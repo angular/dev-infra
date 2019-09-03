@@ -1,0 +1,26 @@
+.DS_STORE
+
+node_modules
+
+# Include when developing application packages.
+.c9
+.idea/
+.devcontainer/*
+!.devcontainer/recommended-devcontainer.json
+!.devcontainer/recommended-Dockerfile
+.settings/
+.vscode/launch.json
+.vscode/settings.json
+*.swo
+.vimrc
+.nvimrc
+
+# Don't check in secret files
+*secret.js
+
+# Ignore npm/yarn debug log
+npm-debug.log
+yarn-error.log
+
+# User specific bazel settings
+.bazelrc.user
