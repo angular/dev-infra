@@ -32,7 +32,7 @@ async function run(): Promise<void> {
       'This issue has been automatically locked due to inactivity.\n' +
       'Please file a new issue if you are encountering a similar or related problem.\n\n' +
       `Read more about our [automatic conversation locking policy](${policyUrl}).\n\n` +
-      '_This action has been performed automatically by a bot._';
+      '<sub>_This action has been performed automatically by a bot._</sub>';
 
     const maxPerExecution = Math.min(+core.getInput('locks-per-execution') || 1, 400);
     const repoToken = core.getInput('github-token', { required: true });
