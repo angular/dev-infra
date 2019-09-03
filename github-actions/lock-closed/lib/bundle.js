@@ -21999,6 +21999,7 @@ async function run() {
             'Please file a new issue if you are encountering a similar or related problem.\n\n' +
             `Read more about our [automatic conversation locking policy](${policyUrl}).\n\n` +
             '_This action has been performed automatically by a bot._';
+        const maxPerExecution = Math.min(+core_5('locks-per-execution') || 1, 400);
         const repoToken = core_5('github-token', { required: true });
         const client = new github_2(repoToken);
         // Set the threshold date based on the days inactive
@@ -22024,7 +22025,7 @@ async function run() {
                     core_10(`Unable to lock issue #${issue.number}: ${error.message}`);
                 }
                 // Limit lock actions per run to prevent notification spam and API rate-limit issues
-                if (lockCount === 400) {
+                if (lockCount >= maxPerExecution) {
                     return;
                 }
             }

@@ -34,6 +34,7 @@ async function run(): Promise<void> {
       `Read more about our [automatic conversation locking policy](${policyUrl}).\n\n` +
       '_This action has been performed automatically by a bot._';
 
+    const maxPerExecution = Math.min(+core.getInput('locks-per-execution') || 1, 400);
     const repoToken = core.getInput('github-token', { required: true });
     const client = new github.GitHub(repoToken);
 
@@ -63,7 +64,7 @@ async function run(): Promise<void> {
         }
 
         // Limit lock actions per run to prevent notification spam and API rate-limit issues
-        if (lockCount === 400) {
+        if (lockCount >= maxPerExecution) {
           return;
         }
       }
