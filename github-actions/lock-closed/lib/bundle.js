@@ -22022,7 +22022,11 @@ async function run() {
                     await lockIssue(client, issue.number, message);
                 }
                 catch (error) {
+                    core_8(error);
                     core_10(`Unable to lock issue #${issue.number}: ${error.message}`);
+                    if (typeof error.request === 'object') {
+                        core_9(JSON.stringify(error.request, null, 2));
+                    }
                 }
                 // Limit lock actions per run to prevent notification spam and API rate-limit issues
                 if (lockCount >= maxPerExecution) {
@@ -22034,6 +22038,9 @@ async function run() {
     catch (error) {
         core_8(error);
         core_7(error.message);
+        if (typeof error.request === 'object') {
+            core_9(JSON.stringify(error.request, null, 2));
+        }
     }
 }
 run();

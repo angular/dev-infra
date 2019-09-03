@@ -60,7 +60,11 @@ async function run(): Promise<void> {
           core.debug(`Locking issue #${issue.number}`);
           await lockIssue(client, issue.number, message);
         } catch (error) {
+          core.debug(error);
           core.warning(`Unable to lock issue #${issue.number}: ${error.message}`);
+          if (typeof error.request === 'object') {
+            core.error(JSON.stringify(error.request, null, 2));
+          }
         }
 
         // Limit lock actions per run to prevent notification spam and API rate-limit issues
@@ -72,6 +76,9 @@ async function run(): Promise<void> {
   } catch (error) {
     core.debug(error);
     core.setFailed(error.message);
+    if (typeof error.request === 'object') {
+      core.error(JSON.stringify(error.request, null, 2));
+    }
   }
 }
 
