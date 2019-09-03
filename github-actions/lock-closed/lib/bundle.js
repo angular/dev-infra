@@ -22001,7 +22001,7 @@ async function run() {
         const message = 'This issue has been automatically locked due to inactivity.\n' +
             'Please file a new issue if you are encountering a similar or related problem.\n\n' +
             `Read more about our [automatic conversation locking policy](${policyUrl}).\n\n` +
-            '_This action has been performed automatically by a bot._';
+            '<sub>_This action has been performed automatically by a bot._</sub>';
         const maxPerExecution = Math.min(+core_5('locks-per-execution') || 1, 400);
         const repoToken = core_5('github-token', { required: true });
         const client = new github_2(repoToken);
