@@ -43,7 +43,7 @@ async function run(): Promise<void> {
     threshold.setDate(threshold.getDate() - days);
 
     const repositoryName = github.context.repo.owner + '/' + github.context.repo.repo;
-    const query = `repo:${repositoryName}+is:issue+is:closed+is:unlocked+updated:<${threshold.toISOString()}+sort:updated-asc`;
+    const query = `repo:${repositoryName}+is:issue+is:closed+is:unlocked+updated:<${threshold.toISOString().split('T')[0]}+sort:updated-asc`;
     core.debug('Issue query: ' + query);
 
     let lockCount = 0;
