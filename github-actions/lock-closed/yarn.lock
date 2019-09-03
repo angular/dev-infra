@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/@actions/core/-/core-1.0.0.tgz#4a090a2e958cc300b9ea802331034d5faf42d239"
   integrity sha512-aMIlkx96XH4E/2YZtEOeyrYQfhlas9jIRkfGPqMwXD095Rdkzo4lB6ZmbxPQSzD+e1M+Xsm98ZhuSMYGv/AlqA==
 
-"@actions/github@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@actions/github/-/github-1.0.0.tgz#5154cadd93c4b17217f56304ee27056730b8ae88"
-  integrity sha512-PPbWZ5wFAD/Vr+RCECfR3KNHjTwYln4liJBihs9tQUL0/PCFqB2lSkIh9V94AcZFHxgKk8snImjuLaBE8bKR7A==
+"@actions/github@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@actions/github/-/github-1.0.1.tgz#fac9eaa0b1b14a57eacb410dc9d674e632ceb1e6"
+  integrity sha512-fmji0JB0E4vmtXVjnqCJouLP4AyM/B5nbLe9U9ooPerxXh9r+VBlx8Lh5c+Dlvux1GooUduQxy4XVA21Lfs/Wg==
   dependencies:
     "@octokit/graphql" "^2.0.1"
     "@octokit/rest" "^16.15.0"

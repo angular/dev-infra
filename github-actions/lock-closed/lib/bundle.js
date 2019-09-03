@@ -17,10 +17,6 @@ var zlib = _interopDefault(require('zlib'));
 
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
-function commonjsRequire () {
-	throw new Error('Dynamic requires are not currently supported by rollup-plugin-commonjs');
-}
-
 function unwrapExports (x) {
 	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
 }
@@ -21895,15 +21891,22 @@ var rest = core$2.plugin(CORE_PLUGINS);
 
 var context = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
-/* eslint-disable @typescript-eslint/no-require-imports */
+
+
 class Context {
     /**
      * Hydrate the context from the environment
      */
     constructor() {
-        this.payload = process.env.GITHUB_EVENT_PATH
-            ? JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'))
-            : {};
+        this.payload = {};
+        if (process.env.GITHUB_EVENT_PATH) {
+            if (fs.existsSync(process.env.GITHUB_EVENT_PATH)) {
+                this.payload = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH, { encoding: 'utf8' }));
+            }
+            else {
+                process.stdout.write(`GITHUB_EVENT_PATH ${process.env.GITHUB_EVENT_PATH} does not exist${os.EOL}`);
+            }
+        }
         this.eventName = process.env.GITHUB_EVENT_NAME;
         this.sha = process.env.GITHUB_SHA;
         this.ref = process.env.GITHUB_REF;
@@ -22006,7 +22009,7 @@ async function run() {
         const threshold = new Date();
         threshold.setDate(threshold.getDate() - days);
         const repositoryName = github_1.repo.owner + '/' + github_1.repo.repo;
-        const query = `repo:${repositoryName}+is:issue+is:closed+is:unlocked+updated:<${threshold.toISOString()}+sort:updated-asc`;
+        const query = `repo:${repositoryName}+is:issue+is:closed+is:unlocked+updated:<${threshold.toISOString().split('T')[0]}+sort:updated-asc`;
         core_8('Issue query: ' + query);
         let lockCount = 0;
         let issueResponse;
