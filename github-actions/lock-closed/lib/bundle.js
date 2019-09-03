@@ -21891,11 +21891,6 @@ const CORE_PLUGINS = [
 
 var rest = core$2.plugin(CORE_PLUGINS);
 
-var GitHub = /*#__PURE__*/Object.freeze({
-	'default': rest,
-	__moduleExports: rest
-});
-
 var context = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 
@@ -25260,7 +25255,7 @@ async function run() {
         // Installation Id of the Lock Bot App
         const lockBotAppId = 1770828;
         // Create unauthenticated Github client.
-        const client = new GitHub();
+        const client = new rest();
         // Create JWT Token with provided private key.
         const lockBotKey = core_5('lock-bot-key', { required: true });
         const lockBotJWT = createJWT(lockBotKey, lockBotAppId);

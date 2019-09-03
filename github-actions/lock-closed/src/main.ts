@@ -1,9 +1,9 @@
 import * as core from '@actions/core';
 import { context } from '@actions/github';
-import * as GitHub from '@octokit/rest';
+import Octokit from '@octokit/rest';
 import * as jwt from 'jsonwebtoken';
 
-async function lockIssue(client: GitHub, issue: number, message?: string): Promise<void> {
+async function lockIssue(client: Octokit, issue: number, message?: string): Promise<void> {
   // Add a comment before locking
   if (message) {
     await client.issues.createComment({
@@ -60,7 +60,7 @@ async function run(): Promise<void> {
     const lockBotAppId = 1770828;
 
     // Create unauthenticated Github client.
-    const client = new GitHub();
+    const client = new Octokit();
 
     // Create JWT Token with provided private key.
     const lockBotKey = core.getInput('lock-bot-key', { required: true });
