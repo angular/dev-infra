@@ -22018,7 +22018,7 @@ async function run() {
                 q: query,
                 per_page: 100,
             });
-            for (const issue of issueResponse.data) {
+            for (const issue of issueResponse.data.items) {
                 ++lockCount;
                 try {
                     core_8(`Locking issue #${issue.number}`);

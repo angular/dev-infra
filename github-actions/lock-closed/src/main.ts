@@ -54,7 +54,7 @@ async function run(): Promise<void> {
         per_page: 100,
       });
 
-      for (const issue of issueResponse.data) {
+      for (const issue of issueResponse.data.items) {
         ++lockCount;
         try {
           core.debug(`Locking issue #${issue.number}`);
