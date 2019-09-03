@@ -25233,8 +25233,8 @@ function createJWT(privateKey, id) {
     return jsonwebtoken_3({
         // Issued at time
         iat: now,
-        // JWT expiration time (60 minutes in the future)
-        exp: now + 60 * 60,
+        // JWT expiration time (10 minutes in the future)
+        exp: now + 10 * 60,
         // Installation (Githup App) id
         iss: id,
     }, privateKey, {
