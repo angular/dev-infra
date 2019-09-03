@@ -1,5 +1,6 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
+import * as jwt from 'jsonwebtoken';
 
 async function lockIssue(client: github.GitHub, issue: number, message?: string): Promise<void> {
   // Add a comment before locking
@@ -20,6 +21,26 @@ async function lockIssue(client: github.GitHub, issue: number, message?: string)
   });
 }
 
+/** Creates a JWT token expiring one hour in the future, for authentication as an installation (Github App). */
+function createJWT(privateKey: string, id: number) {
+  const now = Date.now() / 1000;
+
+  return jwt.sign(
+    {
+      // Issued at time
+      iat: now,
+      // JWT expiration time (60 minutes in the future)
+      exp: now + 60 * 60,
+      // Installation (Githup App) id
+      iss: id,
+    },
+    privateKey,
+    {
+      algorithm: 'RS256',
+    },
+  );
+}
+
 async function run(): Promise<void> {
   try {
     // NOTE: `days` and `message` must not be changed without dev-rel and dev-infra concurrence
@@ -33,11 +54,33 @@ async function run(): Promise<void> {
       'Please file a new issue if you are encountering a similar or related problem.\n\n' +
       `Read more about our [automatic conversation locking policy](${policyUrl}).\n\n` +
       '<sub>_This action has been performed automatically by a bot._</sub>';
+    // Installation Id of the Lock Bot App
+    const lockBotAppId = 1770828;
+
+
+    // Create unauthenticated Github client.
+    const client = new github.GitHub('');
+
+    // Create JWT Token with provided private key.
+    const lockBotKey = core.getInput('lock-bot-key', { required: true });
+    const lockBotJWT = createJWT(lockBotKey, lockBotAppId);
+
+    // Create Installation Token using JWT Token
+    client.authenticate({
+      type: 'app',
+      token: lockBotJWT,
+    });
+    const installToken = await client.apps.createInstallationToken({
+      installation_id: lockBotAppId,
+    });
+
+    // Authenticate using as `angular-automatic-lock-bot` Github App Installation Token
+    client.authenticate({
+      type: 'token',
+      token: installToken.data.token,
+    });
 
     const maxPerExecution = Math.min(+core.getInput('locks-per-execution') || 1, 400);
-    const repoToken = core.getInput('github-token', { required: true });
-    const client = new github.GitHub(repoToken);
-
     // Set the threshold date based on the days inactive
     const threshold = new Date();
     threshold.setDate(threshold.getDate() - days);
