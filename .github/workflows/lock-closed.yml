@@ -3,7 +3,7 @@ name: Lock issues that are closed and inactive
 on:
   schedule:
   # for testing, will run on the 30th minute of every hour
-  - cron: "27 * * * *"
+  - cron: "33 * * * *"
 
 jobs:
   lock_closed:
