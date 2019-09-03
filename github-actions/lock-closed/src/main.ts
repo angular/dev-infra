@@ -27,8 +27,11 @@ function createJWT(privateKey: string, id: number) {
 
   return jwt.sign(
     {
+      // Issued at time
       iat: now,
+      // JWT expiration time (60 minutes in the future)
       exp: now + 60 * 60,
+      // Installation (Githup App) id
       iss: id,
     },
     privateKey,
