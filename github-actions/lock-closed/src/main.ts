@@ -32,7 +32,7 @@ function createJWT(privateKey: string, id: number) {
       iat: now,
       // JWT expiration time (10 minutes in the future)
       exp: now + 10 * 60,
-      // Installation (Githup App) id
+      // Githup App id
       iss: id,
     },
     privateKey,
@@ -56,8 +56,10 @@ async function run(): Promise<void> {
       'Please file a new issue if you are encountering a similar or related problem.\n\n' +
       `Read more about our [automatic conversation locking policy](${policyUrl}).\n\n` +
       '<sub>_This action has been performed automatically by a bot._</sub>';
+    // Github App Id of the Lock Bot App
+    const lockBotAppId = 22342;
     // Installation Id of the Lock Bot App
-    const lockBotAppId = 1770828;
+    const installationId = 1772826;
 
     // Create unauthenticated Github client.
     const client = new Octokit();
@@ -72,7 +74,7 @@ async function run(): Promise<void> {
       token: lockBotJWT,
     });
     const installToken = await client.apps.createInstallationToken({
-      installation_id: lockBotAppId,
+      installation_id: installationId,
     });
 
     // Authenticate using as `angular-automatic-lock-bot` Github App Installation Token
