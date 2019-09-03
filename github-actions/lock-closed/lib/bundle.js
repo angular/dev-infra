@@ -21891,6 +21891,11 @@ const CORE_PLUGINS = [
 
 var rest = core$2.plugin(CORE_PLUGINS);
 
+var GitHub = /*#__PURE__*/Object.freeze({
+	'default': rest,
+	__moduleExports: rest
+});
+
 var context = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 
@@ -25247,7 +25252,7 @@ async function run() {
         // Fixed amount of days a closed issue must be inactive before being locked
         const days = 30;
         // Standardized Angular Team message for locking issues
-        const policyUrl = 'https://github.com/angular/angular/blob/67d80f9ae8082d446e2d58227375f5a92eeae933/docs/GITHUB_PROCESS.md#conversation-locking';
+        const policyUrl = 'https://com/angular/angular/blob/67d80f9ae8082d446e2d58227375f5a92eeae933/docs/GITHUB_PROCESS.md#conversation-locking';
         const message = 'This issue has been automatically locked due to inactivity.\n' +
             'Please file a new issue if you are encountering a similar or related problem.\n\n' +
             `Read more about our [automatic conversation locking policy](${policyUrl}).\n\n` +
@@ -25255,7 +25260,7 @@ async function run() {
         // Installation Id of the Lock Bot App
         const lockBotAppId = 1770828;
         // Create unauthenticated Github client.
-        const client = new github_2('');
+        const client = new GitHub();
         // Create JWT Token with provided private key.
         const lockBotKey = core_5('lock-bot-key', { required: true });
         const lockBotJWT = createJWT(lockBotKey, lockBotAppId);

@@ -1,13 +1,14 @@
 import * as core from '@actions/core';
-import * as github from '@actions/github';
+import { context } from '@actions/github';
+import * as GitHub from '@octokit/rest';
 import * as jwt from 'jsonwebtoken';
 
-async function lockIssue(client: github.GitHub, issue: number, message?: string): Promise<void> {
+async function lockIssue(client: GitHub, issue: number, message?: string): Promise<void> {
   // Add a comment before locking
   if (message) {
     await client.issues.createComment({
-      owner: github.context.repo.owner,
-      repo: github.context.repo.repo,
+      owner: context.repo.owner,
+      repo: context.repo.repo,
       issue_number: issue,
       body: message,
     });
@@ -15,8 +16,8 @@ async function lockIssue(client: github.GitHub, issue: number, message?: string)
 
   // Actually lock the issue
   await client.issues.lock({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
+    owner: context.repo.owner,
+    repo: context.repo.repo,
     issue_number: issue,
   });
 }
@@ -48,7 +49,8 @@ async function run(): Promise<void> {
     // Fixed amount of days a closed issue must be inactive before being locked
     const days = 30;
     // Standardized Angular Team message for locking issues
-    const policyUrl = 'https://github.com/angular/angular/blob/67d80f9ae8082d446e2d58227375f5a92eeae933/docs/GITHUB_PROCESS.md#conversation-locking';
+    const policyUrl =
+      'https://com/angular/angular/blob/67d80f9ae8082d446e2d58227375f5a92eeae933/docs/GITHUB_PROCESS.md#conversation-locking';
     const message =
       'This issue has been automatically locked due to inactivity.\n' +
       'Please file a new issue if you are encountering a similar or related problem.\n\n' +
@@ -57,9 +59,8 @@ async function run(): Promise<void> {
     // Installation Id of the Lock Bot App
     const lockBotAppId = 1770828;
 
-
     // Create unauthenticated Github client.
-    const client = new github.GitHub('');
+    const client = new GitHub();
 
     // Create JWT Token with provided private key.
     const lockBotKey = core.getInput('lock-bot-key', { required: true });
@@ -85,8 +86,10 @@ async function run(): Promise<void> {
     const threshold = new Date();
     threshold.setDate(threshold.getDate() - days);
 
-    const repositoryName = github.context.repo.owner + '/' + github.context.repo.repo;
-    const query = `repo:${repositoryName}+is:issue+is:closed+is:unlocked+updated:<${threshold.toISOString().split('T')[0]}+sort:updated-asc`;
+    const repositoryName = context.repo.owner + '/' + context.repo.repo;
+    const query = `repo:${repositoryName}+is:issue+is:closed+is:unlocked+updated:<${
+      threshold.toISOString().split('T')[0]
+    }+sort:updated-asc`;
     core.debug('Issue query: ' + query);
 
     let lockCount = 0;
