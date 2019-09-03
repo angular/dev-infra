@@ -25253,7 +25253,7 @@ async function run() {
             `Read more about our [automatic conversation locking policy](${policyUrl}).\n\n` +
             '<sub>_This action has been performed automatically by a bot._</sub>';
         // Github App Id of the Lock Bot App
-        const lockBotAppId = 22342;
+        const lockBotAppId = 40213;
         // Installation Id of the Lock Bot App
         const installationId = 1772826;
         // Create unauthenticated Github client.
