@@ -22011,7 +22011,7 @@ async function run() {
         let lockCount = 0;
         let issueResponse;
         while (!issueResponse || issueResponse.data.length > 0) {
-            issueResponse = await client.search.issues({
+            issueResponse = await client.search.issuesAndPullRequests({
                 q: query,
                 per_page: 100,
             });
