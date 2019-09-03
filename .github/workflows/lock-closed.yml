@@ -2,8 +2,8 @@ name: Lock issues that are closed and inactive
 
 on:
   schedule:
-  # for testing, will run on the 30th minute of every hour
-  - cron: "01 * * * *"
+    # for testing, will run on the 30th minute of every hour
+    - cron: '01 * * * *'
 
 jobs:
   lock_closed:
