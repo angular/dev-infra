@@ -24,7 +24,7 @@ async function lockIssue(client: Octokit, issue: number, message?: string): Prom
 
 /** Creates a JWT token expiring one hour in the future, for authentication as an installation (Github App). */
 function createJWT(privateKey: string, id: number) {
-  const now = Date.now() / 1000;
+  const now = Math.floor(Date.now() / 1000);
 
   return jwt.sign(
     {

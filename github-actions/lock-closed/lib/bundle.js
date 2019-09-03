@@ -25229,7 +25229,7 @@ async function lockIssue(client, issue, message) {
 }
 /** Creates a JWT token expiring one hour in the future, for authentication as an installation (Github App). */
 function createJWT(privateKey, id) {
-    const now = Date.now() / 1000;
+    const now = Math.floor(Date.now() / 1000);
     return jsonwebtoken_3({
         // Issued at time
         iat: now,
