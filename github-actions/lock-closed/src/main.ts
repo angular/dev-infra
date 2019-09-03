@@ -24,6 +24,7 @@ async function run(): Promise<void> {
   try {
     // NOTE: `days` and `message` must not be changed without dev-rel and dev-infra concurrence
 
+    const requiredBotUsername = 'our-bot-account';
     // Fixed amount of days a closed issue must be inactive before being locked
     const days = 30;
     // Standardized Angular Team message for locking issues
@@ -37,6 +38,13 @@ async function run(): Promise<void> {
     const maxPerExecution = Math.min(+core.getInput('locks-per-execution') || 1, 400);
     const repoToken = core.getInput('github-token', { required: true });
     const client = new github.GitHub(repoToken);
+
+
+    const activeLoginUsername = await client.users.getAuthenticated().then(result => result.data.login);
+    if (activeLoginUsername !== requiredBotUsername) {
+      core.setFailed(`All usages of the Angular lock-closed github action must use the ${requiredBotUsername} account.`);
+    }
+
 
     // Set the threshold date based on the days inactive
     const threshold = new Date();
