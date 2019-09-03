@@ -11,5 +11,5 @@ jobs:
     steps:
       - uses: angular/dev-infra/github-actions/lock-closed@master
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.TEST_BOT_KEY }}
           locks-per-execution: 1
