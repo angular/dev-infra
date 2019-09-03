@@ -5,6 +5,9 @@ inputs:
   github-token:
     description: 'Github access token'
     required: true
+  locks-per-execution:
+    description: 'Maximum number of issue locks per action execution'
+    default: 400
 runs:
   using: 'node12'
   main: 'lib/bundle.js'
