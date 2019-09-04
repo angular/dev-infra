@@ -25323,5 +25323,5 @@ if (github_1.repo.owner === 'angular') {
 }
 else {
     core_10('The Automatic Locking Closed issues was skipped as this action is only meant to run ' +
-        'in repos belonging to the Angular orgization.');
+        'in repos belonging to the Angular organization.');
 }
