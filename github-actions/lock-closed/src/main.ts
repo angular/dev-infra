@@ -136,7 +136,7 @@ if (context.repo.owner === 'angular') {
   run();
 } else {
   core.warning(
-    'The Automatic Locking Closed issues was skipped as this action is only meant to run ' + 
-    'in repos belong to the Angular orgization.'
+    'The Automatic Locking Closed issues was skipped as this action is only meant to run ' +
+      'in repos belonging to the Angular orgization.',
   );
 }
