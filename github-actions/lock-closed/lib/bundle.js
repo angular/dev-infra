@@ -25321,3 +25321,7 @@ async function run() {
 if (github_1.repo.owner === 'angular') {
     run();
 }
+else {
+    core_10('The Automatic Locking Closed issues was skipped as this action is only meant to run ' +
+        'in repos belong to the Angular orgization.');
+}

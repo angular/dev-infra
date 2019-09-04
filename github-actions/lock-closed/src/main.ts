@@ -134,4 +134,9 @@ async function run(): Promise<void> {
 // to prevent the action from actually running in a fork of a repository with this action set up.
 if (context.repo.owner === 'angular') {
   run();
+} else {
+  core.warning(
+    'The Automatic Locking Closed issues was skipped as this action is only meant to run ' + 
+    'in repos belong to the Angular orgization.'
+  );
 }
