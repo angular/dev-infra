@@ -25316,4 +25316,8 @@ async function run() {
         }
     }
 }
-run();
+// Only run if the action is executed in a repository with is in the Angular org. This is in place
+// to prevent the action from actually running in a fork of a repository with this action set up.
+if (github_1.repo.owner === 'angular') {
+    run();
+}
