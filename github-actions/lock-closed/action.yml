@@ -7,7 +7,7 @@ inputs:
     required: true
   locks-per-execution:
     description: 'Maximum number of issue locks per action execution'
-    default: 400
+    default: 100
 runs:
   using: 'node12'
   main: 'lib/bundle.js'
