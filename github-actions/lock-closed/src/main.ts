@@ -83,7 +83,7 @@ async function run(): Promise<void> {
       token: installToken.data.token,
     });
 
-    const maxPerExecution = Math.min(+core.getInput('locks-per-execution') || 1, 400);
+    const maxPerExecution = Math.min(+core.getInput('locks-per-execution') || 1, 100);
     // Set the threshold date based on the days inactive
     const threshold = new Date();
     threshold.setDate(threshold.getDate() - days);
@@ -95,35 +95,28 @@ async function run(): Promise<void> {
     console.info('Issue query: ' + query);
 
     let lockCount = 0;
-    let issueResponse;
-    while (!issueResponse || issueResponse.data.length > 0) {
-      issueResponse = await client.search.issuesAndPullRequests({
-        q: query,
-        per_page: 100,
-      });
+    let issueResponse = await client.search.issuesAndPullRequests({
+      q: query,
+      per_page: maxPerExecution,
+    });
 
-      console.info(`Attempting to lock ${issueResponse.data.items.length} item(s)`);
-      core.startGroup('Locking issues');
-      for (const issue of issueResponse.data.items) {
-        ++lockCount;
-        try {
-          console.info(`Locking issue #${issue.number}`);
-          await lockIssue(client, issue.number, message);
-        } catch (error) {
-          core.debug(error);
-          core.warning(`Unable to lock issue #${issue.number}: ${error.message}`);
-          if (typeof error.request === 'object') {
-            core.error(JSON.stringify(error.request, null, 2));
-          }
-        }
-
-        // Limit lock actions per run to prevent notification spam and API rate-limit issues
-        if (lockCount >= maxPerExecution) {
-          return;
+    console.info(`Attempting to lock ${issueResponse.data.items.length} item(s)`);
+    core.startGroup('Locking issues');
+    for (const issue of issueResponse.data.items) {
+      ++lockCount;
+      try {
+        console.info(`Locking issue #${issue.number}`);
+        await lockIssue(client, issue.number, message);
+      } catch (error) {
+        core.debug(error);
+        core.warning(`Unable to lock issue #${issue.number}: ${error.message}`);
+        if (typeof error.request === 'object') {
+          core.error(JSON.stringify(error.request, null, 2));
         }
       }
-      core.endGroup();
     }
+    console.info(`Locked ${lockCount} item(s)`);
+    core.endGroup();
   } catch (error) {
     core.debug(error);
     core.setFailed(error.message);
@@ -131,6 +124,7 @@ async function run(): Promise<void> {
       core.error(JSON.stringify(error.request, null, 2));
     }
   }
+  console.info(`End of locking task`);
 }
 
 // Only run if the action is executed in a repository with is in the Angular org. This is in place

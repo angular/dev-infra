@@ -25329,7 +25329,7 @@ async function run() {
             type: 'token',
             token: installToken.data.token,
         });
-        const maxPerExecution = Math.min(+core_5('locks-per-execution') || 1, 400);
+        const maxPerExecution = Math.min(+core_5('locks-per-execution') || 1, 100);
         // Set the threshold date based on the days inactive
         const threshold = new Date();
         threshold.setDate(threshold.getDate() - days);
@@ -25337,34 +25337,28 @@ async function run() {
         const query = `repo:${repositoryName}+is:issue+is:closed+is:unlocked+updated:<${threshold.toISOString().split('T')[0]}+sort:updated-asc`;
         console.info('Issue query: ' + query);
         let lockCount = 0;
-        let issueResponse;
-        while (!issueResponse || issueResponse.data.length > 0) {
-            issueResponse = await client.search.issuesAndPullRequests({
-                q: query,
-                per_page: 100,
-            });
-            console.info(`Attempting to lock ${issueResponse.data.items.length} item(s)`);
-            core_11('Locking issues');
-            for (const issue of issueResponse.data.items) {
-                ++lockCount;
-                try {
-                    console.info(`Locking issue #${issue.number}`);
-                    await lockIssue(client, issue.number, message);
-                }
-                catch (error) {
-                    core_8(error);
-                    core_10(`Unable to lock issue #${issue.number}: ${error.message}`);
-                    if (typeof error.request === 'object') {
-                        core_9(JSON.stringify(error.request, null, 2));
-                    }
-                }
-                // Limit lock actions per run to prevent notification spam and API rate-limit issues
-                if (lockCount >= maxPerExecution) {
-                    return;
+        let issueResponse = await client.search.issuesAndPullRequests({
+            q: query,
+            per_page: maxPerExecution,
+        });
+        console.info(`Attempting to lock ${issueResponse.data.items.length} item(s)`);
+        core_11('Locking issues');
+        for (const issue of issueResponse.data.items) {
+            ++lockCount;
+            try {
+                console.info(`Locking issue #${issue.number}`);
+                await lockIssue(client, issue.number, message);
+            }
+            catch (error) {
+                core_8(error);
+                core_10(`Unable to lock issue #${issue.number}: ${error.message}`);
+                if (typeof error.request === 'object') {
+                    core_9(JSON.stringify(error.request, null, 2));
                 }
             }
-            core_12();
         }
+        console.info(`Locked ${lockCount} item(s)`);
+        core_12();
     }
     catch (error) {
         core_8(error);
@@ -25373,6 +25367,7 @@ async function run() {
             core_9(JSON.stringify(error.request, null, 2));
         }
     }
+    console.info(`End of locking task`);
 }
 // Only run if the action is executed in a repository with is in the Angular org. This is in place
 // to prevent the action from actually running in a fork of a repository with this action set up.
