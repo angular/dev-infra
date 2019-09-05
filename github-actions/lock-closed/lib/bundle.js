@@ -25345,6 +25345,10 @@ async function run() {
             q: query,
             per_page: maxPerExecution,
         });
+        if (!issueResponse.data.items.length) {
+            console.info(`No issues found to lock`);
+            return;
+        }
         console.info(`Attempting to lock ${issueResponse.data.items.length} item(s)`);
         core_11('Locking issues');
         for (const issue of issueResponse.data.items) {
