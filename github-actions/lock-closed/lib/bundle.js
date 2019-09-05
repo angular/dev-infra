@@ -25338,7 +25338,8 @@ async function run() {
         const threshold = new Date();
         threshold.setDate(threshold.getDate() - days);
         const repositoryName = github_1.repo.owner + '/' + github_1.repo.repo;
-        const query = `repo:${repositoryName}+is:issue+is:closed+is:unlocked+updated:<${threshold.toISOString().split('T')[0]}+sort:updated-asc`;
+        const updatedAt = threshold.toISOString().split('T')[0];
+        const query = `repo:${repositoryName}+is:closed+is:unlocked+updated:<${updatedAt}+sort:updated-asc`;
         console.info('Issue query: ' + query);
         let lockCount = 0;
         let issueResponse = await client.search.issuesAndPullRequests({

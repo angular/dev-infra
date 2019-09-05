@@ -94,9 +94,8 @@ async function run(): Promise<void> {
     threshold.setDate(threshold.getDate() - days);
 
     const repositoryName = context.repo.owner + '/' + context.repo.repo;
-    const query = `repo:${repositoryName}+is:issue+is:closed+is:unlocked+updated:<${
-      threshold.toISOString().split('T')[0]
-    }+sort:updated-asc`;
+    const updatedAt = threshold.toISOString().split('T')[0];
+    const query = `repo:${repositoryName}+is:closed+is:unlocked+updated:<${updatedAt}+sort:updated-asc`;
     console.info('Issue query: ' + query);
 
     let lockCount = 0;
