@@ -22,6 +22,11 @@ async function lockIssue(client: Octokit, issue: number, message?: string): Prom
   });
 }
 
+/** Creates a promise which resolves after a set period of time. */
+async function timeout(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 /** Creates a JWT token expiring one hour in the future, for authentication as an installation (Github App). */
 function createJWT(privateKey: string, id: number) {
   const now = Math.floor(Date.now() / 1000);
@@ -107,6 +112,7 @@ async function run(): Promise<void> {
       try {
         console.info(`Locking issue #${issue.number}`);
         await lockIssue(client, issue.number, message);
+        await timeout(500);
       } catch (error) {
         core.debug(error);
         core.warning(`Unable to lock issue #${issue.number}: ${error.message}`);

@@ -25282,6 +25282,10 @@ async function lockIssue(client, issue, message) {
         issue_number: issue,
     });
 }
+/** Creates a promise which resolves after a set period of time. */
+async function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 /** Creates a JWT token expiring one hour in the future, for authentication as an installation (Github App). */
 function createJWT(privateKey, id) {
     const now = Math.floor(Date.now() / 1000);
@@ -25348,6 +25352,7 @@ async function run() {
             try {
                 console.info(`Locking issue #${issue.number}`);
                 await lockIssue(client, issue.number, message);
+                await timeout(500);
             }
             catch (error) {
                 core_8(error);
