@@ -105,6 +105,11 @@ async function run(): Promise<void> {
       per_page: maxPerExecution,
     });
 
+    if (!issueResponse.data.items.length) {
+      console.info(`No issues found to lock`);
+      return;
+    }
+
     console.info(`Attempting to lock ${issueResponse.data.items.length} item(s)`);
     core.startGroup('Locking issues');
     for (const issue of issueResponse.data.items) {
