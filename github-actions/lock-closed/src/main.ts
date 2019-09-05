@@ -96,7 +96,7 @@ async function run(): Promise<void> {
     const repositoryName = context.repo.owner + '/' + context.repo.repo;
     const updatedAt = threshold.toISOString().split('T')[0];
     const query = `repo:${repositoryName}+is:closed+is:unlocked+updated:<${updatedAt}+sort:updated-asc`;
-    console.info('Issue query: ' + query);
+    console.info('Query: ' + query);
 
     let lockCount = 0;
     let issueResponse = await client.search.issuesAndPullRequests({
@@ -105,7 +105,7 @@ async function run(): Promise<void> {
     });
 
     if (!issueResponse.data.items.length) {
-      console.info(`No issues found to lock`);
+      console.info(`No items found to lock`);
       return;
     }
 
@@ -114,12 +114,13 @@ async function run(): Promise<void> {
     for (const issue of issueResponse.data.items) {
       ++lockCount;
       try {
-        console.info(`Locking issue #${issue.number}`);
+        const itemType = issue.pull_request ? 'pull request' : 'issue';
+        console.info(`Locking ${itemType} #${issue.number}`);
         await lockIssue(client, issue.number, message);
         await timeout(500);
       } catch (error) {
         core.debug(error);
-        core.warning(`Unable to lock issue #${issue.number}: ${error.message}`);
+        core.warning(`Unable to lock ${itemType} #${issue.number}: ${error.message}`);
         if (typeof error.request === 'object') {
           core.error(JSON.stringify(error.request, null, 2));
         }
