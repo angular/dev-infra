@@ -23,7 +23,7 @@ async function lockIssue(client: Octokit, issue: number, message?: string): Prom
 }
 
 /** Creates a promise which resolves after a set period of time. */
-async function timeout(ms: number) {
+function timeout(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 

@@ -25283,7 +25283,7 @@ async function lockIssue(client, issue, message) {
     });
 }
 /** Creates a promise which resolves after a set period of time. */
-async function timeout(ms) {
+function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 /** Creates a JWT token expiring one hour in the future, for authentication as an installation (Github App). */
