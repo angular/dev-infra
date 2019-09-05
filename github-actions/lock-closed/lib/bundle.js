@@ -42,14 +42,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
  *
  * Examples:
  *   ##[warning]This is the user warning message
- *   ##[set-secret name=mypassword]definatelyNotAPassword!
+ *   ##[set-secret name=mypassword]definitelyNotAPassword!
  */
 function issueCommand(command, properties, message) {
     const cmd = new Command(command, properties, message);
     process.stdout.write(cmd.toString() + os.EOL);
 }
 exports.issueCommand = issueCommand;
-function issue(name, message) {
+function issue(name, message = '') {
     issueCommand(name, {}, message);
 }
 exports.issue = issue;
@@ -104,6 +104,15 @@ var command_1 = command.issueCommand;
 var command_2 = command.issue;
 
 var core = createCommonjsModule(function (module, exports) {
+var __awaiter = (commonjsGlobal && commonjsGlobal.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 
 
@@ -141,7 +150,10 @@ exports.exportVariable = exportVariable;
  */
 function exportSecret(name, val) {
     exportVariable(name, val);
+    // the runner will error with not implemented
+    // leaving the function but raising the error earlier
     command.issueCommand('set-secret', {}, val);
+    throw new Error('Not implemented.');
 }
 exports.exportSecret = exportSecret;
 /**
@@ -218,6 +230,46 @@ function warning(message) {
     command.issue('warning', message);
 }
 exports.warning = warning;
+/**
+ * Begin an output group.
+ *
+ * Output until the next `groupEnd` will be foldable in this group
+ *
+ * @param name The name of the output group
+ */
+function startGroup(name) {
+    command.issue('group', name);
+}
+exports.startGroup = startGroup;
+/**
+ * End an output group.
+ */
+function endGroup() {
+    command.issue('endgroup');
+}
+exports.endGroup = endGroup;
+/**
+ * Wrap an asynchronous function call in a group.
+ *
+ * Returns the same type as the function itself.
+ *
+ * @param name The name of the group
+ * @param fn The function to wrap in the group
+ */
+function group(name, fn) {
+    return __awaiter(this, void 0, void 0, function* () {
+        startGroup(name);
+        let result;
+        try {
+            result = yield fn();
+        }
+        finally {
+            endGroup();
+        }
+        return result;
+    });
+}
+exports.group = group;
 
 });
 
@@ -232,6 +284,9 @@ var core_7 = core.setFailed;
 var core_8 = core.debug;
 var core_9 = core.error;
 var core_10 = core.warning;
+var core_11 = core.startGroup;
+var core_12 = core.endGroup;
+var core_13 = core.group;
 
 var isMergeableObject = function isMergeableObject(value) {
 	return isNonNullObject(value)
@@ -21918,7 +21973,7 @@ class Context {
     }
     get issue() {
         const payload = this.payload;
-        return Object.assign({}, this.repo, { number: (payload.issue || payload.pullRequest || payload).number });
+        return Object.assign(Object.assign({}, this.repo), { number: (payload.issue || payload.pullRequest || payload).number });
     }
     get repo() {
         if (process.env.GITHUB_REPOSITORY) {
@@ -21961,8 +22016,8 @@ const Context = __importStar(context);
 rest_1.default.prototype = new rest_1.default();
 exports.context = new Context.Context();
 class GitHub extends rest_1.default {
-    constructor(token) {
-        super({ auth: `token ${token}` });
+    constructor(token, opts = {}) {
+        super(Object.assign(Object.assign({}, opts), { auth: `token ${token}` }));
         this.graphql = graphql$1.defaults({
             headers: { authorization: `token ${token}` }
         });
@@ -25280,7 +25335,7 @@ async function run() {
         threshold.setDate(threshold.getDate() - days);
         const repositoryName = github_1.repo.owner + '/' + github_1.repo.repo;
         const query = `repo:${repositoryName}+is:issue+is:closed+is:unlocked+updated:<${threshold.toISOString().split('T')[0]}+sort:updated-asc`;
-        core_8('Issue query: ' + query);
+        console.info('Issue query: ' + query);
         let lockCount = 0;
         let issueResponse;
         while (!issueResponse || issueResponse.data.length > 0) {
@@ -25288,10 +25343,12 @@ async function run() {
                 q: query,
                 per_page: 100,
             });
+            console.info(`Attempting to lock ${issueResponse.data.items.length} item(s)`);
+            core_11('Locking issues');
             for (const issue of issueResponse.data.items) {
                 ++lockCount;
                 try {
-                    core_8(`Locking issue #${issue.number}`);
+                    console.info(`Locking issue #${issue.number}`);
                     await lockIssue(client, issue.number, message);
                 }
                 catch (error) {
@@ -25306,6 +25363,7 @@ async function run() {
                     return;
                 }
             }
+            core_12();
         }
     }
     catch (error) {

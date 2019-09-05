@@ -14,8 +14,8 @@
   "author": "Angular",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "1.0.0",
-    "@actions/github": "1.0.1",
+    "@actions/core": "^1.1.0",
+    "@actions/github": "^1.1.0",
     "@octokit/rest": "^16.15.0",
     "jsonwebtoken": "^8.5.1"
   },
