@@ -92,7 +92,7 @@ async function run(): Promise<void> {
     const query = `repo:${repositoryName}+is:issue+is:closed+is:unlocked+updated:<${
       threshold.toISOString().split('T')[0]
     }+sort:updated-asc`;
-    core.debug('Issue query: ' + query);
+    console.info('Issue query: ' + query);
 
     let lockCount = 0;
     let issueResponse;
@@ -102,10 +102,12 @@ async function run(): Promise<void> {
         per_page: 100,
       });
 
+      console.info(`Attempting to lock ${issueResponse.data.items.length} item(s)`);
+      core.startGroup('Locking issues');
       for (const issue of issueResponse.data.items) {
         ++lockCount;
         try {
-          core.debug(`Locking issue #${issue.number}`);
+          console.info(`Locking issue #${issue.number}`);
           await lockIssue(client, issue.number, message);
         } catch (error) {
           core.debug(error);
@@ -120,6 +122,7 @@ async function run(): Promise<void> {
           return;
         }
       }
+      core.endGroup();
     }
   } catch (error) {
     core.debug(error);
