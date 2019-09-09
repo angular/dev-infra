@@ -113,8 +113,9 @@ async function run(): Promise<void> {
     core.startGroup('Locking issues');
     for (const issue of issueResponse.data.items) {
       ++lockCount;
+      let itemType: string | undefined;
       try {
-        const itemType = issue.pull_request ? 'pull request' : 'issue';
+        itemType = issue.pull_request ? 'pull request' : 'issue';
         console.info(`Locking ${itemType} #${issue.number}`);
         await lockIssue(client, issue.number, message);
         await timeout(500);

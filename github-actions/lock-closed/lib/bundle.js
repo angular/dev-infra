@@ -25354,8 +25354,9 @@ async function run() {
         core_11('Locking issues');
         for (const issue of issueResponse.data.items) {
             ++lockCount;
+            let itemType;
             try {
-                const itemType = issue.pull_request ? 'pull request' : 'issue';
+                itemType = issue.pull_request ? 'pull request' : 'issue';
                 console.info(`Locking ${itemType} #${issue.number}`);
                 await lockIssue(client, issue.number, message);
                 await timeout(500);
