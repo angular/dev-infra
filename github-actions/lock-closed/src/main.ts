@@ -127,8 +127,8 @@ async function run(): Promise<void> {
         }
       }
     }
-    console.info(`Locked ${lockCount} item(s)`);
     core.endGroup();
+    console.info(`Locked ${lockCount} item(s)`);
   } catch (error) {
     core.debug(error);
     core.setFailed(error.message);

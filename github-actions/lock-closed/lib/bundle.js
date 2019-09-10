@@ -25369,8 +25369,8 @@ async function run() {
                 }
             }
         }
-        console.info(`Locked ${lockCount} item(s)`);
         core_12();
+        console.info(`Locked ${lockCount} item(s)`);
     }
     catch (error) {
         core_8(error);
