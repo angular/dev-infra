@@ -101,8 +101,10 @@ async function run(): Promise<void> {
       per_page: maxPerExecution,
     });
 
+    console.info(`Query found ${issueResponse.data.total_count} items`);
+
     if (!issueResponse.data.items.length) {
-      console.info(`No items found to lock`);
+      console.info(`No items to lock`);
       return;
     }
 
@@ -112,11 +114,11 @@ async function run(): Promise<void> {
       ++lockCount;
       let itemType: string | undefined;
       try {
+        itemType = item.pull_request ? 'pull request' : 'issue';
         if (item.locked) {
           console.info(`Skipping ${itemType} #${item.number}, already locked`);
           continue;
         }
-        itemType = item.pull_request ? 'pull request' : 'issue';
         console.info(`Locking ${itemType} #${item.number}`);
         await lockIssue(client, item.number, message);
         await timeout(500);
