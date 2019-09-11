@@ -25343,8 +25343,9 @@ async function run() {
             q: query,
             per_page: maxPerExecution,
         });
+        console.info(`Query found ${issueResponse.data.total_count} items`);
         if (!issueResponse.data.items.length) {
-            console.info(`No items found to lock`);
+            console.info(`No items to lock`);
             return;
         }
         console.info(`Attempting to lock ${issueResponse.data.items.length} item(s)`);
@@ -25353,11 +25354,11 @@ async function run() {
             ++lockCount;
             let itemType;
             try {
+                itemType = item.pull_request ? 'pull request' : 'issue';
                 if (item.locked) {
                     console.info(`Skipping ${itemType} #${item.number}, already locked`);
                     continue;
                 }
-                itemType = item.pull_request ? 'pull request' : 'issue';
                 console.info(`Locking ${itemType} #${item.number}`);
                 await lockIssue(client, item.number, message);
                 await timeout(500);
