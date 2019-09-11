@@ -25266,15 +25266,12 @@ var jsonwebtoken = {
 var jsonwebtoken_3 = jsonwebtoken.sign;
 
 async function lockIssue(client, issue, message) {
-    // Add a comment before locking
-    if (message) {
-        await client.issues.createComment({
-            owner: github_1.repo.owner,
-            repo: github_1.repo.repo,
-            issue_number: issue,
-            body: message,
-        });
-    }
+    await client.issues.createComment({
+        owner: github_1.repo.owner,
+        repo: github_1.repo.repo,
+        issue_number: issue,
+        body: message,
+    });
     // Actually lock the issue
     await client.issues.lock({
         owner: github_1.repo.owner,
