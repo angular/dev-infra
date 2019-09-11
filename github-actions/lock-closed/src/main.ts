@@ -3,16 +3,13 @@ import { context } from '@actions/github';
 import Octokit from '@octokit/rest';
 import * as jwt from 'jsonwebtoken';
 
-async function lockIssue(client: Octokit, issue: number, message?: string): Promise<void> {
-  // Add a comment before locking
-  if (message) {
-    await client.issues.createComment({
-      owner: context.repo.owner,
-      repo: context.repo.repo,
-      issue_number: issue,
-      body: message,
-    });
-  }
+async function lockIssue(client: Octokit, issue: number, message: string): Promise<void> {
+  await client.issues.createComment({
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    issue_number: issue,
+    body: message,
+  });
 
   // Actually lock the issue
   await client.issues.lock({
