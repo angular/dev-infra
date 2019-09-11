@@ -107,18 +107,22 @@ async function run(): Promise<void> {
     }
 
     console.info(`Attempting to lock ${issueResponse.data.items.length} item(s)`);
-    core.startGroup('Locking issues');
-    for (const issue of issueResponse.data.items) {
+    core.startGroup('Locking items');
+    for (const item of issueResponse.data.items) {
       ++lockCount;
       let itemType: string | undefined;
       try {
-        itemType = issue.pull_request ? 'pull request' : 'issue';
-        console.info(`Locking ${itemType} #${issue.number}`);
-        await lockIssue(client, issue.number, message);
+        if (item.locked) {
+          console.info(`Skipping ${itemType} #${item.number}, already locked`);
+          continue;
+        }
+        itemType = item.pull_request ? 'pull request' : 'issue';
+        console.info(`Locking ${itemType} #${item.number}`);
+        await lockIssue(client, item.number, message);
         await timeout(500);
       } catch (error) {
         core.debug(error);
-        core.warning(`Unable to lock ${itemType} #${issue.number}: ${error.message}`);
+        core.warning(`Unable to lock ${itemType} #${item.number}: ${error.message}`);
         if (typeof error.request === 'object') {
           core.error(JSON.stringify(error.request, null, 2));
         }
