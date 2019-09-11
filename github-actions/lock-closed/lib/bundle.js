@@ -25348,19 +25348,23 @@ async function run() {
             return;
         }
         console.info(`Attempting to lock ${issueResponse.data.items.length} item(s)`);
-        core_11('Locking issues');
-        for (const issue of issueResponse.data.items) {
+        core_11('Locking items');
+        for (const item of issueResponse.data.items) {
             ++lockCount;
             let itemType;
             try {
-                itemType = issue.pull_request ? 'pull request' : 'issue';
-                console.info(`Locking ${itemType} #${issue.number}`);
-                await lockIssue(client, issue.number, message);
+                if (item.locked) {
+                    console.info(`Skipping ${itemType} #${item.number}, already locked`);
+                    continue;
+                }
+                itemType = item.pull_request ? 'pull request' : 'issue';
+                console.info(`Locking ${itemType} #${item.number}`);
+                await lockIssue(client, item.number, message);
                 await timeout(500);
             }
             catch (error) {
                 core_8(error);
-                core_10(`Unable to lock ${itemType} #${issue.number}: ${error.message}`);
+                core_10(`Unable to lock ${itemType} #${item.number}: ${error.message}`);
                 if (typeof error.request === 'object') {
                     core_9(JSON.stringify(error.request, null, 2));
                 }
