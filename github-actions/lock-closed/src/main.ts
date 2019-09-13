@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import { context } from '@actions/github';
 import Octokit from '@octokit/rest';
-import * as jwt from 'jsonwebtoken';
+import { App } from '@octokit/app';
 
 async function lockIssue(client: Octokit, issue: number, message: string): Promise<void> {
   await client.issues.createComment({
@@ -24,26 +24,6 @@ function timeout(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-/** Creates a JWT token expiring one hour in the future, for authentication as an installation (Github App). */
-function createJWT(privateKey: string, id: number) {
-  const now = Math.floor(Date.now() / 1000);
-
-  return jwt.sign(
-    {
-      // Issued at time
-      iat: now,
-      // JWT expiration time (10 minutes in the future)
-      exp: now + 10 * 60,
-      // Githup App id
-      iss: id,
-    },
-    privateKey,
-    {
-      algorithm: 'RS256',
-    },
-  );
-}
-
 async function run(): Promise<void> {
   try {
     // NOTE: `days` and `message` must not be changed without dev-rel and dev-infra concurrence
@@ -63,27 +43,17 @@ async function run(): Promise<void> {
     // Installation Id of the Lock Bot App
     const installationId = 1772826;
 
-    // Create unauthenticated Github client.
-    const client = new Octokit();
-
     // Create JWT Token with provided private key.
     const lockBotKey = core.getInput('lock-bot-key', { required: true });
-    const lockBotJWT = createJWT(lockBotKey, lockBotAppId);
 
-    // Create Installation Token using JWT Token
-    client.authenticate({
-      type: 'app',
-      token: lockBotJWT,
-    });
-    const installToken = await client.apps.createInstallationToken({
-      installation_id: installationId,
-    });
+    // The Angular Lock Bot Github application
+    const githubApp = new App({ id: lockBotAppId, privateKey: lockBotKey });
 
-    // Authenticate using as `angular-automatic-lock-bot` Github App Installation Token
-    client.authenticate({
-      type: 'token',
-      token: installToken.data.token,
-    });
+    // A short lived github token for the Angular Lock Bot
+    const githubToken = await githubApp.getInstallationAccessToken({ installationId });
+
+    // Create authenticated Github client.
+    const client = new Octokit({ auth: githubToken });
 
     const maxPerExecution = Math.min(+core.getInput('locks-per-execution') || 1, 100);
     // Set the threshold date based on the days inactive

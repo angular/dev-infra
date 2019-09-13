@@ -16,11 +16,10 @@
   "dependencies": {
     "@actions/core": "^1.1.0",
     "@actions/github": "^1.1.0",
-    "@octokit/rest": "^16.15.0",
-    "jsonwebtoken": "^8.5.1"
+    "@octokit/app": "^4.1.0",
+    "@octokit/rest": "^16.15.0"
   },
   "devDependencies": {
-    "@types/jsonwebtoken": "^8.3.3",
     "rollup": "1.20.2",
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-json": "4.0.0",
