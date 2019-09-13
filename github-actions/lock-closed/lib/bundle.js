@@ -25351,7 +25351,6 @@ async function run() {
         console.info(`Attempting to lock ${issueResponse.data.items.length} item(s)`);
         core_11('Locking items');
         for (const item of issueResponse.data.items) {
-            ++lockCount;
             let itemType;
             try {
                 itemType = item.pull_request ? 'pull request' : 'issue';
@@ -25362,6 +25361,7 @@ async function run() {
                 console.info(`Locking ${itemType} #${item.number}`);
                 await lockIssue(client, item.number, message);
                 await timeout(500);
+                ++lockCount;
             }
             catch (error) {
                 core_8(error);
