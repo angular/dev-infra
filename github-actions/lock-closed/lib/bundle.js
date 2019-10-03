@@ -26128,7 +26128,7 @@ async function run() {
         });
         console.info(`Query found ${issueResponse.data.total_count} items`);
         if (!issueResponse.data.items.length) {
-            console.info(`No items to lock`);
+            console.info(`No items to locksss`);
             return;
         }
         console.info(`Attempting to lock ${issueResponse.data.items.length} item(s)`);

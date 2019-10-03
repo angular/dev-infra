@@ -74,7 +74,7 @@ async function run(): Promise<void> {
     console.info(`Query found ${issueResponse.data.total_count} items`);
 
     if (!issueResponse.data.items.length) {
-      console.info(`No items to lock`);
+      console.info(`No items to locksss`);
       return;
     }
 
