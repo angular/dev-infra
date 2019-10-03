@@ -1,0 +1,13 @@
+name: Rebase PR
+
+on:
+  pull_request:
+    types: [labeled]
+
+jobs:
+  lock_closed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: angular/dev-infra/github-actions/rebase-pr@rebase-action
+        with:
+          bot-key: ${{ secrets.LOCK_BOT_PRIVATE_KEY }}
