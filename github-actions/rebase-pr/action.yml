@@ -1,0 +1,13 @@
+name: 'Lock Closed Issues'
+description: 'Locks issues that are both closed and inactive'
+author: 'Angular'
+inputs:
+  github-token:
+    description: 'Github access token'
+    required: true
+  locks-per-execution:
+    description: 'Maximum number of issue locks per action execution'
+    default: 100
+runs:
+  using: 'node12'
+  main: 'lib/bundle.js'
