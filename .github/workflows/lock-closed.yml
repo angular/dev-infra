@@ -2,7 +2,7 @@ name: Lock issues that are closed and inactive
 
 on:
   schedule:
-    - cron: '13 * * * *'
+    - cron: '0 0 * * *'
 
 jobs:
   lock_closed:
