@@ -8,11 +8,14 @@ git config --global user.name "Angular Rebase Bot"
 # Exit code for a successful run
 SUCCESS_EXIT_CODE=0
 
-# The repository name and branch name for the PRs head and base
+# Information taken from github event object
 PR_REPOSITORY=$(jq -r ".pull_request.head.repo.full_name" "$GITHUB_EVENT_PATH")
 PR_BRANCH=$(jq -r ".pull_request.head.ref" "$GITHUB_EVENT_PATH")
 TARGET_REPOSITORY=$(jq -r ".pull_request.base.repo.full_name" "$GITHUB_EVENT_PATH")
 TARGET_BRANCH=$(jq -r ".pull_request.base.ref" "$GITHUB_EVENT_PATH")
+REPO_FULL_NAME=$(jq -r ".repository.full_name" "$GITHUB_EVENT_PATH")
+PR_NUMBER=$(jq -r ".pull_request.number" "$GITHUB_EVENT_PATH")
+REBASE_PR_LABEL=$(jq -r ".label.name" "$GITHUB_EVENT_PATH")
 
 # Change to the github workspace and initialize the repo if needed.
 cd "$GITHUB_WORKSPACE"
@@ -39,4 +42,10 @@ git rebase target/"$TARGET_BRANCH"
 # used to protect from the unlikely situation in which an update is pushed
 # to the PR during the rebase action process.
 git push --force-with-lease pr "$PR_BRANCH"
+
+# Remove the label that was used to trigger the action via the Github API.
+curl --request DELETE \
+     -H "Authorization: token $TOKEN" \
+     "$(echo https://api.github.com/repos/$REPO_FULL_NAME/issues/$PR_NUMBER/labels/$REBASE_PR_LABEL | sed 's/ /%20/g')"
+
 exit $SUCCESS_EXIT_CODE
