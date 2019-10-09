@@ -15,7 +15,7 @@ TARGET_REPOSITORY=$(jq -r ".pull_request.base.repo.full_name" "$GITHUB_EVENT_PAT
 TARGET_BRANCH=$(jq -r ".pull_request.base.ref" "$GITHUB_EVENT_PATH")
 REPO_FULL_NAME=$(jq -r ".repository.full_name" "$GITHUB_EVENT_PATH")
 PR_NUMBER=$(jq -r ".pull_request.number" "$GITHUB_EVENT_PATH")
-REBASE_PR_LABEL=$(jq -r ".label.name" "$GITHUB_EVENT_PATH")
+REBASE_PR_LABEL=$(jq -r ".label.name | @uri" "$GITHUB_EVENT_PATH")
 
 # Change to the github workspace and initialize the repo if needed.
 cd "$GITHUB_WORKSPACE"
@@ -46,6 +46,6 @@ git push --force-with-lease pr "$PR_BRANCH"
 # Remove the label that was used to trigger the action via the Github API.
 curl --request DELETE \
      -H "Authorization: token $TOKEN" \
-     "$(echo https://api.github.com/repos/$REPO_FULL_NAME/issues/$PR_NUMBER/labels/$REBASE_PR_LABEL | sed 's/ /%20/g')"
+     https://api.github.com/repos/$REPO_FULL_NAME/issues/$PR_NUMBER/labels/$REBASE_PR_LABEL
 
 exit $SUCCESS_EXIT_CODE
