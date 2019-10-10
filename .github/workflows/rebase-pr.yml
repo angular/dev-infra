@@ -1,4 +1,4 @@
-name: Rebase a pr
+name: Rebase PR
 
 on:
   pull_request:
@@ -8,10 +8,17 @@ jobs:
   rebase_pr:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repo
+      - name: Checkout Repo
         uses: actions/checkout@master
+      - name: App Auth
+        id: authenticate
+        uses: ./github-actions/app-auth
+        with:
+          app-id: 43341
+          installation-id: 2789539
+          private-key: ${{ secrets.GITHUB_ROBOT }}
       - name: Rebase PR
         if: github.event.label.name == 'rebase-pr'
-        uses: angular/dev-infra/github-actions/rebase-pr@master
+        uses: ./github-actions/rebase-pr
         env:
-          TOKEN: ${{ secrets.ANGULAR_REBASE_BOT_TOKEN }}
+          TOKEN: ${{ steps.authenticate.outputs.installation_access_token }}"

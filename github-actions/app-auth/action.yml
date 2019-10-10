@@ -1,0 +1,16 @@
+name: 'Auth Github App'
+description: 'Gets an installation token for a Github App installation'
+author: 'Angular'
+inputs:
+  app-id:
+    description: 'Github App ID'
+    required: true
+  private-key:
+    description: 'Private Key for the Github App'
+    required: true
+  installation-id:
+    description: 'Github App Installation ID'
+    required: true
+runs:
+  using: 'node12'
+  main: 'lib/bundle.js'

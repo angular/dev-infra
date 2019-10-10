@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2018",
+    "lib": ["es2018"]
+  }
+}

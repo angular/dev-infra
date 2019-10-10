@@ -3,3 +3,4 @@ yarn pretty-quick;
 
 # Build lock-closed github action bundle.
 yarn --cwd github-actions/lock-closed build;
+yarn --cwd github-actions/app-auth build;
