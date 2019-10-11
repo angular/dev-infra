@@ -1,0 +1,16 @@
+name: Check Cherry Pick
+
+on:
+  pull_request:
+    types: [synchronize, opened, labeled, unlabeled]
+
+jobs:
+  check-cherry-pick:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v1
+      - name: Check Cherry Pick
+        if: >
+          contains(github.event.pull_request.labels.*.name, 'PR target: patch')
+        uses: ./github-actions/check-cherry-pick
