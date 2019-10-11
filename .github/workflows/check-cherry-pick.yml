@@ -1,0 +1,14 @@
+name: Check Cherry Pick
+
+on:
+  pull_request:
+    types: [synchronize, opened]
+
+jobs:
+  rebase-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v1
+      - name: Check Cherry Pick
+        uses: ./github-actions/check-cherry-pick
