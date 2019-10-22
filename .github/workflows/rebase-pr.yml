@@ -8,6 +8,12 @@ jobs:
   rebase_pr:
     runs-on: ubuntu-latest
     steps:
+      - name: Dump runner context
+        env:
+          RUNNER_CONTEXT: ${{ toJson(runner) }}
+        run: echo "$RUNNER_CONTEXT"
+
+        
       - name: checkout repo
         uses: actions/checkout@master
       - name: Rebase PR
