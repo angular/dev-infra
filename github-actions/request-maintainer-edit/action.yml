@@ -1,0 +1,10 @@
+name: 'Request Maintainer Edit'
+description: 'Request PR authors to allow maintainer edit access, if not already granted.'
+author: 'Angular'
+inputs:
+  github-token:
+    description: 'Github access token'
+    required: true
+runs:
+  using: 'node12'
+  main: 'lib/bundle.js'

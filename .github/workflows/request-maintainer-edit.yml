@@ -1,0 +1,17 @@
+name: Request Maintainer Edit
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  request_maintainer_edit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: ./github-actions/request-maintainer-edit
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
