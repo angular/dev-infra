@@ -32,7 +32,7 @@ async function run(): Promise<void> {
     const days = 30;
     // Standardized Angular Team message for locking issues
     const policyUrl =
-      'https://github.com/angular/angular/blob/67d80f/docs/GITHUB_PROCESS.md#conversation-locking';
+      'https://github.com/angular/angular/blob/8f24bc9443b3872fe095d9f7f77b308a361a13b4/docs/GITHUB_PROCESS.md#conversation-locking';
     const message =
       'This issue has been automatically locked due to inactivity.\n' +
       'Please file a new issue if you are encountering a similar or related problem.\n\n' +
