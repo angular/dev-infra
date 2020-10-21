@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "Locks issues that are both closed and inactive",
-  "main": "lib/main.js",
+  "main": "lib/bundle.js",
   "scripts": {
     "build": "rollup --config"
   },
