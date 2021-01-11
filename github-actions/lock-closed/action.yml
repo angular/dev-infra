@@ -2,7 +2,7 @@ name: 'Lock Closed Issues'
 description: 'Locks issues that are both closed and inactive'
 author: 'Angular'
 inputs:
-  lock-bot-token:
+  lock-bot-key:
     description: 'A private key for the Lock Bot GitHub app'
     required: true
   locks-per-execution:
