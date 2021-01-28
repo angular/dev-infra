@@ -1,0 +1,180 @@
+import { GitHubAPI, GitHubIssueAPI, MarkedComment, Issue } from './api';
+import { log } from './log';
+
+export enum CommentMarkers {
+  StartVoting = '<!-- 6374bc4f-3ca6-4ebb-b416-250033c91ab5 -->',
+  Warn = '<!-- 727acbae-59f4-4cde-b59e-4c9847cabcca -->',
+  Close = '<!-- 5bb7b168-3bff-4685-ac2a-be3174a97af4 -->',
+}
+
+export interface Config {
+  organization: string;
+
+  featureRequestLabel: string;
+  requiresVotesLabel: string;
+  inBacklogLabel: string;
+  underConsiderationLabel: string;
+
+  // For old issues we don't want to go to the standard
+  // process because they have been already open for long enough.
+  // Instead we want to wait `oldIssuesDaysWarnDuration` number of days
+  // until we post a warning and close it in `closeAfterWarnDaysDuration`.
+  oldIssueWarnDaysDuration: number;
+  // This flag indicates for how long after the initial comment
+  // that kicks off the voting process we should post a warning comment.
+  warnDaysDuration: number;
+  // Indicates how may days after the warning comment we should close
+  // the issue and post an explanation.
+  closeAfterWarnDaysDuration: number;
+
+  closeComment: string;
+  warnComment: string;
+  startVotingComment: string;
+
+  // Number of votes up required to add the `underConsiderationLabel`.
+  minimumVotesForConsideration: number;
+  // Number of comments from unique authors required to add the `underConsiderationLabel`.
+  // Keep in mind that this includes comments from the bot and team members.
+  minimumUniqueCommentAuthorsForConsideration: number;
+
+  // If set to true, the bot will automatically close the issue
+  // when voting has ended, if the request has not collected a sufficient number of votes.
+  // Alternatively, the bot will just add a `votingFinishedLabel`.
+  closeWhenNoSufficientVotes: boolean;
+  insufficientVotesLabel: string;
+}
+
+export const run = async (api: GitHubAPI, config: Config) => {
+  const issues = api.query({
+    q: `is:open is:issue label:"${config.featureRequestLabel}" -label:"${config.inBacklogLabel}" -label:"${config.underConsiderationLabel}" sort:created-asc`,
+  });
+
+  for await (const issue of issues) {
+    await processIssue(api, issue, config);
+  }
+};
+
+const processIssue = async (githubAPI: GitHubAPI, githubIssue: GitHubIssueAPI, config: Config) => {
+  const issue = await githubIssue.get();
+
+  if (await githubAPI.isOrgMember(issue.author.name, config.organization)) {
+    log(`The creator of this issue is a member of the organization.`);
+    return;
+  }
+
+  // An extra assurance we will not get into a situation where we
+  // have issues under consideration / backlog which require votes.
+  if (
+    issue.labels.includes(config.inBacklogLabel) ||
+    issue.labels.includes(config.underConsiderationLabel) ||
+    !issue.labels.includes(config.featureRequestLabel) ||
+    !issue.open
+  ) {
+    log(`Invalid query result for issue #${issue.number}.`);
+    return;
+  }
+
+  if (await shouldConsiderIssue(issue, githubIssue, config)) {
+    log(`Adding #${issue.number} for consideration.`);
+    return githubIssue.addLabel(config.underConsiderationLabel);
+  }
+
+  if (!issue.labels.includes(config.requiresVotesLabel)) {
+    log(`Adding votes required to #${issue.number}`);
+    await githubIssue.addLabel(config.requiresVotesLabel);
+  }
+
+  const timestamps = await getTimestamps(githubIssue);
+
+  if (timestamps.start === null && timestamps.warn === null) {
+    // In case an issue has been open for longer than a specified period of time and
+    // it still does not have enough votes to be under consideration we want to add a warning.
+    if (daysSince(issue.createdAt) >= config.oldIssueWarnDaysDuration) {
+      log(`Adding a warning for old feature request with #${issue.number}`);
+      return await githubIssue.postComment(comment(CommentMarkers.Warn, config.warnComment));
+    }
+
+    // If this is not an old issue, we want to announce the voting process has started.
+    log(`Starting voting for #${issue.number}`);
+    return await githubIssue.postComment(
+      comment(CommentMarkers.StartVoting, config.startVotingComment),
+    );
+  }
+
+  if (
+    timestamps.start !== null &&
+    daysSince(timestamps.start) >= config.warnDaysDuration &&
+    timestamps.warn === null
+  ) {
+    log(`Posting a warning for #${issue.number}`);
+    return await githubIssue.postComment(comment(CommentMarkers.Warn, config.warnComment));
+  }
+
+  if (timestamps.warn !== null && daysSince(timestamps.warn) >= config.closeAfterWarnDaysDuration) {
+    // In the future consider closing associated PRs if we have high
+    // level of confidence they are scoped to the feature request.
+    log(`Closing feature request #${issue.number}`);
+    return await Promise.all([
+      githubIssue.postComment(comment(CommentMarkers.Close, config.closeComment)),
+      config.closeWhenNoSufficientVotes
+        ? githubIssue.close()
+        : githubIssue.addLabel(config.insufficientVotesLabel),
+    ]);
+  }
+};
+
+/**
+ * Returns if the following issue has met the criteria for consideration.
+ *
+ * @param issue Object containing the issue information.
+ * @param githubIssue Object which allows us to communicate directly with the GitHub API for the specified issue
+ * @param config Configuration of the GitHub bot.
+ */
+const shouldConsiderIssue = async (
+  issue: Issue,
+  githubIssue: GitHubIssueAPI,
+  config: Config,
+): Promise<boolean> => {
+  let shouldBeConsidered = issue.reactions['+1'] >= config.minimumVotesForConsideration;
+
+  // Only get the comments when the issue is not already for consideration
+  // and the number of comments is higher than the minimum required to avoid requests.
+  if (
+    !shouldBeConsidered &&
+    issue.numComments >= config.minimumUniqueCommentAuthorsForConsideration
+  ) {
+    const authors = new Set<string>();
+    const comments = githubIssue.getComments();
+    for await (const comment of comments) {
+      authors.add(comment.author.name);
+    }
+    shouldBeConsidered = authors.size >= config.minimumUniqueCommentAuthorsForConsideration;
+  }
+  return shouldBeConsidered;
+};
+
+
+const daysSince = (date: number) => Math.ceil((Date.now() - date) / (1000 * 60 * 60 * 24));
+
+const getTimestamps = async (githubIssue: GitHubIssueAPI) => {
+  const timestamps: { warn: number | null; start: number | null } = {
+    start: null,
+    warn: null,
+  };
+
+  const comments = githubIssue.getComments();
+  for await (const comment of comments) {
+    // If there are multiple comments we should get the last timestamp.
+    if (comment.body.includes(CommentMarkers.StartVoting)) {
+      timestamps.start = Math.max(comment.timestamp, timestamps.start ?? -Infinity);
+    }
+    if (comment.body.includes(CommentMarkers.Warn)) {
+      timestamps.warn = Math.max(comment.timestamp, timestamps.warn ?? -Infinity);
+    }
+  }
+
+  return timestamps;
+};
+
+export const comment = (marker: CommentMarkers, text: string): MarkedComment =>
+  `${marker}\n${text}` as MarkedComment;
