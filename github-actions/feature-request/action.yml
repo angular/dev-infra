@@ -1,0 +1,52 @@
+name: 'Manage Feature Requests'
+description: 'Manages feature requests based on community demand'
+author: 'Angular'
+inputs:
+  token:
+    description: 'A token for the feature request bot.'
+    default: ${{ github.token }}
+  repository:
+    description: 'Target repository for the feature request triage'
+    required: true
+  owner:
+    description: 'Owner of the repository for feature request triage'
+    required: true
+  minimum-unique-comment-authors-for-consideration:
+    description: 'Number of unique comment authors required to move a feature request to our consideration list.'
+    required: true
+  minimum-votes-for-consideration:
+    description: 'Number of votes required to move a feature request to our consideration list.'
+    required: true
+  feature-request-label:
+    description: 'Label used to distinguish feature request from other issues.'
+    required: true
+  in-backlog-label:
+    description: 'Label used to distinguish feature requests, which are already part of the backlog.'
+    required: true
+  requires-votes-label:
+    description: 'Label used to distinguish requests in voting phase from other issues.'
+    required: true
+  under-consideration-label:
+    description: 'Label used to distinguish features which are in our list for consideration.'
+    required: true
+  old-issue-warn-days-duration:
+    description: 'Indicates in number of days how old an issue should be to directly get a warning comment rather than just a vote initiation.'
+    required: true
+  warn-days-duration:
+    description: 'Number days of after the voting has started to post the warning comment.'
+    required: true
+  close-after-warn-days-duration:
+    description: 'In what duration in days the bot should close a particular request if it has not collected enough votes or comments'
+    required: true
+  close-comment:
+    description: 'Comment to post when closing the issue'
+    required: true
+  start-voting-comment:
+    description: 'Comment to kick voting off.'
+    required: true
+  warn-comment:
+    description: 'A warning that the end of voting is approaching.'
+    required: true
+runs:
+  using: 'node12'
+  main: 'lib/bundle.js'
