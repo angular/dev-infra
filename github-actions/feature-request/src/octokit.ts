@@ -40,6 +40,8 @@ export class OctoKit implements GitHubAPI {
       ...query,
       q,
       per_page: 100,
+      // To access reactions we need a specific media type we specify via the accept header
+      // https://docs.github.com/en/rest/reference/repos#list-commit-comments-for-a-repository-preview-notices
       headers: { Accept: 'application/vnd.github.squirrel-girl-preview+json' },
     });
 
@@ -157,6 +159,8 @@ export class OctoKitIssue extends OctoKit implements GitHubIssueAPI {
       await this.octokit.issues.get({
         ...this.params,
         issue_number: this.issueData.number,
+        // To access reactions we need a specific media type
+        // https://docs.github.com/en/rest/reference/repos#list-commit-comments-for-a-repository-preview-notices
         mediaType: { previews: ['squirrel-girl'] },
       })
     ).data;

@@ -54,11 +54,22 @@ export const run = async (api: GitHubAPI, config: Config) => {
   }
 };
 
+/**
+ * Processes a particular issue from the repository. At the beginning of the invocation
+ * the function makes sure the issue is in the target group of feature requests we want to process.
+ * Depending on the current state of the issue, the function will either label it, close it,
+ * add a comment, or perform a noop.
+ *
+ * @param githubAPI Object used for querying the GitHub API
+ * @param githubIssue Object used for communication with the GitHub API for a particular issue
+ * @param config Configuration of the GitHub bot
+ */
 const processIssue = async (githubAPI: GitHubAPI, githubIssue: GitHubIssueAPI, config: Config) => {
   const issue = await githubIssue.get();
 
+  // Issues opened by team members bypass the process.
   if (await githubAPI.isOrgMember(issue.author.name, config.organization)) {
-    log(`The creator of this issue is a member of the organization.`);
+    log('The creator of this issue is a member of the organization.');
     return;
   }
 
@@ -153,9 +164,21 @@ const shouldConsiderIssue = async (
   return shouldBeConsidered;
 };
 
-
+/**
+ * Returns the number of days between now and the passed timestamp.
+ *
+ * @param date Timestamp
+ */
 const daysSince = (date: number) => Math.ceil((Date.now() - date) / (1000 * 60 * 60 * 24));
 
+/**
+ * Returns the timestamps when we've started voting and warned that voting has almost finished.
+ * The start timestamp corresponds to the time we published the initial comment that voting is open.
+ * The warn timestamp corresponds to the time we published the warn comment that there are only
+ * X days left before voting closes.
+ *
+ * @param githubIssue an object we can use to get the comments for a particular issue.
+ */
 const getTimestamps = async (githubIssue: GitHubIssueAPI) => {
   const timestamps: { warn: number | null; start: number | null } = {
     start: null,
@@ -176,5 +199,12 @@ const getTimestamps = async (githubIssue: GitHubIssueAPI) => {
   return timestamps;
 };
 
+/**
+ *
+ * Returns a comment with a specific UUID that will allow us to identify it in the future.
+ *
+ * @param marker A UUID wrapped in an HTML comment we can use to identify this message later on.
+ * @param text Text of the comment.
+ */
 export const comment = (marker: CommentMarkers, text: string): MarkedComment =>
   `${marker}\n${text}` as MarkedComment;
