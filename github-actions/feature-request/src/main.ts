@@ -28,6 +28,7 @@ const octokit = new OctoKit(v('token'), {
   owner: context.repo.owner,
 });
 
+// Run the action with the specified values in the YAML configuration.
 run(octokit, {
   organization: context.repo.owner,
   closeAfterWarnDaysDuration: v('close-after-warn-days-duration'),

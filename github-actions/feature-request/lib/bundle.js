@@ -456,11 +456,22 @@ const run = async (api, config) => {
         }
     }
 };
+/**
+ * Processes a particular issue from the repository. At the beginning of the invocation
+ * the function makes sure the issue is in the target group of feature requests we want to process.
+ * Depending on the current state of the issue, the function will either label it, close it,
+ * add a comment, or perform a noop.
+ *
+ * @param githubAPI Object used for querying the GitHub API
+ * @param githubIssue Object used for communication with the GitHub API for a particular issue
+ * @param config Configuration of the GitHub bot
+ */
 const processIssue = async (githubAPI, githubIssue, config) => {
     const issue = await githubIssue.get();
+    // Issues opened by team members bypass the process.
     if (await githubAPI.isOrgMember(issue.author.name, config.organization)) {
-        log(`The creator of this issue is a member of the organization.`);
-        // return;
+        log('The creator of this issue is a member of the organization.');
+        return;
     }
     // An extra assurance we will not get into a situation where we
     // have issues under consideration / backlog which require votes.
@@ -507,6 +518,13 @@ const processIssue = async (githubAPI, githubIssue, config) => {
         ]);
     }
 };
+/**
+ * Returns if the following issue has met the criteria for consideration.
+ *
+ * @param issue Object containing the issue information.
+ * @param githubIssue Object which allows us to communicate directly with the GitHub API for the specified issue
+ * @param config Configuration of the GitHub bot.
+ */
 const shouldConsiderIssue = async (issue, githubIssue, config) => {
     let shouldBeConsidered = issue.reactions['+1'] >= config.minimumVotesForConsideration;
     // Only get the comments when the issue is not already for consideration
@@ -524,7 +542,20 @@ const shouldConsiderIssue = async (issue, githubIssue, config) => {
     }
     return shouldBeConsidered;
 };
+/**
+ * Returns the number of days between now and the passed timestamp.
+ *
+ * @param date Timestamp
+ */
 const daysSince = (date) => Math.ceil((Date.now() - date) / (1000 * 60 * 60 * 24));
+/**
+ * Returns the timestamps when we've started voting and warned that voting has almost finished.
+ * The start timestamp corresponds to the time we published the initial comment that voting is open.
+ * The warn timestamp corresponds to the time we published the warn comment that there are only
+ * X days left before voting closes.
+ *
+ * @param githubIssue an object we can use to get the comments for a particular issue.
+ */
 const getTimestamps = async (githubIssue) => {
     var _a, _b;
     const timestamps = {
@@ -545,6 +576,13 @@ const getTimestamps = async (githubIssue) => {
     }
     return timestamps;
 };
+/**
+ *
+ * Returns a comment with a specific UUID that will allow us to identify it in the future.
+ *
+ * @param marker A UUID wrapped in an HTML comment we can use to identify this message later on.
+ * @param text Text of the comment.
+ */
 const comment = (marker, text) => `${marker}\n${text}`;
 
 /*!
@@ -15087,11 +15125,22 @@ unwrapExports(github);
 var github_1 = github.context;
 var github_2 = github.GitHub;
 
+/**
+ * The following file contains a modified version of the Microsoft implementation of
+ * communication with GitHub's REST APIs.
+ *
+ * The original is available at
+ * https://github.com/microsoft/vscode-github-triage-actions/blob/eb561150d9bfab77954cfda7ffef149c07e0e079/api/octokit.ts
+ */
 class OctoKit {
     constructor(token, params, options = { readonly: false }) {
         this.token = token;
         this.params = params;
         this.options = options;
+        // The organization members will likely not change
+        // between issues. We want to cache them so we
+        // don't query the GitHub API for each issue.
+        this._orgMembers = new Set();
         this.mockLabels = new Set();
         this._octokit = new github_2(token);
     }
@@ -15124,18 +15173,25 @@ class OctoKit {
         }
     }
     async isOrgMember(name, org) {
+        if (this._orgMembers.size) {
+            return this._orgMembers.has(name);
+        }
         const response = this.octokit.paginate.iterator(this.octokit.orgs.listMembers.endpoint.merge({
             org,
             per_page: 100,
         }));
+        let found = false;
         for await (const page of response) {
             for (const user of page.data) {
+                this._orgMembers.add(user.login);
+                // Don't return early to make sure we
+                // populate the user set.
                 if (user.login === name) {
-                    return true;
+                    found = true;
                 }
             }
         }
-        return false;
+        return found;
     }
     octokitIssueToIssue(issue) {
         var _a, _b, _c, _d;
@@ -15277,6 +15333,8 @@ function isIssue(object) {
     return isIssue;
 }
 
+// Gets a specific value from the YAML configuration.
+// The value could be either a number or a string.
 const v = (name) => {
     const result = core_5(name);
     if (!result) {
@@ -15295,6 +15353,7 @@ const octokit = new OctoKit(v('token'), {
     repo: v('repository'),
     owner: v('owner')
 });
+// Run the action with the specified values in the YAML configuration.
 run(octokit, {
     closeAfterWarnDaysDuration: v('close-after-warn-days-duration'),
     closeComment: v('close-comment'),
