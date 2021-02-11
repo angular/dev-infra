@@ -34,7 +34,7 @@ export class OctoKit implements GitHubAPI {
   }
 
   async *query(query: Query): AsyncIterableIterator<GitHubIssueAPI> {
-    const q = query.q + ` repo:${this.params.owner}/${this.params.repo}`;
+    const q = `${query.q} repo:${this.params.owner}/${this.params.repo}`;
 
     const options = this.octokit.search.issuesAndPullRequests.endpoint.merge({
       ...query,
@@ -61,15 +61,14 @@ export class OctoKit implements GitHubAPI {
       await timeout();
       const page: Array<Octokit.SearchIssuesAndPullRequestsResponseItemsItem> = pageResponse.data;
       log(`Page ${++pageNum}: ${page.map(({ number }) => number).join(' ')}`);
-      page.forEach(
-        (issue) =>
-          yield new OctoKitIssue(
-            this.token,
-            this.params,
-            this.octokitIssueToIssue(issue),
-            this.options,
-          ),
-      );
+      for (const issue of page) {
+        yield new OctoKitIssue(
+          this.token,
+          this.params,
+          this.octokitIssueToIssue(issue),
+          this.options,
+        );
+      }
     }
   }
 
@@ -200,15 +199,14 @@ export class OctoKitIssue extends OctoKit implements GitHubIssueAPI {
     );
 
     for await (const page of response) {
-      (page.data as Octokit.IssuesListCommentsResponseItem[]).forEach(
-        (comment) =>
-          yield {
-            author: { name: comment.user.login, isGitHubApp: comment.user.type === 'Bot' },
-            body: comment.body,
-            id: comment.id,
-            timestamp: +new Date(comment.created_at),
-          },
-      );
+      for (const comment of page.data) {
+        yield {
+          author: { name: comment.user.login, isGitHubApp: comment.user.type === 'Bot' },
+          body: comment.body,
+          id: comment.id,
+          timestamp: +new Date(comment.created_at),
+        };
+      }
     }
   }
 

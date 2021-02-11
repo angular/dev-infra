@@ -5,10 +5,10 @@ import { OctoKit } from './octokit';
 
 // Gets a specific value from the YAML configuration.
 // The value could be either a number or a string.
-const v = <T extends number|string|boolean>(name: string): T => {
+const getInputValue = <T extends number|string|boolean>(name: string): T => {
   const result = core.getInput(name);
   if (!result) {
-    throw new Error(`Value for ${name} not specified.`);
+    throw new Error(`No value for ${name} specified in the configuration.`);
   }
   if (/^(true|false)$/.test(result)) {
     return (result === 'true' ? true : false) as T;
@@ -23,7 +23,7 @@ const v = <T extends number|string|boolean>(name: string): T => {
   return num as T;
 };
 
-const octokit = new OctoKit(v('token'), {
+const octokit = new OctoKit(getInputValue('token'), {
   repo: context.repo.repo,
   owner: context.repo.owner,
 });
@@ -31,18 +31,18 @@ const octokit = new OctoKit(v('token'), {
 // Run the action with the specified values in the YAML configuration.
 run(octokit, {
   organization: context.repo.owner,
-  closeAfterWarnDaysDuration: v('close-after-warn-days-duration'),
-  closeComment: v('close-comment'),
-  featureRequestLabel: v('feature-request-label'),
-  inBacklogLabel: v('in-backlog-label'),
-  minimumUniqueCommentAuthorsForConsideration: v('minimum-unique-comment-authors-for-consideration'),
-  minimumVotesForConsideration: v('minimum-votes-for-consideration'),
-  oldIssueWarnDaysDuration: v('old-issue-warn-days-duration'),
-  requiresVotesLabel: v('requires-votes-label'),
-  startVotingComment: v('start-voting-comment'),
-  underConsiderationLabel: v('under-consideration-label'),
-  warnComment: v('warn-comment'),
-  warnDaysDuration: v('warn-days-duration'),
-  closeWhenNoSufficientVotes: v('close-when-no-sufficient-votes'),
-  insufficientVotesLabel: v('insufficient-votes-label')
+  closeAfterWarnDaysDuration: getInputValue('close-after-warn-days-duration'),
+  closeComment: getInputValue('close-comment'),
+  featureRequestLabel: getInputValue('feature-request-label'),
+  inBacklogLabel: getInputValue('in-backlog-label'),
+  minimumUniqueCommentAuthorsForConsideration: getInputValue('minimum-unique-comment-authors-for-consideration'),
+  minimumVotesForConsideration: getInputValue('minimum-votes-for-consideration'),
+  oldIssueWarnDaysDuration: getInputValue('old-issue-warn-days-duration'),
+  requiresVotesLabel: getInputValue('requires-votes-label'),
+  startVotingComment: getInputValue('start-voting-comment'),
+  underConsiderationLabel: getInputValue('under-consideration-label'),
+  warnComment: getInputValue('warn-comment'),
+  warnDaysDuration: getInputValue('warn-days-duration'),
+  closeWhenNoSufficientVotes: getInputValue('close-when-no-sufficient-votes'),
+  insufficientVotesLabel: getInputValue('insufficient-votes-label')
 })

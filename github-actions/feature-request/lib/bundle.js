@@ -433,158 +433,6 @@ var core_16 = core.group;
 var core_17 = core.saveState;
 var core_18 = core.getState;
 
-const log = (...messages) => {
-    if (process.argv.includes('--config=jasmine.json')) {
-        return;
-    }
-    console.log(...messages);
-};
-
-var CommentMarkers;
-(function (CommentMarkers) {
-    CommentMarkers["StartVoting"] = "<!-- 6374bc4f-3ca6-4ebb-b416-250033c91ab5 -->";
-    CommentMarkers["Warn"] = "<!-- 727acbae-59f4-4cde-b59e-4c9847cabcca -->";
-    CommentMarkers["Close"] = "<!-- 5bb7b168-3bff-4685-ac2a-be3174a97af4 -->";
-})(CommentMarkers || (CommentMarkers = {}));
-const run = async (api, config) => {
-    const pages = api.query({
-        q: `is:open is:issue label:"${config.featureRequestLabel}" -label:"${config.inBacklogLabel}" -label:"${config.underConsiderationLabel}"`,
-    });
-    for await (const page of pages) {
-        for (const issue of page) {
-            await processIssue(api, issue, config);
-        }
-    }
-};
-/**
- * Processes a particular issue from the repository. At the beginning of the invocation
- * the function makes sure the issue is in the target group of feature requests we want to process.
- * Depending on the current state of the issue, the function will either label it, close it,
- * add a comment, or perform a noop.
- *
- * @param githubAPI Object used for querying the GitHub API
- * @param githubIssue Object used for communication with the GitHub API for a particular issue
- * @param config Configuration of the GitHub bot
- */
-const processIssue = async (githubAPI, githubIssue, config) => {
-    const issue = await githubIssue.get();
-    // Issues opened by team members bypass the process.
-    if (await githubAPI.isOrgMember(issue.author.name, config.organization)) {
-        log('The creator of this issue is a member of the organization.');
-        return;
-    }
-    // An extra assurance we will not get into a situation where we
-    // have issues under consideration / backlog which require votes.
-    if (issue.labels.includes(config.inBacklogLabel) ||
-        issue.labels.includes(config.underConsiderationLabel) ||
-        !issue.labels.includes(config.featureRequestLabel) ||
-        !issue.open) {
-        log(`Invalid query result for issue #${issue.number}.`);
-        return;
-    }
-    if (await shouldConsiderIssue(issue, githubIssue, config)) {
-        log(`Adding #${issue.number} for consideration.`);
-        return githubIssue.addLabel(config.underConsiderationLabel);
-    }
-    if (!issue.labels.includes(config.requiresVotesLabel)) {
-        log(`Adding votes required to #${issue.number}`);
-        await githubIssue.addLabel(config.requiresVotesLabel);
-    }
-    const timestamps = await getTimestamps(githubIssue);
-    if (timestamps.start === null && timestamps.warn === null) {
-        // In case an issue has been open for longer than a specified period of time and
-        // it still does not have enough votes to be under consideration we wat to add a warning.
-        if (daysSince(issue.createdAt) >= config.oldIssueWarnDaysDuration) {
-            log(`Adding a warning for old feature request with #${issue.number}`);
-            return await githubIssue.postComment(comment(CommentMarkers.Warn, config.warnComment));
-        }
-        // If this is not an old issue, we want to announce the voting process has started.
-        log(`Starting voting for #${issue.number}`);
-        return await githubIssue.postComment(comment(CommentMarkers.StartVoting, config.startVotingComment));
-    }
-    if (timestamps.start !== null &&
-        daysSince(timestamps.start) >= config.warnDaysDuration &&
-        timestamps.warn === null) {
-        log(`Posting a warning for #${issue.number}`);
-        return await githubIssue.postComment(comment(CommentMarkers.Warn, config.warnComment));
-    }
-    if (timestamps.warn !== null && daysSince(timestamps.warn) >= config.closeAfterWarnDaysDuration) {
-        // In the future consider closing associated PRs if we have high
-        // level of confidence they are scoped to the feature request.
-        log(`Closing feature request #${issue.number}`);
-        return await Promise.all([
-            githubIssue.postComment(comment(CommentMarkers.Close, config.closeComment)),
-            githubIssue.close()
-        ]);
-    }
-};
-/**
- * Returns if the following issue has met the criteria for consideration.
- *
- * @param issue Object containing the issue information.
- * @param githubIssue Object which allows us to communicate directly with the GitHub API for the specified issue
- * @param config Configuration of the GitHub bot.
- */
-const shouldConsiderIssue = async (issue, githubIssue, config) => {
-    let shouldBeConsidered = issue.reactions['+1'] >= config.minimumVotesForConsideration;
-    // Only get the comments when the issue is not already for consideration
-    // and the number of comments is higher than the minimum required to avoid requests.
-    if (!shouldBeConsidered &&
-        issue.numComments >= config.minimumUniqueCommentAuthorsForConsideration) {
-        const authors = new Set();
-        const pages = githubIssue.getComments();
-        for await (const page of pages) {
-            for (const comment of page) {
-                authors.add(comment.author.name);
-            }
-        }
-        shouldBeConsidered = authors.size >= config.minimumUniqueCommentAuthorsForConsideration;
-    }
-    return shouldBeConsidered;
-};
-/**
- * Returns the number of days between now and the passed timestamp.
- *
- * @param date Timestamp
- */
-const daysSince = (date) => Math.ceil((Date.now() - date) / (1000 * 60 * 60 * 24));
-/**
- * Returns the timestamps when we've started voting and warned that voting has almost finished.
- * The start timestamp corresponds to the time we published the initial comment that voting is open.
- * The warn timestamp corresponds to the time we published the warn comment that there are only
- * X days left before voting closes.
- *
- * @param githubIssue an object we can use to get the comments for a particular issue.
- */
-const getTimestamps = async (githubIssue) => {
-    var _a, _b;
-    const timestamps = {
-        start: null,
-        warn: null,
-    };
-    const pages = githubIssue.getComments();
-    for await (const page of pages) {
-        for (const comment of page) {
-            // If there are multiple comments we should get the last timestamp.
-            if (comment.body.includes(CommentMarkers.StartVoting)) {
-                timestamps.start = Math.max(comment.timestamp, (_a = timestamps.start) !== null && _a !== void 0 ? _a : -Infinity);
-            }
-            if (comment.body.includes(CommentMarkers.Warn)) {
-                timestamps.warn = Math.max(comment.timestamp, (_b = timestamps.warn) !== null && _b !== void 0 ? _b : -Infinity);
-            }
-        }
-    }
-    return timestamps;
-};
-/**
- *
- * Returns a comment with a specific UUID that will allow us to identify it in the future.
- *
- * @param marker A UUID wrapped in an HTML comment we can use to identify this message later on.
- * @param text Text of the comment.
- */
-const comment = (marker, text) => `${marker}\n${text}`;
-
 /*!
  * is-plain-object <https://github.com/jonschlinkert/is-plain-object>
  *
@@ -15125,6 +14973,163 @@ unwrapExports(github);
 var github_1 = github.context;
 var github_2 = github.GitHub;
 
+const log = (...messages) => {
+    // Don't show the log output in tests.
+    if (process.argv.includes('--config=jasmine.json')) {
+        return;
+    }
+    console.log(...messages);
+};
+
+/**
+ * CommentMarkers are used to distinguish individual comments
+ * posted from the action. This way we track when the voting
+ * process has started, when we have posted a warning message,
+ * and when it's time to move to the next stage.
+ */
+var CommentMarkers;
+(function (CommentMarkers) {
+    CommentMarkers["StartVoting"] = "<!-- 6374bc4f-3ca6-4ebb-b416-250033c91ab5 -->";
+    CommentMarkers["Warn"] = "<!-- 727acbae-59f4-4cde-b59e-4c9847cabcca -->";
+    CommentMarkers["Close"] = "<!-- 5bb7b168-3bff-4685-ac2a-be3174a97af4 -->";
+})(CommentMarkers || (CommentMarkers = {}));
+const run = async (api, config) => {
+    const issues = api.query({
+        q: `is:open is:issue label:"${config.featureRequestLabel}" -label:"${config.inBacklogLabel}" -label:"${config.underConsiderationLabel}" sort:created-asc`,
+    });
+    for await (const issue of issues) {
+        await processIssue(api, issue, config);
+    }
+};
+/**
+ * Processes a particular issue from the repository. At the beginning of the invocation
+ * the function makes sure the issue is in the target group of feature requests we want to process.
+ * Depending on the current state of the issue, the function will either label it, close it,
+ * add a comment, or perform a noop.
+ *
+ * @param githubAPI Object used for querying the GitHub API
+ * @param githubIssue Object used for communication with the GitHub API for a particular issue
+ * @param config Configuration of the GitHub bot
+ */
+const processIssue = async (githubAPI, githubIssue, config) => {
+    const issue = await githubIssue.get();
+    // Issues opened by team members bypass the process.
+    if (await githubAPI.isOrgMember(issue.author.name, config.organization)) {
+        log(`The creator of issue #${issue.number} is a member of the organization.`);
+        return;
+    }
+    // An extra assurance we will not get into a situation where we
+    // have issues under consideration / backlog which require votes.
+    if (issue.labels.includes(config.inBacklogLabel) ||
+        issue.labels.includes(config.underConsiderationLabel) ||
+        !issue.labels.includes(config.featureRequestLabel) ||
+        !issue.open) {
+        log(`Invalid query result for issue #${issue.number}.`);
+        return;
+    }
+    if (await shouldConsiderIssue(issue, githubIssue, config)) {
+        log(`Adding #${issue.number} for consideration.`);
+        return githubIssue.addLabel(config.underConsiderationLabel);
+    }
+    if (!issue.labels.includes(config.requiresVotesLabel)) {
+        log(`Adding votes required to #${issue.number}`);
+        await githubIssue.addLabel(config.requiresVotesLabel);
+    }
+    const timestamps = await getTimestamps(githubIssue);
+    if (timestamps.start === null && timestamps.warn === null) {
+        // In case an issue has been open for longer than a specified period of time and
+        // it still does not have enough votes to be under consideration we want to add a warning.
+        if (daysSince(issue.createdAt) >= config.oldIssueWarnDaysDuration) {
+            log(`Adding a warning for old feature request with #${issue.number}`);
+            return await githubIssue.postComment(comment(CommentMarkers.Warn, config.warnComment));
+        }
+        // If this is not an old issue, we want to announce the voting process has started.
+        log(`Starting voting for #${issue.number}`);
+        return await githubIssue.postComment(comment(CommentMarkers.StartVoting, config.startVotingComment));
+    }
+    if (timestamps.start !== null &&
+        daysSince(timestamps.start) >= config.warnDaysDuration &&
+        timestamps.warn === null) {
+        log(`Posting a warning for #${issue.number}`);
+        return await githubIssue.postComment(comment(CommentMarkers.Warn, config.warnComment));
+    }
+    if (timestamps.warn !== null && daysSince(timestamps.warn) >= config.closeAfterWarnDaysDuration) {
+        // In the future consider closing associated PRs if we have high
+        // level of confidence they are scoped to the feature request.
+        log(`Insufficient votes for feature request #${issue.number}`);
+        const actions = [
+            githubIssue.postComment(comment(CommentMarkers.Close, config.closeComment)),
+            githubIssue.addLabel(config.insufficientVotesLabel)
+        ];
+        if (config.closeWhenNoSufficientVotes) {
+            actions.push(githubIssue.close());
+        }
+        return await Promise.all(actions);
+    }
+};
+/**
+ * Returns if the following issue has met the criteria for consideration.
+ *
+ * @param issue Object containing the issue information.
+ * @param githubIssue Object which allows us to communicate directly with the GitHub API for the specified issue
+ * @param config Configuration of the GitHub bot.
+ */
+const shouldConsiderIssue = async (issue, githubIssue, config) => {
+    let shouldBeConsidered = issue.reactions['+1'] >= config.minimumVotesForConsideration;
+    // Only get the comments when the issue is not already for consideration
+    // and the number of comments is higher than the minimum required to avoid requests.
+    if (!shouldBeConsidered &&
+        issue.numComments >= config.minimumUniqueCommentAuthorsForConsideration) {
+        const authors = new Set();
+        const comments = githubIssue.getComments();
+        for await (const comment of comments) {
+            authors.add(comment.author.name);
+        }
+        shouldBeConsidered = authors.size >= config.minimumUniqueCommentAuthorsForConsideration;
+    }
+    return shouldBeConsidered;
+};
+/**
+ * Returns the number of days between now and the passed timestamp.
+ *
+ * @param date Timestamp
+ */
+const daysSince = (date) => Math.ceil((Date.now() - date) / (1000 * 60 * 60 * 24));
+/**
+ * Returns the timestamps when we've started voting and warned that voting has almost finished.
+ * The start timestamp corresponds to the time we published the initial comment that voting is open.
+ * The warn timestamp corresponds to the time we published the warn comment that there are only
+ * X days left before voting closes.
+ *
+ * @param githubIssue an object we can use to get the comments for a particular issue.
+ */
+const getTimestamps = async (githubIssue) => {
+    var _a, _b;
+    const timestamps = {
+        start: null,
+        warn: null,
+    };
+    const comments = githubIssue.getComments();
+    for await (const comment of comments) {
+        // If there are multiple comments we should get the last timestamp.
+        if (comment.body.includes(CommentMarkers.StartVoting)) {
+            timestamps.start = Math.max(comment.timestamp, (_a = timestamps.start) !== null && _a !== void 0 ? _a : -Infinity);
+        }
+        if (comment.body.includes(CommentMarkers.Warn)) {
+            timestamps.warn = Math.max(comment.timestamp, (_b = timestamps.warn) !== null && _b !== void 0 ? _b : -Infinity);
+        }
+    }
+    return timestamps;
+};
+/**
+ *
+ * Returns a comment with a specific UUID that will allow us to identify it in the future.
+ *
+ * @param marker A UUID wrapped in an HTML comment we can use to identify this message later on.
+ * @param text Text of the comment.
+ */
+const comment = (marker, text) => `${marker}\n${text}`;
+
 /**
  * The following file contains a modified version of the Microsoft implementation of
  * communication with GitHub's REST APIs.
@@ -15148,11 +15153,13 @@ class OctoKit {
         return this._octokit;
     }
     async *query(query) {
-        const q = query.q + ` repo:${this.params.owner}/${this.params.repo}`;
+        const q = `${query.q} repo:${this.params.owner}/${this.params.repo}`;
         const options = this.octokit.search.issuesAndPullRequests.endpoint.merge({
             ...query,
             q,
             per_page: 100,
+            // To access reactions we need a specific media type we specify via the accept header
+            // https://docs.github.com/en/rest/reference/repos#list-commit-comments-for-a-repository-preview-notices
             headers: { Accept: 'application/vnd.github.squirrel-girl-preview+json' },
         });
         let pageNum = 0;
@@ -15169,7 +15176,9 @@ class OctoKit {
             await timeout();
             const page = pageResponse.data;
             log(`Page ${++pageNum}: ${page.map(({ number }) => number).join(' ')}`);
-            yield page.map((issue) => new OctoKitIssue(this.token, this.params, this.octokitIssueToIssue(issue), this.options));
+            for (const issue of page) {
+                yield new OctoKitIssue(this.token, this.params, this.octokitIssueToIssue(issue), this.options);
+            }
         }
     }
     async isOrgMember(name, org) {
@@ -15180,18 +15189,12 @@ class OctoKit {
             org,
             per_page: 100,
         }));
-        let found = false;
         for await (const page of response) {
             for (const user of page.data) {
                 this._orgMembers.add(user.login);
-                // Don't return early to make sure we
-                // populate the user set.
-                if (user.login === name) {
-                    found = true;
-                }
             }
         }
-        return found;
+        return this._orgMembers.has(name);
     }
     octokitIssueToIssue(issue) {
         var _a, _b, _c, _d;
@@ -15249,6 +15252,8 @@ class OctoKitIssue extends OctoKit {
         const issue = (await this.octokit.issues.get({
             ...this.params,
             issue_number: this.issueData.number,
+            // To access reactions we need a specific media type
+            // https://docs.github.com/en/rest/reference/repos#list-commit-comments-for-a-repository-preview-notices
             mediaType: { previews: ['squirrel-girl'] },
         })).data;
         return (this.issueData = this.octokitIssueToIssue(issue));
@@ -15280,18 +15285,20 @@ class OctoKitIssue extends OctoKit {
             ...(last ? { per_page: 1, page: (await this.get()).numComments } : {}),
         }));
         for await (const page of response) {
-            yield page.data.map((comment) => ({
-                author: { name: comment.user.login, isGitHubApp: comment.user.type === 'Bot' },
-                body: comment.body,
-                id: comment.id,
-                timestamp: +new Date(comment.created_at),
-            }));
+            for (const comment of page.data) {
+                yield {
+                    author: { name: comment.user.login, isGitHubApp: comment.user.type === 'Bot' },
+                    body: comment.body,
+                    id: comment.id,
+                    timestamp: +new Date(comment.created_at),
+                };
+            }
         }
     }
     async addLabel(name) {
         log(`Adding label ${name} to ${this.issueData.number}`);
         if (!(await this.repoHasLabel(name))) {
-            throw Error(`Action could not execute becuase label ${name} is not defined.`);
+            throw Error(`Action could not execute because label ${name} is not defined.`);
         }
         if (!this.options.readonly)
             await this.octokit.issues.addLabels({
@@ -15335,10 +15342,13 @@ function isIssue(object) {
 
 // Gets a specific value from the YAML configuration.
 // The value could be either a number or a string.
-const v = (name) => {
+const getInputValue = (name) => {
     const result = core_5(name);
     if (!result) {
-        throw new Error(`Value for ${name} not specified.`);
+        throw new Error(`No value for ${name} specified in the configuration.`);
+    }
+    if (/^(true|false)$/.test(result)) {
+        return (result === 'true' ? true : false);
     }
     if (!/^\d+(\.\d*)$/.test(result)) {
         return result;
@@ -15349,23 +15359,25 @@ const v = (name) => {
     }
     return num;
 };
-const octokit = new OctoKit(v('token'), {
-    repo: v('repository'),
-    owner: v('owner')
+const octokit = new OctoKit(getInputValue('token'), {
+    repo: github_1.repo.repo,
+    owner: github_1.repo.owner,
 });
 // Run the action with the specified values in the YAML configuration.
 run(octokit, {
-    closeAfterWarnDaysDuration: v('close-after-warn-days-duration'),
-    closeComment: v('close-comment'),
-    featureRequestLabel: v('feature-request-label'),
-    inBacklogLabel: v('in-backlog-label'),
-    minimumUniqueCommentAuthorsForConsideration: v('minimum-unique-comment-authors-for-consideration'),
-    minimumVotesForConsideration: v('minimum-votes-for-consideration'),
-    oldIssueWarnDaysDuration: v('old-issue-warn-days-duration'),
-    requiresVotesLabel: v('requires-votes-label'),
-    startVotingComment: v('start-voting-comment'),
-    organization: v('owner'),
-    underConsiderationLabel: v('under-consideration-label'),
-    warnComment: v('warn-comment'),
-    warnDaysDuration: v('warn-days-duration')
+    organization: github_1.repo.owner,
+    closeAfterWarnDaysDuration: getInputValue('close-after-warn-days-duration'),
+    closeComment: getInputValue('close-comment'),
+    featureRequestLabel: getInputValue('feature-request-label'),
+    inBacklogLabel: getInputValue('in-backlog-label'),
+    minimumUniqueCommentAuthorsForConsideration: getInputValue('minimum-unique-comment-authors-for-consideration'),
+    minimumVotesForConsideration: getInputValue('minimum-votes-for-consideration'),
+    oldIssueWarnDaysDuration: getInputValue('old-issue-warn-days-duration'),
+    requiresVotesLabel: getInputValue('requires-votes-label'),
+    startVotingComment: getInputValue('start-voting-comment'),
+    underConsiderationLabel: getInputValue('under-consideration-label'),
+    warnComment: getInputValue('warn-comment'),
+    warnDaysDuration: getInputValue('warn-days-duration'),
+    closeWhenNoSufficientVotes: getInputValue('close-when-no-sufficient-votes'),
+    insufficientVotesLabel: getInputValue('insufficient-votes-label')
 });
