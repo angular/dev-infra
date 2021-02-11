@@ -36,7 +36,7 @@ export interface GitHubIssueAPI {
 }
 
 /**
- * Lists the fields we can sort comments by.
+ * Lists the fields we can sort issues/PRs by.
  */
 type SortVar =
   | 'comments'

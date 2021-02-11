@@ -1,6 +1,12 @@
 import { GitHubAPI, GitHubIssueAPI, MarkedComment, Issue } from './api';
 import { log } from './log';
 
+/**
+ * CommentMarkers are used to distinguish individual comments
+ * posted from the action. This way we track when the voting
+ * process has started, when we have posted a warning message,
+ * and when it's time to move to the next stage.
+ */
 export enum CommentMarkers {
   StartVoting = '<!-- 6374bc4f-3ca6-4ebb-b416-250033c91ab5 -->',
   Warn = '<!-- 727acbae-59f4-4cde-b59e-4c9847cabcca -->',
@@ -69,7 +75,7 @@ const processIssue = async (githubAPI: GitHubAPI, githubIssue: GitHubIssueAPI, c
 
   // Issues opened by team members bypass the process.
   if (await githubAPI.isOrgMember(issue.author.name, config.organization)) {
-    log('The creator of this issue is a member of the organization.');
+    log(`The creator of issue #${issue.number} is a member of the organization.`);
     return;
   }
 
@@ -124,13 +130,15 @@ const processIssue = async (githubAPI: GitHubAPI, githubIssue: GitHubIssueAPI, c
   if (timestamps.warn !== null && daysSince(timestamps.warn) >= config.closeAfterWarnDaysDuration) {
     // In the future consider closing associated PRs if we have high
     // level of confidence they are scoped to the feature request.
-    log(`Closing feature request #${issue.number}`);
-    return await Promise.all([
+    log(`Insufficient votes for feature request #${issue.number}`);
+    const actions = [
       githubIssue.postComment(comment(CommentMarkers.Close, config.closeComment)),
-      config.closeWhenNoSufficientVotes
-        ? githubIssue.close()
-        : githubIssue.addLabel(config.insufficientVotesLabel),
-    ]);
+      githubIssue.addLabel(config.insufficientVotesLabel)
+    ];
+    if (config.closeWhenNoSufficientVotes) {
+      actions.push(githubIssue.close());
+    }
+    return await Promise.all(actions);
   }
 };
 

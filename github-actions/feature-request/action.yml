@@ -5,48 +5,67 @@ inputs:
   token:
     description: 'A token for the feature request bot.'
     default: ${{ github.token }}
-  repository:
-    description: 'Target repository for the feature request triage'
-    required: true
-  owner:
-    description: 'Owner of the repository for feature request triage'
-    required: true
   minimum-unique-comment-authors-for-consideration:
     description: 'Number of unique comment authors required to move a feature request to our consideration list.'
-    required: true
+    default: 10
   minimum-votes-for-consideration:
     description: 'Number of votes required to move a feature request to our consideration list.'
-    required: true
+    default: 20
   feature-request-label:
     description: 'Label used to distinguish feature request from other issues.'
-    required: true
+    default: 'feature'
   in-backlog-label:
     description: 'Label used to distinguish feature requests, which are already part of the backlog.'
-    required: true
+    default: 'in backlog'
   requires-votes-label:
     description: 'Label used to distinguish requests in voting phase from other issues.'
-    required: true
+    default: 'votes required'
   under-consideration-label:
     description: 'Label used to distinguish features which are in our list for consideration.'
-    required: true
+    default: 'under consideration'
   old-issue-warn-days-duration:
     description: 'Indicates in number of days how old an issue should be to directly get a warning comment rather than just a vote initiation.'
-    required: true
+    default: 60
   warn-days-duration:
     description: 'Number days of after the voting has started to post the warning comment.'
-    required: true
+    default: 40
   close-after-warn-days-duration:
-    description: 'In what duration in days the bot should close a particular request if it has not collected enough votes or comments'
-    required: true
+    description: 'In what duration in days the bot should close a particular request if it has not collected enough votes or comments.'
+    default: 20
+  close-when-no-sufficient-votes:
+    description: 'If set to true, the bot will automatically close the issue when voting has ended, if the request has not collected a sufficient number of votes. Alternatively, the bot will just add a `voting-finished-label`.'
+    default: false
+    request: true
+  insufficient-votes-label:
+    description: 'Label to add when the `close-when-no-sufficient-votes` is set to false and there are no sufficient number of votes or comments from unique authors.'
+    default: 'insufficient votes'
+    request: true
   close-comment:
-    description: 'Comment to post when closing the issue'
-    required: true
+    description: 'Comment to post when closing the issue.'
+    default: >
+Thank you for submitting your feature request! Looks like during the polling
+process it didn't collect a sufficient number of votes to move to the next stage.
+
+We want to keep Angular rich and ergonomic and at the same time be mindful about
+its scope and learning journey. If you think your request could live outside
+Angular's scope, we'd encourage you to collaborate with the
+[community](https://angular.io/resources?category=community) on publishing it
+as an open source [package](https://angular.io/guide/creating-libraries)!
+
+You can find more details about the feature request process in our
+[documentation](https://github.com/angular/angular/blob/automation-docs/docs/GITHUB_PROCESS.md#feature-request-process).
   start-voting-comment:
     description: 'Comment to kick voting off.'
-    required: true
+    default: >
+This feature request is now candidate for our backlog! In the next phase, the community has 60 days to
+upvote. If the request receives more than 20 upvotes, we'll move it
+to our consideration list.
+
+You can find more details about the feature request process in our
+[documentation](https://github.com/angular/angular/blob/automation-docs/docs/GITHUB_PROCESS.md#feature-request-process).
   warn-comment:
     description: 'A warning that the end of voting is approaching.'
-    required: true
+    default: Just a heads up that there are 20 days until the voting process ends.
 runs:
   using: 'node12'
   main: 'lib/bundle.js'
