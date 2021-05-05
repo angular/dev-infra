@@ -44,14 +44,16 @@ inputs:
       Thank you for submitting your feature request! Looks like during the polling
       process it didn't collect a sufficient number of votes to move to the next stage.
 
+
       We want to keep Angular rich and ergonomic and at the same time be mindful about
       its scope and learning journey. If you think your request could live outside
       Angular's scope, we'd encourage you to collaborate with the
       [community](https://angular.io/resources?category=community) on publishing it
-      as an open source [package](https://angular.io/guide/creating-libraries)!
+      as an open source [package](https://angular.io/guide/creating-libraries).
+
 
       You can find more details about the feature request process in our
-      [documentation](https://github.com/angular/angular/blob/automation-docs/docs/GITHUB_PROCESS.md#feature-request-process).
+      [documentation](https://github.com/angular/angular/blob/ce8e011a9f7c6bac94292d632b0cc8822f710a66/docs/GITHUB_PROCESS.md#feature-request-process).
   start-voting-comment:
     description: 'Comment to kick voting off.'
     default: >
@@ -59,11 +61,16 @@ inputs:
       upvote. If the request receives more than 20 upvotes, we'll move it
       to our consideration list.
 
+
       You can find more details about the feature request process in our
-      [documentation](https://github.com/angular/angular/blob/automation-docs/docs/GITHUB_PROCESS.md#feature-request-process).
+      [documentation](https://github.com/angular/angular/blob/ce8e011a9f7c6bac94292d632b0cc8822f710a66/docs/GITHUB_PROCESS.md#feature-request-process).
   warn-comment:
     description: 'A warning that the end of voting is approaching.'
-    default: Just a heads up that there are 20 days until the voting process ends.
+    default: >
+      Just a heads up that we kicked off a community voting process for your feature request. There are 20 days until the voting process ends.
+
+      
+      Find more details about Angular's feature request process in our [documentation](https://github.com/angular/angular/blob/ce8e011a9f7c6bac94292d632b0cc8822f710a66/docs/GITHUB_PROCESS.md#feature-request-process).
 runs:
   using: 'node12'
   main: 'lib/bundle.js'
