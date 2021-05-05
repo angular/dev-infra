@@ -38,6 +38,9 @@ inputs:
   insufficient-votes-label:
     description: 'Label to add when the `close-when-no-sufficient-votes` is set to false and there are no sufficient number of votes or comments from unique authors.'
     default: 'insufficient votes'
+  limit:
+    description: 'Limits the number of issues we are going to run the action over.'
+    default: -1
   close-comment:
     description: 'Comment to post when closing the issue.'
     default: >

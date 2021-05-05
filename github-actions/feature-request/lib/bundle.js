@@ -14997,7 +14997,12 @@ const run = async (api, config) => {
     const issues = api.query({
         q: `is:open is:issue label:"${config.featureRequestLabel}" -label:"${config.inBacklogLabel}" -label:"${config.underConsiderationLabel}" -label:"${config.insufficientVotesLabel}" sort:created-asc`,
     });
+    let limit = config.limit === -1 ? Infinity : config.limit;
     for await (const issue of issues) {
+        if (limit <= 0) {
+            break;
+        }
+        limit--;
         await processIssue(api, issue, config);
     }
 };
@@ -15380,5 +15385,6 @@ run(octokit, {
     warnComment: getInputValue('warn-comment'),
     warnDaysDuration: getInputValue('warn-days-duration'),
     closeWhenNoSufficientVotes: getInputValue('close-when-no-sufficient-votes'),
-    insufficientVotesLabel: getInputValue('insufficient-votes-label')
+    insufficientVotesLabel: getInputValue('insufficient-votes-label'),
+    limit: getInputValue('limit'),
 });

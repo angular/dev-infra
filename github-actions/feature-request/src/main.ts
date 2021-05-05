@@ -44,5 +44,6 @@ run(octokit, {
   warnComment: getInputValue('warn-comment'),
   warnDaysDuration: getInputValue('warn-days-duration'),
   closeWhenNoSufficientVotes: getInputValue('close-when-no-sufficient-votes'),
-  insufficientVotesLabel: getInputValue('insufficient-votes-label')
+  insufficientVotesLabel: getInputValue('insufficient-votes-label'),
+  limit: getInputValue('limit'),
 })
