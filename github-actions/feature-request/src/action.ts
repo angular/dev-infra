@@ -48,6 +48,10 @@ export interface Config {
   // Alternatively, the bot will just add a `votingFinishedLabel`.
   closeWhenNoSufficientVotes: boolean;
   insufficientVotesLabel: string;
+
+  // Sets the number of issues we want to perform the action over.
+  // Use -1 for all the issues in the repository.
+  limit: number;
 }
 
 export const run = async (api: GitHubAPI, config: Config) => {
@@ -55,7 +59,12 @@ export const run = async (api: GitHubAPI, config: Config) => {
     q: `is:open is:issue label:"${config.featureRequestLabel}" -label:"${config.inBacklogLabel}" -label:"${config.underConsiderationLabel}" -label:"${config.insufficientVotesLabel}" sort:created-asc`,
   });
 
+  let limit = config.limit === -1 ? Infinity : config.limit;
   for await (const issue of issues) {
+    if (limit <= 0) {
+      break;
+    }
+    limit--;
     await processIssue(api, issue, config);
   }
 };

@@ -25,7 +25,8 @@ describe('feature request action', () => {
       minimumUniqueCommentAuthorsForConsideration: 10,
       organization: 'angular',
       insufficientVotesLabel: 'voting-finished',
-      closeWhenNoSufficientVotes: true
+      closeWhenNoSufficientVotes: true,
+      limit: -1
     };
   });
 
@@ -220,4 +221,29 @@ describe('feature request action', () => {
     expect(first.comments.length).toBe(1);
     expect(first.open).toBeTrue();
   });
+
+  it('should respect the limit configuration parameter', async () => {
+    const [first, second] = basic.issues;
+    first.labels = [basicConfig.featureRequestLabel];
+    second.labels = [basicConfig.featureRequestLabel];
+
+    basicConfig.limit = 1;
+
+    // Two months ago
+    first.createdAt = Date.now() - (60 * 24 * 60 * 60 * 1000);
+    // 300 days ago
+    second.createdAt = Date.now() - (300 * 24 * 60 * 60 * 1000);
+
+    await action.run(basic, basicConfig);
+
+    expect(first.labels.indexOf(basicConfig.requiresVotesLabel)).toBe(1);
+    expect(second.labels.indexOf(basicConfig.requiresVotesLabel)).toBe(-1);
+
+    expect(first.comments.length).toBe(1);
+    expect(second.comments.length).toBe(0);
+
+    for await (const comment of first.comments) {
+      expect(comment.body).toEqual(action.comment(action.CommentMarkers.Warn, basicConfig.warnComment));
+    }
+  })
 });
