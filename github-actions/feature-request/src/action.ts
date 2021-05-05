@@ -52,7 +52,7 @@ export interface Config {
 
 export const run = async (api: GitHubAPI, config: Config) => {
   const issues = api.query({
-    q: `is:open is:issue label:"${config.featureRequestLabel}" -label:"${config.inBacklogLabel}" -label:"${config.underConsiderationLabel}" sort:created-asc`,
+    q: `is:open is:issue label:"${config.featureRequestLabel}" -label:"${config.inBacklogLabel}" -label:"${config.underConsiderationLabel}" -label:"${config.insufficientVotesLabel}" sort:created-asc`,
   });
 
   for await (const issue of issues) {
@@ -83,6 +83,7 @@ const processIssue = async (githubAPI: GitHubAPI, githubIssue: GitHubIssueAPI, c
   // have issues under consideration / backlog which require votes.
   if (
     issue.labels.includes(config.inBacklogLabel) ||
+    issue.labels.includes(config.insufficientVotesLabel) ||
     issue.labels.includes(config.underConsiderationLabel) ||
     !issue.labels.includes(config.featureRequestLabel) ||
     !issue.open

@@ -201,4 +201,23 @@ describe('feature request action', () => {
     expect(first.labels.indexOf(basicConfig.requiresVotesLabel)).toBe(-1);
     expect(first.comments.length).toBe(0);
   });
+
+  it('should not process (comment, close, or label) issues which are already marked as having insufficient number of votes', async () => {
+    const [first] = basic.issues;
+    first.labels = [basicConfig.featureRequestLabel, basicConfig.insufficientVotesLabel];
+    first.comments.push({
+      author: {
+        name: ''
+      },
+      body: action.comment(action.CommentMarkers.Warn, basicConfig.warnComment),
+      id: 1,
+      timestamp: Date.now() - (basicConfig.closeAfterWarnDaysDuration * 24 * 60 * 60 * 1000)
+    });
+
+    await action.run(basic, basicConfig);
+
+    expect(first.labels.indexOf(basicConfig.requiresVotesLabel)).toBe(-1);
+    expect(first.comments.length).toBe(1);
+    expect(first.open).toBeTrue();
+  });
 });
