@@ -14995,7 +14995,7 @@ var CommentMarkers;
 })(CommentMarkers || (CommentMarkers = {}));
 const run = async (api, config) => {
     const issues = api.query({
-        q: `is:open is:issue label:"${config.featureRequestLabel}" -label:"${config.inBacklogLabel}" -label:"${config.underConsiderationLabel}" sort:created-asc`,
+        q: `is:open is:issue label:"${config.featureRequestLabel}" -label:"${config.inBacklogLabel}" -label:"${config.underConsiderationLabel}" -label:"${config.insufficientVotesLabel}" sort:created-asc`,
     });
     for await (const issue of issues) {
         await processIssue(api, issue, config);
@@ -15021,6 +15021,7 @@ const processIssue = async (githubAPI, githubIssue, config) => {
     // An extra assurance we will not get into a situation where we
     // have issues under consideration / backlog which require votes.
     if (issue.labels.includes(config.inBacklogLabel) ||
+        issue.labels.includes(config.insufficientVotesLabel) ||
         issue.labels.includes(config.underConsiderationLabel) ||
         !issue.labels.includes(config.featureRequestLabel) ||
         !issue.open) {
