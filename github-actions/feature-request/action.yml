@@ -56,7 +56,7 @@ inputs:
 
 
       You can find more details about the feature request process in our
-      [documentation](https://github.com/angular/angular/blob/ce8e011a9f7c6bac94292d632b0cc8822f710a66/docs/GITHUB_PROCESS.md#feature-request-process).
+      [documentation](https://github.com/angular/angular/blob/e29eb8abfbfdfb793e08ac88e14b7ba6d2ff2136/docs/GITHUB_PROCESS.md#feature-request-process).
   start-voting-comment:
     description: 'Comment to kick voting off.'
     default: >
@@ -66,14 +66,14 @@ inputs:
 
 
       You can find more details about the feature request process in our
-      [documentation](https://github.com/angular/angular/blob/ce8e011a9f7c6bac94292d632b0cc8822f710a66/docs/GITHUB_PROCESS.md#feature-request-process).
+      [documentation](https://github.com/angular/angular/blob/e29eb8abfbfdfb793e08ac88e14b7ba6d2ff2136/docs/GITHUB_PROCESS.md#feature-request-process).
   warn-comment:
     description: 'A warning that the end of voting is approaching.'
     default: >
       Just a heads up that we kicked off a community voting process for your feature request. There are 20 days until the voting process ends.
 
-      
-      Find more details about Angular's feature request process in our [documentation](https://github.com/angular/angular/blob/ce8e011a9f7c6bac94292d632b0cc8822f710a66/docs/GITHUB_PROCESS.md#feature-request-process).
+
+      Find more details about Angular's feature request process in our [documentation](https://github.com/angular/angular/blob/e29eb8abfbfdfb793e08ac88e14b7ba6d2ff2136/docs/GITHUB_PROCESS.md#feature-request-process).
 runs:
   using: 'node12'
   main: 'lib/bundle.js'
