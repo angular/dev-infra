@@ -14,7 +14,7 @@
   "author": "Angular",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.1.0",
+    "@actions/core": "^1.2.6",
     "@actions/github": "^1.1.0",
     "@octokit/app": "^4.1.0",
     "@octokit/rest": "^16.15.0"
