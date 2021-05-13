@@ -2,9 +2,9 @@ name: 'Manage Feature Requests'
 description: 'Manages feature requests based on community demand'
 author: 'Angular'
 inputs:
-  token:
-    description: 'A token for the feature request bot.'
-    default: ${{ github.token }}
+  angular-robot-key:
+    description: 'The private key for the Angular Robot Github app.'
+    required: true
   minimum-unique-comment-authors-for-consideration:
     description: 'Number of unique comment authors required to move a feature request to our consideration list.'
     default: 10

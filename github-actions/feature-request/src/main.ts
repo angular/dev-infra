@@ -1,5 +1,6 @@
 import * as core from '@actions/core';
 import { context } from '@actions/github';
+import { App } from '@octokit/app';
 import { run } from './action';
 import { OctoKit } from './octokit';
 
@@ -23,27 +24,46 @@ const getInputValue = <T extends number|string|boolean>(name: string): T => {
   return num as T;
 };
 
-const octokit = new OctoKit(getInputValue('token'), {
-  repo: context.repo.repo,
-  owner: context.repo.owner,
-});
 
-// Run the action with the specified values in the YAML configuration.
-run(octokit, {
-  organization: context.repo.owner,
-  closeAfterWarnDaysDuration: getInputValue('close-after-warn-days-duration'),
-  closeComment: getInputValue('close-comment'),
-  featureRequestLabel: getInputValue('feature-request-label'),
-  inBacklogLabel: getInputValue('in-backlog-label'),
-  minimumUniqueCommentAuthorsForConsideration: getInputValue('minimum-unique-comment-authors-for-consideration'),
-  minimumVotesForConsideration: getInputValue('minimum-votes-for-consideration'),
-  oldIssueWarnDaysDuration: getInputValue('old-issue-warn-days-duration'),
-  requiresVotesLabel: getInputValue('requires-votes-label'),
-  startVotingComment: getInputValue('start-voting-comment'),
-  underConsiderationLabel: getInputValue('under-consideration-label'),
-  warnComment: getInputValue('warn-comment'),
-  warnDaysDuration: getInputValue('warn-days-duration'),
-  closeWhenNoSufficientVotes: getInputValue('close-when-no-sufficient-votes'),
-  insufficientVotesLabel: getInputValue('insufficient-votes-label'),
-  limit: getInputValue('limit'),
-})
+try {
+  // A immediately executed async function to allow `await`ing the installation access token.
+  (async function() {
+    /** The private key for the angular robot app. */
+    const privateKey = getInputValue<string>('angular-robot-key');
+    /** Github App id of the Angular Robot app. */
+    const id = 43341;
+    /** Installation id of the Angular Robot app. */
+    const installationId = 28132081;
+    // The Angular Lock Bot Github application
+    const githubApp = new App({ id, privateKey });
+    // A short lived github token for the Angular Lock Bot
+    const token = await githubApp.getInstallationAccessToken({ installationId });
+    /** The Octokit instance for interacting with Github. */
+    const octokit = new OctoKit(token, {
+      repo: context.repo.repo,
+      owner: context.repo.owner,
+    });
+
+    // Run the action with the specified values in the YAML configuration.
+    run(octokit, {
+      organization: context.repo.owner,
+      closeAfterWarnDaysDuration: getInputValue('close-after-warn-days-duration'),
+      closeComment: getInputValue('close-comment'),
+      featureRequestLabel: getInputValue('feature-request-label'),
+      inBacklogLabel: getInputValue('in-backlog-label'),
+      minimumUniqueCommentAuthorsForConsideration: getInputValue('minimum-unique-comment-authors-for-consideration'),
+      minimumVotesForConsideration: getInputValue('minimum-votes-for-consideration'),
+      oldIssueWarnDaysDuration: getInputValue('old-issue-warn-days-duration'),
+      requiresVotesLabel: getInputValue('requires-votes-label'),
+      startVotingComment: getInputValue('start-voting-comment'),
+      underConsiderationLabel: getInputValue('under-consideration-label'),
+      warnComment: getInputValue('warn-comment'),
+      warnDaysDuration: getInputValue('warn-days-duration'),
+      closeWhenNoSufficientVotes: getInputValue('close-when-no-sufficient-votes'),
+      insufficientVotesLabel: getInputValue('insufficient-votes-label'),
+      limit: getInputValue('limit'),
+    })
+  })();
+} catch (e) {
+  core.setFailed(e)
+}
