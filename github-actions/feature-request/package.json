@@ -5,7 +5,7 @@
   "description": "Triages GitHub issues",
   "main": "lib/bundle.js",
   "scripts": {
-    "build": "rollup --config",
+    "build": "esbuild src/main.ts --bundle --outfile=lib/bundle.js --platform=node --target=node12",
     "test": "ts-node -P tsconfig.json node_modules/jasmine/bin/jasmine --config=jasmine.json",
     "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test"
   },
@@ -18,19 +18,15 @@
   "dependencies": {
     "@actions/core": "^1.2.6",
     "@actions/github": "^2.1.1",
-    "@octokit/app": "^4.1.0"
+    "github-app-installation-token": "^1.1.0"
   },
   "devDependencies": {
     "@types/jasmine": "^3.6.3",
+    "esbuild": "^0.11.23",
     "jasmine": "^3.6.4",
     "nyc": "^15.1.0",
-    "rollup": "1.20.2",
-    "rollup-plugin-commonjs": "10.1.0",
-    "rollup-plugin-json": "4.0.0",
-    "rollup-plugin-node-resolve": "5.2.0",
-    "rollup-plugin-typescript": "1.0.1",
-    "ts-node": "^9.1.1",
     "tslib": "1.10.0",
+    "ts-node": "^9.1.1",
     "typescript": "4.1.3"
   }
 }

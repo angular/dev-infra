@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
 import { context } from '@actions/github';
-import { App } from '@octokit/app';
+import { getToken } from 'github-app-installation-token'
 import { run } from './action';
 import { OctoKit } from './octokit';
 
@@ -31,13 +31,11 @@ try {
     /** The private key for the angular robot app. */
     const privateKey = getInputValue<string>('angular-robot-key');
     /** Github App id of the Angular Robot app. */
-    const id = 43341;
+    const appId = 43341;
     /** Installation id of the Angular Robot app. */
     const installationId = 28132081;
     // The Angular Lock Bot Github application
-    const githubApp = new App({ id, privateKey });
-    // A short lived github token for the Angular Lock Bot
-    const token = await githubApp.getInstallationAccessToken({ installationId });
+    const {token} = await getToken({ installationId, appId, privateKey });
     /** The Octokit instance for interacting with Github. */
     const octokit = new OctoKit(token, {
       repo: context.repo.repo,
