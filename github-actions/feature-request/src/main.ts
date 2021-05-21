@@ -33,7 +33,7 @@ try {
     /** Github App id of the Angular Robot app. */
     const appId = 43341;
     /** Installation id of the Angular Robot app. */
-    const installationId = 28132081;
+    const installationId = 2813208;
     // The Angular Lock Bot Github application
     const {token} = await getToken({ installationId, appId, privateKey });
     /** The Octokit instance for interacting with Github. */

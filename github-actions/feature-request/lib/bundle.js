@@ -38272,7 +38272,7 @@ try {
   (async function() {
     const privateKey = getInputValue("angular-robot-key");
     const appId = 43341;
-    const installationId = 28132081;
+    const installationId = 2813208;
     const {token} = await (0, import_github_app_installation_token.getToken)({installationId, appId, privateKey});
     const octokit = new OctoKit(token, {
       repo: import_github2.context.repo.repo,
