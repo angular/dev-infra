@@ -37994,10 +37994,16 @@ var run = async (api, config) => {
     }
     limit--;
     await processIssue(api, issue, config);
+    log("---------------------------");
   }
 };
 var processIssue = async (githubAPI, githubIssue, config) => {
   const issue = await githubIssue.get();
+  log(`Started processing issue #${issue.number}:
+  Title:    ${issue.title}
+  Author:   ${issue.author}
+  Votes:    ${issue.reactions["+1"]}
+  Comments: ${issue.numComments}`);
   if (await githubAPI.isOrgMember(issue.author.name, config.organization)) {
     log(`The creator of issue #${issue.number} is a member of the organization.`);
     return;
@@ -38161,10 +38167,10 @@ var OctoKitIssue = class extends OctoKit {
     super(token, params, options);
     this.params = params;
     this.issueData = issueData;
-    log("running bot on issue", issueData.number);
+    log(`Running bot on issue #${issueData.number}`);
   }
   async close() {
-    log("Closing issue " + this.issueData.number);
+    log(`Closing issue #${this.issueData.number}`);
     if (!this.options.readonly)
       await this.octokit.issues.update(__spreadProps(__spreadValues({}, this.params), {
         issue_number: this.issueData.number,
@@ -38173,10 +38179,10 @@ var OctoKitIssue = class extends OctoKit {
   }
   async get() {
     if (isIssue(this.issueData)) {
-      log("Got issue data from query result " + this.issueData.number);
+      log(`Got issue data from query result #${this.issueData.number}`);
       return this.issueData;
     }
-    log("Fetching issue " + this.issueData.number);
+    log(`Fetching issue #${this.issueData.number}`);
     const issue = (await this.octokit.issues.get(__spreadProps(__spreadValues({}, this.params), {
       issue_number: this.issueData.number,
       mediaType: {previews: ["squirrel-girl"]}
@@ -38184,7 +38190,7 @@ var OctoKitIssue = class extends OctoKit {
     return this.issueData = this.octokitIssueToIssue(issue);
   }
   async postComment(body) {
-    log(`Posting comment on ${this.issueData.number}`);
+    log(`Posting comment on #${this.issueData.number}`);
     if (!this.options.readonly)
       await this.octokit.issues.createComment(__spreadProps(__spreadValues({}, this.params), {
         issue_number: this.issueData.number,
@@ -38192,7 +38198,7 @@ var OctoKitIssue = class extends OctoKit {
       }));
   }
   async deleteComment(id) {
-    log(`Deleting comment ${id} on ${this.issueData.number}`);
+    log(`Deleting comment #${id} on #${this.issueData.number}`);
     if (!this.options.readonly)
       await this.octokit.issues.deleteComment({
         owner: this.params.owner,
@@ -38201,7 +38207,7 @@ var OctoKitIssue = class extends OctoKit {
       });
   }
   async *getComments(last) {
-    log("Fetching comments for " + this.issueData.number);
+    log(`Fetching comments for #${this.issueData.number}`);
     const response = this.octokit.paginate.iterator(this.octokit.issues.listComments.endpoint.merge(__spreadValues(__spreadProps(__spreadValues({}, this.params), {
       issue_number: this.issueData.number,
       per_page: 100
@@ -38218,7 +38224,7 @@ var OctoKitIssue = class extends OctoKit {
     }
   }
   async addLabel(name) {
-    log(`Adding label ${name} to ${this.issueData.number}`);
+    log(`Adding label ${name} to #${this.issueData.number}`);
     if (!await this.repoHasLabel(name)) {
       throw Error(`Action could not execute because label ${name} is not defined.`);
     }
@@ -38229,7 +38235,7 @@ var OctoKitIssue = class extends OctoKit {
       }));
   }
   async removeLabel(name) {
-    log(`Removing label ${name} from ${this.issueData.number}`);
+    log(`Removing label ${name} from #${this.issueData.number}`);
     try {
       if (!this.options.readonly)
         await this.octokit.issues.removeLabel(__spreadProps(__spreadValues({}, this.params), {

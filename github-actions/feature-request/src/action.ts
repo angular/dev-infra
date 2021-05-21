@@ -66,6 +66,9 @@ export const run = async (api: GitHubAPI, config: Config) => {
     }
     limit--;
     await processIssue(api, issue, config);
+
+    // Separator between the individual issues for better readability
+    log('---------------------------');
   }
 };
 
@@ -81,6 +84,14 @@ export const run = async (api: GitHubAPI, config: Config) => {
  */
 const processIssue = async (githubAPI: GitHubAPI, githubIssue: GitHubIssueAPI, config: Config) => {
   const issue = await githubIssue.get();
+
+  log(
+    `Started processing issue #${issue.number}:\n` +
+    `  Title:    ${issue.title}\n` +
+    `  Author:   ${issue.author}\n` +
+    `  Votes:    ${issue.reactions['+1']}\n` +
+    `  Comments: ${issue.numComments}`
+  );
 
   // Issues opened by team members bypass the process.
   if (await githubAPI.isOrgMember(issue.author.name, config.organization)) {
