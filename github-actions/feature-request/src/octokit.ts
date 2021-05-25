@@ -134,11 +134,11 @@ export class OctoKitIssue extends OctoKit implements GitHubIssueAPI {
     options: { readonly: boolean } = { readonly: false },
   ) {
     super(token, params, options);
-    log('running bot on issue', issueData.number);
+    log(`Running bot on issue #${issueData.number}`);
   }
 
   async close(): Promise<void> {
-    log('Closing issue ' + this.issueData.number);
+    log(`Closing issue #${this.issueData.number}`);
     if (!this.options.readonly)
       await this.octokit.issues.update({
         ...this.params,
@@ -149,11 +149,11 @@ export class OctoKitIssue extends OctoKit implements GitHubIssueAPI {
 
   async get(): Promise<Issue> {
     if (isIssue(this.issueData)) {
-      log('Got issue data from query result ' + this.issueData.number);
+      log(`Got issue data from query result #${this.issueData.number}`);
       return this.issueData;
     }
 
-    log('Fetching issue ' + this.issueData.number);
+    log(`Fetching issue #${this.issueData.number}`);
     const issue = (
       await this.octokit.issues.get({
         ...this.params,
@@ -167,7 +167,7 @@ export class OctoKitIssue extends OctoKit implements GitHubIssueAPI {
   }
 
   async postComment(body: string): Promise<void> {
-    log(`Posting comment on ${this.issueData.number}`);
+    log(`Posting comment on #${this.issueData.number}`);
     if (!this.options.readonly)
       await this.octokit.issues.createComment({
         ...this.params,
@@ -177,7 +177,7 @@ export class OctoKitIssue extends OctoKit implements GitHubIssueAPI {
   }
 
   async deleteComment(id: number): Promise<void> {
-    log(`Deleting comment ${id} on ${this.issueData.number}`);
+    log(`Deleting comment #${id} on #${this.issueData.number}`);
     if (!this.options.readonly)
       await this.octokit.issues.deleteComment({
         owner: this.params.owner,
@@ -187,7 +187,7 @@ export class OctoKitIssue extends OctoKit implements GitHubIssueAPI {
   }
 
   async *getComments(last?: boolean): AsyncIterableIterator<Comment> {
-    log('Fetching comments for ' + this.issueData.number);
+    log(`Fetching comments for #${this.issueData.number}`);
 
     const response = this.octokit.paginate.iterator(
       this.octokit.issues.listComments.endpoint.merge({
@@ -211,7 +211,7 @@ export class OctoKitIssue extends OctoKit implements GitHubIssueAPI {
   }
 
   async addLabel(name: string): Promise<void> {
-    log(`Adding label ${name} to ${this.issueData.number}`);
+    log(`Adding label ${name} to #${this.issueData.number}`);
     if (!(await this.repoHasLabel(name))) {
       throw Error(`Action could not execute because label ${name} is not defined.`);
     }
@@ -224,7 +224,7 @@ export class OctoKitIssue extends OctoKit implements GitHubIssueAPI {
   }
 
   async removeLabel(name: string): Promise<void> {
-    log(`Removing label ${name} from ${this.issueData.number}`);
+    log(`Removing label ${name} from #${this.issueData.number}`);
     try {
       if (!this.options.readonly)
         await this.octokit.issues.removeLabel({
