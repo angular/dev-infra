@@ -14,14 +14,13 @@
   "author": "Angular",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.1.0",
-    "@actions/github": "^1.1.0",
-    "@octokit/app": "^4.1.0",
-    "@octokit/rest": "^16.15.0"
+    "@actions/core": "^1.2.6",
+    "@actions/github": "^2.1.1",
+    "github-app-installation-token": "^1.1.0"
   },
   "devDependencies": {
     "esbuild": "^0.11.23",
     "tslib": "1.10.0",
-    "typescript": "3.5.3"
+    "typescript": "4.1.3"
   }
 }
