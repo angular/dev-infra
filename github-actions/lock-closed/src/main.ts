@@ -1,9 +1,8 @@
 import * as core from '@actions/core';
-import { context } from '@actions/github';
-import Octokit from '@octokit/rest';
-import { App } from '@octokit/app';
+import { context, GitHub } from '@actions/github';
+import { getToken } from 'github-app-installation-token'
 
-async function lockIssue(client: Octokit, issue: number, message: string): Promise<void> {
+async function lockIssue(client: GitHub, issue: number, message: string): Promise<void> {
   await client.issues.createComment({
     owner: context.repo.owner,
     repo: context.repo.repo,
@@ -39,21 +38,18 @@ async function run(): Promise<void> {
       `Read more about our [automatic conversation locking policy](${policyUrl}).\n\n` +
       '<sub>_This action has been performed automatically by a bot._</sub>';
     // Github App Id of the Lock Bot App
-    const lockBotAppId = 40213;
+    const appId = 40213;
     // Installation Id of the Lock Bot App
     const installationId = 1772826;
 
     // Create JWT Token with provided private key.
-    const lockBotKey = core.getInput('lock-bot-key', { required: true });
-
-    // The Angular Lock Bot Github application
-    const githubApp = new App({ id: lockBotAppId, privateKey: lockBotKey });
+    const privateKey = core.getInput('lock-bot-key', { required: true });
 
     // A short lived github token for the Angular Lock Bot
-    const githubToken = await githubApp.getInstallationAccessToken({ installationId });
+    const {token} = await getToken({ installationId, appId, privateKey });
 
     // Create authenticated Github client.
-    const client = new Octokit({ auth: githubToken });
+    const client = new GitHub({ auth: token });
 
     const maxPerExecution = Math.min(+core.getInput('locks-per-execution') || 1, 100);
     // Set the threshold date based on the days inactive
@@ -114,7 +110,8 @@ async function run(): Promise<void> {
 
 // Only run if the action is executed in a repository with is in the Angular org. This is in place
 // to prevent the action from actually running in a fork of a repository with this action set up.
-if (context.repo.owner === 'josephperrott') {
+// Runs triggered via 'workflow_dispatch' are also allowed to run.
+if (context.repo.owner === 'angular' || context.eventName === 'workflow_dispatch') {
   run();
 } else {
   core.warning(
