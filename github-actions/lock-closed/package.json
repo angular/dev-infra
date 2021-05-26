@@ -5,7 +5,7 @@
   "description": "Locks issues that are both closed and inactive",
   "main": "lib/bundle.js",
   "scripts": {
-    "build": "rollup --config"
+    "build": "esbuild src/main.ts --bundle --outfile=lib/bundle.js --platform=node --target=node12"
   },
   "repository": {
     "type": "git",
@@ -20,11 +20,7 @@
     "@octokit/rest": "^16.15.0"
   },
   "devDependencies": {
-    "rollup": "1.20.2",
-    "rollup-plugin-commonjs": "10.1.0",
-    "rollup-plugin-json": "4.0.0",
-    "rollup-plugin-node-resolve": "5.2.0",
-    "rollup-plugin-typescript": "1.0.1",
+    "esbuild": "^0.11.23",
     "tslib": "1.10.0",
     "typescript": "3.5.3"
   }
