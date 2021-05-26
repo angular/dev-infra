@@ -1,26 +1,10 @@
 {
   "name": "lock-closed",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "private": true,
   "description": "Locks issues that are both closed and inactive",
   "main": "lib/bundle.js",
   "scripts": {
     "build": "esbuild src/main.ts --bundle --outfile=lib/bundle.js --platform=node --target=node12"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/angular/dev-infra.git"
-  },
-  "author": "Angular",
-  "license": "MIT",
-  "dependencies": {
-    "@actions/core": "^1.2.6",
-    "@actions/github": "^2.1.1",
-    "github-app-installation-token": "^1.1.0"
-  },
-  "devDependencies": {
-    "esbuild": "^0.11.23",
-    "tslib": "1.10.0",
-    "typescript": "4.1.3"
   }
 }
