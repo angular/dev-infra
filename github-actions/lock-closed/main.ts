@@ -1,8 +1,10 @@
 import * as core from '@actions/core';
-import { context, GitHub } from '@actions/github';
-import { getToken } from 'github-app-installation-token'
+import { context } from '@actions/github';
+import {Octokit} from '@octokit/rest';
+const {getToken} = require('github-app-installation-token');
 
-async function lockIssue(client: GitHub, issue: number, message: string): Promise<void> {
+
+async function lockIssue(client: Octokit, issue: number, message: string): Promise<void> {
   await client.issues.createComment({
     owner: context.repo.owner,
     repo: context.repo.repo,
@@ -49,7 +51,7 @@ async function run(): Promise<void> {
     const {token} = await getToken({ installationId, appId, privateKey });
 
     // Create authenticated Github client.
-    const client = new GitHub({ auth: token });
+    const client = new Octokit({ auth: token });
 
     const maxPerExecution = Math.min(+core.getInput('locks-per-execution') || 1, 100);
     // Set the threshold date based on the days inactive
@@ -80,7 +82,7 @@ async function run(): Promise<void> {
       let itemType: string | undefined;
       try {
         itemType = item.pull_request ? 'pull request' : 'issue';
-        if (item.locked) {
+        if ((item as any).locked) {
           console.info(`Skipping ${itemType} #${item.number}, already locked`);
           continue;
         }

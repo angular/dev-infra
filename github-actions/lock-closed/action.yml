@@ -10,4 +10,4 @@ inputs:
     default: 100
 runs:
   using: 'node12'
-  main: 'lib/bundle.js'
+  main: 'bundle.js'

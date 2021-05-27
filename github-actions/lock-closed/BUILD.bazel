@@ -1,0 +1,23 @@
+load("//tools:esbuild.bzl", "esbuild")
+load("//tools:defaults.bzl", "ts_project")
+
+package(default_visibility = ["//github-actions/lock-closed:__subpackages__"])
+
+ts_project(
+    name = "lock-closed",
+    deps = [
+        "@npm//@actions/core",
+        "@npm//@actions/github",
+        "@npm//@octokit/rest",
+        "@npm//github-app-installation-token",
+    ],
+)
+
+esbuild(
+    name = "bundle",
+    entry_point = "main.js",
+    save_to_repo = True,
+    deps = [
+        ":lock-closed",
+    ],
+)
