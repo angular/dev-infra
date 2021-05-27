@@ -1,0 +1,17 @@
+# build --announce_rc
+
+# Enable debugging tests with --config=debug
+test:debug --test_arg=--node_options=--inspect-brk --test_output=streamed --test_strategy=exclusive --test_timeout=9999 --nocache_test_results
+
+###############################
+# Filesystem interactions     #
+###############################
+
+# Create symlinks in the project:
+# - dist/bin for outputs
+# - dist/testlogs, dist/genfiles
+# - bazel-out
+build --symlink_prefix=dist/
+
+# Write testing errors to log on test failure
+test --test_output=errors
