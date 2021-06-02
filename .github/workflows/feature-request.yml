@@ -10,4 +10,3 @@ jobs:
       - uses: ./github-actions/feature-request
         with:
           angular-robot-key: ${{ secrets.ANGULAR_ROBOT_PRIVATE_KEY }}
-          limit: 50

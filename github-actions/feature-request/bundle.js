@@ -15760,9 +15760,9 @@ var require_path_key = __commonJS({
   }
 });
 
-// node_modules/cross-spawn/lib/util/resolveCommand.js
+// node_modules/windows-release/node_modules/cross-spawn/lib/util/resolveCommand.js
 var require_resolveCommand = __commonJS({
-  "node_modules/cross-spawn/lib/util/resolveCommand.js"(exports2, module2) {
+  "node_modules/windows-release/node_modules/cross-spawn/lib/util/resolveCommand.js"(exports2, module2) {
     "use strict";
     var path = require("path");
     var which = require_which();
@@ -15798,9 +15798,9 @@ var require_resolveCommand = __commonJS({
   }
 });
 
-// node_modules/cross-spawn/lib/util/escape.js
+// node_modules/windows-release/node_modules/cross-spawn/lib/util/escape.js
 var require_escape = __commonJS({
-  "node_modules/cross-spawn/lib/util/escape.js"(exports2, module2) {
+  "node_modules/windows-release/node_modules/cross-spawn/lib/util/escape.js"(exports2, module2) {
     "use strict";
     var metaCharsRegExp = /([()\][%!^"`<>&|;, *?])/g;
     function escapeCommand(arg) {
@@ -15849,9 +15849,9 @@ var require_shebang_command = __commonJS({
   }
 });
 
-// node_modules/cross-spawn/lib/util/readShebang.js
+// node_modules/windows-release/node_modules/cross-spawn/lib/util/readShebang.js
 var require_readShebang = __commonJS({
-  "node_modules/cross-spawn/lib/util/readShebang.js"(exports2, module2) {
+  "node_modules/windows-release/node_modules/cross-spawn/lib/util/readShebang.js"(exports2, module2) {
     "use strict";
     var fs = require("fs");
     var shebangCommand = require_shebang_command();
@@ -16925,9 +16925,9 @@ var require_semver = __commonJS({
   }
 });
 
-// node_modules/cross-spawn/lib/parse.js
+// node_modules/windows-release/node_modules/cross-spawn/lib/parse.js
 var require_parse = __commonJS({
-  "node_modules/cross-spawn/lib/parse.js"(exports2, module2) {
+  "node_modules/windows-release/node_modules/cross-spawn/lib/parse.js"(exports2, module2) {
     "use strict";
     var path = require("path");
     var niceTry = require_src();
@@ -17011,9 +17011,9 @@ var require_parse = __commonJS({
   }
 });
 
-// node_modules/cross-spawn/lib/enoent.js
+// node_modules/windows-release/node_modules/cross-spawn/lib/enoent.js
 var require_enoent = __commonJS({
-  "node_modules/cross-spawn/lib/enoent.js"(exports2, module2) {
+  "node_modules/windows-release/node_modules/cross-spawn/lib/enoent.js"(exports2, module2) {
     "use strict";
     var isWin = process.platform === "win32";
     function notFoundError(original, syscall) {
@@ -17061,9 +17061,9 @@ var require_enoent = __commonJS({
   }
 });
 
-// node_modules/cross-spawn/index.js
+// node_modules/windows-release/node_modules/cross-spawn/index.js
 var require_cross_spawn = __commonJS({
-  "node_modules/cross-spawn/index.js"(exports2, module2) {
+  "node_modules/windows-release/node_modules/cross-spawn/index.js"(exports2, module2) {
     "use strict";
     var cp = require("child_process");
     var parse = require_parse();
@@ -17342,9 +17342,9 @@ var require_pump = __commonJS({
   }
 });
 
-// node_modules/get-stream/buffer-stream.js
+// node_modules/windows-release/node_modules/get-stream/buffer-stream.js
 var require_buffer_stream = __commonJS({
-  "node_modules/get-stream/buffer-stream.js"(exports2, module2) {
+  "node_modules/windows-release/node_modules/get-stream/buffer-stream.js"(exports2, module2) {
     "use strict";
     var { PassThrough } = require("stream");
     module2.exports = (options) => {
@@ -17387,9 +17387,9 @@ var require_buffer_stream = __commonJS({
   }
 });
 
-// node_modules/get-stream/index.js
+// node_modules/windows-release/node_modules/get-stream/index.js
 var require_get_stream = __commonJS({
-  "node_modules/get-stream/index.js"(exports2, module2) {
+  "node_modules/windows-release/node_modules/get-stream/index.js"(exports2, module2) {
     "use strict";
     var pump = require_pump();
     var bufferStream = require_buffer_stream();
@@ -17595,9 +17595,9 @@ var require_signal_exit = __commonJS({
   }
 });
 
-// node_modules/execa/lib/errname.js
+// node_modules/windows-release/node_modules/execa/lib/errname.js
 var require_errname = __commonJS({
-  "node_modules/execa/lib/errname.js"(exports2, module2) {
+  "node_modules/windows-release/node_modules/execa/lib/errname.js"(exports2, module2) {
     "use strict";
     var util = require("util");
     var uv;
@@ -17628,9 +17628,9 @@ var require_errname = __commonJS({
   }
 });
 
-// node_modules/execa/lib/stdio.js
+// node_modules/windows-release/node_modules/execa/lib/stdio.js
 var require_stdio = __commonJS({
-  "node_modules/execa/lib/stdio.js"(exports2, module2) {
+  "node_modules/windows-release/node_modules/execa/lib/stdio.js"(exports2, module2) {
     "use strict";
     var alias = ["stdin", "stdout", "stderr"];
     var hasAlias = (opts) => alias.some((x) => Boolean(opts[x]));
@@ -17664,9 +17664,9 @@ var require_stdio = __commonJS({
   }
 });
 
-// node_modules/execa/index.js
+// node_modules/windows-release/node_modules/execa/index.js
 var require_execa = __commonJS({
-  "node_modules/execa/index.js"(exports2, module2) {
+  "node_modules/windows-release/node_modules/execa/index.js"(exports2, module2) {
     "use strict";
     var path = require("path");
     var childProcess = require("child_process");
@@ -21041,9 +21041,9 @@ var require_github = __commonJS({
   }
 });
 
-// bazel-out/k8-fastbuild/bin/github-actions/feature-request/src/log.js
+// bazel-out/darwin-fastbuild/bin/github-actions/feature-request/src/log.js
 var require_log = __commonJS({
-  "bazel-out/k8-fastbuild/bin/github-actions/feature-request/src/log.js"(exports2) {
+  "bazel-out/darwin-fastbuild/bin/github-actions/feature-request/src/log.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.log = void 0;
@@ -21057,9 +21057,9 @@ var require_log = __commonJS({
   }
 });
 
-// bazel-out/k8-fastbuild/bin/github-actions/feature-request/src/action.js
+// bazel-out/darwin-fastbuild/bin/github-actions/feature-request/src/action.js
 var require_action = __commonJS({
-  "bazel-out/k8-fastbuild/bin/github-actions/feature-request/src/action.js"(exports2) {
+  "bazel-out/darwin-fastbuild/bin/github-actions/feature-request/src/action.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.comment = exports2.run = exports2.CommentMarkers = void 0;
@@ -21169,9 +21169,37 @@ ${text}`;
   }
 });
 
-// bazel-out/k8-fastbuild/bin/github-actions/feature-request/src/octokit.js
+// bazel-out/darwin-fastbuild/bin/github-actions/feature-request/src/get-input.js
+var require_get_input = __commonJS({
+  "bazel-out/darwin-fastbuild/bin/github-actions/feature-request/src/get-input.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.getInputValue = void 0;
+    var core2 = require_core();
+    var getInputValue = (name, _core = core2) => {
+      const result = _core.getInput(name);
+      if (!result) {
+        throw new Error(`No value for ${name} specified in the configuration.`);
+      }
+      if (/^(true|false)$/.test(result)) {
+        return result === "true" ? true : false;
+      }
+      if (!/^-?\d+(\.?\d*)$/.test(result)) {
+        return result;
+      }
+      const num = parseFloat(result);
+      if (isNaN(num)) {
+        throw new Error(`Can't parse ${name} as a numeric value.`);
+      }
+      return num;
+    };
+    exports2.getInputValue = getInputValue;
+  }
+});
+
+// bazel-out/darwin-fastbuild/bin/github-actions/feature-request/src/octokit.js
 var require_octokit = __commonJS({
-  "bazel-out/k8-fastbuild/bin/github-actions/feature-request/src/octokit.js"(exports2) {
+  "bazel-out/darwin-fastbuild/bin/github-actions/feature-request/src/octokit.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.OctoKitIssue = exports2.OctoKit = void 0;
@@ -38330,34 +38358,18 @@ var require_dist = __commonJS({
   }
 });
 
-// bazel-out/k8-fastbuild/bin/github-actions/feature-request/src/main.js
+// bazel-out/darwin-fastbuild/bin/github-actions/feature-request/src/main.js
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var core = require_core();
 var github_1 = require_github();
 var action_1 = require_action();
+var get_input_1 = require_get_input();
 var octokit_1 = require_octokit();
 var { getToken } = require_dist();
-var getInputValue = (name) => {
-  const result = core.getInput(name);
-  if (!result) {
-    throw new Error(`No value for ${name} specified in the configuration.`);
-  }
-  if (/^(true|false)$/.test(result)) {
-    return result === "true" ? true : false;
-  }
-  if (!/^\d+(\.\d*)$/.test(result)) {
-    return result;
-  }
-  const num = parseFloat(result);
-  if (isNaN(num)) {
-    throw new Error(`Can't parse ${name} as a numeric value.`);
-  }
-  return num;
-};
 (async () => {
   try {
-    const privateKey = getInputValue("angular-robot-key");
+    const privateKey = get_input_1.getInputValue("angular-robot-key");
     const appId = 43341;
     const installationId = 2813208;
     const { token } = await getToken({ installationId, appId, privateKey });
@@ -38367,21 +38379,21 @@ var getInputValue = (name) => {
     });
     await action_1.run(octokit, {
       organization: github_1.context.repo.owner,
-      closeAfterWarnDaysDuration: getInputValue("close-after-warn-days-duration"),
-      closeComment: getInputValue("close-comment"),
-      featureRequestLabel: getInputValue("feature-request-label"),
-      inBacklogLabel: getInputValue("in-backlog-label"),
-      minimumUniqueCommentAuthorsForConsideration: getInputValue("minimum-unique-comment-authors-for-consideration"),
-      minimumVotesForConsideration: getInputValue("minimum-votes-for-consideration"),
-      oldIssueWarnDaysDuration: getInputValue("old-issue-warn-days-duration"),
-      requiresVotesLabel: getInputValue("requires-votes-label"),
-      startVotingComment: getInputValue("start-voting-comment"),
-      underConsiderationLabel: getInputValue("under-consideration-label"),
-      warnComment: getInputValue("warn-comment"),
-      warnDaysDuration: getInputValue("warn-days-duration"),
-      closeWhenNoSufficientVotes: getInputValue("close-when-no-sufficient-votes"),
-      insufficientVotesLabel: getInputValue("insufficient-votes-label"),
-      limit: getInputValue("limit")
+      closeAfterWarnDaysDuration: get_input_1.getInputValue("close-after-warn-days-duration"),
+      closeComment: get_input_1.getInputValue("close-comment"),
+      featureRequestLabel: get_input_1.getInputValue("feature-request-label"),
+      inBacklogLabel: get_input_1.getInputValue("in-backlog-label"),
+      minimumUniqueCommentAuthorsForConsideration: get_input_1.getInputValue("minimum-unique-comment-authors-for-consideration"),
+      minimumVotesForConsideration: get_input_1.getInputValue("minimum-votes-for-consideration"),
+      oldIssueWarnDaysDuration: get_input_1.getInputValue("old-issue-warn-days-duration"),
+      requiresVotesLabel: get_input_1.getInputValue("requires-votes-label"),
+      startVotingComment: get_input_1.getInputValue("start-voting-comment"),
+      underConsiderationLabel: get_input_1.getInputValue("under-consideration-label"),
+      warnComment: get_input_1.getInputValue("warn-comment"),
+      warnDaysDuration: get_input_1.getInputValue("warn-days-duration"),
+      closeWhenNoSufficientVotes: get_input_1.getInputValue("close-when-no-sufficient-votes"),
+      insufficientVotesLabel: get_input_1.getInputValue("insufficient-votes-label"),
+      limit: get_input_1.getInputValue("limit")
     });
   } catch (e) {
     core.setFailed(e);
