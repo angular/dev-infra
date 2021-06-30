@@ -5,10 +5,7 @@ describe('feature request action', () => {
   let basic: APIMock;
   let basicConfig: action.Config;
   beforeEach(() => {
-    basic = new APIMock([
-      new IssueAPIMock([]),
-      new IssueAPIMock([]),
-    ], {});
+    basic = new APIMock([new IssueAPIMock([]), new IssueAPIMock([])], {});
 
     basicConfig = {
       closeComment: 'below min votes',
@@ -26,7 +23,7 @@ describe('feature request action', () => {
       organization: 'angular',
       insufficientVotesLabel: 'voting-finished',
       closeWhenNoSufficientVotes: true,
-      limit: -1
+      limit: -1,
     };
   });
 
@@ -42,7 +39,7 @@ describe('feature request action', () => {
     second.labels = [basicConfig.featureRequestLabel];
 
     // Setting createdAt to yesterday.
-    first.createdAt = second.createdAt = Date.now() - (24 * 60 * 60 * 1000);
+    first.createdAt = second.createdAt = Date.now() - 24 * 60 * 60 * 1000;
 
     await action.run(basic, basicConfig);
 
@@ -53,10 +50,14 @@ describe('feature request action', () => {
     expect(second.comments.length).toBe(1);
 
     for await (const comment of first.comments) {
-      expect(comment.body).toEqual(action.comment(action.CommentMarkers.StartVoting, basicConfig.startVotingComment));
+      expect(comment.body).toEqual(
+        action.comment(action.CommentMarkers.StartVoting, basicConfig.startVotingComment),
+      );
     }
     for await (const comment of second.comments) {
-      expect(comment.body).toEqual(action.comment(action.CommentMarkers.StartVoting, basicConfig.startVotingComment));
+      expect(comment.body).toEqual(
+        action.comment(action.CommentMarkers.StartVoting, basicConfig.startVotingComment),
+      );
     }
   });
 
@@ -66,9 +67,9 @@ describe('feature request action', () => {
     second.labels = [basicConfig.featureRequestLabel];
 
     // Two months ago
-    first.createdAt = Date.now() - (60 * 24 * 60 * 60 * 1000);
+    first.createdAt = Date.now() - 60 * 24 * 60 * 60 * 1000;
     // 300 days ago
-    second.createdAt = Date.now() - (300 * 24 * 60 * 60 * 1000);
+    second.createdAt = Date.now() - 300 * 24 * 60 * 60 * 1000;
 
     await action.run(basic, basicConfig);
 
@@ -79,10 +80,14 @@ describe('feature request action', () => {
     expect(second.comments.length).toBe(1);
 
     for await (const comment of first.comments) {
-      expect(comment.body).toEqual(action.comment(action.CommentMarkers.Warn, basicConfig.warnComment));
+      expect(comment.body).toEqual(
+        action.comment(action.CommentMarkers.Warn, basicConfig.warnComment),
+      );
     }
     for await (const comment of second.comments) {
-      expect(comment.body).toEqual(action.comment(action.CommentMarkers.Warn, basicConfig.warnComment));
+      expect(comment.body).toEqual(
+        action.comment(action.CommentMarkers.Warn, basicConfig.warnComment),
+      );
     }
   });
 
@@ -91,38 +96,42 @@ describe('feature request action', () => {
     first.labels = [basicConfig.featureRequestLabel];
     first.comments.push({
       author: {
-        name: ''
+        name: '',
       },
       body: action.comment(action.CommentMarkers.StartVoting, basicConfig.startVotingComment),
       id: 1,
-      timestamp: Date.now() - (basicConfig.warnDaysDuration * 24 * 60 * 60 * 1000)
+      timestamp: Date.now() - basicConfig.warnDaysDuration * 24 * 60 * 60 * 1000,
     });
 
     await action.run(basic, basicConfig);
 
     expect(first.labels.indexOf(basicConfig.requiresVotesLabel)).toBe(1);
     expect(first.comments.length).toBe(2);
-    expect(first.comments.pop()!.body).toEqual(action.comment(action.CommentMarkers.Warn, basicConfig.warnComment));
+    expect(first.comments.pop()!.body).toEqual(
+      action.comment(action.CommentMarkers.Warn, basicConfig.warnComment),
+    );
   });
 
   it('should mark for consideration issues with specific number of votes', async () => {
     const [first] = basic.issues;
     first.labels = [basicConfig.featureRequestLabel];
     first.reactions = {
-      "+1": basicConfig.minimumVotesForConsideration,
-      "-1": 0,
+      '+1': basicConfig.minimumVotesForConsideration,
+      '-1': 0,
       confused: 0,
       eyes: 0,
       heart: 10,
       hooray: 10,
       laugh: 10,
-      rocket: 10
+      rocket: 10,
     };
 
     await action.run(basic, basicConfig);
 
     expect(first.labels.length).toBe(2);
-    expect(first.labels.indexOf(basicConfig.underConsiderationLabel)).toBe(1);
+    expect(first.labels.includes(basicConfig.requiresVotesLabel)).toBeFalse();
+    expect(first.labels.includes(basicConfig.underConsiderationLabel)).toBeTrue();
+    expect(first.labels.includes(basicConfig.featureRequestLabel)).toBeTrue();
   });
 
   it('should mark for consideration issues with specific number of comment authors', async () => {
@@ -133,18 +142,20 @@ describe('feature request action', () => {
     [...new Array(basicConfig.minimumUniqueCommentAuthorsForConsideration)].forEach((_, i) => {
       first.comments.push({
         author: {
-          name: i.toString()
+          name: i.toString(),
         },
         body: '',
         id: 1,
-        timestamp: Date.now() - (basicConfig.warnDaysDuration * 24 * 60 * 60 * 1000)
+        timestamp: Date.now() - basicConfig.warnDaysDuration * 24 * 60 * 60 * 1000,
       });
     });
 
     await action.run(basic, basicConfig);
 
     expect(first.labels.length).toBe(2);
-    expect(first.labels.indexOf(basicConfig.underConsiderationLabel)).toBe(1);
+    expect(first.labels.includes(basicConfig.requiresVotesLabel)).toBeFalse();
+    expect(first.labels.includes(basicConfig.featureRequestLabel)).toBeTrue();
+    expect(first.labels.includes(basicConfig.underConsiderationLabel)).toBeTrue();
   });
 
   it('should close issues with old enough warn comment', async () => {
@@ -152,18 +163,22 @@ describe('feature request action', () => {
     first.labels = [basicConfig.featureRequestLabel];
     first.comments.push({
       author: {
-        name: ''
+        name: '',
       },
       body: action.comment(action.CommentMarkers.Warn, basicConfig.warnComment),
       id: 1,
-      timestamp: Date.now() - (basicConfig.closeAfterWarnDaysDuration * 24 * 60 * 60 * 1000)
+      timestamp: Date.now() - basicConfig.closeAfterWarnDaysDuration * 24 * 60 * 60 * 1000,
     });
 
     await action.run(basic, basicConfig);
 
-    expect(first.labels.indexOf(basicConfig.requiresVotesLabel)).toBe(1);
+    expect(first.labels.includes(basicConfig.requiresVotesLabel)).toBeFalse();
+    expect(first.labels.includes(basicConfig.insufficientVotesLabel)).toBeTrue();
+    expect(first.labels.includes(basicConfig.featureRequestLabel)).toBeTrue();
     expect(first.comments.length).toBe(2);
-    expect(first.comments.pop()!.body).toEqual(action.comment(action.CommentMarkers.Close, basicConfig.closeComment));
+    expect(first.comments.pop()!.body).toEqual(
+      action.comment(action.CommentMarkers.Close, basicConfig.closeComment),
+    );
     expect(first.open).toBeFalse();
   });
 
@@ -172,20 +187,22 @@ describe('feature request action', () => {
     first.labels = [basicConfig.featureRequestLabel];
     first.comments.push({
       author: {
-        name: ''
+        name: '',
       },
       body: action.comment(action.CommentMarkers.Warn, basicConfig.warnComment),
       id: 1,
-      timestamp: Date.now() - (basicConfig.closeAfterWarnDaysDuration * 24 * 60 * 60 * 1000)
+      timestamp: Date.now() - basicConfig.closeAfterWarnDaysDuration * 24 * 60 * 60 * 1000,
     });
 
     basicConfig.closeWhenNoSufficientVotes = false;
     await action.run(basic, basicConfig);
 
-    expect(first.labels.indexOf(basicConfig.requiresVotesLabel)).toBe(1);
-    expect(first.labels.indexOf(basicConfig.insufficientVotesLabel)).toBe(2);
+    expect(first.labels.indexOf(basicConfig.requiresVotesLabel)).toBe(-1);
+    expect(first.labels.indexOf(basicConfig.insufficientVotesLabel)).toBe(1);
     expect(first.comments.length).toBe(2);
-    expect(first.comments.pop()!.body).toEqual(action.comment(action.CommentMarkers.Close, basicConfig.closeComment));
+    expect(first.comments.pop()!.body).toEqual(
+      action.comment(action.CommentMarkers.Close, basicConfig.closeComment),
+    );
     expect(first.open).toBeTrue();
   });
 
@@ -194,7 +211,7 @@ describe('feature request action', () => {
     first.labels = [basicConfig.featureRequestLabel];
     first.author.name = 'foo';
     basic.orgMembers = {
-      angular: ['foo']
+      angular: ['foo'],
     };
 
     await action.run(basic, basicConfig);
@@ -208,11 +225,11 @@ describe('feature request action', () => {
     first.labels = [basicConfig.featureRequestLabel, basicConfig.insufficientVotesLabel];
     first.comments.push({
       author: {
-        name: ''
+        name: '',
       },
       body: action.comment(action.CommentMarkers.Warn, basicConfig.warnComment),
       id: 1,
-      timestamp: Date.now() - (basicConfig.closeAfterWarnDaysDuration * 24 * 60 * 60 * 1000)
+      timestamp: Date.now() - basicConfig.closeAfterWarnDaysDuration * 24 * 60 * 60 * 1000,
     });
 
     await action.run(basic, basicConfig);
@@ -230,9 +247,9 @@ describe('feature request action', () => {
     basicConfig.limit = 1;
 
     // Two months ago
-    first.createdAt = Date.now() - (60 * 24 * 60 * 60 * 1000);
+    first.createdAt = Date.now() - 60 * 24 * 60 * 60 * 1000;
     // 300 days ago
-    second.createdAt = Date.now() - (300 * 24 * 60 * 60 * 1000);
+    second.createdAt = Date.now() - 300 * 24 * 60 * 60 * 1000;
 
     await action.run(basic, basicConfig);
 
@@ -243,7 +260,9 @@ describe('feature request action', () => {
     expect(second.comments.length).toBe(0);
 
     for await (const comment of first.comments) {
-      expect(comment.body).toEqual(action.comment(action.CommentMarkers.Warn, basicConfig.warnComment));
+      expect(comment.body).toEqual(
+        action.comment(action.CommentMarkers.Warn, basicConfig.warnComment),
+      );
     }
-  })
+  });
 });

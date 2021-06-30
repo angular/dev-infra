@@ -21089,7 +21089,7 @@ var require_action = __commonJS({
       const issue = await githubIssue.get();
       log_1.log(`Started processing issue #${issue.number}:
   Title:    ${issue.title}
-  Author:   ${issue.author}
+  Author:   ${issue.author.name}
   Votes:    ${issue.reactions["+1"]}
   Comments: ${issue.numComments}`);
       if (await githubAPI.isOrgMember(issue.author.name, config.organization)) {
@@ -21102,7 +21102,10 @@ var require_action = __commonJS({
       }
       if (await shouldConsiderIssue(issue, githubIssue, config)) {
         log_1.log(`Adding #${issue.number} for consideration.`);
-        return githubIssue.addLabel(config.underConsiderationLabel);
+        return Promise.all([
+          githubIssue.addLabel(config.underConsiderationLabel),
+          githubIssue.removeLabel(config.requiresVotesLabel)
+        ]);
       }
       if (!issue.labels.includes(config.requiresVotesLabel)) {
         log_1.log(`Adding votes required to #${issue.number}`);
@@ -21125,7 +21128,8 @@ var require_action = __commonJS({
         log_1.log(`Insufficient votes for feature request #${issue.number}`);
         const actions = [
           githubIssue.postComment(exports2.comment(CommentMarkers.Close, config.closeComment)),
-          githubIssue.addLabel(config.insufficientVotesLabel)
+          githubIssue.addLabel(config.insufficientVotesLabel),
+          githubIssue.removeLabel(config.requiresVotesLabel)
         ];
         if (config.closeWhenNoSufficientVotes) {
           actions.push(githubIssue.close());
