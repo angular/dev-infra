@@ -87,10 +87,10 @@ const processIssue = async (githubAPI: GitHubAPI, githubIssue: GitHubIssueAPI, c
 
   log(
     `Started processing issue #${issue.number}:\n` +
-    `  Title:    ${issue.title}\n` +
-    `  Author:   ${issue.author}\n` +
-    `  Votes:    ${issue.reactions['+1']}\n` +
-    `  Comments: ${issue.numComments}`
+      `  Title:    ${issue.title}\n` +
+      `  Author:   ${issue.author.name}\n` +
+      `  Votes:    ${issue.reactions['+1']}\n` +
+      `  Comments: ${issue.numComments}`,
   );
 
   // Issues opened by team members bypass the process.
@@ -114,7 +114,10 @@ const processIssue = async (githubAPI: GitHubAPI, githubIssue: GitHubIssueAPI, c
 
   if (await shouldConsiderIssue(issue, githubIssue, config)) {
     log(`Adding #${issue.number} for consideration.`);
-    return githubIssue.addLabel(config.underConsiderationLabel);
+    return Promise.all([
+      githubIssue.addLabel(config.underConsiderationLabel),
+      githubIssue.removeLabel(config.requiresVotesLabel),
+    ]);
   }
 
   if (!issue.labels.includes(config.requiresVotesLabel)) {
@@ -154,7 +157,8 @@ const processIssue = async (githubAPI: GitHubAPI, githubIssue: GitHubIssueAPI, c
     log(`Insufficient votes for feature request #${issue.number}`);
     const actions = [
       githubIssue.postComment(comment(CommentMarkers.Close, config.closeComment)),
-      githubIssue.addLabel(config.insufficientVotesLabel)
+      githubIssue.addLabel(config.insufficientVotesLabel),
+      githubIssue.removeLabel(config.requiresVotesLabel),
     ];
     if (config.closeWhenNoSufficientVotes) {
       actions.push(githubIssue.close());

@@ -13,7 +13,7 @@ export class APIMock implements GitHubAPI {
       next() {
         const result = Promise.resolve({
           value: self.issues[current],
-          done: current++ >= self.issues.length
+          done: current++ >= self.issues.length,
         } as IteratorReturnResult<IssueAPIMock>);
         return result;
       },
@@ -30,7 +30,6 @@ export class APIMock implements GitHubAPI {
     }
     return Promise.resolve(false);
   }
-
 }
 
 type OrgMembers = { [org: string]: string[] };
@@ -87,7 +86,7 @@ export class IssueAPIMock implements GitHubIssueAPI, Issue {
       next() {
         const result = Promise.resolve({
           value: self.comments[current],
-          done: current++ >= self.comments.length
+          done: current++ >= self.comments.length,
         } as IteratorReturnResult<Comment>);
         return result;
       },
@@ -106,6 +105,9 @@ export class IssueAPIMock implements GitHubIssueAPI, Issue {
   }
 
   removeLabel(label: string): Promise<void> {
+    if (!this.labels.includes(label)) {
+      return Promise.resolve();
+    }
     this.labels.splice(this.labels.indexOf(label), 1);
     return Promise.resolve();
   }
