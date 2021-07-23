@@ -24,28 +24,28 @@
   dependencies:
     tunnel "0.0.6"
 
-"@bazel/bazelisk@^1.9.0":
+"@bazel/bazelisk@^1.10.1":
   version "1.10.1"
   resolved "https://registry.yarnpkg.com/@bazel/bazelisk/-/bazelisk-1.10.1.tgz#46236a43ad58e310c55247f866da0dc6083c3d8b"
   integrity sha512-IHszNzBO2UrUy6YtsSAsZtnU6I6qpzXGkWdEvGoMxLgJnDsEnsIYniDCUjvjU1KAP+A03eepmCHlyFcRHMSxRA==
 
-"@bazel/esbuild@3.5.1":
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/@bazel/esbuild/-/esbuild-3.5.1.tgz#96c218d53f6b27c3d051ad000b190da14e71f2e7"
-  integrity sha512-JVHwGGJXVCU77+N4ig4MWaTogoG6mY9c9WOcJcS4E89ipVLMFBF9G7doW42ubxaPjREGHap5JCLsHsFWQMD5GQ==
+"@bazel/esbuild@4.0.0-beta.0":
+  version "4.0.0-beta.0"
+  resolved "https://registry.yarnpkg.com/@bazel/esbuild/-/esbuild-4.0.0-beta.0.tgz#ff75447b18bc0d56b376d7e44095d9ca9b904583"
+  integrity sha512-4AxL8IhyeyeTH0fr1XFfdd1ls/AnsiEu1oBXxoplb0ar88pRrdl0UjCUgLylWj75uIcQsqu/l3Xv7qOfDSXWsQ==
 
-"@bazel/jasmine@3.5.1":
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/@bazel/jasmine/-/jasmine-3.5.1.tgz#f4d79172a8f224e55f284dfe91d71d20ae57c8e8"
-  integrity sha512-0YxPGrYt4iwpjFCF8Tw9UC/EC2a0iD7DVtLpPzuOTVZhlZ/QIJUKQjRfYabwe6Hm4cu4cwPDj6i0OpkPXnQrVg==
+"@bazel/jasmine@4.0.0-beta.0":
+  version "4.0.0-beta.0"
+  resolved "https://registry.yarnpkg.com/@bazel/jasmine/-/jasmine-4.0.0-beta.0.tgz#575e9cd88932b19c54447fba43cbd62e14ff3022"
+  integrity sha512-VYEAaHCi8ot0aSMKbIio6usJZqvINd7LzrrGoChGAGwMgGEpTfMGdprwdlrQPKD6/GbLkVtkCcsViG92ynXhdQ==
   dependencies:
     c8 "~7.5.0"
     jasmine-reporters "~2.4.0"
 
-"@bazel/typescript@3.5.1":
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/@bazel/typescript/-/typescript-3.5.1.tgz#c6027d683adeefa2c3cebfa3ed5efa17c405a63b"
-  integrity sha512-dU5sGgaGdFWV1dJ1B+9iFbttgcKtmob+BvlM8mY7Nxq4j7/wVbgPjiVLOBeOD7kpzYep8JHXfhAokHt486IG+Q==
+"@bazel/typescript@4.0.0-beta.0":
+  version "4.0.0-beta.0"
+  resolved "https://registry.yarnpkg.com/@bazel/typescript/-/typescript-4.0.0-beta.0.tgz#daf2fb0d0bdcd3df331d4320463b1a4beca6031c"
+  integrity sha512-dfI3QLQ5bLyK3BIrrwxuH9cLbMHuku0UZH7nwjHjXwQX70O0MSGN6yXx2Vrqatj2iw/UfHX/akPuhGlNqrDFRw==
   dependencies:
     protobufjs "6.8.8"
     semver "5.6.0"

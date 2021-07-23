@@ -34,11 +34,6 @@ def esbuild(name, entry_point, save_to_repo = False, deps = []):
         name = "%s_esbuild" % name,
         entry_point = entry_point,
         deps = deps,
-        tool = select({
-            "@bazel_tools//src/conditions:darwin": "@esbuild_darwin//:bin/esbuild",
-            "@bazel_tools//src/conditions:windows": "@esbuild_windows//:esbuild.exe",
-            "@bazel_tools//src/conditions:linux_x86_64": "@esbuild_linux//:bin/esbuild",
-        }),
         platform = "node",
         target = "node12",
     )
