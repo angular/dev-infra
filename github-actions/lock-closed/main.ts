@@ -21,7 +21,7 @@ async function lockIssue(client: Octokit, issue: number, message: string): Promi
 
 /** Creates a promise which resolves after a set period of time. */
 function timeout(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return setTimeout.__promisify__(ms);
 }
 
 async function run(): Promise<void> {
