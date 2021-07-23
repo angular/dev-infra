@@ -6,20 +6,22 @@
  * https://github.com/microsoft/vscode-github-triage-actions/blob/eb561150d9bfab77954cfda7ffef149c07e0e079/api/octokit.ts
  */
 
-import { GitHub } from '@actions/github';
-import { Octokit } from '@octokit/rest';
+import { Octokit, RestEndpointMethodTypes } from '@octokit/rest';
 import { Comment, GitHubAPI, GitHubIssueAPI, Issue, Query } from './api';
 import { log } from './log';
 
+type IssuesGetResponse = RestEndpointMethodTypes['issues']['get']['response']['data'];
+type SearchIssuesAndPullRequestsResponseItemsItem = RestEndpointMethodTypes['search']['issuesAndPullRequests']['response']['data']['items'][0];
+
 export class OctoKit implements GitHubAPI {
-  private _octokit: GitHub;
+  private _octokit: Octokit;
 
   // The organization members will likely not change
   // between issues. We want to cache them so we
   // don't query the GitHub API for each issue.
   private _orgMembers = new Set<string>();
 
-  protected get octokit(): GitHub {
+  protected get octokit(): Octokit {
     return this._octokit;
   }
 
@@ -30,13 +32,25 @@ export class OctoKit implements GitHubAPI {
     protected params: { repo: string; owner: string },
     protected options: { readonly: boolean } = { readonly: false },
   ) {
-    this._octokit = new GitHub(token);
+    this._octokit = new Octokit({ token });
   }
 
   async *query(query: Query): AsyncIterableIterator<GitHubIssueAPI> {
+    let pageNum = 0;
+
+    const timeout = async () => {
+      if (pageNum < 2) {
+        /* pass */
+      } else if (pageNum < 4) {
+        await setTimeout.__promisify__(10000);
+      } else {
+        await setTimeout.__promisify__(30000);
+      }
+    };
+
     const q = `${query.q} repo:${this.params.owner}/${this.params.repo}`;
 
-    const options = this.octokit.search.issuesAndPullRequests.endpoint.merge({
+    const response = this.octokit.paginate.iterator(this.octokit.search.issuesAndPullRequests, {
       ...query,
       q,
       per_page: 100,
@@ -45,21 +59,9 @@ export class OctoKit implements GitHubAPI {
       headers: { Accept: 'application/vnd.github.squirrel-girl-preview+json' },
     });
 
-    let pageNum = 0;
-
-    const timeout = async () => {
-      if (pageNum < 2) {
-        /* pass */
-      } else if (pageNum < 4) {
-        await new Promise((resolve) => setTimeout(resolve, 10000));
-      } else {
-        await new Promise((resolve) => setTimeout(resolve, 30000));
-      }
-    };
-
-    for await (const pageResponse of this.octokit.paginate.iterator(options)) {
+    for await (const pageResponse of response) {
       await timeout();
-      const page: Array<Octokit.SearchIssuesAndPullRequestsResponseItemsItem> = pageResponse.data;
+      const page = pageResponse.data;
       log(`Page ${++pageNum}: ${page.map(({ number }) => number).join(' ')}`);
       for (const issue of page) {
         yield new OctoKitIssue(
@@ -77,16 +79,14 @@ export class OctoKit implements GitHubAPI {
       return this._orgMembers.has(name);
     }
 
-    const response = this.octokit.paginate.iterator(
-      this.octokit.orgs.listMembers.endpoint.merge({
-        org,
-        per_page: 100,
-      }),
-    );
+    const response = this.octokit.paginate.iterator(this.octokit.orgs.listMembers, {
+      org,
+      per_page: 100,
+    });
 
     for await (const page of response) {
-      for (const user of page.data as Octokit.OrgsListMembersResponse) {
-        this._orgMembers.add(user.login);
+      for (const user of page.data) {
+        this._orgMembers.add(user!.login);
       }
     }
 
@@ -94,22 +94,22 @@ export class OctoKit implements GitHubAPI {
   }
 
   protected octokitIssueToIssue(
-    issue: Octokit.IssuesGetResponse | Octokit.SearchIssuesAndPullRequestsResponseItemsItem,
+    issue: IssuesGetResponse | SearchIssuesAndPullRequestsResponseItemsItem,
   ): Issue {
     return {
-      author: { name: issue.user.login, isGitHubApp: issue.user.type === 'Bot' },
-      body: issue.body,
+      author: { name: issue.user!.login, isGitHubApp: issue.user!.type === 'Bot' },
+      body: issue.body || '',
       number: issue.number,
       title: issue.title,
-      labels: (issue.labels as Octokit.IssuesGetLabelResponse[]).map((label) => label.name),
+      labels: issue.labels.map(label => (typeof label === 'string' ? label : label.name!)),
       open: issue.state === 'open',
-      locked: (issue as any).locked,
+      locked: issue.locked,
       numComments: issue.comments,
-      reactions: (issue as any).reactions,
-      assignee: issue.assignee?.login ?? (issue as any).assignees?.[0]?.login,
+      reactions: (issue as IssuesGetResponse).reactions!,
+      assignee: issue.assignee?.login,
       createdAt: +new Date(issue.created_at),
       updatedAt: +new Date(issue.updated_at),
-      closedAt: issue.closed_at ? +new Date((issue.closed_at as unknown) as string) : undefined,
+      closedAt: issue.closed_at ? +new Date(issue.closed_at) : undefined,
     };
   }
 
@@ -129,7 +129,7 @@ export class OctoKit implements GitHubAPI {
 export class OctoKitIssue extends OctoKit implements GitHubIssueAPI {
   constructor(
     token: string,
-    protected params: { repo: string; owner: string },
+    params: { repo: string; owner: string },
     private issueData: { number: number } | Issue,
     options: { readonly: boolean } = { readonly: false },
   ) {
@@ -189,20 +189,18 @@ export class OctoKitIssue extends OctoKit implements GitHubIssueAPI {
   async *getComments(last?: boolean): AsyncIterableIterator<Comment> {
     log(`Fetching comments for #${this.issueData.number}`);
 
-    const response = this.octokit.paginate.iterator(
-      this.octokit.issues.listComments.endpoint.merge({
-        ...this.params,
-        issue_number: this.issueData.number,
-        per_page: 100,
-        ...(last ? { per_page: 1, page: (await this.get()).numComments } : {}),
-      }),
-    );
+    const response = this.octokit.paginate.iterator(this.octokit.issues.listComments, {
+      ...this.params,
+      issue_number: this.issueData.number,
+      per_page: 100,
+      ...(last ? { per_page: 1, page: (await this.get()).numComments } : {}),
+    });
 
     for await (const page of response) {
       for (const comment of page.data) {
         yield {
-          author: { name: comment.user.login, isGitHubApp: comment.user.type === 'Bot' },
-          body: comment.body,
+          author: { name: comment.user!.login, isGitHubApp: comment.user!.type === 'Bot' },
+          body: comment.body || '',
           id: comment.id,
           timestamp: +new Date(comment.created_at),
         };
