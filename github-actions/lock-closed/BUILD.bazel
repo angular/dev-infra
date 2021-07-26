@@ -1,23 +1,28 @@
 load("//tools:esbuild.bzl", "esbuild")
-load("//tools:defaults.bzl", "ts_project")
+load("//tools:defaults.bzl", "ts_library")
 
-package(default_visibility = ["//github-actions/lock-closed:__subpackages__"])
+package(default_visibility = ["//github-actions/feature-request:__subpackages__"])
 
-ts_project(
-    name = "lock-closed",
+ts_library(
+    name = "lib",
+    srcs = glob(
+        ["*.ts"],
+        exclude = ["*.spec.ts"],
+    ),
     deps = [
         "@npm//@actions/core",
         "@npm//@actions/github",
         "@npm//@octokit/rest",
+        "@npm//@types/node",
         "@npm//github-app-installation-token",
     ],
 )
 
 esbuild(
     name = "bundle",
-    entry_point = "main.js",
+    entry_point = "main.ts",
     save_to_repo = True,
     deps = [
-        ":lock-closed",
+        ":lib",
     ],
 )

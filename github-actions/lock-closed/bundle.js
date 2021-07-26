@@ -21849,7 +21849,7 @@ var require_dist = __commonJS({
   }
 });
 
-// bazel-out/k8-fastbuild/bin/github-actions/lock-closed/main.js
+// bazel-out/k8-fastbuild/bin/github-actions/lock-closed/main.mjs
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var core = require_core();
