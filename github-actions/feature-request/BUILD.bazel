@@ -1,36 +1,45 @@
 load("//tools:esbuild.bzl", "esbuild")
-load("//tools:defaults.bzl", "jasmine_node_test", "ts_project")
+load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
 
 package(default_visibility = ["//github-actions/feature-request:__subpackages__"])
 
-ts_project(
-    name = "feature-request",
+ts_library(
+    name = "lib",
+    srcs = glob(
+        ["src/*.ts"],
+        exclude = ["src/*.spec.ts"],
+    ),
     deps = [
         "@npm//@actions/core",
         "@npm//@actions/github",
         "@npm//@octokit/rest",
-        "@npm//@types/jasmine",
+        "@npm//@types/node",
         "@npm//github-app-installation-token",
+    ],
+)
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob(["src/*.spec.ts"]),
+    deps = [
+        ":lib",
         "@npm//jasmine",
     ],
 )
 
 jasmine_node_test(
     name = "test",
-    srcs = [
-        ":src/action.spec.js",
-        ":src/get-input.spec.js",
-    ],
-    deps = [
-        ":feature-request",
+    specs = [
+        ":test_lib",
     ],
 )
 
 esbuild(
     name = "bundle",
-    entry_point = ":src/main.js",
+    entry_point = ":src/main.ts",
     save_to_repo = True,
     deps = [
-        ":feature-request",
+        ":lib",
     ],
 )
