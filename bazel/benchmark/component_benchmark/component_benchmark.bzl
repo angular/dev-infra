@@ -1,5 +1,5 @@
-load("//dev-infra/benchmark/ng_rollup_bundle:ng_rollup_bundle.bzl", "ng_rollup_bundle")
-load("//tools:defaults.bzl", "ng_module")
+load("//bazel/benchmark/ng_rollup_bundle:ng_rollup_bundle.bzl", "ng_rollup_bundle")
+load("@npm//@angular/bazel:index.bzl", "ng_module")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("@npm//@bazel/concatjs:index.bzl", "concatjs_devserver")
 load(":benchmark_test.bzl", "benchmark_test")
@@ -14,7 +14,7 @@ def copy_default_file(origin, destination):
     """
     native.genrule(
         name = "copy_default_" + origin + "_file_genrule",
-        srcs = ["//dev-infra/benchmark/component_benchmark/defaults:" + origin],
+        srcs = ["//bazel/benchmark/component_benchmark/defaults:" + origin],
         outs = [destination],
         cmd = "cat $(SRCS) >> $@",
     )
@@ -31,8 +31,8 @@ def component_benchmark(
         styles = None,
         entry_point = None,
         entry_point_deps = [
-            "//packages/core",
-            "//packages/platform-browser",
+            "@npm//@angular/core",
+            "@npm//@angular/platform-browser",
         ]):
     """
     Runs a benchmark test against the given angular app using the given driver.
@@ -111,7 +111,7 @@ def component_benchmark(
         # Creates ngFactory and ngSummary to be imported by the app's entry point.
         generate_ve_shims = True,
         deps = ng_deps,
-        tsconfig = "//dev-infra/benchmark/component_benchmark:tsconfig-e2e.json",
+        tsconfig = "//bazel/benchmark/component_benchmark:tsconfig-e2e.json",
     )
 
     # Bundle the application (needed by concatjs_devserver).
@@ -124,7 +124,7 @@ def component_benchmark(
     # The ts_library for the driver that runs tests against the benchmark app.
     ts_library(
         name = benchmark_driver,
-        tsconfig = "//dev-infra/benchmark/component_benchmark:tsconfig-e2e.json",
+        tsconfig = "//bazel/benchmark/component_benchmark:tsconfig-e2e.json",
         testonly = True,
         srcs = [driver],
         deps = driver_deps,
@@ -133,11 +133,11 @@ def component_benchmark(
     # The server for our application.
     concatjs_devserver(
         name = server,
-        bootstrap = ["//packages/zone.js/bundles:zone.umd.js"],
+        bootstrap = ["@npm//zone.js/bundles:zone.umd.js"],
         port = 4200,
         static_files = assets + styles,
         deps = [":" + app_main + ".min_debug.js"],
-        additional_root_paths = ["//dev-infra/benchmark/component_benchmark/defaults"],
+        additional_root_paths = ["//bazel/benchmark/component_benchmark/defaults"],
         serving_path = "/app_bundle.js",
     )
 

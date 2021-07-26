@@ -1,4 +1,4 @@
-load("//dev-infra/bazel/browsers:browser_archive_repo.bzl", "browser_archive")
+load("//bazel/browsers:browser_archive_repo.bzl", "browser_archive")
 
 """
   Defines repositories for Firefox that can be used inside Karma unit tests
