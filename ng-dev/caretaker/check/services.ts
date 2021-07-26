@@ -19,7 +19,7 @@ interface ServiceConfig {
 /** The results of checking the status of a service */
 interface StatusCheckResult {
   name: string;
-  status: 'passing'|'failing';
+  status: 'passing' | 'failing';
   description: string;
   lastUpdated: Date;
 }
@@ -46,12 +46,12 @@ export const services: ServiceConfig[] = [
 
 export class ServicesModule extends BaseModule<StatusCheckResult[]> {
   override async retrieveData() {
-    return Promise.all(services.map(service => this.getStatusFromStandardApi(service)));
+    return Promise.all(services.map((service) => this.getStatusFromStandardApi(service)));
   }
 
   override async printToTerminal() {
     const statuses = await this.data;
-    const serviceNameMinLength = Math.max(...statuses.map(service => service.name.length));
+    const serviceNameMinLength = Math.max(...statuses.map((service) => service.name.length));
     info.group(bold('Service Statuses'));
     for (const status of statuses) {
       const name = status.name.padEnd(serviceNameMinLength);
@@ -69,13 +69,13 @@ export class ServicesModule extends BaseModule<StatusCheckResult[]> {
 
   /** Retrieve the status information for a service which uses a standard API response. */
   async getStatusFromStandardApi(service: ServiceConfig): Promise<StatusCheckResult> {
-    const result = await fetch(service.url).then(result => result.json());
+    const result = await fetch(service.url).then((result) => result.json());
     const status = result.status.indicator === 'none' ? 'passing' : 'failing';
     return {
       name: service.name,
       status,
       description: result.status.description,
-      lastUpdated: new Date(result.page.updated_at)
+      lastUpdated: new Date(result.page.updated_at),
     };
   }
 }

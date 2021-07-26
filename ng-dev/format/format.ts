@@ -64,13 +64,13 @@ export async function checkFiles(files: string[]) {
 
     if (runFormatter) {
       // Format the failing files as requested.
-      await formatFiles(failures.map(f => f.filePath));
+      await formatFiles(failures.map((f) => f.filePath));
       process.exit(0);
     } else {
       // Inform user how to format files in the future.
       info();
       info(`To format the failing file run the following command:`);
-      info(`  yarn ng-dev format files ${failures.map(f => f.filePath).join(' ')}`);
+      info(`  yarn ng-dev format files ${failures.map((f) => f.filePath).join(' ')}`);
       process.exit(1);
     }
   } else {

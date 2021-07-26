@@ -27,21 +27,28 @@ export class ReleaseNotes {
   /** An instance of GitClient. */
   private git = GitClient.get();
   /** The RenderContext to be used during rendering. */
-  private renderContext: RenderContext|undefined;
+  private renderContext: RenderContext | undefined;
   /** The title to use for the release. */
-  private title: string|false|undefined;
+  private title: string | false | undefined;
   /** A promise resolving to a list of Commits since the latest semver tag on the branch. */
-  private commits: Promise<CommitFromGitLog[]> =
-      this.getCommitsInRange(this.startingRef, this.endingRef);
+  private commits: Promise<CommitFromGitLog[]> = this.getCommitsInRange(
+    this.startingRef,
+    this.endingRef,
+  );
   /** The configuration for release notes. */
   private config: ReleaseNotesConfig = this.getReleaseConfig().releaseNotes;
 
   protected constructor(
-      public version: semver.SemVer, private startingRef: string, private endingRef: string) {}
+    public version: semver.SemVer,
+    private startingRef: string,
+    private endingRef: string,
+  ) {}
 
   /** Retrieve the release note generated for a Github Release. */
   async getGithubReleaseEntry(): Promise<string> {
-    return render(githubReleaseTemplate, await this.generateRenderContext(), {rmWhitespace: true});
+    return render(githubReleaseTemplate, await this.generateRenderContext(), {
+      rmWhitespace: true,
+    });
   }
 
   /** Retrieve the release note generated for a CHANGELOG entry. */
@@ -78,7 +85,6 @@ export class ReleaseNotes {
     }
     return this.renderContext;
   }
-
 
   // These methods are used for access to the utility functions while allowing them to be
   // overwritten in subclasses during testing.

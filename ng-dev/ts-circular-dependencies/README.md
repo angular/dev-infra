@@ -43,8 +43,8 @@ capture at least one of the other cycles. The golden will change in an unexpecte
 Other algorithms exist which are proven to print out _all_ the elementary cycles in a directed
 graph. For example:
 
-* [Johnson's algorithm for finding simple cycles][johnson-cycles].
-* [Tarjan's algorithm for enumerating elementary circuits][tarjan-cycles].
+- [Johnson's algorithm for finding simple cycles][johnson-cycles].
+- [Tarjan's algorithm for enumerating elementary circuits][tarjan-cycles].
 
 Experiments with these algorithms unveiled that usual source file graphs we have in Angular
 repositories are too large to be processed in acceptable time. At the time of writing, the
@@ -57,7 +57,7 @@ such algorithms is described to be `O((n + e)(c + 1))` where `c` is the number o
 circuits. Donald B. Johnson describes the number of elementary circuits the followed:
 
 > Thus the number of elementary circuits in a directed graph can grow faster with n than
-the exponential 2"
+> the exponential 2"
 
 This shows quite well that these algorithms become quickly inefficient the more vertices, edges
 and simple cycles a graph has. Finding elementary cycles of arbitrary length seems NP-complete as
@@ -66,16 +66,16 @@ finding a Hamiltonian cycle with length of `n` is NP-complete too. Below is a qu
 _fixed_ length that seems to confirm this hypothesis:
 
 > It is well known that finding the longest cycle in a graph is a hard problem, since finding
-a hamiltonian cycle is NP-complete. Hence finding a simple cycle of length k, for an arbitrary
-k, is NP-complete. 
+> a hamiltonian cycle is NP-complete. Hence finding a simple cycle of length k, for an arbitrary
+> k, is NP-complete.
 
 Other tools like `madge` or `dpdm` have the same limitations.
 
 **Resources**:
 
-* [Finding all the elementary circuits of a directed graph - Donald. B. Johnson][johnson-cycles]
-* [Enumeration of the elementary circuits of a directed graph - Robert Tarjan][tarjan-cycles]
-* [Once again: Finding simple cycles in graphs - Carsten Dorgerlohx; Jürgen Wirtgen][np-complete-cycles]
+- [Finding all the elementary circuits of a directed graph - Donald. B. Johnson][johnson-cycles]
+- [Enumeration of the elementary circuits of a directed graph - Robert Tarjan][tarjan-cycles]
+- [Once again: Finding simple cycles in graphs - Carsten Dorgerlohx; Jürgen Wirtgen][np-complete-cycles]
 
 [johnson-cycles]: https://www.cs.tufts.edu/comp/150GA/homeworks/hw1/Johnson%2075.PDF
 [tarjan-cycles]: https://ecommons.cornell.edu/bitstream/handle/1813/5941/72-145.pdf?sequence=1&isAllowed=y

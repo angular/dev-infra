@@ -12,7 +12,6 @@ import {addGithubTokenOption} from '../../utils/git/github-yargs';
 
 import {updateCaretakerTeamViaPrompt} from './update-github-team';
 
-
 export interface CaretakerHandoffOptions {
   githubToken: string;
 }

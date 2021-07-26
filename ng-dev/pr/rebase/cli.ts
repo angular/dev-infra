@@ -24,7 +24,9 @@ export function buildRebaseCommand(yargs: Argv): Argv<RebaseCommandOptions> {
 }
 
 /** Handles the rebase pull request command. */
-export async function handleRebaseCommand(
-    {prNumber, githubToken}: Arguments<RebaseCommandOptions>) {
+export async function handleRebaseCommand({
+  prNumber,
+  githubToken,
+}: Arguments<RebaseCommandOptions>) {
   await rebasePr(prNumber, githubToken);
 }

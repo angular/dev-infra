@@ -45,15 +45,17 @@ export class PullApproveGroup {
   readonly reviewers: GroupReviewers;
 
   constructor(
-      public groupName: string, config: PullApproveGroupConfig,
-      readonly precedingGroups: PullApproveGroup[] = []) {
+    public groupName: string,
+    config: PullApproveGroupConfig,
+    readonly precedingGroups: PullApproveGroup[] = [],
+  ) {
     this._captureConditions(config);
     this.reviewers = config.reviewers ?? {users: [], teams: []};
   }
 
   private _captureConditions(config: PullApproveGroupConfig) {
     if (config.conditions) {
-      return config.conditions.forEach(condition => {
+      return config.conditions.forEach((condition) => {
         const expression = condition.trim();
 
         if (expression.match(GLOBAL_APPROVAL_CONDITION_REGEX)) {
@@ -103,10 +105,11 @@ export class PullApproveGroup {
           // Return true so that `this.conditions.every` can continue evaluating.
           return true;
         } else {
-          const errMessage = `Condition could not be evaluated: \n\n` +
-              `From the [${this.groupName}] group:\n` +
-              ` - ${expression}` +
-              `\n\n${e.message} ${e.stack}\n\n`;
+          const errMessage =
+            `Condition could not be evaluated: \n\n` +
+            `From the [${this.groupName}] group:\n` +
+            ` - ${expression}` +
+            `\n\n${e.message} ${e.stack}\n\n`;
           error(errMessage);
           process.exit(1);
         }
@@ -116,10 +119,11 @@ export class PullApproveGroup {
 
   /** Retrieve the results for the Group, all matched and unmatched conditions. */
   getResults(): PullApproveGroupResult {
-    const matchedConditions = this.conditions.filter(c => c.matchedFiles.size > 0);
-    const unmatchedConditions =
-        this.conditions.filter(c => c.matchedFiles.size === 0 && !c.unverifiable);
-    const unverifiableConditions = this.conditions.filter(c => c.unverifiable);
+    const matchedConditions = this.conditions.filter((c) => c.matchedFiles.size > 0);
+    const unmatchedConditions = this.conditions.filter(
+      (c) => c.matchedFiles.size === 0 && !c.unverifiable,
+    );
+    const unverifiableConditions = this.conditions.filter((c) => c.unverifiable);
     return {
       matchedConditions,
       matchedCount: matchedConditions.length,

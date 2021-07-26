@@ -6,26 +6,30 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {spawn as _spawn, SpawnOptions as _SpawnOptions, spawnSync as _spawnSync, SpawnSyncOptions as _SpawnSyncOptions} from 'child_process';
+import {
+  spawn as _spawn,
+  SpawnOptions as _SpawnOptions,
+  spawnSync as _spawnSync,
+  SpawnSyncOptions as _SpawnSyncOptions,
+} from 'child_process';
 import {debug, error} from './console';
 
-
 /** Interface describing the options for spawning a process synchronously. */
-export interface SpawnSyncOptions extends Omit<_SpawnSyncOptions, 'shell'|'stdio'> {
+export interface SpawnSyncOptions extends Omit<_SpawnSyncOptions, 'shell' | 'stdio'> {
   /** Whether to prevent exit codes being treated as failures. */
   suppressErrorOnFailingExitCode?: boolean;
 }
 
 /** Interface describing the options for spawning a process. */
-export interface SpawnOptions extends Omit<_SpawnOptions, 'shell'|'stdio'> {
+export interface SpawnOptions extends Omit<_SpawnOptions, 'shell' | 'stdio'> {
   /** Console output mode. Defaults to "enabled". */
-  mode?: 'enabled'|'silent'|'on-error';
+  mode?: 'enabled' | 'silent' | 'on-error';
   /** Whether to prevent exit codes being treated as failures. */
   suppressErrorOnFailingExitCode?: boolean;
 }
 
 /** Interface describing the options for spawning an interactive process. */
-export type SpawnInteractiveCommandOptions = Omit<_SpawnOptions, 'shell'|'stdio'>;
+export type SpawnInteractiveCommandOptions = Omit<_SpawnOptions, 'shell' | 'stdio'>;
 
 /** Interface describing the result of a spawned process. */
 export interface SpawnResult {
@@ -34,7 +38,7 @@ export interface SpawnResult {
   /** Captured stderr in string format. */
   stderr: string;
   /** The exit code or signal of the process. */
-  status: number|NodeJS.Signals;
+  status: number | NodeJS.Signals;
 }
 
 /**
@@ -44,12 +48,15 @@ export interface SpawnResult {
  * @returns a Promise resolving on success, and rejecting on command failure with the status code.
  */
 export function spawnInteractive(
-    command: string, args: string[], options: SpawnInteractiveCommandOptions = {}) {
+  command: string,
+  args: string[],
+  options: SpawnInteractiveCommandOptions = {},
+) {
   return new Promise<void>((resolve, reject) => {
     const commandText = `${command} ${args.join(' ')}`;
     debug(`Executing command: ${commandText}`);
     const childProcess = _spawn(command, args, {...options, shell: true, stdio: 'inherit'});
-    childProcess.on('exit', status => status === 0 ? resolve() : reject(status));
+    childProcess.on('exit', (status) => (status === 0 ? resolve() : reject(status)));
   });
 }
 
@@ -62,7 +69,10 @@ export function spawnInteractive(
  *   rejects on command failure.
  */
 export function spawn(
-    command: string, args: string[], options: SpawnOptions = {}): Promise<SpawnResult> {
+  command: string,
+  args: string[],
+  options: SpawnOptions = {},
+): Promise<SpawnResult> {
   return new Promise((resolve, reject) => {
     const commandText = `${command} ${args.join(' ')}`;
     const outputMode = options.mode;
@@ -76,7 +86,7 @@ export function spawn(
 
     // Capture the stdout separately so that it can be passed as resolve value.
     // This is useful if commands return parsable stdout.
-    childProcess.stderr.on('data', message => {
+    childProcess.stderr.on('data', (message) => {
       stderr += message;
       logOutput += message;
       // If console output is enabled, print the message directly to the stderr. Note that
@@ -86,7 +96,7 @@ export function spawn(
       }
     });
 
-    childProcess.stdout.on('data', message => {
+    childProcess.stdout.on('data', (message) => {
       stdout += message;
       logOutput += message;
       // If console output is enabled, print the message directly to the stderr. Note that
@@ -121,12 +131,19 @@ export function spawn(
  * @returns The command's stdout and stderr.
  */
 export function spawnSync(
-    command: string, args: string[], options: SpawnSyncOptions = {}): SpawnResult {
+  command: string,
+  args: string[],
+  options: SpawnSyncOptions = {},
+): SpawnResult {
   const commandText = `${command} ${args.join(' ')}`;
   debug(`Executing command: ${commandText}`);
 
-  const {status: exitCode, signal, stdout, stderr} =
-      _spawnSync(command, args, {...options, encoding: 'utf8', shell: true, stdio: 'pipe'});
+  const {
+    status: exitCode,
+    signal,
+    stdout,
+    stderr,
+  } = _spawnSync(command, args, {...options, encoding: 'utf8', shell: true, stdio: 'pipe'});
 
   /** The status of the spawn result. */
   const status = statusFromExitCodeAndSignal(exitCode, signal);
@@ -146,6 +163,6 @@ export function spawnSync(
  *
  * For more details see: https://nodejs.org/api/child_process.html#child_process_event_exit
  */
-function statusFromExitCodeAndSignal(exitCode: number|null, signal: NodeJS.Signals|null) {
+function statusFromExitCodeAndSignal(exitCode: number | null, signal: NodeJS.Signals | null) {
   return exitCode ?? signal ?? -1;
 }

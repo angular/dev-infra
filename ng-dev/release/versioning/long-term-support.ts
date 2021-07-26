@@ -49,8 +49,9 @@ const majorLongTermSupportDuration = 12;
 const ltsNpmDistTagRegex = /^v(\d+)-lts$/;
 
 /** Finds all long-term support release trains from the specified NPM package. */
-export async function fetchLongTermSupportBranchesFromNpm(config: ReleaseConfig):
-    Promise<LtsBranches> {
+export async function fetchLongTermSupportBranchesFromNpm(
+  config: ReleaseConfig,
+): Promise<LtsBranches> {
   const {'dist-tags': distTags, time} = await fetchProjectNpmPackageInfo(config);
   const today = new Date();
   const active: LtsBranch[] = [];
@@ -94,10 +95,14 @@ export function isLtsDistTag(tagName: string): tagName is LtsNpmDistTag {
  */
 export function computeLtsEndDateOfMajor(majorReleaseDate: Date): Date {
   return new Date(
-      majorReleaseDate.getFullYear(),
-      majorReleaseDate.getMonth() + majorActiveSupportDuration + majorLongTermSupportDuration,
-      majorReleaseDate.getDate(), majorReleaseDate.getHours(), majorReleaseDate.getMinutes(),
-      majorReleaseDate.getSeconds(), majorReleaseDate.getMilliseconds());
+    majorReleaseDate.getFullYear(),
+    majorReleaseDate.getMonth() + majorActiveSupportDuration + majorLongTermSupportDuration,
+    majorReleaseDate.getDate(),
+    majorReleaseDate.getHours(),
+    majorReleaseDate.getMinutes(),
+    majorReleaseDate.getSeconds(),
+    majorReleaseDate.getMilliseconds(),
+  );
 }
 
 /** Gets the long-term support NPM dist tag for a given major version. */

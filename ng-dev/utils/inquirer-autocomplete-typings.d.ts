@@ -8,8 +8,7 @@
 
 // inquirer-autocomplete-prompt doesn't provide types and no types are made available via
 // DefinitelyTyped.
-declare module "inquirer-autocomplete-prompt" {
-
+declare module 'inquirer-autocomplete-prompt' {
   import {registerPrompt} from 'inquirer';
 
   let AutocompletePrompt: Parameters<typeof registerPrompt>[1];

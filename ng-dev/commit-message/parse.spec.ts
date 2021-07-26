@@ -21,7 +21,6 @@ const commitValues: CommitMessageParts = {
 
 const buildCommitMessage = commitMessageBuilder(commitValues);
 
-
 describe('commit message parsing:', () => {
   describe('parses the scope', () => {
     it('when only a scope is defined', () => {
@@ -44,8 +43,9 @@ describe('commit message parsing:', () => {
 
   it('parses the header', () => {
     const message = buildCommitMessage();
-    expect(parseCommitMessage(message).header)
-        .toBe(`${commitValues.type}(${commitValues.scope}): ${commitValues.summary}`);
+    expect(parseCommitMessage(message).header).toBe(
+      `${commitValues.type}(${commitValues.scope}): ${commitValues.summary}`,
+    );
   });
 
   it('parses the body', () => {
@@ -87,22 +87,25 @@ describe('commit message parsing:', () => {
 
   it('ignores comment lines', () => {
     const message = buildCommitMessage({
-      prefix: '# This is a comment line before the header.\n' +
-          '## This is another comment line before the headers.\n',
-      body: '# This is a comment line befor the body.\n' +
-          'This is line 1 of the actual body.\n' +
-          '## This is another comment line inside the body.\n' +
-          'This is line 2 of the actual body (and it also contains a # but it not a comment).\n' +
-          '### This is yet another comment line after the body.\n',
+      prefix:
+        '# This is a comment line before the header.\n' +
+        '## This is another comment line before the headers.\n',
+      body:
+        '# This is a comment line befor the body.\n' +
+        'This is line 1 of the actual body.\n' +
+        '## This is another comment line inside the body.\n' +
+        'This is line 2 of the actual body (and it also contains a # but it not a comment).\n' +
+        '### This is yet another comment line after the body.\n',
     });
     const parsedMessage = parseCommitMessage(message);
 
-    expect(parsedMessage.header)
-        .toBe(`${commitValues.type}(${commitValues.scope}): ${commitValues.summary}`);
-    expect(parsedMessage.body)
-        .toBe(
-            'This is line 1 of the actual body.\n' +
-            'This is line 2 of the actual body (and it also contains a # but it not a comment).');
+    expect(parsedMessage.header).toBe(
+      `${commitValues.type}(${commitValues.scope}): ${commitValues.summary}`,
+    );
+    expect(parsedMessage.body).toBe(
+      'This is line 1 of the actual body.\n' +
+        'This is line 2 of the actual body (and it also contains a # but it not a comment).',
+    );
   });
 
   describe('parses breaking change notes', () => {
@@ -138,8 +141,9 @@ describe('commit message parsing:', () => {
 
     it('only when keyword is at the beginning of a line', () => {
       const message = buildCommitMessage({
-        body: 'This changes how the `BREAKING CHANGE: ` commit message note\n' +
-            'keyword is detected for the changelog.',
+        body:
+          'This changes how the `BREAKING CHANGE: ` commit message note\n' +
+          'keyword is detected for the changelog.',
       });
       const parsedMessage = parseCommitMessage(message);
       expect(parsedMessage.breakingChanges.length).toBe(0);
@@ -149,7 +153,6 @@ describe('commit message parsing:', () => {
   describe('parses deprecation notes', () => {
     const summary = 'This will break things later';
     const description = 'This is a long winded explanation of why it \nwill break things later.';
-
 
     it('when only a summary is provided', () => {
       const message = buildCommitMessage({
@@ -180,8 +183,9 @@ describe('commit message parsing:', () => {
 
     it('only when keyword is at the beginning of a line', () => {
       const message = buildCommitMessage({
-        body: 'This changes how the `DEPRECATED: ` commit message note\n' +
-            'keyword is detected for the changelog.',
+        body:
+          'This changes how the `DEPRECATED: ` commit message note\n' +
+          'keyword is detected for the changelog.',
       });
       const parsedMessage = parseCommitMessage(message);
       expect(parsedMessage.deprecations.length).toBe(0);

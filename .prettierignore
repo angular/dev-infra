@@ -1,2 +1,4 @@
 github-actions/feature-request/bundle.js
 github-actions/lock-closed/bundle.js
+ng-dev/ng-dev.js
+ng-dev/build-worker.js

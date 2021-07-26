@@ -26,8 +26,10 @@ export class CutReleaseCandidateAction extends ReleaseAction {
     const {branchName} = this.active.releaseCandidate!;
     const newVersion = this._newVersion;
 
-    const {pullRequest, releaseNotes} =
-        await this.checkoutBranchAndStageVersion(newVersion, branchName);
+    const {pullRequest, releaseNotes} = await this.checkoutBranchAndStageVersion(
+      newVersion,
+      branchName,
+    );
 
     await this.waitForPullRequestToBeMerged(pullRequest);
     await this.buildAndPublish(releaseNotes, branchName, 'next');
@@ -37,7 +39,8 @@ export class CutReleaseCandidateAction extends ReleaseAction {
   static override async isActive(active: ActiveReleaseTrains) {
     // A release-candidate can be cut for an active release-train currently
     // in the feature-freeze phase.
-    return active.releaseCandidate !== null &&
-        active.releaseCandidate.version.prerelease[0] === 'next';
+    return (
+      active.releaseCandidate !== null && active.releaseCandidate.version.prerelease[0] === 'next'
+    );
   }
 }

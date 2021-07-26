@@ -103,7 +103,7 @@ export const COMMIT_TYPES: {[key: string]: CommitType} = {
   },
   test: {
     name: 'test',
-    description: 'Improvements or corrections made to the project\'s test suite',
+    description: "Improvements or corrections made to the project's test suite",
     scope: ScopeRequirement.Optional,
     releaseNotesLevel: ReleaseNotesLevel.Hidden,
   },

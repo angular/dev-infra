@@ -12,16 +12,15 @@ import {fetchActiveReleaseTrains, ReleaseTrain} from '../../release/versioning/i
 import {bold, debug, info} from '../../utils/console';
 import {BaseModule} from './base';
 
-
 /** The result of checking a branch on CI. */
-type CiBranchStatus = 'success'|'failed'|'not found';
+type CiBranchStatus = 'success' | 'failed' | 'not found';
 
 /** A list of results for checking CI branches. */
 type CiData = {
-  active: boolean,
-  name: string,
-  label: string,
-  status: CiBranchStatus,
+  active: boolean;
+  name: string;
+  label: string;
+  status: CiBranchStatus;
 }[];
 
 export class CiModule extends BaseModule<CiData> {
@@ -29,34 +28,34 @@ export class CiModule extends BaseModule<CiData> {
     const gitRepoWithApi = {api: this.git.github, ...this.git.remoteConfig};
     const releaseTrains = await fetchActiveReleaseTrains(gitRepoWithApi);
 
-    const ciResultPromises = Object.entries(releaseTrains).map(async ([trainName, train]: [
-                                                                 string, ReleaseTrain|null
-                                                               ]) => {
-      if (train === null) {
-        return {
-          active: false,
-          name: trainName,
-          label: '',
-          status: 'not found' as const,
-        };
-      }
+    const ciResultPromises = Object.entries(releaseTrains).map(
+      async ([trainName, train]: [string, ReleaseTrain | null]) => {
+        if (train === null) {
+          return {
+            active: false,
+            name: trainName,
+            label: '',
+            status: 'not found' as const,
+          };
+        }
 
-      return {
-        active: true,
-        name: train.branchName,
-        label: `${trainName} (${train.branchName})`,
-        status: await this.getBranchStatusFromCi(train.branchName),
-      };
-    });
+        return {
+          active: true,
+          name: train.branchName,
+          label: `${trainName} (${train.branchName})`,
+          status: await this.getBranchStatusFromCi(train.branchName),
+        };
+      },
+    );
 
     return await Promise.all(ciResultPromises);
   }
 
   override async printToTerminal() {
     const data = await this.data;
-    const minLabelLength = Math.max(...data.map(result => result.label.length));
+    const minLabelLength = Math.max(...data.map((result) => result.label.length));
     info.group(bold(`CI`));
-    data.forEach(result => {
+    data.forEach((result) => {
       if (result.active === false) {
         debug(`No active release train for ${result.name}`);
         return;
@@ -78,7 +77,7 @@ export class CiModule extends BaseModule<CiData> {
   private async getBranchStatusFromCi(branch: string): Promise<CiBranchStatus> {
     const {owner, name} = this.git.remoteConfig;
     const url = `https://circleci.com/gh/${owner}/${name}/tree/${branch}.svg?style=shield`;
-    const result = await fetch(url).then(result => result.text());
+    const result = await fetch(url).then((result) => result.text());
 
     if (result && !result.includes('no builds')) {
       return result.includes('passing') ? 'success' : 'failed';

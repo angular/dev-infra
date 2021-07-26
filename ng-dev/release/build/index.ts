@@ -16,20 +16,21 @@ import {BuiltPackage} from '../config/index';
  * pollute the stdout in such cases, we launch a child process for building the release packages
  * and redirect all stdout output to the stderr channel (which can be read in the terminal).
  */
-export async function buildReleaseOutput(stampForRelease: boolean = false):
-    Promise<BuiltPackage[]|null> {
-  return new Promise(resolve => {
+export async function buildReleaseOutput(
+  stampForRelease: boolean = false,
+): Promise<BuiltPackage[] | null> {
+  return new Promise((resolve) => {
     const buildProcess = fork(require.resolve('./build-worker'), [`${stampForRelease}`], {
       // The stdio option is set to redirect any "stdout" output directly to the "stderr" file
       // descriptor. An additional "ipc" file descriptor is created to support communication with
       // the build process. https://nodejs.org/api/child_process.html#child_process_options_stdio.
       stdio: ['inherit', 2, 2, 'ipc'],
     });
-    let builtPackages: BuiltPackage[]|null = null;
+    let builtPackages: BuiltPackage[] | null = null;
 
     // The child process will pass the `buildPackages()` output through the
     // IPC channel. We keep track of it so that we can use it as resolve value.
-    buildProcess.on('message', buildResponse => builtPackages = buildResponse);
+    buildProcess.on('message', (buildResponse) => (builtPackages = buildResponse));
 
     // On child process exit, resolve the promise with the received output.
     buildProcess.on('exit', () => resolve(builtPackages));

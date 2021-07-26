@@ -25,23 +25,21 @@ export class ClangFormat extends Formatter {
   override actions = {
     check: {
       commandFlags: `--Werror -n -style=file`,
-      callback:
-          (_: string, code: number|NodeJS.Signals) => {
-            return code !== 0;
-          },
+      callback: (_: string, code: number | NodeJS.Signals) => {
+        return code !== 0;
+      },
     },
     format: {
       commandFlags: `-i -style=file`,
-      callback:
-          (file: string, code: number|NodeJS.Signals, _: string, stderr: string) => {
-            if (code !== 0) {
-              error(`Error running clang-format on: ${file}`);
-              error(stderr);
-              error();
-              return true;
-            }
-            return false;
-          }
-    }
+      callback: (file: string, code: number | NodeJS.Signals, _: string, stderr: string) => {
+        if (code !== 0) {
+          error(`Error running clang-format on: ${file}`);
+          error(stderr);
+          error();
+          return true;
+        }
+        return false;
+      },
+    },
   };
 }

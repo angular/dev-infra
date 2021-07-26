@@ -33,14 +33,14 @@ export interface GithubConfig extends GitClientConfig {}
 
 /** The common configuration for ng-dev. */
 type CommonConfig = {
-  github: GithubConfig
+  github: GithubConfig;
 };
 
 /**
  * The configuration for the specific ng-dev command, providing both the common
  * ng-dev config as well as the specific config of a subcommand.
  */
-export type NgDevConfig<T = {}> = CommonConfig&T;
+export type NgDevConfig<T = {}> = CommonConfig & T;
 
 /**
  * The filename expected for creating the ng-dev config, without the file
@@ -49,7 +49,7 @@ export type NgDevConfig<T = {}> = CommonConfig&T;
 const CONFIG_FILE_PATH = '.ng-dev/config';
 
 /** The configuration for ng-dev. */
-let cachedConfig: NgDevConfig|null = null;
+let cachedConfig: NgDevConfig | null = null;
 
 /**
  * The filename expected for local user config, without the file extension to allow a typescript,
@@ -58,7 +58,7 @@ let cachedConfig: NgDevConfig|null = null;
 const USER_CONFIG_FILE_PATH = '.ng-dev.user';
 
 /** The local user configuration for ng-dev. */
-let userConfig: {[key: string]: any}|null = null;
+let userConfig: {[key: string]: any} | null = null;
 
 /**
  * Get the configuration from the file system, returning the already loaded
@@ -105,14 +105,20 @@ function validateCommonConfig(config: Partial<NgDevConfig>) {
 function readConfigFile(configPath: string, returnEmptyObjectOnError = false): object {
   // If the `.ts` extension has not been set up already, and a TypeScript based
   // version of the given configuration seems to exist, set up `ts-node` if available.
-  if (require.extensions['.ts'] === undefined && existsSync(`${configPath}.ts`) &&
-      isTsNodeAvailable()) {
+  if (
+    require.extensions['.ts'] === undefined &&
+    existsSync(`${configPath}.ts`) &&
+    isTsNodeAvailable()
+  ) {
     // Ensure the module target is set to `commonjs`. This is necessary because the
     // dev-infra tool runs in NodeJS which does not support ES modules by default.
     // Additionally, set the `dir` option to the directory that contains the configuration
     // file. This allows for custom compiler options (such as `--strict`).
-    require('ts-node').register(
-        {dir: dirname(configPath), transpileOnly: true, compilerOptions: {module: 'commonjs'}});
+    require('ts-node').register({
+      dir: dirname(configPath),
+      transpileOnly: true,
+      compilerOptions: {module: 'commonjs'},
+    });
   }
 
   try {

@@ -12,7 +12,6 @@ import {addGithubTokenOption} from '../../utils/git/github-yargs';
 
 import {checkServiceStatuses} from './check';
 
-
 export interface CaretakerCheckOptions {
   githubToken: string;
 }

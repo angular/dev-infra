@@ -16,7 +16,7 @@ interface BranchPushMatchParameters {
   targetBranch: string;
   baseRepo: GithubRepo;
   baseBranch: string;
-  expectedCommits: Commit[]|jasmine.ArrayContaining<Commit>;
+  expectedCommits: Commit[] | jasmine.ArrayContaining<Commit>;
 }
 
 /**
@@ -28,7 +28,7 @@ export function getBranchPushMatcher(options: BranchPushMatchParameters) {
   return jasmine.objectContaining({
     remote: {
       repoUrl: `https://abc123@github.com/${targetRepo.owner}/${targetRepo.name}.git`,
-      name: `refs/heads/${targetBranch}`
+      name: `refs/heads/${targetBranch}`,
     },
     head: jasmine.objectContaining({
       newCommits: expectedCommits,
@@ -36,6 +36,6 @@ export function getBranchPushMatcher(options: BranchPushMatchParameters) {
         repoUrl: `https://abc123@github.com/${baseRepo.owner}/${baseRepo.name}.git`,
         name: baseBranch,
       },
-    })
+    }),
   });
 }

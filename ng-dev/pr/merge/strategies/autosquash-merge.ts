@@ -31,9 +31,9 @@ export class AutosquashMergeStrategy extends MergeStrategy {
    *   specific to the pull request merge.
    * @returns A pull request failure or null in case of success.
    */
-  override async merge(pullRequest: PullRequest): Promise<PullRequestFailure|null> {
+  override async merge(pullRequest: PullRequest): Promise<PullRequestFailure | null> {
     const {prNumber, targetBranches, requiredBaseSha, needsCommitMessageFixup, githubTargetBranch} =
-        pullRequest;
+      pullRequest;
     // In case a required base is specified for this pull request, check if the pull
     // request contains the given commit. If not, return a pull request failure. This
     // check is useful for enforcing that PRs are rebased on top of a given commit. e.g.
@@ -49,8 +49,9 @@ export class AutosquashMergeStrategy extends MergeStrategy {
     // reliable as we rebase the PR with autosquash where the amount of commits could
     // change. We work around this by parsing the base revision so that we have a fixated
     // SHA before the autosquash rebase is performed.
-    const baseSha =
-        this.git.run(['rev-parse', this.getPullRequestBaseRevision(pullRequest)]).stdout.trim();
+    const baseSha = this.git
+      .run(['rev-parse', this.getPullRequestBaseRevision(pullRequest)])
+      .stdout.trim();
     // Git revision range that matches the pull request commits.
     const revisionRange = `${baseSha}..${TEMP_PR_HEAD_BRANCH}`;
 
@@ -61,11 +62,13 @@ export class AutosquashMergeStrategy extends MergeStrategy {
     // the rebase seems interactive to Git, while it's not interactive to the user.
     // See: https://github.com/git/git/commit/891d4a0313edc03f7e2ecb96edec5d30dc182294.
     const branchOrRevisionBeforeRebase = this.git.getCurrentBranchOrRevision();
-    const rebaseEnv =
-        needsCommitMessageFixup ? undefined : {...process.env, GIT_SEQUENCE_EDITOR: 'true'};
-    this.git.run(
-        ['rebase', '--interactive', '--autosquash', baseSha, TEMP_PR_HEAD_BRANCH],
-        {stdio: 'inherit', env: rebaseEnv});
+    const rebaseEnv = needsCommitMessageFixup
+      ? undefined
+      : {...process.env, GIT_SEQUENCE_EDITOR: 'true'};
+    this.git.run(['rebase', '--interactive', '--autosquash', baseSha, TEMP_PR_HEAD_BRANCH], {
+      stdio: 'inherit',
+      env: rebaseEnv,
+    });
 
     // Update pull requests commits to reference the pull request. This matches what
     // Github does when pull requests are merged through the Web UI. The motivation is
@@ -73,8 +76,13 @@ export class AutosquashMergeStrategy extends MergeStrategy {
     // Note: The filter-branch command relies on the working tree, so we want to make sure
     // that we are on the initial branch or revision where the merge script has been invoked.
     this.git.run(['checkout', '-f', branchOrRevisionBeforeRebase]);
-    this.git.run(
-        ['filter-branch', '-f', '--msg-filter', `${MSG_FILTER_SCRIPT} ${prNumber}`, revisionRange]);
+    this.git.run([
+      'filter-branch',
+      '-f',
+      '--msg-filter',
+      `${MSG_FILTER_SCRIPT} ${prNumber}`,
+      revisionRange,
+    ]);
 
     // Cherry-pick the pull request into all determined target branches.
     const failedBranches = this.cherryPickIntoTargetBranches(revisionRange, targetBranches);
@@ -98,7 +106,7 @@ export class AutosquashMergeStrategy extends MergeStrategy {
       await this.git.github.issues.createComment({
         ...this.git.remoteParams,
         issue_number: pullRequest.prNumber,
-        body: `Closed by commit ${sha}`
+        body: `Closed by commit ${sha}`,
       });
       // Actually close the PR.
       await this.git.github.pulls.update({

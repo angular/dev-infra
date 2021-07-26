@@ -20,15 +20,13 @@ import {GitClient} from '../git/git-client';
  */
 export const testTmpDir: string = process.env['TEST_TMPDIR']!;
 
-
 /** A mock instance of a configuration for the ng-dev toolset for default testing. */
 export const mockNgDevConfig: NgDevConfig = {
   github: {
     name: 'name',
     owner: 'owner',
-  }
+  },
 };
-
 
 /** Type describing a Git head. */
 interface GitHead {
@@ -66,13 +64,13 @@ export class VirtualGitClient extends AuthenticatedGitClient {
   }
 
   /** Current Git HEAD that has been previously fetched. */
-  fetchHeadRef: RemoteRef|null = null;
+  fetchHeadRef: RemoteRef | null = null;
   /** List of known branches in the repository. */
   branches: {[branchName: string]: GitHead} = {master: {branch: 'master', newCommits: []}};
   /** Current checked out HEAD in the repository. */
   head: GitHead = this.branches['master'];
   /** List of pushed heads to a given remote ref. */
-  pushed: {remote: RemoteRef, head: GitHead}[] = [];
+  pushed: {remote: RemoteRef; head: GitHead}[] = [];
 
   /**
    * Override the actual GitClient getLatestSemverTag, as an actual tag cannot be retrieved in
@@ -118,8 +116,9 @@ export class VirtualGitClient extends AuthenticatedGitClient {
     const [repoUrl, refspec] = parseArgs(args, {boolean: ['q']})._;
     const ref = this._unwrapRefspec(refspec);
     const name = ref.destination || ref.source;
-    const existingPush =
-        this.pushed.find(({remote}) => remote.repoUrl === repoUrl && remote.name === name);
+    const existingPush = this.pushed.find(
+      ({remote}) => remote.repoUrl === repoUrl && remote.name === name,
+    );
     const pushedHead = this._cloneHead(this.head);
 
     // Either, update a previously pushed branch, or keep track of a newly
@@ -182,7 +181,10 @@ export class VirtualGitClient extends AuthenticatedGitClient {
     } else if (this.branches[target]) {
       this.head = this._cloneHead(this.branches[target], detached);
     } else if (createBranch) {
-      this.head = this.branches[target] = {branch: target, ...this._cloneHead(this.head, detached)};
+      this.head = this.branches[target] = {
+        branch: target,
+        ...this._cloneHead(this.head, detached),
+      };
     } else {
       throw Error(`Unexpected branch checked out: ${target}`);
     }
@@ -192,7 +194,7 @@ export class VirtualGitClient extends AuthenticatedGitClient {
    * Unwraps a refspec into the base and target ref names.
    * https://git-scm.com/docs/git-fetch#Documentation/git-fetch.txt-ltrefspecgt.
    */
-  private _unwrapRefspec(refspec: string): {source: string, destination?: string} {
+  private _unwrapRefspec(refspec: string): {source: string; destination?: string} {
     const [source, destination] = refspec.split(':');
     if (!destination) {
       return {source};

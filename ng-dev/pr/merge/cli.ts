@@ -22,18 +22,18 @@ export interface MergeCommandOptions {
 /** Builds the command. */
 function builder(yargs: Argv) {
   return addGithubTokenOption(yargs)
-      .help()
-      .strict()
-      .positional('pr', {
-        demandOption: true,
-        type: 'number',
-        description: 'The PR to be merged.',
-      })
-      .option('branch-prompt' as 'branchPrompt', {
-        type: 'boolean',
-        default: true,
-        description: 'Whether to prompt to confirm the branches a PR will merge into.',
-      });
+    .help()
+    .strict()
+    .positional('pr', {
+      demandOption: true,
+      type: 'number',
+      description: 'The PR to be merged.',
+    })
+    .option('branch-prompt' as 'branchPrompt', {
+      type: 'boolean',
+      default: true,
+      description: 'Whether to prompt to confirm the branches a PR will merge into.',
+    });
 }
 
 /** Handles the command. */

@@ -13,7 +13,12 @@ import {ReleaseTrain} from '../../versioning/release-trains';
 import {CutNextPrereleaseAction} from '../actions/cut-next-prerelease';
 import {packageJsonPath} from '../constants';
 
-import {expectStagingAndPublishWithCherryPick, expectStagingAndPublishWithoutCherryPick, parse, setupReleaseActionForTesting} from './test-utils';
+import {
+  expectStagingAndPublishWithCherryPick,
+  expectStagingAndPublishWithoutCherryPick,
+  parse,
+  setupReleaseActionForTesting,
+} from './test-utils';
 
 describe('cut next pre-release action', () => {
   it('should always be active regardless of release-trains', async () => {
@@ -39,17 +44,19 @@ describe('cut next pre-release action', () => {
   // the version if the version in the next branch has not been published yet.
   it('should not bump version if current next version has not been published', async () => {
     const action = setupReleaseActionForTesting(
-        CutNextPrereleaseAction, {
-          releaseCandidate: null,
-          next: new ReleaseTrain('master', parse('10.2.0-next.0')),
-          latest: new ReleaseTrain('10.1.x', parse('10.1.0')),
-        },
-        /* isNextPublishedToNpm */ false);
+      CutNextPrereleaseAction,
+      {
+        releaseCandidate: null,
+        next: new ReleaseTrain('master', parse('10.2.0-next.0')),
+        latest: new ReleaseTrain('10.1.x', parse('10.1.0')),
+      },
+      /* isNextPublishedToNpm */ false,
+    );
 
     await expectStagingAndPublishWithoutCherryPick(action, 'master', '10.2.0-next.0', 'next');
 
     const pkgJsonContents = readFileSync(join(action.testTmpDir, packageJsonPath), 'utf8');
-    const pkgJson = JSON.parse(pkgJsonContents) as {version: string, [key: string]: any};
+    const pkgJson = JSON.parse(pkgJsonContents) as {version: string; [key: string]: any};
     expect(pkgJson.version).toBe('10.2.0-next.0', 'Expected version to not have changed.');
   });
 

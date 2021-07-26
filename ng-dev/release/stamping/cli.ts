@@ -10,7 +10,6 @@ import {Arguments, Argv, CommandModule} from 'yargs';
 
 import {buildEnvStamp, EnvStampMode} from './env-stamp';
 
-
 export interface Options {
   mode: EnvStampMode;
 }
@@ -19,7 +18,7 @@ function builder(args: Argv): Argv<Options> {
   return args.option('mode', {
     demandOption: true,
     description: 'Whether the env-stamp should be built for a snapshot or release',
-    choices: ['snapshot' as const, 'release' as const]
+    choices: ['snapshot' as const, 'release' as const],
   });
 }
 

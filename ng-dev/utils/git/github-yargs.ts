@@ -17,7 +17,8 @@ export type ArgvWithGithubToken = Argv<{githubToken: string}>;
 
 /** Sets up the `github-token` command option for the given Yargs instance. */
 export function addGithubTokenOption(yargs: Argv): ArgvWithGithubToken {
-  return yargs
+  return (
+    yargs
       // 'github-token' is casted to 'githubToken' to properly set up typings to reflect the key in
       // the Argv object being camelCase rather than kebab case due to the `camel-case-expansion`
       // config: https://github.com/yargs/yargs-parser#camel-case-expansion
@@ -40,5 +41,6 @@ export function addGithubTokenOption(yargs: Argv): ArgvWithGithubToken {
           return githubToken;
         },
       })
-      .default('github-token' as 'githubToken', '', '<LOCAL TOKEN>');
+      .default('github-token' as 'githubToken', '', '<LOCAL TOKEN>')
+  );
 }

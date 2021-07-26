@@ -14,23 +14,27 @@ import {BaseModule} from './base';
 
 /** A list of generated results for a github query. */
 type GithubQueryResults = {
-  queryName: string,
-  count: number,
-  queryUrl: string,
-  matchedUrls: string[],
+  queryName: string;
+  count: number;
+  queryUrl: string;
+  matchedUrls: string[];
 }[];
 
 /** The fragment for a result from Github's api for a Github query. */
 const GithubQueryResultFragment = {
   issueCount: types.number,
-  nodes: [{...onUnion({
-    PullRequest: {
-      url: types.string,
+  nodes: [
+    {
+      ...onUnion({
+        PullRequest: {
+          url: types.string,
+        },
+        Issue: {
+          url: types.string,
+        },
+      }),
     },
-    Issue: {
-      url: types.string,
-    },
-  })}],
+  ],
 };
 
 /** An object containing results of multiple queries.  */
@@ -44,7 +48,7 @@ type GithubQueryResult = {
  */
 const MAX_RETURNED_ISSUES = 20;
 
-export class GithubQueriesModule extends BaseModule<GithubQueryResults|void> {
+export class GithubQueriesModule extends BaseModule<GithubQueryResults | void> {
   override async retrieveData() {
     // Non-null assertion is used here as the check for undefined immediately follows to confirm the
     // assertion.  Typescript's type filtering does not seem to work as needed to understand
@@ -66,7 +70,7 @@ export class GithubQueriesModule extends BaseModule<GithubQueryResults|void> {
         queryName: queries[i].name,
         count: result.issueCount,
         queryUrl: encodeURI(`https://github.com/${owner}/${repo}/issues?q=${queries[i].query}`),
-        matchedUrls: result.nodes.map(node => node.url)
+        matchedUrls: result.nodes.map((node) => node.url),
       };
     });
   }
@@ -79,17 +83,17 @@ export class GithubQueriesModule extends BaseModule<GithubQueryResults|void> {
     /** The Github search filter for the configured repository. */
     const repoFilter = `repo:${owner}/${repo}`;
 
-
     queries.forEach(({name, query}) => {
       /** The name of the query, with spaces removed to match Graphql requirements. */
       const queryKey = alias(name.replace(/ /g, ''), 'search');
       graphqlQuery[queryKey] = params(
-          {
-            type: 'ISSUE',
-            first: MAX_RETURNED_ISSUES,
-            query: `"${repoFilter} ${query.replace(/"/g, '\\"')}"`,
-          },
-          {...GithubQueryResultFragment});
+        {
+          type: 'ISSUE',
+          first: MAX_RETURNED_ISSUES,
+          query: `"${repoFilter} ${query.replace(/"/g, '\\"')}"`,
+        },
+        {...GithubQueryResultFragment},
+      );
     });
 
     return graphqlQuery;
@@ -101,13 +105,13 @@ export class GithubQueriesModule extends BaseModule<GithubQueryResults|void> {
       return;
     }
     info.group(bold('Github Tasks'));
-    const minQueryNameLength = Math.max(...queryResults.map(result => result.queryName.length));
+    const minQueryNameLength = Math.max(...queryResults.map((result) => result.queryName.length));
     for (const queryResult of queryResults) {
       info(`${queryResult.queryName.padEnd(minQueryNameLength)}  ${queryResult.count}`);
 
       if (queryResult.count > 0) {
         info.group(queryResult.queryUrl);
-        queryResult.matchedUrls.forEach(url => info(`- ${url}`));
+        queryResult.matchedUrls.forEach((url) => info(`- ${url}`));
         if (queryResult.count > MAX_RETURNED_ISSUES) {
           info(`... ${queryResult.count - MAX_RETURNED_ISSUES} additional matches`);
         }

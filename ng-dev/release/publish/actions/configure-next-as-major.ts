@@ -34,11 +34,14 @@ export class ConfigureNextAsMajorAction extends ReleaseAction {
     await this.verifyPassingGithubStatus(branchName);
     await this.checkoutUpstreamBranch(branchName);
     await this.updateProjectVersion(newVersion);
-    await this.createCommit(
-        getCommitMessageForNextBranchMajorSwitch(newVersion), [packageJsonPath]);
+    await this.createCommit(getCommitMessageForNextBranchMajorSwitch(newVersion), [
+      packageJsonPath,
+    ]);
     const pullRequest = await this.pushChangesToForkAndCreatePullRequest(
-        branchName, `switch-next-to-major-${newVersion}`,
-        `Configure next branch to receive major changes for v${newVersion}`);
+      branchName,
+      `switch-next-to-major-${newVersion}`,
+      `Configure next branch to receive major changes for v${newVersion}`,
+    );
 
     info(green('  ✓   Next branch update pull request has been created.'));
     info(yellow(`      Please ask team members to review: ${pullRequest.url}.`));

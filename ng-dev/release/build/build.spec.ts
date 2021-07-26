@@ -31,8 +31,11 @@ describe('ng-dev release build', () => {
 
   /** Invokes the build command handler. */
   async function invokeBuild({json}: {json?: boolean} = {}) {
-    spyOn(releaseConfig, 'getReleaseConfig')
-        .and.returnValue({npmPackages, buildPackages, releaseNotes: {}});
+    spyOn(releaseConfig, 'getReleaseConfig').and.returnValue({
+      npmPackages,
+      buildPackages,
+      releaseNotes: {},
+    });
     await ReleaseBuildCommandModule.handler({json: !!json, stampForRelease: true, $0: '', _: []});
   }
 
@@ -54,7 +57,7 @@ describe('ng-dev release build', () => {
 
     expect(parsed).toEqual([
       {name: '@angular/pkg1', outputPath: 'dist/pkg1'},
-      {name: '@angular/pkg2', outputPath: 'dist/pkg2'}
+      {name: '@angular/pkg2', outputPath: 'dist/pkg2'},
     ]);
     expect(process.exit).toHaveBeenCalledTimes(0);
   });
@@ -67,9 +70,9 @@ describe('ng-dev release build', () => {
     await invokeBuild();
 
     expect(console.error).toHaveBeenCalledTimes(2);
-    expect(console.error)
-        .toHaveBeenCalledWith(
-            jasmine.stringMatching(`Release output missing for the following packages`));
+    expect(console.error).toHaveBeenCalledWith(
+      jasmine.stringMatching(`Release output missing for the following packages`),
+    );
     expect(console.error).toHaveBeenCalledWith(jasmine.stringMatching(`- @angular/non-existent`));
     expect(process.exit).toHaveBeenCalledTimes(1);
     expect(process.exit).toHaveBeenCalledWith(1);

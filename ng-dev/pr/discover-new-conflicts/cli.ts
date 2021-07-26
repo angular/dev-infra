@@ -20,21 +20,24 @@ export interface DiscoverNewConflictsCommandOptions {
 }
 
 /** Builds the discover-new-conflicts pull request command. */
-export function buildDiscoverNewConflictsCommand(yargs: Argv):
-    Argv<DiscoverNewConflictsCommandOptions> {
+export function buildDiscoverNewConflictsCommand(
+  yargs: Argv,
+): Argv<DiscoverNewConflictsCommandOptions> {
   return addGithubTokenOption(yargs)
-      .option('date', {
-        description: 'Only consider PRs updated since provided date',
-        defaultDescription: '30 days ago',
-        coerce: (date) => typeof date === 'number' ? date : Date.parse(date),
-        default: getThirtyDaysAgoDate(),
-      })
-      .positional('pr-number', {demandOption: true, type: 'number'});
+    .option('date', {
+      description: 'Only consider PRs updated since provided date',
+      defaultDescription: '30 days ago',
+      coerce: (date) => (typeof date === 'number' ? date : Date.parse(date)),
+      default: getThirtyDaysAgoDate(),
+    })
+    .positional('pr-number', {demandOption: true, type: 'number'});
 }
 
 /** Handles the discover-new-conflicts pull request command. */
-export async function handleDiscoverNewConflictsCommand(
-    {'pr-number': prNumber, date}: Arguments<DiscoverNewConflictsCommandOptions>) {
+export async function handleDiscoverNewConflictsCommand({
+  'pr-number': prNumber,
+  date,
+}: Arguments<DiscoverNewConflictsCommandOptions>) {
   // If a provided date is not able to be parsed, yargs provides it as NaN.
   if (isNaN(date)) {
     error('Unable to parse the value provided via --date flag');

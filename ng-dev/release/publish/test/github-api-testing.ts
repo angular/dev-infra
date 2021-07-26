@@ -22,33 +22,40 @@ export class GithubTestingRepo {
   constructor(public owner: string, public name: string) {}
 
   expectPullRequestToBeCreated(
-      baseBranch: string, fork: GithubTestingRepo, forkBranch: string, prNumber: number): this {
+    baseBranch: string,
+    fork: GithubTestingRepo,
+    forkBranch: string,
+    prNumber: number,
+  ): this {
     const expectedHead = `${fork.owner}:${forkBranch}`;
     nock(this.repoApiUrl)
-        .post('/pulls', ({base, head}) => base === baseBranch && head === expectedHead)
-        .reply(200, {number: prNumber});
+      .post('/pulls', ({base, head}) => base === baseBranch && head === expectedHead)
+      .reply(200, {number: prNumber});
     return this;
   }
 
-  expectBranchRequest(branchName: string, sha: string|null): this {
+  expectBranchRequest(branchName: string, sha: string | null): this {
     nock(this.repoApiUrl)
-        .get(`/branches/${branchName}`)
-        .reply(sha ? 200 : 404, sha ? {commit: {sha}} : undefined);
+      .get(`/branches/${branchName}`)
+      .reply(sha ? 200 : 404, sha ? {commit: {sha}} : undefined);
     return this;
   }
 
   expectFindForkRequest(fork: GithubTestingRepo): this {
     nock(this.apiEndpoint)
-        .post(
-            '/graphql',
-            ({variables}) => variables.owner === this.owner && variables.name === this.name)
-        .reply(200, {
-          data: {repository: {forks: {nodes: [{owner: {login: fork.owner}, name: fork.name}]}}}
-        });
+      .post(
+        '/graphql',
+        ({variables}) => variables.owner === this.owner && variables.name === this.name,
+      )
+      .reply(200, {
+        data: {
+          repository: {forks: {nodes: [{owner: {login: fork.owner}, name: fork.name}]}},
+        },
+      });
     return this;
   }
 
-  expectCommitStatusCheck(sha: string, state: 'success'|'pending'|'failure'): this {
+  expectCommitStatusCheck(sha: string, state: 'success' | 'pending' | 'failure'): this {
     nock(this.repoApiUrl).get(`/commits/${sha}/status`).reply(200, {state}).activeMocks();
     return this;
   }
@@ -67,15 +74,15 @@ export class GithubTestingRepo {
 
   expectTagToBeCreated(tagName: string, sha: string): this {
     nock(this.repoApiUrl)
-        .post(`/git/refs`, b => b.ref === `refs/tags/${tagName}` && b.sha === sha)
-        .reply(200, {});
+      .post(`/git/refs`, (b) => b.ref === `refs/tags/${tagName}` && b.sha === sha)
+      .reply(200, {});
     return this;
   }
 
   expectReleaseToBeCreated(name: string, tagName: string): this {
     nock(this.repoApiUrl)
-        .post('/releases', b => b.name === name && b['tag_name'] === tagName)
-        .reply(200, {});
+      .post('/releases', (b) => b.name === name && b['tag_name'] === tagName)
+      .reply(200, {});
     return this;
   }
 }

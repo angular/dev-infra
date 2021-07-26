@@ -16,7 +16,9 @@ import {isVersionPublishedToNpm} from './npm-registry';
 
 /** Computes the new pre-release version for the next release-train. */
 export async function computeNewPrereleaseVersionForNext(
-    active: ActiveReleaseTrains, config: ReleaseConfig): Promise<semver.SemVer> {
+  active: ActiveReleaseTrains,
+  config: ReleaseConfig,
+): Promise<semver.SemVer> {
   const {version: nextVersion} = active.next;
   const isNextPublishedToNpm = await isVersionPublishedToNpm(nextVersion, config);
   // Special-case where the version in the `next` release-train is not published yet. This

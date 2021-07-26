@@ -11,16 +11,14 @@ import {CommitFromGitLog} from '../../commit-message/parse';
 import {GithubConfig} from '../../utils/config';
 import {ReleaseNotesConfig} from '../config/index';
 
-
 /** List of types to be included in the release notes. */
-const typesToIncludeInReleaseNotes =
-    Object.values(COMMIT_TYPES)
-        .filter(type => type.releaseNotesLevel === ReleaseNotesLevel.Visible)
-        .map(type => type.name);
+const typesToIncludeInReleaseNotes = Object.values(COMMIT_TYPES)
+  .filter((type) => type.releaseNotesLevel === ReleaseNotesLevel.Visible)
+  .map((type) => type.name);
 
 /** Data used for context during rendering. */
 export interface RenderContextData {
-  title: string|false;
+  title: string | false;
   groupOrder?: ReleaseNotesConfig['groupOrder'];
   hiddenScopes?: ReleaseNotesConfig['hiddenScopes'];
   date?: Date;
@@ -58,7 +56,7 @@ export class RenderContext {
     const groups = new Map<string, CommitFromGitLog[]>();
 
     // Place each commit in the list into its group.
-    commits.forEach(commit => {
+    commits.forEach((commit) => {
       const key = commit.npmScope ? `${commit.npmScope}/${commit.scope}` : commit.scope;
       const groupCommits = groups.get(key) || [];
       groups.set(key, groupCommits);
@@ -70,15 +68,15 @@ export class RenderContext {
      * of the group title.
      */
     const commitGroups = Array.from(groups.entries())
-                             .map(([title, commits]) => ({title, commits}))
-                             .sort((a, b) => a.title > b.title ? 1 : a.title < b.title ? -1 : 0);
+      .map(([title, commits]) => ({title, commits}))
+      .sort((a, b) => (a.title > b.title ? 1 : a.title < b.title ? -1 : 0));
 
     // If the configuration provides a sorting order, updated the sorted list of group keys to
     // satisfy the order of the groups provided in the list with any groups not found in the list at
     // the end of the sorted list.
     if (this.groupOrder.length) {
       for (const groupTitle of this.groupOrder.reverse()) {
-        const currentIdx = commitGroups.findIndex(k => k.title === groupTitle);
+        const currentIdx = commitGroups.findIndex((k) => k.title === groupTitle);
         if (currentIdx !== -1) {
           const removedGroups = commitGroups.splice(currentIdx, 1);
           commitGroups.splice(0, 0, ...removedGroups);
@@ -140,8 +138,7 @@ export class RenderContext {
    * Convert a commit object to a Markdown link.
    */
   commitToLink(commit: CommitFromGitLog): string {
-    const url = `https://github.com/${this.data.github.owner}/${this.data.github.name}/commit/${
-        commit.hash}`;
+    const url = `https://github.com/${this.data.github.owner}/${this.data.github.name}/commit/${commit.hash}`;
     return `[${commit.shortHash}](${url})`;
   }
 
@@ -149,8 +146,7 @@ export class RenderContext {
    * Convert a pull request number to a Markdown link.
    */
   pullRequestToLink(prNumber: number): string {
-    const url =
-        `https://github.com/${this.data.github.owner}/${this.data.github.name}/pull/${prNumber}`;
+    const url = `https://github.com/${this.data.github.owner}/${this.data.github.name}/pull/${prNumber}`;
     return `[#${prNumber}](${url})`;
   }
 
@@ -163,7 +159,6 @@ export class RenderContext {
   }
 }
 
-
 /**
  * Builds a date stamp for stamping in release notes.
  *
@@ -171,7 +166,7 @@ export class RenderContext {
  */
 export function buildDateStamp(date = new Date()) {
   const year = `${date.getFullYear()}`;
-  const month = `${(date.getMonth() + 1)}`.padStart(2, '0');
+  const month = `${date.getMonth() + 1}`.padStart(2, '0');
   const day = `${date.getDate()}`.padStart(2, '0');
 
   return [year, month, day].join('-');

@@ -12,8 +12,11 @@ import {GitCommandError} from '../../utils/git/git-client';
 
 import {MergeConfigWithRemote} from './config';
 import {PullRequestFailure} from './failures';
-import {getCaretakerNotePromptMessage, getTargettedBranchesConfirmationPromptMessage} from './messages';
-import {isPullRequest, loadAndValidatePullRequest,} from './pull-request';
+import {
+  getCaretakerNotePromptMessage,
+  getTargettedBranchesConfirmationPromptMessage,
+} from './messages';
+import {isPullRequest, loadAndValidatePullRequest} from './pull-request';
 import {GithubApiMergeStrategy} from './strategies/api-merge';
 import {AutosquashMergeStrategy} from './strategies/autosquash-merge';
 
@@ -52,8 +55,10 @@ export class PullRequestMergeTask {
   private flags: PullRequestMergeTaskFlags;
 
   constructor(
-      public config: MergeConfigWithRemote, public git: AuthenticatedGitClient,
-      flags: Partial<PullRequestMergeTaskFlags>) {
+    public config: MergeConfigWithRemote,
+    public git: AuthenticatedGitClient,
+    flags: Partial<PullRequestMergeTaskFlags>,
+  ) {
     // Update flags property with the provided flags values as patches to the default flag values.
     this.flags = {...defaultPullRequestMergeTaskFlags, ...flags};
   }
@@ -89,7 +94,7 @@ export class PullRequestMergeTask {
     if (hasOauthScopes !== true) {
       return {
         status: MergeStatus.GITHUB_ERROR,
-        failure: PullRequestFailure.insufficientPermissionsToMerge(hasOauthScopes.error)
+        failure: PullRequestFailure.insufficientPermissionsToMerge(hasOauthScopes.error),
       };
     }
 
@@ -103,27 +108,29 @@ export class PullRequestMergeTask {
       return {status: MergeStatus.FAILED, failure: pullRequest};
     }
 
-
-    if (this.flags.branchPrompt &&
-        !await promptConfirm(getTargettedBranchesConfirmationPromptMessage(pullRequest))) {
+    if (
+      this.flags.branchPrompt &&
+      !(await promptConfirm(getTargettedBranchesConfirmationPromptMessage(pullRequest)))
+    ) {
       return {status: MergeStatus.USER_ABORTED};
     }
-
 
     // If the pull request has a caretaker note applied, raise awareness by prompting
     // the caretaker. The caretaker can then decide to proceed or abort the merge.
-    if (pullRequest.hasCaretakerNote &&
-        !await promptConfirm(getCaretakerNotePromptMessage(pullRequest))) {
+    if (
+      pullRequest.hasCaretakerNote &&
+      !(await promptConfirm(getCaretakerNotePromptMessage(pullRequest)))
+    ) {
       return {status: MergeStatus.USER_ABORTED};
     }
 
-    const strategy = this.config.githubApiMerge ?
-        new GithubApiMergeStrategy(this.git, this.config.githubApiMerge) :
-        new AutosquashMergeStrategy(this.git);
+    const strategy = this.config.githubApiMerge
+      ? new GithubApiMergeStrategy(this.git, this.config.githubApiMerge)
+      : new AutosquashMergeStrategy(this.git);
 
     // Branch or revision that is currently checked out so that we can switch back to
     // it once the pull request has been merged.
-    let previousBranchOrRevision: null|string = null;
+    let previousBranchOrRevision: null | string = null;
 
     // The following block runs Git commands as child processes. These Git commands can fail.
     // We want to capture these command errors and return an appropriate merge request status.

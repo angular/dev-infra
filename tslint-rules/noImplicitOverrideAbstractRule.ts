@@ -10,9 +10,10 @@ import {Replacement, RuleFailure, WalkContext} from 'tslint/lib';
 import {TypedRule} from 'tslint/lib/rules';
 import * as ts from 'typescript';
 
-const FAILURE_MESSAGE = 'Missing override modifier. Members implemented as part of ' +
-    'abstract classes must explicitly set the "override" modifier. ' +
-    'More details: https://github.com/microsoft/TypeScript/issues/44457#issuecomment-856202843.';
+const FAILURE_MESSAGE =
+  'Missing override modifier. Members implemented as part of ' +
+  'abstract classes must explicitly set the "override" modifier. ' +
+  'More details: https://github.com/microsoft/TypeScript/issues/44457#issuecomment-856202843.';
 
 /**
  * Rule which enforces that class members implementing abstract members
@@ -26,7 +27,7 @@ const FAILURE_MESSAGE = 'Missing override modifier. Members implemented as part 
  */
 export class Rule extends TypedRule {
   override applyWithProgram(sourceFile: ts.SourceFile, program: ts.Program): RuleFailure[] {
-    return this.applyWithFunction(sourceFile, ctx => visitNode(sourceFile, ctx, program));
+    return this.applyWithFunction(sourceFile, (ctx) => visitNode(sourceFile, ctx, program));
   }
 }
 
@@ -37,13 +38,19 @@ export class Rule extends TypedRule {
 function visitNode(node: ts.Node, ctx: WalkContext, program: ts.Program) {
   // If a class element implements an abstract member but does not have the
   // `override` keyword, create a lint failure.
-  if (ts.isClassElement(node) && !hasOverrideModifier(node) &&
-      matchesParentAbstractElement(node, program)) {
+  if (
+    ts.isClassElement(node) &&
+    !hasOverrideModifier(node) &&
+    matchesParentAbstractElement(node, program)
+  ) {
     ctx.addFailureAtNode(
-        node, FAILURE_MESSAGE, Replacement.appendText(node.getStart(), `override `));
+      node,
+      FAILURE_MESSAGE,
+      Replacement.appendText(node.getStart(), `override `),
+    );
   }
 
-  ts.forEachChild(node, node => visitNode(node, ctx, program));
+  ts.forEachChild(node, (node) => visitNode(node, ctx, program));
 }
 
 /**
@@ -73,7 +80,10 @@ function matchesParentAbstractElement(node: ts.ClassElement, program: ts.Program
 
 /** Checks if the given class inherits an abstract member with the specified name. */
 function checkClassForInheritedMatchingAbstractMember(
-    clazz: ts.ClassDeclaration, typeChecker: ts.TypeChecker, searchMemberName: string): boolean {
+  clazz: ts.ClassDeclaration,
+  typeChecker: ts.TypeChecker,
+  searchMemberName: string,
+): boolean {
   const baseClass = getBaseClass(clazz, typeChecker);
 
   // If the class is not `abstract`, then all parent abstract methods would need to
@@ -83,7 +93,8 @@ function checkClassForInheritedMatchingAbstractMember(
   }
 
   const matchingMember = baseClass.members.find(
-      m => m.name !== undefined && getPropertyNameText(m.name) === searchMemberName);
+    (m) => m.name !== undefined && getPropertyNameText(m.name) === searchMemberName,
+  );
 
   if (matchingMember !== undefined) {
     return hasAbstractModifier(matchingMember);
@@ -93,8 +104,10 @@ function checkClassForInheritedMatchingAbstractMember(
 }
 
 /** Gets the base class for the given class declaration. */
-function getBaseClass(node: ts.ClassDeclaration, typeChecker: ts.TypeChecker): ts.ClassDeclaration|
-    null {
+function getBaseClass(
+  node: ts.ClassDeclaration,
+  typeChecker: ts.TypeChecker,
+): ts.ClassDeclaration | null {
   const baseTypes = getExtendsHeritageExpressions(node);
 
   if (baseTypes.length > 1) {
@@ -112,8 +125,9 @@ function getBaseClass(node: ts.ClassDeclaration, typeChecker: ts.TypeChecker): t
 }
 
 /** Gets the `extends` base type expressions of the specified class. */
-function getExtendsHeritageExpressions(classDecl: ts.ClassDeclaration):
-    ts.ExpressionWithTypeArguments[] {
+function getExtendsHeritageExpressions(
+  classDecl: ts.ClassDeclaration,
+): ts.ExpressionWithTypeArguments[] {
   if (classDecl.heritageClauses === undefined) {
     return [];
   }
@@ -128,16 +142,16 @@ function getExtendsHeritageExpressions(classDecl: ts.ClassDeclaration):
 
 /** Gets whether the specified node has the `abstract` modifier applied. */
 function hasAbstractModifier(node: ts.Node): boolean {
-  return !!node.modifiers?.some(s => s.kind === ts.SyntaxKind.AbstractKeyword);
+  return !!node.modifiers?.some((s) => s.kind === ts.SyntaxKind.AbstractKeyword);
 }
 
 /** Gets whether the specified node has the `override` modifier applied. */
 function hasOverrideModifier(node: ts.Node): boolean {
-  return !!node.modifiers?.some(s => s.kind === ts.SyntaxKind.OverrideKeyword);
+  return !!node.modifiers?.some((s) => s.kind === ts.SyntaxKind.OverrideKeyword);
 }
 
 /** Gets the property name text of the specified property name. */
-function getPropertyNameText(name: ts.PropertyName): string|null {
+function getPropertyNameText(name: ts.PropertyName): string | null {
   if (ts.isComputedPropertyName(name)) {
     return null;
   }

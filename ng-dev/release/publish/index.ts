@@ -13,7 +13,11 @@ import {GithubConfig} from '../../utils/config';
 import {debug, error, info, log, promptConfirm, red, yellow} from '../../utils/console';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {ReleaseConfig} from '../config/index';
-import {ActiveReleaseTrains, fetchActiveReleaseTrains, nextBranchName} from '../versioning/active-release-trains';
+import {
+  ActiveReleaseTrains,
+  fetchActiveReleaseTrains,
+  nextBranchName,
+} from '../versioning/active-release-trains';
 import {npmIsLoggedIn, npmLogin, npmLogout} from '../versioning/npm-publish';
 import {printActiveReleaseTrains} from '../versioning/print-active-trains';
 import {GithubRepoWithApi} from '../versioning/version-branches';
@@ -35,8 +39,10 @@ export class ReleaseTool {
   private previousGitBranchOrRevision = this._git.getCurrentBranchOrRevision();
 
   constructor(
-      protected _config: ReleaseConfig, protected _github: GithubConfig,
-      protected _projectRoot: string) {}
+    protected _config: ReleaseConfig,
+    protected _github: GithubConfig,
+    protected _projectRoot: string,
+  ) {}
 
   /** Runs the interactive release tool. */
   async run(): Promise<CompletionState> {
@@ -46,12 +52,15 @@ export class ReleaseTool {
     log(yellow('--------------------------------------------'));
     log();
 
-    if (!await this._verifyEnvironmentHasPython3Symlink() ||
-        !await this._verifyNoUncommittedChanges() || !await this._verifyRunningFromNextBranch()) {
+    if (
+      !(await this._verifyEnvironmentHasPython3Symlink()) ||
+      !(await this._verifyNoUncommittedChanges()) ||
+      !(await this._verifyRunningFromNextBranch())
+    ) {
       return CompletionState.FATAL_ERROR;
     }
 
-    if (!await this._verifyNpmLoginState()) {
+    if (!(await this._verifyNpmLoginState())) {
       return CompletionState.MANUALLY_ABORTED;
     }
 
@@ -99,8 +108,12 @@ export class ReleaseTool {
     // Find and instantiate all release actions which are currently valid.
     for (let actionType of actions) {
       if (await actionType.isActive(activeTrains, this._config)) {
-        const action: ReleaseAction =
-            new actionType(activeTrains, this._git, this._config, this._projectRoot);
+        const action: ReleaseAction = new actionType(
+          activeTrains,
+          this._git,
+          this._config,
+          this._projectRoot,
+        );
         choices.push({name: await action.getDescription(), value: action});
       }
     }
@@ -166,8 +179,10 @@ export class ReleaseTool {
    */
   private async _verifyRunningFromNextBranch(): Promise<boolean> {
     const headSha = this._git.run(['rev-parse', 'HEAD']).stdout.trim();
-    const {data} =
-        await this._git.github.repos.getBranch({...this._git.remoteParams, branch: nextBranchName});
+    const {data} = await this._git.github.repos.getBranch({
+      ...this._git.remoteParams,
+      branch: nextBranchName,
+    });
 
     if (headSha !== data.commit.sha) {
       error(red('  ✘   Running release tool from an outdated local branch.'));

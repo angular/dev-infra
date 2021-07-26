@@ -16,7 +16,12 @@ import {getPr} from '../../utils/github';
 import {MergeConfig, TargetLabel} from './config';
 import {PullRequestFailure} from './failures';
 import {matchesPattern} from './string-pattern';
-import {getBranchesFromTargetLabel, getTargetLabelFromPullRequest, InvalidTargetBranchError, InvalidTargetLabelError} from './target-label';
+import {
+  getBranchesFromTargetLabel,
+  getTargetLabelFromPullRequest,
+  InvalidTargetBranchError,
+  InvalidTargetLabelError,
+} from './target-label';
 import {PullRequestMergeTask} from './task';
 
 /** The default label for labeling pull requests containing a breaking change. */
@@ -51,20 +56,22 @@ export interface PullRequest {
  * If the pull requests fails, a pull request failure is returned.
  */
 export async function loadAndValidatePullRequest(
-    {git, config}: PullRequestMergeTask, prNumber: number,
-    ignoreNonFatalFailures = false): Promise<PullRequest|PullRequestFailure> {
+  {git, config}: PullRequestMergeTask,
+  prNumber: number,
+  ignoreNonFatalFailures = false,
+): Promise<PullRequest | PullRequestFailure> {
   const prData = await fetchPullRequestFromGithub(git, prNumber);
 
   if (prData === null) {
     return PullRequestFailure.notFound();
   }
 
-  const labels = prData.labels.nodes.map(l => l.name);
+  const labels = prData.labels.nodes.map((l) => l.name);
 
-  if (!labels.some(name => matchesPattern(name, config.mergeReadyLabel))) {
+  if (!labels.some((name) => matchesPattern(name, config.mergeReadyLabel))) {
     return PullRequestFailure.notMergeReady();
   }
-  if (!labels.some(name => matchesPattern(name, config.claSignedLabel))) {
+  if (!labels.some((name) => matchesPattern(name, config.claSignedLabel))) {
     return PullRequestFailure.claUnsigned();
   }
 
@@ -79,7 +86,7 @@ export async function loadAndValidatePullRequest(
   }
 
   /** List of parsed commits for all of the commits in the pull request. */
-  const commitsInPr = prData.commits.nodes.map(n => parseCommitMessage(n.commit.message));
+  const commitsInPr = prData.commits.nodes.map((n) => parseCommitMessage(n.commit.message));
 
   try {
     assertPendingState(prData);
@@ -100,11 +107,13 @@ export async function loadAndValidatePullRequest(
 
   const githubTargetBranch = prData.baseRefName;
   const requiredBaseSha =
-      config.requiredBaseCommits && config.requiredBaseCommits[githubTargetBranch];
-  const needsCommitMessageFixup = !!config.commitMessageFixupLabel &&
-      labels.some(name => matchesPattern(name, config.commitMessageFixupLabel));
-  const hasCaretakerNote = !!config.caretakerNoteLabel &&
-      labels.some(name => matchesPattern(name, config.caretakerNoteLabel!));
+    config.requiredBaseCommits && config.requiredBaseCommits[githubTargetBranch];
+  const needsCommitMessageFixup =
+    !!config.commitMessageFixupLabel &&
+    labels.some((name) => matchesPattern(name, config.commitMessageFixupLabel));
+  const hasCaretakerNote =
+    !!config.caretakerNoteLabel &&
+    labels.some((name) => matchesPattern(name, config.caretakerNoteLabel!));
   let targetBranches: string[];
 
   // If branches are determined for a given target label, capture errors that are
@@ -142,33 +151,44 @@ const PR_SCHEMA = {
   number: graphqlTypes.number,
   // Only the last 100 commits from a pull request are obtained as we likely will never see a pull
   // requests with more than 100 commits.
-  commits: params({last: 100}, {
-    totalCount: graphqlTypes.number,
-    nodes: [{
-      commit: {
-        status: {
-          state: graphqlTypes.oneOf(['FAILURE', 'PENDING', 'SUCCESS'] as const),
+  commits: params(
+    {last: 100},
+    {
+      totalCount: graphqlTypes.number,
+      nodes: [
+        {
+          commit: {
+            status: {
+              state: graphqlTypes.oneOf(['FAILURE', 'PENDING', 'SUCCESS'] as const),
+            },
+            message: graphqlTypes.string,
+          },
         },
-        message: graphqlTypes.string,
-      },
-    }],
-  }),
+      ],
+    },
+  ),
   baseRefName: graphqlTypes.string,
   title: graphqlTypes.string,
-  labels: params({first: 100}, {
-    nodes: [{
-      name: graphqlTypes.string,
-    }]
-  }),
+  labels: params(
+    {first: 100},
+    {
+      nodes: [
+        {
+          name: graphqlTypes.string,
+        },
+      ],
+    },
+  ),
 };
 
 /** A pull request retrieved from github via the graphql API. */
 type RawPullRequest = typeof PR_SCHEMA;
 
-
 /** Fetches a pull request from Github. Returns null if an error occurred. */
 async function fetchPullRequestFromGithub(
-    git: AuthenticatedGitClient, prNumber: number): Promise<RawPullRequest|null> {
+  git: AuthenticatedGitClient,
+  prNumber: number,
+): Promise<RawPullRequest | null> {
   try {
     return await getPr(PR_SCHEMA, prNumber, git);
   } catch (e) {
@@ -182,7 +202,7 @@ async function fetchPullRequestFromGithub(
 }
 
 /** Whether the specified value resolves to a pull request. */
-export function isPullRequest(v: PullRequestFailure|PullRequest): v is PullRequest {
+export function isPullRequest(v: PullRequestFailure | PullRequest): v is PullRequest {
   return (v as PullRequest).targetBranches !== undefined;
 }
 
@@ -192,17 +212,20 @@ export function isPullRequest(v: PullRequestFailure|PullRequest): v is PullReque
  * @throws {PullRequestFailure}
  */
 function assertChangesAllowForTargetLabel(
-    commits: Commit[], label: TargetLabel, config: MergeConfig) {
+  commits: Commit[],
+  label: TargetLabel,
+  config: MergeConfig,
+) {
   /**
    * List of commit scopes which are exempted from target label content requirements. i.e. no `feat`
    * scopes in patch branches, no breaking changes in minor or patch changes.
    */
   const exemptedScopes = config.targetLabelExemptScopes || [];
   /** List of commits which are subject to content requirements for the target label. */
-  commits = commits.filter(commit => !exemptedScopes.includes(commit.scope));
-  const hasBreakingChanges = commits.some(commit => commit.breakingChanges.length !== 0);
-  const hasDeprecations = commits.some(commit => commit.deprecations.length !== 0);
-  const hasFeatureCommits = commits.some(commit => commit.type === 'feat');
+  commits = commits.filter((commit) => !exemptedScopes.includes(commit.scope));
+  const hasBreakingChanges = commits.some((commit) => commit.breakingChanges.length !== 0);
+  const hasDeprecations = commits.some((commit) => commit.deprecations.length !== 0);
+  const hasFeatureCommits = commits.some((commit) => commit.type === 'feat');
   switch (label.pattern) {
     case 'target: major':
       break;
@@ -240,11 +263,14 @@ function assertChangesAllowForTargetLabel(
  * @throws {PullRequestFailure}
  */
 function assertCorrectBreakingChangeLabeling(
-    commits: Commit[], labels: string[], config: MergeConfig) {
+  commits: Commit[],
+  labels: string[],
+  config: MergeConfig,
+) {
   /** Whether the PR has a label noting a breaking change. */
   const hasLabel = labels.includes(config.breakingChangeLabel || BreakingChangeLabel);
   //** Whether the PR has at least one commit which notes a breaking change. */
-  const hasCommit = commits.some(commit => commit.breakingChanges.length !== 0);
+  const hasCommit = commits.some((commit) => commit.breakingChanges.length !== 0);
 
   if (!hasLabel && hasCommit) {
     throw PullRequestFailure.missingBreakingChangeLabel();
@@ -254,7 +280,6 @@ function assertCorrectBreakingChangeLabeling(
     throw PullRequestFailure.missingBreakingChangeCommit();
   }
 }
-
 
 /**
  * Assert the pull request is pending, not closed, merged or in draft.

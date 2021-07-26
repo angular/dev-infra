@@ -20,17 +20,22 @@ export type Golden = CircularDependency[];
  * the source file objects are mapped to their relative file names.
  */
 export function convertReferenceChainToGolden(refs: ReferenceChain[], baseDir: string): Golden {
-  return refs
+  return (
+    refs
       .map(
-          // Normalize cycles as the paths can vary based on which node in the cycle is visited
-          // first in the analyzer. The paths represent cycles. Hence we can shift nodes in a
-          // deterministic way so that the goldens don't change unnecessarily and cycle comparison
-          // is simpler.
-          chain => normalizeCircularDependency(
-              chain.map(({fileName}) => convertPathToForwardSlash(relative(baseDir, fileName)))))
+        // Normalize cycles as the paths can vary based on which node in the cycle is visited
+        // first in the analyzer. The paths represent cycles. Hence we can shift nodes in a
+        // deterministic way so that the goldens don't change unnecessarily and cycle comparison
+        // is simpler.
+        (chain) =>
+          normalizeCircularDependency(
+            chain.map(({fileName}) => convertPathToForwardSlash(relative(baseDir, fileName))),
+          ),
+      )
       // Sort cycles so that the golden doesn't change unnecessarily when cycles are detected
       // in different order (e.g. new imports cause cycles to be detected earlier or later).
-      .sort(compareCircularDependency);
+      .sort(compareCircularDependency)
+  );
 }
 
 /**
@@ -40,13 +45,13 @@ export function convertReferenceChainToGolden(refs: ReferenceChain[], baseDir: s
 export function compareGoldens(actual: Golden, expected: Golden) {
   const newCircularDeps: CircularDependency[] = [];
   const fixedCircularDeps: CircularDependency[] = [];
-  actual.forEach(a => {
-    if (!expected.find(e => isSameCircularDependency(a, e))) {
+  actual.forEach((a) => {
+    if (!expected.find((e) => isSameCircularDependency(a, e))) {
       newCircularDeps.push(a);
     }
   });
-  expected.forEach(e => {
-    if (!actual.find(a => isSameCircularDependency(e, a))) {
+  expected.forEach((e) => {
+    if (!actual.find((a) => isSameCircularDependency(e, a))) {
       fixedCircularDeps.push(e);
     }
   });

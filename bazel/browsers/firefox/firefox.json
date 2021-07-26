@@ -8,7 +8,7 @@
     },
     "google:wslConfig": {
       "binary": "%FILE:GECKODRIVER%",
-      "port":"%WSLPORT:WSL%",
+      "port": "%WSLPORT:WSL%",
       "args": [
         "--port=%WSLPORT:WSL%",
         "--host=%WSL:HOST_IP%",

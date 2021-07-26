@@ -12,7 +12,6 @@ import {getUserConfig} from '../../utils/config';
 
 import {validateFile} from './validate-file';
 
-
 export interface ValidateFileOptions {
   file?: string;
   fileEnvVariable?: string;
@@ -22,32 +21,32 @@ export interface ValidateFileOptions {
 /** Builds the command. */
 function builder(yargs: Argv) {
   return yargs
-      .option('file', {
-        type: 'string',
-        conflicts: ['file-env-variable'],
-        description: 'The path of the commit message file.',
-      })
-      .option('file-env-variable' as 'fileEnvVariable', {
-        type: 'string',
-        conflicts: ['file'],
-        description: 'The key of the environment variable for the path of the commit message file.',
-        coerce: (arg: string|undefined) => {
-          if (arg === undefined) {
-            return arg;
-          }
-          const file = process.env[arg];
-          if (!file) {
-            throw new Error(`Provided environment variable "${arg}" was not found.`);
-          }
-          return file;
-        },
-      })
-      .option('error', {
-        type: 'boolean',
-        description:
-            'Whether invalid commit messages should be treated as failures rather than a warning',
-        default: !!getUserConfig().commitMessage?.errorOnInvalidMessage || !!process.env['CI']
-      });
+    .option('file', {
+      type: 'string',
+      conflicts: ['file-env-variable'],
+      description: 'The path of the commit message file.',
+    })
+    .option('file-env-variable' as 'fileEnvVariable', {
+      type: 'string',
+      conflicts: ['file'],
+      description: 'The key of the environment variable for the path of the commit message file.',
+      coerce: (arg: string | undefined) => {
+        if (arg === undefined) {
+          return arg;
+        }
+        const file = process.env[arg];
+        if (!file) {
+          throw new Error(`Provided environment variable "${arg}" was not found.`);
+        }
+        return file;
+      },
+    })
+    .option('error', {
+      type: 'boolean',
+      description:
+        'Whether invalid commit messages should be treated as failures rather than a warning',
+      default: !!getUserConfig().commitMessage?.errorOnInvalidMessage || !!process.env['CI'],
+    });
 }
 
 /** Handles the command. */

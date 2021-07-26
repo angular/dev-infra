@@ -13,14 +13,14 @@ import {ReleaseConfig} from '../config/index';
 import {LtsNpmDistTag} from './long-term-support';
 
 /** Type describing the possible NPM dist tags used by Angular packages. */
-export type NpmDistTag = 'latest'|'next'|LtsNpmDistTag;
+export type NpmDistTag = 'latest' | 'next' | LtsNpmDistTag;
 
 /** Type describing an NPM package fetched from the registry. */
 export interface NpmPackageInfo {
   /** Maps of versions and their package JSON objects. */
-  'versions': {[name: string]: undefined|object};
+  'versions': {[name: string]: undefined | object};
   /** Map of NPM dist-tags and their chosen version. */
-  'dist-tags': {[tagName: string]: string|undefined};
+  'dist-tags': {[tagName: string]: string | undefined};
   /** Map of versions and their ISO release time. */
   'time': {[name: string]: string};
 }
@@ -44,7 +44,9 @@ export async function fetchProjectNpmPackageInfo(config: ReleaseConfig): Promise
 
 /** Gets whether the given version is published to NPM or not */
 export async function isVersionPublishedToNpm(
-    version: semver.SemVer, config: ReleaseConfig): Promise<boolean> {
+  version: semver.SemVer,
+  config: ReleaseConfig,
+): Promise<boolean> {
   const {versions} = await fetchProjectNpmPackageInfo(config);
   return versions[version.format()] !== undefined;
 }
@@ -62,8 +64,9 @@ function getRepresentativeNpmPackage(config: ReleaseConfig) {
 /** Fetches the specified NPM package from the NPM registry. */
 async function fetchPackageInfoFromNpmRegistry(pkgName: string): Promise<NpmPackageInfo> {
   if (_npmPackageInfoCache[pkgName] === undefined) {
-    _npmPackageInfoCache[pkgName] =
-        fetch(`https://registry.npmjs.org/${pkgName}`).then(r => r.json());
+    _npmPackageInfoCache[pkgName] = fetch(`https://registry.npmjs.org/${pkgName}`).then((r) =>
+      r.json(),
+    );
   }
   return await _npmPackageInfoCache[pkgName];
 }

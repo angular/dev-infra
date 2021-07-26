@@ -11,7 +11,19 @@ export {verifyNoBrowserErrors} from './e2e_util';
 
 const nodeUuid = require('node-uuid');
 
-import {SeleniumWebDriverAdapter, Options, JsonFileReporter, Validator, RegressionSlopeValidator, ConsoleReporter, SizeValidator, MultiReporter, MultiMetric, Runner, StaticProvider} from '@angular/benchpress';
+import {
+  SeleniumWebDriverAdapter,
+  Options,
+  JsonFileReporter,
+  Validator,
+  RegressionSlopeValidator,
+  ConsoleReporter,
+  SizeValidator,
+  MultiReporter,
+  MultiMetric,
+  Runner,
+  StaticProvider,
+} from '@angular/benchpress';
 import {openBrowser} from './e2e_util';
 
 // Note: Keep the `modules/benchmarks/README.md` file in sync with the supported options.
@@ -33,14 +45,14 @@ export async function runBenchmark({
   prepare,
   setup,
 }: {
-  id: string,
-  url?: string,
-  params?: {name: string, value: any}[],
-  ignoreBrowserSynchronization?: boolean,
-  microMetrics?: {[key: string]: string},
-  work?: (() => void)|(() => Promise<unknown>),
-  prepare?: (() => void)|(() => Promise<unknown>),
-  setup?: (() => void)|(() => Promise<unknown>),
+  id: string;
+  url?: string;
+  params?: {name: string; value: any}[];
+  ignoreBrowserSynchronization?: boolean;
+  microMetrics?: {[key: string]: string};
+  work?: (() => void) | (() => Promise<unknown>);
+  prepare?: (() => void) | (() => Promise<unknown>);
+  setup?: (() => void) | (() => Promise<unknown>);
 }): Promise<any> {
   openBrowser({url, params, ignoreBrowserSynchronization});
   if (setup) {
@@ -51,7 +63,7 @@ export async function runBenchmark({
     execute: work,
     prepare,
     microMetrics,
-    providers: [{provide: Options.SAMPLE_DESCRIPTION, useValue: {}}]
+    providers: [{provide: Options.SAMPLE_DESCRIPTION, useValue: {}}],
   });
 }
 
@@ -67,13 +79,16 @@ function createBenchpressRunner(): Runner {
   const providers: StaticProvider[] = [
     SeleniumWebDriverAdapter.PROTRACTOR_PROVIDERS,
     {provide: Options.FORCE_GC, useValue: globalOptions.forceGc},
-    {provide: Options.DEFAULT_DESCRIPTION, useValue: {'runId': runId}}, JsonFileReporter.PROVIDERS,
-    {provide: JsonFileReporter.PATH, useValue: resultsFolder}
+    {provide: Options.DEFAULT_DESCRIPTION, useValue: {'runId': runId}},
+    JsonFileReporter.PROVIDERS,
+    {provide: JsonFileReporter.PATH, useValue: resultsFolder},
   ];
   if (!globalOptions.dryRun) {
     providers.push({provide: Validator, useExisting: RegressionSlopeValidator});
-    providers.push(
-        {provide: RegressionSlopeValidator.SAMPLE_SIZE, useValue: globalOptions.sampleSize});
+    providers.push({
+      provide: RegressionSlopeValidator.SAMPLE_SIZE,
+      useValue: globalOptions.sampleSize,
+    });
     providers.push(MultiReporter.provideWith([ConsoleReporter, JsonFileReporter]));
   } else {
     providers.push({provide: Validator, useExisting: SizeValidator});

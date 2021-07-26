@@ -17,7 +17,10 @@ import {NpmDistTag} from './npm-registry';
  * @throws With the process log output if the publish failed.
  */
 export async function runNpmPublish(
-    packagePath: string, distTag: NpmDistTag, registryUrl: string|undefined) {
+  packagePath: string,
+  distTag: NpmDistTag,
+  registryUrl: string | undefined,
+) {
   const args = ['publish', '--access', 'public', '--tag', distTag];
   // If a custom registry URL has been specified, add the `--registry` flag.
   if (registryUrl !== undefined) {
@@ -31,7 +34,11 @@ export async function runNpmPublish(
  * @throws With the process log output if the tagging failed.
  */
 export async function setNpmTagForPackage(
-    packageName: string, distTag: string, version: semver.SemVer, registryUrl: string|undefined) {
+  packageName: string,
+  distTag: string,
+  version: semver.SemVer,
+  registryUrl: string | undefined,
+) {
   const args = ['dist-tag', 'add', `${packageName}@${version}`, distTag];
   // If a custom registry URL has been specified, add the `--registry` flag.
   if (registryUrl !== undefined) {
@@ -44,7 +51,7 @@ export async function setNpmTagForPackage(
  * Checks whether the user is currently logged into NPM.
  * @returns Whether the user is currently logged into NPM.
  */
-export async function npmIsLoggedIn(registryUrl: string|undefined): Promise<boolean> {
+export async function npmIsLoggedIn(registryUrl: string | undefined): Promise<boolean> {
   const args = ['whoami'];
   // If a custom registry URL has been specified, add the `--registry` flag.
   if (registryUrl !== undefined) {
@@ -62,7 +69,7 @@ export async function npmIsLoggedIn(registryUrl: string|undefined): Promise<bool
  * Log into NPM at a provided registry.
  * @throws With the `npm login` status code if the login failed.
  */
-export async function npmLogin(registryUrl: string|undefined) {
+export async function npmLogin(registryUrl: string | undefined) {
   const args = ['login', '--no-browser'];
   // If a custom registry URL has been specified, add the `--registry` flag. The `--registry` flag
   // must be spliced into the correct place in the command as npm expects it to be the flag
@@ -79,7 +86,7 @@ export async function npmLogin(registryUrl: string|undefined) {
  * Log out of NPM at a provided registry.
  * @returns Whether the user was logged out of NPM.
  */
-export async function npmLogout(registryUrl: string|undefined): Promise<boolean> {
+export async function npmLogout(registryUrl: string | undefined): Promise<boolean> {
   const args = ['logout'];
   // If a custom registry URL has been specified, add the `--registry` flag. The `--registry` flag
   // must be spliced into the correct place in the command as npm expects it to be the flag

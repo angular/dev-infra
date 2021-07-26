@@ -40,8 +40,14 @@ import {FatalReleaseActionError} from './actions-error';
 export async function invokeSetNpmDistCommand(npmDistTag: NpmDistTag, version: semver.SemVer) {
   try {
     // Note: No progress indicator needed as that is the responsibility of the command.
-    await spawn(
-        'yarn', ['--silent', 'ng-dev', 'release', 'set-dist-tag', npmDistTag, version.format()]);
+    await spawn('yarn', [
+      '--silent',
+      'ng-dev',
+      'release',
+      'set-dist-tag',
+      npmDistTag,
+      version.format(),
+    ]);
     info(green(`  ✓   Set "${npmDistTag}" NPM dist tag for all packages to v${version}.`));
   } catch (e) {
     error(e);
@@ -59,8 +65,9 @@ export async function invokeReleaseBuildCommand(): Promise<BuiltPackage[]> {
   try {
     // Since we expect JSON to be printed from the `ng-dev release build` command,
     // we spawn the process in silent mode. We have set up an Ora progress spinner.
-    const {stdout} =
-        await spawn('yarn', ['--silent', 'ng-dev', 'release', 'build', '--json'], {mode: 'silent'});
+    const {stdout} = await spawn('yarn', ['--silent', 'ng-dev', 'release', 'build', '--json'], {
+      mode: 'silent',
+    });
     spinner.stop();
     info(green('  ✓   Built release output for all packages.'));
     // The `ng-dev release build` command prints a JSON array to stdout

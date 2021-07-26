@@ -13,7 +13,10 @@ import {ReleaseNotes} from '../../notes/release-notes';
 import {ActiveReleaseTrains} from '../../versioning/active-release-trains';
 import {computeNewPrereleaseVersionForNext} from '../../versioning/next-prerelease-version';
 import {ReleaseAction} from '../actions';
-import {getCommitMessageForExceptionalNextVersionBump, getReleaseNoteCherryPickCommitMessage} from '../commit-message';
+import {
+  getCommitMessageForExceptionalNextVersionBump,
+  getReleaseNoteCherryPickCommitMessage,
+} from '../commit-message';
 import {changelogPath, packageJsonPath} from '../constants';
 
 /**
@@ -40,8 +43,10 @@ export class MoveNextIntoFeatureFreezeAction extends ReleaseAction {
     // Stage the new version for the newly created branch, and push changes to a
     // fork in order to create a staging pull request. Note that we re-use the newly
     // created branch instead of re-fetching from the upstream.
-    const {pullRequest, releaseNotes} =
-        await this.stageVersionForBranchAndCreatePullRequest(newVersion, newBranch);
+    const {pullRequest, releaseNotes} = await this.stageVersionForBranchAndCreatePullRequest(
+      newVersion,
+      newBranch,
+    );
 
     // Wait for the staging PR to be merged. Then build and publish the feature-freeze next
     // pre-release. Finally, cherry-pick the release notes into the next branch in combination
@@ -66,7 +71,9 @@ export class MoveNextIntoFeatureFreezeAction extends ReleaseAction {
    * minor, and cherry-picks the changelog for the newly branched-off feature-freeze version.
    */
   private async _createNextBranchUpdatePullRequest(
-      releaseNotes: ReleaseNotes, newVersion: semver.SemVer) {
+    releaseNotes: ReleaseNotes,
+    newVersion: semver.SemVer,
+  ) {
     const {branchName: nextBranch, version} = this.active.next;
     // We increase the version for the next branch to the next minor. The team can decide
     // later if they want next to be a major through the `Configure Next as Major` release action.
@@ -86,15 +93,18 @@ export class MoveNextIntoFeatureFreezeAction extends ReleaseAction {
 
     await this.createCommit(commitMessage, [changelogPath]);
 
-    let nextPullRequestMessage = `The previous "next" release-train has moved into the ` +
-        `release-candidate phase. This PR updates the next branch to the subsequent ` +
-        `release-train.\n\nAlso this PR cherry-picks the changelog for ` +
-        `v${newVersion} into the ${nextBranch} branch so that the changelog is up to date.`;
+    let nextPullRequestMessage =
+      `The previous "next" release-train has moved into the ` +
+      `release-candidate phase. This PR updates the next branch to the subsequent ` +
+      `release-train.\n\nAlso this PR cherry-picks the changelog for ` +
+      `v${newVersion} into the ${nextBranch} branch so that the changelog is up to date.`;
 
     const nextUpdatePullRequest = await this.pushChangesToForkAndCreatePullRequest(
-        nextBranch, `next-release-train-${newNextVersion}`,
-        `Update next branch to reflect new release-train "v${newNextVersion}".`,
-        nextPullRequestMessage);
+      nextBranch,
+      `next-release-train-${newNextVersion}`,
+      `Update next branch to reflect new release-train "v${newNextVersion}".`,
+      nextPullRequestMessage,
+    );
 
     info(green(`  ✓   Pull request for updating the "${nextBranch}" branch has been created.`));
     info(yellow(`      Please ask team members to review: ${nextUpdatePullRequest.url}.`));

@@ -13,19 +13,28 @@ import {params, types} from 'typed-graphqlify';
  * that are owned by the current viewer authenticated with the Github API.
  */
 export const findOwnedForksOfRepoQuery = params(
-    {
-      $owner: 'String!',
-      $name: 'String!',
-    },
-    {
-      repository: params({owner: '$owner', name: '$name'}, {
-        forks: params({affiliations: 'OWNER', first: 1}, {
-          nodes: [{
-            owner: {
-              login: types.string,
-            },
-            name: types.string,
-          }],
-        }),
-      }),
-    });
+  {
+    $owner: 'String!',
+    $name: 'String!',
+  },
+  {
+    repository: params(
+      {owner: '$owner', name: '$name'},
+      {
+        forks: params(
+          {affiliations: 'OWNER', first: 1},
+          {
+            nodes: [
+              {
+                owner: {
+                  login: types.string,
+                },
+                name: types.string,
+              },
+            ],
+          },
+        ),
+      },
+    ),
+  },
+);

@@ -12,7 +12,6 @@ import {info} from '../../utils/console';
 
 import {validateCommitRange} from './validate-range';
 
-
 export interface ValidateRangeOptions {
   startingRef: string;
   endingRef: string;
@@ -21,16 +20,16 @@ export interface ValidateRangeOptions {
 /** Builds the command. */
 function builder(yargs: Argv) {
   return yargs
-      .positional('startingRef', {
-        description: 'The first ref in the range to select',
-        type: 'string',
-        demandOption: true,
-      })
-      .positional('endingRef', {
-        description: 'The last ref in the range to select',
-        type: 'string',
-        default: 'HEAD',
-      });
+    .positional('startingRef', {
+      description: 'The first ref in the range to select',
+      type: 'string',
+      demandOption: true,
+    })
+    .positional('endingRef', {
+      description: 'The last ref in the range to select',
+      type: 'string',
+      default: 'HEAD',
+    });
 }
 
 /** Handles the command. */

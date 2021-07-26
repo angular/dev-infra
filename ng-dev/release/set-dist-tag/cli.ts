@@ -14,7 +14,6 @@ import {bold, debug, error, green, info, red} from '../../utils/console';
 import {getReleaseConfig} from '../config/index';
 import {setNpmTagForPackage} from '../versioning/npm-publish';
 
-
 /** Command line options for setting an NPM dist tag. */
 export interface ReleaseSetDistTagOptions {
   tagName: string;
@@ -23,16 +22,16 @@ export interface ReleaseSetDistTagOptions {
 
 function builder(args: Argv): Argv<ReleaseSetDistTagOptions> {
   return args
-      .positional('tagName', {
-        type: 'string',
-        demandOption: true,
-        description: 'Name of the NPM dist tag.',
-      })
-      .positional('targetVersion', {
-        type: 'string',
-        demandOption: true,
-        description: 'Version to which the dist tag should be set.'
-      });
+    .positional('tagName', {
+      type: 'string',
+      demandOption: true,
+      description: 'Name of the NPM dist tag.',
+    })
+    .positional('targetVersion', {
+      type: 'string',
+      demandOption: true,
+      description: 'Version to which the dist tag should be set.',
+    });
 }
 
 /** Yargs command handler for building a release. */

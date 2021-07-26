@@ -12,7 +12,6 @@ import {error} from '../utils/console';
 
 import {ModuleResolver} from './analyzer';
 
-
 /** Configuration for a circular dependencies test. */
 export interface CircularDependenciesTestConfig {
   /** Base directory used for shortening paths in the golden file. */

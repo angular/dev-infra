@@ -16,13 +16,14 @@ import {BuildEnvStampCommand} from './stamping/cli';
 
 /** Build the parser for the release commands. */
 export function buildReleaseParser(localYargs: yargs.Argv) {
-  return localYargs.help()
-      .strict()
-      .demandCommand()
-      .command(ReleasePublishCommandModule)
-      .command(ReleaseBuildCommandModule)
-      .command(ReleaseInfoCommandModule)
-      .command(ReleaseSetDistTagCommand)
-      .command(BuildEnvStampCommand)
-      .command(ReleaseNotesCommandModule);
+  return localYargs
+    .help()
+    .strict()
+    .demandCommand()
+    .command(ReleasePublishCommandModule)
+    .command(ReleaseBuildCommandModule)
+    .command(ReleaseInfoCommandModule)
+    .command(ReleaseSetDistTagCommand)
+    .command(BuildEnvStampCommand)
+    .command(ReleaseNotesCommandModule);
 }

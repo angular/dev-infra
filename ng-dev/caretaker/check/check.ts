@@ -14,24 +14,19 @@ import {GithubQueriesModule} from './github';
 import {ServicesModule} from './services';
 
 /** List of modules checked for the caretaker check command. */
-const moduleList = [
-  GithubQueriesModule,
-  ServicesModule,
-  CiModule,
-  G3Module,
-];
+const moduleList = [GithubQueriesModule, ServicesModule, CiModule, G3Module];
 
 /** Check the status of services which Angular caretakers need to monitor. */
 export async function checkServiceStatuses() {
   /** The configuration for the caretaker commands. */
   const config = getCaretakerConfig();
   /** List of instances of Caretaker Check modules */
-  const caretakerCheckModules = moduleList.map(module => new module(config));
+  const caretakerCheckModules = moduleList.map((module) => new module(config));
 
   // Module's `data` is casted as Promise<unknown> because the data types of the `module`'s `data`
   // promises do not match typings, however our usage here is only to determine when the promise
   // resolves.
-  await Promise.all(caretakerCheckModules.map(module => module.data as Promise<unknown>));
+  await Promise.all(caretakerCheckModules.map((module) => module.data as Promise<unknown>));
 
   for (const module of caretakerCheckModules) {
     await module.printToTerminal();

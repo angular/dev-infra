@@ -13,7 +13,11 @@ import * as semver from 'semver';
 
 import {GithubConfig} from '../../../utils/config';
 import * as console from '../../../utils/console';
-import {getBranchPushMatcher, installVirtualGitClientSpies, VirtualGitClient} from '../../../utils/testing';
+import {
+  getBranchPushMatcher,
+  installVirtualGitClientSpies,
+  VirtualGitClient,
+} from '../../../utils/testing';
 import {ReleaseConfig} from '../../config/index';
 import {ActiveReleaseTrains} from '../../versioning/active-release-trains';
 import * as npm from '../../versioning/npm-publish';
@@ -47,10 +51,7 @@ export function getTestingMocksForReleaseAction() {
   const githubConfig = {owner: 'angular', name: 'dev-infra-test'};
   const gitClient = VirtualGitClient.createInstance({github: githubConfig});
   const releaseConfig: ReleaseConfig = {
-    npmPackages: [
-      '@angular/pkg1',
-      '@angular/pkg2',
-    ],
+    npmPackages: ['@angular/pkg1', '@angular/pkg2'],
     releaseNotes: {},
     buildPackages: () => {
       throw Error('Not implemented');
@@ -66,8 +67,10 @@ export function getTestingMocksForReleaseAction() {
  * @param isNextPublishedToNpm Whether the next version is published to NPM. True by default.
  */
 export function setupReleaseActionForTesting<T extends ReleaseAction>(
-    actionCtor: ReleaseActionConstructor<T>, active: ActiveReleaseTrains,
-    isNextPublishedToNpm = true): TestReleaseAction<T> {
+  actionCtor: ReleaseActionConstructor<T>,
+  active: ActiveReleaseTrains,
+  isNextPublishedToNpm = true,
+): TestReleaseAction<T> {
   // Reset existing HTTP interceptors.
   nock.cleanAll();
 
@@ -82,9 +85,9 @@ export function setupReleaseActionForTesting<T extends ReleaseAction>(
   // published to NPM. We mock the NPM package request and fake the state of the next
   // version based on the `isNextPublishedToNpm` testing parameter. More details on the
   // special case for the next release train can be found in the next pre-release action.
-  fakeNpmPackageQueryRequest(
-      releaseConfig.npmPackages[0],
-      {versions: {[active.next.version.format()]: isNextPublishedToNpm ? {} : undefined}});
+  fakeNpmPackageQueryRequest(releaseConfig.npmPackages[0], {
+    versions: {[active.next.version.format()]: isNextPublishedToNpm ? {} : undefined},
+  });
 
   const action = new actionCtor(active, gitClient, releaseConfig, testTmpDir);
 
@@ -98,7 +101,7 @@ export function setupReleaseActionForTesting<T extends ReleaseAction>(
   spyOn(externalCommands, 'invokeYarnInstallCommand').and.resolveTo();
   spyOn(externalCommands, 'invokeReleaseBuildCommand').and.resolveTo([
     {name: '@angular/pkg1', outputPath: `${testTmpDir}/dist/pkg1`},
-    {name: '@angular/pkg2', outputPath: `${testTmpDir}/dist/pkg2`}
+    {name: '@angular/pkg2', outputPath: `${testTmpDir}/dist/pkg2`},
   ]);
 
   // Fake checking the package versions since we don't actually create packages to check against in
@@ -123,24 +126,30 @@ export function parse(version: string): semver.SemVer {
 }
 
 export async function expectStagingAndPublishWithoutCherryPick(
-    action: TestReleaseAction, expectedBranch: string, expectedVersion: string,
-    expectedNpmDistTag: NpmDistTag) {
+  action: TestReleaseAction,
+  expectedBranch: string,
+  expectedVersion: string,
+  expectedNpmDistTag: NpmDistTag,
+) {
   const {repo, fork, gitClient} = action;
   const expectedStagingForkBranch = `release-stage-${expectedVersion}`;
   const expectedTagName = expectedVersion;
 
   // We first mock the commit status check for the next branch, then expect two pull
   // requests from a fork that are targeting next and the new feature-freeze branch.
-  repo.expectBranchRequest(expectedBranch, 'MASTER_COMMIT_SHA')
-      .expectCommitStatusCheck('MASTER_COMMIT_SHA', 'success')
-      .expectFindForkRequest(fork)
-      .expectPullRequestToBeCreated(expectedBranch, fork, expectedStagingForkBranch, 200)
-      .expectPullRequestWait(200)
-      .expectBranchRequest(expectedBranch, 'STAGING_COMMIT_SHA')
-      .expectCommitRequest(
-          'STAGING_COMMIT_SHA', `release: cut the v${expectedVersion} release\n\nPR Close #200.`)
-      .expectTagToBeCreated(expectedTagName, 'STAGING_COMMIT_SHA')
-      .expectReleaseToBeCreated(`v${expectedVersion}`, expectedTagName);
+  repo
+    .expectBranchRequest(expectedBranch, 'MASTER_COMMIT_SHA')
+    .expectCommitStatusCheck('MASTER_COMMIT_SHA', 'success')
+    .expectFindForkRequest(fork)
+    .expectPullRequestToBeCreated(expectedBranch, fork, expectedStagingForkBranch, 200)
+    .expectPullRequestWait(200)
+    .expectBranchRequest(expectedBranch, 'STAGING_COMMIT_SHA')
+    .expectCommitRequest(
+      'STAGING_COMMIT_SHA',
+      `release: cut the v${expectedVersion} release\n\nPR Close #200.`,
+    )
+    .expectTagToBeCreated(expectedTagName, 'STAGING_COMMIT_SHA')
+    .expectReleaseToBeCreated(`v${expectedVersion}`, expectedTagName);
 
   // In the fork, we make the staging branch appear as non-existent,
   // so that the PR can be created properly without collisions.
@@ -149,31 +158,42 @@ export async function expectStagingAndPublishWithoutCherryPick(
   await action.instance.perform();
 
   expect(gitClient.pushed.length).toBe(1);
-  expect(gitClient.pushed[0])
-      .toEqual(
-          getBranchPushMatcher({
-            baseBranch: expectedBranch,
-            baseRepo: repo,
-            targetBranch: expectedStagingForkBranch,
-            targetRepo: fork,
-            expectedCommits: [{
-              message: `release: cut the v${expectedVersion} release`,
-              files: ['package.json', 'CHANGELOG.md'],
-            }],
-          }),
-          'Expected release staging branch to be created in fork.');
+  expect(gitClient.pushed[0]).toEqual(
+    getBranchPushMatcher({
+      baseBranch: expectedBranch,
+      baseRepo: repo,
+      targetBranch: expectedStagingForkBranch,
+      targetRepo: fork,
+      expectedCommits: [
+        {
+          message: `release: cut the v${expectedVersion} release`,
+          files: ['package.json', 'CHANGELOG.md'],
+        },
+      ],
+    }),
+    'Expected release staging branch to be created in fork.',
+  );
 
   expect(externalCommands.invokeReleaseBuildCommand).toHaveBeenCalledTimes(1);
   expect(npm.runNpmPublish).toHaveBeenCalledTimes(2);
-  expect(npm.runNpmPublish)
-      .toHaveBeenCalledWith(`${testTmpDir}/dist/pkg1`, expectedNpmDistTag, undefined);
-  expect(npm.runNpmPublish)
-      .toHaveBeenCalledWith(`${testTmpDir}/dist/pkg2`, expectedNpmDistTag, undefined);
+  expect(npm.runNpmPublish).toHaveBeenCalledWith(
+    `${testTmpDir}/dist/pkg1`,
+    expectedNpmDistTag,
+    undefined,
+  );
+  expect(npm.runNpmPublish).toHaveBeenCalledWith(
+    `${testTmpDir}/dist/pkg2`,
+    expectedNpmDistTag,
+    undefined,
+  );
 }
 
 export async function expectStagingAndPublishWithCherryPick(
-    action: TestReleaseAction, expectedBranch: string, expectedVersion: string,
-    expectedNpmDistTag: NpmDistTag) {
+  action: TestReleaseAction,
+  expectedBranch: string,
+  expectedVersion: string,
+  expectedNpmDistTag: NpmDistTag,
+) {
   const {repo, fork, gitClient, releaseConfig} = action;
   const expectedStagingForkBranch = `release-stage-${expectedVersion}`;
   const expectedCherryPickForkBranch = `changelog-cherry-pick-${expectedVersion}`;
@@ -181,65 +201,83 @@ export async function expectStagingAndPublishWithCherryPick(
 
   // We first mock the commit status check for the next branch, then expect two pull
   // requests from a fork that are targeting next and the new feature-freeze branch.
-  repo.expectBranchRequest(expectedBranch, 'MASTER_COMMIT_SHA')
-      .expectCommitStatusCheck('MASTER_COMMIT_SHA', 'success')
-      .expectFindForkRequest(fork)
-      .expectPullRequestToBeCreated(expectedBranch, fork, expectedStagingForkBranch, 200)
-      .expectPullRequestWait(200)
-      .expectBranchRequest(expectedBranch, 'STAGING_COMMIT_SHA')
-      .expectCommitRequest(
-          'STAGING_COMMIT_SHA', `release: cut the v${expectedVersion} release\n\nPR Close #200.`)
-      .expectTagToBeCreated(expectedTagName, 'STAGING_COMMIT_SHA')
-      .expectReleaseToBeCreated(`v${expectedVersion}`, expectedTagName)
-      .expectPullRequestToBeCreated('master', fork, expectedCherryPickForkBranch, 300)
-      .expectPullRequestWait(300);
+  repo
+    .expectBranchRequest(expectedBranch, 'MASTER_COMMIT_SHA')
+    .expectCommitStatusCheck('MASTER_COMMIT_SHA', 'success')
+    .expectFindForkRequest(fork)
+    .expectPullRequestToBeCreated(expectedBranch, fork, expectedStagingForkBranch, 200)
+    .expectPullRequestWait(200)
+    .expectBranchRequest(expectedBranch, 'STAGING_COMMIT_SHA')
+    .expectCommitRequest(
+      'STAGING_COMMIT_SHA',
+      `release: cut the v${expectedVersion} release\n\nPR Close #200.`,
+    )
+    .expectTagToBeCreated(expectedTagName, 'STAGING_COMMIT_SHA')
+    .expectReleaseToBeCreated(`v${expectedVersion}`, expectedTagName)
+    .expectPullRequestToBeCreated('master', fork, expectedCherryPickForkBranch, 300)
+    .expectPullRequestWait(300);
 
   // In the fork, we make the staging and cherry-pick branches appear as
   // non-existent, so that the PRs can be created properly without collisions.
-  fork.expectBranchRequest(expectedStagingForkBranch, null)
-      .expectBranchRequest(expectedCherryPickForkBranch, null);
+  fork
+    .expectBranchRequest(expectedStagingForkBranch, null)
+    .expectBranchRequest(expectedCherryPickForkBranch, null);
 
   await action.instance.perform();
 
   expect(gitClient.pushed.length).toBe(2);
-  expect(gitClient.pushed[0])
-      .toEqual(
-          getBranchPushMatcher({
-            baseBranch: expectedBranch,
-            baseRepo: repo,
-            targetBranch: expectedStagingForkBranch,
-            targetRepo: fork,
-            expectedCommits: [{
-              message: `release: cut the v${expectedVersion} release`,
-              files: ['package.json', 'CHANGELOG.md'],
-            }],
-          }),
-          'Expected release staging branch to be created in fork.');
+  expect(gitClient.pushed[0]).toEqual(
+    getBranchPushMatcher({
+      baseBranch: expectedBranch,
+      baseRepo: repo,
+      targetBranch: expectedStagingForkBranch,
+      targetRepo: fork,
+      expectedCommits: [
+        {
+          message: `release: cut the v${expectedVersion} release`,
+          files: ['package.json', 'CHANGELOG.md'],
+        },
+      ],
+    }),
+    'Expected release staging branch to be created in fork.',
+  );
 
-  expect(gitClient.pushed[1])
-      .toEqual(
-          getBranchPushMatcher({
-            baseBranch: 'master',
-            baseRepo: repo,
-            targetBranch: expectedCherryPickForkBranch,
-            targetRepo: fork,
-            expectedCommits: [{
-              message: `docs: release notes for the v${expectedVersion} release`,
-              files: ['CHANGELOG.md'],
-            }],
-          }),
-          'Expected cherry-pick branch to be created in fork.');
+  expect(gitClient.pushed[1]).toEqual(
+    getBranchPushMatcher({
+      baseBranch: 'master',
+      baseRepo: repo,
+      targetBranch: expectedCherryPickForkBranch,
+      targetRepo: fork,
+      expectedCommits: [
+        {
+          message: `docs: release notes for the v${expectedVersion} release`,
+          files: ['CHANGELOG.md'],
+        },
+      ],
+    }),
+    'Expected cherry-pick branch to be created in fork.',
+  );
 
   expect(externalCommands.invokeReleaseBuildCommand).toHaveBeenCalledTimes(1);
   expect(npm.runNpmPublish).toHaveBeenCalledTimes(2);
-  expect(npm.runNpmPublish)
-      .toHaveBeenCalledWith(`${testTmpDir}/dist/pkg1`, expectedNpmDistTag, undefined);
-  expect(npm.runNpmPublish)
-      .toHaveBeenCalledWith(`${testTmpDir}/dist/pkg2`, expectedNpmDistTag, undefined);
+  expect(npm.runNpmPublish).toHaveBeenCalledWith(
+    `${testTmpDir}/dist/pkg1`,
+    expectedNpmDistTag,
+    undefined,
+  );
+  expect(npm.runNpmPublish).toHaveBeenCalledWith(
+    `${testTmpDir}/dist/pkg2`,
+    expectedNpmDistTag,
+    undefined,
+  );
 }
 
 /** Fakes a NPM package query API request for the given package. */
 export function fakeNpmPackageQueryRequest(pkgName: string, data: Partial<NpmPackageInfo>) {
-  _npmPackageInfoCache[pkgName] =
-      Promise.resolve({'dist-tags': {}, versions: {}, time: {}, ...data});
+  _npmPackageInfoCache[pkgName] = Promise.resolve({
+    'dist-tags': {},
+    versions: {},
+    time: {},
+    ...data,
+  });
 }

@@ -10,21 +10,27 @@ import {info} from '../utils/console';
 import {PullApproveGroupResult} from './group';
 
 type ConditionGrouping = keyof Pick<
-    PullApproveGroupResult, 'matchedConditions'|'unmatchedConditions'|'unverifiableConditions'>;
+  PullApproveGroupResult,
+  'matchedConditions' | 'unmatchedConditions' | 'unverifiableConditions'
+>;
 
 /** Create logs for each pullapprove group result. */
 export function logGroup(
-    group: PullApproveGroupResult, conditionsToPrint: ConditionGrouping, printMessageFn = info) {
+  group: PullApproveGroupResult,
+  conditionsToPrint: ConditionGrouping,
+  printMessageFn = info,
+) {
   const conditions = group[conditionsToPrint];
   printMessageFn.group(`[${group.groupName}]`);
   if (conditions.length) {
-    conditions.forEach(groupCondition => {
+    conditions.forEach((groupCondition) => {
       const count = groupCondition.matchedFiles.size;
       if (conditionsToPrint === 'unverifiableConditions') {
         printMessageFn(`${groupCondition.expression}`);
       } else {
         printMessageFn(
-            `${count} ${count === 1 ? 'match' : 'matches'} - ${groupCondition.expression}`);
+          `${count} ${count === 1 ? 'match' : 'matches'} - ${groupCondition.expression}`,
+        );
       }
     });
     printMessageFn.groupEnd();

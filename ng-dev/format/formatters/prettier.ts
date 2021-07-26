@@ -27,30 +27,28 @@ export class Prettier extends Formatter {
    * The configuration path of the prettier config, obtained during construction to prevent needing
    * to discover it repeatedly for each execution.
    */
-  private configPath = this.config['prettier'] ?
-      spawnSync(this.binaryFilePath, ['--find-config-path', '.']).stdout.trim() :
-      '';
+  private configPath = this.config['prettier']
+    ? spawnSync(this.binaryFilePath, ['--find-config-path', '.']).stdout.trim()
+    : '';
 
   override actions = {
     check: {
       commandFlags: `--config ${this.configPath} --check`,
-      callback:
-          (_: string, code: number|NodeJS.Signals, stdout: string) => {
-            return code !== 0;
-          },
+      callback: (_: string, code: number | NodeJS.Signals, stdout: string) => {
+        return code !== 0;
+      },
     },
     format: {
       commandFlags: `--config ${this.configPath} --write`,
-      callback:
-          (file: string, code: number|NodeJS.Signals, _: string, stderr: string) => {
-            if (code !== 0) {
-              error(`Error running prettier on: ${file}`);
-              error(stderr);
-              error();
-              return true;
-            }
-            return false;
-          },
+      callback: (file: string, code: number | NodeJS.Signals, _: string, stderr: string) => {
+        if (code !== 0) {
+          error(`Error running prettier on: ${file}`);
+          error(stderr);
+          error();
+          return true;
+        }
+        return false;
+      },
     },
   };
 }

@@ -11,7 +11,10 @@ import {resolve} from 'path';
 import {error, green, info, log, red, yellow} from '../../utils/console';
 import {GitClient} from '../../utils/git/git-client';
 
-import {deleteCommitMessageDraft, saveCommitMessageDraft} from '../restore-commit-message/commit-message-draft';
+import {
+  deleteCommitMessageDraft,
+  saveCommitMessageDraft,
+} from '../restore-commit-message/commit-message-draft';
 import {printValidationErrors, validateCommitMessage} from '../validate';
 
 /** Validate commit message at the provided file path. */
@@ -34,7 +37,8 @@ export function validateFile(filePath: string, isErrorMode: boolean) {
   if (isErrorMode) {
     printFn(red('Aborting commit attempt due to invalid commit message.'));
     printFn(
-        red('Commit message aborted as failure rather than warning due to local configuration.'));
+      red('Commit message aborted as failure rather than warning due to local configuration.'),
+    );
   } else {
     printFn(yellow('Before this commit can be merged into the upstream repository, it must be'));
     printFn(yellow('amended to follow commit message guidelines.'));

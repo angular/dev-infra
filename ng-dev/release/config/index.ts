@@ -23,7 +23,7 @@ export interface ReleaseConfig {
   /** List of NPM packages that are published as part of this project. */
   npmPackages: string[];
   /** Builds release packages and returns a list of paths pointing to the output. */
-  buildPackages: (stampForRelease?: boolean) => Promise<BuiltPackage[]|null>;
+  buildPackages: (stampForRelease?: boolean) => Promise<BuiltPackage[] | null>;
   /** The list of github labels to add to the release PRs. */
   releasePrLabels?: string[];
   /** Configuration for creating release notes during publishing. */
@@ -49,8 +49,9 @@ export interface ReleaseNotesConfig {
 export type DevInfraReleaseConfig = NgDevConfig<{release: ReleaseConfig}>;
 
 /** Retrieve and validate the config as `ReleaseConfig`. */
-export function getReleaseConfig(config: Partial<DevInfraReleaseConfig> = getConfig()):
-    ReleaseConfig {
+export function getReleaseConfig(
+  config: Partial<DevInfraReleaseConfig> = getConfig(),
+): ReleaseConfig {
   // List of errors encountered validating the config.
   const errors: string[] = [];
 

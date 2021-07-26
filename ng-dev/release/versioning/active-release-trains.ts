@@ -9,12 +9,17 @@
 import * as semver from 'semver';
 
 import {ReleaseTrain} from './release-trains';
-import {getBranchesForMajorVersions, getVersionOfBranch, GithubRepoWithApi, VersionBranch} from './version-branches';
+import {
+  getBranchesForMajorVersions,
+  getVersionOfBranch,
+  GithubRepoWithApi,
+  VersionBranch,
+} from './version-branches';
 
 /** Interface describing determined active release trains for a project. */
 export interface ActiveReleaseTrains {
   /** Release-train currently in the "release-candidate" or "feature-freeze" phase. */
-  releaseCandidate: ReleaseTrain|null;
+  releaseCandidate: ReleaseTrain | null;
   /** Release-train currently in the "latest" phase. */
   latest: ReleaseTrain;
   /** Release-train in the `next` phase. */
@@ -25,8 +30,9 @@ export interface ActiveReleaseTrains {
 export const nextBranchName = 'master';
 
 /** Fetches the active release trains for the configured project. */
-export async function fetchActiveReleaseTrains(repo: GithubRepoWithApi):
-    Promise<ActiveReleaseTrains> {
+export async function fetchActiveReleaseTrains(
+  repo: GithubRepoWithApi,
+): Promise<ActiveReleaseTrains> {
   const nextVersion = await getVersionOfBranch(repo, nextBranchName);
   const next = new ReleaseTrain(nextBranchName, nextVersion);
   const majorVersionsToConsider: number[] = [];
@@ -61,12 +67,17 @@ export async function fetchActiveReleaseTrains(repo: GithubRepoWithApi):
   // or the feature-freeze/release-candidate.
   const branches = await getBranchesForMajorVersions(repo, majorVersionsToConsider);
   const {latest, releaseCandidate} = await findActiveReleaseTrainsFromVersionBranches(
-      repo, nextVersion, branches, expectedReleaseCandidateMajor);
+    repo,
+    nextVersion,
+    branches,
+    expectedReleaseCandidateMajor,
+  );
 
   if (latest === null) {
     throw Error(
-        `Unable to determine the latest release-train. The following branches ` +
-        `have been considered: [${branches.map(b => b.name).join(', ')}]`);
+      `Unable to determine the latest release-train. The following branches ` +
+        `have been considered: [${branches.map((b) => b.name).join(', ')}]`,
+    );
   }
 
   return {releaseCandidate, latest, next};
@@ -74,18 +85,21 @@ export async function fetchActiveReleaseTrains(repo: GithubRepoWithApi):
 
 /** Finds the currently active release trains from the specified version branches. */
 export async function findActiveReleaseTrainsFromVersionBranches(
-    repo: GithubRepoWithApi, nextVersion: semver.SemVer, branches: VersionBranch[],
-    expectedReleaseCandidateMajor: number): Promise<{
-  latest: ReleaseTrain | null,
-  releaseCandidate: ReleaseTrain | null,
+  repo: GithubRepoWithApi,
+  nextVersion: semver.SemVer,
+  branches: VersionBranch[],
+  expectedReleaseCandidateMajor: number,
+): Promise<{
+  latest: ReleaseTrain | null;
+  releaseCandidate: ReleaseTrain | null;
 }> {
   // Version representing the release-train currently in the next phase. Note that we ignore
   // patch and pre-release segments in order to be able to compare the next release train to
   // other release trains from version branches (which follow the `N.N.x` pattern).
   const nextReleaseTrainVersion = semver.parse(`${nextVersion.major}.${nextVersion.minor}.0`)!;
 
-  let latest: ReleaseTrain|null = null;
-  let releaseCandidate: ReleaseTrain|null = null;
+  let latest: ReleaseTrain | null = null;
+  let releaseCandidate: ReleaseTrain | null = null;
 
   // Iterate through the captured branches and find the latest non-prerelease branch and a
   // potential release candidate branch. From the collected branches we iterate descending
@@ -102,15 +116,17 @@ export async function findActiveReleaseTrainsFromVersionBranches(
     // accidentally created branch by the caretaker. In either way we want to raise awareness.
     if (semver.gt(parsed, nextReleaseTrainVersion)) {
       throw Error(
-          `Discovered unexpected version-branch "${name}" for a release-train that is ` +
+        `Discovered unexpected version-branch "${name}" for a release-train that is ` +
           `more recent than the release-train currently in the "${nextBranchName}" branch. ` +
           `Please either delete the branch if created by accident, or update the outdated ` +
-          `version in the next branch (${nextBranchName}).`);
+          `version in the next branch (${nextBranchName}).`,
+      );
     } else if (semver.eq(parsed, nextReleaseTrainVersion)) {
       throw Error(
-          `Discovered unexpected version-branch "${name}" for a release-train that is already ` +
+        `Discovered unexpected version-branch "${name}" for a release-train that is already ` +
           `active in the "${nextBranchName}" branch. Please either delete the branch if ` +
-          `created by accident, or update the version in the next branch (${nextBranchName}).`);
+          `created by accident, or update the version in the next branch (${nextBranchName}).`,
+      );
     }
 
     const version = await getVersionOfBranch(repo, name);
@@ -120,13 +136,15 @@ export async function findActiveReleaseTrainsFromVersionBranches(
     if (isPrerelease) {
       if (releaseCandidate !== null) {
         throw Error(
-            `Unable to determine latest release-train. Found two consecutive ` +
+          `Unable to determine latest release-train. Found two consecutive ` +
             `branches in feature-freeze/release-candidate phase. Did not expect both "${name}" ` +
-            `and "${releaseCandidate.branchName}" to be in feature-freeze/release-candidate mode.`);
+            `and "${releaseCandidate.branchName}" to be in feature-freeze/release-candidate mode.`,
+        );
       } else if (version.major !== expectedReleaseCandidateMajor) {
         throw Error(
-            `Discovered unexpected old feature-freeze/release-candidate branch. Expected no ` +
-            `version-branch in feature-freeze/release-candidate mode for v${version.major}.`);
+          `Discovered unexpected old feature-freeze/release-candidate branch. Expected no ` +
+            `version-branch in feature-freeze/release-candidate mode for v${version.major}.`,
+        );
       }
       releaseCandidate = releaseTrain;
     } else {

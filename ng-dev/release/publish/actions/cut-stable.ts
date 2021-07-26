@@ -30,8 +30,10 @@ export class CutStableAction extends ReleaseAction {
     const newVersion = this._newVersion;
     const isNewMajor = this.active.releaseCandidate?.isMajor;
 
-    const {pullRequest, releaseNotes} =
-        await this.checkoutBranchAndStageVersion(newVersion, branchName);
+    const {pullRequest, releaseNotes} = await this.checkoutBranchAndStageVersion(
+      newVersion,
+      branchName,
+    );
 
     await this.waitForPullRequestToBeMerged(pullRequest);
 
@@ -77,7 +79,8 @@ export class CutStableAction extends ReleaseAction {
     // A stable version can be cut for an active release-train currently in the
     // release-candidate phase. Note: It is not possible to directly release from
     // feature-freeze phase into a stable version.
-    return active.releaseCandidate !== null &&
-        active.releaseCandidate.version.prerelease[0] === 'rc';
+    return (
+      active.releaseCandidate !== null && active.releaseCandidate.version.prerelease[0] === 'rc'
+    );
   }
 }
