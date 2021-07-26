@@ -1,4 +1,4 @@
-load("//dev-infra:defaults.bzl", "jasmine_node_test", "ts_library")
+load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
 
 ts_library(
     name = "set-dist-tag",
@@ -8,11 +8,11 @@ ts_library(
         ],
         exclude = ["*.spec.ts"],
     ),
-    visibility = ["//dev-infra:__subpackages__"],
+    visibility = ["//ng-dev:__subpackages__"],
     deps = [
-        "//dev-infra/release/config",
-        "//dev-infra/release/versioning",
-        "//dev-infra/utils",
+        "//ng-dev/release/config",
+        "//ng-dev/release/versioning",
+        "//ng-dev/utils",
         "@npm//@types/node",
         "@npm//@types/semver",
         "@npm//@types/yargs",
@@ -28,9 +28,9 @@ ts_library(
     ]),
     deps = [
         ":set-dist-tag",
-        "//dev-infra/release/config",
-        "//dev-infra/release/versioning",
-        "//dev-infra/utils/testing",
+        "//ng-dev/release/config",
+        "//ng-dev/release/versioning",
+        "//ng-dev/utils/testing",
         "@npm//@types/jasmine",
         "@npm//@types/node",
     ],
@@ -38,5 +38,5 @@ ts_library(
 
 jasmine_node_test(
     name = "test",
-    deps = [":test_lib"],
+    specs = [":test_lib"],
 )

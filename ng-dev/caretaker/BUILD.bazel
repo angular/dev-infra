@@ -1,4 +1,4 @@
-load("//dev-infra:defaults.bzl", "jasmine_node_test", "ts_library")
+load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
 
 ts_library(
     name = "caretaker",
@@ -6,10 +6,10 @@ ts_library(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    visibility = ["//dev-infra:__subpackages__"],
+    visibility = ["//ng-dev:__subpackages__"],
     deps = [
-        "//dev-infra/release/versioning",
-        "//dev-infra/utils",
+        "//ng-dev/release/versioning",
+        "//ng-dev/utils",
         "@npm//@types/inquirer",
         "@npm//@types/node",
         "@npm//@types/node-fetch",
@@ -29,11 +29,9 @@ ts_library(
     srcs = glob(["**/*.spec.ts"]),
     deps = [
         ":caretaker",
-        "//dev-infra/release/versioning",
-        "//dev-infra/utils",
-        "//dev-infra/utils/testing",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
+        "//ng-dev/release/versioning",
+        "//ng-dev/utils",
+        "//ng-dev/utils/testing",
         "@npm//@types/semver",
         "@npm//semver",
     ],
@@ -41,7 +39,7 @@ ts_library(
 
 jasmine_node_test(
     name = "test",
-    deps = [
+    specs = [
         ":test_lib",
     ],
 )
