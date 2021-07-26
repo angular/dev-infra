@@ -35,7 +35,7 @@ describe('common release action logic', () => {
     latest: new ReleaseTrain('10.0.x', parse('10.0.1')),
   };
 
-  describe('version computation', async () => {
+  describe('version computation', () => {
     const testReleaseTrain: ActiveReleaseTrains = {
       releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.3')),
       next: new ReleaseTrain('master', parse('10.2.0-next.0')),

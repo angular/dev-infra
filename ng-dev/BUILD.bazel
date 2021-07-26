@@ -1,6 +1,89 @@
-package(default_visibility = ["//visibility:public"])
+load("//tools:defaults.bzl", "pkg_npm", "ts_project", "jasmine_node_test")
+load("//tools:esbuild.bzl", "esbuild")
 
-exports_files([
-    "package.json",
-    "tsconfig.json",
-])
+ts_project(
+    name = "project",
+    visibility = ["//ng-dev:__subpackages__"],
+    deps = [
+        "@npm//@angular/benchpress",
+        "@npm//@octokit/graphql",
+        "@npm//@octokit/rest",
+        "@npm//@octokit/types",
+        "@npm//@types/cli-progress",
+        "@npm//@types/conventional-commits-parser",
+        "@npm//@types/ejs",
+        "@npm//@types/events",
+        "@npm//@types/git-raw-commits",
+        "@npm//@types/glob",
+        "@npm//@types/inquirer",
+        "@npm//@types/jasmine",
+        "@npm//@types/minimatch",
+        "@npm//@types/minimist",
+        "@npm//@types/node",
+        "@npm//@types/node-fetch",
+        "@npm//@types/semver",
+        "@npm//@types/yaml",
+        "@npm//@types/yargs",
+        "@npm//brotli",
+        "@npm//chalk",
+        "@npm//cli-progress",
+        "@npm//conventional-commits-parser",
+        "@npm//ejs",
+        "@npm//glob",
+        "@npm//git-raw-commits",
+        "@npm//inquirer",
+        "@npm//minimatch",
+        "@npm//minimist",
+        "@npm//multimatch",
+        "@npm//nock",
+        "@npm//node-fetch",
+        "@npm//node-uuid",
+        "@npm//ora",
+        "@npm//semver",
+        "@npm//ts-node",
+        "@npm//tslib",
+        "@npm//typed-graphqlify",
+        "@npm//typescript",
+        "@npm//yaml",
+        "@npm//yargs",
+    ],
+)
+
+jasmine_node_test(
+    name = "test",
+    use_direct_specs = False,
+    deps = [
+        ":project",
+    ],
+)
+
+
+pkg_npm(
+    name = "npm_package",
+    package_name = "@angular/dev-infra-private",
+    visibility = ["//visibility:public"],
+    build_package_json_from_template = True,
+    deps = [
+        ":build-worker",
+        ":ng-dev",
+        ":project",
+    ],
+)
+
+esbuild(
+    name = "ng-dev",
+    entry_point = "cli.ts",
+    save_to_repo = True,
+    deps = [
+        ":project",
+    ],
+)
+
+esbuild(
+    name = "build-worker",
+    entry_point = ":release/build/build-worker.js",
+    save_to_repo = True,
+    deps = [
+        ":project",
+    ],
+)

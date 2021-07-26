@@ -30,7 +30,7 @@ export async function buildReleaseOutput(
 
     // The child process will pass the `buildPackages()` output through the
     // IPC channel. We keep track of it so that we can use it as resolve value.
-    buildProcess.on('message', (buildResponse) => (builtPackages = buildResponse));
+    buildProcess.on('message', (buildResponse: BuiltPackage[]) => (builtPackages = buildResponse));
 
     // On child process exit, resolve the promise with the received output.
     buildProcess.on('exit', () => resolve(builtPackages));
