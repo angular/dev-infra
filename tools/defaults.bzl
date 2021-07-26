@@ -31,7 +31,7 @@ def ts_library(name, testonly = False, deps = [], **kwargs):
         devmode_target = "es2020",
         prodmode_module = "commonjs",
         prodmode_target = "es2020",
-        tsconfig = "//tools:tsconfig",
+        tsconfig = kwargs.pop("tsconfig", "//tools:tsconfig"),
         testonly = testonly,
         deps = deps,
         module_name = kwargs.pop("module_name", native.package_name()),

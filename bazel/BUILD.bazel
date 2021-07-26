@@ -1,13 +1,23 @@
-package(default_visibility = ["//visibility:public"])
+load("//tools:defaults.bzl", "ts_library")
+
+ts_library(
+    name = "lib",
+    visibility = ["//:npm"],
+    deps = [
+        "//bazel/benchmark/driver-utilities",
+    ],
+)
 
 filegroup(
-    name = "files",
+    name = "npm_files",
     srcs = [
         "BUILD.bazel",
         "expand_template.bzl",
         "extract_js_module_output.bzl",
-        "//dev-infra/bazel/api-golden:files",
-        "//dev-infra/bazel/browsers:files",
-        "//dev-infra/bazel/remote-execution:files",
+        "//bazel/api-golden:files",
+        "//bazel/benchmark:files",
+        "//bazel/browsers:files",
+        "//bazel/remote-execution:files",
     ],
+    visibility = ["//:npm"],
 )
