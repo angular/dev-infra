@@ -1,4 +1,4 @@
-load("//dev-infra:defaults.bzl", "ts_library")
+load("//tools:defaults.bzl", "ts_library")
 
 ts_library(
     name = "rebase",
@@ -6,10 +6,10 @@ ts_library(
         "cli.ts",
         "index.ts",
     ],
-    visibility = ["//dev-infra:__subpackages__"],
+    visibility = ["//ng-dev:__subpackages__"],
     deps = [
-        "//dev-infra/commit-message",
-        "//dev-infra/utils",
+        "//ng-dev/commit-message",
+        "//ng-dev/utils",
         "@npm//@types/conventional-commits-parser",
         "@npm//@types/inquirer",
         "@npm//@types/node",

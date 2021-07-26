@@ -1,18 +1,18 @@
-load("//dev-infra:defaults.bzl", "ts_library")
+load("//tools:defaults.bzl", "ts_library")
 
 ts_library(
     name = "publish",
     srcs = glob([
         "**/*.ts",
     ]),
-    visibility = ["//dev-infra:__subpackages__"],
+    visibility = ["//ng-dev:__subpackages__"],
     deps = [
-        "//dev-infra/commit-message",
-        "//dev-infra/pr/merge",
-        "//dev-infra/release/config",
-        "//dev-infra/release/notes",
-        "//dev-infra/release/versioning",
-        "//dev-infra/utils",
+        "//ng-dev/commit-message",
+        "//ng-dev/pr/merge",
+        "//ng-dev/release/config",
+        "//ng-dev/release/notes",
+        "//ng-dev/release/versioning",
+        "//ng-dev/utils",
         "@npm//@octokit/rest",
         "@npm//@types/ejs",
         "@npm//@types/inquirer",

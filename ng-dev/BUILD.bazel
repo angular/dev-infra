@@ -1,6 +1,58 @@
-package(default_visibility = ["//visibility:public"])
+load("//tools:defaults.bzl", "esbuild", "ts_library")
 
-exports_files([
-    "package.json",
-    "tsconfig.json",
-])
+filegroup(
+    name = "npm_files",
+    srcs = [
+        "build-worker.js",
+        "ng-dev.js",
+    ],
+    visibility = [
+        "//:npm",
+        "//ng-dev:__subpackages__",
+    ],
+)
+
+ts_library(
+    name = "lib",
+    srcs = [
+        "cli.ts",
+    ],
+    visibility = [
+        "//:npm",
+        "//ng-dev:__subpackages__",
+    ],
+    deps = [
+        "//ng-dev/caretaker",
+        "//ng-dev/commit-message",
+        "//ng-dev/format",
+        "//ng-dev/misc",
+        "//ng-dev/ngbot",
+        "//ng-dev/pr",
+        "//ng-dev/pullapprove",
+        "//ng-dev/release",
+        "//ng-dev/ts-circular-dependencies",
+        "//ng-dev/utils",
+        "@npm//@types/yargs",
+        "@npm//yargs",
+    ],
+)
+
+esbuild(
+    name = "ng-dev",
+    entry_point = "cli.ts",
+    external = ["ts-node"],
+    save_to_repo = True,
+    deps = [
+        ":lib",
+    ],
+)
+
+esbuild(
+    name = "build-worker",
+    entry_point = "//ng-dev/release/build:build-worker.ts",
+    external = ["ts-node"],
+    save_to_repo = True,
+    deps = [
+        "//ng-dev/release/build",
+    ],
+)

@@ -1,11 +1,11 @@
-load("//dev-infra:defaults.bzl", "ts_library")
+load("//tools:defaults.bzl", "ts_library")
 
 ts_library(
     name = "testing",
     srcs = glob(["*.ts"]),
-    visibility = ["//dev-infra:__subpackages__"],
+    visibility = ["//ng-dev:__subpackages__"],
     deps = [
-        "//dev-infra/utils",
+        "//ng-dev/utils",
         "@npm//@types/jasmine",
         "@npm//@types/minimist",
         "@npm//@types/node",
