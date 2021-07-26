@@ -12,13 +12,13 @@ import {GithubClient} from '../../utils/git/github';
 import {GithubApiMergeStrategyConfig} from './strategies/api-merge';
 
 /** Describes possible values that can be returned for `branches` of a target label. */
-export type TargetLabelBranchResult = string[]|Promise<string[]>;
+export type TargetLabelBranchResult = string[] | Promise<string[]>;
 
 /**
  * Possible merge methods supported by the Github API.
  * https://developer.github.com/v3/pulls/#merge-a-pull-request-merge-button.
  */
-export type GithubApiMergeMethod = 'merge'|'squash'|'rebase';
+export type GithubApiMergeMethod = 'merge' | 'squash' | 'rebase';
 
 /**
  * Target labels represent Github pull requests labels. These labels instruct the merge
@@ -26,7 +26,7 @@ export type GithubApiMergeMethod = 'merge'|'squash'|'rebase';
  */
 export interface TargetLabel {
   /** Pattern that matches the given target label. */
-  pattern: RegExp|string;
+  pattern: RegExp | string;
   /**
    * List of branches a pull request with this target label should be merged into.
    * Can also be wrapped in a function that accepts the target branch specified in the
@@ -35,7 +35,7 @@ export interface TargetLabel {
    * @throws {InvalidTargetLabelError} Invalid label has been applied to pull request.
    * @throws {InvalidTargetBranchError} Invalid Github target branch has been selected.
    */
-  branches: TargetLabelBranchResult|((githubTargetBranch: string) => TargetLabelBranchResult);
+  branches: TargetLabelBranchResult | ((githubTargetBranch: string) => TargetLabelBranchResult);
 }
 
 /**
@@ -43,7 +43,7 @@ export interface TargetLabel {
  * default `MergeConfig` has does not require any of these options as defaults
  * are provided by the common dev-infra github configuration.
  */
-export type MergeConfigWithRemote = MergeConfig&{remote: GitClientConfig};
+export type MergeConfigWithRemote = MergeConfig & {remote: GitClientConfig};
 
 /** Configuration for the merge script. */
 export interface MergeConfig {
@@ -57,13 +57,13 @@ export interface MergeConfig {
   /** Required base commits for given branches. */
   requiredBaseCommits?: {[branchName: string]: string};
   /** Pattern that matches labels which imply a signed CLA. */
-  claSignedLabel: string|RegExp;
+  claSignedLabel: string | RegExp;
   /** Pattern that matches labels which imply a merge ready pull request. */
-  mergeReadyLabel: string|RegExp;
+  mergeReadyLabel: string | RegExp;
   /** Label that is applied when special attention from the caretaker is required. */
-  caretakerNoteLabel?: string|RegExp;
+  caretakerNoteLabel?: string | RegExp;
   /** Label which can be applied to fixup commit messages in the merge script. */
-  commitMessageFixupLabel: string|RegExp;
+  commitMessageFixupLabel: string | RegExp;
   /** Label that is applied when a breaking change is made in the pull request. */
   breakingChangeLabel?: string;
   /**
@@ -72,7 +72,7 @@ export interface MergeConfig {
    * The downside is that fixup or squash commits no longer work as the Github API does
    * not support this.
    */
-  githubApiMerge: false|GithubApiMergeStrategyConfig;
+  githubApiMerge: false | GithubApiMergeStrategyConfig;
   /**
    * List of commit scopes which are exempted from target label content requirements. i.e. no `feat`
    * scopes in patch branches, no breaking changes in minor or patch changes.
@@ -86,13 +86,15 @@ export interface MergeConfig {
  * on branch name computations. We don't want to run these immediately whenever
  * the dev-infra configuration is loaded as that could slow-down other commands.
  */
-export type DevInfraMergeConfig =
-    NgDevConfig<{'merge': (api: GithubClient) => MergeConfig | Promise<MergeConfig>}>;
+export type DevInfraMergeConfig = NgDevConfig<{
+  'merge': (api: GithubClient) => MergeConfig | Promise<MergeConfig>;
+}>;
 
 /** Loads and validates the merge configuration. */
 export async function loadAndValidateConfig(
-    config: Partial<DevInfraMergeConfig>,
-    api: GithubClient): Promise<{config?: MergeConfig, errors?: string[]}> {
+  config: Partial<DevInfraMergeConfig>,
+  api: GithubClient,
+): Promise<{config?: MergeConfig; errors?: string[]}> {
   if (config.merge === undefined) {
     return {errors: ['No merge configuration found. Set the `merge` configuration.']};
   }

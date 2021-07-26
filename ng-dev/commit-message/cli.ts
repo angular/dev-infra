@@ -13,9 +13,10 @@ import {ValidateRangeModule} from './validate-range/cli';
 
 /** Build the parser for the commit-message commands. */
 export function buildCommitMessageParser(localYargs: yargs.Argv) {
-  return localYargs.help()
-      .strict()
-      .command(RestoreCommitMessageModule)
-      .command(ValidateFileModule)
-      .command(ValidateRangeModule);
+  return localYargs
+    .help()
+    .strict()
+    .command(RestoreCommitMessageModule)
+    .command(ValidateFileModule)
+    .command(ValidateRangeModule);
 }

@@ -13,7 +13,7 @@ interface Formatter {
 }
 
 export interface FormatConfig {
-  [key: string]: boolean|Formatter;
+  [key: string]: boolean | Formatter;
 }
 
 /** Retrieve and validate the config as `FormatConfig`. */

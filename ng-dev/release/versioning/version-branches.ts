@@ -32,17 +32,25 @@ const versionBranchNameRegex = /^(\d+)\.(\d+)\.x$/;
 
 /** Gets the version of a given branch by reading the `package.json` upstream. */
 export async function getVersionOfBranch(
-    repo: GithubRepoWithApi, branchName: string): Promise<semver.SemVer> {
-  const {data} = await repo.api.repos.getContent(
-      {owner: repo.owner, repo: repo.name, path: '/package.json', ref: branchName});
+  repo: GithubRepoWithApi,
+  branchName: string,
+): Promise<semver.SemVer> {
+  const {data} = await repo.api.repos.getContent({
+    owner: repo.owner,
+    repo: repo.name,
+    path: '/package.json',
+    ref: branchName,
+  });
   // Workaround for: https://github.com/octokit/rest.js/issues/32.
   // TODO: Remove cast once types of Octokit `getContent` are fixed.
   const content = (data as {content?: string}).content;
   if (!content) {
     throw Error(`Unable to read "package.json" file from repository.`);
   }
-  const {version} = JSON.parse(Buffer.from(content, 'base64').toString()) as
-      {version: string, [key: string]: any};
+  const {version} = JSON.parse(Buffer.from(content, 'base64').toString()) as {
+    version: string;
+    [key: string]: any;
+  };
   const parsedVersion = semver.parse(version);
   if (parsedVersion === null) {
     throw Error(`Invalid version detected in following branch: ${branchName}.`);
@@ -62,7 +70,7 @@ export function isVersionBranch(branchName: string): boolean {
  * For example `10.0.x` will become `10.0.0` in SemVer. The patch digit is not
  * relevant but needed for parsing. SemVer does not allow `x` as patch digit.
  */
-export function getVersionForVersionBranch(branchName: string): semver.SemVer|null {
+export function getVersionForVersionBranch(branchName: string): semver.SemVer | null {
   return semver.parse(branchName.replace(versionBranchNameRegex, '$1.$2.0'));
 }
 
@@ -71,9 +79,14 @@ export function getVersionForVersionBranch(branchName: string): semver.SemVer|nu
  * order. i.e. latest version branches first.
  */
 export async function getBranchesForMajorVersions(
-    repo: GithubRepoWithApi, majorVersions: number[]): Promise<VersionBranch[]> {
-  const branchData = await repo.api.paginate(
-      repo.api.repos.listBranches, {owner: repo.owner, repo: repo.name, protected: true});
+  repo: GithubRepoWithApi,
+  majorVersions: number[],
+): Promise<VersionBranch[]> {
+  const branchData = await repo.api.paginate(repo.api.repos.listBranches, {
+    owner: repo.owner,
+    repo: repo.name,
+    protected: true,
+  });
   const branches: VersionBranch[] = [];
 
   for (const {name} of branchData) {

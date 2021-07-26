@@ -51,7 +51,7 @@ export interface ReleaseActionConstructor<T extends ReleaseAction = ReleaseActio
   /** Whether the release action is currently active. */
   isActive(active: ActiveReleaseTrains, config: ReleaseConfig): Promise<boolean>;
   /** Constructs a release action. */
-  new(...args: [ActiveReleaseTrains, AuthenticatedGitClient, ReleaseConfig, string]): T;
+  new (...args: [ActiveReleaseTrains, AuthenticatedGitClient, ReleaseConfig, string]): T;
 }
 
 /**
@@ -75,25 +75,32 @@ export abstract class ReleaseAction {
   abstract perform(): Promise<void>;
 
   /** Cached found fork of the configured project. */
-  private _cachedForkRepo: GithubRepo|null = null;
+  private _cachedForkRepo: GithubRepo | null = null;
 
   constructor(
-      protected active: ActiveReleaseTrains, protected git: AuthenticatedGitClient,
-      protected config: ReleaseConfig, protected projectDir: string) {}
+    protected active: ActiveReleaseTrains,
+    protected git: AuthenticatedGitClient,
+    protected config: ReleaseConfig,
+    protected projectDir: string,
+  ) {}
 
   /** Retrieves the version in the project top-level `package.json` file. */
   private async getProjectVersion() {
     const pkgJsonPath = join(this.projectDir, packageJsonPath);
-    const pkgJson =
-        JSON.parse(await fs.readFile(pkgJsonPath, 'utf8')) as {version: string, [key: string]: any};
+    const pkgJson = JSON.parse(await fs.readFile(pkgJsonPath, 'utf8')) as {
+      version: string;
+      [key: string]: any;
+    };
     return new semver.SemVer(pkgJson.version);
   }
 
   /** Updates the version in the project top-level `package.json` file. */
   protected async updateProjectVersion(newVersion: semver.SemVer) {
     const pkgJsonPath = join(this.projectDir, packageJsonPath);
-    const pkgJson =
-        JSON.parse(await fs.readFile(pkgJsonPath, 'utf8')) as {version: string, [key: string]: any};
+    const pkgJson = JSON.parse(await fs.readFile(pkgJsonPath, 'utf8')) as {
+      version: string;
+      [key: string]: any;
+    };
     pkgJson.version = newVersion.format();
     // Write the `package.json` file. Note that we add a trailing new line
     // to avoid unnecessary diff. IDEs usually add a trailing new line.
@@ -103,34 +110,48 @@ export abstract class ReleaseAction {
 
   /** Gets the most recent commit of a specified branch. */
   private async _getCommitOfBranch(branchName: string): Promise<string> {
-    const {data: {commit}} =
-        await this.git.github.repos.getBranch({...this.git.remoteParams, branch: branchName});
+    const {
+      data: {commit},
+    } = await this.git.github.repos.getBranch({...this.git.remoteParams, branch: branchName});
     return commit.sha;
   }
 
   /** Verifies that the latest commit for the given branch is passing all statuses. */
   protected async verifyPassingGithubStatus(branchName: string) {
     const commitSha = await this._getCommitOfBranch(branchName);
-    const {data: {state}} = await this.git.github.repos.getCombinedStatusForRef(
-        {...this.git.remoteParams, ref: commitSha});
+    const {
+      data: {state},
+    } = await this.git.github.repos.getCombinedStatusForRef({
+      ...this.git.remoteParams,
+      ref: commitSha,
+    });
     const branchCommitsUrl = getListCommitsInBranchUrl(this.git, branchName);
 
     if (state === 'failure') {
       error(
-          red(`  ✘   Cannot stage release. Commit "${commitSha}" does not pass all github ` +
-              'status checks. Please make sure this commit passes all checks before re-running.'));
+        red(
+          `  ✘   Cannot stage release. Commit "${commitSha}" does not pass all github ` +
+            'status checks. Please make sure this commit passes all checks before re-running.',
+        ),
+      );
       error(`      Please have a look at: ${branchCommitsUrl}`);
 
       if (await promptConfirm('Do you want to ignore the Github status and proceed?')) {
-        info(yellow(
-            '  ⚠   Upstream commit is failing CI checks, but status has been forcibly ignored.'));
+        info(
+          yellow(
+            '  ⚠   Upstream commit is failing CI checks, but status has been forcibly ignored.',
+          ),
+        );
         return;
       }
       throw new UserAbortedReleaseActionError();
     } else if (state === 'pending') {
       error(
-          red(`  ✘   Commit "${commitSha}" still has pending github statuses that ` +
-              'need to succeed before staging a release.'));
+        red(
+          `  ✘   Commit "${commitSha}" still has pending github statuses that ` +
+            'need to succeed before staging a release.',
+        ),
+      );
       error(red(`      Please have a look at: ${branchCommitsUrl}`));
       if (await promptConfirm('Do you want to ignore the Github status and proceed?')) {
         info(yellow('  ⚠   Upstream commit is pending CI, but status has been forcibly ignored.'));
@@ -142,18 +163,20 @@ export abstract class ReleaseAction {
     info(green('  ✓   Upstream commit is passing all github status checks.'));
   }
 
-
   /**
    * Prompts the user for potential release notes edits that need to be made. Once
    * confirmed, a new commit for the release point is created.
    */
   protected async waitForEditsAndCreateReleaseCommit(newVersion: semver.SemVer) {
-    info(yellow(
+    info(
+      yellow(
         '  ⚠   Please review the changelog and ensure that the log contains only changes ' +
-        'that apply to the public API surface. Manual changes can be made. When done, please ' +
-        'proceed with the prompt below.'));
+          'that apply to the public API surface. Manual changes can be made. When done, please ' +
+          'proceed with the prompt below.',
+      ),
+    );
 
-    if (!await promptConfirm('Do you want to proceed and commit the changes?')) {
+    if (!(await promptConfirm('Do you want to proceed and commit the changes?'))) {
       throw new UserAbortedReleaseActionError();
     }
 
@@ -186,7 +209,7 @@ export abstract class ReleaseAction {
     }
 
     const fork = forks[0];
-    return this._cachedForkRepo = {owner: fork.owner.login, name: fork.name};
+    return (this._cachedForkRepo = {owner: fork.owner.login, name: fork.name});
   }
 
   /** Checks whether a given branch name is reserved in the specified repository. */
@@ -238,13 +261,17 @@ export abstract class ReleaseAction {
    *   a local branch with remote tracking should be set up.
    * @returns The fork and branch name containing the pushed changes.
    */
-  private async _pushHeadToFork(proposedBranchName: string, trackLocalBranch: boolean):
-      Promise<{fork: GithubRepo, branchName: string}> {
+  private async _pushHeadToFork(
+    proposedBranchName: string,
+    trackLocalBranch: boolean,
+  ): Promise<{fork: GithubRepo; branchName: string}> {
     const fork = await this._getForkOfAuthenticatedUser();
     // Compute a repository URL for pushing to the fork. Note that we want to respect
     // the SSH option from the dev-infra github configuration.
-    const repoGitUrl =
-        getRepositoryGitUrl({...fork, useSsh: this.git.remoteConfig.useSsh}, this.git.githubToken);
+    const repoGitUrl = getRepositoryGitUrl(
+      {...fork, useSsh: this.git.remoteConfig.useSsh},
+      this.git.githubToken,
+    );
     const branchName = await this._findAvailableBranchName(fork, proposedBranchName);
     const pushArgs: string[] = [];
     // If a local branch should track the remote fork branch, create a branch matching
@@ -265,8 +292,11 @@ export abstract class ReleaseAction {
    * @returns An object describing the created pull request.
    */
   protected async pushChangesToForkAndCreatePullRequest(
-      targetBranch: string, proposedForkBranchName: string, title: string,
-      body?: string): Promise<PullRequest> {
+    targetBranch: string,
+    proposedForkBranchName: string,
+    title: string,
+    body?: string,
+  ): Promise<PullRequest> {
     const repoSlug = `${this.git.remoteParams.owner}/${this.git.remoteParams.repo}`;
     const {fork, branchName} = await this._pushHeadToFork(proposedForkBranchName, true);
     const {data} = await this.git.github.pulls.create({
@@ -301,7 +331,9 @@ export abstract class ReleaseAction {
    * merge, the script will abort gracefully (considering a manual user abort).
    */
   protected async waitForPullRequestToBeMerged(
-      {id}: PullRequest, interval = waitForPullRequestInterval): Promise<void> {
+    {id}: PullRequest,
+    interval = waitForPullRequestInterval,
+  ): Promise<void> {
     return new Promise((resolve, reject) => {
       debug(`Waiting for pull request #${id} to be merged.`);
 
@@ -351,15 +383,15 @@ export abstract class ReleaseAction {
     this.git.run(['commit', '-q', '--no-verify', '-m', message, ...files]);
   }
 
-
   /**
    * Stages the specified new version for the current branch and creates a
    * pull request that targets the given base branch.
    * @returns an object describing the created pull request.
    */
   protected async stageVersionForBranchAndCreatePullRequest(
-      newVersion: semver.SemVer, pullRequestBaseBranch: string):
-      Promise<{releaseNotes: ReleaseNotes, pullRequest: PullRequest}> {
+    newVersion: semver.SemVer,
+    pullRequestBaseBranch: string,
+  ): Promise<{releaseNotes: ReleaseNotes; pullRequest: PullRequest}> {
     /**
      * The current version of the project for the branch from the root package.json. This must be
      * retrieved prior to updating the project version.
@@ -371,8 +403,10 @@ export abstract class ReleaseAction {
     await this.waitForEditsAndCreateReleaseCommit(newVersion);
 
     const pullRequest = await this.pushChangesToForkAndCreatePullRequest(
-        pullRequestBaseBranch, `release-stage-${newVersion}`,
-        `Bump version to "v${newVersion}" with changelog.`);
+      pullRequestBaseBranch,
+      `release-stage-${newVersion}`,
+      `Bump version to "v${newVersion}" with changelog.`,
+    );
 
     info(green('  ✓   Release staging pull request has been created.'));
     info(yellow(`      Please ask team members to review: ${pullRequest.url}.`));
@@ -385,8 +419,10 @@ export abstract class ReleaseAction {
    * the specified new version in order to create a pull request.
    * @returns an object describing the created pull request.
    */
-  protected async checkoutBranchAndStageVersion(newVersion: semver.SemVer, stagingBranch: string):
-      Promise<{releaseNotes: ReleaseNotes, pullRequest: PullRequest}> {
+  protected async checkoutBranchAndStageVersion(
+    newVersion: semver.SemVer,
+    stagingBranch: string,
+  ): Promise<{releaseNotes: ReleaseNotes; pullRequest: PullRequest}> {
     await this.verifyPassingGithubStatus(stagingBranch);
     await this.checkoutUpstreamBranch(stagingBranch);
     return await this.stageVersionForBranchAndCreatePullRequest(newVersion, stagingBranch);
@@ -398,7 +434,9 @@ export abstract class ReleaseAction {
    * @returns a boolean indicating successful creation of the cherry-pick pull request.
    */
   protected async cherryPickChangelogIntoNextBranch(
-      releaseNotes: ReleaseNotes, stagingBranch: string): Promise<boolean> {
+    releaseNotes: ReleaseNotes,
+    stagingBranch: string,
+  ): Promise<boolean> {
     const nextBranch = this.active.next.branchName;
     const commitMessage = getReleaseNoteCherryPickCommitMessage(releaseNotes.version);
 
@@ -413,13 +451,19 @@ export abstract class ReleaseAction {
 
     // Create a cherry-pick pull request that should be merged by the caretaker.
     const pullRequest = await this.pushChangesToForkAndCreatePullRequest(
-        nextBranch, `changelog-cherry-pick-${releaseNotes.version}`, commitMessage,
-        `Cherry-picks the changelog from the "${stagingBranch}" branch to the next ` +
-            `branch (${nextBranch}).`);
+      nextBranch,
+      `changelog-cherry-pick-${releaseNotes.version}`,
+      commitMessage,
+      `Cherry-picks the changelog from the "${stagingBranch}" branch to the next ` +
+        `branch (${nextBranch}).`,
+    );
 
-    info(green(
+    info(
+      green(
         `  ✓   Pull request for cherry-picking the changelog into "${nextBranch}" ` +
-        'has been created.'));
+          'has been created.',
+      ),
+    );
     info(yellow(`      Please ask team members to review: ${pullRequest.url}.`));
 
     // Wait for the Pull Request to be merged.
@@ -433,7 +477,10 @@ export abstract class ReleaseAction {
    * The release is created by tagging the specified commit SHA.
    */
   private async _createGithubReleaseForVersion(
-      releaseNotes: ReleaseNotes, versionBumpCommitSha: string, prerelease: boolean) {
+    releaseNotes: ReleaseNotes,
+    versionBumpCommitSha: string,
+    prerelease: boolean,
+  ) {
     const tagName = releaseNotes.version.format();
     await this.git.github.git.createRef({
       ...this.git.remoteParams,
@@ -459,10 +506,13 @@ export abstract class ReleaseAction {
    * @param npmDistTag NPM dist tag where the version should be published to.
    */
   protected async buildAndPublish(
-      releaseNotes: ReleaseNotes, publishBranch: string, npmDistTag: NpmDistTag) {
+    releaseNotes: ReleaseNotes,
+    publishBranch: string,
+    npmDistTag: NpmDistTag,
+  ) {
     const versionBumpCommitSha = await this._getCommitOfBranch(publishBranch);
 
-    if (!await this._isCommitForVersionStaging(releaseNotes.version, versionBumpCommitSha)) {
+    if (!(await this._isCommitForVersionStaging(releaseNotes.version, versionBumpCommitSha))) {
       error(red(`  ✘   Latest commit in "${publishBranch}" branch is not a staging commit.`));
       error(red('      Please make sure the staging pull request has been merged.'));
       throw new FatalReleaseActionError();
@@ -485,7 +535,10 @@ export abstract class ReleaseAction {
 
     // Create a Github release for the new version.
     await this._createGithubReleaseForVersion(
-        releaseNotes, versionBumpCommitSha, npmDistTag === 'next');
+      releaseNotes,
+      versionBumpCommitSha,
+      npmDistTag === 'next',
+    );
 
     // Walk through all built packages and publish them to NPM.
     for (const builtPackage of builtPackages) {
@@ -514,8 +567,10 @@ export abstract class ReleaseAction {
 
   /** Checks whether the given commit represents a staging commit for the specified version. */
   private async _isCommitForVersionStaging(version: semver.SemVer, commitSha: string) {
-    const {data} =
-        await this.git.github.repos.getCommit({...this.git.remoteParams, ref: commitSha});
+    const {data} = await this.git.github.repos.getCommit({
+      ...this.git.remoteParams,
+      ref: commitSha,
+    });
     return data.commit.message.startsWith(getCommitMessageForRelease(version));
   }
 
@@ -525,9 +580,9 @@ export abstract class ReleaseAction {
     const experimentalVersion = createExperimentalSemver(version);
 
     for (const pkg of packages) {
-      const {version: packageJsonVersion} =
-          JSON.parse(await fs.readFile(join(pkg.outputPath, 'package.json'), 'utf8')) as
-          {version: string, [key: string]: any};
+      const {version: packageJsonVersion} = JSON.parse(
+        await fs.readFile(join(pkg.outputPath, 'package.json'), 'utf8'),
+      ) as {version: string; [key: string]: any};
 
       const mismatchesVersion = version.compare(packageJsonVersion) !== 0;
       const mismatchesExperimental = experimentalVersion.compare(packageJsonVersion) !== 0;

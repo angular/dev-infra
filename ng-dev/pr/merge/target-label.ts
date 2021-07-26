@@ -27,7 +27,9 @@ export class InvalidTargetLabelError {
 
 /** Gets the target label from the specified pull request labels. */
 export function getTargetLabelFromPullRequest(
-    config: Pick<MergeConfig, 'labels'>, labels: string[]): TargetLabel {
+  config: Pick<MergeConfig, 'labels'>,
+  labels: string[],
+): TargetLabel {
   /** List of discovered target labels for the PR. */
   const matches = [];
   for (const label of labels) {
@@ -41,10 +43,12 @@ export function getTargetLabelFromPullRequest(
   }
   if (matches.length === 0) {
     throw new InvalidTargetLabelError(
-        'Unable to determine target for the PR as it has no target label.');
+      'Unable to determine target for the PR as it has no target label.',
+    );
   }
   throw new InvalidTargetLabelError(
-      'Unable to determine target for the PR as it has multiple target labels.');
+    'Unable to determine target for the PR as it has multiple target labels.',
+  );
 }
 
 /**
@@ -54,7 +58,10 @@ export function getTargetLabelFromPullRequest(
  * @throws {InvalidTargetBranchError} Invalid Github target branch has been selected.
  */
 export async function getBranchesFromTargetLabel(
-    label: TargetLabel, githubTargetBranch: string): Promise<string[]> {
-  return typeof label.branches === 'function' ? await label.branches(githubTargetBranch) :
-                                                await label.branches;
+  label: TargetLabel,
+  githubTargetBranch: string,
+): Promise<string[]> {
+  return typeof label.branches === 'function'
+    ? await label.branches(githubTargetBranch)
+    : await label.branches;
 }

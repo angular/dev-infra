@@ -22,7 +22,7 @@ export interface G3StatsData {
   commits: number;
 }
 
-export class G3Module extends BaseModule<G3StatsData|void> {
+export class G3Module extends BaseModule<G3StatsData | void> {
   override async retrieveData() {
     const toCopyToG3 = this.getG3FileIncludeAndExcludeLists();
     const latestSha = this.getLatestShas();
@@ -32,7 +32,11 @@ export class G3Module extends BaseModule<G3StatsData|void> {
     }
 
     return this.getDiffStats(
-        latestSha.g3, latestSha.master, toCopyToG3.include, toCopyToG3.exclude);
+      latestSha.g3,
+      latestSha.master,
+      toCopyToG3.include,
+      toCopyToG3.exclude,
+    );
   }
 
   override async printToTerminal() {
@@ -46,8 +50,9 @@ export class G3Module extends BaseModule<G3StatsData|void> {
       info('✅  No sync is needed at this time');
     } else {
       info(
-          `${stats.files} files changed, ${stats.insertions} insertions(+), ${stats.deletions} ` +
-          `deletions(-) from ${stats.commits} commits will be included in the next sync`);
+        `${stats.files} files changed, ${stats.insertions} insertions(+), ${stats.deletions} ` +
+          `deletions(-) from ${stats.commits} commits will be included in the next sync`,
+      );
     }
     info.groupEnd();
     info();
@@ -57,11 +62,17 @@ export class G3Module extends BaseModule<G3StatsData|void> {
   private getShaForBranchLatest(branch: string) {
     const {owner, name} = this.git.remoteConfig;
     /** The result fo the fetch command. */
-    const fetchResult =
-        this.git.runGraceful(['fetch', '-q', `https://github.com/${owner}/${name}.git`, branch]);
+    const fetchResult = this.git.runGraceful([
+      'fetch',
+      '-q',
+      `https://github.com/${owner}/${name}.git`,
+      branch,
+    ]);
 
-    if (fetchResult.status !== 0 &&
-        fetchResult.stderr.includes(`couldn't find remote ref ${branch}`)) {
+    if (
+      fetchResult.status !== 0 &&
+      fetchResult.stderr.includes(`couldn't find remote ref ${branch}`)
+    ) {
       debug(`No '${branch}' branch exists on upstream, skipping.`);
       return null;
     }
@@ -73,7 +84,11 @@ export class G3Module extends BaseModule<G3StatsData|void> {
    * files.
    */
   private getDiffStats(
-      g3Ref: string, masterRef: string, includeFiles: string[], excludeFiles: string[]) {
+    g3Ref: string,
+    masterRef: string,
+    includeFiles: string[],
+    excludeFiles: string[],
+  ) {
     /** The diff stats to be returned. */
     const stats = {
       insertions: 0,
@@ -83,41 +98,43 @@ export class G3Module extends BaseModule<G3StatsData|void> {
     };
 
     // Determine the number of commits between master and g3 refs. */
-    stats.commits =
-        parseInt(this.git.run(['rev-list', '--count', `${g3Ref}..${masterRef}`]).stdout, 10);
+    stats.commits = parseInt(
+      this.git.run(['rev-list', '--count', `${g3Ref}..${masterRef}`]).stdout,
+      10,
+    );
 
     // Get the numstat information between master and g3
-    this.git.run(['diff', `${g3Ref}...${masterRef}`, '--numstat'])
-        .stdout
-        // Remove the extra space after git's output.
-        .trim()
-        // Split each line of git output into array
-        .split('\n')
-        // Split each line from the git output into components parts: insertions,
-        // deletions and file name respectively
-        .map(line => line.trim().split('\t'))
-        // Parse number value from the insertions and deletions values
-        // Example raw line input:
-        //   10\t5\tsrc/file/name.ts
-        .map(line => [Number(line[0]), Number(line[1]), line[2]] as [number, number, string])
-        // Add each line's value to the diff stats, and conditionally to the g3
-        // stats as well if the file name is included in the files synced to g3.
-        .forEach(([insertions, deletions, fileName]) => {
-          if (this.checkMatchAgainstIncludeAndExclude(fileName, includeFiles, excludeFiles)) {
-            stats.insertions += insertions;
-            stats.deletions += deletions;
-            stats.files += 1;
-          }
-        });
+    this.git
+      .run(['diff', `${g3Ref}...${masterRef}`, '--numstat'])
+      .stdout // Remove the extra space after git's output.
+      .trim()
+      // Split each line of git output into array
+      .split('\n')
+      // Split each line from the git output into components parts: insertions,
+      // deletions and file name respectively
+      .map((line) => line.trim().split('\t'))
+      // Parse number value from the insertions and deletions values
+      // Example raw line input:
+      //   10\t5\tsrc/file/name.ts
+      .map((line) => [Number(line[0]), Number(line[1]), line[2]] as [number, number, string])
+      // Add each line's value to the diff stats, and conditionally to the g3
+      // stats as well if the file name is included in the files synced to g3.
+      .forEach(([insertions, deletions, fileName]) => {
+        if (this.checkMatchAgainstIncludeAndExclude(fileName, includeFiles, excludeFiles)) {
+          stats.insertions += insertions;
+          stats.deletions += deletions;
+          stats.files += 1;
+        }
+      });
     return stats;
   }
   /** Determine whether the file name passes both include and exclude checks. */
   private checkMatchAgainstIncludeAndExclude(file: string, includes: string[], excludes: string[]) {
     return (
-        multimatch.call(undefined, file, includes).length >= 1 &&
-        multimatch.call(undefined, file, excludes).length === 0);
+      multimatch.call(undefined, file, includes).length >= 1 &&
+      multimatch.call(undefined, file, excludes).length === 0
+    );
   }
-
 
   private getG3FileIncludeAndExcludeLists() {
     const angularRobotFilePath = join(this.git.baseDir, '.github/angular-robot.yml');

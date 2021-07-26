@@ -12,7 +12,6 @@ import {CommitFromGitLog, gitLogFormatForParsing, parseCommitFromGitLog} from '.
 // Set `gitCommits` as this imported value to address "Cannot call a namespace" error.
 const gitCommits = gitCommits_;
 
-
 /**
  * Find all commits within the given range and return an object describing those.
  */

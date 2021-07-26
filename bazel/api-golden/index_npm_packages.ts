@@ -19,8 +19,12 @@ import {testApiGolden} from './test_api_report';
  * against golden files within the given golden directory.
  */
 async function main(
-    goldenDir: string, npmPackageDir: string, approveGolden: boolean, stripExportPattern: RegExp,
-    typeNames: string[]) {
+  goldenDir: string,
+  npmPackageDir: string,
+  approveGolden: boolean,
+  stripExportPattern: RegExp,
+  typeNames: string[],
+) {
   const entryPoints = findEntryPointsWithinNpmPackage(npmPackageDir);
   const outdatedGoldens: string[] = [];
   let allTestsSucceeding = true;
@@ -36,8 +40,13 @@ async function main(
     const goldenFilePath = join(goldenDir, goldenName);
 
     const {succeeded, apiReportChanged} = await testApiGolden(
-        goldenFilePath, typesEntryPointPath, approveGolden, stripExportPattern, typeNames,
-        packageJsonPath);
+      goldenFilePath,
+      typesEntryPointPath,
+      approveGolden,
+      stripExportPattern,
+      typeNames,
+      packageJsonPath,
+    );
 
     // Keep track of outdated goldens.
     if (!succeeded && apiReportChanged) {
@@ -49,10 +58,13 @@ async function main(
 
   if (outdatedGoldens.length) {
     console.error(chalk.red(`The following goldens are outdated:`));
-    outdatedGoldens.forEach(name => console.info(`-  ${name}`));
+    outdatedGoldens.forEach((name) => console.info(`-  ${name}`));
     console.info();
-    console.info(chalk.yellow(
-        `The goldens can be updated by running: yarn bazel run ${process.env.TEST_TARGET}.accept`));
+    console.info(
+      chalk.yellow(
+        `The goldens can be updated by running: yarn bazel run ${process.env.TEST_TARGET}.accept`,
+      ),
+    );
   }
 
   // Bazel expects `3` as exit code for failing tests.
@@ -67,7 +79,7 @@ if (require.main === module) {
   const stripExportPattern = new RegExp(args[3]);
   const typeNames = args.slice(4);
 
-  main(goldenDir, npmPackageDir, approveGolden, stripExportPattern, typeNames).catch(e => {
+  main(goldenDir, npmPackageDir, approveGolden, stripExportPattern, typeNames).catch((e) => {
     console.error(e);
     process.exit(1);
   });

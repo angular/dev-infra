@@ -46,7 +46,8 @@ describe('group parsing', () => {
     expect(getGroupNames(fwMigrations.precedingGroups)).toEqual([]);
     expect(getGroupNames(fwCore.precedingGroups)).toEqual([fwMigrations.groupName]);
     expect(getGroupNames(devInfra.precedingGroups)).toEqual([
-      fwMigrations.groupName, fwCore.groupName
+      fwMigrations.groupName,
+      fwCore.groupName,
     ]);
   });
 
@@ -79,10 +80,10 @@ describe('group parsing', () => {
   });
 });
 
-function getGroupByName(groups: PullApproveGroup[], name: string): PullApproveGroup|undefined {
-  return groups.find(g => g.groupName === name);
+function getGroupByName(groups: PullApproveGroup[], name: string): PullApproveGroup | undefined {
+  return groups.find((g) => g.groupName === name);
 }
 
 function getGroupNames(groups: PullApproveGroup[]) {
-  return groups.map(g => g.groupName);
+  return groups.map((g) => g.groupName);
 }

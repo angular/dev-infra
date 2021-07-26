@@ -19,7 +19,9 @@ import {isVersionPublishedToNpm} from './npm-registry';
  * @params config Release configuration used for querying NPM on published versions.
  */
 export async function printActiveReleaseTrains(
-    active: ActiveReleaseTrains, config: ReleaseConfig): Promise<void> {
+  active: ActiveReleaseTrains,
+  config: ReleaseConfig,
+): Promise<void> {
   const {releaseCandidate, next, latest} = active;
   const isNextPublishedToNpm = await isVersionPublishedToNpm(next.version, config);
   const nextTrainType = next.isMajor ? 'major' : 'minor';
@@ -33,10 +35,11 @@ export async function printActiveReleaseTrains(
     const rcVersion = releaseCandidate.version;
     const rcTrainType = releaseCandidate.isMajor ? 'major' : 'minor';
     const rcTrainPhase =
-        rcVersion.prerelease[0] === 'next' ? 'feature-freeze' : 'release-candidate';
+      rcVersion.prerelease[0] === 'next' ? 'feature-freeze' : 'release-candidate';
     info(
-        ` • ${bold(releaseCandidate.branchName)} contains changes for an upcoming ` +
-        `${rcTrainType} that is currently in ${bold(rcTrainPhase)} phase.`);
+      ` • ${bold(releaseCandidate.branchName)} contains changes for an upcoming ` +
+        `${rcTrainType} that is currently in ${bold(rcTrainPhase)} phase.`,
+    );
     info(`   Most recent pre-release for this branch is "${bold(`v${rcVersion}`)}".`);
   }
 
@@ -46,8 +49,9 @@ export async function printActiveReleaseTrains(
 
   // Print information about the release-train in the next phase.
   info(
-      ` • ${bold(next.branchName)} contains changes for a ${nextTrainType} ` +
-      `currently in active development.`);
+    ` • ${bold(next.branchName)} contains changes for a ${nextTrainType} ` +
+      `currently in active development.`,
+  );
   // Note that there is a special case for versions in the next release-train. The version in
   // the next branch is not always published to NPM. This can happen when we recently branched
   // off for a feature-freeze release-train. More details are in the next pre-release action.
@@ -55,8 +59,9 @@ export async function printActiveReleaseTrains(
     info(`   Most recent pre-release version for this branch is "${bold(`v${next.version}`)}".`);
   } else {
     info(
-        `   Version is currently set to "${bold(`v${next.version}`)}", but has not been ` +
-        `published yet.`);
+      `   Version is currently set to "${bold(`v${next.version}`)}", but has not been ` +
+        `published yet.`,
+    );
   }
 
   // If no release-train in release-candidate or feature-freeze phase is active,

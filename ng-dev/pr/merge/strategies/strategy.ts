@@ -30,20 +30,23 @@ export abstract class MergeStrategy {
    */
   async prepare(pullRequest: PullRequest) {
     this.fetchTargetBranches(
-        pullRequest.targetBranches, `pull/${pullRequest.prNumber}/head:${TEMP_PR_HEAD_BRANCH}`);
+      pullRequest.targetBranches,
+      `pull/${pullRequest.prNumber}/head:${TEMP_PR_HEAD_BRANCH}`,
+    );
   }
 
   /**
    * Performs the merge of the given pull request. This needs to be implemented
    * by individual merge strategies.
    */
-  abstract merge(pullRequest: PullRequest): Promise<null|PullRequestFailure>;
+  abstract merge(pullRequest: PullRequest): Promise<null | PullRequestFailure>;
 
   /** Cleans up the pull request merge. e.g. deleting temporary local branches. */
   async cleanup(pullRequest: PullRequest) {
     // Delete all temporary target branches.
-    pullRequest.targetBranches.forEach(
-        branchName => this.git.run(['branch', '-D', this.getLocalTargetBranchName(branchName)]));
+    pullRequest.targetBranches.forEach((branchName) =>
+      this.git.run(['branch', '-D', this.getLocalTargetBranchName(branchName)]),
+    );
 
     // Delete temporary branch for the pull request head.
     this.git.run(['branch', '-D', TEMP_PR_HEAD_BRANCH]);
@@ -68,10 +71,14 @@ export abstract class MergeStrategy {
    * Cherry-picks the given revision range into the specified target branches.
    * @returns A list of branches for which the revisions could not be cherry-picked into.
    */
-  protected cherryPickIntoTargetBranches(revisionRange: string, targetBranches: string[], options: {
-    dryRun?: boolean,
-    linkToOriginalCommits?: boolean,
-  } = {}) {
+  protected cherryPickIntoTargetBranches(
+    revisionRange: string,
+    targetBranches: string[],
+    options: {
+      dryRun?: boolean;
+      linkToOriginalCommits?: boolean;
+    } = {},
+  ) {
     const cherryPickArgs = [revisionRange];
     const failedBranches: string[] = [];
 
@@ -118,19 +125,25 @@ export abstract class MergeStrategy {
    * should be fetched. This is helpful as multiple slow fetches could be avoided.
    */
   protected fetchTargetBranches(names: string[], ...extraRefspecs: string[]) {
-    const fetchRefspecs = names.map(targetBranch => {
+    const fetchRefspecs = names.map((targetBranch) => {
       const localTargetBranch = this.getLocalTargetBranchName(targetBranch);
       return `refs/heads/${targetBranch}:${localTargetBranch}`;
     });
     // Fetch all target branches with a single command. We don't want to fetch them
     // individually as that could cause an unnecessary slow-down.
-    this.git.run(
-        ['fetch', '-q', '-f', this.git.getRepoGitUrl(), ...fetchRefspecs, ...extraRefspecs]);
+    this.git.run([
+      'fetch',
+      '-q',
+      '-f',
+      this.git.getRepoGitUrl(),
+      ...fetchRefspecs,
+      ...extraRefspecs,
+    ]);
   }
 
   /** Pushes the given target branches upstream. */
   protected pushTargetBranchesUpstream(names: string[]) {
-    const pushRefspecs = names.map(targetBranch => {
+    const pushRefspecs = names.map((targetBranch) => {
       const localTargetBranch = this.getLocalTargetBranchName(targetBranch);
       return `${localTargetBranch}:refs/heads/${targetBranch}`;
     });

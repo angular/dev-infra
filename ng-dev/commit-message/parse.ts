@@ -8,7 +8,6 @@
 
 import {Commit as ParsedCommit, Options, sync as parse} from 'conventional-commits-parser';
 
-
 /** A parsed commit, containing the information needed to validate the commit. */
 export interface Commit {
   /** The full raw text of the commit. */
@@ -62,7 +61,9 @@ const commitFields = {
 export type CommitFields = typeof commitFields;
 /** The commit fields described as git log format entries for parsing. */
 export const commitFieldsAsFormat = (fields: CommitFields) => {
-  return Object.entries(fields).map(([key, value]) => `%n-${key}-%n${value}`).join('');
+  return Object.entries(fields)
+    .map(([key, value]) => `%n-${key}-%n${value}`)
+    .join('');
 };
 /**
  * The git log format template to create git log entries for parsing.
@@ -106,7 +107,7 @@ const headerCorrespondence = ['type', 'npmScope', 'scope', 'subject'];
  * NOTE: An extended type from `Options` must be used because the current
  * @types/conventional-commits-parser version does not include the `notesPattern` field.
  */
-const parseOptions: Options&{notesPattern: (keywords: string) => RegExp} = {
+const parseOptions: Options & {notesPattern: (keywords: string) => RegExp} = {
   commentChar: '#',
   headerPattern,
   headerCorrespondence,
@@ -123,13 +124,14 @@ export const parseCommitFromGitLog: (fullText: Buffer) => CommitFromGitLog = par
 /** Parse a full commit message into its composite parts. */
 function parseInternal(fullText: string): Commit;
 function parseInternal(fullText: Buffer): CommitFromGitLog;
-function parseInternal(fullText: string|Buffer): CommitFromGitLog|Commit {
+function parseInternal(fullText: string | Buffer): CommitFromGitLog | Commit {
   // Ensure the fullText symbol is a `string`, even if a Buffer was provided.
   fullText = fullText.toString();
   /** The commit message text with the fixup and squash markers stripped out. */
-  const strippedCommitMsg = fullText.replace(FIXUP_PREFIX_RE, '')
-                                .replace(SQUASH_PREFIX_RE, '')
-                                .replace(REVERT_PREFIX_RE, '');
+  const strippedCommitMsg = fullText
+    .replace(FIXUP_PREFIX_RE, '')
+    .replace(SQUASH_PREFIX_RE, '')
+    .replace(REVERT_PREFIX_RE, '');
   /** The initially parsed commit. */
   const commit = parse(strippedCommitMsg, parseOptions);
   /** A list of breaking change notes from the commit. */

@@ -11,7 +11,7 @@ import {SemVer} from 'semver';
 import {GitClient} from '../../utils/git/git-client';
 import {createExperimentalSemver} from '../../utils/semver';
 
-export type EnvStampMode = 'snapshot'|'release';
+export type EnvStampMode = 'snapshot' | 'release';
 
 /**
  * Log the environment variables expected by bazel for stamping.
@@ -47,7 +47,7 @@ function hasLocalChanges() {
  * In snapshot mode, the version is based on the most recent semver tag.
  * In release mode, the version is based on the base package.json version.
  */
-function getSCMVersions(mode: EnvStampMode): {version: string, experimentalVersion: string} {
+function getSCMVersions(mode: EnvStampMode): {version: string; experimentalVersion: string} {
   const git = GitClient.get();
   if (mode === 'release') {
     const packageJsonPath = join(git.baseDir, 'package.json');
@@ -57,14 +57,22 @@ function getSCMVersions(mode: EnvStampMode): {version: string, experimentalVersi
   }
   if (mode === 'snapshot') {
     const localChanges = hasLocalChanges() ? '.with-local-changes' : '';
-    const {stdout: rawVersion} = git.run(
-        ['describe', '--match', '*[0-9]*.[0-9]*.[0-9]*', '--abbrev=7', '--tags', 'HEAD~100']);
+    const {stdout: rawVersion} = git.run([
+      'describe',
+      '--match',
+      '*[0-9]*.[0-9]*.[0-9]*',
+      '--abbrev=7',
+      '--tags',
+      'HEAD~100',
+    ]);
     const {version} = new SemVer(rawVersion);
     const {version: experimentalVersion} = createExperimentalSemver(version);
     return {
       version: `${version.replace(/-([0-9]+)-g/, '+$1.sha-')}${localChanges}`,
-      experimentalVersion:
-          `${experimentalVersion.replace(/-([0-9]+)-g/, '+$1.sha-')}${localChanges}`,
+      experimentalVersion: `${experimentalVersion.replace(
+        /-([0-9]+)-g/,
+        '+$1.sha-',
+      )}${localChanges}`,
     };
   }
   throw Error('No environment stamp mode was provided.');

@@ -1,4 +1,3 @@
-
 /**
  * @license
  * Copyright Google LLC All Rights Reserved.
@@ -30,8 +29,10 @@ describe('ServicesModule', () => {
     it('for each of the services', async () => {
       new ServicesModule({caretaker: {}, ...mockNgDevConfig});
 
-      expect(getStatusFromStandardApiSpy)
-          .toHaveBeenCalledWith({url: 'fakeStatus.com/api.json', name: 'Service Name'});
+      expect(getStatusFromStandardApiSpy).toHaveBeenCalledWith({
+        url: 'fakeStatus.com/api.json',
+        name: 'Service Name',
+      });
     });
   });
 
@@ -52,16 +53,15 @@ describe('ServicesModule', () => {
         },
       ]);
 
-
       const module = new ServicesModule({caretaker: {}, ...mockNgDevConfig});
       Object.defineProperty(module, 'data', {value: fakeData});
       await module.printToTerminal();
 
-
       expect(infoGroupSpy).toHaveBeenCalledWith('Service Statuses');
       expect(infoSpy).toHaveBeenCalledWith('Service 1 ✅');
-      expect(infoGroupSpy)
-          .toHaveBeenCalledWith(`Service 2 ❌ (Updated: ${new Date(0).toLocaleString()})`);
+      expect(infoGroupSpy).toHaveBeenCalledWith(
+        `Service 2 ❌ (Updated: ${new Date(0).toLocaleString()})`,
+      );
       expect(infoSpy).toHaveBeenCalledWith('  Details: Literally everything is broken');
     });
   });

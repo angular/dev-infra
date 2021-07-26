@@ -16,30 +16,33 @@ The process of updating the Chrome or Firefox version is not straightforward, bu
 
 1. Visit https://chromium.woolyss.com/ and note the version (commit position) of the latest stable version.
 
-    For example, "Google Chrome 83.0.4103.97 (756066) • Wednesday, 3 Jun 2020".
-    Alternatively, you can look in https://omahaproxy.appspot.com/.
+   For example, "Google Chrome 83.0.4103.97 (756066) • Wednesday, 3 Jun 2020".
+   Alternatively, you can look in https://omahaproxy.appspot.com/.
 
 2. Find the closest commit position number available for each platform in chromium-browser-snapshots: https://commondatastorage.googleapis.com/chromium-browser-snapshots/index.html
 
-    For example:
-    * https://commondatastorage.googleapis.com/chromium-browser-snapshots/index.html?prefix=Linux_x64/756066/
-    * https://commondatastorage.googleapis.com/chromium-browser-snapshots/index.html?prefix=Mac/756053/
-    * https://commondatastorage.googleapis.com/chromium-browser-snapshots/index.html?prefix=Win/756065/
+   For example:
 
-    You can download Chromium for your local platform and double check that the `--version` matches up with what you expect.
+   - https://commondatastorage.googleapis.com/chromium-browser-snapshots/index.html?prefix=Linux_x64/756066/
+   - https://commondatastorage.googleapis.com/chromium-browser-snapshots/index.html?prefix=Mac/756053/
+   - https://commondatastorage.googleapis.com/chromium-browser-snapshots/index.html?prefix=Win/756065/
 
-    For example:
-    ``` bash
-    $ ~/Downloads/chrome-mac/Chromium.app/Contents/MacOS/Chromium --version
-    Chromium 83.0.4103.0
-    ```
+   You can download Chromium for your local platform and double check that the `--version` matches up with what you expect.
+
+   For example:
+
+   ```bash
+   $ ~/Downloads/chrome-mac/Chromium.app/Contents/MacOS/Chromium --version
+   Chromium 83.0.4103.0
+   ```
 
 3. Update the chrome & chrome driver build numbers in `dev-infra/bazel/browsers/chromium/chromium.bzl` and either run `bazel query @org_chromium_chromium_amd64//...` to prompt Bazel to calculate the new `sha256` for each platform binary or determine the new `sha256` values manually.
 
-    Here is an example with `curl` & `shasum`:
-    ``` bash
-    curl -L https://commondatastorage.googleapis.com/chromium-browser-snapshots/Linux_x64/756066/chrome-linux.zip | shasum -a 256
-    ```
+   Here is an example with `curl` & `shasum`:
+
+   ```bash
+   curl -L https://commondatastorage.googleapis.com/chromium-browser-snapshots/Linux_x64/756066/chrome-linux.zip | shasum -a 256
+   ```
 
 ## Puppeteer
 
@@ -47,19 +50,19 @@ The process of updating the Chrome or Firefox version is not straightforward, bu
 
 2. Visit https://chromedriver.chromium.org/downloads to determine which version of ChromeDriver should be used for the version of Chrome desired.
 
-    > NOTE:
-    > The version of Chrome does not necessarily correspond exactly with the version of ChromeDriver.
-    > For example, you might have to use ChromeDriver v87.0.4280.x to drive Chrome v87.0.4272.x.
+   > NOTE:
+   > The version of Chrome does not necessarily correspond exactly with the version of ChromeDriver.
+   > For example, you might have to use ChromeDriver v87.0.4280.x to drive Chrome v87.0.4272.x.
 
 3. Update `scripts/puppeteer-chromedriver-versions.js` to include an entry with the new version of puppeteer as key and the new version of ChromeDriver as value (as determined in the two previous steps).
 
 4. Update all of the puppeteer versions throughout the repo:
 
-    * `package.json`
-    * `aio/package.json`
-    * `aio/tools/examples/shared/package.json`
+   - `package.json`
+   - `aio/package.json`
+   - `aio/tools/examples/shared/package.json`
 
-    ...and their corresponding `yarn.lock` files.
+   ...and their corresponding `yarn.lock` files.
 
 ## Firefox
 
@@ -77,13 +80,13 @@ platform_http_file(
 ```
 
 1. Go to the `urls` property and update the URL by replacing all `78.0` occurrences with the version you intend to use.
-    Once done, do the same change for other platforms (such as `macos`).
+   Once done, do the same change for other platforms (such as `macos`).
 
 2. Update the `sha256` checksum of the browser archives.
-    You can do this by downloading the artifacts from the URLs you just updated, and then running `shasum` on those files:
-    ```sh
-    curl -L <BROWSER_URL> | shasum -a 256
-    ```
+   You can do this by downloading the artifacts from the URLs you just updated, and then running `shasum` on those files:
+   ```sh
+   curl -L <BROWSER_URL> | shasum -a 256
+   ```
 
 In the same file, you can also update the version of gecko driver (the WebDriver implementation for Firefox browsers).
 
@@ -91,20 +94,20 @@ In the same file, you can also update the version of gecko driver (the WebDriver
 
 2. Update the `geckodriver` repository URLs to the desired version:
 
-    ```bzl
-    platform_http_file(
-        name = "org_mozilla_geckodriver_amd64",
-        licenses = ["reciprocal"],  # MPL 2.0
-        sha256 = "d59ca434d8e41ec1e30dd7707b0c95171dd6d16056fb6db9c978449ad8b93cc0",
-        # Geckodriver v0.26.0
-        urls = ["https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux64.tar.gz"],
-    )
-    ```
+   ```bzl
+   platform_http_file(
+       name = "org_mozilla_geckodriver_amd64",
+       licenses = ["reciprocal"],  # MPL 2.0
+       sha256 = "d59ca434d8e41ec1e30dd7707b0c95171dd6d16056fb6db9c978449ad8b93cc0",
+       # Geckodriver v0.26.0
+       urls = ["https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux64.tar.gz"],
+   )
+   ```
 
-    For example, replace all occurrences of `0.26.0` with the newer version.
+   For example, replace all occurrences of `0.26.0` with the newer version.
 
 3. Update the `sha256` checksum of the driver archives.
-    You can do this by downloading the artifacts from the URLs you just updated, and then running `shasum` on those files:
-    ```sh
-    curl -L <DRIVER_URL> | shasum -a 256
-    ```
+   You can do this by downloading the artifacts from the URLs you just updated, and then running `shasum` on those files:
+   ```sh
+   curl -L <DRIVER_URL> | shasum -a 256
+   ```

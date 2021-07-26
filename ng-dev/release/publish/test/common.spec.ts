@@ -20,7 +20,13 @@ import {ReleaseAction} from '../actions';
 import {actions} from '../actions/index';
 import {changelogPath} from '../constants';
 
-import {fakeNpmPackageQueryRequest, getTestingMocksForReleaseAction, parse, setupReleaseActionForTesting, testTmpDir} from './test-utils';
+import {
+  fakeNpmPackageQueryRequest,
+  getTestingMocksForReleaseAction,
+  parse,
+  setupReleaseActionForTesting,
+  testTmpDir,
+} from './test-utils';
 
 describe('common release action logic', () => {
   const baseReleaseTrains: ActiveReleaseTrains = {
@@ -54,23 +60,26 @@ describe('common release action logic', () => {
         `Cut a first release-candidate for the feature-freeze branch (v10.1.0-rc.0).`,
         `Cut a new patch release for the "10.0.x" branch (v10.0.2).`,
         `Cut a new next pre-release for the "10.1.x" branch (v10.1.0-next.4).`,
-        `Cut a new release for an active LTS branch (0 active).`
+        `Cut a new release for an active LTS branch (0 active).`,
       ]);
     });
   });
 
   describe('build and publishing', () => {
     it('should support a custom NPM registry', async () => {
-      const {repo, instance, releaseConfig} =
-          setupReleaseActionForTesting(TestAction, baseReleaseTrains);
+      const {repo, instance, releaseConfig} = setupReleaseActionForTesting(
+        TestAction,
+        baseReleaseTrains,
+      );
       const {version, branchName} = baseReleaseTrains.next;
       const tagName = version.format();
       const customRegistryUrl = 'https://custom-npm-registry.google.com';
 
-      repo.expectBranchRequest(branchName, 'STAGING_SHA')
-          .expectCommitRequest('STAGING_SHA', `release: cut the v${version} release`)
-          .expectTagToBeCreated(tagName, 'STAGING_SHA')
-          .expectReleaseToBeCreated(`v${version}`, tagName);
+      repo
+        .expectBranchRequest(branchName, 'STAGING_SHA')
+        .expectCommitRequest('STAGING_SHA', `release: cut the v${version} release`)
+        .expectTagToBeCreated(tagName, 'STAGING_SHA')
+        .expectReleaseToBeCreated(`v${version}`, tagName);
 
       // Set up a custom NPM registry.
       releaseConfig.publishRegistry = customRegistryUrl;
@@ -78,10 +87,16 @@ describe('common release action logic', () => {
       await instance.testBuildAndPublish(version, branchName, 'latest');
 
       expect(npm.runNpmPublish).toHaveBeenCalledTimes(2);
-      expect(npm.runNpmPublish)
-          .toHaveBeenCalledWith(`${testTmpDir}/dist/pkg1`, 'latest', customRegistryUrl);
-      expect(npm.runNpmPublish)
-          .toHaveBeenCalledWith(`${testTmpDir}/dist/pkg2`, 'latest', customRegistryUrl);
+      expect(npm.runNpmPublish).toHaveBeenCalledWith(
+        `${testTmpDir}/dist/pkg1`,
+        'latest',
+        customRegistryUrl,
+      );
+      expect(npm.runNpmPublish).toHaveBeenCalledWith(
+        `${testTmpDir}/dist/pkg2`,
+        'latest',
+        customRegistryUrl,
+      );
     });
   });
 
@@ -90,14 +105,17 @@ describe('common release action logic', () => {
     const forkBranchName = `changelog-cherry-pick-${version}`;
 
     it('should prepend the changelog to the next branch', async () => {
-      const {repo, fork, instance, testTmpDir} =
-          setupReleaseActionForTesting(TestAction, baseReleaseTrains);
+      const {repo, fork, instance, testTmpDir} = setupReleaseActionForTesting(
+        TestAction,
+        baseReleaseTrains,
+      );
 
       // Expect the changelog to be fetched and return a fake changelog to test that
       // it is properly appended. Also expect a pull request to be created in the fork.
-      repo.expectFindForkRequest(fork)
-          .expectPullRequestToBeCreated('master', fork, forkBranchName, 200)
-          .expectPullRequestWait(200);
+      repo
+        .expectFindForkRequest(fork)
+        .expectPullRequestToBeCreated('master', fork, forkBranchName, 200)
+        .expectPullRequestWait(200);
 
       // Simulate that the fork branch name is available.
       fork.expectBranchRequest(forkBranchName, null);
@@ -109,14 +127,17 @@ describe('common release action logic', () => {
     });
 
     it('should push changes to a fork for creating a pull request', async () => {
-      const {repo, fork, instance, gitClient} =
-          setupReleaseActionForTesting(TestAction, baseReleaseTrains);
+      const {repo, fork, instance, gitClient} = setupReleaseActionForTesting(
+        TestAction,
+        baseReleaseTrains,
+      );
 
       // Expect the changelog to be fetched and return a fake changelog to test that
       // it is properly appended. Also expect a pull request to be created in the fork.
-      repo.expectFindForkRequest(fork)
-          .expectPullRequestToBeCreated('master', fork, forkBranchName, 200)
-          .expectPullRequestWait(200);
+      repo
+        .expectFindForkRequest(fork)
+        .expectPullRequestToBeCreated('master', fork, forkBranchName, 200)
+        .expectPullRequestWait(200);
 
       // Simulate that the fork branch name is available.
       fork.expectBranchRequest(forkBranchName, null);
@@ -124,16 +145,20 @@ describe('common release action logic', () => {
       await instance.testCherryPickWithPullRequest(version, branchName);
 
       expect(gitClient.pushed.length).toBe(1);
-      expect(gitClient.pushed[0]).toEqual(getBranchPushMatcher({
-        targetBranch: forkBranchName,
-        targetRepo: fork,
-        baseBranch: 'master',
-        baseRepo: repo,
-        expectedCommits: [{
-          message: `docs: release notes for the v${version} release`,
-          files: ['CHANGELOG.md'],
-        }],
-      }));
+      expect(gitClient.pushed[0]).toEqual(
+        getBranchPushMatcher({
+          targetBranch: forkBranchName,
+          targetRepo: fork,
+          baseBranch: 'master',
+          baseRepo: repo,
+          expectedCommits: [
+            {
+              message: `docs: release notes for the v${version} release`,
+              files: ['CHANGELOG.md'],
+            },
+          ],
+        }),
+      );
     });
   });
 });

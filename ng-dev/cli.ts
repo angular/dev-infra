@@ -19,19 +19,20 @@ import {tsCircularDependenciesBuilder} from './ts-circular-dependencies/index';
 import {captureLogOutputForCommand} from './utils/console';
 import {buildMiscParser} from './misc/cli';
 
-yargs.scriptName('ng-dev')
-    .middleware(captureLogOutputForCommand)
-    .demandCommand()
-    .recommendCommands()
-    .command('commit-message <command>', '', buildCommitMessageParser)
-    .command('format <command>', '', buildFormatParser)
-    .command('pr <command>', '', buildPrParser)
-    .command('pullapprove <command>', '', buildPullapproveParser)
-    .command('release <command>', '', buildReleaseParser)
-    .command('ts-circular-deps <command>', '', tsCircularDependenciesBuilder)
-    .command('caretaker <command>', '', buildCaretakerParser)
-    .command('misc <command>', '', buildMiscParser)
-    .command('ngbot <command>', false, buildNgbotParser)
-    .wrap(120)
-    .strict()
-    .parse();
+yargs
+  .scriptName('ng-dev')
+  .middleware(captureLogOutputForCommand)
+  .demandCommand()
+  .recommendCommands()
+  .command('commit-message <command>', '', buildCommitMessageParser)
+  .command('format <command>', '', buildFormatParser)
+  .command('pr <command>', '', buildPrParser)
+  .command('pullapprove <command>', '', buildPullapproveParser)
+  .command('release <command>', '', buildReleaseParser)
+  .command('ts-circular-deps <command>', '', tsCircularDependenciesBuilder)
+  .command('caretaker <command>', '', buildCaretakerParser)
+  .command('misc <command>', '', buildMiscParser)
+  .command('ngbot <command>', false, buildNgbotParser)
+  .wrap(120)
+  .strict()
+  .parse();

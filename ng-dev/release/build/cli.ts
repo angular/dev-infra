@@ -47,14 +47,15 @@ async function handler(args: Arguments<ReleaseBuildOptions>) {
     process.exit(1);
   }
 
-  const missingPackages =
-      npmPackages.filter(pkgName => !builtPackages!.find(b => b.name === pkgName));
+  const missingPackages = npmPackages.filter(
+    (pkgName) => !builtPackages!.find((b) => b.name === pkgName),
+  );
 
   // Check for configured release packages which have not been built. We want to
   // error and exit if any configured package has not been built.
   if (missingPackages.length > 0) {
     error(red(`  ✘   Release output missing for the following packages:`));
-    missingPackages.forEach(pkgName => error(red(`      - ${pkgName}`)));
+    missingPackages.forEach((pkgName) => error(red(`      - ${pkgName}`)));
     process.exit(1);
   }
 

@@ -22,36 +22,38 @@ export interface ReleaseNotesOptions {
   to: string;
   outFile?: string;
   releaseVersion: SemVer;
-  type: 'github-release'|'changelog';
+  type: 'github-release' | 'changelog';
 }
 
 /** Yargs command builder for configuring the `ng-dev release build` command. */
 function builder(argv: Argv): Argv<ReleaseNotesOptions> {
   return argv
-      .option(
-          'releaseVersion',
-          {type: 'string', default: '0.0.0', coerce: (version: string) => new SemVer(version)})
-      .option('from', {
-        type: 'string',
-        description: 'The git tag or ref to start the changelog entry from',
-        defaultDescription: 'The latest semver tag',
-      })
-      .option('to', {
-        type: 'string',
-        description: 'The git tag or ref to end the changelog entry with',
-        default: 'HEAD',
-      })
-      .option('type', {
-        type: 'string',
-        description: 'The type of release notes to create',
-        choices: ['github-release', 'changelog'] as const,
-        default: 'changelog' as const,
-      })
-      .option('outFile', {
-        type: 'string',
-        description: 'File location to write the generated release notes to',
-        coerce: (filePath?: string) => filePath ? join(process.cwd(), filePath) : undefined
-      });
+    .option('releaseVersion', {
+      type: 'string',
+      default: '0.0.0',
+      coerce: (version: string) => new SemVer(version),
+    })
+    .option('from', {
+      type: 'string',
+      description: 'The git tag or ref to start the changelog entry from',
+      defaultDescription: 'The latest semver tag',
+    })
+    .option('to', {
+      type: 'string',
+      description: 'The git tag or ref to end the changelog entry with',
+      default: 'HEAD',
+    })
+    .option('type', {
+      type: 'string',
+      description: 'The type of release notes to create',
+      choices: ['github-release', 'changelog'] as const,
+      default: 'changelog' as const,
+    })
+    .option('outFile', {
+      type: 'string',
+      description: 'File location to write the generated release notes to',
+      coerce: (filePath?: string) => (filePath ? join(process.cwd(), filePath) : undefined),
+    });
 }
 
 /** Yargs command handler for generating release notes. */
@@ -63,9 +65,9 @@ async function handler({releaseVersion, from, to, outFile, type}: Arguments<Rele
   const releaseNotes = await ReleaseNotes.fromRange(releaseVersion, from, to);
 
   /** The requested release notes entry. */
-  const releaseNotesEntry = await (
-      type === 'changelog' ? releaseNotes.getChangelogEntry() :
-                             releaseNotes.getGithubReleaseEntry());
+  const releaseNotesEntry = await (type === 'changelog'
+    ? releaseNotes.getChangelogEntry()
+    : releaseNotes.getGithubReleaseEntry());
 
   if (outFile) {
     writeFileSync(outFile, releaseNotesEntry);

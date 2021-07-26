@@ -8,7 +8,11 @@
 import {error, green, info, red} from '../../utils/console';
 import {Commit} from '../parse';
 import {getCommitsInRange} from '../utils';
-import {printValidationErrors, validateCommitMessage, ValidateCommitMessageOptions} from '../validate';
+import {
+  printValidationErrors,
+  validateCommitMessage,
+  ValidateCommitMessageOptions,
+} from '../validate';
 
 // Whether the provided commit is a fixup commit.
 const isNonFixup = (commit: Commit) => !commit.isFixup;
@@ -32,9 +36,12 @@ export async function validateCommitRange(from: string, to: string) {
   const allCommitsInRangeValid = commits.every((commit, i) => {
     const options: ValidateCommitMessageOptions = {
       disallowSquash: true,
-      nonFixupCommitHeaders: isNonFixup(commit) ?
-          undefined :
-          commits.slice(i + 1).filter(isNonFixup).map(extractCommitHeader)
+      nonFixupCommitHeaders: isNonFixup(commit)
+        ? undefined
+        : commits
+            .slice(i + 1)
+            .filter(isNonFixup)
+            .map(extractCommitHeader),
     };
     const {valid, errors: localErrors} = validateCommitMessage(commit, options);
     if (localErrors.length) {

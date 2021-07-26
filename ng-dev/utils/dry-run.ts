@@ -22,7 +22,7 @@ export function addDryRunFlag<T>(args: Argv<T>) {
         process.env['DRY_RUN'] = '1';
       }
       return dryRun;
-    }
+    },
   });
 }
 

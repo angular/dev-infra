@@ -43,7 +43,10 @@ const PR_SCHEMA = {
  * commit to the PRs repository.
  */
 export async function rebasePr(
-    prNumber: number, githubToken: string, config: Pick<NgDevConfig, 'github'> = getConfig()) {
+  prNumber: number,
+  githubToken: string,
+  config: Pick<NgDevConfig, 'github'> = getConfig(),
+) {
   /** The singleton instance of the authenticated git client. */
   const git = AuthenticatedGitClient.get();
   if (git.hasUncommittedChanges()) {
@@ -78,8 +81,9 @@ export async function rebasePr(
   // be pushed up.
   if (!pr.maintainerCanModify && !pr.viewerDidAuthor) {
     error(
-        `Cannot rebase as you did not author the PR and the PR does not allow maintainers` +
-        `to modify the PR`);
+      `Cannot rebase as you did not author the PR and the PR does not allow maintainers` +
+        `to modify the PR`,
+    );
     process.exit(1);
   }
 
@@ -96,11 +100,13 @@ export async function rebasePr(
 
     const commits = await getCommitsInRange(commonAncestorSha, 'HEAD');
 
-    let squashFixups = commits.filter((commit: Commit) => commit.isFixup).length === 0 ?
-        false :
-        await promptConfirm(
+    let squashFixups =
+      commits.filter((commit: Commit) => commit.isFixup).length === 0
+        ? false
+        : await promptConfirm(
             `PR #${prNumber} contains fixup commits, would you like to squash them during rebase?`,
-            true);
+            true,
+          );
 
     info(`Attempting to rebase PR #${prNumber} on ${fullBaseRef}`);
 
@@ -110,9 +116,9 @@ export async function rebasePr(
      * Additional flags to perform the autosquashing are added when the user confirm squashing of
      * fixup commits should occur.
      */
-    const [flags, env] = squashFixups ?
-        [['--interactive', '--autosquash'], {...process.env, GIT_SEQUENCE_EDITOR: 'true'}] :
-        [[], undefined];
+    const [flags, env] = squashFixups
+      ? [['--interactive', '--autosquash'], {...process.env, GIT_SEQUENCE_EDITOR: 'true'}]
+      : [[], undefined];
     const rebaseResult = git.runGraceful(['rebase', ...flags, 'FETCH_HEAD'], {env: env});
 
     // If the rebase was clean, push the rebased PR up to the authors fork.
@@ -135,7 +141,7 @@ export async function rebasePr(
   info(`Rebase was unable to complete automatically without conflicts.`);
   // If the command is run in a non-CI environment, prompt to format the files immediately.
   const continueRebase =
-      process.env['CI'] === undefined && await promptConfirm('Manually complete rebase?');
+    process.env['CI'] === undefined && (await promptConfirm('Manually complete rebase?'));
 
   if (continueRebase) {
     info(`After manually completing rebase, run the following command to update PR #${prNumber}:`);

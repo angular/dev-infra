@@ -1,4 +1,3 @@
-
 /**
  * @license
  * Copyright Google LLC All Rights Reserved.
@@ -60,8 +59,12 @@ describe('CiModule', () => {
       const module = new CiModule({caretaker: {}, ...mockNgDevConfig});
       const data = await module.data;
 
-      expect(data[0]).toEqual(
-          {active: false, name: 'releaseCandidate', label: '', status: 'not found'});
+      expect(data[0]).toEqual({
+        active: false,
+        name: 'releaseCandidate',
+        label: '',
+        status: 'not found',
+      });
       expect(data[1]).toEqual({
         active: true,
         name: 'latest-branch',
@@ -98,12 +101,13 @@ describe('CiModule', () => {
   });
 });
 
-
 /** Build a mock set of ActiveReleaseTrains. */
-function buildMockActiveReleaseTrains(withRc: false): versioning.ActiveReleaseTrains&
-    {releaseCandidate: null};
-function buildMockActiveReleaseTrains(withRc: true): versioning.ActiveReleaseTrains&
-    {releaseCandidate: ReleaseTrain};
+function buildMockActiveReleaseTrains(
+  withRc: false,
+): versioning.ActiveReleaseTrains & {releaseCandidate: null};
+function buildMockActiveReleaseTrains(
+  withRc: true,
+): versioning.ActiveReleaseTrains & {releaseCandidate: ReleaseTrain};
 function buildMockActiveReleaseTrains(withRc: boolean): versioning.ActiveReleaseTrains {
   const baseResult = {
     isMajor: false,
@@ -112,6 +116,6 @@ function buildMockActiveReleaseTrains(withRc: boolean): versioning.ActiveRelease
   return {
     releaseCandidate: withRc ? {branchName: 'rc-branch', ...baseResult} : null,
     latest: {branchName: 'latest-branch', ...baseResult},
-    next: {branchName: 'next-branch', ...baseResult}
+    next: {branchName: 'next-branch', ...baseResult},
   };
 }

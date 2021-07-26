@@ -35,12 +35,12 @@ export class PullApproveStringArray extends Array<string> {
   }
   /** Returns a new array which only includes files that match the given pattern. */
   include(pattern: string): PullApproveStringArray {
-    return new PullApproveStringArray(...this.filter(s => getOrCreateGlob(pattern).match(s)));
+    return new PullApproveStringArray(...this.filter((s) => getOrCreateGlob(pattern).match(s)));
   }
 
   /** Returns a new array which only includes files that did not match the given pattern. */
   exclude(pattern: string): PullApproveStringArray {
-    return new PullApproveStringArray(...this.filter(s => !getOrCreateGlob(pattern).match(s)));
+    return new PullApproveStringArray(...this.filter((s) => !getOrCreateGlob(pattern).match(s)));
   }
 }
 
@@ -59,12 +59,12 @@ export class PullApproveGroupArray extends Array<PullApproveGroup> {
   }
 
   include(pattern: string): PullApproveGroupArray {
-    return new PullApproveGroupArray(...this.filter(s => s.groupName.match(pattern)));
+    return new PullApproveGroupArray(...this.filter((s) => s.groupName.match(pattern)));
   }
 
   /** Returns a new array which only includes files that did not match the given pattern. */
   exclude(pattern: string): PullApproveGroupArray {
-    return new PullApproveGroupArray(...this.filter(s => s.groupName.match(pattern)));
+    return new PullApproveGroupArray(...this.filter((s) => s.groupName.match(pattern)));
   }
 
   get pending() {
@@ -84,6 +84,6 @@ export class PullApproveGroupArray extends Array<PullApproveGroup> {
   }
 
   get names() {
-    return this.map(g => g.groupName);
+    return this.map((g) => g.groupName);
   }
 }

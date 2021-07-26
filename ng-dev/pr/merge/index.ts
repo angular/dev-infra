@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-
 import {getConfig} from '../../utils/config';
 import {error, green, info, promptConfirm, red, yellow} from '../../utils/console';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
@@ -37,7 +36,7 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
   // Perform the merge. Force mode can be activated through a command line flag.
   // Alternatively, if the merge fails with non-fatal failures, the script
   // will prompt whether it should rerun in force mode.
-  if (!await performMerge(false)) {
+  if (!(await performMerge(false))) {
     process.exit(1);
   }
 
@@ -88,13 +87,18 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
         return true;
       case MergeStatus.DIRTY_WORKING_DIR:
         error(
-            red(`Local working repository not clean. Please make sure there are ` +
-                `no uncommitted changes.`));
+          red(
+            `Local working repository not clean. Please make sure there are ` +
+              `no uncommitted changes.`,
+          ),
+        );
         return false;
       case MergeStatus.UNKNOWN_GIT_ERROR:
         error(
-            red('An unknown Git error has been thrown. Please check the output ' +
-                'above for details.'));
+          red(
+            'An unknown Git error has been thrown. Please check the output ' + 'above for details.',
+          ),
+        );
         return false;
       case MergeStatus.GITHUB_ERROR:
         error(red('An error related to interacting with Github has been discovered.'));
@@ -132,7 +136,7 @@ async function createPullRequestMergeTask(flags: PullRequestMergeTaskFlags) {
 
   if (errors) {
     error(red('Invalid merge configuration:'));
-    errors.forEach(desc => error(yellow(`  -  ${desc}`)));
+    errors.forEach((desc) => error(yellow(`  -  ${desc}`)));
     process.exit(1);
   }
 

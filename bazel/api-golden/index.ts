@@ -16,15 +16,27 @@ import {testApiGolden} from './test_api_report';
  * the specified entry point file and compares it against the specified golden file.
  */
 async function main(
-    goldenFilePath: string, entryPointFilePath: string, approveGolden: boolean,
-    stripExportPattern: RegExp, typeNames: string[]) {
+  goldenFilePath: string,
+  entryPointFilePath: string,
+  approveGolden: boolean,
+  stripExportPattern: RegExp,
+  typeNames: string[],
+) {
   const {succeeded, apiReportChanged} = await testApiGolden(
-      goldenFilePath, entryPointFilePath, approveGolden, stripExportPattern, typeNames);
+    goldenFilePath,
+    entryPointFilePath,
+    approveGolden,
+    stripExportPattern,
+    typeNames,
+  );
 
   if (!succeeded && apiReportChanged) {
     console.error(chalk.red(`The API signature has changed and the golden file is outdated.`));
-    console.info(chalk.yellow(
-        `Golden can be updated by running: yarn bazel run ${process.env.TEST_TARGET}.accept`));
+    console.info(
+      chalk.yellow(
+        `Golden can be updated by running: yarn bazel run ${process.env.TEST_TARGET}.accept`,
+      ),
+    );
   }
 
   // Bazel expects `3` as exit code for failing tests.
@@ -39,9 +51,10 @@ if (require.main === module) {
   const stripExportPattern = new RegExp(args[3]);
   const typeNames = args.slice(4);
 
-  main(goldenFilePath, entryPointFilePath, approveGolden, stripExportPattern, typeNames)
-      .catch(e => {
-        console.error(e);
-        process.exit(1);
-      });
+  main(goldenFilePath, entryPointFilePath, approveGolden, stripExportPattern, typeNames).catch(
+    (e) => {
+      console.error(e);
+      process.exit(1);
+    },
+  );
 }

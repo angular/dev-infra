@@ -14,8 +14,9 @@ export class ReleaseTrain {
   isMajor = this.version.minor === 0 && this.version.patch === 0;
 
   constructor(
-      /** Name of the branch for this release-train. */
-      public branchName: string,
-      /** Most recent version for this release train. */
-      public version: semver.SemVer) {}
+    /** Name of the branch for this release-train. */
+    public branchName: string,
+    /** Most recent version for this release train. */
+    public version: semver.SemVer,
+  ) {}
 }

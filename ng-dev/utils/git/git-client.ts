@@ -32,7 +32,7 @@ export class GitCommandError extends Error {
 }
 
 /** The options available for the `GitClient``run` and `runGraceful` methods. */
-type GitCommandRunOptions = SpawnSyncOptions&{
+type GitCommandRunOptions = SpawnSyncOptions & {
   verboseLogging?: boolean;
 };
 
@@ -48,10 +48,11 @@ export class GitClient {
   readonly github = new GithubClient();
 
   constructor(
-      /** The full path to the root of the repository base. */
-      readonly baseDir = determineRepoBaseDirFromCwd(),
-      /** The configuration, containing the github specific configuration. */
-      readonly config = getConfig(baseDir)) {}
+    /** The full path to the root of the repository base. */
+    readonly baseDir = determineRepoBaseDirFromCwd(),
+    /** The configuration, containing the github specific configuration. */
+    readonly config = getConfig(baseDir),
+  ) {}
 
   /** Executes the given git command. Throws if the command fails. */
   run(args: string[], options?: GitCommandRunOptions): Omit<SpawnSyncReturns<string>, 'status'> {
@@ -82,7 +83,7 @@ export class GitClient {
     // commands at the DEBUG level to better understand the git actions occurring. Verbose logging,
     // always logging at the INFO level, can be enabled either by setting the verboseLogging
     // property on the GitClient class or the options object provided to the method.
-    const printFn = (GitClient.verboseLogging || options.verboseLogging) ? info : debug;
+    const printFn = GitClient.verboseLogging || options.verboseLogging ? info : debug;
     // Note that we sanitize the command before printing it to the console. We do not want to
     // print an access token if it is contained in the command. It's common to share errors with
     // others if the tool failed, and we do not want to leak tokens.
@@ -161,7 +162,8 @@ export class GitClient {
 
     if (latestTag === undefined) {
       throw new Error(
-          `Unable to find a SemVer matching tag on "${this.getCurrentBranchOrRevision()}"`);
+        `Unable to find a SemVer matching tag on "${this.getCurrentBranchOrRevision()}"`,
+      );
     }
     return new SemVer(latestTag, semVerOptions);
   }
@@ -170,8 +172,9 @@ export class GitClient {
   getMatchingTagForSemver(semver: SemVer): string {
     const semVerOptions: SemVerOptions = {loose: true};
     const tags = this.runGraceful(['tag', '--sort=-committerdate', '--merged']).stdout.split('\n');
-    const matchingTag =
-        tags.find((tag: string) => parse(tag, semVerOptions)?.compare(semver) === 0);
+    const matchingTag = tags.find(
+      (tag: string) => parse(tag, semVerOptions)?.compare(semver) === 0,
+    );
 
     if (matchingTag === undefined) {
       throw new Error(`Unable to find a tag for the version: "${semver.format()}"`);
@@ -181,16 +184,19 @@ export class GitClient {
 
   /** Retrieve a list of all files in the repository changed since the provided shaOrRef. */
   allChangesFilesSince(shaOrRef = 'HEAD'): string[] {
-    return Array.from(new Set([
-      ...gitOutputAsArray(this.runGraceful(['diff', '--name-only', '--diff-filter=d', shaOrRef])),
-      ...gitOutputAsArray(this.runGraceful(['ls-files', '--others', '--exclude-standard'])),
-    ]));
+    return Array.from(
+      new Set([
+        ...gitOutputAsArray(this.runGraceful(['diff', '--name-only', '--diff-filter=d', shaOrRef])),
+        ...gitOutputAsArray(this.runGraceful(['ls-files', '--others', '--exclude-standard'])),
+      ]),
+    );
   }
 
   /** Retrieve a list of all files currently staged in the repostitory. */
   allStagedFiles(): string[] {
     return gitOutputAsArray(
-        this.runGraceful(['diff', '--name-only', '--diff-filter=ACM', '--staged']));
+      this.runGraceful(['diff', '--name-only', '--diff-filter=ACM', '--staged']),
+    );
   }
 
   /** Retrieve a list of all files tracked in the repository. */
@@ -238,19 +244,26 @@ export class GitClient {
  * utility within `GitClient`'s methods to create outputs as array.
  */
 function gitOutputAsArray(gitCommandResult: SpawnSyncReturns<string>): string[] {
-  return gitCommandResult.stdout.split('\n').map(x => x.trim()).filter(x => !!x);
+  return gitCommandResult.stdout
+    .split('\n')
+    .map((x) => x.trim())
+    .filter((x) => !!x);
 }
 
 /** Determines the repository base directory from the current working directory. */
 function determineRepoBaseDirFromCwd() {
   // TODO(devversion): Replace with common spawn sync utility once available.
-  const {stdout, stderr, status} = spawnSync(
-      'git', ['rev-parse --show-toplevel'], {shell: true, stdio: 'pipe', encoding: 'utf8'});
+  const {stdout, stderr, status} = spawnSync('git', ['rev-parse --show-toplevel'], {
+    shell: true,
+    stdio: 'pipe',
+    encoding: 'utf8',
+  });
   if (status !== 0) {
     throw Error(
-        `Unable to find the path to the base directory of the repository.\n` +
+      `Unable to find the path to the base directory of the repository.\n` +
         `Was the command run from inside of the repo?\n\n` +
-        `${stderr}`);
+        `${stderr}`,
+    );
   }
   return stdout.trim();
 }

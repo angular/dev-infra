@@ -10,11 +10,15 @@ import {GitClient} from '../../utils/git/git-client';
 import {FormatConfig} from '../config';
 
 // A callback to determine if the formatter run found a failure in formatting.
-export type CallbackFunc =
-    (file: string, code: number|NodeJS.Signals, stdout: string, stderr: string) => boolean;
+export type CallbackFunc = (
+  file: string,
+  code: number | NodeJS.Signals,
+  stdout: string,
+  stderr: string,
+) => boolean;
 
 // The actions a formatter can take.
-export type FormatterAction = 'check'|'format';
+export type FormatterAction = 'check' | 'format';
 
 // The metadata needed for running one of the `FormatterAction`s on a file.
 interface FormatterActionMetadata {
@@ -92,7 +96,7 @@ export abstract class Formatter {
   /**
    * Retrieves the file matcher from the config provided to the constructor if provided.
    */
-  private getFileMatcherFromConfig(): string[]|undefined {
+  private getFileMatcherFromConfig(): string[] | undefined {
     const formatterConfig = this.config[this.name];
     if (typeof formatterConfig === 'boolean') {
       return undefined;

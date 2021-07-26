@@ -7,7 +7,16 @@
  */
 
 import {runfiles} from '@bazel/runfiles';
-import {ConsoleMessageId, Extractor, ExtractorConfig, ExtractorLogLevel, ExtractorMessage, ExtractorMessageId, ExtractorResult, IConfigFile} from '@microsoft/api-extractor';
+import {
+  ConsoleMessageId,
+  Extractor,
+  ExtractorConfig,
+  ExtractorLogLevel,
+  ExtractorMessage,
+  ExtractorMessageId,
+  ExtractorResult,
+  IConfigFile,
+} from '@microsoft/api-extractor';
 import {AstModule} from '@microsoft/api-extractor/lib/analyzer/AstModule';
 import {ExportAnalyzer} from '@microsoft/api-extractor/lib/analyzer/ExportAnalyzer';
 import {basename, dirname} from 'path';
@@ -35,9 +44,13 @@ const _origFetchAstModuleExportInfo = ExportAnalyzer.prototype.fetchAstModuleExp
  *   the package name displayed within the API golden.
  */
 export async function testApiGolden(
-    goldenFilePath: string, indexFilePath: string, approveGolden: boolean,
-    stripExportPattern: RegExp, typeNames: string[] = [],
-    packageJsonPath = resolveWorkspacePackageJsonPath()): Promise<ExtractorResult> {
+  goldenFilePath: string,
+  indexFilePath: string,
+  approveGolden: boolean,
+  stripExportPattern: RegExp,
+  typeNames: string[] = [],
+  packageJsonPath = resolveWorkspacePackageJsonPath(),
+): Promise<ExtractorResult> {
   // If no `TEST_TMPDIR` is defined, then this script runs using `bazel run`. We use
   // the runfile directory as temporary directory for API extractor.
   const tempDir = process.env.TEST_TMPDIR ?? process.cwd();
@@ -45,10 +58,10 @@ export async function testApiGolden(
   const configObject: IConfigFile = {
     compiler: {
       overrideTsconfig:
-          // We disable automatic `@types` resolution as this throws-off API reports
-          // when the API test is run outside sandbox. Instead we expect a list of
-          // hard-coded types that should be included. This works in non-sandbox too.
-          {files: [indexFilePath], compilerOptions: {types: typeNames, lib: ['esnext', 'dom']}}
+        // We disable automatic `@types` resolution as this throws-off API reports
+        // when the API test is run outside sandbox. Instead we expect a list of
+        // hard-coded types that should be included. This works in non-sandbox too.
+        {files: [indexFilePath], compilerOptions: {types: typeNames, lib: ['esnext', 'dom']}},
     },
     projectFolder: dirname(packageJsonPath),
     mainEntryPointFilePath: indexFilePath,
@@ -78,9 +91,10 @@ export async function testApiGolden(
   // TODO remove once https://github.com/microsoft/rushstack/issues/2774 is resolved.
   const packageJson = require(packageJsonPath);
   const packageNameSegments = packageJson.name.split('/');
-  const packageName = packageNameSegments.length === 1 ?
-      packageNameSegments[0] :
-      `${packageNameSegments[0]}/${packageNameSegments.slice(1).join('_')}`;
+  const packageName =
+    packageNameSegments.length === 1
+      ? packageNameSegments[0]
+      : `${packageNameSegments[0]}/${packageNameSegments.slice(1).join('_')}`;
 
   const extractorConfig = ExtractorConfig.prepare({
     configObject,
@@ -96,7 +110,7 @@ export async function testApiGolden(
   // but there are cases in Angular where exports cannot be `@internal` but at the same
   // time are denoted as unstable. Such exports are allowed to change frequently and should
   // not be captured in the API report (as this would be unnecessarily inconvenient).
-  ExportAnalyzer.prototype.fetchAstModuleExportInfo = function(module: AstModule) {
+  ExportAnalyzer.prototype.fetchAstModuleExportInfo = function (module: AstModule) {
     const info = _origFetchAstModuleExportInfo.apply(this, [module]);
 
     info.exportedLocalEntities.forEach((entity, exportName) => {
@@ -113,7 +127,7 @@ export async function testApiGolden(
     // API extractor to update the file.
     localBuild: approveGolden,
     // Process messages from the API extractor (and modify log levels if needed).
-    messageCallback: msg => processExtractorMessage(msg, approveGolden),
+    messageCallback: (msg) => processExtractorMessage(msg, approveGolden),
   });
 }
 

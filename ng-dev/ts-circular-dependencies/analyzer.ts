@@ -13,7 +13,7 @@ import * as ts from 'typescript';
 import {getFileStatus} from './file_system';
 import {getModuleReferences} from './parser';
 
-export type ModuleResolver = (specifier: string) => string|null;
+export type ModuleResolver = (specifier: string) => string | null;
 
 /**
  * Reference chains describe a sequence of source files which are connected through imports.
@@ -36,11 +36,16 @@ export class Analyzer {
   unresolvedFiles = new Map<string, string[]>();
 
   constructor(
-      public resolveModuleFn?: ModuleResolver, public extensions: string[] = DEFAULT_EXTENSIONS) {}
+    public resolveModuleFn?: ModuleResolver,
+    public extensions: string[] = DEFAULT_EXTENSIONS,
+  ) {}
 
   /** Finds all cycles in the specified source file. */
-  findCycles(sf: ts.SourceFile, visited = new WeakSet<ts.SourceFile>(), path: ReferenceChain = []):
-      ReferenceChain[] {
+  findCycles(
+    sf: ts.SourceFile,
+    visited = new WeakSet<ts.SourceFile>(),
+    path: ReferenceChain = [],
+  ): ReferenceChain[] {
     const previousIndex = path.indexOf(sf);
     // If the given node is already part of the current path, then a cycle has
     // been found. Add the reference chain which represents the cycle to the results.
@@ -72,14 +77,18 @@ export class Analyzer {
       return this._sourceFileCache.get(resolvedPath)!;
     }
     const fileContent = readFileSync(resolvedPath, 'utf8');
-    const sourceFile =
-        ts.createSourceFile(resolvedPath, fileContent, ts.ScriptTarget.Latest, false);
+    const sourceFile = ts.createSourceFile(
+      resolvedPath,
+      fileContent,
+      ts.ScriptTarget.Latest,
+      false,
+    );
     this._sourceFileCache.set(resolvedPath, sourceFile);
     return sourceFile;
   }
 
   /** Resolves the given import specifier with respect to the specified containing file path. */
-  private _resolveImport(specifier: string, containingFilePath: string): string|null {
+  private _resolveImport(specifier: string, containingFilePath: string): string | null {
     if (specifier.charAt(0) === '.') {
       const resolvedPath = this._resolveFileSpecifier(specifier, containingFilePath);
       if (resolvedPath === null) {
@@ -109,9 +118,9 @@ export class Analyzer {
   }
 
   /** Resolves the given import specifier to the corresponding source file. */
-  private _resolveFileSpecifier(specifier: string, containingFilePath?: string): string|null {
+  private _resolveFileSpecifier(specifier: string, containingFilePath?: string): string | null {
     const importFullPath =
-        containingFilePath !== undefined ? join(dirname(containingFilePath), specifier) : specifier;
+      containingFilePath !== undefined ? join(dirname(containingFilePath), specifier) : specifier;
     const stat = getFileStatus(importFullPath);
     if (stat && stat.isFile()) {
       return importFullPath;

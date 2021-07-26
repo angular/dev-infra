@@ -26,7 +26,7 @@ export interface GithubApiMergeStrategyConfig {
   /** Default method used for merging pull requests */
   default: GithubApiMergeMethod;
   /** Labels which specify a different merge method than the default. */
-  labels?: {pattern: string, method: GithubApiMergeMethod}[];
+  labels?: {pattern: string; method: GithubApiMergeMethod}[];
 }
 
 /** Separator between commit message header and body. */
@@ -44,12 +44,12 @@ export class GithubApiMergeStrategy extends MergeStrategy {
     super(git);
   }
 
-  override async merge(pullRequest: PullRequest): Promise<PullRequestFailure|null> {
+  override async merge(pullRequest: PullRequest): Promise<PullRequestFailure | null> {
     const {githubTargetBranch, prNumber, targetBranches, requiredBaseSha, needsCommitMessageFixup} =
-        pullRequest;
+      pullRequest;
     // If the pull request does not have its base branch set to any determined target
     // branch, we cannot merge using the API.
-    if (targetBranches.every(t => t !== githubTargetBranch)) {
+    if (targetBranches.every((t) => t !== githubTargetBranch)) {
       return PullRequestFailure.mismatchingTargetBranch(targetBranches);
     }
 
@@ -63,7 +63,7 @@ export class GithubApiMergeStrategy extends MergeStrategy {
     }
 
     const method = this._getMergeActionFromPullRequest(pullRequest);
-    const cherryPickTargetBranches = targetBranches.filter(b => b !== githubTargetBranch);
+    const cherryPickTargetBranches = targetBranches.filter((b) => b !== githubTargetBranch);
 
     // First cherry-pick the PR into all local target branches in dry-run mode. This is
     // purely for testing so that we can figure out whether the PR can be cherry-picked
@@ -138,13 +138,16 @@ export class GithubApiMergeStrategy extends MergeStrategy {
 
     // Cherry pick the merged commits into the remaining target branches.
     const failedBranches = await this.cherryPickIntoTargetBranches(
-        `${targetSha}~${targetCommitsCount}..${targetSha}`, cherryPickTargetBranches, {
-          // Commits that have been created by the Github API do not necessarily contain
-          // a reference to the source pull request (unless the squash strategy is used).
-          // To ensure that original commits can be found when a commit is viewed in a
-          // target branch, we add a link to the original commits when cherry-picking.
-          linkToOriginalCommits: true,
-        });
+      `${targetSha}~${targetCommitsCount}..${targetSha}`,
+      cherryPickTargetBranches,
+      {
+        // Commits that have been created by the Github API do not necessarily contain
+        // a reference to the source pull request (unless the squash strategy is used).
+        // To ensure that original commits can be found when a commit is viewed in a
+        // target branch, we add a link to the original commits when cherry-picking.
+        linkToOriginalCommits: true,
+      },
+    );
 
     // We already checked whether the PR can be cherry-picked into the target branches,
     // but in case the cherry-pick somehow fails, we still handle the conflicts here. The
@@ -163,7 +166,9 @@ export class GithubApiMergeStrategy extends MergeStrategy {
    * The Github API only allows modifications to PR title and body for squash merges.
    */
   private async _promptCommitMessageEdit(
-      pullRequest: PullRequest, mergeOptions: OctokitMergeParams) {
+    pullRequest: PullRequest,
+    mergeOptions: OctokitMergeParams,
+  ) {
     const commitMessage = await this._getDefaultSquashCommitMessage(pullRequest);
     const {result} = await prompt<{result: string}>({
       type: 'editor',
@@ -187,20 +192,24 @@ export class GithubApiMergeStrategy extends MergeStrategy {
    * behavior here so that we have a default commit message that can be fixed up.
    */
   private async _getDefaultSquashCommitMessage(pullRequest: PullRequest): Promise<string> {
-    const commits = (await this._getPullRequestCommitMessages(pullRequest))
-                        .map(message => ({message, parsed: parseCommitMessage(message)}));
+    const commits = (await this._getPullRequestCommitMessages(pullRequest)).map((message) => ({
+      message,
+      parsed: parseCommitMessage(message),
+    }));
     const messageBase = `${pullRequest.title}${COMMIT_HEADER_SEPARATOR}`;
     if (commits.length <= 1) {
       return `${messageBase}${commits[0].parsed.body}`;
     }
-    const joinedMessages = commits.map(c => `* ${c.message}`).join(COMMIT_HEADER_SEPARATOR);
+    const joinedMessages = commits.map((c) => `* ${c.message}`).join(COMMIT_HEADER_SEPARATOR);
     return `${messageBase}${joinedMessages}`;
   }
 
   /** Gets all commit messages of commits in the pull request. */
   private async _getPullRequestCommitMessages({prNumber}: PullRequest) {
-    const allCommits = await this.git.github.paginate(
-        this.git.github.pulls.listCommits, {...this.git.remoteParams, pull_number: prNumber});
+    const allCommits = await this.git.github.paginate(this.git.github.pulls.listCommits, {
+      ...this.git.remoteParams,
+      pull_number: prNumber,
+    });
     return allCommits.map(({commit}) => commit.message);
   }
 
@@ -208,11 +217,14 @@ export class GithubApiMergeStrategy extends MergeStrategy {
    * Checks if given pull request could be merged into its target branches.
    * @returns A pull request failure if it the PR could not be merged.
    */
-  private async _checkMergability(pullRequest: PullRequest, targetBranches: string[]):
-      Promise<null|PullRequestFailure> {
+  private async _checkMergability(
+    pullRequest: PullRequest,
+    targetBranches: string[],
+  ): Promise<null | PullRequestFailure> {
     const revisionRange = this.getPullRequestRevisionRange(pullRequest);
-    const failedBranches =
-        this.cherryPickIntoTargetBranches(revisionRange, targetBranches, {dryRun: true});
+    const failedBranches = this.cherryPickIntoTargetBranches(revisionRange, targetBranches, {
+      dryRun: true,
+    });
 
     if (failedBranches.length) {
       return PullRequestFailure.mergeConflicts(failedBranches);
@@ -223,8 +235,9 @@ export class GithubApiMergeStrategy extends MergeStrategy {
   /** Determines the merge action from the given pull request. */
   private _getMergeActionFromPullRequest({labels}: PullRequest): GithubApiMergeMethod {
     if (this._config.labels) {
-      const matchingLabel =
-          this._config.labels.find(({pattern}) => labels.some(l => matchesPattern(l, pattern)));
+      const matchingLabel = this._config.labels.find(({pattern}) =>
+        labels.some((l) => matchesPattern(l, pattern)),
+      );
       if (matchingLabel !== undefined) {
         return matchingLabel.method;
       }

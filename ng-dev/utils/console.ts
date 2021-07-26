@@ -23,13 +23,14 @@ export const blue = chalk.blue;
 
 /** Prompts the user with a confirmation question and a specified message. */
 export async function promptConfirm(message: string, defaultValue = false): Promise<boolean> {
-  return (await prompt<{result: boolean}>({
-           type: 'confirm',
-           name: 'result',
-           message: message,
-           default: defaultValue,
-         }))
-      .result;
+  return (
+    await prompt<{result: boolean}>({
+      type: 'confirm',
+      name: 'result',
+      message: message,
+      default: defaultValue,
+    })
+  ).result;
 }
 
 /** Prompts the user for one line of input. */
@@ -180,5 +181,9 @@ export function captureLogOutputForCommand(argv: Arguments) {
 /** Write the provided text to the log file, prepending each line with the log level.  */
 function printToLogFile(logLevel: LOG_LEVELS, ...text: string[]) {
   const logLevelText = `${LOG_LEVELS[logLevel]}:`.padEnd(LOG_LEVEL_COLUMNS);
-  LOGGED_TEXT += text.join(' ').split('\n').map(l => `${logLevelText} ${l}\n`).join('');
+  LOGGED_TEXT += text
+    .join(' ')
+    .split('\n')
+    .map((l) => `${logLevelText} ${l}\n`)
+    .join('');
 }

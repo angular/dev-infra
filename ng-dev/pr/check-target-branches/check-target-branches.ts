@@ -10,7 +10,11 @@ import {getConfig} from '../../utils/config';
 import {error, info, red} from '../../utils/console';
 import {GitClient} from '../../utils/git/git-client';
 import {loadAndValidateConfig, TargetLabel} from '../merge/config';
-import {getBranchesFromTargetLabel, getTargetLabelFromPullRequest, InvalidTargetLabelError} from '../merge/target-label';
+import {
+  getBranchesFromTargetLabel,
+  getTargetLabelFromPullRequest,
+  InvalidTargetLabelError,
+} from '../merge/target-label';
 
 export async function getTargetBranchesForPr(prNumber: number) {
   /** The ng-dev configuration. */
@@ -31,7 +35,7 @@ export async function getTargetBranchesForPr(prNumber: number) {
   // here.
   // TODO(devversion): Remove the non-null cast once
   // https://github.com/github/rest-api-description/issues/169 is fixed.
-  const labels = prData.labels.map(l => l.name!);
+  const labels = prData.labels.map((l) => l.name!);
   /** The branch targetted via the Github UI. */
   const githubTargetBranch = prData.base.ref;
   /** The active label which is being used for targetting the PR. */
@@ -51,13 +55,12 @@ export async function getTargetBranchesForPr(prNumber: number) {
   return await getBranchesFromTargetLabel(targetLabel, githubTargetBranch);
 }
 
-
 export async function printTargetBranchesForPr(prNumber: number) {
   const targets = await getTargetBranchesForPr(prNumber);
   if (targets === undefined) {
     return;
   }
   info.group(`PR #${prNumber} will merge into:`);
-  targets.forEach(target => info(`- ${target}`));
+  targets.forEach((target) => info(`- ${target}`));
   info.groupEnd();
 }

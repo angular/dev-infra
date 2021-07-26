@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-
 import {URL} from 'url';
 
 import {GithubConfig} from '../config';

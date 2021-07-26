@@ -20,7 +20,7 @@ const conditionContext = {
   'contains_any_globs': (files: PullApproveStringArray, patterns: string[]) => {
     // Note: Do not always create globs for the same pattern again. This method
     // could be called for each source file. Creating glob's is expensive.
-    return files.some(f => patterns.some(pattern => getOrCreateGlob(pattern).match(f)));
+    return files.some((f) => patterns.some((pattern) => getOrCreateGlob(pattern).match(f)));
   },
 };
 
@@ -28,23 +28,31 @@ const conditionContext = {
  * Converts a given condition to a function that accepts a set of files. The returned
  * function can be called to check if the set of files matches the condition.
  */
-export function convertConditionToFunction(expr: string): (
-    files: string[], groups: PullApproveGroup[]) => boolean {
+export function convertConditionToFunction(
+  expr: string,
+): (files: string[], groups: PullApproveGroup[]) => boolean {
   // Creates a dynamic function with the specified expression.
   // The first parameter will be `files` as that corresponds to the supported `files` variable that
   // can be accessed in PullApprove condition expressions. The second parameter is the list of
   // PullApproveGroups that are accessible in the condition expressions. The followed parameters
   // correspond to other context variables provided by PullApprove for conditions.
-  const evaluateFn = new Function('files', 'groups', ...Object.keys(conditionContext), `
+  const evaluateFn = new Function(
+    'files',
+    'groups',
+    ...Object.keys(conditionContext),
+    `
     return (${transformExpressionToJs(expr)});
-  `);
+  `,
+  );
 
   // Create a function that calls the dynamically constructed function which mimics
   // the condition expression that is usually evaluated with Python in PullApprove.
   return (files, groups) => {
     const result = evaluateFn(
-        new PullApproveStringArray(...files), new PullApproveGroupArray(...groups),
-        ...Object.values(conditionContext));
+      new PullApproveStringArray(...files),
+      new PullApproveGroupArray(...groups),
+      ...Object.values(conditionContext),
+    );
     // If an array is returned, we consider the condition as active if the array is not
     // empty. This matches PullApprove's condition evaluation that is based on Python.
     if (Array.isArray(result)) {

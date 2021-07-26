@@ -10,7 +10,6 @@ import {Argv} from 'yargs';
 import {CheckModule} from './check/cli';
 import {HandoffModule} from './handoff/cli';
 
-
 /** Build the parser for the caretaker commands. */
 export function buildCaretakerParser(yargs: Argv) {
   return yargs.command(CheckModule).command(HandoffModule);

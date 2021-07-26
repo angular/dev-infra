@@ -10,6 +10,9 @@ import {verify} from './verify';
 
 /** Build the parser for the NgBot commands. */
 export function buildNgbotParser(localYargs: yargs.Argv) {
-  return localYargs.help().strict().demandCommand().command(
-      'verify', 'Verify the NgBot config', {}, () => verify());
+  return localYargs
+    .help()
+    .strict()
+    .demandCommand()
+    .command('verify', 'Verify the NgBot config', {}, () => verify());
 }

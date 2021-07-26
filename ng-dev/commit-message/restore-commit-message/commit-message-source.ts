@@ -10,4 +10,4 @@
  * The source triggering the git commit message creation.
  * As described in: https://git-scm.com/docs/githooks#_prepare_commit_msg
  */
-export type CommitMsgSource = 'message'|'template'|'merge'|'squash'|'commit';
+export type CommitMsgSource = 'message' | 'template' | 'merge' | 'squash' | 'commit';

@@ -15,7 +15,6 @@ import {buildReleaseOutput} from '../../release/build/index';
 import {spawn} from '../../utils/child-process';
 import {error, info, red} from '../../utils/console';
 
-
 /** Command line options. */
 export interface BuildAndLinkOptions {
   projectRoot: string;
@@ -65,5 +64,5 @@ export const BuildAndLinkCommandModule: CommandModule<{}, BuildAndLinkOptions> =
   handler,
   command: 'build-and-link <projectRoot>',
   describe:
-      'Builds the release output, registers the outputs as linked, and links via yarn to the provided project',
+    'Builds the release output, registers the outputs as linked, and links via yarn to the provided project',
 };

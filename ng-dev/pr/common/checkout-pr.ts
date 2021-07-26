@@ -35,7 +35,6 @@ const PR_SCHEMA = {
   },
 };
 
-
 export class UnexpectedLocalChangesError extends Error {
   constructor(m: string) {
     super(m);
@@ -61,7 +60,10 @@ export interface PullRequestCheckoutOptions {
  * commit to the PRs repository.
  */
 export async function checkOutPullRequestLocally(
-    prNumber: number, githubToken: string, opts: PullRequestCheckoutOptions = {}) {
+  prNumber: number,
+  githubToken: string,
+  opts: PullRequestCheckoutOptions = {},
+) {
   /** The singleton instance of the authenticated git client. */
   const git = AuthenticatedGitClient.get();
 
@@ -123,6 +125,6 @@ export async function checkOutPullRequestLocally(
     /** Restores the state of the local repository to before the PR checkout occured. */
     resetGitState: (): boolean => {
       return git.checkout(previousBranchOrRevision, true);
-    }
+    },
   };
 }

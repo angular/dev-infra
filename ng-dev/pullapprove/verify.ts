@@ -27,9 +27,9 @@ export function verify() {
    * PullApprove groups without conditions. These are skipped in the verification
    * as those would always be active and cause zero unmatched files.
    */
-  const groupsSkipped = groups.filter(group => !group.conditions.length);
+  const groupsSkipped = groups.filter((group) => !group.conditions.length);
   /** PullApprove groups with conditions. */
-  const groupsWithConditions = groups.filter(group => !!group.conditions.length);
+  const groupsWithConditions = groups.filter((group) => !!group.conditions.length);
   /** Files which are matched by at least one group. */
   const matchedFiles: string[] = [];
   /** Files which are not matched by at least one group. */
@@ -37,22 +37,24 @@ export function verify() {
 
   // Test each file in the repo against each group for being matched.
   REPO_FILES.forEach((file: string) => {
-    if (groupsWithConditions.filter(group => group.testFile(file)).length) {
+    if (groupsWithConditions.filter((group) => group.testFile(file)).length) {
       matchedFiles.push(file);
     } else {
       unmatchedFiles.push(file);
     }
   });
   /** Results for each group */
-  const resultsByGroup = groupsWithConditions.map(group => group.getResults());
+  const resultsByGroup = groupsWithConditions.map((group) => group.getResults());
   /**
    * Whether all group condition lines match at least one file and all files
    * are matched by at least one group.
    */
   const allGroupConditionsValid =
-      resultsByGroup.every(r => !r.unmatchedCount) && !unmatchedFiles.length;
+    resultsByGroup.every((r) => !r.unmatchedCount) && !unmatchedFiles.length;
   /** Whether all groups have at least one reviewer user or team defined.  */
-  const groupsWithoutReviewers = groups.filter(group => Object.keys(group.reviewers).length === 0);
+  const groupsWithoutReviewers = groups.filter(
+    (group) => Object.keys(group.reviewers).length === 0,
+  );
   /** The overall result of the verifcation. */
   const overallResult = allGroupConditionsValid && groupsWithoutReviewers.length === 0;
 
@@ -75,7 +77,7 @@ export function verify() {
     info('All group contain at least one reviewer user or team.');
   } else {
     info.group(`Discovered ${groupsWithoutReviewers.length} group(s) without a reviewer defined`);
-    groupsWithoutReviewers.forEach(g => info(g.groupName));
+    groupsWithoutReviewers.forEach((g) => info(g.groupName));
     info.groupEnd();
   }
   /**
@@ -83,30 +85,31 @@ export function verify() {
    */
   logHeader('PullApprove results by file');
   info.group(`Matched Files (${matchedFiles.length} files)`);
-  matchedFiles.forEach(file => debug(file));
+  matchedFiles.forEach((file) => debug(file));
   info.groupEnd();
   info.group(`Unmatched Files (${unmatchedFiles.length} files)`);
-  unmatchedFiles.forEach(file => info(file));
+  unmatchedFiles.forEach((file) => info(file));
   info.groupEnd();
   /**
    * Group by group Summary
    */
   logHeader('PullApprove results by group');
   info.group(`Groups skipped (${groupsSkipped.length} groups)`);
-  groupsSkipped.forEach(group => debug(`${group.groupName}`));
+  groupsSkipped.forEach((group) => debug(`${group.groupName}`));
   info.groupEnd();
-  const matchedGroups = resultsByGroup.filter(group => !group.unmatchedCount);
+  const matchedGroups = resultsByGroup.filter((group) => !group.unmatchedCount);
   info.group(`Matched conditions by Group (${matchedGroups.length} groups)`);
-  matchedGroups.forEach(group => logGroup(group, 'matchedConditions', debug));
+  matchedGroups.forEach((group) => logGroup(group, 'matchedConditions', debug));
   info.groupEnd();
-  const unmatchedGroups = resultsByGroup.filter(group => group.unmatchedCount);
+  const unmatchedGroups = resultsByGroup.filter((group) => group.unmatchedCount);
   info.group(`Unmatched conditions by Group (${unmatchedGroups.length} groups)`);
-  unmatchedGroups.forEach(group => logGroup(group, 'unmatchedConditions'));
+  unmatchedGroups.forEach((group) => logGroup(group, 'unmatchedConditions'));
   info.groupEnd();
-  const unverifiableConditionsInGroups =
-      resultsByGroup.filter(group => group.unverifiableConditions.length > 0);
+  const unverifiableConditionsInGroups = resultsByGroup.filter(
+    (group) => group.unverifiableConditions.length > 0,
+  );
   info.group(`Unverifiable conditions by Group (${unverifiableConditionsInGroups.length} groups)`);
-  unverifiableConditionsInGroups.forEach(group => logGroup(group, 'unverifiableConditions'));
+  unverifiableConditionsInGroups.forEach((group) => logGroup(group, 'unverifiableConditions'));
   info.groupEnd();
 
   // Provide correct exit code based on verification success.

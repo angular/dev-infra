@@ -10,6 +10,9 @@ import {verify} from './verify';
 
 /** Build the parser for the pullapprove commands. */
 export function buildPullapproveParser(localYargs: yargs.Argv) {
-  return localYargs.help().strict().demandCommand().command(
-      'verify', 'Verify the pullapprove config', {}, () => verify());
+  return localYargs
+    .help()
+    .strict()
+    .demandCommand()
+    .command('verify', 'Verify the pullapprove config', {}, () => verify());
 }

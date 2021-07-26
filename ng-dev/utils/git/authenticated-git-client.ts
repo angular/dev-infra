@@ -11,7 +11,11 @@ import {yellow} from '../console';
 
 import {GitClient} from './git-client';
 import {AuthenticatedGithubClient} from './github';
-import {getRepositoryGitUrl, GITHUB_TOKEN_GENERATE_URL, GITHUB_TOKEN_SETTINGS_URL} from './github-urls';
+import {
+  getRepositoryGitUrl,
+  GITHUB_TOKEN_GENERATE_URL,
+  GITHUB_TOKEN_SETTINGS_URL,
+} from './github-urls';
 
 /** Describes a function that can be used to test for given Github OAuth scopes. */
 export type OAuthScopeTestFunction = (scopes: string[], missing: string[]) => void;
@@ -28,7 +32,7 @@ export class AuthenticatedGitClient extends GitClient {
   private readonly _githubTokenRegex: RegExp = new RegExp(this.githubToken, 'g');
 
   /** The OAuth scopes available for the provided Github token. */
-  private _cachedOauthScopes: Promise<string[]>|null = null;
+  private _cachedOauthScopes: Promise<string[]> | null = null;
 
   /** Instance of an authenticated github client. */
   override readonly github = new AuthenticatedGithubClient(this.githubToken);
@@ -51,7 +55,7 @@ export class AuthenticatedGitClient extends GitClient {
    * Assert the GitClient instance is using a token with permissions for the all of the
    * provided OAuth scopes.
    */
-  async hasOauthScopes(testFn: OAuthScopeTestFunction): Promise<true|{error: string}> {
+  async hasOauthScopes(testFn: OAuthScopeTestFunction): Promise<true | {error: string}> {
     const scopes = await this._fetchAuthScopesForToken();
     const missingScopes: string[] = [];
     // Test Github OAuth scopes and collect missing ones.
@@ -64,11 +68,11 @@ export class AuthenticatedGitClient extends GitClient {
     // Pre-constructed error message to log to the user, providing missing scopes and
     // remediation instructions.
     const error =
-        `The provided <TOKEN> does not have required permissions due to missing scope(s): ` +
-        `${yellow(missingScopes.join(', '))}\n\n` +
-        `Update the token in use at:\n` +
-        `  ${GITHUB_TOKEN_SETTINGS_URL}\n\n` +
-        `Alternatively, a new token can be created at: ${GITHUB_TOKEN_GENERATE_URL}\n`;
+      `The provided <TOKEN> does not have required permissions due to missing scope(s): ` +
+      `${yellow(missingScopes.join(', '))}\n\n` +
+      `Update the token in use at:\n` +
+      `  ${GITHUB_TOKEN_SETTINGS_URL}\n\n` +
+      `Alternatively, a new token can be created at: ${GITHUB_TOKEN_GENERATE_URL}\n`;
 
     return {error};
   }
@@ -81,7 +85,7 @@ export class AuthenticatedGitClient extends GitClient {
     }
     // OAuth scopes are loaded via the /rate_limit endpoint to prevent
     // usage of a request against that rate_limit for this lookup.
-    return this._cachedOauthScopes = this.github.rateLimit.get().then(response => {
+    return (this._cachedOauthScopes = this.github.rateLimit.get().then((response) => {
       const scopes = response.headers['x-oauth-scopes'];
 
       // If no token is provided, or if the Github client is authenticated incorrectly,
@@ -91,8 +95,11 @@ export class AuthenticatedGitClient extends GitClient {
         throw Error('Unable to retrieve OAuth scopes for token provided to Git client.');
       }
 
-      return scopes.split(',').map(scope => scope.trim()).filter(scope => scope !== '');
-    });
+      return scopes
+        .split(',')
+        .map((scope) => scope.trim())
+        .filter((scope) => scope !== '');
+    }));
   }
 
   /** The singleton instance of the `AuthenticatedGitClient`. */
@@ -113,7 +120,8 @@ export class AuthenticatedGitClient extends GitClient {
   static configure(token: string): void {
     if (AuthenticatedGitClient._authenticatedInstance) {
       throw Error(
-          'Unable to configure `AuthenticatedGitClient` as it has been configured already.');
+        'Unable to configure `AuthenticatedGitClient` as it has been configured already.',
+      );
     }
     AuthenticatedGitClient._authenticatedInstance = new AuthenticatedGitClient(token);
   }

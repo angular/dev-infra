@@ -8,7 +8,7 @@
 
 import {CommitFromGitLog, parseCommitFromGitLog} from '../../../../commit-message/parse';
 import {commitMessageBuilder} from '../../../../commit-message/test-util';
-import {RenderContext, RenderContextData,} from '../../../notes/context';
+import {RenderContext, RenderContextData} from '../../../notes/context';
 
 const defaultContextData: RenderContextData = {
   commits: [],
@@ -43,13 +43,11 @@ describe('RenderContext', () => {
     expect(commits.filter(renderContext.contains('breakingChanges'))).toEqual(matchingCommits);
   });
 
-  it('filters to include only the first commit discovered with a unique value for a specified field',
-     () => {
-       const renderContext = new RenderContext(defaultContextData);
-       const matchingCommits = commitsFromList(0, 1, 2, 3, 4, 7, 12);
-       expect(commits.filter(renderContext.unique('type'))).toEqual(matchingCommits);
-     });
-
+  it('filters to include only the first commit discovered with a unique value for a specified field', () => {
+    const renderContext = new RenderContext(defaultContextData);
+    const matchingCommits = commitsFromList(0, 1, 2, 3, 4, 7, 12);
+    expect(commits.filter(renderContext.unique('type'))).toEqual(matchingCommits);
+  });
 
   describe('filters to include commits which are to be included in the release notes', () => {
     it('including all scopes by default', () => {
@@ -71,8 +69,9 @@ describe('RenderContext', () => {
     let compilerCommits: CommitFromGitLog[];
     let unorganizedCommits: CommitFromGitLog[];
     function assertOrganizedGroupsMatch(
-        generatedGroups: {title: string, commits: CommitFromGitLog[]}[],
-        providedGroups: {title: string, commits: CommitFromGitLog[]}[]) {
+      generatedGroups: {title: string; commits: CommitFromGitLog[]}[],
+      providedGroups: {title: string; commits: CommitFromGitLog[]}[],
+    ) {
       expect(generatedGroups.length).toBe(providedGroups.length);
       generatedGroups.forEach(({title, commits}, idx) => {
         expect(title).toBe(providedGroups[idx].title);
@@ -81,14 +80,13 @@ describe('RenderContext', () => {
     }
 
     beforeEach(() => {
-      devInfraCommits = commits.filter(c => c.scope === 'dev-infra');
-      coreCommits = commits.filter(c => c.scope === 'core');
-      compilerCommits = commits.filter(c => c.scope === 'compiler');
-      unorganizedCommits =
-          [...devInfraCommits, ...coreCommits, ...compilerCommits].sort(() => Math.random() - 0.5);
+      devInfraCommits = commits.filter((c) => c.scope === 'dev-infra');
+      coreCommits = commits.filter((c) => c.scope === 'core');
+      compilerCommits = commits.filter((c) => c.scope === 'compiler');
+      unorganizedCommits = [...devInfraCommits, ...coreCommits, ...compilerCommits].sort(
+        () => Math.random() - 0.5,
+      );
     });
-
-
 
     it('with default sorting', () => {
       const renderContext = new RenderContext(defaultContextData);
@@ -102,8 +100,10 @@ describe('RenderContext', () => {
     });
 
     it('sorted by the provided order in the config', () => {
-      const renderContext =
-          new RenderContext({...defaultContextData, groupOrder: ['core', 'dev-infra']});
+      const renderContext = new RenderContext({
+        ...defaultContextData,
+        groupOrder: ['core', 'dev-infra'],
+      });
       const organizedCommits = renderContext.asCommitGroups(unorganizedCommits);
 
       assertOrganizedGroupsMatch(organizedCommits, [
@@ -118,8 +118,6 @@ describe('RenderContext', () => {
     jasmine.clock().uninstall();
   });
 });
-
-
 
 const buildCommitMessage = commitMessageBuilder({
   prefix: '',
@@ -137,7 +135,6 @@ function buildCommit(type: string, scope: string, withBreakingChange = false) {
   return parseCommitFromGitLog(Buffer.from(buildCommitMessage(parts)));
 }
 
-
 function commitsFromList(...indexes: number[]) {
   const output: CommitFromGitLog[] = [];
   for (const i of indexes) {
@@ -145,7 +142,6 @@ function commitsFromList(...indexes: number[]) {
   }
   return output;
 }
-
 
 const commits: CommitFromGitLog[] = [
   buildCommit('fix', 'platform-browser'),

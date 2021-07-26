@@ -9,15 +9,21 @@
 import {ReleaseTrain} from '../../versioning/release-trains';
 import {CutNewPatchAction} from '../actions/cut-new-patch';
 
-import {expectStagingAndPublishWithCherryPick, parse, setupReleaseActionForTesting} from './test-utils';
+import {
+  expectStagingAndPublishWithCherryPick,
+  parse,
+  setupReleaseActionForTesting,
+} from './test-utils';
 
 describe('cut new patch action', () => {
   it('should be active', async () => {
-    expect(await CutNewPatchAction.isActive({
-      releaseCandidate: null,
-      next: new ReleaseTrain('master', parse('10.1.0-next.3')),
-      latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
-    })).toBe(true);
+    expect(
+      await CutNewPatchAction.isActive({
+        releaseCandidate: null,
+        next: new ReleaseTrain('master', parse('10.1.0-next.3')),
+        latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
+      }),
+    ).toBe(true);
   });
 
   it('should compute proper new version and select correct branch', async () => {

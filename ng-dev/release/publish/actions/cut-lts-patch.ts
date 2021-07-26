@@ -30,8 +30,10 @@ export class CutLongTermSupportPatchAction extends ReleaseAction {
   override async perform() {
     const ltsBranch = await this._promptForTargetLtsBranch();
     const newVersion = semverInc(ltsBranch.version, 'patch');
-    const {pullRequest, releaseNotes} =
-        await this.checkoutBranchAndStageVersion(newVersion, ltsBranch.name);
+    const {pullRequest, releaseNotes} = await this.checkoutBranchAndStageVersion(
+      newVersion,
+      ltsBranch.name,
+    );
 
     await this.waitForPullRequestToBeMerged(pullRequest);
     await this.buildAndPublish(releaseNotes, ltsBranch.name, ltsBranch.npmDistTag);
@@ -41,7 +43,7 @@ export class CutLongTermSupportPatchAction extends ReleaseAction {
   /** Prompts the user to select an LTS branch for which a patch should but cut. */
   private async _promptForTargetLtsBranch(): Promise<LtsBranch> {
     const {active, inactive} = await this.ltsBranches;
-    const activeBranchChoices = active.map(branch => this._getChoiceForLtsBranch(branch));
+    const activeBranchChoices = active.map((branch) => this._getChoiceForLtsBranch(branch));
 
     // If there are inactive LTS branches, we allow them to be selected. In some situations,
     // patch releases are still cut for inactive LTS branches. e.g. when the LTS duration
@@ -50,22 +52,24 @@ export class CutLongTermSupportPatchAction extends ReleaseAction {
       activeBranchChoices.push({name: 'Inactive LTS versions (not recommended)', value: null});
     }
 
-    const {activeLtsBranch, inactiveLtsBranch} =
-        await prompt<{activeLtsBranch: LtsBranch | null, inactiveLtsBranch: LtsBranch}>([
-          {
-            name: 'activeLtsBranch',
-            type: 'list',
-            message: 'Please select a version for which you want to cut an LTS patch',
-            choices: activeBranchChoices,
-          },
-          {
-            name: 'inactiveLtsBranch',
-            type: 'list',
-            when: o => o.activeLtsBranch === null,
-            message: 'Please select an inactive LTS version for which you want to cut an LTS patch',
-            choices: inactive.map(branch => this._getChoiceForLtsBranch(branch)),
-          }
-        ]);
+    const {activeLtsBranch, inactiveLtsBranch} = await prompt<{
+      activeLtsBranch: LtsBranch | null;
+      inactiveLtsBranch: LtsBranch;
+    }>([
+      {
+        name: 'activeLtsBranch',
+        type: 'list',
+        message: 'Please select a version for which you want to cut an LTS patch',
+        choices: activeBranchChoices,
+      },
+      {
+        name: 'inactiveLtsBranch',
+        type: 'list',
+        when: (o) => o.activeLtsBranch === null,
+        message: 'Please select an inactive LTS version for which you want to cut an LTS patch',
+        choices: inactive.map((branch) => this._getChoiceForLtsBranch(branch)),
+      },
+    ]);
     return activeLtsBranch ?? inactiveLtsBranch;
   }
 

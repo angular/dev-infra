@@ -1,4 +1,3 @@
-
 /**
  * @license
  * Copyright Google LLC All Rights Reserved.
@@ -22,8 +21,10 @@ describe('G3Module', () => {
 
   beforeEach(() => {
     installVirtualGitClientSpies();
-    getG3FileIncludeAndExcludeLists =
-        spyOn(G3Module.prototype, 'getG3FileIncludeAndExcludeLists' as any).and.returnValue(null);
+    getG3FileIncludeAndExcludeLists = spyOn(
+      G3Module.prototype,
+      'getG3FileIncludeAndExcludeLists' as any,
+    ).and.returnValue(null);
     getLatestShas = spyOn(G3Module.prototype, 'getLatestShas' as any).and.returnValue(null);
     getDiffStats = spyOn(G3Module.prototype, 'getDiffStats' as any).and.returnValue(null);
     infoSpy = spyOn(console, 'info');
@@ -87,7 +88,8 @@ describe('G3Module', () => {
       await module.printToTerminal();
 
       expect(infoSpy).toHaveBeenCalledWith(
-          '2 files changed, 25 insertions(+), 10 deletions(-) from 2 commits will be included in the next sync');
+        '2 files changed, 25 insertions(+), 10 deletions(-) from 2 commits will be included in the next sync',
+      );
     });
 
     it('if no files need to sync', async () => {

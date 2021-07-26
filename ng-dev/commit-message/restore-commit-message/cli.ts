@@ -21,14 +21,15 @@ export interface RestoreCommitMessageOptions {
 /** Builds the command. */
 function builder(yargs: Argv) {
   return yargs
-      .option('file-env-variable' as 'fileEnvVariable', {
-        type: 'string',
-        description: 'The key for the environment variable which holds the arguments for the\n' +
-            'prepare-commit-msg hook as described here:\n' +
-            'https://git-scm.com/docs/githooks#_prepare_commit_msg'
-      })
-      .positional('file', {type: 'string'})
-      .positional('source', {type: 'string'});
+    .option('file-env-variable' as 'fileEnvVariable', {
+      type: 'string',
+      description:
+        'The key for the environment variable which holds the arguments for the\n' +
+        'prepare-commit-msg hook as described here:\n' +
+        'https://git-scm.com/docs/githooks#_prepare_commit_msg',
+    })
+    .positional('file', {type: 'string'})
+    .positional('source', {type: 'string'});
 }
 
 /** Handles the command. */
@@ -50,8 +51,9 @@ async function handler({fileEnvVariable, file, source}: Arguments<RestoreCommitM
   }
 
   throw new Error(
-      'No file path and commit message source provide. Provide values via positional command ' +
-      'arguments, or via the --file-env-variable flag');
+    'No file path and commit message source provide. Provide values via positional command ' +
+      'arguments, or via the --file-env-variable flag',
+  );
 }
 
 /** yargs command module describing the command. */
