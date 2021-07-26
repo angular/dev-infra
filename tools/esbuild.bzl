@@ -31,7 +31,7 @@ _get_single_file = rule(
 """
 def esbuild(name, entry_point, save_to_repo = False, deps = []):
     _esbuild(
-        name = "%s_esbuild" % name,
+        name = "%s_bundle" % name,
         entry_point = entry_point,
         deps = deps,
         platform = "node",
@@ -40,7 +40,7 @@ def esbuild(name, entry_point, save_to_repo = False, deps = []):
 
     _get_single_file(
         name = name,
-        dependency = ":%s_esbuild" % name,
+        dependency = ":%s_bundle" % name,
     )
 
     if save_to_repo:

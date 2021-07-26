@@ -1,13 +1,20 @@
-load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("//tools:defaults.bzl", "pkg_npm", "ts_project")
 
-ts_library(
+ts_project(
     name = "tslint-rules",
-    srcs = glob(["*.ts"]),
-    module_name = "@angular/dev-infra-private/tslint-rules",
     visibility = ["//dev-infra:__subpackages__"],
     deps = [
+        "@npm//@types/node",
         "@npm//tslib",
         "@npm//tslint",
         "@npm//typescript",
+    ],
+)
+
+pkg_npm(
+    name = "npm_package",
+    build_package_json_from_template = True,
+    deps = [
+        ":tslint-rules",
     ],
 )
