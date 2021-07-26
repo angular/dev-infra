@@ -29,5 +29,14 @@ yarn_install(
     yarn_lock = "//:yarn.lock",
 )
 
+load("@npm//@bazel/protractor:package.bzl", "npm_bazel_protractor_dependencies")
+npm_bazel_protractor_dependencies()
+
+load("@io_bazel_rules_webtesting//web:repositories.bzl", "web_test_repositories")
+web_test_repositories()
+
+load("//bazel/browsers:browser_repositories.bzl", "browser_repositories")
+browser_repositories()
+
 load("@npm//@bazel/esbuild:esbuild_repositories.bzl", "esbuild_repositories")
 esbuild_repositories()

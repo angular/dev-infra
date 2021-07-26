@@ -1,4 +1,4 @@
-load("//dev-infra/bazel/browsers:browser_archive_repo.bzl", "browser_archive")
+load("//bazel/browsers:browser_archive_repo.bzl", "browser_archive")
 
 """
   Defines repositories for Chromium that can be used inside Karma unit tests
@@ -7,7 +7,7 @@ load("//dev-infra/bazel/browsers:browser_archive_repo.bzl", "browser_archive")
 
 def define_chromium_repositories():
     # To update to a newer version of Chromium see instructions in
-    # https://github.com/angular/angular/blob/master/dev-infra/bazel/browsers/README.md.
+    # https://github.com/angular/angular/blob/master/bazel/browsers/README.md.
 
     browser_archive(
         name = "org_chromium_chromium_amd64",

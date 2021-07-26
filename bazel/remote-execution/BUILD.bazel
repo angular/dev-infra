@@ -31,6 +31,6 @@ filegroup(
     name = "files",
     srcs = [
         "BUILD.bazel",
-        "//dev-infra/bazel/remote-execution/cpp:files",
+        "//bazel/remote-execution/cpp:files",
     ],
 )

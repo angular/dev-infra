@@ -17,7 +17,7 @@ ts_library(
     ],
     # A tsconfig needs to be specified as otherwise `ts_library` will look for the config
     # in `//:package.json` and this breaks when the BUILD file is copied to `@npm//`.
-    tsconfig = "//dev-infra:tsconfig.json",
+    tsconfig = "//:tsconfig.json",
     deps = [
         "@npm//@bazel/runfiles",
         "@npm//@microsoft/api-extractor",
