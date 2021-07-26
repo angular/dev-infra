@@ -8,6 +8,7 @@
 
 import {existsSync} from 'fs';
 import {dirname, join} from 'path';
+import {register} from 'ts-node';
 
 import {debug, error} from './console';
 import {GitClient} from './git/git-client';
@@ -114,7 +115,7 @@ function readConfigFile(configPath: string, returnEmptyObjectOnError = false): o
     // dev-infra tool runs in NodeJS which does not support ES modules by default.
     // Additionally, set the `dir` option to the directory that contains the configuration
     // file. This allows for custom compiler options (such as `--strict`).
-    require('ts-node').register({
+    register({
       dir: dirname(configPath),
       transpileOnly: true,
       compilerOptions: {module: 'commonjs'},

@@ -1,4 +1,4 @@
-load("//dev-infra:defaults.bzl", "jasmine_node_test", "ts_library")
+load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
 
 ts_library(
     name = "commit-message",
@@ -6,9 +6,9 @@ ts_library(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    visibility = ["//dev-infra:__subpackages__"],
+    visibility = ["//ng-dev:__subpackages__"],
     deps = [
-        "//dev-infra/utils",
+        "//ng-dev/utils",
         "@npm//@types/conventional-commits-parser",
         "@npm//@types/git-raw-commits",
         "@npm//@types/inquirer",
@@ -27,17 +27,15 @@ ts_library(
     srcs = glob(["**/*.spec.ts"]),
     deps = [
         ":commit-message",
-        "//dev-infra/utils",
+        "//ng-dev/utils",
         "@npm//@types/events",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
         "@npm//inquirer",
     ],
 )
 
 jasmine_node_test(
     name = "test",
-    deps = [
+    specs = [
         ":test_lib",
     ],
 )

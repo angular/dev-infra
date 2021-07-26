@@ -1,12 +1,12 @@
-load("//dev-infra:defaults.bzl", "ts_library")
+load("//tools:defaults.bzl", "ts_library")
 
 ts_library(
     name = "checkout",
     srcs = glob(["*.ts"]),
-    visibility = ["//dev-infra:__subpackages__"],
+    visibility = ["//ng-dev:__subpackages__"],
     deps = [
-        "//dev-infra/pr/common",
-        "//dev-infra/utils",
+        "//ng-dev/pr/common",
+        "//ng-dev/utils",
         "@npm//@types/yargs",
     ],
 )

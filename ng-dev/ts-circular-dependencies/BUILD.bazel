@@ -1,12 +1,13 @@
-load("//dev-infra:defaults.bzl", "ts_library")
+load("//tools:defaults.bzl", "ts_library")
 
 ts_library(
     name = "ts-circular-dependencies",
     srcs = glob(["*.ts"]),
-    visibility = ["//dev-infra:__subpackages__"],
+    visibility = ["//ng-dev:__subpackages__"],
     deps = [
-        "//dev-infra/utils",
+        "//ng-dev/utils",
         "@npm//@types/glob",
+        "@npm//glob",
         "@npm//@types/node",
         "@npm//@types/yargs",
         "@npm//chalk",

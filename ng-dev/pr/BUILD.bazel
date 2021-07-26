@@ -1,15 +1,15 @@
-load("//dev-infra:defaults.bzl", "ts_library")
+load("//tools:defaults.bzl", "ts_library")
 
 ts_library(
     name = "pr",
     srcs = ["cli.ts"],
-    visibility = ["//dev-infra:__subpackages__"],
+    visibility = ["//ng-dev:__subpackages__"],
     deps = [
-        "//dev-infra/pr/check-target-branches",
-        "//dev-infra/pr/checkout",
-        "//dev-infra/pr/discover-new-conflicts",
-        "//dev-infra/pr/merge",
-        "//dev-infra/pr/rebase",
+        "//ng-dev/pr/check-target-branches",
+        "//ng-dev/pr/checkout",
+        "//ng-dev/pr/discover-new-conflicts",
+        "//ng-dev/pr/merge",
+        "//ng-dev/pr/rebase",
         "@npm//@types/yargs",
     ],
 )
