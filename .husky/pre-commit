@@ -1,5 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-# Run prettier over the repo
-yarn pretty-quick;
+yarn -s ng-dev format staged;
