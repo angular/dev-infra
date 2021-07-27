@@ -6,12 +6,13 @@
  * https://github.com/microsoft/vscode-github-triage-actions/blob/eb561150d9bfab77954cfda7ffef149c07e0e079/api/octokit.ts
  */
 
-import { Octokit, RestEndpointMethodTypes } from '@octokit/rest';
-import { Comment, GitHubAPI, GitHubIssueAPI, Issue, Query } from './api';
-import { log } from './log';
+import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
+import {Comment, GitHubAPI, GitHubIssueAPI, Issue, Query} from './api';
+import {log} from './log';
 
 type IssuesGetResponse = RestEndpointMethodTypes['issues']['get']['response']['data'];
-type SearchIssuesAndPullRequestsResponseItemsItem = RestEndpointMethodTypes['search']['issuesAndPullRequests']['response']['data']['items'][0];
+type SearchIssuesAndPullRequestsResponseItemsItem =
+  RestEndpointMethodTypes['search']['issuesAndPullRequests']['response']['data']['items'][0];
 
 export class OctoKit implements GitHubAPI {
   private _octokit: Octokit;
@@ -29,10 +30,10 @@ export class OctoKit implements GitHubAPI {
 
   constructor(
     protected token: string,
-    protected params: { repo: string; owner: string },
-    protected options: { readonly: boolean } = { readonly: false },
+    protected params: {repo: string; owner: string},
+    protected options: {readonly: boolean} = {readonly: false},
   ) {
-    this._octokit = new Octokit({ token });
+    this._octokit = new Octokit({token});
   }
 
   async *query(query: Query): AsyncIterableIterator<GitHubIssueAPI> {
@@ -56,13 +57,13 @@ export class OctoKit implements GitHubAPI {
       per_page: 100,
       // To access reactions we need a specific media type we specify via the accept header
       // https://docs.github.com/en/rest/reference/repos#list-commit-comments-for-a-repository-preview-notices
-      headers: { Accept: 'application/vnd.github.squirrel-girl-preview+json' },
+      headers: {Accept: 'application/vnd.github.squirrel-girl-preview+json'},
     });
 
     for await (const pageResponse of response) {
       await timeout();
       const page = pageResponse.data;
-      log(`Page ${++pageNum}: ${page.map(({ number }) => number).join(' ')}`);
+      log(`Page ${++pageNum}: ${page.map(({number}) => number).join(' ')}`);
       for (const issue of page) {
         yield new OctoKitIssue(
           this.token,
@@ -97,11 +98,11 @@ export class OctoKit implements GitHubAPI {
     issue: IssuesGetResponse | SearchIssuesAndPullRequestsResponseItemsItem,
   ): Issue {
     return {
-      author: { name: issue.user!.login, isGitHubApp: issue.user!.type === 'Bot' },
+      author: {name: issue.user!.login, isGitHubApp: issue.user!.type === 'Bot'},
       body: issue.body || '',
       number: issue.number,
       title: issue.title,
-      labels: issue.labels.map(label => (typeof label === 'string' ? label : label.name!)),
+      labels: issue.labels.map((label) => (typeof label === 'string' ? label : label.name!)),
       open: issue.state === 'open',
       locked: issue.locked,
       numComments: issue.comments,
@@ -115,7 +116,7 @@ export class OctoKit implements GitHubAPI {
 
   async repoHasLabel(name: string): Promise<boolean> {
     try {
-      await this.octokit.issues.getLabel({ ...this.params, name });
+      await this.octokit.issues.getLabel({...this.params, name});
       return true;
     } catch (err) {
       if (err.status === 404) {
@@ -129,9 +130,9 @@ export class OctoKit implements GitHubAPI {
 export class OctoKitIssue extends OctoKit implements GitHubIssueAPI {
   constructor(
     token: string,
-    params: { repo: string; owner: string },
-    private issueData: { number: number } | Issue,
-    options: { readonly: boolean } = { readonly: false },
+    params: {repo: string; owner: string},
+    private issueData: {number: number} | Issue,
+    options: {readonly: boolean} = {readonly: false},
   ) {
     super(token, params, options);
     log(`Running bot on issue #${issueData.number}`);
@@ -160,7 +161,7 @@ export class OctoKitIssue extends OctoKit implements GitHubIssueAPI {
         issue_number: this.issueData.number,
         // To access reactions we need a specific media type
         // https://docs.github.com/en/rest/reference/repos#list-commit-comments-for-a-repository-preview-notices
-        mediaType: { previews: ['squirrel-girl'] },
+        mediaType: {previews: ['squirrel-girl']},
       })
     ).data;
     return (this.issueData = this.octokitIssueToIssue(issue));
@@ -193,13 +194,13 @@ export class OctoKitIssue extends OctoKit implements GitHubIssueAPI {
       ...this.params,
       issue_number: this.issueData.number,
       per_page: 100,
-      ...(last ? { per_page: 1, page: (await this.get()).numComments } : {}),
+      ...(last ? {per_page: 1, page: (await this.get()).numComments} : {}),
     });
 
     for await (const page of response) {
       for (const comment of page.data) {
         yield {
-          author: { name: comment.user!.login, isGitHubApp: comment.user!.type === 'Bot' },
+          author: {name: comment.user!.login, isGitHubApp: comment.user!.type === 'Bot'},
           body: comment.body || '',
           id: comment.id,
           timestamp: +new Date(comment.created_at),

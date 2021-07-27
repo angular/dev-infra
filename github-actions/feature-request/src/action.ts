@@ -1,5 +1,5 @@
-import { GitHubAPI, GitHubIssueAPI, MarkedComment, Issue } from './api';
-import { log } from './log';
+import {GitHubAPI, GitHubIssueAPI, MarkedComment, Issue} from './api';
+import {log} from './log';
 
 /**
  * CommentMarkers are used to distinguish individual comments
@@ -213,7 +213,7 @@ const daysSince = (date: number) => Math.ceil((Date.now() - date) / (1000 * 60 *
  * @param githubIssue an object we can use to get the comments for a particular issue.
  */
 const getTimestamps = async (githubIssue: GitHubIssueAPI) => {
-  const timestamps: { warn: number | null; start: number | null } = {
+  const timestamps: {warn: number | null; start: number | null} = {
     start: null,
     warn: null,
   };

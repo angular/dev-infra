@@ -1,4 +1,4 @@
-import { GitHubAPI, GitHubIssueAPI, Issue, Comment, Query, User } from './api';
+import {GitHubAPI, GitHubIssueAPI, Issue, Comment, Query, User} from './api';
 
 export class APIMock implements GitHubAPI {
   constructor(public issues: IssueAPIMock[], public orgMembers: OrgMembers) {}
@@ -32,7 +32,7 @@ export class APIMock implements GitHubAPI {
   }
 }
 
-type OrgMembers = { [org: string]: string[] };
+type OrgMembers = {[org: string]: string[]};
 
 export class IssueAPIMock implements GitHubIssueAPI, Issue {
   labels: string[] = [];

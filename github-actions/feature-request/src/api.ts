@@ -6,7 +6,7 @@
  * individual comments.
  */
 export interface GitHubAPI {
-  query(query: Query): AsyncIterableIterator<GitHubIssueAPI>
+  query(query: Query): AsyncIterableIterator<GitHubIssueAPI>;
   isOrgMember(user: string, org: string): Promise<boolean>;
 }
 
@@ -24,15 +24,15 @@ export type MarkedComment = string & {
  * Class which allows us to perform actions over GitHub comments.
  */
 export interface GitHubIssueAPI {
-  get(): Promise<Issue>
+  get(): Promise<Issue>;
 
-  postComment(body: MarkedComment): Promise<void>
-  getComments(last?: boolean): AsyncIterableIterator<Comment>
+  postComment(body: MarkedComment): Promise<void>;
+  getComments(last?: boolean): AsyncIterableIterator<Comment>;
 
-  close(): Promise<void>
+  close(): Promise<void>;
 
-  addLabel(label: string): Promise<void>
-  removeLabel(label: string): Promise<void>
+  addLabel(label: string): Promise<void>;
+  removeLabel(label: string): Promise<void>;
 }
 
 /**
@@ -65,7 +65,6 @@ export interface Query {
   order?: SortOrder;
 }
 
-
 /**
  * Type which contains the types of reaction a comment may contain. We're
  * primarily interested in the +1 reaction to determine the community demand
@@ -80,7 +79,7 @@ export type Reactions = {
   heart: number;
   rocket: number;
   eyes: number;
-}
+};
 
 /**
  * Represents a GitHub user or a comment author.
