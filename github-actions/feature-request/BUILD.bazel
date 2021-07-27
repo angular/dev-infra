@@ -1,5 +1,4 @@
-load("//tools:esbuild.bzl", "esbuild")
-load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
+load("//tools:defaults.bzl", "jasmine_node_test", "ts_library", "esbuild")
 
 package(default_visibility = ["//github-actions/feature-request:__subpackages__"])
 
