@@ -1,4 +1,5 @@
 {
+  "name": "@angular/dev-infra-private",
   "private": true,
   "scripts": {
     "prepare": "husky install"
@@ -6,10 +7,6 @@
   "dependencies": {
     "@actions/core": "^1.4.0",
     "@actions/github": "^5.0.0",
-    "@octokit/rest": "^18.7.0",
-    "github-app-installation-token": "^1.1.0"
-  },
-  "devDependencies": {
     "@angular-devkit/build-optimizer": "^0.1201.3",
     "@angular/benchpress": "0.2.1",
     "@bazel/bazelisk": "^1.10.1",
@@ -20,11 +17,12 @@
     "@bazel/runfiles": "4.0.0-beta.0",
     "@bazel/typescript": "4.0.0-beta.0",
     "@microsoft/api-extractor": "7.18.4",
-    "@octokit/graphql": "^4.6.1",
-    "@octokit/types": "^6.16.6",
     "@octokit/core": "^3.5.1",
-    "@octokit/plugin-rest-endpoint-methods": "^5.3.3",
+    "@octokit/graphql": "^4.6.1",
     "@octokit/plugin-paginate-rest": "^2.13.5",
+    "@octokit/plugin-rest-endpoint-methods": "^5.3.3",
+    "@octokit/rest": "^18.7.0",
+    "@octokit/types": "^6.16.6",
     "@types/chalk": "^2.2.0",
     "@types/cli-progress": "^3.9.1",
     "@types/conventional-commits-parser": "^3.0.1",
@@ -48,6 +46,7 @@
     "conventional-commits-parser": "^3.2.1",
     "ejs": "^3.1.6",
     "git-raw-commits": "^2.0.10",
+    "github-app-installation-token": "^1.1.0",
     "glob": "7.1.7",
     "husky": "^7.0.1",
     "inquirer": "^8.0.0",

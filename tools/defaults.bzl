@@ -1,8 +1,7 @@
 load("@npm//@bazel/jasmine:index.bzl", _jasmine_node_test = "jasmine_node_test")
 load("@npm//@bazel/typescript:index.bzl", _ts_library = "ts_library", _ts_project = "ts_project")
 load("@npm//@bazel/esbuild:index.bzl", _esbuild = "esbuild")
-load("@build_bazel_rules_nodejs//:index.bzl", "generated_file_test")
-load("@build_bazel_rules_nodejs//:index.bzl", _pkg_npm = "pkg_npm")
+load("@build_bazel_rules_nodejs//:index.bzl", "generated_file_test", _pkg_npm = "pkg_npm")
 
 def jasmine_node_test(name, specs = [], **kwargs):
     _jasmine_node_test(
@@ -15,11 +14,11 @@ def jasmine_node_test(name, specs = [], **kwargs):
 
 def ts_project(**kwargs):
     _ts_project(
-        tsconfig = "//tools:tsconfig",
+        tsconfig = "//:tsconfig",
         **kwargs
     )
 
-def ts_library(name, testonly = False, deps = [], **kwargs):
+def ts_library(name, testonly = False, deps = [], srcs = [], **kwargs):
     deps = deps + ["@npm//tslib"]
     if testonly:
         deps.append("@npm//@types/jasmine")
@@ -31,18 +30,26 @@ def ts_library(name, testonly = False, deps = [], **kwargs):
         devmode_target = "es2020",
         prodmode_module = "commonjs",
         prodmode_target = "es2020",
-        tsconfig = kwargs.pop("tsconfig", "//tools:tsconfig"),
+        tsconfig = kwargs.pop("tsconfig", "//:tsconfig"),
         testonly = testonly,
         deps = deps,
+        srcs = srcs,
         module_name = kwargs.pop("module_name", native.package_name()),
         **kwargs
     )
 
-def esbuild(name, entry_point, minify = True, sourcemap = "inline",
-            save_to_repo = False, deps = []):
+def esbuild(
+        name,
+        entry_point,
+        minify = True,
+        sourcemap = "inline",
+        save_to_repo = False,
+        external = [],
+        deps = []):
     _esbuild(
         name = "%s_generated" % name,
         entry_point = entry_point,
+        external = external,
         deps = deps,
         platform = "node",
         target = "node12",
