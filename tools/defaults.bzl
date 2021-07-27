@@ -4,17 +4,10 @@ load("@npm//@bazel/esbuild:index.bzl", _esbuild = "esbuild")
 load("@build_bazel_rules_nodejs//:index.bzl", "generated_file_test")
 
 def jasmine_node_test(name, specs = [], **kwargs):
-    native.filegroup(
-        name = "%s_js_files",
-        srcs = specs,
-        testonly = True,
-        output_group = "es5_sources",
-    )
-
     _jasmine_node_test(
         name = name,
-        srcs = kwargs.pop("srcs", []) + ["%s_js_files"],
-        deps = kwargs.pop("deps", []) + specs,
+        srcs = kwargs.pop("srcs", []) + specs,
+        deps = kwargs.pop("deps", []),
         use_direct_specs = True,
         **kwargs
     )
