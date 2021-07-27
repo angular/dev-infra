@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
-import { context } from '@actions/github';
-import { Octokit } from '@octokit/rest';
-const { getToken } = require('github-app-installation-token');
+import {context} from '@actions/github';
+import {Octokit} from '@octokit/rest';
+const {getToken} = require('github-app-installation-token');
 
 async function lockIssue(client: Octokit, issue: number, message: string): Promise<void> {
   await client.issues.createComment({
@@ -44,13 +44,13 @@ async function run(): Promise<void> {
     const installationId = 1772826;
 
     // Create JWT Token with provided private key.
-    const privateKey = core.getInput('lock-bot-key', { required: true });
+    const privateKey = core.getInput('lock-bot-key', {required: true});
 
     // A short lived github token for the Angular Lock Bot
-    const { token } = await getToken({ installationId, appId, privateKey });
+    const {token} = await getToken({installationId, appId, privateKey});
 
     // Create authenticated Github client.
-    const client = new Octokit({ auth: token });
+    const client = new Octokit({auth: token});
 
     const maxPerExecution = Math.min(+core.getInput('locks-per-execution') || 1, 100);
     // Set the threshold date based on the days inactive
