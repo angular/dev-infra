@@ -28,3 +28,8 @@ yarn-error.log
 # Bazel generated directories
 /dist/
 /bazel-out
+
+# Ignore ng-dev logs and user-config
+.ng-dev.err*
+.ng-dev.log
+.ng-dev.user*
