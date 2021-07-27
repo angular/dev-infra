@@ -1,14 +1,1 @@
-load("@npm//@bazel/typescript:index.bzl", "ts_config")
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
-
-package(default_visibility = ["//visibility:public"])
-
-ts_config(
-    name = "tsconfig",
-    src = "//:tsconfig.json",
-)
-
-nodejs_binary(
-    name = "inline-package-json-deps",
-    entry_point = "//tools:inline-package-json-deps.js",
-)
+# This BUILD.bazel file needs to exist to allow for //tools to be considered a package.

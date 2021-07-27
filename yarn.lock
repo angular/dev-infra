@@ -215,11 +215,6 @@
     "@octokit/types" "^6.0.3"
     universal-user-agent "^6.0.0"
 
-"@octokit/openapi-types@^9.1.0":
-  version "9.1.0"
-  resolved "https://registry.yarnpkg.com/@octokit/openapi-types/-/openapi-types-9.1.0.tgz#7f73adbde8ba2d2512de90ea8a5da68b25d65d0a"
-  integrity sha512-XBP03pG4XuTU+VgeJM1ozRdmZJerMG4tk6wA+raFKycC4qV9jtD2UQroAg9bAcmI3Q0zWvifeDGtPqsFjMzkLg==
-
 "@octokit/openapi-types@^9.1.1":
   version "9.1.1"
   resolved "https://registry.yarnpkg.com/@octokit/openapi-types/-/openapi-types-9.1.1.tgz#fb87f2e2f44b95a5720d61dee409a9f1fbc59217"
@@ -245,15 +240,7 @@
     "@octokit/types" "^6.1.0"
     deprecation "^2.3.1"
 
-"@octokit/plugin-rest-endpoint-methods@5.5.0", "@octokit/plugin-rest-endpoint-methods@^5.1.1":
-  version "5.5.0"
-  resolved "https://registry.yarnpkg.com/@octokit/plugin-rest-endpoint-methods/-/plugin-rest-endpoint-methods-5.5.0.tgz#28f94a089029dffb8589447366eca5c441bb8d34"
-  integrity sha512-v4dNoHF8cXNx7C67yQx7oarHs5Wg2IiafWvp/ULkNcCOuXgQdBOkJtwidpYqPiRPUw4uHDkI6Tgfje+nXB+Deg==
-  dependencies:
-    "@octokit/types" "^6.21.0"
-    deprecation "^2.3.1"
-
-"@octokit/plugin-rest-endpoint-methods@^5.3.3":
+"@octokit/plugin-rest-endpoint-methods@5.5.1", "@octokit/plugin-rest-endpoint-methods@^5.1.1", "@octokit/plugin-rest-endpoint-methods@^5.3.3":
   version "5.5.1"
   resolved "https://registry.yarnpkg.com/@octokit/plugin-rest-endpoint-methods/-/plugin-rest-endpoint-methods-5.5.1.tgz#31cce8fc3eda4d186bd90828cb7a2203ad95e3d1"
   integrity sha512-Al57+OZmO65JpiPk4JS6u6kQ2y9qjoZtY1IWiSshc4N+F7EcrK8Rgy/cUJBB4WIcSFUQyF66EJQK1oKgXWeRNw==
@@ -293,14 +280,14 @@
     "@octokit/plugin-rest-endpoint-methods" "4.4.1"
 
 "@octokit/rest@^18.7.0":
-  version "18.7.0"
-  resolved "https://registry.yarnpkg.com/@octokit/rest/-/rest-18.7.0.tgz#3a0f6498a9495f3ecede582ab15efe38b298fac8"
-  integrity sha512-8K8BJFyPFRSfnwu+aSbdjU5w3EtxC33PkDlEi5tyVTYC+t4n7gaqygRg5ajJLCpb/ZzVaXXFJXC9OxQ9TvFRAw==
+  version "18.7.1"
+  resolved "https://registry.yarnpkg.com/@octokit/rest/-/rest-18.7.1.tgz#575ecf8b881b79540daa28b0fa3a2b3ae8ef2649"
+  integrity sha512-790Yv8Xpbqs3BtnMAO5hlOftVICHPdgZ/3qlTmeOoqrQGzT25BIpHkg/KKMeKG9Fg8d598PLxGhf80RswElv9g==
   dependencies:
     "@octokit/core" "^3.5.0"
     "@octokit/plugin-paginate-rest" "^2.6.2"
     "@octokit/plugin-request-log" "^1.0.2"
-    "@octokit/plugin-rest-endpoint-methods" "5.5.0"
+    "@octokit/plugin-rest-endpoint-methods" "5.5.1"
 
 "@octokit/types@^5.0.0":
   version "5.5.0"
@@ -309,14 +296,7 @@
   dependencies:
     "@types/node" ">= 8"
 
-"@octokit/types@^6.0.3", "@octokit/types@^6.1.0", "@octokit/types@^6.16.1", "@octokit/types@^6.18.0", "@octokit/types@^6.21.0":
-  version "6.21.0"
-  resolved "https://registry.yarnpkg.com/@octokit/types/-/types-6.21.0.tgz#723d0296d35296d6ec91247e770f24e6cd51d4ee"
-  integrity sha512-VPSxn9uhCoOUMpxCsOAQhf8DgIx+uzFjZRYDiZS5+TvrKaEwBrWkjr/5NmUVvPbW6xdPC2n3yL3XCnoxa4rxvg==
-  dependencies:
-    "@octokit/openapi-types" "^9.1.0"
-
-"@octokit/types@^6.16.6", "@octokit/types@^6.21.1":
+"@octokit/types@^6.0.3", "@octokit/types@^6.1.0", "@octokit/types@^6.16.1", "@octokit/types@^6.16.6", "@octokit/types@^6.18.0", "@octokit/types@^6.21.1":
   version "6.21.1"
   resolved "https://registry.yarnpkg.com/@octokit/types/-/types-6.21.1.tgz#d0f2b7598c88e13d0bd87e330d975e3fb2a90180"
   integrity sha512-PP+m3T5EWZKawru4zi/FvX8KL2vkO5f1fLthx78/7743p7RtJUevt3z7698k+7oAYRA7YuVqfXthSEHqkDvZ8g==
@@ -558,9 +538,9 @@
     form-data "^3.0.0"
 
 "@types/node@*", "@types/node@>= 8":
-  version "16.4.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.4.1.tgz#9fad171a5b701613ee8a6f4ece3c88b1034b1b03"
-  integrity sha512-UW7cbLqf/Wu5XH2RKKY1cHwUNLicIDRLMraYKz+HHAerJ0ZffUEk+fMnd8qU2JaS6cAy0r8tsaf7yqHASf/Y0Q==
+  version "16.4.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.4.3.tgz#c01c1a215721f6dec71b47d88b4687463601ba48"
+  integrity sha512-GKM4FLMkWDc0sfx7tXqPWkM6NBow1kge0fgQh0bOnlqo4iT1kvTvMEKE0c1RtUGnbLlGRXiAA8SumE//90uKAg==
 
 "@types/node@10.17.13":
   version "10.17.13"
@@ -573,9 +553,9 @@
   integrity sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw==
 
 "@types/node@^14.17.0":
-  version "14.17.5"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.17.5.tgz#b59daf6a7ffa461b5648456ca59050ba8e40ed54"
-  integrity sha512-bjqH2cX/O33jXT/UmReo2pM7DIJREPMnarixbQ57DOOzzFaI6D2+IcwaJQaJpv0M1E9TIhPCYVxrkcityLjlqA==
+  version "14.17.6"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.17.6.tgz#cc61c8361c89e70c468cda464d1fa3dd7e5ebd62"
+  integrity sha512-iBxsxU7eswQDGhlr3AiamBxOssaYxbM+NKXVil8jg9yFXvrfEFbDumLD/2dMTB+zYyg7w+Xjt8yuxfdbUHAtcQ==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
@@ -2089,17 +2069,17 @@ merge-stream@^2.0.0:
   resolved "https://registry.yarnpkg.com/merge-stream/-/merge-stream-2.0.0.tgz#52823629a14dd00c9770fb6ad47dc6310f2c1f60"
   integrity sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==
 
-mime-db@1.48.0:
-  version "1.48.0"
-  resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.48.0.tgz#e35b31045dd7eada3aaad537ed88a33afbef2d1d"
-  integrity sha512-FM3QwxV+TnZYQ2aRqhlKBMHxk10lTbMt3bBkMAp54ddrNeVSfcQYOOKuGuy3Ddrm38I04If834fOUSq1yzslJQ==
+mime-db@1.49.0:
+  version "1.49.0"
+  resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.49.0.tgz#f3dfde60c99e9cf3bc9701d687778f537001cbed"
+  integrity sha512-CIc8j9URtOVApSFCQIF+VBkX1RwXp/oMMOrqdyXSBXq5RWNEsRfyj1kiRnQgmNXmHxPoFIxOroKA3zcU9P+nAA==
 
 mime-types@^2.1.12, mime-types@~2.1.19:
-  version "2.1.31"
-  resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.31.tgz#a00d76b74317c61f9c2db2218b8e9f8e9c5c9e6b"
-  integrity sha512-XGZnNzm3QvgKxa8dpzyhFTHmpP3l5YNusmne07VUOXxou9CqUqYa/HBy124RqtVh/O2pECas/MOcsDgpilPOPg==
+  version "2.1.32"
+  resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.32.tgz#1d00e89e7de7fe02008db61001d9e02852670fd5"
+  integrity sha512-hJGaVS4G4c9TSMYh2n6SQAGrC4RnfU+daP8G7cSCmaqNjiOoUY0VHCMS42pxnQmVF1GWwFhbHWn3RIxCqTmZ9A==
   dependencies:
-    mime-db "1.48.0"
+    mime-db "1.49.0"
 
 mimic-fn@^2.1.0:
   version "2.1.0"

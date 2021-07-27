@@ -1,6 +1,35 @@
-package(default_visibility = ["//visibility:public"])
+load("//tools:defaults.bzl", "pkg_npm")
+load("@npm//@bazel/typescript:index.bzl", "ts_config")
+
+ts_config(
+    name = "tsconfig",
+    src = "tsconfig.json",
+    visibility = ["//visibility:public"],
+)
 
 exports_files([
-    "package.json",
     "tsconfig.json",
 ])
+
+package_group(
+    name = "npm",
+    packages = [
+        "//",
+    ],
+)
+
+pkg_npm(
+    name = "npm_package",
+    package_name = "@angular/dev-infra-private",
+    srcs = [
+        "package.json",
+        ":index.bzl",
+        "//bazel:npm_files",
+        "//ng-dev:npm_files",
+    ],
+    deps = [
+        "//bazel:lib",
+        "//ng-dev:lib",
+        "//tslint-rules:lib",
+    ],
+)
