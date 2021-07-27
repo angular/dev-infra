@@ -1,0 +1,117 @@
+# Configuration file for https://circleci.com/gh/angular/dev-infra
+
+version: 2.1
+
+# **Note**: When updating the beginning of the cache key, also update the cache key to match
+# the new cache key prefix. This allows us to take advantage of CircleCI's fallback caching.
+# Read more here: https://circleci.com/docs/2.0/caching/#restoring-cache.
+var_1: &cache_key v1-{{ checksum ".bazelversion" }}-{{ checksum "WORKSPACE" }}-{{ checksum "yarn.lock" }}
+# We want to invalidate the cache if the postinstall patches change. In order to apply new
+# patches, a clean version of the node modules is needed. Additionally, we invalidate the cache
+# if the Bazel version changes. We do this because otherwise the `bazelisk` cache folder will
+# contain all previously used versions and ultimately cause the cache restoring to be slower.
+var_2: &cache_fallback_key v1-{{ checksum ".bazelversion" }}-
+
+var_3: &gcp_decrypt_token "angular"
+
+var_4: &restore_cache
+  restore_cache:
+    keys:
+      - *cache_key
+      - *cache_fallback_key
+
+var_5: &save_cache
+  save_cache:
+    key: *cache_key
+    paths:
+      - "node_modules"
+      - "~/.cache/bazelisk"
+      - "~/bazel_repository_cache"
+
+# Executor Definitions
+# https://circleci.com/docs/2.0/reusing-config/#authoring-reusable-executors
+executors:
+  default-executor:
+    parameters:
+      resource_class:
+        type: string
+        default: medium
+    environment:
+      GCP_DECRYPT_TOKEN: *gcp_decrypt_token
+    docker:
+      - image: circleci/node:14.16.1@sha256:951e12268fe692615bfd155c327bd910e10c99db98404badd03879f984c32b31
+    resource_class: << parameters.resource_class >>
+    working_directory: ~/ng
+
+# Command Definitions
+# https://circleci.com/docs/2.0/reusing-config/#authoring-reusable-commands
+commands:
+  custom_attach_workspace:
+    description: Attach workspace at a predefined location
+    steps:
+      - attach_workspace:
+          at: ~/
+
+  setup_bazel_config:
+    description: "Setting up Bazel configuration for CI"
+    steps:
+      - run: echo "import %workspace%/.circleci/bazel.rc" >> ./.bazelrc
+      - run: ./.circleci/setup-bazel.sh
+
+  checkout_and_rebase:
+    description: Checkout and rebase the repository
+    steps:
+      - checkout
+      # After checkout, rebase on top of target branch.
+      - run:
+          name: Rebase PR on target branch
+          environment:
+            CIRCLE_GIT_BASE_REVISION: << pipeline.git.base_revision >>
+            CIRCLE_GIT_REVISION: << pipeline.git.revision >>
+          command: |
+            if [ -n "$CIRCLE_PR_NUMBER" ]; then
+              # User is required for rebase.
+              git config user.name "angular-ci"
+              git config user.email "angular-ci"
+              node .circleci/rebase-pr.js
+            fi
+
+# Job definitions
+# Jobs can include parameters that are passed in the workflow job invocation.
+# https://circleci.com/docs/2.0/reusing-config/#authoring-parameterized-jobs
+jobs:
+  test:
+    executor: default-executor
+    steps:
+      - checkout_and_rebase
+      - *restore_cache
+      - setup_bazel_config
+      - run:
+          name: yarn install
+          command: yarn install --frozen-lockfile --non-interactive
+          no_output_timeout: 2m
+      - run:
+          name: Run bazel tests
+          command: yarn bazel test //...
+      - *save_cache
+
+  lint:
+    executor: default-executor
+    steps:
+      - checkout_and_rebase
+      - *restore_cache
+      - setup_bazel_config
+      - run:
+          name: yarn install
+          command: yarn install --frozen-lockfile --non-interactive
+          no_output_timeout: 45m
+      - run:
+          name: Check code format
+          command: yarn ng-dev format changed --check << pipeline.git.base_revision >>
+
+workflows:
+  version: 2
+  default_workflow:
+    jobs:
+      - test
+      - lint
