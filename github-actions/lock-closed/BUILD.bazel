@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "ts_library", "esbuild")
+load("//tools:defaults.bzl", "esbuild", "ts_library")
 
 package(default_visibility = ["//github-actions/feature-request:__subpackages__"])
 
