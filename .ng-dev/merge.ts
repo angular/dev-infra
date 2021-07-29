@@ -10,8 +10,8 @@ export const merge: DevInfraMergeConfig['merge'] = async (api) => {
     commitMessageFixupLabel: 'needs commit fixup',
     labels: [
       {
-        // Since only one branch is merged into for the repository, all patterns are matching.
-        pattern: /.*/,
+        // Since only one branch is merged into for the repository, we use our merge label as a marker.
+        pattern: 'action: merge',
         branches: ['master'],
       },
     ],
