@@ -7,4 +7,4 @@ yarn ng-dev pr merge <pr number>
 
 PRs should be reviewed by at least one other member of the dev-infra team before merging.
 
-Any members of the dev-infra team is able to merge "merge ready" PRs as needed.
+Any member of the dev-infra team is able to merge "merge ready" PRs as needed.
