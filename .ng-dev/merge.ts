@@ -12,7 +12,7 @@ export const merge: DevInfraMergeConfig['merge'] = async (api) => {
       {
         // Since only one branch is merged into for the repository, we use our merge label as a marker.
         pattern: 'action: merge',
-        branches: ['master'],
+        branches: ['main'],
       },
     ],
   };
