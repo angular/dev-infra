@@ -14,7 +14,7 @@ The process of updating the Chrome or Firefox version is not straightforward, bu
 
 ## Updating Chromium
 
-1. Run `yarn ts-node dev-infra/bazel/browsers/chromium/find-stable-revision-for-all-platforms.ts`
+1. Run `yarn ts-node bazel/browsers/chromium/find-stable-revision-for-all-platforms.ts`
 
 2. Inspect the console output which looks like the followed:
 
@@ -129,7 +129,7 @@ In the same file, you can also update the version of gecko driver (the WebDriver
    `dev-infra-mirror` cloud storage bucket (which serves as a fallback mirror to help with reducing flakiness).
 
    Note: The `dev-infra-mirror` bucket is part of the team-internal `internal-200822` GCP instance. If you do not
-   have permission to update, please contact a member of the Angular dev-infra team
+   have permission to update, please contact a member of the Angular dev-infra team.
 
 2. Update the permissions for all uploaded artifacts so that they can be accessed publicly. This can be
    done by clicking on an uploaded file, then going to `Edit Permissions`. Within the permission dialog

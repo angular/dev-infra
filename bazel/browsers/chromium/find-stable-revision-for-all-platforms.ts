@@ -74,9 +74,9 @@ if (require.main === module) {
  */
 async function main(explicitStartRevision: number | null): Promise<void> {
   const availableRevision =
-    explicitStartRevision !== null
-      ? await findClosestAscendingRevisionForAllPlatforms(explicitStartRevision)
-      : await findClosestStableRevisionForAllPlatforms();
+    explicitStartRevision === null
+      ? await findClosestStableRevisionForAllPlatforms()
+      : await findClosestAscendingRevisionForAllPlatforms(explicitStartRevision);
 
   if (availableRevision === null) {
     console.error('Could not find a revision for which builds are available for all platforms.');
@@ -101,15 +101,12 @@ async function main(explicitStartRevision: number | null): Promise<void> {
     );
     console.info(
       ' '.repeat(15),
-      await getSha256ChecksumForPlatform(availableRevision, platform, 'browser'),
+      getSha256ChecksumForPlatform(availableRevision, platform, 'browser'),
     );
-    console.info(
-      ' '.repeat(10),
-      await getRevisionArchiveUrl(availableRevision, platform, 'driver'),
-    );
+    console.info(' '.repeat(10), getRevisionArchiveUrl(availableRevision, platform, 'driver'));
     console.info(
       ' '.repeat(15),
-      await getSha256ChecksumForPlatform(availableRevision, platform, 'driver'),
+      getSha256ChecksumForPlatform(availableRevision, platform, 'driver'),
     );
     console.info();
   }
