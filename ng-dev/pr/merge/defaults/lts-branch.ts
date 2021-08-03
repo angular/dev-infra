@@ -14,7 +14,7 @@ import {
   fetchProjectNpmPackageInfo,
   getLtsNpmDistTagOfMajor,
   getVersionOfBranch,
-  GithubRepoWithApi,
+  ReleaseRepoWithApi,
 } from '../../../release/versioning';
 import {promptConfirm, red, warn, yellow} from '../../../utils/console';
 import {InvalidTargetBranchError} from '../target-label';
@@ -28,7 +28,7 @@ import {InvalidTargetBranchError} from '../target-label';
  * @param branchName Branch that is checked to be an active LTS version-branch.
  * */
 export async function assertActiveLtsBranch(
-  repo: GithubRepoWithApi,
+  repo: ReleaseRepoWithApi,
   releaseConfig: ReleaseConfig,
   branchName: string,
 ) {

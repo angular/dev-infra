@@ -57,7 +57,7 @@ export interface ReleaseActionConstructor<T extends ReleaseAction = ReleaseActio
 /**
  * Abstract base class for a release action. A release action is selectable by the caretaker
  * if active, and can perform changes for releasing, such as staging a release, bumping the
- * version, cherry-picking the changelog, branching off from master. etc.
+ * version, cherry-picking the changelog, branching off from the main branch. etc.
  */
 export abstract class ReleaseAction {
   /** Whether the release action is currently active. */

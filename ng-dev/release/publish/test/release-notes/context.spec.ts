@@ -15,6 +15,7 @@ const defaultContextData: RenderContextData = {
   github: {
     name: 'repoName',
     owner: 'repoOwner',
+    mainBranchName: 'master',
   },
   title: false,
   version: '1.2.3',

@@ -7,7 +7,12 @@
  */
 
 import fetch from 'node-fetch';
-import {fetchActiveReleaseTrains, ReleaseTrain} from '../../release/versioning/index';
+import {
+  fetchActiveReleaseTrains,
+  getNextBranchName,
+  ReleaseRepoWithApi,
+  ReleaseTrain,
+} from '../../release/versioning/index';
 
 import {bold, debug, info} from '../../utils/console';
 import {BaseModule} from './base';
@@ -25,8 +30,13 @@ type CiData = {
 
 export class CiModule extends BaseModule<CiData> {
   override async retrieveData() {
-    const gitRepoWithApi = {api: this.git.github, ...this.git.remoteConfig};
-    const releaseTrains = await fetchActiveReleaseTrains(gitRepoWithApi);
+    const nextBranchName = getNextBranchName(this.config.github);
+    const repo: ReleaseRepoWithApi = {
+      api: this.git.github,
+      ...this.git.remoteConfig,
+      nextBranchName,
+    };
+    const releaseTrains = await fetchActiveReleaseTrains(repo);
 
     const ciResultPromises = Object.entries(releaseTrains).map(
       async ([trainName, train]: [string, ReleaseTrain | null]) => {

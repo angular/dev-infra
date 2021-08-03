@@ -29,7 +29,7 @@ describe('default target labels', () => {
 
   beforeEach(() => {
     api = new GithubClient();
-    githubConfig = {owner: 'angular', name: 'dev-infra-test'};
+    githubConfig = {owner: 'angular', name: 'dev-infra-test', mainBranchName: 'master'};
     releaseConfig = {
       npmPackages: ['@angular/dev-infra-test-pkg'],
       buildPackages: async () => [],

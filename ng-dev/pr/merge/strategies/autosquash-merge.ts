@@ -93,11 +93,11 @@ export class AutosquashMergeStrategy extends MergeStrategy {
 
     this.pushTargetBranchesUpstream(targetBranches);
 
-    // For PRs which do not target the `master` branch on Github, Github does not automatically
-    // close the PR when its commit is pushed into the repository.  To ensure these PRs are
+    // For PRs which do not target the `main` branch on Github, Github does not automatically
+    // close the PR when its commit is pushed into the repository. To ensure these PRs are
     // correctly marked as closed, we must detect this situation and close the PR via the API after
     // the upstream pushes are completed.
-    if (githubTargetBranch !== 'master') {
+    if (githubTargetBranch !== this.git.mainBranchName) {
       /** The local branch name of the github targeted branch. */
       const localBranch = this.getLocalTargetBranchName(githubTargetBranch);
       /** The SHA of the commit pushed to github which represents closing the PR. */
