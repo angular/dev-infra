@@ -19,6 +19,7 @@ import {TargetLabel} from '../config';
 import {getBranchesFromTargetLabel, getTargetLabelFromPullRequest} from '../target-label';
 
 import {getDefaultTargetLabelConfiguration} from './index';
+import {fakeGithubPaginationResponse} from '../../../utils/testing/github-interception';
 
 const API_ENDPOINT = `https://api.github.com`;
 
@@ -97,30 +98,10 @@ describe('default target labels', () => {
    * https://docs.github.com/en/rest/reference/repos#list-branches.
    */
   function interceptBranchesListRequestWithPagination(branches: string[]) {
-    const apiUrl = getRepoApiRequestUrl();
-
-    // For each branch, create its own API page so that pagination is required
-    // to resolve all given branches.
-    for (let index = 0; index < branches.length; index++) {
-      // Pages start with `1` as per the Github API specification.
-      const pageNum = index + 1;
-      const name = branches[index];
-      const linkHeader = buildGithubPaginationResponseHeader(
-        branches.length,
-        pageNum,
-        `${apiUrl}/branches`,
-      );
-
-      // For the first page, either `?page=1` needs to be set, or no `page` should be specified.
-      const queryMatch =
-        pageNum === 1
-          ? (params: ParsedUrlQuery) => params.page === '1' || params.page === undefined
-          : {page: pageNum};
-
-      nock(getRepoApiRequestUrl()).get('/branches').query(queryMatch).reply(200, [{name}], {
-        link: linkHeader,
-      });
-    }
+    fakeGithubPaginationResponse(
+      `${getRepoApiRequestUrl()}/branches`,
+      branches.map((name) => ({name})),
+    );
   }
 
   async function getBranchesForLabel(
