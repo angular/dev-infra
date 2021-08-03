@@ -12,7 +12,7 @@ import {ReleaseTrain} from './release-trains';
 import {
   getBranchesForMajorVersions,
   getVersionOfBranch,
-  GithubRepoWithApi,
+  ReleaseRepoWithApi,
   VersionBranch,
 } from './version-branches';
 
@@ -26,20 +26,18 @@ export interface ActiveReleaseTrains {
   next: ReleaseTrain;
 }
 
-/** Branch name for the `next` branch. */
-export const nextBranchName = 'master';
-
 /** Fetches the active release trains for the configured project. */
 export async function fetchActiveReleaseTrains(
-  repo: GithubRepoWithApi,
+  repo: ReleaseRepoWithApi,
 ): Promise<ActiveReleaseTrains> {
+  const nextBranchName = repo.nextBranchName;
   const nextVersion = await getVersionOfBranch(repo, nextBranchName);
   const next = new ReleaseTrain(nextBranchName, nextVersion);
   const majorVersionsToConsider: number[] = [];
   let expectedReleaseCandidateMajor: number;
 
-  // If the `next` branch (i.e. `master` branch) is for an upcoming major version, we know
-  // that there is no patch branch or feature-freeze/release-candidate branch for this major
+  // If the `next` branch (i.e. `main` branch) is for an upcoming major version, we
+  // know that there is no patch branch or feature-freeze/release-candidate branch for this major
   // digit. If the current `next` version is the first minor of a major version, we know that
   // the feature-freeze/release-candidate branch can only be the actual major branch. The
   // patch branch is based on that, either the actual major branch or the last minor from the
@@ -85,7 +83,7 @@ export async function fetchActiveReleaseTrains(
 
 /** Finds the currently active release trains from the specified version branches. */
 export async function findActiveReleaseTrainsFromVersionBranches(
-  repo: GithubRepoWithApi,
+  repo: ReleaseRepoWithApi,
   nextVersion: semver.SemVer,
   branches: VersionBranch[],
   expectedReleaseCandidateMajor: number,
@@ -97,6 +95,7 @@ export async function findActiveReleaseTrainsFromVersionBranches(
   // patch and pre-release segments in order to be able to compare the next release train to
   // other release trains from version branches (which follow the `N.N.x` pattern).
   const nextReleaseTrainVersion = semver.parse(`${nextVersion.major}.${nextVersion.minor}.0`)!;
+  const nextBranchName = repo.nextBranchName;
 
   let latest: ReleaseTrain | null = null;
   let releaseCandidate: ReleaseTrain | null = null;

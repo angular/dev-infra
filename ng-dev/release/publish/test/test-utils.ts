@@ -48,7 +48,11 @@ export interface TestReleaseAction<T extends ReleaseAction = ReleaseAction> {
 
 /** Gets necessary test mocks for running a release action. */
 export function getTestingMocksForReleaseAction() {
-  const githubConfig = {owner: 'angular', name: 'dev-infra-test'};
+  const githubConfig: GithubConfig = {
+    owner: 'angular',
+    name: 'dev-infra-test',
+    mainBranchName: 'master',
+  };
   const gitClient = VirtualGitClient.createInstance({github: githubConfig});
   const releaseConfig: ReleaseConfig = {
     npmPackages: ['@angular/pkg1', '@angular/pkg2'],

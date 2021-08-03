@@ -25,7 +25,10 @@ export function addTokenToGitHttpsUrl(githubHttpsUrl: string, token: string) {
 }
 
 /** Gets the repository Git URL for the given github config. */
-export function getRepositoryGitUrl(config: GithubConfig, githubToken?: string): string {
+export function getRepositoryGitUrl(
+  config: Pick<GithubConfig, 'name' | 'owner' | 'useSsh'>,
+  githubToken?: string,
+): string {
   if (config.useSsh) {
     return `git@github.com:${config.owner}/${config.name}.git`;
   }

@@ -42,7 +42,7 @@ export class CutNextPrereleaseAction extends ReleaseAction {
 
     // If the pre-release has been cut from a branch that is not corresponding
     // to the next release-train, cherry-pick the changelog into the primary
-    // development branch. i.e. the `next` branch that is usually `master`.
+    // development branch (i.e. the next branch).
     if (releaseTrain !== this.active.next) {
       await this.cherryPickChangelogIntoNextBranch(releaseNotes, branchName);
     }
@@ -69,7 +69,7 @@ export class CutNextPrereleaseAction extends ReleaseAction {
   static override async isActive() {
     // Pre-releases for the `next` NPM dist tag can always be cut. Depending on whether
     // there is a feature-freeze/release-candidate branch, the next pre-releases are either
-    // cut from such a branch, or from the actual `next` release-train branch (i.e. master).
+    // cut from such a branch, or from the actual `next` release-train branch.
     return true;
   }
 }

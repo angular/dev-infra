@@ -8,11 +8,14 @@
 
 import * as semver from 'semver';
 import {GithubClient, GithubRepo} from '../../utils/git/github';
+import {GithubConfig} from '../../utils/config';
 
-/** Type describing a Github repository with corresponding API client. */
-export interface GithubRepoWithApi extends GithubRepo {
+/** Object describing a repository that can be released, together with an API client. */
+export interface ReleaseRepoWithApi extends GithubRepo {
   /** API client that can access the repository. */
   api: GithubClient;
+  /** Name of the next branch. */
+  nextBranchName: string;
 }
 
 /** Type describing a version-branch. */
@@ -30,9 +33,19 @@ export interface VersionBranch {
 /** Regular expression that matches version-branches. */
 const versionBranchNameRegex = /^(\d+)\.(\d+)\.x$/;
 
+/**
+ * Gets the name of the next branch from the Github configuration.
+ *
+ * Note that there is a clear separation between the main branch of the
+ * upstream remote repository and the `next` release-train branch.
+ */
+export function getNextBranchName(github: GithubConfig): string {
+  return github.mainBranchName;
+}
+
 /** Gets the version of a given branch by reading the `package.json` upstream. */
 export async function getVersionOfBranch(
-  repo: GithubRepoWithApi,
+  repo: ReleaseRepoWithApi,
   branchName: string,
 ): Promise<semver.SemVer> {
   const {data} = await repo.api.repos.getContent({
@@ -79,7 +92,7 @@ export function getVersionForVersionBranch(branchName: string): semver.SemVer | 
  * order. i.e. latest version branches first.
  */
 export async function getBranchesForMajorVersions(
-  repo: GithubRepoWithApi,
+  repo: ReleaseRepoWithApi,
   majorVersions: number[],
 ): Promise<VersionBranch[]> {
   const branchData = await repo.api.paginate(repo.api.repos.listBranches, {

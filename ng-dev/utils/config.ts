@@ -19,6 +19,8 @@ export interface GitClientConfig {
   owner: string;
   /** Name of the repository. */
   name: string;
+  /** Main branch name for the repository. */
+  mainBranchName: string;
   /** If SSH protocol should be used for git interactions. */
   useSsh?: boolean;
   /** Whether the specified repository is private. */

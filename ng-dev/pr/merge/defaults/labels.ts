@@ -9,8 +9,9 @@
 import {ReleaseConfig} from '../../../release/config/index';
 import {
   fetchActiveReleaseTrains,
+  getNextBranchName,
   isVersionBranch,
-  nextBranchName,
+  ReleaseRepoWithApi,
 } from '../../../release/versioning';
 import {GithubConfig} from '../../../utils/config';
 import {GithubClient} from '../../../utils/git/github';
@@ -36,7 +37,13 @@ export async function getDefaultTargetLabelConfiguration(
   githubConfig: GithubConfig,
   releaseConfig: ReleaseConfig,
 ): Promise<TargetLabel[]> {
-  const repo = {owner: githubConfig.owner, name: githubConfig.name, api};
+  const nextBranchName = getNextBranchName(githubConfig);
+  const repo: ReleaseRepoWithApi = {
+    owner: githubConfig.owner,
+    name: githubConfig.name,
+    nextBranchName,
+    api,
+  };
   const {latest, releaseCandidate, next} = await fetchActiveReleaseTrains(repo);
 
   return [
@@ -57,8 +64,8 @@ export async function getDefaultTargetLabelConfiguration(
     {
       pattern: 'target: minor',
       // Changes labeled with `target: minor` are merged most commonly into the next branch
-      // (i.e. `master`). In rare cases of an exceptional minor version while being already
-      // on a major release train, this would need to be overridden manually.
+      // (i.e. `main`). In rare cases of an exceptional minor version while being
+      // already on a major release train, this would need to be overridden manually.
       // TODO: Consider handling this automatically by checking if the NPM version matches
       // the last-minor. If not, then an exceptional minor might be in progress. See:
       // https://docs.google.com/document/d/197kVillDwx-RZtSVOBtPb4BBIAw0E9RT3q3v6DZkykU/edit#heading=h.h7o5pjq6yqd0

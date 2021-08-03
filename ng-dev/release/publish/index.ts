@@ -13,14 +13,10 @@ import {GithubConfig} from '../../utils/config';
 import {debug, error, info, log, promptConfirm, red, yellow} from '../../utils/console';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {ReleaseConfig} from '../config/index';
-import {
-  ActiveReleaseTrains,
-  fetchActiveReleaseTrains,
-  nextBranchName,
-} from '../versioning/active-release-trains';
+import {ActiveReleaseTrains, fetchActiveReleaseTrains} from '../versioning/active-release-trains';
 import {npmIsLoggedIn, npmLogin, npmLogout} from '../versioning/npm-publish';
 import {printActiveReleaseTrains} from '../versioning/print-active-trains';
-import {GithubRepoWithApi} from '../versioning/version-branches';
+import {getNextBranchName, ReleaseRepoWithApi} from '../versioning/version-branches';
 
 import {ReleaseAction} from './actions';
 import {FatalReleaseActionError, UserAbortedReleaseActionError} from './actions-error';
@@ -52,10 +48,13 @@ export class ReleaseTool {
     log(yellow('--------------------------------------------'));
     log();
 
+    const {owner, name} = this._github;
+    const nextBranchName = getNextBranchName(this._github);
+
     if (
       !(await this._verifyEnvironmentHasPython3Symlink()) ||
       !(await this._verifyNoUncommittedChanges()) ||
-      !(await this._verifyRunningFromNextBranch())
+      !(await this._verifyRunningFromNextBranch(nextBranchName))
     ) {
       return CompletionState.FATAL_ERROR;
     }
@@ -64,8 +63,7 @@ export class ReleaseTool {
       return CompletionState.MANUALLY_ABORTED;
     }
 
-    const {owner, name} = this._github;
-    const repo: GithubRepoWithApi = {owner, name, api: this._git.github};
+    const repo: ReleaseRepoWithApi = {owner, name, api: this._git.github, nextBranchName};
     const releaseTrains = await fetchActiveReleaseTrains(repo);
 
     // Print the active release trains so that the caretaker can access
@@ -177,11 +175,11 @@ export class ReleaseTool {
    * Verifies that the next branch from the configured repository is checked out.
    * @returns a boolean indicating success or failure.
    */
-  private async _verifyRunningFromNextBranch(): Promise<boolean> {
+  private async _verifyRunningFromNextBranch(nextBranchName: string): Promise<boolean> {
     const headSha = this._git.run(['rev-parse', 'HEAD']).stdout.trim();
     const {data} = await this._git.github.repos.getBranch({
       ...this._git.remoteParams,
-      branch: nextBranchName,
+      branch: this._git.mainBranchName,
     });
 
     if (headSha !== data.commit.sha) {

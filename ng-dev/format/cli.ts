@@ -36,9 +36,10 @@ export function buildFormatParser(localYargs: yargs.Argv) {
       'Run the formatter on files changed since the provided sha/ref',
       (args) => args.positional('shaOrRef', {type: 'string'}),
       ({shaOrRef, check}) => {
-        const sha = shaOrRef || 'master';
+        const git = GitClient.get();
+        const sha = shaOrRef || git.mainBranchName;
         const executionCmd = check ? checkFiles : formatFiles;
-        const allChangedFilesSince = GitClient.get().allChangesFilesSince(sha);
+        const allChangedFilesSince = git.allChangesFilesSince(sha);
         executionCmd(allChangedFilesSince);
       },
     )

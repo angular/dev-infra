@@ -14,7 +14,7 @@ import {bold, debug, info} from '../../utils/console';
 
 import {BaseModule} from './base';
 
-/** Information expressing the difference between the master and g3 branches */
+/** Information expressing the difference between the main and g3 branches */
 export interface G3StatsData {
   insertions: number;
   deletions: number;
@@ -31,12 +31,7 @@ export class G3Module extends BaseModule<G3StatsData | void> {
       return;
     }
 
-    return this.getDiffStats(
-      latestSha.g3,
-      latestSha.master,
-      toCopyToG3.include,
-      toCopyToG3.exclude,
-    );
+    return this.getDiffStats(latestSha.g3, latestSha.main, toCopyToG3.include, toCopyToG3.exclude);
   }
 
   override async printToTerminal() {
@@ -46,7 +41,7 @@ export class G3Module extends BaseModule<G3StatsData | void> {
     }
     info.group(bold('g3 branch check'));
     if (stats.files === 0) {
-      info(`${stats.commits} commits between g3 and master`);
+      info(`${stats.commits} commits between g3 and ${this.git.mainBranchName}`);
       info('✅  No sync is needed at this time');
     } else {
       info(
@@ -80,12 +75,12 @@ export class G3Module extends BaseModule<G3StatsData | void> {
   }
 
   /**
-   * Get git diff stats between master and g3, for all files and filtered to only g3 affecting
+   * Get git diff stats between main and g3, for all files and filtered to only g3 affecting
    * files.
    */
   private getDiffStats(
     g3Ref: string,
-    masterRef: string,
+    mainRef: string,
     includeFiles: string[],
     excludeFiles: string[],
   ) {
@@ -97,15 +92,15 @@ export class G3Module extends BaseModule<G3StatsData | void> {
       commits: 0,
     };
 
-    // Determine the number of commits between master and g3 refs. */
+    // Determine the number of commits between main and g3 refs. */
     stats.commits = parseInt(
-      this.git.run(['rev-list', '--count', `${g3Ref}..${masterRef}`]).stdout,
+      this.git.run(['rev-list', '--count', `${g3Ref}..${mainRef}`]).stdout,
       10,
     );
 
-    // Get the numstat information between master and g3
+    // Get the numstat information between main and g3
     this.git
-      .run(['diff', `${g3Ref}...${masterRef}`, '--numstat'])
+      .run(['diff', `${g3Ref}...${mainRef}`, '--numstat'])
       .stdout // Remove the extra space after git's output.
       .trim()
       // Split each line of git output into array
@@ -160,14 +155,14 @@ export class G3Module extends BaseModule<G3StatsData | void> {
   private getLatestShas() {
     /** The latest sha for the g3 branch. */
     const g3 = this.getShaForBranchLatest('g3');
-    /** The latest sha for the master branch. */
-    const master = this.getShaForBranchLatest('master');
+    /** The latest sha for the main branch. */
+    const main = this.getShaForBranchLatest(this.git.mainBranchName);
 
-    if (g3 === null || master === null) {
-      debug('Either the g3 or master was unable to be retrieved');
+    if (g3 === null || main === null) {
+      debug(`Either the g3 or ${this.git.mainBranchName} was unable to be retrieved`);
       return null;
     }
 
-    return {g3, master};
+    return {g3, main};
   }
 }

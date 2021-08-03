@@ -13,12 +13,14 @@ import {GitClient} from '../../utils/git/git-client';
 import {getReleaseConfig} from '../config/index';
 import {fetchActiveReleaseTrains} from '../versioning/active-release-trains';
 import {printActiveReleaseTrains} from '../versioning/print-active-trains';
+import {getNextBranchName, ReleaseRepoWithApi} from '../versioning';
 
 /** Yargs command handler for printing release information. */
 async function handler() {
   const git = GitClient.get();
-  const gitRepoWithApi = {api: git.github, ...git.remoteConfig};
-  const releaseTrains = await fetchActiveReleaseTrains(gitRepoWithApi);
+  const nextBranchName = getNextBranchName(git.config.github);
+  const repo: ReleaseRepoWithApi = {api: git.github, ...git.remoteConfig, nextBranchName};
+  const releaseTrains = await fetchActiveReleaseTrains(repo);
 
   // Print the active release trains.
   await printActiveReleaseTrains(releaseTrains, getReleaseConfig());

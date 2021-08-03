@@ -44,6 +44,9 @@ export class GitClient {
   /** Octokit request parameters object for targeting the configured remote. */
   readonly remoteParams = {owner: this.remoteConfig.owner, repo: this.remoteConfig.name};
 
+  /** Name of the primary branch of the upstream remote. */
+  readonly mainBranchName = this.config.github.mainBranchName;
+
   /** Instance of the Github client. */
   readonly github = new GithubClient();
 

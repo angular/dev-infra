@@ -25,6 +25,7 @@ export const mockNgDevConfig: NgDevConfig = {
   github: {
     name: 'name',
     owner: 'owner',
+    mainBranchName: 'master',
   },
 };
 
@@ -66,9 +67,11 @@ export class VirtualGitClient extends AuthenticatedGitClient {
   /** Current Git HEAD that has been previously fetched. */
   fetchHeadRef: RemoteRef | null = null;
   /** List of known branches in the repository. */
-  branches: {[branchName: string]: GitHead} = {master: {branch: 'master', newCommits: []}};
+  branches: {[branchName: string]: GitHead} = {
+    [this.mainBranchName]: {branch: this.mainBranchName, newCommits: []},
+  };
   /** Current checked out HEAD in the repository. */
-  head: GitHead = this.branches['master'];
+  head: GitHead = this.branches[this.mainBranchName];
   /** List of pushed heads to a given remote ref. */
   pushed: {remote: RemoteRef; head: GitHead}[] = [];
 
