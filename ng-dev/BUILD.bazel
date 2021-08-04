@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "esbuild", "ts_library")
+load("//tools:defaults.bzl", "esbuild_checked_in", "ts_library")
 
 filegroup(
     name = "npm_files",
@@ -37,21 +37,25 @@ ts_library(
     ],
 )
 
-esbuild(
+esbuild_checked_in(
     name = "ng-dev",
     entry_point = "cli.ts",
-    external = ["ts-node"],
-    save_to_repo = True,
+    external = [
+        "ts-node",
+        "source-map-support",
+    ],
     deps = [
         ":lib",
     ],
 )
 
-esbuild(
+esbuild_checked_in(
     name = "build-worker",
     entry_point = "//ng-dev/release/build:build-worker.ts",
-    external = ["ts-node"],
-    save_to_repo = True,
+    external = [
+        "ts-node",
+        "source-map-support",
+    ],
     deps = [
         "//ng-dev/release/build",
     ],

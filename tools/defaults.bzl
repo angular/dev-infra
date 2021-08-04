@@ -38,31 +38,40 @@ def ts_library(name, testonly = False, deps = [], srcs = [], **kwargs):
         **kwargs
     )
 
-def esbuild(
-        name,
-        entry_point,
-        minify = True,
-        sourcemap = "inline",
-        save_to_repo = False,
-        external = [],
-        deps = []):
+def esbuild(**kwargs):
     _esbuild(
-        name = "%s_generated" % name,
-        entry_point = entry_point,
-        external = external,
-        deps = deps,
         platform = "node",
         target = "node12",
-        minify = minify,
-        sourcemap = sourcemap,
+        **kwargs
     )
 
-    if save_to_repo:
-        generated_file_test(
-            name = name,
-            src = "%s.js" % name,
-            generated = "%s_generated.js" % name,
-        )
+def esbuild_checked_in(name, **kwargs):
+    esbuild(
+        name = "%s_generated" % name,
+        sourcemap = "inline",
+        # We always disable minification for checked-in files as otherwise it will
+        # become difficult determining potential differences. e.g. on Windows ESBuild
+        # accidentally included `source-map-support` due to the missing sandbox.
+        minify = False,
+        **kwargs
+    )
+
+    # ESBuild adds comments and function identifiers with the name of their module
+    # location. e.g. `"bazel-out/x64_windows-fastbuild"function(exports)`. We strip
+    # any of these `bazel-out` specific paths as that would break approval of the
+    # the checked-in files within different platforms. e.g. RBE running with K8.
+    native.genrule(
+        name = "%s_sanitized" % name,
+        srcs = ["%s_generated.js" % name],
+        outs = ["%s_sanitized.js" % name],
+        cmd = """cat $< | sed "s#bazel-out/[^/]*/##g" > $@""",
+    )
+
+    generated_file_test(
+        name = name,
+        src = "%s.js" % name,
+        generated = "%s_sanitized.js" % name,
+    )
 
 def pkg_npm(build_package_json_from_template = False, deps = [], **kwargs):
     if build_package_json_from_template:
