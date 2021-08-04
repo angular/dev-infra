@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "esbuild", "jasmine_node_test", "ts_library")
+load("//tools:defaults.bzl", "esbuild_checked_in", "jasmine_node_test", "ts_library")
 
 package(default_visibility = ["//github-actions/feature-request:__subpackages__"])
 
@@ -34,10 +34,9 @@ jasmine_node_test(
     ],
 )
 
-esbuild(
+esbuild_checked_in(
     name = "bundle",
     entry_point = ":src/main.ts",
-    save_to_repo = True,
     deps = [
         ":lib",
     ],

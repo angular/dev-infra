@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "esbuild", "ts_library")
+load("//tools:defaults.bzl", "esbuild_checked_in", "ts_library")
 
 package(default_visibility = ["//github-actions/feature-request:__subpackages__"])
 
@@ -17,10 +17,9 @@ ts_library(
     ],
 )
 
-esbuild(
+esbuild_checked_in(
     name = "bundle",
     entry_point = "main.ts",
-    save_to_repo = True,
     deps = [
         ":lib",
     ],
