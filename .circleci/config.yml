@@ -52,6 +52,14 @@ commands:
       - attach_workspace:
           at: ~/
 
+  yarn_install:
+    description: Run yarn install
+    steps:
+      - run:
+          name: yarn install
+          command: yarn install --frozen-lockfile --non-interactive
+          no_output_timeout: 2m
+
   setup_bazel_config:
     description: "Setting up Bazel configuration for CI"
     steps:
@@ -109,9 +117,31 @@ jobs:
           name: Check code format
           command: yarn ng-dev format changed --check << pipeline.git.base_revision >>
 
+  publish_snapshot_build:
+    executor: default-executor
+    steps:
+      - checkout_and_rebase
+      - *restore_cache
+      - setup_bazel_config
+      - run:
+          name: yarn install
+          command: yarn install --frozen-lockfile --non-interactive
+          no_output_timeout: 45m
+      - run:
+          name: Build npm package
+          command: yarn bazel build //:npm_package
+      - run:
+          name: Publish snapshot build to github
+          command: ./.circleci/publish_to_github.sh
+
 workflows:
   version: 2
   default_workflow:
     jobs:
       - test
       - lint
+      - publish_snapshot_build:
+          filters:
+            branches:
+              only:
+                - main
