@@ -8,12 +8,14 @@
 
 import {ReleaseTrain} from '../../versioning/release-trains';
 import {CutNewPatchAction} from '../actions/cut-new-patch';
-
+import {changelogPattern, parse, setupReleaseActionForTesting} from './test-utils/test-utils';
 import {
+  expectGithubApiRequestsForStaging,
   expectStagingAndPublishWithCherryPick,
-  parse,
-  setupReleaseActionForTesting,
-} from './test-utils';
+} from './test-utils/staging-test';
+import {SandboxGitRepo} from './test-utils/sandbox-testing';
+import {readFileSync} from 'fs';
+import {testTmpDir} from './test-utils/action-mocks';
 
 describe('cut new patch action', () => {
   it('should be active', async () => {
@@ -54,5 +56,41 @@ describe('cut new patch action', () => {
     });
 
     await expectStagingAndPublishWithCherryPick(action, '10.0.x', '10.0.10', 'latest');
+  });
+
+  it('should generate release notes capturing changes to the previous latest patch version', async () => {
+    const action = setupReleaseActionForTesting(
+      CutNewPatchAction,
+      {
+        releaseCandidate: null,
+        next: new ReleaseTrain('master', parse('10.1.0-next.3')),
+        latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
+      },
+      true,
+      {useSandboxGitClient: true},
+    );
+
+    SandboxGitRepo.withInitialCommit(action.githubConfig)
+      .branchOff('10.0.x')
+      .commit('feat(pkg1): already released #1')
+      .commit('feat(pkg1): already released #2')
+      .createTagForHead('10.0.2')
+      .commit('feat(pkg1): not yet released #1')
+      .commit('feat(pkg1): not yet released #2');
+
+    await expectGithubApiRequestsForStaging(action, '10.0.x', '10.0.3', true);
+    await action.instance.perform();
+
+    const changelog = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
+
+    expect(changelog).toMatch(changelogPattern`
+      # 10.0.3 <..>
+      ### pkg1
+      | Commit | Description |
+      | -- | -- |
+      | <..> | feat(pkg1): not yet released #2 |
+      | <..> | feat(pkg1): not yet released #1 |
+      ## Special Thanks:
+    `);
   });
 });

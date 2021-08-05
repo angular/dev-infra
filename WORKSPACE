@@ -44,3 +44,9 @@ browser_repositories()
 load("@npm//@bazel/esbuild:esbuild_repositories.bzl", "esbuild_repositories")
 
 esbuild_repositories()
+
+register_toolchains(
+    "//tools/git-toolchain:git_linux_toolchain",
+    "//tools/git-toolchain:git_macos_toolchain",
+    "//tools/git-toolchain:git_windows_toolchain",
+)

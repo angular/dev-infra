@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Arguments, Argv, CommandModule} from 'yargs';
+import {Argv, CommandModule} from 'yargs';
 
 import {getConfig} from '../../utils/config';
 import {error, green, info, red, yellow} from '../../utils/console';
@@ -31,8 +31,7 @@ async function handler() {
   const git = GitClient.get();
   const config = getConfig();
   const releaseConfig = getReleaseConfig(config);
-  const projectDir = git.baseDir;
-  const task = new ReleaseTool(releaseConfig, config.github, projectDir);
+  const task = new ReleaseTool(releaseConfig, config.github, git.baseDir);
   const result = await task.run();
 
   switch (result) {

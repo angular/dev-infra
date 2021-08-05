@@ -25,9 +25,11 @@ export class CutReleaseCandidateForFeatureFreezeAction extends ReleaseAction {
   override async perform() {
     const {branchName} = this.active.releaseCandidate!;
     const newVersion = this._newVersion;
+    const compareVersionForReleaseNotes = this.active.releaseCandidate!.version;
 
     const {pullRequest, releaseNotes} = await this.checkoutBranchAndStageVersion(
       newVersion,
+      compareVersionForReleaseNotes,
       branchName,
     );
 

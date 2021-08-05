@@ -30,8 +30,13 @@ export class CutStableAction extends ReleaseAction {
     const newVersion = this._newVersion;
     const isNewMajor = this.active.releaseCandidate?.isMajor;
 
+    // When cutting a new stable minor/major, we want to build the release notes capturing
+    // all changes that have landed in the individual next and RC pre-releases.
+    const compareVersionForReleaseNotes = this.active.latest.version;
+
     const {pullRequest, releaseNotes} = await this.checkoutBranchAndStageVersion(
       newVersion,
+      compareVersionForReleaseNotes,
       branchName,
     );
 

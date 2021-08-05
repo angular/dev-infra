@@ -30,8 +30,11 @@ export class CutLongTermSupportPatchAction extends ReleaseAction {
   override async perform() {
     const ltsBranch = await this._promptForTargetLtsBranch();
     const newVersion = semverInc(ltsBranch.version, 'patch');
+    const compareVersionForReleaseNotes = ltsBranch.version;
+
     const {pullRequest, releaseNotes} = await this.checkoutBranchAndStageVersion(
       newVersion,
+      compareVersionForReleaseNotes,
       ltsBranch.name,
     );
 

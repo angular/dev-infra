@@ -12,13 +12,14 @@ import {join} from 'path';
 import {ReleaseTrain} from '../../versioning/release-trains';
 import {CutNextPrereleaseAction} from '../actions/cut-next-prerelease';
 import {packageJsonPath} from '../constants';
-
+import {changelogPattern, parse, setupReleaseActionForTesting} from './test-utils/test-utils';
 import {
+  expectGithubApiRequestsForStaging,
   expectStagingAndPublishWithCherryPick,
   expectStagingAndPublishWithoutCherryPick,
-  parse,
-  setupReleaseActionForTesting,
-} from './test-utils';
+} from './test-utils/staging-test';
+import {testTmpDir} from './test-utils/action-mocks';
+import {SandboxGitRepo} from './test-utils/sandbox-testing';
 
 describe('cut next pre-release action', () => {
   it('should always be active regardless of release-trains', async () => {
@@ -42,22 +43,70 @@ describe('cut next pre-release action', () => {
   // publish versions to the NPM dist tag. This means that the version is later published, but
   // still needs all the staging work (e.g. changelog). We special-case this by not incrementing
   // the version if the version in the next branch has not been published yet.
-  it('should not bump version if current next version has not been published', async () => {
-    const action = setupReleaseActionForTesting(
-      CutNextPrereleaseAction,
-      {
-        releaseCandidate: null,
-        next: new ReleaseTrain('master', parse('10.2.0-next.0')),
-        latest: new ReleaseTrain('10.1.x', parse('10.1.0')),
+  describe('current next version has not been published', () => {
+    it('should not bump the version', async () => {
+      const action = setupReleaseActionForTesting(
+        CutNextPrereleaseAction,
+        {
+          releaseCandidate: null,
+          next: new ReleaseTrain('master', parse('10.2.0-next.0')),
+          latest: new ReleaseTrain('10.1.x', parse('10.1.0')),
+        },
+        /* isNextPublishedToNpm */ false,
+      );
+
+      await expectStagingAndPublishWithoutCherryPick(action, 'master', '10.2.0-next.0', 'next');
+
+      const pkgJsonContents = readFileSync(join(action.testTmpDir, packageJsonPath), 'utf8');
+      const pkgJson = JSON.parse(pkgJsonContents) as {version: string; [key: string]: any};
+      expect(pkgJson.version).toBe('10.2.0-next.0', 'Expected version to not have changed.');
+    });
+
+    it(
+      'should generate release notes capturing changes to the latest patch while deduping ' +
+        'changes that have also landed in the current patch',
+      async () => {
+        const action = setupReleaseActionForTesting(
+          CutNextPrereleaseAction,
+          {
+            releaseCandidate: null,
+            next: new ReleaseTrain('master', parse('10.2.0-next.0')),
+            latest: new ReleaseTrain('10.1.x', parse('10.1.0')),
+          },
+          /* isNextPublishedToNpm */ false,
+          {useSandboxGitClient: true},
+        );
+
+        SandboxGitRepo.withInitialCommit(action.githubConfig)
+          .branchOff('10.1.x')
+          .commit('feat(pkg1): patch already released #1')
+          .commit('feat(pkg1): patch already released #2')
+          .commit('feat(pkg1): released in patch, but cherry-picked', 1)
+          .createTagForHead('10.1.0')
+          .commit('feat(pkg1): not released yet, but cherry-picked', 2)
+          .switchToBranch('master')
+          .commit('feat(pkg1): only in next, not released yet #1')
+          .commit('feat(pkg1): only in next, not released yet #2')
+          .cherryPick(1)
+          .cherryPick(2);
+
+        await expectGithubApiRequestsForStaging(action, 'master', '10.2.0-next.0', false);
+        await action.instance.perform();
+
+        const changelog = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
+
+        expect(changelog).toMatch(changelogPattern`
+          # 10.2.0-next.0 <..>
+          ### pkg1
+          | Commit | Description |
+          | -- | -- |
+          | <..> | feat(pkg1): not released yet, but cherry-picked |
+          | <..> | feat(pkg1): only in next, not released yet #2 |
+          | <..> | feat(pkg1): only in next, not released yet #1 |
+          ## Special Thanks:
+        `);
       },
-      /* isNextPublishedToNpm */ false,
     );
-
-    await expectStagingAndPublishWithoutCherryPick(action, 'master', '10.2.0-next.0', 'next');
-
-    const pkgJsonContents = readFileSync(join(action.testTmpDir, packageJsonPath), 'utf8');
-    const pkgJson = JSON.parse(pkgJsonContents) as {version: string; [key: string]: any};
-    expect(pkgJson.version).toBe('10.2.0-next.0', 'Expected version to not have changed.');
   });
 
   describe('with active feature-freeze', () => {
@@ -70,6 +119,42 @@ describe('cut next pre-release action', () => {
 
       await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0-next.5', 'next');
     });
+
+    it('should generate release notes capturing changes to the previous pre-release', async () => {
+      const action = setupReleaseActionForTesting(
+        CutNextPrereleaseAction,
+        {
+          releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.4')),
+          next: new ReleaseTrain('master', parse('10.2.0-next.0')),
+          latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
+        },
+        true,
+        {useSandboxGitClient: true},
+      );
+
+      SandboxGitRepo.withInitialCommit(action.githubConfig)
+        .branchOff('10.1.x')
+        .commit('feat(pkg1): feature-freeze already released #1')
+        .commit('feat(pkg1): feature-freeze already released #2')
+        .createTagForHead('10.1.0-next.4')
+        .commit('feat(pkg1): not released yet #1')
+        .commit('feat(pkg1): not released yet #2');
+
+      await expectGithubApiRequestsForStaging(action, '10.1.x', '10.1.0-next.5', true);
+      await action.instance.perform();
+
+      const changelog = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
+
+      expect(changelog).toMatch(changelogPattern`
+        # 10.1.0-next.5 <..>
+        ### pkg1
+        | Commit | Description |
+        | -- | -- |
+        | <..> | feat(pkg1): not released yet #2 |
+        | <..> | feat(pkg1): not released yet #1 |
+        ## Special Thanks:
+      `);
+    });
   });
 
   describe('with active release-candidate', () => {
@@ -81,6 +166,42 @@ describe('cut next pre-release action', () => {
       });
 
       await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0-rc.1', 'next');
+    });
+
+    it('should generate release notes capturing changes to the previous pre-release', async () => {
+      const action = setupReleaseActionForTesting(
+        CutNextPrereleaseAction,
+        {
+          releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
+          next: new ReleaseTrain('master', parse('10.2.0-next.0')),
+          latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
+        },
+        true,
+        {useSandboxGitClient: true},
+      );
+
+      SandboxGitRepo.withInitialCommit(action.githubConfig)
+        .branchOff('10.1.x')
+        .commit('feat(pkg1): release-candidate already released #1')
+        .commit('feat(pkg1): release-candidate already released #2')
+        .createTagForHead('10.1.0-rc.0')
+        .commit('feat(pkg1): not released yet #1')
+        .commit('feat(pkg1): not released yet #2');
+
+      await expectGithubApiRequestsForStaging(action, '10.1.x', '10.1.0-rc.1', true);
+      await action.instance.perform();
+
+      const changelog = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
+
+      expect(changelog).toMatch(changelogPattern`
+        # 10.1.0-rc.1 <..>
+        ### pkg1
+        | Commit | Description |
+        | -- | -- |
+        | <..> | feat(pkg1): not released yet #2 |
+        | <..> | feat(pkg1): not released yet #1 |
+        ## Special Thanks:
+      `);
     });
   });
 });

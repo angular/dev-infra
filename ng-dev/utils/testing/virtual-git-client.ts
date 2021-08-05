@@ -8,7 +8,6 @@
 
 import {SpawnSyncOptions, SpawnSyncReturns} from 'child_process';
 import * as parseArgs from 'minimist';
-import {SemVer} from 'semver';
 
 import {NgDevConfig} from '../config';
 import {AuthenticatedGitClient} from '../git/authenticated-git-client';
@@ -18,7 +17,7 @@ import {GitClient} from '../git/git-client';
  * Temporary directory which will be used as project directory in tests. Note that
  * this environment variable is automatically set by Bazel for tests.
  */
-export const testTmpDir: string = process.env['TEST_TMPDIR']!;
+const testTmpDir: string = process.env['TEST_TMPDIR']!;
 
 /** A mock instance of a configuration for the ng-dev toolset for default testing. */
 export const mockNgDevConfig: NgDevConfig = {
@@ -74,22 +73,6 @@ export class VirtualGitClient extends AuthenticatedGitClient {
   head: GitHead = this.branches[this.mainBranchName];
   /** List of pushed heads to a given remote ref. */
   pushed: {remote: RemoteRef; head: GitHead}[] = [];
-
-  /**
-   * Override the actual GitClient getLatestSemverTag, as an actual tag cannot be retrieved in
-   * testing.
-   */
-  override getLatestSemverTag() {
-    return new SemVer('0.0.0');
-  }
-
-  /**
-   * Override the actual GitClient getLatestSemverTag, as an actual tags cannot be checked during
-   * testing, return back the SemVer version as the tag.
-   */
-  override getMatchingTagForSemver(semver: SemVer) {
-    return semver.format();
-  }
 
   /** Override for the actual Git client command execution. */
   override runGraceful(args: string[], options: SpawnSyncOptions = {}): SpawnSyncReturns<string> {

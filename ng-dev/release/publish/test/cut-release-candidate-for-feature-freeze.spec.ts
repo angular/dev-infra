@@ -8,12 +8,14 @@
 
 import {ReleaseTrain} from '../../versioning/release-trains';
 import {CutReleaseCandidateForFeatureFreezeAction} from '../actions/cut-release-candidate-for-feature-freeze';
-
+import {changelogPattern, parse, setupReleaseActionForTesting} from './test-utils/test-utils';
 import {
+  expectGithubApiRequestsForStaging,
   expectStagingAndPublishWithCherryPick,
-  parse,
-  setupReleaseActionForTesting,
-} from './test-utils';
+} from './test-utils/staging-test';
+import {readFileSync} from 'fs';
+import {testTmpDir} from './test-utils/action-mocks';
+import {SandboxGitRepo} from './test-utils/sandbox-testing';
 
 describe('cut release candidate for feature-freeze action', () => {
   it('should activate if a feature-freeze release-train is active', async () => {
@@ -55,5 +57,41 @@ describe('cut release candidate for feature-freeze action', () => {
     });
 
     await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0-rc.0', 'next');
+  });
+
+  it('should generate release notes capturing changes to the previous pre-release', async () => {
+    const action = setupReleaseActionForTesting(
+      CutReleaseCandidateForFeatureFreezeAction,
+      {
+        releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.1')),
+        next: new ReleaseTrain('master', parse('10.2.0-next.0')),
+        latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
+      },
+      true,
+      {useSandboxGitClient: true},
+    );
+
+    SandboxGitRepo.withInitialCommit(action.githubConfig)
+      .branchOff('10.1.x')
+      .commit('feat(pkg1): feature-freeze, already released #1')
+      .commit('feat(pkg1): feature-freeze, already released #2')
+      .createTagForHead('10.1.0-next.1')
+      .commit('feat(pkg1): not yet released #1')
+      .commit('fix(pkg1): not yet released #2');
+
+    await expectGithubApiRequestsForStaging(action, '10.1.x', '10.1.0-rc.0', true);
+    await action.instance.perform();
+
+    const changelog = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
+
+    expect(changelog).toMatch(changelogPattern`
+      # 10.1.0-rc.0 <..>
+      ### pkg1
+      | Commit | Description |
+      | -- | -- |
+      | <..> | fix(pkg1): not yet released #2 |
+      | <..> | feat(pkg1): not yet released #1 |
+      ## Special Thanks:
+    `);
   });
 });

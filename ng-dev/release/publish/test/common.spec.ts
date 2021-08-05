@@ -19,14 +19,18 @@ import {ReleaseTrain} from '../../versioning/release-trains';
 import {ReleaseAction} from '../actions';
 import {actions} from '../actions/index';
 import {changelogPath} from '../constants';
-
 import {
+  changelogPattern,
   fakeNpmPackageQueryRequest,
-  getTestingMocksForReleaseAction,
   parse,
   setupReleaseActionForTesting,
+} from './test-utils/test-utils';
+import {
+  getMockGitClient,
+  getTestConfigurationsForAction,
+  testReleasePackages,
   testTmpDir,
-} from './test-utils';
+} from './test-utils/action-mocks';
 
 describe('common release action logic', () => {
   const baseReleaseTrains: ActiveReleaseTrains = {
@@ -43,7 +47,8 @@ describe('common release action logic', () => {
     };
 
     it('should not modify release train versions and cause invalid other actions', async () => {
-      const {releaseConfig, gitClient} = getTestingMocksForReleaseAction();
+      const {releaseConfig, githubConfig} = getTestConfigurationsForAction();
+      const gitClient = getMockGitClient(githubConfig, /* useSandboxGitClient */ false);
       const descriptions: string[] = [];
 
       // Fake the NPM package request as otherwise the test would rely on `npmjs.org`.
@@ -86,17 +91,15 @@ describe('common release action logic', () => {
 
       await instance.testBuildAndPublish(version, branchName, 'latest');
 
-      expect(npm.runNpmPublish).toHaveBeenCalledTimes(2);
-      expect(npm.runNpmPublish).toHaveBeenCalledWith(
-        `${testTmpDir}/dist/pkg1`,
-        'latest',
-        customRegistryUrl,
-      );
-      expect(npm.runNpmPublish).toHaveBeenCalledWith(
-        `${testTmpDir}/dist/pkg2`,
-        'latest',
-        customRegistryUrl,
-      );
+      expect(npm.runNpmPublish).toHaveBeenCalledTimes(testReleasePackages.length);
+
+      for (const pkgName of testReleasePackages) {
+        expect(npm.runNpmPublish).toHaveBeenCalledWith(
+          `${testTmpDir}/dist/${pkgName}`,
+          'latest',
+          customRegistryUrl,
+        );
+      }
     });
   });
 
@@ -123,7 +126,12 @@ describe('common release action logic', () => {
       await instance.testCherryPickWithPullRequest(version, branchName);
 
       const changelogContent = readFileSync(join(testTmpDir, changelogPath), 'utf8');
-      expect(changelogContent).toEqual(`Changelog Entry for 10.0.1\n\nExisting changelog`);
+      expect(changelogContent).toMatch(changelogPattern`
+        # 10.0.1 <..>
+
+
+        Existing changelog
+      `);
     });
 
     it('should push changes to a fork for creating a pull request', async () => {
@@ -177,12 +185,12 @@ class TestAction extends ReleaseAction {
   }
 
   async testBuildAndPublish(version: semver.SemVer, publishBranch: string, distTag: NpmDistTag) {
-    const releaseNotes = await ReleaseNotes.fromRange(version, '', '');
+    const releaseNotes = await ReleaseNotes.forRange(version, '', '');
     await this.buildAndPublish(releaseNotes, publishBranch, distTag);
   }
 
   async testCherryPickWithPullRequest(version: semver.SemVer, branch: string) {
-    const releaseNotes = await ReleaseNotes.fromRange(version, '', '');
+    const releaseNotes = await ReleaseNotes.forRange(version, '', '');
     await this.cherryPickChangelogIntoNextBranch(releaseNotes, branch);
   }
 }

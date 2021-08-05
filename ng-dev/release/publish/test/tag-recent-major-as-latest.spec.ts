@@ -10,17 +10,16 @@ import {matchesVersion} from '../../../utils/testing';
 import {ReleaseTrain} from '../../versioning/release-trains';
 import {TagRecentMajorAsLatest} from '../actions/tag-recent-major-as-latest';
 import * as externalCommands from '../external-commands';
-
+import {getTestConfigurationsForAction} from './test-utils/action-mocks';
 import {
   fakeNpmPackageQueryRequest,
-  getTestingMocksForReleaseAction,
   parse,
   setupReleaseActionForTesting,
-} from './test-utils';
+} from './test-utils/test-utils';
 
 describe('tag recent major as latest action', () => {
   it('should not be active if a patch has been published after major release', async () => {
-    const {releaseConfig} = getTestingMocksForReleaseAction();
+    const {releaseConfig} = getTestConfigurationsForAction();
     expect(
       await TagRecentMajorAsLatest.isActive(
         {
@@ -37,7 +36,7 @@ describe('tag recent major as latest action', () => {
     'should not be active if a major has been released recently but "@latest" on NPM points to ' +
       'a more recent major',
     async () => {
-      const {releaseConfig} = getTestingMocksForReleaseAction();
+      const {releaseConfig} = getTestConfigurationsForAction();
 
       // NPM `@latest` will point to a patch release of a more recent major. This is unlikely
       // to happen (only with manual changes outside of the release tool), but should
@@ -63,7 +62,7 @@ describe('tag recent major as latest action', () => {
     'should not be active if a major has been released recently but "@latest" on NPM points to ' +
       'an older major',
     async () => {
-      const {releaseConfig} = getTestingMocksForReleaseAction();
+      const {releaseConfig} = getTestConfigurationsForAction();
 
       // NPM `@latest` will point to a patch release of an older major. This is unlikely to happen
       // (only with manual changes outside of the release tool), but should prevent accidental
@@ -90,7 +89,7 @@ describe('tag recent major as latest action', () => {
     'should be active if a major has been released recently but is not published as ' +
       '"@latest" to NPM',
     async () => {
-      const {releaseConfig} = getTestingMocksForReleaseAction();
+      const {releaseConfig} = getTestConfigurationsForAction();
 
       // NPM `@latest` will point to a patch release of the previous major.
       fakeNpmPackageQueryRequest(releaseConfig.npmPackages[0], {

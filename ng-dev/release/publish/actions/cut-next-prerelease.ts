@@ -9,7 +9,10 @@
 import * as semver from 'semver';
 
 import {semverInc} from '../../../utils/semver';
-import {computeNewPrereleaseVersionForNext} from '../../versioning/next-prerelease-version';
+import {
+  computeNewPrereleaseVersionForNext,
+  getReleaseNotesCompareVersionForNext,
+} from '../../versioning/next-prerelease-version';
 import {ReleaseTrain} from '../../versioning/release-trains';
 import {ReleaseAction} from '../actions';
 
@@ -31,9 +34,11 @@ export class CutNextPrereleaseAction extends ReleaseAction {
     const releaseTrain = this._getActivePrereleaseTrain();
     const {branchName} = releaseTrain;
     const newVersion = await this._newVersion;
+    const compareVersionForReleaseNotes = await this._getCompareVersionForReleaseNotes();
 
     const {pullRequest, releaseNotes} = await this.checkoutBranchAndStageVersion(
       newVersion,
+      compareVersionForReleaseNotes,
       branchName,
     );
 
@@ -63,6 +68,19 @@ export class CutNextPrereleaseAction extends ReleaseAction {
       return await computeNewPrereleaseVersionForNext(this.active, this.config);
     } else {
       return semverInc(releaseTrain.version, 'prerelease');
+    }
+  }
+
+  /** Gets the compare version for building release notes of the new pre-release.*/
+  private async _getCompareVersionForReleaseNotes(): Promise<semver.SemVer> {
+    const releaseTrain = this._getActivePrereleaseTrain();
+    // If a pre-release is cut for the next release-train, the compare version is computed
+    // with respect to special cases surfacing with FF/RC branches. Otherwise, the current
+    // version from the release train is used for comparison.
+    if (releaseTrain === this.active.next) {
+      return await getReleaseNotesCompareVersionForNext(this.active, this.config);
+    } else {
+      return releaseTrain.version;
     }
   }
 

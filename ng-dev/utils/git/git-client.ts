@@ -50,6 +50,12 @@ export class GitClient {
   /** Instance of the Github client. */
   readonly github = new GithubClient();
 
+  /**
+   * Path to the Git executable. By default, `git` is assumed to exist
+   * in the shell environment (using `$PATH`).
+   */
+  readonly gitBinPath: string = 'git';
+
   constructor(
     /** The full path to the root of the repository base. */
     readonly baseDir = determineRepoBaseDirFromCwd(),
@@ -92,7 +98,7 @@ export class GitClient {
     // others if the tool failed, and we do not want to leak tokens.
     printFn('Executing: git', this.sanitizeConsoleOutput(args.join(' ')));
 
-    const result = spawnSync('git', args, {
+    const result = spawnSync(this.gitBinPath, args, {
       cwd: this.baseDir,
       stdio: 'pipe',
       ...options,
@@ -106,6 +112,13 @@ export class GitClient {
       // potentially leak the Github token used for accessing the remote. To avoid
       // printing a token, we sanitize the string before printing the stderr output.
       process.stderr.write(this.sanitizeConsoleOutput(result.stderr));
+    }
+
+    if (result.error !== undefined) {
+      // Git sometimes prints the command if it failed. This means that it could
+      // potentially leak the Github token used for accessing the remote. To avoid
+      // printing a token, we sanitize the string before printing the stderr output.
+      process.stderr.write(this.sanitizeConsoleOutput(result.error.message));
     }
 
     return result;
@@ -155,34 +168,6 @@ export class GitClient {
       this.runGraceful(['reset', '--hard'], {stdio: 'ignore'});
     }
     return this.runGraceful(['checkout', branchOrRevision], {stdio: 'ignore'}).status === 0;
-  }
-
-  /** Gets the latest git tag on the current branch that matches SemVer. */
-  getLatestSemverTag(): SemVer {
-    const semVerOptions: SemVerOptions = {loose: true};
-    const tags = this.runGraceful(['tag', '--sort=-committerdate', '--merged']).stdout.split('\n');
-    const latestTag = tags.find((tag: string) => parse(tag, semVerOptions));
-
-    if (latestTag === undefined) {
-      throw new Error(
-        `Unable to find a SemVer matching tag on "${this.getCurrentBranchOrRevision()}"`,
-      );
-    }
-    return new SemVer(latestTag, semVerOptions);
-  }
-
-  /** Retrieves the git tag matching the provided SemVer, if it exists. */
-  getMatchingTagForSemver(semver: SemVer): string {
-    const semVerOptions: SemVerOptions = {loose: true};
-    const tags = this.runGraceful(['tag', '--sort=-committerdate', '--merged']).stdout.split('\n');
-    const matchingTag = tags.find(
-      (tag: string) => parse(tag, semVerOptions)?.compare(semver) === 0,
-    );
-
-    if (matchingTag === undefined) {
-      throw new Error(`Unable to find a tag for the version: "${semver.format()}"`);
-    }
-    return matchingTag;
   }
 
   /** Retrieve a list of all files in the repository changed since the provided shaOrRef. */

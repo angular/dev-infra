@@ -10,15 +10,23 @@ import {matchesVersion} from '../../../utils/testing/semver-matchers';
 import {fetchLongTermSupportBranchesFromNpm} from '../../versioning/long-term-support';
 import {ReleaseTrain} from '../../versioning/release-trains';
 import {CutLongTermSupportPatchAction} from '../actions/cut-lts-patch';
-
 import {
-  expectStagingAndPublishWithCherryPick,
+  changelogPattern,
   fakeNpmPackageQueryRequest,
-  getTestingMocksForReleaseAction,
   parse,
   setupReleaseActionForTesting,
+} from './test-utils/test-utils';
+import {
+  expectGithubApiRequestsForStaging,
+  expectStagingAndPublishWithCherryPick,
+} from './test-utils/staging-test';
+import {
+  getMockGitClient,
+  getTestConfigurationsForAction,
   testTmpDir,
-} from './test-utils';
+} from './test-utils/action-mocks';
+import {SandboxGitRepo} from './test-utils/sandbox-testing';
+import {readFileSync} from 'fs';
 
 describe('cut an LTS patch action', () => {
   it('should be active', async () => {
@@ -67,8 +75,51 @@ describe('cut an LTS patch action', () => {
     await expectStagingAndPublishWithCherryPick(action, '9.2.x', '9.2.5', 'v9-lts');
   });
 
+  it('should generate release notes capturing changes to previous latest LTS version', async () => {
+    const action = setupReleaseActionForTesting(
+      CutLongTermSupportPatchAction,
+      {
+        releaseCandidate: null,
+        next: new ReleaseTrain('master', parse('10.1.0-next.3')),
+        latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
+      },
+      true,
+      {useSandboxGitClient: true},
+    );
+
+    spyOn<any>(action.instance, '_promptForTargetLtsBranch').and.resolveTo({
+      name: '9.2.x',
+      version: parse('9.2.4'),
+      npmDistTag: 'v9-lts',
+    });
+
+    SandboxGitRepo.withInitialCommit(action.githubConfig)
+      .branchOff('9.2.x')
+      .commit('feat(pkg1): already released #1')
+      .commit('feat(pkg1): already released #2')
+      .createTagForHead('9.2.4')
+      .commit('feat(pkg1): not yet released #1')
+      .commit('feat(pkg1): not yet released #2');
+
+    await expectGithubApiRequestsForStaging(action, '9.2.x', '9.2.5', true);
+    await action.instance.perform();
+
+    const changelog = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
+
+    expect(changelog).toMatch(changelogPattern`
+      # 9.2.5 <..>
+      ### pkg1
+      | Commit | Description |
+      | -- | -- |
+      | <..> | feat(pkg1): not yet released #2 |
+      | <..> | feat(pkg1): not yet released #1 |
+      ## Special Thanks:
+    `);
+  });
+
   it('should include number of active LTS branches in action description', async () => {
-    const {releaseConfig, gitClient} = getTestingMocksForReleaseAction();
+    const {releaseConfig, githubConfig} = getTestConfigurationsForAction();
+    const gitClient = getMockGitClient(githubConfig, /* useSandboxGitClient */ false);
     const activeReleaseTrains = {
       releaseCandidate: null,
       next: new ReleaseTrain('master', parse('10.1.0-next.3')),
@@ -96,7 +147,7 @@ describe('cut an LTS patch action', () => {
   });
 
   it('should properly determine active and inactive LTS branches', async () => {
-    const {releaseConfig} = getTestingMocksForReleaseAction();
+    const {releaseConfig} = getTestConfigurationsForAction();
     fakeNpmPackageQueryRequest(releaseConfig.npmPackages[0], {
       'dist-tags': {
         'v9-lts': '9.2.3',
