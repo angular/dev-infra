@@ -1,3 +1,4 @@
+# BEGIN-INTERNAL
 load("//tools:defaults.bzl", "pkg_npm")
 load("@npm//@bazel/typescript:index.bzl", "ts_config")
 
@@ -6,10 +7,11 @@ ts_config(
     src = "tsconfig.json",
     visibility = ["//visibility:public"],
 )
+# END-INTERNAL
 
-exports_files([
-    "tsconfig.json",
-])
+exports_files(["tsconfig.json"])
+
+# BEGIN-INTERNAL
 
 package_group(
     name = "npm",
@@ -22,14 +24,27 @@ pkg_npm(
     name = "npm_package",
     package_name = "@angular/dev-infra-private",
     srcs = [
+        "BUILD.bazel",
         "package.json",
+        "tsconfig.json",
         ":index.bzl",
         "//bazel:npm_files",
         "//ng-dev:npm_files",
     ],
+    substitutions = {
+        "@dev-infra//bazel/": "@npm//@angular/dev-infra-private/bazel/",
+        "//bazel/": "@npm//@angular/dev-infra-private/bazel/",
+        "//bazel:": "@npm//@angular/dev-infra-private/bazel:",
+        "//ng-dev/": "@npm//@angular/dev-infra-private/ng-dev/",
+        "//ng-dev:": "@npm//@angular/dev-infra-private/ng-dev:",
+        "//tslint-rules/": "@npm//@angular/dev-infra-private/tslint-rules/",
+        "//tslint-rules:": "@npm//@angular/dev-infra-private/tslint-rules:",
+        "//:tsconfig.json": "@npm//@angular/dev-infra-private:tsconfig.json",
+    },
     deps = [
         "//bazel:lib",
         "//ng-dev:lib",
         "//tslint-rules:lib",
     ],
 )
+# END-INTERNAL

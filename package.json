@@ -1,5 +1,9 @@
 {
   "name": "@angular/dev-infra-private",
+  "version": "0.0.0",
+  "bin": {
+    "ng-dev": "./ng-dev/cli.ts"
+  },
   "private": true,
   "scripts": {
     "prepare": "husky install",
