@@ -94,10 +94,7 @@ jobs:
       - checkout_and_rebase
       - *restore_cache
       - setup_bazel_config
-      - run:
-          name: yarn install
-          command: yarn install --frozen-lockfile --non-interactive
-          no_output_timeout: 2m
+      - yarn_install
       - run:
           name: Run bazel tests
           command: yarn bazel test //...
@@ -109,10 +106,7 @@ jobs:
       - checkout_and_rebase
       - *restore_cache
       - setup_bazel_config
-      - run:
-          name: yarn install
-          command: yarn install --frozen-lockfile --non-interactive
-          no_output_timeout: 45m
+      - yarn_install
       - run:
           name: Check code format
           command: yarn ng-dev format changed --check << pipeline.git.base_revision >>
@@ -123,10 +117,7 @@ jobs:
       - checkout_and_rebase
       - *restore_cache
       - setup_bazel_config
-      - run:
-          name: yarn install
-          command: yarn install --frozen-lockfile --non-interactive
-          no_output_timeout: 45m
+      - yarn_install
       - run:
           name: Build npm package
           command: yarn bazel build //:npm_package
