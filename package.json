@@ -2,10 +2,9 @@
   "name": "@angular/dev-infra-private",
   "version": "0.0.0",
   "bin": {
-    "ng-dev": "./ng-dev/cli.ts"
+    "ng-dev": "./ng-dev/cli-bundle.js"
   },
   "private": true,
-  "main": "./ng-dev/cli-bundle.js",
   "scripts": {
     "prepare": "husky install",
     "ng-dev": "ts-node --transpile-only ./ng-dev/cli.ts"

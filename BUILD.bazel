@@ -7,11 +7,6 @@ ts_config(
     src = "tsconfig.json",
     visibility = ["//visibility:public"],
 )
-# END-INTERNAL
-
-exports_files(["tsconfig.json"])
-
-# BEGIN-INTERNAL
 
 package_group(
     name = "npm",
@@ -42,8 +37,11 @@ pkg_npm(
     },
     deps = [
         "//bazel:lib",
+        "//ng-dev",
         "//ng-dev:lib",
         "//tslint-rules:lib",
     ],
 )
 # END-INTERNAL
+
+exports_files(["tsconfig.json"])
