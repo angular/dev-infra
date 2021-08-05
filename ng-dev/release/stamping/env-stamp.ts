@@ -62,7 +62,7 @@ function getSCMVersions(mode: EnvStampMode): {version: string; experimentalVersi
         '*[0-9]*.[0-9]*.[0-9]*',
         '--abbrev=7',
         '--tags',
-        'HEAD~100',
+        'HEAD',
       ]);
       const {version} = new SemVer(rawVersion);
       const {version: experimentalVersion} = createExperimentalSemver(version);
