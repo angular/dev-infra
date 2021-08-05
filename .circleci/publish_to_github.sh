@@ -34,6 +34,7 @@ publishPackage() {
   buildCommitMessage="${branchName} - ${commitMessage}"
 
   repoUrl="https://github.com/angular/${packageRepo}.git"
+  authenticatedRepoUrl="https://${DEV_INFRA_BUILDS_TOKEN}:@github.com/angular/${packageRepo}.git"
   repoDir="/tmp/${packageRepo}"
 
   echo "Starting publish process of ${packageName} for ${buildVersionName} into ${branchName}.."
@@ -68,9 +69,6 @@ publishPackage() {
   # Prepare Git for pushing the artifacts to the repository.
   git config user.name "${commitAuthorName}"
   git config user.email "${commitAuthorEmail}"
-  git config credential.helper "store --file=.git/credentials"
-
-  echo "https://${DEV_INFRA_BUILDS_TOKEN}:@github.com" > .git/credentials
 
   echo "Git configuration has been updated to match the last commit author. Publishing now.."
 
@@ -80,7 +78,7 @@ publishPackage() {
     echo "Skipping push as no changes occured between this push and the previous commit."
   else
     git commit -m "${buildCommitMessage}"
-    git push origin ${branchName} --force
+    git push ${authenticatedRepoUrl} ${branchName} --force
     echo "Published package artifacts for ${packageName}#${buildVersionName} into ${branchName}"
   fi
 }
