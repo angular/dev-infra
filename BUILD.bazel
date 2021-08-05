@@ -24,8 +24,7 @@ pkg_npm(
     srcs = [
         "package.json",
         ":index.bzl",
-        "//bazel:npm_files",
-        "//ng-dev:npm_files",
+        "//bazel:static_files",
     ],
     deps = [
         "//bazel:lib",

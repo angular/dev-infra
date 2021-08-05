@@ -1,5 +1,9 @@
 load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
 
+exports_files([
+    "strategies/commit-message-filter.js",
+])
+
 ts_library(
     name = "merge",
     srcs = glob(

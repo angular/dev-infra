@@ -1,24 +1,19 @@
-load("//tools:defaults.bzl", "esbuild_checked_in", "ts_library")
+load("//tools:defaults.bzl", "esbuild", "ts_library")
 
-filegroup(
-    name = "npm_files",
-    srcs = [
-        "build-worker.js",
-        "ng-dev.js",
-    ],
-    visibility = [
-        "//:npm",
-        "//ng-dev:__subpackages__",
-    ],
-)
+NG_DEV_EXTERNALS = [
+    # `ts-node` is optional for users who write their configurations in TypeScript.
+    "ts-node",
+    # `typescript` is external because we want the project to provide a TypeScript version.
+    # TODO: Figure out how we want to manage dependencies for the dev-infra tool.
+    "typescript",
+]
 
 ts_library(
-    name = "lib",
+    name = "ng-dev",
     srcs = [
         "cli.ts",
     ],
     visibility = [
-        "//:npm",
         "//ng-dev:__subpackages__",
     ],
     deps = [
@@ -37,26 +32,46 @@ ts_library(
     ],
 )
 
-esbuild_checked_in(
-    name = "ng-dev",
+esbuild(
+    name = "cli-bundle",
     entry_point = "cli.ts",
-    external = [
-        "ts-node",
-        "source-map-support",
-    ],
+    external = NG_DEV_EXTERNALS,
+    output = "cli-bundle.js",
     deps = [
-        ":lib",
+        ":ng-dev",
     ],
 )
 
-esbuild_checked_in(
-    name = "build-worker",
+esbuild(
+    name = "build-worker-bundle",
     entry_point = "//ng-dev/release/build:build-worker.ts",
-    external = [
-        "ts-node",
-        "source-map-support",
-    ],
+    external = NG_DEV_EXTERNALS,
+    # Note: Needs to be named `build-worker.js` as this is the external path
+    # the release build command resolves the script from.
+    output = "build-worker.js",
     deps = [
         "//ng-dev/release/build",
     ],
+)
+
+genrule(
+    name = "commit-message-filter",
+    srcs = ["//ng-dev/pr/merge:strategies/commit-message-filter.js"],
+    # Note: Needs to be named `commit-message-filter.js` as this is the name
+    # the autosquash merge strategy expects the external file to be named.
+    outs = ["commit-message-filter.js"],
+    cmd = """cp $< $@""",
+)
+
+filegroup(
+    name = "lib",
+    srcs = [
+        ":cli-bundle",
+        # The bundle of `ng-dev` relies on the following files to be available next to the `ng-dev`
+        # bundle. This is necessary because the CLI resolves these files using relative paths and
+        # requires these to be external, compared to bundling those up.
+        ":build-worker-bundle",
+        ":commit-message-filter",
+    ],
+    visibility = ["//:npm"],
 )

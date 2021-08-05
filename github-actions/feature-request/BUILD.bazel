@@ -3,7 +3,7 @@ load("//tools:defaults.bzl", "esbuild_checked_in", "jasmine_node_test", "ts_libr
 package(default_visibility = ["//github-actions/feature-request:__subpackages__"])
 
 ts_library(
-    name = "lib",
+    name = "feature-request",
     srcs = glob(
         ["src/*.ts"],
         exclude = ["src/*.spec.ts"],
@@ -22,7 +22,7 @@ ts_library(
     testonly = True,
     srcs = glob(["src/*.spec.ts"]),
     deps = [
-        ":lib",
+        ":feature-request",
         "@npm//jasmine",
     ],
 )
@@ -38,6 +38,6 @@ esbuild_checked_in(
     name = "bundle",
     entry_point = ":src/main.ts",
     deps = [
-        ":lib",
+        ":feature-request",
     ],
 )

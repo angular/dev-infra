@@ -3,7 +3,7 @@ load("//tools:defaults.bzl", "esbuild_checked_in", "ts_library")
 package(default_visibility = ["//github-actions/feature-request:__subpackages__"])
 
 ts_library(
-    name = "lib",
+    name = "lock-closed",
     srcs = glob(
         ["*.ts"],
         exclude = ["*.spec.ts"],
@@ -21,6 +21,6 @@ esbuild_checked_in(
     name = "bundle",
     entry_point = "main.ts",
     deps = [
-        ":lib",
+        ":lock-closed",
     ],
 )
