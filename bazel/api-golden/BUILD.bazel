@@ -23,7 +23,6 @@ ts_library(
         "@npm//@microsoft/api-extractor",
         "@npm//@types/node",
         "@npm//chalk",
-        "@npm//tslib",
         "@npm//typescript",
     ],
 )

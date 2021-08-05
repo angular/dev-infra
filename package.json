@@ -5,6 +5,7 @@
     "ng-dev": "./ng-dev/cli.ts"
   },
   "private": true,
+  "main": "./ng-dev/cli-bundle.js",
   "scripts": {
     "prepare": "husky install",
     "ng-dev": "ts-node --transpile-only ./ng-dev/cli.ts"

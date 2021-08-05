@@ -9,7 +9,7 @@ ts_library(
 )
 
 filegroup(
-    name = "npm_files",
+    name = "static_files",
     srcs = [
         "BUILD.bazel",
         "expand_template.bzl",

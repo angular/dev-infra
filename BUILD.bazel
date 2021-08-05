@@ -28,8 +28,7 @@ pkg_npm(
         "package.json",
         "tsconfig.json",
         ":index.bzl",
-        "//bazel:npm_files",
-        "//ng-dev:npm_files",
+        "//bazel:static_files",
     ],
     substitutions = {
         "@dev-infra//bazel/": "@npm//@angular/dev-infra-private/bazel/",
