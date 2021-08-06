@@ -26,7 +26,9 @@ export class Buildifier extends Formatter {
     check: {
       commandFlags: `${BAZEL_WARNING_FLAG} --lint=warn --mode=check --format=json`,
       callback: (_: string, code: number | NodeJS.Signals, stdout: string) => {
-        return code !== 0 || !(JSON.parse(stdout) as {success: string}).success;
+        // For cases where `stdout` is empty, we instead use an empty object to still allow parsing.
+        stdout = stdout || '{}';
+        return code !== 0 || !(JSON.parse(stdout) as {success: boolean}).success;
       },
     },
     format: {
