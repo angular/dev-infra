@@ -8,8 +8,13 @@
 import * as yargs from 'yargs';
 
 import {BuildAndLinkCommandModule} from './build-and-link/cli';
+import {UpdateYarnCommandModule} from './update-yarn/cli';
 
 /** Build the parser for the misc commands. */
 export function buildMiscParser(localYargs: yargs.Argv) {
-  return localYargs.help().strict().command(BuildAndLinkCommandModule);
+  return localYargs
+    .help()
+    .strict()
+    .command(BuildAndLinkCommandModule)
+    .command(UpdateYarnCommandModule);
 }

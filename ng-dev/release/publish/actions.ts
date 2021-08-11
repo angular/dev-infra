@@ -29,7 +29,6 @@ import {FatalReleaseActionError, UserAbortedReleaseActionError} from './actions-
 import {getCommitMessageForRelease, getReleaseNoteCherryPickCommitMessage} from './commit-message';
 import {githubReleaseBodyLimit, waitForPullRequestInterval} from './constants';
 import {invokeReleaseBuildCommand, invokeYarnInstallCommand} from './external-commands';
-import {findOwnedForksOfRepoQuery} from './graphql-queries';
 import {getPullRequestState} from './pull-request-state';
 import {getReleaseTagForVersion} from '../versioning/version-tags';
 import {GithubApiRequestError} from '../../utils/git/github';
