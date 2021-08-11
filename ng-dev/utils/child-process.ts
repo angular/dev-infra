@@ -56,7 +56,10 @@ export function spawnInteractive(
     const commandText = `${command} ${args.join(' ')}`;
     debug(`Executing command: ${commandText}`);
     const childProcess = _spawn(command, args, {...options, shell: true, stdio: 'inherit'});
-    childProcess.on('exit', (status) => (status === 0 ? resolve() : reject(status)));
+    // The `close` event is used because the process is guaranteed to have completed writing to
+    // stdout and stderr, using the `exit` event can cause inconsistent information in stdout and
+    // stderr due to a race condition around exiting.
+    childProcess.on('close', (status) => (status === 0 ? resolve() : reject(status)));
   });
 }
 
@@ -106,7 +109,10 @@ export function spawn(
       }
     });
 
-    childProcess.on('exit', (exitCode, signal) => {
+    // The `close` event is used because the process is guaranteed to have completed writing to
+    // stdout and stderr, using the `exit` event can cause inconsistent information in stdout and
+    // stderr due to a race condition around exiting.
+    childProcess.on('close', (exitCode, signal) => {
       const exitDescription = exitCode !== null ? `exit code "${exitCode}"` : `signal "${signal}"`;
       const printFn = outputMode === 'on-error' ? error : debug;
       const status = statusFromExitCodeAndSignal(exitCode, signal);
