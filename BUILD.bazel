@@ -36,7 +36,6 @@ pkg_npm(
         "//:tsconfig.json": "@npm//@angular/dev-infra-private:tsconfig.json",
     },
     deps = [
-        "//bazel:lib",
         "//ng-dev",
         "//ng-dev:lib",
         "//tslint-rules:lib",

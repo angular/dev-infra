@@ -7,5 +7,6 @@ filegroup(
         "//bazel/benchmark/brotli-cli:files",
         "//bazel/benchmark/component_benchmark:files",
         "//bazel/benchmark/ng_rollup_bundle:files",
+        "//bazel/benchmark/driver-utilities:files",
     ],
 )

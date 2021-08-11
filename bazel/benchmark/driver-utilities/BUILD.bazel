@@ -5,6 +5,7 @@ package(default_visibility = ["//visibility:public"])
 ts_library(
     name = "driver-utilities",
     srcs = glob(["*.ts"]),
+    module_name = "@angular/dev-infra-private/bazel/benchmark/driver-utilities",
     tsconfig = "//bazel/benchmark/component_benchmark:tsconfig-e2e.json",
     deps = [
         "@npm//@angular/benchpress",
@@ -14,4 +15,10 @@ ts_library(
         "@npm//protractor",
         "@npm//selenium-webdriver",
     ],
+)
+
+# Make source files available for distribution via pkg_npm
+filegroup(
+    name = "files",
+    srcs = glob(["*"]),
 )
