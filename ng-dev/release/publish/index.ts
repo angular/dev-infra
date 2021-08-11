@@ -7,8 +7,6 @@
  */
 
 import {ListChoiceOptions, prompt} from 'inquirer';
-
-import {spawn} from '../../utils/child-process';
 import {GithubConfig} from '../../utils/config';
 import {debug, error, info, log, promptConfirm, red, yellow} from '../../utils/console';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
@@ -52,7 +50,6 @@ export class ReleaseTool {
     const nextBranchName = getNextBranchName(this._github);
 
     if (
-      !(await this._verifyEnvironmentHasPython3Symlink()) ||
       !(await this._verifyNoUncommittedChanges()) ||
       !(await this._verifyRunningFromNextBranch(nextBranchName))
     ) {
@@ -138,37 +135,6 @@ export class ReleaseTool {
       return false;
     }
     return true;
-  }
-
-  /**
-   * Verifies that Python can be resolved within scripts and points to a compatible version. Python
-   * is required in Bazel actions as there can be tools (such as `skydoc`) that rely on it.
-   * @returns a boolean indicating success or failure.
-   */
-  private async _verifyEnvironmentHasPython3Symlink(): Promise<boolean> {
-    try {
-      // Note: We do not rely on `/usr/bin/env` but rather access the `env` binary directly as it
-      // should be part of the shell's `$PATH`. This is necessary for compatibility with Windows.
-      const pyVersion = await spawn('env', ['python', '--version'], {mode: 'silent'});
-      const version = pyVersion.stdout.trim() || pyVersion.stderr.trim();
-      if (version.startsWith('Python 3.')) {
-        debug(`Local python version: ${version}`);
-        return true;
-      }
-      error(red(`  ✘   \`/usr/bin/python\` is currently symlinked to "${version}", please update`));
-      error(red('      the symlink to link instead to Python3'));
-      error();
-      error(red('      Googlers: please run the following command to symlink python to python3:'));
-      error(red('        sudo ln -s /usr/bin/python3 /usr/bin/python'));
-      return false;
-    } catch {
-      error(red('  ✘   `/usr/bin/python` does not exist, please ensure `/usr/bin/python` is'));
-      error(red('      symlinked to Python3.'));
-      error();
-      error(red('      Googlers: please run the following command to symlink python to python3:'));
-      error(red('        sudo ln -s /usr/bin/python3 /usr/bin/python'));
-    }
-    return false;
   }
 
   /**
