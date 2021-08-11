@@ -1,0 +1,10 @@
+name: 'Breaking Changes Labeling'
+description: 'Automatically label pull requests with a breaking change with a breaking change label'
+author: 'Angular'
+inputs:
+  angular-robot-key:
+    description: 'The private key for the Angular Robot Github app.'
+    required: true
+runs:
+  using: 'node12'
+  main: 'bundle.js'
