@@ -5,11 +5,11 @@ package(default_visibility = ["//github-actions:__subpackages__"])
 ts_library(
     name = "utils",
     srcs = [
-      "utils.ts",
+        "utils.ts",
     ],
     deps = [
         "@npm//@actions/core",
-        "@npm//github-app-installation-token",
         "@npm//@types/node",
+        "@npm//github-app-installation-token",
     ],
 )

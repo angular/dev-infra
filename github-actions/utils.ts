@@ -11,7 +11,9 @@ const {getToken} = require('github-app-installation-token');
  * where it was  executed from.
  */
 export async function getAuthTokenForAngularRobotApp(): Promise<string>;
-export async function getAuthTokenForAngularRobotApp(inputKey = 'angular-robot-key'): Promise<string> {
+export async function getAuthTokenForAngularRobotApp(
+  inputKey = 'angular-robot-key',
+): Promise<string> {
   /** The private key for the angular robot app. */
   const privateKey = getInput('angular-robot-key');
   /** Github App id of the Angular Robot app. */
@@ -19,7 +21,7 @@ export async function getAuthTokenForAngularRobotApp(inputKey = 'angular-robot-k
   /** Installation id of the Angular Robot app. */
   const installationId = 2813208;
   // The Angular Lock Bot Github application
-  const {token} = await getToken({installationId, appId, privateKey})
+  const {token} = await getToken({installationId, appId, privateKey});
 
   return token;
 }

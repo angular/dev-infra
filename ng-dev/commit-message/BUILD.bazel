@@ -6,7 +6,10 @@ ts_library(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    visibility = ["//ng-dev:__subpackages__"],
+    visibility = [
+        "//github-actions/breaking-changes-label:__subpackages__",
+        "//ng-dev:__subpackages__",
+    ],
     deps = [
         "//ng-dev/utils",
         "@npm//@types/conventional-commits-parser",
