@@ -6,11 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {findOwnedForksOfRepoQuery} from './graphql-queries';
 import {NgDevConfig} from '../config';
 import {yellow} from '../console';
 
 import {GitClient} from './git-client';
-import {AuthenticatedGithubClient} from './github';
+import {AuthenticatedGithubClient, GithubRepo} from './github';
 import {
   getRepositoryGitUrl,
   GITHUB_TOKEN_GENERATE_URL,
@@ -33,6 +34,9 @@ export class AuthenticatedGitClient extends GitClient {
 
   /** The OAuth scopes available for the provided Github token. */
   private _cachedOauthScopes: Promise<string[]> | null = null;
+
+  /** Cached found fork of the configured project. */
+  private _cachedForkRepo: GithubRepo | null = null;
 
   /** Instance of an authenticated github client. */
   override readonly github = new AuthenticatedGithubClient(this.githubToken);
@@ -75,6 +79,30 @@ export class AuthenticatedGitClient extends GitClient {
       `Alternatively, a new token can be created at: ${GITHUB_TOKEN_GENERATE_URL}\n`;
 
     return {error};
+  }
+
+  /**
+   * Gets an owned fork for the configured project of the authenticated user, caching the determined
+   * fork repository as the authenticated user cannot change during action execution.
+   */
+  async getForkOfAuthenticatedUser(): Promise<GithubRepo> {
+    if (this._cachedForkRepo !== null) {
+      return this._cachedForkRepo;
+    }
+
+    const {owner, name} = this.remoteConfig;
+    const result = await this.github.graphql(findOwnedForksOfRepoQuery, {owner, name});
+    const forks = result.repository.forks.nodes;
+
+    if (forks.length === 0) {
+      throw Error(
+        'Unable to find fork for currently authenticated user. Please ensure you created a fork ' +
+          ` of: ${owner}/${name}.`,
+      );
+    }
+
+    const fork = forks[0];
+    return (this._cachedForkRepo = {owner: fork.owner.login, name: fork.name});
   }
 
   /** Fetch the OAuth scopes for the loaded Github token. */

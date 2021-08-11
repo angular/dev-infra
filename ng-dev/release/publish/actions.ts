@@ -191,26 +191,17 @@ export abstract class ReleaseAction {
 
   /**
    * Gets an owned fork for the configured project of the authenticated user. Aborts the
-   * process with an error if no fork could be found. Also caches the determined fork
-   * repository as the authenticated user cannot change during action execution.
+   * process with an error if no fork could be found.
    */
   private async _getForkOfAuthenticatedUser(): Promise<GithubRepo> {
-    if (this._cachedForkRepo !== null) {
-      return this._cachedForkRepo;
-    }
-
-    const {owner, name} = this.git.remoteConfig;
-    const result = await this.git.github.graphql(findOwnedForksOfRepoQuery, {owner, name});
-    const forks = result.repository.forks.nodes;
-
-    if (forks.length === 0) {
+    try {
+      return this.git.getForkOfAuthenticatedUser();
+    } catch {
+      const {owner, name} = this.git.remoteConfig;
       error(red('  ✘   Unable to find fork for currently authenticated user.'));
       error(red(`      Please ensure you created a fork of: ${owner}/${name}.`));
       throw new FatalReleaseActionError();
     }
-
-    const fork = forks[0];
-    return (this._cachedForkRepo = {owner: fork.owner.login, name: fork.name});
   }
 
   /** Checks whether a given branch name is reserved in the specified repository. */
