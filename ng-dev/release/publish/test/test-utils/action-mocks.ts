@@ -23,10 +23,11 @@ import {ReleaseNotes} from '../../../notes/release-notes';
 import {getMockGitClient} from './git-client-mock';
 
 /**
- * Temporary directory which will be used as project directory in tests. Note that
- * this environment variable is automatically set by Bazel for tests.
+ * Temporary directory which will be used as project directory in tests. Note that this environment
+ * variable is automatically set by Bazel for tests. Bazel expects tests "not attempt to remove,
+ * chmod, or otherwise alter [TEST_TMPDIR]," so a subdirectory path is used to be created/destroyed.
  */
-export const testTmpDir: string = process.env['TEST_TMPDIR']!;
+export const testTmpDir: string = join(process.env['TEST_TMPDIR']!, 'dev-infra');
 
 /** List of NPM packages which are configured for release action tests. */
 export const testReleasePackages = ['@angular/pkg1', '@angular/pkg2'];
