@@ -54,12 +54,12 @@ describe('release notes generation', () => {
         # 13.0.0 <..>
         ## Breaking Changes
         ### cdk/a11y
-        Description of breaking change.
+        - Description of breaking change.
         ### cdk/a11y
         | Commit | Description |
         | -- | -- |
-        | <..> | refactor(cdk/a11y): with breaking change |
         | <..> | fix(cdk/a11y): not yet released #1 |
+        | <..> | refactor(cdk/a11y): with breaking change |
         ## Special Thanks:
       `);
     });
@@ -79,12 +79,12 @@ describe('release notes generation', () => {
         # 13.0.0 <..>
         ## Deprecations
         ### cdk/a11y
-        Description of deprecation.
+        - Description of deprecation.
         ### cdk/a11y
         | Commit | Description |
         | -- | -- |
-        | <..> | refactor(cdk/a11y): with deprecation |
         | <..> | fix(cdk/a11y): not yet released #1 |
+        | <..> | refactor(cdk/a11y): with deprecation |
         ## Special Thanks:
       `);
     });
@@ -107,12 +107,12 @@ describe('release notes generation', () => {
         # 13.0.0 <..>
         ## Breaking Changes
         ### cdk/a11y
-        Description of breaking change.
+        - Description of breaking change.
         ### cdk/a11y
         | Commit | Description |
         | -- | -- |
-        | <..> | refactor(cdk/a11y): with breaking change |
         | <..> | fix(cdk/a11y): not yet released #1 |
+        | <..> | refactor(cdk/a11y): with breaking change |
         ## Special Thanks:
       `);
     });
@@ -132,12 +132,12 @@ describe('release notes generation', () => {
         # 13.0.0 <..>
         ## Deprecations
         ### cdk/a11y
-        Description of deprecation.
+        - Description of deprecation.
         ### cdk/a11y
         | Commit | Description |
         | -- | -- |
-        | <..> | refactor(cdk/a11y): with deprecation |
         | <..> | fix(cdk/a11y): not yet released #1 |
+        | <..> | refactor(cdk/a11y): with deprecation |
         ## Special Thanks:
       `);
     });

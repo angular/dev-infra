@@ -145,8 +145,8 @@ describe('move next into release-candidate action', () => {
       ### pkg1
       | Commit | Description |
       | -- | -- |
-      | <..> | fix(pkg1): not yet released #2 |
       | <..> | feat(pkg1): not yet released #1 |
+      | <..> | fix(pkg1): not yet released #2 |
       ## Special Thanks:
     `);
   });
