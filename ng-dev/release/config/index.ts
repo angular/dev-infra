@@ -27,7 +27,7 @@ export interface ReleaseConfig {
   /** The list of github labels to add to the release PRs. */
   releasePrLabels?: string[];
   /** Configuration for creating release notes during publishing. */
-  releaseNotes: ReleaseNotesConfig;
+  releaseNotes?: ReleaseNotesConfig;
 }
 
 /** Configuration for creating release notes during publishing. */

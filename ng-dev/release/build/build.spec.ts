@@ -34,7 +34,6 @@ describe('ng-dev release build', () => {
     spyOn(releaseConfig, 'getReleaseConfig').and.returnValue({
       npmPackages,
       buildPackages,
-      releaseNotes: {},
     });
     await ReleaseBuildCommandModule.handler({json: !!json, stampForRelease: true, $0: '', _: []});
   }

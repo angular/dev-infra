@@ -1,6 +1,3 @@
-import {mkdirSync, rmdirSync, writeFileSync} from 'fs';
-import {join} from 'path';
-
 /**
  * @license
  * Copyright Google LLC All Rights Reserved.
@@ -8,6 +5,9 @@ import {join} from 'path';
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+
+import {mkdirSync, rmdirSync, writeFileSync} from 'fs';
+import {join} from 'path';
 
 import * as npm from '../../../versioning/npm-publish';
 import * as constants from '../../constants';
@@ -18,8 +18,9 @@ import {ReleaseAction} from '../../actions';
 import {GithubConfig} from '../../../../utils/config';
 import {ReleaseConfig} from '../../../config';
 import {installVirtualGitClientSpies, VirtualGitClient} from '../../../../utils/testing';
-import {installSandboxGitClient, SandboxGitClient} from './sandbox-git-client';
+import {installSandboxGitClient} from './sandbox-git-client';
 import {ReleaseNotes} from '../../../notes/release-notes';
+import {getMockGitClient} from './git-client-mock';
 
 /**
  * Temporary directory which will be used as project directory in tests. Note that
@@ -39,7 +40,6 @@ export function getTestConfigurationsForAction() {
   };
   const releaseConfig: ReleaseConfig = {
     npmPackages: testReleasePackages,
-    releaseNotes: {},
     buildPackages: () => {
       throw Error('Not implemented');
     },
@@ -101,21 +101,4 @@ export function setupMocksForReleaseAction<T extends boolean>(
   }
 
   return {gitClient};
-}
-
-/** Gets a mock instance for the `GitClient` instance. */
-export function getMockGitClient<T extends boolean>(
-  github: GithubConfig,
-  useSandboxGitClient: T,
-): T extends true ? SandboxGitClient : VirtualGitClient {
-  if (useSandboxGitClient) {
-    // TypeScript does not infer the return type for the implementation, so we cast
-    // to any. The function signature will have the proper conditional return type.
-    // The Git binary path will be passed to this test process as command line argument.
-    // See `ng-dev/release/publish/test/BUILD.bazel` and the `GIT_BIN_PATH` variable
-    // that is exposed from the Git bazel toolchain.
-    return SandboxGitClient.createInstance(process.argv[2], {github}, testTmpDir) as any;
-  } else {
-    return VirtualGitClient.createInstance({github});
-  }
 }

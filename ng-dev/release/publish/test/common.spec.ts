@@ -26,11 +26,11 @@ import {
   setupReleaseActionForTesting,
 } from './test-utils/test-utils';
 import {
-  getMockGitClient,
   getTestConfigurationsForAction,
   testReleasePackages,
   testTmpDir,
 } from './test-utils/action-mocks';
+import {getMockGitClient} from './test-utils/git-client-mock';
 
 describe('common release action logic', () => {
   const baseReleaseTrains: ActiveReleaseTrains = {
