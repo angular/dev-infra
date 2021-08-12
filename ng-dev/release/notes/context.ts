@@ -86,38 +86,34 @@ export class RenderContext {
     return commitGroups;
   }
 
-  /**
-   * A filter function for filtering a list of commits to only include commits which should appear
-   * in release notes.
-   */
-  includeInReleaseNotes() {
-    return (commit: CommitFromGitLog) => {
-      if (!typesToIncludeInReleaseNotes.includes(commit.type)) {
-        return false;
-      }
+  /** Whether the specified commit contains breaking changes. */
+  hasBreakingChanges(commit: CommitFromGitLog) {
+    return commit.breakingChanges.length !== 0;
+  }
 
-      if (this.hiddenScopes.includes(commit.scope)) {
-        return false;
-      }
-      return true;
-    };
+  /** Whether the specified commit contains deprecations. */
+  hasDeprecations(commit: CommitFromGitLog) {
+    return commit.deprecations.length !== 0;
   }
 
   /**
-   * A filter function for filtering a list of commits to only include commits which contain a
-   * truthy value, or for arrays an array with 1 or more elements, for the provided field.
+   * A filter function for filtering a list of commits to only include commits which
+   * should appear in release notes.
    */
-  contains(field: keyof CommitFromGitLog) {
+  includeInReleaseNotes() {
     return (commit: CommitFromGitLog) => {
-      const fieldValue = commit[field];
-      if (!fieldValue) {
+      if (this.hiddenScopes.includes(commit.scope)) {
         return false;
       }
 
-      if (Array.isArray(fieldValue) && fieldValue.length === 0) {
-        return false;
+      // Commits which contain breaking changes or deprecations are always included
+      // in release notes. The breaking change or deprecations will already be listed
+      // in a dedicated section but it is still valuable to include the actual commit.
+      if (this.hasBreakingChanges(commit) || this.hasDeprecations(commit)) {
+        return true;
       }
-      return true;
+
+      return typesToIncludeInReleaseNotes.includes(commit.type);
     };
   }
 

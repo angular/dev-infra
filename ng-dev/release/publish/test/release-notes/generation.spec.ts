@@ -58,6 +58,7 @@ describe('release notes generation', () => {
         ### cdk/a11y
         | Commit | Description |
         | -- | -- |
+        | <..> | refactor(cdk/a11y): with breaking change |
         | <..> | fix(cdk/a11y): not yet released #1 |
         ## Special Thanks:
       `);
@@ -82,6 +83,7 @@ describe('release notes generation', () => {
         ### cdk/a11y
         | Commit | Description |
         | -- | -- |
+        | <..> | refactor(cdk/a11y): with deprecation |
         | <..> | fix(cdk/a11y): not yet released #1 |
         ## Special Thanks:
       `);
@@ -109,6 +111,7 @@ describe('release notes generation', () => {
         ### cdk/a11y
         | Commit | Description |
         | -- | -- |
+        | <..> | refactor(cdk/a11y): with breaking change |
         | <..> | fix(cdk/a11y): not yet released #1 |
         ## Special Thanks:
       `);
@@ -133,6 +136,7 @@ describe('release notes generation', () => {
         ### cdk/a11y
         | Commit | Description |
         | -- | -- |
+        | <..> | refactor(cdk/a11y): with deprecation |
         | <..> | fix(cdk/a11y): not yet released #1 |
         ## Special Thanks:
       `);
