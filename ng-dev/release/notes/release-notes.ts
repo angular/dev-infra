@@ -33,7 +33,7 @@ export class ReleaseNotes {
   /** The title to use for the release. */
   private title: string | false | undefined;
   /** The configuration for release notes. */
-  private config: ReleaseNotesConfig = this.getReleaseConfig().releaseNotes;
+  private config: ReleaseNotesConfig = this.getReleaseConfig().releaseNotes ?? {};
 
   protected constructor(public version: semver.SemVer, private commits: CommitFromGitLog[]) {}
 

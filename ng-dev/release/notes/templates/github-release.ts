@@ -11,23 +11,6 @@ export default `
 # <%- version %><% if (title) { %> "<%- title %>"<% } %> (<%- dateStamp %>)
 
 <%_
-const commitsInChangelog = commits.filter(includeInReleaseNotes());
-for (const group of asCommitGroups(commitsInChangelog)) {
-_%>
-
-### <%- group.title %>
-| Commit | Description |
-| -- | -- |
-<%_
-  for (const commit of group.commits) {
-_%>
-| <%- commit.shortHash %> | <%- commit.header %> |
-<%_
-  }
-}
-_%>
-
-<%_
 const breakingChanges = commits.filter(contains('breakingChanges'));
 if (breakingChanges.length) {
 _%>
@@ -65,6 +48,23 @@ _%>
 <%- commit.deprecations[0].text %>
 <%_
     }
+  }
+}
+_%>
+
+<%_
+const commitsInChangelog = commits.filter(includeInReleaseNotes());
+for (const group of asCommitGroups(commitsInChangelog)) {
+_%>
+
+### <%- group.title %>
+| Commit | Description |
+| -- | -- |
+<%_
+  for (const commit of group.commits) {
+_%>
+| <%- commit.shortHash %> | <%- commit.header %> |
+<%_
   }
 }
 _%>

@@ -32,7 +32,6 @@ describe('ng-dev release set-dist-tag', () => {
       npmPackages,
       publishRegistry,
       buildPackages: async () => [],
-      releaseNotes: {},
     });
     await ReleaseSetDistTagCommand.handler({tagName, targetVersion, $0: '', _: []});
   }
