@@ -100,9 +100,9 @@ describe('cut next pre-release action', () => {
           ### pkg1
           | Commit | Description |
           | -- | -- |
-          | <..> | feat(pkg1): not released yet, but cherry-picked |
-          | <..> | feat(pkg1): only in next, not released yet #2 |
-          | <..> | feat(pkg1): only in next, not released yet #1 |
+          | <..> | feat: not released yet, but cherry-picked |
+          | <..> | feat: only in next, not released yet #2 |
+          | <..> | feat: only in next, not released yet #1 |
           ## Special Thanks:
         `);
       },
@@ -150,8 +150,8 @@ describe('cut next pre-release action', () => {
         ### pkg1
         | Commit | Description |
         | -- | -- |
-        | <..> | feat(pkg1): not released yet #2 |
-        | <..> | feat(pkg1): not released yet #1 |
+        | <..> | feat: not released yet #2 |
+        | <..> | feat: not released yet #1 |
         ## Special Thanks:
       `);
     });
@@ -198,8 +198,8 @@ describe('cut next pre-release action', () => {
         ### pkg1
         | Commit | Description |
         | -- | -- |
-        | <..> | feat(pkg1): not released yet #2 |
-        | <..> | feat(pkg1): not released yet #1 |
+        | <..> | feat: not released yet #2 |
+        | <..> | feat: not released yet #1 |
         ## Special Thanks:
       `);
     });

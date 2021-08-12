@@ -152,15 +152,15 @@ describe('cut stable action', () => {
       ### pkg1
       | Commit | Description |
       | -- | -- |
-      | <..> | fix(pkg1): not yet released #2 |
-      | <..> | fix(pkg1): not yet released #1 |
-      | <..> | fix(pkg1): released release-candidate #2 |
-      | <..> | fix(pkg1): released release-candidate #1 |
-      | <..> | fix(pkg1): released feature-freeze pre-release #2 |
-      | <..> | fix(pkg1): released feature-freeze pre-release #1 |
-      | <..> | fix(pkg1): released first next pre-release #2 |
-      | <..> | fix(pkg1): released first next pre-release #1 |
-      | <..> | fix(pkg1): landed in patch, not released but cherry-picked #1 |
+      | <..> | fix: not yet released #2 |
+      | <..> | fix: not yet released #1 |
+      | <..> | fix: released release-candidate #2 |
+      | <..> | fix: released release-candidate #1 |
+      | <..> | fix: released feature-freeze pre-release #2 |
+      | <..> | fix: released feature-freeze pre-release #1 |
+      | <..> | fix: released first next pre-release #2 |
+      | <..> | fix: released first next pre-release #1 |
+      | <..> | fix: landed in patch, not released but cherry-picked #1 |
       ## Special Thanks:
     `);
     },

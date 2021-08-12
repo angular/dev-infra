@@ -111,9 +111,9 @@ describe('move next into release-candidate action', () => {
         ### pkg1
         | Commit | Description |
         | -- | -- |
-        | <..> | feat(pkg1): not released yet, but cherry-picked |
-        | <..> | feat(pkg1): only in next, not released yet #2 |
-        | <..> | feat(pkg1): only in next, not released yet #1 |
+        | <..> | feat: not released yet, but cherry-picked |
+        | <..> | feat: only in next, not released yet #2 |
+        | <..> | feat: only in next, not released yet #1 |
       `);
       },
     );
@@ -145,8 +145,8 @@ describe('move next into release-candidate action', () => {
       ### pkg1
       | Commit | Description |
       | -- | -- |
-      | <..> | feat(pkg1): not yet released #1 |
-      | <..> | fix(pkg1): not yet released #2 |
+      | <..> | feat: not yet released #1 |
+      | <..> | fix: not yet released #2 |
       ## Special Thanks:
     `);
   });

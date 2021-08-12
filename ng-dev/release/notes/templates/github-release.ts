@@ -52,7 +52,7 @@ _%>
 <%_
   for (const commit of group.commits) {
 _%>
-| <%- commit.shortHash %> | <%- commit.header %> |
+| <%- commitToBadge(commit) %> | <%- commit.subject %> |
 <%_
   }
 }

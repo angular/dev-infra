@@ -175,6 +175,27 @@ export class RenderContext {
       .filter((a) => !botsAuthorNames.includes(a))
       .sort();
   }
+
+  /**
+   * Convert a commit object to a Markdown linked badged.
+   */
+  commitToBadge(commit: CommitFromGitLog): string {
+    let color = 'yellow';
+    switch (commit.type) {
+      case 'fix':
+        color = 'green';
+        break;
+      case 'feat':
+        color = 'blue';
+        break;
+      case 'perf':
+        color = 'orange';
+        break;
+    }
+    const url = `https://github.com/${this.data.github.owner}/${this.data.github.name}/commit/${commit.hash}`;
+    const imgSrc = `https://img.shields.io/badge/${commit.shortHash}-${commit.type}-${color}`;
+    return `[![${commit.type} - ${commit.shortHash}](${imgSrc})](${url})`;
+  }
 }
 
 /**

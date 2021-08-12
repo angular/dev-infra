@@ -108,8 +108,8 @@ describe('cut an LTS patch action', () => {
       ### pkg1
       | Commit | Description |
       | -- | -- |
-      | <..> | feat(pkg1): not yet released #2 |
-      | <..> | feat(pkg1): not yet released #1 |
+      | <..> | feat: not yet released #2 |
+      | <..> | feat: not yet released #1 |
       ## Special Thanks:
     `);
   });
