@@ -38,12 +38,6 @@ describe('RenderContext', () => {
     expect(renderContext.dateStamp).toBe('2000-01-20');
   });
 
-  it('filters to include only commits which have specified field', () => {
-    const renderContext = new RenderContext(defaultContextData);
-    const matchingCommits = commitsFromList(2, 15);
-    expect(commits.filter(renderContext.contains('breakingChanges'))).toEqual(matchingCommits);
-  });
-
   it('filters to include only the first commit discovered with a unique value for a specified field', () => {
     const renderContext = new RenderContext(defaultContextData);
     const matchingCommits = commitsFromList(0, 1, 2, 3, 4, 7, 12);
@@ -51,6 +45,46 @@ describe('RenderContext', () => {
   });
 
   describe('filters to include commits which are to be included in the release notes', () => {
+    it('forcibly includes commits with breaking changes regardless of type', () => {
+      const renderContext = new RenderContext({...defaultContextData, hiddenScopes: ['excluded']});
+      const refactorCommit = buildCommit('refactor', 'core');
+      const refactorCommitWithBreakingChange = buildCommit('refactor', 'core', 'breaking-change');
+      const refactorCommitWithBreakingChangeButExcluded = buildCommit(
+        'refactor',
+        'excluded',
+        'breaking-change',
+      );
+      const commitsToTest = [
+        refactorCommit,
+        refactorCommitWithBreakingChange,
+        refactorCommitWithBreakingChangeButExcluded,
+      ];
+
+      expect(commitsToTest.filter(renderContext.includeInReleaseNotes())).toEqual([
+        refactorCommitWithBreakingChange,
+      ]);
+    });
+
+    it('forcibly includes commits with deprecations regardless of type', () => {
+      const renderContext = new RenderContext({...defaultContextData, hiddenScopes: ['excluded']});
+      const refactorCommit = buildCommit('refactor', 'core');
+      const refactorCommitWithDeprecation = buildCommit('refactor', 'core', 'deprecation');
+      const refactorCommitWithDeprecationButExcluded = buildCommit(
+        'refactor',
+        'excluded',
+        'deprecation',
+      );
+      const commitsToTest = [
+        refactorCommit,
+        refactorCommitWithDeprecation,
+        refactorCommitWithDeprecationButExcluded,
+      ];
+
+      expect(commitsToTest.filter(renderContext.includeInReleaseNotes())).toEqual([
+        refactorCommitWithDeprecation,
+      ]);
+    });
+
     it('including all scopes by default', () => {
       const renderContext = new RenderContext(defaultContextData);
       const matchingCommits = commitsFromList(0, 2, 5, 6, 8, 10, 11, 12, 15, 16);
@@ -130,8 +164,9 @@ const buildCommitMessage = commitMessageBuilder({
   footer: '',
 });
 
-function buildCommit(type: string, scope: string, withBreakingChange = false) {
-  const footer = withBreakingChange ? 'BREAKING CHANGE: something is broken now' : '';
+function buildCommit(type: string, scope: string, withNote?: 'breaking-change' | 'deprecation') {
+  const noteMarker = withNote === 'breaking-change' ? 'BREAKING CHANGE' : 'DEPRECATED';
+  const footer = withNote ? `${noteMarker}: description of note` : '';
   const parts = {type, scope, footer};
   return parseCommitFromGitLog(Buffer.from(buildCommitMessage(parts)));
 }
@@ -147,7 +182,7 @@ function commitsFromList(...indexes: number[]) {
 const commits: CommitFromGitLog[] = [
   buildCommit('fix', 'platform-browser'),
   buildCommit('test', 'dev-infra'),
-  buildCommit('feat', 'dev-infra', true),
+  buildCommit('feat', 'dev-infra', 'breaking-change'),
   buildCommit('build', 'docs-infra'),
   buildCommit('docs', 'router'),
   buildCommit('feat', 'core'),
@@ -160,6 +195,6 @@ const commits: CommitFromGitLog[] = [
   buildCommit('perf', 'core'),
   buildCommit('docs', 'forms'),
   buildCommit('refactor', 'dev-infra'),
-  buildCommit('feat', 'docs-infra', true),
+  buildCommit('feat', 'docs-infra', 'breaking-change'),
   buildCommit('fix', 'compiler'),
 ];

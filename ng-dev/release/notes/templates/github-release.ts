@@ -11,7 +11,7 @@ export default `
 # <%- version %><% if (title) { %> "<%- title %>"<% } %> (<%- dateStamp %>)
 
 <%_
-const breakingChanges = commits.filter(contains('breakingChanges'));
+const breakingChanges = commits.filter(hasBreakingChanges);
 if (breakingChanges.length) {
 _%>
 ## Breaking Changes
@@ -33,7 +33,7 @@ _%>
 _%>
 
 <%_
-const deprecations = commits.filter(contains('deprecations'));
+const deprecations = commits.filter(hasDeprecations);
 if (deprecations.length) {
 _%>
 ## Deprecations
