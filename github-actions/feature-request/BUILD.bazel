@@ -9,11 +9,11 @@ ts_library(
         exclude = ["src/*.spec.ts"],
     ),
     deps = [
+        "//github-actions:utils",
         "@npm//@actions/core",
         "@npm//@actions/github",
         "@npm//@octokit/rest",
         "@npm//@types/node",
-        "@npm//github-app-installation-token",
     ],
 )
 

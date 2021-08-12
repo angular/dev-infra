@@ -1,21 +1,14 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
+import {getAuthTokenForAngularRobotApp} from '../../utils';
 import {run} from './action';
 import {getInputValue} from './get-input';
 import {OctoKit} from './octokit';
-const {getToken} = require('github-app-installation-token');
 
 (async () => {
   try {
     // A immediately executed async function to allow `await`ing the installation access token.
-    /** The private key for the angular robot app. */
-    const privateKey = getInputValue<string>('angular-robot-key');
-    /** Github App id of the Angular Robot app. */
-    const appId = 43341;
-    /** Installation id of the Angular Robot app. */
-    const installationId = 2813208;
-    // The Angular Lock Bot Github application
-    const {token} = await getToken({installationId, appId, privateKey});
+    const token = await getAuthTokenForAngularRobotApp();
     /** The Octokit instance for interacting with Github. */
     const octokit = new OctoKit(token, {
       repo: context.repo.repo,
