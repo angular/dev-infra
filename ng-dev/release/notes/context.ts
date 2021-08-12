@@ -16,6 +16,9 @@ const typesToIncludeInReleaseNotes = Object.values(COMMIT_TYPES)
   .filter((type) => type.releaseNotesLevel === ReleaseNotesLevel.Visible)
   .map((type) => type.name);
 
+/** List of commit authors which are bots. */
+const botsAuthorNames = ['dependabot[bot]', 'Renovate Bot'];
+
 /** Data used for context during rendering. */
 export interface RenderContextData {
   title: string | false;
@@ -162,6 +165,15 @@ export class RenderContext {
    */
   bulletizeText(text: string): string {
     return '- ' + text.replace(/\\n/g, '\\n  ');
+  }
+
+  /**
+   * Returns unique, sorted and filtered commit authors.
+   */
+  commitAuthors(commits: CommitFromGitLog[]): string[] {
+    return [...new Set(commits.map((c) => c.author))]
+      .filter((a) => !botsAuthorNames.includes(a))
+      .sort();
   }
 }
 
