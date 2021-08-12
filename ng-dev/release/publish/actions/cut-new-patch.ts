@@ -16,7 +16,8 @@ import {ReleaseAction} from '../actions';
  * for the new patch version, but also needs to be cherry-picked into the next development branch.
  */
 export class CutNewPatchAction extends ReleaseAction {
-  private _newVersion = semverInc(this.active.latest.version, 'patch');
+  private _previousVersion = this.active.latest.version;
+  private _newVersion = semverInc(this._previousVersion, 'patch');
 
   override async getDescription() {
     const {branchName} = this.active.latest;
@@ -27,9 +28,11 @@ export class CutNewPatchAction extends ReleaseAction {
   override async perform() {
     const {branchName} = this.active.latest;
     const newVersion = this._newVersion;
+    const compareVersionForReleaseNotes = this._previousVersion;
 
     const {pullRequest, releaseNotes} = await this.checkoutBranchAndStageVersion(
       newVersion,
+      compareVersionForReleaseNotes,
       branchName,
     );
 

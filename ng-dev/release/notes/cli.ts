@@ -12,13 +12,12 @@ import {SemVer} from 'semver';
 import {Arguments, Argv, CommandModule} from 'yargs';
 
 import {info} from '../../utils/console';
-import {GitClient} from '../../utils/git/git-client';
 
 import {ReleaseNotes} from './release-notes';
 
 /** Command line options for building a release. */
 export interface ReleaseNotesOptions {
-  from?: string;
+  from: string;
   to: string;
   outFile?: string;
   releaseVersion: SemVer;
@@ -36,7 +35,7 @@ function builder(argv: Argv): Argv<ReleaseNotesOptions> {
     .option('from', {
       type: 'string',
       description: 'The git tag or ref to start the changelog entry from',
-      defaultDescription: 'The latest semver tag',
+      demandOption: true,
     })
     .option('to', {
       type: 'string',
@@ -58,11 +57,8 @@ function builder(argv: Argv): Argv<ReleaseNotesOptions> {
 
 /** Yargs command handler for generating release notes. */
 async function handler({releaseVersion, from, to, outFile, type}: Arguments<ReleaseNotesOptions>) {
-  // Since `yargs` evaluates defaults even if a value as been provided, if no value is provided to
-  // the handler, the latest semver tag on the branch is used.
-  from = from || GitClient.get().getLatestSemverTag().format();
   /** The ReleaseNotes instance to generate release notes. */
-  const releaseNotes = await ReleaseNotes.fromRange(releaseVersion, from, to);
+  const releaseNotes = await ReleaseNotes.forRange(releaseVersion, from, to);
 
   /** The requested release notes entry. */
   const releaseNotesEntry = await (type === 'changelog'

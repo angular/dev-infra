@@ -12,27 +12,22 @@ import * as npm from '../../versioning/npm-publish';
 import {ReleaseActionConstructor} from '../actions';
 import {BranchOffNextBranchBaseAction} from '../actions/branch-off-next-branch';
 import * as externalCommands from '../external-commands';
-
-import {setupReleaseActionForTesting, testTmpDir} from './test-utils';
+import {setupReleaseActionForTesting} from './test-utils/test-utils';
+import {testReleasePackages, testTmpDir} from './test-utils/action-mocks';
+import {readFileSync} from 'fs';
+import {TestReleaseAction} from './test-utils/test-action';
 
 /**
- * Performs the given branch-off release action and expects versions and
- * branches to be determined and created properly.
+ * Expects and fakes the necessary Github API requests for branching-off
+ * the next branch to a specified new version.
  */
-export async function expectBranchOffActionToRun(
-  action: ReleaseActionConstructor<BranchOffNextBranchBaseAction>,
-  active: ActiveReleaseTrains,
-  isNextPublishedToNpm: boolean,
+async function expectGithubApiRequestsForBranchOff(
+  action: Omit<TestReleaseAction, 'gitClient'>,
   expectedNextVersion: string,
   expectedVersion: string,
   expectedNewBranch: string,
 ) {
-  const {repo, fork, instance, gitClient} = setupReleaseActionForTesting(
-    action,
-    active,
-    isNextPublishedToNpm,
-  );
-
+  const {repo, fork} = action;
   const expectedNextUpdateBranch = `next-release-train-${expectedNextVersion}`;
   const expectedStagingForkBranch = `release-stage-${expectedVersion}`;
   const expectedTagName = expectedVersion;
@@ -59,6 +54,32 @@ export async function expectBranchOffActionToRun(
   fork
     .expectBranchRequest(expectedStagingForkBranch, null)
     .expectBranchRequest(expectedNextUpdateBranch, null);
+
+  return {expectedNextUpdateBranch, expectedStagingForkBranch, expectedTagName};
+}
+
+/**
+ * Performs the given branch-off release action and expects versions and
+ * branches to be determined and created properly.
+ */
+export async function expectBranchOffActionToRun(
+  actionType: ReleaseActionConstructor<BranchOffNextBranchBaseAction>,
+  active: ActiveReleaseTrains,
+  isNextPublishedToNpm: boolean,
+  expectedNextVersion: string,
+  expectedVersion: string,
+  expectedNewBranch: string,
+) {
+  const action = setupReleaseActionForTesting(actionType, active, isNextPublishedToNpm);
+  const {repo, fork, instance, gitClient} = action;
+
+  const {expectedStagingForkBranch, expectedNextUpdateBranch} =
+    await expectGithubApiRequestsForBranchOff(
+      action,
+      expectedNextVersion,
+      expectedVersion,
+      expectedNewBranch,
+    );
 
   await instance.perform();
 
@@ -110,7 +131,47 @@ export async function expectBranchOffActionToRun(
   );
 
   expect(externalCommands.invokeReleaseBuildCommand).toHaveBeenCalledTimes(1);
-  expect(npm.runNpmPublish).toHaveBeenCalledTimes(2);
-  expect(npm.runNpmPublish).toHaveBeenCalledWith(`${testTmpDir}/dist/pkg1`, 'next', undefined);
-  expect(npm.runNpmPublish).toHaveBeenCalledWith(`${testTmpDir}/dist/pkg2`, 'next', undefined);
+  expect(npm.runNpmPublish).toHaveBeenCalledTimes(testReleasePackages.length);
+
+  for (const pkgName of testReleasePackages) {
+    expect(npm.runNpmPublish).toHaveBeenCalledWith(
+      `${testTmpDir}/dist/${pkgName}`,
+      'next',
+      undefined,
+    );
+  }
+}
+
+/**
+ * Prepares the specified release action for a test run where the changelog is being
+ * generated. The action is not run automatically because the test author should still
+ * be able to operate within the sandbox git repo.
+ *
+ * A function is exposed that can be invoked to build the changelog.
+ */
+export function prepareBranchOffActionForChangelog(
+  actionType: ReleaseActionConstructor<BranchOffNextBranchBaseAction>,
+  active: ActiveReleaseTrains,
+  isNextPublishedToNpm: boolean,
+  expectedNextVersion: string,
+  expectedVersion: string,
+  expectedNewBranch: string,
+) {
+  const action = setupReleaseActionForTesting(actionType, active, isNextPublishedToNpm, {
+    useSandboxGitClient: true,
+  });
+
+  const buildChangelog = async () => {
+    await expectGithubApiRequestsForBranchOff(
+      action,
+      expectedNextVersion,
+      expectedVersion,
+      expectedNewBranch,
+    );
+    await action.instance.perform();
+
+    return readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
+  };
+
+  return {action, buildChangelog};
 }

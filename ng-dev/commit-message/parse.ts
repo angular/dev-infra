@@ -142,10 +142,9 @@ function parseInternal(fullText: string | Buffer): CommitFromGitLog | Commit {
   // Extract the commit message notes by marked types into their respective lists.
   commit.notes.forEach((note: ParsedCommit.Note) => {
     if (note.title === NoteSections.BREAKING_CHANGE) {
-      return breakingChanges.push(note);
-    }
-    if (note.title === NoteSections.DEPRECATED) {
-      return deprecations.push(note);
+      breakingChanges.push(note);
+    } else if (note.title === NoteSections.DEPRECATED) {
+      deprecations.push(note);
     }
   });
 

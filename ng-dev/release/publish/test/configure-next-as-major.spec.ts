@@ -9,8 +9,7 @@
 import {getBranchPushMatcher} from '../../../utils/testing';
 import {ReleaseTrain} from '../../versioning/release-trains';
 import {ConfigureNextAsMajorAction} from '../actions/configure-next-as-major';
-
-import {parse, setupReleaseActionForTesting} from './test-utils';
+import {parse, setupReleaseActionForTesting} from './test-utils/test-utils';
 
 describe('configure next as major action', () => {
   it('should be active if the next branch is for a minor', async () => {

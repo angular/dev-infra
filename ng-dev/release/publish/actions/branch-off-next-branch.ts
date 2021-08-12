@@ -11,8 +11,10 @@ import * as semver from 'semver';
 import {green, info, yellow} from '../../../utils/console';
 import {semverInc} from '../../../utils/semver';
 import {ReleaseNotes} from '../../notes/release-notes';
-import {ActiveReleaseTrains} from '../../versioning/active-release-trains';
-import {computeNewPrereleaseVersionForNext} from '../../versioning/next-prerelease-version';
+import {
+  computeNewPrereleaseVersionForNext,
+  getReleaseNotesCompareVersionForNext,
+} from '../../versioning/next-prerelease-version';
 import {ReleaseAction} from '../actions';
 import {
   getCommitMessageForExceptionalNextVersionBump,
@@ -42,6 +44,10 @@ export abstract class BranchOffNextBranchBaseAction extends ReleaseAction {
   }
 
   override async perform() {
+    const compareVersionForReleaseNotes = await getReleaseNotesCompareVersionForNext(
+      this.active,
+      this.config,
+    );
     const newVersion = await this._computeNewVersion();
     const newBranch = `${newVersion.major}.${newVersion.minor}.x`;
 
@@ -53,6 +59,7 @@ export abstract class BranchOffNextBranchBaseAction extends ReleaseAction {
     // created branch instead of re-fetching from the upstream.
     const {pullRequest, releaseNotes} = await this.stageVersionForBranchAndCreatePullRequest(
       newVersion,
+      compareVersionForReleaseNotes,
       newBranch,
     );
 

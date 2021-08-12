@@ -1,0 +1,65 @@
+load(":toolchain.bzl", "git_toolchain")
+load(":alias.bzl", "git_toolchain_alias")
+
+package(default_visibility = ["//visibility:public"])
+
+toolchain_type(name = "toolchain_type")
+
+git_toolchain_alias(name = "current_git_toolchain")
+
+git_toolchain(
+    name = "git_linux",
+    binary_path = "/usr/bin/git",
+)
+
+git_toolchain(
+    name = "git_macos",
+    binary_path = "/usr/bin/git",
+)
+
+git_toolchain(
+    name = "git_windows",
+    binary_path = "C:\\Program Files\\Git\\bin\\git.exe",
+)
+
+toolchain(
+    name = "git_linux_toolchain",
+    exec_compatible_with = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+    ],
+    target_compatible_with = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+    ],
+    toolchain = ":git_linux",
+    toolchain_type = ":toolchain_type",
+)
+
+toolchain(
+    name = "git_macos_toolchain",
+    exec_compatible_with = [
+        "@platforms//os:macos",
+        "@platforms//cpu:x86_64",
+    ],
+    target_compatible_with = [
+        "@platforms//os:macos",
+        "@platforms//cpu:x86_64",
+    ],
+    toolchain = ":git_macos",
+    toolchain_type = ":toolchain_type",
+)
+
+toolchain(
+    name = "git_windows_toolchain",
+    exec_compatible_with = [
+        "@platforms//os:windows",
+        "@platforms//cpu:x86_64",
+    ],
+    target_compatible_with = [
+        "@platforms//os:windows",
+        "@platforms//cpu:x86_64",
+    ],
+    toolchain = ":git_windows",
+    toolchain_type = ":toolchain_type",
+)

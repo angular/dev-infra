@@ -9,8 +9,12 @@
 import {ReleaseTrain} from '../../versioning/release-trains';
 import {MoveNextIntoReleaseCandidateAction} from '../actions/move-next-into-release-candidate';
 
-import {expectBranchOffActionToRun} from './branch-off-next-branch-testing';
-import {parse} from './test-utils';
+import {
+  expectBranchOffActionToRun,
+  prepareBranchOffActionForChangelog,
+} from './branch-off-next-branch-testing';
+import {changelogPattern, parse} from './test-utils/test-utils';
+import {SandboxGitRepo} from './test-utils/sandbox-testing';
 
 describe('move next into release-candidate action', () => {
   it('should not activate if a feature-freeze release-train is active', async () => {
@@ -54,18 +58,111 @@ describe('move next into release-candidate action', () => {
     ).toBe(true);
   });
 
+  // This is test for a special case in the release tooling. Whenever we branch off for
+  // feature-freeze, we immediately bump the version in `next` but do not publish it.
+  describe('current next version has not been published', () => {
+    it('should update the version regardless', async () => {
+      await expectBranchOffActionToRun(
+        MoveNextIntoReleaseCandidateAction,
+        {
+          releaseCandidate: null,
+          next: new ReleaseTrain('master', parse('10.1.0-next.0')),
+          latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
+        },
+        /* isNextPublishedToNpm */ false,
+        '10.2.0-next.0',
+        '10.1.0-rc.0',
+        '10.1.x',
+      );
+    });
+
+    it(
+      'should generate release notes capturing changes to the latest patch while deduping ' +
+        'changes that have also landed in the current patch',
+      async () => {
+        const {action, buildChangelog} = prepareBranchOffActionForChangelog(
+          MoveNextIntoReleaseCandidateAction,
+          {
+            releaseCandidate: null,
+            next: new ReleaseTrain('master', parse('10.1.0-next.0')),
+            latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
+          },
+          /* isNextPublishedToNpm */ false,
+          '10.2.0-next.0',
+          '10.1.0-rc.0',
+          '10.1.x',
+        );
+
+        SandboxGitRepo.withInitialCommit(action.githubConfig)
+          .branchOff('10.0.x')
+          .commit('feat(pkg1): patch already released #1')
+          .commit('feat(pkg1): patch already released #2')
+          .commit('feat(pkg1): released in patch, but cherry-picked', 1)
+          .createTagForHead('10.0.3')
+          .commit('feat(pkg1): not released yet, but cherry-picked', 2)
+          .switchToBranch('master')
+          .commit('feat(pkg1): only in next, not released yet #1')
+          .commit('feat(pkg1): only in next, not released yet #2')
+          .cherryPick(1)
+          .cherryPick(2);
+
+        expect(await buildChangelog()).toMatch(changelogPattern`
+        # 10.1.0-rc.0 <..>
+        ### pkg1
+        | Commit | Description |
+        | -- | -- |
+        | <..> | feat(pkg1): not released yet, but cherry-picked |
+        | <..> | feat(pkg1): only in next, not released yet #2 |
+        | <..> | feat(pkg1): only in next, not released yet #1 |
+      `);
+      },
+    );
+  });
+
+  it('should generate release notes capturing changes to the previous next pre-release', async () => {
+    const {action, buildChangelog} = prepareBranchOffActionForChangelog(
+      MoveNextIntoReleaseCandidateAction,
+      {
+        releaseCandidate: null,
+        next: new ReleaseTrain('master', parse('10.1.0-next.0')),
+        latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
+      },
+      /* isNextPublishedToNpm */ true,
+      '10.2.0-next.0',
+      '10.1.0-rc.0',
+      '10.1.x',
+    );
+
+    SandboxGitRepo.withInitialCommit(action.githubConfig)
+      .commit('feat(pkg1): already released #1')
+      .commit('feat(pkg1): already released #2')
+      .createTagForHead('10.1.0-next.0')
+      .commit('feat(pkg1): not yet released #1')
+      .commit('fix(pkg1): not yet released #2');
+
+    expect(await buildChangelog()).toMatch(changelogPattern`
+      # 10.1.0-rc.0 <..>
+      ### pkg1
+      | Commit | Description |
+      | -- | -- |
+      | <..> | fix(pkg1): not yet released #2 |
+      | <..> | feat(pkg1): not yet released #1 |
+      ## Special Thanks:
+    `);
+  });
+
   it('should create pull requests and new version-branch', async () => {
     await expectBranchOffActionToRun(
       MoveNextIntoReleaseCandidateAction,
       {
         releaseCandidate: null,
-        next: new ReleaseTrain('master', parse('10.2.0-next.0')),
+        next: new ReleaseTrain('master', parse('10.1.0-next.0')),
         latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
       },
       /* isNextPublishedToNpm */ true,
-      '10.3.0-next.0',
-      '10.2.0-rc.0',
-      '10.2.x',
+      '10.2.0-next.0',
+      '10.1.0-rc.0',
+      '10.1.x',
     );
   });
 });

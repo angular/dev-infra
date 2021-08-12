@@ -27,6 +27,7 @@ import {changelogPath, packageJsonPath, waitForPullRequestInterval} from './cons
 import {invokeReleaseBuildCommand, invokeYarnInstallCommand} from './external-commands';
 import {findOwnedForksOfRepoQuery} from './graphql-queries';
 import {getPullRequestState} from './pull-request-state';
+import {getReleaseTagForVersion} from '../versioning/version-tags';
 
 /** Interface describing a Github repository. */
 export interface GithubRepo {
@@ -377,33 +378,44 @@ export abstract class ReleaseAction {
   /**
    * Creates a commit for the specified files with the given message.
    * @param message Message for the created commit
-   * @param files List of project-relative file paths to be commited.
+   * @param files List of project-relative file paths to be committed.
    */
   protected async createCommit(message: string, files: string[]) {
+    // Note: `git add` would not be needed if the files are already known to
+    // Git, but the specified files could also be newly created, and unknown.
+    this.git.run(['add', ...files]);
     this.git.run(['commit', '-q', '--no-verify', '-m', message, ...files]);
   }
 
   /**
-   * Stages the specified new version for the current branch and creates a
-   * pull request that targets the given base branch.
+   * Stages the specified new version for the current branch and creates a pull request
+   * that targets the given base branch. Assumes the staging branch is already checked-out.
+   *
+   * @param newVersion New version to be staged.
+   * @param compareVersionForReleaseNotes Version used for comparing with the current
+   *   `HEAD` in order build the release notes.
+   * @param pullRequestTargetBranch Branch the pull request should target.
    * @returns an object describing the created pull request.
    */
   protected async stageVersionForBranchAndCreatePullRequest(
     newVersion: semver.SemVer,
-    pullRequestBaseBranch: string,
+    compareVersionForReleaseNotes: semver.SemVer,
+    pullRequestTargetBranch: string,
   ): Promise<{releaseNotes: ReleaseNotes; pullRequest: PullRequest}> {
-    /**
-     * The current version of the project for the branch from the root package.json. This must be
-     * retrieved prior to updating the project version.
-     */
-    const currentVersion = this.git.getMatchingTagForSemver(await this.getProjectVersion());
-    const releaseNotes = await ReleaseNotes.fromRange(newVersion, currentVersion, 'HEAD');
+    const releaseNotesCompareTag = getReleaseTagForVersion(compareVersionForReleaseNotes);
+
+    // Fetch the compare tag so that commits for the release notes can be determined.
+    this.git.run(['fetch', this.git.getRepoGitUrl(), `refs/tags/${releaseNotesCompareTag}`]);
+
+    // Build release notes for commits from `<releaseNotesCompareTag>..HEAD`.
+    const releaseNotes = await ReleaseNotes.forRange(newVersion, releaseNotesCompareTag, 'HEAD');
+
     await this.updateProjectVersion(newVersion);
     await this.prependReleaseNotesToChangelog(releaseNotes);
     await this.waitForEditsAndCreateReleaseCommit(newVersion);
 
     const pullRequest = await this.pushChangesToForkAndCreatePullRequest(
-      pullRequestBaseBranch,
+      pullRequestTargetBranch,
       `release-stage-${newVersion}`,
       `Bump version to "v${newVersion}" with changelog.`,
     );
@@ -417,15 +429,25 @@ export abstract class ReleaseAction {
   /**
    * Checks out the specified target branch, verifies its CI status and stages
    * the specified new version in order to create a pull request.
+   *
+   * @param newVersion New version to be staged.
+   * @param compareVersionForReleaseNotes Version used for comparing with `HEAD` of
+   *   the staging branch in order build the release notes.
+   * @param stagingBranch Branch within the new version should be staged.
    * @returns an object describing the created pull request.
    */
   protected async checkoutBranchAndStageVersion(
     newVersion: semver.SemVer,
+    compareVersionForReleaseNotes: semver.SemVer,
     stagingBranch: string,
   ): Promise<{releaseNotes: ReleaseNotes; pullRequest: PullRequest}> {
     await this.verifyPassingGithubStatus(stagingBranch);
     await this.checkoutUpstreamBranch(stagingBranch);
-    return await this.stageVersionForBranchAndCreatePullRequest(newVersion, stagingBranch);
+    return await this.stageVersionForBranchAndCreatePullRequest(
+      newVersion,
+      compareVersionForReleaseNotes,
+      stagingBranch,
+    );
   }
 
   /**
@@ -481,7 +503,7 @@ export abstract class ReleaseAction {
     versionBumpCommitSha: string,
     prerelease: boolean,
   ) {
-    const tagName = releaseNotes.version.format();
+    const tagName = getReleaseTagForVersion(releaseNotes.version);
     await this.git.github.git.createRef({
       ...this.git.remoteParams,
       ref: `refs/tags/${tagName}`,
