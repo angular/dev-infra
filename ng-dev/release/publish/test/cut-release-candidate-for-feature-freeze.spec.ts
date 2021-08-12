@@ -89,8 +89,8 @@ describe('cut release candidate for feature-freeze action', () => {
       ### pkg1
       | Commit | Description |
       | -- | -- |
-      | <..> | feat(pkg1): not yet released #1 |
-      | <..> | fix(pkg1): not yet released #2 |
+      | <..> | feat: not yet released #1 |
+      | <..> | fix: not yet released #2 |
       ## Special Thanks:
     `);
   });

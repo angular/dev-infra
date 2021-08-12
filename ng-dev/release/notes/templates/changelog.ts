@@ -52,7 +52,7 @@ _%>
 <%_
   for (const commit of group.commits) {
 _%>
-| <%- commitToLink(commit) %> | <%- replaceCommitHeaderPullRequestNumber(commit.header) %> |
+| <%- commitToLink(commit) %> | <%- commit.type %>: <%- replaceCommitHeaderPullRequestNumber(commit.subject) %> |
 <%_
   }
 }
