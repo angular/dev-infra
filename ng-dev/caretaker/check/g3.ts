@@ -56,21 +56,16 @@ export class G3Module extends BaseModule<G3StatsData | void> {
   /** Fetch and retrieve the latest sha for a specific branch. */
   private getShaForBranchLatest(branch: string) {
     const {owner, name} = this.git.remoteConfig;
-    /** The result fo the fetch command. */
-    const fetchResult = this.git.runGraceful([
-      'fetch',
-      '-q',
-      `https://github.com/${owner}/${name}.git`,
-      branch,
-    ]);
+    const remoteUrl = `https://github.com/${owner}/${name}.git`;
 
-    if (
-      fetchResult.status !== 0 &&
-      fetchResult.stderr.includes(`couldn't find remote ref ${branch}`)
-    ) {
+    // With the --exit-code flag, if no match is found an exit code of 2 is returned by the command.
+    if (this.git.runGraceful(['ls-remote', '--exit-code', remoteUrl, branch]).status === 2) {
       debug(`No '${branch}' branch exists on upstream, skipping.`);
       return null;
     }
+
+    // Retrieve the latest ref for the branch and return its sha.
+    this.git.runGraceful(['fetch', '-q', remoteUrl, branch]);
     return this.git.runGraceful(['rev-parse', 'FETCH_HEAD']).stdout.trim();
   }
 
