@@ -57,3 +57,13 @@ build:remote --platforms=//bazel/remote-execution:platform
 
 # Set remote caching settings
 build:remote --remote_accept_cached=true
+
+####################################################
+# User bazel configuration
+# NOTE: This needs to be the *last* entry in the config to allow for it to override other
+#   configuration in this file.
+####################################################
+
+# Load any settings which are specific to the current user. Needs to be *last* statement
+# in this config, as the user configuration should be able to overwrite flags from this file.
+try-import .bazelrc.user
