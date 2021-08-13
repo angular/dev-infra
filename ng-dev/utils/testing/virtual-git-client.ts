@@ -7,7 +7,7 @@
  */
 
 import {SpawnSyncOptions, SpawnSyncReturns} from 'child_process';
-import * as parseArgs from 'minimist';
+import * as yargs from 'yargs';
 
 import {NgDevConfig} from '../config';
 import {AuthenticatedGitClient} from '../git/authenticated-git-client';
@@ -99,7 +99,12 @@ export class VirtualGitClient extends AuthenticatedGitClient {
 
   /** Handler for the `git push` command. */
   private _push(args: string[]) {
-    const [repoUrl, refspec] = parseArgs(args, {boolean: ['q']})._;
+    const {repoUrl, refspec} = yargs(args)
+      .command('$0 <repoUrl> <refspec>', false)
+      .positional('repoUrl', {type: 'string', demandOption: true})
+      .positional('refspec', {type: 'string', demandOption: true})
+      .option('q', {boolean: true})
+      .parseSync();
     const ref = this._unwrapRefspec(refspec);
     const name = ref.destination || ref.source;
     const existingPush = this.pushed.find(
@@ -118,9 +123,11 @@ export class VirtualGitClient extends AuthenticatedGitClient {
 
   /** Handler for the `git commit` command. */
   private _commit(rawArgs: string[]) {
-    const args = parseArgs(rawArgs, {string: ['m', 'message']});
-    const message = args['m'] || args['message'];
-    const files = args._;
+    const {message, files} = yargs(rawArgs)
+      .command('$0 [files..]', false)
+      .option('message', {string: true, alias: 'm'})
+      .positional('files', {array: true, demandOption: true, type: 'string'})
+      .parseSync();
     if (!message) {
       throw Error('No commit message has been specified.');
     }
@@ -129,14 +136,19 @@ export class VirtualGitClient extends AuthenticatedGitClient {
 
   /** Handler for the `git fetch` command. */
   private _fetch(rawArgs: string[]) {
-    const args = parseArgs(rawArgs, {boolean: ['f', 'force', 'q', 'quiet']});
-    const [repoUrl, refspec] = args._;
-    const force = args['f'] || args['force'];
+    const {force, refspec, repoUrl} = yargs(rawArgs)
+      .command('$0 <repoUrl> <refspec>', false)
+      .positional('repoUrl', {type: 'string', demandOption: true})
+      .positional('refspec', {type: 'string', demandOption: true})
+      .option('force', {boolean: true, alias: 'f'})
+      .option('quiet', {boolean: true, alias: 'q'})
+      .parseSync();
+
     const ref = this._unwrapRefspec(refspec);
 
     // Keep track of the fetch head, so that it can be checked out
     // later in a detached state.
-    this.fetchHeadRef = {name: ref.source, repoUrl};
+    this.fetchHeadRef = {name: ref.source, repoUrl: repoUrl};
 
     // If a destination has been specified in the ref spec, add it to the
     // list of available local branches.
@@ -154,10 +166,17 @@ export class VirtualGitClient extends AuthenticatedGitClient {
 
   /** Handler for the `git checkout` command. */
   private _checkout(rawArgs: string[]) {
-    const args = parseArgs(rawArgs, {boolean: ['detach', 'B', 'q']});
-    const createBranch = args['B'];
-    const detached = args['detach'];
-    const [target] = args._;
+    const {
+      target,
+      B: createBranch,
+      detach: detached,
+    } = yargs(rawArgs)
+      .command('$0 <target>', false)
+      .positional('target', {demandOption: true, type: 'string'})
+      .option('detach', {boolean: true})
+      .option('q', {boolean: true})
+      .option('B', {boolean: true})
+      .parseSync();
 
     if (target === 'FETCH_HEAD') {
       if (this.fetchHeadRef === null) {

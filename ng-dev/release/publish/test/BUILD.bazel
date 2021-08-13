@@ -14,12 +14,12 @@ ts_library(
         "//ng-dev/utils",
         "//ng-dev/utils/testing",
         "@npm//@types/jasmine",
-        "@npm//@types/minimist",
         "@npm//@types/node",
         "@npm//@types/semver",
-        "@npm//minimist",
+        "@npm//@types/yargs",
         "@npm//nock",
         "@npm//semver",
+        "@npm//yargs",
     ],
 )
 
