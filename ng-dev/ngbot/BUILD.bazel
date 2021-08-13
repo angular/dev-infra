@@ -10,7 +10,6 @@ ts_library(
     deps = [
         "//ng-dev/utils",
         "@npm//@types/node",
-        "@npm//@types/yaml",
         "@npm//@types/yargs",
         "@npm//yaml",
         "@npm//yargs",
