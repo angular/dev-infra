@@ -94,23 +94,32 @@ async function _main() {
   console.log(`Rebased current branch onto ${refs.base.ref}.`);
 }
 
+let primaryBranch = null;
+function getPrimaryBranchName() {
+  if (primaryBranch === null) {
+    primaryBranch = exec(`git remote show origin | sed -n '/HEAD branch/s/.*: //p'`).trim();
+  }
+  return primaryBranch;
+}
+
 /**
  * Sort a list of fullpath refs into a list and then provide the first entry.
  *
- * The sort order will first find master ref, and then any semver ref, followed
+ * The sort order will first find primary branch ref, and then any semver ref, followed
  * by the rest of the refs in the order provided.
  *
- * Branches are sorted in this order as work is primarily done on master, and
+ * Branches are sorted in this order as work is primarily done on one primary branch, and
  * otherwise on a semver branch. If neither of those were to match, the most
  * likely correct branch will be the first one encountered in the list.
  */
 function getRefFromBranchList(gitOutput) {
+  const primaryBranchName = getPrimaryBranchName();
   const branches = gitOutput.split('\n').map((b) => b.split('/').slice(1).join('').trim());
   return branches.sort((a, b) => {
-    if (a === 'master') {
+    if (a === primaryBranchName) {
       return -1;
     }
-    if (b === 'master') {
+    if (b === primaryBranchName) {
       return 1;
     }
     const aIsSemver = semverRegex.test(a);
@@ -148,7 +157,7 @@ function getShaFromRef(ref) {
  * by committerdate.
  *
  * example:
- *   upstream/master
+ *   upstream/main
  *   upstream/9.0.x
  *   upstream/test
  *   upstream/1.1.x
