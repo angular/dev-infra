@@ -99,14 +99,13 @@ export class VirtualGitClient extends AuthenticatedGitClient {
 
   /** Handler for the `git push` command. */
   private _push(args: string[]) {
-    const [repoUrl, refspec] = yargs(args)
-      .options({
-        q: {
-          boolean: true,
-        },
-      })
-      .parseSync()._;
-    const ref = this._unwrapRefspec(refspec as string);
+    const {repoUrl, refspec} = yargs(args)
+      .command('$0 <repoUrl> <refspec>', false)
+      .positional('repoUrl', {type: 'string', demandOption: true})
+      .positional('refspec', {type: 'string', demandOption: true})
+      .option('q', {boolean: true})
+      .parseSync();
+    const ref = this._unwrapRefspec(refspec);
     const name = ref.destination || ref.source;
     const existingPush = this.pushed.find(
       ({remote}) => remote.repoUrl === repoUrl && remote.name === name,
@@ -118,22 +117,17 @@ export class VirtualGitClient extends AuthenticatedGitClient {
     if (existingPush !== undefined) {
       existingPush.head = pushedHead;
     } else {
-      this.pushed.push({remote: {repoUrl: repoUrl as string, name}, head: pushedHead});
+      this.pushed.push({remote: {repoUrl, name}, head: pushedHead});
     }
   }
 
   /** Handler for the `git commit` command. */
   private _commit(rawArgs: string[]) {
-    const args = yargs(rawArgs)
-      .options({
-        message: {
-          string: true,
-          alias: 'm',
-        },
-      })
+    const {message, files} = yargs(rawArgs)
+      .command('$0 [files..]', false)
+      .option('message', {string: true, alias: 'm'})
+      .positional('files', {array: true, demandOption: true, type: 'string'})
       .parseSync();
-    const message = args.message;
-    const files = args._ as string[];
     if (!message) {
       throw Error('No commit message has been specified.');
     }
@@ -142,30 +136,24 @@ export class VirtualGitClient extends AuthenticatedGitClient {
 
   /** Handler for the `git fetch` command. */
   private _fetch(rawArgs: string[]) {
-    const args = yargs(rawArgs)
-      .options({
-        force: {
-          boolean: true,
-          alias: 'f',
-        },
-        quiet: {
-          boolean: true,
-          alias: 'q',
-        },
-      })
+    const {force, refspec, repoUrl} = yargs(rawArgs)
+      .command('$0 <repoUrl> <refspec>', false)
+      .positional('repoUrl', {type: 'string', demandOption: true})
+      .positional('refspec', {type: 'string', demandOption: true})
+      .option('force', {boolean: true, alias: 'f'})
+      .option('quiet', {boolean: true, alias: 'q'})
       .parseSync();
 
-    const [repoUrl, refspec] = args._;
-    const ref = this._unwrapRefspec(refspec as string);
+    const ref = this._unwrapRefspec(refspec);
 
     // Keep track of the fetch head, so that it can be checked out
     // later in a detached state.
-    this.fetchHeadRef = {name: ref.source, repoUrl: repoUrl as string};
+    this.fetchHeadRef = {name: ref.source, repoUrl: repoUrl};
 
     // If a destination has been specified in the ref spec, add it to the
     // list of available local branches.
     if (ref.destination) {
-      if (this.branches[ref.destination] && !args.force) {
+      if (this.branches[ref.destination] && !force) {
         throw Error('Cannot override existing local branch when fetching.');
       }
       this.branches[ref.destination] = {
@@ -178,23 +166,17 @@ export class VirtualGitClient extends AuthenticatedGitClient {
 
   /** Handler for the `git checkout` command. */
   private _checkout(rawArgs: string[]) {
-    const args = yargs(rawArgs)
-      .options({
-        detach: {
-          boolean: true,
-        },
-        q: {
-          boolean: true,
-        },
-        B: {
-          boolean: true,
-        },
-      })
+    const {
+      target,
+      B: createBranch,
+      detach: detached,
+    } = yargs(rawArgs)
+      .command('$0 <target>', false)
+      .positional('target', {demandOption: true, type: 'string'})
+      .option('detach', {boolean: true})
+      .option('q', {boolean: true})
+      .option('B', {boolean: true})
       .parseSync();
-
-    const createBranch = args['B'];
-    const detached = args['detach'];
-    const [target] = args._ as string[];
 
     if (target === 'FETCH_HEAD') {
       if (this.fetchHeadRef === null) {
