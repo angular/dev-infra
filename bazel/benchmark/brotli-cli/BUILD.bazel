@@ -6,7 +6,6 @@ nodejs_binary(
     name = "brotli-cli",
     data = [
         "cli.js",
-        "@npm//brotli",
     ],
     entry_point = ":cli.js",
     visibility = ["//visibility:public"],

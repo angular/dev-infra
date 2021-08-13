@@ -7,13 +7,13 @@
  */
 
 const fs = require('fs');
-const compress = require('brotli/compress');
+const {brotliCompressSync} = require('zlib');
 
 function main(args) {
   const output = args[0].substring('--output='.length);
   const input = args[1];
   const buffer = fs.readFileSync(input);
-  fs.writeFileSync(output, compress(buffer, {mode: 0, quality: 11}));
+  fs.writeFileSync(output, brotliCompressSync(buffer));
 }
 
 if (require.main === module) {
