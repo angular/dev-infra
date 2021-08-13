@@ -9,8 +9,6 @@ import {mkdirSync} from 'fs';
 
 export {verifyNoBrowserErrors} from './e2e_util';
 
-const nodeUuid = require('node-uuid');
-
 import {
   SeleniumWebDriverAdapter,
   Options,
@@ -24,6 +22,7 @@ import {
   Runner,
   StaticProvider,
 } from '@angular/benchpress';
+import {v1 as uuidv1} from 'uuid';
 import {openBrowser} from './e2e_util';
 
 // Note: Keep the `modules/benchmarks/README.md` file in sync with the supported options.
@@ -68,7 +67,7 @@ export async function runBenchmark({
 }
 
 function createBenchpressRunner(): Runner {
-  let runId = nodeUuid.v1();
+  let runId = uuidv1();
   if (process.env.GIT_SHA) {
     runId = process.env.GIT_SHA + ' ' + runId;
   }
