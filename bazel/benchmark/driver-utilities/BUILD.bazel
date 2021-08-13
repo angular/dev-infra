@@ -11,7 +11,7 @@ ts_library(
         "@npm//@angular/benchpress",
         "@npm//@types/node",
         "@npm//@types/selenium-webdriver",
-        "@npm//node-uuid",
+        "@npm//@types/uuid",
         "@npm//protractor",
         "@npm//selenium-webdriver",
     ],
