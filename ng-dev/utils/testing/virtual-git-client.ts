@@ -7,7 +7,7 @@
  */
 
 import {SpawnSyncOptions, SpawnSyncReturns} from 'child_process';
-import * as parseArgs from 'minimist';
+import * as yargs from 'yargs';
 
 import {NgDevConfig} from '../config';
 import {AuthenticatedGitClient} from '../git/authenticated-git-client';
@@ -99,8 +99,14 @@ export class VirtualGitClient extends AuthenticatedGitClient {
 
   /** Handler for the `git push` command. */
   private _push(args: string[]) {
-    const [repoUrl, refspec] = parseArgs(args, {boolean: ['q']})._;
-    const ref = this._unwrapRefspec(refspec);
+    const [repoUrl, refspec] = yargs(args)
+      .options({
+        q: {
+          boolean: true,
+        },
+      })
+      .parseSync()._;
+    const ref = this._unwrapRefspec(refspec as string);
     const name = ref.destination || ref.source;
     const existingPush = this.pushed.find(
       ({remote}) => remote.repoUrl === repoUrl && remote.name === name,
@@ -112,15 +118,22 @@ export class VirtualGitClient extends AuthenticatedGitClient {
     if (existingPush !== undefined) {
       existingPush.head = pushedHead;
     } else {
-      this.pushed.push({remote: {repoUrl, name}, head: pushedHead});
+      this.pushed.push({remote: {repoUrl: repoUrl as string, name}, head: pushedHead});
     }
   }
 
   /** Handler for the `git commit` command. */
   private _commit(rawArgs: string[]) {
-    const args = parseArgs(rawArgs, {string: ['m', 'message']});
-    const message = args['m'] || args['message'];
-    const files = args._;
+    const args = yargs(rawArgs)
+      .options({
+        message: {
+          string: true,
+          alias: 'm',
+        },
+      })
+      .parseSync();
+    const message = args.message;
+    const files = args._ as string[];
     if (!message) {
       throw Error('No commit message has been specified.');
     }
@@ -129,19 +142,30 @@ export class VirtualGitClient extends AuthenticatedGitClient {
 
   /** Handler for the `git fetch` command. */
   private _fetch(rawArgs: string[]) {
-    const args = parseArgs(rawArgs, {boolean: ['f', 'force', 'q', 'quiet']});
+    const args = yargs(rawArgs)
+      .options({
+        force: {
+          boolean: true,
+          alias: 'f',
+        },
+        quiet: {
+          boolean: true,
+          alias: 'q',
+        },
+      })
+      .parseSync();
+
     const [repoUrl, refspec] = args._;
-    const force = args['f'] || args['force'];
-    const ref = this._unwrapRefspec(refspec);
+    const ref = this._unwrapRefspec(refspec as string);
 
     // Keep track of the fetch head, so that it can be checked out
     // later in a detached state.
-    this.fetchHeadRef = {name: ref.source, repoUrl};
+    this.fetchHeadRef = {name: ref.source, repoUrl: repoUrl as string};
 
     // If a destination has been specified in the ref spec, add it to the
     // list of available local branches.
     if (ref.destination) {
-      if (this.branches[ref.destination] && !force) {
+      if (this.branches[ref.destination] && !args.force) {
         throw Error('Cannot override existing local branch when fetching.');
       }
       this.branches[ref.destination] = {
@@ -154,10 +178,23 @@ export class VirtualGitClient extends AuthenticatedGitClient {
 
   /** Handler for the `git checkout` command. */
   private _checkout(rawArgs: string[]) {
-    const args = parseArgs(rawArgs, {boolean: ['detach', 'B', 'q']});
+    const args = yargs(rawArgs)
+      .options({
+        detach: {
+          boolean: true,
+        },
+        q: {
+          boolean: true,
+        },
+        B: {
+          boolean: true,
+        },
+      })
+      .parseSync();
+
     const createBranch = args['B'];
     const detached = args['detach'];
-    const [target] = args._;
+    const [target] = args._ as string[];
 
     if (target === 'FETCH_HEAD') {
       if (this.fetchHeadRef === null) {

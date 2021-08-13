@@ -7,11 +7,11 @@ ts_library(
     deps = [
         "//ng-dev/utils",
         "@npm//@types/jasmine",
-        "@npm//@types/minimist",
         "@npm//@types/node",
         "@npm//@types/semver",
-        "@npm//minimist",
+        "@npm//@types/yargs",
         "@npm//nock",
         "@npm//semver",
+        "@npm//yargs",
     ],
 )
