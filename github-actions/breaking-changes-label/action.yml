@@ -5,6 +5,9 @@ inputs:
   angular-robot-key:
     description: 'The private key for the Angular Robot Github app.'
     required: true
+  breaking-changes-label:
+    description: 'Breaking changes label value.'
+    default: 'breaking changes'
 runs:
   using: 'node12'
   main: 'bundle.js'

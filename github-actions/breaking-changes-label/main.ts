@@ -4,12 +4,12 @@ import {Octokit} from '@octokit/rest';
 import {parseCommitMessage} from '../../ng-dev/commit-message/parse';
 import {getAuthTokenForAngularRobotApp} from '../utils';
 
-const breakingChangesLabel = 'breaking changes';
-
 async function run(): Promise<void> {
   const token = await getAuthTokenForAngularRobotApp();
   // Create authenticated Github client.
   const client = new Octokit({auth: token});
+
+  const breakingChangesLabel = core.getInput('breaking-changes-label');
 
   const {number, owner, repo} = context.issue;
 
