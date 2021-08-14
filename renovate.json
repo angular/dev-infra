@@ -12,7 +12,7 @@
   "schedule": ["after 10pm every weekday", "before 4am every weekday", "every weekend"],
   "baseBranches": ["main"],
   "ignoreDeps": ["@types/node", "@types/selenium-webdriver", "selenium-webdriver"],
-  "packageFiles": ["WORKSPACE", "package.json"],
+  "packageFiles": ["WORKSPACE", "package.json", ".github/workflows/**/*.yml"],
   "packageRules": [
     {
       "packagePatterns": ["^@bazel/.*", "^build_bazel.*"],
