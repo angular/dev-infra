@@ -26,6 +26,7 @@ pkg_npm(
         "//bazel:static_files",
     ],
     substitutions = {
+        "    \"prepare\": \"husky install\",\n": "",
         "@dev-infra//bazel/": "@npm//@angular/dev-infra-private/bazel/",
         "//bazel/": "@npm//@angular/dev-infra-private/bazel/",
         "//bazel:": "@npm//@angular/dev-infra-private/bazel:",
