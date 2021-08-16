@@ -1,0 +1,22 @@
+load("//tools:defaults.bzl", "ts_library")
+
+package(default_visibility = ["//github-actions/slash-commands:__subpackages__"])
+
+ts_library(
+    name = "lib",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["*.spec.ts"],
+    ),
+    deps = [
+        "//github-actions:utils",
+        "//ng-dev/pr/rebase",
+        "@npm//@actions/core",
+        "@npm//@actions/github",
+        "@npm//@octokit/plugin-rest-endpoint-methods",
+        "@npm//@octokit/rest",
+        "@npm//@types/node",
+        "@npm//@types/node-fetch",
+        "@npm//node-fetch",
+    ],
+)
