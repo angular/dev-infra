@@ -4,3 +4,5 @@ github-actions/lock-closed/main.js
 github-actions/lock-closed/post.js
 github-actions/breaking-changes-label/main.js
 github-actions/breaking-changes-label/post.js
+github-actions/slash-commands/main.js
+github-actions/slash-commands/post.js

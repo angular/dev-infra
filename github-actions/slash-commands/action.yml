@@ -1,0 +1,14 @@
+name: 'Slash Commands'
+description: 'Handle slack commands in the repository'
+author: 'Angular'
+inputs:
+  angular-robot-key:
+    description: 'The private key for the Angular Robot Github app.'
+    required: true
+  circleci-token:
+    description: 'The token for interacting with CircleCI.'
+    required: false
+runs:
+  using: 'node12'
+  main: 'main.js'
+  post: 'post.js'
