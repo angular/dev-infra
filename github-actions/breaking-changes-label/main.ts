@@ -4,7 +4,7 @@ import {Octokit} from '@octokit/rest';
 import {parseCommitMessage} from '../../ng-dev/commit-message/parse';
 import {getAuthTokenForAngularRobotApp} from '../utils';
 
-const breakingChangesLabel = 'breaking changes';
+const breakingChangesLabel = 'flag: breaking change';
 
 async function run(): Promise<void> {
   const token = await getAuthTokenForAngularRobotApp();

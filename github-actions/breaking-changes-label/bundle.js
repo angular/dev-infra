@@ -30337,7 +30337,7 @@ var github_1 = require_github();
 var rest_1 = require_dist_node12();
 var parse_1 = require_parse();
 var utils_1 = require_utils4();
-var breakingChangesLabel = "breaking changes";
+var breakingChangesLabel = "flag: breaking change";
 async function run() {
   const token = await utils_1.getAuthTokenForAngularRobotApp();
   const client = new rest_1.Octokit({ auth: token });
