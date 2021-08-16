@@ -75,7 +75,7 @@ var require_command = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.issue = exports2.issueCommand = void 0;
     var os = __importStar(require("os"));
-    var utils_1 = require_utils();
+    var utils_12 = require_utils();
     function issueCommand(command, properties, message) {
       const cmd = new Command(command, properties, message);
       process.stdout.write(cmd.toString() + os.EOL);
@@ -119,10 +119,10 @@ var require_command = __commonJS({
       }
     };
     function escapeData(s) {
-      return utils_1.toCommandValue(s).replace(/%/g, "%25").replace(/\r/g, "%0D").replace(/\n/g, "%0A");
+      return utils_12.toCommandValue(s).replace(/%/g, "%25").replace(/\r/g, "%0D").replace(/\n/g, "%0A");
     }
     function escapeProperty(s) {
-      return utils_1.toCommandValue(s).replace(/%/g, "%25").replace(/\r/g, "%0D").replace(/\n/g, "%0A").replace(/:/g, "%3A").replace(/,/g, "%2C");
+      return utils_12.toCommandValue(s).replace(/%/g, "%25").replace(/\r/g, "%0D").replace(/\n/g, "%0A").replace(/:/g, "%3A").replace(/,/g, "%2C");
     }
   }
 });
@@ -163,7 +163,7 @@ var require_file_command = __commonJS({
     exports2.issueCommand = void 0;
     var fs = __importStar(require("fs"));
     var os = __importStar(require("os"));
-    var utils_1 = require_utils();
+    var utils_12 = require_utils();
     function issueCommand(command, message) {
       const filePath = process.env[`GITHUB_${command}`];
       if (!filePath) {
@@ -172,7 +172,7 @@ var require_file_command = __commonJS({
       if (!fs.existsSync(filePath)) {
         throw new Error(`Missing file at path: ${filePath}`);
       }
-      fs.appendFileSync(filePath, `${utils_1.toCommandValue(message)}${os.EOL}`, {
+      fs.appendFileSync(filePath, `${utils_12.toCommandValue(message)}${os.EOL}`, {
         encoding: "utf8"
       });
     }
@@ -243,7 +243,7 @@ var require_core = __commonJS({
     exports2.getState = exports2.saveState = exports2.group = exports2.endGroup = exports2.startGroup = exports2.info = exports2.warning = exports2.error = exports2.debug = exports2.isDebug = exports2.setFailed = exports2.setCommandEcho = exports2.setOutput = exports2.getBooleanInput = exports2.getMultilineInput = exports2.getInput = exports2.addPath = exports2.setSecret = exports2.exportVariable = exports2.ExitCode = void 0;
     var command_1 = require_command();
     var file_command_1 = require_file_command();
-    var utils_1 = require_utils();
+    var utils_12 = require_utils();
     var os = __importStar(require("os"));
     var path = __importStar(require("path"));
     var ExitCode;
@@ -252,7 +252,7 @@ var require_core = __commonJS({
       ExitCode2[ExitCode2["Failure"] = 1] = "Failure";
     })(ExitCode = exports2.ExitCode || (exports2.ExitCode = {}));
     function exportVariable(name, val) {
-      const convertedVal = utils_1.toCommandValue(val);
+      const convertedVal = utils_12.toCommandValue(val);
       process.env[name] = convertedVal;
       const filePath = process.env["GITHUB_ENV"] || "";
       if (filePath) {
@@ -4817,10 +4817,10 @@ var require_github = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getOctokit = exports2.context = void 0;
     var Context = __importStar(require_context());
-    var utils_1 = require_utils3();
+    var utils_12 = require_utils3();
     exports2.context = new Context.Context();
     function getOctokit(token, options) {
-      return new utils_1.GitHub(utils_1.getOctokitOptions(token, options));
+      return new utils_12.GitHub(utils_12.getOctokitOptions(token, options));
     }
     exports2.getOctokit = getOctokit;
   }
@@ -49847,11 +49847,7 @@ function parseCommandFromContext() {
   }
   return matches[1].split(" ").map((_) => _.trim()).filter((_) => !!_);
 }
-function shouldPerformAction() {
-  if (github_1.context.payload.sender.type === "Bot") {
-    core.info(`Skipping as this action was triggered by a bot: ${github_1.context.actor}`);
-    return false;
-  }
+function assertProperlyFormedCommand() {
   if (github_1.context.payload.issue.pull_request === void 0) {
     core.info("Skipping as this action was triggered from an issue not a pull request");
     return false;
@@ -49868,8 +49864,11 @@ function shouldPerformAction() {
     core.info(`Skipping as the comment does not begin with ${commandMarker}`);
     return false;
   }
-  if (getParsedCommand().length === 0) {
-    core.info(`Skipping as only the commandMarket (${commandMarker}) is provided as a command`);
+  return true;
+}
+async function assertPermissionsToPerformCommand() {
+  if (github_1.context.payload.sender.type === "Bot") {
+    core.info(`Skipping as this action was triggered by a bot: ${github_1.context.actor}`);
     return false;
   }
   const approvedAssociations = ["COLLABORATOR", "MEMBER", "OWNER"];
@@ -49888,10 +49887,10 @@ function shouldPerformAction() {
   return false;
 }
 async function run() {
-  if (!shouldPerformAction()) {
+  if (!assertProperlyFormedCommand() || !await assertPermissionsToPerformCommand()) {
     return;
   }
-  const [command, ...parameters] = getParsedCommand();
+  const [command] = parseCommandFromContext();
   switch (command) {
     default:
       core.info(`No command was run because no command matches were found for ${command}`);
