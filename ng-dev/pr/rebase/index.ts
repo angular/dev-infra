@@ -10,7 +10,6 @@ import {types as graphqlTypes} from 'typed-graphqlify';
 
 import {Commit} from '../../commit-message/parse';
 import {getCommitsInRange} from '../../commit-message/utils';
-import {getConfig, NgDevConfig} from '../../utils/config';
 import {error, info, promptConfirm} from '../../utils/console';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {addTokenToGitHttpsUrl} from '../../utils/git/github-urls';
@@ -41,17 +40,15 @@ const PR_SCHEMA = {
 /**
  * Rebase the provided PR onto its merge target branch, and push up the resulting
  * commit to the PRs repository.
+ *
+ * @returns a status code indicating whether the rebase was successful.
  */
-export async function rebasePr(
-  prNumber: number,
-  githubToken: string,
-  config: Pick<NgDevConfig, 'github'> = getConfig(),
-) {
+export async function rebasePr(prNumber: number, githubToken: string) {
   /** The singleton instance of the authenticated git client. */
   const git = AuthenticatedGitClient.get();
   if (git.hasUncommittedChanges()) {
     error('Cannot perform rebase of PR with local changes.');
-    process.exit(1);
+    return 1;
   }
 
   /**
@@ -84,7 +81,7 @@ export async function rebasePr(
       `Cannot rebase as you did not author the PR and the PR does not allow maintainers` +
         `to modify the PR`,
     );
-    process.exit(1);
+    return 1;
   }
 
   try {
@@ -101,6 +98,7 @@ export async function rebasePr(
     const commits = await getCommitsInRange(commonAncestorSha, 'HEAD');
 
     let squashFixups =
+      process.env['CI'] !== undefined ||
       commits.filter((commit: Commit) => commit.isFixup).length === 0
         ? false
         : await promptConfirm(
@@ -128,12 +126,12 @@ export async function rebasePr(
       git.run(['push', headRefUrl, `HEAD:${headRefName}`, forceWithLeaseFlag]);
       info(`Rebased and updated PR #${prNumber}`);
       git.checkout(previousBranchOrRevision, true);
-      process.exit(0);
+      return 0;
     }
   } catch (err) {
     error(err.message);
     git.checkout(previousBranchOrRevision, true);
-    process.exit(1);
+    return 1;
   }
 
   // On automatic rebase failures, prompt to choose if the rebase should be continued
@@ -150,11 +148,11 @@ export async function rebasePr(
     info(`To abort the rebase and return to the state of the repository before this command`);
     info(`run the following command:`);
     info(` $ git rebase --abort && git reset --hard && git checkout ${previousBranchOrRevision}`);
-    process.exit(1);
+    return 1;
   } else {
     info(`Cleaning up git state, and restoring previous state.`);
   }
 
   git.checkout(previousBranchOrRevision, true);
-  process.exit(1);
+  return 1;
 }

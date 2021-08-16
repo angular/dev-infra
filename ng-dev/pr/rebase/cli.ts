@@ -28,5 +28,5 @@ export async function handleRebaseCommand({
   prNumber,
   githubToken,
 }: Arguments<RebaseCommandOptions>) {
-  await rebasePr(prNumber, githubToken);
+  process.exitCode = await rebasePr(prNumber, githubToken);
 }
