@@ -25,7 +25,7 @@ import {
 import {PullRequestMergeTask} from './task';
 
 /** The default label for labeling pull requests containing a breaking change. */
-const BreakingChangeLabel = 'breaking changes';
+const BreakingChangeLabel = 'flag: breaking change';
 
 /** Interface that describes a pull request. */
 export interface PullRequest {
