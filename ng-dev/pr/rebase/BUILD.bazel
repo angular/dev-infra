@@ -6,7 +6,10 @@ ts_library(
         "cli.ts",
         "index.ts",
     ],
-    visibility = ["//ng-dev:__subpackages__"],
+    visibility = [
+        "//github-actions/slash-commands:__subpackages__",
+        "//ng-dev:__subpackages__",
+    ],
     deps = [
         "//ng-dev/commit-message",
         "//ng-dev/utils",
