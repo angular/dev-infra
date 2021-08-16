@@ -11,6 +11,7 @@ ts_library(
     deps = [
         "//github-actions:utils",
         "//ng-dev/pr/rebase",
+        "//ng-dev/utils",
         "@npm//@actions/core",
         "@npm//@actions/github",
         "@npm//@octokit/plugin-rest-endpoint-methods",
