@@ -7,6 +7,7 @@
  */
 
 import {TargetLabel} from './config';
+import {breakingChangeLabel} from './constants';
 
 /**
  * Class that can be used to describe pull request failures. A failure
@@ -117,15 +118,16 @@ export class PullRequestFailure {
 
   static missingBreakingChangeLabel() {
     const message =
-      'Pull Request has at least one commit containing a breaking change note, but ' +
-      'does not have a breaking change label.';
+      `Pull Request has at least one commit containing a breaking change note, ` +
+      `but does not have a breaking change label. Make sure to apply the ` +
+      `following label: ${breakingChangeLabel}`;
     return new this(message);
   }
 
   static missingBreakingChangeCommit() {
     const message =
-      'Pull Request has a breaking change label, but does not contain any commits ' +
-      'with breaking change notes.';
+      'Pull Request has a breaking change label, but does not contain any commits with ' +
+      'breaking change notes (i.e. commits do not have a `BREAKING CHANGE: <..>` section).';
     return new this(message);
   }
 }

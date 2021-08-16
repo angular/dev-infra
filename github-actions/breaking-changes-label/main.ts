@@ -3,8 +3,7 @@ import {context} from '@actions/github';
 import {Octokit} from '@octokit/rest';
 import {parseCommitMessage} from '../../ng-dev/commit-message/parse';
 import {getAuthTokenForAngularRobotApp} from '../utils';
-
-const breakingChangesLabel = 'flag: breaking change';
+import {breakingChangeLabel} from '../../ng-dev/pr/merge/constants';
 
 async function run(): Promise<void> {
   const token = await getAuthTokenForAngularRobotApp();
@@ -15,7 +14,7 @@ async function run(): Promise<void> {
 
   const hasBreakingChangeLabel = await (
     await client.issues.listLabelsOnIssue({issue_number: number, owner, repo})
-  ).data.find((label) => label.name === breakingChangesLabel);
+  ).data.find((label) => label.name === breakingChangeLabel);
   console.log('hasBreakingChangeLabel', hasBreakingChangeLabel);
 
   const hasBreakingChangeCommit = (
@@ -29,18 +28,18 @@ async function run(): Promise<void> {
       repo,
       owner,
       issue_number: number,
-      labels: [breakingChangesLabel],
+      labels: [breakingChangeLabel],
     });
-    console.log(`Added ${breakingChangesLabel} label to PR #${number}`);
+    console.log(`Added ${breakingChangeLabel} label to PR #${number}`);
   }
   if (!hasBreakingChangeCommit && hasBreakingChangeLabel) {
     await client.issues.removeLabel({
       repo,
       owner,
       issue_number: number,
-      name: breakingChangesLabel,
+      name: breakingChangeLabel,
     });
-    console.log(`Removed ${breakingChangesLabel} label from PR #${number}`);
+    console.log(`Removed ${breakingChangeLabel} label from PR #${number}`);
   }
 }
 

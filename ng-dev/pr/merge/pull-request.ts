@@ -23,9 +23,7 @@ import {
   InvalidTargetLabelError,
 } from './target-label';
 import {PullRequestMergeTask} from './task';
-
-/** The default label for labeling pull requests containing a breaking change. */
-const BreakingChangeLabel = 'flag: breaking change';
+import {breakingChangeLabel} from './constants';
 
 /** Interface that describes a pull request. */
 export interface PullRequest {
@@ -91,7 +89,7 @@ export async function loadAndValidatePullRequest(
   try {
     assertPendingState(prData);
     assertChangesAllowForTargetLabel(commitsInPr, targetLabel, config);
-    assertCorrectBreakingChangeLabeling(commitsInPr, labels, config);
+    assertCorrectBreakingChangeLabeling(commitsInPr, labels);
   } catch (error) {
     return error;
   }
@@ -262,13 +260,9 @@ function assertChangesAllowForTargetLabel(
  * commits, and only has the label if there are breaking change commits.
  * @throws {PullRequestFailure}
  */
-function assertCorrectBreakingChangeLabeling(
-  commits: Commit[],
-  labels: string[],
-  config: MergeConfig,
-) {
+function assertCorrectBreakingChangeLabeling(commits: Commit[], labels: string[]) {
   /** Whether the PR has a label noting a breaking change. */
-  const hasLabel = labels.includes(config.breakingChangeLabel || BreakingChangeLabel);
+  const hasLabel = labels.includes(breakingChangeLabel);
   //** Whether the PR has at least one commit which notes a breaking change. */
   const hasCommit = commits.some((commit) => commit.breakingChanges.length !== 0);
 
