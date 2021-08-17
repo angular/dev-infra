@@ -501,7 +501,7 @@ export abstract class ReleaseAction {
   private async _createGithubReleaseForVersion(
     releaseNotes: ReleaseNotes,
     versionBumpCommitSha: string,
-    prerelease: boolean,
+    isPrerelease: boolean,
   ) {
     const tagName = getReleaseTagForVersion(releaseNotes.version);
     await this.git.github.git.createRef({
@@ -515,7 +515,7 @@ export abstract class ReleaseAction {
       ...this.git.remoteParams,
       name: `v${releaseNotes.version}`,
       tag_name: tagName,
-      prerelease,
+      prerelease: isPrerelease,
       body: await releaseNotes.getGithubReleaseEntry(),
     });
     info(green(`  ✓   Created v${releaseNotes.version} release in Github.`));
