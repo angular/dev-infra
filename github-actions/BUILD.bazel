@@ -9,7 +9,9 @@ ts_library(
     ],
     deps = [
         "@npm//@actions/core",
+        "@npm//@actions/github",
+        "@npm//@octokit/auth-app",
+        "@npm//@octokit/rest",
         "@npm//@types/node",
-        "@npm//github-app-installation-token",
     ],
 )

@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {Octokit} from '@octokit/rest';
-const {getToken} = require('github-app-installation-token');
+import {ANGULAR_LOCK_BOT, getAuthTokenFor} from '../utils';
 
 async function lockIssue(client: Octokit, issue: number, message: string): Promise<void> {
   await client.issues.createComment({
@@ -38,16 +38,8 @@ async function run(): Promise<void> {
       'Please file a new issue if you are encountering a similar or related problem.\n\n' +
       `Read more about our [automatic conversation locking policy](${policyUrl}).\n\n` +
       '<sub>_This action has been performed automatically by a bot._</sub>';
-    // Github App Id of the Lock Bot App
-    const appId = 40213;
-    // Installation Id of the Lock Bot App
-    const installationId = 1772826;
 
-    // Create JWT Token with provided private key.
-    const privateKey = core.getInput('lock-bot-key', {required: true});
-
-    // A short lived github token for the Angular Lock Bot
-    const {token} = await getToken({installationId, appId, privateKey});
+    const token = await getAuthTokenFor(ANGULAR_LOCK_BOT);
 
     // Create authenticated Github client.
     const client = new Octokit({auth: token});

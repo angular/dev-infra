@@ -2,11 +2,11 @@ import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {Octokit} from '@octokit/rest';
 import {parseCommitMessage} from '../../ng-dev/commit-message/parse';
-import {getAuthTokenForAngularRobotApp} from '../utils';
+import {getAuthTokenFor, ANGULAR_ROBOT} from '../utils';
 import {breakingChangeLabel} from '../../ng-dev/pr/merge/constants';
 
 async function run(): Promise<void> {
-  const token = await getAuthTokenForAngularRobotApp();
+  const token = await getAuthTokenFor(ANGULAR_ROBOT);
   // Create authenticated Github client.
   const client = new Octokit({auth: token});
 
