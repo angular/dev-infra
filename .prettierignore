@@ -1,4 +1,5 @@
-github-actions/feature-request/bundle.js
+github-actions/feature-request/post.js
+github-actions/feature-request/main.js
 github-actions/lock-closed/main.js
 github-actions/lock-closed/post.js
 github-actions/breaking-changes-label/main.js
