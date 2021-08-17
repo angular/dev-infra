@@ -35,8 +35,16 @@ jasmine_node_test(
 )
 
 esbuild_checked_in(
-    name = "bundle",
+    name = "main",
     entry_point = ":src/main.ts",
+    deps = [
+        ":feature-request",
+    ],
+)
+
+esbuild_checked_in(
+    name = "post",
+    entry_point = ":src/post.ts",
     deps = [
         ":feature-request",
     ],
