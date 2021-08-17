@@ -31,8 +31,8 @@ export class SandboxGitRepo {
 
   protected constructor(private _github: GithubConfig) {
     runGitInTmpDir(['init']);
-    runGitInTmpDir(['config', 'user.email', 'dev-infra-test@angular.io']);
-    runGitInTmpDir(['config', 'user.name', 'DevInfraTestActor']);
+    runGitInTmpDir(['config', 'user.email', 'angular-robot@google.com']);
+    runGitInTmpDir(['config', 'user.name', 'Angular Robot']);
 
     // Note: We cannot use `--initial-branch=` as this Git option is rather
     // new and we do not have a strict requirement on a specific Git version.
