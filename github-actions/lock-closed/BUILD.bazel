@@ -1,26 +1,19 @@
-load("//tools:defaults.bzl", "esbuild_checked_in", "ts_library")
+load("//tools:defaults.bzl", "esbuild_checked_in")
 
-package(default_visibility = ["//github-actions/feature-request:__subpackages__"])
+package(default_visibility = ["//github-actions/lock-closed:__subpackages__"])
 
-ts_library(
-    name = "lock-closed",
-    srcs = glob(
-        ["*.ts"],
-        exclude = ["*.spec.ts"],
-    ),
+esbuild_checked_in(
+    name = "main",
+    entry_point = "//github-actions/lock-closed/lib:main.ts",
     deps = [
-        "//github-actions:utils",
-        "@npm//@actions/core",
-        "@npm//@actions/github",
-        "@npm//@octokit/rest",
-        "@npm//@types/node",
+        "//github-actions/lock-closed/lib",
     ],
 )
 
 esbuild_checked_in(
-    name = "bundle",
-    entry_point = "main.ts",
+    name = "post",
+    entry_point = "//github-actions/lock-closed/lib:post.ts",
     deps = [
-        ":lock-closed",
+        "//github-actions/lock-closed/lib",
     ],
 )

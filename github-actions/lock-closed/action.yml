@@ -10,4 +10,5 @@ inputs:
     default: 100
 runs:
   using: 'node12'
-  main: 'bundle.js'
+  main: 'main.js'
+  post: 'post.js'
