@@ -13,7 +13,11 @@ import * as semver from 'semver';
 
 import {debug, error, green, info, promptConfirm, red, warn, yellow} from '../../utils/console';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
-import {getListCommitsInBranchUrl, getRepositoryGitUrl} from '../../utils/git/github-urls';
+import {
+  getFileContentsUrl,
+  getListCommitsInBranchUrl,
+  getRepositoryGitUrl,
+} from '../../utils/git/github-urls';
 import {createExperimentalSemver} from '../../utils/semver';
 import {BuiltPackage, ReleaseConfig} from '../config/index';
 import {ReleaseNotes} from '../notes/release-notes';
@@ -23,7 +27,12 @@ import {runNpmPublish} from '../versioning/npm-publish';
 
 import {FatalReleaseActionError, UserAbortedReleaseActionError} from './actions-error';
 import {getCommitMessageForRelease, getReleaseNoteCherryPickCommitMessage} from './commit-message';
-import {changelogPath, packageJsonPath, waitForPullRequestInterval} from './constants';
+import {
+  changelogPath,
+  githubReleaseBodyLimit,
+  packageJsonPath,
+  waitForPullRequestInterval,
+} from './constants';
 import {invokeReleaseBuildCommand, invokeYarnInstallCommand} from './external-commands';
 import {findOwnedForksOfRepoQuery} from './graphql-queries';
 import {getPullRequestState} from './pull-request-state';
@@ -495,8 +504,16 @@ export abstract class ReleaseAction {
   }
 
   /**
-   * Creates a Github release for the specified version in the configured project.
-   * The release is created by tagging the specified commit SHA.
+   * Creates a Github release for the specified version. The release is created
+   * by tagging the version bump commit, and by creating the release entry.
+   *
+   * Expects the version bump commit and changelog to be available in the
+   * upstream remote.
+   *
+   * @param releaseNotes The release notes for the version being published.
+   * @param versionBumpCommitSha Commit that bumped the version. The release tag
+   *   will point to this commit.
+   * @param isPrerelease Whether the new version is published as a pre-release.
    */
   private async _createGithubReleaseForVersion(
     releaseNotes: ReleaseNotes,
@@ -511,14 +528,32 @@ export abstract class ReleaseAction {
     });
     info(green(`  ✓   Tagged v${releaseNotes.version} release upstream.`));
 
+    let releaseBody = await releaseNotes.getGithubReleaseEntry();
+
+    // If the release body exceeds the Github body limit, we just provide
+    // a link to the changelog entry in the Github release entry.
+    if (releaseBody.length > githubReleaseBodyLimit) {
+      const releaseNotesUrl = await this._getGithubChangelogUrlForRef(releaseNotes, tagName);
+      releaseBody =
+        `Release notes are too large to be captured here. ` +
+        `[View all changes here](${releaseNotesUrl}).`;
+    }
+
     await this.git.github.repos.createRelease({
       ...this.git.remoteParams,
       name: `v${releaseNotes.version}`,
       tag_name: tagName,
       prerelease: isPrerelease,
-      body: await releaseNotes.getGithubReleaseEntry(),
+      body: releaseBody,
     });
     info(green(`  ✓   Created v${releaseNotes.version} release in Github.`));
+  }
+
+  /** Gets a Github URL that resolves to the release notes in the given ref. */
+  private async _getGithubChangelogUrlForRef(releaseNotes: ReleaseNotes, ref: string) {
+    const baseUrl = getFileContentsUrl(this.git, ref, changelogPath);
+    const urlFragment = await releaseNotes.getUrlFragmentForRelease();
+    return `${baseUrl}#${urlFragment}`;
   }
 
   /**

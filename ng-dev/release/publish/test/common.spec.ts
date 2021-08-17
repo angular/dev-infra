@@ -9,6 +9,7 @@
 import {readFileSync} from 'fs';
 import {join} from 'path';
 import * as semver from 'semver';
+import {SemVer} from 'semver';
 
 import {getBranchPushMatcher} from '../../../utils/testing';
 import {ReleaseNotes} from '../../notes/release-notes';
@@ -18,7 +19,7 @@ import * as npm from '../../versioning/npm-publish';
 import {ReleaseTrain} from '../../versioning/release-trains';
 import {ReleaseAction} from '../actions';
 import {actions} from '../actions/index';
-import {changelogPath} from '../constants';
+import {changelogPath, githubReleaseBodyLimit} from '../constants';
 import {
   changelogPattern,
   fakeNpmPackageQueryRequest,
@@ -31,6 +32,8 @@ import {
   testTmpDir,
 } from './test-utils/action-mocks';
 import {getMockGitClient} from './test-utils/git-client-mock';
+import {CommitFromGitLog, parseCommitFromGitLog} from '../../../commit-message/parse';
+import {SandboxGitRepo} from './test-utils/sandbox-testing';
 
 describe('common release action logic', () => {
   const baseReleaseTrains: ActiveReleaseTrains = {
@@ -100,6 +103,76 @@ describe('common release action logic', () => {
           customRegistryUrl,
         );
       }
+    });
+
+    it('should capture release notes in release entry', async () => {
+      const {repo, instance, githubConfig} = setupReleaseActionForTesting(
+        TestAction,
+        baseReleaseTrains,
+        /* isNextPublishedToNpm */ true,
+        {useSandboxGitClient: true},
+      );
+      const {version, branchName} = baseReleaseTrains.next;
+      const tagName = version.format();
+
+      SandboxGitRepo.withInitialCommit(githubConfig)
+        .createTagForHead('startTagForNotes')
+        .commit('feat(test): first commit')
+        .commit('feat(test): second commit');
+
+      repo
+        .expectBranchRequest(branchName, 'STAGING_SHA')
+        .expectCommitRequest('STAGING_SHA', `release: cut the v${version} release`)
+        .expectTagToBeCreated(tagName, 'STAGING_SHA')
+        .expectReleaseToBeCreated(
+          `v${version}`,
+          tagName,
+          changelogPattern`
+            # 10.1.0-next.0 (2021-08-17)
+            ### test
+            | Commit | Description |
+            | -- | -- |
+            | <..> | second commit |
+            | <..> | first commit |
+            ## Special Thanks:
+          `,
+        );
+
+      await instance.testBuildAndPublish(version, branchName, 'latest', 'startTagForNotes');
+    });
+
+    it('should link to the changelog in the release entry if notes are too large', async () => {
+      const {repo, instance} = setupReleaseActionForTesting(TestAction, baseReleaseTrains);
+      const {version, branchName} = baseReleaseTrains.latest;
+      const tagName = version.format();
+      const testCommit = parseCommitFromGitLog(Buffer.from('fix(test): test'));
+      const exceedingText = Array.from(new Array(githubReleaseBodyLimit), () => '#').join('');
+
+      // Note: We cannot directly parse our commit with characters as much as the Github
+      // release body limit because the parser does breaks for such unrealistic commit
+      // messages. We manually update the commit to contain as much text so that
+      // the release notes generation would exceed the Github release body limit.
+      // This is faster and simpler than generating actual commits to simulate a case
+      // where the API character limit from Github is reached.
+      testCommit.subject = exceedingText;
+
+      spyOn(ReleaseNotes, 'forRange').and.callFake(
+        async () => new MockReleaseNotes(version, [testCommit]),
+      );
+
+      repo
+        .expectBranchRequest(branchName, 'STAGING_SHA')
+        .expectCommitRequest('STAGING_SHA', `release: cut the v${version} release`)
+        .expectTagToBeCreated(tagName, 'STAGING_SHA')
+        .expectReleaseToBeCreated(
+          `v${version}`,
+          tagName,
+          changelogPattern`
+            Release notes are too large to be captured here. [View all changes here](https://github.com/angular/dev-infra-test/blob/10.0.1/CHANGELOG.md#10.0.1).
+          `,
+        );
+
+      await instance.testBuildAndPublish(version, branchName, 'latest');
     });
   });
 
@@ -171,6 +244,13 @@ describe('common release action logic', () => {
   });
 });
 
+/** Mock class for `ReleaseNotes` which accepts a list of in-memory commit objects. */
+class MockReleaseNotes extends ReleaseNotes {
+  constructor(version: SemVer, commits: CommitFromGitLog[]) {
+    super(version, commits);
+  }
+}
+
 /**
  * Test release action that exposes protected units of the base
  * release action class. This allows us to add unit tests.
@@ -184,8 +264,14 @@ class TestAction extends ReleaseAction {
     throw Error('Not implemented.');
   }
 
-  async testBuildAndPublish(version: semver.SemVer, publishBranch: string, distTag: NpmDistTag) {
-    const releaseNotes = await ReleaseNotes.forRange(version, '', '');
+  async testBuildAndPublish(
+    version: semver.SemVer,
+    publishBranch: string,
+    distTag: NpmDistTag,
+    releaseNotesCompareTag = 'HEAD',
+  ) {
+    const releaseNotes = await ReleaseNotes.forRange(version, releaseNotesCompareTag, 'HEAD');
+    debugger;
     await this.buildAndPublish(releaseNotes, publishBranch, distTag);
   }
 

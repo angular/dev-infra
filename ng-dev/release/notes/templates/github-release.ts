@@ -7,7 +7,7 @@
  */
 
 export default `
-<a name="<%- version %>"></a>
+<a name="<%- urlFragmentForRelease %>"></a>
 # <%- version %><% if (title) { %> "<%- title %>"<% } %> (<%- dateStamp %>)
 
 <%_
