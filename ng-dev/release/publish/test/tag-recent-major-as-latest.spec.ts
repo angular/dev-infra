@@ -109,38 +109,38 @@ describe('tag recent major as latest action', () => {
     },
   );
 
-  it(
-    'should be active if a major has been released recently but is not published as ' +
-      '"@latest" to NPM',
-    async () => {
-      const {instance, gitClient, releaseConfig} = setupReleaseActionForTesting(
-        TagRecentMajorAsLatest,
-        {
-          releaseCandidate: null,
-          next: new ReleaseTrain('master', parse('10.1.0-next.0')),
-          latest: new ReleaseTrain('10.0.x', parse('10.0.0')),
-        },
-      );
+  it('should re-tag the version in the NPM registry and update the Github release', async () => {
+    const {instance, gitClient, releaseConfig, repo} = setupReleaseActionForTesting(
+      TagRecentMajorAsLatest,
+      {
+        releaseCandidate: null,
+        next: new ReleaseTrain('master', parse('10.1.0-next.0')),
+        latest: new ReleaseTrain('10.0.x', parse('10.0.0')),
+      },
+    );
 
-      // NPM `@latest` will point to a patch release of the previous major.
-      fakeNpmPackageQueryRequest(releaseConfig.npmPackages[0], {
-        'dist-tags': {'latest': '9.2.3'},
-      });
+    // NPM `@latest` will point to a patch release of the previous major.
+    fakeNpmPackageQueryRequest(releaseConfig.npmPackages[0], {
+      'dist-tags': {'latest': '9.2.3'},
+    });
 
-      await instance.perform();
+    repo
+      .expectReleaseByTagRequest('10.0.0', /* fakeReleaseId */ 1)
+      .expectReleaseUpdateRequest(1, {prerelease: false});
 
-      // Ensure that the NPM dist tag is set only for packages that were available in the previous
-      // major version. A spy has already been installed on the function.
-      (externalCommands.invokeSetNpmDistCommand as jasmine.Spy).and.callFake(() => {
-        expect(gitClient.head.ref?.name).toBe('10.0.x');
-        return Promise.resolve();
-      });
+    await instance.perform();
 
-      expect(externalCommands.invokeSetNpmDistCommand).toHaveBeenCalledTimes(1);
-      expect(externalCommands.invokeSetNpmDistCommand).toHaveBeenCalledWith(
-        'latest',
-        matchesVersion('10.0.0'),
-      );
-    },
-  );
+    // Ensure that the NPM dist tag is set only for packages that were available in the previous
+    // major version. A spy has already been installed on the function.
+    (externalCommands.invokeSetNpmDistCommand as jasmine.Spy).and.callFake(() => {
+      expect(gitClient.head.ref?.name).toBe('10.0.x');
+      return Promise.resolve();
+    });
+
+    expect(externalCommands.invokeSetNpmDistCommand).toHaveBeenCalledTimes(1);
+    expect(externalCommands.invokeSetNpmDistCommand).toHaveBeenCalledWith(
+      'latest',
+      matchesVersion('10.0.0'),
+    );
+  });
 });

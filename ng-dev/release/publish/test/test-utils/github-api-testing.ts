@@ -7,6 +7,10 @@
  */
 
 import * as nock from 'nock';
+import {RestEndpointMethodTypes} from '@octokit/plugin-rest-endpoint-methods';
+
+/** Type describing the parameters for a Github release update API request. */
+type ReleaseUpdateParameters = RestEndpointMethodTypes['repos']['updateRelease']['parameters'];
 
 /**
  * Class that represents a Github repository in testing. The class can be
@@ -56,7 +60,19 @@ export class GithubTestingRepo {
   }
 
   expectCommitStatusCheck(sha: string, state: 'success' | 'pending' | 'failure'): this {
-    nock(this.repoApiUrl).get(`/commits/${sha}/status`).reply(200, {state}).activeMocks();
+    nock(this.repoApiUrl).get(`/commits/${sha}/status`).reply(200, {state});
+    return this;
+  }
+
+  expectReleaseByTagRequest(tagName: string, id: number): this {
+    nock(this.repoApiUrl).get(`/releases/tags/${tagName}`).reply(200, {id});
+    return this;
+  }
+
+  expectReleaseUpdateRequest(id: number, updatedFields: Partial<ReleaseUpdateParameters>): this {
+    nock(this.repoApiUrl)
+      .patch(`/releases/${id}`, (body) => JSON.stringify(body) === JSON.stringify(updatedFields))
+      .reply(200, {id});
     return this;
   }
 

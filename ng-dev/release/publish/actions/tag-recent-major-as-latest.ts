@@ -13,6 +13,8 @@ import {ActiveReleaseTrains} from '../../versioning/active-release-trains';
 import {fetchProjectNpmPackageInfo} from '../../versioning/npm-registry';
 import {ReleaseAction} from '../actions';
 import {invokeSetNpmDistCommand, invokeYarnInstallCommand} from '../external-commands';
+import {SemVer} from 'semver';
+import {getReleaseTagForVersion} from '../../versioning/version-tags';
 
 /**
  * Release action that tags the recently published major as latest within the NPM
@@ -30,9 +32,28 @@ export class TagRecentMajorAsLatest extends ReleaseAction {
   }
 
   override async perform() {
+    await this.updateGithubReleaseEntryToStable(this.active.latest.version);
     await this.checkoutUpstreamBranch(this.active.latest.branchName);
     await invokeYarnInstallCommand(this.projectDir);
     await invokeSetNpmDistCommand('latest', this.active.latest.version);
+  }
+
+  /**
+   * Updates the Github release entry for the specified version to show
+   * it as stable release, compared to it being shown as a pre-release.
+   */
+  async updateGithubReleaseEntryToStable(version: SemVer) {
+    const releaseTagName = getReleaseTagForVersion(version);
+    const {data: releaseInfo} = await this.git.github.repos.getReleaseByTag({
+      ...this.git.remoteParams,
+      tag: releaseTagName,
+    });
+
+    await this.git.github.repos.updateRelease({
+      ...this.git.remoteParams,
+      release_id: releaseInfo.id,
+      prerelease: false,
+    });
   }
 
   static override async isActive({latest}: ActiveReleaseTrains, config: ReleaseConfig) {

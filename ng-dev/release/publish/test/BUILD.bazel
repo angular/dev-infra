@@ -13,6 +13,7 @@ ts_library(
         "//ng-dev/release/versioning",
         "//ng-dev/utils",
         "//ng-dev/utils/testing",
+        "@npm//@octokit/plugin-rest-endpoint-methods",
         "@npm//@types/jasmine",
         "@npm//@types/node",
         "@npm//@types/semver",
