@@ -7,4 +7,5 @@ inputs:
     required: true
 runs:
   using: 'node12'
-  main: 'bundle.js'
+  main: 'main.js'
+  post: 'post.js'
