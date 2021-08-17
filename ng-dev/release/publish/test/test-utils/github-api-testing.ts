@@ -95,9 +95,16 @@ export class GithubTestingRepo {
     return this;
   }
 
-  expectReleaseToBeCreated(name: string, tagName: string): this {
+  expectReleaseToBeCreated(name: string, tagName: string, bodyRegex?: RegExp): this {
     nock(this.repoApiUrl)
-      .post('/releases', (b) => b.name === name && b['tag_name'] === tagName)
+      .post('/releases', (requestBody) => {
+        if (bodyRegex && !bodyRegex.test(requestBody.body)) {
+          return false;
+        } else if (requestBody.name !== name) {
+          return false;
+        }
+        return requestBody['tag_name'] === tagName;
+      })
       .reply(200, {});
     return this;
   }

@@ -50,6 +50,14 @@ export class ReleaseNotes {
   }
 
   /**
+   * Gets the URL fragment for the release notes. The URL fragment identifier
+   * can be used to point to a specific changelog entry through an URL.
+   */
+  async getUrlFragmentForRelease() {
+    return (await this.generateRenderContext()).urlFragmentForRelease;
+  }
+
+  /**
    * Prompt the user for a title for the release, if the project's configuration is defined to use a
    * title.
    */

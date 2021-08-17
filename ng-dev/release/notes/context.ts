@@ -44,6 +44,8 @@ export class RenderContext {
   readonly version = this.data.version;
   /** The date stamp string for use in the release notes entry. */
   readonly dateStamp = buildDateStamp(this.data.date);
+  /** URL fragment that is used to create an anchor for the release. */
+  readonly urlFragmentForRelease = this.data.version;
 
   constructor(private readonly data: RenderContextData) {}
 

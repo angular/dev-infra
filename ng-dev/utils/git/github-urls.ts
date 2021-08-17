@@ -40,6 +40,13 @@ export function getRepositoryGitUrl(
 }
 
 /** Gets a Github URL that refers to a list of recent commits within a specified branch. */
-export function getListCommitsInBranchUrl({remoteParams}: GitClient, branchName: string) {
-  return `https://github.com/${remoteParams.owner}/${remoteParams.repo}/commits/${branchName}`;
+export function getListCommitsInBranchUrl(client: GitClient, branchName: string) {
+  const {owner, repo} = client.remoteParams;
+  return `https://github.com/${owner}/${repo}/commits/${branchName}`;
+}
+
+/** Gets a Github URL for viewing the file contents of a specified file for the given ref. */
+export function getFileContentsUrl(client: GitClient, ref: string, relativeFilePath: string) {
+  const {owner, repo} = client.remoteParams;
+  return `https://github.com/${owner}/${repo}/blob/${ref}/${relativeFilePath}`;
 }
