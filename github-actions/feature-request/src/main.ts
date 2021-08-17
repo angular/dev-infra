@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
-import {getAuthTokenForAngularRobotApp} from '../../utils';
+import {getAuthTokenFor, ANGULAR_ROBOT} from '../../utils';
 import {run} from './action';
 import {getInputValue} from './get-input';
 import {OctoKit} from './octokit';
@@ -8,7 +8,7 @@ import {OctoKit} from './octokit';
 (async () => {
   try {
     // A immediately executed async function to allow `await`ing the installation access token.
-    const token = await getAuthTokenForAngularRobotApp();
+    const token = await getAuthTokenFor(ANGULAR_ROBOT);
     /** The Octokit instance for interacting with Github. */
     const octokit = new OctoKit(token, {
       repo: context.repo.repo,
