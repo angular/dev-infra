@@ -79,8 +79,8 @@ commands:
           command: |
             if [ -n "$CIRCLE_PR_NUMBER" ]; then
               # User is required for rebase.
-              git config user.name "angular-ci"
-              git config user.email "angular-ci"
+              git config user.name "Angular Robot"
+              git config user.email "angular-robot@google.com"
               node .circleci/rebase-pr.js
             fi
 
