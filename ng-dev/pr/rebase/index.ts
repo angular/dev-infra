@@ -85,13 +85,16 @@ export async function rebasePr(prNumber: number, githubToken: string) {
   }
 
   try {
+    // Fetches are done with --depth=500 increase the likelihood of finding a common ancestor when
+    // a shallow clone is being used.
+
     // Fetch the branch at the commit of the PR, and check it out in a detached state.
     info(`Checking out PR #${prNumber} from ${fullHeadRef}`);
-    git.run(['fetch', '-q', headRefUrl, headRefName]);
+    git.run(['fetch', '-q', headRefUrl, headRefName, '--depth=500']);
     git.run(['checkout', '-q', '--detach', 'FETCH_HEAD']);
     // Fetch the PRs target branch and rebase onto it.
     info(`Fetching ${fullBaseRef} to rebase #${prNumber} on`);
-    git.run(['fetch', '-q', baseRefUrl, baseRefName]);
+    git.run(['fetch', '-q', baseRefUrl, baseRefName, '--depth=500']);
 
     const commonAncestorSha = git.run(['merge-base', 'HEAD', 'FETCH_HEAD']).stdout.trim();
 
