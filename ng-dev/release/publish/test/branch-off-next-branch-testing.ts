@@ -16,6 +16,7 @@ import {setupReleaseActionForTesting} from './test-utils/test-utils';
 import {testReleasePackages, testTmpDir} from './test-utils/action-mocks';
 import {readFileSync} from 'fs';
 import {TestReleaseAction} from './test-utils/test-action';
+import {semverInc} from '../../../utils/semver';
 
 /**
  * Expects and fakes the necessary Github API requests for branching-off
@@ -71,6 +72,11 @@ export async function expectBranchOffActionToRun(
   expectedNewBranch: string,
 ) {
   const action = setupReleaseActionForTesting(actionType, active, isNextPublishedToNpm);
+
+  spyOn(action.instance, '_promptForNewNextVersion' as any).and.resolveTo(
+    semverInc(active.next.version, 'preminor', 'next'),
+  );
+
   const {repo, fork, instance, gitClient} = action;
 
   const {expectedStagingForkBranch, expectedNextUpdateBranch} =
@@ -160,6 +166,10 @@ export function prepareBranchOffActionForChangelog(
   const action = setupReleaseActionForTesting(actionType, active, isNextPublishedToNpm, {
     useSandboxGitClient: true,
   });
+
+  spyOn(action.instance, '_promptForNewNextVersion' as any).and.resolveTo(
+    semverInc(active.next.version, 'preminor', 'next'),
+  );
 
   const buildChangelog = async () => {
     await expectGithubApiRequestsForBranchOff(

@@ -7,6 +7,7 @@
  */
 
 import * as semver from 'semver';
+import {prompt} from 'inquirer';
 
 import {green, info, yellow} from '../../../utils/console';
 import {semverInc} from '../../../utils/semver';
@@ -50,6 +51,7 @@ export abstract class BranchOffNextBranchBaseAction extends ReleaseAction {
     );
     const newVersion = await this._computeNewVersion();
     const newBranch = `${newVersion.major}.${newVersion.minor}.x`;
+    const newNextVersion = await this._promptForNewNextVersion();
 
     // Branch-off the next branch into a new version branch.
     await this._createNewVersionBranchFromNext(newBranch);
@@ -68,7 +70,7 @@ export abstract class BranchOffNextBranchBaseAction extends ReleaseAction {
     // with bumping the version to the next minor too.
     await this.waitForPullRequestToBeMerged(pullRequest);
     await this.buildAndPublish(releaseNotes, newBranch, 'next');
-    await this._createNextBranchUpdatePullRequest(releaseNotes, newVersion);
+    await this._createNextBranchUpdatePullRequest(releaseNotes, newVersion, newNextVersion);
   }
 
   /** Computes the new version for the release-train being branched-off. */
@@ -98,11 +100,9 @@ export abstract class BranchOffNextBranchBaseAction extends ReleaseAction {
   private async _createNextBranchUpdatePullRequest(
     releaseNotes: ReleaseNotes,
     newVersion: semver.SemVer,
+    newNextVersion: semver.SemVer,
   ) {
-    const {branchName: nextBranch, version} = this.active.next;
-    // We increase the version for the next branch to the next minor. The team can decide
-    // later if they want next to be a major through the `Configure Next as Major` release action.
-    const newNextVersion = semver.parse(`${version.major}.${version.minor + 1}.0-next.0`)!;
+    const {branchName: nextBranch} = this.active.next;
     const bumpCommitMessage = getCommitMessageForExceptionalNextVersionBump(newNextVersion);
 
     await this.checkoutUpstreamBranch(nextBranch);
@@ -133,5 +133,27 @@ export abstract class BranchOffNextBranchBaseAction extends ReleaseAction {
 
     info(green(`  ✓   Pull request for updating the "${nextBranch}" branch has been created.`));
     info(yellow(`      Please ask team members to review: ${nextUpdatePullRequest.url}.`));
+  }
+
+  /** Prompt the user to determine the new version to be used in the "next" branch. */
+  private async _promptForNewNextVersion() {
+    const {branchName, version} = this.active.next;
+    const newMinorVersion = semverInc(version, 'preminor', 'next');
+    const newMajorVersion = semverInc(version, 'premajor', 'next');
+
+    info(
+      `Moving "${branchName}" into ${this.newPhaseName} requires the version in the "next" ` +
+        'branch to be updated',
+    );
+
+    return await prompt<semver.SemVer>({
+      name: 'newNextVersion',
+      message: 'Please select the new version for the next branch',
+      type: 'list',
+      choices: [
+        {name: `Minor (${newMinorVersion.format()})`, value: newMinorVersion},
+        {name: `Major (${newMajorVersion.format()})`, value: newMajorVersion},
+      ],
+    });
   }
 }
