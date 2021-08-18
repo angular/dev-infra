@@ -128,7 +128,7 @@ describe('common release action logic', () => {
           `v${version}`,
           tagName,
           changelogPattern`
-            # 10.1.0-next.0 (2021-08-17)
+            # 10.1.0-next.0 <..>
             ### test
             | Commit | Description |
             | -- | -- |
