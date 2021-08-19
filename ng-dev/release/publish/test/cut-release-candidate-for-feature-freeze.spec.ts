@@ -73,11 +73,11 @@ describe('cut release candidate for feature-freeze action', () => {
 
     SandboxGitRepo.withInitialCommit(action.githubConfig)
       .branchOff('10.1.x')
-      .commit('feat(pkg1): feature-freeze, already released #1')
-      .commit('feat(pkg1): feature-freeze, already released #2')
+      .commit('feat(pkg1): feature-freeze, already released *1')
+      .commit('feat(pkg1): feature-freeze, already released *2')
       .createTagForHead('10.1.0-next.1')
-      .commit('feat(pkg1): not yet released #1')
-      .commit('fix(pkg1): not yet released #2');
+      .commit('feat(pkg1): not yet released *1')
+      .commit('fix(pkg1): not yet released *2');
 
     await expectGithubApiRequestsForStaging(action, '10.1.x', '10.1.0-rc.0', true);
     await action.instance.perform();
@@ -87,10 +87,10 @@ describe('cut release candidate for feature-freeze action', () => {
     expect(changelog).toMatch(changelogPattern`
       # 10.1.0-rc.0 <..>
       ### pkg1
-      | Commit | Description |
-      | -- | -- |
-      | <..> | feat: not yet released #1 |
-      | <..> | fix: not yet released #2 |
+      | Commit | Type | Description |
+      | -- | -- | -- |
+      | <..> | feat | not yet released *1 |
+      | <..> | fix | not yet released *2 |
       ## Special Thanks:
     `);
   });

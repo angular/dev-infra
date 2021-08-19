@@ -79,14 +79,14 @@ describe('cut next pre-release action', () => {
 
         SandboxGitRepo.withInitialCommit(action.githubConfig)
           .branchOff('10.1.x')
-          .commit('feat(pkg1): patch already released #1')
-          .commit('feat(pkg1): patch already released #2')
+          .commit('feat(pkg1): patch already released *1')
+          .commit('feat(pkg1): patch already released *2')
           .commit('feat(pkg1): released in patch, but cherry-picked', 1)
           .createTagForHead('10.1.0')
           .commit('feat(pkg1): not released yet, but cherry-picked', 2)
           .switchToBranch('master')
-          .commit('feat(pkg1): only in next, not released yet #1')
-          .commit('feat(pkg1): only in next, not released yet #2')
+          .commit('feat(pkg1): only in next, not released yet *1')
+          .commit('feat(pkg1): only in next, not released yet *2')
           .cherryPick(1)
           .cherryPick(2);
 
@@ -98,11 +98,11 @@ describe('cut next pre-release action', () => {
         expect(changelog).toMatch(changelogPattern`
           # 10.2.0-next.0 <..>
           ### pkg1
-          | Commit | Description |
-          | -- | -- |
-          | <..> | feat: not released yet, but cherry-picked |
-          | <..> | feat: only in next, not released yet #2 |
-          | <..> | feat: only in next, not released yet #1 |
+          | Commit | Type | Description |
+          | -- | -- | -- |
+          | <..> | feat | not released yet, but cherry-picked |
+          | <..> | feat | only in next, not released yet *2 |
+          | <..> | feat | only in next, not released yet *1 |
           ## Special Thanks:
         `);
       },
@@ -134,11 +134,11 @@ describe('cut next pre-release action', () => {
 
       SandboxGitRepo.withInitialCommit(action.githubConfig)
         .branchOff('10.1.x')
-        .commit('feat(pkg1): feature-freeze already released #1')
-        .commit('feat(pkg1): feature-freeze already released #2')
+        .commit('feat(pkg1): feature-freeze already released *1')
+        .commit('feat(pkg1): feature-freeze already released *2')
         .createTagForHead('10.1.0-next.4')
-        .commit('feat(pkg1): not released yet #1')
-        .commit('feat(pkg1): not released yet #2');
+        .commit('feat(pkg1): not released yet *1')
+        .commit('feat(pkg1): not released yet *2');
 
       await expectGithubApiRequestsForStaging(action, '10.1.x', '10.1.0-next.5', true);
       await action.instance.perform();
@@ -148,10 +148,10 @@ describe('cut next pre-release action', () => {
       expect(changelog).toMatch(changelogPattern`
         # 10.1.0-next.5 <..>
         ### pkg1
-        | Commit | Description |
-        | -- | -- |
-        | <..> | feat: not released yet #2 |
-        | <..> | feat: not released yet #1 |
+        | Commit | Type | Description |
+        | -- | -- | -- |
+        | <..> | feat | not released yet *2 |
+        | <..> | feat | not released yet *1 |
         ## Special Thanks:
       `);
     });
@@ -182,11 +182,11 @@ describe('cut next pre-release action', () => {
 
       SandboxGitRepo.withInitialCommit(action.githubConfig)
         .branchOff('10.1.x')
-        .commit('feat(pkg1): release-candidate already released #1')
-        .commit('feat(pkg1): release-candidate already released #2')
+        .commit('feat(pkg1): release-candidate already released *1')
+        .commit('feat(pkg1): release-candidate already released *2')
         .createTagForHead('10.1.0-rc.0')
-        .commit('feat(pkg1): not released yet #1')
-        .commit('feat(pkg1): not released yet #2');
+        .commit('feat(pkg1): not released yet *1')
+        .commit('feat(pkg1): not released yet *2');
 
       await expectGithubApiRequestsForStaging(action, '10.1.x', '10.1.0-rc.1', true);
       await action.instance.perform();
@@ -196,10 +196,10 @@ describe('cut next pre-release action', () => {
       expect(changelog).toMatch(changelogPattern`
         # 10.1.0-rc.1 <..>
         ### pkg1
-        | Commit | Description |
-        | -- | -- |
-        | <..> | feat: not released yet #2 |
-        | <..> | feat: not released yet #1 |
+        | Commit | Type | Description |
+        | -- | -- | -- |
+        | <..> | feat | not released yet *2 |
+        | <..> | feat | not released yet *1 |
         ## Special Thanks:
       `);
     });

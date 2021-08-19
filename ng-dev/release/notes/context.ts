@@ -22,12 +22,19 @@ const botsAuthorNames = ['dependabot[bot]', 'Renovate Bot'];
 /** Data used for context during rendering. */
 export interface RenderContextData {
   title: string | false;
-  groupOrder?: ReleaseNotesConfig['groupOrder'];
-  hiddenScopes?: ReleaseNotesConfig['hiddenScopes'];
-  date?: Date;
+  groupOrder: ReleaseNotesConfig['groupOrder'];
+  hiddenScopes: ReleaseNotesConfig['hiddenScopes'];
+  categorizeCommit: ReleaseNotesConfig['categorizeCommit'];
   commits: CommitFromGitLog[];
   version: string;
   github: GithubConfig;
+  date?: Date;
+}
+
+/** Interface describing an categorized commit. */
+export interface CategorizedCommit extends CommitFromGitLog {
+  groupName: string;
+  description: string;
 }
 
 /** Context class used for rendering release notes. */
@@ -38,16 +45,28 @@ export class RenderContext {
   private readonly hiddenScopes = this.data.hiddenScopes || [];
   /** The title of the release, or `false` if no title should be used. */
   readonly title = this.data.title;
-  /** An array of commits in the release period. */
-  readonly commits = this.data.commits;
   /** The version of the release. */
   readonly version = this.data.version;
   /** The date stamp string for use in the release notes entry. */
   readonly dateStamp = buildDateStamp(this.data.date);
   /** URL fragment that is used to create an anchor for the release. */
   readonly urlFragmentForRelease = this.data.version;
+  /** List of categorized commits in the release period. */
+  readonly commits = this._categorizeCommits(this.data.commits);
 
   constructor(private readonly data: RenderContextData) {}
+
+  /** Gets a list of categorized commits from all commits in the release period. */
+  _categorizeCommits(commits: CommitFromGitLog[]): CategorizedCommit[] {
+    return commits.map((commit) => {
+      const {description, groupName} = this.data.categorizeCommit?.(commit) ?? {};
+      return {
+        groupName: groupName ?? commit.scope,
+        description: description ?? commit.subject,
+        ...commit,
+      };
+    });
+  }
 
   /**
    * Organizes and sorts the commits into groups of commits.
@@ -56,21 +75,21 @@ export class RenderContext {
    * the configuration. Commits are order in the same order within each groups commit list as they
    * appear in the provided list of commits.
    * */
-  asCommitGroups(commits: CommitFromGitLog[]) {
+  asCommitGroups(commits: CategorizedCommit[]) {
     /** The discovered groups to organize into. */
-    const groups = new Map<string, CommitFromGitLog[]>();
+    const groups = new Map<string, CategorizedCommit[]>();
 
     // Place each commit in the list into its group.
     commits.forEach((commit) => {
-      const key = commit.npmScope ? `${commit.npmScope}/${commit.scope}` : commit.scope;
+      const key = commit.groupName;
       const groupCommits = groups.get(key) || [];
       groups.set(key, groupCommits);
       groupCommits.push(commit);
     });
 
     /**
-     * Array of CommitGroups containing the discovered commit groups. Sorted in alphanumeric order
-     * of the group title.
+     * List of discovered commit groups which are sorted in alphanumeric order
+     * based on the group title.
      */
     const commitGroups = Array.from(groups.entries())
       .map(([title, commits]) => ({
@@ -95,12 +114,12 @@ export class RenderContext {
   }
 
   /** Whether the specified commit contains breaking changes. */
-  hasBreakingChanges(commit: CommitFromGitLog) {
+  hasBreakingChanges(commit: CategorizedCommit) {
     return commit.breakingChanges.length !== 0;
   }
 
   /** Whether the specified commit contains deprecations. */
-  hasDeprecations(commit: CommitFromGitLog) {
+  hasDeprecations(commit: CategorizedCommit) {
     return commit.deprecations.length !== 0;
   }
 
@@ -109,7 +128,7 @@ export class RenderContext {
    * should appear in release notes.
    */
   includeInReleaseNotes() {
-    return (commit: CommitFromGitLog) => {
+    return (commit: CategorizedCommit) => {
       if (this.hiddenScopes.includes(commit.scope)) {
         return false;
       }
@@ -129,9 +148,9 @@ export class RenderContext {
    * A filter function for filtering a list of commits to only include commits which contain a
    * unique value for the provided field across all commits in the list.
    */
-  unique(field: keyof CommitFromGitLog) {
-    const set = new Set<CommitFromGitLog[typeof field]>();
-    return (commit: CommitFromGitLog) => {
+  unique(field: keyof CategorizedCommit) {
+    const set = new Set<CategorizedCommit[typeof field]>();
+    return (commit: CategorizedCommit) => {
       const include = !set.has(commit[field]);
       set.add(commit[field]);
       return include;
@@ -141,7 +160,7 @@ export class RenderContext {
   /**
    * Convert a commit object to a Markdown link.
    */
-  commitToLink(commit: CommitFromGitLog): string {
+  commitToLink(commit: CategorizedCommit): string {
     const url = `https://github.com/${this.data.github.owner}/${this.data.github.name}/commit/${commit.hash}`;
     return `[${commit.shortHash}](${url})`;
   }
@@ -155,11 +174,15 @@ export class RenderContext {
   }
 
   /**
-   * Transform a commit message header by replacing the parenthesized pull request reference at the
-   * end of the line (which is added by merge tooling) to a Markdown link.
+   * Transform a given string by replacing any pull request references with their
+   * equivalent markdown links.
+   *
+   * This is useful for the changelog output. Github transforms pull request references
+   * automatically in release note entries, issues and pull requests, but not for plain
+   * markdown files (like the changelog file).
    */
-  replaceCommitHeaderPullRequestNumber(header: string): string {
-    return header.replace(/\(#(\d+)\)$/, (_, g) => `(${this.pullRequestToLink(+g)})`);
+  convertPullRequestReferencesToLinks(content: string): string {
+    return content.replace(/#(\d+)/g, (_, g) => this.pullRequestToLink(Number(g)));
   }
 
   /**
@@ -172,7 +195,7 @@ export class RenderContext {
   /**
    * Returns unique, sorted and filtered commit authors.
    */
-  commitAuthors(commits: CommitFromGitLog[]): string[] {
+  commitAuthors(commits: CategorizedCommit[]): string[] {
     return [...new Set(commits.map((c) => c.author))]
       .filter((a) => !botsAuthorNames.includes(a))
       .sort();
@@ -181,7 +204,7 @@ export class RenderContext {
   /**
    * Convert a commit object to a Markdown linked badged.
    */
-  commitToBadge(commit: CommitFromGitLog): string {
+  commitToBadge(commit: CategorizedCommit): string {
     let color = 'yellow';
     switch (commit.type) {
       case 'fix':

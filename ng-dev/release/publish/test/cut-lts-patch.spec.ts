@@ -92,11 +92,11 @@ describe('cut an LTS patch action', () => {
 
     SandboxGitRepo.withInitialCommit(action.githubConfig)
       .branchOff('9.2.x')
-      .commit('feat(pkg1): already released #1')
-      .commit('feat(pkg1): already released #2')
+      .commit('feat(pkg1): already released *1')
+      .commit('feat(pkg1): already released *2')
       .createTagForHead('9.2.4')
-      .commit('feat(pkg1): not yet released #1')
-      .commit('feat(pkg1): not yet released #2');
+      .commit('feat(pkg1): not yet released *1')
+      .commit('feat(pkg1): not yet released *2');
 
     await expectGithubApiRequestsForStaging(action, '9.2.x', '9.2.5', true);
     await action.instance.perform();
@@ -106,10 +106,10 @@ describe('cut an LTS patch action', () => {
     expect(changelog).toMatch(changelogPattern`
       # 9.2.5 <..>
       ### pkg1
-      | Commit | Description |
-      | -- | -- |
-      | <..> | feat: not yet released #2 |
-      | <..> | feat: not yet released #1 |
+      | Commit | Type | Description |
+      | -- | -- | -- |
+      | <..> | feat | not yet released *2 |
+      | <..> | feat | not yet released *1 |
       ## Special Thanks:
     `);
   });

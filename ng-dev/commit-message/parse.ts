@@ -24,8 +24,6 @@ export interface Commit {
   type: string;
   /** The scope of the commit message. */
   scope: string;
-  /** The npm scope of the commit message. */
-  npmScope: string;
   /** The subject of the commit message. */
   subject: string;
   /** A list of breaking change notes in the commit message. */
@@ -92,15 +90,15 @@ const REVERT_PREFIX_RE = /^revert:? /i;
  *
  * The pattern can be broken down into component parts:
  * - `(\w+)` - a capturing group discovering the type of the commit.
- * - `(?:\((?:([^/]+)\/)?([^)]+)\))?` - a pair of capturing groups to capture the scope and,
- * optionally the npmScope of the commit.
+ * - `(?:\(([^)]+)\))?` - an optional capturing group to capture the scope of the commit.
  * - `(.*)` - a capturing group discovering the subject of the commit.
  */
-const headerPattern = /^(\w+)(?:\((?:([^/]+)\/)?([^)]+)\))?: (.*)$/;
+const headerPattern = /^(\w+)(?:\(([^)]+)\))?: (.*)$/;
 /**
- * The property names used for the values extracted from the header via the `headerPattern` regex.
+ * The property names used for the values extracted from the header via the
+ * `headerPattern` regex.
  */
-const headerCorrespondence = ['type', 'npmScope', 'scope', 'subject'];
+const headerCorrespondence = ['type', 'scope', 'subject'];
 /**
  * Configuration options for the commit parser.
  *
@@ -159,7 +157,6 @@ function parseInternal(fullText: string | Buffer): CommitFromGitLog | Commit {
     scope: commit.scope || '',
     subject: commit.subject || '',
     type: commit.type || '',
-    npmScope: commit.npmScope || '',
     isFixup: FIXUP_PREFIX_RE.test(fullText),
     isSquash: SQUASH_PREFIX_RE.test(fullText),
     isRevert: REVERT_PREFIX_RE.test(fullText),

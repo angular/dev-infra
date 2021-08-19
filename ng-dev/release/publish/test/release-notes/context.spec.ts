@@ -8,10 +8,13 @@
 
 import {CommitFromGitLog, parseCommitFromGitLog} from '../../../../commit-message/parse';
 import {commitMessageBuilder} from '../../../../commit-message/test-util';
-import {RenderContext, RenderContextData} from '../../../notes/context';
+import {CategorizedCommit, RenderContext, RenderContextData} from '../../../notes/context';
 
 const defaultContextData: RenderContextData = {
   commits: [],
+  categorizeCommit: undefined,
+  hiddenScopes: undefined,
+  groupOrder: undefined,
   github: {
     name: 'repoName',
     owner: 'repoOwner',
@@ -40,8 +43,9 @@ describe('RenderContext', () => {
 
   it('filters to include only the first commit discovered with a unique value for a specified field', () => {
     const renderContext = new RenderContext(defaultContextData);
-    const matchingCommits = commitsFromList(0, 1, 2, 3, 4, 7, 12);
-    expect(commits.filter(renderContext.unique('type'))).toEqual(matchingCommits);
+    const matchingCommits = renderContext._categorizeCommits(commitsFromList(0, 1, 2, 3, 4, 7, 12));
+    const testCommits = renderContext._categorizeCommits(commits);
+    expect(testCommits.filter(renderContext.unique('type'))).toEqual(matchingCommits);
   });
 
   describe('filters to include commits which are to be included in the release notes', () => {
@@ -54,15 +58,15 @@ describe('RenderContext', () => {
         'excluded',
         'breaking-change',
       );
-      const commitsToTest = [
+      const commitsToTest = renderContext._categorizeCommits([
         refactorCommit,
         refactorCommitWithBreakingChange,
         refactorCommitWithBreakingChangeButExcluded,
-      ];
-
-      expect(commitsToTest.filter(renderContext.includeInReleaseNotes())).toEqual([
-        refactorCommitWithBreakingChange,
       ]);
+
+      expect(commitsToTest.filter(renderContext.includeInReleaseNotes())).toEqual(
+        renderContext._categorizeCommits([refactorCommitWithBreakingChange]),
+      );
     });
 
     it('forcibly includes commits with deprecations regardless of type', () => {
@@ -74,27 +78,35 @@ describe('RenderContext', () => {
         'excluded',
         'deprecation',
       );
-      const commitsToTest = [
+      const commitsToTest = renderContext._categorizeCommits([
         refactorCommit,
         refactorCommitWithDeprecation,
         refactorCommitWithDeprecationButExcluded,
-      ];
-
-      expect(commitsToTest.filter(renderContext.includeInReleaseNotes())).toEqual([
-        refactorCommitWithDeprecation,
       ]);
+
+      expect(commitsToTest.filter(renderContext.includeInReleaseNotes())).toEqual(
+        renderContext._categorizeCommits([refactorCommitWithDeprecation]),
+      );
     });
 
     it('including all scopes by default', () => {
       const renderContext = new RenderContext(defaultContextData);
-      const matchingCommits = commitsFromList(0, 2, 5, 6, 8, 10, 11, 12, 15, 16);
-      expect(commits.filter(renderContext.includeInReleaseNotes())).toEqual(matchingCommits);
+      const matchingCommits = renderContext._categorizeCommits(
+        commitsFromList(0, 2, 5, 6, 8, 10, 11, 12, 15, 16),
+      );
+      const testCommits = renderContext._categorizeCommits(commits);
+
+      expect(testCommits.filter(renderContext.includeInReleaseNotes())).toEqual(matchingCommits);
     });
 
     it('excluding hidden scopes defined in the config', () => {
       const renderContext = new RenderContext({...defaultContextData, hiddenScopes: ['core']});
-      const matchingCommits = commitsFromList(0, 2, 6, 8, 10, 11, 15, 16);
-      expect(commits.filter(renderContext.includeInReleaseNotes())).toEqual(matchingCommits);
+      const matchingCommits = renderContext._categorizeCommits(
+        commitsFromList(0, 2, 6, 8, 10, 11, 15, 16),
+      );
+      const testCommits = renderContext._categorizeCommits(commits);
+
+      expect(testCommits.filter(renderContext.includeInReleaseNotes())).toEqual(matchingCommits);
     });
   });
 
@@ -104,13 +116,15 @@ describe('RenderContext', () => {
     let compilerCommits: CommitFromGitLog[];
     let unorganizedCommits: CommitFromGitLog[];
     function assertOrganizedGroupsMatch(
-      generatedGroups: {title: string; commits: CommitFromGitLog[]}[],
+      context: RenderContext,
+      generatedGroups: {title: string; commits: CategorizedCommit[]}[],
       providedGroups: {title: string; commits: CommitFromGitLog[]}[],
     ) {
       expect(generatedGroups.length).toBe(providedGroups.length);
       generatedGroups.forEach(({title, commits}, idx) => {
+        const expectedCommits = context._categorizeCommits(providedGroups[idx].commits);
         expect(title).toBe(providedGroups[idx].title);
-        expect(commits).toEqual(jasmine.arrayWithExactContents(providedGroups[idx].commits));
+        expect(commits).toEqual(jasmine.arrayWithExactContents(expectedCommits));
       });
     }
 
@@ -125,9 +139,11 @@ describe('RenderContext', () => {
 
     it('with default sorting', () => {
       const renderContext = new RenderContext(defaultContextData);
-      const organizedCommits = renderContext.asCommitGroups(unorganizedCommits);
+      const organizedCommits = renderContext.asCommitGroups(
+        renderContext._categorizeCommits(unorganizedCommits),
+      );
 
-      assertOrganizedGroupsMatch(organizedCommits, [
+      assertOrganizedGroupsMatch(renderContext, organizedCommits, [
         {title: 'compiler', commits: compilerCommits},
         {title: 'core', commits: coreCommits},
         {title: 'dev-infra', commits: devInfraCommits},
@@ -139,9 +155,11 @@ describe('RenderContext', () => {
         ...defaultContextData,
         groupOrder: ['core', 'dev-infra'],
       });
-      const organizedCommits = renderContext.asCommitGroups(unorganizedCommits);
+      const organizedCommits = renderContext.asCommitGroups(
+        renderContext._categorizeCommits(unorganizedCommits),
+      );
 
-      assertOrganizedGroupsMatch(organizedCommits, [
+      assertOrganizedGroupsMatch(renderContext, organizedCommits, [
         {title: 'core', commits: coreCommits},
         {title: 'dev-infra', commits: devInfraCommits},
         {title: 'compiler', commits: compilerCommits},
@@ -157,7 +175,6 @@ describe('RenderContext', () => {
 const buildCommitMessage = commitMessageBuilder({
   prefix: '',
   type: '',
-  npmScope: '',
   scope: '',
   summary: 'This is a short summary of the change',
   body: 'This is a longer description of the change',

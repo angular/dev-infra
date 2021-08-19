@@ -112,25 +112,25 @@ describe('move next into feature-freeze action', () => {
 
         SandboxGitRepo.withInitialCommit(action.githubConfig)
           .branchOff('10.0.x')
-          .commit('feat(pkg1): patch already released #1')
-          .commit('feat(pkg1): patch already released #2')
+          .commit('feat(pkg1): patch already released *1')
+          .commit('feat(pkg1): patch already released *2')
           .commit('feat(pkg1): released in patch, but cherry-picked', 1)
           .createTagForHead('10.0.3')
           .commit('feat(pkg1): not released yet, but cherry-picked', 2)
           .switchToBranch('master')
-          .commit('feat(pkg1): only in next, not released yet #1')
-          .commit('feat(pkg1): only in next, not released yet #2')
+          .commit('feat(pkg1): only in next, not released yet *1')
+          .commit('feat(pkg1): only in next, not released yet *2')
           .cherryPick(1)
           .cherryPick(2);
 
         expect(await buildChangelog()).toMatch(changelogPattern`
         # 10.1.0-next.0 <..>
         ### pkg1
-        | Commit | Description |
-        | -- | -- |
-        | <..> | feat: not released yet, but cherry-picked |
-        | <..> | feat: only in next, not released yet #2 |
-        | <..> | feat: only in next, not released yet #1 |
+        | Commit | Type | Description |
+        | -- | -- | -- |
+        | <..> | feat | not released yet, but cherry-picked |
+        | <..> | feat | only in next, not released yet *2 |
+        | <..> | feat | only in next, not released yet *1 |
       `);
       },
     );
@@ -151,19 +151,19 @@ describe('move next into feature-freeze action', () => {
     );
 
     SandboxGitRepo.withInitialCommit(action.githubConfig)
-      .commit('feat(pkg1): already released #1')
-      .commit('feat(pkg1): already released #2')
+      .commit('feat(pkg1): already released *1')
+      .commit('feat(pkg1): already released *2')
       .createTagForHead('10.1.0-next.0')
-      .commit('feat(pkg1): not yet released #1')
-      .commit('fix(pkg1): not yet released #2');
+      .commit('feat(pkg1): not yet released *1')
+      .commit('fix(pkg1): not yet released *2');
 
     expect(await buildChangelog()).toMatch(changelogPattern`
       # 10.1.0-next.1 <..>
       ### pkg1
-      | Commit | Description |
-      | -- | -- |
-      | <..> | feat: not yet released #1 |
-      | <..> | fix: not yet released #2 |
+      | Commit | Type | Description |
+      | -- | -- | -- |
+      | <..> | feat | not yet released *1 |
+      | <..> | fix | not yet released *2 |
       ## Special Thanks:
     `);
   });

@@ -139,10 +139,9 @@ export function validateCommitMessage(
       return false;
     }
 
-    const fullScope = commit.npmScope ? `${commit.npmScope}/${commit.scope}` : commit.scope;
-    if (fullScope && !config.scopes.includes(fullScope)) {
+    if (commit.scope && !config.scopes.includes(commit.scope)) {
       errors.push(
-        `'${fullScope}' is not an allowed scope.\n => SCOPES: ${config.scopes.join(', ')}`,
+        `'${commit.scope}' is not an allowed scope.\n => SCOPES: ${config.scopes.join(', ')}`,
       );
       return false;
     }
