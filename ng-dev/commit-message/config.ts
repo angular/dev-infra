@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {assertNoErrors, getConfig, NgDevConfig} from '../utils/config';
+import {assertNoErrors, getConfig} from '../utils/config';
 
 /** Configuration for commit-message comands. */
 export interface CommitMessageConfig {
@@ -21,7 +21,7 @@ export function getCommitMessageConfig() {
   // List of errors encountered validating the config.
   const errors: string[] = [];
   // The non-validated config object.
-  const config: Partial<NgDevConfig<{commitMessage: CommitMessageConfig}>> = getConfig();
+  const config: Partial<{commitMessage: CommitMessageConfig}> = getConfig();
 
   if (config.commitMessage === undefined) {
     errors.push(`No configuration defined for "commitMessage"`);

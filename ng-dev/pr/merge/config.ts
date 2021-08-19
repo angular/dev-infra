@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {GitClientConfig, NgDevConfig} from '../../utils/config';
+import {GitClientConfig} from '../../utils/config';
 import {GithubClient} from '../../utils/git/github';
 
 import {GithubApiMergeStrategyConfig} from './strategies/api-merge';
@@ -84,9 +84,10 @@ export interface MergeConfig {
  * on branch name computations. We don't want to run these immediately whenever
  * the dev-infra configuration is loaded as that could slow-down other commands.
  */
-export type DevInfraMergeConfig = NgDevConfig<{
-  'merge': (api: GithubClient) => MergeConfig | Promise<MergeConfig>;
-}>;
+export type DevInfraMergeConfig = {
+  github: GitClientConfig;
+  merge: (api: GithubClient) => MergeConfig | Promise<MergeConfig>;
+};
 
 /** Loads and validates the merge configuration. */
 export async function loadAndValidateConfig(

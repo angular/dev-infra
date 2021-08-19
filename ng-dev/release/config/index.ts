@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {assertNoErrors, getConfig, NgDevConfig} from '../../utils/config';
+import {assertNoErrors, getConfig} from '../../utils/config';
 
 /** Interface describing a built package. */
 export interface BuiltPackage {
@@ -46,7 +46,7 @@ export interface ReleaseNotesConfig {
 }
 
 /** Configuration for releases in the dev-infra configuration. */
-export type DevInfraReleaseConfig = NgDevConfig<{release: ReleaseConfig}>;
+export type DevInfraReleaseConfig = {release: ReleaseConfig};
 
 /** Retrieve and validate the config as `ReleaseConfig`. */
 export function getReleaseConfig(

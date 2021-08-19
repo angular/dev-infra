@@ -10,7 +10,7 @@ import {installSandboxGitClient, SandboxGitClient} from '../test-utils/sandbox-g
 import {mkdirSync, rmdirSync} from 'fs';
 import {testTmpDir} from '../test-utils/action-mocks';
 import {getMockGitClient} from '../test-utils/git-client-mock';
-import {GithubConfig} from '../../../../utils/config';
+import {GitClientConfig} from '../../../../utils/config';
 import {SandboxGitRepo} from '../test-utils/sandbox-testing';
 import {ReleaseNotes} from '../../../notes/release-notes';
 import {ReleaseConfig} from '../../../config';
@@ -18,7 +18,7 @@ import {changelogPattern, parse} from '../test-utils/test-utils';
 
 describe('release notes generation', () => {
   let releaseConfig: ReleaseConfig;
-  let githubConfig: GithubConfig;
+  let GitClientConfig: GitClientConfig;
   let client: SandboxGitClient;
 
   beforeEach(() => {
@@ -28,8 +28,8 @@ describe('release notes generation', () => {
     mkdirSync(testTmpDir);
 
     releaseConfig = {npmPackages: [], buildPackages: async () => []};
-    githubConfig = {owner: 'angular', name: 'dev-infra-test', mainBranchName: 'main'};
-    client = getMockGitClient(githubConfig, /* useSandboxGitClient */ true);
+    GitClientConfig = {owner: 'angular', name: 'dev-infra-test', mainBranchName: 'main'};
+    client = getMockGitClient(GitClientConfig, /* useSandboxGitClient */ true);
 
     installSandboxGitClient(client);
 
@@ -39,7 +39,7 @@ describe('release notes generation', () => {
 
   describe('changelog', () => {
     it('should capture breaking changes', async () => {
-      SandboxGitRepo.withInitialCommit(githubConfig)
+      SandboxGitRepo.withInitialCommit(GitClientConfig)
         .commit('fix(cdk/a11y): already released #1')
         .createTagForHead('13.0.0-next.0')
         .commit('fix(cdk/a11y): not yet released #1')
@@ -65,7 +65,7 @@ describe('release notes generation', () => {
     });
 
     it('should capture deprecations', async () => {
-      SandboxGitRepo.withInitialCommit(githubConfig)
+      SandboxGitRepo.withInitialCommit(GitClientConfig)
         .commit('fix(cdk/a11y): already released #1')
         .createTagForHead('13.0.0-next.0')
         .commit('fix(cdk/a11y): not yet released #1')
@@ -92,7 +92,7 @@ describe('release notes generation', () => {
 
   describe('github release notes', () => {
     it('should capture breaking changes', async () => {
-      SandboxGitRepo.withInitialCommit(githubConfig)
+      SandboxGitRepo.withInitialCommit(GitClientConfig)
         .commit('fix(cdk/a11y): already released #1')
         .createTagForHead('13.0.0-next.0')
         .commit('fix(cdk/a11y): not yet released #1')
@@ -118,7 +118,7 @@ describe('release notes generation', () => {
     });
 
     it('should capture deprecations', async () => {
-      SandboxGitRepo.withInitialCommit(githubConfig)
+      SandboxGitRepo.withInitialCommit(GitClientConfig)
         .commit('fix(cdk/a11y): already released #1')
         .createTagForHead('13.0.0-next.0')
         .commit('fix(cdk/a11y): not yet released #1')

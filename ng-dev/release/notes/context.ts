@@ -8,7 +8,7 @@
 
 import {COMMIT_TYPES, ReleaseNotesLevel} from '../../commit-message/config';
 import {CommitFromGitLog} from '../../commit-message/parse';
-import {GithubConfig} from '../../utils/config';
+import {GitClientConfig} from '../../utils/config';
 import {ReleaseNotesConfig} from '../config/index';
 
 /** List of types to be included in the release notes. */
@@ -27,7 +27,7 @@ export interface RenderContextData {
   date?: Date;
   commits: CommitFromGitLog[];
   version: string;
-  github: GithubConfig;
+  github: GitClientConfig;
 }
 
 /** Context class used for rendering release notes. */

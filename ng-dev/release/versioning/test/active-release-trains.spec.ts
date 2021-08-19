@@ -4,7 +4,7 @@ import {GithubClient} from '../../../utils/git/github';
 import * as nock from 'nock';
 import {matchesVersion} from '../../../utils/testing';
 import {fakeGithubPaginationResponse} from '../../../utils/testing/github-interception';
-import {GithubConfig} from '../../../utils/config';
+import {GitClientConfig} from '../../../utils/config';
 
 describe('active release train determination', () => {
   let api: GithubClient;
@@ -17,7 +17,7 @@ describe('active release train determination', () => {
   afterEach(() => nock.cleanAll());
 
   /** Configures the test environment with the given github config. */
-  function setup(config: GithubConfig) {
+  function setup(config: GitClientConfig) {
     api = new GithubClient();
     repo = {
       owner: config.owner,
