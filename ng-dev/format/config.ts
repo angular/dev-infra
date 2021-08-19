@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {assertNoErrors, getConfig} from '../utils/config';
+import {ConfigValidationError} from '../utils/config';
 
 interface Formatter {
   matchers: string[];
@@ -17,14 +17,13 @@ export interface FormatConfig {
 }
 
 /** Retrieve and validate the config as `FormatConfig`. */
-export function getFormatConfig() {
+export function assertValidFormatConfig<T>(
+  config: T & Partial<{format: FormatConfig}>,
+): asserts config is T & {format: FormatConfig} {
   // List of errors encountered validating the config.
   const errors: string[] = [];
-  // The unvalidated config object.
-  const config: Partial<{format: FormatConfig}> = getConfig();
-
   if (config.format === undefined) {
-    errors.push(`No configuration defined for "format"`);
+    throw new ConfigValidationError(`No configuration defined for "format"`);
   }
 
   for (const [key, value] of Object.entries(config.format!)) {
@@ -38,9 +37,9 @@ export function getFormatConfig() {
         errors.push(`"format.${key}" is not a boolean or Formatter object`);
     }
   }
-
-  assertNoErrors(errors);
-  return config as Required<typeof config>;
+  if (errors.length) {
+    throw new ConfigValidationError('Invalid "format" configuration', errors);
+  }
 }
 
 /** Validate an individual Formatter config. */

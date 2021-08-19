@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {getFormatConfig} from '../config';
+import {getConfig} from '../../utils/config';
+import {assertValidFormatConfig} from '../config';
 
 import {Buildifier} from './buildifier';
 import {ClangFormat} from './clang-format';
@@ -16,10 +17,14 @@ import {Prettier} from './prettier';
  * Get all defined formatters which are active based on the current loaded config.
  */
 export function getActiveFormatters() {
-  const config = getFormatConfig().format;
-  return [new Prettier(config), new Buildifier(config), new ClangFormat(config)].filter(
-    (formatter) => formatter.isEnabled(),
-  );
+  const config = getConfig();
+  assertValidFormatConfig(config);
+
+  return [
+    new Prettier(config.format),
+    new Buildifier(config.format),
+    new ClangFormat(config.format),
+  ].filter((formatter) => formatter.isEnabled());
 }
 
 // Rexport symbols used for types elsewhere.
