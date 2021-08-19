@@ -7,11 +7,10 @@
  */
 
 // Imports
-import * as validateConfig from './config';
+import {CommitMessageConfig, COMMIT_TYPES} from './config';
+import * as configUtils from '../utils/config';
 import {parseCommitMessage} from './parse';
 import {validateCommitMessage, ValidateCommitMessageResult} from './validate';
-
-type CommitMessageConfig = validateConfig.CommitMessageConfig;
 
 // Constants
 const config: {commitMessage: CommitMessageConfig} = {
@@ -21,7 +20,7 @@ const config: {commitMessage: CommitMessageConfig} = {
     scopes: ['common', 'compiler', 'core', 'packaging', '@angular-devkit/build-angular'],
   },
 };
-const TYPES = Object.keys(validateConfig.COMMIT_TYPES).join(', ');
+const TYPES = Object.keys(COMMIT_TYPES).join(', ');
 const SCOPES = config.commitMessage.scopes.join(', ');
 const INVALID = false;
 const VALID = true;
@@ -37,10 +36,9 @@ function expectValidationResult(
 // TODO(josephperrott): Clean up tests to test script rather than for
 // specific commit messages we want to use.
 describe('validate-commit-message.js', () => {
+  let getConfigSpy: jasmine.Spy
   beforeEach(() => {
-    spyOn(validateConfig, 'getCommitMessageConfig').and.returnValue(
-      config as ReturnType<typeof validateConfig.getCommitMessageConfig>,
-    );
+    getConfigSpy = spyOn(configUtils, 'getConfig').and.returnValue(config);
   });
 
   describe('validateMessage()', () => {
@@ -267,7 +265,7 @@ describe('validate-commit-message.js', () => {
       };
 
       beforeEach(() => {
-        (validateConfig.getCommitMessageConfig as jasmine.Spy).and.returnValue(minBodyLengthConfig);
+        getConfigSpy.and.returnValue(minBodyLengthConfig);
       });
 
       it('should fail validation if the body is shorter than `minBodyLength`', () => {
