@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {assertNoErrors, getConfig} from '../utils/config';
+import {ConfigValidationError} from '../utils/config';
 
 /** Configuration for commit-message comands. */
 export interface CommitMessageConfig {
@@ -16,19 +16,11 @@ export interface CommitMessageConfig {
   scopes: string[];
 }
 
-/** Retrieve and validate the config as `CommitMessageConfig`. */
-export function getCommitMessageConfig() {
-  // List of errors encountered validating the config.
-  const errors: string[] = [];
-  // The non-validated config object.
-  const config: Partial<{commitMessage: CommitMessageConfig}> = getConfig();
-
+/** Assert the provided config contains a `CommitMessageConfig`. */
+export function assertValidCommitMessageConfig<T>(config: T & Partial<{commitMessage: CommitMessageConfig}>): asserts config is T & {commitMessage: CommitMessageConfig} {
   if (config.commitMessage === undefined) {
-    errors.push(`No configuration defined for "commitMessage"`);
+    throw new ConfigValidationError(`No configuration defined for "commitMessage"`);
   }
-
-  assertNoErrors(errors);
-  return config as Required<typeof config>;
 }
 
 /** Scope requirement level to be set for each commit type. */

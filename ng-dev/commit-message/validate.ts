@@ -6,9 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import { getConfig } from '../utils/config';
 import {error} from '../utils/console';
 
-import {COMMIT_TYPES, getCommitMessageConfig, ScopeRequirement} from './config';
+import {assertValidCommitMessageConfig, COMMIT_TYPES, ScopeRequirement} from './config';
 import {Commit, parseCommitMessage} from './parse';
 
 /** Options for commit message validation. */
@@ -55,7 +56,9 @@ export function validateCommitMessage(
   commitMsg: string | Commit,
   options: ValidateCommitMessageOptions = {},
 ): ValidateCommitMessageResult {
-  const config = getCommitMessageConfig().commitMessage;
+  const _config = getConfig();
+  assertValidCommitMessageConfig(_config);
+  const config = _config.commitMessage;
   const commit = typeof commitMsg === 'string' ? parseCommitMessage(commitMsg) : commitMsg;
   const errors: string[] = [];
 
