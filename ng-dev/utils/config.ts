@@ -28,30 +28,13 @@ export interface GitClientConfig {
 }
 
 /**
- * Describes the Github configuration for dev-infra. This configuration is
- * used for API requests, determining the upstream remote, etc.
- */
-export interface GithubConfig extends GitClientConfig {}
-
-/** The common configuration for ng-dev. */
-type CommonConfig = {
-  github: GithubConfig;
-};
-
-/**
- * The configuration for the specific ng-dev command, providing both the common
- * ng-dev config as well as the specific config of a subcommand.
- */
-export type NgDevConfig<T = {}> = CommonConfig & T;
-
-/**
  * The filename expected for creating the ng-dev config, without the file
  * extension to allow either a typescript or javascript file to be used.
  */
 const CONFIG_FILE_PATH = '.ng-dev/config';
 
 /** The configuration for ng-dev. */
-let cachedConfig: NgDevConfig | null = null;
+let cachedConfig: {} | null = null;
 
 /**
  * The filename expected for local user config, without the file extension to allow a typescript,
@@ -66,24 +49,55 @@ let userConfig: {[key: string]: any} | null = null;
  * Get the configuration from the file system, returning the already loaded
  * copy if it is defined.
  */
-export function getConfig(): NgDevConfig;
-export function getConfig(baseDir?: string): NgDevConfig;
-export function getConfig(baseDir?: string): NgDevConfig {
+export function getConfig(): {};
+export function getConfig(baseDir?: string): {};
+export function getConfig(baseDir?: string): {} {
   // If the global config is not defined, load it from the file system.
   if (cachedConfig === null) {
     baseDir = baseDir || GitClient.get().baseDir;
     // The full path to the configuration file.
     const configPath = join(baseDir, CONFIG_FILE_PATH);
     // Read the configuration and validate it before caching it for the future.
-    cachedConfig = validateCommonConfig(readConfigFile(configPath));
+    cachedConfig = readConfigFile(configPath);
   }
   // Return a clone of the cached global config to ensure that a new instance of the config
   // is returned each time, preventing unexpected effects of modifications to the config object.
   return {...cachedConfig};
 }
 
+/**
+ * Get the local user configuration from the file system, returning the already loaded copy if it is
+ * defined.
+ *
+ * @returns The user configuration object, or an empty object if no user configuration file is
+ * present. The object is an untyped object as there are no required user configurations.
+ */
+export function getUserConfig() {
+  // If the global config is not defined, load it from the file system.
+  if (userConfig === null) {
+    const git = GitClient.get();
+    // The full path to the configuration file.
+    const configPath = join(git.baseDir, USER_CONFIG_FILE_PATH);
+    // Set the global config object.
+    userConfig = readConfigFile(configPath, true);
+  }
+  // Return a clone of the user config to ensure that a new instance of the config is returned
+  // each time, preventing unexpected effects of modifications to the config object.
+  return {...userConfig};
+}
+
+/** A standard error class to thrown during assertions while validating configuration. */
+export class ConfigValidationError extends Error {
+  constructor(message?: string, public readonly errors: string[] = []) {
+    super(message);
+    Object.setPrototypeOf(this, ConfigValidationError.prototype);
+  }
+}
+
 /** Validate the common configuration has been met for the ng-dev command. */
-function validateCommonConfig(config: Partial<NgDevConfig>) {
+export function assertValidGithubConfig<T>(
+  config: T & Partial<{github: GitClientConfig}>,
+): asserts config is T & {github: GitClientConfig} {
   const errors: string[] = [];
   // Validate the github configuration.
   if (config.github === undefined) {
@@ -96,15 +110,16 @@ function validateCommonConfig(config: Partial<NgDevConfig>) {
       errors.push(`"github.owner" is not defined`);
     }
   }
-  assertNoErrors(errors);
-  return config as NgDevConfig;
+  if (errors.length) {
+    throw new ConfigValidationError('Invalid `github` configuration', errors);
+  }
 }
 
 /**
  * Resolves and reads the specified configuration file, optionally returning an empty object if the
  * configuration file cannot be read.
  */
-function readConfigFile(configPath: string, returnEmptyObjectOnError = false): object {
+function readConfigFile(configPath: string, returnEmptyObjectOnError = false): {} {
   // If the `.ts` extension has not been set up already, and a TypeScript based
   // version of the given configuration seems to exist, set up `ts-node` if available.
   if (
@@ -150,25 +165,4 @@ export function assertNoErrors(errors: string[]) {
     error(`  - ${err}`);
   }
   process.exit(1);
-}
-
-/**
- * Get the local user configuration from the file system, returning the already loaded copy if it is
- * defined.
- *
- * @returns The user configuration object, or an empty object if no user configuration file is
- * present. The object is an untyped object as there are no required user configurations.
- */
-export function getUserConfig() {
-  // If the global config is not defined, load it from the file system.
-  if (userConfig === null) {
-    const git = GitClient.get();
-    // The full path to the configuration file.
-    const configPath = join(git.baseDir, USER_CONFIG_FILE_PATH);
-    // Set the global config object.
-    userConfig = readConfigFile(configPath, true);
-  }
-  // Return a clone of the user config to ensure that a new instance of the config is returned
-  // each time, preventing unexpected effects of modifications to the config object.
-  return {...userConfig};
 }

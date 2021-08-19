@@ -8,7 +8,7 @@
 
 import {ReleaseAction} from '../../actions';
 import {GithubTestingRepo} from './github-api-testing';
-import {GithubConfig} from '../../../../utils/config';
+import {GitClientConfig} from '../../../../utils/config';
 import {ReleaseConfig} from '../../../config';
 import {SandboxGitClient} from './sandbox-git-client';
 import {VirtualGitClient} from '../../../../utils/testing';
@@ -41,7 +41,7 @@ export interface TestReleaseAction<
   repo: GithubTestingRepo;
   fork: GithubTestingRepo;
   testTmpDir: string;
-  githubConfig: GithubConfig;
+  githubConfig: GitClientConfig;
   releaseConfig: ReleaseConfig;
   gitClient: O['useSandboxGitClient'] extends true ? SandboxGitClient : VirtualGitClient;
 }

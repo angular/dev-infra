@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {assertValidGithubConfig} from '../../utils/config';
 import {getCaretakerConfig} from '../config';
 
 import {CiModule} from './ci';
@@ -20,6 +21,7 @@ const moduleList = [GithubQueriesModule, ServicesModule, CiModule, G3Module];
 export async function checkServiceStatuses() {
   /** The configuration for the caretaker commands. */
   const config = getCaretakerConfig();
+  assertValidGithubConfig(config);
   /** List of instances of Caretaker Check modules */
   const caretakerCheckModules = moduleList.map((module) => new module(config));
 

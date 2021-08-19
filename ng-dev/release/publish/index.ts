@@ -7,7 +7,7 @@
  */
 
 import {ListChoiceOptions, prompt} from 'inquirer';
-import {GithubConfig} from '../../utils/config';
+import {GitClientConfig} from '../../utils/config';
 import {debug, error, info, log, promptConfirm, red, yellow} from '../../utils/console';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {ReleaseConfig} from '../config/index';
@@ -34,7 +34,7 @@ export class ReleaseTool {
 
   constructor(
     protected _config: ReleaseConfig,
-    protected _github: GithubConfig,
+    protected _github: GitClientConfig,
     protected _projectRoot: string,
   ) {}
 

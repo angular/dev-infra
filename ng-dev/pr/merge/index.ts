@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {getConfig} from '../../utils/config';
+import {assertValidGithubConfig, getConfig} from '../../utils/config';
 import {error, green, info, promptConfirm, red, yellow} from '../../utils/console';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {GithubApiRequestError} from '../../utils/git/github';
@@ -130,6 +130,7 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
  */
 async function createPullRequestMergeTask(flags: PullRequestMergeTaskFlags) {
   const devInfraConfig = getConfig();
+  assertValidGithubConfig(devInfraConfig);
   /** The singleton instance of the authenticated git client. */
   const git = AuthenticatedGitClient.get();
   const {config, errors} = await loadAndValidateConfig(devInfraConfig, git.github);

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {getConfig} from '../../utils/config';
+import {assertValidGithubConfig, getConfig} from '../../utils/config';
 import {error, info, red} from '../../utils/console';
 import {GitClient} from '../../utils/git/git-client';
 import {loadAndValidateConfig, TargetLabel} from '../merge/config';
@@ -19,6 +19,7 @@ import {
 export async function getTargetBranchesForPr(prNumber: number) {
   /** The ng-dev configuration. */
   const config = getConfig();
+  assertValidGithubConfig(config);
   /** Repo owner and name for the github repository. */
   const {owner, name: repo} = config.github;
   /** The singleton instance of the GitClient. */

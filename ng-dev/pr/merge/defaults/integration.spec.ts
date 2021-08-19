@@ -11,7 +11,7 @@ import {ParsedUrlQuery} from 'querystring';
 
 import {ReleaseConfig} from '../../../release/config/index';
 import {_npmPackageInfoCache, NpmPackageInfo} from '../../../release/versioning/npm-registry';
-import {GithubConfig} from '../../../utils/config';
+import {GitClientConfig} from '../../../utils/config';
 import * as console from '../../../utils/console';
 import {GithubClient} from '../../../utils/git/github';
 import {buildGithubPaginationResponseHeader} from '../../../utils/testing/github-pagination-header';
@@ -25,7 +25,7 @@ const API_ENDPOINT = `https://api.github.com`;
 
 describe('default target labels', () => {
   let api: GithubClient;
-  let githubConfig: GithubConfig;
+  let githubConfig: GitClientConfig;
   let releaseConfig: ReleaseConfig;
 
   beforeEach(() => {

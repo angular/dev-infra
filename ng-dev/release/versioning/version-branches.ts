@@ -8,7 +8,7 @@
 
 import * as semver from 'semver';
 import {GithubClient, GithubRepo} from '../../utils/git/github';
-import {GithubConfig} from '../../utils/config';
+import {GitClientConfig} from '../../utils/config';
 
 /** Object describing a repository that can be released, together with an API client. */
 export interface ReleaseRepoWithApi extends GithubRepo {
@@ -39,7 +39,7 @@ const versionBranchNameRegex = /^(\d+)\.(\d+)\.x$/;
  * Note that there is a clear separation between the main branch of the
  * upstream remote repository and the `next` release-train branch.
  */
-export function getNextBranchName(github: GithubConfig): string {
+export function getNextBranchName(github: GitClientConfig): string {
   return github.mainBranchName;
 }
 

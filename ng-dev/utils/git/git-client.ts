@@ -9,7 +9,7 @@
 import {spawnSync, SpawnSyncOptions, SpawnSyncReturns} from 'child_process';
 import {Options as SemVerOptions, parse, SemVer} from 'semver';
 
-import {getConfig, GithubConfig, NgDevConfig} from '../config';
+import {getConfig, GitClientConfig, assertValidGithubConfig} from '../config';
 import {debug, info} from '../console';
 import {DryRunError, isDryRun} from '../dry-run';
 
@@ -39,16 +39,19 @@ type GitCommandRunOptions = SpawnSyncOptions & {
 /** Class that can be used to perform Git interactions with a given remote. **/
 export class GitClient {
   /** Short-hand for accessing the default remote configuration. */
-  readonly remoteConfig: GithubConfig = this.config.github;
+  readonly remoteConfig: GitClientConfig;
 
   /** Octokit request parameters object for targeting the configured remote. */
-  readonly remoteParams = {owner: this.remoteConfig.owner, repo: this.remoteConfig.name};
+  readonly remoteParams: {owner: string; repo: string};
 
   /** Name of the primary branch of the upstream remote. */
-  readonly mainBranchName = this.config.github.mainBranchName;
+  readonly mainBranchName: string;
 
   /** Instance of the Github client. */
   readonly github = new GithubClient();
+
+  /** The configuration, containing the github specific configuration. */
+  readonly config: {github: GitClientConfig};
 
   /**
    * Path to the Git executable. By default, `git` is assumed to exist
@@ -60,8 +63,14 @@ export class GitClient {
     /** The full path to the root of the repository base. */
     readonly baseDir = determineRepoBaseDirFromCwd(),
     /** The configuration, containing the github specific configuration. */
-    readonly config = getConfig(baseDir),
-  ) {}
+    config = getConfig(baseDir),
+  ) {
+    assertValidGithubConfig(config);
+    this.config = config;
+    this.remoteConfig = config.github;
+    this.remoteParams = {owner: config.github.owner, repo: config.github.name};
+    this.mainBranchName = config.github.mainBranchName;
+  }
 
   /** Executes the given git command. Throws if the command fails. */
   run(args: string[], options?: GitCommandRunOptions): Omit<SpawnSyncReturns<string>, 'status'> {

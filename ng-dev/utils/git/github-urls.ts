@@ -8,7 +8,7 @@
 
 import {URL} from 'url';
 
-import {GithubConfig} from '../config';
+import {GitClientConfig} from '../config';
 import {GitClient} from './git-client';
 
 /** URL to the Github page where personal access tokens can be managed. */
@@ -26,7 +26,7 @@ export function addTokenToGitHttpsUrl(githubHttpsUrl: string, token: string) {
 
 /** Gets the repository Git URL for the given github config. */
 export function getRepositoryGitUrl(
-  config: Pick<GithubConfig, 'name' | 'owner' | 'useSsh'>,
+  config: Pick<GitClientConfig, 'name' | 'owner' | 'useSsh'>,
   githubToken?: string,
 ): string {
   if (config.useSsh) {

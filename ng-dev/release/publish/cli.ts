@@ -8,7 +8,7 @@
 
 import {Argv, CommandModule} from 'yargs';
 
-import {getConfig} from '../../utils/config';
+import {assertValidGithubConfig, getConfig} from '../../utils/config';
 import {error, green, info, red, yellow} from '../../utils/console';
 import {GitClient} from '../../utils/git/git-client';
 import {addGithubTokenOption} from '../../utils/git/github-yargs';
@@ -31,6 +31,7 @@ async function handler() {
   const git = GitClient.get();
   const config = getConfig();
   const releaseConfig = getReleaseConfig(config);
+  assertValidGithubConfig(config);
   const task = new ReleaseTool(releaseConfig, config.github, git.baseDir);
   const result = await task.run();
 
