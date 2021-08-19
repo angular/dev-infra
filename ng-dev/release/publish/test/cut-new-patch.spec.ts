@@ -72,11 +72,11 @@ describe('cut new patch action', () => {
 
     SandboxGitRepo.withInitialCommit(action.githubConfig)
       .branchOff('10.0.x')
-      .commit('feat(pkg1): already released #1')
-      .commit('feat(pkg1): already released #2')
+      .commit('feat(pkg1): already released *1')
+      .commit('feat(pkg1): already released *2')
       .createTagForHead('10.0.2')
-      .commit('feat(pkg1): not yet released #1')
-      .commit('feat(pkg1): not yet released #2');
+      .commit('feat(pkg1): not yet released *1')
+      .commit('feat(pkg1): not yet released *2');
 
     await expectGithubApiRequestsForStaging(action, '10.0.x', '10.0.3', true);
     await action.instance.perform();
@@ -86,10 +86,10 @@ describe('cut new patch action', () => {
     expect(changelog).toMatch(changelogPattern`
       # 10.0.3 <..>
       ### pkg1
-      | Commit | Description |
-      | -- | -- |
-      | <..> | feat: not yet released #2 |
-      | <..> | feat: not yet released #1 |
+      | Commit | Type | Description |
+      | -- | -- | -- |
+      | <..> | feat | not yet released *2 |
+      | <..> | feat | not yet released *1 |
       ## Special Thanks:
     `);
   });

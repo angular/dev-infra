@@ -47,12 +47,14 @@ for (const group of asCommitGroups(commitsInChangelog)) {
 _%>
 
 ### <%- group.title %>
-| Commit | Description |
-| -- | -- |
+| Commit | Type | Description |
+| -- | -- | -- |
 <%_
   for (const commit of group.commits) {
+    const descriptionWithMarkdownLinks = convertPullRequestReferencesToLinks(
+      commit.description);
 _%>
-| <%- commitToLink(commit) %> | <%- commit.type %>: <%- replaceCommitHeaderPullRequestNumber(commit.subject) %> |
+| <%- commitToLink(commit) %> | <%- commit.type %> | <%- descriptionWithMarkdownLinks %> |
 <%_
   }
 }

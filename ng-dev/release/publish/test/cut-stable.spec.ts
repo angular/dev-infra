@@ -116,12 +116,12 @@ describe('cut stable action', () => {
       );
 
       SandboxGitRepo.withInitialCommit(action.githubConfig)
-        .commit('fix(pkg1): landed in all release trains #1')
+        .commit('fix(pkg1): landed in all release trains *1')
         .branchOff('10.0.x')
-        .commit('fix(pkg1): released in patch, cherry-picked #1', 1)
-        .commit('fix(pkg1): released in patch, cherry-picked #2', 2)
+        .commit('fix(pkg1): released in patch, cherry-picked *1', 1)
+        .commit('fix(pkg1): released in patch, cherry-picked *2', 2)
         .createTagForHead('10.0.3')
-        .commit('fix(pkg1): landed in patch, not released but cherry-picked #1', 3)
+        .commit('fix(pkg1): landed in patch, not released but cherry-picked *1', 3)
         .switchToBranch('master')
         .cherryPick(1)
         .cherryPick(2)
@@ -129,18 +129,18 @@ describe('cut stable action', () => {
         // to be captured in the release notes. The cherry-picked commits from above have
         // already been released as part of `10.0.3` and should be omitted.
         .cherryPick(3)
-        .commit('fix(pkg1): released first next pre-release #1')
-        .commit('fix(pkg1): released first next pre-release #2')
+        .commit('fix(pkg1): released first next pre-release *1')
+        .commit('fix(pkg1): released first next pre-release *2')
         .createTagForHead('10.1.0-next.0')
-        .commit('fix(pkg1): released feature-freeze pre-release #1')
-        .commit('fix(pkg1): released feature-freeze pre-release #2')
+        .commit('fix(pkg1): released feature-freeze pre-release *1')
+        .commit('fix(pkg1): released feature-freeze pre-release *2')
         .branchOff('10.1.x')
         .createTagForHead('10.1.0-next.1')
-        .commit('fix(pkg1): released release-candidate #1')
-        .commit('fix(pkg1): released release-candidate #2')
+        .commit('fix(pkg1): released release-candidate *1')
+        .commit('fix(pkg1): released release-candidate *2')
         .createTagForHead('10.1.0-rc.0')
-        .commit('fix(pkg1): not yet released #1')
-        .commit('fix(pkg1): not yet released #2');
+        .commit('fix(pkg1): not yet released *1')
+        .commit('fix(pkg1): not yet released *2');
 
       await expectGithubApiRequestsForStaging(action, '10.1.x', '10.1.0', true);
       await action.instance.perform();
@@ -150,17 +150,17 @@ describe('cut stable action', () => {
       expect(changelog).toMatch(changelogPattern`
       # 10.1.0 <..>
       ### pkg1
-      | Commit | Description |
-      | -- | -- |
-      | <..> | fix: not yet released #2 |
-      | <..> | fix: not yet released #1 |
-      | <..> | fix: released release-candidate #2 |
-      | <..> | fix: released release-candidate #1 |
-      | <..> | fix: released feature-freeze pre-release #2 |
-      | <..> | fix: released feature-freeze pre-release #1 |
-      | <..> | fix: released first next pre-release #2 |
-      | <..> | fix: released first next pre-release #1 |
-      | <..> | fix: landed in patch, not released but cherry-picked #1 |
+      | Commit | Type | Description |
+      | -- | -- | -- |
+      | <..> | fix | not yet released *2 |
+      | <..> | fix | not yet released *1 |
+      | <..> | fix | released release-candidate *2 |
+      | <..> | fix | released release-candidate *1 |
+      | <..> | fix | released feature-freeze pre-release *2 |
+      | <..> | fix | released feature-freeze pre-release *1 |
+      | <..> | fix | released first next pre-release *2 |
+      | <..> | fix | released first next pre-release *1 |
+      | <..> | fix | landed in patch, not released but cherry-picked *1 |
       ## Special Thanks:
     `);
     },

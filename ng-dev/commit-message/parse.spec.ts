@@ -12,7 +12,6 @@ import {commitMessageBuilder, CommitMessageParts} from './test-util';
 const commitValues: CommitMessageParts = {
   prefix: '',
   type: 'fix',
-  npmScope: '',
   scope: 'changed-area',
   summary: 'This is a short summary of the change',
   body: 'This is a longer description of the change',
@@ -26,13 +25,6 @@ describe('commit message parsing:', () => {
     it('when only a scope is defined', () => {
       const message = buildCommitMessage();
       expect(parseCommitMessage(message).scope).toBe(commitValues.scope);
-      expect(parseCommitMessage(message).npmScope).toBe('');
-    });
-
-    it('when an npmScope and scope are defined', () => {
-      const message = buildCommitMessage({npmScope: 'myNpmPackage'});
-      expect(parseCommitMessage(message).scope).toBe(commitValues.scope);
-      expect(parseCommitMessage(message).npmScope).toBe('myNpmPackage');
     });
   });
 

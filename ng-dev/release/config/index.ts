@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {CommitFromGitLog} from '../../commit-message/parse';
 import {assertNoErrors, ConfigValidationError, getConfig} from '../../utils/config';
 
 /** Interface describing a built package. */
@@ -34,13 +35,31 @@ export interface ReleaseConfig {
 export interface ReleaseNotesConfig {
   /** Whether to prompt for and include a release title in the generated release notes. */
   useReleaseTitle?: boolean;
-  /** List of commit scopes to disclude from generated release notes. */
+  /** List of commit scopes to exclude from generated release notes. */
   hiddenScopes?: string[];
+  /** Optional function that can be used to categorize commits for the release notes. */
+  categorizeCommit?: (commit: CommitFromGitLog) => {
+    /**
+     * Name of the group the commit should be displayed within. If not specified,
+     * commits will be grouped based on their scope.
+     */
+    groupName?: string;
+    /**
+     * Description of the commit. This option allows consumers to incorporate additional
+     * information for commits that would otherwise not be captured.
+     *
+     * If not specified, the commit subject is used as description. i.e. the description does
+     * not include the type and scope. e.g. `fix(a): <desc>` will turn into `<desc>`.
+     */
+    description?: string;
+  };
   /**
-   * List of commit groups, either {npmScope}/{scope} or {scope}, to use for ordering.
+   * List that can be set to control the order of how groups appear in the release
+   * notes. Elements in the list need to match with the groups as determined according
+   * to the `commitToGroup` option.
    *
-   * Each group for the release notes, will appear in the order provided in groupOrder and any other
-   * groups will appear after these groups, sorted by `Array.sort`'s default sorting order.
+   * Each group for the release notes, will appear in the order provided in `groupOrder`
+   * and any other groups will appear after these groups, sorted alphanumerically.
    */
   groupOrder?: string[];
 }

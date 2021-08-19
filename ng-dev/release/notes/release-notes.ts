@@ -82,6 +82,7 @@ export class ReleaseNotes {
         version: this.version.format(),
         groupOrder: this.config.groupOrder,
         hiddenScopes: this.config.hiddenScopes,
+        categorizeCommit: this.config.categorizeCommit,
         title: await this.promptForReleaseTitle(),
       });
     }

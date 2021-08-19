@@ -7,6 +7,7 @@ ts_library(
     ]),
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
+        "//ng-dev/commit-message",
         "//ng-dev/utils",
         "@npm//@types/semver",
     ],
