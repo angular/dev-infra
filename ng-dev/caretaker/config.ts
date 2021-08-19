@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {assertNoErrors, getConfig} from '../utils/config';
+import {assertNoErrors, ConfigValidationError, getConfig} from '../utils/config';
 
 export interface CaretakerConfig {
   /** Github queries showing a snapshot of pulls/issues caretakers need to monitor. */
@@ -19,12 +19,10 @@ export interface CaretakerConfig {
 }
 
 /** Retrieve and validate the config as `CaretakerConfig`. */
-export function getCaretakerConfig() {
-  // List of errors encountered validating the config.
-  const errors: string[] = [];
-  // The non-validated config object.
-  const config: Partial<{caretaker: CaretakerConfig}> = getConfig();
-
-  assertNoErrors(errors);
-  return config as Required<typeof config>;
+export function assertValidCaretakerConfig<T>(
+  config: T & Partial<{caretaker: CaretakerConfig}>,
+): asserts config is T & {caretaker: CaretakerConfig} {
+  if (config.caretaker === undefined) {
+    throw new ConfigValidationError(`No configuration defined for "caretaker"`);
+  }
 }

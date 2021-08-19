@@ -7,24 +7,27 @@
  */
 
 import {prompt} from 'inquirer';
+import {getConfig} from '../../utils/config';
 
 import {debug, green, info, red, yellow} from '../../utils/console';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
-import {getCaretakerConfig} from '../config';
+import {assertValidCaretakerConfig} from '../config';
 
 /** Update the Github caretaker group, using a prompt to obtain the new caretaker group members.  */
 export async function updateCaretakerTeamViaPrompt() {
   /** Caretaker specific configuration. */
-  const caretakerConfig = getCaretakerConfig().caretaker;
+  const config = getConfig();
+  assertValidCaretakerConfig(config);
+  const {caretakerGroup} = config.caretaker;
 
-  if (caretakerConfig.caretakerGroup === undefined) {
+  if (caretakerGroup === undefined) {
     throw Error('`caretakerGroup` is not defined in the `caretaker` config');
   }
 
   /** The list of current members in the group. */
-  const current = await getGroupMembers(caretakerConfig.caretakerGroup);
+  const current = await getGroupMembers(caretakerGroup);
   /** The list of members able to be added to the group as defined by a separate roster group. */
-  const roster = await getGroupMembers(`${caretakerConfig.caretakerGroup}-roster`);
+  const roster = await getGroupMembers(`${caretakerGroup}-roster`);
   const {
     /** The list of users selected to be members of the caretaker group. */
     selected,
@@ -65,7 +68,7 @@ export async function updateCaretakerTeamViaPrompt() {
   }
 
   try {
-    await setCaretakerGroup(caretakerConfig.caretakerGroup, selected);
+    await setCaretakerGroup(caretakerGroup, selected);
   } catch {
     info(red('  ✘  Failed to update caretaker group.'));
     return;
