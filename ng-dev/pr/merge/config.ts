@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {GithubConfig} from '../../utils/config';
-import {GithubClient} from '../../utils/git/github';
+import {ConfigValidationError, GithubConfig} from '../../utils/config';
 
 import {GithubApiMergeStrategyConfig} from './strategies/api-merge';
 
@@ -85,49 +84,34 @@ export interface MergeConfig {
  * the dev-infra configuration is loaded as that could slow-down other commands.
  */
 export type DevInfraMergeConfig = {
-  github: GithubConfig;
-  merge: (api: GithubClient) => MergeConfig | Promise<MergeConfig>;
+  merge: MergeConfig;
 };
 
 /** Loads and validates the merge configuration. */
-export async function loadAndValidateConfig(
-  config: Partial<DevInfraMergeConfig>,
-  api: GithubClient,
-): Promise<{config?: MergeConfig; errors?: string[]}> {
-  if (config.merge === undefined) {
-    return {errors: ['No merge configuration found. Set the `merge` configuration.']};
-  }
-
-  if (typeof config.merge !== 'function') {
-    return {errors: ['Expected merge configuration to be defined lazily through a function.']};
-  }
-
-  const mergeConfig = await config.merge(api);
-  const errors = validateMergeConfig(mergeConfig);
-
-  if (errors.length) {
-    return {errors};
-  }
-
-  return {config: mergeConfig};
-}
-
-/** Validates the specified configuration. Returns a list of failure messages. */
-function validateMergeConfig(config: Partial<MergeConfig>): string[] {
+export function assertValidMergeConfig<T>(
+  config: T & Partial<DevInfraMergeConfig>,
+): asserts config is T & DevInfraMergeConfig {
   const errors: string[] = [];
-  if (!config.labels) {
+  if (config.merge === undefined) {
+    throw new ConfigValidationError('No merge configuration found. Set the `merge` configuration.');
+  }
+
+  if (!config.merge.labels) {
     errors.push('No label configuration.');
-  } else if (!Array.isArray(config.labels)) {
+  } else if (!Array.isArray(config.merge.labels)) {
     errors.push('Label configuration needs to be an array.');
   }
-  if (!config.claSignedLabel) {
+  if (!config.merge.claSignedLabel) {
     errors.push('No CLA signed label configured.');
   }
-  if (!config.mergeReadyLabel) {
+  if (!config.merge.mergeReadyLabel) {
     errors.push('No merge ready label configured.');
   }
-  if (config.githubApiMerge === undefined) {
+  if (config.merge.githubApiMerge === undefined) {
     errors.push('No explicit choice of merge strategy. Please set `githubApiMerge`.');
   }
-  return errors;
+
+  if (errors.length) {
+    throw new ConfigValidationError('Invalid `merge` configuration', errors);
+  }
 }

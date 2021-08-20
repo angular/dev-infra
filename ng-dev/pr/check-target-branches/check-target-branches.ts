@@ -9,7 +9,7 @@
 import {assertValidGithubConfig, getConfig} from '../../utils/config';
 import {error, info, red} from '../../utils/console';
 import {GitClient} from '../../utils/git/git-client';
-import {loadAndValidateConfig, TargetLabel} from '../merge/config';
+import {assertValidMergeConfig, TargetLabel} from '../merge/config';
 import {
   getBranchesFromTargetLabel,
   getTargetLabelFromPullRequest,
@@ -20,15 +20,12 @@ export async function getTargetBranchesForPr(prNumber: number) {
   /** The ng-dev configuration. */
   const config = getConfig();
   assertValidGithubConfig(config);
+  assertValidMergeConfig(config);
   /** Repo owner and name for the github repository. */
   const {owner, name: repo} = config.github;
   /** The singleton instance of the GitClient. */
   const git = GitClient.get();
-  /** The validated merge config. */
-  const {config: mergeConfig, errors} = await loadAndValidateConfig(config, git.github);
-  if (errors !== undefined) {
-    throw Error(`Invalid configuration found: ${errors}`);
-  }
+
   /** The current state of the pull request from Github. */
   const prData = (await git.github.pulls.get({owner, repo, pull_number: prNumber})).data;
   /** The list of labels on the PR as strings. */
@@ -43,7 +40,7 @@ export async function getTargetBranchesForPr(prNumber: number) {
   let targetLabel: TargetLabel;
 
   try {
-    targetLabel = getTargetLabelFromPullRequest(mergeConfig!, labels);
+    targetLabel = getTargetLabelFromPullRequest(config.merge, labels);
   } catch (e) {
     if (e instanceof InvalidTargetLabelError) {
       error(red(e.failureMessage));
