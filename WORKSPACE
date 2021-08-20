@@ -41,7 +41,7 @@ load("//bazel/browsers:browser_repositories.bzl", "browser_repositories")
 
 browser_repositories()
 
-load("@npm//@bazel/esbuild:esbuild_repositories.bzl", "esbuild_repositories")
+load("@build_bazel_rules_nodejs//toolchains/esbuild:esbuild_repositories.bzl", "esbuild_repositories")
 
 esbuild_repositories()
 
