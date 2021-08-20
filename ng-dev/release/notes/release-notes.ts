@@ -11,12 +11,13 @@ import {CommitFromGitLog} from '../../commit-message/parse';
 
 import {promptInput} from '../../utils/console';
 import {GitClient} from '../../utils/git/git-client';
-import {DevInfraReleaseConfig, getReleaseConfig, ReleaseNotesConfig} from '../config/index';
+import {assertValidReleaseConfig, ReleaseNotesConfig} from '../config/index';
 import {RenderContext} from './context';
 
 import changelogTemplate from './templates/changelog';
 import githubReleaseTemplate from './templates/github-release';
 import {getCommitsForRangeWithDeduping} from './commits/get-commits-in-range';
+import {getConfig} from '../../utils/config';
 
 /** Release note generation. */
 export class ReleaseNotes {
@@ -87,9 +88,11 @@ export class ReleaseNotes {
     return this.renderContext;
   }
 
-  // These methods are used for access to the utility functions while allowing them
+  // This method is used for access to the utility functions while allowing them
   // to be overwritten in subclasses during testing.
-  protected getReleaseConfig(config?: Partial<DevInfraReleaseConfig>) {
-    return getReleaseConfig(config);
+  protected getReleaseConfig() {
+    const config = getConfig();
+    assertValidReleaseConfig(config);
+    return config.release;
   }
 }

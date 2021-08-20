@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as releaseConfig from '../config/index';
+import * as configUtils from '../../utils/config';
+import {BuiltPackage} from '../config';
 import {ReleaseBuildCommandModule} from './cli';
 import * as index from './index';
 
@@ -31,9 +32,12 @@ describe('ng-dev release build', () => {
 
   /** Invokes the build command handler. */
   async function invokeBuild({json}: {json?: boolean} = {}) {
-    spyOn(releaseConfig, 'getReleaseConfig').and.returnValue({
-      npmPackages,
-      buildPackages,
+    spyOn(configUtils, 'getConfig').and.returnValue({
+      release: {
+        npmPackages,
+        buildPackages,
+        releaseNotes: {},
+      },
     });
     await ReleaseBuildCommandModule.handler({json: !!json, stampForRelease: true, $0: '', _: []});
   }
@@ -52,7 +56,7 @@ describe('ng-dev release build', () => {
     expect(writeSpy).toHaveBeenCalledTimes(1);
 
     const jsonText = writeSpy.calls.mostRecent().args[0] as string;
-    const parsed = JSON.parse(jsonText) as releaseConfig.BuiltPackage[];
+    const parsed = JSON.parse(jsonText) as BuiltPackage[];
 
     expect(parsed).toEqual([
       {name: '@angular/pkg1', outputPath: 'dist/pkg1'},

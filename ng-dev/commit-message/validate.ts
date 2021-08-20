@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import { getConfig } from '../utils/config';
+import {getConfig} from '../utils/config';
 import {error} from '../utils/console';
 
 import {assertValidCommitMessageConfig, COMMIT_TYPES, ScopeRequirement} from './config';

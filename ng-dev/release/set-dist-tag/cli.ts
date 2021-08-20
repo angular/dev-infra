@@ -9,9 +9,10 @@
 import * as ora from 'ora';
 import * as semver from 'semver';
 import {Arguments, Argv, CommandModule} from 'yargs';
+import {getConfig} from '../../utils/config';
 
 import {bold, debug, error, green, info, red} from '../../utils/console';
-import {getReleaseConfig} from '../config/index';
+import {assertValidReleaseConfig} from '../config/index';
 import {setNpmTagForPackage} from '../versioning/npm-publish';
 
 /** Command line options for setting an NPM dist tag. */
@@ -37,7 +38,9 @@ function builder(args: Argv): Argv<ReleaseSetDistTagOptions> {
 /** Yargs command handler for building a release. */
 async function handler(args: Arguments<ReleaseSetDistTagOptions>) {
   const {targetVersion: rawVersion, tagName} = args;
-  const {npmPackages, publishRegistry} = getReleaseConfig();
+  const config = getConfig();
+  assertValidReleaseConfig(config);
+  const {npmPackages, publishRegistry} = config.release;
   const version = semver.parse(rawVersion);
 
   if (version === null) {

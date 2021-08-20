@@ -7,7 +7,7 @@
  */
 
 import {matchesVersion} from '../../utils/testing/semver-matchers';
-import * as releaseConfig from '../config/index';
+import * as configUtils from '../../utils/config';
 import * as npm from '../versioning/npm-publish';
 
 import {ReleaseSetDistTagCommand} from './cli';
@@ -28,10 +28,13 @@ describe('ng-dev release set-dist-tag', () => {
 
   /** Invokes the `set-dist-tag` command handler. */
   async function invokeCommand(tagName: string, targetVersion: string) {
-    spyOn(releaseConfig, 'getReleaseConfig').and.returnValue({
-      npmPackages,
-      publishRegistry,
-      buildPackages: async () => [],
+    spyOn(configUtils, 'getConfig').and.returnValue({
+      release: {
+        npmPackages,
+        publishRegistry,
+        releaseNotes: {},
+        buildPackages: async () => [],
+      },
     });
     await ReleaseSetDistTagCommand.handler({tagName, targetVersion, $0: '', _: []});
   }

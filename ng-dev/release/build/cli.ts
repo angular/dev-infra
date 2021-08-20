@@ -9,8 +9,8 @@
 import {Arguments, Argv, CommandModule} from 'yargs';
 
 import {getConfig} from '../../utils/config';
-import {error, green, info, red, warn, yellow} from '../../utils/console';
-import {BuiltPackage, getReleaseConfig} from '../config/index';
+import {error, green, info, red} from '../../utils/console';
+import {assertValidReleaseConfig} from '../config/index';
 
 import {buildReleaseOutput} from './index';
 
@@ -30,7 +30,9 @@ function builder(argv: Argv): Argv<ReleaseBuildOptions> {
 
 /** Yargs command handler for building a release. */
 async function handler(args: Arguments<ReleaseBuildOptions>) {
-  const {npmPackages} = getReleaseConfig();
+  const config = getConfig();
+  assertValidReleaseConfig(config);
+  const {npmPackages} = config.release;
   let builtPackages = await buildReleaseOutput(true);
 
   // If package building failed, print an error and exit with an error code.

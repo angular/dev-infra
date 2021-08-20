@@ -30,6 +30,7 @@ ts_library(
     deps = [
         ":build",
         "//ng-dev/release/config",
+        "//ng-dev/utils",
     ],
 )
 

@@ -36,7 +36,7 @@ function expectValidationResult(
 // TODO(josephperrott): Clean up tests to test script rather than for
 // specific commit messages we want to use.
 describe('validate-commit-message.js', () => {
-  let getConfigSpy: jasmine.Spy
+  let getConfigSpy: jasmine.Spy;
   beforeEach(() => {
     getConfigSpy = spyOn(configUtils, 'getConfig').and.returnValue(config);
   });

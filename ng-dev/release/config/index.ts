@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {assertNoErrors, getConfig} from '../../utils/config';
+import {assertNoErrors, ConfigValidationError, getConfig} from '../../utils/config';
 
 /** Interface describing a built package. */
 export interface BuiltPackage {
@@ -49,25 +49,26 @@ export interface ReleaseNotesConfig {
 export type DevInfraReleaseConfig = {release: ReleaseConfig};
 
 /** Retrieve and validate the config as `ReleaseConfig`. */
-export function getReleaseConfig(
-  config: Partial<DevInfraReleaseConfig> = getConfig(),
-): ReleaseConfig {
+export function assertValidReleaseConfig<T>(
+  config: T & Partial<DevInfraReleaseConfig>,
+): asserts config is T & DevInfraReleaseConfig {
   // List of errors encountered validating the config.
   const errors: string[] = [];
 
   if (config.release === undefined) {
-    errors.push(`No configuration defined for "release"`);
-  }
-  if (config.release?.npmPackages === undefined) {
-    errors.push(`No "npmPackages" configured for releasing.`);
-  }
-  if (config.release?.buildPackages === undefined) {
-    errors.push(`No "buildPackages" function configured for releasing.`);
-  }
-  if (config.release?.releaseNotes === undefined) {
-    errors.push(`No "releaseNotes" configured for releasing.`);
+    throw new ConfigValidationError('No configuration provided for `release`');
   }
 
-  assertNoErrors(errors);
-  return config.release!;
+  if (config.release.npmPackages === undefined) {
+    errors.push(`No "npmPackages" configured for releasing.`);
+  }
+  if (config.release.buildPackages === undefined) {
+    errors.push(`No "buildPackages" function configured for releasing.`);
+  }
+  if (config.release.releaseNotes === undefined) {
+    errors.push(`No "releaseNotes" configured for releasing.`);
+  }
+  if (errors.length) {
+    throw new ConfigValidationError('Invalid `release` configuration', errors);
+  }
 }

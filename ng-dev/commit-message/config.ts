@@ -17,7 +17,9 @@ export interface CommitMessageConfig {
 }
 
 /** Assert the provided config contains a `CommitMessageConfig`. */
-export function assertValidCommitMessageConfig<T>(config: T & Partial<{commitMessage: CommitMessageConfig}>): asserts config is T & {commitMessage: CommitMessageConfig} {
+export function assertValidCommitMessageConfig<T>(
+  config: T & Partial<{commitMessage: CommitMessageConfig}>,
+): asserts config is T & {commitMessage: CommitMessageConfig} {
   if (config.commitMessage === undefined) {
     throw new ConfigValidationError(`No configuration defined for "commitMessage"`);
   }

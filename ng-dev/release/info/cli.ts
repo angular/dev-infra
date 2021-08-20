@@ -8,12 +8,12 @@
 
 import {CommandModule} from 'yargs';
 
-import {info} from '../../utils/console';
 import {GitClient} from '../../utils/git/git-client';
-import {getReleaseConfig} from '../config/index';
+import {assertValidReleaseConfig} from '../config/index';
 import {fetchActiveReleaseTrains} from '../versioning/active-release-trains';
 import {printActiveReleaseTrains} from '../versioning/print-active-trains';
 import {getNextBranchName, ReleaseRepoWithApi} from '../versioning';
+import {getConfig} from '../../utils/config';
 
 /** Yargs command handler for printing release information. */
 async function handler() {
@@ -21,9 +21,11 @@ async function handler() {
   const nextBranchName = getNextBranchName(git.config.github);
   const repo: ReleaseRepoWithApi = {api: git.github, ...git.remoteConfig, nextBranchName};
   const releaseTrains = await fetchActiveReleaseTrains(repo);
+  const config = getConfig();
+  assertValidReleaseConfig(config);
 
   // Print the active release trains.
-  await printActiveReleaseTrains(releaseTrains, getReleaseConfig());
+  await printActiveReleaseTrains(releaseTrains, config.release);
 }
 
 /** CLI command module for retrieving release information. */
