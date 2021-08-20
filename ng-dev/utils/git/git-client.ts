@@ -7,9 +7,8 @@
  */
 
 import {spawnSync, SpawnSyncOptions, SpawnSyncReturns} from 'child_process';
-import {Options as SemVerOptions, parse, SemVer} from 'semver';
 
-import {getConfig, GitClientConfig, assertValidGithubConfig} from '../config';
+import {getConfig, GithubConfig, assertValidGithubConfig} from '../config';
 import {debug, info} from '../console';
 import {DryRunError, isDryRun} from '../dry-run';
 
@@ -39,7 +38,7 @@ type GitCommandRunOptions = SpawnSyncOptions & {
 /** Class that can be used to perform Git interactions with a given remote. **/
 export class GitClient {
   /** Short-hand for accessing the default remote configuration. */
-  readonly remoteConfig: GitClientConfig;
+  readonly remoteConfig: GithubConfig;
 
   /** Octokit request parameters object for targeting the configured remote. */
   readonly remoteParams: {owner: string; repo: string};
@@ -51,7 +50,7 @@ export class GitClient {
   readonly github = new GithubClient();
 
   /** The configuration, containing the github specific configuration. */
-  readonly config: {github: GitClientConfig};
+  readonly config: {github: GithubConfig};
 
   /**
    * Path to the Git executable. By default, `git` is assumed to exist

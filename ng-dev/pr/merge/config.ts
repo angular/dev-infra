@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {GitClientConfig} from '../../utils/config';
+import {GithubConfig} from '../../utils/config';
 import {GithubClient} from '../../utils/git/github';
 
 import {GithubApiMergeStrategyConfig} from './strategies/api-merge';
@@ -43,7 +43,7 @@ export interface TargetLabel {
  * default `MergeConfig` has does not require any of these options as defaults
  * are provided by the common dev-infra github configuration.
  */
-export type MergeConfigWithRemote = MergeConfig & {remote: GitClientConfig};
+export type MergeConfigWithRemote = MergeConfig & {remote: GithubConfig};
 
 /** Configuration for the merge script. */
 export interface MergeConfig {
@@ -51,7 +51,7 @@ export interface MergeConfig {
    * Configuration for the upstream remote. All of these options are optional as
    * defaults are provided by the common dev-infra github configuration.
    */
-  remote?: GitClientConfig;
+  remote?: GithubConfig;
   /** List of target labels. */
   labels: TargetLabel[];
   /** Required base commits for given branches. */
@@ -85,7 +85,7 @@ export interface MergeConfig {
  * the dev-infra configuration is loaded as that could slow-down other commands.
  */
 export type DevInfraMergeConfig = {
-  github: GitClientConfig;
+  github: GithubConfig;
   merge: (api: GithubClient) => MergeConfig | Promise<MergeConfig>;
 };
 

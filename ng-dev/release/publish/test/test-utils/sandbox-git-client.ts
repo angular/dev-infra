@@ -8,7 +8,7 @@
 
 import {SpawnSyncOptions, SpawnSyncReturns} from 'child_process';
 import {AuthenticatedGitClient} from '../../../../utils/git/authenticated-git-client';
-import {GitClientConfig} from '../../../../utils/config';
+import {GithubConfig} from '../../../../utils/config';
 import {GitClient} from '../../../../utils/git/git-client';
 
 /** Fake spawn sync returns value that is successful without any process output. */
@@ -22,7 +22,7 @@ const noopSpawnSyncReturns = {status: 0, stderr: '', output: [], pid: -1, signal
 export class SandboxGitClient extends AuthenticatedGitClient {
   static createInstance(
     gitBinPath: string,
-    config: {github: GitClientConfig},
+    config: {github: GithubConfig},
     baseDir: string,
   ): SandboxGitClient {
     return new SandboxGitClient(gitBinPath, 'abc123', baseDir, config);
@@ -33,7 +33,7 @@ export class SandboxGitClient extends AuthenticatedGitClient {
     override gitBinPath: string,
     githubToken: string,
     baseDir?: string,
-    config?: {github: GitClientConfig},
+    config?: {github: GithubConfig},
   ) {
     super(githubToken, baseDir, config);
   }

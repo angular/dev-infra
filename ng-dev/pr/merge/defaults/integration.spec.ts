@@ -7,14 +7,12 @@
  */
 
 import * as nock from 'nock';
-import {ParsedUrlQuery} from 'querystring';
 
 import {ReleaseConfig} from '../../../release/config/index';
 import {_npmPackageInfoCache, NpmPackageInfo} from '../../../release/versioning/npm-registry';
-import {GitClientConfig} from '../../../utils/config';
+import {GithubConfig} from '../../../utils/config';
 import * as console from '../../../utils/console';
 import {GithubClient} from '../../../utils/git/github';
-import {buildGithubPaginationResponseHeader} from '../../../utils/testing/github-pagination-header';
 import {TargetLabel} from '../config';
 import {getBranchesFromTargetLabel, getTargetLabelFromPullRequest} from '../target-label';
 
@@ -25,7 +23,7 @@ const API_ENDPOINT = `https://api.github.com`;
 
 describe('default target labels', () => {
   let api: GithubClient;
-  let githubConfig: GitClientConfig;
+  let githubConfig: GithubConfig;
   let releaseConfig: ReleaseConfig;
 
   beforeEach(() => {

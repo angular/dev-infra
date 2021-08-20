@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {GitClientConfig} from '../config';
+import {GithubConfig} from '../config';
 import {yellow} from '../console';
 
 import {GitClient} from './git-client';
@@ -40,7 +40,7 @@ export class AuthenticatedGitClient extends GitClient {
   protected constructor(
     readonly githubToken: string,
     baseDir?: string,
-    config?: {github: GitClientConfig},
+    config?: {github: GithubConfig},
   ) {
     super(baseDir, config);
   }
@@ -136,7 +136,7 @@ export class AuthenticatedGitClient extends GitClient {
   }
 
   /** Configures an authenticated git client in the context of a Github action. */
-  static configureForGithubActions(token: string, config: {github: GitClientConfig}): void {
+  static configureForGithubActions(token: string, config: {github: GithubConfig}): void {
     if (AuthenticatedGitClient._authenticatedInstance) {
       throw Error(
         'Unable to configure `AuthenticatedGitClient` as it has been configured already.',

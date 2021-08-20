@@ -13,7 +13,7 @@ import {
   isVersionBranch,
   ReleaseRepoWithApi,
 } from '../../../release/versioning';
-import {GitClientConfig} from '../../../utils/config';
+import {GithubConfig} from '../../../utils/config';
 import {GithubClient} from '../../../utils/git/github';
 import {TargetLabel} from '../config';
 import {InvalidTargetBranchError, InvalidTargetLabelError} from '../target-label';
@@ -34,7 +34,7 @@ import {assertActiveLtsBranch} from './lts-branch';
  */
 export async function getDefaultTargetLabelConfiguration(
   api: GithubClient,
-  githubConfig: GitClientConfig,
+  githubConfig: GithubConfig,
   releaseConfig: ReleaseConfig,
 ): Promise<TargetLabel[]> {
   const nextBranchName = getNextBranchName(githubConfig);
