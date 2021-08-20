@@ -35,16 +35,13 @@ import {assertActiveLtsBranch} from './lts-branch';
  */
 export async function getTargetLabels(): Promise<TargetLabel[]>;
 export async function getTargetLabels(
-  _api?: GithubClient,
-  _config?: Partial<{github: GithubConfig; release: ReleaseConfig}>,
+  api?: GithubClient,
+  config?: Partial<{github: GithubConfig; release: ReleaseConfig}>,
 ): Promise<TargetLabel[]>;
 export async function getTargetLabels(
-  _api?: GithubClient,
-  _config?: Partial<{github: GithubConfig; release: ReleaseConfig}>,
+  api = GitClient.get().github,
+  config = getConfig() as Partial<{github: GithubConfig; release: ReleaseConfig}>,
 ): Promise<TargetLabel[]> {
-  const api = _api || GitClient.get().github;
-
-  const config = _config || (getConfig() as any);
   assertValidReleaseConfig(config);
   assertValidGithubConfig(config);
 

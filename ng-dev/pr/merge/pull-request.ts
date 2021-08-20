@@ -24,6 +24,7 @@ import {
 } from './target-label';
 import {PullRequestMergeTask} from './task';
 import {breakingChangeLabel} from './constants';
+import {GithubConfig} from '../../utils/config';
 
 /** Interface that describes a pull request. */
 export interface PullRequest {
@@ -75,32 +76,14 @@ export async function loadAndValidatePullRequest(
 
   /** List of parsed commits for all of the commits in the pull request. */
   const commitsInPr = prData.commits.nodes.map((n) => parseCommitMessage(n.commit.message));
-
   const githubTargetBranch = prData.baseRefName;
-  let targetLabel: TargetLabel;
-  let targetBranches: string[];
-  if (!config.noTargetLabeling) {
-    try {
-      targetLabel = await getTargetLabelFromPullRequest(config, labels);
-      // If branches are determined for a given target label, capture errors that are
-      // thrown as part of branch computation. This is expected because a merge configuration
-      // can lazily compute branches for a target label and throw. e.g. if an invalid target
-      // label is applied, we want to exit the script gracefully with an error message.
 
-      targetBranches = await getBranchesFromTargetLabel(targetLabel, githubTargetBranch);
-      assertChangesAllowForTargetLabel(commitsInPr, targetLabel, config);
-    } catch (error) {
-      if (error instanceof PullRequestFailure) {
-        return error;
-      }
-      if (error instanceof InvalidTargetBranchError || error instanceof InvalidTargetLabelError) {
-        return new PullRequestFailure(error.failureMessage);
-      }
-      throw error;
-    }
-  } else {
-    targetBranches = [git.config.github.mainBranchName];
-  }
+  const targetBranches = await getTargetBranches(
+    {github: git.config.github, merge: config},
+    labels,
+    githubTargetBranch,
+    commitsInPr,
+  );
 
   try {
     assertPendingState(prData);
@@ -288,5 +271,34 @@ function assertPendingState(pr: RawPullRequest) {
       throw PullRequestFailure.isClosed();
     case 'MERGED':
       throw PullRequestFailure.isMerged();
+  }
+}
+
+/** Get the branches the pull request will be merged into.  */
+async function getTargetBranches(
+  config: {merge: MergeConfig; github: GithubConfig},
+  labels: string[],
+  targetBranch: string,
+  commits: Commit[],
+) {
+  if (config.merge.noTargetLabeling) {
+    return [config.github.mainBranchName];
+  } else {
+    try {
+      let targetLabel = await getTargetLabelFromPullRequest(config.merge, labels);
+      // If branches are determined for a given target label, capture errors that are
+      // thrown as part of branch computation. This is expected because a merge configuration
+      // can lazily compute branches for a target label and throw. e.g. if an invalid target
+      // label is applied, we want to exit the script gracefully with an error message.
+
+      let targetBranches = await getBranchesFromTargetLabel(targetLabel, targetBranch);
+      assertChangesAllowForTargetLabel(commits, targetLabel, config.merge);
+      return targetBranches;
+    } catch (error) {
+      if (error instanceof InvalidTargetBranchError || error instanceof InvalidTargetLabelError) {
+        throw new PullRequestFailure(error.failureMessage);
+      }
+      throw error;
+    }
   }
 }
