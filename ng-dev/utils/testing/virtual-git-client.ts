@@ -9,7 +9,7 @@
 import {SpawnSyncOptions, SpawnSyncReturns} from 'child_process';
 import * as yargs from 'yargs';
 
-import {GitClientConfig} from '../config';
+import {GithubConfig} from '../config';
 import {AuthenticatedGitClient} from '../git/authenticated-git-client';
 import {GitClient} from '../git/git-client';
 
@@ -20,7 +20,7 @@ import {GitClient} from '../git/git-client';
 const testTmpDir: string = process.env['TEST_TMPDIR']!;
 
 /** A mock instance of a configuration for the ng-dev toolset for default testing. */
-export const mockNgDevConfig: {github: GitClientConfig} = {
+export const mockNgDevConfig: {github: GithubConfig} = {
   github: {
     name: 'name',
     owner: 'owner',

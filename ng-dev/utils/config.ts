@@ -13,8 +13,11 @@ import {debug, error} from './console';
 import {GitClient} from './git/git-client';
 import {isTsNodeAvailable} from './ts-node';
 
-/** Configuration for Git client interactions. */
-export interface GitClientConfig {
+/**
+ * Describes the Github configuration for dev-infra. This configuration is
+ * used for API requests, determining the upstream remote, etc.
+ */
+export interface GithubConfig {
   /** Owner name of the repository. */
   owner: string;
   /** Name of the repository. */
@@ -94,10 +97,10 @@ export class ConfigValidationError extends Error {
   }
 }
 
-/** Validate the common configuration has been met for the ng-dev command. */
+/** Validate th configuration has been met for the ng-dev command. */
 export function assertValidGithubConfig<T>(
-  config: T & Partial<{github: GitClientConfig}>,
-): asserts config is T & {github: GitClientConfig} {
+  config: T & Partial<{github: GithubConfig}>,
+): asserts config is T & {github: GithubConfig} {
   const errors: string[] = [];
   // Validate the github configuration.
   if (config.github === undefined) {

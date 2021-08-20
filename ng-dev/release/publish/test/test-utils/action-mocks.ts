@@ -15,7 +15,7 @@ import * as externalCommands from '../../external-commands';
 import * as console from '../../../../utils/console';
 
 import {ReleaseAction} from '../../actions';
-import {GitClientConfig} from '../../../../utils/config';
+import {GithubConfig} from '../../../../utils/config';
 import {ReleaseConfig} from '../../../config';
 import {installVirtualGitClientSpies, VirtualGitClient} from '../../../../utils/testing';
 import {installSandboxGitClient} from './sandbox-git-client';
@@ -34,7 +34,7 @@ export const testReleasePackages = ['@angular/pkg1', '@angular/pkg2'];
 
 /** Gets test configurations for running testing a publish action. */
 export function getTestConfigurationsForAction() {
-  const githubConfig: GitClientConfig = {
+  const githubConfig: GithubConfig = {
     owner: 'angular',
     name: 'dev-infra-test',
     mainBranchName: 'master',
@@ -50,7 +50,7 @@ export function getTestConfigurationsForAction() {
 
 /** Sets up all test mocks needed to run a release action. */
 export function setupMocksForReleaseAction<T extends boolean>(
-  githubConfig: GitClientConfig,
+  githubConfig: GithubConfig,
   releaseConfig: ReleaseConfig,
   useSandboxGitClient: T,
 ) {

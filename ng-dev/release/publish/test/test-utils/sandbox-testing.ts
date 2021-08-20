@@ -7,7 +7,7 @@
  */
 
 import {getNextBranchName} from '../../../versioning';
-import {GitClientConfig} from '../../../../utils/config';
+import {GithubConfig} from '../../../../utils/config';
 import {spawnSync} from 'child_process';
 import {testTmpDir} from './action-mocks';
 
@@ -25,11 +25,11 @@ export class SandboxGitRepo {
   private _nextBranchName = getNextBranchName(this._github);
   private _commitShaById = new Map<number, string>();
 
-  static withInitialCommit(github: GitClientConfig) {
+  static withInitialCommit(github: GithubConfig) {
     return new SandboxGitRepo(github).commit('feat(pkg1): initial commit');
   }
 
-  protected constructor(private _github: GitClientConfig) {
+  protected constructor(private _github: GithubConfig) {
     runGitInTmpDir(['init']);
     runGitInTmpDir(['config', 'user.email', 'angular-robot@google.com']);
     runGitInTmpDir(['config', 'user.name', 'Angular Robot']);
