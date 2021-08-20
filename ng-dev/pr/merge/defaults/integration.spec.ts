@@ -31,7 +31,6 @@ describe('default target labels', () => {
     api = new GithubClient();
     githubConfig = {owner: 'angular', name: 'dev-infra-test', mainBranchName: 'master'};
     releaseConfig = {
-      releaseNotes: {},
       npmPackages: ['@angular/dev-infra-test-pkg'],
       buildPackages: async () => [],
     };
@@ -113,10 +112,6 @@ describe('default target labels', () => {
     try {
       label = await getTargetLabelFromPullRequest({}, [name]);
     } catch (error) {
-      console.log(error);
-      if (error.message === 'This repository does not use target labels') {
-        return [githubTargetBranch];
-      }
       return null;
     }
     return await getBranchesFromTargetLabel(label, githubTargetBranch);

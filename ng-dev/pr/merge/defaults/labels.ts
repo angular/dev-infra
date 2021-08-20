@@ -33,11 +33,6 @@ import {assertActiveLtsBranch} from './lts-branch';
  * @param releaseConfig Configuration for the release packages. Used to fetch
  *   NPM version data when LTS version branches are validated.
  */
-export async function getTargetLabels(): Promise<TargetLabel[]>;
-export async function getTargetLabels(
-  api?: GithubClient,
-  config?: Partial<{github: GithubConfig; release: ReleaseConfig}>,
-): Promise<TargetLabel[]>;
 export async function getTargetLabels(
   api = GitClient.get().github,
   config = getConfig() as Partial<{github: GithubConfig; release: ReleaseConfig}>,

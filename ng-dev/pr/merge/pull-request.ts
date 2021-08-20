@@ -278,7 +278,7 @@ function assertPendingState(pr: RawPullRequest) {
 async function getTargetBranches(
   config: {merge: MergeConfig; github: GithubConfig},
   labels: string[],
-  targetBranch: string,
+  githubTargetBranch: string,
   commits: Commit[],
 ) {
   if (config.merge.noTargetLabeling) {
@@ -291,7 +291,7 @@ async function getTargetBranches(
       // can lazily compute branches for a target label and throw. e.g. if an invalid target
       // label is applied, we want to exit the script gracefully with an error message.
 
-      let targetBranches = await getBranchesFromTargetLabel(targetLabel, targetBranch);
+      let targetBranches = await getBranchesFromTargetLabel(targetLabel, githubTargetBranch);
       assertChangesAllowForTargetLabel(commits, targetLabel, config.merge);
       return targetBranches;
     } catch (error) {
