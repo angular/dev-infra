@@ -52,7 +52,7 @@ export interface MergeConfig {
    */
   remote?: GithubConfig;
   /** List of target labels. */
-  labels: TargetLabel[];
+  noTargetLabeling?: boolean;
   /** Required base commits for given branches. */
   requiredBaseCommits?: {[branchName: string]: string};
   /** Pattern that matches labels which imply a signed CLA. */
@@ -77,30 +77,15 @@ export interface MergeConfig {
   targetLabelExemptScopes?: string[];
 }
 
-/**
- * Configuration of the merge script in the dev-infra configuration. Note that the
- * merge configuration is retrieved lazily as usually these configurations rely
- * on branch name computations. We don't want to run these immediately whenever
- * the dev-infra configuration is loaded as that could slow-down other commands.
- */
-export type DevInfraMergeConfig = {
-  merge: MergeConfig;
-};
-
 /** Loads and validates the merge configuration. */
 export function assertValidMergeConfig<T>(
-  config: T & Partial<DevInfraMergeConfig>,
-): asserts config is T & DevInfraMergeConfig {
+  config: T & Partial<{merge: MergeConfig}>,
+): asserts config is T & {merge: MergeConfig} {
   const errors: string[] = [];
   if (config.merge === undefined) {
     throw new ConfigValidationError('No merge configuration found. Set the `merge` configuration.');
   }
 
-  if (!config.merge.labels) {
-    errors.push('No label configuration.');
-  } else if (!Array.isArray(config.merge.labels)) {
-    errors.push('Label configuration needs to be an array.');
-  }
   if (!config.merge.claSignedLabel) {
     errors.push('No CLA signed label configured.');
   }

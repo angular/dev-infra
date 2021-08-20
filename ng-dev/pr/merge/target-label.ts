@@ -7,6 +7,7 @@
  */
 
 import {MergeConfig, TargetLabel} from './config';
+import {getTargetLabels} from './defaults/labels';
 import {matchesPattern} from './string-pattern';
 
 /**
@@ -26,14 +27,19 @@ export class InvalidTargetLabelError {
 }
 
 /** Gets the target label from the specified pull request labels. */
-export function getTargetLabelFromPullRequest(
-  config: Pick<MergeConfig, 'labels'>,
+export async function getTargetLabelFromPullRequest(
+  config: Pick<MergeConfig, 'noTargetLabeling'>,
   labels: string[],
-): TargetLabel {
+): Promise<TargetLabel> {
+  if (config.noTargetLabeling) {
+    throw Error('This repository does not use target labels');
+  }
+
+  const targetLabels = await getTargetLabels();
   /** List of discovered target labels for the PR. */
   const matches = [];
   for (const label of labels) {
-    const match = config.labels.find(({pattern}) => matchesPattern(label, pattern));
+    const match = targetLabels.find(({pattern}) => matchesPattern(label, pattern));
     if (match !== undefined) {
       matches.push(match);
     }

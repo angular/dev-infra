@@ -6,21 +6,20 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {assertValidGithubConfig, getConfig} from '../../utils/config';
+import {assertValidGithubConfig, getConfig, GithubConfig} from '../../utils/config';
 import {error, info, red} from '../../utils/console';
 import {GitClient} from '../../utils/git/git-client';
-import {assertValidMergeConfig, TargetLabel} from '../merge/config';
+import {assertValidMergeConfig, MergeConfig, TargetLabel} from '../merge/config';
 import {
   getBranchesFromTargetLabel,
   getTargetLabelFromPullRequest,
   InvalidTargetLabelError,
 } from '../merge/target-label';
 
-export async function getTargetBranchesForPr(prNumber: number) {
-  /** The ng-dev configuration. */
-  const config = getConfig();
-  assertValidGithubConfig(config);
-  assertValidMergeConfig(config);
+async function getTargetBranchesForPr(
+  prNumber: number,
+  config: {github: GithubConfig; merge: MergeConfig},
+) {
   /** Repo owner and name for the github repository. */
   const {owner, name: repo} = config.github;
   /** The singleton instance of the GitClient. */
@@ -40,12 +39,11 @@ export async function getTargetBranchesForPr(prNumber: number) {
   let targetLabel: TargetLabel;
 
   try {
-    targetLabel = getTargetLabelFromPullRequest(config.merge, labels);
+    targetLabel = await getTargetLabelFromPullRequest(config.merge, labels);
   } catch (e) {
     if (e instanceof InvalidTargetLabelError) {
       error(red(e.failureMessage));
-      process.exitCode = 1;
-      return;
+      process.exit(1);
     }
     throw e;
   }
@@ -54,10 +52,16 @@ export async function getTargetBranchesForPr(prNumber: number) {
 }
 
 export async function printTargetBranchesForPr(prNumber: number) {
-  const targets = await getTargetBranchesForPr(prNumber);
-  if (targets === undefined) {
+  const config = getConfig();
+  assertValidGithubConfig(config);
+  assertValidMergeConfig(config);
+
+  if (config.merge.noTargetLabeling) {
+    info(`PR #${prNumber} will merge into: ${config.github.mainBranchName}`);
     return;
   }
+
+  const targets = await getTargetBranchesForPr(prNumber, config);
   info.group(`PR #${prNumber} will merge into:`);
   targets.forEach((target) => info(`- ${target}`));
   info.groupEnd();

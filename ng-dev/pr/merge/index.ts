@@ -154,5 +154,6 @@ async function createPullRequestMergeTask(flags: PullRequestMergeTaskFlags) {
       }
       process.exit(1);
     }
+    throw e;
   }
 }

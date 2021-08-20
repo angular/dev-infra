@@ -6,14 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ReleaseConfig} from '../../../release/config/index';
+import {assertValidReleaseConfig, ReleaseConfig} from '../../../release/config/index';
 import {
   fetchActiveReleaseTrains,
   getNextBranchName,
   isVersionBranch,
   ReleaseRepoWithApi,
 } from '../../../release/versioning';
-import {GithubConfig} from '../../../utils/config';
+import {assertValidGithubConfig, getConfig, GithubConfig} from '../../../utils/config';
+import {GitClient} from '../../../utils/git/git-client';
 import {GithubClient} from '../../../utils/git/github';
 import {TargetLabel} from '../config';
 import {InvalidTargetBranchError, InvalidTargetLabelError} from '../target-label';
@@ -32,15 +33,17 @@ import {assertActiveLtsBranch} from './lts-branch';
  * @param releaseConfig Configuration for the release packages. Used to fetch
  *   NPM version data when LTS version branches are validated.
  */
-export async function getDefaultTargetLabelConfiguration(
-  api: GithubClient,
-  githubConfig: GithubConfig,
-  releaseConfig: ReleaseConfig,
+export async function getTargetLabels(
+  api = GitClient.get().github,
+  config = getConfig() as Partial<{github: GithubConfig; release: ReleaseConfig}>,
 ): Promise<TargetLabel[]> {
-  const nextBranchName = getNextBranchName(githubConfig);
+  assertValidReleaseConfig(config);
+  assertValidGithubConfig(config);
+
+  const nextBranchName = getNextBranchName(config.github);
   const repo: ReleaseRepoWithApi = {
-    owner: githubConfig.owner,
-    name: githubConfig.name,
+    owner: config.github.owner,
+    name: config.github.name,
     nextBranchName,
     api,
   };
@@ -139,7 +142,7 @@ export async function getDefaultTargetLabelConfiguration(
           );
         }
         // Assert that the selected branch is an active LTS branch.
-        await assertActiveLtsBranch(repo, releaseConfig, githubTargetBranch);
+        await assertActiveLtsBranch(repo, config.release, githubTargetBranch);
         return [githubTargetBranch];
       },
     },
