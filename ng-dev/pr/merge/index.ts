@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {assertValidGithubConfig, getConfig} from '../../utils/config';
+import {assertValidGithubConfig, ConfigValidationError, getConfig} from '../../utils/config';
 import {error, green, info, promptConfirm, red, yellow} from '../../utils/console';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {GithubApiRequestError} from '../../utils/git/github';
 import {GITHUB_TOKEN_GENERATE_URL} from '../../utils/git/github-urls';
 
-import {loadAndValidateConfig, MergeConfigWithRemote} from './config';
+import {assertValidMergeConfig} from './config';
 import {MergeResult, MergeStatus, PullRequestMergeTask, PullRequestMergeTaskFlags} from './task';
 
 /**
@@ -129,22 +129,30 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
  * repository.
  */
 async function createPullRequestMergeTask(flags: PullRequestMergeTaskFlags) {
-  const devInfraConfig = getConfig();
-  assertValidGithubConfig(devInfraConfig);
-  /** The singleton instance of the authenticated git client. */
-  const git = AuthenticatedGitClient.get();
-  const {config, errors} = await loadAndValidateConfig(devInfraConfig, git.github);
+  try {
+    const config = getConfig();
+    assertValidGithubConfig(config);
+    assertValidMergeConfig(config);
+    /** The singleton instance of the authenticated git client. */
+    const git = AuthenticatedGitClient.get();
 
-  if (errors) {
-    error(red('Invalid merge configuration:'));
-    errors.forEach((desc) => error(yellow(`  -  ${desc}`)));
-    process.exit(1);
+    // Set the remote so that the merge tool has access to information about
+    // the remote it intends to merge to.
+    const mergeConfig = {
+      remote: config.github,
+      ...config.merge,
+    };
+
+    return new PullRequestMergeTask(mergeConfig, git, flags);
+  } catch (e) {
+    if (e instanceof ConfigValidationError) {
+      if (e.errors.length) {
+        error(red('Invalid merge configuration:'));
+        e.errors.forEach((desc) => error(yellow(`  -  ${desc}`)));
+      } else {
+        error(red(e.message));
+      }
+      process.exit(1);
+    }
   }
-
-  // Set the remote so that the merge tool has access to information about
-  // the remote it intends to merge to.
-  config!.remote = devInfraConfig.github;
-  // We can cast this to a merge config with remote because we always set the
-  // remote above.
-  return new PullRequestMergeTask(config! as MergeConfigWithRemote, git, flags);
 }
