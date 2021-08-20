@@ -36,7 +36,6 @@ describe('ng-dev release build', () => {
       release: {
         npmPackages,
         buildPackages,
-        releaseNotes: {},
       },
     });
     await ReleaseBuildCommandModule.handler({json: !!json, stampForRelease: true, $0: '', _: []});

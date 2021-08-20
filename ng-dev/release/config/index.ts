@@ -48,7 +48,7 @@ export interface ReleaseNotesConfig {
 /** Configuration for releases in the dev-infra configuration. */
 export type DevInfraReleaseConfig = {release: ReleaseConfig};
 
-/** Retrieve and validate the config as `ReleaseConfig`. */
+/** Asserts that the given configuration is a valid `DevInfraReleaseConfig`. */
 export function assertValidReleaseConfig<T>(
   config: T & Partial<DevInfraReleaseConfig>,
 ): asserts config is T & DevInfraReleaseConfig {
@@ -64,9 +64,6 @@ export function assertValidReleaseConfig<T>(
   }
   if (config.release.buildPackages === undefined) {
     errors.push(`No "buildPackages" function configured for releasing.`);
-  }
-  if (config.release.releaseNotes === undefined) {
-    errors.push(`No "releaseNotes" configured for releasing.`);
   }
   if (errors.length) {
     throw new ConfigValidationError('Invalid `release` configuration', errors);

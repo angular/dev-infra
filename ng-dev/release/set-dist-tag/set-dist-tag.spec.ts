@@ -32,7 +32,6 @@ describe('ng-dev release set-dist-tag', () => {
       release: {
         npmPackages,
         publishRegistry,
-        releaseNotes: {},
         buildPackages: async () => [],
       },
     });
