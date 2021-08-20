@@ -12,7 +12,7 @@ import {assertValidGithubConfig, getConfig} from '../../utils/config';
 import {error, green, info, red, yellow} from '../../utils/console';
 import {GitClient} from '../../utils/git/git-client';
 import {addGithubTokenOption} from '../../utils/git/github-yargs';
-import {getReleaseConfig} from '../config/index';
+import {assertValidReleaseConfig} from '../config/index';
 
 import {CompletionState, ReleaseTool} from './index';
 
@@ -30,9 +30,9 @@ function builder(argv: Argv): Argv<ReleasePublishOptions> {
 async function handler() {
   const git = GitClient.get();
   const config = getConfig();
-  const releaseConfig = getReleaseConfig(config);
+  assertValidReleaseConfig(config);
   assertValidGithubConfig(config);
-  const task = new ReleaseTool(releaseConfig, config.github, git.baseDir);
+  const task = new ReleaseTool(config.release, config.github, git.baseDir);
   const result = await task.run();
 
   switch (result) {

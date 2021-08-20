@@ -13,7 +13,8 @@
  * supports stdout JSON output that should be parsable and not polluted from other stdout messages.
  */
 
-import {getReleaseConfig} from '../config/index';
+import {getConfig} from '../../utils/config';
+import {assertValidReleaseConfig} from '../config/index';
 
 // Start the release package building.
 main(process.argv[2] === 'true');
@@ -24,8 +25,9 @@ async function main(stampForRelease: boolean) {
     throw Error('This script needs to be invoked as a NodeJS worker.');
   }
 
-  const config = getReleaseConfig();
-  const builtPackages = await config.buildPackages(stampForRelease);
+  const config = getConfig();
+  assertValidReleaseConfig(config);
+  const builtPackages = await config.release.buildPackages(stampForRelease);
 
   // Transfer the built packages back to the parent process.
   process.send(builtPackages);

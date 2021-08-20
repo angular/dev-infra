@@ -30,6 +30,7 @@ ts_library(
         ":set-dist-tag",
         "//ng-dev/release/config",
         "//ng-dev/release/versioning",
+        "//ng-dev/utils",
         "//ng-dev/utils/testing",
         "@npm//@types/jasmine",
         "@npm//@types/node",
