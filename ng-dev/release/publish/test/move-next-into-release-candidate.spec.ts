@@ -147,7 +147,7 @@ describe('move next into release-candidate action', () => {
       | -- | -- | -- |
       | <..> | feat | not yet released *1 |
       | <..> | fix | not yet released *2 |
-      ## Special Thanks:
+      ## Special Thanks
     `);
   });
 

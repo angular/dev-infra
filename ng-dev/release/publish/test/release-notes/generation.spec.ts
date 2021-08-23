@@ -61,7 +61,7 @@ describe('release notes generation', () => {
           | -- | -- | -- |
           | <..> | fix | commit *4 |
           | <..> | fix | commit *3 |
-          ## Special Thanks:
+          ## Special Thanks
         `);
       });
 
@@ -92,7 +92,7 @@ describe('release notes generation', () => {
           | -- | -- | -- |
           | <..> | fix | commit *4 |
           | <..> | fix | commit *3 |
-          ## Special Thanks:
+          ## Special Thanks
         `);
       });
 
@@ -125,7 +125,7 @@ describe('release notes generation', () => {
           | Commit | Type | Description |
           | -- | -- | -- |
           | <..> | fix | platform: fix detection of chromium |
-          ## Special Thanks:
+          ## Special Thanks
         `);
       });
 
@@ -164,7 +164,7 @@ describe('release notes generation', () => {
           | Commit | Type | Description |
           | -- | -- | -- |
           | <..> | fix | slider/testing: missing stabilization |
-          ## Special Thanks:
+          ## Special Thanks
         `);
       });
     });
@@ -184,7 +184,7 @@ describe('release notes generation', () => {
         | -- | -- | -- |
         | <..> | fix | commit ([#2](<..>/pull/2)) |
         | <..> | fix | commit [#1](<..>/pull/1) |
-        ## Special Thanks:
+        ## Special Thanks
       `);
     });
 
@@ -210,7 +210,7 @@ describe('release notes generation', () => {
         | -- | -- | -- |
         | <..> | fix | not yet released *1 |
         | <..> | refactor | with breaking change |
-        ## Special Thanks:
+        ## Special Thanks
       `);
     });
 
@@ -235,7 +235,7 @@ describe('release notes generation', () => {
         | -- | -- | -- |
         | <..> | fix | not yet released *1 |
         | <..> | refactor | with deprecation |
-        ## Special Thanks:
+        ## Special Thanks
       `);
     });
   });
@@ -264,7 +264,7 @@ describe('release notes generation', () => {
           | -- | -- |
           | <..> | commit *4 |
           | <..> | commit *3 |
-          ## Special Thanks:
+          ## Special Thanks
         `);
       });
 
@@ -295,7 +295,7 @@ describe('release notes generation', () => {
           | -- | -- |
           | <..> | commit *4 |
           | <..> | commit *3 |
-          ## Special Thanks:
+          ## Special Thanks
         `);
       });
 
@@ -328,7 +328,7 @@ describe('release notes generation', () => {
           | Commit | Description |
           | -- | -- |
           | <..> | platform: fix detection of chromium |
-          ## Special Thanks:
+          ## Special Thanks
         `);
       });
 
@@ -367,7 +367,7 @@ describe('release notes generation', () => {
           | Commit | Description |
           | -- | -- |
           | <..> | slider/testing: missing stabilization |
-          ## Special Thanks:
+          ## Special Thanks
         `);
       });
     });
@@ -394,7 +394,7 @@ describe('release notes generation', () => {
         | -- | -- |
         | <..> | not yet released *1 |
         | <..> | with breaking change |
-        ## Special Thanks:
+        ## Special Thanks
       `);
     });
 
@@ -419,7 +419,7 @@ describe('release notes generation', () => {
         | -- | -- |
         | <..> | not yet released *1 |
         | <..> | with deprecation |
-        ## Special Thanks:
+        ## Special Thanks
       `);
     });
   });

@@ -90,7 +90,7 @@ describe('cut new patch action', () => {
       | -- | -- | -- |
       | <..> | feat | not yet released *2 |
       | <..> | feat | not yet released *1 |
-      ## Special Thanks:
+      ## Special Thanks
     `);
   });
 });
