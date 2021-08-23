@@ -16,10 +16,7 @@ export const changelogPath = 'CHANGELOG.md';
 export const waitForPullRequestInterval = 10000;
 
 /**
- * Maximum number of characters a Github release entry can use for its body.
- *
- * Note: Github does not specify an official limit for this, but based on local testing,
- * Github limits switch between 25000 and 125000 characters. We use the lowest limit we have
- * seen so far, as otherwise the limit can potentially be wrong and result in errors.
+ * Maximum number of characters a Github release entry can use for its body.  This number was
+ * confirmed by reaching out to Github support to confirm the character limit.
  */
-export const githubReleaseBodyLimit = 25000;
+export const githubReleaseBodyLimit = 125000;
