@@ -109,7 +109,10 @@ jobs:
       - yarn_install
       - run:
           name: Check code format
-          command: yarn ng-dev format changed --check << pipeline.git.base_revision >>
+          command: yarn -s ng-dev format changed --check << pipeline.git.base_revision >>
+      - run:
+          name: Check commit messages
+          command: yarn -s ng-dev commit-message validate-range << pipeline.git.base_revision >> << pipeline.git.revision >>
 
   publish_snapshot_build:
     executor: default-executor
