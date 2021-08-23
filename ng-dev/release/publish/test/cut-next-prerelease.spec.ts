@@ -103,7 +103,7 @@ describe('cut next pre-release action', () => {
           | <..> | feat | not released yet, but cherry-picked |
           | <..> | feat | only in next, not released yet *2 |
           | <..> | feat | only in next, not released yet *1 |
-          ## Special Thanks:
+          ## Special Thanks
         `);
       },
     );
@@ -152,7 +152,7 @@ describe('cut next pre-release action', () => {
         | -- | -- | -- |
         | <..> | feat | not released yet *2 |
         | <..> | feat | not released yet *1 |
-        ## Special Thanks:
+        ## Special Thanks
       `);
     });
   });
@@ -200,7 +200,7 @@ describe('cut next pre-release action', () => {
         | -- | -- | -- |
         | <..> | feat | not released yet *2 |
         | <..> | feat | not released yet *1 |
-        ## Special Thanks:
+        ## Special Thanks
       `);
     });
   });

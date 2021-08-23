@@ -161,7 +161,7 @@ describe('cut stable action', () => {
       | <..> | fix | released first next pre-release *2 |
       | <..> | fix | released first next pre-release *1 |
       | <..> | fix | landed in patch, not released but cherry-picked *1 |
-      ## Special Thanks:
+      ## Special Thanks
     `);
     },
   );
