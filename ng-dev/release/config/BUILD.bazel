@@ -5,7 +5,10 @@ ts_library(
     srcs = glob([
         "**/*.ts",
     ]),
-    visibility = ["//ng-dev:__subpackages__"],
+    visibility = [
+        "//ng-dev:__subpackages__",
+        "//tools/local-actions/changelog/lib:__subpackages__",
+    ],
     deps = [
         "//ng-dev/commit-message",
         "//ng-dev/utils",

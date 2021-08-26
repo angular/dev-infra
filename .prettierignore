@@ -6,3 +6,5 @@ github-actions/breaking-changes-label/main.js
 github-actions/breaking-changes-label/post.js
 github-actions/slash-commands/main.js
 github-actions/slash-commands/post.js
+tools/local-actions/changelog/main.js
+tools/local-actions/changelog/post.js

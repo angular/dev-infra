@@ -1,0 +1,28 @@
+load("//tools:defaults.bzl", "ts_library")
+
+package(default_visibility = ["//tools/local-actions/changelog:__subpackages__"])
+
+exports_files([
+    "main.ts",
+    "post.ts",
+])
+
+ts_library(
+    name = "lib",
+    srcs = glob(
+        ["*.ts"],
+        exclude = ["*.spec.ts"],
+    ),
+    deps = [
+        "//github-actions:utils",
+        "//ng-dev/release/config",
+        "//ng-dev/release/notes",
+        "//ng-dev/utils",
+        "@npm//@actions/core",
+        "@npm//@actions/github",
+        "@npm//@octokit/rest",
+        "@npm//@types/node",
+        "@npm//@types/semver",
+        "@npm//semver",
+    ],
+)

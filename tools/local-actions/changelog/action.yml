@@ -1,0 +1,11 @@
+name: 'Create DevInfra Changelogs'
+description: 'Automatically create changelog entries for the dev-infra repo'
+author: 'Angular'
+inputs:
+  angular-robot-key:
+    description: 'The private key for the Angular Robot Github app.'
+    required: true
+runs:
+  using: 'node12'
+  main: 'main.js'
+  post: 'post.js'

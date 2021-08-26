@@ -7,6 +7,10 @@ ts_library(
     srcs = [
         "utils.ts",
     ],
+    visibility = [
+        "//github-actions:__subpackages__",
+        "//tools/local-actions:__subpackages__",
+    ],
     deps = [
         "@npm//@actions/core",
         "@npm//@actions/github",

@@ -9,6 +9,7 @@ ts_library(
     visibility = [
         "//github-actions/slash-commands/lib:__subpackages__",
         "//ng-dev:__subpackages__",
+        "//tools/local-actions/changelog/lib:__subpackages__",
     ],
     deps = [
         "@npm//@octokit/core",
