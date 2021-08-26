@@ -127,25 +127,6 @@ export class AuthenticatedGitClient extends GitClient {
         'Unable to configure `AuthenticatedGitClient` as it has been configured already.',
       );
     }
-    if (process.env['GITHUB_ACTIONS']) {
-      throw Error(
-        'Cannot use `configure` static method to create AuthenticatedGitClient in a Github Action.',
-      );
-    }
     AuthenticatedGitClient._authenticatedInstance = new AuthenticatedGitClient(token);
-  }
-
-  /** Configures an authenticated git client in the context of a Github action. */
-  static configureForGithubActions(token: string, config: {github: GithubConfig}): void {
-    if (AuthenticatedGitClient._authenticatedInstance) {
-      throw Error(
-        'Unable to configure `AuthenticatedGitClient` as it has been configured already.',
-      );
-    }
-    AuthenticatedGitClient._authenticatedInstance = new AuthenticatedGitClient(
-      token,
-      undefined,
-      config,
-    );
   }
 }
