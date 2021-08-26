@@ -21,7 +21,6 @@ ts_library(
         "@npm//@types/yargs",
         "@npm//ejs",
         "@npm//inquirer",
-        "@npm//ora",
         "@npm//semver",
         "@npm//typed-graphqlify",
     ],

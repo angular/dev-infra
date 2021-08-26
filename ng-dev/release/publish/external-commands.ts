@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as ora from 'ora';
 import * as semver from 'semver';
 
 import {spawn} from '../../utils/child-process';
 import {error, green, info, red} from '../../utils/console';
+import {Spinner} from '../../utils/spinner';
 import {BuiltPackage} from '../config/index';
 import {NpmDistTag} from '../versioning';
 
@@ -61,20 +61,20 @@ export async function invokeSetNpmDistCommand(npmDistTag: NpmDistTag, version: s
  * packages for the currently checked out branch.
  */
 export async function invokeReleaseBuildCommand(): Promise<BuiltPackage[]> {
-  const spinner = ora.call(undefined).start('Building release output.');
+  const spinner = new Spinner('Building release output.');
   try {
     // Since we expect JSON to be printed from the `ng-dev release build` command,
     // we spawn the process in silent mode. We have set up an Ora progress spinner.
     const {stdout} = await spawn('yarn', ['--silent', 'ng-dev', 'release', 'build', '--json'], {
       mode: 'silent',
     });
-    spinner.stop();
+    spinner.complete();
     info(green('  ✓   Built release output for all packages.'));
     // The `ng-dev release build` command prints a JSON array to stdout
     // that represents the built release packages and their output paths.
     return JSON.parse(stdout.trim()) as BuiltPackage[];
   } catch (e) {
-    spinner.stop();
+    spinner.complete();
     error(e);
     error(red('  ✘   An error occurred while building the release packages.'));
     throw new FatalReleaseActionError();
