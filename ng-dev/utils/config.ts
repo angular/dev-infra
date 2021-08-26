@@ -49,6 +49,14 @@ const USER_CONFIG_FILE_PATH = '.ng-dev.user';
 let userConfig: {[key: string]: any} | null = null;
 
 /**
+ * Set the cached configuration object to be loaded later. Only to be used on CI situations in
+ * which loading from the `.ng-dev/` directory is not possible.
+ */
+export function setConfig(config: {}) {
+  cachedConfig = config;
+}
+
+/**
  * Get the configuration from the file system, returning the already loaded
  * copy if it is defined.
  */
