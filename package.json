@@ -43,7 +43,6 @@
     "multimatch": "^5.0.0",
     "nock": "^13.0.3",
     "node-fetch": "^2.6.1",
-    "ora": "^5.0.0",
     "prettier": "^2.3.2",
     "protractor": "^7.0.0",
     "rollup": "^2.53.3",

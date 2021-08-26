@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as ora from 'ora';
 import * as semver from 'semver';
 import {Arguments, Argv, CommandModule} from 'yargs';
 import {getConfig} from '../../utils/config';
 
 import {bold, debug, error, green, info, red} from '../../utils/console';
+import {Spinner} from '../../utils/spinner';
 import {assertValidReleaseConfig} from '../config/index';
 import {setNpmTagForPackage} from '../versioning/npm-publish';
 
@@ -48,25 +48,24 @@ async function handler(args: Arguments<ReleaseSetDistTagOptions>) {
     process.exit(1);
   }
 
-  const spinner = ora.call(undefined).start();
   debug(`Setting "${tagName}" NPM dist tag for release packages to v${version}.`);
+  const spinner = new Spinner('');
 
   for (const pkgName of npmPackages) {
-    spinner.text = `Setting NPM dist tag for "${pkgName}"`;
-    spinner.render();
+    spinner.update(`Setting NPM dist tag for "${pkgName}"`);
 
     try {
       await setNpmTagForPackage(pkgName, tagName, version!, publishRegistry);
       debug(`Successfully set "${tagName}" NPM dist tag for "${pkgName}".`);
     } catch (e) {
-      spinner.stop();
+      spinner.complete();
       error(e);
       error(red(`  ✘   An error occurred while setting the NPM dist tag for "${pkgName}".`));
       process.exit(1);
     }
   }
 
-  spinner.stop();
+  spinner.complete();
   info(green(`  ✓   Set NPM dist tag for all release packages.`));
   info(green(`      ${bold(tagName)} will now point to ${bold(`v${version}`)}.`));
 }

@@ -27,7 +27,7 @@
 
 import {createHash} from 'crypto';
 import fetch from 'node-fetch';
-import * as Ora from 'ora';
+import {Spinner} from '../../../ng-dev/utils/spinner';
 
 /**
  * Enum describing browser platforms this script considers. The
@@ -149,11 +149,11 @@ async function lookForRevisionWithBuildsForAllPlatforms(
   startRevision: number,
   toRevision: number,
 ): Promise<number | null> {
-  const spinner = Ora({}).start('Looking for revision build.');
+  const spinner = new Spinner('Looking for revision build.');
   const increment = toRevision >= startRevision ? 1 : -1;
 
   for (let i = startRevision; i !== toRevision; i += increment) {
-    spinner.text = `Checking: r${i}`;
+    spinner.update(`Checking: r${i}`);
 
     const checks = await Promise.all(
       Object.values(BrowserPlatform).map((p) => isRevisionAvailableForPlatform(i, p)),
@@ -162,11 +162,13 @@ async function lookForRevisionWithBuildsForAllPlatforms(
     // If the current revision is available for all platforms, stop
     // searching and return the current revision.
     if (checks.every((isAvailable) => isAvailable === true)) {
-      spinner.succeed(`Found revision: r${i}`);
+      spinner.complete();
+      console.log(` √ Found revision: r${i}`);
       return i;
     }
   }
-  spinner.fail('No revision found.');
+  spinner.complete();
+  console.log(' ✘ No revision found.');
   return null;
 }
 

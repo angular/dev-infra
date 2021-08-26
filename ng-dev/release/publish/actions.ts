@@ -7,11 +7,11 @@
  */
 
 import {promises as fs} from 'fs';
-import * as ora from 'ora';
 import {join} from 'path';
 import * as semver from 'semver';
 
 import {debug, error, green, info, promptConfirm, red, warn, yellow} from '../../utils/console';
+import {Spinner} from '../../utils/spinner';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {
   getFileContentsUrl,
@@ -347,16 +347,16 @@ export abstract class ReleaseAction {
     return new Promise((resolve, reject) => {
       debug(`Waiting for pull request #${id} to be merged.`);
 
-      const spinner = ora.call(undefined).start(`Waiting for pull request #${id} to be merged.`);
+      const spinner = new Spinner(`Waiting for pull request #${id} to be merged.`);
       const intervalId = setInterval(async () => {
         const prState = await getPullRequestState(this.git, id);
         if (prState === 'merged') {
-          spinner.stop();
+          spinner.complete();
           info(green(`  ✓   Pull request #${id} has been merged.`));
           clearInterval(intervalId);
           resolve();
         } else if (prState === 'closed') {
-          spinner.stop();
+          spinner.complete();
           warn(yellow(`  ✘   Pull request #${id} has been closed.`));
           clearInterval(intervalId);
           reject(new UserAbortedReleaseActionError());
@@ -608,14 +608,14 @@ export abstract class ReleaseAction {
   /** Publishes the given built package to NPM with the specified NPM dist tag. */
   private async _publishBuiltPackageToNpm(pkg: BuiltPackage, npmDistTag: NpmDistTag) {
     debug(`Starting publish of "${pkg.name}".`);
-    const spinner = ora.call(undefined).start(`Publishing "${pkg.name}"`);
+    const spinner = new Spinner(`Publishing "${pkg.name}"`);
 
     try {
       await runNpmPublish(pkg.outputPath, npmDistTag, this.config.publishRegistry);
-      spinner.stop();
+      spinner.complete();
       info(green(`  ✓   Successfully published "${pkg.name}.`));
     } catch (e) {
-      spinner.stop();
+      spinner.complete();
       error(e);
       error(red(`  ✘   An error occurred while publishing "${pkg.name}".`));
       throw new FatalReleaseActionError();
