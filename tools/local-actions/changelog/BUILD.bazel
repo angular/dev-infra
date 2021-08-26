@@ -1,0 +1,19 @@
+load("//tools:defaults.bzl", "esbuild_checked_in")
+
+esbuild_checked_in(
+    name = "post",
+    entry_point = "//tools/local-actions/changelog/lib:post.ts",
+    external = ["ts-node"],
+    deps = [
+        "//tools/local-actions/changelog/lib",
+    ],
+)
+
+esbuild_checked_in(
+    name = "main",
+    entry_point = "//tools/local-actions/changelog/lib:main.ts",
+    external = ["ts-node"],
+    deps = [
+        "//tools/local-actions/changelog/lib",
+    ],
+)

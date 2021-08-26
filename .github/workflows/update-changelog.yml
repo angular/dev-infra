@@ -1,0 +1,16 @@
+name: Update changelog
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Run every Sunday at 0:00
+    - cron: '0 0 * * 0'
+
+jobs:
+  update_changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./tools/local-actions/changelog
+        with:
+          angular-robot-key: ${{ secrets.ANGULAR_ROBOT_PRIVATE_KEY }}
