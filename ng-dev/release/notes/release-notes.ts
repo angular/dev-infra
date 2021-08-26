@@ -50,6 +50,12 @@ export class ReleaseNotes {
     return render(changelogTemplate, await this.generateRenderContext(), {rmWhitespace: true});
   }
 
+  /** Retrieve the number of commits included in the release notes after filtering and deduping. */
+  async getCommitCountInReleaseNotes() {
+    const context = await this.generateRenderContext();
+    return this.commits.filter(context.includeInReleaseNotes).length;
+  }
+
   /**
    * Gets the URL fragment for the release notes. The URL fragment identifier
    * can be used to point to a specific changelog entry through an URL.
