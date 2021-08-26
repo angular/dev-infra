@@ -88,8 +88,8 @@ describe('cut new patch action', () => {
       ### pkg1
       | Commit | Type | Description |
       | -- | -- | -- |
-      | <..> | feat | not yet released *2 |
       | <..> | feat | not yet released *1 |
+      | <..> | feat | not yet released *2 |
       ## Special Thanks
     `);
   });
