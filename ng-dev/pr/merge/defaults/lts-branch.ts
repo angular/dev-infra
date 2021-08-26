@@ -18,6 +18,7 @@ import {
 } from '../../../release/versioning';
 import {promptConfirm, red, warn, yellow} from '../../../utils/console';
 import {InvalidTargetBranchError} from '../target-label';
+import {defaultLocale} from '../../../utils/locale';
 
 /**
  * Asserts that the given branch corresponds to an active LTS version-branch that can receive
@@ -63,7 +64,7 @@ export async function assertActiveLtsBranch(
   // allow the merge as per our LTS guarantees. Can be forcibly overridden if desired.
   // See: https://angular.io/guide/releases#support-policy-and-schedule.
   if (today > ltsEndDate) {
-    const ltsEndDateText = ltsEndDate.toLocaleDateString('en-US');
+    const ltsEndDateText = ltsEndDate.toLocaleDateString(defaultLocale);
     warn(red(`Long-term support ended for v${version.major} on ${ltsEndDateText}.`));
     warn(
       yellow(

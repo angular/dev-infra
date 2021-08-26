@@ -54,13 +54,13 @@ describe('release notes generation', () => {
           ### @angular-devkit/core
           | Commit | Type | Description |
           | -- | -- | -- |
-          | <..> | fix | commit *2 |
           | <..> | fix | commit *1 |
+          | <..> | fix | commit *2 |
           ### @angular-devkit/test
           | Commit | Type | Description |
           | -- | -- | -- |
-          | <..> | fix | commit *4 |
           | <..> | fix | commit *3 |
+          | <..> | fix | commit *4 |
           ## Special Thanks
         `);
       });
@@ -85,13 +85,13 @@ describe('release notes generation', () => {
           ### cdk
           | Commit | Type | Description |
           | -- | -- | -- |
-          | <..> | fix | commit *2 |
           | <..> | fix | commit *1 |
+          | <..> | fix | commit *2 |
           ### material
           | Commit | Type | Description |
           | -- | -- | -- |
-          | <..> | fix | commit *4 |
           | <..> | fix | commit *3 |
+          | <..> | fix | commit *4 |
           ## Special Thanks
         `);
       });
@@ -158,8 +158,8 @@ describe('release notes generation', () => {
           ### cdk
           | Commit | Type | Description |
           | -- | -- | -- |
-          | <..> | fix | platform: fix detection of chromium |
           | <..> | fix | a11y: fix module definition |
+          | <..> | fix | platform: fix detection of chromium |
           ### material
           | Commit | Type | Description |
           | -- | -- | -- |
@@ -257,13 +257,13 @@ describe('release notes generation', () => {
           ### @angular-devkit/core
           | Commit | Description |
           | -- | -- |
-          | <..> | commit *2 |
           | <..> | commit *1 |
+          | <..> | commit *2 |
           ### @angular-devkit/test
           | Commit | Description |
           | -- | -- |
-          | <..> | commit *4 |
           | <..> | commit *3 |
+          | <..> | commit *4 |
           ## Special Thanks
         `);
       });
@@ -288,13 +288,13 @@ describe('release notes generation', () => {
           ### cdk
           | Commit | Description |
           | -- | -- |
-          | <..> | commit *2 |
           | <..> | commit *1 |
+          | <..> | commit *2 |
           ### material
           | Commit | Description |
           | -- | -- |
-          | <..> | commit *4 |
           | <..> | commit *3 |
+          | <..> | commit *4 |
           ## Special Thanks
         `);
       });
@@ -361,8 +361,8 @@ describe('release notes generation', () => {
           ### cdk
           | Commit | Description |
           | -- | -- |
-          | <..> | platform: fix detection of chromium |
           | <..> | a11y: fix module definition |
+          | <..> | platform: fix detection of chromium |
           ### material
           | Commit | Description |
           | -- | -- |

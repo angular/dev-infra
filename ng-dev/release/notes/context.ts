@@ -10,6 +10,7 @@ import {COMMIT_TYPES, ReleaseNotesLevel} from '../../commit-message/config';
 import {CommitFromGitLog} from '../../commit-message/parse';
 import {GithubConfig} from '../../utils/config';
 import {ReleaseNotesConfig} from '../config/index';
+import {compareString} from '../../utils/locale';
 
 /** List of types to be included in the release notes. */
 const typesToIncludeInReleaseNotes = Object.values(COMMIT_TYPES)
@@ -69,6 +70,19 @@ export class RenderContext {
   }
 
   /**
+   * Comparator used for sorting commits within a release notes group. Commits
+   * are sorted alphabetically based on their type. Commits having the same type
+   * will be sorted alphabetically based on their determined description
+   */
+  private _commitsWithinGroupComparator = (a: CategorizedCommit, b: CategorizedCommit): number => {
+    const typeCompareOrder = compareString(a.type, b.type);
+    if (typeCompareOrder === 0) {
+      return compareString(a.description, b.description);
+    }
+    return typeCompareOrder;
+  };
+
+  /**
    * Organizes and sorts the commits into groups of commits.
    *
    * Groups are sorted either by default `Array.sort` order, or using the provided group order from
@@ -94,9 +108,9 @@ export class RenderContext {
     const commitGroups = Array.from(groups.entries())
       .map(([title, commits]) => ({
         title,
-        commits: commits.sort((a, b) => (a.type > b.type ? 1 : a.type < b.type ? -1 : 0)),
+        commits: commits.sort(this._commitsWithinGroupComparator),
       }))
-      .sort((a, b) => (a.title > b.title ? 1 : a.title < b.title ? -1 : 0));
+      .sort((a, b) => compareString(a.title, b.title));
 
     // If the configuration provides a sorting order, updated the sorted list of group keys to
     // satisfy the order of the groups provided in the list with any groups not found in the list at

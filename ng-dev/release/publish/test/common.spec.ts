@@ -132,8 +132,8 @@ describe('common release action logic', () => {
             ### test
             | Commit | Description |
             | -- | -- |
-            | <..> | second commit |
             | <..> | first commit |
+            | <..> | second commit |
             ## Special Thanks
           `,
         );
