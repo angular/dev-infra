@@ -423,4 +423,18 @@ describe('release notes generation', () => {
       `);
     });
   });
+
+  it('should determine the number of commits included in the entry', async () => {
+    SandboxGitRepo.withInitialCommit(githubConfig)
+      .createTagForHead('0.0.0')
+      .commit('fix: first thing fixed')
+      .commit('feat: first new thing')
+      .commit('feat: second new thing')
+      .commit('build: rework everything')
+      .commit('fix: fix what we broke');
+
+    const releaseNotes = await ReleaseNotes.forRange(parse('0.0.1'), '0.0.0', 'HEAD');
+
+    expect(await releaseNotes.getCommitCountInReleaseNotes()).toBe(4);
+  });
 });

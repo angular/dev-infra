@@ -53,7 +53,7 @@ export class ReleaseNotes {
   /** Retrieve the number of commits included in the release notes after filtering and deduping. */
   async getCommitCountInReleaseNotes() {
     const context = await this.generateRenderContext();
-    return this.commits.filter(context.includeInReleaseNotes).length;
+    return context.commits.filter(context.includeInReleaseNotes()).length;
   }
 
   /**
