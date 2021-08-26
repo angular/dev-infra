@@ -3,13 +3,19 @@ import {Octokit} from '@octokit/rest';
 import {context} from '@actions/github';
 import {getAuthTokenFor, ANGULAR_ROBOT} from '../../../utils';
 import {AuthenticatedGitClient} from '../../../../ng-dev/utils/git/authenticated-git-client';
+import {setConfig} from '../../../../ng-dev/utils/config';
 
 export async function rebase() {
   const token = await getAuthTokenFor(ANGULAR_ROBOT);
-  const {owner, repo: name} = context.repo;
-  const mainBranchName = context.payload.repository!.default_branch;
+  setConfig({
+    github: {
+      name: context.repo.repo,
+      owner: context.repo.owner,
+      mainBranchName: context.payload.repository!.default_branch,
+    },
+  });
 
-  AuthenticatedGitClient.configureForGithubActions(token, {github: {name, owner, mainBranchName}});
+  AuthenticatedGitClient.configure(token);
 
   if ((await rebasePr(context.issue.number, token)) !== 0) {
     // For any failure to rebase, comment on the PR informing the user a rebase was unable to be
