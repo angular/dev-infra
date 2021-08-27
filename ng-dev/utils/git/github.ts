@@ -12,7 +12,12 @@ import {PaginateInterface} from '@octokit/plugin-paginate-rest';
 import {RestEndpointMethods} from '@octokit/plugin-rest-endpoint-methods/dist-types/generated/method-types';
 import {Octokit} from '@octokit/rest';
 import {RequestParameters} from '@octokit/types';
+import {RequestError} from '@octokit/request-error';
 import {query} from 'typed-graphqlify';
+
+// Expose the `RequestError` class from Octokit with a more concrete
+// export name, making it easier to find and understand.
+export {RequestError as GithubApiRequestError};
 
 /**
  * An object representation of a Graphql Query to be used as a response type and
@@ -26,13 +31,6 @@ export interface GithubRepo {
   owner: string;
   /** Name of the repository. */
   name: string;
-}
-
-/** Error for failed Github API requests. */
-export class GithubApiRequestError extends Error {
-  constructor(public status: number, message: string) {
-    super(message);
-  }
 }
 
 /** A Github client for interacting with the Github APIs. */

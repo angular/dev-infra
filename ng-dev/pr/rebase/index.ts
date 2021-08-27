@@ -132,7 +132,7 @@ export async function rebasePr(prNumber: number, githubToken: string) {
       return 0;
     }
   } catch (err) {
-    error(err.message);
+    error(err);
     git.checkout(previousBranchOrRevision, true);
     return 1;
   }

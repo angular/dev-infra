@@ -74,14 +74,14 @@ export const warn = buildLogLevelFunction(() => console.warn, LOG_LEVELS.WARN);
 /** Build an instance of a logging function for the provided level. */
 function buildLogLevelFunction(loadCommand: () => Function, level: LOG_LEVELS) {
   /** Write to stdout for the LOG_LEVEL. */
-  const loggingFunction = (...text: string[]) => {
+  const loggingFunction = (...text: unknown[]) => {
     runConsoleCommand(loadCommand, level, ...text);
   };
 
   /** Start a group at the LOG_LEVEL, optionally starting it as collapsed. */
-  loggingFunction.group = (text: string, collapsed = false) => {
+  loggingFunction.group = (label: unknown, collapsed = false) => {
     const command = collapsed ? console.groupCollapsed : console.group;
-    runConsoleCommand(() => command, level, text);
+    runConsoleCommand(() => command, level, label);
   };
 
   /** End the group at the LOG_LEVEL. */
@@ -101,7 +101,7 @@ function buildLogLevelFunction(loadCommand: () => Function, level: LOG_LEVELS) {
  * the console.* function, the function is saved into the closure of the created logging
  * function before jasmine can spy.
  */
-function runConsoleCommand(loadCommand: () => Function, logLevel: LOG_LEVELS, ...text: string[]) {
+function runConsoleCommand(loadCommand: () => Function, logLevel: LOG_LEVELS, ...text: unknown[]) {
   if (getLogLevel() >= logLevel) {
     loadCommand()(...text);
   }
@@ -179,7 +179,7 @@ export function captureLogOutputForCommand(argv: Arguments) {
 }
 
 /** Write the provided text to the log file, prepending each line with the log level.  */
-function printToLogFile(logLevel: LOG_LEVELS, ...text: string[]) {
+function printToLogFile(logLevel: LOG_LEVELS, ...text: unknown[]) {
   const logLevelText = `${LOG_LEVELS[logLevel]}:`.padEnd(LOG_LEVEL_COLUMNS);
   LOGGED_TEXT += text
     .join(' ')

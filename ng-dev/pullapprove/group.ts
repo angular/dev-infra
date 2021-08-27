@@ -73,9 +73,7 @@ export class PullApproveGroup {
         } catch (e) {
           error(`Could not parse condition in group: ${this.groupName}`);
           error(` - ${expression}`);
-          error(`Error:`);
-          error(e.message);
-          error(e.stack);
+          error(`Error:`, e);
           process.exit(1);
         }
       });
@@ -108,9 +106,8 @@ export class PullApproveGroup {
           const errMessage =
             `Condition could not be evaluated: \n\n` +
             `From the [${this.groupName}] group:\n` +
-            ` - ${expression}` +
-            `\n\n${e.message} ${e.stack}\n\n`;
-          error(errMessage);
+            ` - ${expression}`;
+          error(errMessage, '\n\n', e, '\n\n');
           process.exit(1);
         }
       }

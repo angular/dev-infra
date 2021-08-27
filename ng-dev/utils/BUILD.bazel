@@ -16,6 +16,7 @@ ts_library(
         "@npm//@octokit/graphql",
         "@npm//@octokit/plugin-paginate-rest",
         "@npm//@octokit/plugin-rest-endpoint-methods",
+        "@npm//@octokit/request-error",
         "@npm//@octokit/rest",
         "@npm//@octokit/types",
         "@npm//@types/inquirer",
