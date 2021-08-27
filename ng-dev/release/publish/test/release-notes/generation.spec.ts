@@ -8,7 +8,7 @@
 
 import {installSandboxGitClient, SandboxGitClient} from '../test-utils/sandbox-git-client';
 import {mkdirSync, rmdirSync} from 'fs';
-import {testTmpDir} from '../test-utils/action-mocks';
+import {prepareTempDirectory, testTmpDir} from '../test-utils/action-mocks';
 import {getMockGitClient} from '../test-utils/git-client-mock';
 import {GithubConfig} from '../../../../utils/config';
 import {SandboxGitRepo} from '../test-utils/sandbox-testing';
@@ -24,8 +24,7 @@ describe('release notes generation', () => {
   beforeEach(() => {
     // Clear the temporary directory used by the sandbox git client. We do not want
     // the repo state to persist between tests.
-    rmdirSync(testTmpDir, {recursive: true});
-    mkdirSync(testTmpDir);
+    prepareTempDirectory();
 
     releaseConfig = {npmPackages: [], buildPackages: async () => []};
     githubConfig = {owner: 'angular', name: 'dev-infra-test', mainBranchName: 'main'};
