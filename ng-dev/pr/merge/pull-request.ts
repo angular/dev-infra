@@ -89,7 +89,12 @@ export async function loadAndValidatePullRequest(
     assertPendingState(prData);
     assertCorrectBreakingChangeLabeling(commitsInPr, labels);
   } catch (error) {
-    return error;
+    // If the error is a pull request failure, we pass it through gracefully
+    // as the tool expects such failures to be returned from the function.
+    if (error instanceof PullRequestFailure) {
+      return error;
+    }
+    throw error;
   }
 
   /** The combined status of the latest commit in the pull request. */
@@ -175,7 +180,8 @@ async function fetchPullRequestFromGithub(
   } catch (e) {
     // If the pull request could not be found, we want to return `null` so
     // that the error can be handled gracefully.
-    if (e.status === 404) {
+    // TODO(devversion): revisit once https://github.com/octokit/graphql.js/issues/311 is fixed.
+    if ((e as any).status === 404) {
       return null;
     }
     throw e;

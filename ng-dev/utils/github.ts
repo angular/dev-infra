@@ -9,7 +9,9 @@
 import {params, types} from 'typed-graphqlify';
 import {AuthenticatedGitClient} from './git/authenticated-git-client';
 
-/** Get a PR from github  */
+/**
+ * Gets the given pull request from Github using the GraphQL API endpoint.
+ */
 export async function getPr<PrSchema>(
   prSchema: PrSchema,
   prNumber: number,

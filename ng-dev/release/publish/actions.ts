@@ -37,6 +37,7 @@ import {invokeReleaseBuildCommand, invokeYarnInstallCommand} from './external-co
 import {findOwnedForksOfRepoQuery} from './graphql-queries';
 import {getPullRequestState} from './pull-request-state';
 import {getReleaseTagForVersion} from '../versioning/version-tags';
+import {GithubApiRequestError} from '../../utils/git/github';
 
 /** Interface describing a Github repository. */
 export interface GithubRepo {
@@ -230,7 +231,7 @@ export abstract class ReleaseAction {
     } catch (e) {
       // If the error has a `status` property set to `404`, then we know that the branch
       // does not exist. Otherwise, it might be an API error that we want to report/re-throw.
-      if (e.status === 404) {
+      if (e instanceof GithubApiRequestError && e.status === 404) {
         return false;
       }
       throw e;

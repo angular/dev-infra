@@ -17,6 +17,7 @@ import {PullRequest} from '../pull-request';
 import {matchesPattern} from '../string-pattern';
 
 import {MergeStrategy, TEMP_PR_HEAD_BRANCH} from './strategy';
+import {GithubApiRequestError} from '../../../utils/git/github';
 
 /** Type describing the parameters for the Octokit `merge` API endpoint. */
 type OctokitMergeParams = RestEndpointMethodTypes['pulls']['merge']['parameters'];
@@ -106,7 +107,7 @@ export class GithubApiMergeStrategy extends MergeStrategy {
       // token with insufficient permissions. Github does this because it doesn't want
       // to leak whether a repository exists or not. In our case we expect a certain
       // repository to exist, so we always treat this as a permission failure.
-      if (e.status === 403 || e.status === 404) {
+      if (e instanceof GithubApiRequestError && (e.status === 403 || e.status === 404)) {
         return PullRequestFailure.insufficientPermissionsToMerge();
       }
       throw e;

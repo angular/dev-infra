@@ -54,7 +54,7 @@ export function loadTestConfig(configPath: string): CircularDependenciesTestConf
     return config;
   } catch (e) {
     error('Could not load test configuration file at: ' + configPath);
-    error(`Failed with: ${e.message}`);
+    error(`Failed with error:`, e);
     process.exit(1);
   }
 }
