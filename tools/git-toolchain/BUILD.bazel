@@ -13,7 +13,12 @@ git_toolchain(
 )
 
 git_toolchain(
-    name = "git_macos",
+    name = "git_macos_x86",
+    binary_path = "/usr/bin/git",
+)
+
+git_toolchain(
+    name = "git_macos_arm64",
     binary_path = "/usr/bin/git",
 )
 
@@ -37,7 +42,7 @@ toolchain(
 )
 
 toolchain(
-    name = "git_macos_toolchain",
+    name = "git_macos_x86_toolchain",
     exec_compatible_with = [
         "@platforms//os:macos",
         "@platforms//cpu:x86_64",
@@ -46,7 +51,21 @@ toolchain(
         "@platforms//os:macos",
         "@platforms//cpu:x86_64",
     ],
-    toolchain = ":git_macos",
+    toolchain = ":git_macos_x86",
+    toolchain_type = ":toolchain_type",
+)
+
+toolchain(
+    name = "git_macos_arm64_toolchain",
+    exec_compatible_with = [
+        "@platforms//os:macos",
+        "@platforms//cpu:aarch64",
+    ],
+    target_compatible_with = [
+        "@platforms//os:macos",
+        "@platforms//cpu:aarch64",
+    ],
+    toolchain = ":git_macos_arm64",
     toolchain_type = ":toolchain_type",
 )
 

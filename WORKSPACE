@@ -15,12 +15,7 @@ http_archive(
 load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories", "yarn_install")
 
 node_repositories(
-    node_repositories = {
-        "14.17.0-darwin_amd64": ("node-v14.17.0-darwin-x64.tar.gz", "node-v14.17.0-darwin-x64", "7b210652e11d1ee25650c164cf32381895e1dcb3e0ff1d0841d8abc1f47ac73e"),
-        "14.17.0-linux_amd64": ("node-v14.17.0-linux-x64.tar.xz", "node-v14.17.0-linux-x64", "494b161759a3d19c70e3172d33ce1918dd8df9ad20d29d1652a8387a84e2d308"),
-        "14.17.0-windows_amd64": ("node-v14.17.0-win-x64.zip", "node-v14.17.0-win-x64", "6582a7259c433e9f667dcc4ed3e5d68bc514caba2eed40e4626c8b4c7e5ecd5c"),
-    },
-    node_version = "14.17.0",
+    node_version = "16.6.0",
 )
 
 yarn_install(
@@ -47,6 +42,7 @@ esbuild_repositories()
 
 register_toolchains(
     "//tools/git-toolchain:git_linux_toolchain",
-    "//tools/git-toolchain:git_macos_toolchain",
+    "//tools/git-toolchain:git_macos_x86_toolchain",
+    "//tools/git-toolchain:git_macos_arm64_toolchain",
     "//tools/git-toolchain:git_windows_toolchain",
 )
