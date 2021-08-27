@@ -28,8 +28,8 @@ export class Spinner {
   /** Get the next spinner character. */
   private getNextSpinnerCharacter() {
     this.currentSpinnerCharacterIndex =
-      (this.currentSpinnerCharacterIndex % this.spinnerCharacters.length) + 1;
-    return this.spinnerCharacters[this.currentSpinnerCharacterIndex - 1];
+      (this.currentSpinnerCharacterIndex + 1) % this.spinnerCharacters.length;
+    return this.spinnerCharacters[this.currentSpinnerCharacterIndex];
   }
 
   /** Print the current text for the spinner to the  */
