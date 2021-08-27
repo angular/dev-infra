@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {mkdirSync, rmdirSync, writeFileSync} from 'fs';
+import {existsSync, mkdirSync, rmdirSync, writeFileSync} from 'fs';
 import {join} from 'path';
 
 import * as npm from '../../../versioning/npm-publish';
@@ -48,6 +48,17 @@ export function getTestConfigurationsForAction() {
   return {githubConfig, releaseConfig};
 }
 
+/**
+ * Prepares the temporary test directory by deleting previous
+ * contents if present. Ensures the temp directory exists.
+ */
+export function prepareTempDirectory() {
+  if (existsSync(testTmpDir)) {
+    rmdirSync(testTmpDir, {recursive: true});
+  }
+  mkdirSync(testTmpDir);
+}
+
 /** Sets up all test mocks needed to run a release action. */
 export function setupMocksForReleaseAction<T extends boolean>(
   githubConfig: GithubConfig,
@@ -56,8 +67,7 @@ export function setupMocksForReleaseAction<T extends boolean>(
 ) {
   // Clear the temporary directory. We do not want the repo state
   // to persist between tests if the sandbox git client is used.
-  rmdirSync(testTmpDir, {recursive: true});
-  mkdirSync(testTmpDir);
+  prepareTempDirectory();
 
   // Fake confirm any prompts. We do not want to make any changelog edits and
   // just proceed with the release action.
