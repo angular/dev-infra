@@ -36,7 +36,10 @@ import {OctoKit} from './octokit';
       insufficientVotesLabel: getInputValue('insufficient-votes-label'),
       limit: getInputValue('limit'),
     });
-  } catch (e) {
-    core.setFailed(e);
+  } catch (error) {
+    if (error instanceof Error) {
+      core.setFailed(error.message);
+    }
+    throw error;
   }
 })();

@@ -20,17 +20,19 @@ export async function rerunCircleCi() {
     const workflowId = await getCircleCiWorkflowIdForPullRequest(pullRequest, github, circleci);
     await circleci.post(`workflow/${workflowId}/rerun`, {from_failed: true});
   } catch (err) {
-    // If the rerun attempt failed comment on the issue informing the requestor.
-    await github.issues.createComment({
-      ...context.repo,
-      issue_number: pullRequest.number,
-      body:
-        `@${context.actor} the CircleCI rerun you requested failed.  See details below:\n\n` +
-        `\`\`\`\n${err.message}\n\`\`\``,
-      number: pullRequest.number,
-    });
-
-    core.error(err);
+    if (err instanceof Error) {
+      // If the rerun attempt failed comment on the issue informing the requestor.
+      await github.issues.createComment({
+        ...context.repo,
+        issue_number: pullRequest.number,
+        body:
+          `@${context.actor} the CircleCI rerun you requested failed.  See details below:\n\n` +
+          `\`\`\`\n${err.message}\n\`\`\``,
+        number: pullRequest.number,
+      });
+      core.error(err);
+    }
+    throw err;
   }
 }
 

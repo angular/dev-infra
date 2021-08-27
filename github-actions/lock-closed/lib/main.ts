@@ -81,7 +81,8 @@ async function run(): Promise<void> {
         await lockIssue(client, item.number, message);
         await timeout(500);
         ++lockCount;
-      } catch (error) {
+      } catch (error: any) {
+        // TODO(josephperrott): properly set typings for error.
         core.debug(error);
         core.warning(`Unable to lock ${itemType} #${item.number}: ${error.message}`);
         if (typeof error.request === 'object') {
@@ -91,8 +92,9 @@ async function run(): Promise<void> {
     }
     core.endGroup();
     console.info(`Locked ${lockCount} item(s)`);
-  } catch (error) {
-    core.debug(error);
+  } catch (error: any) {
+    // TODO(josephperrott): properly set typings for error.
+    core.debug(error.message);
     core.setFailed(error.message);
     if (typeof error.request === 'object') {
       core.error(JSON.stringify(error.request, null, 2));

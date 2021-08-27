@@ -119,7 +119,8 @@ export class OctoKit implements GitHubAPI {
       await this.octokit.issues.getLabel({...this.params, name});
       return true;
     } catch (err) {
-      if (err.status === 404) {
+      // TODO(josephperrott): properly set typings for error.
+      if ((err as any).status === 404) {
         return this.options.readonly && this.mockLabels.has(name);
       }
       throw err;
@@ -232,7 +233,8 @@ export class OctoKitIssue extends OctoKit implements GitHubIssueAPI {
           name,
         });
     } catch (err) {
-      if (err.status === 404) {
+      // TODO(devversion): revisit once https://github.com/octokit/graphql.js/issues/311 is fixed.
+      if ((err as any).status === 404) {
         log(`Label ${name} not found on issue`);
         return;
       }
