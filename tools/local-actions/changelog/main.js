@@ -52007,7 +52007,7 @@ function getLatestRefFromUpstream(branchOrTag) {
 }
 function getTodayAsSemver() {
   const today = new Date();
-  return new semver_1.SemVer(`${today.getFullYear()}.${today.getMonth() + 1}.${today.getDay()}`);
+  return new semver_1.SemVer(`${today.getFullYear()}.${today.getMonth() + 1}.${today.getDate()}`);
 }
 if (github_1.context.repo.owner === "angular" && github_1.context.repo.repo === "dev-infra") {
   run().catch((e) => {

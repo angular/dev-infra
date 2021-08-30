@@ -120,7 +120,7 @@ function getLatestRefFromUpstream(branchOrTag: string) {
 /** Create a semver tag based on todays date. */
 function getTodayAsSemver() {
   const today = new Date();
-  return new SemVer(`${today.getFullYear()}.${today.getMonth() + 1}.${today.getDay()}`);
+  return new SemVer(`${today.getFullYear()}.${today.getMonth() + 1}.${today.getDate()}`);
 }
 
 // This action should only be run in the angular/dev-infra repo.
