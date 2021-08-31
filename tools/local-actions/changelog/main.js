@@ -51963,7 +51963,7 @@ var config = {
 async function run() {
   authenticated_git_client_1.AuthenticatedGitClient.configure(await (0, utils_1.getAuthTokenFor)(utils_1.ANGULAR_ROBOT));
   const git = authenticated_git_client_1.AuthenticatedGitClient.get();
-  git.run(["config", "user.email", "angular-robot@google.com"]);
+  git.run(["config", "user.email", "56403804+angular-robot[bot]@users.noreply.github.com"]);
   git.run(["config", "user.name", "Angular Robot"]);
   const changelogFile = (0, path_1.join)(git.baseDir, "CHANGELOG.md");
   const changelogArchiveFile = (0, path_1.join)(git.baseDir, "CHANGELOG_ARCHIVE.md");
