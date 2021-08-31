@@ -46,7 +46,7 @@ async function run(): Promise<void> {
   AuthenticatedGitClient.configure(await getAuthTokenFor(ANGULAR_ROBOT));
   /** The authenticed GitClient. */
   const git = AuthenticatedGitClient.get();
-  git.run(['config', 'user.email', 'angular-robot@google.com']);
+  git.run(['config', 'user.email', '56403804+angular-robot[bot]@users.noreply.github.com']);
   git.run(['config', 'user.name', 'Angular Robot']);
 
   /** The full path to the changelog file. */
