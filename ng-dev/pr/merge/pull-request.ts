@@ -175,17 +175,7 @@ async function fetchPullRequestFromGithub(
   git: AuthenticatedGitClient,
   prNumber: number,
 ): Promise<RawPullRequest | null> {
-  try {
-    return await getPr(PR_SCHEMA, prNumber, git);
-  } catch (e) {
-    // If the pull request could not be found, we want to return `null` so
-    // that the error can be handled gracefully.
-    // TODO(devversion): revisit once https://github.com/octokit/graphql.js/issues/311 is fixed.
-    if ((e as any).status === 404) {
-      return null;
-    }
-    throw e;
-  }
+  return await getPr(PR_SCHEMA, prNumber, git);
 }
 
 /** Whether the specified value resolves to a pull request. */

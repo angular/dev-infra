@@ -7,6 +7,7 @@
  */
 
 import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
+import {RequestError} from '@octokit/request-error';
 import {Comment, GitHubAPI, GitHubIssueAPI, Issue, Query} from './api';
 import {log} from './log';
 
@@ -118,12 +119,11 @@ export class OctoKit implements GitHubAPI {
     try {
       await this.octokit.issues.getLabel({...this.params, name});
       return true;
-    } catch (err) {
-      // TODO(josephperrott): properly set typings for error.
-      if ((err as any).status === 404) {
+    } catch (e) {
+      if (e instanceof RequestError && e.status === 404) {
         return this.options.readonly && this.mockLabels.has(name);
       }
-      throw err;
+      throw e;
     }
   }
 }
@@ -232,13 +232,12 @@ export class OctoKitIssue extends OctoKit implements GitHubIssueAPI {
           issue_number: this.issueData.number,
           name,
         });
-    } catch (err) {
-      // TODO(devversion): revisit once https://github.com/octokit/graphql.js/issues/311 is fixed.
-      if ((err as any).status === 404) {
+    } catch (e) {
+      if (e instanceof RequestError && e.status === 404) {
         log(`Label ${name} not found on issue`);
         return;
       }
-      throw err;
+      throw e;
     }
   }
 }

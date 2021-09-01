@@ -43,7 +43,7 @@ const PR_SCHEMA = {
  *
  * @returns a status code indicating whether the rebase was successful.
  */
-export async function rebasePr(prNumber: number, githubToken: string) {
+export async function rebasePr(prNumber: number, githubToken: string): Promise<number> {
   /** The singleton instance of the authenticated git client. */
   const git = AuthenticatedGitClient.get();
   if (git.hasUncommittedChanges()) {
@@ -58,6 +58,11 @@ export async function rebasePr(prNumber: number, githubToken: string) {
   const previousBranchOrRevision = git.getCurrentBranchOrRevision();
   /* Get the PR information from Github. */
   const pr = await getPr(PR_SCHEMA, prNumber, git);
+
+  if (pr === null) {
+    error(`Specified pull request does not exist.`);
+    return 1;
+  }
 
   const headRefName = pr.headRef.name;
   const baseRefName = pr.baseRef.name;

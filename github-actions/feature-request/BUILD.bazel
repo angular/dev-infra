@@ -12,6 +12,7 @@ ts_library(
         "//github-actions:utils",
         "@npm//@actions/core",
         "@npm//@actions/github",
+        "@npm//@octokit/request-error",
         "@npm//@octokit/rest",
         "@npm//@types/node",
     ],
