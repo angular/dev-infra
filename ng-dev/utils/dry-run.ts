@@ -32,4 +32,8 @@ export function isDryRun(): boolean {
 }
 
 /** Error to be thrown when a function or method is called in dryRun mode and shouldn't be. */
-export class DryRunError extends Error {}
+export class DryRunError extends Error {
+  constructor() {
+    super('Cannot call this function in dryRun mode.');
+  }
+}
