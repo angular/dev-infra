@@ -8,9 +8,10 @@ import {AuthenticatedGitClient} from '../../../../ng-dev/utils/git/authenticated
 import {ANGULAR_ROBOT, getAuthTokenFor} from '../../../../github-actions/utils';
 import {GithubConfig, setConfig} from '../../../../ng-dev/utils/config';
 import {ReleaseConfig} from '../../../../ng-dev/release/config/index';
+import {addTokenToGitHttpsUrl} from '../../../../ng-dev/utils/git/github-urls';
 
 /** The tag used for tracking the last time the changlog was generated. */
-const lastChangelogTag = 'most-recent-changelog-generation';
+const lastChangelogTag = 'most-recent-changelog-generation-test';
 /** Marker comment used to split the changelog into a list of distinct changelog entries.  */
 const splitMarker = '\n<!-- CHANGELOG SPLIT MARKER -->\n';
 /** The commit message used for the changes to the CHANGELOG. */
@@ -19,7 +20,7 @@ const commitMessage = 'release: create weekly changelog entry';
 // Set the cached configuration object to be used throughout the action.
 const config: {github: GithubConfig; release: ReleaseConfig} = {
   github: {
-    mainBranchName: 'main',
+    mainBranchName: 'main-test',
     name: context.repo.repo,
     owner: context.repo.owner,
   },
@@ -46,9 +47,11 @@ async function run(): Promise<void> {
   AuthenticatedGitClient.configure(await getAuthTokenFor(ANGULAR_ROBOT));
   /** The authenticed GitClient. */
   const git = AuthenticatedGitClient.get();
-  git.run(['config', 'user.email', '56403804+angular-robot[bot]@users.noreply.github.com']);
+  git.run(['config', 'user.email', 'angular-robot@google.com']);
   git.run(['config', 'user.name', 'Angular Robot']);
 
+  /** The url of the git repository with the authenticated token set. */
+  const authenticatedGitUrl = addTokenToGitHttpsUrl(git.getRepoGitUrl(), git.githubToken)
   /** The full path to the changelog file. */
   const changelogFile = join(git.baseDir, 'CHANGELOG.md');
   /** The full path of the changelog */
@@ -92,10 +95,10 @@ async function run(): Promise<void> {
 
   // Commit the new changelog(s) and push the changes to github.
   git.run(['commit', '--no-verify', '-m', commitMessage]);
-  git.run(['push', git.getRepoGitUrl(), `HEAD:refs/heads/${git.mainBranchName}`]);
+  git.run(['push', authenticatedGitUrl, `HEAD:refs/heads/${git.mainBranchName}`]);
   // A force push is used to update the tag git does not expect it to move and a force is neccessary
   // to update it from its old sha.
-  git.run(['push', '-f', git.getRepoGitUrl(), `HEAD:refs/tags/${lastChangelogTag}`]);
+  git.run(['push', '-f', authenticatedGitUrl, `HEAD:refs/tags/${lastChangelogTag}`]);
 }
 
 /** Write the contents to the provided file and add it to git staging. */
