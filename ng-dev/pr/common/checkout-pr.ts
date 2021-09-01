@@ -35,19 +35,12 @@ const PR_SCHEMA = {
   },
 };
 
-export class UnexpectedLocalChangesError extends Error {
-  constructor(m: string) {
-    super(m);
-    Object.setPrototypeOf(this, UnexpectedLocalChangesError.prototype);
-  }
-}
-
-export class MaintainerModifyAccessError extends Error {
-  constructor(m: string) {
-    super(m);
-    Object.setPrototypeOf(this, MaintainerModifyAccessError.prototype);
-  }
-}
+/** Error being thrown if there are unexpected local changes in the project repo. */
+export class UnexpectedLocalChangesError extends Error {}
+/** Error being thrown if a requested pull request could not be found upstream. */
+export class PullRequestNotFoundError extends Error {}
+/** Error being thrown if the pull request does not allow for maintainer modifications. */
+export class MaintainerModifyAccessError extends Error {}
 
 /** Options for checking out a PR */
 export interface PullRequestCheckoutOptions {
@@ -58,6 +51,13 @@ export interface PullRequestCheckoutOptions {
 /**
  * Rebase the provided PR onto its merge target branch, and push up the resulting
  * commit to the PRs repository.
+ *
+ * @throws {UnexpectedLocalChangesError} If the pull request cannot be checked out
+ *   due to uncommitted local changes.
+ * @throws {PullRequestNotFoundError} If the pull request cannot be checked out
+ *   because it is unavailable on Github.
+ * @throws {MaintainerModifyAccessError} If the pull request does not allow maintainers
+ *   to modify a pull request. Skipped if `allowIfMaintainerCannotModify` is set.
  */
 export async function checkOutPullRequestLocally(
   prNumber: number,
@@ -78,8 +78,13 @@ export async function checkOutPullRequestLocally(
    * any Git operations that may change the working branch.
    */
   const previousBranchOrRevision = git.getCurrentBranchOrRevision();
-  /* The PR information from Github. */
+  /** The PR information from Github. */
   const pr = await getPr(PR_SCHEMA, prNumber, git);
+
+  if (pr === null) {
+    throw new PullRequestNotFoundError(`Pull request #${prNumber} could not be found.`);
+  }
+
   /** The branch name of the PR from the repository the PR came from. */
   const headRefName = pr.headRef.name;
   /** The full ref for the repository and branch the PR came from. */
@@ -92,7 +97,7 @@ export async function checkOutPullRequestLocally(
   // never accidentally override upstream changes that have been pushed in the meanwhile.
   // See:
   // https://git-scm.com/docs/git-push#Documentation/git-push.txt---force-with-leaseltrefnamegtltexpectgt
-  /** Flag for a force push with leage back to upstream. */
+  /** Flag for a force push with lease back to upstream. */
   const forceWithLeaseFlag = `--force-with-lease=${headRefName}:${pr.headRefOid}`;
 
   // If the PR does not allow maintainers to modify it, exit as the rebased PR cannot
@@ -116,7 +121,7 @@ export async function checkOutPullRequestLocally(
      * Pushes the current local branch to the PR on the upstream repository.
      *
      * @returns true If the command did not fail causing a GitCommandError to be thrown.
-     * @throws GitCommandError Thrown when the push back to upstream fails.
+     * @throws {GitCommandError} Thrown when the push back to upstream fails.
      */
     pushToUpstream: (): true => {
       git.run(['push', headRefUrl, `HEAD:${headRefName}`, forceWithLeaseFlag]);

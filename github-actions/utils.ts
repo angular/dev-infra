@@ -10,7 +10,7 @@ export const ANGULAR_LOCK_BOT: GithubAppMetadata = [40213, 'lock-bot-key'];
 /** Angular Robot Github app (angular-robot). */
 export const ANGULAR_ROBOT: GithubAppMetadata = [43341, 'angular-robot-key'];
 
-/** Create a JWT authenticatd Github client to manage installation tokens. */
+/** Create a JWT authenticated Github client to manage installation tokens. */
 async function getJwtAuthedGithubClient([appId, inputKey]: GithubAppMetadata) {
   /** The private key for the angular robot app. */
   const privateKey = getInput(inputKey, {required: true});

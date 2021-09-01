@@ -8,6 +8,7 @@
 
 import {params, types} from 'typed-graphqlify';
 import {AuthenticatedGitClient} from './git/authenticated-git-client';
+import {GraphqlResponseError} from '@octokit/graphql';
 
 /**
  * Gets the given pull request from Github using the GraphQL API endpoint.
@@ -16,7 +17,7 @@ export async function getPr<PrSchema>(
   prSchema: PrSchema,
   prNumber: number,
   git: AuthenticatedGitClient,
-) {
+): Promise<PrSchema | null> {
   /** The owner and name of the repository */
   const {owner, name} = git.remoteConfig;
   /** The Graphql query object to get a the PR */
@@ -36,8 +37,17 @@ export async function getPr<PrSchema>(
     },
   );
 
-  const result = await git.github.graphql(PR_QUERY, {number: prNumber, owner, name});
-  return result.repository.pullRequest;
+  try {
+    const result = await git.github.graphql(PR_QUERY, {number: prNumber, owner, name});
+    return result.repository.pullRequest;
+  } catch (e) {
+    // If we know the error is just about the pull request not being found, we explicitly
+    // return `null`. This allows convenient and graceful handling if a PR does not exist.
+    if (e instanceof GraphqlResponseError && e.errors?.every((e) => e.type === 'NOT_FOUND')) {
+      return null;
+    }
+    throw e;
+  }
 }
 
 /** Get all pending PRs from github  */
