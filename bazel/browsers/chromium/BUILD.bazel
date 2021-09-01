@@ -8,15 +8,19 @@ browser(
     deps = [
         "@io_bazel_rules_webtesting//go/wsl",
     ] + select({
-        "@io_bazel_rules_webtesting//common/conditions:linux": [
-            "@org_chromium_chromedriver_amd64//:metadata",
-            "@org_chromium_chromium_amd64//:metadata",
+        "//bazel/constraints:linux_x64": [
+            "@org_chromium_chromedriver_linux_x64//:metadata",
+            "@org_chromium_chromium_linux_x64//:metadata",
         ],
-        "@io_bazel_rules_webtesting//common/conditions:mac": [
-            "@org_chromium_chromedriver_macos//:metadata",
-            "@org_chromium_chromium_macos//:metadata",
+        "//bazel/constraints:macos_x64": [
+            "@org_chromium_chromedriver_macos_x64//:metadata",
+            "@org_chromium_chromium_macos_x64//:metadata",
         ],
-        "@io_bazel_rules_webtesting//common/conditions:windows": [
+        "//bazel/constraints:macos_arm64": [
+            "@org_chromium_chromedriver_macos_arm64//:metadata",
+            "@org_chromium_chromium_macos_arm64//:metadata",
+        ],
+        "//bazel/constraints:windows_x32": [
             "@org_chromium_chromedriver_windows//:metadata",
             "@org_chromium_chromium_windows//:metadata",
         ],

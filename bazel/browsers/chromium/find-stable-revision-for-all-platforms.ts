@@ -35,22 +35,25 @@ import {Spinner} from '../../../ng-dev/utils/spinner';
  * See: https://commondatastorage.googleapis.com/chromium-browser-snapshots/index.html.
  */
 enum BrowserPlatform {
-  LINUX = 'Linux_x64',
-  MAC = 'Mac',
+  LINUX_X64 = 'Linux_x64',
+  MAC_X64 = 'Mac',
+  MAC_ARM64 = 'Mac_Arm',
   WINDOWS = 'Win',
 }
 
 /** Maps a browser platform to the archive file containing the browser binary. */
 const PlatformBrowserArchiveMap = {
-  [BrowserPlatform.LINUX]: 'chrome-linux.zip',
-  [BrowserPlatform.MAC]: 'chrome-mac.zip',
+  [BrowserPlatform.LINUX_X64]: 'chrome-linux.zip',
+  [BrowserPlatform.MAC_X64]: 'chrome-mac.zip',
+  [BrowserPlatform.MAC_ARM64]: 'chrome-mac.zip',
   [BrowserPlatform.WINDOWS]: 'chrome-win.zip',
 };
 
 /** Maps a browser platform to the archive file containing the driver. */
 const PlatformDriverArchiveMap = {
-  [BrowserPlatform.LINUX]: 'chromedriver_linux64.zip',
-  [BrowserPlatform.MAC]: 'chromedriver_mac64.zip',
+  [BrowserPlatform.LINUX_X64]: 'chromedriver_linux64.zip',
+  [BrowserPlatform.MAC_X64]: 'chromedriver_mac64.zip',
+  [BrowserPlatform.MAC_ARM64]: 'chromedriver_mac64.zip',
   [BrowserPlatform.WINDOWS]: 'chromedriver_win32.zip',
 };
 
@@ -101,12 +104,12 @@ async function main(explicitStartRevision: number | null): Promise<void> {
     );
     console.info(
       ' '.repeat(15),
-      getSha256ChecksumForPlatform(availableRevision, platform, 'browser'),
+      await getSha256ChecksumForPlatform(availableRevision, platform, 'browser'),
     );
     console.info(' '.repeat(10), getRevisionArchiveUrl(availableRevision, platform, 'driver'));
     console.info(
       ' '.repeat(15),
-      getSha256ChecksumForPlatform(availableRevision, platform, 'driver'),
+      await getSha256ChecksumForPlatform(availableRevision, platform, 'driver'),
     );
     console.info();
   }

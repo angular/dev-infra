@@ -7,22 +7,31 @@ browser(
     disabled = select({
         # TODO: Consider adding support for Windows. Requires a portable version of
         # Firefox. Official distribution only ships with installers.
-        "@io_bazel_rules_webtesting//common/conditions:windows": "Firefox is not supported on Windows",
+        "//bazel/constraints:windows_x32": "Firefox is not disabled on Windows but always passing",
+        "//bazel/constraints:windows_x64": "Firefox is not disabled on Windows but always passing",
+        # Note: We keep always keep others enabled. This will result in proper errors if e.g. a
+        # linux arm64 machine intends to run tests with Firefox but we miss binaries for the platform.
         "//conditions:default": None,
     }),
     metadata = "firefox.json",
     deps = [
         "@io_bazel_rules_webtesting//go/wsl",
     ] + select({
-        "@io_bazel_rules_webtesting//common/conditions:linux": [
-            "@org_mozilla_firefox_amd64//:metadata",
-            "@org_mozilla_geckodriver_amd64//:metadata",
+        "//bazel/constraints:linux_x64": [
+            "@org_mozilla_firefox_linux_x64//:metadata",
+            "@org_mozilla_geckodriver_linux_x64//:metadata",
         ],
-        "@io_bazel_rules_webtesting//common/conditions:mac": [
+        "//bazel/constraints:macos_x64": [
+            # Firefox has a launcher that conditionally starts x64/arm64
             "@org_mozilla_firefox_macos//:metadata",
-            "@org_mozilla_geckodriver_macos//:metadata",
+            "@org_mozilla_geckodriver_macos_x64//:metadata",
         ],
-        "@io_bazel_rules_webtesting//common/conditions:windows": [],
+        "//bazel/constraints:macos_arm64": [
+            # Firefox has a launcher that conditionally starts x64/arm64
+            "@org_mozilla_firefox_macos//:metadata",
+            "@org_mozilla_geckodriver_macos_arm64//:metadata",
+        ],
+        "//conditions:default": [],
     }),
 )
 
