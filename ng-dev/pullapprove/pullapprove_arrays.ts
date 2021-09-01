@@ -8,31 +8,13 @@
 import {PullApproveGroup} from './group';
 import {getOrCreateGlob} from './utils';
 
-export class PullApproveGroupStateDependencyError extends Error {
-  constructor(message?: string) {
-    super(message);
-    // Set the prototype explicitly because in ES5, the prototype is accidentally
-    // lost due to a limitation in down-leveling.
-    // https://github.com/Microsoft/TypeScript/wiki/FAQ#why-doesnt-extending-built-ins-like-error-array-and-map-work.
-    Object.setPrototypeOf(this, PullApproveGroupStateDependencyError.prototype);
-    // Error names are displayed in their stack but can't be set in the constructor.
-    this.name = PullApproveGroupStateDependencyError.name;
-  }
-}
+export class PullApproveGroupStateDependencyError extends Error {}
 
 /**
  * Superset of a native array. The superset provides methods which mimic the
  * list data structure used in PullApprove for files in conditions.
  */
 export class PullApproveStringArray extends Array<string> {
-  constructor(...elements: string[]) {
-    super(...elements);
-
-    // Set the prototype explicitly because in ES5, the prototype is accidentally
-    // lost due to a limitation in down-leveling.
-    // https://github.com/Microsoft/TypeScript/wiki/FAQ#why-doesnt-extending-built-ins-like-error-array-and-map-work.
-    Object.setPrototypeOf(this, PullApproveStringArray.prototype);
-  }
   /** Returns a new array which only includes files that match the given pattern. */
   include(pattern: string): PullApproveStringArray {
     return new PullApproveStringArray(...this.filter((s) => getOrCreateGlob(pattern).match(s)));
@@ -49,15 +31,6 @@ export class PullApproveStringArray extends Array<string> {
  * list data structure used in PullApprove for groups in conditions.
  */
 export class PullApproveGroupArray extends Array<PullApproveGroup> {
-  constructor(...elements: PullApproveGroup[]) {
-    super(...elements);
-
-    // Set the prototype explicitly because in ES5, the prototype is accidentally
-    // lost due to a limitation in down-leveling.
-    // https://github.com/Microsoft/TypeScript/wiki/FAQ#why-doesnt-extending-built-ins-like-error-array-and-map-work.
-    Object.setPrototypeOf(this, PullApproveGroupArray.prototype);
-  }
-
   include(pattern: string): PullApproveGroupArray {
     return new PullApproveGroupArray(...this.filter((s) => s.groupName.match(pattern)));
   }

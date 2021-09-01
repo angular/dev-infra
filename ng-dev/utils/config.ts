@@ -101,7 +101,6 @@ export function getUserConfig() {
 export class ConfigValidationError extends Error {
   constructor(message?: string, public readonly errors: string[] = []) {
     super(message);
-    Object.setPrototypeOf(this, ConfigValidationError.prototype);
   }
 }
 

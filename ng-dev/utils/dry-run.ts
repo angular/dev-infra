@@ -35,9 +35,5 @@ export function isDryRun(): boolean {
 export class DryRunError extends Error {
   constructor() {
     super('Cannot call this function in dryRun mode.');
-    // Set the prototype explicitly because in ES5, the prototype is accidentally lost due to
-    // a limitation in down-leveling.
-    // https://github.com/Microsoft/TypeScript/wiki/FAQ#why-doesnt-extending-built-ins-like-error-array-and-map-work.
-    Object.setPrototypeOf(this, DryRunError.prototype);
   }
 }
