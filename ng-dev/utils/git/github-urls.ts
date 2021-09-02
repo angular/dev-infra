@@ -20,7 +20,8 @@ export const GITHUB_TOKEN_GENERATE_URL = 'https://github.com/settings/tokens/new
 /** Adds the provided token to the given Github HTTPs remote url. */
 export function addTokenToGitHttpsUrl(githubHttpsUrl: string, token: string) {
   const url = new URL(githubHttpsUrl);
-  url.username = token;
+  url.password = token;
+  url.username = '_';
   return url.href;
 }
 
