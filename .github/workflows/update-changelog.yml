@@ -11,6 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          # Setting `persist-credentials: false` prevents the github-action account from being the
+          # account that is attempted to be used for authentication, instead the remote is set to
+          # an authenticated URL.
+          persist-credentials: false
       - uses: ./tools/local-actions/changelog
         with:
           angular-robot-key: ${{ secrets.ANGULAR_ROBOT_PRIVATE_KEY }}

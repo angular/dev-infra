@@ -8,6 +8,7 @@ import {AuthenticatedGitClient} from '../../../../ng-dev/utils/git/authenticated
 import {ANGULAR_ROBOT, getAuthTokenFor} from '../../../../github-actions/utils';
 import {GithubConfig, setConfig} from '../../../../ng-dev/utils/config';
 import {ReleaseConfig} from '../../../../ng-dev/release/config/index';
+import {addTokenToGitHttpsUrl} from '../../../../ng-dev/utils/git/github-urls';
 
 /** The tag used for tracking the last time the changlog was generated. */
 const lastChangelogTag = 'most-recent-changelog-generation';
@@ -46,7 +47,7 @@ async function run(): Promise<void> {
   AuthenticatedGitClient.configure(await getAuthTokenFor(ANGULAR_ROBOT));
   /** The authenticed GitClient. */
   const git = AuthenticatedGitClient.get();
-  git.run(['config', 'user.email', '56403804+angular-robot[bot]@users.noreply.github.com']);
+  git.run(['config', 'user.email', 'angular-robot@google.com']);
   git.run(['config', 'user.name', 'Angular Robot']);
 
   /** The full path to the changelog file. */
