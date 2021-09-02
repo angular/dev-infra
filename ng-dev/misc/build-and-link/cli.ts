@@ -14,6 +14,8 @@ import {Arguments, Argv, CommandModule} from 'yargs';
 import {buildReleaseOutput} from '../../release/build/index';
 import {spawn} from '../../utils/child-process';
 import {error, info, red} from '../../utils/console';
+import {getConfig} from '../../utils/config';
+import {assertValidReleaseConfig} from '../../release/config';
 
 /** Command line options. */
 export interface BuildAndLinkOptions {
@@ -42,15 +44,18 @@ async function handler({projectRoot}: Arguments<BuildAndLinkOptions>) {
     process.exit(1);
   }
 
-  const releaseOutputs = await buildReleaseOutput(false);
+  const config = getConfig();
+  assertValidReleaseConfig(config);
 
-  if (releaseOutputs === null) {
+  const builtPackages = await buildReleaseOutput();
+
+  if (builtPackages === null) {
     error(red(`  ✘   Could not build release output. Please check output above.`));
     process.exit(1);
   }
   info(green(` ✓  Built release output.`));
 
-  for (const {outputPath, name} of releaseOutputs) {
+  for (const {outputPath, name} of builtPackages) {
     await spawn('yarn', ['link', '--cwd', outputPath]);
     await spawn('yarn', ['link', '--cwd', projectRoot, name]);
   }

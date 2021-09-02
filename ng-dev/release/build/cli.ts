@@ -33,7 +33,7 @@ async function handler(args: Arguments<ReleaseBuildOptions>) {
   const config = getConfig();
   assertValidReleaseConfig(config);
   const {npmPackages} = config.release;
-  let builtPackages = await buildReleaseOutput(true);
+  let builtPackages = await buildReleaseOutput();
 
   // If package building failed, print an error and exit with an error code.
   if (builtPackages === null) {
