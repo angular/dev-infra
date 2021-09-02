@@ -7,12 +7,11 @@
  */
 
 import {Commit} from '../../commit-message/parse';
-import {TargetLabel} from './target-label';
+import {TargetLabel, TargetLabelName} from './target-label';
 import {MergeConfig} from './config';
 import {PullRequestFailure} from './failures';
 import {red, warn} from '../../utils/console';
 import {breakingChangeLabel} from './constants';
-import {TargetLabelName} from './defaults';
 import {RawPullRequest} from './fetch-pull-request';
 
 /**
@@ -35,7 +34,7 @@ export function assertChangesAllowForTargetLabel(
   const hasBreakingChanges = commits.some((commit) => commit.breakingChanges.length !== 0);
   const hasDeprecations = commits.some((commit) => commit.deprecations.length !== 0);
   const hasFeatureCommits = commits.some((commit) => commit.type === 'feat');
-  switch (label.pattern) {
+  switch (label.name) {
     case TargetLabelName.MAJOR:
       break;
     case TargetLabelName.MINOR:
@@ -61,7 +60,7 @@ export function assertChangesAllowForTargetLabel(
       break;
     default:
       warn(red('WARNING: Unable to confirm all commits in the pull request are eligible to be'));
-      warn(red(`merged into the target branch: ${label.pattern}`));
+      warn(red(`merged into the target branch: ${label.name}`));
       break;
   }
 }
@@ -71,7 +70,10 @@ export function assertChangesAllowForTargetLabel(
  * commits, and only has the label if there are breaking change commits.
  * @throws {PullRequestFailure}
  */
-export function assertCorrectBreakingChangeLabeling(commits: Commit[], pullRequestLabels: string[]) {
+export function assertCorrectBreakingChangeLabeling(
+  commits: Commit[],
+  pullRequestLabels: string[],
+) {
   /** Whether the PR has a label noting a breaking change. */
   const hasLabel = pullRequestLabels.includes(breakingChangeLabel);
   //** Whether the PR has at least one commit which notes a breaking change. */

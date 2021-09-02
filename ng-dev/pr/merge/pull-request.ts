@@ -125,4 +125,3 @@ export async function loadAndValidatePullRequest(
 export function isPullRequest(v: PullRequestFailure | PullRequest): v is PullRequest {
   return (v as PullRequest).targetBranches !== undefined;
 }
-

@@ -10,16 +10,11 @@ import {ConfigValidationError, GithubConfig} from '../../utils/config';
 
 import {GithubApiMergeStrategyConfig} from './strategies/api-merge';
 
-/** Describes possible values that can be returned for `branches` of a target label. */
-export type TargetLabelBranchResult = string[] | Promise<string[]>;
-
 /**
  * Possible merge methods supported by the Github API.
  * https://developer.github.com/v3/pulls/#merge-a-pull-request-merge-button.
  */
 export type GithubApiMergeMethod = 'merge' | 'squash' | 'rebase';
-
-
 
 /**
  * Configuration for the merge script with all remote options specified. The

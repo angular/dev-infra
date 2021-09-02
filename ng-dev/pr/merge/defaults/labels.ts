@@ -15,25 +15,14 @@ import {
 } from '../../../release/versioning';
 import {assertValidGithubConfig, getConfig, GithubConfig} from '../../../utils/config';
 import {GitClient} from '../../../utils/git/git-client';
-import {InvalidTargetBranchError, InvalidTargetLabelError, TargetLabel} from '../target-label';
+import {
+  InvalidTargetBranchError,
+  InvalidTargetLabelError,
+  TargetLabel,
+  TargetLabelName,
+} from '../target-label';
 
 import {assertActiveLtsBranch} from './lts-branch';
-
-/**
- * Enum capturing available target label names in the Angular organization. A target
- * label is set on a pull request to specify where its changes should land.
- *
- * More details can be found here:
- * https://docs.google.com/document/d/197kVillDwx-RZtSVOBtPb4BBIAw0E9RT3q3v6DZkykU#heading=h.lkuypj38h15d
- */
-export enum TargetLabelName {
-  MAJOR = 'target: major',
-  MINOR = 'target: minor',
-  PATCH = 'target: patch',
-  RELEASE_CANDIDATE = 'target: rc',
-  LONG_TERM_SUPPORT = 'target: lts',
-}
-
 
 /**
  * Gets a list of target labels which should be considered by the merge
@@ -66,7 +55,7 @@ export async function getTargetLabelsForActiveReleaseTrains(
 
   return [
     {
-      pattern: TargetLabelName.MAJOR,
+      name: TargetLabelName.MAJOR,
       branches: () => {
         // If `next` is currently not designated to be a major version, we do not
         // allow merging of PRs with `target: major`.
@@ -80,17 +69,17 @@ export async function getTargetLabelsForActiveReleaseTrains(
       },
     },
     {
-      pattern: TargetLabelName.MINOR,
+      name: TargetLabelName.MINOR,
       // Changes labeled with `target: minor` are merged most commonly into the next branch
       // (i.e. `main`). In rare cases of an exceptional minor version while being
       // already on a major release train, this would need to be overridden manually.
       // TODO: Consider handling this automatically by checking if the NPM version matches
       // the last-minor. If not, then an exceptional minor might be in progress. See:
       // https://docs.google.com/document/d/197kVillDwx-RZtSVOBtPb4BBIAw0E9RT3q3v6DZkykU/edit#heading=h.h7o5pjq6yqd0
-      branches: [nextBranchName],
+      branches: () => [nextBranchName],
     },
     {
-      pattern: TargetLabelName.PATCH,
+      name: TargetLabelName.PATCH,
       branches: (githubTargetBranch) => {
         // If a PR is targeting the latest active version-branch through the Github UI,
         // and is also labeled with `target: patch`, then we merge it directly into the
@@ -110,7 +99,7 @@ export async function getTargetLabelsForActiveReleaseTrains(
       },
     },
     {
-      pattern: TargetLabelName.RELEASE_CANDIDATE,
+      name: TargetLabelName.RELEASE_CANDIDATE,
       branches: (githubTargetBranch) => {
         // The `target: rc` label cannot be applied if there is no active feature-freeze
         // or release-candidate release train.
@@ -136,7 +125,7 @@ export async function getTargetLabelsForActiveReleaseTrains(
       // active LTS branches for PRs created against any other branch. Instead, PR authors need
       // to manually create separate PRs for desired LTS branches. Additionally, active LT branches
       // commonly diverge quickly. This makes cherry-picking not an option for LTS changes.
-      pattern: TargetLabelName.LONG_TERM_SUPPORT,
+      name: TargetLabelName.LONG_TERM_SUPPORT,
       branches: async (githubTargetBranch) => {
         if (!isVersionBranch(githubTargetBranch)) {
           throw new InvalidTargetBranchError(

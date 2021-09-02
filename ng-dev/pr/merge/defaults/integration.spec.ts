@@ -13,7 +13,11 @@ import {_npmPackageInfoCache, NpmPackageInfo} from '../../../release/versioning/
 import {GithubConfig} from '../../../utils/config';
 import * as console from '../../../utils/console';
 import {GithubClient} from '../../../utils/git/github';
-import {getBranchesFromTargetLabel, getMatchingTargetLabelForPullRequest, TargetLabel} from '../target-label';
+import {
+  getBranchesFromTargetLabel,
+  getMatchingTargetLabelForPullRequest,
+  TargetLabel,
+} from '../target-label';
 import * as labelDefaults from './labels';
 
 import {fakeGithubPaginationResponse} from '../../../utils/testing/github-interception';
@@ -101,8 +105,10 @@ describe('default target labels', () => {
     name: string,
     githubTargetBranch = 'master',
   ): Promise<string[] | null> {
-    const targetLabels = await getTargetLabelsForActiveReleaseTrains(
-      api, {github: githubConfig, release: releaseConfig});
+    const targetLabels = await getTargetLabelsForActiveReleaseTrains(api, {
+      github: githubConfig,
+      release: releaseConfig,
+    });
     let label: TargetLabel;
     try {
       label = await getMatchingTargetLabelForPullRequest({}, [name], targetLabels);

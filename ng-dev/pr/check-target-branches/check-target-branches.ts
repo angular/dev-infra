@@ -11,8 +11,11 @@ import {error, info, red} from '../../utils/console';
 import {GitClient} from '../../utils/git/git-client';
 import {assertValidMergeConfig, MergeConfig} from '../merge/config';
 import {
-  getBranchesFromTargetLabel, getMatchingTargetLabelForPullRequest, getTargetBranchesForPullRequest,
-  InvalidTargetLabelError, TargetLabel,
+  getBranchesFromTargetLabel,
+  getMatchingTargetLabelForPullRequest,
+  getTargetBranchesForPullRequest,
+  InvalidTargetLabelError,
+  TargetLabel,
 } from '../merge/target-label';
 
 async function getTargetBranchesForPr(
