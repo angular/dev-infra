@@ -161,18 +161,3 @@ function readConfigFile(configPath: string, returnEmptyObjectOnError = false): {
     process.exit(1);
   }
 }
-
-/**
- * Asserts the provided array of error messages is empty. If any errors are in the array,
- * logs the errors and exit the process as a failure.
- */
-export function assertNoErrors(errors: string[]) {
-  if (errors.length == 0) {
-    return;
-  }
-  error(`Errors discovered while loading configuration file:`);
-  for (const err of errors) {
-    error(`  - ${err}`);
-  }
-  process.exit(1);
-}

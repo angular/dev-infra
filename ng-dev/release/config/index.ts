@@ -7,7 +7,7 @@
  */
 
 import {CommitFromGitLog} from '../../commit-message/parse';
-import {assertNoErrors, ConfigValidationError, getConfig} from '../../utils/config';
+import {ConfigValidationError} from '../../utils/config';
 
 /** Interface describing a built package. */
 export interface BuiltPackage {
