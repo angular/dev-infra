@@ -13,12 +13,11 @@ import {_npmPackageInfoCache, NpmPackageInfo} from '../../../release/versioning/
 import {GithubConfig} from '../../../utils/config';
 import * as console from '../../../utils/console';
 import {GithubClient} from '../../../utils/git/github';
-import {TargetLabel} from '../config';
-import {getBranchesFromTargetLabel, getTargetLabelFromPullRequest} from '../target-label';
+import {getBranchesFromTargetLabel, getMatchingTargetLabelForPullRequest, TargetLabel} from '../target-label';
 import * as labelDefaults from './labels';
 
-import {getTargetLabels} from './index';
 import {fakeGithubPaginationResponse} from '../../../utils/testing/github-interception';
+import {getTargetLabelsForActiveReleaseTrains} from './labels';
 
 const API_ENDPOINT = `https://api.github.com`;
 
@@ -41,10 +40,6 @@ describe('default target labels', () => {
   });
 
   afterEach(() => nock.cleanAll());
-
-  async function computeTargetLabels(): Promise<TargetLabel[]> {
-    return getTargetLabels(api, {github: githubConfig, release: releaseConfig});
-  }
 
   function getRepoApiRequestUrl(): string {
     return `${API_ENDPOINT}/repos/${githubConfig.owner}/${githubConfig.name}`;
@@ -106,11 +101,11 @@ describe('default target labels', () => {
     name: string,
     githubTargetBranch = 'master',
   ): Promise<string[] | null> {
-    const labels = await computeTargetLabels();
-    spyOn(labelDefaults, 'getTargetLabels').and.resolveTo(labels);
+    const targetLabels = await getTargetLabelsForActiveReleaseTrains(
+      api, {github: githubConfig, release: releaseConfig});
     let label: TargetLabel;
     try {
-      label = await getTargetLabelFromPullRequest({}, [name]);
+      label = await getMatchingTargetLabelForPullRequest({}, [name], targetLabels);
     } catch (error) {
       return null;
     }

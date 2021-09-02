@@ -8,23 +8,15 @@
 
 import {params, types as graphqlTypes} from 'typed-graphqlify';
 
-import {Commit, parseCommitMessage} from '../../commit-message/parse';
-import {red, warn} from '../../utils/console';
+import {parseCommitMessage} from '../../commit-message/parse';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {getPr} from '../../utils/github';
-
-import {MergeConfig, TargetLabel} from './config';
 import {PullRequestFailure} from './failures';
 import {matchesPattern} from './string-pattern';
-import {
-  getBranchesFromTargetLabel,
-  getTargetLabelFromPullRequest,
-  InvalidTargetBranchError,
-  InvalidTargetLabelError,
-} from './target-label';
 import {PullRequestMergeTask} from './task';
-import {breakingChangeLabel} from './constants';
-import {GithubConfig} from '../../utils/config';
+import {getTargetBranchesForPullRequest} from './target-label';
+import {assertCorrectBreakingChangeLabeling, assertPendingState} from './validations';
+import {fetchPullRequestFromGithub} from './fetch-pull-request';
 
 /** Interface that describes a pull request. */
 export interface PullRequest {
@@ -78,7 +70,7 @@ export async function loadAndValidatePullRequest(
   const commitsInPr = prData.commits.nodes.map((n) => parseCommitMessage(n.commit.message));
   const githubTargetBranch = prData.baseRefName;
 
-  const targetBranches = await getTargetBranches(
+  const targetBranches = await getTargetBranchesForPullRequest(
     {github: git.config.github, merge: config},
     labels,
     githubTargetBranch,
@@ -129,172 +121,8 @@ export async function loadAndValidatePullRequest(
   };
 }
 
-/* Graphql schema for the response body the requested pull request. */
-const PR_SCHEMA = {
-  url: graphqlTypes.string,
-  isDraft: graphqlTypes.boolean,
-  state: graphqlTypes.oneOf(['OPEN', 'MERGED', 'CLOSED'] as const),
-  number: graphqlTypes.number,
-  // Only the last 100 commits from a pull request are obtained as we likely will never see a pull
-  // requests with more than 100 commits.
-  commits: params(
-    {last: 100},
-    {
-      totalCount: graphqlTypes.number,
-      nodes: [
-        {
-          commit: {
-            status: {
-              state: graphqlTypes.oneOf(['FAILURE', 'PENDING', 'SUCCESS'] as const),
-            },
-            message: graphqlTypes.string,
-          },
-        },
-      ],
-    },
-  ),
-  baseRefName: graphqlTypes.string,
-  title: graphqlTypes.string,
-  labels: params(
-    {first: 100},
-    {
-      nodes: [
-        {
-          name: graphqlTypes.string,
-        },
-      ],
-    },
-  ),
-};
-
-/** A pull request retrieved from github via the graphql API. */
-type RawPullRequest = typeof PR_SCHEMA;
-
-/** Fetches a pull request from Github. Returns null if an error occurred. */
-async function fetchPullRequestFromGithub(
-  git: AuthenticatedGitClient,
-  prNumber: number,
-): Promise<RawPullRequest | null> {
-  return await getPr(PR_SCHEMA, prNumber, git);
-}
-
 /** Whether the specified value resolves to a pull request. */
 export function isPullRequest(v: PullRequestFailure | PullRequest): v is PullRequest {
   return (v as PullRequest).targetBranches !== undefined;
 }
 
-/**
- * Assert the commits provided are allowed to merge to the provided target label,
- * throwing an error otherwise.
- * @throws {PullRequestFailure}
- */
-function assertChangesAllowForTargetLabel(
-  commits: Commit[],
-  label: TargetLabel,
-  config: MergeConfig,
-) {
-  /**
-   * List of commit scopes which are exempted from target label content requirements. i.e. no `feat`
-   * scopes in patch branches, no breaking changes in minor or patch changes.
-   */
-  const exemptedScopes = config.targetLabelExemptScopes || [];
-  /** List of commits which are subject to content requirements for the target label. */
-  commits = commits.filter((commit) => !exemptedScopes.includes(commit.scope));
-  const hasBreakingChanges = commits.some((commit) => commit.breakingChanges.length !== 0);
-  const hasDeprecations = commits.some((commit) => commit.deprecations.length !== 0);
-  const hasFeatureCommits = commits.some((commit) => commit.type === 'feat');
-  switch (label.pattern) {
-    case 'target: major':
-      break;
-    case 'target: minor':
-      if (hasBreakingChanges) {
-        throw PullRequestFailure.hasBreakingChanges(label);
-      }
-      break;
-    case 'target: rc':
-    case 'target: patch':
-    case 'target: lts':
-      if (hasBreakingChanges) {
-        throw PullRequestFailure.hasBreakingChanges(label);
-      }
-      if (hasFeatureCommits) {
-        throw PullRequestFailure.hasFeatureCommits(label);
-      }
-      // Deprecations should not be merged into RC, patch or LTS branches.
-      // https://semver.org/#spec-item-7. Deprecations should be part of
-      // minor releases, or major releases according to SemVer.
-      if (hasDeprecations) {
-        throw PullRequestFailure.hasDeprecations(label);
-      }
-      break;
-    default:
-      warn(red('WARNING: Unable to confirm all commits in the pull request are eligible to be'));
-      warn(red(`merged into the target branch: ${label.pattern}`));
-      break;
-  }
-}
-
-/**
- * Assert the pull request has the proper label for breaking changes if there are breaking change
- * commits, and only has the label if there are breaking change commits.
- * @throws {PullRequestFailure}
- */
-function assertCorrectBreakingChangeLabeling(commits: Commit[], labels: string[]) {
-  /** Whether the PR has a label noting a breaking change. */
-  const hasLabel = labels.includes(breakingChangeLabel);
-  //** Whether the PR has at least one commit which notes a breaking change. */
-  const hasCommit = commits.some((commit) => commit.breakingChanges.length !== 0);
-
-  if (!hasLabel && hasCommit) {
-    throw PullRequestFailure.missingBreakingChangeLabel();
-  }
-
-  if (hasLabel && !hasCommit) {
-    throw PullRequestFailure.missingBreakingChangeCommit();
-  }
-}
-
-/**
- * Assert the pull request is pending, not closed, merged or in draft.
- * @throws {PullRequestFailure} if the pull request is not pending.
- */
-function assertPendingState(pr: RawPullRequest) {
-  if (pr.isDraft) {
-    throw PullRequestFailure.isDraft();
-  }
-  switch (pr.state) {
-    case 'CLOSED':
-      throw PullRequestFailure.isClosed();
-    case 'MERGED':
-      throw PullRequestFailure.isMerged();
-  }
-}
-
-/** Get the branches the pull request will be merged into.  */
-async function getTargetBranches(
-  config: {merge: MergeConfig; github: GithubConfig},
-  labels: string[],
-  githubTargetBranch: string,
-  commits: Commit[],
-) {
-  if (config.merge.noTargetLabeling) {
-    return [config.github.mainBranchName];
-  } else {
-    try {
-      let targetLabel = await getTargetLabelFromPullRequest(config.merge, labels);
-      // If branches are determined for a given target label, capture errors that are
-      // thrown as part of branch computation. This is expected because a merge configuration
-      // can lazily compute branches for a target label and throw. e.g. if an invalid target
-      // label is applied, we want to exit the script gracefully with an error message.
-
-      let targetBranches = await getBranchesFromTargetLabel(targetLabel, githubTargetBranch);
-      assertChangesAllowForTargetLabel(commits, targetLabel, config.merge);
-      return targetBranches;
-    } catch (error) {
-      if (error instanceof InvalidTargetBranchError || error instanceof InvalidTargetLabelError) {
-        throw new PullRequestFailure(error.failureMessage);
-      }
-      throw error;
-    }
-  }
-}

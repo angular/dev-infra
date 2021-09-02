@@ -9,11 +9,10 @@
 import {assertValidGithubConfig, getConfig, GithubConfig} from '../../utils/config';
 import {error, info, red} from '../../utils/console';
 import {GitClient} from '../../utils/git/git-client';
-import {assertValidMergeConfig, MergeConfig, TargetLabel} from '../merge/config';
+import {assertValidMergeConfig, MergeConfig} from '../merge/config';
 import {
-  getBranchesFromTargetLabel,
-  getTargetLabelFromPullRequest,
-  InvalidTargetLabelError,
+  getBranchesFromTargetLabel, getMatchingTargetLabelForPullRequest, getTargetBranchesForPullRequest,
+  InvalidTargetLabelError, TargetLabel,
 } from '../merge/target-label';
 
 async function getTargetBranchesForPr(
@@ -35,20 +34,10 @@ async function getTargetBranchesForPr(
   const labels = prData.labels.map((l) => l.name!);
   /** The branch targetted via the Github UI. */
   const githubTargetBranch = prData.base.ref;
-  /** The active label which is being used for targetting the PR. */
-  let targetLabel: TargetLabel;
 
-  try {
-    targetLabel = await getTargetLabelFromPullRequest(config.merge, labels);
-  } catch (e) {
-    if (e instanceof InvalidTargetLabelError) {
-      error(red(e.failureMessage));
-      process.exit(1);
-    }
-    throw e;
-  }
-  /** The target branches based on the target label and branch targetted in the Github UI. */
-  return await getBranchesFromTargetLabel(targetLabel, githubTargetBranch);
+  // Note: We do not pass a list of commits here because we did not fetch this information
+  // and the commits are only used for validation (which we can skip here).
+  return getTargetBranchesForPullRequest(config, labels, githubTargetBranch, []);
 }
 
 export async function printTargetBranchesForPr(prNumber: number) {
