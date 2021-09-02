@@ -17,17 +17,21 @@ import {getConfig} from '../../utils/config';
 import {assertValidReleaseConfig} from '../config/index';
 
 // Start the release package building.
-main(process.argv[2] === 'true');
+main().catch((e) => {
+  console.error(e);
+  throw e;
+});
 
 /** Main function for building the release packages. */
-async function main(stampForRelease: boolean) {
+async function main() {
   if (process.send === undefined) {
     throw Error('This script needs to be invoked as a NodeJS worker.');
   }
 
   const config = getConfig();
   assertValidReleaseConfig(config);
-  const builtPackages = await config.release.buildPackages(stampForRelease);
+
+  const builtPackages = await config.release.buildPackages();
 
   // Transfer the built packages back to the parent process.
   process.send(builtPackages);
