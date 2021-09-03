@@ -15,25 +15,29 @@ import {
 } from '../../../release/versioning';
 import {assertValidGithubConfig, getConfig, GithubConfig} from '../../../utils/config';
 import {GitClient} from '../../../utils/git/git-client';
-import {GithubClient} from '../../../utils/git/github';
-import {TargetLabel} from '../config';
-import {InvalidTargetBranchError, InvalidTargetLabelError} from '../target-label';
+import {
+  InvalidTargetBranchError,
+  InvalidTargetLabelError,
+  TargetLabel,
+  TargetLabelName,
+} from '../target-label';
 
 import {assertActiveLtsBranch} from './lts-branch';
 
 /**
- * Gets a label configuration for the merge tooling that reflects the default Angular
- * organization-wide labeling and branching semantics as outlined in the specification.
+ * Gets a list of target labels which should be considered by the merge
+ * tooling when a pull request is processed to be merged.
  *
+ * The target labels are implemented according to the design document which
+ * specifies versioning, branching and releasing for the Angular organization:
  * https://docs.google.com/document/d/197kVillDwx-RZtSVOBtPb4BBIAw0E9RT3q3v6DZkykU
  *
  * @param api Instance of an authenticated Github client.
- * @param githubConfig Configuration for the Github remote. Used as Git remote
  *   for the release train branches.
- * @param releaseConfig Configuration for the release packages. Used to fetch
+ * @param config Configuration for the Github remote and release packages. Used to fetch
  *   NPM version data when LTS version branches are validated.
  */
-export async function getTargetLabels(
+export async function getTargetLabelsForActiveReleaseTrains(
   api = GitClient.get().github,
   config = getConfig() as Partial<{github: GithubConfig; release: ReleaseConfig}>,
 ): Promise<TargetLabel[]> {
@@ -51,7 +55,7 @@ export async function getTargetLabels(
 
   return [
     {
-      pattern: 'target: major',
+      name: TargetLabelName.MAJOR,
       branches: () => {
         // If `next` is currently not designated to be a major version, we do not
         // allow merging of PRs with `target: major`.
@@ -65,17 +69,17 @@ export async function getTargetLabels(
       },
     },
     {
-      pattern: 'target: minor',
+      name: TargetLabelName.MINOR,
       // Changes labeled with `target: minor` are merged most commonly into the next branch
       // (i.e. `main`). In rare cases of an exceptional minor version while being
       // already on a major release train, this would need to be overridden manually.
       // TODO: Consider handling this automatically by checking if the NPM version matches
       // the last-minor. If not, then an exceptional minor might be in progress. See:
       // https://docs.google.com/document/d/197kVillDwx-RZtSVOBtPb4BBIAw0E9RT3q3v6DZkykU/edit#heading=h.h7o5pjq6yqd0
-      branches: [nextBranchName],
+      branches: () => [nextBranchName],
     },
     {
-      pattern: 'target: patch',
+      name: TargetLabelName.PATCH,
       branches: (githubTargetBranch) => {
         // If a PR is targeting the latest active version-branch through the Github UI,
         // and is also labeled with `target: patch`, then we merge it directly into the
@@ -95,7 +99,7 @@ export async function getTargetLabels(
       },
     },
     {
-      pattern: 'target: rc',
+      name: TargetLabelName.RELEASE_CANDIDATE,
       branches: (githubTargetBranch) => {
         // The `target: rc` label cannot be applied if there is no active feature-freeze
         // or release-candidate release train.
@@ -121,7 +125,7 @@ export async function getTargetLabels(
       // active LTS branches for PRs created against any other branch. Instead, PR authors need
       // to manually create separate PRs for desired LTS branches. Additionally, active LT branches
       // commonly diverge quickly. This makes cherry-picking not an option for LTS changes.
-      pattern: 'target: lts',
+      name: TargetLabelName.LONG_TERM_SUPPORT,
       branches: async (githubTargetBranch) => {
         if (!isVersionBranch(githubTargetBranch)) {
           throw new InvalidTargetBranchError(

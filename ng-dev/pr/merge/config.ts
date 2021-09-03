@@ -10,32 +10,11 @@ import {ConfigValidationError, GithubConfig} from '../../utils/config';
 
 import {GithubApiMergeStrategyConfig} from './strategies/api-merge';
 
-/** Describes possible values that can be returned for `branches` of a target label. */
-export type TargetLabelBranchResult = string[] | Promise<string[]>;
-
 /**
  * Possible merge methods supported by the Github API.
  * https://developer.github.com/v3/pulls/#merge-a-pull-request-merge-button.
  */
 export type GithubApiMergeMethod = 'merge' | 'squash' | 'rebase';
-
-/**
- * Target labels represent Github pull requests labels. These labels instruct the merge
- * script into which branches a given pull request should be merged to.
- */
-export interface TargetLabel {
-  /** Pattern that matches the given target label. */
-  pattern: RegExp | string;
-  /**
-   * List of branches a pull request with this target label should be merged into.
-   * Can also be wrapped in a function that accepts the target branch specified in the
-   * Github Web UI. This is useful for supporting labels like `target: development-branch`.
-   *
-   * @throws {InvalidTargetLabelError} Invalid label has been applied to pull request.
-   * @throws {InvalidTargetBranchError} Invalid Github target branch has been selected.
-   */
-  branches: TargetLabelBranchResult | ((githubTargetBranch: string) => TargetLabelBranchResult);
-}
 
 /**
  * Configuration for the merge script with all remote options specified. The

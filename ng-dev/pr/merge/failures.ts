@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {TargetLabel} from './config';
 import {breakingChangeLabel} from './constants';
+import {TargetLabel} from './target-label';
 
 /**
  * Class that can be used to describe pull request failures. A failure
@@ -95,14 +95,14 @@ export class PullRequestFailure {
 
   static hasBreakingChanges(label: TargetLabel) {
     const message =
-      `Cannot merge into branch for "${label.pattern}" as the pull request has ` +
+      `Cannot merge into branch for "${label.name}" as the pull request has ` +
       `breaking changes. Breaking changes can only be merged with the "target: major" label.`;
     return new this(message);
   }
 
   static hasDeprecations(label: TargetLabel) {
     const message =
-      `Cannot merge into branch for "${label.pattern}" as the pull request ` +
+      `Cannot merge into branch for "${label.name}" as the pull request ` +
       `contains deprecations. Deprecations can only be merged with the "target: minor" or ` +
       `"target: major" label.`;
     return new this(message);
@@ -110,7 +110,7 @@ export class PullRequestFailure {
 
   static hasFeatureCommits(label: TargetLabel) {
     const message =
-      `Cannot merge into branch for "${label.pattern}" as the pull request has ` +
+      `Cannot merge into branch for "${label.name}" as the pull request has ` +
       'commits with the "feat" type. New features can only be merged with the "target: minor" ' +
       'or "target: major" label.';
     return new this(message);
