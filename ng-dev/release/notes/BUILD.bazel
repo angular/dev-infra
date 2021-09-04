@@ -11,6 +11,7 @@ ts_library(
     ],
     deps = [
         "//ng-dev/commit-message",
+        "//ng-dev/format",
         "//ng-dev/release/config",
         "//ng-dev/release/versioning",
         "//ng-dev/utils",

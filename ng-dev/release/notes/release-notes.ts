@@ -10,33 +10,43 @@ import * as semver from 'semver';
 import {CommitFromGitLog} from '../../commit-message/parse';
 
 import {promptInput} from '../../utils/console';
+import {formatFiles} from '../../format/format';
 import {GitClient} from '../../utils/git/git-client';
-import {assertValidReleaseConfig, ReleaseNotesConfig} from '../config/index';
+import {assertValidReleaseConfig, ReleaseConfig, ReleaseNotesConfig} from '../config/index';
 import {RenderContext} from './context';
 
 import changelogTemplate from './templates/changelog';
 import githubReleaseTemplate from './templates/github-release';
 import {getCommitsForRangeWithDeduping} from './commits/get-commits-in-range';
 import {getConfig} from '../../utils/config';
+import {existsSync, readFileSync, writeFileSync} from 'fs';
+import {join} from 'path';
+import {assertValidFormatConfig} from '../../format/config';
 
 /** Release note generation. */
 export class ReleaseNotes {
   static async forRange(version: semver.SemVer, baseRef: string, headRef: string) {
-    const client = GitClient.get();
-    const commits = getCommitsForRangeWithDeduping(client, baseRef, headRef);
-    return new ReleaseNotes(version, commits);
+    const git = GitClient.get();
+    const commits = getCommitsForRangeWithDeduping(git, baseRef, headRef);
+    return new ReleaseNotes(version, commits, git);
   }
 
-  /** An instance of GitClient. */
-  private git = GitClient.get();
   /** The RenderContext to be used during rendering. */
   private renderContext: RenderContext | undefined;
   /** The title to use for the release. */
   private title: string | false | undefined;
-  /** The configuration for release notes. */
-  private config: ReleaseNotesConfig = this.getReleaseConfig().releaseNotes ?? {};
+  /** The configuration ng-dev. */
+  private config: {release: ReleaseConfig} = getConfig([assertValidReleaseConfig]);
+  /** The configuration for the release notes. */
+  private get notesConfig() {
+    return this.config.release.releaseNotes || {};
+  }
 
-  protected constructor(public version: semver.SemVer, private commits: CommitFromGitLog[]) {}
+  protected constructor(
+    public version: semver.SemVer,
+    private commits: CommitFromGitLog[],
+    private git: GitClient,
+  ) {}
 
   /** Retrieve the release note generated for a Github Release. */
   async getGithubReleaseEntry(): Promise<string> {
@@ -48,6 +58,28 @@ export class ReleaseNotes {
   /** Retrieve the release note generated for a CHANGELOG entry. */
   async getChangelogEntry() {
     return render(changelogTemplate, await this.generateRenderContext(), {rmWhitespace: true});
+  }
+
+  /** Prepends the generated release note to the CHANGELOG file. */
+  async prependEntryToChangelog() {
+    /** The fully path to the changelog file. */
+    const filePath = join(this.git.baseDir, 'CHANGELOG.md');
+    /** The changelog contents in the current changelog. */
+    let changelog = '';
+    if (existsSync(filePath)) {
+      changelog = readFileSync(filePath, {encoding: 'utf8'});
+    }
+    /** The new changelog entry to add to the changelog. */
+    const entry = await this.getChangelogEntry();
+
+    writeFileSync(filePath, `${entry}\n\n${changelog}`);
+
+    try {
+      assertValidFormatConfig(this.config);
+      await formatFiles([filePath]);
+    } catch {
+      // If the formatting is either unavailable or fails, continue on with the unformatted result.
+    }
   }
 
   /** Retrieve the number of commits included in the release notes after filtering and deduping. */
@@ -70,7 +102,7 @@ export class ReleaseNotes {
    */
   async promptForReleaseTitle() {
     if (this.title === undefined) {
-      if (this.config.useReleaseTitle) {
+      if (this.notesConfig.useReleaseTitle) {
         this.title = await promptInput('Please provide a title for the release:');
       } else {
         this.title = false;
@@ -86,20 +118,12 @@ export class ReleaseNotes {
         commits: this.commits,
         github: this.git.remoteConfig,
         version: this.version.format(),
-        groupOrder: this.config.groupOrder,
-        hiddenScopes: this.config.hiddenScopes,
-        categorizeCommit: this.config.categorizeCommit,
+        groupOrder: this.notesConfig.groupOrder,
+        hiddenScopes: this.notesConfig.hiddenScopes,
+        categorizeCommit: this.notesConfig.categorizeCommit,
         title: await this.promptForReleaseTitle(),
       });
     }
     return this.renderContext;
-  }
-
-  // This method is used for access to the utility functions while allowing them
-  // to be overwritten in subclasses during testing.
-  protected getReleaseConfig() {
-    const config = getConfig();
-    assertValidReleaseConfig(config);
-    return config.release;
   }
 }
