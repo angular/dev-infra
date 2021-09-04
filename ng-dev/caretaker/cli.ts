@@ -8,7 +8,7 @@
 
 import {info} from 'console';
 import {Arguments, Argv} from 'yargs';
-import {getConfig} from '../utils/config';
+import {assertValidGithubConfig, getConfig} from '../utils/config';
 import {CheckModule} from './check/cli';
 import {assertValidCaretakerConfig} from './config';
 import {HandoffModule} from './handoff/cli';
@@ -22,9 +22,8 @@ export function buildCaretakerParser(yargs: Argv) {
 }
 
 function caretakerCommandCanRun(argv: Arguments) {
-  const config = getConfig();
   try {
-    assertValidCaretakerConfig(config);
+    getConfig([assertValidCaretakerConfig, assertValidGithubConfig]);
   } catch {
     info('The `caretaker` command is not enabled in this repository.');
     info(`   To enable it, provide a caretaker config in the repository's .ng-dev/ directory`);

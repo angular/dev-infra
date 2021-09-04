@@ -8,6 +8,7 @@
 
 import {existsSync} from 'fs';
 import {dirname, join} from 'path';
+import {Assertions, MultipleAssertions} from './assertion-typings';
 
 import {debug, error} from './console';
 import {GitClient} from './git/git-client';
@@ -61,16 +62,30 @@ export function setConfig(config: {}) {
  * copy if it is defined.
  */
 export function getConfig(): {};
-export function getConfig(baseDir?: string): {};
-export function getConfig(baseDir?: string): {} {
+export function getConfig(baseDir: string): {};
+export function getConfig<A extends MultipleAssertions>(assertions: A): Assertions<A>;
+export function getConfig(baseDirOrAssertions?: unknown) {
+  let baseDir: string;
+  if (typeof baseDirOrAssertions === 'string') {
+    baseDir = baseDirOrAssertions;
+  } else {
+    baseDir = GitClient.get().baseDir;
+  }
+
   // If the global config is not defined, load it from the file system.
   if (cachedConfig === null) {
-    baseDir = baseDir || GitClient.get().baseDir;
     // The full path to the configuration file.
     const configPath = join(baseDir, CONFIG_FILE_PATH);
     // Read the configuration and validate it before caching it for the future.
     cachedConfig = readConfigFile(configPath);
   }
+
+  if (Array.isArray(baseDirOrAssertions)) {
+    for (const assertion of baseDirOrAssertions) {
+      assertion(cachedConfig);
+    }
+  }
+
   // Return a clone of the cached global config to ensure that a new instance of the config
   // is returned each time, preventing unexpected effects of modifications to the config object.
   return {...cachedConfig};
