@@ -12,7 +12,7 @@ import {CommitFromGitLog} from '../../commit-message/parse';
 import {promptInput} from '../../utils/console';
 import {formatFiles} from '../../format/format';
 import {GitClient} from '../../utils/git/git-client';
-import {assertValidReleaseConfig, ReleaseConfig, ReleaseNotesConfig} from '../config/index';
+import {assertValidReleaseConfig, ReleaseConfig} from '../config/index';
 import {RenderContext} from './context';
 
 import changelogTemplate from './templates/changelog';
@@ -23,6 +23,9 @@ import {existsSync, readFileSync, writeFileSync} from 'fs';
 import {join} from 'path';
 import {assertValidFormatConfig} from '../../format/config';
 
+/** Project-relative path for the changelog file. */
+export const changelogPath = 'CHANGELOG.md';
+
 /** Release note generation. */
 export class ReleaseNotes {
   static async forRange(version: semver.SemVer, baseRef: string, headRef: string) {
@@ -31,6 +34,8 @@ export class ReleaseNotes {
     return new ReleaseNotes(version, commits, git);
   }
 
+  /** The absolute path to the changelog file. */
+  private changelogPath = join(this.git.baseDir, changelogPath);
   /** The RenderContext to be used during rendering. */
   private renderContext: RenderContext | undefined;
   /** The title to use for the release. */
@@ -39,7 +44,7 @@ export class ReleaseNotes {
   private config: {release: ReleaseConfig} = getConfig([assertValidReleaseConfig]);
   /** The configuration for the release notes. */
   private get notesConfig() {
-    return this.config.release.releaseNotes || {};
+    return this.config.release.releaseNotes ?? {};
   }
 
   protected constructor(
@@ -60,23 +65,24 @@ export class ReleaseNotes {
     return render(changelogTemplate, await this.generateRenderContext(), {rmWhitespace: true});
   }
 
-  /** Prepends the generated release note to the CHANGELOG file. */
+  /**
+   * Prepend generated release note to the CHANGELOG.md file in the base directory of the repository
+   * provided by the GitClient.
+   */
   async prependEntryToChangelog() {
-    /** The fully path to the changelog file. */
-    const filePath = join(this.git.baseDir, 'CHANGELOG.md');
     /** The changelog contents in the current changelog. */
     let changelog = '';
-    if (existsSync(filePath)) {
-      changelog = readFileSync(filePath, {encoding: 'utf8'});
+    if (existsSync(this.changelogPath)) {
+      changelog = readFileSync(this.changelogPath, {encoding: 'utf8'});
     }
     /** The new changelog entry to add to the changelog. */
     const entry = await this.getChangelogEntry();
 
-    writeFileSync(filePath, `${entry}\n\n${changelog}`);
+    writeFileSync(this.changelogPath, `${entry}\n\n${changelog}`);
 
     try {
       assertValidFormatConfig(this.config);
-      await formatFiles([filePath]);
+      await formatFiles([this.changelogPath]);
     } catch {
       // If the formatting is either unavailable or fails, continue on with the unformatted result.
     }

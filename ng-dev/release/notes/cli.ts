@@ -16,7 +16,7 @@ import {ReleaseNotes} from './release-notes';
 export interface Options {
   from: string;
   to: string;
-  updateChangelog: boolean;
+  prependToChangelog: boolean;
   releaseVersion: SemVer;
   type: 'github-release' | 'changelog';
 }
@@ -45,7 +45,7 @@ function builder(argv: Argv): Argv<Options> {
       choices: ['github-release', 'changelog'] as const,
       default: 'changelog' as const,
     })
-    .option('updateChangelog', {
+    .option('prependToChangelog', {
       type: 'boolean',
       default: false,
       description: 'Whether to update the changelog with the newly created entry',
@@ -53,11 +53,11 @@ function builder(argv: Argv): Argv<Options> {
 }
 
 /** Yargs command handler for generating release notes. */
-async function handler({releaseVersion, from, to, updateChangelog, type}: Arguments<Options>) {
+async function handler({releaseVersion, from, to, prependToChangelog, type}: Arguments<Options>) {
   /** The ReleaseNotes instance to generate release notes. */
   const releaseNotes = await ReleaseNotes.forRange(releaseVersion, from, to);
 
-  if (updateChangelog) {
+  if (prependToChangelog) {
     await releaseNotes.prependEntryToChangelog();
     info(`Added release notes for "${releaseVersion}" to the changelog`);
     return;
