@@ -15,11 +15,10 @@ import * as externalCommands from '../../external-commands';
 import * as console from '../../../../utils/console';
 
 import {ReleaseAction} from '../../actions';
-import {GithubConfig} from '../../../../utils/config';
+import {GithubConfig, setConfig} from '../../../../utils/config';
 import {ReleaseConfig} from '../../../config';
 import {installVirtualGitClientSpies, VirtualGitClient} from '../../../../utils/testing';
 import {installSandboxGitClient} from './sandbox-git-client';
-import {ReleaseNotes} from '../../../notes/release-notes';
 import {getMockGitClient} from './git-client-mock';
 
 /**
@@ -69,6 +68,9 @@ export function setupMocksForReleaseAction<T extends boolean>(
   // to persist between tests if the sandbox git client is used.
   prepareTempDirectory();
 
+  // Set the configuration to be used throughout the spec.
+  setConfig({github: githubConfig, release: releaseConfig});
+
   // Fake confirm any prompts. We do not want to make any changelog edits and
   // just proceed with the release action.
   spyOn(console, 'promptConfirm').and.resolveTo(true);
@@ -80,8 +82,6 @@ export function setupMocksForReleaseAction<T extends boolean>(
   spyOn(externalCommands, 'invokeReleaseBuildCommand').and.resolveTo(
     testReleasePackages.map((name) => ({name, outputPath: `${testTmpDir}/dist/${name}`})),
   );
-
-  spyOn(ReleaseNotes.prototype as any, 'getReleaseConfig').and.returnValue(releaseConfig);
 
   // Fake checking the package versions since we don't actually create NPM
   // package output that can be tested.

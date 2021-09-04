@@ -7,14 +7,16 @@
  */
 
 import {installSandboxGitClient, SandboxGitClient} from '../test-utils/sandbox-git-client';
-import {mkdirSync, rmdirSync} from 'fs';
+import {readFileSync, writeFileSync} from 'fs';
 import {prepareTempDirectory, testTmpDir} from '../test-utils/action-mocks';
 import {getMockGitClient} from '../test-utils/git-client-mock';
-import {GithubConfig} from '../../../../utils/config';
+import {GithubConfig, setConfig} from '../../../../utils/config';
 import {SandboxGitRepo} from '../test-utils/sandbox-testing';
 import {ReleaseNotes} from '../../../notes/release-notes';
 import {ReleaseConfig} from '../../../config';
 import {changelogPattern, parse} from '../test-utils/test-utils';
+import { buildDateStamp } from '../../../notes/context';
+import { dedent } from '../../../../utils/testing/dedent';
 
 describe('release notes generation', () => {
   let releaseConfig: ReleaseConfig;
@@ -28,12 +30,10 @@ describe('release notes generation', () => {
 
     releaseConfig = {npmPackages: [], buildPackages: async () => []};
     githubConfig = {owner: 'angular', name: 'dev-infra-test', mainBranchName: 'main'};
+    setConfig({github: githubConfig, release: releaseConfig});
     client = getMockGitClient(githubConfig, /* useSandboxGitClient */ true);
 
     installSandboxGitClient(client);
-
-    // Ensure the `ReleaseNotes` class picks up the fake release config for testing.
-    spyOn(ReleaseNotes.prototype as any, 'getReleaseConfig').and.callFake(() => releaseConfig);
   });
 
   describe('changelog', () => {
@@ -435,5 +435,37 @@ describe('release notes generation', () => {
     const releaseNotes = await ReleaseNotes.forRange(parse('0.0.1'), '0.0.0', 'HEAD');
 
     expect(await releaseNotes.getCommitCountInReleaseNotes()).toBe(4);
+  });
+
+  describe('updates the changelog file', () => {
+    it('prepending the entry', async () => {
+      writeFileSync(`${testTmpDir}/CHANGELOG.md`, '<Previous Changelog Entries>');
+
+      const sandboxRepo = SandboxGitRepo.withInitialCommit(githubConfig)
+        .createTagForHead('startTag')
+        .commit('fix(ng-dev): commit *1', 1);
+
+      const fullSha = sandboxRepo.getShaForCommitId(1, 'long');
+      const shortSha = sandboxRepo.getShaForCommitId(1, 'short');
+
+      const releaseNotes = await ReleaseNotes.forRange(parse('13.0.0'), 'startTag', 'HEAD');
+      await releaseNotes.prependEntryToChangelog();
+
+      const changelog = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
+
+      expect(changelog).toBe(dedent`
+      <a name="13.0.0"></a>
+      # 13.0.0 (${buildDateStamp()})
+      ### ng-dev
+      | Commit | Type | Description |
+      | -- | -- | -- |
+      | [${shortSha}](https://github.com/angular/dev-infra-test/commit/${fullSha}) | fix | commit *1 |
+      ## Special Thanks
+      Angular Robot
+
+
+      <Previous Changelog Entries>`.trim()
+      );
+    });
   });
 });

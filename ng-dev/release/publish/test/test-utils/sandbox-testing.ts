@@ -78,14 +78,23 @@ export class SandboxGitRepo {
   }
 
   /** Cherry-picks a commit into the current branch. */
-  cherryPick(commitId: number) {
+  cherryPick(commitId: number): this {
+    runGitInTmpDir(['cherry-pick', '--allow-empty', this.getShaForCommitId(commitId)]);
+    return this;
+  }
+
+  /** Retrieve the sha for the commit. */
+  getShaForCommitId(commitId: number, type: 'long'|'short' = 'long'): string {
     const commitSha = this._commitShaById.get(commitId);
 
     if (commitSha === undefined) {
-      throw Error('Unable to cherry-pick. Unknown commit id.');
+      throw Error('Unable to get determine SHA due to an unknown commit id.');
     }
 
-    runGitInTmpDir(['cherry-pick', '--allow-empty', commitSha]);
-    return this;
+    if (type === 'short') {
+      return runGitInTmpDir(['rev-parse', '--short', commitSha]);
+    }
+
+    return commitSha;
   }
 }

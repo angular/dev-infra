@@ -34,6 +34,7 @@ import {
 import {getMockGitClient} from './test-utils/git-client-mock';
 import {CommitFromGitLog, parseCommitFromGitLog} from '../../../commit-message/parse';
 import {SandboxGitRepo} from './test-utils/sandbox-testing';
+import { GitClient } from '../../../utils/git/git-client';
 
 describe('common release action logic', () => {
   const baseReleaseTrains: ActiveReleaseTrains = {
@@ -142,7 +143,7 @@ describe('common release action logic', () => {
     });
 
     it('should link to the changelog in the release entry if notes are too large', async () => {
-      const {repo, instance} = setupReleaseActionForTesting(TestAction, baseReleaseTrains);
+      const {repo, instance, gitClient} = setupReleaseActionForTesting(TestAction, baseReleaseTrains);
       const {version, branchName} = baseReleaseTrains.latest;
       const tagName = version.format();
       const testCommit = parseCommitFromGitLog(Buffer.from('fix(test): test'));
@@ -157,7 +158,7 @@ describe('common release action logic', () => {
       testCommit.subject = exceedingText;
 
       spyOn(ReleaseNotes, 'forRange').and.callFake(
-        async () => new MockReleaseNotes(version, [testCommit]),
+        async () => new MockReleaseNotes(version, [testCommit], gitClient)
       );
 
       repo
@@ -246,8 +247,8 @@ describe('common release action logic', () => {
 
 /** Mock class for `ReleaseNotes` which accepts a list of in-memory commit objects. */
 class MockReleaseNotes extends ReleaseNotes {
-  constructor(version: SemVer, commits: CommitFromGitLog[]) {
-    super(version, commits);
+  constructor(version: SemVer, commits: CommitFromGitLog[], git: GitClient) {
+    super(version, commits, git);
   }
 }
 
