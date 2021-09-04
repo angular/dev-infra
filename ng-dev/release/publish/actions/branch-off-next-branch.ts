@@ -10,7 +10,7 @@ import * as semver from 'semver';
 
 import {green, info, yellow} from '../../../utils/console';
 import {semverInc} from '../../../utils/semver';
-import {ReleaseNotes} from '../../notes/release-notes';
+import {changelogPath, ReleaseNotes} from '../../notes/release-notes';
 import {
   computeNewPrereleaseVersionForNext,
   getReleaseNotesCompareVersionForNext,
@@ -20,7 +20,7 @@ import {
   getCommitMessageForExceptionalNextVersionBump,
   getReleaseNoteCherryPickCommitMessage,
 } from '../commit-message';
-import {changelogPath, packageJsonPath} from '../constants';
+import {packageJsonPath} from '../constants';
 
 /**
  * Base action that can be used to move the next release-train into the feature-freeze or

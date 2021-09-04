@@ -12,14 +12,14 @@ import * as semver from 'semver';
 import {SemVer} from 'semver';
 
 import {getBranchPushMatcher, testTmpDir} from '../../../utils/testing';
-import {ReleaseNotes} from '../../notes/release-notes';
+import {changelogPath, ReleaseNotes} from '../../notes/release-notes';
 import {NpmDistTag} from '../../versioning';
 import {ActiveReleaseTrains} from '../../versioning/active-release-trains';
 import * as npm from '../../versioning/npm-publish';
 import {ReleaseTrain} from '../../versioning/release-trains';
 import {ReleaseAction} from '../actions';
 import {actions} from '../actions/index';
-import {changelogPath, githubReleaseBodyLimit} from '../constants';
+import {githubReleaseBodyLimit} from '../constants';
 import {
   changelogPattern,
   fakeNpmPackageQueryRequest,

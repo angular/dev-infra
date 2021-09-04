@@ -88,7 +88,7 @@ export class SandboxGitRepo {
     const commitSha = this._commitShaById.get(commitId);
 
     if (commitSha === undefined) {
-      throw Error('Unable to get determine SHA due to an unknown commit id.');
+      throw Error('Unable to retrieve SHA due to an unknown commit id.');
     }
 
     if (type === 'short') {

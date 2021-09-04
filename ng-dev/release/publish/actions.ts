@@ -20,19 +20,14 @@ import {
 } from '../../utils/git/github-urls';
 import {createExperimentalSemver} from '../../utils/semver';
 import {BuiltPackage, ReleaseConfig} from '../config/index';
-import {ReleaseNotes} from '../notes/release-notes';
+import {changelogPath, ReleaseNotes} from '../notes/release-notes';
 import {NpmDistTag} from '../versioning';
 import {ActiveReleaseTrains} from '../versioning/active-release-trains';
 import {runNpmPublish} from '../versioning/npm-publish';
 
 import {FatalReleaseActionError, UserAbortedReleaseActionError} from './actions-error';
 import {getCommitMessageForRelease, getReleaseNoteCherryPickCommitMessage} from './commit-message';
-import {
-  changelogPath,
-  githubReleaseBodyLimit,
-  packageJsonPath,
-  waitForPullRequestInterval,
-} from './constants';
+import {githubReleaseBodyLimit, packageJsonPath, waitForPullRequestInterval} from './constants';
 import {invokeReleaseBuildCommand, invokeYarnInstallCommand} from './external-commands';
 import {findOwnedForksOfRepoQuery} from './graphql-queries';
 import {getPullRequestState} from './pull-request-state';
@@ -372,10 +367,7 @@ export abstract class ReleaseAction {
    * @returns A boolean indicating whether the release notes have been prepended.
    */
   protected async prependReleaseNotesToChangelog(releaseNotes: ReleaseNotes): Promise<void> {
-    const localChangelogPath = join(this.projectDir, changelogPath);
-    const localChangelog = await fs.readFile(localChangelogPath, 'utf8');
-    const releaseNotesEntry = await releaseNotes.getChangelogEntry();
-    await fs.writeFile(localChangelogPath, `${releaseNotesEntry}\n\n${localChangelog}`);
+    await releaseNotes.prependEntryToChangelog();
     info(green(`  ✓   Updated the changelog to capture changes for "${releaseNotes.version}".`));
   }
 
