@@ -25,41 +25,41 @@ export function buildFormatParser(localYargs: yargs.Argv) {
       'all',
       'Run the formatter on all files in the repository',
       (args) => args,
-      ({check}) => {
+      async ({check}) => {
         const executionCmd = check ? checkFiles : formatFiles;
         const allFiles = GitClient.get().allFiles();
-        executionCmd(allFiles);
+        process.exitCode = await executionCmd(allFiles);
       },
     )
     .command(
       'changed [shaOrRef]',
       'Run the formatter on files changed since the provided sha/ref',
       (args) => args.positional('shaOrRef', {type: 'string'}),
-      ({shaOrRef, check}) => {
+      async ({shaOrRef, check}) => {
         const git = GitClient.get();
         const sha = shaOrRef || git.mainBranchName;
         const executionCmd = check ? checkFiles : formatFiles;
         const allChangedFilesSince = git.allChangesFilesSince(sha);
-        executionCmd(allChangedFilesSince);
+        process.exitCode = await executionCmd(allChangedFilesSince);
       },
     )
     .command(
       'staged',
       'Run the formatter on all staged files',
       (args) => args,
-      ({check}) => {
+      async ({check}) => {
         const executionCmd = check ? checkFiles : formatFiles;
         const allStagedFiles = GitClient.get().allStagedFiles();
-        executionCmd(allStagedFiles);
+        process.exitCode = await executionCmd(allStagedFiles);
       },
     )
     .command(
       'files <files..>',
       'Run the formatter on provided files',
       (args) => args.positional('files', {array: true, type: 'string'}),
-      ({check, files}) => {
+      async ({check, files}) => {
         const executionCmd = check ? checkFiles : formatFiles;
-        executionCmd(files!);
+        process.exitCode = await executionCmd(files!);
       },
     );
 }
