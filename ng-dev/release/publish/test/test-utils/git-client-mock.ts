@@ -8,8 +8,7 @@
 
 import {GithubConfig} from '../../../../utils/config';
 import {SandboxGitClient} from './sandbox-git-client';
-import {VirtualGitClient} from '../../../../utils/testing';
-import {testTmpDir} from './action-mocks';
+import {testTmpDir, VirtualGitClient} from '../../../../utils/testing';
 
 /** Gets a mock instance for the `GitClient` instance. */
 export function getMockGitClient<T extends boolean>(

@@ -15,25 +15,22 @@ import * as externalCommands from '../../external-commands';
 import * as console from '../../../../utils/console';
 
 import {ReleaseAction} from '../../actions';
-import {GithubConfig, setConfig} from '../../../../utils/config';
+import * as config from '../../../../utils/config';
 import {ReleaseConfig} from '../../../config';
-import {installVirtualGitClientSpies, VirtualGitClient} from '../../../../utils/testing';
+import {
+  installVirtualGitClientSpies,
+  testTmpDir,
+  VirtualGitClient,
+} from '../../../../utils/testing';
 import {installSandboxGitClient} from './sandbox-git-client';
 import {getMockGitClient} from './git-client-mock';
-
-/**
- * Temporary directory which will be used as project directory in tests. Note that this environment
- * variable is automatically set by Bazel for tests. Bazel expects tests "not attempt to remove,
- * chmod, or otherwise alter [TEST_TMPDIR]," so a subdirectory path is used to be created/destroyed.
- */
-export const testTmpDir: string = join(process.env['TEST_TMPDIR']!, 'dev-infra');
 
 /** List of NPM packages which are configured for release action tests. */
 export const testReleasePackages = ['@angular/pkg1', '@angular/pkg2'];
 
 /** Gets test configurations for running testing a publish action. */
 export function getTestConfigurationsForAction() {
-  const githubConfig: GithubConfig = {
+  const githubConfig: config.GithubConfig = {
     owner: 'angular',
     name: 'dev-infra-test',
     mainBranchName: 'master',
@@ -60,7 +57,7 @@ export function prepareTempDirectory() {
 
 /** Sets up all test mocks needed to run a release action. */
 export function setupMocksForReleaseAction<T extends boolean>(
-  githubConfig: GithubConfig,
+  githubConfig: config.GithubConfig,
   releaseConfig: ReleaseConfig,
   useSandboxGitClient: T,
 ) {
@@ -69,7 +66,7 @@ export function setupMocksForReleaseAction<T extends boolean>(
   prepareTempDirectory();
 
   // Set the configuration to be used throughout the spec.
-  setConfig({github: githubConfig, release: releaseConfig});
+  spyOn(config, 'getConfig').and.returnValue({github: githubConfig, release: releaseConfig});
 
   // Fake confirm any prompts. We do not want to make any changelog edits and
   // just proceed with the release action.

@@ -9,3 +9,4 @@
 export * from './semver-matchers';
 export * from './virtual-git-client';
 export * from './virtual-git-matchers';
+export * from './bazel-env';

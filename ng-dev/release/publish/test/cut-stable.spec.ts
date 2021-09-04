@@ -17,8 +17,8 @@ import {
   expectGithubApiRequestsForStaging,
   expectStagingAndPublishWithCherryPick,
 } from './test-utils/staging-test';
-import {testTmpDir} from './test-utils/action-mocks';
 import {SandboxGitRepo} from './test-utils/sandbox-testing';
+import {testTmpDir} from '../../../utils/testing';
 
 describe('cut stable action', () => {
   it('should not activate if a feature-freeze release-train is active', async () => {
