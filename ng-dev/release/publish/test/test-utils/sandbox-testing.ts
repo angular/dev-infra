@@ -9,7 +9,7 @@
 import {getNextBranchName} from '../../../versioning';
 import {GithubConfig} from '../../../../utils/config';
 import {spawnSync} from 'child_process';
-import {testTmpDir} from './action-mocks';
+import {testTmpDir} from '../../../../utils/testing';
 
 /** Runs a Git command in the temporary repo directory. */
 export function runGitInTmpDir(args: string[]): string {
@@ -84,7 +84,7 @@ export class SandboxGitRepo {
   }
 
   /** Retrieve the sha for the commit. */
-  getShaForCommitId(commitId: number, type: 'long'|'short' = 'long'): string {
+  getShaForCommitId(commitId: number, type: 'long' | 'short' = 'long'): string {
     const commitSha = this._commitShaById.get(commitId);
 
     if (commitSha === undefined) {

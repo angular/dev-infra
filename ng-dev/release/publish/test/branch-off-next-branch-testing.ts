@@ -6,14 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {getBranchPushMatcher} from '../../../utils/testing';
+import {getBranchPushMatcher, testTmpDir} from '../../../utils/testing';
 import {ActiveReleaseTrains} from '../../versioning';
 import * as npm from '../../versioning/npm-publish';
 import {ReleaseActionConstructor} from '../actions';
 import {BranchOffNextBranchBaseAction} from '../actions/branch-off-next-branch';
 import * as externalCommands from '../external-commands';
 import {setupReleaseActionForTesting} from './test-utils/test-utils';
-import {testReleasePackages, testTmpDir} from './test-utils/action-mocks';
+import {testReleasePackages} from './test-utils/action-mocks';
 import {readFileSync} from 'fs';
 import {TestReleaseAction} from './test-utils/test-action';
 

@@ -8,19 +8,20 @@
 
 import {installSandboxGitClient, SandboxGitClient} from '../test-utils/sandbox-git-client';
 import {readFileSync, writeFileSync} from 'fs';
-import {prepareTempDirectory, testTmpDir} from '../test-utils/action-mocks';
+import {prepareTempDirectory} from '../test-utils/action-mocks';
 import {getMockGitClient} from '../test-utils/git-client-mock';
-import {GithubConfig, setConfig} from '../../../../utils/config';
+import * as config from '../../../../utils/config';
 import {SandboxGitRepo} from '../test-utils/sandbox-testing';
 import {ReleaseNotes} from '../../../notes/release-notes';
 import {ReleaseConfig} from '../../../config';
 import {changelogPattern, parse} from '../test-utils/test-utils';
-import { buildDateStamp } from '../../../notes/context';
-import { dedent } from '../../../../utils/testing/dedent';
+import {buildDateStamp} from '../../../notes/context';
+import {dedent} from '../../../../utils/testing/dedent';
+import {testTmpDir} from '../../../../utils/testing';
 
 describe('release notes generation', () => {
   let releaseConfig: ReleaseConfig;
-  let githubConfig: GithubConfig;
+  let githubConfig: config.GithubConfig;
   let client: SandboxGitClient;
 
   beforeEach(() => {
@@ -30,7 +31,7 @@ describe('release notes generation', () => {
 
     releaseConfig = {npmPackages: [], buildPackages: async () => []};
     githubConfig = {owner: 'angular', name: 'dev-infra-test', mainBranchName: 'main'};
-    setConfig({github: githubConfig, release: releaseConfig});
+    spyOn(config, 'getConfig').and.returnValue({github: githubConfig, release: releaseConfig});
     client = getMockGitClient(githubConfig, /* useSandboxGitClient */ true);
 
     installSandboxGitClient(client);
@@ -453,7 +454,8 @@ describe('release notes generation', () => {
 
       const changelog = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
 
-      expect(changelog).toBe(dedent`
+      expect(changelog).toBe(
+        dedent`
       <a name="13.0.0"></a>
       # 13.0.0 (${buildDateStamp()})
       ### ng-dev
@@ -464,7 +466,7 @@ describe('release notes generation', () => {
       Angular Robot
 
 
-      <Previous Changelog Entries>`.trim()
+      <Previous Changelog Entries>`.trim(),
       );
     });
   });

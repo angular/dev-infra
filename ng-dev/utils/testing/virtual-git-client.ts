@@ -8,16 +8,11 @@
 
 import {SpawnSyncOptions, SpawnSyncReturns} from 'child_process';
 import * as yargs from 'yargs';
+import {testTmpDir} from '.';
 
 import {GithubConfig} from '../config';
 import {AuthenticatedGitClient} from '../git/authenticated-git-client';
 import {GitClient} from '../git/git-client';
-
-/**
- * Temporary directory which will be used as project directory in tests. Note that
- * this environment variable is automatically set by Bazel for tests.
- */
-const testTmpDir: string = process.env['TEST_TMPDIR']!;
 
 /** A mock instance of a configuration for the ng-dev toolset for default testing. */
 export const mockNgDevConfig: {github: GithubConfig} = {
@@ -73,6 +68,11 @@ export class VirtualGitClient extends AuthenticatedGitClient {
   head: GitHead = this.branches[this.mainBranchName];
   /** List of pushed heads to a given remote ref. */
   pushed: {remote: RemoteRef; head: GitHead}[] = [];
+
+  constructor(githubToken: string, baseDir?: string, config?: {github: GithubConfig}) {
+    super(githubToken, baseDir, config);
+    console.log(baseDir);
+  }
 
   /** Override for the actual Git client command execution. */
   override runGraceful(args: string[], options: SpawnSyncOptions = {}): SpawnSyncReturns<string> {

@@ -7,11 +7,11 @@
  */
 
 import {NpmDistTag} from '../../../versioning';
-import {getBranchPushMatcher} from '../../../../utils/testing';
+import {getBranchPushMatcher, testTmpDir} from '../../../../utils/testing';
 
 import * as npm from '../../../versioning/npm-publish';
 import * as externalCommands from '../../external-commands';
-import {testReleasePackages, testTmpDir} from './action-mocks';
+import {testReleasePackages} from './action-mocks';
 import {TestReleaseAction} from './test-action';
 
 /**
