@@ -12,14 +12,16 @@ import {runFormatterInParallel} from './run-commands-parallel';
 
 /**
  * Format provided files in place.
+ *
+ * @returns a status code indicating whether the formatting run was successful.
  */
-export async function formatFiles(files: string[]) {
+export async function formatFiles(files: string[]): Promise<1 | 0> {
   // Whether any files failed to format.
   let failures = await runFormatterInParallel(files, 'format');
 
   if (failures === false) {
     info('No files matched for formatting.');
-    process.exit(0);
+    return 0;
   }
 
   // The process should exit as a failure if any of the files failed to format.
@@ -29,14 +31,16 @@ export async function formatFiles(files: string[]) {
       info(`  • ${filePath}: ${message}`);
     });
     error(red(`Formatting failed, see errors above for more information.`));
-    process.exit(1);
+    return 1;
   }
   info(`√  Formatting complete.`);
-  process.exit(0);
+  return 0;
 }
 
 /**
  * Check provided files for formatting correctness.
+ *
+ * @returns a status code indicating whether the format check run was successful.
  */
 export async function checkFiles(files: string[]) {
   // Files which are currently not formatted correctly.
@@ -44,7 +48,7 @@ export async function checkFiles(files: string[]) {
 
   if (failures === false) {
     info('No files matched for formatting check.');
-    process.exit(0);
+    return 0;
   }
 
   if (failures.length) {
@@ -64,17 +68,16 @@ export async function checkFiles(files: string[]) {
 
     if (runFormatter) {
       // Format the failing files as requested.
-      await formatFiles(failures.map((f) => f.filePath));
-      process.exit(0);
+      return (await formatFiles(failures.map((f) => f.filePath))) || 0;
     } else {
       // Inform user how to format files in the future.
       info();
       info(`To format the failing file run the following command:`);
       info(`  yarn ng-dev format files ${failures.map((f) => f.filePath).join(' ')}`);
-      process.exit(1);
+      return 1;
     }
   } else {
     info('√  All files correctly formatted.');
-    process.exit(0);
+    return 0;
   }
 }
