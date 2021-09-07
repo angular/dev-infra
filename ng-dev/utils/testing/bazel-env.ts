@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {existsSync, mkdirSync, rmSync} from 'fs';
 import {join} from 'path';
 
 /**
@@ -14,3 +15,14 @@ import {join} from 'path';
  * chmod, or otherwise alter [TEST_TMPDIR]," so a subdirectory path is used to be created/destroyed.
  */
 export const testTmpDir: string = join(process.env['TEST_TMPDIR']!, 'dev-infra');
+
+/**
+ * Prepares the temporary test directory, deleting previous contents if present. Ensures the temp
+ * directory exists.
+ */
+export function cleanTestTmpDir() {
+  if (existsSync(testTmpDir)) {
+    rmSync(testTmpDir, {recursive: true});
+  }
+  mkdirSync(testTmpDir);
+}
