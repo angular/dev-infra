@@ -1,16 +1,9 @@
-load("@npm//@bazel/jasmine:index.bzl", _jasmine_node_test = "jasmine_node_test")
 load("@npm//@bazel/typescript:index.bzl", _ts_library = "ts_library", _ts_project = "ts_project")
 load("@npm//@bazel/esbuild:index.bzl", _esbuild = "esbuild")
 load("@build_bazel_rules_nodejs//:index.bzl", "generated_file_test", _pkg_npm = "pkg_npm")
+load("//tools/jasmine:jasmine.bzl", _jasmine_node_test = "jasmine_node_test")
 
-def jasmine_node_test(name, specs = [], **kwargs):
-    _jasmine_node_test(
-        name = name,
-        srcs = kwargs.pop("srcs", []) + specs,
-        deps = kwargs.pop("deps", []),
-        use_direct_specs = True,
-        **kwargs
-    )
+jasmine_node_test = _jasmine_node_test
 
 def ts_project(**kwargs):
     _ts_project(

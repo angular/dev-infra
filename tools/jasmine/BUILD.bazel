@@ -1,0 +1,50 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("//tools:defaults.bzl", "jasmine_node_test")
+
+ts_library(
+    name = "bootstrap_ts",
+    testonly = True,
+    srcs = [
+        "bootstrap.ts",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//ng-dev/utils/testing:bazel-env",
+        "@npm//@bazel/jasmine",
+        "@npm//@types/jasmine",
+    ],
+)
+
+alias(
+    name = "bootstrap_dependencies",
+    actual = "//ng-dev/utils/testing:bazel-env",
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "bootstrap",
+    testonly = True,
+    srcs = [":bootstrap_ts"],
+    output_group = "es5_sources",
+    visibility = ["//visibility:public"],
+)
+
+ts_library(
+    name = "bootstrap_test",
+    testonly = True,
+    srcs = [
+        "bootstrap.spec.ts",
+    ],
+    deps = [
+        ":bootstrap_ts",
+        "//ng-dev/utils/testing:bazel-env",
+        "@npm//@types/node",
+    ],
+)
+
+jasmine_node_test(
+    name = "test",
+    specs = [
+        ":bootstrap_test",
+    ],
+)
