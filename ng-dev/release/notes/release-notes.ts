@@ -80,6 +80,10 @@ export class ReleaseNotes {
 
     writeFileSync(this.changelogPath, `${entry}\n\n${changelog}`);
 
+    // TODO(josephperrott): Remove file formatting calls.
+    //   Upon reaching a standardized formatting for markdown files, rather than calling a formatter
+    //   for all creation of changelogs, we instead will confirm in our testing that the new changes
+    //   created for changelogs meet on standardized markdown formats via unit testing.
     try {
       assertValidFormatConfig(this.config);
       await formatFiles([this.changelogPath]);

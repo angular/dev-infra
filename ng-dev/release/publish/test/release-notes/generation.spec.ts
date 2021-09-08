@@ -438,36 +438,33 @@ describe('release notes generation', () => {
     expect(await releaseNotes.getCommitCountInReleaseNotes()).toBe(4);
   });
 
-  describe('updates the changelog file', () => {
-    it('prepending the entry', async () => {
-      writeFileSync(`${testTmpDir}/CHANGELOG.md`, '<Previous Changelog Entries>');
+  it('should insert correct shortened and full shas for commits', async () => {
+    const sandboxRepo = SandboxGitRepo.withInitialCommit(githubConfig)
+      .createTagForHead('startTag')
+      .commit('fix(ng-dev): commit *1', 1);
 
-      const sandboxRepo = SandboxGitRepo.withInitialCommit(githubConfig)
-        .createTagForHead('startTag')
-        .commit('fix(ng-dev): commit *1', 1);
+    const fullSha = sandboxRepo.getShaForCommitId(1, 'long');
+    const shortSha = sandboxRepo.getShaForCommitId(1, 'short');
 
-      const fullSha = sandboxRepo.getShaForCommitId(1, 'long');
-      const shortSha = sandboxRepo.getShaForCommitId(1, 'short');
+    const releaseNotes = await ReleaseNotes.forRange(parse('13.0.0'), 'startTag', 'HEAD');
+    const changelog = await releaseNotes.getChangelogEntry();
 
-      const releaseNotes = await ReleaseNotes.forRange(parse('13.0.0'), 'startTag', 'HEAD');
-      await releaseNotes.prependEntryToChangelog();
+    expect(changelog).toContain(
+      `| [${shortSha}](https://github.com/angular/dev-infra-test/commit/${fullSha}) | fix | commit *1 |`,
+    );
+  });
 
-      const changelog = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
+  it('updates the changelog file by prepending the entry to the current changelog', async () => {
+    writeFileSync(`${testTmpDir}/CHANGELOG.md`, '<Previous Changelog Entries>');
 
-      expect(changelog).toBe(
-        dedent`
-      <a name="13.0.0"></a>
-      # 13.0.0 (${buildDateStamp()})
-      ### ng-dev
-      | Commit | Type | Description |
-      | -- | -- | -- |
-      | [${shortSha}](https://github.com/angular/dev-infra-test/commit/${fullSha}) | fix | commit *1 |
-      ## Special Thanks
-      Angular Robot
+    SandboxGitRepo.withInitialCommit(githubConfig).createTagForHead('startTag');
 
+    const releaseNotes = await ReleaseNotes.forRange(parse('13.0.0'), 'startTag', 'HEAD');
+    await releaseNotes.prependEntryToChangelog();
 
-      <Previous Changelog Entries>`.trim(),
-      );
-    });
+    const changelog = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
+
+    const entry = await releaseNotes.getChangelogEntry();
+    expect(changelog).toBe(`${entry}\n\n<Previous Changelog Entries>`);
   });
 });
