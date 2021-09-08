@@ -11,7 +11,8 @@ import {join} from 'path';
 import {testTmpDir} from '../../ng-dev/utils/testing/bazel-env';
 
 describe('bootstraping script', () => {
-  // This specific describe block is explicitly testing that
+  // This specific describe block is explicitly testing to determine if spec effect each other, and
+  // to do so, we disable randomization of the test order.
   jasmine.getEnv().configure({
     ...jasmine.getEnv().configuration(),
     random: false,

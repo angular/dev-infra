@@ -71,7 +71,6 @@ export class VirtualGitClient extends AuthenticatedGitClient {
 
   constructor(githubToken: string, baseDir?: string, config?: {github: GithubConfig}) {
     super(githubToken, baseDir, config);
-    console.log(baseDir);
   }
 
   /** Override for the actual Git client command execution. */
