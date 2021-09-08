@@ -415,7 +415,14 @@ export abstract class ReleaseAction {
     const releaseNotesCompareTag = getReleaseTagForVersion(compareVersionForReleaseNotes);
 
     // Fetch the compare tag so that commits for the release notes can be determined.
-    this.git.run(['fetch', this.git.getRepoGitUrl(), `refs/tags/${releaseNotesCompareTag}`]);
+    // We forcibly override existing local tags that are named similar as we will fetch
+    // the correct tag for release notes comparison from the upstream remote.
+    this.git.run([
+      'fetch',
+      '--force',
+      this.git.getRepoGitUrl(),
+      `refs/tags/${releaseNotesCompareTag}:refs/tags/${releaseNotesCompareTag}`,
+    ]);
 
     // Build release notes for commits from `<releaseNotesCompareTag>..HEAD`.
     const releaseNotes = await ReleaseNotes.forRange(newVersion, releaseNotesCompareTag, 'HEAD');
