@@ -4,7 +4,7 @@
   "semanticPrefix": "build",
   "separateMajorMinor": false,
   "prHourlyLimit": 2,
-  "labels": ["comp: build", "dependencies"],
+  "labels": ["comp: build", "dependencies", "action: merge"],
   "timezone": "America/Tijuana",
   "lockFileMaintenance": {
     "enabled": true
