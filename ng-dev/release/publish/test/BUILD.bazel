@@ -5,6 +5,9 @@ ts_library(
     srcs = glob([
         "**/*.ts",
     ]),
+    visibility = [
+        "//ng-dev/release/notes:__subpackages__",
+    ],
     deps = [
         "//ng-dev/commit-message",
         "//ng-dev/release/config",

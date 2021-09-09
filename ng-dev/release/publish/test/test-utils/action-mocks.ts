@@ -86,7 +86,7 @@ export function setupMocksForReleaseAction<T extends boolean>(
 
   // Create an empty changelog and a `package.json` file so that file system
   // interactions with the project directory do not cause exceptions.
-  writeFileSync(join(testTmpDir, 'CHANGELOG.md'), 'Existing changelog');
+  writeFileSync(join(testTmpDir, 'CHANGELOG.md'), '<a name="0.0.0"></a>\nExisting changelog');
   writeFileSync(join(testTmpDir, 'package.json'), JSON.stringify({version: '0.0.0'}));
 
   // Override the default pull request wait interval to a number of milliseconds that can be

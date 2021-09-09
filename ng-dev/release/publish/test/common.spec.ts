@@ -202,7 +202,9 @@ describe('common release action logic', () => {
       expect(changelogContent).toMatch(changelogPattern`
         # 10.0.1 <..>
 
+        <!-- CHANGELOG SPLIT MARKER -->
 
+        <a name="0.0.0"></a>
         Existing changelog
       `);
     });

@@ -453,18 +453,4 @@ describe('release notes generation', () => {
       `| [${shortSha}](https://github.com/angular/dev-infra-test/commit/${fullSha}) | fix | commit *1 |`,
     );
   });
-
-  it('updates the changelog file by prepending the entry to the current changelog', async () => {
-    writeFileSync(`${testTmpDir}/CHANGELOG.md`, '<Previous Changelog Entries>');
-
-    SandboxGitRepo.withInitialCommit(githubConfig).createTagForHead('startTag');
-
-    const releaseNotes = await ReleaseNotes.forRange(parse('13.0.0'), 'startTag', 'HEAD');
-    await releaseNotes.prependEntryToChangelog();
-
-    const changelog = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
-
-    const entry = await releaseNotes.getChangelogEntry();
-    expect(changelog).toBe(`${entry}\n\n<Previous Changelog Entries>`);
-  });
 });
