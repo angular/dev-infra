@@ -19,9 +19,8 @@ import changelogTemplate from './templates/changelog';
 import githubReleaseTemplate from './templates/github-release';
 import {getCommitsForRangeWithDeduping} from './commits/get-commits-in-range';
 import {getConfig} from '../../utils/config';
-import {existsSync, readFileSync, writeFileSync} from 'fs';
-import {join} from 'path';
 import {assertValidFormatConfig} from '../../format/config';
+import {Changelog} from './changelog';
 
 /** Project-relative path for the changelog file. */
 export const changelogPath = 'CHANGELOG.md';
@@ -34,8 +33,8 @@ export class ReleaseNotes {
     return new ReleaseNotes(version, commits, git);
   }
 
-  /** The absolute path to the changelog file. */
-  private changelogPath = join(this.git.baseDir, changelogPath);
+  /** The changelog writer. */
+  private changelog = new Changelog(this.git);
   /** The RenderContext to be used during rendering. */
   private renderContext: RenderContext | undefined;
   /** The title to use for the release. */
@@ -70,15 +69,7 @@ export class ReleaseNotes {
    * provided by the GitClient.
    */
   async prependEntryToChangelog() {
-    /** The changelog contents in the current changelog. */
-    let changelog = '';
-    if (existsSync(this.changelogPath)) {
-      changelog = readFileSync(this.changelogPath, {encoding: 'utf8'});
-    }
-    /** The new changelog entry to add to the changelog. */
-    const entry = await this.getChangelogEntry();
-
-    writeFileSync(this.changelogPath, `${entry}\n\n${changelog}`);
+    this.changelog.prependEntryToChangelog(await this.getChangelogEntry());
 
     // TODO(josephperrott): Remove file formatting calls.
     //   Upon reaching a standardized formatting for markdown files, rather than calling a formatter
@@ -86,7 +77,7 @@ export class ReleaseNotes {
     //   created for changelogs meet on standardized markdown formats via unit testing.
     try {
       assertValidFormatConfig(this.config);
-      await formatFiles([this.changelogPath]);
+      await formatFiles([this.changelog.filePath]);
     } catch {
       // If the formatting is either unavailable or fails, continue on with the unformatted result.
     }
