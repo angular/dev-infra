@@ -10,7 +10,13 @@ import {readFileSync, writeFileSync} from 'fs';
 import {join} from 'path';
 import {testTmpDir} from '../../ng-dev/utils/testing/bazel-env';
 
-describe('bootstraping script', () => {
+/**
+ * The number of tests which have run within the file. This variable is used to
+ * ensure tests do not execute twice with our custom bootstrap init script.
+ */
+let testCount = 0;
+
+describe('bootstrapping script', () => {
   // This specific describe block is explicitly testing to determine if spec effect each other, and
   // to do so, we disable randomization of the test order.
   jasmine.getEnv().configure({
@@ -22,8 +28,6 @@ describe('bootstraping script', () => {
   const testContent = `This is random: ${Math.random()}`;
   /** The absolute path to a file within the temporary test directory. */
   const testFilePath = join(testTmpDir, 'test-file');
-  /** The number of tests which have run within the describe block. */
-  let testCount = 0;
 
   it('allows files in the temp directory to be modified', () => {
     // The postfix increment operator is used to check the current value, while incrementing by 1.
