@@ -130,13 +130,11 @@ export class PullRequestMergeTask {
 
     // Branch or revision that is currently checked out so that we can switch back to
     // it once the pull request has been merged.
-    let previousBranchOrRevision: null | string = null;
+    const previousBranchOrRevision = this.git.getCurrentBranchOrRevision();
 
     // The following block runs Git commands as child processes. These Git commands can fail.
     // We want to capture these command errors and return an appropriate merge request status.
     try {
-      previousBranchOrRevision = this.git.getCurrentBranchOrRevision();
-
       // Run preparations for the merge (e.g. fetching branches).
       await strategy.prepare(pullRequest);
 
@@ -145,12 +143,6 @@ export class PullRequestMergeTask {
       if (failure !== null) {
         return {status: MergeStatus.FAILED, failure};
       }
-
-      // Switch back to the previous branch. We need to do this before deleting the temporary
-      // branches because we cannot delete branches which are currently checked out.
-      this.git.run(['checkout', '-f', previousBranchOrRevision]);
-
-      await strategy.cleanup(pullRequest);
 
       // Return a successful merge status.
       return {status: MergeStatus.SUCCESS};
@@ -162,11 +154,11 @@ export class PullRequestMergeTask {
       }
       throw e;
     } finally {
-      // Always try to restore the branch if possible. We don't want to leave
-      // the repository in a different state than before.
-      if (previousBranchOrRevision !== null) {
-        this.git.runGraceful(['checkout', '-f', previousBranchOrRevision]);
-      }
+      // Switch back to the previous branch. We need to do this before deleting the temporary
+      // branches because we cannot delete branches which are currently checked out.
+      this.git.run(['checkout', '-f', previousBranchOrRevision]);
+
+      await strategy.cleanup(pullRequest);
     }
   }
 }
