@@ -50,11 +50,11 @@ export class Changelog {
    */
   private get archiveEntries() {
     if (this._archiveEntries === undefined) {
-      return this._archiveEntries = this.getEntriesFor(this.archiveFilePath);
+      return (this._archiveEntries = this.getEntriesFor(this.archiveFilePath));
     }
     return this._archiveEntries;
   }
-  private _archiveEntries: undefined | ChangelogEntry[] = undefined
+  private _archiveEntries: undefined | ChangelogEntry[] = undefined;
   /** Whether the changelog archive has entries upon intialization. */
   private alreadyHasChangelogArchive = this.archiveEntries.length !== 0;
 
@@ -69,6 +69,11 @@ export class Changelog {
   /**
    * Move all changelog entries from the CHANGELOG.md file for versions prior to the provided
    * version to the changelog archive.
+   *
+   * Versions should be used to determine which entries are moved to archive as versions are the
+   * most accurate piece of context found within a changelog entry to determine its relationship to
+   * other changelog entries.  This allows for example, moving all changelog entries out of the
+   * main changelog when a version moves out of support.
    */
   moveEntriesPriorToVersionToArchive(version: semver.SemVer) {
     [...this.entries].reverse().forEach((entry: ChangelogEntry) => {
