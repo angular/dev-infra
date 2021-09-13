@@ -54772,7 +54772,7 @@ function writeAndAddToGit(filePath, contents) {
 function getLatestRefFromUpstream(branchOrTag) {
   try {
     const git = authenticated_git_client_1.AuthenticatedGitClient.get();
-    git.runGraceful(["fetch", git.getRepoGitUrl(), branchOrTag, "--depth=250"]);
+    git.runGraceful(["fetch", git.getRepoGitUrl(), branchOrTag, "--deepen=250"]);
     return git.runGraceful(["rev-parse", "FETCH_HEAD"]).stdout.trim();
   } catch {
     core.error(`Unable to retrieve '${branchOrTag}' from upstream`);
