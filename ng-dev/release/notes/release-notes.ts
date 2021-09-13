@@ -69,9 +69,7 @@ export class ReleaseNotes {
    * provided by the GitClient.
    */
   async prependEntryToChangelog() {
-    const changelog = new Changelog(this.git);
-
-    changelog.prependEntryToChangelog(await this.getChangelogEntry());
+    this.changelog.prependEntryToChangelog(await this.getChangelogEntry());
 
     // TODO(josephperrott): Remove file formatting calls.
     //   Upon reaching a standardized formatting for markdown files, rather than calling a formatter
@@ -79,7 +77,7 @@ export class ReleaseNotes {
     //   created for changelogs meet on standardized markdown formats via unit testing.
     try {
       assertValidFormatConfig(this.config);
-      await formatFiles([this.changelog.changelogPath]);
+      await formatFiles([this.changelog.filePath]);
     } catch {
       // If the formatting is either unavailable or fails, continue on with the unformatted result.
     }

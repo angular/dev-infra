@@ -23,39 +23,73 @@ describe('Changelog', () => {
     expect(() => changelog.prependEntryToChangelog(createChangelogEntry('NotSemVer'))).toThrow();
   });
 
+  it('concatenates the changelog entries into the changelog file with the split marker between', () => {
+    changelog.prependEntryToChangelog(createChangelogEntry('1.0.0'));
+    changelog.prependEntryToChangelog(createChangelogEntry('2.0.0'));
+    changelog.prependEntryToChangelog(createChangelogEntry('3.0.0'));
+
+    expect(readFileAsString(changelog.filePath)).toBe(
+      dedent`
+    <a name="3.0.0"></a>
+
+    ${splitMarker}
+
+    <a name="2.0.0"></a>
+
+    ${splitMarker}
+
+    <a name="1.0.0"></a>
+    `.trim(),
+    );
+
+    changelog.moveEntriesPriorToVersionToArchive(new SemVer('3.0.0'));
+
+    expect(readFileAsString(changelog.archiveFilePath)).toBe(
+      dedent`
+    <a name="2.0.0"></a>
+
+    ${splitMarker}
+
+    <a name="1.0.0"></a>
+    `.trim(),
+    );
+
+    expect(readFileAsString(changelog.filePath)).toBe(`<a name="3.0.0"></a>`);
+  });
+
   describe('adds entries to the changelog', () => {
-    it('creating a new changelog file if one does not exist.', () => {
-      expect(existsSync(changelog.changelogPath)).toBe(false);
+    it('creates a new changelog file if one does not exist.', () => {
+      expect(existsSync(changelog.filePath)).toBe(false);
 
       changelog.prependEntryToChangelog(createChangelogEntry('0.0.0'));
-      expect(existsSync(changelog.changelogPath)).toBe(true);
+      expect(existsSync(changelog.filePath)).toBe(true);
     });
 
-    it('not including a split marker when only one changelog entry is in the changelog.', () => {
+    it('should not include a split marker when only one changelog entry is in the changelog.', () => {
       changelog.prependEntryToChangelog(createChangelogEntry('0.0.0'));
 
-      expect(readFileAsString(changelog.changelogPath)).not.toContain(splitMarker);
+      expect(readFileAsString(changelog.filePath)).not.toContain(splitMarker);
     });
 
-    it('separating multiple changelog entries with a standard split marker', () => {
+    it('separates multiple changelog entries using a standard split marker', () => {
       for (let i = 0; i < 2; i++) {
         changelog.prependEntryToChangelog(createChangelogEntry(`0.0.${i}`));
       }
 
-      expect(readFileAsString(changelog.changelogPath)).toContain(splitMarker);
+      expect(readFileAsString(changelog.filePath)).toContain(splitMarker);
     });
   });
 
   describe('adds entries to the changelog archive', () => {
-    it('only updating or creating the changelog archive if necessary', () => {
+    it('only updates or creates the changelog archive if necessary', () => {
       changelog.prependEntryToChangelog(createChangelogEntry('1.0.0'));
-      expect(existsSync(changelog.changelogArchivePath)).toBe(false);
+      expect(existsSync(changelog.archiveFilePath)).toBe(false);
 
       changelog.moveEntriesPriorToVersionToArchive(new SemVer('1.0.0'));
-      expect(existsSync(changelog.changelogArchivePath)).toBe(false);
+      expect(existsSync(changelog.archiveFilePath)).toBe(false);
 
       changelog.moveEntriesPriorToVersionToArchive(new SemVer('2.0.0'));
-      expect(existsSync(changelog.changelogArchivePath)).toBe(true);
+      expect(existsSync(changelog.archiveFilePath)).toBe(true);
     });
 
     it('from the primary changelog older than a provided version', () => {
@@ -64,9 +98,9 @@ describe('Changelog', () => {
       changelog.prependEntryToChangelog(createChangelogEntry('3.0.0', 'This is version 3'));
 
       changelog.moveEntriesPriorToVersionToArchive(new SemVer('3.0.0'));
-      expect(readFileAsString(changelog.changelogArchivePath)).toContain('version 1');
-      expect(readFileAsString(changelog.changelogArchivePath)).toContain('version 2');
-      expect(readFileAsString(changelog.changelogArchivePath)).not.toContain('version 3');
+      expect(readFileAsString(changelog.archiveFilePath)).toContain('version 1');
+      expect(readFileAsString(changelog.archiveFilePath)).toContain('version 2');
+      expect(readFileAsString(changelog.archiveFilePath)).not.toContain('version 3');
     });
   });
 });

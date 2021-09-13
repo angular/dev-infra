@@ -38,14 +38,23 @@ interface ChangelogEntry {
 
 export class Changelog {
   /** The absolute path to the changelog file. */
-  readonly changelogPath = join(this.git.baseDir, changelogPath);
+  readonly filePath = join(this.git.baseDir, changelogPath);
   /** The absolute path to the changelog archive file. */
-  readonly changelogArchivePath = join(this.git.baseDir, changelogArchivePath);
+  readonly archiveFilePath = join(this.git.baseDir, changelogArchivePath);
 
   /** The changelog entries in the CHANGELOG.md file. */
-  private entries = this.getEntriesFor(this.changelogPath);
-  /** The changelog entries in the CHANGELOG_ARCHIVE.md file. */
-  private archiveEntries = this.getEntriesFor(this.changelogArchivePath);
+  private entries = this.getEntriesFor(this.filePath);
+  /**
+   * The changelog entries in the CHANGELOG_ARCHIVE.md file.
+   * Delays reading the CHANGELOG_ARCHIVE.md file until it is actually used.
+   */
+  private get archiveEntries() {
+    if (this._archiveEntries === undefined) {
+      return this._archiveEntries = this.getEntriesFor(this.archiveFilePath);
+    }
+    return this._archiveEntries;
+  }
+  private _archiveEntries: undefined | ChangelogEntry[] = undefined
   /** Whether the changelog archive has entries upon intialization. */
   private alreadyHasChangelogArchive = this.archiveEntries.length !== 0;
 
@@ -74,12 +83,12 @@ export class Changelog {
   /** Update the changelog files with the known changelog entries. */
   private writeToChangelogFiles(): void {
     const changelog = this.entries.map((entry) => entry.content).join(joinMarker);
-    writeFileSync(this.changelogPath, changelog);
+    writeFileSync(this.filePath, changelog);
 
     // Only update the changelog archive if it previously had content, or if there is now content.
     if (this.alreadyHasChangelogArchive || this.archiveEntries.length) {
       const changelogArchive = this.archiveEntries.map((entry) => entry.content).join(joinMarker);
-      writeFileSync(this.changelogArchivePath, changelogArchive);
+      writeFileSync(this.archiveFilePath, changelogArchive);
     }
   }
 
