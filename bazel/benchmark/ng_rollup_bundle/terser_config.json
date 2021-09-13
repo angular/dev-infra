@@ -1,6 +1,6 @@
 {
-  "output": {
-    "ecma": "es2015",
+  "format": {
+    "ecma": "es2020",
     "comments": false,
     "beautify": "bazel_debug"
   },

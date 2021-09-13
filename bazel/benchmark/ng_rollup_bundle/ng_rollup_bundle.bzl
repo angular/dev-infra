@@ -24,10 +24,10 @@ def ng_rollup_bundle(
 
     Runs [rollup], [terser_minified] and [brotli] to produce a number of output bundles.
 
-    es2015                          : "%{name}.js"
-    es2015 minified                 : "%{name}.min.js"
-    es2015 minified (compressed)    : "%{name}.min.js.br",
-    es2015 minified (debug)         : "%{name}.min_debug.js"
+    JS                          : "%{name}.js"
+    JS minified                 : "%{name}.min.js"
+    JS minified (compressed)    : "%{name}.min.js.br",
+    JS minified (debug)         : "%{name}.min_debug.js"
 
     It registers `@angular-devkit/build-optimizer` as a rollup plugin by default. This helps
     with further optimization. See https://github.com/angular/angular-cli/tree/master/packages/angular_devkit/build_optimizer.
