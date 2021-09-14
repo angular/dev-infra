@@ -41,7 +41,6 @@ export class Changelog {
   readonly filePath = join(this.git.baseDir, changelogPath);
   /** The absolute path to the changelog archive file. */
   readonly archiveFilePath = join(this.git.baseDir, changelogArchivePath);
-
   /** The changelog entries in the CHANGELOG.md file. */
   private entries = this.getEntriesFor(this.filePath);
   /**
@@ -55,15 +54,13 @@ export class Changelog {
     return this._archiveEntries;
   }
   private _archiveEntries: undefined | ChangelogEntry[] = undefined;
-  /** Whether the changelog archive has entries upon intialization. */
-  private alreadyHasChangelogArchive = this.archiveEntries.length !== 0;
 
   constructor(private git: GitClient) {}
 
   /** Prepend a changelog entry to the changelog. */
   prependEntryToChangelog(entry: string) {
     this.entries.unshift(parseChangelogEntry(entry));
-    this.writeToChangelogFiles();
+    this.writeToChangelogFile();
   }
 
   /**
@@ -77,24 +74,28 @@ export class Changelog {
    */
   moveEntriesPriorToVersionToArchive(version: semver.SemVer) {
     [...this.entries].reverse().forEach((entry: ChangelogEntry) => {
-      if (version.compare(entry.version) === 1) {
+      if (semver.lt(entry.version, version)) {
         this.archiveEntries.unshift(entry);
         this.entries.splice(this.entries.indexOf(entry), 1);
       }
     });
-    this.writeToChangelogFiles();
+
+    this.writeToChangelogFile();
+    if (this.archiveEntries.length) {
+      this.writeToChangelogArchiveFile();
+    }
   }
 
-  /** Update the changelog files with the known changelog entries. */
-  private writeToChangelogFiles(): void {
+  /** Update the changelog archive file with the known changelog archive entries. */
+  private writeToChangelogArchiveFile(): void {
+    const changelogArchive = this.archiveEntries.map((entry) => entry.content).join(joinMarker);
+    writeFileSync(this.archiveFilePath, changelogArchive);
+  }
+
+  /** Update the changelog file with the known changelog entries. */
+  private writeToChangelogFile(): void {
     const changelog = this.entries.map((entry) => entry.content).join(joinMarker);
     writeFileSync(this.filePath, changelog);
-
-    // Only update the changelog archive if it previously had content, or if there is now content.
-    if (this.alreadyHasChangelogArchive || this.archiveEntries.length) {
-      const changelogArchive = this.archiveEntries.map((entry) => entry.content).join(joinMarker);
-      writeFileSync(this.archiveFilePath, changelogArchive);
-    }
   }
 
   /**
