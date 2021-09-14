@@ -24,6 +24,7 @@ import {AutosquashMergeStrategy} from './strategies/autosquash-merge';
 export const enum MergeStatus {
   UNKNOWN_GIT_ERROR,
   DIRTY_WORKING_DIR,
+  UNEXPECTED_SHALLOW_REPO,
   SUCCESS,
   FAILED,
   USER_ABORTED,
@@ -69,6 +70,14 @@ export class PullRequestMergeTask {
    * @param force Whether non-critical pull request failures should be ignored.
    */
   async merge(prNumber: number, force = false): Promise<MergeResult> {
+    if (this.git.hasUncommittedChanges()) {
+      return {status: MergeStatus.DIRTY_WORKING_DIR};
+    }
+
+    if (this.git.isShallowRepo()) {
+      return {status: MergeStatus.UNEXPECTED_SHALLOW_REPO};
+    }
+
     // Check whether the given Github token has sufficient permissions for writing
     // to the configured repository. If the repository is not private, only the
     // reduced `public_repo` OAuth scope is sufficient for performing merges.
@@ -96,10 +105,6 @@ export class PullRequestMergeTask {
         status: MergeStatus.GITHUB_ERROR,
         failure: PullRequestFailure.insufficientPermissionsToMerge(hasOauthScopes.error),
       };
-    }
-
-    if (this.git.hasUncommittedChanges()) {
-      return {status: MergeStatus.DIRTY_WORKING_DIR};
     }
 
     const pullRequest = await loadAndValidatePullRequest(this, prNumber, force);

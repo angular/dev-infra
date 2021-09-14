@@ -137,6 +137,11 @@ export class GitClient {
     return this.run(['branch', branchName, '--contains', sha]).stdout !== '';
   }
 
+  /** Whether the local repository is configured as shallow. */
+  isShallowRepo(): boolean {
+    return this.run(['rev-parse', '--is-shallow-repository']).stdout.trim() === 'true';
+  }
+
   /** Gets the currently checked out branch or revision. */
   getCurrentBranchOrRevision(): string {
     const branchName = this.run(['rev-parse', '--abbrev-ref', 'HEAD']).stdout.trim();

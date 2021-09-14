@@ -93,6 +93,11 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
           ),
         );
         return false;
+      case MergeStatus.UNEXPECTED_SHALLOW_REPO:
+        error(red(`Unable to perform merge in a local repository that is configured as shallow.`));
+        error(red(`Please convert the repository to a complete one by syncing with upstream.`));
+        error(red(`https://git-scm.com/docs/git-fetch#Documentation/git-fetch.txt---unshallow`));
+        return false;
       case MergeStatus.UNKNOWN_GIT_ERROR:
         error(
           red(

@@ -51,7 +51,8 @@ export class ReleaseTool {
 
     if (
       !(await this._verifyNoUncommittedChanges()) ||
-      !(await this._verifyRunningFromNextBranch(nextBranchName))
+      !(await this._verifyRunningFromNextBranch(nextBranchName)) ||
+      !(await this._verifyNoShallowRepository())
     ) {
       return CompletionState.FATAL_ERROR;
     }
@@ -132,6 +133,22 @@ export class ReleaseTool {
   private async _verifyNoUncommittedChanges(): Promise<boolean> {
     if (this._git.hasUncommittedChanges()) {
       error(red('  ✘   There are changes which are not committed and should be discarded.'));
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Verifies that the local repository is not configured as shallow.
+   * @returns a boolean indicating success or failure.
+   */
+  private async _verifyNoShallowRepository(): Promise<boolean> {
+    if (this._git.isShallowRepo()) {
+      error(red('  ✘   The local repository is configured as shallow.'));
+      error(red(`      Please convert the repository to a complete one by syncing with upstream.`));
+      error(
+        red(`      https://git-scm.com/docs/git-fetch#Documentation/git-fetch.txt---unshallow`),
+      );
       return false;
     }
     return true;
