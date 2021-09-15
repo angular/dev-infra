@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 const {execSync} = require('child_process');
-const {join} = require('path');
+const {join, extname} = require('path');
 const {mkdirSync, rmSync, statSync, readdirSync, copyFileSync} = require('fs');
 
 /**
@@ -19,7 +19,8 @@ const findTestResultsInDir = function (dirPath, files) {
     if (statSync(filePath).isDirectory()) {
       files = findTestResultsInDir(filePath, files);
     } else {
-      if (file === 'test.xml') {
+      // Only the test result files, which are XML with the .xml extension, should be discovered.
+      if (extname(file) === '.xml') {
         files.push(filePath);
       }
     }
@@ -27,10 +28,11 @@ const findTestResultsInDir = function (dirPath, files) {
   return files;
 };
 
-/** StdOut result from the bazel info command. */
-const bazelInfoOutput = execSync('yarn bazel info', {stdio: 'pipe', encoding: 'utf8'});
 /** Absolute path to the bazel instance's testlog directory.  */
-const testLogPath = bazelInfoOutput.match(/bazel\-testlogs: (.*)/)[1];
+const testLogPath = execSync('yarn -s bazel info bazel-testlogs', {
+  stdio: 'pipe',
+  encoding: 'utf8',
+}).trim();
 /** List of test result files. */
 const testResultPaths = findTestResultsInDir(testLogPath, []);
 /**
