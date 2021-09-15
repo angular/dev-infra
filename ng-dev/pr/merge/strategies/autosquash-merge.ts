@@ -93,22 +93,25 @@ export class AutosquashMergeStrategy extends MergeStrategy {
 
     this.pushTargetBranchesUpstream(targetBranches);
 
+    /** The local branch name of the github targeted branch. */
+    const localBranch = this.getLocalTargetBranchName(githubTargetBranch);
+    /** The SHA of the commit pushed to github which represents closing the PR. */
+    const sha = this.git.run(['rev-parse', localBranch]).stdout.trim();
+    // Github automatically closes PRs whose commits are merged into the main branch on Github.
+    // However, it does not note them as merged using the purple merge badge as occurs when done via
+    // the UI. To inform users that the PR was in fact merged, add a comment expressing the fact
+    // that the PR is merged.
+    await this.git.github.issues.createComment({
+      ...this.git.remoteParams,
+      issue_number: pullRequest.prNumber,
+      body: `This PR was merged into the repository by commit ${sha}.`,
+    });
+
     // For PRs which do not target the `main` branch on Github, Github does not automatically
     // close the PR when its commit is pushed into the repository. To ensure these PRs are
     // correctly marked as closed, we must detect this situation and close the PR via the API after
     // the upstream pushes are completed.
     if (githubTargetBranch !== this.git.mainBranchName) {
-      /** The local branch name of the github targeted branch. */
-      const localBranch = this.getLocalTargetBranchName(githubTargetBranch);
-      /** The SHA of the commit pushed to github which represents closing the PR. */
-      const sha = this.git.run(['rev-parse', localBranch]).stdout.trim();
-      // Create a comment saying the PR was closed by the SHA.
-      await this.git.github.issues.createComment({
-        ...this.git.remoteParams,
-        issue_number: pullRequest.prNumber,
-        body: `Closed by commit ${sha}`,
-      });
-      // Actually close the PR.
       await this.git.github.pulls.update({
         ...this.git.remoteParams,
         pull_number: pullRequest.prNumber,
