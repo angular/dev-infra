@@ -20,7 +20,7 @@ browser(
             "@org_chromium_chromedriver_macos_arm64//:metadata",
             "@org_chromium_chromium_macos_arm64//:metadata",
         ],
-        "//bazel/constraints:windows_x32": [
+        "//bazel/constraints:windows_x64": [
             "@org_chromium_chromedriver_windows//:metadata",
             "@org_chromium_chromium_windows//:metadata",
         ],
