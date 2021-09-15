@@ -66,6 +66,16 @@ commands:
       - run: echo "import %workspace%/.circleci/bazel.rc" >> ./.bazelrc
       - run: ./.circleci/setup-bazel.sh
 
+  prepare_and_store_test_results:
+    description: "Prepare and upload test results"
+    steps:
+      - run:
+          name: Copy JUnit test reports to central folder for upload
+          command: node .circleci/copy-junit-reports.js
+          when: always
+      - store_test_results:
+          path: ./test-results
+
   checkout_and_rebase:
     description: Checkout and rebase the repository
     steps:
@@ -98,6 +108,7 @@ jobs:
       - run:
           name: Run bazel tests
           command: yarn bazel test //...
+      - prepare_and_store_test_results
       - *save_cache
 
   lint:

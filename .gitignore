@@ -33,3 +33,6 @@ yarn-error.log
 .ng-dev.err*
 .ng-dev.log
 .ng-dev.user*
+
+# Don't check in junit test results.
+test-results/*
