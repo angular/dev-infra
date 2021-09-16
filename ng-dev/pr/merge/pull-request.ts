@@ -67,6 +67,7 @@ export async function loadAndValidatePullRequest(
   const githubTargetBranch = prData.baseRefName;
 
   const targetBranches = await getTargetBranchesForPullRequest(
+    git.github,
     {github: git.config.github, merge: config},
     labels,
     githubTargetBranch,

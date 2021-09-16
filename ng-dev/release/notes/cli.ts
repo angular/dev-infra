@@ -11,6 +11,7 @@ import {Arguments, Argv, CommandModule} from 'yargs';
 import {info} from '../../utils/console';
 
 import {ReleaseNotes} from './release-notes';
+import {GitClient} from '../../utils/git/git-client';
 
 /** Command line options for building a release. */
 export interface Options {
@@ -54,8 +55,10 @@ function builder(argv: Argv): Argv<Options> {
 
 /** Yargs command handler for generating release notes. */
 async function handler({releaseVersion, from, to, prependToChangelog, type}: Arguments<Options>) {
+  /** Git client to use for generating the release notes. */
+  const git = GitClient.get();
   /** The ReleaseNotes instance to generate release notes. */
-  const releaseNotes = await ReleaseNotes.forRange(releaseVersion, from, to);
+  const releaseNotes = await ReleaseNotes.forRange(git, releaseVersion, from, to);
 
   if (prependToChangelog) {
     await releaseNotes.prependEntryToChangelogFile();

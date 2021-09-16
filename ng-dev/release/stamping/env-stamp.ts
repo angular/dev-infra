@@ -24,21 +24,21 @@ export type EnvStampMode = 'snapshot' | 'release';
  * in Windows or OSX hosts (https://github.com/docker/for-win/issues/188).
  */
 export function buildEnvStamp(mode: EnvStampMode) {
-  console.info(`BUILD_SCM_BRANCH ${getCurrentBranch()}`);
-  console.info(`BUILD_SCM_COMMIT_SHA ${getCurrentBranchOrRevision()}`);
-  console.info(`BUILD_SCM_HASH ${getCurrentBranchOrRevision()}`);
-  console.info(`BUILD_SCM_LOCAL_CHANGES ${hasLocalChanges()}`);
-  console.info(`BUILD_SCM_USER ${getCurrentGitUser()}`);
-  const {version, experimentalVersion} = getSCMVersions(mode);
+  const git = GitClient.get();
+  console.info(`BUILD_SCM_BRANCH ${getCurrentBranch(git)}`);
+  console.info(`BUILD_SCM_COMMIT_SHA ${getCurrentBranchOrRevision(git)}`);
+  console.info(`BUILD_SCM_HASH ${getCurrentBranchOrRevision(git)}`);
+  console.info(`BUILD_SCM_LOCAL_CHANGES ${hasLocalChanges(git)}`);
+  console.info(`BUILD_SCM_USER ${getCurrentGitUser(git)}`);
+  const {version, experimentalVersion} = getSCMVersions(git, mode);
   console.info(`BUILD_SCM_VERSION ${version}`);
   console.info(`BUILD_SCM_EXPERIMENTAL_VERSION ${experimentalVersion}`);
   process.exit();
 }
 
 /** Whether the repo has local changes. */
-function hasLocalChanges() {
+function hasLocalChanges(git: GitClient) {
   try {
-    const git = GitClient.get();
     return git.hasUncommittedChanges();
   } catch {
     return true;
@@ -51,11 +51,13 @@ function hasLocalChanges() {
  * In snapshot mode, the version is based on the most recent semver tag.
  * In release mode, the version is based on the base package.json version.
  */
-function getSCMVersions(mode: EnvStampMode): {version: string; experimentalVersion: string} {
+function getSCMVersions(
+  git: GitClient,
+  mode: EnvStampMode,
+): {version: string; experimentalVersion: string} {
   try {
-    const git = GitClient.get();
     if (mode === 'snapshot') {
-      const localChanges = hasLocalChanges() ? '.with-local-changes' : '';
+      const localChanges = hasLocalChanges(git) ? '.with-local-changes' : '';
       const {stdout: rawVersion} = git.run([
         'describe',
         '--match',
@@ -88,9 +90,8 @@ function getSCMVersions(mode: EnvStampMode): {version: string; experimentalVersi
 }
 
 /** Get the current branch or revision of HEAD. */
-function getCurrentBranchOrRevision() {
+function getCurrentBranchOrRevision(git: GitClient) {
   try {
-    const git = GitClient.get();
     return git.getCurrentBranchOrRevision();
   } catch {
     return '';
@@ -98,9 +99,8 @@ function getCurrentBranchOrRevision() {
 }
 
 /** Get the currently checked out branch. */
-function getCurrentBranch() {
+function getCurrentBranch(git: GitClient) {
   try {
-    const git = GitClient.get();
     return git.run(['symbolic-ref', '--short', 'HEAD']).stdout.trim();
   } catch {
     return '';
@@ -108,9 +108,8 @@ function getCurrentBranch() {
 }
 
 /** Get the current git user based on the git config. */
-function getCurrentGitUser() {
+function getCurrentGitUser(git: GitClient) {
   try {
-    const git = GitClient.get();
     let userName = git.runGraceful(['config', 'user.name']).stdout.trim() || 'Unknown User';
     let userEmail = git.runGraceful(['config', 'user.email']).stdout.trim() || 'unknown_email';
     return `${userName} <${userEmail}>`;

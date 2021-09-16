@@ -417,7 +417,12 @@ export abstract class ReleaseAction {
     ]);
 
     // Build release notes for commits from `<releaseNotesCompareTag>..HEAD`.
-    const releaseNotes = await ReleaseNotes.forRange(newVersion, releaseNotesCompareTag, 'HEAD');
+    const releaseNotes = await ReleaseNotes.forRange(
+      this.git,
+      newVersion,
+      releaseNotesCompareTag,
+      'HEAD',
+    );
 
     await this.updateProjectVersion(newVersion);
     await this.prependReleaseNotesToChangelog(releaseNotes);

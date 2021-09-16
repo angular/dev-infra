@@ -47,7 +47,12 @@ describe('release notes generation', () => {
           .commit('fix(@angular-devkit/test): commit *3')
           .commit('fix(@angular-devkit/test): commit *4');
 
-        const releaseNotes = await ReleaseNotes.forRange(parse('13.0.0'), 'startTag', 'HEAD');
+        const releaseNotes = await ReleaseNotes.forRange(
+          client,
+          parse('13.0.0'),
+          'startTag',
+          'HEAD',
+        );
 
         expect(await releaseNotes.getChangelogEntry()).toMatch(changelogPattern`
           # 13.0.0 <..>
@@ -78,7 +83,12 @@ describe('release notes generation', () => {
           categorizeCommit: (commit) => ({groupName: commit.scope.split('/', 1)[0]}),
         };
 
-        const releaseNotes = await ReleaseNotes.forRange(parse('13.0.0'), 'startTag', 'HEAD');
+        const releaseNotes = await ReleaseNotes.forRange(
+          client,
+          parse('13.0.0'),
+          'startTag',
+          'HEAD',
+        );
 
         expect(await releaseNotes.getChangelogEntry()).toMatch(changelogPattern`
           # 13.0.0 <..>
@@ -113,7 +123,12 @@ describe('release notes generation', () => {
           },
         };
 
-        const releaseNotes = await ReleaseNotes.forRange(parse('13.0.0'), 'startTag', 'HEAD');
+        const releaseNotes = await ReleaseNotes.forRange(
+          client,
+          parse('13.0.0'),
+          'startTag',
+          'HEAD',
+        );
 
         expect(await releaseNotes.getChangelogEntry()).toMatch(changelogPattern`
           # 13.0.0 <..>
@@ -151,7 +166,12 @@ describe('release notes generation', () => {
           },
         };
 
-        const releaseNotes = await ReleaseNotes.forRange(parse('13.0.0'), 'startTag', 'HEAD');
+        const releaseNotes = await ReleaseNotes.forRange(
+          client,
+          parse('13.0.0'),
+          'startTag',
+          'HEAD',
+        );
 
         expect(await releaseNotes.getChangelogEntry()).toMatch(changelogPattern`
           # 13.0.0 <..>
@@ -175,7 +195,7 @@ describe('release notes generation', () => {
         .commit('fix(@angular-devkit/test): commit #1')
         .commit('fix(@angular-devkit/test): commit (#2)');
 
-      const releaseNotes = await ReleaseNotes.forRange(parse('13.0.0'), 'startTag', 'HEAD');
+      const releaseNotes = await ReleaseNotes.forRange(client, parse('13.0.0'), 'startTag', 'HEAD');
 
       expect(await releaseNotes.getChangelogEntry()).toMatch(changelogPattern`
         # 13.0.0 <..>
@@ -198,7 +218,12 @@ describe('release notes generation', () => {
             'BREAKING CHANGE: Description of breaking change.',
         );
 
-      const releaseNotes = await ReleaseNotes.forRange(parse('13.0.0'), '13.0.0-next.0', 'HEAD');
+      const releaseNotes = await ReleaseNotes.forRange(
+        client,
+        parse('13.0.0'),
+        '13.0.0-next.0',
+        'HEAD',
+      );
 
       expect(await releaseNotes.getChangelogEntry()).toMatch(changelogPattern`
         # 13.0.0 <..>
@@ -223,7 +248,12 @@ describe('release notes generation', () => {
           'refactor(cdk/a11y): with deprecation\n\n' + 'DEPRECATED: Description of deprecation.',
         );
 
-      const releaseNotes = await ReleaseNotes.forRange(parse('13.0.0'), '13.0.0-next.0', 'HEAD');
+      const releaseNotes = await ReleaseNotes.forRange(
+        client,
+        parse('13.0.0'),
+        '13.0.0-next.0',
+        'HEAD',
+      );
 
       expect(await releaseNotes.getChangelogEntry()).toMatch(changelogPattern`
         # 13.0.0 <..>
@@ -250,7 +280,12 @@ describe('release notes generation', () => {
           .commit('fix(@angular-devkit/test): commit *3')
           .commit('fix(@angular-devkit/test): commit *4');
 
-        const releaseNotes = await ReleaseNotes.forRange(parse('13.0.0'), 'startTag', 'HEAD');
+        const releaseNotes = await ReleaseNotes.forRange(
+          client,
+          parse('13.0.0'),
+          'startTag',
+          'HEAD',
+        );
 
         expect(await releaseNotes.getGithubReleaseEntry()).toMatch(changelogPattern`
           # 13.0.0 <..>
@@ -281,7 +316,12 @@ describe('release notes generation', () => {
           categorizeCommit: (commit) => ({groupName: commit.scope.split('/', 1)[0]}),
         };
 
-        const releaseNotes = await ReleaseNotes.forRange(parse('13.0.0'), 'startTag', 'HEAD');
+        const releaseNotes = await ReleaseNotes.forRange(
+          client,
+          parse('13.0.0'),
+          'startTag',
+          'HEAD',
+        );
 
         expect(await releaseNotes.getGithubReleaseEntry()).toMatch(changelogPattern`
           # 13.0.0 <..>
@@ -316,7 +356,12 @@ describe('release notes generation', () => {
           },
         };
 
-        const releaseNotes = await ReleaseNotes.forRange(parse('13.0.0'), 'startTag', 'HEAD');
+        const releaseNotes = await ReleaseNotes.forRange(
+          client,
+          parse('13.0.0'),
+          'startTag',
+          'HEAD',
+        );
 
         expect(await releaseNotes.getGithubReleaseEntry()).toMatch(changelogPattern`
           # 13.0.0 <..>
@@ -354,7 +399,12 @@ describe('release notes generation', () => {
           },
         };
 
-        const releaseNotes = await ReleaseNotes.forRange(parse('13.0.0'), 'startTag', 'HEAD');
+        const releaseNotes = await ReleaseNotes.forRange(
+          client,
+          parse('13.0.0'),
+          'startTag',
+          'HEAD',
+        );
 
         expect(await releaseNotes.getGithubReleaseEntry()).toMatch(changelogPattern`
           # 13.0.0 <..>
@@ -382,7 +432,12 @@ describe('release notes generation', () => {
             'BREAKING CHANGE: Description of breaking change.',
         );
 
-      const releaseNotes = await ReleaseNotes.forRange(parse('13.0.0'), '13.0.0-next.0', 'HEAD');
+      const releaseNotes = await ReleaseNotes.forRange(
+        client,
+        parse('13.0.0'),
+        '13.0.0-next.0',
+        'HEAD',
+      );
 
       expect(await releaseNotes.getGithubReleaseEntry()).toMatch(changelogPattern`
         # 13.0.0 <..>
@@ -407,7 +462,12 @@ describe('release notes generation', () => {
           'refactor(cdk/a11y): with deprecation\n\n' + 'DEPRECATED: Description of deprecation.',
         );
 
-      const releaseNotes = await ReleaseNotes.forRange(parse('13.0.0'), '13.0.0-next.0', 'HEAD');
+      const releaseNotes = await ReleaseNotes.forRange(
+        client,
+        parse('13.0.0'),
+        '13.0.0-next.0',
+        'HEAD',
+      );
 
       expect(await releaseNotes.getGithubReleaseEntry()).toMatch(changelogPattern`
         # 13.0.0 <..>
@@ -433,7 +493,7 @@ describe('release notes generation', () => {
       .commit('build: rework everything')
       .commit('fix: fix what we broke');
 
-    const releaseNotes = await ReleaseNotes.forRange(parse('0.0.1'), '0.0.0', 'HEAD');
+    const releaseNotes = await ReleaseNotes.forRange(client, parse('0.0.1'), '0.0.0', 'HEAD');
 
     expect(await releaseNotes.getCommitCountInReleaseNotes()).toBe(4);
   });
@@ -446,7 +506,7 @@ describe('release notes generation', () => {
     const fullSha = sandboxRepo.getShaForCommitId(1, 'long');
     const shortSha = sandboxRepo.getShaForCommitId(1, 'short');
 
-    const releaseNotes = await ReleaseNotes.forRange(parse('13.0.0'), 'startTag', 'HEAD');
+    const releaseNotes = await ReleaseNotes.forRange(client, parse('13.0.0'), 'startTag', 'HEAD');
     const changelog = await releaseNotes.getChangelogEntry();
 
     expect(changelog).toContain(

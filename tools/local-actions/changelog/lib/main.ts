@@ -45,7 +45,7 @@ setConfig(config);
 async function run(): Promise<void> {
   // Configure the AuthenticatedGitClient to be authenticated with the token for the Angular Robot.
   AuthenticatedGitClient.configure(await getAuthTokenFor(ANGULAR_ROBOT));
-  /** The authenticed GitClient. */
+  /** The authenticated GitClient. */
   const git = AuthenticatedGitClient.get();
   git.run(['config', 'user.email', 'angular-robot@google.com']);
   git.run(['config', 'user.name', 'Angular Robot']);
@@ -59,7 +59,12 @@ async function run(): Promise<void> {
   /** The sha of the latest commit on the main branch. */
   const latestRef = getLatestRefFromUpstream(git.mainBranchName);
   /** The release notes generation object. */
-  const releaseNotes = await ReleaseNotes.forRange(getTodayAsSemver(), lastChangelogRef, latestRef);
+  const releaseNotes = await ReleaseNotes.forRange(
+    git,
+    getTodayAsSemver(),
+    lastChangelogRef,
+    latestRef,
+  );
 
   if ((await releaseNotes.getCommitCountInReleaseNotes()) === 0) {
     console.log('No release notes are needed as no commits would be included.');

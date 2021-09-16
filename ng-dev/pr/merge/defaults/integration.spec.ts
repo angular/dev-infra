@@ -18,7 +18,6 @@ import {
   getMatchingTargetLabelForPullRequest,
   TargetLabel,
 } from '../target-label';
-import * as labelDefaults from './labels';
 
 import {fakeGithubPaginationResponse} from '../../../utils/testing/github-interception';
 import {getTargetLabelsForActiveReleaseTrains} from './labels';

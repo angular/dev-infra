@@ -27,8 +27,7 @@ export const changelogPath = 'CHANGELOG.md';
 
 /** Release note generation. */
 export class ReleaseNotes {
-  static async forRange(version: semver.SemVer, baseRef: string, headRef: string) {
-    const git = GitClient.get();
+  static async forRange(git: GitClient, version: semver.SemVer, baseRef: string, headRef: string) {
     const commits = getCommitsForRangeWithDeduping(git, baseRef, headRef);
     return new ReleaseNotes(version, commits, git);
   }
@@ -67,7 +66,7 @@ export class ReleaseNotes {
    * provided by the GitClient.
    */
   async prependEntryToChangelogFile() {
-    Changelog.prependEntryToChangelogFile(await this.getChangelogEntry(), this.git);
+    Changelog.prependEntryToChangelogFile(this.git, await this.getChangelogEntry());
 
     // TODO(josephperrott): Remove file formatting calls.
     //   Upon reaching a standardized formatting for markdown files, rather than calling a formatter
