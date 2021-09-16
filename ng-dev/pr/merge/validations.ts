@@ -12,7 +12,7 @@ import {MergeConfig} from './config';
 import {PullRequestFailure} from './failures';
 import {red, warn} from '../../utils/console';
 import {breakingChangeLabel} from './constants';
-import {RawPullRequest} from './fetch-pull-request';
+import {RawPullRequest} from '../common/fetch-pull-request';
 
 /**
  * Assert the commits provided are allowed to merge to the provided target label,
