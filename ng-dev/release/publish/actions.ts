@@ -367,7 +367,7 @@ export abstract class ReleaseAction {
    * @returns A boolean indicating whether the release notes have been prepended.
    */
   protected async prependReleaseNotesToChangelog(releaseNotes: ReleaseNotes): Promise<void> {
-    await releaseNotes.prependEntryToChangelog();
+    await releaseNotes.prependEntryToChangelogFile();
     info(green(`  ✓   Updated the changelog to capture changes for "${releaseNotes.version}".`));
   }
 

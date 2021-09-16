@@ -58,7 +58,7 @@ async function handler({releaseVersion, from, to, prependToChangelog, type}: Arg
   const releaseNotes = await ReleaseNotes.forRange(releaseVersion, from, to);
 
   if (prependToChangelog) {
-    await releaseNotes.prependEntryToChangelog();
+    await releaseNotes.prependEntryToChangelogFile();
     info(`Added release notes for "${releaseVersion}" to the changelog`);
     return;
   }
