@@ -10,7 +10,7 @@ import {promptConfirm} from '../../utils/console';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {GitCommandError} from '../../utils/git/git-client';
 
-import {MergeConfigWithRemote} from './config';
+import {MergeConfigWithRemote} from '../config';
 import {PullRequestFailure} from './failures';
 import {
   getCaretakerNotePromptMessage,

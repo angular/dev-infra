@@ -8,7 +8,7 @@
 
 import {Commit} from '../../commit-message/parse';
 import {TargetLabel, TargetLabelName} from './target-label';
-import {MergeConfig} from './config';
+import {MergeConfig} from '../config';
 import {PullRequestFailure} from './failures';
 import {red, warn} from '../../utils/console';
 import {breakingChangeLabel} from './constants';

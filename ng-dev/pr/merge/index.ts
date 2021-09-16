@@ -12,7 +12,7 @@ import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {GithubApiRequestError} from '../../utils/git/github';
 import {GITHUB_TOKEN_GENERATE_URL} from '../../utils/git/github-urls';
 
-import {assertValidMergeConfig} from './config';
+import {assertValidMergeConfig} from '../config';
 import {MergeResult, MergeStatus, PullRequestMergeTask, PullRequestMergeTaskFlags} from './task';
 
 /**

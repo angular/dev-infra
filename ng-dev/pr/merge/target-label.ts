@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {MergeConfig} from './config';
+import {MergeConfig} from '../config';
 import {getTargetLabelsForActiveReleaseTrains} from './defaults';
 import {GithubConfig} from '../../utils/config';
 import {Commit} from '../../commit-message/parse';
