@@ -8,3 +8,4 @@ github-actions/slash-commands/main.js
 github-actions/slash-commands/post.js
 tools/local-actions/changelog/main.js
 tools/local-actions/changelog/post.js
+tools/protos/test_status_pb.js
