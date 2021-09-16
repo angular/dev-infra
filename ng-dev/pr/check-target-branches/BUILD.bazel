@@ -5,6 +5,7 @@ ts_library(
     srcs = glob(["*.ts"]),
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
+        "//ng-dev/pr:config",
         "//ng-dev/pr/merge",
         "//ng-dev/utils",
         "@npm//@types/yargs",

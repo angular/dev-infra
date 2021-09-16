@@ -11,7 +11,7 @@ import {prompt} from 'inquirer';
 
 import {parseCommitMessage} from '../../../commit-message/parse';
 import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client';
-import {GithubApiMergeMethod} from '../config';
+import {GithubApiMergeMethod, GithubApiMergeStrategyConfig} from '../../config';
 import {PullRequestFailure} from '../failures';
 import {PullRequest} from '../pull-request';
 import {matchesPattern} from '../string-pattern';
@@ -21,14 +21,6 @@ import {GithubApiRequestError} from '../../../utils/git/github';
 
 /** Type describing the parameters for the Octokit `merge` API endpoint. */
 type OctokitMergeParams = RestEndpointMethodTypes['pulls']['merge']['parameters'];
-
-/** Configuration for the Github API merge strategy. */
-export interface GithubApiMergeStrategyConfig {
-  /** Default method used for merging pull requests */
-  default: GithubApiMergeMethod;
-  /** Labels which specify a different merge method than the default. */
-  labels?: {pattern: string; method: GithubApiMergeMethod}[];
-}
 
 /** Separator between commit message header and body. */
 const COMMIT_HEADER_SEPARATOR = '\n\n';
