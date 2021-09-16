@@ -272,13 +272,18 @@ class TestAction extends ReleaseAction {
     distTag: NpmDistTag,
     releaseNotesCompareTag = 'HEAD',
   ) {
-    const releaseNotes = await ReleaseNotes.forRange(version, releaseNotesCompareTag, 'HEAD');
+    const releaseNotes = await ReleaseNotes.forRange(
+      this.git,
+      version,
+      releaseNotesCompareTag,
+      'HEAD',
+    );
     debugger;
     await this.buildAndPublish(releaseNotes, publishBranch, distTag);
   }
 
   async testCherryPickWithPullRequest(version: semver.SemVer, branch: string) {
-    const releaseNotes = await ReleaseNotes.forRange(version, '', '');
+    const releaseNotes = await ReleaseNotes.forRange(this.git, version, '', '');
     await this.cherryPickChangelogIntoNextBranch(releaseNotes, branch);
   }
 }

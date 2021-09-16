@@ -10,11 +10,11 @@ import {Argv, CommandModule} from 'yargs';
 
 import {assertValidGithubConfig, getConfig} from '../../utils/config';
 import {error, green, info, red, yellow} from '../../utils/console';
-import {GitClient} from '../../utils/git/git-client';
 import {addGithubTokenOption} from '../../utils/git/github-yargs';
 import {assertValidReleaseConfig} from '../config/index';
 
 import {CompletionState, ReleaseTool} from './index';
+import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 
 /** Command line options for publishing a release. */
 export interface ReleasePublishOptions {
@@ -28,11 +28,11 @@ function builder(argv: Argv): Argv<ReleasePublishOptions> {
 
 /** Yargs command handler for staging a release. */
 async function handler() {
-  const git = GitClient.get();
+  const git = AuthenticatedGitClient.get();
   const config = getConfig();
   assertValidReleaseConfig(config);
   assertValidGithubConfig(config);
-  const task = new ReleaseTool(config.release, config.github, git.baseDir);
+  const task = new ReleaseTool(git, config.release, config.github, git.baseDir);
   const result = await task.run();
 
   switch (result) {

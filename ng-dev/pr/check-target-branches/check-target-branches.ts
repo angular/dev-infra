@@ -7,16 +7,10 @@
  */
 
 import {assertValidGithubConfig, getConfig, GithubConfig} from '../../utils/config';
-import {error, info, red} from '../../utils/console';
+import {info} from '../../utils/console';
 import {GitClient} from '../../utils/git/git-client';
 import {assertValidMergeConfig, MergeConfig} from '../merge/config';
-import {
-  getBranchesFromTargetLabel,
-  getMatchingTargetLabelForPullRequest,
-  getTargetBranchesForPullRequest,
-  InvalidTargetLabelError,
-  TargetLabel,
-} from '../merge/target-label';
+import {getTargetBranchesForPullRequest} from '../merge/target-label';
 
 async function getTargetBranchesForPr(
   prNumber: number,
@@ -40,7 +34,7 @@ async function getTargetBranchesForPr(
 
   // Note: We do not pass a list of commits here because we did not fetch this information
   // and the commits are only used for validation (which we can skip here).
-  return getTargetBranchesForPullRequest(config, labels, githubTargetBranch, []);
+  return getTargetBranchesForPullRequest(git.github, config, labels, githubTargetBranch, []);
 }
 
 export async function printTargetBranchesForPr(prNumber: number) {

@@ -27,12 +27,11 @@ export enum CompletionState {
 }
 
 export class ReleaseTool {
-  /** The singleton instance of the authenticated git client. */
-  private _git = AuthenticatedGitClient.get();
   /** The previous git commit to return back to after the release tool runs. */
   private previousGitBranchOrRevision = this._git.getCurrentBranchOrRevision();
 
   constructor(
+    protected _git: AuthenticatedGitClient,
     protected _config: ReleaseConfig,
     protected _github: GithubConfig,
     protected _projectRoot: string,

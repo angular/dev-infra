@@ -38,7 +38,7 @@ interface ChangelogEntry {
 
 export class Changelog {
   /** Prepend a changelog entry to the current changelog file. */
-  static prependEntryToChangelogFile(entry: string, git = GitClient.get()) {
+  static prependEntryToChangelogFile(git: GitClient, entry: string) {
     const changelog = new this(git);
     changelog.prependEntryToChangelogFile(entry);
   }
@@ -52,14 +52,14 @@ export class Changelog {
    * other changelog entries.  This allows for example, moving all changelog entries out of the
    * main changelog when a version moves out of support.
    */
-  static moveEntriesPriorToVersionToArchive(version: semver.SemVer, git = GitClient.get()) {
+  static moveEntriesPriorToVersionToArchive(git: GitClient, version: semver.SemVer) {
     const changelog = new this(git);
     changelog.moveEntriesPriorToVersionToArchive(version);
   }
 
   // TODO(josephperrott): Remove this after it is unused.
   /** Retrieve the file paths for the changelog files. */
-  static getChangelogFilePaths(git = GitClient.get()) {
+  static getChangelogFilePaths(git: GitClient) {
     return new this(git);
   }
 
