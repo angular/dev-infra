@@ -63,10 +63,10 @@ def ng_rollup_bundle(
         },
         visibility = visibility,
         deps = config_data + deps + [
-            "@npm//rollup-plugin-node-resolve",
-            "@npm//rollup-plugin-sourcemaps",
-            "@npm//rollup-plugin-commonjs",
             "@npm//@angular-devkit/build-optimizer",
+            "@npm//@rollup/plugin-node-resolve",
+            "@npm//@rollup/plugin-commonjs",
+            "@npm//rollup-plugin-sourcemaps",
         ],
         silent = True,
         format = format,
