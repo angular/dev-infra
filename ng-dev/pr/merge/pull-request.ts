@@ -6,17 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {params, types as graphqlTypes} from 'typed-graphqlify';
-
 import {parseCommitMessage} from '../../commit-message/parse';
-import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
-import {getPr} from '../../utils/github';
 import {PullRequestFailure} from './failures';
 import {matchesPattern} from './string-pattern';
 import {PullRequestMergeTask} from './task';
 import {getTargetBranchesForPullRequest} from './target-label';
 import {assertCorrectBreakingChangeLabeling, assertPendingState} from './validations';
-import {fetchPullRequestFromGithub} from './fetch-pull-request';
+import {fetchPullRequestFromGithub} from '../common/fetch-pull-request';
 
 /** Interface that describes a pull request. */
 export interface PullRequest {
