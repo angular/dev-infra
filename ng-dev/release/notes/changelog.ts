@@ -4,10 +4,10 @@ import * as semver from 'semver';
 import {GitClient} from '../../utils/git/git-client';
 
 /** Project-relative path for the changelog file. */
-export const changelogPath = 'CHANGELOG.md';
+const changelogPath = 'CHANGELOG.md';
 
 /** Project-relative path for the changelog archive file. */
-export const changelogArchivePath = 'CHANGELOG_ARCHIVE.md';
+const changelogArchivePath = 'CHANGELOG_ARCHIVE.md';
 
 /** A marker used to split a CHANGELOG.md file into individual entries. */
 export const splitMarker = '<!-- CHANGELOG SPLIT MARKER -->';
@@ -37,12 +37,47 @@ interface ChangelogEntry {
 }
 
 export class Changelog {
+  /** Prepend a changelog entry to the current changelog file. */
+  static prependEntryToChangelogFile(entry: string, git = GitClient.get()) {
+    const changelog = new this(git);
+    changelog.prependEntryToChangelogFile(entry);
+  }
+
+  /**
+   * Move all changelog entries from the CHANGELOG.md file for versions prior to the provided
+   * version to the changelog archive.
+   *
+   * Versions should be used to determine which entries are moved to archive as versions are the
+   * most accurate piece of context found within a changelog entry to determine its relationship to
+   * other changelog entries.  This allows for example, moving all changelog entries out of the
+   * main changelog when a version moves out of support.
+   */
+  static moveEntriesPriorToVersionToArchive(version: semver.SemVer, git = GitClient.get()) {
+    const changelog = new this(git);
+    changelog.moveEntriesPriorToVersionToArchive(version);
+  }
+
+  // TODO(josephperrott): Remove this after it is unused.
+  /** Retrieve the file paths for the changelog files. */
+  static getChangelogFilePaths(git = GitClient.get()) {
+    return new this(git);
+  }
+
   /** The absolute path to the changelog file. */
   readonly filePath = join(this.git.baseDir, changelogPath);
   /** The absolute path to the changelog archive file. */
   readonly archiveFilePath = join(this.git.baseDir, changelogArchivePath);
-  /** The changelog entries in the CHANGELOG.md file. */
-  private entries = this.getEntriesFor(this.filePath);
+  /**
+   * The changelog entries in the CHANGELOG.md file.
+   * Delays reading the CHANGELOG.md file until it is actually used.
+   */
+  private get entries() {
+    if (this._entries === undefined) {
+      return (this._entries = this.getEntriesFor(this.filePath));
+    }
+    return this._entries;
+  }
+  private _entries: undefined | ChangelogEntry[] = undefined;
   /**
    * The changelog entries in the CHANGELOG_ARCHIVE.md file.
    * Delays reading the CHANGELOG_ARCHIVE.md file until it is actually used.
@@ -55,10 +90,10 @@ export class Changelog {
   }
   private _archiveEntries: undefined | ChangelogEntry[] = undefined;
 
-  constructor(private git: GitClient) {}
+  private constructor(private git: GitClient) {}
 
   /** Prepend a changelog entry to the changelog. */
-  prependEntryToChangelog(entry: string) {
+  private prependEntryToChangelogFile(entry: string) {
     this.entries.unshift(parseChangelogEntry(entry));
     this.writeToChangelogFile();
   }
@@ -72,7 +107,7 @@ export class Changelog {
    * other changelog entries.  This allows for example, moving all changelog entries out of the
    * main changelog when a version moves out of support.
    */
-  moveEntriesPriorToVersionToArchive(version: semver.SemVer) {
+  private moveEntriesPriorToVersionToArchive(version: semver.SemVer) {
     [...this.entries].reverse().forEach((entry: ChangelogEntry) => {
       if (semver.lt(entry.version, version)) {
         this.archiveEntries.unshift(entry);

@@ -33,8 +33,6 @@ export class ReleaseNotes {
     return new ReleaseNotes(version, commits, git);
   }
 
-  /** The changelog writer. */
-  private changelog = new Changelog(this.git);
   /** The RenderContext to be used during rendering. */
   private renderContext: RenderContext | undefined;
   /** The title to use for the release. */
@@ -68,8 +66,8 @@ export class ReleaseNotes {
    * Prepend generated release note to the CHANGELOG.md file in the base directory of the repository
    * provided by the GitClient.
    */
-  async prependEntryToChangelog() {
-    this.changelog.prependEntryToChangelog(await this.getChangelogEntry());
+  async prependEntryToChangelogFile() {
+    Changelog.prependEntryToChangelogFile(await this.getChangelogEntry(), this.git);
 
     // TODO(josephperrott): Remove file formatting calls.
     //   Upon reaching a standardized formatting for markdown files, rather than calling a formatter
@@ -77,7 +75,7 @@ export class ReleaseNotes {
     //   created for changelogs meet on standardized markdown formats via unit testing.
     try {
       assertValidFormatConfig(this.config);
-      await formatFiles([this.changelog.filePath]);
+      await formatFiles([Changelog.getChangelogFilePaths(this.git).filePath]);
     } catch {
       // If the formatting is either unavailable or fails, continue on with the unformatted result.
     }
