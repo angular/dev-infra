@@ -34,6 +34,23 @@ const PR_SCHEMA = {
       ],
     },
   ),
+  maintainerCanModify: graphqlTypes.boolean,
+  viewerDidAuthor: graphqlTypes.boolean,
+  headRefOid: graphqlTypes.string,
+  headRef: {
+    name: graphqlTypes.string,
+    repository: {
+      url: graphqlTypes.string,
+      nameWithOwner: graphqlTypes.string,
+    },
+  },
+  baseRef: {
+    name: graphqlTypes.string,
+    repository: {
+      url: graphqlTypes.string,
+      nameWithOwner: graphqlTypes.string,
+    },
+  },
   baseRefName: graphqlTypes.string,
   title: graphqlTypes.string,
   labels: params(

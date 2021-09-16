@@ -12,6 +12,7 @@ ts_library(
     ],
     deps = [
         "//ng-dev/commit-message",
+        "//ng-dev/pr/common",
         "//ng-dev/utils",
         "@npm//@types/conventional-commits-parser",
         "@npm//@types/inquirer",
