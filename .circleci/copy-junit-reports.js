@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 const {execSync} = require('child_process');
-const {join, extname} = require('path');
-const {mkdirSync, rmSync, statSync, readdirSync, copyFileSync} = require('fs');
+const {join, dirname, extname} = require('path');
+const {mkdirSync, rmSync, readFileSync, statSync, readdirSync, copyFileSync} = require('fs');
+const {TestResultData} = require('../tools/protos/test_status_pb');
 
 /**
  * Discover all test results, which @bazel/jasmine stores as `test.xml` files, in the directory and
@@ -21,7 +22,7 @@ const findTestResultsInDir = function (dirPath, files) {
     } else {
       // Only the test result files, which are XML with the .xml extension, should be discovered.
       if (extname(file) === '.xml') {
-        files.push(filePath);
+        files.push([filePath, join(dirname(filePath), 'test.cache_status')]);
       }
     }
   }
@@ -47,9 +48,20 @@ const destDirPath = join(__dirname, '../test-results/jasmine');
 rmSync(destDirPath, {recursive: true, force: true});
 mkdirSync(destDirPath, {recursive: true});
 
+/** Total number of files copied, also used as a index to number copied files. */
+let copiedFileCount = 0;
 // Copy each of the test result files to the central test result directory which CircleCI discovers
 // test results in.
-testResultPaths.forEach((filePath, i) => {
-  const destFilePath = join(destDirPath, `results-${i}.xml`);
-  copyFileSync(filePath, destFilePath);
+testResultPaths.forEach(([xmlFilePath, cacheStatusFilePath]) => {
+  const shortFilePath = xmlFilePath.substr(testLogPath.length + 1);
+  const testResultData = TestResultData.deserializeBinary(readFileSync(cacheStatusFilePath));
+  if (testResultData.getRemotelyCached()) {
+    console.debug(`Skipping copy of ${shortFilePath} as it was a passing remote cache hit`);
+  } else {
+    const destFilePath = join(destDirPath, `results-${copiedFileCount++}.xml`);
+    copyFileSync(xmlFilePath, destFilePath);
+    console.debug(`Copying ${shortFilePath}`);
+  }
 });
+
+console.info(`Copied ${copiedFileCount} test result file(s) for upload.`);
