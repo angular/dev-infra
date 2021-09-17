@@ -22,8 +22,8 @@ import {
   testTmpDir,
   VirtualGitClient,
 } from '../../../../utils/testing';
-import {installSandboxGitClient} from './sandbox-git-client';
-import {getMockGitClient} from './git-client-mock';
+import {installSandboxGitClient} from '../../../../utils/testing';
+import {getMockGitClient} from '../../../../utils/testing';
 
 /** List of NPM packages which are configured for release action tests. */
 export const testReleasePackages = ['@angular/pkg1', '@angular/pkg2'];

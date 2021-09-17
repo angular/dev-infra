@@ -6,10 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {getNextBranchName} from '../../../versioning';
-import {GithubConfig} from '../../../../utils/config';
+import {GithubConfig} from '../config';
 import {spawnSync} from 'child_process';
-import {testTmpDir} from '../../../../utils/testing';
+import {testTmpDir} from './bazel-env';
 
 /** Runs a Git command in the temporary repo directory. */
 export function runGitInTmpDir(args: string[]): string {
@@ -22,7 +21,7 @@ export function runGitInTmpDir(args: string[]): string {
 
 /** Helper class that can be used to initialize and control the sandbox test repo. */
 export class SandboxGitRepo {
-  private _nextBranchName = getNextBranchName(this._github);
+  private _nextBranchName = this._github.mainBranchName;
   private _commitShaById = new Map<number, string>();
 
   static withInitialCommit(github: GithubConfig) {

@@ -6,18 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {installSandboxGitClient, SandboxGitClient} from '../test-utils/sandbox-git-client';
-import {readFileSync, writeFileSync} from 'fs';
 import {prepareTempDirectory} from '../test-utils/action-mocks';
-import {getMockGitClient} from '../test-utils/git-client-mock';
 import * as config from '../../../../utils/config';
-import {SandboxGitRepo} from '../test-utils/sandbox-testing';
 import {ReleaseNotes} from '../../../notes/release-notes';
 import {ReleaseConfig} from '../../../config';
 import {changelogPattern, parse} from '../test-utils/test-utils';
-import {buildDateStamp} from '../../../notes/context';
-import {dedent} from '../../../../utils/testing/dedent';
-import {testTmpDir} from '../../../../utils/testing';
+import {installSandboxGitClient, SandboxGitClient} from '../../../../utils/testing';
+import {getMockGitClient} from '../../../../utils/testing';
+import {SandboxGitRepo} from '../../../../utils/testing';
 
 describe('release notes generation', () => {
   let releaseConfig: ReleaseConfig;

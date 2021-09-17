@@ -19,7 +19,7 @@ import {
   TargetLabel,
 } from '../target-label';
 
-import {fakeGithubPaginationResponse} from '../../../utils/testing/github-interception';
+import {fakeGithubPaginationResponse} from '../../../utils/testing';
 import {getTargetLabelsForActiveReleaseTrains} from './labels';
 
 const API_ENDPOINT = `https://api.github.com`;

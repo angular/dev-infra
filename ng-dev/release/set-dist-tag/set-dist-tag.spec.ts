@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {matchesVersion} from '../../utils/testing/semver-matchers';
+import {matchesVersion} from '../../utils/testing';
 import * as configUtils from '../../utils/config';
 import * as npm from '../versioning/npm-publish';
 

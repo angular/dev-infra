@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {matchesVersion} from '../../../utils/testing/semver-matchers';
+import {matchesVersion} from '../../../utils/testing';
 import {fetchLongTermSupportBranchesFromNpm} from '../../versioning/long-term-support';
 import {ReleaseTrain} from '../../versioning/release-trains';
 import {CutLongTermSupportPatchAction} from '../actions/cut-lts-patch';
@@ -21,10 +21,10 @@ import {
   expectStagingAndPublishWithCherryPick,
 } from './test-utils/staging-test';
 import {getTestConfigurationsForAction} from './test-utils/action-mocks';
-import {SandboxGitRepo} from './test-utils/sandbox-testing';
 import {readFileSync} from 'fs';
-import {getMockGitClient} from './test-utils/git-client-mock';
 import {testTmpDir} from '../../../utils/testing';
+import {SandboxGitRepo} from '../../../utils/testing';
+import {getMockGitClient} from '../../../utils/testing';
 
 describe('cut an LTS patch action', () => {
   it('should be active', async () => {

@@ -14,8 +14,8 @@ import {
   expectStagingAndPublishWithCherryPick,
 } from './test-utils/staging-test';
 import {readFileSync} from 'fs';
-import {SandboxGitRepo} from './test-utils/sandbox-testing';
 import {testTmpDir} from '../../../utils/testing';
+import {SandboxGitRepo} from '../../../utils/testing';
 
 describe('cut release candidate for feature-freeze action', () => {
   it('should activate if a feature-freeze release-train is active', async () => {

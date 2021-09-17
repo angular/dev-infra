@@ -13,9 +13,9 @@ import {
   expectGithubApiRequestsForStaging,
   expectStagingAndPublishWithCherryPick,
 } from './test-utils/staging-test';
-import {SandboxGitRepo} from './test-utils/sandbox-testing';
 import {readFileSync} from 'fs';
 import {testTmpDir} from '../../../utils/testing';
+import {SandboxGitRepo} from '../../../utils/testing';
 
 describe('cut new patch action', () => {
   it('should be active', async () => {
