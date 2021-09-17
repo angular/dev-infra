@@ -2,11 +2,17 @@ load("//tools:defaults.bzl", "ts_library")
 
 ts_library(
     name = "common",
-    srcs = glob(["*.ts"]),
+    srcs = glob(["**/*.ts"]),
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
+        "//ng-dev/commit-message",
+        "//ng-dev/pr/config",
+        "//ng-dev/release/config",
+        "//ng-dev/release/versioning",
         "//ng-dev/utils",
         "@npm//@types/node",
+        "@npm//@types/semver",
+        "@npm//semver",
         "@npm//typed-graphqlify",
     ],
 )

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ConfigValidationError, GithubConfig} from '../utils/config';
+import {ConfigValidationError, GithubConfig} from '../../utils/config';
 
 /**
  * Possible merge methods supported by the Github API.
@@ -85,3 +85,6 @@ export function assertValidMergeConfig<T>(
     throw new ConfigValidationError('Invalid `merge` configuration', errors);
   }
 }
+
+/** Label for pull requests containing a breaking change. */
+export const breakingChangeLabel = 'flag: breaking change';

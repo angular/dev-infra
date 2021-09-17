@@ -7,7 +7,7 @@
  */
 
 import {join} from 'path';
-import {PullRequestFailure} from '../failures';
+import {PullRequestFailure} from '../../common/validation/failures';
 import {PullRequest} from '../pull-request';
 import {MergeStrategy, TEMP_PR_HEAD_BRANCH} from './strategy';
 

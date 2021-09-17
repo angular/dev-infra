@@ -6,13 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Commit} from '../../commit-message/parse';
-import {TargetLabel, TargetLabelName} from './target-label';
-import {MergeConfig} from '../config';
+import {Commit} from '../../../commit-message/parse';
+import {TargetLabel, TargetLabelName} from '../targeting/target-label';
+import {breakingChangeLabel, MergeConfig} from '../../config';
 import {PullRequestFailure} from './failures';
-import {red, warn} from '../../utils/console';
-import {breakingChangeLabel} from './constants';
-import {RawPullRequest} from '../common/fetch-pull-request';
+import {red, warn} from '../../../utils/console';
+import {RawPullRequest} from '../fetch-pull-request';
 
 /**
  * Assert the commits provided are allowed to merge to the provided target label,

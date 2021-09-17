@@ -13,14 +13,13 @@ import {
   isVersionBranch,
   ReleaseRepoWithApi,
 } from '../../../release/versioning';
-import {assertValidGithubConfig, getConfig, GithubConfig} from '../../../utils/config';
-import {GitClient} from '../../../utils/git/git-client';
+import {assertValidGithubConfig, GithubConfig} from '../../../utils/config';
 import {
   InvalidTargetBranchError,
   InvalidTargetLabelError,
   TargetLabel,
   TargetLabelName,
-} from '../target-label';
+} from './target-label';
 
 import {assertActiveLtsBranch} from './lts-branch';
 import {GithubClient} from '../../../utils/git/github';

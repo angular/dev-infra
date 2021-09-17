@@ -3,6 +3,7 @@ load("//tools:defaults.bzl", "esbuild_checked_in")
 esbuild_checked_in(
     name = "post",
     entry_point = "//github-actions/breaking-changes-label/lib:post.ts",
+    external = ["ts-node"],
     deps = [
         "//github-actions/breaking-changes-label/lib",
     ],
@@ -11,6 +12,7 @@ esbuild_checked_in(
 esbuild_checked_in(
     name = "main",
     entry_point = "//github-actions/breaking-changes-label/lib:main.ts",
+    external = ["ts-node"],
     deps = [
         "//github-actions/breaking-changes-label/lib",
     ],

@@ -13,12 +13,3 @@ ts_library(
         "@npm//@types/yargs",
     ],
 )
-
-ts_library(
-    name = "config",
-    srcs = ["config.ts"],
-    visibility = ["//ng-dev:__subpackages__"],
-    deps = [
-        "//ng-dev/utils",
-    ],
-)

@@ -8,19 +8,18 @@
 
 import * as nock from 'nock';
 
-import {ReleaseConfig} from '../../../release/config/index';
-import {_npmPackageInfoCache, NpmPackageInfo} from '../../../release/versioning/npm-registry';
-import {GithubConfig} from '../../../utils/config';
-import * as console from '../../../utils/console';
-import {GithubClient} from '../../../utils/git/github';
+import {ReleaseConfig} from '../../release/config/index';
+import {_npmPackageInfoCache, NpmPackageInfo} from '../../release/versioning/npm-registry';
+import {GithubConfig} from '../../utils/config';
+import * as console from '../../utils/console';
+import {GithubClient} from '../../utils/git/github';
 import {
   getBranchesFromTargetLabel,
   getMatchingTargetLabelForPullRequest,
   TargetLabel,
-} from '../target-label';
-
-import {fakeGithubPaginationResponse} from '../../../utils/testing';
-import {getTargetLabelsForActiveReleaseTrains} from './labels';
+} from '../common/targeting/target-label';
+import {fakeGithubPaginationResponse} from '../../utils/testing/github-interception';
+import {getTargetLabelsForActiveReleaseTrains} from '../common/targeting/labels';
 
 const API_ENDPOINT = `https://api.github.com`;
 

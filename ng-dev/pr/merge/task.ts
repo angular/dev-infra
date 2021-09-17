@@ -11,7 +11,7 @@ import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {GitCommandError} from '../../utils/git/git-client';
 
 import {MergeConfigWithRemote} from '../config';
-import {PullRequestFailure} from './failures';
+import {PullRequestFailure} from '../common/validation/failures';
 import {
   getCaretakerNotePromptMessage,
   getTargettedBranchesConfirmationPromptMessage,

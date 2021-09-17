@@ -7,11 +7,14 @@
  */
 
 import {parseCommitMessage} from '../../commit-message/parse';
-import {PullRequestFailure} from './failures';
+import {PullRequestFailure} from '../common/validation/failures';
 import {matchesPattern} from './string-pattern';
 import {PullRequestMergeTask} from './task';
-import {getTargetBranchesForPullRequest} from './target-label';
-import {assertCorrectBreakingChangeLabeling, assertPendingState} from './validations';
+import {getTargetBranchesForPullRequest} from '../common/targeting/target-label';
+import {
+  assertCorrectBreakingChangeLabeling,
+  assertPendingState,
+} from '../common/validation/validations';
 import {fetchPullRequestFromGithub} from '../common/fetch-pull-request';
 
 /** Interface that describes a pull request. */

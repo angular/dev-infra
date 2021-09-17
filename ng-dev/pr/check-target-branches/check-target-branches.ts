@@ -10,7 +10,7 @@ import {assertValidGithubConfig, getConfig, GithubConfig} from '../../utils/conf
 import {info} from '../../utils/console';
 import {GitClient} from '../../utils/git/git-client';
 import {assertValidMergeConfig, MergeConfig} from '../config';
-import {getTargetBranchesForPullRequest} from '../merge/target-label';
+import {getTargetBranchesForPullRequest} from '../common/targeting/target-label';
 
 async function getTargetBranchesForPr(
   prNumber: number,

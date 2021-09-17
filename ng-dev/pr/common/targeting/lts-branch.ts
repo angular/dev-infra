@@ -17,7 +17,7 @@ import {
   ReleaseRepoWithApi,
 } from '../../../release/versioning';
 import {promptConfirm, red, warn, yellow} from '../../../utils/console';
-import {InvalidTargetBranchError} from '../target-label';
+import {InvalidTargetBranchError} from './target-label';
 import {defaultLocale} from '../../../utils/locale';
 
 /**

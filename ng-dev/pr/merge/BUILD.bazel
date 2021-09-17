@@ -11,13 +11,12 @@ ts_library(
         exclude = ["**/*.spec.ts"],
     ),
     visibility = [
-        "//github-actions/breaking-changes-label/lib:__pkg__",
         "//ng-dev:__subpackages__",
     ],
     deps = [
         "//ng-dev/commit-message",
-        "//ng-dev/pr:config",
         "//ng-dev/pr/common",
+        "//ng-dev/pr/config",
         "//ng-dev/release/config",
         "//ng-dev/release/versioning",
         "//ng-dev/utils",
@@ -38,6 +37,7 @@ ts_library(
     srcs = glob(["**/*.spec.ts"]),
     deps = [
         ":merge",
+        "//ng-dev/pr/common",
         "//ng-dev/release/config",
         "//ng-dev/release/versioning",
         "//ng-dev/utils",
