@@ -9,10 +9,32 @@
 const {loadSync} = require('protobufjs');
 const {execSync} = require('child_process');
 const {join, dirname, extname} = require('path');
-const {mkdirSync, rmSync, readFileSync, statSync, readdirSync, copyFileSync} = require('fs');
+const {
+  mkdirSync,
+  rmSync,
+  readFileSync,
+  statSync,
+  readdirSync,
+  copyFileSync,
+  writeFileSync,
+} = require('fs');
 
 const proto = loadSync(join(__dirname, '../tools/protos/test_status.proto'));
 const TestResultData = proto.lookupType('blaze.TestResultData');
+
+/**
+ * A JUnit test report to always include signaling to CircleCI that tests were requested.
+ *
+ * `testsuite` and `testcase` elements are required for CircleCI to properly parse the report.
+ */
+const baseTestReport = `
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites disabled="0" errors="0" failures="0" tests="0" time="0">
+  <testsuite name="">
+    <testcase name=""/>
+  </testsuite>
+</testsuites>
+`.trim();
 
 /**
  * Discover all test results, which @bazel/jasmine stores as `test.xml` files, in the directory and
@@ -48,6 +70,14 @@ const destDirPath = join(__dirname, '../test-results/jasmine');
 // Ensure that an empty directory exists to contain the test results reports for upload.
 rmSync(destDirPath, {recursive: true, force: true});
 mkdirSync(destDirPath, {recursive: true});
+
+// By always uploading at least one result file, CircleCI will understand that a tests actions were
+// called for in the bazel test run, even if not tests were actually executed due to cache hits. By
+// always making sure to upload at least one test result report, CircleCI always include the
+// workflow in its aggregated data and provide better metrics about the number of executed tests per
+// run.
+writeFileSync(join(destDirPath, `results.xml`), baseTestReport);
+console.debug('Added base test report to test-results directory.');
 
 /** Total number of files copied, also used as a index to number copied files. */
 let copiedFileCount = 0;
