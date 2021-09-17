@@ -6,7 +6,7 @@ ts_library(
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
         "//ng-dev/commit-message",
-        "//ng-dev/pr:config",
+        "//ng-dev/pr/config",
         "//ng-dev/release/config",
         "//ng-dev/release/versioning",
         "//ng-dev/utils",
