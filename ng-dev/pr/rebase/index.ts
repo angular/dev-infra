@@ -5,37 +5,12 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-
-import {types as graphqlTypes} from 'typed-graphqlify';
-
 import {Commit} from '../../commit-message/parse';
 import {getCommitsInRange} from '../../commit-message/utils';
 import {error, info, promptConfirm} from '../../utils/console';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {addTokenToGitHttpsUrl} from '../../utils/git/github-urls';
-import {getPr} from '../../utils/github';
-
-/* Graphql schema for the response body for each pending PR. */
-const PR_SCHEMA = {
-  state: graphqlTypes.string,
-  maintainerCanModify: graphqlTypes.boolean,
-  viewerDidAuthor: graphqlTypes.boolean,
-  headRefOid: graphqlTypes.string,
-  headRef: {
-    name: graphqlTypes.string,
-    repository: {
-      url: graphqlTypes.string,
-      nameWithOwner: graphqlTypes.string,
-    },
-  },
-  baseRef: {
-    name: graphqlTypes.string,
-    repository: {
-      url: graphqlTypes.string,
-      nameWithOwner: graphqlTypes.string,
-    },
-  },
-};
+import {fetchPullRequestFromGithub} from '../common/fetch-pull-request';
 
 /**
  * Rebase the provided PR onto its merge target branch, and push up the resulting
@@ -57,7 +32,7 @@ export async function rebasePr(prNumber: number, githubToken: string): Promise<n
    */
   const previousBranchOrRevision = git.getCurrentBranchOrRevision();
   /* Get the PR information from Github. */
-  const pr = await getPr(PR_SCHEMA, prNumber, git);
+  const pr = await fetchPullRequestFromGithub(git, prNumber);
 
   if (pr === null) {
     error(`Specified pull request does not exist.`);
