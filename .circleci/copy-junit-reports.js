@@ -5,10 +5,14 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+
+const {loadSync} = require('protobufjs');
 const {execSync} = require('child_process');
 const {join, dirname, extname} = require('path');
 const {mkdirSync, rmSync, readFileSync, statSync, readdirSync, copyFileSync} = require('fs');
-const {TestResultData} = require('../tools/protos/test_status_pb');
+
+const proto = loadSync(join(__dirname, '../tools/protos/test_status.proto'));
+const TestResultData = proto.lookupType('blaze.TestResultData');
 
 /**
  * Discover all test results, which @bazel/jasmine stores as `test.xml` files, in the directory and
@@ -30,10 +34,7 @@ const findTestResultsInDir = function (dirPath, files) {
 };
 
 /** Absolute path to the bazel instance's testlog directory.  */
-const testLogPath = execSync('yarn -s bazel info bazel-testlogs', {
-  stdio: 'pipe',
-  encoding: 'utf8',
-}).trim();
+const testLogPath = execSync('yarn -s bazel info bazel-testlogs', {encoding: 'utf8'}).trim();
 /** List of test result files. */
 const testResultPaths = findTestResultsInDir(testLogPath, []);
 /**
@@ -54,8 +55,9 @@ let copiedFileCount = 0;
 // test results in.
 testResultPaths.forEach(([xmlFilePath, cacheStatusFilePath]) => {
   const shortFilePath = xmlFilePath.substr(testLogPath.length + 1);
-  const testResultData = TestResultData.deserializeBinary(readFileSync(cacheStatusFilePath));
-  if (testResultData.getRemotelyCached()) {
+  const testResultData = TestResultData.decode(readFileSync(cacheStatusFilePath));
+
+  if (testResultData.remotelyCached && testResultData.testPassed) {
     console.debug(`Skipping copy of ${shortFilePath} as it was a passing remote cache hit`);
   } else {
     const destFilePath = join(destDirPath, `results-${copiedFileCount++}.xml`);
