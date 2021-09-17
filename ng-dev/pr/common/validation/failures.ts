@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {breakingChangeLabel} from './constants';
-import {TargetLabel} from './target-label';
+import {breakingChangeLabel} from '../../config';
+import {TargetLabel} from '../targeting/target-label';
 
 /**
  * Class that can be used to describe pull request failures. A failure

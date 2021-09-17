@@ -12,7 +12,7 @@ import {prompt} from 'inquirer';
 import {parseCommitMessage} from '../../../commit-message/parse';
 import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client';
 import {GithubApiMergeMethod, GithubApiMergeStrategyConfig} from '../../config';
-import {PullRequestFailure} from '../failures';
+import {PullRequestFailure} from '../../common/validation/failures';
 import {PullRequest} from '../pull-request';
 import {matchesPattern} from '../string-pattern';
 

@@ -2,8 +2,8 @@ import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {Octokit} from '@octokit/rest';
 import {parseCommitMessage} from '../../../ng-dev/commit-message/parse';
+import {breakingChangeLabel} from '../../../ng-dev/pr/config';
 import {ANGULAR_ROBOT, getAuthTokenFor} from '../../utils';
-import {breakingChangeLabel} from '../../../ng-dev/pr/merge/constants';
 
 async function run(): Promise<void> {
   const token = await getAuthTokenFor(ANGULAR_ROBOT);

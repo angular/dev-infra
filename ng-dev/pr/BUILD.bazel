@@ -17,7 +17,10 @@ ts_library(
 ts_library(
     name = "config",
     srcs = ["config.ts"],
-    visibility = ["//ng-dev:__subpackages__"],
+    visibility = [
+        "//github-actions/breaking-changes-label/lib:__pkg__",
+        "//ng-dev:__subpackages__",
+    ],
     deps = [
         "//ng-dev/utils",
     ],

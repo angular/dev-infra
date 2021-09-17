@@ -7,7 +7,7 @@
  */
 
 import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client';
-import {PullRequestFailure} from '../failures';
+import {PullRequestFailure} from '../../common/validation/failures';
 import {PullRequest} from '../pull-request';
 
 /**

@@ -85,3 +85,6 @@ export function assertValidMergeConfig<T>(
     throw new ConfigValidationError('Invalid `merge` configuration', errors);
   }
 }
+
+/** Label for pull requests containing a breaking change. */
+export const breakingChangeLabel = 'flag: breaking change';

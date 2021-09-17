@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {MergeConfig} from '../config';
-import {getTargetLabelsForActiveReleaseTrains} from './defaults';
-import {GithubConfig} from '../../utils/config';
-import {Commit} from '../../commit-message/parse';
-import {assertChangesAllowForTargetLabel} from './validations';
-import {PullRequestFailure} from './failures';
-import {GithubClient} from '../../utils/git/github';
+import {MergeConfig} from '../../config';
+import {getTargetLabelsForActiveReleaseTrains} from './labels';
+import {GithubConfig} from '../../../utils/config';
+import {Commit} from '../../../commit-message/parse';
+import {assertChangesAllowForTargetLabel} from '../validation/validations';
+import {PullRequestFailure} from '../validation/failures';
+import {GithubClient} from '../../../utils/git/github';
 
 /**
  * Enum capturing available target label names in the Angular organization. A target
