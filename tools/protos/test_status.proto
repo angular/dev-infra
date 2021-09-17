@@ -1,5 +1,5 @@
 // Copied from `external/@bazel_tools/src/main/protobuf/test_status.proto`.
-// https://github.com/bazelbuild/bazel/blob/master/src/main/protobuf/test_status.proto.
+// https://github.com/bazelbuild/bazel/blob/4.2.1/src/main/protobuf/test_status.proto
 // Bazel Version: 4.2.1
 
 // Copyright 2014 The Bazel Authors. All rights reserved.
