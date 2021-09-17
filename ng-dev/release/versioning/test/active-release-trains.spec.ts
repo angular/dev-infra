@@ -3,7 +3,7 @@ import {getNextBranchName, ReleaseRepoWithApi} from '../version-branches';
 import {GithubClient} from '../../../utils/git/github';
 import * as nock from 'nock';
 import {matchesVersion} from '../../../utils/testing';
-import {fakeGithubPaginationResponse} from '../../../utils/testing/github-interception';
+import {fakeGithubPaginationResponse} from '../../../utils/testing';
 import {GithubConfig} from '../../../utils/config';
 
 describe('active release train determination', () => {

@@ -18,8 +18,8 @@ import {
   expectStagingAndPublishWithCherryPick,
   expectStagingAndPublishWithoutCherryPick,
 } from './test-utils/staging-test';
-import {SandboxGitRepo} from './test-utils/sandbox-testing';
 import {testTmpDir} from '../../../utils/testing';
+import {SandboxGitRepo} from '../../../utils/testing';
 
 describe('cut next pre-release action', () => {
   it('should always be active regardless of release-trains', async () => {

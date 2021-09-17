@@ -7,12 +7,12 @@
  */
 
 import {ReleaseAction} from '../../actions';
-import {GithubTestingRepo} from './github-api-testing';
+import {GithubTestingRepo} from '../../../../utils/testing';
 import {GithubConfig} from '../../../../utils/config';
 import {ReleaseConfig} from '../../../config';
-import {SandboxGitClient} from './sandbox-git-client';
 import {VirtualGitClient} from '../../../../utils/testing';
 import {ActiveReleaseTrains} from '../../../versioning';
+import {SandboxGitClient} from '../../../../utils/testing';
 
 export interface TestOptions {
   /**

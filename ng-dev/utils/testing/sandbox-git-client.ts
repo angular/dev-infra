@@ -7,9 +7,9 @@
  */
 
 import {SpawnSyncOptions, SpawnSyncReturns} from 'child_process';
-import {AuthenticatedGitClient} from '../../../../utils/git/authenticated-git-client';
-import {GithubConfig} from '../../../../utils/config';
-import {GitClient} from '../../../../utils/git/git-client';
+import {AuthenticatedGitClient} from '../git/authenticated-git-client';
+import {GithubConfig} from '../config';
+import {GitClient} from '../git/git-client';
 
 /** Fake spawn sync returns value that is successful without any process output. */
 const noopSpawnSyncReturns = {status: 0, stderr: '', output: [], pid: -1, signal: null, stdout: ''};

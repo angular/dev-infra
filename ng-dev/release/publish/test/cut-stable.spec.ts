@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {matchesVersion} from '../../../utils/testing/semver-matchers';
+import {matchesVersion} from '../../../utils/testing';
 import {ReleaseTrain} from '../../versioning/release-trains';
 import {CutStableAction} from '../actions/cut-stable';
 import * as externalCommands from '../external-commands';
@@ -17,8 +17,8 @@ import {
   expectGithubApiRequestsForStaging,
   expectStagingAndPublishWithCherryPick,
 } from './test-utils/staging-test';
-import {SandboxGitRepo} from './test-utils/sandbox-testing';
 import {testTmpDir} from '../../../utils/testing';
+import {SandboxGitRepo} from '../../../utils/testing';
 
 describe('cut stable action', () => {
   it('should not activate if a feature-freeze release-train is active', async () => {

@@ -27,10 +27,10 @@ import {
   setupReleaseActionForTesting,
 } from './test-utils/test-utils';
 import {getTestConfigurationsForAction, testReleasePackages} from './test-utils/action-mocks';
-import {getMockGitClient} from './test-utils/git-client-mock';
 import {CommitFromGitLog, parseCommitFromGitLog} from '../../../commit-message/parse';
-import {SandboxGitRepo} from './test-utils/sandbox-testing';
 import {GitClient} from '../../../utils/git/git-client';
+import {getMockGitClient} from '../../../utils/testing';
+import {SandboxGitRepo} from '../../../utils/testing';
 
 describe('common release action logic', () => {
   const baseReleaseTrains: ActiveReleaseTrains = {
