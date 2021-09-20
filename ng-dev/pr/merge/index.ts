@@ -12,7 +12,7 @@ import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {GithubApiRequestError} from '../../utils/git/github';
 import {GITHUB_TOKEN_GENERATE_URL} from '../../utils/git/github-urls';
 
-import {assertValidMergeConfig} from '../config';
+import {assertValidPullRequestConfig} from '../config';
 import {MergeResult, MergeStatus, PullRequestMergeTask, PullRequestMergeTaskFlags} from './task';
 
 /**
@@ -137,7 +137,7 @@ async function createPullRequestMergeTask(flags: PullRequestMergeTaskFlags) {
   try {
     const config = getConfig();
     assertValidGithubConfig(config);
-    assertValidMergeConfig(config);
+    assertValidPullRequestConfig(config);
     /** The singleton instance of the authenticated git client. */
     const git = AuthenticatedGitClient.get();
 

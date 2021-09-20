@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {MergeConfig} from '../../config';
+import {PullRequestConfig} from '../../config';
 import {getTargetLabelsForActiveReleaseTrains} from './labels';
 import {GithubConfig} from '../../../utils/config';
 import {Commit} from '../../../commit-message/parse';
@@ -65,7 +65,7 @@ export class InvalidTargetLabelError {
 
 /** Gets the target label from the specified pull request labels. */
 export async function getMatchingTargetLabelForPullRequest(
-  config: Pick<MergeConfig, 'noTargetLabeling'>,
+  config: Pick<PullRequestConfig, 'noTargetLabeling'>,
   labelsOnPullRequest: string[],
   allTargetLabels: TargetLabel[],
 ): Promise<TargetLabel> {
@@ -97,12 +97,12 @@ export async function getMatchingTargetLabelForPullRequest(
 /** Get the branches the pull request should be merged into. */
 export async function getTargetBranchesForPullRequest(
   api: GithubClient,
-  config: {merge: MergeConfig; github: GithubConfig},
+  config: {pullRequest: PullRequestConfig; github: GithubConfig},
   labelsOnPullRequest: string[],
   githubTargetBranch: string,
   commits: Commit[],
 ): Promise<string[]> {
-  if (config.merge.noTargetLabeling) {
+  if (config.pullRequest.noTargetLabeling) {
     return [config.github.mainBranchName];
   }
 
@@ -113,13 +113,13 @@ export async function getTargetBranchesForPullRequest(
   try {
     const targetLabels = await getTargetLabelsForActiveReleaseTrains(api, config);
     const matchingLabel = await getMatchingTargetLabelForPullRequest(
-      config.merge,
+      config.pullRequest,
       labelsOnPullRequest,
       targetLabels,
     );
     const targetBranches = await getBranchesFromTargetLabel(matchingLabel, githubTargetBranch);
 
-    assertChangesAllowForTargetLabel(commits, matchingLabel, config.merge);
+    assertChangesAllowForTargetLabel(commits, matchingLabel, config.pullRequest);
 
     return targetBranches;
   } catch (error) {

@@ -58,10 +58,10 @@ export async function loadAndValidatePullRequest(
 
   const labels = prData.labels.nodes.map((l) => l.name);
 
-  if (!labels.some((name) => matchesPattern(name, config.merge.mergeReadyLabel))) {
+  if (!labels.some((name) => matchesPattern(name, config.pullRequest.mergeReadyLabel))) {
     return PullRequestFailure.notMergeReady();
   }
-  if (!labels.some((name) => matchesPattern(name, config.merge.claSignedLabel))) {
+  if (!labels.some((name) => matchesPattern(name, config.pullRequest.claSignedLabel))) {
     return PullRequestFailure.claUnsigned();
   }
 
@@ -99,13 +99,14 @@ export async function loadAndValidatePullRequest(
   }
 
   const requiredBaseSha =
-    config.merge.requiredBaseCommits && config.merge.requiredBaseCommits[githubTargetBranch];
+    config.pullRequest.requiredBaseCommits &&
+    config.pullRequest.requiredBaseCommits[githubTargetBranch];
   const needsCommitMessageFixup =
-    !!config.merge.commitMessageFixupLabel &&
-    labels.some((name) => matchesPattern(name, config.merge.commitMessageFixupLabel));
+    !!config.pullRequest.commitMessageFixupLabel &&
+    labels.some((name) => matchesPattern(name, config.pullRequest.commitMessageFixupLabel));
   const hasCaretakerNote =
-    !!config.merge.caretakerNoteLabel &&
-    labels.some((name) => matchesPattern(name, config.merge.caretakerNoteLabel!));
+    !!config.pullRequest.caretakerNoteLabel &&
+    labels.some((name) => matchesPattern(name, config.pullRequest.caretakerNoteLabel!));
 
   return {
     url: prData.url,

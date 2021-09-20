@@ -23,7 +23,7 @@ export interface GithubApiMergeStrategyConfig {
 }
 
 /** Configuration for the merge script. */
-export interface MergeConfig {
+export interface PullRequestConfig {
   /**
    * Configuration for the upstream remote. All of these options are optional as
    * defaults are provided by the common dev-infra github configuration.
@@ -56,26 +56,28 @@ export interface MergeConfig {
 }
 
 /** Loads and validates the merge configuration. */
-export function assertValidMergeConfig<T>(
-  config: T & Partial<{merge: MergeConfig}>,
-): asserts config is T & {merge: MergeConfig} {
+export function assertValidPullRequestConfig<T>(
+  config: T & Partial<{pullRequest: PullRequestConfig}>,
+): asserts config is T & {pullRequest: PullRequestConfig} {
   const errors: string[] = [];
-  if (config.merge === undefined) {
-    throw new ConfigValidationError('No merge configuration found. Set the `merge` configuration.');
+  if (config.pullRequest === undefined) {
+    throw new ConfigValidationError(
+      'No pullRequest configuration found. Set the `pullRequest` configuration.',
+    );
   }
 
-  if (!config.merge.claSignedLabel) {
+  if (!config.pullRequest.claSignedLabel) {
     errors.push('No CLA signed label configured.');
   }
-  if (!config.merge.mergeReadyLabel) {
+  if (!config.pullRequest.mergeReadyLabel) {
     errors.push('No merge ready label configured.');
   }
-  if (config.merge.githubApiMerge === undefined) {
+  if (config.pullRequest.githubApiMerge === undefined) {
     errors.push('No explicit choice of merge strategy. Please set `githubApiMerge`.');
   }
 
   if (errors.length) {
-    throw new ConfigValidationError('Invalid `merge` configuration', errors);
+    throw new ConfigValidationError('Invalid `pullRequest` configuration', errors);
   }
 }
 
