@@ -61,7 +61,9 @@ export function assertValidPullRequestConfig<T>(
 ): asserts config is T & {pullRequest: PullRequestConfig} {
   const errors: string[] = [];
   if (config.pullRequest === undefined) {
-    throw new ConfigValidationError('No merge configuration found. Set the `merge` configuration.');
+    throw new ConfigValidationError(
+      'No pullRequest configuration found. Set the `pullRequest` configuration.',
+    );
   }
 
   if (!config.pullRequest.claSignedLabel) {
@@ -75,7 +77,7 @@ export function assertValidPullRequestConfig<T>(
   }
 
   if (errors.length) {
-    throw new ConfigValidationError('Invalid `merge` configuration', errors);
+    throw new ConfigValidationError('Invalid `pullRequest` configuration', errors);
   }
 }
 
