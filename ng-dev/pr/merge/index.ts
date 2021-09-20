@@ -141,14 +141,7 @@ async function createPullRequestMergeTask(flags: PullRequestMergeTaskFlags) {
     /** The singleton instance of the authenticated git client. */
     const git = AuthenticatedGitClient.get();
 
-    // Set the remote so that the merge tool has access to information about
-    // the remote it intends to merge to.
-    const mergeConfig = {
-      remote: config.github,
-      ...config.merge,
-    };
-
-    return new PullRequestMergeTask(mergeConfig, git, flags);
+    return new PullRequestMergeTask(config, git, flags);
   } catch (e) {
     if (e instanceof ConfigValidationError) {
       if (e.errors.length) {
