@@ -1,7 +1,7 @@
-import {MergeConfig} from '../ng-dev/pr/merge/config';
+import {PullRequestConfig} from '../ng-dev/pr/config';
 
-/** Configuration for merging pull requests into the repo. */
-export const merge: MergeConfig = {
+/** Configuration for interacting with pull requests in the repo. */
+export const pullRequest: PullRequestConfig = {
   githubApiMerge: false,
   claSignedLabel: 'cla: yes',
   mergeReadyLabel: 'action: merge',
