@@ -9,12 +9,12 @@
 import {assertValidGithubConfig, getConfig, GithubConfig} from '../../utils/config';
 import {info} from '../../utils/console';
 import {GitClient} from '../../utils/git/git-client';
-import {assertValidMergeConfig, MergeConfig} from '../config';
+import {assertValidPullRequestConfig, PullRequestConfig} from '../config';
 import {getTargetBranchesForPullRequest} from '../common/targeting/target-label';
 
 async function getTargetBranchesForPr(
   prNumber: number,
-  config: {github: GithubConfig; merge: MergeConfig},
+  config: {github: GithubConfig; pullRequest: PullRequestConfig},
 ) {
   /** Repo owner and name for the github repository. */
   const {owner, name: repo} = config.github;
@@ -40,9 +40,9 @@ async function getTargetBranchesForPr(
 export async function printTargetBranchesForPr(prNumber: number) {
   const config = getConfig();
   assertValidGithubConfig(config);
-  assertValidMergeConfig(config);
+  assertValidPullRequestConfig(config);
 
-  if (config.merge.noTargetLabeling) {
+  if (config.pullRequest.noTargetLabeling) {
     info(`PR #${prNumber} will merge into: ${config.github.mainBranchName}`);
     return;
   }

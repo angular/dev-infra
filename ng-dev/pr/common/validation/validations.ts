@@ -8,7 +8,7 @@
 
 import {Commit} from '../../../commit-message/parse';
 import {TargetLabel, TargetLabelName} from '../targeting/target-label';
-import {breakingChangeLabel, MergeConfig} from '../../config';
+import {breakingChangeLabel, PullRequestConfig} from '../../config';
 import {PullRequestFailure} from './failures';
 import {red, warn} from '../../../utils/console';
 import {RawPullRequest} from '../fetch-pull-request';
@@ -21,7 +21,7 @@ import {RawPullRequest} from '../fetch-pull-request';
 export function assertChangesAllowForTargetLabel(
   commits: Commit[],
   label: TargetLabel,
-  config: MergeConfig,
+  config: PullRequestConfig,
 ) {
   /**
    * List of commit scopes which are exempted from target label content requirements. i.e. no `feat`

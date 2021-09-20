@@ -10,7 +10,7 @@ import {promptConfirm} from '../../utils/console';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {GitCommandError} from '../../utils/git/git-client';
 
-import {MergeConfig} from '../config';
+import {PullRequestConfig} from '../config';
 import {PullRequestFailure} from '../common/validation/failures';
 import {
   getCaretakerNotePromptMessage,
@@ -57,7 +57,7 @@ export class PullRequestMergeTask {
   private flags: PullRequestMergeTaskFlags;
 
   constructor(
-    public config: {merge: MergeConfig; github: GithubConfig},
+    public config: {pullRequest: PullRequestConfig; github: GithubConfig},
     public git: AuthenticatedGitClient,
     flags: Partial<PullRequestMergeTaskFlags>,
   ) {
@@ -130,8 +130,8 @@ export class PullRequestMergeTask {
       return {status: MergeStatus.USER_ABORTED};
     }
 
-    const strategy = this.config.merge.githubApiMerge
-      ? new GithubApiMergeStrategy(this.git, this.config.merge.githubApiMerge)
+    const strategy = this.config.pullRequest.githubApiMerge
+      ? new GithubApiMergeStrategy(this.git, this.config.pullRequest.githubApiMerge)
       : new AutosquashMergeStrategy(this.git);
 
     // Branch or revision that is currently checked out so that we can switch back to
