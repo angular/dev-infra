@@ -10,7 +10,7 @@ import {promptConfirm} from '../../utils/console';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {GitCommandError} from '../../utils/git/git-client';
 
-import {MergeConfigWithRemote} from '../config';
+import {MergeConfig} from '../config';
 import {PullRequestFailure} from '../common/validation/failures';
 import {
   getCaretakerNotePromptMessage,
@@ -19,6 +19,7 @@ import {
 import {isPullRequest, loadAndValidatePullRequest} from './pull-request';
 import {GithubApiMergeStrategy} from './strategies/api-merge';
 import {AutosquashMergeStrategy} from './strategies/autosquash-merge';
+import {GithubConfig} from '../../utils/config';
 
 /** Describes the status of a pull request merge. */
 export const enum MergeStatus {
@@ -56,7 +57,7 @@ export class PullRequestMergeTask {
   private flags: PullRequestMergeTaskFlags;
 
   constructor(
-    public config: MergeConfigWithRemote,
+    public config: {merge: MergeConfig; github: GithubConfig},
     public git: AuthenticatedGitClient,
     flags: Partial<PullRequestMergeTaskFlags>,
   ) {
@@ -83,7 +84,7 @@ export class PullRequestMergeTask {
     // reduced `public_repo` OAuth scope is sufficient for performing merges.
     const hasOauthScopes = await this.git.hasOauthScopes((scopes, missing) => {
       if (!scopes.includes('repo')) {
-        if (this.config.remote.private) {
+        if (this.config.github.private) {
           missing.push('repo');
         } else if (!scopes.includes('public_repo')) {
           missing.push('public_repo');
@@ -129,8 +130,8 @@ export class PullRequestMergeTask {
       return {status: MergeStatus.USER_ABORTED};
     }
 
-    const strategy = this.config.githubApiMerge
-      ? new GithubApiMergeStrategy(this.git, this.config.githubApiMerge)
+    const strategy = this.config.merge.githubApiMerge
+      ? new GithubApiMergeStrategy(this.git, this.config.merge.githubApiMerge)
       : new AutosquashMergeStrategy(this.git);
 
     // Branch or revision that is currently checked out so that we can switch back to

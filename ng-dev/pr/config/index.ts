@@ -22,13 +22,6 @@ export interface GithubApiMergeStrategyConfig {
   labels?: {pattern: string; method: GithubApiMergeMethod}[];
 }
 
-/**
- * Configuration for the merge script with all remote options specified. The
- * default `MergeConfig` has does not require any of these options as defaults
- * are provided by the common dev-infra github configuration.
- */
-export type MergeConfigWithRemote = MergeConfig & {remote: GithubConfig};
-
 /** Configuration for the merge script. */
 export interface MergeConfig {
   /**
