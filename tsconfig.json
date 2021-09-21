@@ -2,18 +2,10 @@
   "compilerOptions": {
     "module": "CommonJS",
     "target": "es2020",
-    "lib": ["DOM", "es2020"],
+    "lib": ["es2020"],
     "strict": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
-    "moduleResolution": "node",
-    "noEmit": false
-  },
-  "include": [
-    "bazel/",
-    "github-actions/",
-    "ng-dev/",
-    "tools/",
-    "tslint-rules/",
-  ]
+    "moduleResolution": "node"
+  }
 }
