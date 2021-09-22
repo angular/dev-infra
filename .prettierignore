@@ -1,3 +1,5 @@
+bazel/protos/*.d.ts
+bazel/protos/*.js
 github-actions/feature-request/post.js
 github-actions/feature-request/main.js
 github-actions/lock-closed/main.js
