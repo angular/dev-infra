@@ -9,7 +9,13 @@ export const commitMessage: CommitMessageConfig = {
   maxLineLength: Infinity,
   minBodyLength: 0,
   scopes: [
-    ...buildScopesFor('bazel', ['api-golden', 'benchmark', 'browsers', 'remote-execution']),
+    ...buildScopesFor('bazel', [
+      'api-golden',
+      'benchmark',
+      'browsers',
+      'protos',
+      'remote-execution',
+    ]),
     ...buildScopesFor('github-actions', [
       'breaking-changes-label',
       'feature-request',
@@ -18,6 +24,7 @@ export const commitMessage: CommitMessageConfig = {
       'rerun-circleci',
     ]),
     ...buildScopesFor('ng-dev', [
+      'ci',
       'caretaker',
       'commit-message',
       'format',
