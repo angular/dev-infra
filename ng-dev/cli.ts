@@ -18,6 +18,7 @@ import {buildReleaseParser} from './release/cli';
 import {tsCircularDependenciesBuilder} from './ts-circular-dependencies/index';
 import {captureLogOutputForCommand} from './utils/console';
 import {buildMiscParser} from './misc/cli';
+import {buildCiParser} from './ci/cli';
 
 yargs
   .scriptName('ng-dev')
@@ -33,6 +34,7 @@ yargs
   .command('caretaker <command>', '', buildCaretakerParser)
   .command('misc <command>', '', buildMiscParser)
   .command('ngbot <command>', false, buildNgbotParser)
+  .command('ci <command>', false, buildCiParser)
   .wrap(120)
   .strict()
   .parse();
