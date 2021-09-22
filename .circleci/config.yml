@@ -71,7 +71,7 @@ commands:
     steps:
       - run:
           name: Copy JUnit test reports to central folder for upload
-          command: node .circleci/copy-junit-reports.js
+          command: yarn -s ng-dev ci gather-test-results
           when: always
       - store_test_results:
           path: ./test-results
