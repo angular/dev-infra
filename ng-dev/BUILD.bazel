@@ -19,6 +19,7 @@ ts_library(
     ],
     deps = [
         "//ng-dev/caretaker",
+        "//ng-dev/ci",
         "//ng-dev/commit-message",
         "//ng-dev/format",
         "//ng-dev/misc",
