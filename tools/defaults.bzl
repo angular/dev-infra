@@ -1,6 +1,6 @@
 load("@npm//@bazel/typescript:index.bzl", _ts_library = "ts_library", _ts_project = "ts_project")
 load("@npm//@bazel/esbuild:index.bzl", _esbuild = "esbuild")
-load("@build_bazel_rules_nodejs//:index.bzl", "generated_file_test", "js_library", "npm_package_bin", _pkg_npm = "pkg_npm")
+load("@build_bazel_rules_nodejs//:index.bzl", "generated_file_test", _pkg_npm = "pkg_npm")
 load("//tools/jasmine:jasmine.bzl", _jasmine_node_test = "jasmine_node_test")
 
 jasmine_node_test = _jasmine_node_test
@@ -86,74 +86,4 @@ def pkg_npm(build_package_json_from_template = False, deps = [], **kwargs):
     _pkg_npm(
         deps = deps,
         **kwargs
-    )
-
-def generate_ts_proto_module(name, protofile, visibility = ["//visibility:public"]):
-    """
-    Generate a typescript module for decoding a proto binary file based on a provided .proto file.
-    """
-    protobufjs_dependencies = [
-        "@npm//semver",
-        "@npm//chalk",
-        "@npm//jsdoc",
-        "@npm//minimist",
-        "@npm//uglify-js",
-    ]
-    js_file = name + "_pb.js"
-    d_ts_file = name + "_pb.d.ts"
-
-    npm_package_bin(
-        name = "generate_js_" + name,
-        tool = "@npm//protobufjs/bin:pbjs",
-        data = protobufjs_dependencies + [
-            protofile,
-        ],
-        testonly = True,
-        args = [
-            "-t",
-            "static-module",
-            "-w",
-            "commonjs",
-            "$(rootpath %s)" % protofile,
-        ],
-        stdout = "generated_" + js_file,
-    )
-
-    npm_package_bin(
-        name = "generate_ts_" + name,
-        tool = "@npm//protobufjs/bin:pbts",
-        data = protobufjs_dependencies + [
-            ":generate_js_%s" % name,
-        ],
-        testonly = True,
-        args = [
-            "$(execpath :generate_js_%s)" % name,
-        ],
-        stdout = "generated_" + d_ts_file,
-    )
-
-    generated_file_test(
-        name = name + "_dts",
-        src = d_ts_file,
-        testonly = True,
-        generated = "generated_" + d_ts_file,
-    )
-
-    generated_file_test(
-        name = name + "_js",
-        testonly = True,
-        src = js_file,
-        generated = "generated_" + js_file,
-    )
-
-    js_library(
-        name = name,
-        srcs = [
-            d_ts_file,
-            js_file,
-        ],
-        deps = [
-            "@npm//protobufjs",
-        ],
-        visibility = visibility,
     )
