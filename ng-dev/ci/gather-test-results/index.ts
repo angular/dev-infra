@@ -8,7 +8,7 @@
 
 import {blaze} from '../../../bazel/protos/test_status_pb';
 import {spawnSync} from '../../utils/child-process';
-import {join, dirname, extname} from 'path';
+import {join, extname} from 'path';
 import {
   mkdirSync,
   rmSync,
@@ -61,7 +61,7 @@ function findAllTestResultFiles(dirPath: string, files: TestResultFiles[]) {
     } else {
       // Only the test result files, which are XML with the .xml extension, should be discovered.
       if (extname(file) === '.xml') {
-        files.push([filePath, join(dirname(filePath), 'test.cache_status')]);
+        files.push([filePath, join(dirPath, 'test.cache_status')]);
       }
     }
   }
