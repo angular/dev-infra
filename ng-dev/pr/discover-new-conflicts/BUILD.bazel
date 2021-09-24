@@ -8,10 +8,10 @@ ts_library(
     ],
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
+        "//ng-dev/pr/common",
         "//ng-dev/utils",
         "@npm//@types/cli-progress",
         "@npm//@types/node",
         "@npm//@types/yargs",
-        "@npm//typed-graphqlify",
     ],
 )
