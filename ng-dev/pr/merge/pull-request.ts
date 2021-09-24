@@ -16,12 +16,9 @@ import {
   matchesPattern,
   assertPendingState,
   assertSignedCla,
+  assertPassingCi,
 } from '../common/validation/validations';
-import {
-  fetchPullRequestFromGithub,
-  getStatusesForPullRequest,
-  PullRequestStatus,
-} from '../common/fetch-pull-request';
+import {fetchPullRequestFromGithub} from '../common/fetch-pull-request';
 
 /** Interface that describes a pull request. */
 export interface PullRequest {
@@ -81,6 +78,10 @@ export async function loadAndValidatePullRequest(
     assertSignedCla(prData);
     assertPendingState(prData);
     assertCorrectBreakingChangeLabeling(commitsInPr, labels);
+
+    if (!ignoreNonFatalFailures) {
+      assertPassingCi(prData);
+    }
   } catch (error) {
     // If the error is a pull request failure, we pass it through gracefully
     // as the tool expects such failures to be returned from the function.
@@ -88,15 +89,6 @@ export async function loadAndValidatePullRequest(
       return error;
     }
     throw error;
-  }
-
-  /** The combined status of the latest commit in the pull request. */
-  const {combinedStatus} = getStatusesForPullRequest(prData);
-  if (combinedStatus === PullRequestStatus.FAILING && !ignoreNonFatalFailures) {
-    return PullRequestFailure.failingCiJobs();
-  }
-  if (combinedStatus === PullRequestStatus.PENDING && !ignoreNonFatalFailures) {
-    return PullRequestFailure.pendingCiJobs();
   }
 
   const requiredBaseSha =
