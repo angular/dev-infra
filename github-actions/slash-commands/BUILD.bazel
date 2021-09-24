@@ -5,7 +5,10 @@ package(default_visibility = ["//github-actions/slash-commands:__subpackages__"]
 esbuild_checked_in(
     name = "main",
     entry_point = "//github-actions/slash-commands/lib:main.ts",
-    external = ["ts-node"],
+    external = [
+        "ts-node",
+        "@bazel/bazelisk",
+    ],
     deps = [
         "//github-actions/slash-commands/lib",
     ],

@@ -7,7 +7,7 @@
  */
 
 import {Arguments, Argv, CommandModule} from 'yargs';
-import {updateAllGeneratedFileTargets} from '.';
+import {updateAllGeneratedFileTargets} from './index';
 
 /** Command line options. */
 export interface Options {}

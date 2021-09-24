@@ -4,6 +4,7 @@ import {rerunCircleCi} from './commands/rerun-circleci';
 import {rebase} from './commands/rebase';
 import {getAuthTokenFor, ANGULAR_ROBOT} from '../../utils';
 import {Octokit} from '@octokit/rest';
+import {updateGeneratedFiles} from './commands/update-generated-files';
 
 /** The marker used in comments to note a command is being made in the comments. */
 const commandMarker = '/ng-bot';
@@ -90,6 +91,8 @@ async function run(): Promise<void> {
       return await rerunCircleCi();
     case 'rebase':
       return await rebase();
+    case 'update-generated-files':
+      return await updateGeneratedFiles();
     case undefined:
       return core.info(
         `Skipping as only the commandMarker (${commandMarker}) is provided as a command`,

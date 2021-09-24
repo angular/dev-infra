@@ -10,6 +10,8 @@ ts_library(
     ),
     deps = [
         "//github-actions:utils",
+        "//ng-dev/misc/update-generated-files",
+        "//ng-dev/pr/common",
         "//ng-dev/pr/rebase",
         "//ng-dev/utils",
         "@npm//@actions/core",

@@ -1,0 +1,15 @@
+load("//tools:defaults.bzl", "ts_library")
+
+ts_library(
+    name = "update-generated-files",
+    srcs = glob(["*.ts"]),
+    visibility = [
+        "//github-actions/slash-commands:__subpackages__",
+        "//ng-dev:__subpackages__",
+    ],
+    deps = [
+        "//ng-dev/utils",
+        "@npm//@types/node",
+        "@npm//@types/yargs",
+    ],
+)

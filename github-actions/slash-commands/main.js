@@ -52115,6 +52115,261 @@ var require_rebase2 = __commonJS({
   }
 });
 
+// ng-dev/pr/common/checkout-pr.js
+var require_checkout_pr = __commonJS({
+  "ng-dev/pr/common/checkout-pr.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.checkOutPullRequestLocally = exports2.MaintainerModifyAccessError = exports2.PullRequestNotFoundError = exports2.UnexpectedLocalChangesError = void 0;
+    var typed_graphqlify_1 = require_dist();
+    var console_1 = require_console();
+    var authenticated_git_client_1 = require_authenticated_git_client();
+    var github_urls_1 = require_github_urls();
+    var github_12 = require_github3();
+    var PR_SCHEMA = {
+      state: typed_graphqlify_1.types.string,
+      maintainerCanModify: typed_graphqlify_1.types.boolean,
+      viewerDidAuthor: typed_graphqlify_1.types.boolean,
+      headRefOid: typed_graphqlify_1.types.string,
+      headRef: {
+        name: typed_graphqlify_1.types.string,
+        repository: {
+          url: typed_graphqlify_1.types.string,
+          nameWithOwner: typed_graphqlify_1.types.string
+        }
+      },
+      baseRef: {
+        name: typed_graphqlify_1.types.string,
+        repository: {
+          url: typed_graphqlify_1.types.string,
+          nameWithOwner: typed_graphqlify_1.types.string
+        }
+      }
+    };
+    var UnexpectedLocalChangesError = class extends Error {
+    };
+    exports2.UnexpectedLocalChangesError = UnexpectedLocalChangesError;
+    var PullRequestNotFoundError = class extends Error {
+    };
+    exports2.PullRequestNotFoundError = PullRequestNotFoundError;
+    var MaintainerModifyAccessError = class extends Error {
+    };
+    exports2.MaintainerModifyAccessError = MaintainerModifyAccessError;
+    async function checkOutPullRequestLocally(prNumber, githubToken, opts = {}) {
+      const git = authenticated_git_client_1.AuthenticatedGitClient.get();
+      if (git.hasUncommittedChanges()) {
+        throw new UnexpectedLocalChangesError("Unable to checkout PR due to uncommitted changes.");
+      }
+      const previousBranchOrRevision = git.getCurrentBranchOrRevision();
+      const pr = await (0, github_12.getPr)(PR_SCHEMA, prNumber, git);
+      if (pr === null) {
+        throw new PullRequestNotFoundError(`Pull request #${prNumber} could not be found.`);
+      }
+      const headRefName = pr.headRef.name;
+      const fullHeadRef = `${pr.headRef.repository.nameWithOwner}:${headRefName}`;
+      const headRefUrl = (0, github_urls_1.addTokenToGitHttpsUrl)(pr.headRef.repository.url, githubToken);
+      const forceWithLeaseFlag = `--force-with-lease=${headRefName}:${pr.headRefOid}`;
+      if (!pr.maintainerCanModify && !pr.viewerDidAuthor && !opts.allowIfMaintainerCannotModify) {
+        throw new MaintainerModifyAccessError("PR is not set to allow maintainers to modify the PR");
+      }
+      try {
+        (0, console_1.info)(`Checking out PR #${prNumber} from ${fullHeadRef}`);
+        git.run(["fetch", "-q", headRefUrl, headRefName]);
+        git.run(["checkout", "--detach", "FETCH_HEAD"]);
+      } catch (e) {
+        git.checkout(previousBranchOrRevision, true);
+        throw e;
+      }
+      return {
+        pushToUpstream: () => {
+          git.run(["push", headRefUrl, `HEAD:${headRefName}`, forceWithLeaseFlag]);
+          return true;
+        },
+        resetGitState: () => {
+          return git.checkout(previousBranchOrRevision, true);
+        }
+      };
+    }
+    exports2.checkOutPullRequestLocally = checkOutPullRequestLocally;
+  }
+});
+
+// ng-dev/utils/child-process.js
+var require_child_process = __commonJS({
+  "ng-dev/utils/child-process.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.spawnSync = exports2.spawn = exports2.spawnInteractive = void 0;
+    var child_process_1 = require("child_process");
+    var console_1 = require_console();
+    function spawnInteractive(command, args, options = {}) {
+      return new Promise((resolve, reject) => {
+        const commandText = `${command} ${args.join(" ")}`;
+        (0, console_1.debug)(`Executing command: ${commandText}`);
+        const childProcess = (0, child_process_1.spawn)(command, args, __spreadProps(__spreadValues({}, options), { shell: true, stdio: "inherit" }));
+        childProcess.on("close", (status) => status === 0 ? resolve() : reject(status));
+      });
+    }
+    exports2.spawnInteractive = spawnInteractive;
+    function spawn(command, args, options = {}) {
+      return new Promise((resolve, reject) => {
+        const commandText = `${command} ${args.join(" ")}`;
+        const outputMode = options.mode;
+        (0, console_1.debug)(`Executing command: ${commandText}`);
+        const childProcess = (0, child_process_1.spawn)(command, args, __spreadProps(__spreadValues({}, options), { shell: true, stdio: "pipe" }));
+        let logOutput = "";
+        let stdout = "";
+        let stderr = "";
+        childProcess.stderr.on("data", (message) => {
+          stderr += message;
+          logOutput += message;
+          if (outputMode === void 0 || outputMode === "enabled") {
+            process.stderr.write(message);
+          }
+        });
+        childProcess.stdout.on("data", (message) => {
+          stdout += message;
+          logOutput += message;
+          if (outputMode === void 0 || outputMode === "enabled") {
+            process.stderr.write(message);
+          }
+        });
+        childProcess.on("close", (exitCode, signal) => {
+          const exitDescription = exitCode !== null ? `exit code "${exitCode}"` : `signal "${signal}"`;
+          const printFn = outputMode === "on-error" ? console_1.error : console_1.debug;
+          const status = statusFromExitCodeAndSignal(exitCode, signal);
+          printFn(`Command "${commandText}" completed with ${exitDescription}.`);
+          printFn(`Process output: 
+${logOutput}`);
+          if (status === 0 || options.suppressErrorOnFailingExitCode) {
+            resolve({ stdout, stderr, status });
+          } else {
+            reject(outputMode === "silent" ? logOutput : void 0);
+          }
+        });
+      });
+    }
+    exports2.spawn = spawn;
+    function spawnSync(command, args, options = {}) {
+      const commandText = `${command} ${args.join(" ")}`;
+      (0, console_1.debug)(`Executing command: ${commandText}`);
+      const { status: exitCode, signal, stdout, stderr } = (0, child_process_1.spawnSync)(command, args, __spreadProps(__spreadValues({}, options), { encoding: "utf8", shell: true, stdio: "pipe" }));
+      const status = statusFromExitCodeAndSignal(exitCode, signal);
+      if (status === 0 || options.suppressErrorOnFailingExitCode) {
+        return { status, stdout, stderr };
+      }
+      throw new Error(stderr);
+    }
+    exports2.spawnSync = spawnSync;
+    function statusFromExitCodeAndSignal(exitCode, signal) {
+      var _a;
+      return (_a = exitCode != null ? exitCode : signal) != null ? _a : -1;
+    }
+  }
+});
+
+// ng-dev/utils/bazel.js
+var require_bazel = __commonJS({
+  "ng-dev/utils/bazel.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.bazel = void 0;
+    var child_process_1 = require_child_process();
+    var { getNativeBinary } = require("@bazel/bazelisk/bazelisk.js");
+    var bazelBinPath;
+    function bazel(cmd, args) {
+      bazelBinPath = bazelBinPath || getNativeBinary();
+      const { status, stdout, stderr } = (0, child_process_1.spawnSync)(bazelBinPath, [cmd, ...args]);
+      if (status === 0) {
+        return stdout.trim();
+      }
+      throw Error(stderr);
+    }
+    exports2.bazel = bazel;
+  }
+});
+
+// ng-dev/misc/update-generated-files/index.js
+var require_update_generated_files = __commonJS({
+  "ng-dev/misc/update-generated-files/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.updateAllGeneratedFileTargets = void 0;
+    var bazel_1 = require_bazel();
+    var console_1 = require_console();
+    function findAllFileGeneratingTargets() {
+      const queryFragments = [
+        "kind(nodejs_binary, //...)",
+        `attr(name, '.update$', //...)`,
+        `attr(tags, 'generated-file', //...)`
+      ];
+      const result = (0, bazel_1.bazel)("query", [`"${queryFragments.join(" intersect ")}"`, "--output", "label"]);
+      return result.split("\n").filter((_) => _);
+    }
+    function updateAllGeneratedFileTargets() {
+      const targets = findAllFileGeneratingTargets();
+      (0, console_1.info)(`Discovered ${targets.length} target(s) to run.`);
+      let failures = [];
+      for (const target of targets) {
+        try {
+          (0, bazel_1.bazel)("run", [target]);
+          (0, console_1.info)(`${target} succeeded`);
+        } catch (e) {
+          if (e instanceof Error) {
+            failures.push(e);
+            (0, console_1.error)((0, console_1.red)(`${target} failed, see below for more detail:`));
+            (0, console_1.error)(e);
+          }
+          throw e;
+        }
+      }
+      return {
+        succeeded: failures.length === 0,
+        failures
+      };
+    }
+    exports2.updateAllGeneratedFileTargets = updateAllGeneratedFileTargets;
+  }
+});
+
+// github-actions/slash-commands/lib/commands/update-generated-files.js
+var require_update_generated_files2 = __commonJS({
+  "github-actions/slash-commands/lib/commands/update-generated-files.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.updateGeneratedFiles = void 0;
+    var github_12 = require_github();
+    var core_1 = require_core();
+    var utils_12 = require_utils5();
+    var authenticated_git_client_1 = require_authenticated_git_client();
+    var config_1 = require_config2();
+    var checkout_pr_1 = require_checkout_pr();
+    var update_generated_files_12 = require_update_generated_files();
+    async function updateGeneratedFiles() {
+      const token = await (0, utils_12.getAuthTokenFor)(utils_12.ANGULAR_ROBOT);
+      (0, config_1.setConfig)({
+        github: {
+          name: github_12.context.repo.repo,
+          owner: github_12.context.repo.owner,
+          mainBranchName: github_12.context.payload.repository.default_branch
+        }
+      });
+      authenticated_git_client_1.AuthenticatedGitClient.configure(token);
+      const git = authenticated_git_client_1.AuthenticatedGitClient.get();
+      const { pushToUpstream } = await (0, checkout_pr_1.checkOutPullRequestLocally)(github_12.context.issue.number, git.githubToken);
+      const { succeeded } = (0, update_generated_files_12.updateAllGeneratedFileTargets)();
+      if (succeeded) {
+        git.run(["add", "-A"]);
+        git.run(["commit", "--no-verify", "--fixup", "HEAD"]);
+        pushToUpstream();
+        return;
+      }
+      (0, core_1.setFailed)("Unable to update all generated files, check the logs above for more detail");
+    }
+    exports2.updateGeneratedFiles = updateGeneratedFiles;
+  }
+});
+
 // github-actions/slash-commands/lib/main.mjs
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -52124,6 +52379,7 @@ var rerun_circleci_1 = require_rerun_circleci();
 var rebase_1 = require_rebase2();
 var utils_1 = require_utils5();
 var rest_1 = require_dist_node12();
+var update_generated_files_1 = require_update_generated_files2();
 var commandMarker = "/ng-bot";
 var commandMatcher = new RegExp(`^${commandMarker} (.*)$`, "m");
 function parseCommandFromContext() {
@@ -52183,6 +52439,8 @@ async function run() {
       return await (0, rerun_circleci_1.rerunCircleCi)();
     case "rebase":
       return await (0, rebase_1.rebase)();
+    case "update-generated-files":
+      return await (0, update_generated_files_1.updateGeneratedFiles)();
     case void 0:
       return core.info(`Skipping as only the commandMarker (${commandMarker}) is provided as a command`);
     default:
