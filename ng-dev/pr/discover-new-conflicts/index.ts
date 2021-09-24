@@ -7,45 +7,14 @@
  */
 
 import {Bar} from 'cli-progress';
-import {types as graphqlTypes} from 'typed-graphqlify';
 
 import {error, info} from '../../utils/console';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {GitCommandError} from '../../utils/git/git-client';
-import {getPendingPrs} from '../../utils/github';
-
-/* Graphql schema for the response body for each pending PR. */
-const PR_SCHEMA = {
-  headRef: {
-    name: graphqlTypes.string,
-    repository: {
-      url: graphqlTypes.string,
-      nameWithOwner: graphqlTypes.string,
-    },
-  },
-  baseRef: {
-    name: graphqlTypes.string,
-    repository: {
-      url: graphqlTypes.string,
-      nameWithOwner: graphqlTypes.string,
-    },
-  },
-  updatedAt: graphqlTypes.string,
-  number: graphqlTypes.number,
-  mergeable: graphqlTypes.string,
-  title: graphqlTypes.string,
-};
-
-/* Pull Request response from Github Graphql query */
-type RawPullRequest = typeof PR_SCHEMA;
-
-/** Convert raw Pull Request response from Github to usable Pull Request object. */
-function processPr(pr: RawPullRequest) {
-  return {...pr, updatedAt: new Date(pr.updatedAt).getTime()};
-}
-
-/* Pull Request object after processing, derived from the return type of the processPr function. */
-type PullRequest = ReturnType<typeof processPr>;
+import {
+  fetchPendingPullRequestsFromGithub,
+  PullRequestFromGithub,
+} from '../common/fetch-pull-request';
 
 /** Name of a temporary local branch that is used for checking conflicts. **/
 const tempWorkingBranch = '__NgDevRepoBaseAfterChange__';
@@ -66,11 +35,17 @@ export async function discoverNewConflictsForPr(newPrNumber: number, updatedAfte
   /* Progress bar to indicate progress. */
   const progressBar = new Bar({format: `[{bar}] ETA: {eta}s | {value}/{total}`});
   /* PRs which were found to be conflicting. */
-  const conflicts: Array<PullRequest> = [];
+  const conflicts: Array<PullRequestFromGithub> = [];
 
   info(`Requesting pending PRs from Github`);
   /** List of PRs from github currently known as mergable. */
-  const allPendingPRs = (await getPendingPrs(PR_SCHEMA, git)).map(processPr);
+  const allPendingPRs = await fetchPendingPullRequestsFromGithub(git);
+
+  if (allPendingPRs === null) {
+    error('Unable to find any pending PRs in the repository');
+    process.exit(1);
+  }
+
   /** The PR which is being checked against. */
   const requestedPr = allPendingPRs.find((pr) => pr.number === newPrNumber);
   if (requestedPr === undefined) {
@@ -88,7 +63,7 @@ export async function discoverNewConflictsForPr(newPrNumber: number, updatedAfte
       // PRs which either have not been processed or are determined as mergable by Github
       pr.mergeable !== 'CONFLICTING' &&
       // PRs updated after the provided date
-      pr.updatedAt >= updatedAfter
+      new Date(pr.updatedAt).getTime() >= updatedAfter
     );
   });
   info(`Retrieved ${allPendingPRs.length} total pending PRs`);

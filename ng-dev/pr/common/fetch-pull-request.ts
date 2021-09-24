@@ -7,9 +7,10 @@
  */
 
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
-import {getPr} from '../../utils/github';
+import {getPendingPrs, getPr} from '../../utils/github';
 import {params, types as graphqlTypes, onUnion} from 'typed-graphqlify';
 import {
+  MergeableState,
   CheckConclusionState,
   StatusState,
   PullRequestState,
@@ -29,6 +30,8 @@ export const PR_SCHEMA = {
   isDraft: graphqlTypes.boolean,
   state: graphqlTypes.custom<PullRequestState>(),
   number: graphqlTypes.number,
+  mergeable: graphqlTypes.custom<MergeableState>(),
+  updatedAt: graphqlTypes.string,
   // Only the last 100 commits from a pull request are obtained as we likely will never see a pull
   // requests with more than 100 commits.
   commits: params(
@@ -106,6 +109,13 @@ export async function fetchPullRequestFromGithub(
   prNumber: number,
 ): Promise<PullRequestFromGithub | null> {
   return await getPr(PR_SCHEMA, prNumber, git);
+}
+
+/** Fetches a pull request from Github. Returns null if an error occurred. */
+export async function fetchPendingPullRequestsFromGithub(
+  git: AuthenticatedGitClient,
+): Promise<PullRequestFromGithub[] | null> {
+  return await getPendingPrs(PR_SCHEMA, git);
 }
 
 /**
