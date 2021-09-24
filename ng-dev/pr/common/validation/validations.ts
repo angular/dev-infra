@@ -11,7 +11,7 @@ import {TargetLabel, TargetLabelName} from '../targeting/target-label';
 import {breakingChangeLabel, PullRequestConfig} from '../../config';
 import {PullRequestFailure} from './failures';
 import {red, warn} from '../../../utils/console';
-import {RawPullRequest} from '../fetch-pull-request';
+import {PullRequestFromGithub} from '../fetch-pull-request';
 
 /**
  * Assert the commits provided are allowed to merge to the provided target label,
@@ -91,7 +91,7 @@ export function assertCorrectBreakingChangeLabeling(
  * Assert the pull request is pending, not closed, merged or in draft.
  * @throws {PullRequestFailure} if the pull request is not pending.
  */
-export function assertPendingState(pullRequest: RawPullRequest) {
+export function assertPendingState(pullRequest: PullRequestFromGithub) {
   if (pullRequest.isDraft) {
     throw PullRequestFailure.isDraft();
   }
