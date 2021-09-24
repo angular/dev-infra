@@ -11,7 +11,11 @@ import {TargetLabel, TargetLabelName} from '../targeting/target-label';
 import {breakingChangeLabel, PullRequestConfig} from '../../config';
 import {PullRequestFailure} from './failures';
 import {red, warn} from '../../../utils/console';
-import {PullRequestFromGithub} from '../fetch-pull-request';
+import {
+  getStatusesForPullRequest,
+  PullRequestFromGithub,
+  PullRequestStatus,
+} from '../fetch-pull-request';
 
 /**
  * Assert the commits provided are allowed to merge to the provided target label,
@@ -101,4 +105,20 @@ export function assertPendingState(pullRequest: PullRequestFromGithub) {
     case 'MERGED':
       throw PullRequestFailure.isMerged();
   }
+}
+
+/**
+ * Assert the pull request has all necessary CLAs signed.
+ * @throws {PullRequestFailure} if the pull request is missing a necessary CLA signature.
+ */
+export function assertSignedCla(pullRequest: PullRequestFromGithub) {
+  const passing = getStatusesForPullRequest(pullRequest).statuses.some(({name, status}) => {
+    return name === 'cla/google' && status === PullRequestStatus.PASSING;
+  });
+
+  if (passing) {
+    return;
+  }
+
+  throw PullRequestFailure.claUnsigned();
 }

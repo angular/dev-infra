@@ -33,8 +33,6 @@ export interface PullRequestConfig {
   noTargetLabeling?: boolean;
   /** Required base commits for given branches. */
   requiredBaseCommits?: {[branchName: string]: string};
-  /** Pattern that matches labels which imply a signed CLA. */
-  claSignedLabel: string | RegExp;
   /** Pattern that matches labels which imply a merge ready pull request. */
   mergeReadyLabel: string | RegExp;
   /** Label that is applied when special attention from the caretaker is required. */
@@ -66,9 +64,6 @@ export function assertValidPullRequestConfig<T>(
     );
   }
 
-  if (!config.pullRequest.claSignedLabel) {
-    errors.push('No CLA signed label configured.');
-  }
   if (!config.pullRequest.mergeReadyLabel) {
     errors.push('No merge ready label configured.');
   }

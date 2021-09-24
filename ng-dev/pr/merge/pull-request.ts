@@ -14,6 +14,7 @@ import {getTargetBranchesForPullRequest} from '../common/targeting/target-label'
 import {
   assertCorrectBreakingChangeLabeling,
   assertPendingState,
+  assertSignedCla,
 } from '../common/validation/validations';
 import {
   fetchPullRequestFromGithub,
@@ -65,9 +66,6 @@ export async function loadAndValidatePullRequest(
   if (!labels.some((name) => matchesPattern(name, config.pullRequest.mergeReadyLabel))) {
     return PullRequestFailure.notMergeReady();
   }
-  if (!labels.some((name) => matchesPattern(name, config.pullRequest.claSignedLabel))) {
-    return PullRequestFailure.claUnsigned();
-  }
 
   /** List of parsed commits for all of the commits in the pull request. */
   const commitsInPr = prData.commits.nodes.map((n) => parseCommitMessage(n.commit.message));
@@ -82,6 +80,7 @@ export async function loadAndValidatePullRequest(
   );
 
   try {
+    assertSignedCla(prData);
     assertPendingState(prData);
     assertCorrectBreakingChangeLabeling(commitsInPr, labels);
   } catch (error) {
