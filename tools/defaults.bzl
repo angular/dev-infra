@@ -67,6 +67,7 @@ def esbuild_checked_in(name, **kwargs):
     generated_file_test(
         name = name,
         src = "%s.js" % name,
+        tags = ["generated-file"],
         generated = "%s_sanitized.js" % name,
     )
 
