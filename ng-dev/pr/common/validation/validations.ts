@@ -122,3 +122,20 @@ export function assertSignedCla(pullRequest: PullRequestFromGithub) {
 
   throw PullRequestFailure.claUnsigned();
 }
+
+/**
+ * Assert the pull request has been marked ready for merge by the author.
+ * @throws {PullRequestFailure} if the pull request is missing the merge ready label.
+ */
+export function assertMergeReady(pullRequest: PullRequestFromGithub, config: PullRequestConfig) {
+  if (pullRequest.labels.nodes.some(({name}) => matchesPattern(name, config.mergeReadyLabel))) {
+    return true;
+  }
+  throw PullRequestFailure.notMergeReady();
+}
+
+// TODO: Remove need to export this pattern matching utility.
+/** Checks whether the specified value matches the given pattern. */
+export function matchesPattern(value: string, pattern: RegExp | string): boolean {
+  return typeof pattern === 'string' ? value === pattern : pattern.test(value);
+}
