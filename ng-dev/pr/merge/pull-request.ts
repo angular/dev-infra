@@ -15,7 +15,11 @@ import {
   assertCorrectBreakingChangeLabeling,
   assertPendingState,
 } from '../common/validation/validations';
-import {fetchPullRequestFromGithub} from '../common/fetch-pull-request';
+import {
+  fetchPullRequestFromGithub,
+  getStatusesForPullRequest,
+  PullRequestStatus,
+} from '../common/fetch-pull-request';
 
 /** Interface that describes a pull request. */
 export interface PullRequest {
@@ -90,11 +94,11 @@ export async function loadAndValidatePullRequest(
   }
 
   /** The combined status of the latest commit in the pull request. */
-  const state = prData.commits.nodes.slice(-1)[0].commit.status.state;
-  if (state === 'FAILURE' && !ignoreNonFatalFailures) {
+  const {combinedStatus} = getStatusesForPullRequest(prData);
+  if (combinedStatus === PullRequestStatus.FAILING && !ignoreNonFatalFailures) {
     return PullRequestFailure.failingCiJobs();
   }
-  if (state === 'PENDING' && !ignoreNonFatalFailures) {
+  if (combinedStatus === PullRequestStatus.PENDING && !ignoreNonFatalFailures) {
     return PullRequestFailure.pendingCiJobs();
   }
 

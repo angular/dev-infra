@@ -63,6 +63,7 @@
     "yargs": "^17.0.0"
   },
   "devDependencies": {
+    "@octokit/graphql-schema": "^10.72.0",
     "@types/cli-progress": "^3.9.1",
     "@types/conventional-commits-parser": "^3.0.1",
     "@types/ejs": "^3.0.6",

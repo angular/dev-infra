@@ -10,6 +10,7 @@ ts_library(
         "//ng-dev/release/config",
         "//ng-dev/release/versioning",
         "//ng-dev/utils",
+        "@npm//@octokit/graphql-schema",
         "@npm//@types/node",
         "@npm//@types/semver",
         "@npm//semver",
