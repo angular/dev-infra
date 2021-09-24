@@ -134,6 +134,20 @@ export function assertMergeReady(pullRequest: PullRequestFromGithub, config: Pul
   throw PullRequestFailure.notMergeReady();
 }
 
+/**
+ * Assert the pull request has been marked ready for merge by the author.
+ * @throws {PullRequestFailure} if the pull request is missing the merge ready label.
+ */
+export function assertPassingCi(pullRequest: PullRequestFromGithub) {
+  const {combinedStatus} = getStatusesForPullRequest(pullRequest);
+  if (combinedStatus === PullRequestStatus.PENDING) {
+    throw PullRequestFailure.pendingCiJobs();
+  }
+  if (combinedStatus === PullRequestStatus.FAILING) {
+    throw PullRequestFailure.failingCiJobs();
+  }
+}
+
 // TODO: Remove need to export this pattern matching utility.
 /** Checks whether the specified value matches the given pattern. */
 export function matchesPattern(value: string, pattern: RegExp | string): boolean {
