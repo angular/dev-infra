@@ -6,6 +6,8 @@ NG_DEV_EXTERNALS = [
     # `typescript` is external because we want the project to provide a TypeScript version.
     # TODO: Figure out how we want to manage dependencies for the dev-infra tool.
     "typescript",
+    # `@bazel/bazelisk` is currently only provided as a javascript package.
+    "@bazel/bazelisk",
 ]
 
 ts_library(

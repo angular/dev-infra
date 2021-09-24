@@ -7,7 +7,6 @@
  */
 
 import {blaze} from '../../../bazel/protos/test_status_pb';
-import {spawnSync} from '../../utils/child-process';
 import {join, extname} from 'path';
 import {
   mkdirSync,
@@ -20,6 +19,7 @@ import {
 } from 'fs';
 import {debug, info} from '../../utils/console';
 import {GitClient} from '../../utils/git/git-client';
+import {bazel} from '../../utils/bazel';
 
 /** Bazel's TestResultData proto Message. */
 const TestResultData = blaze.TestResultData;
@@ -39,15 +39,6 @@ const baseTestReport = `
    </testsuite>
  </testsuites>
  `.trim();
-
-function getTestLogsDirectoryPath() {
-  const {stdout, status} = spawnSync('yarn', ['-s', 'bazel', 'info', 'bazel-testlogs']);
-
-  if (status === 0) {
-    return stdout.trim();
-  }
-  throw Error(`Unable to determine the path to the directory containing Bazel's testlog.`);
-}
 
 /**
  * Discover all test results, which @bazel/jasmine stores as `test.xml` files, in the directory and
@@ -72,7 +63,7 @@ export function copyTestResultFiles() {
   /** Total number of files copied, also used as a index to number copied files. */
   let copiedFileCount = 0;
   /** The absolute path to the directory containing test logs from bazel tests. */
-  const testLogsDir = getTestLogsDirectoryPath();
+  const testLogsDir = bazel('info', ['bazel-testlogs']);
   /** List of test result files. */
   const testResultPaths = findAllTestResultFiles(testLogsDir, []);
   /** The full path to the root of the repository base. */
