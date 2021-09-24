@@ -14,10 +14,10 @@ import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-clien
 import {GithubApiMergeMethod, GithubApiMergeStrategyConfig} from '../../config';
 import {PullRequestFailure} from '../../common/validation/failures';
 import {PullRequest} from '../pull-request';
-import {matchesPattern} from '../string-pattern';
 
 import {MergeStrategy, TEMP_PR_HEAD_BRANCH} from './strategy';
 import {GithubApiRequestError} from '../../../utils/git/github';
+import {matchesPattern} from '../../common/validation/validations';
 
 /** Type describing the parameters for the Octokit `merge` API endpoint. */
 type OctokitMergeParams = RestEndpointMethodTypes['pulls']['merge']['parameters'];

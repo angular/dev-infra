@@ -8,11 +8,12 @@
 
 import {parseCommitMessage} from '../../commit-message/parse';
 import {PullRequestFailure} from '../common/validation/failures';
-import {matchesPattern} from './string-pattern';
 import {PullRequestMergeTask} from './task';
 import {getTargetBranchesForPullRequest} from '../common/targeting/target-label';
 import {
   assertCorrectBreakingChangeLabeling,
+  assertMergeReady,
+  matchesPattern,
   assertPendingState,
   assertSignedCla,
 } from '../common/validation/validations';
@@ -63,10 +64,6 @@ export async function loadAndValidatePullRequest(
 
   const labels = prData.labels.nodes.map((l) => l.name);
 
-  if (!labels.some((name) => matchesPattern(name, config.pullRequest.mergeReadyLabel))) {
-    return PullRequestFailure.notMergeReady();
-  }
-
   /** List of parsed commits for all of the commits in the pull request. */
   const commitsInPr = prData.commits.nodes.map((n) => parseCommitMessage(n.commit.message));
   const githubTargetBranch = prData.baseRefName;
@@ -80,6 +77,7 @@ export async function loadAndValidatePullRequest(
   );
 
   try {
+    assertMergeReady(prData, config.pullRequest);
     assertSignedCla(prData);
     assertPendingState(prData);
     assertCorrectBreakingChangeLabeling(commitsInPr, labels);
