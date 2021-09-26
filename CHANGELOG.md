@@ -1,3 +1,22 @@
+<a name="2021.9.26"></a>
+# 2021.9.26 (2021-09-26)
+## Breaking Changes
+### ng-dev
+- `MergeConfig` has been renamed to `PullRequestConfig` and is now accessed via `pullRequest` on the provided
+ng-dev config.
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0a83a42](https://github.com/angular/dev-infra/commit/0a83a42160652246e37253287a261f45a7e11313) | feat | **protos:** automatically generate typescript implementation of bazel test_status proto ([#239](https://github.com/angular/dev-infra/pull/239)) |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cf92a66](https://github.com/angular/dev-infra/commit/cf92a666d40fee957e1e7f964016054ccb023ab1) | feat | **ci:** create a common tool for gathering test results from bazel ([#239](https://github.com/angular/dev-infra/pull/239)) |
+| [c3f5729](https://github.com/angular/dev-infra/commit/c3f5729376048af3ce939a505e5389dba11ff7d2) | fix | **pr:** rename MergeConfig to PullRequestConfig, discover the attribute at pullRequest instead of merge ([#237](https://github.com/angular/dev-infra/pull/237)) |
+## Special Thanks
+Joey Perrott
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2021.9.19"></a>
 # 2021.9.19 (2021-09-19)
 ### bazel
