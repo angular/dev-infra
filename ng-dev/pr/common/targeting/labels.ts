@@ -13,7 +13,7 @@ import {
   isVersionBranch,
   ReleaseRepoWithApi,
 } from '../../../release/versioning';
-import {assertValidGithubConfig, GithubConfig} from '../../../utils/config';
+import {assertValidGithubConfig, ConfigValidationError, GithubConfig} from '../../../utils/config';
 import {
   InvalidTargetBranchError,
   InvalidTargetLabelError,
@@ -23,6 +23,7 @@ import {
 
 import {assertActiveLtsBranch} from './lts-branch';
 import {GithubClient} from '../../../utils/git/github';
+import {debug} from '../../../utils/console';
 
 /**
  * Gets a list of target labels which should be considered by the merge
@@ -40,7 +41,6 @@ export async function getTargetLabelsForActiveReleaseTrains(
   api: GithubClient,
   config: Partial<{github: GithubConfig; release: ReleaseConfig}>,
 ): Promise<TargetLabel[]> {
-  assertValidReleaseConfig(config);
   assertValidGithubConfig(config);
 
   const nextBranchName = getNextBranchName(config.github);
@@ -52,7 +52,7 @@ export async function getTargetLabelsForActiveReleaseTrains(
   };
   const {latest, releaseCandidate, next} = await fetchActiveReleaseTrains(repo);
 
-  return [
+  const targetLabels: TargetLabel[] = [
     {
       name: TargetLabelName.MAJOR,
       branches: () => {
@@ -119,7 +119,13 @@ export async function getTargetLabelsForActiveReleaseTrains(
         return [nextBranchName, releaseCandidate.branchName];
       },
     },
-    {
+  ];
+
+  // LTS branches can only be determined if the release configuration is defined, and must be added
+  // after asserting the configuration contains a release config.
+  try {
+    assertValidReleaseConfig(config);
+    targetLabels.push({
       // LTS changes are rare enough that we won't worry about cherry-picking changes into all
       // active LTS branches for PRs created against any other branch. Instead, PR authors need
       // to manually create separate PRs for desired LTS branches. Additionally, active LT branches
@@ -145,9 +151,19 @@ export async function getTargetLabelsForActiveReleaseTrains(
           );
         }
         // Assert that the selected branch is an active LTS branch.
+        assertValidReleaseConfig(config);
         await assertActiveLtsBranch(repo, config.release, githubTargetBranch);
         return [githubTargetBranch];
       },
-    },
-  ];
+    });
+  } catch (err) {
+    if (err instanceof ConfigValidationError) {
+      debug('LTS target label not included in target labels as no valid release configuration was');
+      debug('found to allow the LTS branches to be determined.');
+    } else {
+      throw err;
+    }
+  }
+
+  return targetLabels;
 }
