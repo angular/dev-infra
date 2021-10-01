@@ -386,6 +386,9 @@ export abstract class ReleaseAction {
     // Note: `git add` would not be needed if the files are already known to
     // Git, but the specified files could also be newly created, and unknown.
     this.git.run(['add', ...files]);
+    // Note: `--no-verify` skips the majority of commit hooks here, but there are hooks
+    // like `prepare-commit-message` which still run. We have set the `HUSKY=0` environment
+    // variable at the start of the publish command to ignore such hooks as well.
     this.git.run(['commit', '-q', '--no-verify', '-m', message, ...files]);
   }
 
