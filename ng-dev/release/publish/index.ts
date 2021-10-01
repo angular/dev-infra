@@ -60,6 +60,13 @@ export class ReleaseTool {
       return CompletionState.MANUALLY_ABORTED;
     }
 
+    // Set the environment variable to skip all git commit hooks triggered by husky. We are unable to
+    // rely on `--no-verify` as some hooks still run, notably the `prepare-commit-msg` hook.
+    // Running hooks has the downside of potentially running code (like the `ng-dev` tool) when a version
+    // branch is checked out, but the node modules are not re-installed. The tool switches branches
+    // multiple times per execution, and it is not desirable re-running Yarn all the time.
+    process.env['HUSKY'] = '0';
+
     const repo: ReleaseRepoWithApi = {owner, name, api: this._git.github, nextBranchName};
     const releaseTrains = await fetchActiveReleaseTrains(repo);
 
