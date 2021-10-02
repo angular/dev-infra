@@ -31,7 +31,7 @@
     "@octokit/request-error": "^2.1.0",
     "@octokit/rest": "^18.7.0",
     "@octokit/types": "^6.16.6",
-    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-commonjs": "^21.0.0",
     "@rollup/plugin-node-resolve": "^13.0.4",
     "chalk": "^4.1.0",
     "clang-format": "^1.4.0",
