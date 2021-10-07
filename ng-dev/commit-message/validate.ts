@@ -46,10 +46,11 @@ const INCORRECT_BREAKING_CHANGE_BODY_RE =
  *
  *   - `DEPRECATED <some-content>` | Here we assume the colon is missing by accident.
  *   - `DEPRECATIONS: <some-content>` | The wrong keyword is used here.
+ *   - `DEPRECATION: <some-content>` | The wrong keyword is used here.
  *   - `DEPRECATE: <some-content>` | The wrong keyword is used here.
  *   - `DEPRECATES: <some-content>` | The wrong keyword is used here.
  */
-const INCORRECT_DEPRECATION_BODY_RE = /^(DEPRECATED[^:]|DEPRECATIONS|DEPRECATE:|DEPRECATES)/m;
+const INCORRECT_DEPRECATION_BODY_RE = /^(DEPRECATED[^:]|DEPRECATIONS?|DEPRECATE:|DEPRECATES)/m;
 
 /** Validate a commit message against using the local repo's config. */
 export function validateCommitMessage(

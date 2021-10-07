@@ -377,6 +377,17 @@ describe('validate-commit-message.js', () => {
         expectValidationResult(validateCommitMessage(incorrectKeyword3), INVALID, [
           'The commit message body contains an invalid deprecation note.',
         ]);
+
+        const incorrectKeyword4 =
+          'feat(compiler): this is just a usual commit message title\n\n' +
+          'This is a normal commit message body which does not exceed the max length\n' +
+          'limit. For more details see the following super long URL:\n\n' +
+          'DEPRECATION:\n' +
+          ' * A to be removed\n' +
+          ' * B to be removed';
+        expectValidationResult(validateCommitMessage(incorrectKeyword4), INVALID, [
+          'The commit message body contains an invalid deprecation note.',
+        ]);
       });
     });
 
