@@ -16,45 +16,55 @@ import {
 import {readFileSync} from 'fs';
 import {testTmpDir} from '../../../utils/testing';
 import {SandboxGitRepo} from '../../../utils/testing';
+import {ActiveReleaseTrains} from '../../versioning';
 
 describe('cut release candidate for feature-freeze action', () => {
   it('should activate if a feature-freeze release-train is active', async () => {
     expect(
-      await CutReleaseCandidateForFeatureFreezeAction.isActive({
-        releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.1')),
-        next: new ReleaseTrain('master', parse('10.2.0-next.0')),
-        latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
-      }),
+      await CutReleaseCandidateForFeatureFreezeAction.isActive(
+        new ActiveReleaseTrains({
+          releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.1')),
+          next: new ReleaseTrain('master', parse('10.2.0-next.0')),
+          latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
+        }),
+      ),
     ).toBe(true);
   });
 
   it('should not activate if release-candidate release-train is active', async () => {
     expect(
-      await CutReleaseCandidateForFeatureFreezeAction.isActive({
-        // No longer in feature-freeze but in release-candidate phase.
-        releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
-        next: new ReleaseTrain('master', parse('10.2.0-next.0')),
-        latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
-      }),
+      await CutReleaseCandidateForFeatureFreezeAction.isActive(
+        new ActiveReleaseTrains({
+          // No longer in feature-freeze but in release-candidate phase.
+          releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
+          next: new ReleaseTrain('master', parse('10.2.0-next.0')),
+          latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
+        }),
+      ),
     ).toBe(false);
   });
 
   it('should not activate if no FF/RC release-train is active', async () => {
     expect(
-      await CutReleaseCandidateForFeatureFreezeAction.isActive({
-        releaseCandidate: null,
-        next: new ReleaseTrain('master', parse('10.1.0-next.0')),
-        latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
-      }),
+      await CutReleaseCandidateForFeatureFreezeAction.isActive(
+        new ActiveReleaseTrains({
+          releaseCandidate: null,
+          next: new ReleaseTrain('master', parse('10.1.0-next.0')),
+          latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
+        }),
+      ),
     ).toBe(false);
   });
 
   it('should create a proper new version and select correct branch', async () => {
-    const action = setupReleaseActionForTesting(CutReleaseCandidateForFeatureFreezeAction, {
-      releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.1')),
-      next: new ReleaseTrain('master', parse('10.2.0-next.0')),
-      latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
-    });
+    const action = setupReleaseActionForTesting(
+      CutReleaseCandidateForFeatureFreezeAction,
+      new ActiveReleaseTrains({
+        releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.1')),
+        next: new ReleaseTrain('master', parse('10.2.0-next.0')),
+        latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
+      }),
+    );
 
     await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0-rc.0', 'next');
   });
@@ -62,11 +72,11 @@ describe('cut release candidate for feature-freeze action', () => {
   it('should generate release notes capturing changes to the previous pre-release', async () => {
     const action = setupReleaseActionForTesting(
       CutReleaseCandidateForFeatureFreezeAction,
-      {
+      new ActiveReleaseTrains({
         releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.1')),
         next: new ReleaseTrain('master', parse('10.2.0-next.0')),
         latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
-      },
+      }),
       true,
       {useSandboxGitClient: true},
     );

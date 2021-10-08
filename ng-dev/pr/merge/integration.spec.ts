@@ -20,6 +20,7 @@ import {
 } from '../common/targeting/target-label';
 import {fakeGithubPaginationResponse} from '../../utils/testing/github-interception';
 import {getTargetLabelsForActiveReleaseTrains} from '../common/targeting/labels';
+import {fetchActiveReleaseTrains} from '../../release/versioning';
 
 const API_ENDPOINT = `https://api.github.com`;
 
@@ -103,7 +104,14 @@ describe('default target labels', () => {
     name: string,
     githubTargetBranch = 'master',
   ): Promise<string[] | null> {
-    const targetLabels = await getTargetLabelsForActiveReleaseTrains(api, {
+    const {mainBranchName, name: repoName, owner} = githubConfig;
+    const releaseTrains = await fetchActiveReleaseTrains({
+      name: repoName,
+      nextBranchName: mainBranchName,
+      owner,
+      api,
+    });
+    const targetLabels = await getTargetLabelsForActiveReleaseTrains(releaseTrains, api, {
       github: githubConfig,
       release: releaseConfig,
     });

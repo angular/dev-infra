@@ -33,18 +33,18 @@ import {getMockGitClient} from '../../../utils/testing';
 import {SandboxGitRepo} from '../../../utils/testing';
 
 describe('common release action logic', () => {
-  const baseReleaseTrains: ActiveReleaseTrains = {
+  const baseReleaseTrains = new ActiveReleaseTrains({
     releaseCandidate: null,
     next: new ReleaseTrain('master', parse('10.1.0-next.0')),
     latest: new ReleaseTrain('10.0.x', parse('10.0.1')),
-  };
+  });
 
   describe('version computation', () => {
-    const testReleaseTrain: ActiveReleaseTrains = {
+    const testReleaseTrain = new ActiveReleaseTrains({
       releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.3')),
       next: new ReleaseTrain('master', parse('10.2.0-next.0')),
       latest: new ReleaseTrain('10.0.x', parse('10.0.1')),
-    };
+    });
 
     it('should not modify release train versions and cause invalid other actions', async () => {
       const {releaseConfig, githubConfig} = getTestConfigurationsForAction();

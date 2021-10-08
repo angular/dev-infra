@@ -13,6 +13,7 @@ import {Commit} from '../../../commit-message/parse';
 import {assertChangesAllowForTargetLabel} from '../validation/validations';
 import {PullRequestFailure} from '../validation/failures';
 import {GithubClient} from '../../../utils/git/github';
+import {fetchActiveReleaseTrains} from '../../../release/versioning';
 
 /**
  * Enum capturing available target label names in the Angular organization. A target
@@ -111,7 +112,14 @@ export async function getTargetBranchesForPullRequest(
   // can lazily compute branches for a target label and throw. e.g. if an invalid target
   // label is applied, we want to exit the script gracefully with an error message.
   try {
-    const targetLabels = await getTargetLabelsForActiveReleaseTrains(api, config);
+    const {mainBranchName, name, owner} = config.github;
+    const releaseTrains = await fetchActiveReleaseTrains({
+      name,
+      nextBranchName: mainBranchName,
+      owner,
+      api,
+    });
+    const targetLabels = await getTargetLabelsForActiveReleaseTrains(releaseTrains, api, config);
     const matchingLabel = await getMatchingTargetLabelForPullRequest(
       config.pullRequest,
       labelsOnPullRequest,
@@ -119,7 +127,7 @@ export async function getTargetBranchesForPullRequest(
     );
     const targetBranches = await getBranchesFromTargetLabel(matchingLabel, githubTargetBranch);
 
-    assertChangesAllowForTargetLabel(commits, matchingLabel, config.pullRequest);
+    assertChangesAllowForTargetLabel(commits, matchingLabel, config.pullRequest, releaseTrains);
 
     return targetBranches;
   } catch (error) {

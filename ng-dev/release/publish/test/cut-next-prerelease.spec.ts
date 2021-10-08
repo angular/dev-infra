@@ -20,6 +20,7 @@ import {
 } from './test-utils/staging-test';
 import {testTmpDir} from '../../../utils/testing';
 import {SandboxGitRepo} from '../../../utils/testing';
+import {ActiveReleaseTrains} from '../../versioning';
 
 describe('cut next pre-release action', () => {
   it('should always be active regardless of release-trains', async () => {
@@ -27,11 +28,14 @@ describe('cut next pre-release action', () => {
   });
 
   it('should cut a pre-release for the next branch if there is no FF/RC branch', async () => {
-    const action = setupReleaseActionForTesting(CutNextPrereleaseAction, {
-      releaseCandidate: null,
-      next: new ReleaseTrain('master', parse('10.2.0-next.0')),
-      latest: new ReleaseTrain('10.1.x', parse('10.1.2')),
-    });
+    const action = setupReleaseActionForTesting(
+      CutNextPrereleaseAction,
+      new ActiveReleaseTrains({
+        releaseCandidate: null,
+        next: new ReleaseTrain('master', parse('10.2.0-next.0')),
+        latest: new ReleaseTrain('10.1.x', parse('10.1.2')),
+      }),
+    );
 
     await expectStagingAndPublishWithoutCherryPick(action, 'master', '10.2.0-next.1', 'next');
   });
@@ -47,11 +51,11 @@ describe('cut next pre-release action', () => {
     it('should not bump the version', async () => {
       const action = setupReleaseActionForTesting(
         CutNextPrereleaseAction,
-        {
+        new ActiveReleaseTrains({
           releaseCandidate: null,
           next: new ReleaseTrain('master', parse('10.2.0-next.0')),
           latest: new ReleaseTrain('10.1.x', parse('10.1.0')),
-        },
+        }),
         /* isNextPublishedToNpm */ false,
       );
 
@@ -68,11 +72,11 @@ describe('cut next pre-release action', () => {
       async () => {
         const action = setupReleaseActionForTesting(
           CutNextPrereleaseAction,
-          {
+          new ActiveReleaseTrains({
             releaseCandidate: null,
             next: new ReleaseTrain('master', parse('10.2.0-next.0')),
             latest: new ReleaseTrain('10.1.x', parse('10.1.0')),
-          },
+          }),
           /* isNextPublishedToNpm */ false,
           {useSandboxGitClient: true},
         );
@@ -111,11 +115,14 @@ describe('cut next pre-release action', () => {
 
   describe('with active feature-freeze', () => {
     it('should create a proper new version and select correct branch', async () => {
-      const action = setupReleaseActionForTesting(CutNextPrereleaseAction, {
-        releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.4')),
-        next: new ReleaseTrain('master', parse('10.2.0-next.0')),
-        latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
-      });
+      const action = setupReleaseActionForTesting(
+        CutNextPrereleaseAction,
+        new ActiveReleaseTrains({
+          releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.4')),
+          next: new ReleaseTrain('master', parse('10.2.0-next.0')),
+          latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
+        }),
+      );
 
       await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0-next.5', 'next');
     });
@@ -123,11 +130,11 @@ describe('cut next pre-release action', () => {
     it('should generate release notes capturing changes to the previous pre-release', async () => {
       const action = setupReleaseActionForTesting(
         CutNextPrereleaseAction,
-        {
+        new ActiveReleaseTrains({
           releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.4')),
           next: new ReleaseTrain('master', parse('10.2.0-next.0')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
-        },
+        }),
         true,
         {useSandboxGitClient: true},
       );
@@ -159,11 +166,14 @@ describe('cut next pre-release action', () => {
 
   describe('with active release-candidate', () => {
     it('should create a proper new version and select correct branch', async () => {
-      const action = setupReleaseActionForTesting(CutNextPrereleaseAction, {
-        releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
-        next: new ReleaseTrain('master', parse('10.2.0-next.0')),
-        latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
-      });
+      const action = setupReleaseActionForTesting(
+        CutNextPrereleaseAction,
+        new ActiveReleaseTrains({
+          releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
+          next: new ReleaseTrain('master', parse('10.2.0-next.0')),
+          latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
+        }),
+      );
 
       await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0-rc.1', 'next');
     });
@@ -171,11 +181,11 @@ describe('cut next pre-release action', () => {
     it('should generate release notes capturing changes to the previous pre-release', async () => {
       const action = setupReleaseActionForTesting(
         CutNextPrereleaseAction,
-        {
+        new ActiveReleaseTrains({
           releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
           next: new ReleaseTrain('master', parse('10.2.0-next.0')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
-        },
+        }),
         true,
         {useSandboxGitClient: true},
       );

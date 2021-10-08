@@ -16,14 +16,27 @@ import {
   VersionBranch,
 } from './version-branches';
 
-/** Interface describing determined active release trains for a project. */
-export interface ActiveReleaseTrains {
+/** The active release trains for a project. */
+export class ActiveReleaseTrains {
   /** Release-train currently in the "release-candidate" or "feature-freeze" phase. */
-  releaseCandidate: ReleaseTrain | null;
-  /** Release-train currently in the "latest" phase. */
-  latest: ReleaseTrain;
+  readonly releaseCandidate: ReleaseTrain | null = this.trains.releaseCandidate || null;
   /** Release-train in the `next` phase. */
-  next: ReleaseTrain;
+  readonly next: ReleaseTrain = this.trains.next;
+  /** Release-train currently in the "latest" phase. */
+  readonly latest: ReleaseTrain = this.trains.latest;
+
+  constructor(
+    private trains: {
+      releaseCandidate: ReleaseTrain | null;
+      next: ReleaseTrain;
+      latest: ReleaseTrain;
+    },
+  ) {}
+
+  /** Whether the active release trains indicate the repository is in a feature freeze state. */
+  isFeatureFreeze() {
+    return this.releaseCandidate !== null && this.releaseCandidate.version.prerelease[0] === 'next';
+  }
 }
 
 /** Fetches the active release trains for the configured project. */
@@ -78,7 +91,7 @@ export async function fetchActiveReleaseTrains(
     );
   }
 
-  return {releaseCandidate, latest, next};
+  return new ActiveReleaseTrains({releaseCandidate, next, latest});
 }
 
 /** Finds the currently active release trains from the specified version branches. */

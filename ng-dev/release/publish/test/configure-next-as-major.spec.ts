@@ -7,6 +7,7 @@
  */
 
 import {getBranchPushMatcher} from '../../../utils/testing';
+import {ActiveReleaseTrains} from '../../versioning';
 import {ReleaseTrain} from '../../versioning/release-trains';
 import {ConfigureNextAsMajorAction} from '../actions/configure-next-as-major';
 import {parse, setupReleaseActionForTesting} from './test-utils/test-utils';
@@ -14,40 +15,49 @@ import {parse, setupReleaseActionForTesting} from './test-utils/test-utils';
 describe('configure next as major action', () => {
   it('should be active if the next branch is for a minor', async () => {
     expect(
-      await ConfigureNextAsMajorAction.isActive({
-        releaseCandidate: null,
-        next: new ReleaseTrain('master', parse('10.1.0-next.3')),
-        latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
-      }),
+      await ConfigureNextAsMajorAction.isActive(
+        new ActiveReleaseTrains({
+          releaseCandidate: null,
+          next: new ReleaseTrain('master', parse('10.1.0-next.3')),
+          latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
+        }),
+      ),
     ).toBe(true);
   });
 
   it('should be active regardless of a feature-freeze/release-candidate train', async () => {
     expect(
-      await ConfigureNextAsMajorAction.isActive({
-        releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.1')),
-        next: new ReleaseTrain('master', parse('10.2.0-next.3')),
-        latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
-      }),
+      await ConfigureNextAsMajorAction.isActive(
+        new ActiveReleaseTrains({
+          releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.1')),
+          next: new ReleaseTrain('master', parse('10.2.0-next.3')),
+          latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
+        }),
+      ),
     ).toBe(true);
   });
 
   it('should not be active if the next branch is for a major', async () => {
     expect(
-      await ConfigureNextAsMajorAction.isActive({
-        releaseCandidate: null,
-        next: new ReleaseTrain('master', parse('11.0.0-next.0')),
-        latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
-      }),
+      await ConfigureNextAsMajorAction.isActive(
+        new ActiveReleaseTrains({
+          releaseCandidate: null,
+          next: new ReleaseTrain('master', parse('11.0.0-next.0')),
+          latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
+        }),
+      ),
     ).toBe(false);
   });
 
   it('should compute proper version and create staging pull request', async () => {
-    const action = setupReleaseActionForTesting(ConfigureNextAsMajorAction, {
-      releaseCandidate: null,
-      next: new ReleaseTrain('master', parse('10.1.0-next.3')),
-      latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
-    });
+    const action = setupReleaseActionForTesting(
+      ConfigureNextAsMajorAction,
+      new ActiveReleaseTrains({
+        releaseCandidate: null,
+        next: new ReleaseTrain('master', parse('10.1.0-next.3')),
+        latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
+      }),
+    );
 
     const {repo, fork, gitClient} = action;
     const expectedVersion = `11.0.0-next.0`;

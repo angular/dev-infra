@@ -16,6 +16,7 @@ import {
   PullRequestFromGithub,
   PullRequestStatus,
 } from '../fetch-pull-request';
+import {ActiveReleaseTrains} from '../../../release/versioning';
 
 /**
  * Assert the commits provided are allowed to merge to the provided target label,
@@ -26,6 +27,7 @@ export function assertChangesAllowForTargetLabel(
   commits: Commit[],
   label: TargetLabel,
   config: PullRequestConfig,
+  releaseTrains: ActiveReleaseTrains,
 ) {
   /**
    * List of commit scopes which are exempted from target label content requirements. i.e. no `feat`
@@ -57,7 +59,7 @@ export function assertChangesAllowForTargetLabel(
       // Deprecations should not be merged into RC, patch or LTS branches.
       // https://semver.org/#spec-item-7. Deprecations should be part of
       // minor releases, or major releases according to SemVer.
-      if (hasDeprecations) {
+      if (hasDeprecations && !releaseTrains.isFeatureFreeze()) {
         throw PullRequestFailure.hasDeprecations(label);
       }
       break;
