@@ -8,7 +8,7 @@
 
 import {assertValidReleaseConfig, ReleaseConfig} from '../../../release/config/index';
 import {
-  fetchActiveReleaseTrains,
+  ActiveReleaseTrains,
   getNextBranchName,
   isVersionBranch,
   ReleaseRepoWithApi,
@@ -38,6 +38,7 @@ import {debug} from '../../../utils/console';
  *   NPM version data when LTS version branches are validated.
  */
 export async function getTargetLabelsForActiveReleaseTrains(
+  {latest, releaseCandidate, next}: ActiveReleaseTrains,
   api: GithubClient,
   config: Partial<{github: GithubConfig; release: ReleaseConfig}>,
 ): Promise<TargetLabel[]> {
@@ -50,7 +51,6 @@ export async function getTargetLabelsForActiveReleaseTrains(
     nextBranchName,
     api,
   };
-  const {latest, releaseCandidate, next} = await fetchActiveReleaseTrains(repo);
 
   const targetLabels: TargetLabel[] = [
     {

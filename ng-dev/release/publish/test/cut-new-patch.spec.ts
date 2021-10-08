@@ -16,44 +16,56 @@ import {
 import {readFileSync} from 'fs';
 import {testTmpDir} from '../../../utils/testing';
 import {SandboxGitRepo} from '../../../utils/testing';
+import {ActiveReleaseTrains} from '../../versioning';
 
 describe('cut new patch action', () => {
   it('should be active', async () => {
     expect(
-      await CutNewPatchAction.isActive({
-        releaseCandidate: null,
-        next: new ReleaseTrain('master', parse('10.1.0-next.3')),
-        latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
-      }),
+      await CutNewPatchAction.isActive(
+        new ActiveReleaseTrains({
+          releaseCandidate: null,
+          next: new ReleaseTrain('master', parse('10.1.0-next.3')),
+          latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
+        }),
+      ),
     ).toBe(true);
   });
 
   it('should compute proper new version and select correct branch', async () => {
-    const action = setupReleaseActionForTesting(CutNewPatchAction, {
-      releaseCandidate: null,
-      next: new ReleaseTrain('master', parse('10.1.0-next.3')),
-      latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
-    });
+    const action = setupReleaseActionForTesting(
+      CutNewPatchAction,
+      new ActiveReleaseTrains({
+        releaseCandidate: null,
+        next: new ReleaseTrain('master', parse('10.1.0-next.3')),
+        latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
+      }),
+    );
 
     await expectStagingAndPublishWithCherryPick(action, '10.0.x', '10.0.3', 'latest');
   });
 
   it('should create a proper new version if there is a feature-freeze release-train', async () => {
-    const action = setupReleaseActionForTesting(CutNewPatchAction, {
-      releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.3')),
-      next: new ReleaseTrain('master', parse('10.2.0-next.0')),
-      latest: new ReleaseTrain('10.0.x', parse('10.0.9')),
-    });
+    const action = setupReleaseActionForTesting(
+      CutNewPatchAction,
+      new ActiveReleaseTrains({
+        releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.3')),
+        next: new ReleaseTrain('master', parse('10.2.0-next.0')),
+        latest: new ReleaseTrain('10.0.x', parse('10.0.9')),
+      }),
+    );
 
     await expectStagingAndPublishWithCherryPick(action, '10.0.x', '10.0.10', 'latest');
   });
 
   it('should create a proper new version if there is a release-candidate train', async () => {
-    const action = setupReleaseActionForTesting(CutNewPatchAction, {
-      releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
-      next: new ReleaseTrain('master', parse('10.2.0-next.0')),
-      latest: new ReleaseTrain('10.0.x', parse('10.0.9')),
-    });
+    const action = setupReleaseActionForTesting(
+      CutNewPatchAction,
+      new ActiveReleaseTrains({
+        releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
+        next: new ReleaseTrain('master', parse('10.2.0-next.0')),
+        latest: new ReleaseTrain('10.0.x', parse('10.0.9')),
+      }),
+    );
 
     await expectStagingAndPublishWithCherryPick(action, '10.0.x', '10.0.10', 'latest');
   });
@@ -61,11 +73,11 @@ describe('cut new patch action', () => {
   it('should generate release notes capturing changes to the previous latest patch version', async () => {
     const action = setupReleaseActionForTesting(
       CutNewPatchAction,
-      {
+      new ActiveReleaseTrains({
         releaseCandidate: null,
         next: new ReleaseTrain('master', parse('10.1.0-next.3')),
         latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
-      },
+      }),
       true,
       {useSandboxGitClient: true},
     );

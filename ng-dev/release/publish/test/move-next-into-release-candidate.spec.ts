@@ -7,6 +7,7 @@
  */
 
 import {SandboxGitRepo} from '../../../utils/testing';
+import {ActiveReleaseTrains} from '../../versioning';
 import {ReleaseTrain} from '../../versioning/release-trains';
 import {MoveNextIntoReleaseCandidateAction} from '../actions/move-next-into-release-candidate';
 
@@ -19,42 +20,50 @@ import {changelogPattern, parse} from './test-utils/test-utils';
 describe('move next into release-candidate action', () => {
   it('should not activate if a feature-freeze release-train is active', async () => {
     expect(
-      await MoveNextIntoReleaseCandidateAction.isActive({
-        releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.1')),
-        next: new ReleaseTrain('master', parse('10.2.0-next.0')),
-        latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
-      }),
+      await MoveNextIntoReleaseCandidateAction.isActive(
+        new ActiveReleaseTrains({
+          releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.1')),
+          next: new ReleaseTrain('master', parse('10.2.0-next.0')),
+          latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
+        }),
+      ),
     ).toBe(false);
   });
 
   it('should not activate if release-candidate release-train is active', async () => {
     expect(
-      await MoveNextIntoReleaseCandidateAction.isActive({
-        // No longer in feature-freeze but in release-candidate phase.
-        releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
-        next: new ReleaseTrain('master', parse('10.2.0-next.0')),
-        latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
-      }),
+      await MoveNextIntoReleaseCandidateAction.isActive(
+        new ActiveReleaseTrains({
+          // No longer in feature-freeze but in release-candidate phase.
+          releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
+          next: new ReleaseTrain('master', parse('10.2.0-next.0')),
+          latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
+        }),
+      ),
     ).toBe(false);
   });
 
   it('should not activate if the next release-train is for a major', async () => {
     expect(
-      await MoveNextIntoReleaseCandidateAction.isActive({
-        releaseCandidate: null,
-        next: new ReleaseTrain('master', parse('11.0.0-next.0')),
-        latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
-      }),
+      await MoveNextIntoReleaseCandidateAction.isActive(
+        new ActiveReleaseTrains({
+          releaseCandidate: null,
+          next: new ReleaseTrain('master', parse('11.0.0-next.0')),
+          latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
+        }),
+      ),
     ).toBe(false);
   });
 
   it('should activate if no FF/RC release-train is active', async () => {
     expect(
-      await MoveNextIntoReleaseCandidateAction.isActive({
-        releaseCandidate: null,
-        next: new ReleaseTrain('master', parse('10.1.0-next.0')),
-        latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
-      }),
+      await MoveNextIntoReleaseCandidateAction.isActive(
+        new ActiveReleaseTrains({
+          releaseCandidate: null,
+          next: new ReleaseTrain('master', parse('10.1.0-next.0')),
+          latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
+        }),
+      ),
     ).toBe(true);
   });
 
@@ -64,11 +73,11 @@ describe('move next into release-candidate action', () => {
     it('should update the version regardless', async () => {
       await expectBranchOffActionToRun(
         MoveNextIntoReleaseCandidateAction,
-        {
+        new ActiveReleaseTrains({
           releaseCandidate: null,
           next: new ReleaseTrain('master', parse('10.1.0-next.0')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
-        },
+        }),
         /* isNextPublishedToNpm */ false,
         '10.2.0-next.0',
         '10.1.0-rc.0',
@@ -82,11 +91,11 @@ describe('move next into release-candidate action', () => {
       async () => {
         const {action, buildChangelog} = prepareBranchOffActionForChangelog(
           MoveNextIntoReleaseCandidateAction,
-          {
+          new ActiveReleaseTrains({
             releaseCandidate: null,
             next: new ReleaseTrain('master', parse('10.1.0-next.0')),
             latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
-          },
+          }),
           /* isNextPublishedToNpm */ false,
           '10.2.0-next.0',
           '10.1.0-rc.0',
@@ -122,11 +131,11 @@ describe('move next into release-candidate action', () => {
   it('should generate release notes capturing changes to the previous next pre-release', async () => {
     const {action, buildChangelog} = prepareBranchOffActionForChangelog(
       MoveNextIntoReleaseCandidateAction,
-      {
+      new ActiveReleaseTrains({
         releaseCandidate: null,
         next: new ReleaseTrain('master', parse('10.1.0-next.0')),
         latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
-      },
+      }),
       /* isNextPublishedToNpm */ true,
       '10.2.0-next.0',
       '10.1.0-rc.0',
@@ -154,11 +163,11 @@ describe('move next into release-candidate action', () => {
   it('should create pull requests and new version-branch', async () => {
     await expectBranchOffActionToRun(
       MoveNextIntoReleaseCandidateAction,
-      {
+      new ActiveReleaseTrains({
         releaseCandidate: null,
         next: new ReleaseTrain('master', parse('10.1.0-next.0')),
         latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
-      },
+      }),
       /* isNextPublishedToNpm */ true,
       '10.2.0-next.0',
       '10.1.0-rc.0',

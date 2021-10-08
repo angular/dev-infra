@@ -7,6 +7,7 @@
  */
 
 import {matchesVersion} from '../../../utils/testing';
+import {ActiveReleaseTrains} from '../../versioning';
 import {ReleaseTrain} from '../../versioning/release-trains';
 import {TagRecentMajorAsLatest} from '../actions/tag-recent-major-as-latest';
 import * as externalCommands from '../external-commands';
@@ -22,11 +23,11 @@ describe('tag recent major as latest action', () => {
     const {releaseConfig} = getTestConfigurationsForAction();
     expect(
       await TagRecentMajorAsLatest.isActive(
-        {
+        new ActiveReleaseTrains({
           releaseCandidate: null,
           next: new ReleaseTrain('master', parse('10.1.0-next.0')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.1')),
-        },
+        }),
         releaseConfig,
       ),
     ).toBe(false);
@@ -47,11 +48,11 @@ describe('tag recent major as latest action', () => {
 
       expect(
         await TagRecentMajorAsLatest.isActive(
-          {
+          new ActiveReleaseTrains({
             releaseCandidate: null,
             next: new ReleaseTrain('master', parse('10.1.0-next.0')),
             latest: new ReleaseTrain('10.0.x', parse('10.0.0')),
-          },
+          }),
           releaseConfig,
         ),
       ).toBe(false);
@@ -74,11 +75,11 @@ describe('tag recent major as latest action', () => {
 
       expect(
         await TagRecentMajorAsLatest.isActive(
-          {
+          new ActiveReleaseTrains({
             releaseCandidate: null,
             next: new ReleaseTrain('master', parse('10.1.0-next.0')),
             latest: new ReleaseTrain('10.0.x', parse('10.0.0')),
-          },
+          }),
           releaseConfig,
         ),
       ).toBe(false);
@@ -98,11 +99,11 @@ describe('tag recent major as latest action', () => {
 
       expect(
         await TagRecentMajorAsLatest.isActive(
-          {
+          new ActiveReleaseTrains({
             releaseCandidate: null,
             next: new ReleaseTrain('master', parse('10.1.0-next.0')),
             latest: new ReleaseTrain('10.0.x', parse('10.0.0')),
-          },
+          }),
           releaseConfig,
         ),
       ).toBe(true);
@@ -112,11 +113,11 @@ describe('tag recent major as latest action', () => {
   it('should re-tag the version in the NPM registry and update the Github release', async () => {
     const {instance, gitClient, releaseConfig, repo} = setupReleaseActionForTesting(
       TagRecentMajorAsLatest,
-      {
+      new ActiveReleaseTrains({
         releaseCandidate: null,
         next: new ReleaseTrain('master', parse('10.1.0-next.0')),
         latest: new ReleaseTrain('10.0.x', parse('10.0.0')),
-      },
+      }),
     );
 
     // NPM `@latest` will point to a patch release of the previous major.

@@ -36,9 +36,8 @@ export class CiModule extends BaseModule<CiData> {
       ...this.git.remoteConfig,
       nextBranchName,
     };
-    const releaseTrains = await fetchActiveReleaseTrains(repo);
-
-    const ciResultPromises = Object.entries(releaseTrains).map(
+    const {latest, next, releaseCandidate} = await fetchActiveReleaseTrains(repo);
+    const ciResultPromises = Object.entries({releaseCandidate, latest, next}).map(
       async ([trainName, train]: [string, ReleaseTrain | null]) => {
         if (train === null) {
           return {

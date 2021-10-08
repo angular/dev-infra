@@ -89,7 +89,8 @@ describe('CiModule', () => {
         status: 'failed',
       },
     ]);
-    fetchActiveReleaseTrainsSpy.and.resolveTo([]);
+    const trains = buildMockActiveReleaseTrains(true);
+    fetchActiveReleaseTrainsSpy.and.resolveTo(trains);
 
     const module = new CiModule({caretaker: {}, ...mockNgDevConfig});
     Object.defineProperty(module, 'data', {value: fakeData});
@@ -113,9 +114,9 @@ function buildMockActiveReleaseTrains(withRc: boolean): versioning.ActiveRelease
     isMajor: false,
     version: new SemVer('0.0.0'),
   };
-  return {
+  return new versioning.ActiveReleaseTrains({
     releaseCandidate: withRc ? {branchName: 'rc-branch', ...baseResult} : null,
     latest: {branchName: 'latest-branch', ...baseResult},
     next: {branchName: 'next-branch', ...baseResult},
-  };
+  });
 }
