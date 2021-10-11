@@ -63,9 +63,14 @@ export class ReleaseNotes {
 
   /**
    * Prepend generated release note to the CHANGELOG.md file in the base directory of the repository
-   * provided by the GitClient.
+   * provided by the GitClient. Removes entries for related prerelease entries as appropriate.
    */
   async prependEntryToChangelogFile() {
+    // When the version for the entry is a non-prelease (i.e. 1.0.0 rather than 1.0.0-next.1), the
+    // pre-release entries for the version should be removed from the changelog.
+    if (semver.prerelease(this.version) === null) {
+      Changelog.removePrereleaseEntriesForVersion(this.git, this.version);
+    }
     Changelog.prependEntryToChangelogFile(this.git, await this.getChangelogEntry());
 
     // TODO(josephperrott): Remove file formatting calls.
