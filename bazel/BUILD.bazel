@@ -8,6 +8,7 @@ filegroup(
         "//bazel/benchmark:files",
         "//bazel/browsers:files",
         "//bazel/constraints:files",
+        "//bazel/integration:files",
         "//bazel/remote-execution:files",
     ],
     visibility = ["//:npm"],
