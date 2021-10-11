@@ -20,6 +20,7 @@ import {
 import {testTmpDir} from '../../../utils/testing';
 import {SandboxGitRepo} from '../../../utils/testing';
 import {ActiveReleaseTrains} from '../../versioning';
+import {ReleaseNotes} from '../../notes/release-notes';
 
 describe('cut stable action', () => {
   it('should not activate if a feature-freeze release-train is active', async () => {
@@ -179,6 +180,78 @@ describe('cut stable action', () => {
       | <..> | fix | released release-candidate *2 |
       ## Special Thanks
     `);
+    },
+  );
+
+  it(
+    'removes prerelease changelog entries for the new stable release when creating the stable ' +
+      'release changelog entry',
+    async () => {
+      const action = setupReleaseActionForTesting(
+        CutStableAction,
+        new ActiveReleaseTrains({
+          releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
+          next: new ReleaseTrain('master', parse('10.2.0-next.0')),
+          latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
+        }),
+        true,
+        {useSandboxGitClient: true},
+      );
+
+      SandboxGitRepo.withInitialCommit(action.githubConfig)
+        .commit('fix(pkg1): landed in all release trains *1')
+        .branchOff('10.0.x')
+        .commit('fix(pkg1): released in patch, cherry-picked *1', 1)
+        .commit('fix(pkg1): released in patch, cherry-picked *2', 2)
+        .createTagForHead('10.0.3')
+        .commit('fix(pkg1): landed in patch, not released but cherry-picked *1', 3)
+        .switchToBranch('master')
+        .cherryPick(1)
+        .cherryPick(2)
+        .cherryPick(3)
+        .commit('fix(pkg1): released first next pre-release *1')
+        .commit('fix(pkg1): released first next pre-release *2')
+        .createTagForHead('10.1.0-next.0')
+        .commit('fix(pkg1): released feature-freeze pre-release *1')
+        .commit('fix(pkg1): released feature-freeze pre-release *2')
+        .branchOff('10.1.x')
+        .createTagForHead('10.1.0-next.1')
+        .commit('fix(pkg1): released release-candidate *1')
+        .commit('fix(pkg1): released release-candidate *2')
+        .createTagForHead('10.1.0-rc.0')
+        .commit('fix(pkg1): not yet released *1')
+        .commit('fix(pkg1): not yet released *2');
+
+      const entriesBeforeStableReleaseAction: [startingRef: string, endingRef: string][] = [
+        ['10.0.3~2', '10.0.3'],
+        ['10.0.3', '10.1.0-next.0'],
+        ['10.1.0-next.0', '10.1.0-next.1'],
+        ['10.1.0-next.1', '10.1.0-rc.0'],
+      ];
+      for (const [start, end] of entriesBeforeStableReleaseAction) {
+        const releaseNotes = await ReleaseNotes.forRange(action.gitClient, parse(end), start, end);
+        await releaseNotes.prependEntryToChangelogFile();
+      }
+
+      // Assert the existence of the expected versions in the changelog.
+      const changelogBeforeAction = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
+      expect(changelogBeforeAction).toContain('<a name="10.0.3"></a>');
+      expect(changelogBeforeAction).toContain('<a name="10.1.0-next.0"></a>');
+      expect(changelogBeforeAction).toContain('<a name="10.1.0-next.1"></a>');
+      expect(changelogBeforeAction).toContain('<a name="10.1.0-rc.0"></a>');
+      expect(changelogBeforeAction).not.toContain('<a name="10.1.0"></a>');
+
+      await expectGithubApiRequestsForStaging(action, '10.1.x', '10.1.0', true);
+      await action.instance.perform();
+
+      // Assert the removal of changelog entries for the prerelease versions expected to be removed
+      // and now has the new stable entry.
+      const changelogAfterAction = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
+      expect(changelogAfterAction).not.toContain('<a name="10.0.3"></a>');
+      expect(changelogAfterAction).not.toContain('<a name="10.1.0-next.0"></a>');
+      expect(changelogAfterAction).not.toContain('<a name="10.1.0-next.1"></a>');
+      expect(changelogAfterAction).not.toContain('<a name="10.1.0-rc.0"></a>');
+      expect(changelogAfterAction).toContain('<a name="10.1.0"></a>');
     },
   );
 });
