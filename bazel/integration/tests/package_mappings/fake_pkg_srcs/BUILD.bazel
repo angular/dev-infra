@@ -1,0 +1,19 @@
+load("@rules_pkg//:pkg.bzl", "pkg_tar")
+load("//tools:defaults.bzl", "pkg_npm")
+
+pkg_npm(
+    name = "npm_package",
+    srcs = [
+        "index.mjs",
+        "package.json",
+    ],
+    validate = False,
+)
+
+pkg_tar(
+    name = "archive",
+    srcs = [":npm_package"],
+    extension = "tar.gz",
+    strip_prefix = "./npm_package",
+    visibility = ["//bazel/integration/tests/package_mappings:__pkg__"],
+)

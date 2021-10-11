@@ -3,3 +3,4 @@ dist
 
 bazel/integration/tests/angular-cli/.angular/
 bazel/integration/tests/angular-cli/node_modules/
+bazel/integration/tests/package_mappings/node_modules/
