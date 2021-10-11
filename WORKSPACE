@@ -15,7 +15,7 @@ http_archive(
 load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories", "yarn_install")
 
 node_repositories(
-    node_version = "16.6.0",
+    node_version = "16.10.0",
 )
 
 yarn_install(

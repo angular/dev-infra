@@ -1,6 +1,7 @@
 .DS_STORE
 
 node_modules
+.angular/
 
 # Include when developing application packages.
 .c9
