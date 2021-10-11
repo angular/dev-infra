@@ -1,6 +1,7 @@
 import {existsSync, readFileSync, writeFileSync} from 'fs';
 import {join} from 'path';
 import * as semver from 'semver';
+import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {GitClient} from '../../utils/git/git-client';
 
 /** Project-relative path for the changelog file. */
@@ -57,6 +58,17 @@ export class Changelog {
     changelog.moveEntriesPriorToVersionToArchive(version);
   }
 
+  /**
+   * Remove all changelog entries from the CHANGELOG.md file for versions which are prereleases
+   * for the provided version. This is expected to be done on each major and minor release to remove
+   * the changelog entries which will be made redundant by the first major/minor changelog for a
+   * version.
+   */
+  static removePrereleaseEntriesForVersion(git: GitClient, version: semver.SemVer) {
+    const changelog = new this(git);
+    changelog.removePrereleaseEntriesForVersion(version);
+  }
+
   // TODO(josephperrott): Remove this after it is unused.
   /** Retrieve the file paths for the changelog files. */
   static getChangelogFilePaths(git: GitClient) {
@@ -95,6 +107,19 @@ export class Changelog {
   /** Prepend a changelog entry to the changelog. */
   private prependEntryToChangelogFile(entry: string) {
     this.entries.unshift(parseChangelogEntry(entry));
+    this.writeToChangelogFile();
+  }
+
+  /**
+   * Remove all changelog entries from the CHANGELOG.md file for versions which are prereleases
+   * for the provided version. This is expected to be done on each major and minor release to remove
+   * the changelog entries which will be made redundant by the first major/minor changelog for a
+   * version.
+   */
+  private removePrereleaseEntriesForVersion(version: semver.SemVer) {
+    this._entries = this.entries.filter((entry: ChangelogEntry) => {
+      return semver.diff(entry.version, version) !== 'prerelease';
+    });
     this.writeToChangelogFile();
   }
 

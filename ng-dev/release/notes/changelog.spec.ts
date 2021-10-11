@@ -119,6 +119,34 @@ describe('Changelog', () => {
       expect(readFileAsString(changelog.archiveFilePath)).not.toContain('version 3');
     });
   });
+
+  describe('removes entries for all prereleases of major or minor versions', () => {
+    it('only removes the prerelease entries from the matching minor versions', () => {
+      Changelog.prependEntryToChangelogFile(gitClient, createChangelogEntry('1.0.0-next.0'));
+      Changelog.prependEntryToChangelogFile(gitClient, createChangelogEntry('1.0.0'));
+      Changelog.prependEntryToChangelogFile(gitClient, createChangelogEntry('1.1.0-next.0'));
+      Changelog.prependEntryToChangelogFile(gitClient, createChangelogEntry('1.1.0-rc.0'));
+
+      Changelog.removePrereleaseEntriesForVersion(gitClient, new SemVer('1.1.0'));
+      expect(readFileAsString(changelog.filePath)).toContain('1.0.0-next.0');
+      expect(readFileAsString(changelog.filePath)).toContain('1.0.0');
+      expect(readFileAsString(changelog.filePath)).not.toContain('1.1.0-next.0');
+      expect(readFileAsString(changelog.filePath)).not.toContain('1.1.0-rc.0');
+    });
+
+    it('only removes the prerelease entries from the matching major versions', () => {
+      Changelog.prependEntryToChangelogFile(gitClient, createChangelogEntry('1.0.0-next.0'));
+      Changelog.prependEntryToChangelogFile(gitClient, createChangelogEntry('1.0.0'));
+      Changelog.prependEntryToChangelogFile(gitClient, createChangelogEntry('2.0.0-next.0'));
+      Changelog.prependEntryToChangelogFile(gitClient, createChangelogEntry('2.0.0-rc.0'));
+
+      Changelog.removePrereleaseEntriesForVersion(gitClient, new SemVer('2.0.0'));
+      expect(readFileAsString(changelog.filePath)).toContain('1.0.0-next.0');
+      expect(readFileAsString(changelog.filePath)).toContain('1.0.0');
+      expect(readFileAsString(changelog.filePath)).not.toContain('2.0.0-next.0');
+      expect(readFileAsString(changelog.filePath)).not.toContain('2.0.0-rc.0');
+    });
+  });
 });
 
 function readFileAsString(file: string) {
