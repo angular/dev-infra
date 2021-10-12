@@ -30,6 +30,7 @@ ts_library(
 jasmine_node_test(
     name = "test",
     args = ["'$(GIT_BIN_PATH)'"],
+    shard_count = 6,
     specs = [":test_lib"],
     toolchains = ["//tools/git-toolchain:current_git_toolchain"],
 )
