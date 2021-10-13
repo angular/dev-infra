@@ -19,6 +19,7 @@ import {getNextBranchName, ReleaseRepoWithApi} from '../versioning/version-branc
 import {ReleaseAction} from './actions';
 import {FatalReleaseActionError, UserAbortedReleaseActionError} from './actions-error';
 import {actions} from './actions/index';
+import {invokeYarnIntegryCheck} from './external-commands';
 
 export enum CompletionState {
   SUCCESS,
@@ -51,7 +52,8 @@ export class ReleaseTool {
     if (
       !(await this._verifyNoUncommittedChanges()) ||
       !(await this._verifyRunningFromNextBranch(nextBranchName)) ||
-      !(await this._verifyNoShallowRepository())
+      !(await this._verifyNoShallowRepository()) ||
+      !(await this._verifyInstalledDependenciesAreUpToDate())
     ) {
       return CompletionState.FATAL_ERROR;
     }
@@ -142,6 +144,20 @@ export class ReleaseTool {
       return false;
     }
     return true;
+  }
+
+  /**
+   * Verifiy that the install dependencies match the the versions defined in the package.json and
+   * yarn.lock files.
+   * @returns a boolean indicating success or failure.
+   */
+  private async _verifyInstalledDependenciesAreUpToDate(): Promise<boolean> {
+    try {
+      await invokeYarnIntegryCheck(this._projectRoot);
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   /**

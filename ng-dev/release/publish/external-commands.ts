@@ -97,3 +97,17 @@ export async function invokeYarnInstallCommand(projectDir: string): Promise<void
     throw new FatalReleaseActionError();
   }
 }
+
+/**
+ * Invokes the `yarn check --integrity` command in order to verify up to date dependencies.
+ */
+export async function invokeYarnIntegryCheck(projectDir: string): Promise<void> {
+  try {
+    await spawn('yarn', ['check', '--integrity'], {cwd: projectDir, mode: 'silent'});
+    info(green('  ✓   Confirmed installed dependencies match those defined in package.json.'));
+  } catch (e) {
+    error(red('  ✘   Failed yarn integrity check, your installed dependencies are likely out of'));
+    error(red('      date. Please run `yarn install` to update your installed dependencies.'));
+    throw new FatalReleaseActionError();
+  }
+}
