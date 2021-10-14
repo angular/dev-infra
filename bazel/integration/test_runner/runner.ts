@@ -45,6 +45,8 @@ export class TestRunner {
     const tmpDir = await this._getTmpDirectoryPath();
     const toolMappings = await this._setupToolMappingsForTest(tmpDir);
 
+    console.info(`Running test in: ${path.normalize(tmpDir)}`);
+
     await this._copyTestFilesToDirectory(tmpDir);
     await this._patchPackageJsonIfNeeded(tmpDir);
     await this._runTestCommands(tmpDir, toolMappings.binDir);
@@ -64,8 +66,6 @@ export class TestRunner {
     // directory. The Bazel test tmpdir is not guaranteed to remain so for debugging,
     // when the test is run with `bazel run`, we use a directory we control.
     if (process.env.TEST_TMPDIR) {
-      // Bazel itself cleans the temporary directory, so the direct cleanup
-      // function is a noop.
       return process.env.TEST_TMPDIR;
     }
 
