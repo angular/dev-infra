@@ -27,6 +27,21 @@ platform(
     },
 )
 
+platform(
+    name = "platform_with_network",
+    exec_properties = {
+        # By default we have network access disabled with the `:platform` target. This is an
+        # additional platform that extends from the default one but enables network access.
+        # Network is generally not recommended, but for some exceptions, like integration tests
+        # running a Yarn install, network access is reasonable. In such special cases, Bazel can
+        # be invoked to run with this platform. It is recommended that exec platforms with network
+        # access are used in combination with `--sandbox_default_allow_network=false` as this allows
+        # specific targets to be granted network access, while others will not have access.
+        "dockerNetwork": "standard",
+    },
+    parents = [":platform"],
+)
+
 filegroup(
     name = "files",
     srcs = [
