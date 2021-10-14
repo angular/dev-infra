@@ -2,44 +2,55 @@ import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {Octokit} from '@octokit/rest';
 import {parseCommitMessage} from '../../../ng-dev/commit-message/parse';
-import {breakingChangeLabel} from '../../../ng-dev/pr/config';
+import {breakingChangeLabel, deprecationLabel} from '../../../ng-dev/pr/config';
 import {ANGULAR_ROBOT, getAuthTokenFor} from '../../utils';
+
+/** List of supported label and commit message attribute combinations. */
+const supportedLabels = [
+  [breakingChangeLabel, 'breakingChanges'],
+  [deprecationLabel, 'deprecations'],
+] as const;
 
 async function run(): Promise<void> {
   const token = await getAuthTokenFor(ANGULAR_ROBOT);
-  // Create authenticated Github client.
   const client = new Octokit({auth: token});
-
   const {number, owner, repo} = context.issue;
-
-  const hasBreakingChangeLabel = await (
+  /** Labels currently applied to the PR. */
+  const labels = await (
     await client.issues.listLabelsOnIssue({issue_number: number, owner, repo})
-  ).data.find((label) => label.name === breakingChangeLabel);
-  console.log('hasBreakingChangeLabel', hasBreakingChangeLabel);
-
-  const hasBreakingChangeCommit = (
+  ).data;
+  /** Parsed commit message for every commit on the PR. */
+  const commits = await (
     await client.paginate(client.pulls.listCommits, {owner, pull_number: number, repo})
-  ).some((commit) => {
-    return parseCommitMessage(commit.commit.message).breakingChanges.length > 0;
-  });
+  ).map(({commit: {message}}) => parseCommitMessage(message));
 
-  if (hasBreakingChangeCommit && !hasBreakingChangeLabel) {
-    await client.issues.addLabels({
-      repo,
-      owner,
-      issue_number: number,
-      labels: [breakingChangeLabel],
-    });
-    console.log(`Added ${breakingChangeLabel} label to PR #${number}`);
-  }
-  if (!hasBreakingChangeCommit && hasBreakingChangeLabel) {
-    await client.issues.removeLabel({
-      repo,
-      owner,
-      issue_number: number,
-      name: breakingChangeLabel,
-    });
-    console.log(`Removed ${breakingChangeLabel} label from PR #${number}`);
+  console.log(`PR #${number}`);
+
+  // Add or Remove label as appropriate for each of the supported label and commit messaage
+  // combinations.
+  for (const [label, commitProperty] of supportedLabels) {
+    const hasCommit = commits.some((commit) => commit[commitProperty].length > 0);
+    const hasLabel = labels.some(({name}) => name === label);
+    console.log(`${commitProperty} | hasLabel: ${hasLabel} | hasCommit: ${hasCommit}`);
+
+    if (hasCommit && !hasLabel) {
+      await client.issues.addLabels({
+        repo,
+        owner,
+        issue_number: number,
+        labels: [label],
+      });
+      console.log(`Added ${label} label to PR #${number}`);
+    }
+    if (!hasCommit && hasLabel) {
+      await client.issues.removeLabel({
+        repo,
+        owner,
+        issue_number: number,
+        name: label,
+      });
+      console.log(`Removed ${label} label from PR #${number}`);
+    }
   }
 }
 
