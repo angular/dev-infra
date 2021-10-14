@@ -6,6 +6,8 @@
 // a local version of Chromium that can run within Bazel.
 process.env.CHROME_BIN = require('puppeteer').executablePath();
 
+console.error('just a test change');
+
 module.exports = function (config) {
   config.set({
     basePath: '',
