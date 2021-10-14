@@ -7,7 +7,7 @@ ts_library(
         exclude = ["**/*.spec.ts"],
     ),
     visibility = [
-        "//github-actions/breaking-changes-label:__subpackages__",
+        "//github-actions/commit-message-based-labels:__subpackages__",
         "//ng-dev:__subpackages__",
     ],
     deps = [

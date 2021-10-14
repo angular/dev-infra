@@ -1,0 +1,19 @@
+load("//tools:defaults.bzl", "esbuild_checked_in")
+
+esbuild_checked_in(
+    name = "post",
+    entry_point = "//github-actions/commit-message-based-labels/lib:post.ts",
+    external = ["ts-node"],
+    deps = [
+        "//github-actions/commit-message-based-labels/lib",
+    ],
+)
+
+esbuild_checked_in(
+    name = "main",
+    entry_point = "//github-actions/commit-message-based-labels/lib:main.ts",
+    external = ["ts-node"],
+    deps = [
+        "//github-actions/commit-message-based-labels/lib",
+    ],
+)

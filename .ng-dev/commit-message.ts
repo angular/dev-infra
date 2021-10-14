@@ -17,7 +17,7 @@ export const commitMessage: CommitMessageConfig = {
       'remote-execution',
     ]),
     ...buildScopesFor('github-actions', [
-      'breaking-changes-label',
+      'commit-message-based-labels',
       'feature-request',
       'lock-closed',
       'rebase',
