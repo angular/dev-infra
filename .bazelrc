@@ -56,9 +56,9 @@ build:remote --auth_enabled=true
 # is provided by the shared dev-infra package and targets k8 remote containers.
 build:remote --crosstool_top=//bazel/remote-execution/cpp:cc_toolchain_suite
 build:remote --extra_toolchains=//bazel/remote-execution/cpp:cc_toolchain
-build:remote --extra_execution_platforms=//bazel/remote-execution:platform
-build:remote --host_platform=//bazel/remote-execution:platform
-build:remote --platforms=//bazel/remote-execution:platform
+build:remote --extra_execution_platforms=//bazel/remote-execution:platform_with_network
+build:remote --host_platform=//bazel/remote-execution:platform_with_network
+build:remote --platforms=//bazel/remote-execution:platform_with_network
 
 # Set remote caching settings
 build:remote --remote_accept_cached=true

@@ -14,11 +14,8 @@ integration_test(
         "@nodejs//:yarn_files",
     ],
     tags = [
-        # Chromium cannot run in Sandbox. For this test, sandbox is disabled.
-        # Additionally, we need to disable RBE as this test relies on internet
-        # access for installing the NPM packages.
-        "no-sandbox",
-        "no-remote-exec",
+        # This test relies on `yarn` so there needs to be internet access.
+        "requires-network",
     ],
     tool_mappings = {
         "@nodejs//:yarn_bin": "yarn",
