@@ -78,3 +78,6 @@ export function assertValidPullRequestConfig<T>(
 
 /** Label for pull requests containing a breaking change. */
 export const breakingChangeLabel = 'flag: breaking change';
+
+/** Label for pull requests containing a deprecation. */
+export const deprecationLabel = 'flag: deprecation';
