@@ -2,7 +2,7 @@
 test:debug --test_arg=--node_options=--inspect-brk --test_output=streamed --test_strategy=exclusive --test_timeout=9999 --nocache_test_results
 
 # By default, network access should be disabled unless explicitly granted for certain targets
-using the `requires-network` tag. https://docs.bazel.build/versions/main/be/common-definitions.html
+# using the `requires-network` tag. https://docs.bazel.build/versions/main/be/common-definitions.html
 build --sandbox_default_allow_network=false
 test --sandbox_default_allow_network=false
 
