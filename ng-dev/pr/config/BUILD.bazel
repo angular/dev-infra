@@ -4,7 +4,7 @@ ts_library(
     name = "config",
     srcs = ["index.ts"],
     visibility = [
-        "//github-actions/breaking-changes-label/lib:__pkg__",
+        "//github-actions/commit-message-based-labels/lib:__pkg__",
         "//ng-dev:__subpackages__",
     ],
     deps = [
