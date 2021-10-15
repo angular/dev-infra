@@ -51,7 +51,7 @@ export class TestRunner {
   async run() {
     const testDir = await this._getTestTmpDirectoryPath();
     const toolMappings = await this._setupToolMappingsForTest(testDir);
-    const testEnv = await this._createTestProcessEnvironment(testDir, toolMappings.binDir);
+    const testEnv = await this._buildTestProcessEnvironment(testDir, toolMappings.binDir);
 
     console.info(`Running test in: ${path.normalize(testDir)}`);
 
@@ -175,13 +175,13 @@ export class TestRunner {
   }
 
   /**
-   * Creates the test process environment. The specified tools bin directory
-   * will be added to the environment `PATH` variable.
+   * Builds the test process environment object literal. The specified tools bin
+   * directory will be added to the environment `PATH` variable.
    *
    * User-specified environment variables can use Bazel location expansion as well
    * as a special placeholder for acquiring a temporary directory for the test.
    */
-  private async _createTestProcessEnvironment(
+  private async _buildTestProcessEnvironment(
     testDir: string,
     toolsBinDir: string,
   ): Promise<NodeJS.ProcessEnv> {
