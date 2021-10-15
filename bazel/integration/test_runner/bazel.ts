@@ -23,6 +23,18 @@ export interface BazelFileInfo {
   shortPath: string;
 }
 
+/**
+ * Interface describing a Bazel-expanded value. A integration command for example could
+ * use a Bazel location expansion to resolve a binary. Such resolved values are captured in
+ * a structure like this.
+ */
+export interface BazelExpandedValue {
+  /** Actual value, with expanded Make expressions if it contained any. */
+  value: string;
+  /** Whether the value contains an expanded value. */
+  containsExpandedValue: boolean;
+}
+
 /** Resolves the specified Bazel file to an absolute disk path. */
 export function resolveBazelFile(file: BazelFileInfo): string {
   return runfiles.resolveWorkspaceRelative(file.shortPath);

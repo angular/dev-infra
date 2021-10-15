@@ -6,10 +6,30 @@ def _serialize_file(file):
 
     return struct(path = file.path, shortPath = file.short_path)
 
+def _serialize_and_expand_location(ctx, value):
+    """Expands Bazel make location expressions for the given value. Returns a JSON
+      serializable dictionary matching the `BazelExpandedValue` type in the test runner."""
+    new_value = ctx.expand_location(value, targets = ctx.attr.data)
+
+    return {
+        "value": new_value,
+        "containsExpandedValue": new_value != value,
+    }
+
 def _split_and_expand_command(ctx, command):
     """Splits a command into the binary and its arguments. Also Bazel locations are expanded."""
-    expanded_command = ctx.expand_location(command, targets = ctx.attr.data)
-    return expanded_command.split(" ", 1)
+    return [_serialize_and_expand_location(ctx, v) for v in command.split(" ", 1)]
+
+def _serialize_and_expand_environment(ctx, environment_dict):
+    """Converts the given environment dictionary into a JSON-serializable dictionary
+      that will work with the test runner."""
+    result = {}
+
+    for variable_name in environment_dict:
+        value = environment_dict[variable_name]
+        result[variable_name] = _serialize_and_expand_location(ctx, value)
+
+    return result
 
 def _unwrap_label_keyed_mappings(dict, description):
     """Unwraps a label-keyed dictionary used for expressing mappings into a JSON-serializable
@@ -51,6 +71,7 @@ def _integration_test_config_impl(ctx):
         testPackage = ctx.label.package,
         testFiles = [_serialize_file(f) for f in ctx.files.srcs],
         commands = [_split_and_expand_command(ctx, c) for c in ctx.attr.commands],
+        environment = _serialize_and_expand_environment(ctx, ctx.attr.environment),
         npmPackageMappings = npmPackageMappings,
         toolMappings = toolMappings,
     )
@@ -105,6 +126,17 @@ _integration_test_config = rule(
               This allows for binaries like `node` to be made available to the integration test
               using the `PATH` environment variable.""",
         ),
+        "environment": attr.string_dict(
+            doc = """
+              Dictionary of environment variables and their values. This allows for custom
+              environment variables to be set when integration commands are invoked.
+
+              The environment variable values can use Bazel make location expansion similar
+              to the `commands` attribute. Additionally, values of `<TMP>` are replaced with
+              a unique temporary directory. This can be useful when providing `HOME` for
+              bazelisk or puppeteer as as an example.
+            """,
+        ),
     },
 )
 
@@ -114,6 +146,7 @@ def integration_test(
         commands,
         npm_packages = {},
         tool_mappings = {},
+        environment = {},
         data = [],
         tags = [],
         **kwargs):
@@ -129,6 +162,7 @@ def integration_test(
         commands = commands,
         npm_packages = npm_packages,
         tool_mappings = tool_mappings,
+        environment = environment,
         tags = tags,
     )
 

@@ -15,7 +15,12 @@ import {
   readPackageJsonContents,
   updateMappingsForPackageJson,
 } from './package_json';
-import {BazelFileInfo, resolveBazelFile, resolveBinaryWithRunfiles} from './bazel';
+import {
+  BazelExpandedValue,
+  BazelFileInfo,
+  resolveBazelFile,
+  resolveBinaryWithRunfiles,
+} from './bazel';
 import {debug} from './debug';
 import {
   expandEnvironmentVariableSubstitutions,
@@ -23,6 +28,7 @@ import {
   prependToPathVariable,
   runCommandInChildProcess,
 } from './process_utils';
+import {ENVIRONMENT_TMP_PLACEHOLDER} from './constants';
 
 /**
  * Test runner that takes a set of files within a Bazel package and copies the files
@@ -38,18 +44,20 @@ export class TestRunner {
     private readonly testPackage: string,
     private readonly toolMappings: Record<string, BazelFileInfo>,
     private readonly npmPackageMappings: Record<string, BazelFileInfo>,
-    private readonly commands: [[binary: string, ...args: string[]]],
+    private readonly commands: [[binary: BazelExpandedValue, ...args: BazelExpandedValue[]]],
+    private readonly environment: Record<string, BazelExpandedValue>,
   ) {}
 
   async run() {
-    const tmpDir = await this._getTmpDirectoryPath();
-    const toolMappings = await this._setupToolMappingsForTest(tmpDir);
+    const testDir = await this._getTestTmpDirectoryPath();
+    const toolMappings = await this._setupToolMappingsForTest(testDir);
+    const testEnv = await this._buildTestProcessEnvironment(testDir, toolMappings.binDir);
 
-    console.info(`Running test in: ${path.normalize(tmpDir)}`);
+    console.info(`Running test in: ${path.normalize(testDir)}`);
 
-    await this._copyTestFilesToDirectory(tmpDir);
-    await this._patchPackageJsonIfNeeded(tmpDir);
-    await this._runTestCommands(tmpDir, toolMappings.binDir);
+    await this._copyTestFilesToDirectory(testDir);
+    await this._patchPackageJsonIfNeeded(testDir);
+    await this._runTestCommands(testDir, testEnv);
   }
 
   /**
@@ -59,7 +67,7 @@ export class TestRunner {
    * In case this test does not run as part of `bazel test`, a system-temporary directory
    * is being created, although not being cleaned up to allow for debugging.
    */
-  private async _getTmpDirectoryPath(): Promise<string> {
+  private async _getTestTmpDirectoryPath(): Promise<string> {
     // Bazel provides a temporary test directory itself when it executes a test. We prefer
     // this when the integration test runs with `bazel test`. In other cases we want to
     // provide a temporary directory that can be used for manually jumping into the
@@ -167,24 +175,50 @@ export class TestRunner {
   }
 
   /**
-   * Runs the test commands sequentially in the test directory. An additional directory
-   * that is added to the command process `$PATH` environment variables can be specified.
+   * Builds the test process environment object literal. The specified tools bin
+   * directory will be added to the environment `PATH` variable.
+   *
+   * User-specified environment variables can use Bazel location expansion as well
+   * as a special placeholder for acquiring a temporary directory for the test.
+   */
+  private async _buildTestProcessEnvironment(
+    testDir: string,
+    toolsBinDir: string,
+  ): Promise<NodeJS.ProcessEnv> {
+    const testEnv: NodeJS.ProcessEnv = {...process.env};
+    let i = 0;
+
+    for (let [variableName, value] of Object.entries(this.environment)) {
+      let envValue: string = value.value;
+
+      if (value.containsExpandedValue) {
+        envValue = await resolveBinaryWithRunfiles(envValue);
+      } else if (envValue === ENVIRONMENT_TMP_PLACEHOLDER) {
+        envValue = path.join(testDir, `.tmp-env-${i++}`);
+        await fs.promises.mkdir(envValue);
+      }
+
+      testEnv[variableName] = envValue;
+    }
+
+    const commandPath = prependToPathVariable(toolsBinDir, testEnv.PATH ?? '');
+    return {...testEnv, PATH: commandPath};
+  }
+
+  /**
+   * Runs the test commands sequentially in the test directory with the given test
+   * environment applied to the child process executing the command.
    *
    * @throws An error if any of the configured commands did not complete successfully.
    */
-  private async _runTestCommands(
-    testDir: string,
-    additionalPathDirectory: string | null,
-  ): Promise<void> {
-    const commandPath =
-      additionalPathDirectory === null
-        ? process.env.PATH
-        : prependToPathVariable(additionalPathDirectory, process.env.PATH ?? '');
-    const commandEnv = {...process.env, PATH: commandPath};
-
+  private async _runTestCommands(testDir: string, commandEnv: NodeJS.ProcessEnv): Promise<void> {
     for (const [binary, ...args] of this.commands) {
-      const resolvedBinary = await resolveBinaryWithRunfiles(binary);
-      const evaluatedArgs = expandEnvironmentVariableSubstitutions(args);
+      // Only resolve the binary if it contains an expanded value. In other cases we would
+      // not want to resolve through runfiles to avoid accidentally unexpected resolution.
+      const resolvedBinary = binary.containsExpandedValue
+        ? await resolveBinaryWithRunfiles(binary.value)
+        : binary.value;
+      const evaluatedArgs = expandEnvironmentVariableSubstitutions(args.map((v) => v.value));
       const success = await runCommandInChildProcess(
         resolvedBinary,
         evaluatedArgs,
