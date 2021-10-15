@@ -1,0 +1,22 @@
+load("//bazel/integration:index.bzl", "integration_test")
+
+integration_test(
+    name = "test",
+    srcs = [
+        "test.js",
+    ],
+    commands = [
+        "node ./test.js",
+    ],
+    data = ["@npm//:node_modules/semver/package.json"],
+    environment = {
+        "CUSTOM_VAR": "yes!",
+        "RESOLVED_BIN": "$(rootpath @npm//:node_modules/semver/package.json)",
+        "MANIFEST_PATH": "external/npm/node_modules/semver/package.json",
+        "BAZELISK_HOME": "<TMP>",
+        "BAZELISK_HOME_2": "<TMP>",
+    },
+    tool_mappings = {
+        "@nodejs//:node_bin": "node",
+    },
+)
