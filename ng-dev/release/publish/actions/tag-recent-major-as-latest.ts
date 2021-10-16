@@ -34,7 +34,7 @@ export class TagRecentMajorAsLatest extends ReleaseAction {
   override async perform() {
     await this.updateGithubReleaseEntryToStable(this.active.latest.version);
     await this.checkoutUpstreamBranch(this.active.latest.branchName);
-    await invokeYarnInstallCommand(this.projectDir);
+    await this.installDependenciesForCurrentBranch();
     await invokeSetNpmDistCommand('latest', this.active.latest.version);
   }
 

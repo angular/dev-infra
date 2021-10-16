@@ -9,6 +9,7 @@
 import {promises as fs} from 'fs';
 import {join} from 'path';
 import * as semver from 'semver';
+import * as del from 'del';
 
 import {debug, error, green, info, promptConfirm, red, warn, yellow} from '../../utils/console';
 import {Spinner} from '../../utils/spinner';
@@ -377,6 +378,17 @@ export abstract class ReleaseAction {
     this.git.run(['checkout', '-q', 'FETCH_HEAD', '--detach']);
   }
 
+  /** Installs all Yarn dependencies in the current branch. */
+  protected async installDependenciesForCurrentBranch() {
+    // Note: We delete all contents of the `node_modules` first. This is necessary
+    // because Yarn could preserve extraneous/outdated nested modules that will cause
+    // unexpected build failures with the NodeJS Bazel `@npm` workspace generation.
+    // This is a workaround for: https://github.com/yarnpkg/yarn/issues/8146. Even though
+    // we might be able to fix this with Yarn 2+, it is reasonable ensuring clean node modules.
+    await del(['node_modules/**'], {cwd: this.projectDir});
+    await invokeYarnInstallCommand(this.projectDir);
+  }
+
   /**
    * Creates a commit for the specified files with the given message.
    * @param message Message for the created commit
@@ -585,14 +597,14 @@ export abstract class ReleaseAction {
 
     // Checkout the publish branch and build the release packages.
     await this.checkoutUpstreamBranch(publishBranch);
+    // Install the project dependencies for the publish branch.
+    await this.installDependenciesForCurrentBranch();
 
-    // Install the project dependencies for the publish branch, and then build the release
-    // packages. Note that we do not directly call the build packages function from the release
+    // Note that we do not directly call the build packages function from the release
     // config. We only want to build and publish packages that have been configured in the given
     // publish branch. e.g. consider we publish patch version and a new package has been
     // created in the `next` branch. The new package would not be part of the patch branch,
     // so we cannot build and publish it.
-    await invokeYarnInstallCommand(this.projectDir);
     const builtPackages = await invokeReleaseBuildCommand();
 
     // Verify the packages built are the correct version.

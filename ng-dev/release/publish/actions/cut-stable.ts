@@ -67,7 +67,8 @@ export class CutStableAction extends ReleaseAction {
       // NPM dist tag for new packages part of the released major, nor would it be acceptable
       // to skip the LTS tag for packages which are no longer part of the new major.
       await this.checkoutUpstreamBranch(previousPatch.branchName);
-      await invokeYarnInstallCommand(this.projectDir);
+      await this.installDependenciesForCurrentBranch();
+
       await invokeSetNpmDistCommand(ltsTagForPatch, previousPatch.version);
     }
 
