@@ -101,7 +101,7 @@ export async function invokeYarnInstallCommand(projectDir: string): Promise<void
 /**
  * Invokes the `yarn check --integrity` command in order to verify up to date dependencies.
  */
-export async function invokeYarnIntegryCheck(projectDir: string): Promise<void> {
+export async function invokeYarnIntegrityCheck(projectDir: string): Promise<void> {
   try {
     await spawn('yarn', ['check', '--integrity'], {cwd: projectDir, mode: 'silent'});
     info(green('  ✓   Confirmed dependencies from package.json match those in yarn.lock.'));
