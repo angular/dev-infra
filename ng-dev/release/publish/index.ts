@@ -19,7 +19,7 @@ import {getNextBranchName, ReleaseRepoWithApi} from '../versioning/version-branc
 import {ReleaseAction} from './actions';
 import {FatalReleaseActionError, UserAbortedReleaseActionError} from './actions-error';
 import {actions} from './actions/index';
-import {invokeYarnIntegryCheck, invokeYarnVerifyTreeCheck} from './external-commands';
+import {invokeYarnIntegrityCheck, invokeYarnVerifyTreeCheck} from './external-commands';
 
 export enum CompletionState {
   SUCCESS,
@@ -154,7 +154,7 @@ export class ReleaseTool {
   private async _verifyInstalledDependenciesAreUpToDate(): Promise<boolean> {
     try {
       await invokeYarnVerifyTreeCheck(this._projectRoot);
-      await invokeYarnIntegryCheck(this._projectRoot);
+      await invokeYarnIntegrityCheck(this._projectRoot);
       return true;
     } catch {
       return false;
