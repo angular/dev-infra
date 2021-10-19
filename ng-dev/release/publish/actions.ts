@@ -9,7 +9,6 @@
 import {promises as fs} from 'fs';
 import {join} from 'path';
 import * as semver from 'semver';
-import * as del from 'del';
 
 import {debug, error, green, info, promptConfirm, red, warn, yellow} from '../../utils/console';
 import {Spinner} from '../../utils/spinner';
@@ -380,12 +379,13 @@ export abstract class ReleaseAction {
 
   /** Installs all Yarn dependencies in the current branch. */
   protected async installDependenciesForCurrentBranch() {
+    const nodeModulesDir = join(this.projectDir, 'node_modules');
     // Note: We delete all contents of the `node_modules` first. This is necessary
     // because Yarn could preserve extraneous/outdated nested modules that will cause
     // unexpected build failures with the NodeJS Bazel `@npm` workspace generation.
     // This is a workaround for: https://github.com/yarnpkg/yarn/issues/8146. Even though
     // we might be able to fix this with Yarn 2+, it is reasonable ensuring clean node modules.
-    await del(['node_modules/**'], {cwd: this.projectDir});
+    await fs.rm(nodeModulesDir, {force: true, recursive: true, maxRetries: 3});
     await invokeYarnInstallCommand(this.projectDir);
   }
 

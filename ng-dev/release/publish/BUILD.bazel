@@ -19,7 +19,6 @@ ts_library(
         "@npm//@types/node",
         "@npm//@types/semver",
         "@npm//@types/yargs",
-        "@npm//del",
         "@npm//ejs",
         "@npm//inquirer",
         "@npm//semver",
