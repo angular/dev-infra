@@ -45,7 +45,7 @@
     "inquirer": "^8.0.0",
     "jasmine": "^3.7.0",
     "minimatch": "^3.0.4",
-    "multimatch": "^5.0.0",
+    "multimatch": "^6.0.0",
     "nock": "^13.0.3",
     "node-fetch": "^2.6.1",
     "prettier": "^2.3.2",
