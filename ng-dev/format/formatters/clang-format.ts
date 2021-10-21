@@ -20,7 +20,7 @@ export class ClangFormat extends Formatter {
 
   override binaryFilePath = join(this.git.baseDir, 'node_modules/.bin/clang-format');
 
-  override defaultFileMatcher = ['**/*.{t,j}s'];
+  override defaultFileMatcher = ['**/*.{t,j,cj,mj}s'];
 
   override actions = {
     check: {

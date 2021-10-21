@@ -45296,7 +45296,7 @@ var require_clang_format = __commonJS({
         super(...arguments);
         this.name = "clang-format";
         this.binaryFilePath = (0, path_12.join)(this.git.baseDir, "node_modules/.bin/clang-format");
-        this.defaultFileMatcher = ["**/*.{t,j}s"];
+        this.defaultFileMatcher = ["**/*.{t,j,cj,mj}s"];
         this.actions = {
           check: {
             commandFlags: `--Werror -n -style=file`,
@@ -45338,7 +45338,7 @@ var require_prettier = __commonJS({
         super(...arguments);
         this.name = "prettier";
         this.binaryFilePath = (0, path_12.join)(this.git.baseDir, "node_modules/.bin/prettier");
-        this.defaultFileMatcher = ["**/*.{t,j}s"];
+        this.defaultFileMatcher = ["**/*.{t,j,cj,mj}s"];
         this.configPath = this.config["prettier"] ? (0, child_process_1.spawnSync)(this.binaryFilePath, ["--find-config-path", "."]).stdout.trim() : "";
         this.actions = {
           check: {
