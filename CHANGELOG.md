@@ -1,3 +1,17 @@
+<a name="2021.10.24"></a>
+# 2021.10.24 (2021-10-24)
+### github-actions
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6fb5d71](https://github.com/angular/dev-infra/commit/6fb5d7162863b67cd1e006b2262db7da78608c88) | feat | ensure pull requests with deprecation commits have a deprecation label ([#269](https://github.com/angular/dev-infra/pull/269)) |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [7b66fb5](https://github.com/angular/dev-infra/commit/7b66fb5dc44b92fb4ecbd6a7d52b67a3e15339eb) | fix | **release:** ensure installed node modules do not break within Bazel ([#271](https://github.com/angular/dev-infra/pull/271)) |
+## Special Thanks
+Alan Agius, Joey Perrott and Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2021.10.17"></a>
 # 2021.10.17 (2021-10-17)
 ### bazel
