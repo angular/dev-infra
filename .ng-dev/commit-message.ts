@@ -34,5 +34,6 @@ export const commitMessage: CommitMessageConfig = {
       'release',
       'ts-circular-dependencies',
     ]),
+    ...buildScopesFor('tslint-rules', []),
   ],
 };
