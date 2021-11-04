@@ -28,7 +28,7 @@ import {getReleaseTagForVersion} from '../../versioning/version-tags';
  */
 export class TagRecentMajorAsLatest extends ReleaseAction {
   override async getDescription() {
-    return `Tag recently published major v${this.active.latest.version} as "next" in NPM.`;
+    return `Retag recently published major v${this.active.latest.version} as "latest" in NPM.`;
   }
 
   override async perform() {
