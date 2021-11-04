@@ -26,14 +26,14 @@
   dependencies:
     tunnel "0.0.6"
 
-"@angular-devkit/build-optimizer@^0.1202.0":
-  version "0.1202.11"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/build-optimizer/-/build-optimizer-0.1202.11.tgz#7e94eb20f7277b74a73f27ac3212a99df2469a29"
-  integrity sha512-3iU2q8QYrF7bSxffcrvYrvs9BQrLGHLe3MFyNfU3ps38c6CmnMsnR3RODmDZZgkgk9jN45y+WGmkF46ydiOHtA==
+"@angular-devkit/build-optimizer@^0.1300.0":
+  version "0.1300.1"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/build-optimizer/-/build-optimizer-0.1300.1.tgz#75019895cc5ba256b59018fe82019ac5aa2122eb"
+  integrity sha512-Y97HdkZQmKggDrAvgqKtikYKwwuUiHdQPMxmclN2zlw7vskmkhLF3Te1pWW/i1W3bgcS4nc244vf/cWLhyTy/w==
   dependencies:
     source-map "0.7.3"
-    tslib "2.3.0"
-    typescript "4.3.5"
+    tslib "2.3.1"
+    typescript "4.4.4"
 
 "@angular/benchpress@0.2.1":
   version "0.2.1"
@@ -3099,20 +3099,15 @@ ts-node@^10.2.1:
     make-error "^1.1.1"
     yn "3.1.1"
 
-tslib@2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.0.tgz#803b8cdab3e12ba581a4ca41c8839bbb0dacb09e"
-  integrity sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==
+tslib@2.3.1, tslib@^2.0.0, tslib@^2.1.0, tslib@^2.3.0:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
+  integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
 
 tslib@^1.13.0, tslib@^1.8.1:
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
-
-tslib@^2.0.0, tslib@^2.1.0, tslib@^2.3.0:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
-  integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
 
 tslib@~2.1.0:
   version "2.1.0"
@@ -3194,12 +3189,7 @@ typed-graphqlify@^3.1.1:
   resolved "https://registry.yarnpkg.com/typed-graphqlify/-/typed-graphqlify-3.1.4.tgz#f5e494cd78bb87a4284df8c34b8f29617596aaec"
   integrity sha512-/LnB/b5TXXL9zY5I5hE6/SwAaxZZsvQPxjZGIHtMa/Y0pcnw52uwVA5UnLNesgWtgFkfPYw2NAx31vGbnaqh+A==
 
-typescript@4.3.5:
-  version "4.3.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.3.5.tgz#4d1c37cc16e893973c45a06886b7113234f119f4"
-  integrity sha512-DqQgihaQ9cUrskJo9kIyW/+g0Vxsk8cDtZ52a3NGh0YNTfpUSArXSohyUGnvbPazEPLu398C0UxmKSOrPumUzA==
-
-typescript@~4.4.0, typescript@~4.4.2:
+typescript@4.4.4, typescript@~4.4.0, typescript@~4.4.2:
   version "4.4.4"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.4.tgz#2cd01a1a1f160704d3101fd5a58ff0f9fcb8030c"
   integrity sha512-DqGhF5IKoBl8WNf8C1gu8q0xZSInh9j1kJJMqT3a94w1JzVaBU4EXOSMrz9yDqMT0xt3selp83fuFMQ0uzv6qA==
