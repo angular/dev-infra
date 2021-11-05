@@ -1,4 +1,5 @@
 load("@io_bazel_rules_webtesting//web:web.bzl", "browser")
+load("//bazel/browsers:browser_toolchain_alias.bzl", "browser_toolchain_alias")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -24,6 +25,16 @@ browser(
             "@org_chromium_chromedriver_windows//:metadata",
             "@org_chromium_chromium_windows//:metadata",
         ],
+    }),
+)
+
+browser_toolchain_alias(
+    name = "toolchain_alias",
+    metadata = select({
+        "//bazel/constraints:linux_x64": "@org_chromium_chromium_linux_x64//:metadata",
+        "//bazel/constraints:macos_x64": "@org_chromium_chromium_macos_x64//:metadata",
+        "//bazel/constraints:macos_arm64": "@org_chromium_chromium_macos_arm64//:metadata",
+        "//bazel/constraints:windows_x64": "@org_chromium_chromium_windows//:metadata",
     }),
 )
 
