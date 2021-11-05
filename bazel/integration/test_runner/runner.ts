@@ -218,7 +218,10 @@ export class TestRunner {
       const resolvedBinary = binary.containsExpandedValue
         ? await resolveBinaryWithRunfiles(binary.value)
         : binary.value;
-      const evaluatedArgs = expandEnvironmentVariableSubstitutions(args.map((v) => v.value));
+      const evaluatedArgs = expandEnvironmentVariableSubstitutions(
+        args.map((v) => v.value),
+        commandEnv,
+      );
       const success = await runCommandInChildProcess(
         resolvedBinary,
         evaluatedArgs,
