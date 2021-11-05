@@ -47,7 +47,7 @@ export function runCommandInChildProcess(
   workingDir: string,
   env: NodeJS.ProcessEnv,
 ): Promise<boolean> {
-  const humanReadableCommand = `${binary} ${args.join(' ')}`;
+  const humanReadableCommand = `${binary}${args.length ? ` ${args.join(' ')}` : ''}`;
 
   debug(`Executing command: ${humanReadableCommand} in ${workingDir}`);
 
