@@ -1,16 +1,21 @@
 load("@io_bazel_rules_webtesting//web/internal:metadata.bzl", "metadata")
 load("@io_bazel_rules_webtesting//web/internal:provider.bzl", "WebTestInfo")
 
-"""Converts the specified label to a manifest path"""
+NamedFilesInfo = provider(
+    doc = "Provider exposing the named files of an extracted browser archive.",
+    fields = {
+        "value": "Dictionary of keys and their corresponding manifest paths",
+    },
+)
 
 def _label_to_manifest_path(label):
+    """Converts the specified label to a manifest path"""
     if label.package != "":
         return "%s/%s" % (label.workspace_name, label.package)
     return label.workspace_name
 
-"""Implementation of the `browser_configure` rule."""
-
 def _browser_configure_impl(ctx):
+    """Implementation of the `browser_configure` rule."""
     named_files = {}
     base_dir = _label_to_manifest_path(ctx.label)
 
@@ -32,6 +37,7 @@ def _browser_configure_impl(ctx):
     return [
         DefaultInfo(runfiles = ctx.runfiles(files = ctx.files.files)),
         WebTestInfo(metadata = ctx.outputs.web_test_metadata),
+        NamedFilesInfo(value = ctx.attr.named_files),
     ]
 
 """
