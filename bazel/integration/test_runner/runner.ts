@@ -191,7 +191,7 @@ export class TestRunner {
     for (let [variableName, value] of Object.entries(this.environment)) {
       let envValue: string = value.value;
 
-      if (value.containsExpandedValue) {
+      if (value.containsExpansion) {
         envValue = await resolveBinaryWithRunfiles(envValue);
       } else if (envValue === ENVIRONMENT_TMP_PLACEHOLDER) {
         envValue = path.join(testDir, `.tmp-env-${i++}`);
@@ -215,7 +215,7 @@ export class TestRunner {
     for (const [binary, ...args] of this.commands) {
       // Only resolve the binary if it contains an expanded value. In other cases we would
       // not want to resolve through runfiles to avoid accidentally unexpected resolution.
-      const resolvedBinary = binary.containsExpandedValue
+      const resolvedBinary = binary.containsExpansion
         ? await resolveBinaryWithRunfiles(binary.value)
         : binary.value;
       const evaluatedArgs = expandEnvironmentVariableSubstitutions(

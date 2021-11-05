@@ -6,19 +6,25 @@ def _serialize_file(file):
 
     return struct(path = file.path, shortPath = file.short_path)
 
-def _serialize_and_expand_location(ctx, value):
-    """Expands Bazel make location expressions for the given value. Returns a JSON
+def _serialize_and_expand_value(ctx, value, description):
+    """Expands Bazel make variable and location expressions for the given value. Returns a JSON
       serializable dictionary matching the `BazelExpandedValue` type in the test runner."""
-    new_value = ctx.expand_location(value, targets = ctx.attr.data)
+    expanded_location_value = ctx.expand_location(value, targets = ctx.attr.data)
+
+    # Note: `expand_make_variables` is deprecated but there is no reasonable replacement
+    # yet. It's also still discussed whether the deprecation was reasonable to begin with:
+    # https://github.com/bazelbuild/bazel/issues/5859. If this ever gets deleted, we can
+    # directly use `ctx.var` but would have switch users from e.g. `$(VAR)` to `{VAR}`.
+    expanded_make_value = ctx.expand_make_variables(description, expanded_location_value, {})
 
     return {
-        "value": new_value,
-        "containsExpandedValue": new_value != value,
+        "value": expanded_make_value,
+        "containsExpansion": expanded_make_value != value,
     }
 
 def _split_and_expand_command(ctx, command):
-    """Splits a command into the binary and its arguments. Also Bazel locations are expanded."""
-    return [_serialize_and_expand_location(ctx, v) for v in command.split(" ", 1)]
+    """Splits a command into the binary and its arguments. Bazel make expression are expanded."""
+    return [_serialize_and_expand_value(ctx, v, "command") for v in command.split(" ", 1)]
 
 def _serialize_and_expand_environment(ctx, environment_dict):
     """Converts the given environment dictionary into a JSON-serializable dictionary
@@ -27,7 +33,7 @@ def _serialize_and_expand_environment(ctx, environment_dict):
 
     for variable_name in environment_dict:
         value = environment_dict[variable_name]
-        result[variable_name] = _serialize_and_expand_location(ctx, value)
+        result[variable_name] = _serialize_and_expand_value(ctx, value, "environment")
 
     return result
 
@@ -61,7 +67,6 @@ def _unwrap_label_keyed_mappings(dict, description):
 
 def _integration_test_config_impl(ctx):
     """Implementation of the `_integration_test_config` rule."""
-
     npmPackageMappings, npmPackageFiles = \
         _unwrap_label_keyed_mappings(ctx.attr.npm_packages, "NPM package")
     toolMappings, toolFiles = _unwrap_label_keyed_mappings(ctx.attr.tool_mappings, "Tool")
@@ -111,7 +116,7 @@ _integration_test_config = rule(
               List of commands to run as part of the integration test. The commands can rely on
               the global tools made available through the tool mappings.
 
-              Commands can also use Bazel make location expansion.""",
+              Commands can also use Bazel make configuration variable or location expansion.""",
         ),
         "npm_packages": attr.label_keyed_string_dict(
             allow_files = True,
@@ -131,9 +136,9 @@ _integration_test_config = rule(
               Dictionary of environment variables and their values. This allows for custom
               environment variables to be set when integration commands are invoked.
 
-              The environment variable values can use Bazel make location expansion similar
-              to the `commands` attribute. Additionally, values of `<TMP>` are replaced with
-              a unique temporary directory. This can be useful when providing `HOME` for
+              The environment variable values can use Bazel make variable or location expansion,
+              similar to the `commands` attribute. Additionally, values of `<TMP>` are replaced
+              with a unique temporary directory. This can be useful when providing `HOME` for
               bazelisk or puppeteer as as an example.
             """,
         ),
@@ -147,6 +152,7 @@ def integration_test(
         npm_packages = {},
         tool_mappings = {},
         environment = {},
+        toolchains = [],
         data = [],
         tags = [],
         **kwargs):
@@ -157,6 +163,7 @@ def integration_test(
 
     _integration_test_config(
         name = config_target,
+        testonly = True,
         srcs = srcs,
         data = data,
         commands = commands,
@@ -164,6 +171,7 @@ def integration_test(
         tool_mappings = tool_mappings,
         environment = environment,
         tags = tags,
+        toolchains = toolchains,
     )
 
     nodejs_test(
