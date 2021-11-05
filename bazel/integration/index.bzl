@@ -86,12 +86,18 @@ def _integration_test_config_impl(ctx):
         content = json.encode(config),
     )
 
-    runfiles = [config_file] + ctx.files.data + ctx.files.srcs + npmPackageFiles + toolFiles
+    runfiles = ctx.runfiles(
+        [config_file] + ctx.files.data + ctx.files.srcs + npmPackageFiles + toolFiles,
+    )
+
+    # Include transitive runfiles for `data` dependencies.
+    for data_dep in ctx.attr.data:
+        runfiles = runfiles.merge(data_dep[DefaultInfo].default_runfiles)
 
     return [
         DefaultInfo(
             files = depset([config_file]),
-            runfiles = ctx.runfiles(files = runfiles),
+            runfiles = runfiles,
         ),
     ]
 
