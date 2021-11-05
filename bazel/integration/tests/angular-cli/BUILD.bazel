@@ -12,7 +12,12 @@ integration_test(
         # The Yarn files also need to be part of the integration test as runfiles
         # because the `yarn_bin` target is not a self-contained standalone binary.
         "@nodejs//:yarn_files",
+        # Makes the chromium binaries available for the `ng test` command.
+        "//bazel/browsers/chromium",
     ],
+    environment = {
+        "CHROME_BIN": "$(CHROMIUM)",
+    },
     tags = [
         # This test relies on `yarn` so there needs to be internet access.
         "requires-network",
@@ -21,4 +26,5 @@ integration_test(
         "@nodejs//:yarn_bin": "yarn",
         "@nodejs//:node_bin": "node",
     },
+    toolchains = ["//bazel/browsers/chromium:toolchain_alias"],
 )
