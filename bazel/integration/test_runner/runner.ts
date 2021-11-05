@@ -231,7 +231,7 @@ export class TestRunner {
 
       if (!success) {
         throw Error(
-          `Integration test command: \`${binary} ${evaluatedArgs.join(' ')}\` failed. ` +
+          `Integration test command: \`${binary.value} ${evaluatedArgs.join(' ')}\` failed. ` +
             `See error output above for details.`,
         );
       }
