@@ -6,6 +6,14 @@ def _serialize_file(file):
 
     return struct(path = file.path, shortPath = file.short_path)
 
+def _create_expanded_value(value, isExpanded):
+    """Creates a JSON serializable dictionary matching the `BazelExpandedValue` type in
+      the test runner."""
+    return {
+        "value": value,
+        "containsExpansion": isExpanded,
+    }
+
 def _serialize_and_expand_value(ctx, value, description):
     """Expands Bazel make variable and location expressions for the given value. Returns a JSON
       serializable dictionary matching the `BazelExpandedValue` type in the test runner."""
@@ -17,14 +25,51 @@ def _serialize_and_expand_value(ctx, value, description):
     # directly use `ctx.var` but would have switch users from e.g. `$(VAR)` to `{VAR}`.
     expanded_make_value = ctx.expand_make_variables(description, expanded_location_value, {})
 
-    return {
-        "value": expanded_make_value,
-        "containsExpansion": expanded_make_value != value,
-    }
+    return _create_expanded_value(expanded_make_value, expanded_make_value != value)
 
-def _split_and_expand_command(ctx, command):
-    """Splits a command into the binary and its arguments. Bazel make expression are expanded."""
-    return [_serialize_and_expand_value(ctx, v, "command") for v in command.split(" ", 1)]
+def _expand_and_split_command(ctx, command):
+    """Expands a command using the Bazel command helper. The command is then split into the
+      binary and its arguments, matching the runner `[BazelExpandedValue, ...string[]]` type."""
+
+    # Instead of manually resolving the command using e.g. `ctx.expand_location`, we use
+    # the Bazel `resolve_command` helper which internally follows the semantics of a `genrule`,
+    # allowing for better expansion/resolution of tools provided in the `data` attribute.
+    # This is necessary so that e.g. executables from a `sh_binary` can be conveniently
+    # expanded through `$(rootpath <label>`). Note that the same would not work with
+    # `ctx.expand_location` as a `sh_binary` exposes multiple files causing an error like:
+    #  -->  `expression expands to more than one file, please use $(locations ...)`.
+    # The Bazel command helper utility instead (which is also used by the genrule internally),
+    # will be able to determine the executable (based on the current exec platform) and expand it.
+    # https://cs.opensource.google/bazel/bazel/+/master:src/main/java/com/google/devtools/build/lib/analysis/CommandHelper.java;l=175-199;drc=2255ce4165f936f695111020fa664b259a875c4a.
+    inputs, resolved_bash_command, manifests = ctx.resolve_command(
+        command = command,
+        attribute = "command (%s)" % command,
+        expand_locations = True,
+        make_variables = ctx.var,
+        tools = ctx.attr.data,
+    )
+
+    # If the resolved command does not have three arguments, then there were too many arguments
+    # and Bazel extracted the command into a dedicated Bash script that we cannot read here.
+    # https://cs.opensource.google/bazel/bazel/+/master:src/main/java/com/google/devtools/build/lib/analysis/BashCommandConstructor.java;l=40;drc=2255ce4165f936f695111020fa664b259a875c4a.
+    # https://cs.opensource.google/bazel/bazel/+/master:src/main/java/com/google/devtools/build/lib/analysis/CommandHelper.java;l=275-282;drc=2255ce4165f936f695111020fa664b259a875c4a.
+    if len(resolved_bash_command) != 3:
+        fail("Test command too long. Please use a shorter one, or extract this " +
+             "into a dedicated script: %s" % command)
+
+    # The third argument of the resolved `bash -c` command will hold the actually expanded command.
+    # We extract the command since we were only interested in the proper expansion of tools.
+    # https://cs.opensource.google/bazel/bazel/+/master:src/main/java/com/google/devtools/build/lib/analysis/BashCommandConstructor.java;l=40;drc=2255ce4165f936f695111020fa664b259a875c4a.
+    resolved_command = resolved_bash_command[2].split(" ")
+    resolved_binary = resolved_command[0]
+    original_binary = command.split(" ", 1)[0]
+
+    # If the resolved command binary does not match the binary from the original command, then
+    # we know a Make expression has been expanded and we capture that in a `BazelExpandedValue`.
+    if resolved_binary != original_binary:
+        return [_create_expanded_value(resolved_binary, True)] + resolved_command[1:]
+
+    return [_create_expanded_value(resolved_binary, False)] + resolved_command[1:]
 
 def _serialize_and_expand_environment(ctx, environment_dict):
     """Converts the given environment dictionary into a JSON-serializable dictionary
@@ -75,7 +120,7 @@ def _integration_test_config_impl(ctx):
     config = struct(
         testPackage = ctx.label.package,
         testFiles = [_serialize_file(f) for f in ctx.files.srcs],
-        commands = [_split_and_expand_command(ctx, c) for c in ctx.attr.commands],
+        commands = [_expand_and_split_command(ctx, c) for c in ctx.attr.commands],
         environment = _serialize_and_expand_environment(ctx, ctx.attr.environment),
         npmPackageMappings = npmPackageMappings,
         toolMappings = toolMappings,

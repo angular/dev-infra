@@ -44,7 +44,7 @@ export class TestRunner {
     private readonly testPackage: string,
     private readonly toolMappings: Record<string, BazelFileInfo>,
     private readonly npmPackageMappings: Record<string, BazelFileInfo>,
-    private readonly commands: [[binary: BazelExpandedValue, ...args: BazelExpandedValue[]]],
+    private readonly commands: [[binary: BazelExpandedValue, ...args: string[]]],
     private readonly environment: Record<string, BazelExpandedValue>,
   ) {}
 
@@ -218,10 +218,7 @@ export class TestRunner {
       const resolvedBinary = binary.containsExpansion
         ? await resolveBinaryWithRunfiles(binary.value)
         : binary.value;
-      const evaluatedArgs = expandEnvironmentVariableSubstitutions(
-        args.map((v) => v.value),
-        commandEnv,
-      );
+      const evaluatedArgs = expandEnvironmentVariableSubstitutions(args, commandEnv);
       const success = await runCommandInChildProcess(
         resolvedBinary,
         evaluatedArgs,
@@ -231,7 +228,7 @@ export class TestRunner {
 
       if (!success) {
         throw Error(
-          `Integration test command: \`${binary.value} ${evaluatedArgs.join(' ')}\` failed. ` +
+          `Integration test command: \`${resolvedBinary} ${evaluatedArgs.join(' ')}\` failed. ` +
             `See error output above for details.`,
         );
       }

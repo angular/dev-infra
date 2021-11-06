@@ -20,7 +20,7 @@ interface TestConfig {
   testFiles: BazelFileInfo[];
   npmPackageMappings: Record<string, BazelFileInfo>;
   toolMappings: Record<string, BazelFileInfo>;
-  commands: [[binary: BazelExpandedValue, ...args: BazelExpandedValue[]]];
+  commands: [[binary: BazelExpandedValue, ...args: string[]]];
   environment: Record<string, BazelExpandedValue>;
 }
 
