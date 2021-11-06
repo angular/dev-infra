@@ -54,7 +54,8 @@ def _expand_and_split_command(ctx, command):
     # https://cs.opensource.google/bazel/bazel/+/master:src/main/java/com/google/devtools/build/lib/analysis/BashCommandConstructor.java;l=40;drc=2255ce4165f936f695111020fa664b259a875c4a.
     # https://cs.opensource.google/bazel/bazel/+/master:src/main/java/com/google/devtools/build/lib/analysis/CommandHelper.java;l=275-282;drc=2255ce4165f936f695111020fa664b259a875c4a.
     if len(resolved_bash_command) != 3:
-        fail("Command too long. Please split this into a dedicated script: %s" % command)
+        fail("Test command too long. Please use a shorter one, or extract this " +
+             "into a dedicated script: %s" % command)
 
     # The third argument of the resolved `bash -c` command will hold the actually expanded command.
     # We extract the command since we were only interested in the proper expansion of tools.
