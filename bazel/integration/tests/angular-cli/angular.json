@@ -98,6 +98,18 @@
             ],
             "scripts": []
           }
+        },
+        "e2e": {
+          "builder": "@wdio/schematics:wdio",
+          "options": {
+            "configFile": "test/wdio.conf.js",
+            "devServerTarget": "ng:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "ng:serve:production"
+            }
+          }
         }
       }
     }
