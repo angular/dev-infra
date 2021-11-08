@@ -49,10 +49,18 @@ export function updateMappingsForPackageJson(
 ): PackageJson {
   const newPackageJson = {...packageJson};
 
-  updateMappingForRecord(newPackageJson.dependencies ?? {}, mappings);
-  updateMappingForRecord(newPackageJson.devDependencies ?? {}, mappings);
-  updateMappingForRecord(newPackageJson.optionalDependencies ?? {}, mappings);
-  updateMappingForRecord(newPackageJson.resolutions ?? {}, mappings);
+  updateMappingForRecord(newPackageJson, 'dependencies', mappings);
+  updateMappingForRecord(newPackageJson, 'devDependencies', mappings);
+  updateMappingForRecord(newPackageJson, 'optionalDependencies', mappings);
+  // The object for Yarn resolutions will not directly match with the mapping keys
+  // specified here, as resolutions usually follow a format as followed:
+  //  1. `**/<pkg-name>`
+  //  2. `<other-pkg>/**/<pkg-name>`
+  //  3. `<pkg-name>`
+  // More details here: https://classic.yarnpkg.com/lang/en/docs/selective-version-resolutions/.
+  // We pass a regular expression which matches the `<pkg-name>` so that the mappings can
+  // be applied for resolutions as well.
+  updateMappingForRecord(newPackageJson, 'resolutions', mappings, /([^/]+)$/);
 
   return newPackageJson;
 }
@@ -64,15 +72,31 @@ export function updateMappingsForPackageJson(
  * @throws An error if there is a dependency entry referring to a local file. Such
  *   entries should not use `file:` but instead configure a mapping through Bazel.
  */
-function updateMappingForRecord(record: DependencyRecord, mappings: PackageMappings) {
-  for (const [pkgName, value] of Object.entries(record)) {
+function updateMappingForRecord(
+  pkgJson: PackageJson,
+  recordName: keyof PackageJson,
+  mappings: PackageMappings,
+  nameMatchRegex?: RegExp,
+) {
+  const record = pkgJson[recordName] ?? {};
+
+  for (const [entryKey, value] of Object.entries(record)) {
+    const pkgName = getPackageNameFromDependencyEntry(entryKey, nameMatchRegex);
+
+    if (pkgName === null) {
+      throw Error(`Could not determine package name for "${recordName}" entry: ${entryKey}.`);
+    }
+
+    // Print the resolved package name to ease debugging when packages are not mapped properly.
+    debug(`updateMappingForRecord: Resolved "${recordName}@${entryKey}" to package: ${pkgName}`);
+
     const mappedAbsolutePath = mappings[pkgName];
 
     // If the value of the dependency entry is referring to a local file, then we report
     // an error as this is likely a missing mapping that should be set up through Bazel.
     if (mappedAbsolutePath === undefined && value.startsWith(`file:`)) {
       throw Error(
-        `Unexpected dependency entry for: ${pkgName}, pointing to: ${value}.` +
+        `Unexpected dependency entry for: ${entryKey}, pointing to: ${value}. ` +
           `Instead, configure the mapping through the integration test Bazel target.`,
       );
     }
@@ -82,6 +106,25 @@ function updateMappingForRecord(record: DependencyRecord, mappings: PackageMappi
       continue;
     }
 
-    record[pkgName] = mappedAbsolutePath;
+    record[entryKey] = mappedAbsolutePath;
   }
+}
+
+/**
+ * Gets the package name from a dependency record entry.
+ *
+ * @param entryKey Key of the dependency record entry.
+ * @param nameMatchRegex Optional regular expression that can be specified to match the package
+ *   name in a dependency entry. This is useful for e.g. Yarn resolutions using patterns.
+ *   The first capturing group is expected to return the matched package name.
+ */
+function getPackageNameFromDependencyEntry(
+  entryKey: string,
+  nameMatchRegex?: RegExp,
+): string | null {
+  if (nameMatchRegex) {
+    const matches = entryKey.match(nameMatchRegex);
+    return matches === null ? null : matches[1];
+  }
+  return entryKey;
 }

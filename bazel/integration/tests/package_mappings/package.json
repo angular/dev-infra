@@ -5,5 +5,16 @@
   "license": "MIT",
   "dependencies": {
     "fake_pkg": "0.0.0"
+  },
+  "devDependencies": {
+    "fake_pkg": "0.0.0"
+  },
+  "optionalDependencies": {
+    "fake_pkg": "0.0.0"
+  },
+  "resolutions": {
+    "**/fake_pkg": "0.0.0",
+    "some_pkg/**/fake_pkg": "0.0.0",
+    "fake_pkg": "0.0.0"
   }
 }
