@@ -63,6 +63,14 @@ build:remote --platforms=//bazel/remote-execution:platform_with_network
 # Set remote caching settings
 build:remote --remote_accept_cached=true
 
+################################
+#     Release setup            #
+################################
+
+# Releases should always be stamped with version control info
+build:release --workspace_status_command="yarn -s ng-dev release build-env-stamp --mode=release"
+build:release --stamp
+
 ####################################################
 # User bazel configuration
 # NOTE: This needs to be the *last* entry in the config to allow for it to override other

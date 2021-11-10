@@ -134,7 +134,7 @@ jobs:
       - yarn_install
       - run:
           name: Build npm package
-          command: yarn bazel build //:npm_package
+          command: yarn bazel build //:npm_package --config=release
       - run:
           name: Publish snapshot build to github
           command: ./.circleci/publish_to_github.sh
@@ -150,3 +150,6 @@ workflows:
             branches:
               only:
                 - main
+                # Additional branch that can be used to test the snapshot build output.
+                # Developers can just push to that branch to test the built artifact.
+                - snapshot-test

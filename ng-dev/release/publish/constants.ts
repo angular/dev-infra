@@ -9,6 +9,9 @@
 /** Project-relative path for the "package.json" file. */
 export const packageJsonPath = 'package.json';
 
+/** Project-relative path for the "yarn.lock" file. */
+export const yarnLockFilePath = 'yarn.lock';
+
 /** Default interval in milliseconds to check whether a pull request has been merged. */
 export const waitForPullRequestInterval = 10000;
 

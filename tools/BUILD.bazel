@@ -1,1 +1,7 @@
-# This BUILD.bazel file needs to exist to allow for //tools to be considered a package.
+package(default_visibility = ["//visibility:public"])
+
+# Detect if the build is running with stamping enabled.
+config_setting(
+    name = "stamp",
+    values = {"stamp": "true"},
+)

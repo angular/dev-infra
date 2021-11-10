@@ -19,6 +19,8 @@ ts_library(
         "@npm//@types/node",
         "@npm//@types/semver",
         "@npm//@types/yargs",
+        "@npm//@types/yarnpkg__lockfile",
+        "@npm//@yarnpkg/lockfile",
         "@npm//ejs",
         "@npm//inquirer",
         "@npm//semver",

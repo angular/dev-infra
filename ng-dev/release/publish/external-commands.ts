@@ -97,31 +97,3 @@ export async function invokeYarnInstallCommand(projectDir: string): Promise<void
     throw new FatalReleaseActionError();
   }
 }
-
-/**
- * Invokes the `yarn check --integrity` command in order to verify up to date dependencies.
- */
-export async function invokeYarnIntegrityCheck(projectDir: string): Promise<void> {
-  try {
-    await spawn('yarn', ['check', '--integrity'], {cwd: projectDir, mode: 'silent'});
-    info(green('  ✓   Confirmed dependencies from package.json match those in yarn.lock.'));
-  } catch (e) {
-    error(red('  ✘   Failed yarn integrity check, your installed dependencies are likely out of'));
-    error(red('      date. Please run `yarn install` to update your installed dependencies.'));
-    throw new FatalReleaseActionError();
-  }
-}
-
-/**
- * Invokes the `yarn check --verify-tree` command in order to verify up to date dependencies.
- */
-export async function invokeYarnVerifyTreeCheck(projectDir: string): Promise<void> {
-  try {
-    await spawn('yarn', ['check', '--verify-tree'], {cwd: projectDir, mode: 'silent'});
-    info(green('  ✓   Confirmed installed dependencies match those defined in package.json.'));
-  } catch (e) {
-    error(red('  ✘   Failed yarn verify tree check, your installed dependencies are likely out'));
-    error(red('      of date. Please run `yarn install` to update your installed dependencies.'));
-    throw new FatalReleaseActionError();
-  }
-}
