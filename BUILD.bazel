@@ -1,4 +1,5 @@
 # BEGIN-INTERNAL
+load("//:package.bzl", "NPM_PACKAGE_SUBSTITUTIONS")
 load("//tools:defaults.bzl", "pkg_npm")
 load("@npm//@bazel/typescript:index.bzl", "ts_config")
 
@@ -25,17 +26,7 @@ pkg_npm(
         ":index.bzl",
         "//bazel:static_files",
     ],
-    substitutions = {
-        "    \"prepare\": \"husky install\",\n": "",
-        "@dev-infra//bazel/": "@npm//@angular/dev-infra-private/bazel/",
-        "//bazel/": "@npm//@angular/dev-infra-private/bazel/",
-        "//bazel:": "@npm//@angular/dev-infra-private/bazel:",
-        "//ng-dev/": "@npm//@angular/dev-infra-private/ng-dev/",
-        "//ng-dev:": "@npm//@angular/dev-infra-private/ng-dev:",
-        "//tslint-rules/": "@npm//@angular/dev-infra-private/tslint-rules/",
-        "//tslint-rules:": "@npm//@angular/dev-infra-private/tslint-rules:",
-        "//:tsconfig.json": "@npm//@angular/dev-infra-private:tsconfig.json",
-    },
+    substitutions = NPM_PACKAGE_SUBSTITUTIONS,
     deps = [
         "//ng-dev",
         "//ng-dev:lib",

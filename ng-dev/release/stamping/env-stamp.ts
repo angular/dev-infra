@@ -26,8 +26,9 @@ export type EnvStampMode = 'snapshot' | 'release';
 export function buildEnvStamp(mode: EnvStampMode) {
   const git = GitClient.get();
   console.info(`BUILD_SCM_BRANCH ${getCurrentBranch(git)}`);
-  console.info(`BUILD_SCM_COMMIT_SHA ${getCurrentBranchOrRevision(git)}`);
-  console.info(`BUILD_SCM_HASH ${getCurrentBranchOrRevision(git)}`);
+  console.info(`BUILD_SCM_COMMIT_SHA ${getCurrentSha(git)}`);
+  console.info(`BUILD_SCM_HASH ${getCurrentSha(git)}`);
+  console.info(`BUILD_SCM_BRANCH ${getCurrentBranchOrRevision(git)}`);
   console.info(`BUILD_SCM_LOCAL_CHANGES ${hasLocalChanges(git)}`);
   console.info(`BUILD_SCM_USER ${getCurrentGitUser(git)}`);
   const {version, experimentalVersion} = getSCMVersions(git, mode);
@@ -86,6 +87,15 @@ function getSCMVersions(
       version: '',
       experimentalVersion: '',
     };
+  }
+}
+
+/** Get the current SHA of HEAD. */
+function getCurrentSha(git: GitClient) {
+  try {
+    return git.run(['rev-parse', 'HEAD']).stdout.trim();
+  } catch {
+    return '';
   }
 }
 
