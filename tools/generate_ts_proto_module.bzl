@@ -32,7 +32,7 @@ def generate_ts_proto_module(name, protofile, visibility = ["//visibility:public
             "static-module",
             "-w",
             "commonjs",
-            "$(rootpath %s)" % protofile,
+            "$(execpath %s)" % protofile,
         ],
         stdout = "generated_" + js_file,
     )
