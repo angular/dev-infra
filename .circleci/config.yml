@@ -2,9 +2,6 @@
 
 version: 2.1
 
-orbs:
-  buildalert: oss-tools/buildalert@0.1.0
-
 # **Note**: When updating the beginning of the cache key, also update the cache key to match
 # the new cache key prefix. This allows us to take advantage of CircleCI's fallback caching.
 # Read more here: https://circleci.com/docs/2.0/caching/#restoring-cache.
@@ -144,20 +141,6 @@ jobs:
 
 workflows:
   version: 2
-  oss_abuse_monitoring:
-    triggers:
-      - schedule:
-          cron: "* * * * *"
-          filters:
-            branches:
-              only:
-                - master
-    jobs:
-      - buildalert/monitor-builds:
-          circle-project-org: 'angular'
-          circle-project-reponame: 'angular'
-          circle-token-envvar: 'OSS_ABUSE_CIRCLECI_TOKEN'
-          slack-app-url-envvar: 'OSS_ABUSE_SLACK_URL'
   default_workflow:
     jobs:
       - test
