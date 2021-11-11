@@ -22,8 +22,8 @@ import {getConfig} from '../../utils/config';
 import {assertValidFormatConfig} from '../../format/config';
 import {Changelog} from './changelog';
 
-/** Project-relative path for the changelog file. */
-export const changelogPath = 'CHANGELOG.md';
+/** Workspace-relative path for the changelog file. */
+export const workspaceRelativeChangelogPath = 'CHANGELOG.md';
 
 /** Release note generation. */
 export class ReleaseNotes {

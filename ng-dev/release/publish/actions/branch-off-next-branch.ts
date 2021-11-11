@@ -10,7 +10,7 @@ import * as semver from 'semver';
 
 import {green, info, yellow} from '../../../utils/console';
 import {semverInc} from '../../../utils/semver';
-import {changelogPath, ReleaseNotes} from '../../notes/release-notes';
+import {ReleaseNotes, workspaceRelativeChangelogPath} from '../../notes/release-notes';
 import {
   computeNewPrereleaseVersionForNext,
   getReleaseNotesCompareVersionForNext,
@@ -20,7 +20,7 @@ import {
   getCommitMessageForExceptionalNextVersionBump,
   getReleaseNoteCherryPickCommitMessage,
 } from '../commit-message';
-import {packageJsonPath} from '../constants';
+import {workspaceRelativePackageJsonPath} from '../../../utils/constants';
 
 /**
  * Base action that can be used to move the next release-train into the feature-freeze or
@@ -110,13 +110,13 @@ export abstract class BranchOffNextBranchBaseAction extends ReleaseAction {
 
     // Create an individual commit for the next version bump. The changelog should go into
     // a separate commit that makes it clear where the changelog is cherry-picked from.
-    await this.createCommit(bumpCommitMessage, [packageJsonPath]);
+    await this.createCommit(bumpCommitMessage, [workspaceRelativePackageJsonPath]);
 
     await this.prependReleaseNotesToChangelog(releaseNotes);
 
     const commitMessage = getReleaseNoteCherryPickCommitMessage(releaseNotes.version);
 
-    await this.createCommit(commitMessage, [changelogPath]);
+    await this.createCommit(commitMessage, [workspaceRelativeChangelogPath]);
 
     let nextPullRequestMessage =
       `The previous "next" release-train has moved into the ` +

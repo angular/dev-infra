@@ -11,7 +11,6 @@ import {join} from 'path';
 
 import {ReleaseTrain} from '../../versioning/release-trains';
 import {CutNextPrereleaseAction} from '../actions/cut-next-prerelease';
-import {packageJsonPath} from '../constants';
 import {changelogPattern, parse, setupReleaseActionForTesting} from './test-utils/test-utils';
 import {
   expectGithubApiRequestsForStaging,
@@ -21,6 +20,7 @@ import {
 import {testTmpDir} from '../../../utils/testing';
 import {SandboxGitRepo} from '../../../utils/testing';
 import {ActiveReleaseTrains} from '../../versioning';
+import {workspaceRelativePackageJsonPath} from '../../../utils/constants';
 
 describe('cut next pre-release action', () => {
   it('should always be active regardless of release-trains', async () => {
@@ -61,7 +61,10 @@ describe('cut next pre-release action', () => {
 
       await expectStagingAndPublishWithoutCherryPick(action, 'master', '10.2.0-next.0', 'next');
 
-      const pkgJsonContents = readFileSync(join(action.testTmpDir, packageJsonPath), 'utf8');
+      const pkgJsonContents = readFileSync(
+        join(action.testTmpDir, workspaceRelativePackageJsonPath),
+        'utf8',
+      );
       const pkgJson = JSON.parse(pkgJsonContents) as {version: string; [key: string]: any};
       expect(pkgJson.version).toBe('10.2.0-next.0', 'Expected version to not have changed.');
     });

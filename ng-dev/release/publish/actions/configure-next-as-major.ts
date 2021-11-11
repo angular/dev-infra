@@ -12,7 +12,7 @@ import {green, info, yellow} from '../../../utils/console';
 import {ActiveReleaseTrains} from '../../versioning/active-release-trains';
 import {ReleaseAction} from '../actions';
 import {getCommitMessageForNextBranchMajorSwitch} from '../commit-message';
-import {packageJsonPath} from '../constants';
+import {workspaceRelativePackageJsonPath} from '../../../utils/constants';
 
 /**
  * Release action that configures the active next release-train to be for a major
@@ -35,7 +35,7 @@ export class ConfigureNextAsMajorAction extends ReleaseAction {
     await this.checkoutUpstreamBranch(branchName);
     await this.updateProjectVersion(newVersion);
     await this.createCommit(getCommitMessageForNextBranchMajorSwitch(newVersion), [
-      packageJsonPath,
+      workspaceRelativePackageJsonPath,
     ]);
     const pullRequest = await this.pushChangesToForkAndCreatePullRequest(
       branchName,
