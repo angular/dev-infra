@@ -51,7 +51,7 @@ export function resolveBazelFile(file: BazelFileInfo): string {
  * used as binary for the integration test command. This results in a root-relative
  * path that we try to resolve here (using the runfiles).
  */
-export async function resolveBinaryWithRunfiles(binary: string): Promise<string> {
+export async function resolveBinaryWithRunfilesGracefully(binary: string): Promise<string> {
   try {
     const resolved = runfiles.resolveWorkspaceRelative(binary);
     debug(`Resolved ${binary} to ${resolved} using runfile resolution.`);

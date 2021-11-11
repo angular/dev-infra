@@ -12,7 +12,7 @@ integration_test(
     environment = {
         "CUSTOM_VAR": "yes!",
         "RESOLVED_BIN": "$(rootpath @npm//:node_modules/semver/package.json)",
-        "MANIFEST_PATH": "external/npm/node_modules/semver/package.json",
+        "MANUAL_ROOT_PATH": "../npm/node_modules/semver/package.json",
         "BAZELISK_HOME": "<TMP>",
         "BAZELISK_HOME_2": "<TMP>",
     },
