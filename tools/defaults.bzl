@@ -41,7 +41,11 @@ def esbuild(**kwargs):
 def esbuild_checked_in(name, **kwargs):
     esbuild(
         name = "%s_generated" % name,
-        sourcemap = "inline",
+        # Unfortunately we need to omit source maps from the checked-in files as these
+        # will vary based on the platform. See more details below in the sanitization
+        # genrule transformation. It is acceptable not having source-maps for the checked-in
+        # files as those are not minified and its to debug, the checked-in file can be visited.
+        sourcemap = "external",
         # We always disable minification for checked-in files as otherwise it will
         # become difficult determining potential differences. e.g. on Windows ESBuild
         # accidentally included `source-map-support` due to the missing sandbox.
@@ -50,14 +54,14 @@ def esbuild_checked_in(name, **kwargs):
     )
 
     # ESBuild adds comments and function identifiers with the name of their module
-    # location. e.g. `"bazel-out/x64_windows-fastbuild"function(exports)`. We strip
+    # location. e.g. `"bazel-out/x64_windows-fastbuild/bin"function(exports)`. We strip
     # any of these `bazel-out` specific paths as that would break approval of the
     # the checked-in files within different platforms. e.g. RBE running with K8.
     native.genrule(
         name = "%s_sanitized" % name,
         srcs = ["%s_generated.js" % name],
         outs = ["%s_sanitized.js" % name],
-        cmd = """cat $< | sed "s#bazel-out/[^/]*/##g" > $@""",
+        cmd = """cat $< | sed -E "s#bazel-out/[^/]+/(bin/)?##g" > $@""",
     )
 
     generated_file_test(
