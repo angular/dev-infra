@@ -151,7 +151,7 @@ workflows:
           filters:
             branches:
               only:
-                - main
+                - master
     jobs:
       - buildalert/monitor-builds:
           circle-project-org: 'angular'
