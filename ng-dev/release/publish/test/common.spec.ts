@@ -12,7 +12,7 @@ import * as semver from 'semver';
 import {SemVer} from 'semver';
 
 import {getBranchPushMatcher, testTmpDir} from '../../../utils/testing';
-import {changelogPath, ReleaseNotes} from '../../notes/release-notes';
+import {workspaceRelativeChangelogPath, ReleaseNotes} from '../../notes/release-notes';
 import {NpmDistTag} from '../../versioning';
 import {ActiveReleaseTrains} from '../../versioning/active-release-trains';
 import * as npm from '../../versioning/npm-publish';
@@ -198,7 +198,10 @@ describe('common release action logic', () => {
 
       await instance.testCherryPickWithPullRequest(version, branchName);
 
-      const changelogContent = readFileSync(join(testTmpDir, changelogPath), 'utf8');
+      const changelogContent = readFileSync(
+        join(testTmpDir, workspaceRelativeChangelogPath),
+        'utf8',
+      );
       expect(changelogContent).toMatch(changelogPattern`
         # 10.0.1 <..>
 

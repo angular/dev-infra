@@ -20,19 +20,20 @@ import {
 } from '../../utils/git/github-urls';
 import {createExperimentalSemver} from '../../utils/semver';
 import {BuiltPackage, ReleaseConfig} from '../config/index';
-import {changelogPath, ReleaseNotes} from '../notes/release-notes';
+import {ReleaseNotes, workspaceRelativeChangelogPath} from '../notes/release-notes';
 import {NpmDistTag} from '../versioning';
 import {ActiveReleaseTrains} from '../versioning/active-release-trains';
 import {runNpmPublish} from '../versioning/npm-publish';
 
 import {FatalReleaseActionError, UserAbortedReleaseActionError} from './actions-error';
 import {getCommitMessageForRelease, getReleaseNoteCherryPickCommitMessage} from './commit-message';
-import {githubReleaseBodyLimit, packageJsonPath, waitForPullRequestInterval} from './constants';
+import {githubReleaseBodyLimit, waitForPullRequestInterval} from './constants';
 import {invokeReleaseBuildCommand, invokeYarnInstallCommand} from './external-commands';
 import {findOwnedForksOfRepoQuery} from './graphql-queries';
 import {getPullRequestState} from './pull-request-state';
 import {getReleaseTagForVersion} from '../versioning/version-tags';
 import {GithubApiRequestError} from '../../utils/git/github';
+import {workspaceRelativePackageJsonPath} from '../../utils/constants';
 
 /** Interface describing a Github repository. */
 export interface GithubRepo {
@@ -92,7 +93,7 @@ export abstract class ReleaseAction {
 
   /** Retrieves the version in the project top-level `package.json` file. */
   private async getProjectVersion() {
-    const pkgJsonPath = join(this.projectDir, packageJsonPath);
+    const pkgJsonPath = join(this.projectDir, workspaceRelativePackageJsonPath);
     const pkgJson = JSON.parse(await fs.readFile(pkgJsonPath, 'utf8')) as {
       version: string;
       [key: string]: any;
@@ -102,7 +103,7 @@ export abstract class ReleaseAction {
 
   /** Updates the version in the project top-level `package.json` file. */
   protected async updateProjectVersion(newVersion: semver.SemVer) {
-    const pkgJsonPath = join(this.projectDir, packageJsonPath);
+    const pkgJsonPath = join(this.projectDir, workspaceRelativePackageJsonPath);
     const pkgJson = JSON.parse(await fs.readFile(pkgJsonPath, 'utf8')) as {
       version: string;
       [key: string]: any;
@@ -189,7 +190,10 @@ export abstract class ReleaseAction {
     // Commit message for the release point.
     const commitMessage = getCommitMessageForRelease(newVersion);
     // Create a release staging commit including changelog and version bump.
-    await this.createCommit(commitMessage, [packageJsonPath, changelogPath]);
+    await this.createCommit(commitMessage, [
+      workspaceRelativePackageJsonPath,
+      workspaceRelativeChangelogPath,
+    ]);
 
     info(green(`  ✓   Created release commit for: "${newVersion}".`));
   }
@@ -497,7 +501,7 @@ export abstract class ReleaseAction {
     await this.prependReleaseNotesToChangelog(releaseNotes);
 
     // Create a changelog cherry-pick commit.
-    await this.createCommit(commitMessage, [changelogPath]);
+    await this.createCommit(commitMessage, [workspaceRelativeChangelogPath]);
     info(green(`  ✓   Created changelog cherry-pick commit for: "${releaseNotes.version}".`));
 
     // Create a cherry-pick pull request that should be merged by the caretaker.
@@ -571,7 +575,7 @@ export abstract class ReleaseAction {
 
   /** Gets a Github URL that resolves to the release notes in the given ref. */
   private async _getGithubChangelogUrlForRef(releaseNotes: ReleaseNotes, ref: string) {
-    const baseUrl = getFileContentsUrl(this.git, ref, changelogPath);
+    const baseUrl = getFileContentsUrl(this.git, ref, workspaceRelativeChangelogPath);
     const urlFragment = await releaseNotes.getUrlFragmentForRelease();
     return `${baseUrl}#${urlFragment}`;
   }

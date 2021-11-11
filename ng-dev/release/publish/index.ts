@@ -6,10 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as path from 'path';
-import * as fs from 'fs';
 import {ListChoiceOptions, prompt} from 'inquirer';
-import {parse as parseYarnLockfile, LockFileObject} from '@yarnpkg/lockfile';
 
 import {GithubConfig} from '../../utils/config';
 import {debug, error, info, log, promptConfirm, red, yellow} from '../../utils/console';
@@ -19,12 +16,11 @@ import {ActiveReleaseTrains, fetchActiveReleaseTrains} from '../versioning/activ
 import {npmIsLoggedIn, npmLogin, npmLogout} from '../versioning/npm-publish';
 import {printActiveReleaseTrains} from '../versioning/print-active-trains';
 import {getNextBranchName, ReleaseRepoWithApi} from '../versioning/version-branches';
-import {ngDevNpmPackageName} from '../../utils/constants';
 
 import {ReleaseAction} from './actions';
 import {FatalReleaseActionError, UserAbortedReleaseActionError} from './actions-error';
 import {actions} from './actions/index';
-import {packageJsonPath, yarnLockFilePath} from './constants';
+import {verifyNgDevToolIsUpToDate} from '../../utils/version-check';
 
 export enum CompletionState {
   SUCCESS,
@@ -58,7 +54,7 @@ export class ReleaseTool {
       !(await this._verifyNoUncommittedChanges()) ||
       !(await this._verifyRunningFromNextBranch(nextBranchName)) ||
       !(await this._verifyNoShallowRepository()) ||
-      !(await this._verifyInstalledDependenciesAreUpToDate())
+      !(await verifyNgDevToolIsUpToDate(this._projectRoot))
     ) {
       return CompletionState.FATAL_ERROR;
     }
@@ -149,54 +145,6 @@ export class ReleaseTool {
       return false;
     }
     return true;
-  }
-
-  /**
-   * Verifiy that the install dependencies match the the versions defined in the package.json and
-   * yarn.lock files.
-   * @returns a boolean indicating success or failure.
-   */
-  private async _verifyInstalledDependenciesAreUpToDate(): Promise<boolean> {
-    // The placeholder will be replaced by the `pkg_npm` substitutions.
-    const localVersion = `0.0.0-{SCM_HEAD_SHA}`;
-    const projectPackageJsonFile = path.join(this._projectRoot, packageJsonPath);
-    const projectDirLockFile = path.join(this._projectRoot, yarnLockFilePath);
-
-    try {
-      const lockFileContent = fs.readFileSync(projectDirLockFile, 'utf8');
-      const packageJson = JSON.parse(fs.readFileSync(projectPackageJsonFile, 'utf8')) as any;
-      const lockFile = parseYarnLockfile(lockFileContent);
-
-      if (lockFile.type !== 'success') {
-        throw Error('Unable to parse project lock file. Please ensure the file is valid.');
-      }
-
-      // If we are operating in the actual dev-infra repo, always return `true`.
-      if (packageJson.name === ngDevNpmPackageName) {
-        return true;
-      }
-
-      const lockFileObject = lockFile.object as LockFileObject;
-      const devInfraPkgVersion =
-        packageJson?.dependencies?.[ngDevNpmPackageName] ??
-        packageJson?.devDependencies?.[ngDevNpmPackageName] ??
-        packageJson?.optionalDependencies?.[ngDevNpmPackageName];
-      const expectedVersion =
-        lockFileObject[`${ngDevNpmPackageName}@${devInfraPkgVersion}`].version;
-
-      if (localVersion !== expectedVersion) {
-        error(red('  ✘   Your locally installed version of the `ng-dev` tool is outdated and not'));
-        error(red('      matching with the version in the `package.json` file.'));
-        error(
-          red('      Re-install the dependencies to ensure you are using the correct version.'),
-        );
-        return false;
-      }
-      return true;
-    } catch (e) {
-      error(e);
-      return false;
-    }
   }
 
   /**
