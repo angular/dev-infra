@@ -1,3 +1,4 @@
+.yarn/releases/*.cjs
 bazel/protos/*.d.ts
 bazel/protos/*.js
 github-actions/feature-request/post.js
