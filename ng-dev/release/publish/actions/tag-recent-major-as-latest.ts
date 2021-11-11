@@ -12,7 +12,7 @@ import {ReleaseConfig} from '../../config';
 import {ActiveReleaseTrains} from '../../versioning/active-release-trains';
 import {fetchProjectNpmPackageInfo} from '../../versioning/npm-registry';
 import {ReleaseAction} from '../actions';
-import {invokeSetNpmDistCommand, invokeYarnInstallCommand} from '../external-commands';
+import {invokeSetNpmDistCommand} from '../external-commands';
 import {SemVer} from 'semver';
 import {getReleaseTagForVersion} from '../../versioning/version-tags';
 
