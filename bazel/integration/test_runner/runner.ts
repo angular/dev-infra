@@ -19,7 +19,7 @@ import {
   BazelExpandedValue,
   BazelFileInfo,
   resolveBazelFile,
-  resolveBinaryWithRunfiles,
+  resolveBinaryWithRunfilesGracefully,
 } from './bazel';
 import {debug} from './debug';
 import {
@@ -192,7 +192,7 @@ export class TestRunner {
       let envValue: string = value.value;
 
       if (value.containsExpansion) {
-        envValue = await resolveBinaryWithRunfiles(envValue);
+        envValue = await resolveBinaryWithRunfilesGracefully(envValue);
       } else if (envValue === ENVIRONMENT_TMP_PLACEHOLDER) {
         envValue = path.join(testDir, `.tmp-env-${i++}`);
         await fs.promises.mkdir(envValue);
@@ -216,7 +216,7 @@ export class TestRunner {
       // Only resolve the binary if it contains an expanded value. In other cases we would
       // not want to resolve through runfiles to avoid accidentally unexpected resolution.
       const resolvedBinary = binary.containsExpansion
-        ? await resolveBinaryWithRunfiles(binary.value)
+        ? await resolveBinaryWithRunfilesGracefully(binary.value)
         : binary.value;
       const evaluatedArgs = expandEnvironmentVariableSubstitutions(args, commandEnv);
       const success = await runCommandInChildProcess(

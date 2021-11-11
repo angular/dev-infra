@@ -15,8 +15,8 @@ if (require(process.env.RESOLVED_BIN).name !== 'semver') {
   process.exit(1);
 }
 
-if (process.env.MANIFEST_PATH !== 'external/npm/node_modules/semver/package.json') {
-  console.error('Expected `MANIFEST_PATH` to remain untouched as it has not not been expanded.');
+if (process.env.MANUAL_ROOT_PATH !== '../npm/node_modules/semver/package.json') {
+  console.error('Expected `MANUAL_ROOT_PATH` to be unmodified as it is not an expanded value.');
   process.exit(1);
 }
 
