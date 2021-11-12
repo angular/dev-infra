@@ -56,6 +56,7 @@
     "selenium-webdriver": "3.5.0",
     "semver": "^7.3.5",
     "tmp": "^0.2.1",
+    "true-case-path": "^2.2.1",
     "ts-node": "^10.2.1",
     "tslib": "^2.3.0",
     "tslint": "^6.1.3",
