@@ -9,6 +9,7 @@
 import * as childProcess from 'child_process';
 import * as path from 'path';
 import {debug} from './debug';
+import {getCaseExactRealpath} from './file_system_utils';
 
 /**
  * Regular expression matching environment variable substitutions
@@ -41,21 +42,26 @@ export function expandEnvironmentVariableSubstitutions(
  * @returns a Promise that resolves with a boolean indicating whether the
  *   command completed successfully or not.
  */
-export function runCommandInChildProcess(
+export async function runCommandInChildProcess(
   binary: string,
   args: string[],
   workingDir: string,
   env: NodeJS.ProcessEnv,
 ): Promise<boolean> {
   const humanReadableCommand = `${binary}${args.length ? ` ${args.join(' ')}` : ''}`;
+  // Note: We resolve the working directory to a case-exact system `realpath`. This is
+  // necessary as otherwise Node module resolution could behave unexpectedly when invoked
+  // tools down-the-line resolve files with an actual system realpath. Here is an example
+  // within Microsoft's `playwright`: https://github.com/microsoft/playwright/issues/9193.
+  const normalizedWorkingDir = await getCaseExactRealpath(path.posix.normalize(workingDir));
 
-  debug(`Executing command: ${humanReadableCommand} in ${workingDir}`);
+  debug(`Executing command: ${humanReadableCommand} in ${normalizedWorkingDir}`);
 
   return new Promise<boolean>((resolve) => {
     const commandProcess = childProcess.spawn(binary, args, {
       shell: true,
       stdio: 'inherit',
-      cwd: workingDir,
+      cwd: normalizedWorkingDir,
       env,
     });
 

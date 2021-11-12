@@ -7,6 +7,7 @@
  */
 
 import * as fs from 'fs';
+import {trueCasePath} from 'true-case-path';
 
 /** Gets whether the file is executable or not. */
 export async function isExecutable(filePath: string): Promise<boolean> {
@@ -16,6 +17,16 @@ export async function isExecutable(filePath: string): Promise<boolean> {
   } catch {
     return false;
   }
+}
+
+/**
+ * Gets a case-exact system realpath for the specified path.
+ *
+ * This is useful for example because Bazel passes `C:\users\<..>` as action input, but
+ * the actual case-exact path for the current platform would be: `C:\Users\<..>`.
+ */
+export async function getCaseExactRealpath(filePath: string): Promise<string> {
+  return trueCasePath(filePath);
 }
 
 /** Adds the `write` permission to the given file using `chmod`. */
