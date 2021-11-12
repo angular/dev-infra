@@ -86,44 +86,44 @@
   resolved "https://registry.yarnpkg.com/@bazel/buildifier/-/buildifier-4.2.3.tgz#2c6e54faa12e31b75051834cf1cfa68c71678262"
   integrity sha512-19GqPhxlyh376mJT6kvvNAJbRCjDj4WFjqy+sT2LAMt5THMGSES8+lwde5J1jwpud/mqrNUIRjEzVZR5A/6+BA==
 
-"@bazel/esbuild@4.4.2":
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/@bazel/esbuild/-/esbuild-4.4.2.tgz#e1f35922cc9b63e96cc8c263a77b8e1b2938a445"
-  integrity sha512-P3cXIje01zsg3TMhTwwbA0sKldYa1J2EGVwahmOPfXlxewd+6cwjhQBQV8SSoxZeFLmCuoMu8eA++mnXgHzm2g==
+"@bazel/esbuild@4.4.5":
+  version "4.4.5"
+  resolved "https://registry.yarnpkg.com/@bazel/esbuild/-/esbuild-4.4.5.tgz#17331868ac42f2d2c03afc776847dea2d0e650d4"
+  integrity sha512-CImfEr+1ecouGFVGgfCV6Zvx0I3Lw0abxkI8R3BmMleyQcLj8FejCGSFhxIJLKLuxGh/OJXjxoE+PAMTON4O9Q==
 
-"@bazel/jasmine@4.4.2":
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/@bazel/jasmine/-/jasmine-4.4.2.tgz#04fc413856984456525d3e2e3ebf7f308e915c54"
-  integrity sha512-r0ZUB//pRZnpXiy5keSt2vDQfV/3a9x/kar865CgMJRV+mVQsHMF4l72rQD8LPhGzx4QgX+yOWI2gpAq5E5/zQ==
+"@bazel/jasmine@4.4.5":
+  version "4.4.5"
+  resolved "https://registry.yarnpkg.com/@bazel/jasmine/-/jasmine-4.4.5.tgz#e9540f0bffe286f23ce47ab59e6e015cc14c21af"
+  integrity sha512-BDWKtDmfux89TtWOhSMSuA01cdaNmdU9/8zrMNQopkTGDBmaDyPYvaxyhBAvQQLMiloOUBcS2eMO/fcSKRyg/A==
   dependencies:
     c8 "~7.5.0"
     jasmine-reporters "~2.4.0"
 
-"@bazel/protractor@4.4.2":
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/@bazel/protractor/-/protractor-4.4.2.tgz#0d2b7ba2a003b30d54c1383b3de2e9f7d80642a5"
-  integrity sha512-mryiNMyQEEeMubjAM9yZpMIex388kvLxmfhhZpbePxLRG7Nm9Lr4C/+fn7iho3GDAPS04HggQLCYsYj+nQ9Rug==
+"@bazel/protractor@4.4.5":
+  version "4.4.5"
+  resolved "https://registry.yarnpkg.com/@bazel/protractor/-/protractor-4.4.5.tgz#b406e85c3d59015e0895c00700396ddd0d58d755"
+  integrity sha512-pW4hwkpLpBYHGFp7CO+vHfUXkOoFJBh11+2zFUjEXPaCYAol78Zt2SUzWRYD14CVEDWhxJlI6kCRg7IxW7/S2w==
 
-"@bazel/runfiles@4.4.2":
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/@bazel/runfiles/-/runfiles-4.4.2.tgz#9d424f0f9ad7505d2ff2f854a450b986e132ac8e"
-  integrity sha512-Om8T+Chx//6DoxghILc6tUXtXkotvO3I5loNpU76OTf9tgiIZ9wlDtgHkaXxthoe0cYLZFai6GCaKFPyAL+ztw==
+"@bazel/runfiles@4.4.5":
+  version "4.4.5"
+  resolved "https://registry.yarnpkg.com/@bazel/runfiles/-/runfiles-4.4.5.tgz#bbf112e882ea37d88f02009bb7cb661ac8908742"
+  integrity sha512-tFua24Ra/AI/K2di3sD03gzqG1uf9ziL+gSyc9dwjx9De1z4Fgafnqul9zXf1gqjEdWdJhZYXbntYmyj76BZNw==
 
-"@bazel/typescript@4.4.2":
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/@bazel/typescript/-/typescript-4.4.2.tgz#987000806043d9df1388debcd576420ce5b8c860"
-  integrity sha512-dTt/AvlnwWiUXF7T25FpAozmLKN9Z+me07iSOcjDv7+6aVcxV5vJTbhpktZO1Ij0oSaYew4I8e/NlRf/mS2k7g==
+"@bazel/typescript@4.4.5":
+  version "4.4.5"
+  resolved "https://registry.yarnpkg.com/@bazel/typescript/-/typescript-4.4.5.tgz#0b323a292910dbfdc5f90312377e9282c73035f0"
+  integrity sha512-Cgq7ZXGkFPAAOn2t9C9JWIDkSjDKB7AkwNgXEwrPwpchKgdoCcD1uMieiErfwBB0FWgJF1xvwwLGOnWA6E/G0A==
   dependencies:
-    "@bazel/worker" "4.4.2"
+    "@bazel/worker" "4.4.5"
     protobufjs "6.8.8"
     semver "5.6.0"
     source-map-support "0.5.9"
     tsutils "3.21.0"
 
-"@bazel/worker@4.4.2":
-  version "4.4.2"
-  resolved "https://registry.yarnpkg.com/@bazel/worker/-/worker-4.4.2.tgz#01dcfa873786d4ad0b7150b8f9d03a23aa0c19e4"
-  integrity sha512-EkxgsV2o6nPd/+ujnyCuKU3C57sjYDdtQVPLdBBIiOmx37RPBw+tRMrp6XYgU3PkhqgMqNQPpS/9Exbj0XSihQ==
+"@bazel/worker@4.4.5":
+  version "4.4.5"
+  resolved "https://registry.yarnpkg.com/@bazel/worker/-/worker-4.4.5.tgz#1f9292c31615dff8a7297960f7f520bf9febf428"
+  integrity sha512-PoBMiN0SGSb1Qn/SabiM9HWC5nqwyWn0yTJgz6Vq2GMHo1UG7olVHuIfDb2ScFx9jY+mJ3wSyxQ4htlTGldedA==
   dependencies:
     google-protobuf "^3.6.1"
 
@@ -2732,10 +2732,10 @@ rollup-plugin-sourcemaps@^0.6.3:
     "@rollup/pluginutils" "^3.0.9"
     source-map-resolve "^0.6.0"
 
-rollup@2.59.0:
-  version "2.59.0"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.59.0.tgz#108c61b0fa0a37ebc8d1f164f281622056f0db59"
-  integrity sha512-l7s90JQhCQ6JyZjKgo7Lq1dKh2RxatOM+Jr6a9F7WbS9WgKbocyUSeLmZl8evAse7y96Ae98L2k1cBOwWD8nHw==
+rollup@2.60.0:
+  version "2.60.0"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.60.0.tgz#4ee60ab7bdd0356763f87d7099f413e5460fc193"
+  integrity sha512-cHdv9GWd58v58rdseC8e8XIaPUo8a9cgZpnCMMDGZFDZKEODOiPPEQFXLriWr/TjXzhPPmG5bkAztPsOARIcGQ==
   optionalDependencies:
     fsevents "~2.3.2"
 
