@@ -1,0 +1,33 @@
+load("//bazel/integration:index.bzl", "integration_test")
+
+# Note: Since the Bazel nested workspace is fully isolated we cannot simply wire up
+# the integration test with a `BUILD` file in the nested workspace. Instead we need
+# the test to be defined at a higher-level, part of the actual `dev-infra` workspace.
+integration_test(
+    name = "basic",
+    srcs = glob(["basic/**/*"]),
+    commands = [
+        "yarn",
+        "yarn test",
+    ],
+    data = [
+        # The Yarn files also need to be part of the integration test as runfiles
+        # because the `yarn_bin` target is not a self-contained standalone binary.
+        "@nodejs//:yarn_files",
+    ],
+    environment = {
+        # Setup a HOME directory so that Bazelisk can work, both Linux/macOS and Windows variants
+        # are configured to provide a fake home directory so that Bazelisk can download Bazel.
+        "HOME": "<TMP>",
+        "LOCALAPPDATA": "<TMP>",
+    },
+    tags = [
+        # This test relies on `yarn` so there needs to be internet access.
+        "requires-network",
+    ],
+    tool_mappings = {
+        "@nodejs//:yarn_bin": "yarn",
+        "@nodejs//:node_bin": "node",
+    },
+    working_dir = "basic/",
+)

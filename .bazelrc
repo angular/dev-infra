@@ -11,6 +11,12 @@ build --nolegacy_external_runfiles
 run --nolegacy_external_runfiles
 test --nolegacy_external_runfiles
 
+# The nested Bazel integration test workspace should not be analysed as part of
+# Skyframe, but should also not be ignored in order to be able to glob for its files.
+# TODO: Simplify this once https://github.com/bazelbuild/bazel/issues/12034 is fixed
+build --deleted_packages=bazel/integration/tests/nested_bazel_workspaces/basic
+query --deleted_packages=bazel/integration/tests/nested_bazel_workspaces/basic
+
 ###############################
 # Filesystem interactions     #
 ###############################

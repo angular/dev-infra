@@ -119,6 +119,7 @@ def _integration_test_config_impl(ctx):
     config_file = ctx.actions.declare_file("%s.json" % ctx.attr.name)
     config = struct(
         testPackage = ctx.label.package,
+        testPackageRelativeWorkingDir = ctx.attr.working_dir,
         testFiles = [_serialize_file(f) for f in ctx.files.srcs],
         commands = [_expand_and_split_command(ctx, c) for c in ctx.attr.commands],
         environment = _serialize_and_expand_environment(ctx, ctx.attr.environment),
@@ -150,6 +151,16 @@ _integration_test_config = rule(
     implementation = _integration_test_config_impl,
     doc = """Rule which controls the integration test runner by writing a configuration file.""",
     attrs = {
+        "working_dir": attr.string(
+            default = "",
+            doc = """
+              Relative path that points to the working directory in which the integration
+              test commands are executed.
+
+              The working directory is also used as base directory for finding a `package.json`
+              file that will be updated to reflect the integration test NPM package mappings.
+            """,
+        ),
         "srcs": attr.label_list(
             allow_files = True,
             mandatory = True,
@@ -204,6 +215,7 @@ def integration_test(
         tool_mappings = {},
         environment = {},
         toolchains = [],
+        working_dir = None,
         data = [],
         tags = [],
         **kwargs):
@@ -221,6 +233,7 @@ def integration_test(
         npm_packages = npm_packages,
         tool_mappings = tool_mappings,
         environment = environment,
+        working_dir = working_dir,
         tags = tags,
         toolchains = toolchains,
     )
