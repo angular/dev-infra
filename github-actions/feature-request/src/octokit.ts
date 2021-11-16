@@ -34,7 +34,7 @@ export class OctoKit implements GitHubAPI {
     protected params: {repo: string; owner: string},
     protected options: {readonly: boolean} = {readonly: false},
   ) {
-    this._octokit = new Octokit({token});
+    this._octokit = new Octokit({auth: token});
   }
 
   async *query(query: Query): AsyncIterableIterator<GitHubIssueAPI> {

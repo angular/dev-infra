@@ -11762,7 +11762,7 @@ var require_octokit = __commonJS({
         this.options = options;
         this._orgMembers = new Set();
         this.mockLabels = new Set();
-        this._octokit = new rest_1.Octokit({ token });
+        this._octokit = new rest_1.Octokit({ auth: token });
       }
       get octokit() {
         return this._octokit;
