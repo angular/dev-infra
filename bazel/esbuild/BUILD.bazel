@@ -1,0 +1,9 @@
+package(default_visibility = ["//visibility:public"])
+
+exports_files(["esbuild-amd-config.mjs"])
+
+# Make source files available for distribution via pkg_npm
+filegroup(
+    name = "files",
+    srcs = glob(["*"]),
+)
