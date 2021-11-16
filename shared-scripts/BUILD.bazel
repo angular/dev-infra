@@ -1,0 +1,8 @@
+package(default_visibility = ["//visibility:public"])
+
+filegroup(
+    name = "static_files",
+    srcs = [
+        "//shared-scripts/angular-linker:static_files",
+    ],
+)

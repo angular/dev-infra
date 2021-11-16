@@ -11,6 +11,7 @@ filegroup(
         "//bazel/esbuild:files",
         "//bazel/integration:files",
         "//bazel/remote-execution:files",
+        "//bazel/spec-bundling:files",
     ],
     visibility = ["//:npm"],
 )
