@@ -1,0 +1,18 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
+
+package(default_visibility = ["//visibility:public"])
+
+filegroup(
+    name = "static_files",
+    srcs = glob(["*"]),
+)
+
+js_library(
+    name = "js_lib",
+    package_name = "@angular/dev-infra-private/shared-scripts/angular-linker",
+    srcs = ["esbuild-plugin.mjs"],
+    deps = [
+        "@npm//@angular/compiler-cli",
+        "@npm//@babel/core",
+    ],
+)

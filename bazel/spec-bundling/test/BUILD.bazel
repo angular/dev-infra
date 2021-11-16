@@ -1,0 +1,25 @@
+load("//bazel/spec-bundling:index.bzl", "spec_bundle")
+load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob(["**/*.spec.ts"]),
+    deps = [
+        "@npm//@angular/core",
+    ],
+)
+
+spec_bundle(
+    name = "test_bundle",
+    platform = "node",
+    run_angular_linker = True,
+    deps = [":test_lib"],
+)
+
+jasmine_node_test(
+    name = "test",
+    specs = [
+        ":test_bundle",
+    ],
+)

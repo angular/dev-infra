@@ -25,6 +25,7 @@ pkg_npm(
         "tsconfig.json",
         ":index.bzl",
         "//bazel:static_files",
+        "//shared-scripts:static_files",
     ],
     substitutions = NPM_PACKAGE_SUBSTITUTIONS,
     deps = [
