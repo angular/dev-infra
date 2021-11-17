@@ -15,8 +15,9 @@ basePackageSubstitutions = {
     "//ng-dev:": "@npm//@angular/dev-infra-private/ng-dev:",
     "//tslint-rules/": "@npm//@angular/dev-infra-private/tslint-rules/",
     "//tslint-rules:": "@npm//@angular/dev-infra-private/tslint-rules:",
+    "//shared-scripts/": "@npm//@angular/dev-infra-private/shared-scripts/",
+    "//shared-scripts:": "@npm//@angular/dev-infra-private/shared-scripts:",
     "//:tsconfig.json": "@npm//@angular/dev-infra-private:tsconfig.json",
-    "//shared-scripts[:/][^\"]+": "@npm//@angular/dev-infra-private",
 }
 
 NPM_PACKAGE_SUBSTITUTIONS = select({
