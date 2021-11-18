@@ -1,4 +1,4 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
+load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin", "js_library")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -7,10 +7,17 @@ filegroup(
     srcs = glob(["*"]),
 )
 
+# Workaround for: https://github.com/bazelbuild/rules_nodejs/pull/3083.
+# TODO: Remove this once non-generated files can work with the linker.
+copy_to_bin(
+    name = "js_lib_files",
+    srcs = ["esbuild-plugin.mjs"],
+)
+
 js_library(
     name = "js_lib",
     package_name = "@angular/dev-infra-private/shared-scripts/angular-linker",
-    srcs = ["esbuild-plugin.mjs"],
+    srcs = [":js_lib_files"],
     deps = [
         "@npm//@angular/compiler-cli",
         "@npm//@babel/core",
