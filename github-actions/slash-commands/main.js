@@ -36733,7 +36733,10 @@ var require_signals = __commonJS({
 var require_signal_exit = __commonJS({
   "node_modules/signal-exit/index.js"(exports2, module2) {
     var process2 = global.process;
-    if (typeof process2 !== "object" || !process2) {
+    var processOk = function(process3) {
+      return process3 && typeof process3 === "object" && typeof process3.removeListener === "function" && typeof process3.emit === "function" && typeof process3.reallyExit === "function" && typeof process3.listeners === "function" && typeof process3.kill === "function" && typeof process3.pid === "number" && typeof process3.on === "function";
+    };
+    if (!processOk(process2)) {
       module2.exports = function() {
       };
     } else {
@@ -36756,7 +36759,7 @@ var require_signal_exit = __commonJS({
         emitter.infinite = true;
       }
       module2.exports = function(cb, opts) {
-        if (global.process !== process2) {
+        if (!processOk(global.process)) {
           return;
         }
         assert.equal(typeof cb, "function", "a callback must be provided for exit handler");
@@ -36777,7 +36780,7 @@ var require_signal_exit = __commonJS({
         return remove;
       };
       unload = function unload2() {
-        if (!loaded || global.process !== process2) {
+        if (!loaded || !processOk(global.process)) {
           return;
         }
         loaded = false;
@@ -36802,7 +36805,7 @@ var require_signal_exit = __commonJS({
       sigListeners = {};
       signals.forEach(function(sig) {
         sigListeners[sig] = function listener() {
-          if (process2 !== global.process) {
+          if (!processOk(global.process)) {
             return;
           }
           var listeners = process2.listeners(sig);
@@ -36822,7 +36825,7 @@ var require_signal_exit = __commonJS({
       };
       loaded = false;
       load = function load2() {
-        if (loaded || process2 !== global.process) {
+        if (loaded || !processOk(global.process)) {
           return;
         }
         loaded = true;
@@ -36841,7 +36844,7 @@ var require_signal_exit = __commonJS({
       module2.exports.load = load;
       originalProcessReallyExit = process2.reallyExit;
       processReallyExit = function processReallyExit2(code) {
-        if (process2 !== global.process) {
+        if (!processOk(global.process)) {
           return;
         }
         process2.exitCode = code || 0;
@@ -36851,7 +36854,7 @@ var require_signal_exit = __commonJS({
       };
       originalProcessEmit = process2.emit;
       processEmit = function processEmit2(ev, arg) {
-        if (ev === "exit" && process2 === global.process) {
+        if (ev === "exit" && processOk(global.process)) {
           if (arg !== void 0) {
             process2.exitCode = arg;
           }
