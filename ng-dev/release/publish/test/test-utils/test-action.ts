@@ -18,17 +18,29 @@ export interface TestOptions {
   /**
    * Whether the test should operate using a sandbox Git client.
    */
-  useSandboxGitClient: boolean;
+  useSandboxGitClient?: boolean;
+  /**
+   * Whether the built package output checks should be stubbed
+   * as noop for this test.
+   */
+  stubBuiltPackageOutputChecks?: boolean;
 }
 
 /** Type describing the default options. Used for narrowing in generics. */
 export type defaultTestOptionsType = TestOptions & {
   useSandboxGitClient: false;
+  stubBuiltPackageOutputChecks: true;
 };
 
 /** Default options for tests. Need to match with the default options type. */
 export const defaultTestOptions: defaultTestOptionsType = {
   useSandboxGitClient: false,
+  stubBuiltPackageOutputChecks: true,
+};
+
+/** Type describing test options with defaults merged. */
+export type TestOptionsWithDefaults<O extends TestOptions> = {
+  [K in keyof Required<TestOptions>]: O[K] extends boolean ? O[K] : defaultTestOptionsType[K];
 };
 
 /** Interface describing a test release action. */

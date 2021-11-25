@@ -80,7 +80,9 @@ describe('cut an LTS patch action', () => {
       npmDistTag: 'v9-lts',
     });
 
-    await expectStagingAndPublishWithCherryPick(action, '9.2.x', '9.2.5', 'v9-lts');
+    await expectStagingAndPublishWithCherryPick(action, '9.2.x', '9.2.5', 'v9-lts', {
+      expectNoExperimentalPackages: true,
+    });
   });
 
   it('should generate release notes capturing changes to previous latest LTS version', async () => {
@@ -134,7 +136,7 @@ describe('cut an LTS patch action', () => {
       latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
     });
 
-    fakeNpmPackageQueryRequest(releaseConfig.npmPackages[0], {
+    fakeNpmPackageQueryRequest(releaseConfig.representativeNpmPackage, {
       'dist-tags': {'v9-lts': '9.1.2', 'v8-lts': '8.2.2'},
       'time': {
         '9.0.0': new Date().toISOString(),
@@ -156,7 +158,7 @@ describe('cut an LTS patch action', () => {
 
   it('should properly determine active and inactive LTS branches', async () => {
     const {releaseConfig} = getTestConfigurationsForAction();
-    fakeNpmPackageQueryRequest(releaseConfig.npmPackages[0], {
+    fakeNpmPackageQueryRequest(releaseConfig.representativeNpmPackage, {
       'dist-tags': {
         'v9-lts': '9.2.3',
         'v8-lts': '8.4.4',

@@ -18,8 +18,8 @@ import {
   getListCommitsInBranchUrl,
   getRepositoryGitUrl,
 } from '../../utils/git/github-urls';
-import {createExperimentalSemver} from '../../utils/semver';
-import {BuiltPackage, ReleaseConfig} from '../config/index';
+import {createExperimentalSemver} from '../versioning/experimental-versions';
+import {BuiltPackage, NpmPackage, ReleaseConfig} from '../config/index';
 import {ReleaseNotes, workspaceRelativeChangelogPath} from '../notes/release-notes';
 import {NpmDistTag} from '../versioning';
 import {ActiveReleaseTrains} from '../versioning/active-release-trains';
@@ -28,11 +28,16 @@ import {runNpmPublish} from '../versioning/npm-publish';
 import {FatalReleaseActionError, UserAbortedReleaseActionError} from './actions-error';
 import {getCommitMessageForRelease, getReleaseNoteCherryPickCommitMessage} from './commit-message';
 import {githubReleaseBodyLimit, waitForPullRequestInterval} from './constants';
-import {invokeReleaseBuildCommand, invokeYarnInstallCommand} from './external-commands';
+import {
+  invokeReleaseBuildCommand,
+  invokeReleaseInfoCommand,
+  invokeYarnInstallCommand,
+} from './external-commands';
 import {getPullRequestState} from './pull-request-state';
 import {getReleaseTagForVersion} from '../versioning/version-tags';
 import {GithubApiRequestError} from '../../utils/git/github';
 import {workspaceRelativePackageJsonPath} from '../../utils/constants';
+import {BuiltPackageWithInfo, mergeBuiltPackagesWithInfo} from './merge-built-packages-info';
 
 /** Interface describing a Github repository. */
 export interface GithubRepo {
@@ -559,15 +564,19 @@ export abstract class ReleaseAction {
 
   /**
    * Builds and publishes the given version in the specified branch.
+   *
    * @param releaseNotes The release notes for the version being published.
    * @param publishBranch Name of the branch that contains the new version.
    * @param npmDistTag NPM dist tag where the version should be published to.
+   * @param additionalOptions Additional options for building and publishing.
    */
   protected async buildAndPublish(
     releaseNotes: ReleaseNotes,
     publishBranch: string,
     npmDistTag: NpmDistTag,
+    additionalOptions: {skipExperimentalPackages?: boolean} = {},
   ) {
+    const {skipExperimentalPackages} = additionalOptions;
     const versionBumpCommitSha = await this._getCommitOfBranch(publishBranch);
 
     if (!(await this._isCommitForVersionStaging(releaseNotes.version, versionBumpCommitSha))) {
@@ -587,9 +596,17 @@ export abstract class ReleaseAction {
     // created in the `next` branch. The new package would not be part of the patch branch,
     // so we cannot build and publish it.
     const builtPackages = await invokeReleaseBuildCommand(this.projectDir);
+    const releaseInfo = await invokeReleaseInfoCommand(this.projectDir);
+
+    // Combine the built packages with their NPM package information. This is helpful
+    // later for filtering out e.g. experimental packages.
+    const builtPackagesWithInfo = mergeBuiltPackagesWithInfo(
+      builtPackages,
+      releaseInfo.npmPackages,
+    );
 
     // Verify the packages built are the correct version.
-    await this._verifyPackageVersions(releaseNotes.version, builtPackages);
+    await this._verifyPackageVersions(releaseNotes.version, builtPackagesWithInfo);
 
     // Create a Github release for the new version.
     await this._createGithubReleaseForVersion(
@@ -599,8 +616,13 @@ export abstract class ReleaseAction {
     );
 
     // Walk through all built packages and publish them to NPM.
-    for (const builtPackage of builtPackages) {
-      await this._publishBuiltPackageToNpm(builtPackage, npmDistTag);
+    for (const pkg of builtPackagesWithInfo) {
+      if (skipExperimentalPackages && pkg.experimental) {
+        debug(`Skipping "${pkg.name}" as it is experimental.`);
+        continue;
+      }
+
+      await this._publishBuiltPackageToNpm(pkg, npmDistTag);
     }
 
     info(green('  ✓   Published all packages successfully'));
@@ -632,9 +654,10 @@ export abstract class ReleaseAction {
     return data.commit.message.startsWith(getCommitMessageForRelease(version));
   }
 
+  // TODO: Remove this check and run it as part of common release validation.
   /** Verify the version of each generated package exact matches the specified version. */
-  private async _verifyPackageVersions(version: semver.SemVer, packages: BuiltPackage[]) {
-    /** Experimental equivalent version for packages created with the provided version. */
+  private async _verifyPackageVersions(version: semver.SemVer, packages: BuiltPackageWithInfo[]) {
+    // Experimental equivalent version for packages.
     const experimentalVersion = createExperimentalSemver(version);
 
     for (const pkg of packages) {
@@ -642,13 +665,13 @@ export abstract class ReleaseAction {
         await fs.readFile(join(pkg.outputPath, 'package.json'), 'utf8'),
       ) as {version: string; [key: string]: any};
 
-      const mismatchesVersion = version.compare(packageJsonVersion) !== 0;
-      const mismatchesExperimental = experimentalVersion.compare(packageJsonVersion) !== 0;
+      const expectedVersion = pkg.experimental ? experimentalVersion : version;
+      const mismatchesVersion = expectedVersion.compare(packageJsonVersion) !== 0;
 
-      if (mismatchesExperimental && mismatchesVersion) {
-        error(red('The built package version does not match the version being released.'));
-        error(`  Release Version:   ${version.version} (${experimentalVersion.version})`);
-        error(`  Generated Version: ${packageJsonVersion}`);
+      if (mismatchesVersion) {
+        error(red(`The built package version does not match for: ${pkg.name}.`));
+        error(`  Actual version:   ${packageJsonVersion}`);
+        error(`  Expected version: ${expectedVersion}`);
         throw new FatalReleaseActionError();
       }
     }

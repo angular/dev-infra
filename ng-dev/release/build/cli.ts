@@ -10,9 +10,17 @@ import {Arguments, Argv, CommandModule} from 'yargs';
 
 import {getConfig} from '../../utils/config';
 import {error, green, info, red} from '../../utils/console';
-import {assertValidReleaseConfig} from '../config/index';
+import {assertValidReleaseConfig, BuiltPackage} from '../config/index';
 
 import {buildReleaseOutput} from './index';
+
+/**
+ * Type describing the JSON output of this command.
+ *
+ * @important When changing this, make sure the release action
+ *   invocation is updated as well.
+ */
+export type ReleaseBuildJsonStdout = BuiltPackage[];
 
 /** Command line options for building a release. */
 export interface ReleaseBuildOptions {
@@ -50,19 +58,19 @@ async function handler(args: Arguments<ReleaseBuildOptions>) {
   }
 
   const missingPackages = npmPackages.filter(
-    (pkgName) => !builtPackages!.find((b) => b.name === pkgName),
+    (pkg) => !builtPackages!.find((b) => b.name === pkg.name),
   );
 
   // Check for configured release packages which have not been built. We want to
   // error and exit if any configured package has not been built.
   if (missingPackages.length > 0) {
     error(red(`  ✘   Release output missing for the following packages:`));
-    missingPackages.forEach((pkgName) => error(red(`      - ${pkgName}`)));
+    missingPackages.forEach((pkg) => error(red(`      - ${pkg.name}`)));
     process.exit(1);
   }
 
   if (args.json) {
-    process.stdout.write(JSON.stringify(builtPackages, null, 2));
+    process.stdout.write(JSON.stringify(<ReleaseBuildJsonStdout>builtPackages, null, 2));
   } else {
     info(green('  ✓   Built release packages.'));
     builtPackages.forEach(({name}) => info(green(`      - ${name}`)));

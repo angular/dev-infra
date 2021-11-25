@@ -9,7 +9,9 @@ ts_library(
     deps = [
         "//ng-dev/commit-message",
         "//ng-dev/pr/merge",
+        "//ng-dev/release/build",
         "//ng-dev/release/config",
+        "//ng-dev/release/info",
         "//ng-dev/release/notes",
         "//ng-dev/release/versioning",
         "//ng-dev/utils",

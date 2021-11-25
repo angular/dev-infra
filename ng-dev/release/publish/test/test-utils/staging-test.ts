@@ -13,6 +13,7 @@ import * as npm from '../../../versioning/npm-publish';
 import * as externalCommands from '../../external-commands';
 import {testReleasePackages} from './action-mocks';
 import {TestReleaseAction} from './test-action';
+import {NpmPackage} from '../../../config';
 
 /**
  * Expects and fakes the necessary Github API requests for staging
@@ -65,11 +66,24 @@ export async function expectGithubApiRequestsForStaging(
   }
 }
 
+function expectNpmPublishToBeInvoked(packages: NpmPackage[], expectedNpmDistTag: NpmDistTag) {
+  expect(npm.runNpmPublish).toHaveBeenCalledTimes(packages.length);
+
+  for (const pkg of packages) {
+    expect(npm.runNpmPublish).toHaveBeenCalledWith(
+      `${testTmpDir}/dist/${pkg.name}`,
+      expectedNpmDistTag,
+      undefined,
+    );
+  }
+}
+
 export async function expectStagingAndPublishWithoutCherryPick(
   action: TestReleaseAction,
   expectedBranch: string,
   expectedVersion: string,
   expectedNpmDistTag: NpmDistTag,
+  options: {expectNoExperimentalPackages?: boolean} = {},
 ) {
   const {repo, fork, gitClient} = action;
   const expectedStagingForkBranch = `release-stage-${expectedVersion}`;
@@ -94,16 +108,12 @@ export async function expectStagingAndPublishWithoutCherryPick(
     'Expected release staging branch to be created in fork.',
   );
 
-  expect(externalCommands.invokeReleaseBuildCommand).toHaveBeenCalledTimes(1);
-  expect(npm.runNpmPublish).toHaveBeenCalledTimes(testReleasePackages.length);
+  const publishedPackages = options.expectNoExperimentalPackages
+    ? testReleasePackages.filter((pkg) => !pkg.experimental)
+    : testReleasePackages;
 
-  for (const pkgName of testReleasePackages) {
-    expect(npm.runNpmPublish).toHaveBeenCalledWith(
-      `${testTmpDir}/dist/${pkgName}`,
-      expectedNpmDistTag,
-      undefined,
-    );
-  }
+  expect(externalCommands.invokeReleaseBuildCommand).toHaveBeenCalledTimes(1);
+  expectNpmPublishToBeInvoked(publishedPackages, expectedNpmDistTag);
 }
 
 export async function expectStagingAndPublishWithCherryPick(
@@ -111,6 +121,7 @@ export async function expectStagingAndPublishWithCherryPick(
   expectedBranch: string,
   expectedVersion: string,
   expectedNpmDistTag: NpmDistTag,
+  options: {expectNoExperimentalPackages?: boolean} = {},
 ) {
   const {repo, fork, gitClient} = action;
   const expectedStagingForkBranch = `release-stage-${expectedVersion}`;
@@ -152,14 +163,10 @@ export async function expectStagingAndPublishWithCherryPick(
     'Expected cherry-pick branch to be created in fork.',
   );
 
-  expect(externalCommands.invokeReleaseBuildCommand).toHaveBeenCalledTimes(1);
-  expect(npm.runNpmPublish).toHaveBeenCalledTimes(testReleasePackages.length);
+  const publishedPackages = options.expectNoExperimentalPackages
+    ? testReleasePackages.filter((pkg) => !pkg.experimental)
+    : testReleasePackages;
 
-  for (const pkgName of testReleasePackages) {
-    expect(npm.runNpmPublish).toHaveBeenCalledWith(
-      `${testTmpDir}/dist/${pkgName}`,
-      expectedNpmDistTag,
-      undefined,
-    );
-  }
+  expect(externalCommands.invokeReleaseBuildCommand).toHaveBeenCalledTimes(1);
+  expectNpmPublishToBeInvoked(publishedPackages, expectedNpmDistTag);
 }

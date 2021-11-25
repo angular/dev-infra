@@ -12,11 +12,10 @@ ts_library(
         "//ng-dev/release/notes",
         "//ng-dev/release/publish",
         "//ng-dev/release/set-dist-tag",
+        "//ng-dev/release/stamping",
         "//ng-dev/utils",
         "@npm//@types/node",
-        "@npm//@types/semver",
         "@npm//@types/yargs",
-        "@npm//semver",
         "@npm//yargs",
     ],
 )

@@ -7,16 +7,16 @@
  */
 
 import * as configUtils from '../../utils/config';
-import {BuiltPackage} from '../config';
+import {BuiltPackage, NpmPackage, ReleaseConfig} from '../config';
 import {ReleaseBuildCommandModule} from './cli';
 import * as index from './index';
 
 describe('ng-dev release build', () => {
-  let npmPackages: string[];
+  let npmPackages: NpmPackage[];
   let buildPackages: jasmine.Spy;
 
   beforeEach(() => {
-    npmPackages = ['@angular/pkg1', '@angular/pkg2'];
+    npmPackages = [{name: '@angular/pkg1'}, {name: '@angular/pkg2'}];
     buildPackages = jasmine.createSpy('buildPackages').and.resolveTo([
       {name: '@angular/pkg1', outputPath: 'dist/pkg1'},
       {name: '@angular/pkg2', outputPath: 'dist/pkg2'},
@@ -34,9 +34,10 @@ describe('ng-dev release build', () => {
   async function invokeBuild({json}: {json?: boolean} = {}) {
     spyOn(configUtils, 'getConfig').and.returnValue({
       release: {
+        representativeNpmPackage: npmPackages[0].name,
         npmPackages,
         buildPackages,
-      },
+      } as ReleaseConfig,
     });
     await ReleaseBuildCommandModule.handler({json: !!json, stampForRelease: true, $0: '', _: []});
   }
@@ -66,7 +67,7 @@ describe('ng-dev release build', () => {
 
   it('should error if package has not been built', async () => {
     // Set up an NPM package that is not built.
-    npmPackages.push('@angular/non-existent');
+    npmPackages.push({name: '@angular/non-existent', experimental: true});
 
     spyOn(console, 'error');
     await invokeBuild();
