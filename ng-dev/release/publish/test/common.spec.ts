@@ -8,16 +8,18 @@
 
 import {readFileSync} from 'fs';
 import {join} from 'path';
-import * as semver from 'semver';
 import {SemVer} from 'semver';
 
-import {getBranchPushMatcher, testTmpDir} from '../../../utils/testing';
-import {workspaceRelativeChangelogPath, ReleaseNotes} from '../../notes/release-notes';
-import {NpmDistTag} from '../../versioning';
+import {
+  getBranchPushMatcher,
+  getMockGitClient,
+  SandboxGitRepo,
+  testTmpDir,
+} from '../../../utils/testing';
+import {ReleaseNotes, workspaceRelativeChangelogPath} from '../../notes/release-notes';
 import {ActiveReleaseTrains} from '../../versioning/active-release-trains';
 import * as npm from '../../versioning/npm-publish';
 import {ReleaseTrain} from '../../versioning/release-trains';
-import {ReleaseAction} from '../actions';
 import {actions} from '../actions/index';
 import {githubReleaseBodyLimit} from '../constants';
 import {
@@ -29,8 +31,7 @@ import {
 import {getTestConfigurationsForAction, testReleasePackages} from './test-utils/action-mocks';
 import {CommitFromGitLog, parseCommitFromGitLog} from '../../../commit-message/parse';
 import {GitClient} from '../../../utils/git/git-client';
-import {getMockGitClient} from '../../../utils/testing';
-import {SandboxGitRepo} from '../../../utils/testing';
+import {DelegateTestAction} from './delegate-test-action';
 
 describe('common release action logic', () => {
   const baseReleaseTrains = new ActiveReleaseTrains({
@@ -52,7 +53,7 @@ describe('common release action logic', () => {
       const descriptions: string[] = [];
 
       // Fake the NPM package request as otherwise the test would rely on `npmjs.org`.
-      fakeNpmPackageQueryRequest(releaseConfig.npmPackages[0], {'dist-tags': {}});
+      fakeNpmPackageQueryRequest(releaseConfig.representativeNpmPackage, {'dist-tags': {}});
 
       for (const actionCtor of actions) {
         if (await actionCtor.isActive(testReleaseTrain, releaseConfig)) {
@@ -73,7 +74,7 @@ describe('common release action logic', () => {
   describe('build and publishing', () => {
     it('should support a custom NPM registry', async () => {
       const {repo, instance, releaseConfig} = setupReleaseActionForTesting(
-        TestAction,
+        DelegateTestAction,
         baseReleaseTrains,
       );
       const {version, branchName} = baseReleaseTrains.next;
@@ -93,9 +94,9 @@ describe('common release action logic', () => {
 
       expect(npm.runNpmPublish).toHaveBeenCalledTimes(testReleasePackages.length);
 
-      for (const pkgName of testReleasePackages) {
+      for (const pkg of testReleasePackages) {
         expect(npm.runNpmPublish).toHaveBeenCalledWith(
-          `${testTmpDir}/dist/${pkgName}`,
+          `${testTmpDir}/dist/${pkg.name}`,
           'latest',
           customRegistryUrl,
         );
@@ -104,7 +105,7 @@ describe('common release action logic', () => {
 
     it('should capture release notes in release entry', async () => {
       const {repo, instance, githubConfig} = setupReleaseActionForTesting(
-        TestAction,
+        DelegateTestAction,
         baseReleaseTrains,
         /* isNextPublishedToNpm */ true,
         {useSandboxGitClient: true},
@@ -140,7 +141,7 @@ describe('common release action logic', () => {
 
     it('should link to the changelog in the release entry if notes are too large', async () => {
       const {repo, instance, gitClient} = setupReleaseActionForTesting(
-        TestAction,
+        DelegateTestAction,
         baseReleaseTrains,
       );
       const {version, branchName} = baseReleaseTrains.latest;
@@ -182,7 +183,7 @@ describe('common release action logic', () => {
 
     it('should prepend the changelog to the next branch', async () => {
       const {repo, fork, instance, projectDir} = setupReleaseActionForTesting(
-        TestAction,
+        DelegateTestAction,
         baseReleaseTrains,
       );
 
@@ -214,7 +215,7 @@ describe('common release action logic', () => {
 
     it('should push changes to a fork for creating a pull request', async () => {
       const {repo, fork, instance, gitClient} = setupReleaseActionForTesting(
-        TestAction,
+        DelegateTestAction,
         baseReleaseTrains,
       );
 
@@ -253,40 +254,5 @@ describe('common release action logic', () => {
 class MockReleaseNotes extends ReleaseNotes {
   constructor(version: SemVer, commits: CommitFromGitLog[], git: GitClient) {
     super(version, commits, git);
-  }
-}
-
-/**
- * Test release action that exposes protected units of the base
- * release action class. This allows us to add unit tests.
- */
-class TestAction extends ReleaseAction {
-  override async getDescription() {
-    return 'Test action';
-  }
-
-  override async perform() {
-    throw Error('Not implemented.');
-  }
-
-  async testBuildAndPublish(
-    version: semver.SemVer,
-    publishBranch: string,
-    distTag: NpmDistTag,
-    releaseNotesCompareTag = 'HEAD',
-  ) {
-    const releaseNotes = await ReleaseNotes.forRange(
-      this.git,
-      version,
-      releaseNotesCompareTag,
-      'HEAD',
-    );
-    debugger;
-    await this.buildAndPublish(releaseNotes, publishBranch, distTag);
-  }
-
-  async testCherryPickWithPullRequest(version: semver.SemVer, branch: string) {
-    const releaseNotes = await ReleaseNotes.forRange(this.git, version, '', '');
-    await this.cherryPickChangelogIntoNextBranch(releaseNotes, branch);
   }
 }

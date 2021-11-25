@@ -42,7 +42,7 @@ describe('tag recent major as latest action', () => {
       // NPM `@latest` will point to a patch release of a more recent major. This is unlikely
       // to happen (only with manual changes outside of the release tool), but should
       // prevent accidental overrides from the release action.
-      fakeNpmPackageQueryRequest(releaseConfig.npmPackages[0], {
+      fakeNpmPackageQueryRequest(releaseConfig.representativeNpmPackage, {
         'dist-tags': {'latest': '11.0.3'},
       });
 
@@ -69,7 +69,7 @@ describe('tag recent major as latest action', () => {
       // (only with manual changes outside of the release tool), but should prevent accidental
       // changes from the release action that indicate mismatched version branches, or an
       // out-of-sync NPM registry.
-      fakeNpmPackageQueryRequest(releaseConfig.npmPackages[0], {
+      fakeNpmPackageQueryRequest(releaseConfig.representativeNpmPackage, {
         'dist-tags': {'latest': '8.4.7'},
       });
 
@@ -93,7 +93,7 @@ describe('tag recent major as latest action', () => {
       const {releaseConfig} = getTestConfigurationsForAction();
 
       // NPM `@latest` will point to a patch release of the previous major.
-      fakeNpmPackageQueryRequest(releaseConfig.npmPackages[0], {
+      fakeNpmPackageQueryRequest(releaseConfig.representativeNpmPackage, {
         'dist-tags': {'latest': '9.2.3'},
       });
 
@@ -121,7 +121,7 @@ describe('tag recent major as latest action', () => {
     );
 
     // NPM `@latest` will point to a patch release of the previous major.
-    fakeNpmPackageQueryRequest(releaseConfig.npmPackages[0], {
+    fakeNpmPackageQueryRequest(releaseConfig.representativeNpmPackage, {
       'dist-tags': {'latest': '9.2.3'},
     });
 

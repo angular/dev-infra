@@ -11,11 +11,12 @@ import * as semver from 'semver';
 import {spawn} from '../../utils/child-process';
 import {error, green, info, red} from '../../utils/console';
 import {Spinner} from '../../utils/spinner';
-import {BuiltPackage} from '../config/index';
 import {NpmDistTag} from '../versioning';
 
 import {FatalReleaseActionError} from './actions-error';
-import {resolveYarnScriptForProject, YarnCommandInfo} from '../../utils/resolve-yarn-bin';
+import {resolveYarnScriptForProject} from '../../utils/resolve-yarn-bin';
+import {ReleaseBuildJsonStdout} from '../build/cli';
+import {ReleaseInfoJsonStdout} from '../info/cli';
 
 /*
  * ###############################################################
@@ -37,11 +38,15 @@ import {resolveYarnScriptForProject, YarnCommandInfo} from '../../utils/resolve-
 /**
  * Invokes the `ng-dev release set-dist-tag` command in order to set the specified
  * NPM dist tag for all packages in the checked out branch to the given version.
+ *
+ * Optionally, the NPM dist tag update can be skipped for experimental packages. This
+ * is useful when tagging long-term-support packages within NPM.
  */
 export async function invokeSetNpmDistCommand(
   projectDir: string,
   npmDistTag: NpmDistTag,
   version: semver.SemVer,
+  options: {skipExperimentalPackages: boolean} = {skipExperimentalPackages: false},
 ) {
   // Note: We cannot use `yarn` directly as command because we might operate in
   // a different publish branch and the current `PATH` will point to the Yarn version
@@ -60,6 +65,7 @@ export async function invokeSetNpmDistCommand(
         'set-dist-tag',
         npmDistTag,
         version.format(),
+        `--skip-experimental-packages=${options.skipExperimentalPackages}`,
       ],
       {cwd: projectDir},
     );
@@ -75,7 +81,9 @@ export async function invokeSetNpmDistCommand(
  * Invokes the `ng-dev release build` command in order to build the release
  * packages for the currently checked out branch.
  */
-export async function invokeReleaseBuildCommand(projectDir: string): Promise<BuiltPackage[]> {
+export async function invokeReleaseBuildCommand(
+  projectDir: string,
+): Promise<ReleaseBuildJsonStdout> {
   // Note: We cannot use `yarn` directly as command because we might operate in
   // a different publish branch and the current `PATH` will point to the Yarn version
   // that invoked the release tool. More details in the function description.
@@ -97,11 +105,44 @@ export async function invokeReleaseBuildCommand(projectDir: string): Promise<Bui
     info(green('  ✓   Built release output for all packages.'));
     // The `ng-dev release build` command prints a JSON array to stdout
     // that represents the built release packages and their output paths.
-    return JSON.parse(stdout.trim()) as BuiltPackage[];
+    return JSON.parse(stdout.trim()) as ReleaseBuildJsonStdout;
   } catch (e) {
     spinner.complete();
     error(e);
     error(red('  ✘   An error occurred while building the release packages.'));
+    throw new FatalReleaseActionError();
+  }
+}
+
+/**
+ * Invokes the `ng-dev release info` command in order to retrieve information
+ * about the release for the currently checked-out branch.
+ *
+ * This is useful to e.g. determine whether a built package is currently
+ * denoted as experimental or not.
+ */
+export async function invokeReleaseInfoCommand(projectDir: string): Promise<ReleaseInfoJsonStdout> {
+  // Note: We cannot use `yarn` directly as command because we might operate in
+  // a different publish branch and the current `PATH` will point to the Yarn version
+  // that invoked the release tool. More details in the function description.
+  const yarnCommand = await resolveYarnScriptForProject(projectDir);
+
+  try {
+    // Note: No progress indicator needed as that is expected to be a fast operation.
+    const {stdout} = await spawn('yarn', ['--silent', 'ng-dev', 'release', 'info', '--json'], {
+      cwd: projectDir,
+      mode: 'silent',
+    });
+    // The `ng-dev release info` command prints a JSON object to stdout.
+    return JSON.parse(stdout.trim()) as ReleaseInfoJsonStdout;
+  } catch (e) {
+    error(e);
+    error(
+      red(
+        `  ✘   An error occurred while retrieving the release information for ` +
+          `the currently checked-out branch.`,
+      ),
+    );
     throw new FatalReleaseActionError();
   }
 }

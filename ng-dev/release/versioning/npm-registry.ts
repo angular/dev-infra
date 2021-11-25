@@ -31,15 +31,9 @@ export interface NpmPackageInfo {
  */
 export const _npmPackageInfoCache: {[pkgName: string]: Promise<NpmPackageInfo>} = {};
 
-/**
- * Fetches the NPM package representing the project. Angular repositories usually contain
- * multiple packages in a monorepo scheme, but packages dealt with as part of the release
- * tooling are released together with the same versioning and branching. This means that
- * a single package can be used as source of truth for NPM package queries.
- */
+/** Fetches the NPM package representing the project. */
 export async function fetchProjectNpmPackageInfo(config: ReleaseConfig): Promise<NpmPackageInfo> {
-  const pkgName = getRepresentativeNpmPackage(config);
-  return await fetchPackageInfoFromNpmRegistry(pkgName);
+  return await fetchPackageInfoFromNpmRegistry(config.representativeNpmPackage);
 }
 
 /** Gets whether the given version is published to NPM or not */
@@ -49,16 +43,6 @@ export async function isVersionPublishedToNpm(
 ): Promise<boolean> {
   const {versions} = await fetchProjectNpmPackageInfo(config);
   return versions[version.format()] !== undefined;
-}
-
-/**
- * Gets the representative NPM package for the specified release configuration. Angular
- * repositories usually contain multiple packages in a monorepo scheme, but packages dealt with
- * as part of the release tooling are released together with the same versioning and branching.
- * This means that a single package can be used as source of truth for NPM package queries.
- */
-function getRepresentativeNpmPackage(config: ReleaseConfig) {
-  return config.npmPackages[0];
 }
 
 /** Fetches the specified NPM package from the NPM registry. */

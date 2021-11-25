@@ -33,7 +33,8 @@ describe('default target labels', () => {
     api = new GithubClient();
     githubConfig = {owner: 'angular', name: 'dev-infra-test', mainBranchName: 'master'};
     releaseConfig = {
-      npmPackages: ['@angular/dev-infra-test-pkg'],
+      representativeNpmPackage: '@angular/dev-infra-test-pkg',
+      npmPackages: [{name: '@angular/dev-infra-test-pkg'}],
       buildPackages: async () => [],
     };
 
@@ -66,7 +67,7 @@ describe('default target labels', () => {
 
   /** Fakes a NPM package query API request. */
   function fakeNpmPackageQueryRequest(data: Partial<NpmPackageInfo>) {
-    _npmPackageInfoCache[releaseConfig.npmPackages[0]] = Promise.resolve({
+    _npmPackageInfoCache[releaseConfig.representativeNpmPackage] = Promise.resolve({
       'dist-tags': {},
       versions: {},
       time: {},

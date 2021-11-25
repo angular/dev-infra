@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {existsSync, mkdirSync, rmdirSync, writeFileSync} from 'fs';
+import {existsSync, mkdirSync, rmSync, writeFileSync} from 'fs';
 import {join} from 'path';
 
 import * as npm from '../../../versioning/npm-publish';
@@ -16,7 +16,7 @@ import * as console from '../../../../utils/console';
 
 import {ReleaseAction} from '../../actions';
 import * as config from '../../../../utils/config';
-import {ReleaseConfig} from '../../../config';
+import {BuiltPackage, NpmPackage, ReleaseConfig} from '../../../config';
 import {
   installVirtualGitClientSpies,
   testTmpDir,
@@ -24,9 +24,17 @@ import {
 } from '../../../../utils/testing';
 import {installSandboxGitClient} from '../../../../utils/testing';
 import {getMockGitClient} from '../../../../utils/testing';
+import {BuiltPackageWithInfo} from '../../merge-built-packages-info';
+
+/** Default representative NPM package used in tests. */
+export const testRepresentativePackage = '@angular/pkg1';
 
 /** List of NPM packages which are configured for release action tests. */
-export const testReleasePackages = ['@angular/pkg1', '@angular/pkg2'];
+export const testReleasePackages: NpmPackage[] = [
+  {name: '@angular/pkg1'},
+  {name: '@angular/pkg2'},
+  {name: '@experimental/somepkg', experimental: true},
+];
 
 /** Gets test configurations for running testing a publish action. */
 export function getTestConfigurationsForAction() {
@@ -36,6 +44,7 @@ export function getTestConfigurationsForAction() {
     mainBranchName: 'master',
   };
   const releaseConfig: ReleaseConfig = {
+    representativeNpmPackage: testRepresentativePackage,
     npmPackages: testReleasePackages,
     buildPackages: () => {
       throw Error('Not implemented');
@@ -50,7 +59,7 @@ export function getTestConfigurationsForAction() {
  */
 export function prepareTempDirectory() {
   if (existsSync(testTmpDir)) {
-    rmdirSync(testTmpDir, {recursive: true});
+    rmSync(testTmpDir, {recursive: true});
   }
   mkdirSync(testTmpDir);
 }
@@ -59,6 +68,7 @@ export function prepareTempDirectory() {
 export function setupMocksForReleaseAction<T extends boolean>(
   githubConfig: config.GithubConfig,
   releaseConfig: ReleaseConfig,
+  stubBuiltPackageOutputChecks: boolean,
   useSandboxGitClient: T,
 ) {
   // Clear the temporary directory. We do not want the repo state
@@ -72,17 +82,23 @@ export function setupMocksForReleaseAction<T extends boolean>(
   // just proceed with the release action.
   spyOn(console, 'promptConfirm').and.resolveTo(true);
 
+  const builtPackages: BuiltPackageWithInfo[] = testReleasePackages.map((pkg) => ({
+    ...pkg,
+    outputPath: `${testTmpDir}/dist/${pkg.name}`,
+  }));
+
   // Fake all external commands for the release tool.
   spyOn(npm, 'runNpmPublish').and.resolveTo();
   spyOn(externalCommands, 'invokeSetNpmDistCommand').and.resolveTo();
   spyOn(externalCommands, 'invokeYarnInstallCommand').and.resolveTo();
-  spyOn(externalCommands, 'invokeReleaseBuildCommand').and.resolveTo(
-    testReleasePackages.map((name) => ({name, outputPath: `${testTmpDir}/dist/${name}`})),
-  );
+  spyOn(externalCommands, 'invokeReleaseInfoCommand').and.resolveTo(releaseConfig);
+  spyOn(externalCommands, 'invokeReleaseBuildCommand').and.resolveTo(builtPackages);
 
-  // Fake checking the package versions since we don't actually create NPM
-  // package output that can be tested.
-  spyOn(ReleaseAction.prototype, '_verifyPackageVersions' as any).and.resolveTo();
+  if (stubBuiltPackageOutputChecks) {
+    // Fake checking the package versions since we don't actually create NPM
+    // package output that can be tested.
+    spyOn(ReleaseAction.prototype, '_verifyPackageVersions' as any).and.resolveTo();
+  }
 
   // Create an empty changelog and a `package.json` file so that file system
   // interactions with the project directory do not cause exceptions.

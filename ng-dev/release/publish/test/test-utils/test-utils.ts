@@ -13,7 +13,12 @@ import {getTestConfigurationsForAction, setupMocksForReleaseAction} from './acti
 import {_npmPackageInfoCache, ActiveReleaseTrains, NpmPackageInfo} from '../../../versioning';
 import {ReleaseAction, ReleaseActionConstructor} from '../../actions';
 import {GithubTestingRepo} from '../../../../utils/testing';
-import {defaultTestOptions, TestOptions, TestReleaseAction} from './test-action';
+import {
+  defaultTestOptions,
+  TestOptions,
+  TestOptionsWithDefaults,
+  TestReleaseAction,
+} from './test-action';
 import {dedent} from '../../../../utils/testing';
 import {testTmpDir} from '../../../../utils/testing';
 
@@ -24,16 +29,21 @@ import {testTmpDir} from '../../../../utils/testing';
  * @param isNextPublishedToNpm Whether the next version is published to NPM. True by default.
  * @param testOptions Additional options that can be used to control the test setup.
  */
-export function setupReleaseActionForTesting<T extends ReleaseAction, O extends TestOptions>(
-  actionCtor: ReleaseActionConstructor<T>,
+export function setupReleaseActionForTesting<
+  Type extends ReleaseAction,
+  Options extends TestOptions,
+  OptionsWithDefaults extends TestOptionsWithDefaults<Options>,
+>(
+  actionCtor: ReleaseActionConstructor<Type>,
   active: ActiveReleaseTrains,
   isNextPublishedToNpm = true,
-  testOptions: O = defaultTestOptions as O,
-): TestReleaseAction<T, O> {
+  testOptions?: Options,
+): TestReleaseAction<Type, OptionsWithDefaults> {
   // Reset existing HTTP interceptors.
   nock.cleanAll();
 
   const projectDir = testTmpDir;
+  const testOptionsWithDefaults = {...defaultTestOptions, ...testOptions} as OptionsWithDefaults;
   const {githubConfig, releaseConfig} = getTestConfigurationsForAction();
   const repo = new GithubTestingRepo(githubConfig.owner, githubConfig.name);
   const fork = new GithubTestingRepo('some-user', 'fork');
@@ -42,15 +52,16 @@ export function setupReleaseActionForTesting<T extends ReleaseAction, O extends 
   // published to NPM. We mock the NPM package request and fake the state of the next
   // version based on the `isNextPublishedToNpm` testing parameter. More details on the
   // special case for the next release train can be found in the next pre-release action.
-  fakeNpmPackageQueryRequest(releaseConfig.npmPackages[0], {
+  fakeNpmPackageQueryRequest(releaseConfig.representativeNpmPackage, {
     versions: {[active.next.version.format()]: isNextPublishedToNpm ? {} : undefined},
   });
 
   // Setup mocks for release action.
-  const {gitClient} = setupMocksForReleaseAction<O['useSandboxGitClient']>(
+  const {gitClient} = setupMocksForReleaseAction<OptionsWithDefaults['useSandboxGitClient']>(
     githubConfig,
     releaseConfig,
-    testOptions.useSandboxGitClient,
+    testOptionsWithDefaults.stubBuiltPackageOutputChecks,
+    testOptionsWithDefaults.useSandboxGitClient,
   );
 
   const action = new actionCtor(active, gitClient, releaseConfig, projectDir);

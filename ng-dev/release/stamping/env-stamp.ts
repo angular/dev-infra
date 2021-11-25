@@ -9,7 +9,7 @@
 import {join} from 'path';
 import {SemVer} from 'semver';
 import {GitClient} from '../../utils/git/git-client';
-import {createExperimentalSemver} from '../../utils/semver';
+import {createExperimentalSemver} from '../../release/versioning/experimental-versions';
 
 export type EnvStampMode = 'snapshot' | 'release';
 

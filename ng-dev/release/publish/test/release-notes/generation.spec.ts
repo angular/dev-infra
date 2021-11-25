@@ -25,7 +25,11 @@ describe('release notes generation', () => {
     // the repo state to persist between tests.
     prepareTempDirectory();
 
-    releaseConfig = {npmPackages: [], buildPackages: async () => []};
+    releaseConfig = {
+      npmPackages: [{name: 'test-pkg'}],
+      representativeNpmPackage: 'test-pkg',
+      buildPackages: async () => [],
+    };
     githubConfig = {owner: 'angular', name: 'dev-infra-test', mainBranchName: 'main'};
     spyOn(config, 'getConfig').and.returnValue({github: githubConfig, release: releaseConfig});
     client = getMockGitClient(githubConfig, /* useSandboxGitClient */ true);

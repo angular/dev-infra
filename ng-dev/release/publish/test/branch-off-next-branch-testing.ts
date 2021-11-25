@@ -133,9 +133,9 @@ export async function expectBranchOffActionToRun(
   expect(externalCommands.invokeReleaseBuildCommand).toHaveBeenCalledTimes(1);
   expect(npm.runNpmPublish).toHaveBeenCalledTimes(testReleasePackages.length);
 
-  for (const pkgName of testReleasePackages) {
+  for (const pkg of testReleasePackages) {
     expect(npm.runNpmPublish).toHaveBeenCalledWith(
-      `${testTmpDir}/dist/${pkgName}`,
+      `${testTmpDir}/dist/${pkg.name}`,
       'next',
       undefined,
     );

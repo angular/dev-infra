@@ -8,7 +8,6 @@ import {AuthenticatedGitClient} from '../../../../ng-dev/utils/git/authenticated
 import {ANGULAR_ROBOT, getAuthTokenFor} from '../../../../github-actions/utils';
 import {GithubConfig, setConfig} from '../../../../ng-dev/utils/config';
 import {ReleaseConfig} from '../../../../ng-dev/release/config/index';
-import {addTokenToGitHttpsUrl} from '../../../../ng-dev/utils/git/github-urls';
 
 /** The tag used for tracking the last time the changlog was generated. */
 const lastChangelogTag = 'most-recent-changelog-generation';
@@ -25,6 +24,7 @@ const config: {github: GithubConfig; release: ReleaseConfig} = {
     owner: context.repo.owner,
   },
   release: {
+    representativeNpmPackage: '',
     npmPackages: [],
     buildPackages: async () => [],
     releaseNotes: {
