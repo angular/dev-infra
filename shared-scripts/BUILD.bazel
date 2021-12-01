@@ -4,5 +4,6 @@ filegroup(
     name = "static_files",
     srcs = glob(["*"]) + [
         "//shared-scripts/angular-linker:static_files",
+        "//shared-scripts/angular-optimization:static_files",
     ],
 )

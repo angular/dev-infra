@@ -1,0 +1,40 @@
+load("@npm//@angular/bazel:index.bzl", "ng_module")
+load("//bazel/benchmark/app_bundling:index.bzl", "app_bundle")
+load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
+
+ng_module(
+    name = "test_fixture_lib",
+    srcs = ["main_fixture.ts"],
+    tsconfig = "tsconfig.json",
+    deps = [
+        "@npm//@angular/core",
+        "@npm//@angular/platform-browser",
+    ],
+)
+
+app_bundle(
+    name = "bundle",
+    entry_point = "main_fixture.ts",
+    deps = [":test_fixture_lib"],
+)
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = [
+        "bundle.spec.ts",
+    ],
+    deps = [
+        "@npm//@bazel/runfiles",
+        "@npm//@types/jsdom",
+        "@npm//jsdom",
+    ],
+)
+
+jasmine_node_test(
+    name = "test",
+    data = [":bundle.min.js"],
+    specs = [
+        ":test_lib",
+    ],
+)
