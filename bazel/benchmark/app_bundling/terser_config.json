@@ -1,18 +1,12 @@
 {
-  "format": {
-    "ecma": "es2020",
-    "comments": false,
-    "beautify": "bazel_debug"
-  },
+  "ecma": "es2020",
   "compress": {
-    "global_defs": {
-      "ngDevMode": false,
-      "ngI18nClosureMode": false,
-      "ngJitMode": false
-    },
-    "passes": 3,
+    "passes": 2,
     "pure_getters": true
   },
-  "toplevel": true,
-  "mangle": "bazel_no_debug"
+  "format": {
+    "ascii_only": true,
+    "wrap_func_args": false
+  },
+  "mangle": false
 }

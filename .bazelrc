@@ -17,6 +17,8 @@ test --nolegacy_external_runfiles
 build --deleted_packages=bazel/integration/tests/nested_bazel_workspaces/basic
 query --deleted_packages=bazel/integration/tests/nested_bazel_workspaces/basic
 
+build --define=angular_ivy_enabled=True
+
 ###############################
 # Filesystem interactions     #
 ###############################

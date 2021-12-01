@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-const protractorUtils = require('@bazel/protractor/protractor-utils');
+const protractorUtils = require('@bazel/protractor/protractor-utils.js');
 const protractor = require('protractor');
 
 module.exports = async function (config) {

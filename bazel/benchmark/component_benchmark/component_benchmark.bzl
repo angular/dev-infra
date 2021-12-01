@@ -1,4 +1,4 @@
-load("//bazel/benchmark/ng_rollup_bundle:ng_rollup_bundle.bzl", "ng_rollup_bundle")
+load("//bazel/benchmark/app_bundling:index.bzl", "app_bundle")
 load("@npm//@angular/bazel:index.bzl", "ng_module")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
 load("@npm//@bazel/concatjs:index.bzl", "concatjs_devserver")
@@ -115,7 +115,7 @@ def component_benchmark(
     )
 
     # Bundle the application (needed by concatjs_devserver).
-    ng_rollup_bundle(
+    app_bundle(
         name = app_main,
         entry_point = entry_point,
         deps = [":" + app_lib] + entry_point_deps,
@@ -131,12 +131,14 @@ def component_benchmark(
     )
 
     # The server for our application.
+    # TODO: Move away from ConcatJS devserver and use shared devserver from dev-infra
+    # that is based on the one used in components.
     concatjs_devserver(
         name = server,
-        bootstrap = ["@npm//zone.js"],
+        bootstrap = ["@npm//:node_modules/zone.js/bundles/zone.umd.js"],
         port = 4200,
         static_files = assets + styles,
-        deps = [":" + app_main + ".min_debug.js"],
+        deps = [":" + app_main + ".debug.min.js"],
         additional_root_paths = ["//bazel/benchmark/component_benchmark/defaults"],
         serving_path = "/app_bundle.js",
     )
