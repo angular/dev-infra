@@ -40,7 +40,7 @@ export interface TestReleaseAction<
   instance: T;
   repo: GithubTestingRepo;
   fork: GithubTestingRepo;
-  testTmpDir: string;
+  projectDir: string;
   githubConfig: GithubConfig;
   releaseConfig: ReleaseConfig;
   gitClient: O['useSandboxGitClient'] extends true ? SandboxGitClient : VirtualGitClient;

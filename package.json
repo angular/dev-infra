@@ -62,6 +62,7 @@
     "typed-graphqlify": "^3.1.1",
     "typescript": "~4.5.0",
     "uuid": "^8.3.2",
+    "which": "^2.0.2",
     "yaml": "^1.10.0",
     "yargs": "^17.0.0"
   },
@@ -88,6 +89,7 @@
     "@types/semver": "^7.3.6",
     "@types/shelljs": "^0.8.8",
     "@types/uuid": "^8.3.1",
+    "@types/which": "^2.0.1",
     "@types/yargs": "^17.0.0",
     "@types/yarnpkg__lockfile": "^1.1.5",
     "jsdoc": "^3.6.7",

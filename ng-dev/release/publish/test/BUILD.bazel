@@ -2,6 +2,7 @@ load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
 
 ts_library(
     name = "test_lib",
+    testonly = True,
     srcs = glob([
         "**/*.ts",
     ]),
@@ -17,8 +18,6 @@ ts_library(
         "//ng-dev/utils",
         "//ng-dev/utils/testing",
         "@npm//@octokit/plugin-rest-endpoint-methods",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
         "@npm//@types/semver",
         "@npm//@types/yargs",
         "@npm//nock",

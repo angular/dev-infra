@@ -69,7 +69,7 @@ export class CutStableAction extends ReleaseAction {
       await this.checkoutUpstreamBranch(previousPatch.branchName);
       await this.installDependenciesForCurrentBranch();
 
-      await invokeSetNpmDistCommand(ltsTagForPatch, previousPatch.version);
+      await invokeSetNpmDistCommand(this.projectDir, ltsTagForPatch, previousPatch.version);
     }
 
     await this.cherryPickChangelogIntoNextBranch(releaseNotes, branchName);

@@ -80,25 +80,12 @@ export abstract class ReleaseAction {
    */
   abstract perform(): Promise<void>;
 
-  /** Cached found fork of the configured project. */
-  private _cachedForkRepo: GithubRepo | null = null;
-
   constructor(
     protected active: ActiveReleaseTrains,
     protected git: AuthenticatedGitClient,
     protected config: ReleaseConfig,
     protected projectDir: string,
   ) {}
-
-  /** Retrieves the version in the project top-level `package.json` file. */
-  private async getProjectVersion() {
-    const pkgJsonPath = join(this.projectDir, workspaceRelativePackageJsonPath);
-    const pkgJson = JSON.parse(await fs.readFile(pkgJsonPath, 'utf8')) as {
-      version: string;
-      [key: string]: any;
-    };
-    return new semver.SemVer(pkgJson.version);
-  }
 
   /** Updates the version in the project top-level `package.json` file. */
   protected async updateProjectVersion(newVersion: semver.SemVer) {
@@ -599,7 +586,7 @@ export abstract class ReleaseAction {
     // publish branch. e.g. consider we publish patch version and a new package has been
     // created in the `next` branch. The new package would not be part of the patch branch,
     // so we cannot build and publish it.
-    const builtPackages = await invokeReleaseBuildCommand();
+    const builtPackages = await invokeReleaseBuildCommand(this.projectDir);
 
     // Verify the packages built are the correct version.
     await this._verifyPackageVersions(releaseNotes.version, builtPackages);

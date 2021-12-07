@@ -181,7 +181,7 @@ describe('common release action logic', () => {
     const forkBranchName = `changelog-cherry-pick-${version}`;
 
     it('should prepend the changelog to the next branch', async () => {
-      const {repo, fork, instance, testTmpDir} = setupReleaseActionForTesting(
+      const {repo, fork, instance, projectDir} = setupReleaseActionForTesting(
         TestAction,
         baseReleaseTrains,
       );
@@ -199,7 +199,7 @@ describe('common release action logic', () => {
       await instance.testCherryPickWithPullRequest(version, branchName);
 
       const changelogContent = readFileSync(
-        join(testTmpDir, workspaceRelativeChangelogPath),
+        join(projectDir, workspaceRelativeChangelogPath),
         'utf8',
       );
       expect(changelogContent).toMatch(changelogPattern`
