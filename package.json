@@ -91,7 +91,7 @@
     "@types/yargs": "^17.0.0",
     "@types/yarnpkg__lockfile": "^1.1.5",
     "jsdoc": "^3.6.7",
-    "jsdom": "^18.1.1",
+    "jsdom": "^19.0.0",
     "minimist": "^1.2.5",
     "protobufjs": "^6.11.2",
     "rxjs": "^7.4.0",
