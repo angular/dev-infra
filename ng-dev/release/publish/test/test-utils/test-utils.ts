@@ -33,6 +33,7 @@ export function setupReleaseActionForTesting<T extends ReleaseAction, O extends 
   // Reset existing HTTP interceptors.
   nock.cleanAll();
 
+  const projectDir = testTmpDir;
   const {githubConfig, releaseConfig} = getTestConfigurationsForAction();
   const repo = new GithubTestingRepo(githubConfig.owner, githubConfig.name);
   const fork = new GithubTestingRepo('some-user', 'fork');
@@ -52,9 +53,18 @@ export function setupReleaseActionForTesting<T extends ReleaseAction, O extends 
     testOptions.useSandboxGitClient,
   );
 
-  const action = new actionCtor(active, gitClient, releaseConfig, testTmpDir);
+  const action = new actionCtor(active, gitClient, releaseConfig, projectDir);
 
-  return {instance: action, active, repo, fork, testTmpDir, githubConfig, releaseConfig, gitClient};
+  return {
+    instance: action,
+    active,
+    repo,
+    fork,
+    projectDir,
+    githubConfig,
+    releaseConfig,
+    gitClient,
+  };
 }
 
 /** Parses the specified version into Semver. */

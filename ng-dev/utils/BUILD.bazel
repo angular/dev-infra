@@ -22,6 +22,7 @@ ts_library(
         "@npm//@types/inquirer",
         "@npm//@types/node",
         "@npm//@types/semver",
+        "@npm//@types/which",
         "@npm//@types/yargs",
         "@npm//@types/yarnpkg__lockfile",
         "@npm//@yarnpkg/lockfile",
@@ -29,6 +30,8 @@ ts_library(
         "@npm//inquirer",
         "@npm//semver",
         "@npm//typed-graphqlify",
+        "@npm//which",
+        "@npm//yaml",
         "@npm//yargs",
     ],
 )

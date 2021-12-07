@@ -62,7 +62,7 @@ describe('cut next pre-release action', () => {
       await expectStagingAndPublishWithoutCherryPick(action, 'master', '10.2.0-next.0', 'next');
 
       const pkgJsonContents = readFileSync(
-        join(action.testTmpDir, workspaceRelativePackageJsonPath),
+        join(action.projectDir, workspaceRelativePackageJsonPath),
         'utf8',
       );
       const pkgJson = JSON.parse(pkgJsonContents) as {version: string; [key: string]: any};

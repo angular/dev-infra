@@ -15,6 +15,7 @@ import {BuiltPackage} from '../config/index';
 import {NpmDistTag} from '../versioning';
 
 import {FatalReleaseActionError} from './actions-error';
+import {resolveYarnScriptForProject, YarnCommandInfo} from '../../utils/resolve-yarn-bin';
 
 /*
  * ###############################################################
@@ -37,17 +38,31 @@ import {FatalReleaseActionError} from './actions-error';
  * Invokes the `ng-dev release set-dist-tag` command in order to set the specified
  * NPM dist tag for all packages in the checked out branch to the given version.
  */
-export async function invokeSetNpmDistCommand(npmDistTag: NpmDistTag, version: semver.SemVer) {
+export async function invokeSetNpmDistCommand(
+  projectDir: string,
+  npmDistTag: NpmDistTag,
+  version: semver.SemVer,
+) {
+  // Note: We cannot use `yarn` directly as command because we might operate in
+  // a different publish branch and the current `PATH` will point to the Yarn version
+  // that invoked the release tool. More details in the function description.
+  const yarnCommand = await resolveYarnScriptForProject(projectDir);
+
   try {
     // Note: No progress indicator needed as that is the responsibility of the command.
-    await spawn('yarn', [
-      '--silent',
-      'ng-dev',
-      'release',
-      'set-dist-tag',
-      npmDistTag,
-      version.format(),
-    ]);
+    await spawn(
+      yarnCommand.binary,
+      [
+        ...yarnCommand.args,
+        '--silent',
+        'ng-dev',
+        'release',
+        'set-dist-tag',
+        npmDistTag,
+        version.format(),
+      ],
+      {cwd: projectDir},
+    );
     info(green(`  ✓   Set "${npmDistTag}" NPM dist tag for all packages to v${version}.`));
   } catch (e) {
     error(e);
@@ -60,14 +75,24 @@ export async function invokeSetNpmDistCommand(npmDistTag: NpmDistTag, version: s
  * Invokes the `ng-dev release build` command in order to build the release
  * packages for the currently checked out branch.
  */
-export async function invokeReleaseBuildCommand(): Promise<BuiltPackage[]> {
+export async function invokeReleaseBuildCommand(projectDir: string): Promise<BuiltPackage[]> {
+  // Note: We cannot use `yarn` directly as command because we might operate in
+  // a different publish branch and the current `PATH` will point to the Yarn version
+  // that invoked the release tool. More details in the function description.
+  const yarnCommand = await resolveYarnScriptForProject(projectDir);
   const spinner = new Spinner('Building release output.');
+
   try {
     // Since we expect JSON to be printed from the `ng-dev release build` command,
     // we spawn the process in silent mode. We have set up an Ora progress spinner.
-    const {stdout} = await spawn('yarn', ['--silent', 'ng-dev', 'release', 'build', '--json'], {
-      mode: 'silent',
-    });
+    const {stdout} = await spawn(
+      yarnCommand.binary,
+      [...yarnCommand.args, '--silent', 'ng-dev', 'release', 'build', '--json'],
+      {
+        cwd: projectDir,
+        mode: 'silent',
+      },
+    );
     spinner.complete();
     info(green('  ✓   Built release output for all packages.'));
     // The `ng-dev release build` command prints a JSON array to stdout
@@ -86,10 +111,19 @@ export async function invokeReleaseBuildCommand(): Promise<BuiltPackage[]> {
  * the configured project with the currently checked out revision.
  */
 export async function invokeYarnInstallCommand(projectDir: string): Promise<void> {
+  // Note: We cannot use `yarn` directly as command because we might operate in
+  // a different publish branch and the current `PATH` will point to the Yarn version
+  // that invoked the release tool. More details in the function description.
+  const yarnCommand = await resolveYarnScriptForProject(projectDir);
+
   try {
     // Note: No progress indicator needed as that is the responsibility of the command.
     // TODO: Consider using an Ora spinner instead to ensure minimal console output.
-    await spawn('yarn', ['install', '--frozen-lockfile', '--non-interactive'], {cwd: projectDir});
+    await spawn(
+      yarnCommand.binary,
+      [...yarnCommand.args, 'install', '--frozen-lockfile', '--non-interactive'],
+      {cwd: projectDir},
+    );
     info(green('  ✓   Installed project dependencies.'));
   } catch (e) {
     error(e);

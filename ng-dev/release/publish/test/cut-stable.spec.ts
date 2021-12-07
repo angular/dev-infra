@@ -112,6 +112,7 @@ describe('cut stable action', () => {
     await expectStagingAndPublishWithCherryPick(action, '11.0.x', '11.0.0', 'next');
     expect(externalCommands.invokeSetNpmDistCommand).toHaveBeenCalledTimes(1);
     expect(externalCommands.invokeSetNpmDistCommand).toHaveBeenCalledWith(
+      action.projectDir,
       'v10-lts',
       matchesVersion('10.0.3'),
     );

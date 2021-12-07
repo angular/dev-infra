@@ -111,7 +111,7 @@ describe('tag recent major as latest action', () => {
   );
 
   it('should re-tag the version in the NPM registry and update the Github release', async () => {
-    const {instance, gitClient, releaseConfig, repo} = setupReleaseActionForTesting(
+    const {instance, gitClient, projectDir, releaseConfig, repo} = setupReleaseActionForTesting(
       TagRecentMajorAsLatest,
       new ActiveReleaseTrains({
         releaseCandidate: null,
@@ -140,6 +140,7 @@ describe('tag recent major as latest action', () => {
 
     expect(externalCommands.invokeSetNpmDistCommand).toHaveBeenCalledTimes(1);
     expect(externalCommands.invokeSetNpmDistCommand).toHaveBeenCalledWith(
+      projectDir,
       'latest',
       matchesVersion('10.0.0'),
     );

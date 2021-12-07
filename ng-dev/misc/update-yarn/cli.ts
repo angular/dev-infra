@@ -15,6 +15,7 @@ import {error, info, red} from '../../utils/console';
 import {Spinner} from '../../utils/spinner';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {addGithubTokenOption} from '../../utils/git/github-yargs';
+import {getYarnPathFromNpmGlobalBinaries} from '../../utils/resolve-yarn-bin';
 
 async function builder(yargs: Argv) {
   return addGithubTokenOption(yargs);
@@ -33,10 +34,16 @@ const skipHuskyEnv = {
 };
 
 async function handler() {
-  /** Directory where node binary are globally installed. */
-  const npmBinDir = spawnSync('npm', ['bin', '--global', 'yarn']).stdout.trim();
-  /** The full path to the globally installed yarn binary. */
-  const yarnBin = `${npmBinDir}/yarn`;
+  /**
+   * Process command that refers to the global Yarn installation.
+   *
+   * Note that we intend to use the global Yarn command here as this allows us to let Yarn
+   * respect the `.yarnrc` file, allowing us to check if the update has completed properly.
+   * Just using `yarn` does not necessarily resolve to the global Yarn version as Yarn-initiated
+   * sub-processes will have a modified `process.env.PATH` that directly points to the Yarn
+   * version that spawned the sub-process.
+   */
+  const yarnGlobalBin = (await getYarnPathFromNpmGlobalBinaries()) ?? 'yarn';
   /** Instance of the local git client. */
   const git = AuthenticatedGitClient.get();
   /** The main branch name of the repository. */
@@ -62,10 +69,10 @@ async function handler() {
     readdirSync(yarnReleasesDir).forEach((file) => unlinkSync(join(yarnReleasesDir, file)));
 
     spinner.update('Updating yarn version.');
-    spawnSync(yarnBin, ['policies', 'set-version', 'latest']);
+    spawnSync(yarnGlobalBin, ['policies', 'set-version', 'latest']);
 
     spinner.update('Confirming the version of yarn was updated.');
-    const newYarnVersion = spawnSync(yarnBin, ['-v'], {env: useYarnPathEnv}).stdout.trim();
+    const newYarnVersion = spawnSync(yarnGlobalBin, ['-v'], {env: useYarnPathEnv}).stdout.trim();
     if (git.run(['status', '--porcelain']).stdout.length === 0) {
       spinner.complete();
       error(red('Yarn already up to date'));
