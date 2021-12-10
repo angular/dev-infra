@@ -12,6 +12,7 @@ ts_library(
         "//tools/local-actions/changelog/lib:__subpackages__",
     ],
     deps = [
+        "@npm//@bazel/bazelisk",
         "@npm//@octokit/core",
         "@npm//@octokit/graphql",
         "@npm//@octokit/plugin-paginate-rest",

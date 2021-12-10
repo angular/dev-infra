@@ -52275,10 +52275,10 @@ var require_bazel = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.bazel = void 0;
     var child_process_1 = require_child_process();
-    var { getNativeBinary } = require("@bazel/bazelisk/bazelisk.js");
+    var bazelisk_1 = require("@bazel/bazelisk");
     var bazelBinPath;
     function bazel(cmd, args) {
-      bazelBinPath = bazelBinPath || getNativeBinary();
+      bazelBinPath = bazelBinPath || (0, bazelisk_1.getNativeBinary)();
       const { status, stdout, stderr } = (0, child_process_1.spawnSync)(bazelBinPath, [cmd, ...args]);
       if (status === 0) {
         return stdout.trim();
