@@ -1,3 +1,17 @@
+<a name="2021.12.12"></a>
+# 2021.12.12 (2021-12-12)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [885008c](https://github.com/angular/dev-infra/commit/885008c8215ce0254ba191ae0cfa01b43c815405) | fix | benchmark angular compilation pipeline not working with APF v13 |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1516a4e](https://github.com/angular/dev-infra/commit/1516a4ef6d42bdcf008a7984409468183ab67808) | fix | **release:** do not error when yarn version of publish branch is older |
+## Special Thanks
+Paul Gschwendtner and renovate[bot]
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2021.11.28"></a>
 # 2021.11.28 (2021-11-28)
 ### ng-dev
@@ -191,16 +205,3 @@ Joey Perrott, Paul Gschwendtner and renovate[bot]
 | [12c4de0](https://github.com/angular/dev-infra/commit/12c4de00bc410a1082e32fff7c082a7d216660b0) | fix | set `_` as the username in the URL when creating authenticated git URLs ([#199](https://github.com/angular/dev-infra/pull/199)) |
 ## Special Thanks
 Joey Perrott and Paul Gschwendtner
-
-<!-- CHANGELOG SPLIT MARKER -->
-<a name="2021.8.31"></a>
-# 2021.8.31 (2021-08-31)
-### ng-dev
-| Commit | Type | Description |
-| -- | -- | -- |
-| [2589dcd](https://github.com/angular/dev-infra/commit/2589dcd9a393830b696fa7ade0e0a4c750d067ee) | feat | **release:** Allow retrieving the number of commits in the release notes ([#180](https://github.com/angular/dev-infra/pull/180)) |
-| [c76f891](https://github.com/angular/dev-infra/commit/c76f89188ab5a0cca9756ba22daa806684405959) | feat | allow for setting the cached configuration object imperatively ([#180](https://github.com/angular/dev-infra/pull/180)) |
-| [80b22b0](https://github.com/angular/dev-infra/commit/80b22b0d339ab57ed82f30fa58811fe28e0ba829) | feat | create a spinner utility ([#183](https://github.com/angular/dev-infra/pull/183)) |
-| [39af989](https://github.com/angular/dev-infra/commit/39af989a0862e684b7f4934fd6a61be6bc65f423) | feat | sort commits in release notes based on description |
-## Special Thanks
-Angular Robot, Charles Lyding, Joey Perrott and Paul Gschwendtner
