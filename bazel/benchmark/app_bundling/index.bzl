@@ -67,7 +67,6 @@ def app_bundle(
 
     common_esbuild_options = dict(kwargs, **{
         "config": "%s_esbuild_config" % name,
-        "testonly": True,
         "entry_point": entry_point,
         "target": target,
         "platform": platform,
