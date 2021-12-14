@@ -65,7 +65,7 @@ def app_bundle(
         visibility = visibility,
     )
 
-    common_esbuild_options = dict(kwargs, **{
+    common_esbuild_options = {
         "config": "%s_esbuild_config" % name,
         "entry_point": entry_point,
         "target": target,
@@ -73,7 +73,7 @@ def app_bundle(
         "format": format,
         "sourcemap": "external",
         "visibility": visibility,
-    })
+    }
 
     common_terser_options = {
         "visibility": visibility,
@@ -86,14 +86,13 @@ def app_bundle(
     esbuild(
         name = name,
         args = _create_esbuild_minify_options(False),
-        **common_esbuild_options
+        **dict(kwargs, **common_esbuild_options)
     )
 
     esbuild(
         name = "%s.debug" % name,
         args = _create_esbuild_minify_options(True),
-        tags = ["manual"],
-        **common_esbuild_options
+        **dict(kwargs, tags = ["manual"], **common_esbuild_options)
     )
 
     terser_minified(name = name + ".min", src = name + ".js", **common_terser_options)

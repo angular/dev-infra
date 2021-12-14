@@ -15,6 +15,7 @@ ng_module(
 app_bundle(
     name = "bundle",
     entry_point = "main_fixture.ts",
+    tags = ["some-test-tag"],
     deps = [":test_fixture_lib"],
 )
 
