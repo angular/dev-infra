@@ -129,10 +129,14 @@ export async function invokeReleaseInfoCommand(projectDir: string): Promise<Rele
 
   try {
     // Note: No progress indicator needed as that is expected to be a fast operation.
-    const {stdout} = await spawn('yarn', ['--silent', 'ng-dev', 'release', 'info', '--json'], {
-      cwd: projectDir,
-      mode: 'silent',
-    });
+    const {stdout} = await spawn(
+      yarnCommand.binary,
+      [...yarnCommand.args, '--silent', 'ng-dev', 'release', 'info', '--json'],
+      {
+        cwd: projectDir,
+        mode: 'silent',
+      },
+    );
     // The `ng-dev release info` command prints a JSON object to stdout.
     return JSON.parse(stdout.trim()) as ReleaseInfoJsonStdout;
   } catch (e) {
