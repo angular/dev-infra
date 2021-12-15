@@ -7,8 +7,8 @@ filegroup(
     srcs = glob(["*"]),
 )
 
-# Workaround for: https://github.com/bazelbuild/rules_nodejs/pull/3083.
-# TODO: Remove this once non-generated files can work with the linker.
+# Exposed `js_library` targets need to copy files to `bazel-out`. More details here:
+# https://github.com/bazelbuild/rules_nodejs/pull/3083.
 copy_to_bin(
     name = "js_lib_files",
     srcs = ["esbuild-plugin.mjs"],
