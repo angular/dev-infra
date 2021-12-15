@@ -17,11 +17,13 @@ import {getRepositoryGitUrl} from './github-urls';
 
 /** Error for failed Git commands. */
 export class GitCommandError extends Error {
-  constructor(client: GitClient, public args: string[]) {
+  // Note: Do not expose the unsanitized arguments as a public property. NodeJS
+  // could print the properties of an error instance and leak e.g. a token.
+  constructor(client: GitClient, unsanitizedArgs: string[]) {
     // Errors are not guaranteed to be caught. To ensure that we don't
     // accidentally leak the Github token that might be used in a command,
     // we sanitize the command that will be part of the error message.
-    super(`Command failed: git ${client.sanitizeConsoleOutput(args.join(' '))}`);
+    super(`Command failed: git ${client.sanitizeConsoleOutput(unsanitizedArgs.join(' '))}`);
   }
 }
 
