@@ -1,3 +1,4 @@
+"use strict";
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __defProps = Object.defineProperties;
@@ -23,18 +24,18 @@ var __spreadValues = (a, b) => {
 var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
 var __markAsModule = (target) => __defProp(target, "__esModule", { value: true });
 var __commonJS = (cb, mod) => function __require() {
-  return mod || (0, cb[Object.keys(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
-var __reExport = (target, module2, desc) => {
+var __reExport = (target, module2, copyDefault, desc) => {
   if (module2 && typeof module2 === "object" || typeof module2 === "function") {
     for (let key of __getOwnPropNames(module2))
-      if (!__hasOwnProp.call(target, key) && key !== "default")
+      if (!__hasOwnProp.call(target, key) && (copyDefault || key !== "default"))
         __defProp(target, key, { get: () => module2[key], enumerable: !(desc = __getOwnPropDesc(module2, key)) || desc.enumerable });
   }
   return target;
 };
-var __toModule = (module2) => {
-  return __reExport(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", module2 && module2.__esModule && "default" in module2 ? { get: () => module2.default, enumerable: true } : { value: module2, enumerable: true })), module2);
+var __toESM = (module2, isNodeMode) => {
+  return __reExport(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", !isNodeMode && module2 && module2.__esModule ? { get: () => module2.default, enumerable: true } : { value: module2, enumerable: true })), module2);
 };
 
 // node_modules/@actions/core/lib/utils.js
@@ -2350,11 +2351,11 @@ var require_url_state_machine = __commonJS({
     function isC0ControlPercentEncode(c) {
       return c <= 31 || c > 126;
     }
-    var extraPathPercentEncodeSet = new Set([32, 34, 35, 60, 62, 63, 96, 123, 125]);
+    var extraPathPercentEncodeSet = /* @__PURE__ */ new Set([32, 34, 35, 60, 62, 63, 96, 123, 125]);
     function isPathPercentEncode(c) {
       return isC0ControlPercentEncode(c) || extraPathPercentEncodeSet.has(c);
     }
-    var extraUserinfoPercentEncodeSet = new Set([47, 58, 59, 61, 64, 91, 92, 93, 94, 124]);
+    var extraUserinfoPercentEncodeSet = /* @__PURE__ */ new Set([47, 58, 59, 61, 64, 91, 92, 93, 94, 124]);
     function isUserinfoPercentEncode(c) {
       return isPathPercentEncode(c) || extraUserinfoPercentEncodeSet.has(c);
     }
@@ -2998,7 +2999,7 @@ var require_url_state_machine = __commonJS({
       }
       return true;
     };
-    var fileOtherwiseCodePoints = new Set([47, 92, 63, 35]);
+    var fileOtherwiseCodePoints = /* @__PURE__ */ new Set([47, 92, 63, 35]);
     URLStateMachine.prototype["parse file"] = function parseFile(c) {
       this.url.scheme = "file";
       if (c === 47 || c === 92) {
@@ -7742,7 +7743,7 @@ var require_lru_cache = __commonJS({
         if (this[DISPOSE] && this[LRU_LIST] && this[LRU_LIST].length) {
           this[LRU_LIST].forEach((hit) => this[DISPOSE](hit.key, hit.value));
         }
-        this[CACHE] = new Map();
+        this[CACHE] = /* @__PURE__ */ new Map();
         this[LRU_LIST] = new Yallist();
         this[LENGTH] = 0;
       }
@@ -7973,7 +7974,7 @@ var require_range = __commonJS({
         const compRe = loose ? re[t.COMPARATORLOOSE] : re[t.COMPARATOR];
         const rangeList = range.split(" ").map((comp) => parseComparator(comp, this.options)).join(" ").split(/\s+/).map((comp) => replaceGTE0(comp, this.options)).filter(this.options.loose ? (comp) => !!comp.match(compRe) : () => true).map((comp) => new Comparator(comp, this.options));
         const l = rangeList.length;
-        const rangeMap = new Map();
+        const rangeMap = /* @__PURE__ */ new Map();
         for (const comp of rangeList) {
           if (isNullSet(comp))
             return [comp];
@@ -8692,7 +8693,7 @@ var require_subset = __commonJS({
         else
           dom = [new Comparator(">=0.0.0")];
       }
-      const eqSet = new Set();
+      const eqSet = /* @__PURE__ */ new Set();
       let gt, lt;
       for (const c of sub) {
         if (c.operator === ">" || c.operator === ">=")
@@ -10507,7 +10508,7 @@ var require_ansi_styles = __commonJS({
       return styles;
     };
     function assembleStyles() {
-      const codes = new Map();
+      const codes = /* @__PURE__ */ new Map();
       const styles = {
         modifier: {
           reset: [0, 0],
@@ -10757,7 +10758,7 @@ var require_templates = __commonJS({
     var STYLE_REGEX = /(?:^|\.)(\w+)(?:\(([^)]*)\))?/g;
     var STRING_REGEX = /^(['"])((?:\\.|(?!\1)[^\\])*)\1$/;
     var ESCAPE_REGEX = /\\(u(?:[a-f\d]{4}|{[a-f\d]{1,6}})|x[a-f\d]{2}|.)|([^\\])/gi;
-    var ESCAPES = new Map([
+    var ESCAPES = /* @__PURE__ */ new Map([
       ["n", "\n"],
       ["r", "\r"],
       ["t", "	"],
@@ -20435,7 +20436,7 @@ var require_distinct = __commonJS({
     var noop_1 = require_noop();
     function distinct(keySelector, flushes) {
       return lift_1.operate(function(source, subscriber) {
-        var distinctKeys = new Set();
+        var distinctKeys = /* @__PURE__ */ new Set();
         source.subscribe(new OperatorSubscriber_1.OperatorSubscriber(subscriber, function(value) {
           var key = keySelector ? keySelector(value) : value;
           if (!distinctKeys.has(key)) {
@@ -20870,7 +20871,7 @@ var require_groupBy = __commonJS({
         } else {
           duration = elementOrOptions.duration, element = elementOrOptions.element, connector = elementOrOptions.connector;
         }
-        var groups = new Map();
+        var groups = /* @__PURE__ */ new Map();
         var notify = function(cb) {
           groups.forEach(cb);
           cb(subscriber);
@@ -25225,7 +25226,7 @@ var require_onetime = __commonJS({
   "node_modules/onetime/index.js"(exports2, module2) {
     "use strict";
     var mimicFn = require_mimic_fn();
-    var calledFunctions = new WeakMap();
+    var calledFunctions = /* @__PURE__ */ new WeakMap();
     var onetime = (function_, options = {}) => {
       if (typeof function_ !== "function") {
         throw new TypeError("Expected a function");
@@ -27874,7 +27875,7 @@ var require_buffer_list = __commonJS({
     function copyBuffer(src, target, offset) {
       Buffer2.prototype.copy.call(src, target, offset);
     }
-    module2.exports = function() {
+    module2.exports = /* @__PURE__ */ function() {
       function BufferList() {
         _classCallCheck(this, BufferList);
         this.head = null;
@@ -42600,13 +42601,13 @@ var require_dist = __commonJS({
     }
     function render(value) {
       var context = {
-        fragments: new Map()
+        fragments: /* @__PURE__ */ new Map()
       };
       var rend = renderObject(void 0, value, context);
-      var rendered = new Map();
+      var rendered = /* @__PURE__ */ new Map();
       var executingContext = context;
       var currentContext = {
-        fragments: new Map()
+        fragments: /* @__PURE__ */ new Map()
       };
       while (executingContext.fragments.size > 0) {
         for (var _i = 0, _a = Array.from(executingContext.fragments.entries()); _i < _a.length; _i++) {
@@ -42617,18 +42618,18 @@ var require_dist = __commonJS({
         }
         executingContext = currentContext;
         currentContext = {
-          fragments: new Map()
+          fragments: /* @__PURE__ */ new Map()
         };
       }
       return rend + Array.from(rendered.values()).join("");
     }
     function fragmentToString(value) {
       var context = {
-        fragments: new Map()
+        fragments: /* @__PURE__ */ new Map()
       };
       renderObject(void 0, value, context);
       var currentContext = {
-        fragments: new Map()
+        fragments: /* @__PURE__ */ new Map()
       };
       var output = "";
       for (var _i = 0, _a = Array.from(context.fragments.entries()); _i < _a.length; _i++) {
@@ -42934,7 +42935,7 @@ var require_git_client = __commonJS({
         return this.runGraceful(["checkout", branchOrRevision], { stdio: "ignore" }).status === 0;
       }
       allChangesFilesSince(shaOrRef = "HEAD") {
-        return Array.from(new Set([
+        return Array.from(/* @__PURE__ */ new Set([
           ...gitOutputAsArray(this.runGraceful(["diff", "--name-only", "--diff-filter=d", shaOrRef])),
           ...gitOutputAsArray(this.runGraceful(["ls-files", "--others", "--exclude-standard"]))
         ]));
@@ -46023,7 +46024,7 @@ var require_context2 = __commonJS({
         });
       }
       asCommitGroups(commits) {
-        const groups = new Map();
+        const groups = /* @__PURE__ */ new Map();
         commits.forEach((commit) => {
           const key = commit.groupName;
           const groupCommits = groups.get(key) || [];
@@ -46063,7 +46064,7 @@ var require_context2 = __commonJS({
         };
       }
       unique(field) {
-        const set = new Set();
+        const set = /* @__PURE__ */ new Set();
         return (commit) => {
           const include = !set.has(commit[field]);
           set.add(commit[field]);
@@ -52239,7 +52240,7 @@ var require_get_commits_in_range = __commonJS({
       const commits = [];
       const commitsForHead = fetchCommitsForRevisionRange(client, `${baseRef}..${headRef}`);
       const commitsForBase = fetchCommitsForRevisionRange(client, `${headRef}..${baseRef}`);
-      const knownCommitsOnlyInBase = new Map();
+      const knownCommitsOnlyInBase = /* @__PURE__ */ new Map();
       for (const commit of commitsForBase) {
         const id = (0, unique_commit_id_1.computeUniqueIdFromCommitMessage)(commit);
         const numSimilarCommits = (_a = knownCommitsOnlyInBase.get(id)) != null ? _a : 0;
@@ -56860,7 +56861,6 @@ var require_utils7 = __commonJS({
 });
 
 // tools/local-actions/changelog/lib/main.mjs
-"use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var core = require_core();
 var github_1 = require_github();
