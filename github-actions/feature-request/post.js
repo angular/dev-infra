@@ -1,6 +1,8 @@
+"use strict";
 var __defProp = Object.defineProperty;
 var __defProps = Object.defineProperties;
 var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
+var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getOwnPropSymbols = Object.getOwnPropertySymbols;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __propIsEnum = Object.prototype.propertyIsEnumerable;
@@ -18,7 +20,7 @@ var __spreadValues = (a, b) => {
 };
 var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
 var __commonJS = (cb, mod) => function __require() {
-  return mod || (0, cb[Object.keys(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
 
 // node_modules/@actions/core/lib/utils.js
@@ -2223,11 +2225,11 @@ var require_url_state_machine = __commonJS({
     function isC0ControlPercentEncode(c) {
       return c <= 31 || c > 126;
     }
-    var extraPathPercentEncodeSet = new Set([32, 34, 35, 60, 62, 63, 96, 123, 125]);
+    var extraPathPercentEncodeSet = /* @__PURE__ */ new Set([32, 34, 35, 60, 62, 63, 96, 123, 125]);
     function isPathPercentEncode(c) {
       return isC0ControlPercentEncode(c) || extraPathPercentEncodeSet.has(c);
     }
-    var extraUserinfoPercentEncodeSet = new Set([47, 58, 59, 61, 64, 91, 92, 93, 94, 124]);
+    var extraUserinfoPercentEncodeSet = /* @__PURE__ */ new Set([47, 58, 59, 61, 64, 91, 92, 93, 94, 124]);
     function isUserinfoPercentEncode(c) {
       return isPathPercentEncode(c) || extraUserinfoPercentEncodeSet.has(c);
     }
@@ -2871,7 +2873,7 @@ var require_url_state_machine = __commonJS({
       }
       return true;
     };
-    var fileOtherwiseCodePoints = new Set([47, 92, 63, 35]);
+    var fileOtherwiseCodePoints = /* @__PURE__ */ new Set([47, 92, 63, 35]);
     URLStateMachine.prototype["parse file"] = function parseFile(c) {
       this.url.scheme = "file";
       if (c === 47 || c === 92) {
@@ -10739,7 +10741,7 @@ var require_lru_cache = __commonJS({
         if (this[DISPOSE] && this[LRU_LIST] && this[LRU_LIST].length) {
           this[LRU_LIST].forEach((hit) => this[DISPOSE](hit.key, hit.value));
         }
-        this[CACHE] = new Map();
+        this[CACHE] = /* @__PURE__ */ new Map();
         this[LRU_LIST] = new Yallist();
         this[LENGTH] = 0;
       }
@@ -11587,7 +11589,6 @@ var require_utils5 = __commonJS({
 });
 
 // github-actions/feature-request/src/post.mjs
-"use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var utils_1 = require_utils5();
 async function run() {
