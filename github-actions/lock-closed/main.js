@@ -4105,7 +4105,7 @@ var require_lib2 = __commonJS({
     var Headers = class {
       constructor() {
         let init = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : void 0;
-        this[MAP] = Object.create(null);
+        this[MAP] = /* @__PURE__ */ Object.create(null);
         if (init instanceof Headers) {
           const rawHeaders = init.raw();
           const headerNames = Object.keys(rawHeaders);
