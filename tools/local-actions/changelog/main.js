@@ -4120,7 +4120,7 @@ var require_lib2 = __commonJS({
     var Headers = class {
       constructor() {
         let init = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : void 0;
-        this[MAP] = Object.create(null);
+        this[MAP] = /* @__PURE__ */ Object.create(null);
         if (init instanceof Headers) {
           const rawHeaders = init.raw();
           const headerNames = Object.keys(rawHeaders);
@@ -10881,7 +10881,7 @@ var require_source = __commonJS({
       "ansi256",
       "ansi16m"
     ];
-    var styles = Object.create(null);
+    var styles = /* @__PURE__ */ Object.create(null);
     var applyOptions = (object, options = {}) => {
       if (options.level && !(Number.isInteger(options.level) && options.level >= 0 && options.level <= 3)) {
         throw new Error("The `level` option should be an integer from 0 to 3");
