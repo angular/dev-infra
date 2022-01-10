@@ -15944,13 +15944,13 @@ var require_git_raw_commits = __commonJS({
     function getGitArgs(gitOpts) {
       const gitFormat = template("--format=<%= format %>%n" + DELIMITER)(gitOpts);
       const gitFromTo = [gitOpts.from, gitOpts.to].filter(Boolean).join("..");
-      const gitArgs = ["log", gitFormat, gitFromTo];
+      const gitArgs = ["log", gitFormat, gitFromTo].concat(dargs(gitOpts, {
+        excludes: ["debug", "from", "to", "format", "path"]
+      }));
       if (gitOpts.path) {
         gitArgs.push("--", gitOpts.path);
       }
-      return gitArgs.concat(dargs(gitOpts, {
-        excludes: ["debug", "from", "to", "format", "path"]
-      }));
+      return gitArgs;
     }
     function gitRawCommits(rawGitOpts, rawExecOpts) {
       const readable = new stream.Readable();
@@ -21733,7 +21733,7 @@ var require_conventional_commits_parser = __commonJS({
           "resolved"
         ],
         issuePrefixes: ["#"],
-        noteKeywords: ["BREAKING CHANGE"],
+        noteKeywords: ["BREAKING CHANGE", "BREAKING-CHANGE"],
         fieldPattern: /^-(.*?)-$/,
         revertPattern: /^Revert\s"([\s\S]*)"\s*This reverts commit (\w*)\./,
         revertCorrespondence: ["header", "hash"],
@@ -26333,15 +26333,19 @@ var require_Observable = __commonJS({
         var _this = this;
         promiseCtor = getPromiseCtor(promiseCtor);
         return new promiseCtor(function(resolve, reject) {
-          var subscription;
-          subscription = _this.subscribe(function(value) {
-            try {
-              next(value);
-            } catch (err) {
-              reject(err);
-              subscription === null || subscription === void 0 ? void 0 : subscription.unsubscribe();
-            }
-          }, reject, resolve);
+          var subscriber = new Subscriber_1.SafeSubscriber({
+            next: function(value) {
+              try {
+                next(value);
+              } catch (err) {
+                reject(err);
+                subscriber.unsubscribe();
+              }
+            },
+            error: reject,
+            complete: resolve
+          });
+          _this.subscribe(subscriber);
         });
       };
       Observable2.prototype._subscribe = function(subscriber) {
@@ -27555,7 +27559,9 @@ var require_AsapAction = __commonJS({
         if (delay != null && delay > 0 || delay == null && this.delay > 0) {
           return _super.prototype.recycleAsyncId.call(this, scheduler, id, delay);
         }
-        if (scheduler.actions.length === 0) {
+        if (!scheduler.actions.some(function(action) {
+          return action.id === id;
+        })) {
           immediateProvider_1.immediateProvider.clearImmediate(id);
           scheduler._scheduled = void 0;
         }
@@ -27697,20 +27703,19 @@ var require_AsapScheduler = __commonJS({
       }
       AsapScheduler2.prototype.flush = function(action) {
         this._active = true;
+        var flushId = this._scheduled;
         this._scheduled = void 0;
         var actions = this.actions;
         var error;
-        var index = -1;
         action = action || actions.shift();
-        var count = actions.length;
         do {
           if (error = action.execute(action.state, action.delay)) {
             break;
           }
-        } while (++index < count && (action = actions.shift()));
+        } while ((action = actions[0]) && action.id === flushId && actions.shift());
         this._active = false;
         if (error) {
-          while (++index < count && (action = actions.shift())) {
+          while ((action = actions[0]) && action.id === flushId && actions.shift()) {
             action.unsubscribe();
           }
           throw error;
@@ -27922,7 +27927,9 @@ var require_AnimationFrameAction = __commonJS({
         if (delay != null && delay > 0 || delay == null && this.delay > 0) {
           return _super.prototype.recycleAsyncId.call(this, scheduler, id, delay);
         }
-        if (scheduler.actions.length === 0) {
+        if (!scheduler.actions.some(function(action) {
+          return action.id === id;
+        })) {
           animationFrameProvider_1.animationFrameProvider.cancelAnimationFrame(id);
           scheduler._scheduled = void 0;
         }
@@ -27969,20 +27976,19 @@ var require_AnimationFrameScheduler = __commonJS({
       }
       AnimationFrameScheduler2.prototype.flush = function(action) {
         this._active = true;
+        var flushId = this._scheduled;
         this._scheduled = void 0;
         var actions = this.actions;
         var error;
-        var index = -1;
         action = action || actions.shift();
-        var count = actions.length;
         do {
           if (error = action.execute(action.state, action.delay)) {
             break;
           }
-        } while (++index < count && (action = actions.shift()));
+        } while ((action = actions[0]) && action.id === flushId && actions.shift());
         this._active = false;
         if (error) {
-          while (++index < count && (action = actions.shift())) {
+          while ((action = actions[0]) && action.id === flushId && actions.shift()) {
             action.unsubscribe();
           }
           throw error;
@@ -32952,23 +32958,44 @@ var require_repeat = __commonJS({
     var empty_1 = require_empty();
     var lift_1 = require_lift();
     var OperatorSubscriber_1 = require_OperatorSubscriber();
-    function repeat(count) {
-      if (count === void 0) {
-        count = Infinity;
+    var innerFrom_1 = require_innerFrom();
+    var timer_1 = require_timer();
+    function repeat(countOrConfig) {
+      var _a;
+      var count = Infinity;
+      var delay;
+      if (countOrConfig != null) {
+        if (typeof countOrConfig === "object") {
+          _a = countOrConfig.count, count = _a === void 0 ? Infinity : _a, delay = countOrConfig.delay;
+        } else {
+          count = countOrConfig;
+        }
       }
       return count <= 0 ? function() {
         return empty_1.EMPTY;
       } : lift_1.operate(function(source, subscriber) {
         var soFar = 0;
-        var innerSub;
-        var subscribeForRepeat = function() {
+        var sourceSub;
+        var resubscribe = function() {
+          sourceSub === null || sourceSub === void 0 ? void 0 : sourceSub.unsubscribe();
+          sourceSub = null;
+          if (delay != null) {
+            var notifier = typeof delay === "number" ? timer_1.timer(delay) : innerFrom_1.innerFrom(delay(soFar));
+            var notifierSubscriber_1 = new OperatorSubscriber_1.OperatorSubscriber(subscriber, function() {
+              notifierSubscriber_1.unsubscribe();
+              subscribeToSource();
+            });
+            notifier.subscribe(notifierSubscriber_1);
+          } else {
+            subscribeToSource();
+          }
+        };
+        var subscribeToSource = function() {
           var syncUnsub = false;
-          innerSub = source.subscribe(new OperatorSubscriber_1.OperatorSubscriber(subscriber, void 0, function() {
+          sourceSub = source.subscribe(new OperatorSubscriber_1.OperatorSubscriber(subscriber, void 0, function() {
             if (++soFar < count) {
-              if (innerSub) {
-                innerSub.unsubscribe();
-                innerSub = null;
-                subscribeForRepeat();
+              if (sourceSub) {
+                resubscribe();
               } else {
                 syncUnsub = true;
               }
@@ -32977,12 +33004,10 @@ var require_repeat = __commonJS({
             }
           }));
           if (syncUnsub) {
-            innerSub.unsubscribe();
-            innerSub = null;
-            subscribeForRepeat();
+            resubscribe();
           }
         };
-        subscribeForRepeat();
+        subscribeToSource();
       });
     }
     exports2.repeat = repeat;
@@ -33786,9 +33811,12 @@ var require_throttle = __commonJS({
       leading: true,
       trailing: false
     };
-    function throttle(durationSelector, _a) {
-      var _b = _a === void 0 ? exports2.defaultThrottleConfig : _a, leading = _b.leading, trailing = _b.trailing;
+    function throttle(durationSelector, config) {
+      if (config === void 0) {
+        config = exports2.defaultThrottleConfig;
+      }
       return lift_1.operate(function(source, subscriber) {
+        var leading = config.leading, trailing = config.trailing;
         var hasValue = false;
         var sendValue = null;
         var throttled = null;
