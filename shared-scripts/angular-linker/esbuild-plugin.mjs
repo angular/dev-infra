@@ -47,13 +47,20 @@ async function assertNoPartialDeclaration(filePath, ast, traverseFn) {
  *   more here: https://esbuild.github.io/plugins/#filters.
  * @param ensureNoPartialDeclaration Whether an additional check ensuring there are
  *   no partial declarations should run.
+ * @param linkerOptions configuration options for the linker environment.
+ *   See: https://github.com/angular/angular/blob/master/packages/compiler-cli/linker/src/file_linker/linker_options.ts
  */
-export async function createLinkerEsbuildPlugin(filter, ensureNoPartialDeclaration) {
+export async function createLinkerEsbuildPlugin(
+  filter,
+  ensureNoPartialDeclaration,
+  linkerOptions = {},
+) {
   const linkerBabelPlugin = createEs2015LinkerPlugin({
     fileSystem: new NodeJSFileSystem(),
     logger: new ConsoleLogger(LogLevel.warn),
     // We enable JIT mode as unit tests also will rely on the linked ESM files.
     linkerJitMode: true,
+    ...linkerOptions,
   });
 
   return {
