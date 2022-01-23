@@ -1,40 +1,40 @@
 {
-  "pinVersions": false,
-  "semanticCommits": true,
-  "semanticPrefix": "build",
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "semanticCommits": "enabled",
+  "semanticCommitType": "build",
+  "semanticCommitScope": "",
+  "automerge": false,
   "separateMajorMinor": false,
-  "prHourlyLimit": 2,
-  "labels": ["comp: build", "dependencies", "action: merge"],
   "timezone": "America/Tijuana",
+  "prHourlyLimit": 3,
+  "labels": ["comp: build", "dependencies", "action: merge"],
   "lockFileMaintenance": {
     "enabled": true
   },
-  "schedule": ["after 10pm every weekday", "before 4am every weekday", "every weekend"],
+  "enabledManagers": ["npm", "bazel", "github-actions"],
   "baseBranches": ["main"],
-  "ignoreDeps": ["@types/node", "@types/selenium-webdriver", "selenium-webdriver"],
-  "packageFiles": ["WORKSPACE", "package.json"],
   "packageRules": [
-    {
-      "packagePatterns": ["^@bazel/.*", "^build_bazel.*"],
-      "groupName": "bazel",
-      "pinVersions": false
-    },
-    {
-      "packageNames": ["typescript"],
-      "updateTypes": ["major"],
-      "enabled": false
-    },
-    {
-      "matchCurrentVersion": "0.0.0-PLACEHOLDER",
-      "enabled": false
-    },
     {
       "matchPackagePatterns": ["*"],
       "matchUpdateTypes": ["minor", "patch"],
-      "matchCurrentVersion": ">=1",
       "groupName": "all non-major dependencies",
-      "groupSlug": "all-minor-patch",
-      "schedule": ["after 1am on Thursday"]
+      "schedule": ["after 1am every weekday", "every weekend"]
+    },
+    {
+      "matchPackagePatterns": ["^@bazel/.*", "^build_bazel.*"],
+      "groupName": "bazel setup",
+      "schedule": ["at any time"]
+    },
+    {
+      "matchPackagePrefixes": ["@angular/", "@angular-devkit", "@schematics/"],
+      "followTag": "next",
+      "groupName": "angular dependencies",
+      "schedule": ["at any time"]
+    },
+    {
+      "matchPackageNames": ["typescript"],
+      "updateTypes": ["major"],
+      "enabled": false
     }
   ]
 }
