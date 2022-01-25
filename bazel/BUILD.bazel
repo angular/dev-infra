@@ -9,6 +9,7 @@ filegroup(
         "//bazel/browsers:files",
         "//bazel/constraints:files",
         "//bazel/esbuild:files",
+        "//bazel/http-server:files",
         "//bazel/integration:files",
         "//bazel/remote-execution:files",
         "//bazel/spec-bundling:files",

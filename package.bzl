@@ -9,6 +9,7 @@ noStampSubstitutions = dict(stampSubstitutions, **{})
 basePackageSubstitutions = {
     "    \"prepare\": \"husky install\",\n": "",
     "@dev-infra//bazel/": "@npm//@angular/dev-infra-private/bazel/",
+    "rlocation \"dev-infra/": "rlocation \"npm/@angular/dev-infra-private/",
     "//bazel/": "@npm//@angular/dev-infra-private/bazel/",
     "//bazel:": "@npm//@angular/dev-infra-private/bazel:",
     "//ng-dev/": "@npm//@angular/dev-infra-private/ng-dev/",
