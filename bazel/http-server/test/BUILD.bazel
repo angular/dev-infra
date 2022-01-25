@@ -1,0 +1,16 @@
+load("//bazel/http-server:index.bzl", "http_server")
+load("//tools:defaults.bzl", "ts_library")
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = ["main.ts"],
+)
+
+http_server(
+    name = "server",
+    testonly = True,
+    srcs = ["index.html"],
+    environment_variables = ["GOOGLE_MAPS_API_KEY"],
+    deps = [":test_lib"],
+)
