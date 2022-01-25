@@ -8,7 +8,9 @@
 
 /// <reference lib="dom" />
 
-const span = document.createElement('span');
-span.innerHTML = 'Hello!';
+const spanEl = document.createElement('span');
+const secretValue = (window as any)['GOOGLE_MAPS_API_KEY']!;
 
-document.body.appendChild(span);
+spanEl.innerHTML = `My key: ${secretValue}`;
+
+document.body.appendChild(spanEl);

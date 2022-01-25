@@ -105,7 +105,7 @@ export class HttpServer {
 
       if (resolvedPath === null) {
         res.statusCode = 404;
-        res.end('Page not found');
+        res.end('Not found - Error 404');
         return;
       }
 
