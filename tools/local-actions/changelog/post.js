@@ -4785,7 +4785,7 @@ var require_dist_node5 = __commonJS({
     var isPlainObject = require_is_plain_object();
     var nodeFetch = _interopDefault(require_lib2());
     var requestError = require_dist_node4();
-    var VERSION = "5.6.2";
+    var VERSION = "5.6.3";
     function getBufferResponse(response) {
       return response.arrayBuffer();
     }
