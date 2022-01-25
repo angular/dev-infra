@@ -1,8 +1,9 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_test")
 load("//bazel/http-server:index.bzl", "http_server")
 load("//tools:defaults.bzl", "ts_library")
 
 ts_library(
-    name = "test_lib",
+    name = "app_lib",
     testonly = True,
     srcs = ["main.ts"],
 )
@@ -12,5 +13,35 @@ http_server(
     testonly = True,
     srcs = ["index.html"],
     environment_variables = ["GOOGLE_MAPS_API_KEY"],
-    deps = [":test_lib"],
+    deps = [":app_lib"],
+)
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = ["server-test.ts"],
+    deps = [
+        "@npm//@bazel/runfiles",
+        "@npm//@types/selenium-webdriver",
+        "@npm//@types/wait-on",
+        "@npm//selenium-webdriver",
+        "@npm//wait-on",
+    ],
+)
+
+nodejs_test(
+    name = "test",
+    # Pass the chromium and chromedriver binaries as arguments to the test.
+    # These variables are made available by the toolchain alias.
+    args = [
+        "$(CHROMIUM)",
+        "$(CHROMEDRIVER)",
+    ],
+    data = [
+        ":server",
+        ":test_lib",
+        "//bazel/browsers/chromium",
+    ],
+    entry_point = ":server-test.ts",
+    toolchains = ["//bazel/browsers/chromium:toolchain_alias"],
 )

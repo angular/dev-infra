@@ -138,7 +138,7 @@ http_server_rule = rule(
 )
 
 def http_server(name, testonly = False, port = 4200, tags = [], **kwargs):
-    """Creates a HTTP server that can depend on individual bazel targets. The server uses
+    """Creates an HTTP server that can depend on individual bazel targets. The server uses
       bazel runfile resolution in order to work with Bazel package paths. e.g. developers can
       request files through their manifest path: "my_workspace/src/dev-app/my-genfile"."""
 
