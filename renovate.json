@@ -16,6 +16,7 @@
   "packageRules": [
     {
       "matchPackagePatterns": ["*"],
+      "excludePackageNames": ["@types/node"],
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "all non-major dependencies",
       "schedule": ["after 1am every weekday", "every weekend"]
