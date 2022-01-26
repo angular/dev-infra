@@ -88,7 +88,9 @@ export async function invokeReleaseBuildCommand(
   // a different publish branch and the current `PATH` will point to the Yarn version
   // that invoked the release tool. More details in the function description.
   const yarnCommand = await resolveYarnScriptForProject(projectDir);
-  const spinner = new Spinner('Building release output.');
+  // Note: We explicitly mention that this can take a few minutes, so that it's obvious
+  // to caretakers that it can take longer than just a few seconds.
+  const spinner = new Spinner('Building release output. This can take a few minutes.');
 
   try {
     // Since we expect JSON to be printed from the `ng-dev release build` command,
