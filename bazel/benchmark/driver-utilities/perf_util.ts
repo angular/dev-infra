@@ -5,9 +5,13 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {mkdirSync} from 'fs';
+import {resolve} from 'path';
 
 export {verifyNoBrowserErrors} from './e2e_util';
+
+/** Absolute path to the directory where benchmark results should be written to. */
+const testOutputDirectory =
+  process.env.TEST_UNDECLARED_OUTPUTS_DIR ?? resolve('./dist/benchmark_results');
 
 import {
   SeleniumWebDriverAdapter,
@@ -71,16 +75,13 @@ function createBenchpressRunner(): Runner {
   if (process.env.GIT_SHA) {
     runId = process.env.GIT_SHA + ' ' + runId;
   }
-  const resultsFolder = './dist/benchmark_results';
-  mkdirSync(resultsFolder, {
-    recursive: true,
-  });
+
   const providers: StaticProvider[] = [
     SeleniumWebDriverAdapter.PROTRACTOR_PROVIDERS,
     {provide: Options.FORCE_GC, useValue: globalOptions.forceGc},
     {provide: Options.DEFAULT_DESCRIPTION, useValue: {'runId': runId}},
     JsonFileReporter.PROVIDERS,
-    {provide: JsonFileReporter.PATH, useValue: resultsFolder},
+    {provide: JsonFileReporter.PATH, useValue: testOutputDirectory},
   ];
   if (!globalOptions.dryRun) {
     providers.push({provide: Validator, useExisting: RegressionSlopeValidator});
