@@ -1,0 +1,18 @@
+load("//bazel/benchmark/component_benchmark:component_benchmark.bzl", "component_benchmark")
+
+component_benchmark(
+    name = "perf_test",
+    driver = "app.perf.spec.ts",
+    driver_deps = [
+        "//bazel/benchmark/driver-utilities",
+        "@npm//protractor",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+    ],
+    ng_deps = [
+        "@npm//@angular/core",
+        "@npm//@angular/platform-browser",
+    ],
+    ng_srcs = ["app.module.ts"],
+    prefix = "",
+)
