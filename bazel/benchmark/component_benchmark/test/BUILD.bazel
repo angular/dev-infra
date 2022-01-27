@@ -1,7 +1,7 @@
 load("//bazel/benchmark/component_benchmark:component_benchmark.bzl", "component_benchmark")
 
 component_benchmark(
-    name = "perf_test",
+    name = "test",
     driver = "app.perf.spec.ts",
     driver_deps = [
         "//bazel/benchmark/driver-utilities",

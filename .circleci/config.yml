@@ -108,9 +108,9 @@ jobs:
       - *restore_cache
       - setup_bazel_config
       - yarn_install
-      - run:
-          name: Run bazel tests
-          command: yarn bazel test //...
+      # Run all tests in the workspace. Also explicitly add the component benchmark test. Benchmark
+      # tests are not run by default on CI but we want to verify the macro works.
+      - run: yarn bazel test -- //... //bazel/benchmark/component_benchmark/test
       - prepare_and_store_test_results
       - *save_cache
 
