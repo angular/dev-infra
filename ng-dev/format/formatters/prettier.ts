@@ -21,7 +21,7 @@ export class Prettier extends Formatter {
 
   override binaryFilePath = join(this.git.baseDir, 'node_modules/.bin/prettier');
 
-  override defaultFileMatcher = ['**/*.{t,j,cj,mj}s'];
+  override defaultFileMatcher = ['**/*.{js,cjs,mjs}', '**/*.{ts,cts,mts}', '**/*.json'];
 
   /**
    * The configuration path of the prettier config, obtained during construction to prevent needing
