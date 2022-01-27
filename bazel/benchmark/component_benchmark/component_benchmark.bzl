@@ -1,8 +1,19 @@
 load("//bazel/benchmark/app_bundling:index.bzl", "app_bundle")
+load("//bazel/http-server:index.bzl", "http_server")
+load("//bazel:expand_template.bzl", "expand_template")
 load("@npm//@angular/bazel:index.bzl", "ng_module")
 load("@npm//@bazel/typescript:index.bzl", "ts_library")
-load("@npm//@bazel/concatjs:index.bzl", "concatjs_devserver")
 load(":benchmark_test.bzl", "benchmark_test")
+
+def copy_default_index_html(output_name, bundle_target_name):
+    """Copies the default `index.html` file to the current package."""
+
+    expand_template(
+        name = "copy_default_index_html_%s" % output_name,
+        output_name = output_name,
+        template = "//bazel/benchmark/component_benchmark/defaults:index-template.html",
+        substitutions = {"{bundle_target_name}": bundle_target_name},
+    )
 
 def copy_default_file(origin, destination):
     """
@@ -53,9 +64,10 @@ def component_benchmark(
     (assets): The default index.html expects that the root selector for
     the benchmark app is "app-root".
 
-    (entry_point): The default entry_point expects a file named "app.module" to export
-    the root NgModule for the benchmark application. It also expects that the
-    root NgModule is named "AppModule".
+    (entry_point): The default entry_point expects a file named "app.module" to
+    export the root NgModule for the benchmark application. It also expects that the
+    root NgModule is named "AppModule" and has a bootstrap component declared with
+    the selector `app-root`.
 
     TIP: The server is named `name + "_server"` so that you can view/debug the
     app.
@@ -95,7 +107,8 @@ def component_benchmark(
     if not assets:
         html = prefix + "index.html"
         assets = [html]
-        copy_default_file("index.html", html)
+
+        copy_default_index_html(html, app_main)
 
     if not styles:
         css = prefix + "styles.css"
@@ -131,16 +144,11 @@ def component_benchmark(
     )
 
     # The server for our application.
-    # TODO: Move away from ConcatJS devserver and use shared devserver from dev-infra
-    # that is based on the one used in components.
-    concatjs_devserver(
+    http_server(
         name = server,
-        bootstrap = ["@npm//:node_modules/zone.js/bundles/zone.umd.js"],
-        port = 4200,
-        static_files = assets + styles,
-        deps = [":" + app_main + ".debug.min.js"],
+        srcs = assets + styles,
+        deps = [":%s.min.js" % app_main],
         additional_root_paths = ["//bazel/benchmark/component_benchmark/defaults"],
-        serving_path = "/app_bundle.js",
     )
 
     # Runs a protractor test that's set up to use @angular/benchpress.

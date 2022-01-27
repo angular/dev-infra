@@ -7,7 +7,7 @@ filegroup(
 )
 
 exports_files([
-    "index.html",
+    "index-template.html",
     "index.ts",
     "styles.css",
 ])

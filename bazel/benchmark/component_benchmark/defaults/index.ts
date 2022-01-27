@@ -6,14 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-// @ts-ignore Cannot find module
-import {enableProdMode} from '@angular/core';
+import 'zone.js/dist/zone';
 
-// @ts-ignore Cannot find module
+import {enableProdMode} from '@angular/core';
 import {platformBrowser} from '@angular/platform-browser';
 
-// @ts-ignore Cannot find module
-import {AppModuleNgFactory} from './app.module.ngfactory';
+// @ts-ignore This file needs to be defined by the consumer.
+import {AppModule} from './app.module';
 
 enableProdMode();
-platformBrowser().bootstrapModuleFactory(AppModuleNgFactory);
+platformBrowser().bootstrapModule(AppModule);
