@@ -5,13 +5,8 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {resolve} from 'path';
 
 export {verifyNoBrowserErrors} from './e2e_util';
-
-/** Absolute path to the directory where benchmark results should be written to. */
-const testOutputDirectory =
-  process.env.TEST_UNDECLARED_OUTPUTS_DIR ?? resolve('./dist/benchmark_results');
 
 import {
   SeleniumWebDriverAdapter,
@@ -74,6 +69,15 @@ function createBenchpressRunner(): Runner {
   let runId = uuidv1();
   if (process.env.GIT_SHA) {
     runId = process.env.GIT_SHA + ' ' + runId;
+  }
+
+  const testOutputDirectory = process.env.TEST_UNDECLARED_OUTPUTS_DIR;
+
+  if (testOutputDirectory === undefined) {
+    throw new Error(
+      'Unexpected execution outside of a Bazel test. ' +
+        'Missing `TEST_UNDECLARED_OUTPUTS_DIR` environment variable.',
+    );
   }
 
   const providers: StaticProvider[] = [

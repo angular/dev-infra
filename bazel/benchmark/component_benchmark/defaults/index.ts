@@ -11,7 +11,7 @@ import 'zone.js/dist/zone';
 import {enableProdMode} from '@angular/core';
 import {platformBrowser} from '@angular/platform-browser';
 
-// @ts-ignore This file needs to be defined by the consumer.
+// @ts-ignore This file will be provided by the consumer.
 import {AppModule} from './app.module';
 
 enableProdMode();
