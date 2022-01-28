@@ -36,15 +36,15 @@ def component_benchmark(
         driver,
         driver_deps,
         ng_srcs,
-        ng_deps,
+        ng_deps = [
+            "@npm//@angular/core",
+            "@npm//@angular/platform-browser",
+            "@npm//zone.js",
+        ],
         ng_assets = [],
         assets = None,
         styles = None,
-        entry_point = None,
-        entry_point_deps = [
-            "@npm//@angular/core",
-            "@npm//@angular/platform-browser",
-        ]):
+        entry_point = None):
     """
     Runs a benchmark test against the given angular app using the given driver.
 
@@ -82,8 +82,8 @@ def component_benchmark(
       ng_assets: The static assets for the angular app
       assets: Static files
       styles: Stylesheets
-      entry_point: Main entry point for the angular app
-      entry_point_deps: Entry point's dependencies
+      entry_point: Main entry point for the angular app. If specified, must
+        be part of the `ng_srcs`
     """
     app_lib = name + "_app_lib"
     app_main = name + "_app_main"
@@ -127,11 +127,11 @@ def component_benchmark(
         tsconfig = "//bazel/benchmark/component_benchmark:tsconfig-e2e.json",
     )
 
-    # Bundle the application (needed by concatjs_devserver).
+    # Bundle the application (needed for the http server).
     app_bundle(
         name = app_main,
         entry_point = entry_point,
-        deps = [":" + app_lib] + entry_point_deps,
+        deps = [":" + app_lib],
     )
 
     # The ts_library for the driver that runs tests against the benchmark app.
