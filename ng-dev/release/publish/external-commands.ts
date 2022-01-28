@@ -168,7 +168,10 @@ export async function invokeYarnInstallCommand(projectDir: string): Promise<void
     // TODO: Consider using an Ora spinner instead to ensure minimal console output.
     await spawn(
       yarnCommand.binary,
-      [...yarnCommand.args, 'install', '--frozen-lockfile', '--non-interactive'],
+      // TODO: Switch this to `--immutable` when all active release-trains/repositories
+      // run with Yarn berry/v2+. Note: We do not need `--non-interactive` here as we
+      // spawn this child process using `stdio: pipe` which results in `isTTY = false`.
+      [...yarnCommand.args, 'install', '--frozen-lockfile'],
       {cwd: projectDir},
     );
     info(green('  ✓   Installed project dependencies.'));

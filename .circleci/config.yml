@@ -60,7 +60,7 @@ commands:
     steps:
       - run:
           name: yarn install
-          command: yarn install --frozen-lockfile --non-interactive
+          command: yarn install --immutable
           no_output_timeout: 2m
 
   setup_bazel_config:
