@@ -1,1 +1,1 @@
-export default "This is a fake package!";
+export default 'This is a fake package!';
