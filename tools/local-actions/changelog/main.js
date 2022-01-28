@@ -44935,7 +44935,7 @@ var require_prettier = __commonJS({
         super(...arguments);
         this.name = "prettier";
         this.binaryFilePath = (0, path_12.join)(this.git.baseDir, "node_modules/.bin/prettier");
-        this.defaultFileMatcher = ["**/*.{t,j,cj,mj}s"];
+        this.defaultFileMatcher = ["**/*.{js,cjs,mjs}", "**/*.{ts,cts,mts}", "**/*.json"];
         this.configPath = this.config["prettier"] ? (0, child_process_1.spawnSync)(this.binaryFilePath, ["--find-config-path", "."]).stdout.trim() : "";
         this.actions = {
           check: {
