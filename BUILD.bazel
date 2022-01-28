@@ -3,7 +3,11 @@ load("//:package.bzl", "NPM_PACKAGE_SUBSTITUTIONS")
 load("//tools:defaults.bzl", "pkg_npm")
 load("@npm//@bazel/typescript:index.bzl", "ts_config")
 
-exports_files(["package.json"])
+exports_files([
+    "package.json",
+    ".yarnrc.yml",
+    "yarn-berry.patch",
+])
 
 ts_config(
     name = "tsconfig",

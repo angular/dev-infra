@@ -23,6 +23,15 @@ node_modules
 npm-debug.log
 yarn-error.log
 
+# Yarn v2+. Zero installs enabled.
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
 # User specific bazel settings
 .bazelrc.user
 

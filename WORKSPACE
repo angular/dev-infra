@@ -19,6 +19,7 @@ http_archive(
 # Fetch rules_nodejs so we can install our npm dependencies
 http_archive(
     name = "build_bazel_rules_nodejs",
+    patches = ["//:yarn-berry.patch"],
     sha256 = "ddb78717b802f8dd5d4c01c340ecdc007c8ced5c1df7db421d0df3d642ea0580",
     urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/4.6.0/rules_nodejs-4.6.0.tar.gz"],
 )
@@ -31,6 +32,10 @@ node_repositories(
 
 yarn_install(
     name = "npm",
+    args = ["--immutable"],
+    data = ["//:.yarnrc.yml"],
+    # Yarn Berry/v2+ expects `--immutable` instead of `--frozen-lockfile`.
+    frozen_lockfile = False,
     package_json = "//:package.json",
     yarn_lock = "//:yarn.lock",
 )
