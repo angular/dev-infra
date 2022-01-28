@@ -86,7 +86,7 @@ build:remote --remote_accept_cached=true
 ################################
 
 # Releases should always be stamped with version control info
-build:release --workspace_status_command="yarn -s ng-dev release build-env-stamp --mode=release"
+build:release --workspace_status_command="yarn ng-dev release build-env-stamp --mode=release"
 build:release --stamp
 
 ####################################################

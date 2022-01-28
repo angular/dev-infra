@@ -55,6 +55,7 @@ export async function invokeSetNpmDistCommand(
 
   try {
     // Note: No progress indicator needed as that is the responsibility of the command.
+    // TODO: detect yarn berry and handle flag differences properly.
     await spawn(
       yarnCommand.binary,
       [
@@ -95,6 +96,7 @@ export async function invokeReleaseBuildCommand(
   try {
     // Since we expect JSON to be printed from the `ng-dev release build` command,
     // we spawn the process in silent mode. We have set up an Ora progress spinner.
+    // TODO: detect yarn berry and handle flag differences properly.
     const {stdout} = await spawn(
       yarnCommand.binary,
       [...yarnCommand.args, '--silent', 'ng-dev', 'release', 'build', '--json'],
@@ -131,6 +133,7 @@ export async function invokeReleaseInfoCommand(projectDir: string): Promise<Rele
 
   try {
     // Note: No progress indicator needed as that is expected to be a fast operation.
+    // TODO: detect yarn berry and handle flag differences properly.
     const {stdout} = await spawn(
       yarnCommand.binary,
       [...yarnCommand.args, '--silent', 'ng-dev', 'release', 'info', '--json'],
@@ -168,10 +171,8 @@ export async function invokeYarnInstallCommand(projectDir: string): Promise<void
     // TODO: Consider using an Ora spinner instead to ensure minimal console output.
     await spawn(
       yarnCommand.binary,
-      // TODO: Switch this to `--immutable` when all active release-trains/repositories
-      // run with Yarn berry/v2+. Note: We do not need `--non-interactive` here as we
-      // spawn this child process using `stdio: pipe` which results in `isTTY = false`.
-      [...yarnCommand.args, 'install', '--frozen-lockfile'],
+      // TODO: detect yarn berry and handle flag differences properly.
+      [...yarnCommand.args, 'install', '--frozen-lockfile', '--non-interactive'],
       {cwd: projectDir},
     );
     info(green('  ✓   Installed project dependencies.'));

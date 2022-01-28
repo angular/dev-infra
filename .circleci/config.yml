@@ -74,7 +74,7 @@ commands:
     steps:
       - run:
           name: Copy JUnit test reports to central folder for upload
-          command: yarn -s ng-dev ci gather-test-results
+          command: yarn ng-dev ci gather-test-results
           when: always
       - store_test_results:
           path: ./test-results
@@ -123,10 +123,10 @@ jobs:
       - yarn_install
       - run:
           name: Check code format
-          command: yarn -s ng-dev format changed --check << pipeline.git.base_revision >>
+          command: yarn ng-dev format changed --check << pipeline.git.base_revision >>
       - run:
           name: Check commit messages
-          command: yarn -s ng-dev commit-message validate-range << pipeline.git.base_revision >> << pipeline.git.revision >>
+          command: yarn ng-dev commit-message validate-range << pipeline.git.base_revision >> << pipeline.git.revision >>
 
   publish_snapshot_build:
     executor: default-executor
