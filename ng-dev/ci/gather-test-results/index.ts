@@ -41,7 +41,7 @@ const baseTestReport = `
  `.trim();
 
 function getTestLogsDirectoryPath() {
-  const {stdout, status} = spawnSync('yarn', ['-s', 'bazel', 'info', 'bazel-testlogs']);
+  const {stdout, status} = spawnSync('yarn', ['bazel', 'info', 'bazel-testlogs']);
 
   if (status === 0) {
     return stdout.trim();
