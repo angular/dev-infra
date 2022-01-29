@@ -10,11 +10,12 @@
     "ng-dev": "ts-node --transpile-only ./ng-dev/cli.ts",
     "update-generated-files": "ts-node --transpile-only ./tools/update-generated-files.ts"
   },
+  "packageManager": "yarn@3.1.1",
   "dependencies": {
     "@actions/core": "^1.4.0",
     "@actions/github": "^5.0.0",
     "@angular-devkit/build-angular": "13.2.0-rc.1",
-    "@angular/benchpress": "0.2.1",
+    "@angular/benchpress": "^0.2.2",
     "@babel/core": "^7.16.0",
     "@bazel/bazelisk": "^1.10.1",
     "@bazel/buildifier": "^4.0.1",
@@ -106,5 +107,7 @@
     "wait-on": "^6.0.0",
     "zone.js": "^0.11.4"
   },
-  "packageManager": "yarn@3.1.1"
+  "resolutions": {
+    "@angular/benchpress/@angular/core": "14.0.0-next.0"
+  }
 }
