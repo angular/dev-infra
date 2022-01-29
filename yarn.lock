@@ -225,13 +225,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/benchpress@npm:0.2.1":
-  version: 0.2.1
-  resolution: "@angular/benchpress@npm:0.2.1"
+"@angular/benchpress@npm:^0.2.2":
+  version: 0.2.2
+  resolution: "@angular/benchpress@npm:0.2.2"
   dependencies:
-    "@angular/core": ^10.0.0-0 || ^11.0.0
+    "@angular/core": ^13.0.0
     reflect-metadata: ^0.1.13
-  checksum: edd61bca77547d28e56eb719b347c855398e7754fda736d288f909f9c33a2e38daf4847b105033daf56dca94fa53145823a9b41d1a6317ae281b9eaa23a63348
+  checksum: 03f39e45e8f0968997217fc0dff842036f6cbc227a7708effcf22ad2b4bbf506099483f28f7d11f81d3d5c604f72d35029e1ff2fa68d9df5922aa8f09293df2a
   languageName: node
   linkType: hard
 
@@ -294,18 +294,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/core@npm:^10.0.0-0 || ^11.0.0":
-  version: 11.2.14
-  resolution: "@angular/core@npm:11.2.14"
-  dependencies:
-    tslib: ^2.0.0
-  peerDependencies:
-    rxjs: ^6.5.3
-    zone.js: ^0.10.2 || ^0.11.3
-  checksum: 8dd40d6c90246726e8b6c1bf715e7ea688da7ea71da5742737d2d04ce85ccc5378e00a6aa2d796bcfaa82d11e4677b551ceda347a76242e7b0feea09e1a2e92f
-  languageName: node
-  linkType: hard
-
 "@angular/dev-infra-private@workspace:.":
   version: 0.0.0-use.local
   resolution: "@angular/dev-infra-private@workspace:."
@@ -315,7 +303,7 @@ __metadata:
     "@angular-devkit/build-angular": 13.2.0-rc.1
     "@angular/animations": 14.0.0-next.0
     "@angular/bazel": 14.0.0-next.0
-    "@angular/benchpress": 0.2.1
+    "@angular/benchpress": ^0.2.2
     "@angular/common": 14.0.0-next.0
     "@angular/compiler": 14.0.0-next.0
     "@angular/compiler-cli": 14.0.0-next.0
