@@ -1,7 +1,7 @@
 # Yarn Vendoring
 
-We utilize Yarn's `yarn-path` configuration in a shared `.yarnrc` file to enforce
-everyone using the same version of Yarn. Yarn checks the `.yarnrc` file to
+We utilize Yarn's `yarn-path` configuration in a shared `.yarnrc.yml` file to enforce
+everyone using the same version of Yarn. Yarn checks the `.yarnrc.yml` file to
 determine if yarn should delegate the command to a vendored version at the
 provided path.
 
