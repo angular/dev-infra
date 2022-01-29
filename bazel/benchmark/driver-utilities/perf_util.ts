@@ -8,19 +8,7 @@
 
 export {verifyNoBrowserErrors} from './e2e_util';
 
-import {
-  SeleniumWebDriverAdapter,
-  Options,
-  JsonFileReporter,
-  Validator,
-  RegressionSlopeValidator,
-  ConsoleReporter,
-  SizeValidator,
-  MultiReporter,
-  MultiMetric,
-  Runner,
-  StaticProvider,
-} from '@angular/benchpress';
+import type * as benchpress from '@angular/benchpress';
 import {v1 as uuidv1} from 'uuid';
 import {openBrowser} from './e2e_util';
 
@@ -31,7 +19,12 @@ const globalOptions = {
   dryRun: process.env.PERF_DRYRUN === 'true',
 };
 
-const runner = createBenchpressRunner();
+type BenchpressSetup = {
+  runner: benchpress.Runner;
+  module: typeof benchpress;
+};
+
+let _cachedBenchpressSetup: Promise<BenchpressSetup> | null = null;
 
 export async function runBenchmark({
   id,
@@ -52,6 +45,15 @@ export async function runBenchmark({
   prepare?: (() => void) | (() => Promise<unknown>);
   setup?: (() => void) | (() => Promise<unknown>);
 }): Promise<any> {
+  if (_cachedBenchpressSetup === null) {
+    _cachedBenchpressSetup = _prepareBenchpressSetup();
+  }
+
+  // Wait for the benchpress setup to complete initilization.
+  // The benchpress setup is loaded asynchronously due to it relying on ESM.
+  // TODO: This can be removed when benchmark tests/e2e tests can run with ESM.
+  const {module, runner} = await _cachedBenchpressSetup;
+
   openBrowser({url, params, ignoreBrowserSynchronization});
   if (setup) {
     await setup();
@@ -61,11 +63,25 @@ export async function runBenchmark({
     execute: work,
     prepare,
     microMetrics,
-    providers: [{provide: Options.SAMPLE_DESCRIPTION, useValue: {}}],
+    providers: [{provide: module.Options.SAMPLE_DESCRIPTION, useValue: {}}],
   });
 }
 
-function createBenchpressRunner(): Runner {
+async function _prepareBenchpressSetup(): Promise<BenchpressSetup> {
+  const module = await loadBenchpressModule();
+  const {
+    SeleniumWebDriverAdapter,
+    Options,
+    JsonFileReporter,
+    RegressionSlopeValidator,
+    Validator,
+    MultiReporter,
+    ConsoleReporter,
+    SizeValidator,
+    MultiMetric,
+    Runner,
+  } = module;
+
   let runId = uuidv1();
   if (process.env.GIT_SHA) {
     runId = process.env.GIT_SHA + ' ' + runId;
@@ -80,7 +96,7 @@ function createBenchpressRunner(): Runner {
     );
   }
 
-  const providers: StaticProvider[] = [
+  const providers: benchpress.StaticProvider[] = [
     SeleniumWebDriverAdapter.PROTRACTOR_PROVIDERS,
     {provide: Options.FORCE_GC, useValue: globalOptions.forceGc},
     {provide: Options.DEFAULT_DESCRIPTION, useValue: {'runId': runId}},
@@ -100,5 +116,14 @@ function createBenchpressRunner(): Runner {
     providers.push(MultiReporter.provideWith([]));
     providers.push(MultiMetric.provideWith([]));
   }
-  return new Runner(providers);
+
+  return {
+    runner: new Runner(providers),
+    module,
+  };
+}
+
+/** Loads the benchpress module through a CJS/ESM interop. */
+async function loadBenchpressModule(): Promise<typeof benchpress> {
+  return await new Function(`return import('@angular/benchpress');`)();
 }

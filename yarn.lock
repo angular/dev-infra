@@ -225,13 +225,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/benchpress@npm:^0.2.2":
-  version: 0.2.2
-  resolution: "@angular/benchpress@npm:0.2.2"
+"@angular/benchpress@npm:0.3.0":
+  version: 0.3.0
+  resolution: "@angular/benchpress@npm:0.3.0"
   dependencies:
-    "@angular/core": ^13.0.0
+    "@angular/core": ^13.0.0 || ^14.0.0-0
     reflect-metadata: ^0.1.13
-  checksum: 03f39e45e8f0968997217fc0dff842036f6cbc227a7708effcf22ad2b4bbf506099483f28f7d11f81d3d5c604f72d35029e1ff2fa68d9df5922aa8f09293df2a
+  checksum: 0563189776484e92d40e0a6e94361889fda4af4a3fabe305831ab0297bcbde90f7d20a36710e51a6b25e70c429a96a3f889c293e3839833caf13c2e14668550b
   languageName: node
   linkType: hard
 
@@ -303,7 +303,7 @@ __metadata:
     "@angular-devkit/build-angular": 13.2.0-rc.1
     "@angular/animations": 14.0.0-next.0
     "@angular/bazel": 14.0.0-next.0
-    "@angular/benchpress": ^0.2.2
+    "@angular/benchpress": 0.3.0
     "@angular/common": 14.0.0-next.0
     "@angular/compiler": 14.0.0-next.0
     "@angular/compiler-cli": 14.0.0-next.0
