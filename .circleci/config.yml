@@ -8,11 +8,10 @@ orbs:
 # **Note**: When updating the beginning of the cache key, also update the cache key to match
 # the new cache key prefix. This allows us to take advantage of CircleCI's fallback caching.
 # Read more here: https://circleci.com/docs/2.0/caching/#restoring-cache.
-var_1: &cache_key v1-{{ checksum ".bazelversion" }}-{{ checksum "WORKSPACE" }}-{{ checksum "yarn.lock" }}
-# We want to invalidate the cache if the postinstall patches change. In order to apply new
-# patches, a clean version of the node modules is needed. Additionally, we invalidate the cache
-# if the Bazel version changes. We do this because otherwise the `bazelisk` cache folder will
-# contain all previously used versions and ultimately cause the cache restoring to be slower.
+var_1: &cache_key v1-{{ checksum ".bazelversion" }}-{{ checksum "WORKSPACE" }}
+# We invalidate the cache if the Bazel version changes. We do this because otherwise the `bazelisk`
+# cache folder will contain all previously used versions and ultimately cause the cache
+# restoring to be slower.
 var_2: &cache_fallback_key v1-{{ checksum ".bazelversion" }}-
 
 var_3: &gcp_decrypt_token "angular"
@@ -27,7 +26,6 @@ var_5: &save_cache
   save_cache:
     key: *cache_key
     paths:
-      - "node_modules"
       - "~/.cache/bazelisk"
       - "~/bazel_repository_cache"
 
@@ -114,6 +112,27 @@ jobs:
       - prepare_and_store_test_results
       - *save_cache
 
+  # Job that runs for PRs changing the Yarn cache directory for zero installs
+  # https://yarnpkg.com/features/zero-installs#does-it-have-security-implications.
+  check-yarn-cache:
+    executor: default-executor
+    steps:
+      - checkout_and_rebase
+      - run:
+          name: Check Yarn dependency cache if modified
+          environment:
+            CIRCLE_GIT_BASE_REVISION: << pipeline.git.base_revision >>
+          command: |
+            latestShaForCacheDir=$(git log -1 --format=format:%H .yarn/cache/)
+
+            # If the cache directory SHA is already part of the base, we know that the
+            # cache has not been modified, and can skip this rather slow security check.
+            if git merge-base --is-ancestor $latestShaForCacheDir $CIRCLE_GIT_BASE_REVISION; then
+              echo "Cache has not been touched. Skipping check."
+            else
+              yarn install --check-cache --immutable
+            fi
+
   lint:
     executor: default-executor
     steps:
@@ -165,6 +184,7 @@ workflows:
     jobs:
       - test
       - lint
+      - check-yarn-cache
       - publish_snapshot_build:
           filters:
             branches:
