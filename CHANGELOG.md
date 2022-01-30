@@ -1,3 +1,20 @@
+<a name="2022.1.30"></a>
+# 2022.1.30 (2022-01-30)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b066f7b](https://github.com/angular/dev-infra/commit/b066f7bc383e78a791505b6e7817bf2ef412a266) | feat | move devserver from angular/components to dev-infra |
+| [e7f43ba](https://github.com/angular/dev-infra/commit/e7f43ba426f482caf3aabc53fccb02883f5c0c00) | fix | **benchmark:** expose benchpress test results as bazel test output |
+| [8298e12](https://github.com/angular/dev-infra/commit/8298e121c51960857ef39abc16b743775ff6be68) | fix | **benchmark:** missing uuid runtime dependency for perf utils |
+| [98b0de7](https://github.com/angular/dev-infra/commit/98b0de771265aad02241c1127e8d3afb6d12f648) | fix | **benchmark:** switch to http-server for perf tests to support Apple M1 |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [68a5b58](https://github.com/angular/dev-infra/commit/68a5b58c2dc8df50d6a5a49c8aa40fa9cc3c3b7d) | feat | format json files by default with prettier |
+## Special Thanks
+Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.1.16"></a>
 # 2022.1.16 (2022-01-16)
 ### bazel
@@ -174,22 +191,3 @@ Alan Agius and Joey Perrott
 | [eca29df](https://github.com/angular/dev-infra/commit/eca29dfefbe243eaedcce233cda5f53e57c6e1d4) | fix | only include LTS label as a target label if the release configuration is defined ([#245](https://github.com/angular/dev-infra/pull/245)) |
 ## Special Thanks
 Joey Perrott and Paul Gschwendtner
-
-<!-- CHANGELOG SPLIT MARKER -->
-<a name="2021.9.26"></a>
-# 2021.9.26 (2021-09-26)
-## Breaking Changes
-### ng-dev
-- `MergeConfig` has been renamed to `PullRequestConfig` and is now accessed via `pullRequest` on the provided
-ng-dev config.
-### bazel
-| Commit | Type | Description |
-| -- | -- | -- |
-| [0a83a42](https://github.com/angular/dev-infra/commit/0a83a42160652246e37253287a261f45a7e11313) | feat | **protos:** automatically generate typescript implementation of bazel test_status proto ([#239](https://github.com/angular/dev-infra/pull/239)) |
-### ng-dev
-| Commit | Type | Description |
-| -- | -- | -- |
-| [cf92a66](https://github.com/angular/dev-infra/commit/cf92a666d40fee957e1e7f964016054ccb023ab1) | feat | **ci:** create a common tool for gathering test results from bazel ([#239](https://github.com/angular/dev-infra/pull/239)) |
-| [c3f5729](https://github.com/angular/dev-infra/commit/c3f5729376048af3ce939a505e5389dba11ff7d2) | fix | **pr:** rename MergeConfig to PullRequestConfig, discover the attribute at pullRequest instead of merge ([#237](https://github.com/angular/dev-infra/pull/237)) |
-## Special Thanks
-Joey Perrott
