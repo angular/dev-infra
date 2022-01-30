@@ -39,7 +39,6 @@ def component_benchmark(
         ng_deps = [
             "@npm//@angular/core",
             "@npm//@angular/platform-browser",
-            "@npm//zone.js",
         ],
         ng_assets = [],
         assets = None,
@@ -89,6 +88,7 @@ def component_benchmark(
     app_main = name + "_app_main"
     benchmark_driver = name + "_driver"
     server = name + "_server"
+    ng_bundle_deps = [":%s" % app_lib]
 
     # If the user doesn't provide assets, entry_point, or styles, we use a
     # default version.
@@ -103,6 +103,12 @@ def component_benchmark(
         entry_point = prefix + "default_index.ts"
         ng_srcs.append(entry_point)
         copy_default_file("index.ts", entry_point)
+
+        # Note: In the default entry-point index, `zone.js` is imported in a way that is not
+        # checked by TypeScript. We add the dependency only for bundling to reduce the compilation
+        # scope and to make it easier to replace this dependency inside the `angular/angular`
+        # repository with its corresponding source target that does not come with any typings.
+        ng_bundle_deps.append("@npm//zone.js")
 
     if not assets:
         html = prefix + "index.html"
@@ -121,8 +127,6 @@ def component_benchmark(
         name = app_lib,
         srcs = ng_srcs,
         assets = ng_assets,
-        # Creates ngFactory and ngSummary to be imported by the app's entry point.
-        generate_ve_shims = True,
         deps = ng_deps,
         tsconfig = "//bazel/benchmark/component_benchmark:tsconfig-e2e.json",
     )
@@ -131,7 +135,7 @@ def component_benchmark(
     app_bundle(
         name = app_main,
         entry_point = entry_point,
-        deps = [":" + app_lib],
+        deps = ng_bundle_deps,
     )
 
     # The ts_library for the driver that runs tests against the benchmark app.
