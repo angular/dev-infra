@@ -28,6 +28,7 @@ export function buildEnvStamp(mode: EnvStampMode) {
   console.info(`BUILD_SCM_BRANCH ${getCurrentBranch(git)}`);
   console.info(`BUILD_SCM_COMMIT_SHA ${getCurrentSha(git)}`);
   console.info(`BUILD_SCM_HASH ${getCurrentSha(git)}`);
+  console.info(`BUILD_SCM_ABBREV_HASH ${getCurrentAbbrevSha(git)}`);
   console.info(`BUILD_SCM_BRANCH ${getCurrentBranchOrRevision(git)}`);
   console.info(`BUILD_SCM_LOCAL_CHANGES ${hasLocalChanges(git)}`);
   console.info(`BUILD_SCM_USER ${getCurrentGitUser(git)}`);
@@ -94,6 +95,15 @@ function getSCMVersions(
 function getCurrentSha(git: GitClient) {
   try {
     return git.run(['rev-parse', 'HEAD']).stdout.trim();
+  } catch {
+    return '';
+  }
+}
+
+/** Get the current abbreviated SHA of HEAD. */
+function getCurrentAbbrevSha(git: GitClient) {
+  try {
+    return git.run(['rev-parse', '--short', 'HEAD']).stdout.trim();
   } catch {
     return '';
   }
