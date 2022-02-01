@@ -35444,9 +35444,9 @@ var require_cli_width = __commonJS({
   }
 });
 
-// node_modules/strip-ansi/node_modules/ansi-regex/index.js
+// node_modules/ansi-regex/index.js
 var require_ansi_regex = __commonJS({
-  "node_modules/strip-ansi/node_modules/ansi-regex/index.js"(exports2, module2) {
+  "node_modules/ansi-regex/index.js"(exports2, module2) {
     "use strict";
     module2.exports = ({ onlyFirst = false } = {}) => {
       const pattern = [
@@ -50748,9 +50748,9 @@ var require_dist_node17 = __commonJS({
   }
 });
 
-// node_modules/jws/lib/data-stream.js
+// node_modules/jsonwebtoken/node_modules/jws/lib/data-stream.js
 var require_data_stream = __commonJS({
-  "node_modules/jws/lib/data-stream.js"(exports2, module2) {
+  "node_modules/jsonwebtoken/node_modules/jws/lib/data-stream.js"(exports2, module2) {
     var Buffer2 = require_safe_buffer().Buffer;
     var Stream = require("stream");
     var util = require("util");
@@ -50994,9 +50994,9 @@ var require_ecdsa_sig_formatter = __commonJS({
   }
 });
 
-// node_modules/jwa/index.js
+// node_modules/jsonwebtoken/node_modules/jwa/index.js
 var require_jwa = __commonJS({
-  "node_modules/jwa/index.js"(exports2, module2) {
+  "node_modules/jsonwebtoken/node_modules/jwa/index.js"(exports2, module2) {
     var bufferEqual = require_buffer_equal_constant_time();
     var Buffer2 = require_safe_buffer().Buffer;
     var crypto = require("crypto");
@@ -51207,9 +51207,9 @@ var require_jwa = __commonJS({
   }
 });
 
-// node_modules/jws/lib/tostring.js
+// node_modules/jsonwebtoken/node_modules/jws/lib/tostring.js
 var require_tostring = __commonJS({
-  "node_modules/jws/lib/tostring.js"(exports2, module2) {
+  "node_modules/jsonwebtoken/node_modules/jws/lib/tostring.js"(exports2, module2) {
     var Buffer2 = require("buffer").Buffer;
     module2.exports = function toString(obj) {
       if (typeof obj === "string")
@@ -51221,9 +51221,9 @@ var require_tostring = __commonJS({
   }
 });
 
-// node_modules/jws/lib/sign-stream.js
+// node_modules/jsonwebtoken/node_modules/jws/lib/sign-stream.js
 var require_sign_stream = __commonJS({
-  "node_modules/jws/lib/sign-stream.js"(exports2, module2) {
+  "node_modules/jsonwebtoken/node_modules/jws/lib/sign-stream.js"(exports2, module2) {
     var Buffer2 = require_safe_buffer().Buffer;
     var DataStream = require_data_stream();
     var jwa = require_jwa();
@@ -51291,9 +51291,9 @@ var require_sign_stream = __commonJS({
   }
 });
 
-// node_modules/jws/lib/verify-stream.js
+// node_modules/jsonwebtoken/node_modules/jws/lib/verify-stream.js
 var require_verify_stream = __commonJS({
-  "node_modules/jws/lib/verify-stream.js"(exports2, module2) {
+  "node_modules/jsonwebtoken/node_modules/jws/lib/verify-stream.js"(exports2, module2) {
     var Buffer2 = require_safe_buffer().Buffer;
     var DataStream = require_data_stream();
     var jwa = require_jwa();
@@ -51401,9 +51401,9 @@ var require_verify_stream = __commonJS({
   }
 });
 
-// node_modules/jws/index.js
+// node_modules/jsonwebtoken/node_modules/jws/index.js
 var require_jws = __commonJS({
-  "node_modules/jws/index.js"(exports2) {
+  "node_modules/jsonwebtoken/node_modules/jws/index.js"(exports2) {
     var SignStream = require_sign_stream();
     var VerifyStream = require_verify_stream();
     var ALGORITHMS = [

@@ -1,0 +1,27 @@
+load("@npm//@bazel/typescript:index.bzl", "ts_library")
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+
+package(default_visibility = ["//visibility:private"])
+
+ts_library(
+    name = "update_script_lib",
+    srcs = glob(["*.ts"]),
+    deps = [
+        "//ng-dev/utils",
+        "@npm//@google-cloud/storage",
+        "@npm//@types/node",
+        "@npm//@types/node-fetch",
+        "@npm//@types/tmp",
+        "@npm//@types/yargs",
+        "@npm//node-fetch",
+        "@npm//tmp",
+        "@npm//yargs",
+    ],
+)
+
+nodejs_binary(
+    name = "update-script",
+    data = [":update_script_lib"],
+    entry_point = ":index.ts",
+    templated_args = ["--bazel_patch_module_resolver"],
+)

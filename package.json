@@ -79,6 +79,7 @@
     "@angular/compiler-cli": "14.0.0-next.1",
     "@angular/core": "14.0.0-next.1",
     "@angular/platform-browser": "14.0.0-next.1",
+    "@google-cloud/storage": "^5.18.1",
     "@octokit/graphql-schema": "^10.72.0",
     "@types/cli-progress": "^3.9.1",
     "@types/conventional-commits-parser": "^3.0.1",

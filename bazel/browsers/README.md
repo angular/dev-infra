@@ -14,7 +14,7 @@ The process of updating the Chrome or Firefox version is not straightforward, bu
 
 ## Updating Chromium
 
-1. Run `yarn ts-node bazel/browsers/chromium/find-stable-revision-for-all-platforms.ts`
+1. Run `bazel run bazel/browsers/update-script find-latest-chromium-revision`
 
 2. Inspect the console output which looks like the followed:
 
@@ -46,8 +46,16 @@ LINUX:     https://storage.googleapis.com/chromium-browser-snapshots/Linux_x64/8
    new URLs printed out by the tool. Also make sure to update the SHA256 checksums. The tool prints the
    new checksums for convenient copy & paste.
 
-5. [Upload artifacts to our Google Cloud Storage mirror.](#uploading-mirror-artifacts)
+5. Update the dev-infra Google Cloud Storage mirror by running the following command.
+   You need to acquire a service key for the `dev-infra-gcs-manager` service account.
 
+```bash
+GOOGLE_APPLICATION_CREDENTIALS=<path-to-gcp-service-key> \
+  bazel run bazel/browsers/update-script upload-to-mirror chromium <revision-num>
+```
+
+Update the fallback `dev-infra-mirror` URLs for your browser archives to point to the newly
+uploaded files (as printed by the script to the terminal output).
 
 ## Puppeteer
 
@@ -89,18 +97,14 @@ platform_http_file(
 
 2. Update the `sha256` checksum of the browser archives.
    You can do this by downloading the artifacts from the URLs you just updated, and then running `shasum` on those files:
+
    ```sh
    curl -L <BROWSER_URL> | shasum -a 256
    ```
 
-3. [Upload artifacts to our Google Cloud Storage mirror.](#uploading-mirror-artifacts)
+3. Go to https://firefox-source-docs.mozilla.org/testing/geckodriver/Support.html and find a version that is compatible with the version of Firefox being used.
 
-
-In the same file, you can also update the version of gecko driver (the WebDriver implementation for Firefox browsers).
-
-1. Go to https://firefox-source-docs.mozilla.org/testing/geckodriver/Support.html and find a version that is compatible with the used version of Firefox.
-
-2. Update the `geckodriver` repository URLs to the desired version:
+4. Update the `geckodriver` repository URLs to the desired version:
 
    ```bzl
    platform_http_file(
@@ -114,26 +118,20 @@ In the same file, you can also update the version of gecko driver (the WebDriver
 
    For example, replace all occurrences of `0.26.0` with the newer version.
 
-3. Update the `sha256` checksum of the driver archives.
-    You can do this by downloading the artifacts from the URLs you just updated, and then running `shasum` on those files:
-    ```sh
-    curl -L <DRIVER_URL> | shasum -a 256
-    ```
+5. Update the `sha256` checksum of the driver archives.
+   You can do this by downloading the artifacts from the URLs you just updated, and then running `shasum` on those files:
 
-4. [Upload artifacts to our Google Cloud Storage mirror.](#uploading-mirror-artifacts)
+   ```sh
+   curl -L <DRIVER_URL> | shasum -a 256
+   ```
 
+6. Update the dev-infra Google Cloud Storage mirror by running the following command.
+   You need to acquire a service key for the `dev-infra-gcs-manager` service account.
 
-## Uploading mirror artifacts
+```bash
+GOOGLE_APPLICATION_CREDENTIALS=<path-to-gcp-service-key> \
+  bazel run bazel/browsers/update-script upload-to-mirror firefox <version> <geckodriver-version>
+```
 
-1. Download all the artifacts you want to mirror, and upload the artifacts to the
-   `dev-infra-mirror` cloud storage bucket (which serves as a fallback mirror to help with reducing flakiness).
-
-   Note: The `dev-infra-mirror` bucket is part of the team-internal `internal-200822` GCP instance. If you do not
-   have permission to update, please contact a member of the Angular dev-infra team.
-
-2. Update the permissions for all uploaded artifacts so that they can be accessed publicly. This can be
-   done by clicking on an uploaded file, then going to `Edit Permissions`. Within the permission dialog
-   you can then add another entity for `Public` with the `allUsers` name, and `Reader` access.
-
-3. Update the fallback `dev-infra-mirror` URLs for your browser archives to point to the newly
-   uploaded files.
+Update the fallback `dev-infra-mirror` URLs for your browser archives to point to the newly
+uploaded files (as printed by the script to the terminal output).
