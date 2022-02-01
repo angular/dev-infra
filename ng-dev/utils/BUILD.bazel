@@ -7,6 +7,7 @@ ts_library(
         "git/*.ts",
     ]),
     visibility = [
+        "//bazel/browsers/update-script:__pkg__",
         "//github-actions/slash-commands/lib:__subpackages__",
         "//ng-dev:__subpackages__",
         "//tools/local-actions/changelog/lib:__subpackages__",

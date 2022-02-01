@@ -28,46 +28,9 @@
 import {createHash} from 'crypto';
 import fetch from 'node-fetch';
 import {Spinner} from '../../../ng-dev/utils/spinner';
-
-/**
- * Enum describing browser platforms this script considers. The
- * value for each browser maps to the key being used by the Chromium buildbot.
- * See: https://commondatastorage.googleapis.com/chromium-browser-snapshots/index.html.
- */
-enum BrowserPlatform {
-  LINUX_X64 = 'Linux_x64',
-  MAC_X64 = 'Mac',
-  MAC_ARM64 = 'Mac_Arm',
-  WINDOWS = 'Win',
-}
-
-/** Maps a browser platform to the archive file containing the browser binary. */
-const PlatformBrowserArchiveMap = {
-  [BrowserPlatform.LINUX_X64]: 'chrome-linux.zip',
-  [BrowserPlatform.MAC_X64]: 'chrome-mac.zip',
-  [BrowserPlatform.MAC_ARM64]: 'chrome-mac.zip',
-  [BrowserPlatform.WINDOWS]: 'chrome-win.zip',
-};
-
-/** Maps a browser platform to the archive file containing the driver. */
-const PlatformDriverArchiveMap = {
-  [BrowserPlatform.LINUX_X64]: 'chromedriver_linux64.zip',
-  [BrowserPlatform.MAC_X64]: 'chromedriver_mac64.zip',
-  [BrowserPlatform.MAC_ARM64]: 'chromedriver_mac64.zip',
-  [BrowserPlatform.WINDOWS]: 'chromedriver_win32.zip',
-};
-
-const cloudStorageHeadRevisionUrl = `https://storage.googleapis.com/chromium-browser-snapshots/{platform}/LAST_CHANGE`;
-const cloudStorageArchiveUrl =
-  'https://storage.googleapis.com/chromium-browser-snapshots/{platform}/{revision}/{file}';
-
-if (require.main === module) {
-  const explicitStartRevision = Number(process.argv[2]) || null;
-  main(explicitStartRevision).catch((e) => {
-    console.error(e);
-    process.exit(1);
-  });
-}
+import {ArchiveType} from './browser';
+import {Chromium} from './chromium';
+import {Platform} from './platform';
 
 /**
  * Entry-point for the script, finding a revision which has snapshot builds for all platforms.
@@ -75,9 +38,11 @@ if (require.main === module) {
  * revision that is available for all platforms. If none has been specified, we look for
  * a revision that is as close as possible to the revision in the stable release channel.
  */
-async function main(explicitStartRevision: number | null): Promise<void> {
+export async function findLatestRevisionForAllPlatforms(
+  explicitStartRevision: number | undefined,
+): Promise<void> {
   const availableRevision =
-    explicitStartRevision === null
+    explicitStartRevision === undefined
       ? await findClosestStableRevisionForAllPlatforms()
       : await findClosestAscendingRevisionForAllPlatforms(explicitStartRevision);
 
@@ -85,6 +50,8 @@ async function main(explicitStartRevision: number | null): Promise<void> {
     console.error('Could not find a revision for which builds are available for all platforms.');
     process.exit(1);
   }
+
+  const browser = new Chromium(availableRevision);
 
   console.info('Found a revision for which builds are available for all platforms.');
   console.info('Printing the URLs and archive checksums:');
@@ -95,21 +62,18 @@ async function main(explicitStartRevision: number | null): Promise<void> {
   console.info('Click on the link above to determine the Chromium version number.');
   console.info();
 
-  for (const platformName of Object.keys(BrowserPlatform)) {
-    const platform = BrowserPlatform[platformName as keyof typeof BrowserPlatform];
+  for (const platformName of Object.keys(Platform)) {
+    const platform = Platform[platformName as keyof typeof Platform];
 
-    console.info(
-      `${platformName}: `.padEnd(10),
-      getRevisionArchiveUrl(availableRevision, platform, 'browser'),
-    );
+    console.info(`${platformName}: `.padEnd(10), browser.getDownloadUrl(platform, 'browser-bin'));
     console.info(
       ' '.repeat(15),
-      await getSha256ChecksumForPlatform(availableRevision, platform, 'browser'),
+      await getSha256ChecksumForPlatform(browser, platform, 'browser-bin'),
     );
-    console.info(' '.repeat(10), getRevisionArchiveUrl(availableRevision, platform, 'driver'));
+    console.info(' '.repeat(10), browser.getDownloadUrl(platform, 'driver-bin'));
     console.info(
       ' '.repeat(15),
-      await getSha256ChecksumForPlatform(availableRevision, platform, 'driver'),
+      await getSha256ChecksumForPlatform(browser, platform, 'driver-bin'),
     );
     console.info();
   }
@@ -159,7 +123,7 @@ async function lookForRevisionWithBuildsForAllPlatforms(
     spinner.update(`Checking: r${i}`);
 
     const checks = await Promise.all(
-      Object.values(BrowserPlatform).map((p) => isRevisionAvailableForPlatform(i, p)),
+      Object.values(Platform).map((p) => isRevisionAvailableForPlatform(i, p)),
     );
 
     // If the current revision is available for all platforms, stop
@@ -178,10 +142,10 @@ async function lookForRevisionWithBuildsForAllPlatforms(
 /** Checks if the specified revision is available for the given platform. */
 async function isRevisionAvailableForPlatform(
   revision: number,
-  platform: BrowserPlatform,
+  platform: Platform,
 ): Promise<boolean> {
   // Look for the `driver` archive as this is smaller and faster to check.
-  const response = await fetch(getRevisionArchiveUrl(revision, platform, 'driver'));
+  const response = await fetch(Chromium.getDownloadArchiveUrl(revision, platform, 'driver-bin'));
   return response.ok && response.status === 200;
 }
 
@@ -205,37 +169,19 @@ async function getReleaseInfoUrlForRevision(revision: number): Promise<string | 
 /** Determines the latest Chromium revision available in the CDN. */
 async function getHeadChromiumRevision(): Promise<number> {
   const responses = await Promise.all(
-    Object.values(BrowserPlatform).map((p) => fetch(getPlatformLastChangeFileUrl(p))),
+    Object.values(Platform).map((p) => fetch(Chromium.getLatestRevisionUrl(p))),
   );
   const revisions = await Promise.all(responses.map(async (r) => Number(await r.text())));
   return Math.max(...revisions);
 }
 
-/** Gets the SHA256 checksum for the platform archive of a specified revision. */
+/** Gets the SHA256 checksum for the platform archive of a given chromium instance. */
 async function getSha256ChecksumForPlatform(
-  revision: number,
-  platform: BrowserPlatform,
-  archive: 'driver' | 'browser',
+  browser: Chromium,
+  platform: Platform,
+  archive: ArchiveType,
 ): Promise<string> {
-  const response = await fetch(getRevisionArchiveUrl(revision, platform, archive));
+  const response = await fetch(browser.getDownloadUrl(platform, archive));
   const binaryContent = await response.buffer();
   return createHash('sha256').update(binaryContent).digest('hex');
-}
-
-/** Gets an URL to the `LAST_CHANGE` file for a given platform. */
-function getPlatformLastChangeFileUrl(platform: BrowserPlatform) {
-  return cloudStorageHeadRevisionUrl.replace('{platform}', platform);
-}
-
-/** Gets the CDN archive URL for the given revision and platform. */
-function getRevisionArchiveUrl(
-  revision: number,
-  platform: BrowserPlatform,
-  archive: 'driver' | 'browser',
-): string {
-  const archiveMap = archive === 'driver' ? PlatformDriverArchiveMap : PlatformBrowserArchiveMap;
-  return cloudStorageArchiveUrl
-    .replace('{platform}', platform)
-    .replace('{revision}', `${revision}`)
-    .replace('{file}', archiveMap[platform]);
 }
