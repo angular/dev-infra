@@ -14,7 +14,7 @@ var_1: &cache_key v1-{{ checksum ".bazelversion" }}-{{ checksum "WORKSPACE" }}
 # restoring to be slower.
 var_2: &cache_fallback_key v1-{{ checksum ".bazelversion" }}-
 
-var_3: &gcp_decrypt_token "angular"
+var_3: &gcp_decrypt_token 'angular'
 
 var_4: &restore_cache
   restore_cache:
@@ -26,8 +26,8 @@ var_5: &save_cache
   save_cache:
     key: *cache_key
     paths:
-      - "~/.cache/bazelisk"
-      - "~/bazel_repository_cache"
+      - '~/.cache/bazelisk'
+      - '~/bazel_repository_cache'
 
 # Executor Definitions
 # https://circleci.com/docs/2.0/reusing-config/#authoring-reusable-executors
@@ -62,13 +62,13 @@ commands:
           no_output_timeout: 2m
 
   setup_bazel_config:
-    description: "Setting up Bazel configuration for CI"
+    description: 'Setting up Bazel configuration for CI'
     steps:
       - run: echo "import %workspace%/.circleci/bazel.rc" >> ./.bazelrc
       - run: ./.circleci/setup-bazel.sh
 
   prepare_and_store_test_results:
-    description: "Prepare and upload test results"
+    description: 'Prepare and upload test results'
     steps:
       - run:
           name: Copy JUnit test reports to central folder for upload
@@ -112,27 +112,6 @@ jobs:
       - prepare_and_store_test_results
       - *save_cache
 
-  # Job that runs for PRs changing the Yarn cache directory for zero installs
-  # https://yarnpkg.com/features/zero-installs#does-it-have-security-implications.
-  check-yarn-cache:
-    executor: default-executor
-    steps:
-      - checkout_and_rebase
-      - run:
-          name: Check Yarn dependency cache if modified
-          environment:
-            CIRCLE_GIT_BASE_REVISION: << pipeline.git.base_revision >>
-          command: |
-            latestShaForCacheDir=$(git log -1 --format=format:%H .yarn/cache/)
-
-            # If the cache directory SHA is already part of the base, we know that the
-            # cache has not been modified, and can skip this rather slow security check.
-            if git merge-base --is-ancestor $latestShaForCacheDir $CIRCLE_GIT_BASE_REVISION; then
-              echo "Cache has not been touched. Skipping check."
-            else
-              yarn install --check-cache --immutable
-            fi
-
   lint:
     executor: default-executor
     steps:
@@ -166,7 +145,7 @@ workflows:
   oss_abuse_monitoring:
     triggers:
       - schedule:
-          cron: "* * * * *"
+          cron: '* * * * *'
           filters:
             branches:
               only:
@@ -184,7 +163,6 @@ workflows:
     jobs:
       - test
       - lint
-      - check-yarn-cache
       - publish_snapshot_build:
           filters:
             branches:
