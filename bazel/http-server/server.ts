@@ -109,7 +109,7 @@ export class HttpServer {
         return;
       }
 
-      send(req, resolvedPath).pipe(res);
+      send(req, resolvedPath, {dotfiles: 'allow'}).pipe(res);
     }
   }
 
