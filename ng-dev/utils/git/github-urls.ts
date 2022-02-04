@@ -17,6 +17,12 @@ export const GITHUB_TOKEN_SETTINGS_URL = 'https://github.com/settings/tokens';
 /** URL to the Github page where personal access tokens can be generated. */
 export const GITHUB_TOKEN_GENERATE_URL = 'https://github.com/settings/tokens/new';
 
+/** Prefix for accessing Github via HTTPS. */
+export const GITHUB_URL_PREFIX = 'https://github.com';
+
+/** Prefix for accessing Github via SSH. */
+export const GITHUB_SSH_PREFIX = 'git@github.com';
+
 /** Adds the provided token to the given Github HTTPs remote url. */
 export function addTokenToGitHttpsUrl(githubHttpsUrl: string, token: string) {
   const url = new URL(githubHttpsUrl);
@@ -31,7 +37,7 @@ export function getRepositoryGitUrl(
   githubToken?: string,
 ): string {
   if (config.useSsh) {
-    return `git@github.com:${config.owner}/${config.name}.git`;
+    return `${GITHUB_SSH_PREFIX}:${config.owner}/${config.name}.git`;
   }
   const baseHttpUrl = `https://github.com/${config.owner}/${config.name}.git`;
   if (githubToken !== undefined) {

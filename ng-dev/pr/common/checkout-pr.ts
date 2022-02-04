@@ -10,7 +10,11 @@ import {types as graphqlTypes} from 'typed-graphqlify';
 
 import {info} from '../../utils/console';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
-import {addTokenToGitHttpsUrl} from '../../utils/git/github-urls';
+import {
+  addTokenToGitHttpsUrl,
+  GITHUB_SSH_PREFIX,
+  GITHUB_URL_PREFIX,
+} from '../../utils/git/github-urls';
 import {getPr} from '../../utils/github';
 
 /* Graphql schema for the response body for a pending PR. */
@@ -109,6 +113,13 @@ export async function checkOutPullRequestLocally(
   try {
     // Fetch the branch at the commit of the PR, and check it out in a detached state.
     info(`Checking out PR #${prNumber} from ${fullHeadRef}`);
+    info(`To push to this PR branch:`);
+    info(
+      `  git push ${GITHUB_SSH_PREFIX}:${pr.headRef.repository.nameWithOwner} HEAD:${headRefName} -f`,
+    );
+    info(
+      `  git push ${GITHUB_URL_PREFIX}:${pr.headRef.repository.nameWithOwner} HEAD:${headRefName} -f`,
+    );
     git.run(['fetch', '-q', headRefUrl, headRefName]);
     git.run(['checkout', '--detach', 'FETCH_HEAD']);
   } catch (e) {
