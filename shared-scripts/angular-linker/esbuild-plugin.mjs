@@ -60,6 +60,8 @@ export async function createLinkerEsbuildPlugin(
     logger: new ConsoleLogger(LogLevel.warn),
     // We enable JIT mode as unit tests also will rely on the linked ESM files.
     linkerJitMode: true,
+    // Workaround for https://github.com/angular/angular/issues/42769 and https://github.com/angular/angular-cli/issues/22647.
+    sourceMapping: false,
     ...linkerOptions,
   });
 
