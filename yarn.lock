@@ -308,7 +308,6 @@ __metadata:
     "@angular/platform-browser": 14.0.0-next.3
     "@babel/core": ^7.16.0
     "@bazel/bazelisk": ^1.10.1
-    "@bazel/buildifier": ^4.0.1
     "@bazel/concatjs": 4.6.0
     "@bazel/esbuild": 4.6.0
     "@bazel/jasmine": 4.6.0
@@ -339,9 +338,9 @@ __metadata:
     "@types/jsdom": ^16.2.13
     "@types/node": 16.10.9
     "@types/node-fetch": ^2.5.10
+    "@types/selenium-webdriver": ^4.0.18
     "@types/semver": ^7.3.6
     "@types/send": ^0.17.1
-    "@types/shelljs": ^0.8.8
     "@types/tmp": ^0.2.1
     "@types/uuid": ^8.3.1
     "@types/wait-on": ^5.3.1
@@ -1675,15 +1674,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@bazel/buildifier@npm:^4.0.1":
-  version: 4.2.5
-  resolution: "@bazel/buildifier@npm:4.2.5"
-  bin:
-    buildifier: buildifier.js
-  checksum: 2b2cc27582b5e3a4b584dd9ab153c2dc37bf8c8eb71881c32fbb34772d7494e9a892f6a530e8c372157f4c200c79d60b96de3867fa6666b1a553e5ac46fed0d1
-  languageName: node
-  linkType: hard
-
 "@bazel/concatjs@npm:4.6.0":
   version: 4.6.0
   resolution: "@bazel/concatjs@npm:4.6.0"
@@ -2726,7 +2716,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/glob@npm:*, @types/glob@npm:^7.1.3":
+"@types/glob@npm:^7.1.3":
   version: 7.2.0
   resolution: "@types/glob@npm:7.2.0"
   dependencies:
@@ -2972,6 +2962,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/selenium-webdriver@npm:^4.0.18":
+  version: 4.0.18
+  resolution: "@types/selenium-webdriver@npm:4.0.18"
+  checksum: 026ad92e3c400d30c51cb70c34c6545fed78f3652d98a7236b286efb789a8891cbbcc29fe3526f9fcd239aecd2cf24b5b2077d7f637338a28d0d3b9d6d321f61
+  languageName: node
+  linkType: hard
+
 "@types/semver@npm:^7.3.6":
   version: 7.3.9
   resolution: "@types/semver@npm:7.3.9"
@@ -3005,16 +3002,6 @@ __metadata:
     "@types/mime": ^1
     "@types/node": "*"
   checksum: eaca858739483e3ded254cad7d7a679dc2c8b3f52c8bb0cd845b3b7eb1984bde0371fdcb0a5c83aa12e6daf61b6beb762545021f520f08a1fe882a3fa4ea5554
-  languageName: node
-  linkType: hard
-
-"@types/shelljs@npm:^0.8.8":
-  version: 0.8.11
-  resolution: "@types/shelljs@npm:0.8.11"
-  dependencies:
-    "@types/glob": "*"
-    "@types/node": "*"
-  checksum: 559b81efba72f2b231485b26510aad68cccfe98dc74087d67dafd5511462997884db0ef18e0e56bf61a3a5789aa65a54dc04845a488bb0528d4a699e6151b99c
   languageName: node
   linkType: hard
 
