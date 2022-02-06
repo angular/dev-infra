@@ -54,14 +54,15 @@ def esbuild_checked_in(name, **kwargs):
     )
 
     # ESBuild adds comments and function identifiers with the name of their module
-    # location. e.g. `"bazel-out/x64_windows-fastbuild/bin"function(exports)`. We strip
-    # any of these `bazel-out` specific paths as that would break approval of the
-    # the checked-in files within different platforms. e.g. RBE running with K8.
+    # location. e.g. `"bazel-out/x64_windows-fastbuild/bin/node_modules/a"function(exports)`.
+    # We strip all of these paths as that would break approval of the he checked-in files within
+    # different platforms (e.g. RBE running with K8). Additionally these paths depend
+    # on the non-deterministic hoisting of the package manager across all platforms.
     native.genrule(
         name = "%s_sanitized" % name,
         srcs = ["%s_generated.js" % name],
         outs = ["%s_sanitized.js" % name],
-        cmd = """cat $< | sed -E "s#bazel-out/[^/]+/(bin/)?##g" > $@""",
+        cmd = """cat $< | sed -E "s#(bazel-out|node_modules)/[^\\"']+##g" > $@""",
     )
 
     generated_file_test(
