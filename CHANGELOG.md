@@ -1,3 +1,17 @@
+<a name="2022.2.6"></a>
+# 2022.2.6 (2022-02-06)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a90f807](https://github.com/angular/dev-infra/commit/a90f807bd664e27f8109069e31959cb2f780179d) | fix | disable angular linker sourcemaps |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c922f5b](https://github.com/angular/dev-infra/commit/c922f5b23611024bc9d94833ae147f6048ab0275) | feat | abbreviated SHA stamp ([#373](https://github.com/angular/dev-infra/pull/373)) |
+## Special Thanks
+Alan Agius, Derek Cormier, Joey Perrott, Paul Gschwendtner and renovate[bot]
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.1.30"></a>
 # 2022.1.30 (2022-01-30)
 ### bazel
@@ -175,19 +189,3 @@ Joey Perrott and Paul Gschwendtner
 | [cce6d07](https://github.com/angular/dev-infra/commit/cce6d07bb4a1c0c3ff19aea614253164f05ec564) | fix | allow deprecations in PRs during feature freeze ([#256](https://github.com/angular/dev-infra/pull/256)) |
 ## Special Thanks
 Alan Agius and Joey Perrott
-
-<!-- CHANGELOG SPLIT MARKER -->
-<a name="2021.10.3"></a>
-# 2021.10.3 (2021-10-03)
-## Breaking Changes
-### ng-dev
-- `claSignedLabel` is not longer used as an attribute on the `PullRequestConfig`
-### ng-dev
-| Commit | Type | Description |
-| -- | -- | -- |
-| [2556d72](https://github.com/angular/dev-infra/commit/2556d72d0f4b695309e5fa23e1c39f4c22909526) | fix | **pr:** check CLA status rather than label for CLA passing status on pr merges ([#242](https://github.com/angular/dev-infra/pull/242)) |
-| [2c6f847](https://github.com/angular/dev-infra/commit/2c6f84778dae1c285513f97838431c1718e4c3bb) | fix | **pr:** correctly retrieve both github checks and statuses and normalize them together ([#242](https://github.com/angular/dev-infra/pull/242)) |
-| [e638278](https://github.com/angular/dev-infra/commit/e638278dafb51a09bb06929dbfa44b3ac26e4030) | fix | **release:** prepare-commit-message hook accidentally running when bump commit is created ([#247](https://github.com/angular/dev-infra/pull/247)) |
-| [eca29df](https://github.com/angular/dev-infra/commit/eca29dfefbe243eaedcce233cda5f53e57c6e1d4) | fix | only include LTS label as a target label if the release configuration is defined ([#245](https://github.com/angular/dev-infra/pull/245)) |
-## Special Thanks
-Joey Perrott and Paul Gschwendtner

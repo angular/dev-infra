@@ -1,3 +1,19 @@
+<a name="2021.10.3"></a>
+# 2021.10.3 (2021-10-03)
+## Breaking Changes
+### ng-dev
+- `claSignedLabel` is not longer used as an attribute on the `PullRequestConfig`
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2556d72](https://github.com/angular/dev-infra/commit/2556d72d0f4b695309e5fa23e1c39f4c22909526) | fix | **pr:** check CLA status rather than label for CLA passing status on pr merges ([#242](https://github.com/angular/dev-infra/pull/242)) |
+| [2c6f847](https://github.com/angular/dev-infra/commit/2c6f84778dae1c285513f97838431c1718e4c3bb) | fix | **pr:** correctly retrieve both github checks and statuses and normalize them together ([#242](https://github.com/angular/dev-infra/pull/242)) |
+| [e638278](https://github.com/angular/dev-infra/commit/e638278dafb51a09bb06929dbfa44b3ac26e4030) | fix | **release:** prepare-commit-message hook accidentally running when bump commit is created ([#247](https://github.com/angular/dev-infra/pull/247)) |
+| [eca29df](https://github.com/angular/dev-infra/commit/eca29dfefbe243eaedcce233cda5f53e57c6e1d4) | fix | only include LTS label as a target label if the release configuration is defined ([#245](https://github.com/angular/dev-infra/pull/245)) |
+## Special Thanks
+Joey Perrott and Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2021.9.26"></a>
 # 2021.9.26 (2021-09-26)
 ## Breaking Changes
