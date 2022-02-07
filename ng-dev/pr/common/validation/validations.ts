@@ -10,7 +10,7 @@ import {Commit} from '../../../commit-message/parse';
 import {TargetLabel, TargetLabelName} from '../targeting/target-label';
 import {breakingChangeLabel, PullRequestConfig} from '../../config';
 import {PullRequestFailure} from './failures';
-import {red, warn} from '../../../utils/console';
+import {debug, red, warn} from '../../../utils/console';
 import {
   getStatusesForPullRequest,
   PullRequestFromGithub,
@@ -28,7 +28,17 @@ export function assertChangesAllowForTargetLabel(
   label: TargetLabel,
   config: PullRequestConfig,
   releaseTrains: ActiveReleaseTrains,
+  labelsOnPullRequest: string[],
 ) {
+  if (
+    !!config.commitMessageFixupLabel &&
+    labelsOnPullRequest.some((name) => matchesPattern(name, config.commitMessageFixupLabel))
+  ) {
+    debug('Skipping assertion for changes from commits allowed for the target label because the');
+    debug('commit message fixup label has been applied.');
+    return;
+  }
+
   /**
    * List of commit scopes which are exempted from target label content requirements. i.e. no `feat`
    * scopes in patch branches, no breaking changes in minor or patch changes.

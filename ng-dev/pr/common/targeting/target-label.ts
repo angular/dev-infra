@@ -127,7 +127,13 @@ export async function getTargetBranchesForPullRequest(
     );
     const targetBranches = await getBranchesFromTargetLabel(matchingLabel, githubTargetBranch);
 
-    assertChangesAllowForTargetLabel(commits, matchingLabel, config.pullRequest, releaseTrains);
+    assertChangesAllowForTargetLabel(
+      commits,
+      matchingLabel,
+      config.pullRequest,
+      releaseTrains,
+      labelsOnPullRequest,
+    );
 
     return targetBranches;
   } catch (error) {
