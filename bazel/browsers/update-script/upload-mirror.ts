@@ -7,11 +7,12 @@
  */
 
 import {Bucket, Storage, File} from '@google-cloud/storage';
-import {Browser, ArchiveType} from './browser';
+import {Browser} from './browser';
 import {Platform} from './platform';
 import {createTmpDir, downloadFileThroughStreaming} from './utils';
 
 import * as path from 'path';
+import {ArtifactType, BrowserArtifact} from './browser-artifact';
 
 /** Name of the Google Cloud Storage bucket for the browser mirror. */
 const MIRROR_BUCKET_NAME = 'dev-infra-mirror';
@@ -21,17 +22,25 @@ export function getMirrorDirectoryForBrowserInstance<T>(browser: Browser<T>): st
   return `${browser.name}/${browser.revision}`;
 }
 
-/** Uploads a browser platform artifact to the browser mirror. */
+/** Gets the destination file path for a given browser artifact. */
+export function getDestinationFilePath(artifact: BrowserArtifact, platform: Platform): string {
+  const versionMirrorDir = getMirrorDirectoryForBrowserInstance(artifact.browser);
+  return `${versionMirrorDir}/${platform}/${artifact.type}.${artifact.extension}`;
+}
+
+/**
+ * Uploads a browser platform artifact to the browser mirror.
+ *
+ * @throws {Error} An error if the artifact already exists in the mirror.
+ */
 export async function uploadArtifactToMirror(
   bucket: Bucket,
-  browser: Browser<unknown>,
+  artifact: BrowserArtifact,
   platform: Platform,
-  type: ArchiveType,
   sourceFile: string,
 ): Promise<File> {
-  const versionMirrorDir = getMirrorDirectoryForBrowserInstance(browser);
   const [file] = await bucket.upload(sourceFile, {
-    destination: `${versionMirrorDir}/${platform}/${type}.zip`,
+    destination: getDestinationFilePath(artifact, platform),
     public: true,
   });
 
@@ -45,62 +54,67 @@ export async function uploadArtifactToMirror(
  */
 export async function uploadBrowserArtifactsToMirror(storage: Storage, browser: Browser<unknown>) {
   const bucket = storage.bucket(MIRROR_BUCKET_NAME);
-  const versionMirrorDir = getMirrorDirectoryForBrowserInstance(browser);
-
-  // Note that the `File#exists` method returns the following: `[boolean]`.
-  // https://googleapis.dev/nodejs/storage/latest/global.html#FileExistsResponse.
-  if ((await bucket.file(versionMirrorDir).exists())[0]) {
-    throw Error('Revision is already in the mirror. Remove the artifacts if you want to retry.');
-  }
-
   const tmpDir = await createTmpDir({template: `${browser.name}-${browser.revision}-XXXXXX`});
   const downloadTasks: Promise<{
     platform: Platform;
     filePath: string;
-    type: ArchiveType;
+    artifact: BrowserArtifact;
   }>[] = [];
 
   for (const platform of Object.values(Platform)) {
-    const driverArchiveUrl = browser.getDownloadUrl(platform, 'driver-bin');
-    const browserArchiveUrl = browser.getDownloadUrl(platform, 'browser-bin');
-    const driverTmpPath = path.join(tmpDir, 'driver.bin');
-    const browserTmpPath = path.join(tmpDir, 'browser.bin');
+    if (!browser.supports(platform)) {
+      continue;
+    }
+
+    const driverArtifact = browser.getArtifact(platform, 'driver-bin');
+    const browserArtifact = browser.getArtifact(platform, 'browser-bin');
+    const driverTmpPath = path.join(tmpDir, `${platform}-driver.${driverArtifact.extension}`);
+    const browserTmpPath = path.join(tmpDir, `${platform}-browser.${browserArtifact.extension}`);
+
+    // We use the driver artifact (which is usually much smaller) to run a quick
+    // sanity check upstream to ensure that the artifact does not yet exist upstream.
+    const testDestinationFile = getDestinationFilePath(driverArtifact, platform);
+    // Note that we cannot check directly for the directory to exist since GCP does
+    // not support this. Hence we need to run this check for the actual files instead.
+    if ((await bucket.file(testDestinationFile).exists())[0]) {
+      throw Error('Revision is already in the mirror. Remove the artifacts if you want to retry.');
+    }
 
     downloadTasks.push(
-      downloadFileThroughStreaming(browserArchiveUrl, browserTmpPath)
+      downloadFileThroughStreaming(browserArtifact.downloadUrl, browserTmpPath)
         .then(() => console.info(`✅ Downloaded: ${browser.name} - ${platform} browser.`))
         .then(() => ({
           platform,
           filePath: browserTmpPath,
-          type: 'browser-bin',
+          artifact: browserArtifact,
         })),
     );
 
     downloadTasks.push(
-      downloadFileThroughStreaming(driverArchiveUrl, driverTmpPath)
+      downloadFileThroughStreaming(driverArtifact.downloadUrl, driverTmpPath)
         .then(() => console.info(`✅ Downloaded: ${browser.name} - ${platform} driver.`))
         .then(() => ({
           platform,
           filePath: driverTmpPath,
-          type: 'driver-bin',
+          artifact: driverArtifact,
         })),
     );
   }
 
   const tasks = await Promise.all(downloadTasks);
-  const uploadTasks: Promise<{platform: Platform; type: ArchiveType; file: File}>[] = [];
+  const uploadTasks: Promise<{platform: Platform; artifact: BrowserArtifact; file: File}>[] = [];
 
   console.info();
   console.info('Fetched all browser artifacts. Now uploading to mirror.');
   console.info();
 
-  for (const {platform, filePath, type} of tasks) {
+  for (const {platform, filePath, artifact} of tasks) {
     uploadTasks.push(
-      uploadArtifactToMirror(bucket, browser, platform, type, filePath).then((file) => {
-        console.log(`✅ Uploaded: ${platform} ${type}`);
+      uploadArtifactToMirror(bucket, artifact, platform, filePath).then((file) => {
+        console.log(`✅ Uploaded: ${platform} ${artifact.type}`);
         console.log(`  -> ${file.publicUrl()}`);
 
-        return {platform, file, type};
+        return {platform, file, artifact};
       }),
     );
   }

@@ -35,16 +35,16 @@ async function main() {
           (args) => uploadBrowserArtifactsToMirror(new Storage(), new Chromium(args.revision)),
         )
         .command(
-          'firefox <version> <driver-version>',
+          'firefox <browser-version> <driver-version>',
           'Push Firefox artifacts',
           (args) =>
             args
-              .positional('version', {type: 'string', demandOption: true})
+              .positional('browserVersion', {type: 'string', demandOption: true})
               .positional('driverVersion', {type: 'string', demandOption: true}),
           (args) =>
             uploadBrowserArtifactsToMirror(
               new Storage(),
-              new Firefox(args.version, args.driverVersion),
+              new Firefox(args.browserVersion, args.driverVersion),
             ),
         ),
     )
