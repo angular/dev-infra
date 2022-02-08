@@ -12,11 +12,11 @@ def define_firefox_repositories():
     browser_archive(
         name = "org_mozilla_firefox_linux_x64",
         licenses = ["reciprocal"],  # MPL 2.0
-        sha256 = "998607f028043b3780f296eee03027279ef059acab5b50f9754df2bd69ca42b3",
-        # Firefox v90.0.1
+        sha256 = "3d0f74790fe6ff5e38324222ab0c47e10edb31970ed67c6dd7a1c84e7017d1a5",
+        # Firefox v97.0
         urls = [
-            "https://ftp.mozilla.org/pub/firefox/releases/90.0.1/linux-x86_64/en-US/firefox-90.0.1.tar.bz2",
-            "https://storage.googleapis.com/dev-infra-mirror/mozilla/firefox/firefox-90.0.1.tar.bz2",
+            "https://ftp.mozilla.org/pub/firefox/releases/97.0/linux-x86_64/en-US/firefox-97.0.tar.bz2",
+            "https://storage.googleapis.com/dev-infra-mirror/firefox/97.0/linux_x64/browser-bin.tar.bz2",
         ],
         named_files = {
             "FIREFOX": "firefox/firefox",
@@ -27,11 +27,11 @@ def define_firefox_repositories():
         # Firefox has a launcher that conditionally starts x64/arm64
         name = "org_mozilla_firefox_macos",
         licenses = ["reciprocal"],  # MPL 2.0
-        sha256 = "76c1b9c42b52c7e5be4c112a98b7d3762a18841367f778a179679ac0de751f05",
-        # Firefox v90.0.1
+        sha256 = "c06c4e58179acaf55d05c3be41d0d4cdd68f811a75322a39557d91121aa2ef74",
+        # Firefox v97.0
         urls = [
-            "https://ftp.mozilla.org/pub/firefox/releases/90.0.1/mac/en-US/Firefox%2090.0.1.dmg",
-            "https://storage.googleapis.com/dev-infra-mirror/mozilla/firefox/Firefox%2090.0.1.dmg",
+            "https://ftp.mozilla.org/pub/firefox/releases/97.0/mac/en-US/Firefox%2097.0.dmg",
+            "https://storage.googleapis.com/dev-infra-mirror/firefox/97.0/mac_x64/browser-bin.dmg",
         ],
         named_files = {
             "FIREFOX": "Firefox.app/Contents/MacOS/firefox",
@@ -41,11 +41,11 @@ def define_firefox_repositories():
     browser_archive(
         name = "org_mozilla_geckodriver_linux_x64",
         licenses = ["reciprocal"],  # MPL 2.0
-        sha256 = "ec164910a3de7eec71e596bd2a1814ae27ba4c9d112b611680a6470dbe2ce27b",
-        # Geckodriver v0.29.1
+        sha256 = "12c37f41d11ed982b7be43d02411ff2c75fb7a484e46966d000b47d1665baa88",
+        # Geckodriver v0.30.0
         urls = [
-            "https://github.com/mozilla/geckodriver/releases/download/v0.29.1/geckodriver-v0.29.1-linux64.tar.gz",
-            "https://storage.googleapis.com/dev-infra-mirror/mozilla/geckodriver/0.29.1/geckodriver-v0.29.1-linux64.tar.gz",
+            "https://github.com/mozilla/geckodriver/releases/download/v0.30.0/geckodriver-v0.30.0-linux64.tar.gz",
+            "https://storage.googleapis.com/dev-infra-mirror/firefox/97.0/linux_x64/driver-bin.tar.gz",
         ],
         named_files = {
             "GECKODRIVER": "geckodriver",
@@ -55,11 +55,11 @@ def define_firefox_repositories():
     browser_archive(
         name = "org_mozilla_geckodriver_macos_x64",
         licenses = ["reciprocal"],  # MPL 2.0
-        sha256 = "9929c804ad0157ca13fdafca808866c88815b658e7059280a9f08f7e70364963",
-        # Geckodriver v0.29.1
+        sha256 = "560ba192666c1fe8796404153cfdf2d12551515601c4b3937aabcba6ee300f8c",
+        # Geckodriver v0.30.0
         urls = [
-            "https://github.com/mozilla/geckodriver/releases/download/v0.29.1/geckodriver-v0.29.1-macos.tar.gz",
-            "https://storage.googleapis.com/dev-infra-mirror/mozilla/geckodriver/0.29.1/geckodriver-v0.29.1-macos.tar.gz",
+            "https://github.com/mozilla/geckodriver/releases/download/v0.30.0/geckodriver-v0.30.0-macos.tar.gz",
+            "https://storage.googleapis.com/dev-infra-mirror/firefox/97.0/mac_x64/driver-bin.tar.gz",
         ],
         named_files = {
             "GECKODRIVER": "geckodriver",
@@ -69,11 +69,11 @@ def define_firefox_repositories():
     browser_archive(
         name = "org_mozilla_geckodriver_macos_arm64",
         licenses = ["reciprocal"],  # MPL 2.0
-        sha256 = "a1ec058b930fbfb684e30071ea47eec61bc18acb489914a9e0d095ede6088eea",
-        # Geckodriver v0.29.1
+        sha256 = "6230b0abea0df843d3420f46871efd91e17a21602f4ffc84db57c7c3a42ec00d",
+        # Geckodriver v0.30.0
         urls = [
-            "https://github.com/mozilla/geckodriver/releases/download/v0.29.1/geckodriver-v0.29.1-macos-aarch64.tar.gz",
-            "https://storage.googleapis.com/dev-infra-mirror/mozilla/geckodriver/0.29.1/geckodriver-v0.29.1-macos-aarch64.tar.gz",
+            "https://github.com/mozilla/geckodriver/releases/download/v0.30.0/geckodriver-v0.30.0-macos-aarch64.tar.gz",
+            "https://storage.googleapis.com/dev-infra-mirror/firefox/97.0/mac_arm64/driver-bin.tar.gz",
         ],
         named_files = {
             "GECKODRIVER": "geckodriver",
