@@ -34,8 +34,10 @@ export function assertChangesAllowForTargetLabel(
     !!config.commitMessageFixupLabel &&
     labelsOnPullRequest.some((name) => matchesPattern(name, config.commitMessageFixupLabel))
   ) {
-    debug('Skipping assertion for changes from commits allowed for the target label because the');
-    debug('commit message fixup label has been applied.');
+    debug(
+      'Skipping commit message target label validation because the commit message fixup label is ' +
+        'applied.',
+    );
     return;
   }
 
