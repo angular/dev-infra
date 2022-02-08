@@ -28,7 +28,7 @@
 import {createHash} from 'crypto';
 import fetch from 'node-fetch';
 import {Spinner} from '../../../ng-dev/utils/spinner';
-import {ArchiveType} from './browser';
+import {ArtifactType} from './browser-artifact';
 import {Chromium} from './chromium';
 import {Platform} from './platform';
 
@@ -145,7 +145,7 @@ async function isRevisionAvailableForPlatform(
   platform: Platform,
 ): Promise<boolean> {
   // Look for the `driver` archive as this is smaller and faster to check.
-  const response = await fetch(Chromium.getDownloadArchiveUrl(revision, platform, 'driver-bin'));
+  const response = await fetch(Chromium.getDownloadArtifactUrl(revision, platform, 'driver-bin'));
   return response.ok && response.status === 200;
 }
 
@@ -179,9 +179,9 @@ async function getHeadChromiumRevision(): Promise<number> {
 async function getSha256ChecksumForPlatform(
   browser: Chromium,
   platform: Platform,
-  archive: ArchiveType,
+  artifactType: ArtifactType,
 ): Promise<string> {
-  const response = await fetch(browser.getDownloadUrl(platform, archive));
+  const response = await fetch(browser.getDownloadUrl(platform, artifactType));
   const binaryContent = await response.buffer();
   return createHash('sha256').update(binaryContent).digest('hex');
 }

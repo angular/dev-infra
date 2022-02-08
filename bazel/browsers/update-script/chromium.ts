@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Browser, ArchiveType} from './browser';
+import {Browser} from './browser';
+import {ArtifactType, BrowserArtifact} from './browser-artifact';
 import {Platform} from './platform';
 
 const cloudStorageArchiveUrl =
@@ -59,13 +60,16 @@ export class Chromium implements Browser<number> {
     return supportedPlatforms.has(platform);
   }
 
-  getDownloadUrl(platform: Platform, type: ArchiveType): string {
-    return Chromium.getDownloadArchiveUrl(this.revision, platform, type);
+  getArtifact(platform: Platform, type: ArtifactType): BrowserArtifact {
+    return new BrowserArtifact(this, type, this.getDownloadUrl(platform, type));
   }
 
-  static getDownloadArchiveUrl(revision: number, platform: Platform, archive: ArchiveType): string {
-    const archiveMap =
-      archive === 'driver-bin' ? PlatformDriverArchiveMap : PlatformBrowserArchiveMap;
+  getDownloadUrl(platform: Platform, type: ArtifactType): string {
+    return Chromium.getDownloadArtifactUrl(this.revision, platform, type);
+  }
+
+  static getDownloadArtifactUrl(revision: number, platform: Platform, type: ArtifactType): string {
+    const archiveMap = type === 'driver-bin' ? PlatformDriverArchiveMap : PlatformBrowserArchiveMap;
     return cloudStorageArchiveUrl
       .replace('{platform}', PlatformSnapshotNameMap[platform])
       .replace('{revision}', `${revision}`)

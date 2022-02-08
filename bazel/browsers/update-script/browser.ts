@@ -6,15 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {BrowserArtifact, ArtifactType} from './browser-artifact';
 import {Platform} from './platform';
-
-/** Type describing possible archive types for browser downloads. */
-export type ArchiveType = 'driver-bin' | 'browser-bin';
 
 /** Interface describing a browser. */
 export interface Browser<T> {
   name: string;
   revision: T;
   supports(platform: Platform): boolean;
-  getDownloadUrl(platform: Platform, type: ArchiveType): string;
+  getArtifact(platform: Platform, type: ArtifactType): BrowserArtifact;
 }

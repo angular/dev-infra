@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Browser, ArchiveType} from './browser';
+import {ArtifactType, BrowserArtifact} from './browser-artifact';
+import {Browser} from './browser';
 import {Platform} from './platform';
 
 const downloadLinuxUrls = {
@@ -32,7 +33,7 @@ const downloadMacOsArm64Urls = {
 
 /** Class providing necessary information for the firefox browser. */
 export class Firefox implements Browser<string> {
-  name = 'chromium';
+  name = 'firefox';
 
   constructor(public revision: string, public driverVersion: string) {}
 
@@ -44,14 +45,15 @@ export class Firefox implements Browser<string> {
     );
   }
 
-  getDownloadUrl(platform: Platform, archiveType: ArchiveType): string {
+  getArtifact(platform: Platform, archiveType: ArtifactType): BrowserArtifact {
     const urlSet = this._getUrlSetForPlatform(platform);
     const baseUrl = urlSet[archiveType];
+    const downloadUrl = baseUrl.replace(/\{version}/g, this.revision);
 
-    return baseUrl.replace(/\{version}/g, this.revision);
+    return new BrowserArtifact(this, archiveType, downloadUrl);
   }
 
-  private _getUrlSetForPlatform(platform: Platform): Record<ArchiveType, string> {
+  private _getUrlSetForPlatform(platform: Platform): Record<ArtifactType, string> {
     switch (platform) {
       case Platform.LINUX_X64:
         return downloadLinuxUrls;
@@ -60,7 +62,7 @@ export class Firefox implements Browser<string> {
       case Platform.MAC_ARM64:
         return downloadMacOsArm64Urls;
       default:
-        throw Error('Unexpected platform without Firefox support.');
+        throw Error(`Unexpected platform "${platform}" without Firefox support.`);
     }
   }
 }
