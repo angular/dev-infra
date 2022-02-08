@@ -40417,6 +40417,8 @@ var require_signal_exit = __commonJS({
     };
     if (!processOk(process2)) {
       module2.exports = function() {
+        return function() {
+        };
       };
     } else {
       assert = require("assert");
@@ -40439,7 +40441,8 @@ var require_signal_exit = __commonJS({
       }
       module2.exports = function(cb, opts) {
         if (!processOk(global.process)) {
-          return;
+          return function() {
+          };
         }
         assert.equal(typeof cb, "function", "a callback must be provided for exit handler");
         if (loaded === false) {
