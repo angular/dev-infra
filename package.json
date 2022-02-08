@@ -72,13 +72,13 @@
     "yargs": "^17.0.0"
   },
   "devDependencies": {
-    "@angular/animations": "14.0.0-next.1",
-    "@angular/bazel": "14.0.0-next.1",
-    "@angular/common": "14.0.0-next.1",
-    "@angular/compiler": "14.0.0-next.1",
-    "@angular/compiler-cli": "14.0.0-next.1",
-    "@angular/core": "14.0.0-next.1",
-    "@angular/platform-browser": "14.0.0-next.1",
+    "@angular/animations": "14.0.0-next.2",
+    "@angular/bazel": "14.0.0-next.2",
+    "@angular/common": "14.0.0-next.2",
+    "@angular/compiler": "14.0.0-next.2",
+    "@angular/compiler-cli": "14.0.0-next.2",
+    "@angular/core": "14.0.0-next.2",
+    "@angular/platform-browser": "14.0.0-next.2",
     "@google-cloud/storage": "^5.18.1",
     "@octokit/graphql-schema": "^10.72.0",
     "@types/cli-progress": "^3.9.1",
@@ -109,6 +109,6 @@
     "zone.js": "^0.11.4"
   },
   "resolutions": {
-    "@angular/benchpress/@angular/core": "14.0.0-next.1"
+    "@angular/benchpress/@angular/core": "14.0.0-next.2"
   }
 }
