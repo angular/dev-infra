@@ -9,6 +9,7 @@
 import {ArtifactType, BrowserArtifact} from './browser-artifact';
 import {Browser} from './browser';
 import {Platform} from './platform';
+import {detectArtifactExtension} from './browser-artifact';
 
 const downloadLinuxUrls = {
   'browser-bin':
@@ -48,9 +49,15 @@ export class Firefox implements Browser<string> {
   getArtifact(platform: Platform, archiveType: ArtifactType): BrowserArtifact {
     const urlSet = this._getUrlSetForPlatform(platform);
     const baseUrl = urlSet[archiveType];
-    const downloadUrl = baseUrl.replace(/\{version}/g, this.revision);
+    const downloadUrl = baseUrl.replace(
+      /\{version}/g,
+      // Depending on browser, or driver being requested, substitute the associated version.
+      archiveType === 'browser-bin' ? this.revision : this.driverVersion,
+    );
 
-    return new BrowserArtifact(this, archiveType, downloadUrl);
+    // Note that for the artifact extension we will consult the non-substituted base URL
+    // as the substituted version like `97.0.tar.bz2` would throw off the detection.
+    return new BrowserArtifact(this, archiveType, downloadUrl, detectArtifactExtension(baseUrl));
   }
 
   private _getUrlSetForPlatform(platform: Platform): Record<ArtifactType, string> {
