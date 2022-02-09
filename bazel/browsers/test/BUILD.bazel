@@ -8,6 +8,11 @@ karma_web_test_suite(
         "//bazel/browsers/chromium:chromium",
         "//bazel/browsers/firefox:firefox",
     ],
+    tags = [
+        "linux",
+        "macos",
+        "windows",
+    ],
     deps = [
         ":test_bundle",
     ],
@@ -15,6 +20,7 @@ karma_web_test_suite(
 
 js_library(
     name = "test_lib",
+    testonly = True,
     srcs = ["browser-test.spec.mjs"],
 )
 
