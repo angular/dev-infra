@@ -4,9 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "test": "bazel test ..."
+    "test": "bazelisk test ..."
   },
   "devDependencies": {
-    "@bazel/bazelisk": "^1.10.1"
+    "@bazel/bazelisk": "^1.11.0"
   }
 }

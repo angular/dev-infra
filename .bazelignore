@@ -3,4 +3,6 @@ dist
 
 bazel/integration/tests/angular-cli/.angular/
 bazel/integration/tests/angular-cli/node_modules/
+bazel/integration/tests/nested_bazel_workspaces/node_modules
 bazel/integration/tests/package_mappings/node_modules/
+bazel/integration/tests/playwright_chromium/node_modules
