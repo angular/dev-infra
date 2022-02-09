@@ -117,7 +117,10 @@ commands:
 # https://circleci.com/docs/2.0/reusing-config/#authoring-parameterized-jobs
 jobs:
   test:
-    executor: docker-linux-executor
+    executor:
+      name: docker-linux-executor
+      resource_class: xlarge
+
     steps:
       - checkout_and_rebase
       - *restore_cache
