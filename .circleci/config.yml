@@ -4,15 +4,16 @@ version: 2.1
 
 orbs:
   buildalert: oss-tools/buildalert@0.1.0
+  win: circleci/windows@2.2.0
 
 # **Note**: When updating the beginning of the cache key, also update the cache key to match
 # the new cache key prefix. This allows us to take advantage of CircleCI's fallback caching.
 # Read more here: https://circleci.com/docs/2.0/caching/#restoring-cache.
-var_1: &cache_key v1-{{ checksum ".bazelversion" }}-{{ checksum "WORKSPACE" }}
-# We invalidate the cache if the Bazel version changes. We do this because otherwise the `bazelisk`
-# cache folder will contain all previously used versions and ultimately cause the cache
-# restoring to be slower.
-var_2: &cache_fallback_key v1-{{ checksum ".bazelversion" }}-
+var_1: &cache_key v1-{{arch}}-{{ checksum ".bazelversion" }}-{{ checksum "WORKSPACE" }}
+# We use a different cache if the Bazel version changes, or if the executor is a different one.
+# We do this because otherwise the `bazelisk` cache folder will contain all previously used
+# versions and ultimately cause the cache restoring to be slower.
+var_2: &cache_fallback_key v1-{{arch}}-{{ checksum ".bazelversion" }}-
 
 var_3: &gcp_decrypt_token 'angular'
 
@@ -29,20 +30,36 @@ var_5: &save_cache
       - '~/.cache/bazelisk'
       - '~/bazel_repository_cache'
 
+var_6: &default_executor_settings
+  parameters:
+    resource_class:
+      type: string
+      default: medium
+  environment:
+    GCP_DECRYPT_TOKEN: *gcp_decrypt_token
+  resource_class: << parameters.resource_class >>
+  working_directory: ~/ng
+
+var_7: &main_upstream_branches_filter
+  branches:
+    only:
+      - main
+      # Additional branch that can be used to test the snapshot build output.
+      # Developers can just push to that branch to test the built artifact.
+      - snapshot-test
+
 # Executor Definitions
 # https://circleci.com/docs/2.0/reusing-config/#authoring-reusable-executors
 executors:
-  default-executor:
-    parameters:
-      resource_class:
-        type: string
-        default: medium
-    environment:
-      GCP_DECRYPT_TOKEN: *gcp_decrypt_token
+  docker-linux-executor:
+    <<: *default_executor_settings
     docker:
       - image: cimg/node:16.10.0-browsers@sha256:83ff2dcad3043c4b3f7f58513805a0c8757ba5541a1f3c213f80bd242a3c77ac
-    resource_class: << parameters.resource_class >>
-    working_directory: ~/ng
+
+  macos-x64-executor:
+    <<: *default_executor_settings
+    macos:
+      xcode: '13.3.0'
 
 # Command Definitions
 # https://circleci.com/docs/2.0/reusing-config/#authoring-reusable-commands
@@ -64,7 +81,7 @@ commands:
   setup_bazel_config:
     description: 'Setting up Bazel configuration for CI'
     steps:
-      - run: echo "import %workspace%/.circleci/bazel.rc" >> ./.bazelrc
+      - run: echo "import %workspace%/.circleci/linux-bazel.rc" >> ./.bazelrc
       - run: ./.circleci/setup-bazel.sh
 
   prepare_and_store_test_results:
@@ -100,7 +117,7 @@ commands:
 # https://circleci.com/docs/2.0/reusing-config/#authoring-parameterized-jobs
 jobs:
   test:
-    executor: default-executor
+    executor: docker-linux-executor
     steps:
       - checkout_and_rebase
       - *restore_cache
@@ -112,8 +129,32 @@ jobs:
       - prepare_and_store_test_results
       - *save_cache
 
+  test_macos_x64:
+    executor: macos-x64-executor
+    steps:
+      - checkout
+      - *restore_cache
+      - yarn_install
+      - run: yarn bazel test --test_tag_filters=macos --build_tests_only -- //... -//bazel/remote-execution/...
+      - prepare_and_store_test_results
+      - *save_cache
+
+  test_windows_x64:
+    executor:
+      name: win/default
+      shell: bash.exe
+    steps:
+      - checkout
+      - *restore_cache
+      # Note: We cannot use the config-shared Yarn install command because the output timeout
+      # needs to be increased due to slower windows I/O (back to the 10min default for CircleCI).
+      - run: yarn install --immutable
+      - run: yarn bazel test --test_tag_filters=windows --build_tests_only -- ... -bazel/remote-execution/...
+      - prepare_and_store_test_results
+      - *save_cache
+
   lint:
-    executor: default-executor
+    executor: docker-linux-executor
     steps:
       - checkout_and_rebase
       - *restore_cache
@@ -127,7 +168,7 @@ jobs:
           command: yarn ng-dev commit-message validate-range << pipeline.git.base_revision >> << pipeline.git.revision >>
 
   publish_snapshot_build:
-    executor: default-executor
+    executor: docker-linux-executor
     steps:
       - checkout_and_rebase
       - *restore_cache
@@ -163,11 +204,9 @@ workflows:
     jobs:
       - test
       - lint
+      - test_macos_x64:
+          filters: *main_upstream_branches_filter
+      - test_windows_x64:
+          filters: *main_upstream_branches_filter
       - publish_snapshot_build:
-          filters:
-            branches:
-              only:
-                - main
-                # Additional branch that can be used to test the snapshot build output.
-                # Developers can just push to that branch to test the built artifact.
-                - snapshot-test
+          filters: *main_upstream_branches_filter
