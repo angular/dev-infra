@@ -33,7 +33,7 @@
     "@wdio/local-runner": "^7.16.4",
     "@wdio/schematics": "1.2.1",
     "@wdio/spec-reporter": "^7.16.4",
-    "chromedriver": "^97.0.0",
+    "chromedriver": "^98.0.0",
     "jasmine-core": "~3.9.0",
     "karma": "~6.3.0",
     "karma-chrome-launcher": "~3.1.0",
