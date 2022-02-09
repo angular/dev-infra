@@ -1,0 +1,26 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
+load("@npm//@bazel/concatjs:index.bzl", "karma_web_test_suite")
+load("//bazel/spec-bundling:index.bzl", "spec_bundle")
+
+karma_web_test_suite(
+    name = "test",
+    browsers = [
+        "//bazel/browsers/chromium:chromium",
+        "//bazel/browsers/firefox:firefox",
+    ],
+    deps = [
+        ":test_bundle",
+    ],
+)
+
+js_library(
+    name = "test_lib",
+    srcs = ["browser-test.spec.mjs"],
+)
+
+spec_bundle(
+    name = "test_bundle",
+    platform = "browser",
+    workspace_name = "dev-infra",
+    deps = [":test_lib"],
+)
