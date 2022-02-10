@@ -138,6 +138,10 @@ jobs:
       - checkout
       - *restore_cache
       - yarn_install
+      # Firefox tests will run in the Bazel sandbox, but Firefox currently requires, regardless
+      # of us specifying a custom profile directory, that the default profile directory exists.
+      # TODO: Remove this once https://bugzilla.mozilla.org/show_bug.cgi?id=1754821#c3 is resolved.
+      - run: mkdir "$HOME/Library/Application Support/Firefox"
       - run: yarn bazel test --test_tag_filters=macos --build_tests_only -- //... -//bazel/remote-execution/...
       - prepare_and_store_test_results
       - *save_cache
