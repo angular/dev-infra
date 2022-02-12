@@ -51,6 +51,9 @@ export function buildFormatParser(localYargs: yargs.Argv) {
         const executionCmd = check ? checkFiles : formatFiles;
         const allStagedFiles = GitClient.get().allStagedFiles();
         process.exitCode = await executionCmd(allStagedFiles);
+        if (!check && process.exitCode === 0) {
+          GitClient.get().runGraceful(['add', ...allStagedFiles]);
+        }
       },
     )
     .command(
