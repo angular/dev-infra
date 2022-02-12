@@ -4,7 +4,7 @@ load(
     _karma_web_test_suite = "karma_web_test_suite",
 )
 
-def _karma_local_browsers_target(name, **web_test_args):
+def _karma_debug_browsers_target(name, **web_test_args):
     """Macro for defining a standalone karma web test target that starts Karma
       without a browser, allowing for manual debugging."""
 
@@ -12,7 +12,7 @@ def _karma_local_browsers_target(name, **web_test_args):
     # that is manually connected to.
     _karma_web_test(
         name = "%s_bin" % name,
-        config_file = "//bazel/karma:karma-local-config.js",
+        config_file = "//bazel/karma:karma-debug-config.js",
         tags = ["manual"],
         **web_test_args
     )
@@ -38,15 +38,15 @@ def karma_web_test_suite(name, **kwargs):
         ]
 
     # Filter out options which are specific to "karma_web_test" targets. We cannot
-    # pass options like "browsers" to the local web test target.
+    # pass options like "browsers" to the debug web test target.
     web_test_args = {}
     for opt_name in kwargs.keys():
-        if not opt_name in ["wrapped_test_tags", "browsers", "wrapped_test_tags", "tags"]:
+        if not opt_name in ["wrapped_test_tags", "browsers", "tags"]:
             web_test_args[opt_name] = kwargs[opt_name]
 
-    # Custom standalone web test that can be run to test against any browser
-    # that is manually connected to.
-    _karma_local_browsers_target(name = "%s_local" % name)
+    # Custom standalone web test that can be run to test against any
+    # browser that is manually connected to.
+    _karma_debug_browsers_target(name = "%s_debug" % name)
 
     # Default test suite with all configured browsers.
     _karma_web_test_suite(name = name, **kwargs)

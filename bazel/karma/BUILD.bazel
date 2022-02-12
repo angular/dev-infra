@@ -1,6 +1,6 @@
 package(default_visibility = ["//visibility:public"])
 
-exports_files(["karma-local-config.js"])
+exports_files(["karma-debug-config.js"])
 
 # Make source files available for distribution via pkg_npm
 filegroup(
