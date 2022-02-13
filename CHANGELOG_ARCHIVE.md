@@ -1,3 +1,14 @@
+<a name="2021.10.10"></a>
+# 2021.10.10 (2021-10-10)
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [87ee867](https://github.com/angular/dev-infra/commit/87ee86733980a2ef64b60100a32c892161fd8239) | fix | add `DEPRECATION` to invalid commit message ([#250](https://github.com/angular/dev-infra/pull/250)) |
+| [cce6d07](https://github.com/angular/dev-infra/commit/cce6d07bb4a1c0c3ff19aea614253164f05ec564) | fix | allow deprecations in PRs during feature freeze ([#256](https://github.com/angular/dev-infra/pull/256)) |
+## Special Thanks
+Alan Agius and Joey Perrott
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2021.10.3"></a>
 # 2021.10.3 (2021-10-03)
 ## Breaking Changes
