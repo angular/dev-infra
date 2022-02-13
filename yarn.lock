@@ -368,7 +368,7 @@ __metadata:
     karma-jasmine: ^4.0.1
     karma-requirejs: ^1.1.0
     karma-sourcemap-loader: ^0.3.8
-    minimatch: ^3.0.4
+    minimatch: ^4.0.0
     minimist: ^1.2.5
     multimatch: ^5.0.0
     nock: ^13.0.3
@@ -8642,6 +8642,15 @@ __metadata:
   dependencies:
     brace-expansion: ^1.1.7
   checksum: a3b84b426eafca947741b864502cee02860c4e7b145de11ad98775cfcf3066fef422583bc0ffce0952ddf4750c1ccf4220b1556430d4ce10139f66247d87d69e
+  languageName: node
+  linkType: hard
+
+"minimatch@npm:^4.0.0":
+  version: 4.1.0
+  resolution: "minimatch@npm:4.1.0"
+  dependencies:
+    brace-expansion: ^1.1.7
+  checksum: 2e479ae6dc71b35e85f9cb9a06366a28ab196a4e40846998277187d5ebed1d2c10958113c4e8f307010d4636a1ded57dc71b65e428e636f18465131c39bfbec4
   languageName: node
   linkType: hard
 
