@@ -13,8 +13,14 @@ export const commitMessage: CommitMessageConfig = {
       'api-golden',
       'benchmark',
       'browsers',
+      'constraints',
+      'esbuild',
+      'http-server',
+      'integration',
+      'karma',
       'protos',
       'remote-execution',
+      'spec-bundling',
     ]),
     ...buildScopesFor('github-actions', [
       'commit-message-based-labels',
@@ -35,5 +41,6 @@ export const commitMessage: CommitMessageConfig = {
       'ts-circular-dependencies',
     ]),
     ...buildScopesFor('tslint-rules', []),
+    ...buildScopesFor('shared-scripts', []),
   ],
 };
