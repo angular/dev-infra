@@ -1,5 +1,5 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
-load("@npm//@bazel/concatjs:index.bzl", "karma_web_test_suite")
+load("//bazel/karma:index.bzl", "karma_web_test_suite")
 load("//bazel/spec-bundling:index.bzl", "spec_bundle")
 
 karma_web_test_suite(

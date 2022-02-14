@@ -46,7 +46,7 @@ def karma_web_test_suite(name, **kwargs):
 
     # Custom standalone web test that can be run to test against any
     # browser that is manually connected to.
-    _karma_debug_browsers_target(name = "%s_debug" % name)
+    _karma_debug_browsers_target(name = "%s_debug" % name, **web_test_args)
 
     # Default test suite with all configured browsers.
     _karma_web_test_suite(name = name, **kwargs)
