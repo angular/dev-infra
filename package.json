@@ -50,7 +50,7 @@
     "husky": "^7.0.1",
     "inquirer": "^8.0.0",
     "jasmine": "^3.7.0",
-    "minimatch": "^4.0.0",
+    "minimatch": "^5.0.0",
     "multimatch": "^5.0.0",
     "nock": "^13.0.3",
     "node-fetch": "^2.6.1",
