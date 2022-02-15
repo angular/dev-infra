@@ -377,7 +377,7 @@ __metadata:
     karma-jasmine: ^4.0.1
     karma-requirejs: ^1.1.0
     karma-sourcemap-loader: ^0.3.8
-    minimatch: ^4.0.0
+    minimatch: ^5.0.0
     minimist: ^1.2.5
     multimatch: ^5.0.0
     nock: ^13.0.3
@@ -4061,6 +4061,15 @@ __metadata:
     balanced-match: ^1.0.0
     concat-map: 0.0.1
   checksum: faf34a7bb0c3fcf4b59c7808bc5d2a96a40988addf2e7e09dfbb67a2251800e0d14cd2bfc1aa79174f2f5095c54ff27f46fb1289fe2d77dac755b5eb3434cc07
+  languageName: node
+  linkType: hard
+
+"brace-expansion@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "brace-expansion@npm:2.0.1"
+  dependencies:
+    balanced-match: ^1.0.0
+  checksum: a61e7cd2e8a8505e9f0036b3b6108ba5e926b4b55089eeb5550cd04a471fe216c96d4fe7e4c7f995c728c554ae20ddfc4244cad10aef255e72b62930afd233d1
   languageName: node
   linkType: hard
 
@@ -8715,12 +8724,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimatch@npm:^4.0.0":
-  version: 4.1.1
-  resolution: "minimatch@npm:4.1.1"
+"minimatch@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "minimatch@npm:5.0.0"
   dependencies:
-    brace-expansion: ^1.1.7
-  checksum: e598cc16a97ef1504dd9419243c58b1b13de31eaf7743d08aa5d4896b72148046488de7b17c39933ffcef8abae09e2267a3e17508ce80e6953d65285a0c4a2bf
+    brace-expansion: ^2.0.1
+  checksum: 810d4165fa2b16d0ffe8eb7586b8b7b7122ab77efa8f351686ffd1e8cbe63997ae9d5e7404fe611a676e59e1a47f7f5e8d9a004e0fe5bb6d5ac35457469116a4
   languageName: node
   linkType: hard
 
