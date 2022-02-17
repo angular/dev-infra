@@ -4,6 +4,9 @@ load(
     _karma_web_test_suite = "karma_web_test_suite",
 )
 
+# Re-export of unmodified Karma test macros/rules.
+karma_web_test = _karma_web_test
+
 def _karma_debug_browsers_target(name, **web_test_args):
     """Macro for defining a standalone karma web test target that starts Karma
       without a browser, allowing for manual debugging."""
