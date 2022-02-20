@@ -1,4 +1,5 @@
-load("@npm//@bazel/typescript:index.bzl", _ts_library = "ts_library", _ts_project = "ts_project")
+load("@npm//@bazel/concatjs:index.bzl", _ts_library = "ts_library")
+load("@npm//@bazel/typescript:index.bzl", _ts_project = "ts_project")
 load("//bazel/esbuild:index.bzl", _esbuild = "esbuild", _esbuild_config = "esbuild_config")
 load("@build_bazel_rules_nodejs//:index.bzl", "generated_file_test", _pkg_npm = "pkg_npm")
 load("//tools/jasmine:jasmine.bzl", _jasmine_node_test = "jasmine_node_test")

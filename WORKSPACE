@@ -16,13 +16,16 @@ http_archive(
     ],
 )
 
-# Fetch rules_nodejs so we can install our npm dependencies
+# Fetch rules_nodejs and install its dependencies so we can install our npm dependencies.
 http_archive(
     name = "build_bazel_rules_nodejs",
-    patches = ["//:yarn-berry.patch"],
-    sha256 = "ddb78717b802f8dd5d4c01c340ecdc007c8ced5c1df7db421d0df3d642ea0580",
-    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/4.6.0/rules_nodejs-4.6.0.tar.gz"],
+    sha256 = "c077680a307eb88f3e62b0b662c2e9c6315319385bc8c637a861ffdbed8ca247",
+    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.1.0/rules_nodejs-5.1.0.tar.gz"],
 )
+
+load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_dependencies")
+
+build_bazel_rules_nodejs_dependencies()
 
 load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories", "yarn_install")
 
@@ -32,11 +35,14 @@ node_repositories(
 
 yarn_install(
     name = "npm",
-    args = ["--immutable"],
-    data = ["//:.yarnrc.yml"],
     # Yarn Berry/v2+ expects `--immutable` instead of `--frozen-lockfile`.
-    frozen_lockfile = False,
+    args = ["--immutable"],
+    data = [
+        "//:.yarn/releases/yarn-3.2.0.cjs",
+        "//:.yarnrc.yml",
+    ],
     package_json = "//:package.json",
+    yarn = "//:.yarn/releases/yarn-3.2.0.cjs",
     yarn_lock = "//:yarn.lock",
 )
 
@@ -54,7 +60,9 @@ browser_repositories()
 
 load("@build_bazel_rules_nodejs//toolchains/esbuild:esbuild_repositories.bzl", "esbuild_repositories")
 
-esbuild_repositories()
+esbuild_repositories(
+    npm_repository = "npm",
+)
 
 load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 

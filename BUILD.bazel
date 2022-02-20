@@ -6,7 +6,6 @@ load("@npm//@bazel/typescript:index.bzl", "ts_config")
 exports_files([
     "package.json",
     ".yarnrc.yml",
-    "yarn-berry.patch",
 ])
 
 ts_config(
