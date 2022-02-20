@@ -1,3 +1,19 @@
+<a name="2022.2.20"></a>
+# 2022.2.20 (2022-02-20)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [09cb90c](https://github.com/angular/dev-infra/commit/09cb90cd7e273966d8bc1e1a2dd98484e347a4cf) | feat | **karma:** expose karma web test rule in shared karma code |
+| [a3ad969](https://github.com/angular/dev-infra/commit/a3ad969facdad942bbb0a6a75100fe25f9243b26) | feat | setup karma web test wrapper with "local" debug target ([#403](https://github.com/angular/dev-infra/pull/403)) |
+| [5b35e20](https://github.com/angular/dev-infra/commit/5b35e20aeb147b713c31ba5c269cf2128c746d46) | fix | **karma:** web test arguments not passed through |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [74b89a4](https://github.com/angular/dev-infra/commit/74b89a46292330ba949652680c30b0280249db74) | feat | **format:** add staged files back ([#405](https://github.com/angular/dev-infra/pull/405)) |
+## Special Thanks
+Paul Gschwendtner, dario-piotrowicz and renovate[bot]
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.2.13"></a>
 # 2022.2.13 (2022-02-13)
 ### bazel
@@ -176,21 +192,3 @@ Paul Gschwendtner
 | [7b66fb5](https://github.com/angular/dev-infra/commit/7b66fb5dc44b92fb4ecbd6a7d52b67a3e15339eb) | fix | **release:** ensure installed node modules do not break within Bazel ([#271](https://github.com/angular/dev-infra/pull/271)) |
 ## Special Thanks
 Alan Agius, Joey Perrott and Paul Gschwendtner
-
-<!-- CHANGELOG SPLIT MARKER -->
-<a name="2021.10.17"></a>
-# 2021.10.17 (2021-10-17)
-### bazel
-| Commit | Type | Description |
-| -- | -- | -- |
-| [3cc5232](https://github.com/angular/dev-infra/commit/3cc523269f0219a7beeb895af3a9c5066249f9a6) | feat | add support for custom environment variables in integration tests ([#270](https://github.com/angular/dev-infra/pull/270)) |
-| [053cd9a](https://github.com/angular/dev-infra/commit/053cd9a761f891ee60393a68e9b805a07d470637) | feat | introduce rule for running integration tests with Bazel |
-| [4c652ca](https://github.com/angular/dev-infra/commit/4c652caff46440bf44b5a0822ee62e66dd83c3b5) | feat | provide remote-execution platform with network access. |
-### ng-dev
-| Commit | Type | Description |
-| -- | -- | -- |
-| [8cec60f](https://github.com/angular/dev-infra/commit/8cec60fa9e14cef6f29fcac429c8246f0bd93531) | feat | remove prerelease changelog entries when cutting a stable release ([#260](https://github.com/angular/dev-infra/pull/260)) |
-| [387b9d2](https://github.com/angular/dev-infra/commit/387b9d22e6ea5f67257a85431b59ddd460468331) | feat | support removing all prerelease changelog entries ([#260](https://github.com/angular/dev-infra/pull/260)) |
-| [f31797a](https://github.com/angular/dev-infra/commit/f31797a431ece334d127090ddc7921f07b8ee734) | fix | **release:** run yarn integrity and verify-trees checks before performing a release ([#264](https://github.com/angular/dev-infra/pull/264)) |
-## Special Thanks
-Joey Perrott and Paul Gschwendtner
