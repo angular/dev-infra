@@ -158,6 +158,13 @@ export class GitClient {
 
   /** Gets whether the current Git repository has uncommitted changes. */
   hasUncommittedChanges(): boolean {
+    // We also need to refresh the index in case some files have been touched
+    // but not modified. The diff-index command will not check contents so we
+    // manually need to refresh and cleanup the index before performing the diff.
+    // Relevant info: https://git-scm.com/docs/git-diff-index#_non_cached_mode,
+    // https://git-scm.com/docs/git-update-index and https://stackoverflow.com/a/34808299.
+    this.runGraceful(['update-index', '-q', '--refresh']);
+
     return this.runGraceful(['diff-index', '--quiet', 'HEAD']).status !== 0;
   }
 
