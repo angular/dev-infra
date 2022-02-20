@@ -46508,6 +46508,7 @@ var require_git_client = __commonJS({
         return branchName;
       }
       hasUncommittedChanges() {
+        this.runGraceful(["update-index", "-q", "--refresh"]);
         return this.runGraceful(["diff-index", "--quiet", "HEAD"]).status !== 0;
       }
       checkout(branchOrRevision, cleanState) {
