@@ -47675,6 +47675,7 @@ var require_minimatch = __commonJS({
       assertValidPattern(pattern);
       if (!options)
         options = {};
+      pattern = pattern.trim();
       if (!options.allowWindowsEscape && path.sep !== "/") {
         pattern = pattern.split(path.sep).join("/");
       }
