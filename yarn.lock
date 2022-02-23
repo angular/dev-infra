@@ -308,6 +308,7 @@ __metadata:
     "@angular/platform-browser": 14.0.0-next.3
     "@babel/core": ^7.16.0
     "@bazel/bazelisk": ^1.10.1
+    "@bazel/buildifier": ^4.0.1
     "@bazel/concatjs": 4.6.0
     "@bazel/esbuild": 4.6.0
     "@bazel/jasmine": 4.6.0
@@ -1671,6 +1672,15 @@ __metadata:
     bazel: bazelisk.js
     bazelisk: bazelisk.js
   checksum: f1f64b6c37c084e874d97118278597a451c4a8d260bb9c53647a5f2cb4c3e480ff2221ca8555639fc2f6d777c70727a1bb8316fe5eb1d8ac2ac3f6ef8a4fddbf
+  languageName: node
+  linkType: hard
+
+"@bazel/buildifier@npm:^4.0.1":
+  version: 4.2.5
+  resolution: "@bazel/buildifier@npm:4.2.5"
+  bin:
+    buildifier: buildifier.js
+  checksum: 2b2cc27582b5e3a4b584dd9ab153c2dc37bf8c8eb71881c32fbb34772d7494e9a892f6a530e8c372157f4c200c79d60b96de3867fa6666b1a553e5ac46fed0d1
   languageName: node
   linkType: hard
 
