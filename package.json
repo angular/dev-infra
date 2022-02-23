@@ -14,7 +14,6 @@
   "dependencies": {
     "@angular-devkit/build-angular": "14.0.0-next.2",
     "@angular/benchpress": "0.3.0",
-    "@angular/compiler-cli": "14.0.0-next.3",
     "@babel/core": "^7.16.0",
     "@bazel/concatjs": "4.6.0",
     "@bazel/esbuild": "4.6.0",
@@ -55,6 +54,7 @@
     "@angular/bazel": "14.0.0-next.3",
     "@angular/common": "14.0.0-next.3",
     "@angular/compiler": "14.0.0-next.3",
+    "@angular/compiler-cli": "14.0.0-next.3",
     "@angular/core": "14.0.0-next.3",
     "@angular/platform-browser": "14.0.0-next.3",
     "@bazel/bazelisk": "^1.10.1",
