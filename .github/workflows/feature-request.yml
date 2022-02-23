@@ -2,6 +2,10 @@ name: Feature request triage bot
 
 on: [workflow_dispatch]
 
+# Declare default permissions as read only.
+permissions:
+  contents: read
+
 jobs:
   feature_triage:
     runs-on: ubuntu-latest

@@ -4,6 +4,10 @@ on:
   issue_comment:
     types: [created, edited]
 
+# Declare default permissions as read only.
+permissions:
+  contents: read
+
 jobs:
   slash_commands:
     runs-on: ubuntu-latest

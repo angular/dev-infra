@@ -5,6 +5,10 @@ on:
   schedule:
     - cron: '0 0 * * *'
 
+# Declare default permissions as read only.
+permissions:
+  contents: read
+
 jobs:
   lock_closed:
     runs-on: ubuntu-latest
