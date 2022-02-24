@@ -63,16 +63,3 @@ esbuild(
         ":ng-dev",
     ],
 )
-
-filegroup(
-    name = "lib",
-    srcs = [
-        ":cli-bundle",
-        # The bundle of `ng-dev` relies on the following files to be available next to the `ng-dev`
-        # bundle. This is necessary because the CLI resolves these files using relative paths and
-        # requires these to be external, compared to bundling those up.
-        ":build-worker-bundle",
-        ":commit-message-filter",
-    ],
-    visibility = ["//:npm"],
-)
