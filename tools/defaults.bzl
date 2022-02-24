@@ -5,6 +5,12 @@ load("//tools/jasmine:jasmine.bzl", _jasmine_node_test = "jasmine_node_test")
 
 jasmine_node_test = _jasmine_node_test
 
+def _get_module_name(testonly):
+    if testonly:
+        return None
+
+    return "@angular/dev-infra-private/%s" % native.package_name()
+
 def ts_project(**kwargs):
     _ts_project(
         tsconfig = "//:tsconfig",
@@ -27,7 +33,8 @@ def ts_library(name, testonly = False, deps = [], srcs = [], **kwargs):
         testonly = testonly,
         deps = deps,
         srcs = srcs,
-        module_name = kwargs.pop("module_name", native.package_name()),
+        module_name = kwargs.pop("module_name", _get_module_name(testonly)),
+        package_name = kwargs.pop("package_name", _get_module_name(testonly)),
         **kwargs
     )
 

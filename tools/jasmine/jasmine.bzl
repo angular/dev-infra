@@ -2,6 +2,7 @@ load("@npm//@bazel/jasmine:index.bzl", _jasmine_node_test = "jasmine_node_test")
 
 def jasmine_node_test(name, specs = [], **kwargs):
     templated_args = kwargs.pop("templated_args", []) + [
+        "--bazel_patch_module_resolver",
         # Include our jasmime bootstrap file to be run before the jasmine runner.
         "--node_options=--require=$$(rlocation $(rootpath //tools/jasmine:bootstrap_init))",
     ]
