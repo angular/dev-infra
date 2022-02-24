@@ -1,7 +1,7 @@
 load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
 
 exports_files([
-    "strategies/commit-message-filter.js",
+    "strategies/commit-message-filter.ts",
 ])
 
 ts_library(

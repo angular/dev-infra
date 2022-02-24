@@ -10,6 +10,14 @@
     "ng-dev": "ts-node --transpile-only ./ng-dev/cli.ts",
     "update-generated-files": "ts-node --transpile-only ./tools/update-generated-files.ts"
   },
+  "exports": {
+    "./ng-dev/*": {
+      "default": "./ng-dev/bundles/*"
+    },
+    "./*": {
+      "default": "./'"
+    }
+  },
   "packageManager": "yarn@3.2.0",
   "dependencies": {
     "@angular-devkit/build-angular": "14.0.0-next.3",

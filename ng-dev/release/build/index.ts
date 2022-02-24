@@ -18,7 +18,7 @@ import {BuiltPackage} from '../config/index';
  */
 export async function buildReleaseOutput(): Promise<BuiltPackage[] | null> {
   return new Promise((resolve) => {
-    const buildProcess = fork(require.resolve('./build-worker'), {
+    const buildProcess = fork(getBuildWorkerScriptPath(), {
       // The stdio option is set to redirect any "stdout" output directly to the "stderr" file
       // descriptor. An additional "ipc" file descriptor is created to support communication with
       // the build process. https://nodejs.org/api/child_process.html#child_process_options_stdio.
@@ -33,4 +33,11 @@ export async function buildReleaseOutput(): Promise<BuiltPackage[] | null> {
     // On child process exit, resolve the promise with the received output.
     buildProcess.on('exit', () => resolve(builtPackages));
   });
+}
+
+/** Gets the absolute file path to the build worker script. */
+function getBuildWorkerScriptPath(): string {
+  // We resolve the worker script using module resolution as in the package output
+  // the worker might be bundled but exposed through a subpath export mapping.
+  return require.resolve('@angular/dev-infra-private/ng-dev/release/build/build-worker');
 }

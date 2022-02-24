@@ -1,4 +1,5 @@
 load("//tools:defaults.bzl", "esbuild", "ts_library")
+load("//bazel:extract_types.bzl", "extract_types")
 
 NG_DEV_EXTERNALS = [
     # `ts-node` is optional for users who write their configurations in TypeScript.
@@ -12,6 +13,7 @@ ts_library(
     name = "ng-dev",
     srcs = [
         "cli.ts",
+        "index.ts",
     ],
     visibility = [
         "//:npm",
@@ -25,8 +27,12 @@ ts_library(
         "//ng-dev/misc",
         "//ng-dev/ngbot",
         "//ng-dev/pr",
+        "//ng-dev/pr/config",
         "//ng-dev/pullapprove",
         "//ng-dev/release",
+        "//ng-dev/release/config",
+        "//ng-dev/release/publish",
+        "//ng-dev/release/versioning",
         "//ng-dev/ts-circular-dependencies",
         "//ng-dev/utils",
         "@npm//@types/yargs",
@@ -34,35 +40,28 @@ ts_library(
     ],
 )
 
+extract_types(
+    name = "types",
+    visibility = ["//:npm"],
+    deps = [":ng-dev"],
+)
+
 esbuild(
-    name = "cli-bundle",
-    entry_point = "cli.ts",
+    name = "bundles",
+    entry_points = [
+        "cli.ts",
+        "index.ts",
+        # These additional entry-points need to be generated since the `ng-dev` tool tries
+        # to launch these files/scripts dynamically (through e.g. `spawn` or `fork`).
+        "//ng-dev/release/build:build-worker.ts",
+        "//ng-dev/pr/merge:strategies/commit-message-filter.ts",
+    ],
     external = NG_DEV_EXTERNALS,
-    output = "cli-bundle.js",
+    splitting = True,
+    visibility = ["//:npm"],
     deps = [
         ":ng-dev",
     ],
-)
-
-esbuild(
-    name = "build-worker-bundle",
-    entry_point = "//ng-dev/release/build:build-worker.ts",
-    external = NG_DEV_EXTERNALS,
-    # Note: Needs to be named `build-worker.js` as this is the external path
-    # the release build command resolves the script from.
-    output = "build-worker.js",
-    deps = [
-        "//ng-dev/release/build",
-    ],
-)
-
-genrule(
-    name = "commit-message-filter",
-    srcs = ["//ng-dev/pr/merge:strategies/commit-message-filter.js"],
-    # Note: Needs to be named `commit-message-filter.js` as this is the name
-    # the autosquash merge strategy expects the external file to be named.
-    outs = ["commit-message-filter.js"],
-    cmd = """cp $< $@""",
 )
 
 filegroup(

@@ -35,8 +35,8 @@ pkg_npm(
     ],
     substitutions = NPM_PACKAGE_SUBSTITUTIONS,
     deps = [
-        "//ng-dev",
-        "//ng-dev:lib",
+        "//ng-dev:bundles",
+        "//ng-dev:types",
         "//tslint-rules:lib",
     ],
 )
