@@ -6,13 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {join} from 'path';
 import {PullRequestFailure} from '../../common/validation/failures';
 import {PullRequest} from '../pull-request';
 import {MergeStrategy, TEMP_PR_HEAD_BRANCH} from './strategy';
-
-/** Path to the commit message filter script. Git expects this paths to use forward slashes. */
-const MSG_FILTER_SCRIPT = join(__dirname, './commit-message-filter.js').replace(/\\/g, '/');
 
 /**
  * Merge strategy that does not use the Github API for merging. Instead, it fetches
@@ -80,7 +76,7 @@ export class AutosquashMergeStrategy extends MergeStrategy {
       'filter-branch',
       '-f',
       '--msg-filter',
-      `${MSG_FILTER_SCRIPT} ${prNumber}`,
+      `${getCommitMessageFilterScriptPath()} ${prNumber}`,
       revisionRange,
     ]);
 
@@ -121,4 +117,13 @@ export class AutosquashMergeStrategy extends MergeStrategy {
 
     return null;
   }
+}
+
+/** Gets the absolute file path to the commit-message filter script. */
+function getCommitMessageFilterScriptPath(): string {
+  // We resolve the script using module resolution as in the package output
+  // the worker might be bundled but exposed through a subpath export mapping.
+  return require.resolve(
+    '@angular/dev-infra-private/ng-dev/pr/merge/strategies/commit-message-filter',
+  );
 }

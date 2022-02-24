@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 /**
  * @license
  * Copyright Google LLC All Rights Reserved.
@@ -34,7 +35,7 @@ if (require.main === module) {
   });
 }
 
-function rewriteCommitMessage(message, prNumber) {
+function rewriteCommitMessage(message: string, prNumber: string) {
   const lines = message.split(/\n/);
   // Add the pull request number to the commit message title. This matches what
   // Github does when PRs are merged on the web through the `Squash and Merge` button.
