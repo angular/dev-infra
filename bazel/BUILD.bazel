@@ -4,6 +4,7 @@ filegroup(
         "BUILD.bazel",
         "expand_template.bzl",
         "extract_js_module_output.bzl",
+        "extract_types.bzl",
         "//bazel/api-golden:files",
         "//bazel/benchmark:files",
         "//bazel/browsers:files",
