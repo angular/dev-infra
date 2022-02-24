@@ -18,6 +18,10 @@ export * from './release/config';
 // respect to Angular's branching/versioning and release process.
 export * from './release/versioning';
 
+// Exposes console utils that can be used by consumers to e.g. add messages
+// to the dev-infra log which is stored on failures.
+export * from './utils/console';
+
 // Additional exports for adding custom release pre-staging, post-build checks.
 // TODO: Remove this once we have a public API for release hooks/checks
 export {ReleaseAction} from './release/publish/actions';
