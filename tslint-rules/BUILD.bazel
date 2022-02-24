@@ -3,7 +3,6 @@ load("//tools:defaults.bzl", "ts_library")
 ts_library(
     name = "lib",
     srcs = glob(["*.ts"]),
-    module_name = "@angular/dev-infra-private/tslint-rules",
     visibility = ["//:npm"],
     deps = [
         "@npm//tslint",
