@@ -7,12 +7,12 @@
   "private": true,
   "scripts": {
     "prepare": "husky install",
-    "ng-dev": "ts-node --transpile-only ./ng-dev/cli.ts",
+    "ng-dev": "bash ./tools/local-dev.sh",
     "update-generated-files": "ts-node --transpile-only ./tools/update-generated-files.ts"
   },
   "exports": {
     "./ng-dev/*": {
-      "default": "./ng-dev/bundles/*"
+      "default": "./ng-dev/bundles/*.js"
     },
     "./*": {
       "default": "./'"

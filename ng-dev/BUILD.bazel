@@ -16,7 +16,6 @@ ts_library(
         "index.ts",
     ],
     visibility = [
-        "//:npm",
         "//ng-dev:__subpackages__",
     ],
     deps = [
@@ -57,7 +56,7 @@ esbuild(
         "//ng-dev/pr/merge:strategies/commit-message-filter.ts",
     ],
     external = NG_DEV_EXTERNALS,
-    splitting = True,
+    format = "iife",
     visibility = ["//:npm"],
     deps = [
         ":ng-dev",
