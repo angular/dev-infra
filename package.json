@@ -2,21 +2,24 @@
   "name": "@angular/dev-infra-private",
   "version": "0.0.0-{SCM_HEAD_SHA}",
   "bin": {
-    "ng-dev": "./ng-dev/cli-bundle.js"
+    "ng-dev": "./ng-dev/bundles/cli.js"
   },
   "private": true,
   "scripts": {
     "prepare": "husky install",
     "ng-dev": "bash ./tools/local-dev.sh",
-    "build-env-stamp": "ts-node --transpile-only ./ng-dev/release/stamping/cli.ts build-env-stamp",
+    "build-env-stamp": "ts-node --transpile-only ./ng-dev/release/stamping/_private_main.ts build-env-stamp",
     "update-generated-files": "ts-node --transpile-only ./tools/update-generated-files.ts"
   },
   "exports": {
+    "./ng-dev": {
+      "default": "./ng-dev/bundles/index.js"
+    },
     "./ng-dev/*": {
       "default": "./ng-dev/bundles/*.js"
     },
     "./*": {
-      "default": "./'"
+      "default": "./*"
     }
   },
   "packageManager": "yarn@3.2.0",

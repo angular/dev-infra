@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import yargs, {Arguments, Argv, CommandModule} from 'yargs';
+import {Arguments, Argv, CommandModule} from 'yargs';
 
 import {buildEnvStamp, EnvStampMode} from './env-stamp';
 
@@ -33,14 +33,3 @@ export const BuildEnvStampCommand: CommandModule<{}, Options> = {
   command: 'build-env-stamp',
   describe: 'Build the environment stamping information',
 };
-
-// This file can be executed directly for the workspace stamping in this repo.
-// More details can be found in the `.bazelrc` file.
-if (require.main === module) {
-  yargs(process.argv.slice(2))
-    .help()
-    .strict()
-    .demandCommand()
-    .command(BuildEnvStampCommand)
-    .parseSync();
-}

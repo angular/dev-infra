@@ -23,7 +23,7 @@ export * from './release/versioning';
 export * from './utils/console';
 
 // Additional exports for adding custom release pre-staging, post-build checks.
-// TODO: Remove this once we have a public API for release hooks/checks
+// TODO: Remove once https://github.com/angular/dev-infra/issues/402 is resolved.
 export {ReleaseAction} from './release/publish/actions';
 export {
   FatalReleaseActionError,

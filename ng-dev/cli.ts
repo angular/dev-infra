@@ -19,6 +19,13 @@ import {tsCircularDependenciesBuilder} from './ts-circular-dependencies/index';
 import {captureLogOutputForCommand} from './utils/console';
 import {buildMiscParser} from './misc/cli';
 import {buildCiParser} from './ci/cli';
+import {ReleaseAction} from './index';
+
+// Expose the `ReleaseAction` constructor globally so that the COMP repo
+// can hook into it and setup staging/post-building release checks.
+// TODO: Remove once https://github.com/angular/dev-infra/issues/402 is resolved.
+// or if we have code-splitting w/ ESM enabled for the ng-dev bundling.
+(global as any).ReleaseAction = ReleaseAction;
 
 yargs
   .scriptName('ng-dev')
