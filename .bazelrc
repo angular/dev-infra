@@ -86,7 +86,11 @@ build:remote --remote_accept_cached=true
 ################################
 
 # Releases should always be stamped with version control info
-build:release --workspace_status_command="yarn ng-dev release build-env-stamp --mode=release"
+# Note: We usually would use the `ng-dev` tool directly, but that one would need to be
+# built with Bazel and building with Bazel inside the Bazel-invoked workspace status
+# script does not work. To workaround this, we have a `ts-node`-based stamping script.
+# TODO: Consider using `ng-dev` directly if this is possible.
+build:release --workspace_status_command="yarn build-env-stamp --mode=release"
 build:release --stamp
 
 ####################################################
