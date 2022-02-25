@@ -9,6 +9,7 @@ filegroup(
 
 cc_toolchain_suite(
     name = "cc_toolchain_suite",
+    tags = ["manual"],
     toolchains = {
         "k8": ":cc_compiler_k8",
     },
