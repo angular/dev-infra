@@ -1,3 +1,18 @@
+<a name="2022.2.27"></a>
+# 2022.2.27 (2022-02-27)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [53786a3](https://github.com/angular/dev-infra/commit/53786a3d630f1ba10bbb6697913768215ca41308) | feat | add rule for extracting type definitions from targets ([#430](https://github.com/angular/dev-infra/pull/430)) |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c969fc8](https://github.com/angular/dev-infra/commit/c969fc8c87b91faf2e415baae9ccce8fec310dc1) | feat | expose entry-point with code-splitting for runtime consumers ([#430](https://github.com/angular/dev-infra/pull/430)) |
+| [a9c4860](https://github.com/angular/dev-infra/commit/a9c48602d4f54850beabdf7933e05a9ce89e9dd5) | fix | uncommitted changes check returning false-positives ([#416](https://github.com/angular/dev-infra/pull/416)) |
+## Special Thanks
+Charles Lyding, George Kalpakas, Paul Gschwendtner and renovate[bot]
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.2.20"></a>
 # 2022.2.20 (2022-02-20)
 ### bazel
@@ -178,17 +193,3 @@ Joey Perrott, Paul Gschwendtner and renovate[bot]
 | [471437d](https://github.com/angular/dev-infra/commit/471437d21eb1d94615fb4e48b3f8d6175277467c) | feat | **format:** support mjs and cjs files with prettier and clang-format ([#274](https://github.com/angular/dev-infra/pull/274)) |
 ## Special Thanks
 Paul Gschwendtner
-
-<!-- CHANGELOG SPLIT MARKER -->
-<a name="2021.10.24"></a>
-# 2021.10.24 (2021-10-24)
-### github-actions
-| Commit | Type | Description |
-| -- | -- | -- |
-| [6fb5d71](https://github.com/angular/dev-infra/commit/6fb5d7162863b67cd1e006b2262db7da78608c88) | feat | ensure pull requests with deprecation commits have a deprecation label ([#269](https://github.com/angular/dev-infra/pull/269)) |
-### ng-dev
-| Commit | Type | Description |
-| -- | -- | -- |
-| [7b66fb5](https://github.com/angular/dev-infra/commit/7b66fb5dc44b92fb4ecbd6a7d52b67a3e15339eb) | fix | **release:** ensure installed node modules do not break within Bazel ([#271](https://github.com/angular/dev-infra/pull/271)) |
-## Special Thanks
-Alan Agius, Joey Perrott and Paul Gschwendtner
