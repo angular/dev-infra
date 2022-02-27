@@ -308,7 +308,7 @@ __metadata:
     "@angular/platform-browser": 14.0.0-next.4
     "@babel/core": ^7.16.0
     "@bazel/bazelisk": ^1.10.1
-    "@bazel/buildifier": ^4.0.1
+    "@bazel/buildifier": ^5.0.1
     "@bazel/concatjs": 4.6.0
     "@bazel/esbuild": 4.6.0
     "@bazel/jasmine": 4.6.0
@@ -351,7 +351,7 @@ __metadata:
     "@yarnpkg/lockfile": ^1.1.0
     browser-sync: ^2.27.7
     chalk: ^4.1.0
-    clang-format: ^1.4.0
+    clang-format: ^1.6.0
     cli-progress: ^3.7.0
     conventional-commits-parser: ^3.2.1
     ejs: ^3.1.6
@@ -1675,12 +1675,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@bazel/buildifier@npm:^4.0.1":
-  version: 4.2.5
-  resolution: "@bazel/buildifier@npm:4.2.5"
+"@bazel/buildifier@npm:^5.0.1":
+  version: 5.0.1
+  resolution: "@bazel/buildifier@npm:5.0.1"
   bin:
     buildifier: buildifier.js
-  checksum: 2b2cc27582b5e3a4b584dd9ab153c2dc37bf8c8eb71881c32fbb34772d7494e9a892f6a530e8c372157f4c200c79d60b96de3867fa6666b1a553e5ac46fed0d1
+  checksum: 89ecb43a4ecc239f7c8222806087ecd4f26b2d8dac74a553a7baf4c20125cbe6895d0dccc48a9f2c00c70296d02dd696a2f3f56e932281855e8df42f33dbf267
   languageName: node
   linkType: hard
 
@@ -4418,7 +4418,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"clang-format@npm:^1.4.0":
+"clang-format@npm:^1.6.0":
   version: 1.6.0
   resolution: "clang-format@npm:1.6.0"
   dependencies:
