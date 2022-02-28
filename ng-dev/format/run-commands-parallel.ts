@@ -15,7 +15,10 @@ import {info} from '../utils/console';
 
 import {Formatter, FormatterAction, getActiveFormatters} from './formatters/index';
 
-const AVAILABLE_THREADS = Math.max(cpus().length - 1, 1);
+// Some environments, like CircleCI which use Docker report a number of CPUs by the host and not the count of available.
+// This causes the task to be killed when formatting a large number of files due lack of resources.
+// https://github.com/nodejs/node/issues/28762
+const AVAILABLE_THREADS = Math.max(Math.min(cpus().length, 8) - 1, 1);
 
 /** Interface describing a failure occurred during formatting of a file. */
 export interface FormatFailure {

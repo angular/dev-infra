@@ -48561,7 +48561,7 @@ var require_run_commands_parallel = __commonJS({
     var child_process_1 = require_child_process();
     var console_1 = require_console();
     var index_1 = require_formatters();
-    var AVAILABLE_THREADS = Math.max((0, os_1.cpus)().length - 1, 1);
+    var AVAILABLE_THREADS = Math.max(Math.min((0, os_1.cpus)().length, 8) - 1, 1);
     function runFormatterInParallel(allFiles, action) {
       return new Promise((resolve) => {
         const formatters = (0, index_1.getActiveFormatters)();
