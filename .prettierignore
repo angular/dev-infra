@@ -1,6 +1,6 @@
 .yarn/releases/*.cjs
-bazel/protos/*.d.ts
-bazel/protos/*.js
+ng-dev/utils/protos/*.d.ts
+ng-dev/utils/protos/*.js
 github-actions/feature-request/post.js
 github-actions/feature-request/main.js
 github-actions/lock-closed/main.js

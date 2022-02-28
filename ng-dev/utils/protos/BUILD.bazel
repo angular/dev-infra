@@ -1,6 +1,7 @@
 load("//tools:generate_ts_proto_module.bzl", "generate_ts_proto_module")
 
 generate_ts_proto_module(
-    name = "test_status",
+    name = "bazel_test_status",
     protofile = "@bazel_test_status_proto//file",
+    visibility = ["//ng-dev:__subpackages__"],
 )
