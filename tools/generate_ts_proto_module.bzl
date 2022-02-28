@@ -1,6 +1,6 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "generated_file_test", "js_library", "npm_package_bin")
 
-def generate_ts_proto_module(name, protofile, visibility = ["//visibility:public"]):
+def generate_ts_proto_module(name, protofile, visibility = None):
     """
     Generate a typescript module for decoding a proto binary file based on a provided .proto file.
     """

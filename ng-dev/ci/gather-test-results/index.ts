@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {blaze} from '../../../bazel/protos/test_status_pb';
+import {blaze} from '../../utils/protos/bazel_test_status_pb';
 import {spawnSync} from '../../utils/child-process';
 import {join, extname} from 'path';
 import {

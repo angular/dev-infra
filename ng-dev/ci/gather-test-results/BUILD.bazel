@@ -8,8 +8,8 @@ ts_library(
     ],
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
-        "//bazel/protos:test_status",
         "//ng-dev/utils",
+        "//ng-dev/utils/protos:bazel_test_status",
         "@npm//@types/node",
         "@npm//@types/yargs",
     ],
