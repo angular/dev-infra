@@ -27,11 +27,14 @@ load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_d
 
 build_bazel_rules_nodejs_dependencies()
 
-load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories", "yarn_install")
+load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
 
-node_repositories(
+nodejs_register_toolchains(
+    name = "nodejs",
     node_version = "16.10.0",
 )
+
+load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
 
 yarn_install(
     name = "npm",
@@ -41,6 +44,10 @@ yarn_install(
         "//:.yarn/releases/yarn-3.2.0.cjs",
         "//:.yarnrc.yml",
     ],
+    # Currently disabled due to:
+    #  1. Missing Windows support currently.
+    #  2. Incompatibilites with the `ts_library` rule.
+    exports_directories_only = False,
     package_json = "//:package.json",
     yarn = "//:.yarn/releases/yarn-3.2.0.cjs",
     yarn_lock = "//:yarn.lock",
