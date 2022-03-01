@@ -27,6 +27,7 @@ extract_types = rule(
         "deps": attr.label_list(
             doc = """List of targets for which all direct and transitive type definitions
               should be collected.""",
+            allow_files = True,
             mandatory = True,
         ),
     },
