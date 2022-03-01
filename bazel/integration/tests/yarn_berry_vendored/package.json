@@ -1,0 +1,7 @@
+{
+  "name": "yarn_berry_vendored",
+  "packageManager": "yarn@3.2.0",
+  "dependencies": {
+    "is-number": "^7.0.0"
+  }
+}
