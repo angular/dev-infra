@@ -82,7 +82,7 @@ def _serialize_and_expand_environment(ctx, environment_dict):
 
     return result
 
-def _unwrap_label_keyed_mappings(dict, description):
+def _unwrap_label_keyed_mappings(ctx, dict, description):
     """Unwraps a label-keyed dictionary used for expressing mappings into a JSON-serializable
     dictionary that will match the `Record<string, BazelFileInfo>` type as in the test
     runner. Additionally, the list of referenced mapping files is returned so that these
@@ -92,7 +92,8 @@ def _unwrap_label_keyed_mappings(dict, description):
     dictionaries into JSON that can be passed to the test runner."""
 
     serialized_mappings = {}
-    referenced_files = []
+    static_runfiles = []
+    transitive_runfiles = []
 
     for target in dict:
         name = dict[target]
@@ -100,21 +101,37 @@ def _unwrap_label_keyed_mappings(dict, description):
         if not DefaultInfo in target:
             fail("Expected %s mapping for %s to have the `DefaultInfo` provider." % (description, target))
 
-        files = target[DefaultInfo].files.to_list()
+        info = target[DefaultInfo]
+
+        # If this target is an executable, we can just take the executable and the target
+        # default runfiles. This allows e.g. for simple mappings to `nodejs_binary`
+        if info.files_to_run and info.files_to_run.executable:
+            transitive_runfiles.append(info.default_runfiles)
+            serialized_mappings[name] = _serialize_file(info.files_to_run.executable)
+            continue
+
+        # In the other case, for convenience, we allow non-executable targets to become
+        # executables (for e.g. tool mappings) if they have a single file in `DefaultInfo`.
+        files = info.files.to_list()
 
         if len(files) != 1:
-            fail("Expected %s target %s to only have a single file in `DefaultInfo`" % (description, target))
+            fail("Expected %s target %s to be an executable, or to be a " % (description, target) +
+                 "target with only a single file in `DefaultInfo`")
 
+        static_runfiles.append(files[0])
         serialized_mappings[name] = _serialize_file(files[0])
-        referenced_files.append(files[0])
 
-    return serialized_mappings, referenced_files
+    # Runfiles object containing all files to support the executable mappings.
+    required_runfiles = ctx.runfiles(files = static_runfiles).merge_all(transitive_runfiles)
+
+    return serialized_mappings, required_runfiles
 
 def _integration_test_config_impl(ctx):
     """Implementation of the `_integration_test_config` rule."""
-    npmPackageMappings, npmPackageFiles = \
-        _unwrap_label_keyed_mappings(ctx.attr.npm_packages, "NPM package")
-    toolMappings, toolFiles = _unwrap_label_keyed_mappings(ctx.attr.tool_mappings, "Tool")
+    npmPackageMappings, npmPackageRunfiles = \
+        _unwrap_label_keyed_mappings(ctx, ctx.attr.npm_packages, "NPM package")
+    toolMappings, toolRunfiles = \
+        _unwrap_label_keyed_mappings(ctx, ctx.attr.tool_mappings, "Tool")
 
     config_file = ctx.actions.declare_file("%s.json" % ctx.attr.name)
     config = struct(
@@ -133,12 +150,16 @@ def _integration_test_config_impl(ctx):
     )
 
     runfiles = ctx.runfiles(
-        [config_file] + ctx.files.data + ctx.files.srcs + npmPackageFiles + toolFiles,
+        [config_file] + ctx.files.data + ctx.files.srcs,
     )
 
-    # Include transitive runfiles for `data` dependencies.
-    for data_dep in ctx.attr.data:
-        runfiles = runfiles.merge(data_dep[DefaultInfo].default_runfiles)
+    # Include transitive runfiles for `data` dependencies. Also include runfiles
+    # for the configured tool mappings or npm packages. Note that using `merge_all`
+    # is more efficient than calling it multiple times, building a deep chain.
+    runfiles = runfiles.merge_all(
+        [toolRunfiles, npmPackageRunfiles] +
+        [data_dep[DefaultInfo].default_runfiles for data_dep in ctx.attr.data],
+    )
 
     return [
         DefaultInfo(
