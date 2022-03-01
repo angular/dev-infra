@@ -1,0 +1,18 @@
+load("//bazel/integration:index.bzl", "integration_test")
+
+integration_test(
+    name = "test",
+    srcs = [
+        "package.json",
+    ],
+    commands = [
+        "yarn",
+    ],
+    tags = [
+        # This test relies on `yarn` so there needs to be internet access.
+        "requires-network",
+    ],
+    tool_mappings = {
+        "//:yarn_berry_vendored": "yarn",
+    },
+)
