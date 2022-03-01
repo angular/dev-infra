@@ -17,6 +17,6 @@ integration_test(
         "BAZELISK_HOME_2": "<TMP>",
     },
     tool_mappings = {
-        "@nodejs//:node_bin": "node",
+        "@nodejs_toolchains//:resolved_toolchain": "node",
     },
 )
