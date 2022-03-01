@@ -1,4 +1,4 @@
-load("//bazel:extract_js_module_output.bzl", "extract_js_module_output")
+load("//bazel:extract_types.bzl", "extract_types")
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary", "nodejs_test")
 
 nodejs_test_args = [
@@ -60,14 +60,9 @@ def api_golden_test(
     # needs to resolve other targets that have been linked by the Bazel NodeJS rules. The
     # linker by default only provides access to JavaScript sources, but the API extractor is
     # specifically concerned with type definitions that we can extract manually here.
-    extract_js_module_output(
+    extract_types(
         name = "%s_data_typings" % name,
         deps = data,
-        provider = "JSModuleInfo",
-        forward_linker_mappings = False,
-        include_external_npm_packages = False,
-        include_declarations = True,
-        include_default_files = False,
     )
 
     test_data = ["//bazel/api-golden", "//:package.json", ":%s_data_typings" % name] + \
