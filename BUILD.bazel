@@ -22,6 +22,13 @@ nodejs_binary(
     visibility = ["//bazel/integration/tests:__subpackages__"],
 )
 
+nodejs_binary(
+    name = "yarn_classic_vendored",
+    data = [".yarn/releases/yarn-1.22.17.cjs"],
+    entry_point = ".yarn/releases/yarn-1.22.17.cjs",
+    visibility = ["//bazel/integration/tests:__subpackages__"],
+)
+
 package_group(
     name = "npm",
     packages = [
