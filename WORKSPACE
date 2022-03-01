@@ -42,6 +42,7 @@ yarn_install(
     args = ["--immutable"],
     data = [
         "//:.yarn/releases/yarn-3.2.0.cjs",
+        "//:.yarn/yarn.js",
         "//:.yarnrc.yml",
     ],
     # Currently disabled due to:
@@ -49,7 +50,8 @@ yarn_install(
     #  2. Incompatibilites with the `ts_library` rule.
     exports_directories_only = False,
     package_json = "//:package.json",
-    yarn = "//:.yarn/releases/yarn-3.2.0.cjs",
+    # TODO: Cleanup when https://github.com/bazelbuild/rules_nodejs/pull/3350 is available.
+    yarn = "//:.yarn/yarn.js",
     yarn_lock = "//:yarn.lock",
 )
 
