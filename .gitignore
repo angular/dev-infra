@@ -32,6 +32,7 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+!.yarn/yarn.js
 
 # User specific bazel settings
 .bazelrc.user
