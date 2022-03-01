@@ -2,6 +2,7 @@
 load("//:package.bzl", "NPM_PACKAGE_SUBSTITUTIONS")
 load("//tools:defaults.bzl", "pkg_npm")
 load("@npm//@bazel/typescript:index.bzl", "ts_config")
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 
 exports_files([
     "package.json",
@@ -12,6 +13,13 @@ ts_config(
     name = "tsconfig",
     src = "tsconfig.json",
     visibility = ["//visibility:public"],
+)
+
+nodejs_binary(
+    name = "yarn_berry_vendored",
+    data = [".yarn/releases/yarn-3.2.0.cjs"],
+    entry_point = ".yarn/releases/yarn-3.2.0.cjs",
+    visibility = ["//bazel/integration/tests:__subpackages__"],
 )
 
 package_group(
