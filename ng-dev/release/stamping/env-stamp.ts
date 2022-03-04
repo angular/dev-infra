@@ -63,7 +63,10 @@ function getSCMVersions(
       const {stdout: rawVersion} = git.run([
         'describe',
         '--match',
-        '*[0-9]*.[0-9]*.[0-9]*',
+        // As git describe uses glob matchers we cannot the specific describe what we expect to see
+        // starting character we expect for our version string.  To ensure we can handle 'v'
+        // prefixed verstions we have the '?' wildcard character.
+        '?[0-9]*.[0-9]*.[0-9]*',
         '--abbrev=7',
         '--tags',
         'HEAD',
@@ -83,7 +86,8 @@ function getSCMVersions(
       const {version: experimentalVersion} = createExperimentalSemver(new SemVer(version));
       return {version, experimentalVersion};
     }
-  } catch {
+  } catch (e) {
+    console.error(e);
     return {
       version: '',
       experimentalVersion: '',
