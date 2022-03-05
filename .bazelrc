@@ -85,12 +85,14 @@ build:remote --remote_accept_cached=true
 #     Release setup            #
 ################################
 
-# Releases should always be stamped with version control info
+# Releases should always be stamped with version control info. The dev-infra project
+# does not have actual versions so we need to skip version stamping. Our NPM package
+# will have a version composed with the current SHA from the SCM stamping info.
 # Note: We usually would use the `ng-dev` tool directly, but that one would need to be
 # built with Bazel and building with Bazel inside the Bazel-invoked workspace status
 # script does not work. To workaround this, we have a `ts-node`-based stamping script.
 # TODO: Consider using `ng-dev` directly if this is possible.
-build:release --workspace_status_command="yarn build-env-stamp --mode=release"
+build:release --workspace_status_command="yarn build-env-stamp --mode=release --include-version=false"
 build:release --stamp
 
 ####################################################

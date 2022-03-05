@@ -12,18 +12,25 @@ import {buildEnvStamp, EnvStampMode} from './env-stamp';
 
 export interface Options {
   mode: EnvStampMode;
+  includeVersion: boolean;
 }
 
 function builder(args: Argv): Argv<Options> {
-  return args.option('mode', {
-    demandOption: true,
-    description: 'Whether the env-stamp should be built for a snapshot or release',
-    choices: ['snapshot' as const, 'release' as const],
-  });
+  return args
+    .option('mode', {
+      demandOption: true,
+      description: 'Whether the env-stamp should be built for a snapshot or release',
+      choices: ['snapshot' as const, 'release' as const],
+    })
+    .option('includeVersion', {
+      type: 'boolean',
+      description: 'Whether the version should be included in the stamp.',
+      default: true,
+    });
 }
 
-async function handler({mode}: Arguments<Options>) {
-  buildEnvStamp(mode);
+async function handler({mode, includeVersion}: Arguments<Options>) {
+  buildEnvStamp(mode, includeVersion);
 }
 
 /** CLI command module for building the environment stamp. */
