@@ -8,4 +8,4 @@ yargs(process.argv.slice(2))
   .strict()
   .demandCommand()
   .command(BuildEnvStampCommand)
-  .parseSync();
+  .parseAsync();
