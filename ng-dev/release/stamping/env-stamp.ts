@@ -57,37 +57,33 @@ function getSCMVersions(
   git: GitClient,
   mode: EnvStampMode,
 ): {version: string; experimentalVersion: string} {
-  try {
-    if (mode === 'snapshot') {
-      const localChanges = hasLocalChanges(git) ? '.with-local-changes' : '';
-      const {stdout: rawVersion} = git.run([
-        'describe',
-        '--match',
-        '*[0-9]*.[0-9]*.[0-9]*',
-        '--abbrev=7',
-        '--tags',
-        'HEAD',
-      ]);
-      const {version} = new SemVer(rawVersion);
-      const {version: experimentalVersion} = createExperimentalSemver(version);
-      return {
-        version: `${version.replace(/-([0-9]+)-g/, '+$1.sha-')}${localChanges}`,
-        experimentalVersion: `${experimentalVersion.replace(
-          /-([0-9]+)-g/,
-          '+$1.sha-',
-        )}${localChanges}`,
-      };
-    } else {
-      const packageJsonPath = join(git.baseDir, 'package.json');
-      const {version} = new SemVer(require(packageJsonPath).version);
-      const {version: experimentalVersion} = createExperimentalSemver(new SemVer(version));
-      return {version, experimentalVersion};
-    }
-  } catch {
+  if (mode === 'snapshot') {
+    const localChanges = hasLocalChanges(git) ? '.with-local-changes' : '';
+    const {stdout: rawVersion} = git.run([
+      'describe',
+      '--match',
+      // As git describe uses glob matchers we cannot the specific describe what we expect to see
+      // starting character we expect for our version string.  To ensure we can handle 'v'
+      // prefixed verstions we have the '?' wildcard character.
+      '?[0-9]*.[0-9]*.[0-9]*',
+      '--abbrev=7',
+      '--tags',
+      'HEAD',
+    ]);
+    const {version} = new SemVer(rawVersion);
+    const {version: experimentalVersion} = createExperimentalSemver(version);
     return {
-      version: '',
-      experimentalVersion: '',
+      version: `${version.replace(/-([0-9]+)-g/, '+$1.sha-')}${localChanges}`,
+      experimentalVersion: `${experimentalVersion.replace(
+        /-([0-9]+)-g/,
+        '+$1.sha-',
+      )}${localChanges}`,
     };
+  } else {
+    const packageJsonPath = join(git.baseDir, 'package.json');
+    const {version} = new SemVer(require(packageJsonPath).version);
+    const {version: experimentalVersion} = createExperimentalSemver(new SemVer(version));
+    return {version, experimentalVersion};
   }
 }
 
