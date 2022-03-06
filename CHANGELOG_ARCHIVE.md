@@ -1,3 +1,13 @@
+<a name="2021.10.31"></a>
+# 2021.10.31 (2021-10-31)
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [471437d](https://github.com/angular/dev-infra/commit/471437d21eb1d94615fb4e48b3f8d6175277467c) | feat | **format:** support mjs and cjs files with prettier and clang-format ([#274](https://github.com/angular/dev-infra/pull/274)) |
+## Special Thanks
+Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2021.10.24"></a>
 # 2021.10.24 (2021-10-24)
 ### github-actions
