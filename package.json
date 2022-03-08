@@ -54,7 +54,7 @@
     "tmp": "^0.2.1",
     "true-case-path": "^2.2.1",
     "tslib": "^2.3.0",
-    "typescript": "~4.5.0",
+    "typescript": "~4.6.2",
     "uuid": "^8.3.2",
     "yargs": "^17.0.0",
     "zone.js": "^0.11.4"
