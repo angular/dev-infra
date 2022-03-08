@@ -1,4 +1,4 @@
-load("@build_bazel_rules_nodejs//:providers.bzl", "JSModuleInfo")
+load("@rules_nodejs//nodejs:providers.bzl", "JSModuleInfo")
 
 def _is_spec_file(file):
     """Gets whether the given file is a spec file."""

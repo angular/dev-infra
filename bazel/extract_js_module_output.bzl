@@ -1,4 +1,5 @@
-load("@build_bazel_rules_nodejs//:providers.bzl", "DeclarationInfo", "ExternalNpmPackageInfo", "JSEcmaScriptModuleInfo", "JSModuleInfo", "JSNamedModuleInfo", "node_modules_aspect")
+load("@rules_nodejs//nodejs:providers.bzl", "JSModuleInfo")
+load("@build_bazel_rules_nodejs//:providers.bzl", "DeclarationInfo", "ExternalNpmPackageInfo", "JSEcmaScriptModuleInfo", "JSNamedModuleInfo", "node_modules_aspect")
 load("@build_bazel_rules_nodejs//internal/linker:link_node_modules.bzl", "LinkerPackageMappingInfo", "module_mappings_aspect")
 
 """Converts a provider name to its actually Starlark provider instance."""
