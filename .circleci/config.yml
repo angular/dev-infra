@@ -27,6 +27,7 @@ var_5: &save_cache
   save_cache:
     key: *cache_key
     paths:
+      - '.yarn/cache'
       - '~/.cache/bazelisk'
       - '~/bazel_repository_cache'
 
