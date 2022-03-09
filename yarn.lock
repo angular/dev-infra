@@ -183,34 +183,34 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/animations@npm:14.0.0-next.5":
-  version: 14.0.0-next.5
-  resolution: "@angular/animations@npm:14.0.0-next.5"
+"@angular/animations@npm:14.0.0-next.6":
+  version: 14.0.0-next.6
+  resolution: "@angular/animations@npm:14.0.0-next.6"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/core": 14.0.0-next.5
-  checksum: 679802f6af3cde8b35be632918be86a5286a0467c503b92d223f650eda0cec0a9be69a07c43b13001e4dee178d16cf102bbc07413bf44767000437225dda5bc5
+    "@angular/core": 14.0.0-next.6
+  checksum: 5e6b77de0e5e984f69cc135afad28353018d258fc869c683e281e8df56ca88768b944f1c0187b799ba80d3a81f0f63eab744067d46be126cd1c7fad4208928f9
   languageName: node
   linkType: hard
 
-"@angular/bazel@npm:14.0.0-next.5":
-  version: 14.0.0-next.5
-  resolution: "@angular/bazel@npm:14.0.0-next.5"
+"@angular/bazel@npm:14.0.0-next.6":
+  version: 14.0.0-next.6
+  resolution: "@angular/bazel@npm:14.0.0-next.6"
   dependencies:
     "@microsoft/api-extractor": 7.19.4
     shelljs: ^0.8.5
     tsickle: ^0.38.0
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/compiler-cli": 14.0.0-next.5
+    "@angular/compiler-cli": 14.0.0-next.6
     "@bazel/typescript": ">=1.0.0"
     "@rollup/plugin-commonjs": ^21.0.0
     "@rollup/plugin-node-resolve": ^13.0.4
     rollup: ^2.56.3
     rollup-plugin-sourcemaps: ^0.6.3
     terser: ^5.9.0
-    typescript: ">=4.4.2 <4.6"
+    typescript: ">=4.4.2 <4.7"
   peerDependenciesMeta:
     terser:
       optional: true
@@ -219,7 +219,7 @@ __metadata:
     ngc-wrapped: src/ngc-wrapped/index.js
     packager: src/ng_package/packager.js
     xi18n: src/ngc-wrapped/extract_i18n.js
-  checksum: 10614125c0c47ff0493beb2ac8fd9f806b7cf35396149db39e95f3d88031241667ec040d8c5262bbd6f0d79ba7b4213d2a092431778426556b0405aa9700d544
+  checksum: c2d134a199b4c24878e8ff524d258b96357f671f3901a1ffc47239fa890259344d4a841638fa9acc30908fb78e99b85444020a5e075f58605b2c0ac4d31491ac
   languageName: node
   linkType: hard
 
@@ -233,61 +233,66 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/common@npm:14.0.0-next.5":
-  version: 14.0.0-next.5
-  resolution: "@angular/common@npm:14.0.0-next.5"
+"@angular/common@npm:14.0.0-next.6":
+  version: 14.0.0-next.6
+  resolution: "@angular/common@npm:14.0.0-next.6"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/core": 14.0.0-next.5
+    "@angular/core": 14.0.0-next.6
     rxjs: ^6.5.3 || ^7.4.0
-  checksum: ad1418327379e0db4c91645d2ec57a7cbc05f0ea10fda1ba3dd23d13d7b8fc6400d81cc9a93e36e4850cd6267c38b74fbefdf2c7eb2dff4794f70fa25bfd4e7d
+  checksum: 2cdf4914ce184bd54b1e3c961fcc5818127d1e00b84e12738cb9f5aa71e391c38192b42e4888fc388ebaef2564e9952db81d44a4e62cd96b01b901d150fcfcc9
   languageName: node
   linkType: hard
 
-"@angular/compiler-cli@npm:14.0.0-next.5":
-  version: 14.0.0-next.5
-  resolution: "@angular/compiler-cli@npm:14.0.0-next.5"
+"@angular/compiler-cli@npm:14.0.0-next.6":
+  version: 14.0.0-next.6
+  resolution: "@angular/compiler-cli@npm:14.0.0-next.6"
   dependencies:
     "@babel/core": ^7.17.2
     chokidar: ^3.0.0
     convert-source-map: ^1.5.1
     dependency-graph: ^0.11.0
-    magic-string: ^0.25.0
+    magic-string: ^0.26.0
     reflect-metadata: ^0.1.2
     semver: ^7.0.0
     sourcemap-codec: ^1.4.8
     tslib: ^2.3.0
     yargs: ^17.2.1
   peerDependencies:
-    "@angular/compiler": 14.0.0-next.5
-    typescript: ">=4.4.2 <4.6"
+    "@angular/compiler": 14.0.0-next.6
+    typescript: ">=4.4.2 <4.7"
   bin:
     ng-xi18n: bundles/src/bin/ng_xi18n.js
     ngc: bundles/src/bin/ngc.js
     ngcc: bundles/ngcc/main-ngcc.js
-  checksum: e284c0706fa112081e173c563d3aeb8e25ebb1a50bf4a5e631f0082dc6d9544659afa7b202c1eff1f067028f79ceb2d8fc0be54b9dd70bf896fb1461c78f2cda
+  checksum: 551d4c2de7a5f88fa86a61518af64d084aac914b75fa79df3036cb6dca3c26090d5ed88ac30a85a82137dcd123f45596b85b3f8f52c1be79260ef14b5693bddf
   languageName: node
   linkType: hard
 
-"@angular/compiler@npm:14.0.0-next.5":
-  version: 14.0.0-next.5
-  resolution: "@angular/compiler@npm:14.0.0-next.5"
+"@angular/compiler@npm:14.0.0-next.6":
+  version: 14.0.0-next.6
+  resolution: "@angular/compiler@npm:14.0.0-next.6"
   dependencies:
     tslib: ^2.3.0
-  checksum: aca619feb1ac8ddfd7e64ead63827d0b71c92eb4e6370ed08b56f351565c50f5dc489b7af49224c33331b093853577018cab015dbfa0d9b0be4d10f0709af6e3
+  peerDependencies:
+    "@angular/core": 14.0.0-next.6
+  peerDependenciesMeta:
+    "@angular/core":
+      optional: true
+  checksum: ffb6ca8553ed99f216ab4841a5f6da9111aee1c4b8a0acbf0a5234b20b9217f2a0abb9926be1c892e0ad6d0d134d2118f76343ebd47a0b6c8d6d23df460950c3
   languageName: node
   linkType: hard
 
-"@angular/core@npm:14.0.0-next.5":
-  version: 14.0.0-next.5
-  resolution: "@angular/core@npm:14.0.0-next.5"
+"@angular/core@npm:14.0.0-next.6":
+  version: 14.0.0-next.6
+  resolution: "@angular/core@npm:14.0.0-next.6"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
     rxjs: ^6.5.3 || ^7.4.0
     zone.js: ~0.11.4
-  checksum: 57a10577cb5cd25fa28c687617bf2529e11cb509ad4b5a7101c539692be02938d41b27ec0eff3fbf733a29593aa9188f23fe8c1d4b2073cb6c6f248548b5553b
+  checksum: bf98496493a8c024d16c2d223d066a50d726064c419f6e5a5da2b19ffbea186238f714bb07021498107fce2d4a73be1ae8b05fd185b5d1f513bad67e1f34cc92
   languageName: node
   linkType: hard
 
@@ -298,14 +303,14 @@ __metadata:
     "@actions/core": ^1.4.0
     "@actions/github": ^5.0.0
     "@angular-devkit/build-angular": 14.0.0-next.4
-    "@angular/animations": 14.0.0-next.5
-    "@angular/bazel": 14.0.0-next.5
+    "@angular/animations": 14.0.0-next.6
+    "@angular/bazel": 14.0.0-next.6
     "@angular/benchpress": 0.3.0
-    "@angular/common": 14.0.0-next.5
-    "@angular/compiler": 14.0.0-next.5
-    "@angular/compiler-cli": 14.0.0-next.5
-    "@angular/core": 14.0.0-next.5
-    "@angular/platform-browser": 14.0.0-next.5
+    "@angular/common": 14.0.0-next.6
+    "@angular/compiler": 14.0.0-next.6
+    "@angular/compiler-cli": 14.0.0-next.6
+    "@angular/core": 14.0.0-next.6
+    "@angular/platform-browser": 14.0.0-next.6
     "@babel/core": ^7.16.0
     "@bazel/bazelisk": ^1.11.0
     "@bazel/buildifier": ^5.0.1
@@ -400,19 +405,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@angular/platform-browser@npm:14.0.0-next.5":
-  version: 14.0.0-next.5
-  resolution: "@angular/platform-browser@npm:14.0.0-next.5"
+"@angular/platform-browser@npm:14.0.0-next.6":
+  version: 14.0.0-next.6
+  resolution: "@angular/platform-browser@npm:14.0.0-next.6"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/animations": 14.0.0-next.5
-    "@angular/common": 14.0.0-next.5
-    "@angular/core": 14.0.0-next.5
+    "@angular/animations": 14.0.0-next.6
+    "@angular/common": 14.0.0-next.6
+    "@angular/core": 14.0.0-next.6
   peerDependenciesMeta:
     "@angular/animations":
       optional: true
-  checksum: db41475423287915843dc2d442ec7ecbc4b73720ef5bdc42ecb056823d19e5961d0d64ab70e240c187f48adf8d46e2e5526f072a5d7fda80628d692d6d12c738
+  checksum: b88fbf90ef073a5c0b5e21e57357229397936ebf5f298fd0df8a77c358a0e9009b88caab4f67e99e7c9424bd73cd28bd25bb817935a1078d972b0387cb1c2537
   languageName: node
   linkType: hard
 
@@ -8446,12 +8451,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"magic-string@npm:0.25.7, magic-string@npm:^0.25.0":
+"magic-string@npm:0.25.7":
   version: 0.25.7
   resolution: "magic-string@npm:0.25.7"
   dependencies:
     sourcemap-codec: ^1.4.4
   checksum: 727a1fb70f9610304fe384f1df0251eb7d1d9dd779c07ef1225690361b71b216f26f5d934bfb11c919b5b0e7ba50f6240c823a6f2e44cfd33d4a07d7747ca829
+  languageName: node
+  linkType: hard
+
+"magic-string@npm:^0.26.0":
+  version: 0.26.1
+  resolution: "magic-string@npm:0.26.1"
+  dependencies:
+    sourcemap-codec: ^1.4.8
+  checksum: 23f21f5734346ddfbabd7b9834e3ecda3521e3e1db81166c1513b45b729489bbed1eafa8cd052c7db7fdc7c68ebc5c03bc00dd5a23697edda15dbecaf8c98397
   languageName: node
   linkType: hard
 
