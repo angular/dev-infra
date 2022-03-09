@@ -9,11 +9,11 @@ orbs:
 # **Note**: When updating the beginning of the cache key, also update the cache key to match
 # the new cache key prefix. This allows us to take advantage of CircleCI's fallback caching.
 # Read more here: https://circleci.com/docs/2.0/caching/#restoring-cache.
-var_1: &cache_key v1-{{arch}}-{{ checksum ".bazelversion" }}-{{ checksum "WORKSPACE" }}
+var_1: &cache_key v2-{{arch}}-{{ checksum ".bazelversion" }}-{{ checksum "WORKSPACE" }}--{{ checksum "yarn.lock" }}
 # We use a different cache if the Bazel version changes, or if the executor is a different one.
 # We do this because otherwise the `bazelisk` cache folder will contain all previously used
 # versions and ultimately cause the cache restoring to be slower.
-var_2: &cache_fallback_key v1-{{arch}}-{{ checksum ".bazelversion" }}-
+var_2: &cache_fallback_key v2-{{arch}}-{{ checksum ".bazelversion" }}-
 
 var_3: &gcp_decrypt_token 'angular'
 
