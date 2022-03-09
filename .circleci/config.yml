@@ -76,7 +76,7 @@ commands:
       - run:
           name: yarn install
           command: yarn install --immutable
-          no_output_timeout: 2m
+          no_output_timeout: 5m
 
   setup_bazel_config:
     description: 'Setting up Bazel configuration for CI'
@@ -156,9 +156,7 @@ jobs:
     steps:
       - checkout
       - *restore_cache
-      # Note: We cannot use the config-shared Yarn install command because the output timeout
-      # needs to be increased due to slower windows I/O (back to the 10min default for CircleCI).
-      - run: yarn install --immutable
+      - yarn_install
       - run: yarn bazel test --test_tag_filters=windows --build_tests_only -- ... -bazel/remote-execution/...
       - prepare_and_store_test_results
       - *save_cache
