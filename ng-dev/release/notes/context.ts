@@ -203,7 +203,7 @@ export class RenderContext {
    * Bulletize a paragraph.
    */
   bulletizeText(text: string): string {
-    return '- ' + text.replace(/\\n/g, '\\n  ');
+    return '- ' + text.replace(/\n/g, '\n  ');
   }
 
   /**
