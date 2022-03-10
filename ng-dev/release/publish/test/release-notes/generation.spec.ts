@@ -239,6 +239,42 @@ describe('release notes generation', () => {
       `);
     });
 
+    it('should indent breaking changes with bullets', async () => {
+      SandboxGitRepo.withInitialCommit(githubConfig)
+        .commit('fix(cdk/a11y): already released *1')
+        .createTagForHead('13.0.0-next.0')
+        .commit('fix(cdk/a11y): not yet released *1')
+        .commit(
+          'refactor(cdk/a11y): with breaking change\n\n' +
+            'BREAKING CHANGE:\n' +
+            'Description of breaking change.\n' +
+            '- point 1\n' +
+            '- point 2\n',
+        );
+
+      const releaseNotes = await ReleaseNotes.forRange(
+        client,
+        parse('13.0.0'),
+        '13.0.0-next.0',
+        'HEAD',
+      );
+
+      expect(await releaseNotes.getChangelogEntry()).toMatch(changelogPattern`
+        # 13.0.0 <..>
+        ## Breaking Changes
+        ### cdk/a11y
+        - Description of breaking change.
+          - point 1
+          - point 2
+        ### cdk/a11y
+        | Commit | Type | Description |
+        | -- | -- | -- |
+        | <..> | fix | not yet released *1 |
+        | <..> | refactor | with breaking change |
+        ## Special Thanks
+      `);
+    });
+
     it('should capture deprecations', async () => {
       SandboxGitRepo.withInitialCommit(githubConfig)
         .commit('fix(cdk/a11y): already released *1')
