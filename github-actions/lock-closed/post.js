@@ -8739,7 +8739,7 @@ var require_dist_node8 = __commonJS({
       }
       return target;
     }
-    var VERSION = "3.5.1";
+    var VERSION = "3.6.0";
     var _excluded = ["authStrategy"];
     var Octokit = class {
       constructor(options = {}) {
