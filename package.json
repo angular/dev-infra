@@ -34,7 +34,7 @@
     "@bazel/runfiles": "5.2.0",
     "@bazel/terser": "5.2.0",
     "@bazel/typescript": "5.2.0",
-    "@microsoft/api-extractor": "7.19.4",
+    "@microsoft/api-extractor": "7.19.5",
     "@types/browser-sync": "^2.26.3",
     "@types/node": "16.10.9",
     "@types/node-fetch": "^2.5.10",
