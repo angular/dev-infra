@@ -35,8 +35,8 @@ export class AuthenticatedGitClient extends GitClient {
   /** The OAuth scopes available for the provided Github token. */
   private _cachedOauthScopes: Promise<string[]> | null = null;
 
-  /** Cached found fork of the configured project. */
-  private _cachedForkRepo: GithubRepo | null = null;
+  /** Cached fork repositories of the authenticated user. */
+  private _cachedForkRepositories: GithubRepo[] | null = null;
 
   /** Instance of an authenticated github client. */
   override readonly github = new AuthenticatedGithubClient(this.githubToken);
@@ -85,28 +85,35 @@ export class AuthenticatedGitClient extends GitClient {
     return {error};
   }
 
-  /**
-   * Gets an owned fork for the configured project of the authenticated user, caching the determined
-   * fork repository as the authenticated user cannot change during action execution.
-   */
+  /** Gets an owned fork for the configured project of the authenticated user. */
   async getForkOfAuthenticatedUser(): Promise<GithubRepo> {
-    if (this._cachedForkRepo !== null) {
-      return this._cachedForkRepo;
+    const forks = await this.getAllForksOfAuthenticatedUser();
+
+    if (forks.length === 0) {
+      throw Error('Unable to find fork a for currently authenticated user.');
+    }
+
+    return forks[0];
+  }
+
+  /**
+   * Finds all forks owned by the currently authenticated user in the Git client,
+   *
+   * The determined fork repositories are cached as we assume that the authenticated
+   * user will not change during execution, or that no new forks are created.
+   */
+  async getAllForksOfAuthenticatedUser(): Promise<GithubRepo[]> {
+    if (this._cachedForkRepositories !== null) {
+      return this._cachedForkRepositories;
     }
 
     const {owner, name} = this.remoteConfig;
     const result = await this.github.graphql(findOwnedForksOfRepoQuery, {owner, name});
-    const forks = result.repository.forks.nodes;
 
-    if (forks.length === 0) {
-      throw Error(
-        'Unable to find fork for currently authenticated user. Please ensure you created a fork ' +
-          ` of: ${owner}/${name}.`,
-      );
-    }
-
-    const fork = forks[0];
-    return (this._cachedForkRepo = {owner: fork.owner.login, name: fork.name});
+    return (this._cachedForkRepositories = result.repository.forks.nodes.map((node) => ({
+      owner: node.owner.login,
+      name: node.name,
+    })));
   }
 
   /** Fetch the OAuth scopes for the loaded Github token. */

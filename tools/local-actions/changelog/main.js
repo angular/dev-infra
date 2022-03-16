@@ -54672,7 +54672,7 @@ var require_authenticated_git_client = __commonJS({
         this.githubToken = githubToken;
         this._githubTokenRegex = new RegExp(this.githubToken, "g");
         this._cachedOauthScopes = null;
-        this._cachedForkRepo = null;
+        this._cachedForkRepositories = null;
         this.github = new github_12.AuthenticatedGithubClient(this.githubToken);
       }
       sanitizeConsoleOutput(value) {
@@ -54698,17 +54698,22 @@ Alternatively, a new token can be created at: ${github_urls_1.GITHUB_TOKEN_GENER
         return { error };
       }
       async getForkOfAuthenticatedUser() {
-        if (this._cachedForkRepo !== null) {
-          return this._cachedForkRepo;
+        const forks = await this.getForksForAuthenticatedUser();
+        if (forks.length === 0) {
+          throw Error("Unable to find fork a for currently authenticated user.");
+        }
+        return forks[0];
+      }
+      async getForksForAuthenticatedUser() {
+        if (this._cachedForkRepositories !== null) {
+          return this._cachedForkRepositories;
         }
         const { owner, name } = this.remoteConfig;
         const result = await this.github.graphql(graphql_queries_1.findOwnedForksOfRepoQuery, { owner, name });
-        const forks = result.repository.forks.nodes;
-        if (forks.length === 0) {
-          throw Error(`Unable to find fork for currently authenticated user. Please ensure you created a fork  of: ${owner}/${name}.`);
-        }
-        const fork = forks[0];
-        return this._cachedForkRepo = { owner: fork.owner.login, name: fork.name };
+        return this._cachedForkRepositories = result.repository.forks.nodes.map((node) => ({
+          owner: node.owner.login,
+          name: node.name
+        }));
       }
       _fetchAuthScopesForToken() {
         if (this._cachedOauthScopes !== null) {

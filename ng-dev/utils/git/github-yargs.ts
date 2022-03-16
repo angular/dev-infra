@@ -6,10 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Argv} from 'yargs';
-
 import {error, red, yellow} from '../console';
 
+import {Argv} from 'yargs';
 import {AuthenticatedGitClient} from './authenticated-git-client';
 import {GITHUB_TOKEN_GENERATE_URL} from './github-urls';
 
@@ -26,7 +25,7 @@ export function addGithubTokenOption(yargs: Argv): ArgvWithGithubToken {
         type: 'string',
         description: 'Github token. If not set, token is retrieved from the environment variables.',
         coerce: (token: string) => {
-          const githubToken = token || process.env.GITHUB_TOKEN || process.env.TOKEN;
+          const githubToken = token ?? findGithubTokenInEnvironment();
           if (!githubToken) {
             error(red('No Github token set. Please set the `GITHUB_TOKEN` environment variable.'));
             error(red('Alternatively, pass the `--github-token` command line flag.'));
@@ -43,4 +42,12 @@ export function addGithubTokenOption(yargs: Argv): ArgvWithGithubToken {
       })
       .default('github-token' as 'githubToken', '', '<LOCAL TOKEN>')
   );
+}
+
+/**
+ * Finds a non-explicitly provided Github token in the local environment.
+ * The function looks for `GITHUB_TOKEN` or `TOKEN` in the environment variables.
+ */
+export function findGithubTokenInEnvironment(): string | undefined {
+  return process.env.GITHUB_TOKEN ?? process.env.TOKEN;
 }
