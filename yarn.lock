@@ -340,7 +340,7 @@ __metadata:
     "@types/git-raw-commits": ^2.0.0
     "@types/glob": ^7.1.3
     "@types/inquirer": 8.2.0
-    "@types/jasmine": ^3.7.0
+    "@types/jasmine": ^4.0.0
     "@types/jsdom": ^16.2.13
     "@types/node": 16.10.9
     "@types/node-fetch": ^2.5.10
@@ -2784,10 +2784,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jasmine@npm:^3.7.0":
-  version: 3.10.3
-  resolution: "@types/jasmine@npm:3.10.3"
-  checksum: c2603f30307d53e8231f6c46148beb3680579c340c21857b3a58b12ba2e41e36e1edbf4b8a217d25f4c41271b276b392089f132f08592453f8c7a30fc7e099ad
+"@types/jasmine@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@types/jasmine@npm:4.0.0"
+  checksum: af5f120477bdf07ccab3a13b8adea282df7ae4e71d67a416fed9271757122c1ebe272f0e063b51d5c076b3deee829e17f5c8e80551fcb298301cd2c3ac5ed70f
   languageName: node
   linkType: hard
 
