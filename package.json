@@ -24,7 +24,7 @@
   },
   "packageManager": "yarn@3.2.0",
   "dependencies": {
-    "@angular-devkit/build-angular": "14.0.0-next.5",
+    "@angular-devkit/build-angular": "14.0.0-next.6",
     "@angular/benchpress": "0.3.0",
     "@babel/core": "^7.16.0",
     "@bazel/buildifier": "^5.0.1",
@@ -62,13 +62,13 @@
   "devDependencies": {
     "@actions/core": "^1.4.0",
     "@actions/github": "^5.0.0",
-    "@angular/animations": "14.0.0-next.6",
-    "@angular/bazel": "14.0.0-next.6",
-    "@angular/common": "14.0.0-next.6",
-    "@angular/compiler": "14.0.0-next.6",
-    "@angular/compiler-cli": "14.0.0-next.6",
-    "@angular/core": "14.0.0-next.6",
-    "@angular/platform-browser": "14.0.0-next.6",
+    "@angular/animations": "14.0.0-next.7",
+    "@angular/bazel": "14.0.0-next.7",
+    "@angular/common": "14.0.0-next.7",
+    "@angular/compiler": "14.0.0-next.7",
+    "@angular/compiler-cli": "14.0.0-next.7",
+    "@angular/core": "14.0.0-next.7",
+    "@angular/platform-browser": "14.0.0-next.7",
     "@bazel/bazelisk": "^1.11.0",
     "@bazel/jasmine": "5.2.0",
     "@google-cloud/storage": "^5.18.1",
@@ -128,6 +128,6 @@
     "yaml": "^1.10.0"
   },
   "resolutions": {
-    "@angular/benchpress/@angular/core": "14.0.0-next.6"
+    "@angular/benchpress/@angular/core": "14.0.0-next.7"
   }
 }
