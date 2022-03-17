@@ -54815,7 +54815,7 @@ var require_fetch_pull_request = __commonJS({
         nodes: [
           {
             commit: {
-              statusCheckRollup: {
+              statusCheckRollup: (0, typed_graphqlify_1.optional)({
                 state: typed_graphqlify_1.types.custom(),
                 contexts: (0, typed_graphqlify_1.params)({ last: 100 }, {
                   nodes: [
@@ -54834,7 +54834,7 @@ var require_fetch_pull_request = __commonJS({
                     })
                   ]
                 })
-              },
+              }),
               message: typed_graphqlify_1.types.string
             }
           }
@@ -54878,6 +54878,12 @@ var require_fetch_pull_request = __commonJS({
     function getStatusesForPullRequest(pullRequest) {
       const nodes = pullRequest.commits.nodes;
       const { statusCheckRollup } = nodes[nodes.length - 1].commit;
+      if (!statusCheckRollup) {
+        return {
+          combinedStatus: PullRequestStatus.FAILING,
+          statuses: []
+        };
+      }
       const statuses = statusCheckRollup.contexts.nodes.map((context) => {
         switch (context.__typename) {
           case "CheckRun":
@@ -54913,15 +54919,8 @@ var require_fetch_pull_request = __commonJS({
       }
     }
     function normalizeGithubCheckState(conclusion, status) {
-      switch (status) {
-        case "COMPLETED":
-          break;
-        case "QUEUED":
-        case "IN_PROGRESS":
-        case "WAITING":
-        case "PENDING":
-        case "REQUESTED":
-          return PullRequestStatus.PENDING;
+      if (status !== "COMPLETED") {
+        return PullRequestStatus.PENDING;
       }
       switch (conclusion) {
         case "ACTION_REQUIRED":

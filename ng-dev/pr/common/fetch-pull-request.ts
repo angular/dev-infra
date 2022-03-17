@@ -6,16 +6,17 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
-import {getPendingPrs, getPr} from '../../utils/github';
-import {params, types as graphqlTypes, onUnion} from 'typed-graphqlify';
 import {
-  MergeableState,
   CheckConclusionState,
-  StatusState,
-  PullRequestState,
   CheckStatusState,
+  MergeableState,
+  PullRequestState,
+  StatusState,
 } from '@octokit/graphql-schema';
+import {getPendingPrs, getPr} from '../../utils/github';
+import {types as graphqlTypes, onUnion, optional, params} from 'typed-graphqlify';
+
+import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 
 /** A status for a pull request status or check. */
 export enum PullRequestStatus {
@@ -41,7 +42,7 @@ export const PR_SCHEMA = {
       nodes: [
         {
           commit: {
-            statusCheckRollup: {
+            statusCheckRollup: optional({
               state: graphqlTypes.custom<StatusState>(),
               contexts: params(
                 {last: 100},
@@ -51,7 +52,7 @@ export const PR_SCHEMA = {
                       CheckRun: {
                         __typename: graphqlTypes.constant('CheckRun'),
                         status: graphqlTypes.custom<CheckStatusState>(),
-                        conclusion: graphqlTypes.custom<CheckConclusionState>(),
+                        conclusion: graphqlTypes.custom<CheckConclusionState | null>(),
                         name: graphqlTypes.string,
                       },
                       StatusContext: {
@@ -63,7 +64,7 @@ export const PR_SCHEMA = {
                   ],
                 },
               ),
-            },
+            }),
             message: graphqlTypes.string,
           },
         },
@@ -103,6 +104,16 @@ export const PR_SCHEMA = {
 
 export type PullRequestFromGithub = typeof PR_SCHEMA;
 
+/** Type describing the normalized and combined status of a pull request. */
+export type PullRequestStatusInfo = {
+  combinedStatus: PullRequestStatus;
+  statuses: {
+    status: PullRequestStatus;
+    type: 'check' | 'status';
+    name: string;
+  }[];
+};
+
 /** Fetches a pull request from Github. Returns null if an error occurred. */
 export async function fetchPullRequestFromGithub(
   git: AuthenticatedGitClient,
@@ -119,25 +130,36 @@ export async function fetchPendingPullRequestsFromGithub(
 }
 
 /**
- * Gets the statuses for a commit from a pull requeste, using a consistent interface for both
- * status and checks results.
+ * Gets the statuses for a commit from a pull request, using a consistent interface
+ * for both status and checks results.
  */
-export function getStatusesForPullRequest(pullRequest: PullRequestFromGithub) {
+export function getStatusesForPullRequest(
+  pullRequest: PullRequestFromGithub,
+): PullRequestStatusInfo {
   const nodes = pullRequest.commits.nodes;
   /** The combined github status and github checks object. */
   const {statusCheckRollup} = nodes[nodes.length - 1].commit;
+
+  // If there is no status check rollup (i.e. no status nor checks), we
+  // consider the pull request status as failing.
+  if (!statusCheckRollup) {
+    return {
+      combinedStatus: PullRequestStatus.FAILING,
+      statuses: [],
+    };
+  }
 
   const statuses = statusCheckRollup.contexts.nodes.map((context) => {
     switch (context.__typename) {
       case 'CheckRun':
         return {
-          type: 'check',
+          type: 'check' as const,
           name: context.name,
           status: normalizeGithubCheckState(context.conclusion, context.status),
         };
       case 'StatusContext':
         return {
-          type: 'status',
+          type: 'status' as const,
           name: context.context,
           status: normalizeGithubStatusState(context.state),
         };
@@ -151,7 +173,7 @@ export function getStatusesForPullRequest(pullRequest: PullRequestFromGithub) {
 }
 
 /** Retrieve the normalized PullRequestStatus for the provided github status state. */
-function normalizeGithubStatusState(state: StatusState) {
+function normalizeGithubStatusState(state: StatusState): PullRequestStatus {
   switch (state) {
     case 'FAILURE':
     case 'ERROR':
@@ -165,19 +187,16 @@ function normalizeGithubStatusState(state: StatusState) {
 }
 
 /** Retrieve the normalized PullRequestStatus for the provided github check state. */
-function normalizeGithubCheckState(conclusion: CheckConclusionState, status: CheckStatusState) {
-  switch (status) {
-    case 'COMPLETED':
-      break;
-    case 'QUEUED':
-    case 'IN_PROGRESS':
-    case 'WAITING':
-    case 'PENDING':
-    case 'REQUESTED':
-      return PullRequestStatus.PENDING;
+function normalizeGithubCheckState(
+  conclusion: CheckConclusionState | null,
+  status: CheckStatusState,
+): PullRequestStatus {
+  if (status !== 'COMPLETED') {
+    return PullRequestStatus.PENDING;
   }
 
-  switch (conclusion) {
+  // If the `status` is completed, a conclusion is guaranteed to be set.
+  switch (conclusion!) {
     case 'ACTION_REQUIRED':
     case 'TIMED_OUT':
     case 'CANCELLED':
