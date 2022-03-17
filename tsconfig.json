@@ -8,5 +8,6 @@
     "noImplicitOverride": true,
     "noImplicitReturns": true,
     "moduleResolution": "node"
-  }
+  },
+  "exclude": ["node_modules/**", "bazel-out/**", "dist/**"]
 }
