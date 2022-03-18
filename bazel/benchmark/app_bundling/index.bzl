@@ -17,8 +17,6 @@ def _create_esbuild_minify_options(debug = False):
         "minifyIdentifiers": not debug,
         "minifySyntax": True,
         "minifyWhitespace": False,
-        # TODO: Remove when https://github.com/bazelbuild/rules_nodejs/pull/3106 landed.
-        "ignoreAnnotations": False,
     }
 
 def app_bundle(
