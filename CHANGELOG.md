@@ -1,3 +1,17 @@
+<a name="2022.3.20"></a>
+# 2022.3.20 (2022-03-20)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cd25674](https://github.com/angular/dev-infra/commit/cd25674bf426cd367b6b5700550c6b75b07de6e9) | fix | use correct `LinkerPackageMappingInfo` field name |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2c7dece](https://github.com/angular/dev-infra/commit/2c7dece49c9a83992899140c4c6e636a926d2bb2) | fix | avoid runtime error when pull request does not have status/checks |
+## Special Thanks
+George Kalpakas, Paul Gschwendtner and renovate[bot]
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.3.13"></a>
 # 2022.3.13 (2022-03-13)
 ### ng-dev
@@ -167,22 +181,5 @@ Joey Perrott
 | Commit | Type | Description |
 | -- | -- | -- |
 | [912311a](https://github.com/angular/dev-infra/commit/912311af713004c92ddc3ac73eb0f43ceb55867f) | fix | properly set the authentication token for feature request action ([#306](https://github.com/angular/dev-infra/pull/306)) |
-## Special Thanks
-Joey Perrott and Paul Gschwendtner
-
-<!-- CHANGELOG SPLIT MARKER -->
-<a name="2021.11.14"></a>
-# 2021.11.14 (2021-11-14)
-### bazel
-| Commit | Type | Description |
-| -- | -- | -- |
-| [88d1b37](https://github.com/angular/dev-infra/commit/88d1b37354dad996d399f8ca0ace6cd1ba7e3307) | feat | expose browser driver binaries through toolchain aliases |
-| [4144181](https://github.com/angular/dev-infra/commit/4144181a07b80c8a1c6c0ca35c6751253e1cc3db) | fix | integration rule not working with legacy external runfiles disabled |
-| [afceae0](https://github.com/angular/dev-infra/commit/afceae0cd799b8f18865ead4d2579d9ed735c67a) | fix | integration rule using incorrect casing for working dir of commands |
-| [ff39f60](https://github.com/angular/dev-infra/commit/ff39f60188b219ca368e463e4022be680ba7c73b) | fix | integration test rule not able to setup mappings for resolutions ([#286](https://github.com/angular/dev-infra/pull/286)) |
-### ng-dev
-| Commit | Type | Description |
-| -- | -- | -- |
-| [0474a28](https://github.com/angular/dev-infra/commit/0474a28f6c7dbc47b8075e78223b2eeb8cd37c2e) | fix | **release:** properly ensure local ng-dev version is up-to-date |
 ## Special Thanks
 Joey Perrott and Paul Gschwendtner
