@@ -1,21 +1,22 @@
-load("//tools:defaults.bzl", "ts_library")
-load("//bazel/api-golden:index.bzl", "api_golden_test")
-
-package(default_visibility = ["//visibility:public"])
-
-ts_library(
-    name = "test_lib",
-    srcs = ["test_fixture.ts"],
-    deps = ["//bazel/api-golden/test/transitive_target"],
-)
+load("//bazel/api-golden:index.bzl", "api_golden_test", "api_golden_test_npm_package")
 
 api_golden_test(
-    name = "test",
+    name = "test_explicit_files",
     data = [
-        "test_golden.md",
-        ":test_lib",
+        "goldens/test_golden.md",
+        "//bazel/api-golden/test/fixtures:test_lib",
     ],
-    entry_point = "dev-infra/bazel/api-golden/test/test_fixture.d.ts",
-    golden = "dev-infra/bazel/api-golden/test/test_golden.md",
+    entry_point = "dev-infra/bazel/api-golden/test/fixtures/test_fixture.d.ts",
+    golden = "dev-infra/bazel/api-golden/test/goldens/test_golden.md",
     types = ["@npm//@types/node"],
+)
+
+api_golden_test_npm_package(
+    name = "test_npm_package",
+    data = [
+        "goldens/test_package",
+        "//bazel/api-golden/test/fixtures:test_package",
+    ],
+    golden_dir = "dev-infra/bazel/api-golden/test/goldens/test_package",
+    npm_package = "dev-infra/bazel/api-golden/test/fixtures/test_package",
 )
