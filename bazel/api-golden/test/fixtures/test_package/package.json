@@ -1,0 +1,15 @@
+{
+  "name": "test-package",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts"
+    },
+    "./testing": {
+      "types": "./testing/index.d.ts"
+    },
+    "./testing/nested": {
+      "types": "./testing/nested.d.ts"
+    }
+  }
+}
