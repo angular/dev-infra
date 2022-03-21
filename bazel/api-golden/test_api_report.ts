@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {runfiles} from '@bazel/runfiles';
 import {
   ConsoleMessageId,
   Extractor,
@@ -17,9 +16,11 @@ import {
   ExtractorResult,
   IConfigFile,
 } from '@microsoft/api-extractor';
+import {basename, dirname} from 'path';
+
 import {AstModule} from '@microsoft/api-extractor/lib/analyzer/AstModule';
 import {ExportAnalyzer} from '@microsoft/api-extractor/lib/analyzer/ExportAnalyzer';
-import {basename, dirname} from 'path';
+import {runfiles} from '@bazel/runfiles';
 
 /**
  * Original definition of the `ExportAnalyzer#fetchAstModuleExportInfo` method.
@@ -42,6 +43,9 @@ const _origFetchAstModuleExportInfo = ExportAnalyzer.prototype.fetchAstModuleExp
  * @param packageJsonPath Optional path to a `package.json` file that contains the entry
  *   point. Note that the `package.json` is currently only used by `api-extractor` to determine
  *   the package name displayed within the API golden.
+ * @param customPackageName A custom package name to be provided for the API report. This can be
+ *   useful when the specified `package.json` is describing the whole package but the API report
+ *   is scoped to a specific subpath/entry-point.
  */
 export async function testApiGolden(
   goldenFilePath: string,
@@ -50,6 +54,7 @@ export async function testApiGolden(
   stripExportPattern: RegExp,
   typeNames: string[] = [],
   packageJsonPath = resolveWorkspacePackageJsonPath(),
+  customPackageName?: string,
 ): Promise<ExtractorResult> {
   // If no `TEST_TMPDIR` is defined, then this script runs using `bazel run`. We use
   // the runfile directory as temporary directory for API extractor.
@@ -90,11 +95,14 @@ export async function testApiGolden(
   // compatible with the API extractor. This is a workaround for a bug in api-extractor.
   // TODO remove once https://github.com/microsoft/rushstack/issues/2774 is resolved.
   const packageJson = require(packageJsonPath);
-  const packageNameSegments = packageJson.name.split('/');
-  const packageName =
-    packageNameSegments.length === 1
-      ? packageNameSegments[0]
-      : `${packageNameSegments[0]}/${packageNameSegments.slice(1).join('_')}`;
+  const packageNameSegments = (customPackageName ?? packageJson.name).split('/');
+  const isScopedPackage = packageNameSegments[0][0] === '@' && packageNameSegments.length > 1;
+  // API extractor allows one-slash when the package uses the scoped-package convention.
+  const slashConversionStartIndex = isScopedPackage ? 1 : 0;
+  const normalizedRest = packageNameSegments.slice(slashConversionStartIndex).join('_');
+  const packageName = isScopedPackage
+    ? `${packageNameSegments[0]}/${normalizedRest}`
+    : normalizedRest;
 
   const extractorConfig = ExtractorConfig.prepare({
     configObject,

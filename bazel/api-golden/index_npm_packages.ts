@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {runfiles} from '@bazel/runfiles';
 import * as chalk from 'chalk';
-import {join, relative} from 'path';
 
 import {findEntryPointsWithinNpmPackage} from './find_entry_points';
+import {join} from 'path';
+import {runfiles} from '@bazel/runfiles';
 import {testApiGolden} from './test_api_report';
 
 /**
@@ -25,18 +25,17 @@ async function main(
   stripExportPattern: RegExp,
   typeNames: string[],
 ) {
-  const entryPoints = findEntryPointsWithinNpmPackage(npmPackageDir);
+  const packageJsonPath = join(npmPackageDir, 'package.json');
+  const entryPoints = findEntryPointsWithinNpmPackage(npmPackageDir, packageJsonPath);
   const outdatedGoldens: string[] = [];
   let allTestsSucceeding = true;
 
-  for (const {packageJsonPath, typesEntryPointPath} of entryPoints) {
-    const pkgRelativeName = relative(npmPackageDir, typesEntryPointPath);
+  for (const {subpath, moduleName, typesEntryPointPath} of entryPoints) {
     // API extractor generates API reports as markdown files. For each types
     // entry-point we maintain a separate golden file. These golden files are
-    // based on the name of the entry-point `.d.ts` file in the NPM package,
-    // but with the proper `.md` file extension.
+    // based on the name of the defining NodeJS exports subpath in the NPM package,
     // See: https://api-extractor.com/pages/overview/demo_api_report/.
-    const goldenName = pkgRelativeName.replace(/\.d\.ts$/, '.md');
+    const goldenName = join(subpath, 'index.md');
     const goldenFilePath = join(goldenDir, goldenName);
 
     const {succeeded, apiReportChanged} = await testApiGolden(
@@ -46,6 +45,7 @@ async function main(
       stripExportPattern,
       typeNames,
       packageJsonPath,
+      moduleName,
     );
 
     // Keep track of outdated goldens.
