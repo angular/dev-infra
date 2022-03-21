@@ -1,0 +1,14 @@
+load("//tools:defaults.bzl", "ts_library")
+
+package(default_visibility = ["//bazel/api-golden/test:__pkg__"])
+
+exports_files(["test_package"])
+
+ts_library(
+    name = "test_lib",
+    srcs = ["test_fixture.ts"],
+    deps = [
+        "//bazel/api-golden/test/fixtures/transitive_target",
+        "@npm//@types/node",
+    ],
+)
