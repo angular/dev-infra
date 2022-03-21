@@ -6,57 +6,47 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {lstatSync, readdirSync, readFileSync} from 'fs';
-import {dirname, join} from 'path';
+import {join, normalize} from 'path';
+
+import {readFileSync} from 'fs';
 
 /** Interface describing a resolved NPM package entry point. */
 export interface PackageEntryPoint {
   typesEntryPointPath: string;
-  packageJsonPath: string;
+  subpath: string;
+  moduleName: string;
 }
 
 /** Interface describing contents of a `package.json`. */
 interface PackageJson {
-  types?: string;
-  typings?: string;
+  name: string;
+  exports?: Record<string, {types?: string}>;
 }
 
 /** Finds all entry points within a given NPM package directory. */
-export function findEntryPointsWithinNpmPackage(dirPath: string): PackageEntryPoint[] {
+export function findEntryPointsWithinNpmPackage(
+  dirPath: string,
+  packageJsonPath: string,
+): PackageEntryPoint[] {
+  const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8')) as PackageJson;
   const entryPoints: PackageEntryPoint[] = [];
 
-  for (const packageJsonFilePath of findPackageJsonFilesInDirectory(dirPath)) {
-    const packageJson = JSON.parse(readFileSync(packageJsonFilePath, 'utf8')) as PackageJson;
-    const typesFile = packageJson.types || packageJson.typings;
+  if (packageJson.exports === undefined) {
+    throw new Error(
+      `Expected top-level "package.json" in "${dirPath}" to declare entry-points ` +
+        `through conditional exports.`,
+    );
+  }
 
-    if (typesFile) {
+  for (const [subpath, conditions] of Object.entries(packageJson.exports)) {
+    if (conditions.types !== undefined) {
       entryPoints.push({
-        packageJsonPath: packageJsonFilePath,
-        typesEntryPointPath: join(dirname(packageJsonFilePath), typesFile),
+        subpath,
+        moduleName: normalize(join(packageJson.name, subpath)).replace(/\\/g, '/'),
+        typesEntryPointPath: join(dirPath, conditions.types),
       });
     }
   }
 
   return entryPoints;
-}
-
-/** Determine if the provided path is a directory. */
-function isDirectory(dirPath: string) {
-  try {
-    return lstatSync(dirPath).isDirectory();
-  } catch {
-    return false;
-  }
-}
-
-/** Finds all `package.json` files within a directory. */
-function* findPackageJsonFilesInDirectory(directoryPath: string): IterableIterator<string> {
-  for (const fileName of readdirSync(directoryPath)) {
-    const fullPath = join(directoryPath, fileName);
-    if (isDirectory(fullPath)) {
-      yield* findPackageJsonFilesInDirectory(fullPath);
-    } else if (fileName === 'package.json') {
-      yield fullPath;
-    }
-  }
 }
