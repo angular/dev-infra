@@ -54397,17 +54397,20 @@ var require_git_client = __commonJS({
           (0, console_1.debug)(`"git push" is not able to be run in dryRun mode.`);
           throw new dry_run_1.DryRunError();
         }
-        const printFn = GitClient.verboseLogging || options.verboseLogging ? console_1.info : console_1.debug;
-        printFn("Executing: git", this.sanitizeConsoleOutput(args.join(" ")));
+        (0, console_1.debug)("Executing: git", this.sanitizeConsoleOutput(args.join(" ")));
         const result = (0, child_process_1.spawnSync)(this.gitBinPath, args, __spreadProps(__spreadValues({
           cwd: this.baseDir,
           stdio: "pipe"
         }, options), {
           encoding: "utf8"
         }));
+        (0, console_1.debug)(`Status: ${result.status}, Error: ${!!result.error}, Signal: ${result.signal}`);
         if (result.status !== 0 && result.stderr !== null) {
           process.stderr.write(this.sanitizeConsoleOutput(result.stderr));
         }
+        (0, console_1.debug)("Stdout:", result.stdout);
+        (0, console_1.debug)("Stderr:", result.stderr);
+        (0, console_1.debug)("Process Error:", result.error);
         if (result.error !== void 0) {
           process.stderr.write(this.sanitizeConsoleOutput(result.error.message));
         }
@@ -54457,9 +54460,6 @@ var require_git_client = __commonJS({
       sanitizeConsoleOutput(value) {
         return value;
       }
-      static setVerboseLoggingState(verbose) {
-        GitClient.verboseLogging = verbose;
-      }
       static get() {
         if (!this._unauthenticatedInstance) {
           GitClient._unauthenticatedInstance = new GitClient();
@@ -54468,7 +54468,6 @@ var require_git_client = __commonJS({
       }
     };
     exports2.GitClient = GitClient;
-    GitClient.verboseLogging = false;
     function gitOutputAsArray(gitCommandResult) {
       return gitCommandResult.stdout.split("\n").map((x) => x.trim()).filter((x) => !!x);
     }
