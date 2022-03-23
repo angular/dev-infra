@@ -27,9 +27,7 @@ export class GitCommandError extends Error {
 }
 
 /** The options available for the `GitClient``run` and `runGraceful` methods. */
-type GitCommandRunOptions = SpawnSyncOptions & {
-  verboseLogging?: boolean;
-};
+type GitCommandRunOptions = SpawnSyncOptions;
 
 /** Class that can be used to perform Git interactions with a given remote. **/
 export class GitClient {
@@ -93,14 +91,11 @@ export class GitClient {
     }
 
     // To improve the debugging experience in case something fails, we print all executed Git
-    // commands at the DEBUG level to better understand the git actions occurring. Verbose logging,
-    // always logging at the INFO level, can be enabled either by setting the verboseLogging
-    // property on the GitClient class or the options object provided to the method.
-    const printFn = GitClient.verboseLogging || options.verboseLogging ? info : debug;
+    // commands at the DEBUG level to better understand the git actions occurring.
     // Note that we sanitize the command before printing it to the console. We do not want to
     // print an access token if it is contained in the command. It's common to share errors with
     // others if the tool failed, and we do not want to leak tokens.
-    printFn('Executing: git', this.sanitizeConsoleOutput(args.join(' ')));
+    debug('Executing: git', this.sanitizeConsoleOutput(args.join(' ')));
 
     const result = spawnSync(this.gitBinPath, args, {
       cwd: this.baseDir,
@@ -111,12 +106,18 @@ export class GitClient {
       encoding: 'utf8',
     });
 
+    debug(`Status: ${result.status}, Error: ${!!result.error}, Signal: ${result.signal}`);
+
     if (result.status !== 0 && result.stderr !== null) {
       // Git sometimes prints the command if it failed. This means that it could
       // potentially leak the Github token used for accessing the remote. To avoid
       // printing a token, we sanitize the string before printing the stderr output.
       process.stderr.write(this.sanitizeConsoleOutput(result.stderr));
     }
+
+    debug('Stdout:', result.stdout);
+    debug('Stderr:', result.stderr);
+    debug('Process Error:', result.error);
 
     if (result.error !== undefined) {
       // Git sometimes prints the command if it failed. This means that it could
@@ -216,16 +217,8 @@ export class GitClient {
     return value;
   }
 
-  /** Whether verbose logging of Git actions should be used. */
-  private static verboseLogging = false;
-
   /** The singleton instance of the unauthenticated `GitClient`. */
   private static _unauthenticatedInstance: GitClient;
-
-  /** Set the verbose logging state of all git client instances. */
-  static setVerboseLoggingState(verbose: boolean) {
-    GitClient.verboseLogging = verbose;
-  }
 
   /**
    * Static method to get the singleton instance of the `GitClient`, creating it
