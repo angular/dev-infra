@@ -53843,6 +53843,39 @@ var require_inquirer = __commonJS({
 });
 
 // 
+var require_dry_run = __commonJS({
+  ""(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.DryRunError = exports2.isDryRun = exports2.addDryRunFlag = void 0;
+    function addDryRunFlag(args) {
+      return args.option("dry-run", {
+        type: "boolean",
+        default: false,
+        description: "Whether to do a dry run",
+        coerce: (dryRun) => {
+          if (dryRun) {
+            process.env["DRY_RUN"] = "1";
+          }
+          return dryRun;
+        }
+      });
+    }
+    exports2.addDryRunFlag = addDryRunFlag;
+    function isDryRun() {
+      return process.env["DRY_RUN"] !== void 0;
+    }
+    exports2.isDryRun = isDryRun;
+    var DryRunError = class extends Error {
+      constructor() {
+        super("Cannot call this function in dryRun mode.");
+      }
+    };
+    exports2.DryRunError = DryRunError;
+  }
+});
+
+// 
 var require_ts_node = __commonJS({
   ""(exports2) {
     "use strict";
@@ -53952,39 +53985,6 @@ var require_config2 = __commonJS({
         process.exit(1);
       }
     }
-  }
-});
-
-// 
-var require_dry_run = __commonJS({
-  ""(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.DryRunError = exports2.isDryRun = exports2.addDryRunFlag = void 0;
-    function addDryRunFlag(args) {
-      return args.option("dry-run", {
-        type: "boolean",
-        default: false,
-        description: "Whether to do a dry run",
-        coerce: (dryRun) => {
-          if (dryRun) {
-            process.env["DRY_RUN"] = "1";
-          }
-          return dryRun;
-        }
-      });
-    }
-    exports2.addDryRunFlag = addDryRunFlag;
-    function isDryRun() {
-      return process.env["DRY_RUN"] !== void 0;
-    }
-    exports2.isDryRun = isDryRun;
-    var DryRunError = class extends Error {
-      constructor() {
-        super("Cannot call this function in dryRun mode.");
-      }
-    };
-    exports2.DryRunError = DryRunError;
   }
 });
 
@@ -54361,10 +54361,10 @@ var require_git_client = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.GitClient = exports2.GitCommandError = void 0;
-    var child_process_1 = require("child_process");
-    var config_1 = require_config2();
-    var console_1 = require_console();
     var dry_run_1 = require_dry_run();
+    var config_1 = require_config2();
+    var child_process_1 = require("child_process");
+    var console_1 = require_console();
     var github_12 = require_github2();
     var github_urls_1 = require_github_urls();
     var GitCommandError = class extends Error {
@@ -54405,7 +54405,7 @@ var require_git_client = __commonJS({
         }, options), {
           encoding: "utf8"
         }));
-        if (result.stderr !== null) {
+        if (result.status !== 0 && result.stderr !== null) {
           process.stderr.write(this.sanitizeConsoleOutput(result.stderr));
         }
         if (result.error !== void 0) {
@@ -54671,13 +54671,13 @@ Alternatively, a new token can be created at: ${github_urls_1.GITHUB_TOKEN_GENER
         return { error };
       }
       async getForkOfAuthenticatedUser() {
-        const forks = await this.getForksForAuthenticatedUser();
+        const forks = await this.getAllForksOfAuthenticatedUser();
         if (forks.length === 0) {
           throw Error("Unable to find fork a for currently authenticated user.");
         }
         return forks[0];
       }
-      async getForksForAuthenticatedUser() {
+      async getAllForksOfAuthenticatedUser() {
         if (this._cachedForkRepositories !== null) {
           return this._cachedForkRepositories;
         }

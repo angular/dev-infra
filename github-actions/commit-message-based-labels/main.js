@@ -48660,10 +48660,10 @@ var require_git_client = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.GitClient = exports2.GitCommandError = void 0;
-    var child_process_1 = require("child_process");
-    var config_12 = require_config2();
-    var console_1 = require_console();
     var dry_run_1 = require_dry_run();
+    var config_12 = require_config2();
+    var child_process_1 = require("child_process");
+    var console_1 = require_console();
     var github_12 = require_github2();
     var github_urls_1 = require_github_urls();
     var GitCommandError = class extends Error {
@@ -48704,7 +48704,7 @@ var require_git_client = __commonJS({
         }, options), {
           encoding: "utf8"
         }));
-        if (result.stderr !== null) {
+        if (result.status !== 0 && result.stderr !== null) {
           process.stderr.write(this.sanitizeConsoleOutput(result.stderr));
         }
         if (result.error !== void 0) {

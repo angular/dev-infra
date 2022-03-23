@@ -6,11 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {spawnSync, SpawnSyncOptions, SpawnSyncReturns} from 'child_process';
-
-import {getConfig, GithubConfig, assertValidGithubConfig} from '../config';
-import {debug, info} from '../console';
 import {DryRunError, isDryRun} from '../dry-run';
+import {GithubConfig, assertValidGithubConfig, getConfig} from '../config';
+import {SpawnSyncOptions, SpawnSyncReturns, spawnSync} from 'child_process';
+import {debug, info} from '../console';
 
 import {GithubClient} from './github';
 import {getRepositoryGitUrl} from './github-urls';
@@ -112,7 +111,7 @@ export class GitClient {
       encoding: 'utf8',
     });
 
-    if (result.stderr !== null) {
+    if (result.status !== 0 && result.stderr !== null) {
       // Git sometimes prints the command if it failed. This means that it could
       // potentially leak the Github token used for accessing the remote. To avoid
       // printing a token, we sanitize the string before printing the stderr output.
