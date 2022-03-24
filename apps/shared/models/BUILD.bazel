@@ -1,0 +1,42 @@
+load("//tools:defaults.bzl", "ts_library")
+
+package(default_visibility = ["//visibility:private"])
+
+ts_library(
+    name = "apps",
+    srcs = [
+        "app-models.ts",
+    ],
+    deps = [
+        ":models",
+        "@npm//firebase",
+    ],
+)
+
+ts_library(
+    name = "server",
+    srcs = [
+        "server-models.ts",
+    ],
+    visibility = ["//apps/functions:__subpackages__"],
+    deps = [
+        ":models",
+        "@npm//@google-cloud/firestore",
+        "@npm//@types/node",
+        "@npm//firebase-admin",
+    ],
+)
+
+ts_library(
+    name = "models",
+    srcs = glob(
+        include = ["*.ts"],
+        exclude = [
+            "app-models.ts",
+            "server-models.ts",
+        ],
+    ),
+    deps = [
+        "@npm//@octokit/webhooks-types",
+    ],
+)
