@@ -50,7 +50,7 @@
     "prettier": "^2.3.2",
     "protractor": "^7.0.0",
     "selenium-webdriver": "4.1.1",
-    "send": "^0.17.2",
+    "send": "^0.18.0",
     "tmp": "^0.2.1",
     "true-case-path": "^2.2.1",
     "tslib": "^2.3.0",
