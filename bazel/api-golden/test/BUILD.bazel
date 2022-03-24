@@ -20,3 +20,13 @@ api_golden_test_npm_package(
     golden_dir = "dev-infra/bazel/api-golden/test/goldens/test_package",
     npm_package = "dev-infra/bazel/api-golden/test/fixtures/test_package",
 )
+
+api_golden_test_npm_package(
+    name = "test_npm_package_no_exports_field",
+    data = [
+        "goldens/pkg_no_exports_field",
+        "//bazel/api-golden/test/fixtures:pkg_no_exports_field",
+    ],
+    golden_dir = "dev-infra/bazel/api-golden/test/goldens/pkg_no_exports_field",
+    npm_package = "dev-infra/bazel/api-golden/test/fixtures/pkg_no_exports_field",
+)

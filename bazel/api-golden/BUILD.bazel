@@ -13,6 +13,7 @@ ts_library(
         "find_entry_points.ts",
         "index.ts",
         "index_npm_packages.ts",
+        "path-normalize.ts",
         "test_api_report.ts",
     ],
     # A tsconfig needs to be specified as otherwise `ts_library` will look for the config

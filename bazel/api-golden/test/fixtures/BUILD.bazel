@@ -2,7 +2,11 @@ load("//tools:defaults.bzl", "ts_library")
 
 package(default_visibility = ["//bazel/api-golden/test:__pkg__"])
 
-exports_files(["test_package"])
+# Expose these two fixture directories as tree artifacts.
+exports_files([
+    "test_package",
+    "pkg_no_exports_field",
+])
 
 ts_library(
     name = "test_lib",
