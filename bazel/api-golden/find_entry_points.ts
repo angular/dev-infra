@@ -27,7 +27,7 @@ export function findEntryPointsWithinNpmPackage(
   // Legacy behavior to support Angular packages without the `exports` field.
   // TODO: Remove when https://github.com/angular/angular-cli/issues/22889 is resolved.
   if (packageJson.exports === undefined) {
-    return findEntryPointsByThroughNestedPackageFiles(dirPath);
+    return findEntryPointsThroughNestedPackageFiles(dirPath);
   }
 
   for (const [subpath, conditions] of Object.entries(packageJson.exports)) {
@@ -47,7 +47,7 @@ export function findEntryPointsWithinNpmPackage(
  * for nested `package.json` files. This is a legacy mechanism since we can
  * consult the `package.json` `exports` information in most cases.
  */
-function findEntryPointsByThroughNestedPackageFiles(dirPath: string): PackageEntryPoint[] {
+function findEntryPointsThroughNestedPackageFiles(dirPath: string): PackageEntryPoint[] {
   const entryPoints: PackageEntryPoint[] = [];
 
   for (const packageJsonFilePath of findPackageJsonFilesInDirectory(dirPath)) {
