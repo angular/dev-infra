@@ -1,0 +1,5 @@
+{
+  "name": "test-package",
+  "type": "module",
+  "types": "./index.d.ts"
+}
