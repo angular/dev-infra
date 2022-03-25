@@ -21,7 +21,6 @@ export const Status = forApp(GithubStatus);
 export const Team = forApp(GithubTeam);
 export const Check = forApp(GithubCheck);
 
-
 /**
  * Mixin for models, allowing them to be used in web app environments leveraging Firestore. This
  * mixin provides the `converter` object used for reading and writing to Firestore, using the

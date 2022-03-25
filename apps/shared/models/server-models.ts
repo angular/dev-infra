@@ -31,7 +31,7 @@ type WithAdminFirestoreDataConverter<Model> = Model & {
 /**
  * A model which has been setup for usage in a Firebase functions (firebase-admin) environment,
  * with additional expectation/support for converting from a Github webhook payload.
-*/
+ */
 type WithAdminFirestoreDataConverterAndGithub<Model, GithubModel> = Model & {
   converter: AdminFirestoreDataConverter<Model> & {
     fromGithub: (model: GithubModel) => Model;

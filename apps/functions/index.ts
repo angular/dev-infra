@@ -1,1 +1,1 @@
-import * as functions from 'firebase-functions';
+export {githubWebhook} from './githubWebhook/index';
