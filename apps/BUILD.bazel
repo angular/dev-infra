@@ -1,0 +1,23 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+
+nodejs_binary(
+    name = "serve",
+    chdir = package_name(),
+    data = [
+        # primary firebase configuration file
+        "firebase.json",
+
+        # Firebase function files
+        "//apps/functions:functions_compiled",
+        "//apps/functions:functions_files",
+    ],
+    entry_point = "@npm//:node_modules/firebase-tools/lib/bin/firebase.js",
+    templated_args = [
+        "--project",
+        "angular-caretaker",
+        "--config",
+        # TODO: Find a way to do this without relying on the copy_to_bin that works cross platform.
+        "$$(rlocation $(execpath :firebase.json))",
+        "emulators:start",
+    ],
+)

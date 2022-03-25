@@ -1,0 +1,35 @@
+load("//tools:defaults.bzl", "esbuild", "ts_library")
+load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
+
+package(default_visibility = ["//visibility:private"])
+
+copy_to_bin(
+    name = "functions_files",
+    srcs = [
+        "package.json",
+    ],
+    visibility = ["//apps:__pkg__"],
+)
+
+ts_library(
+    name = "functions",
+    srcs = [
+        "index.ts",
+    ],
+    deps = [
+        "@npm//firebase-functions",
+    ],
+)
+
+esbuild(
+    name = "functions_compiled",
+    entry_points = [
+        "index.ts",
+    ],
+    format = "cjs",
+    visibility = ["//apps:__pkg__"],
+    deps = [
+        ":functions",
+        "@npm//firebase-functions",
+    ],
+)
