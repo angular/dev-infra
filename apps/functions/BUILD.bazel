@@ -17,6 +17,7 @@ ts_library(
         "index.ts",
     ],
     deps = [
+        "//apps/functions/githubWebhook",
         "@npm//firebase-functions",
     ],
 )
@@ -26,7 +27,7 @@ esbuild(
     entry_points = [
         "index.ts",
     ],
-    format = "cjs",
+    format = "esm",
     visibility = ["//apps:__pkg__"],
     deps = [
         ":functions",

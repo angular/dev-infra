@@ -1,4 +1,3 @@
-
 /**
  * Because it is less expensive to store strings than Firestore references, with no change in the
  * value it provides, we have this local type to express this usage.
@@ -21,4 +20,3 @@ export abstract class GithubBaseModel<T> extends BaseModel<T> {
   /** Helper functions for translating Github objects to Firestore. */
   protected static githubHelpers: GithubHelperFunctions<any, any> | undefined;
 }
-

@@ -1,0 +1,29 @@
+load("//tools:defaults.bzl", "ts_library")
+
+package(default_visibility = ["//visibility:private"])
+
+ts_library(
+    name = "githubWebhook",
+    srcs = [
+        "index.ts",
+    ],
+    visibility = [
+        "//apps/functions:__pkg__",
+    ],
+    deps = [
+        ":webhooks",
+        "@npm//firebase-admin",
+        "@npm//firebase-functions",
+    ],
+)
+
+ts_library(
+    name = "webhooks",
+    srcs = [
+        "pull-request.ts",
+    ],
+    deps = [
+        "//apps/shared/models:server",
+        "@npm//@octokit/webhooks-types",
+    ],
+)

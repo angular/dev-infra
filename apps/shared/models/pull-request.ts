@@ -6,7 +6,7 @@ import {GithubTeam} from './team';
 import {GithubUser, isUserFromGithub} from './user';
 
 interface FirestorePullRequest {
-  owner:  FirestoreReference<GithubUser>;
+  owner: FirestoreReference<GithubUser>;
   repo: string;
   node: string;
   state: PullRequest['state'];
