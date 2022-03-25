@@ -62,13 +62,13 @@
   "devDependencies": {
     "@actions/core": "^1.4.0",
     "@actions/github": "^5.0.0",
-    "@angular/animations": "14.0.0-next.8",
-    "@angular/bazel": "14.0.0-next.8",
-    "@angular/common": "14.0.0-next.8",
-    "@angular/compiler": "14.0.0-next.8",
-    "@angular/compiler-cli": "14.0.0-next.8",
-    "@angular/core": "14.0.0-next.8",
-    "@angular/platform-browser": "14.0.0-next.8",
+    "@angular/animations": "14.0.0-next.9",
+    "@angular/bazel": "14.0.0-next.9",
+    "@angular/common": "14.0.0-next.9",
+    "@angular/compiler": "14.0.0-next.9",
+    "@angular/compiler-cli": "14.0.0-next.9",
+    "@angular/core": "14.0.0-next.9",
+    "@angular/platform-browser": "14.0.0-next.9",
     "@bazel/bazelisk": "^1.11.0",
     "@bazel/jasmine": "5.3.0",
     "@google-cloud/storage": "^5.18.1",
@@ -128,6 +128,6 @@
     "yaml": "^1.10.0"
   },
   "resolutions": {
-    "@angular/benchpress/@angular/core": "14.0.0-next.8"
+    "@angular/benchpress/@angular/core": "14.0.0-next.9"
   }
 }
