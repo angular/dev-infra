@@ -48,3 +48,6 @@ yarn-error.log
 
 # Don't check in junit test results.
 test-results/*
+
+# Ignore firebase debug logs.
+apps/*-debug.log
