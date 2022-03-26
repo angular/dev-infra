@@ -6,10 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {error} from '../utils/console';
-import {convertConditionToFunction} from './condition_evaluator';
+import {
+  PullApproveAuthorStateDependencyError,
+  PullApproveGroupStateDependencyError,
+} from './condition_errors';
+
 import {PullApproveGroupConfig} from './parse-yaml';
-import {PullApproveGroupStateDependencyError} from './pullapprove_arrays';
+import {convertConditionToFunction} from './condition_evaluator';
+import {error} from '../utils/console';
 
 /** A condition for a group. */
 interface GroupCondition {
@@ -34,9 +38,6 @@ export interface PullApproveGroupResult {
   unverifiableConditions: GroupCondition[];
 }
 
-// Regular expression that matches conditions for the global approval.
-const GLOBAL_APPROVAL_CONDITION_REGEX = /^"global-(docs-)?approvers" not in groups.approved$/;
-
 /** A PullApprove group to be able to test files against. */
 export class PullApproveGroup {
   /** List of conditions for the group. */
@@ -57,11 +58,6 @@ export class PullApproveGroup {
     if (config.conditions) {
       return config.conditions.forEach((condition) => {
         const expression = condition.trim();
-
-        if (expression.match(GLOBAL_APPROVAL_CONDITION_REGEX)) {
-          // Currently a noop as we don't take any action for global approval conditions.
-          return;
-        }
 
         try {
           this.conditions.push({
@@ -85,23 +81,31 @@ export class PullApproveGroup {
    * the pull approve group's conditions.
    */
   testFile(filePath: string): boolean {
-    return this.conditions.every((condition) => {
+    let allConditionsMet: boolean | null = null;
+
+    for (const condition of this.conditions) {
       const {matchedFiles, checkFn, expression} = condition;
       try {
         const matchesFile = checkFn([filePath], this.precedingGroups);
+
         if (matchesFile) {
           matchedFiles.add(filePath);
         }
-        return matchesFile;
+
+        allConditionsMet = (allConditionsMet ?? true) && matchesFile;
       } catch (e) {
-        // In the case of a condition that depends on the state of groups we want to
-        // ignore that the verification can't accurately evaluate the condition and then
-        // continue processing. Other types of errors fail the verification, as conditions
-        // should otherwise be able to execute without throwing.
-        if (e instanceof PullApproveGroupStateDependencyError) {
+        // If a group relies on the author state, we assume this group to never match
+        // or own a file. This is a strict assumption but prevents false-positives.
+        if (e instanceof PullApproveAuthorStateDependencyError) {
           condition.unverifiable = true;
-          // Return true so that `this.conditions.every` can continue evaluating.
-          return true;
+          allConditionsMet = false;
+        }
+        // In the case of a condition that depends on the state of groups, we want to ignore
+        // that the verification can't accurately evaluate the condition and continue processing.
+        // Other types of errors fail the verification, as conditions should otherwise be able to
+        // execute without throwing.
+        else if (e instanceof PullApproveGroupStateDependencyError) {
+          condition.unverifiable = true;
         } else {
           const errMessage =
             `Condition could not be evaluated: \n\n` +
@@ -111,7 +115,11 @@ export class PullApproveGroup {
           process.exit(1);
         }
       }
-    });
+    }
+
+    // A file matches the group when all conditions are met. A group is not considered
+    // as matching when all conditions have been skipped.
+    return allConditionsMet === true;
   }
 
   /** Retrieve the results for the Group, all matched and unmatched conditions. */
