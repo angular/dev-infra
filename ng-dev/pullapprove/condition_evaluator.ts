@@ -6,23 +6,39 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {PullApproveGroup} from './group';
 import {PullApproveGroupArray, PullApproveStringArray} from './pullapprove_arrays';
+
+import {PullApproveAuthorStateDependencyError} from './condition_errors';
+import {PullApproveGroup} from './group';
 import {getOrCreateGlob} from './utils';
+import {runInNewContext} from 'vm';
 
 /**
- * Context that is provided to conditions. Conditions can use various helpers
- * that PullApprove provides. We try to mock them here. Consult the official
- * docs for more details: https://docs.pullapprove.com/config/conditions.
+ * Context object that will be used as global context in condition evaluation.
+ *
+ * Conditions can use various helpers that PullApprove provides. We try to
+ * mock them here. Consult the official docs for more details:
+ * https://docs.pullapprove.com/config/conditions.
  */
-const conditionContext = {
-  'len': (value: any[]) => value.length,
-  'contains_any_globs': (files: PullApproveStringArray, patterns: string[]) => {
-    // Note: Do not always create globs for the same pattern again. This method
-    // could be called for each source file. Creating glob's is expensive.
-    return files.some((f) => patterns.some((pattern) => getOrCreateGlob(pattern).match(f)));
-  },
-};
+const conditionEvaluationContext: object = (() => {
+  const context = {
+    'len': (value: any[]) => value.length,
+    'contains_any_globs': (files: PullApproveStringArray, patterns: string[]) => {
+      // Note: Do not always create globs for the same pattern again. This method
+      // could be called for each source file. Creating glob's is expensive.
+      return files.some((f) => patterns.some((pattern) => getOrCreateGlob(pattern).match(f)));
+    },
+  };
+
+  // We cannot process references to `author` in conditions.
+  Object.defineProperty(context, 'author', {
+    get: () => {
+      throw new PullApproveAuthorStateDependencyError();
+    },
+  });
+
+  return context;
+})();
 
 /**
  * Converts a given condition to a function that accepts a set of files. The returned
@@ -31,28 +47,19 @@ const conditionContext = {
 export function convertConditionToFunction(
   expr: string,
 ): (files: string[], groups: PullApproveGroup[]) => boolean {
-  // Creates a dynamic function with the specified expression.
-  // The first parameter will be `files` as that corresponds to the supported `files` variable that
-  // can be accessed in PullApprove condition expressions. The second parameter is the list of
-  // PullApproveGroups that are accessible in the condition expressions. The followed parameters
-  // correspond to other context variables provided by PullApprove for conditions.
-  const evaluateFn = new Function(
-    'files',
-    'groups',
-    ...Object.keys(conditionContext),
-    `
-    return (${transformExpressionToJs(expr)});
-  `,
-  );
+  const jsExpression = `
+    (files, groups) => {
+      return (${transformExpressionToJs(expr)});
+    }
+  `;
+  const isMatchingFn = runInNewContext(jsExpression, conditionEvaluationContext);
 
-  // Create a function that calls the dynamically constructed function which mimics
-  // the condition expression that is usually evaluated with Python in PullApprove.
   return (files, groups) => {
-    const result = evaluateFn(
+    const result = isMatchingFn(
       new PullApproveStringArray(...files),
       new PullApproveGroupArray(...groups),
-      ...Object.values(conditionContext),
     );
+
     // If an array is returned, we consider the condition as active if the array is not
     // empty. This matches PullApprove's condition evaluation that is based on Python.
     if (Array.isArray(result)) {

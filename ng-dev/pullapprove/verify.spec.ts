@@ -78,6 +78,20 @@ describe('group parsing', () => {
     const fwCore = getGroupByName(groups, 'fw-core')!;
     expect(() => fwCore.testFile('any')).not.toThrow();
   });
+
+  it('should never match groups with conditions that rely on author state', () => {
+    const groups = getGroupsFromYaml(`
+      groups:
+        renovate-notify-group:
+          conditions:
+            - author in ["renovate-bot"]
+            - contains_any_globs(files, ['packages/core/**'])
+      `);
+    const renovateGroup = getGroupByName(groups, 'renovate-notify-group')!;
+
+    expect(renovateGroup.testFile('packages/core/index.ts')).toBe(false);
+    expect(renovateGroup.conditions[0].unverifiable).toBe(true);
+  });
 });
 
 function getGroupByName(groups: PullApproveGroup[], name: string): PullApproveGroup | undefined {

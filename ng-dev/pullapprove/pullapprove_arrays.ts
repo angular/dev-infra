@@ -5,10 +5,10 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {PullApproveGroup} from './group';
-import {getOrCreateGlob} from './utils';
 
-export class PullApproveGroupStateDependencyError extends Error {}
+import {PullApproveGroup} from './group';
+import {PullApproveGroupStateDependencyError} from './condition_errors';
+import {getOrCreateGlob} from './utils';
 
 /**
  * Superset of a native array. The superset provides methods which mimic the
