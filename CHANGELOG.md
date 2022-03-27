@@ -1,3 +1,18 @@
+<a name="2022.3.27"></a>
+# 2022.3.27 (2022-03-27)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6379fcf](https://github.com/angular/dev-infra/commit/6379fcf00a013f3695d18b5281888f671424e37a) | feat | api-golden test should leverage package exports information for finding entries |
+| [38f2a98](https://github.com/angular/dev-infra/commit/38f2a980e08337f150c2840d961e44cc361aa37d) | fix | continue to support non-exports resolution in api-golden test |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d831eaa](https://github.com/angular/dev-infra/commit/d831eaabed39001fe776a4d4d0f11c7fdcf4afae) | fix | lock formatting dependencies to avoid formating failures |
+## Special Thanks
+Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.3.20"></a>
 # 2022.3.20 (2022-03-20)
 ### bazel
@@ -166,20 +181,3 @@ Paul Gschwendtner and renovate[bot]
 | [30c518d](https://github.com/angular/dev-infra/commit/30c518dd8396e860f25ca4295dc6f4cd4a09b1da) | feat | add tooling to update vendored yarn version |
 ## Special Thanks
 Joey Perrott
-
-<!-- CHANGELOG SPLIT MARKER -->
-<a name="2021.11.21"></a>
-# 2021.11.21 (2021-11-21)
-### bazel
-| Commit | Type | Description |
-| -- | -- | -- |
-| [c0901db](https://github.com/angular/dev-infra/commit/c0901dbfbfbbe7fd086bc8ea3ce4c6ecb9bc9f8a) | feat | allow for linker mappings and external NPM package extraction in extract rule |
-| [8b007f3](https://github.com/angular/dev-infra/commit/8b007f379515974f9b648e16637cd6e05d22308b) | feat | allow for working directory to be configured in integration tests |
-| [32a04e0](https://github.com/angular/dev-infra/commit/32a04e0070f44f05e6822735e80f0cc5680ee996) | feat | introduce canonical place for esbuild bazel rules |
-| [e67feed](https://github.com/angular/dev-infra/commit/e67feed1a753da554a120ac03910adc8c468b160) | feat | introduce rule for bundling specs with optional angular linker |
-### github-actions
-| Commit | Type | Description |
-| -- | -- | -- |
-| [912311a](https://github.com/angular/dev-infra/commit/912311af713004c92ddc3ac73eb0f43ceb55867f) | fix | properly set the authentication token for feature request action ([#306](https://github.com/angular/dev-infra/pull/306)) |
-## Special Thanks
-Joey Perrott and Paul Gschwendtner
