@@ -33,7 +33,7 @@ async function main(
   npmPackageDir: string,
   approveGolden: boolean,
   stripExportPattern: RegExp,
-  typeNames: string[],
+  typeModuleNames: string[],
 ) {
   const packageJsonPath = join(npmPackageDir, 'package.json');
   const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8')) as PackageJson;
@@ -56,7 +56,7 @@ async function main(
       typesEntryPointPath,
       approveGolden,
       stripExportPattern,
-      typeNames,
+      typeModuleNames,
       packageJsonPath,
       moduleName,
     );
@@ -90,9 +90,9 @@ if (require.main === module) {
   const npmPackageDir = runfiles.resolve(args[1]);
   const approveGolden = args[2] === 'true';
   const stripExportPattern = new RegExp(args[3]);
-  const typeNames = args.slice(4);
+  const typeModuleNames = args.slice(4);
 
-  main(goldenDir, npmPackageDir, approveGolden, stripExportPattern, typeNames).catch((e) => {
+  main(goldenDir, npmPackageDir, approveGolden, stripExportPattern, typeModuleNames).catch((e) => {
     console.error(e);
     process.exit(1);
   });

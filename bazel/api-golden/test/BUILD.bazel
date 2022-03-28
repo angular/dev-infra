@@ -8,6 +8,8 @@ api_golden_test(
     ],
     entry_point = "dev-infra/bazel/api-golden/test/fixtures/test_fixture.d.ts",
     golden = "dev-infra/bazel/api-golden/test/goldens/test_golden.md",
+    # API extractor type resolution is prone to non-sandbox errors, so we test Windows.
+    tags = ["windows"],
     types = ["@npm//@types/node"],
 )
 
@@ -19,6 +21,11 @@ api_golden_test_npm_package(
     ],
     golden_dir = "dev-infra/bazel/api-golden/test/goldens/test_package",
     npm_package = "dev-infra/bazel/api-golden/test/fixtures/test_package",
+    # API extractor type resolution is prone to non-sandbox errors, so we test Windows.
+    tags = ["windows"],
+    # API extractor needs to be able to resolve `@babel/core` due to an aliased namespace
+    # we expose as part of the `nested.d.ts` fake entry-point.
+    types = ["@npm//@types/babel__core"],
 )
 
 api_golden_test_npm_package(
@@ -29,4 +36,6 @@ api_golden_test_npm_package(
     ],
     golden_dir = "dev-infra/bazel/api-golden/test/goldens/pkg_no_exports_field",
     npm_package = "dev-infra/bazel/api-golden/test/fixtures/pkg_no_exports_field",
+    # API extractor type resolution is prone to non-sandbox errors, so we test Windows.
+    tags = ["windows"],
 )
