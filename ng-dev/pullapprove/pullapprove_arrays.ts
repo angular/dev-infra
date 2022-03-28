@@ -40,6 +40,10 @@ export class PullApproveGroupArray extends Array<PullApproveGroup> {
     return new PullApproveGroupArray(...this.filter((s) => s.groupName.match(pattern)));
   }
 
+  get approved() {
+    throw new PullApproveGroupStateDependencyError();
+  }
+
   get pending() {
     throw new PullApproveGroupStateDependencyError();
   }
