@@ -72,8 +72,14 @@ export function convertConditionToFunction(
 /**
  * Transforms a condition expression from PullApprove that is based on python
  * so that it can be run inside JavaScript. Current transformations:
- *   1. `not <..>` -> `!<..>`
+ *
+ *   1. `aExpr not in bExpr` --> `!bExpr.includes(aExpr)`
+ *   2. `aExpr in bExpr`     --> `bExpr.includes(aExpr`)
+ *   3. `not expr`           --> `!expr`
  */
 function transformExpressionToJs(expression: string): string {
-  return expression.replace(/not\s+/g, '!');
+  return expression
+    .replace(/^(.+)\s+not in\s+(.+)$/, '!$2.includes($1)')
+    .replace(/^(.+)\s+in\s+(.+)$/, '$2.includes($1)')
+    .replace(/not\s+/g, '!');
 }

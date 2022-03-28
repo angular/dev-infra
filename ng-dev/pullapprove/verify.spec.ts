@@ -92,6 +92,42 @@ describe('group parsing', () => {
     expect(renovateGroup.testFile('packages/core/index.ts')).toBe(false);
     expect(renovateGroup.conditions[0].unverifiable).toBe(true);
   });
+
+  describe('in operator', () => {
+    it('should work', () => {
+      const groups = getGroupsFromYaml(`
+        groups:
+          pass:
+            conditions:
+              - "'a' in ['a', 'b']"
+          invalid:
+            conditions:
+              - "'a' in ['b']"
+      `);
+      const passGroup = getGroupByName(groups, 'pass')!;
+      const invalidGroup = getGroupByName(groups, 'invalid')!;
+
+      expect(passGroup.testFile('any')).toBe(true);
+      expect(invalidGroup.testFile('any')).toBe(false);
+    });
+
+    it('should support exclusion check', () => {
+      const groups = getGroupsFromYaml(`
+        groups:
+          invalid:
+            conditions:
+              - "'a' not in ['a', 'b']"
+          pass:
+            conditions:
+              - "'a' not in ['b']"
+      `);
+      const invalidGroup = getGroupByName(groups, 'invalid')!;
+      const passGroup = getGroupByName(groups, 'pass')!;
+
+      expect(invalidGroup.testFile('any')).toBe(false);
+      expect(passGroup.testFile('any')).toBe(true);
+    });
+  });
 });
 
 function getGroupByName(groups: PullApproveGroup[], name: string): PullApproveGroup | undefined {
