@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import * as fs from 'fs';
 import * as path from 'path';
 
 import {runfiles} from '@bazel/runfiles';
@@ -17,47 +18,70 @@ const scopedTypesPackageRegex = /^@types\/([^_\/]+)__(.+)/;
  * Resolves type modules and returns corresponding path mappings and a
  * list of referenced files.
  */
-export function resolveTypeModules(typePackageNames: string[]): {
+export async function resolveTypeModules(typePackageNames: string[]): Promise<{
   paths: Record<string, string[]>;
   typeFiles: string[];
-} {
+}> {
   const typeFiles = [];
   const paths: Record<string, string[]> = {};
 
-  for (const moduleName of typePackageNames) {
-    const resolvedModuleDir = resolveNodeModuleToDirectory(moduleName);
-    const scopedAlternativeName = getScopedNameFromTypeName(moduleName);
+  for (const typePackageName of typePackageNames) {
+    const moduleNames = getModuleNamesForTypePackage(typePackageName);
+    const {entryPointTypeFile, resolvedPackageDir} = await resolveTypeDeclarationOfModule(
+      typePackageName,
+    );
 
-    // It's a naive assumption that type files exist directly in `index.d.ts` of
-    // the package. The file does not necessarily exist but this assumption is
-    // sufficient for our current needs. API golden tests rarely rely on global types.
-    typeFiles.push(path.join(resolvedModuleDir, 'index.d.ts'));
+    typeFiles.push(entryPointTypeFile);
 
-    paths[moduleName] = [resolvedModuleDir];
-
-    if (scopedAlternativeName !== null) {
-      paths[scopedAlternativeName] = paths[moduleName];
+    for (const moduleName of moduleNames) {
+      paths[moduleName] = [resolvedPackageDir];
     }
   }
 
   return {paths, typeFiles};
 }
 
+/** Resolves the type declaration entry-point file of a given module. */
+async function resolveTypeDeclarationOfModule(moduleName: string): Promise<{
+  entryPointTypeFile: string;
+  resolvedPackageDir: string;
+}> {
+  const pkgJsonPath = runfiles.resolve(`npm/node_modules/${moduleName}/package.json`);
+  const pkgJson = JSON.parse(await fs.promises.readFile(pkgJsonPath, 'utf8')) as {
+    types?: string;
+    typings?: string;
+  };
+  const typesRelativePath = pkgJson.types ?? pkgJson.typings;
+
+  if (typesRelativePath === undefined) {
+    throw new Error(`Unable to resolve type definition for "${moduleName}".`);
+  }
+
+  return {
+    entryPointTypeFile: path.join(path.dirname(pkgJsonPath), typesRelativePath),
+    resolvedPackageDir: path.dirname(pkgJsonPath),
+  };
+}
+
 /**
- * Gets the scoped module name from a type package, if available.
- * e.g. for `@types/babel__core` this returns `@babel/core`.
+ * Gets the module names for a given type package name.
+ *
+ * As an example, for `@types/babel__core` this returns both the `babel__core`
+ * and `@babel/core` module names.
  */
-function getScopedNameFromTypeName(name: string): string | null {
+function getModuleNamesForTypePackage(name: string): string[] {
+  if (!name.startsWith('@types/')) {
+    return [name];
+  }
+
+  const moduleName = name.slice('@types/'.length);
   const matches = name.match(scopedTypesPackageRegex);
 
   if (matches === null) {
-    return null;
+    return [moduleName];
   }
 
-  return `@${matches[1]}/${matches[2]}`;
-}
-
-/** Resolves a node module to an absolute file directory path. */
-function resolveNodeModuleToDirectory(moduleName: string): string {
-  return runfiles.resolve(`npm/node_modules/${moduleName}/`);
+  // Support potential alternative module names for scoped packages. e.g.
+  // the `@types/babel__core` package could also be for `@babel/core`.
+  return [moduleName, `@${matches[1]}/${matches[2]}`];
 }

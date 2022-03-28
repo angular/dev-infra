@@ -60,7 +60,7 @@ export async function testApiGolden(
   // If no `TEST_TMPDIR` is defined, then this script runs using `bazel run`. We use
   // the runfile directory as temporary directory for API extractor.
   const tempDir = process.env.TEST_TMPDIR ?? process.cwd();
-  const {paths, typeFiles} = resolveTypeModules(typePackageNames);
+  const {paths, typeFiles} = await resolveTypeModules(typePackageNames);
 
   const configObject: IConfigFile = {
     compiler: {
