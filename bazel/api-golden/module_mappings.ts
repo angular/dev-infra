@@ -18,7 +18,7 @@ const scopedTypesPackageRegex = /^@types\/([^_\/]+)__(.+)/;
  * Resolves type modules and returns corresponding path mappings and a
  * list of referenced files.
  */
-export async function resolveTypeModules(typePackageNames: string[]): Promise<{
+export async function resolveTypePackages(typePackageNames: string[]): Promise<{
   paths: Record<string, string[]>;
   typeFiles: string[];
 }> {
@@ -27,7 +27,7 @@ export async function resolveTypeModules(typePackageNames: string[]): Promise<{
 
   for (const typePackageName of typePackageNames) {
     const moduleNames = getModuleNamesForTypePackage(typePackageName);
-    const {entryPointTypeFile, resolvedPackageDir} = await resolveTypeDeclarationOfModule(
+    const {entryPointTypeFile, resolvedPackageDir} = await resolveTypeDeclarationOfPackage(
       typePackageName,
     );
 
@@ -41,8 +41,8 @@ export async function resolveTypeModules(typePackageNames: string[]): Promise<{
   return {paths, typeFiles};
 }
 
-/** Resolves the type declaration entry-point file of a given module. */
-async function resolveTypeDeclarationOfModule(moduleName: string): Promise<{
+/** Resolves the type declaration entry-point file of a given package. */
+async function resolveTypeDeclarationOfPackage(moduleName: string): Promise<{
   entryPointTypeFile: string;
   resolvedPackageDir: string;
 }> {

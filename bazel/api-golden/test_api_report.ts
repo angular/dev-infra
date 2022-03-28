@@ -20,7 +20,7 @@ import {basename, dirname} from 'path';
 
 import {AstModule} from '@microsoft/api-extractor/lib/analyzer/AstModule';
 import {ExportAnalyzer} from '@microsoft/api-extractor/lib/analyzer/ExportAnalyzer';
-import {resolveTypeModules} from './module_mappings';
+import {resolveTypePackages} from './module_mappings';
 import {runfiles} from '@bazel/runfiles';
 
 /**
@@ -60,7 +60,7 @@ export async function testApiGolden(
   // If no `TEST_TMPDIR` is defined, then this script runs using `bazel run`. We use
   // the runfile directory as temporary directory for API extractor.
   const tempDir = process.env.TEST_TMPDIR ?? process.cwd();
-  const {paths, typeFiles} = await resolveTypeModules(typePackageNames);
+  const {paths, typeFiles} = await resolveTypePackages(typePackageNames);
 
   const configObject: IConfigFile = {
     compiler: {
