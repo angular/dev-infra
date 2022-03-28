@@ -4,8 +4,15 @@
 
 ```ts
 
+import * as reexposed from '@babel/types';
+
+// @public (undocumented)
+export function acceptVersion(v: reexposed.ExistsTypeAnnotation): void;
+
 // @public (undocumented)
 export const nestedFile = true;
+
+export { reexposed }
 
 // (No @packageDocumentation comment for this package)
 

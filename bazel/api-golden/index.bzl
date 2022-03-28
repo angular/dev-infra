@@ -5,43 +5,35 @@ nodejs_test_args = [
     # Needed so that node doesn't walk back to the source directory.
     # From there, the relative imports would point to .ts files.
     "--node_options=--preserve-symlinks",
-    # TODO(josephperrott): update dependency usages to no longer need bazel patch module resolver
-    # See: https://github.com/bazelbuild/rules_nodejs/wiki#--bazel_patch_module_resolver-now-defaults-to-false-2324
-    "--bazel_patch_module_resolver",
+    "--nobazel_run_linker",
 ]
 
 default_strip_export_pattern = "^ɵ(?!ɵdefineInjectable|ɵinject|ɵInjectableDef)"
 
-"""Escapes a Regular expression so that it can be passed as process argument."""
-
 def _escape_regex_for_arg(value):
+    """Escapes a Regular expression so that it can be passed as process argument."""
     return "\"%s\"" % value
 
-"""
-  Extracts type names from a list of NPM type targets.
+def extract_module_names_from_npm_targets(type_targets):
+    """Extracts the module names from a list of NPM targets.
 
-  For example: Consider the `@npm//@types/node` target. This function extracts `node`
-  from the label. This is needed so that the Node types can be wired up within a
-  TypeScript program using the `types` tsconfig option.
-"""
+    For example: Consider the `@npm//@types/node` target. This function extracts
+    `@types/node` from the label. This is needed so that the Node types can be
+    resolved from within the test runner through runfile resolution.
+    """
+    module_names = []
 
-def extract_type_names_from_labels(type_targets):
-    type_names = []
     for type_target in type_targets:
-        type_package = Label(type_target).package
+        type_label = Label(type_target)
+        type_package = type_label.package
 
-        if (type_package.startswith("@types/")):
-            type_names.append(type_package[len("@types/"):])
-        else:
-            fail("Expected type target to match the following format: " +
-                 "`@<npm_workspace>//@types/<name>`, but got: %s" % type_target)
+        if type_label.workspace_name != "npm":
+            fail("Expected type targets to be part of the `@npm` workspace." +
+                 "e.g. `@npm//@types/nodes`.")
 
-    return type_names
+        module_names.append(type_package)
 
-"""
-  Builds an API report for the specified entry-point and compares it against the
-  specified golden
-"""
+    return module_names
 
 def api_golden_test(
         name,
@@ -51,6 +43,18 @@ def api_golden_test(
         strip_export_pattern = default_strip_export_pattern,
         types = [],
         **kwargs):
+    """Builds an API report for the specified entry-point and compares it against the
+    specified golden
+
+    Args;
+      name: Name of the test target
+      golden: Manifest path to the golden file
+      entry_point: Manifest path to the type definition entry-point.
+      data: Runtime dependenices needed for the rule (e.g. transitive type definitions)
+      strip_export_pattern: An optional regular expression to filter out exports from the golden.
+      types: Optional list of type targets to make available in the API report generation.
+    """
+
     quoted_export_pattern = _escape_regex_for_arg(strip_export_pattern)
 
     kwargs["tags"] = kwargs.get("tags", []) + ["api_guard"]
@@ -73,7 +77,7 @@ def api_golden_test(
         data = test_data,
         entry_point = "//bazel/api-golden:index.ts",
         templated_args = nodejs_test_args + [golden, entry_point, "false", quoted_export_pattern] +
-                         extract_type_names_from_labels(types),
+                         extract_module_names_from_npm_targets(types),
         **kwargs
     )
 
@@ -83,14 +87,9 @@ def api_golden_test(
         data = test_data,
         entry_point = "//bazel/api-golden:index.ts",
         templated_args = nodejs_test_args + [golden, entry_point, "true", quoted_export_pattern] +
-                         extract_type_names_from_labels(types),
+                         extract_module_names_from_npm_targets(types),
         **kwargs
     )
-
-"""
-  Builds an API report for all entrypoints within the given NPM package and compares it
-  against goldens within the specified directory.
-"""
 
 def api_golden_test_npm_package(
         name,
@@ -100,6 +99,18 @@ def api_golden_test_npm_package(
         strip_export_pattern = default_strip_export_pattern,
         types = [],
         **kwargs):
+    """Builds an API report for all entry-points within the given NPM package and compares it
+      against goldens within the specified directory.
+
+    Args;
+      name: Name of the test target
+      golden_dir: Manifest path to the golden directory
+      npm_package: Manifest path to the NPM package.
+      data: Runtime dependenices needed for the rule (e.g. the tree artifact of the NPM package)
+      strip_export_pattern: An optional regular expression to filter out exports from the golden.
+      types: Optional list of type targets to make available in the API report generation.
+    """
+
     quoted_export_pattern = _escape_regex_for_arg(strip_export_pattern)
 
     kwargs["tags"] = kwargs.get("tags", []) + ["api_guard"]
@@ -109,7 +120,7 @@ def api_golden_test_npm_package(
         data = ["//bazel/api-golden"] + data + types,
         entry_point = "//bazel/api-golden:index_npm_packages.ts",
         templated_args = nodejs_test_args + [golden_dir, npm_package, "false", quoted_export_pattern] +
-                         extract_type_names_from_labels(types),
+                         extract_module_names_from_npm_targets(types),
         **kwargs
     )
 
@@ -119,6 +130,6 @@ def api_golden_test_npm_package(
         data = ["//bazel/api-golden"] + data + types,
         entry_point = "//bazel/api-golden:index_npm_packages.ts",
         templated_args = nodejs_test_args + [golden_dir, npm_package, "true", quoted_export_pattern] +
-                         extract_type_names_from_labels(types),
+                         extract_module_names_from_npm_targets(types),
         **kwargs
     )

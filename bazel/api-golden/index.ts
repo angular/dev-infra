@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {runfiles} from '@bazel/runfiles';
 import * as chalk from 'chalk';
 
+import {runfiles} from '@bazel/runfiles';
 import {testApiGolden} from './test_api_report';
 
 /**
@@ -20,14 +20,14 @@ async function main(
   entryPointFilePath: string,
   approveGolden: boolean,
   stripExportPattern: RegExp,
-  typeNames: string[],
+  typePackageNames: string[],
 ) {
   const {succeeded, apiReportChanged} = await testApiGolden(
     goldenFilePath,
     entryPointFilePath,
     approveGolden,
     stripExportPattern,
-    typeNames,
+    typePackageNames,
   );
 
   if (!succeeded && apiReportChanged) {
@@ -49,12 +49,16 @@ if (require.main === module) {
   const entryPointFilePath = runfiles.resolve(args[1]);
   const approveGolden = args[2] === 'true';
   const stripExportPattern = new RegExp(args[3]);
-  const typeNames = args.slice(4);
+  const typePackageNames = args.slice(4);
 
-  main(goldenFilePath, entryPointFilePath, approveGolden, stripExportPattern, typeNames).catch(
-    (e) => {
-      console.error(e);
-      process.exit(1);
-    },
-  );
+  main(
+    goldenFilePath,
+    entryPointFilePath,
+    approveGolden,
+    stripExportPattern,
+    typePackageNames,
+  ).catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
 }
