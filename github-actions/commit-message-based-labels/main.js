@@ -38291,7 +38291,7 @@ var require_rawlist = __commonJS({
         this.onArrowKey("down");
       }
       onArrowKey(type) {
-        this.selected = incrementListIndex(this.selected, type, this.opt);
+        this.selected = incrementListIndex(this.selected, type, this.opt) || 0;
         this.hiddenLine = String(this.selected + 1);
         this.rl.line = "";
         this.lastKey = "arrow";
@@ -38301,7 +38301,7 @@ var require_rawlist = __commonJS({
       let output = "";
       let separatorOffset = 0;
       choices.forEach((choice, i) => {
-        output += "\n  ";
+        output += output ? "\n  " : "  ";
         if (choice.type === "separator") {
           separatorOffset++;
           output += " " + choice;
