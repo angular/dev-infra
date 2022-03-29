@@ -25,7 +25,7 @@ export function addGithubTokenOption(yargs: Argv): ArgvWithGithubToken {
         type: 'string',
         description: 'Github token. If not set, token is retrieved from the environment variables.',
         coerce: (token: string) => {
-          const githubToken = token ?? findGithubTokenInEnvironment();
+          const githubToken = token || findGithubTokenInEnvironment();
           if (!githubToken) {
             error(red('No Github token set. Please set the `GITHUB_TOKEN` environment variable.'));
             error(red('Alternatively, pass the `--github-token` command line flag.'));
