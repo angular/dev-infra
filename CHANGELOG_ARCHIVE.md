@@ -1,3 +1,13 @@
+<a name="2021.11.28"></a>
+# 2021.11.28 (2021-11-28)
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [30c518d](https://github.com/angular/dev-infra/commit/30c518dd8396e860f25ca4295dc6f4cd4a09b1da) | feat | add tooling to update vendored yarn version |
+## Special Thanks
+Joey Perrott
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2021.11.21"></a>
 # 2021.11.21 (2021-11-21)
 ### bazel
