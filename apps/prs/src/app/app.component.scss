@@ -2,6 +2,11 @@
   position: sticky;
   top: 0;
   z-index: 1;
+  flex-direction: row;
+
+  .spacer {
+    flex: 1;
+  }
 }
 
 .sidenav {

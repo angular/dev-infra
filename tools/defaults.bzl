@@ -3,6 +3,7 @@ load("@npm//@bazel/typescript:index.bzl", _ts_project = "ts_project")
 load("//bazel/esbuild:index.bzl", _esbuild = "esbuild", _esbuild_config = "esbuild_config")
 load("@build_bazel_rules_nodejs//:index.bzl", "generated_file_test", _pkg_npm = "pkg_npm")
 load("//tools/jasmine:jasmine.bzl", _jasmine_node_test = "jasmine_node_test")
+load("@npm//@angular/bazel:index.bzl", _ng_module = "ng_module")
 
 esbuild_config = _esbuild_config
 jasmine_node_test = _jasmine_node_test
@@ -99,5 +100,12 @@ def pkg_npm(build_package_json_from_template = False, deps = [], **kwargs):
 
     _pkg_npm(
         deps = deps,
+        **kwargs
+    )
+
+def ng_module(name, **kwargs):
+    _ng_module(
+        name = name,
+        tsconfig = kwargs.pop("tsconfig", "//:tsconfig"),
         **kwargs
     )
