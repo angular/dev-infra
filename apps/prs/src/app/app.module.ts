@@ -12,6 +12,7 @@ import {environment} from '../environments/environment';
 import {LayoutModule} from '@angular/cdk/layout';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatSidenavModule} from '@angular/material/sidenav';
+import {AccountModule} from '../../../shared/account/account.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -25,6 +26,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
     LayoutModule,
     MatToolbarModule,
     MatSidenavModule,
+    AccountModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

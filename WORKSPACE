@@ -16,6 +16,15 @@ http_archive(
     ],
 )
 
+http_archive(
+    name = "io_bazel_rules_sass",
+    sha256 = "bfb89ca97a4ad452ca5f623dfde23d2a5f3a848a97478d715881b69b4767d3bb",
+    strip_prefix = "rules_sass-1.49.4",
+    urls = [
+        "https://github.com/bazelbuild/rules_sass/archive/1.49.4.zip",
+    ],
+)
+
 # Fetch rules_nodejs and install its dependencies so we can install our npm dependencies.
 http_archive(
     name = "build_bazel_rules_nodejs",
@@ -78,12 +87,17 @@ load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 
 rules_pkg_dependencies()
 
+load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
+
+sass_repositories()
+
 register_toolchains(
     "//tools/git-toolchain:git_linux_toolchain",
     "//tools/git-toolchain:git_macos_x86_toolchain",
     "//tools/git-toolchain:git_macos_arm64_toolchain",
     "//tools/git-toolchain:git_windows_toolchain",
 )
+
 
 http_file(
     name = "bazel_test_status_proto",
