@@ -1,4 +1,4 @@
-<img (click)="open()" referrerpolicy=“no-referrer” [src]="account.avatarUrl">
+<button (click)="open()" class="user-photo" referrerpolicy=“no-referrer” style.backgroundImage="url({{account.avatarUrl}})"></button>
 
 <ng-template #menuContent>
   <div class="account-menu-container mat-elevation-z8 mat-menu-panel">
@@ -19,11 +19,11 @@
         <div class="provider-row">
           <img class="provider-icon" src="http://github.com/favicon.ico" />
           <span class="provider-email">{{ account.githubInfo?.email || "Account Not Linked" }}</span>
-          <button *ngIf="account.githubInfo === null" mat-icon-button class="link-provider-account"
+          <button matTooltip ="Link Github account" *ngIf="account.githubInfo === null" mat-icon-button class="link-provider-account"
             (click)="account.linkWithGithub()">
             <mat-icon>add_link</mat-icon>
           </button>
-          <button *ngIf="account.githubInfo" mat-icon-button class="link-provider-account"
+          <button matTooltip="Unlink Github account" *ngIf="account.githubInfo" mat-icon-button class="link-provider-account"
             (click)="account.unlinkFromGithub()">
             <mat-icon>link_off</mat-icon>
           </button>
@@ -32,6 +32,10 @@
     </ng-container>
 
     <div class="projected-content">
+      <!--
+        This projected content allows for an application to provide applicatoin specific content or options
+        within the account menu popup.
+      -->
       <ng-content></ng-content>
     </div>
 

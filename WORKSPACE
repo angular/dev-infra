@@ -98,7 +98,6 @@ register_toolchains(
     "//tools/git-toolchain:git_windows_toolchain",
 )
 
-
 http_file(
     name = "bazel_test_status_proto",
     sha256 = "61ce1dc62fdcfd6d68624a403e0f04c5fd5136d933b681467aad1ad2d00dbb03",

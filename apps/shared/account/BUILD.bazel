@@ -14,7 +14,7 @@ ng_module(
         ],
     ),
     assets = [
-        "account.component.css",
+        ":account.component.css",
         "account.component.html",
     ],
     deps = [

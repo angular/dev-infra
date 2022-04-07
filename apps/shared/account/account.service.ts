@@ -15,18 +15,17 @@ const DEFAULT_AVATAR_URL = 'https://lh3.googleusercontent.com/a/default-user=s64
 
 @Injectable()
 export class AccountService {
+  /** When the logged in state of the user changes. */
   loggedInStateChange = new Subject<void>();
-
   /** Whether a user is logged in currently. */
-  isLoggedIn!: boolean;
-
+  isLoggedIn: boolean = false;
   /** The Github account information for the current user, if a user is logged in and has linked their Github account. */
-  githubInfo!: UserInfo | null;
-
+  githubInfo: UserInfo | null = null;
   /** The Google account information for the current user, if a user is logged in. */
-  googleInfo!: UserInfo | null;
-
+  googleInfo: UserInfo | null = null;
+  /** The URL for the avatar of the user if available. */
   avatarUrl = DEFAULT_AVATAR_URL;
+  /** The display name for the user is available. */
   displayName: string | undefined;
 
   constructor(private auth: Auth) {
@@ -35,6 +34,7 @@ export class AccountService {
       this.githubInfo = getInfoForProvider(user, 'github.com');
       this.googleInfo = getInfoForProvider(user, 'google.com');
       this.isLoggedIn = user !== null;
+      this.displayName = user?.displayName || undefined;
       this.loggedInStateChange.next();
     });
   }

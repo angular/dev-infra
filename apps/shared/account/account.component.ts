@@ -4,7 +4,7 @@ import {Component, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core
 import {AccountService} from './account.service';
 
 @Component({
-  selector: 'account',
+  selector: 'account-menu-button',
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss'],
 })
