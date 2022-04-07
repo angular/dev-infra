@@ -9,19 +9,19 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file"
 # rule in `@bazel_tools` is not Windows compatible and outdated.
 http_archive(
     name = "rules_pkg",
-    sha256 = "62eeb544ff1ef41d786e329e1536c1d541bb9bcad27ae984d57f18f314018e66",
+    sha256 = "8a298e832762eda1830597d64fe7db58178aa84cd5926d76d5b744d6558941c2",
     urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/rules_pkg/releases/download/0.6.0/rules_pkg-0.6.0.tar.gz",
-        "https://github.com/bazelbuild/rules_pkg/releases/download/0.6.0/rules_pkg-0.6.0.tar.gz",
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_pkg/releases/download/0.7.0/rules_pkg-0.7.0.tar.gz",
+        "https://github.com/bazelbuild/rules_pkg/releases/download/0.7.0/rules_pkg-0.7.0.tar.gz",
     ],
 )
 
 http_archive(
     name = "io_bazel_rules_sass",
-    sha256 = "bfb89ca97a4ad452ca5f623dfde23d2a5f3a848a97478d715881b69b4767d3bb",
-    strip_prefix = "rules_sass-1.49.4",
+    sha256 = "b83d695bc8deb5ab5fb3a8e6919999eebf738a4a5aa57a43a63ee70109f80224",
+    strip_prefix = "rules_sass-1.50.0",
     urls = [
-        "https://github.com/bazelbuild/rules_sass/archive/1.49.4.zip",
+        "https://github.com/bazelbuild/rules_sass/archive/1.50.0.zip",
     ],
 )
 
