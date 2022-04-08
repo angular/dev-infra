@@ -1,7 +1,7 @@
 import {Milestone} from '@octokit/webhooks-types';
 import {GithubBaseModel, GithubHelperFunctions} from './base';
 
-interface FirestoreMilestone {
+export interface FirestoreMilestone {
   title: string;
   description: string;
   openIssues: number;

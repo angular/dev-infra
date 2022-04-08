@@ -5,7 +5,7 @@ import {GithubMilestone} from './milestone';
 import {GithubTeam} from './team';
 import {GithubUser, isUserFromGithub} from './user';
 
-interface FirestorePullRequest {
+export interface FirestorePullRequest {
   owner: FirestoreReference<GithubUser>;
   repo: string;
   node: string;

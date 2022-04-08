@@ -2,9 +2,9 @@ import {Team, User} from '@octokit/webhooks-types';
 import {GithubBaseModel, GithubHelperFunctions} from './base';
 
 export interface FirestoreTeam {
-  readonly slug: string;
-  readonly name: string;
-  readonly privacy: Team['privacy'];
+  slug: string;
+  name: string;
+  privacy: Team['privacy'];
 }
 
 export class GithubTeam extends GithubBaseModel<FirestoreTeam> {
