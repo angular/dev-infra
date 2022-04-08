@@ -1,7 +1,7 @@
 import {CheckRunEvent} from '@octokit/webhooks-types';
 import {GithubBaseModel, GithubHelperFunctions} from './base';
 
-interface FirestoreCheck {
+export interface FirestoreCheck {
   name: string;
   detailsUrl: string | null;
   state: CheckRunEvent['check_run']['conclusion'];

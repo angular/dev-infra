@@ -1,9 +1,9 @@
 import {Label} from '@octokit/webhooks-types';
 import {GithubBaseModel, GithubHelperFunctions} from './base';
 
-export abstract class FirestoreLabel {
-  abstract name: string;
-  abstract color: string;
+export interface FirestoreLabel {
+  name: string;
+  color: string;
 }
 
 export class GithubLabel extends GithubBaseModel<FirestoreLabel> {

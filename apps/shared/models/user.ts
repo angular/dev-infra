@@ -1,7 +1,7 @@
 import {User, Team} from '@octokit/webhooks-types';
 import {GithubBaseModel, GithubHelperFunctions} from './base';
 
-interface FirestoreUser {
+export interface FirestoreUser {
   username: string;
   type: User['type'];
   avatarUrl: string;
