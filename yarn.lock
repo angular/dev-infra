@@ -421,7 +421,7 @@ __metadata:
     "@bazel/typescript": 5.4.0
     "@google-cloud/firestore": ^5.0.2
     "@google-cloud/storage": ^5.18.1
-    "@microsoft/api-extractor": 7.21.1
+    "@microsoft/api-extractor": 7.21.2
     "@octokit/auth-app": ^3.6.0
     "@octokit/core": ^3.5.1
     "@octokit/graphql": ^4.8.0
@@ -2940,9 +2940,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor@npm:7.21.1":
-  version: 7.21.1
-  resolution: "@microsoft/api-extractor@npm:7.21.1"
+"@microsoft/api-extractor@npm:7.21.2":
+  version: 7.21.2
+  resolution: "@microsoft/api-extractor@npm:7.21.2"
   dependencies:
     "@microsoft/api-extractor-model": 7.16.1
     "@microsoft/tsdoc": 0.13.2
@@ -2958,7 +2958,7 @@ __metadata:
     typescript: ~4.5.2
   bin:
     api-extractor: bin/api-extractor
-  checksum: 31138e7e57fed828fe739fc5f68f706aec21dd12820de2bdb57f0389eff33ee316a1c91a98df07a63324beb5a29aebb258cde7cbe43de48c5351fbfc355702f9
+  checksum: b507aa99c3ee2221415ce721066d494e291f047023a5e6dce6e775dbf0cb08cad57092dade029711714c715143bc5cfb9badb9b15974f6bf73feb2340c93e94d
   languageName: node
   linkType: hard
 
