@@ -1,3 +1,17 @@
+<a name="2021.12.12"></a>
+# 2021.12.12 (2021-12-12)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [885008c](https://github.com/angular/dev-infra/commit/885008c8215ce0254ba191ae0cfa01b43c815405) | fix | benchmark angular compilation pipeline not working with APF v13 |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1516a4e](https://github.com/angular/dev-infra/commit/1516a4ef6d42bdcf008a7984409468183ab67808) | fix | **release:** do not error when yarn version of publish branch is older |
+## Special Thanks
+Paul Gschwendtner and renovate[bot]
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2021.11.28"></a>
 # 2021.11.28 (2021-11-28)
 ### ng-dev
