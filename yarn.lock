@@ -421,7 +421,7 @@ __metadata:
     "@bazel/typescript": 5.4.0
     "@google-cloud/firestore": ^5.0.2
     "@google-cloud/storage": ^5.18.1
-    "@microsoft/api-extractor": 7.21.2
+    "@microsoft/api-extractor": 7.21.3
     "@octokit/auth-app": ^3.6.0
     "@octokit/core": ^3.5.1
     "@octokit/graphql": ^4.8.0
@@ -469,8 +469,8 @@ __metadata:
     glob: 7.2.0
     husky: ^7.0.1
     inquirer: ^8.0.0
-    jasmine: ~4.0.0
-    jasmine-core: ~4.0.0
+    jasmine: ~4.1.0
+    jasmine-core: ~4.1.0
     jsdoc: ^3.6.7
     jsdom: ^19.0.0
     karma: ^6.3.15
@@ -2907,14 +2907,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor-model@npm:7.16.1":
-  version: 7.16.1
-  resolution: "@microsoft/api-extractor-model@npm:7.16.1"
+"@microsoft/api-extractor-model@npm:7.16.2":
+  version: 7.16.2
+  resolution: "@microsoft/api-extractor-model@npm:7.16.2"
   dependencies:
-    "@microsoft/tsdoc": 0.13.2
-    "@microsoft/tsdoc-config": ~0.15.2
+    "@microsoft/tsdoc": 0.14.1
+    "@microsoft/tsdoc-config": ~0.16.1
     "@rushstack/node-core-library": 3.45.2
-  checksum: 5f52c7250cef2afecc52b283a4629ade0cf53aac632bfff96848694db17362fe0e2d261613652b7235543a6568edd0bc1cfc229eaf03cc6709f28b898e4f2692
+  checksum: eef9dde74415f5c6b28022885d5f2271a905b18bff3ee816c02d234e1a0810a46f90afd9ae55f74e51b4d583042bde46955bf622ccc224c054c0a55545d058f9
   languageName: node
   linkType: hard
 
@@ -2940,13 +2940,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor@npm:7.21.2":
-  version: 7.21.2
-  resolution: "@microsoft/api-extractor@npm:7.21.2"
+"@microsoft/api-extractor@npm:7.21.3":
+  version: 7.21.3
+  resolution: "@microsoft/api-extractor@npm:7.21.3"
   dependencies:
-    "@microsoft/api-extractor-model": 7.16.1
-    "@microsoft/tsdoc": 0.13.2
-    "@microsoft/tsdoc-config": ~0.15.2
+    "@microsoft/api-extractor-model": 7.16.2
+    "@microsoft/tsdoc": 0.14.1
+    "@microsoft/tsdoc-config": ~0.16.1
     "@rushstack/node-core-library": 3.45.2
     "@rushstack/rig-package": 0.3.9
     "@rushstack/ts-command-line": 4.10.8
@@ -2958,7 +2958,7 @@ __metadata:
     typescript: ~4.5.2
   bin:
     api-extractor: bin/api-extractor
-  checksum: b507aa99c3ee2221415ce721066d494e291f047023a5e6dce6e775dbf0cb08cad57092dade029711714c715143bc5cfb9badb9b15974f6bf73feb2340c93e94d
+  checksum: f2ea36f205b953722e87f84c78d2e70d0e21307bb8e7bee6956cb13709d653d339d8179031265049b94912f8a0b256117fb220698dcda7dab38d7fe79ea584f8
   languageName: node
   linkType: hard
 
@@ -2974,10 +2974,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@microsoft/tsdoc-config@npm:~0.16.1":
+  version: 0.16.1
+  resolution: "@microsoft/tsdoc-config@npm:0.16.1"
+  dependencies:
+    "@microsoft/tsdoc": 0.14.1
+    ajv: ~6.12.6
+    jju: ~1.4.0
+    resolve: ~1.19.0
+  checksum: 2b2121803caf6584fe0264ad16f8fa10de68438c0b82bd25f918606052af5312050f38b6abd4bcf3d40f120713aab144762a7a280fa22dd12e5571cd08e348e1
+  languageName: node
+  linkType: hard
+
 "@microsoft/tsdoc@npm:0.13.2":
   version: 0.13.2
   resolution: "@microsoft/tsdoc@npm:0.13.2"
   checksum: 70948c5647495ef99752ff500e0f612c1fcf3476ea663ace19937e4d2f86fd78f0ad92ea5876d67e06b421f347d571b3d9e49c444935dc267768d5afd15581f8
+  languageName: node
+  linkType: hard
+
+"@microsoft/tsdoc@npm:0.14.1":
+  version: 0.14.1
+  resolution: "@microsoft/tsdoc@npm:0.14.1"
+  checksum: e4ad038ccff2cd96e0d53ee42e2136f0f5a925b16cfda14261f1c2eb55ba0088a0e3b08ff819b476ddc69b2242a391925fab7f6ae2afabb19b96f87e19c114fc
   languageName: node
   linkType: hard
 
@@ -9923,10 +9942,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jasmine-core@npm:^4.0.0, jasmine-core@npm:~4.0.0":
-  version: 4.0.1
-  resolution: "jasmine-core@npm:4.0.1"
-  checksum: f097bf2c681acb55e03fb56a1569a9dfa8fcdf7c291aeb8786cb693c3a803ba2a59d6bac4c1facd239d778cc6f643d0a78920d9d278cba5d0cd46779b2546822
+"jasmine-core@npm:^4.1.0, jasmine-core@npm:~4.1.0":
+  version: 4.1.0
+  resolution: "jasmine-core@npm:4.1.0"
+  checksum: da9f995991273d3c2b7681329e3ac16f4605769de607a573e3c6501729ff95da426d2fe91a8ad78dc7e37107bdedf68983ea7a8d638cdba6b9c82a0ad4ede0a4
   languageName: node
   linkType: hard
 
@@ -9960,15 +9979,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jasmine@npm:~4.0.0":
-  version: 4.0.2
-  resolution: "jasmine@npm:4.0.2"
+"jasmine@npm:~4.1.0":
+  version: 4.1.0
+  resolution: "jasmine@npm:4.1.0"
   dependencies:
     glob: ^7.1.6
-    jasmine-core: ^4.0.0
+    jasmine-core: ^4.1.0
   bin:
     jasmine: bin/jasmine.js
-  checksum: a65e1cf0deb6c54044004b4562461e29ebc7c6cf4b2edd2d7e06cd60a300c391761d2b5674aa7405d40307edb66316a8f9e496d538b5a86ea75447b63e40615f
+  checksum: 1654ad3de46c5575c1fcfbf0bd8f84c01dd468f03035431254e4efea8cb98cd74f9444307ac5f6ca2bd3821e6f0f6343ee739de1b891de39283bb0f17cae1621
   languageName: node
   linkType: hard
 
