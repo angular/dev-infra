@@ -27,7 +27,7 @@
     "@angular-devkit/build-angular": "14.0.0-next.9",
     "@angular/benchpress": "0.3.0",
     "@babel/core": "^7.16.0",
-    "@bazel/buildifier": "5.0.1",
+    "@bazel/buildifier": "5.1.0",
     "@bazel/concatjs": "5.4.0",
     "@bazel/esbuild": "5.4.0",
     "@bazel/protractor": "5.4.0",
