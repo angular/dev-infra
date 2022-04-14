@@ -9,26 +9,31 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as tmp from 'tmp';
-import {addWritePermissionFlag, writeExecutableFile} from './file_system_utils';
-import {
-  PackageMappings,
-  readPackageJsonContents,
-  updateMappingsForPackageJson,
-} from './package_json';
+
 import {
   BazelExpandedValue,
   BazelFileInfo,
   resolveBazelFile,
   resolveBinaryWithRunfilesGracefully,
 } from './bazel';
-import {debug} from './debug';
+import {
+  PackageMappings,
+  readPackageJsonContents,
+  updateMappingsForPackageJson,
+} from './package_json';
+import {addWritePermissionFlag, writeExecutableFile} from './file_system_utils';
 import {
   expandEnvironmentVariableSubstitutions,
   getBinaryPassThroughScript,
   prependToPathVariable,
   runCommandInChildProcess,
 } from './process_utils';
+
 import {ENVIRONMENT_TMP_PLACEHOLDER} from './constants';
+import {debug} from './debug';
+
+/** Error class that is used when an integration command fails.  */
+class IntegrationTestCommandError extends Error {}
 
 /**
  * Test runner that takes a set of files within a Bazel package and copies the files
@@ -230,10 +235,11 @@ export class TestRunner {
       );
 
       if (!success) {
-        throw Error(
-          `Integration test command: \`${resolvedBinary} ${evaluatedArgs.join(' ')}\` failed. ` +
-            `See error output above for details.`,
-        );
+        console.error(`Command failed: \`${resolvedBinary} ${evaluatedArgs.join(' ')}\``);
+        console.error(`Command ran in test directory: ${path.normalize(testDir)}`);
+        console.error(`See error output above.`);
+
+        throw new IntegrationTestCommandError();
       }
     }
   }
