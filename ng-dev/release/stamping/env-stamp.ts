@@ -6,11 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {join} from 'path';
-import {SemVer} from 'semver';
-import {GitClient} from '../../utils/git/git-client';
-import {createExperimentalSemver} from '../../release/versioning/experimental-versions';
 import * as fs from 'fs';
+
+import {GitClient} from '../../utils/git/git-client';
+import {SemVer} from 'semver';
+import {createExperimentalSemver} from '../../release/versioning/experimental-versions';
+import {join} from 'path';
 
 export type EnvStampMode = 'snapshot' | 'release';
 
@@ -45,41 +46,37 @@ function hasLocalChanges(git: GitClient) {
 }
 
 /**
- * Get the versions for generated packages.
+ * Get the versions for generated packages. The stamped versions are always based
+ * on the workspace version. Relying on tags is less reliable because tags can be
+ * modified easily in an untracked/uncontrolled way, and are less predictable with
+ * regards to the source control revision currently being checked out.
  *
- * In snapshot mode, the version is based on the most recent semver tag.
- * In release mode, the version is based on the workspace version.
+ * A concrete use-case: The release tool tags the versioning commit only after building
+ * and publishing to NPM, causing snapshot-docs deployment to display versions from
+ * a previous version because the CI push for the bump commits executes earlier.
+ *
+ * In snapshot mode, we will include the current SHA along with the workspace version.
  */
 function getSCMVersions(
   git: GitClient,
   mode: EnvStampMode,
 ): {version: string; experimentalVersion: string} {
-  if (mode === 'release') {
-    const workspaceVersion = getVersionFromWorkspacePackageJson(git);
+  const version = getVersionFromWorkspacePackageJson(git).format();
+  const experimentalVersion = createExperimentalSemver(version).format();
 
+  if (mode === 'release') {
     return {
-      version: workspaceVersion.format(),
-      experimentalVersion: createExperimentalSemver(workspaceVersion).format(),
+      version,
+      experimentalVersion,
     };
   }
 
-  const localChanges = hasLocalChanges(git) ? '.with-local-changes' : '';
-  const {stdout: rawVersion} = git.run([
-    'describe',
-    '--match',
-    // As git describe uses glob matchers we cannot the specific describe what we expect to see
-    // starting character we expect for our version string.  To ensure we can handle 'v'
-    // prefixed verstions we have the '?' wildcard character.
-    '?[0-9]*.[0-9]*.[0-9]*',
-    '--abbrev=7',
-    '--tags',
-    'HEAD',
-  ]);
-  const {version} = new SemVer(rawVersion);
-  const {version: experimentalVersion} = createExperimentalSemver(version);
+  const headShaAbbreviated = getCurrentSha(git).slice(0, 7);
+  const localChanges = hasLocalChanges(git) ? '-with-local-changes' : '';
+
   return {
-    version: `${version.replace(/-([0-9]+)-g/, '+$1.sha-')}${localChanges}`,
-    experimentalVersion: `${experimentalVersion.replace(/-([0-9]+)-g/, '+$1.sha-')}${localChanges}`,
+    version: `${version}+sha-${headShaAbbreviated}${localChanges}`,
+    experimentalVersion: `${experimentalVersion}+sha-${headShaAbbreviated}${localChanges}`,
   };
 }
 
