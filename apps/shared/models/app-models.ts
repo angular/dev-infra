@@ -1,51 +1,51 @@
-import {DocumentData, FirestoreDataConverter, QueryDocumentSnapshot} from 'firebase/firestore';
-import {GithubUser} from './user';
-import {GithubLabel} from './label';
-import {GithubMilestone} from './milestone';
-import {GithubPullRequest} from './pull-request';
-import {GithubStatus} from './status';
-import {GithubCheck} from './check';
-import {GithubTeam} from './team';
-import {BaseModel} from './base';
+import {getDoc, getFirestore, doc, DocumentData} from 'firebase/firestore';
+import {BaseModel, Constructor, FirestoreReference, fromFirestoreReference} from './base';
 
-export const User = forApp(GithubUser);
-export type User = GithubUser;
-export const Label = forApp(GithubLabel);
-export type Label = GithubLabel;
-export const Milestone = forApp(GithubMilestone);
-export type Milestone = GithubMilestone;
-export const PullRequest = forApp(GithubPullRequest);
-export type PullRequest = GithubPullRequest;
-export const Status = forApp(GithubStatus);
-export type Status = GithubStatus;
-export const Team = forApp(GithubTeam);
-export type Team = GithubTeam;
-export const Check = forApp(GithubCheck);
-export type Check = GithubCheck;
+// Import all of the models for the module and decorate all of them for App usage.
+import * as models from './index';
+Object.values(models).forEach(forApp);
+export * from './index';
 
-/** Constructor for a application model. */
-interface AppModelCtor<T extends DocumentData, ModelT> {
-  new (data: T): ModelT;
-  converter: FirestoreDataConverter<ModelT>;
-}
+/** Map of known Model instances maped by their firestore reference. */
+const instances = new Map<FirestoreReference<unknown>, Promise<unknown>>();
 
 /**
- * Mixin for models, allowing them to be used in web app environments leveraging Firestore. This
- * mixin provides the `converter` object used for reading and writing to Firestore, using the
- * `firebase/firestore` types.
+ * Decorating function for models, allowing them to be used in Firebase function environment leveraging Firestore.
+ * Models decorated with this function use `firebase/firestore` for reading and writing to Firestore.
  */
 function forApp<
   FirebaseModel extends DocumentData,
-  TBase extends new (...args: any[]) => BaseModel<FirebaseModel>,
->(Base: TBase): AppModelCtor<FirebaseModel, InstanceType<TBase>> {
-  return class Model extends Base {
-    static converter = {
-      fromFirestore(snapshot: QueryDocumentSnapshot<FirebaseModel>) {
-        return new Model(snapshot.data());
-      },
-      toFirestore(model: Model) {
-        return model.data;
-      },
-    };
-  } as unknown as AppModelCtor<FirebaseModel, InstanceType<TBase>>;
+  TBase extends Constructor<BaseModel<FirebaseModel>>,
+>(model: TBase) {
+  /** The converter object for performing conversions in and out of Firestore. */
+  const converter = {
+    fromFirestore: (snapshot: any) => {
+      return new model(snapshot.data());
+    },
+    toFirestore: (model: any) => {
+      return model.data;
+    },
+  };
+
+  /**
+   * Class method to get the converter object, ensuring that the converter returned is always
+   * the converter from the specific class definition rather than a parent class.
+   */
+  model.prototype.getConverter = function () {
+    return converter;
+  };
+
+  /**
+   * Gets the model referenced by the provided FirestoreReference, returning the same reference
+   * as previously queried if the instance cache finds an entry.
+   */
+  model.prototype.getByReference = function (ref: FirestoreReference<TBase>) {
+    if (!instances.has(ref)) {
+      instances.set(
+        ref,
+        getDoc(doc(getFirestore(), fromFirestoreReference(ref)).withConverter(converter)),
+      );
+    }
+    return instances.get(ref);
+  };
 }

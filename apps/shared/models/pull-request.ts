@@ -1,33 +1,38 @@
-import {PullRequest} from '@octokit/webhooks-types';
-import {FirestoreReference, GithubBaseModel, GithubHelperFunctions} from './base';
-import {GithubLabel} from './label';
-import {GithubMilestone} from './milestone';
-import {GithubTeam} from './team';
-import {GithubUser, isUserFromGithub} from './user';
+import {PullRequest as GithubPullRequest} from '@octokit/webhooks-types';
+import {
+  FirestoreReference,
+  GithubBaseModel,
+  GithubHelperFunctions,
+  toFirestoreReference,
+} from './base';
+import {Label} from './label';
+import {Milestone} from './milestone';
+import {Team} from './team';
+import {User, isUserFromGithub} from './user';
 
 export interface FirestorePullRequest {
-  owner: FirestoreReference<GithubUser>;
+  owner: string;
   repo: string;
   node: string;
-  state: PullRequest['state'];
-  authorAssociation: PullRequest['author_association'];
+  state: GithubPullRequest['state'];
+  authorAssociation: GithubPullRequest['author_association'];
   changedFiles: number;
   closedAt: string | null;
   commits: number;
   createdAt: string;
   draft: boolean;
-  labels: FirestoreReference<GithubLabel>[];
+  labels: FirestoreReference<Label>[];
   maintainerCanModify: boolean;
   number: number;
-  requestedReviewers: string[];
+  requestedReviewers: (FirestoreReference<User> | FirestoreReference<Team>)[];
   title: string;
-  milestone: null | FirestoreReference<GithubMilestone>;
-  assignees: FirestoreReference<GithubUser>[];
-  user: FirestoreReference<GithubUser>;
+  milestone: null | FirestoreReference<Milestone>;
+  assignees: FirestoreReference<User>[];
+  user: FirestoreReference<User>;
   commit: string;
 }
 
-export class GithubPullRequest extends GithubBaseModel<FirestorePullRequest> {
+export class PullRequest extends GithubBaseModel<FirestorePullRequest> {
   readonly owner = this.data.owner;
   readonly repo = this.data.repo;
   readonly node = this.data.node;
@@ -48,13 +53,17 @@ export class GithubPullRequest extends GithubBaseModel<FirestorePullRequest> {
   readonly user = this.data.user;
   readonly commit = this.data.commit;
 
-  static override githubHelpers: GithubHelperFunctions<PullRequest, FirestorePullRequest> = {
-    buildRefString(model: PullRequest) {
-      return `githubPullRequest/${model.node_id}`;
+  static override githubHelpers: GithubHelperFunctions<
+    PullRequest,
+    GithubPullRequest,
+    FirestorePullRequest
+  > = {
+    buildRefString(model: GithubPullRequest) {
+      return toFirestoreReference(`githubPullRequest/${model.node_id}`);
     },
-    fromGithub(model: PullRequest) {
+    fromGithub(model: GithubPullRequest) {
       return {
-        assignees: model.assignees.map(GithubUser.githubHelpers.buildRefString),
+        assignees: model.assignees.map(User.githubHelpers.buildRefString),
         authorAssociation: model.author_association,
         changedFiles: model.changed_files,
         closedAt: model.closed_at,
@@ -62,23 +71,21 @@ export class GithubPullRequest extends GithubBaseModel<FirestorePullRequest> {
         commits: model.commits,
         createdAt: model.created_at,
         draft: model.draft,
-        labels: model.labels.map(GithubLabel.githubHelpers.buildRefString),
+        labels: model.labels.map((l) => Label.githubHelpers.buildRefString(l)),
         maintainerCanModify: model.maintainer_can_modify,
-        milestone: model.milestone
-          ? GithubMilestone.githubHelpers.buildRefString(model.milestone)
-          : null,
+        milestone: model.milestone ? Milestone.githubHelpers.buildRefString(model.milestone) : null,
         node: model.node_id,
         number: model.number,
         owner: model.base.repo.owner.login,
         repo: model.base.repo.name,
         requestedReviewers: model.requested_reviewers.map((userOrTeam) => {
           return isUserFromGithub(userOrTeam)
-            ? GithubUser.githubHelpers.buildRefString(userOrTeam)
-            : GithubTeam.githubHelpers.buildRefString(userOrTeam);
+            ? User.githubHelpers.buildRefString(userOrTeam)
+            : Team.githubHelpers.buildRefString(userOrTeam);
         }),
         state: model.state,
         title: model.title,
-        user: GithubUser.githubHelpers.buildRefString(model.user),
+        user: User.githubHelpers.buildRefString(model.user),
       };
     },
   };

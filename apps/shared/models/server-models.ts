@@ -1,107 +1,74 @@
 import {firestore} from 'firebase-admin';
+import {DocumentData} from '@google-cloud/firestore';
+
 import {
-  QueryDocumentSnapshot,
-  FirestoreDataConverter,
-  DocumentReference,
-  DocumentData,
-} from '@google-cloud/firestore';
-import {GithubUser} from './user';
-import {GithubLabel} from './label';
-import {GithubMilestone} from './milestone';
-import {GithubPullRequest} from './pull-request';
-import {GithubStatus} from './status';
-import {GithubTeam} from './team';
-import {Constructor, BaseModel, GithubHelperFunctions, GithubBaseModel} from './base';
-import {GithubCheck} from './check';
+  BaseModel,
+  GithubBaseModel,
+  FirestoreReference,
+  fromFirestoreReference,
+  Constructor,
+} from './base';
 
-export const User = forServer(GithubUser, GithubUser.githubHelpers);
-export type User = GithubUser;
-export const Label = forServer(GithubLabel, GithubLabel.githubHelpers);
-export type Label = GithubLabel;
-export const Milestone = forServer(GithubMilestone, GithubMilestone.githubHelpers);
-export type Milestone = GithubMilestone;
-export const PullRequest = forServer(GithubPullRequest, GithubPullRequest.githubHelpers);
-export type PullRequest = GithubPullRequest;
-export const Status = forServer(GithubStatus, GithubStatus.githubHelpers);
-export type Status = GithubStatus;
-export const Team = forServer(GithubTeam, GithubTeam.githubHelpers);
-export type Team = GithubTeam;
-export const Check = forServer(GithubCheck, GithubCheck.githubHelpers);
-export type Check = GithubCheck;
+export {FirestoreReference, fromFirestoreReference};
 
-/** A converter object for conversions to and from Github and Firestore. */
-interface FirestoreDataConverterWithGithub<Model, GithubModel>
-  extends FirestoreDataConverter<Model> {
-  fromGithub: (model: GithubModel) => Model;
-  getFirestoreRefForGithubModel: (model: GithubModel) => DocumentReference;
-}
-
-/** Constructor for a server model. */
-interface ServerModelCtor<T extends DocumentData, ModelT> {
-  new (data: T): ModelT;
-  converter: FirestoreDataConverter<ModelT>;
-}
-
-/** Constructor for a server model. */
-interface ServerModelCtorWithGithub<T extends DocumentData, ModelT, GithubModel> {
-  new (data: T): ModelT;
-  converter: FirestoreDataConverterWithGithub<ModelT, GithubModel>;
-}
+// Import all of the models for the module and decorate all of them for App usage.
+import * as models from './index';
+Object.values(models).forEach(forServer);
+export * from './index';
 
 /**
- * Mixin for models, allowing them to be used in Firebase function environment leveraging Firestore.
- * This mixin provides the `converter` object used for reading and writing to Firestore, using the
- * `firebase-admin/firestore` types.
- *
- * If a GithubHelper function object is provided, creates a class containing converters or Firestore
- * and Github.
+ * Decorating function for models, allowing them to be used in Firebase function environment
+ * leveraging Firestore.  Models decorated with this function use `firebase-admin/firestore` for
+ * reading and writing to Firestore.
  */
-export function forServer<
-  FirebaseModel extends DocumentData,
-  TBase extends Constructor<BaseModel<FirebaseModel>>,
->(base: TBase): ServerModelCtor<FirebaseModel, InstanceType<TBase>>;
-export function forServer<
-  FirebaseModel extends DocumentData,
-  TBase extends Constructor<GithubBaseModel<FirebaseModel>>,
+function forServer<
   GithubModel extends {},
->(
-  Base: TBase,
-  github: GithubHelperFunctions<GithubModel, FirebaseModel>,
-): ServerModelCtorWithGithub<FirebaseModel, InstanceType<TBase>, GithubModel>;
-export function forServer<
   FirebaseModel extends DocumentData,
-  TBase extends Constructor<GithubBaseModel<FirebaseModel>>,
-  GithubModel extends {},
->(Base: TBase, github?: GithubHelperFunctions<GithubModel, FirebaseModel>) {
-  class Model extends Base {
-    static converter:
-      | FirestoreDataConverter<Model>
-      | FirestoreDataConverterWithGithub<Model, GithubModel> = {
-      fromFirestore(snapshot: QueryDocumentSnapshot<FirebaseModel>) {
-        return new Model(snapshot.data());
-      },
-      toFirestore(model: Model) {
-        return model.data;
-      },
+  TBase extends Constructor<BaseModel<FirebaseModel> | GithubBaseModel<FirebaseModel>>,
+>(Base: TBase) {
+  /** The converter object for performing conversions in and out of Firestore. */
+  const converter = {
+    fromFirestore: (snapshot: any) => {
+      return new Base(snapshot.data());
+    },
+    toFirestore: (model: any) => {
+      return model.data;
+    },
+  };
+
+  /**
+   * Class method to get the converter object, ensuring that the converter returned is always
+   * the converter from the specific class definition rather than a parent class.
+   */
+  Base.prototype.getConverter = function () {
+    return converter;
+  };
+
+  /**
+   * Gets the model referenced by the provided FirestoreReference.
+   */
+  Base.prototype.getByReference = function (ref: FirestoreReference<TBase>) {
+    return firestore().doc(fromFirestoreReference(ref)).withConverter(converter);
+  };
+
+  // Because the parameter provided is a class constructor, we can safely also interact with the
+  // static members.
+  const GithubBase = Base as unknown as typeof GithubBaseModel;
+  if (GithubBase.githubHelpers !== undefined) {
+    /**
+     * The github helper functions for converter Github payload models into our models.
+     */
+    Base.prototype.getGithubHelpers = function () {
+      return {
+        fromGithub(model: GithubModel) {
+          return new Base(GithubBase.githubHelpers.fromGithub(model));
+        },
+        getFirestoreRefForGithubModel(model: GithubModel) {
+          return firestore().doc(
+            fromFirestoreReference(GithubBase.githubHelpers.buildRefString(model)),
+          );
+        },
+      };
     };
   }
-
-  if (github) {
-    Model.converter = {
-      ...Model.converter,
-      fromGithub(model: GithubModel) {
-        return new Model(github.fromGithub(model));
-      },
-      getFirestoreRefForGithubModel(model: GithubModel) {
-        return firestore().doc(github.buildRefString(model)).withConverter(Model.converter);
-      },
-    };
-    return Model as unknown as ServerModelCtorWithGithub<
-      FirebaseModel,
-      InstanceType<TBase>,
-      GithubModel
-    >;
-  }
-
-  return Model as unknown as ServerModelCtor<FirebaseModel, InstanceType<TBase>>;
 }

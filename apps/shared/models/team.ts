@@ -1,22 +1,22 @@
-import {Team, User} from '@octokit/webhooks-types';
-import {GithubBaseModel, GithubHelperFunctions} from './base';
+import {Team as GithubTeam, User as GithubUser} from '@octokit/webhooks-types';
+import {GithubBaseModel, GithubHelperFunctions, toFirestoreReference} from './base';
 
 export interface FirestoreTeam {
   slug: string;
   name: string;
-  privacy: Team['privacy'];
+  privacy: GithubTeam['privacy'];
 }
 
-export class GithubTeam extends GithubBaseModel<FirestoreTeam> {
+export class Team extends GithubBaseModel<FirestoreTeam> {
   readonly slug = this.data.slug;
   readonly name = this.data.name;
   readonly private = this.data.privacy;
 
-  static override githubHelpers: GithubHelperFunctions<Team, FirestoreTeam> = {
-    buildRefString(model: Team) {
-      return `githubTeam/${model.node_id}`;
+  static override githubHelpers: GithubHelperFunctions<Team, GithubTeam, FirestoreTeam> = {
+    buildRefString(model: GithubTeam) {
+      return toFirestoreReference(`githubTeam/${model.node_id}`);
     },
-    fromGithub(model: Team) {
+    fromGithub(model: GithubTeam) {
       return {
         name: model.name,
         privacy: model.privacy,
@@ -26,7 +26,7 @@ export class GithubTeam extends GithubBaseModel<FirestoreTeam> {
   };
 }
 
-export function isTeamFromGithub(userOrTeam: User | Team): userOrTeam is Team {
+export function isTeamFromGithub(userOrTeam: GithubUser | GithubTeam): userOrTeam is GithubTeam {
   if ((userOrTeam as any).type !== undefined) {
     return true;
   }

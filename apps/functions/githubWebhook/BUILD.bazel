@@ -25,5 +25,6 @@ ts_library(
     deps = [
         "//apps/shared/models:server",
         "@npm//@octokit/webhooks-types",
+        "@npm//firebase-admin",
     ],
 )
