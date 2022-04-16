@@ -72,8 +72,12 @@ export class PullRequest extends GithubBaseModel<FirestorePullRequest> {
     this.milestone = data.milestone as any;
     this.assignees = data.assignees as any;
     this.commit = data.commit;
-    User.getByReference(data.user).then((u) => (this.user = u));
-    Promise.all(data.labels.map((l) => Label.getByReference(l))).then((l) => (this.labels = l));
+
+    // All asyncronous data fields should be awaited together.
+    await Promise.all([
+      User.getByReference(data.user).then((u) => (this.user = u)),
+      Promise.all(data.labels.map((l) => Label.getByReference(l))).then((l) => (this.labels = l)),
+    ]);
   }
 
   static override githubHelpers: GithubHelperFunctions<

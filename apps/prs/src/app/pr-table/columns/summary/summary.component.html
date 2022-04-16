@@ -1,0 +1,16 @@
+
+  <mat-header-cell *matHeaderCellDef>Pull Request</mat-header-cell>
+  <mat-cell *matCellDef="let pr">
+    <div class="summary">
+      <a target="_blank" rel="noopener" href="//github.com/{{pr.owner}}/{{pr.repo}}/pull/{{pr.number}}">{{pr.title}}</a>
+    </div>
+    <div class="info">
+      <span class="pr-number">#{{pr.number}}</span>
+      <span class="pr-author">{{pr.user?.name}}</span>
+      <span class="pr-labels">
+        <span *ngFor="let label of pr.labels" class="label" [style.background-color]="label.color" [style.color]="label.fontColor">
+          {{label.name}}
+        </span>
+      </span>
+  </div>
+  </mat-cell>
