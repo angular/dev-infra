@@ -33,25 +33,48 @@ export interface FirestorePullRequest {
 }
 
 export class PullRequest extends GithubBaseModel<FirestorePullRequest> {
-  readonly owner = this.data.owner;
-  readonly repo = this.data.repo;
-  readonly node = this.data.node;
-  readonly state = this.data.state;
-  readonly authorAssociation = this.data.authorAssociation;
-  readonly changeFiles = this.data.changedFiles;
-  readonly closedAt = this.data.closedAt;
-  readonly commits = this.data.commits;
-  readonly createdAt = this.data.createdAt;
-  readonly draft = this.data.draft;
-  readonly labels = this.data.labels;
-  readonly maintainerCanModify = this.data.maintainerCanModify;
-  readonly number = this.data.number;
-  readonly requestedReviewers = this.data.requestedReviewers;
-  readonly title = this.data.title;
-  readonly milestone = this.data.milestone;
-  readonly assignees = this.data.assignees;
-  readonly user = this.data.user;
-  readonly commit = this.data.commit;
+  owner!: string;
+  repo!: string;
+  node!: string;
+  state!: string;
+  authorAssociation!: string;
+  changeFiles!: number;
+  closedAt!: string | null;
+  commits!: number;
+  createdAt!: string;
+  draft!: boolean;
+  labels!: Label[];
+  maintainerCanModify!: boolean;
+  number!: number;
+  requestedReviewers!: User[];
+  title!: string;
+  milestone!: Milestone | null;
+  assignees!: User[];
+  user!: User;
+  commit!: string;
+  target: undefined | string;
+
+  override async setData(data: FirestorePullRequest) {
+    this.owner = data.owner;
+    this.repo = data.repo;
+    this.node = data.node;
+    this.state = data.state;
+    this.authorAssociation = data.authorAssociation;
+    this.changeFiles = data.changedFiles;
+    this.closedAt = data.closedAt;
+    this.commits = data.commits;
+    this.createdAt = data.createdAt;
+    this.draft = data.draft;
+    this.maintainerCanModify = data.maintainerCanModify;
+    this.number = data.number;
+    this.requestedReviewers = data.requestedReviewers as any;
+    this.title = data.title;
+    this.milestone = data.milestone as any;
+    this.assignees = data.assignees as any;
+    this.commit = data.commit;
+    User.getByReference(data.user).then((u) => (this.user = u));
+    Promise.all(data.labels.map((l) => Label.getByReference(l))).then((l) => (this.labels = l));
+  }
 
   static override githubHelpers: GithubHelperFunctions<
     PullRequest,
