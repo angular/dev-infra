@@ -111,6 +111,7 @@
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^3.19.0",
     "firebase-tools": "^10.5.0",
+    "font-color-contrast": "^11.1.0",
     "git-raw-commits": "^2.0.10",
     "glob": "7.2.0",
     "husky": "^7.0.1",

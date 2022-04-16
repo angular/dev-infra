@@ -14,11 +14,9 @@ export abstract class BaseModel<T> {
     this.setData(data);
   }
 
-  protected setData(data: T) {
-    this.data = data;
-  }
+  protected setData(data: T) {}
 
-  static getByReference<T>(ref: FirestoreReference<T>): TypeFromFirestoreRef<typeof ref> {
+  static getByReference<T>(ref: FirestoreReference<T>): Promise<TypeFromFirestoreRef<typeof ref>> {
     return this.prototype.getByReference(ref);
   }
 
