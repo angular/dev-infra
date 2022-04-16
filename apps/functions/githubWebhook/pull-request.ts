@@ -1,8 +1,22 @@
 import {PullRequestEvent} from '@octokit/webhooks-types';
-import {PullRequest} from '../../shared/models/server-models';
+import {firestore} from 'firebase-admin';
+// TODO(josephperrott): Remove usage of FirestoreReference and fromFirestoreReference.
+import {
+  PullRequest,
+  FirestoreReference,
+  fromFirestoreReference,
+} from '../../shared/models/server-models';
 
-export async function handlePullRequestEvent(event: PullRequestEvent) {
-  const docRef = PullRequest.converter.getFirestoreRefForGithubModel(event.pull_request);
-  const pullRequest = PullRequest.converter.fromGithub(event.pull_request);
-  await docRef.set(pullRequest);
+export async function handlePullRequestEvent({pull_request}: PullRequestEvent) {
+  const {getFirestoreRefForGithubModel, fromGithub} = PullRequest.getGithubHelpers();
+  /** The pull request model for the pull request data. */
+  const pullRequest = fromGithub(pull_request);
+  /** FirestoreReference for the pull request. */
+  const firestoreRef = getFirestoreRefForGithubModel(
+    pull_request,
+  ) as FirestoreReference<PullRequest>;
+  /** The Firestore document reference for the pull request. */
+  const docRef = firestore().doc(fromFirestoreReference(firestoreRef));
+
+  await docRef.set(pullRequest.data);
 }

@@ -1,5 +1,5 @@
 import {StatusEvent} from '@octokit/webhooks-types';
-import {GithubBaseModel, GithubHelperFunctions} from './base';
+import {GithubBaseModel, GithubHelperFunctions, toFirestoreReference} from './base';
 
 export interface FirestoreStatus {
   context: string;
@@ -7,14 +7,14 @@ export interface FirestoreStatus {
   state: StatusEvent['state'];
 }
 
-export class GithubStatus extends GithubBaseModel<FirestoreStatus> {
+export class Status extends GithubBaseModel<FirestoreStatus> {
   readonly context = this.data.context;
   readonly targetUrl = this.data.targetUrl;
   readonly status = this.data.state;
 
-  static override githubHelpers: GithubHelperFunctions<StatusEvent, FirestoreStatus> = {
+  static override githubHelpers: GithubHelperFunctions<Status, StatusEvent, FirestoreStatus> = {
     buildRefString(model: StatusEvent) {
-      return `githubCommit/${model.sha}/status/${model.context}`;
+      return toFirestoreReference(`githubCommit/${model.sha}/status/${model.context}`);
     },
     fromGithub(model: StatusEvent) {
       return {

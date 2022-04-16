@@ -1,24 +1,24 @@
-import {User, Team} from '@octokit/webhooks-types';
-import {GithubBaseModel, GithubHelperFunctions} from './base';
+import {User as GithubUser, Team as GithubTeam} from '@octokit/webhooks-types';
+import {GithubBaseModel, GithubHelperFunctions, toFirestoreReference} from './base';
 
 export interface FirestoreUser {
   username: string;
-  type: User['type'];
+  type: GithubUser['type'];
   avatarUrl: string;
   name: string;
 }
 
-export class GithubUser extends GithubBaseModel<FirestoreUser> {
+export class User extends GithubBaseModel<FirestoreUser> {
   readonly avatarUrl = this.data.avatarUrl;
   readonly name = this.data.name;
   readonly type = this.data.type;
   readonly username = this.data.username;
 
-  static override githubHelpers: GithubHelperFunctions<User, FirestoreUser> = {
-    buildRefString(model: User) {
-      return `githubUser/${model.node_id}`;
+  static override githubHelpers: GithubHelperFunctions<User, GithubUser, FirestoreUser> = {
+    buildRefString(model: GithubUser) {
+      return toFirestoreReference(`githubUser/${model.node_id}`);
     },
-    fromGithub(model: User) {
+    fromGithub(model: GithubUser) {
       return {
         avatarUrl: model.avatar_url,
         name: model.name || model.login,
@@ -29,7 +29,7 @@ export class GithubUser extends GithubBaseModel<FirestoreUser> {
   };
 }
 
-export function isUserFromGithub(userOrTeam: User | Team): userOrTeam is User {
+export function isUserFromGithub(userOrTeam: GithubUser | GithubTeam): userOrTeam is GithubUser {
   if ((userOrTeam as any).type === undefined) {
     return true;
   }

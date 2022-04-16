@@ -1,5 +1,5 @@
 import {CheckRunEvent} from '@octokit/webhooks-types';
-import {GithubBaseModel, GithubHelperFunctions} from './base';
+import {GithubBaseModel, GithubHelperFunctions, toFirestoreReference} from './base';
 
 export interface FirestoreCheck {
   name: string;
@@ -7,14 +7,16 @@ export interface FirestoreCheck {
   state: CheckRunEvent['check_run']['conclusion'];
 }
 
-export class GithubCheck extends GithubBaseModel<FirestoreCheck> {
+export class Check extends GithubBaseModel<FirestoreCheck> {
   readonly name = this.data.name;
   readonly targetUrl = this.data.detailsUrl;
   readonly status = this.data.state;
 
-  static override githubHelpers: GithubHelperFunctions<CheckRunEvent, FirestoreCheck> = {
+  static override githubHelpers: GithubHelperFunctions<Check, CheckRunEvent, FirestoreCheck> = {
     buildRefString(model: CheckRunEvent) {
-      return `githubCommit/${model.check_run.head_sha}/check/${model.check_run.name}`;
+      return toFirestoreReference(
+        `githubCommit/${model.check_run.head_sha}/check/${model.check_run.name}`,
+      );
     },
     fromGithub(model: CheckRunEvent) {
       return {
