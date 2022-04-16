@@ -1,13 +1,13 @@
 import {getDoc, getFirestore, doc, DocumentData} from 'firebase/firestore';
 import {BaseModel, Constructor, FirestoreReference, fromFirestoreReference} from './base';
 
-// Import all of the models for the module and decorate all of them for App usage.
+/** Marker symbol for noting that a model has been decorated for app use. */
+const decoratedForApp = Symbol('forApp');
+
+// Import all of the models for the module and decorate all of them for app use.
 import * as models from './index';
 Object.values(models).forEach(forApp);
 export * from './index';
-
-/** Map of known Model instances maped by their firestore reference. */
-const instances = new Map<FirestoreReference<unknown>, Promise<unknown>>();
 
 /**
  * Decorating function for models, allowing them to be used in Firebase function environment leveraging Firestore.
@@ -17,6 +17,9 @@ function forApp<
   FirebaseModel extends DocumentData,
   TBase extends Constructor<BaseModel<FirebaseModel>>,
 >(model: TBase) {
+  const staticModel = model as unknown as typeof BaseModel;
+  staticModel.decoratedFor(decoratedForApp);
+
   /** The converter object for performing conversions in and out of Firestore. */
   const converter = {
     fromFirestore: (snapshot: any) => {
@@ -40,12 +43,6 @@ function forApp<
    * as previously queried if the instance cache finds an entry.
    */
   model.prototype.getByReference = function (ref: FirestoreReference<TBase>) {
-    if (!instances.has(ref)) {
-      instances.set(
-        ref,
-        getDoc(doc(getFirestore(), fromFirestoreReference(ref)).withConverter(converter)),
-      );
-    }
-    return instances.get(ref);
+    return getDoc(doc(getFirestore(), fromFirestoreReference(ref)).withConverter(converter));
   };
 }

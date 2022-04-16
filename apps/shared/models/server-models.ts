@@ -11,6 +11,9 @@ import {
 
 export {FirestoreReference, fromFirestoreReference};
 
+/** Marker symbol for noting that a model has been decorated for app use. */
+const decoratedForServer = Symbol('forServer');
+
 // Import all of the models for the module and decorate all of them for App usage.
 import * as models from './index';
 Object.values(models).forEach(forServer);
@@ -25,11 +28,14 @@ function forServer<
   GithubModel extends {},
   FirebaseModel extends DocumentData,
   TBase extends Constructor<BaseModel<FirebaseModel> | GithubBaseModel<FirebaseModel>>,
->(Base: TBase) {
+>(model: TBase) {
+  const staticModel = model as unknown as typeof GithubBaseModel;
+  staticModel.decoratedFor(decoratedForServer);
+
   /** The converter object for performing conversions in and out of Firestore. */
   const converter = {
     fromFirestore: (snapshot: any) => {
-      return new Base(snapshot.data());
+      return new model(snapshot.data());
     },
     toFirestore: (model: any) => {
       return model.data;
@@ -40,32 +46,29 @@ function forServer<
    * Class method to get the converter object, ensuring that the converter returned is always
    * the converter from the specific class definition rather than a parent class.
    */
-  Base.prototype.getConverter = function () {
+  model.prototype.getConverter = function () {
     return converter;
   };
 
   /**
    * Gets the model referenced by the provided FirestoreReference.
    */
-  Base.prototype.getByReference = function (ref: FirestoreReference<TBase>) {
+  model.prototype.getByReference = function (ref: FirestoreReference<TBase>) {
     return firestore().doc(fromFirestoreReference(ref)).withConverter(converter);
   };
 
-  // Because the parameter provided is a class constructor, we can safely also interact with the
-  // static members.
-  const GithubBase = Base as unknown as typeof GithubBaseModel;
-  if (GithubBase.githubHelpers !== undefined) {
+  if (staticModel.githubHelpers !== undefined) {
     /**
      * The github helper functions for converter Github payload models into our models.
      */
-    Base.prototype.getGithubHelpers = function () {
+    model.prototype.getGithubHelpers = function () {
       return {
-        fromGithub(model: GithubModel) {
-          return new Base(GithubBase.githubHelpers.fromGithub(model));
+        fromGithub(githubModel: GithubModel) {
+          return new model(staticModel.githubHelpers.fromGithub(githubModel));
         },
-        getFirestoreRefForGithubModel(model: GithubModel) {
+        getFirestoreRefForGithubModel(githubModel: GithubModel) {
           return firestore().doc(
-            fromFirestoreReference(GithubBase.githubHelpers.buildRefString(model)),
+            fromFirestoreReference(staticModel.githubHelpers.buildRefString(githubModel)),
           );
         },
       };
