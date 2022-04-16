@@ -11,9 +11,6 @@ import {
 
 export {FirestoreReference, fromFirestoreReference};
 
-/** Marker symbol for noting that a model has been decorated for app use. */
-const decoratedForServer = Symbol('forServer');
-
 // Import all of the models for the module and decorate all of them for App usage.
 import * as models from './index';
 Object.values(models).forEach(forServer);
@@ -30,7 +27,7 @@ function forServer<
   TBase extends Constructor<BaseModel<FirebaseModel> | GithubBaseModel<FirebaseModel>>,
 >(model: TBase) {
   const staticModel = model as unknown as typeof GithubBaseModel;
-  staticModel.decoratedFor(decoratedForServer);
+  staticModel.markAsDecorated();
 
   /** The converter object for performing conversions in and out of Firestore. */
   const converter = {

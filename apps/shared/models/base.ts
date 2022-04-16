@@ -4,11 +4,11 @@ export type Constructor<T> = new (...args: any[]) => T;
 export abstract class BaseModel<T> {
   data!: T;
   /** The symbol marker for the function which decorated the model for either app or server. */
-  private decoratedFor!: symbol;
+  private isDecorated = false;
 
   /** The data as stored in Firestore. */
   constructor(data: T) {
-    if (this.decoratedFor === null) {
+    if (this.isDecorated === false) {
       throw Error();
     }
     this.setData(data);
@@ -37,19 +37,16 @@ export abstract class BaseModel<T> {
     throw Error('This was not implemented');
   }
 
-  /** Set the decoratedFor value on the prototype of the class. */
-  static decoratedFor(decoratedFor: symbol) {
-    this.prototype.decoratedForFunc(this, decoratedFor);
-  }
-
   /**
-   * Set the decoratedFor method for the prototype of the class, if has not already been set.
+   * Set the decoratedFor value for the prototype of the class, if has not already been set.
    */
-  private decoratedForFunc<T>({prototype: base, name}: typeof BaseModel, decoratedFor: symbol) {
-    if (base.decoratedFor) {
-      throw Error(`Attempted to mark the decorator for '${name}' after it already had been set`);
+  static markAsDecorated() {
+    if (this.prototype.isDecorated) {
+      throw Error(
+        `Attempted to mark the decorator for '${this.name}' after it already had been set`,
+      );
     }
-    base.decoratedFor = decoratedFor;
+    this.prototype.isDecorated = true;
   }
 }
 

@@ -1,9 +1,6 @@
 import {getDoc, getFirestore, doc, DocumentData} from 'firebase/firestore';
 import {BaseModel, Constructor, FirestoreReference, fromFirestoreReference} from './base';
 
-/** Marker symbol for noting that a model has been decorated for app use. */
-const decoratedForApp = Symbol('forApp');
-
 // Import all of the models for the module and decorate all of them for app use.
 import * as models from './index';
 Object.values(models).forEach(forApp);
@@ -18,7 +15,7 @@ function forApp<
   TBase extends Constructor<BaseModel<FirebaseModel>>,
 >(model: TBase) {
   const staticModel = model as unknown as typeof BaseModel;
-  staticModel.decoratedFor(decoratedForApp);
+  staticModel.markAsDecorated();
 
   /** The converter object for performing conversions in and out of Firestore. */
   const converter = {
