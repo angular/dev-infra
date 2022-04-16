@@ -1,0 +1,34 @@
+.mat-column-summary {
+  &.mat-header-cell {
+  }
+
+  &.mat-cell {
+    flex-direction: column;
+
+    .summary {
+      width: 100%;
+      a {
+        text-decoration: none;
+        color: currentColor;
+      }
+    }
+
+    .info {
+      width: 100%;
+      .pr-number, .pr-author {
+        margin-right: 8px;
+        font-size: .8em;
+      }
+
+      .label {
+        border-radius: 0.5em;
+        padding: 0.1em 0.4em;
+        font-size: .8em;
+        margin-right: 4px;
+        background-color: #b1b1b1;
+        color: currentColor;
+        white-space: nowrap;
+      }
+    }
+  }
+}

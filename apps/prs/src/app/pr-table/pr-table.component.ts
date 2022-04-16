@@ -1,6 +1,5 @@
 import {CdkColumnDef} from '@angular/cdk/table';
 import {Component, Injector, AfterViewInit, ViewChild, ViewContainerRef, Type} from '@angular/core';
-import {Firestore, collectionData, collectionGroup, query, limit} from '@angular/fire/firestore';
 import {
   MatColumnDef,
   MatHeaderRowDef,
@@ -8,8 +7,9 @@ import {
   MatTable,
   MatTableDataSource,
 } from '@angular/material/table';
-import {PullRequest} from '../../../../shared/models/app-models';
+import {PullRequest} from '../../models/pull-request';
 import {BaseColumn} from './columns/base';
+import {SummaryColumn} from './columns/summary/summary.component';
 
 @Component({
   selector: 'pr-table',
@@ -18,10 +18,9 @@ import {BaseColumn} from './columns/base';
 })
 export class PrTableComponent implements AfterViewInit {
   /** The columns used in the PR table. */
-  columns: Type<BaseColumn>[] = [];
+  columns: Type<BaseColumn>[] = [SummaryColumn];
   /** Data source for the table providing the list of pull requests/ */
   dataSource: MatTableDataSource<PullRequest> = new MatTableDataSource();
-
   /** The table. */
   @ViewChild(MatTable, {static: true}) table!: MatTable<PullRequest>;
   /** The row definintion. */
