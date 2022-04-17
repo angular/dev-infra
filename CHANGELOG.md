@@ -1,3 +1,17 @@
+<a name="2022.4.17"></a>
+# 2022.4.17 (2022-04-17)
+### apps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [44e81e1](https://github.com/angular/dev-infra/commit/44e81e16f235c8bdc846c854128a60987bd2ee38) | feat | create the base of the pull request table |
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [03acd84](https://github.com/angular/dev-infra/commit/03acd844a311d66ed63a70edcccffc405570513b) | feat | improve error output on intgeration test failure |
+## Special Thanks
+Joey Perrott and Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.4.10"></a>
 # 2022.4.10 (2022-04-10)
 ### apps
@@ -174,20 +188,3 @@ Paul Gschwendtner
 | [47168ba](https://github.com/angular/dev-infra/commit/47168baf0b140436ad30c923ba8de24cad0aefc2) | feat | allow options to be passed into esbuild ng linker plugin for bazel |
 ## Special Thanks
 AleksanderBodurri and renovate[bot]
-
-<!-- CHANGELOG SPLIT MARKER -->
-<a name="2021.12.19"></a>
-# 2021.12.19 (2021-12-19)
-### bazel
-| Commit | Type | Description |
-| -- | -- | -- |
-| [edafc47](https://github.com/angular/dev-infra/commit/edafc47dd94893a32ba2399c72b09533f8fec5ea) | fix | do not always treat parts of `app_bundle` rule as testonly |
-| [8f9c560](https://github.com/angular/dev-infra/commit/8f9c5606d6cc867b90a6b1dff2d4c099034b0fc5) | fix | unable to set tags for `app_bundle` rule due to conflict |
-### ng-dev
-| Commit | Type | Description |
-| -- | -- | -- |
-| [0b4cae4](https://github.com/angular/dev-infra/commit/0b4cae4acd9d42f33af92951947a30d6aa165070) | feat | **release:** support experimental release packages |
-| [3ea42c1](https://github.com/angular/dev-infra/commit/3ea42c1a2ce5812b610a4495c5b4d9a2ddf421b7) | fix | **release:** resolved yarn instance not used for "release info" command |
-| [c24f7bf](https://github.com/angular/dev-infra/commit/c24f7bfcd036159d7dcf4df74e6248f9e37c99d9) | fix | do not accidentally leak github tokens for errors |
-## Special Thanks
-Paul Gschwendtner and renovate[bot]
