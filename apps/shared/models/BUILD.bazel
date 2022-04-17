@@ -38,5 +38,6 @@ ts_library(
     ),
     deps = [
         "@npm//@octokit/webhooks-types",
+        "@npm//font-color-contrast",
     ],
 )
