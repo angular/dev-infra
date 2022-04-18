@@ -1,6 +1,8 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import {handlePullRequestEvent} from './pull-request';
+import {handleStatusEvent} from './status';
+import {StatusEvent} from '@octokit/webhooks-types';
 
 admin.initializeApp({...functions.firebaseConfig()});
 
@@ -26,6 +28,16 @@ export const githubWebhook = functions
     if (request.get('X-GitHub-Event') === 'pull_request') {
       await handlePullRequestEvent(request.body);
       response.send(`Handled pull request update for pr #${request.body.pull_request.number}`);
+      response.end();
+      return;
+    }
+
+    if (request.get('X-GitHub-Event') === 'status') {
+      const statusEvent = request.body as StatusEvent;
+      await handleStatusEvent(statusEvent);
+      response.send(
+        `Handled status update for status for commit ${statusEvent.sha} with the context ${statusEvent.context}`,
+      );
       response.end();
       return;
     }

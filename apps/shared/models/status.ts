@@ -14,7 +14,9 @@ export class Status extends GithubBaseModel<FirestoreStatus> {
 
   static override githubHelpers: GithubHelperFunctions<Status, StatusEvent, FirestoreStatus> = {
     buildRefString(model: StatusEvent) {
-      return toFirestoreReference(`githubCommit/${model.sha}/status/${model.context}`);
+      return toFirestoreReference(
+        `githubCommit/${model.sha}/status/${model.context.replace(/[:/\s]/g, '_')}`,
+      );
     },
     fromGithub(model: StatusEvent) {
       return {
