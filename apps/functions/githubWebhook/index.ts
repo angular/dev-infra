@@ -2,7 +2,8 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import {handlePullRequestEvent} from './pull-request';
 import {handleStatusEvent} from './status';
-import {StatusEvent} from '@octokit/webhooks-types';
+import {LabelEvent, StatusEvent} from '@octokit/webhooks-types';
+import {handleLabelEvent} from './label';
 
 admin.initializeApp({...functions.firebaseConfig()});
 
@@ -37,6 +38,16 @@ export const githubWebhook = functions
       await handleStatusEvent(statusEvent);
       response.send(
         `Handled status update for status for commit ${statusEvent.sha} with the context ${statusEvent.context}`,
+      );
+      response.end();
+      return;
+    }
+
+    if (request.get('X-GitHub-Event') === 'label') {
+      const labelEvent = request.body as LabelEvent;
+      await handleLabelEvent(labelEvent);
+      response.send(
+        `Handled label ${labelEvent.action} for '${labelEvent.label.name} in ${labelEvent.repository.full_name}`,
       );
       response.end();
       return;
