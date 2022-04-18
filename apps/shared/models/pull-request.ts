@@ -54,6 +54,9 @@ export class PullRequest extends GithubBaseModel<FirestorePullRequest> {
   commit!: string;
   target: undefined | string;
 
+  // TODO: Determine the status icon via the data from firebase.
+  status = ['pending', 'success', 'failure', 'error'][Math.floor((Math.random() * 100) % 4)];
+
   override async setData(data: FirestorePullRequest) {
     this.owner = data.owner;
     this.repo = data.repo;
