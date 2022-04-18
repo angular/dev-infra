@@ -21,6 +21,7 @@ ts_library(
 ts_library(
     name = "webhooks",
     srcs = [
+        "label.ts",
         "pull-request.ts",
         "status.ts",
     ],
