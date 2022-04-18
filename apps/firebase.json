@@ -5,7 +5,7 @@
   },
   "functions": {
     "predeploy": "bazel build //apps/functions:functions_compiled",
-    "source": "../dist/bin/apps/functions"
+    "source": "./functions/dist/functions"
   },
   "emulators": {
     "functions": {
