@@ -3,14 +3,18 @@ export type Constructor<T> = new (...args: any[]) => T;
 /** Base class for all models to inherit from. */
 export abstract class BaseModel<T> {
   data!: T;
-  /** The symbol marker for the function which decorated the model for either app or server. */
-  private isDecorated = false;
+  /**
+   * Whether the model is decorated, undecorated models will be undefined.
+   * Because this value is set by the static properties, we cannot initialize a value for it.
+   * */
+  private isDecorated: true | undefined;
 
   /** The data as stored in Firestore. */
   constructor(data: T) {
-    if (this.isDecorated === false) {
+    if (this.isDecorated !== true) {
       throw Error();
     }
+    this.data = data;
     this.setData(data);
   }
 
