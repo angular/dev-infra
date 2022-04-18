@@ -27,9 +27,19 @@ export class AccountService {
   avatarUrl = DEFAULT_AVATAR_URL;
   /** The display name for the user is available. */
   displayName: string | undefined;
+  /** The current accounts github token, if available. */
+  private githubToken: string | null = null;
 
   constructor(private auth: Auth) {
-    this.auth.onAuthStateChanged((user) => {
+    this.auth.onIdTokenChanged((user) => {
+      if (user === null) {
+        this.githubToken = null;
+      } else {
+        user.getIdTokenResult().then((value) => {
+          this.githubToken = (value.claims.githubToken as string) || null;
+        });
+      }
+
       this.avatarUrl = user?.photoURL || DEFAULT_AVATAR_URL;
       this.githubInfo = getInfoForProvider(user, 'github.com');
       this.googleInfo = getInfoForProvider(user, 'google.com');
