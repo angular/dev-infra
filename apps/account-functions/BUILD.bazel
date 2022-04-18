@@ -1,0 +1,30 @@
+load("//tools:defaults.bzl", "esbuild", "ts_library")
+
+package(default_visibility = ["//visibility:private"])
+
+ts_library(
+    name = "accounts",
+    srcs = [
+        "before-create.ts",
+        "before-sign-in.ts",
+        "index.ts",
+    ],
+    visibility = [
+        "//apps/functions:__pkg__",
+    ],
+    deps = [
+        "@npm//gcip-cloud-functions",
+    ],
+)
+
+esbuild(
+    name = "accounts_compiled",
+    entry_points = [
+        "index.ts",
+    ],
+    format = "esm",
+    visibility = ["//apps:__pkg__"],
+    deps = [
+        ":accounts",
+    ],
+)
