@@ -50,7 +50,7 @@ function forServer<
   /**
    * Gets the model referenced by the provided FirestoreReference.
    */
-  model.prototype.getByReference = function (ref: FirestoreReference<TBase>) {
+  model.prototype.getByReference = async function (ref: FirestoreReference<TBase>) {
     return firestore().doc(fromFirestoreReference(ref)).withConverter(converter);
   };
 
@@ -64,9 +64,7 @@ function forServer<
           return new model(staticModel.githubHelpers.fromGithub(githubModel));
         },
         getFirestoreRefForGithubModel(githubModel: GithubModel) {
-          return firestore().doc(
-            fromFirestoreReference(staticModel.githubHelpers.buildRefString(githubModel)),
-          );
+          return fromFirestoreReference(staticModel.githubHelpers.buildRefString(githubModel));
         },
       };
     };
