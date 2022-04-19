@@ -18,10 +18,10 @@ http_archive(
 
 http_archive(
     name = "io_bazel_rules_sass",
-    sha256 = "b83d695bc8deb5ab5fb3a8e6919999eebf738a4a5aa57a43a63ee70109f80224",
-    strip_prefix = "rules_sass-1.50.0",
+    sha256 = "4b6153ae6c454c5bd44f3e47e5430f8a634d4affb983a237d21ca6199e13991c",
+    strip_prefix = "rules_sass-1.50.1",
     urls = [
-        "https://github.com/bazelbuild/rules_sass/archive/1.50.0.zip",
+        "https://github.com/bazelbuild/rules_sass/archive/1.50.1.zip",
     ],
 )
 
@@ -89,7 +89,9 @@ rules_pkg_dependencies()
 
 load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
 
-sass_repositories()
+sass_repositories(
+    yarn_script = "//:.yarn/releases/yarn-1.22.17.cjs",
+)
 
 register_toolchains(
     "//tools/git-toolchain:git_linux_toolchain",
