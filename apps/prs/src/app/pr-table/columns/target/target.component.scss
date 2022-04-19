@@ -1,0 +1,11 @@
+.mat-column-target {
+  max-width: 80px;
+
+  &.mat-header-cell {
+    justify-content: center;
+  }
+
+  &.mat-cell {
+    justify-content: center;
+  }
+}
