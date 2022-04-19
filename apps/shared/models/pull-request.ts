@@ -52,7 +52,6 @@ export class PullRequest extends GithubBaseModel<FirestorePullRequest> {
   assignees!: User[];
   user!: User;
   commit!: string;
-  target: undefined | string;
 
   // TODO: Determine the status icon via the data from firebase.
   status = ['pending', 'success', 'failure', 'error'][Math.floor((Math.random() * 100) % 4)];

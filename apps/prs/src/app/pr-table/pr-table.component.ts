@@ -11,6 +11,7 @@ import {PullRequest} from '../../models/pull-request';
 import {BaseColumn} from './columns/base';
 import {SummaryColumn} from './columns/summary/summary.component';
 import {StatusColumn} from './columns/status/status.component';
+import {TargetColumn} from './columns/target/target.component';
 
 @Component({
   selector: 'pr-table',
@@ -19,7 +20,7 @@ import {StatusColumn} from './columns/status/status.component';
 })
 export class PrTableComponent implements AfterViewInit {
   /** The columns used in the PR table. */
-  columns: Type<BaseColumn>[] = [SummaryColumn, StatusColumn];
+  columns: Type<BaseColumn>[] = [SummaryColumn, StatusColumn, TargetColumn];
   /** Data source for the table providing the list of pull requests/ */
   dataSource: MatTableDataSource<PullRequest> = new MatTableDataSource();
   /** The table. */
