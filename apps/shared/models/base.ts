@@ -29,14 +29,26 @@ export abstract class BaseModel<T> {
   }
 
   /** A function to get the converter for the model */
-  static getConverter() {
-    return this.prototype.getConverter();
+  static getConverter<T>() {
+    return this.prototype.getConverter<T>(this as unknown as Constructor<T>);
   }
-  protected getConverter(): {
+
+  /**
+   * Class method to get the converter object, ensuring that the converter returned is always
+   * the converter from the specific class definition rather than a parent class.
+   */
+  private getConverter<T>(model: Constructor<T>): {
     fromFirestore: (snapshot: any) => T;
     toFirestore: (model: any) => any;
   } {
-    throw Error('This was not implemented');
+    return {
+      fromFirestore: (snapshot: any) => {
+        return new model(snapshot.data());
+      },
+      toFirestore: (model: any) => {
+        return model.data;
+      },
+    };
   }
 
   /**
