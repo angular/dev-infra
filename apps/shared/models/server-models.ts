@@ -29,29 +29,11 @@ function forServer<
   const staticModel = model as unknown as typeof GithubBaseModel;
   staticModel.markAsDecorated();
 
-  /** The converter object for performing conversions in and out of Firestore. */
-  const converter = {
-    fromFirestore: (snapshot: any) => {
-      return new model(snapshot.data());
-    },
-    toFirestore: (model: any) => {
-      return model.data;
-    },
-  };
-
-  /**
-   * Class method to get the converter object, ensuring that the converter returned is always
-   * the converter from the specific class definition rather than a parent class.
-   */
-  model.prototype.getConverter = function () {
-    return converter;
-  };
-
   /**
    * Gets the model referenced by the provided FirestoreReference.
    */
   model.prototype.getByReference = async function (ref: FirestoreReference<TBase>) {
-    return firestore().doc(fromFirestoreReference(ref)).withConverter(converter);
+    return firestore().doc(fromFirestoreReference(ref)).withConverter(this.getConverter());
   };
 
   if (staticModel.githubHelpers !== undefined) {
