@@ -277,9 +277,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/cdk@npm:14.0.0-next.10":
-  version: 14.0.0-next.10
-  resolution: "@angular/cdk@npm:14.0.0-next.10"
+"@angular/cdk@npm:14.0.0-next.11":
+  version: 14.0.0-next.11
+  resolution: "@angular/cdk@npm:14.0.0-next.11"
   dependencies:
     parse5: ^5.0.0
     tslib: ^2.3.0
@@ -290,7 +290,7 @@ __metadata:
   dependenciesMeta:
     parse5:
       optional: true
-  checksum: d8c16d96a9205b6af8aae7dc190b56ad895a67c9d0c5acd7ce08608e2e4d2348a9d6a897b05627420891aa974d07f85e0241b8e9f2dd244af50614640771ec45
+  checksum: 4dbc044046fff0c49fb01e7915b29219d40534859c78d0758929a05d53e86ea5aad4295bedb87c6fc31da22929616e757f4debf912f6a19e406c1576068fd753
   languageName: node
   linkType: hard
 
@@ -397,7 +397,7 @@ __metadata:
     "@angular/animations": 14.0.0-next.13
     "@angular/bazel": 14.0.0-next.13
     "@angular/benchpress": 0.3.0
-    "@angular/cdk": 14.0.0-next.10
+    "@angular/cdk": 14.0.0-next.11
     "@angular/cli": 14.0.0-next.9
     "@angular/common": 14.0.0-next.13
     "@angular/compiler": 14.0.0-next.13
@@ -405,7 +405,7 @@ __metadata:
     "@angular/core": 14.0.0-next.13
     "@angular/fire": ^7.1.0-rc
     "@angular/forms": 14.0.0-next.13
-    "@angular/material": 14.0.0-next.10
+    "@angular/material": 14.0.0-next.11
     "@angular/platform-browser": 14.0.0-next.13
     "@angular/platform-browser-dynamic": 14.0.0-next.13
     "@angular/router": 14.0.0-next.13
@@ -564,20 +564,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/material@npm:14.0.0-next.10":
-  version: 14.0.0-next.10
-  resolution: "@angular/material@npm:14.0.0-next.10"
+"@angular/material@npm:14.0.0-next.11":
+  version: 14.0.0-next.11
+  resolution: "@angular/material@npm:14.0.0-next.11"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
     "@angular/animations": ^14.0.0-0 || ^15.0.0
-    "@angular/cdk": 14.0.0-next.10
+    "@angular/cdk": 14.0.0-next.11
     "@angular/common": ^14.0.0-0 || ^15.0.0
     "@angular/core": ^14.0.0-0 || ^15.0.0
     "@angular/forms": ^14.0.0-0 || ^15.0.0
     "@angular/platform-browser": ^14.0.0-0 || ^15.0.0
     rxjs: ^6.5.3 || ^7.4.0
-  checksum: 76a42c8578639ca40547a4a5ac2c232327ac4b7a6747a5b8d4a13e27822788dba733a79d0977f707cad17a046b2b97a163cf7e0f5a54869359941d0890128437
+  checksum: bc7d35f537655da4b47eef76eb61715c908c644b58eee31fd70b40548bab813f7c18677c346abc228244f9c843681ed1dc6fe48cd2194cf87d3cfdc42b53506d
   languageName: node
   linkType: hard
 
