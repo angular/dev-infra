@@ -89,7 +89,9 @@ rules_pkg_dependencies()
 
 load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
 
-sass_repositories()
+sass_repositories(
+    yarn_script = "//:.yarn/releases/yarn-3.2.0.cjs",
+)
 
 register_toolchains(
     "//tools/git-toolchain:git_linux_toolchain",
