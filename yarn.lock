@@ -465,7 +465,7 @@ __metadata:
     firebase-functions: ^3.19.0
     firebase-tools: ^10.5.0
     font-color-contrast: ^11.1.0
-    gcip-cloud-functions: 0.0.1
+    gcip-cloud-functions: 0.0.2
     git-raw-commits: ^2.0.10
     glob: 7.2.0
     husky: ^7.0.1
@@ -8435,9 +8435,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gcip-cloud-functions@npm:0.0.1":
-  version: 0.0.1
-  resolution: "gcip-cloud-functions@npm:0.0.1"
+"gcip-cloud-functions@npm:0.0.2":
+  version: 0.0.2
+  resolution: "gcip-cloud-functions@npm:0.0.2"
   dependencies:
     "@types/cors": ^2.8.1
     "@types/express": ^4.11.1
@@ -8446,7 +8446,7 @@ __metadata:
     express: ^4.16.2
     jsonwebtoken: 8.5.1
     node-forge: ^0.10.0
-  checksum: 3cd07dbafa51ba0ba7d9f8efc50c25f4c08c85c3750fb156af590be209e47efd9d541e892fcfeba12432465d134984b14bc177369eb0c6b6a3587c9c9f851622
+  checksum: 275b8a05a0a40e80ce5367a96e9a1f01111bd9ee6679ecf8e6e7c1b0bbf3dde94db62b5ca94a5b9cc4f700bafcea45e4ab68441d1f023898d2384a70c259dc8a
   languageName: node
   linkType: hard
 
