@@ -1,11 +1,20 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin", "nodejs_binary")
+
+copy_to_bin(
+    name = "static_runfiles",
+    srcs = [
+        "firebase.json",
+        "firestore.indexes.json",
+        "firestore.rules",
+    ],
+)
 
 nodejs_binary(
     name = "serve",
     chdir = package_name(),
     data = [
-        # primary firebase configuration file
-        "firebase.json",
+        # top-level static runfiles
+        ":static_runfiles",
 
         # Firebase function files
         "//apps/functions:functions_compiled",
@@ -17,7 +26,7 @@ nodejs_binary(
         "internal-200822",
         "--config",
         # TODO: Find a way to do this without relying on the copy_to_bin that works cross platform.
-        "$$(rlocation $(execpath :firebase.json))",
+        "$$(rlocation dev-infra/apps/firebase.json)",
         "emulators:start",
     ],
 )
@@ -26,8 +35,8 @@ nodejs_binary(
     name = "deploy",
     chdir = package_name(),
     data = [
-        # primary firebase configuration file
-        "firebase.json",
+        # top-level static runfiles
+        ":static_runfiles",
 
         # Firebase function files
         "//apps/functions:functions_compiled",
@@ -39,7 +48,7 @@ nodejs_binary(
         "internal-200822",
         "--config",
         # TODO: Find a way to do this without relying on the copy_to_bin that works cross platform.
-        "$$(rlocation $(execpath :firebase.json))",
+        "$$(rlocation dev-infra/apps/firebase.json)",
         "deploy",
         "--only",
         "functions",
