@@ -4,8 +4,7 @@
     "indexes": "firestore.indexes.json"
   },
   "functions": {
-    "predeploy": "bazel build //apps/functions:functions_compiled",
-    "source": "./functions/dist/functions"
+    "source": "./functions"
   },
   "emulators": {
     "functions": {
