@@ -131,7 +131,7 @@
     "karma-sourcemap-loader": "^0.3.8",
     "minimatch": "^5.0.0",
     "minimist": "^1.2.5",
-    "multimatch": "^5.0.0",
+    "multimatch": "^6.0.0",
     "nock": "^13.0.3",
     "protobufjs": "^6.11.2",
     "requirejs": "^2.3.6",

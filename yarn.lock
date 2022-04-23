@@ -484,7 +484,7 @@ __metadata:
     karma-sourcemap-loader: ^0.3.8
     minimatch: ^5.0.0
     minimist: ^1.2.5
-    multimatch: ^5.0.0
+    multimatch: ^6.0.0
     nock: ^13.0.3
     node-fetch: ^2.6.1
     prettier: 2.6.2
@@ -3914,7 +3914,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/minimatch@npm:*, @types/minimatch@npm:^3.0.3":
+"@types/minimatch@npm:*, @types/minimatch@npm:^3.0.5":
   version: 3.0.5
   resolution: "@types/minimatch@npm:3.0.5"
   checksum: c41d136f67231c3131cf1d4ca0b06687f4a322918a3a5adddc87ce90ed9dbd175a3610adee36b106ae68c0b92c637c35e02b58c8a56c424f71d30993ea220b92
@@ -4746,10 +4746,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"array-differ@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "array-differ@npm:3.0.0"
-  checksum: 117edd9df5c1530bd116c6e8eea891d4bd02850fd89b1b36e532b6540e47ca620a373b81feca1c62d1395d9ae601516ba538abe5e8172d41091da2c546b05fb7
+"array-differ@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "array-differ@npm:4.0.0"
+  checksum: 1de99a06bc3219f96b062a561a4c19af7a68bfaf2c1e0ccedd1d82ce1fbc7757f939e03cf0d3ad76b71f855a8ad2b2a16bf53df331bf5f0c90002774f04fb0b5
   languageName: node
   linkType: hard
 
@@ -4783,13 +4783,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"array-union@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "array-union@npm:2.1.0"
-  checksum: 5bee12395cba82da674931df6d0fea23c4aa4660cb3b338ced9f828782a65caa232573e6bf3968f23e0c5eb301764a382cef2f128b170a9dc59de0e36c39f98d
-  languageName: node
-  linkType: hard
-
 "array-union@npm:^3.0.1":
   version: 3.0.1
   resolution: "array-union@npm:3.0.1"
@@ -4811,7 +4804,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"arrify@npm:^2.0.0, arrify@npm:^2.0.1":
+"arrify@npm:^2.0.0":
   version: 2.0.1
   resolution: "arrify@npm:2.0.1"
   checksum: 067c4c1afd182806a82e4c1cb8acee16ab8b5284fbca1ce29408e6e91281c36bb5b612f6ddfbd40a0f7a7e0c75bf2696eb94c027f6e328d6e9c52465c98e4209
@@ -11546,16 +11539,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"multimatch@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "multimatch@npm:5.0.0"
+"multimatch@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "multimatch@npm:6.0.0"
   dependencies:
-    "@types/minimatch": ^3.0.3
-    array-differ: ^3.0.0
-    array-union: ^2.1.0
-    arrify: ^2.0.1
+    "@types/minimatch": ^3.0.5
+    array-differ: ^4.0.0
+    array-union: ^3.0.1
     minimatch: ^3.0.4
-  checksum: 82c8030a53af965cab48da22f1b0f894ef99e16ee680dabdfbd38d2dfacc3c8208c475203d747afd9e26db44118ed0221d5a0d65268c864f06d6efc7ac6df812
+  checksum: c04233765f664f556af12309cdad1a11c137655f756674b853a981f287984a49f3916955b57d306ed36bba3d2d6d5b6fbba4b48f483f11bd24e3c124a09e05b5
   languageName: node
   linkType: hard
 
