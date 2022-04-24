@@ -1,3 +1,13 @@
+<a name="2022.1.16"></a>
+# 2022.1.16 (2022-01-16)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [47168ba](https://github.com/angular/dev-infra/commit/47168baf0b140436ad30c923ba8de24cad0aefc2) | feat | allow options to be passed into esbuild ng linker plugin for bazel |
+## Special Thanks
+AleksanderBodurri and renovate[bot]
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2021.12.19"></a>
 # 2021.12.19 (2021-12-19)
 ### bazel
