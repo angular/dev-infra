@@ -25,3 +25,8 @@ export function findAvailableLocalBranchName(git: GitClient, baseName: string): 
 export function hasLocalBranch(git: GitClient, branchName: string): boolean {
   return git.runGraceful(['rev-parse', `refs/heads/${branchName}`], {stdio: 'ignore'}).status === 0;
 }
+
+/** Gets the current branch name. */
+export function getCurrentBranch(git: GitClient): string {
+  return git.run(['rev-parse', '--abbrev-ref', 'HEAD']).stdout.trim();
+}
