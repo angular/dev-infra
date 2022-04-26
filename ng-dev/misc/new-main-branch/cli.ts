@@ -8,7 +8,7 @@
 
 import {assertValidGithubConfig, getConfig} from '../../utils/config';
 import {error, green, info, promptConfirm, red, warn, yellow} from '../../utils/console';
-import {findAvailableLocalBranchName, hasLocalBranch} from './find-local-branch';
+import {findAvailableLocalBranchName, getCurrentBranch, hasLocalBranch} from './local-branch';
 import {getRemotesForRepo, isAngularOwnedRemote} from './remotes';
 
 import {CommandModule} from 'yargs';
@@ -33,19 +33,29 @@ async function handler() {
   const config = getConfig([assertValidGithubConfig]);
   const repoSlug = `${config.github.owner}/${config.github.name}`;
 
-  if (config.github.mainBranchName !== 'main') {
-    error(red('Current project is not part of the default branch renaming.'));
-    return;
-  }
-
   if (!hasLocalBranch(git, 'master')) {
     error(red('Local repository does not have a local branch named `master`. Aborting..'));
     return;
   }
 
   if (hasLocalBranch(git, 'main')) {
-    error(red('Local repository already has a branch named `main`. Aborting..'));
-    return;
+    console.warn(yellow('The new `main` branch is already fetched locally. In order to run'));
+    console.warn(yellow('this tool, the `main` branch needs to be non-existent locally.'));
+    console.warn('');
+    console.warn(yellow('The tool will re-fetch the `main` branch and configure it properly.'));
+
+    if (!(await promptConfirm('Do you want to proceed and delete the `main` branch?'))) {
+      error(red('Aborting..'));
+      return;
+    }
+
+    // If we are already on the `main` branch, we cannot delete it without
+    // checking out a different branch. We switch to `master` in such a case.
+    if (getCurrentBranch(git) === 'main') {
+      git.run(['checkout', 'master']);
+    }
+
+    git.run(['branch', '-D', 'main']);
   }
 
   const remotes = getRemotesForRepo(git);

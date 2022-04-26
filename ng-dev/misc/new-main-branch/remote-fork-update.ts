@@ -23,7 +23,7 @@ import {info} from 'console';
 export async function promptForRemoteForkUpdate() {
   if (
     !(await promptConfirm(
-      'Do you want to update your fork(s) on Github to also use `main`? (recommended)',
+      'Do you also want to update your fork(s) on Github to `main`? (recommended)',
     ))
   ) {
     return;
