@@ -39,12 +39,12 @@ async function handler() {
   }
 
   if (hasLocalBranch(git, 'main')) {
-    console.warn(yellow('The new `main` branch is already fetched locally. In order to run'));
-    console.warn(yellow('this tool, the `main` branch needs to be non-existent locally.'));
-    console.warn('');
-    console.warn(yellow('The tool will re-fetch the `main` branch and configure it properly.'));
+    warn(yellow('The new `main` branch is already fetched locally. In order to run'));
+    warn(yellow('this tool, the `main` branch needs to be non-existent locally.'));
+    warn('');
+    warn(yellow('The tool will re-fetch the `main` branch and configure it properly.'));
 
-    if (!(await promptConfirm('Do you want to proceed and delete the `main` branch?'))) {
+    if (!(await promptConfirm('Do you want to proceed and delete the local `main` branch?'))) {
       error(red('Aborting..'));
       return;
     }
