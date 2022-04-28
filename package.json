@@ -49,7 +49,7 @@
     "node-fetch": "^2.6.1",
     "prettier": "2.6.2",
     "protractor": "^7.0.0",
-    "selenium-webdriver": "4.1.1",
+    "selenium-webdriver": "4.1.2",
     "send": "^0.18.0",
     "tmp": "^0.2.1",
     "true-case-path": "^2.2.1",
