@@ -492,7 +492,7 @@ __metadata:
     protractor: ^7.0.0
     requirejs: ^2.3.6
     rxjs: ^7.4.0
-    selenium-webdriver: 4.1.1
+    selenium-webdriver: 4.1.2
     semver: ^7.3.5
     send: ^0.18.0
     tmp: ^0.2.1
@@ -14196,7 +14196,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"selenium-webdriver@npm:4.1.1, selenium-webdriver@npm:^4.0.0-beta.2":
+"selenium-webdriver@npm:4.1.2":
+  version: 4.1.2
+  resolution: "selenium-webdriver@npm:4.1.2"
+  dependencies:
+    jszip: ^3.6.0
+    tmp: ^0.2.1
+    ws: ">=7.4.6"
+  checksum: d55123d83baf23068acd2122ee3d6ece5db9fa09da8ba40cec02ccc89332dd5365f7782dd91e281c242c271e2c299e7b75bf1cc9a5e301c8a9697d65d2989630
+  languageName: node
+  linkType: hard
+
+"selenium-webdriver@npm:^4.0.0-beta.2":
   version: 4.1.1
   resolution: "selenium-webdriver@npm:4.1.1"
   dependencies:
