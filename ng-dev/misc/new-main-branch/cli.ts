@@ -6,14 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {CommandModule} from 'yargs';
+
 import {assertValidGithubConfig, getConfig} from '../../utils/config';
 import {error, green, info, promptConfirm, red, warn, yellow} from '../../utils/console';
-import {findAvailableLocalBranchName, getCurrentBranch, hasLocalBranch} from './local-branch';
-import {getRemotesForRepo, isAngularOwnedRemote} from './remotes';
-
-import {CommandModule} from 'yargs';
 import {GitClient} from '../../utils/git/git-client';
+import {findAvailableLocalBranchName, getCurrentBranch, hasLocalBranch} from './local-branch';
 import {promptForRemoteForkUpdate} from './remote-fork-update';
+import {getRemotesForRepo, isAngularOwnedRemote} from './remotes';
 
 /**
  * Migration command that performs local changes to account for an upstream
@@ -87,11 +87,9 @@ async function handler() {
     return;
   }
 
-  // Refreshing Angular-owned remotes.
-  git.run(['fetch', ...angularRemoteNames]);
-
   // Refresh the remote head to account for the new default branch (i.e. `main`).
   for (const remoteName of angularRemoteNames) {
+    git.run(['fetch', remoteName]);
     git.run(['remote', 'set-head', remoteName, '-a']);
   }
 
