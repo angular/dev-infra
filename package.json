@@ -45,7 +45,7 @@
     "@types/yargs": "^17.0.0",
     "browser-sync": "^2.27.7",
     "chalk": "^4.1.0",
-    "clang-format": "1.7.0",
+    "clang-format": "1.8.0",
     "node-fetch": "^2.6.1",
     "prettier": "2.6.2",
     "protractor": "^7.0.0",
