@@ -456,7 +456,7 @@ __metadata:
     "@yarnpkg/lockfile": ^1.1.0
     browser-sync: ^2.27.7
     chalk: ^4.1.0
-    clang-format: 1.7.0
+    clang-format: 1.8.0
     cli-progress: ^3.7.0
     conventional-commits-parser: ^3.2.1
     ejs: ^3.1.6
@@ -5859,9 +5859,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"clang-format@npm:1.7.0":
-  version: 1.7.0
-  resolution: "clang-format@npm:1.7.0"
+"clang-format@npm:1.8.0":
+  version: 1.8.0
+  resolution: "clang-format@npm:1.8.0"
   dependencies:
     async: ^3.2.3
     glob: ^7.0.0
@@ -5870,7 +5870,7 @@ __metadata:
     check-clang-format: bin/check-clang-format.js
     clang-format: index.js
     git-clang-format: bin/git-clang-format
-  checksum: 2108a9d22b243278f18920adf353460f1003c2a9b57e95b9e7c3213d071b5a1e25187427fa68b2f0358365d1410c32c641862af3abee849c2d4beb4486cc912e
+  checksum: 8e4198e976e8ca1dcb6f7eba09db89db44ce39c326a249b1a28ea2b3fd7dc5ece389d328bb9781424a708e63044b1432d85b9d8f65c46d3d5c13d2b6bf745a50
   languageName: node
   linkType: hard
 
