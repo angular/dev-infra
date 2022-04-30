@@ -20,8 +20,14 @@ _%>
   for (const group of asCommitGroups(breakingChanges)) {
 _%>
 ### <%- group.title %>
-<%- group.commits.map(commit => bulletizeText(commit.breakingChanges[0].text)).join('\\n\\n') %>
 <%_
+    for (const commit of group.commits) {
+      for (const breakingChange of commit.breakingChanges) {
+_%>
+<%- bulletizeText(breakingChange.text) %>
+<%_
+      }
+    }
   }
 }
 _%>
@@ -35,8 +41,14 @@ _%>
   for (const group of asCommitGroups(deprecations)) {
 _%>
 ### <%- group.title %>
-<%- group.commits.map(commit => bulletizeText(commit.deprecations[0].text)).join('\\n\\n') %>
 <%_
+    for (const commit of group.commits) {
+      for (const deprecation of commit.deprecations) {
+_%>
+<%- bulletizeText(deprecation.text) %>
+<%_
+      }
+    }
   }
 }
 _%>
