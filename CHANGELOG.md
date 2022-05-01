@@ -1,3 +1,14 @@
+<a name="2022.5.1"></a>
+# 2022.5.1 (2022-05-01)
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [93fef04](https://github.com/angular/dev-infra/commit/93fef044b38a3818d292be5bad0817ca6578f3e5) | fix | do not throw if multiple remotes point to angular remote |
+| [f77a668](https://github.com/angular/dev-infra/commit/f77a6689d7dc27ec1e6e684a934cb1b47c83e887) | fix | make `new-main-branch` command more flexible to local setup |
+## Special Thanks
+Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.4.24"></a>
 # 2022.4.24 (2022-04-24)
 ### apps
@@ -182,20 +193,3 @@ Alan Agius, Joey Perrott, Lukas Spirig, Paul Gschwendtner and renovate[bot]
 | [c922f5b](https://github.com/angular/dev-infra/commit/c922f5b23611024bc9d94833ae147f6048ab0275) | feat | abbreviated SHA stamp ([#373](https://github.com/angular/dev-infra/pull/373)) |
 ## Special Thanks
 Alan Agius, Derek Cormier, Joey Perrott, Paul Gschwendtner and renovate[bot]
-
-<!-- CHANGELOG SPLIT MARKER -->
-<a name="2022.1.30"></a>
-# 2022.1.30 (2022-01-30)
-### bazel
-| Commit | Type | Description |
-| -- | -- | -- |
-| [b066f7b](https://github.com/angular/dev-infra/commit/b066f7bc383e78a791505b6e7817bf2ef412a266) | feat | move devserver from angular/components to dev-infra |
-| [e7f43ba](https://github.com/angular/dev-infra/commit/e7f43ba426f482caf3aabc53fccb02883f5c0c00) | fix | **benchmark:** expose benchpress test results as bazel test output |
-| [8298e12](https://github.com/angular/dev-infra/commit/8298e121c51960857ef39abc16b743775ff6be68) | fix | **benchmark:** missing uuid runtime dependency for perf utils |
-| [98b0de7](https://github.com/angular/dev-infra/commit/98b0de771265aad02241c1127e8d3afb6d12f648) | fix | **benchmark:** switch to http-server for perf tests to support Apple M1 |
-### ng-dev
-| Commit | Type | Description |
-| -- | -- | -- |
-| [68a5b58](https://github.com/angular/dev-infra/commit/68a5b58c2dc8df50d6a5a49c8aa40fa9cc3c3b7d) | feat | format json files by default with prettier |
-## Special Thanks
-Paul Gschwendtner
