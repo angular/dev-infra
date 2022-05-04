@@ -9,5 +9,7 @@ github-actions/commit-message-based-labels/main.js
 github-actions/commit-message-based-labels/post.js
 github-actions/slash-commands/main.js
 github-actions/slash-commands/post.js
+github-actions/post-approval-changes/main.js
+github-actions/post-approval-changes/post.js
 tools/local-actions/changelog/main.js
 tools/local-actions/changelog/post.js

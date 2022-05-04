@@ -1,0 +1,15 @@
+name: Post Approval Changes
+
+on: [pull_request_target]
+
+# Declare default permissions as read only.
+permissions: read-all
+
+jobs:
+  post_approval_changes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
+      - uses: ./github-actions/post-approval-changes
+        with:
+          lock-bot-key: ${{ secrets.LOCK_BOT_PRIVATE_KEY }}

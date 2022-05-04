@@ -1,0 +1,19 @@
+load("//tools:defaults.bzl", "esbuild_checked_in")
+
+package(default_visibility = ["//github-actions/post-approval-changes:__subpackages__"])
+
+esbuild_checked_in(
+    name = "main",
+    entry_point = "//github-actions/post-approval-changes/lib:main.ts",
+    deps = [
+        "//github-actions/post-approval-changes/lib",
+    ],
+)
+
+esbuild_checked_in(
+    name = "post",
+    entry_point = "//github-actions/post-approval-changes/lib:post.ts",
+    deps = [
+        "//github-actions/post-approval-changes/lib",
+    ],
+)
