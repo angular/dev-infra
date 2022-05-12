@@ -43,7 +43,7 @@ async function run(): Promise<void> {
     return;
   }
 
-  if ([...pr.requested_reviewers, pr.requested_teams].length > 0) {
+  if ([...pr.requested_reviewers, ...pr.requested_teams].length > 0) {
     core.info('Skipping check as there are still pending reviews.');
     return;
   }

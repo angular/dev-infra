@@ -15279,7 +15279,7 @@ async function run() {
     core.info("PR author is a googler, skipping as post approval changes are allowed.");
     return;
   }
-  if ([...pr.requested_reviewers, pr.requested_teams].length > 0) {
+  if ([...pr.requested_reviewers, ...pr.requested_teams].length > 0) {
     core.info("Skipping check as there are still pending reviews.");
     return;
   }
