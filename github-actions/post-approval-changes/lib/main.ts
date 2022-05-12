@@ -83,7 +83,7 @@ async function run(): Promise<void> {
     return;
   }
 
-  if (reviews.filter((review) => review.state !== 'APPROVED')) {
+  if (reviews.find((review) => review.state !== 'APPROVED')) {
     core.info('Skipping check as there are still non-approved review states.');
     return;
   }
