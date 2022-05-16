@@ -26,7 +26,6 @@ const googlers = [
   'mmalerba',
   'pkozlowski-opensource',
   'thevis',
-  'trekladyone',
   'twersky',
   'wagnermaciel',
   'zarend',
