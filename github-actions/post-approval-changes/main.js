@@ -15265,12 +15265,12 @@ var googlers = [
   "mmalerba",
   "pkozlowski-opensource",
   "thevis",
-  "trekladyone",
   "twersky",
   "wagnermaciel",
   "zarend"
 ];
 async function run() {
+  var _a;
   if (github_1.context.eventName !== "pull_request_target") {
     throw Error("This action can only run for with pull_request_target events");
   }
@@ -15279,6 +15279,8 @@ async function run() {
     core.info("PR author is a googler, skipping as post approval changes are allowed.");
     return;
   }
+  console.debug(`Requested Reviewers: ${pr.requested_reviewers.join(", ")}`);
+  console.debug(`Requested Teams:     ${pr.requested_teams.join(", ")}`);
   if ([...pr.requested_reviewers, ...pr.requested_teams].length > 0) {
     core.info("Skipping check as there are still pending reviews.");
     return;
@@ -15299,6 +15301,11 @@ async function run() {
     knownReviewers.add(user);
     return true;
   });
+  console.group("Latest Reviews by Reviewer:");
+  for (let review of reviews) {
+    console.log(`${(_a = review.user) == null ? void 0 : _a.login} - ${review.state}`);
+  }
+  console.groupEnd();
   if (reviews.length === 0) {
     core.info("Skipping check as their are no reviews on the pull request.");
     return;
