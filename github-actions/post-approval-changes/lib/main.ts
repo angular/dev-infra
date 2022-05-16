@@ -42,6 +42,9 @@ async function run(): Promise<void> {
     return;
   }
 
+  console.debug(`Requested Reviewers: ${pr.requested_reviewers.join(', ')}`);
+  console.debug(`Requested Teams:     ${pr.requested_teams.join(', ')}`);
+
   if ([...pr.requested_reviewers, ...pr.requested_teams].length > 0) {
     core.info('Skipping check as there are still pending reviews.');
     return;
@@ -76,6 +79,12 @@ async function run(): Promise<void> {
       knownReviewers.add(user);
       return true;
     });
+
+  console.group('Latest Reviews by Reviewer:');
+  for (let review of reviews) {
+    console.log(`${review.user?.login} - ${review.state}`);
+  }
+  console.groupEnd();
 
   if (reviews.length === 0) {
     core.info('Skipping check as their are no reviews on the pull request.');
