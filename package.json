@@ -24,7 +24,7 @@
   },
   "packageManager": "yarn@3.2.0",
   "dependencies": {
-    "@angular-devkit/build-angular": "14.0.0-rc.0",
+    "@angular-devkit/build-angular": "14.0.0-rc.1",
     "@angular/benchpress": "0.3.0",
     "@babel/core": "^7.16.0",
     "@bazel/buildifier": "5.1.0",
@@ -61,20 +61,20 @@
   "devDependencies": {
     "@actions/core": "^1.4.0",
     "@actions/github": "^5.0.0",
-    "@angular/animations": "14.0.0-rc.0",
-    "@angular/bazel": "14.0.0-rc.0",
+    "@angular/animations": "14.0.0-rc.1",
+    "@angular/bazel": "14.0.0-rc.1",
     "@angular/cdk": "14.0.0-rc.0",
-    "@angular/cli": "14.0.0-rc.0",
-    "@angular/common": "14.0.0-rc.0",
-    "@angular/compiler": "14.0.0-rc.0",
-    "@angular/compiler-cli": "14.0.0-rc.0",
-    "@angular/core": "14.0.0-rc.0",
+    "@angular/cli": "14.0.0-rc.1",
+    "@angular/common": "14.0.0-rc.1",
+    "@angular/compiler": "14.0.0-rc.1",
+    "@angular/compiler-cli": "14.0.0-rc.1",
+    "@angular/core": "14.0.0-rc.1",
     "@angular/fire": "^7.1.0-rc",
-    "@angular/forms": "14.0.0-rc.0",
+    "@angular/forms": "14.0.0-rc.1",
     "@angular/material": "14.0.0-rc.0",
-    "@angular/platform-browser": "14.0.0-rc.0",
-    "@angular/platform-browser-dynamic": "14.0.0-rc.0",
-    "@angular/router": "14.0.0-rc.0",
+    "@angular/platform-browser": "14.0.0-rc.1",
+    "@angular/platform-browser-dynamic": "14.0.0-rc.1",
+    "@angular/router": "14.0.0-rc.1",
     "@bazel/bazelisk": "^1.11.0",
     "@bazel/jasmine": "5.4.2",
     "@google-cloud/firestore": "^5.0.2",
@@ -147,6 +147,6 @@
     "zone.js": "^0.11.4"
   },
   "resolutions": {
-    "@angular/benchpress/@angular/core": "14.0.0-rc.0"
+    "@angular/benchpress/@angular/core": "14.0.0-rc.1"
   }
 }
