@@ -110,7 +110,7 @@
     "firebase": "^9.6.9",
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^3.19.0",
-    "firebase-tools": "^10.5.0",
+    "firebase-tools": "^11.0.0",
     "font-color-contrast": "^11.1.0",
     "gcip-cloud-functions": "0.0.3",
     "git-raw-commits": "^2.0.10",
