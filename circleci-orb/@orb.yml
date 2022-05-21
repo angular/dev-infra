@@ -1,0 +1,7 @@
+version: 2.1
+
+description: Angular Dev-Infra Private Orb
+
+display:
+  home_url: 'https://angular.io'
+  source_url: 'https://github.com/angular/dev-infra'
