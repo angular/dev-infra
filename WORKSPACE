@@ -18,10 +18,10 @@ http_archive(
 
 http_archive(
     name = "io_bazel_rules_sass",
-    sha256 = "856080c608e51993ab3088c08c70361d3f1fce383e14499cc2279060b350898c",
-    strip_prefix = "rules_sass-1.51.0",
+    sha256 = "7566803cedf453c71687577df0ea083341a3ff91aedfec34771d03c66b2c2581",
+    strip_prefix = "rules_sass-1.52.1",
     urls = [
-        "https://github.com/bazelbuild/rules_sass/archive/1.51.0.zip",
+        "https://github.com/bazelbuild/rules_sass/archive/1.52.1.zip",
     ],
 )
 
@@ -50,7 +50,7 @@ yarn_install(
     # Yarn Berry/v2+ expects `--immutable` instead of `--frozen-lockfile`.
     args = ["--immutable"],
     data = [
-        "//:.yarn/releases/yarn-3.2.0.cjs",
+        "//:.yarn/releases/yarn-3.2.1.cjs",
         "//:.yarnrc.yml",
     ],
     # Currently disabled due to:
@@ -61,7 +61,7 @@ yarn_install(
     # We prefer to symlink the `node_modules` to only maintain a single install.
     # See https://github.com/angular/dev-infra/pull/446#issuecomment-1059820287 for details.
     symlink_node_modules = True,
-    yarn = "//:.yarn/releases/yarn-3.2.0.cjs",
+    yarn = "//:.yarn/releases/yarn-3.2.1.cjs",
     yarn_lock = "//:yarn.lock",
 )
 
