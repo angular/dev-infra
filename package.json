@@ -22,7 +22,7 @@
       "default": "./*"
     }
   },
-  "packageManager": "yarn@3.2.0",
+  "packageManager": "yarn@3.2.1",
   "dependencies": {
     "@angular-devkit/build-angular": "14.0.0-rc.1",
     "@angular/benchpress": "0.3.0",
@@ -34,7 +34,7 @@
     "@bazel/runfiles": "5.5.0",
     "@bazel/terser": "5.5.0",
     "@bazel/typescript": "5.5.0",
-    "@microsoft/api-extractor": "7.23.2",
+    "@microsoft/api-extractor": "7.24.1",
     "@types/browser-sync": "^2.26.3",
     "@types/node": "16.10.9",
     "@types/node-fetch": "^2.5.10",

@@ -431,7 +431,7 @@ __metadata:
     "@bazel/typescript": 5.5.0
     "@google-cloud/firestore": ^5.0.2
     "@google-cloud/storage": ^5.18.1
-    "@microsoft/api-extractor": 7.23.2
+    "@microsoft/api-extractor": 7.24.1
     "@octokit/auth-app": ^3.6.0
     "@octokit/core": ^3.5.1
     "@octokit/graphql": ^4.8.0
@@ -3058,9 +3058,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor@npm:7.23.2":
-  version: 7.23.2
-  resolution: "@microsoft/api-extractor@npm:7.23.2"
+"@microsoft/api-extractor@npm:7.24.1":
+  version: 7.24.1
+  resolution: "@microsoft/api-extractor@npm:7.24.1"
   dependencies:
     "@microsoft/api-extractor-model": 7.17.3
     "@microsoft/tsdoc": 0.14.1
@@ -3076,7 +3076,7 @@ __metadata:
     typescript: ~4.6.3
   bin:
     api-extractor: bin/api-extractor
-  checksum: 5fb159374dababed2f15155b2fb7c0dca0d7142eb5e2cc56e3e8e8d1469028cfb1779c50a1583e53e90694d67cb14ee60832c8711a7bddf76617de5b10ef683d
+  checksum: b615783f6248c0d95931c1a0272860358a9618b9a1bff7959e7c5a242799eec7efc2b87db460bf2a3ae967da793dd457ac90570b60810fe9f094ca84b0deabe3
   languageName: node
   linkType: hard
 
@@ -16047,7 +16047,7 @@ __metadata:
 
 "typescript@patch:typescript@~4.5.2#~builtin<compat/typescript>":
   version: 4.5.5
-  resolution: "typescript@patch:typescript@npm%3A4.5.5#~builtin<compat/typescript>::version=4.5.5&hash=bda367"
+  resolution: "typescript@patch:typescript@npm%3A4.5.5#~builtin<compat/typescript>::version=4.5.5&hash=7ad353"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
@@ -16057,7 +16057,7 @@ __metadata:
 
 "typescript@patch:typescript@~4.6.2#~builtin<compat/typescript>, typescript@patch:typescript@~4.6.3#~builtin<compat/typescript>":
   version: 4.6.3
-  resolution: "typescript@patch:typescript@npm%3A4.6.3#~builtin<compat/typescript>::version=4.6.3&hash=bda367"
+  resolution: "typescript@patch:typescript@npm%3A4.6.3#~builtin<compat/typescript>::version=4.6.3&hash=7ad353"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
