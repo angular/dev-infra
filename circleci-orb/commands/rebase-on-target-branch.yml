@@ -1,0 +1,18 @@
+description: Rebase PR on the target branch
+
+parameters:
+  branch:
+    type: string
+    description: The `pipeline.git.branch` pipeline value.
+  base_revision:
+    type: string
+    description: The `pipeline.git.base_revision` pipeline value.
+
+steps:
+  - run:
+      environment:
+        CIRCLE_BASE_REVISION: << parameters.base_revision >>
+        CIRCLE_BRANCH: << parameters.branch >>
+
+      name: Rebasing PR on the target branch
+      command: << include(../dist/bin/circleci-orb/scripts/rebase-on-target-branch/script.sh) >>

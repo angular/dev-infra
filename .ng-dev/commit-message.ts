@@ -43,5 +43,6 @@ export const commitMessage: CommitMessageConfig = {
     ...buildScopesFor('apps', []),
     ...buildScopesFor('tslint-rules', []),
     ...buildScopesFor('shared-scripts', []),
+    ...buildScopesFor('circleci-orb', []),
   ],
 };

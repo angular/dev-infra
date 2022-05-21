@@ -1,0 +1,20 @@
+ORB_NAME = "angular/dev-infra"
+
+ORB_VERSION = "dev:0.0.1"
+
+filegroup(
+    name = "orb_generated_files",
+    srcs = [
+        "//circleci-orb/scripts/rebase-on-target-branch:script",
+    ],
+)
+
+sh_binary(
+    name = "publish",
+    srcs = ["publish.sh"],
+    args = [
+        ORB_NAME,
+        ORB_VERSION,
+    ],
+    data = [":orb_generated_files"],
+)
