@@ -462,7 +462,7 @@ __metadata:
     cli-progress: ^3.7.0
     conventional-commits-parser: ^3.2.1
     ejs: ^3.1.6
-    escodegen: ^1.13.0
+    escodegen: ^2.0.0
     espree: ^7.0.0
     estraverse: ^5.1.0
     firebase: ^9.6.9
@@ -7769,7 +7769,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"escodegen@npm:^1.13.0, escodegen@npm:^1.8.1":
+"escodegen@npm:^1.8.1":
   version: 1.14.3
   resolution: "escodegen@npm:1.14.3"
   dependencies:
