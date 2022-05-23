@@ -10,12 +10,9 @@ import * as yargs from 'yargs';
 
 import {CheckTargetBranchesModule} from './check-target-branches/cli';
 import {CheckoutCommandModule} from './checkout/cli';
-import {
-  buildDiscoverNewConflictsCommand,
-  handleDiscoverNewConflictsCommand,
-} from './discover-new-conflicts/cli';
+import {DiscoverNewConflictsCommandModule} from './discover-new-conflicts/cli';
 import {MergeCommandModule} from './merge/cli';
-import {buildRebaseCommand, handleRebaseCommand} from './rebase/cli';
+import {RebaseCommandModule} from './rebase/cli';
 
 /** Build the parser for pull request commands. */
 export function buildPrParser(localYargs: yargs.Argv) {
@@ -23,18 +20,8 @@ export function buildPrParser(localYargs: yargs.Argv) {
     .help()
     .strict()
     .demandCommand()
-    .command(
-      'discover-new-conflicts <pr>',
-      'Check if a pending PR causes new conflicts for other pending PRs',
-      buildDiscoverNewConflictsCommand,
-      handleDiscoverNewConflictsCommand,
-    )
-    .command(
-      'rebase <pr>',
-      'Rebase a pending PR and push the rebased commits back to Github',
-      buildRebaseCommand,
-      handleRebaseCommand,
-    )
+    .command(DiscoverNewConflictsCommandModule)
+    .command(RebaseCommandModule)
     .command(MergeCommandModule)
     .command(CheckoutCommandModule)
     .command(CheckTargetBranchesModule);
