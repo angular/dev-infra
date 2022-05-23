@@ -9,12 +9,18 @@ def generate_ts_proto_module(name, protofile, visibility = None):
     # during the execution. As `npm_package_bin` isolates the execution from the rest of
     # node_modules, these expected dependencies must be provided.
     # The check and install of the dependencies is performed in this code block:
-    #   https://github.com/protobufjs/protobuf.js/blob/v6.11.2/cli/util.js#L135
+    #   https://github.com/protobufjs/protobuf.js/blob/v6.11.3/cli/util.js#L135
+    #   https://github.com/protobufjs/protobuf.js/blob/v6.11.3/package.json#L93-L104
     protobufjs_dependencies = [
-        "@npm//semver",
         "@npm//chalk",
+        "@npm//escodegen",
+        "@npm//espree",
+        "@npm//estraverse",
+        "@npm//glob",
         "@npm//jsdoc",
         "@npm//minimist",
+        "@npm//semver",
+        "@npm//tmp",
         "@npm//uglify-js",
     ]
     js_file = name + "_pb.js"
