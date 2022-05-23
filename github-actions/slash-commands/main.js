@@ -212,29 +212,31 @@ var require_proxy = __commonJS({
   ""(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.checkBypass = exports2.getProxyUrl = void 0;
     function getProxyUrl(reqUrl) {
-      let usingSsl = reqUrl.protocol === "https:";
-      let proxyUrl;
+      const usingSsl = reqUrl.protocol === "https:";
       if (checkBypass(reqUrl)) {
-        return proxyUrl;
+        return void 0;
       }
-      let proxyVar;
-      if (usingSsl) {
-        proxyVar = process.env["https_proxy"] || process.env["HTTPS_PROXY"];
-      } else {
-        proxyVar = process.env["http_proxy"] || process.env["HTTP_PROXY"];
-      }
+      const proxyVar = (() => {
+        if (usingSsl) {
+          return process.env["https_proxy"] || process.env["HTTPS_PROXY"];
+        } else {
+          return process.env["http_proxy"] || process.env["HTTP_PROXY"];
+        }
+      })();
       if (proxyVar) {
-        proxyUrl = new URL(proxyVar);
+        return new URL(proxyVar);
+      } else {
+        return void 0;
       }
-      return proxyUrl;
     }
     exports2.getProxyUrl = getProxyUrl;
     function checkBypass(reqUrl) {
       if (!reqUrl.hostname) {
         return false;
       }
-      let noProxy = process.env["no_proxy"] || process.env["NO_PROXY"] || "";
+      const noProxy = process.env["no_proxy"] || process.env["NO_PROXY"] || "";
       if (!noProxy) {
         return false;
       }
@@ -246,11 +248,11 @@ var require_proxy = __commonJS({
       } else if (reqUrl.protocol === "https:") {
         reqPort = 443;
       }
-      let upperReqHosts = [reqUrl.hostname.toUpperCase()];
+      const upperReqHosts = [reqUrl.hostname.toUpperCase()];
       if (typeof reqPort === "number") {
         upperReqHosts.push(`${upperReqHosts[0]}:${reqPort}`);
       }
-      for (let upperNoProxyItem of noProxy.split(",").map((x) => x.trim().toUpperCase()).filter((x) => x)) {
+      for (const upperNoProxyItem of noProxy.split(",").map((x) => x.trim().toUpperCase()).filter((x) => x)) {
         if (upperReqHosts.some((x) => x === upperNoProxyItem)) {
           return true;
         }
@@ -492,14 +494,70 @@ var require_tunnel2 = __commonJS({
 });
 
 // 
-var require_http_client = __commonJS({
+var require_lib = __commonJS({
   ""(exports2) {
     "use strict";
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
+      if (k2 === void 0)
+        k2 = k;
+      Object.defineProperty(o, k2, { enumerable: true, get: function() {
+        return m[k];
+      } });
+    } : function(o, m, k, k2) {
+      if (k2 === void 0)
+        k2 = k;
+      o[k2] = m[k];
+    });
+    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? function(o, v) {
+      Object.defineProperty(o, "default", { enumerable: true, value: v });
+    } : function(o, v) {
+      o["default"] = v;
+    });
+    var __importStar = exports2 && exports2.__importStar || function(mod) {
+      if (mod && mod.__esModule)
+        return mod;
+      var result = {};
+      if (mod != null) {
+        for (var k in mod)
+          if (k !== "default" && Object.hasOwnProperty.call(mod, k))
+            __createBinding(result, mod, k);
+      }
+      __setModuleDefault(result, mod);
+      return result;
+    };
+    var __awaiter = exports2 && exports2.__awaiter || function(thisArg, _arguments, P, generator) {
+      function adopt(value) {
+        return value instanceof P ? value : new P(function(resolve) {
+          resolve(value);
+        });
+      }
+      return new (P || (P = Promise))(function(resolve, reject) {
+        function fulfilled(value) {
+          try {
+            step(generator.next(value));
+          } catch (e) {
+            reject(e);
+          }
+        }
+        function rejected(value) {
+          try {
+            step(generator["throw"](value));
+          } catch (e) {
+            reject(e);
+          }
+        }
+        function step(result) {
+          result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+        }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+      });
+    };
     Object.defineProperty(exports2, "__esModule", { value: true });
-    var http = require("http");
-    var https = require("https");
-    var pm = require_proxy();
-    var tunnel;
+    exports2.HttpClient = exports2.isHttps = exports2.HttpClientResponse = exports2.HttpClientError = exports2.getProxyUrl = exports2.MediaTypes = exports2.Headers = exports2.HttpCodes = void 0;
+    var http = __importStar(require("http"));
+    var https = __importStar(require("https"));
+    var pm = __importStar(require_proxy());
+    var tunnel = __importStar(require_tunnel2());
     var HttpCodes;
     (function(HttpCodes2) {
       HttpCodes2[HttpCodes2["OK"] = 200] = "OK";
@@ -540,7 +598,7 @@ var require_http_client = __commonJS({
       MediaTypes2["ApplicationJson"] = "application/json";
     })(MediaTypes = exports2.MediaTypes || (exports2.MediaTypes = {}));
     function getProxyUrl(serverUrl) {
-      let proxyUrl = pm.getProxyUrl(new URL(serverUrl));
+      const proxyUrl = pm.getProxyUrl(new URL(serverUrl));
       return proxyUrl ? proxyUrl.href : "";
     }
     exports2.getProxyUrl = getProxyUrl;
@@ -573,20 +631,22 @@ var require_http_client = __commonJS({
         this.message = message;
       }
       readBody() {
-        return new Promise(async (resolve, reject) => {
-          let output = Buffer.alloc(0);
-          this.message.on("data", (chunk) => {
-            output = Buffer.concat([output, chunk]);
-          });
-          this.message.on("end", () => {
-            resolve(output.toString());
-          });
+        return __awaiter(this, void 0, void 0, function* () {
+          return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
+            let output = Buffer.alloc(0);
+            this.message.on("data", (chunk) => {
+              output = Buffer.concat([output, chunk]);
+            });
+            this.message.on("end", () => {
+              resolve(output.toString());
+            });
+          }));
         });
       }
     };
     exports2.HttpClientResponse = HttpClientResponse;
     function isHttps(requestUrl) {
-      let parsedUrl = new URL(requestUrl);
+      const parsedUrl = new URL(requestUrl);
       return parsedUrl.protocol === "https:";
     }
     exports2.isHttps = isHttps;
@@ -629,112 +689,138 @@ var require_http_client = __commonJS({
         }
       }
       options(requestUrl, additionalHeaders) {
-        return this.request("OPTIONS", requestUrl, null, additionalHeaders || {});
+        return __awaiter(this, void 0, void 0, function* () {
+          return this.request("OPTIONS", requestUrl, null, additionalHeaders || {});
+        });
       }
       get(requestUrl, additionalHeaders) {
-        return this.request("GET", requestUrl, null, additionalHeaders || {});
+        return __awaiter(this, void 0, void 0, function* () {
+          return this.request("GET", requestUrl, null, additionalHeaders || {});
+        });
       }
       del(requestUrl, additionalHeaders) {
-        return this.request("DELETE", requestUrl, null, additionalHeaders || {});
+        return __awaiter(this, void 0, void 0, function* () {
+          return this.request("DELETE", requestUrl, null, additionalHeaders || {});
+        });
       }
       post(requestUrl, data, additionalHeaders) {
-        return this.request("POST", requestUrl, data, additionalHeaders || {});
+        return __awaiter(this, void 0, void 0, function* () {
+          return this.request("POST", requestUrl, data, additionalHeaders || {});
+        });
       }
       patch(requestUrl, data, additionalHeaders) {
-        return this.request("PATCH", requestUrl, data, additionalHeaders || {});
+        return __awaiter(this, void 0, void 0, function* () {
+          return this.request("PATCH", requestUrl, data, additionalHeaders || {});
+        });
       }
       put(requestUrl, data, additionalHeaders) {
-        return this.request("PUT", requestUrl, data, additionalHeaders || {});
+        return __awaiter(this, void 0, void 0, function* () {
+          return this.request("PUT", requestUrl, data, additionalHeaders || {});
+        });
       }
       head(requestUrl, additionalHeaders) {
-        return this.request("HEAD", requestUrl, null, additionalHeaders || {});
+        return __awaiter(this, void 0, void 0, function* () {
+          return this.request("HEAD", requestUrl, null, additionalHeaders || {});
+        });
       }
       sendStream(verb, requestUrl, stream, additionalHeaders) {
-        return this.request(verb, requestUrl, stream, additionalHeaders);
+        return __awaiter(this, void 0, void 0, function* () {
+          return this.request(verb, requestUrl, stream, additionalHeaders);
+        });
       }
-      async getJson(requestUrl, additionalHeaders = {}) {
-        additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
-        let res = await this.get(requestUrl, additionalHeaders);
-        return this._processResponse(res, this.requestOptions);
+      getJson(requestUrl, additionalHeaders = {}) {
+        return __awaiter(this, void 0, void 0, function* () {
+          additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
+          const res = yield this.get(requestUrl, additionalHeaders);
+          return this._processResponse(res, this.requestOptions);
+        });
       }
-      async postJson(requestUrl, obj, additionalHeaders = {}) {
-        let data = JSON.stringify(obj, null, 2);
-        additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
-        additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.ContentType, MediaTypes.ApplicationJson);
-        let res = await this.post(requestUrl, data, additionalHeaders);
-        return this._processResponse(res, this.requestOptions);
+      postJson(requestUrl, obj, additionalHeaders = {}) {
+        return __awaiter(this, void 0, void 0, function* () {
+          const data = JSON.stringify(obj, null, 2);
+          additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
+          additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.ContentType, MediaTypes.ApplicationJson);
+          const res = yield this.post(requestUrl, data, additionalHeaders);
+          return this._processResponse(res, this.requestOptions);
+        });
       }
-      async putJson(requestUrl, obj, additionalHeaders = {}) {
-        let data = JSON.stringify(obj, null, 2);
-        additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
-        additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.ContentType, MediaTypes.ApplicationJson);
-        let res = await this.put(requestUrl, data, additionalHeaders);
-        return this._processResponse(res, this.requestOptions);
+      putJson(requestUrl, obj, additionalHeaders = {}) {
+        return __awaiter(this, void 0, void 0, function* () {
+          const data = JSON.stringify(obj, null, 2);
+          additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
+          additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.ContentType, MediaTypes.ApplicationJson);
+          const res = yield this.put(requestUrl, data, additionalHeaders);
+          return this._processResponse(res, this.requestOptions);
+        });
       }
-      async patchJson(requestUrl, obj, additionalHeaders = {}) {
-        let data = JSON.stringify(obj, null, 2);
-        additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
-        additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.ContentType, MediaTypes.ApplicationJson);
-        let res = await this.patch(requestUrl, data, additionalHeaders);
-        return this._processResponse(res, this.requestOptions);
+      patchJson(requestUrl, obj, additionalHeaders = {}) {
+        return __awaiter(this, void 0, void 0, function* () {
+          const data = JSON.stringify(obj, null, 2);
+          additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
+          additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.ContentType, MediaTypes.ApplicationJson);
+          const res = yield this.patch(requestUrl, data, additionalHeaders);
+          return this._processResponse(res, this.requestOptions);
+        });
       }
-      async request(verb, requestUrl, data, headers) {
-        if (this._disposed) {
-          throw new Error("Client has already been disposed.");
-        }
-        let parsedUrl = new URL(requestUrl);
-        let info = this._prepareRequest(verb, parsedUrl, headers);
-        let maxTries = this._allowRetries && RetryableHttpVerbs.indexOf(verb) != -1 ? this._maxRetries + 1 : 1;
-        let numTries = 0;
-        let response;
-        while (numTries < maxTries) {
-          response = await this.requestRaw(info, data);
-          if (response && response.message && response.message.statusCode === HttpCodes.Unauthorized) {
-            let authenticationHandler;
-            for (let i = 0; i < this.handlers.length; i++) {
-              if (this.handlers[i].canHandleAuthentication(response)) {
-                authenticationHandler = this.handlers[i];
-                break;
-              }
-            }
-            if (authenticationHandler) {
-              return authenticationHandler.handleAuthentication(this, info, data);
-            } else {
-              return response;
-            }
+      request(verb, requestUrl, data, headers) {
+        return __awaiter(this, void 0, void 0, function* () {
+          if (this._disposed) {
+            throw new Error("Client has already been disposed.");
           }
-          let redirectsRemaining = this._maxRedirects;
-          while (HttpRedirectCodes.indexOf(response.message.statusCode) != -1 && this._allowRedirects && redirectsRemaining > 0) {
-            const redirectUrl = response.message.headers["location"];
-            if (!redirectUrl) {
-              break;
-            }
-            let parsedRedirectUrl = new URL(redirectUrl);
-            if (parsedUrl.protocol == "https:" && parsedUrl.protocol != parsedRedirectUrl.protocol && !this._allowRedirectDowngrade) {
-              throw new Error("Redirect from HTTPS to HTTP protocol. This downgrade is not allowed for security reasons. If you want to allow this behavior, set the allowRedirectDowngrade option to true.");
-            }
-            await response.readBody();
-            if (parsedRedirectUrl.hostname !== parsedUrl.hostname) {
-              for (let header in headers) {
-                if (header.toLowerCase() === "authorization") {
-                  delete headers[header];
+          const parsedUrl = new URL(requestUrl);
+          let info = this._prepareRequest(verb, parsedUrl, headers);
+          const maxTries = this._allowRetries && RetryableHttpVerbs.includes(verb) ? this._maxRetries + 1 : 1;
+          let numTries = 0;
+          let response;
+          do {
+            response = yield this.requestRaw(info, data);
+            if (response && response.message && response.message.statusCode === HttpCodes.Unauthorized) {
+              let authenticationHandler;
+              for (const handler of this.handlers) {
+                if (handler.canHandleAuthentication(response)) {
+                  authenticationHandler = handler;
+                  break;
                 }
               }
+              if (authenticationHandler) {
+                return authenticationHandler.handleAuthentication(this, info, data);
+              } else {
+                return response;
+              }
             }
-            info = this._prepareRequest(verb, parsedRedirectUrl, headers);
-            response = await this.requestRaw(info, data);
-            redirectsRemaining--;
-          }
-          if (HttpResponseRetryCodes.indexOf(response.message.statusCode) == -1) {
-            return response;
-          }
-          numTries += 1;
-          if (numTries < maxTries) {
-            await response.readBody();
-            await this._performExponentialBackoff(numTries);
-          }
-        }
-        return response;
+            let redirectsRemaining = this._maxRedirects;
+            while (response.message.statusCode && HttpRedirectCodes.includes(response.message.statusCode) && this._allowRedirects && redirectsRemaining > 0) {
+              const redirectUrl = response.message.headers["location"];
+              if (!redirectUrl) {
+                break;
+              }
+              const parsedRedirectUrl = new URL(redirectUrl);
+              if (parsedUrl.protocol === "https:" && parsedUrl.protocol !== parsedRedirectUrl.protocol && !this._allowRedirectDowngrade) {
+                throw new Error("Redirect from HTTPS to HTTP protocol. This downgrade is not allowed for security reasons. If you want to allow this behavior, set the allowRedirectDowngrade option to true.");
+              }
+              yield response.readBody();
+              if (parsedRedirectUrl.hostname !== parsedUrl.hostname) {
+                for (const header in headers) {
+                  if (header.toLowerCase() === "authorization") {
+                    delete headers[header];
+                  }
+                }
+              }
+              info = this._prepareRequest(verb, parsedRedirectUrl, headers);
+              response = yield this.requestRaw(info, data);
+              redirectsRemaining--;
+            }
+            if (!response.message.statusCode || !HttpResponseRetryCodes.includes(response.message.statusCode)) {
+              return response;
+            }
+            numTries += 1;
+            if (numTries < maxTries) {
+              yield response.readBody();
+              yield this._performExponentialBackoff(numTries);
+            }
+          } while (numTries < maxTries);
+          return response;
+        });
       }
       dispose() {
         if (this._agent) {
@@ -743,32 +829,40 @@ var require_http_client = __commonJS({
         this._disposed = true;
       }
       requestRaw(info, data) {
-        return new Promise((resolve, reject) => {
-          let callbackForResult = function(err, res) {
-            if (err) {
-              reject(err);
+        return __awaiter(this, void 0, void 0, function* () {
+          return new Promise((resolve, reject) => {
+            function callbackForResult(err, res) {
+              if (err) {
+                reject(err);
+              } else if (!res) {
+                reject(new Error("Unknown error"));
+              } else {
+                resolve(res);
+              }
             }
-            resolve(res);
-          };
-          this.requestRawWithCallback(info, data, callbackForResult);
+            this.requestRawWithCallback(info, data, callbackForResult);
+          });
         });
       }
       requestRawWithCallback(info, data, onResult) {
-        let socket;
         if (typeof data === "string") {
+          if (!info.options.headers) {
+            info.options.headers = {};
+          }
           info.options.headers["Content-Length"] = Buffer.byteLength(data, "utf8");
         }
         let callbackCalled = false;
-        let handleResult = (err, res) => {
+        function handleResult(err, res) {
           if (!callbackCalled) {
             callbackCalled = true;
             onResult(err, res);
           }
-        };
-        let req = info.httpModule.request(info.options, (msg) => {
-          let res = new HttpClientResponse(msg);
-          handleResult(null, res);
+        }
+        const req = info.httpModule.request(info.options, (msg) => {
+          const res = new HttpClientResponse(msg);
+          handleResult(void 0, res);
         });
+        let socket;
         req.on("socket", (sock) => {
           socket = sock;
         });
@@ -776,10 +870,10 @@ var require_http_client = __commonJS({
           if (socket) {
             socket.end();
           }
-          handleResult(new Error("Request timeout: " + info.options.path), null);
+          handleResult(new Error(`Request timeout: ${info.options.path}`));
         });
         req.on("error", function(err) {
-          handleResult(err, null);
+          handleResult(err);
         });
         if (data && typeof data === "string") {
           req.write(data, "utf8");
@@ -794,7 +888,7 @@ var require_http_client = __commonJS({
         }
       }
       getAgent(serverUrl) {
-        let parsedUrl = new URL(serverUrl);
+        const parsedUrl = new URL(serverUrl);
         return this._getAgent(parsedUrl);
       }
       _prepareRequest(method, requestUrl, headers) {
@@ -814,21 +908,19 @@ var require_http_client = __commonJS({
         }
         info.options.agent = this._getAgent(info.parsedUrl);
         if (this.handlers) {
-          this.handlers.forEach((handler) => {
+          for (const handler of this.handlers) {
             handler.prepareRequest(info.options);
-          });
+          }
         }
         return info;
       }
       _mergeHeaders(headers) {
-        const lowercaseKeys = (obj) => Object.keys(obj).reduce((c, k) => (c[k.toLowerCase()] = obj[k], c), {});
         if (this.requestOptions && this.requestOptions.headers) {
-          return Object.assign({}, lowercaseKeys(this.requestOptions.headers), lowercaseKeys(headers));
+          return Object.assign({}, lowercaseKeys(this.requestOptions.headers), lowercaseKeys(headers || {}));
         }
         return lowercaseKeys(headers || {});
       }
       _getExistingOrDefaultHeader(additionalHeaders, header, _default) {
-        const lowercaseKeys = (obj) => Object.keys(obj).reduce((c, k) => (c[k.toLowerCase()] = obj[k], c), {});
         let clientHeader;
         if (this.requestOptions && this.requestOptions.headers) {
           clientHeader = lowercaseKeys(this.requestOptions.headers)[header];
@@ -837,35 +929,29 @@ var require_http_client = __commonJS({
       }
       _getAgent(parsedUrl) {
         let agent;
-        let proxyUrl = pm.getProxyUrl(parsedUrl);
-        let useProxy = proxyUrl && proxyUrl.hostname;
+        const proxyUrl = pm.getProxyUrl(parsedUrl);
+        const useProxy = proxyUrl && proxyUrl.hostname;
         if (this._keepAlive && useProxy) {
           agent = this._proxyAgent;
         }
         if (this._keepAlive && !useProxy) {
           agent = this._agent;
         }
-        if (!!agent) {
+        if (agent) {
           return agent;
         }
         const usingSsl = parsedUrl.protocol === "https:";
         let maxSockets = 100;
-        if (!!this.requestOptions) {
+        if (this.requestOptions) {
           maxSockets = this.requestOptions.maxSockets || http.globalAgent.maxSockets;
         }
-        if (useProxy) {
-          if (!tunnel) {
-            tunnel = require_tunnel2();
-          }
+        if (proxyUrl && proxyUrl.hostname) {
           const agentOptions = {
             maxSockets,
             keepAlive: this._keepAlive,
-            proxy: __spreadProps(__spreadValues({}, (proxyUrl.username || proxyUrl.password) && {
+            proxy: Object.assign(Object.assign({}, (proxyUrl.username || proxyUrl.password) && {
               proxyAuth: `${proxyUrl.username}:${proxyUrl.password}`
-            }), {
-              host: proxyUrl.hostname,
-              port: proxyUrl.port
-            })
+            }), { host: proxyUrl.hostname, port: proxyUrl.port })
           };
           let tunnelAgent;
           const overHttps = proxyUrl.protocol === "https:";
@@ -893,64 +979,69 @@ var require_http_client = __commonJS({
         return agent;
       }
       _performExponentialBackoff(retryNumber) {
-        retryNumber = Math.min(ExponentialBackoffCeiling, retryNumber);
-        const ms = ExponentialBackoffTimeSlice * Math.pow(2, retryNumber);
-        return new Promise((resolve) => setTimeout(() => resolve(), ms));
+        return __awaiter(this, void 0, void 0, function* () {
+          retryNumber = Math.min(ExponentialBackoffCeiling, retryNumber);
+          const ms = ExponentialBackoffTimeSlice * Math.pow(2, retryNumber);
+          return new Promise((resolve) => setTimeout(() => resolve(), ms));
+        });
       }
-      static dateTimeDeserializer(key, value) {
-        if (typeof value === "string") {
-          let a = new Date(value);
-          if (!isNaN(a.valueOf())) {
-            return a;
-          }
-        }
-        return value;
-      }
-      async _processResponse(res, options) {
-        return new Promise(async (resolve, reject) => {
-          const statusCode = res.message.statusCode;
-          const response = {
-            statusCode,
-            result: null,
-            headers: {}
-          };
-          if (statusCode == HttpCodes.NotFound) {
-            resolve(response);
-          }
-          let obj;
-          let contents;
-          try {
-            contents = await res.readBody();
-            if (contents && contents.length > 0) {
-              if (options && options.deserializeDates) {
-                obj = JSON.parse(contents, HttpClient.dateTimeDeserializer);
-              } else {
-                obj = JSON.parse(contents);
+      _processResponse(res, options) {
+        return __awaiter(this, void 0, void 0, function* () {
+          return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            const statusCode = res.message.statusCode || 0;
+            const response = {
+              statusCode,
+              result: null,
+              headers: {}
+            };
+            if (statusCode === HttpCodes.NotFound) {
+              resolve(response);
+            }
+            function dateTimeDeserializer(key, value) {
+              if (typeof value === "string") {
+                const a = new Date(value);
+                if (!isNaN(a.valueOf())) {
+                  return a;
+                }
               }
-              response.result = obj;
+              return value;
             }
-            response.headers = res.message.headers;
-          } catch (err) {
-          }
-          if (statusCode > 299) {
-            let msg;
-            if (obj && obj.message) {
-              msg = obj.message;
-            } else if (contents && contents.length > 0) {
-              msg = contents;
+            let obj;
+            let contents;
+            try {
+              contents = yield res.readBody();
+              if (contents && contents.length > 0) {
+                if (options && options.deserializeDates) {
+                  obj = JSON.parse(contents, dateTimeDeserializer);
+                } else {
+                  obj = JSON.parse(contents);
+                }
+                response.result = obj;
+              }
+              response.headers = res.message.headers;
+            } catch (err) {
+            }
+            if (statusCode > 299) {
+              let msg;
+              if (obj && obj.message) {
+                msg = obj.message;
+              } else if (contents && contents.length > 0) {
+                msg = contents;
+              } else {
+                msg = `Failed request: (${statusCode})`;
+              }
+              const err = new HttpClientError(msg, statusCode);
+              err.result = response.result;
+              reject(err);
             } else {
-              msg = "Failed request: (" + statusCode + ")";
+              resolve(response);
             }
-            let err = new HttpClientError(msg, statusCode);
-            err.result = response.result;
-            reject(err);
-          } else {
-            resolve(response);
-          }
+          }));
         });
       }
     };
     exports2.HttpClient = HttpClient;
+    var lowercaseKeys = (obj) => Object.keys(obj).reduce((c, k) => (c[k.toLowerCase()] = obj[k], c), {});
   }
 });
 
@@ -958,20 +1049,53 @@ var require_http_client = __commonJS({
 var require_auth = __commonJS({
   ""(exports2) {
     "use strict";
+    var __awaiter = exports2 && exports2.__awaiter || function(thisArg, _arguments, P, generator) {
+      function adopt(value) {
+        return value instanceof P ? value : new P(function(resolve) {
+          resolve(value);
+        });
+      }
+      return new (P || (P = Promise))(function(resolve, reject) {
+        function fulfilled(value) {
+          try {
+            step(generator.next(value));
+          } catch (e) {
+            reject(e);
+          }
+        }
+        function rejected(value) {
+          try {
+            step(generator["throw"](value));
+          } catch (e) {
+            reject(e);
+          }
+        }
+        function step(result) {
+          result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+        }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+      });
+    };
     Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.PersonalAccessTokenCredentialHandler = exports2.BearerCredentialHandler = exports2.BasicCredentialHandler = void 0;
     var BasicCredentialHandler = class {
       constructor(username, password) {
         this.username = username;
         this.password = password;
       }
       prepareRequest(options) {
-        options.headers["Authorization"] = "Basic " + Buffer.from(this.username + ":" + this.password).toString("base64");
+        if (!options.headers) {
+          throw Error("The request has no headers");
+        }
+        options.headers["Authorization"] = `Basic ${Buffer.from(`${this.username}:${this.password}`).toString("base64")}`;
       }
-      canHandleAuthentication(response) {
+      canHandleAuthentication() {
         return false;
       }
-      handleAuthentication(httpClient, requestInfo, objs) {
-        return null;
+      handleAuthentication() {
+        return __awaiter(this, void 0, void 0, function* () {
+          throw new Error("not implemented");
+        });
       }
     };
     exports2.BasicCredentialHandler = BasicCredentialHandler;
@@ -980,13 +1104,18 @@ var require_auth = __commonJS({
         this.token = token;
       }
       prepareRequest(options) {
-        options.headers["Authorization"] = "Bearer " + this.token;
+        if (!options.headers) {
+          throw Error("The request has no headers");
+        }
+        options.headers["Authorization"] = `Bearer ${this.token}`;
       }
-      canHandleAuthentication(response) {
+      canHandleAuthentication() {
         return false;
       }
-      handleAuthentication(httpClient, requestInfo, objs) {
-        return null;
+      handleAuthentication() {
+        return __awaiter(this, void 0, void 0, function* () {
+          throw new Error("not implemented");
+        });
       }
     };
     exports2.BearerCredentialHandler = BearerCredentialHandler;
@@ -995,13 +1124,18 @@ var require_auth = __commonJS({
         this.token = token;
       }
       prepareRequest(options) {
-        options.headers["Authorization"] = "Basic " + Buffer.from("PAT:" + this.token).toString("base64");
+        if (!options.headers) {
+          throw Error("The request has no headers");
+        }
+        options.headers["Authorization"] = `Basic ${Buffer.from(`PAT:${this.token}`).toString("base64")}`;
       }
-      canHandleAuthentication(response) {
+      canHandleAuthentication() {
         return false;
       }
-      handleAuthentication(httpClient, requestInfo, objs) {
-        return null;
+      handleAuthentication() {
+        return __awaiter(this, void 0, void 0, function* () {
+          throw new Error("not implemented");
+        });
       }
     };
     exports2.PersonalAccessTokenCredentialHandler = PersonalAccessTokenCredentialHandler;
@@ -1041,7 +1175,7 @@ var require_oidc_utils = __commonJS({
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.OidcClient = void 0;
-    var http_client_1 = require_http_client();
+    var http_client_1 = require_lib();
     var auth_1 = require_auth();
     var core_1 = require_core();
     var OidcClient = class {
@@ -1103,6 +1237,171 @@ var require_oidc_utils = __commonJS({
       }
     };
     exports2.OidcClient = OidcClient;
+  }
+});
+
+// 
+var require_summary = __commonJS({
+  ""(exports2) {
+    "use strict";
+    var __awaiter = exports2 && exports2.__awaiter || function(thisArg, _arguments, P, generator) {
+      function adopt(value) {
+        return value instanceof P ? value : new P(function(resolve) {
+          resolve(value);
+        });
+      }
+      return new (P || (P = Promise))(function(resolve, reject) {
+        function fulfilled(value) {
+          try {
+            step(generator.next(value));
+          } catch (e) {
+            reject(e);
+          }
+        }
+        function rejected(value) {
+          try {
+            step(generator["throw"](value));
+          } catch (e) {
+            reject(e);
+          }
+        }
+        function step(result) {
+          result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+        }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+      });
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.summary = exports2.markdownSummary = exports2.SUMMARY_DOCS_URL = exports2.SUMMARY_ENV_VAR = void 0;
+    var os_1 = require("os");
+    var fs_1 = require("fs");
+    var { access, appendFile, writeFile } = fs_1.promises;
+    exports2.SUMMARY_ENV_VAR = "GITHUB_STEP_SUMMARY";
+    exports2.SUMMARY_DOCS_URL = "https://docs.github.com/actions/using-workflows/workflow-commands-for-github-actions#adding-a-job-summary";
+    var Summary = class {
+      constructor() {
+        this._buffer = "";
+      }
+      filePath() {
+        return __awaiter(this, void 0, void 0, function* () {
+          if (this._filePath) {
+            return this._filePath;
+          }
+          const pathFromEnv = process.env[exports2.SUMMARY_ENV_VAR];
+          if (!pathFromEnv) {
+            throw new Error(`Unable to find environment variable for $${exports2.SUMMARY_ENV_VAR}. Check if your runtime environment supports job summaries.`);
+          }
+          try {
+            yield access(pathFromEnv, fs_1.constants.R_OK | fs_1.constants.W_OK);
+          } catch (_a) {
+            throw new Error(`Unable to access summary file: '${pathFromEnv}'. Check if the file has correct read/write permissions.`);
+          }
+          this._filePath = pathFromEnv;
+          return this._filePath;
+        });
+      }
+      wrap(tag, content, attrs = {}) {
+        const htmlAttrs = Object.entries(attrs).map(([key, value]) => ` ${key}="${value}"`).join("");
+        if (!content) {
+          return `<${tag}${htmlAttrs}>`;
+        }
+        return `<${tag}${htmlAttrs}>${content}</${tag}>`;
+      }
+      write(options) {
+        return __awaiter(this, void 0, void 0, function* () {
+          const overwrite = !!(options === null || options === void 0 ? void 0 : options.overwrite);
+          const filePath = yield this.filePath();
+          const writeFunc = overwrite ? writeFile : appendFile;
+          yield writeFunc(filePath, this._buffer, { encoding: "utf8" });
+          return this.emptyBuffer();
+        });
+      }
+      clear() {
+        return __awaiter(this, void 0, void 0, function* () {
+          return this.emptyBuffer().write({ overwrite: true });
+        });
+      }
+      stringify() {
+        return this._buffer;
+      }
+      isEmptyBuffer() {
+        return this._buffer.length === 0;
+      }
+      emptyBuffer() {
+        this._buffer = "";
+        return this;
+      }
+      addRaw(text, addEOL = false) {
+        this._buffer += text;
+        return addEOL ? this.addEOL() : this;
+      }
+      addEOL() {
+        return this.addRaw(os_1.EOL);
+      }
+      addCodeBlock(code, lang) {
+        const attrs = Object.assign({}, lang && { lang });
+        const element = this.wrap("pre", this.wrap("code", code), attrs);
+        return this.addRaw(element).addEOL();
+      }
+      addList(items, ordered = false) {
+        const tag = ordered ? "ol" : "ul";
+        const listItems = items.map((item) => this.wrap("li", item)).join("");
+        const element = this.wrap(tag, listItems);
+        return this.addRaw(element).addEOL();
+      }
+      addTable(rows) {
+        const tableBody = rows.map((row) => {
+          const cells = row.map((cell) => {
+            if (typeof cell === "string") {
+              return this.wrap("td", cell);
+            }
+            const { header, data, colspan, rowspan } = cell;
+            const tag = header ? "th" : "td";
+            const attrs = Object.assign(Object.assign({}, colspan && { colspan }), rowspan && { rowspan });
+            return this.wrap(tag, data, attrs);
+          }).join("");
+          return this.wrap("tr", cells);
+        }).join("");
+        const element = this.wrap("table", tableBody);
+        return this.addRaw(element).addEOL();
+      }
+      addDetails(label, content) {
+        const element = this.wrap("details", this.wrap("summary", label) + content);
+        return this.addRaw(element).addEOL();
+      }
+      addImage(src, alt, options) {
+        const { width, height } = options || {};
+        const attrs = Object.assign(Object.assign({}, width && { width }), height && { height });
+        const element = this.wrap("img", null, Object.assign({ src, alt }, attrs));
+        return this.addRaw(element).addEOL();
+      }
+      addHeading(text, level) {
+        const tag = `h${level}`;
+        const allowedTag = ["h1", "h2", "h3", "h4", "h5", "h6"].includes(tag) ? tag : "h1";
+        const element = this.wrap(allowedTag, text);
+        return this.addRaw(element).addEOL();
+      }
+      addSeparator() {
+        const element = this.wrap("hr", null);
+        return this.addRaw(element).addEOL();
+      }
+      addBreak() {
+        const element = this.wrap("br", null);
+        return this.addRaw(element).addEOL();
+      }
+      addQuote(text, cite) {
+        const attrs = Object.assign({}, cite && { cite });
+        const element = this.wrap("blockquote", text, attrs);
+        return this.addRaw(element).addEOL();
+      }
+      addLink(text, href) {
+        const element = this.wrap("a", text, { href });
+        return this.addRaw(element).addEOL();
+      }
+    };
+    var _summary = new Summary();
+    exports2.markdownSummary = _summary;
+    exports2.summary = _summary;
   }
 });
 
@@ -1306,6 +1605,14 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
       });
     }
     exports2.getIDToken = getIDToken;
+    var summary_1 = require_summary();
+    Object.defineProperty(exports2, "summary", { enumerable: true, get: function() {
+      return summary_1.summary;
+    } });
+    var summary_2 = require_summary();
+    Object.defineProperty(exports2, "markdownSummary", { enumerable: true, get: function() {
+      return summary_2.markdownSummary;
+    } });
   }
 });
 
@@ -1398,7 +1705,7 @@ var require_utils2 = __commonJS({
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.getApiBaseUrl = exports2.getProxyAgent = exports2.getAuthString = void 0;
-    var httpClient = __importStar(require_http_client());
+    var httpClient = __importStar(require_lib());
     function getAuthString(token, options) {
       if (!token && !options.auth) {
         throw new Error("Parameter token or opts.auth is required");
@@ -1903,7 +2210,7 @@ var require_dist_node2 = __commonJS({
 });
 
 // 
-var require_lib = __commonJS({
+var require_lib2 = __commonJS({
   ""(exports2, module2) {
     "use strict";
     var conversions = {};
@@ -3480,7 +3787,7 @@ var require_URL_impl = __commonJS({
 var require_URL = __commonJS({
   ""(exports2, module2) {
     "use strict";
-    var conversions = require_lib();
+    var conversions = require_lib2();
     var utils = require_utils3();
     var Impl = require_URL_impl();
     var impl = utils.implSymbol;
@@ -7139,7 +7446,7 @@ var require_streams = __commonJS({
 });
 
 // 
-var require_lib2 = __commonJS({
+var require_lib3 = __commonJS({
   ""(exports2, module2) {
     "use strict";
     var Buffer2 = require_safer().Buffer;
@@ -7262,7 +7569,7 @@ var require_lib2 = __commonJS({
 var require_encoding = __commonJS({
   ""(exports2, module2) {
     "use strict";
-    var iconvLite = require_lib2();
+    var iconvLite = require_lib3();
     module2.exports.convert = convert;
     function convert(str, to, from) {
       from = checkEncoding(from || "UTF-8");
@@ -7307,7 +7614,7 @@ var require_encoding = __commonJS({
 });
 
 // 
-var require_lib3 = __commonJS({
+var require_lib4 = __commonJS({
   ""(exports2, module2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -8537,7 +8844,7 @@ var require_dist_node5 = __commonJS({
     var endpoint = require_dist_node2();
     var universalUserAgent = require_dist_node();
     var isPlainObject = require_is_plain_object();
-    var nodeFetch = _interopDefault(require_lib3());
+    var nodeFetch = _interopDefault(require_lib4());
     var requestError = require_dist_node4();
     var VERSION = "5.6.3";
     function getBufferResponse(response) {
@@ -11245,7 +11552,7 @@ var require_dist_node17 = __commonJS({
         throw error;
       }
     }
-    var VERSION = "4.3.0";
+    var VERSION = "4.3.1";
     function createOAuthAppAuth(options) {
       const state = Object.assign({
         request: request.request.defaults({
@@ -15260,7 +15567,7 @@ var require_rerun_circleci = __commonJS({
     var rest_12 = require_dist_node12();
     var github_12 = require_github();
     var utils_12 = require_utils5();
-    var node_fetch_1 = require_lib3();
+    var node_fetch_1 = require_lib4();
     async function rerunCircleCi() {
       const circleci = new CircleCiClient();
       const github = new rest_12.Octokit({ auth: await (0, utils_12.getAuthTokenFor)(utils_12.ANGULAR_ROBOT) });
@@ -40645,6 +40952,165 @@ var require_string_width = __commonJS({
 });
 
 // 
+var require_wrap_ansi = __commonJS({
+  ""(exports2, module2) {
+    "use strict";
+    var stringWidth = require_string_width();
+    var stripAnsi = require_strip_ansi();
+    var ansiStyles = require_ansi_styles();
+    var ESCAPES = /* @__PURE__ */ new Set([
+      "\x1B",
+      "\x9B"
+    ]);
+    var END_CODE = 39;
+    var ANSI_ESCAPE_BELL = "\x07";
+    var ANSI_CSI = "[";
+    var ANSI_OSC = "]";
+    var ANSI_SGR_TERMINATOR = "m";
+    var ANSI_ESCAPE_LINK = `${ANSI_OSC}8;;`;
+    var wrapAnsi = (code) => `${ESCAPES.values().next().value}${ANSI_CSI}${code}${ANSI_SGR_TERMINATOR}`;
+    var wrapAnsiHyperlink = (uri) => `${ESCAPES.values().next().value}${ANSI_ESCAPE_LINK}${uri}${ANSI_ESCAPE_BELL}`;
+    var wordLengths = (string) => string.split(" ").map((character) => stringWidth(character));
+    var wrapWord = (rows, word, columns) => {
+      const characters = [...word];
+      let isInsideEscape = false;
+      let isInsideLinkEscape = false;
+      let visible = stringWidth(stripAnsi(rows[rows.length - 1]));
+      for (const [index, character] of characters.entries()) {
+        const characterLength = stringWidth(character);
+        if (visible + characterLength <= columns) {
+          rows[rows.length - 1] += character;
+        } else {
+          rows.push(character);
+          visible = 0;
+        }
+        if (ESCAPES.has(character)) {
+          isInsideEscape = true;
+          isInsideLinkEscape = characters.slice(index + 1).join("").startsWith(ANSI_ESCAPE_LINK);
+        }
+        if (isInsideEscape) {
+          if (isInsideLinkEscape) {
+            if (character === ANSI_ESCAPE_BELL) {
+              isInsideEscape = false;
+              isInsideLinkEscape = false;
+            }
+          } else if (character === ANSI_SGR_TERMINATOR) {
+            isInsideEscape = false;
+          }
+          continue;
+        }
+        visible += characterLength;
+        if (visible === columns && index < characters.length - 1) {
+          rows.push("");
+          visible = 0;
+        }
+      }
+      if (!visible && rows[rows.length - 1].length > 0 && rows.length > 1) {
+        rows[rows.length - 2] += rows.pop();
+      }
+    };
+    var stringVisibleTrimSpacesRight = (string) => {
+      const words = string.split(" ");
+      let last = words.length;
+      while (last > 0) {
+        if (stringWidth(words[last - 1]) > 0) {
+          break;
+        }
+        last--;
+      }
+      if (last === words.length) {
+        return string;
+      }
+      return words.slice(0, last).join(" ") + words.slice(last).join("");
+    };
+    var exec = (string, columns, options = {}) => {
+      if (options.trim !== false && string.trim() === "") {
+        return "";
+      }
+      let returnValue = "";
+      let escapeCode;
+      let escapeUrl;
+      const lengths = wordLengths(string);
+      let rows = [""];
+      for (const [index, word] of string.split(" ").entries()) {
+        if (options.trim !== false) {
+          rows[rows.length - 1] = rows[rows.length - 1].trimStart();
+        }
+        let rowLength = stringWidth(rows[rows.length - 1]);
+        if (index !== 0) {
+          if (rowLength >= columns && (options.wordWrap === false || options.trim === false)) {
+            rows.push("");
+            rowLength = 0;
+          }
+          if (rowLength > 0 || options.trim === false) {
+            rows[rows.length - 1] += " ";
+            rowLength++;
+          }
+        }
+        if (options.hard && lengths[index] > columns) {
+          const remainingColumns = columns - rowLength;
+          const breaksStartingThisLine = 1 + Math.floor((lengths[index] - remainingColumns - 1) / columns);
+          const breaksStartingNextLine = Math.floor((lengths[index] - 1) / columns);
+          if (breaksStartingNextLine < breaksStartingThisLine) {
+            rows.push("");
+          }
+          wrapWord(rows, word, columns);
+          continue;
+        }
+        if (rowLength + lengths[index] > columns && rowLength > 0 && lengths[index] > 0) {
+          if (options.wordWrap === false && rowLength < columns) {
+            wrapWord(rows, word, columns);
+            continue;
+          }
+          rows.push("");
+        }
+        if (rowLength + lengths[index] > columns && options.wordWrap === false) {
+          wrapWord(rows, word, columns);
+          continue;
+        }
+        rows[rows.length - 1] += word;
+      }
+      if (options.trim !== false) {
+        rows = rows.map(stringVisibleTrimSpacesRight);
+      }
+      const pre = [...rows.join("\n")];
+      for (const [index, character] of pre.entries()) {
+        returnValue += character;
+        if (ESCAPES.has(character)) {
+          const { groups } = new RegExp(`(?:\\${ANSI_CSI}(?<code>\\d+)m|\\${ANSI_ESCAPE_LINK}(?<uri>.*)${ANSI_ESCAPE_BELL})`).exec(pre.slice(index).join("")) || { groups: {} };
+          if (groups.code !== void 0) {
+            const code2 = Number.parseFloat(groups.code);
+            escapeCode = code2 === END_CODE ? void 0 : code2;
+          } else if (groups.uri !== void 0) {
+            escapeUrl = groups.uri.length === 0 ? void 0 : groups.uri;
+          }
+        }
+        const code = ansiStyles.codes.get(Number(escapeCode));
+        if (pre[index + 1] === "\n") {
+          if (escapeUrl) {
+            returnValue += wrapAnsiHyperlink("");
+          }
+          if (escapeCode && code) {
+            returnValue += wrapAnsi(code);
+          }
+        } else if (character === "\n") {
+          if (escapeCode && code) {
+            returnValue += wrapAnsi(escapeCode);
+          }
+          if (escapeUrl) {
+            returnValue += wrapAnsiHyperlink(escapeUrl);
+          }
+        }
+      }
+      return returnValue;
+    };
+    module2.exports = (string, columns, options) => {
+      return String(string).normalize().replace(/\r\n/g, "\n").split("\n").map((line) => exec(line, columns, options)).join("\n");
+    };
+  }
+});
+
+// 
 var require_spinners = __commonJS({
   ""(exports2, module2) {
     module2.exports = {
@@ -43183,6 +43649,7 @@ var require_screen_manager = __commonJS({
     "use strict";
     var util = require_readline();
     var cliWidth = require_cli_width();
+    var wrapAnsi = require_wrap_ansi();
     var stripAnsi = require_strip_ansi();
     var stringWidth = require_string_width();
     var ora = require_ora();
@@ -43277,12 +43744,7 @@ var require_screen_manager = __commonJS({
         return width;
       }
       breakLines(lines, width = this.normalizedCliWidth()) {
-        const regex = new RegExp(`(?:(?:\\033[[0-9;]*m)*.?){1,${width}}`, "g");
-        return lines.map((line) => {
-          const chunk = line.match(regex);
-          chunk.pop();
-          return chunk || "";
-        });
+        return lines.map((line) => wrapAnsi(line, width, { trim: false, hard: true }).split("\n"));
       }
       forceLineReturn(content, width = this.normalizedCliWidth()) {
         return this.breakLines(content.split("\n"), width).flat().join("\n");
@@ -43694,7 +44156,7 @@ var require_number = __commonJS({
       filterInput(input) {
         if (input && typeof input === "string") {
           input = input.trim();
-          const numberMatch = input.match(/(^-?\d+|^\d+\.\d*|^\d*\.\d+)(e\d+)?$/);
+          const numberMatch = input.match(/(^-?\d+|^-?\d+\.\d*|^\d*\.\d+)(e\d+)?$/);
           if (numberMatch) {
             return Number(numberMatch[0]);
           }
@@ -52962,7 +53424,7 @@ var require_extend_node = __commonJS({
 });
 
 // 
-var require_lib4 = __commonJS({
+var require_lib5 = __commonJS({
   ""(exports2, module2) {
     "use strict";
     var Buffer2 = require_safer().Buffer;
@@ -53547,7 +54009,7 @@ var require_main = __commonJS({
     var chardet_1 = require_chardet();
     var child_process_1 = require("child_process");
     var fs_1 = require("fs");
-    var iconv_lite_1 = require_lib4();
+    var iconv_lite_1 = require_lib5();
     var tmp_1 = require_tmp();
     var CreateFileError_1 = require_CreateFileError();
     exports2.CreateFileError = CreateFileError_1.CreateFileError;
