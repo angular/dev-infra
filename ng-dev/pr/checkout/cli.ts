@@ -31,6 +31,6 @@ async function handler({prNumber, githubToken}: Arguments<CheckoutOptions>) {
 export const CheckoutCommandModule: CommandModule<{}, CheckoutOptions> = {
   handler,
   builder,
-  command: 'checkout <pr-number>',
+  command: 'checkout <pr>',
   describe: 'Checkout a PR from the upstream repo',
 };

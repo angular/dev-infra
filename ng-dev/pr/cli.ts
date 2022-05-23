@@ -24,13 +24,13 @@ export function buildPrParser(localYargs: yargs.Argv) {
     .strict()
     .demandCommand()
     .command(
-      'discover-new-conflicts <pr-number>',
+      'discover-new-conflicts <pr>',
       'Check if a pending PR causes new conflicts for other pending PRs',
       buildDiscoverNewConflictsCommand,
       handleDiscoverNewConflictsCommand,
     )
     .command(
-      'rebase <pr-number>',
+      'rebase <pr>',
       'Rebase a pending PR and push the rebased commits back to Github',
       buildRebaseCommand,
       handleRebaseCommand,

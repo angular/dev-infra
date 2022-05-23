@@ -15,18 +15,18 @@ import {rebasePr} from './index';
 /** The options available to the rebase command via CLI. */
 export interface RebaseCommandOptions {
   githubToken: string;
-  prNumber: number;
+  pr: number;
 }
 
 /** Builds the rebase pull request command. */
 export function buildRebaseCommand(yargs: Argv): Argv<RebaseCommandOptions> {
-  return addGithubTokenOption(yargs).positional('prNumber', {type: 'number', demandOption: true});
+  return addGithubTokenOption(yargs).positional('pr', {type: 'number', demandOption: true});
 }
 
 /** Handles the rebase pull request command. */
 export async function handleRebaseCommand({
-  prNumber,
+  pr,
   githubToken,
 }: Arguments<RebaseCommandOptions>) {
-  process.exitCode = await rebasePr(prNumber, githubToken);
+  process.exitCode = await rebasePr(pr, githubToken);
 }

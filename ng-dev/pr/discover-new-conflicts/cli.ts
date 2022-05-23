@@ -16,7 +16,7 @@ import {discoverNewConflictsForPr} from './index';
 /** The options available to the discover-new-conflicts command via CLI. */
 export interface DiscoverNewConflictsCommandOptions {
   date: number;
-  'pr-number': number;
+  pr: number;
 }
 
 /** Builds the discover-new-conflicts pull request command. */
@@ -30,12 +30,12 @@ export function buildDiscoverNewConflictsCommand(
       coerce: (date) => (typeof date === 'number' ? date : Date.parse(date)),
       default: getThirtyDaysAgoDate(),
     })
-    .positional('pr-number', {demandOption: true, type: 'number'});
+    .positional('pr', {demandOption: true, type: 'number'});
 }
 
 /** Handles the discover-new-conflicts pull request command. */
 export async function handleDiscoverNewConflictsCommand({
-  'pr-number': prNumber,
+  pr,
   date,
 }: Arguments<DiscoverNewConflictsCommandOptions>) {
   // If a provided date is not able to be parsed, yargs provides it as NaN.
@@ -43,7 +43,7 @@ export async function handleDiscoverNewConflictsCommand({
     error('Unable to parse the value provided via --date flag');
     process.exit(1);
   }
-  await discoverNewConflictsForPr(prNumber, date);
+  await discoverNewConflictsForPr(pr, date);
 }
 
 /** Gets a date object 30 days ago from today. */
