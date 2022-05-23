@@ -17,6 +17,7 @@ export interface MergeCommandOptions {
   githubToken: string;
   pr: number;
   branchPrompt: boolean;
+  forceManualBranches: boolean;
 }
 
 /** Builds the command. */
@@ -33,12 +34,17 @@ function builder(yargs: Argv) {
       type: 'boolean',
       default: true,
       description: 'Whether to prompt to confirm the branches a PR will merge into.',
+    })
+    .option('force-manual-branches' as 'forceManualBranches', {
+      type: 'boolean',
+      default: false,
+      description: 'Whether to manually select the branches you wish to merge the PR into.',
     });
 }
 
 /** Handles the command. */
-async function handler({pr, branchPrompt}: Arguments<MergeCommandOptions>) {
-  await mergePullRequest(pr, {branchPrompt});
+async function handler({pr, branchPrompt, forceManualBranches}: Arguments<MergeCommandOptions>) {
+  await mergePullRequest(pr, {branchPrompt, forceManualBranches});
 }
 
 /** yargs command module describing the command. */
