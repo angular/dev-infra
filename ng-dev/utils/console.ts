@@ -6,11 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {inspect} from 'util';
 import * as chalk from 'chalk';
 import {writeFileSync} from 'fs';
 import {prompt} from 'inquirer';
 import {join} from 'path';
 import {Arguments} from 'yargs';
+import {Spinner} from './spinner';
 
 import {GitClient} from './git/git-client';
 
@@ -103,7 +105,11 @@ function buildLogLevelFunction(loadCommand: () => Function, level: LOG_LEVELS) {
  */
 function runConsoleCommand(loadCommand: () => Function, logLevel: LOG_LEVELS, ...text: unknown[]) {
   if (getLogLevel() >= logLevel) {
-    loadCommand()(...text);
+    if (Spinner.activeSpinner) {
+      Spinner.activeSpinner.info(text.map((val) => inspect(val, true, 3, true)).join(' '));
+    } else {
+      loadCommand()(...text);
+    }
   }
   printToLogFile(logLevel, ...text);
 }
