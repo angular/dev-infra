@@ -17,7 +17,7 @@
   "packageRules": [
     {
       "matchPackagePatterns": ["*"],
-      "excludePackageNames": ["@types/node", "gcip-cloud-functions"],
+      "excludePackageNames": ["@types/node", "espree", "escodegen"],
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "all non-major dependencies",
       "schedule": ["after 1am every weekday", "every weekend"]
