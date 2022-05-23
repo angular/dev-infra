@@ -130,4 +130,11 @@ export class PullRequestFailure {
       'breaking change notes (i.e. commits do not have a `BREAKING CHANGE: <..>` section).';
     return new this(message);
   }
+
+  static failedToManualSelectGithubTargetBranch(branch: string) {
+    const message =
+      `Pull Requests must merge into their targeted Github branch. If this branch (${branch}) ` +
+      'should not be included, please change the targeted branch via the Github UI.';
+    return new this(message);
+  }
 }

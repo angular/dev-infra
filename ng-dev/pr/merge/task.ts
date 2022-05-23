@@ -6,9 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {promptConfirm} from '../../utils/console';
+import {promptConfirm, red, yellow} from '../../utils/console';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {GitCommandError} from '../../utils/git/git-client';
+import * as semver from 'semver';
+import {prompt} from 'inquirer';
+import {warn} from '../../utils/console';
 
 import {PullRequestConfig} from '../config';
 import {PullRequestFailure} from '../common/validation/failures';
@@ -16,10 +19,16 @@ import {
   getCaretakerNotePromptMessage,
   getTargettedBranchesConfirmationPromptMessage,
 } from './messages';
-import {isPullRequest, loadAndValidatePullRequest} from './pull-request';
+import {isPullRequest, loadAndValidatePullRequest, PullRequest} from './pull-request';
 import {GithubApiMergeStrategy} from './strategies/api-merge';
 import {AutosquashMergeStrategy} from './strategies/autosquash-merge';
 import {GithubConfig} from '../../utils/config';
+import {assertValidReleaseConfig} from '../../release/config';
+import {
+  fetchActiveReleaseTrains,
+  fetchLongTermSupportBranchesFromNpm,
+  getNextBranchName,
+} from '../../release/versioning';
 
 /** Describes the status of a pull request merge. */
 export const enum MergeStatus {
@@ -42,10 +51,12 @@ export interface MergeResult {
 
 export interface PullRequestMergeTaskFlags {
   branchPrompt: boolean;
+  forceManualBranches: boolean;
 }
 
 const defaultPullRequestMergeTaskFlags: PullRequestMergeTaskFlags = {
   branchPrompt: true,
+  forceManualBranches: false,
 };
 
 /**
@@ -114,7 +125,16 @@ export class PullRequestMergeTask {
       return {status: MergeStatus.FAILED, failure: pullRequest};
     }
 
+    if (this.flags.forceManualBranches) {
+      const forceManualBranchesFailure = await this.setTargetedBranchesManually(pullRequest);
+      if (forceManualBranchesFailure) {
+        return forceManualBranchesFailure;
+      }
+    }
+
     if (
+      // In cases where manual branch targeting is used, the user already confirmed.
+      !this.flags.forceManualBranches &&
       this.flags.branchPrompt &&
       !(await promptConfirm(getTargettedBranchesConfirmationPromptMessage(pullRequest)))
     ) {
@@ -166,5 +186,97 @@ export class PullRequestMergeTask {
 
       await strategy.cleanup(pullRequest);
     }
+  }
+
+  /**
+   * Modifies the pull request in place with new target branches based on user selection from
+   * the available active branches.
+   */
+  private async setTargetedBranchesManually(pullRequest: PullRequest): Promise<void | MergeResult> {
+    const {mainBranchName, name, owner} = this.config.github;
+
+    // Attempt to retrieve the active LTS branches to be included in the selection.
+    let ltsBranches: {branchName: string; version: semver.SemVer}[] = [];
+    try {
+      assertValidReleaseConfig(this.config);
+      const ltsBranchesFromNpm = await fetchLongTermSupportBranchesFromNpm(this.config.release);
+      ltsBranches = ltsBranchesFromNpm.active.map(({name, version}) => ({
+        branchName: name,
+        version,
+      }));
+    } catch {
+      warn(
+        'Unable to determine the active LTS branches as a release config is not set for this repo.',
+      );
+    }
+
+    // Gather the current active release trains.
+    const {latest, next, releaseCandidate} = await fetchActiveReleaseTrains({
+      name,
+      nextBranchName: getNextBranchName(this.config.github),
+      owner,
+      api: this.git.github,
+    });
+
+    // Collate the known active branches into a single list.
+    const activeBranches: {branchName: string; version: semver.SemVer}[] = [
+      next,
+      latest,
+      ...ltsBranches,
+    ];
+    if (releaseCandidate !== null) {
+      // Since the next version will always be the primary github branch rather than semver, the RC
+      // branch should be included as the second item in the list.
+      activeBranches.splice(1, 0, releaseCandidate);
+    }
+
+    const {selectedBranches, confirm} = await prompt([
+      {
+        type: 'checkbox',
+        default: pullRequest.targetBranches,
+        choices: activeBranches.map(({branchName, version}) => {
+          return {
+            checked: pullRequest.targetBranches.includes(branchName),
+            value: branchName,
+            short: branchName,
+            name: `${branchName} (${version})${
+              branchName === pullRequest.githubTargetBranch ? ' [Targeted via Github UI]' : ''
+            }`,
+          };
+        }),
+        message: 'Select branches to merge pull request into:',
+        name: 'selectedBranches',
+      },
+      {
+        type: 'confirm',
+        default: false,
+        message:
+          red('!!!!!! WARNING !!!!!!!\n') +
+          yellow(
+            'Using manual branch selection disables protective checks provided by the merge ' +
+              'tooling. This means that the merge tooling will not prevent changes which are not ' +
+              'allowed for the targeted branches. Please proceed with caution.\n',
+          ) +
+          'Are you sure you would like to proceed with the selected branches?',
+        name: 'confirm',
+      },
+    ]);
+
+    if (confirm === false) {
+      return {status: MergeStatus.USER_ABORTED};
+    }
+
+    // The Github Targeted branch must always be selected. It is not currently possible to make a
+    // readonly selection in inquirer's checkbox.
+    if (!selectedBranches.includes(pullRequest.githubTargetBranch)) {
+      return {
+        status: MergeStatus.FAILED,
+        failure: PullRequestFailure.failedToManualSelectGithubTargetBranch(
+          pullRequest.githubTargetBranch,
+        ),
+      };
+    }
+
+    pullRequest.targetBranches = selectedBranches;
   }
 }
