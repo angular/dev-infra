@@ -32,6 +32,6 @@ async function handler({pr, githubToken}: Arguments<RebaseOptions>) {
 export const RebaseCommandModule: CommandModule<{}, RebaseOptions> = {
   handler,
   builder,
-  command: 'checkout <pr>',
-  describe: 'Checkout a PR from the upstream repo',
+  command: 'rebase <pr>',
+  describe: 'Rebase a pending PR and push the rebased commits back to Github',
 };

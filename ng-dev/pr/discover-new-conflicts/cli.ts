@@ -55,6 +55,6 @@ function getThirtyDaysAgoDate() {
 export const DiscoverNewConflictsCommandModule: CommandModule<{}, DiscoverNewConflictsOptions> = {
   handler,
   builder,
-  command: 'checkout <pr>',
-  describe: 'Checkout a PR from the upstream repo',
+  command: 'discover-new-conflicts <pr>',
+  describe: 'Check if a pending PR causes new conflicts for other pending PRs',
 };
