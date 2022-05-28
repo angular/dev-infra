@@ -11,21 +11,28 @@ import {join} from 'path';
 import * as semver from 'semver';
 
 import {debug, error, green, info, promptConfirm, red, warn, yellow} from '../../utils/console';
-import {Spinner} from '../../utils/spinner';
+import {workspaceRelativePackageJsonPath} from '../../utils/constants';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
+import {GithubApiRequestError} from '../../utils/git/github';
 import {
   getFileContentsUrl,
   getListCommitsInBranchUrl,
   getRepositoryGitUrl,
 } from '../../utils/git/github-urls';
-import {createExperimentalSemver} from '../versioning/experimental-versions';
-import {BuiltPackage, NpmPackage, ReleaseConfig} from '../config/index';
+import {Spinner} from '../../utils/spinner';
+import {BuiltPackage, ReleaseConfig} from '../config/index';
 import {ReleaseNotes, workspaceRelativeChangelogPath} from '../notes/release-notes';
 import {NpmDistTag} from '../versioning';
 import {ActiveReleaseTrains} from '../versioning/active-release-trains';
+import {createExperimentalSemver} from '../versioning/experimental-versions';
 import {runNpmPublish} from '../versioning/npm-publish';
-
+import {getReleaseTagForVersion} from '../versioning/version-tags';
 import {FatalReleaseActionError, UserAbortedReleaseActionError} from './actions-error';
+import {
+  analyzeAndExtendBuiltPackagesWithInfo,
+  assertIntegrityOfBuiltPackages,
+  BuiltPackageWithInfo,
+} from './built-package-info';
 import {getCommitMessageForRelease, getReleaseNoteCherryPickCommitMessage} from './commit-message';
 import {githubReleaseBodyLimit, waitForPullRequestInterval} from './constants';
 import {
@@ -34,10 +41,6 @@ import {
   invokeYarnInstallCommand,
 } from './external-commands';
 import {getPullRequestState} from './pull-request-state';
-import {getReleaseTagForVersion} from '../versioning/version-tags';
-import {GithubApiRequestError} from '../../utils/git/github';
-import {workspaceRelativePackageJsonPath} from '../../utils/constants';
-import {BuiltPackageWithInfo, mergeBuiltPackagesWithInfo} from './merge-built-packages-info';
 
 /** Interface describing a Github repository. */
 export interface GithubRepo {
@@ -107,23 +110,44 @@ export abstract class ReleaseAction {
   }
 
   /** Gets the most recent commit of a specified branch. */
-  private async _getCommitOfBranch(branchName: string): Promise<string> {
+  protected async getLatestCommitOfBranch(branchName: string): Promise<string> {
     const {
       data: {commit},
     } = await this.git.github.repos.getBranch({...this.git.remoteParams, branch: branchName});
     return commit.sha;
   }
 
-  /** Verifies that the latest commit for the given branch is passing all statuses. */
-  protected async verifyPassingGithubStatus(branchName: string) {
-    const commitSha = await this._getCommitOfBranch(branchName);
+  /** Checks whether the given revision is ahead to the base by the specified amount. */
+  private async _isRevisionAheadOfBase(
+    baseRevision: string,
+    targetRevision: string,
+    expectedAheadCount: number,
+  ) {
+    const {
+      data: {ahead_by, status},
+    } = await this.git.github.repos.compareCommits({
+      ...this.git.remoteParams,
+      base: baseRevision,
+      head: targetRevision,
+    });
+
+    return status === 'ahead' && ahead_by === expectedAheadCount;
+  }
+
+  /**
+   * Verifies that the given commit has passing all statuses.
+   *
+   * Upon error, a link to the branch containing the commit is printed,
+   * allowing the caretaker to quickly inspect the GitHub commit status failures.
+   */
+  protected async assertPassingGithubStatus(commitSha: string, branchNameForError: string) {
     const {
       data: {state},
     } = await this.git.github.repos.getCombinedStatusForRef({
       ...this.git.remoteParams,
       ref: commitSha,
     });
-    const branchCommitsUrl = getListCommitsInBranchUrl(this.git, branchName);
+    const branchCommitsUrl = getListCommitsInBranchUrl(this.git, branchNameForError);
 
     if (state === 'failure') {
       error(
@@ -371,6 +395,7 @@ export abstract class ReleaseAction {
     // unexpected build failures with the NodeJS Bazel `@npm` workspace generation.
     // This is a workaround for: https://github.com/yarnpkg/yarn/issues/8146. Even though
     // we might be able to fix this with Yarn 2+, it is reasonable ensuring clean node modules.
+    // TODO: Remove this when we use Yarn 2+ in all Angular repositories.
     await fs.rm(nodeModulesDir, {force: true, recursive: true, maxRetries: 3});
     await invokeYarnInstallCommand(this.projectDir);
   }
@@ -391,20 +416,46 @@ export abstract class ReleaseAction {
   }
 
   /**
-   * Stages the specified new version for the current branch and creates a pull request
-   * that targets the given base branch. Assumes the staging branch is already checked-out.
+   * Builds the release output for the current branch. Assumes the node modules
+   * to be already installed for the current branch.
+   *
+   * @returns A list of built release packages.
+   */
+  protected async buildReleaseForCurrentBranch(): Promise<BuiltPackageWithInfo[]> {
+    // Note that we do not directly call the build packages function from the release
+    // config. We only want to build and publish packages that have been configured in the given
+    // publish branch. e.g. consider we publish patch version and a new package has been
+    // created in the `next` branch. The new package would not be part of the patch branch,
+    // so we cannot build and publish it.
+    const builtPackages = await invokeReleaseBuildCommand(this.projectDir);
+    const releaseInfo = await invokeReleaseInfoCommand(this.projectDir);
+
+    // Extend the built packages with their disk hash and NPM package information. This is
+    // helpful later for verifying integrity and filtering out e.g. experimental packages.
+    return analyzeAndExtendBuiltPackagesWithInfo(builtPackages, releaseInfo.npmPackages);
+  }
+
+  /**
+   * Stages the specified new version for the current branch, builds the release output,
+   * verifies its output and creates a pull request  that targets the given base branch.
+   *
+   * This method assumes the staging branch is already checked-out.
    *
    * @param newVersion New version to be staged.
    * @param compareVersionForReleaseNotes Version used for comparing with the current
    *   `HEAD` in order build the release notes.
    * @param pullRequestTargetBranch Branch the pull request should target.
-   * @returns an object describing the created pull request.
+   * @returns an object capturing actions performed as part of staging.
    */
   protected async stageVersionForBranchAndCreatePullRequest(
     newVersion: semver.SemVer,
     compareVersionForReleaseNotes: semver.SemVer,
     pullRequestTargetBranch: string,
-  ): Promise<{releaseNotes: ReleaseNotes; pullRequest: PullRequest}> {
+  ): Promise<{
+    releaseNotes: ReleaseNotes;
+    pullRequest: PullRequest;
+    builtPackagesWithInfo: BuiltPackageWithInfo[];
+  }> {
     const releaseNotesCompareTag = getReleaseTagForVersion(compareVersionForReleaseNotes);
 
     // Fetch the compare tag so that commits for the release notes can be determined.
@@ -429,6 +480,14 @@ export abstract class ReleaseAction {
     await this.prependReleaseNotesToChangelog(releaseNotes);
     await this.waitForEditsAndCreateReleaseCommit(newVersion);
 
+    // Install the project dependencies for the publish branch.
+    await this.installDependenciesForCurrentBranch();
+
+    const builtPackagesWithInfo = await this.buildReleaseForCurrentBranch();
+
+    // Verify the packages built are the correct version.
+    await this._verifyPackageVersions(releaseNotes.version, builtPackagesWithInfo);
+
     const pullRequest = await this.pushChangesToForkAndCreatePullRequest(
       pullRequestTargetBranch,
       `release-stage-${newVersion}`,
@@ -438,7 +497,7 @@ export abstract class ReleaseAction {
     info(green('  ✓   Release staging pull request has been created.'));
     info(yellow(`      Please ask team members to review: ${pullRequest.url}.`));
 
-    return {releaseNotes, pullRequest};
+    return {releaseNotes, pullRequest, builtPackagesWithInfo};
   }
 
   /**
@@ -449,20 +508,36 @@ export abstract class ReleaseAction {
    * @param compareVersionForReleaseNotes Version used for comparing with `HEAD` of
    *   the staging branch in order build the release notes.
    * @param stagingBranch Branch within the new version should be staged.
-   * @returns an object describing the created pull request.
+   * @returns an object capturing actions performed as part of staging.
    */
   protected async checkoutBranchAndStageVersion(
     newVersion: semver.SemVer,
     compareVersionForReleaseNotes: semver.SemVer,
     stagingBranch: string,
-  ): Promise<{releaseNotes: ReleaseNotes; pullRequest: PullRequest}> {
-    await this.verifyPassingGithubStatus(stagingBranch);
+  ): Promise<{
+    releaseNotes: ReleaseNotes;
+    pullRequest: PullRequest;
+    builtPackagesWithInfo: BuiltPackageWithInfo[];
+    beforeStagingSha: string;
+  }> {
+    // Keep track of the commit where we started the staging process on. This will be used
+    // later to ensure that no changes, except for the version bump have landed as part
+    // of the staging time window (where the caretaker could accidentally land other stuff).
+    const beforeStagingSha = await this.getLatestCommitOfBranch(stagingBranch);
+
+    await this.assertPassingGithubStatus(beforeStagingSha, stagingBranch);
     await this.checkoutUpstreamBranch(stagingBranch);
-    return await this.stageVersionForBranchAndCreatePullRequest(
+
+    const stagingInfo = await this.stageVersionForBranchAndCreatePullRequest(
       newVersion,
       compareVersionForReleaseNotes,
       stagingBranch,
     );
+
+    return {
+      ...stagingInfo,
+      beforeStagingSha,
+    };
   }
 
   /**
@@ -563,50 +638,49 @@ export abstract class ReleaseAction {
   }
 
   /**
-   * Builds and publishes the given version in the specified branch.
+   * Publishes the given packages to the registry and makes the releases
+   * available on GitHub.
    *
+   * @param builtPackagesWithInfo List of built packages that will be published.
    * @param releaseNotes The release notes for the version being published.
+   * @param beforeStagingSha Commit SHA that is expected to be the most recent one after
+   *   the actual version bump commit. This exists to ensure that caretakers do not land
+   *   additional changes after the release output has been built locally.
    * @param publishBranch Name of the branch that contains the new version.
    * @param npmDistTag NPM dist tag where the version should be published to.
    * @param additionalOptions Additional options for building and publishing.
    */
-  protected async buildAndPublish(
+  protected async publish(
+    builtPackagesWithInfo: BuiltPackageWithInfo[],
     releaseNotes: ReleaseNotes,
+    beforeStagingSha: string,
     publishBranch: string,
     npmDistTag: NpmDistTag,
     additionalOptions: {skipExperimentalPackages?: boolean} = {},
   ) {
     const {skipExperimentalPackages} = additionalOptions;
-    const versionBumpCommitSha = await this._getCommitOfBranch(publishBranch);
+    const versionBumpCommitSha = await this.getLatestCommitOfBranch(publishBranch);
 
+    // Ensure the latest commit in the publish branch is the bump commit.
     if (!(await this._isCommitForVersionStaging(releaseNotes.version, versionBumpCommitSha))) {
       error(red(`  ✘   Latest commit in "${publishBranch}" branch is not a staging commit.`));
       error(red('      Please make sure the staging pull request has been merged.'));
       throw new FatalReleaseActionError();
     }
 
-    // Checkout the publish branch and build the release packages.
-    await this.checkoutUpstreamBranch(publishBranch);
-    // Install the project dependencies for the publish branch.
-    await this.installDependenciesForCurrentBranch();
+    // Ensure no commits have landed since we started the staging process. This would signify
+    // that the locally-built release packages are not matching with the release commit on GitHub.
+    // Note: We expect the version bump commit to be ahead by **one** commit. This means it's
+    // the direct parent of the commit that was latest when we started the staging.
+    if (!(await this._isRevisionAheadOfBase(beforeStagingSha, versionBumpCommitSha, 1))) {
+      error(red(`  ✘   Unexpected additional commits have landed while staging the release.`));
+      error(red('      Please revert the bump commit and retry, or cut a new version on top.'));
+      throw new FatalReleaseActionError();
+    }
 
-    // Note that we do not directly call the build packages function from the release
-    // config. We only want to build and publish packages that have been configured in the given
-    // publish branch. e.g. consider we publish patch version and a new package has been
-    // created in the `next` branch. The new package would not be part of the patch branch,
-    // so we cannot build and publish it.
-    const builtPackages = await invokeReleaseBuildCommand(this.projectDir);
-    const releaseInfo = await invokeReleaseInfoCommand(this.projectDir);
-
-    // Combine the built packages with their NPM package information. This is helpful
-    // later for filtering out e.g. experimental packages.
-    const builtPackagesWithInfo = mergeBuiltPackagesWithInfo(
-      builtPackages,
-      releaseInfo.npmPackages,
-    );
-
-    // Verify the packages built are the correct version.
-    await this._verifyPackageVersions(releaseNotes.version, builtPackagesWithInfo);
+    // Before publishing, we want to ensure that the locally-built packages we
+    // built in the staging phase have not been modified accidentally.
+    await assertIntegrityOfBuiltPackages(builtPackagesWithInfo);
 
     // Create a Github release for the new version.
     await this._createGithubReleaseForVersion(

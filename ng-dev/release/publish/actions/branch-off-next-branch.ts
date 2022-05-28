@@ -9,6 +9,7 @@
 import * as semver from 'semver';
 
 import {green, info, yellow} from '../../../utils/console';
+import {workspaceRelativePackageJsonPath} from '../../../utils/constants';
 import {semverInc} from '../../../utils/semver';
 import {ReleaseNotes, workspaceRelativeChangelogPath} from '../../notes/release-notes';
 import {
@@ -20,7 +21,6 @@ import {
   getCommitMessageForExceptionalNextVersionBump,
   getReleaseNoteCherryPickCommitMessage,
 } from '../commit-message';
-import {workspaceRelativePackageJsonPath} from '../../../utils/constants';
 
 /**
  * Base action that can be used to move the next release-train into the feature-freeze or
@@ -44,12 +44,17 @@ export abstract class BranchOffNextBranchBaseAction extends ReleaseAction {
   }
 
   override async perform() {
+    const nextBranchName = this.active.next.branchName;
     const compareVersionForReleaseNotes = await getReleaseNotesCompareVersionForNext(
       this.active,
       this.config,
     );
     const newVersion = await this._computeNewVersion();
     const newBranch = `${newVersion.major}.${newVersion.minor}.x`;
+    const beforeStagingSha = await this.getLatestCommitOfBranch(nextBranchName);
+
+    // Verify the current next branch has a passing status, before we branch off.
+    await this.assertPassingGithubStatus(beforeStagingSha, nextBranchName);
 
     // Branch-off the next branch into a new version branch.
     await this._createNewVersionBranchFromNext(newBranch);
@@ -57,17 +62,18 @@ export abstract class BranchOffNextBranchBaseAction extends ReleaseAction {
     // Stage the new version for the newly created branch, and push changes to a
     // fork in order to create a staging pull request. Note that we re-use the newly
     // created branch instead of re-fetching from the upstream.
-    const {pullRequest, releaseNotes} = await this.stageVersionForBranchAndCreatePullRequest(
-      newVersion,
-      compareVersionForReleaseNotes,
-      newBranch,
-    );
+    const {pullRequest, releaseNotes, builtPackagesWithInfo} =
+      await this.stageVersionForBranchAndCreatePullRequest(
+        newVersion,
+        compareVersionForReleaseNotes,
+        newBranch,
+      );
 
     // Wait for the staging PR to be merged. Then build and publish the feature-freeze next
     // pre-release. Finally, cherry-pick the release notes into the next branch in combination
     // with bumping the version to the next minor too.
     await this.waitForPullRequestToBeMerged(pullRequest);
-    await this.buildAndPublish(releaseNotes, newBranch, 'next');
+    await this.publish(builtPackagesWithInfo, releaseNotes, beforeStagingSha, newBranch, 'next');
     await this._createNextBranchUpdatePullRequest(releaseNotes, newVersion);
   }
 
@@ -83,7 +89,6 @@ export abstract class BranchOffNextBranchBaseAction extends ReleaseAction {
   /** Creates a new version branch from the next branch. */
   private async _createNewVersionBranchFromNext(newBranch: string) {
     const {branchName: nextBranch} = this.active.next;
-    await this.verifyPassingGithubStatus(nextBranch);
     await this.checkoutUpstreamBranch(nextBranch);
     await this.createLocalBranchFromHead(newBranch);
     await this.pushHeadToRemoteBranch(newBranch);

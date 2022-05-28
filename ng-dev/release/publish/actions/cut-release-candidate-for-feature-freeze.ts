@@ -28,14 +28,15 @@ export class CutReleaseCandidateForFeatureFreezeAction extends ReleaseAction {
     const newVersion = this._newVersion;
     const compareVersionForReleaseNotes = this.active.releaseCandidate!.version;
 
-    const {pullRequest, releaseNotes} = await this.checkoutBranchAndStageVersion(
-      newVersion,
-      compareVersionForReleaseNotes,
-      branchName,
-    );
+    const {pullRequest, releaseNotes, builtPackagesWithInfo, beforeStagingSha} =
+      await this.checkoutBranchAndStageVersion(
+        newVersion,
+        compareVersionForReleaseNotes,
+        branchName,
+      );
 
     await this.waitForPullRequestToBeMerged(pullRequest);
-    await this.buildAndPublish(releaseNotes, branchName, 'next');
+    await this.publish(builtPackagesWithInfo, releaseNotes, beforeStagingSha, branchName, 'next');
     await this.cherryPickChangelogIntoNextBranch(releaseNotes, branchName);
   }
 

@@ -6,28 +6,31 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import * as folderHash from 'folder-hash';
 import {existsSync, mkdirSync, rmSync, writeFileSync} from 'fs';
 import {join} from 'path';
 
-import * as npm from '../../../versioning/npm-publish';
-import * as constants from '../../constants';
-import * as externalCommands from '../../external-commands';
-import * as console from '../../../../utils/console';
-
-import {ReleaseAction} from '../../actions';
 import * as config from '../../../../utils/config';
-import {BuiltPackage, NpmPackage, ReleaseConfig} from '../../../config';
+import * as console from '../../../../utils/console';
 import {
+  getMockGitClient,
+  installSandboxGitClient,
   installVirtualGitClientSpies,
   testTmpDir,
   VirtualGitClient,
 } from '../../../../utils/testing';
-import {installSandboxGitClient} from '../../../../utils/testing';
-import {getMockGitClient} from '../../../../utils/testing';
-import {BuiltPackageWithInfo} from '../../merge-built-packages-info';
+import {BuiltPackage, NpmPackage, ReleaseConfig} from '../../../config';
+import * as npm from '../../../versioning/npm-publish';
+import {ReleaseAction} from '../../actions';
+import {BuiltPackageWithInfo} from '../../built-package-info';
+import * as constants from '../../constants';
+import * as externalCommands from '../../external-commands';
 
 /** Default representative NPM package used in tests. */
 export const testRepresentativePackage = '@angular/pkg1';
+
+/** Fake hash value for package contents. */
+const fakePackageContentHash = '<expected-content-hash>';
 
 /** List of NPM packages which are configured for release action tests. */
 export const testReleasePackages: NpmPackage[] = [
@@ -82,9 +85,15 @@ export function setupMocksForReleaseAction<T extends boolean>(
   // just proceed with the release action.
   spyOn(console, 'promptConfirm').and.resolveTo(true);
 
-  const builtPackages: BuiltPackageWithInfo[] = testReleasePackages.map((pkg) => ({
+  const builtPackagesWithInfo: BuiltPackageWithInfo[] = testReleasePackages.map((pkg) => ({
     ...pkg,
+    hash: fakePackageContentHash,
     outputPath: `${testTmpDir}/dist/${pkg.name}`,
+  }));
+
+  const builtPackages: BuiltPackage[] = builtPackagesWithInfo.map((pkg) => ({
+    name: pkg.name,
+    outputPath: pkg.outputPath,
   }));
 
   // Fake all external commands for the release tool.
@@ -98,6 +107,9 @@ export function setupMocksForReleaseAction<T extends boolean>(
     // Fake checking the package versions since we don't actually create NPM
     // package output that can be tested.
     spyOn(ReleaseAction.prototype, '_verifyPackageVersions' as any).and.resolveTo();
+
+    // Fake the integrity checking since the packages do not exist on disk.
+    spyOn(folderHash, 'hashElement').and.resolveTo({hash: fakePackageContentHash});
   }
 
   // Create an empty changelog and a `package.json` file so that file system
@@ -124,5 +136,5 @@ export function setupMocksForReleaseAction<T extends boolean>(
     );
   }
 
-  return {gitClient};
+  return {gitClient, builtPackagesWithInfo};
 }

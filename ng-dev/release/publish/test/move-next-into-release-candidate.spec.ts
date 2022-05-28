@@ -10,7 +10,6 @@ import {SandboxGitRepo} from '../../../utils/testing';
 import {ActiveReleaseTrains} from '../../versioning';
 import {ReleaseTrain} from '../../versioning/release-trains';
 import {MoveNextIntoReleaseCandidateAction} from '../actions/move-next-into-release-candidate';
-
 import {
   expectBranchOffActionToRun,
   prepareBranchOffActionForChangelog,
