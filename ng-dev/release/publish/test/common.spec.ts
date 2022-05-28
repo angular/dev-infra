@@ -10,6 +10,8 @@ import {readFileSync} from 'fs';
 import {join} from 'path';
 import {SemVer} from 'semver';
 
+import {CommitFromGitLog, parseCommitFromGitLog} from '../../../commit-message/parse';
+import {GitClient} from '../../../utils/git/git-client';
 import {
   getBranchPushMatcher,
   getMockGitClient,
@@ -22,16 +24,14 @@ import * as npm from '../../versioning/npm-publish';
 import {ReleaseTrain} from '../../versioning/release-trains';
 import {actions} from '../actions/index';
 import {githubReleaseBodyLimit} from '../constants';
+import {DelegateTestAction} from './delegate-test-action';
+import {getTestConfigurationsForAction, testReleasePackages} from './test-utils/action-mocks';
 import {
   changelogPattern,
   fakeNpmPackageQueryRequest,
   parse,
   setupReleaseActionForTesting,
 } from './test-utils/test-utils';
-import {getTestConfigurationsForAction, testReleasePackages} from './test-utils/action-mocks';
-import {CommitFromGitLog, parseCommitFromGitLog} from '../../../commit-message/parse';
-import {GitClient} from '../../../utils/git/git-client';
-import {DelegateTestAction} from './delegate-test-action';
 
 describe('common release action logic', () => {
   const baseReleaseTrains = new ActiveReleaseTrains({
@@ -71,9 +71,9 @@ describe('common release action logic', () => {
     });
   });
 
-  describe('build and publishing', () => {
+  describe('publishing', () => {
     it('should support a custom NPM registry', async () => {
-      const {repo, instance, releaseConfig} = setupReleaseActionForTesting(
+      const {repo, instance, releaseConfig, builtPackagesWithInfo} = setupReleaseActionForTesting(
         DelegateTestAction,
         baseReleaseTrains,
       );
@@ -84,13 +84,23 @@ describe('common release action logic', () => {
       repo
         .expectBranchRequest(branchName, 'STAGING_SHA')
         .expectCommitRequest('STAGING_SHA', `release: cut the v${version} release`)
+        .expectCommitCompareRequest('BEFORE_STAGING_SHA', 'STAGING_SHA', {
+          status: 'ahead',
+          ahead_by: 1,
+        })
         .expectTagToBeCreated(tagName, 'STAGING_SHA')
         .expectReleaseToBeCreated(`v${version}`, tagName);
 
       // Set up a custom NPM registry.
       releaseConfig.publishRegistry = customRegistryUrl;
 
-      await instance.testBuildAndPublish(version, branchName, 'latest');
+      await instance.testPublish(
+        builtPackagesWithInfo,
+        version,
+        branchName,
+        'BEFORE_STAGING_SHA',
+        'latest',
+      );
 
       expect(npm.runNpmPublish).toHaveBeenCalledTimes(testReleasePackages.length);
 
@@ -104,7 +114,7 @@ describe('common release action logic', () => {
     });
 
     it('should capture release notes in release entry', async () => {
-      const {repo, instance, githubConfig} = setupReleaseActionForTesting(
+      const {repo, instance, githubConfig, builtPackagesWithInfo} = setupReleaseActionForTesting(
         DelegateTestAction,
         baseReleaseTrains,
         /* isNextPublishedToNpm */ true,
@@ -121,6 +131,10 @@ describe('common release action logic', () => {
       repo
         .expectBranchRequest(branchName, 'STAGING_SHA')
         .expectCommitRequest('STAGING_SHA', `release: cut the v${version} release`)
+        .expectCommitCompareRequest('BEFORE_STAGING_SHA', 'STAGING_SHA', {
+          status: 'ahead',
+          ahead_by: 1,
+        })
         .expectTagToBeCreated(tagName, 'STAGING_SHA')
         .expectReleaseToBeCreated(
           `v${version}`,
@@ -136,11 +150,18 @@ describe('common release action logic', () => {
           `,
         );
 
-      await instance.testBuildAndPublish(version, branchName, 'latest', 'startTagForNotes');
+      await instance.testPublish(
+        builtPackagesWithInfo,
+        version,
+        branchName,
+        'BEFORE_STAGING_SHA',
+        'latest',
+        'startTagForNotes',
+      );
     });
 
     it('should link to the changelog in the release entry if notes are too large', async () => {
-      const {repo, instance, gitClient} = setupReleaseActionForTesting(
+      const {repo, instance, gitClient, builtPackagesWithInfo} = setupReleaseActionForTesting(
         DelegateTestAction,
         baseReleaseTrains,
       );
@@ -164,6 +185,10 @@ describe('common release action logic', () => {
       repo
         .expectBranchRequest(branchName, 'STAGING_SHA')
         .expectCommitRequest('STAGING_SHA', `release: cut the v${version} release`)
+        .expectCommitCompareRequest('BEFORE_STAGING_SHA', 'STAGING_SHA', {
+          status: 'ahead',
+          ahead_by: 1,
+        })
         .expectTagToBeCreated(tagName, 'STAGING_SHA')
         .expectReleaseToBeCreated(
           `v${version}`,
@@ -173,7 +198,13 @@ describe('common release action logic', () => {
           `,
         );
 
-      await instance.testBuildAndPublish(version, branchName, 'latest');
+      await instance.testPublish(
+        builtPackagesWithInfo,
+        version,
+        branchName,
+        'BEFORE_STAGING_SHA',
+        'latest',
+      );
     });
   });
 

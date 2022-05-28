@@ -6,11 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as nock from 'nock';
 import {RestEndpointMethodTypes} from '@octokit/plugin-rest-endpoint-methods';
+import * as nock from 'nock';
 
 /** Type describing the parameters for a Github release update API request. */
 type ReleaseUpdateParameters = RestEndpointMethodTypes['repos']['updateRelease']['parameters'];
+
+/** Type describing the response data for a Github compare commit API request. */
+type CompareCommitResponse = RestEndpointMethodTypes['repos']['compareCommits']['response']['data'];
 
 /**
  * Class that represents a Github repository in testing. The class can be
@@ -85,6 +88,15 @@ export class GithubTestingRepo {
 
   expectCommitRequest(sha: string, message: string): this {
     nock(this.repoApiUrl).get(`/commits/${sha}`).reply(200, {commit: {message}});
+    return this;
+  }
+
+  expectCommitCompareRequest(
+    baseRevision: string,
+    headRevision: string,
+    result: Partial<CompareCommitResponse>,
+  ): this {
+    nock(this.repoApiUrl).get(`/compare/${baseRevision}...${headRevision}`).reply(200, result);
     return this;
   }
 

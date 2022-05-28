@@ -9,18 +9,16 @@
 import * as nock from 'nock';
 import * as semver from 'semver';
 
-import {getTestConfigurationsForAction, setupMocksForReleaseAction} from './action-mocks';
+import {dedent, GithubTestingRepo, testTmpDir} from '../../../../utils/testing';
 import {_npmPackageInfoCache, ActiveReleaseTrains, NpmPackageInfo} from '../../../versioning';
 import {ReleaseAction, ReleaseActionConstructor} from '../../actions';
-import {GithubTestingRepo} from '../../../../utils/testing';
+import {getTestConfigurationsForAction, setupMocksForReleaseAction} from './action-mocks';
 import {
   defaultTestOptions,
   TestOptions,
   TestOptionsWithDefaults,
   TestReleaseAction,
 } from './test-action';
-import {dedent} from '../../../../utils/testing';
-import {testTmpDir} from '../../../../utils/testing';
 
 /**
  * Sets up the given release action for testing.
@@ -57,7 +55,9 @@ export function setupReleaseActionForTesting<
   });
 
   // Setup mocks for release action.
-  const {gitClient} = setupMocksForReleaseAction<OptionsWithDefaults['useSandboxGitClient']>(
+  const {gitClient, builtPackagesWithInfo} = setupMocksForReleaseAction<
+    OptionsWithDefaults['useSandboxGitClient']
+  >(
     githubConfig,
     releaseConfig,
     testOptionsWithDefaults.stubBuiltPackageOutputChecks,
@@ -75,6 +75,7 @@ export function setupReleaseActionForTesting<
     githubConfig,
     releaseConfig,
     gitClient,
+    builtPackagesWithInfo,
   };
 }
 

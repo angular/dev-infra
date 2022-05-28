@@ -6,14 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as path from 'path';
 import * as fs from 'fs';
-import {ActiveReleaseTrains, ReleaseTrain} from '../../versioning';
-import {testTmpDir} from '../../../utils/testing';
+import * as path from 'path';
 
-import {parse, setupReleaseActionForTesting} from './test-utils/test-utils';
-import {DelegateTestAction} from './delegate-test-action';
 import * as console from '../../../utils/console';
+import {testTmpDir} from '../../../utils/testing';
+import {ActiveReleaseTrains, ReleaseTrain} from '../../versioning';
+import {DelegateTestAction} from './delegate-test-action';
+import {expectGithubApiRequestsForStaging} from './test-utils/staging-test';
+import {parse, setupReleaseActionForTesting} from './test-utils/test-utils';
 
 describe('package output checks', () => {
   const baseReleaseTrains = new ActiveReleaseTrains({
@@ -32,20 +33,16 @@ describe('package output checks', () => {
   }
 
   it('should not error if correct versions are set within `package.json` files', async () => {
-    const {repo, instance} = setupReleaseActionForTesting(
+    const action = setupReleaseActionForTesting(
       DelegateTestAction,
       baseReleaseTrains,
       /* isNextPublishedToNpm */ true,
       {stubBuiltPackageOutputChecks: false},
     );
     const {version, branchName} = baseReleaseTrains.latest;
-    const tagName = version.format();
+    const versionName = version.format();
 
-    repo
-      .expectBranchRequest(branchName, 'STAGING_SHA')
-      .expectCommitRequest('STAGING_SHA', `release: cut the v${version} release`)
-      .expectTagToBeCreated(tagName, 'STAGING_SHA')
-      .expectReleaseToBeCreated(`v${version}`, tagName);
+    await expectGithubApiRequestsForStaging(action, branchName, versionName, false);
 
     spyOn(console, 'error');
 
@@ -55,35 +52,34 @@ describe('package output checks', () => {
     await writePackageJson('@experimental/somepkg', '0.1300.1');
 
     await expectAsync(
-      instance.testBuildAndPublish(version, branchName, 'latest'),
+      action.instance.testStagingWithBuild(version, branchName, parse('0.0.0-compare-base')),
     ).not.toBeRejected();
     expect(console.error).toHaveBeenCalledTimes(0);
   });
 
   describe('non-experimental packages', () => {
     it('should error if wrong versions are set within `package.json` files', async () => {
-      const {repo, instance} = setupReleaseActionForTesting(
+      const action = setupReleaseActionForTesting(
         DelegateTestAction,
         baseReleaseTrains,
         /* isNextPublishedToNpm */ true,
         {stubBuiltPackageOutputChecks: false},
       );
       const {version, branchName} = baseReleaseTrains.latest;
-      const tagName = version.format();
+      const versionName = version.format();
 
-      repo
-        .expectBranchRequest(branchName, 'STAGING_SHA')
-        .expectCommitRequest('STAGING_SHA', `release: cut the v${version} release`)
-        .expectTagToBeCreated(tagName, 'STAGING_SHA')
-        .expectReleaseToBeCreated(`v${version}`, tagName);
+      await expectGithubApiRequestsForStaging(action, branchName, versionName, false);
 
       spyOn(console, 'error');
 
       // Write the fake built package output `package.json` files.
       await writePackageJson('@angular/pkg1', '13.0.2');
       await writePackageJson('@angular/pkg2', '13.0.2');
+      await writePackageJson('@experimental/somepkg', '0.1300.2');
 
-      await expectAsync(instance.testBuildAndPublish(version, branchName, 'latest')).toBeRejected();
+      await expectAsync(
+        action.instance.testStagingWithBuild(version, branchName, parse('0.0.0-compare-base')),
+      ).toBeRejected();
 
       expect(console.error).toHaveBeenCalledWith(
         jasmine.stringMatching(/The built package version does not match/),
@@ -96,20 +92,16 @@ describe('package output checks', () => {
 
   describe('experimental packages', () => {
     it('should error if wrong versions are set within `package.json` files', async () => {
-      const {repo, instance} = setupReleaseActionForTesting(
+      const action = setupReleaseActionForTesting(
         DelegateTestAction,
         baseReleaseTrains,
         /* isNextPublishedToNpm */ true,
         {stubBuiltPackageOutputChecks: false},
       );
       const {version, branchName} = baseReleaseTrains.latest;
-      const tagName = version.format();
+      const versionName = version.format();
 
-      repo
-        .expectBranchRequest(branchName, 'STAGING_SHA')
-        .expectCommitRequest('STAGING_SHA', `release: cut the v${version} release`)
-        .expectTagToBeCreated(tagName, 'STAGING_SHA')
-        .expectReleaseToBeCreated(`v${version}`, tagName);
+      await expectGithubApiRequestsForStaging(action, branchName, versionName, false);
 
       spyOn(console, 'error');
 
@@ -118,7 +110,9 @@ describe('package output checks', () => {
       await writePackageJson('@angular/pkg2', '13.0.1');
       await writePackageJson('@experimental/somepkg', '13.0.2');
 
-      await expectAsync(instance.testBuildAndPublish(version, branchName, 'latest')).toBeRejected();
+      await expectAsync(
+        action.instance.testStagingWithBuild(version, branchName, parse('0.0.0-compare-base')),
+      ).toBeRejected();
 
       expect(console.error).toHaveBeenCalledWith(
         jasmine.stringMatching(/The built package version does not match/),

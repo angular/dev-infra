@@ -6,16 +6,17 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {readFileSync} from 'fs';
+
 import {getBranchPushMatcher, testTmpDir} from '../../../utils/testing';
 import {ActiveReleaseTrains} from '../../versioning';
 import * as npm from '../../versioning/npm-publish';
 import {ReleaseActionConstructor} from '../actions';
 import {BranchOffNextBranchBaseAction} from '../actions/branch-off-next-branch';
 import * as externalCommands from '../external-commands';
-import {setupReleaseActionForTesting} from './test-utils/test-utils';
 import {testReleasePackages} from './test-utils/action-mocks';
-import {readFileSync} from 'fs';
 import {TestReleaseAction} from './test-utils/test-action';
+import {setupReleaseActionForTesting} from './test-utils/test-utils';
 
 /**
  * Expects and fakes the necessary Github API requests for branching-off
@@ -35,8 +36,8 @@ async function expectGithubApiRequestsForBranchOff(
   // We first mock the commit status check for the next branch, then expect two pull
   // requests from a fork that are targeting next and the new feature-freeze branch.
   repo
-    .expectBranchRequest('master', 'MASTER_COMMIT_SHA')
-    .expectCommitStatusCheck('MASTER_COMMIT_SHA', 'success')
+    .expectBranchRequest('master', 'PRE_STAGING_SHA')
+    .expectCommitStatusCheck('PRE_STAGING_SHA', 'success')
     .expectFindForkRequest(fork)
     .expectPullRequestToBeCreated(expectedNewBranch, fork, expectedStagingForkBranch, 200)
     .expectPullRequestWait(200)
@@ -45,6 +46,10 @@ async function expectGithubApiRequestsForBranchOff(
       'STAGING_COMMIT_SHA',
       `release: cut the v${expectedVersion} release\n\nPR Close #200.`,
     )
+    .expectCommitCompareRequest('PRE_STAGING_SHA', 'STAGING_COMMIT_SHA', {
+      status: 'ahead',
+      ahead_by: 1,
+    })
     .expectTagToBeCreated(expectedTagName, 'STAGING_COMMIT_SHA')
     .expectReleaseToBeCreated(`v${expectedVersion}`, expectedTagName)
     .expectPullRequestToBeCreated('master', fork, expectedNextUpdateBranch, 100);
