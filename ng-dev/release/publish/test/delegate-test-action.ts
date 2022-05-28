@@ -31,7 +31,7 @@ export class DelegateTestAction extends ReleaseAction {
     stagingBranch: string,
     releaseNotesCompareVersion: semver.SemVer,
   ) {
-    await this.stageVersionForBranchAndCreatePullRequest(
+    return await this.checkoutBranchAndStageVersion(
       version,
       releaseNotesCompareVersion,
       stagingBranch,

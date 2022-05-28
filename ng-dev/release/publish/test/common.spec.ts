@@ -11,6 +11,7 @@ import {join} from 'path';
 import {SemVer} from 'semver';
 
 import {CommitFromGitLog, parseCommitFromGitLog} from '../../../commit-message/parse';
+import * as console from '../../../utils/console';
 import {GitClient} from '../../../utils/git/git-client';
 import {
   getBranchPushMatcher,
@@ -26,11 +27,13 @@ import {actions} from '../actions/index';
 import {githubReleaseBodyLimit} from '../constants';
 import {DelegateTestAction} from './delegate-test-action';
 import {getTestConfigurationsForAction, testReleasePackages} from './test-utils/action-mocks';
+import {expectGithubApiRequestsForStaging} from './test-utils/staging-test';
 import {
   changelogPattern,
   fakeNpmPackageQueryRequest,
   parse,
   setupReleaseActionForTesting,
+  writePackageJson,
 } from './test-utils/test-utils';
 
 describe('common release action logic', () => {
@@ -204,6 +207,85 @@ describe('common release action logic', () => {
         branchName,
         'BEFORE_STAGING_SHA',
         'latest',
+      );
+    });
+
+    it('should ensure that no new changes have landed after release staging has started', async () => {
+      const {repo, instance, builtPackagesWithInfo} = setupReleaseActionForTesting(
+        DelegateTestAction,
+        baseReleaseTrains,
+      );
+      const {version, branchName} = baseReleaseTrains.latest;
+
+      repo
+        .expectBranchRequest(branchName, 'STAGING_SHA')
+        .expectCommitRequest('STAGING_SHA', `release: cut the v${version} release`)
+        .expectCommitCompareRequest('BEFORE_STAGING_SHA', 'STAGING_SHA', {
+          status: 'ahead',
+          ahead_by: 2, // this implies that another unknown/new commit is in between.
+        });
+
+      spyOn(console, 'error');
+
+      await expectAsync(
+        instance.testPublish(
+          builtPackagesWithInfo,
+          version,
+          branchName,
+          'BEFORE_STAGING_SHA',
+          'latest',
+        ),
+      ).toBeRejected();
+
+      expect(console.error).toHaveBeenCalledTimes(2);
+      expect(console.error).toHaveBeenCalledWith(
+        jasmine.stringMatching('additional commits have landed while staging the release'),
+      );
+      expect(console.error).toHaveBeenCalledWith(
+        jasmine.stringMatching('revert the bump commit and retry, or cut a new version on top'),
+      );
+    });
+
+    it('should ensure that the release output has not been modified during staging', async () => {
+      const action = setupReleaseActionForTesting(
+        DelegateTestAction,
+        baseReleaseTrains,
+        /* isNextPublishedToNpm */ true,
+        {stubBuiltPackageOutputChecks: false},
+      );
+      const {version, branchName} = baseReleaseTrains.latest;
+
+      await writePackageJson('@angular/pkg1', '10.0.1');
+      await writePackageJson('@angular/pkg2', '10.0.1');
+      await writePackageJson('@experimental/somepkg', '0.1000.1');
+
+      await expectGithubApiRequestsForStaging(action, branchName, version.format(), false);
+
+      spyOn(console, 'error');
+
+      const {builtPackagesWithInfo} = await action.instance.testStagingWithBuild(
+        version,
+        branchName,
+        parse('0.0.0-compare-base'),
+      );
+
+      // We built the release packages and the release tool hashed the contents.
+      // Now we modify the release output and expect the tool to abort.
+      await writePackageJson('@angular/pkg1', '0.0.0-accidentally-modified');
+
+      await expectAsync(
+        action.instance.testPublish(
+          builtPackagesWithInfo,
+          version,
+          branchName,
+          'PRE_STAGING_SHA',
+          'latest',
+        ),
+      ).toBeRejected();
+
+      expect(console.error).toHaveBeenCalledTimes(2);
+      expect(console.error).toHaveBeenCalledWith(
+        jasmine.stringMatching(' Release output has been modified locally since it was built'),
       );
     });
   });

@@ -6,7 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import * as fs from 'fs';
 import * as nock from 'nock';
+import * as path from 'path';
 import * as semver from 'semver';
 
 import {dedent, GithubTestingRepo, testTmpDir} from '../../../../utils/testing';
@@ -92,6 +94,15 @@ export function fakeNpmPackageQueryRequest(pkgName: string, data: Partial<NpmPac
     time: {},
     ...data,
   });
+}
+
+/** Writes a `package.json` for the given package name. */
+export async function writePackageJson(packageName: string, version: string) {
+  const packageOutDir = path.join(testTmpDir, 'dist', packageName);
+  const packageJsonPath = path.join(packageOutDir, 'package.json');
+
+  await fs.promises.mkdir(packageOutDir, {recursive: true});
+  await fs.promises.writeFile(packageJsonPath, JSON.stringify({version}));
 }
 
 /**
