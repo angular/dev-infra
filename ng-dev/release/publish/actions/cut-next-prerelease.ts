@@ -36,14 +36,15 @@ export class CutNextPrereleaseAction extends ReleaseAction {
     const newVersion = await this._newVersion;
     const compareVersionForReleaseNotes = await this._getCompareVersionForReleaseNotes();
 
-    const {pullRequest, releaseNotes} = await this.checkoutBranchAndStageVersion(
-      newVersion,
-      compareVersionForReleaseNotes,
-      branchName,
-    );
+    const {pullRequest, releaseNotes, builtPackagesWithInfo, beforeStagingSha} =
+      await this.checkoutBranchAndStageVersion(
+        newVersion,
+        compareVersionForReleaseNotes,
+        branchName,
+      );
 
     await this.waitForPullRequestToBeMerged(pullRequest);
-    await this.buildAndPublish(releaseNotes, branchName, 'next');
+    await this.publish(builtPackagesWithInfo, releaseNotes, beforeStagingSha, branchName, 'next');
 
     // If the pre-release has been cut from a branch that is not corresponding
     // to the next release-train, cherry-pick the changelog into the primary

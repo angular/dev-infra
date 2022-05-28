@@ -11,7 +11,7 @@ import * as semver from 'semver';
 import {ActiveReleaseTrains} from '../../versioning/active-release-trains';
 import {getLtsNpmDistTagOfMajor} from '../../versioning/long-term-support';
 import {ReleaseAction} from '../actions';
-import {invokeSetNpmDistCommand, invokeYarnInstallCommand} from '../external-commands';
+import {invokeSetNpmDistCommand} from '../external-commands';
 
 /**
  * Release action that cuts a stable version for the current release-train in the release
@@ -34,11 +34,12 @@ export class CutStableAction extends ReleaseAction {
     // all changes that have landed in the individual next and RC pre-releases.
     const compareVersionForReleaseNotes = this.active.latest.version;
 
-    const {pullRequest, releaseNotes} = await this.checkoutBranchAndStageVersion(
-      newVersion,
-      compareVersionForReleaseNotes,
-      branchName,
-    );
+    const {pullRequest, releaseNotes, builtPackagesWithInfo, beforeStagingSha} =
+      await this.checkoutBranchAndStageVersion(
+        newVersion,
+        compareVersionForReleaseNotes,
+        branchName,
+      );
 
     await this.waitForPullRequestToBeMerged(pullRequest);
 
@@ -52,7 +53,13 @@ export class CutStableAction extends ReleaseAction {
     // dependencies were already available as `@latest`, so users could end up installing v12 while
     // still having the older (but currently still latest) CLI version that is incompatible.
     // The major release can be re-tagged to `latest` through a separate release action.
-    await this.buildAndPublish(releaseNotes, branchName, isNewMajor ? 'next' : 'latest');
+    await this.publish(
+      builtPackagesWithInfo,
+      releaseNotes,
+      beforeStagingSha,
+      branchName,
+      isNewMajor ? 'next' : 'latest',
+    );
 
     // If a new major version is published and becomes the "latest" release-train, we need
     // to set the LTS npm dist tag for the previous latest release-train (the current patch).

@@ -6,14 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NpmDistTag} from '../../../versioning';
 import {getBranchPushMatcher, testTmpDir} from '../../../../utils/testing';
-
+import {NpmPackage} from '../../../config';
+import {NpmDistTag} from '../../../versioning';
 import * as npm from '../../../versioning/npm-publish';
 import * as externalCommands from '../../external-commands';
 import {testReleasePackages} from './action-mocks';
 import {TestReleaseAction} from './test-action';
-import {NpmPackage} from '../../../config';
 
 /**
  * Expects and fakes the necessary Github API requests for staging
@@ -24,7 +23,6 @@ export async function expectGithubApiRequestsForStaging(
   expectedBranch: string,
   expectedVersion: string,
   withCherryPicking: boolean,
-  cherryPickBranchName: string | null = null,
 ) {
   const {repo, fork} = action;
   const expectedStagingForkBranch = `release-stage-${expectedVersion}`;
@@ -33,8 +31,8 @@ export async function expectGithubApiRequestsForStaging(
   // We first mock the commit status check for the next branch, then expect two pull
   // requests from a fork that are targeting next and the new feature-freeze branch.
   repo
-    .expectBranchRequest(expectedBranch, 'MASTER_COMMIT_SHA')
-    .expectCommitStatusCheck('MASTER_COMMIT_SHA', 'success')
+    .expectBranchRequest(expectedBranch, 'PRE_STAGING_SHA')
+    .expectCommitStatusCheck('PRE_STAGING_SHA', 'success')
     .expectFindForkRequest(fork)
     .expectPullRequestToBeCreated(expectedBranch, fork, expectedStagingForkBranch, 200)
     .expectPullRequestWait(200)
@@ -43,6 +41,10 @@ export async function expectGithubApiRequestsForStaging(
       'STAGING_COMMIT_SHA',
       `release: cut the v${expectedVersion} release\n\nPR Close #200.`,
     )
+    .expectCommitCompareRequest('PRE_STAGING_SHA', 'STAGING_COMMIT_SHA', {
+      status: 'ahead',
+      ahead_by: 1,
+    })
     .expectTagToBeCreated(expectedTagName, 'STAGING_COMMIT_SHA')
     .expectReleaseToBeCreated(`v${expectedVersion}`, expectedTagName);
 
@@ -51,8 +53,7 @@ export async function expectGithubApiRequestsForStaging(
   fork.expectBranchRequest(expectedStagingForkBranch, null);
 
   if (withCherryPicking) {
-    const expectedCherryPickForkBranch =
-      cherryPickBranchName ?? `changelog-cherry-pick-${expectedVersion}`;
+    const expectedCherryPickForkBranch = `changelog-cherry-pick-${expectedVersion}`;
 
     repo
       .expectPullRequestToBeCreated('master', fork, expectedCherryPickForkBranch, 300)

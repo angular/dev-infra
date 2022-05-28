@@ -6,13 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ReleaseAction} from '../../actions';
-import {GithubTestingRepo} from '../../../../utils/testing';
 import {GithubConfig} from '../../../../utils/config';
+import {GithubTestingRepo, SandboxGitClient, VirtualGitClient} from '../../../../utils/testing';
 import {ReleaseConfig} from '../../../config';
-import {VirtualGitClient} from '../../../../utils/testing';
 import {ActiveReleaseTrains} from '../../../versioning';
-import {SandboxGitClient} from '../../../../utils/testing';
+import {ReleaseAction} from '../../actions';
+import {BuiltPackageWithInfo} from '../../built-package-info';
 
 export interface TestOptions {
   /**
@@ -55,5 +54,6 @@ export interface TestReleaseAction<
   projectDir: string;
   githubConfig: GithubConfig;
   releaseConfig: ReleaseConfig;
+  builtPackagesWithInfo: BuiltPackageWithInfo[];
   gitClient: O['useSandboxGitClient'] extends true ? SandboxGitClient : VirtualGitClient;
 }

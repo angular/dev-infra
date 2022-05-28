@@ -30,14 +30,15 @@ export class CutNewPatchAction extends ReleaseAction {
     const newVersion = this._newVersion;
     const compareVersionForReleaseNotes = this._previousVersion;
 
-    const {pullRequest, releaseNotes} = await this.checkoutBranchAndStageVersion(
-      newVersion,
-      compareVersionForReleaseNotes,
-      branchName,
-    );
+    const {pullRequest, releaseNotes, builtPackagesWithInfo, beforeStagingSha} =
+      await this.checkoutBranchAndStageVersion(
+        newVersion,
+        compareVersionForReleaseNotes,
+        branchName,
+      );
 
     await this.waitForPullRequestToBeMerged(pullRequest);
-    await this.buildAndPublish(releaseNotes, branchName, 'latest');
+    await this.publish(builtPackagesWithInfo, releaseNotes, beforeStagingSha, branchName, 'latest');
     await this.cherryPickChangelogIntoNextBranch(releaseNotes, branchName);
   }
 

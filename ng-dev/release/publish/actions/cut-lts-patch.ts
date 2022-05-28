@@ -32,17 +32,25 @@ export class CutLongTermSupportPatchAction extends ReleaseAction {
     const newVersion = semverInc(ltsBranch.version, 'patch');
     const compareVersionForReleaseNotes = ltsBranch.version;
 
-    const {pullRequest, releaseNotes} = await this.checkoutBranchAndStageVersion(
-      newVersion,
-      compareVersionForReleaseNotes,
-      ltsBranch.name,
-    );
+    const {pullRequest, releaseNotes, builtPackagesWithInfo, beforeStagingSha} =
+      await this.checkoutBranchAndStageVersion(
+        newVersion,
+        compareVersionForReleaseNotes,
+        ltsBranch.name,
+      );
 
     await this.waitForPullRequestToBeMerged(pullRequest);
-    await this.buildAndPublish(releaseNotes, ltsBranch.name, ltsBranch.npmDistTag, {
-      // For LTS patch versions, we want to skip experimental packages.
-      skipExperimentalPackages: true,
-    });
+    await this.publish(
+      builtPackagesWithInfo,
+      releaseNotes,
+      beforeStagingSha,
+      ltsBranch.name,
+      ltsBranch.npmDistTag,
+      {
+        // For LTS patch versions, we want to skip experimental packages.
+        skipExperimentalPackages: true,
+      },
+    );
     await this.cherryPickChangelogIntoNextBranch(releaseNotes, ltsBranch.name);
   }
 

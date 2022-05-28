@@ -9,10 +9,10 @@
 import * as semver from 'semver';
 
 import {green, info, yellow} from '../../../utils/console';
+import {workspaceRelativePackageJsonPath} from '../../../utils/constants';
 import {ActiveReleaseTrains} from '../../versioning/active-release-trains';
 import {ReleaseAction} from '../actions';
 import {getCommitMessageForNextBranchMajorSwitch} from '../commit-message';
-import {workspaceRelativePackageJsonPath} from '../../../utils/constants';
 
 /**
  * Release action that configures the active next release-train to be for a major
@@ -30,8 +30,9 @@ export class ConfigureNextAsMajorAction extends ReleaseAction {
   override async perform() {
     const {branchName} = this.active.next;
     const newVersion = this._newVersion;
+    const beforeStagingSha = await this.getLatestCommitOfBranch(branchName);
 
-    await this.verifyPassingGithubStatus(branchName);
+    await this.assertPassingGithubStatus(beforeStagingSha, branchName);
     await this.checkoutUpstreamBranch(branchName);
     await this.updateProjectVersion(newVersion);
     await this.createCommit(getCommitMessageForNextBranchMajorSwitch(newVersion), [
