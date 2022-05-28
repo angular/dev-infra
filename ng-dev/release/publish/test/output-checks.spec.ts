@@ -6,15 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
-
 import * as console from '../../../utils/console';
-import {testTmpDir} from '../../../utils/testing';
 import {ActiveReleaseTrains, ReleaseTrain} from '../../versioning';
 import {DelegateTestAction} from './delegate-test-action';
 import {expectGithubApiRequestsForStaging} from './test-utils/staging-test';
-import {parse, setupReleaseActionForTesting} from './test-utils/test-utils';
+import {parse, setupReleaseActionForTesting, writePackageJson} from './test-utils/test-utils';
 
 describe('package output checks', () => {
   const baseReleaseTrains = new ActiveReleaseTrains({
@@ -22,15 +18,6 @@ describe('package output checks', () => {
     latest: new ReleaseTrain('13.0.x', parse('13.0.1')),
     next: new ReleaseTrain('main', parse('13.1.0-next.2')),
   });
-
-  /** Writes a `package.json` for the given package output. */
-  async function writePackageJson(packageName: string, version: string) {
-    const packageOutDir = path.join(testTmpDir, 'dist', packageName);
-    const packageJsonPath = path.join(packageOutDir, 'package.json');
-
-    await fs.promises.mkdir(packageOutDir, {recursive: true});
-    await fs.promises.writeFile(packageJsonPath, JSON.stringify({version}));
-  }
 
   it('should not error if correct versions are set within `package.json` files', async () => {
     const action = setupReleaseActionForTesting(
