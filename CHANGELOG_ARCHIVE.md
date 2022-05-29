@@ -1,3 +1,17 @@
+<a name="2022.2.6"></a>
+# 2022.2.6 (2022-02-06)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a90f807](https://github.com/angular/dev-infra/commit/a90f807bd664e27f8109069e31959cb2f780179d) | fix | disable angular linker sourcemaps |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c922f5b](https://github.com/angular/dev-infra/commit/c922f5b23611024bc9d94833ae147f6048ab0275) | feat | abbreviated SHA stamp ([#373](https://github.com/angular/dev-infra/pull/373)) |
+## Special Thanks
+Alan Agius, Derek Cormier, Joey Perrott, Paul Gschwendtner and renovate[bot]
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.1.30"></a>
 # 2022.1.30 (2022-01-30)
 ### bazel
