@@ -19,7 +19,8 @@ export class CutReleaseCandidateForFeatureFreezeAction extends ReleaseAction {
 
   override async getDescription() {
     const newVersion = this._newVersion;
-    return `Cut a first release-candidate for the feature-freeze branch (v${newVersion}).`;
+    const branchName = this.active.releaseCandidate!.branchName;
+    return `Cut a first release-candidate for the "${branchName}" feature-freeze branch (v${newVersion}).`;
   }
 
   override async perform() {
