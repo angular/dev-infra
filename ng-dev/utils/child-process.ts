@@ -26,6 +26,9 @@ export interface SpawnOptions extends Omit<_SpawnOptions, 'shell' | 'stdio'> {
   mode?: 'enabled' | 'silent' | 'on-error';
   /** Whether to prevent exit codes being treated as failures. */
   suppressErrorOnFailingExitCode?: boolean;
+  // Stdin text to provide to the process. The raw text will be written to `stdin` and then
+  // the stream is closed. This is equivalent to the `input` option from `SpawnSyncOption`.
+  input?: string;
 }
 
 /** Interface describing the options for spawning an interactive process. */
@@ -86,6 +89,12 @@ export function spawn(
     let logOutput = '';
     let stdout = '';
     let stderr = '';
+
+    // If provided, write `input` text to the process `stdin`.
+    if (options.input !== undefined) {
+      childProcess.stdin.write(options.input);
+      childProcess.stdin.end();
+    }
 
     // Capture the stdout separately so that it can be passed as resolve value.
     // This is useful if commands return parsable stdout.

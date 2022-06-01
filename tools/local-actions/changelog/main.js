@@ -48173,6 +48173,10 @@ var require_child_process = __commonJS({
         let logOutput = "";
         let stdout = "";
         let stderr = "";
+        if (options.input !== void 0) {
+          childProcess.stdin.write(options.input);
+          childProcess.stdin.end();
+        }
         childProcess.stderr.on("data", (message) => {
           stderr += message;
           logOutput += message;
