@@ -19,10 +19,9 @@ import {
   testTmpDir,
   VirtualGitClient,
 } from '../../../../utils/testing';
-import {BuiltPackage, NpmPackage, ReleaseConfig} from '../../../config';
+import {BuiltPackage, BuiltPackageWithInfo, NpmPackage, ReleaseConfig} from '../../../config';
 import * as npm from '../../../versioning/npm-publish';
 import {ReleaseAction} from '../../actions';
-import {BuiltPackageWithInfo} from '../../built-package-info';
 import * as constants from '../../constants';
 import * as externalCommands from '../../external-commands';
 

@@ -8,10 +8,9 @@
 
 import {GithubConfig} from '../../../../utils/config';
 import {GithubTestingRepo, SandboxGitClient, VirtualGitClient} from '../../../../utils/testing';
-import {ReleaseConfig} from '../../../config';
+import {BuiltPackageWithInfo, ReleaseConfig} from '../../../config';
 import {ActiveReleaseTrains} from '../../../versioning';
 import {ReleaseAction} from '../../actions';
-import {BuiltPackageWithInfo} from '../../built-package-info';
 
 export interface TestOptions {
   /**

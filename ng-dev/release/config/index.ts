@@ -6,6 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {SemVer} from 'semver';
+
 import {CommitFromGitLog} from '../../commit-message/parse';
 import {ConfigValidationError} from '../../utils/config';
 
@@ -50,6 +52,15 @@ export interface ReleaseConfig {
   releasePrLabels?: string[];
   /** Configuration for creating release notes during publishing. */
   releaseNotes?: ReleaseNotesConfig;
+}
+
+/**
+ * Type describing a built package with its associated NPM package info and package
+ * content hash, useful for verifying its integrity or running custom prechecks.
+ */
+export interface BuiltPackageWithInfo extends BuiltPackage, NpmPackage {
+  /** A deterministic hash that can be used to verify the contents of the package. */
+  hash: string;
 }
 
 /** Configuration for creating release notes during publishing. */
