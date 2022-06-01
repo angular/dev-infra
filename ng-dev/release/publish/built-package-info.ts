@@ -9,17 +9,8 @@
 import {hashElement} from 'folder-hash';
 
 import {debug, error, red} from '../../utils/console';
-import {BuiltPackage, NpmPackage} from '../config';
+import {BuiltPackage, BuiltPackageWithInfo, NpmPackage} from '../config';
 import {FatalReleaseActionError} from './actions-error';
-
-/**
- * Type describing a built package with its associated NPM package info
- * and package content hash, useful for verifying its integrity.
- */
-export interface BuiltPackageWithInfo extends BuiltPackage, NpmPackage {
-  /** A deterministic hash that can be used to verify the contents of the package. */
-  hash: string;
-}
 
 /**
  * Analyzes and extends the given built packages with additional information,

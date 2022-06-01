@@ -13,5 +13,6 @@ ts_library(
         "//ng-dev/commit-message",
         "//ng-dev/utils",
         "@npm//@types/semver",
+        "@npm//semver",
     ],
 )

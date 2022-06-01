@@ -20,7 +20,7 @@ import {
   getRepositoryGitUrl,
 } from '../../utils/git/github-urls';
 import {Spinner} from '../../utils/spinner';
-import {BuiltPackage, ReleaseConfig} from '../config/index';
+import {BuiltPackage, BuiltPackageWithInfo, ReleaseConfig} from '../config/index';
 import {ReleaseNotes, workspaceRelativeChangelogPath} from '../notes/release-notes';
 import {NpmDistTag} from '../versioning';
 import {ActiveReleaseTrains} from '../versioning/active-release-trains';
@@ -31,7 +31,6 @@ import {FatalReleaseActionError, UserAbortedReleaseActionError} from './actions-
 import {
   analyzeAndExtendBuiltPackagesWithInfo,
   assertIntegrityOfBuiltPackages,
-  BuiltPackageWithInfo,
 } from './built-package-info';
 import {getCommitMessageForRelease, getReleaseNoteCherryPickCommitMessage} from './commit-message';
 import {githubReleaseBodyLimit, waitForPullRequestInterval} from './constants';
