@@ -101,6 +101,7 @@ export function setupMocksForReleaseAction<T extends boolean>(
   spyOn(externalCommands, 'invokeYarnInstallCommand').and.resolveTo();
   spyOn(externalCommands, 'invokeReleaseInfoCommand').and.resolveTo(releaseConfig);
   spyOn(externalCommands, 'invokeReleaseBuildCommand').and.resolveTo(builtPackages);
+  spyOn(externalCommands, 'invokeReleasePrecheckCommand').and.resolveTo();
 
   if (stubBuiltPackageOutputChecks) {
     // Fake checking the package versions since we don't actually create NPM

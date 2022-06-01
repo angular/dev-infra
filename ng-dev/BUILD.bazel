@@ -30,6 +30,7 @@ ts_library(
         "//ng-dev/pullapprove",
         "//ng-dev/release",
         "//ng-dev/release/config",
+        "//ng-dev/release/precheck",
         "//ng-dev/release/publish",
         "//ng-dev/release/versioning",
         "//ng-dev/ts-circular-dependencies",

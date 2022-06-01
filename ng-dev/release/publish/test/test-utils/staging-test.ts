@@ -113,6 +113,7 @@ export async function expectStagingAndPublishWithoutCherryPick(
     ? testReleasePackages.filter((pkg) => !pkg.experimental)
     : testReleasePackages;
 
+  expect(externalCommands.invokeReleasePrecheckCommand).toHaveBeenCalledTimes(1);
   expect(externalCommands.invokeReleaseBuildCommand).toHaveBeenCalledTimes(1);
   expectNpmPublishToBeInvoked(publishedPackages, expectedNpmDistTag);
 }
@@ -168,6 +169,7 @@ export async function expectStagingAndPublishWithCherryPick(
     ? testReleasePackages.filter((pkg) => !pkg.experimental)
     : testReleasePackages;
 
+  expect(externalCommands.invokeReleasePrecheckCommand).toHaveBeenCalledTimes(1);
   expect(externalCommands.invokeReleaseBuildCommand).toHaveBeenCalledTimes(1);
   expectNpmPublishToBeInvoked(publishedPackages, expectedNpmDistTag);
 }

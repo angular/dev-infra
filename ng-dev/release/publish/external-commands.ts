@@ -17,6 +17,8 @@ import {FatalReleaseActionError} from './actions-error';
 import {resolveYarnScriptForProject} from '../../utils/resolve-yarn-bin';
 import {ReleaseBuildJsonStdout} from '../build/cli';
 import {ReleaseInfoJsonStdout} from '../info/cli';
+import {ReleasePrecheckJsonStdin} from '../precheck/cli';
+import {BuiltPackageWithInfo} from '../config';
 
 /*
  * ###############################################################
@@ -152,6 +154,50 @@ export async function invokeReleaseInfoCommand(projectDir: string): Promise<Rele
           `the currently checked-out branch.`,
       ),
     );
+    throw new FatalReleaseActionError();
+  }
+}
+
+/**
+ * Invokes the `ng-dev release precheck` command in order to validate the
+ * built packages or run other validations before actually releasing.
+ *
+ * This is run as an external command because prechecks can be customized
+ * through the `ng-dev` configuration, and we wouldn't want to run prechecks
+ * from the `next` branch for older branches, like patch or an LTS branch.
+ */
+export async function invokeReleasePrecheckCommand(
+  projectDir: string,
+  newVersion: semver.SemVer,
+  builtPackagesWithInfo: BuiltPackageWithInfo[],
+): Promise<void> {
+  // Note: We cannot use `yarn` directly as command because we might operate in
+  // a different publish branch and the current `PATH` will point to the Yarn version
+  // that invoked the release tool. More details in the function description.
+  const yarnCommand = await resolveYarnScriptForProject(projectDir);
+  const precheckStdin: ReleasePrecheckJsonStdin = {
+    builtPackagesWithInfo,
+    newVersion: newVersion.format(),
+  };
+
+  try {
+    // Note: No progress indicator needed as that is expected to be a fast operation. Also
+    // we expect the command to handle console messaging and wouldn't want to clobber it.
+    // TODO: detect yarn berry and handle flag differences properly.
+    await spawn(
+      yarnCommand.binary,
+      [...yarnCommand.args, '--silent', 'ng-dev', 'release', 'precheck'],
+      {
+        cwd: projectDir,
+        // Note: We pass the precheck information to the command through `stdin`
+        // because command line arguments are less reliable and have length limits.
+        input: JSON.stringify(precheckStdin),
+      },
+    );
+    info(green(`  ✓   Executed release pre-checks for ${newVersion}`));
+  } catch (e) {
+    error(e);
+    error(red(`  ✘   An error occurred while running release pre-checks.`));
     throw new FatalReleaseActionError();
   }
 }
