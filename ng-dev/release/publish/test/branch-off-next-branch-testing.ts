@@ -135,6 +135,7 @@ export async function expectBranchOffActionToRun(
     'Expected next release-train update branch be created in fork.',
   );
 
+  expect(externalCommands.invokeReleasePrecheckCommand).toHaveBeenCalledTimes(1);
   expect(externalCommands.invokeReleaseBuildCommand).toHaveBeenCalledTimes(1);
   expect(npm.runNpmPublish).toHaveBeenCalledTimes(testReleasePackages.length);
 

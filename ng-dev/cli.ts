@@ -9,23 +9,16 @@
 import * as yargs from 'yargs';
 
 import {buildCaretakerParser} from './caretaker/cli';
+import {buildCiParser} from './ci/cli';
 import {buildCommitMessageParser} from './commit-message/cli';
 import {buildFormatParser} from './format/cli';
+import {buildMiscParser} from './misc/cli';
 import {buildNgbotParser} from './ngbot/cli';
 import {buildPrParser} from './pr/cli';
 import {buildPullapproveParser} from './pullapprove/cli';
 import {buildReleaseParser} from './release/cli';
 import {tsCircularDependenciesBuilder} from './ts-circular-dependencies/index';
 import {captureLogOutputForCommand} from './utils/console';
-import {buildMiscParser} from './misc/cli';
-import {buildCiParser} from './ci/cli';
-import {ReleaseAction} from './index';
-
-// Expose the `ReleaseAction` constructor globally so that the COMP repo
-// can hook into it and setup staging/post-building release checks.
-// TODO: Remove once https://github.com/angular/dev-infra/issues/402 is resolved.
-// or if we have code-splitting w/ ESM enabled for the ng-dev bundling.
-(global as any).ReleaseAction = ReleaseAction;
 
 yargs
   .scriptName('ng-dev')

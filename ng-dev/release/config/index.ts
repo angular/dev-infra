@@ -52,6 +52,17 @@ export interface ReleaseConfig {
   releasePrLabels?: string[];
   /** Configuration for creating release notes during publishing. */
   releaseNotes?: ReleaseNotesConfig;
+  /**
+   * Optional function that can be provided to run checks for a version before
+   * it can be released.
+   *
+   * If provided, the release can occur when the promise resolves. Upon rejection,
+   * the release will abort the release and print the `ReleasePrecheckError` error.
+   */
+  prereleaseCheck?: (
+    newVersion: SemVer,
+    builtPackagesWithInfo: BuiltPackageWithInfo[],
+  ) => Promise<void>;
 }
 
 /**

@@ -18,6 +18,10 @@ export * from './release/config';
 // respect to Angular's branching/versioning and release process.
 export * from './release/versioning';
 
+// Exposes the release precheck command utilities. These should be available
+// as they are needed for authoring pre-release custom checks.
+export {ReleasePrecheckError} from './release/precheck';
+
 // Exposes console utils that can be used by consumers to e.g. add messages
 // to the dev-infra log which is stored on failures.
 export * from './utils/console';
@@ -27,11 +31,3 @@ export * from './utils/console';
 export * from './utils/git/authenticated-git-client';
 export * from './utils/git/git-client';
 export * from './utils/git/github';
-
-// Additional exports for adding custom release pre-staging, post-build checks.
-// TODO: Remove once https://github.com/angular/dev-infra/issues/402 is resolved.
-export {ReleaseAction} from './release/publish/actions';
-export {
-  FatalReleaseActionError,
-  UserAbortedReleaseActionError,
-} from './release/publish/actions-error';

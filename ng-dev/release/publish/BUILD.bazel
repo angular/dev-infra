@@ -13,6 +13,7 @@ ts_library(
         "//ng-dev/release/config",
         "//ng-dev/release/info",
         "//ng-dev/release/notes",
+        "//ng-dev/release/precheck",
         "//ng-dev/release/versioning",
         "//ng-dev/utils",
         "@npm//@octokit/rest",

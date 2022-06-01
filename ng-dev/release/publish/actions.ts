@@ -37,6 +37,7 @@ import {githubReleaseBodyLimit, waitForPullRequestInterval} from './constants';
 import {
   invokeReleaseBuildCommand,
   invokeReleaseInfoCommand,
+  invokeReleasePrecheckCommand,
   invokeYarnInstallCommand,
 } from './external-commands';
 import {getPullRequestState} from './pull-request-state';
@@ -483,6 +484,9 @@ export abstract class ReleaseAction {
     await this.installDependenciesForCurrentBranch();
 
     const builtPackagesWithInfo = await this.buildReleaseForCurrentBranch();
+
+    // Run release pre-checks (e.g. validating the release output).
+    await invokeReleasePrecheckCommand(this.projectDir, newVersion, builtPackagesWithInfo);
 
     // Verify the packages built are the correct version.
     await this._verifyPackageVersions(releaseNotes.version, builtPackagesWithInfo);
