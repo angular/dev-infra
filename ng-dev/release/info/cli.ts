@@ -6,6 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+// ---- **IMPORTANT** ----
+// This command is part of our external commands invoked by the release publish
+// command. Before making changes, keep in mind that more recent `ng-dev` versions
+// can still invoke this command.
+// ------------------------
+
 import {Arguments, Argv, CommandModule} from 'yargs';
 
 import {GitClient} from '../../utils/git/git-client';
