@@ -54,6 +54,7 @@ pkg_npm(
         "//tslint-rules:lib",
     ],
 )
+#TEST
 # END-INTERNAL
 
 exports_files(["tsconfig.json"])
