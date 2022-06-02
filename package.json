@@ -61,20 +61,20 @@
   "devDependencies": {
     "@actions/core": "^1.4.0",
     "@actions/github": "^5.0.0",
-    "@angular/animations": "14.0.0-rc.3",
-    "@angular/bazel": "14.0.0-rc.3",
+    "@angular/animations": "14.0.0",
+    "@angular/bazel": "14.0.0",
     "@angular/cdk": "14.0.0-rc.2",
     "@angular/cli": "14.0.0-rc.3",
-    "@angular/common": "14.0.0-rc.3",
-    "@angular/compiler": "14.0.0-rc.3",
-    "@angular/compiler-cli": "14.0.0-rc.3",
-    "@angular/core": "14.0.0-rc.3",
+    "@angular/common": "14.0.0",
+    "@angular/compiler": "14.0.0",
+    "@angular/compiler-cli": "14.0.0",
+    "@angular/core": "14.0.0",
     "@angular/fire": "^7.1.0-rc",
-    "@angular/forms": "14.0.0-rc.3",
+    "@angular/forms": "14.0.0",
     "@angular/material": "14.0.0-rc.2",
-    "@angular/platform-browser": "14.0.0-rc.3",
-    "@angular/platform-browser-dynamic": "14.0.0-rc.3",
-    "@angular/router": "14.0.0-rc.3",
+    "@angular/platform-browser": "14.0.0",
+    "@angular/platform-browser-dynamic": "14.0.0",
+    "@angular/router": "14.0.0",
     "@bazel/bazelisk": "^1.11.0",
     "@bazel/jasmine": "5.5.0",
     "@google-cloud/firestore": "^5.0.2",
@@ -152,6 +152,6 @@
     "zone.js": "^0.11.4"
   },
   "resolutions": {
-    "@angular/benchpress/@angular/core": "14.0.0-rc.3"
+    "@angular/benchpress/@angular/core": "14.0.0"
   }
 }
