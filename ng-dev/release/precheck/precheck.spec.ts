@@ -73,7 +73,7 @@ describe('ng-dev release precheck', () => {
     });
 
     expect(prereleaseCheckSpy).toHaveBeenCalledTimes(1);
-    expect(prereleaseCheckSpy).toHaveBeenCalledWith(semver.parse('0.0.0')!, builtPackagesWithInfo);
+    expect(prereleaseCheckSpy).toHaveBeenCalledWith('0.0.0', builtPackagesWithInfo);
     expect(process.exitCode).toBe(undefined);
   });
 

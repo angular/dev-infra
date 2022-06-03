@@ -36,7 +36,10 @@ export async function assertPassingReleasePrechecks(
   // The user-defined release precheck function is supposed to throw errors upon unmet
   // checks. We catch this here and print a better message and determine the status.
   try {
-    await config.prereleaseCheck(newVersion, builtPackagesWithInfo);
+    // Note: We do not pass the `SemVer` instance to the user-customizable precheck
+    // function. This is because we bundled our version of `semver` and the version
+    // used in the precheck logic might be different, causing unexpected issues.
+    await config.prereleaseCheck(newVersion.format(), builtPackagesWithInfo);
     info(green('  ✓   Release pre-checks passing.'));
     return true;
   } catch (e) {

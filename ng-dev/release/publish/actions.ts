@@ -193,9 +193,11 @@ export abstract class ReleaseAction {
     info(
       yellow(
         '  ⚠   Please review the changelog and ensure that the log contains only changes ' +
-          'that apply to the public API surface. Manual changes can be made. When done, please ' +
-          'proceed with the prompt below.',
+          'that apply to the public API surface.',
       ),
+    );
+    info(
+      yellow('      Manual changes can be made. When done, please proceed with the prompt below.'),
     );
 
     if (!(await promptConfirm('Do you want to proceed and commit the changes?'))) {

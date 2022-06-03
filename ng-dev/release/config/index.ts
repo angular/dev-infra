@@ -60,7 +60,7 @@ export interface ReleaseConfig {
    * the release will abort the release and print the `ReleasePrecheckError` error.
    */
   prereleaseCheck?: (
-    newVersion: SemVer,
+    newVersion: string,
     builtPackagesWithInfo: BuiltPackageWithInfo[],
   ) => Promise<void>;
 }
