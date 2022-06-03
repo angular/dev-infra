@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {stdout as stdoutColor} from 'supports-color';
 import {
   spawn as _spawn,
   SpawnOptions as _SpawnOptions,
@@ -82,10 +83,11 @@ export function spawn(
   return new Promise((resolve, reject) => {
     const commandText = `${command} ${args.join(' ')}`;
     const outputMode = options.mode;
+    const env = getEnvironmentForNonInteractiveSpawn(options.env);
 
     debug(`Executing command: ${commandText}`);
 
-    const childProcess = _spawn(command, args, {...options, shell: true, stdio: 'pipe'});
+    const childProcess = _spawn(command, args, {...options, env, shell: true, stdio: 'pipe'});
     let logOutput = '';
     let stdout = '';
     let stderr = '';
@@ -151,6 +153,8 @@ export function spawnSync(
   options: SpawnSyncOptions = {},
 ): SpawnResult {
   const commandText = `${command} ${args.join(' ')}`;
+  const env = getEnvironmentForNonInteractiveSpawn(options.env);
+
   debug(`Executing command: ${commandText}`);
 
   const {
@@ -158,7 +162,7 @@ export function spawnSync(
     signal,
     stdout,
     stderr,
-  } = _spawnSync(command, args, {...options, encoding: 'utf8', shell: true, stdio: 'pipe'});
+  } = _spawnSync(command, args, {...options, env, encoding: 'utf8', shell: true, stdio: 'pipe'});
 
   /** The status of the spawn result. */
   const status = statusFromExitCodeAndSignal(exitCode, signal);
@@ -180,4 +184,20 @@ export function spawnSync(
  */
 function statusFromExitCodeAndSignal(exitCode: number | null, signal: NodeJS.Signals | null) {
   return exitCode ?? signal ?? -1;
+}
+
+/**
+ * Gets a process environment object with defaults that can be used for
+ * spawning non-interactive child processes.
+ *
+ * Currently we enable `FORCE_COLOR` since non-interactive spawn's with
+ * non-inherited `stdio` will not have colors enabled due to a missing TTY.
+ */
+function getEnvironmentForNonInteractiveSpawn(
+  userProvidedEnv?: NodeJS.ProcessEnv,
+): NodeJS.ProcessEnv {
+  // Pass through the color level from the TTY/process performing the `spawn` call.
+  const forceColorValue = stdoutColor !== false ? stdoutColor.level.toString() : undefined;
+
+  return {FORCE_COLOR: forceColorValue, ...(userProvidedEnv ?? process.env)};
 }
