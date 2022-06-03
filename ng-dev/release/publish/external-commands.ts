@@ -9,7 +9,7 @@
 import * as semver from 'semver';
 
 import {spawn} from '../../utils/child-process';
-import {error, green, info, red} from '../../utils/console';
+import {debug, error, green, info, red} from '../../utils/console';
 import {Spinner} from '../../utils/spinner';
 import {NpmDistTag} from '../versioning';
 
@@ -196,7 +196,9 @@ export async function invokeReleasePrecheckCommand(
     );
     info(green(`  ✓   Executed release pre-checks for ${newVersion}`));
   } catch (e) {
-    error(e);
+    // The `spawn` invocation already prints all stdout/stderr, so we don't need re-print.
+    // To ease debugging in case of runtime exceptions, we still print the error to `debug`.
+    debug(e);
     error(red(`  ✘   An error occurred while running release pre-checks.`));
     throw new FatalReleaseActionError();
   }
