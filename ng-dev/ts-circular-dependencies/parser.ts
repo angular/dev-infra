@@ -6,25 +6,27 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as ts from 'typescript';
+import ts from 'typescript';
 
 /**
  * Finds all module references in the specified source file.
  * @param node Source file which should be parsed.
  * @returns List of import specifiers in the source file.
  */
-export function getModuleReferences(node: ts.SourceFile): string[] {
+export function getModuleReferences(initialNode: ts.SourceFile): string[] {
   const references: string[] = [];
-  const visitNode = (node: ts.Node) => {
+  const visitNode = (n: ts.Node) => {
     if (
-      (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) &&
-      node.moduleSpecifier !== undefined &&
-      ts.isStringLiteral(node.moduleSpecifier)
+      (ts.isImportDeclaration(n) || ts.isExportDeclaration(n)) &&
+      n.moduleSpecifier !== undefined &&
+      ts.isStringLiteral(n.moduleSpecifier)
     ) {
-      references.push(node.moduleSpecifier.text);
+      references.push(n.moduleSpecifier.text);
     }
-    ts.forEachChild(node, visitNode);
+    ts.forEachChild(n, visitNode);
   };
-  ts.forEachChild(node, visitNode);
+
+  ts.forEachChild(initialNode, visitNode);
+
   return references;
 }

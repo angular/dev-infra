@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as semver from 'semver';
-import {SemVer} from 'semver';
+import semver from 'semver';
 
 import {semverInc} from '../../utils/semver';
 import {ReleaseConfig} from '../config/index';
@@ -22,7 +21,7 @@ import {isVersionPublishedToNpm} from './npm-registry';
 export async function getReleaseNotesCompareVersionForNext(
   active: ActiveReleaseTrains,
   config: ReleaseConfig,
-): Promise<SemVer> {
+): Promise<semver.SemVer> {
   const {version: nextVersion} = active.next;
   // Special-case where the version in the `next` release-train is not published yet. This
   // happens when we recently branched off for feature-freeze. We already bump the version to

@@ -6,7 +6,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import * as yargs from 'yargs';
+import yargs from 'yargs';
 
 import {buildCaretakerParser} from './caretaker/cli';
 import {buildCiParser} from './ci/cli';
@@ -18,9 +18,9 @@ import {buildPrParser} from './pr/cli';
 import {buildPullapproveParser} from './pullapprove/cli';
 import {buildReleaseParser} from './release/cli';
 import {tsCircularDependenciesBuilder} from './ts-circular-dependencies/index';
-import {captureLogOutputForCommand} from './utils/console';
+import {captureLogOutputForCommand} from './utils/logging';
 
-yargs
+yargs(process.argv.slice(2))
   .scriptName('ng-dev')
   .middleware(captureLogOutputForCommand)
   .demandCommand()

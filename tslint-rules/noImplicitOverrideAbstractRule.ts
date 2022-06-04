@@ -8,7 +8,7 @@
 
 import {Replacement, RuleFailure, WalkContext} from 'tslint/lib';
 import {TypedRule} from 'tslint/lib/rules';
-import * as ts from 'typescript';
+import ts from 'typescript';
 
 const FAILURE_MESSAGE =
   'Missing override modifier. Members implemented as part of ' +
@@ -50,7 +50,7 @@ function visitNode(node: ts.Node, ctx: WalkContext, program: ts.Program) {
     );
   }
 
-  ts.forEachChild(node, (node) => visitNode(node, ctx, program));
+  ts.forEachChild(node, (n) => visitNode(n, ctx, program));
 }
 
 /**

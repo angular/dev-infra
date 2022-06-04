@@ -7,7 +7,7 @@
  */
 
 import {assertValidGithubConfig, getConfig, GithubConfig} from '../../utils/config';
-import {info} from '../../utils/console';
+import {Log} from '../../utils/logging';
 import {GitClient} from '../../utils/git/git-client';
 import {assertValidPullRequestConfig, PullRequestConfig} from '../config';
 import {getTargetBranchesForPullRequest} from '../common/targeting/target-label';
@@ -43,12 +43,12 @@ export async function printTargetBranchesForPr(prNumber: number) {
   assertValidPullRequestConfig(config);
 
   if (config.pullRequest.noTargetLabeling) {
-    info(`PR #${prNumber} will merge into: ${config.github.mainBranchName}`);
+    Log.info(`PR #${prNumber} will merge into: ${config.github.mainBranchName}`);
     return;
   }
 
   const targets = await getTargetBranchesForPr(prNumber, config);
-  info.group(`PR #${prNumber} will merge into:`);
-  targets.forEach((target) => info(`- ${target}`));
-  info.groupEnd();
+  Log.info.group(`PR #${prNumber} will merge into:`);
+  targets.forEach((target) => Log.info(`- ${target}`));
+  Log.info.groupEnd();
 }

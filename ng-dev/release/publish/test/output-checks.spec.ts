@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as console from '../../../utils/console';
+import {Log} from '../../../utils/logging';
 import {ActiveReleaseTrains, ReleaseTrain} from '../../versioning';
 import {DelegateTestAction} from './delegate-test-action';
 import {expectGithubApiRequestsForStaging} from './test-utils/staging-test';
@@ -31,7 +31,7 @@ describe('package output checks', () => {
 
     await expectGithubApiRequestsForStaging(action, branchName, versionName, false);
 
-    spyOn(console, 'error');
+    spyOn(Log, 'error');
 
     // Write the fake built package output `package.json` files.
     await writePackageJson('@angular/pkg1', '13.0.1');
@@ -41,7 +41,7 @@ describe('package output checks', () => {
     await expectAsync(
       action.instance.testStagingWithBuild(version, branchName, parse('0.0.0-compare-base')),
     ).not.toBeRejected();
-    expect(console.error).toHaveBeenCalledTimes(0);
+    expect(Log.error).toHaveBeenCalledTimes(0);
   });
 
   describe('non-experimental packages', () => {
@@ -57,7 +57,7 @@ describe('package output checks', () => {
 
       await expectGithubApiRequestsForStaging(action, branchName, versionName, false);
 
-      spyOn(console, 'error');
+      spyOn(Log, 'error');
 
       // Write the fake built package output `package.json` files.
       await writePackageJson('@angular/pkg1', '13.0.2');
@@ -68,12 +68,10 @@ describe('package output checks', () => {
         action.instance.testStagingWithBuild(version, branchName, parse('0.0.0-compare-base')),
       ).toBeRejected();
 
-      expect(console.error).toHaveBeenCalledWith(
+      expect(Log.error).toHaveBeenCalledWith(
         jasmine.stringMatching(/The built package version does not match/),
       );
-      expect(console.error).toHaveBeenCalledWith(
-        jasmine.stringMatching(/Expected version: 13\.0\.1/),
-      );
+      expect(Log.error).toHaveBeenCalledWith(jasmine.stringMatching(/Expected version: 13\.0\.1/));
     });
   });
 
@@ -90,7 +88,7 @@ describe('package output checks', () => {
 
       await expectGithubApiRequestsForStaging(action, branchName, versionName, false);
 
-      spyOn(console, 'error');
+      spyOn(Log, 'error');
 
       // Write the fake built package output `package.json` files.
       await writePackageJson('@angular/pkg1', '13.0.1');
@@ -101,10 +99,10 @@ describe('package output checks', () => {
         action.instance.testStagingWithBuild(version, branchName, parse('0.0.0-compare-base')),
       ).toBeRejected();
 
-      expect(console.error).toHaveBeenCalledWith(
+      expect(Log.error).toHaveBeenCalledWith(
         jasmine.stringMatching(/The built package version does not match/),
       );
-      expect(console.error).toHaveBeenCalledWith(
+      expect(Log.error).toHaveBeenCalledWith(
         jasmine.stringMatching(/Expected version: 0\.1300\.1/),
       );
     });

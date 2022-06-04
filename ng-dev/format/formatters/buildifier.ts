@@ -8,7 +8,7 @@
 
 import {join} from 'path';
 
-import {error} from '../../utils/console';
+import {Log} from '../../utils/logging';
 
 import {Formatter} from './base-formatter';
 
@@ -35,9 +35,9 @@ export class Buildifier extends Formatter {
       commandFlags: `${BAZEL_WARNING_FLAG} --lint=fix --mode=fix`,
       callback: (file: string, code: number | NodeJS.Signals, _: string, stderr: string) => {
         if (code !== 0) {
-          error(`Error running buildifier on: ${file}`);
-          error(stderr);
-          error();
+          Log.error(`Error running buildifier on: ${file}`);
+          Log.error(stderr);
+          Log.error();
           return true;
         }
         return false;

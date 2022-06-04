@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {readFileSync, existsSync} from 'fs';
-import * as browserSync from 'browser-sync';
+import {readFileSync} from 'fs';
+import browserSync from 'browser-sync';
 import * as http from 'http';
 import * as path from 'path';
-import * as send from 'send';
+import send from 'send';
 
 /**
  * Http Server implementation that uses browser-sync internally. This server

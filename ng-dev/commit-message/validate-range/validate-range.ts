@@ -5,7 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {error, green, info, red} from '../../utils/console';
+import {green, Log} from '../../utils/logging';
 import {Commit} from '../parse';
 import {getCommitsInRange} from '../utils';
 import {
@@ -27,7 +27,7 @@ export async function validateCommitRange(from: string, to: string) {
 
   /** A list of parsed commit messages from the range. */
   const commits = await getCommitsInRange(from, to);
-  info(`Examining ${commits.length} commit(s) in the provided range: ${from}..${to}`);
+  Log.info(`Examining ${commits.length} commit(s) in the provided range: ${from}..${to}`);
 
   /**
    * Whether all commits in the range are valid, commits are allowed to be fixup commits for other
@@ -51,13 +51,13 @@ export async function validateCommitRange(from: string, to: string) {
   });
 
   if (allCommitsInRangeValid) {
-    info(green('√  All commit messages in range valid.'));
+    Log.info(green('√  All commit messages in range valid.'));
   } else {
-    error(red('✘  Invalid commit message'));
+    Log.error('✘  Invalid commit message');
     errors.forEach(([header, validationErrors]) => {
-      error.group(header);
+      Log.error.group(header);
       printValidationErrors(validationErrors);
-      error.groupEnd();
+      Log.error.groupEnd();
     });
     // Exit with a non-zero exit code if invalid commit messages have
     // been discovered.

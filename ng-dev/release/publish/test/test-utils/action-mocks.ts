@@ -6,12 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as folderHash from 'folder-hash';
 import {existsSync, mkdirSync, rmSync, writeFileSync} from 'fs';
 import {join} from 'path';
+import {GithubConfig, setConfig} from '../../../../utils/config';
+import {Prompt} from '../../../../utils/prompt';
 
-import * as config from '../../../../utils/config';
-import * as console from '../../../../utils/console';
 import {
   getMockGitClient,
   installSandboxGitClient,
@@ -20,10 +19,10 @@ import {
   VirtualGitClient,
 } from '../../../../utils/testing';
 import {BuiltPackage, BuiltPackageWithInfo, NpmPackage, ReleaseConfig} from '../../../config';
-import * as npm from '../../../versioning/npm-publish';
-import {ReleaseAction} from '../../actions';
-import * as constants from '../../constants';
-import * as externalCommands from '../../external-commands';
+import {NpmCommand} from '../../../versioning/npm-command';
+import {PullRequest, ReleaseAction} from '../../actions';
+import {DirectoryHash} from '../../directory-hash';
+import {ExternalCommands} from '../../external-commands';
 
 /** Default representative NPM package used in tests. */
 export const testRepresentativePackage = '@angular/pkg1';
@@ -40,7 +39,7 @@ export const testReleasePackages: NpmPackage[] = [
 
 /** Gets test configurations for running testing a publish action. */
 export function getTestConfigurationsForAction() {
-  const githubConfig: config.GithubConfig = {
+  const githubConfig: GithubConfig = {
     owner: 'angular',
     name: 'dev-infra-test',
     mainBranchName: 'master',
@@ -68,7 +67,7 @@ export function prepareTempDirectory() {
 
 /** Sets up all test mocks needed to run a release action. */
 export function setupMocksForReleaseAction<T extends boolean>(
-  githubConfig: config.GithubConfig,
+  githubConfig: GithubConfig,
   releaseConfig: ReleaseConfig,
   stubBuiltPackageOutputChecks: boolean,
   useSandboxGitClient: T,
@@ -78,11 +77,11 @@ export function setupMocksForReleaseAction<T extends boolean>(
   prepareTempDirectory();
 
   // Set the configuration to be used throughout the spec.
-  spyOn(config, 'getConfig').and.returnValue({github: githubConfig, release: releaseConfig});
+  setConfig({github: githubConfig, release: releaseConfig});
 
   // Fake confirm any prompts. We do not want to make any changelog edits and
   // just proceed with the release action.
-  spyOn(console, 'promptConfirm').and.resolveTo(true);
+  spyOn(Prompt, 'confirm').and.resolveTo(true);
 
   const builtPackagesWithInfo: BuiltPackageWithInfo[] = testReleasePackages.map((pkg) => ({
     ...pkg,
@@ -96,30 +95,35 @@ export function setupMocksForReleaseAction<T extends boolean>(
   }));
 
   // Fake all external commands for the release tool.
-  spyOn(npm, 'runNpmPublish').and.resolveTo();
-  spyOn(externalCommands, 'invokeSetNpmDistCommand').and.resolveTo();
-  spyOn(externalCommands, 'invokeYarnInstallCommand').and.resolveTo();
-  spyOn(externalCommands, 'invokeReleaseInfoCommand').and.resolveTo(releaseConfig);
-  spyOn(externalCommands, 'invokeReleaseBuildCommand').and.resolveTo(builtPackages);
-  spyOn(externalCommands, 'invokeReleasePrecheckCommand').and.resolveTo();
+  spyOn(NpmCommand, 'publish').and.resolveTo();
+  spyOn(ExternalCommands, 'invokeSetNpmDist').and.resolveTo();
+  spyOn(ExternalCommands, 'invokeYarnInstall').and.resolveTo();
+  spyOn(ExternalCommands, 'invokeReleaseInfo').and.resolveTo(releaseConfig);
+  spyOn(ExternalCommands, 'invokeReleaseBuild').and.resolveTo(builtPackages);
+  spyOn(ExternalCommands, 'invokeReleasePrecheck').and.resolveTo();
 
   if (stubBuiltPackageOutputChecks) {
     // Fake checking the package versions since we don't actually create NPM
     // package output that can be tested.
     spyOn(ReleaseAction.prototype, '_verifyPackageVersions' as any).and.resolveTo();
 
-    // Fake the integrity checking since the packages do not exist on disk.
-    spyOn(folderHash, 'hashElement').and.resolveTo({hash: fakePackageContentHash});
+    spyOn(DirectoryHash, 'compute').and.resolveTo(fakePackageContentHash);
   }
+
+  // Override the default pull request wait interval to a number of milliseconds that can be
+  // awaited in Jasmine tests. The default interval of 10sec is too large and causes a timeout.
+  const originalWaitFn = ReleaseAction.prototype['waitForPullRequestToBeMerged'];
+  spyOn(ReleaseAction.prototype, 'waitForPullRequestToBeMerged' as any).and.callFake(function (
+    this: ReleaseAction,
+    pullRequest: PullRequest,
+  ) {
+    return originalWaitFn.call(this, pullRequest, /* interval */ 10);
+  });
 
   // Create an empty changelog and a `package.json` file so that file system
   // interactions with the project directory do not cause exceptions.
   writeFileSync(join(testTmpDir, 'CHANGELOG.md'), '<a name="0.0.0"></a>\nExisting changelog');
   writeFileSync(join(testTmpDir, 'package.json'), JSON.stringify({version: '0.0.0'}));
-
-  // Override the default pull request wait interval to a number of milliseconds that can be
-  // awaited in Jasmine tests. The default interval of 10sec is too large and causes a timeout.
-  Object.defineProperty(constants, 'waitForPullRequestInterval', {value: 50});
 
   // Get a mocked `GitClient` for testing release actions.
   const gitClient = getMockGitClient(githubConfig, useSandboxGitClient);

@@ -2,21 +2,22 @@
   "name": "@angular/dev-infra-private",
   "version": "0.0.0-{SCM_HEAD_SHA}",
   "bin": {
-    "ng-dev": "./ng-dev/bundles/cli.js"
+    "ng-dev": "./ng-dev/bundles/cli.mjs"
   },
   "private": true,
   "scripts": {
     "prepare": "husky install",
     "ng-dev": "bash ./tools/local-dev.sh",
+    "lint": "yarn tslint -c tslint.json --project tsconfig.json",
     "build-env-stamp": "ts-node --transpile-only ./ng-dev/release/stamping/_private_main.ts build-env-stamp",
     "update-generated-files": "ts-node --transpile-only ./tools/update-generated-files.ts"
   },
   "exports": {
     "./ng-dev": {
-      "default": "./ng-dev/bundles/index.js"
+      "default": "./ng-dev/bundles/index.mjs"
     },
     "./ng-dev/*": {
-      "default": "./ng-dev/bundles/*.js"
+      "default": "./ng-dev/bundles/*.mjs"
     },
     "./*": {
       "default": "./*"
@@ -154,6 +155,7 @@
     "zone.js": "^0.11.4"
   },
   "resolutions": {
-    "@angular/benchpress/@angular/core": "14.0.0"
+    "@angular/benchpress/@angular/core": "14.0.0",
+    "@angular/bazel@14.0.0": "patch:@angular/bazel@npm:14.0.0#.yarn/patches/@angular-bazel-npm-14.0.0-ae3b299ce7.patch"
   }
 }

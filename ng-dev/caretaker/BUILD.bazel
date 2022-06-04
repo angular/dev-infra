@@ -33,6 +33,7 @@ ts_library(
         "//ng-dev/utils",
         "//ng-dev/utils/testing",
         "@npm//@types/semver",
+        "@npm//nock",
         "@npm//semver",
     ],
 )

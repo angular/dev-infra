@@ -6,13 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {existsSync} from 'fs';
+import tsNode from 'ts-node';
+
 import {dirname, join} from 'path';
 import {Assertions, MultipleAssertions} from './assertion-typings';
 
-import {debug, error} from './console';
+import {Log} from './logging';
 import {GitClient} from './git/git-client';
-import {isTsNodeAvailable} from './ts-node';
+import {getCachedConfig, setCachedConfig} from './config-cache';
 
 /**
  * Describes the Github configuration for dev-infra. This configuration is
@@ -37,9 +38,6 @@ export interface GithubConfig {
  */
 const CONFIG_FILE_PATH = '.ng-dev/config';
 
-/** The configuration for ng-dev. */
-let cachedConfig: {} | null = null;
-
 /**
  * The filename expected for local user config, without the file extension to allow a typescript,
  * javascript or json file to be used.
@@ -50,12 +48,10 @@ const USER_CONFIG_FILE_PATH = '.ng-dev.user';
 let userConfig: {[key: string]: any} | null = null;
 
 /**
- * Set the cached configuration object to be loaded later. Only to be used on CI situations in
- * which loading from the `.ng-dev/` directory is not possible.
+ * Set the cached configuration object to be loaded later. Only to be used on
+ * CI and test situations in which loading from the `.ng-dev/` directory is not possible.
  */
-export function setConfig(config: {}) {
-  cachedConfig = config;
-}
+export const setConfig = setCachedConfig;
 
 /**
  * Get the configuration from the file system, returning the already loaded
@@ -65,19 +61,24 @@ export function getConfig(): {};
 export function getConfig(baseDir: string): {};
 export function getConfig<A extends MultipleAssertions>(assertions: A): Assertions<A>;
 export function getConfig(baseDirOrAssertions?: unknown) {
-  let baseDir: string;
-  if (typeof baseDirOrAssertions === 'string') {
-    baseDir = baseDirOrAssertions;
-  } else {
-    baseDir = GitClient.get().baseDir;
-  }
+  let cachedConfig = getCachedConfig();
 
-  // If the global config is not defined, load it from the file system.
   if (cachedConfig === null) {
+    let baseDir: string;
+    if (typeof baseDirOrAssertions === 'string') {
+      baseDir = baseDirOrAssertions;
+    } else {
+      baseDir = GitClient.get().baseDir;
+    }
+
+    // If the global config is not defined, load it from the file system.
     // The full path to the configuration file.
     const configPath = join(baseDir, CONFIG_FILE_PATH);
     // Read the configuration and validate it before caching it for the future.
     cachedConfig = readConfigFile(configPath);
+
+    // Store the newly-read configuration in the cache.
+    setCachedConfig(cachedConfig);
   }
 
   if (Array.isArray(baseDirOrAssertions)) {
@@ -145,34 +146,28 @@ export function assertValidGithubConfig<T>(
  * configuration file cannot be read.
  */
 function readConfigFile(configPath: string, returnEmptyObjectOnError = false): {} {
-  // If the `.ts` extension has not been set up already, and a TypeScript based
-  // version of the given configuration seems to exist, set up `ts-node` if available.
-  if (
-    require.extensions['.ts'] === undefined &&
-    existsSync(`${configPath}.ts`) &&
-    isTsNodeAvailable()
-  ) {
-    // Ensure the module target is set to `commonjs`. This is necessary because the
-    // dev-infra tool runs in NodeJS which does not support ES modules by default.
-    // Additionally, set the `dir` option to the directory that contains the configuration
-    // file. This allows for custom compiler options (such as `--strict`).
-    require('ts-node').register({
-      dir: dirname(configPath),
-      transpileOnly: true,
-      compilerOptions: {module: 'commonjs'},
-    });
-  }
+  // Ensure the module target is set to `commonjs`. This is necessary because the
+  // dev-infra tool runs in NodeJS which does not support ES modules by default.
+  // Additionally, set the `dir` option to the directory that contains the configuration
+  // file. This allows for custom compiler options (such as `--strict`).
+  tsNode.register({
+    dir: dirname(configPath),
+    transpileOnly: true,
+    compilerOptions: {module: 'commonjs'},
+  });
 
   try {
     return require(configPath);
   } catch (e) {
     if (returnEmptyObjectOnError) {
-      debug(`Could not read configuration file at ${configPath}, returning empty object instead.`);
-      debug(e);
+      Log.debug(
+        `Could not read configuration file at ${configPath}, returning empty object instead.`,
+      );
+      Log.debug(e);
       return {};
     }
-    error(`Could not read configuration file at ${configPath}.`);
-    error(e);
+    Log.error(`Could not read configuration file at ${configPath}.`);
+    Log.error(e);
     process.exit(1);
   }
 }

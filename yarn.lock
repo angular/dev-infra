@@ -268,6 +268,36 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@angular/bazel@patch:@angular/bazel@npm:14.0.0#.yarn/patches/@angular-bazel-npm-14.0.0-ae3b299ce7.patch::locator=%40angular%2Fdev-infra-private%40workspace%3A.":
+  version: 14.0.0
+  resolution: "@angular/bazel@patch:@angular/bazel@npm%3A14.0.0#.yarn/patches/@angular-bazel-npm-14.0.0-ae3b299ce7.patch::version=14.0.0&hash=1cca23&locator=%40angular%2Fdev-infra-private%40workspace%3A."
+  dependencies:
+    "@microsoft/api-extractor": 7.24.0
+    shelljs: ^0.8.5
+    tsickle: ^0.38.0
+    tslib: ^2.3.0
+  peerDependencies:
+    "@angular/compiler-cli": 14.0.0
+    "@bazel/concatjs": ^5.3.0
+    "@bazel/worker": ^5.3.0
+    "@rollup/plugin-commonjs": ^21.0.0
+    "@rollup/plugin-node-resolve": ^13.0.4
+    rollup: ^2.56.3
+    rollup-plugin-sourcemaps: ^0.6.3
+    terser: ^5.9.0
+    typescript: ">=4.6.2 <4.8"
+  peerDependenciesMeta:
+    terser:
+      optional: true
+  bin:
+    ngc-wrapped: src/ngc-wrapped/index.js
+    packager: src/ng_package/packager.js
+    types_bundler: src/types_bundle/index.js
+    xi18n: src/ngc-wrapped/extract_i18n.js
+  checksum: fda1f0531c5ba47758edebc37fd15e8df7b6a142200d3463a8ed8b5861ee8ea755de67b6cd8bc174e68761b0248c9e5f9cbc630ccd89686d4f2c1c51d20c2557
+  languageName: node
+  linkType: hard
+
 "@angular/benchpress@npm:0.3.0":
   version: 0.3.0
   resolution: "@angular/benchpress@npm:0.3.0"
@@ -519,7 +549,7 @@ __metadata:
     yargs: ^17.0.0
     zone.js: ^0.11.4
   bin:
-    ng-dev: ./ng-dev/bundles/cli.js
+    ng-dev: ./ng-dev/bundles/cli.mjs
   languageName: unknown
   linkType: soft
 

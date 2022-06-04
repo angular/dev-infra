@@ -9,11 +9,10 @@
 import {ListChoiceOptions, prompt} from 'inquirer';
 
 import {GithubConfig} from '../../utils/config';
-import {debug, error, info, log, promptConfirm, red, yellow} from '../../utils/console';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {ReleaseConfig} from '../config/index';
-import {ActiveReleaseTrains, fetchActiveReleaseTrains} from '../versioning/active-release-trains';
-import {npmIsLoggedIn, npmLogin, npmLogout} from '../versioning/npm-publish';
+import {ActiveReleaseTrains} from '../versioning/active-release-trains';
+import {NpmCommand} from '../versioning/npm-command';
 import {printActiveReleaseTrains} from '../versioning/print-active-trains';
 import {getNextBranchName, ReleaseRepoWithApi} from '../versioning/version-branches';
 
@@ -21,6 +20,8 @@ import {ReleaseAction} from './actions';
 import {FatalReleaseActionError, UserAbortedReleaseActionError} from './actions-error';
 import {actions} from './actions/index';
 import {verifyNgDevToolIsUpToDate} from '../../utils/version-check';
+import {Log, yellow} from '../../utils/logging';
+import {Prompt} from '../../utils/prompt';
 
 export enum CompletionState {
   SUCCESS,
@@ -41,11 +42,11 @@ export class ReleaseTool {
 
   /** Runs the interactive release tool. */
   async run(): Promise<CompletionState> {
-    log();
-    log(yellow('--------------------------------------------'));
-    log(yellow('  Angular Dev-Infra release staging script'));
-    log(yellow('--------------------------------------------'));
-    log();
+    Log.info();
+    Log.info(yellow('--------------------------------------------'));
+    Log.info(yellow('  Angular Dev-Infra release staging script'));
+    Log.info(yellow('--------------------------------------------'));
+    Log.info();
 
     const {owner, name} = this._github;
     const nextBranchName = getNextBranchName(this._github);
@@ -71,7 +72,7 @@ export class ReleaseTool {
     process.env['HUSKY'] = '0';
 
     const repo: ReleaseRepoWithApi = {owner, name, api: this._git.github, nextBranchName};
-    const releaseTrains = await fetchActiveReleaseTrains(repo);
+    const releaseTrains = await ActiveReleaseTrains.fetch(repo);
 
     // Print the active release trains so that the caretaker can access
     // the current project branching state without switching context.
@@ -103,7 +104,7 @@ export class ReleaseTool {
     // Return back to the git state from before the release tool ran.
     this._git.checkout(this.previousGitBranchOrRevision, true);
     // Ensure log out of NPM.
-    await npmLogout(this._config.publishRegistry);
+    await NpmCommand.logout(this._config.publishRegistry);
   }
 
   /** Prompts the caretaker for a release action that should be performed. */
@@ -123,7 +124,7 @@ export class ReleaseTool {
       }
     }
 
-    info('Please select the type of release you want to perform.');
+    Log.info('Please select the type of release you want to perform.');
 
     const {releaseAction} = await prompt<{releaseAction: ReleaseAction}>({
       name: 'releaseAction',
@@ -141,7 +142,7 @@ export class ReleaseTool {
    */
   private async _verifyNoUncommittedChanges(): Promise<boolean> {
     if (this._git.hasUncommittedChanges()) {
-      error(red('  ✘   There are changes which are not committed and should be discarded.'));
+      Log.error('  ✘   There are changes which are not committed and should be discarded.');
       return false;
     }
     return true;
@@ -153,11 +154,9 @@ export class ReleaseTool {
    */
   private async _verifyNoShallowRepository(): Promise<boolean> {
     if (this._git.isShallowRepo()) {
-      error(red('  ✘   The local repository is configured as shallow.'));
-      error(red(`      Please convert the repository to a complete one by syncing with upstream.`));
-      error(
-        red(`      https://git-scm.com/docs/git-fetch#Documentation/git-fetch.txt---unshallow`),
-      );
+      Log.error('  ✘   The local repository is configured as shallow.');
+      Log.error(`      Please convert the repository to a complete one by syncing with upstream.`);
+      Log.error(`      https://git-scm.com/docs/git-fetch#Documentation/git-fetch.txt---unshallow`);
       return false;
     }
     return true;
@@ -175,8 +174,8 @@ export class ReleaseTool {
     });
 
     if (headSha !== data.commit.sha) {
-      error(red('  ✘   Running release tool from an outdated local branch.'));
-      error(red(`      Please make sure you are running from the "${nextBranchName}" branch.`));
+      Log.error('  ✘   Running release tool from an outdated local branch.');
+      Log.error(`      Please make sure you are running from the "${nextBranchName}" branch.`);
       return false;
     }
     return true;
@@ -191,24 +190,24 @@ export class ReleaseTool {
     // TODO(josephperrott): remove wombat specific block once wombot allows `npm whoami` check to
     // check the status of the local token in the .npmrc file.
     if (this._config.publishRegistry?.includes('wombat-dressing-room.appspot.com')) {
-      info('Unable to determine NPM login state for wombat proxy, requiring login now.');
+      Log.info('Unable to determine NPM login state for wombat proxy, requiring login now.');
       try {
-        await npmLogin(this._config.publishRegistry);
+        await NpmCommand.startInteractiveLogin(this._config.publishRegistry);
       } catch {
         return false;
       }
       return true;
     }
-    if (await npmIsLoggedIn(this._config.publishRegistry)) {
-      debug(`Already logged into ${registry}.`);
+    if (await NpmCommand.checkIsLoggedIn(this._config.publishRegistry)) {
+      Log.debug(`Already logged into ${registry}.`);
       return true;
     }
-    error(red(`  ✘   Not currently logged into ${registry}.`));
-    const shouldLogin = await promptConfirm('Would you like to log into NPM now?');
+    Log.warn(`  ✘   Not currently logged into ${registry}.`);
+    const shouldLogin = await Prompt.confirm('Would you like to log into NPM now?');
     if (shouldLogin) {
-      debug('Starting NPM login.');
+      Log.debug('Starting NPM login.');
       try {
-        await npmLogin(this._config.publishRegistry);
+        await NpmCommand.startInteractiveLogin(this._config.publishRegistry);
       } catch {
         return false;
       }

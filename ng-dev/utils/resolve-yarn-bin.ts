@@ -8,12 +8,13 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import * as which from 'which';
+import which from 'which';
+
 import {isNodeJSWrappedError} from './nodejs-errors';
 import {parse as parseLockfile} from '@yarnpkg/lockfile';
 import {parse as parseYaml} from 'yaml';
-import {spawn} from './child-process';
-import {debug} from './console';
+import {ChildProcess} from './child-process';
+import {Log} from './logging';
 
 /** Type describing a Yarn configuration and its potential properties. */
 export interface YarnConfiguration {
@@ -68,7 +69,7 @@ export async function getYarnPathFromNpmGlobalBinaries(): Promise<string | null>
   try {
     return await which('yarn', {path: npmGlobalBinPath});
   } catch (e) {
-    debug('Could not find Yarn within NPM global binary directory. Error:', e);
+    Log.debug('Could not find Yarn within NPM global binary directory. Error:', e);
     return null;
   }
 }
@@ -76,9 +77,9 @@ export async function getYarnPathFromNpmGlobalBinaries(): Promise<string | null>
 /** Gets the path to the system-wide global NPM binary directory. */
 async function getNpmGlobalBinPath(): Promise<string | null> {
   try {
-    return (await spawn('npm', ['bin', '--global'], {mode: 'silent'})).stdout.trim();
+    return (await ChildProcess.spawn('npm', ['bin', '--global'], {mode: 'silent'})).stdout.trim();
   } catch (e) {
-    debug('Could not determine NPM global binary directory. Error:', e);
+    Log.debug('Could not determine NPM global binary directory. Error:', e);
     return null;
   }
 }
@@ -116,8 +117,8 @@ async function findAndParseYarnConfiguration(
   try {
     return config.entry.parse(config.content!);
   } catch (e) {
-    debug(`Could not parse determined Yarn configuration file (${config.entry.fileName}).`);
-    debug(`Error:`, e);
+    Log.debug(`Could not parse determined Yarn configuration file (${config.entry.fileName}).`);
+    Log.debug(`Error:`, e);
     return null;
   }
 }

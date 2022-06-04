@@ -8,7 +8,7 @@
 
 import {writeFileSync} from 'fs';
 
-import {debug, log} from '../../utils/console';
+import {Log} from '../../utils/logging';
 
 import {loadCommitMessageDraft} from './commit-message-draft';
 import {CommitMsgSource} from './commit-message-source';
@@ -22,17 +22,19 @@ import {CommitMsgSource} from './commit-message-source';
 export function restoreCommitMessage(filePath: string, source?: CommitMsgSource) {
   if (!!source) {
     if (source === 'message') {
-      debug('A commit message was already provided via the command with a -m or -F flag');
+      Log.debug('A commit message was already provided via the command with a -m or -F flag');
     }
     if (source === 'template') {
-      debug('A commit message was already provided via the -t flag or config.template setting');
+      Log.debug('A commit message was already provided via the -t flag or config.template setting');
     }
     if (source === 'squash') {
-      debug('A commit message was already provided as a merge action or via .git/MERGE_MSG');
+      Log.debug('A commit message was already provided as a merge action or via .git/MERGE_MSG');
     }
     if (source === 'commit') {
-      debug('A commit message was already provided through a revision specified via --fixup, -c,');
-      debug('-C or --amend flag');
+      Log.debug(
+        'A commit message was already provided through a revision specified via --fixup, -c,',
+      );
+      Log.debug('-C or --amend flag');
     }
     process.exit(0);
   }

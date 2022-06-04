@@ -8,7 +8,7 @@
 
 import {join} from 'path';
 
-import {error} from '../../utils/console';
+import {Log} from '../../utils/logging';
 
 import {Formatter} from './base-formatter';
 
@@ -33,9 +33,9 @@ export class ClangFormat extends Formatter {
       commandFlags: `-i -style=file`,
       callback: (file: string, code: number | NodeJS.Signals, _: string, stderr: string) => {
         if (code !== 0) {
-          error(`Error running clang-format on: ${file}`);
-          error(stderr);
-          error();
+          Log.error(`Error running clang-format on: ${file}`);
+          Log.error(stderr);
+          Log.error();
           return true;
         }
         return false;

@@ -1,6 +1,6 @@
 import {existsSync, readFileSync} from 'fs';
 import {GitClient} from '../../utils/git/git-client';
-import {SemVer} from 'semver';
+import semver from 'semver';
 import {dedent} from '../../utils/testing';
 import {Changelog, splitMarker} from './changelog';
 import {getMockGitClient} from '../../utils/testing';
@@ -49,7 +49,7 @@ describe('Changelog', () => {
     `.trim(),
     );
 
-    Changelog.moveEntriesPriorToVersionToArchive(gitClient, new SemVer('3.0.0'));
+    Changelog.moveEntriesPriorToVersionToArchive(gitClient, new semver.SemVer('3.0.0'));
 
     expect(readFileAsString(changelog.archiveFilePath)).toBe(
       dedent`
@@ -92,10 +92,10 @@ describe('Changelog', () => {
       Changelog.prependEntryToChangelogFile(gitClient, createChangelogEntry('1.0.0'));
       expect(existsSync(changelog.archiveFilePath)).toBe(false);
 
-      Changelog.moveEntriesPriorToVersionToArchive(gitClient, new SemVer('1.0.0'));
+      Changelog.moveEntriesPriorToVersionToArchive(gitClient, new semver.SemVer('1.0.0'));
       expect(existsSync(changelog.archiveFilePath)).toBe(false);
 
-      Changelog.moveEntriesPriorToVersionToArchive(gitClient, new SemVer('2.0.0'));
+      Changelog.moveEntriesPriorToVersionToArchive(gitClient, new semver.SemVer('2.0.0'));
       expect(existsSync(changelog.archiveFilePath)).toBe(true);
     });
 
@@ -113,7 +113,7 @@ describe('Changelog', () => {
         createChangelogEntry('3.0.0', 'This is version 3'),
       );
 
-      Changelog.moveEntriesPriorToVersionToArchive(gitClient, new SemVer('3.0.0'));
+      Changelog.moveEntriesPriorToVersionToArchive(gitClient, new semver.SemVer('3.0.0'));
       expect(readFileAsString(changelog.archiveFilePath)).toContain('version 1');
       expect(readFileAsString(changelog.archiveFilePath)).toContain('version 2');
       expect(readFileAsString(changelog.archiveFilePath)).not.toContain('version 3');
@@ -127,7 +127,7 @@ describe('Changelog', () => {
       Changelog.prependEntryToChangelogFile(gitClient, createChangelogEntry('1.1.0-next.0'));
       Changelog.prependEntryToChangelogFile(gitClient, createChangelogEntry('1.1.0-rc.0'));
 
-      Changelog.removePrereleaseEntriesForVersion(gitClient, new SemVer('1.1.0'));
+      Changelog.removePrereleaseEntriesForVersion(gitClient, new semver.SemVer('1.1.0'));
       expect(readFileAsString(changelog.filePath)).toContain('1.0.0-next.0');
       expect(readFileAsString(changelog.filePath)).toContain('1.0.0');
       expect(readFileAsString(changelog.filePath)).not.toContain('1.1.0-next.0');
@@ -140,7 +140,7 @@ describe('Changelog', () => {
       Changelog.prependEntryToChangelogFile(gitClient, createChangelogEntry('2.0.0-next.0'));
       Changelog.prependEntryToChangelogFile(gitClient, createChangelogEntry('2.0.0-rc.0'));
 
-      Changelog.removePrereleaseEntriesForVersion(gitClient, new SemVer('2.0.0'));
+      Changelog.removePrereleaseEntriesForVersion(gitClient, new semver.SemVer('2.0.0'));
       expect(readFileAsString(changelog.filePath)).toContain('1.0.0-next.0');
       expect(readFileAsString(changelog.filePath)).toContain('1.0.0');
       expect(readFileAsString(changelog.filePath)).not.toContain('2.0.0-next.0');

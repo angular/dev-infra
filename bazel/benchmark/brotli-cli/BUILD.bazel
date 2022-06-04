@@ -5,9 +5,9 @@ package(default_visibility = ["//visibility:public"])
 nodejs_binary(
     name = "brotli-cli",
     data = [
-        "cli.js",
+        "cli.cjs",
     ],
-    entry_point = ":cli.js",
+    entry_point = ":cli.cjs",
     visibility = ["//visibility:public"],
 )
 

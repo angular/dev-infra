@@ -3,31 +3,34 @@ load("//bazel/esbuild:index.bzl", "esbuild", "esbuild_amd", "esbuild_config")
 load("//bazel/spec-bundling:spec-entrypoint.bzl", "spec_entrypoint")
 load("//bazel/spec-bundling:bundle-config.bzl", "spec_bundle_config_file")
 
-"""
-  Starlark file exposing a macro for bundling Bazel targets with spec files into
-  a single spec ESM/AMD file. Bundling is helpful as it avoids unnecessary complexity
-  with module resolution at runtime with loaders such as SystemJS or RequireJS.
-
-  Additionally, given that Angular framework packages do no longer ship UMD bundles,
-  bundling simplifies the integration of those FW packages significantly. It also helps
-  with incorporating Angular linker-processed output of library ESM files.
-"""
-
 def spec_bundle(
         name,
         deps,
         platform,
+        bootstrap = [],
         run_angular_linker = False,
         # We cannot use `ES2017` or higher as that would result in `async/await` not being downleveled.
         # ZoneJS needs to be able to intercept these as otherwise change detection would not work properly.
         target = "es2016",
         workspace_name = None,
         **kwargs):
-    """
-      Macro that will bundle all test files, with their respective transitive dependencies,
-      into a single bundle file that can be loaded within Karma or NodeJS directly. Test files
-      are bundled as Angular framework packages do not ship UMD files and to avoid overall
-      complexity with maintaining a runtime loader such as RequireJS or SystemJS.
+    """Macro that will bundle all test files with their respective transitive dependencies.
+
+    Bundled specs end up in a single bundle file that can be loaded within Karma or NodeJS directly.
+    This is helpful as Angular framework packages do not ship UMD files and to avoid overall
+    complexity with maintaining a runtime loader such as RequireJS or SystemJS.
+
+    Args:
+        name: Name of the spec bundle target
+        deps: Targets that contain all spec files. Files ending with `spec.js`
+          are picked up.
+        platform: Platform for which spec should be bundled. i.e. `node` or `browser`.
+        bootstrap: Targets providing bootstrap scripts that run before the specs. Files
+          ending with `init.js` are picked up.
+        target: Target ECMAScript to use for the specs bundle.
+        run_angular_linker: Whether the Angular linker should process the bundled code.
+        workspace_name: Workspace name that needs to be provided for the AMD module name.
+        **kwargs: Other arguments to be passed to ESBuild.
     """
 
     is_browser_test = platform == "browser"
@@ -36,6 +39,7 @@ def spec_bundle(
     spec_entrypoint(
         name = "%s_spec_entrypoint" % name,
         deps = deps,
+        bootstrap = bootstrap,
         testonly = True,
     )
 

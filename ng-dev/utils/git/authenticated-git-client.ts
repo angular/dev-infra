@@ -8,7 +8,7 @@
 
 import {GithubConfig} from '../config';
 import {findOwnedForksOfRepoQuery} from './graphql-queries';
-import {yellow} from '../console';
+import {yellow} from '../logging';
 
 import {GitClient} from './git-client';
 import {AuthenticatedGithubClient, GithubRepo} from './github';

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as semver from 'semver';
+import semver from 'semver';
 
 import {ReleaseTrain} from './release-trains';
 import {
@@ -37,12 +37,15 @@ export class ActiveReleaseTrains {
   isFeatureFreeze() {
     return this.releaseCandidate !== null && this.releaseCandidate.version.prerelease[0] === 'next';
   }
+
+  /** Fetches the active release trains for the configured project. */
+  static async fetch(repo: ReleaseRepoWithApi): Promise<ActiveReleaseTrains> {
+    return fetchActiveReleaseTrains(repo);
+  }
 }
 
 /** Fetches the active release trains for the configured project. */
-export async function fetchActiveReleaseTrains(
-  repo: ReleaseRepoWithApi,
-): Promise<ActiveReleaseTrains> {
+async function fetchActiveReleaseTrains(repo: ReleaseRepoWithApi): Promise<ActiveReleaseTrains> {
   const nextBranchName = repo.nextBranchName;
   const nextVersion = await getVersionOfBranch(repo, nextBranchName);
   const next = new ReleaseTrain(nextBranchName, nextVersion);
@@ -95,7 +98,7 @@ export async function fetchActiveReleaseTrains(
 }
 
 /** Finds the currently active release trains from the specified version branches. */
-export async function findActiveReleaseTrainsFromVersionBranches(
+async function findActiveReleaseTrainsFromVersionBranches(
   repo: ReleaseRepoWithApi,
   nextVersion: semver.SemVer,
   branches: VersionBranch[],

@@ -1,26 +1,16 @@
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
-load("//tools:defaults.bzl", "jasmine_node_test")
+load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
 
 ts_library(
     name = "bootstrap",
     testonly = True,
     srcs = [
-        "bootstrap.ts",
+        "bootstrap.init.ts",
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//ng-dev/utils:config_cache",
         "//ng-dev/utils/testing:bazel-env",
-        "@npm//@bazel/jasmine",
-        "@npm//@types/jasmine",
     ],
-)
-
-filegroup(
-    name = "bootstrap_init",
-    testonly = True,
-    srcs = [":bootstrap"],
-    output_group = "es5_sources",
-    visibility = ["//visibility:public"],
 )
 
 ts_library(
@@ -31,8 +21,8 @@ ts_library(
     ],
     deps = [
         ":bootstrap",
+        "//ng-dev/utils",
         "//ng-dev/utils/testing:bazel-env",
-        "@npm//@types/node",
     ],
 )
 

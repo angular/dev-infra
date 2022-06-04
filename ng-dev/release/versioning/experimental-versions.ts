@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as semver from 'semver';
+import semver from 'semver';
 
 /** Gets whether the given version denotes an experimental SemVer version. */
-export function isExperimentalSemver(semver: semver.SemVer): boolean {
-  return semver.major === 0 && semver.minor >= 100;
+export function isExperimentalSemver(version: semver.SemVer): boolean {
+  return version.major === 0 && version.minor >= 100;
 }
 
 /** Creates the equivalent experimental version for a provided SemVer. */

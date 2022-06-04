@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {existsSync, readFileSync, writeFileSync} from 'fs';
 import {join} from 'path';
-import {SemVer} from 'semver';
+import semver from 'semver';
 import {ReleaseNotes} from '../../../../ng-dev/release/notes/release-notes';
 import {AuthenticatedGitClient} from '../../../../ng-dev/utils/git/authenticated-git-client';
 import {ANGULAR_ROBOT, getAuthTokenFor} from '../../../../github-actions/utils';
@@ -126,7 +126,7 @@ function getLatestRefFromUpstream(branchOrTag: string) {
 /** Create a semver tag based on todays date. */
 function getTodayAsSemver() {
   const today = new Date();
-  return new SemVer(`${today.getFullYear()}.${today.getMonth() + 1}.${today.getDate()}`);
+  return new semver.SemVer(`${today.getFullYear()}.${today.getMonth() + 1}.${today.getDate()}`);
 }
 
 // This action should only be run in the angular/dev-infra repo.

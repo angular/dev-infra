@@ -4,5 +4,6 @@
     "node": "16"
   },
   "main": "functions_compiled/index.js",
+  "type": "module",
   "private": true
 }

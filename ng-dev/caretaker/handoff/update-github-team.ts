@@ -9,7 +9,7 @@
 import {prompt} from 'inquirer';
 import {getConfig} from '../../utils/config';
 
-import {debug, green, info, red, yellow} from '../../utils/console';
+import {green, Log, yellow} from '../../utils/logging';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {assertValidCaretakerConfig} from '../config';
 
@@ -41,8 +41,8 @@ export async function updateCaretakerTeamViaPrompt() {
       default: current,
       name: 'selected',
       prefix: '',
-      validate: (selected: string[]) => {
-        if (selected.length !== 2) {
+      validate: (value: string[]) => {
+        if (value.length !== 2) {
           return 'Please select exactly 2 caretakers for the upcoming rotation.';
         }
         return true;
@@ -58,22 +58,22 @@ export async function updateCaretakerTeamViaPrompt() {
   ]);
 
   if (confirm === false) {
-    info(yellow('  ⚠  Skipping caretaker group update.'));
+    Log.warn('  ⚠  Skipping caretaker group update.');
     return;
   }
 
   if (JSON.stringify(selected) === JSON.stringify(current)) {
-    info(green('  √  Caretaker group already up to date.'));
+    Log.info(green('  √  Caretaker group already up to date.'));
     return;
   }
 
   try {
     await setCaretakerGroup(caretakerGroup, selected);
   } catch {
-    info(red('  ✘  Failed to update caretaker group.'));
+    Log.error('  ✘  Failed to update caretaker group.');
     return;
   }
-  info(green('  √  Successfully updated caretaker group'));
+  Log.info(green('  √  Successfully updated caretaker group'));
 }
 
 /** Retrieve the current list of members for the provided group. */
@@ -102,7 +102,7 @@ async function setCaretakerGroup(group: string, members: string[]) {
   const removed = current.filter((login) => !members.includes(login));
   /** Add a user to the group. */
   const add = async (username: string) => {
-    debug(`Adding ${username} to ${fullSlug}.`);
+    Log.debug(`Adding ${username} to ${fullSlug}.`);
     await git.github.teams.addOrUpdateMembershipForUserInOrg({
       org: git.remoteConfig.owner,
       team_slug: group,
@@ -112,7 +112,7 @@ async function setCaretakerGroup(group: string, members: string[]) {
   };
   /** Remove a user from the group. */
   const remove = async (username: string) => {
-    debug(`Removing ${username} from ${fullSlug}.`);
+    Log.debug(`Removing ${username} from ${fullSlug}.`);
     await git.github.teams.removeMembershipForUserInOrg({
       org: git.remoteConfig.owner,
       team_slug: group,
@@ -120,16 +120,16 @@ async function setCaretakerGroup(group: string, members: string[]) {
     });
   };
 
-  debug.group(`Caretaker Group: ${fullSlug}`);
-  debug(`Current Membership: ${current.join(', ')}`);
-  debug(`New Membership:     ${members.join(', ')}`);
-  debug(`Removed:            ${removed.join(', ')}`);
-  debug.groupEnd();
+  Log.debug.group(`Caretaker Group: ${fullSlug}`);
+  Log.debug(`Current Membership: ${current.join(', ')}`);
+  Log.debug(`New Membership:     ${members.join(', ')}`);
+  Log.debug(`Removed:            ${removed.join(', ')}`);
+  Log.debug.groupEnd();
 
   // Add members before removing to prevent the account performing the action from removing their
   // permissions to change the group membership early.
   await Promise.all(members.map(add));
   await Promise.all(removed.map(remove));
 
-  debug(`Successfuly updated ${fullSlug}`);
+  Log.debug(green(`Successfully updated ${fullSlug}`));
 }

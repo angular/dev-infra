@@ -12,14 +12,14 @@
 // can still invoke this command.
 // ------------------------
 
-import * as semver from 'semver';
-import {Arguments, Argv, CommandModule} from 'yargs';
+import semver from 'semver';
+import yargs from 'yargs';
 import {getConfig} from '../../utils/config';
 
-import {bold, debug, error, green, info, red} from '../../utils/console';
+import {Log, bold, green} from '../../utils/logging';
 import {Spinner} from '../../utils/spinner';
 import {assertValidReleaseConfig} from '../config/index';
-import {setNpmTagForPackage} from '../versioning/npm-publish';
+import {NpmCommand} from '../versioning/npm-command';
 import {createExperimentalSemver, isExperimentalSemver} from '../versioning/experimental-versions';
 
 /** Command line options for setting an NPM dist tag. */
@@ -29,7 +29,7 @@ export interface ReleaseSetDistTagOptions {
   skipExperimentalPackages: boolean;
 }
 
-function builder(args: Argv): Argv<ReleaseSetDistTagOptions> {
+function builder(args: yargs.Argv): yargs.Argv<ReleaseSetDistTagOptions> {
   return args
     .positional('tagName', {
       type: 'string',
@@ -51,7 +51,7 @@ function builder(args: Argv): Argv<ReleaseSetDistTagOptions> {
 }
 
 /** Yargs command handler for setting an NPM dist tag. */
-async function handler(args: Arguments<ReleaseSetDistTagOptions>) {
+async function handler(args: yargs.Arguments<ReleaseSetDistTagOptions>) {
   const {targetVersion: rawVersion, tagName, skipExperimentalPackages} = args;
   const config = getConfig();
   assertValidReleaseConfig(config);
@@ -59,19 +59,17 @@ async function handler(args: Arguments<ReleaseSetDistTagOptions>) {
   const version = semver.parse(rawVersion);
 
   if (version === null) {
-    error(red(`Invalid version specified (${rawVersion}). Unable to set NPM dist tag.`));
+    Log.error(`Invalid version specified (${rawVersion}). Unable to set NPM dist tag.`);
     process.exit(1);
   } else if (isExperimentalSemver(version)) {
-    error(
-      red(
-        `Unexpected experimental SemVer version specified. This command expects a ` +
-          `non-experimental project SemVer version.`,
-      ),
+    Log.error(
+      `Unexpected experimental SemVer version specified. This command expects a ` +
+        `non-experimental project SemVer version.`,
     );
     process.exit(1);
   }
 
-  debug(`Setting "${tagName}" NPM dist tag for release packages to v${version}.`);
+  Log.debug(`Setting "${tagName}" NPM dist tag for release packages to v${version}.`);
   const spinner = new Spinner('');
 
   for (const pkg of npmPackages) {
@@ -86,23 +84,23 @@ async function handler(args: Arguments<ReleaseSetDistTagOptions>) {
     const distTagVersion = pkg.experimental ? createExperimentalSemver(version!) : version!;
 
     try {
-      await setNpmTagForPackage(pkg.name, tagName, distTagVersion, publishRegistry);
-      debug(`Successfully set "${tagName}" NPM dist tag for "${pkg.name}".`);
+      await NpmCommand.setDistTagForPackage(pkg.name, tagName, distTagVersion, publishRegistry);
+      Log.debug(`Successfully set "${tagName}" NPM dist tag for "${pkg.name}".`);
     } catch (e) {
       spinner.complete();
-      error(e);
-      error(red(`  ✘   An error occurred while setting the NPM dist tag for "${pkg.name}".`));
+      Log.error(e);
+      Log.error(`  ✘   An error occurred while setting the NPM dist tag for "${pkg.name}".`);
       process.exit(1);
     }
   }
 
   spinner.complete();
-  info(green(`  ✓   Set NPM dist tag for all release packages.`));
-  info(green(`      ${bold(tagName)} will now point to ${bold(`v${version}`)}.`));
+  Log.info(green(`  ✓   Set NPM dist tag for all release packages.`));
+  Log.info(green(`      ${bold(tagName)} will now point to ${bold(`v${version}`)}.`));
 }
 
 /** CLI command module for setting an NPM dist tag. */
-export const ReleaseSetDistTagCommand: CommandModule<{}, ReleaseSetDistTagOptions> = {
+export const ReleaseSetDistTagCommand: yargs.CommandModule<{}, ReleaseSetDistTagOptions> = {
   builder,
   handler,
   command: 'set-dist-tag <tag-name> <target-version>',

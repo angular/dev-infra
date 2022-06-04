@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Arguments, Argv, CommandModule} from 'yargs';
+import yargs from 'yargs';
 
-import {info} from '../../utils/console';
+import {Log} from '../../utils/logging';
 
 import {validateCommitRange} from './validate-range';
 
@@ -18,8 +18,8 @@ export interface ValidateRangeOptions {
 }
 
 /** Builds the command. */
-function builder(yargs: Argv) {
-  return yargs
+function builder(argv: yargs.Argv) {
+  return argv
     .positional('startingRef', {
       description: 'The first ref in the range to select',
       type: 'string',
@@ -33,21 +33,21 @@ function builder(yargs: Argv) {
 }
 
 /** Handles the command. */
-async function handler({startingRef, endingRef}: Arguments<ValidateRangeOptions>) {
+async function handler({startingRef, endingRef}: yargs.Arguments<ValidateRangeOptions>) {
   // If on CI, and no pull request number is provided, assume the branch
   // being run on is an upstream branch.
   if (process.env['CI'] && process.env['CI_PULL_REQUEST'] === 'false') {
-    info(`Since valid commit messages are enforced by PR linting on CI, we do not`);
-    info(`need to validate commit messages on CI runs on upstream branches.`);
-    info();
-    info(`Skipping check of provided commit range`);
+    Log.info(`Since valid commit messages are enforced by PR linting on CI, we do not`);
+    Log.info(`need to validate commit messages on CI runs on upstream branches.`);
+    Log.info();
+    Log.info(`Skipping check of provided commit range`);
     return;
   }
   await validateCommitRange(startingRef, endingRef);
 }
 
 /** yargs command module describing the command. */
-export const ValidateRangeModule: CommandModule<{}, ValidateRangeOptions> = {
+export const ValidateRangeModule: yargs.CommandModule<{}, ValidateRangeOptions> = {
   handler,
   builder,
   command: 'validate-range <starting-ref> [ending-ref]',

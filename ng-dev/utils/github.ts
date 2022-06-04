@@ -93,13 +93,13 @@ export async function getPendingPrs<PrSchema>(prSchema: PrSchema, git: Authentic
 
   // For each page of the response, get the page and add it to the list of PRs
   while (hasNextPage) {
-    const params = {
+    const paramsValue = {
       after: cursor || null,
       first: 100,
       owner,
       name,
     };
-    const results = (await git.github.graphql(PRS_QUERY, params)) as typeof PRS_QUERY;
+    const results = (await git.github.graphql(PRS_QUERY, paramsValue)) as typeof PRS_QUERY;
     prs.push(...results.repository.pullRequests.nodes);
     hasNextPage = results.repository.pullRequests.pageInfo.hasNextPage;
     cursor = results.repository.pullRequests.pageInfo.endCursor;

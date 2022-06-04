@@ -8,7 +8,7 @@
 
 import {RuleFailure, WalkContext} from 'tslint/lib';
 import {AbstractRule} from 'tslint/lib/rules';
-import * as ts from 'typescript';
+import ts from 'typescript';
 
 const noNamedExportsError =
   'Named import is not allowed. The module does not expose named exports when ' +
@@ -80,7 +80,7 @@ function visitNode(node: ts.Node, ctx: WalkContext, options: RuleOptions) {
     ctx.addFailureAtNode(node, noDefaultExportError);
   }
 
-  ts.forEachChild(node, (node) => visitNode(node, ctx, options));
+  ts.forEachChild(node, (n) => visitNode(n, ctx, options));
 }
 
 function isNamedImportToDisallowedModule(node: ts.Node, disallowed: string[]): boolean {

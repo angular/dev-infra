@@ -9,7 +9,7 @@
 import {DryRunError, isDryRun} from '../dry-run';
 import {GithubConfig, assertValidGithubConfig, getConfig} from '../config';
 import {SpawnSyncOptions, SpawnSyncReturns, spawnSync} from 'child_process';
-import {debug, info} from '../console';
+import {Log} from '../logging';
 
 import {GithubClient} from './github';
 import {getRepositoryGitUrl} from './github-urls';
@@ -86,7 +86,7 @@ export class GitClient {
     const gitCommand = args[0];
 
     if (isDryRun() && gitCommand === 'push') {
-      debug(`"git push" is not able to be run in dryRun mode.`);
+      Log.debug(`"git push" is not able to be run in dryRun mode.`);
       throw new DryRunError();
     }
 
@@ -95,7 +95,7 @@ export class GitClient {
     // Note that we sanitize the command before printing it to the console. We do not want to
     // print an access token if it is contained in the command. It's common to share errors with
     // others if the tool failed, and we do not want to leak tokens.
-    debug('Executing: git', this.sanitizeConsoleOutput(args.join(' ')));
+    Log.debug('Executing: git', this.sanitizeConsoleOutput(args.join(' ')));
 
     const result = spawnSync(this.gitBinPath, args, {
       cwd: this.baseDir,
@@ -106,7 +106,7 @@ export class GitClient {
       encoding: 'utf8',
     });
 
-    debug(`Status: ${result.status}, Error: ${!!result.error}, Signal: ${result.signal}`);
+    Log.debug(`Status: ${result.status}, Error: ${!!result.error}, Signal: ${result.signal}`);
 
     if (result.status !== 0 && result.stderr !== null) {
       // Git sometimes prints the command if it failed. This means that it could
@@ -115,9 +115,9 @@ export class GitClient {
       process.stderr.write(this.sanitizeConsoleOutput(result.stderr));
     }
 
-    debug('Stdout:', result.stdout);
-    debug('Stderr:', result.stderr);
-    debug('Process Error:', result.error);
+    Log.debug('Stdout:', result.stdout);
+    Log.debug('Stderr:', result.stderr);
+    Log.debug('Process Error:', result.error);
 
     if (result.error !== undefined) {
       // Git sometimes prints the command if it failed. This means that it could

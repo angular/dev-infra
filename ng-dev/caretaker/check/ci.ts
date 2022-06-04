@@ -8,13 +8,13 @@
 
 import fetch from 'node-fetch';
 import {
-  fetchActiveReleaseTrains,
+  ActiveReleaseTrains,
   getNextBranchName,
   ReleaseRepoWithApi,
   ReleaseTrain,
 } from '../../release/versioning/index';
 
-import {bold, debug, info} from '../../utils/console';
+import {bold, Log} from '../../utils/logging';
 import {BaseModule} from './base';
 
 /** The result of checking a branch on CI. */
@@ -36,7 +36,7 @@ export class CiModule extends BaseModule<CiData> {
       ...this.git.remoteConfig,
       nextBranchName,
     };
-    const {latest, next, releaseCandidate} = await fetchActiveReleaseTrains(repo);
+    const {latest, next, releaseCandidate} = await ActiveReleaseTrains.fetch(repo);
     const ciResultPromises = Object.entries({releaseCandidate, latest, next}).map(
       async ([trainName, train]: [string, ReleaseTrain | null]) => {
         if (train === null) {
@@ -63,30 +63,30 @@ export class CiModule extends BaseModule<CiData> {
   override async printToTerminal() {
     const data = await this.data;
     const minLabelLength = Math.max(...data.map((result) => result.label.length));
-    info.group(bold(`CI`));
+    Log.info.group(bold(`CI`));
     data.forEach((result) => {
       if (result.active === false) {
-        debug(`No active release train for ${result.name}`);
+        Log.debug(`No active release train for ${result.name}`);
         return;
       }
       const label = result.label.padEnd(minLabelLength);
       if (result.status === 'not found') {
-        info(`${result.name} was not found on CircleCI`);
+        Log.info(`${result.name} was not found on CircleCI`);
       } else if (result.status === 'success') {
-        info(`${label} ✅`);
+        Log.info(`${label} ✅`);
       } else {
-        info(`${label} ❌`);
+        Log.info(`${label} ❌`);
       }
     });
-    info.groupEnd();
-    info();
+    Log.info.groupEnd();
+    Log.info();
   }
 
   /** Get the CI status of a given branch from CircleCI. */
   private async getBranchStatusFromCi(branch: string): Promise<CiBranchStatus> {
     const {owner, name} = this.git.remoteConfig;
     const url = `https://circleci.com/gh/${owner}/${name}/tree/${branch}.svg?style=shield`;
-    const result = await fetch(url).then((result) => result.text());
+    const result = await fetch(url).then((r) => r.text());
 
     if (result && !result.includes('no builds')) {
       return result.includes('passing') ? 'success' : 'failed';

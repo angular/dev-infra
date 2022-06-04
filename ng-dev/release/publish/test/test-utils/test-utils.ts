@@ -7,9 +7,9 @@
  */
 
 import * as fs from 'fs';
-import * as nock from 'nock';
+import nock from 'nock';
 import * as path from 'path';
-import * as semver from 'semver';
+import semver from 'semver';
 
 import {dedent, GithubTestingRepo, testTmpDir} from '../../../../utils/testing';
 import {_npmPackageInfoCache, ActiveReleaseTrains, NpmPackageInfo} from '../../../versioning';

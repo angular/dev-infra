@@ -7,9 +7,10 @@
  */
 import {Commit} from '../../commit-message/parse';
 import {getCommitsInRange} from '../../commit-message/utils';
-import {error, info, promptConfirm} from '../../utils/console';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {addTokenToGitHttpsUrl} from '../../utils/git/github-urls';
+import {Log} from '../../utils/logging';
+import {Prompt} from '../../utils/prompt';
 import {fetchPullRequestFromGithub} from '../common/fetch-pull-request';
 
 /**
@@ -22,7 +23,7 @@ export async function rebasePr(prNumber: number, githubToken: string): Promise<n
   /** The singleton instance of the authenticated git client. */
   const git = AuthenticatedGitClient.get();
   if (git.hasUncommittedChanges()) {
-    error('Cannot perform rebase of PR with local changes.');
+    Log.error('Cannot perform rebase of PR with local changes.');
     return 1;
   }
 
@@ -35,7 +36,7 @@ export async function rebasePr(prNumber: number, githubToken: string): Promise<n
   const pr = await fetchPullRequestFromGithub(git, prNumber);
 
   if (pr === null) {
-    error(`Specified pull request does not exist.`);
+    Log.error(`Specified pull request does not exist.`);
     return 1;
   }
 
@@ -57,7 +58,7 @@ export async function rebasePr(prNumber: number, githubToken: string): Promise<n
   // If the PR does not allow maintainers to modify it, exit as the rebased PR cannot
   // be pushed up.
   if (!pr.maintainerCanModify && !pr.viewerDidAuthor) {
-    error(
+    Log.error(
       `Cannot rebase as you did not author the PR and the PR does not allow maintainers` +
         `to modify the PR`,
     );
@@ -69,11 +70,11 @@ export async function rebasePr(prNumber: number, githubToken: string): Promise<n
     // a shallow clone is being used.
 
     // Fetch the branch at the commit of the PR, and check it out in a detached state.
-    info(`Checking out PR #${prNumber} from ${fullHeadRef}`);
+    Log.info(`Checking out PR #${prNumber} from ${fullHeadRef}`);
     git.run(['fetch', '-q', headRefUrl, headRefName, '--deepen=500']);
     git.run(['checkout', '-q', '--detach', 'FETCH_HEAD']);
     // Fetch the PRs target branch and rebase onto it.
-    info(`Fetching ${fullBaseRef} to rebase #${prNumber} on`);
+    Log.info(`Fetching ${fullBaseRef} to rebase #${prNumber} on`);
     git.run(['fetch', '-q', baseRefUrl, baseRefName, '--deepen=500']);
 
     const commonAncestorSha = git.run(['merge-base', 'HEAD', 'FETCH_HEAD']).stdout.trim();
@@ -84,12 +85,12 @@ export async function rebasePr(prNumber: number, githubToken: string): Promise<n
       process.env['CI'] !== undefined ||
       commits.filter((commit: Commit) => commit.isFixup).length === 0
         ? false
-        : await promptConfirm(
+        : await Prompt.confirm(
             `PR #${prNumber} contains fixup commits, would you like to squash them during rebase?`,
             true,
           );
 
-    info(`Attempting to rebase PR #${prNumber} on ${fullBaseRef}`);
+    Log.info(`Attempting to rebase PR #${prNumber} on ${fullBaseRef}`);
 
     /**
      * Tuple of flags to be added to the rebase command and env object to run the git command.
@@ -104,36 +105,41 @@ export async function rebasePr(prNumber: number, githubToken: string): Promise<n
 
     // If the rebase was clean, push the rebased PR up to the authors fork.
     if (rebaseResult.status === 0) {
-      info(`Rebase was able to complete automatically without conflicts`);
-      info(`Pushing rebased PR #${prNumber} to ${fullHeadRef}`);
+      Log.info(`Rebase was able to complete automatically without conflicts`);
+      Log.info(`Pushing rebased PR #${prNumber} to ${fullHeadRef}`);
       git.run(['push', headRefUrl, `HEAD:${headRefName}`, forceWithLeaseFlag]);
-      info(`Rebased and updated PR #${prNumber}`);
+      Log.info(`Rebased and updated PR #${prNumber}`);
       git.checkout(previousBranchOrRevision, true);
       return 0;
     }
   } catch (err) {
-    error(err);
+    Log.error(err);
     git.checkout(previousBranchOrRevision, true);
     return 1;
   }
 
   // On automatic rebase failures, prompt to choose if the rebase should be continued
   // manually or aborted now.
-  info(`Rebase was unable to complete automatically without conflicts.`);
-  // If the command is run in a non-CI environment, prompt to format the files immediately.
+  Log.info(`Rebase was unable to complete automatically without conflicts.`);
+  // If the command is run in a non-CI environment, prompt to allow for the user to
+  // manually complete the rebase.
   const continueRebase =
-    process.env['CI'] === undefined && (await promptConfirm('Manually complete rebase?'));
+    process.env['CI'] === undefined && (await Prompt.confirm('Manually complete rebase?'));
 
   if (continueRebase) {
-    info(`After manually completing rebase, run the following command to update PR #${prNumber}:`);
-    info(` $ git push ${pr.headRef.repository.url} HEAD:${headRefName} ${forceWithLeaseFlag}`);
-    info();
-    info(`To abort the rebase and return to the state of the repository before this command`);
-    info(`run the following command:`);
-    info(` $ git rebase --abort && git reset --hard && git checkout ${previousBranchOrRevision}`);
+    Log.info(
+      `After manually completing rebase, run the following command to update PR #${prNumber}:`,
+    );
+    Log.info(` $ git push ${pr.headRef.repository.url} HEAD:${headRefName} ${forceWithLeaseFlag}`);
+    Log.info();
+    Log.info(`To abort the rebase and return to the state of the repository before this command`);
+    Log.info(`run the following command:`);
+    Log.info(
+      ` $ git rebase --abort && git reset --hard && git checkout ${previousBranchOrRevision}`,
+    );
     return 1;
   } else {
-    info(`Cleaning up git state, and restoring previous state.`);
+    Log.info(`Cleaning up git state, and restoring previous state.`);
   }
 
   git.checkout(previousBranchOrRevision, true);

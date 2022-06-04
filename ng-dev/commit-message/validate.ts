@@ -7,7 +7,7 @@
  */
 
 import {getConfig} from '../utils/config';
-import {error} from '../utils/console';
+import {Log} from '../utils/logging';
 
 import {assertValidCommitMessageConfig, COMMIT_TYPES, ScopeRequirement} from './config';
 import {Commit, parseCommitMessage} from './parse';
@@ -206,7 +206,7 @@ export function validateCommitMessage(
 }
 
 /** Print the error messages from the commit message validation to the console. */
-export function printValidationErrors(errors: string[], print = error) {
+export function printValidationErrors(errors: string[], print = Log.error) {
   print.group(`Error${errors.length === 1 ? '' : 's'}:`);
   errors.forEach((line) => print(line));
   print.groupEnd();

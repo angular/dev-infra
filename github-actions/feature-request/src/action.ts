@@ -189,8 +189,8 @@ const shouldConsiderIssue = async (
   ) {
     const authors = new Set<string>();
     const comments = githubIssue.getComments();
-    for await (const comment of comments) {
-      authors.add(comment.author.name);
+    for await (const c of comments) {
+      authors.add(c.author.name);
     }
     shouldBeConsidered = authors.size >= config.minimumUniqueCommentAuthorsForConsideration;
   }
@@ -219,13 +219,13 @@ const getTimestamps = async (githubIssue: GitHubIssueAPI) => {
   };
 
   const comments = githubIssue.getComments();
-  for await (const comment of comments) {
+  for await (const c of comments) {
     // If there are multiple comments we should get the last timestamp.
-    if (comment.body.includes(CommentMarkers.StartVoting)) {
-      timestamps.start = Math.max(comment.timestamp, timestamps.start ?? -Infinity);
+    if (c.body.includes(CommentMarkers.StartVoting)) {
+      timestamps.start = Math.max(c.timestamp, timestamps.start ?? -Infinity);
     }
-    if (comment.body.includes(CommentMarkers.Warn)) {
-      timestamps.warn = Math.max(comment.timestamp, timestamps.warn ?? -Infinity);
+    if (c.body.includes(CommentMarkers.Warn)) {
+      timestamps.warn = Math.max(c.timestamp, timestamps.warn ?? -Infinity);
     }
   }
 

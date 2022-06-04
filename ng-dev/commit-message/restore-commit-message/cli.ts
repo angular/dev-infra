@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Arguments, Argv, CommandModule} from 'yargs';
+import yargs from 'yargs';
 
 import {CommitMsgSource} from './commit-message-source';
 
@@ -19,8 +19,8 @@ export interface RestoreCommitMessageOptions {
 }
 
 /** Builds the command. */
-function builder(yargs: Argv) {
-  return yargs
+function builder(argv: yargs.Argv) {
+  return argv
     .option('file-env-variable' as 'fileEnvVariable', {
       type: 'string',
       description:
@@ -33,7 +33,11 @@ function builder(yargs: Argv) {
 }
 
 /** Handles the command. */
-async function handler({fileEnvVariable, file, source}: Arguments<RestoreCommitMessageOptions>) {
+async function handler({
+  fileEnvVariable,
+  file,
+  source,
+}: yargs.Arguments<RestoreCommitMessageOptions>) {
   // File and source are provided as command line parameters
   if (file !== undefined) {
     restoreCommitMessage(file, source as CommitMsgSource);
@@ -57,7 +61,7 @@ async function handler({fileEnvVariable, file, source}: Arguments<RestoreCommitM
 }
 
 /** yargs command module describing the command. */
-export const RestoreCommitMessageModule: CommandModule<{}, RestoreCommitMessageOptions> = {
+export const RestoreCommitMessageModule: yargs.CommandModule<{}, RestoreCommitMessageOptions> = {
   handler,
   builder,
   command: 'restore-commit-message-draft [file] [source]',

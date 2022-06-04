@@ -6,8 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {SemVer} from 'semver';
-
 import {CommitFromGitLog} from '../../commit-message/parse';
 import {ConfigValidationError} from '../../utils/config';
 

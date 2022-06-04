@@ -10,7 +10,7 @@ import {Commit} from '../../../commit-message/parse';
 import {TargetLabel, TargetLabelName} from '../targeting/target-label';
 import {breakingChangeLabel, PullRequestConfig} from '../../config';
 import {PullRequestFailure} from './failures';
-import {debug, red, warn} from '../../../utils/console';
+import {Log, red} from '../../../utils/logging';
 import {
   getStatusesForPullRequest,
   PullRequestFromGithub,
@@ -34,7 +34,7 @@ export function assertChangesAllowForTargetLabel(
     !!config.commitMessageFixupLabel &&
     labelsOnPullRequest.some((name) => matchesPattern(name, config.commitMessageFixupLabel))
   ) {
-    debug(
+    Log.debug(
       'Skipping commit message target label validation because the commit message fixup label is ' +
         'applied.',
     );
@@ -76,8 +76,8 @@ export function assertChangesAllowForTargetLabel(
       }
       break;
     default:
-      warn(red('WARNING: Unable to confirm all commits in the pull request are eligible to be'));
-      warn(red(`merged into the target branch: ${label.name}`));
+      Log.warn(red('WARNING: Unable to confirm all commits in the pull request are'));
+      Log.warn(red(`eligible to be merged into the target branch: ${label.name}`));
       break;
   }
 }

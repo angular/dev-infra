@@ -10,10 +10,10 @@ import {readFileSync} from 'fs';
 
 import {getBranchPushMatcher, testTmpDir} from '../../../utils/testing';
 import {ActiveReleaseTrains} from '../../versioning';
-import * as npm from '../../versioning/npm-publish';
+import {NpmCommand} from '../../versioning/npm-command';
 import {ReleaseActionConstructor} from '../actions';
 import {BranchOffNextBranchBaseAction} from '../actions/branch-off-next-branch';
-import * as externalCommands from '../external-commands';
+import {ExternalCommands} from '../external-commands';
 import {testReleasePackages} from './test-utils/action-mocks';
 import {TestReleaseAction} from './test-utils/test-action';
 import {setupReleaseActionForTesting} from './test-utils/test-utils';
@@ -135,12 +135,12 @@ export async function expectBranchOffActionToRun(
     'Expected next release-train update branch be created in fork.',
   );
 
-  expect(externalCommands.invokeReleasePrecheckCommand).toHaveBeenCalledTimes(1);
-  expect(externalCommands.invokeReleaseBuildCommand).toHaveBeenCalledTimes(1);
-  expect(npm.runNpmPublish).toHaveBeenCalledTimes(testReleasePackages.length);
+  expect(ExternalCommands.invokeReleasePrecheck).toHaveBeenCalledTimes(1);
+  expect(ExternalCommands.invokeReleaseBuild).toHaveBeenCalledTimes(1);
+  expect(NpmCommand.publish).toHaveBeenCalledTimes(testReleasePackages.length);
 
   for (const pkg of testReleasePackages) {
-    expect(npm.runNpmPublish).toHaveBeenCalledWith(
+    expect(NpmCommand.publish).toHaveBeenCalledWith(
       `${testTmpDir}/dist/${pkg.name}`,
       'next',
       undefined,

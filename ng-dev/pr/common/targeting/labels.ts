@@ -23,7 +23,7 @@ import {
 
 import {assertActiveLtsBranch} from './lts-branch';
 import {GithubClient} from '../../../utils/git/github';
-import {debug} from '../../../utils/console';
+import {Log} from '../../../utils/logging';
 
 /**
  * Gets a list of target labels which should be considered by the merge
@@ -158,8 +158,8 @@ export async function getTargetLabelsForActiveReleaseTrains(
     });
   } catch (err) {
     if (err instanceof ConfigValidationError) {
-      debug('LTS target label not included in target labels as no valid release configuration was');
-      debug('found to allow the LTS branches to be determined.');
+      Log.debug('LTS target label not included in target labels as no valid release');
+      Log.debug('configuration was found to allow the LTS branches to be determined.');
     } else {
       throw err;
     }

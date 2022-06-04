@@ -44,7 +44,7 @@ describe('RenderContext', () => {
   it('filters to include only the first commit discovered with a unique value for a specified field', () => {
     const renderContext = new RenderContext(defaultContextData);
     const matchingCommits = renderContext._categorizeCommits(commitsFromList(0, 1, 2, 3, 4, 7, 12));
-    const testCommits = renderContext._categorizeCommits(commits);
+    const testCommits = renderContext._categorizeCommits(TEST_COMMITS);
     expect(testCommits.filter(renderContext.unique('type'))).toEqual(matchingCommits);
   });
 
@@ -94,7 +94,7 @@ describe('RenderContext', () => {
       const matchingCommits = renderContext._categorizeCommits(
         commitsFromList(0, 2, 5, 6, 8, 10, 11, 12, 15, 16),
       );
-      const testCommits = renderContext._categorizeCommits(commits);
+      const testCommits = renderContext._categorizeCommits(TEST_COMMITS);
 
       expect(testCommits.filter(renderContext.includeInReleaseNotes())).toEqual(matchingCommits);
     });
@@ -104,7 +104,7 @@ describe('RenderContext', () => {
       const matchingCommits = renderContext._categorizeCommits(
         commitsFromList(0, 2, 6, 8, 10, 11, 15, 16),
       );
-      const testCommits = renderContext._categorizeCommits(commits);
+      const testCommits = renderContext._categorizeCommits(TEST_COMMITS);
 
       expect(testCommits.filter(renderContext.includeInReleaseNotes())).toEqual(matchingCommits);
     });
@@ -129,9 +129,9 @@ describe('RenderContext', () => {
     }
 
     beforeEach(() => {
-      devInfraCommits = commits.filter((c) => c.scope === 'dev-infra');
-      coreCommits = commits.filter((c) => c.scope === 'core');
-      compilerCommits = commits.filter((c) => c.scope === 'compiler');
+      devInfraCommits = TEST_COMMITS.filter((c) => c.scope === 'dev-infra');
+      coreCommits = TEST_COMMITS.filter((c) => c.scope === 'core');
+      compilerCommits = TEST_COMMITS.filter((c) => c.scope === 'compiler');
       unorganizedCommits = [...devInfraCommits, ...coreCommits, ...compilerCommits].sort(
         () => Math.random() - 0.5,
       );
@@ -191,12 +191,12 @@ function buildCommit(type: string, scope: string, withNote?: 'breaking-change' |
 function commitsFromList(...indexes: number[]) {
   const output: CommitFromGitLog[] = [];
   for (const i of indexes) {
-    output.push(commits[i]);
+    output.push(TEST_COMMITS[i]);
   }
   return output;
 }
 
-const commits: CommitFromGitLog[] = [
+const TEST_COMMITS: CommitFromGitLog[] = [
   buildCommit('fix', 'platform-browser'),
   buildCommit('test', 'dev-infra'),
   buildCommit('feat', 'dev-infra', 'breaking-change'),

@@ -17,8 +17,8 @@ import {join} from 'path';
 export const testTmpDir: string = join(process.env['TEST_TMPDIR']!, 'dev-infra');
 
 /**
- * Prepares the temporary test directory, deleting previous contents if present. Ensures the temp
- * directory exists.
+ * Prepares the temporary test directory, deleting previous contents if present.
+ * Ensures the temp directory exists.
  */
 export function cleanTestTmpDir() {
   if (existsSync(testTmpDir)) {

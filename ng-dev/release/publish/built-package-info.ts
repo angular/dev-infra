@@ -7,10 +7,11 @@
  */
 
 import {hashElement} from 'folder-hash';
+import {Log} from '../../utils/logging';
 
-import {debug, error, red} from '../../utils/console';
 import {BuiltPackage, BuiltPackageWithInfo, NpmPackage} from '../config';
 import {FatalReleaseActionError} from './actions-error';
+import {DirectoryHash} from './directory-hash';
 
 /**
  * Analyzes and extends the given built packages with additional information,
@@ -29,8 +30,8 @@ export async function analyzeAndExtendBuiltPackagesWithInfo(
     const info = npmPackages.find((i) => i.name === pkg.name);
 
     if (info === undefined) {
-      debug(`Retrieved package information:`, npmPackages);
-      error(red(`  ✘   Could not find package information for built package: "${pkg.name}".`));
+      Log.debug(`Retrieved package information:`, npmPackages);
+      Log.error(`  ✘   Could not find package information for built package: "${pkg.name}".`);
       throw new FatalReleaseActionError();
     }
 
@@ -64,13 +65,13 @@ export async function assertIntegrityOfBuiltPackages(
   }
 
   if (modifiedPackages.length > 0) {
-    error(red(`  ✘   Release output has been modified locally since it was built.`));
-    error(red(`      The following packages changed: ${modifiedPackages.join(', ')}`));
+    Log.error(`  ✘   Release output has been modified locally since it was built.`);
+    Log.error(`      The following packages changed: ${modifiedPackages.join(', ')}`);
     throw new FatalReleaseActionError();
   }
 }
 
 /** Computes a deterministic hash for the package and its contents. */
 async function computeHashForPackageContents(pkg: BuiltPackage): Promise<string> {
-  return (await hashElement(pkg.outputPath, {})).hash;
+  return DirectoryHash.compute(pkg.outputPath);
 }

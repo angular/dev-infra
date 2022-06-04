@@ -7,7 +7,7 @@
  */
 
 import {SpawnSyncOptions, SpawnSyncReturns} from 'child_process';
-import * as yargs from 'yargs';
+import yargs from 'yargs';
 import {testTmpDir} from '.';
 
 import {GithubConfig} from '../config';

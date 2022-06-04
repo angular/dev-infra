@@ -8,7 +8,7 @@
 
 import {Bar} from 'cli-progress';
 
-import {error, info} from '../../utils/console';
+import {Log} from '../../utils/logging';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {GitCommandError} from '../../utils/git/git-client';
 import {
@@ -26,7 +26,7 @@ export async function discoverNewConflictsForPr(newPrNumber: number, updatedAfte
   // If there are any local changes in the current repository state, the
   // check cannot run as it needs to move between branches.
   if (git.hasUncommittedChanges()) {
-    error('Cannot run with local changes. Please make sure there are no local changes.');
+    Log.error('Cannot run with local changes. Please make sure there are no local changes.');
     process.exit(1);
   }
 
@@ -37,22 +37,22 @@ export async function discoverNewConflictsForPr(newPrNumber: number, updatedAfte
   /* PRs which were found to be conflicting. */
   const conflicts: Array<PullRequestFromGithub> = [];
 
-  info(`Requesting pending PRs from Github`);
+  Log.info(`Requesting pending PRs from Github`);
   /** List of PRs from github currently known as mergable. */
   const allPendingPRs = await fetchPendingPullRequestsFromGithub(git);
 
   if (allPendingPRs === null) {
-    error('Unable to find any pending PRs in the repository');
+    Log.error('Unable to find any pending PRs in the repository');
     process.exit(1);
   }
 
   /** The PR which is being checked against. */
   const requestedPr = allPendingPRs.find((pr) => pr.number === newPrNumber);
   if (requestedPr === undefined) {
-    error(
+    Log.error(
       `The request PR, #${newPrNumber} was not found as a pending PR on github, please confirm`,
     );
-    error(`the PR number is correct and is an open PR`);
+    Log.error(`the PR number is correct and is an open PR`);
     process.exit(1);
   }
 
@@ -66,8 +66,8 @@ export async function discoverNewConflictsForPr(newPrNumber: number, updatedAfte
       new Date(pr.updatedAt).getTime() >= updatedAfter
     );
   });
-  info(`Retrieved ${allPendingPRs.length} total pending PRs`);
-  info(`Checking ${pendingPrs.length} PRs for conflicts after a merge of #${newPrNumber}`);
+  Log.info(`Retrieved ${allPendingPRs.length} total pending PRs`);
+  Log.info(`Checking ${pendingPrs.length} PRs for conflicts after a merge of #${newPrNumber}`);
 
   // Fetch and checkout the PR being checked.
   git.run(['fetch', '-q', requestedPr.headRef.repository.url, requestedPr.headRef.name]);
@@ -79,7 +79,7 @@ export async function discoverNewConflictsForPr(newPrNumber: number, updatedAfte
     git.run(['rebase', 'FETCH_HEAD'], {stdio: 'ignore'});
   } catch (err) {
     if (err instanceof GitCommandError) {
-      error('The requested PR currently has conflicts');
+      Log.error('The requested PR currently has conflicts');
       git.checkout(previousBranchOrRevision, true);
       process.exit(1);
     }
@@ -111,22 +111,22 @@ export async function discoverNewConflictsForPr(newPrNumber: number, updatedAfte
   }
   // End the progress bar as all PRs have been processed.
   progressBar.stop();
-  info();
-  info(`Result:`);
+  Log.info();
+  Log.info(`Result:`);
 
   git.checkout(previousBranchOrRevision, true);
 
   // If no conflicts are found, exit successfully.
   if (conflicts.length === 0) {
-    info(`No new conflicting PRs found after #${newPrNumber} merging`);
+    Log.info(`No new conflicting PRs found after #${newPrNumber} merging`);
     process.exit(0);
   }
 
   // Inform about discovered conflicts, exit with failure.
-  error.group(`${conflicts.length} PR(s) which conflict(s) after #${newPrNumber} merges:`);
+  Log.error.group(`${conflicts.length} PR(s) which conflict(s) after #${newPrNumber} merges:`);
   for (const pr of conflicts) {
-    error(`  - #${pr.number}: ${pr.title}`);
+    Log.error(`  - #${pr.number}: ${pr.title}`);
   }
-  error.groupEnd();
+  Log.error.groupEnd();
   process.exit(1);
 }

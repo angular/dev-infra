@@ -5,10 +5,10 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {SemVer} from 'semver';
-import {Arguments, Argv, CommandModule} from 'yargs';
+import semver from 'semver';
+import yargs from 'yargs';
 
-import {info} from '../../utils/console';
+import {Log} from '../../utils/logging';
 
 import {ReleaseNotes} from './release-notes';
 import {GitClient} from '../../utils/git/git-client';
@@ -18,17 +18,17 @@ export interface Options {
   from: string;
   to: string;
   prependToChangelog: boolean;
-  releaseVersion: SemVer;
+  releaseVersion: semver.SemVer;
   type: 'github-release' | 'changelog';
 }
 
 /** Yargs command builder for configuring the `ng-dev release build` command. */
-function builder(argv: Argv): Argv<Options> {
+function builder(argv: yargs.Argv): yargs.Argv<Options> {
   return argv
     .option('releaseVersion', {
       type: 'string',
       default: '0.0.0',
-      coerce: (version: string) => new SemVer(version),
+      coerce: (version: string) => new semver.SemVer(version),
     })
     .option('from', {
       type: 'string',
@@ -54,7 +54,13 @@ function builder(argv: Argv): Argv<Options> {
 }
 
 /** Yargs command handler for generating release notes. */
-async function handler({releaseVersion, from, to, prependToChangelog, type}: Arguments<Options>) {
+async function handler({
+  releaseVersion,
+  from,
+  to,
+  prependToChangelog,
+  type,
+}: yargs.Arguments<Options>) {
   /** Git client to use for generating the release notes. */
   const git = GitClient.get();
   /** The ReleaseNotes instance to generate release notes. */
@@ -62,7 +68,7 @@ async function handler({releaseVersion, from, to, prependToChangelog, type}: Arg
 
   if (prependToChangelog) {
     await releaseNotes.prependEntryToChangelogFile();
-    info(`Added release notes for "${releaseVersion}" to the changelog`);
+    Log.info(`Added release notes for "${releaseVersion}" to the changelog`);
     return;
   }
 
@@ -76,7 +82,7 @@ async function handler({releaseVersion, from, to, prependToChangelog, type}: Arg
 }
 
 /** CLI command module for generating release notes. */
-export const ReleaseNotesCommandModule: CommandModule<{}, Options> = {
+export const ReleaseNotesCommandModule: yargs.CommandModule<{}, Options> = {
   builder,
   handler,
   command: 'notes',
