@@ -1,3 +1,14 @@
+<a name="2022.6.5"></a>
+# 2022.6.5 (2022-06-05)
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4fdbd00](https://github.com/angular/dev-infra/commit/4fdbd0060583d4b1549b5ad41a46698d8f993052) | feat | **release:** support for custom release pre-checks to be provided |
+| [6367f3d](https://github.com/angular/dev-infra/commit/6367f3d0c25936c3caf136782e07d6813b014637) | feat | move release output build and checks to staging phase |
+## Special Thanks
+Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.5.29"></a>
 # 2022.5.29 (2022-05-29)
 ### circleci-orb
@@ -187,19 +198,3 @@ Charles Lyding, George Kalpakas, Paul Gschwendtner and renovate[bot]
 | [74b89a4](https://github.com/angular/dev-infra/commit/74b89a46292330ba949652680c30b0280249db74) | feat | **format:** add staged files back ([#405](https://github.com/angular/dev-infra/pull/405)) |
 ## Special Thanks
 Paul Gschwendtner, dario-piotrowicz and renovate[bot]
-
-<!-- CHANGELOG SPLIT MARKER -->
-<a name="2022.2.13"></a>
-# 2022.2.13 (2022-02-13)
-### bazel
-| Commit | Type | Description |
-| -- | -- | -- |
-| [a3cbcf1](https://github.com/angular/dev-infra/commit/a3cbcf1c7329b9a44123c3a90eed7f3fb6049ffd) | feat | **browsers:** update chromium to 99.0.4759.0 |
-| [f27b1d9](https://github.com/angular/dev-infra/commit/f27b1d9e3921f8f9c129bc92d9d2f2b6989f57ec) | feat | **browsers:** update firefox and geckodriver to v97.0 |
-| [19e2bfd](https://github.com/angular/dev-infra/commit/19e2bfd6e4f7a303b9426c6b416255150397c0bd) | fix | **browsers:** invalid browser firefox geckodriver checksum |
-### ng-dev
-| Commit | Type | Description |
-| -- | -- | -- |
-| [1c1d5c5](https://github.com/angular/dev-infra/commit/1c1d5c5d28f1c670ecdf9615c4e62a87f48151ee) | fix | **pr:** do not fail assertions for changes for target label when the fixup label is applied ([#392](https://github.com/angular/dev-infra/pull/392)) |
-## Special Thanks
-Alan Agius, Joey Perrott, Lukas Spirig, Paul Gschwendtner and renovate[bot]

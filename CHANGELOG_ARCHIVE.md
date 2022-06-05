@@ -1,3 +1,19 @@
+<a name="2022.2.13"></a>
+# 2022.2.13 (2022-02-13)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a3cbcf1](https://github.com/angular/dev-infra/commit/a3cbcf1c7329b9a44123c3a90eed7f3fb6049ffd) | feat | **browsers:** update chromium to 99.0.4759.0 |
+| [f27b1d9](https://github.com/angular/dev-infra/commit/f27b1d9e3921f8f9c129bc92d9d2f2b6989f57ec) | feat | **browsers:** update firefox and geckodriver to v97.0 |
+| [19e2bfd](https://github.com/angular/dev-infra/commit/19e2bfd6e4f7a303b9426c6b416255150397c0bd) | fix | **browsers:** invalid browser firefox geckodriver checksum |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1c1d5c5](https://github.com/angular/dev-infra/commit/1c1d5c5d28f1c670ecdf9615c4e62a87f48151ee) | fix | **pr:** do not fail assertions for changes for target label when the fixup label is applied ([#392](https://github.com/angular/dev-infra/pull/392)) |
+## Special Thanks
+Alan Agius, Joey Perrott, Lukas Spirig, Paul Gschwendtner and renovate[bot]
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.2.6"></a>
 # 2022.2.6 (2022-02-06)
 ### bazel
