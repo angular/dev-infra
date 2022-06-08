@@ -1,0 +1,43 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(
+    [
+        "package.json",
+        "yarn.lock",
+        ".yarnrc.yml",
+    ],
+)
+
+protobufjs_deps = [
+    # Runtime dependencies, if not already installed, are installed by protobufjs via `npm install`
+    # during the execution. As `npm_package_bin` isolates the execution from the rest of
+    # node_modules, these expected dependencies must be provided.
+    # The check and install of the dependencies is performed in this code block:
+    #   https://github.com/protobufjs/protobuf.js/blob/v6.11.3/cli/util.js#L135
+    #   https://github.com/protobufjs/protobuf.js/blob/v6.11.3/package.json#L93-L104
+    "@ts_proto_npm//chalk",
+    "@ts_proto_npm//escodegen",
+    "@ts_proto_npm//espree",
+    "@ts_proto_npm//estraverse",
+    "@ts_proto_npm//glob",
+    "@ts_proto_npm//jsdoc",
+    "@ts_proto_npm//minimist",
+    "@ts_proto_npm//protobufjs",
+    "@ts_proto_npm//semver",
+    "@ts_proto_npm//tmp",
+    "@ts_proto_npm//uglify-js",
+]
+
+nodejs_binary(
+    name = "pbjs",
+    data = protobufjs_deps,
+    entry_point = "@ts_proto_npm//:node_modules/protobufjs/bin/pbjs",
+)
+
+nodejs_binary(
+    name = "pbts",
+    data = protobufjs_deps,
+    entry_point = "@ts_proto_npm//:node_modules/protobufjs/bin/pbts",
+)
