@@ -8,16 +8,16 @@
 
 import {readdirSync, unlinkSync} from 'fs';
 import {join} from 'path';
-import yargs from 'yargs';
-import {ChildProcess} from '../../utils/child-process';
+import {Argv, CommandModule} from 'yargs';
+import {ChildProcess} from '../../utils/child-process.js';
 
-import {Log} from '../../utils/logging';
-import {Spinner} from '../../utils/spinner';
-import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
-import {addGithubTokenOption} from '../../utils/git/github-yargs';
-import {getYarnPathFromNpmGlobalBinaries} from '../../utils/resolve-yarn-bin';
+import {Log} from '../../utils/logging.js';
+import {Spinner} from '../../utils/spinner.js';
+import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
+import {addGithubTokenOption} from '../../utils/git/github-yargs.js';
+import {getYarnPathFromNpmGlobalBinaries} from '../../utils/resolve-yarn-bin.js';
 
-async function builder(argv: yargs.Argv) {
+async function builder(argv: Argv) {
   return addGithubTokenOption(argv);
 }
 
@@ -126,7 +126,7 @@ async function handler() {
 }
 
 /** CLI command module. */
-export const UpdateYarnCommandModule: yargs.CommandModule = {
+export const UpdateYarnCommandModule: CommandModule = {
   builder,
   handler,
   command: 'update-yarn',

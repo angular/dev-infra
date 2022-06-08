@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {blue, bold, Log} from '../../utils/logging';
-import {ReleaseConfig} from '../config/index';
+import {blue, bold, Log} from '../../utils/logging.js';
+import {ReleaseConfig} from '../config/index.js';
 
-import {ActiveReleaseTrains} from './active-release-trains';
-import {fetchLongTermSupportBranchesFromNpm} from './long-term-support';
-import {isVersionPublishedToNpm} from './npm-registry';
+import {ActiveReleaseTrains} from './active-release-trains.js';
+import {fetchLongTermSupportBranchesFromNpm} from './long-term-support.js';
+import {isVersionPublishedToNpm} from './npm-registry.js';
 
 /**
  * Prints the active release trains to the console.

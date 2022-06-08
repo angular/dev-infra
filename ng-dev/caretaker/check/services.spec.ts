@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Log} from '../../utils/logging';
-import {installVirtualGitClientSpies, mockNgDevConfig} from '../../utils/testing';
+import {Log} from '../../utils/logging.js';
+import {installVirtualGitClientSpies, mockNgDevConfig} from '../../utils/testing/index.js';
 
-import {services, ServicesModule} from './services';
+import {services, ServicesModule} from './services.js';
 
 describe('ServicesModule', () => {
   let getStatusFromStandardApiSpy: jasmine.Spy;

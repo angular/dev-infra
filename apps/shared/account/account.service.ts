@@ -1,15 +1,12 @@
 import {Injectable} from '@angular/core';
-import {
-  Auth,
-  GithubAuthProvider,
-  GoogleAuthProvider,
-  linkWithPopup,
-  signInWithPopup,
-  unlink,
-  User,
-  UserInfo,
-} from '@angular/fire/auth';
 import {Subject} from 'rxjs';
+
+// TODO(devversion): Remove this when Angular Fire is using APF v13+
+import type * as authTypes from '@angular/fire/auth/angular-fire-auth.js';
+import type {Auth, UserInfo, User} from '@angular/fire/auth/angular-fire-auth.js';
+
+const {GithubAuthProvider, GoogleAuthProvider, linkWithPopup, signInWithPopup, unlink} =
+  (await import('@angular/fire/auth' as any)) as typeof authTypes;
 
 const DEFAULT_AVATAR_URL = 'https://lh3.googleusercontent.com/a/default-user=s64-c';
 

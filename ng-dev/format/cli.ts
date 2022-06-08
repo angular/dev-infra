@@ -5,13 +5,13 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import yargs from 'yargs';
-import {GitClient} from '../utils/git/git-client';
+import {Argv} from 'yargs';
+import {GitClient} from '../utils/git/git-client.js';
 
-import {checkFiles, formatFiles} from './format';
+import {checkFiles, formatFiles} from './format.js';
 
 /** Build the parser for the format commands. */
-export function buildFormatParser(localYargs: yargs.Argv) {
+export function buildFormatParser(localYargs: Argv) {
   return localYargs
     .help()
     .strict()

@@ -6,26 +6,24 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {matchesVersion} from '../../../utils/testing';
-import {fetchLongTermSupportBranchesFromNpm} from '../../versioning/long-term-support';
-import {ReleaseTrain} from '../../versioning/release-trains';
-import {CutLongTermSupportPatchAction} from '../actions/cut-lts-patch';
+import {matchesVersion} from '../../../utils/testing/index.js';
+import {fetchLongTermSupportBranchesFromNpm} from '../../versioning/long-term-support.js';
+import {ReleaseTrain} from '../../versioning/release-trains.js';
+import {CutLongTermSupportPatchAction} from '../actions/cut-lts-patch.js';
 import {
   changelogPattern,
   fakeNpmPackageQueryRequest,
   parse,
   setupReleaseActionForTesting,
-} from './test-utils/test-utils';
+} from './test-utils/test-utils.js';
 import {
   expectGithubApiRequestsForStaging,
   expectStagingAndPublishWithCherryPick,
-} from './test-utils/staging-test';
-import {getTestConfigurationsForAction} from './test-utils/action-mocks';
+} from './test-utils/staging-test.js';
+import {getTestConfigurationsForAction} from './test-utils/action-mocks.js';
 import {readFileSync} from 'fs';
-import {testTmpDir} from '../../../utils/testing';
-import {SandboxGitRepo} from '../../../utils/testing';
-import {getMockGitClient} from '../../../utils/testing';
-import {ActiveReleaseTrains} from '../../versioning';
+import {testTmpDir, getMockGitClient, SandboxGitRepo} from '../../../utils/testing/index.js';
+import {ActiveReleaseTrains} from '../../versioning/index.js';
 
 describe('cut an LTS patch action', () => {
   it('should be active', async () => {

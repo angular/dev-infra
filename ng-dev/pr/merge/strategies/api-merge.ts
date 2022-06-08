@@ -9,15 +9,15 @@
 import {RestEndpointMethodTypes} from '@octokit/plugin-rest-endpoint-methods';
 import {prompt} from 'inquirer';
 
-import {parseCommitMessage} from '../../../commit-message/parse';
-import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client';
-import {GithubApiMergeMethod, GithubApiMergeStrategyConfig} from '../../config';
-import {PullRequestFailure} from '../../common/validation/failures';
-import {PullRequest} from '../pull-request';
+import {parseCommitMessage} from '../../../commit-message/parse.js';
+import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client.js';
+import {GithubApiMergeMethod, GithubApiMergeStrategyConfig} from '../../config/index.js';
+import {PullRequestFailure} from '../../common/validation/failures.js';
+import {PullRequest} from '../pull-request.js';
 
-import {MergeStrategy, TEMP_PR_HEAD_BRANCH} from './strategy';
-import {GithubApiRequestError} from '../../../utils/git/github';
-import {matchesPattern} from '../../common/validation/validations';
+import {MergeStrategy, TEMP_PR_HEAD_BRANCH} from './strategy.js';
+import {GithubApiRequestError} from '../../../utils/git/github.js';
+import {matchesPattern} from '../../common/validation/validations.js';
 
 /** Type describing the parameters for the Octokit `merge` API endpoint. */
 type OctokitMergeParams = RestEndpointMethodTypes['pulls']['merge']['parameters'];

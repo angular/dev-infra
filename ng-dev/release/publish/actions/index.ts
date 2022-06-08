@@ -6,16 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ReleaseActionConstructor} from '../actions';
+import {ReleaseActionConstructor} from '../actions.js';
 
-import {CutLongTermSupportPatchAction} from './cut-lts-patch';
-import {CutNewPatchAction} from './cut-new-patch';
-import {CutNextPrereleaseAction} from './cut-next-prerelease';
-import {CutReleaseCandidateForFeatureFreezeAction} from './cut-release-candidate-for-feature-freeze';
-import {CutStableAction} from './cut-stable';
-import {MoveNextIntoFeatureFreezeAction} from './move-next-into-feature-freeze';
-import {MoveNextIntoReleaseCandidateAction} from './move-next-into-release-candidate';
-import {TagRecentMajorAsLatest} from './tag-recent-major-as-latest';
+import {CutLongTermSupportPatchAction} from './cut-lts-patch.js';
+import {CutNewPatchAction} from './cut-new-patch.js';
+import {CutNextPrereleaseAction} from './cut-next-prerelease.js';
+import {CutReleaseCandidateForFeatureFreezeAction} from './cut-release-candidate-for-feature-freeze.js';
+import {CutStableAction} from './cut-stable.js';
+import {MoveNextIntoFeatureFreezeAction} from './move-next-into-feature-freeze.js';
+import {MoveNextIntoReleaseCandidateAction} from './move-next-into-release-candidate.js';
+import {TagRecentMajorAsLatest} from './tag-recent-major-as-latest.js';
 
 /**
  * List of release actions supported by the release staging tool. These are sorted

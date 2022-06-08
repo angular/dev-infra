@@ -6,16 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {SandboxGitRepo} from '../../../utils/testing';
-import {ActiveReleaseTrains} from '../../versioning';
-import {ReleaseTrain} from '../../versioning/release-trains';
-import {MoveNextIntoFeatureFreezeAction} from '../actions/move-next-into-feature-freeze';
+import {SandboxGitRepo} from '../../../utils/testing/index.js';
+import {ActiveReleaseTrains} from '../../versioning/index.js';
+import {ReleaseTrain} from '../../versioning/release-trains.js';
+import {MoveNextIntoFeatureFreezeAction} from '../actions/move-next-into-feature-freeze.js';
 
 import {
   expectBranchOffActionToRun,
   prepareBranchOffActionForChangelog,
-} from './branch-off-next-branch-testing';
-import {changelogPattern, parse} from './test-utils/test-utils';
+} from './branch-off-next-branch-testing.js';
+import {changelogPattern, parse} from './test-utils/test-utils.js';
 
 describe('move next into feature-freeze action', () => {
   it('should not activate if a feature-freeze release-train is active', async () => {

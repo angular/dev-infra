@@ -6,17 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ReleaseTrain} from '../../versioning/release-trains';
-import {CutReleaseCandidateForFeatureFreezeAction} from '../actions/cut-release-candidate-for-feature-freeze';
-import {changelogPattern, parse, setupReleaseActionForTesting} from './test-utils/test-utils';
+import {ReleaseTrain} from '../../versioning/release-trains.js';
+import {CutReleaseCandidateForFeatureFreezeAction} from '../actions/cut-release-candidate-for-feature-freeze.js';
+import {changelogPattern, parse, setupReleaseActionForTesting} from './test-utils/test-utils.js';
 import {
   expectGithubApiRequestsForStaging,
   expectStagingAndPublishWithCherryPick,
-} from './test-utils/staging-test';
+} from './test-utils/staging-test.js';
 import {readFileSync} from 'fs';
-import {testTmpDir} from '../../../utils/testing';
-import {SandboxGitRepo} from '../../../utils/testing';
-import {ActiveReleaseTrains} from '../../versioning';
+import {testTmpDir, SandboxGitRepo} from '../../../utils/testing/index.js';
+import {ActiveReleaseTrains} from '../../versioning/index.js';
 
 describe('cut release candidate for feature-freeze action', () => {
   it('should activate if a feature-freeze release-train is active', async () => {

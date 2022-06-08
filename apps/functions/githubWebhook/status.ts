@@ -5,7 +5,7 @@ import {
   Status,
   FirestoreReference,
   fromFirestoreReference,
-} from '../../shared/models/server-models';
+} from '../../shared/models/server-models.js';
 
 export async function handleStatusEvent(event: StatusEvent) {
   const {getFirestoreRefForGithubModel, fromGithub} = Status.getGithubHelpers();

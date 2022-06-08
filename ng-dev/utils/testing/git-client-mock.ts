@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {GithubConfig} from '../config';
-import {SandboxGitClient} from './sandbox-git-client';
-import {testTmpDir} from './bazel-env';
-import {VirtualGitClient} from './virtual-git-client';
+import {GithubConfig} from '../config.js';
+import {SandboxGitClient} from './sandbox-git-client.js';
+import {testTmpDir} from './bazel-env.js';
+import {VirtualGitClient} from './virtual-git-client.js';
 
 /** Gets a mock instance for the `GitClient` instance. */
 export function getMockGitClient<T extends boolean>(

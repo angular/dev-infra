@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {StatusEvent} from '@octokit/webhooks-types';
-import {BaseColumn} from '../base';
+import {BaseColumn} from '../base.js';
 
 @Component({
   selector: 'status-column',

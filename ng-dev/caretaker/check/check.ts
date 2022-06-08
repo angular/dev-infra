@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {assertValidGithubConfig, getConfig} from '../../utils/config';
-import {assertValidCaretakerConfig} from '../config';
+import {assertValidGithubConfig, getConfig} from '../../utils/config.js';
+import {assertValidCaretakerConfig} from '../config.js';
 
-import {CiModule} from './ci';
-import {G3Module} from './g3';
-import {GithubQueriesModule} from './github';
-import {ServicesModule} from './services';
+import {CiModule} from './ci.js';
+import {G3Module} from './g3.js';
+import {GithubQueriesModule} from './github.js';
+import {ServicesModule} from './services.js';
 
 /** List of modules checked for the caretaker check command. */
 const moduleList = [GithubQueriesModule, ServicesModule, CiModule, G3Module];

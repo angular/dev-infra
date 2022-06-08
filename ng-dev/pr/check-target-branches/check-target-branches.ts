@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {assertValidGithubConfig, getConfig, GithubConfig} from '../../utils/config';
-import {Log} from '../../utils/logging';
-import {GitClient} from '../../utils/git/git-client';
-import {assertValidPullRequestConfig, PullRequestConfig} from '../config';
-import {getTargetBranchesForPullRequest} from '../common/targeting/target-label';
+import {assertValidGithubConfig, getConfig, GithubConfig} from '../../utils/config.js';
+import {Log} from '../../utils/logging.js';
+import {GitClient} from '../../utils/git/git-client.js';
+import {assertValidPullRequestConfig, PullRequestConfig} from '../config/index.js';
+import {getTargetBranchesForPullRequest} from '../common/targeting/target-label.js';
 
 async function getTargetBranchesForPr(
   prNumber: number,

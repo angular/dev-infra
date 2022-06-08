@@ -8,8 +8,8 @@
 
 import {relative} from 'path';
 
-import {ReferenceChain} from './analyzer';
-import {convertPathToForwardSlash} from './file_system';
+import {ReferenceChain} from './analyzer.js';
+import {convertPathToForwardSlash} from './file_system.js';
 
 export type CircularDependency = ReferenceChain<string>;
 export type Golden = CircularDependency[];

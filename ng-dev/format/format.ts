@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {green, Log} from '../utils/logging';
-import {Prompt} from '../utils/prompt';
+import {green, Log} from '../utils/logging.js';
+import {Prompt} from '../utils/prompt.js';
 
-import {runFormatterInParallel} from './run-commands-parallel';
+import {runFormatterInParallel} from './run-commands-parallel.js';
 
 /**
  * Format provided files in place.

@@ -1,5 +1,5 @@
 import {StatusEvent} from '@octokit/webhooks-types';
-import {GithubBaseModel, GithubHelperFunctions, toFirestoreReference} from './base';
+import {GithubBaseModel, GithubHelperFunctions, toFirestoreReference} from './base.js';
 
 export interface FirestoreStatus {
   context: string;

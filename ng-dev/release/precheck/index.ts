@@ -8,8 +8,8 @@
 
 import {debug} from 'console';
 import yargs from 'semver';
-import {green, Log} from '../../utils/logging';
-import {BuiltPackageWithInfo, ReleaseConfig} from '../config';
+import {green, Log} from '../../utils/logging.js';
+import {BuiltPackageWithInfo, ReleaseConfig} from '../config/index.js';
 
 /**
  * Error class that can be used to report precheck failures. Messaging with

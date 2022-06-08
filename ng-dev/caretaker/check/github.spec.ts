@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {AuthenticatedGithubClient} from '../../utils/git/github';
-import {Log} from '../../utils/logging';
-import {installVirtualGitClientSpies, mockNgDevConfig} from '../../utils/testing';
+import {AuthenticatedGithubClient} from '../../utils/git/github.js';
+import {Log} from '../../utils/logging.js';
+import {installVirtualGitClientSpies, mockNgDevConfig} from '../../utils/testing/index.js';
 
-import {GithubQueriesModule} from './github';
+import {GithubQueriesModule} from './github.js';
 
 describe('GithubQueriesModule', () => {
   let githubApiSpy: jasmine.Spy;

@@ -8,8 +8,8 @@
 
 import {existsSync, mkdirSync, rmSync, writeFileSync} from 'fs';
 import {join} from 'path';
-import {GithubConfig, setConfig} from '../../../../utils/config';
-import {Prompt} from '../../../../utils/prompt';
+import {GithubConfig, setConfig} from '../../../../utils/config.js';
+import {Prompt} from '../../../../utils/prompt.js';
 
 import {
   getMockGitClient,
@@ -17,12 +17,17 @@ import {
   installVirtualGitClientSpies,
   testTmpDir,
   VirtualGitClient,
-} from '../../../../utils/testing';
-import {BuiltPackage, BuiltPackageWithInfo, NpmPackage, ReleaseConfig} from '../../../config';
-import {NpmCommand} from '../../../versioning/npm-command';
-import {PullRequest, ReleaseAction} from '../../actions';
-import {DirectoryHash} from '../../directory-hash';
-import {ExternalCommands} from '../../external-commands';
+} from '../../../../utils/testing/index.js';
+import {
+  BuiltPackage,
+  BuiltPackageWithInfo,
+  NpmPackage,
+  ReleaseConfig,
+} from '../../../config/index.js';
+import {NpmCommand} from '../../../versioning/npm-command.js';
+import {PullRequest, ReleaseAction} from '../../actions.js';
+import {DirectoryHash} from '../../directory-hash.js';
+import {ExternalCommands} from '../../external-commands.js';
 
 /** Default representative NPM package used in tests. */
 export const testRepresentativePackage = '@angular/pkg1';

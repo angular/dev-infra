@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {PullApproveGroup} from './group';
-import {PullApproveGroupStateDependencyError} from './condition_errors';
-import {getOrCreateGlob} from './utils';
+import {PullApproveGroup} from './group.js';
+import {PullApproveGroupStateDependencyError} from './condition_errors.js';
+import {getOrCreateGlob} from './utils.js';
 
 /**
  * Superset of a native array. The superset provides methods which mimic the

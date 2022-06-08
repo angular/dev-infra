@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ConfigValidationError} from '../utils/config';
+import {ConfigValidationError} from '../utils/config.js';
 
 /** Configuration for commit-message comands. */
 export interface CommitMessageConfig {

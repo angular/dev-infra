@@ -9,8 +9,16 @@
     "skipLibCheck": true,
     "noImplicitOverride": true,
     "esModuleInterop": true,
-    "noImplicitReturns": true,
-    "moduleResolution": "node"
+    "noImplicitReturns": true
   },
-  "exclude": ["node_modules/**", "bazel-out/**", "dist/**", "bazel/integration/tests/**"]
+  "exclude": [
+    "node_modules/**",
+    "bazel-out/**",
+    "dist/**",
+    "bazel/benchmark/component_benchmark/**",
+    "bazel/benchmark/driver-utilities/**",
+    "bazel/integration/tests/**",
+    ".yarn/**",
+    ".angular/**"
+  ]
 }

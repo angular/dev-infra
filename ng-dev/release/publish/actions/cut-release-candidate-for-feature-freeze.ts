@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {semverInc} from '../../../utils/semver';
-import {ActiveReleaseTrains} from '../../versioning/active-release-trains';
-import {ReleaseAction} from '../actions';
+import {semverInc} from '../../../utils/semver.js';
+import {ActiveReleaseTrains} from '../../versioning/active-release-trains.js';
+import {ReleaseAction} from '../actions.js';
 
 /**
  * Cuts the first release candidate for a release-train currently in the

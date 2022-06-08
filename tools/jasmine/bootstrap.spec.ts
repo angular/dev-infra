@@ -8,8 +8,8 @@
 
 import {readFileSync, writeFileSync} from 'fs';
 import {join} from 'path';
-import {getConfig, setConfig} from '../../ng-dev/utils/config';
-import {testTmpDir} from '../../ng-dev/utils/testing/bazel-env';
+import {getConfig, setConfig} from '../../ng-dev/utils/config.js';
+import {testTmpDir} from '../../ng-dev/utils/testing/bazel-env.js';
 
 /**
  * The number of tests which have run within the file. This variable is used to

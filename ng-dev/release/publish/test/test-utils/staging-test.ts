@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {getBranchPushMatcher, testTmpDir} from '../../../../utils/testing';
-import {NpmPackage} from '../../../config';
-import {NpmDistTag} from '../../../versioning';
-import {NpmCommand} from '../../../versioning/npm-command';
-import {ExternalCommands} from '../../external-commands';
-import {testReleasePackages} from './action-mocks';
-import {TestReleaseAction} from './test-action';
+import {getBranchPushMatcher, testTmpDir} from '../../../../utils/testing/index.js';
+import {NpmPackage} from '../../../config/index.js';
+import {NpmDistTag} from '../../../versioning/index.js';
+import {NpmCommand} from '../../../versioning/npm-command.js';
+import {ExternalCommands} from '../../external-commands.js';
+import {testReleasePackages} from './action-mocks.js';
+import {TestReleaseAction} from './test-action.js';
 
 /**
  * Expects and fakes the necessary Github API requests for staging

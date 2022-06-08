@@ -27,10 +27,10 @@
 
 import {createHash} from 'crypto';
 import fetch from 'node-fetch';
-import {Spinner} from '../../../ng-dev/utils/spinner';
-import {ArtifactType} from './browser-artifact';
-import {Chromium} from './chromium';
-import {Platform} from './platform';
+import {Spinner} from '../../../ng-dev/utils/spinner.js';
+import {ArtifactType} from './browser-artifact.js';
+import {Chromium} from './chromium.js';
+import {Platform} from './platform.js';
 
 /**
  * Entry-point for the script, finding a revision which has snapshot builds for all platforms.
@@ -145,7 +145,9 @@ async function isRevisionAvailableForPlatform(
   platform: Platform,
 ): Promise<boolean> {
   // Look for the `driver` archive as this is smaller and faster to check.
-  const response = await fetch(Chromium.getDownloadArtifactUrl(revision, platform, 'driver-bin'));
+  const response = await fetch.default(
+    Chromium.getDownloadArtifactUrl(revision, platform, 'driver-bin'),
+  );
   return response.ok && response.status === 200;
 }
 
@@ -154,7 +156,9 @@ async function getStableChromiumRevision(): Promise<number> {
   // Omahaproxy is maintained by the Chromium team and can be consulted for determining
   // the current latest revision in stable channel.
   // https://chromium.googlesource.com/chromium/chromium/+/refs/heads/trunk/tools/omahaproxy.py.
-  const response = await fetch(`https://omahaproxy.appspot.com/all.json?channel=stable&os=linux`);
+  const response = await fetch.default(
+    `https://omahaproxy.appspot.com/all.json?channel=stable&os=linux`,
+  );
   const revisionStr = (await response.json())[0].versions[0].branch_base_position;
   return Number(revisionStr);
 }
@@ -169,7 +173,7 @@ async function getReleaseInfoUrlForRevision(revision: number): Promise<string | 
 /** Determines the latest Chromium revision available in the CDN. */
 async function getHeadChromiumRevision(): Promise<number> {
   const responses = await Promise.all(
-    Object.values(Platform).map((p) => fetch(Chromium.getLatestRevisionUrl(p))),
+    Object.values(Platform).map((p) => fetch.default(Chromium.getLatestRevisionUrl(p))),
   );
   const revisions = await Promise.all(responses.map(async (r) => Number(await r.text())));
   return Math.max(...revisions);
@@ -181,7 +185,7 @@ async function getSha256ChecksumForPlatform(
   platform: Platform,
   artifactType: ArtifactType,
 ): Promise<string> {
-  const response = await fetch(browser.getDownloadUrl(platform, artifactType));
+  const response = await fetch.default(browser.getDownloadUrl(platform, artifactType));
   const binaryContent = await response.buffer();
   return createHash('sha256').update(binaryContent).digest('hex');
 }

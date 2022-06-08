@@ -6,16 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import yargs from 'yargs';
-import {copyTestResultFiles} from '.';
-import {Log} from '../../utils/logging';
+import {Argv, Arguments, CommandModule} from 'yargs';
+import {copyTestResultFiles} from './index.js';
+import {Log} from '../../utils/logging.js';
 /** Command line options. */
 export interface Options {
   force: boolean;
 }
 
 /** Yargs command builder for the command. */
-function builder(argv: yargs.Argv): yargs.Argv<Options> {
+function builder(argv: Argv): Argv<Options> {
   return argv.option('force', {
     type: 'boolean',
     default: false,
@@ -24,7 +24,7 @@ function builder(argv: yargs.Argv): yargs.Argv<Options> {
 }
 
 /** Yargs command handler for the command. */
-async function handler({force}: yargs.Arguments<Options>) {
+async function handler({force}: Arguments<Options>) {
   if (force === false && process.env['CI'] === undefined) {
     Log.error('Aborting, `gather-test-results` is only meant to be run on CI.');
     process.exit(1);
@@ -33,7 +33,7 @@ async function handler({force}: yargs.Arguments<Options>) {
 }
 
 /** CLI command module. */
-export const GatherTestResultsModule: yargs.CommandModule<{}, Options> = {
+export const GatherTestResultsModule: CommandModule<{}, Options> = {
   builder,
   handler,
   command: 'gather-test-results',

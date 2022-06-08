@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as chalk from 'chalk';
+import chalk, {ChalkInstance} from 'chalk';
 import {writeFileSync} from 'fs';
 import {join} from 'path';
-import yargs from 'yargs';
+import {Arguments} from 'yargs';
 
-import {GitClient} from './git/git-client';
+import {GitClient} from './git/git-client.js';
 
 /**
  * Supported levels for logging functions. Levels are mapped to
@@ -59,7 +59,7 @@ export abstract class Log {
 function buildLogLevelFunction(
   loadCommand: () => Function,
   level: LogLevel,
-  defaultColor: chalk.Chalk | null,
+  defaultColor: ChalkInstance | null,
 ) {
   /** Write to stdout for the LOG_LEVEL. */
   const loggingFunction = (...values: unknown[]) => {
@@ -133,7 +133,7 @@ const LOG_LEVEL_COLUMNS = 7;
  * middleware of yargs to enable the file logging before the rest of the command parsing and
  * response is executed.
  */
-export function captureLogOutputForCommand(argv: yargs.Arguments) {
+export function captureLogOutputForCommand(argv: Arguments) {
   if (FILE_LOGGING_ENABLED) {
     throw Error('`captureLogOutputForCommand` cannot be called multiple times');
   }

@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Log} from '../utils/logging';
-import {PullApproveGroupResult} from './group';
+import {Log} from '../utils/logging.js';
+import {PullApproveGroupResult} from './group.js';
 
 type ConditionGrouping = keyof Pick<
   PullApproveGroupResult,

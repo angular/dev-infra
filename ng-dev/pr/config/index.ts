@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ConfigValidationError, GithubConfig} from '../../utils/config';
+import {ConfigValidationError, GithubConfig} from '../../utils/config.js';
 
 /**
  * Possible merge methods supported by the Github API.

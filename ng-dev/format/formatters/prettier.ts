@@ -8,10 +8,10 @@
 
 import {join} from 'path';
 
-import {ChildProcess} from '../../utils/child-process';
-import {Log} from '../../utils/logging';
+import {ChildProcess} from '../../utils/child-process.js';
+import {Log} from '../../utils/logging.js';
 
-import {Formatter} from './base-formatter';
+import {Formatter} from './base-formatter.js';
 
 /**
  * Formatter for running prettier against Typescript and Javascript files.

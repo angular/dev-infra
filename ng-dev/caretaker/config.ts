@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ConfigValidationError} from '../utils/config';
+import {ConfigValidationError} from '../utils/config.js';
 
 export interface CaretakerConfig {
   /** Github queries showing a snapshot of pulls/issues caretakers need to monitor. */

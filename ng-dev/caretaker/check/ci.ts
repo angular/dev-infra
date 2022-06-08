@@ -12,10 +12,10 @@ import {
   getNextBranchName,
   ReleaseRepoWithApi,
   ReleaseTrain,
-} from '../../release/versioning/index';
+} from '../../release/versioning/index.js';
 
-import {bold, Log} from '../../utils/logging';
-import {BaseModule} from './base';
+import {bold, Log} from '../../utils/logging.js';
+import {BaseModule} from './base.js';
 
 /** The result of checking a branch on CI. */
 type CiBranchStatus = 'success' | 'failed' | 'not found';
@@ -86,7 +86,7 @@ export class CiModule extends BaseModule<CiData> {
   private async getBranchStatusFromCi(branch: string): Promise<CiBranchStatus> {
     const {owner, name} = this.git.remoteConfig;
     const url = `https://circleci.com/gh/${owner}/${name}/tree/${branch}.svg?style=shield`;
-    const result = await fetch(url).then((r) => r.text());
+    const result = await fetch.default(url).then((r) => r.text());
 
     if (result && !result.includes('no builds')) {
       return result.includes('passing') ? 'success' : 'failed';

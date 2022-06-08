@@ -8,10 +8,10 @@
 
 import {types as graphqlTypes} from 'typed-graphqlify';
 
-import {Log} from '../../utils/logging';
-import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
-import {addTokenToGitHttpsUrl} from '../../utils/git/github-urls';
-import {getPr} from '../../utils/github';
+import {Log} from '../../utils/logging.js';
+import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
+import {addTokenToGitHttpsUrl} from '../../utils/git/github-urls.js';
+import {getPr} from '../../utils/github.js';
 
 /* Graphql schema for the response body for a pending PR. */
 const PR_SCHEMA = {

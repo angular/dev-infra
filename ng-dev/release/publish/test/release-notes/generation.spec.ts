@@ -6,17 +6,17 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {GithubConfig, setConfig} from '../../../../utils/config';
+import {GithubConfig, setConfig} from '../../../../utils/config.js';
 import {
   getMockGitClient,
   installSandboxGitClient,
   SandboxGitClient,
   SandboxGitRepo,
-} from '../../../../utils/testing';
-import {ReleaseConfig} from '../../../config';
-import {ReleaseNotes} from '../../../notes/release-notes';
-import {prepareTempDirectory} from '../test-utils/action-mocks';
-import {changelogPattern, parse} from '../test-utils/test-utils';
+} from '../../../../utils/testing/index.js';
+import {ReleaseConfig} from '../../../config/index.js';
+import {ReleaseNotes} from '../../../notes/release-notes.js';
+import {prepareTempDirectory} from '../test-utils/action-mocks.js';
+import {changelogPattern, parse} from '../test-utils/test-utils.js';
 
 describe('release notes generation', () => {
   let releaseConfig: ReleaseConfig;

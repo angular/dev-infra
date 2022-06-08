@@ -8,10 +8,10 @@
 
 import {writeFileSync} from 'fs';
 
-import {Log} from '../../utils/logging';
+import {Log} from '../../utils/logging.js';
 
-import {loadCommitMessageDraft} from './commit-message-draft';
-import {CommitMsgSource} from './commit-message-source';
+import {loadCommitMessageDraft} from './commit-message-draft.js';
+import {CommitMsgSource} from './commit-message-source.js';
 
 /**
  * Restore the commit message draft to the git to be used as the default commit message.

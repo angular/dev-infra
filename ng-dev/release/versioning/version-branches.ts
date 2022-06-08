@@ -7,8 +7,8 @@
  */
 
 import semver from 'semver';
-import {GithubClient, GithubRepo} from '../../utils/git/github';
-import {GithubConfig} from '../../utils/config';
+import {GithubClient, GithubRepo} from '../../utils/git/github.js';
+import {GithubConfig} from '../../utils/config.js';
 
 /** Object describing a repository that can be released, together with an API client. */
 export interface ReleaseRepoWithApi extends GithubRepo {

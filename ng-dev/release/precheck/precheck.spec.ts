@@ -8,11 +8,11 @@
 
 import semver from 'semver';
 import {Readable} from 'stream';
-import {BuiltPackageWithInfo, ReleaseConfig} from '../config';
-import {ReleasePrecheckCommandModule, ReleasePrecheckJsonStdin} from './cli';
 
-import {ReleasePrecheckError} from '.';
-import {setConfig} from '../../utils/config';
+import {BuiltPackageWithInfo, ReleaseConfig} from '../config/index.js';
+import {ReleasePrecheckCommandModule, ReleasePrecheckJsonStdin} from './cli.js';
+import {ReleasePrecheckError} from './index.js';
+import {setConfig} from '../../utils/config.js';
 
 describe('ng-dev release precheck', () => {
   // Keep track of the original `stdin` since we might fake it within specs.

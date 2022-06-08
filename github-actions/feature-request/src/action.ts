@@ -1,5 +1,5 @@
-import {GitHubAPI, GitHubIssueAPI, MarkedComment, Issue} from './api';
-import {log} from './log';
+import {GitHubAPI, GitHubIssueAPI, MarkedComment, Issue} from './api.js';
+import {log} from './log.js';
 
 /**
  * CommentMarkers are used to distinguish individual comments

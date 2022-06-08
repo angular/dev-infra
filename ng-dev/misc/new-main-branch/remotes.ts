@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {GitClient} from '../../utils/git/git-client';
-import {Log} from '../../utils/logging';
+import {GitClient} from '../../utils/git/git-client.js';
+import {Log} from '../../utils/logging.js';
 
 /**
  * Regular expression matching a remote verbose info line, capturing

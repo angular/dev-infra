@@ -8,9 +8,9 @@
 
 import {dirname, isAbsolute, resolve} from 'path';
 
-import {Log} from '../utils/logging';
+import {Log} from '../utils/logging.js';
 
-import {ModuleResolver} from './analyzer';
+import {ModuleResolver} from './analyzer.js';
 
 /** Configuration for a circular dependencies test. */
 export interface CircularDependenciesTestConfig {

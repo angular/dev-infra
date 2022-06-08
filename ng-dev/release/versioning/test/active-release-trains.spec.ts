@@ -1,10 +1,9 @@
-import {ActiveReleaseTrains} from '../active-release-trains';
-import {getNextBranchName, ReleaseRepoWithApi} from '../version-branches';
-import {GithubClient} from '../../../utils/git/github';
+import {ActiveReleaseTrains} from '../active-release-trains.js';
+import {getNextBranchName, ReleaseRepoWithApi} from '../version-branches.js';
+import {GithubClient} from '../../../utils/git/github.js';
 import nock from 'nock';
-import {matchesVersion} from '../../../utils/testing';
-import {fakeGithubPaginationResponse} from '../../../utils/testing';
-import {GithubConfig} from '../../../utils/config';
+import {fakeGithubPaginationResponse, matchesVersion} from '../../../utils/testing/index.js';
+import {GithubConfig} from '../../../utils/config.js';
 
 describe('active release train determination', () => {
   let api: GithubClient;

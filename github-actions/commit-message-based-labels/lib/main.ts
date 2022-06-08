@@ -1,9 +1,9 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {Octokit} from '@octokit/rest';
-import {parseCommitMessage} from '../../../ng-dev/commit-message/parse';
-import {breakingChangeLabel, deprecationLabel} from '../../../ng-dev/pr/config';
-import {ANGULAR_ROBOT, getAuthTokenFor} from '../../utils';
+import {parseCommitMessage} from '../../../ng-dev/commit-message/parse.js';
+import {breakingChangeLabel, deprecationLabel} from '../../../ng-dev/pr/config/index.js';
+import {ANGULAR_ROBOT, getAuthTokenFor} from '../../utils.js';
 
 /** List of supported label and commit message attribute combinations. */
 const supportedLabels = [

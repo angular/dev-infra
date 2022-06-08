@@ -1,5 +1,5 @@
 import {User as GithubUser, Team as GithubTeam} from '@octokit/webhooks-types';
-import {GithubBaseModel, GithubHelperFunctions, toFirestoreReference} from './base';
+import {GithubBaseModel, GithubHelperFunctions, toFirestoreReference} from './base.js';
 
 export interface FirestoreUser {
   username: string;

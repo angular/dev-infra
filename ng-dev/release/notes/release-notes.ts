@@ -7,20 +7,20 @@
  */
 import {render} from 'ejs';
 import semver from 'semver';
-import {CommitFromGitLog} from '../../commit-message/parse';
+import {CommitFromGitLog} from '../../commit-message/parse.js';
 
-import {Prompt} from '../../utils/prompt';
-import {formatFiles} from '../../format/format';
-import {GitClient} from '../../utils/git/git-client';
-import {assertValidReleaseConfig, ReleaseConfig} from '../config/index';
-import {RenderContext} from './context';
+import {Prompt} from '../../utils/prompt.js';
+import {formatFiles} from '../../format/format.js';
+import {GitClient} from '../../utils/git/git-client.js';
+import {assertValidReleaseConfig, ReleaseConfig} from '../config/index.js';
+import {RenderContext} from './context.js';
 
-import changelogTemplate from './templates/changelog';
-import githubReleaseTemplate from './templates/github-release';
-import {getCommitsForRangeWithDeduping} from './commits/get-commits-in-range';
-import {getConfig} from '../../utils/config';
-import {assertValidFormatConfig} from '../../format/config';
-import {Changelog} from './changelog';
+import changelogTemplate from './templates/changelog.js';
+import githubReleaseTemplate from './templates/github-release.js';
+import {getCommitsForRangeWithDeduping} from './commits/get-commits-in-range.js';
+import {getConfig} from '../../utils/config.js';
+import {assertValidFormatConfig} from '../../format/config.js';
+import {Changelog} from './changelog.js';
 
 /** Workspace-relative path for the changelog file. */
 export const workspaceRelativeChangelogPath = 'CHANGELOG.md';

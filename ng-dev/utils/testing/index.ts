@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-export * from './semver-matchers';
-export * from './virtual-git-client';
-export * from './virtual-git-matchers';
-export * from './bazel-env';
-export * from './sandbox-git-client';
-export * from './sandbox-testing';
-export * from './git-client-mock';
-export * from './github-api-testing';
-export * from './github-interception';
-export * from './dedent';
+export * from './semver-matchers.js';
+export * from './virtual-git-client.js';
+export * from './virtual-git-matchers.js';
+export * from './bazel-env.js';
+export * from './sandbox-git-client.js';
+export * from './sandbox-testing.js';
+export * from './git-client-mock.js';
+export * from './github-api-testing.js';
+export * from './github-interception.js';
+export * from './dedent.js';

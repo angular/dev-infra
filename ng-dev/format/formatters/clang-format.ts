@@ -8,9 +8,9 @@
 
 import {join} from 'path';
 
-import {Log} from '../../utils/logging';
+import {Log} from '../../utils/logging.js';
 
-import {Formatter} from './base-formatter';
+import {Formatter} from './base-formatter.js';
 
 /**
  * Formatter for running clang-format against Typescript and Javascript files

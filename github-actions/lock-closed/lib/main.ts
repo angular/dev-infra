@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {Octokit} from '@octokit/rest';
-import {ANGULAR_LOCK_BOT, getAuthTokenFor} from '../../utils';
+import {ANGULAR_LOCK_BOT, getAuthTokenFor} from '../../utils.js';
 
 async function lockIssue(client: Octokit, issue: number, message: string): Promise<void> {
   await client.issues.createComment({

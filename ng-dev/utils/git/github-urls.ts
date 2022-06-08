@@ -8,8 +8,8 @@
 
 import {URL} from 'url';
 
-import {GithubConfig} from '../config';
-import {GitClient} from './git-client';
+import {GithubConfig} from '../config.js';
+import {GitClient} from './git-client.js';
 
 /** URL to the Github page where personal access tokens can be managed. */
 export const GITHUB_TOKEN_SETTINGS_URL = 'https://github.com/settings/tokens';

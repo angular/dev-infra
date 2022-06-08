@@ -8,8 +8,8 @@
 
 import fetch from 'node-fetch';
 
-import {bold, Log} from '../../utils/logging';
-import {BaseModule} from './base';
+import {bold, Log} from '../../utils/logging.js';
+import {BaseModule} from './base.js';
 
 interface ServiceConfig {
   name: string;
@@ -69,7 +69,7 @@ export class ServicesModule extends BaseModule<StatusCheckResult[]> {
 
   /** Retrieve the status information for a service which uses a standard API response. */
   async getStatusFromStandardApi(service: ServiceConfig): Promise<StatusCheckResult> {
-    const result = await fetch(service.url).then((r) => r.json());
+    const result = await fetch.default(service.url).then((r) => r.json());
     const status = result.status.indicator === 'none' ? 'passing' : 'failing';
     return {
       name: service.name,

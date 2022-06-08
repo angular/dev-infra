@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {GithubRepo} from '../git/github';
+import {GithubRepo} from '../git/github.js';
 
-import {Commit} from './virtual-git-client';
+import {Commit} from './virtual-git-client.js';
 
 /** Interface describing the match parameters for a virtual Git client push. */
 interface BranchPushMatchParameters {

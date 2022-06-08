@@ -6,15 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {assertValidGithubConfig, ConfigValidationError, getConfig} from '../../utils/config';
-import {green, Log, yellow} from '../../utils/logging';
-import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
-import {GithubApiRequestError} from '../../utils/git/github';
-import {GITHUB_TOKEN_GENERATE_URL} from '../../utils/git/github-urls';
+import {assertValidGithubConfig, ConfigValidationError, getConfig} from '../../utils/config.js';
+import {green, Log, yellow} from '../../utils/logging.js';
+import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
+import {GithubApiRequestError} from '../../utils/git/github.js';
+import {GITHUB_TOKEN_GENERATE_URL} from '../../utils/git/github-urls.js';
 
-import {assertValidPullRequestConfig} from '../config';
-import {MergeResult, MergeStatus, PullRequestMergeTask, PullRequestMergeTaskFlags} from './task';
-import {Prompt} from '../../utils/prompt';
+import {assertValidPullRequestConfig} from '../config/index.js';
+import {MergeResult, MergeStatus, PullRequestMergeTask, PullRequestMergeTaskFlags} from './task.js';
+import {Prompt} from '../../utils/prompt.js';
 
 /**
  * Merges a given pull request based on labels configured in the given merge configuration.

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Browser} from './browser';
+import {Browser} from './browser.js';
 import * as path from 'path';
 
 /** Type describing possible artifact types for browser downloads. */

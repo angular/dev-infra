@@ -7,7 +7,7 @@
  */
 
 import {params, types} from 'typed-graphqlify';
-import {AuthenticatedGitClient} from './git/authenticated-git-client';
+import {AuthenticatedGitClient} from './git/authenticated-git-client.js';
 import {GraphqlResponseError} from '@octokit/graphql';
 
 /**

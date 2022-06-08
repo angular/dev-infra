@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import yargs from 'yargs';
+import {Argv, Arguments, CommandModule} from 'yargs';
 
-import {getUserConfig} from '../../utils/config';
+import {getUserConfig} from '../../utils/config.js';
 
-import {validateFile} from './validate-file';
+import {validateFile} from './validate-file.js';
 
 export interface ValidateFileOptions {
   file?: string;
@@ -19,7 +19,7 @@ export interface ValidateFileOptions {
 }
 
 /** Builds the command. */
-function builder(argv: yargs.Argv) {
+function builder(argv: Argv) {
   return argv
     .option('file', {
       type: 'string',
@@ -50,13 +50,13 @@ function builder(argv: yargs.Argv) {
 }
 
 /** Handles the command. */
-async function handler({error, file, fileEnvVariable}: yargs.Arguments<ValidateFileOptions>) {
+async function handler({error, file, fileEnvVariable}: Arguments<ValidateFileOptions>) {
   const filePath = file || fileEnvVariable || '.git/COMMIT_EDITMSG';
   validateFile(filePath, error);
 }
 
 /** yargs command module describing the command. */
-export const ValidateFileModule: yargs.CommandModule<{}, ValidateFileOptions> = {
+export const ValidateFileModule: CommandModule<{}, ValidateFileOptions> = {
   handler,
   builder,
   command: 'pre-commit-validate',

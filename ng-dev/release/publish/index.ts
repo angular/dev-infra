@@ -8,20 +8,20 @@
 
 import {ListChoiceOptions, prompt} from 'inquirer';
 
-import {GithubConfig} from '../../utils/config';
-import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
-import {ReleaseConfig} from '../config/index';
-import {ActiveReleaseTrains} from '../versioning/active-release-trains';
-import {NpmCommand} from '../versioning/npm-command';
-import {printActiveReleaseTrains} from '../versioning/print-active-trains';
-import {getNextBranchName, ReleaseRepoWithApi} from '../versioning/version-branches';
+import {GithubConfig} from '../../utils/config.js';
+import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
+import {ReleaseConfig} from '../config/index.js';
+import {ActiveReleaseTrains} from '../versioning/active-release-trains.js';
+import {NpmCommand} from '../versioning/npm-command.js';
+import {printActiveReleaseTrains} from '../versioning/print-active-trains.js';
+import {getNextBranchName, ReleaseRepoWithApi} from '../versioning/version-branches.js';
 
-import {ReleaseAction} from './actions';
-import {FatalReleaseActionError, UserAbortedReleaseActionError} from './actions-error';
-import {actions} from './actions/index';
-import {verifyNgDevToolIsUpToDate} from '../../utils/version-check';
-import {Log, yellow} from '../../utils/logging';
-import {Prompt} from '../../utils/prompt';
+import {ReleaseAction} from './actions.js';
+import {FatalReleaseActionError, UserAbortedReleaseActionError} from './actions-error.js';
+import {actions} from './actions/index.js';
+import {verifyNgDevToolIsUpToDate} from '../../utils/version-check.js';
+import {Log, yellow} from '../../utils/logging.js';
+import {Prompt} from '../../utils/prompt.js';
 
 export enum CompletionState {
   SUCCESS,

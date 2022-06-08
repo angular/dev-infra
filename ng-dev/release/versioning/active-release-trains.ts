@@ -8,13 +8,13 @@
 
 import semver from 'semver';
 
-import {ReleaseTrain} from './release-trains';
+import {ReleaseTrain} from './release-trains.js';
 import {
   getBranchesForMajorVersions,
   getVersionOfBranch,
   ReleaseRepoWithApi,
   VersionBranch,
-} from './version-branches';
+} from './version-branches.js';
 
 /** The active release trains for a project. */
 export class ActiveReleaseTrains {

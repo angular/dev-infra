@@ -8,13 +8,13 @@
 
 import {Bar} from 'cli-progress';
 
-import {Log} from '../../utils/logging';
-import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
-import {GitCommandError} from '../../utils/git/git-client';
+import {Log} from '../../utils/logging.js';
+import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
+import {GitCommandError} from '../../utils/git/git-client.js';
 import {
   fetchPendingPullRequestsFromGithub,
   PullRequestFromGithub,
-} from '../common/fetch-pull-request';
+} from '../common/fetch-pull-request.js';
 
 /** Name of a temporary local branch that is used for checking conflicts. **/
 const tempWorkingBranch = '__NgDevRepoBaseAfterChange__';

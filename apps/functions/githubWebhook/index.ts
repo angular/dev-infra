@@ -1,9 +1,9 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import {handlePullRequestEvent} from './pull-request';
-import {handleStatusEvent} from './status';
+import {handlePullRequestEvent} from './pull-request.js';
+import {handleStatusEvent} from './status.js';
 import {LabelEvent, StatusEvent} from '@octokit/webhooks-types';
-import {handleLabelEvent} from './label';
+import {handleLabelEvent} from './label.js';
 
 admin.initializeApp({...functions.firebaseConfig()});
 

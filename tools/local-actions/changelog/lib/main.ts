@@ -3,11 +3,11 @@ import {context} from '@actions/github';
 import {existsSync, readFileSync, writeFileSync} from 'fs';
 import {join} from 'path';
 import semver from 'semver';
-import {ReleaseNotes} from '../../../../ng-dev/release/notes/release-notes';
-import {AuthenticatedGitClient} from '../../../../ng-dev/utils/git/authenticated-git-client';
-import {ANGULAR_ROBOT, getAuthTokenFor} from '../../../../github-actions/utils';
-import {GithubConfig, setConfig} from '../../../../ng-dev/utils/config';
-import {ReleaseConfig} from '../../../../ng-dev/release/config/index';
+import {ReleaseNotes} from '../../../../ng-dev/release/notes/release-notes.js';
+import {AuthenticatedGitClient} from '../../../../ng-dev/utils/git/authenticated-git-client.js';
+import {ANGULAR_ROBOT, getAuthTokenFor} from '../../../../github-actions/utils.js';
+import {GithubConfig, setConfig} from '../../../../ng-dev/utils/config.js';
+import {ReleaseConfig} from '../../../../ng-dev/release/config/index.js';
 
 /** The tag used for tracking the last time the changlog was generated. */
 const lastChangelogTag = 'most-recent-changelog-generation';

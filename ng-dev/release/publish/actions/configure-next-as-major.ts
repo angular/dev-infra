@@ -8,11 +8,11 @@
 
 import semver from 'semver';
 
-import {green, Log, yellow} from '../../../utils/logging';
-import {workspaceRelativePackageJsonPath} from '../../../utils/constants';
-import {ActiveReleaseTrains} from '../../versioning/active-release-trains';
-import {ReleaseAction} from '../actions';
-import {getCommitMessageForNextBranchMajorSwitch} from '../commit-message';
+import {green, Log, yellow} from '../../../utils/logging.js';
+import {workspaceRelativePackageJsonPath} from '../../../utils/constants.js';
+import {ActiveReleaseTrains} from '../../versioning/active-release-trains.js';
+import {ReleaseAction} from '../actions.js';
+import {getCommitMessageForNextBranchMajorSwitch} from '../commit-message.js';
 
 /**
  * Release action that configures the active next release-train to be for a major

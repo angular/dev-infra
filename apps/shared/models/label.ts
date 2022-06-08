@@ -1,5 +1,5 @@
 import {Label as GithubLabel} from '@octokit/webhooks-types';
-import {GithubBaseModel, GithubHelperFunctions, toFirestoreReference} from './base';
+import {GithubBaseModel, GithubHelperFunctions, toFirestoreReference} from './base.js';
 import contrast from 'font-color-contrast';
 
 export interface FirestoreLabel {
@@ -15,7 +15,7 @@ export class Label extends GithubBaseModel<FirestoreLabel> {
   override setData(data: FirestoreLabel) {
     this.name = data.name;
     this.color = data.color;
-    this.fontColor = contrast(data.color, 0.6);
+    this.fontColor = contrast.default(data.color, 0.6);
   }
 
   static override githubHelpers: GithubHelperFunctions<Label, GithubLabel, FirestoreLabel> = {

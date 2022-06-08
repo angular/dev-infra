@@ -8,11 +8,11 @@
 
 import semver from 'semver';
 
-import {semverInc} from '../../utils/semver';
-import {ReleaseConfig} from '../config/index';
+import {semverInc} from '../../utils/semver.js';
+import {ReleaseConfig} from '../config/index.js';
 
-import {ActiveReleaseTrains} from './active-release-trains';
-import {isVersionPublishedToNpm} from './npm-registry';
+import {ActiveReleaseTrains} from './active-release-trains.js';
+import {isVersionPublishedToNpm} from './npm-registry.js';
 
 /**
  * Gets a version that can be used to build release notes for the next

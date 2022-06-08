@@ -8,17 +8,17 @@
 
 import semver from 'semver';
 
-import {ChildProcess} from '../../utils/child-process';
-import {Spinner} from '../../utils/spinner';
-import {NpmDistTag} from '../versioning';
+import {ChildProcess} from '../../utils/child-process.js';
+import {Spinner} from '../../utils/spinner.js';
+import {NpmDistTag} from '../versioning/index.js';
 
-import {FatalReleaseActionError} from './actions-error';
-import {resolveYarnScriptForProject} from '../../utils/resolve-yarn-bin';
-import {ReleaseBuildJsonStdout} from '../build/cli';
-import {ReleaseInfoJsonStdout} from '../info/cli';
-import {ReleasePrecheckJsonStdin} from '../precheck/cli';
-import {BuiltPackageWithInfo} from '../config';
-import {green, Log} from '../../utils/logging';
+import {FatalReleaseActionError} from './actions-error.js';
+import {resolveYarnScriptForProject} from '../../utils/resolve-yarn-bin.js';
+import {ReleaseBuildJsonStdout} from '../build/cli.js';
+import {ReleaseInfoJsonStdout} from '../info/cli.js';
+import {ReleasePrecheckJsonStdin} from '../precheck/cli.js';
+import {BuiltPackageWithInfo} from '../config/index.js';
+import {green, Log} from '../../utils/logging.js';
 
 /*
  * ###############################################################

@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import yargs from 'yargs';
+import {Argv, Arguments, CommandModule} from 'yargs';
 
-import {Log} from '../../utils/logging';
+import {Log} from '../../utils/logging.js';
 
-import {validateCommitRange} from './validate-range';
+import {validateCommitRange} from './validate-range.js';
 
 export interface ValidateRangeOptions {
   startingRef: string;
@@ -18,7 +18,7 @@ export interface ValidateRangeOptions {
 }
 
 /** Builds the command. */
-function builder(argv: yargs.Argv) {
+function builder(argv: Argv) {
   return argv
     .positional('startingRef', {
       description: 'The first ref in the range to select',
@@ -33,7 +33,7 @@ function builder(argv: yargs.Argv) {
 }
 
 /** Handles the command. */
-async function handler({startingRef, endingRef}: yargs.Arguments<ValidateRangeOptions>) {
+async function handler({startingRef, endingRef}: Arguments<ValidateRangeOptions>) {
   // If on CI, and no pull request number is provided, assume the branch
   // being run on is an upstream branch.
   if (process.env['CI'] && process.env['CI_PULL_REQUEST'] === 'false') {
@@ -47,7 +47,7 @@ async function handler({startingRef, endingRef}: yargs.Arguments<ValidateRangeOp
 }
 
 /** yargs command module describing the command. */
-export const ValidateRangeModule: yargs.CommandModule<{}, ValidateRangeOptions> = {
+export const ValidateRangeModule: CommandModule<{}, ValidateRangeOptions> = {
   handler,
   builder,
   command: 'validate-range <starting-ref> [ending-ref]',

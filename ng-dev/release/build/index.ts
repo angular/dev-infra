@@ -7,7 +7,7 @@
  */
 
 import {fork} from 'child_process';
-import {BuiltPackage} from '../config/index';
+import {BuiltPackage} from '../config/index.js';
 
 export abstract class BuildWorker {
   /**

@@ -5,13 +5,13 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {Commit} from '../../commit-message/parse';
-import {getCommitsInRange} from '../../commit-message/utils';
-import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
-import {addTokenToGitHttpsUrl} from '../../utils/git/github-urls';
-import {Log} from '../../utils/logging';
-import {Prompt} from '../../utils/prompt';
-import {fetchPullRequestFromGithub} from '../common/fetch-pull-request';
+import {Commit} from '../../commit-message/parse.js';
+import {getCommitsInRange} from '../../commit-message/utils.js';
+import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
+import {addTokenToGitHttpsUrl} from '../../utils/git/github-urls.js';
+import {Log} from '../../utils/logging.js';
+import {Prompt} from '../../utils/prompt.js';
+import {fetchPullRequestFromGithub} from '../common/fetch-pull-request.js';
 
 /**
  * Rebase the provided PR onto its merge target branch, and push up the resulting

@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {GitClient} from '../../utils/git/git-client';
-import {FormatConfig} from '../config';
+import {GitClient} from '../../utils/git/git-client.js';
+import {FormatConfig} from '../config.js';
 
 // A callback to determine if the formatter run found a failure in formatting.
 export type CallbackFunc = (

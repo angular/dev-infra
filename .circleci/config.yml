@@ -179,6 +179,11 @@ jobs:
           name: Check code by running linters
           command: yarn lint
 
+      # TODO(ESM): This can be removed when Bazel also uses the new `Node16/next` resolution.
+      - run:
+          name: Ensure TypeScript code passes type checking
+          command: yarn tsc -p tsconfig.json
+
   publish_snapshot_build:
     executor: docker-linux-executor
     steps:

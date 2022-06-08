@@ -6,11 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {GithubConfig} from '../../../../utils/config';
-import {GithubTestingRepo, SandboxGitClient, VirtualGitClient} from '../../../../utils/testing';
-import {BuiltPackageWithInfo, ReleaseConfig} from '../../../config';
-import {ActiveReleaseTrains} from '../../../versioning';
-import {ReleaseAction} from '../../actions';
+import {GithubConfig} from '../../../../utils/config.js';
+import {
+  GithubTestingRepo,
+  SandboxGitClient,
+  VirtualGitClient,
+} from '../../../../utils/testing/index.js';
+import {BuiltPackageWithInfo, ReleaseConfig} from '../../../config/index.js';
+import {ActiveReleaseTrains} from '../../../versioning/index.js';
+import {ReleaseAction} from '../../actions.js';
 
 export interface TestOptions {
   /**

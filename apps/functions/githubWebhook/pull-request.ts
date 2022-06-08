@@ -5,7 +5,7 @@ import {
   PullRequest,
   FirestoreReference,
   fromFirestoreReference,
-} from '../../shared/models/server-models';
+} from '../../shared/models/server-models.js';
 
 export async function handlePullRequestEvent({pull_request}: PullRequestEvent) {
   const {getFirestoreRefForGithubModel, fromGithub} = PullRequest.getGithubHelpers();

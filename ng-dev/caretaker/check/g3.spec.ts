@@ -7,11 +7,11 @@
  */
 import {SpawnSyncReturns} from 'child_process';
 
-import {GitClient} from '../../utils/git/git-client';
-import {Log} from '../../utils/logging';
-import {installVirtualGitClientSpies, mockNgDevConfig} from '../../utils/testing';
+import {GitClient} from '../../utils/git/git-client.js';
+import {Log} from '../../utils/logging.js';
+import {installVirtualGitClientSpies, mockNgDevConfig} from '../../utils/testing/index.js';
 
-import {G3Module, G3StatsData} from './g3';
+import {G3Module, G3StatsData} from './g3.js';
 
 describe('G3Module', () => {
   let getG3FileIncludeAndExcludeLists: jasmine.Spy;

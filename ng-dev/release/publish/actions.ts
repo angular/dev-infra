@@ -10,33 +10,36 @@ import {promises as fs} from 'fs';
 import {join} from 'path';
 import semver from 'semver';
 
-import {workspaceRelativePackageJsonPath} from '../../utils/constants';
-import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
-import {GithubApiRequestError} from '../../utils/git/github';
+import {workspaceRelativePackageJsonPath} from '../../utils/constants.js';
+import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
+import {GithubApiRequestError} from '../../utils/git/github.js';
 import {
   getFileContentsUrl,
   getListCommitsInBranchUrl,
   getRepositoryGitUrl,
-} from '../../utils/git/github-urls';
-import {green, Log, yellow} from '../../utils/logging';
-import {Prompt} from '../../utils/prompt';
-import {Spinner} from '../../utils/spinner';
-import {BuiltPackage, BuiltPackageWithInfo, ReleaseConfig} from '../config/index';
-import {ReleaseNotes, workspaceRelativeChangelogPath} from '../notes/release-notes';
-import {NpmDistTag} from '../versioning';
-import {ActiveReleaseTrains} from '../versioning/active-release-trains';
-import {createExperimentalSemver} from '../versioning/experimental-versions';
-import {NpmCommand} from '../versioning/npm-command';
-import {getReleaseTagForVersion} from '../versioning/version-tags';
-import {FatalReleaseActionError, UserAbortedReleaseActionError} from './actions-error';
+} from '../../utils/git/github-urls.js';
+import {green, Log, yellow} from '../../utils/logging.js';
+import {Prompt} from '../../utils/prompt.js';
+import {Spinner} from '../../utils/spinner.js';
+import {BuiltPackage, BuiltPackageWithInfo, ReleaseConfig} from '../config/index.js';
+import {ReleaseNotes, workspaceRelativeChangelogPath} from '../notes/release-notes.js';
+import {NpmDistTag} from '../versioning/index.js';
+import {ActiveReleaseTrains} from '../versioning/active-release-trains.js';
+import {createExperimentalSemver} from '../versioning/experimental-versions.js';
+import {NpmCommand} from '../versioning/npm-command.js';
+import {getReleaseTagForVersion} from '../versioning/version-tags.js';
+import {FatalReleaseActionError, UserAbortedReleaseActionError} from './actions-error.js';
 import {
   analyzeAndExtendBuiltPackagesWithInfo,
   assertIntegrityOfBuiltPackages,
-} from './built-package-info';
-import {getCommitMessageForRelease, getReleaseNoteCherryPickCommitMessage} from './commit-message';
-import {githubReleaseBodyLimit, waitForPullRequestInterval} from './constants';
-import {ExternalCommands} from './external-commands';
-import {getPullRequestState} from './pull-request-state';
+} from './built-package-info.js';
+import {
+  getCommitMessageForRelease,
+  getReleaseNoteCherryPickCommitMessage,
+} from './commit-message.js';
+import {githubReleaseBodyLimit, waitForPullRequestInterval} from './constants.js';
+import {ExternalCommands} from './external-commands.js';
+import {getPullRequestState} from './pull-request-state.js';
 
 /** Interface describing a Github repository. */
 export interface GithubRepo {

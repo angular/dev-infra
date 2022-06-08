@@ -1,7 +1,11 @@
 import {LabelEvent} from '@octokit/webhooks-types';
 import {firestore} from 'firebase-admin';
 // TODO(josephperrott): Remove usage of FirestoreReference and fromFirestoreReference.
-import {Label, FirestoreReference, fromFirestoreReference} from '../../shared/models/server-models';
+import {
+  Label,
+  FirestoreReference,
+  fromFirestoreReference,
+} from '../../shared/models/server-models.js';
 
 export async function handleLabelEvent(event: LabelEvent) {
   const {getFirestoreRefForGithubModel, fromGithub} = Label.getGithubHelpers();

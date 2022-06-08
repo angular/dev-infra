@@ -9,8 +9,8 @@ import {readFileSync} from 'fs';
 import {resolve} from 'path';
 import {parse as parseYaml} from 'yaml';
 
-import {Log, green} from '../utils/logging';
-import {GitClient} from '../utils/git/git-client';
+import {Log, green} from '../utils/logging.js';
+import {GitClient} from '../utils/git/git-client.js';
 
 export function verify() {
   const git = GitClient.get();

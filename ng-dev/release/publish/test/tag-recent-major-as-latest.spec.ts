@@ -6,17 +6,17 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {matchesVersion} from '../../../utils/testing';
-import {ActiveReleaseTrains} from '../../versioning';
-import {ReleaseTrain} from '../../versioning/release-trains';
-import {TagRecentMajorAsLatest} from '../actions/tag-recent-major-as-latest';
-import {ExternalCommands} from '../external-commands';
-import {getTestConfigurationsForAction} from './test-utils/action-mocks';
+import {matchesVersion} from '../../../utils/testing/index.js';
+import {ActiveReleaseTrains} from '../../versioning/index.js';
+import {ReleaseTrain} from '../../versioning/release-trains.js';
+import {TagRecentMajorAsLatest} from '../actions/tag-recent-major-as-latest.js';
+import {ExternalCommands} from '../external-commands.js';
+import {getTestConfigurationsForAction} from './test-utils/action-mocks.js';
 import {
   fakeNpmPackageQueryRequest,
   parse,
   setupReleaseActionForTesting,
-} from './test-utils/test-utils';
+} from './test-utils/test-utils.js';
 
 describe('tag recent major as latest action', () => {
   it('should not be active if a patch has been published after major release', async () => {

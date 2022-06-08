@@ -8,19 +8,19 @@
 
 import nock from 'nock';
 
-import {ReleaseConfig} from '../../release/config/index';
-import {_npmPackageInfoCache, NpmPackageInfo} from '../../release/versioning/npm-registry';
-import {GithubConfig} from '../../utils/config';
-import {GithubClient} from '../../utils/git/github';
+import {ReleaseConfig} from '../../release/config/index.js';
+import {_npmPackageInfoCache, NpmPackageInfo} from '../../release/versioning/npm-registry.js';
+import {GithubConfig} from '../../utils/config.js';
+import {GithubClient} from '../../utils/git/github.js';
 import {
   getBranchesFromTargetLabel,
   getMatchingTargetLabelForPullRequest,
   TargetLabel,
-} from '../common/targeting/target-label';
-import {fakeGithubPaginationResponse} from '../../utils/testing/github-interception';
-import {getTargetLabelsForActiveReleaseTrains} from '../common/targeting/labels';
-import {ActiveReleaseTrains} from '../../release/versioning';
-import {Prompt} from '../../utils/prompt';
+} from '../common/targeting/target-label.js';
+import {fakeGithubPaginationResponse} from '../../utils/testing/github-interception.js';
+import {getTargetLabelsForActiveReleaseTrains} from '../common/targeting/labels.js';
+import {ActiveReleaseTrains} from '../../release/versioning/index.js';
+import {Prompt} from '../../utils/prompt.js';
 
 const API_ENDPOINT = `https://api.github.com`;
 

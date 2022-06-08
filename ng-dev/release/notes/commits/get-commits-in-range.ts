@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {GitClient} from '../../../utils/git/git-client';
+import {GitClient} from '../../../utils/git/git-client.js';
 import {
   CommitFromGitLog,
   gitLogFormatForParsing,
   parseCommitFromGitLog,
-} from '../../../commit-message/parse';
-import {computeUniqueIdFromCommitMessage} from './unique-commit-id';
+} from '../../../commit-message/parse.js';
+import {computeUniqueIdFromCommitMessage} from './unique-commit-id.js';
 
 /**
  * Gets all commits the head branch contains, but the base branch does not include.

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {GitClient} from '../../utils/git/git-client';
+import {GitClient} from '../../utils/git/git-client.js';
 
 /** Thirty seconds in milliseconds. */
 const THIRTY_SECONDS_IN_MS = 30000;

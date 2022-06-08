@@ -8,19 +8,19 @@
 
 import semver from 'semver';
 
-import {ReleaseConfig} from '../../../release/config/index';
+import {ReleaseConfig} from '../../../release/config/index.js';
 import {
   computeLtsEndDateOfMajor,
   fetchProjectNpmPackageInfo,
   getLtsNpmDistTagOfMajor,
   getVersionOfBranch,
   ReleaseRepoWithApi,
-} from '../../../release/versioning';
-import {Prompt} from '../../../utils/prompt';
+} from '../../../release/versioning/index.js';
+import {Prompt} from '../../../utils/prompt.js';
 
-import {Log, red, yellow} from '../../../utils/logging';
-import {InvalidTargetBranchError} from './target-label';
-import {defaultLocale} from '../../../utils/locale';
+import {Log, red, yellow} from '../../../utils/logging.js';
+import {InvalidTargetBranchError} from './target-label.js';
+import {defaultLocale} from '../../../utils/locale.js';
 
 /**
  * Asserts that the given branch corresponds to an active LTS version-branch that can receive

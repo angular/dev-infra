@@ -10,11 +10,11 @@ import * as fs from 'fs';
 import * as path from 'path';
 import which from 'which';
 
-import {isNodeJSWrappedError} from './nodejs-errors';
+import {isNodeJSWrappedError} from './nodejs-errors.js';
 import {parse as parseLockfile} from '@yarnpkg/lockfile';
 import {parse as parseYaml} from 'yaml';
-import {ChildProcess} from './child-process';
-import {Log} from './logging';
+import {ChildProcess} from './child-process.js';
+import {Log} from './logging.js';
 
 /** Type describing a Yarn configuration and its potential properties. */
 export interface YarnConfiguration {

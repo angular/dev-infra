@@ -1,5 +1,5 @@
-import * as action from './action';
-import {APIMock, IssueAPIMock} from './testing';
+import * as action from './action.js';
+import {APIMock, IssueAPIMock} from './testing.js';
 
 describe('feature request action', () => {
   let basic: APIMock;

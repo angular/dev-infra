@@ -7,7 +7,7 @@
  */
 import gitCommits from 'git-raw-commits';
 
-import {CommitFromGitLog, gitLogFormatForParsing, parseCommitFromGitLog} from './parse';
+import {CommitFromGitLog, gitLogFormatForParsing, parseCommitFromGitLog} from './parse.js';
 
 /**
  * Find all commits within the given range and return an object describing those.

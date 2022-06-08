@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {COMMIT_TYPES, ReleaseNotesLevel} from '../../commit-message/config';
-import {CommitFromGitLog} from '../../commit-message/parse';
-import {GithubConfig} from '../../utils/config';
-import {ReleaseNotesConfig} from '../config/index';
-import {compareString} from '../../utils/locale';
+import {COMMIT_TYPES, ReleaseNotesLevel} from '../../commit-message/config.js';
+import {CommitFromGitLog} from '../../commit-message/parse.js';
+import {GithubConfig} from '../../utils/config.js';
+import {ReleaseNotesConfig} from '../config/index.js';
+import {compareString} from '../../utils/locale.js';
 
 /** List of types to be included in the release notes. */
 const typesToIncludeInReleaseNotes = Object.values(COMMIT_TYPES)

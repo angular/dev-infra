@@ -8,16 +8,15 @@
 
 import {Storage} from '@google-cloud/storage';
 import yargs from 'yargs';
-import {Chromium} from './chromium';
-import {findLatestRevisionForAllPlatforms} from './find-revision-chromium';
-import {Firefox} from './firefox';
-import {uploadBrowserArtifactsToMirror} from './upload-mirror';
+import {Chromium} from './chromium.js';
+import {findLatestRevisionForAllPlatforms} from './find-revision-chromium.js';
+import {Firefox} from './firefox.js';
+import {uploadBrowserArtifactsToMirror} from './upload-mirror.js';
 
 async function main() {
-  await yargs
+  await yargs(process.argv.slice(2))
     .strict()
     .help()
-    .wrap(yargs.terminalWidth())
     .demandCommand()
     .command(
       'find-latest-chromium-revision [start-revision]',

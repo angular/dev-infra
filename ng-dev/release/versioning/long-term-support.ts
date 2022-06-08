@@ -8,9 +8,9 @@
 
 import semver from 'semver';
 
-import {ReleaseConfig} from '../config/index';
+import {ReleaseConfig} from '../config/index.js';
 
-import {fetchProjectNpmPackageInfo} from './npm-registry';
+import {fetchProjectNpmPackageInfo} from './npm-registry.js';
 
 /** Type describing a NPM dist tag indicating long-term support. */
 export type LtsNpmDistTag = `v${number}-lts`;

@@ -1,2 +1,2 @@
-export {beforeCreate} from './before-create';
-export {beforeSignIn} from './before-sign-in';
+export {beforeCreate} from './before-create.js';
+export {beforeSignIn} from './before-sign-in.js';

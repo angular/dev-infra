@@ -7,12 +7,12 @@
  */
 
 import {Bucket, Storage, File} from '@google-cloud/storage';
-import {Browser} from './browser';
-import {Platform} from './platform';
-import {createTmpDir, downloadFileThroughStreaming} from './utils';
+import {Browser} from './browser.js';
+import {Platform} from './platform.js';
+import {createTmpDir, downloadFileThroughStreaming} from './utils.js';
 
 import * as path from 'path';
-import {ArtifactType, BrowserArtifact} from './browser-artifact';
+import {BrowserArtifact} from './browser-artifact.js';
 
 /** Name of the Google Cloud Storage bucket for the browser mirror. */
 const MIRROR_BUCKET_NAME = 'dev-infra-mirror';

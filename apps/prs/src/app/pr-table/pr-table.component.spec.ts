@@ -1,6 +1,6 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {PrTableComponent} from './pr-table.component';
+import {PrTableComponent} from './pr-table.component.js';
 
 describe('PrTableComponent', () => {
   let component: PrTableComponent;

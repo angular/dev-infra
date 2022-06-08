@@ -7,10 +7,10 @@
  */
 
 // Imports
-import {setConfig} from '../utils/config';
-import {CommitMessageConfig, COMMIT_TYPES} from './config';
-import {parseCommitMessage} from './parse';
-import {validateCommitMessage, ValidateCommitMessageResult} from './validate';
+import {setConfig} from '../utils/config.js';
+import {CommitMessageConfig, COMMIT_TYPES} from './config.js';
+import {parseCommitMessage} from './parse.js';
+import {validateCommitMessage, ValidateCommitMessageResult} from './validate.js';
 
 // Constants
 const config: {commitMessage: CommitMessageConfig} = {

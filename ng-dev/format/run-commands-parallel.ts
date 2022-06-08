@@ -10,10 +10,10 @@ import {Bar} from 'cli-progress';
 import multimatch from 'multimatch';
 import {cpus} from 'os';
 
-import {ChildProcess, SpawnResult} from '../utils/child-process';
-import {Log} from '../utils/logging';
+import {ChildProcess, SpawnResult} from '../utils/child-process.js';
+import {Log} from '../utils/logging.js';
 
-import {Formatter, FormatterAction, getActiveFormatters} from './formatters/index';
+import {Formatter, FormatterAction, getActiveFormatters} from './formatters/index.js';
 
 // Some environments, like CircleCI which use Docker report a number of CPUs by the host and not the count of available.
 // This causes the task to be killed when formatting a large number of files due lack of resources.

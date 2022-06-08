@@ -8,14 +8,14 @@
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
 
-import {green, Log, yellow} from '../../utils/logging';
-import {GitClient} from '../../utils/git/git-client';
+import {green, Log, yellow} from '../../utils/logging.js';
+import {GitClient} from '../../utils/git/git-client.js';
 
 import {
   deleteCommitMessageDraft,
   saveCommitMessageDraft,
-} from '../restore-commit-message/commit-message-draft';
-import {printValidationErrors, validateCommitMessage} from '../validate';
+} from '../restore-commit-message/commit-message-draft.js';
+import {printValidationErrors, validateCommitMessage} from '../validate.js';
 
 /** Validate commit message at the provided file path. */
 export function validateFile(filePath: string, isErrorMode: boolean) {

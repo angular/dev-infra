@@ -6,8 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as chalk from 'chalk';
-
 import {runfiles} from '@bazel/runfiles';
 import {testApiGolden} from './test_api_report';
 
@@ -22,6 +20,10 @@ async function main(
   stripExportPattern: RegExp,
   typePackageNames: string[],
 ) {
+  // TODO: This can be replaced with an actual ESM import when `ts_library` is guaranteed
+  // to be ESM-only and supports the `mts` extension.
+  const {default: chalk} = await import('chalk');
+
   const {succeeded, apiReportChanged} = await testApiGolden(
     goldenFilePath,
     entryPointFilePath,

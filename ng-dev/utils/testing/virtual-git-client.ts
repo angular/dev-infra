@@ -8,11 +8,11 @@
 
 import {SpawnSyncOptions, SpawnSyncReturns} from 'child_process';
 import yargs from 'yargs';
-import {testTmpDir} from '.';
+import {testTmpDir} from './index.js';
 
-import {GithubConfig} from '../config';
-import {AuthenticatedGitClient} from '../git/authenticated-git-client';
-import {GitClient} from '../git/git-client';
+import {GithubConfig} from '../config.js';
+import {AuthenticatedGitClient} from '../git/authenticated-git-client.js';
+import {GitClient} from '../git/git-client.js';
 
 /** A mock instance of a configuration for the ng-dev toolset for default testing. */
 export const mockNgDevConfig: {github: GithubConfig} = {

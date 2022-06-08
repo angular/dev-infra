@@ -6,10 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {OctokitOptions} from '@octokit/core/dist-types/types';
+import type {OctokitOptions} from '@octokit/core/dist-types/types.js';
+import type {RestEndpointMethods} from '@octokit/plugin-rest-endpoint-methods/dist-types/generated/method-types.js';
+import type {PaginateInterface} from '@octokit/plugin-paginate-rest';
+
 import {graphql} from '@octokit/graphql';
-import {PaginateInterface} from '@octokit/plugin-paginate-rest';
-import {RestEndpointMethods} from '@octokit/plugin-rest-endpoint-methods/dist-types/generated/method-types';
 import {Octokit} from '@octokit/rest';
 import {RequestParameters} from '@octokit/types';
 import {RequestError} from '@octokit/request-error';
