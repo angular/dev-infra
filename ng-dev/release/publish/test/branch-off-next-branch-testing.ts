@@ -8,15 +8,15 @@
 
 import {readFileSync} from 'fs';
 
-import {getBranchPushMatcher, testTmpDir} from '../../../utils/testing';
-import {ActiveReleaseTrains} from '../../versioning';
-import {NpmCommand} from '../../versioning/npm-command';
-import {ReleaseActionConstructor} from '../actions';
-import {BranchOffNextBranchBaseAction} from '../actions/branch-off-next-branch';
-import {ExternalCommands} from '../external-commands';
-import {testReleasePackages} from './test-utils/action-mocks';
-import {TestReleaseAction} from './test-utils/test-action';
-import {setupReleaseActionForTesting} from './test-utils/test-utils';
+import {getBranchPushMatcher, testTmpDir} from '../../../utils/testing/index.js';
+import {ActiveReleaseTrains} from '../../versioning/index.js';
+import {NpmCommand} from '../../versioning/npm-command.js';
+import {ReleaseActionConstructor} from '../actions.js';
+import {BranchOffNextBranchBaseAction} from '../actions/branch-off-next-branch.js';
+import {ExternalCommands} from '../external-commands.js';
+import {testReleasePackages} from './test-utils/action-mocks.js';
+import {TestReleaseAction} from './test-utils/test-action.js';
+import {setupReleaseActionForTesting} from './test-utils/test-utils.js';
 
 /**
  * Expects and fakes the necessary Github API requests for branching-off

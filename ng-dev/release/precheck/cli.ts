@@ -13,13 +13,13 @@
 // ------------------------
 
 import semver from 'semver';
-import yargs from 'yargs';
+import {CommandModule} from 'yargs';
 
-import {assertPassingReleasePrechecks} from './index';
-import {getConfig} from '../../utils/config';
-import {readBufferFromStdinUntilClosed} from '../../utils/read-stdin-until-closed';
-import {assertValidReleaseConfig, BuiltPackageWithInfo} from '../config/index';
-import {Log} from '../../utils/logging';
+import {assertPassingReleasePrechecks} from './index.js';
+import {getConfig} from '../../utils/config.js';
+import {readBufferFromStdinUntilClosed} from '../../utils/read-stdin-until-closed.js';
+import {assertValidReleaseConfig, BuiltPackageWithInfo} from '../config/index.js';
+import {Log} from '../../utils/logging.js';
 
 /**
  * Type describing the JSON stdin input of this command. The release tool will
@@ -68,7 +68,7 @@ async function handler() {
 }
 
 /** CLI command module for running checks before releasing. */
-export const ReleasePrecheckCommandModule: yargs.CommandModule<{}, {}> = {
+export const ReleasePrecheckCommandModule: CommandModule<{}, {}> = {
   handler,
   command: 'precheck',
   describe: false,

@@ -1,5 +1,5 @@
-import {PullRequest as SharedPullRequest} from '../../../shared/models/app-models';
-import {FirestorePullRequest} from '../../../shared/models/pull-request';
+import {PullRequest as SharedPullRequest} from '../../../shared/models/app-models.js';
+import {FirestorePullRequest} from '../../../shared/models/pull-request.js';
 
 export class PullRequest extends SharedPullRequest {
   target: string | undefined;

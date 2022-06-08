@@ -4,11 +4,11 @@ import {
   GithubBaseModel,
   GithubHelperFunctions,
   toFirestoreReference,
-} from './base';
-import {Label} from './label';
-import {Milestone} from './milestone';
-import {Team} from './team';
-import {User, isUserFromGithub} from './user';
+} from './base.js';
+import {Label} from './label.js';
+import {Milestone} from './milestone.js';
+import {Team} from './team.js';
+import {User, isUserFromGithub} from './user.js';
 
 export interface FirestorePullRequest {
   owner: string;

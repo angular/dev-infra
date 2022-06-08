@@ -7,11 +7,11 @@ import {
   MatTable,
   MatTableDataSource,
 } from '@angular/material/table';
-import {PullRequest} from '../../models/pull-request';
-import {BaseColumn} from './columns/base';
-import {SummaryColumn} from './columns/summary/summary.component';
-import {StatusColumn} from './columns/status/status.component';
-import {TargetColumn} from './columns/target/target.component';
+import {PullRequest} from '../../models/pull-request.js';
+import {BaseColumn} from './columns/base.js';
+import {SummaryColumn} from './columns/summary/summary.component.js';
+import {StatusColumn} from './columns/status/status.component.js';
+import {TargetColumn} from './columns/target/target.component.js';
 
 @Component({
   selector: 'pr-table',

@@ -8,10 +8,10 @@
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
 
-import {Log} from '../utils/logging';
-import {GitClient} from '../utils/git/git-client';
-import {logGroup, logHeader} from './logging';
-import {getGroupsFromYaml} from './parse-yaml';
+import {Log} from '../utils/logging.js';
+import {GitClient} from '../utils/git/git-client.js';
+import {logGroup, logHeader} from './logging.js';
+import {getGroupsFromYaml} from './parse-yaml.js';
 
 export function verify() {
   const git = GitClient.get();

@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {GithubConfig} from '../config';
+import {GithubConfig} from '../config.js';
 import {spawnSync} from 'child_process';
-import {testTmpDir} from './bazel-env';
+import {testTmpDir} from './bazel-env.js';
 
 /** Runs a Git command in the temporary repo directory. */
 export function runGitInTmpDir(args: string[]): string {

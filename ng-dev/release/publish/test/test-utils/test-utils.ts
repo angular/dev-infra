@@ -11,16 +11,20 @@ import nock from 'nock';
 import * as path from 'path';
 import semver from 'semver';
 
-import {dedent, GithubTestingRepo, testTmpDir} from '../../../../utils/testing';
-import {_npmPackageInfoCache, ActiveReleaseTrains, NpmPackageInfo} from '../../../versioning';
-import {ReleaseAction, ReleaseActionConstructor} from '../../actions';
-import {getTestConfigurationsForAction, setupMocksForReleaseAction} from './action-mocks';
+import {dedent, GithubTestingRepo, testTmpDir} from '../../../../utils/testing/index.js';
+import {
+  _npmPackageInfoCache,
+  ActiveReleaseTrains,
+  NpmPackageInfo,
+} from '../../../versioning/index.js';
+import {ReleaseAction, ReleaseActionConstructor} from '../../actions.js';
+import {getTestConfigurationsForAction, setupMocksForReleaseAction} from './action-mocks.js';
 import {
   defaultTestOptions,
   TestOptions,
   TestOptionsWithDefaults,
   TestReleaseAction,
-} from './test-action';
+} from './test-action.js';
 
 /**
  * Sets up the given release action for testing.

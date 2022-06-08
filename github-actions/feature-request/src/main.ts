@@ -1,9 +1,9 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
-import {getAuthTokenFor, ANGULAR_ROBOT} from '../../utils';
-import {run} from './action';
-import {getInputValue} from './get-input';
-import {OctoKit} from './octokit';
+import {getAuthTokenFor, ANGULAR_ROBOT} from '../../utils.js';
+import {run} from './action.js';
+import {getInputValue} from './get-input.js';
+import {OctoKit} from './octokit.js';
 
 (async () => {
   try {

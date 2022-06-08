@@ -10,9 +10,9 @@ import {existsSync, readFileSync} from 'fs';
 import multimatch from 'multimatch';
 import {join} from 'path';
 import {parse as parseYaml} from 'yaml';
-import {bold, Log} from '../../utils/logging';
+import {bold, Log} from '../../utils/logging.js';
 
-import {BaseModule} from './base';
+import {BaseModule} from './base.js';
 
 /** Information expressing the difference between the main and g3 branches */
 export interface G3StatsData {

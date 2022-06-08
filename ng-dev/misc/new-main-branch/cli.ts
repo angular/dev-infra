@@ -6,15 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import yargs from 'yargs';
+import {CommandModule} from 'yargs';
 
-import {assertValidGithubConfig, getConfig} from '../../utils/config';
-import {green, Log, yellow} from '../../utils/logging';
-import {GitClient} from '../../utils/git/git-client';
-import {findAvailableLocalBranchName, getCurrentBranch, hasLocalBranch} from './local-branch';
-import {promptForRemoteForkUpdate} from './remote-fork-update';
-import {getRemotesForRepo, isAngularOwnedRemote} from './remotes';
-import {Prompt} from '../../utils/prompt';
+import {assertValidGithubConfig, getConfig} from '../../utils/config.js';
+import {green, Log, yellow} from '../../utils/logging.js';
+import {GitClient} from '../../utils/git/git-client.js';
+import {findAvailableLocalBranchName, getCurrentBranch, hasLocalBranch} from './local-branch.js';
+import {promptForRemoteForkUpdate} from './remote-fork-update.js';
+import {getRemotesForRepo, isAngularOwnedRemote} from './remotes.js';
+import {Prompt} from '../../utils/prompt.js';
 
 /**
  * Migration command that performs local changes to account for an upstream
@@ -136,7 +136,7 @@ async function handler() {
   await promptForRemoteForkUpdate();
 }
 
-export const NewMainBranchCommandModule: yargs.CommandModule = {
+export const NewMainBranchCommandModule: CommandModule = {
   handler,
   command: 'new-main-branch',
   describe: 'Updates the local repository to account for the new GitHub main branch.',

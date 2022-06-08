@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BuildWorker} from './index';
-import {setConfig} from '../../utils/config';
-import {BuiltPackage, NpmPackage, ReleaseConfig} from '../config';
-import {ReleaseBuildCommandModule} from './cli';
+import {BuildWorker} from './index.js';
+import {setConfig} from '../../utils/config.js';
+import {BuiltPackage, NpmPackage, ReleaseConfig} from '../config/index.js';
+import {ReleaseBuildCommandModule} from './cli.js';
 
 describe('ng-dev release build', () => {
   let npmPackages: NpmPackage[];

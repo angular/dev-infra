@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {DryRunError, isDryRun} from '../dry-run';
-import {GithubConfig, assertValidGithubConfig, getConfig} from '../config';
+import {DryRunError, isDryRun} from '../dry-run.js';
+import {GithubConfig, assertValidGithubConfig, getConfig} from '../config.js';
 import {SpawnSyncOptions, SpawnSyncReturns, spawnSync} from 'child_process';
-import {Log} from '../logging';
+import {Log} from '../logging.js';
 
-import {GithubClient} from './github';
-import {getRepositoryGitUrl} from './github-urls';
+import {GithubClient} from './github.js';
+import {getRepositoryGitUrl} from './github-urls.js';
 
 /** Error for failed Git commands. */
 export class GitCommandError extends Error {

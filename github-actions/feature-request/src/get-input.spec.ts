@@ -1,4 +1,4 @@
-import {getInputValue} from './get-input';
+import {getInputValue} from './get-input.js';
 
 describe('getInputValue', () => {
   it('should parse strings', () => {

@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {getConfig} from '../utils/config';
-import {Log} from '../utils/logging';
+import {getConfig} from '../utils/config.js';
+import {Log} from '../utils/logging.js';
 
-import {assertValidCommitMessageConfig, COMMIT_TYPES, ScopeRequirement} from './config';
-import {Commit, parseCommitMessage} from './parse';
+import {assertValidCommitMessageConfig, COMMIT_TYPES, ScopeRequirement} from './config.js';
+import {Commit, parseCommitMessage} from './parse.js';
 
 /** Options for commit message validation. */
 export interface ValidateCommitMessageOptions {

@@ -10,31 +10,31 @@ import {readFileSync} from 'fs';
 import {join} from 'path';
 import semver from 'semver';
 
-import {CommitFromGitLog, parseCommitFromGitLog} from '../../../commit-message/parse';
-import {GitClient} from '../../../utils/git/git-client';
-import {Log} from '../../../utils/logging';
+import {CommitFromGitLog, parseCommitFromGitLog} from '../../../commit-message/parse.js';
+import {GitClient} from '../../../utils/git/git-client.js';
+import {Log} from '../../../utils/logging.js';
 import {
   getBranchPushMatcher,
   getMockGitClient,
   SandboxGitRepo,
   testTmpDir,
-} from '../../../utils/testing';
-import {ReleaseNotes, workspaceRelativeChangelogPath} from '../../notes/release-notes';
-import {ActiveReleaseTrains} from '../../versioning/active-release-trains';
-import {NpmCommand} from '../../versioning/npm-command';
-import {ReleaseTrain} from '../../versioning/release-trains';
-import {actions} from '../actions/index';
-import {githubReleaseBodyLimit} from '../constants';
-import {DelegateTestAction} from './delegate-test-action';
-import {getTestConfigurationsForAction, testReleasePackages} from './test-utils/action-mocks';
-import {expectGithubApiRequestsForStaging} from './test-utils/staging-test';
+} from '../../../utils/testing/index.js';
+import {ReleaseNotes, workspaceRelativeChangelogPath} from '../../notes/release-notes.js';
+import {ActiveReleaseTrains} from '../../versioning/active-release-trains.js';
+import {NpmCommand} from '../../versioning/npm-command.js';
+import {ReleaseTrain} from '../../versioning/release-trains.js';
+import {actions} from '../actions/index.js';
+import {githubReleaseBodyLimit} from '../constants.js';
+import {DelegateTestAction} from './delegate-test-action.js';
+import {getTestConfigurationsForAction, testReleasePackages} from './test-utils/action-mocks.js';
+import {expectGithubApiRequestsForStaging} from './test-utils/staging-test.js';
 import {
   changelogPattern,
   fakeNpmPackageQueryRequest,
   parse,
   setupReleaseActionForTesting,
   writePackageJson,
-} from './test-utils/test-utils';
+} from './test-utils/test-utils.js';
 
 describe('common release action logic', () => {
   const baseReleaseTrains = new ActiveReleaseTrains({

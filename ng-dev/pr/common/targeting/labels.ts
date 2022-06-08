@@ -6,24 +6,28 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {assertValidReleaseConfig, ReleaseConfig} from '../../../release/config/index';
+import {assertValidReleaseConfig, ReleaseConfig} from '../../../release/config/index.js';
 import {
   ActiveReleaseTrains,
   getNextBranchName,
   isVersionBranch,
   ReleaseRepoWithApi,
-} from '../../../release/versioning';
-import {assertValidGithubConfig, ConfigValidationError, GithubConfig} from '../../../utils/config';
+} from '../../../release/versioning/index.js';
+import {
+  assertValidGithubConfig,
+  ConfigValidationError,
+  GithubConfig,
+} from '../../../utils/config.js';
 import {
   InvalidTargetBranchError,
   InvalidTargetLabelError,
   TargetLabel,
   TargetLabelName,
-} from './target-label';
+} from './target-label.js';
 
-import {assertActiveLtsBranch} from './lts-branch';
-import {GithubClient} from '../../../utils/git/github';
-import {Log} from '../../../utils/logging';
+import {assertActiveLtsBranch} from './lts-branch.js';
+import {GithubClient} from '../../../utils/git/github.js';
+import {Log} from '../../../utils/logging.js';
 
 /**
  * Gets a list of target labels which should be considered by the merge

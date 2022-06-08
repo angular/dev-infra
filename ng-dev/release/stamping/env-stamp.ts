@@ -8,9 +8,9 @@
 
 import * as fs from 'fs';
 
-import {GitClient} from '../../utils/git/git-client';
+import {GitClient} from '../../utils/git/git-client.js';
 import semver from 'semver';
-import {createExperimentalSemver} from '../../release/versioning/experimental-versions';
+import {createExperimentalSemver} from '../../release/versioning/experimental-versions.js';
 import {join} from 'path';
 
 export type EnvStampMode = 'snapshot' | 'release';

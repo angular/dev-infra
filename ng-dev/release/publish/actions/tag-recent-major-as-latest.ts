@@ -8,12 +8,12 @@
 
 import semver from 'semver';
 
-import {ReleaseConfig} from '../../config';
-import {ActiveReleaseTrains} from '../../versioning/active-release-trains';
-import {fetchProjectNpmPackageInfo} from '../../versioning/npm-registry';
-import {ReleaseAction} from '../actions';
-import {ExternalCommands} from '../external-commands';
-import {getReleaseTagForVersion} from '../../versioning/version-tags';
+import {ReleaseConfig} from '../../config/index.js';
+import {ActiveReleaseTrains} from '../../versioning/active-release-trains.js';
+import {fetchProjectNpmPackageInfo} from '../../versioning/npm-registry.js';
+import {ReleaseAction} from '../actions.js';
+import {ExternalCommands} from '../external-commands.js';
+import {getReleaseTagForVersion} from '../../versioning/version-tags.js';
 
 /**
  * Release action that tags the recently published major as latest within the NPM

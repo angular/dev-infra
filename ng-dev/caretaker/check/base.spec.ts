@@ -5,8 +5,8 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {installVirtualGitClientSpies} from '../../utils/testing';
-import {BaseModule} from './base';
+import {installVirtualGitClientSpies} from '../../utils/testing/index.js';
+import {BaseModule} from './base.js';
 
 /** Data mocking as the "retrieved data". */
 const exampleData = 'this is example data' as const;

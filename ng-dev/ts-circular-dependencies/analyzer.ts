@@ -10,8 +10,8 @@ import {readFileSync} from 'fs';
 import {dirname, join, resolve} from 'path';
 import ts from 'typescript';
 
-import {getFileStatus} from './file_system';
-import {getModuleReferences} from './parser';
+import {getFileStatus} from './file_system.js';
+import {getModuleReferences} from './parser.js';
 
 export type ModuleResolver = (specifier: string) => string | null;
 

@@ -8,19 +8,19 @@
 
 import semver from 'semver';
 
-import {green, Log, yellow} from '../../../utils/logging';
-import {workspaceRelativePackageJsonPath} from '../../../utils/constants';
-import {semverInc} from '../../../utils/semver';
-import {ReleaseNotes, workspaceRelativeChangelogPath} from '../../notes/release-notes';
+import {green, Log, yellow} from '../../../utils/logging.js';
+import {workspaceRelativePackageJsonPath} from '../../../utils/constants.js';
+import {semverInc} from '../../../utils/semver.js';
+import {ReleaseNotes, workspaceRelativeChangelogPath} from '../../notes/release-notes.js';
 import {
   computeNewPrereleaseVersionForNext,
   getReleaseNotesCompareVersionForNext,
-} from '../../versioning/next-prerelease-version';
-import {ReleaseAction} from '../actions';
+} from '../../versioning/next-prerelease-version.js';
+import {ReleaseAction} from '../actions.js';
 import {
   getCommitMessageForExceptionalNextVersionBump,
   getReleaseNoteCherryPickCommitMessage,
-} from '../commit-message';
+} from '../commit-message.js';
 
 /**
  * Base action that can be used to move the next release-train into the feature-freeze or

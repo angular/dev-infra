@@ -9,8 +9,8 @@
 import fetch from 'node-fetch';
 import semver from 'semver';
 
-import {ReleaseConfig} from '../config/index';
-import {LtsNpmDistTag} from './long-term-support';
+import {ReleaseConfig} from '../config/index.js';
+import {LtsNpmDistTag} from './long-term-support.js';
 
 /** Type describing the possible NPM dist tags used by Angular packages. */
 export type NpmDistTag = 'latest' | 'next' | LtsNpmDistTag;
@@ -48,9 +48,9 @@ export async function isVersionPublishedToNpm(
 /** Fetches the specified NPM package from the NPM registry. */
 async function fetchPackageInfoFromNpmRegistry(pkgName: string): Promise<NpmPackageInfo> {
   if (_npmPackageInfoCache[pkgName] === undefined) {
-    _npmPackageInfoCache[pkgName] = fetch(`https://registry.npmjs.org/${pkgName}`).then((r) =>
-      r.json(),
-    );
+    _npmPackageInfoCache[pkgName] = fetch
+      .default(`https://registry.npmjs.org/${pkgName}`)
+      .then((r) => r.json());
   }
   return await _npmPackageInfoCache[pkgName];
 }

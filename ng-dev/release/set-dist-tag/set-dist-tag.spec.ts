@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {matchesVersion} from '../../utils/testing';
-import {NpmCommand} from '../versioning/npm-command';
-import {NpmPackage} from '../config/index';
+import {matchesVersion} from '../../utils/testing/index.js';
+import {NpmCommand} from '../versioning/npm-command.js';
+import {NpmPackage} from '../config/index.js';
 
-import {ReleaseSetDistTagCommand} from './cli';
-import {ReleaseConfig} from '../config';
-import {setConfig} from '../../utils/config';
+import {ReleaseSetDistTagCommand} from './cli.js';
+import {ReleaseConfig} from '../config/index.js';
+import {setConfig} from '../../utils/config.js';
 
 describe('ng-dev release set-dist-tag', () => {
   let npmPackages: NpmPackage[];

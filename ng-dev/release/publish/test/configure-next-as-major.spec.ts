@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {getBranchPushMatcher} from '../../../utils/testing';
-import {ActiveReleaseTrains} from '../../versioning';
-import {ReleaseTrain} from '../../versioning/release-trains';
-import {ConfigureNextAsMajorAction} from '../actions/configure-next-as-major';
-import {parse, setupReleaseActionForTesting} from './test-utils/test-utils';
+import {getBranchPushMatcher} from '../../../utils/testing/index.js';
+import {ActiveReleaseTrains} from '../../versioning/index.js';
+import {ReleaseTrain} from '../../versioning/release-trains.js';
+import {ConfigureNextAsMajorAction} from '../actions/configure-next-as-major.js';
+import {parse, setupReleaseActionForTesting} from './test-utils/test-utils.js';
 
 describe('configure next as major action', () => {
   it('should be active if the next branch is for a minor', async () => {

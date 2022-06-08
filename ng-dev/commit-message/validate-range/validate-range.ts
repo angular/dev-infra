@@ -5,14 +5,14 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {green, Log} from '../../utils/logging';
-import {Commit} from '../parse';
-import {getCommitsInRange} from '../utils';
+import {green, Log} from '../../utils/logging.js';
+import {Commit} from '../parse.js';
+import {getCommitsInRange} from '../utils.js';
 import {
   printValidationErrors,
   validateCommitMessage,
   ValidateCommitMessageOptions,
-} from '../validate';
+} from '../validate.js';
 
 // Whether the provided commit is a fixup commit.
 const isNonFixup = (commit: Commit) => !commit.isFixup;

@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {PullApproveGroupArray, PullApproveStringArray} from './pullapprove_arrays';
+import {PullApproveGroupArray, PullApproveStringArray} from './pullapprove_arrays.js';
 
-import {PullApproveAuthorStateDependencyError} from './condition_errors';
-import {PullApproveGroup} from './group';
-import {getOrCreateGlob} from './utils';
+import {PullApproveAuthorStateDependencyError} from './condition_errors.js';
+import {PullApproveGroup} from './group.js';
+import {getOrCreateGlob} from './utils.js';
 import {runInNewContext} from 'vm';
 
 /**

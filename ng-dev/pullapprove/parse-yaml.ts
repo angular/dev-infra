@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {parse as parseYaml} from 'yaml';
-import {PullApproveGroup} from './group';
+import {PullApproveGroup} from './group.js';
 
 export interface PullApproveGroupConfig {
   conditions?: string[];

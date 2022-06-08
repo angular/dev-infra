@@ -9,11 +9,11 @@
 import tsNode from 'ts-node';
 
 import {dirname, join} from 'path';
-import {Assertions, MultipleAssertions} from './assertion-typings';
+import {Assertions, MultipleAssertions} from './assertion-typings.js';
 
-import {Log} from './logging';
-import {GitClient} from './git/git-client';
-import {getCachedConfig, setCachedConfig} from './config-cache';
+import {Log} from './logging.js';
+import {GitClient} from './git/git-client.js';
+import {getCachedConfig, setCachedConfig} from './config-cache.js';
 
 /**
  * Describes the Github configuration for dev-infra. This configuration is

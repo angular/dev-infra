@@ -1,7 +1,7 @@
 import {existsSync, readFileSync, writeFileSync} from 'fs';
 import {join} from 'path';
 import semver from 'semver';
-import {GitClient} from '../../utils/git/git-client';
+import {GitClient} from '../../utils/git/git-client.js';
 
 /** Project-relative path for the changelog file. */
 const changelogPath = 'CHANGELOG.md';

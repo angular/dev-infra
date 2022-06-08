@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {PullRequestFailure} from '../../common/validation/failures';
-import {PullRequest} from '../pull-request';
-import {MergeStrategy, TEMP_PR_HEAD_BRANCH} from './strategy';
+import {PullRequestFailure} from '../../common/validation/failures.js';
+import {PullRequest} from '../pull-request.js';
+import {MergeStrategy, TEMP_PR_HEAD_BRANCH} from './strategy.js';
 
 /**
  * Merge strategy that does not use the Github API for merging. Instead, it fetches

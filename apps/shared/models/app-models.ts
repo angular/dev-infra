@@ -1,10 +1,10 @@
 import {getDoc, getFirestore, doc, DocumentData} from 'firebase/firestore';
-import {BaseModel, Constructor, FirestoreReference, fromFirestoreReference} from './base';
+import {BaseModel, Constructor, FirestoreReference, fromFirestoreReference} from './base.js';
 
 // Import all of the models for the module and decorate all of them for app use.
-import * as models from './index';
+import * as models from './index.js';
 Object.values(models).forEach(forApp);
-export * from './index';
+export * from './index.js';
 
 /**
  * Decorating function for models, allowing them to be used in Firebase function environment leveraging Firestore.

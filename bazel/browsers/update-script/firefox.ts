@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ArtifactType, BrowserArtifact} from './browser-artifact';
-import {Browser} from './browser';
-import {Platform} from './platform';
-import {detectArtifactExtension} from './browser-artifact';
+import {ArtifactType, BrowserArtifact} from './browser-artifact.js';
+import {Browser} from './browser.js';
+import {Platform} from './platform.js';
+import {detectArtifactExtension} from './browser-artifact.js';
 
 const downloadLinuxUrls = {
   'browser-bin':

@@ -1,9 +1,9 @@
-import {rebasePr} from '../../../../ng-dev/pr/rebase/index';
+import {rebasePr} from '../../../../ng-dev/pr/rebase/index.js';
 import {Octokit} from '@octokit/rest';
 import {context} from '@actions/github';
-import {getAuthTokenFor, ANGULAR_ROBOT} from '../../../utils';
-import {AuthenticatedGitClient} from '../../../../ng-dev/utils/git/authenticated-git-client';
-import {setConfig} from '../../../../ng-dev/utils/config';
+import {getAuthTokenFor, ANGULAR_ROBOT} from '../../../utils.js';
+import {AuthenticatedGitClient} from '../../../../ng-dev/utils/git/authenticated-git-client.js';
+import {setConfig} from '../../../../ng-dev/utils/config.js';
 
 export async function rebase() {
   const token = await getAuthTokenFor(ANGULAR_ROBOT);

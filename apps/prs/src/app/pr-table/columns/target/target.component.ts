@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {BaseColumn} from '../base';
+import {BaseColumn} from '../base.js';
 
 /** The targets available, and the text to show in the UI. */
 const Targets = [

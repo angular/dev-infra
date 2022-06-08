@@ -13,10 +13,10 @@ import {
   PullRequestState,
   StatusState,
 } from '@octokit/graphql-schema';
-import {getPendingPrs, getPr} from '../../utils/github';
+import {getPendingPrs, getPr} from '../../utils/github.js';
 import {types as graphqlTypes, onUnion, optional, params} from 'typed-graphqlify';
 
-import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
+import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 
 /** A status for a pull request status or check. */
 export enum PullRequestStatus {

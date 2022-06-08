@@ -6,16 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {green} from 'chalk';
 import {lstatSync} from 'fs';
 import {resolve} from 'path';
-import yargs from 'yargs';
+import {Argv, Arguments, CommandModule} from 'yargs';
 
-import {BuildWorker} from '../../release/build/index';
-import {ChildProcess} from '../../utils/child-process';
-import {Log} from '../../utils/logging';
-import {getConfig} from '../../utils/config';
-import {assertValidReleaseConfig} from '../../release/config';
+import {BuildWorker} from '../../release/build/index.js';
+import {ChildProcess} from '../../utils/child-process.js';
+import {Log, green} from '../../utils/logging.js';
+import {getConfig} from '../../utils/config.js';
+import {assertValidReleaseConfig} from '../../release/config/index.js';
 
 /** Command line options. */
 export interface BuildAndLinkOptions {
@@ -23,7 +22,7 @@ export interface BuildAndLinkOptions {
 }
 
 /** Yargs command builder for the command. */
-function builder(argv: yargs.Argv): yargs.Argv<BuildAndLinkOptions> {
+function builder(argv: Argv): Argv<BuildAndLinkOptions> {
   return argv.positional('projectRoot', {
     type: 'string',
     normalize: true,
@@ -33,7 +32,7 @@ function builder(argv: yargs.Argv): yargs.Argv<BuildAndLinkOptions> {
 }
 
 /** Yargs command handler for the command. */
-async function handler({projectRoot}: yargs.Arguments<BuildAndLinkOptions>) {
+async function handler({projectRoot}: Arguments<BuildAndLinkOptions>) {
   try {
     if (!lstatSync(projectRoot).isDirectory()) {
       Log.error(`  ✘   The 'projectRoot' must be a directory: ${projectRoot}`);
@@ -64,7 +63,7 @@ async function handler({projectRoot}: yargs.Arguments<BuildAndLinkOptions>) {
 }
 
 /** CLI command module. */
-export const BuildAndLinkCommandModule: yargs.CommandModule<{}, BuildAndLinkOptions> = {
+export const BuildAndLinkCommandModule: CommandModule<{}, BuildAndLinkOptions> = {
   builder,
   handler,
   command: 'build-and-link <projectRoot>',

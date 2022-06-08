@@ -1,7 +1,7 @@
 import {Overlay} from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {Component, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
-import {AccountService} from './account.service';
+import {AccountService} from './account.service.js';
 
 @Component({
   selector: 'account-menu-button',

@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BrowserArtifact, ArtifactType} from './browser-artifact';
-import {Platform} from './platform';
+import {BrowserArtifact, ArtifactType} from './browser-artifact.js';
+import {Platform} from './platform.js';
 
 /** Interface describing a browser. */
 export interface Browser<T> {

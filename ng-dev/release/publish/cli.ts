@@ -6,15 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import yargs from 'yargs';
+import {Argv, Arguments, CommandModule} from 'yargs';
 
-import {assertValidGithubConfig, getConfig} from '../../utils/config';
-import {addGithubTokenOption} from '../../utils/git/github-yargs';
-import {assertValidReleaseConfig} from '../config/index';
+import {assertValidGithubConfig, getConfig} from '../../utils/config.js';
+import {addGithubTokenOption} from '../../utils/git/github-yargs.js';
+import {assertValidReleaseConfig} from '../config/index.js';
 
-import {CompletionState, ReleaseTool} from './index';
-import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
-import {green, Log, yellow} from '../../utils/logging';
+import {CompletionState, ReleaseTool} from './index.js';
+import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
+import {green, Log, yellow} from '../../utils/logging.js';
 
 /** Command line options for publishing a release. */
 export interface ReleasePublishOptions {
@@ -22,7 +22,7 @@ export interface ReleasePublishOptions {
 }
 
 /** Yargs command builder for configuring the `ng-dev release publish` command. */
-function builder(argv: yargs.Argv): yargs.Argv<ReleasePublishOptions> {
+function builder(argv: Argv): Argv<ReleasePublishOptions> {
   return addGithubTokenOption(argv);
 }
 
@@ -51,7 +51,7 @@ async function handler() {
 }
 
 /** CLI command module for publishing a release. */
-export const ReleasePublishCommandModule: yargs.CommandModule<{}, ReleasePublishOptions> = {
+export const ReleasePublishCommandModule: CommandModule<{}, ReleasePublishOptions> = {
   builder,
   handler,
   command: 'publish',

@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {parseCommitMessage} from './parse';
-import {commitMessageBuilder, CommitMessageParts} from './test-util';
+import {parseCommitMessage} from './parse.js';
+import {commitMessageBuilder, CommitMessageParts} from './test-util.js';
 
 const commitValues: CommitMessageParts = {
   prefix: '',

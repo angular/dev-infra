@@ -7,11 +7,11 @@
  */
 import semver from 'semver';
 
-import {ActiveReleaseTrains, ReleaseTrain} from '../../release/versioning';
-import {Log} from '../../utils/logging';
-import {installVirtualGitClientSpies, mockNgDevConfig} from '../../utils/testing';
+import {ActiveReleaseTrains, ReleaseTrain} from '../../release/versioning/index.js';
+import {Log} from '../../utils/logging.js';
+import {installVirtualGitClientSpies, mockNgDevConfig} from '../../utils/testing/index.js';
 
-import {CiModule} from './ci';
+import {CiModule} from './ci.js';
 
 describe('CiModule', () => {
   let fetchActiveReleaseTrainsSpy: jasmine.Spy;

@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {PullRequestEvent} from '@octokit/webhooks-types';
 import {Octokit} from '@octokit/rest';
-import {ANGULAR_ROBOT, getAuthTokenFor} from '../../utils';
+import {ANGULAR_ROBOT, getAuthTokenFor} from '../../utils.js';
 
 /** Allow list of googlers whose pull request are allowed to include post approval changes. */
 const googlers = [

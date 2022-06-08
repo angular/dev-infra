@@ -7,11 +7,11 @@
  */
 
 import semver from 'semver';
-import {BuiltPackageWithInfo} from '../../config';
+import {BuiltPackageWithInfo} from '../../config/index.js';
 
-import {ReleaseNotes} from '../../notes/release-notes';
-import {NpmDistTag} from '../../versioning';
-import {ReleaseAction} from '../actions';
+import {ReleaseNotes} from '../../notes/release-notes.js';
+import {NpmDistTag} from '../../versioning/index.js';
+import {ReleaseAction} from '../actions.js';
 
 /**
  * Test release action that exposes protected units of the base

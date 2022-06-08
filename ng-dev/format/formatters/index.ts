@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {getConfig} from '../../utils/config';
-import {assertValidFormatConfig} from '../config';
+import {getConfig} from '../../utils/config.js';
+import {assertValidFormatConfig} from '../config.js';
 
-import {Buildifier} from './buildifier';
-import {ClangFormat} from './clang-format';
-import {Prettier} from './prettier';
+import {Buildifier} from './buildifier.js';
+import {ClangFormat} from './clang-format.js';
+import {Prettier} from './prettier.js';
 
 /**
  * Get all defined formatters which are active based on the current loaded config.
@@ -28,4 +28,4 @@ export function getActiveFormatters() {
 }
 
 // Rexport symbols used for types elsewhere.
-export {Formatter, FormatterAction} from './base-formatter';
+export {Formatter, FormatterAction} from './base-formatter.js';

@@ -1,1 +1,1 @@
-export {githubWebhook} from './githubWebhook/index';
+export {githubWebhook} from './githubWebhook/index.js';

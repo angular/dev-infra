@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {parseCommitMessage} from '../../commit-message/parse';
-import {PullRequestFailure} from '../common/validation/failures';
-import {PullRequestMergeTask} from './task';
-import {getTargetBranchesForPullRequest} from '../common/targeting/target-label';
+import {parseCommitMessage} from '../../commit-message/parse.js';
+import {PullRequestFailure} from '../common/validation/failures.js';
+import {PullRequestMergeTask} from './task.js';
+import {getTargetBranchesForPullRequest} from '../common/targeting/target-label.js';
 import {
   assertCorrectBreakingChangeLabeling,
   assertMergeReady,
@@ -17,8 +17,8 @@ import {
   assertPendingState,
   assertSignedCla,
   assertPassingCi,
-} from '../common/validation/validations';
-import {fetchPullRequestFromGithub} from '../common/fetch-pull-request';
+} from '../common/validation/validations.js';
+import {fetchPullRequestFromGithub} from '../common/fetch-pull-request.js';
 
 /** Interface that describes a pull request. */
 export interface PullRequest {

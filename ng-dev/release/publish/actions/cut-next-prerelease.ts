@@ -8,13 +8,13 @@
 
 import semver from 'semver';
 
-import {semverInc} from '../../../utils/semver';
+import {semverInc} from '../../../utils/semver.js';
 import {
   computeNewPrereleaseVersionForNext,
   getReleaseNotesCompareVersionForNext,
-} from '../../versioning/next-prerelease-version';
-import {ReleaseTrain} from '../../versioning/release-trains';
-import {ReleaseAction} from '../actions';
+} from '../../versioning/next-prerelease-version.js';
+import {ReleaseTrain} from '../../versioning/release-trains.js';
+import {ReleaseAction} from '../actions.js';
 
 /**
  * Release action that cuts a prerelease for the next branch. A version in the next

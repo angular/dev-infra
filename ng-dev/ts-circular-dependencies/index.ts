@@ -7,19 +7,20 @@
  */
 
 import {existsSync, readFileSync, writeFileSync} from 'fs';
-import glob from 'glob';
 import {isAbsolute, relative, resolve} from 'path';
+import {Argv} from 'yargs';
+
 import ts from 'typescript';
-import yargs from 'yargs';
+import glob from 'glob';
 
-import {green, Log, yellow} from '../utils/logging';
+import {green, Log, yellow} from '../utils/logging.js';
 
-import {Analyzer, ReferenceChain} from './analyzer';
-import {CircularDependenciesTestConfig, loadTestConfig} from './config';
-import {convertPathToForwardSlash} from './file_system';
-import {compareGoldens, convertReferenceChainToGolden, Golden} from './golden';
+import {Analyzer, ReferenceChain} from './analyzer.js';
+import {CircularDependenciesTestConfig, loadTestConfig} from './config.js';
+import {convertPathToForwardSlash} from './file_system.js';
+import {compareGoldens, convertReferenceChainToGolden, Golden} from './golden.js';
 
-export function tsCircularDependenciesBuilder(localYargs: yargs.Argv) {
+export function tsCircularDependenciesBuilder(localYargs: Argv) {
   return localYargs
     .help()
     .strict()

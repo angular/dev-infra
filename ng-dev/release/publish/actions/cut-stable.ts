@@ -8,10 +8,10 @@
 
 import semver from 'semver';
 
-import {ActiveReleaseTrains} from '../../versioning/active-release-trains';
-import {getLtsNpmDistTagOfMajor} from '../../versioning/long-term-support';
-import {ReleaseAction} from '../actions';
-import {ExternalCommands} from '../external-commands';
+import {ActiveReleaseTrains} from '../../versioning/active-release-trains.js';
+import {getLtsNpmDistTagOfMajor} from '../../versioning/long-term-support.js';
+import {ReleaseAction} from '../actions.js';
+import {ExternalCommands} from '../external-commands.js';
 
 /**
  * Release action that cuts a stable version for the current release-train in the release

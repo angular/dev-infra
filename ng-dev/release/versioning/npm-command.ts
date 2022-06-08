@@ -8,9 +8,9 @@
 
 import semver from 'semver';
 
-import {ChildProcess} from '../../utils/child-process';
+import {ChildProcess} from '../../utils/child-process.js';
 
-import {NpmDistTag} from './npm-registry';
+import {NpmDistTag} from './npm-registry.js';
 
 export abstract class NpmCommand {
   /**

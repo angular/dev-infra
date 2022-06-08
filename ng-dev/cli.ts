@@ -8,17 +8,17 @@
  */
 import yargs from 'yargs';
 
-import {buildCaretakerParser} from './caretaker/cli';
-import {buildCiParser} from './ci/cli';
-import {buildCommitMessageParser} from './commit-message/cli';
-import {buildFormatParser} from './format/cli';
-import {buildMiscParser} from './misc/cli';
-import {buildNgbotParser} from './ngbot/cli';
-import {buildPrParser} from './pr/cli';
-import {buildPullapproveParser} from './pullapprove/cli';
-import {buildReleaseParser} from './release/cli';
-import {tsCircularDependenciesBuilder} from './ts-circular-dependencies/index';
-import {captureLogOutputForCommand} from './utils/logging';
+import {buildCaretakerParser} from './caretaker/cli.js';
+import {buildCiParser} from './ci/cli.js';
+import {buildCommitMessageParser} from './commit-message/cli.js';
+import {buildFormatParser} from './format/cli.js';
+import {buildMiscParser} from './misc/cli.js';
+import {buildNgbotParser} from './ngbot/cli.js';
+import {buildPrParser} from './pr/cli.js';
+import {buildPullapproveParser} from './pullapprove/cli.js';
+import {buildReleaseParser} from './release/cli.js';
+import {tsCircularDependenciesBuilder} from './ts-circular-dependencies/index.js';
+import {captureLogOutputForCommand} from './utils/logging.js';
 
 yargs(process.argv.slice(2))
   .scriptName('ng-dev')

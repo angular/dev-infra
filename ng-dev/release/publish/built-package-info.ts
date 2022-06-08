@@ -6,12 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {hashElement} from 'folder-hash';
-import {Log} from '../../utils/logging';
+import {Log} from '../../utils/logging.js';
 
-import {BuiltPackage, BuiltPackageWithInfo, NpmPackage} from '../config';
-import {FatalReleaseActionError} from './actions-error';
-import {DirectoryHash} from './directory-hash';
+import {BuiltPackage, BuiltPackageWithInfo, NpmPackage} from '../config/index.js';
+import {FatalReleaseActionError} from './actions-error.js';
+import {DirectoryHash} from './directory-hash.js';
 
 /**
  * Analyzes and extends the given built packages with additional information,

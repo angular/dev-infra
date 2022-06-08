@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CommitFromGitLog} from '../../commit-message/parse';
-import {ConfigValidationError} from '../../utils/config';
+import {CommitFromGitLog} from '../../commit-message/parse.js';
+import {ConfigValidationError} from '../../utils/config.js';
 
 /** Interface describing a built package. */
 export interface BuiltPackage {

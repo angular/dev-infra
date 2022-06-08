@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {GitClient} from '../../utils/git/git-client';
+import {GitClient} from '../../utils/git/git-client.js';
 
 /** Finds a non-reserved branch name in the repository with respect to a base name. */
 export function findAvailableLocalBranchName(git: GitClient, baseName: string): string {

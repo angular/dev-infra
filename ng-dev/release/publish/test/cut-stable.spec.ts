@@ -6,21 +6,20 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {matchesVersion} from '../../../utils/testing';
-import {ReleaseTrain} from '../../versioning/release-trains';
-import {CutStableAction} from '../actions/cut-stable';
-import {ExternalCommands} from '../external-commands';
+import {matchesVersion} from '../../../utils/testing/index.js';
+import {ReleaseTrain} from '../../versioning/release-trains.js';
+import {CutStableAction} from '../actions/cut-stable.js';
+import {ExternalCommands} from '../external-commands.js';
 
 import {readFileSync} from 'fs';
-import {changelogPattern, parse, setupReleaseActionForTesting} from './test-utils/test-utils';
+import {changelogPattern, parse, setupReleaseActionForTesting} from './test-utils/test-utils.js';
 import {
   expectGithubApiRequestsForStaging,
   expectStagingAndPublishWithCherryPick,
-} from './test-utils/staging-test';
-import {testTmpDir} from '../../../utils/testing';
-import {SandboxGitRepo} from '../../../utils/testing';
-import {ActiveReleaseTrains} from '../../versioning';
-import {ReleaseNotes} from '../../notes/release-notes';
+} from './test-utils/staging-test.js';
+import {testTmpDir, SandboxGitRepo} from '../../../utils/testing/index.js';
+import {ActiveReleaseTrains} from '../../versioning/index.js';
+import {ReleaseNotes} from '../../notes/release-notes.js';
 
 describe('cut stable action', () => {
   it('should not activate if a feature-freeze release-train is active', async () => {

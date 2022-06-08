@@ -13,8 +13,8 @@
  * supports stdout JSON output that should be parsable and not polluted from other stdout messages.
  */
 
-import {getConfig} from '../../utils/config';
-import {assertValidReleaseConfig} from '../config/index';
+import {getConfig} from '../../utils/config.js';
+import {assertValidReleaseConfig} from '../config/index.js';
 
 // Start the release package building.
 main().catch((e) => {

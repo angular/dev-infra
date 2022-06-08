@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CommitFromGitLog, parseCommitFromGitLog} from '../../../../commit-message/parse';
-import {commitMessageBuilder} from '../../../../commit-message/test-util';
-import {CategorizedCommit, RenderContext, RenderContextData} from '../../../notes/context';
+import {CommitFromGitLog, parseCommitFromGitLog} from '../../../../commit-message/parse.js';
+import {commitMessageBuilder} from '../../../../commit-message/test-util.js';
+import {CategorizedCommit, RenderContext, RenderContextData} from '../../../notes/context.js';
 
 const defaultContextData: RenderContextData = {
   commits: [],

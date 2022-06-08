@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {green, Log, yellow} from '../../utils/logging';
+import {green, Log, yellow} from '../../utils/logging.js';
 
-import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
-import {GithubRepo} from '../../utils/git/github';
-import {Prompt} from '../../utils/prompt';
+import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
+import {GithubRepo} from '../../utils/git/github.js';
+import {Prompt} from '../../utils/prompt.js';
 
 /**
  * Prompts the user whether remote forks for the current repository should be

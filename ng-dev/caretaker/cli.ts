@@ -7,14 +7,14 @@
  */
 
 import {info} from 'console';
-import yargs from 'yargs';
-import {assertValidGithubConfig, getConfig} from '../utils/config';
-import {CheckModule} from './check/cli';
-import {assertValidCaretakerConfig} from './config';
-import {HandoffModule} from './handoff/cli';
+import {Argv} from 'yargs';
+import {assertValidGithubConfig, getConfig} from '../utils/config.js';
+import {CheckModule} from './check/cli.js';
+import {assertValidCaretakerConfig} from './config.js';
+import {HandoffModule} from './handoff/cli.js';
 
 /** Build the parser for the caretaker commands. */
-export function buildCaretakerParser(argv: yargs.Argv) {
+export function buildCaretakerParser(argv: Argv) {
   return argv.middleware(caretakerCommandCanRun, false).command(CheckModule).command(HandoffModule);
 }
 

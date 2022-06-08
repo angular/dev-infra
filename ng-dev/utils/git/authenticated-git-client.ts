@@ -6,17 +6,17 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {GithubConfig} from '../config';
-import {findOwnedForksOfRepoQuery} from './graphql-queries';
-import {yellow} from '../logging';
+import {GithubConfig} from '../config.js';
+import {findOwnedForksOfRepoQuery} from './graphql-queries.js';
+import {yellow} from '../logging.js';
 
-import {GitClient} from './git-client';
-import {AuthenticatedGithubClient, GithubRepo} from './github';
+import {GitClient} from './git-client.js';
+import {AuthenticatedGithubClient, GithubRepo} from './github.js';
 import {
   getRepositoryGitUrl,
   GITHUB_TOKEN_GENERATE_URL,
   GITHUB_TOKEN_SETTINGS_URL,
-} from './github-urls';
+} from './github-urls.js';
 
 /** Describes a function that can be used to test for given Github OAuth scopes. */
 export type OAuthScopeTestFunction = (scopes: string[], missing: string[]) => void;

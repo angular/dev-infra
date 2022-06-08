@@ -8,10 +8,13 @@
 
 import {ListChoiceOptions, prompt} from 'inquirer';
 
-import {semverInc} from '../../../utils/semver';
-import {ActiveReleaseTrains} from '../../versioning/active-release-trains';
-import {fetchLongTermSupportBranchesFromNpm, LtsBranch} from '../../versioning/long-term-support';
-import {ReleaseAction} from '../actions';
+import {semverInc} from '../../../utils/semver.js';
+import {ActiveReleaseTrains} from '../../versioning/active-release-trains.js';
+import {
+  fetchLongTermSupportBranchesFromNpm,
+  LtsBranch,
+} from '../../versioning/long-term-support.js';
+import {ReleaseAction} from '../actions.js';
 
 /**
  * Release action that cuts a new patch release for an active release-train in the long-term

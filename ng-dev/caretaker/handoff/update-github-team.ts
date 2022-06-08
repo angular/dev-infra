@@ -7,11 +7,11 @@
  */
 
 import {prompt} from 'inquirer';
-import {getConfig} from '../../utils/config';
+import {getConfig} from '../../utils/config.js';
 
-import {green, Log, yellow} from '../../utils/logging';
-import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
-import {assertValidCaretakerConfig} from '../config';
+import {green, Log, yellow} from '../../utils/logging.js';
+import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
+import {assertValidCaretakerConfig} from '../config.js';
 
 /** Update the Github caretaker group, using a prompt to obtain the new caretaker group members.  */
 export async function updateCaretakerTeamViaPrompt() {

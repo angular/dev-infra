@@ -13,14 +13,17 @@
 // ------------------------
 
 import semver from 'semver';
-import yargs from 'yargs';
-import {getConfig} from '../../utils/config';
+import {Argv, Arguments, CommandModule} from 'yargs';
+import {getConfig} from '../../utils/config.js';
 
-import {Log, bold, green} from '../../utils/logging';
-import {Spinner} from '../../utils/spinner';
-import {assertValidReleaseConfig} from '../config/index';
-import {NpmCommand} from '../versioning/npm-command';
-import {createExperimentalSemver, isExperimentalSemver} from '../versioning/experimental-versions';
+import {Log, bold, green} from '../../utils/logging.js';
+import {Spinner} from '../../utils/spinner.js';
+import {assertValidReleaseConfig} from '../config/index.js';
+import {NpmCommand} from '../versioning/npm-command.js';
+import {
+  createExperimentalSemver,
+  isExperimentalSemver,
+} from '../versioning/experimental-versions.js';
 
 /** Command line options for setting an NPM dist tag. */
 export interface ReleaseSetDistTagOptions {
@@ -29,7 +32,7 @@ export interface ReleaseSetDistTagOptions {
   skipExperimentalPackages: boolean;
 }
 
-function builder(args: yargs.Argv): yargs.Argv<ReleaseSetDistTagOptions> {
+function builder(args: Argv): Argv<ReleaseSetDistTagOptions> {
   return args
     .positional('tagName', {
       type: 'string',
@@ -51,7 +54,7 @@ function builder(args: yargs.Argv): yargs.Argv<ReleaseSetDistTagOptions> {
 }
 
 /** Yargs command handler for setting an NPM dist tag. */
-async function handler(args: yargs.Arguments<ReleaseSetDistTagOptions>) {
+async function handler(args: Arguments<ReleaseSetDistTagOptions>) {
   const {targetVersion: rawVersion, tagName, skipExperimentalPackages} = args;
   const config = getConfig();
   assertValidReleaseConfig(config);
@@ -100,7 +103,7 @@ async function handler(args: yargs.Arguments<ReleaseSetDistTagOptions>) {
 }
 
 /** CLI command module for setting an NPM dist tag. */
-export const ReleaseSetDistTagCommand: yargs.CommandModule<{}, ReleaseSetDistTagOptions> = {
+export const ReleaseSetDistTagCommand: CommandModule<{}, ReleaseSetDistTagOptions> = {
   builder,
   handler,
   command: 'set-dist-tag <tag-name> <target-version>',

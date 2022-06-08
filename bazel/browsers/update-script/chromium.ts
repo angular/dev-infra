@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Browser} from './browser';
-import {ArtifactType, BrowserArtifact} from './browser-artifact';
-import {Platform} from './platform';
+import {Browser} from './browser.js';
+import {ArtifactType, BrowserArtifact} from './browser-artifact.js';
+import {Platform} from './platform.js';
 
 const cloudStorageArchiveUrl =
   'https://storage.googleapis.com/chromium-browser-snapshots/{platform}/{revision}/{file}';

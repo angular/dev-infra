@@ -6,29 +6,29 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
-import {GitCommandError} from '../../utils/git/git-client';
+import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
+import {GitCommandError} from '../../utils/git/git-client.js';
 import semver from 'semver';
 import {prompt} from 'inquirer';
-import {Log, red, yellow} from '../../utils/logging';
+import {Log, red, yellow} from '../../utils/logging.js';
 
-import {PullRequestConfig} from '../config';
-import {PullRequestFailure} from '../common/validation/failures';
+import {PullRequestConfig} from '../config/index.js';
+import {PullRequestFailure} from '../common/validation/failures.js';
 import {
   getCaretakerNotePromptMessage,
   getTargettedBranchesConfirmationPromptMessage,
-} from './messages';
-import {isPullRequest, loadAndValidatePullRequest, PullRequest} from './pull-request';
-import {GithubApiMergeStrategy} from './strategies/api-merge';
-import {AutosquashMergeStrategy} from './strategies/autosquash-merge';
-import {GithubConfig} from '../../utils/config';
-import {assertValidReleaseConfig} from '../../release/config';
+} from './messages.js';
+import {isPullRequest, loadAndValidatePullRequest, PullRequest} from './pull-request.js';
+import {GithubApiMergeStrategy} from './strategies/api-merge.js';
+import {AutosquashMergeStrategy} from './strategies/autosquash-merge.js';
+import {GithubConfig} from '../../utils/config.js';
+import {assertValidReleaseConfig} from '../../release/config/index.js';
 import {
   ActiveReleaseTrains,
   fetchLongTermSupportBranchesFromNpm,
   getNextBranchName,
-} from '../../release/versioning';
-import {Prompt} from '../../utils/prompt';
+} from '../../release/versioning/index.js';
+import {Prompt} from '../../utils/prompt.js';
 
 /** Describes the status of a pull request merge. */
 export const enum MergeStatus {

@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {blaze} from '../../utils/protos/bazel_test_status_pb';
-import {ChildProcess} from '../../utils/child-process';
+import {blaze} from '../../utils/protos/bazel_test_status_pb.js';
+import {ChildProcess} from '../../utils/child-process.js';
 import {join, extname} from 'path';
 import {
   mkdirSync,
@@ -18,8 +18,8 @@ import {
   copyFileSync,
   writeFileSync,
 } from 'fs';
-import {Log} from '../../utils/logging';
-import {GitClient} from '../../utils/git/git-client';
+import {Log} from '../../utils/logging.js';
+import {GitClient} from '../../utils/git/git-client.js';
 
 /** Bazel's TestResultData proto Message. */
 const TestResultData = blaze.TestResultData;

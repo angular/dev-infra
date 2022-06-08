@@ -12,13 +12,13 @@
 // can still invoke this command.
 // ------------------------
 
-import yargs from 'yargs';
+import {Argv, Arguments, CommandModule} from 'yargs';
 
-import {getConfig} from '../../utils/config';
-import {green, Log} from '../../utils/logging';
-import {assertValidReleaseConfig, BuiltPackage} from '../config/index';
+import {getConfig} from '../../utils/config.js';
+import {green, Log} from '../../utils/logging.js';
+import {assertValidReleaseConfig, BuiltPackage} from '../config/index.js';
 
-import {BuildWorker} from './index';
+import {BuildWorker} from './index.js';
 
 /**
  * Type describing the JSON output of this command.
@@ -34,7 +34,7 @@ export interface ReleaseBuildOptions {
 }
 
 /** Yargs command builder for configuring the `ng-dev release build` command. */
-function builder(argv: yargs.Argv): yargs.Argv<ReleaseBuildOptions> {
+function builder(argv: Argv): Argv<ReleaseBuildOptions> {
   return argv.option('json', {
     type: 'boolean',
     description: 'Whether the built packages should be printed to stdout as JSON.',
@@ -43,7 +43,7 @@ function builder(argv: yargs.Argv): yargs.Argv<ReleaseBuildOptions> {
 }
 
 /** Yargs command handler for building a release. */
-async function handler(args: yargs.Arguments<ReleaseBuildOptions>) {
+async function handler(args: Arguments<ReleaseBuildOptions>) {
   const config = getConfig();
   assertValidReleaseConfig(config);
   const {npmPackages} = config.release;
@@ -84,7 +84,7 @@ async function handler(args: yargs.Arguments<ReleaseBuildOptions>) {
 }
 
 /** CLI command module for building release output. */
-export const ReleaseBuildCommandModule: yargs.CommandModule<{}, ReleaseBuildOptions> = {
+export const ReleaseBuildCommandModule: CommandModule<{}, ReleaseBuildOptions> = {
   builder,
   handler,
   command: 'build',

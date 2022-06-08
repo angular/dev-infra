@@ -13,7 +13,7 @@ import {
   spawnSync as _spawnSync,
   SpawnSyncOptions as _SpawnSyncOptions,
 } from 'child_process';
-import {Log} from './logging';
+import {Log} from './logging.js';
 
 /** Interface describing the options for spawning a process synchronously. */
 export interface SpawnSyncOptions extends Omit<_SpawnSyncOptions, 'shell' | 'stdio'> {

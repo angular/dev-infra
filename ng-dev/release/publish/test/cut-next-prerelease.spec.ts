@@ -9,18 +9,17 @@
 import {readFileSync} from 'fs';
 import {join} from 'path';
 
-import {ReleaseTrain} from '../../versioning/release-trains';
-import {CutNextPrereleaseAction} from '../actions/cut-next-prerelease';
-import {changelogPattern, parse, setupReleaseActionForTesting} from './test-utils/test-utils';
+import {ReleaseTrain} from '../../versioning/release-trains.js';
+import {CutNextPrereleaseAction} from '../actions/cut-next-prerelease.js';
+import {changelogPattern, parse, setupReleaseActionForTesting} from './test-utils/test-utils.js';
 import {
   expectGithubApiRequestsForStaging,
   expectStagingAndPublishWithCherryPick,
   expectStagingAndPublishWithoutCherryPick,
-} from './test-utils/staging-test';
-import {testTmpDir} from '../../../utils/testing';
-import {SandboxGitRepo} from '../../../utils/testing';
-import {ActiveReleaseTrains} from '../../versioning';
-import {workspaceRelativePackageJsonPath} from '../../../utils/constants';
+} from './test-utils/staging-test.js';
+import {testTmpDir, SandboxGitRepo} from '../../../utils/testing/index.js';
+import {ActiveReleaseTrains} from '../../versioning/index.js';
+import {workspaceRelativePackageJsonPath} from '../../../utils/constants.js';
 
 describe('cut next pre-release action', () => {
   it('should always be active regardless of release-trains', async () => {

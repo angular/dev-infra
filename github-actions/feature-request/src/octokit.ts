@@ -8,8 +8,8 @@
 
 import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
 import {RequestError} from '@octokit/request-error';
-import {Comment, GitHubAPI, GitHubIssueAPI, Issue, Query} from './api';
-import {log} from './log';
+import {Comment, GitHubAPI, GitHubIssueAPI, Issue, Query} from './api.js';
+import {log} from './log.js';
 
 type IssuesGetResponse = RestEndpointMethodTypes['issues']['get']['response']['data'];
 type SearchIssuesAndPullRequestsResponseItemsItem =

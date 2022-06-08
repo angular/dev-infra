@@ -1,8 +1,8 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
-import {rerunCircleCi} from './commands/rerun-circleci';
-import {rebase} from './commands/rebase';
-import {getAuthTokenFor, ANGULAR_ROBOT} from '../../utils';
+import {rerunCircleCi} from './commands/rerun-circleci.js';
+import {rebase} from './commands/rebase.js';
+import {getAuthTokenFor, ANGULAR_ROBOT} from '../../utils.js';
 import {Octokit} from '@octokit/rest';
 
 /** The marker used in comments to note a command is being made in the comments. */

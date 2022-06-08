@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ActiveReleaseTrains} from '../../versioning';
+import {ActiveReleaseTrains} from '../../versioning/index.js';
 
-import {BranchOffNextBranchBaseAction} from './branch-off-next-branch';
+import {BranchOffNextBranchBaseAction} from './branch-off-next-branch.js';
 
 /**
  * Release action that moves the next release-train into the feature-freeze phase. This means

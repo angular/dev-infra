@@ -13,8 +13,8 @@ import {
   ngDevNpmPackageName,
   workspaceRelativePackageJsonPath,
   workspaceRelativeYarnLockFilePath,
-} from './constants';
-import {Log} from './logging';
+} from './constants.js';
+import {Log} from './logging.js';
 
 /**
  * Verifies that the `ng-dev` tool is up-to-date in the workspace. The check will compare

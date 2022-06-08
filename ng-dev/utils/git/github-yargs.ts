@@ -6,16 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Log} from '../logging';
+import {Log} from '../logging.js';
 
-import yargs from 'yargs';
-import {AuthenticatedGitClient} from './authenticated-git-client';
-import {GITHUB_TOKEN_GENERATE_URL} from './github-urls';
+import {Argv} from 'yargs';
+import {AuthenticatedGitClient} from './authenticated-git-client.js';
+import {GITHUB_TOKEN_GENERATE_URL} from './github-urls.js';
 
-export type ArgvWithGithubToken = yargs.Argv<{githubToken: string}>;
+export type ArgvWithGithubToken = Argv<{githubToken: string}>;
 
 /** Sets up the `github-token` command option for the given Yargs instance. */
-export function addGithubTokenOption(argv: yargs.Argv): ArgvWithGithubToken {
+export function addGithubTokenOption(argv: Argv): ArgvWithGithubToken {
   return (
     argv
       // 'github-token' is casted to 'githubToken' to properly set up typings to reflect the key in

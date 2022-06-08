@@ -1,9 +1,9 @@
 import {existsSync, readFileSync} from 'fs';
-import {GitClient} from '../../utils/git/git-client';
+import {GitClient} from '../../utils/git/git-client.js';
 import semver from 'semver';
-import {dedent} from '../../utils/testing';
-import {Changelog, splitMarker} from './changelog';
-import {getMockGitClient} from '../../utils/testing';
+import {dedent} from '../../utils/testing/index.js';
+import {Changelog, splitMarker} from './changelog.js';
+import {getMockGitClient} from '../../utils/testing/index.js';
 
 describe('Changelog', () => {
   let changelog: Changelog;

@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import {Octokit} from '@octokit/rest';
 import {context} from '@actions/github';
-import {getAuthTokenFor, ANGULAR_ROBOT} from '../../../utils';
+import {getAuthTokenFor, ANGULAR_ROBOT} from '../../../utils.js';
 import fetch, {HeaderInit, RequestInit} from 'node-fetch';
 import {RestEndpointMethodTypes} from '@octokit/plugin-rest-endpoint-methods';
 
@@ -108,7 +108,7 @@ class CircleCiClient {
       requestInit['body'] = JSON.stringify(body);
     }
 
-    const response = await fetch(url, requestInit);
+    const response = await fetch.default(url, requestInit);
     const responseJson = await response.json();
 
     if (!response.ok) {

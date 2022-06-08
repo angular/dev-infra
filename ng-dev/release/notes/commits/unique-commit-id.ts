@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Commit} from '../../../commit-message/parse';
+import {Commit} from '../../../commit-message/parse.js';
 
 /**
  * Fields from a `Commit` to incorporate when building up an unique

@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Log} from '../../../utils/logging';
-import {ActiveReleaseTrains, ReleaseTrain} from '../../versioning';
-import {DelegateTestAction} from './delegate-test-action';
-import {expectGithubApiRequestsForStaging} from './test-utils/staging-test';
-import {parse, setupReleaseActionForTesting, writePackageJson} from './test-utils/test-utils';
+import {Log} from '../../../utils/logging.js';
+import {ActiveReleaseTrains, ReleaseTrain} from '../../versioning/index.js';
+import {DelegateTestAction} from './delegate-test-action.js';
+import {expectGithubApiRequestsForStaging} from './test-utils/staging-test.js';
+import {parse, setupReleaseActionForTesting, writePackageJson} from './test-utils/test-utils.js';
 
 describe('package output checks', () => {
   const baseReleaseTrains = new ActiveReleaseTrains({

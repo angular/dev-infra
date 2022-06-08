@@ -9,11 +9,11 @@
 import {
   PullApproveAuthorStateDependencyError,
   PullApproveGroupStateDependencyError,
-} from './condition_errors';
+} from './condition_errors.js';
 
-import {PullApproveGroupConfig} from './parse-yaml';
-import {convertConditionToFunction} from './condition_evaluator';
-import {Log} from '../utils/logging';
+import {PullApproveGroupConfig} from './parse-yaml.js';
+import {convertConditionToFunction} from './condition_evaluator.js';
+import {Log} from '../utils/logging.js';
 
 /** A condition for a group. */
 interface GroupCondition {

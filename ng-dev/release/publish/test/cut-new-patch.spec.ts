@@ -6,17 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ReleaseTrain} from '../../versioning/release-trains';
-import {CutNewPatchAction} from '../actions/cut-new-patch';
-import {changelogPattern, parse, setupReleaseActionForTesting} from './test-utils/test-utils';
+import {ReleaseTrain} from '../../versioning/release-trains.js';
+import {CutNewPatchAction} from '../actions/cut-new-patch.js';
+import {changelogPattern, parse, setupReleaseActionForTesting} from './test-utils/test-utils.js';
 import {
   expectGithubApiRequestsForStaging,
   expectStagingAndPublishWithCherryPick,
-} from './test-utils/staging-test';
+} from './test-utils/staging-test.js';
 import {readFileSync} from 'fs';
-import {testTmpDir} from '../../../utils/testing';
-import {SandboxGitRepo} from '../../../utils/testing';
-import {ActiveReleaseTrains} from '../../versioning';
+import {testTmpDir, SandboxGitRepo} from '../../../utils/testing/index.js';
+import {ActiveReleaseTrains} from '../../versioning/index.js';
 
 describe('cut new patch action', () => {
   it('should be active', async () => {
