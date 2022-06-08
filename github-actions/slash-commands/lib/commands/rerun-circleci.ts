@@ -2,8 +2,13 @@ import * as core from '@actions/core';
 import {Octokit} from '@octokit/rest';
 import {context} from '@actions/github';
 import {getAuthTokenFor, ANGULAR_ROBOT} from '../../../utils.js';
-import fetch, {HeaderInit, RequestInit} from 'node-fetch';
+import fetch, {HeadersInit, RequestInit} from 'node-fetch';
 import {RestEndpointMethodTypes} from '@octokit/plugin-rest-endpoint-methods';
+
+/** CircleCI JSON response on errors. See: https://circleci.com/docs/api/v2. */
+interface CircleErrorResponse {
+  message?: string;
+}
 
 export async function rerunCircleCi() {
   /** Authenticated CircleCi client */
@@ -80,7 +85,7 @@ async function getCircleCiWorkflowIdForPullRequest(
 
 class CircleCiClient {
   /** Headers to include in all HTTP requests. */
-  private headers: HeaderInit = {
+  private headers: HeadersInit = {
     'Content-Type': 'application/json',
     'Circle-Token': core.getInput('circleci-token', {required: true}),
   };
@@ -108,11 +113,11 @@ class CircleCiClient {
       requestInit['body'] = JSON.stringify(body);
     }
 
-    const response = await fetch.default(url, requestInit);
-    const responseJson = await response.json();
+    const response = await fetch(url, requestInit);
+    const responseJson = (await response.json()) as T | CircleErrorResponse;
 
     if (!response.ok) {
-      const message = responseJson['message'] || 'Unknown error';
+      const message = (responseJson as CircleErrorResponse)['message'] || 'Unknown error';
       throw Error(`Error code: ${response.status}  Message: ${message}`);
     }
 

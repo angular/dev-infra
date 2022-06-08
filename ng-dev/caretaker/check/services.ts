@@ -16,6 +16,20 @@ interface ServiceConfig {
   url: string;
 }
 
+/**
+ * Status HTTP responses which are commonly used by services like GitHub.
+ * See for example: https://www.githubstatus.com/api.
+ */
+interface StatusHttpResponse {
+  page: {
+    updated_at: string;
+  };
+  status: {
+    description: string;
+    indicator: 'none' | 'minor' | 'major' | 'critical';
+  };
+}
+
 /** The results of checking the status of a service */
 interface StatusCheckResult {
   name: string;
@@ -69,7 +83,7 @@ export class ServicesModule extends BaseModule<StatusCheckResult[]> {
 
   /** Retrieve the status information for a service which uses a standard API response. */
   async getStatusFromStandardApi(service: ServiceConfig): Promise<StatusCheckResult> {
-    const result = await fetch.default(service.url).then((r) => r.json());
+    const result = (await fetch(service.url).then((r) => r.json())) as StatusHttpResponse;
     const status = result.status.indicator === 'none' ? 'passing' : 'failing';
     return {
       name: service.name,

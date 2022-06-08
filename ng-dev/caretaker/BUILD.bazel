@@ -12,7 +12,6 @@ ts_library(
         "//ng-dev/utils",
         "@npm//@types/inquirer",
         "@npm//@types/node",
-        "@npm//@types/node-fetch",
         "@npm//@types/yargs",
         "@npm//inquirer",
         "@npm//multimatch",

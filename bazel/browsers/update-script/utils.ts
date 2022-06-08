@@ -28,7 +28,13 @@ export async function downloadFileThroughStreaming(
   destinationPath: string,
 ): Promise<void> {
   return new Promise(async (resolve, reject) => {
-    const stream = (await fetch.default(sourceUrl)).body;
+    const stream = (await fetch(sourceUrl)).body;
+
+    if (stream === null) {
+      reject();
+      return;
+    }
+
     const outStream = fs.createWriteStream(destinationPath);
 
     stream.on('error', (err) => reject(err));
