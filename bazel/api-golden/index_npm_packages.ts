@@ -33,9 +33,9 @@ async function main(
   stripExportPattern: RegExp,
   typePackageNames: string[],
 ) {
-  // TODO: This can be replaced with an actual ESM import when `ts_library` is guaranteed
-  // to be ESM-only and supports the `mts` extension.
-  const {default: chalk} = await import('chalk');
+  // TODO(ESM) This can be replaced with an actual ESM import when `ts_library` is
+  // guaranteed to be ESM-only and supports the `mts` extension.
+  const chalk = {red: (v: string) => v, yellow: (v: string) => v};
 
   const packageJsonPath = join(npmPackageDir, 'package.json');
   const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8')) as PackageJson;

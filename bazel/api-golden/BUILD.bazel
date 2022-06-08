@@ -24,7 +24,6 @@ ts_library(
         "@npm//@bazel/runfiles",
         "@npm//@microsoft/api-extractor",
         "@npm//@types/node",
-        "@npm//chalk",
         "@npm//typescript",
     ],
 )

@@ -9,8 +9,8 @@
     "prepare": "husky install",
     "ng-dev": "bash ./tools/local-dev.sh",
     "lint": "yarn tslint -c tslint.json --project tsconfig.json",
-    "build-env-stamp": "ts-node --transpile-only ./ng-dev/release/stamping/_private_main.ts build-env-stamp",
-    "update-generated-files": "ts-node --transpile-only ./tools/update-generated-files.ts"
+    "build-env-stamp": "ts-node --transpile-only --esm --project tsconfig.json ./ng-dev/release/stamping/_private_main.ts build-env-stamp",
+    "update-generated-files": "ts-node --transpile-only --esm --project tsconfig.json ./tools/update-generated-files.ts"
   },
   "exports": {
     "./ng-dev": {
@@ -44,7 +44,6 @@
     "@types/uuid": "^8.3.1",
     "@types/yargs": "^17.0.0",
     "browser-sync": "^2.27.7",
-    "chalk": "^5.0.1",
     "clang-format": "1.8.0",
     "prettier": "2.6.2",
     "protractor": "^7.0.0",
@@ -105,6 +104,7 @@
     "@types/which": "^2.0.1",
     "@types/yarnpkg__lockfile": "^1.1.5",
     "@yarnpkg/lockfile": "^1.1.0",
+    "chalk": "^5.0.1",
     "cli-progress": "^3.7.0",
     "conventional-commits-parser": "^3.2.1",
     "ejs": "^3.1.6",
