@@ -1,37 +1,15 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "generated_file_test", "js_library", "npm_package_bin")
 
 def generate_ts_proto_module(name, protofile, visibility = None):
-    """
-    Generate a typescript module for decoding a proto binary file based on a provided .proto file.
-    """
+    """Generate a typescript module for decoding a proto binary file based on a provided .proto file."""
 
-    # Runtime dependencies, if not already installed, are installed by protobufjs via `npm install`
-    # during the execution. As `npm_package_bin` isolates the execution from the rest of
-    # node_modules, these expected dependencies must be provided.
-    # The check and install of the dependencies is performed in this code block:
-    #   https://github.com/protobufjs/protobuf.js/blob/v6.11.3/cli/util.js#L135
-    #   https://github.com/protobufjs/protobuf.js/blob/v6.11.3/package.json#L93-L104
-    protobufjs_dependencies = [
-        "@npm//chalk",
-        "@npm//escodegen",
-        "@npm//espree",
-        "@npm//estraverse",
-        "@npm//glob",
-        "@npm//jsdoc",
-        "@npm//minimist",
-        "@npm//semver",
-        "@npm//tmp",
-        "@npm//uglify-js",
-    ]
     js_file = name + "_pb.js"
     d_ts_file = name + "_pb.d.ts"
 
     npm_package_bin(
         name = "generate_js_" + name,
-        tool = "@npm//protobufjs/bin:pbjs",
-        data = protobufjs_dependencies + [
-            protofile,
-        ],
+        tool = "//tools/ts_proto:pbjs",
+        data = [protofile],
         testonly = True,
         args = [
             "-t",
@@ -45,10 +23,8 @@ def generate_ts_proto_module(name, protofile, visibility = None):
 
     npm_package_bin(
         name = "generate_ts_" + name,
-        tool = "@npm//protobufjs/bin:pbts",
-        data = protobufjs_dependencies + [
-            ":generate_js_%s" % name,
-        ],
+        tool = "//tools/ts_proto:pbts",
+        data = [":generate_js_%s" % name],
         testonly = True,
         args = [
             "$(execpath :generate_js_%s)" % name,

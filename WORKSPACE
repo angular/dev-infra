@@ -65,6 +65,19 @@ yarn_install(
     yarn_lock = "//:yarn.lock",
 )
 
+yarn_install(
+    name = "ts_proto_npm",
+    args = ["--immutable"],
+    data = [
+        "//:.yarn/releases/yarn-3.2.1.cjs",
+        "//tools/ts_proto:.yarnrc.yml",
+    ],
+    exports_directories_only = False,
+    package_json = "//tools/ts_proto:package.json",
+    yarn = "//:.yarn/releases/yarn-3.2.1.cjs",
+    yarn_lock = "//tools/ts_proto:yarn.lock",
+)
+
 load("@npm//@bazel/protractor:package.bzl", "npm_bazel_protractor_dependencies")
 
 npm_bazel_protractor_dependencies()

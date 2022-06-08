@@ -1,4 +1,4 @@
-load("//tools:generate_ts_proto_module.bzl", "generate_ts_proto_module")
+load("//tools/ts_proto:index.bzl", "generate_ts_proto_module")
 
 generate_ts_proto_module(
     name = "bazel_test_status",
