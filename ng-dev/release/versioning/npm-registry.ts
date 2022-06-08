@@ -48,9 +48,9 @@ export async function isVersionPublishedToNpm(
 /** Fetches the specified NPM package from the NPM registry. */
 async function fetchPackageInfoFromNpmRegistry(pkgName: string): Promise<NpmPackageInfo> {
   if (_npmPackageInfoCache[pkgName] === undefined) {
-    _npmPackageInfoCache[pkgName] = fetch
-      .default(`https://registry.npmjs.org/${pkgName}`)
-      .then((r) => r.json());
+    _npmPackageInfoCache[pkgName] = fetch(`https://registry.npmjs.org/${pkgName}`).then(
+      (r) => r.json() as Promise<NpmPackageInfo>,
+    );
   }
   return await _npmPackageInfoCache[pkgName];
 }

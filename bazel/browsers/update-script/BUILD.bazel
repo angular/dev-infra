@@ -10,7 +10,6 @@ ts_library(
         "//ng-dev/utils",
         "@npm//@google-cloud/storage",
         "@npm//@types/node",
-        "@npm//@types/node-fetch",
         "@npm//@types/tmp",
         "@npm//@types/yargs",
         "@npm//node-fetch",

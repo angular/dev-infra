@@ -86,7 +86,7 @@ export class CiModule extends BaseModule<CiData> {
   private async getBranchStatusFromCi(branch: string): Promise<CiBranchStatus> {
     const {owner, name} = this.git.remoteConfig;
     const url = `https://circleci.com/gh/${owner}/${name}/tree/${branch}.svg?style=shield`;
-    const result = await fetch.default(url).then((r) => r.text());
+    const result = await fetch(url).then((r) => r.text());
 
     if (result && !result.includes('no builds')) {
       return result.includes('passing') ? 'success' : 'failed';

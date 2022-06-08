@@ -9,7 +9,6 @@ ts_library(
     deps = [
         "//ng-dev/release/config",
         "//ng-dev/utils",
-        "@npm//@types/node-fetch",
         "@npm//@types/semver",
         "@npm//node-fetch",
         "@npm//semver",
