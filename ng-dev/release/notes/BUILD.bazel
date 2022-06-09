@@ -31,7 +31,6 @@ ts_library(
     srcs = glob(["**/*.spec.ts"]),
     deps = [
         ":notes",
-        "//ng-dev/release/publish/test:test_lib",
         "//ng-dev/utils",
         "//ng-dev/utils/testing",
         "@npm//@types/semver",
