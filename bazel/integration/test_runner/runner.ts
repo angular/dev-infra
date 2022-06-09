@@ -91,7 +91,7 @@ export class TestRunner {
           template: 'ng-integration-test-XXXXXX',
           keep: true,
         },
-        (err, path) => (err ? reject(err) : resolve(path)),
+        (err, tmpPath) => (err ? reject(err) : resolve(tmpPath)),
       );
     });
   }

@@ -127,8 +127,8 @@ export class Analyzer {
     }
     for (const extension of this.extensions) {
       const pathWithExtension = `${importFullPath}.${extension}`;
-      const stat = getFileStatus(pathWithExtension);
-      if (stat && stat.isFile()) {
+      const withExtensionStat = getFileStatus(pathWithExtension);
+      if (withExtensionStat?.isFile()) {
         return pathWithExtension;
       }
     }

@@ -243,7 +243,7 @@ export class OctoKitIssue extends OctoKit implements GitHubIssueAPI {
 }
 
 function isIssue(object: any): object is Issue {
-  const isIssue =
+  return (
     'author' in object &&
     'body' in object &&
     'title' in object &&
@@ -253,7 +253,6 @@ function isIssue(object: any): object is Issue {
     'number' in object &&
     'numComments' in object &&
     'reactions' in object &&
-    'milestoneId' in object;
-
-  return isIssue;
+    'milestoneId' in object
+  );
 }

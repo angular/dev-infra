@@ -31,20 +31,20 @@ async function main() {
         .command(
           'chromium <revision>',
           'Push Chromium artifacts',
-          (args) => args.positional('revision', {type: 'number', demandOption: true}),
-          (args) => uploadBrowserArtifactsToMirror(new Storage(), new Chromium(args.revision)),
+          (cArgs) => cArgs.positional('revision', {type: 'number', demandOption: true}),
+          (cArgs) => uploadBrowserArtifactsToMirror(new Storage(), new Chromium(cArgs.revision)),
         )
         .command(
           'firefox <browser-version> <driver-version>',
           'Push Firefox artifacts',
-          (args) =>
-            args
+          (fArgs) =>
+            fArgs
               .positional('browserVersion', {type: 'string', demandOption: true})
               .positional('driverVersion', {type: 'string', demandOption: true}),
-          (args) =>
+          (fArgs) =>
             uploadBrowserArtifactsToMirror(
               new Storage(),
-              new Firefox(args.browserVersion, args.driverVersion),
+              new Firefox(fArgs.browserVersion, fArgs.driverVersion),
             ),
         ),
     )

@@ -132,13 +132,13 @@ const processIssue = async (githubAPI: GitHubAPI, githubIssue: GitHubIssueAPI, c
     // it still does not have enough votes to be under consideration we want to add a warning.
     if (daysSince(issue.createdAt) >= config.oldIssueWarnDaysDuration) {
       log(`Adding a warning for old feature request with #${issue.number}`);
-      return await githubIssue.postComment(comment(CommentMarkers.Warn, config.warnComment));
+      return await githubIssue.postComment(createComment(CommentMarkers.Warn, config.warnComment));
     }
 
     // If this is not an old issue, we want to announce the voting process has started.
     log(`Starting voting for #${issue.number}`);
     return await githubIssue.postComment(
-      comment(CommentMarkers.StartVoting, config.startVotingComment),
+      createComment(CommentMarkers.StartVoting, config.startVotingComment),
     );
   }
 
@@ -148,7 +148,7 @@ const processIssue = async (githubAPI: GitHubAPI, githubIssue: GitHubIssueAPI, c
     timestamps.warn === null
   ) {
     log(`Posting a warning for #${issue.number}`);
-    return await githubIssue.postComment(comment(CommentMarkers.Warn, config.warnComment));
+    return await githubIssue.postComment(createComment(CommentMarkers.Warn, config.warnComment));
   }
 
   if (timestamps.warn !== null && daysSince(timestamps.warn) >= config.closeAfterWarnDaysDuration) {
@@ -156,7 +156,7 @@ const processIssue = async (githubAPI: GitHubAPI, githubIssue: GitHubIssueAPI, c
     // level of confidence they are scoped to the feature request.
     log(`Insufficient votes for feature request #${issue.number}`);
     const actions = [
-      githubIssue.postComment(comment(CommentMarkers.Close, config.closeComment)),
+      githubIssue.postComment(createComment(CommentMarkers.Close, config.closeComment)),
       githubIssue.addLabel(config.insufficientVotesLabel),
       githubIssue.removeLabel(config.requiresVotesLabel),
     ];
@@ -239,5 +239,5 @@ const getTimestamps = async (githubIssue: GitHubIssueAPI) => {
  * @param marker A UUID wrapped in an HTML comment we can use to identify this message later on.
  * @param text Text of the comment.
  */
-export const comment = (marker: CommentMarkers, text: string): MarkedComment =>
+export const createComment = (marker: CommentMarkers, text: string): MarkedComment =>
   `${marker}\n${text}` as MarkedComment;

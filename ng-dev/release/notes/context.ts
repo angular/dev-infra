@@ -106,9 +106,9 @@ export class RenderContext {
      * based on the group title.
      */
     const commitGroups = Array.from(groups.entries())
-      .map(([title, commits]) => ({
+      .map(([title, groupCommits]) => ({
         title,
-        commits: commits.sort(this._commitsWithinGroupComparator),
+        commits: groupCommits.sort(this._commitsWithinGroupComparator),
       }))
       .sort((a, b) => compareString(a.title, b.title));
 
