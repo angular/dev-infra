@@ -9,3 +9,9 @@ ts_library(
         "@npm//typescript",
     ],
 )
+
+filegroup(
+    name = "static_files",
+    srcs = ["tsNodeLoaderRule.js"],
+    visibility = ["//:npm"],
+)
