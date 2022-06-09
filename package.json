@@ -8,6 +8,7 @@
   "scripts": {
     "prepare": "husky install",
     "ng-dev": "bash ./tools/local-dev.sh",
+    "lint": "yarn tslint -c tslint.json --project tsconfig.json",
     "build-env-stamp": "ts-node --transpile-only ./ng-dev/release/stamping/_private_main.ts build-env-stamp",
     "update-generated-files": "ts-node --transpile-only ./tools/update-generated-files.ts"
   },

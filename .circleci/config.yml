@@ -175,6 +175,9 @@ jobs:
       - run:
           name: Check commit messages
           command: yarn ng-dev commit-message validate-range << pipeline.git.base_revision >> << pipeline.git.revision >>
+      - run:
+          name: Check code by running linters
+          command: yarn lint
 
   publish_snapshot_build:
     executor: docker-linux-executor

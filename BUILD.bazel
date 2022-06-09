@@ -46,6 +46,7 @@ pkg_npm(
         ":index.bzl",
         "//bazel:static_files",
         "//shared-scripts:static_files",
+        "//tslint-rules:static_files",
     ],
     substitutions = NPM_PACKAGE_SUBSTITUTIONS,
     deps = [
