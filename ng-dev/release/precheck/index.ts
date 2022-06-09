@@ -43,7 +43,7 @@ export async function assertPassingReleasePrechecks(
     Log.info(green('  ✓   Release pre-checks passing.'));
     return true;
   } catch (e) {
-    if (isReleasePrecheckError(e)) {
+    if (e instanceof ReleasePrecheckError) {
       // Note: Error messaging is expected to be handled manually.
       debug(e.message);
       Log.error(`  ✘   Release pre-checks failed. Please check the output above.`);
@@ -54,15 +54,4 @@ export async function assertPassingReleasePrechecks(
 
     return false;
   }
-}
-
-/**
- * Gets whether the given value is a `ReleasePrecheckError`. This helper exists
- * because `instanceof` checks would not work due to us not using code-splitting.
- *
- * TODO(devversion): Remove this when we expose the same code we use in the CLI,
- *   using ESBuild code-splitting.
- */
-function isReleasePrecheckError(value: unknown): value is ReleasePrecheckError {
-  return (value as Partial<Object>).constructor?.name === 'ReleasePrecheckError';
 }
