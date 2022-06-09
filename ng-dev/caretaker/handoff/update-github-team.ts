@@ -16,8 +16,7 @@ import {assertValidCaretakerConfig} from '../config.js';
 /** Update the Github caretaker group, using a prompt to obtain the new caretaker group members.  */
 export async function updateCaretakerTeamViaPrompt() {
   /** Caretaker specific configuration. */
-  const config = getConfig();
-  assertValidCaretakerConfig(config);
+  const config = await getConfig([assertValidCaretakerConfig]);
   const {caretakerGroup} = config.caretaker;
 
   if (caretakerGroup === undefined) {
@@ -79,7 +78,7 @@ export async function updateCaretakerTeamViaPrompt() {
 /** Retrieve the current list of members for the provided group. */
 async function getGroupMembers(group: string) {
   /** The authenticated GitClient instance. */
-  const git = AuthenticatedGitClient.get();
+  const git = await AuthenticatedGitClient.get();
 
   return (
     await git.github.teams.listMembersInOrg({
@@ -93,7 +92,7 @@ async function getGroupMembers(group: string) {
 
 async function setCaretakerGroup(group: string, members: string[]) {
   /** The authenticated GitClient instance. */
-  const git = AuthenticatedGitClient.get();
+  const git = await AuthenticatedGitClient.get();
   /** The full name of the group <org>/<group name>. */
   const fullSlug = `${git.remoteConfig.owner}/${group}`;
   /** The list of current members of the group. */

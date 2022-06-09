@@ -11,6 +11,7 @@ import {join} from 'path';
 import semver from 'semver';
 
 import {CommitFromGitLog, parseCommitFromGitLog} from '../../../commit-message/parse.js';
+import {NgDevConfig} from '../../../utils/config.js';
 import {GitClient} from '../../../utils/git/git-client.js';
 import {Log} from '../../../utils/logging.js';
 import {
@@ -19,6 +20,7 @@ import {
   SandboxGitRepo,
   testTmpDir,
 } from '../../../utils/testing/index.js';
+import {ReleaseConfig} from '../../config/index.js';
 import {ReleaseNotes, workspaceRelativeChangelogPath} from '../../notes/release-notes.js';
 import {ActiveReleaseTrains} from '../../versioning/active-release-trains.js';
 import {NpmCommand} from '../../versioning/npm-command.js';
@@ -164,10 +166,8 @@ describe('common release action logic', () => {
     });
 
     it('should link to the changelog in the release entry if notes are too large', async () => {
-      const {repo, instance, gitClient, builtPackagesWithInfo} = setupReleaseActionForTesting(
-        DelegateTestAction,
-        baseReleaseTrains,
-      );
+      const {repo, instance, gitClient, builtPackagesWithInfo, releaseConfig} =
+        setupReleaseActionForTesting(DelegateTestAction, baseReleaseTrains);
       const {version, branchName} = baseReleaseTrains.latest;
       const tagName = version.format();
       const testCommit = parseCommitFromGitLog(Buffer.from('fix(test): test'));
@@ -182,7 +182,7 @@ describe('common release action logic', () => {
       testCommit.subject = exceedingText;
 
       spyOn(ReleaseNotes, 'forRange').and.callFake(
-        async () => new MockReleaseNotes(version, [testCommit], gitClient),
+        async () => new MockReleaseNotes(releaseConfig, version, [testCommit], gitClient),
       );
 
       repo
@@ -365,7 +365,17 @@ describe('common release action logic', () => {
 
 /** Mock class for `ReleaseNotes` which accepts a list of in-memory commit objects. */
 class MockReleaseNotes extends ReleaseNotes {
-  constructor(version: semver.SemVer, commits: CommitFromGitLog[], git: GitClient) {
-    super(version, commits, git);
+  constructor(
+    releaseConfig: ReleaseConfig,
+    version: semver.SemVer,
+    commits: CommitFromGitLog[],
+    git: GitClient,
+  ) {
+    const ngDevConfig = {
+      release: releaseConfig,
+      __isNgDevConfigObject: true,
+    };
+
+    super(ngDevConfig, version, commits, git);
   }
 }

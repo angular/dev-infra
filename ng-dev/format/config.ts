@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ConfigValidationError} from '../utils/config.js';
+import {ConfigValidationError, NgDevConfig} from '../utils/config.js';
 
 interface Formatter {
   matchers: string[];
@@ -17,7 +17,7 @@ export interface FormatConfig {
 }
 
 /** Retrieve and validate the config as `FormatConfig`. */
-export function assertValidFormatConfig<T>(
+export function assertValidFormatConfig<T extends NgDevConfig>(
   config: T & Partial<{format: FormatConfig}>,
 ): asserts config is T & {format: FormatConfig} {
   // List of errors encountered validating the config.

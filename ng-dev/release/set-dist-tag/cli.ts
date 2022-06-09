@@ -56,7 +56,7 @@ function builder(args: Argv): Argv<ReleaseSetDistTagOptions> {
 /** Yargs command handler for setting an NPM dist tag. */
 async function handler(args: Arguments<ReleaseSetDistTagOptions>) {
   const {targetVersion: rawVersion, tagName, skipExperimentalPackages} = args;
-  const config = getConfig();
+  const config = await getConfig();
   assertValidReleaseConfig(config);
   const {npmPackages, publishRegistry} = config.release;
   const version = semver.parse(rawVersion);

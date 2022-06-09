@@ -26,8 +26,9 @@ export function buildFormatParser(localYargs: Argv) {
       'Run the formatter on all files in the repository',
       (args) => args,
       async ({check}) => {
+        const git = await GitClient.get();
         const executionCmd = check ? checkFiles : formatFiles;
-        const allFiles = GitClient.get().allFiles();
+        const allFiles = git.allFiles();
         process.exitCode = await executionCmd(allFiles);
       },
     )
@@ -36,7 +37,7 @@ export function buildFormatParser(localYargs: Argv) {
       'Run the formatter on files changed since the provided sha/ref',
       (args) => args.positional('shaOrRef', {type: 'string'}),
       async ({shaOrRef, check}) => {
-        const git = GitClient.get();
+        const git = await GitClient.get();
         const sha = shaOrRef || git.mainBranchName;
         const executionCmd = check ? checkFiles : formatFiles;
         const allChangedFilesSince = git.allChangesFilesSince(sha);
@@ -48,11 +49,12 @@ export function buildFormatParser(localYargs: Argv) {
       'Run the formatter on all staged files',
       (args) => args,
       async ({check}) => {
+        const git = await GitClient.get();
         const executionCmd = check ? checkFiles : formatFiles;
-        const allStagedFiles = GitClient.get().allStagedFiles();
+        const allStagedFiles = git.allStagedFiles();
         process.exitCode = await executionCmd(allStagedFiles);
         if (!check && process.exitCode === 0) {
-          GitClient.get().runGraceful(['add', ...allStagedFiles]);
+          git.runGraceful(['add', ...allStagedFiles]);
         }
       },
     )

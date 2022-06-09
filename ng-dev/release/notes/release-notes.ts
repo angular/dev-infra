@@ -18,7 +18,7 @@ import {RenderContext} from './context.js';
 import changelogTemplate from './templates/changelog.js';
 import githubReleaseTemplate from './templates/github-release.js';
 import {getCommitsForRangeWithDeduping} from './commits/get-commits-in-range.js';
-import {getConfig} from '../../utils/config.js';
+import {getConfig, NgDevConfig} from '../../utils/config.js';
 import {assertValidFormatConfig} from '../../format/config.js';
 import {Changelog} from './changelog.js';
 
@@ -28,22 +28,19 @@ export const workspaceRelativeChangelogPath = 'CHANGELOG.md';
 /** Release note generation. */
 export class ReleaseNotes {
   static async forRange(git: GitClient, version: semver.SemVer, baseRef: string, headRef: string) {
+    const config = await getConfig([assertValidReleaseConfig]);
     const commits = getCommitsForRangeWithDeduping(git, baseRef, headRef);
-    return new ReleaseNotes(version, commits, git);
+    return new ReleaseNotes(config, version, commits, git);
   }
 
   /** The RenderContext to be used during rendering. */
   private renderContext: RenderContext | undefined;
+
   /** The title to use for the release. */
   private title: string | false | undefined;
-  /** The configuration ng-dev. */
-  private config: {release: ReleaseConfig} = getConfig([assertValidReleaseConfig]);
-  /** The configuration for the release notes. */
-  private get notesConfig() {
-    return this.config.release.releaseNotes ?? {};
-  }
 
   protected constructor(
+    public config: NgDevConfig<{release: ReleaseConfig}>,
     public version: semver.SemVer,
     private commits: CommitFromGitLog[],
     private git: GitClient,
@@ -78,7 +75,7 @@ export class ReleaseNotes {
     //   for all creation of changelogs, we instead will confirm in our testing that the new changes
     //   created for changelogs meet on standardized markdown formats via unit testing.
     try {
-      assertValidFormatConfig(this.config);
+      assertValidFormatConfig(await this.config);
       await formatFiles([Changelog.getChangelogFilePaths(this.git).filePath]);
     } catch {
       // If the formatting is either unavailable or fails, continue on with the unformatted result.
@@ -104,8 +101,10 @@ export class ReleaseNotes {
    * title.
    */
   async promptForReleaseTitle() {
+    const notesConfig = await this._getNotesConfig();
+
     if (this.title === undefined) {
-      if (this.notesConfig.useReleaseTitle) {
+      if (notesConfig.useReleaseTitle) {
         this.title = await Prompt.input('Please provide a title for the release:');
       } else {
         this.title = false;
@@ -116,17 +115,24 @@ export class ReleaseNotes {
 
   /** Build the render context data object for constructing the RenderContext instance. */
   private async generateRenderContext(): Promise<RenderContext> {
+    const notesConfig = await this._getNotesConfig();
+
     if (!this.renderContext) {
       this.renderContext = new RenderContext({
         commits: this.commits,
         github: this.git.remoteConfig,
         version: this.version.format(),
-        groupOrder: this.notesConfig.groupOrder,
-        hiddenScopes: this.notesConfig.hiddenScopes,
-        categorizeCommit: this.notesConfig.categorizeCommit,
+        groupOrder: notesConfig.groupOrder,
+        hiddenScopes: notesConfig.hiddenScopes,
+        categorizeCommit: notesConfig.categorizeCommit,
         title: await this.promptForReleaseTitle(),
       });
     }
     return this.renderContext;
+  }
+
+  /** Gets the configuration for the release notes. */
+  private async _getNotesConfig() {
+    return (await this.config).release.releaseNotes ?? {};
   }
 }

@@ -7,7 +7,7 @@
  */
 
 import {CommitFromGitLog} from '../../commit-message/parse.js';
-import {ConfigValidationError} from '../../utils/config.js';
+import {ConfigValidationError, NgDevConfig} from '../../utils/config.js';
 
 /** Interface describing a built package. */
 export interface BuiltPackage {
@@ -109,7 +109,7 @@ export interface ReleaseNotesConfig {
 export type DevInfraReleaseConfig = {release: ReleaseConfig};
 
 /** Asserts that the given configuration is a valid `DevInfraReleaseConfig`. */
-export function assertValidReleaseConfig<T>(
+export function assertValidReleaseConfig<T extends NgDevConfig>(
   config: T & Partial<DevInfraReleaseConfig>,
 ): asserts config is T & DevInfraReleaseConfig {
   // List of errors encountered validating the config.

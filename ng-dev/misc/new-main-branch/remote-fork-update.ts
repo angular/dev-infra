@@ -56,7 +56,7 @@ export async function promptForRemoteForkUpdate() {
   // Configure an authenticated Git client.
   AuthenticatedGitClient.configure(accessToken);
 
-  const git = AuthenticatedGitClient.get();
+  const git = await AuthenticatedGitClient.get();
   const forks = (await git.getAllForksOfAuthenticatedUser()).map((fork) => ({
     ...fork,
     description: getDescriptionForRepo(fork),

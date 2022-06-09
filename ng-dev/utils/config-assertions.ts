@@ -1,3 +1,5 @@
+import {NgDevConfig} from './config.js';
+
 type UnionToIntersection<U> = (U extends unknown ? (union: U) => void : never) extends (
   intersection: infer I,
 ) => void
@@ -13,5 +15,5 @@ type ExtractValuesAsUnionFromObject<T> = T[keyof T & number];
 export type Assertions<A extends readonly AssertionFn<unknown>[]> = UnionToIntersection<
   ExtractValuesAsUnionFromObject<AllAssertedTypes<A>>
 >;
-export type AssertionFn<T> = (value: Partial<T>) => asserts value is T;
+export type AssertionFn<T> = (value: NgDevConfig & Partial<T>) => asserts value is NgDevConfig & T;
 export type MultipleAssertions = AssertionFn<unknown>[];

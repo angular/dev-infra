@@ -8,7 +8,7 @@
 
 import {PullRequestConfig} from '../../config/index.js';
 import {getTargetLabelsForActiveReleaseTrains} from './labels.js';
-import {GithubConfig} from '../../../utils/config.js';
+import {GithubConfig, NgDevConfig} from '../../../utils/config.js';
 import {Commit} from '../../../commit-message/parse.js';
 import {assertChangesAllowForTargetLabel} from '../validation/validations.js';
 import {PullRequestFailure} from '../validation/failures.js';
@@ -98,7 +98,7 @@ export async function getMatchingTargetLabelForPullRequest(
 /** Get the branches the pull request should be merged into. */
 export async function getTargetBranchesForPullRequest(
   api: GithubClient,
-  config: {pullRequest: PullRequestConfig; github: GithubConfig},
+  config: NgDevConfig<{pullRequest: PullRequestConfig; github: GithubConfig}>,
   labelsOnPullRequest: string[],
   githubTargetBranch: string,
   commits: Commit[],

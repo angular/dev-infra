@@ -22,7 +22,8 @@ const tempWorkingBranch = '__NgDevRepoBaseAfterChange__';
 /** Checks if the provided PR will cause new conflicts in other pending PRs. */
 export async function discoverNewConflictsForPr(newPrNumber: number, updatedAfter: number) {
   /** The singleton instance of the authenticated git client. */
-  const git = AuthenticatedGitClient.get();
+  const git = await AuthenticatedGitClient.get();
+
   // If there are any local changes in the current repository state, the
   // check cannot run as it needs to move between branches.
   if (git.hasUncommittedChanges()) {

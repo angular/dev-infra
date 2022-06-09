@@ -45,7 +45,7 @@ async function handler() {
    */
   const yarnGlobalBin = (await getYarnPathFromNpmGlobalBinaries()) ?? 'yarn';
   /** Instance of the local git client. */
-  const git = AuthenticatedGitClient.get();
+  const git = await AuthenticatedGitClient.get();
   /** The main branch name of the repository. */
   const mainBranchName = git.mainBranchName;
   /** The original branch or ref before the command was invoked. */

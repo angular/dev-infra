@@ -21,7 +21,8 @@ import {fetchPullRequestFromGithub} from '../common/fetch-pull-request.js';
  */
 export async function rebasePr(prNumber: number, githubToken: string): Promise<number> {
   /** The singleton instance of the authenticated git client. */
-  const git = AuthenticatedGitClient.get();
+  const git = await AuthenticatedGitClient.get();
+
   if (git.hasUncommittedChanges()) {
     Log.error('Cannot perform rebase of PR with local changes.');
     return 1;

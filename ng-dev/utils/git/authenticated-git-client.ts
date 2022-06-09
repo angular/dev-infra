@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {GithubConfig} from '../config.js';
+import {assertValidGithubConfig, getConfig, GithubConfig} from '../config.js';
 import {findOwnedForksOfRepoQuery} from './graphql-queries.js';
 import {yellow} from '../logging.js';
 
@@ -43,10 +43,10 @@ export class AuthenticatedGitClient extends GitClient {
 
   protected constructor(
     readonly githubToken: string,
+    config: {github: GithubConfig},
     baseDir?: string,
-    config?: {github: GithubConfig},
   ) {
-    super(baseDir, config);
+    super(config, baseDir);
   }
 
   /** Sanitizes a given message by omitting the provided Github token if present. */
@@ -141,17 +141,29 @@ export class AuthenticatedGitClient extends GitClient {
     }));
   }
 
+  /** The previously configured access token. */
+  private static _token: string | null = null;
   /** The singleton instance of the `AuthenticatedGitClient`. */
-  private static _authenticatedInstance: AuthenticatedGitClient;
+  private static _authenticatedInstance: Promise<AuthenticatedGitClient> | null = null;
 
   /**
    * Static method to get the singleton instance of the `AuthenticatedGitClient`,
    * creating it if it has not yet been created.
    */
-  static override get(): AuthenticatedGitClient {
-    if (!AuthenticatedGitClient._authenticatedInstance) {
-      throw new Error('No instance of `AuthenticatedGitClient` has been set up yet.');
+  static override async get(): Promise<AuthenticatedGitClient> {
+    if (AuthenticatedGitClient._token === null) {
+      throw new Error('No instance of `AuthenticatedGitClient` has been configured.');
     }
+
+    // If there is no cached authenticated instance, create one and cache the promise
+    // immediately. This avoids constructing a client twice accidentally when e.g. waiting
+    // for the configuration to be loaded.
+    if (AuthenticatedGitClient._authenticatedInstance === null) {
+      AuthenticatedGitClient._authenticatedInstance = (async (token: string) => {
+        return new AuthenticatedGitClient(token, await getConfig([assertValidGithubConfig]));
+      })(AuthenticatedGitClient._token);
+    }
+
     return AuthenticatedGitClient._authenticatedInstance;
   }
 
@@ -162,6 +174,7 @@ export class AuthenticatedGitClient extends GitClient {
         'Unable to configure `AuthenticatedGitClient` as it has been configured already.',
       );
     }
-    AuthenticatedGitClient._authenticatedInstance = new AuthenticatedGitClient(token);
+
+    AuthenticatedGitClient._token = token;
   }
 }

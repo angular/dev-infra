@@ -56,7 +56,7 @@ function builder(argv: Argv): Argv<Options> {
 /** Yargs command handler for generating release notes. */
 async function handler({releaseVersion, from, to, prependToChangelog, type}: Arguments<Options>) {
   /** Git client to use for generating the release notes. */
-  const git = GitClient.get();
+  const git = await GitClient.get();
   /** The ReleaseNotes instance to generate release notes. */
   const releaseNotes = await ReleaseNotes.forRange(git, releaseVersion, from, to);
 

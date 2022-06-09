@@ -29,7 +29,7 @@ async function handler({force}: Arguments<Options>) {
     Log.error('Aborting, `gather-test-results` is only meant to be run on CI.');
     process.exit(1);
   }
-  copyTestResultFiles();
+  await copyTestResultFiles();
 }
 
 /** CLI command module. */

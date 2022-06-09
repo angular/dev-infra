@@ -55,7 +55,7 @@ export interface Commit {
  */
 export class VirtualGitClient extends AuthenticatedGitClient {
   static createInstance(config = mockNgDevConfig, tmpDir = testTmpDir): VirtualGitClient {
-    return new VirtualGitClient('abc123', tmpDir, config);
+    return new VirtualGitClient('abc123', config, tmpDir);
   }
 
   /** Current Git HEAD that has been previously fetched. */
@@ -69,8 +69,8 @@ export class VirtualGitClient extends AuthenticatedGitClient {
   /** List of pushed heads to a given remote ref. */
   pushed: {remote: RemoteRef; head: GitHead}[] = [];
 
-  constructor(githubToken: string, baseDir?: string, config?: {github: GithubConfig}) {
-    super(githubToken, baseDir, config);
+  constructor(githubToken: string, config: {github: GithubConfig}, baseDir?: string) {
+    super(githubToken, config, baseDir);
   }
 
   /** Override for the actual Git client command execution. */
@@ -218,6 +218,6 @@ export class VirtualGitClient extends AuthenticatedGitClient {
 }
 
 export function installVirtualGitClientSpies(mockInstance = VirtualGitClient.createInstance()) {
-  spyOn(GitClient, 'get').and.returnValue(mockInstance);
-  spyOn(AuthenticatedGitClient, 'get').and.returnValue(mockInstance);
+  spyOn(GitClient, 'get').and.resolveTo(mockInstance);
+  spyOn(AuthenticatedGitClient, 'get').and.resolveTo(mockInstance);
 }

@@ -53,11 +53,11 @@ const INCORRECT_BREAKING_CHANGE_BODY_RE =
 const INCORRECT_DEPRECATION_BODY_RE = /^(DEPRECATED[^:]|DEPRECATIONS?|DEPRECATE:|DEPRECATES)/m;
 
 /** Validate a commit message against using the local repo's config. */
-export function validateCommitMessage(
+export async function validateCommitMessage(
   commitMsg: string | Commit,
   options: ValidateCommitMessageOptions = {},
-): ValidateCommitMessageResult {
-  const _config = getConfig();
+): Promise<ValidateCommitMessageResult> {
+  const _config = await getConfig();
   assertValidCommitMessageConfig(_config);
   const config = _config.commitMessage;
   const commit = typeof commitMsg === 'string' ? parseCommitMessage(commitMsg) : commitMsg;

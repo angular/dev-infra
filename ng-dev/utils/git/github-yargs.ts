@@ -32,11 +32,8 @@ export function addGithubTokenOption(argv: Argv): ArgvWithGithubToken {
             Log.warn(`You can generate a token here: ${GITHUB_TOKEN_GENERATE_URL}`);
             process.exit(1);
           }
-          try {
-            AuthenticatedGitClient.get();
-          } catch {
-            AuthenticatedGitClient.configure(githubToken);
-          }
+
+          AuthenticatedGitClient.configure(githubToken);
           return githubToken;
         },
       })

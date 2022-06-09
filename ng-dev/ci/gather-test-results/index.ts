@@ -68,7 +68,7 @@ function findAllTestResultFiles(dirPath: string, files: TestResultFiles[]) {
   return files;
 }
 
-export function copyTestResultFiles() {
+export async function copyTestResultFiles() {
   /** Total number of files copied, also used as a index to number copied files. */
   let copiedFileCount = 0;
   /** The absolute path to the directory containing test logs from bazel tests. */
@@ -76,7 +76,7 @@ export function copyTestResultFiles() {
   /** List of test result files. */
   const testResultPaths = findAllTestResultFiles(testLogsDir, []);
   /** The full path to the root of the repository base. */
-  const projectBaseDir = GitClient.get().baseDir;
+  const projectBaseDir = (await GitClient.get()).baseDir;
   /**
    * Absolute path to a directory to contain the JUnit test result files.
    *
