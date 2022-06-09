@@ -63,6 +63,10 @@ def define_chromium_repositories():
         named_files = {
             "CHROMIUM": "chrome-win/chrome.exe",
         },
+        exclude_patterns = [
+            # Exclude files with spaces to prevent errors when symlinked as runfiles (https://github.com/bazelbuild/bazel/issues/4327).
+            "chrome-win/First Run",
+        ],
     )
 
     browser_archive(
