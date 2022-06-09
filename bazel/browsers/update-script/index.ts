@@ -17,6 +17,7 @@ async function main() {
   await yargs(process.argv.slice(2))
     .strict()
     .help()
+    .scriptName('<cmd>')
     .demandCommand()
     .command(
       'find-latest-chromium-revision [start-revision]',

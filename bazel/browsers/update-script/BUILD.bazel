@@ -1,4 +1,4 @@
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
+load("//tools:defaults.bzl", "esbuild", "ts_library")
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 
 package(default_visibility = ["//visibility:private"])
@@ -18,9 +18,16 @@ ts_library(
     ],
 )
 
+esbuild(
+    name = "cli_script",
+    entry_point = ":index.ts",
+    format = "iife",
+    deps = [":update_script_lib"],
+)
+
 nodejs_binary(
     name = "update-script",
-    data = [":update_script_lib"],
-    entry_point = ":index.ts",
-    templated_args = ["--bazel_patch_module_resolver"],
+    data = [":cli_script"],
+    entry_point = "cli_script.js",
+    templated_args = ["--nobazel_run_linker"],
 )
