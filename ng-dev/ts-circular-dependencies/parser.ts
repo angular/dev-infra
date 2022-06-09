@@ -13,7 +13,7 @@ import * as ts from 'typescript';
  * @param node Source file which should be parsed.
  * @returns List of import specifiers in the source file.
  */
-export function getModuleReferences(node: ts.SourceFile): string[] {
+export function getModuleReferences(initialNode: ts.SourceFile): string[] {
   const references: string[] = [];
   const visitNode = (node: ts.Node) => {
     if (
@@ -25,6 +25,8 @@ export function getModuleReferences(node: ts.SourceFile): string[] {
     }
     ts.forEachChild(node, visitNode);
   };
-  ts.forEachChild(node, visitNode);
+
+  ts.forEachChild(initialNode, visitNode);
+
   return references;
 }

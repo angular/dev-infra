@@ -51,12 +51,12 @@ describe('feature request action', () => {
 
     for await (const comment of first.comments) {
       expect(comment.body).toEqual(
-        action.comment(action.CommentMarkers.StartVoting, basicConfig.startVotingComment),
+        action.createComment(action.CommentMarkers.StartVoting, basicConfig.startVotingComment),
       );
     }
     for await (const comment of second.comments) {
       expect(comment.body).toEqual(
-        action.comment(action.CommentMarkers.StartVoting, basicConfig.startVotingComment),
+        action.createComment(action.CommentMarkers.StartVoting, basicConfig.startVotingComment),
       );
     }
   });
@@ -81,12 +81,12 @@ describe('feature request action', () => {
 
     for await (const comment of first.comments) {
       expect(comment.body).toEqual(
-        action.comment(action.CommentMarkers.Warn, basicConfig.warnComment),
+        action.createComment(action.CommentMarkers.Warn, basicConfig.warnComment),
       );
     }
     for await (const comment of second.comments) {
       expect(comment.body).toEqual(
-        action.comment(action.CommentMarkers.Warn, basicConfig.warnComment),
+        action.createComment(action.CommentMarkers.Warn, basicConfig.warnComment),
       );
     }
   });
@@ -98,7 +98,7 @@ describe('feature request action', () => {
       author: {
         name: '',
       },
-      body: action.comment(action.CommentMarkers.StartVoting, basicConfig.startVotingComment),
+      body: action.createComment(action.CommentMarkers.StartVoting, basicConfig.startVotingComment),
       id: 1,
       timestamp: Date.now() - basicConfig.warnDaysDuration * 24 * 60 * 60 * 1000,
     });
@@ -108,7 +108,7 @@ describe('feature request action', () => {
     expect(first.labels.indexOf(basicConfig.requiresVotesLabel)).toBe(1);
     expect(first.comments.length).toBe(2);
     expect(first.comments.pop()!.body).toEqual(
-      action.comment(action.CommentMarkers.Warn, basicConfig.warnComment),
+      action.createComment(action.CommentMarkers.Warn, basicConfig.warnComment),
     );
   });
 
@@ -165,7 +165,7 @@ describe('feature request action', () => {
       author: {
         name: '',
       },
-      body: action.comment(action.CommentMarkers.Warn, basicConfig.warnComment),
+      body: action.createComment(action.CommentMarkers.Warn, basicConfig.warnComment),
       id: 1,
       timestamp: Date.now() - basicConfig.closeAfterWarnDaysDuration * 24 * 60 * 60 * 1000,
     });
@@ -177,7 +177,7 @@ describe('feature request action', () => {
     expect(first.labels.includes(basicConfig.featureRequestLabel)).toBeTrue();
     expect(first.comments.length).toBe(2);
     expect(first.comments.pop()!.body).toEqual(
-      action.comment(action.CommentMarkers.Close, basicConfig.closeComment),
+      action.createComment(action.CommentMarkers.Close, basicConfig.closeComment),
     );
     expect(first.open).toBeFalse();
   });
@@ -189,7 +189,7 @@ describe('feature request action', () => {
       author: {
         name: '',
       },
-      body: action.comment(action.CommentMarkers.Warn, basicConfig.warnComment),
+      body: action.createComment(action.CommentMarkers.Warn, basicConfig.warnComment),
       id: 1,
       timestamp: Date.now() - basicConfig.closeAfterWarnDaysDuration * 24 * 60 * 60 * 1000,
     });
@@ -201,7 +201,7 @@ describe('feature request action', () => {
     expect(first.labels.indexOf(basicConfig.insufficientVotesLabel)).toBe(1);
     expect(first.comments.length).toBe(2);
     expect(first.comments.pop()!.body).toEqual(
-      action.comment(action.CommentMarkers.Close, basicConfig.closeComment),
+      action.createComment(action.CommentMarkers.Close, basicConfig.closeComment),
     );
     expect(first.open).toBeTrue();
   });
@@ -227,7 +227,7 @@ describe('feature request action', () => {
       author: {
         name: '',
       },
-      body: action.comment(action.CommentMarkers.Warn, basicConfig.warnComment),
+      body: action.createComment(action.CommentMarkers.Warn, basicConfig.warnComment),
       id: 1,
       timestamp: Date.now() - basicConfig.closeAfterWarnDaysDuration * 24 * 60 * 60 * 1000,
     });
@@ -261,7 +261,7 @@ describe('feature request action', () => {
 
     for await (const comment of first.comments) {
       expect(comment.body).toEqual(
-        action.comment(action.CommentMarkers.Warn, basicConfig.warnComment),
+        action.createComment(action.CommentMarkers.Warn, basicConfig.warnComment),
       );
     }
   });

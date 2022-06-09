@@ -37,16 +37,16 @@ export abstract class BaseModel<T> {
    * Class method to get the converter object, ensuring that the converter returned is always
    * the converter from the specific class definition rather than a parent class.
    */
-  private getConverter<T>(model: Constructor<T>): {
-    fromFirestore: (snapshot: any) => T;
+  private getConverter<SubModelT>(modelCtor: Constructor<SubModelT>): {
+    fromFirestore: (snapshot: any) => SubModelT;
     toFirestore: (model: any) => any;
   } {
     return {
       fromFirestore: (snapshot: any) => {
-        return new model(snapshot.data());
+        return new modelCtor(snapshot.data());
       },
-      toFirestore: (model: any) => {
-        return model.data;
+      toFirestore: (modelInstance: any) => {
+        return modelInstance.data;
       },
     };
   }

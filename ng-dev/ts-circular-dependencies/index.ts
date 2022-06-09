@@ -66,12 +66,12 @@ export function main(
   config: CircularDependenciesTestConfig,
   printWarnings: boolean,
 ): number {
-  const {baseDir, goldenFile, glob, resolveModule, approveCommand} = config;
+  const {baseDir, goldenFile, glob: globPattern, resolveModule, approveCommand} = config;
   const analyzer = new Analyzer(resolveModule);
   const cycles: ReferenceChain[] = [];
   const checkedNodes = new WeakSet<ts.SourceFile>();
 
-  globSync(glob, {absolute: true, ignore: ['**/node_modules/**']}).forEach((filePath) => {
+  glob.sync(globPattern, {absolute: true, ignore: ['**/node_modules/**']}).forEach((filePath) => {
     const sourceFile = analyzer.getSourceFile(filePath);
     cycles.push(...analyzer.findCycles(sourceFile, checkedNodes));
   });
