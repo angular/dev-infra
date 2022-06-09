@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "esbuild", "ts_library")
+load("//tools:defaults.bzl", "esbuild_esm_bundle", "ts_library")
 load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
 
 package(default_visibility = ["//visibility:private"])
@@ -22,12 +22,11 @@ ts_library(
     ],
 )
 
-esbuild(
+esbuild_esm_bundle(
     name = "functions_compiled",
     entry_points = [
         "index.ts",
     ],
-    format = "esm",
     visibility = ["//apps:__pkg__"],
     deps = [
         ":functions",

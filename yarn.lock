@@ -549,7 +549,7 @@ __metadata:
     yargs: ^17.0.0
     zone.js: ^0.11.4
   bin:
-    ng-dev: ./ng-dev/bundles/cli.js
+    ng-dev: ./ng-dev/bundles/cli.mjs
   languageName: unknown
   linkType: soft
 

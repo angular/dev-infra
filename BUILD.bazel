@@ -45,6 +45,7 @@ pkg_npm(
         "tsconfig.json",
         ":index.bzl",
         "//bazel:static_files",
+        "//ng-dev:static_files",
         "//shared-scripts:static_files",
         "//tslint-rules:static_files",
     ],

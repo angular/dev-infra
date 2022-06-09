@@ -6,7 +6,7 @@
 set -e
 
 devInfraProjectDir="$(dirname ${0})/.."
-ngDevBinFile="${devInfraProjectDir}/dist/bin/npm_package/ng-dev/bundles/cli.js"
+ngDevBinFile="${devInfraProjectDir}/dist/bin/npm_package/ng-dev/bundles/cli.mjs"
 bazelCommand=${BAZEL:-"yarn bazel"}
 
 # Build the `ng-dev` binary into the `dev-infra/dist` directory.
