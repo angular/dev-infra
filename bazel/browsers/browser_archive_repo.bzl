@@ -33,11 +33,15 @@ licenses(%s)
 
 browser_configure(
   name = "metadata",
-  files = glob(["**/*"]),
+  files = glob(["**/*"], exclude = %s),
   named_files = %s,
   visibility = ["//visibility:public"],
 )
-""" % (str(ctx.attr.licenses), str(ctx.attr.named_files)))
+""" % (
+        str(ctx.attr.licenses),
+        str(ctx.attr.exclude_patterns),
+        str(ctx.attr.named_files),
+    ))
 
 """
   Rule that can be used to download and unpack a browser archive in a dedicated Bazel
@@ -91,6 +95,15 @@ browser_archive = repository_rule(
               expect a `CHROMIUM` key to point to the Chromium browser binary.
             """,
             mandatory = True,
+        ),
+        "exclude_patterns": attr.string_list(
+            default = [],
+            doc = """Patterns of files which should be excluded from the browser runfiles.
+
+              This is useful for example when files with spaces are shipped as part of the
+              archives of browsers. Runfiles with spaces cause issues within Bazel and if
+              these files are not strictly needed, they should be omitted.
+            """,
         ),
     },
 )
