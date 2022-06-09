@@ -3,6 +3,10 @@
 import yargs from 'yargs';
 import {BuildEnvStampCommand} from './cli.js';
 
+// TODO(ESM): Remove this when we use a dyanmic import for config loading.
+import {createRequire as __cjsCompatRequire} from 'module';
+global.require = __cjsCompatRequire(import.meta.url);
+
 yargs(process.argv.slice(2))
   .help()
   .strict()
