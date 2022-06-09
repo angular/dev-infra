@@ -6,9 +6,12 @@
  */
 
 import {join} from 'path';
+import {fileURLToPath} from 'url';
+
 import {spawnSync, SpawnSyncOptionsWithStringEncoding} from 'child_process';
 
-const projectDir = join(__dirname, '../');
+const currentDir = fileURLToPath(import.meta.url);
+const projectDir = join(currentDir, '../');
 const bazelPath = process.env.BAZEL ?? join(projectDir, 'node_modules/.bin/bazel');
 const spawnOptions: SpawnSyncOptionsWithStringEncoding = {
   encoding: 'utf8',
