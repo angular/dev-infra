@@ -8,7 +8,7 @@
 
 import {readFileSync, writeFileSync} from 'fs';
 import {join} from 'path';
-import {getConfig, setConfig} from '../../ng-dev/utils/config.js';
+import {getConfig, NgDevConfig, setConfig} from '../../ng-dev/utils/config.js';
 import {testTmpDir} from '../../ng-dev/utils/testing/bazel-env.js';
 
 /**
@@ -48,19 +48,22 @@ describe('bootstrapping script', () => {
     expect(() => readFileSync(testFilePath, {encoding: 'utf8'})).toThrowError(errorMatcher);
   });
 
-  it('allows modification of the ng-dev configuration', () => {
+  it('allows modification of the ng-dev configuration', async () => {
     // The postfix increment operator is used to check the current value, while incrementing by 1.
     expect(testCount++).toBe(2);
 
     setConfig({test: true});
 
-    expect(getConfig()).toEqual({test: true});
+    expect((await getConfig()) as NgDevConfig<{test?: true}>).toEqual({
+      test: true,
+      __isNgDevConfigObject: true,
+    });
   });
 
-  it('resets the ng-dev configuration between specs', () => {
+  it('resets the ng-dev configuration between specs', async () => {
     // The postfix increment operator is used to check the current value, while incrementing by 1.
     expect(testCount++).toBe(3);
 
-    expect(getConfig()).toEqual({});
+    expect(await getConfig()).toEqual({__isNgDevConfigObject: true});
   });
 });

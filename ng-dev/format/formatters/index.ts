@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {GitClient} from '../../utils/git/git-client.js';
 import {getConfig} from '../../utils/config.js';
 import {assertValidFormatConfig} from '../config.js';
 
@@ -16,14 +17,15 @@ import {Prettier} from './prettier.js';
 /**
  * Get all defined formatters which are active based on the current loaded config.
  */
-export function getActiveFormatters() {
-  const config = getConfig();
+export async function getActiveFormatters() {
+  const config = await getConfig();
   assertValidFormatConfig(config);
+  const gitClient = await GitClient.get();
 
   return [
-    new Prettier(config.format),
-    new Buildifier(config.format),
-    new ClangFormat(config.format),
+    new Prettier(gitClient, config.format),
+    new Buildifier(gitClient, config.format),
+    new ClangFormat(gitClient, config.format),
   ].filter((formatter) => formatter.isEnabled());
 }
 

@@ -28,10 +28,11 @@ function builder(argv: Argv): Argv<ReleasePublishOptions> {
 
 /** Yargs command handler for staging a release. */
 async function handler() {
-  const git = AuthenticatedGitClient.get();
-  const config = getConfig();
+  const git = await AuthenticatedGitClient.get();
+  const config = await getConfig();
   assertValidReleaseConfig(config);
   assertValidGithubConfig(config);
+
   const task = new ReleaseTool(git, config.release, config.github, git.baseDir);
   const result = await task.run();
 

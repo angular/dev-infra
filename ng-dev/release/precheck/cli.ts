@@ -41,7 +41,7 @@ async function handler() {
   // asynchronously start reading the `stdin` input. With the default `readableFlowing`
   // value of `null`, data is buffered. See: https://nodejs.org/api/stream.html#three-states.
   const stdin = await readBufferFromStdinUntilClosed();
-  const config = getConfig();
+  const config = await getConfig();
   assertValidReleaseConfig(config);
 
   // Parse the JSON metadata read from `stdin`.

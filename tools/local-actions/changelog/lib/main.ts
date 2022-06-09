@@ -45,8 +45,10 @@ setConfig(config);
 async function run(): Promise<void> {
   // Configure the AuthenticatedGitClient to be authenticated with the token for the Angular Robot.
   AuthenticatedGitClient.configure(await getAuthTokenFor(ANGULAR_ROBOT));
+
   /** The authenticated GitClient. */
-  const git = AuthenticatedGitClient.get();
+  const git = await AuthenticatedGitClient.get();
+
   git.run(['config', 'user.email', 'angular-robot@google.com']);
   git.run(['config', 'user.name', 'Angular Robot']);
 
@@ -55,9 +57,9 @@ async function run(): Promise<void> {
   /** The full path of the changelog */
   const changelogArchiveFile = join(git.baseDir, 'CHANGELOG_ARCHIVE.md');
   /** The sha of the commit when the changelog was most recently generated. */
-  const lastChangelogRef = getLatestRefFromUpstream(lastChangelogTag);
+  const lastChangelogRef = getLatestRefFromUpstream(git, lastChangelogTag);
   /** The sha of the latest commit on the main branch. */
-  const latestRef = getLatestRefFromUpstream(git.mainBranchName);
+  const latestRef = getLatestRefFromUpstream(git, git.mainBranchName);
   /** The release notes generation object. */
   const releaseNotes = await ReleaseNotes.forRange(
     git,
@@ -89,12 +91,12 @@ async function run(): Promise<void> {
       changelogArchive = readFileSync(changelogArchiveFile, {encoding: 'utf8'}).split(splitMarker);
     }
     changelogArchive.unshift(...changelog.splice(12));
-    writeAndAddToGit(changelogArchiveFile, changelogArchive.join(splitMarker));
+    writeAndAddToGit(git, changelogArchiveFile, changelogArchive.join(splitMarker));
   }
 
   // Place the new changelog entry at the beginning of the changelog entries list.
   changelog.unshift(changelogEntry);
-  writeAndAddToGit(changelogFile, changelog.join(splitMarker));
+  writeAndAddToGit(git, changelogFile, changelog.join(splitMarker));
 
   // Commit the new changelog(s) and push the changes to github.
   git.run(['commit', '--no-verify', '-m', commitMessage]);
@@ -105,16 +107,14 @@ async function run(): Promise<void> {
 }
 
 /** Write the contents to the provided file and add it to git staging. */
-function writeAndAddToGit(filePath: string, contents: string) {
-  const git = AuthenticatedGitClient.get();
+function writeAndAddToGit(git: AuthenticatedGitClient, filePath: string, contents: string) {
   writeFileSync(filePath, contents);
   git.run(['add', filePath]);
 }
 
 /** Retrieve the latest ref for the branch or tag from upstream. */
-function getLatestRefFromUpstream(branchOrTag: string) {
+function getLatestRefFromUpstream(git: AuthenticatedGitClient, branchOrTag: string) {
   try {
-    const git = AuthenticatedGitClient.get();
     git.runGraceful(['fetch', git.getRepoGitUrl(), branchOrTag, '--deepen=250']);
     return git.runGraceful(['rev-parse', 'FETCH_HEAD']).stdout.trim();
   } catch {

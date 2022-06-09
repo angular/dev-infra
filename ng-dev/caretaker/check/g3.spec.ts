@@ -7,6 +7,7 @@
  */
 import {SpawnSyncReturns} from 'child_process';
 
+import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {GitClient} from '../../utils/git/git-client.js';
 import {Log} from '../../utils/logging.js';
 import {installVirtualGitClientSpies, mockNgDevConfig} from '../../utils/testing/index.js';
@@ -18,8 +19,9 @@ describe('G3Module', () => {
   let getLatestShas: jasmine.Spy;
   let getDiffStats: jasmine.Spy;
   let infoSpy: jasmine.Spy;
+  let git: AuthenticatedGitClient;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     installVirtualGitClientSpies();
     getG3FileIncludeAndExcludeLists = spyOn(
       G3Module.prototype,
@@ -28,13 +30,14 @@ describe('G3Module', () => {
     getLatestShas = spyOn(G3Module.prototype, 'getLatestShas' as any).and.returnValue(null);
     getDiffStats = spyOn(G3Module.prototype, 'getDiffStats' as any).and.returnValue(null);
     infoSpy = spyOn(Log, 'info');
+    git = await AuthenticatedGitClient.get();
   });
 
   describe('gathering stats', () => {
     it('unless the g3 merge config is not defined in the angular robot file', async () => {
       getG3FileIncludeAndExcludeLists.and.returnValue(null);
       getLatestShas.and.returnValue({g3: 'abc123', master: 'zxy987'});
-      const module = new G3Module({caretaker: {}, ...mockNgDevConfig});
+      const module = new G3Module(git, {caretaker: {}, ...mockNgDevConfig});
 
       expect(getDiffStats).not.toHaveBeenCalled();
       expect(await module.data).toBe(undefined);
@@ -43,7 +46,7 @@ describe('G3Module', () => {
     it('unless the branch shas are not able to be retrieved', async () => {
       getLatestShas.and.returnValue(null);
       getG3FileIncludeAndExcludeLists.and.returnValue({include: ['file1'], exclude: []});
-      const module = new G3Module({caretaker: {}, ...mockNgDevConfig});
+      const module = new G3Module(git, {caretaker: {}, ...mockNgDevConfig});
 
       expect(getDiffStats).not.toHaveBeenCalled();
       expect(await module.data).toBe(undefined);
@@ -64,7 +67,7 @@ describe('G3Module', () => {
         return output;
       });
 
-      const module = new G3Module({caretaker: {}, ...mockNgDevConfig});
+      const module = new G3Module(git, {caretaker: {}, ...mockNgDevConfig});
       const {insertions, deletions, files, commits} = (await module.data) as G3StatsData;
 
       expect(insertions).toBe(12);
@@ -83,7 +86,7 @@ describe('G3Module', () => {
         commits: 2,
       });
 
-      const module = new G3Module({caretaker: {}, ...mockNgDevConfig});
+      const module = new G3Module(git, {caretaker: {}, ...mockNgDevConfig});
       Object.defineProperty(module, 'data', {value: fakeData});
       await module.printToTerminal();
 
@@ -100,7 +103,7 @@ describe('G3Module', () => {
         commits: 25,
       });
 
-      const module = new G3Module({caretaker: {}, ...mockNgDevConfig});
+      const module = new G3Module(git, {caretaker: {}, ...mockNgDevConfig});
       Object.defineProperty(module, 'data', {value: fakeData});
       await module.printToTerminal();
 

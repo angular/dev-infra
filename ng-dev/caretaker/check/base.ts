@@ -12,12 +12,13 @@ import {CaretakerConfig} from '../config.js';
 
 /** The BaseModule to extend modules for caretaker checks from. */
 export abstract class BaseModule<Data> {
-  /** The singleton instance of the authenticated git client. */
-  protected git = AuthenticatedGitClient.get();
   /** The data for the module. */
   readonly data = this.retrieveData();
 
-  constructor(protected config: {caretaker: CaretakerConfig; github: GithubConfig}) {}
+  constructor(
+    protected git: AuthenticatedGitClient,
+    protected config: {caretaker: CaretakerConfig; github: GithubConfig},
+  ) {}
 
   /** Asyncronously retrieve data for the module. */
   protected abstract retrieveData(): Promise<Data>;

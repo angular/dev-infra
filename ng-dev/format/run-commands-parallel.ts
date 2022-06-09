@@ -41,8 +41,8 @@ export interface FormatFailure {
  * The promise resolves with a list of failures, or `false` if no formatters have matched.
  */
 export function runFormatterInParallel(allFiles: string[], action: FormatterAction) {
-  return new Promise<false | FormatFailure[]>((resolve) => {
-    const formatters = getActiveFormatters();
+  return new Promise<false | FormatFailure[]>(async (resolve) => {
+    const formatters = await getActiveFormatters();
     const failures: FormatFailure[] = [];
     const pendingCommands: {formatter: Formatter; file: string}[] = [];
 

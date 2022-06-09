@@ -12,8 +12,8 @@ import {parse as parseYaml} from 'yaml';
 import {Log, green} from '../utils/logging.js';
 import {GitClient} from '../utils/git/git-client.js';
 
-export function verify() {
-  const git = GitClient.get();
+export async function verify() {
+  const git = await GitClient.get();
   /** Full path to NgBot config file */
   const NGBOT_CONFIG_YAML_PATH = resolve(git.baseDir, '.github/angular-robot.yml');
 

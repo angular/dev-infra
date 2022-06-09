@@ -39,141 +39,155 @@ describe('validate-commit-message.js', () => {
   beforeEach(() => setConfig(config));
 
   describe('validateMessage()', () => {
-    it('should be valid', () => {
-      expectValidationResult(validateCommitMessage('feat(packaging): something'), VALID);
-      expectValidationResult(validateCommitMessage('fix(packaging): something'), VALID);
-      expectValidationResult(validateCommitMessage('fixup! fix(packaging): something'), VALID);
-      expectValidationResult(validateCommitMessage('squash! fix(packaging): something'), VALID);
-      expectValidationResult(validateCommitMessage('Revert: "fix(packaging): something"'), VALID);
+    it('should be valid', async () => {
+      expectValidationResult(await validateCommitMessage('feat(packaging): something'), VALID);
+      expectValidationResult(await validateCommitMessage('fix(packaging): something'), VALID);
+      expectValidationResult(
+        await validateCommitMessage('fixup! fix(packaging): something'),
+        VALID,
+      );
+      expectValidationResult(
+        await validateCommitMessage('squash! fix(packaging): something'),
+        VALID,
+      );
+      expectValidationResult(
+        await validateCommitMessage('Revert: "fix(packaging): something"'),
+        VALID,
+      );
     });
 
-    it('should validate max length', () => {
+    it('should validate max length', async () => {
       const msg =
         'fix(compiler): something super mega extra giga tera long, maybe even longer and longer and longer and longer and longer and longer...';
 
-      expectValidationResult(validateCommitMessage(msg), INVALID, [
+      expectValidationResult(await validateCommitMessage(msg), INVALID, [
         `The commit message header is longer than ${config.commitMessage.maxLineLength} characters`,
       ]);
     });
 
-    it('should skip max length limit for URLs', () => {
+    it('should skip max length limit for URLs', async () => {
       const msg =
         'fix(compiler): this is just a usual commit message title\n\n' +
         'This is a normal commit message body which does not exceed the max length\n' +
         'limit. For more details see the following super long URL:\n\n' +
         'https://github.com/angular/components/commit/e2ace018ddfad10608e0e32932c43dcfef4095d7#diff-9879d6db96fd29134fc802214163b95a';
 
-      expectValidationResult(validateCommitMessage(msg), VALID);
+      expectValidationResult(await validateCommitMessage(msg), VALID);
     });
 
-    it('should validate "<type>(<scope>): <subject>" format', () => {
+    it('should validate "<type>(<scope>): <subject>" format', async () => {
       const msg = 'not correct format';
 
-      expectValidationResult(validateCommitMessage(msg), INVALID, [
+      expectValidationResult(await validateCommitMessage(msg), INVALID, [
         `The commit message header does not match the expected format.`,
       ]);
     });
 
-    it('should fail when type is invalid', () => {
+    it('should fail when type is invalid', async () => {
       const msg = 'weird(core): something';
 
-      expectValidationResult(validateCommitMessage(msg), INVALID, [
+      expectValidationResult(await validateCommitMessage(msg), INVALID, [
         `'weird' is not an allowed type.\n => TYPES: ${TYPES}`,
       ]);
     });
 
-    it('should pass when scope contains NPM scope', () => {
+    it('should pass when scope contains NPM scope', async () => {
       expectValidationResult(
-        validateCommitMessage('fix(@angular-devkit/build-angular): something'),
+        await validateCommitMessage('fix(@angular-devkit/build-angular): something'),
         true,
       );
     });
 
-    it('should fail when scope is invalid', () => {
+    it('should fail when scope is invalid', async () => {
       const errorMessageFor = (scope: string, header: string) =>
         `'${scope}' is not an allowed scope.\n => SCOPES: ${SCOPES}`;
 
-      expectValidationResult(validateCommitMessage('fix(Compiler): something'), INVALID, [
+      expectValidationResult(await validateCommitMessage('fix(Compiler): something'), INVALID, [
         errorMessageFor('Compiler', 'fix(Compiler): something'),
       ]);
 
-      expectValidationResult(validateCommitMessage('feat(bah): something'), INVALID, [
+      expectValidationResult(await validateCommitMessage('feat(bah): something'), INVALID, [
         errorMessageFor('bah', 'feat(bah): something'),
       ]);
 
-      expectValidationResult(validateCommitMessage('fix(webworker): something'), INVALID, [
+      expectValidationResult(await validateCommitMessage('fix(webworker): something'), INVALID, [
         errorMessageFor('webworker', 'fix(webworker): something'),
       ]);
 
-      expectValidationResult(validateCommitMessage('refactor(security): something'), INVALID, [
-        errorMessageFor('security', 'refactor(security): something'),
-      ]);
+      expectValidationResult(
+        await validateCommitMessage('refactor(security): something'),
+        INVALID,
+        [errorMessageFor('security', 'refactor(security): something')],
+      );
 
-      expectValidationResult(validateCommitMessage('refactor(docs): something'), INVALID, [
+      expectValidationResult(await validateCommitMessage('refactor(docs): something'), INVALID, [
         errorMessageFor('docs', 'refactor(docs): something'),
       ]);
 
-      expectValidationResult(validateCommitMessage('feat(angular): something'), INVALID, [
+      expectValidationResult(await validateCommitMessage('feat(angular): something'), INVALID, [
         errorMessageFor('angular', 'feat(angular): something'),
       ]);
     });
 
-    it('should allow empty scope', () => {
-      expectValidationResult(validateCommitMessage('build: blablabla'), VALID);
+    it('should allow empty scope', async () => {
+      expectValidationResult(await validateCommitMessage('build: blablabla'), VALID);
     });
 
     // We do not want to allow WIP. It is OK to fail the PR build in this case to show that there is
     // work still to be done (i.e. fixing the commit message).
-    it('should not allow "WIP: ..." syntax', () => {
+    it('should not allow "WIP: ..." syntax', async () => {
       const msg = 'WIP: fix: something';
 
-      expectValidationResult(validateCommitMessage(msg), INVALID, [
+      expectValidationResult(await validateCommitMessage(msg), INVALID, [
         `'WIP' is not an allowed type.\n => TYPES: ${TYPES}`,
       ]);
     });
 
     describe('(revert)', () => {
-      it('should allow valid "revert: ..." syntaxes', () => {
-        expectValidationResult(validateCommitMessage('revert: anything'), VALID);
-        expectValidationResult(validateCommitMessage('Revert: "anything"'), VALID);
-        expectValidationResult(validateCommitMessage('revert anything'), VALID);
-        expectValidationResult(validateCommitMessage('rEvErT anything'), VALID);
+      it('should allow valid "revert: ..." syntaxes', async () => {
+        expectValidationResult(await validateCommitMessage('revert: anything'), VALID);
+        expectValidationResult(await validateCommitMessage('Revert: "anything"'), VALID);
+        expectValidationResult(await validateCommitMessage('revert anything'), VALID);
+        expectValidationResult(await validateCommitMessage('rEvErT anything'), VALID);
       });
 
-      it('should not allow "revert(scope): ..." syntax', () => {
+      it('should not allow "revert(scope): ..." syntax', async () => {
         const msg = 'revert(compiler): reduce generated code payload size by 65%';
 
-        expectValidationResult(validateCommitMessage(msg), INVALID, [
+        expectValidationResult(await validateCommitMessage(msg), INVALID, [
           `'revert' is not an allowed type.\n => TYPES: ${TYPES}`,
         ]);
       });
 
       // https://github.com/angular/angular/issues/23479
-      it('should allow typical Angular messages generated by git', () => {
+      it('should allow typical Angular messages generated by git', async () => {
         const msg =
           'Revert "fix(compiler): Pretty print object instead of [Object object] (#22689)" (#23442)';
 
-        expectValidationResult(validateCommitMessage(msg), VALID);
+        expectValidationResult(await validateCommitMessage(msg), VALID);
       });
     });
 
     describe('(squash)', () => {
       describe('without `disallowSquash`', () => {
-        it('should return commits as valid', () => {
-          expectValidationResult(validateCommitMessage('squash! feat(core): add feature'), VALID);
-          expectValidationResult(validateCommitMessage('squash! fix: a bug'), VALID);
-          expectValidationResult(validateCommitMessage('squash! fix a typo'), VALID);
+        it('should return commits as valid', async () => {
+          expectValidationResult(
+            await validateCommitMessage('squash! feat(core): add feature'),
+            VALID,
+          );
+          expectValidationResult(await validateCommitMessage('squash! fix: a bug'), VALID);
+          expectValidationResult(await validateCommitMessage('squash! fix a typo'), VALID);
         });
       });
 
       describe('with `disallowSquash`', () => {
-        it('should fail', () => {
+        it('should fail', async () => {
           expectValidationResult(
-            validateCommitMessage('fix(core): something', {disallowSquash: true}),
+            await validateCommitMessage('fix(core): something', {disallowSquash: true}),
             VALID,
           );
           expectValidationResult(
-            validateCommitMessage('squash! fix(core): something', {disallowSquash: true}),
+            await validateCommitMessage('squash! fix(core): something', {disallowSquash: true}),
             INVALID,
             ['The commit must be manually squashed into the target commit'],
           );
@@ -183,33 +197,36 @@ describe('validate-commit-message.js', () => {
 
     describe('(fixup)', () => {
       describe('without `nonFixupCommitHeaders`', () => {
-        it('should return commits as valid', () => {
-          expectValidationResult(validateCommitMessage('fixup! feat(core): add feature'), VALID);
-          expectValidationResult(validateCommitMessage('fixup! fix: a bug'), VALID);
-          expectValidationResult(validateCommitMessage('fixup! fixup! fix: a bug'), VALID);
+        it('should return commits as valid', async () => {
+          expectValidationResult(
+            await validateCommitMessage('fixup! feat(core): add feature'),
+            VALID,
+          );
+          expectValidationResult(await validateCommitMessage('fixup! fix: a bug'), VALID);
+          expectValidationResult(await validateCommitMessage('fixup! fixup! fix: a bug'), VALID);
         });
       });
 
       describe('with `nonFixupCommitHeaders`', () => {
-        it('should check that the fixup commit matches a non-fixup one', () => {
+        it('should check that the fixup commit matches a non-fixup one', async () => {
           const msg = 'fixup! foo';
 
           expectValidationResult(
-            validateCommitMessage(msg, {
+            await validateCommitMessage(msg, {
               disallowSquash: false,
               nonFixupCommitHeaders: ['foo', 'bar', 'baz'],
             }),
             VALID,
           );
           expectValidationResult(
-            validateCommitMessage(msg, {
+            await validateCommitMessage(msg, {
               disallowSquash: false,
               nonFixupCommitHeaders: ['bar', 'baz', 'foo'],
             }),
             VALID,
           );
           expectValidationResult(
-            validateCommitMessage(msg, {
+            await validateCommitMessage(msg, {
               disallowSquash: false,
               nonFixupCommitHeaders: ['baz', 'foo', 'bar'],
             }),
@@ -217,7 +234,7 @@ describe('validate-commit-message.js', () => {
           );
 
           expectValidationResult(
-            validateCommitMessage(msg, {
+            await validateCommitMessage(msg, {
               disallowSquash: false,
               nonFixupCommitHeaders: ['qux', 'quux', 'quuux'],
             }),
@@ -231,16 +248,16 @@ describe('validate-commit-message.js', () => {
           );
         });
 
-        it('should fail if `nonFixupCommitHeaders` is empty', () => {
+        it('should fail if `nonFixupCommitHeaders` is empty', async () => {
           expectValidationResult(
-            validateCommitMessage('refactor(core): make reactive', {
+            await validateCommitMessage('refactor(core): make reactive', {
               disallowSquash: false,
               nonFixupCommitHeaders: [],
             }),
             VALID,
           );
           expectValidationResult(
-            validateCommitMessage('fixup! foo', {
+            await validateCommitMessage('fixup! foo', {
               disallowSquash: false,
               nonFixupCommitHeaders: [],
             }),
@@ -265,44 +282,49 @@ describe('validate-commit-message.js', () => {
         setConfig(minBodyLengthConfig);
       });
 
-      it('should fail validation if the body is shorter than `minBodyLength`', () => {
+      it('should fail validation if the body is shorter than `minBodyLength`', async () => {
         expectValidationResult(
-          validateCommitMessage(
+          await validateCommitMessage(
             'fix(core): something\n\n Explanation of the motivation behind this change',
           ),
           VALID,
         );
         expectValidationResult(
-          validateCommitMessage('fix(core): something\n\n too short'),
+          await validateCommitMessage('fix(core): something\n\n too short'),
           INVALID,
           ['The commit message body does not meet the minimum length of 30 characters'],
         );
-        expectValidationResult(validateCommitMessage('fix(core): something'), INVALID, [
+        expectValidationResult(await validateCommitMessage('fix(core): something'), INVALID, [
           'The commit message body does not meet the minimum length of 30 characters',
         ]);
       });
 
-      it('should pass validation even if the total non-header content is longer than `minBodyLength`, even if the body contains a `#` reference usage', () => {
+      it('should pass validation even if the total non-header content is longer than `minBodyLength`, even if the body contains a `#` reference usage', async () => {
         expectValidationResult(
-          validateCommitMessage(
+          await validateCommitMessage(
             'fix(core): something\n\n Explanation of how #123 motivated this change',
           ),
           VALID,
         );
       });
 
-      it('should pass validation if the body is shorter than `minBodyLength` but the commit type is in the `minBodyLengthTypeExclusions` list', () => {
-        expectValidationResult(validateCommitMessage('docs: just fixing a typo'), VALID);
-        expectValidationResult(validateCommitMessage('docs(core): just fixing a typo'), VALID);
+      it('should pass validation if the body is shorter than `minBodyLength` but the commit type is in the `minBodyLengthTypeExclusions` list', async () => {
+        expectValidationResult(await validateCommitMessage('docs: just fixing a typo'), VALID);
         expectValidationResult(
-          validateCommitMessage('docs(core): just fixing a typo\n\nThis was just a silly typo.'),
+          await validateCommitMessage('docs(core): just fixing a typo'),
+          VALID,
+        );
+        expectValidationResult(
+          await validateCommitMessage(
+            'docs(core): just fixing a typo\n\nThis was just a silly typo.',
+          ),
           VALID,
         );
       });
     });
 
     describe('deprecations', () => {
-      it('should allow valid deprecation notes in commit messages', () => {
+      it('should allow valid deprecation notes in commit messages', async () => {
         const msgWithListOfDeprecations =
           'feat(compiler): this is just a usual commit message title\n\n' +
           'This is a normal commit message body which does not exceed the max length\n' +
@@ -310,7 +332,7 @@ describe('validate-commit-message.js', () => {
           'DEPRECATED:\n' +
           ' * A to be removed\n' +
           ' * B to be removed';
-        expectValidationResult(validateCommitMessage(msgWithListOfDeprecations), VALID);
+        expectValidationResult(await validateCommitMessage(msgWithListOfDeprecations), VALID);
         expect(parseCommitMessage(msgWithListOfDeprecations).deprecations.length).toBe(1);
 
         const msgWithSummary =
@@ -319,7 +341,7 @@ describe('validate-commit-message.js', () => {
           'limit. For more details see the following super long URL:\n\n' +
           'DEPRECATED: All methods in X to be removed in v12.';
 
-        expectValidationResult(validateCommitMessage(msgWithSummary), VALID);
+        expectValidationResult(await validateCommitMessage(msgWithSummary), VALID);
         expect(parseCommitMessage(msgWithSummary).deprecations.length).toBe(1);
 
         const msgWithSummaryAndDescription =
@@ -330,18 +352,18 @@ describe('validate-commit-message.js', () => {
           '' +
           'This is the more detailed description about the deprecation of X.';
 
-        expectValidationResult(validateCommitMessage(msgWithSummaryAndDescription), VALID);
+        expectValidationResult(await validateCommitMessage(msgWithSummaryAndDescription), VALID);
         expect(parseCommitMessage(msgWithSummaryAndDescription).deprecations.length).toBe(1);
 
         const msgWithNoDeprecation =
           'feat(compiler): this is just a usual commit message title\n\n' +
           'This is not a\n' +
           'deprecation commit.';
-        expectValidationResult(validateCommitMessage(msgWithNoDeprecation), VALID);
+        expectValidationResult(await validateCommitMessage(msgWithNoDeprecation), VALID);
         expect(parseCommitMessage(msgWithNoDeprecation).deprecations.length).toBe(0);
       });
 
-      it('should fail for non-valid deprecation notes in commit messages', () => {
+      it('should fail for non-valid deprecation notes in commit messages', async () => {
         const incorrectKeyword1 =
           'feat(compiler): this is just a usual commit message title\n\n' +
           'This is a normal commit message body which does not exceed the max length\n' +
@@ -349,7 +371,7 @@ describe('validate-commit-message.js', () => {
           'DEPRECATE:\n' +
           ' * A to be removed\n' +
           ' * B to be removed';
-        expectValidationResult(validateCommitMessage(incorrectKeyword1), INVALID, [
+        expectValidationResult(await validateCommitMessage(incorrectKeyword1), INVALID, [
           'The commit message body contains an invalid deprecation note.',
         ]);
 
@@ -360,7 +382,7 @@ describe('validate-commit-message.js', () => {
           'DEPRECATES:\n' +
           ' * A to be removed\n' +
           ' * B to be removed';
-        expectValidationResult(validateCommitMessage(incorrectKeyword2), INVALID, [
+        expectValidationResult(await validateCommitMessage(incorrectKeyword2), INVALID, [
           'The commit message body contains an invalid deprecation note.',
         ]);
 
@@ -371,7 +393,7 @@ describe('validate-commit-message.js', () => {
           'DEPRECATIONS:\n' +
           ' * A to be removed\n' +
           ' * B to be removed';
-        expectValidationResult(validateCommitMessage(incorrectKeyword3), INVALID, [
+        expectValidationResult(await validateCommitMessage(incorrectKeyword3), INVALID, [
           'The commit message body contains an invalid deprecation note.',
         ]);
 
@@ -382,20 +404,20 @@ describe('validate-commit-message.js', () => {
           'DEPRECATION:\n' +
           ' * A to be removed\n' +
           ' * B to be removed';
-        expectValidationResult(validateCommitMessage(incorrectKeyword4), INVALID, [
+        expectValidationResult(await validateCommitMessage(incorrectKeyword4), INVALID, [
           'The commit message body contains an invalid deprecation note.',
         ]);
       });
     });
 
     describe('breaking change', () => {
-      it('should allow valid breaking change commit descriptions', () => {
+      it('should allow valid breaking change commit descriptions', async () => {
         const msgWithSummary =
           'feat(compiler): this is just a usual commit message title\n\n' +
           'This is a normal commit message body which does not exceed the max length\n' +
           'limit. For more details see the following super long URL:\n\n' +
           'BREAKING CHANGE: This is a summary of a breaking change.';
-        expectValidationResult(validateCommitMessage(msgWithSummary), VALID);
+        expectValidationResult(await validateCommitMessage(msgWithSummary), VALID);
         expect(parseCommitMessage(msgWithSummary).breakingChanges.length).toBe(1);
 
         const msgWithDescriptionDoubleLineBreakSeparator =
@@ -405,7 +427,7 @@ describe('validate-commit-message.js', () => {
           'BREAKING CHANGE:\n\n' +
           'This is a full description of the breaking change.';
         expectValidationResult(
-          validateCommitMessage(msgWithDescriptionDoubleLineBreakSeparator),
+          await validateCommitMessage(msgWithDescriptionDoubleLineBreakSeparator),
           VALID,
         );
         expect(
@@ -419,7 +441,7 @@ describe('validate-commit-message.js', () => {
           'BREAKING CHANGE:\n' +
           'This is a full description of the breaking change.';
         expectValidationResult(
-          validateCommitMessage(msgWithDescriptionSingleLineBreakSeparator),
+          await validateCommitMessage(msgWithDescriptionSingleLineBreakSeparator),
           VALID,
         );
         expect(
@@ -432,24 +454,24 @@ describe('validate-commit-message.js', () => {
           'limit. For more details see the following super long URL:\n\n' +
           'BREAKING CHANGE: This is a summary of a breaking change.\n\n' +
           'This is a full description of the breaking change.';
-        expectValidationResult(validateCommitMessage(msgWithSummaryAndDescription), VALID);
+        expectValidationResult(await validateCommitMessage(msgWithSummaryAndDescription), VALID);
         expect(parseCommitMessage(msgWithSummaryAndDescription).breakingChanges.length).toBe(1);
 
         const msgWithNonBreaking =
           'feat(compiler): this is just a usual commit message title\n\n' +
           'This is not a\n' +
           'breaking change commit.';
-        expectValidationResult(validateCommitMessage(msgWithNonBreaking), VALID);
+        expectValidationResult(await validateCommitMessage(msgWithNonBreaking), VALID);
         expect(parseCommitMessage(msgWithNonBreaking).breakingChanges.length).toBe(0);
       });
 
-      it('should fail for non-valid breaking change commit descriptions', () => {
+      it('should fail for non-valid breaking change commit descriptions', async () => {
         const msgWithSummary =
           'feat(compiler): this is just a usual commit message title\n\n' +
           'This is a normal commit message body which does not exceed the max length\n' +
           'limit. For more details see the following super long URL:\n\n' +
           'BREAKING CHANGE This is a summary of a breaking change.';
-        expectValidationResult(validateCommitMessage(msgWithSummary), INVALID, [
+        expectValidationResult(await validateCommitMessage(msgWithSummary), INVALID, [
           `The commit message body contains an invalid breaking change note.`,
         ]);
 
@@ -458,7 +480,7 @@ describe('validate-commit-message.js', () => {
           'This is a normal commit message body which does not exceed the max length\n' +
           'limit. For more details see the following super long URL:\n\n' +
           'BREAKING CHANGES: This is a summary of a breaking change.';
-        expectValidationResult(validateCommitMessage(msgWithPlural), INVALID, [
+        expectValidationResult(await validateCommitMessage(msgWithPlural), INVALID, [
           `The commit message body contains an invalid breaking change note.`,
         ]);
 
@@ -468,7 +490,7 @@ describe('validate-commit-message.js', () => {
           'limit. For more details see the following super long URL:\n\n' +
           'BREAKING-CHANGE:' +
           'This is a full description of the breaking change.';
-        expectValidationResult(validateCommitMessage(msgWithWithDashedKeyword), INVALID, [
+        expectValidationResult(await validateCommitMessage(msgWithWithDashedKeyword), INVALID, [
           `The commit message body contains an invalid breaking change note.`,
         ]);
 
@@ -478,7 +500,7 @@ describe('validate-commit-message.js', () => {
           'limit. For more details see the following super long URL:\n\n' +
           'BREAKING CHANGE\n\n' +
           'This is a full description of the breaking change.';
-        expectValidationResult(validateCommitMessage(msgWithSummaryAndDescription), INVALID, [
+        expectValidationResult(await validateCommitMessage(msgWithSummaryAndDescription), INVALID, [
           `The commit message body contains an invalid breaking change note.`,
         ]);
 
@@ -488,7 +510,7 @@ describe('validate-commit-message.js', () => {
           'limit. For more details see the following super long URL:\n\n' +
           'BREAKING CHANGES:\n' +
           ' * A has been removed\n';
-        expectValidationResult(validateCommitMessage(incorrectKeyword1), INVALID, [
+        expectValidationResult(await validateCommitMessage(incorrectKeyword1), INVALID, [
           'The commit message body contains an invalid breaking change note.',
         ]);
 
@@ -498,7 +520,7 @@ describe('validate-commit-message.js', () => {
           'limit. For more details see the following super long URL:\n\n' +
           'BREAKING-CHANGE:\n' +
           ' * A has been removed\n';
-        expectValidationResult(validateCommitMessage(incorrectKeyword2), INVALID, [
+        expectValidationResult(await validateCommitMessage(incorrectKeyword2), INVALID, [
           'The commit message body contains an invalid breaking change note.',
         ]);
 
@@ -508,7 +530,7 @@ describe('validate-commit-message.js', () => {
           'limit. For more details see the following super long URL:\n\n' +
           'BREAKING-CHANGES:\n' +
           ' * A has been removed\n';
-        expectValidationResult(validateCommitMessage(incorrectKeyword3), INVALID, [
+        expectValidationResult(await validateCommitMessage(incorrectKeyword3), INVALID, [
           'The commit message body contains an invalid breaking change note.',
         ]);
       });

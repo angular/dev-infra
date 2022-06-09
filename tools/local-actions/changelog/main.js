@@ -59290,19 +59290,19 @@ function getCachedConfig() {
 }
 
 // 
-var CONFIG_FILE_PATH = ".ng-dev/config";
+var CONFIG_FILE_PATH = ".ng-dev/config.mjs";
 var setConfig = setCachedConfig;
-function getConfig(baseDirOrAssertions) {
+async function getConfig(baseDirOrAssertions) {
   let cachedConfig2 = getCachedConfig();
   if (cachedConfig2 === null) {
     let baseDir;
     if (typeof baseDirOrAssertions === "string") {
       baseDir = baseDirOrAssertions;
     } else {
-      baseDir = GitClient.get().baseDir;
+      baseDir = determineRepoBaseDirFromCwd();
     }
     const configPath = join(baseDir, CONFIG_FILE_PATH);
-    cachedConfig2 = readConfigFile(configPath);
+    cachedConfig2 = await readConfigFile(configPath);
     setCachedConfig(cachedConfig2);
   }
   if (Array.isArray(baseDirOrAssertions)) {
@@ -59310,7 +59310,7 @@ function getConfig(baseDirOrAssertions) {
       assertion(cachedConfig2);
     }
   }
-  return __spreadValues({}, cachedConfig2);
+  return __spreadProps(__spreadValues({}, cachedConfig2), { __isNgDevConfigObject: true });
 }
 var ConfigValidationError = class extends Error {
   constructor(message, errors = []) {
@@ -59334,14 +59334,14 @@ function assertValidGithubConfig(config2) {
     throw new ConfigValidationError("Invalid `github` configuration", errors);
   }
 }
-function readConfigFile(configPath, returnEmptyObjectOnError = false) {
+async function readConfigFile(configPath, returnEmptyObjectOnError = false) {
   tsNode.register({
     dir: dirname(configPath),
-    transpileOnly: true,
-    compilerOptions: { module: "commonjs" }
+    esm: true,
+    transpileOnly: true
   });
   try {
-    return __require(configPath);
+    return await import(configPath);
   } catch (e) {
     if (returnEmptyObjectOnError) {
       Log.debug(`Could not read configuration file at ${configPath}, returning empty object instead.`);
@@ -59414,11 +59414,10 @@ var GitCommandError = class extends Error {
   }
 };
 var GitClient = class {
-  constructor(baseDir = determineRepoBaseDirFromCwd(), config2 = getConfig(baseDir)) {
+  constructor(config2, baseDir = determineRepoBaseDirFromCwd()) {
     this.baseDir = baseDir;
     this.github = new GithubClient();
     this.gitBinPath = "git";
-    assertValidGithubConfig(config2);
     this.config = config2;
     this.remoteConfig = config2.github;
     this.remoteParams = { owner: config2.github.owner, repo: config2.github.name };
@@ -59500,13 +59499,16 @@ var GitClient = class {
   sanitizeConsoleOutput(value) {
     return value;
   }
-  static get() {
-    if (!this._unauthenticatedInstance) {
-      GitClient._unauthenticatedInstance = new GitClient();
+  static async get() {
+    if (GitClient._unauthenticatedInstance === null) {
+      GitClient._unauthenticatedInstance = (async () => {
+        return new GitClient(await getConfig([assertValidGithubConfig]));
+      })();
     }
     return GitClient._unauthenticatedInstance;
   }
 };
+GitClient._unauthenticatedInstance = null;
 function gitOutputAsArray(gitCommandResult) {
   return gitCommandResult.stdout.split("\n").map((x) => x.trim()).filter((x) => !!x);
 }
@@ -59696,9 +59698,9 @@ import { join as join2 } from "path";
 
 // 
 var Formatter = class {
-  constructor(config2) {
+  constructor(git, config2) {
+    this.git = git;
     this.config = config2;
-    this.git = GitClient.get();
   }
   commandFor(action) {
     switch (action) {
@@ -59836,21 +59838,22 @@ var Prettier = class extends Formatter {
 };
 
 // 
-function getActiveFormatters() {
-  const config2 = getConfig();
+async function getActiveFormatters() {
+  const config2 = await getConfig();
   assertValidFormatConfig(config2);
+  const gitClient = await GitClient.get();
   return [
-    new Prettier(config2.format),
-    new Buildifier(config2.format),
-    new ClangFormat(config2.format)
+    new Prettier(gitClient, config2.format),
+    new Buildifier(gitClient, config2.format),
+    new ClangFormat(gitClient, config2.format)
   ].filter((formatter) => formatter.isEnabled());
 }
 
 // 
 var AVAILABLE_THREADS = Math.max(Math.min(cpus().length, 8) - 1, 1);
 function runFormatterInParallel(allFiles, action) {
-  return new Promise((resolve) => {
-    const formatters = getActiveFormatters();
+  return new Promise(async (resolve) => {
+    const formatters = await getActiveFormatters();
     const failures = [];
     const pendingCommands = [];
     for (const formatter of formatters) {
@@ -60521,18 +60524,16 @@ function parseChangelogEntry(content) {
 
 // 
 var ReleaseNotes = class {
-  constructor(version, commits, git) {
+  constructor(config2, version, commits, git) {
+    this.config = config2;
     this.version = version;
     this.commits = commits;
     this.git = git;
-    this.config = getConfig([assertValidReleaseConfig]);
   }
   static async forRange(git, version, baseRef, headRef) {
+    const config2 = await getConfig([assertValidReleaseConfig]);
     const commits = getCommitsForRangeWithDeduping(git, baseRef, headRef);
-    return new ReleaseNotes(version, commits, git);
-  }
-  get notesConfig() {
-    return this.config.release.releaseNotes ?? {};
+    return new ReleaseNotes(config2, version, commits, git);
   }
   async getGithubReleaseEntry() {
     return (0, import_ejs.render)(github_release_default, await this.generateRenderContext(), {
@@ -60548,7 +60549,7 @@ var ReleaseNotes = class {
     }
     Changelog.prependEntryToChangelogFile(this.git, await this.getChangelogEntry());
     try {
-      assertValidFormatConfig(this.config);
+      assertValidFormatConfig(await this.config);
       await formatFiles([Changelog.getChangelogFilePaths(this.git).filePath]);
     } catch {
     }
@@ -60561,8 +60562,9 @@ var ReleaseNotes = class {
     return (await this.generateRenderContext()).urlFragmentForRelease;
   }
   async promptForReleaseTitle() {
+    const notesConfig = await this._getNotesConfig();
     if (this.title === void 0) {
-      if (this.notesConfig.useReleaseTitle) {
+      if (notesConfig.useReleaseTitle) {
         this.title = await Prompt.input("Please provide a title for the release:");
       } else {
         this.title = false;
@@ -60571,18 +60573,22 @@ var ReleaseNotes = class {
     return this.title;
   }
   async generateRenderContext() {
+    const notesConfig = await this._getNotesConfig();
     if (!this.renderContext) {
       this.renderContext = new RenderContext({
         commits: this.commits,
         github: this.git.remoteConfig,
         version: this.version.format(),
-        groupOrder: this.notesConfig.groupOrder,
-        hiddenScopes: this.notesConfig.hiddenScopes,
-        categorizeCommit: this.notesConfig.categorizeCommit,
+        groupOrder: notesConfig.groupOrder,
+        hiddenScopes: notesConfig.hiddenScopes,
+        categorizeCommit: notesConfig.categorizeCommit,
         title: await this.promptForReleaseTitle()
       });
     }
     return this.renderContext;
+  }
+  async _getNotesConfig() {
+    return (await this.config).release.releaseNotes ?? {};
   }
 };
 
@@ -60608,8 +60614,8 @@ var findOwnedForksOfRepoQuery = (0, import_typed_graphqlify2.params)({
 
 // 
 var AuthenticatedGitClient = class extends GitClient {
-  constructor(githubToken, baseDir, config2) {
-    super(baseDir, config2);
+  constructor(githubToken, config2, baseDir) {
+    super(config2, baseDir);
     this.githubToken = githubToken;
     this._githubTokenRegex = new RegExp(this.githubToken, "g");
     this._cachedOauthScopes = null;
@@ -60668,9 +60674,14 @@ Alternatively, a new token can be created at: ${GITHUB_TOKEN_GENERATE_URL}
       return scopes.split(",").map((scope) => scope.trim()).filter((scope) => scope !== "");
     });
   }
-  static get() {
-    if (!AuthenticatedGitClient._authenticatedInstance) {
-      throw new Error("No instance of `AuthenticatedGitClient` has been set up yet.");
+  static async get() {
+    if (AuthenticatedGitClient._token === null) {
+      throw new Error("No instance of `AuthenticatedGitClient` has been configured.");
+    }
+    if (AuthenticatedGitClient._authenticatedInstance === null) {
+      AuthenticatedGitClient._authenticatedInstance = (async (token) => {
+        return new AuthenticatedGitClient(token, await getConfig([assertValidGithubConfig]));
+      })(AuthenticatedGitClient._token);
     }
     return AuthenticatedGitClient._authenticatedInstance;
   }
@@ -60678,9 +60689,11 @@ Alternatively, a new token can be created at: ${GITHUB_TOKEN_GENERATE_URL}
     if (AuthenticatedGitClient._authenticatedInstance) {
       throw Error("Unable to configure `AuthenticatedGitClient` as it has been configured already.");
     }
-    AuthenticatedGitClient._authenticatedInstance = new AuthenticatedGitClient(token);
+    AuthenticatedGitClient._token = token;
   }
 };
+AuthenticatedGitClient._token = null;
+AuthenticatedGitClient._authenticatedInstance = null;
 
 // 
 var import_core = __toESM(require_core());
@@ -60733,13 +60746,13 @@ var config = {
 setConfig(config);
 async function run() {
   AuthenticatedGitClient.configure(await getAuthTokenFor(ANGULAR_ROBOT));
-  const git = AuthenticatedGitClient.get();
+  const git = await AuthenticatedGitClient.get();
   git.run(["config", "user.email", "angular-robot@google.com"]);
   git.run(["config", "user.name", "Angular Robot"]);
   const changelogFile = join6(git.baseDir, "CHANGELOG.md");
   const changelogArchiveFile = join6(git.baseDir, "CHANGELOG_ARCHIVE.md");
-  const lastChangelogRef = getLatestRefFromUpstream(lastChangelogTag);
-  const latestRef = getLatestRefFromUpstream(git.mainBranchName);
+  const lastChangelogRef = getLatestRefFromUpstream(git, lastChangelogTag);
+  const latestRef = getLatestRefFromUpstream(git, git.mainBranchName);
   const releaseNotes = await ReleaseNotes.forRange(git, getTodayAsSemver(), lastChangelogRef, latestRef);
   if (await releaseNotes.getCommitCountInReleaseNotes() === 0) {
     console.log("No release notes are needed as no commits would be included.");
@@ -60754,22 +60767,20 @@ async function run() {
       changelogArchive = readFileSync2(changelogArchiveFile, { encoding: "utf8" }).split(splitMarker2);
     }
     changelogArchive.unshift(...changelog.splice(12));
-    writeAndAddToGit(changelogArchiveFile, changelogArchive.join(splitMarker2));
+    writeAndAddToGit(git, changelogArchiveFile, changelogArchive.join(splitMarker2));
   }
   changelog.unshift(changelogEntry);
-  writeAndAddToGit(changelogFile, changelog.join(splitMarker2));
+  writeAndAddToGit(git, changelogFile, changelog.join(splitMarker2));
   git.run(["commit", "--no-verify", "-m", commitMessage]);
   git.run(["push", git.getRepoGitUrl(), `HEAD:refs/heads/${git.mainBranchName}`]);
   git.run(["push", "-f", git.getRepoGitUrl(), `HEAD:refs/tags/${lastChangelogTag}`]);
 }
-function writeAndAddToGit(filePath, contents) {
-  const git = AuthenticatedGitClient.get();
+function writeAndAddToGit(git, filePath, contents) {
   writeFileSync2(filePath, contents);
   git.run(["add", filePath]);
 }
-function getLatestRefFromUpstream(branchOrTag) {
+function getLatestRefFromUpstream(git, branchOrTag) {
   try {
-    const git = AuthenticatedGitClient.get();
     git.runGraceful(["fetch", git.getRepoGitUrl(), branchOrTag, "--deepen=250"]);
     return git.runGraceful(["rev-parse", "FETCH_HEAD"]).stdout.trim();
   } catch {

@@ -30,7 +30,6 @@ interface FormatterActionMetadata {
  * The base class for formatters to run against provided files.
  */
 export abstract class Formatter {
-  protected git = GitClient.get();
   /**
    * The name of the formatter, this is used for identification in logging and for enabling and
    * configuring the formatter in the config.
@@ -51,7 +50,7 @@ export abstract class Formatter {
   /** The default matchers for the formatter for filtering files to be formatted. */
   abstract defaultFileMatcher: string[];
 
-  constructor(protected config: FormatConfig) {}
+  constructor(protected git: GitClient, protected config: FormatConfig) {}
 
   /**
    * Retrieve the command to execute the provided action, including both the binary

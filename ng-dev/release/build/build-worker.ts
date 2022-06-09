@@ -28,7 +28,7 @@ async function main() {
     throw Error('This script needs to be invoked as a NodeJS worker.');
   }
 
-  const config = getConfig();
+  const config = await getConfig();
   assertValidReleaseConfig(config);
 
   const builtPackages = await config.release.buildPackages();

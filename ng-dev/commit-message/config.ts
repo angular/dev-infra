@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ConfigValidationError} from '../utils/config.js';
+import {ConfigValidationError, NgDevConfig} from '../utils/config.js';
 
 /** Configuration for commit-message comands. */
 export interface CommitMessageConfig {
@@ -17,7 +17,7 @@ export interface CommitMessageConfig {
 }
 
 /** Assert the provided config contains a `CommitMessageConfig`. */
-export function assertValidCommitMessageConfig<T>(
+export function assertValidCommitMessageConfig<T extends NgDevConfig>(
   config: T & Partial<{commitMessage: CommitMessageConfig}>,
 ): asserts config is T & {commitMessage: CommitMessageConfig} {
   if (config.commitMessage === undefined) {

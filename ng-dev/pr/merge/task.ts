@@ -21,7 +21,7 @@ import {
 import {isPullRequest, loadAndValidatePullRequest, PullRequest} from './pull-request.js';
 import {GithubApiMergeStrategy} from './strategies/api-merge.js';
 import {AutosquashMergeStrategy} from './strategies/autosquash-merge.js';
-import {GithubConfig} from '../../utils/config.js';
+import {GithubConfig, NgDevConfig} from '../../utils/config.js';
 import {assertValidReleaseConfig} from '../../release/config/index.js';
 import {
   ActiveReleaseTrains,
@@ -68,7 +68,7 @@ export class PullRequestMergeTask {
   private flags: PullRequestMergeTaskFlags;
 
   constructor(
-    public config: {pullRequest: PullRequestConfig; github: GithubConfig},
+    public config: NgDevConfig<{pullRequest: PullRequestConfig; github: GithubConfig}>,
     public git: AuthenticatedGitClient,
     flags: Partial<PullRequestMergeTaskFlags>,
   ) {
