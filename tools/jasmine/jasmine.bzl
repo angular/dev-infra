@@ -1,20 +1,24 @@
 load("@npm//@bazel/jasmine:index.bzl", _jasmine_node_test = "jasmine_node_test")
+load("//bazel/spec-bundling:index.bzl", "spec_bundle")
 
-def jasmine_node_test(name, specs = [], **kwargs):
+def jasmine_node_test(name, specs = [], external = [], **kwargs):
     templated_args = kwargs.pop("templated_args", []) + [
         "--bazel_patch_module_resolver",
-        # Include our jasmime bootstrap file to be run before the jasmine runner.
-        "--node_options=--require=$$(rlocation $(rootpath //tools/jasmine:bootstrap_init))",
     ]
+
+    spec_bundle(
+        name = "%s_test_bundle" % name,
+        platform = "node",
+        target = "es2020",
+        bootstrap = ["//tools/jasmine:bootstrap"],
+        deps = specs,
+        external = external,
+    )
 
     _jasmine_node_test(
         name = name,
-        srcs = kwargs.pop("srcs", []) + specs,
+        srcs = [":%s_test_bundle" % name],
         use_direct_specs = True,
-        deps = kwargs.pop("deps", []) + [
-            "//tools/jasmine:bootstrap",
-            "//tools/jasmine:bootstrap_init",
-        ],
         templated_args = templated_args,
         **kwargs
     )

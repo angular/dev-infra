@@ -34,7 +34,12 @@ ts_library(
 
 jasmine_node_test(
     name = "test",
-    data = [":bundle.min.js"],
+    data = [
+        ":bundle.min.js",
+        "@npm//jsdom",
+    ],
+    # JSDOM should not be bundled because it has workers and dynamic imports.
+    external = ["jsdom"],
     specs = [
         ":test_lib",
     ],
