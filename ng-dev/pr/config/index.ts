@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ConfigValidationError, GithubConfig} from '../../utils/config.js';
+import {ConfigValidationError, GithubConfig, NgDevConfig} from '../../utils/config.js';
 
 /**
  * Possible merge methods supported by the Github API.
@@ -54,7 +54,7 @@ export interface PullRequestConfig {
 }
 
 /** Loads and validates the merge configuration. */
-export function assertValidPullRequestConfig<T>(
+export function assertValidPullRequestConfig<T extends NgDevConfig>(
   config: T & Partial<{pullRequest: PullRequestConfig}>,
 ): asserts config is T & {pullRequest: PullRequestConfig} {
   const errors: string[] = [];

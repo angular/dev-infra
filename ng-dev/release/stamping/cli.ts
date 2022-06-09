@@ -30,7 +30,7 @@ function builder(args: Argv): Argv<Options> {
 }
 
 async function handler({mode, includeVersion}: Arguments<Options>) {
-  buildEnvStamp(mode, includeVersion);
+  await buildEnvStamp(mode, includeVersion);
 }
 
 /** CLI command module for building the environment stamp. */

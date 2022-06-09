@@ -43,7 +43,7 @@ async function handler({projectRoot}: Arguments<BuildAndLinkOptions>) {
     process.exit(1);
   }
 
-  const config = getConfig();
+  const config = await getConfig();
   assertValidReleaseConfig(config);
 
   const builtPackages = await BuildWorker.invokeBuild();

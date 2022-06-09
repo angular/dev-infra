@@ -60973,24 +60973,8 @@ function getCommitsInRange(from, to = "HEAD") {
 }
 
 // 
-var import_typed_graphqlify = __toESM(require_dist());
-var findOwnedForksOfRepoQuery = (0, import_typed_graphqlify.params)({
-  $owner: "String!",
-  $name: "String!"
-}, {
-  repository: (0, import_typed_graphqlify.params)({ owner: "$owner", name: "$name" }, {
-    forks: (0, import_typed_graphqlify.params)({ affiliations: "OWNER", first: 1 }, {
-      nodes: [
-        {
-          owner: {
-            login: import_typed_graphqlify.types.string
-          },
-          name: import_typed_graphqlify.types.string
-        }
-      ]
-    })
-  })
-});
+import tsNode from "ts-node";
+import { dirname, join } from "path";
 
 // 
 var ANSI_BACKGROUND_OFFSET = 10;
@@ -61469,90 +61453,12 @@ var DryRunError = class extends Error {
 };
 
 // 
-import tsNode from "ts-node";
-import { dirname, join } from "path";
-
-// 
-var cachedConfig = null;
-function setCachedConfig(config) {
-  cachedConfig = config;
-}
-function getCachedConfig() {
-  return cachedConfig;
-}
-
-// 
-var CONFIG_FILE_PATH = ".ng-dev/config";
-var setConfig = setCachedConfig;
-function getConfig(baseDirOrAssertions) {
-  let cachedConfig2 = getCachedConfig();
-  if (cachedConfig2 === null) {
-    let baseDir;
-    if (typeof baseDirOrAssertions === "string") {
-      baseDir = baseDirOrAssertions;
-    } else {
-      baseDir = GitClient.get().baseDir;
-    }
-    const configPath = join(baseDir, CONFIG_FILE_PATH);
-    cachedConfig2 = readConfigFile(configPath);
-    setCachedConfig(cachedConfig2);
-  }
-  if (Array.isArray(baseDirOrAssertions)) {
-    for (const assertion of baseDirOrAssertions) {
-      assertion(cachedConfig2);
-    }
-  }
-  return __spreadValues({}, cachedConfig2);
-}
-var ConfigValidationError = class extends Error {
-  constructor(message, errors = []) {
-    super(message);
-    this.errors = errors;
-  }
-};
-function assertValidGithubConfig(config) {
-  const errors = [];
-  if (config.github === void 0) {
-    errors.push(`Github repository not configured. Set the "github" option.`);
-  } else {
-    if (config.github.name === void 0) {
-      errors.push(`"github.name" is not defined`);
-    }
-    if (config.github.owner === void 0) {
-      errors.push(`"github.owner" is not defined`);
-    }
-  }
-  if (errors.length) {
-    throw new ConfigValidationError("Invalid `github` configuration", errors);
-  }
-}
-function readConfigFile(configPath, returnEmptyObjectOnError = false) {
-  tsNode.register({
-    dir: dirname(configPath),
-    transpileOnly: true,
-    compilerOptions: { module: "commonjs" }
-  });
-  try {
-    return __require(configPath);
-  } catch (e2) {
-    if (returnEmptyObjectOnError) {
-      Log.debug(`Could not read configuration file at ${configPath}, returning empty object instead.`);
-      Log.debug(e2);
-      return {};
-    }
-    Log.error(`Could not read configuration file at ${configPath}.`);
-    Log.error(e2);
-    process.exit(1);
-  }
-}
-
-// 
 import { spawnSync } from "child_process";
 
 // 
 var import_graphql = __toESM(require_dist_node6());
 var import_rest3 = __toESM(require_dist_node12());
-var import_typed_graphqlify2 = __toESM(require_dist());
+var import_typed_graphqlify = __toESM(require_dist());
 var GithubClient = class {
   constructor(_octokitOptions) {
     this._octokitOptions = _octokitOptions;
@@ -61574,7 +61480,7 @@ var AuthenticatedGithubClient = class extends GithubClient {
     this._graphql = import_graphql.graphql.defaults({ headers: { authorization: `token ${this._token}` } });
   }
   async graphql(queryObject, params4 = {}) {
-    return await this._graphql((0, import_typed_graphqlify2.query)(queryObject).toString(), params4);
+    return await this._graphql((0, import_typed_graphqlify.query)(queryObject).toString(), params4);
   }
 };
 
@@ -61606,11 +61512,10 @@ var GitCommandError = class extends Error {
   }
 };
 var GitClient = class {
-  constructor(baseDir = determineRepoBaseDirFromCwd(), config = getConfig(baseDir)) {
+  constructor(config, baseDir = determineRepoBaseDirFromCwd()) {
     this.baseDir = baseDir;
     this.github = new GithubClient();
     this.gitBinPath = "git";
-    assertValidGithubConfig(config);
     this.config = config;
     this.remoteConfig = config.github;
     this.remoteParams = { owner: config.github.owner, repo: config.github.name };
@@ -61692,13 +61597,16 @@ var GitClient = class {
   sanitizeConsoleOutput(value) {
     return value;
   }
-  static get() {
-    if (!this._unauthenticatedInstance) {
-      GitClient._unauthenticatedInstance = new GitClient();
+  static async get() {
+    if (GitClient._unauthenticatedInstance === null) {
+      GitClient._unauthenticatedInstance = (async () => {
+        return new GitClient(await getConfig([assertValidGithubConfig]));
+      })();
     }
     return GitClient._unauthenticatedInstance;
   }
 };
+GitClient._unauthenticatedInstance = null;
 function gitOutputAsArray(gitCommandResult) {
   return gitCommandResult.stdout.split("\n").map((x2) => x2.trim()).filter((x2) => !!x2);
 }
@@ -61777,9 +61685,103 @@ function printToLogFile(logLevel, ...text) {
 }
 
 // 
+var cachedConfig = null;
+function setCachedConfig(config) {
+  cachedConfig = config;
+}
+function getCachedConfig() {
+  return cachedConfig;
+}
+
+// 
+var CONFIG_FILE_PATH = ".ng-dev/config.mjs";
+var setConfig = setCachedConfig;
+async function getConfig(baseDirOrAssertions) {
+  let cachedConfig2 = getCachedConfig();
+  if (cachedConfig2 === null) {
+    let baseDir;
+    if (typeof baseDirOrAssertions === "string") {
+      baseDir = baseDirOrAssertions;
+    } else {
+      baseDir = determineRepoBaseDirFromCwd();
+    }
+    const configPath = join(baseDir, CONFIG_FILE_PATH);
+    cachedConfig2 = await readConfigFile(configPath);
+    setCachedConfig(cachedConfig2);
+  }
+  if (Array.isArray(baseDirOrAssertions)) {
+    for (const assertion of baseDirOrAssertions) {
+      assertion(cachedConfig2);
+    }
+  }
+  return __spreadProps(__spreadValues({}, cachedConfig2), { __isNgDevConfigObject: true });
+}
+var ConfigValidationError = class extends Error {
+  constructor(message, errors = []) {
+    super(message);
+    this.errors = errors;
+  }
+};
+function assertValidGithubConfig(config) {
+  const errors = [];
+  if (config.github === void 0) {
+    errors.push(`Github repository not configured. Set the "github" option.`);
+  } else {
+    if (config.github.name === void 0) {
+      errors.push(`"github.name" is not defined`);
+    }
+    if (config.github.owner === void 0) {
+      errors.push(`"github.owner" is not defined`);
+    }
+  }
+  if (errors.length) {
+    throw new ConfigValidationError("Invalid `github` configuration", errors);
+  }
+}
+async function readConfigFile(configPath, returnEmptyObjectOnError = false) {
+  tsNode.register({
+    dir: dirname(configPath),
+    esm: true,
+    transpileOnly: true
+  });
+  try {
+    return await import(configPath);
+  } catch (e2) {
+    if (returnEmptyObjectOnError) {
+      Log.debug(`Could not read configuration file at ${configPath}, returning empty object instead.`);
+      Log.debug(e2);
+      return {};
+    }
+    Log.error(`Could not read configuration file at ${configPath}.`);
+    Log.error(e2);
+    process.exit(1);
+  }
+}
+
+// 
+var import_typed_graphqlify2 = __toESM(require_dist());
+var findOwnedForksOfRepoQuery = (0, import_typed_graphqlify2.params)({
+  $owner: "String!",
+  $name: "String!"
+}, {
+  repository: (0, import_typed_graphqlify2.params)({ owner: "$owner", name: "$name" }, {
+    forks: (0, import_typed_graphqlify2.params)({ affiliations: "OWNER", first: 1 }, {
+      nodes: [
+        {
+          owner: {
+            login: import_typed_graphqlify2.types.string
+          },
+          name: import_typed_graphqlify2.types.string
+        }
+      ]
+    })
+  })
+});
+
+// 
 var AuthenticatedGitClient = class extends GitClient {
-  constructor(githubToken, baseDir, config) {
-    super(baseDir, config);
+  constructor(githubToken, config, baseDir) {
+    super(config, baseDir);
     this.githubToken = githubToken;
     this._githubTokenRegex = new RegExp(this.githubToken, "g");
     this._cachedOauthScopes = null;
@@ -61838,9 +61840,14 @@ Alternatively, a new token can be created at: ${GITHUB_TOKEN_GENERATE_URL}
       return scopes.split(",").map((scope) => scope.trim()).filter((scope) => scope !== "");
     });
   }
-  static get() {
-    if (!AuthenticatedGitClient._authenticatedInstance) {
-      throw new Error("No instance of `AuthenticatedGitClient` has been set up yet.");
+  static async get() {
+    if (AuthenticatedGitClient._token === null) {
+      throw new Error("No instance of `AuthenticatedGitClient` has been configured.");
+    }
+    if (AuthenticatedGitClient._authenticatedInstance === null) {
+      AuthenticatedGitClient._authenticatedInstance = (async (token) => {
+        return new AuthenticatedGitClient(token, await getConfig([assertValidGithubConfig]));
+      })(AuthenticatedGitClient._token);
     }
     return AuthenticatedGitClient._authenticatedInstance;
   }
@@ -61848,9 +61855,11 @@ Alternatively, a new token can be created at: ${GITHUB_TOKEN_GENERATE_URL}
     if (AuthenticatedGitClient._authenticatedInstance) {
       throw Error("Unable to configure `AuthenticatedGitClient` as it has been configured already.");
     }
-    AuthenticatedGitClient._authenticatedInstance = new AuthenticatedGitClient(token);
+    AuthenticatedGitClient._token = token;
   }
 };
+AuthenticatedGitClient._token = null;
+AuthenticatedGitClient._authenticatedInstance = null;
 
 // 
 var import_inquirer = __toESM(require_inquirer());
@@ -61972,7 +61981,7 @@ async function fetchPullRequestFromGithub(git, prNumber) {
 
 // 
 async function rebasePr(prNumber, githubToken) {
-  const git = AuthenticatedGitClient.get();
+  const git = await AuthenticatedGitClient.get();
   if (git.hasUncommittedChanges()) {
     Log.error("Cannot perform rebase of PR with local changes.");
     return 1;

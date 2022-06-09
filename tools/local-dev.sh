@@ -19,4 +19,4 @@ bazelCommand=${BAZEL:-"yarn bazel"}
 
 # Execute the built ng-dev command in the current working directory
 # and pass-through arguments unmodified.
-node ${ngDevBinFile} ${@}
+${ngDevBinFile} ${@}

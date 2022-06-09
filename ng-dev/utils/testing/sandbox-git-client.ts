@@ -25,17 +25,17 @@ export class SandboxGitClient extends AuthenticatedGitClient {
     config: {github: GithubConfig},
     baseDir: string,
   ): SandboxGitClient {
-    return new SandboxGitClient(gitBinPath, 'abc123', baseDir, config);
+    return new SandboxGitClient(gitBinPath, 'abc123', config, baseDir);
   }
 
   protected constructor(
     // Overrides the path to the Git binary.
     override gitBinPath: string,
     githubToken: string,
+    config: {github: GithubConfig},
     baseDir?: string,
-    config?: {github: GithubConfig},
   ) {
-    super(githubToken, baseDir, config);
+    super(githubToken, config, baseDir);
   }
 
   /** Override for the actual Git client command execution. */
@@ -60,6 +60,6 @@ export class SandboxGitClient extends AuthenticatedGitClient {
 }
 
 export function installSandboxGitClient(mockInstance: SandboxGitClient) {
-  spyOn(GitClient, 'get').and.returnValue(mockInstance);
-  spyOn(AuthenticatedGitClient, 'get').and.returnValue(mockInstance);
+  spyOn(GitClient, 'get').and.resolveTo(mockInstance);
+  spyOn(AuthenticatedGitClient, 'get').and.resolveTo(mockInstance);
 }

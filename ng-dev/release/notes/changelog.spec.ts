@@ -14,7 +14,7 @@ describe('Changelog', () => {
       {owner: 'angular', name: 'dev-infra-test', mainBranchName: 'main'},
       /* useSandboxGitClient */ false,
     );
-    spyOn(GitClient, 'get').and.returnValue(gitClient);
+    spyOn(GitClient, 'get').and.resolveTo(gitClient);
     changelog = Changelog.getChangelogFilePaths(gitClient);
   });
 

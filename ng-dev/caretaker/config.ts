@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ConfigValidationError} from '../utils/config.js';
+import {ConfigValidationError, NgDevConfig} from '../utils/config.js';
 
 export interface CaretakerConfig {
   /** Github queries showing a snapshot of pulls/issues caretakers need to monitor. */
@@ -19,7 +19,7 @@ export interface CaretakerConfig {
 }
 
 /** Retrieve and validate the config as `CaretakerConfig`. */
-export function assertValidCaretakerConfig<T>(
+export function assertValidCaretakerConfig<T extends NgDevConfig>(
   config: T & Partial<{caretaker: CaretakerConfig}>,
 ): asserts config is T & {caretaker: CaretakerConfig} {
   if (config.caretaker === undefined) {

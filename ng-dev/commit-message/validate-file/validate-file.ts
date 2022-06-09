@@ -18,10 +18,10 @@ import {
 import {printValidationErrors, validateCommitMessage} from '../validate.js';
 
 /** Validate commit message at the provided file path. */
-export function validateFile(filePath: string, isErrorMode: boolean) {
-  const git = GitClient.get();
+export async function validateFile(filePath: string, isErrorMode: boolean) {
+  const git = await GitClient.get();
   const commitMessage = readFileSync(resolve(git.baseDir, filePath), 'utf8');
-  const {valid, errors} = validateCommitMessage(commitMessage);
+  const {valid, errors} = await validateCommitMessage(commitMessage);
   if (valid) {
     Log.info(`${green('√')}  Valid commit message`);
     deleteCommitMessageDraft(filePath);

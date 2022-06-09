@@ -3801,8 +3801,8 @@ var require_URL = __commonJS({
     var utils = require_utils3();
     var Impl = require_URL_impl();
     var impl = utils.implSymbol;
-    function URL2(url) {
-      if (!this || this[impl] || !(this instanceof URL2)) {
+    function URL3(url) {
+      if (!this || this[impl] || !(this instanceof URL3)) {
         throw new TypeError("Failed to construct 'URL': Please use the 'new' operator, this DOM object constructor cannot be called as a function.");
       }
       if (arguments.length < 1) {
@@ -3818,7 +3818,7 @@ var require_URL = __commonJS({
       }
       module.exports.setup(this, args);
     }
-    URL2.prototype.toJSON = function toJSON() {
+    URL3.prototype.toJSON = function toJSON() {
       if (!this || !module.exports.is(this)) {
         throw new TypeError("Illegal invocation");
       }
@@ -3828,7 +3828,7 @@ var require_URL = __commonJS({
       }
       return this[impl].toJSON.apply(this[impl], args);
     };
-    Object.defineProperty(URL2.prototype, "href", {
+    Object.defineProperty(URL3.prototype, "href", {
       get() {
         return this[impl].href;
       },
@@ -3839,20 +3839,20 @@ var require_URL = __commonJS({
       enumerable: true,
       configurable: true
     });
-    URL2.prototype.toString = function() {
+    URL3.prototype.toString = function() {
       if (!this || !module.exports.is(this)) {
         throw new TypeError("Illegal invocation");
       }
       return this.href;
     };
-    Object.defineProperty(URL2.prototype, "origin", {
+    Object.defineProperty(URL3.prototype, "origin", {
       get() {
         return this[impl].origin;
       },
       enumerable: true,
       configurable: true
     });
-    Object.defineProperty(URL2.prototype, "protocol", {
+    Object.defineProperty(URL3.prototype, "protocol", {
       get() {
         return this[impl].protocol;
       },
@@ -3863,7 +3863,7 @@ var require_URL = __commonJS({
       enumerable: true,
       configurable: true
     });
-    Object.defineProperty(URL2.prototype, "username", {
+    Object.defineProperty(URL3.prototype, "username", {
       get() {
         return this[impl].username;
       },
@@ -3874,7 +3874,7 @@ var require_URL = __commonJS({
       enumerable: true,
       configurable: true
     });
-    Object.defineProperty(URL2.prototype, "password", {
+    Object.defineProperty(URL3.prototype, "password", {
       get() {
         return this[impl].password;
       },
@@ -3885,7 +3885,7 @@ var require_URL = __commonJS({
       enumerable: true,
       configurable: true
     });
-    Object.defineProperty(URL2.prototype, "host", {
+    Object.defineProperty(URL3.prototype, "host", {
       get() {
         return this[impl].host;
       },
@@ -3896,7 +3896,7 @@ var require_URL = __commonJS({
       enumerable: true,
       configurable: true
     });
-    Object.defineProperty(URL2.prototype, "hostname", {
+    Object.defineProperty(URL3.prototype, "hostname", {
       get() {
         return this[impl].hostname;
       },
@@ -3907,7 +3907,7 @@ var require_URL = __commonJS({
       enumerable: true,
       configurable: true
     });
-    Object.defineProperty(URL2.prototype, "port", {
+    Object.defineProperty(URL3.prototype, "port", {
       get() {
         return this[impl].port;
       },
@@ -3918,7 +3918,7 @@ var require_URL = __commonJS({
       enumerable: true,
       configurable: true
     });
-    Object.defineProperty(URL2.prototype, "pathname", {
+    Object.defineProperty(URL3.prototype, "pathname", {
       get() {
         return this[impl].pathname;
       },
@@ -3929,7 +3929,7 @@ var require_URL = __commonJS({
       enumerable: true,
       configurable: true
     });
-    Object.defineProperty(URL2.prototype, "search", {
+    Object.defineProperty(URL3.prototype, "search", {
       get() {
         return this[impl].search;
       },
@@ -3940,7 +3940,7 @@ var require_URL = __commonJS({
       enumerable: true,
       configurable: true
     });
-    Object.defineProperty(URL2.prototype, "hash", {
+    Object.defineProperty(URL3.prototype, "hash", {
       get() {
         return this[impl].hash;
       },
@@ -3956,7 +3956,7 @@ var require_URL = __commonJS({
         return !!obj && obj[impl] instanceof Impl.implementation;
       },
       create(constructorArgs, privateData) {
-        let obj = Object.create(URL2.prototype);
+        let obj = Object.create(URL3.prototype);
         this.setup(obj, constructorArgs, privateData);
         return obj;
       },
@@ -3967,10 +3967,10 @@ var require_URL = __commonJS({
         obj[impl] = new Impl.implementation(constructorArgs, privateData);
         obj[impl][utils.wrapperSymbol] = obj;
       },
-      interface: URL2,
+      interface: URL3,
       expose: {
-        Window: { URL: URL2 },
-        Worker: { URL: URL2 }
+        Window: { URL: URL3 },
+        Worker: { URL: URL3 }
       }
     };
   }
@@ -8341,12 +8341,12 @@ var require_lib4 = __commonJS({
       configurable: true
     });
     var INTERNALS$2 = Symbol("Request internals");
-    var URL2 = Url.URL || whatwgUrl.URL;
+    var URL3 = Url.URL || whatwgUrl.URL;
     var parse_url = Url.parse;
     var format_url = Url.format;
     function parseURL(urlStr) {
       if (/^[a-zA-Z][a-zA-Z\d+\-.]*:/.exec(urlStr)) {
-        urlStr = new URL2(urlStr).toString();
+        urlStr = new URL3(urlStr).toString();
       }
       return parse_url(urlStr);
     }
@@ -9181,7 +9181,7 @@ var require_dist_node8 = __commonJS({
     }
     var VERSION = "3.6.0";
     var _excluded = ["authStrategy"];
-    var Octokit3 = class {
+    var Octokit4 = class {
       constructor(options = {}) {
         const hook = new beforeAfterHook.Collection();
         const requestDefaults = {
@@ -9267,9 +9267,9 @@ var require_dist_node8 = __commonJS({
         return NewOctokit;
       }
     };
-    Octokit3.VERSION = VERSION;
-    Octokit3.plugins = [];
-    exports.Octokit = Octokit3;
+    Octokit4.VERSION = VERSION;
+    Octokit4.plugins = [];
+    exports.Octokit = Octokit4;
   }
 });
 
@@ -10570,10 +10570,10 @@ var require_dist_node12 = __commonJS({
     var pluginPaginateRest = require_dist_node10();
     var pluginRestEndpointMethods = require_dist_node9();
     var VERSION = "18.12.0";
-    var Octokit3 = core2.Octokit.plugin(pluginRequestLog.requestLog, pluginRestEndpointMethods.legacyRestEndpointMethods, pluginPaginateRest.paginateRest).defaults({
+    var Octokit4 = core2.Octokit.plugin(pluginRequestLog.requestLog, pluginRestEndpointMethods.legacyRestEndpointMethods, pluginPaginateRest.paginateRest).defaults({
       userAgent: `octokit-rest.js/${VERSION}`
     });
-    exports.Octokit = Octokit3;
+    exports.Octokit = Octokit4;
   }
 });
 
@@ -13815,7 +13815,7 @@ var require_lodash = __commonJS({
           }
           return mapped.length && mapped[0] === arrays[0] ? baseIntersection(mapped, undefined2, comparator) : [];
         });
-        function join(array, separator) {
+        function join2(array, separator) {
           return array == null ? "" : nativeJoin.call(array, separator);
         }
         function last(array) {
@@ -15731,7 +15731,7 @@ var require_lodash = __commonJS({
         lodash.isUndefined = isUndefined;
         lodash.isWeakMap = isWeakMap;
         lodash.isWeakSet = isWeakSet;
-        lodash.join = join;
+        lodash.join = join2;
         lodash.kebabCase = kebabCase;
         lodash.last = last;
         lodash.lastIndexOf = lastIndexOf;
@@ -16249,7 +16249,7 @@ var require_regex = __commonJS({
   ""(exports, module) {
     "use strict";
     var reNomatch = /(?!.*)/;
-    function join(array, joiner) {
+    function join2(array, joiner) {
       return array.map(function(val) {
         return val.trim();
       }).filter(function(val) {
@@ -16260,7 +16260,7 @@ var require_regex = __commonJS({
       if (!noteKeywords) {
         return reNomatch;
       }
-      const noteKeywordsSelection = join(noteKeywords, "|");
+      const noteKeywordsSelection = join2(noteKeywords, "|");
       if (!notesPattern) {
         return new RegExp("^[\\s|*]*(" + noteKeywordsSelection + ")[:\\s]+(.*)", "i");
       }
@@ -16271,13 +16271,13 @@ var require_regex = __commonJS({
         return reNomatch;
       }
       const flags = issuePrefixesCaseSensitive ? "g" : "gi";
-      return new RegExp("(?:.*?)??\\s*([\\w-\\.\\/]*?)??(" + join(issuePrefixes, "|") + ")([\\w-]*\\d+)", flags);
+      return new RegExp("(?:.*?)??\\s*([\\w-\\.\\/]*?)??(" + join2(issuePrefixes, "|") + ")([\\w-]*\\d+)", flags);
     }
     function getReferencesRegex(referenceActions) {
       if (!referenceActions) {
         return /()(.+)/gi;
       }
-      const joinedKeywords = join(referenceActions, "|");
+      const joinedKeywords = join2(referenceActions, "|");
       return new RegExp("(" + joinedKeywords + ")(?:\\s+(.*?))(?=(?:" + joinedKeywords + ")|$)", "gi");
     }
     module.exports = function(options) {
@@ -16427,7 +16427,7 @@ var require_buffer_list = __commonJS({
         }
       }, {
         key: "join",
-        value: function join(s) {
+        value: function join2(s) {
           if (this.length === 0)
             return "";
           var p = this.head;
@@ -24470,7 +24470,7 @@ var require_dist_node19 = __commonJS({
 // 
 var core = __toESM(require_core());
 var import_github3 = __toESM(require_github());
-var import_rest2 = __toESM(require_dist_node12());
+var import_rest3 = __toESM(require_dist_node12());
 
 // 
 var import_conventional_commits_parser = __toESM(require_conventional_commits_parser());
@@ -24536,6 +24536,7 @@ function parseInternal(fullText) {
 
 // 
 import tsNode from "ts-node";
+import { dirname, join } from "path";
 
 // 
 var ANSI_BACKGROUND_OFFSET = 10;
@@ -25004,7 +25005,174 @@ var chalkStderr = createChalk({ level: stderrColor ? stderrColor.level : 0 });
 var source_default = chalk;
 
 // 
+function isDryRun() {
+  return process.env["DRY_RUN"] !== void 0;
+}
+var DryRunError = class extends Error {
+  constructor() {
+    super("Cannot call this function in dryRun mode.");
+  }
+};
+
+// 
+import { spawnSync } from "child_process";
+
+// 
+var import_rest = __toESM(require_dist_node12());
 var import_typed_graphqlify = __toESM(require_dist());
+var GithubClient = class {
+  constructor(_octokitOptions) {
+    this._octokitOptions = _octokitOptions;
+    this._octokit = new import_rest.Octokit(this._octokitOptions);
+    this.pulls = this._octokit.pulls;
+    this.repos = this._octokit.repos;
+    this.issues = this._octokit.issues;
+    this.git = this._octokit.git;
+    this.rateLimit = this._octokit.rateLimit;
+    this.teams = this._octokit.teams;
+    this.rest = this._octokit.rest;
+    this.paginate = this._octokit.paginate;
+  }
+};
+
+// 
+import { URL as URL2 } from "url";
+function addTokenToGitHttpsUrl(githubHttpsUrl, token) {
+  const url = new URL2(githubHttpsUrl);
+  url.password = token;
+  url.username = "_";
+  return url.href;
+}
+function getRepositoryGitUrl(config, githubToken) {
+  if (config.useSsh) {
+    return `git@github.com:${config.owner}/${config.name}.git`;
+  }
+  const baseHttpUrl = `https://github.com/${config.owner}/${config.name}.git`;
+  if (githubToken !== void 0) {
+    return addTokenToGitHttpsUrl(baseHttpUrl, githubToken);
+  }
+  return baseHttpUrl;
+}
+
+// 
+var GitCommandError = class extends Error {
+  constructor(client, unsanitizedArgs) {
+    super(`Command failed: git ${client.sanitizeConsoleOutput(unsanitizedArgs.join(" "))}`);
+  }
+};
+var GitClient = class {
+  constructor(config, baseDir = determineRepoBaseDirFromCwd()) {
+    this.baseDir = baseDir;
+    this.github = new GithubClient();
+    this.gitBinPath = "git";
+    this.config = config;
+    this.remoteConfig = config.github;
+    this.remoteParams = { owner: config.github.owner, repo: config.github.name };
+    this.mainBranchName = config.github.mainBranchName;
+  }
+  run(args, options) {
+    const result = this.runGraceful(args, options);
+    if (result.status !== 0) {
+      throw new GitCommandError(this, args);
+    }
+    return result;
+  }
+  runGraceful(args, options = {}) {
+    const gitCommand = args[0];
+    if (isDryRun() && gitCommand === "push") {
+      Log.debug(`"git push" is not able to be run in dryRun mode.`);
+      throw new DryRunError();
+    }
+    Log.debug("Executing: git", this.sanitizeConsoleOutput(args.join(" ")));
+    const result = spawnSync(this.gitBinPath, args, __spreadProps(__spreadValues({
+      cwd: this.baseDir,
+      stdio: "pipe"
+    }, options), {
+      encoding: "utf8"
+    }));
+    Log.debug(`Status: ${result.status}, Error: ${!!result.error}, Signal: ${result.signal}`);
+    if (result.status !== 0 && result.stderr !== null) {
+      process.stderr.write(this.sanitizeConsoleOutput(result.stderr));
+    }
+    Log.debug("Stdout:", result.stdout);
+    Log.debug("Stderr:", result.stderr);
+    Log.debug("Process Error:", result.error);
+    if (result.error !== void 0) {
+      process.stderr.write(this.sanitizeConsoleOutput(result.error.message));
+    }
+    return result;
+  }
+  getRepoGitUrl() {
+    return getRepositoryGitUrl(this.remoteConfig);
+  }
+  hasCommit(branchName, sha) {
+    return this.run(["branch", branchName, "--contains", sha]).stdout !== "";
+  }
+  isShallowRepo() {
+    return this.run(["rev-parse", "--is-shallow-repository"]).stdout.trim() === "true";
+  }
+  getCurrentBranchOrRevision() {
+    const branchName = this.run(["rev-parse", "--abbrev-ref", "HEAD"]).stdout.trim();
+    if (branchName === "HEAD") {
+      return this.run(["rev-parse", "HEAD"]).stdout.trim();
+    }
+    return branchName;
+  }
+  hasUncommittedChanges() {
+    this.runGraceful(["update-index", "-q", "--refresh"]);
+    return this.runGraceful(["diff-index", "--quiet", "HEAD"]).status !== 0;
+  }
+  checkout(branchOrRevision, cleanState) {
+    if (cleanState) {
+      this.runGraceful(["am", "--abort"], { stdio: "ignore" });
+      this.runGraceful(["cherry-pick", "--abort"], { stdio: "ignore" });
+      this.runGraceful(["rebase", "--abort"], { stdio: "ignore" });
+      this.runGraceful(["reset", "--hard"], { stdio: "ignore" });
+    }
+    return this.runGraceful(["checkout", branchOrRevision], { stdio: "ignore" }).status === 0;
+  }
+  allChangesFilesSince(shaOrRef = "HEAD") {
+    return Array.from(/* @__PURE__ */ new Set([
+      ...gitOutputAsArray(this.runGraceful(["diff", "--name-only", "--diff-filter=d", shaOrRef])),
+      ...gitOutputAsArray(this.runGraceful(["ls-files", "--others", "--exclude-standard"]))
+    ]));
+  }
+  allStagedFiles() {
+    return gitOutputAsArray(this.runGraceful(["diff", "--name-only", "--diff-filter=ACM", "--staged"]));
+  }
+  allFiles() {
+    return gitOutputAsArray(this.runGraceful(["ls-files"]));
+  }
+  sanitizeConsoleOutput(value) {
+    return value;
+  }
+  static async get() {
+    if (GitClient._unauthenticatedInstance === null) {
+      GitClient._unauthenticatedInstance = (async () => {
+        return new GitClient(await getConfig([assertValidGithubConfig]));
+      })();
+    }
+    return GitClient._unauthenticatedInstance;
+  }
+};
+GitClient._unauthenticatedInstance = null;
+function gitOutputAsArray(gitCommandResult) {
+  return gitCommandResult.stdout.split("\n").map((x) => x.trim()).filter((x) => !!x);
+}
+function determineRepoBaseDirFromCwd() {
+  const { stdout, stderr, status } = spawnSync("git", ["rev-parse --show-toplevel"], {
+    shell: true,
+    stdio: "pipe",
+    encoding: "utf8"
+  });
+  if (status !== 0) {
+    throw Error(`Unable to find the path to the base directory of the repository.
+Was the command run from inside of the repo?
+
+${stderr}`);
+  }
+  return stdout.trim();
+}
 
 // 
 var LogLevel;
@@ -25066,18 +25234,91 @@ function printToLogFile(logLevel, ...text) {
 }
 
 // 
+var cachedConfig = null;
+function setCachedConfig(config) {
+  cachedConfig = config;
+}
+function getCachedConfig() {
+  return cachedConfig;
+}
+
+// 
+var CONFIG_FILE_PATH = ".ng-dev/config.mjs";
+async function getConfig(baseDirOrAssertions) {
+  let cachedConfig2 = getCachedConfig();
+  if (cachedConfig2 === null) {
+    let baseDir;
+    if (typeof baseDirOrAssertions === "string") {
+      baseDir = baseDirOrAssertions;
+    } else {
+      baseDir = determineRepoBaseDirFromCwd();
+    }
+    const configPath = join(baseDir, CONFIG_FILE_PATH);
+    cachedConfig2 = await readConfigFile(configPath);
+    setCachedConfig(cachedConfig2);
+  }
+  if (Array.isArray(baseDirOrAssertions)) {
+    for (const assertion of baseDirOrAssertions) {
+      assertion(cachedConfig2);
+    }
+  }
+  return __spreadProps(__spreadValues({}, cachedConfig2), { __isNgDevConfigObject: true });
+}
+var ConfigValidationError = class extends Error {
+  constructor(message, errors = []) {
+    super(message);
+    this.errors = errors;
+  }
+};
+function assertValidGithubConfig(config) {
+  const errors = [];
+  if (config.github === void 0) {
+    errors.push(`Github repository not configured. Set the "github" option.`);
+  } else {
+    if (config.github.name === void 0) {
+      errors.push(`"github.name" is not defined`);
+    }
+    if (config.github.owner === void 0) {
+      errors.push(`"github.owner" is not defined`);
+    }
+  }
+  if (errors.length) {
+    throw new ConfigValidationError("Invalid `github` configuration", errors);
+  }
+}
+async function readConfigFile(configPath, returnEmptyObjectOnError = false) {
+  tsNode.register({
+    dir: dirname(configPath),
+    esm: true,
+    transpileOnly: true
+  });
+  try {
+    return await import(configPath);
+  } catch (e) {
+    if (returnEmptyObjectOnError) {
+      Log.debug(`Could not read configuration file at ${configPath}, returning empty object instead.`);
+      Log.debug(e);
+      return {};
+    }
+    Log.error(`Could not read configuration file at ${configPath}.`);
+    Log.error(e);
+    process.exit(1);
+  }
+}
+
+// 
 var breakingChangeLabel = "flag: breaking change";
 var deprecationLabel = "flag: deprecation";
 
 // 
 var import_core = __toESM(require_core());
-var import_rest = __toESM(require_dist_node12());
+var import_rest2 = __toESM(require_dist_node12());
 var import_auth_app = __toESM(require_dist_node19());
 var import_github2 = __toESM(require_github());
 var ANGULAR_ROBOT = [43341, "angular-robot-key"];
 async function getJwtAuthedGithubClient([appId, inputKey]) {
   const privateKey = (0, import_core.getInput)(inputKey, { required: true });
-  return new import_rest.Octokit({
+  return new import_rest2.Octokit({
     authStrategy: import_auth_app.createAppAuth,
     auth: { appId, privateKey }
   });
@@ -25098,7 +25339,7 @@ var supportedLabels = [
 ];
 async function run() {
   const token = await getAuthTokenFor(ANGULAR_ROBOT);
-  const client = new import_rest2.Octokit({ auth: token });
+  const client = new import_rest3.Octokit({ auth: token });
   const { number, owner, repo } = import_github3.context.issue;
   const labels = await (await client.issues.listLabelsOnIssue({ issue_number: number, owner, repo })).data;
   const commits = await (await client.paginate(client.pulls.listCommits, { owner, pull_number: number, repo })).map(({ commit: { message } }) => parseCommitMessage(message));

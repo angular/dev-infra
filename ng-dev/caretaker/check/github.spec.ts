@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {AuthenticatedGithubClient} from '../../utils/git/github.js';
 import {Log} from '../../utils/logging.js';
 import {installVirtualGitClientSpies, mockNgDevConfig} from '../../utils/testing/index.js';
@@ -16,19 +17,21 @@ describe('GithubQueriesModule', () => {
   let githubApiSpy: jasmine.Spy;
   let infoSpy: jasmine.Spy;
   let infoGroupSpy: jasmine.Spy;
+  let git: AuthenticatedGitClient;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     githubApiSpy = spyOn(AuthenticatedGithubClient.prototype, 'graphql').and.throwError(
       'The graphql query response must always be manually defined in a test.',
     );
     installVirtualGitClientSpies();
     infoGroupSpy = spyOn(Log.info, 'group');
     infoSpy = spyOn(Log, 'info');
+    git = await AuthenticatedGitClient.get();
   });
 
   describe('gathering stats', () => {
     it('unless githubQueries are `undefined`', async () => {
-      const module = new GithubQueriesModule({
+      const module = new GithubQueriesModule(git, {
         ...mockNgDevConfig,
         caretaker: {githubQueries: undefined},
       });
@@ -37,7 +40,7 @@ describe('GithubQueriesModule', () => {
     });
 
     it('unless githubQueries are an empty array', async () => {
-      const module = new GithubQueriesModule({
+      const module = new GithubQueriesModule(git, {
         ...mockNgDevConfig,
         caretaker: {githubQueries: []},
       });
@@ -52,7 +55,7 @@ describe('GithubQueriesModule', () => {
           nodes: [{url: 'http://github.com/owner/name/issue/1'}],
         },
       });
-      const module = new GithubQueriesModule({
+      const module = new GithubQueriesModule(git, {
         ...mockNgDevConfig,
         caretaker: {githubQueries: [{name: 'key name with spaces', query: 'issue: yes'}]},
       });
@@ -85,7 +88,7 @@ describe('GithubQueriesModule', () => {
         },
       ]);
 
-      const module = new GithubQueriesModule({caretaker: {}, ...mockNgDevConfig});
+      const module = new GithubQueriesModule(git, {caretaker: {}, ...mockNgDevConfig});
       Object.defineProperty(module, 'data', {value: fakeData});
 
       await module.printToTerminal();
@@ -111,7 +114,7 @@ describe('GithubQueriesModule', () => {
         },
       ]);
 
-      const module = new GithubQueriesModule({caretaker: {}, ...mockNgDevConfig});
+      const module = new GithubQueriesModule(git, {caretaker: {}, ...mockNgDevConfig});
       Object.defineProperty(module, 'data', {value: fakeData});
 
       await module.printToTerminal();

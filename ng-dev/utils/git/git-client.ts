@@ -53,12 +53,11 @@ export class GitClient {
   readonly gitBinPath: string = 'git';
 
   constructor(
+    /** The configuration, containing the github specific configuration. */
+    config: {github: GithubConfig},
     /** The full path to the root of the repository base. */
     readonly baseDir = determineRepoBaseDirFromCwd(),
-    /** The configuration, containing the github specific configuration. */
-    config = getConfig(baseDir),
   ) {
-    assertValidGithubConfig(config);
     this.config = config;
     this.remoteConfig = config.github;
     this.remoteParams = {owner: config.github.owner, repo: config.github.name};
@@ -218,16 +217,22 @@ export class GitClient {
   }
 
   /** The singleton instance of the unauthenticated `GitClient`. */
-  private static _unauthenticatedInstance: GitClient;
+  private static _unauthenticatedInstance: Promise<GitClient> | null = null;
 
   /**
-   * Static method to get the singleton instance of the `GitClient`, creating it
-   * if it has not yet been created.
+   * Static method to get the singleton instance of the `GitClient`,
+   * creating it, if not created yet.
    */
-  static get(): GitClient {
-    if (!this._unauthenticatedInstance) {
-      GitClient._unauthenticatedInstance = new GitClient();
+  static async get(): Promise<GitClient> {
+    // If there is no cached instance, create one and cache the promise immediately.
+    // This avoids constructing a client twice accidentally when e.g. waiting for the
+    // configuration to be loaded.
+    if (GitClient._unauthenticatedInstance === null) {
+      GitClient._unauthenticatedInstance = (async () => {
+        return new GitClient(await getConfig([assertValidGithubConfig]));
+      })();
     }
+
     return GitClient._unauthenticatedInstance;
   }
 }
@@ -248,7 +253,7 @@ function gitOutputAsArray(gitCommandResult: SpawnSyncReturns<string>): string[] 
 }
 
 /** Determines the repository base directory from the current working directory. */
-function determineRepoBaseDirFromCwd() {
+export function determineRepoBaseDirFromCwd() {
   // TODO(devversion): Replace with common spawn sync utility once available.
   const {stdout, stderr, status} = spawnSync('git', ['rev-parse --show-toplevel'], {
     shell: true,

@@ -132,11 +132,11 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
  */
 async function createPullRequestMergeTask(flags: PullRequestMergeTaskFlags) {
   try {
-    const config = getConfig();
+    const config = await getConfig();
     assertValidGithubConfig(config);
     assertValidPullRequestConfig(config);
     /** The singleton instance of the authenticated git client. */
-    const git = AuthenticatedGitClient.get();
+    const git = await AuthenticatedGitClient.get();
 
     return new PullRequestMergeTask(config, git, flags);
   } catch (e) {

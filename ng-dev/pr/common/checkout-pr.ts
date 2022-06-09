@@ -65,7 +65,7 @@ export async function checkOutPullRequestLocally(
   opts: PullRequestCheckoutOptions = {},
 ) {
   /** The singleton instance of the authenticated git client. */
-  const git = AuthenticatedGitClient.get();
+  const git = await AuthenticatedGitClient.get();
 
   // In order to preserve local changes, checkouts cannot occur if local changes are present in the
   // git environment. Checked before retrieving the PR to fail fast.

@@ -23,7 +23,7 @@ import {Prompt} from '../../utils/prompt.js';
  * https://docs.google.com/document/d/1nqb94eSIcGuPC0M9Rv7-IeqOiJKzsMnuistHZNeUmAg.
  */
 async function handler() {
-  const git = GitClient.get();
+  const git = await GitClient.get();
 
   // The command cannot operate on the local repository if there are uncommitted changes.
   if (git.hasUncommittedChanges()) {
@@ -31,7 +31,7 @@ async function handler() {
     return;
   }
 
-  const config = getConfig([assertValidGithubConfig]);
+  const config = await getConfig([assertValidGithubConfig]);
   const repoSlug = `${config.github.owner}/${config.github.name}`;
 
   if (!hasLocalBranch(git, 'master')) {

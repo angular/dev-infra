@@ -15,7 +15,7 @@ import {validateFile} from './validate-file.js';
 export interface ValidateFileOptions {
   file?: string;
   fileEnvVariable?: string;
-  error: boolean;
+  error: boolean | null;
 }
 
 /** Builds the command. */
@@ -45,14 +45,21 @@ function builder(argv: Argv) {
       type: 'boolean',
       description:
         'Whether invalid commit messages should be treated as failures rather than a warning',
-      default: !!getUserConfig().commitMessage?.errorOnInvalidMessage || !!process.env['CI'],
+      default: null,
+      defaultDescription: '`True` on CI or can be enabled through ng-dev user-config.',
     });
 }
 
 /** Handles the command. */
 async function handler({error, file, fileEnvVariable}: Arguments<ValidateFileOptions>) {
+  const isErrorMode = error === null ? await getIsErrorModeDefault() : error;
   const filePath = file || fileEnvVariable || '.git/COMMIT_EDITMSG';
-  validateFile(filePath, error);
+
+  await validateFile(filePath, isErrorMode);
+}
+
+async function getIsErrorModeDefault(): Promise<boolean> {
+  return !!process.env['CI'] || !!(await getUserConfig()).commitMessage?.errorOnInvalidMessage;
 }
 
 /** yargs command module describing the command. */

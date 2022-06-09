@@ -45,7 +45,7 @@ function builder(argv: Argv): Argv<ReleaseInfoOptions> {
 
 /** Yargs command handler for printing release information. */
 async function handler(argv: Arguments<ReleaseInfoOptions>) {
-  const config = getConfig();
+  const config = await getConfig();
   assertValidReleaseConfig(config);
 
   // If JSON output is requested, print the information as JSON to stdout.
@@ -54,7 +54,7 @@ async function handler(argv: Arguments<ReleaseInfoOptions>) {
     return;
   }
 
-  const git = GitClient.get();
+  const git = await GitClient.get();
   const nextBranchName = getNextBranchName(git.config.github);
   const repo: ReleaseRepoWithApi = {api: git.github, ...git.remoteConfig, nextBranchName};
   const releaseTrains = await ActiveReleaseTrains.fetch(repo);

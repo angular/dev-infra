@@ -13,8 +13,8 @@ import {GitClient} from '../utils/git/git-client.js';
 import {logGroup, logHeader} from './logging.js';
 import {getGroupsFromYaml} from './parse-yaml.js';
 
-export function verify() {
-  const git = GitClient.get();
+export async function verify() {
+  const git = await GitClient.get();
   /** Full path to PullApprove config file */
   const PULL_APPROVE_YAML_PATH = resolve(git.baseDir, '.pullapprove.yml');
   /** All tracked files in the repository. */

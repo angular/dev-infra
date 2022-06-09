@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {assertValidGithubConfig, getConfig, GithubConfig} from '../../utils/config.js';
+import {assertValidGithubConfig, getConfig, GithubConfig, NgDevConfig} from '../../utils/config.js';
 import {Log} from '../../utils/logging.js';
 import {GitClient} from '../../utils/git/git-client.js';
 import {assertValidPullRequestConfig, PullRequestConfig} from '../config/index.js';
@@ -14,12 +14,12 @@ import {getTargetBranchesForPullRequest} from '../common/targeting/target-label.
 
 async function getTargetBranchesForPr(
   prNumber: number,
-  config: {github: GithubConfig; pullRequest: PullRequestConfig},
+  config: NgDevConfig<{github: GithubConfig; pullRequest: PullRequestConfig}>,
 ) {
   /** Repo owner and name for the github repository. */
   const {owner, name: repo} = config.github;
   /** The singleton instance of the GitClient. */
-  const git = GitClient.get();
+  const git = await GitClient.get();
 
   /** The current state of the pull request from Github. */
   const prData = (await git.github.pulls.get({owner, repo, pull_number: prNumber})).data;
@@ -38,7 +38,7 @@ async function getTargetBranchesForPr(
 }
 
 export async function printTargetBranchesForPr(prNumber: number) {
-  const config = getConfig();
+  const config = await getConfig();
   assertValidGithubConfig(config);
   assertValidPullRequestConfig(config);
 

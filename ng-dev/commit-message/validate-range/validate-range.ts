@@ -21,7 +21,7 @@ const isNonFixup = (commit: Commit) => !commit.isFixup;
 const extractCommitHeader = (commit: Commit) => commit.header;
 
 /** Validate all commits in a provided git commit range. */
-export async function validateCommitRange(from: string, to: string) {
+export async function validateCommitRange(from: string, to: string): Promise<void> {
   /** A list of tuples of the commit header string and a list of error messages for the commit. */
   const errors: [commitHeader: string, errors: string[]][] = [];
 
@@ -33,7 +33,10 @@ export async function validateCommitRange(from: string, to: string) {
    * Whether all commits in the range are valid, commits are allowed to be fixup commits for other
    * commits in the provided commit range.
    */
-  const allCommitsInRangeValid = commits.every((commit, i) => {
+  let allCommitsInRangeValid = true;
+
+  for (let i = 0; i < commits.length; i++) {
+    const commit = commits[i];
     const options: ValidateCommitMessageOptions = {
       disallowSquash: true,
       nonFixupCommitHeaders: isNonFixup(commit)
@@ -43,12 +46,14 @@ export async function validateCommitRange(from: string, to: string) {
             .filter(isNonFixup)
             .map(extractCommitHeader),
     };
-    const {valid, errors: localErrors} = validateCommitMessage(commit, options);
+
+    const {valid, errors: localErrors} = await validateCommitMessage(commit, options);
     if (localErrors.length) {
       errors.push([commit.header, localErrors]);
     }
-    return valid;
-  });
+
+    allCommitsInRangeValid = allCommitsInRangeValid && valid;
+  }
 
   if (allCommitsInRangeValid) {
     Log.info(green('√  All commit messages in range valid.'));

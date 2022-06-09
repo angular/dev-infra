@@ -44,7 +44,7 @@ function builder(argv: Argv): Argv<ReleaseBuildOptions> {
 
 /** Yargs command handler for building a release. */
 async function handler(args: Arguments<ReleaseBuildOptions>) {
-  const config = getConfig();
+  const config = await getConfig();
   assertValidReleaseConfig(config);
   const {npmPackages} = config.release;
   let builtPackages = await BuildWorker.invokeBuild();

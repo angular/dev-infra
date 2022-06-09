@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {assertValidGithubConfig, getConfig} from '../../utils/config.js';
 import {assertValidCaretakerConfig} from '../config.js';
 
@@ -20,11 +21,15 @@ const moduleList = [GithubQueriesModule, ServicesModule, CiModule, G3Module];
 /** Check the status of services which Angular caretakers need to monitor. */
 export async function checkServiceStatuses() {
   /** The configuration for the caretaker commands. */
-  const config = getConfig();
+  const config = await getConfig();
   assertValidCaretakerConfig(config);
   assertValidGithubConfig(config);
+
+  /** An authenticated git client instance. */
+  const git = await AuthenticatedGitClient.get();
+
   /** List of instances of Caretaker Check modules */
-  const caretakerCheckModules = moduleList.map((module) => new module(config));
+  const caretakerCheckModules = moduleList.map((module) => new module(git, config));
 
   // Module's `data` is casted as Promise<unknown> because the data types of the `module`'s `data`
   // promises do not match typings, however our usage here is only to determine when the promise

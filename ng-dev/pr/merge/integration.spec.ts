@@ -115,6 +115,7 @@ describe('default target labels', () => {
     const targetLabels = await getTargetLabelsForActiveReleaseTrains(releaseTrains, api, {
       github: githubConfig,
       release: releaseConfig,
+      __isNgDevConfigObject: true,
     });
     let label: TargetLabel;
     try {

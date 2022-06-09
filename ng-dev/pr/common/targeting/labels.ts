@@ -17,6 +17,7 @@ import {
   assertValidGithubConfig,
   ConfigValidationError,
   GithubConfig,
+  NgDevConfig,
 } from '../../../utils/config.js';
 import {
   InvalidTargetBranchError,
@@ -44,7 +45,7 @@ import {Log} from '../../../utils/logging.js';
 export async function getTargetLabelsForActiveReleaseTrains(
   {latest, releaseCandidate, next}: ActiveReleaseTrains,
   api: GithubClient,
-  config: Partial<{github: GithubConfig; release: ReleaseConfig}>,
+  config: NgDevConfig<{github?: GithubConfig; release?: ReleaseConfig}>,
 ): Promise<TargetLabel[]> {
   assertValidGithubConfig(config);
 

@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {Log} from '../../utils/logging.js';
 import {installVirtualGitClientSpies, mockNgDevConfig} from '../../utils/testing/index.js';
 
@@ -15,19 +16,21 @@ describe('ServicesModule', () => {
   let getStatusFromStandardApiSpy: jasmine.Spy;
   let infoSpy: jasmine.Spy;
   let infoGroupSpy: jasmine.Spy;
+  let git: AuthenticatedGitClient;
 
   services.splice(0, Infinity, {url: 'fakeStatus.com/api.json', name: 'Service Name'});
 
-  beforeEach(() => {
+  beforeEach(async () => {
     getStatusFromStandardApiSpy = spyOn(ServicesModule.prototype, 'getStatusFromStandardApi');
     installVirtualGitClientSpies();
     infoGroupSpy = spyOn(Log.info, 'group');
     infoSpy = spyOn(Log, 'info');
+    git = await AuthenticatedGitClient.get();
   });
 
   describe('gathering status', () => {
     it('for each of the services', async () => {
-      new ServicesModule({caretaker: {}, ...mockNgDevConfig});
+      new ServicesModule(git, {caretaker: {}, ...mockNgDevConfig});
 
       expect(getStatusFromStandardApiSpy).toHaveBeenCalledWith({
         url: 'fakeStatus.com/api.json',
@@ -53,7 +56,7 @@ describe('ServicesModule', () => {
         },
       ]);
 
-      const module = new ServicesModule({caretaker: {}, ...mockNgDevConfig});
+      const module = new ServicesModule(git, {caretaker: {}, ...mockNgDevConfig});
       Object.defineProperty(module, 'data', {value: fakeData});
       await module.printToTerminal();
 

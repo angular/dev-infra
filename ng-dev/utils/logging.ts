@@ -133,12 +133,12 @@ const LOG_LEVEL_COLUMNS = 7;
  * middleware of yargs to enable the file logging before the rest of the command parsing and
  * response is executed.
  */
-export function captureLogOutputForCommand(argv: Arguments) {
+export async function captureLogOutputForCommand(argv: Arguments) {
   if (FILE_LOGGING_ENABLED) {
     throw Error('`captureLogOutputForCommand` cannot be called multiple times');
   }
 
-  const git = GitClient.get();
+  const git = await GitClient.get();
   /** The date time used for timestamping when the command was invoked. */
   const now = new Date();
   /** Header line to separate command runs in log files. */
