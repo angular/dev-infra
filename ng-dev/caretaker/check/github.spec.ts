@@ -5,8 +5,9 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import * as console from '../../utils/console';
-import {AuthenticatedGithubClient, GithubClient} from '../../utils/git/github';
+
+import {AuthenticatedGithubClient} from '../../utils/git/github';
+import {Log} from '../../utils/logging';
 import {installVirtualGitClientSpies, mockNgDevConfig} from '../../utils/testing';
 
 import {GithubQueriesModule} from './github';
@@ -21,8 +22,8 @@ describe('GithubQueriesModule', () => {
       'The graphql query response must always be manually defined in a test.',
     );
     installVirtualGitClientSpies();
-    infoGroupSpy = spyOn(console.info, 'group');
-    infoSpy = spyOn(console, 'info');
+    infoGroupSpy = spyOn(Log.info, 'group');
+    infoSpy = spyOn(Log, 'info');
   });
 
   describe('gathering stats', () => {

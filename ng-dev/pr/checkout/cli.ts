@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Arguments, Argv, CommandModule} from 'yargs';
+import yargs from 'yargs';
 
 import {addGithubTokenOption} from '../../utils/git/github-yargs';
 import {checkOutPullRequestLocally} from '../common/checkout-pr';
@@ -17,18 +17,18 @@ export interface CheckoutOptions {
 }
 
 /** Builds the checkout pull request command. */
-function builder(yargs: Argv) {
+function builder(yargs: yargs.Argv) {
   return addGithubTokenOption(yargs).positional('pr', {type: 'number', demandOption: true});
 }
 
 /** Handles the checkout pull request command. */
-async function handler({pr, githubToken}: Arguments<CheckoutOptions>) {
+async function handler({pr, githubToken}: yargs.Arguments<CheckoutOptions>) {
   const prCheckoutOptions = {allowIfMaintainerCannotModify: true, branchName: `pr-${pr}`};
   await checkOutPullRequestLocally(pr, githubToken, prCheckoutOptions);
 }
 
 /** yargs command module for checking out a PR  */
-export const CheckoutCommandModule: CommandModule<{}, CheckoutOptions> = {
+export const CheckoutCommandModule: yargs.CommandModule<{}, CheckoutOptions> = {
   handler,
   builder,
   command: 'checkout <pr>',

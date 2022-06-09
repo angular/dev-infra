@@ -7,8 +7,8 @@
  */
 import {SpawnSyncReturns} from 'child_process';
 
-import * as console from '../../utils/console';
 import {GitClient} from '../../utils/git/git-client';
+import {Log} from '../../utils/logging';
 import {installVirtualGitClientSpies, mockNgDevConfig} from '../../utils/testing';
 
 import {G3Module, G3StatsData} from './g3';
@@ -27,7 +27,7 @@ describe('G3Module', () => {
     ).and.returnValue(null);
     getLatestShas = spyOn(G3Module.prototype, 'getLatestShas' as any).and.returnValue(null);
     getDiffStats = spyOn(G3Module.prototype, 'getDiffStats' as any).and.returnValue(null);
-    infoSpy = spyOn(console, 'info');
+    infoSpy = spyOn(Log, 'info');
   });
 
   describe('gathering stats', () => {

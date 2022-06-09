@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Arguments, Argv, CommandModule} from 'yargs';
+import yargs from 'yargs';
 
-import {error} from '../../utils/console';
+import {Log} from '../../utils/logging';
 import {addGithubTokenOption} from '../../utils/git/github-yargs';
 
 import {discoverNewConflictsForPr} from './index';
@@ -20,8 +20,8 @@ export interface DiscoverNewConflictsOptions {
 }
 
 /** Builds the discover-new-conflicts pull request command. */
-function builder(yargs: Argv): Argv<DiscoverNewConflictsOptions> {
-  return addGithubTokenOption(yargs)
+function builder(argv: yargs.Argv): yargs.Argv<DiscoverNewConflictsOptions> {
+  return addGithubTokenOption(argv)
     .option('date', {
       description: 'Only consider PRs updated since provided date',
       defaultDescription: '30 days ago',
@@ -32,10 +32,10 @@ function builder(yargs: Argv): Argv<DiscoverNewConflictsOptions> {
 }
 
 /** Handles the discover-new-conflicts pull request command. */
-async function handler({pr, date}: Arguments<DiscoverNewConflictsOptions>) {
+async function handler({pr, date}: yargs.Arguments<DiscoverNewConflictsOptions>) {
   // If a provided date is not able to be parsed, yargs provides it as NaN.
   if (isNaN(date)) {
-    error('Unable to parse the value provided via --date flag');
+    Log.error('Unable to parse the value provided via --date flag');
     process.exit(1);
   }
   await discoverNewConflictsForPr(pr, date);
@@ -52,7 +52,10 @@ function getThirtyDaysAgoDate() {
 }
 
 /** yargs command module for discovering new conflicts for a PR  */
-export const DiscoverNewConflictsCommandModule: CommandModule<{}, DiscoverNewConflictsOptions> = {
+export const DiscoverNewConflictsCommandModule: yargs.CommandModule<
+  {},
+  DiscoverNewConflictsOptions
+> = {
   handler,
   builder,
   command: 'discover-new-conflicts <pr>',

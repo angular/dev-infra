@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as semver from 'semver';
+import semver from 'semver';
 
 import {ReleaseConfig} from '../../../release/config/index';
 import {
@@ -16,7 +16,9 @@ import {
   getVersionOfBranch,
   ReleaseRepoWithApi,
 } from '../../../release/versioning';
-import {promptConfirm, red, warn, yellow} from '../../../utils/console';
+import {Prompt} from '../../../utils/prompt';
+
+import {Log, red, yellow} from '../../../utils/logging';
 import {InvalidTargetBranchError} from './target-label';
 import {defaultLocale} from '../../../utils/locale';
 
@@ -65,14 +67,14 @@ export async function assertActiveLtsBranch(
   // See: https://angular.io/guide/releases#support-policy-and-schedule.
   if (today > ltsEndDate) {
     const ltsEndDateText = ltsEndDate.toLocaleDateString(defaultLocale);
-    warn(red(`Long-term support ended for v${version.major} on ${ltsEndDateText}.`));
-    warn(
+    Log.warn(red(`Long-term support ended for v${version.major} on ${ltsEndDateText}.`));
+    Log.warn(
       yellow(
         `Merging of pull requests for this major is generally not ` +
           `desired, but can be forcibly ignored.`,
       ),
     );
-    if (await promptConfirm('Do you want to forcibly proceed with merging?')) {
+    if (await Prompt.confirm('Do you want to forcibly proceed with merging?')) {
       return;
     }
     throw new InvalidTargetBranchError(

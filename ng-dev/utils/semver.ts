@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as semver from 'semver';
+import semver from 'semver';
 
 /**
  * Increments a specified SemVer version. Compared to the original increment in SemVer,

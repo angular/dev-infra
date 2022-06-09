@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Arguments, Argv, CommandModule} from 'yargs';
+import yargs from 'yargs';
 
 import {buildEnvStamp, EnvStampMode} from './env-stamp';
 
@@ -15,7 +15,7 @@ export interface Options {
   includeVersion: boolean;
 }
 
-function builder(args: Argv): Argv<Options> {
+function builder(args: yargs.Argv): yargs.Argv<Options> {
   return args
     .option('mode', {
       demandOption: true,
@@ -29,12 +29,12 @@ function builder(args: Argv): Argv<Options> {
     });
 }
 
-async function handler({mode, includeVersion}: Arguments<Options>) {
+async function handler({mode, includeVersion}: yargs.Arguments<Options>) {
   buildEnvStamp(mode, includeVersion);
 }
 
 /** CLI command module for building the environment stamp. */
-export const BuildEnvStampCommand: CommandModule<{}, Options> = {
+export const BuildEnvStampCommand: yargs.CommandModule<{}, Options> = {
   builder,
   handler,
   command: 'build-env-stamp',

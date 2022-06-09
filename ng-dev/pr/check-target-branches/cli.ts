@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Arguments, Argv, CommandModule} from 'yargs';
+import yargs from 'yargs';
 
 import {printTargetBranchesForPr} from './check-target-branches';
 
@@ -15,8 +15,8 @@ export interface CheckTargetBranchesOptions {
 }
 
 /** Builds the command. */
-function builder(yargs: Argv) {
-  return yargs.positional('pr', {
+function builder(argv: yargs.Argv) {
+  return argv.positional('pr', {
     description: 'The pull request number',
     type: 'number',
     demandOption: true,
@@ -24,12 +24,12 @@ function builder(yargs: Argv) {
 }
 
 /** Handles the command. */
-async function handler({pr}: Arguments<CheckTargetBranchesOptions>) {
+async function handler({pr}: yargs.Arguments<CheckTargetBranchesOptions>) {
   await printTargetBranchesForPr(pr);
 }
 
 /** yargs command module describing the command.  */
-export const CheckTargetBranchesModule: CommandModule<{}, CheckTargetBranchesOptions> = {
+export const CheckTargetBranchesModule: yargs.CommandModule<{}, CheckTargetBranchesOptions> = {
   handler,
   builder,
   command: 'check-target-branches <pr>',

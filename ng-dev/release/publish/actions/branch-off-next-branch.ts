@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as semver from 'semver';
+import semver from 'semver';
 
-import {green, info, yellow} from '../../../utils/console';
+import {green, Log, yellow} from '../../../utils/logging';
 import {workspaceRelativePackageJsonPath} from '../../../utils/constants';
 import {semverInc} from '../../../utils/semver';
 import {ReleaseNotes, workspaceRelativeChangelogPath} from '../../notes/release-notes';
@@ -92,7 +92,7 @@ export abstract class BranchOffNextBranchBaseAction extends ReleaseAction {
     await this.checkoutUpstreamBranch(nextBranch);
     await this.createLocalBranchFromHead(newBranch);
     await this.pushHeadToRemoteBranch(newBranch);
-    info(green(`  ✓   Version branch "${newBranch}" created.`));
+    Log.info(green(`  ✓   Version branch "${newBranch}" created.`));
   }
 
   /**
@@ -136,7 +136,7 @@ export abstract class BranchOffNextBranchBaseAction extends ReleaseAction {
       nextPullRequestMessage,
     );
 
-    info(green(`  ✓   Pull request for updating the "${nextBranch}" branch has been created.`));
-    info(yellow(`      Please ask team members to review: ${nextUpdatePullRequest.url}.`));
+    Log.info(green(`  ✓   Pull request for updating the "${nextBranch}" branch has been created.`));
+    Log.info(yellow(`      Please ask team members to review: ${nextUpdatePullRequest.url}.`));
   }
 }

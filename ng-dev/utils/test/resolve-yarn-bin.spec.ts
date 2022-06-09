@@ -9,7 +9,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import * as child_process from '../child-process';
+import {ChildProcess} from '../child-process';
 import {resolveYarnScriptForProject} from '../resolve-yarn-bin';
 import {testTmpDir} from '../testing';
 
@@ -46,7 +46,7 @@ describe('resolve yarn bin', () => {
       fs.writeFileSync(path.join(fakeNpmBinDir, 'yarn.bat'), '', {mode: 0o777});
 
       // The `npm bin --global` command should return the fake global directory.
-      spyOn(child_process, 'spawn').and.resolveTo({stdout: fakeNpmBinDir, stderr: '', status: 0});
+      spyOn(ChildProcess, 'spawn').and.resolveTo({stdout: fakeNpmBinDir, stderr: '', status: 0});
     });
 
     it('should check if no config is found', async () => {

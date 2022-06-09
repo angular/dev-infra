@@ -8,9 +8,8 @@
 
 import {promises as fs} from 'fs';
 import {join} from 'path';
-import * as semver from 'semver';
+import semver from 'semver';
 
-import {debug, error, green, info, promptConfirm, red, warn, yellow} from '../../utils/console';
 import {workspaceRelativePackageJsonPath} from '../../utils/constants';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {GithubApiRequestError} from '../../utils/git/github';
@@ -19,13 +18,15 @@ import {
   getListCommitsInBranchUrl,
   getRepositoryGitUrl,
 } from '../../utils/git/github-urls';
+import {green, Log, yellow} from '../../utils/logging';
+import {Prompt} from '../../utils/prompt';
 import {Spinner} from '../../utils/spinner';
 import {BuiltPackage, BuiltPackageWithInfo, ReleaseConfig} from '../config/index';
 import {ReleaseNotes, workspaceRelativeChangelogPath} from '../notes/release-notes';
 import {NpmDistTag} from '../versioning';
 import {ActiveReleaseTrains} from '../versioning/active-release-trains';
 import {createExperimentalSemver} from '../versioning/experimental-versions';
-import {runNpmPublish} from '../versioning/npm-publish';
+import {NpmCommand} from '../versioning/npm-command';
 import {getReleaseTagForVersion} from '../versioning/version-tags';
 import {FatalReleaseActionError, UserAbortedReleaseActionError} from './actions-error';
 import {
@@ -34,12 +35,7 @@ import {
 } from './built-package-info';
 import {getCommitMessageForRelease, getReleaseNoteCherryPickCommitMessage} from './commit-message';
 import {githubReleaseBodyLimit, waitForPullRequestInterval} from './constants';
-import {
-  invokeReleaseBuildCommand,
-  invokeReleaseInfoCommand,
-  invokeReleasePrecheckCommand,
-  invokeYarnInstallCommand,
-} from './external-commands';
+import {ExternalCommands} from './external-commands';
 import {getPullRequestState} from './pull-request-state';
 
 /** Interface describing a Github repository. */
@@ -106,7 +102,7 @@ export abstract class ReleaseAction {
     // Write the `package.json` file. Note that we add a trailing new line
     // to avoid unnecessary diff. IDEs usually add a trailing new line.
     await fs.writeFile(pkgJsonPath, `${JSON.stringify(pkgJson, null, 2)}\n`);
-    info(green(`  ✓   Updated project version to ${pkgJson.version}`));
+    Log.info(green(`  ✓   Updated project version to ${pkgJson.version}`));
   }
 
   /** Gets the most recent commit of a specified branch. */
@@ -150,39 +146,33 @@ export abstract class ReleaseAction {
     const branchCommitsUrl = getListCommitsInBranchUrl(this.git, branchNameForError);
 
     if (state === 'failure') {
-      error(
-        red(
-          `  ✘   Cannot stage release. Commit "${commitSha}" does not pass all github ` +
-            'status checks. Please make sure this commit passes all checks before re-running.',
-        ),
+      Log.error(
+        `  ✘   Cannot stage release. Commit "${commitSha}" does not pass all github ` +
+          'status checks. Please make sure this commit passes all checks before re-running.',
       );
-      error(`      Please have a look at: ${branchCommitsUrl}`);
+      Log.error(`      Please have a look at: ${branchCommitsUrl}`);
 
-      if (await promptConfirm('Do you want to ignore the Github status and proceed?')) {
-        info(
-          yellow(
-            '  ⚠   Upstream commit is failing CI checks, but status has been forcibly ignored.',
-          ),
+      if (await Prompt.confirm('Do you want to ignore the Github status and proceed?')) {
+        Log.warn(
+          '  ⚠   Upstream commit is failing CI checks, but status has been forcibly ignored.',
         );
         return;
       }
       throw new UserAbortedReleaseActionError();
     } else if (state === 'pending') {
-      error(
-        red(
-          `  ✘   Commit "${commitSha}" still has pending github statuses that ` +
-            'need to succeed before staging a release.',
-        ),
+      Log.error(
+        `  ✘   Commit "${commitSha}" still has pending github statuses that ` +
+          'need to succeed before staging a release.',
       );
-      error(red(`      Please have a look at: ${branchCommitsUrl}`));
-      if (await promptConfirm('Do you want to ignore the Github status and proceed?')) {
-        info(yellow('  ⚠   Upstream commit is pending CI, but status has been forcibly ignored.'));
+      Log.error(`      Please have a look at: ${branchCommitsUrl}`);
+      if (await Prompt.confirm('Do you want to ignore the Github status and proceed?')) {
+        Log.warn('  ⚠   Upstream commit is pending CI, but status has been forcibly ignored.');
         return;
       }
       throw new UserAbortedReleaseActionError();
     }
 
-    info(green('  ✓   Upstream commit is passing all github status checks.'));
+    Log.info(green('  ✓   Upstream commit is passing all github status checks.'));
   }
 
   /**
@@ -190,17 +180,13 @@ export abstract class ReleaseAction {
    * confirmed, a new commit for the release point is created.
    */
   protected async waitForEditsAndCreateReleaseCommit(newVersion: semver.SemVer) {
-    info(
-      yellow(
-        '  ⚠   Please review the changelog and ensure that the log contains only changes ' +
-          'that apply to the public API surface.',
-      ),
+    Log.warn(
+      '  ⚠   Please review the changelog and ensure that the log contains only changes ' +
+        'that apply to the public API surface.',
     );
-    info(
-      yellow('      Manual changes can be made. When done, please proceed with the prompt below.'),
-    );
+    Log.warn('      Manual changes can be made. When done, please proceed with the prompt below.');
 
-    if (!(await promptConfirm('Do you want to proceed and commit the changes?'))) {
+    if (!(await Prompt.confirm('Do you want to proceed and commit the changes?'))) {
       throw new UserAbortedReleaseActionError();
     }
 
@@ -212,7 +198,7 @@ export abstract class ReleaseAction {
       workspaceRelativeChangelogPath,
     ]);
 
-    info(green(`  ✓   Created release commit for: "${newVersion}".`));
+    Log.info(green(`  ✓   Created release commit for: "${newVersion}".`));
   }
 
   /**
@@ -224,8 +210,8 @@ export abstract class ReleaseAction {
       return this.git.getForkOfAuthenticatedUser();
     } catch {
       const {owner, name} = this.git.remoteConfig;
-      error(red('  ✘   Unable to find fork for currently authenticated user.'));
-      error(red(`      Please ensure you created a fork of: ${owner}/${name}.`));
+      Log.error('  ✘   Unable to find fork for currently authenticated user.');
+      Log.error(`      Please ensure you created a fork of: ${owner}/${name}.`);
       throw new FatalReleaseActionError();
     }
   }
@@ -334,7 +320,7 @@ export abstract class ReleaseAction {
       });
     }
 
-    info(green(`  ✓   Created pull request #${data.number} in ${repoSlug}.`));
+    Log.info(green(`  ✓   Created pull request #${data.number} in ${repoSlug}.`));
     return {
       id: data.number,
       url: data.html_url,
@@ -353,19 +339,19 @@ export abstract class ReleaseAction {
     interval = waitForPullRequestInterval,
   ): Promise<void> {
     return new Promise((resolve, reject) => {
-      debug(`Waiting for pull request #${id} to be merged.`);
+      Log.debug(`Waiting for pull request #${id} to be merged.`);
 
       const spinner = new Spinner(`Waiting for pull request #${id} to be merged.`);
       const intervalId = setInterval(async () => {
         const prState = await getPullRequestState(this.git, id);
         if (prState === 'merged') {
           spinner.complete();
-          info(green(`  ✓   Pull request #${id} has been merged.`));
+          Log.info(green(`  ✓   Pull request #${id} has been merged.`));
           clearInterval(intervalId);
           resolve();
         } else if (prState === 'closed') {
           spinner.complete();
-          warn(yellow(`  ✘   Pull request #${id} has been closed.`));
+          Log.warn(`  ✘   Pull request #${id} has been closed.`);
           clearInterval(intervalId);
           reject(new UserAbortedReleaseActionError());
         }
@@ -380,7 +366,9 @@ export abstract class ReleaseAction {
    */
   protected async prependReleaseNotesToChangelog(releaseNotes: ReleaseNotes): Promise<void> {
     await releaseNotes.prependEntryToChangelogFile();
-    info(green(`  ✓   Updated the changelog to capture changes for "${releaseNotes.version}".`));
+    Log.info(
+      green(`  ✓   Updated the changelog to capture changes for "${releaseNotes.version}".`),
+    );
   }
 
   /** Checks out an upstream branch with a detached head. */
@@ -399,7 +387,7 @@ export abstract class ReleaseAction {
     // we might be able to fix this with Yarn 2+, it is reasonable ensuring clean node modules.
     // TODO: Remove this when we use Yarn 2+ in all Angular repositories.
     await fs.rm(nodeModulesDir, {force: true, recursive: true, maxRetries: 3});
-    await invokeYarnInstallCommand(this.projectDir);
+    await ExternalCommands.invokeYarnInstall(this.projectDir);
   }
 
   /**
@@ -429,8 +417,8 @@ export abstract class ReleaseAction {
     // publish branch. e.g. consider we publish patch version and a new package has been
     // created in the `next` branch. The new package would not be part of the patch branch,
     // so we cannot build and publish it.
-    const builtPackages = await invokeReleaseBuildCommand(this.projectDir);
-    const releaseInfo = await invokeReleaseInfoCommand(this.projectDir);
+    const builtPackages = await ExternalCommands.invokeReleaseBuild(this.projectDir);
+    const releaseInfo = await ExternalCommands.invokeReleaseInfo(this.projectDir);
 
     // Extend the built packages with their disk hash and NPM package information. This is
     // helpful later for verifying integrity and filtering out e.g. experimental packages.
@@ -488,7 +476,11 @@ export abstract class ReleaseAction {
     const builtPackagesWithInfo = await this.buildReleaseForCurrentBranch();
 
     // Run release pre-checks (e.g. validating the release output).
-    await invokeReleasePrecheckCommand(this.projectDir, newVersion, builtPackagesWithInfo);
+    await ExternalCommands.invokeReleasePrecheck(
+      this.projectDir,
+      newVersion,
+      builtPackagesWithInfo,
+    );
 
     // Verify the packages built are the correct version.
     await this._verifyPackageVersions(releaseNotes.version, builtPackagesWithInfo);
@@ -499,8 +491,8 @@ export abstract class ReleaseAction {
       `Bump version to "v${newVersion}" with changelog.`,
     );
 
-    info(green('  ✓   Release staging pull request has been created.'));
-    info(yellow(`      Please ask team members to review: ${pullRequest.url}.`));
+    Log.info(green('  ✓   Release staging pull request has been created.'));
+    Log.info(yellow(`      Please ask team members to review: ${pullRequest.url}.`));
 
     return {releaseNotes, pullRequest, builtPackagesWithInfo};
   }
@@ -564,7 +556,7 @@ export abstract class ReleaseAction {
 
     // Create a changelog cherry-pick commit.
     await this.createCommit(commitMessage, [workspaceRelativeChangelogPath]);
-    info(green(`  ✓   Created changelog cherry-pick commit for: "${releaseNotes.version}".`));
+    Log.info(green(`  ✓   Created changelog cherry-pick commit for: "${releaseNotes.version}".`));
 
     // Create a cherry-pick pull request that should be merged by the caretaker.
     const pullRequest = await this.pushChangesToForkAndCreatePullRequest(
@@ -575,13 +567,13 @@ export abstract class ReleaseAction {
         `branch (${nextBranch}).`,
     );
 
-    info(
+    Log.info(
       green(
         `  ✓   Pull request for cherry-picking the changelog into "${nextBranch}" ` +
           'has been created.',
       ),
     );
-    info(yellow(`      Please ask team members to review: ${pullRequest.url}.`));
+    Log.info(yellow(`      Please ask team members to review: ${pullRequest.url}.`));
 
     // Wait for the Pull Request to be merged.
     await this.waitForPullRequestToBeMerged(pullRequest);
@@ -612,7 +604,7 @@ export abstract class ReleaseAction {
       ref: `refs/tags/${tagName}`,
       sha: versionBumpCommitSha,
     });
-    info(green(`  ✓   Tagged v${releaseNotes.version} release upstream.`));
+    Log.info(green(`  ✓   Tagged v${releaseNotes.version} release upstream.`));
 
     let releaseBody = await releaseNotes.getGithubReleaseEntry();
 
@@ -632,7 +624,7 @@ export abstract class ReleaseAction {
       prerelease: isPrerelease,
       body: releaseBody,
     });
-    info(green(`  ✓   Created v${releaseNotes.version} release in Github.`));
+    Log.info(green(`  ✓   Created v${releaseNotes.version} release in Github.`));
   }
 
   /** Gets a Github URL that resolves to the release notes in the given ref. */
@@ -668,8 +660,8 @@ export abstract class ReleaseAction {
 
     // Ensure the latest commit in the publish branch is the bump commit.
     if (!(await this._isCommitForVersionStaging(releaseNotes.version, versionBumpCommitSha))) {
-      error(red(`  ✘   Latest commit in "${publishBranch}" branch is not a staging commit.`));
-      error(red('      Please make sure the staging pull request has been merged.'));
+      Log.error(`  ✘   Latest commit in "${publishBranch}" branch is not a staging commit.`);
+      Log.error('      Please make sure the staging pull request has been merged.');
       throw new FatalReleaseActionError();
     }
 
@@ -678,8 +670,8 @@ export abstract class ReleaseAction {
     // Note: We expect the version bump commit to be ahead by **one** commit. This means it's
     // the direct parent of the commit that was latest when we started the staging.
     if (!(await this._isRevisionAheadOfBase(beforeStagingSha, versionBumpCommitSha, 1))) {
-      error(red(`  ✘   Unexpected additional commits have landed while staging the release.`));
-      error(red('      Please revert the bump commit and retry, or cut a new version on top.'));
+      Log.error(`  ✘   Unexpected additional commits have landed while staging the release.`);
+      Log.error('      Please revert the bump commit and retry, or cut a new version on top.');
       throw new FatalReleaseActionError();
     }
 
@@ -697,29 +689,29 @@ export abstract class ReleaseAction {
     // Walk through all built packages and publish them to NPM.
     for (const pkg of builtPackagesWithInfo) {
       if (skipExperimentalPackages && pkg.experimental) {
-        debug(`Skipping "${pkg.name}" as it is experimental.`);
+        Log.debug(`Skipping "${pkg.name}" as it is experimental.`);
         continue;
       }
 
       await this._publishBuiltPackageToNpm(pkg, npmDistTag);
     }
 
-    info(green('  ✓   Published all packages successfully'));
+    Log.info(green('  ✓   Published all packages successfully'));
   }
 
   /** Publishes the given built package to NPM with the specified NPM dist tag. */
   private async _publishBuiltPackageToNpm(pkg: BuiltPackage, npmDistTag: NpmDistTag) {
-    debug(`Starting publish of "${pkg.name}".`);
+    Log.debug(`Starting publish of "${pkg.name}".`);
     const spinner = new Spinner(`Publishing "${pkg.name}"`);
 
     try {
-      await runNpmPublish(pkg.outputPath, npmDistTag, this.config.publishRegistry);
+      await NpmCommand.publish(pkg.outputPath, npmDistTag, this.config.publishRegistry);
       spinner.complete();
-      info(green(`  ✓   Successfully published "${pkg.name}.`));
+      Log.info(green(`  ✓   Successfully published "${pkg.name}.`));
     } catch (e) {
       spinner.complete();
-      error(e);
-      error(red(`  ✘   An error occurred while publishing "${pkg.name}".`));
+      Log.error(e);
+      Log.error(`  ✘   An error occurred while publishing "${pkg.name}".`);
       throw new FatalReleaseActionError();
     }
   }
@@ -748,9 +740,9 @@ export abstract class ReleaseAction {
       const mismatchesVersion = expectedVersion.compare(packageJsonVersion) !== 0;
 
       if (mismatchesVersion) {
-        error(red(`The built package version does not match for: ${pkg.name}.`));
-        error(`  Actual version:   ${packageJsonVersion}`);
-        error(`  Expected version: ${expectedVersion}`);
+        Log.error(`The built package version does not match for: ${pkg.name}.`);
+        Log.error(`  Actual version:   ${packageJsonVersion}`);
+        Log.error(`  Expected version: ${expectedVersion}`);
         throw new FatalReleaseActionError();
       }
     }

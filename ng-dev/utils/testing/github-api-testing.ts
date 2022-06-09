@@ -7,7 +7,7 @@
  */
 
 import {RestEndpointMethodTypes} from '@octokit/plugin-rest-endpoint-methods';
-import * as nock from 'nock';
+import nock from 'nock';
 
 /** Type describing the parameters for a Github release update API request. */
 type ReleaseUpdateParameters = RestEndpointMethodTypes['repos']['updateRelease']['parameters'];

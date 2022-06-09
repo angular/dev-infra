@@ -6,14 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CommandModule} from 'yargs';
+import yargs from 'yargs';
 
 import {assertValidGithubConfig, getConfig} from '../../utils/config';
-import {error, green, info, promptConfirm, red, warn, yellow} from '../../utils/console';
+import {green, Log, yellow} from '../../utils/logging';
 import {GitClient} from '../../utils/git/git-client';
 import {findAvailableLocalBranchName, getCurrentBranch, hasLocalBranch} from './local-branch';
 import {promptForRemoteForkUpdate} from './remote-fork-update';
 import {getRemotesForRepo, isAngularOwnedRemote} from './remotes';
+import {Prompt} from '../../utils/prompt';
 
 /**
  * Migration command that performs local changes to account for an upstream
@@ -26,7 +27,7 @@ async function handler() {
 
   // The command cannot operate on the local repository if there are uncommitted changes.
   if (git.hasUncommittedChanges()) {
-    error(red('There are uncommitted changes. Unable to switch to new main branch. Aborting..'));
+    Log.error('There are uncommitted changes. Unable to switch to new main branch. Aborting..');
     return;
   }
 
@@ -34,18 +35,18 @@ async function handler() {
   const repoSlug = `${config.github.owner}/${config.github.name}`;
 
   if (!hasLocalBranch(git, 'master')) {
-    error(red('Local repository does not have a local branch named `master`. Aborting..'));
+    Log.error('Local repository does not have a local branch named `master`. Aborting..');
     return;
   }
 
   if (hasLocalBranch(git, 'main')) {
-    warn(yellow('The new `main` branch is already fetched locally. In order to run'));
-    warn(yellow('this tool, the `main` branch needs to be non-existent locally.'));
-    warn('');
-    warn(yellow('The tool will re-fetch the `main` branch and configure it properly.'));
+    Log.warn('The new `main` branch is already fetched locally. In order to run');
+    Log.warn('this tool, the `main` branch needs to be non-existent locally.');
+    Log.warn('');
+    Log.warn('The tool will re-fetch the `main` branch and configure it properly.');
 
-    if (!(await promptConfirm('Do you want to proceed and delete the local `main` branch?'))) {
-      error(red('Aborting..'));
+    if (!(await Prompt.confirm('Do you want to proceed and delete the local `main` branch?'))) {
+      Log.error('Aborting..');
       return;
     }
 
@@ -67,23 +68,23 @@ async function handler() {
   const primaryRemoteName = angularRemoteNames[0];
 
   if (angularRemoteNames.length === 0) {
-    warn(yellow(`Found no remote in repository that points to the \`${repoSlug}\` repository.`));
+    Log.warn(`Found no remote in repository that points to the \`${repoSlug}\` repository.`);
   }
 
-  info('The following steps will be performed:');
+  Log.info('The following steps will be performed:');
   if (angularRemoteNames.length) {
-    info(`  → Remotes (${angularRemoteNames.join(`, `)}) are refreshed.`);
+    Log.info(`  → Remotes (${angularRemoteNames.join(`, `)}) are refreshed.`);
   }
-  info(`  → The \`main\` branch is fetched from \`${repoSlug}\`.`);
-  info('  → The new `main` branch is checked out.');
+  Log.info(`  → The \`main\` branch is fetched from \`${repoSlug}\`.`);
+  Log.info('  → The new `main` branch is checked out.');
   if (primaryRemoteName) {
-    info(`  → The new \`main\` branch is linked to the \`${primaryRemoteName}\` remote.`);
+    Log.info(`  → The new \`main\` branch is linked to the \`${primaryRemoteName}\` remote.`);
   }
-  info('  → The old `master` branch is deleted or renamed (you will be prompted).');
-  info('  → Remote references to `master` branches in the index are removed.');
-  info('');
+  Log.info('  → The old `master` branch is deleted or renamed (you will be prompted).');
+  Log.info('  → Remote references to `master` branches in the index are removed.');
+  Log.info('');
 
-  if (!(await promptConfirm('Do you want to continue?'))) {
+  if (!(await Prompt.confirm('Do you want to continue?'))) {
     return;
   }
 
@@ -106,13 +107,15 @@ async function handler() {
 
   // Delete the old `master` branch if desirable, or preserve it if desired.
   if (
-    await promptConfirm('Are there changes in your local `master` branch that you want to keep?')
+    await Prompt.confirm('Are there changes in your local `master` branch that you want to keep?')
   ) {
     const tmpBranch = findAvailableLocalBranchName(git, 'old-master');
     git.run(['branch', '-m', 'master', tmpBranch]);
 
-    info('');
-    info(yellow(`Renamed local \`master\` branch to \`${tmpBranch}\`, preserving your changes.`));
+    Log.info('');
+    Log.info(
+      yellow(`Renamed local \`master\` branch to \`${tmpBranch}\`, preserving your changes.`),
+    );
   } else {
     git.run(['branch', '-D', 'master']);
   }
@@ -123,17 +126,17 @@ async function handler() {
     git.runGraceful(['update-ref', '-d', `refs/remotes/${remoteName}/master`]);
   }
 
-  info('');
-  info(green('---------------------------------------------------------'));
-  info(green('Successfully updated the local repository to use `main`.'));
-  info(green('---------------------------------------------------------'));
-  info('');
-  info('');
+  Log.info('');
+  Log.info(green('---------------------------------------------------------'));
+  Log.info(green('Successfully updated the local repository to use `main`.'));
+  Log.info(green('---------------------------------------------------------'));
+  Log.info('');
+  Log.info('');
 
   await promptForRemoteForkUpdate();
 }
 
-export const NewMainBranchCommandModule: CommandModule = {
+export const NewMainBranchCommandModule: yargs.CommandModule = {
   handler,
   command: 'new-main-branch',
   describe: 'Updates the local repository to account for the new GitHub main branch.',

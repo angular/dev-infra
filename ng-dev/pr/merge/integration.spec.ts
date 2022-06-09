@@ -6,12 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as nock from 'nock';
+import nock from 'nock';
 
 import {ReleaseConfig} from '../../release/config/index';
 import {_npmPackageInfoCache, NpmPackageInfo} from '../../release/versioning/npm-registry';
 import {GithubConfig} from '../../utils/config';
-import * as console from '../../utils/console';
 import {GithubClient} from '../../utils/git/github';
 import {
   getBranchesFromTargetLabel,
@@ -20,7 +19,8 @@ import {
 } from '../common/targeting/target-label';
 import {fakeGithubPaginationResponse} from '../../utils/testing/github-interception';
 import {getTargetLabelsForActiveReleaseTrains} from '../common/targeting/labels';
-import {fetchActiveReleaseTrains} from '../../release/versioning';
+import {ActiveReleaseTrains} from '../../release/versioning';
+import {Prompt} from '../../utils/prompt';
 
 const API_ENDPOINT = `https://api.github.com`;
 
@@ -62,7 +62,7 @@ describe('default target labels', () => {
 
   /** Fakes a prompt confirm question with the given value. */
   function fakePromptConfirmValue(returnValue: boolean) {
-    spyOn(console, 'promptConfirm').and.resolveTo(returnValue);
+    spyOn(Prompt, 'confirm').and.resolveTo(returnValue);
   }
 
   /** Fakes a NPM package query API request. */
@@ -106,7 +106,7 @@ describe('default target labels', () => {
     githubTargetBranch = 'master',
   ): Promise<string[] | null> {
     const {mainBranchName, name: repoName, owner} = githubConfig;
-    const releaseTrains = await fetchActiveReleaseTrains({
+    const releaseTrains = await ActiveReleaseTrains.fetch({
       name: repoName,
       nextBranchName: mainBranchName,
       owner,

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Arguments, Argv, CommandModule} from 'yargs';
+import yargs from 'yargs';
 
 import {addGithubTokenOption} from '../../utils/git/github-yargs';
 
@@ -19,17 +19,17 @@ export interface RebaseOptions {
 }
 
 /** Builds the rebase pull request command. */
-function builder(yargs: Argv): Argv<RebaseOptions> {
-  return addGithubTokenOption(yargs).positional('pr', {type: 'number', demandOption: true});
+function builder(argv: yargs.Argv): yargs.Argv<RebaseOptions> {
+  return addGithubTokenOption(argv).positional('pr', {type: 'number', demandOption: true});
 }
 
 /** Handles the rebase pull request command. */
-async function handler({pr, githubToken}: Arguments<RebaseOptions>) {
+async function handler({pr, githubToken}: yargs.Arguments<RebaseOptions>) {
   process.exitCode = await rebasePr(pr, githubToken);
 }
 
-/** yargs command module for rebaseing a PR  */
-export const RebaseCommandModule: CommandModule<{}, RebaseOptions> = {
+/** yargs command module for rebasing a PR  */
+export const RebaseCommandModule: yargs.CommandModule<{}, RebaseOptions> = {
   handler,
   builder,
   command: 'rebase <pr>',

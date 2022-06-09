@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {info} from '../utils/console';
+import {Log} from '../utils/logging';
 import {PullApproveGroupResult} from './group';
 
 type ConditionGrouping = keyof Pick<
@@ -18,7 +18,7 @@ type ConditionGrouping = keyof Pick<
 export function logGroup(
   group: PullApproveGroupResult,
   conditionsToPrint: ConditionGrouping,
-  printMessageFn = info,
+  printMessageFn = Log.info,
 ) {
   const conditions = group[conditionsToPrint];
   printMessageFn.group(`[${group.groupName}]`);
@@ -46,7 +46,7 @@ export function logHeader(...params: string[]) {
   const rightSpace = fillWidth - leftSpace - headerText.length;
   const fill = (count: number, content: string) => content.repeat(count);
 
-  info(`┌${fill(fillWidth, '─')}┐`);
-  info(`│${fill(leftSpace, ' ')}${headerText}${fill(rightSpace, ' ')}│`);
-  info(`└${fill(fillWidth, '─')}┘`);
+  Log.info(`┌${fill(fillWidth, '─')}┐`);
+  Log.info(`│${fill(leftSpace, ' ')}${headerText}${fill(rightSpace, ' ')}│`);
+  Log.info(`└${fill(fillWidth, '─')}┘`);
 }

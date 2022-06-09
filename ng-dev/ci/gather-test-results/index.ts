@@ -7,7 +7,7 @@
  */
 
 import {blaze} from '../../utils/protos/bazel_test_status_pb';
-import {spawnSync} from '../../utils/child-process';
+import {ChildProcess} from '../../utils/child-process';
 import {join, extname} from 'path';
 import {
   mkdirSync,
@@ -18,7 +18,7 @@ import {
   copyFileSync,
   writeFileSync,
 } from 'fs';
-import {debug, info} from '../../utils/console';
+import {Log} from '../../utils/logging';
 import {GitClient} from '../../utils/git/git-client';
 
 /** Bazel's TestResultData proto Message. */
@@ -41,7 +41,7 @@ const baseTestReport = `
  `.trim();
 
 function getTestLogsDirectoryPath() {
-  const {stdout, status} = spawnSync('yarn', ['bazel', 'info', 'bazel-testlogs']);
+  const {stdout, status} = ChildProcess.spawnSync('yarn', ['bazel', 'info', 'bazel-testlogs']);
 
   if (status === 0) {
     return stdout.trim();
@@ -95,7 +95,7 @@ export function copyTestResultFiles() {
   // workflow in its aggregated data and provide better metrics about the number of executed tests per
   // run.
   writeFileSync(join(destDirPath, `results.xml`), baseTestReport);
-  debug('Added base test report to test-results directory.');
+  Log.debug('Added base test report to test-results directory.');
 
   // Copy each of the test result files to the central test result directory which CircleCI discovers
   // test results in.
@@ -104,13 +104,13 @@ export function copyTestResultFiles() {
     const testResultData = TestResultData.decode(readFileSync(cacheStatusFilePath));
 
     if (testResultData.remotelyCached && testResultData.testPassed) {
-      debug(`Skipping copy of ${shortFilePath} as it was a passing remote cache hit`);
+      Log.debug(`Skipping copy of ${shortFilePath} as it was a passing remote cache hit`);
     } else {
       const destFilePath = join(destDirPath, `results-${copiedFileCount++}.xml`);
       copyFileSync(xmlFilePath, destFilePath);
-      debug(`Copying ${shortFilePath}`);
+      Log.debug(`Copying ${shortFilePath}`);
     }
   });
 
-  info(`Copied ${copiedFileCount} test result file(s) for upload.`);
+  Log.info(`Copied ${copiedFileCount} test result file(s) for upload.`);
 }

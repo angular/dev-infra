@@ -12,13 +12,13 @@
 // can still invoke this command.
 // ------------------------
 
-import {Arguments, Argv, CommandModule} from 'yargs';
+import yargs from 'yargs';
 
 import {getConfig} from '../../utils/config';
-import {error, green, info, red} from '../../utils/console';
+import {green, Log} from '../../utils/logging';
 import {assertValidReleaseConfig, BuiltPackage} from '../config/index';
 
-import {buildReleaseOutput} from './index';
+import {BuildWorker} from './index';
 
 /**
  * Type describing the JSON output of this command.
@@ -34,7 +34,7 @@ export interface ReleaseBuildOptions {
 }
 
 /** Yargs command builder for configuring the `ng-dev release build` command. */
-function builder(argv: Argv): Argv<ReleaseBuildOptions> {
+function builder(argv: yargs.Argv): yargs.Argv<ReleaseBuildOptions> {
   return argv.option('json', {
     type: 'boolean',
     description: 'Whether the built packages should be printed to stdout as JSON.',
@@ -43,23 +43,23 @@ function builder(argv: Argv): Argv<ReleaseBuildOptions> {
 }
 
 /** Yargs command handler for building a release. */
-async function handler(args: Arguments<ReleaseBuildOptions>) {
+async function handler(args: yargs.Arguments<ReleaseBuildOptions>) {
   const config = getConfig();
   assertValidReleaseConfig(config);
   const {npmPackages} = config.release;
-  let builtPackages = await buildReleaseOutput();
+  let builtPackages = await BuildWorker.invokeBuild();
 
   // If package building failed, print an error and exit with an error code.
   if (builtPackages === null) {
-    error(red(`  ✘   Could not build release output. Please check output above.`));
+    Log.error(`  ✘   Could not build release output. Please check output above.`);
     process.exit(1);
   }
 
   // If no packages have been built, we assume that this is never correct
   // and exit with an error code.
   if (builtPackages.length === 0) {
-    error(red(`  ✘   No release packages have been built. Please ensure that the`));
-    error(red(`      build script is configured correctly in ".ng-dev".`));
+    Log.error(`  ✘   No release packages have been built. Please ensure that the`);
+    Log.error(`      build script is configured correctly in ".ng-dev".`);
     process.exit(1);
   }
 
@@ -70,21 +70,21 @@ async function handler(args: Arguments<ReleaseBuildOptions>) {
   // Check for configured release packages which have not been built. We want to
   // error and exit if any configured package has not been built.
   if (missingPackages.length > 0) {
-    error(red(`  ✘   Release output missing for the following packages:`));
-    missingPackages.forEach((pkg) => error(red(`      - ${pkg.name}`)));
+    Log.error(`  ✘   Release output missing for the following packages:`);
+    missingPackages.forEach((pkg) => Log.error(`      - ${pkg.name}`));
     process.exit(1);
   }
 
   if (args.json) {
     process.stdout.write(JSON.stringify(<ReleaseBuildJsonStdout>builtPackages, null, 2));
   } else {
-    info(green('  ✓   Built release packages.'));
-    builtPackages.forEach(({name}) => info(green(`      - ${name}`)));
+    Log.info(green('  ✓   Built release packages.'));
+    builtPackages.forEach(({name}) => Log.info(green(`      - ${name}`)));
   }
 }
 
 /** CLI command module for building release output. */
-export const ReleaseBuildCommandModule: CommandModule<{}, ReleaseBuildOptions> = {
+export const ReleaseBuildCommandModule: yargs.CommandModule<{}, ReleaseBuildOptions> = {
   builder,
   handler,
   command: 'build',

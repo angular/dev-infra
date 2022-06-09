@@ -8,7 +8,7 @@
 
 import {alias, onUnion, params, types} from 'typed-graphqlify';
 
-import {bold, debug, info} from '../../utils/console';
+import {bold, Log} from '../../utils/logging';
 import {CaretakerConfig} from '../config';
 import {BaseModule} from './base';
 
@@ -55,7 +55,7 @@ export class GithubQueriesModule extends BaseModule<GithubQueryResults | void> {
     // whether githubQueries is undefined or not.
     let queries = this.config.caretaker?.githubQueries!;
     if (queries === undefined || queries.length === 0) {
-      debug('No github queries defined in the configuration, skipping');
+      Log.debug('No github queries defined in the configuration, skipping');
       return;
     }
 
@@ -104,21 +104,21 @@ export class GithubQueriesModule extends BaseModule<GithubQueryResults | void> {
     if (!queryResults) {
       return;
     }
-    info.group(bold('Github Tasks'));
+    Log.info.group(bold('Github Tasks'));
     const minQueryNameLength = Math.max(...queryResults.map((result) => result.queryName.length));
     for (const queryResult of queryResults) {
-      info(`${queryResult.queryName.padEnd(minQueryNameLength)}  ${queryResult.count}`);
+      Log.info(`${queryResult.queryName.padEnd(minQueryNameLength)}  ${queryResult.count}`);
 
       if (queryResult.count > 0) {
-        info.group(queryResult.queryUrl);
-        queryResult.matchedUrls.forEach((url) => info(`- ${url}`));
+        Log.info.group(queryResult.queryUrl);
+        queryResult.matchedUrls.forEach((url) => Log.info(`- ${url}`));
         if (queryResult.count > MAX_RETURNED_ISSUES) {
-          info(`... ${queryResult.count - MAX_RETURNED_ISSUES} additional matches`);
+          Log.info(`... ${queryResult.count - MAX_RETURNED_ISSUES} additional matches`);
         }
-        info.groupEnd();
+        Log.info.groupEnd();
       }
     }
-    info.groupEnd();
-    info();
+    Log.info.groupEnd();
+    Log.info();
   }
 }

@@ -13,7 +13,7 @@ import {
 
 import {PullApproveGroupConfig} from './parse-yaml';
 import {convertConditionToFunction} from './condition_evaluator';
-import {error} from '../utils/console';
+import {Log} from '../utils/logging';
 
 /** A condition for a group. */
 interface GroupCondition {
@@ -67,9 +67,9 @@ export class PullApproveGroup {
             unverifiable: false,
           });
         } catch (e) {
-          error(`Could not parse condition in group: ${this.groupName}`);
-          error(` - ${expression}`);
-          error(`Error:`, e);
+          Log.error(`Could not parse condition in group: ${this.groupName}`);
+          Log.error(` - ${expression}`);
+          Log.error(`Error:`, e);
           process.exit(1);
         }
       });
@@ -111,7 +111,7 @@ export class PullApproveGroup {
             `Condition could not be evaluated: \n\n` +
             `From the [${this.groupName}] group:\n` +
             ` - ${expression}`;
-          error(errMessage, '\n\n', e, '\n\n');
+          Log.error(errMessage, '\n\n', e, '\n\n');
           process.exit(1);
         }
       }

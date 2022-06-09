@@ -7,7 +7,7 @@
  */
 
 import fetch from 'node-fetch';
-import * as semver from 'semver';
+import semver from 'semver';
 
 import {ReleaseConfig} from '../config/index';
 import {LtsNpmDistTag} from './long-term-support';

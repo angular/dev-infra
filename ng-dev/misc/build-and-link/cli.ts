@@ -9,11 +9,11 @@
 import {green} from 'chalk';
 import {lstatSync} from 'fs';
 import {resolve} from 'path';
-import {Arguments, Argv, CommandModule} from 'yargs';
+import yargs from 'yargs';
 
-import {buildReleaseOutput} from '../../release/build/index';
-import {spawn} from '../../utils/child-process';
-import {error, info, red} from '../../utils/console';
+import {BuildWorker} from '../../release/build/index';
+import {ChildProcess} from '../../utils/child-process';
+import {Log} from '../../utils/logging';
 import {getConfig} from '../../utils/config';
 import {assertValidReleaseConfig} from '../../release/config';
 
@@ -23,7 +23,7 @@ export interface BuildAndLinkOptions {
 }
 
 /** Yargs command builder for the command. */
-function builder(argv: Argv): Argv<BuildAndLinkOptions> {
+function builder(argv: yargs.Argv): yargs.Argv<BuildAndLinkOptions> {
   return argv.positional('projectRoot', {
     type: 'string',
     normalize: true,
@@ -33,38 +33,38 @@ function builder(argv: Argv): Argv<BuildAndLinkOptions> {
 }
 
 /** Yargs command handler for the command. */
-async function handler({projectRoot}: Arguments<BuildAndLinkOptions>) {
+async function handler({projectRoot}: yargs.Arguments<BuildAndLinkOptions>) {
   try {
     if (!lstatSync(projectRoot).isDirectory()) {
-      error(red(`  ✘   The 'projectRoot' must be a directory: ${projectRoot}`));
+      Log.error(`  ✘   The 'projectRoot' must be a directory: ${projectRoot}`);
       process.exit(1);
     }
   } catch {
-    error(red(`  ✘   Could not find the 'projectRoot' provided: ${projectRoot}`));
+    Log.error(`  ✘   Could not find the 'projectRoot' provided: ${projectRoot}`);
     process.exit(1);
   }
 
   const config = getConfig();
   assertValidReleaseConfig(config);
 
-  const builtPackages = await buildReleaseOutput();
+  const builtPackages = await BuildWorker.invokeBuild();
 
   if (builtPackages === null) {
-    error(red(`  ✘   Could not build release output. Please check output above.`));
+    Log.error(`  ✘   Could not build release output. Please check output above.`);
     process.exit(1);
   }
-  info(green(` ✓  Built release output.`));
+  Log.info(green(` ✓  Built release output.`));
 
   for (const {outputPath, name} of builtPackages) {
-    await spawn('yarn', ['link', '--cwd', outputPath]);
-    await spawn('yarn', ['link', '--cwd', projectRoot, name]);
+    await ChildProcess.spawn('yarn', ['link', '--cwd', outputPath]);
+    await ChildProcess.spawn('yarn', ['link', '--cwd', projectRoot, name]);
   }
 
-  info(green(` ✓  Linked release packages in provided project.`));
+  Log.info(green(` ✓  Linked release packages in provided project.`));
 }
 
 /** CLI command module. */
-export const BuildAndLinkCommandModule: CommandModule<{}, BuildAndLinkOptions> = {
+export const BuildAndLinkCommandModule: yargs.CommandModule<{}, BuildAndLinkOptions> = {
   builder,
   handler,
   command: 'build-and-link <projectRoot>',

@@ -1,7 +1,6 @@
 import {existsSync, readFileSync, writeFileSync} from 'fs';
 import {join} from 'path';
-import * as semver from 'semver';
-import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
+import semver from 'semver';
 import {GitClient} from '../../utils/git/git-client';
 
 /** Project-relative path for the changelog file. */

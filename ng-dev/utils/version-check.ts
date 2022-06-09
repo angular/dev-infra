@@ -14,7 +14,7 @@ import {
   workspaceRelativePackageJsonPath,
   workspaceRelativeYarnLockFilePath,
 } from './constants';
-import {error, red} from './console';
+import {Log} from './logging';
 
 /**
  * Verifies that the `ng-dev` tool is up-to-date in the workspace. The check will compare
@@ -53,14 +53,14 @@ export async function verifyNgDevToolIsUpToDate(workspacePath: string): Promise<
     const expectedVersion = lockFileObject[`${ngDevNpmPackageName}@${devInfraPkgVersion}`].version;
 
     if (localVersion !== expectedVersion) {
-      error(red('  ✘   Your locally installed version of the `ng-dev` tool is outdated and not'));
-      error(red('      matching with the version in the `package.json` file.'));
-      error(red('      Re-install the dependencies to ensure you are using the correct version.'));
+      Log.error('  ✘   Your locally installed version of the `ng-dev` tool is outdated and not');
+      Log.error('      matching with the version in the `package.json` file.');
+      Log.error('      Re-install the dependencies to ensure you are using the correct version.');
       return false;
     }
     return true;
   } catch (e) {
-    error(e);
+    Log.error(e);
     return false;
   }
 }

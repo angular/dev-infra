@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as yargs from 'yargs';
+import yargs from 'yargs';
 
 import {CheckTargetBranchesModule} from './check-target-branches/cli';
 import {CheckoutCommandModule} from './checkout/cli';

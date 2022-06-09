@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Argv} from 'yargs';
+import yargs from 'yargs';
 
 /**
  * Add a --dry-run flag to the available options for the yargs argv object. When present, sets an
  * environment variable noting dry run mode.
  */
-export function addDryRunFlag<T>(args: Argv<T>) {
+export function addDryRunFlag<T>(args: yargs.Argv<T>) {
   return args.option('dry-run' as 'dryRun', {
     type: 'boolean',
     default: false,

@@ -13,7 +13,7 @@ import {Commit} from '../../../commit-message/parse';
 import {assertChangesAllowForTargetLabel} from '../validation/validations';
 import {PullRequestFailure} from '../validation/failures';
 import {GithubClient} from '../../../utils/git/github';
-import {fetchActiveReleaseTrains} from '../../../release/versioning';
+import {ActiveReleaseTrains} from '../../../release/versioning';
 
 /**
  * Enum capturing available target label names in the Angular organization. A target
@@ -113,7 +113,7 @@ export async function getTargetBranchesForPullRequest(
   // label is applied, we want to exit the script gracefully with an error message.
   try {
     const {mainBranchName, name, owner} = config.github;
-    const releaseTrains = await fetchActiveReleaseTrains({
+    const releaseTrains = await ActiveReleaseTrains.fetch({
       name,
       nextBranchName: mainBranchName,
       owner,

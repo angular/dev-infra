@@ -10,7 +10,7 @@ import {matchesVersion} from '../../../utils/testing';
 import {ActiveReleaseTrains} from '../../versioning';
 import {ReleaseTrain} from '../../versioning/release-trains';
 import {TagRecentMajorAsLatest} from '../actions/tag-recent-major-as-latest';
-import * as externalCommands from '../external-commands';
+import {ExternalCommands} from '../external-commands';
 import {getTestConfigurationsForAction} from './test-utils/action-mocks';
 import {
   fakeNpmPackageQueryRequest,
@@ -133,13 +133,13 @@ describe('tag recent major as latest action', () => {
 
     // Ensure that the NPM dist tag is set only for packages that were available in the previous
     // major version. A spy has already been installed on the function.
-    (externalCommands.invokeSetNpmDistCommand as jasmine.Spy).and.callFake(() => {
+    (ExternalCommands.invokeSetNpmDist as jasmine.Spy).and.callFake(() => {
       expect(gitClient.head.ref?.name).toBe('10.0.x');
       return Promise.resolve();
     });
 
-    expect(externalCommands.invokeSetNpmDistCommand).toHaveBeenCalledTimes(1);
-    expect(externalCommands.invokeSetNpmDistCommand).toHaveBeenCalledWith(
+    expect(ExternalCommands.invokeSetNpmDist).toHaveBeenCalledTimes(1);
+    expect(ExternalCommands.invokeSetNpmDist).toHaveBeenCalledWith(
       projectDir,
       'latest',
       matchesVersion('10.0.0'),

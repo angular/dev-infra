@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Arguments, Argv, CommandModule} from 'yargs';
+import yargs from 'yargs';
 
 import {getUserConfig} from '../../utils/config';
 
@@ -19,8 +19,8 @@ export interface ValidateFileOptions {
 }
 
 /** Builds the command. */
-function builder(yargs: Argv) {
-  return yargs
+function builder(argv: yargs.Argv) {
+  return argv
     .option('file', {
       type: 'string',
       conflicts: ['file-env-variable'],
@@ -50,13 +50,13 @@ function builder(yargs: Argv) {
 }
 
 /** Handles the command. */
-async function handler({error, file, fileEnvVariable}: Arguments<ValidateFileOptions>) {
+async function handler({error, file, fileEnvVariable}: yargs.Arguments<ValidateFileOptions>) {
   const filePath = file || fileEnvVariable || '.git/COMMIT_EDITMSG';
   validateFile(filePath, error);
 }
 
 /** yargs command module describing the command. */
-export const ValidateFileModule: CommandModule<{}, ValidateFileOptions> = {
+export const ValidateFileModule: yargs.CommandModule<{}, ValidateFileOptions> = {
   handler,
   builder,
   command: 'pre-commit-validate',

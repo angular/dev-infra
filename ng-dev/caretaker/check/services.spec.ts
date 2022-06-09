@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as console from '../../utils/console';
+import {Log} from '../../utils/logging';
 import {installVirtualGitClientSpies, mockNgDevConfig} from '../../utils/testing';
 
 import {services, ServicesModule} from './services';
@@ -21,8 +21,8 @@ describe('ServicesModule', () => {
   beforeEach(() => {
     getStatusFromStandardApiSpy = spyOn(ServicesModule.prototype, 'getStatusFromStandardApi');
     installVirtualGitClientSpies();
-    infoGroupSpy = spyOn(console.info, 'group');
-    infoSpy = spyOn(console, 'info');
+    infoGroupSpy = spyOn(Log.info, 'group');
+    infoSpy = spyOn(Log, 'info');
   });
 
   describe('gathering status', () => {

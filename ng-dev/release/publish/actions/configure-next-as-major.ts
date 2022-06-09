@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as semver from 'semver';
+import semver from 'semver';
 
-import {green, info, yellow} from '../../../utils/console';
+import {green, Log, yellow} from '../../../utils/logging';
 import {workspaceRelativePackageJsonPath} from '../../../utils/constants';
 import {ActiveReleaseTrains} from '../../versioning/active-release-trains';
 import {ReleaseAction} from '../actions';
@@ -44,8 +44,8 @@ export class ConfigureNextAsMajorAction extends ReleaseAction {
       `Configure next branch to receive major changes for v${newVersion}`,
     );
 
-    info(green('  ✓   Next branch update pull request has been created.'));
-    info(yellow(`      Please ask team members to review: ${pullRequest.url}.`));
+    Log.info(green('  ✓   Next branch update pull request has been created.'));
+    Log.info(yellow(`      Please ask team members to review: ${pullRequest.url}.`));
   }
 
   static override async isActive(active: ActiveReleaseTrains) {

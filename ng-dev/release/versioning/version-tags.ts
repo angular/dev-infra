@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {SemVer} from 'semver';
+import semver from 'semver';
 
 /** Gets the release tag name for the specified version. */
-export function getReleaseTagForVersion(version: SemVer): string {
+export function getReleaseTagForVersion(version: semver.SemVer): string {
   return version.format();
 }

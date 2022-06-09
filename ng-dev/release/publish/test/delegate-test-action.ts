@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as semver from 'semver';
+import semver from 'semver';
 import {BuiltPackageWithInfo} from '../../config';
 
 import {ReleaseNotes} from '../../notes/release-notes';

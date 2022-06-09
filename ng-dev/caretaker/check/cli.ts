@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Argv, CommandModule} from 'yargs';
+import yargs from 'yargs';
 
 import {addGithubTokenOption} from '../../utils/git/github-yargs';
 
@@ -17,8 +17,8 @@ export interface CaretakerCheckOptions {
 }
 
 /** Builds the command. */
-function builder(yargs: Argv) {
-  return addGithubTokenOption(yargs);
+function builder(argv: yargs.Argv) {
+  return addGithubTokenOption(argv);
 }
 
 /** Handles the command. */
@@ -27,7 +27,7 @@ async function handler() {
 }
 
 /** yargs command module for checking status information for the repository  */
-export const CheckModule: CommandModule<{}, CaretakerCheckOptions> = {
+export const CheckModule: yargs.CommandModule<{}, CaretakerCheckOptions> = {
   handler,
   builder,
   command: 'check',

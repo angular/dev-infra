@@ -20,6 +20,8 @@ ts_library(
     name = "test_lib",
     testonly = True,
     srcs = ["server-test.ts"],
+    # TODO(devversion): Remove this when `ts_library` supports `.mts` extension.
+    devmode_module = "commonjs",
     deps = [
         "@npm//@bazel/runfiles",
         "@npm//@types/selenium-webdriver",

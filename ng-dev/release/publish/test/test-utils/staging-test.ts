@@ -9,8 +9,8 @@
 import {getBranchPushMatcher, testTmpDir} from '../../../../utils/testing';
 import {NpmPackage} from '../../../config';
 import {NpmDistTag} from '../../../versioning';
-import * as npm from '../../../versioning/npm-publish';
-import * as externalCommands from '../../external-commands';
+import {NpmCommand} from '../../../versioning/npm-command';
+import {ExternalCommands} from '../../external-commands';
 import {testReleasePackages} from './action-mocks';
 import {TestReleaseAction} from './test-action';
 
@@ -68,10 +68,10 @@ export async function expectGithubApiRequestsForStaging(
 }
 
 function expectNpmPublishToBeInvoked(packages: NpmPackage[], expectedNpmDistTag: NpmDistTag) {
-  expect(npm.runNpmPublish).toHaveBeenCalledTimes(packages.length);
+  expect(NpmCommand.publish).toHaveBeenCalledTimes(packages.length);
 
   for (const pkg of packages) {
-    expect(npm.runNpmPublish).toHaveBeenCalledWith(
+    expect(NpmCommand.publish).toHaveBeenCalledWith(
       `${testTmpDir}/dist/${pkg.name}`,
       expectedNpmDistTag,
       undefined,
@@ -113,8 +113,8 @@ export async function expectStagingAndPublishWithoutCherryPick(
     ? testReleasePackages.filter((pkg) => !pkg.experimental)
     : testReleasePackages;
 
-  expect(externalCommands.invokeReleasePrecheckCommand).toHaveBeenCalledTimes(1);
-  expect(externalCommands.invokeReleaseBuildCommand).toHaveBeenCalledTimes(1);
+  expect(ExternalCommands.invokeReleasePrecheck).toHaveBeenCalledTimes(1);
+  expect(ExternalCommands.invokeReleaseBuild).toHaveBeenCalledTimes(1);
   expectNpmPublishToBeInvoked(publishedPackages, expectedNpmDistTag);
 }
 
@@ -169,7 +169,7 @@ export async function expectStagingAndPublishWithCherryPick(
     ? testReleasePackages.filter((pkg) => !pkg.experimental)
     : testReleasePackages;
 
-  expect(externalCommands.invokeReleasePrecheckCommand).toHaveBeenCalledTimes(1);
-  expect(externalCommands.invokeReleaseBuildCommand).toHaveBeenCalledTimes(1);
+  expect(ExternalCommands.invokeReleasePrecheck).toHaveBeenCalledTimes(1);
+  expect(ExternalCommands.invokeReleaseBuild).toHaveBeenCalledTimes(1);
   expectNpmPublishToBeInvoked(publishedPackages, expectedNpmDistTag);
 }

@@ -22,9 +22,9 @@ export * from './release/versioning';
 // as they are needed for authoring pre-release custom checks.
 export {ReleasePrecheckError} from './release/precheck';
 
-// Exposes console utils that can be used by consumers to e.g. add messages
-// to the dev-infra log which is stored on failures.
-export * from './utils/console';
+// Exposes logging and console utils that can be used by consumers to e.g. add
+// messages to the dev-infra log which is stored on failures.
+export * from './utils/logging';
 
 // Exposes Git/Github client classes needed for interacting with some of the
 // release versioning APIs.

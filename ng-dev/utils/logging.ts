@@ -8,42 +8,16 @@
 
 import * as chalk from 'chalk';
 import {writeFileSync} from 'fs';
-import {prompt} from 'inquirer';
 import {join} from 'path';
-import {Arguments} from 'yargs';
+import yargs from 'yargs';
 
 import {GitClient} from './git/git-client';
 
-/** Reexport of chalk colors for convenient access. */
-export const red = chalk.red;
-export const green = chalk.green;
-export const yellow = chalk.yellow;
-export const bold = chalk.bold;
-export const blue = chalk.blue;
-
-/** Prompts the user with a confirmation question and a specified message. */
-export async function promptConfirm(message: string, defaultValue = false): Promise<boolean> {
-  return (
-    await prompt<{result: boolean}>({
-      type: 'confirm',
-      name: 'result',
-      message: message,
-      default: defaultValue,
-    })
-  ).result;
-}
-
-/** Prompts the user for one line of input. */
-export async function promptInput(message: string): Promise<string> {
-  return (await prompt<{result: string}>({type: 'input', name: 'result', message})).result;
-}
-
 /**
- * Supported levels for logging functions.
- *
- * Levels are mapped to numbers to represent a hierarchy of logging levels.
+ * Supported levels for logging functions. Levels are mapped to
+ * numbers to represent a hierarchy of logging levels.
  */
-export enum LOG_LEVELS {
+export enum LogLevel {
   SILENT = 0,
   ERROR = 1,
   WARN = 2,
@@ -53,35 +27,54 @@ export enum LOG_LEVELS {
 }
 
 /** Default log level for the tool. */
-export const DEFAULT_LOG_LEVEL = LOG_LEVELS.INFO;
+export const DEFAULT_LOG_LEVEL = LogLevel.INFO;
 
-/** Write to the console for at INFO logging level */
-export const info = buildLogLevelFunction(() => console.info, LOG_LEVELS.INFO);
+/** Reexport of chalk colors for convenient access. */
+export const red = chalk.red;
+export const reset = chalk.reset;
+export const green = chalk.green;
+export const yellow = chalk.yellow;
+export const bold = chalk.bold;
+export const blue = chalk.blue;
 
-/** Write to the console for at ERROR logging level */
-export const error = buildLogLevelFunction(() => console.error, LOG_LEVELS.ERROR);
+/** Class used for logging to the console and to a ng-dev log file. */
+export abstract class Log {
+  /** Write to the console for at INFO logging level */
+  static info = buildLogLevelFunction(() => console.info, LogLevel.INFO, null);
 
-/** Write to the console for at DEBUG logging level */
-export const debug = buildLogLevelFunction(() => console.debug, LOG_LEVELS.DEBUG);
+  /** Write to the console for at ERROR logging level */
+  static error = buildLogLevelFunction(() => console.error, LogLevel.ERROR, chalk.red);
 
-/** Write to the console for at LOG logging level */
-// tslint:disable-next-line: no-console
-export const log = buildLogLevelFunction(() => console.log, LOG_LEVELS.LOG);
+  /** Write to the console for at DEBUG logging level */
+  static debug = buildLogLevelFunction(() => console.debug, LogLevel.DEBUG, null);
 
-/** Write to the console for at WARN logging level */
-export const warn = buildLogLevelFunction(() => console.warn, LOG_LEVELS.WARN);
+  /** Write to the console for at LOG logging level */
+  static log = buildLogLevelFunction(() => console.log, LogLevel.LOG, null);
+
+  /** Write to the console for at WARN logging level */
+  static warn = buildLogLevelFunction(() => console.warn, LogLevel.WARN, chalk.yellow);
+}
 
 /** Build an instance of a logging function for the provided level. */
-function buildLogLevelFunction(loadCommand: () => Function, level: LOG_LEVELS) {
+function buildLogLevelFunction(
+  loadCommand: () => Function,
+  level: LogLevel,
+  defaultColor: chalk.Chalk | null,
+) {
   /** Write to stdout for the LOG_LEVEL. */
-  const loggingFunction = (...text: unknown[]) => {
-    runConsoleCommand(loadCommand, level, ...text);
+  const loggingFunction = (...values: unknown[]) => {
+    runConsoleCommand(
+      loadCommand,
+      level,
+      // For string values, apply the default color.
+      ...values.map((v) => (typeof v === 'string' && defaultColor ? defaultColor(v) : v)),
+    );
   };
 
   /** Start a group at the LOG_LEVEL, optionally starting it as collapsed. */
-  loggingFunction.group = (label: unknown, collapsed = false) => {
+  loggingFunction.group = (label: string, collapsed = false) => {
     const command = collapsed ? console.groupCollapsed : console.group;
-    runConsoleCommand(() => command, level, label);
+    runConsoleCommand(() => command, level, defaultColor ? defaultColor(label) : label);
   };
 
   /** End the group at the LOG_LEVEL. */
@@ -101,7 +94,7 @@ function buildLogLevelFunction(loadCommand: () => Function, level: LOG_LEVELS) {
  * the console.* function, the function is saved into the closure of the created logging
  * function before jasmine can spy.
  */
-function runConsoleCommand(loadCommand: () => Function, logLevel: LOG_LEVELS, ...text: unknown[]) {
+function runConsoleCommand(loadCommand: () => Function, logLevel: LogLevel, ...text: unknown[]) {
   if (getLogLevel() >= logLevel) {
     loadCommand()(...text);
   }
@@ -115,7 +108,7 @@ function runConsoleCommand(loadCommand: () => Function, logLevel: LOG_LEVELS, ..
  */
 function getLogLevel() {
   const logLevelEnvValue: any = (process.env[`LOG_LEVEL`] || '').toUpperCase();
-  const logLevel = LOG_LEVELS[logLevelEnvValue];
+  const logLevel = LogLevel[logLevelEnvValue];
   if (logLevel === undefined) {
     return DEFAULT_LOG_LEVEL;
   }
@@ -140,7 +133,7 @@ const LOG_LEVEL_COLUMNS = 7;
  * middleware of yargs to enable the file logging before the rest of the command parsing and
  * response is executed.
  */
-export function captureLogOutputForCommand(argv: Arguments) {
+export function captureLogOutputForCommand(argv: yargs.Arguments) {
   if (FILE_LOGGING_ENABLED) {
     throw Error('`captureLogOutputForCommand` cannot be called multiple times');
   }
@@ -179,8 +172,8 @@ export function captureLogOutputForCommand(argv: Arguments) {
 }
 
 /** Write the provided text to the log file, prepending each line with the log level.  */
-function printToLogFile(logLevel: LOG_LEVELS, ...text: unknown[]) {
-  const logLevelText = `${LOG_LEVELS[logLevel]}:`.padEnd(LOG_LEVEL_COLUMNS);
+function printToLogFile(logLevel: LogLevel, ...text: unknown[]) {
+  const logLevelText = `${LogLevel[logLevel]}:`.padEnd(LOG_LEVEL_COLUMNS);
   LOGGED_TEXT += text
     .join(' ')
     .split('\n')

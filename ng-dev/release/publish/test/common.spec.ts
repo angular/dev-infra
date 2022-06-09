@@ -8,11 +8,11 @@
 
 import {readFileSync} from 'fs';
 import {join} from 'path';
-import {SemVer} from 'semver';
+import semver from 'semver';
 
 import {CommitFromGitLog, parseCommitFromGitLog} from '../../../commit-message/parse';
-import * as console from '../../../utils/console';
 import {GitClient} from '../../../utils/git/git-client';
+import {Log} from '../../../utils/logging';
 import {
   getBranchPushMatcher,
   getMockGitClient,
@@ -21,7 +21,7 @@ import {
 } from '../../../utils/testing';
 import {ReleaseNotes, workspaceRelativeChangelogPath} from '../../notes/release-notes';
 import {ActiveReleaseTrains} from '../../versioning/active-release-trains';
-import * as npm from '../../versioning/npm-publish';
+import {NpmCommand} from '../../versioning/npm-command';
 import {ReleaseTrain} from '../../versioning/release-trains';
 import {actions} from '../actions/index';
 import {githubReleaseBodyLimit} from '../constants';
@@ -105,10 +105,10 @@ describe('common release action logic', () => {
         'latest',
       );
 
-      expect(npm.runNpmPublish).toHaveBeenCalledTimes(testReleasePackages.length);
+      expect(NpmCommand.publish).toHaveBeenCalledTimes(testReleasePackages.length);
 
       for (const pkg of testReleasePackages) {
-        expect(npm.runNpmPublish).toHaveBeenCalledWith(
+        expect(NpmCommand.publish).toHaveBeenCalledWith(
           `${testTmpDir}/dist/${pkg.name}`,
           'latest',
           customRegistryUrl,
@@ -225,7 +225,7 @@ describe('common release action logic', () => {
           ahead_by: 2, // this implies that another unknown/new commit is in between.
         });
 
-      spyOn(console, 'error');
+      spyOn(Log, 'error');
 
       await expectAsync(
         instance.testPublish(
@@ -237,11 +237,11 @@ describe('common release action logic', () => {
         ),
       ).toBeRejected();
 
-      expect(console.error).toHaveBeenCalledTimes(2);
-      expect(console.error).toHaveBeenCalledWith(
+      expect(Log.error).toHaveBeenCalledTimes(2);
+      expect(Log.error).toHaveBeenCalledWith(
         jasmine.stringMatching('additional commits have landed while staging the release'),
       );
-      expect(console.error).toHaveBeenCalledWith(
+      expect(Log.error).toHaveBeenCalledWith(
         jasmine.stringMatching('revert the bump commit and retry, or cut a new version on top'),
       );
     });
@@ -261,7 +261,7 @@ describe('common release action logic', () => {
 
       await expectGithubApiRequestsForStaging(action, branchName, version.format(), false);
 
-      spyOn(console, 'error');
+      spyOn(Log, 'error');
 
       const {builtPackagesWithInfo} = await action.instance.testStagingWithBuild(
         version,
@@ -283,8 +283,8 @@ describe('common release action logic', () => {
         ),
       ).toBeRejected();
 
-      expect(console.error).toHaveBeenCalledTimes(2);
-      expect(console.error).toHaveBeenCalledWith(
+      expect(Log.error).toHaveBeenCalledTimes(2);
+      expect(Log.error).toHaveBeenCalledWith(
         jasmine.stringMatching(' Release output has been modified locally since it was built'),
       );
     });
@@ -365,7 +365,7 @@ describe('common release action logic', () => {
 
 /** Mock class for `ReleaseNotes` which accepts a list of in-memory commit objects. */
 class MockReleaseNotes extends ReleaseNotes {
-  constructor(version: SemVer, commits: CommitFromGitLog[], git: GitClient) {
+  constructor(version: semver.SemVer, commits: CommitFromGitLog[], git: GitClient) {
     super(version, commits, git);
   }
 }

@@ -7,21 +7,18 @@
  */
 
 import {info} from 'console';
-import {Arguments, Argv} from 'yargs';
+import yargs from 'yargs';
 import {assertValidGithubConfig, getConfig} from '../utils/config';
 import {CheckModule} from './check/cli';
 import {assertValidCaretakerConfig} from './config';
 import {HandoffModule} from './handoff/cli';
 
 /** Build the parser for the caretaker commands. */
-export function buildCaretakerParser(yargs: Argv) {
-  return yargs
-    .middleware(caretakerCommandCanRun, false)
-    .command(CheckModule)
-    .command(HandoffModule);
+export function buildCaretakerParser(argv: yargs.Argv) {
+  return argv.middleware(caretakerCommandCanRun, false).command(CheckModule).command(HandoffModule);
 }
 
-function caretakerCommandCanRun(argv: Arguments) {
+function caretakerCommandCanRun() {
   try {
     getConfig([assertValidCaretakerConfig, assertValidGithubConfig]);
   } catch {

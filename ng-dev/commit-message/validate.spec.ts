@@ -7,8 +7,8 @@
  */
 
 // Imports
+import {setConfig} from '../utils/config';
 import {CommitMessageConfig, COMMIT_TYPES} from './config';
-import * as configUtils from '../utils/config';
 import {parseCommitMessage} from './parse';
 import {validateCommitMessage, ValidateCommitMessageResult} from './validate';
 
@@ -36,10 +36,7 @@ function expectValidationResult(
 // TODO(josephperrott): Clean up tests to test script rather than for
 // specific commit messages we want to use.
 describe('validate-commit-message.js', () => {
-  let getConfigSpy: jasmine.Spy;
-  beforeEach(() => {
-    getConfigSpy = spyOn(configUtils, 'getConfig').and.returnValue(config);
-  });
+  beforeEach(() => setConfig(config));
 
   describe('validateMessage()', () => {
     it('should be valid', () => {
@@ -265,7 +262,7 @@ describe('validate-commit-message.js', () => {
       };
 
       beforeEach(() => {
-        getConfigSpy.and.returnValue(minBodyLengthConfig);
+        setConfig(minBodyLengthConfig);
       });
 
       it('should fail validation if the body is shorter than `minBodyLength`', () => {
