@@ -12,11 +12,11 @@
 // can still invoke this command.
 // ------------------------
 
-import {Arguments, Argv, CommandModule} from 'yargs';
+import yargs from 'yargs';
 
 import {GitClient} from '../../utils/git/git-client';
 import {assertValidReleaseConfig, NpmPackage} from '../config/index';
-import {fetchActiveReleaseTrains} from '../versioning/active-release-trains';
+import {ActiveReleaseTrains} from '../versioning/active-release-trains';
 import {printActiveReleaseTrains} from '../versioning/print-active-trains';
 import {getNextBranchName, ReleaseRepoWithApi} from '../versioning';
 import {getConfig} from '../../utils/config';
@@ -35,7 +35,7 @@ export interface ReleaseInfoOptions {
 }
 
 /** Yargs command builder for the `ng-dev release info` command. */
-function builder(argv: Argv): Argv<ReleaseInfoOptions> {
+function builder(argv: yargs.Argv): yargs.Argv<ReleaseInfoOptions> {
   return argv.option('json', {
     type: 'boolean',
     description: 'Whether information should be written as JSON to stdout.',
@@ -44,7 +44,7 @@ function builder(argv: Argv): Argv<ReleaseInfoOptions> {
 }
 
 /** Yargs command handler for printing release information. */
-async function handler(argv: Arguments<ReleaseInfoOptions>) {
+async function handler(argv: yargs.Arguments<ReleaseInfoOptions>) {
   const config = getConfig();
   assertValidReleaseConfig(config);
 
@@ -57,14 +57,14 @@ async function handler(argv: Arguments<ReleaseInfoOptions>) {
   const git = GitClient.get();
   const nextBranchName = getNextBranchName(git.config.github);
   const repo: ReleaseRepoWithApi = {api: git.github, ...git.remoteConfig, nextBranchName};
-  const releaseTrains = await fetchActiveReleaseTrains(repo);
+  const releaseTrains = await ActiveReleaseTrains.fetch(repo);
 
   // Print the active release trains.
   await printActiveReleaseTrains(releaseTrains, config.release);
 }
 
 /** CLI command module for retrieving release information. */
-export const ReleaseInfoCommandModule: CommandModule<{}, ReleaseInfoOptions> = {
+export const ReleaseInfoCommandModule: yargs.CommandModule<{}, ReleaseInfoOptions> = {
   builder,
   handler,
   command: 'info',

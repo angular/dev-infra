@@ -49,7 +49,7 @@ export async function runBenchmark({
     _cachedBenchpressSetup = _prepareBenchpressSetup();
   }
 
-  // Wait for the benchpress setup to complete initilization.
+  // Wait for the benchpress setup to complete initialization.
   // The benchpress setup is loaded asynchronously due to it relying on ESM.
   // TODO: This can be removed when benchmark tests/e2e tests can run with ESM.
   const {module, runner} = await _cachedBenchpressSetup;

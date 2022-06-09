@@ -8,7 +8,7 @@
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
 
-import {error, green, info, log, red, yellow} from '../../utils/console';
+import {green, Log, yellow} from '../../utils/logging';
 import {GitClient} from '../../utils/git/git-client';
 
 import {
@@ -23,22 +23,20 @@ export function validateFile(filePath: string, isErrorMode: boolean) {
   const commitMessage = readFileSync(resolve(git.baseDir, filePath), 'utf8');
   const {valid, errors} = validateCommitMessage(commitMessage);
   if (valid) {
-    info(`${green('√')}  Valid commit message`);
+    Log.info(`${green('√')}  Valid commit message`);
     deleteCommitMessageDraft(filePath);
     process.exitCode = 0;
     return;
   }
 
   /** Function used to print to the console log. */
-  let printFn = isErrorMode ? error : log;
+  let printFn = isErrorMode ? Log.error : Log.log;
 
-  printFn(`${isErrorMode ? red('✘') : yellow('!')}  Invalid commit message`);
+  printFn(isErrorMode ? '✘ Invalid commit message.' : yellow('! Invalid commit message.'));
   printValidationErrors(errors, printFn);
   if (isErrorMode) {
-    printFn(red('Aborting commit attempt due to invalid commit message.'));
-    printFn(
-      red('Commit message aborted as failure rather than warning due to local configuration.'),
-    );
+    printFn('Aborting commit attempt due to invalid commit message.');
+    printFn('Commit message aborted as failure rather than warning due to local configuration.');
   } else {
     printFn(yellow('Before this commit can be merged into the upstream repository, it must be'));
     printFn(yellow('amended to follow commit message guidelines.'));

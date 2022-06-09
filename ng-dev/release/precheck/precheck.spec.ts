@@ -6,14 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as semver from 'semver';
+import semver from 'semver';
 import {Readable} from 'stream';
 import {BuiltPackageWithInfo, ReleaseConfig} from '../config';
 import {ReleasePrecheckCommandModule, ReleasePrecheckJsonStdin} from './cli';
 
-import * as configUtils from '../../utils/config';
-import * as console from '../../utils/console';
 import {ReleasePrecheckError} from '.';
+import {setConfig} from '../../utils/config';
 
 describe('ng-dev release precheck', () => {
   // Keep track of the original `stdin` since we might fake it within specs.
@@ -34,14 +33,14 @@ describe('ng-dev release precheck', () => {
       .createSpy('ReleaseConfig#prereleaseCheck')
       .and.callFake(() => Promise.resolve());
 
-    spyOn(configUtils, 'getConfig').and.callFake(() => ({
+    setConfig({
       release: {
         representativeNpmPackage: npmPackages[0].name,
         npmPackages,
         prereleaseCheck: prereleaseCheckSpy,
         buildPackages: () => Promise.resolve(builtPackagesWithInfo),
       } as ReleaseConfig,
-    }));
+    });
   });
 
   afterEach(() => {

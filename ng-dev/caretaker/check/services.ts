@@ -8,7 +8,7 @@
 
 import fetch from 'node-fetch';
 
-import {bold, info} from '../../utils/console';
+import {bold, Log} from '../../utils/logging';
 import {BaseModule} from './base';
 
 interface ServiceConfig {
@@ -52,24 +52,24 @@ export class ServicesModule extends BaseModule<StatusCheckResult[]> {
   override async printToTerminal() {
     const statuses = await this.data;
     const serviceNameMinLength = Math.max(...statuses.map((service) => service.name.length));
-    info.group(bold('Service Statuses'));
+    Log.info.group(bold('Service Statuses'));
     for (const status of statuses) {
       const name = status.name.padEnd(serviceNameMinLength);
       if (status.status === 'passing') {
-        info(`${name} ✅`);
+        Log.info(`${name} ✅`);
       } else {
-        info.group(`${name} ❌ (Updated: ${status.lastUpdated.toLocaleString()})`);
-        info(`  Details: ${status.description}`);
-        info.groupEnd();
+        Log.info.group(`${name} ❌ (Updated: ${status.lastUpdated.toLocaleString()})`);
+        Log.info(`  Details: ${status.description}`);
+        Log.info.groupEnd();
       }
     }
-    info.groupEnd();
-    info();
+    Log.info.groupEnd();
+    Log.info();
   }
 
   /** Retrieve the status information for a service which uses a standard API response. */
   async getStatusFromStandardApi(service: ServiceConfig): Promise<StatusCheckResult> {
-    const result = await fetch(service.url).then((result) => result.json());
+    const result = await fetch(service.url).then((r) => r.json());
     const status = result.status.indicator === 'none' ? 'passing' : 'failing';
     return {
       name: service.name,

@@ -7,12 +7,12 @@
  */
 
 import {matchesVersion} from '../../utils/testing';
-import * as configUtils from '../../utils/config';
-import * as npm from '../versioning/npm-publish';
+import {NpmCommand} from '../versioning/npm-command';
 import {NpmPackage} from '../config/index';
 
 import {ReleaseSetDistTagCommand} from './cli';
 import {ReleaseConfig} from '../config';
+import {setConfig} from '../../utils/config';
 
 describe('ng-dev release set-dist-tag', () => {
   let npmPackages: NpmPackage[];
@@ -22,7 +22,7 @@ describe('ng-dev release set-dist-tag', () => {
     npmPackages = [{name: '@angular/pkg1'}, {name: '@angular/pkg2'}];
     publishRegistry = undefined;
 
-    spyOn(npm, 'setNpmTagForPackage');
+    spyOn(NpmCommand, 'setDistTagForPackage');
     // We need to stub out the `process.exit` function during tests as the
     // CLI handler calls those in case of failures.
     spyOn(process, 'exit');
@@ -36,7 +36,7 @@ describe('ng-dev release set-dist-tag', () => {
       skipExperimentalPackages: false,
     },
   ) {
-    spyOn(configUtils, 'getConfig').and.returnValue({
+    setConfig({
       release: {
         representativeNpmPackage: npmPackages[0].name,
         npmPackages,
@@ -55,14 +55,14 @@ describe('ng-dev release set-dist-tag', () => {
 
   it('should invoke "npm dist-tag" command for all configured packages', async () => {
     await invokeCommand('latest', '10.0.0');
-    expect(npm.setNpmTagForPackage).toHaveBeenCalledTimes(2);
-    expect(npm.setNpmTagForPackage).toHaveBeenCalledWith(
+    expect(NpmCommand.setDistTagForPackage).toHaveBeenCalledTimes(2);
+    expect(NpmCommand.setDistTagForPackage).toHaveBeenCalledWith(
       '@angular/pkg1',
       'latest',
       matchesVersion('10.0.0'),
       undefined,
     );
-    expect(npm.setNpmTagForPackage).toHaveBeenCalledWith(
+    expect(NpmCommand.setDistTagForPackage).toHaveBeenCalledWith(
       '@angular/pkg2',
       'latest',
       matchesVersion('10.0.0'),
@@ -74,20 +74,20 @@ describe('ng-dev release set-dist-tag', () => {
     npmPackages.push({name: '@whatever/experimental', experimental: true});
     await invokeCommand('latest', '10.0.0');
 
-    expect(npm.setNpmTagForPackage).toHaveBeenCalledTimes(3);
-    expect(npm.setNpmTagForPackage).toHaveBeenCalledWith(
+    expect(NpmCommand.setDistTagForPackage).toHaveBeenCalledTimes(3);
+    expect(NpmCommand.setDistTagForPackage).toHaveBeenCalledWith(
       '@angular/pkg1',
       'latest',
       matchesVersion('10.0.0'),
       undefined,
     );
-    expect(npm.setNpmTagForPackage).toHaveBeenCalledWith(
+    expect(NpmCommand.setDistTagForPackage).toHaveBeenCalledWith(
       '@angular/pkg2',
       'latest',
       matchesVersion('10.0.0'),
       undefined,
     );
-    expect(npm.setNpmTagForPackage).toHaveBeenCalledWith(
+    expect(NpmCommand.setDistTagForPackage).toHaveBeenCalledWith(
       '@whatever/experimental',
       'latest',
       // Expected to match an experimental SemVer version as used commonly throughout the
@@ -101,14 +101,14 @@ describe('ng-dev release set-dist-tag', () => {
     npmPackages.push({name: '@whatever/experimental', experimental: true});
     await invokeCommand('latest', '10.0.0', {skipExperimentalPackages: true});
 
-    expect(npm.setNpmTagForPackage).toHaveBeenCalledTimes(2);
-    expect(npm.setNpmTagForPackage).toHaveBeenCalledWith(
+    expect(NpmCommand.setDistTagForPackage).toHaveBeenCalledTimes(2);
+    expect(NpmCommand.setDistTagForPackage).toHaveBeenCalledWith(
       '@angular/pkg1',
       'latest',
       matchesVersion('10.0.0'),
       undefined,
     );
-    expect(npm.setNpmTagForPackage).toHaveBeenCalledWith(
+    expect(NpmCommand.setDistTagForPackage).toHaveBeenCalledWith(
       '@angular/pkg2',
       'latest',
       matchesVersion('10.0.0'),
@@ -120,14 +120,14 @@ describe('ng-dev release set-dist-tag', () => {
     publishRegistry = 'https://my-custom-registry.angular.io';
     await invokeCommand('latest', '10.0.0');
 
-    expect(npm.setNpmTagForPackage).toHaveBeenCalledTimes(2);
-    expect(npm.setNpmTagForPackage).toHaveBeenCalledWith(
+    expect(NpmCommand.setDistTagForPackage).toHaveBeenCalledTimes(2);
+    expect(NpmCommand.setDistTagForPackage).toHaveBeenCalledWith(
       '@angular/pkg1',
       'latest',
       matchesVersion('10.0.0'),
       'https://my-custom-registry.angular.io',
     );
-    expect(npm.setNpmTagForPackage).toHaveBeenCalledWith(
+    expect(NpmCommand.setDistTagForPackage).toHaveBeenCalledWith(
       '@angular/pkg2',
       'latest',
       matchesVersion('10.0.0'),

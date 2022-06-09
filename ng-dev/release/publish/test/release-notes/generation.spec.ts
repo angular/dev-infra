@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as config from '../../../../utils/config';
+import {GithubConfig, setConfig} from '../../../../utils/config';
 import {
   getMockGitClient,
   installSandboxGitClient,
@@ -20,7 +20,7 @@ import {changelogPattern, parse} from '../test-utils/test-utils';
 
 describe('release notes generation', () => {
   let releaseConfig: ReleaseConfig;
-  let githubConfig: config.GithubConfig;
+  let githubConfig: GithubConfig;
   let client: SandboxGitClient;
 
   beforeEach(() => {
@@ -34,7 +34,7 @@ describe('release notes generation', () => {
       buildPackages: async () => [],
     };
     githubConfig = {owner: 'angular', name: 'dev-infra-test', mainBranchName: 'main'};
-    spyOn(config, 'getConfig').and.returnValue({github: githubConfig, release: releaseConfig});
+    setConfig({github: githubConfig, release: releaseConfig});
     client = getMockGitClient(githubConfig, /* useSandboxGitClient */ true);
 
     installSandboxGitClient(client);

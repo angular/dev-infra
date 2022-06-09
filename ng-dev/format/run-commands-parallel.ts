@@ -7,11 +7,11 @@
  */
 
 import {Bar} from 'cli-progress';
-import * as multimatch from 'multimatch';
+import multimatch from 'multimatch';
 import {cpus} from 'os';
 
-import {spawn, SpawnResult} from '../utils/child-process';
-import {info} from '../utils/console';
+import {ChildProcess, SpawnResult} from '../utils/child-process';
+import {Log} from '../utils/logging';
 
 import {Formatter, FormatterAction, getActiveFormatters} from './formatters/index';
 
@@ -62,10 +62,10 @@ export function runFormatterInParallel(allFiles: string[], action: FormatterActi
 
     switch (action) {
       case 'format':
-        info(`Formatting ${pendingCommands.length} file(s)`);
+        Log.info(`Formatting ${pendingCommands.length} file(s)`);
         break;
       case 'check':
-        info(`Checking format of ${pendingCommands.length} file(s)`);
+        Log.info(`Checking format of ${pendingCommands.length} file(s)`);
         break;
       default:
         throw Error(`Invalid format action "${action}": allowed actions are "format" and "check"`);
@@ -94,30 +94,32 @@ export function runFormatterInParallel(allFiles: string[], action: FormatterActi
       const {file, formatter} = nextCommand;
 
       const [spawnCmd, ...spawnArgs] = [...formatter.commandFor(action).split(' '), file];
-      spawn(spawnCmd, spawnArgs, {suppressErrorOnFailingExitCode: true, mode: 'silent'}).then(
-        ({stdout, stderr, status}: SpawnResult) => {
-          // Run the provided callback function.
-          const failed = formatter.callbackFor(action)(file, status, stdout, stderr);
-          if (failed) {
-            failures.push({filePath: file, message: stderr});
-          }
-          // Note in the progress bar another file being completed.
-          progressBar.increment(1);
-          // If more files exist in the list, run again to work on the next file,
-          // using the same slot.
-          if (pendingCommands.length) {
-            return runCommandInThread(thread);
-          }
-          // If not more files are available, mark the thread as unused.
-          threads[thread] = false;
-          // If all of the threads are false, as they are unused, mark the progress bar
-          // completed and resolve the promise.
-          if (threads.every((active) => !active)) {
-            progressBar.stop();
-            resolve(failures);
-          }
-        },
-      );
+
+      ChildProcess.spawn(spawnCmd, spawnArgs, {
+        suppressErrorOnFailingExitCode: true,
+        mode: 'silent',
+      }).then(({stdout, stderr, status}: SpawnResult) => {
+        // Run the provided callback function.
+        const failed = formatter.callbackFor(action)(file, status, stdout, stderr);
+        if (failed) {
+          failures.push({filePath: file, message: stderr});
+        }
+        // Note in the progress bar another file being completed.
+        progressBar.increment(1);
+        // If more files exist in the list, run again to work on the next file,
+        // using the same slot.
+        if (pendingCommands.length) {
+          return runCommandInThread(thread);
+        }
+        // If not more files are available, mark the thread as unused.
+        threads[thread] = false;
+        // If all of the threads are false, as they are unused, mark the progress bar
+        // completed and resolve the promise.
+        if (threads.every((active) => !active)) {
+          progressBar.stop();
+          resolve(failures);
+        }
+      });
       // Mark the thread as in use as the command execution has been started.
       threads[thread] = true;
     }

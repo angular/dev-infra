@@ -10,7 +10,7 @@ import {runfiles} from '@bazel/runfiles';
 import {Builder, By, WebDriver} from 'selenium-webdriver';
 import {Options as ChromeOptions, ServiceBuilder} from 'selenium-webdriver/chrome';
 
-import * as waitOn from 'wait-on';
+import waitOn from 'wait-on';
 import * as childProcess from 'child_process';
 
 /**

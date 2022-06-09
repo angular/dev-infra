@@ -8,17 +8,17 @@
 
 import {readdirSync, unlinkSync} from 'fs';
 import {join} from 'path';
-import {Argv, CommandModule} from 'yargs';
-import {spawnSync} from '../../utils/child-process';
+import yargs from 'yargs';
+import {ChildProcess} from '../../utils/child-process';
 
-import {error, info, red} from '../../utils/console';
+import {Log} from '../../utils/logging';
 import {Spinner} from '../../utils/spinner';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {addGithubTokenOption} from '../../utils/git/github-yargs';
 import {getYarnPathFromNpmGlobalBinaries} from '../../utils/resolve-yarn-bin';
 
-async function builder(yargs: Argv) {
-  return addGithubTokenOption(yargs);
+async function builder(argv: yargs.Argv) {
+  return addGithubTokenOption(argv);
 }
 
 /** Environment object enabling the usage of yarn-path to determine the new version. */
@@ -52,7 +52,7 @@ async function handler() {
   const originalBranchOrRef = git.getCurrentBranchOrRevision();
 
   if (git.hasUncommittedChanges()) {
-    error(red('Found changes in the local repository. Make sure there are no uncommitted files.'));
+    Log.error('Found changes in the local repository. Make sure there are no uncommitted files.');
     process.exitCode = 1;
     return;
   }
@@ -69,13 +69,17 @@ async function handler() {
     readdirSync(yarnReleasesDir).forEach((file) => unlinkSync(join(yarnReleasesDir, file)));
 
     spinner.update('Updating yarn version.');
-    spawnSync(yarnGlobalBin, ['policies', 'set-version', 'latest']);
+    ChildProcess.spawnSync(yarnGlobalBin, ['policies', 'set-version', 'latest']);
 
     spinner.update('Confirming the version of yarn was updated.');
-    const newYarnVersion = spawnSync(yarnGlobalBin, ['-v'], {env: useYarnPathEnv}).stdout.trim();
+
+    const newYarnVersion = ChildProcess.spawnSync(yarnGlobalBin, ['-v'], {
+      env: useYarnPathEnv,
+    }).stdout.trim();
+
     if (git.run(['status', '--porcelain']).stdout.length === 0) {
       spinner.complete();
-      error(red('Yarn already up to date'));
+      Log.error('Yarn already up to date');
       process.exitCode = 0;
       return;
     }
@@ -109,11 +113,11 @@ async function handler() {
     ).data;
 
     spinner.complete();
-    info(`Created PR #${number} to update to yarn v${newYarnVersion}`);
+    Log.info(`Created PR #${number} to update to yarn v${newYarnVersion}`);
   } catch (e) {
     spinner.complete();
-    error(red('Aborted yarn update do to errors:'));
-    error(e);
+    Log.error('Aborted yarn update do to errors:');
+    Log.error(e);
     process.exitCode = 1;
     git.checkout(originalBranchOrRef, true);
   } finally {
@@ -122,7 +126,7 @@ async function handler() {
 }
 
 /** CLI command module. */
-export const UpdateYarnCommandModule: CommandModule = {
+export const UpdateYarnCommandModule: yargs.CommandModule = {
   builder,
   handler,
   command: 'update-yarn',

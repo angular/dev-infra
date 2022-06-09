@@ -7,8 +7,8 @@
  */
 
 import {debug} from 'console';
-import {SemVer} from 'semver';
-import {error, green, info, red, warn, yellow} from '../../utils/console';
+import yargs from 'semver';
+import {green, Log} from '../../utils/logging';
 import {BuiltPackageWithInfo, ReleaseConfig} from '../config';
 
 /**
@@ -25,11 +25,11 @@ export class ReleasePrecheckError extends Error {}
  */
 export async function assertPassingReleasePrechecks(
   config: ReleaseConfig,
-  newVersion: SemVer,
+  newVersion: yargs.SemVer,
   builtPackagesWithInfo: BuiltPackageWithInfo[],
 ): Promise<boolean> {
   if (config.prereleaseCheck === undefined) {
-    warn(yellow('  ⚠   Skipping release pre-checks. No checks configured.'));
+    Log.warn('  ⚠   Skipping release pre-checks. No checks configured.');
     return true;
   }
 
@@ -40,16 +40,16 @@ export async function assertPassingReleasePrechecks(
     // function. This is because we bundled our version of `semver` and the version
     // used in the precheck logic might be different, causing unexpected issues.
     await config.prereleaseCheck(newVersion.format(), builtPackagesWithInfo);
-    info(green('  ✓   Release pre-checks passing.'));
+    Log.info(green('  ✓   Release pre-checks passing.'));
     return true;
   } catch (e) {
     if (isReleasePrecheckError(e)) {
       // Note: Error messaging is expected to be handled manually.
       debug(e.message);
-      error(red(`  ✘   Release pre-checks failed. Please check the output above.`));
+      Log.error(`  ✘   Release pre-checks failed. Please check the output above.`);
     } else {
-      error(red(e), '\n');
-      error(red(`  ✘   Release pre-checks errored with unexpected runtime error.`));
+      Log.error(e, '\n');
+      Log.error(`  ✘   Release pre-checks errored with unexpected runtime error.`);
     }
 
     return false;

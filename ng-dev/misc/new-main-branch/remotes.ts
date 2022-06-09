@@ -7,7 +7,7 @@
  */
 
 import {GitClient} from '../../utils/git/git-client';
-import {debug} from '../../utils/console';
+import {Log} from '../../utils/logging';
 
 /**
  * Regular expression matching a remote verbose info line, capturing
@@ -44,7 +44,7 @@ export function getRemotesForRepo(git: GitClient): Remotes {
     const matches = line.match(remoteVerboseInfoRegex);
 
     if (matches === null) {
-      debug('Could not parse remote info line:', line);
+      Log.debug('Could not parse remote info line:', line);
       continue;
     }
 

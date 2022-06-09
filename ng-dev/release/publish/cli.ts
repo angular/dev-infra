@@ -6,15 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Argv, CommandModule} from 'yargs';
+import yargs from 'yargs';
 
 import {assertValidGithubConfig, getConfig} from '../../utils/config';
-import {error, green, info, red, yellow} from '../../utils/console';
 import {addGithubTokenOption} from '../../utils/git/github-yargs';
 import {assertValidReleaseConfig} from '../config/index';
 
 import {CompletionState, ReleaseTool} from './index';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
+import {green, Log, yellow} from '../../utils/logging';
 
 /** Command line options for publishing a release. */
 export interface ReleasePublishOptions {
@@ -22,7 +22,7 @@ export interface ReleasePublishOptions {
 }
 
 /** Yargs command builder for configuring the `ng-dev release publish` command. */
-function builder(argv: Argv): Argv<ReleasePublishOptions> {
+function builder(argv: yargs.Argv): yargs.Argv<ReleasePublishOptions> {
   return addGithubTokenOption(argv);
 }
 
@@ -37,21 +37,21 @@ async function handler() {
 
   switch (result) {
     case CompletionState.FATAL_ERROR:
-      error(red(`Release action has been aborted due to fatal errors. See above.`));
+      Log.error(`Release action has been aborted due to fatal errors. See above.`);
       process.exitCode = 2;
       break;
     case CompletionState.MANUALLY_ABORTED:
-      info(yellow(`Release action has been manually aborted.`));
+      Log.info(yellow(`Release action has been manually aborted.`));
       process.exitCode = 1;
       break;
     case CompletionState.SUCCESS:
-      info(green(`Release action has completed successfully.`));
+      Log.info(green(`Release action has completed successfully.`));
       break;
   }
 }
 
 /** CLI command module for publishing a release. */
-export const ReleasePublishCommandModule: CommandModule<{}, ReleasePublishOptions> = {
+export const ReleasePublishCommandModule: yargs.CommandModule<{}, ReleasePublishOptions> = {
   builder,
   handler,
   command: 'publish',

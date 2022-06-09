@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {render} from 'ejs';
-import * as semver from 'semver';
+import semver from 'semver';
 import {CommitFromGitLog} from '../../commit-message/parse';
 
-import {promptInput} from '../../utils/console';
+import {Prompt} from '../../utils/prompt';
 import {formatFiles} from '../../format/format';
 import {GitClient} from '../../utils/git/git-client';
 import {assertValidReleaseConfig, ReleaseConfig} from '../config/index';
@@ -106,7 +106,7 @@ export class ReleaseNotes {
   async promptForReleaseTitle() {
     if (this.title === undefined) {
       if (this.notesConfig.useReleaseTitle) {
-        this.title = await promptInput('Please provide a title for the release:');
+        this.title = await Prompt.input('Please provide a title for the release:');
       } else {
         this.title = false;
       }

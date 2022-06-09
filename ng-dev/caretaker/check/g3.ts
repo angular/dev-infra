@@ -7,10 +7,10 @@
  */
 
 import {existsSync, readFileSync} from 'fs';
-import * as multimatch from 'multimatch';
+import multimatch from 'multimatch';
 import {join} from 'path';
 import {parse as parseYaml} from 'yaml';
-import {bold, debug, info} from '../../utils/console';
+import {bold, Log} from '../../utils/logging';
 
 import {BaseModule} from './base';
 
@@ -39,18 +39,18 @@ export class G3Module extends BaseModule<G3StatsData | void> {
     if (!stats) {
       return;
     }
-    info.group(bold('g3 branch check'));
+    Log.info.group(bold('g3 branch check'));
     if (stats.files === 0) {
-      info(`${stats.commits} commits between g3 and ${this.git.mainBranchName}`);
-      info('✅  No sync is needed at this time');
+      Log.info(`${stats.commits} commits between g3 and ${this.git.mainBranchName}`);
+      Log.info('✅  No sync is needed at this time');
     } else {
-      info(
+      Log.info(
         `${stats.files} files changed, ${stats.insertions} insertions(+), ${stats.deletions} ` +
           `deletions(-) from ${stats.commits} commits will be included in the next sync`,
       );
     }
-    info.groupEnd();
-    info();
+    Log.info.groupEnd();
+    Log.info();
   }
 
   /** Fetch and retrieve the latest sha for a specific branch. */
@@ -60,7 +60,7 @@ export class G3Module extends BaseModule<G3StatsData | void> {
       this.git.runGraceful(['ls-remote', '--exit-code', this.git.getRepoGitUrl(), branch])
         .status === 2
     ) {
-      debug(`No '${branch}' branch exists on upstream, skipping.`);
+      Log.debug(`No '${branch}' branch exists on upstream, skipping.`);
       return null;
     }
 
@@ -129,7 +129,7 @@ export class G3Module extends BaseModule<G3StatsData | void> {
   private getG3FileIncludeAndExcludeLists() {
     const angularRobotFilePath = join(this.git.baseDir, '.github/angular-robot.yml');
     if (!existsSync(angularRobotFilePath)) {
-      debug('No angular robot configuration file exists, skipping.');
+      Log.debug('No angular robot configuration file exists, skipping.');
       return null;
     }
     /** The configuration defined for the angular robot. */
@@ -140,7 +140,9 @@ export class G3Module extends BaseModule<G3StatsData | void> {
     const exclude: string[] = robotConfig?.merge?.g3Status?.exclude || [];
 
     if (include.length === 0 && exclude.length === 0) {
-      debug('No g3Status include or exclude lists are defined in the angular robot configuration');
+      Log.debug(
+        'No g3Status include or exclude lists are defined in the angular robot configuration',
+      );
       return null;
     }
 
@@ -154,7 +156,7 @@ export class G3Module extends BaseModule<G3StatsData | void> {
     const main = this.getShaForBranchLatest(this.git.mainBranchName);
 
     if (g3 === null || main === null) {
-      debug(`Either the g3 or ${this.git.mainBranchName} was unable to be retrieved`);
+      Log.debug(`Either the g3 or ${this.git.mainBranchName} was unable to be retrieved`);
       return null;
     }
 

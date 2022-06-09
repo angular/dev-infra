@@ -9,7 +9,7 @@ import {readFileSync} from 'fs';
 import {resolve} from 'path';
 import {parse as parseYaml} from 'yaml';
 
-import {error, green, info, red} from '../utils/console';
+import {Log, green} from '../utils/logging';
 import {GitClient} from '../utils/git/git-client';
 
 export function verify() {
@@ -23,10 +23,10 @@ export function verify() {
   try {
     // Try parsing the config file to verify that the syntax is correct.
     parseYaml(ngBotYaml);
-    info(`${green('√')}  Valid NgBot YAML config`);
+    Log.info(green('√  Valid NgBot YAML config'));
   } catch (e) {
-    error(`${red('!')} Invalid NgBot YAML config`);
-    error(e);
+    Log.error(`! Invalid NgBot YAML config`);
+    Log.error(e);
     process.exitCode = 1;
   }
 }

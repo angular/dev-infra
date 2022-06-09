@@ -5,11 +5,10 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {SemVer} from 'semver';
+import semver from 'semver';
 
-import {ReleaseTrain} from '../../release/versioning';
-import * as versioning from '../../release/versioning/active-release-trains';
-import * as console from '../../utils/console';
+import {ActiveReleaseTrains, ReleaseTrain} from '../../release/versioning';
+import {Log} from '../../utils/logging';
 import {installVirtualGitClientSpies, mockNgDevConfig} from '../../utils/testing';
 
 import {CiModule} from './ci';
@@ -22,10 +21,10 @@ describe('CiModule', () => {
 
   beforeEach(() => {
     installVirtualGitClientSpies();
-    fetchActiveReleaseTrainsSpy = spyOn(versioning, 'fetchActiveReleaseTrains');
+    fetchActiveReleaseTrainsSpy = spyOn(ActiveReleaseTrains, 'fetch');
     getBranchStatusFromCiSpy = spyOn(CiModule.prototype, 'getBranchStatusFromCi' as any);
-    infoSpy = spyOn(console, 'info');
-    debugSpy = spyOn(console, 'debug');
+    infoSpy = spyOn(Log, 'info');
+    debugSpy = spyOn(Log, 'debug');
   });
 
   describe('getting data for active trains', () => {
@@ -105,16 +104,16 @@ describe('CiModule', () => {
 /** Build a mock set of ActiveReleaseTrains. */
 function buildMockActiveReleaseTrains(
   withRc: false,
-): versioning.ActiveReleaseTrains & {releaseCandidate: null};
+): ActiveReleaseTrains & {releaseCandidate: null};
 function buildMockActiveReleaseTrains(
   withRc: true,
-): versioning.ActiveReleaseTrains & {releaseCandidate: ReleaseTrain};
-function buildMockActiveReleaseTrains(withRc: boolean): versioning.ActiveReleaseTrains {
+): ActiveReleaseTrains & {releaseCandidate: ReleaseTrain};
+function buildMockActiveReleaseTrains(withRc: boolean): ActiveReleaseTrains {
   const baseResult = {
     isMajor: false,
-    version: new SemVer('0.0.0'),
+    version: new semver.SemVer('0.0.0'),
   };
-  return new versioning.ActiveReleaseTrains({
+  return new ActiveReleaseTrains({
     releaseCandidate: withRc ? {branchName: 'rc-branch', ...baseResult} : null,
     latest: {branchName: 'latest-branch', ...baseResult},
     next: {branchName: 'next-branch', ...baseResult},

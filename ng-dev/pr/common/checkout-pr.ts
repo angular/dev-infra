@@ -8,7 +8,7 @@
 
 import {types as graphqlTypes} from 'typed-graphqlify';
 
-import {info} from '../../utils/console';
+import {Log} from '../../utils/logging';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {addTokenToGitHttpsUrl} from '../../utils/git/github-urls';
 import {getPr} from '../../utils/github';
@@ -108,7 +108,7 @@ export async function checkOutPullRequestLocally(
 
   try {
     // Fetch the branch at the commit of the PR, and check it out in a detached state.
-    info(`Checking out PR #${prNumber} from ${fullHeadRef}`);
+    Log.info(`Checking out PR #${prNumber} from ${fullHeadRef}`);
     git.run(['fetch', '-q', headRefUrl, headRefName]);
     git.run(['checkout', '--detach', 'FETCH_HEAD']);
   } catch (e) {

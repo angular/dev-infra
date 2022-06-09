@@ -6,12 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {promptConfirm, red, yellow} from '../../utils/console';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {GitCommandError} from '../../utils/git/git-client';
-import * as semver from 'semver';
+import semver from 'semver';
 import {prompt} from 'inquirer';
-import {warn} from '../../utils/console';
+import {Log, red, yellow} from '../../utils/logging';
 
 import {PullRequestConfig} from '../config';
 import {PullRequestFailure} from '../common/validation/failures';
@@ -25,10 +24,11 @@ import {AutosquashMergeStrategy} from './strategies/autosquash-merge';
 import {GithubConfig} from '../../utils/config';
 import {assertValidReleaseConfig} from '../../release/config';
 import {
-  fetchActiveReleaseTrains,
+  ActiveReleaseTrains,
   fetchLongTermSupportBranchesFromNpm,
   getNextBranchName,
 } from '../../release/versioning';
+import {Prompt} from '../../utils/prompt';
 
 /** Describes the status of a pull request merge. */
 export const enum MergeStatus {
@@ -136,7 +136,7 @@ export class PullRequestMergeTask {
       // In cases where manual branch targeting is used, the user already confirmed.
       !this.flags.forceManualBranches &&
       this.flags.branchPrompt &&
-      !(await promptConfirm(getTargettedBranchesConfirmationPromptMessage(pullRequest)))
+      !(await Prompt.confirm(getTargettedBranchesConfirmationPromptMessage(pullRequest)))
     ) {
       return {status: MergeStatus.USER_ABORTED};
     }
@@ -145,7 +145,7 @@ export class PullRequestMergeTask {
     // the caretaker. The caretaker can then decide to proceed or abort the merge.
     if (
       pullRequest.hasCaretakerNote &&
-      !(await promptConfirm(getCaretakerNotePromptMessage(pullRequest)))
+      !(await Prompt.confirm(getCaretakerNotePromptMessage(pullRequest)))
     ) {
       return {status: MergeStatus.USER_ABORTED};
     }
@@ -193,7 +193,7 @@ export class PullRequestMergeTask {
    * the available active branches.
    */
   private async setTargetedBranchesManually(pullRequest: PullRequest): Promise<void | MergeResult> {
-    const {mainBranchName, name, owner} = this.config.github;
+    const {name: repoName, owner} = this.config.github;
 
     // Attempt to retrieve the active LTS branches to be included in the selection.
     let ltsBranches: {branchName: string; version: semver.SemVer}[] = [];
@@ -205,14 +205,14 @@ export class PullRequestMergeTask {
         version,
       }));
     } catch {
-      warn(
+      Log.warn(
         'Unable to determine the active LTS branches as a release config is not set for this repo.',
       );
     }
 
     // Gather the current active release trains.
-    const {latest, next, releaseCandidate} = await fetchActiveReleaseTrains({
-      name,
+    const {latest, next, releaseCandidate} = await ActiveReleaseTrains.fetch({
+      name: repoName,
       nextBranchName: getNextBranchName(this.config.github),
       owner,
       api: this.git.github,

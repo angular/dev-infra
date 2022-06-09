@@ -6,14 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as semver from 'semver';
+import semver from 'semver';
 
 import {ReleaseConfig} from '../../config';
 import {ActiveReleaseTrains} from '../../versioning/active-release-trains';
 import {fetchProjectNpmPackageInfo} from '../../versioning/npm-registry';
 import {ReleaseAction} from '../actions';
-import {invokeSetNpmDistCommand} from '../external-commands';
-import {SemVer} from 'semver';
+import {ExternalCommands} from '../external-commands';
 import {getReleaseTagForVersion} from '../../versioning/version-tags';
 
 /**
@@ -35,14 +34,14 @@ export class TagRecentMajorAsLatest extends ReleaseAction {
     await this.updateGithubReleaseEntryToStable(this.active.latest.version);
     await this.checkoutUpstreamBranch(this.active.latest.branchName);
     await this.installDependenciesForCurrentBranch();
-    await invokeSetNpmDistCommand(this.projectDir, 'latest', this.active.latest.version);
+    await ExternalCommands.invokeSetNpmDist(this.projectDir, 'latest', this.active.latest.version);
   }
 
   /**
    * Updates the Github release entry for the specified version to show
    * it as stable release, compared to it being shown as a pre-release.
    */
-  async updateGithubReleaseEntryToStable(version: SemVer) {
+  async updateGithubReleaseEntryToStable(version: semver.SemVer) {
     const releaseTagName = getReleaseTagForVersion(version);
     const {data: releaseInfo} = await this.git.github.repos.getReleaseByTag({
       ...this.git.remoteParams,

@@ -7,13 +7,14 @@
  */
 
 import {assertValidGithubConfig, ConfigValidationError, getConfig} from '../../utils/config';
-import {error, green, info, promptConfirm, red, yellow} from '../../utils/console';
+import {green, Log, yellow} from '../../utils/logging';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {GithubApiRequestError} from '../../utils/git/github';
 import {GITHUB_TOKEN_GENERATE_URL} from '../../utils/git/github-urls';
 
 import {assertValidPullRequestConfig} from '../config';
 import {MergeResult, MergeStatus, PullRequestMergeTask, PullRequestMergeTaskFlags} from './task';
+import {Prompt} from '../../utils/prompt';
 
 /**
  * Merges a given pull request based on labels configured in the given merge configuration.
@@ -49,9 +50,9 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
       // Catch errors to the Github API for invalid requests. We want to
       // exit the script with a better explanation of the error.
       if (e instanceof GithubApiRequestError && e.status === 401) {
-        error(red('Github API request failed. ' + e.message));
-        error(yellow('Please ensure that your provided token is valid.'));
-        error(yellow(`You can generate a token here: ${GITHUB_TOKEN_GENERATE_URL}`));
+        Log.error('Github API request failed. ' + e.message);
+        Log.error('Please ensure that your provided token is valid.');
+        Log.warn(`You can generate a token here: ${GITHUB_TOKEN_GENERATE_URL}`);
         process.exit(1);
       }
       throw e;
@@ -64,7 +65,7 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
    * @returns Whether the specified pull request has been forcibly merged.
    */
   async function promptAndPerformForceMerge(): Promise<boolean> {
-    if (await promptConfirm('Do you want to forcibly proceed with merging?')) {
+    if (await Prompt.confirm('Do you want to forcibly proceed with merging?')) {
       // Perform the merge in force mode. This means that non-fatal failures
       // are ignored and the merge continues.
       return performMerge(true);
@@ -83,42 +84,38 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
 
     switch (status) {
       case MergeStatus.SUCCESS:
-        info(green(`Successfully merged the pull request: #${prNumber}`));
+        Log.info(green(`Successfully merged the pull request: #${prNumber}`));
         return true;
       case MergeStatus.DIRTY_WORKING_DIR:
-        error(
-          red(
-            `Local working repository not clean. Please make sure there are ` +
-              `no uncommitted changes.`,
-          ),
+        Log.error(
+          `Local working repository not clean. Please make sure there are ` +
+            `no uncommitted changes.`,
         );
         return false;
       case MergeStatus.UNEXPECTED_SHALLOW_REPO:
-        error(red(`Unable to perform merge in a local repository that is configured as shallow.`));
-        error(red(`Please convert the repository to a complete one by syncing with upstream.`));
-        error(red(`https://git-scm.com/docs/git-fetch#Documentation/git-fetch.txt---unshallow`));
+        Log.error(`Unable to perform merge in a local repository that is configured as shallow.`);
+        Log.error(`Please convert the repository to a complete one by syncing with upstream.`);
+        Log.error(`https://git-scm.com/docs/git-fetch#Documentation/git-fetch.txt---unshallow`);
         return false;
       case MergeStatus.UNKNOWN_GIT_ERROR:
-        error(
-          red(
-            'An unknown Git error has been thrown. Please check the output ' + 'above for details.',
-          ),
+        Log.error(
+          'An unknown Git error has been thrown. Please check the output ' + 'above for details.',
         );
         return false;
       case MergeStatus.GITHUB_ERROR:
-        error(red('An error related to interacting with Github has been discovered.'));
-        error(failure!.message);
+        Log.error('An error related to interacting with Github has been discovered.');
+        Log.error(failure!.message);
         return false;
       case MergeStatus.USER_ABORTED:
-        info(`Merge of pull request has been aborted manually: #${prNumber}`);
+        Log.info(`Merge of pull request has been aborted manually: #${prNumber}`);
         return true;
       case MergeStatus.FAILED:
-        error(yellow(`Could not merge the specified pull request.`));
-        error(red(failure!.message));
+        Log.error(`Could not merge the specified pull request.`);
+        Log.error(failure!.message);
         if (canForciblyMerge && !disableForceMergePrompt) {
-          info();
-          info(yellow('The pull request above failed due to non-critical errors.'));
-          info(yellow(`This error can be forcibly ignored if desired.`));
+          Log.info();
+          Log.info(yellow('The pull request above failed due to non-critical errors.'));
+          Log.info(yellow(`This error can be forcibly ignored if desired.`));
           return await promptAndPerformForceMerge();
         }
         return false;
@@ -145,10 +142,10 @@ async function createPullRequestMergeTask(flags: PullRequestMergeTaskFlags) {
   } catch (e) {
     if (e instanceof ConfigValidationError) {
       if (e.errors.length) {
-        error(red('Invalid merge configuration:'));
-        e.errors.forEach((desc) => error(yellow(`  -  ${desc}`)));
+        Log.error('Invalid merge configuration:');
+        e.errors.forEach((desc) => Log.error(`  -  ${desc}`));
       } else {
-        error(red(e.message));
+        Log.error(e.message);
       }
       process.exit(1);
     }

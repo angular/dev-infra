@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as semver from 'semver';
+import semver from 'semver';
 
 import {ActiveReleaseTrains} from '../../versioning/active-release-trains';
 import {getLtsNpmDistTagOfMajor} from '../../versioning/long-term-support';
 import {ReleaseAction} from '../actions';
-import {invokeSetNpmDistCommand} from '../external-commands';
+import {ExternalCommands} from '../external-commands';
 
 /**
  * Release action that cuts a stable version for the current release-train in the release
@@ -76,10 +76,15 @@ export class CutStableAction extends ReleaseAction {
       await this.checkoutUpstreamBranch(previousPatch.branchName);
       await this.installDependenciesForCurrentBranch();
 
-      await invokeSetNpmDistCommand(this.projectDir, ltsTagForPatch, previousPatch.version, {
-        // We do not intend to tag experimental NPM packages as LTS.
-        skipExperimentalPackages: true,
-      });
+      await ExternalCommands.invokeSetNpmDist(
+        this.projectDir,
+        ltsTagForPatch,
+        previousPatch.version,
+        {
+          // We do not intend to tag experimental NPM packages as LTS.
+          skipExperimentalPackages: true,
+        },
+      );
     }
 
     await this.cherryPickChangelogIntoNextBranch(releaseNotes, branchName);

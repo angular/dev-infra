@@ -12,14 +12,14 @@
 // can still invoke this command.
 // ------------------------
 
-import * as semver from 'semver';
-import {CommandModule} from 'yargs';
+import semver from 'semver';
+import yargs from 'yargs';
 
 import {assertPassingReleasePrechecks} from './index';
 import {getConfig} from '../../utils/config';
 import {readBufferFromStdinUntilClosed} from '../../utils/read-stdin-until-closed';
 import {assertValidReleaseConfig, BuiltPackageWithInfo} from '../config/index';
-import {error, red} from '../../utils/console';
+import {Log} from '../../utils/logging';
 
 /**
  * Type describing the JSON stdin input of this command. The release tool will
@@ -50,14 +50,14 @@ async function handler() {
   ) as ReleasePrecheckJsonStdin;
 
   if (!Array.isArray(builtPackagesWithInfo)) {
-    error(red(`  ✘   Release pre-checks failed. Invalid list of built packages was provided.`));
+    Log.error(`  ✘   Release pre-checks failed. Invalid list of built packages was provided.`);
     process.exitCode = 1;
     return;
   }
 
   const newVersion = semver.parse(newVersionRaw);
   if (newVersion === null) {
-    error(red(`  ✘   Release pre-checks failed. Invalid new version was provided.`));
+    Log.error(`  ✘   Release pre-checks failed. Invalid new version was provided.`);
     process.exitCode = 1;
     return;
   }
@@ -68,7 +68,7 @@ async function handler() {
 }
 
 /** CLI command module for running checks before releasing. */
-export const ReleasePrecheckCommandModule: CommandModule<{}, {}> = {
+export const ReleasePrecheckCommandModule: yargs.CommandModule<{}, {}> = {
   handler,
   command: 'precheck',
   describe: false,

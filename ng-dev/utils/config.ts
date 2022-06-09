@@ -6,13 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {existsSync} from 'fs';
 import {dirname, join} from 'path';
 import {Assertions, MultipleAssertions} from './assertion-typings';
 
-import {debug, error} from './console';
+import {Log} from './logging';
 import {GitClient} from './git/git-client';
-import {isTsNodeAvailable} from './ts-node';
+import {getCachedConfig, setCachedConfig} from './config-cache';
 
 /**
  * Describes the Github configuration for dev-infra. This configuration is
@@ -170,12 +169,14 @@ function readConfigFile(configPath: string, returnEmptyObjectOnError = false): {
     return require(configPath);
   } catch (e) {
     if (returnEmptyObjectOnError) {
-      debug(`Could not read configuration file at ${configPath}, returning empty object instead.`);
-      debug(e);
+      Log.debug(
+        `Could not read configuration file at ${configPath}, returning empty object instead.`,
+      );
+      Log.debug(e);
       return {};
     }
-    error(`Could not read configuration file at ${configPath}.`);
-    error(e);
+    Log.error(`Could not read configuration file at ${configPath}.`);
+    Log.error(e);
     process.exit(1);
   }
 }

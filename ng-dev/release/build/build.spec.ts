@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as configUtils from '../../utils/config';
+import {BuildWorker} from './index';
+import {setConfig} from '../../utils/config';
 import {BuiltPackage, NpmPackage, ReleaseConfig} from '../config';
 import {ReleaseBuildCommandModule} from './cli';
-import * as index from './index';
 
 describe('ng-dev release build', () => {
   let npmPackages: NpmPackage[];
@@ -22,9 +22,9 @@ describe('ng-dev release build', () => {
       {name: '@angular/pkg2', outputPath: 'dist/pkg2'},
     ]);
 
-    // We cannot test the worker process, so we fake the worker function and
+    // We cannot test the worker process, so we fake the worker build function and
     // directly call the package build function.
-    spyOn(index, 'buildReleaseOutput').and.callFake(() => buildPackages());
+    spyOn(BuildWorker, 'invokeBuild').and.callFake(() => buildPackages());
     // We need to stub out the `process.exit` function during tests as the CLI
     // handler calls those in case of failures.
     spyOn(process, 'exit');
@@ -32,13 +32,14 @@ describe('ng-dev release build', () => {
 
   /** Invokes the build command handler. */
   async function invokeBuild({json}: {json?: boolean} = {}) {
-    spyOn(configUtils, 'getConfig').and.returnValue({
+    setConfig({
       release: {
         representativeNpmPackage: npmPackages[0].name,
         npmPackages,
         buildPackages,
       } as ReleaseConfig,
     });
+
     await ReleaseBuildCommandModule.handler({json: !!json, stampForRelease: true, $0: '', _: []});
   }
 

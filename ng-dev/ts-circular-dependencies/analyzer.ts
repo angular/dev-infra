@@ -8,7 +8,7 @@
 
 import {readFileSync} from 'fs';
 import {dirname, join, resolve} from 'path';
-import * as ts from 'typescript';
+import ts from 'typescript';
 
 import {getFileStatus} from './file_system';
 import {getModuleReferences} from './parser';

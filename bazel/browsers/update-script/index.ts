@@ -7,7 +7,7 @@
  */
 
 import {Storage} from '@google-cloud/storage';
-import * as yargs from 'yargs';
+import yargs from 'yargs';
 import {Chromium} from './chromium';
 import {findLatestRevisionForAllPlatforms} from './find-revision-chromium';
 import {Firefox} from './firefox';

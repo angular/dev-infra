@@ -8,7 +8,7 @@
 
 import {buildGithubPaginationResponseHeader} from './github-pagination-header';
 import {ParsedUrlQuery} from 'querystring';
-import * as nock from 'nock';
+import nock from 'nock';
 
 /**
  * Fakes a Github server response with pagination.

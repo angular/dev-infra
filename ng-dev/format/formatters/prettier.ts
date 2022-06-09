@@ -8,8 +8,8 @@
 
 import {join} from 'path';
 
-import {spawnSync} from '../../utils/child-process';
-import {error} from '../../utils/console';
+import {ChildProcess} from '../../utils/child-process';
+import {Log} from '../../utils/logging';
 
 import {Formatter} from './base-formatter';
 
@@ -33,7 +33,7 @@ export class Prettier extends Formatter {
    * to discover it repeatedly for each execution.
    */
   private configPath = this.config['prettier']
-    ? spawnSync(this.binaryFilePath, ['--find-config-path', '.']).stdout.trim()
+    ? ChildProcess.spawnSync(this.binaryFilePath, ['--find-config-path', '.']).stdout.trim()
     : '';
 
   override actions = {
@@ -47,9 +47,9 @@ export class Prettier extends Formatter {
       commandFlags: `--config ${this.configPath} --write`,
       callback: (file: string, code: number | NodeJS.Signals, _: string, stderr: string) => {
         if (code !== 0) {
-          error(`Error running prettier on: ${file}`);
-          error(stderr);
-          error();
+          Log.error(`Error running prettier on: ${file}`);
+          Log.error(stderr);
+          Log.error();
           return true;
         }
         return false;

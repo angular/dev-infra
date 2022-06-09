@@ -9,7 +9,7 @@
 import * as fs from 'fs';
 
 import {GitClient} from '../../utils/git/git-client';
-import {SemVer} from 'semver';
+import semver from 'semver';
 import {createExperimentalSemver} from '../../release/versioning/experimental-versions';
 import {join} from 'path';
 
@@ -128,7 +128,7 @@ function getCurrentGitUser(git: GitClient) {
 }
 
 /** Gets the `version` from the workspace top-level `package.json` file. */
-function getVersionFromWorkspacePackageJson(git: GitClient): SemVer {
+function getVersionFromWorkspacePackageJson(git: GitClient): semver.SemVer {
   const packageJsonPath = join(git.baseDir, 'package.json');
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8')) as {
     version: string | undefined;
@@ -138,5 +138,5 @@ function getVersionFromWorkspacePackageJson(git: GitClient): SemVer {
     throw new Error(`No workspace version found in: ${packageJsonPath}`);
   }
 
-  return new SemVer(packageJson.version);
+  return new semver.SemVer(packageJson.version);
 }

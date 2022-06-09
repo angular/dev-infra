@@ -5,12 +5,9 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import * as gitCommits_ from 'git-raw-commits';
+import gitCommits from 'git-raw-commits';
 
 import {CommitFromGitLog, gitLogFormatForParsing, parseCommitFromGitLog} from './parse';
-
-// Set `gitCommits` as this imported value to address "Cannot call a namespace" error.
-const gitCommits = gitCommits_;
 
 /**
  * Find all commits within the given range and return an object describing those.

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Arguments, Argv, CommandModule} from 'yargs';
+import yargs from 'yargs';
 
 import {addGithubTokenOption} from '../../utils/git/github-yargs';
 
@@ -21,8 +21,8 @@ export interface MergeCommandOptions {
 }
 
 /** Builds the command. */
-function builder(yargs: Argv) {
-  return addGithubTokenOption(yargs)
+function builder(argv: yargs.Argv) {
+  return addGithubTokenOption(argv)
     .help()
     .strict()
     .positional('pr', {
@@ -43,12 +43,16 @@ function builder(yargs: Argv) {
 }
 
 /** Handles the command. */
-async function handler({pr, branchPrompt, forceManualBranches}: Arguments<MergeCommandOptions>) {
+async function handler({
+  pr,
+  branchPrompt,
+  forceManualBranches,
+}: yargs.Arguments<MergeCommandOptions>) {
   await mergePullRequest(pr, {branchPrompt, forceManualBranches});
 }
 
 /** yargs command module describing the command. */
-export const MergeCommandModule: CommandModule<{}, MergeCommandOptions> = {
+export const MergeCommandModule: yargs.CommandModule<{}, MergeCommandOptions> = {
   handler,
   builder,
   command: 'merge <pr>',

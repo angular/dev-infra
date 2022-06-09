@@ -1,7 +1,7 @@
-import {fetchActiveReleaseTrains} from '../active-release-trains';
+import {ActiveReleaseTrains} from '../active-release-trains';
 import {getNextBranchName, ReleaseRepoWithApi} from '../version-branches';
 import {GithubClient} from '../../../utils/git/github';
-import * as nock from 'nock';
+import nock from 'nock';
 import {matchesVersion} from '../../../utils/testing';
 import {fakeGithubPaginationResponse} from '../../../utils/testing';
 import {GithubConfig} from '../../../utils/config';
@@ -74,7 +74,7 @@ describe('active release train determination', () => {
     interceptBranchVersionRequest('10.0.x', '10.0.1');
     interceptBranchesListRequest(['10.0.x', '9.5.x']);
 
-    const active = await fetchActiveReleaseTrains(repo);
+    const active = await ActiveReleaseTrains.fetch(repo);
     expect(active.releaseCandidate).toBe(null);
     expect(active.next).toEqual(
       jasmine.objectContaining({
@@ -94,7 +94,7 @@ describe('active release train determination', () => {
     interceptBranchVersionRequest('10.0.x', '10.0.1');
     interceptBranchesListRequest(['10.0.x', '9.5.x']);
 
-    const active = await fetchActiveReleaseTrains(repo);
+    const active = await ActiveReleaseTrains.fetch(repo);
     expect(active.releaseCandidate).toBe(null);
     expect(active.next).toEqual(
       jasmine.objectContaining({
@@ -114,7 +114,7 @@ describe('active release train determination', () => {
     // See: https://github.com/angular/angular/commit/261b060fa168754db00248d1c5c9574bb19a72b4.
     interceptBranchesListRequestWithPagination(['8.4.x', '9.5.x', '10.0.x']);
 
-    const active = await fetchActiveReleaseTrains(repo);
+    const active = await ActiveReleaseTrains.fetch(repo);
     expect(active.latest).toEqual(
       jasmine.objectContaining({
         branchName: '10.0.x',
@@ -129,7 +129,7 @@ describe('active release train determination', () => {
       interceptBranchVersionRequest('10.0.x', '10.0.1');
       interceptBranchesListRequest(['10.0.x']);
 
-      const active = await fetchActiveReleaseTrains(repo);
+      const active = await ActiveReleaseTrains.fetch(repo);
       expect(active.releaseCandidate).toBe(null);
       expect(active.latest).toEqual(
         jasmine.objectContaining({
@@ -147,7 +147,7 @@ describe('active release train determination', () => {
       interceptBranchVersionRequest('10.0.x', '10.0.1');
       interceptBranchesListRequest(['10.1.x', '10.0.x']);
 
-      const active = await fetchActiveReleaseTrains(repo);
+      const active = await ActiveReleaseTrains.fetch(repo);
       expect(active.releaseCandidate).toEqual(
         jasmine.objectContaining({
           branchName: '10.1.x',
@@ -162,7 +162,7 @@ describe('active release train determination', () => {
       interceptBranchVersionRequest('10.0.x', '10.0.1');
       interceptBranchesListRequest(['10.1.x', '10.0.x']);
 
-      const active = await fetchActiveReleaseTrains(repo);
+      const active = await ActiveReleaseTrains.fetch(repo);
       expect(active.releaseCandidate).not.toBe(null);
       expect(active.latest).toEqual(
         jasmine.objectContaining({
@@ -180,7 +180,7 @@ describe('active release train determination', () => {
       interceptBranchVersionRequest('10.0.x', '10.0.1');
       interceptBranchesListRequest(['10.1.x', '10.0.x']);
 
-      const active = await fetchActiveReleaseTrains(repo);
+      const active = await ActiveReleaseTrains.fetch(repo);
       expect(active.releaseCandidate).toEqual(
         jasmine.objectContaining({
           branchName: '10.1.x',
@@ -195,7 +195,7 @@ describe('active release train determination', () => {
       interceptBranchVersionRequest('10.0.x', '10.0.1');
       interceptBranchesListRequest(['10.1.x', '10.0.x']);
 
-      const active = await fetchActiveReleaseTrains(repo);
+      const active = await ActiveReleaseTrains.fetch(repo);
       expect(active.releaseCandidate).not.toBe(null);
       expect(active.latest).toEqual(
         jasmine.objectContaining({

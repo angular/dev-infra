@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Argv, CommandModule} from 'yargs';
+import yargs from 'yargs';
 
 import {addGithubTokenOption} from '../../utils/git/github-yargs';
 
@@ -17,8 +17,8 @@ export interface CaretakerHandoffOptions {
 }
 
 /** Builds the command. */
-function builder(yargs: Argv) {
-  return addGithubTokenOption(yargs);
+function builder(argv: yargs.Argv) {
+  return addGithubTokenOption(argv);
 }
 
 /** Handles the command. */
@@ -27,7 +27,7 @@ async function handler() {
 }
 
 /** yargs command module for assisting in handing off caretaker.  */
-export const HandoffModule: CommandModule<{}, CaretakerHandoffOptions> = {
+export const HandoffModule: yargs.CommandModule<{}, CaretakerHandoffOptions> = {
   handler,
   builder,
   command: 'handoff',
