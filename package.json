@@ -2,7 +2,7 @@
   "name": "@angular/dev-infra-private",
   "version": "0.0.0-{SCM_HEAD_SHA}",
   "bin": {
-    "ng-dev": "./ng-dev/bundles/cli.js"
+    "ng-dev": "./ng-dev/bundles/cli.mjs"
   },
   "private": true,
   "scripts": {
@@ -14,10 +14,10 @@
   },
   "exports": {
     "./ng-dev": {
-      "default": "./ng-dev/bundles/index.js"
+      "default": "./ng-dev/bundles/index.mjs"
     },
     "./ng-dev/*": {
-      "default": "./ng-dev/bundles/*.js"
+      "default": "./ng-dev/bundles/*.mjs"
     },
     "./*": {
       "default": "./*"
