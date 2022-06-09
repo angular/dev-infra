@@ -3,6 +3,8 @@ load("//tools:defaults.bzl", "ts_library")
 ts_library(
     name = "lib",
     srcs = glob(["*.ts"]),
+    # Note: TSLint rules need to be written in CommonJS.
+    devmode_module = "commonjs",
     visibility = ["//:npm"],
     deps = [
         "@npm//tslint",

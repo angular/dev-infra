@@ -155,6 +155,7 @@
     "zone.js": "^0.11.4"
   },
   "resolutions": {
-    "@angular/benchpress/@angular/core": "14.1.0-next.0"
+    "@angular/benchpress/@angular/core": "14.1.0-next.0",
+    "@angular/bazel@14.1.0-next.0": "patch:@angular/bazel@npm:14.1.0-next.0#.yarn/patches/@angular-bazel-npm-14.1.0-next.0-9dd2cc71f8.patch"
   }
 }

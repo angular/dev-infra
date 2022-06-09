@@ -1,13 +1,16 @@
 {
   "compilerOptions": {
-    "module": "CommonJS",
+    "module": "Node16",
     "target": "es2020",
     "lib": ["es2020", "dom"],
     "experimentalDecorators": true,
     "strict": true,
+    "outDir": "./dist/tsc-non-bazel-out",
+    "skipLibCheck": true,
     "noImplicitOverride": true,
+    "esModuleInterop": true,
     "noImplicitReturns": true,
     "moduleResolution": "node"
   },
-  "exclude": ["node_modules/**", "bazel-out/**", "dist/**"]
+  "exclude": ["node_modules/**", "bazel-out/**", "dist/**", "bazel/integration/tests/**"]
 }

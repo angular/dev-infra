@@ -20,7 +20,7 @@ def ts_project(**kwargs):
         **kwargs
     )
 
-def ts_library(name, testonly = False, deps = [], srcs = [], **kwargs):
+def ts_library(name, testonly = False, deps = [], srcs = [], devmode_module = None, **kwargs):
     deps = deps + ["@npm//tslib"]
     if testonly:
         deps.append("@npm//@types/jasmine")
@@ -28,9 +28,9 @@ def ts_library(name, testonly = False, deps = [], srcs = [], **kwargs):
 
     _ts_library(
         name = name,
-        devmode_module = "commonjs",
+        devmode_module = devmode_module if devmode_module != None else "esnext",
         devmode_target = "es2020",
-        prodmode_module = "commonjs",
+        prodmode_module = "esnext",
         prodmode_target = "es2020",
         tsconfig = kwargs.pop("tsconfig", "//:tsconfig"),
         testonly = testonly,
