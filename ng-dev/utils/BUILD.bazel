@@ -2,17 +2,22 @@ load("//tools:defaults.bzl", "ts_library")
 
 ts_library(
     name = "utils",
-    srcs = glob([
-        "*.ts",
-        "git/*.ts",
-    ]),
+    srcs = glob(
+        [
+            "*.ts",
+            "git/*.ts",
+        ],
+        exclude = ["config-cache.ts"],
+    ),
     visibility = [
         "//bazel/browsers/update-script:__pkg__",
         "//github-actions/slash-commands/lib:__subpackages__",
         "//ng-dev:__subpackages__",
+        "//tools/jasmine:__pkg__",
         "//tools/local-actions/changelog/lib:__subpackages__",
     ],
     deps = [
+        ":config_cache",
         "@npm//@octokit/core",
         "@npm//@octokit/graphql",
         "@npm//@octokit/plugin-paginate-rest",
@@ -37,4 +42,13 @@ ts_library(
         "@npm//yaml",
         "@npm//yargs",
     ],
+)
+
+ts_library(
+    name = "config_cache",
+    srcs = ["config-cache.ts"],
+    visibility = [
+        "//tools/jasmine:__pkg__",
+    ],
+    deps = [],
 )

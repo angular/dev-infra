@@ -50,12 +50,10 @@ const USER_CONFIG_FILE_PATH = '.ng-dev.user';
 let userConfig: {[key: string]: any} | null = null;
 
 /**
- * Set the cached configuration object to be loaded later. Only to be used on CI situations in
- * which loading from the `.ng-dev/` directory is not possible.
+ * Set the cached configuration object to be loaded later. Only to be used on
+ * CI and test situations in which loading from the `.ng-dev/` directory is not possible.
  */
-export function setConfig(config: {}) {
-  cachedConfig = config;
-}
+export const setConfig = setCachedConfig;
 
 /**
  * Get the configuration from the file system, returning the already loaded
@@ -65,19 +63,24 @@ export function getConfig(): {};
 export function getConfig(baseDir: string): {};
 export function getConfig<A extends MultipleAssertions>(assertions: A): Assertions<A>;
 export function getConfig(baseDirOrAssertions?: unknown) {
-  let baseDir: string;
-  if (typeof baseDirOrAssertions === 'string') {
-    baseDir = baseDirOrAssertions;
-  } else {
-    baseDir = GitClient.get().baseDir;
-  }
+  let cachedConfig = getCachedConfig();
 
-  // If the global config is not defined, load it from the file system.
   if (cachedConfig === null) {
+    let baseDir: string;
+    if (typeof baseDirOrAssertions === 'string') {
+      baseDir = baseDirOrAssertions;
+    } else {
+      baseDir = GitClient.get().baseDir;
+    }
+
+    // If the global config is not defined, load it from the file system.
     // The full path to the configuration file.
     const configPath = join(baseDir, CONFIG_FILE_PATH);
     // Read the configuration and validate it before caching it for the future.
     cachedConfig = readConfigFile(configPath);
+
+    // Store the newly-read configuration in the cache.
+    setCachedConfig(cachedConfig);
   }
 
   if (Array.isArray(baseDirOrAssertions)) {
