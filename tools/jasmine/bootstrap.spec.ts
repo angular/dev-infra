@@ -8,6 +8,7 @@
 
 import {readFileSync, writeFileSync} from 'fs';
 import {join} from 'path';
+import {getConfig, setConfig} from '../../ng-dev/utils/config';
 import {testTmpDir} from '../../ng-dev/utils/testing/bazel-env';
 
 /**
@@ -45,5 +46,21 @@ describe('bootstrapping script', () => {
     const errorMatcher = new RegExp(/^ENOENT\: no such file or directory, open/);
 
     expect(() => readFileSync(testFilePath, {encoding: 'utf8'})).toThrowError(errorMatcher);
+  });
+
+  it('allows modification of the ng-dev configuration', () => {
+    // The postfix increment operator is used to check the current value, while incrementing by 1.
+    expect(testCount++).toBe(2);
+
+    setConfig({test: true});
+
+    expect(getConfig()).toEqual({test: true});
+  });
+
+  it('resets the ng-dev configuration between specs', () => {
+    // The postfix increment operator is used to check the current value, while incrementing by 1.
+    expect(testCount++).toBe(3);
+
+    expect(getConfig()).toEqual({});
   });
 });
