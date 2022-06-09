@@ -1,4 +1,4 @@
-import {CommitMessageConfig} from '../ng-dev/commit-message/config';
+import {CommitMessageConfig} from '../ng-dev/commit-message/config.js';
 
 /** Build a set of scopes for a package. */
 function buildScopesFor(pkg: string, subpkgs: string[]) {

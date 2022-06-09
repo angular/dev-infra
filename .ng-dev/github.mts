@@ -1,4 +1,4 @@
-import {GithubConfig} from '../ng-dev/utils/config';
+import {GithubConfig} from '../ng-dev/utils/config.js';
 
 /** Configuration for interactions with github. */
 export const github: GithubConfig = {
