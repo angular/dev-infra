@@ -14,9 +14,11 @@
   },
   "exports": {
     "./ng-dev": {
+      "types": "./ng-dev/index.d.ts",
       "default": "./ng-dev/bundles/index.mjs"
     },
     "./ng-dev/*": {
+      "types": "./ng-dev/*.d.ts",
       "default": "./ng-dev/bundles/*.mjs"
     },
     "./*": {
