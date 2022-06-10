@@ -24535,8 +24535,7 @@ function parseInternal(fullText) {
 }
 
 // 
-import tsNode from "ts-node";
-import { dirname, join } from "path";
+import { join } from "path";
 
 // 
 var ANSI_BACKGROUND_OFFSET = 10;
@@ -25287,11 +25286,6 @@ function assertValidGithubConfig(config) {
   }
 }
 async function readConfigFile(configPath, returnEmptyObjectOnError = false) {
-  tsNode.register({
-    dir: dirname(configPath),
-    esm: true,
-    transpileOnly: true
-  });
   try {
     return await import(configPath);
   } catch (e) {

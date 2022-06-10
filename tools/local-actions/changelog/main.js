@@ -13045,10 +13045,10 @@ var require_ejs = __commonJS({
     exports.localsName = _DEFAULT_LOCALS_NAME;
     exports.promiseImpl = new Function("return this;")().Promise;
     exports.resolveInclude = function(name, filename, isDir) {
-      var dirname2 = path.dirname;
+      var dirname = path.dirname;
       var extname = path.extname;
       var resolve = path.resolve;
-      var includePath = resolve(isDir ? filename : dirname2(filename), name);
+      var includePath = resolve(isDir ? filename : dirname(filename), name);
       var ext = extname(name);
       if (!ext) {
         includePath += ".ejs";
@@ -59277,8 +59277,7 @@ var DryRunError = class extends Error {
 };
 
 // 
-import tsNode from "ts-node";
-import { dirname, join } from "path";
+import { join } from "path";
 
 // 
 var cachedConfig = null;
@@ -59335,11 +59334,6 @@ function assertValidGithubConfig(config2) {
   }
 }
 async function readConfigFile(configPath, returnEmptyObjectOnError = false) {
-  tsNode.register({
-    dir: dirname(configPath),
-    esm: true,
-    transpileOnly: true
-  });
   try {
     return await import(configPath);
   } catch (e) {
