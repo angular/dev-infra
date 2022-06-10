@@ -37,7 +37,6 @@ ts_library(
         "@npm//inquirer",
         "@npm//semver",
         "@npm//supports-color",
-        "@npm//ts-node",
         "@npm//typed-graphqlify",
         "@npm//which",
         "@npm//yaml",

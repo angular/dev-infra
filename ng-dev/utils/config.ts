@@ -6,9 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import tsNode from 'ts-node';
-
-import {dirname, join} from 'path';
+import {join} from 'path';
 import {Assertions, MultipleAssertions} from './config-assertions.js';
 
 import {Log} from './logging.js';
@@ -153,20 +151,10 @@ export function assertValidGithubConfig<T extends NgDevConfig>(
 }
 
 /**
- * Resolves and reads the specified configuration file, optionally returning an empty object if the
- * configuration file cannot be read.
+ * Resolves and reads the specified configuration file, optionally returning an empty object
+ * if the configuration file cannot be read.
  */
 async function readConfigFile(configPath: string, returnEmptyObjectOnError = false): Promise<{}> {
-  // Ensure the module target is set to `commonjs`. This is necessary because the
-  // dev-infra tool runs in NodeJS which does not support ES modules by default.
-  // Additionally, set the `dir` option to the directory that contains the configuration
-  // file. This allows for custom compiler options (such as `--strict`).
-  tsNode.register({
-    dir: dirname(configPath),
-    esm: true,
-    transpileOnly: true,
-  });
-
   try {
     return await import(configPath);
   } catch (e) {

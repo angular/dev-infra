@@ -2,8 +2,6 @@ load("//tools:defaults.bzl", "esbuild_esm_bundle", "ts_library")
 load("//bazel:extract_types.bzl", "extract_types")
 
 NG_DEV_EXTERNALS = [
-    # `ts-node` is optional for users who write their configurations in TypeScript.
-    "ts-node",
     # `typescript` is external because we want the project to provide a TypeScript version.
     # TODO: Figure out how we want to manage dependencies for the dev-infra tool.
     "typescript",
