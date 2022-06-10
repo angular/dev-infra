@@ -12,19 +12,19 @@ import {addGithubTokenOption} from '../../utils/git/github-yargs';
 import {checkOutPullRequestLocally} from '../common/checkout-pr';
 
 export interface CheckoutOptions {
-  prNumber: number;
+  pr: number;
   githubToken: string;
 }
 
 /** Builds the checkout pull request command. */
 function builder(yargs: Argv) {
-  return addGithubTokenOption(yargs).positional('prNumber', {type: 'number', demandOption: true});
+  return addGithubTokenOption(yargs).positional('pr', {type: 'number', demandOption: true});
 }
 
 /** Handles the checkout pull request command. */
-async function handler({prNumber, githubToken}: Arguments<CheckoutOptions>) {
-  const prCheckoutOptions = {allowIfMaintainerCannotModify: true, branchName: `pr-${prNumber}`};
-  await checkOutPullRequestLocally(prNumber, githubToken, prCheckoutOptions);
+async function handler({pr, githubToken}: Arguments<CheckoutOptions>) {
+  const prCheckoutOptions = {allowIfMaintainerCannotModify: true, branchName: `pr-${pr}`};
+  await checkOutPullRequestLocally(pr, githubToken, prCheckoutOptions);
 }
 
 /** yargs command module for checking out a PR  */
