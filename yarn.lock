@@ -478,8 +478,8 @@ __metadata:
     glob: 7.2.0
     husky: ^8.0.0
     inquirer: ^8.0.0
-    jasmine: ~4.1.0
-    jasmine-core: ~4.1.0
+    jasmine: ~4.2.0
+    jasmine-core: ~4.2.0
     jsdoc: ^3.6.7
     jsdom: ^19.0.0
     karma: ^6.3.15
@@ -10125,10 +10125,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jasmine-core@npm:^4.1.0, jasmine-core@npm:~4.1.0":
+"jasmine-core@npm:^4.1.0":
   version: 4.1.1
   resolution: "jasmine-core@npm:4.1.1"
   checksum: 0488f1ac38f2acbe54bfec57d2be8a4c63c9af1bb2076fbfe84008b79b6f26a54a1ca8bf4021bb0afc84ae1de2773356f69fdb9bd886a4717d1d3599b5e7eddb
+  languageName: node
+  linkType: hard
+
+"jasmine-core@npm:^4.2.0, jasmine-core@npm:~4.2.0":
+  version: 4.2.0
+  resolution: "jasmine-core@npm:4.2.0"
+  checksum: 86c731bb4d3d1f0149ced89f5b5729dccdeda963c6e844e6ec6ac21a76f46086e9aa47bcb1bd65024b48685af3c8c970368665682deaf81bc01203a3ff9ab03f
   languageName: node
   linkType: hard
 
@@ -10162,15 +10169,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jasmine@npm:~4.1.0":
-  version: 4.1.0
-  resolution: "jasmine@npm:4.1.0"
+"jasmine@npm:~4.2.0":
+  version: 4.2.0
+  resolution: "jasmine@npm:4.2.0"
   dependencies:
     glob: ^7.1.6
-    jasmine-core: ^4.1.0
+    jasmine-core: ^4.2.0
   bin:
     jasmine: bin/jasmine.js
-  checksum: 1654ad3de46c5575c1fcfbf0bd8f84c01dd468f03035431254e4efea8cb98cd74f9444307ac5f6ca2bd3821e6f0f6343ee739de1b891de39283bb0f17cae1621
+  checksum: 3c8b5df6ba3fca03b9831f0845e91a28d89ff320de5f537356be36a5fb10532e95d9bbe3c5db5f4d769a543e03e25028fe5ae6444585bf76c3d753df0baa93e8
   languageName: node
   linkType: hard
 
