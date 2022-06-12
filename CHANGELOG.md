@@ -1,3 +1,18 @@
+<a name="2022.6.12"></a>
+# 2022.6.12 (2022-06-12)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8b36a85](https://github.com/angular/dev-infra/commit/8b36a853df8faefd9e9a6b9530b3b7797e3bdee2) | feat | **browsers:** add support for excluding files from browser runfiles |
+| [ec636aa](https://github.com/angular/dev-infra/commit/ec636aa679c65c37599dc30c316943ae4fb52ac3) | fix | **browsers:** exclude unnecessary chromium file containing spaces on windows |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [23ccc87](https://github.com/angular/dev-infra/commit/23ccc87f9af0ada07e855aa4517508a3ae286649) | fix | **pr:** yargs positional placeholder does not match positional name |
+## Special Thanks
+Derek Cormier and Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.6.5"></a>
 # 2022.6.5 (2022-06-05)
 ### ng-dev
@@ -182,19 +197,3 @@ Alan Agius, George Kalpakas, Jason Bedard, Joey Perrott and Paul Gschwendtner
 | [a9c4860](https://github.com/angular/dev-infra/commit/a9c48602d4f54850beabdf7933e05a9ce89e9dd5) | fix | uncommitted changes check returning false-positives ([#416](https://github.com/angular/dev-infra/pull/416)) |
 ## Special Thanks
 Charles Lyding, George Kalpakas, Paul Gschwendtner and renovate[bot]
-
-<!-- CHANGELOG SPLIT MARKER -->
-<a name="2022.2.20"></a>
-# 2022.2.20 (2022-02-20)
-### bazel
-| Commit | Type | Description |
-| -- | -- | -- |
-| [09cb90c](https://github.com/angular/dev-infra/commit/09cb90cd7e273966d8bc1e1a2dd98484e347a4cf) | feat | **karma:** expose karma web test rule in shared karma code |
-| [a3ad969](https://github.com/angular/dev-infra/commit/a3ad969facdad942bbb0a6a75100fe25f9243b26) | feat | setup karma web test wrapper with "local" debug target ([#403](https://github.com/angular/dev-infra/pull/403)) |
-| [5b35e20](https://github.com/angular/dev-infra/commit/5b35e20aeb147b713c31ba5c269cf2128c746d46) | fix | **karma:** web test arguments not passed through |
-### ng-dev
-| Commit | Type | Description |
-| -- | -- | -- |
-| [74b89a4](https://github.com/angular/dev-infra/commit/74b89a46292330ba949652680c30b0280249db74) | feat | **format:** add staged files back ([#405](https://github.com/angular/dev-infra/pull/405)) |
-## Special Thanks
-Paul Gschwendtner, dario-piotrowicz and renovate[bot]

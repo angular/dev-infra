@@ -1,3 +1,19 @@
+<a name="2022.2.20"></a>
+# 2022.2.20 (2022-02-20)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [09cb90c](https://github.com/angular/dev-infra/commit/09cb90cd7e273966d8bc1e1a2dd98484e347a4cf) | feat | **karma:** expose karma web test rule in shared karma code |
+| [a3ad969](https://github.com/angular/dev-infra/commit/a3ad969facdad942bbb0a6a75100fe25f9243b26) | feat | setup karma web test wrapper with "local" debug target ([#403](https://github.com/angular/dev-infra/pull/403)) |
+| [5b35e20](https://github.com/angular/dev-infra/commit/5b35e20aeb147b713c31ba5c269cf2128c746d46) | fix | **karma:** web test arguments not passed through |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [74b89a4](https://github.com/angular/dev-infra/commit/74b89a46292330ba949652680c30b0280249db74) | feat | **format:** add staged files back ([#405](https://github.com/angular/dev-infra/pull/405)) |
+## Special Thanks
+Paul Gschwendtner, dario-piotrowicz and renovate[bot]
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.2.13"></a>
 # 2022.2.13 (2022-02-13)
 ### bazel
