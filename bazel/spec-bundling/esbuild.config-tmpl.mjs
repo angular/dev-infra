@@ -29,8 +29,5 @@ export default {
   conditions: ['es2020', 'es2015', 'module'],
   // This ensures that we prioritize ES2020. RxJS would otherwise use the ESM5 output.
   mainFields: ['es2020', 'es2015', 'module', 'main'],
-  // Use the `iife` format for the test entry-point as tests should run immediately.
-  // For browser tests which are wrapped in an AMD header and footer, this works as well.
-  format: 'iife',
   plugins,
 };

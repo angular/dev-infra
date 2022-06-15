@@ -1,5 +1,5 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
-load("//bazel/esbuild:index.bzl", "esbuild", "esbuild_amd", "esbuild_config")
+load("//bazel/esbuild:index.bzl", "esbuild_amd", "esbuild_config", "esbuild_esm_bundle")
 load("//bazel/spec-bundling:spec-entrypoint.bzl", "spec_entrypoint")
 load("//bazel/spec-bundling:bundle-config.bzl", "spec_bundle_config_file")
 
@@ -63,16 +63,16 @@ def spec_bundle(
 
     # Browser tests (Karma) need named AMD modules to load.
     # TODO(devversion): consider updating `@bazel/concatjs` to support loading JS files directly.
-    esbuild_rule = esbuild_amd if is_browser_test else esbuild
+    esbuild_rule = esbuild_amd if is_browser_test else esbuild_esm_bundle
     amd_name = "%s/%s/%s" % (workspace_name, package_name, name + "_spec") if is_browser_test else None
 
     esbuild_rule(
         name = "%s_bundle" % name,
         testonly = True,
         config = ":%s_config" % name,
+        output = "%s_spec.%s" % (name, "js" if is_browser_test else "mjs"),
         entry_point = ":%s_spec_entrypoint" % name,
         module_name = amd_name,
-        output = "%s_spec.js" % name,
         target = target,
         platform = platform,
         deps = deps + [":%s_spec_entrypoint" % name],
