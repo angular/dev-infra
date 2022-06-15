@@ -8,6 +8,7 @@
       true,
       {
         "noNamedExports": [
+          "@yarnpkg/lockfile",
           "typescript",
           "multimatch",
           "semver",
