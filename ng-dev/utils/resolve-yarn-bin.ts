@@ -11,7 +11,7 @@ import * as path from 'path';
 import which from 'which';
 
 import {isNodeJSWrappedError} from './nodejs-errors.js';
-import {parse as parseLockfile} from '@yarnpkg/lockfile';
+import lockfile from '@yarnpkg/lockfile';
 import {parse as parseYaml} from 'yaml';
 import {ChildProcess} from './child-process.js';
 import {Log} from './logging.js';
@@ -33,7 +33,7 @@ export interface YarnCommandInfo {
 
 /** List of Yarn configuration files and their parsing mechanisms. */
 export const yarnConfigFiles: ConfigWithParser[] = [
-  {fileName: '.yarnrc', parse: (c) => parseLockfile(c).object},
+  {fileName: '.yarnrc', parse: (c) => lockfile.parse(c).object},
   {fileName: '.yarnrc.yml', parse: (c) => parseYaml(c)},
 ];
 
