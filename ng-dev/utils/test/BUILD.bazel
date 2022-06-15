@@ -14,5 +14,8 @@ ts_library(
 
 jasmine_node_test(
     name = "test",
+    data = ["@npm//@yarnpkg/lockfile"],
+    # Same reasoning as in "ng-dev/BUILD.bazel". This package cannot be bundled.
+    external = ["@yarnpkg/lockfile"],
     specs = [":test_lib"],
 )
