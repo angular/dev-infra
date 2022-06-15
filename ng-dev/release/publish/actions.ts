@@ -661,9 +661,7 @@ export abstract class ReleaseAction {
     beforeStagingSha: string,
     publishBranch: string,
     npmDistTag: NpmDistTag,
-    additionalOptions: {skipExperimentalPackages?: boolean} = {},
   ) {
-    const {skipExperimentalPackages} = additionalOptions;
     const versionBumpCommitSha = await this.getLatestCommitOfBranch(publishBranch);
 
     // Ensure the latest commit in the publish branch is the bump commit.
@@ -696,11 +694,6 @@ export abstract class ReleaseAction {
 
     // Walk through all built packages and publish them to NPM.
     for (const pkg of builtPackagesWithInfo) {
-      if (skipExperimentalPackages && pkg.experimental) {
-        debug(`Skipping "${pkg.name}" as it is experimental.`);
-        continue;
-      }
-
       await this._publishBuiltPackageToNpm(pkg, npmDistTag);
     }
 

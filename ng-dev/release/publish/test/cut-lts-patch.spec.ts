@@ -80,9 +80,7 @@ describe('cut an LTS patch action', () => {
       npmDistTag: 'v9-lts',
     });
 
-    await expectStagingAndPublishWithCherryPick(action, '9.2.x', '9.2.5', 'v9-lts', {
-      expectNoExperimentalPackages: true,
-    });
+    await expectStagingAndPublishWithCherryPick(action, '9.2.x', '9.2.5', 'v9-lts');
   });
 
   it('should generate release notes capturing changes to previous latest LTS version', async () => {
