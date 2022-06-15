@@ -1,10 +1,21 @@
-load("//bazel/esbuild:index.bzl", _esbuild = "esbuild", _esbuild_config = "esbuild_config")
+load(
+    "//bazel/esbuild:index.bzl",
+    _esbuild = "esbuild",
+    _esbuild_config = "esbuild_config",
+    _esbuild_esm_bundle = "esbuild_esm_bundle",
+)
 load("//bazel:extract_js_module_output.bzl", "extract_js_module_output")
 load("@build_bazel_rules_nodejs//:index.bzl", "generated_file_test")
 
 esbuild_config = _esbuild_config
 
-def esbuild(name, platform = "node", target = "node14", deps = [], **kwargs):
+def _esbuild_devmode_prioritize(
+        esbuild_rule,
+        name,
+        platform = "node",
+        target = "node14",
+        deps = [],
+        **kwargs):
     # TODO: Rename once devmode and prodmode have been combined.
     # This helps speeding up building as ESBuild (used internally by the rule) would
     # request both devmode and prodmode output flavor (resulting in 2x TS compilations).
@@ -19,7 +30,7 @@ def esbuild(name, platform = "node", target = "node14", deps = [], **kwargs):
         include_declarations = False,
     )
 
-    _esbuild(
+    esbuild_rule(
         name = name,
         platform = platform,
         target = target,
@@ -27,31 +38,15 @@ def esbuild(name, platform = "node", target = "node14", deps = [], **kwargs):
         **kwargs
     )
 
-def esbuild_esm_bundle(name, **kwargs):
-    """ESBuild macro that prioritizes ESM output and supports an ESM/CJS interop.
-
-    Args:
-      name: Name of the target
-      deps: List of dependencies
-      **kwargs: Other arguments passed to the `esbuild` rule.
-    """
-
-    args = dict(
-        resolveExtensions = [".mjs", ".js"],
-        outExtension = {".js": ".mjs"},
-        # Workaround for: https://github.com/evanw/esbuild/issues/1921.
-        banner = {
-            "js": """
-import {createRequire as __cjsCompatRequire} from 'module';
-const require = __cjsCompatRequire(import.meta.url);
-""",
-        },
+def esbuild(**kwargs):
+    _esbuild_devmode_prioritize(
+        _esbuild,
+        **kwargs
     )
 
-    esbuild(
-        name = name,
-        format = "esm",
-        args = args,
+def esbuild_esm_bundle(**kwargs):
+    _esbuild_devmode_prioritize(
+        _esbuild_esm_bundle,
         **kwargs
     )
 

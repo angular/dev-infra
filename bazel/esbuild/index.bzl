@@ -19,6 +19,33 @@ def esbuild(
         **kwargs
     )
 
+def esbuild_esm_bundle(name, **kwargs):
+    """ESBuild macro supports an ESM/CJS interop.
+
+    Args:
+      name: Name of the target
+      **kwargs: Other arguments passed to the `esbuild` rule.
+    """
+
+    args = dict(
+        resolveExtensions = [".mjs", ".js"],
+        outExtension = {".js": ".mjs"},
+        # Workaround for: https://github.com/evanw/esbuild/issues/1921.
+        banner = {
+            "js": """
+import {createRequire as __cjsCompatRequire} from 'module';
+const require = __cjsCompatRequire(import.meta.url);
+""",
+        },
+    )
+
+    esbuild(
+        name = name,
+        format = "esm",
+        args = args,
+        **kwargs
+    )
+
 def esbuild_amd(name, entry_point, module_name, testonly = False, config = None, deps = [], **kwargs):
     """Generates an AMD bundle for the specified entry-point with the given AMD module name."""
     expand_template(
@@ -47,6 +74,7 @@ def esbuild_amd(name, entry_point, module_name, testonly = False, config = None,
         testonly = testonly,
         deps = deps,
         entry_point = entry_point,
+        format = "iife",
         config = "%s_config_lib" % name,
         **kwargs
     )
