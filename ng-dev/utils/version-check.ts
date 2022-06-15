@@ -8,7 +8,7 @@
 
 import * as path from 'path';
 import * as fs from 'fs';
-import {LockFileObject, parse as parseYarnLockfile} from '@yarnpkg/lockfile';
+import lockfile from '@yarnpkg/lockfile';
 import {
   ngDevNpmPackageName,
   workspaceRelativePackageJsonPath,
@@ -34,7 +34,7 @@ export async function verifyNgDevToolIsUpToDate(workspacePath: string): Promise<
   try {
     const lockFileContent = fs.readFileSync(workspaceDirLockFile, 'utf8');
     const packageJson = JSON.parse(fs.readFileSync(workspacePackageJsonFile, 'utf8')) as any;
-    const lockFile = parseYarnLockfile(lockFileContent);
+    const lockFile = lockfile.parse(lockFileContent);
 
     if (lockFile.type !== 'success') {
       throw Error('Unable to parse workspace lock file. Please ensure the file is valid.');
@@ -45,7 +45,7 @@ export async function verifyNgDevToolIsUpToDate(workspacePath: string): Promise<
       return true;
     }
 
-    const lockFileObject = lockFile.object as LockFileObject;
+    const lockFileObject = lockFile.object as lockfile.LockFileObject;
     const devInfraPkgVersion =
       packageJson?.dependencies?.[ngDevNpmPackageName] ??
       packageJson?.devDependencies?.[ngDevNpmPackageName] ??

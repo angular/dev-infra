@@ -5,6 +5,9 @@ NG_DEV_EXTERNALS = [
     # `typescript` is external because we want the project to provide a TypeScript version.
     # TODO: Figure out how we want to manage dependencies for the dev-infra tool.
     "typescript",
+    # Package uses `__filename` and `__dirname` and cannot be bundled in ESM. We do not
+    # intend to provide interop globals for this as it could hide other significant issues.
+    "@yarnpkg/lockfile",
 ]
 
 ts_library(
