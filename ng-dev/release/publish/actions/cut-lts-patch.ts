@@ -46,10 +46,6 @@ export class CutLongTermSupportPatchAction extends ReleaseAction {
       beforeStagingSha,
       ltsBranch.name,
       ltsBranch.npmDistTag,
-      {
-        // For LTS patch versions, we want to skip experimental packages.
-        skipExperimentalPackages: true,
-      },
     );
     await this.cherryPickChangelogIntoNextBranch(releaseNotes, ltsBranch.name);
   }

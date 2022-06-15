@@ -84,7 +84,6 @@ export async function expectStagingAndPublishWithoutCherryPick(
   expectedBranch: string,
   expectedVersion: string,
   expectedNpmDistTag: NpmDistTag,
-  options: {expectNoExperimentalPackages?: boolean} = {},
 ) {
   const {repo, fork, gitClient} = action;
   const expectedStagingForkBranch = `release-stage-${expectedVersion}`;
@@ -109,13 +108,9 @@ export async function expectStagingAndPublishWithoutCherryPick(
     'Expected release staging branch to be created in fork.',
   );
 
-  const publishedPackages = options.expectNoExperimentalPackages
-    ? testReleasePackages.filter((pkg) => !pkg.experimental)
-    : testReleasePackages;
-
   expect(externalCommands.invokeReleasePrecheckCommand).toHaveBeenCalledTimes(1);
   expect(externalCommands.invokeReleaseBuildCommand).toHaveBeenCalledTimes(1);
-  expectNpmPublishToBeInvoked(publishedPackages, expectedNpmDistTag);
+  expectNpmPublishToBeInvoked(testReleasePackages, expectedNpmDistTag);
 }
 
 export async function expectStagingAndPublishWithCherryPick(
@@ -123,7 +118,6 @@ export async function expectStagingAndPublishWithCherryPick(
   expectedBranch: string,
   expectedVersion: string,
   expectedNpmDistTag: NpmDistTag,
-  options: {expectNoExperimentalPackages?: boolean} = {},
 ) {
   const {repo, fork, gitClient} = action;
   const expectedStagingForkBranch = `release-stage-${expectedVersion}`;
@@ -165,11 +159,7 @@ export async function expectStagingAndPublishWithCherryPick(
     'Expected cherry-pick branch to be created in fork.',
   );
 
-  const publishedPackages = options.expectNoExperimentalPackages
-    ? testReleasePackages.filter((pkg) => !pkg.experimental)
-    : testReleasePackages;
-
   expect(externalCommands.invokeReleasePrecheckCommand).toHaveBeenCalledTimes(1);
   expect(externalCommands.invokeReleaseBuildCommand).toHaveBeenCalledTimes(1);
-  expectNpmPublishToBeInvoked(publishedPackages, expectedNpmDistTag);
+  expectNpmPublishToBeInvoked(testReleasePackages, expectedNpmDistTag);
 }
