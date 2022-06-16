@@ -474,7 +474,7 @@ __metadata:
     "@types/inquirer": 8.2.1
     "@types/jasmine": ^4.0.0
     "@types/jsdom": ^16.2.13
-    "@types/node": 16.10.9
+    "@types/node": 18.0.0
     "@types/selenium-webdriver": ^4.0.18
     "@types/semver": ^7.3.6
     "@types/send": ^0.17.1
@@ -4626,10 +4626,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:16.10.9":
-  version: 16.10.9
-  resolution: "@types/node@npm:16.10.9"
-  checksum: b47c3e3896ce243d3bc9e356578d4d607357d9ea0c1445a15cb564341580ac4db4f95677bf15fd354e46343edbd171ac19701740a53637234411da5b66c883a4
+"@types/node@npm:18.0.0":
+  version: 18.0.0
+  resolution: "@types/node@npm:18.0.0"
+  checksum: aab2b325727a2599f6d25ebe0dedf58c40fb66a51ce4ca9c0226ceb70fcda2d3afccdca29db5942eb48b158ee8585a274a1e3750c718bbd5399d7f41d62dfdcc
   languageName: node
   linkType: hard
 
