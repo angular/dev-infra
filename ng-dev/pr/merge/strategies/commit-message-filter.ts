@@ -14,7 +14,9 @@
  * corresponding pull request. For more details. See: https://git.io/Jv64r.
  */
 
-if (require.main === module) {
+main();
+
+function main() {
   const [prNumber] = process.argv.slice(2);
   if (!prNumber) {
     console.error('No pull request number specified.');
