@@ -112,7 +112,7 @@
     "ejs": "^3.1.6",
     "escodegen": "^1.13.0",
     "firebase": "9.8.3",
-    "firebase-admin": "^10.2.0",
+    "firebase-admin": "^11.0.0",
     "firebase-functions": "^3.21.2",
     "firebase-tools": "^11.0.1",
     "folder-hash": "^4.0.2",
