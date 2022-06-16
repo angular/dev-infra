@@ -14,6 +14,8 @@ integration_test(
         "//bazel/browsers/chromium",
     ],
     environment = {
+        # Ensure Yarn does not try to access the shared system cache (even within sandboxing)
+        "HOME": "<TMP>",
         "CHROMEDRIVER_SKIP_DOWNLOAD": "true",
         "CHROMEDRIVER_PATH": "$(CHROMEDRIVER)",
         "CHROME_BIN": "$(CHROMIUM)",
