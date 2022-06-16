@@ -20,9 +20,23 @@ spec_bundle(
     deps = [":test_lib"],
 )
 
+spec_bundle(
+    name = "test_bundle_legacy_cjs",
+    platform = "cjs-legacy",
+    run_angular_linker = True,
+    deps = [":test_lib"],
+)
+
 jasmine_node_test(
     name = "test",
     deps = [
         ":test_bundle",
+    ],
+)
+
+jasmine_node_test(
+    name = "test_legacy_cjs",
+    deps = [
+        ":test_bundle_legacy_cjs",
     ],
 )
