@@ -493,7 +493,7 @@ __metadata:
     conventional-commits-parser: ^3.2.1
     ejs: ^3.1.6
     escodegen: ^1.13.0
-    firebase: 9.8.2-canary.497d34c84
+    firebase: 9.8.3
     firebase-admin: ^10.2.0
     firebase-functions: ^3.21.2
     firebase-tools: ^11.0.1
@@ -519,7 +519,7 @@ __metadata:
     multimatch: ^5.0.0
     nock: ^13.0.3
     node-fetch: ^3.2.5
-    prettier: 2.7.0
+    prettier: 2.7.1
     protobufjs: ^6.11.3
     protractor: ^7.0.0
     requirejs: ^2.3.6
@@ -2235,18 +2235,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/analytics-compat@npm:0.1.10-canary.497d34c84":
-  version: 0.1.10-canary.497d34c84
-  resolution: "@firebase/analytics-compat@npm:0.1.10-canary.497d34c84"
+"@firebase/analytics-compat@npm:0.1.11":
+  version: 0.1.11
+  resolution: "@firebase/analytics-compat@npm:0.1.11"
   dependencies:
-    "@firebase/analytics": 0.7.9-canary.497d34c84
-    "@firebase/analytics-types": 0.7.0-canary.497d34c84
-    "@firebase/component": 0.5.14-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
+    "@firebase/analytics": 0.7.10
+    "@firebase/analytics-types": 0.7.0
+    "@firebase/component": 0.5.15
+    "@firebase/util": 1.6.1
     tslib: ^2.1.0
   peerDependencies:
-    "@firebase/app-compat": 0.1.26-canary.497d34c84
-  checksum: 8a6abd52d0c7d61677685b3e7f912f4b9912189c5fea800ec7feb1519c022472f5e8f8e958db69f5224cd88b05289ce3d048b04b7ab24c1dd549990f040b3776
+    "@firebase/app-compat": 0.x
+  checksum: 494fd9f2823d32819a27811e417ab23654dcd838fa95868d2a05e2e3e3f19778163f146d484614b7413f5d92b331c2a44ebad2ada012bcc49b967c65e4bcebc7
   languageName: node
   linkType: hard
 
@@ -2257,10 +2257,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/analytics-types@npm:0.7.0-canary.497d34c84":
-  version: 0.7.0-canary.497d34c84
-  resolution: "@firebase/analytics-types@npm:0.7.0-canary.497d34c84"
-  checksum: bcdaa75c0101953411a0484c4e50be0866c81bed3b5ff4df103fd480bc76416b5224e4914c87f82e9cb77eebf9fbb5f8c12eb5ce2a13aba25ef3ac85e6bca4ec
+"@firebase/analytics@npm:0.7.10":
+  version: 0.7.10
+  resolution: "@firebase/analytics@npm:0.7.10"
+  dependencies:
+    "@firebase/component": 0.5.15
+    "@firebase/installations": 0.5.10
+    "@firebase/logger": 0.3.3
+    "@firebase/util": 1.6.1
+    tslib: ^2.1.0
+  peerDependencies:
+    "@firebase/app": 0.x
+  checksum: b35e608d9a2609d7704df871fe71fe87f79d65d5534f1c841228898c5b126d9c5bc14fbc04b1baaef493f89943006571a8423754c519d08a00b895f5f0fe7d81
   languageName: node
   linkType: hard
 
@@ -2276,21 +2284,6 @@ __metadata:
   peerDependencies:
     "@firebase/app": 0.x
   checksum: 06657c6f2d12c4279622b7bcf335eb9116189190a5f1998b2dd231ca2b9ca34f0048f106c9245d0af0263d6c0edd278e466a289a8f6e85722d3e273c64f18eb9
-  languageName: node
-  linkType: hard
-
-"@firebase/analytics@npm:0.7.9-canary.497d34c84":
-  version: 0.7.9-canary.497d34c84
-  resolution: "@firebase/analytics@npm:0.7.9-canary.497d34c84"
-  dependencies:
-    "@firebase/component": 0.5.14-canary.497d34c84
-    "@firebase/installations": 0.5.9-canary.497d34c84
-    "@firebase/logger": 0.3.2-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
-    tslib: ^2.1.0
-  peerDependencies:
-    "@firebase/app": 0.7.25-canary.497d34c84
-  checksum: c26ad6c2d850454562448ba16c0f0d7d926969c410b7a211b0bce3d144364ddf734ddc5b74bfd7a6a0c57835e20a5cc6f03d232b4a580292a14236fd2055d0b8
   languageName: node
   linkType: hard
 
@@ -2310,19 +2303,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/app-check-compat@npm:0.2.8-canary.497d34c84":
-  version: 0.2.8-canary.497d34c84
-  resolution: "@firebase/app-check-compat@npm:0.2.8-canary.497d34c84"
+"@firebase/app-check-compat@npm:0.2.9":
+  version: 0.2.9
+  resolution: "@firebase/app-check-compat@npm:0.2.9"
   dependencies:
-    "@firebase/app-check": 0.5.8-canary.497d34c84
-    "@firebase/app-check-types": 0.4.0-canary.497d34c84
-    "@firebase/component": 0.5.14-canary.497d34c84
-    "@firebase/logger": 0.3.2-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
+    "@firebase/app-check": 0.5.9
+    "@firebase/app-check-types": 0.4.0
+    "@firebase/component": 0.5.15
+    "@firebase/logger": 0.3.3
+    "@firebase/util": 1.6.1
     tslib: ^2.1.0
   peerDependencies:
-    "@firebase/app-compat": 0.1.26-canary.497d34c84
-  checksum: 86d3ba5f3befbc58375e062231ff5335c511a25950d8c5042590bd681862b2bbe853205d32bb93f8bf4446f589f3bb7231b06a6d48ece869b7f0aa5d02326629
+    "@firebase/app-compat": 0.x
+  checksum: baec9269f19a1c15f12e8acdfef6d482de50e46918257470454301a1ae218d5180895837ce13094c8234b632799b494a3148ee253b2c46d07f2ac3714d465bef
   languageName: node
   linkType: hard
 
@@ -2333,24 +2326,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/app-check-interop-types@npm:0.1.0-canary.497d34c84":
-  version: 0.1.0-canary.497d34c84
-  resolution: "@firebase/app-check-interop-types@npm:0.1.0-canary.497d34c84"
-  checksum: b0a46cdfec95cebf892d12d6c0c27aa0695232951cbada0b9b714f75bc974a20a72a86c2b5d2c6b4aa68296ab6409d231d49bd51437191e388c24d51b94ab7dd
-  languageName: node
-  linkType: hard
-
 "@firebase/app-check-types@npm:0.4.0":
   version: 0.4.0
   resolution: "@firebase/app-check-types@npm:0.4.0"
   checksum: b3011d5332d91cbf5437add152f8006e0342e04c11ffa810ee1d4fcd7c0888c9776e2f7093f28f68bdf0944c089d5cb59c41bf4a0131bfcb540febe03068168c
-  languageName: node
-  linkType: hard
-
-"@firebase/app-check-types@npm:0.4.0-canary.497d34c84":
-  version: 0.4.0-canary.497d34c84
-  resolution: "@firebase/app-check-types@npm:0.4.0-canary.497d34c84"
-  checksum: e1757d8945142d468da2a295ad4fa2c2de25fc772b073f58ce69a39cf20fe603556840c4aa862e34784c025689f143aae25100448e6b682ab9a8af19858281ea
   languageName: node
   linkType: hard
 
@@ -2368,17 +2347,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/app-check@npm:0.5.8-canary.497d34c84":
-  version: 0.5.8-canary.497d34c84
-  resolution: "@firebase/app-check@npm:0.5.8-canary.497d34c84"
+"@firebase/app-check@npm:0.5.9":
+  version: 0.5.9
+  resolution: "@firebase/app-check@npm:0.5.9"
   dependencies:
-    "@firebase/component": 0.5.14-canary.497d34c84
-    "@firebase/logger": 0.3.2-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
+    "@firebase/component": 0.5.15
+    "@firebase/logger": 0.3.3
+    "@firebase/util": 1.6.1
     tslib: ^2.1.0
   peerDependencies:
-    "@firebase/app": 0.7.25-canary.497d34c84
-  checksum: 3e048995d1dd9e5ca1517a9eba61a3f788b73abb72cc878fb52f2a2973d4866420950a68113841368d6146948eacd100cedb654c4cd01227f1ab726d158dd957
+    "@firebase/app": 0.x
+  checksum: aed73fdf738f1f6806b0742930e320c3822cfbb66a654b9eb793ef5f044b54f720108c2bed9d238f8e9abb69c91229a7d9b2a2b1350f7184955150be1914b77f
   languageName: node
   linkType: hard
 
@@ -2395,16 +2374,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/app-compat@npm:0.1.26-canary.497d34c84":
-  version: 0.1.26-canary.497d34c84
-  resolution: "@firebase/app-compat@npm:0.1.26-canary.497d34c84"
+"@firebase/app-compat@npm:0.1.27":
+  version: 0.1.27
+  resolution: "@firebase/app-compat@npm:0.1.27"
   dependencies:
-    "@firebase/app": 0.7.25-canary.497d34c84
-    "@firebase/component": 0.5.14-canary.497d34c84
-    "@firebase/logger": 0.3.2-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
+    "@firebase/app": 0.7.26
+    "@firebase/component": 0.5.15
+    "@firebase/logger": 0.3.3
+    "@firebase/util": 1.6.1
     tslib: ^2.1.0
-  checksum: 420b2a822cf0ffe068e2a2082b40fde819f3f2c28f4d7336193ff0c3cb8a90008d80b29d3bbf0a8a5eb0af62f49644893d67233ed5c9809e6c8a425e9b58f5ab
+  checksum: 1f42743659fa0b48d0fa61e8d079773df502f012a9513fa9b6817bcbf27d79de8dd215f643605a3fdc6d352a9beb0f082290a760219e52bb6ca5d38163e50d67
   languageName: node
   linkType: hard
 
@@ -2412,13 +2391,6 @@ __metadata:
   version: 0.7.0
   resolution: "@firebase/app-types@npm:0.7.0"
   checksum: 9b46512659061751e81d32e95420e206f0fe97d3f597267b1c1a520e10bba0792952535e1f22b031b894fb63c1c6f5815aaa71fae27913fdfaba281e99f5fbfc
-  languageName: node
-  linkType: hard
-
-"@firebase/app-types@npm:0.7.0-canary.497d34c84":
-  version: 0.7.0-canary.497d34c84
-  resolution: "@firebase/app-types@npm:0.7.0-canary.497d34c84"
-  checksum: 596d21778de7761823b9b578e899df73d493715f19ed81455c5e02cc1a7dacf85d562991622e6da95a1bac390c0c98f2d5cda20d0d55148265ffa5880534b309
   languageName: node
   linkType: hard
 
@@ -2435,16 +2407,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/app@npm:0.7.25-canary.497d34c84":
-  version: 0.7.25-canary.497d34c84
-  resolution: "@firebase/app@npm:0.7.25-canary.497d34c84"
+"@firebase/app@npm:0.7.26":
+  version: 0.7.26
+  resolution: "@firebase/app@npm:0.7.26"
   dependencies:
-    "@firebase/component": 0.5.14-canary.497d34c84
-    "@firebase/logger": 0.3.2-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
+    "@firebase/component": 0.5.15
+    "@firebase/logger": 0.3.3
+    "@firebase/util": 1.6.1
     idb: 7.0.1
     tslib: ^2.1.0
-  checksum: 1fc1f088cc639492e04a56300bcf5fad5432223c9e92d80a495b33d42a8b399aa8312db09b0b0c982ea06707704bda2d70d2b2dca59598c774f175a15fd4e892
+  checksum: db7eae9eb20dfc5ac630185272634e54c9893ed1bb12b8ff9a1a0c4cae203f59186f1a28940517cbcace6175262589e749776b2f5ad0e130be3ff0dd9d161006
   languageName: node
   linkType: hard
 
@@ -2465,20 +2437,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/auth-compat@npm:0.2.15-canary.497d34c84":
-  version: 0.2.15-canary.497d34c84
-  resolution: "@firebase/auth-compat@npm:0.2.15-canary.497d34c84"
+"@firebase/auth-compat@npm:0.2.16":
+  version: 0.2.16
+  resolution: "@firebase/auth-compat@npm:0.2.16"
   dependencies:
-    "@firebase/auth": 0.20.2-canary.497d34c84
-    "@firebase/auth-types": 0.11.0-canary.497d34c84
-    "@firebase/component": 0.5.14-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
+    "@firebase/auth": 0.20.3
+    "@firebase/auth-types": 0.11.0
+    "@firebase/component": 0.5.15
+    "@firebase/util": 1.6.1
     node-fetch: 2.6.7
     selenium-webdriver: 4.1.2
     tslib: ^2.1.0
   peerDependencies:
-    "@firebase/app-compat": 0.1.26-canary.497d34c84
-  checksum: c72f9f2d05bf2abac28936cf4b0e743873b582eca982fb62d92c6d73c407defdab90be07cd406cbadb4dc91b6b3643bfccc5236490059aeb01f039df4a606481
+    "@firebase/app-compat": 0.x
+  checksum: 98c2f9b991b3f2ca4d19ed24253de62f914f70e9ac1a664d43d09a5326370987b41fd76df7759b977788ba2f7b647ce34a0b8fe29a301b3f1c8abc038aa52b3e
   languageName: node
   linkType: hard
 
@@ -2492,16 +2464,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/auth-interop-types@npm:0.1.6-canary.497d34c84":
-  version: 0.1.6-canary.497d34c84
-  resolution: "@firebase/auth-interop-types@npm:0.1.6-canary.497d34c84"
-  peerDependencies:
-    "@firebase/app-types": 0.7.0-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
-  checksum: 61e040baddf25138ac86d6d01f4b980720534b933a3cd53afe957faf2e97fce0ef09b9f28b63a80aa161134c689407a2b9cf9a100c5e9ab5fea2978d1cfcef5b
-  languageName: node
-  linkType: hard
-
 "@firebase/auth-types@npm:0.11.0":
   version: 0.11.0
   resolution: "@firebase/auth-types@npm:0.11.0"
@@ -2509,16 +2471,6 @@ __metadata:
     "@firebase/app-types": 0.x
     "@firebase/util": 1.x
   checksum: 69fa441bd86b2892031b2cefc6c9d4d6eeee2fb04a3999fc817a2208705da64d4d2023b57c446d95df31fbb308e3111d72020b7542d682c2fe9ea4ee9e67380b
-  languageName: node
-  linkType: hard
-
-"@firebase/auth-types@npm:0.11.0-canary.497d34c84":
-  version: 0.11.0-canary.497d34c84
-  resolution: "@firebase/auth-types@npm:0.11.0-canary.497d34c84"
-  peerDependencies:
-    "@firebase/app-types": 0.7.0-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
-  checksum: 055775d221867d3c9cc68de33c2eb73a71b1d0171a5e9375ce85dc7a2530096b8877fa6853aa2094516e48eadd15f0dd6acb69da32c38335d1597e0f2a6286b5
   languageName: node
   linkType: hard
 
@@ -2538,19 +2490,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/auth@npm:0.20.2-canary.497d34c84":
-  version: 0.20.2-canary.497d34c84
-  resolution: "@firebase/auth@npm:0.20.2-canary.497d34c84"
+"@firebase/auth@npm:0.20.3":
+  version: 0.20.3
+  resolution: "@firebase/auth@npm:0.20.3"
   dependencies:
-    "@firebase/component": 0.5.14-canary.497d34c84
-    "@firebase/logger": 0.3.2-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
+    "@firebase/component": 0.5.15
+    "@firebase/logger": 0.3.3
+    "@firebase/util": 1.6.1
     node-fetch: 2.6.7
     selenium-webdriver: 4.1.2
     tslib: ^2.1.0
   peerDependencies:
-    "@firebase/app": 0.7.25-canary.497d34c84
-  checksum: c4d95f5db14591255e78845aaf013e0b7bbf6781973d00ba10399ccbead9c695f8c59586d45217bf5c4a532a50c892623f426fcb5a9ad5af12d9adc9662d339c
+    "@firebase/app": 0.x
+  checksum: 40758cb0cadb25ce34d27f75b02793fe96e2bd0cfb25701211c008d35781cc0cc12825cde34e1d6436a2b428672e7bb55826cec18736d26627073e496e05012a
   languageName: node
   linkType: hard
 
@@ -2574,13 +2526,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/component@npm:0.5.14-canary.497d34c84":
-  version: 0.5.14-canary.497d34c84
-  resolution: "@firebase/component@npm:0.5.14-canary.497d34c84"
+"@firebase/component@npm:0.5.15":
+  version: 0.5.15
+  resolution: "@firebase/component@npm:0.5.15"
   dependencies:
-    "@firebase/util": 1.6.0-canary.497d34c84
+    "@firebase/util": 1.6.1
     tslib: ^2.1.0
-  checksum: 61509c6a1ed0fe19d956263ba316d1166c04bfb7e11759dab81e1b8b744fdd4e1796f6970ce85330fb8a6c10d6e2418379fc18addb95cae2bc4504ef314028c3
+  checksum: 4aef89b7ae039e14569044b8ec96c8bca7b43ddf72c3232043c967f9da1fe71347e8775fc9eca22d40d5f6394cdb331dede895c3670b576e46ff29c6fa5f7353
   languageName: node
   linkType: hard
 
@@ -2600,17 +2552,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/database-compat@npm:0.2.0-canary.497d34c84":
-  version: 0.2.0-canary.497d34c84
-  resolution: "@firebase/database-compat@npm:0.2.0-canary.497d34c84"
+"@firebase/database-compat@npm:0.2.1":
+  version: 0.2.1
+  resolution: "@firebase/database-compat@npm:0.2.1"
   dependencies:
-    "@firebase/component": 0.5.14-canary.497d34c84
-    "@firebase/database": 0.13.0-canary.497d34c84
-    "@firebase/database-types": 0.9.8-canary.497d34c84
-    "@firebase/logger": 0.3.2-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
+    "@firebase/component": 0.5.15
+    "@firebase/database": 0.13.1
+    "@firebase/database-types": 0.9.9
+    "@firebase/logger": 0.3.3
+    "@firebase/util": 1.6.1
     tslib: ^2.1.0
-  checksum: 2948a287df8faff65e80dbe3946c8a23bf7cdf1f17dddb663f695effb2565c937e4f64e050698cd01375e24cccbaacbdf89ff0b3fd1d38f11eb5ad1ac45b76e6
+  checksum: d7c75d8c3e774c141766776bf798b22ec0e8e775f5aa0ced950ed207ad7024d96694e42d0e693fd35cc489f75597cc2975cb2f59d706b34fb891c421db7d6fca
   languageName: node
   linkType: hard
 
@@ -2650,13 +2602,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/database-types@npm:0.9.8-canary.497d34c84":
-  version: 0.9.8-canary.497d34c84
-  resolution: "@firebase/database-types@npm:0.9.8-canary.497d34c84"
+"@firebase/database-types@npm:0.9.9":
+  version: 0.9.9
+  resolution: "@firebase/database-types@npm:0.9.9"
   dependencies:
-    "@firebase/app-types": 0.7.0-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
-  checksum: 7d4d6529174943ba5307a993e7bd29de444592216d80431a482dceb3d263151d69ad1c5d48a9bba87b26f9babfb8781b5bc12fe3341542b3af5e07bf00cebc93
+    "@firebase/app-types": 0.7.0
+    "@firebase/util": 1.6.1
+  checksum: f4a5f23ebce28a03641f073bbcea1a222945dda936ade7d0bd8e4aff874ca01390977262b449790f4ed7598f4a2fedf31245f034a6ca6a45445943fb1c8f1285
   languageName: node
   linkType: hard
 
@@ -2688,17 +2640,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/database@npm:0.13.0-canary.497d34c84":
-  version: 0.13.0-canary.497d34c84
-  resolution: "@firebase/database@npm:0.13.0-canary.497d34c84"
+"@firebase/database@npm:0.13.1":
+  version: 0.13.1
+  resolution: "@firebase/database@npm:0.13.1"
   dependencies:
-    "@firebase/auth-interop-types": 0.1.6-canary.497d34c84
-    "@firebase/component": 0.5.14-canary.497d34c84
-    "@firebase/logger": 0.3.2-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
+    "@firebase/auth-interop-types": 0.1.6
+    "@firebase/component": 0.5.15
+    "@firebase/logger": 0.3.3
+    "@firebase/util": 1.6.1
     faye-websocket: 0.11.4
     tslib: ^2.1.0
-  checksum: 4e5d1268586b3411553d7ffb787a01e8575c32c9fcb6a8e17e518112f67038a86dcb9fecd143551d8e000ba78af648707016e519dacd2179cb25ceacf23f71a6
+  checksum: 367e4ae0a73f6a5f28427cc901f01eb25b6e46d4d964b75f981fd1d04103ff76789b8c659e31e6f0b6c359e7ec321f56b728ca78f670aee2ce1d8f1a7b9529ec
   languageName: node
   linkType: hard
 
@@ -2717,18 +2669,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/firestore-compat@npm:0.1.18-canary.497d34c84":
-  version: 0.1.18-canary.497d34c84
-  resolution: "@firebase/firestore-compat@npm:0.1.18-canary.497d34c84"
+"@firebase/firestore-compat@npm:0.1.19":
+  version: 0.1.19
+  resolution: "@firebase/firestore-compat@npm:0.1.19"
   dependencies:
-    "@firebase/component": 0.5.14-canary.497d34c84
-    "@firebase/firestore": 3.4.9-canary.497d34c84
-    "@firebase/firestore-types": 2.5.0-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
+    "@firebase/component": 0.5.15
+    "@firebase/firestore": 3.4.10
+    "@firebase/firestore-types": 2.5.0
+    "@firebase/util": 1.6.1
     tslib: ^2.1.0
   peerDependencies:
-    "@firebase/app-compat": 0.1.26-canary.497d34c84
-  checksum: f8fa366bc16eca0d1f56a54426d7561844c461f2ae8e5cdba41a04ce14d5292d741ab8800ac20aa324882c4587ca65d27bf721f6797bc6015d0f7b992a4bafde
+    "@firebase/app-compat": 0.x
+  checksum: 55e04879fe36c2ceff56a1429430ac23a10eb9f1183742befcdd5c4609d082e368dc19ac60c50888937095729349a1da703045a3cbaf74451ad90fbe8e741771
   languageName: node
   linkType: hard
 
@@ -2742,13 +2694,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/firestore-types@npm:2.5.0-canary.497d34c84":
-  version: 2.5.0-canary.497d34c84
-  resolution: "@firebase/firestore-types@npm:2.5.0-canary.497d34c84"
+"@firebase/firestore@npm:3.4.10":
+  version: 3.4.10
+  resolution: "@firebase/firestore@npm:3.4.10"
+  dependencies:
+    "@firebase/component": 0.5.15
+    "@firebase/logger": 0.3.3
+    "@firebase/util": 1.6.1
+    "@firebase/webchannel-wrapper": 0.6.2
+    "@grpc/grpc-js": ^1.3.2
+    "@grpc/proto-loader": ^0.6.0
+    node-fetch: 2.6.7
+    tslib: ^2.1.0
   peerDependencies:
-    "@firebase/app-types": 0.7.0-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
-  checksum: 99131505e396634a594c6027b3e698b824359c9511dcb5f2bd00788fffa7221dae462d224bf58f9c75be1e5f8ce15dfcc8a4796dd96f2f96e1638499efcf4545
+    "@firebase/app": 0.x
+  checksum: de9ed9ed431ce9718cdbf50f130db990d2dd37d2277578a44f27f82f400005d5c2be889a17ab449d1be900e400b41445274d2bbd5e710a00ff2cc5da0f7d2eb7
   languageName: node
   linkType: hard
 
@@ -2770,24 +2730,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/firestore@npm:3.4.9-canary.497d34c84":
-  version: 3.4.9-canary.497d34c84
-  resolution: "@firebase/firestore@npm:3.4.9-canary.497d34c84"
-  dependencies:
-    "@firebase/component": 0.5.14-canary.497d34c84
-    "@firebase/logger": 0.3.2-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
-    "@firebase/webchannel-wrapper": 0.6.1-canary.497d34c84
-    "@grpc/grpc-js": ^1.3.2
-    "@grpc/proto-loader": ^0.6.0
-    node-fetch: 2.6.7
-    tslib: ^2.1.0
-  peerDependencies:
-    "@firebase/app": 0.7.25-canary.497d34c84
-  checksum: bcb1c4aa9b2b3a6f318f860ebfaa17a1d78d6d9c469dec71b2dd0d66b7ed3428f98dd66481858621527b38b43619938b860a5e8ef5995dd01efc80fd44644fd6
-  languageName: node
-  linkType: hard
-
 "@firebase/functions-compat@npm:0.2.1":
   version: 0.2.1
   resolution: "@firebase/functions-compat@npm:0.2.1"
@@ -2803,18 +2745,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/functions-compat@npm:0.2.1-canary.497d34c84":
-  version: 0.2.1-canary.497d34c84
-  resolution: "@firebase/functions-compat@npm:0.2.1-canary.497d34c84"
+"@firebase/functions-compat@npm:0.2.2":
+  version: 0.2.2
+  resolution: "@firebase/functions-compat@npm:0.2.2"
   dependencies:
-    "@firebase/component": 0.5.14-canary.497d34c84
-    "@firebase/functions": 0.8.1-canary.497d34c84
-    "@firebase/functions-types": 0.5.0-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
+    "@firebase/component": 0.5.15
+    "@firebase/functions": 0.8.2
+    "@firebase/functions-types": 0.5.0
+    "@firebase/util": 1.6.1
     tslib: ^2.1.0
   peerDependencies:
-    "@firebase/app-compat": 0.1.26-canary.497d34c84
-  checksum: 6bc020c8a253ddf42b6390051e50218b7fcdbfbd237f3213c2c757259a9e90b1d5874c980fcd50f06373880162700bf794ff811ec787e56039ffbf0a8529e9ba
+    "@firebase/app-compat": 0.x
+  checksum: 4d12d67f2084ceb9925aaaa8e3b12223b4bcddee864b6e98c58fa1b9c40a4f578fa13efc11ebe9a7217f30f2ac6bf724d9ada0e59a7dc599d764de7ccc03b253
   languageName: node
   linkType: hard
 
@@ -2822,13 +2764,6 @@ __metadata:
   version: 0.5.0
   resolution: "@firebase/functions-types@npm:0.5.0"
   checksum: adf03a655fa5d0eee30e7f1652805a1d1f339b7ae0742d6d58c5bdc6dfe3bd5e61d41b60c0d55474e3444e99944b26e3429360c32651662e2c25c6dc5700d931
-  languageName: node
-  linkType: hard
-
-"@firebase/functions-types@npm:0.5.0-canary.497d34c84":
-  version: 0.5.0-canary.497d34c84
-  resolution: "@firebase/functions-types@npm:0.5.0-canary.497d34c84"
-  checksum: 99ae2156e44107422e1410dd2ce35bf41e29b220d3f49f2cba3e48ff0dc33adb003d4d82b6ddd7aa9f57cbd15f9c8eafadcf0141bb179e4113eaab6b552aabae
   languageName: node
   linkType: hard
 
@@ -2849,20 +2784,34 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/functions@npm:0.8.1-canary.497d34c84":
-  version: 0.8.1-canary.497d34c84
-  resolution: "@firebase/functions@npm:0.8.1-canary.497d34c84"
+"@firebase/functions@npm:0.8.2":
+  version: 0.8.2
+  resolution: "@firebase/functions@npm:0.8.2"
   dependencies:
-    "@firebase/app-check-interop-types": 0.1.0-canary.497d34c84
-    "@firebase/auth-interop-types": 0.1.6-canary.497d34c84
-    "@firebase/component": 0.5.14-canary.497d34c84
-    "@firebase/messaging-interop-types": 0.1.0-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
+    "@firebase/app-check-interop-types": 0.1.0
+    "@firebase/auth-interop-types": 0.1.6
+    "@firebase/component": 0.5.15
+    "@firebase/messaging-interop-types": 0.1.0
+    "@firebase/util": 1.6.1
     node-fetch: 2.6.7
     tslib: ^2.1.0
   peerDependencies:
-    "@firebase/app": 0.7.25-canary.497d34c84
-  checksum: 283ba011a91971da15a51a8823089dee937a6ca792c6ee0569afaaae0d5f3e64c272c06e6f9bcc4a6dc31b95045ff519917edebba08e6de207eab682def69573
+    "@firebase/app": 0.x
+  checksum: c7e8783f2c6b35ceb3e18d241b54f9f83e787f623f697e2f91b893d25c670be6bd450d4368b0f8831ce72a44c847bbb365ec8f90e11a2d2cf51353829c02594a
+  languageName: node
+  linkType: hard
+
+"@firebase/installations@npm:0.5.10":
+  version: 0.5.10
+  resolution: "@firebase/installations@npm:0.5.10"
+  dependencies:
+    "@firebase/component": 0.5.15
+    "@firebase/util": 1.6.1
+    idb: 7.0.1
+    tslib: ^2.1.0
+  peerDependencies:
+    "@firebase/app": 0.x
+  checksum: 2e1902ab2f7c786688028d74792d4cde791fa829729d249786ac3ef1fa7c09fd809e552d80d8f34726711f0e3b1984ef251bb248505b11de55494e093f41a33b
   languageName: node
   linkType: hard
 
@@ -2880,20 +2829,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/installations@npm:0.5.9-canary.497d34c84":
-  version: 0.5.9-canary.497d34c84
-  resolution: "@firebase/installations@npm:0.5.9-canary.497d34c84"
-  dependencies:
-    "@firebase/component": 0.5.14-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
-    idb: 7.0.1
-    tslib: ^2.1.0
-  peerDependencies:
-    "@firebase/app": 0.7.25-canary.497d34c84
-  checksum: b79f07551b3b768883a4a39b65464964f3ce67b46c8435b90c2636c2d51f839948a2f8d1b1dd4a01a3ceb72ebb7f9abc1a96071b33cc162d30e891a9cdc77c9b
-  languageName: node
-  linkType: hard
-
 "@firebase/logger@npm:0.3.2":
   version: 0.3.2
   resolution: "@firebase/logger@npm:0.3.2"
@@ -2903,12 +2838,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/logger@npm:0.3.2-canary.497d34c84":
-  version: 0.3.2-canary.497d34c84
-  resolution: "@firebase/logger@npm:0.3.2-canary.497d34c84"
+"@firebase/logger@npm:0.3.3":
+  version: 0.3.3
+  resolution: "@firebase/logger@npm:0.3.3"
   dependencies:
     tslib: ^2.1.0
-  checksum: faaaa2c1cbf170b3fa58bbff5854a017cb94e7e53bd0322a5f364970032ccec94458aacf49abb9f705d5b931baf57ff116e5f5089d86b02a78d9ded41028c6d8
+  checksum: 34c20c50db125b904e231c10e9f00868fad91dcdba6981c8a296c86036d49ab4a0aa9a367b6472f6321562f8d07d858eac155597d271351279e8aba825d7f77c
   languageName: node
   linkType: hard
 
@@ -2926,17 +2861,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/messaging-compat@npm:0.1.13-canary.497d34c84":
-  version: 0.1.13-canary.497d34c84
-  resolution: "@firebase/messaging-compat@npm:0.1.13-canary.497d34c84"
+"@firebase/messaging-compat@npm:0.1.14":
+  version: 0.1.14
+  resolution: "@firebase/messaging-compat@npm:0.1.14"
   dependencies:
-    "@firebase/component": 0.5.14-canary.497d34c84
-    "@firebase/messaging": 0.9.13-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
+    "@firebase/component": 0.5.15
+    "@firebase/messaging": 0.9.14
+    "@firebase/util": 1.6.1
     tslib: ^2.1.0
   peerDependencies:
-    "@firebase/app-compat": 0.1.26-canary.497d34c84
-  checksum: ee72ccd6d97cf99b48ce5b6a317dab28e669d1ea65f7f98d96f9228f92785bf88d6a3a62d3e6cd4db2bd94224981240cc8cdda1f6ef2fd0273cf376cf1811cfa
+    "@firebase/app-compat": 0.x
+  checksum: 2b1c81f86d24deb0a49204be76de4b33fe9b47235d07c9458bd3872bbb10b4a9915e1f477b7fc3868f790d5bf74cb45c091bdc570159a604ea657e486b583355
   languageName: node
   linkType: hard
 
@@ -2944,13 +2879,6 @@ __metadata:
   version: 0.1.0
   resolution: "@firebase/messaging-interop-types@npm:0.1.0"
   checksum: 7772eeda0070064c2c0c9c80b2f774c6cbbdc37cd7bff24208d0fedf9cfdca22bb6b396f32daff858a941cf5074def624ec4e6b827b3df83661dbb2c1bfabe93
-  languageName: node
-  linkType: hard
-
-"@firebase/messaging-interop-types@npm:0.1.0-canary.497d34c84":
-  version: 0.1.0-canary.497d34c84
-  resolution: "@firebase/messaging-interop-types@npm:0.1.0-canary.497d34c84"
-  checksum: 05f7b44e7810fdf78947a94a576a61263bec2c799b10ed1b0e74f98af1562bef17da70af1d1d19ddaedb074a0a8f649fa82e907bc1331599a87321fa88007377
   languageName: node
   linkType: hard
 
@@ -2970,19 +2898,35 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/messaging@npm:0.9.13-canary.497d34c84":
-  version: 0.9.13-canary.497d34c84
-  resolution: "@firebase/messaging@npm:0.9.13-canary.497d34c84"
+"@firebase/messaging@npm:0.9.14":
+  version: 0.9.14
+  resolution: "@firebase/messaging@npm:0.9.14"
   dependencies:
-    "@firebase/component": 0.5.14-canary.497d34c84
-    "@firebase/installations": 0.5.9-canary.497d34c84
-    "@firebase/messaging-interop-types": 0.1.0-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
+    "@firebase/component": 0.5.15
+    "@firebase/installations": 0.5.10
+    "@firebase/messaging-interop-types": 0.1.0
+    "@firebase/util": 1.6.1
     idb: 7.0.1
     tslib: ^2.1.0
   peerDependencies:
-    "@firebase/app": 0.7.25-canary.497d34c84
-  checksum: d9054d6a9bb90757668b53eaded12a68758d5a68bf2d185e871ce337e859174b4c54d60c8aca9d343c582801d4eacdf528b2dc08dd03822f45db98763889eeb7
+    "@firebase/app": 0.x
+  checksum: a707830fdb004854ae0afcdba02e018e5738def9ce56ab79900ff42d0068bcdf3ca8e091ffa2ee4b242ec30d13b60c86c9faa07e2f0c75b3aa16c3bde5fbe3f3
+  languageName: node
+  linkType: hard
+
+"@firebase/performance-compat@npm:0.1.10":
+  version: 0.1.10
+  resolution: "@firebase/performance-compat@npm:0.1.10"
+  dependencies:
+    "@firebase/component": 0.5.15
+    "@firebase/logger": 0.3.3
+    "@firebase/performance": 0.5.10
+    "@firebase/performance-types": 0.1.0
+    "@firebase/util": 1.6.1
+    tslib: ^2.1.0
+  peerDependencies:
+    "@firebase/app-compat": 0.x
+  checksum: 5159c57abeb663633e2af7890430a7b4512d805cf96b60837051d88bb912bbf5268a1d02c38775bbc1dc455fd5471880a097811697c9abcc1705714798bcd128
   languageName: node
   linkType: hard
 
@@ -3002,22 +2946,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/performance-compat@npm:0.1.9-canary.497d34c84":
-  version: 0.1.9-canary.497d34c84
-  resolution: "@firebase/performance-compat@npm:0.1.9-canary.497d34c84"
-  dependencies:
-    "@firebase/component": 0.5.14-canary.497d34c84
-    "@firebase/logger": 0.3.2-canary.497d34c84
-    "@firebase/performance": 0.5.9-canary.497d34c84
-    "@firebase/performance-types": 0.1.0-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
-    tslib: ^2.1.0
-  peerDependencies:
-    "@firebase/app-compat": 0.1.26-canary.497d34c84
-  checksum: ab6d0d4b2c17720cf20118a65a7b800cc3541030c4b22beb971650b58730444468ba0e002b8725cfbb821383af9a926241a9e05f80478c2e7cd42199ac7400ec
-  languageName: node
-  linkType: hard
-
 "@firebase/performance-types@npm:0.1.0":
   version: 0.1.0
   resolution: "@firebase/performance-types@npm:0.1.0"
@@ -3025,10 +2953,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/performance-types@npm:0.1.0-canary.497d34c84":
-  version: 0.1.0-canary.497d34c84
-  resolution: "@firebase/performance-types@npm:0.1.0-canary.497d34c84"
-  checksum: 87fa62f7df7a22dea8c5f609ff5953822ebe8e528e9b25e2f702c6c31db2123dc77d0d48e110d35bc10600089ab6a261958a560d3aa447e5ba9140b87e7a3ccf
+"@firebase/performance@npm:0.5.10":
+  version: 0.5.10
+  resolution: "@firebase/performance@npm:0.5.10"
+  dependencies:
+    "@firebase/component": 0.5.15
+    "@firebase/installations": 0.5.10
+    "@firebase/logger": 0.3.3
+    "@firebase/util": 1.6.1
+    tslib: ^2.1.0
+  peerDependencies:
+    "@firebase/app": 0.x
+  checksum: ad1c92de3d4b77d142c2c640b30aad7cde92ad1d08656904b2465204daa58bed74e5d893bd01afa36cdae38b979c63869931f0746481f373f2e6d6a91624b15d
   languageName: node
   linkType: hard
 
@@ -3047,21 +2983,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/performance@npm:0.5.9-canary.497d34c84":
-  version: 0.5.9-canary.497d34c84
-  resolution: "@firebase/performance@npm:0.5.9-canary.497d34c84"
-  dependencies:
-    "@firebase/component": 0.5.14-canary.497d34c84
-    "@firebase/installations": 0.5.9-canary.497d34c84
-    "@firebase/logger": 0.3.2-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
-    tslib: ^2.1.0
-  peerDependencies:
-    "@firebase/app": 0.7.25-canary.497d34c84
-  checksum: 7bfc8398750cbc80b1f0f155de629a54682d96399e0da21e6b1f864c64fc2b3cc49da3280c203514398aa109f829090c992d396e49f25a55c3746cb6f4a7880a
-  languageName: node
-  linkType: hard
-
 "@firebase/polyfill@npm:0.3.36":
   version: 0.3.36
   resolution: "@firebase/polyfill@npm:0.3.36"
@@ -3070,6 +2991,22 @@ __metadata:
     promise-polyfill: 8.1.3
     whatwg-fetch: 2.0.4
   checksum: 530904e8871c724dfef46eb2f613cb59c45cbb2a0afb31a9803c03146185200bc2ad9a1debec34a2635f0c26fe02ead0086522200f6aa2941d0c10be69f7a04d
+  languageName: node
+  linkType: hard
+
+"@firebase/remote-config-compat@npm:0.1.10":
+  version: 0.1.10
+  resolution: "@firebase/remote-config-compat@npm:0.1.10"
+  dependencies:
+    "@firebase/component": 0.5.15
+    "@firebase/logger": 0.3.3
+    "@firebase/remote-config": 0.3.9
+    "@firebase/remote-config-types": 0.2.0
+    "@firebase/util": 1.6.1
+    tslib: ^2.1.0
+  peerDependencies:
+    "@firebase/app-compat": 0.x
+  checksum: 3227ef2fe0c4a866f584034c2d5d8a34790a357d24877cfaba9672aac40dfe46507f61a680bc34344c3fa00decc8ee6e776768ac3b094b648c33c65afc581ede
   languageName: node
   linkType: hard
 
@@ -3089,33 +3026,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/remote-config-compat@npm:0.1.9-canary.497d34c84":
-  version: 0.1.9-canary.497d34c84
-  resolution: "@firebase/remote-config-compat@npm:0.1.9-canary.497d34c84"
-  dependencies:
-    "@firebase/component": 0.5.14-canary.497d34c84
-    "@firebase/logger": 0.3.2-canary.497d34c84
-    "@firebase/remote-config": 0.3.8-canary.497d34c84
-    "@firebase/remote-config-types": 0.2.0-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
-    tslib: ^2.1.0
-  peerDependencies:
-    "@firebase/app-compat": 0.1.26-canary.497d34c84
-  checksum: de012d536fa688f80882e839e744d1920363e4d779d66a0aa63bba4bfd8e51f6d74a9d9aa8e251187f86d0a77d0f28699355e0c2c59b1f88bf098869112cd875
-  languageName: node
-  linkType: hard
-
 "@firebase/remote-config-types@npm:0.2.0":
   version: 0.2.0
   resolution: "@firebase/remote-config-types@npm:0.2.0"
   checksum: 3d0c4df9c9674f70fbef0e9b51fb17cf9cd6a1023cfaae1cf1faec0c6cea0b7e4deaeffca82ceb25bdc588b03ab74c684ef30c8277338644f92cf30cd94598eb
-  languageName: node
-  linkType: hard
-
-"@firebase/remote-config-types@npm:0.2.0-canary.497d34c84":
-  version: 0.2.0-canary.497d34c84
-  resolution: "@firebase/remote-config-types@npm:0.2.0-canary.497d34c84"
-  checksum: ef2f9b77e443c0c4a434c35dcd4635f60590c1bfb6cfccfbc9b8359ad18e62af4db2b54ea8bccfc0e7555fa9b68e9612cd7e187369550001a75db67e466b929e
   languageName: node
   linkType: hard
 
@@ -3134,18 +3048,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/remote-config@npm:0.3.8-canary.497d34c84":
-  version: 0.3.8-canary.497d34c84
-  resolution: "@firebase/remote-config@npm:0.3.8-canary.497d34c84"
+"@firebase/remote-config@npm:0.3.9":
+  version: 0.3.9
+  resolution: "@firebase/remote-config@npm:0.3.9"
   dependencies:
-    "@firebase/component": 0.5.14-canary.497d34c84
-    "@firebase/installations": 0.5.9-canary.497d34c84
-    "@firebase/logger": 0.3.2-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
+    "@firebase/component": 0.5.15
+    "@firebase/installations": 0.5.10
+    "@firebase/logger": 0.3.3
+    "@firebase/util": 1.6.1
     tslib: ^2.1.0
   peerDependencies:
-    "@firebase/app": 0.7.25-canary.497d34c84
-  checksum: 2576516aef3b561ab37ecc1f019827ba69ddc0a0b9d16a2d4105119ca0206a22477c8886cfba3bbf85e9537ef222770628e92639fa80448908563c617206d91f
+    "@firebase/app": 0.x
+  checksum: 173977b1d9cb0bde5094e3946b5d5569827ac37dd753fd2cdbf80e7a5d751e4d019895ffa1f06d64005cae38b78a4644408892b321d5090dff3778ef12db1d41
   languageName: node
   linkType: hard
 
@@ -3164,18 +3078,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/storage-compat@npm:0.1.14-canary.497d34c84":
-  version: 0.1.14-canary.497d34c84
-  resolution: "@firebase/storage-compat@npm:0.1.14-canary.497d34c84"
+"@firebase/storage-compat@npm:0.1.15":
+  version: 0.1.15
+  resolution: "@firebase/storage-compat@npm:0.1.15"
   dependencies:
-    "@firebase/component": 0.5.14-canary.497d34c84
-    "@firebase/storage": 0.9.6-canary.497d34c84
-    "@firebase/storage-types": 0.6.0-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
+    "@firebase/component": 0.5.15
+    "@firebase/storage": 0.9.7
+    "@firebase/storage-types": 0.6.0
+    "@firebase/util": 1.6.1
     tslib: ^2.1.0
   peerDependencies:
-    "@firebase/app-compat": 0.1.26-canary.497d34c84
-  checksum: 5d67115a18132b6ba2334adebe91b8d12251ef5567fe0cc30feb71f77d40876d9136ed408a7aa15ec0c3204e4e12a80d239a2c0055f1a5d44086f5b7e0213f3b
+    "@firebase/app-compat": 0.x
+  checksum: 58639fb52ffbba0b0f8f97612659bc313bc05f8a15e51cac346ec8818561b4008e5b943fde204ac972c7c716e26b6d215ad1816fccd399eb8997d67f2a005d5d
   languageName: node
   linkType: hard
 
@@ -3186,16 +3100,6 @@ __metadata:
     "@firebase/app-types": 0.x
     "@firebase/util": 1.x
   checksum: c49de571a1cd63a133ed6fa0e848b006a73a240c6db39afa6d6d75bcf3c32944a7fcc7cfad6b1804a7d1f6fe115c485e5c005e259ea3ba36ffb1423823aca94c
-  languageName: node
-  linkType: hard
-
-"@firebase/storage-types@npm:0.6.0-canary.497d34c84":
-  version: 0.6.0-canary.497d34c84
-  resolution: "@firebase/storage-types@npm:0.6.0-canary.497d34c84"
-  peerDependencies:
-    "@firebase/app-types": 0.7.0-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
-  checksum: b8de6c463c78902b36917c058b2478ad6ebddb71aff63dc6fa20da861e790e2b62fc292586b2bf5258286aff6d4d03fe830a62beb4b67c2fe7964c7badc3f861
   languageName: node
   linkType: hard
 
@@ -3213,17 +3117,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/storage@npm:0.9.6-canary.497d34c84":
-  version: 0.9.6-canary.497d34c84
-  resolution: "@firebase/storage@npm:0.9.6-canary.497d34c84"
+"@firebase/storage@npm:0.9.7":
+  version: 0.9.7
+  resolution: "@firebase/storage@npm:0.9.7"
   dependencies:
-    "@firebase/component": 0.5.14-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
+    "@firebase/component": 0.5.15
+    "@firebase/util": 1.6.1
     node-fetch: 2.6.7
     tslib: ^2.1.0
   peerDependencies:
-    "@firebase/app": 0.7.25-canary.497d34c84
-  checksum: 3e9c9cd9dd0a2e4b2f1f50a3d890a3d22e0f356078c96e046bd8986fd99fc13b474e16f77460bfa6b927c77c725bd2b87abbad56c1d34667d7d1d2977af1b8b6
+    "@firebase/app": 0.x
+  checksum: 440419004f2ad28dc10772fffbf1872cac31591f326523de0920dfce5ad6a6db67ea50fa49afcf240995becdde3fc9b7c16d5ac13ea9bdd572d311ee4ccb972b
   languageName: node
   linkType: hard
 
@@ -3245,12 +3149,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/util@npm:1.6.0-canary.497d34c84":
-  version: 1.6.0-canary.497d34c84
-  resolution: "@firebase/util@npm:1.6.0-canary.497d34c84"
+"@firebase/util@npm:1.6.1":
+  version: 1.6.1
+  resolution: "@firebase/util@npm:1.6.1"
   dependencies:
     tslib: ^2.1.0
-  checksum: d7a67a201e1a7464b90d64256320d148907533b79f17e617d20b2129c32b1cda62f22c40a17cb91c4965f64fc9acbedcb889b33c75de409da84d9099df84c381
+  checksum: 6f29f4e093df5d6d8a979537ea0314e297e19e21b7cfca1d34a277791bb8d46ce42e5665e375c2872c66d22a9bc293401653f984c596b7145ea38c9f5304b91e
   languageName: node
   linkType: hard
 
@@ -3261,10 +3165,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/webchannel-wrapper@npm:0.6.1-canary.497d34c84":
-  version: 0.6.1-canary.497d34c84
-  resolution: "@firebase/webchannel-wrapper@npm:0.6.1-canary.497d34c84"
-  checksum: 3b83ddc847b4a124be42e47640a08a0e8a8adbaee318860c6ea04f628367d9194f2eec744357f4e25f01f3b6f1581a9d9956e5ada41ef27a289eb0116e170d34
+"@firebase/webchannel-wrapper@npm:0.6.2":
+  version: 0.6.2
+  resolution: "@firebase/webchannel-wrapper@npm:0.6.2"
+  checksum: e15e1d7d5fe668616c0f698cc4776af4ce858154fdabd1be7a34da60f368652a6a8c7a59c253be030600c1c515caaefc73ae941766ec61c6ee8d555971f7d619
   languageName: node
   linkType: hard
 
@@ -8748,37 +8652,37 @@ __metadata:
   languageName: node
   linkType: hard
 
-"firebase@npm:9.8.2-canary.497d34c84":
-  version: 9.8.2-canary.497d34c84
-  resolution: "firebase@npm:9.8.2-canary.497d34c84"
+"firebase@npm:9.8.3":
+  version: 9.8.3
+  resolution: "firebase@npm:9.8.3"
   dependencies:
-    "@firebase/analytics": 0.7.9-canary.497d34c84
-    "@firebase/analytics-compat": 0.1.10-canary.497d34c84
-    "@firebase/app": 0.7.25-canary.497d34c84
-    "@firebase/app-check": 0.5.8-canary.497d34c84
-    "@firebase/app-check-compat": 0.2.8-canary.497d34c84
-    "@firebase/app-compat": 0.1.26-canary.497d34c84
-    "@firebase/app-types": 0.7.0-canary.497d34c84
-    "@firebase/auth": 0.20.2-canary.497d34c84
-    "@firebase/auth-compat": 0.2.15-canary.497d34c84
-    "@firebase/database": 0.13.0-canary.497d34c84
-    "@firebase/database-compat": 0.2.0-canary.497d34c84
-    "@firebase/firestore": 3.4.9-canary.497d34c84
-    "@firebase/firestore-compat": 0.1.18-canary.497d34c84
-    "@firebase/functions": 0.8.1-canary.497d34c84
-    "@firebase/functions-compat": 0.2.1-canary.497d34c84
-    "@firebase/installations": 0.5.9-canary.497d34c84
-    "@firebase/messaging": 0.9.13-canary.497d34c84
-    "@firebase/messaging-compat": 0.1.13-canary.497d34c84
-    "@firebase/performance": 0.5.9-canary.497d34c84
-    "@firebase/performance-compat": 0.1.9-canary.497d34c84
+    "@firebase/analytics": 0.7.10
+    "@firebase/analytics-compat": 0.1.11
+    "@firebase/app": 0.7.26
+    "@firebase/app-check": 0.5.9
+    "@firebase/app-check-compat": 0.2.9
+    "@firebase/app-compat": 0.1.27
+    "@firebase/app-types": 0.7.0
+    "@firebase/auth": 0.20.3
+    "@firebase/auth-compat": 0.2.16
+    "@firebase/database": 0.13.1
+    "@firebase/database-compat": 0.2.1
+    "@firebase/firestore": 3.4.10
+    "@firebase/firestore-compat": 0.1.19
+    "@firebase/functions": 0.8.2
+    "@firebase/functions-compat": 0.2.2
+    "@firebase/installations": 0.5.10
+    "@firebase/messaging": 0.9.14
+    "@firebase/messaging-compat": 0.1.14
+    "@firebase/performance": 0.5.10
+    "@firebase/performance-compat": 0.1.10
     "@firebase/polyfill": 0.3.36
-    "@firebase/remote-config": 0.3.8-canary.497d34c84
-    "@firebase/remote-config-compat": 0.1.9-canary.497d34c84
-    "@firebase/storage": 0.9.6-canary.497d34c84
-    "@firebase/storage-compat": 0.1.14-canary.497d34c84
-    "@firebase/util": 1.6.0-canary.497d34c84
-  checksum: 6c13522c23975a67f9617d3c15e674a29dd129e21dd5748fb3945688ac99f734e117ac50bd00b34c67548b3dbc1eb8db0b49133eeba40860717d945d368ee999
+    "@firebase/remote-config": 0.3.9
+    "@firebase/remote-config-compat": 0.1.10
+    "@firebase/storage": 0.9.7
+    "@firebase/storage-compat": 0.1.15
+    "@firebase/util": 1.6.1
+  checksum: 6e422e182946cf5e35d20402bb2dee33ae51c6e4816ac1ff1711d7ff6ae82cf3a6bff08aab80d0d3dbdaa1dd958d91cff381b4bfb9af17c68e5cbbb87f160c6c
   languageName: node
   linkType: hard
 
@@ -13559,12 +13463,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:2.7.0":
-  version: 2.7.0
-  resolution: "prettier@npm:2.7.0"
+"prettier@npm:2.7.1":
+  version: 2.7.1
+  resolution: "prettier@npm:2.7.1"
   bin:
     prettier: bin-prettier.js
-  checksum: 5b55bb1dced9d16635b83229df8e670d150890fdb343f19e8a66e610094a108e960c0f57352b3e5cdbc4eff4ef00a834406047ffcd9f20bd22a6497ba143c81f
+  checksum: 55a4409182260866ab31284d929b3cb961e5fdb91fe0d2e099dac92eaecec890f36e524b4c19e6ceae839c99c6d7195817579cdffc8e2c80da0cb794463a748b
   languageName: node
   linkType: hard
 
