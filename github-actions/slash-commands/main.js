@@ -61443,173 +61443,7 @@ var chalkStderr = createChalk({ level: stderrColor ? stderrColor.level : 0 });
 var source_default = chalk;
 
 // 
-function isDryRun() {
-  return process.env["DRY_RUN"] !== void 0;
-}
-var DryRunError = class extends Error {
-  constructor() {
-    super("Cannot call this function in dryRun mode.");
-  }
-};
-
-// 
 import { spawnSync } from "child_process";
-
-// 
-var import_graphql = __toESM(require_dist_node6());
-var import_rest3 = __toESM(require_dist_node12());
-var import_typed_graphqlify = __toESM(require_dist());
-var GithubClient = class {
-  constructor(_octokitOptions) {
-    this._octokitOptions = _octokitOptions;
-    this._octokit = new import_rest3.Octokit(this._octokitOptions);
-    this.pulls = this._octokit.pulls;
-    this.repos = this._octokit.repos;
-    this.issues = this._octokit.issues;
-    this.git = this._octokit.git;
-    this.rateLimit = this._octokit.rateLimit;
-    this.teams = this._octokit.teams;
-    this.rest = this._octokit.rest;
-    this.paginate = this._octokit.paginate;
-  }
-};
-var AuthenticatedGithubClient = class extends GithubClient {
-  constructor(_token) {
-    super({ auth: _token });
-    this._token = _token;
-    this._graphql = import_graphql.graphql.defaults({ headers: { authorization: `token ${this._token}` } });
-  }
-  async graphql(queryObject, params4 = {}) {
-    return await this._graphql((0, import_typed_graphqlify.query)(queryObject).toString(), params4);
-  }
-};
-
-// 
-import { URL as URL2 } from "url";
-var GITHUB_TOKEN_SETTINGS_URL = "https://github.com/settings/tokens";
-var GITHUB_TOKEN_GENERATE_URL = "https://github.com/settings/tokens/new";
-function addTokenToGitHttpsUrl(githubHttpsUrl, token) {
-  const url = new URL2(githubHttpsUrl);
-  url.password = token;
-  url.username = "_";
-  return url.href;
-}
-function getRepositoryGitUrl(config, githubToken) {
-  if (config.useSsh) {
-    return `git@github.com:${config.owner}/${config.name}.git`;
-  }
-  const baseHttpUrl = `https://github.com/${config.owner}/${config.name}.git`;
-  if (githubToken !== void 0) {
-    return addTokenToGitHttpsUrl(baseHttpUrl, githubToken);
-  }
-  return baseHttpUrl;
-}
-
-// 
-var GitCommandError = class extends Error {
-  constructor(client, unsanitizedArgs) {
-    super(`Command failed: git ${client.sanitizeConsoleOutput(unsanitizedArgs.join(" "))}`);
-  }
-};
-var GitClient = class {
-  constructor(config, baseDir = determineRepoBaseDirFromCwd()) {
-    this.baseDir = baseDir;
-    this.github = new GithubClient();
-    this.gitBinPath = "git";
-    this.config = config;
-    this.remoteConfig = config.github;
-    this.remoteParams = { owner: config.github.owner, repo: config.github.name };
-    this.mainBranchName = config.github.mainBranchName;
-  }
-  run(args, options) {
-    const result = this.runGraceful(args, options);
-    if (result.status !== 0) {
-      throw new GitCommandError(this, args);
-    }
-    return result;
-  }
-  runGraceful(args, options = {}) {
-    const gitCommand = args[0];
-    if (isDryRun() && gitCommand === "push") {
-      Log.debug(`"git push" is not able to be run in dryRun mode.`);
-      throw new DryRunError();
-    }
-    Log.debug("Executing: git", this.sanitizeConsoleOutput(args.join(" ")));
-    const result = spawnSync(this.gitBinPath, args, __spreadProps(__spreadValues({
-      cwd: this.baseDir,
-      stdio: "pipe"
-    }, options), {
-      encoding: "utf8"
-    }));
-    Log.debug(`Status: ${result.status}, Error: ${!!result.error}, Signal: ${result.signal}`);
-    if (result.status !== 0 && result.stderr !== null) {
-      process.stderr.write(this.sanitizeConsoleOutput(result.stderr));
-    }
-    Log.debug("Stdout:", result.stdout);
-    Log.debug("Stderr:", result.stderr);
-    Log.debug("Process Error:", result.error);
-    if (result.error !== void 0) {
-      process.stderr.write(this.sanitizeConsoleOutput(result.error.message));
-    }
-    return result;
-  }
-  getRepoGitUrl() {
-    return getRepositoryGitUrl(this.remoteConfig);
-  }
-  hasCommit(branchName, sha) {
-    return this.run(["branch", branchName, "--contains", sha]).stdout !== "";
-  }
-  isShallowRepo() {
-    return this.run(["rev-parse", "--is-shallow-repository"]).stdout.trim() === "true";
-  }
-  getCurrentBranchOrRevision() {
-    const branchName = this.run(["rev-parse", "--abbrev-ref", "HEAD"]).stdout.trim();
-    if (branchName === "HEAD") {
-      return this.run(["rev-parse", "HEAD"]).stdout.trim();
-    }
-    return branchName;
-  }
-  hasUncommittedChanges() {
-    this.runGraceful(["update-index", "-q", "--refresh"]);
-    return this.runGraceful(["diff-index", "--quiet", "HEAD"]).status !== 0;
-  }
-  checkout(branchOrRevision, cleanState) {
-    if (cleanState) {
-      this.runGraceful(["am", "--abort"], { stdio: "ignore" });
-      this.runGraceful(["cherry-pick", "--abort"], { stdio: "ignore" });
-      this.runGraceful(["rebase", "--abort"], { stdio: "ignore" });
-      this.runGraceful(["reset", "--hard"], { stdio: "ignore" });
-    }
-    return this.runGraceful(["checkout", branchOrRevision], { stdio: "ignore" }).status === 0;
-  }
-  allChangesFilesSince(shaOrRef = "HEAD") {
-    return Array.from(/* @__PURE__ */ new Set([
-      ...gitOutputAsArray(this.runGraceful(["diff", "--name-only", "--diff-filter=d", shaOrRef])),
-      ...gitOutputAsArray(this.runGraceful(["ls-files", "--others", "--exclude-standard"]))
-    ]));
-  }
-  allStagedFiles() {
-    return gitOutputAsArray(this.runGraceful(["diff", "--name-only", "--diff-filter=ACM", "--staged"]));
-  }
-  allFiles() {
-    return gitOutputAsArray(this.runGraceful(["ls-files"]));
-  }
-  sanitizeConsoleOutput(value) {
-    return value;
-  }
-  static async get() {
-    if (GitClient._unauthenticatedInstance === null) {
-      GitClient._unauthenticatedInstance = (async () => {
-        return new GitClient(await getConfig([assertValidGithubConfig]));
-      })();
-    }
-    return GitClient._unauthenticatedInstance;
-  }
-};
-GitClient._unauthenticatedInstance = null;
-function gitOutputAsArray(gitCommandResult) {
-  return gitCommandResult.stdout.split("\n").map((x2) => x2.trim()).filter((x2) => !!x2);
-}
 function determineRepoBaseDirFromCwd() {
   const { stdout, stderr, status } = spawnSync("git", ["rev-parse --show-toplevel"], {
     shell: true,
@@ -61754,24 +61588,193 @@ async function readConfigFile(configPath, returnEmptyObjectOnError = false) {
 }
 
 // 
-var import_typed_graphqlify2 = __toESM(require_dist());
-var findOwnedForksOfRepoQuery = (0, import_typed_graphqlify2.params)({
+var import_typed_graphqlify = __toESM(require_dist());
+var findOwnedForksOfRepoQuery = (0, import_typed_graphqlify.params)({
   $owner: "String!",
   $name: "String!"
 }, {
-  repository: (0, import_typed_graphqlify2.params)({ owner: "$owner", name: "$name" }, {
-    forks: (0, import_typed_graphqlify2.params)({ affiliations: "OWNER", first: 1 }, {
+  repository: (0, import_typed_graphqlify.params)({ owner: "$owner", name: "$name" }, {
+    forks: (0, import_typed_graphqlify.params)({ affiliations: "OWNER", first: 1 }, {
       nodes: [
         {
           owner: {
-            login: import_typed_graphqlify2.types.string
+            login: import_typed_graphqlify.types.string
           },
-          name: import_typed_graphqlify2.types.string
+          name: import_typed_graphqlify.types.string
         }
       ]
     })
   })
 });
+
+// 
+function isDryRun() {
+  return process.env["DRY_RUN"] !== void 0;
+}
+var DryRunError = class extends Error {
+  constructor() {
+    super("Cannot call this function in dryRun mode.");
+  }
+};
+
+// 
+import { spawnSync as spawnSync2 } from "child_process";
+
+// 
+var import_graphql = __toESM(require_dist_node6());
+var import_rest3 = __toESM(require_dist_node12());
+var import_typed_graphqlify2 = __toESM(require_dist());
+var GithubClient = class {
+  constructor(_octokitOptions) {
+    this._octokitOptions = _octokitOptions;
+    this._octokit = new import_rest3.Octokit(this._octokitOptions);
+    this.pulls = this._octokit.pulls;
+    this.repos = this._octokit.repos;
+    this.issues = this._octokit.issues;
+    this.git = this._octokit.git;
+    this.rateLimit = this._octokit.rateLimit;
+    this.teams = this._octokit.teams;
+    this.rest = this._octokit.rest;
+    this.paginate = this._octokit.paginate;
+  }
+};
+var AuthenticatedGithubClient = class extends GithubClient {
+  constructor(_token) {
+    super({ auth: _token });
+    this._token = _token;
+    this._graphql = import_graphql.graphql.defaults({ headers: { authorization: `token ${this._token}` } });
+  }
+  async graphql(queryObject, params4 = {}) {
+    return await this._graphql((0, import_typed_graphqlify2.query)(queryObject).toString(), params4);
+  }
+};
+
+// 
+import { URL as URL2 } from "url";
+var GITHUB_TOKEN_SETTINGS_URL = "https://github.com/settings/tokens";
+var GITHUB_TOKEN_GENERATE_URL = "https://github.com/settings/tokens/new";
+function addTokenToGitHttpsUrl(githubHttpsUrl, token) {
+  const url = new URL2(githubHttpsUrl);
+  url.password = token;
+  url.username = "_";
+  return url.href;
+}
+function getRepositoryGitUrl(config, githubToken) {
+  if (config.useSsh) {
+    return `git@github.com:${config.owner}/${config.name}.git`;
+  }
+  const baseHttpUrl = `https://github.com/${config.owner}/${config.name}.git`;
+  if (githubToken !== void 0) {
+    return addTokenToGitHttpsUrl(baseHttpUrl, githubToken);
+  }
+  return baseHttpUrl;
+}
+
+// 
+var GitCommandError = class extends Error {
+  constructor(client, unsanitizedArgs) {
+    super(`Command failed: git ${client.sanitizeConsoleOutput(unsanitizedArgs.join(" "))}`);
+  }
+};
+var GitClient = class {
+  constructor(config, baseDir = determineRepoBaseDirFromCwd()) {
+    this.baseDir = baseDir;
+    this.github = new GithubClient();
+    this.gitBinPath = "git";
+    this.config = config;
+    this.remoteConfig = config.github;
+    this.remoteParams = { owner: config.github.owner, repo: config.github.name };
+    this.mainBranchName = config.github.mainBranchName;
+  }
+  run(args, options) {
+    const result = this.runGraceful(args, options);
+    if (result.status !== 0) {
+      throw new GitCommandError(this, args);
+    }
+    return result;
+  }
+  runGraceful(args, options = {}) {
+    const gitCommand = args[0];
+    if (isDryRun() && gitCommand === "push") {
+      Log.debug(`"git push" is not able to be run in dryRun mode.`);
+      throw new DryRunError();
+    }
+    Log.debug("Executing: git", this.sanitizeConsoleOutput(args.join(" ")));
+    const result = spawnSync2(this.gitBinPath, args, __spreadProps(__spreadValues({
+      cwd: this.baseDir,
+      stdio: "pipe"
+    }, options), {
+      encoding: "utf8"
+    }));
+    Log.debug(`Status: ${result.status}, Error: ${!!result.error}, Signal: ${result.signal}`);
+    if (result.status !== 0 && result.stderr !== null) {
+      process.stderr.write(this.sanitizeConsoleOutput(result.stderr));
+    }
+    Log.debug("Stdout:", result.stdout);
+    Log.debug("Stderr:", result.stderr);
+    Log.debug("Process Error:", result.error);
+    if (result.error !== void 0) {
+      process.stderr.write(this.sanitizeConsoleOutput(result.error.message));
+    }
+    return result;
+  }
+  getRepoGitUrl() {
+    return getRepositoryGitUrl(this.remoteConfig);
+  }
+  hasCommit(branchName, sha) {
+    return this.run(["branch", branchName, "--contains", sha]).stdout !== "";
+  }
+  isShallowRepo() {
+    return this.run(["rev-parse", "--is-shallow-repository"]).stdout.trim() === "true";
+  }
+  getCurrentBranchOrRevision() {
+    const branchName = this.run(["rev-parse", "--abbrev-ref", "HEAD"]).stdout.trim();
+    if (branchName === "HEAD") {
+      return this.run(["rev-parse", "HEAD"]).stdout.trim();
+    }
+    return branchName;
+  }
+  hasUncommittedChanges() {
+    this.runGraceful(["update-index", "-q", "--refresh"]);
+    return this.runGraceful(["diff-index", "--quiet", "HEAD"]).status !== 0;
+  }
+  checkout(branchOrRevision, cleanState) {
+    if (cleanState) {
+      this.runGraceful(["am", "--abort"], { stdio: "ignore" });
+      this.runGraceful(["cherry-pick", "--abort"], { stdio: "ignore" });
+      this.runGraceful(["rebase", "--abort"], { stdio: "ignore" });
+      this.runGraceful(["reset", "--hard"], { stdio: "ignore" });
+    }
+    return this.runGraceful(["checkout", branchOrRevision], { stdio: "ignore" }).status === 0;
+  }
+  allChangesFilesSince(shaOrRef = "HEAD") {
+    return Array.from(/* @__PURE__ */ new Set([
+      ...gitOutputAsArray(this.runGraceful(["diff", "--name-only", "--diff-filter=d", shaOrRef])),
+      ...gitOutputAsArray(this.runGraceful(["ls-files", "--others", "--exclude-standard"]))
+    ]));
+  }
+  allStagedFiles() {
+    return gitOutputAsArray(this.runGraceful(["diff", "--name-only", "--diff-filter=ACM", "--staged"]));
+  }
+  allFiles() {
+    return gitOutputAsArray(this.runGraceful(["ls-files"]));
+  }
+  sanitizeConsoleOutput(value) {
+    return value;
+  }
+  static async get() {
+    if (GitClient._unauthenticatedInstance === null) {
+      GitClient._unauthenticatedInstance = (async () => {
+        return new GitClient(await getConfig([assertValidGithubConfig]));
+      })();
+    }
+    return GitClient._unauthenticatedInstance;
+  }
+};
+GitClient._unauthenticatedInstance = null;
+function gitOutputAsArray(gitCommandResult) {
+  return gitCommandResult.stdout.split("\n").map((x2) => x2.trim()).filter((x2) => !!x2);
+}
 
 // 
 var AuthenticatedGitClient = class extends GitClient {

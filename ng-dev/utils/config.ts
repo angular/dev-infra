@@ -11,8 +11,8 @@ import {join} from 'path';
 import {Assertions, MultipleAssertions} from './config-assertions.js';
 
 import {Log} from './logging.js';
-import {determineRepoBaseDirFromCwd} from './git/git-client.js';
 import {getCachedConfig, setCachedConfig} from './config-cache.js';
+import {determineRepoBaseDirFromCwd} from './repo-directory.js';
 
 /**
  * Type describing a ng-dev configuration.

@@ -13,6 +13,7 @@ import {Log} from '../logging.js';
 
 import {GithubClient} from './github.js';
 import {getRepositoryGitUrl} from './github-urls.js';
+import {determineRepoBaseDirFromCwd} from '../repo-directory.js';
 
 /** Error for failed Git commands. */
 export class GitCommandError extends Error {
@@ -250,22 +251,4 @@ function gitOutputAsArray(gitCommandResult: SpawnSyncReturns<string>): string[] 
     .split('\n')
     .map((x) => x.trim())
     .filter((x) => !!x);
-}
-
-/** Determines the repository base directory from the current working directory. */
-export function determineRepoBaseDirFromCwd() {
-  // TODO(devversion): Replace with common spawn sync utility once available.
-  const {stdout, stderr, status} = spawnSync('git', ['rev-parse --show-toplevel'], {
-    shell: true,
-    stdio: 'pipe',
-    encoding: 'utf8',
-  });
-  if (status !== 0) {
-    throw Error(
-      `Unable to find the path to the base directory of the repository.\n` +
-        `Was the command run from inside of the repo?\n\n` +
-        `${stderr}`,
-    );
-  }
-  return stdout.trim();
 }
