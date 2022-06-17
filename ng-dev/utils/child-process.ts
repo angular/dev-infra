@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {stdout as stdoutColor} from 'supports-color';
+import supportsColor from 'supports-color';
 import {
   spawn as _spawn,
   SpawnOptions as _SpawnOptions,
@@ -192,7 +192,8 @@ function getEnvironmentForNonInteractiveSpawn(
   userProvidedEnv?: NodeJS.ProcessEnv,
 ): NodeJS.ProcessEnv {
   // Pass through the color level from the TTY/process performing the `spawn` call.
-  const forceColorValue = stdoutColor !== false ? stdoutColor.level.toString() : undefined;
+  const forceColorValue =
+    supportsColor.stdout !== false ? supportsColor.stdout.level.toString() : undefined;
 
   return {FORCE_COLOR: forceColorValue, ...(userProvidedEnv ?? process.env)};
 }
