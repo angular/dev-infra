@@ -10,8 +10,7 @@ import chalk, {ChalkInstance} from 'chalk';
 import {writeFileSync} from 'fs';
 import {join} from 'path';
 import {Arguments} from 'yargs';
-
-import {GitClient} from './git/git-client.js';
+import {determineRepoBaseDirFromCwd} from './repo-directory.js';
 
 /**
  * Supported levels for logging functions. Levels are mapped to
@@ -138,7 +137,7 @@ export async function captureLogOutputForCommand(argv: Arguments) {
     throw Error('`captureLogOutputForCommand` cannot be called multiple times');
   }
 
-  const git = await GitClient.get();
+  const repoDir = determineRepoBaseDirFromCwd();
   /** The date time used for timestamping when the command was invoked. */
   const now = new Date();
   /** Header line to separate command runs in log files. */
@@ -151,7 +150,7 @@ export async function captureLogOutputForCommand(argv: Arguments) {
     LOGGED_TEXT += `Command ran in ${new Date().getTime() - now.getTime()}ms\n`;
     LOGGED_TEXT += `Exit Code: ${code}\n`;
     /** Path to the log file location. */
-    const logFilePath = join(git.baseDir, '.ng-dev.log');
+    const logFilePath = join(repoDir, '.ng-dev.log');
 
     // Strip ANSI escape codes from log outputs.
     LOGGED_TEXT = LOGGED_TEXT.replace(/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]/g, '');
@@ -163,7 +162,7 @@ export async function captureLogOutputForCommand(argv: Arguments) {
     if (code > 1) {
       const logFileName = `.ng-dev.err-${now.getTime()}.log`;
       console.error(`Exit code: ${code}. Writing full log to ${logFileName}`);
-      writeFileSync(join(git.baseDir, logFileName), LOGGED_TEXT);
+      writeFileSync(join(repoDir, logFileName), LOGGED_TEXT);
     }
   });
 

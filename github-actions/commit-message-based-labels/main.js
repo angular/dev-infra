@@ -3801,8 +3801,8 @@ var require_URL = __commonJS({
     var utils = require_utils3();
     var Impl = require_URL_impl();
     var impl = utils.implSymbol;
-    function URL3(url) {
-      if (!this || this[impl] || !(this instanceof URL3)) {
+    function URL2(url) {
+      if (!this || this[impl] || !(this instanceof URL2)) {
         throw new TypeError("Failed to construct 'URL': Please use the 'new' operator, this DOM object constructor cannot be called as a function.");
       }
       if (arguments.length < 1) {
@@ -3818,7 +3818,7 @@ var require_URL = __commonJS({
       }
       module.exports.setup(this, args);
     }
-    URL3.prototype.toJSON = function toJSON() {
+    URL2.prototype.toJSON = function toJSON() {
       if (!this || !module.exports.is(this)) {
         throw new TypeError("Illegal invocation");
       }
@@ -3828,7 +3828,7 @@ var require_URL = __commonJS({
       }
       return this[impl].toJSON.apply(this[impl], args);
     };
-    Object.defineProperty(URL3.prototype, "href", {
+    Object.defineProperty(URL2.prototype, "href", {
       get() {
         return this[impl].href;
       },
@@ -3839,20 +3839,20 @@ var require_URL = __commonJS({
       enumerable: true,
       configurable: true
     });
-    URL3.prototype.toString = function() {
+    URL2.prototype.toString = function() {
       if (!this || !module.exports.is(this)) {
         throw new TypeError("Illegal invocation");
       }
       return this.href;
     };
-    Object.defineProperty(URL3.prototype, "origin", {
+    Object.defineProperty(URL2.prototype, "origin", {
       get() {
         return this[impl].origin;
       },
       enumerable: true,
       configurable: true
     });
-    Object.defineProperty(URL3.prototype, "protocol", {
+    Object.defineProperty(URL2.prototype, "protocol", {
       get() {
         return this[impl].protocol;
       },
@@ -3863,7 +3863,7 @@ var require_URL = __commonJS({
       enumerable: true,
       configurable: true
     });
-    Object.defineProperty(URL3.prototype, "username", {
+    Object.defineProperty(URL2.prototype, "username", {
       get() {
         return this[impl].username;
       },
@@ -3874,7 +3874,7 @@ var require_URL = __commonJS({
       enumerable: true,
       configurable: true
     });
-    Object.defineProperty(URL3.prototype, "password", {
+    Object.defineProperty(URL2.prototype, "password", {
       get() {
         return this[impl].password;
       },
@@ -3885,7 +3885,7 @@ var require_URL = __commonJS({
       enumerable: true,
       configurable: true
     });
-    Object.defineProperty(URL3.prototype, "host", {
+    Object.defineProperty(URL2.prototype, "host", {
       get() {
         return this[impl].host;
       },
@@ -3896,7 +3896,7 @@ var require_URL = __commonJS({
       enumerable: true,
       configurable: true
     });
-    Object.defineProperty(URL3.prototype, "hostname", {
+    Object.defineProperty(URL2.prototype, "hostname", {
       get() {
         return this[impl].hostname;
       },
@@ -3907,7 +3907,7 @@ var require_URL = __commonJS({
       enumerable: true,
       configurable: true
     });
-    Object.defineProperty(URL3.prototype, "port", {
+    Object.defineProperty(URL2.prototype, "port", {
       get() {
         return this[impl].port;
       },
@@ -3918,7 +3918,7 @@ var require_URL = __commonJS({
       enumerable: true,
       configurable: true
     });
-    Object.defineProperty(URL3.prototype, "pathname", {
+    Object.defineProperty(URL2.prototype, "pathname", {
       get() {
         return this[impl].pathname;
       },
@@ -3929,7 +3929,7 @@ var require_URL = __commonJS({
       enumerable: true,
       configurable: true
     });
-    Object.defineProperty(URL3.prototype, "search", {
+    Object.defineProperty(URL2.prototype, "search", {
       get() {
         return this[impl].search;
       },
@@ -3940,7 +3940,7 @@ var require_URL = __commonJS({
       enumerable: true,
       configurable: true
     });
-    Object.defineProperty(URL3.prototype, "hash", {
+    Object.defineProperty(URL2.prototype, "hash", {
       get() {
         return this[impl].hash;
       },
@@ -3956,7 +3956,7 @@ var require_URL = __commonJS({
         return !!obj && obj[impl] instanceof Impl.implementation;
       },
       create(constructorArgs, privateData) {
-        let obj = Object.create(URL3.prototype);
+        let obj = Object.create(URL2.prototype);
         this.setup(obj, constructorArgs, privateData);
         return obj;
       },
@@ -3967,10 +3967,10 @@ var require_URL = __commonJS({
         obj[impl] = new Impl.implementation(constructorArgs, privateData);
         obj[impl][utils.wrapperSymbol] = obj;
       },
-      interface: URL3,
+      interface: URL2,
       expose: {
-        Window: { URL: URL3 },
-        Worker: { URL: URL3 }
+        Window: { URL: URL2 },
+        Worker: { URL: URL2 }
       }
     };
   }
@@ -8341,12 +8341,12 @@ var require_lib4 = __commonJS({
       configurable: true
     });
     var INTERNALS$2 = Symbol("Request internals");
-    var URL3 = Url.URL || whatwgUrl.URL;
+    var URL2 = Url.URL || whatwgUrl.URL;
     var parse_url = Url.parse;
     var format_url = Url.format;
     function parseURL(urlStr) {
       if (/^[a-zA-Z][a-zA-Z\d+\-.]*:/.exec(urlStr)) {
-        urlStr = new URL3(urlStr).toString();
+        urlStr = new URL2(urlStr).toString();
       }
       return parse_url(urlStr);
     }
@@ -9022,9 +9022,9 @@ var require_dist_node6 = __commonJS({
     var NON_VARIABLE_OPTIONS = ["method", "baseUrl", "url", "headers", "request", "query", "mediaType"];
     var FORBIDDEN_VARIABLE_OPTIONS = ["query", "method", "url"];
     var GHES_V3_SUFFIX_REGEX = /\/api\/v3\/?$/;
-    function graphql(request2, query2, options) {
+    function graphql(request2, query, options) {
       if (options) {
-        if (typeof query2 === "string" && "query" in options) {
+        if (typeof query === "string" && "query" in options) {
           return Promise.reject(new Error(`[@octokit/graphql] "query" cannot be used as variable name`));
         }
         for (const key in options) {
@@ -9033,9 +9033,9 @@ var require_dist_node6 = __commonJS({
           return Promise.reject(new Error(`[@octokit/graphql] "${key}" cannot be used as variable name`));
         }
       }
-      const parsedOptions = typeof query2 === "string" ? Object.assign({
-        query: query2
-      }, options) : query2;
+      const parsedOptions = typeof query === "string" ? Object.assign({
+        query
+      }, options) : query;
       const requestOptions = Object.keys(parsedOptions).reduce((result, key) => {
         if (NON_VARIABLE_OPTIONS.includes(key)) {
           result[key] = parsedOptions[key];
@@ -9064,8 +9064,8 @@ var require_dist_node6 = __commonJS({
     }
     function withDefaults(request$1, newDefaults) {
       const newRequest = request$1.defaults(newDefaults);
-      const newApi = (query2, options) => {
-        return graphql(newRequest, query2, options);
+      const newApi = (query, options) => {
+        return graphql(newRequest, query, options);
       };
       return Object.assign(newApi, {
         defaults: withDefaults.bind(null, newRequest),
@@ -9181,7 +9181,7 @@ var require_dist_node8 = __commonJS({
     }
     var VERSION = "3.6.0";
     var _excluded = ["authStrategy"];
-    var Octokit4 = class {
+    var Octokit3 = class {
       constructor(options = {}) {
         const hook = new beforeAfterHook.Collection();
         const requestDefaults = {
@@ -9267,9 +9267,9 @@ var require_dist_node8 = __commonJS({
         return NewOctokit;
       }
     };
-    Octokit4.VERSION = VERSION;
-    Octokit4.plugins = [];
-    exports.Octokit = Octokit4;
+    Octokit3.VERSION = VERSION;
+    Octokit3.plugins = [];
+    exports.Octokit = Octokit3;
   }
 });
 
@@ -10570,10 +10570,10 @@ var require_dist_node12 = __commonJS({
     var pluginPaginateRest = require_dist_node10();
     var pluginRestEndpointMethods = require_dist_node9();
     var VERSION = "18.12.0";
-    var Octokit4 = core2.Octokit.plugin(pluginRequestLog.requestLog, pluginRestEndpointMethods.legacyRestEndpointMethods, pluginPaginateRest.paginateRest).defaults({
+    var Octokit3 = core2.Octokit.plugin(pluginRequestLog.requestLog, pluginRestEndpointMethods.legacyRestEndpointMethods, pluginPaginateRest.paginateRest).defaults({
       userAgent: `octokit-rest.js/${VERSION}`
     });
-    exports.Octokit = Octokit4;
+    exports.Octokit = Octokit3;
   }
 });
 
@@ -13815,7 +13815,7 @@ var require_lodash = __commonJS({
           }
           return mapped.length && mapped[0] === arrays[0] ? baseIntersection(mapped, undefined2, comparator) : [];
         });
-        function join2(array, separator) {
+        function join(array, separator) {
           return array == null ? "" : nativeJoin.call(array, separator);
         }
         function last(array) {
@@ -15731,7 +15731,7 @@ var require_lodash = __commonJS({
         lodash.isUndefined = isUndefined;
         lodash.isWeakMap = isWeakMap;
         lodash.isWeakSet = isWeakSet;
-        lodash.join = join2;
+        lodash.join = join;
         lodash.kebabCase = kebabCase;
         lodash.last = last;
         lodash.lastIndexOf = lastIndexOf;
@@ -16249,7 +16249,7 @@ var require_regex = __commonJS({
   ""(exports, module) {
     "use strict";
     var reNomatch = /(?!.*)/;
-    function join2(array, joiner) {
+    function join(array, joiner) {
       return array.map(function(val) {
         return val.trim();
       }).filter(function(val) {
@@ -16260,7 +16260,7 @@ var require_regex = __commonJS({
       if (!noteKeywords) {
         return reNomatch;
       }
-      const noteKeywordsSelection = join2(noteKeywords, "|");
+      const noteKeywordsSelection = join(noteKeywords, "|");
       if (!notesPattern) {
         return new RegExp("^[\\s|*]*(" + noteKeywordsSelection + ")[:\\s]+(.*)", "i");
       }
@@ -16271,13 +16271,13 @@ var require_regex = __commonJS({
         return reNomatch;
       }
       const flags = issuePrefixesCaseSensitive ? "g" : "gi";
-      return new RegExp("(?:.*?)??\\s*([\\w-\\.\\/]*?)??(" + join2(issuePrefixes, "|") + ")([\\w-]*\\d+)", flags);
+      return new RegExp("(?:.*?)??\\s*([\\w-\\.\\/]*?)??(" + join(issuePrefixes, "|") + ")([\\w-]*\\d+)", flags);
     }
     function getReferencesRegex(referenceActions) {
       if (!referenceActions) {
         return /()(.+)/gi;
       }
-      const joinedKeywords = join2(referenceActions, "|");
+      const joinedKeywords = join(referenceActions, "|");
       return new RegExp("(" + joinedKeywords + ")(?:\\s+(.*?))(?=(?:" + joinedKeywords + ")|$)", "gi");
     }
     module.exports = function(options) {
@@ -16427,7 +16427,7 @@ var require_buffer_list = __commonJS({
         }
       }, {
         key: "join",
-        value: function join2(s) {
+        value: function join(s) {
           if (this.length === 0)
             return "";
           var p = this.head;
@@ -19281,294 +19281,6 @@ var require_conventional_commits_parser = __commonJS({
     }
     module.exports = conventionalCommitsParser;
     module.exports.sync = sync;
-  }
-});
-
-// 
-var require_dist = __commonJS({
-  ""(exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.GraphQLType = void 0;
-    (function(GraphQLType) {
-      GraphQLType[GraphQLType["SCALAR"] = 0] = "SCALAR";
-      GraphQLType[GraphQLType["INLINE_FRAGMENT"] = 1] = "INLINE_FRAGMENT";
-      GraphQLType[GraphQLType["FRAGMENT"] = 2] = "FRAGMENT";
-    })(exports.GraphQLType || (exports.GraphQLType = {}));
-    var typeSymbol = Symbol("GraphQL Type");
-    var paramsSymbol = Symbol("GraphQL Params");
-    function isInlineFragmentObject(value) {
-      return typeof value === "object" && value !== null && value[typeSymbol] === exports.GraphQLType.INLINE_FRAGMENT;
-    }
-    function isFragmentObject(value) {
-      return typeof value === "object" && value !== null && value[typeSymbol] === exports.GraphQLType.FRAGMENT;
-    }
-    function isScalarObject(value) {
-      return typeof value === "object" && value !== null && value[typeSymbol] === exports.GraphQLType.SCALAR;
-    }
-    function renderName(name) {
-      return name === void 0 ? "" : name;
-    }
-    function renderParams(params2, brackets, array) {
-      if (brackets === void 0) {
-        brackets = true;
-      }
-      if (array === void 0) {
-        array = false;
-      }
-      if (!params2) {
-        return "";
-      }
-      var builder = [];
-      for (var _i = 0, _a = Object.entries(params2); _i < _a.length; _i++) {
-        var _b = _a[_i], key = _b[0], value = _b[1];
-        var params_1 = void 0;
-        if (value === null) {
-          params_1 = "null";
-        } else if (Array.isArray(value)) {
-          params_1 = "[".concat(renderParams(value, false, true), "]");
-        } else if (typeof value === "object") {
-          params_1 = "{".concat(renderParams(value, false), "}");
-        } else {
-          params_1 = "".concat(value);
-        }
-        builder.push(array ? "".concat(params_1) : "".concat(key, ":").concat(params_1));
-      }
-      var built = builder.join(",");
-      if (brackets) {
-        built = "(".concat(built, ")");
-      }
-      return built;
-    }
-    function renderScalar(name, params2) {
-      return renderName(name) + renderParams(params2);
-    }
-    function renderInlineFragment(fragment2, context3) {
-      return "...on ".concat(fragment2.typeName).concat(renderObject(void 0, fragment2.internal, context3));
-    }
-    function renderFragment(fragment2, context3) {
-      return "fragment ".concat(fragment2.name, " on ").concat(fragment2.typeName).concat(renderObject(void 0, fragment2.internal, context3));
-    }
-    function renderArray(name, arr, context3) {
-      var first = arr[0];
-      if (first === void 0 || first === null) {
-        throw new Error("Cannot render array with no first value");
-      }
-      first[paramsSymbol] = arr[paramsSymbol];
-      return renderType(name, first, context3);
-    }
-    function renderType(name, value, context3) {
-      switch (typeof value) {
-        case "bigint":
-        case "boolean":
-        case "number":
-        case "string":
-          throw new Error("Rendering type ".concat(typeof value, " directly is disallowed"));
-        case "object":
-          if (value === null) {
-            throw new Error("Cannot render null");
-          }
-          if (isScalarObject(value)) {
-            return "".concat(renderScalar(name, value[paramsSymbol]), " ");
-          } else if (Array.isArray(value)) {
-            return renderArray(name, value, context3);
-          } else {
-            return renderObject(name, value, context3);
-          }
-        case "undefined":
-          return "";
-        default:
-          throw new Error("Cannot render type ".concat(typeof value));
-      }
-    }
-    function renderObject(name, obj, context3) {
-      var fields = [];
-      for (var _i = 0, _a = Object.entries(obj); _i < _a.length; _i++) {
-        var _b = _a[_i], key = _b[0], value = _b[1];
-        fields.push(renderType(key, value, context3));
-      }
-      for (var _c = 0, _d = Object.getOwnPropertySymbols(obj); _c < _d.length; _c++) {
-        var sym = _d[_c];
-        var value = obj[sym];
-        if (isInlineFragmentObject(value)) {
-          fields.push(renderInlineFragment(value, context3));
-        } else if (isFragmentObject(value)) {
-          context3.fragments.set(sym, value);
-          fields.push("...".concat(value.name));
-        }
-      }
-      if (fields.length === 0) {
-        throw new Error("Object cannot have no fields");
-      }
-      return "".concat(renderName(name)).concat(renderParams(obj[paramsSymbol]), "{").concat(fields.join("").trim(), "}");
-    }
-    function render(value) {
-      var context3 = {
-        fragments: /* @__PURE__ */ new Map()
-      };
-      var rend = renderObject(void 0, value, context3);
-      var rendered = /* @__PURE__ */ new Map();
-      var executingContext = context3;
-      var currentContext = {
-        fragments: /* @__PURE__ */ new Map()
-      };
-      while (executingContext.fragments.size > 0) {
-        for (var _i = 0, _a = Array.from(executingContext.fragments.entries()); _i < _a.length; _i++) {
-          var _b = _a[_i], sym = _b[0], fragment2 = _b[1];
-          if (!rendered.has(sym)) {
-            rendered.set(sym, renderFragment(fragment2, currentContext));
-          }
-        }
-        executingContext = currentContext;
-        currentContext = {
-          fragments: /* @__PURE__ */ new Map()
-        };
-      }
-      return rend + Array.from(rendered.values()).join("");
-    }
-    function fragmentToString(value) {
-      var context3 = {
-        fragments: /* @__PURE__ */ new Map()
-      };
-      renderObject(void 0, value, context3);
-      var currentContext = {
-        fragments: /* @__PURE__ */ new Map()
-      };
-      var output = "";
-      for (var _i = 0, _a = Array.from(context3.fragments.entries()); _i < _a.length; _i++) {
-        var _b = _a[_i], fragment2 = _b[1];
-        output = output + renderFragment(fragment2, currentContext);
-      }
-      return output;
-    }
-    function createOperate(operateType) {
-      function operate(opNameOrQueryObject, queryObject) {
-        if (typeof opNameOrQueryObject === "string") {
-          if (!queryObject) {
-            throw new Error("queryObject is not set");
-          }
-          return {
-            toString: function() {
-              return "".concat(operateType, " ").concat(opNameOrQueryObject).concat(render(queryObject));
-            }
-          };
-        }
-        return {
-          toString: function() {
-            return "".concat(operateType).concat(render(opNameOrQueryObject));
-          }
-        };
-      }
-      return operate;
-    }
-    var query2 = createOperate("query");
-    var mutation = createOperate("mutation");
-    var subscription = createOperate("subscription");
-    function params(params2, input) {
-      if (typeof params2 !== "object") {
-        throw new Error("Params have to be an object");
-      }
-      if (typeof input !== "object") {
-        throw new Error("Cannot apply params to JS ".concat(typeof params2));
-      }
-      input[paramsSymbol] = params2;
-      return input;
-    }
-    function alias(alias2, target) {
-      return "".concat(alias2, ":").concat(target);
-    }
-    function fragment(name, typeName, input) {
-      var _a, _b;
-      var fragment2 = (_a = {}, _a[typeSymbol] = exports.GraphQLType.FRAGMENT, _a.name = name, _a.typeName = typeName, _a.internal = input, _a);
-      return _b = {}, _b[Symbol("Fragment(".concat(name, " on ").concat(typeName, ")"))] = fragment2, _b;
-    }
-    function rawString(input) {
-      return JSON.stringify(input);
-    }
-    var __assign = function() {
-      __assign = Object.assign || function __assign2(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-          s = arguments[i];
-          for (var p in s)
-            if (Object.prototype.hasOwnProperty.call(s, p))
-              t[p] = s[p];
-        }
-        return t;
-      };
-      return __assign.apply(this, arguments);
-    };
-    function optional(obj) {
-      return obj;
-    }
-    function on(typeName, internal) {
-      var _a, _b;
-      var fragment2 = (_a = {}, _a[typeSymbol] = exports.GraphQLType.INLINE_FRAGMENT, _a.typeName = typeName, _a.internal = internal, _a);
-      return _b = {}, _b[Symbol("InlineFragment(".concat(typeName, ")"))] = fragment2, _b;
-    }
-    function onUnion(types2) {
-      var fragments = {};
-      for (var _i = 0, _a = Object.entries(types2); _i < _a.length; _i++) {
-        var _b = _a[_i], typeName = _b[0], internal = _b[1];
-        fragments = __assign(__assign({}, fragments), on(typeName, internal));
-      }
-      return fragments;
-    }
-    function scalarType() {
-      var _a;
-      var scalar = (_a = {}, _a[typeSymbol] = exports.GraphQLType.SCALAR, _a);
-      return scalar;
-    }
-    var types = function() {
-      function types2() {
-      }
-      Object.defineProperty(types2, "number", {
-        get: function() {
-          return scalarType();
-        },
-        enumerable: false,
-        configurable: true
-      });
-      Object.defineProperty(types2, "string", {
-        get: function() {
-          return scalarType();
-        },
-        enumerable: false,
-        configurable: true
-      });
-      Object.defineProperty(types2, "boolean", {
-        get: function() {
-          return scalarType();
-        },
-        enumerable: false,
-        configurable: true
-      });
-      types2.constant = function(_c) {
-        return scalarType();
-      };
-      types2.oneOf = function(_e) {
-        return scalarType();
-      };
-      types2.custom = function() {
-        return scalarType();
-      };
-      types2.optional = types2;
-      return types2;
-    }();
-    exports.alias = alias;
-    exports.fragment = fragment;
-    exports.fragmentToString = fragmentToString;
-    exports.mutation = mutation;
-    exports.on = on;
-    exports.onUnion = onUnion;
-    exports.optional = optional;
-    exports.params = params;
-    exports.paramsSymbol = paramsSymbol;
-    exports.query = query2;
-    exports.rawString = rawString;
-    exports.render = render;
-    exports.subscription = subscription;
-    exports.typeSymbol = typeSymbol;
-    exports.types = types;
   }
 });
 
@@ -24469,8 +24181,8 @@ var require_dist_node19 = __commonJS({
 
 // 
 var core = __toESM(require_core());
-var import_github3 = __toESM(require_github());
-var import_rest3 = __toESM(require_dist_node12());
+var import_github2 = __toESM(require_github());
+var import_rest2 = __toESM(require_dist_node12());
 
 // 
 var import_conventional_commits_parser = __toESM(require_conventional_commits_parser());
@@ -24533,10 +24245,6 @@ function parseInternal(fullText) {
     shortHash: commit.shortHash || void 0
   };
 }
-
-// 
-import { pathToFileURL } from "url";
-import { join } from "path";
 
 // 
 var ANSI_BACKGROUND_OFFSET = 10;
@@ -25005,176 +24713,6 @@ var chalkStderr = createChalk({ level: stderrColor ? stderrColor.level : 0 });
 var source_default = chalk;
 
 // 
-function isDryRun() {
-  return process.env["DRY_RUN"] !== void 0;
-}
-var DryRunError = class extends Error {
-  constructor() {
-    super("Cannot call this function in dryRun mode.");
-  }
-};
-
-// 
-import { spawnSync } from "child_process";
-
-// 
-var import_rest = __toESM(require_dist_node12());
-var import_typed_graphqlify = __toESM(require_dist());
-var GithubClient = class {
-  constructor(_octokitOptions) {
-    this._octokitOptions = _octokitOptions;
-    this._octokit = new import_rest.Octokit(this._octokitOptions);
-    this.pulls = this._octokit.pulls;
-    this.repos = this._octokit.repos;
-    this.issues = this._octokit.issues;
-    this.git = this._octokit.git;
-    this.rateLimit = this._octokit.rateLimit;
-    this.teams = this._octokit.teams;
-    this.rest = this._octokit.rest;
-    this.paginate = this._octokit.paginate;
-  }
-};
-
-// 
-import { URL as URL2 } from "url";
-function addTokenToGitHttpsUrl(githubHttpsUrl, token) {
-  const url = new URL2(githubHttpsUrl);
-  url.password = token;
-  url.username = "_";
-  return url.href;
-}
-function getRepositoryGitUrl(config, githubToken) {
-  if (config.useSsh) {
-    return `git@github.com:${config.owner}/${config.name}.git`;
-  }
-  const baseHttpUrl = `https://github.com/${config.owner}/${config.name}.git`;
-  if (githubToken !== void 0) {
-    return addTokenToGitHttpsUrl(baseHttpUrl, githubToken);
-  }
-  return baseHttpUrl;
-}
-
-// 
-var GitCommandError = class extends Error {
-  constructor(client, unsanitizedArgs) {
-    super(`Command failed: git ${client.sanitizeConsoleOutput(unsanitizedArgs.join(" "))}`);
-  }
-};
-var GitClient = class {
-  constructor(config, baseDir = determineRepoBaseDirFromCwd()) {
-    this.baseDir = baseDir;
-    this.github = new GithubClient();
-    this.gitBinPath = "git";
-    this.config = config;
-    this.remoteConfig = config.github;
-    this.remoteParams = { owner: config.github.owner, repo: config.github.name };
-    this.mainBranchName = config.github.mainBranchName;
-  }
-  run(args, options) {
-    const result = this.runGraceful(args, options);
-    if (result.status !== 0) {
-      throw new GitCommandError(this, args);
-    }
-    return result;
-  }
-  runGraceful(args, options = {}) {
-    const gitCommand = args[0];
-    if (isDryRun() && gitCommand === "push") {
-      Log.debug(`"git push" is not able to be run in dryRun mode.`);
-      throw new DryRunError();
-    }
-    Log.debug("Executing: git", this.sanitizeConsoleOutput(args.join(" ")));
-    const result = spawnSync(this.gitBinPath, args, __spreadProps(__spreadValues({
-      cwd: this.baseDir,
-      stdio: "pipe"
-    }, options), {
-      encoding: "utf8"
-    }));
-    Log.debug(`Status: ${result.status}, Error: ${!!result.error}, Signal: ${result.signal}`);
-    if (result.status !== 0 && result.stderr !== null) {
-      process.stderr.write(this.sanitizeConsoleOutput(result.stderr));
-    }
-    Log.debug("Stdout:", result.stdout);
-    Log.debug("Stderr:", result.stderr);
-    Log.debug("Process Error:", result.error);
-    if (result.error !== void 0) {
-      process.stderr.write(this.sanitizeConsoleOutput(result.error.message));
-    }
-    return result;
-  }
-  getRepoGitUrl() {
-    return getRepositoryGitUrl(this.remoteConfig);
-  }
-  hasCommit(branchName, sha) {
-    return this.run(["branch", branchName, "--contains", sha]).stdout !== "";
-  }
-  isShallowRepo() {
-    return this.run(["rev-parse", "--is-shallow-repository"]).stdout.trim() === "true";
-  }
-  getCurrentBranchOrRevision() {
-    const branchName = this.run(["rev-parse", "--abbrev-ref", "HEAD"]).stdout.trim();
-    if (branchName === "HEAD") {
-      return this.run(["rev-parse", "HEAD"]).stdout.trim();
-    }
-    return branchName;
-  }
-  hasUncommittedChanges() {
-    this.runGraceful(["update-index", "-q", "--refresh"]);
-    return this.runGraceful(["diff-index", "--quiet", "HEAD"]).status !== 0;
-  }
-  checkout(branchOrRevision, cleanState) {
-    if (cleanState) {
-      this.runGraceful(["am", "--abort"], { stdio: "ignore" });
-      this.runGraceful(["cherry-pick", "--abort"], { stdio: "ignore" });
-      this.runGraceful(["rebase", "--abort"], { stdio: "ignore" });
-      this.runGraceful(["reset", "--hard"], { stdio: "ignore" });
-    }
-    return this.runGraceful(["checkout", branchOrRevision], { stdio: "ignore" }).status === 0;
-  }
-  allChangesFilesSince(shaOrRef = "HEAD") {
-    return Array.from(/* @__PURE__ */ new Set([
-      ...gitOutputAsArray(this.runGraceful(["diff", "--name-only", "--diff-filter=d", shaOrRef])),
-      ...gitOutputAsArray(this.runGraceful(["ls-files", "--others", "--exclude-standard"]))
-    ]));
-  }
-  allStagedFiles() {
-    return gitOutputAsArray(this.runGraceful(["diff", "--name-only", "--diff-filter=ACM", "--staged"]));
-  }
-  allFiles() {
-    return gitOutputAsArray(this.runGraceful(["ls-files"]));
-  }
-  sanitizeConsoleOutput(value) {
-    return value;
-  }
-  static async get() {
-    if (GitClient._unauthenticatedInstance === null) {
-      GitClient._unauthenticatedInstance = (async () => {
-        return new GitClient(await getConfig([assertValidGithubConfig]));
-      })();
-    }
-    return GitClient._unauthenticatedInstance;
-  }
-};
-GitClient._unauthenticatedInstance = null;
-function gitOutputAsArray(gitCommandResult) {
-  return gitCommandResult.stdout.split("\n").map((x) => x.trim()).filter((x) => !!x);
-}
-function determineRepoBaseDirFromCwd() {
-  const { stdout, stderr, status } = spawnSync("git", ["rev-parse --show-toplevel"], {
-    shell: true,
-    stdio: "pipe",
-    encoding: "utf8"
-  });
-  if (status !== 0) {
-    throw Error(`Unable to find the path to the base directory of the repository.
-Was the command run from inside of the repo?
-
-${stderr}`);
-  }
-  return stdout.trim();
-}
-
-// 
 var LogLevel;
 (function(LogLevel2) {
   LogLevel2[LogLevel2["SILENT"] = 0] = "SILENT";
@@ -25234,93 +24772,25 @@ function printToLogFile(logLevel, ...text) {
 }
 
 // 
-var cachedConfig = null;
-function setCachedConfig(config) {
-  cachedConfig = config;
-}
-function getCachedConfig() {
-  return cachedConfig;
-}
-
-// 
-var CONFIG_FILE_PATH = ".ng-dev/config.mjs";
-async function getConfig(baseDirOrAssertions) {
-  let cachedConfig2 = getCachedConfig();
-  if (cachedConfig2 === null) {
-    let baseDir;
-    if (typeof baseDirOrAssertions === "string") {
-      baseDir = baseDirOrAssertions;
-    } else {
-      baseDir = determineRepoBaseDirFromCwd();
-    }
-    const configPath = join(baseDir, CONFIG_FILE_PATH);
-    cachedConfig2 = await readConfigFile(configPath);
-    setCachedConfig(cachedConfig2);
-  }
-  if (Array.isArray(baseDirOrAssertions)) {
-    for (const assertion of baseDirOrAssertions) {
-      assertion(cachedConfig2);
-    }
-  }
-  return __spreadProps(__spreadValues({}, cachedConfig2), { __isNgDevConfigObject: true });
-}
-var ConfigValidationError = class extends Error {
-  constructor(message, errors = []) {
-    super(message);
-    this.errors = errors;
-  }
-};
-function assertValidGithubConfig(config) {
-  const errors = [];
-  if (config.github === void 0) {
-    errors.push(`Github repository not configured. Set the "github" option.`);
-  } else {
-    if (config.github.name === void 0) {
-      errors.push(`"github.name" is not defined`);
-    }
-    if (config.github.owner === void 0) {
-      errors.push(`"github.owner" is not defined`);
-    }
-  }
-  if (errors.length) {
-    throw new ConfigValidationError("Invalid `github` configuration", errors);
-  }
-}
-async function readConfigFile(configPath, returnEmptyObjectOnError = false) {
-  try {
-    return await import(pathToFileURL(configPath).toString());
-  } catch (e) {
-    if (returnEmptyObjectOnError) {
-      Log.debug(`Could not read configuration file at ${configPath}, returning empty object instead.`);
-      Log.debug(e);
-      return {};
-    }
-    Log.error(`Could not read configuration file at ${configPath}.`);
-    Log.error(e);
-    process.exit(1);
-  }
-}
-
-// 
 var breakingChangeLabel = "flag: breaking change";
 var deprecationLabel = "flag: deprecation";
 
 // 
 var import_core = __toESM(require_core());
-var import_rest2 = __toESM(require_dist_node12());
+var import_rest = __toESM(require_dist_node12());
 var import_auth_app = __toESM(require_dist_node19());
-var import_github2 = __toESM(require_github());
+var import_github = __toESM(require_github());
 var ANGULAR_ROBOT = [43341, "angular-robot-key"];
 async function getJwtAuthedGithubClient([appId, inputKey]) {
   const privateKey = (0, import_core.getInput)(inputKey, { required: true });
-  return new import_rest2.Octokit({
+  return new import_rest.Octokit({
     authStrategy: import_auth_app.createAppAuth,
     auth: { appId, privateKey }
   });
 }
 async function getAuthTokenFor(app) {
   const github = await getJwtAuthedGithubClient(app);
-  const { id: installationId } = (await github.apps.getRepoInstallation(__spreadValues({}, import_github2.context.repo))).data;
+  const { id: installationId } = (await github.apps.getRepoInstallation(__spreadValues({}, import_github.context.repo))).data;
   const { token } = (await github.rest.apps.createInstallationAccessToken({
     installation_id: installationId
   })).data;
@@ -25334,8 +24804,8 @@ var supportedLabels = [
 ];
 async function run() {
   const token = await getAuthTokenFor(ANGULAR_ROBOT);
-  const client = new import_rest3.Octokit({ auth: token });
-  const { number, owner, repo } = import_github3.context.issue;
+  const client = new import_rest2.Octokit({ auth: token });
+  const { number, owner, repo } = import_github2.context.issue;
   const labels = await (await client.issues.listLabelsOnIssue({ issue_number: number, owner, repo })).data;
   const commits = await (await client.paginate(client.pulls.listCommits, { owner, pull_number: number, repo })).map(({ commit: { message } }) => parseCommitMessage(message));
   console.log(`PR #${number}`);
@@ -25363,7 +24833,7 @@ async function run() {
     }
   }
 }
-if (import_github3.context.repo.owner === "angular") {
+if (import_github2.context.repo.owner === "angular") {
   run();
 } else {
   core.warning("Automatic labeling was skipped as this action is only meant to run in repos belonging to the Angular organization.");
