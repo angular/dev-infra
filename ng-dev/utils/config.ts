@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {pathToFileURL} from 'url';
 import {join} from 'path';
 import {Assertions, MultipleAssertions} from './config-assertions.js';
 
@@ -156,7 +157,9 @@ export function assertValidGithubConfig<T extends NgDevConfig>(
  */
 async function readConfigFile(configPath: string, returnEmptyObjectOnError = false): Promise<{}> {
   try {
-    return await import(configPath);
+    // ESM imports expect a valid URL. On Windows, the disk name causes errors like:
+    // `ERR_UNSUPPORTED_ESM_URL_SCHEME: <..> Received protocol 'c:'`
+    return await import(pathToFileURL(configPath).toString());
   } catch (e) {
     if (returnEmptyObjectOnError) {
       Log.debug(

@@ -24535,6 +24535,7 @@ function parseInternal(fullText) {
 }
 
 // 
+import { pathToFileURL } from "url";
 import { join } from "path";
 
 // 
@@ -25287,7 +25288,7 @@ function assertValidGithubConfig(config) {
 }
 async function readConfigFile(configPath, returnEmptyObjectOnError = false) {
   try {
-    return await import(configPath);
+    return await import(pathToFileURL(configPath).toString());
   } catch (e) {
     if (returnEmptyObjectOnError) {
       Log.debug(`Could not read configuration file at ${configPath}, returning empty object instead.`);
