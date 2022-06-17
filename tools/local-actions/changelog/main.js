@@ -59277,6 +59277,7 @@ var DryRunError = class extends Error {
 };
 
 // 
+import { pathToFileURL } from "url";
 import { join } from "path";
 
 // 
@@ -59335,7 +59336,7 @@ function assertValidGithubConfig(config2) {
 }
 async function readConfigFile(configPath, returnEmptyObjectOnError = false) {
   try {
-    return await import(configPath);
+    return await import(pathToFileURL(configPath).toString());
   } catch (e) {
     if (returnEmptyObjectOnError) {
       Log.debug(`Could not read configuration file at ${configPath}, returning empty object instead.`);
