@@ -29,5 +29,7 @@ export default {
   conditions: ['es2020', 'es2015', 'module'],
   // This ensures that we prioritize ES2020. RxJS would otherwise use the ESM5 output.
   mainFields: ['es2020', 'es2015', 'module', 'main'],
+  // Addition of `.mjs` to the non-jsx defaults. https://esbuild.github.io/api/#resolve-extensions
+  resolveExtensions: ['.mjs', '.js', '.json'],
   plugins,
 };
