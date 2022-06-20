@@ -1,4 +1,17 @@
 load("//bazel/api-golden:index.bzl", "api_golden_test", "api_golden_test_npm_package")
+load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
+
+package(default_visibility = ["//bazel/api-golden/test:__pkg__"])
+
+copy_to_bin(
+    name = "test_package_golden_dir",
+    srcs = glob(["goldens/test_package/**"]),
+)
+
+copy_to_bin(
+    name = "pkg_no_exports_field_golden_dir",
+    srcs = glob(["goldens/pkg_no_exports_field/**"]),
+)
 
 api_golden_test(
     name = "test_explicit_files",
@@ -16,8 +29,8 @@ api_golden_test(
 api_golden_test_npm_package(
     name = "test_npm_package",
     data = [
-        "goldens/test_package",
-        "//bazel/api-golden/test/fixtures:test_package",
+        ":test_package_golden_dir",
+        "//bazel/api-golden/test/fixtures:test_package_fixture",
     ],
     golden_dir = "dev-infra/bazel/api-golden/test/goldens/test_package",
     npm_package = "dev-infra/bazel/api-golden/test/fixtures/test_package",
@@ -31,8 +44,8 @@ api_golden_test_npm_package(
 api_golden_test_npm_package(
     name = "test_npm_package_no_exports_field",
     data = [
-        "goldens/pkg_no_exports_field",
-        "//bazel/api-golden/test/fixtures:pkg_no_exports_field",
+        ":pkg_no_exports_field_golden_dir",
+        "//bazel/api-golden/test/fixtures:pkg_no_exports_field_fixture",
     ],
     golden_dir = "dev-infra/bazel/api-golden/test/goldens/pkg_no_exports_field",
     npm_package = "dev-infra/bazel/api-golden/test/fixtures/pkg_no_exports_field",

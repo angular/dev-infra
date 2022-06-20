@@ -19,4 +19,4 @@ openssl aes-256-cbc -d -in .circleci/gcp_token -md md5 -k ${GCP_DECRYPT_TOKEN} \
 echo "export GOOGLE_APPLICATION_CREDENTIALS=$HOME/.gcp_credentials" >> $BASH_ENV
 
 # Update the CircleCI Bazel configuration to always use remote execution.
-echo "build --config=remote" >> .circleci/bazel.rc
+echo "build --config=remote" >> .circleci/linux-bazel.rc

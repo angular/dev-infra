@@ -1,12 +1,17 @@
 load("//tools:defaults.bzl", "ts_library")
+load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
 
 package(default_visibility = ["//bazel/api-golden/test:__pkg__"])
 
-# Expose these two fixture directories as tree artifacts.
-exports_files([
-    "test_package",
-    "pkg_no_exports_field",
-])
+copy_to_bin(
+    name = "test_package_fixture",
+    srcs = glob(["test_package/**"]),
+)
+
+copy_to_bin(
+    name = "pkg_no_exports_field_fixture",
+    srcs = glob(["pkg_no_exports_field/**"]),
+)
 
 ts_library(
     name = "test_lib",
