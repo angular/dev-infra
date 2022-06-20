@@ -5,9 +5,18 @@ load("//bazel/spec-bundling:index.bzl", "spec_bundle")
 load("//tools:defaults.bzl", "ts_library")
 
 ts_library(
-    name = "test_lib",
+    name = "test_lib_apf",
     testonly = True,
-    srcs = glob(["**/*.spec.ts"]),
+    srcs = ["core_apf_esm.spec.ts"],
+    deps = [
+        "@npm//@angular/core",
+    ],
+)
+
+ts_library(
+    name = "test_lib_invalid_linker_declaration",
+    testonly = True,
+    srcs = ["core_invalid_linker_decl.spec.ts"],
     deps = [
         "@npm//@angular/core",
     ],
@@ -17,14 +26,22 @@ spec_bundle(
     name = "test_bundle",
     platform = "node",
     run_angular_linker = True,
-    deps = [":test_lib"],
+    deps = [":test_lib_apf"],
 )
 
 spec_bundle(
     name = "test_bundle_legacy_cjs",
     platform = "cjs-legacy",
     run_angular_linker = True,
-    deps = [":test_lib"],
+    deps = [":test_lib_apf"],
+)
+
+spec_bundle(
+    name = "test_bundle_invalid_declaration_linker",
+    linker_unknown_declaration_handling = "ignore",
+    platform = "node",
+    run_angular_linker = True,
+    deps = [":test_lib_invalid_linker_declaration"],
 )
 
 jasmine_node_test(
@@ -38,5 +55,12 @@ jasmine_node_test(
     name = "test_legacy_cjs",
     deps = [
         ":test_bundle_legacy_cjs",
+    ],
+)
+
+jasmine_node_test(
+    name = "test_invalid_declaration_linker",
+    deps = [
+        ":test_bundle_invalid_declaration_linker",
     ],
 )

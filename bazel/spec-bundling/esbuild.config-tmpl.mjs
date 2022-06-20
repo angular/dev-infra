@@ -18,7 +18,9 @@ async function fetchAndCreateLinkerEsbuildPlugin() {
   const {createLinkerEsbuildPlugin} = await import(
     '@angular/dev-infra-private/shared-scripts/angular-linker/esbuild-plugin.mjs'
   );
-  return await createLinkerEsbuildPlugin(/.*/, /* ensureNoPartialDeclaration */ true);
+  return await createLinkerEsbuildPlugin(/.*/, /* ensureNoPartialDeclaration */ true, {
+    unknownDeclarationVersionHandling: TMPL_LINKER_UNKNOWN_DECLARATION_HANDLING,
+  });
 }
 
 // Based on the Bazel action and its substitutions, we run the linker for all inputs.

@@ -13,7 +13,10 @@ describe('@angular/core ESM import', () => {
       class TestCmp {}
       core.ɵɵngDeclareComponent({
         version: '0.0.0',
-        minVersion: '0.0.0',
+        // use a high version that would cause the linking process to fail due to
+        // an unknown version. We expect the bundling to still work though since
+        // we set the handling to `ignore` using `linker_unknown_declaration_handling`.
+        minVersion: '9999999999999.0.0',
         type: TestCmp,
         selector: 'test',
         ngImport: core,

@@ -9,6 +9,7 @@ def spec_bundle(
         platform,
         bootstrap = [],
         run_angular_linker = False,
+        linker_unknown_declaration_handling = None,
         # We cannot use `ES2017` or higher as that would result in `async/await` not being downleveled.
         # ZoneJS needs to be able to intercept these as otherwise change detection would not work properly.
         target = "es2016",
@@ -29,6 +30,8 @@ def spec_bundle(
           ending with `init.js` are picked up.
         target: Target ECMAScript to use for the specs bundle.
         run_angular_linker: Whether the Angular linker should process the bundled code.
+        linker_unknown_declaration_handling: Control how unknown partial declarations should be
+          treated. This passes through to the `unknownDeclarationVersionHandling` linker plugin option.
         external: List of modules/packages which should not be bundled.
         workspace_name: Workspace name that needs to be provided for the AMD module name.
     """
@@ -52,6 +55,7 @@ def spec_bundle(
         testonly = True,
         output_name = "%s_config.mjs" % name,
         run_angular_linker = run_angular_linker,
+        linker_unknown_declaration_handling = linker_unknown_declaration_handling,
     )
 
     esbuild_config(
