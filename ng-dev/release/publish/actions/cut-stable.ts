@@ -19,16 +19,19 @@ import {ExternalCommands} from '../external-commands.js';
  */
 export class CutStableAction extends ReleaseAction {
   private _newVersion = this._computeNewVersion();
+  private _isNewMajor = this.active.releaseCandidate!.isMajor;
 
   override async getDescription() {
-    const newVersion = this._newVersion;
-    return `Cut a stable release for the release-candidate branch (v${newVersion}).`;
+    if (this._isNewMajor) {
+      return `Cut a stable release for the release-candidate branch — published as \`@next\` (v${this._newVersion}).`;
+    } else {
+      return `Cut a stable release for the release-candidate branch — published as \`@latest\` (v${this._newVersion}).`;
+    }
   }
 
   override async perform() {
     const {branchName} = this.active.releaseCandidate!;
     const newVersion = this._newVersion;
-    const isNewMajor = this.active.releaseCandidate?.isMajor;
 
     // When cutting a new stable minor/major, we want to build the release notes capturing
     // all changes that have landed in the individual next and RC pre-releases.
@@ -58,12 +61,12 @@ export class CutStableAction extends ReleaseAction {
       releaseNotes,
       beforeStagingSha,
       branchName,
-      isNewMajor ? 'next' : 'latest',
+      this._isNewMajor ? 'next' : 'latest',
     );
 
     // If a new major version is published and becomes the "latest" release-train, we need
     // to set the LTS npm dist tag for the previous latest release-train (the current patch).
-    if (isNewMajor) {
+    if (this._isNewMajor) {
       const previousPatch = this.active.latest;
       const ltsTagForPatch = getLtsNpmDistTagOfMajor(previousPatch.version.major);
 
