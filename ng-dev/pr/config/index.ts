@@ -51,6 +51,14 @@ export interface PullRequestConfig {
    * scopes in patch branches, no breaking changes in minor or patch changes.
    */
   targetLabelExemptScopes?: string[];
+
+  /**
+   * Special flag that should **NOT** be used without confirming with the dev-infra team.
+   * This flag turns the RC/FF release-train into an exceptional minor release-train by:
+   *
+   *    - changing `target: minor` to point to `target: rc` (without the RC merge restrictions)
+   */
+  __specialTreatRcAsExceptionalMinor?: boolean;
 }
 
 /** Loads and validates the merge configuration. */

@@ -29,6 +29,7 @@ import {
 import {assertActiveLtsBranch} from './lts-branch.js';
 import {GithubClient} from '../../../utils/git/github.js';
 import {Log} from '../../../utils/logging.js';
+import {assertValidPullRequestConfig, PullRequestConfig} from '../../config/index.js';
 
 /**
  * Gets a list of target labels which should be considered by the merge
@@ -45,9 +46,14 @@ import {Log} from '../../../utils/logging.js';
 export async function getTargetLabelsForActiveReleaseTrains(
   {latest, releaseCandidate, next}: ActiveReleaseTrains,
   api: GithubClient,
-  config: NgDevConfig<{github?: GithubConfig; release?: ReleaseConfig}>,
+  config: NgDevConfig<{
+    github: GithubConfig;
+    pullRequest: PullRequestConfig;
+    release?: ReleaseConfig;
+  }>,
 ): Promise<TargetLabel[]> {
   assertValidGithubConfig(config);
+  assertValidPullRequestConfig(config);
 
   const nextBranchName = getNextBranchName(config.github);
   const repo: ReleaseRepoWithApi = {
@@ -80,7 +86,14 @@ export async function getTargetLabelsForActiveReleaseTrains(
       // TODO: Consider handling this automatically by checking if the NPM version matches
       // the last-minor. If not, then an exceptional minor might be in progress. See:
       // https://docs.google.com/document/d/197kVillDwx-RZtSVOBtPb4BBIAw0E9RT3q3v6DZkykU/edit#heading=h.h7o5pjq6yqd0
-      branches: () => [nextBranchName],
+      branches: () => {
+        // TODO(devversion): Remove this when we actually support exceptional minors.
+        if (config.pullRequest.__specialTreatRcAsExceptionalMinor && releaseCandidate !== null) {
+          return [releaseCandidate.branchName];
+        }
+
+        return [nextBranchName];
+      },
     },
     {
       name: TargetLabelName.PATCH,
