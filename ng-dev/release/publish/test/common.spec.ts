@@ -46,13 +46,13 @@ describe('common release action logic', () => {
   });
 
   describe('version computation', () => {
-    const testReleaseTrain = new ActiveReleaseTrains({
-      releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.3')),
-      next: new ReleaseTrain('master', parse('10.2.0-next.0')),
-      latest: new ReleaseTrain('10.0.x', parse('10.0.1')),
-    });
-
     it('should not modify release train versions and cause invalid other actions', async () => {
+      const testReleaseTrain = new ActiveReleaseTrains({
+        releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.3')),
+        next: new ReleaseTrain('master', parse('10.2.0-next.0')),
+        latest: new ReleaseTrain('10.0.x', parse('10.0.1')),
+      });
+
       const {releaseConfig, githubConfig} = getTestConfigurationsForAction();
       const gitClient = getMockGitClient(githubConfig, /* useSandboxGitClient */ false);
       const descriptions: string[] = [];
@@ -71,6 +71,35 @@ describe('common release action logic', () => {
         `Cut a first release-candidate for the "10.1.x" feature-freeze branch (v10.1.0-rc.0).`,
         `Cut a new patch release for the "10.0.x" branch (v10.0.2).`,
         `Cut a new next pre-release for the "10.1.x" branch (v10.1.0-next.4).`,
+        `Cut a new release for an active LTS branch (0 active).`,
+      ]);
+    });
+
+    it('should properly show descriptions when a major is in RC-phase', async () => {
+      const testReleaseTrain = new ActiveReleaseTrains({
+        releaseCandidate: new ReleaseTrain('15.0.x', parse('15.0.0-rc.1')),
+        next: new ReleaseTrain('main', parse('15.1.0-next.0')),
+        latest: new ReleaseTrain('14.3.x', parse('14.3.1')),
+      });
+
+      const {releaseConfig, githubConfig} = getTestConfigurationsForAction();
+      const gitClient = getMockGitClient(githubConfig, /* useSandboxGitClient */ false);
+      const descriptions: string[] = [];
+
+      // Fake the NPM package request as otherwise the test would rely on `npmjs.org`.
+      fakeNpmPackageQueryRequest(releaseConfig.representativeNpmPackage, {'dist-tags': {}});
+
+      for (const actionCtor of actions) {
+        if (await actionCtor.isActive(testReleaseTrain, releaseConfig)) {
+          const action = new actionCtor(testReleaseTrain, gitClient, releaseConfig, testTmpDir);
+          descriptions.push(await action.getDescription());
+        }
+      }
+
+      expect(descriptions).toEqual([
+        'Cut a stable release for the release-candidate branch — published as `@next` (v15.0.0).',
+        'Cut a new patch release for the "14.3.x" branch (v14.3.2).',
+        `Cut a new next pre-release for the "15.0.x" branch (v15.0.0-rc.2).`,
         `Cut a new release for an active LTS branch (0 active).`,
       ]);
     });
