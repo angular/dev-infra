@@ -115,6 +115,11 @@ describe('default target labels', () => {
     const targetLabels = await getTargetLabelsForActiveReleaseTrains(releaseTrains, api, {
       github: githubConfig,
       release: releaseConfig,
+      pullRequest: {
+        commitMessageFixupLabel: 'commit message fixup',
+        githubApiMerge: false,
+        mergeReadyLabel: 'merge ready',
+      },
       __isNgDevConfigObject: true,
     });
     let label: TargetLabel;
