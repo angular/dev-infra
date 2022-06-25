@@ -442,13 +442,13 @@ __metadata:
     "@babel/core": ^7.16.0
     "@bazel/bazelisk": ^1.11.0
     "@bazel/buildifier": 5.1.0
-    "@bazel/concatjs": 5.5.0
-    "@bazel/esbuild": 5.5.0
-    "@bazel/jasmine": 5.5.0
-    "@bazel/protractor": 5.5.0
-    "@bazel/runfiles": 5.5.0
-    "@bazel/terser": 5.5.0
-    "@bazel/typescript": 5.5.0
+    "@bazel/concatjs": 5.5.1
+    "@bazel/esbuild": 5.5.1
+    "@bazel/jasmine": 5.5.1
+    "@bazel/protractor": 5.5.1
+    "@bazel/runfiles": 5.5.1
+    "@bazel/terser": 5.5.1
+    "@bazel/typescript": 5.5.1
     "@google-cloud/firestore": ^5.0.2
     "@google-cloud/storage": ^6.0.0
     "@microsoft/api-extractor": 7.25.2
@@ -1938,9 +1938,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@bazel/concatjs@npm:5.5.0":
-  version: 5.5.0
-  resolution: "@bazel/concatjs@npm:5.5.0"
+"@bazel/concatjs@npm:5.5.1":
+  version: 5.5.1
+  resolution: "@bazel/concatjs@npm:5.5.1"
   dependencies:
     protobufjs: 6.8.8
     source-map-support: 0.5.9
@@ -1955,20 +1955,20 @@ __metadata:
     karma-sourcemap-loader: ">=0.3.0"
   bin:
     tsc_wrapped: internal/tsc_wrapped/tsc_wrapped.js
-  checksum: 24fdba14d624c7c3818fc041ec380c41efe6da692635fc93c823bb5df01e99b432770ec3823722ac256142cb88687279e5409ecf676f5b04db44c4725203e4af
+  checksum: f313dd99029375487b9216187a65e4bf531accbf717af416ad7515720665281ca6da4d275c3c14394c198a8caabb8ca5b7df1c8382a4690d14ff6702e45d79ec
   languageName: node
   linkType: hard
 
-"@bazel/esbuild@npm:5.5.0":
-  version: 5.5.0
-  resolution: "@bazel/esbuild@npm:5.5.0"
-  checksum: f518007794d36f7b980e7294916692b040f0b6369f3b2db051c9d7e94e82a18c0699c5f8a711267bdd3ad66b4ef735b184f9853b10efab995880e325a7043473
+"@bazel/esbuild@npm:5.5.1":
+  version: 5.5.1
+  resolution: "@bazel/esbuild@npm:5.5.1"
+  checksum: 233a3c9fd7af811953eda40ee7a9203042bd97d43f703628e4c86aa105d14b609843fa09d3ed084fe1f3503ddfbf1f19bcc0670f3ad6b5fb18173aba06f3d3d2
   languageName: node
   linkType: hard
 
-"@bazel/jasmine@npm:5.5.0":
-  version: 5.5.0
-  resolution: "@bazel/jasmine@npm:5.5.0"
+"@bazel/jasmine@npm:5.5.1":
+  version: 5.5.1
+  resolution: "@bazel/jasmine@npm:5.5.1"
   dependencies:
     c8: ~7.5.0
     jasmine-reporters: ~2.5.0
@@ -1977,43 +1977,42 @@ __metadata:
     jasmine-core: ">=2.99.0"
   bin:
     bazel-jasmine-runner: jasmine_runner.js
-  checksum: cf46897b602c5ebb06f1bc33d121658eeb81193e2c3ad0eef2092c09f51d878a1c75d3276b8356ba354c6e65ed81a0f63ec0c7dd1ed98c6447f0fdf7c0fb7b18
+  checksum: 88cbf29d3bff7b5ed707b836c83b803ff3d1404e97d076a44027906c1407c96e8b614288b7150dfd2fa2090793d58fb6938ad024947beffa4d00b6113881a8aa
   languageName: node
   linkType: hard
 
-"@bazel/protractor@npm:5.5.0":
-  version: 5.5.0
-  resolution: "@bazel/protractor@npm:5.5.0"
+"@bazel/protractor@npm:5.5.1":
+  version: 5.5.1
+  resolution: "@bazel/protractor@npm:5.5.1"
   peerDependencies:
     protractor: ">=5.0.0"
-  checksum: 84d0d0e0d3badc00fec970687e1184d914e5c788ba8593d8c0d39319607be05047bef7bc8bb4f0fbffe720fd6621cd5e7cd4a72ad90d38360ee5250960df7862
+  checksum: 727c21e611a01cf6a67071224539c6d42f8fa3cb99ef8fa6e13929efeb941bc6dbdbfe752698033a42476083ab3c945802bb4308af41bbc27658386677aa30e6
   languageName: node
   linkType: hard
 
-"@bazel/runfiles@npm:5.5.0":
-  version: 5.5.0
-  resolution: "@bazel/runfiles@npm:5.5.0"
-  checksum: fe83bfebf7026ca6dad03806307560b7421d9adc6038ddd0a5dd22c94d57945a16b2f58486dd946504eb7d31e7258630093e2afdfeae3efe0214a9b30d4500de
+"@bazel/runfiles@npm:5.5.1":
+  version: 5.5.1
+  resolution: "@bazel/runfiles@npm:5.5.1"
+  checksum: 6b58ce53d8af0d1d483727df4577b86f99504b8409c8efa06b83d4b82db28ff906b78b9b92cbb77ace37183d081267e86861b638b603a1a717cfd2bd6bdd7050
   languageName: node
   linkType: hard
 
-"@bazel/terser@npm:5.5.0":
-  version: 5.5.0
-  resolution: "@bazel/terser@npm:5.5.0"
+"@bazel/terser@npm:5.5.1":
+  version: 5.5.1
+  resolution: "@bazel/terser@npm:5.5.1"
   peerDependencies:
     terser: ">=4.0.0 <5.9.0"
   bin:
     terser: index.js
-  checksum: 76ee6eede6a3030e06ed0123194b66b34318db7ccd1f6327ded7f10b95024faefc8b57e5427aa9b7a751138be871c1991531d151cb6108ba8b9108e7f20b56a6
+  checksum: 6a718564d7bf77d89cccde12cb9ef57348056784d8b36c8446378d468a2b7c7aed892ab29ccea6c728d841e1432b7f007d97b7cc43ff5cc3b3f7b9b8076d2fb4
   languageName: node
   linkType: hard
 
-"@bazel/typescript@npm:5.5.0":
-  version: 5.5.0
-  resolution: "@bazel/typescript@npm:5.5.0"
+"@bazel/typescript@npm:5.5.1":
+  version: 5.5.1
+  resolution: "@bazel/typescript@npm:5.5.1"
   dependencies:
-    "@bazel/worker": 5.5.0
-    protobufjs: 6.8.8
+    "@bazel/worker": 5.5.1
     semver: 5.6.0
     source-map-support: 0.5.9
     tsutils: 3.21.0
@@ -2021,16 +2020,16 @@ __metadata:
     typescript: ">=3.0.0"
   bin:
     ts_project_options_validator: internal/ts_project_options_validator.js
-  checksum: d78b6804eea533ff24924f07f1ef01dc9dade43fafecb973eb453b81629268c73104d162fe984bd1da8e519fb5114fe02b903b204f4d7ece8b72ba50520e0346
+  checksum: f67d183de2f0cd687203fc8772b1714d39d22cac99ac56898db9901faf222e76a36027e43f009857e439e6053018cd7bd80829439b761cdcd10f3f14b4ba5e92
   languageName: node
   linkType: hard
 
-"@bazel/worker@npm:5.5.0":
-  version: 5.5.0
-  resolution: "@bazel/worker@npm:5.5.0"
+"@bazel/worker@npm:5.5.1":
+  version: 5.5.1
+  resolution: "@bazel/worker@npm:5.5.1"
   dependencies:
     google-protobuf: ^3.6.1
-  checksum: b3d0c659967051782bb35ea49c50d48a08997bcd73bcd11f6e23937153e126fc465cb07c96a6cf71355f9e0343173dd14f750c4032b220b78dbf6270f6244968
+  checksum: 421d3bad292f6bcdab381edc872345934a6c2f2402b4fada06542a0c48d9f1ebd9d3a7f7ebd4fdcd0dc5fa598eb65335fe22aadbe0772310e336b39a55620af8
   languageName: node
   linkType: hard
 
