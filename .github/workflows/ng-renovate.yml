@@ -1,0 +1,26 @@
+name: Angular-Org Renovate
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0/30 * * * *' # Runs every 30 minutes.
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            .github/ng-renovate/.yarn/cache
+          key: v4-${{hashFiles('.github/ng-renovate/yarn.lock')}}
+          restore-keys: v4-
+
+      - run: yarn install --immutable --cwd .github/ng-renovate
+        shell: bash
+
+      - run: yarn --cwd .github/ng-renovate renovate
+        env:
+          LOG_LEVEL: debug
+          RENOVATE_TOKEN: ${{ secrets.NG_RENOVATE_USER_ACCESS_TOKEN }}
+          RENOVATE_FORK_TOKEN: ${{ secrets.NG_RENOVATE_USER_ACCESS_TOKEN }}
+          RENOVATE_CONFIG_FILE: ./runner-config.js

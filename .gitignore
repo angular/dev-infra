@@ -23,8 +23,7 @@ node_modules
 npm-debug.log
 yarn-error.log
 
-# Yarn v2+. Zero installs disablled since we are not using PnP anyway
-# and a still would still be needed. Can be revisited in the future.
+# Yarn v2+. Zero installs disabled since we are not using PnP.
 .pnp.*
 .yarn/*
 !.yarn/patches
