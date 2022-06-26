@@ -7,8 +7,8 @@ ts_library(
         exclude = ["**/*.spec.ts"],
     ),
     visibility = [
+        "//.github/local-actions/changelog/lib:__subpackages__",
         "//ng-dev:__subpackages__",
-        "//tools/local-actions/changelog/lib:__subpackages__",
     ],
     deps = [
         "//ng-dev/commit-message",
