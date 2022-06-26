@@ -20,6 +20,6 @@ jobs:
           # account that is attempted to be used for authentication, instead the remote is set to
           # an authenticated URL.
           persist-credentials: false
-      - uses: ./tools/local-actions/changelog
+      - uses: ./.github/local-actions/changelog
         with:
           angular-robot-key: ${{ secrets.ANGULAR_ROBOT_PRIVATE_KEY }}

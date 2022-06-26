@@ -8,8 +8,8 @@ ts_library(
         "utils.ts",
     ],
     visibility = [
+        "//.github/local-actions:__subpackages__",
         "//github-actions:__subpackages__",
-        "//tools/local-actions:__subpackages__",
     ],
     deps = [
         "@npm//@actions/core",

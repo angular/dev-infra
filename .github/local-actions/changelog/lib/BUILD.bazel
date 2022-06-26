@@ -1,6 +1,6 @@
 load("//tools:defaults.bzl", "ts_library")
 
-package(default_visibility = ["//tools/local-actions/changelog:__subpackages__"])
+package(default_visibility = ["//.github/local-actions/changelog:__subpackages__"])
 
 exports_files([
     "main.ts",

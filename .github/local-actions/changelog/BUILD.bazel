@@ -2,9 +2,9 @@ load("//tools:defaults.bzl", "esbuild_checked_in")
 
 esbuild_checked_in(
     name = "main",
-    entry_point = "//tools/local-actions/changelog/lib:main.ts",
+    entry_point = "//.github/local-actions/changelog/lib:main.ts",
     target = "node16",
     deps = [
-        "//tools/local-actions/changelog/lib",
+        "//.github/local-actions/changelog/lib",
     ],
 )
