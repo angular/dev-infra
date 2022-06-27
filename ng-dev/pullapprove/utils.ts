@@ -18,7 +18,7 @@ export function getOrCreateGlob(pattern: string) {
   if (patternCache.has(pattern)) {
     return patternCache.get(pattern)!;
   }
-  const glob = new Minimatch(pattern, {dot: true});
+  const glob = new Minimatch(pattern, {dot: false, nobrace: false});
   patternCache.set(pattern, glob);
   return glob;
 }
