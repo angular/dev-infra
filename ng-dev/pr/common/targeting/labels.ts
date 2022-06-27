@@ -89,7 +89,7 @@ export async function getTargetLabelsForActiveReleaseTrains(
       branches: () => {
         // TODO(devversion): Remove this when we actually support exceptional minors.
         if (config.pullRequest.__specialTreatRcAsExceptionalMinor && releaseCandidate !== null) {
-          return [releaseCandidate.branchName];
+          return [nextBranchName, releaseCandidate.branchName];
         }
 
         return [nextBranchName];
