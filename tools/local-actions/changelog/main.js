@@ -58861,9 +58861,9 @@ var ansiStyles = assembleStyles();
 var ansi_styles_default = ansiStyles;
 
 // 
-import process2 from "process";
-import os from "os";
-import tty from "tty";
+import process2 from "node:process";
+import os from "node:os";
+import tty from "node:tty";
 function hasFlag(flag, argv = process2.argv) {
   const prefix = flag.startsWith("-") ? "" : flag.length === 1 ? "-" : "--";
   const position = argv.indexOf(prefix + flag);
@@ -59235,9 +59235,9 @@ var import_multimatch = __toESM(require_multimatch());
 import { cpus } from "os";
 
 // 
-import process3 from "process";
-import os2 from "os";
-import tty2 from "tty";
+import process3 from "node:process";
+import os2 from "node:os";
+import tty2 from "node:tty";
 function hasFlag2(flag, argv = process3.argv) {
   const prefix = flag.startsWith("-") ? "" : flag.length === 1 ? "-" : "--";
   const position = argv.indexOf(prefix + flag);

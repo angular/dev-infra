@@ -38,6 +38,7 @@ jasmine_node_test(
 esbuild_checked_in(
     name = "main",
     entry_point = ":src/main.ts",
+    target = "node16",
     deps = [
         ":feature-request",
     ],
@@ -46,6 +47,7 @@ esbuild_checked_in(
 esbuild_checked_in(
     name = "post",
     entry_point = ":src/post.ts",
+    target = "node16",
     deps = [
         ":feature-request",
     ],

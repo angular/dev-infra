@@ -5,6 +5,7 @@ package(default_visibility = ["//github-actions/post-approval-changes:__subpacka
 esbuild_checked_in(
     name = "main",
     entry_point = "//github-actions/post-approval-changes/lib:main.ts",
+    target = "node16",
     deps = [
         "//github-actions/post-approval-changes/lib",
     ],
@@ -13,6 +14,7 @@ esbuild_checked_in(
 esbuild_checked_in(
     name = "post",
     entry_point = "//github-actions/post-approval-changes/lib:post.ts",
+    target = "node16",
     deps = [
         "//github-actions/post-approval-changes/lib",
     ],
