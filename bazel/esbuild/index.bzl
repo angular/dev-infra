@@ -28,7 +28,7 @@ def esbuild_esm_bundle(name, **kwargs):
     """
 
     args = dict(
-        resolveExtensions = [".mjs", ".js"],
+        resolveExtensions = [".mjs", ".js", ".json"],
         outExtension = {".js": ".mjs"},
         # Workaround for: https://github.com/evanw/esbuild/issues/1921.
         banner = {
