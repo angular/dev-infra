@@ -11,5 +11,9 @@ ts_library(
         "@npm//@types/node",
         "@npm//@types/yargs",
         "@npm//chalk",
+        "@npm//license-checker",
+        "@npm//@types/license-checker",
+        "@npm//spdx-satisfies",
+        "@npm//@types/spdx-satisfies",
     ],
 )
