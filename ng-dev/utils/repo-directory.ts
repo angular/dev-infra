@@ -6,16 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {spawnSync} from 'child_process';
+import {ChildProcess} from './child-process.js';
 
 /** Determines the repository base directory from the current working directory. */
 export function determineRepoBaseDirFromCwd() {
-  // TODO(devversion): Replace with common spawn sync utility once available.
-  const {stdout, stderr, status} = spawnSync('git', ['rev-parse --show-toplevel'], {
-    shell: true,
-    stdio: 'pipe',
-    encoding: 'utf8',
-  });
+  const {stdout, stderr, status} = ChildProcess.spawnSync('git', ['rev-parse --show-toplevel']);
   if (status !== 0) {
     throw Error(
       `Unable to find the path to the base directory of the repository.\n` +

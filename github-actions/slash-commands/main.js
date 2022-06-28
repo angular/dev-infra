@@ -118,11 +118,11 @@ var require_command = __commonJS({
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.issue = exports.issueCommand = void 0;
-    var os2 = __importStar(__require("os"));
+    var os3 = __importStar(__require("os"));
     var utils_1 = require_utils();
     function issueCommand(command, properties, message) {
       const cmd = new Command(command, properties, message);
-      process.stdout.write(cmd.toString() + os2.EOL);
+      process.stdout.write(cmd.toString() + os3.EOL);
     }
     exports.issueCommand = issueCommand;
     function issue(name, message = "") {
@@ -206,7 +206,7 @@ var require_file_command = __commonJS({
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.issueCommand = void 0;
     var fs2 = __importStar(__require("fs"));
-    var os2 = __importStar(__require("os"));
+    var os3 = __importStar(__require("os"));
     var utils_1 = require_utils();
     function issueCommand(command, message) {
       const filePath = process.env[`GITHUB_${command}`];
@@ -216,7 +216,7 @@ var require_file_command = __commonJS({
       if (!fs2.existsSync(filePath)) {
         throw new Error(`Missing file at path: ${filePath}`);
       }
-      fs2.appendFileSync(filePath, `${utils_1.toCommandValue(message)}${os2.EOL}`, {
+      fs2.appendFileSync(filePath, `${utils_1.toCommandValue(message)}${os3.EOL}`, {
         encoding: "utf8"
       });
     }
@@ -1486,7 +1486,7 @@ var require_core = __commonJS({
     var command_1 = require_command();
     var file_command_1 = require_file_command();
     var utils_1 = require_utils();
-    var os2 = __importStar(__require("os"));
+    var os3 = __importStar(__require("os"));
     var path = __importStar(__require("path"));
     var oidc_utils_1 = require_oidc_utils();
     var ExitCode;
@@ -1500,7 +1500,7 @@ var require_core = __commonJS({
       const filePath = process.env["GITHUB_ENV"] || "";
       if (filePath) {
         const delimiter = "_GitHubActionsFileCommandDelimeter_";
-        const commandValue = `${name}<<${delimiter}${os2.EOL}${convertedVal}${os2.EOL}${delimiter}`;
+        const commandValue = `${name}<<${delimiter}${os3.EOL}${convertedVal}${os3.EOL}${delimiter}`;
         file_command_1.issueCommand("ENV", commandValue);
       } else {
         command_1.issueCommand("set-env", { name }, convertedVal);
@@ -1550,7 +1550,7 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
     }
     exports.getBooleanInput = getBooleanInput;
     function setOutput(name, value) {
-      process.stdout.write(os2.EOL);
+      process.stdout.write(os3.EOL);
       command_1.issueCommand("set-output", { name }, value);
     }
     exports.setOutput = setOutput;
@@ -1584,7 +1584,7 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
     }
     exports.notice = notice;
     function info3(message) {
-      process.stdout.write(message + os2.EOL);
+      process.stdout.write(message + os3.EOL);
     }
     exports.info = info3;
     function startGroup(name) {
@@ -14138,15 +14138,15 @@ var require_streams2 = __commonJS({
     var POOL_SIZE2 = 65536;
     if (!globalThis.ReadableStream) {
       try {
-        const process3 = __require("node:process");
-        const { emitWarning } = process3;
+        const process4 = __require("node:process");
+        const { emitWarning } = process4;
         try {
-          process3.emitWarning = () => {
+          process4.emitWarning = () => {
           };
           Object.assign(globalThis, __require("node:stream/web"));
-          process3.emitWarning = emitWarning;
+          process4.emitWarning = emitWarning;
         } catch (error3) {
-          process3.emitWarning = emitWarning;
+          process4.emitWarning = emitWarning;
           throw error3;
         }
       } catch (error3) {
@@ -26502,26 +26502,26 @@ var require_has_flag = __commonJS({
 var require_supports_color = __commonJS({
   ""(exports, module) {
     "use strict";
-    var os2 = __require("os");
-    var tty2 = __require("tty");
-    var hasFlag2 = require_has_flag();
-    var { env: env2 } = process;
+    var os3 = __require("os");
+    var tty3 = __require("tty");
+    var hasFlag3 = require_has_flag();
+    var { env: env3 } = process;
     var forceColor;
-    if (hasFlag2("no-color") || hasFlag2("no-colors") || hasFlag2("color=false") || hasFlag2("color=never")) {
+    if (hasFlag3("no-color") || hasFlag3("no-colors") || hasFlag3("color=false") || hasFlag3("color=never")) {
       forceColor = 0;
-    } else if (hasFlag2("color") || hasFlag2("colors") || hasFlag2("color=true") || hasFlag2("color=always")) {
+    } else if (hasFlag3("color") || hasFlag3("colors") || hasFlag3("color=true") || hasFlag3("color=always")) {
       forceColor = 1;
     }
-    if ("FORCE_COLOR" in env2) {
-      if (env2.FORCE_COLOR === "true") {
+    if ("FORCE_COLOR" in env3) {
+      if (env3.FORCE_COLOR === "true") {
         forceColor = 1;
-      } else if (env2.FORCE_COLOR === "false") {
+      } else if (env3.FORCE_COLOR === "false") {
         forceColor = 0;
       } else {
-        forceColor = env2.FORCE_COLOR.length === 0 ? 1 : Math.min(parseInt(env2.FORCE_COLOR, 10), 3);
+        forceColor = env3.FORCE_COLOR.length === 0 ? 1 : Math.min(parseInt(env3.FORCE_COLOR, 10), 3);
       }
     }
-    function translateLevel2(level) {
+    function translateLevel3(level) {
       if (level === 0) {
         return false;
       }
@@ -26532,70 +26532,70 @@ var require_supports_color = __commonJS({
         has16m: level >= 3
       };
     }
-    function supportsColor2(haveStream, streamIsTTY) {
+    function supportsColor3(haveStream, streamIsTTY) {
       if (forceColor === 0) {
         return 0;
       }
-      if (hasFlag2("color=16m") || hasFlag2("color=full") || hasFlag2("color=truecolor")) {
+      if (hasFlag3("color=16m") || hasFlag3("color=full") || hasFlag3("color=truecolor")) {
         return 3;
       }
-      if (hasFlag2("color=256")) {
+      if (hasFlag3("color=256")) {
         return 2;
       }
       if (haveStream && !streamIsTTY && forceColor === void 0) {
         return 0;
       }
       const min = forceColor || 0;
-      if (env2.TERM === "dumb") {
+      if (env3.TERM === "dumb") {
         return min;
       }
       if (process.platform === "win32") {
-        const osRelease = os2.release().split(".");
+        const osRelease = os3.release().split(".");
         if (Number(osRelease[0]) >= 10 && Number(osRelease[2]) >= 10586) {
           return Number(osRelease[2]) >= 14931 ? 3 : 2;
         }
         return 1;
       }
-      if ("CI" in env2) {
-        if (["TRAVIS", "CIRCLECI", "APPVEYOR", "GITLAB_CI", "GITHUB_ACTIONS", "BUILDKITE"].some((sign) => sign in env2) || env2.CI_NAME === "codeship") {
+      if ("CI" in env3) {
+        if (["TRAVIS", "CIRCLECI", "APPVEYOR", "GITLAB_CI", "GITHUB_ACTIONS", "BUILDKITE"].some((sign) => sign in env3) || env3.CI_NAME === "codeship") {
           return 1;
         }
         return min;
       }
-      if ("TEAMCITY_VERSION" in env2) {
-        return /^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(env2.TEAMCITY_VERSION) ? 1 : 0;
+      if ("TEAMCITY_VERSION" in env3) {
+        return /^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(env3.TEAMCITY_VERSION) ? 1 : 0;
       }
-      if (env2.COLORTERM === "truecolor") {
+      if (env3.COLORTERM === "truecolor") {
         return 3;
       }
-      if ("TERM_PROGRAM" in env2) {
-        const version = parseInt((env2.TERM_PROGRAM_VERSION || "").split(".")[0], 10);
-        switch (env2.TERM_PROGRAM) {
+      if ("TERM_PROGRAM" in env3) {
+        const version = parseInt((env3.TERM_PROGRAM_VERSION || "").split(".")[0], 10);
+        switch (env3.TERM_PROGRAM) {
           case "iTerm.app":
             return version >= 3 ? 3 : 2;
           case "Apple_Terminal":
             return 2;
         }
       }
-      if (/-256(color)?$/i.test(env2.TERM)) {
+      if (/-256(color)?$/i.test(env3.TERM)) {
         return 2;
       }
-      if (/^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(env2.TERM)) {
+      if (/^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(env3.TERM)) {
         return 1;
       }
-      if ("COLORTERM" in env2) {
+      if ("COLORTERM" in env3) {
         return 1;
       }
       return min;
     }
     function getSupportLevel(stream) {
-      const level = supportsColor2(stream, stream && stream.isTTY);
-      return translateLevel2(level);
+      const level = supportsColor3(stream, stream && stream.isTTY);
+      return translateLevel3(level);
     }
     module.exports = {
       supportsColor: getSupportLevel,
-      stdout: translateLevel2(supportsColor2(true, tty2.isatty(1))),
-      stderr: translateLevel2(supportsColor2(true, tty2.isatty(2)))
+      stdout: translateLevel3(supportsColor3(true, tty3.isatty(1))),
+      stderr: translateLevel3(supportsColor3(true, tty3.isatty(2)))
     };
   }
 });
@@ -31276,7 +31276,7 @@ var require_innerFrom = __commonJS({
     exports.fromIterable = fromIterable;
     function fromAsyncIterable(asyncIterable) {
       return new Observable_1.Observable(function(subscriber) {
-        process3(asyncIterable, subscriber).catch(function(err) {
+        process4(asyncIterable, subscriber).catch(function(err) {
           return subscriber.error(err);
         });
       });
@@ -31286,7 +31286,7 @@ var require_innerFrom = __commonJS({
       return fromAsyncIterable(isReadableStreamLike_1.readableStreamLikeToAsyncGenerator(readableStream));
     }
     exports.fromReadableStreamLike = fromReadableStreamLike;
-    function process3(asyncIterable, subscriber) {
+    function process4(asyncIterable, subscriber) {
       var asyncIterable_1, asyncIterable_1_1;
       var e_2, _a;
       return __awaiter(this, void 0, void 0, function() {
@@ -38514,11 +38514,11 @@ var require_signals = __commonJS({
 // 
 var require_signal_exit = __commonJS({
   ""(exports, module) {
-    var process3 = global.process;
-    var processOk = function(process4) {
-      return process4 && typeof process4 === "object" && typeof process4.removeListener === "function" && typeof process4.emit === "function" && typeof process4.reallyExit === "function" && typeof process4.listeners === "function" && typeof process4.kill === "function" && typeof process4.pid === "number" && typeof process4.on === "function";
+    var process4 = global.process;
+    var processOk = function(process5) {
+      return process5 && typeof process5 === "object" && typeof process5.removeListener === "function" && typeof process5.emit === "function" && typeof process5.reallyExit === "function" && typeof process5.listeners === "function" && typeof process5.kill === "function" && typeof process5.pid === "number" && typeof process5.on === "function";
     };
-    if (!processOk(process3)) {
+    if (!processOk(process4)) {
       module.exports = function() {
         return function() {
         };
@@ -38526,15 +38526,15 @@ var require_signal_exit = __commonJS({
     } else {
       assert = __require("assert");
       signals = require_signals();
-      isWin = /^win/i.test(process3.platform);
+      isWin = /^win/i.test(process4.platform);
       EE = __require("events");
       if (typeof EE !== "function") {
         EE = EE.EventEmitter;
       }
-      if (process3.__signal_exit_emitter__) {
-        emitter = process3.__signal_exit_emitter__;
+      if (process4.__signal_exit_emitter__) {
+        emitter = process4.__signal_exit_emitter__;
       } else {
-        emitter = process3.__signal_exit_emitter__ = new EE();
+        emitter = process4.__signal_exit_emitter__ = new EE();
         emitter.count = 0;
         emitter.emitted = {};
       }
@@ -38571,12 +38571,12 @@ var require_signal_exit = __commonJS({
         loaded = false;
         signals.forEach(function(sig) {
           try {
-            process3.removeListener(sig, sigListeners[sig]);
+            process4.removeListener(sig, sigListeners[sig]);
           } catch (er) {
           }
         });
-        process3.emit = originalProcessEmit;
-        process3.reallyExit = originalProcessReallyExit;
+        process4.emit = originalProcessEmit;
+        process4.reallyExit = originalProcessReallyExit;
         emitter.count -= 1;
       };
       module.exports.unload = unload;
@@ -38593,7 +38593,7 @@ var require_signal_exit = __commonJS({
           if (!processOk(global.process)) {
             return;
           }
-          var listeners = process3.listeners(sig);
+          var listeners = process4.listeners(sig);
           if (listeners.length === emitter.count) {
             unload();
             emit("exit", null, sig);
@@ -38601,7 +38601,7 @@ var require_signal_exit = __commonJS({
             if (isWin && sig === "SIGHUP") {
               sig = "SIGINT";
             }
-            process3.kill(process3.pid, sig);
+            process4.kill(process4.pid, sig);
           }
         };
       });
@@ -38617,35 +38617,35 @@ var require_signal_exit = __commonJS({
         emitter.count += 1;
         signals = signals.filter(function(sig) {
           try {
-            process3.on(sig, sigListeners[sig]);
+            process4.on(sig, sigListeners[sig]);
             return true;
           } catch (er) {
             return false;
           }
         });
-        process3.emit = processEmit;
-        process3.reallyExit = processReallyExit;
+        process4.emit = processEmit;
+        process4.reallyExit = processReallyExit;
       };
       module.exports.load = load;
-      originalProcessReallyExit = process3.reallyExit;
+      originalProcessReallyExit = process4.reallyExit;
       processReallyExit = function processReallyExit2(code) {
         if (!processOk(global.process)) {
           return;
         }
-        process3.exitCode = code || 0;
-        emit("exit", process3.exitCode, null);
-        emit("afterexit", process3.exitCode, null);
-        originalProcessReallyExit.call(process3, process3.exitCode);
+        process4.exitCode = code || 0;
+        emit("exit", process4.exitCode, null);
+        emit("afterexit", process4.exitCode, null);
+        originalProcessReallyExit.call(process4, process4.exitCode);
       };
-      originalProcessEmit = process3.emit;
+      originalProcessEmit = process4.emit;
       processEmit = function processEmit2(ev, arg) {
         if (ev === "exit" && processOk(global.process)) {
           if (arg !== void 0) {
-            process3.exitCode = arg;
+            process4.exitCode = arg;
           }
           var ret = originalProcessEmit.apply(this, arguments);
-          emit("exit", process3.exitCode, null);
-          emit("afterexit", process3.exitCode, null);
+          emit("exit", process4.exitCode, null);
+          emit("afterexit", process4.exitCode, null);
           return ret;
         } else {
           return originalProcessEmit.apply(this, arguments);
@@ -40657,26 +40657,26 @@ var require_wrap_ansi = __commonJS({
 var require_supports_color2 = __commonJS({
   ""(exports, module) {
     "use strict";
-    var os2 = __require("os");
-    var tty2 = __require("tty");
-    var hasFlag2 = require_has_flag();
-    var { env: env2 } = process;
+    var os3 = __require("os");
+    var tty3 = __require("tty");
+    var hasFlag3 = require_has_flag();
+    var { env: env3 } = process;
     var forceColor;
-    if (hasFlag2("no-color") || hasFlag2("no-colors") || hasFlag2("color=false") || hasFlag2("color=never")) {
+    if (hasFlag3("no-color") || hasFlag3("no-colors") || hasFlag3("color=false") || hasFlag3("color=never")) {
       forceColor = 0;
-    } else if (hasFlag2("color") || hasFlag2("colors") || hasFlag2("color=true") || hasFlag2("color=always")) {
+    } else if (hasFlag3("color") || hasFlag3("colors") || hasFlag3("color=true") || hasFlag3("color=always")) {
       forceColor = 1;
     }
-    if ("FORCE_COLOR" in env2) {
-      if (env2.FORCE_COLOR === "true") {
+    if ("FORCE_COLOR" in env3) {
+      if (env3.FORCE_COLOR === "true") {
         forceColor = 1;
-      } else if (env2.FORCE_COLOR === "false") {
+      } else if (env3.FORCE_COLOR === "false") {
         forceColor = 0;
       } else {
-        forceColor = env2.FORCE_COLOR.length === 0 ? 1 : Math.min(parseInt(env2.FORCE_COLOR, 10), 3);
+        forceColor = env3.FORCE_COLOR.length === 0 ? 1 : Math.min(parseInt(env3.FORCE_COLOR, 10), 3);
       }
     }
-    function translateLevel2(level) {
+    function translateLevel3(level) {
       if (level === 0) {
         return false;
       }
@@ -40687,70 +40687,70 @@ var require_supports_color2 = __commonJS({
         has16m: level >= 3
       };
     }
-    function supportsColor2(haveStream, streamIsTTY) {
+    function supportsColor3(haveStream, streamIsTTY) {
       if (forceColor === 0) {
         return 0;
       }
-      if (hasFlag2("color=16m") || hasFlag2("color=full") || hasFlag2("color=truecolor")) {
+      if (hasFlag3("color=16m") || hasFlag3("color=full") || hasFlag3("color=truecolor")) {
         return 3;
       }
-      if (hasFlag2("color=256")) {
+      if (hasFlag3("color=256")) {
         return 2;
       }
       if (haveStream && !streamIsTTY && forceColor === void 0) {
         return 0;
       }
       const min = forceColor || 0;
-      if (env2.TERM === "dumb") {
+      if (env3.TERM === "dumb") {
         return min;
       }
       if (process.platform === "win32") {
-        const osRelease = os2.release().split(".");
+        const osRelease = os3.release().split(".");
         if (Number(osRelease[0]) >= 10 && Number(osRelease[2]) >= 10586) {
           return Number(osRelease[2]) >= 14931 ? 3 : 2;
         }
         return 1;
       }
-      if ("CI" in env2) {
-        if (["TRAVIS", "CIRCLECI", "APPVEYOR", "GITLAB_CI", "GITHUB_ACTIONS", "BUILDKITE"].some((sign) => sign in env2) || env2.CI_NAME === "codeship") {
+      if ("CI" in env3) {
+        if (["TRAVIS", "CIRCLECI", "APPVEYOR", "GITLAB_CI", "GITHUB_ACTIONS", "BUILDKITE"].some((sign) => sign in env3) || env3.CI_NAME === "codeship") {
           return 1;
         }
         return min;
       }
-      if ("TEAMCITY_VERSION" in env2) {
-        return /^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(env2.TEAMCITY_VERSION) ? 1 : 0;
+      if ("TEAMCITY_VERSION" in env3) {
+        return /^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(env3.TEAMCITY_VERSION) ? 1 : 0;
       }
-      if (env2.COLORTERM === "truecolor") {
+      if (env3.COLORTERM === "truecolor") {
         return 3;
       }
-      if ("TERM_PROGRAM" in env2) {
-        const version = parseInt((env2.TERM_PROGRAM_VERSION || "").split(".")[0], 10);
-        switch (env2.TERM_PROGRAM) {
+      if ("TERM_PROGRAM" in env3) {
+        const version = parseInt((env3.TERM_PROGRAM_VERSION || "").split(".")[0], 10);
+        switch (env3.TERM_PROGRAM) {
           case "iTerm.app":
             return version >= 3 ? 3 : 2;
           case "Apple_Terminal":
             return 2;
         }
       }
-      if (/-256(color)?$/i.test(env2.TERM)) {
+      if (/-256(color)?$/i.test(env3.TERM)) {
         return 2;
       }
-      if (/^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(env2.TERM)) {
+      if (/^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(env3.TERM)) {
         return 1;
       }
-      if ("COLORTERM" in env2) {
+      if ("COLORTERM" in env3) {
         return 1;
       }
       return min;
     }
     function getSupportLevel(stream) {
-      const level = supportsColor2(stream, stream && stream.isTTY);
-      return translateLevel2(level);
+      const level = supportsColor3(stream, stream && stream.isTTY);
+      return translateLevel3(level);
     }
     module.exports = {
       supportsColor: getSupportLevel,
-      stdout: translateLevel2(supportsColor2(true, tty2.isatty(1))),
-      stderr: translateLevel2(supportsColor2(true, tty2.isatty(2)))
+      stdout: translateLevel3(supportsColor3(true, tty3.isatty(1))),
+      stderr: translateLevel3(supportsColor3(true, tty3.isatty(2)))
     };
   }
 });
@@ -42524,26 +42524,26 @@ var require_cli_spinners = __commonJS({
 var require_supports_color3 = __commonJS({
   ""(exports, module) {
     "use strict";
-    var os2 = __require("os");
-    var tty2 = __require("tty");
-    var hasFlag2 = require_has_flag();
-    var { env: env2 } = process;
+    var os3 = __require("os");
+    var tty3 = __require("tty");
+    var hasFlag3 = require_has_flag();
+    var { env: env3 } = process;
     var forceColor;
-    if (hasFlag2("no-color") || hasFlag2("no-colors") || hasFlag2("color=false") || hasFlag2("color=never")) {
+    if (hasFlag3("no-color") || hasFlag3("no-colors") || hasFlag3("color=false") || hasFlag3("color=never")) {
       forceColor = 0;
-    } else if (hasFlag2("color") || hasFlag2("colors") || hasFlag2("color=true") || hasFlag2("color=always")) {
+    } else if (hasFlag3("color") || hasFlag3("colors") || hasFlag3("color=true") || hasFlag3("color=always")) {
       forceColor = 1;
     }
-    if ("FORCE_COLOR" in env2) {
-      if (env2.FORCE_COLOR === "true") {
+    if ("FORCE_COLOR" in env3) {
+      if (env3.FORCE_COLOR === "true") {
         forceColor = 1;
-      } else if (env2.FORCE_COLOR === "false") {
+      } else if (env3.FORCE_COLOR === "false") {
         forceColor = 0;
       } else {
-        forceColor = env2.FORCE_COLOR.length === 0 ? 1 : Math.min(parseInt(env2.FORCE_COLOR, 10), 3);
+        forceColor = env3.FORCE_COLOR.length === 0 ? 1 : Math.min(parseInt(env3.FORCE_COLOR, 10), 3);
       }
     }
-    function translateLevel2(level) {
+    function translateLevel3(level) {
       if (level === 0) {
         return false;
       }
@@ -42554,70 +42554,70 @@ var require_supports_color3 = __commonJS({
         has16m: level >= 3
       };
     }
-    function supportsColor2(haveStream, streamIsTTY) {
+    function supportsColor3(haveStream, streamIsTTY) {
       if (forceColor === 0) {
         return 0;
       }
-      if (hasFlag2("color=16m") || hasFlag2("color=full") || hasFlag2("color=truecolor")) {
+      if (hasFlag3("color=16m") || hasFlag3("color=full") || hasFlag3("color=truecolor")) {
         return 3;
       }
-      if (hasFlag2("color=256")) {
+      if (hasFlag3("color=256")) {
         return 2;
       }
       if (haveStream && !streamIsTTY && forceColor === void 0) {
         return 0;
       }
       const min = forceColor || 0;
-      if (env2.TERM === "dumb") {
+      if (env3.TERM === "dumb") {
         return min;
       }
       if (process.platform === "win32") {
-        const osRelease = os2.release().split(".");
+        const osRelease = os3.release().split(".");
         if (Number(osRelease[0]) >= 10 && Number(osRelease[2]) >= 10586) {
           return Number(osRelease[2]) >= 14931 ? 3 : 2;
         }
         return 1;
       }
-      if ("CI" in env2) {
-        if (["TRAVIS", "CIRCLECI", "APPVEYOR", "GITLAB_CI", "GITHUB_ACTIONS", "BUILDKITE"].some((sign) => sign in env2) || env2.CI_NAME === "codeship") {
+      if ("CI" in env3) {
+        if (["TRAVIS", "CIRCLECI", "APPVEYOR", "GITLAB_CI", "GITHUB_ACTIONS", "BUILDKITE"].some((sign) => sign in env3) || env3.CI_NAME === "codeship") {
           return 1;
         }
         return min;
       }
-      if ("TEAMCITY_VERSION" in env2) {
-        return /^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(env2.TEAMCITY_VERSION) ? 1 : 0;
+      if ("TEAMCITY_VERSION" in env3) {
+        return /^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(env3.TEAMCITY_VERSION) ? 1 : 0;
       }
-      if (env2.COLORTERM === "truecolor") {
+      if (env3.COLORTERM === "truecolor") {
         return 3;
       }
-      if ("TERM_PROGRAM" in env2) {
-        const version = parseInt((env2.TERM_PROGRAM_VERSION || "").split(".")[0], 10);
-        switch (env2.TERM_PROGRAM) {
+      if ("TERM_PROGRAM" in env3) {
+        const version = parseInt((env3.TERM_PROGRAM_VERSION || "").split(".")[0], 10);
+        switch (env3.TERM_PROGRAM) {
           case "iTerm.app":
             return version >= 3 ? 3 : 2;
           case "Apple_Terminal":
             return 2;
         }
       }
-      if (/-256(color)?$/i.test(env2.TERM)) {
+      if (/-256(color)?$/i.test(env3.TERM)) {
         return 2;
       }
-      if (/^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(env2.TERM)) {
+      if (/^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(env3.TERM)) {
         return 1;
       }
-      if ("COLORTERM" in env2) {
+      if ("COLORTERM" in env3) {
         return 1;
       }
       return min;
     }
     function getSupportLevel(stream) {
-      const level = supportsColor2(stream, stream && stream.isTTY);
-      return translateLevel2(level);
+      const level = supportsColor3(stream, stream && stream.isTTY);
+      return translateLevel3(level);
     }
     module.exports = {
       supportsColor: getSupportLevel,
-      stdout: translateLevel2(supportsColor2(true, tty2.isatty(1))),
-      stderr: translateLevel2(supportsColor2(true, tty2.isatty(2)))
+      stdout: translateLevel3(supportsColor3(true, tty3.isatty(1))),
+      stderr: translateLevel3(supportsColor3(true, tty3.isatty(2)))
     };
   }
 });
@@ -61398,13 +61398,199 @@ var chalkStderr = createChalk({ level: stderrColor ? stderrColor.level : 0 });
 var source_default = chalk;
 
 // 
-import { spawnSync } from "child_process";
+import process3 from "node:process";
+import os2 from "node:os";
+import tty2 from "node:tty";
+function hasFlag2(flag, argv = process3.argv) {
+  const prefix = flag.startsWith("-") ? "" : flag.length === 1 ? "-" : "--";
+  const position = argv.indexOf(prefix + flag);
+  const terminatorPosition = argv.indexOf("--");
+  return position !== -1 && (terminatorPosition === -1 || position < terminatorPosition);
+}
+var { env: env2 } = process3;
+var flagForceColor2;
+if (hasFlag2("no-color") || hasFlag2("no-colors") || hasFlag2("color=false") || hasFlag2("color=never")) {
+  flagForceColor2 = 0;
+} else if (hasFlag2("color") || hasFlag2("colors") || hasFlag2("color=true") || hasFlag2("color=always")) {
+  flagForceColor2 = 1;
+}
+function envForceColor2() {
+  if ("FORCE_COLOR" in env2) {
+    if (env2.FORCE_COLOR === "true") {
+      return 1;
+    }
+    if (env2.FORCE_COLOR === "false") {
+      return 0;
+    }
+    return env2.FORCE_COLOR.length === 0 ? 1 : Math.min(Number.parseInt(env2.FORCE_COLOR, 10), 3);
+  }
+}
+function translateLevel2(level) {
+  if (level === 0) {
+    return false;
+  }
+  return {
+    level,
+    hasBasic: true,
+    has256: level >= 2,
+    has16m: level >= 3
+  };
+}
+function _supportsColor2(haveStream, { streamIsTTY, sniffFlags = true } = {}) {
+  const noFlagForceColor = envForceColor2();
+  if (noFlagForceColor !== void 0) {
+    flagForceColor2 = noFlagForceColor;
+  }
+  const forceColor = sniffFlags ? flagForceColor2 : noFlagForceColor;
+  if (forceColor === 0) {
+    return 0;
+  }
+  if (sniffFlags) {
+    if (hasFlag2("color=16m") || hasFlag2("color=full") || hasFlag2("color=truecolor")) {
+      return 3;
+    }
+    if (hasFlag2("color=256")) {
+      return 2;
+    }
+  }
+  if (haveStream && !streamIsTTY && forceColor === void 0) {
+    return 0;
+  }
+  const min = forceColor || 0;
+  if (env2.TERM === "dumb") {
+    return min;
+  }
+  if (process3.platform === "win32") {
+    const osRelease = os2.release().split(".");
+    if (Number(osRelease[0]) >= 10 && Number(osRelease[2]) >= 10586) {
+      return Number(osRelease[2]) >= 14931 ? 3 : 2;
+    }
+    return 1;
+  }
+  if ("CI" in env2) {
+    if (["TRAVIS", "CIRCLECI", "APPVEYOR", "GITLAB_CI", "GITHUB_ACTIONS", "BUILDKITE", "DRONE"].some((sign) => sign in env2) || env2.CI_NAME === "codeship") {
+      return 1;
+    }
+    return min;
+  }
+  if ("TEAMCITY_VERSION" in env2) {
+    return /^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(env2.TEAMCITY_VERSION) ? 1 : 0;
+  }
+  if ("TF_BUILD" in env2 && "AGENT_NAME" in env2) {
+    return 1;
+  }
+  if (env2.COLORTERM === "truecolor") {
+    return 3;
+  }
+  if ("TERM_PROGRAM" in env2) {
+    const version = Number.parseInt((env2.TERM_PROGRAM_VERSION || "").split(".")[0], 10);
+    switch (env2.TERM_PROGRAM) {
+      case "iTerm.app":
+        return version >= 3 ? 3 : 2;
+      case "Apple_Terminal":
+        return 2;
+    }
+  }
+  if (/-256(color)?$/i.test(env2.TERM)) {
+    return 2;
+  }
+  if (/^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(env2.TERM)) {
+    return 1;
+  }
+  if ("COLORTERM" in env2) {
+    return 1;
+  }
+  return min;
+}
+function createSupportsColor2(stream, options = {}) {
+  const level = _supportsColor2(stream, __spreadValues({
+    streamIsTTY: stream && stream.isTTY
+  }, options));
+  return translateLevel2(level);
+}
+var supportsColor2 = {
+  stdout: createSupportsColor2({ isTTY: tty2.isatty(1) }),
+  stderr: createSupportsColor2({ isTTY: tty2.isatty(2) })
+};
+var supports_color_default2 = supportsColor2;
+
+// 
+import { spawn as _spawn, spawnSync as _spawnSync } from "child_process";
+var ChildProcess = class {
+  static spawnInteractive(command, args, options = {}) {
+    return new Promise((resolve, reject) => {
+      const commandText = `${command} ${args.join(" ")}`;
+      Log.debug(`Executing command: ${commandText}`);
+      const childProcess = _spawn(command, args, __spreadProps(__spreadValues({}, options), { shell: true, stdio: "inherit" }));
+      childProcess.on("close", (status) => status === 0 ? resolve() : reject(status));
+    });
+  }
+  static spawn(command, args, options = {}) {
+    return new Promise((resolve, reject) => {
+      const commandText = `${command} ${args.join(" ")}`;
+      const outputMode = options.mode;
+      const env3 = getEnvironmentForNonInteractiveSpawn(options.env);
+      Log.debug(`Executing command: ${commandText}`);
+      const childProcess = _spawn(command, args, __spreadProps(__spreadValues({}, options), { env: env3, shell: true, stdio: "pipe" }));
+      let logOutput = "";
+      let stdout = "";
+      let stderr = "";
+      if (options.input !== void 0) {
+        childProcess.stdin.write(options.input);
+        childProcess.stdin.end();
+      }
+      childProcess.stderr.on("data", (message) => {
+        stderr += message;
+        logOutput += message;
+        if (outputMode === void 0 || outputMode === "enabled") {
+          process.stderr.write(message);
+        }
+      });
+      childProcess.stdout.on("data", (message) => {
+        stdout += message;
+        logOutput += message;
+        if (outputMode === void 0 || outputMode === "enabled") {
+          process.stderr.write(message);
+        }
+      });
+      childProcess.on("close", (exitCode, signal) => {
+        const exitDescription = exitCode !== null ? `exit code "${exitCode}"` : `signal "${signal}"`;
+        const printFn = outputMode === "on-error" ? Log.error : Log.debug;
+        const status = statusFromExitCodeAndSignal(exitCode, signal);
+        printFn(`Command "${commandText}" completed with ${exitDescription}.`);
+        printFn(`Process output: 
+${logOutput}`);
+        if (status === 0 || options.suppressErrorOnFailingExitCode) {
+          resolve({ stdout, stderr, status });
+        } else {
+          reject(outputMode === "silent" ? logOutput : void 0);
+        }
+      });
+    });
+  }
+  static spawnSync(command, args, options = {}) {
+    const commandText = `${command} ${args.join(" ")}`;
+    const env3 = getEnvironmentForNonInteractiveSpawn(options.env);
+    Log.debug(`Executing command: ${commandText}`);
+    const { status: exitCode, signal, stdout, stderr } = _spawnSync(command, args, __spreadProps(__spreadValues({}, options), { env: env3, encoding: "utf8", shell: true, stdio: "pipe" }));
+    const status = statusFromExitCodeAndSignal(exitCode, signal);
+    if (status === 0 || options.suppressErrorOnFailingExitCode) {
+      return { status, stdout, stderr };
+    }
+    throw new Error(stderr);
+  }
+};
+function statusFromExitCodeAndSignal(exitCode, signal) {
+  return exitCode ?? signal ?? -1;
+}
+function getEnvironmentForNonInteractiveSpawn(userProvidedEnv) {
+  const forceColorValue = supports_color_default2.stdout !== false ? supports_color_default2.stdout.level.toString() : void 0;
+  return __spreadValues({ FORCE_COLOR: forceColorValue }, userProvidedEnv ?? process.env);
+}
+
+// 
 function determineRepoBaseDirFromCwd() {
-  const { stdout, stderr, status } = spawnSync("git", ["rev-parse --show-toplevel"], {
-    shell: true,
-    stdio: "pipe",
-    encoding: "utf8"
-  });
+  const { stdout, stderr, status } = ChildProcess.spawnSync("git", ["rev-parse --show-toplevel"]);
   if (status !== 0) {
     throw Error(`Unable to find the path to the base directory of the repository.
 Was the command run from inside of the repo?
@@ -61573,7 +61759,7 @@ var DryRunError = class extends Error {
 };
 
 // 
-import { spawnSync as spawnSync2 } from "child_process";
+import { spawnSync } from "child_process";
 
 // 
 var import_graphql = __toESM(require_dist_node6());
@@ -61655,7 +61841,7 @@ var GitClient = class {
       throw new DryRunError();
     }
     Log.debug("Executing: git", this.sanitizeConsoleOutput(args.join(" ")));
-    const result = spawnSync2(this.gitBinPath, args, __spreadProps(__spreadValues({
+    const result = spawnSync(this.gitBinPath, args, __spreadProps(__spreadValues({
       cwd: this.baseDir,
       stdio: "pipe"
     }, options), {
@@ -61966,8 +62152,8 @@ async function rebasePr(prNumber, githubToken) {
     const commits = await getCommitsInRange(commonAncestorSha, "HEAD");
     let squashFixups = process.env["CI"] !== void 0 || commits.filter((commit) => commit.isFixup).length === 0 ? false : await Prompt.confirm(`PR #${prNumber} contains fixup commits, would you like to squash them during rebase?`, true);
     Log.info(`Attempting to rebase PR #${prNumber} on ${fullBaseRef}`);
-    const [flags, env2] = squashFixups ? [["--interactive", "--autosquash"], __spreadProps(__spreadValues({}, process.env), { GIT_SEQUENCE_EDITOR: "true" })] : [[], void 0];
-    const rebaseResult = git.runGraceful(["rebase", ...flags, "FETCH_HEAD"], { env: env2 });
+    const [flags, env3] = squashFixups ? [["--interactive", "--autosquash"], __spreadProps(__spreadValues({}, process.env), { GIT_SEQUENCE_EDITOR: "true" })] : [[], void 0];
+    const rebaseResult = git.runGraceful(["rebase", ...flags, "FETCH_HEAD"], { env: env3 });
     if (rebaseResult.status === 0) {
       Log.info(`Rebase was able to complete automatically without conflicts`);
       Log.info(`Pushing rebased PR #${prNumber} to ${fullHeadRef}`);
