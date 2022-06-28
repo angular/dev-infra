@@ -59154,87 +59154,6 @@ var chalkStderr = createChalk({ level: stderrColor ? stderrColor.level : 0 });
 var source_default = chalk;
 
 // 
-import { spawnSync } from "child_process";
-function determineRepoBaseDirFromCwd() {
-  const { stdout, stderr, status } = spawnSync("git", ["rev-parse --show-toplevel"], {
-    shell: true,
-    stdio: "pipe",
-    encoding: "utf8"
-  });
-  if (status !== 0) {
-    throw Error(`Unable to find the path to the base directory of the repository.
-Was the command run from inside of the repo?
-
-${stderr}`);
-  }
-  return stdout.trim();
-}
-
-// 
-var LogLevel;
-(function(LogLevel2) {
-  LogLevel2[LogLevel2["SILENT"] = 0] = "SILENT";
-  LogLevel2[LogLevel2["ERROR"] = 1] = "ERROR";
-  LogLevel2[LogLevel2["WARN"] = 2] = "WARN";
-  LogLevel2[LogLevel2["LOG"] = 3] = "LOG";
-  LogLevel2[LogLevel2["INFO"] = 4] = "INFO";
-  LogLevel2[LogLevel2["DEBUG"] = 5] = "DEBUG";
-})(LogLevel || (LogLevel = {}));
-var DEFAULT_LOG_LEVEL = LogLevel.INFO;
-var red = source_default.red;
-var reset = source_default.reset;
-var green = source_default.green;
-var yellow = source_default.yellow;
-var bold = source_default.bold;
-var blue = source_default.blue;
-var Log = class {
-};
-Log.info = buildLogLevelFunction(() => console.info, LogLevel.INFO, null);
-Log.error = buildLogLevelFunction(() => console.error, LogLevel.ERROR, source_default.red);
-Log.debug = buildLogLevelFunction(() => console.debug, LogLevel.DEBUG, null);
-Log.log = buildLogLevelFunction(() => console.log, LogLevel.LOG, null);
-Log.warn = buildLogLevelFunction(() => console.warn, LogLevel.WARN, source_default.yellow);
-function buildLogLevelFunction(loadCommand, level, defaultColor) {
-  const loggingFunction = (...values) => {
-    runConsoleCommand(loadCommand, level, ...values.map((v) => typeof v === "string" && defaultColor ? defaultColor(v) : v));
-  };
-  loggingFunction.group = (label, collapsed = false) => {
-    const command = collapsed ? console.groupCollapsed : console.group;
-    runConsoleCommand(() => command, level, defaultColor ? defaultColor(label) : label);
-  };
-  loggingFunction.groupEnd = () => {
-    runConsoleCommand(() => console.groupEnd, level);
-  };
-  return loggingFunction;
-}
-function runConsoleCommand(loadCommand, logLevel, ...text) {
-  if (getLogLevel() >= logLevel) {
-    loadCommand()(...text);
-  }
-  printToLogFile(logLevel, ...text);
-}
-function getLogLevel() {
-  const logLevelEnvValue = (process.env[`LOG_LEVEL`] || "").toUpperCase();
-  const logLevel = LogLevel[logLevelEnvValue];
-  if (logLevel === void 0) {
-    return DEFAULT_LOG_LEVEL;
-  }
-  return logLevel;
-}
-var LOGGED_TEXT = "";
-var LOG_LEVEL_COLUMNS = 7;
-function printToLogFile(logLevel, ...text) {
-  const logLevelText = `${LogLevel[logLevel]}:`.padEnd(LOG_LEVEL_COLUMNS);
-  LOGGED_TEXT += text.join(" ").split("\n").map((l) => `${logLevelText} ${l}
-`).join("");
-}
-
-// 
-var import_cli_progress = __toESM(require_cli_progress());
-var import_multimatch = __toESM(require_multimatch());
-import { cpus } from "os";
-
-// 
 import process3 from "node:process";
 import os2 from "node:os";
 import tty2 from "node:tty";
@@ -59426,6 +59345,82 @@ function getEnvironmentForNonInteractiveSpawn(userProvidedEnv) {
 }
 
 // 
+function determineRepoBaseDirFromCwd() {
+  const { stdout, stderr, status } = ChildProcess.spawnSync("git", ["rev-parse --show-toplevel"]);
+  if (status !== 0) {
+    throw Error(`Unable to find the path to the base directory of the repository.
+Was the command run from inside of the repo?
+
+${stderr}`);
+  }
+  return stdout.trim();
+}
+
+// 
+var LogLevel;
+(function(LogLevel2) {
+  LogLevel2[LogLevel2["SILENT"] = 0] = "SILENT";
+  LogLevel2[LogLevel2["ERROR"] = 1] = "ERROR";
+  LogLevel2[LogLevel2["WARN"] = 2] = "WARN";
+  LogLevel2[LogLevel2["LOG"] = 3] = "LOG";
+  LogLevel2[LogLevel2["INFO"] = 4] = "INFO";
+  LogLevel2[LogLevel2["DEBUG"] = 5] = "DEBUG";
+})(LogLevel || (LogLevel = {}));
+var DEFAULT_LOG_LEVEL = LogLevel.INFO;
+var red = source_default.red;
+var reset = source_default.reset;
+var green = source_default.green;
+var yellow = source_default.yellow;
+var bold = source_default.bold;
+var blue = source_default.blue;
+var Log = class {
+};
+Log.info = buildLogLevelFunction(() => console.info, LogLevel.INFO, null);
+Log.error = buildLogLevelFunction(() => console.error, LogLevel.ERROR, source_default.red);
+Log.debug = buildLogLevelFunction(() => console.debug, LogLevel.DEBUG, null);
+Log.log = buildLogLevelFunction(() => console.log, LogLevel.LOG, null);
+Log.warn = buildLogLevelFunction(() => console.warn, LogLevel.WARN, source_default.yellow);
+function buildLogLevelFunction(loadCommand, level, defaultColor) {
+  const loggingFunction = (...values) => {
+    runConsoleCommand(loadCommand, level, ...values.map((v) => typeof v === "string" && defaultColor ? defaultColor(v) : v));
+  };
+  loggingFunction.group = (label, collapsed = false) => {
+    const command = collapsed ? console.groupCollapsed : console.group;
+    runConsoleCommand(() => command, level, defaultColor ? defaultColor(label) : label);
+  };
+  loggingFunction.groupEnd = () => {
+    runConsoleCommand(() => console.groupEnd, level);
+  };
+  return loggingFunction;
+}
+function runConsoleCommand(loadCommand, logLevel, ...text) {
+  if (getLogLevel() >= logLevel) {
+    loadCommand()(...text);
+  }
+  printToLogFile(logLevel, ...text);
+}
+function getLogLevel() {
+  const logLevelEnvValue = (process.env[`LOG_LEVEL`] || "").toUpperCase();
+  const logLevel = LogLevel[logLevelEnvValue];
+  if (logLevel === void 0) {
+    return DEFAULT_LOG_LEVEL;
+  }
+  return logLevel;
+}
+var LOGGED_TEXT = "";
+var LOG_LEVEL_COLUMNS = 7;
+function printToLogFile(logLevel, ...text) {
+  const logLevelText = `${LogLevel[logLevel]}:`.padEnd(LOG_LEVEL_COLUMNS);
+  LOGGED_TEXT += text.join(" ").split("\n").map((l) => `${logLevelText} ${l}
+`).join("");
+}
+
+// 
+var import_cli_progress = __toESM(require_cli_progress());
+var import_multimatch = __toESM(require_multimatch());
+import { cpus } from "os";
+
+// 
 function isDryRun() {
   return process.env["DRY_RUN"] !== void 0;
 }
@@ -59509,7 +59504,7 @@ async function readConfigFile(configPath, returnEmptyObjectOnError = false) {
 }
 
 // 
-import { spawnSync as spawnSync2 } from "child_process";
+import { spawnSync } from "child_process";
 
 // 
 var import_graphql = __toESM(require_dist_node6());
@@ -59591,7 +59586,7 @@ var GitClient = class {
       throw new DryRunError();
     }
     Log.debug("Executing: git", this.sanitizeConsoleOutput(args.join(" ")));
-    const result = spawnSync2(this.gitBinPath, args, __spreadProps(__spreadValues({
+    const result = spawnSync(this.gitBinPath, args, __spreadProps(__spreadValues({
       cwd: this.baseDir,
       stdio: "pipe"
     }, options), {
