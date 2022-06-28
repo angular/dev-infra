@@ -15540,7 +15540,7 @@ var import_rest = __toESM(require_dist_node12());
 var import_auth_app = __toESM(require_dist_node19());
 var import_github = __toESM(require_github());
 var ANGULAR_ROBOT = [43341, "angular-robot-key"];
-async function getJwtAuthedGithubClient([appId, inputKey]) {
+async function getJwtAuthedAppClient([appId, inputKey]) {
   const privateKey = (0, import_core.getInput)(inputKey, { required: true });
   return new import_rest.Octokit({
     authStrategy: import_auth_app.createAppAuth,
@@ -15548,12 +15548,20 @@ async function getJwtAuthedGithubClient([appId, inputKey]) {
   });
 }
 async function getAuthTokenFor(app) {
-  const github = await getJwtAuthedGithubClient(app);
+  const github = await getJwtAuthedAppClient(app);
   const { id: installationId } = (await github.apps.getRepoInstallation(__spreadValues({}, import_github.context.repo))).data;
   const { token } = (await github.rest.apps.createInstallationAccessToken({
     installation_id: installationId
   })).data;
   return token;
+}
+async function revokeActiveInstallationToken(githubOrToken) {
+  if (typeof githubOrToken === "string") {
+    await new import_rest.Octokit({ auth: githubOrToken }).apps.revokeInstallationAccessToken();
+  } else {
+    await githubOrToken.apps.revokeInstallationAccessToken();
+  }
+  (0, import_core.info)("Revoked installation token used for Angular Robot.");
 }
 
 // 
@@ -15699,10 +15707,7 @@ var OctoKit = class {
     this.options = options;
     this._orgMembers = /* @__PURE__ */ new Set();
     this.mockLabels = /* @__PURE__ */ new Set();
-    this._octokit = new import_rest2.Octokit({ auth: token });
-  }
-  get octokit() {
-    return this._octokit;
+    this.octokit = new import_rest2.Octokit({ auth: token });
   }
   async *query(query) {
     let pageNum = 0;
@@ -15868,13 +15873,14 @@ function isIssue(object) {
 
 // 
 (async () => {
+  let installationOctokit = null;
   try {
     const token = await getAuthTokenFor(ANGULAR_ROBOT);
-    const octokit = new OctoKit(token, {
+    installationOctokit = new OctoKit(token, {
       repo: import_github2.context.repo.repo,
       owner: import_github2.context.repo.owner
     });
-    await run(octokit, {
+    await run(installationOctokit, {
       organization: import_github2.context.repo.owner,
       closeAfterWarnDaysDuration: getInputValue("close-after-warn-days-duration"),
       closeComment: getInputValue("close-comment"),
@@ -15897,6 +15903,10 @@ function isIssue(object) {
       core2.setFailed(error.message);
     }
     throw error;
+  } finally {
+    if (installationOctokit !== null) {
+      await revokeActiveInstallationToken(installationOctokit.octokit);
+    }
   }
 })();
 /*!

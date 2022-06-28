@@ -15538,7 +15538,7 @@ var import_rest = __toESM(require_dist_node12());
 var import_auth_app = __toESM(require_dist_node19());
 var import_github = __toESM(require_github());
 var ANGULAR_LOCK_BOT = [40213, "lock-bot-key"];
-async function getJwtAuthedGithubClient([appId, inputKey]) {
+async function getJwtAuthedAppClient([appId, inputKey]) {
   const privateKey = (0, import_core.getInput)(inputKey, { required: true });
   return new import_rest.Octokit({
     authStrategy: import_auth_app.createAppAuth,
@@ -15546,12 +15546,20 @@ async function getJwtAuthedGithubClient([appId, inputKey]) {
   });
 }
 async function getAuthTokenFor(app) {
-  const github = await getJwtAuthedGithubClient(app);
+  const github = await getJwtAuthedAppClient(app);
   const { id: installationId } = (await github.apps.getRepoInstallation(__spreadValues({}, import_github.context.repo))).data;
   const { token } = (await github.rest.apps.createInstallationAccessToken({
     installation_id: installationId
   })).data;
   return token;
+}
+async function revokeActiveInstallationToken(githubOrToken) {
+  if (typeof githubOrToken === "string") {
+    await new import_rest.Octokit({ auth: githubOrToken }).apps.revokeInstallationAccessToken();
+  } else {
+    await githubOrToken.apps.revokeInstallationAccessToken();
+  }
+  (0, import_core.info)("Revoked installation token used for Angular Robot.");
 }
 
 // 
@@ -15571,70 +15579,80 @@ async function lockIssue(client, issue, message) {
 function timeout(ms) {
   return setTimeout.__promisify__(ms);
 }
-async function run() {
+async function main() {
+  let installationClient = null;
   try {
-    const days = 30;
-    const policyUrl = "https://github.com/angular/angular/blob/8f24bc9443b3872fe095d9f7f77b308a361a13b4/docs/GITHUB_PROCESS.md#conversation-locking";
-    const message = `This issue has been automatically locked due to inactivity.
-Please file a new issue if you are encountering a similar or related problem.
-
-Read more about our [automatic conversation locking policy](${policyUrl}).
-
-<sub>_This action has been performed automatically by a bot._</sub>`;
     const token = await getAuthTokenFor(ANGULAR_LOCK_BOT);
-    const client = new import_rest2.Octokit({ auth: token });
-    const maxPerExecution = Math.min(+core.getInput("locks-per-execution") || 1, 100);
-    const threshold = new Date();
-    threshold.setDate(threshold.getDate() - days);
-    const repositoryName = import_github2.context.repo.owner + "/" + import_github2.context.repo.repo;
-    const updatedAt = threshold.toISOString().split("T")[0];
-    const query = `repo:${repositoryName}+is:closed+is:unlocked+updated:<${updatedAt}+sort:updated-asc`;
-    console.info("Query: " + query);
-    let lockCount = 0;
-    let issueResponse = await client.search.issuesAndPullRequests({
-      q: query,
-      per_page: maxPerExecution
-    });
-    console.info(`Query found ${issueResponse.data.total_count} items`);
-    if (!issueResponse.data.items.length) {
-      console.info(`No items to lock`);
-      return;
-    }
-    console.info(`Attempting to lock ${issueResponse.data.items.length} item(s)`);
-    core.startGroup("Locking items");
-    for (const item of issueResponse.data.items) {
-      let itemType;
-      try {
-        itemType = item.pull_request ? "pull request" : "issue";
-        if (item.locked) {
-          console.info(`Skipping ${itemType} #${item.number}, already locked`);
-          continue;
-        }
-        console.info(`Locking ${itemType} #${item.number}`);
-        await lockIssue(client, item.number, message);
-        await timeout(500);
-        ++lockCount;
-      } catch (error2) {
-        core.debug(error2);
-        core.warning(`Unable to lock ${itemType} #${item.number}: ${error2.message}`);
-        if (typeof error2.request === "object") {
-          core.error(JSON.stringify(error2.request, null, 2));
-        }
-      }
-    }
-    core.endGroup();
-    console.info(`Locked ${lockCount} item(s)`);
+    installationClient = new import_rest2.Octokit({ auth: token });
+    await runLockClosedAction(installationClient);
   } catch (error2) {
     core.debug(error2.message);
     core.setFailed(error2.message);
     if (typeof error2.request === "object") {
       core.error(JSON.stringify(error2.request, null, 2));
     }
+  } finally {
+    if (installationClient !== null) {
+      await revokeActiveInstallationToken(installationClient);
+    }
   }
-  console.info(`End of locking task`);
+}
+async function runLockClosedAction(github) {
+  const days = 30;
+  const policyUrl = "https://github.com/angular/angular/blob/8f24bc9443b3872fe095d9f7f77b308a361a13b4/docs/GITHUB_PROCESS.md#conversation-locking";
+  const message = `This issue has been automatically locked due to inactivity.
+Please file a new issue if you are encountering a similar or related problem.
+
+Read more about our [automatic conversation locking policy](${policyUrl}).
+
+<sub>_This action has been performed automatically by a bot._</sub>`;
+  const maxPerExecution = Math.min(+core.getInput("locks-per-execution") || 1, 100);
+  const threshold = new Date();
+  threshold.setDate(threshold.getDate() - days);
+  const repositoryName = import_github2.context.repo.owner + "/" + import_github2.context.repo.repo;
+  const updatedAt = threshold.toISOString().split("T")[0];
+  const query = `repo:${repositoryName}+is:closed+is:unlocked+updated:<${updatedAt}+sort:updated-asc`;
+  console.info("Query: " + query);
+  let lockCount = 0;
+  let issueResponse = await github.search.issuesAndPullRequests({
+    q: query,
+    per_page: maxPerExecution
+  });
+  console.info(`Query found ${issueResponse.data.total_count} items`);
+  if (!issueResponse.data.items.length) {
+    console.info(`No items to lock`);
+    return;
+  }
+  console.info(`Attempting to lock ${issueResponse.data.items.length} item(s)`);
+  core.startGroup("Locking items");
+  for (const item of issueResponse.data.items) {
+    let itemType;
+    try {
+      itemType = item.pull_request ? "pull request" : "issue";
+      if (item.locked) {
+        console.info(`Skipping ${itemType} #${item.number}, already locked`);
+        continue;
+      }
+      console.info(`Locking ${itemType} #${item.number}`);
+      await lockIssue(github, item.number, message);
+      await timeout(500);
+      ++lockCount;
+    } catch (error2) {
+      core.debug(error2);
+      core.warning(`Unable to lock ${itemType} #${item.number}: ${error2.message}`);
+      if (typeof error2.request === "object") {
+        core.error(JSON.stringify(error2.request, null, 2));
+      }
+    }
+  }
+  core.endGroup();
+  console.info(`Locked ${lockCount} item(s)`);
 }
 if (import_github2.context.repo.owner === "angular" || import_github2.context.eventName === "workflow_dispatch") {
-  run();
+  main().catch((e) => {
+    core.error(e);
+    core.setFailed(e.message);
+  });
 } else {
   core.warning("The Automatic Locking Closed issues was skipped as this action is only meant to run in repos belonging to the Angular organization.");
 }
