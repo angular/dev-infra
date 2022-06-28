@@ -15110,7 +15110,7 @@ var require_figures = __commonJS({
     "use strict";
     var escapeStringRegexp = require_escape_string_regexp();
     var { platform } = process;
-    var main = {
+    var main2 = {
       tick: "\u2714",
       cross: "\u2716",
       star: "\u2605",
@@ -15196,12 +15196,12 @@ var require_figures = __commonJS({
       hamburger: "\u2261",
       smiley: "\u263A",
       mustache: "\u250C\u2500\u2510",
-      heart: main.heart,
+      heart: main2.heart,
       nodejs: "\u2666",
-      arrowUp: main.arrowUp,
-      arrowDown: main.arrowDown,
-      arrowLeft: main.arrowLeft,
-      arrowRight: main.arrowRight,
+      arrowUp: main2.arrowUp,
+      arrowDown: main2.arrowDown,
+      arrowLeft: main2.arrowLeft,
+      arrowRight: main2.arrowRight,
       radioOn: "(*)",
       radioOff: "( )",
       checkboxOn: "[\xD7]",
@@ -15229,14 +15229,14 @@ var require_figures = __commonJS({
       sevenEighths: "7/8"
     };
     if (platform === "linux") {
-      main.questionMarkPrefix = "?";
+      main2.questionMarkPrefix = "?";
     }
-    var figures = platform === "win32" ? windows : main;
+    var figures = platform === "win32" ? windows : main2;
     var fn = (string) => {
-      if (figures === main) {
+      if (figures === main2) {
         return string;
       }
-      for (const [key, value] of Object.entries(main)) {
+      for (const [key, value] of Object.entries(main2)) {
         if (value === figures[key]) {
           continue;
         }
@@ -15245,7 +15245,7 @@ var require_figures = __commonJS({
       return string;
     };
     module.exports = Object.assign(fn, figures);
-    module.exports.main = main;
+    module.exports.main = main2;
     module.exports.windows = windows;
   }
 });
@@ -17847,17 +17847,17 @@ var require_animationFrames = __commonJS({
         var subscription = new Subscription_1.Subscription();
         var provider = timestampProvider || performanceTimestampProvider_1.performanceTimestampProvider;
         var start = provider.now();
-        var run2 = function(timestamp) {
+        var run = function(timestamp) {
           var now = provider.now();
           subscriber.next({
             timestamp: timestampProvider ? now : timestamp,
             elapsed: now - start
           });
           if (!subscriber.closed) {
-            subscription.add(schedule(run2));
+            subscription.add(schedule(run));
           }
         };
-        subscription.add(schedule(run2));
+        subscription.add(schedule(run));
         return subscription;
       });
     }
@@ -32044,7 +32044,7 @@ var require_log_symbols = __commonJS({
     "use strict";
     var chalk2 = require_source3();
     var isUnicodeSupported = require_is_unicode_supported();
-    var main = {
+    var main2 = {
       info: chalk2.blue("\u2139"),
       success: chalk2.green("\u2714"),
       warning: chalk2.yellow("\u26A0"),
@@ -32056,7 +32056,7 @@ var require_log_symbols = __commonJS({
       warning: chalk2.yellow("\u203C"),
       error: chalk2.red("\xD7")
     };
-    module.exports = isUnicodeSupported() ? main : fallback;
+    module.exports = isUnicodeSupported() ? main2 : fallback;
   }
 });
 
@@ -60702,7 +60702,7 @@ var import_rest2 = __toESM(require_dist_node12());
 var import_auth_app = __toESM(require_dist_node19());
 var import_github3 = __toESM(require_github());
 var ANGULAR_ROBOT = [43341, "angular-robot-key"];
-async function getJwtAuthedGithubClient([appId, inputKey]) {
+async function getJwtAuthedAppClient([appId, inputKey]) {
   const privateKey = (0, import_core.getInput)(inputKey, { required: true });
   return new import_rest2.Octokit({
     authStrategy: import_auth_app.createAppAuth,
@@ -60710,12 +60710,20 @@ async function getJwtAuthedGithubClient([appId, inputKey]) {
   });
 }
 async function getAuthTokenFor(app) {
-  const github = await getJwtAuthedGithubClient(app);
+  const github = await getJwtAuthedAppClient(app);
   const { id: installationId } = (await github.apps.getRepoInstallation(__spreadValues({}, import_github3.context.repo))).data;
   const { token } = (await github.rest.apps.createInstallationAccessToken({
     installation_id: installationId
   })).data;
   return token;
+}
+async function revokeActiveInstallationToken(githubOrToken) {
+  if (typeof githubOrToken === "string") {
+    await new import_rest2.Octokit({ auth: githubOrToken }).apps.revokeInstallationAccessToken();
+  } else {
+    await githubOrToken.apps.revokeInstallationAccessToken();
+  }
+  (0, import_core.info)("Revoked installation token used for Angular Robot.");
 }
 
 // 
@@ -60744,9 +60752,20 @@ var config = {
     }
   }
 };
-setConfig(config);
-async function run() {
-  AuthenticatedGitClient.configure(await getAuthTokenFor(ANGULAR_ROBOT));
+async function main() {
+  let installationToken = null;
+  try {
+    installationToken = await getAuthTokenFor(ANGULAR_ROBOT);
+    await runChangelogAction(installationToken);
+  } finally {
+    if (installationToken !== null) {
+      await revokeActiveInstallationToken(installationToken);
+    }
+  }
+}
+async function runChangelogAction(installationToken) {
+  setConfig(config);
+  AuthenticatedGitClient.configure(installationToken);
   const git = await AuthenticatedGitClient.get();
   git.run(["config", "user.email", "angular-robot@google.com"]);
   git.run(["config", "user.name", "Angular Robot"]);
@@ -60794,7 +60813,7 @@ function getTodayAsSemver() {
   return new import_semver3.default.SemVer(`${today.getFullYear()}.${today.getMonth() + 1}.${today.getDate()}`);
 }
 if (import_github4.context.repo.owner === "angular" && import_github4.context.repo.repo === "dev-infra") {
-  run().catch((e) => {
+  main().catch((e) => {
     core.error(e);
     core.setFailed(e.message);
   });

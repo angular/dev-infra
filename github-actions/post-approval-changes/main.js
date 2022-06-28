@@ -395,18 +395,18 @@ var require_tunnel = __commonJS({
         if (res.statusCode !== 200) {
           debug("tunneling socket could not be established, statusCode=%d", res.statusCode);
           socket.destroy();
-          var error = new Error("tunneling socket could not be established, statusCode=" + res.statusCode);
-          error.code = "ECONNRESET";
-          options.request.emit("error", error);
+          var error2 = new Error("tunneling socket could not be established, statusCode=" + res.statusCode);
+          error2.code = "ECONNRESET";
+          options.request.emit("error", error2);
           self.removeSocket(placeholder);
           return;
         }
         if (head.length > 0) {
           debug("got illegal response body from proxy");
           socket.destroy();
-          var error = new Error("got illegal response body from proxy");
-          error.code = "ECONNRESET";
-          options.request.emit("error", error);
+          var error2 = new Error("got illegal response body from proxy");
+          error2.code = "ECONNRESET";
+          options.request.emit("error", error2);
           self.removeSocket(placeholder);
           return;
         }
@@ -417,9 +417,9 @@ var require_tunnel = __commonJS({
       function onError(cause) {
         connectReq.removeAllListeners();
         debug("tunneling socket could not be established, cause=%s\n", cause.message, cause.stack);
-        var error = new Error("tunneling socket could not be established, cause=" + cause.message);
-        error.code = "ECONNRESET";
-        options.request.emit("error", error);
+        var error2 = new Error("tunneling socket could not be established, cause=" + cause.message);
+        error2.code = "ECONNRESET";
+        options.request.emit("error", error2);
         self.removeSocket(placeholder);
       }
     };
@@ -1211,12 +1211,12 @@ var require_oidc_utils = __commonJS({
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
           const httpclient = OidcClient.createHttpClient();
-          const res = yield httpclient.getJson(id_token_url).catch((error) => {
+          const res = yield httpclient.getJson(id_token_url).catch((error2) => {
             throw new Error(`Failed to get ID Token. 
  
-        Error Code : ${error.statusCode}
+        Error Code : ${error2.statusCode}
  
-        Error Message: ${error.result.message}`);
+        Error Message: ${error2.result.message}`);
           });
           const id_token = (_a = res.result) === null || _a === void 0 ? void 0 : _a.value;
           if (!id_token) {
@@ -1237,8 +1237,8 @@ var require_oidc_utils = __commonJS({
             const id_token = yield OidcClient.getCall(id_token_url);
             core_1.setSecret(id_token);
             return id_token;
-          } catch (error) {
-            throw new Error(`Error message: ${error.message}`);
+          } catch (error2) {
+            throw new Error(`Error message: ${error2.message}`);
           }
         });
       }
@@ -1548,11 +1548,11 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
       command_1.issue("echo", enabled ? "on" : "off");
     }
     exports.setCommandEcho = setCommandEcho;
-    function setFailed(message) {
+    function setFailed2(message) {
       process.exitCode = ExitCode.Failure;
-      error(message);
+      error2(message);
     }
-    exports.setFailed = setFailed;
+    exports.setFailed = setFailed2;
     function isDebug() {
       return process.env["RUNNER_DEBUG"] === "1";
     }
@@ -1561,10 +1561,10 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
       command_1.issueCommand("debug", {}, message);
     }
     exports.debug = debug;
-    function error(message, properties = {}) {
+    function error2(message, properties = {}) {
       command_1.issueCommand("error", utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
     }
-    exports.error = error;
+    exports.error = error2;
     function warning2(message, properties = {}) {
       command_1.issueCommand("warning", utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
     }
@@ -1807,8 +1807,8 @@ var require_add = __commonJS({
       }
       if (kind === "error") {
         hook = function(method, options) {
-          return Promise.resolve().then(method.bind(null, options)).catch(function(error) {
-            return orig(error, options);
+          return Promise.resolve().then(method.bind(null, options)).catch(function(error2) {
+            return orig(error2, options);
           });
         };
       }
@@ -2490,21 +2490,21 @@ var require_tr46 = __commonJS({
         label = punycode.toUnicode(label);
         processing_option = PROCESSING_OPTIONS.NONTRANSITIONAL;
       }
-      var error = false;
+      var error2 = false;
       if (normalize(label) !== label || label[3] === "-" && label[4] === "-" || label[0] === "-" || label[label.length - 1] === "-" || label.indexOf(".") !== -1 || label.search(combiningMarksRegex) === 0) {
-        error = true;
+        error2 = true;
       }
       var len = countSymbols(label);
       for (var i = 0; i < len; ++i) {
         var status = findStatus(label.codePointAt(i));
         if (processing === PROCESSING_OPTIONS.TRANSITIONAL && status[1] !== "valid" || processing === PROCESSING_OPTIONS.NONTRANSITIONAL && status[1] !== "valid" && status[1] !== "deviation") {
-          error = true;
+          error2 = true;
           break;
         }
       }
       return {
         label,
-        error
+        error: error2
       };
     }
     function processing(domain_name, useSTD3, processing_option) {
@@ -7785,8 +7785,8 @@ var require_lib4 = __commonJS({
       this.timeout = timeout;
       if (body instanceof Stream) {
         body.on("error", function(err) {
-          const error = err.name === "AbortError" ? err : new FetchError(`Invalid response body while trying to fetch ${_this.url}: ${err.message}`, "system", err);
-          _this[INTERNALS].error = error;
+          const error2 = err.name === "AbortError" ? err : new FetchError(`Invalid response body while trying to fetch ${_this.url}: ${err.message}`, "system", err);
+          _this[INTERNALS].error = error2;
         });
       }
     }
@@ -8513,14 +8513,14 @@ var require_lib4 = __commonJS({
         const signal = request.signal;
         let response = null;
         const abort = function abort2() {
-          let error = new AbortError("The user aborted a request.");
-          reject(error);
+          let error2 = new AbortError("The user aborted a request.");
+          reject(error2);
           if (request.body && request.body instanceof Stream.Readable) {
-            request.body.destroy(error);
+            request.body.destroy(error2);
           }
           if (!response || !response.body)
             return;
-          response.body.emit("error", error);
+          response.body.emit("error", error2);
         };
         if (signal && signal.aborted) {
           abort();
@@ -8912,7 +8912,7 @@ var require_dist_node5 = __commonJS({
         }
         if (status >= 400) {
           const data = await getResponseData(response);
-          const error = new requestError.RequestError(toErrorMessage(data), status, {
+          const error2 = new requestError.RequestError(toErrorMessage(data), status, {
             response: {
               url,
               status,
@@ -8921,7 +8921,7 @@ var require_dist_node5 = __commonJS({
             },
             request: requestOptions
           });
-          throw error;
+          throw error2;
         }
         return getResponseData(response);
       }).then((data) => {
@@ -8931,10 +8931,10 @@ var require_dist_node5 = __commonJS({
           headers,
           data
         };
-      }).catch((error) => {
-        if (error instanceof requestError.RequestError)
-          throw error;
-        throw new requestError.RequestError(error.message, 500, {
+      }).catch((error2) => {
+        if (error2 instanceof requestError.RequestError)
+          throw error2;
+        throw new requestError.RequestError(error2.message, 500, {
           request: requestOptions
         });
       });
@@ -10362,9 +10362,9 @@ var require_dist_node10 = __commonJS({
               return {
                 value: normalizedResponse
               };
-            } catch (error) {
-              if (error.status !== 409)
-                throw error;
+            } catch (error2) {
+              if (error2.status !== 409)
+                throw error2;
               url = "";
               return {
                 value: {
@@ -10546,9 +10546,9 @@ var require_dist_node11 = __commonJS({
         return request(options).then((response) => {
           octokit.log.info(`${requestOptions.method} ${path} - ${response.status} in ${Date.now() - start}ms`);
           return response;
-        }).catch((error) => {
-          octokit.log.info(`${requestOptions.method} ${path} - ${error.status} in ${Date.now() - start}ms`);
-          throw error;
+        }).catch((error2) => {
+          octokit.log.info(`${requestOptions.method} ${path} - ${error2.status} in ${Date.now() - start}ms`);
+          throw error2;
         });
       });
     }
@@ -10734,12 +10734,12 @@ var require_dist_node14 = __commonJS({
       }, parameters);
       const response = await request2(route, withOAuthParameters);
       if ("error" in response.data) {
-        const error = new requestError.RequestError(`${response.data.error_description} (${response.data.error}, ${response.data.error_uri})`, 400, {
+        const error2 = new requestError.RequestError(`${response.data.error_description} (${response.data.error}, ${response.data.error_uri})`, 400, {
           request: request2.endpoint.merge(route, withOAuthParameters),
           headers: response.headers
         });
-        error.response = response;
-        throw error;
+        error2.response = response;
+        throw error2;
       }
       return response;
     }
@@ -11096,10 +11096,10 @@ var require_dist_node15 = __commonJS({
           type: "token",
           tokenType: "oauth"
         }, authentication);
-      } catch (error) {
-        if (!error.response)
-          throw error;
-        const errorType = error.response.data.error;
+      } catch (error2) {
+        if (!error2.response)
+          throw error2;
+        const errorType = error2.response.data.error;
         if (errorType === "authorization_pending") {
           await wait(verification.interval);
           return waitForAccessToken(request2, clientId, clientType, verification);
@@ -11108,7 +11108,7 @@ var require_dist_node15 = __commonJS({
           await wait(verification.interval + 5);
           return waitForAccessToken(request2, clientId, clientType, verification);
         }
-        throw error;
+        throw error2;
       }
     }
     async function auth(state, authOptions) {
@@ -11344,12 +11344,12 @@ var require_dist_node16 = __commonJS({
             type: "token"
           }, authentication);
           return state.authentication;
-        } catch (error) {
-          if (error.status === 404) {
-            error.message = "[@octokit/auth-oauth-user] Token is invalid";
+        } catch (error2) {
+          if (error2.status === 404) {
+            error2.message = "[@octokit/auth-oauth-user] Token is invalid";
             state.authentication.invalid = true;
           }
-          throw error;
+          throw error2;
         }
       }
       if (options.type === "delete" || options.type === "deleteAuthorization") {
@@ -11362,9 +11362,9 @@ var require_dist_node16 = __commonJS({
             token: state.authentication.token,
             request: state.request
           });
-        } catch (error) {
-          if (error.status !== 404)
-            throw error;
+        } catch (error2) {
+          if (error2.status !== 404)
+            throw error2;
         }
         state.authentication.invalid = true;
         return state.authentication;
@@ -11552,11 +11552,11 @@ var require_dist_node17 = __commonJS({
       endpoint.headers.authorization = `basic ${credentials}`;
       try {
         return await request2(endpoint);
-      } catch (error) {
-        if (error.status !== 401)
-          throw error;
-        error.message = `[@octokit/auth-oauth-app] "${endpoint.method} ${endpoint.url}" does not support clientId/clientSecret basic authentication.`;
-        throw error;
+      } catch (error2) {
+        if (error2.status !== 401)
+          throw error2;
+        error2.message = `[@octokit/auth-oauth-app] "${endpoint.method} ${endpoint.url}" does not support clientId/clientSecret basic authentication.`;
+        throw error2;
       }
     }
     var VERSION = "4.3.1";
@@ -12362,15 +12362,15 @@ var require_decode = __commonJS({
 // 
 var require_JsonWebTokenError = __commonJS({
   ""(exports, module) {
-    var JsonWebTokenError = function(message, error) {
+    var JsonWebTokenError = function(message, error2) {
       Error.call(this, message);
       if (Error.captureStackTrace) {
         Error.captureStackTrace(this, this.constructor);
       }
       this.name = "JsonWebTokenError";
       this.message = message;
-      if (error)
-        this.inner = error;
+      if (error2)
+        this.inner = error2;
     };
     JsonWebTokenError.prototype = Object.create(Error.prototype);
     JsonWebTokenError.prototype.constructor = JsonWebTokenError;
@@ -14306,8 +14306,8 @@ var require_sign = __commonJS({
       } else if (isObjectPayload) {
         try {
           validatePayload(payload);
-        } catch (error) {
-          return failure(error);
+        } catch (error2) {
+          return failure(error2);
         }
         if (!options.mutatePayload) {
           payload = Object.assign({}, payload);
@@ -14328,8 +14328,8 @@ var require_sign = __commonJS({
       }
       try {
         validateOptions(options);
-      } catch (error) {
-        return failure(error);
+      } catch (error2) {
+        return failure(error2);
       }
       var timestamp = payload.iat || Math.floor(Date.now() / 1e3);
       if (options.noTimestamp) {
@@ -15199,11 +15199,11 @@ var require_dist_node19 = __commonJS({
           appId: appAuthentication.appId,
           expiresAt: new Date(appAuthentication.expiration * 1e3).toISOString()
         };
-      } catch (error) {
+      } catch (error2) {
         if (privateKey === "-----BEGIN RSA PRIVATE KEY-----") {
           throw new Error("The 'privateKey` option contains only the first line '-----BEGIN RSA PRIVATE KEY-----'. If you are setting it using a `.env` file, make sure it is set on a single line with newlines replaced by '\n'");
         } else {
-          throw error;
+          throw error2;
         }
       }
     }
@@ -15408,8 +15408,8 @@ var require_dist_node19 = __commonJS({
       return !!url && REGEX.test(url);
     }
     var FIVE_SECONDS_IN_MS = 5 * 1e3;
-    function isNotTimeSkewError(error) {
-      return !(error.message.match(/'Expiration time' claim \('exp'\) must be a numeric value representing the future time at which the assertion expires/) || error.message.match(/'Issued at' claim \('iat'\) must be an Integer representing the time that the assertion was issued/));
+    function isNotTimeSkewError(error2) {
+      return !(error2.message.match(/'Expiration time' claim \('exp'\) must be a numeric value representing the future time at which the assertion expires/) || error2.message.match(/'Issued at' claim \('iat'\) must be an Integer representing the time that the assertion was issued/));
     }
     async function hook(state, request2, route, parameters) {
       const endpoint = request2.endpoint.merge(route, parameters);
@@ -15425,15 +15425,15 @@ var require_dist_node19 = __commonJS({
         let response;
         try {
           response = await request2(endpoint);
-        } catch (error) {
-          if (isNotTimeSkewError(error)) {
-            throw error;
+        } catch (error2) {
+          if (isNotTimeSkewError(error2)) {
+            throw error2;
           }
-          if (typeof error.response.headers.date === "undefined") {
-            throw error;
+          if (typeof error2.response.headers.date === "undefined") {
+            throw error2;
           }
-          const diff = Math.floor((Date.parse(error.response.headers.date) - Date.parse(new Date().toString())) / 1e3);
-          state.log.warn(error.message);
+          const diff = Math.floor((Date.parse(error2.response.headers.date) - Date.parse(new Date().toString())) / 1e3);
+          state.log.warn(error2.message);
           state.log.warn(`[@octokit/auth-app] GitHub API time and system time are different by ${diff} seconds. Retrying request with the difference accounted for.`);
           const {
             token: token3
@@ -15463,15 +15463,15 @@ var require_dist_node19 = __commonJS({
       const timeSinceTokenCreationInMs = +new Date() - +new Date(createdAt);
       try {
         return await request2(options);
-      } catch (error) {
-        if (error.status !== 401) {
-          throw error;
+      } catch (error2) {
+        if (error2.status !== 401) {
+          throw error2;
         }
         if (timeSinceTokenCreationInMs >= FIVE_SECONDS_IN_MS) {
           if (retries > 0) {
-            error.message = `After ${retries} retries within ${timeSinceTokenCreationInMs / 1e3}s of creating the installation access token, the response remains 401. At this point, the cause may be an authentication problem or a system outage. Please check https://www.githubstatus.com for status information`;
+            error2.message = `After ${retries} retries within ${timeSinceTokenCreationInMs / 1e3}s of creating the installation access token, the response remains 401. At this point, the cause may be an authentication problem or a system outage. Please check https://www.githubstatus.com for status information`;
           }
-          throw error;
+          throw error2;
         }
         ++retries;
         const awaitTime = retries * 1e3;
@@ -15538,7 +15538,7 @@ var import_rest = __toESM(require_dist_node12());
 var import_auth_app = __toESM(require_dist_node19());
 var import_github = __toESM(require_github());
 var ANGULAR_ROBOT = [43341, "angular-robot-key"];
-async function getJwtAuthedGithubClient([appId, inputKey]) {
+async function getJwtAuthedAppClient([appId, inputKey]) {
   const privateKey = (0, import_core.getInput)(inputKey, { required: true });
   return new import_rest.Octokit({
     authStrategy: import_auth_app.createAppAuth,
@@ -15546,12 +15546,20 @@ async function getJwtAuthedGithubClient([appId, inputKey]) {
   });
 }
 async function getAuthTokenFor(app) {
-  const github = await getJwtAuthedGithubClient(app);
+  const github = await getJwtAuthedAppClient(app);
   const { id: installationId } = (await github.apps.getRepoInstallation(__spreadValues({}, import_github.context.repo))).data;
   const { token } = (await github.rest.apps.createInstallationAccessToken({
     installation_id: installationId
   })).data;
   return token;
+}
+async function revokeActiveInstallationToken(githubOrToken) {
+  if (typeof githubOrToken === "string") {
+    await new import_rest.Octokit({ auth: githubOrToken }).apps.revokeInstallationAccessToken();
+  } else {
+    await githubOrToken.apps.revokeInstallationAccessToken();
+  }
+  (0, import_core.info)("Revoked installation token used for Angular Robot.");
 }
 
 // 
@@ -15580,7 +15588,19 @@ var googlers = [
   "wagnermaciel",
   "zarend"
 ];
-async function run() {
+async function main() {
+  let installationClient = null;
+  try {
+    const token = await getAuthTokenFor(ANGULAR_ROBOT);
+    installationClient = new import_rest2.Octokit({ auth: token });
+    await runPostApprovalChangesAction(installationClient);
+  } finally {
+    if (installationClient !== null) {
+      await revokeActiveInstallationToken(installationClient);
+    }
+  }
+}
+async function runPostApprovalChangesAction(client) {
   var _a;
   if (import_github2.context.eventName !== "pull_request_target") {
     throw Error("This action can only run for with pull_request_target events");
@@ -15596,7 +15616,6 @@ async function run() {
     core.info("Skipping check as there are still pending reviews.");
     return;
   }
-  const client = new import_rest2.Octokit({ auth: await getAuthTokenFor(ANGULAR_ROBOT) });
   const { repo, owner } = import_github2.context.issue;
   const pull_number = import_github2.context.issue.number;
   const allReviews = await client.paginate(client.pulls.listReviews, { owner, pull_number, repo });
@@ -15639,7 +15658,10 @@ async function run() {
   });
 }
 if (import_github2.context.repo.owner === "angular") {
-  run();
+  main().catch((e) => {
+    core.error(e);
+    core.setFailed(e.message);
+  });
 } else {
   core.warning("Post Approvals changes check was skipped as this action is only meant to run in repos belonging to the Angular organization.");
 }
