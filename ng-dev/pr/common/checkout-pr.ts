@@ -131,5 +131,7 @@ export async function checkOutPullRequestLocally(
     resetGitState: (): boolean => {
       return git.checkout(previousBranchOrRevision, true);
     },
+    pushToUpstreamCommand: `git push ${pr.headRef.repository.url} HEAD:${headRefName} ${forceWithLeaseFlag}`,
+    resetGitStateCommand: `git rebase --abort && git reset --hard && git checkout ${previousBranchOrRevision}`,
   };
 }

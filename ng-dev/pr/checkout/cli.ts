@@ -7,6 +7,7 @@
  */
 
 import {Argv, Arguments, CommandModule} from 'yargs';
+import {Log} from '../../utils/logging.js';
 
 import {addGithubTokenOption} from '../../utils/git/github-yargs.js';
 import {checkOutPullRequestLocally} from '../common/checkout-pr.js';
@@ -23,8 +24,11 @@ function builder(yargs: Argv) {
 
 /** Handles the checkout pull request command. */
 async function handler({pr, githubToken}: Arguments<CheckoutOptions>) {
-  const prCheckoutOptions = {allowIfMaintainerCannotModify: true, branchName: `pr-${pr}`};
-  await checkOutPullRequestLocally(pr, githubToken, prCheckoutOptions);
+  const options = {allowIfMaintainerCannotModify: true, branchName: `pr-${pr}`};
+  const {pushToUpstreamCommand} = await checkOutPullRequestLocally(pr, githubToken, options);
+  Log.info(`Checked out the remote branch for pull request #${pr}\n`);
+  Log.info('To push the checked out branch back to its PR, run the following command:');
+  Log.info(`  $ ${pushToUpstreamCommand}`);
 }
 
 /** yargs command module for checking out a PR  */
