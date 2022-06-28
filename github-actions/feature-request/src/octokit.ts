@@ -16,16 +16,13 @@ type SearchIssuesAndPullRequestsResponseItemsItem =
   RestEndpointMethodTypes['search']['issuesAndPullRequests']['response']['data']['items'][0];
 
 export class OctoKit implements GitHubAPI {
-  private _octokit: Octokit;
+  /** Underlying actual `Octokit` instance. */
+  readonly octokit: Octokit;
 
   // The organization members will likely not change
   // between issues. We want to cache them so we
   // don't query the GitHub API for each issue.
   private _orgMembers = new Set<string>();
-
-  protected get octokit(): Octokit {
-    return this._octokit;
-  }
 
   protected mockLabels: Set<string> = new Set();
 
@@ -34,7 +31,7 @@ export class OctoKit implements GitHubAPI {
     protected params: {repo: string; owner: string},
     protected options: {readonly: boolean} = {readonly: false},
   ) {
-    this._octokit = new Octokit({auth: token});
+    this.octokit = new Octokit({auth: token});
   }
 
   async *query(query: Query): AsyncIterableIterator<GitHubIssueAPI> {

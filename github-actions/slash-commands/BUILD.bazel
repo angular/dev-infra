@@ -10,12 +10,3 @@ esbuild_checked_in(
         "//github-actions/slash-commands/lib",
     ],
 )
-
-esbuild_checked_in(
-    name = "post",
-    entry_point = "//github-actions/slash-commands/lib:post.ts",
-    target = "node16",
-    deps = [
-        "//github-actions/slash-commands/lib",
-    ],
-)

@@ -3,7 +3,7 @@ import {context} from '@actions/github';
 import {Octokit} from '@octokit/rest';
 import {parseCommitMessage} from '../../../ng-dev/commit-message/parse.js';
 import {breakingChangeLabel, deprecationLabel} from '../../../ng-dev/pr/config/index.js';
-import {ANGULAR_ROBOT, getAuthTokenFor} from '../../utils.js';
+import {ANGULAR_ROBOT, getAuthTokenFor, revokeActiveInstallationToken} from '../../utils.js';
 
 /** List of supported label and commit message attribute combinations. */
 const supportedLabels = [
@@ -11,9 +11,22 @@ const supportedLabels = [
   [deprecationLabel, 'deprecations'],
 ] as const;
 
-async function run(): Promise<void> {
-  const token = await getAuthTokenFor(ANGULAR_ROBOT);
-  const client = new Octokit({auth: token});
+async function main() {
+  let installationClient: Octokit | null = null;
+
+  try {
+    const token = await getAuthTokenFor(ANGULAR_ROBOT);
+    installationClient = new Octokit({auth: token});
+
+    await runCommitMessageBasedLabelsAction(installationClient);
+  } finally {
+    if (installationClient !== null) {
+      await revokeActiveInstallationToken(installationClient);
+    }
+  }
+}
+
+async function runCommitMessageBasedLabelsAction(client: Octokit): Promise<void> {
   const {number, owner, repo} = context.issue;
   /** Labels currently applied to the PR. */
   const labels = await (
@@ -57,7 +70,10 @@ async function run(): Promise<void> {
 // Only run if the action is executed in a repository within the Angular org. This is in place
 // to prevent the action from actually running in a fork of a repository with this action set up.
 if (context.repo.owner === 'angular') {
-  run();
+  main().catch((e: Error) => {
+    core.error(e);
+    core.setFailed(e.message);
+  });
 } else {
   core.warning(
     'Automatic labeling was skipped as this action is only meant to run ' +

@@ -10,12 +10,3 @@ esbuild_checked_in(
         "//github-actions/lock-closed/lib",
     ],
 )
-
-esbuild_checked_in(
-    name = "post",
-    entry_point = "//github-actions/lock-closed/lib:post.ts",
-    target = "node16",
-    deps = [
-        "//github-actions/lock-closed/lib",
-    ],
-)

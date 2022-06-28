@@ -10,12 +10,3 @@ esbuild_checked_in(
         "//github-actions/post-approval-changes/lib",
     ],
 )
-
-esbuild_checked_in(
-    name = "post",
-    entry_point = "//github-actions/post-approval-changes/lib:post.ts",
-    target = "node16",
-    deps = [
-        "//github-actions/post-approval-changes/lib",
-    ],
-)
