@@ -13,6 +13,7 @@ filegroup(
         "//bazel/http-server:files",
         "//bazel/integration:files",
         "//bazel/karma:files",
+        "//bazel/map-size-tracking:files",
         "//bazel/remote-execution:files",
         "//bazel/spec-bundling:files",
     ],

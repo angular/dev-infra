@@ -1,0 +1,57 @@
+{
+  "unmapped": 6140,
+  "files": {
+    "bazel/": {
+      "map-size-tracking/": {
+        "size": 25,
+        "test/": {
+          "fixture-app/": {
+            "main.ts": 5,
+            "size": 25,
+            "test-component.ts": 20
+          },
+          "size": 25
+        }
+      },
+      "size": 25
+    },
+    "node_modules/": {
+      "rxjs/": {
+        "size": 3821,
+        "src/": {
+          "internal/": {
+            "NotificationFactories.ts": 126,
+            "Observable.ts": 553,
+            "Subscriber.ts": 1086,
+            "Subscription.ts": 1097,
+            "config.ts": 131,
+            "scheduler/": {
+              "size": 62,
+              "timeoutProvider.ts": 62
+            },
+            "size": 3821,
+            "symbol/": {
+              "observable.ts": 16,
+              "size": 16
+            },
+            "util/": {
+              "UnsubscriptionError.ts": 69,
+              "arrRemove.ts": 93,
+              "createErrorClass.ts": 69,
+              "errorContext.ts": 187,
+              "identity.ts": 1,
+              "isFunction.ts": 75,
+              "noop.ts": 10,
+              "pipe.ts": 104,
+              "reportUnhandledError.ts": 142,
+              "size": 750
+            }
+          },
+          "size": 3821
+        }
+      },
+      "size": 3821
+    },
+    "size": 3846
+  }
+}

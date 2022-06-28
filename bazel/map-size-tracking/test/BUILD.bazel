@@ -1,0 +1,33 @@
+load("//tools:defaults.bzl", "ts_library")
+load("//bazel/map-size-tracking:index.bzl", "js_mapping_size_test")
+load("@npm//@bazel/jasmine:index.bzl", "jasmine_node_test")
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob(["**/*_spec.ts"]),
+    # TODO(devversion): Remove this when `ts_library` supports `.mts` extension.
+    # Also switch back to the `defaults.bzl`-provided Jasmine node test macro.
+    devmode_module = "commonjs",
+    deps = [
+        "//bazel/map-size-tracking",
+        "@npm//source-map",
+    ],
+)
+
+jasmine_node_test(
+    name = "test",
+    srcs = [
+        ":test_lib",
+    ],
+    templated_args = ["--nobazel_run_linker"],
+)
+
+js_mapping_size_test(
+    name = "size_test",
+    src = "//bazel/map-size-tracking/test/fixture-app:bundle.js",
+    golden_file = "size-golden.json",
+    max_byte_diff = 1000,
+    max_percentage_diff = 10,
+    source_map = "//bazel/map-size-tracking/test/fixture-app:bundle.js.map",
+)

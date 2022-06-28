@@ -18,6 +18,7 @@ export const commitMessage: CommitMessageConfig = {
       'http-server',
       'integration',
       'karma',
+      'map-size-tracking',
       'protos',
       'remote-execution',
       'spec-bundling',
