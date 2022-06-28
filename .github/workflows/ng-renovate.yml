@@ -18,9 +18,12 @@ jobs:
       - run: yarn install --immutable --cwd .github/ng-renovate
         shell: bash
 
-      - run: yarn --cwd .github/ng-renovate renovate
+      # Note: Run Renovate outside of Yarn as otherwise we would end up breaking Yarn path
+      # resolution due to Yarn setting `YARN_IGNORE_PATH`. This would cause vendored Yarn
+      # installations to be ignored and lock file generation for repositories to break.
+      - run: .github/ng-renovate/node_modules/.bin/renovate
         env:
           LOG_LEVEL: debug
           RENOVATE_TOKEN: ${{ secrets.NG_RENOVATE_USER_ACCESS_TOKEN }}
           RENOVATE_FORK_TOKEN: ${{ secrets.NG_RENOVATE_USER_ACCESS_TOKEN }}
-          RENOVATE_CONFIG_FILE: ./runner-config.js
+          RENOVATE_CONFIG_FILE: .github/ng-renovate/runner-config.js
