@@ -1,0 +1,21 @@
+load("//bazel/benchmark/app_bundling:index.bzl", "app_bundle")
+load("//tools:defaults.bzl", "ts_library")
+
+package(default_visibility = ["//bazel/map-size-tracking/test:__pkg__"])
+
+ts_library(
+    name = "fixture-app",
+    srcs = [
+        "main.ts",
+        "test-component.ts",
+    ],
+    deps = [
+        "@npm//rxjs",
+    ],
+)
+
+app_bundle(
+    name = "bundle",
+    entry_point = "main.ts",
+    deps = [":fixture-app"],
+)
