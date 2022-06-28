@@ -5,12 +5,12 @@
  * to manually run all of these targets.
  */
 
-import {join} from 'path';
+import {dirname, join} from 'path';
 import {fileURLToPath} from 'url';
 
 import {spawnSync, SpawnSyncOptionsWithStringEncoding} from 'child_process';
 
-const currentDir = fileURLToPath(import.meta.url);
+const currentDir = dirname(fileURLToPath(import.meta.url));
 const projectDir = join(currentDir, '../');
 const bazelPath = process.env.BAZEL ?? join(projectDir, 'node_modules/.bin/bazel');
 const spawnOptions: SpawnSyncOptionsWithStringEncoding = {
