@@ -1,22 +1,23 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
-import {getAuthTokenFor, ANGULAR_ROBOT} from '../../utils.js';
+import {getAuthTokenFor, ANGULAR_ROBOT, revokeActiveInstallationToken} from '../../utils.js';
 import {run} from './action.js';
 import {getInputValue} from './get-input.js';
 import {OctoKit} from './octokit.js';
 
 (async () => {
+  let installationOctokit: OctoKit | null = null;
+
   try {
-    // A immediately executed async function to allow `await`ing the installation access token.
     const token = await getAuthTokenFor(ANGULAR_ROBOT);
     /** The Octokit instance for interacting with Github. */
-    const octokit = new OctoKit(token, {
+    installationOctokit = new OctoKit(token, {
       repo: context.repo.repo,
       owner: context.repo.owner,
     });
 
     // Run the action with the specified values in the YAML configuration.
-    await run(octokit, {
+    await run(installationOctokit, {
       organization: context.repo.owner,
       closeAfterWarnDaysDuration: getInputValue('close-after-warn-days-duration'),
       closeComment: getInputValue('close-comment'),
@@ -41,5 +42,9 @@ import {OctoKit} from './octokit.js';
       core.setFailed(error.message);
     }
     throw error;
+  } finally {
+    if (installationOctokit !== null) {
+      await revokeActiveInstallationToken(installationOctokit.octokit);
+    }
   }
 })();

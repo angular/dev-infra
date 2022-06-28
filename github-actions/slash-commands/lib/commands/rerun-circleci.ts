@@ -1,7 +1,6 @@
 import * as core from '@actions/core';
 import {Octokit} from '@octokit/rest';
 import {context} from '@actions/github';
-import {getAuthTokenFor, ANGULAR_ROBOT} from '../../../utils.js';
 import fetch, {HeadersInit, RequestInit} from 'node-fetch';
 import {RestEndpointMethodTypes} from '@octokit/plugin-rest-endpoint-methods';
 
@@ -10,24 +9,26 @@ interface CircleErrorResponse {
   message?: string;
 }
 
-export async function rerunCircleCi() {
+export async function rerunCircleCi(installationGithub: Octokit) {
   /** Authenticated CircleCi client */
   const circleci = new CircleCiClient();
-  /** Authenticated Github client. */
-  const github = new Octokit({auth: await getAuthTokenFor(ANGULAR_ROBOT)});
   /** The pull request for the action currently running. */
-  const {data: pullRequest} = await github.pulls.get({
+  const {data: pullRequest} = await installationGithub.pulls.get({
     ...context.repo,
     pull_number: context.payload.issue!.number,
   });
 
   try {
-    const workflowId = await getCircleCiWorkflowIdForPullRequest(pullRequest, github, circleci);
+    const workflowId = await getCircleCiWorkflowIdForPullRequest(
+      pullRequest,
+      installationGithub,
+      circleci,
+    );
     await circleci.post(`workflow/${workflowId}/rerun`, {from_failed: true});
   } catch (err) {
     if (err instanceof Error) {
       // If the rerun attempt failed comment on the issue informing the requestor.
-      await github.issues.createComment({
+      await installationGithub.issues.createComment({
         ...context.repo,
         issue_number: pullRequest.number,
         body:

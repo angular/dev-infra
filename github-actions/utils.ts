@@ -10,8 +10,8 @@ export const ANGULAR_LOCK_BOT: GithubAppMetadata = [40213, 'lock-bot-key'];
 /** Angular Robot Github app (angular-robot). */
 export const ANGULAR_ROBOT: GithubAppMetadata = [43341, 'angular-robot-key'];
 
-/** Create a JWT authenticated Github client to manage installation tokens. */
-async function getJwtAuthedGithubClient([appId, inputKey]: GithubAppMetadata) {
+/** Create a JWT authenticated App client to manage installation tokens. */
+async function getJwtAuthedAppClient([appId, inputKey]: GithubAppMetadata) {
   /** The private key for the angular robot app. */
   const privateKey = getInput(inputKey, {required: true});
 
@@ -31,7 +31,7 @@ async function getJwtAuthedGithubClient([appId, inputKey]: GithubAppMetadata) {
  * where it was  executed from.
  */
 export async function getAuthTokenFor(app: GithubAppMetadata): Promise<string> {
-  const github = await getJwtAuthedGithubClient(app);
+  const github = await getJwtAuthedAppClient(app);
 
   const {id: installationId} = (
     await github.apps.getRepoInstallation({
@@ -48,9 +48,17 @@ export async function getAuthTokenFor(app: GithubAppMetadata): Promise<string> {
   return token;
 }
 
-/** Revoke the generated authentication token for the provided app.  */
-export async function revokeAuthTokenFor(app: GithubAppMetadata): Promise<void> {
-  const github = await getJwtAuthedGithubClient(app);
-  await github.rest.apps.revokeInstallationAccessToken();
+/** Revoke the currently-authenticated installation token for the Octokit instance. */
+export async function revokeActiveInstallationToken(octokitInstallation: Octokit): Promise<void>;
+/** Revoke the specified installation token. */
+export async function revokeActiveInstallationToken(installationToken: string): Promise<void>;
+export async function revokeActiveInstallationToken(
+  githubOrToken: Octokit | string,
+): Promise<void> {
+  if (typeof githubOrToken === 'string') {
+    await new Octokit({auth: githubOrToken}).apps.revokeInstallationAccessToken();
+  } else {
+    await githubOrToken.apps.revokeInstallationAccessToken();
+  }
   info('Revoked installation token used for Angular Robot.');
 }

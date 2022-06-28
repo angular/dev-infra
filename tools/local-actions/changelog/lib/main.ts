@@ -5,7 +5,11 @@ import {join} from 'path';
 import semver from 'semver';
 import {ReleaseNotes} from '../../../../ng-dev/release/notes/release-notes.js';
 import {AuthenticatedGitClient} from '../../../../ng-dev/utils/git/authenticated-git-client.js';
-import {ANGULAR_ROBOT, getAuthTokenFor} from '../../../../github-actions/utils.js';
+import {
+  ANGULAR_ROBOT,
+  getAuthTokenFor,
+  revokeActiveInstallationToken,
+} from '../../../../github-actions/utils.js';
 import {GithubConfig, setConfig} from '../../../../ng-dev/utils/config.js';
 import {ReleaseConfig} from '../../../../ng-dev/release/config/index.js';
 
@@ -40,11 +44,26 @@ const config: {github: GithubConfig; release: ReleaseConfig} = {
     },
   },
 };
-setConfig(config);
 
-async function run(): Promise<void> {
+async function main() {
+  let installationToken: string | null = null;
+
+  try {
+    installationToken = await getAuthTokenFor(ANGULAR_ROBOT);
+
+    await runChangelogAction(installationToken);
+  } finally {
+    if (installationToken !== null) {
+      await revokeActiveInstallationToken(installationToken);
+    }
+  }
+}
+
+async function runChangelogAction(installationToken: string): Promise<void> {
+  setConfig(config);
+
   // Configure the AuthenticatedGitClient to be authenticated with the token for the Angular Robot.
-  AuthenticatedGitClient.configure(await getAuthTokenFor(ANGULAR_ROBOT));
+  AuthenticatedGitClient.configure(installationToken);
 
   /** The authenticated GitClient. */
   const git = await AuthenticatedGitClient.get();
@@ -131,7 +150,7 @@ function getTodayAsSemver() {
 
 // This action should only be run in the angular/dev-infra repo.
 if (context.repo.owner === 'angular' && context.repo.repo === 'dev-infra') {
-  run().catch((e: Error) => {
+  main().catch((e: Error) => {
     core.error(e);
     core.setFailed(e.message);
   });

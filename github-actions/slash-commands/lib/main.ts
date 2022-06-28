@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {rerunCircleCi} from './commands/rerun-circleci.js';
 import {rebase} from './commands/rebase.js';
-import {getAuthTokenFor, ANGULAR_ROBOT} from '../../utils.js';
+import {getAuthTokenFor, ANGULAR_ROBOT, revokeActiveInstallationToken} from '../../utils.js';
 import {Octokit} from '@octokit/rest';
 
 /** The marker used in comments to note a command is being made in the comments. */
@@ -77,8 +77,26 @@ async function assertPermissionsToPerformCommand(): Promise<boolean> {
   return false;
 }
 
+async function main() {
+  let installationClient: Octokit | null = null;
+
+  try {
+    const installationToken = await getAuthTokenFor(ANGULAR_ROBOT);
+    installationClient = new Octokit({auth: installationToken});
+
+    await runSlashCommandsAction(installationToken, installationClient);
+  } finally {
+    if (installationClient !== null) {
+      await revokeActiveInstallationToken(installationClient);
+    }
+  }
+}
+
 /** The main function for the slash-command action. */
-async function run(): Promise<void> {
+async function runSlashCommandsAction(
+  installationToken: string,
+  installationGithub: Octokit,
+): Promise<void> {
   if (!assertProperlyFormedCommand() || !(await assertPermissionsToPerformCommand())) {
     return;
   }
@@ -87,9 +105,9 @@ async function run(): Promise<void> {
 
   switch (command) {
     case 'rerun-circleci':
-      return await rerunCircleCi();
+      return await rerunCircleCi(installationGithub);
     case 'rebase':
-      return await rebase();
+      return await rebase(installationGithub, installationToken);
     case undefined:
       return core.info(
         `Skipping as only the commandMarker (${commandMarker}) is provided as a command`,
@@ -102,7 +120,10 @@ async function run(): Promise<void> {
 // Only run if the action is executed in a repository with is in the Angular org. This is in place
 // to prevent the action from actually running in a fork of a repository with this action set up.
 if (context.repo.owner === 'angular') {
-  run();
+  main().catch((e: Error) => {
+    core.error(e);
+    core.setFailed(e.message);
+  });
 } else {
   core.warning(
     'The action was skipped as this action is only meant to run in repos belonging to the Angular organization.',

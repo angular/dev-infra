@@ -4,7 +4,6 @@ package(default_visibility = ["//github-actions/commit-message-based-labels:__su
 
 exports_files([
     "main.ts",
-    "post.ts",
 ])
 
 ts_library(

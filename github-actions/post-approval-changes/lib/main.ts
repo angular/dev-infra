@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {PullRequestEvent} from '@octokit/webhooks-types';
 import {Octokit} from '@octokit/rest';
-import {ANGULAR_ROBOT, getAuthTokenFor} from '../../utils.js';
+import {ANGULAR_ROBOT, getAuthTokenFor, revokeActiveInstallationToken} from '../../utils.js';
 
 /** Allow list of googlers whose pull request are allowed to include post approval changes. */
 const googlers = [
@@ -31,7 +31,22 @@ const googlers = [
   'zarend',
 ];
 
-async function run(): Promise<void> {
+async function main() {
+  let installationClient: Octokit | null = null;
+
+  try {
+    const token = await getAuthTokenFor(ANGULAR_ROBOT);
+    installationClient = new Octokit({auth: token});
+
+    await runPostApprovalChangesAction(installationClient);
+  } finally {
+    if (installationClient !== null) {
+      await revokeActiveInstallationToken(installationClient);
+    }
+  }
+}
+
+async function runPostApprovalChangesAction(client: Octokit): Promise<void> {
   if (context.eventName !== 'pull_request_target') {
     throw Error('This action can only run for with pull_request_target events');
   }
@@ -50,8 +65,6 @@ async function run(): Promise<void> {
     return;
   }
 
-  /** Authenticated Github client. */
-  const client = new Octokit({auth: await getAuthTokenFor(ANGULAR_ROBOT)});
   /** The repository and owner for the pull request. */
   const {repo, owner} = context.issue;
   /** The number of the pull request. */
@@ -115,7 +128,10 @@ async function run(): Promise<void> {
 // to prevent the action from actually running in a fork of a repository with this action set up.
 // Runs triggered via 'workflow_dispatch' are also allowed to run.
 if (context.repo.owner === 'angular') {
-  run();
+  main().catch((e: Error) => {
+    core.error(e);
+    core.setFailed(e.message);
+  });
 } else {
   core.warning(
     'Post Approvals changes check was skipped as this action is only meant to run in repos ' +
