@@ -17,7 +17,6 @@ import {PullRequest} from '../pull-request.js';
 
 import {MergeStrategy, TEMP_PR_HEAD_BRANCH} from './strategy.js';
 import {GithubApiRequestError} from '../../../utils/git/github.js';
-import {matchesPattern} from '../../common/validation/validations.js';
 
 /** Type describing the parameters for the Octokit `merge` API endpoint. */
 type OctokitMergeParams = RestEndpointMethodTypes['pulls']['merge']['parameters'];
@@ -228,9 +227,7 @@ export class GithubApiMergeStrategy extends MergeStrategy {
   /** Determines the merge action from the given pull request. */
   private _getMergeActionFromPullRequest({labels}: PullRequest): GithubApiMergeMethod {
     if (this._config.labels) {
-      const matchingLabel = this._config.labels.find(({pattern}) =>
-        labels.some((l) => matchesPattern(l, pattern)),
-      );
+      const matchingLabel = this._config.labels.find(({pattern}) => labels.includes(pattern));
       if (matchingLabel !== undefined) {
         return matchingLabel.method;
       }
