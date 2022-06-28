@@ -1,3 +1,18 @@
+<a name="2022.2.27"></a>
+# 2022.2.27 (2022-02-27)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [53786a3](https://github.com/angular/dev-infra/commit/53786a3d630f1ba10bbb6697913768215ca41308) | feat | add rule for extracting type definitions from targets ([#430](https://github.com/angular/dev-infra/pull/430)) |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c969fc8](https://github.com/angular/dev-infra/commit/c969fc8c87b91faf2e415baae9ccce8fec310dc1) | feat | expose entry-point with code-splitting for runtime consumers ([#430](https://github.com/angular/dev-infra/pull/430)) |
+| [a9c4860](https://github.com/angular/dev-infra/commit/a9c48602d4f54850beabdf7933e05a9ce89e9dd5) | fix | uncommitted changes check returning false-positives ([#416](https://github.com/angular/dev-infra/pull/416)) |
+## Special Thanks
+Charles Lyding, George Kalpakas, Paul Gschwendtner and renovate[bot]
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.2.20"></a>
 # 2022.2.20 (2022-02-20)
 ### bazel
