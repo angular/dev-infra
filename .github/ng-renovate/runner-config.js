@@ -1,6 +1,6 @@
 module.exports = {
   branchPrefix: 'ng-renovate/',
-  gitAuthor: 'Angular Robot <angulat-robot@google.com>',
+  gitAuthor: 'Angular Robot <angular-robot@google.com>',
   platform: 'github',
   forkMode: true,
   onboarding: false,
