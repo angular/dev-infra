@@ -13,7 +13,6 @@ import {getTargetBranchesForPullRequest} from '../common/targeting/target-label.
 import {
   assertCorrectBreakingChangeLabeling,
   assertMergeReady,
-  matchesPattern,
   assertPendingState,
   assertSignedCla,
   assertPassingCi,
@@ -96,10 +95,10 @@ export async function loadAndValidatePullRequest(
     config.pullRequest.requiredBaseCommits[githubTargetBranch];
   const needsCommitMessageFixup =
     !!config.pullRequest.commitMessageFixupLabel &&
-    labels.some((name) => matchesPattern(name, config.pullRequest.commitMessageFixupLabel));
+    labels.includes(config.pullRequest.commitMessageFixupLabel);
   const hasCaretakerNote =
     !!config.pullRequest.caretakerNoteLabel &&
-    labels.some((name) => matchesPattern(name, config.pullRequest.caretakerNoteLabel!));
+    labels.includes(config.pullRequest.caretakerNoteLabel);
 
   return {
     url: prData.url,

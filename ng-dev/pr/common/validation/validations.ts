@@ -32,7 +32,7 @@ export function assertChangesAllowForTargetLabel(
 ) {
   if (
     !!config.commitMessageFixupLabel &&
-    labelsOnPullRequest.some((name) => matchesPattern(name, config.commitMessageFixupLabel))
+    labelsOnPullRequest.includes(config.commitMessageFixupLabel)
   ) {
     Log.debug(
       'Skipping commit message target label validation because the commit message fixup label is ' +
@@ -142,7 +142,7 @@ export function assertSignedCla(pullRequest: PullRequestFromGithub) {
  * @throws {PullRequestFailure} if the pull request is missing the merge ready label.
  */
 export function assertMergeReady(pullRequest: PullRequestFromGithub, config: PullRequestConfig) {
-  if (pullRequest.labels.nodes.some(({name}) => matchesPattern(name, config.mergeReadyLabel))) {
+  if (pullRequest.labels.nodes.some(({name}) => name === config.mergeReadyLabel)) {
     return true;
   }
   throw PullRequestFailure.notMergeReady();
@@ -160,10 +160,4 @@ export function assertPassingCi(pullRequest: PullRequestFromGithub) {
   if (combinedStatus === PullRequestStatus.FAILING) {
     throw PullRequestFailure.failingCiJobs();
   }
-}
-
-// TODO: Remove need to export this pattern matching utility.
-/** Checks whether the specified value matches the given pattern. */
-export function matchesPattern(value: string, pattern: RegExp | string): boolean {
-  return typeof pattern === 'string' ? value === pattern : pattern.test(value);
 }
