@@ -541,6 +541,9 @@ __metadata:
     yaml: ^2.0.0
     yargs: ^17.0.0
     zone.js: ^0.11.4
+  dependenciesMeta:
+    re2:
+      built: false
   bin:
     ng-dev: ./ng-dev/bundles/cli.mjs
   languageName: unknown

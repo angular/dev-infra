@@ -150,6 +150,11 @@
     "yaml": "^2.0.0",
     "zone.js": "^0.11.4"
   },
+  "dependenciesMeta": {
+    "re2": {
+      "built": false
+    }
+  },
   "resolutions": {
     "@angular/benchpress/@angular/core": "14.1.0-next.2"
   }
