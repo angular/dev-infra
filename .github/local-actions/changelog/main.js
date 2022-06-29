@@ -60033,7 +60033,7 @@ function compareString(a, b) {
 
 // 
 var typesToIncludeInReleaseNotes = Object.values(COMMIT_TYPES).filter((type) => type.releaseNotesLevel === ReleaseNotesLevel.Visible).map((type) => type.name);
-var botsAuthorNames = ["dependabot[bot]", "Renovate Bot"];
+var botsAuthorNames = ["dependabot[bot]", "Renovate Bot", "angular-robot", "Angular Robot"];
 var RenderContext = class {
   constructor(data) {
     this.data = data;
