@@ -8,6 +8,7 @@ nodejs_binary(
         "cli.cjs",
     ],
     entry_point = ":cli.cjs",
+    templated_args = ["--nobazel_run_linker"],
     visibility = ["//visibility:public"],
 )
 
