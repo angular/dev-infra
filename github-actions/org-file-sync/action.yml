@@ -1,0 +1,17 @@
+name: 'Organization File Sync'
+description: 'Synchronize files throughout the Github Organization'
+author: 'Angular'
+inputs:
+  angular-robot-key:
+    description: 'The private key for the Angular Robot Github app.'
+    required: true
+  repos:
+    description: 'The repositories to keep organization level files in sync'
+    required: true
+  files:
+    description: 'The organization level files to keep in sync'
+    required: true
+
+runs:
+  using: 'node16'
+  main: 'main.js'
