@@ -8,6 +8,7 @@ github-actions/lock-closed/main.js
 github-actions/commit-message-based-labels/main.js
 github-actions/slash-commands/main.js
 github-actions/post-approval-changes/main.js
+github-actions/org-file-sync/main.js
 .github/local-actions/changelog/main.js
 
 bazel/map-size-tracking/test/size-golden.json
