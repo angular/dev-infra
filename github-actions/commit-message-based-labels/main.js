@@ -4,27 +4,10 @@ const require = __cjsCompatRequire(import.meta.url);
 
 var __create = Object.create;
 var __defProp = Object.defineProperty;
-var __defProps = Object.defineProperties;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
 var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getOwnPropSymbols = Object.getOwnPropertySymbols;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __propIsEnum = Object.prototype.propertyIsEnumerable;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __spreadValues = (a, b) => {
-  for (var prop in b || (b = {}))
-    if (__hasOwnProp.call(b, prop))
-      __defNormalProp(a, prop, b[prop]);
-  if (__getOwnPropSymbols)
-    for (var prop of __getOwnPropSymbols(b)) {
-      if (__propIsEnum.call(b, prop))
-        __defNormalProp(a, prop, b[prop]);
-    }
-  return a;
-};
-var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
 var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
   get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
 }) : x)(function(x) {
@@ -24525,9 +24508,10 @@ function _supportsColor(haveStream, { streamIsTTY, sniffFlags = true } = {}) {
   return min;
 }
 function createSupportsColor(stream, options = {}) {
-  const level = _supportsColor(stream, __spreadValues({
-    streamIsTTY: stream && stream.isTTY
-  }, options));
+  const level = _supportsColor(stream, {
+    streamIsTTY: stream && stream.isTTY,
+    ...options
+  });
   return translateLevel(level);
 }
 var supportsColor = {
@@ -24649,7 +24633,8 @@ for (const model of usedModels) {
   };
 }
 var proto = Object.defineProperties(() => {
-}, __spreadProps(__spreadValues({}, styles), {
+}, {
+  ...styles,
   level: {
     enumerable: true,
     get() {
@@ -24659,7 +24644,7 @@ var proto = Object.defineProperties(() => {
       this[GENERATOR].level = level;
     }
   }
-}));
+});
 var createStyler = (open, close, parent) => {
   let openAll;
   let closeAll;
@@ -24818,9 +24803,10 @@ function _supportsColor2(haveStream, { streamIsTTY, sniffFlags = true } = {}) {
   return min;
 }
 function createSupportsColor2(stream, options = {}) {
-  const level = _supportsColor2(stream, __spreadValues({
-    streamIsTTY: stream && stream.isTTY
-  }, options));
+  const level = _supportsColor2(stream, {
+    streamIsTTY: stream && stream.isTTY,
+    ...options
+  });
   return translateLevel2(level);
 }
 var supportsColor2 = {
@@ -24906,7 +24892,9 @@ async function getJwtAuthedAppClient([appId, inputKey]) {
 }
 async function getAuthTokenFor(app) {
   const github = await getJwtAuthedAppClient(app);
-  const { id: installationId } = (await github.apps.getRepoInstallation(__spreadValues({}, import_github.context.repo))).data;
+  const { id: installationId } = (await github.apps.getRepoInstallation({
+    ...import_github.context.repo
+  })).data;
   const { token } = (await github.rest.apps.createInstallationAccessToken({
     installation_id: installationId
   })).data;
