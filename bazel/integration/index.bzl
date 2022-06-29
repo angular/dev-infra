@@ -41,7 +41,7 @@ def _expand_and_split_command(ctx, command):
     # The Bazel command helper utility instead (which is also used by the genrule internally),
     # will be able to determine the executable (based on the current exec platform) and expand it.
     # https://cs.opensource.google/bazel/bazel/+/master:src/main/java/com/google/devtools/build/lib/analysis/CommandHelper.java;l=175-199;drc=2255ce4165f936f695111020fa664b259a875c4a.
-    inputs, resolved_bash_command, manifests = ctx.resolve_command(
+    _, resolved_bash_command, _ = ctx.resolve_command(
         command = command,
         attribute = "command (%s)" % command,
         expand_locations = True,
