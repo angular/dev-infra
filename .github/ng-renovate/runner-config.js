@@ -5,6 +5,7 @@ module.exports = {
   forkMode: true,
   onboarding: false,
   repositories: [
+    'angular/angular',
     'angular/dev-infra',
     'angular/components',
     'angular/angular-cli',
