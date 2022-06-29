@@ -262,7 +262,7 @@ def integration_test(
     nodejs_test(
         name = name,
         data = ["//bazel/integration/test_runner", ":" + config_target],
-        templated_args = ["--bazel_patch_module_resolver", "$(rootpath :%s)" % config_target],
+        templated_args = ["--nobazel_run_linker", "$(rootpath :%s)" % config_target],
         entry_point = "//bazel/integration/test_runner:main.ts",
         tags = tags,
         **kwargs
