@@ -4,27 +4,10 @@ const require = __cjsCompatRequire(import.meta.url);
 
 var __create = Object.create;
 var __defProp = Object.defineProperty;
-var __defProps = Object.defineProperties;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
 var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getOwnPropSymbols = Object.getOwnPropertySymbols;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __propIsEnum = Object.prototype.propertyIsEnumerable;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __spreadValues = (a, b) => {
-  for (var prop in b || (b = {}))
-    if (__hasOwnProp.call(b, prop))
-      __defNormalProp(a, prop, b[prop]);
-  if (__getOwnPropSymbols)
-    for (var prop of __getOwnPropSymbols(b)) {
-      if (__propIsEnum.call(b, prop))
-        __defNormalProp(a, prop, b[prop]);
-    }
-  return a;
-};
-var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
 var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
   get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
 }) : x)(function(x) {
@@ -15549,7 +15532,9 @@ async function getJwtAuthedAppClient([appId, inputKey]) {
 }
 async function getAuthTokenFor(app) {
   const github = await getJwtAuthedAppClient(app);
-  const { id: installationId } = (await github.apps.getRepoInstallation(__spreadValues({}, import_github.context.repo))).data;
+  const { id: installationId } = (await github.apps.getRepoInstallation({
+    ...import_github.context.repo
+  })).data;
   const { token } = (await github.rest.apps.createInstallationAccessToken({
     installation_id: installationId
   })).data;
@@ -15720,11 +15705,12 @@ var OctoKit = class {
       }
     };
     const q = `${query.q} repo:${this.params.owner}/${this.params.repo}`;
-    const response = this.octokit.paginate.iterator(this.octokit.search.issuesAndPullRequests, __spreadProps(__spreadValues({}, query), {
+    const response = this.octokit.paginate.iterator(this.octokit.search.issuesAndPullRequests, {
+      ...query,
       q,
       per_page: 100,
       headers: { Accept: "application/vnd.github.squirrel-girl-preview+json" }
-    }));
+    });
     for await (const pageResponse of response) {
       await timeout();
       const page = pageResponse.data;
@@ -15769,7 +15755,7 @@ var OctoKit = class {
   }
   async repoHasLabel(name) {
     try {
-      await this.octokit.issues.getLabel(__spreadProps(__spreadValues({}, this.params), { name }));
+      await this.octokit.issues.getLabel({ ...this.params, name });
       return true;
     } catch (e) {
       if (e instanceof import_request_error.RequestError && e.status === 404) {
@@ -15788,10 +15774,11 @@ var OctoKitIssue = class extends OctoKit {
   async close() {
     log(`Closing issue #${this.issueData.number}`);
     if (!this.options.readonly)
-      await this.octokit.issues.update(__spreadProps(__spreadValues({}, this.params), {
+      await this.octokit.issues.update({
+        ...this.params,
         issue_number: this.issueData.number,
         state: "closed"
-      }));
+      });
   }
   async get() {
     if (isIssue(this.issueData)) {
@@ -15799,19 +15786,21 @@ var OctoKitIssue = class extends OctoKit {
       return this.issueData;
     }
     log(`Fetching issue #${this.issueData.number}`);
-    const issue = (await this.octokit.issues.get(__spreadProps(__spreadValues({}, this.params), {
+    const issue = (await this.octokit.issues.get({
+      ...this.params,
       issue_number: this.issueData.number,
       mediaType: { previews: ["squirrel-girl"] }
-    }))).data;
+    })).data;
     return this.issueData = this.octokitIssueToIssue(issue);
   }
   async postComment(body) {
     log(`Posting comment on #${this.issueData.number}`);
     if (!this.options.readonly)
-      await this.octokit.issues.createComment(__spreadProps(__spreadValues({}, this.params), {
+      await this.octokit.issues.createComment({
+        ...this.params,
         issue_number: this.issueData.number,
         body
-      }));
+      });
   }
   async deleteComment(id) {
     log(`Deleting comment #${id} on #${this.issueData.number}`);
@@ -15824,10 +15813,12 @@ var OctoKitIssue = class extends OctoKit {
   }
   async *getComments(last) {
     log(`Fetching comments for #${this.issueData.number}`);
-    const response = this.octokit.paginate.iterator(this.octokit.issues.listComments, __spreadValues(__spreadProps(__spreadValues({}, this.params), {
+    const response = this.octokit.paginate.iterator(this.octokit.issues.listComments, {
+      ...this.params,
       issue_number: this.issueData.number,
-      per_page: 100
-    }), last ? { per_page: 1, page: (await this.get()).numComments } : {}));
+      per_page: 100,
+      ...last ? { per_page: 1, page: (await this.get()).numComments } : {}
+    });
     for await (const page of response) {
       for (const comment of page.data) {
         yield {
@@ -15845,19 +15836,21 @@ var OctoKitIssue = class extends OctoKit {
       throw Error(`Action could not execute because label ${name} is not defined.`);
     }
     if (!this.options.readonly)
-      await this.octokit.issues.addLabels(__spreadProps(__spreadValues({}, this.params), {
+      await this.octokit.issues.addLabels({
+        ...this.params,
         issue_number: this.issueData.number,
         labels: [name]
-      }));
+      });
   }
   async removeLabel(name) {
     log(`Removing label ${name} from #${this.issueData.number}`);
     try {
       if (!this.options.readonly)
-        await this.octokit.issues.removeLabel(__spreadProps(__spreadValues({}, this.params), {
+        await this.octokit.issues.removeLabel({
+          ...this.params,
           issue_number: this.issueData.number,
           name
-        }));
+        });
     } catch (e) {
       if (e instanceof import_request_error.RequestError && e.status === 404) {
         log(`Label ${name} not found on issue`);

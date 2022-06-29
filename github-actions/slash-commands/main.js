@@ -4,27 +4,10 @@ const require = __cjsCompatRequire(import.meta.url);
 
 var __create = Object.create;
 var __defProp = Object.defineProperty;
-var __defProps = Object.defineProperties;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
 var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getOwnPropSymbols = Object.getOwnPropertySymbols;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __propIsEnum = Object.prototype.propertyIsEnumerable;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __spreadValues = (a, b) => {
-  for (var prop in b || (b = {}))
-    if (__hasOwnProp.call(b, prop))
-      __defNormalProp(a, prop, b[prop]);
-  if (__getOwnPropSymbols)
-    for (var prop of __getOwnPropSymbols(b)) {
-      if (__propIsEnum.call(b, prop))
-        __defNormalProp(a, prop, b[prop]);
-    }
-  return a;
-};
-var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
 var __require = /* @__PURE__ */ ((x2) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x2, {
   get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
 }) : x2)(function(x2) {
@@ -14904,10 +14887,11 @@ var require_dargs = __commonJS({
       const arguments_ = [];
       let extraArguments = [];
       let separatedArguments = [];
-      options = __spreadValues({
+      options = {
         useEquals: true,
-        shortFlag: true
-      }, options);
+        shortFlag: true,
+        ...options
+      };
       const makeArguments = (key, value) => {
         const prefix = options.shortFlag && key.length === 1 ? "-" : "--";
         const theKey = options.allowCamelCase ? key : key.replace(/[A-Z]/g, "-$&").toLowerCase();
@@ -26839,7 +26823,8 @@ var require_source = __commonJS({
       };
     }
     var proto2 = Object.defineProperties(() => {
-    }, __spreadProps(__spreadValues({}, styles2), {
+    }, {
+      ...styles2,
       level: {
         enumerable: true,
         get() {
@@ -26849,7 +26834,7 @@ var require_source = __commonJS({
           this._generator.level = level;
         }
       }
-    }));
+    });
     var createStyler2 = (open, close, parent) => {
       let openAll;
       let closeAll;
@@ -27375,12 +27360,12 @@ var require_baseUI = __commonJS({
       const ms = new MuteStream();
       ms.pipe(opt.output || process.stdout);
       const output = ms;
-      return __spreadProps(__spreadValues({
-        terminal: true
-      }, opt), {
+      return {
+        terminal: true,
+        ...opt,
         input,
         output
-      });
+      };
     }
     module.exports = UI;
   }
@@ -38376,12 +38361,12 @@ var require_prompt = __commonJS({
       }
       run(questions, answers) {
         if (_.isPlainObject(answers)) {
-          this.answers = __spreadValues({}, answers);
+          this.answers = { ...answers };
         } else {
           this.answers = {};
         }
         if (_.isPlainObject(questions)) {
-          questions = Object.values(questions).every((v) => _.isPlainObject(v) && v.name === void 0) ? Object.entries(questions).map(([name, question]) => __spreadValues({ name }, question)) : [questions];
+          questions = Object.values(questions).every((v) => _.isPlainObject(v) && v.name === void 0) ? Object.entries(questions).map(([name, question]) => ({ name, ...question })) : [questions];
         }
         const obs = Array.isArray(questions) ? from(questions) : questions;
         this.process = obs.pipe(concatMap(this.processQuestion.bind(this)), publish());
@@ -38400,7 +38385,7 @@ var require_prompt = __commonJS({
         return Promise.reject(error3);
       }
       processQuestion(question) {
-        question = __spreadValues({}, question);
+        question = { ...question };
         return defer(() => {
           const obs = of(question);
           return obs.pipe(concatMap(this.setDefaultType.bind(this)), concatMap(this.filterIfRunnable.bind(this)), concatMap(() => utils.fetchAsyncQuestionProperty(question, "message", this.answers)), concatMap(() => utils.fetchAsyncQuestionProperty(question, "default", this.answers)), concatMap(() => utils.fetchAsyncQuestionProperty(question, "choices", this.answers)), concatMap(this.fetchAnswer.bind(this)));
@@ -40994,7 +40979,8 @@ var require_source2 = __commonJS({
       };
     }
     var proto2 = Object.defineProperties(() => {
-    }, __spreadProps(__spreadValues({}, styles2), {
+    }, {
+      ...styles2,
       level: {
         enumerable: true,
         get() {
@@ -41004,7 +40990,7 @@ var require_source2 = __commonJS({
           this._generator.level = level;
         }
       }
-    }));
+    });
     var createStyler2 = (open, close, parent) => {
       let openAll;
       let closeAll;
@@ -42861,7 +42847,8 @@ var require_source3 = __commonJS({
       };
     }
     var proto2 = Object.defineProperties(() => {
-    }, __spreadProps(__spreadValues({}, styles2), {
+    }, {
+      ...styles2,
       level: {
         enumerable: true,
         get() {
@@ -42871,7 +42858,7 @@ var require_source3 = __commonJS({
           this._generator.level = level;
         }
       }
-    }));
+    });
     var createStyler2 = (open, close, parent) => {
       let openAll;
       let closeAll;
@@ -43809,12 +43796,13 @@ var require_ora = __commonJS({
             text: options
           };
         }
-        this.options = __spreadValues({
+        this.options = {
           text: "",
           color: "cyan",
           stream: process.stderr,
-          discardStdin: true
-        }, options);
+          discardStdin: true,
+          ...options
+        };
         this.spinner = this.options.spinner;
         this.color = this.options.color;
         this.hideCursor = this.options.hideCursor !== false;
@@ -60777,15 +60765,17 @@ function fixResponseChunkedTransferBadEnding(request, errorCallback) {
 // 
 async function rerunCircleCi(installationGithub) {
   const circleci = new CircleCiClient();
-  const { data: pullRequest } = await installationGithub.pulls.get(__spreadProps(__spreadValues({}, import_github.context.repo), {
+  const { data: pullRequest } = await installationGithub.pulls.get({
+    ...import_github.context.repo,
     pull_number: import_github.context.payload.issue.number
-  }));
+  });
   try {
     const workflowId = await getCircleCiWorkflowIdForPullRequest(pullRequest, installationGithub, circleci);
     await circleci.post(`workflow/${workflowId}/rerun`, { from_failed: true });
   } catch (err) {
     if (err instanceof Error) {
-      await installationGithub.issues.createComment(__spreadProps(__spreadValues({}, import_github.context.repo), {
+      await installationGithub.issues.createComment({
+        ...import_github.context.repo,
         issue_number: pullRequest.number,
         body: `@${import_github.context.actor} the CircleCI rerun you requested failed.  See details below:
 
@@ -60793,7 +60783,7 @@ async function rerunCircleCi(installationGithub) {
 ${err.message}
 \`\`\``,
         number: pullRequest.number
-      }));
+      });
       core.error(err);
     }
     throw err;
@@ -61210,9 +61200,10 @@ function _supportsColor(haveStream, { streamIsTTY, sniffFlags = true } = {}) {
   return min;
 }
 function createSupportsColor(stream, options = {}) {
-  const level = _supportsColor(stream, __spreadValues({
-    streamIsTTY: stream && stream.isTTY
-  }, options));
+  const level = _supportsColor(stream, {
+    streamIsTTY: stream && stream.isTTY,
+    ...options
+  });
   return translateLevel(level);
 }
 var supportsColor = {
@@ -61334,7 +61325,8 @@ for (const model of usedModels) {
   };
 }
 var proto = Object.defineProperties(() => {
-}, __spreadProps(__spreadValues({}, styles), {
+}, {
+  ...styles,
   level: {
     enumerable: true,
     get() {
@@ -61344,7 +61336,7 @@ var proto = Object.defineProperties(() => {
       this[GENERATOR].level = level;
     }
   }
-}));
+});
 var createStyler = (open, close, parent) => {
   let openAll;
   let closeAll;
@@ -61503,9 +61495,10 @@ function _supportsColor2(haveStream, { streamIsTTY, sniffFlags = true } = {}) {
   return min;
 }
 function createSupportsColor2(stream, options = {}) {
-  const level = _supportsColor2(stream, __spreadValues({
-    streamIsTTY: stream && stream.isTTY
-  }, options));
+  const level = _supportsColor2(stream, {
+    streamIsTTY: stream && stream.isTTY,
+    ...options
+  });
   return translateLevel2(level);
 }
 var supportsColor2 = {
@@ -61521,7 +61514,7 @@ var ChildProcess = class {
     return new Promise((resolve, reject) => {
       const commandText = `${command} ${args.join(" ")}`;
       Log.debug(`Executing command: ${commandText}`);
-      const childProcess = _spawn(command, args, __spreadProps(__spreadValues({}, options), { shell: true, stdio: "inherit" }));
+      const childProcess = _spawn(command, args, { ...options, shell: true, stdio: "inherit" });
       childProcess.on("close", (status) => status === 0 ? resolve() : reject(status));
     });
   }
@@ -61531,7 +61524,7 @@ var ChildProcess = class {
       const outputMode = options.mode;
       const env3 = getEnvironmentForNonInteractiveSpawn(options.env);
       Log.debug(`Executing command: ${commandText}`);
-      const childProcess = _spawn(command, args, __spreadProps(__spreadValues({}, options), { env: env3, shell: true, stdio: "pipe" }));
+      const childProcess = _spawn(command, args, { ...options, env: env3, shell: true, stdio: "pipe" });
       let logOutput = "";
       let stdout = "";
       let stderr = "";
@@ -61572,7 +61565,7 @@ ${logOutput}`);
     const commandText = `${command} ${args.join(" ")}`;
     const env3 = getEnvironmentForNonInteractiveSpawn(options.env);
     Log.debug(`Executing command: ${commandText}`);
-    const { status: exitCode, signal, stdout, stderr } = _spawnSync(command, args, __spreadProps(__spreadValues({}, options), { env: env3, encoding: "utf8", shell: true, stdio: "pipe" }));
+    const { status: exitCode, signal, stdout, stderr } = _spawnSync(command, args, { ...options, env: env3, encoding: "utf8", shell: true, stdio: "pipe" });
     const status = statusFromExitCodeAndSignal(exitCode, signal);
     if (status === 0 || options.suppressErrorOnFailingExitCode) {
       return { status, stdout, stderr };
@@ -61585,7 +61578,7 @@ function statusFromExitCodeAndSignal(exitCode, signal) {
 }
 function getEnvironmentForNonInteractiveSpawn(userProvidedEnv) {
   const forceColorValue = supports_color_default2.stdout !== false ? supports_color_default2.stdout.level.toString() : void 0;
-  return __spreadValues({ FORCE_COLOR: forceColorValue }, userProvidedEnv ?? process.env);
+  return { FORCE_COLOR: forceColorValue, ...userProvidedEnv ?? process.env };
 }
 
 // 
@@ -61689,7 +61682,7 @@ async function getConfig(baseDirOrAssertions) {
       assertion(cachedConfig2);
     }
   }
-  return __spreadProps(__spreadValues({}, cachedConfig2), { __isNgDevConfigObject: true });
+  return { ...cachedConfig2, __isNgDevConfigObject: true };
 }
 var ConfigValidationError = class extends Error {
   constructor(message, errors = []) {
@@ -61841,12 +61834,12 @@ var GitClient = class {
       throw new DryRunError();
     }
     Log.debug("Executing: git", this.sanitizeConsoleOutput(args.join(" ")));
-    const result = spawnSync(this.gitBinPath, args, __spreadProps(__spreadValues({
+    const result = spawnSync(this.gitBinPath, args, {
       cwd: this.baseDir,
-      stdio: "pipe"
-    }, options), {
+      stdio: "pipe",
+      ...options,
       encoding: "utf8"
-    }));
+    });
     Log.debug(`Status: ${result.status}, Error: ${!!result.error}, Signal: ${result.signal}`);
     if (result.status !== 0 && result.stderr !== null) {
       process.stderr.write(this.sanitizeConsoleOutput(result.stderr));
@@ -62152,7 +62145,7 @@ async function rebasePr(prNumber, githubToken) {
     const commits = await getCommitsInRange(commonAncestorSha, "HEAD");
     let squashFixups = process.env["CI"] !== void 0 || commits.filter((commit) => commit.isFixup).length === 0 ? false : await Prompt.confirm(`PR #${prNumber} contains fixup commits, would you like to squash them during rebase?`, true);
     Log.info(`Attempting to rebase PR #${prNumber} on ${fullBaseRef}`);
-    const [flags, env3] = squashFixups ? [["--interactive", "--autosquash"], __spreadProps(__spreadValues({}, process.env), { GIT_SEQUENCE_EDITOR: "true" })] : [[], void 0];
+    const [flags, env3] = squashFixups ? [["--interactive", "--autosquash"], { ...process.env, GIT_SEQUENCE_EDITOR: "true" }] : [[], void 0];
     const rebaseResult = git.runGraceful(["rebase", ...flags, "FETCH_HEAD"], { env: env3 });
     if (rebaseResult.status === 0) {
       Log.info(`Rebase was able to complete automatically without conflicts`);
@@ -62196,10 +62189,11 @@ async function rebase(installationClient, installationToken) {
   });
   AuthenticatedGitClient.configure(installationToken);
   if (await rebasePr(import_github5.context.issue.number, installationToken) !== 0) {
-    await installationClient.issues.createComment(__spreadProps(__spreadValues({}, import_github5.context.repo), {
+    await installationClient.issues.createComment({
+      ...import_github5.context.repo,
       issue_number: import_github5.context.issue.number,
       body: `@${import_github5.context.actor} We were unable to perform a clean rebase of the PR, please reach out the PR author and ask them to perform the rebase.`
-    }));
+    });
   }
 }
 
@@ -62218,7 +62212,9 @@ async function getJwtAuthedAppClient([appId, inputKey]) {
 }
 async function getAuthTokenFor(app) {
   const github = await getJwtAuthedAppClient(app);
-  const { id: installationId } = (await github.apps.getRepoInstallation(__spreadValues({}, import_github6.context.repo))).data;
+  const { id: installationId } = (await github.apps.getRepoInstallation({
+    ...import_github6.context.repo
+  })).data;
   const { token } = (await github.rest.apps.createInstallationAccessToken({
     installation_id: installationId
   })).data;
@@ -62278,10 +62274,11 @@ async function assertPermissionsToPerformCommand() {
   }
   const token = await getAuthTokenFor(ANGULAR_ROBOT);
   const github = new import_rest3.Octokit({ auth: token });
-  await github.issues.createComment(__spreadProps(__spreadValues({}, import_github7.context.repo), {
+  await github.issues.createComment({
+    ...import_github7.context.repo,
     issue_number: import_github7.context.payload.issue.number,
     body: `@${import_github7.context.actor}, unfortunately you do not have permission to run the command you requested`
-  }));
+  });
   return false;
 }
 async function main() {
