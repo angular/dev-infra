@@ -11,6 +11,7 @@ module.exports = {
     'angular/angular-cli',
     'angular/universal',
     'angular/vscode-ng-language-service',
+    'angular/ngcc-validation',
   ],
   productLinks: {
     documentation: 'https://docs.renovatebot.com/',
