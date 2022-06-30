@@ -15552,9 +15552,9 @@ async function revokeActiveInstallationToken(githubOrToken) {
 
 // 
 var reposToSync = core.getMultilineInput("repos", { required: true, trimWhitespace: true });
-core.group("Repos being synced:", async () => reposToSync.forEach((repo) => `- ${repo}`));
+core.group("Repos being synced:", async () => reposToSync.forEach((repo) => core.info(`- ${repo}`)));
 var filesToSync = core.getMultilineInput("files", { required: true, trimWhitespace: true });
-core.group("Files being synced:", async () => filesToSync.forEach((file) => `- ${file}`));
+core.group("Files being synced:", async () => filesToSync.forEach((file) => core.info(`- ${file}`)));
 async function getFilesForRepo(github, repo) {
   core.startGroup(`Retrieving files from "${repo}" repo`);
   const fileMap = /* @__PURE__ */ new Map();
