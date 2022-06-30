@@ -1,9 +1,18 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+
 package(default_visibility = ["//visibility:public"])
 
 exports_files([
     "terser_config.json",
     "esbuild.config-tmpl.mjs",
 ])
+
+nodejs_binary(
+    name = "brotli-compress",
+    data = ["brotli-compress.cjs"],
+    entry_point = ":brotli-compress.cjs",
+    templated_args = ["--nobazel_run_linker"],
+)
 
 # Make source files available for distribution via pkg_npm
 filegroup(

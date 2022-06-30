@@ -1,4 +1,4 @@
-load("//bazel/benchmark/app_bundling:index.bzl", "app_bundle")
+load("//bazel/app-bundling:index.bzl", "app_bundle")
 load("//tools:defaults.bzl", "ts_library")
 
 package(default_visibility = ["//bazel/map-size-tracking/test:__pkg__"])

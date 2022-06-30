@@ -11,6 +11,7 @@ export const commitMessage: CommitMessageConfig = {
   scopes: [
     ...buildScopesFor('bazel', [
       'api-golden',
+      'app-bundling',
       'benchmark',
       'browsers',
       'constraints',
