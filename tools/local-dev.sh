@@ -17,6 +17,9 @@ bazelCommand=${BAZEL:-"yarn bazel"}
   ${bazelCommand} build :npm_package
 )
 
+export TS_NODE_TRANSPILE_ONLY=1
+export TS_NODE_PROJECT=${PWD}/.ng-dev/tsconfig.json
+
 # Execute the built ng-dev command in the current working directory
 # and pass-through arguments unmodified.
-yarn ts-node --esm --project .ng-dev/tsconfig.json ${ngDevBinFile} ${@}
+node --no-warnings --loader ts-node/esm ${ngDevBinFile} ${@}
