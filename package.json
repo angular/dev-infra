@@ -90,7 +90,7 @@
     "@octokit/request-error": "^2.1.0",
     "@octokit/rest": "^18.7.0",
     "@octokit/types": "^6.16.6",
-    "@octokit/webhooks-types": "^5.5.1",
+    "@octokit/webhooks-types": "^6.0.0",
     "@types/babel__core": "^7.1.19",
     "@types/cli-progress": "^3.9.1",
     "@types/conventional-commits-parser": "^3.0.1",

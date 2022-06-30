@@ -461,7 +461,7 @@ __metadata:
     "@octokit/request-error": ^2.1.0
     "@octokit/rest": ^18.7.0
     "@octokit/types": ^6.16.6
-    "@octokit/webhooks-types": ^5.5.1
+    "@octokit/webhooks-types": ^6.0.0
     "@types/babel__core": ^7.1.19
     "@types/browser-sync": ^2.26.3
     "@types/cli-progress": ^3.9.1
@@ -3836,10 +3836,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/webhooks-types@npm:^5.5.1":
-  version: 5.7.1
-  resolution: "@octokit/webhooks-types@npm:5.7.1"
-  checksum: 3ef548f834c45e172ee51edc4295d253d38d5829ace4afa941cc6be891bd3d9e94b9cdbce267fc22a20708a4bb311a49e4212df476616e735d4126d5a7d3a768
+"@octokit/webhooks-types@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "@octokit/webhooks-types@npm:6.0.0"
+  checksum: 96fa443709d3472f9f3aafaa4d0cd407fae25ba492bba86734d50dfde756d56b76d49193bc7c4957d3600cfa6853b03b6b18f891fa520d2599352ead69312d98
   languageName: node
   linkType: hard
 
