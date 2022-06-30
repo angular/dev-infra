@@ -5,7 +5,9 @@ import {RequestError} from '@octokit/types';
 import {getAuthTokenFor, ANGULAR_ROBOT, revokeActiveInstallationToken} from '../../utils.js';
 
 const reposToSync = core.getMultilineInput('repos', {required: true, trimWhitespace: true});
-const fileToSync = core.getMultilineInput('files', {required: true, trimWhitespace: true});
+core.group('Repos being synced:', async () => reposToSync.forEach((repo) => `- ${repo}`));
+const filesToSync = core.getMultilineInput('files', {required: true, trimWhitespace: true});
+core.group('Files being synced:', async () => filesToSync.forEach((file) => `- ${file}`));
 
 /**
  * A file to be synced, a custom interface is used due to Octokit's types not properly expressing
@@ -21,10 +23,13 @@ type Files = Map<string, File | null>;
 
 /** Retrieve the files from Github which are syncronized for a given repo. */
 async function getFilesForRepo(github: Octokit, repo: string): Promise<Files> {
+  core.startGroup(`Retrieving files from "${repo}" repo`);
   const fileMap = new Map<string, File | null>();
-  for (const path of fileToSync) {
+  for (const path of filesToSync) {
     fileMap.set(path, await getFile(github, repo, path));
   }
+  core.info(`Retrieved ${fileMap.size} file(s)`);
+  core.endGroup();
   return fileMap;
 }
 
@@ -33,6 +38,7 @@ async function getFilesForRepo(github: Octokit, repo: string): Promise<Files> {
  * repo and returning a 404.
  */
 async function getFile(github: Octokit, repo: string, path: string): Promise<File | null> {
+  core.info(`Retrieving "${path}" from ${repo} repo`);
   return github.rest.repos.getContent({owner: context.repo.owner, repo, path}).then(
     (response) => {
       if ((response.data as {content?: string}).content !== undefined) {
@@ -42,6 +48,7 @@ async function getFile(github: Octokit, repo: string, path: string): Promise<Fil
     },
     (reason: RequestError) => {
       if (reason.status === 404) {
+        core.warning(`"${path}" does not exist in "${repo}" repo`);
         return null;
       }
       throw reason;
@@ -70,9 +77,9 @@ async function updateRepoWithFiles(github: Octokit, repo: string, goldenFiles: F
     /** The target repository's File for the path. */
     const repoFile = repoFiles.get(path) || null;
     /** The SHA of the last time the file was updated in the target repo. */
-    let repoSha: string | undefined;
+    let repoSha: string | undefined = undefined;
     /** The current content of the file in the target repo. */
-    let repoFileContent: string | undefined;
+    let repoFileContent: string | undefined = undefined;
 
     // If the repo file is null, there is not previous information to use for comparisons
     if (repoFile !== null) {
@@ -81,6 +88,7 @@ async function updateRepoWithFiles(github: Octokit, repo: string, goldenFiles: F
     }
 
     if (repoFileContent !== goldenFile.content) {
+      core.info(`Updating "${path}" in "${repo}" repo`);
       updates.push(
         github.repos.createOrUpdateFileContents({
           content: goldenFile.content,
@@ -92,6 +100,8 @@ async function updateRepoWithFiles(github: Octokit, repo: string, goldenFiles: F
           sha: repoSha,
         }),
       );
+    } else {
+      core.info(`"${path}" is already in sync`);
     }
   });
 
@@ -104,6 +114,7 @@ async function main() {
     const goldenFiles: Files = await getFilesForRepo(github, context.repo.repo);
 
     for (const repo of reposToSync) {
+      core.info(`~~~~~~Updating "${repo}" repo~~~~~~~`);
       await updateRepoWithFiles(github, repo, goldenFiles);
     }
   } finally {
