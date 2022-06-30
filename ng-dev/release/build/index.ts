@@ -6,6 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {dirname, join} from 'path';
+import {fileURLToPath} from 'url';
 import {fork} from 'child_process';
 import {BuiltPackage} from '../config/index.js';
 
@@ -42,7 +44,10 @@ export abstract class BuildWorker {
 
 /** Gets the absolute file path to the build worker script. */
 function getBuildWorkerScriptPath(): string {
-  // We resolve the worker script using module resolution as in the package output
-  // the worker might be bundled but exposed through a subpath export mapping.
-  return require.resolve('@angular/dev-infra-private/ng-dev/release/build/build-worker');
+  // This file is getting bundled and ends up in `<pkg-root>/bundles/<chunk>`. We also
+  // bundle the build worker script as another entry-point and can reference
+  // it relatively as the path is preserved inside `bundles/`.
+  // *Note*: Relying on package resolution is problematic within ESM and with `local-dev.sh`
+  const bundlesDir = dirname(fileURLToPath(import.meta.url));
+  return join(bundlesDir, './release/build/build-worker.mjs');
 }

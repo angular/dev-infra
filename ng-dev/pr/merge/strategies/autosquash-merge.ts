@@ -6,6 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {dirname, join} from 'path';
+import {fileURLToPath} from 'url';
 import {PullRequestFailure} from '../../common/validation/failures.js';
 import {PullRequest} from '../pull-request.js';
 import {MergeStrategy, TEMP_PR_HEAD_BRANCH} from './strategy.js';
@@ -121,9 +123,10 @@ export class AutosquashMergeStrategy extends MergeStrategy {
 
 /** Gets the absolute file path to the commit-message filter script. */
 function getCommitMessageFilterScriptPath(): string {
-  // We resolve the script using module resolution as in the package output
-  // the worker might be bundled but exposed through a subpath export mapping.
-  return require.resolve(
-    '@angular/dev-infra-private/ng-dev/pr/merge/strategies/commit-message-filter',
-  );
+  // This file is getting bundled and ends up in `<pkg-root>/bundles/<chunk>`. We also
+  // bundle the commit-message-filter script as another entry-point and can reference
+  // it relatively as the path is preserved inside `bundles/`.
+  // *Note*: Relying on package resolution is problematic within ESM and with `local-dev.sh`
+  const bundlesDir = dirname(fileURLToPath(import.meta.url));
+  return join(bundlesDir, './pr/merge/strategies/commit-message-filter.mjs');
 }
