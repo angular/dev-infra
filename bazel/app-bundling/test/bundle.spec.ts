@@ -12,9 +12,7 @@ import {runInNewContext} from 'vm';
 import {runfiles} from '@bazel/runfiles';
 
 /** Absolute file path to the built minified app bundle. */
-const bundleScriptPath = runfiles.resolveWorkspaceRelative(
-  'bazel/benchmark/app_bundling/test/bundle.min.js',
-);
+const bundleScriptPath = runfiles.resolveWorkspaceRelative('bazel/app-bundling/test/bundle.min.js');
 
 const appIndexHtml = `
   <html lang="en">

@@ -4,8 +4,6 @@ package(default_visibility = ["//visibility:public"])
 filegroup(
     name = "files",
     srcs = glob(["*"]) + [
-        "//bazel/benchmark/app_bundling:files",
-        "//bazel/benchmark/brotli-cli:files",
         "//bazel/benchmark/component_benchmark:files",
         "//bazel/benchmark/driver-utilities:files",
     ],
