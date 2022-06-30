@@ -5,9 +5,13 @@ import {RequestError} from '@octokit/types';
 import {getAuthTokenFor, ANGULAR_ROBOT, revokeActiveInstallationToken} from '../../utils.js';
 
 const reposToSync = core.getMultilineInput('repos', {required: true, trimWhitespace: true});
-core.group('Repos being synced:', async () => reposToSync.forEach((repo) => `- ${repo}`));
+core.group('Repos being synced:', async () =>
+  reposToSync.forEach((repo) => core.info(`- ${repo}`)),
+);
 const filesToSync = core.getMultilineInput('files', {required: true, trimWhitespace: true});
-core.group('Files being synced:', async () => filesToSync.forEach((file) => `- ${file}`));
+core.group('Files being synced:', async () =>
+  filesToSync.forEach((file) => core.info(`- ${file}`)),
+);
 
 /**
  * A file to be synced, a custom interface is used due to Octokit's types not properly expressing
