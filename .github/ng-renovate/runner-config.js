@@ -11,7 +11,9 @@ module.exports = {
     'angular/angular-cli',
     'angular/universal',
     'angular/vscode-ng-language-service',
-    'angular/ngcc-validation',
+    // Disable fork-mode for ngcc validation to support auto-merging
+    // and multiple base branches.
+    {repository: 'angular/ngcc-validation', forkMode: false},
   ],
   productLinks: {
     documentation: 'https://docs.renovatebot.com/',
