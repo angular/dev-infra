@@ -1,3 +1,19 @@
+<a name="2022.3.6"></a>
+# 2022.3.6 (2022-03-06)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [81a01c5](https://github.com/angular/dev-infra/commit/81a01c58bebfe2112f78a7ef63047232506c5593) | feat | **integration:** support for executables to be provided in tool mappings |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e43bee7](https://github.com/angular/dev-infra/commit/e43bee7dcbc6d6c2118436d542a4aecb759e0631) | feat | support skipping version stamp in release stamp env |
+| [b555dd0](https://github.com/angular/dev-infra/commit/b555dd0c28fab88f132c0858cd2f1f130d707361) | fix | **release:** only match on a single character prefixed version for snapshotting ([#449](https://github.com/angular/dev-infra/pull/449)) |
+| [104c49a](https://github.com/angular/dev-infra/commit/104c49ad795097101ab3aa268a8e9af2cdf04a8d) | fix | limit the amount of CPUs used by workers ([#436](https://github.com/angular/dev-infra/pull/436)) |
+## Special Thanks
+Alan Agius, George Kalpakas, Jason Bedard, Joey Perrott and Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.2.27"></a>
 # 2022.2.27 (2022-02-27)
 ### bazel
