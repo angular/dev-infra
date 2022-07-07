@@ -24,12 +24,12 @@
     },
     {
       "matchPackagePatterns": ["^@bazel/.*", "^build_bazel.*"],
-      "groupName": "bazel setup",
+      "groupName": "bazel setup"
     },
     {
       "matchPackagePrefixes": ["@angular/", "@angular-devkit", "@schematics/"],
       "followTag": "next",
-      "groupName": "angular dependencies",
+      "groupName": "angular dependencies"
     },
     {
       "matchPackageNames": ["typescript"],
