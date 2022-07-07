@@ -3,10 +3,10 @@
   "semanticCommits": "enabled",
   "semanticCommitType": "build",
   "semanticCommitScope": "",
+  "dependencyDashboard": true,
   "automerge": false,
   "separateMajorMinor": false,
   "timezone": "America/Tijuana",
-  "prHourlyLimit": 3,
   "labels": ["comp: build", "dependencies", "action: merge"],
   "lockFileMaintenance": {
     "enabled": true
@@ -20,18 +20,16 @@
       "excludePackageNames": ["@types/node", "espree", "escodegen", "glob"],
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "all non-major dependencies",
-      "schedule": ["after 1am every weekday", "every weekend"]
+      "schedule": ["at any time"]
     },
     {
       "matchPackagePatterns": ["^@bazel/.*", "^build_bazel.*"],
       "groupName": "bazel setup",
-      "schedule": ["at any time"]
     },
     {
       "matchPackagePrefixes": ["@angular/", "@angular-devkit", "@schematics/"],
       "followTag": "next",
       "groupName": "angular dependencies",
-      "schedule": ["at any time"]
     },
     {
       "matchPackageNames": ["typescript"],
