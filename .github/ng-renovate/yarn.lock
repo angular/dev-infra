@@ -1493,14 +1493,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pnpm/read-project-manifest@npm:3.0.4":
-  version: 3.0.4
-  resolution: "@pnpm/read-project-manifest@npm:3.0.4"
+"@pnpm/read-project-manifest@npm:3.0.6":
+  version: 3.0.6
+  resolution: "@pnpm/read-project-manifest@npm:3.0.6"
   dependencies:
     "@pnpm/error": 3.0.1
     "@pnpm/graceful-fs": 2.0.0
-    "@pnpm/types": 8.2.0
-    "@pnpm/write-project-manifest": 3.0.3
+    "@pnpm/types": 8.4.0
+    "@pnpm/write-project-manifest": 3.0.5
     detect-indent: ^6.0.0
     fast-deep-equal: ^3.1.3
     is-windows: ^1.0.2
@@ -1509,26 +1509,26 @@ __metadata:
     read-yaml-file: ^2.1.0
     sort-keys: ^4.2.0
     strip-bom: ^4.0.0
-  checksum: 2172b50cba10853f8aaa95c230399bbb999aecbc9a8c2593e742a3ddf7c38eb849f1cbb0e10cc62b97df6d294d0b98c2bca500d93da0f7905aeb3d7fcd01be3f
+  checksum: 56d2f7c1bba0a23e4c745f99f7be368db4bce5bade6b0650cd1ba34429455537d17491950e07ff82150f6487c5d77e4dd744fdb4071e3aafe06106bce2d1d723
   languageName: node
   linkType: hard
 
-"@pnpm/types@npm:8.2.0":
-  version: 8.2.0
-  resolution: "@pnpm/types@npm:8.2.0"
-  checksum: c93cbc853ab53eb08a23f6349a8653fbb80fbd039ff3793dd30e01d6c4aff744b0c078431ca688f20a6a034ce70b0a141e81515eec2d3d16b9b14577b9cd97ad
+"@pnpm/types@npm:8.4.0":
+  version: 8.4.0
+  resolution: "@pnpm/types@npm:8.4.0"
+  checksum: f25663279299fef2718e73f2c859488c0e310d67aeebe925edb65642ba53e64d9a65c7980e60b7445e409928bf0544aa3bdcb6540b25f1d045ae11f969fe3977
   languageName: node
   linkType: hard
 
-"@pnpm/write-project-manifest@npm:3.0.3":
-  version: 3.0.3
-  resolution: "@pnpm/write-project-manifest@npm:3.0.3"
+"@pnpm/write-project-manifest@npm:3.0.5":
+  version: 3.0.5
+  resolution: "@pnpm/write-project-manifest@npm:3.0.5"
   dependencies:
-    "@pnpm/types": 8.2.0
+    "@pnpm/types": 8.4.0
     json5: ^2.1.3
     write-file-atomic: ^3.0.3
     write-yaml-file: ^4.2.0
-  checksum: 3cd3157b434ba47c9e59b9bbe3a26d28a34955a0dbef89dacd212bf015d4715af3a7d31175578d84f63a0d78e07750553385d7cb19665a86b640abacade5d68c
+  checksum: 74f83b6229567ad3121e75769eaa041ec17eb4eeb8e148c559c1914b619a9b4a1543a7a00358206ddb92996903ac33bb86b16898d1739adef05f162685e5dc37
   languageName: node
   linkType: hard
 
@@ -1541,14 +1541,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@redis/client@npm:1.1.0":
-  version: 1.1.0
-  resolution: "@redis/client@npm:1.1.0"
+"@redis/client@npm:1.1.1":
+  version: 1.1.1
+  resolution: "@redis/client@npm:1.1.1"
   dependencies:
     cluster-key-slot: 1.1.0
     generic-pool: 3.8.2
     yallist: 4.0.0
-  checksum: 4f1f4a079eeb49e29e381f00be7da6ca606e8b744878e9b2e90a5800b902cdba6a631b10a7be4ed6a740d6fa4282f055c0d6d89e44eea5cbcaa8e2da10b397fc
+  checksum: a96fa8e6125b006b3b027fb42354cfc3fc056f0225160d0b4b60808a23659002cfde39eedf648c94208cefa788a71fb8b3107c6d2a1ff2bede97213e4e07b34e
   languageName: node
   linkType: hard
 
@@ -3098,15 +3098,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"find-packages@npm:9.0.4":
-  version: 9.0.4
-  resolution: "find-packages@npm:9.0.4"
+"find-packages@npm:9.0.6":
+  version: 9.0.6
+  resolution: "find-packages@npm:9.0.6"
   dependencies:
-    "@pnpm/read-project-manifest": 3.0.4
-    "@pnpm/types": 8.2.0
+    "@pnpm/read-project-manifest": 3.0.6
+    "@pnpm/types": 8.4.0
     fast-glob: ^3.2.4
     p-filter: ^2.1.0
-  checksum: f6ac5a568386015d7a8bbf357fb2a09ad18f1f1c1726932cdbd3721c3591ac907a3da14e2e5d91e5374c50e56fa932257a95d4204c31fcd8cc49068e15f007b5
+  checksum: 242396708da938cd1ff773d562c74584855ac1a69c6e513e5293bf41b563cc11d56ef749977a62fc7343c0f92f30f4b223920e8868cec8fe3fd582a980910983
   languageName: node
   linkType: hard
 
@@ -4666,7 +4666,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: ^32.99.8
+    renovate: 32.108.0
   languageName: unknown
   linkType: soft
 
@@ -4831,12 +4831,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"openpgp@npm:5.3.0":
-  version: 5.3.0
-  resolution: "openpgp@npm:5.3.0"
+"openpgp@npm:5.3.1":
+  version: 5.3.1
+  resolution: "openpgp@npm:5.3.1"
   dependencies:
     asn1.js: ^5.0.0
-  checksum: 7f3b605556120e1547ee756a9a868533ec7eba9b1bf3e2b17ff7d4318bc487d7085078264dfc8e92bf32caa9a5351130318c38b25c1f80370c223d0a097f73f5
+  checksum: b149af872b8b4f829dec7ae0158e753f9768f3fe5aa5d43ad6206f397671e7d7e0939183cc5a8e4db858bbdc9aa226dc0db85e20b1b2c7d0db770ed31197d575
   languageName: node
   linkType: hard
 
@@ -5277,17 +5277,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redis@npm:4.1.0":
-  version: 4.1.0
-  resolution: "redis@npm:4.1.0"
+"redis@npm:4.1.1":
+  version: 4.1.1
+  resolution: "redis@npm:4.1.1"
   dependencies:
     "@redis/bloom": 1.0.2
-    "@redis/client": 1.1.0
+    "@redis/client": 1.1.1
     "@redis/graph": 1.0.1
     "@redis/json": 1.0.3
     "@redis/search": 1.0.6
     "@redis/time-series": 1.0.3
-  checksum: e3cc90a05a3ea9ada3d771145a0865cd85340a9b54cbeda768f127d86df13beb56ec505b978c464a092ad33ff39b1850101c102842d51b84a1ff6b1f9790901b
+  checksum: 8c9b4e068edb6cd64c0379bed9e0822e2b8e7ee3f25cb63eb5e758fbc4bfc8eba8e88d6a0288dee84a1e6a9450850ba26c235afacdbd87969e645361e483f536
   languageName: node
   linkType: hard
 
@@ -5349,9 +5349,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:^32.99.8":
-  version: 32.99.8
-  resolution: "renovate@npm:32.99.8"
+"renovate@npm:32.108.0":
+  version: 32.108.0
+  resolution: "renovate@npm:32.108.0"
   dependencies:
     "@aws-sdk/client-ec2": 3.112.0
     "@aws-sdk/client-ecr": 3.112.0
@@ -5387,7 +5387,7 @@ __metadata:
     emojibase-regex: 6.0.1
     extract-zip: 2.0.1
     fast-safe-stringify: 2.1.1
-    find-packages: 9.0.4
+    find-packages: 9.0.6
     find-up: 5.0.0
     fs-extra: 10.1.0
     git-url-parse: 11.6.0
@@ -5412,34 +5412,34 @@ __metadata:
     moo: 0.5.1
     nanoid: 3.3.4
     node-html-parser: 5.3.3
-    openpgp: 5.3.0
+    openpgp: 5.3.1
     p-all: 3.0.0
     p-map: 4.0.0
     p-queue: 6.6.2
     parse-link-header: 2.0.0
     re2: 1.17.7
-    redis: 4.1.0
+    redis: 4.1.1
     remark: 13.0.0
     remark-github: 10.1.0
     semver: 7.3.7
     semver-stable: 3.0.0
     semver-utils: 1.1.4
-    shlex: 2.1.0
-    simple-git: 3.8.0
+    shlex: 2.1.2
+    simple-git: 3.10.0
     slugify: 1.6.5
     traverse: 0.6.6
     tslib: 2.4.0
     upath: 2.0.1
     url-join: 4.0.1
     validate-npm-package-name: 4.0.0
-    xmldoc: 1.1.3
+    xmldoc: 1.1.4
   dependenciesMeta:
     re2:
       optional: true
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 57c142af4f3fdbef8206a7e3c9a5982049601b07474a001cc0a9dd148cb27e855b6ba985e0e37c116a24273fc9b3665a51a8fb58735ec6950f9124fdc2356b78
+  checksum: 9b626f83aa72b51fd89c3decfcd4be4f87091f3de365fda96eec432cb2d2fcd37491031267f79748895aef49f8fba4b2999d7339b33bcbe0e8a20dc858d030f1
   languageName: node
   linkType: hard
 
@@ -5670,10 +5670,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"shlex@npm:2.1.0":
-  version: 2.1.0
-  resolution: "shlex@npm:2.1.0"
-  checksum: 9fc018f86d650e386e94d855ac039a9c8eac19403045d300d8298b16e26b5cb2e8bb8755873019cedf1427f76fa04be3ec04e891113f5fcf543d88f8339943ae
+"shlex@npm:2.1.2":
+  version: 2.1.2
+  resolution: "shlex@npm:2.1.2"
+  checksum: a8f228409d78e2811103ba8cf5de43f9b4b5f20f620af04aba1d934a32b8ebd975c334a4ead37d1533dae7d058dfdb352bb494f8e1b8d6ed10ecd9d8f8799bde
   languageName: node
   linkType: hard
 
@@ -5702,14 +5702,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"simple-git@npm:3.8.0":
-  version: 3.8.0
-  resolution: "simple-git@npm:3.8.0"
+"simple-git@npm:3.10.0":
+  version: 3.10.0
+  resolution: "simple-git@npm:3.10.0"
   dependencies:
     "@kwsites/file-exists": ^1.1.1
     "@kwsites/promise-deferred": ^1.1.1
     debug: ^4.3.4
-  checksum: 16d333a5fd57531f59a50d1dda2a02670f4ddd595307971ce717a0089e9fa00a0fbdf526f7f525d48fc19f2f0703f4cf1b787fd2a88cbb16c0a6e989fa83ee2c
+  checksum: 167a6c4b2634bfcc4353a87ccbd7f66ecffa9111990341f7208614e70750f7b920c8858202dd8a535e4534f7539e0d94e89704a2d98cff47002f7dc989a4075f
   languageName: node
   linkType: hard
 
@@ -6453,12 +6453,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"xmldoc@npm:1.1.3":
-  version: 1.1.3
-  resolution: "xmldoc@npm:1.1.3"
+"xmldoc@npm:1.1.4":
+  version: 1.1.4
+  resolution: "xmldoc@npm:1.1.4"
   dependencies:
     sax: ^1.2.4
-  checksum: ce5b26ed3f974024bf360e57bbbf5fa779dc46d35fa1579d2770f2f497abce594ee888e61d4d2136cfd9a8907bf0a083a7a6b0a5d4ab11debeae29686e36e500
+  checksum: 794c4afabd1c9c718dee9e2859439aa0c6c4e701ce689c5194255ce9447a631e6206af01fbd65864c1986d60663b990c33d60cab4c8c3989f31c3ff0c0fe2b21
   languageName: node
   linkType: hard
 
