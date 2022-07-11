@@ -24,6 +24,8 @@ platform(
         # property in the platform again in case the default ever changes. Network access is not desirable in
         # Bazel builds as it is potential source of flaky tests and therefore also breaks hermeticity.
         "dockerNetwork": "off",
+        # Specify the name of the remote worker pool all actions will execute on.
+        "Pool": "default",
     },
 )
 
