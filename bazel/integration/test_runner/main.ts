@@ -34,9 +34,16 @@ async function main(): Promise<void> {
   const configContent = await fs.promises.readFile(configPath, 'utf8');
   const config = JSON.parse(configContent) as TestConfig;
 
+  // If we run with `DEBUG=1` or `bazel run`, we assume the user wants to debug
+  // the test and jump into the integration test directory.
+  const isTestDebugMode =
+    process.env.DEBUG === '1' || process.env.BUILD_WORKSPACE_DIRECTORY !== undefined;
+
+  debug('Running in test debug mode:', isTestDebugMode);
   debug('Fetched test config:', config);
 
   const runner = new TestRunner(
+    isTestDebugMode,
     config.testFiles,
     config.testPackage,
     config.testPackageRelativeWorkingDir,
