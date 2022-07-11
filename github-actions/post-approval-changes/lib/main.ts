@@ -61,6 +61,7 @@ async function runPostApprovalChangesAction(client: Octokit): Promise<void> {
 
   if (googleOwnedRobots.includes(pr.user.login)) {
     core.info('PR author is a robot owned by Google. Post approval changes are allowed.');
+    return;
   }
 
   console.debug(`Requested Reviewers: ${pr.requested_reviewers.join(', ')}`);

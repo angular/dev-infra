@@ -25980,6 +25980,7 @@ async function runPostApprovalChangesAction(client) {
   }
   if (googleOwnedRobots.includes(pr.user.login)) {
     core.info("PR author is a robot owned by Google. Post approval changes are allowed.");
+    return;
   }
   console.debug(`Requested Reviewers: ${pr.requested_reviewers.join(", ")}`);
   console.debug(`Requested Teams:     ${pr.requested_teams.join(", ")}`);
