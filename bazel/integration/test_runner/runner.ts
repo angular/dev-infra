@@ -56,14 +56,21 @@ export class TestRunner {
 
   async run() {
     const testTmpDir = await this._getTestTmpDirectoryPath();
-    const testWorkingDir = path.join(testTmpDir, this.testPackageRelativeWorkingDir);
+    const testSandboxDir = path.join(testTmpDir, 'test-sandbox');
+    const testWorkingDir = path.join(testSandboxDir, this.testPackageRelativeWorkingDir);
+
+    // Create the test sandbox directory. The working directory does not need to
+    // be explicitly created here as the test file copying should create the folder.
+    await fs.promises.mkdir(testSandboxDir);
+
     const toolMappings = await this._setupToolMappingsForTest(testTmpDir);
     const testEnv = await this._buildTestProcessEnvironment(testTmpDir, toolMappings.binDir);
 
-    debug(`Copying test fixtures into: ${path.normalize(testTmpDir)}`);
+    debug(`Temporary directory for integration test: ${path.normalize(testTmpDir)}`);
+    debug(`Test files are copied into: ${path.normalize(testSandboxDir)}`);
     console.info(`Running test in directory: ${path.normalize(testWorkingDir)}`);
 
-    await this._copyTestFilesToDirectory(testTmpDir);
+    await this._copyTestFilesToDirectory(testSandboxDir);
     await this._patchPackageJsonIfNeeded(testWorkingDir);
     await this._runTestCommands(testWorkingDir, testEnv);
   }
