@@ -27,6 +27,10 @@
       "groupName": "bazel setup"
     },
     {
+      "matchPackagePrefixes": ["@octokit/"],
+      "groupName": "octokit dependencies"
+    },
+    {
       "matchPackagePrefixes": ["@angular/", "@angular-devkit", "@schematics/"],
       "followTag": "next",
       "groupName": "angular dependencies"
