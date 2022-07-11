@@ -458,7 +458,7 @@ __metadata:
     "@octokit/graphql-schema": ^10.72.0
     "@octokit/plugin-paginate-rest": ^2.13.5
     "@octokit/plugin-rest-endpoint-methods": ^5.3.3
-    "@octokit/request-error": ^2.1.0
+    "@octokit/request-error": ^3.0.0
     "@octokit/rest": ^18.7.0
     "@octokit/types": ^6.16.6
     "@octokit/webhooks-types": ^6.0.0
@@ -4180,6 +4180,17 @@ __metadata:
     deprecation: ^2.0.0
     once: ^1.4.0
   checksum: baec2b5700498be01b4d958f9472cb776b3f3b0ea52924323a07e7a88572e24cac2cdf7eb04a0614031ba346043558b47bea2d346e98f0e8385b4261f138ef18
+  languageName: node
+  linkType: hard
+
+"@octokit/request-error@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@octokit/request-error@npm:3.0.0"
+  dependencies:
+    "@octokit/types": ^6.0.3
+    deprecation: ^2.0.0
+    once: ^1.4.0
+  checksum: 5778904ed5421e955107eb7fd2ed1655f3eb1bf3f6433278a5382efa2dd02082c35c2454cdc8818c88c9feef71f08489abdefee376dd51eac9caf72b133ec176
   languageName: node
   linkType: hard
 
