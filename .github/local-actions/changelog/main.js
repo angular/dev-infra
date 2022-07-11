@@ -47542,8 +47542,8 @@ var require_brace_expansion = __commonJS({
 // 
 var require_minimatch = __commonJS({
   ""(exports, module) {
-    module.exports = minimatch;
-    minimatch.Minimatch = Minimatch;
+    module.exports = minimatch2;
+    minimatch2.Minimatch = Minimatch;
     var path = function() {
       try {
         return __require("path");
@@ -47552,8 +47552,8 @@ var require_minimatch = __commonJS({
     }() || {
       sep: "/"
     };
-    minimatch.sep = path.sep;
-    var GLOBSTAR = minimatch.GLOBSTAR = Minimatch.GLOBSTAR = {};
+    minimatch2.sep = path.sep;
+    var GLOBSTAR = minimatch2.GLOBSTAR = Minimatch.GLOBSTAR = {};
     var expand = require_brace_expansion();
     var plTypes = {
       "!": { open: "(?:(?!(?:", close: "))[^/]*?)" },
@@ -47574,11 +47574,11 @@ var require_minimatch = __commonJS({
       }, {});
     }
     var slashSplit = /\/+/;
-    minimatch.filter = filter;
+    minimatch2.filter = filter;
     function filter(pattern, options) {
       options = options || {};
       return function(p, i, list) {
-        return minimatch(p, pattern, options);
+        return minimatch2(p, pattern, options);
       };
     }
     function ext(a, b) {
@@ -47592,12 +47592,12 @@ var require_minimatch = __commonJS({
       });
       return t;
     }
-    minimatch.defaults = function(def) {
+    minimatch2.defaults = function(def) {
       if (!def || typeof def !== "object" || !Object.keys(def).length) {
-        return minimatch;
+        return minimatch2;
       }
-      var orig = minimatch;
-      var m = function minimatch2(p, pattern, options) {
+      var orig = minimatch2;
+      var m = function minimatch3(p, pattern, options) {
         return orig(p, pattern, ext(def, options));
       };
       m.Minimatch = function Minimatch2(pattern, options) {
@@ -47624,9 +47624,9 @@ var require_minimatch = __commonJS({
       return m;
     };
     Minimatch.defaults = function(def) {
-      return minimatch.defaults(def).Minimatch;
+      return minimatch2.defaults(def).Minimatch;
     };
-    function minimatch(p, pattern, options) {
+    function minimatch2(p, pattern, options) {
       assertValidPattern(pattern);
       if (!options)
         options = {};
@@ -47707,7 +47707,7 @@ var require_minimatch = __commonJS({
         this.pattern = pattern.substr(negateOffset);
       this.negate = negate;
     }
-    minimatch.braceExpand = function(pattern, options) {
+    minimatch2.braceExpand = function(pattern, options) {
       return braceExpand(pattern, options);
     };
     Minimatch.prototype.braceExpand = braceExpand;
@@ -47969,7 +47969,7 @@ var require_minimatch = __commonJS({
       regExp._src = re;
       return regExp;
     }
-    minimatch.makeRe = function(pattern, options) {
+    minimatch2.makeRe = function(pattern, options) {
       return new Minimatch(pattern, options || {}).makeRe();
     };
     Minimatch.prototype.makeRe = makeRe;
@@ -47999,7 +47999,7 @@ var require_minimatch = __commonJS({
       }
       return this.regexp;
     }
-    minimatch.match = function(list, pattern, options) {
+    minimatch2.match = function(list, pattern, options) {
       options = options || {};
       var mm = new Minimatch(pattern, options);
       list = list.filter(function(f) {
@@ -48123,81 +48123,6 @@ var require_minimatch = __commonJS({
     function regExpEscape(s) {
       return s.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
     }
-  }
-});
-
-// 
-var require_array_union = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    module.exports = (...arguments_) => {
-      return [...new Set([].concat(...arguments_))];
-    };
-  }
-});
-
-// 
-var require_array_differ = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    var arrayDiffer = (array, ...values) => {
-      const rest = new Set([].concat(...values));
-      return array.filter((element) => !rest.has(element));
-    };
-    module.exports = arrayDiffer;
-  }
-});
-
-// 
-var require_arrify = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    var arrify = (value) => {
-      if (value === null || value === void 0) {
-        return [];
-      }
-      if (Array.isArray(value)) {
-        return value;
-      }
-      if (typeof value === "string") {
-        return [value];
-      }
-      if (typeof value[Symbol.iterator] === "function") {
-        return [...value];
-      }
-      return [value];
-    };
-    module.exports = arrify;
-  }
-});
-
-// 
-var require_multimatch = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    var minimatch = require_minimatch();
-    var arrayUnion = require_array_union();
-    var arrayDiffer = require_array_differ();
-    var arrify = require_arrify();
-    module.exports = (list, patterns, options = {}) => {
-      list = arrify(list);
-      patterns = arrify(patterns);
-      if (list.length === 0 || patterns.length === 0) {
-        return [];
-      }
-      let result = [];
-      for (const item of list) {
-        for (let pattern of patterns) {
-          let process4 = arrayUnion;
-          if (pattern[0] === "!") {
-            pattern = pattern.slice(1);
-            process4 = arrayDiffer;
-          }
-          result = process4(result, minimatch.match([item], pattern, options));
-        }
-      }
-      return result;
-    };
   }
 });
 
@@ -69786,7 +69711,42 @@ function printToLogFile(logLevel, ...text) {
 
 // 
 var import_cli_progress = __toESM(require_cli_progress());
-var import_multimatch = __toESM(require_multimatch());
+
+// 
+var import_minimatch = __toESM(require_minimatch(), 1);
+
+// 
+var arrayUnion = (...arguments_) => [...new Set(arguments_.flat())];
+var array_union_default = arrayUnion;
+
+// 
+function arrayDiffer(array, ...values) {
+  const rest = new Set([...values].flat());
+  return array.filter((element) => !rest.has(element));
+}
+
+// 
+function multimatch(list, patterns, options = {}) {
+  list = [list].flat();
+  patterns = [patterns].flat();
+  if (list.length === 0 || patterns.length === 0) {
+    return [];
+  }
+  let result = [];
+  for (const item of list) {
+    for (let pattern of patterns) {
+      let process4 = array_union_default;
+      if (pattern[0] === "!") {
+        pattern = pattern.slice(1);
+        process4 = arrayDiffer;
+      }
+      result = process4(result, import_minimatch.default.match([item], pattern, options));
+    }
+  }
+  return result;
+}
+
+// 
 import { cpus } from "os";
 
 // 
@@ -70222,7 +70182,7 @@ function runFormatterInParallel(allFiles, action) {
     const failures = [];
     const pendingCommands = [];
     for (const formatter of formatters) {
-      pendingCommands.push(...import_multimatch.default.call(void 0, allFiles, formatter.getFileMatcher(), { dot: true }).map((file) => ({ formatter, file })));
+      pendingCommands.push(...multimatch.call(void 0, allFiles, formatter.getFileMatcher(), { dot: true }).map((file) => ({ formatter, file })));
     }
     if (pendingCommands.length === 0) {
       return resolve(false);
