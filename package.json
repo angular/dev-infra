@@ -81,7 +81,7 @@
     "@bazel/jasmine": "5.5.2",
     "@google-cloud/firestore": "^5.0.2",
     "@google-cloud/storage": "^6.0.0",
-    "@octokit/auth-app": "^3.6.0",
+    "@octokit/auth-app": "^4.0.0",
     "@octokit/core": "^3.5.1",
     "@octokit/graphql": "^4.8.0",
     "@octokit/graphql-schema": "^10.72.0",
