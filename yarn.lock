@@ -492,7 +492,6 @@ __metadata:
     cli-progress: ^3.7.0
     conventional-commits-parser: ^3.2.1
     ejs: ^3.1.6
-    escodegen: ^1.13.0
     firebase: 9.9.0
     firebase-admin: ^11.0.0
     firebase-functions: ^3.21.2
@@ -8429,7 +8428,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"escodegen@npm:^1.13.0, escodegen@npm:^1.8.1":
+"escodegen@npm:^1.8.1":
   version: 1.14.3
   resolution: "escodegen@npm:1.14.3"
   dependencies:
