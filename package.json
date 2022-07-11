@@ -111,7 +111,7 @@
     "cli-progress": "^3.7.0",
     "conventional-commits-parser": "^3.2.1",
     "ejs": "^3.1.6",
-    "escodegen": "^1.13.0",
+    "escodegen": "^2.0.0",
     "firebase": "9.9.0",
     "firebase-admin": "^11.0.0",
     "firebase-functions": "^3.21.2",
