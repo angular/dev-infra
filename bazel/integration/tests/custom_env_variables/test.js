@@ -20,6 +20,11 @@ if (process.env.MANUAL_ROOT_PATH !== '../npm/node_modules/semver/package.json') 
   process.exit(1);
 }
 
+if (!process.env.HOME.includes('.tmp-env-')) {
+  console.error('Expected `HOME` to point to a temporary environment directory.');
+  process.exit(1);
+}
+
 const bazeliskHome = process.env.BAZELISK_HOME;
 const bazeliskHome_2 = process.env.BAZELISK_HOME_2;
 
