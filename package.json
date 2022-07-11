@@ -39,7 +39,7 @@
     "@bazel/typescript": "5.5.2",
     "@microsoft/api-extractor": "7.28.4",
     "@types/browser-sync": "^2.26.3",
-    "@types/node": "16.10.9",
+    "@types/node": "18.0.3",
     "@types/selenium-webdriver": "^4.0.18",
     "@types/send": "^0.17.1",
     "@types/tmp": "^0.2.1",
