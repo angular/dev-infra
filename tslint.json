@@ -10,9 +10,7 @@
         "noNamedExports": [
           "@yarnpkg/lockfile",
           "typescript",
-          "multimatch",
           "semver",
-          "glob",
           "nock",
           "wait-on",
           "browser-sync",
