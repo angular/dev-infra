@@ -88,7 +88,7 @@
     "@octokit/plugin-paginate-rest": "^2.13.5",
     "@octokit/plugin-rest-endpoint-methods": "^5.3.3",
     "@octokit/request-error": "^2.1.0",
-    "@octokit/rest": "^18.7.0",
+    "@octokit/rest": "^19.0.0",
     "@octokit/types": "^6.16.6",
     "@octokit/webhooks-types": "^6.0.0",
     "@types/babel__core": "^7.1.19",
