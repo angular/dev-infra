@@ -120,7 +120,7 @@
     "font-color-contrast": "^11.1.0",
     "gcip-cloud-functions": "0.0.3",
     "git-raw-commits": "^2.0.10",
-    "glob": "7.2.0",
+    "glob": "8.0.3",
     "husky": "^8.0.0",
     "inquirer": "^8.0.0",
     "jasmine": "~4.2.0",
