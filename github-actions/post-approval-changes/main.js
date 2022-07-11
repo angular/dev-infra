@@ -25955,6 +25955,7 @@ var googlers = [
   "wagnermaciel",
   "zarend"
 ];
+var googleOwnedRobots = ["angular-robot"];
 async function main() {
   let installationClient = null;
   try {
@@ -25976,6 +25977,9 @@ async function runPostApprovalChangesAction(client) {
   if (googlers.includes(pr.user.login)) {
     core.info("PR author is a googler, skipping as post approval changes are allowed.");
     return;
+  }
+  if (googleOwnedRobots.includes(pr.user.login)) {
+    core.info("PR author is a robot owned by Google. Post approval changes are allowed.");
   }
   console.debug(`Requested Reviewers: ${pr.requested_reviewers.join(", ")}`);
   console.debug(`Requested Teams:     ${pr.requested_teams.join(", ")}`);
