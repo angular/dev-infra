@@ -7,15 +7,17 @@ integration_test(
         "test.mjs",
     ],
     commands = [
-        # Note: We use a cache folder within the integration test as otherwise
-        # the NPM package mapped archive would be cached in the system.
-        # See: https://github.com/yarnpkg/yarn/issues/2165.
-        "yarn install --cache-folder .yarn_cache_folder/",
+        "yarn",
         "node ./test.mjs",
     ],
     npm_packages = {
         "//bazel/integration/tests/package_mappings/fake_pkg_srcs:archive": "fake_pkg",
     },
+    tags = [
+        # We want to run a basic integration test on Windows to ensure the integration
+        # test rule works properly for Windows contributors.
+        "windows",
+    ],
     tool_mappings = {
         "//:yarn_classic_vendored": "yarn",
         "@nodejs_toolchains//:resolved_toolchain": "node",

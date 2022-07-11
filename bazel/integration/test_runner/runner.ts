@@ -9,6 +9,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as tmp from 'tmp';
+import * as os from 'os';
 
 import {
   BazelExpandedValue,
@@ -35,6 +36,9 @@ import {debug} from './debug';
 /** Error class that is used when an integration command fails.  */
 class IntegrationTestCommandError extends Error {}
 
+/** Type describing an environment configuration that can be passed to the runner. */
+type EnvironmentConfig = Record<string, BazelExpandedValue>;
+
 /**
  * Test runner that takes a set of files within a Bazel package and copies the files
  * to a temporary directory where it then executes a list of specified commands.
@@ -44,6 +48,8 @@ class IntegrationTestCommandError extends Error {}
  * test runner will patch the top-level `package.json` of the test Bazel package for that.
  */
 export class TestRunner {
+  private readonly environment: EnvironmentConfig;
+
   constructor(
     private readonly testFiles: BazelFileInfo[],
     private readonly testPackage: string,
@@ -51,8 +57,10 @@ export class TestRunner {
     private readonly toolMappings: Record<string, BazelFileInfo>,
     private readonly npmPackageMappings: Record<string, BazelFileInfo>,
     private readonly commands: [[binary: BazelExpandedValue, ...args: string[]]],
-    private readonly environment: Record<string, BazelExpandedValue>,
-  ) {}
+    environment: EnvironmentConfig,
+  ) {
+    this.environment = this._assignDefaultEnvironmentVariables(environment);
+  }
 
   async run() {
     const testTmpDir = await this._getTestTmpDirectoryPath();
@@ -261,5 +269,28 @@ export class TestRunner {
       mappings[pkgName] = resolveBazelFile(file);
     }
     return mappings;
+  }
+
+  /**
+   * Assigns the default environment environments.
+   *
+   * We intend to always fake the system home-related directory environment variables
+   * to temporary directories. This helps as integration tests (even within the Bazel sandbox)
+   * have read access to the system home directory and attempt to write to it.
+   */
+  private _assignDefaultEnvironmentVariables(baseEnv: EnvironmentConfig): EnvironmentConfig {
+    const defaults: EnvironmentConfig = {
+      'HOME': {value: ENVIRONMENT_TMP_PLACEHOLDER, containsExpansion: false},
+    };
+
+    // Support windows-specific system variables. We don't want to always assign these as
+    // it would result in unnecessary directories being created all the time.
+    if (os.platform() === 'win32') {
+      defaults.USERPROFILE = {value: ENVIRONMENT_TMP_PLACEHOLDER, containsExpansion: false};
+      defaults.APPDATA = {value: ENVIRONMENT_TMP_PLACEHOLDER, containsExpansion: false};
+      defaults.LOCALAPPDATA = {value: ENVIRONMENT_TMP_PLACEHOLDER, containsExpansion: false};
+    }
+
+    return {...defaults, ...baseEnv};
   }
 }

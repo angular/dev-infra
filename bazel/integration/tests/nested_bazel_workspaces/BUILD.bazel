@@ -10,12 +10,6 @@ integration_test(
         "yarn",
         "yarn test",
     ],
-    environment = {
-        # Setup a HOME directory so that Bazelisk can work, both Linux/macOS and Windows variants
-        # are configured to provide a fake home directory so that Bazelisk can download Bazel.
-        "HOME": "<TMP>",
-        "LOCALAPPDATA": "<TMP>",
-    },
     tags = [
         # This test relies on `yarn` so there needs to be internet access.
         "requires-network",
