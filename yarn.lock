@@ -453,7 +453,7 @@ __metadata:
     "@google-cloud/storage": ^6.0.0
     "@microsoft/api-extractor": 7.28.4
     "@octokit/auth-app": ^3.6.0
-    "@octokit/core": ^3.5.1
+    "@octokit/core": ^4.0.0
     "@octokit/graphql": ^4.8.0
     "@octokit/graphql-schema": ^10.72.0
     "@octokit/plugin-paginate-rest": ^2.13.5
@@ -4066,6 +4066,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@octokit/auth-token@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@octokit/auth-token@npm:3.0.0"
+  dependencies:
+    "@octokit/types": ^6.0.3
+  checksum: 70dc50385ae25e26ea23782a6730ac680a241a4c6bd401a88c1b4820d6f14a333c6a0e6c10a3a998d1909f95725e8df4477fb6c9e32ff13e056f6324cfebc3bb
+  languageName: node
+  linkType: hard
+
 "@octokit/core@npm:^3.5.1, @octokit/core@npm:^3.6.0":
   version: 3.6.0
   resolution: "@octokit/core@npm:3.6.0"
@@ -4081,6 +4090,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@octokit/core@npm:^4.0.0":
+  version: 4.0.4
+  resolution: "@octokit/core@npm:4.0.4"
+  dependencies:
+    "@octokit/auth-token": ^3.0.0
+    "@octokit/graphql": ^5.0.0
+    "@octokit/request": ^6.0.0
+    "@octokit/request-error": ^3.0.0
+    "@octokit/types": ^6.0.3
+    before-after-hook: ^2.2.0
+    universal-user-agent: ^6.0.0
+  checksum: c9ae1e5706ab568a725cc5dba314049fbd37d77f1595dd2c19733abddfd72f4e1d46d6980e212d845dde4625ce5f170af951ac0eb0d7bc09e56a159b88cbe5dd
+  languageName: node
+  linkType: hard
+
 "@octokit/endpoint@npm:^6.0.1":
   version: 6.0.12
   resolution: "@octokit/endpoint@npm:6.0.12"
@@ -4089,6 +4113,17 @@ __metadata:
     is-plain-object: ^5.0.0
     universal-user-agent: ^6.0.0
   checksum: b48b29940af11c4b9bca41cf56809754bb8385d4e3a6122671799d27f0238ba575b3fde86d2d30a84f4dbbc14430940de821e56ecc6a9a92d47fc2b29a31479d
+  languageName: node
+  linkType: hard
+
+"@octokit/endpoint@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "@octokit/endpoint@npm:7.0.0"
+  dependencies:
+    "@octokit/types": ^6.0.3
+    is-plain-object: ^5.0.0
+    universal-user-agent: ^6.0.0
+  checksum: e6d7a2876c4a09852e671074b34f0a70722866e60bc218e475d2bdce7dea17de275dcd01f34c381bcc21d77def915c25a2f46e21f65a8d12aa4c6e418e5e01e2
   languageName: node
   linkType: hard
 
@@ -4110,6 +4145,17 @@ __metadata:
     "@octokit/types": ^6.0.3
     universal-user-agent: ^6.0.0
   checksum: f68afe53f63900d4a16a0a733f2f500df2695b731f8ed32edb728d50edead7f5011437f71d069c2d2f6d656227703d0c832a3c8af58ecf82bd5dcc051f2d2d74
+  languageName: node
+  linkType: hard
+
+"@octokit/graphql@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "@octokit/graphql@npm:5.0.0"
+  dependencies:
+    "@octokit/request": ^6.0.0
+    "@octokit/types": ^6.0.3
+    universal-user-agent: ^6.0.0
+  checksum: 94c3f4fb6ff6dd6151a8ba6d8a2397329eedd5c30d1119b70d2be84add12efb4405ae0af9111f06dd047fc02d12063263357e53b4d04d3ab1ae2c07717ddfef5
   languageName: node
   linkType: hard
 
@@ -4183,6 +4229,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@octokit/request-error@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@octokit/request-error@npm:3.0.0"
+  dependencies:
+    "@octokit/types": ^6.0.3
+    deprecation: ^2.0.0
+    once: ^1.4.0
+  checksum: 5778904ed5421e955107eb7fd2ed1655f3eb1bf3f6433278a5382efa2dd02082c35c2454cdc8818c88c9feef71f08489abdefee376dd51eac9caf72b133ec176
+  languageName: node
+  linkType: hard
+
 "@octokit/request@npm:^5.4.14, @octokit/request@npm:^5.6.0, @octokit/request@npm:^5.6.3":
   version: 5.6.3
   resolution: "@octokit/request@npm:5.6.3"
@@ -4194,6 +4251,20 @@ __metadata:
     node-fetch: ^2.6.7
     universal-user-agent: ^6.0.0
   checksum: c0b4542eb4baaf880d673c758d3e0b5c4a625a4ae30abf40df5548b35f1ff540edaac74625192b1aff42a79ac661e774da4ab7d5505f1cb4ef81239b1e8510c5
+  languageName: node
+  linkType: hard
+
+"@octokit/request@npm:^6.0.0":
+  version: 6.0.2
+  resolution: "@octokit/request@npm:6.0.2"
+  dependencies:
+    "@octokit/endpoint": ^7.0.0
+    "@octokit/request-error": ^3.0.0
+    "@octokit/types": ^6.16.1
+    is-plain-object: ^5.0.0
+    node-fetch: ^2.6.7
+    universal-user-agent: ^6.0.0
+  checksum: 877cc9f4da3f23b9f3f91dcc7b4e7e73e3ee71afd39461bfb7460eeafe656340c6f21515efb09f13e4cf5546f27bcf04bd8ff5dbbb44955fcf0d430e2297ee9d
   languageName: node
   linkType: hard
 
