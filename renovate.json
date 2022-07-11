@@ -11,13 +11,13 @@
   "lockFileMaintenance": {
     "enabled": true
   },
-  "ignorePaths": ["bazel/integration/tests/**"],
+  "ignorePaths": ["bazel/integration/tests/**", "tools/ts_proto/**"],
   "enabledManagers": ["npm", "bazel", "github-actions"],
   "baseBranches": ["main"],
   "packageRules": [
     {
       "matchPackagePatterns": ["*"],
-      "excludePackageNames": ["@types/node", "espree", "escodegen", "glob"],
+      "excludePackageNames": ["@types/node"],
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "all non-major dependencies",
       "schedule": ["at any time"]
