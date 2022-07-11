@@ -520,7 +520,7 @@ __metadata:
     nock: ^13.0.3
     node-fetch: ^3.2.5
     prettier: 2.7.1
-    protobufjs: ^6.11.3
+    protobufjs: ^7.0.0
     protractor: ^7.0.0
     requirejs: ^2.3.6
     rxjs: ^7.4.0
@@ -11808,6 +11808,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"long@npm:^5.0.0":
+  version: 5.2.0
+  resolution: "long@npm:5.2.0"
+  checksum: 37aa4e67b9c3eebc6d9d675adcc9d06f06059ca268922a71273de389746bf07f0ff282f9e604d17fdf84c4149099b44e936ea2b621a6c4759a216621afa97efd
+  languageName: node
+  linkType: hard
+
 "lowercase-keys@npm:^1.0.0, lowercase-keys@npm:^1.0.1":
   version: 1.0.1
   resolution: "lowercase-keys@npm:1.0.1"
@@ -14029,6 +14036,27 @@ __metadata:
     pbjs: bin/pbjs
     pbts: bin/pbts
   checksum: ab7d84bffa4061edebb48087d25d50985c439624e1f46e5a2980dc4da3175d65df3c17da20839e91aeee9efa07c261eac1326e978bad39da95ef3a9e18e367df
+  languageName: node
+  linkType: hard
+
+"protobufjs@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "protobufjs@npm:7.0.0"
+  dependencies:
+    "@protobufjs/aspromise": ^1.1.2
+    "@protobufjs/base64": ^1.1.2
+    "@protobufjs/codegen": ^2.0.4
+    "@protobufjs/eventemitter": ^1.1.0
+    "@protobufjs/fetch": ^1.1.0
+    "@protobufjs/float": ^1.0.2
+    "@protobufjs/inquire": ^1.1.0
+    "@protobufjs/path": ^1.1.2
+    "@protobufjs/pool": ^1.1.0
+    "@protobufjs/utf8": ^1.1.0
+    "@types/long": ^4.0.1
+    "@types/node": ">=13.7.0"
+    long: ^5.0.0
+  checksum: 84c12ceef34d190bb0e08c7203a4e066c66b67fa788ac18575b5c45a269a515c3921b13116e12fe55ffe1fd4831ce208481d44231b75dbe0a8730ab4ca51c84b
   languageName: node
   linkType: hard
 
