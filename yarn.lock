@@ -456,7 +456,7 @@ __metadata:
     "@octokit/core": ^3.5.1
     "@octokit/graphql": ^4.8.0
     "@octokit/graphql-schema": ^10.72.0
-    "@octokit/plugin-paginate-rest": ^2.13.5
+    "@octokit/plugin-paginate-rest": ^3.0.0
     "@octokit/plugin-rest-endpoint-methods": ^5.3.3
     "@octokit/request-error": ^2.1.0
     "@octokit/rest": ^18.7.0
@@ -4140,7 +4140,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/plugin-paginate-rest@npm:^2.13.5, @octokit/plugin-paginate-rest@npm:^2.16.8, @octokit/plugin-paginate-rest@npm:^2.17.0":
+"@octokit/openapi-types@npm:^12.7.0":
+  version: 12.8.0
+  resolution: "@octokit/openapi-types@npm:12.8.0"
+  checksum: 66058ebb9aabfeafaf61cd205487edd14b8f3eac7c6aa796cd7489fe948657912514d9b02918c1bca9d88a07dbb2deed5763e2ca61a6a8f6503caee32429a7b1
+  languageName: node
+  linkType: hard
+
+"@octokit/plugin-paginate-rest@npm:^2.16.8, @octokit/plugin-paginate-rest@npm:^2.17.0":
   version: 2.17.0
   resolution: "@octokit/plugin-paginate-rest@npm:2.17.0"
   dependencies:
@@ -4148,6 +4155,17 @@ __metadata:
   peerDependencies:
     "@octokit/core": ">=2"
   checksum: c8753cda6f7ede79d0e9df43a54e56020aa1c9c6887684e0e0d45cb6ee0dcabf460c3e4b8a18edabef711bb269fd826616e99e78dc29fb30d47c210c562603a0
+  languageName: node
+  linkType: hard
+
+"@octokit/plugin-paginate-rest@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@octokit/plugin-paginate-rest@npm:3.0.0"
+  dependencies:
+    "@octokit/types": ^6.39.0
+  peerDependencies:
+    "@octokit/core": ">=4"
+  checksum: 1d2c900254f3dcd43f7ba69dfd12ff63f93a0d39a1bf542b1d0f006e95da4924ae0a26044c864ad7fb0309047f44becaf76293aae334d14c946910d65edd2523
   languageName: node
   linkType: hard
 
@@ -4215,6 +4233,15 @@ __metadata:
   dependencies:
     "@octokit/openapi-types": ^11.2.0
   checksum: f122b9aee8f6baddd515e34a0913e73b21d4bc82d6ee59d77a8aaf01b4a02c10867dd013003d087a83dc96db23511893669015af6d30c27cece185e21cf1df89
+  languageName: node
+  linkType: hard
+
+"@octokit/types@npm:^6.39.0":
+  version: 6.39.0
+  resolution: "@octokit/types@npm:6.39.0"
+  dependencies:
+    "@octokit/openapi-types": ^12.7.0
+  checksum: 0e3d55e4bdef41e652a2e99a304cebada90f23a90619c49ab892a76ae908c4281316738453348c9ba30b32250ef5eda0a939c2af3aec5ca808acdf9922da420c
   languageName: node
   linkType: hard
 
