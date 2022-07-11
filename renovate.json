@@ -17,7 +17,6 @@
   "packageRules": [
     {
       "matchPackagePatterns": ["*"],
-      "excludePackageNames": ["@types/node"],
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "all non-major dependencies",
       "schedule": ["at any time"]
@@ -37,6 +36,11 @@
     },
     {
       "matchPackageNames": ["typescript"],
+      "updateTypes": ["major"],
+      "enabled": false
+    },
+    {
+      "matchPackageNames": ["@types/node"],
       "updateTypes": ["major"],
       "enabled": false
     },
