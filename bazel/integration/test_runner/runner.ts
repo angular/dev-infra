@@ -51,6 +51,7 @@ export class TestRunner {
   private readonly environment: EnvironmentConfig;
 
   constructor(
+    private readonly isTestDebugMode: boolean,
     private readonly testFiles: BazelFileInfo[],
     private readonly testPackage: string,
     private readonly testPackageRelativeWorkingDir: string,
@@ -80,30 +81,42 @@ export class TestRunner {
 
     await this._copyTestFilesToDirectory(testSandboxDir);
     await this._patchPackageJsonIfNeeded(testWorkingDir);
-    await this._runTestCommands(testWorkingDir, testEnv);
+
+    try {
+      await this._runTestCommands(testWorkingDir, testEnv);
+    } finally {
+      debug('Finished running integration test commands.');
+
+      // We keep the temporary directory on disk if the users wants to debug the test.
+      if (!this.isTestDebugMode) {
+        debug('Deleting the integration test temporary directory..');
+        await fs.promises.rm(testTmpDir, {force: true, recursive: true, maxRetries: 3});
+      }
+    }
   }
 
   /**
-   * Gets the path to a temporary directory that can be used for running the integration
-   * test. The temporary directory will not be deleted as it is controlled by Bazel.
+   * Gets the path to a temporary directory that can be used for running
+   * the integration test.
    *
-   * In case this test does not run as part of `bazel test`, a system-temporary directory
-   * is being created, although not being cleaned up to allow for debugging.
+   * Note that we do not want to use test temporary directory provided by Bazel
+   * as it might reside inside the `execroot` and end up making integration tests
+   * non-hermetic. e.g. the `.yarnrc.yml` might be inherited incorrectly.
+   *
+   * This would be especially problematic and inconsistent with integration tests
+   * running on some platforms in the sandbox (outside of the execroot).
    */
   private async _getTestTmpDirectoryPath(): Promise<string> {
-    // Bazel provides a temporary test directory itself when it executes a test. We prefer
-    // this when the integration test runs with `bazel test`. In other cases we want to
-    // provide a temporary directory that can be used for manually jumping into the
-    // directory. The Bazel test tmpdir is not guaranteed to remain so for debugging,
-    // when the test is run with `bazel run`, we use a directory we control.
-    if (process.env.TEST_TMPDIR) {
-      return process.env.TEST_TMPDIR;
-    }
-
+    // Note: When running inside the Bazel sandbox (darwin or linux), temporary
+    // system directories are always writable. See:
+    // Linux: https://github.com/bazelbuild/bazel/blob/d35f923b098e4dc9c90b1ab66b413c216bdee638/src/main/java/com/google/devtools/build/lib/sandbox/LinuxSandboxedSpawnRunner.java#L280.
+    // Darwin: https://github.com/bazelbuild/bazel/blob/d35f923b098e4dc9c90b1ab66b413c216bdee638/src/main/java/com/google/devtools/build/lib/sandbox/DarwinSandboxedSpawnRunner.java#L170.
     return new Promise((resolve, reject) => {
       tmp.dir(
         {
           template: 'ng-integration-test-XXXXXX',
+          // Always keep the directory for debugging. We will handle the deletion
+          // manually and need full control over the directory persistence.
           keep: true,
         },
         (err, tmpPath) => (err ? reject(err) : resolve(tmpPath)),
@@ -234,7 +247,10 @@ export class TestRunner {
    *
    * @throws An error if any of the configured commands did not complete successfully.
    */
-  private async _runTestCommands(testDir: string, commandEnv: NodeJS.ProcessEnv): Promise<void> {
+  private async _runTestCommands(
+    testWorkingDir: string,
+    commandEnv: NodeJS.ProcessEnv,
+  ): Promise<void> {
     for (const [binary, ...args] of this.commands) {
       // Only resolve the binary if it contains an expanded value. In other cases we would
       // not want to resolve through runfiles to avoid accidentally unexpected resolution.
@@ -245,18 +261,22 @@ export class TestRunner {
       const success = await runCommandInChildProcess(
         resolvedBinary,
         evaluatedArgs,
-        testDir,
+        testWorkingDir,
         commandEnv,
       );
 
       if (!success) {
         console.error(`Command failed: \`${resolvedBinary} ${evaluatedArgs.join(' ')}\``);
-        console.error(`Command ran in test directory: ${path.normalize(testDir)}`);
+        console.error(`Command ran in test directory: ${path.normalize(testWorkingDir)}`);
         console.error(`See error output above.`);
 
         throw new IntegrationTestCommandError();
       }
     }
+
+    console.info(
+      `Successfully ran all commands in test directory: ${path.normalize(testWorkingDir)}`,
+    );
   }
 
   /**
