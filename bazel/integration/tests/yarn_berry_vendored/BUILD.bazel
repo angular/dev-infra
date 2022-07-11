@@ -4,9 +4,10 @@ integration_test(
     name = "test",
     srcs = [
         "package.json",
+        "yarn.lock",
     ],
     commands = [
-        "yarn",
+        "yarn --immutable",
     ],
     tags = [
         # This test relies on `yarn` so there needs to be internet access.
