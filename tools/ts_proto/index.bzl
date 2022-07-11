@@ -8,7 +8,7 @@ def generate_ts_proto_module(name, protofile, visibility = None):
 
     npm_package_bin(
         name = "generate_js_" + name,
-        tool = "//tools/ts_proto:pbjs",
+        tool = "@ts_proto_npm//protobufjs-cli/bin:pbjs",
         data = [protofile],
         testonly = True,
         args = [
@@ -23,7 +23,7 @@ def generate_ts_proto_module(name, protofile, visibility = None):
 
     npm_package_bin(
         name = "generate_ts_" + name,
-        tool = "//tools/ts_proto:pbts",
+        tool = "@ts_proto_npm//protobufjs-cli/bin:pbts",
         data = [":generate_js_%s" % name],
         testonly = True,
         args = [

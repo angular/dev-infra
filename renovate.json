@@ -11,7 +11,7 @@
   "lockFileMaintenance": {
     "enabled": true
   },
-  "ignorePaths": ["bazel/integration/tests/**", "tools/ts_proto/**"],
+  "ignorePaths": ["bazel/integration/tests/**"],
   "enabledManagers": ["npm", "bazel", "github-actions"],
   "baseBranches": ["main"],
   "packageRules": [

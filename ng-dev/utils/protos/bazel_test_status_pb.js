@@ -235,32 +235,40 @@ $root.blaze = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                case 1:
-                    if (!(message.child && message.child.length))
-                        message.child = [];
-                    message.child.push($root.blaze.TestCase.decode(reader, reader.uint32()));
-                    break;
-                case 2:
-                    message.name = reader.string();
-                    break;
-                case 3:
-                    message.className = reader.string();
-                    break;
-                case 4:
-                    message.runDurationMillis = reader.int64();
-                    break;
-                case 5:
-                    message.result = reader.string();
-                    break;
-                case 6:
-                    message.type = reader.int32();
-                    break;
-                case 7:
-                    message.status = reader.int32();
-                    break;
-                case 8:
-                    message.run = reader.bool();
-                    break;
+                case 1: {
+                        if (!(message.child && message.child.length))
+                            message.child = [];
+                        message.child.push($root.blaze.TestCase.decode(reader, reader.uint32()));
+                        break;
+                    }
+                case 2: {
+                        message.name = reader.string();
+                        break;
+                    }
+                case 3: {
+                        message.className = reader.string();
+                        break;
+                    }
+                case 4: {
+                        message.runDurationMillis = reader.int64();
+                        break;
+                    }
+                case 5: {
+                        message.result = reader.string();
+                        break;
+                    }
+                case 6: {
+                        message.type = reader.int32();
+                        break;
+                    }
+                case 7: {
+                        message.status = reader.int32();
+                        break;
+                    }
+                case 8: {
+                        message.run = reader.bool();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -478,6 +486,21 @@ $root.blaze = (function() {
          */
         TestCase.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for TestCase
+         * @function getTypeUrl
+         * @memberof blaze.TestCase
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        TestCase.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/blaze.TestCase";
         };
 
         /**
@@ -782,72 +805,88 @@ $root.blaze = (function() {
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
-                case 1:
-                    message.cachable = reader.bool();
-                    break;
-                case 2:
-                    message.testPassed = reader.bool();
-                    break;
-                case 3:
-                    message.status = reader.int32();
-                    break;
-                case 16:
-                    message.statusDetails = reader.string();
-                    break;
-                case 4:
-                    if (!(message.failedLogs && message.failedLogs.length))
-                        message.failedLogs = [];
-                    message.failedLogs.push(reader.string());
-                    break;
-                case 5:
-                    if (!(message.warning && message.warning.length))
-                        message.warning = [];
-                    message.warning.push(reader.string());
-                    break;
-                case 6:
-                    message.hasCoverage = reader.bool();
-                    break;
-                case 7:
-                    message.remotelyCached = reader.bool();
-                    break;
-                case 8:
-                    message.isRemoteStrategy = reader.bool();
-                    break;
-                case 9:
-                    if (!(message.testTimes && message.testTimes.length))
-                        message.testTimes = [];
-                    if ((tag & 7) === 2) {
-                        var end2 = reader.uint32() + reader.pos;
-                        while (reader.pos < end2)
+                case 1: {
+                        message.cachable = reader.bool();
+                        break;
+                    }
+                case 2: {
+                        message.testPassed = reader.bool();
+                        break;
+                    }
+                case 3: {
+                        message.status = reader.int32();
+                        break;
+                    }
+                case 16: {
+                        message.statusDetails = reader.string();
+                        break;
+                    }
+                case 4: {
+                        if (!(message.failedLogs && message.failedLogs.length))
+                            message.failedLogs = [];
+                        message.failedLogs.push(reader.string());
+                        break;
+                    }
+                case 5: {
+                        if (!(message.warning && message.warning.length))
+                            message.warning = [];
+                        message.warning.push(reader.string());
+                        break;
+                    }
+                case 6: {
+                        message.hasCoverage = reader.bool();
+                        break;
+                    }
+                case 7: {
+                        message.remotelyCached = reader.bool();
+                        break;
+                    }
+                case 8: {
+                        message.isRemoteStrategy = reader.bool();
+                        break;
+                    }
+                case 9: {
+                        if (!(message.testTimes && message.testTimes.length))
+                            message.testTimes = [];
+                        if ((tag & 7) === 2) {
+                            var end2 = reader.uint32() + reader.pos;
+                            while (reader.pos < end2)
+                                message.testTimes.push(reader.int64());
+                        } else
                             message.testTimes.push(reader.int64());
-                    } else
-                        message.testTimes.push(reader.int64());
-                    break;
-                case 10:
-                    message.passedLog = reader.string();
-                    break;
-                case 11:
-                    if (!(message.testProcessTimes && message.testProcessTimes.length))
-                        message.testProcessTimes = [];
-                    if ((tag & 7) === 2) {
-                        var end2 = reader.uint32() + reader.pos;
-                        while (reader.pos < end2)
+                        break;
+                    }
+                case 10: {
+                        message.passedLog = reader.string();
+                        break;
+                    }
+                case 11: {
+                        if (!(message.testProcessTimes && message.testProcessTimes.length))
+                            message.testProcessTimes = [];
+                        if ((tag & 7) === 2) {
+                            var end2 = reader.uint32() + reader.pos;
+                            while (reader.pos < end2)
+                                message.testProcessTimes.push(reader.int64());
+                        } else
                             message.testProcessTimes.push(reader.int64());
-                    } else
-                        message.testProcessTimes.push(reader.int64());
-                    break;
-                case 12:
-                    message.runDurationMillis = reader.int64();
-                    break;
-                case 15:
-                    message.startTimeMillisEpoch = reader.int64();
-                    break;
-                case 13:
-                    message.testCase = $root.blaze.TestCase.decode(reader, reader.uint32());
-                    break;
-                case 14:
-                    message.failedStatus = reader.int32();
-                    break;
+                        break;
+                    }
+                case 12: {
+                        message.runDurationMillis = reader.int64();
+                        break;
+                    }
+                case 15: {
+                        message.startTimeMillisEpoch = reader.int64();
+                        break;
+                    }
+                case 13: {
+                        message.testCase = $root.blaze.TestCase.decode(reader, reader.uint32());
+                        break;
+                    }
+                case 14: {
+                        message.failedStatus = reader.int32();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -1230,6 +1269,21 @@ $root.blaze = (function() {
          */
         TestResultData.prototype.toJSON = function toJSON() {
             return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for TestResultData
+         * @function getTypeUrl
+         * @memberof blaze.TestResultData
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        TestResultData.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/blaze.TestResultData";
         };
 
         return TestResultData;
