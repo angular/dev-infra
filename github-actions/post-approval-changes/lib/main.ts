@@ -31,6 +31,8 @@ const googlers = [
   'zarend',
 ];
 
+const googleOwnedRobots = ['angular-robot'];
+
 async function main() {
   let installationClient: Octokit | null = null;
 
@@ -55,6 +57,10 @@ async function runPostApprovalChangesAction(client: Octokit): Promise<void> {
   if (googlers.includes(pr.user.login)) {
     core.info('PR author is a googler, skipping as post approval changes are allowed.');
     return;
+  }
+
+  if (googleOwnedRobots.includes(pr.user.login)) {
+    core.info('PR author is a robot owned by Google. Post approval changes are allowed.');
   }
 
   console.debug(`Requested Reviewers: ${pr.requested_reviewers.join(', ')}`);
