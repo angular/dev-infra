@@ -92,11 +92,11 @@ def app_bundle(
         **dict(kwargs, tags = ["manual"], **common_esbuild_options)
     )
 
-    terser_minified(name = name + ".min", src = name + ".js", **common_terser_options)
+    terser_minified(name = name + ".min", src = ":%s" % name, **common_terser_options)
     filter_outputs(name = name + ".min.js", target = ":%s.min" % name, filters = ["%s.min.js" % name], visibility = visibility)
     filter_outputs(name = name + ".min.js.map", target = ":%s.min" % name, filters = ["%s.min.js.map" % name], visibility = visibility)
 
-    terser_minified(name = name + ".debug.min", src = name + ".debug.js", debug = True, tags = ["manual"], **common_terser_options)
+    terser_minified(name = name + ".debug.min", src = ":%s.debug" % name, debug = True, tags = ["manual"], **common_terser_options)
     filter_outputs(name = name + ".debug.min.js", target = ":%s.debug.min" % name, filters = ["%s.debug.min.js" % name], visibility = visibility)
     filter_outputs(name = name + ".debug.min.js.map", target = ":%s.debug.min" % name, filters = ["%s.debug.min.js.map" % name], visibility = visibility)
 
