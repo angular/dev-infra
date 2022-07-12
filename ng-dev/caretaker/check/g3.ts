@@ -94,11 +94,18 @@ export class G3Module extends BaseModule<G3StatsData | void> {
     );
 
     // Get the numstat information between main and g3
-    this.git
+    const numStatDiff = this.git
       .run(['diff', `${g3Ref}...${mainRef}`, '--numstat'])
       .stdout // Remove the extra space after git's output.
-      .trim()
-      // Split each line of git output into array
+      .trim();
+
+    // If there is no diff, we can return early.
+    if (numStatDiff === '') {
+      return stats;
+    }
+
+    // Split each line of git output into array
+    numStatDiff
       .split('\n')
       // Split each line from the git output into components parts: insertions,
       // deletions and file name respectively
@@ -116,6 +123,7 @@ export class G3Module extends BaseModule<G3StatsData | void> {
           stats.files += 1;
         }
       });
+
     return stats;
   }
   /** Determine whether the file name passes both include and exclude checks. */
