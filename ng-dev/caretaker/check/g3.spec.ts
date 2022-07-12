@@ -75,6 +75,31 @@ describe('G3Module', () => {
       expect(files).toBe(2);
       expect(commits).toBe(3);
     });
+
+    it('should not throw when there is no diff between the g3 and main branch', async () => {
+      getLatestShas.and.returnValue({g3: 'abc123', master: 'zxy987'});
+      getG3FileIncludeAndExcludeLists.and.returnValue({include: ['project1/*'], exclude: []});
+      getDiffStats.and.callThrough();
+
+      spyOn(GitClient.prototype, 'run').and.callFake((args: string[]): any => {
+        const output: Partial<SpawnSyncReturns<string>> = {};
+        if (args[0] === 'rev-list') {
+          output.stdout = '0';
+        }
+        if (args[0] === 'diff') {
+          output.stdout = '';
+        }
+        return output;
+      });
+
+      const module = new G3Module(git, {caretaker: {}, ...mockNgDevConfig});
+      const {insertions, deletions, files, commits} = (await module.data) as G3StatsData;
+
+      expect(insertions).toBe(0);
+      expect(deletions).toBe(0);
+      expect(files).toBe(0);
+      expect(commits).toBe(0);
+    });
   });
 
   describe('printing the data retrieved', () => {
