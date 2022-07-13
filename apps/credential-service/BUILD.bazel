@@ -1,0 +1,29 @@
+load("//tools:defaults.bzl", "esbuild_esm_bundle")
+load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin", "nodejs_binary")
+
+nodejs_binary(
+    name = "serve",
+    data = [
+        ":bin_files",
+    ],
+    entry_point = ":credential-service.js",
+)
+
+copy_to_bin(
+    name = "bin_files",
+    srcs = [
+        "package.json",
+    ],
+)
+
+esbuild_esm_bundle(
+    name = "credential-service",
+    entry_point = "//apps/credential-service/lib:server.ts",
+    target = "node16",
+    visibility = [
+        "//apps/credential-service:__subpackages__",
+    ],
+    deps = [
+        "//apps/credential-service/lib",
+    ],
+)
