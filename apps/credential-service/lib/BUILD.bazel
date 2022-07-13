@@ -1,0 +1,23 @@
+load("//tools:defaults.bzl", "ts_library")
+
+exports_files([
+    "server.ts",
+])
+
+ts_library(
+    name = "lib",
+    srcs = [
+        "server.ts",
+    ],
+    visibility = [
+        "//apps/credential-service:__pkg__",
+    ],
+    deps = [
+        "@npm//@octokit/auth-app",
+        "@npm//@octokit/rest",
+        "@npm//@types/node",
+        "@npm//@types/ws",
+        "@npm//firebase-admin",
+        "@npm//ws",
+    ],
+)
