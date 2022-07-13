@@ -226,14 +226,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/animations@npm:14.1.0-next.4":
-  version: 14.1.0-next.4
-  resolution: "@angular/animations@npm:14.1.0-next.4"
+"@angular/animations@npm:14.1.0-rc.0":
+  version: 14.1.0-rc.0
+  resolution: "@angular/animations@npm:14.1.0-rc.0"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/core": 14.1.0-next.4
-  checksum: 57017e25d13133075b88a2ede9446ff0c0349f8482a2bc2c22ec072c99fa6456740d049df639cad13fa7fbd4027838bf531a99fba2b217b2f0f878fe72a9a81b
+    "@angular/core": 14.1.0-rc.0
+  checksum: 7f46c65e5aff9aa16256357b5b6e9c4f232519ca2fb22e81f9a7941f15dbc8d098543e17a657b447139e16fe282a4477a452ff401a8138fe4a8645ee8cf49b56
   languageName: node
   linkType: hard
 
@@ -354,21 +354,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/common@npm:14.1.0-next.4":
-  version: 14.1.0-next.4
-  resolution: "@angular/common@npm:14.1.0-next.4"
+"@angular/common@npm:14.1.0-rc.0":
+  version: 14.1.0-rc.0
+  resolution: "@angular/common@npm:14.1.0-rc.0"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/core": 14.1.0-next.4
+    "@angular/core": 14.1.0-rc.0
     rxjs: ^6.5.3 || ^7.4.0
-  checksum: 20beeac67ca1874c7a0b24e67ff9f2de91c0b5f4f2b3ccbb009cbc836cb8dbba48f5f4a6658b3955aff2e947ffc27dcf8fbb61e1d12a5d1bc263f6495ff3ae68
+  checksum: 6347c1db6cbfcd502b01f9c90f9a28d171687f3a642fe4b281f8a267480ac8eb559b2989fff769e4355f076f35c7a89f4ffd97cd80e013a6500756903d6397df
   languageName: node
   linkType: hard
 
-"@angular/compiler-cli@npm:14.1.0-next.4":
-  version: 14.1.0-next.4
-  resolution: "@angular/compiler-cli@npm:14.1.0-next.4"
+"@angular/compiler-cli@npm:14.1.0-rc.0":
+  version: 14.1.0-rc.0
+  resolution: "@angular/compiler-cli@npm:14.1.0-rc.0"
   dependencies:
     "@babel/core": ^7.17.2
     chokidar: ^3.0.0
@@ -381,39 +381,39 @@ __metadata:
     tslib: ^2.3.0
     yargs: ^17.2.1
   peerDependencies:
-    "@angular/compiler": 14.1.0-next.4
+    "@angular/compiler": 14.1.0-rc.0
     typescript: ">=4.6.2 <4.8"
   bin:
     ng-xi18n: bundles/src/bin/ng_xi18n.js
     ngc: bundles/src/bin/ngc.js
     ngcc: bundles/ngcc/main-ngcc.js
-  checksum: c6c08bcd6ccf542eb5b98b2e4fb9af5a560f900522c0c52654bac2ced3d7983b1976702afbd4770fb5c37068e24d89e58b11fd4ed48323d11a2d142af4ffb0b8
+  checksum: 830b7fcfb5bf4e87adcd0daa2089ce37514c3497b50ff40c9cc9e2f8f3ef97a8eb7e73be56fd0cbee8e9a0a66985a028ca11fb152f08239b57f5a4daf013ae2e
   languageName: node
   linkType: hard
 
-"@angular/compiler@npm:14.1.0-next.4":
-  version: 14.1.0-next.4
-  resolution: "@angular/compiler@npm:14.1.0-next.4"
+"@angular/compiler@npm:14.1.0-rc.0":
+  version: 14.1.0-rc.0
+  resolution: "@angular/compiler@npm:14.1.0-rc.0"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/core": 14.1.0-next.4
+    "@angular/core": 14.1.0-rc.0
   peerDependenciesMeta:
     "@angular/core":
       optional: true
-  checksum: a06e94e11c546aaef1213555015c6bc01624774e095bb748574499fadf9d6c626db1c1dc413b9fb50d0c874bd26986e5aa651f5c3e71d87f360de9efb7aba5ff
+  checksum: cf4cbd183d8c22107043ade6d3f86239cf6edf778239b19347f7206a129713828e8144c11cfe99d3329fcb9a6ab2e27e4713d96e2f71af6443caafa2f88586a2
   languageName: node
   linkType: hard
 
-"@angular/core@npm:14.1.0-next.4":
-  version: 14.1.0-next.4
-  resolution: "@angular/core@npm:14.1.0-next.4"
+"@angular/core@npm:14.1.0-rc.0":
+  version: 14.1.0-rc.0
+  resolution: "@angular/core@npm:14.1.0-rc.0"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
     rxjs: ^6.5.3 || ^7.4.0
     zone.js: ~0.11.4
-  checksum: 3a4782cacb6551353ee9a275666728222ee40ea85ed0792f92c0d51d58530a11437996fdc44491d2bdbeef2ed44a81dcf25893a24268028104d8e6e48ef86171
+  checksum: 421e4085f754d7a644950efc6e47b645a3fa9320ad277e4174b0c44385b3f4bbfa280b63336dabdf6083c9060a2a6b9ecca2356b5cef19cd4fef8235b473819a
   languageName: node
   linkType: hard
 
@@ -424,21 +424,21 @@ __metadata:
     "@actions/core": ^1.4.0
     "@actions/github": ^5.0.0
     "@angular-devkit/build-angular": 14.1.0-next.4
-    "@angular/animations": 14.1.0-next.4
+    "@angular/animations": 14.1.0-rc.0
     "@angular/bazel": "patch:@angular/bazel@npm:14.1.0-next.2#.yarn/patches/@angular-bazel-npm.patch"
     "@angular/benchpress": 0.3.0
     "@angular/cdk": 14.1.0-next.3
     "@angular/cli": 14.1.0-next.4
-    "@angular/common": 14.1.0-next.4
-    "@angular/compiler": 14.1.0-next.4
-    "@angular/compiler-cli": 14.1.0-next.4
-    "@angular/core": 14.1.0-next.4
+    "@angular/common": 14.1.0-rc.0
+    "@angular/compiler": 14.1.0-rc.0
+    "@angular/compiler-cli": 14.1.0-rc.0
+    "@angular/core": 14.1.0-rc.0
     "@angular/fire": ^7.1.0-rc
-    "@angular/forms": 14.1.0-next.4
+    "@angular/forms": 14.1.0-rc.0
     "@angular/material": 14.1.0-next.3
-    "@angular/platform-browser": 14.1.0-next.4
-    "@angular/platform-browser-dynamic": 14.1.0-next.4
-    "@angular/router": 14.1.0-next.4
+    "@angular/platform-browser": 14.1.0-rc.0
+    "@angular/platform-browser-dynamic": 14.1.0-rc.0
+    "@angular/router": 14.1.0-rc.0
     "@babel/core": ^7.16.0
     "@bazel/bazelisk": ^1.11.0
     "@bazel/buildifier": 5.1.0
@@ -585,17 +585,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/forms@npm:14.1.0-next.4":
-  version: 14.1.0-next.4
-  resolution: "@angular/forms@npm:14.1.0-next.4"
+"@angular/forms@npm:14.1.0-rc.0":
+  version: 14.1.0-rc.0
+  resolution: "@angular/forms@npm:14.1.0-rc.0"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/common": 14.1.0-next.4
-    "@angular/core": 14.1.0-next.4
-    "@angular/platform-browser": 14.1.0-next.4
+    "@angular/common": 14.1.0-rc.0
+    "@angular/core": 14.1.0-rc.0
+    "@angular/platform-browser": 14.1.0-rc.0
     rxjs: ^6.5.3 || ^7.4.0
-  checksum: ad5c71b19f60ab9da2370cf12ce270961bd9f25bc62eab36106a5daf667e6c52d87f52cd0539fbb1533696963ab2169ee4edd1b98421a0050c5ebe20296a0328
+  checksum: 2e63198a7b28e3d7634776f99a417fd1adced8f77c9d860c7edf19b236f9650b06b1caf63c08f536498b43e1a9c6bb3d77eed58300eefd63ae2b0a08dce9d8fe
   languageName: node
   linkType: hard
 
@@ -616,47 +616,47 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/platform-browser-dynamic@npm:14.1.0-next.4":
-  version: 14.1.0-next.4
-  resolution: "@angular/platform-browser-dynamic@npm:14.1.0-next.4"
+"@angular/platform-browser-dynamic@npm:14.1.0-rc.0":
+  version: 14.1.0-rc.0
+  resolution: "@angular/platform-browser-dynamic@npm:14.1.0-rc.0"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/common": 14.1.0-next.4
-    "@angular/compiler": 14.1.0-next.4
-    "@angular/core": 14.1.0-next.4
-    "@angular/platform-browser": 14.1.0-next.4
-  checksum: 1ff929835f4fcc81de1cc54c0acad65abb75afebdea5677bbc8cb8f20ed3ff151bc25f10c36fd7220e10b3d595353b741b8ecb900585d77639fce6c51d4c015f
+    "@angular/common": 14.1.0-rc.0
+    "@angular/compiler": 14.1.0-rc.0
+    "@angular/core": 14.1.0-rc.0
+    "@angular/platform-browser": 14.1.0-rc.0
+  checksum: dede2552853e6973b51376ab185d414b221c8e8c4756e55ebfd121d5ac43bc18fc6647665b277552082dafaa9c9c32fe9de686af77d02368826b60e25995fceb
   languageName: node
   linkType: hard
 
-"@angular/platform-browser@npm:14.1.0-next.4":
-  version: 14.1.0-next.4
-  resolution: "@angular/platform-browser@npm:14.1.0-next.4"
+"@angular/platform-browser@npm:14.1.0-rc.0":
+  version: 14.1.0-rc.0
+  resolution: "@angular/platform-browser@npm:14.1.0-rc.0"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/animations": 14.1.0-next.4
-    "@angular/common": 14.1.0-next.4
-    "@angular/core": 14.1.0-next.4
+    "@angular/animations": 14.1.0-rc.0
+    "@angular/common": 14.1.0-rc.0
+    "@angular/core": 14.1.0-rc.0
   peerDependenciesMeta:
     "@angular/animations":
       optional: true
-  checksum: 046b5cfc9d2bed91f05784858c7c65d69a3f2e3895cf7fe5b904bc72ef41ceeeda65b1e7643e654e91fe7477010bcab304d7ed81e05f10ebfb9b7dfcca998e55
+  checksum: c9166b466ec30829730e7cd9f375c2507fbd07ae1306bbb08716bd69c7e6707a2b2172f1c4a863b51d8dc7843ec3910fb47c9ce775b7bc6f627738bf8123cab1
   languageName: node
   linkType: hard
 
-"@angular/router@npm:14.1.0-next.4":
-  version: 14.1.0-next.4
-  resolution: "@angular/router@npm:14.1.0-next.4"
+"@angular/router@npm:14.1.0-rc.0":
+  version: 14.1.0-rc.0
+  resolution: "@angular/router@npm:14.1.0-rc.0"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/common": 14.1.0-next.4
-    "@angular/core": 14.1.0-next.4
-    "@angular/platform-browser": 14.1.0-next.4
+    "@angular/common": 14.1.0-rc.0
+    "@angular/core": 14.1.0-rc.0
+    "@angular/platform-browser": 14.1.0-rc.0
     rxjs: ^6.5.3 || ^7.4.0
-  checksum: 3b9f78699d22fadaa050103888cebf1ebe44169bcd0e84c9cae7dc62fea57efce92c4d4f57c9de239dc9aabb5a5a77beb36617c2456e23eec9dd2e2b217e63c2
+  checksum: 9121f16ee4f9dcd7f4f8ee2437605232f7091e5880e62324b0d0fc3628ca4827e55c8762290486004dcfb74205af30d4cd47867f49f5f2221303c3570450d453
   languageName: node
   linkType: hard
 
