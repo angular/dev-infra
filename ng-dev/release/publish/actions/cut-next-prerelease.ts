@@ -43,7 +43,7 @@ export class CutNextPrereleaseAction extends ReleaseAction {
         branchName,
       );
 
-    await this.waitForPullRequestToBeMerged(pullRequest);
+    await this.promptAndWaitForPullRequestMerged(pullRequest);
     await this.publish(builtPackagesWithInfo, releaseNotes, beforeStagingSha, branchName, 'next');
 
     // If the pre-release has been cut from a branch that is not corresponding

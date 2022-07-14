@@ -334,7 +334,8 @@ describe('common release action logic', () => {
       repo
         .expectFindForkRequest(fork)
         .expectPullRequestToBeCreated('master', fork, forkBranchName, 200)
-        .expectPullRequestWait(200);
+        .expectPullRequestMergeCheck(200, false)
+        .expectPullRequestMerge(200);
 
       // Simulate that the fork branch name is available.
       fork.expectBranchRequest(forkBranchName, null);
@@ -355,6 +356,25 @@ describe('common release action logic', () => {
       `);
     });
 
+    it('should be possible to complete when pull request is merged manually', async () => {
+      const {repo, fork, instance, gitClient} = setupReleaseActionForTesting(
+        DelegateTestAction,
+        baseReleaseTrains,
+      );
+
+      repo
+        .expectFindForkRequest(fork)
+        .expectPullRequestToBeCreated('master', fork, forkBranchName, 200)
+        .expectPullRequestMergeCheck(200, true);
+
+      // Simulate that the fork branch name is available.
+      fork.expectBranchRequest(forkBranchName, null);
+
+      await instance.testCherryPickWithPullRequest(version, branchName);
+
+      expect(gitClient.pushed.length).toBe(1);
+    });
+
     it('should push changes to a fork for creating a pull request', async () => {
       const {repo, fork, instance, gitClient} = setupReleaseActionForTesting(
         DelegateTestAction,
@@ -366,7 +386,8 @@ describe('common release action logic', () => {
       repo
         .expectFindForkRequest(fork)
         .expectPullRequestToBeCreated('master', fork, forkBranchName, 200)
-        .expectPullRequestWait(200);
+        .expectPullRequestMergeCheck(200, false)
+        .expectPullRequestMerge(200);
 
       // Simulate that the fork branch name is available.
       fork.expectBranchRequest(forkBranchName, null);

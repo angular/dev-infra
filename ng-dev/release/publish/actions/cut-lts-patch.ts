@@ -42,7 +42,7 @@ export class CutLongTermSupportPatchAction extends ReleaseAction {
         ltsBranch.name,
       );
 
-    await this.waitForPullRequestToBeMerged(pullRequest);
+    await this.promptAndWaitForPullRequestMerged(pullRequest);
     await this.publish(
       builtPackagesWithInfo,
       releaseNotes,

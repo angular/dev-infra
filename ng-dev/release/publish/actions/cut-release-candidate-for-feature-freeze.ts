@@ -35,7 +35,7 @@ export class CutReleaseCandidateForFeatureFreezeAction extends ReleaseAction {
         branchName,
       );
 
-    await this.waitForPullRequestToBeMerged(pullRequest);
+    await this.promptAndWaitForPullRequestMerged(pullRequest);
     await this.publish(builtPackagesWithInfo, releaseNotes, beforeStagingSha, branchName, 'next');
     await this.cherryPickChangelogIntoNextBranch(releaseNotes, branchName);
   }

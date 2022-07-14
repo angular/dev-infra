@@ -8,29 +8,27 @@
 
 import {GitClient} from '../../utils/git/git-client.js';
 
-/** Thirty seconds in milliseconds. */
-const THIRTY_SECONDS_IN_MS = 30000;
-
 /** State of a pull request in Github. */
-export type PullRequestState = 'merged' | 'closed' | 'open';
+export type PullRequestState = 'merged' | 'unknown';
 
-/** Gets whether a given pull request has been merged. */
-export async function getPullRequestState(api: GitClient, id: number): Promise<PullRequestState> {
+/**
+ * Gets whether a given pull request has been merged.
+ *
+ * Note: There are situations where GitHub still processes the merging or
+ * closing action and temporarily this function would return `false`. Make
+ * sure to account for this when logic relies on this method.
+ *
+ * More details here: https://github.com/angular/angular/pull/40181.
+ *
+ * @throws {GithubApiRequestError} May throw Github API request errors if e.g. a pull request
+ *   cannot be found, or the repository is not existing/visible.
+ */
+export async function isPullRequestMerged(api: GitClient, id: number): Promise<boolean> {
   const {data} = await api.github.pulls.get({...api.remoteParams, pull_number: id});
   if (data.merged) {
-    return 'merged';
+    return true;
   }
-  // Check if the PR was closed more than 30 seconds ago, this extra time gives Github time to
-  // update the closed pull request to be associated with the closing commit.
-  // Note: a Date constructed with `null` creates an object at 0 time, which will never be greater
-  // than the current date time.
-  if (
-    data.closed_at !== null &&
-    new Date(data.closed_at).getTime() < Date.now() - THIRTY_SECONDS_IN_MS
-  ) {
-    return (await isPullRequestClosedWithAssociatedCommit(api, id)) ? 'merged' : 'closed';
-  }
-  return 'open';
+  return await isPullRequestClosedWithAssociatedCommit(api, id);
 }
 
 /**

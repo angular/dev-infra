@@ -35,7 +35,8 @@ export async function expectGithubApiRequestsForStaging(
     .expectCommitStatusCheck('PRE_STAGING_SHA', 'success')
     .expectFindForkRequest(fork)
     .expectPullRequestToBeCreated(expectedBranch, fork, expectedStagingForkBranch, 200)
-    .expectPullRequestWait(200)
+    .expectPullRequestMergeCheck(200, false)
+    .expectPullRequestMerge(200)
     .expectBranchRequest(expectedBranch, 'STAGING_COMMIT_SHA')
     .expectCommitRequest(
       'STAGING_COMMIT_SHA',
@@ -57,7 +58,8 @@ export async function expectGithubApiRequestsForStaging(
 
     repo
       .expectPullRequestToBeCreated('master', fork, expectedCherryPickForkBranch, 300)
-      .expectPullRequestWait(300);
+      .expectPullRequestMergeCheck(300, false)
+      .expectPullRequestMerge(300);
 
     // In the fork, make the cherry-pick branch appear as non-existent, so that the
     // cherry-pick PR can be created properly without collisions.

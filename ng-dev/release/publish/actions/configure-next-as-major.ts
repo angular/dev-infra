@@ -45,7 +45,6 @@ export class ConfigureNextAsMajorAction extends ReleaseAction {
     );
 
     Log.info(green('  ✓   Next branch update pull request has been created.'));
-    Log.info(yellow(`      Please ask team members to review: ${pullRequest.url}.`));
   }
 
   static override async isActive(active: ActiveReleaseTrains) {
