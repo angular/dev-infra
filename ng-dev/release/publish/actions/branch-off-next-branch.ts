@@ -16,7 +16,7 @@ import {
   computeNewPrereleaseVersionForNext,
   getReleaseNotesCompareVersionForNext,
 } from '../../versioning/next-prerelease-version.js';
-import {ReleaseAction} from '../actions.js';
+import {PullRequest, ReleaseAction} from '../actions.js';
 import {
   getCommitMessageForExceptionalNextVersionBump,
   getReleaseNoteCherryPickCommitMessage,
@@ -74,7 +74,12 @@ export abstract class BranchOffNextBranchBaseAction extends ReleaseAction {
     // with bumping the version to the next minor too.
     await this.waitForPullRequestToBeMerged(pullRequest);
     await this.publish(builtPackagesWithInfo, releaseNotes, beforeStagingSha, newBranch, 'next');
-    await this._createNextBranchUpdatePullRequest(releaseNotes, newVersion);
+
+    const branchOffPullRequest = await this._createNextBranchUpdatePullRequest(
+      releaseNotes,
+      newVersion,
+    );
+    await this.waitForPullRequestToBeMerged(branchOffPullRequest);
   }
 
   /** Computes the new version for the release-train being branched-off. */
@@ -103,7 +108,7 @@ export abstract class BranchOffNextBranchBaseAction extends ReleaseAction {
   private async _createNextBranchUpdatePullRequest(
     releaseNotes: ReleaseNotes,
     newVersion: semver.SemVer,
-  ) {
+  ): Promise<PullRequest> {
     const {branchName: nextBranch, version} = this.active.next;
     // We increase the version for the next branch to the next minor. The team can decide
     // later if they want next to be a major through the `Configure Next as Major` release action.
@@ -138,5 +143,7 @@ export abstract class BranchOffNextBranchBaseAction extends ReleaseAction {
 
     Log.info(green(`  ✓   Pull request for updating the "${nextBranch}" branch has been created.`));
     Log.info(yellow(`      Please ask team members to review: ${nextUpdatePullRequest.url}.`));
+
+    return nextUpdatePullRequest;
   }
 }
