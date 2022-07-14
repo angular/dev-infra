@@ -4652,7 +4652,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: 32.111.2
+    renovate: 32.114.0
   languageName: unknown
   linkType: soft
 
@@ -5048,6 +5048,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prettier@npm:2.7.1":
+  version: 2.7.1
+  resolution: "prettier@npm:2.7.1"
+  bin:
+    prettier: bin-prettier.js
+  checksum: 55a4409182260866ab31284d929b3cb961e5fdb91fe0d2e099dac92eaecec890f36e524b4c19e6ceae839c99c6d7195817579cdffc8e2c80da0cb794463a748b
+  languageName: node
+  linkType: hard
+
 "pretty-bytes@npm:^5.1.0":
   version: 5.6.0
   resolution: "pretty-bytes@npm:5.6.0"
@@ -5313,9 +5322,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:32.111.2":
-  version: 32.111.2
-  resolution: "renovate@npm:32.111.2"
+"renovate@npm:32.114.0":
+  version: 32.114.0
+  resolution: "renovate@npm:32.114.0"
   dependencies:
     "@aws-sdk/client-ec2": 3.112.0
     "@aws-sdk/client-ecr": 3.112.0
@@ -5381,6 +5390,7 @@ __metadata:
     p-map: 4.0.0
     p-queue: 6.6.2
     parse-link-header: 2.0.0
+    prettier: 2.7.1
     re2: 1.17.7
     redis: 4.2.0
     remark: 13.0.0
@@ -5403,7 +5413,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: b5d5732643dd2203b7ffae0fd77b6c6bf110b4204c7295bbd55fb46b63e597a04bbdd96adb81657cc05517a8e51971a245e9a58c77b4426e6176063246b3d51e
+  checksum: 27704fba9ecfa1b5622b10eee1feab703af03a7dc995989349b1b90fc6cbf7280c42d747e77e503f752e62e5ea94a8337bddcbc7d07f3880dd9173e9728e1e02
   languageName: node
   linkType: hard
 
