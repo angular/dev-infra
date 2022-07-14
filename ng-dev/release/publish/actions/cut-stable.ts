@@ -44,7 +44,7 @@ export class CutStableAction extends ReleaseAction {
         branchName,
       );
 
-    await this.waitForPullRequestToBeMerged(pullRequest);
+    await this.promptAndWaitForPullRequestMerged(pullRequest);
 
     // If a new major version is published, we publish to the `next` NPM dist tag temporarily.
     // We do this because for major versions, we want all main Angular projects to have their

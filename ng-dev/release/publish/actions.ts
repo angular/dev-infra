@@ -37,9 +37,9 @@ import {
   getCommitMessageForRelease,
   getReleaseNoteCherryPickCommitMessage,
 } from './commit-message.js';
-import {githubReleaseBodyLimit, waitForPullRequestInterval} from './constants.js';
+import {githubReleaseBodyLimit} from './constants.js';
 import {ExternalCommands} from './external-commands.js';
-import {getPullRequestState} from './pull-request-state.js';
+import {promptToInitiatePullRequestMerge} from './prompt-merge.js';
 
 /** Interface describing a Github repository. */
 export interface GithubRepo {
@@ -333,36 +333,6 @@ export abstract class ReleaseAction {
   }
 
   /**
-   * Waits for the given pull request to be merged. Default interval for checking the Github
-   * API is 10 seconds (to not exceed any rate limits). If the pull request is closed without
-   * merge, the script will abort gracefully (considering a manual user abort).
-   */
-  protected async waitForPullRequestToBeMerged(
-    {id}: PullRequest,
-    interval = waitForPullRequestInterval,
-  ): Promise<void> {
-    return new Promise((resolve, reject) => {
-      Log.debug(`Waiting for pull request #${id} to be merged.`);
-
-      const spinner = new Spinner(`Waiting for pull request #${id} to be merged.`);
-      const intervalId = setInterval(async () => {
-        const prState = await getPullRequestState(this.git, id);
-        if (prState === 'merged') {
-          spinner.complete();
-          Log.info(green(`  ✓   Pull request #${id} has been merged.`));
-          clearInterval(intervalId);
-          resolve();
-        } else if (prState === 'closed') {
-          spinner.complete();
-          Log.warn(`  ✘   Pull request #${id} has been closed.`);
-          clearInterval(intervalId);
-          reject(new UserAbortedReleaseActionError());
-        }
-      }, interval);
-    });
-  }
-
-  /**
    * Prepend releases notes for a version published in a given branch to the changelog in
    * the current Git `HEAD`. This is useful for cherry-picking the changelog.
    * @returns A boolean indicating whether the release notes have been prepended.
@@ -495,7 +465,6 @@ export abstract class ReleaseAction {
     );
 
     Log.info(green('  ✓   Release staging pull request has been created.'));
-    Log.info(yellow(`      Please ask team members to review: ${pullRequest.url}.`));
 
     return {releaseNotes, pullRequest, builtPackagesWithInfo};
   }
@@ -576,12 +545,15 @@ export abstract class ReleaseAction {
           'has been created.',
       ),
     );
-    Log.info(yellow(`      Please ask team members to review: ${pullRequest.url}.`));
 
-    // Wait for the Pull Request to be merged.
-    await this.waitForPullRequestToBeMerged(pullRequest);
+    await this.promptAndWaitForPullRequestMerged(pullRequest);
 
     return true;
+  }
+
+  /** Prompts the user for merging the pull request, and waits for it to be merged. */
+  protected async promptAndWaitForPullRequestMerged(pullRequest: PullRequest): Promise<void> {
+    await promptToInitiatePullRequestMerge(this.git, pullRequest);
   }
 
   /**

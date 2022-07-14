@@ -25,7 +25,7 @@ import {
   ReleaseConfig,
 } from '../../../config/index.js';
 import {NpmCommand} from '../../../versioning/npm-command.js';
-import {PullRequest, ReleaseAction} from '../../actions.js';
+import {ReleaseAction} from '../../actions.js';
 import {DirectoryHash} from '../../directory-hash.js';
 import {ExternalCommands} from '../../external-commands.js';
 
@@ -85,7 +85,8 @@ export function setupMocksForReleaseAction<T extends boolean>(
   setConfig({github: githubConfig, release: releaseConfig});
 
   // Fake confirm any prompts. We do not want to make any changelog edits and
-  // just proceed with the release action.
+  // just proceed with the release action. Also we immediately want to confirm
+  // when we are prompted whether the pull request should be merged.
   spyOn(Prompt, 'confirm').and.resolveTo(true);
 
   const builtPackagesWithInfo: BuiltPackageWithInfo[] = testReleasePackages.map((pkg) => ({
@@ -114,16 +115,6 @@ export function setupMocksForReleaseAction<T extends boolean>(
 
     spyOn(DirectoryHash, 'compute').and.resolveTo(fakePackageContentHash);
   }
-
-  // Override the default pull request wait interval to a number of milliseconds that can be
-  // awaited in Jasmine tests. The default interval of 10sec is too large and causes a timeout.
-  const originalWaitFn = ReleaseAction.prototype['waitForPullRequestToBeMerged'];
-  spyOn(ReleaseAction.prototype, 'waitForPullRequestToBeMerged' as any).and.callFake(function (
-    this: ReleaseAction,
-    pullRequest: PullRequest,
-  ) {
-    return originalWaitFn.call(this, pullRequest, /* interval */ 10);
-  });
 
   // Create an empty changelog and a `package.json` file so that file system
   // interactions with the project directory do not cause exceptions.

@@ -40,7 +40,8 @@ async function expectGithubApiRequestsForBranchOff(
     .expectCommitStatusCheck('PRE_STAGING_SHA', 'success')
     .expectFindForkRequest(fork)
     .expectPullRequestToBeCreated(expectedNewBranch, fork, expectedStagingForkBranch, 200)
-    .expectPullRequestWait(200)
+    .expectPullRequestMergeCheck(200, false)
+    .expectPullRequestMerge(200)
     .expectBranchRequest(expectedNewBranch, 'STAGING_COMMIT_SHA')
     .expectCommitRequest(
       'STAGING_COMMIT_SHA',
@@ -53,7 +54,8 @@ async function expectGithubApiRequestsForBranchOff(
     .expectTagToBeCreated(expectedTagName, 'STAGING_COMMIT_SHA')
     .expectReleaseToBeCreated(`v${expectedVersion}`, expectedTagName)
     .expectPullRequestToBeCreated('master', fork, expectedNextUpdateBranch, 100)
-    .expectPullRequestWait(100);
+    .expectPullRequestMergeCheck(100, false)
+    .expectPullRequestMerge(100);
 
   // In the fork, we make the following branches appear as non-existent,
   // so that the PRs can be created properly without collisions.

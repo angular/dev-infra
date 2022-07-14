@@ -69,17 +69,17 @@ export abstract class BranchOffNextBranchBaseAction extends ReleaseAction {
         newBranch,
       );
 
-    // Wait for the staging PR to be merged. Then build and publish the feature-freeze next
-    // pre-release. Finally, cherry-pick the release notes into the next branch in combination
-    // with bumping the version to the next minor too.
-    await this.waitForPullRequestToBeMerged(pullRequest);
+    // Wait for the staging PR to be merged. Then publish the feature-freeze next pre-release. Finally,
+    // cherry-pick the release notes into the next branch in combination with bumping the version to
+    // the next minor too.
+    await this.promptAndWaitForPullRequestMerged(pullRequest);
     await this.publish(builtPackagesWithInfo, releaseNotes, beforeStagingSha, newBranch, 'next');
 
     const branchOffPullRequest = await this._createNextBranchUpdatePullRequest(
       releaseNotes,
       newVersion,
     );
-    await this.waitForPullRequestToBeMerged(branchOffPullRequest);
+    await this.promptAndWaitForPullRequestMerged(branchOffPullRequest);
   }
 
   /** Computes the new version for the release-train being branched-off. */
@@ -142,7 +142,6 @@ export abstract class BranchOffNextBranchBaseAction extends ReleaseAction {
     );
 
     Log.info(green(`  ✓   Pull request for updating the "${nextBranch}" branch has been created.`));
-    Log.info(yellow(`      Please ask team members to review: ${nextUpdatePullRequest.url}.`));
 
     return nextUpdatePullRequest;
   }

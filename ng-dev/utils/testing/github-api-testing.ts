@@ -79,10 +79,15 @@ export class GithubTestingRepo {
     return this;
   }
 
-  expectPullRequestWait(prNumber: number): this {
-    // The pull request state could be queried multiple times, so we persist
-    // this mock request. By default, nock only mocks requests once.
-    nock(this.repoApiUrl).get(`/pulls/${prNumber}`).reply(200, {merged: true}).persist();
+  expectPullRequestMergeCheck(prNumber: number, merged: boolean): this {
+    nock(this.repoApiUrl).get(`/pulls/${prNumber}`).reply(200, {merged});
+    nock(this.repoApiUrl).get(`/issues/${prNumber}/events`).reply(200, []);
+
+    return this;
+  }
+
+  expectPullRequestMerge(prNumber: number): this {
+    nock(this.repoApiUrl).put(`/pulls/${prNumber}/merge`).reply(200, {merged: true});
     return this;
   }
 
