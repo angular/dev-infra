@@ -1399,6 +1399,56 @@ var require_summary = __commonJS({
 });
 
 // 
+var require_path_utils = __commonJS({
+  ""(exports) {
+    "use strict";
+    var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
+      if (k2 === void 0)
+        k2 = k;
+      Object.defineProperty(o, k2, { enumerable: true, get: function() {
+        return m[k];
+      } });
+    } : function(o, m, k, k2) {
+      if (k2 === void 0)
+        k2 = k;
+      o[k2] = m[k];
+    });
+    var __setModuleDefault = exports && exports.__setModuleDefault || (Object.create ? function(o, v) {
+      Object.defineProperty(o, "default", { enumerable: true, value: v });
+    } : function(o, v) {
+      o["default"] = v;
+    });
+    var __importStar = exports && exports.__importStar || function(mod) {
+      if (mod && mod.__esModule)
+        return mod;
+      var result = {};
+      if (mod != null) {
+        for (var k in mod)
+          if (k !== "default" && Object.hasOwnProperty.call(mod, k))
+            __createBinding(result, mod, k);
+      }
+      __setModuleDefault(result, mod);
+      return result;
+    };
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.toPlatformPath = exports.toWin32Path = exports.toPosixPath = void 0;
+    var path = __importStar(__require("path"));
+    function toPosixPath(pth) {
+      return pth.replace(/[\\]/g, "/");
+    }
+    exports.toPosixPath = toPosixPath;
+    function toWin32Path(pth) {
+      return pth.replace(/[/]/g, "\\");
+    }
+    exports.toWin32Path = toWin32Path;
+    function toPlatformPath(pth) {
+      return pth.replace(/[/\\]/g, path.sep);
+    }
+    exports.toPlatformPath = toPlatformPath;
+  }
+});
+
+// 
 var require_core = __commonJS({
   ""(exports) {
     "use strict";
@@ -1605,6 +1655,16 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
     var summary_2 = require_summary();
     Object.defineProperty(exports, "markdownSummary", { enumerable: true, get: function() {
       return summary_2.markdownSummary;
+    } });
+    var path_utils_1 = require_path_utils();
+    Object.defineProperty(exports, "toPosixPath", { enumerable: true, get: function() {
+      return path_utils_1.toPosixPath;
+    } });
+    Object.defineProperty(exports, "toWin32Path", { enumerable: true, get: function() {
+      return path_utils_1.toWin32Path;
+    } });
+    Object.defineProperty(exports, "toPlatformPath", { enumerable: true, get: function() {
+      return path_utils_1.toPlatformPath;
     } });
   }
 });
@@ -9306,6 +9366,8 @@ var require_dist_node9 = __commonJS({
     }
     var Endpoints = {
       actions: {
+        addCustomLabelsToSelfHostedRunnerForOrg: ["POST /orgs/{org}/actions/runners/{runner_id}/labels"],
+        addCustomLabelsToSelfHostedRunnerForRepo: ["POST /repos/{owner}/{repo}/actions/runners/{runner_id}/labels"],
         addSelectedRepoToOrgSecret: ["PUT /orgs/{org}/actions/secrets/{secret_name}/repositories/{repository_id}"],
         approveWorkflowRun: ["POST /repos/{owner}/{repo}/actions/runs/{run_id}/approve"],
         cancelWorkflowRun: ["POST /repos/{owner}/{repo}/actions/runs/{run_id}/cancel"],
@@ -9317,6 +9379,8 @@ var require_dist_node9 = __commonJS({
         createRemoveTokenForOrg: ["POST /orgs/{org}/actions/runners/remove-token"],
         createRemoveTokenForRepo: ["POST /repos/{owner}/{repo}/actions/runners/remove-token"],
         createWorkflowDispatch: ["POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches"],
+        deleteActionsCacheById: ["DELETE /repos/{owner}/{repo}/actions/caches/{cache_id}"],
+        deleteActionsCacheByKey: ["DELETE /repos/{owner}/{repo}/actions/caches{?key,ref}"],
         deleteArtifact: ["DELETE /repos/{owner}/{repo}/actions/artifacts/{artifact_id}"],
         deleteEnvironmentSecret: ["DELETE /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}"],
         deleteOrgSecret: ["DELETE /orgs/{org}/actions/secrets/{secret_name}"],
@@ -9333,11 +9397,19 @@ var require_dist_node9 = __commonJS({
         downloadWorkflowRunLogs: ["GET /repos/{owner}/{repo}/actions/runs/{run_id}/logs"],
         enableSelectedRepositoryGithubActionsOrganization: ["PUT /orgs/{org}/actions/permissions/repositories/{repository_id}"],
         enableWorkflow: ["PUT /repos/{owner}/{repo}/actions/workflows/{workflow_id}/enable"],
+        getActionsCacheList: ["GET /repos/{owner}/{repo}/actions/caches"],
+        getActionsCacheUsage: ["GET /repos/{owner}/{repo}/actions/cache/usage"],
+        getActionsCacheUsageByRepoForOrg: ["GET /orgs/{org}/actions/cache/usage-by-repository"],
+        getActionsCacheUsageForEnterprise: ["GET /enterprises/{enterprise}/actions/cache/usage"],
+        getActionsCacheUsageForOrg: ["GET /orgs/{org}/actions/cache/usage"],
         getAllowedActionsOrganization: ["GET /orgs/{org}/actions/permissions/selected-actions"],
         getAllowedActionsRepository: ["GET /repos/{owner}/{repo}/actions/permissions/selected-actions"],
         getArtifact: ["GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id}"],
         getEnvironmentPublicKey: ["GET /repositories/{repository_id}/environments/{environment_name}/secrets/public-key"],
         getEnvironmentSecret: ["GET /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}"],
+        getGithubActionsDefaultWorkflowPermissionsEnterprise: ["GET /enterprises/{enterprise}/actions/permissions/workflow"],
+        getGithubActionsDefaultWorkflowPermissionsOrganization: ["GET /orgs/{org}/actions/permissions/workflow"],
+        getGithubActionsDefaultWorkflowPermissionsRepository: ["GET /repos/{owner}/{repo}/actions/permissions/workflow"],
         getGithubActionsPermissionsOrganization: ["GET /orgs/{org}/actions/permissions"],
         getGithubActionsPermissionsRepository: ["GET /repos/{owner}/{repo}/actions/permissions"],
         getJobForWorkflowRun: ["GET /repos/{owner}/{repo}/actions/jobs/{job_id}"],
@@ -9353,6 +9425,7 @@ var require_dist_node9 = __commonJS({
         getSelfHostedRunnerForOrg: ["GET /orgs/{org}/actions/runners/{runner_id}"],
         getSelfHostedRunnerForRepo: ["GET /repos/{owner}/{repo}/actions/runners/{runner_id}"],
         getWorkflow: ["GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}"],
+        getWorkflowAccessToRepository: ["GET /repos/{owner}/{repo}/actions/permissions/access"],
         getWorkflowRun: ["GET /repos/{owner}/{repo}/actions/runs/{run_id}"],
         getWorkflowRunAttempt: ["GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}"],
         getWorkflowRunUsage: ["GET /repos/{owner}/{repo}/actions/runs/{run_id}/timing"],
@@ -9361,6 +9434,8 @@ var require_dist_node9 = __commonJS({
         listEnvironmentSecrets: ["GET /repositories/{repository_id}/environments/{environment_name}/secrets"],
         listJobsForWorkflowRun: ["GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs"],
         listJobsForWorkflowRunAttempt: ["GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/jobs"],
+        listLabelsForSelfHostedRunnerForOrg: ["GET /orgs/{org}/actions/runners/{runner_id}/labels"],
+        listLabelsForSelfHostedRunnerForRepo: ["GET /repos/{owner}/{repo}/actions/runners/{runner_id}/labels"],
         listOrgSecrets: ["GET /orgs/{org}/actions/secrets"],
         listRepoSecrets: ["GET /repos/{owner}/{repo}/actions/secrets"],
         listRepoWorkflows: ["GET /repos/{owner}/{repo}/actions/workflows"],
@@ -9373,14 +9448,27 @@ var require_dist_node9 = __commonJS({
         listWorkflowRunArtifacts: ["GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts"],
         listWorkflowRuns: ["GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs"],
         listWorkflowRunsForRepo: ["GET /repos/{owner}/{repo}/actions/runs"],
+        reRunJobForWorkflowRun: ["POST /repos/{owner}/{repo}/actions/jobs/{job_id}/rerun"],
+        reRunWorkflow: ["POST /repos/{owner}/{repo}/actions/runs/{run_id}/rerun"],
+        reRunWorkflowFailedJobs: ["POST /repos/{owner}/{repo}/actions/runs/{run_id}/rerun-failed-jobs"],
+        removeAllCustomLabelsFromSelfHostedRunnerForOrg: ["DELETE /orgs/{org}/actions/runners/{runner_id}/labels"],
+        removeAllCustomLabelsFromSelfHostedRunnerForRepo: ["DELETE /repos/{owner}/{repo}/actions/runners/{runner_id}/labels"],
+        removeCustomLabelFromSelfHostedRunnerForOrg: ["DELETE /orgs/{org}/actions/runners/{runner_id}/labels/{name}"],
+        removeCustomLabelFromSelfHostedRunnerForRepo: ["DELETE /repos/{owner}/{repo}/actions/runners/{runner_id}/labels/{name}"],
         removeSelectedRepoFromOrgSecret: ["DELETE /orgs/{org}/actions/secrets/{secret_name}/repositories/{repository_id}"],
         reviewPendingDeploymentsForRun: ["POST /repos/{owner}/{repo}/actions/runs/{run_id}/pending_deployments"],
         setAllowedActionsOrganization: ["PUT /orgs/{org}/actions/permissions/selected-actions"],
         setAllowedActionsRepository: ["PUT /repos/{owner}/{repo}/actions/permissions/selected-actions"],
+        setCustomLabelsForSelfHostedRunnerForOrg: ["PUT /orgs/{org}/actions/runners/{runner_id}/labels"],
+        setCustomLabelsForSelfHostedRunnerForRepo: ["PUT /repos/{owner}/{repo}/actions/runners/{runner_id}/labels"],
+        setGithubActionsDefaultWorkflowPermissionsEnterprise: ["PUT /enterprises/{enterprise}/actions/permissions/workflow"],
+        setGithubActionsDefaultWorkflowPermissionsOrganization: ["PUT /orgs/{org}/actions/permissions/workflow"],
+        setGithubActionsDefaultWorkflowPermissionsRepository: ["PUT /repos/{owner}/{repo}/actions/permissions/workflow"],
         setGithubActionsPermissionsOrganization: ["PUT /orgs/{org}/actions/permissions"],
         setGithubActionsPermissionsRepository: ["PUT /repos/{owner}/{repo}/actions/permissions"],
         setSelectedReposForOrgSecret: ["PUT /orgs/{org}/actions/secrets/{secret_name}/repositories"],
-        setSelectedRepositoriesEnabledGithubActionsOrganization: ["PUT /orgs/{org}/actions/permissions/repositories"]
+        setSelectedRepositoriesEnabledGithubActionsOrganization: ["PUT /orgs/{org}/actions/permissions/repositories"],
+        setWorkflowAccessToRepository: ["PUT /repos/{owner}/{repo}/actions/permissions/access"]
       },
       activity: {
         checkRepoIsStarredByAuthenticatedUser: ["GET /user/starred/{owner}/{repo}"],
@@ -9421,16 +9509,6 @@ var require_dist_node9 = __commonJS({
         }],
         addRepoToInstallationForAuthenticatedUser: ["PUT /user/installations/{installation_id}/repositories/{repository_id}"],
         checkToken: ["POST /applications/{client_id}/token"],
-        createContentAttachment: ["POST /content_references/{content_reference_id}/attachments", {
-          mediaType: {
-            previews: ["corsair"]
-          }
-        }],
-        createContentAttachmentForRepo: ["POST /repos/{owner}/{repo}/content_references/{content_reference_id}/attachments", {
-          mediaType: {
-            previews: ["corsair"]
-          }
-        }],
         createFromManifest: ["POST /app-manifests/{code}/conversions"],
         createInstallationAccessToken: ["POST /app/installations/{installation_id}/access_tokens"],
         deleteAuthorization: ["DELETE /applications/{client_id}/grant"],
@@ -9472,6 +9550,8 @@ var require_dist_node9 = __commonJS({
       billing: {
         getGithubActionsBillingOrg: ["GET /orgs/{org}/settings/billing/actions"],
         getGithubActionsBillingUser: ["GET /users/{username}/settings/billing/actions"],
+        getGithubAdvancedSecurityBillingGhe: ["GET /enterprises/{enterprise}/settings/billing/advanced-security"],
+        getGithubAdvancedSecurityBillingOrg: ["GET /orgs/{org}/settings/billing/advanced-security"],
         getGithubPackagesBillingOrg: ["GET /orgs/{org}/settings/billing/packages"],
         getGithubPackagesBillingUser: ["GET /users/{username}/settings/billing/packages"],
         getSharedStorageBillingOrg: ["GET /orgs/{org}/settings/billing/shared-storage"],
@@ -9501,6 +9581,7 @@ var require_dist_node9 = __commonJS({
         getAnalysis: ["GET /repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}"],
         getSarif: ["GET /repos/{owner}/{repo}/code-scanning/sarifs/{sarif_id}"],
         listAlertInstances: ["GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances"],
+        listAlertsForOrg: ["GET /orgs/{org}/code-scanning/alerts"],
         listAlertsForRepo: ["GET /repos/{owner}/{repo}/code-scanning/alerts"],
         listAlertsInstances: ["GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances", {}, {
           renamed: ["codeScanning", "listAlertInstances"]
@@ -9513,16 +9594,80 @@ var require_dist_node9 = __commonJS({
         getAllCodesOfConduct: ["GET /codes_of_conduct"],
         getConductCode: ["GET /codes_of_conduct/{key}"]
       },
+      codespaces: {
+        addRepositoryForSecretForAuthenticatedUser: ["PUT /user/codespaces/secrets/{secret_name}/repositories/{repository_id}"],
+        codespaceMachinesForAuthenticatedUser: ["GET /user/codespaces/{codespace_name}/machines"],
+        createForAuthenticatedUser: ["POST /user/codespaces"],
+        createOrUpdateRepoSecret: ["PUT /repos/{owner}/{repo}/codespaces/secrets/{secret_name}"],
+        createOrUpdateSecretForAuthenticatedUser: ["PUT /user/codespaces/secrets/{secret_name}"],
+        createWithPrForAuthenticatedUser: ["POST /repos/{owner}/{repo}/pulls/{pull_number}/codespaces"],
+        createWithRepoForAuthenticatedUser: ["POST /repos/{owner}/{repo}/codespaces"],
+        deleteForAuthenticatedUser: ["DELETE /user/codespaces/{codespace_name}"],
+        deleteFromOrganization: ["DELETE /orgs/{org}/members/{username}/codespaces/{codespace_name}"],
+        deleteRepoSecret: ["DELETE /repos/{owner}/{repo}/codespaces/secrets/{secret_name}"],
+        deleteSecretForAuthenticatedUser: ["DELETE /user/codespaces/secrets/{secret_name}"],
+        exportForAuthenticatedUser: ["POST /user/codespaces/{codespace_name}/exports"],
+        getExportDetailsForAuthenticatedUser: ["GET /user/codespaces/{codespace_name}/exports/{export_id}"],
+        getForAuthenticatedUser: ["GET /user/codespaces/{codespace_name}"],
+        getPublicKeyForAuthenticatedUser: ["GET /user/codespaces/secrets/public-key"],
+        getRepoPublicKey: ["GET /repos/{owner}/{repo}/codespaces/secrets/public-key"],
+        getRepoSecret: ["GET /repos/{owner}/{repo}/codespaces/secrets/{secret_name}"],
+        getSecretForAuthenticatedUser: ["GET /user/codespaces/secrets/{secret_name}"],
+        listDevcontainersInRepositoryForAuthenticatedUser: ["GET /repos/{owner}/{repo}/codespaces/devcontainers"],
+        listForAuthenticatedUser: ["GET /user/codespaces"],
+        listInOrganization: ["GET /orgs/{org}/codespaces", {}, {
+          renamedParameters: {
+            org_id: "org"
+          }
+        }],
+        listInRepositoryForAuthenticatedUser: ["GET /repos/{owner}/{repo}/codespaces"],
+        listRepoSecrets: ["GET /repos/{owner}/{repo}/codespaces/secrets"],
+        listRepositoriesForSecretForAuthenticatedUser: ["GET /user/codespaces/secrets/{secret_name}/repositories"],
+        listSecretsForAuthenticatedUser: ["GET /user/codespaces/secrets"],
+        removeRepositoryForSecretForAuthenticatedUser: ["DELETE /user/codespaces/secrets/{secret_name}/repositories/{repository_id}"],
+        repoMachinesForAuthenticatedUser: ["GET /repos/{owner}/{repo}/codespaces/machines"],
+        setRepositoriesForSecretForAuthenticatedUser: ["PUT /user/codespaces/secrets/{secret_name}/repositories"],
+        startForAuthenticatedUser: ["POST /user/codespaces/{codespace_name}/start"],
+        stopForAuthenticatedUser: ["POST /user/codespaces/{codespace_name}/stop"],
+        stopInOrganization: ["POST /orgs/{org}/members/{username}/codespaces/{codespace_name}/stop"],
+        updateForAuthenticatedUser: ["PATCH /user/codespaces/{codespace_name}"]
+      },
+      dependabot: {
+        addSelectedRepoToOrgSecret: ["PUT /orgs/{org}/dependabot/secrets/{secret_name}/repositories/{repository_id}"],
+        createOrUpdateOrgSecret: ["PUT /orgs/{org}/dependabot/secrets/{secret_name}"],
+        createOrUpdateRepoSecret: ["PUT /repos/{owner}/{repo}/dependabot/secrets/{secret_name}"],
+        deleteOrgSecret: ["DELETE /orgs/{org}/dependabot/secrets/{secret_name}"],
+        deleteRepoSecret: ["DELETE /repos/{owner}/{repo}/dependabot/secrets/{secret_name}"],
+        getOrgPublicKey: ["GET /orgs/{org}/dependabot/secrets/public-key"],
+        getOrgSecret: ["GET /orgs/{org}/dependabot/secrets/{secret_name}"],
+        getRepoPublicKey: ["GET /repos/{owner}/{repo}/dependabot/secrets/public-key"],
+        getRepoSecret: ["GET /repos/{owner}/{repo}/dependabot/secrets/{secret_name}"],
+        listOrgSecrets: ["GET /orgs/{org}/dependabot/secrets"],
+        listRepoSecrets: ["GET /repos/{owner}/{repo}/dependabot/secrets"],
+        listSelectedReposForOrgSecret: ["GET /orgs/{org}/dependabot/secrets/{secret_name}/repositories"],
+        removeSelectedRepoFromOrgSecret: ["DELETE /orgs/{org}/dependabot/secrets/{secret_name}/repositories/{repository_id}"],
+        setSelectedReposForOrgSecret: ["PUT /orgs/{org}/dependabot/secrets/{secret_name}/repositories"]
+      },
+      dependencyGraph: {
+        createRepositorySnapshot: ["POST /repos/{owner}/{repo}/dependency-graph/snapshots"],
+        diffRange: ["GET /repos/{owner}/{repo}/dependency-graph/compare/{basehead}"]
+      },
       emojis: {
         get: ["GET /emojis"]
       },
       enterpriseAdmin: {
+        addCustomLabelsToSelfHostedRunnerForEnterprise: ["POST /enterprises/{enterprise}/actions/runners/{runner_id}/labels"],
         disableSelectedOrganizationGithubActionsEnterprise: ["DELETE /enterprises/{enterprise}/actions/permissions/organizations/{org_id}"],
         enableSelectedOrganizationGithubActionsEnterprise: ["PUT /enterprises/{enterprise}/actions/permissions/organizations/{org_id}"],
         getAllowedActionsEnterprise: ["GET /enterprises/{enterprise}/actions/permissions/selected-actions"],
         getGithubActionsPermissionsEnterprise: ["GET /enterprises/{enterprise}/actions/permissions"],
+        getServerStatistics: ["GET /enterprise-installation/{enterprise_or_org}/server-statistics"],
+        listLabelsForSelfHostedRunnerForEnterprise: ["GET /enterprises/{enterprise}/actions/runners/{runner_id}/labels"],
         listSelectedOrganizationsEnabledGithubActionsEnterprise: ["GET /enterprises/{enterprise}/actions/permissions/organizations"],
+        removeAllCustomLabelsFromSelfHostedRunnerForEnterprise: ["DELETE /enterprises/{enterprise}/actions/runners/{runner_id}/labels"],
+        removeCustomLabelFromSelfHostedRunnerForEnterprise: ["DELETE /enterprises/{enterprise}/actions/runners/{runner_id}/labels/{name}"],
         setAllowedActionsEnterprise: ["PUT /enterprises/{enterprise}/actions/permissions/selected-actions"],
+        setCustomLabelsForSelfHostedRunnerForEnterprise: ["PUT /enterprises/{enterprise}/actions/runners/{runner_id}/labels"],
         setGithubActionsPermissionsEnterprise: ["PUT /enterprises/{enterprise}/actions/permissions"],
         setSelectedOrganizationsEnabledGithubActionsEnterprise: ["PUT /enterprises/{enterprise}/actions/permissions/organizations"]
       },
@@ -9693,6 +9838,7 @@ var require_dist_node9 = __commonJS({
         list: ["GET /organizations"],
         listAppInstallations: ["GET /orgs/{org}/installations"],
         listBlockedUsers: ["GET /orgs/{org}/blocks"],
+        listCustomRoles: ["GET /organizations/{organization_id}/custom_roles"],
         listFailedInvitations: ["GET /orgs/{org}/failed_invitations"],
         listForAuthenticatedUser: ["GET /user/orgs"],
         listForUser: ["GET /users/{username}/orgs"],
@@ -9821,12 +9967,14 @@ var require_dist_node9 = __commonJS({
         deleteForIssue: ["DELETE /repos/{owner}/{repo}/issues/{issue_number}/reactions/{reaction_id}"],
         deleteForIssueComment: ["DELETE /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions/{reaction_id}"],
         deleteForPullRequestComment: ["DELETE /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions/{reaction_id}"],
+        deleteForRelease: ["DELETE /repos/{owner}/{repo}/releases/{release_id}/reactions/{reaction_id}"],
         deleteForTeamDiscussion: ["DELETE /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions/{reaction_id}"],
         deleteForTeamDiscussionComment: ["DELETE /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions/{reaction_id}"],
         listForCommitComment: ["GET /repos/{owner}/{repo}/comments/{comment_id}/reactions"],
         listForIssue: ["GET /repos/{owner}/{repo}/issues/{issue_number}/reactions"],
         listForIssueComment: ["GET /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions"],
         listForPullRequestReviewComment: ["GET /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions"],
+        listForRelease: ["GET /repos/{owner}/{repo}/releases/{release_id}/reactions"],
         listForTeamDiscussionCommentInOrg: ["GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions"],
         listForTeamDiscussionInOrg: ["GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions"]
       },
@@ -9850,6 +9998,7 @@ var require_dist_node9 = __commonJS({
         }],
         checkCollaborator: ["GET /repos/{owner}/{repo}/collaborators/{username}"],
         checkVulnerabilityAlerts: ["GET /repos/{owner}/{repo}/vulnerability-alerts"],
+        codeownersErrors: ["GET /repos/{owner}/{repo}/codeowners/errors"],
         compareCommits: ["GET /repos/{owner}/{repo}/compare/{base}...{head}"],
         compareCommitsWithBasehead: ["GET /repos/{owner}/{repo}/compare/{basehead}"],
         createAutolink: ["POST /repos/{owner}/{repo}/autolinks"],
@@ -9867,6 +10016,7 @@ var require_dist_node9 = __commonJS({
         createOrUpdateFileContents: ["PUT /repos/{owner}/{repo}/contents/{path}"],
         createPagesSite: ["POST /repos/{owner}/{repo}/pages"],
         createRelease: ["POST /repos/{owner}/{repo}/releases"],
+        createTagProtection: ["POST /repos/{owner}/{repo}/tags/protection"],
         createUsingTemplate: ["POST /repos/{template_owner}/{template_repo}/generate"],
         createWebhook: ["POST /repos/{owner}/{repo}/hooks"],
         declineInvitation: ["DELETE /user/repository_invitations/{invitation_id}", {}, {
@@ -9889,6 +10039,7 @@ var require_dist_node9 = __commonJS({
         deletePullRequestReviewProtection: ["DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews"],
         deleteRelease: ["DELETE /repos/{owner}/{repo}/releases/{release_id}"],
         deleteReleaseAsset: ["DELETE /repos/{owner}/{repo}/releases/assets/{asset_id}"],
+        deleteTagProtection: ["DELETE /repos/{owner}/{repo}/tags/protection/{tag_protection_id}"],
         deleteWebhook: ["DELETE /repos/{owner}/{repo}/hooks/{hook_id}"],
         disableAutomatedSecurityFixes: ["DELETE /repos/{owner}/{repo}/automated-security-fixes"],
         disableLfsForRepo: ["DELETE /repos/{owner}/{repo}/lfs"],
@@ -9907,11 +10058,7 @@ var require_dist_node9 = __commonJS({
         getAdminBranchProtection: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins"],
         getAllEnvironments: ["GET /repos/{owner}/{repo}/environments"],
         getAllStatusCheckContexts: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks/contexts"],
-        getAllTopics: ["GET /repos/{owner}/{repo}/topics", {
-          mediaType: {
-            previews: ["mercy"]
-          }
-        }],
+        getAllTopics: ["GET /repos/{owner}/{repo}/topics"],
         getAppsWithAccessToProtectedBranch: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/apps"],
         getAutolink: ["GET /repos/{owner}/{repo}/autolinks/{autolink_id}"],
         getBranch: ["GET /repos/{owner}/{repo}/branches/{branch}"],
@@ -9977,6 +10124,7 @@ var require_dist_node9 = __commonJS({
         listPullRequestsAssociatedWithCommit: ["GET /repos/{owner}/{repo}/commits/{commit_sha}/pulls"],
         listReleaseAssets: ["GET /repos/{owner}/{repo}/releases/{release_id}/assets"],
         listReleases: ["GET /repos/{owner}/{repo}/releases"],
+        listTagProtection: ["GET /repos/{owner}/{repo}/tags/protection"],
         listTags: ["GET /repos/{owner}/{repo}/tags"],
         listTeams: ["GET /repos/{owner}/{repo}/teams"],
         listWebhookDeliveries: ["GET /repos/{owner}/{repo}/hooks/{hook_id}/deliveries"],
@@ -10000,11 +10148,7 @@ var require_dist_node9 = __commonJS({
           mapToData: "users"
         }],
         renameBranch: ["POST /repos/{owner}/{repo}/branches/{branch}/rename"],
-        replaceAllTopics: ["PUT /repos/{owner}/{repo}/topics", {
-          mediaType: {
-            previews: ["mercy"]
-          }
-        }],
+        replaceAllTopics: ["PUT /repos/{owner}/{repo}/topics"],
         requestPagesBuild: ["POST /repos/{owner}/{repo}/pages/builds"],
         setAdminBranchProtection: ["POST /repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins"],
         setAppAccessRestrictions: ["PUT /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/apps", {}, {
@@ -10045,17 +10189,15 @@ var require_dist_node9 = __commonJS({
         issuesAndPullRequests: ["GET /search/issues"],
         labels: ["GET /search/labels"],
         repos: ["GET /search/repositories"],
-        topics: ["GET /search/topics", {
-          mediaType: {
-            previews: ["mercy"]
-          }
-        }],
+        topics: ["GET /search/topics"],
         users: ["GET /search/users"]
       },
       secretScanning: {
         getAlert: ["GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}"],
+        listAlertsForEnterprise: ["GET /enterprises/{enterprise}/secret-scanning/alerts"],
         listAlertsForOrg: ["GET /orgs/{org}/secret-scanning/alerts"],
         listAlertsForRepo: ["GET /repos/{owner}/{repo}/secret-scanning/alerts"],
+        listLocationsForAlert: ["GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}/locations"],
         updateAlert: ["PATCH /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}"]
       },
       teams: {
@@ -10170,7 +10312,7 @@ var require_dist_node9 = __commonJS({
         updateAuthenticated: ["PATCH /user"]
       }
     };
-    var VERSION = "5.13.0";
+    var VERSION = "5.16.2";
     function endpointsToMethods(octokit, endpointsMap) {
       const newMethods = {};
       for (const [scope, endpoints] of Object.entries(endpointsMap)) {
@@ -10253,34 +10395,25 @@ var require_dist_node10 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var VERSION = "2.17.0";
+    var VERSION = "2.21.2";
     function ownKeys(object, enumerableOnly) {
       var keys = Object.keys(object);
       if (Object.getOwnPropertySymbols) {
         var symbols = Object.getOwnPropertySymbols(object);
-        if (enumerableOnly) {
-          symbols = symbols.filter(function(sym) {
-            return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-          });
-        }
-        keys.push.apply(keys, symbols);
+        enumerableOnly && (symbols = symbols.filter(function(sym) {
+          return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+        })), keys.push.apply(keys, symbols);
       }
       return keys;
     }
     function _objectSpread2(target) {
       for (var i = 1; i < arguments.length; i++) {
         var source = arguments[i] != null ? arguments[i] : {};
-        if (i % 2) {
-          ownKeys(Object(source), true).forEach(function(key) {
-            _defineProperty(target, key, source[key]);
-          });
-        } else if (Object.getOwnPropertyDescriptors) {
-          Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-        } else {
-          ownKeys(Object(source)).forEach(function(key) {
-            Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-          });
-        }
+        i % 2 ? ownKeys(Object(source), true).forEach(function(key) {
+          _defineProperty(target, key, source[key]);
+        }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function(key) {
+          Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+        });
       }
       return target;
     }
@@ -10390,7 +10523,7 @@ var require_dist_node10 = __commonJS({
     var composePaginateRest = Object.assign(paginate, {
       iterator
     });
-    var paginatingEndpoints = ["GET /app/hook/deliveries", "GET /app/installations", "GET /applications/grants", "GET /authorizations", "GET /enterprises/{enterprise}/actions/permissions/organizations", "GET /enterprises/{enterprise}/actions/runner-groups", "GET /enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/organizations", "GET /enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/runners", "GET /enterprises/{enterprise}/actions/runners", "GET /enterprises/{enterprise}/actions/runners/downloads", "GET /events", "GET /gists", "GET /gists/public", "GET /gists/starred", "GET /gists/{gist_id}/comments", "GET /gists/{gist_id}/commits", "GET /gists/{gist_id}/forks", "GET /installation/repositories", "GET /issues", "GET /marketplace_listing/plans", "GET /marketplace_listing/plans/{plan_id}/accounts", "GET /marketplace_listing/stubbed/plans", "GET /marketplace_listing/stubbed/plans/{plan_id}/accounts", "GET /networks/{owner}/{repo}/events", "GET /notifications", "GET /organizations", "GET /orgs/{org}/actions/permissions/repositories", "GET /orgs/{org}/actions/runner-groups", "GET /orgs/{org}/actions/runner-groups/{runner_group_id}/repositories", "GET /orgs/{org}/actions/runner-groups/{runner_group_id}/runners", "GET /orgs/{org}/actions/runners", "GET /orgs/{org}/actions/runners/downloads", "GET /orgs/{org}/actions/secrets", "GET /orgs/{org}/actions/secrets/{secret_name}/repositories", "GET /orgs/{org}/blocks", "GET /orgs/{org}/credential-authorizations", "GET /orgs/{org}/events", "GET /orgs/{org}/failed_invitations", "GET /orgs/{org}/hooks", "GET /orgs/{org}/hooks/{hook_id}/deliveries", "GET /orgs/{org}/installations", "GET /orgs/{org}/invitations", "GET /orgs/{org}/invitations/{invitation_id}/teams", "GET /orgs/{org}/issues", "GET /orgs/{org}/members", "GET /orgs/{org}/migrations", "GET /orgs/{org}/migrations/{migration_id}/repositories", "GET /orgs/{org}/outside_collaborators", "GET /orgs/{org}/packages", "GET /orgs/{org}/projects", "GET /orgs/{org}/public_members", "GET /orgs/{org}/repos", "GET /orgs/{org}/secret-scanning/alerts", "GET /orgs/{org}/team-sync/groups", "GET /orgs/{org}/teams", "GET /orgs/{org}/teams/{team_slug}/discussions", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions", "GET /orgs/{org}/teams/{team_slug}/invitations", "GET /orgs/{org}/teams/{team_slug}/members", "GET /orgs/{org}/teams/{team_slug}/projects", "GET /orgs/{org}/teams/{team_slug}/repos", "GET /orgs/{org}/teams/{team_slug}/team-sync/group-mappings", "GET /orgs/{org}/teams/{team_slug}/teams", "GET /projects/columns/{column_id}/cards", "GET /projects/{project_id}/collaborators", "GET /projects/{project_id}/columns", "GET /repos/{owner}/{repo}/actions/artifacts", "GET /repos/{owner}/{repo}/actions/runners", "GET /repos/{owner}/{repo}/actions/runners/downloads", "GET /repos/{owner}/{repo}/actions/runs", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/jobs", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs", "GET /repos/{owner}/{repo}/actions/secrets", "GET /repos/{owner}/{repo}/actions/workflows", "GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs", "GET /repos/{owner}/{repo}/assignees", "GET /repos/{owner}/{repo}/autolinks", "GET /repos/{owner}/{repo}/branches", "GET /repos/{owner}/{repo}/check-runs/{check_run_id}/annotations", "GET /repos/{owner}/{repo}/check-suites/{check_suite_id}/check-runs", "GET /repos/{owner}/{repo}/code-scanning/alerts", "GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances", "GET /repos/{owner}/{repo}/code-scanning/analyses", "GET /repos/{owner}/{repo}/collaborators", "GET /repos/{owner}/{repo}/comments", "GET /repos/{owner}/{repo}/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/commits", "GET /repos/{owner}/{repo}/commits/{commit_sha}/branches-where-head", "GET /repos/{owner}/{repo}/commits/{commit_sha}/comments", "GET /repos/{owner}/{repo}/commits/{commit_sha}/pulls", "GET /repos/{owner}/{repo}/commits/{ref}/check-runs", "GET /repos/{owner}/{repo}/commits/{ref}/check-suites", "GET /repos/{owner}/{repo}/commits/{ref}/statuses", "GET /repos/{owner}/{repo}/contributors", "GET /repos/{owner}/{repo}/deployments", "GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses", "GET /repos/{owner}/{repo}/events", "GET /repos/{owner}/{repo}/forks", "GET /repos/{owner}/{repo}/git/matching-refs/{ref}", "GET /repos/{owner}/{repo}/hooks", "GET /repos/{owner}/{repo}/hooks/{hook_id}/deliveries", "GET /repos/{owner}/{repo}/invitations", "GET /repos/{owner}/{repo}/issues", "GET /repos/{owner}/{repo}/issues/comments", "GET /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/issues/events", "GET /repos/{owner}/{repo}/issues/{issue_number}/comments", "GET /repos/{owner}/{repo}/issues/{issue_number}/events", "GET /repos/{owner}/{repo}/issues/{issue_number}/labels", "GET /repos/{owner}/{repo}/issues/{issue_number}/reactions", "GET /repos/{owner}/{repo}/issues/{issue_number}/timeline", "GET /repos/{owner}/{repo}/keys", "GET /repos/{owner}/{repo}/labels", "GET /repos/{owner}/{repo}/milestones", "GET /repos/{owner}/{repo}/milestones/{milestone_number}/labels", "GET /repos/{owner}/{repo}/notifications", "GET /repos/{owner}/{repo}/pages/builds", "GET /repos/{owner}/{repo}/projects", "GET /repos/{owner}/{repo}/pulls", "GET /repos/{owner}/{repo}/pulls/comments", "GET /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/pulls/{pull_number}/comments", "GET /repos/{owner}/{repo}/pulls/{pull_number}/commits", "GET /repos/{owner}/{repo}/pulls/{pull_number}/files", "GET /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers", "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews", "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/comments", "GET /repos/{owner}/{repo}/releases", "GET /repos/{owner}/{repo}/releases/{release_id}/assets", "GET /repos/{owner}/{repo}/secret-scanning/alerts", "GET /repos/{owner}/{repo}/stargazers", "GET /repos/{owner}/{repo}/subscribers", "GET /repos/{owner}/{repo}/tags", "GET /repos/{owner}/{repo}/teams", "GET /repositories", "GET /repositories/{repository_id}/environments/{environment_name}/secrets", "GET /scim/v2/enterprises/{enterprise}/Groups", "GET /scim/v2/enterprises/{enterprise}/Users", "GET /scim/v2/organizations/{org}/Users", "GET /search/code", "GET /search/commits", "GET /search/issues", "GET /search/labels", "GET /search/repositories", "GET /search/topics", "GET /search/users", "GET /teams/{team_id}/discussions", "GET /teams/{team_id}/discussions/{discussion_number}/comments", "GET /teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}/reactions", "GET /teams/{team_id}/discussions/{discussion_number}/reactions", "GET /teams/{team_id}/invitations", "GET /teams/{team_id}/members", "GET /teams/{team_id}/projects", "GET /teams/{team_id}/repos", "GET /teams/{team_id}/team-sync/group-mappings", "GET /teams/{team_id}/teams", "GET /user/blocks", "GET /user/emails", "GET /user/followers", "GET /user/following", "GET /user/gpg_keys", "GET /user/installations", "GET /user/installations/{installation_id}/repositories", "GET /user/issues", "GET /user/keys", "GET /user/marketplace_purchases", "GET /user/marketplace_purchases/stubbed", "GET /user/memberships/orgs", "GET /user/migrations", "GET /user/migrations/{migration_id}/repositories", "GET /user/orgs", "GET /user/packages", "GET /user/public_emails", "GET /user/repos", "GET /user/repository_invitations", "GET /user/starred", "GET /user/subscriptions", "GET /user/teams", "GET /users", "GET /users/{username}/events", "GET /users/{username}/events/orgs/{org}", "GET /users/{username}/events/public", "GET /users/{username}/followers", "GET /users/{username}/following", "GET /users/{username}/gists", "GET /users/{username}/gpg_keys", "GET /users/{username}/keys", "GET /users/{username}/orgs", "GET /users/{username}/packages", "GET /users/{username}/projects", "GET /users/{username}/received_events", "GET /users/{username}/received_events/public", "GET /users/{username}/repos", "GET /users/{username}/starred", "GET /users/{username}/subscriptions"];
+    var paginatingEndpoints = ["GET /app/hook/deliveries", "GET /app/installations", "GET /applications/grants", "GET /authorizations", "GET /enterprises/{enterprise}/actions/permissions/organizations", "GET /enterprises/{enterprise}/actions/runner-groups", "GET /enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/organizations", "GET /enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/runners", "GET /enterprises/{enterprise}/actions/runners", "GET /enterprises/{enterprise}/audit-log", "GET /enterprises/{enterprise}/secret-scanning/alerts", "GET /enterprises/{enterprise}/settings/billing/advanced-security", "GET /events", "GET /gists", "GET /gists/public", "GET /gists/starred", "GET /gists/{gist_id}/comments", "GET /gists/{gist_id}/commits", "GET /gists/{gist_id}/forks", "GET /installation/repositories", "GET /issues", "GET /licenses", "GET /marketplace_listing/plans", "GET /marketplace_listing/plans/{plan_id}/accounts", "GET /marketplace_listing/stubbed/plans", "GET /marketplace_listing/stubbed/plans/{plan_id}/accounts", "GET /networks/{owner}/{repo}/events", "GET /notifications", "GET /organizations", "GET /orgs/{org}/actions/cache/usage-by-repository", "GET /orgs/{org}/actions/permissions/repositories", "GET /orgs/{org}/actions/runner-groups", "GET /orgs/{org}/actions/runner-groups/{runner_group_id}/repositories", "GET /orgs/{org}/actions/runner-groups/{runner_group_id}/runners", "GET /orgs/{org}/actions/runners", "GET /orgs/{org}/actions/secrets", "GET /orgs/{org}/actions/secrets/{secret_name}/repositories", "GET /orgs/{org}/audit-log", "GET /orgs/{org}/blocks", "GET /orgs/{org}/code-scanning/alerts", "GET /orgs/{org}/codespaces", "GET /orgs/{org}/credential-authorizations", "GET /orgs/{org}/dependabot/secrets", "GET /orgs/{org}/dependabot/secrets/{secret_name}/repositories", "GET /orgs/{org}/events", "GET /orgs/{org}/external-groups", "GET /orgs/{org}/failed_invitations", "GET /orgs/{org}/hooks", "GET /orgs/{org}/hooks/{hook_id}/deliveries", "GET /orgs/{org}/installations", "GET /orgs/{org}/invitations", "GET /orgs/{org}/invitations/{invitation_id}/teams", "GET /orgs/{org}/issues", "GET /orgs/{org}/members", "GET /orgs/{org}/migrations", "GET /orgs/{org}/migrations/{migration_id}/repositories", "GET /orgs/{org}/outside_collaborators", "GET /orgs/{org}/packages", "GET /orgs/{org}/packages/{package_type}/{package_name}/versions", "GET /orgs/{org}/projects", "GET /orgs/{org}/public_members", "GET /orgs/{org}/repos", "GET /orgs/{org}/secret-scanning/alerts", "GET /orgs/{org}/settings/billing/advanced-security", "GET /orgs/{org}/team-sync/groups", "GET /orgs/{org}/teams", "GET /orgs/{org}/teams/{team_slug}/discussions", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions", "GET /orgs/{org}/teams/{team_slug}/invitations", "GET /orgs/{org}/teams/{team_slug}/members", "GET /orgs/{org}/teams/{team_slug}/projects", "GET /orgs/{org}/teams/{team_slug}/repos", "GET /orgs/{org}/teams/{team_slug}/teams", "GET /projects/columns/{column_id}/cards", "GET /projects/{project_id}/collaborators", "GET /projects/{project_id}/columns", "GET /repos/{owner}/{repo}/actions/artifacts", "GET /repos/{owner}/{repo}/actions/caches", "GET /repos/{owner}/{repo}/actions/runners", "GET /repos/{owner}/{repo}/actions/runs", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/jobs", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs", "GET /repos/{owner}/{repo}/actions/secrets", "GET /repos/{owner}/{repo}/actions/workflows", "GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs", "GET /repos/{owner}/{repo}/assignees", "GET /repos/{owner}/{repo}/branches", "GET /repos/{owner}/{repo}/check-runs/{check_run_id}/annotations", "GET /repos/{owner}/{repo}/check-suites/{check_suite_id}/check-runs", "GET /repos/{owner}/{repo}/code-scanning/alerts", "GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances", "GET /repos/{owner}/{repo}/code-scanning/analyses", "GET /repos/{owner}/{repo}/codespaces", "GET /repos/{owner}/{repo}/codespaces/devcontainers", "GET /repos/{owner}/{repo}/codespaces/secrets", "GET /repos/{owner}/{repo}/collaborators", "GET /repos/{owner}/{repo}/comments", "GET /repos/{owner}/{repo}/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/commits", "GET /repos/{owner}/{repo}/commits/{commit_sha}/comments", "GET /repos/{owner}/{repo}/commits/{commit_sha}/pulls", "GET /repos/{owner}/{repo}/commits/{ref}/check-runs", "GET /repos/{owner}/{repo}/commits/{ref}/check-suites", "GET /repos/{owner}/{repo}/commits/{ref}/status", "GET /repos/{owner}/{repo}/commits/{ref}/statuses", "GET /repos/{owner}/{repo}/contributors", "GET /repos/{owner}/{repo}/dependabot/secrets", "GET /repos/{owner}/{repo}/deployments", "GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses", "GET /repos/{owner}/{repo}/environments", "GET /repos/{owner}/{repo}/events", "GET /repos/{owner}/{repo}/forks", "GET /repos/{owner}/{repo}/git/matching-refs/{ref}", "GET /repos/{owner}/{repo}/hooks", "GET /repos/{owner}/{repo}/hooks/{hook_id}/deliveries", "GET /repos/{owner}/{repo}/invitations", "GET /repos/{owner}/{repo}/issues", "GET /repos/{owner}/{repo}/issues/comments", "GET /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/issues/events", "GET /repos/{owner}/{repo}/issues/{issue_number}/comments", "GET /repos/{owner}/{repo}/issues/{issue_number}/events", "GET /repos/{owner}/{repo}/issues/{issue_number}/labels", "GET /repos/{owner}/{repo}/issues/{issue_number}/reactions", "GET /repos/{owner}/{repo}/issues/{issue_number}/timeline", "GET /repos/{owner}/{repo}/keys", "GET /repos/{owner}/{repo}/labels", "GET /repos/{owner}/{repo}/milestones", "GET /repos/{owner}/{repo}/milestones/{milestone_number}/labels", "GET /repos/{owner}/{repo}/notifications", "GET /repos/{owner}/{repo}/pages/builds", "GET /repos/{owner}/{repo}/projects", "GET /repos/{owner}/{repo}/pulls", "GET /repos/{owner}/{repo}/pulls/comments", "GET /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/pulls/{pull_number}/comments", "GET /repos/{owner}/{repo}/pulls/{pull_number}/commits", "GET /repos/{owner}/{repo}/pulls/{pull_number}/files", "GET /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers", "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews", "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/comments", "GET /repos/{owner}/{repo}/releases", "GET /repos/{owner}/{repo}/releases/{release_id}/assets", "GET /repos/{owner}/{repo}/releases/{release_id}/reactions", "GET /repos/{owner}/{repo}/secret-scanning/alerts", "GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}/locations", "GET /repos/{owner}/{repo}/stargazers", "GET /repos/{owner}/{repo}/subscribers", "GET /repos/{owner}/{repo}/tags", "GET /repos/{owner}/{repo}/teams", "GET /repos/{owner}/{repo}/topics", "GET /repositories", "GET /repositories/{repository_id}/environments/{environment_name}/secrets", "GET /search/code", "GET /search/commits", "GET /search/issues", "GET /search/labels", "GET /search/repositories", "GET /search/topics", "GET /search/users", "GET /teams/{team_id}/discussions", "GET /teams/{team_id}/discussions/{discussion_number}/comments", "GET /teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}/reactions", "GET /teams/{team_id}/discussions/{discussion_number}/reactions", "GET /teams/{team_id}/invitations", "GET /teams/{team_id}/members", "GET /teams/{team_id}/projects", "GET /teams/{team_id}/repos", "GET /teams/{team_id}/teams", "GET /user/blocks", "GET /user/codespaces", "GET /user/codespaces/secrets", "GET /user/emails", "GET /user/followers", "GET /user/following", "GET /user/gpg_keys", "GET /user/installations", "GET /user/installations/{installation_id}/repositories", "GET /user/issues", "GET /user/keys", "GET /user/marketplace_purchases", "GET /user/marketplace_purchases/stubbed", "GET /user/memberships/orgs", "GET /user/migrations", "GET /user/migrations/{migration_id}/repositories", "GET /user/orgs", "GET /user/packages", "GET /user/packages/{package_type}/{package_name}/versions", "GET /user/public_emails", "GET /user/repos", "GET /user/repository_invitations", "GET /user/starred", "GET /user/subscriptions", "GET /user/teams", "GET /users", "GET /users/{username}/events", "GET /users/{username}/events/orgs/{org}", "GET /users/{username}/events/public", "GET /users/{username}/followers", "GET /users/{username}/following", "GET /users/{username}/gists", "GET /users/{username}/gpg_keys", "GET /users/{username}/keys", "GET /users/{username}/orgs", "GET /users/{username}/packages", "GET /users/{username}/projects", "GET /users/{username}/received_events", "GET /users/{username}/received_events/public", "GET /users/{username}/repos", "GET /users/{username}/starred", "GET /users/{username}/subscriptions"];
     function isPaginatingEndpoint(arg) {
       if (typeof arg === "string") {
         return paginatingEndpoints.includes(arg);
@@ -22705,7 +22838,7 @@ var require_connect = __commonJS({
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.connect = void 0;
     var Subject_1 = require_Subject();
-    var from_1 = require_from();
+    var innerFrom_1 = require_innerFrom();
     var lift_1 = require_lift();
     var fromSubscribable_1 = require_fromSubscribable();
     var DEFAULT_CONFIG = {
@@ -22720,7 +22853,7 @@ var require_connect = __commonJS({
       var connector = config2.connector;
       return lift_1.operate(function(source, subscriber) {
         var subject = connector();
-        from_1.from(selector(fromSubscribable_1.fromSubscribable(subject))).subscribe(subscriber);
+        innerFrom_1.innerFrom(selector(fromSubscribable_1.fromSubscribable(subject))).subscribe(subscriber);
         subscriber.add(source.subscribe(subject));
       });
     }
@@ -23207,47 +23340,6 @@ var require_every = __commonJS({
 });
 
 // 
-var require_exhaustAll = __commonJS({
-  ""(exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.exhaustAll = void 0;
-    var lift_1 = require_lift();
-    var innerFrom_1 = require_innerFrom();
-    var OperatorSubscriber_1 = require_OperatorSubscriber();
-    function exhaustAll() {
-      return lift_1.operate(function(source, subscriber) {
-        var isComplete = false;
-        var innerSub = null;
-        source.subscribe(OperatorSubscriber_1.createOperatorSubscriber(subscriber, function(inner) {
-          if (!innerSub) {
-            innerSub = innerFrom_1.innerFrom(inner).subscribe(OperatorSubscriber_1.createOperatorSubscriber(subscriber, void 0, function() {
-              innerSub = null;
-              isComplete && subscriber.complete();
-            }));
-          }
-        }, function() {
-          isComplete = true;
-          !innerSub && subscriber.complete();
-        }));
-      });
-    }
-    exports.exhaustAll = exhaustAll;
-  }
-});
-
-// 
-var require_exhaust = __commonJS({
-  ""(exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.exhaust = void 0;
-    var exhaustAll_1 = require_exhaustAll();
-    exports.exhaust = exhaustAll_1.exhaustAll;
-  }
-});
-
-// 
 var require_exhaustMap = __commonJS({
   ""(exports) {
     "use strict";
@@ -23286,6 +23378,32 @@ var require_exhaustMap = __commonJS({
       });
     }
     exports.exhaustMap = exhaustMap;
+  }
+});
+
+// 
+var require_exhaustAll = __commonJS({
+  ""(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.exhaustAll = void 0;
+    var exhaustMap_1 = require_exhaustMap();
+    var identity_1 = require_identity();
+    function exhaustAll() {
+      return exhaustMap_1.exhaustMap(identity_1.identity);
+    }
+    exports.exhaustAll = exhaustAll;
+  }
+});
+
+// 
+var require_exhaust = __commonJS({
+  ""(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.exhaust = void 0;
+    var exhaustAll_1 = require_exhaustAll();
+    exports.exhaust = exhaustAll_1.exhaustAll;
   }
 });
 
@@ -24415,8 +24533,7 @@ var require_share = __commonJS({
     };
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.share = void 0;
-    var from_1 = require_from();
-    var take_1 = require_take();
+    var innerFrom_1 = require_innerFrom();
     var Subject_1 = require_Subject();
     var Subscriber_1 = require_Subscriber();
     var lift_1 = require_lift();
@@ -24428,19 +24545,19 @@ var require_share = __commonJS({
         return new Subject_1.Subject();
       } : _a, _b = options.resetOnError, resetOnError = _b === void 0 ? true : _b, _c = options.resetOnComplete, resetOnComplete = _c === void 0 ? true : _c, _d = options.resetOnRefCountZero, resetOnRefCountZero = _d === void 0 ? true : _d;
       return function(wrapperSource) {
-        var connection = null;
-        var resetConnection = null;
-        var subject = null;
+        var connection;
+        var resetConnection;
+        var subject;
         var refCount = 0;
         var hasCompleted = false;
         var hasErrored = false;
         var cancelReset = function() {
           resetConnection === null || resetConnection === void 0 ? void 0 : resetConnection.unsubscribe();
-          resetConnection = null;
+          resetConnection = void 0;
         };
         var reset2 = function() {
           cancelReset();
-          connection = subject = null;
+          connection = subject = void 0;
           hasCompleted = hasErrored = false;
         };
         var resetAndUnsubscribe = function() {
@@ -24461,7 +24578,7 @@ var require_share = __commonJS({
             }
           });
           dest.subscribe(subscriber);
-          if (!connection) {
+          if (!connection && refCount > 0) {
             connection = new Subscriber_1.SafeSubscriber({
               next: function(value) {
                 return dest.next(value);
@@ -24479,7 +24596,7 @@ var require_share = __commonJS({
                 dest.complete();
               }
             });
-            from_1.from(source).subscribe(connection);
+            innerFrom_1.innerFrom(source).subscribe(connection);
           }
         })(wrapperSource);
       };
@@ -24492,14 +24609,18 @@ var require_share = __commonJS({
       }
       if (on === true) {
         reset2();
-        return null;
+        return;
       }
       if (on === false) {
-        return null;
+        return;
       }
-      return on.apply(void 0, __spreadArray([], __read(args))).pipe(take_1.take(1)).subscribe(function() {
-        return reset2();
+      var onSubscriber = new Subscriber_1.SafeSubscriber({
+        next: function() {
+          onSubscriber.unsubscribe();
+          reset2();
+        }
       });
+      return on.apply(void 0, __spreadArray([], __read(args))).subscribe(onSubscriber);
     }
   }
 });
@@ -47012,7 +47133,7 @@ var require_options = __commonJS({
         options.forceRedraw = mergeOption(opt.forceRedraw, false);
         options.autopadding = mergeOption(opt.autopadding, false);
         options.autopaddingChar = options.autopadding ? mergeOption(opt.autopaddingChar, "   ") : "";
-        options.gracefulExit = mergeOption(opt.gracefulExit, true);
+        options.gracefulExit = mergeOption(opt.gracefulExit, false);
         return options;
       }
     };
@@ -51168,7 +51289,7 @@ var require_dist_node13 = __commonJS({
     var isPlainObject = require_is_plain_object();
     var nodeFetch = _interopDefault(require_lib7());
     var requestError = require_dist_node12();
-    var VERSION = "6.0.2";
+    var VERSION = "6.1.0";
     function getBufferResponse(response) {
       return response.arrayBuffer();
     }
@@ -51180,7 +51301,7 @@ var require_dist_node13 = __commonJS({
       let headers = {};
       let status;
       let url;
-      const fetch = requestOptions.request && requestOptions.request.fetch || nodeFetch;
+      const fetch = requestOptions.request && requestOptions.request.fetch || globalThis.fetch || nodeFetch;
       return fetch(requestOptions.url, Object.assign({
         method: requestOptions.method,
         body: requestOptions.body,
@@ -62249,3274 +62370,15 @@ var require_dist_node26 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    function oauthAuthorizationUrl(options) {
-      const clientType = options.clientType || "oauth-app";
-      const baseUrl = options.baseUrl || "https://github.com";
-      const result = {
-        clientType,
-        allowSignup: options.allowSignup === false ? false : true,
-        clientId: options.clientId,
-        login: options.login || null,
-        redirectUrl: options.redirectUrl || null,
-        state: options.state || Math.random().toString(36).substr(2),
-        url: ""
-      };
-      if (clientType === "oauth-app") {
-        const scopes = "scopes" in options ? options.scopes : [];
-        result.scopes = typeof scopes === "string" ? scopes.split(/[,\s]+/).filter(Boolean) : scopes;
-      }
-      result.url = urlBuilderAuthorize(`${baseUrl}/login/oauth/authorize`, result);
-      return result;
-    }
-    function urlBuilderAuthorize(base, options) {
-      const map = {
-        allowSignup: "allow_signup",
-        clientId: "client_id",
-        login: "login",
-        redirectUrl: "redirect_uri",
-        scopes: "scope",
-        state: "state"
-      };
-      let url = base;
-      Object.keys(map).filter((k) => options[k] !== null).filter((k) => {
-        if (k !== "scopes")
-          return true;
-        if (options.clientType === "github-app")
-          return false;
-        return !Array.isArray(options[k]) || options[k].length > 0;
-      }).map((key) => [map[key], `${options[key]}`]).forEach(([key, value], index) => {
-        url += index === 0 ? `?` : "&";
-        url += `${key}=${encodeURIComponent(value)}`;
-      });
-      return url;
-    }
-    exports.oauthAuthorizationUrl = oauthAuthorizationUrl;
-  }
-});
-
-// 
-var require_lib10 = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    var conversions = {};
-    module.exports = conversions;
-    function sign(x) {
-      return x < 0 ? -1 : 1;
-    }
-    function evenRound(x) {
-      if (x % 1 === 0.5 && (x & 1) === 0) {
-        return Math.floor(x);
-      } else {
-        return Math.round(x);
-      }
-    }
-    function createNumberConversion(bitLength, typeOpts) {
-      if (!typeOpts.unsigned) {
-        --bitLength;
-      }
-      const lowerBound = typeOpts.unsigned ? 0 : -Math.pow(2, bitLength);
-      const upperBound = Math.pow(2, bitLength) - 1;
-      const moduloVal = typeOpts.moduloBitLength ? Math.pow(2, typeOpts.moduloBitLength) : Math.pow(2, bitLength);
-      const moduloBound = typeOpts.moduloBitLength ? Math.pow(2, typeOpts.moduloBitLength - 1) : Math.pow(2, bitLength - 1);
-      return function(V, opts) {
-        if (!opts)
-          opts = {};
-        let x = +V;
-        if (opts.enforceRange) {
-          if (!Number.isFinite(x)) {
-            throw new TypeError("Argument is not a finite number");
-          }
-          x = sign(x) * Math.floor(Math.abs(x));
-          if (x < lowerBound || x > upperBound) {
-            throw new TypeError("Argument is not in byte range");
-          }
-          return x;
-        }
-        if (!isNaN(x) && opts.clamp) {
-          x = evenRound(x);
-          if (x < lowerBound)
-            x = lowerBound;
-          if (x > upperBound)
-            x = upperBound;
-          return x;
-        }
-        if (!Number.isFinite(x) || x === 0) {
-          return 0;
-        }
-        x = sign(x) * Math.floor(Math.abs(x));
-        x = x % moduloVal;
-        if (!typeOpts.unsigned && x >= moduloBound) {
-          return x - moduloVal;
-        } else if (typeOpts.unsigned) {
-          if (x < 0) {
-            x += moduloVal;
-          } else if (x === -0) {
-            return 0;
-          }
-        }
-        return x;
-      };
-    }
-    conversions["void"] = function() {
-      return void 0;
-    };
-    conversions["boolean"] = function(val) {
-      return !!val;
-    };
-    conversions["byte"] = createNumberConversion(8, { unsigned: false });
-    conversions["octet"] = createNumberConversion(8, { unsigned: true });
-    conversions["short"] = createNumberConversion(16, { unsigned: false });
-    conversions["unsigned short"] = createNumberConversion(16, { unsigned: true });
-    conversions["long"] = createNumberConversion(32, { unsigned: false });
-    conversions["unsigned long"] = createNumberConversion(32, { unsigned: true });
-    conversions["long long"] = createNumberConversion(32, { unsigned: false, moduloBitLength: 64 });
-    conversions["unsigned long long"] = createNumberConversion(32, { unsigned: true, moduloBitLength: 64 });
-    conversions["double"] = function(V) {
-      const x = +V;
-      if (!Number.isFinite(x)) {
-        throw new TypeError("Argument is not a finite floating-point value");
-      }
-      return x;
-    };
-    conversions["unrestricted double"] = function(V) {
-      const x = +V;
-      if (isNaN(x)) {
-        throw new TypeError("Argument is NaN");
-      }
-      return x;
-    };
-    conversions["float"] = conversions["double"];
-    conversions["unrestricted float"] = conversions["unrestricted double"];
-    conversions["DOMString"] = function(V, opts) {
-      if (!opts)
-        opts = {};
-      if (opts.treatNullAsEmptyString && V === null) {
-        return "";
-      }
-      return String(V);
-    };
-    conversions["ByteString"] = function(V, opts) {
-      const x = String(V);
-      let c = void 0;
-      for (let i = 0; (c = x.codePointAt(i)) !== void 0; ++i) {
-        if (c > 255) {
-          throw new TypeError("Argument is not a valid bytestring");
-        }
-      }
-      return x;
-    };
-    conversions["USVString"] = function(V) {
-      const S = String(V);
-      const n = S.length;
-      const U = [];
-      for (let i = 0; i < n; ++i) {
-        const c = S.charCodeAt(i);
-        if (c < 55296 || c > 57343) {
-          U.push(String.fromCodePoint(c));
-        } else if (56320 <= c && c <= 57343) {
-          U.push(String.fromCodePoint(65533));
-        } else {
-          if (i === n - 1) {
-            U.push(String.fromCodePoint(65533));
-          } else {
-            const d = S.charCodeAt(i + 1);
-            if (56320 <= d && d <= 57343) {
-              const a = c & 1023;
-              const b = d & 1023;
-              U.push(String.fromCodePoint((2 << 15) + (2 << 9) * a + b));
-              ++i;
-            } else {
-              U.push(String.fromCodePoint(65533));
-            }
-          }
-        }
-      }
-      return U.join("");
-    };
-    conversions["Date"] = function(V, opts) {
-      if (!(V instanceof Date)) {
-        throw new TypeError("Argument is not a Date object");
-      }
-      if (isNaN(V)) {
-        return void 0;
-      }
-      return V;
-    };
-    conversions["RegExp"] = function(V, opts) {
-      if (!(V instanceof RegExp)) {
-        V = new RegExp(V);
-      }
-      return V;
-    };
-  }
-});
-
-// 
-var require_utils9 = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    module.exports.mixin = function mixin(target, source) {
-      const keys = Object.getOwnPropertyNames(source);
-      for (let i = 0; i < keys.length; ++i) {
-        Object.defineProperty(target, keys[i], Object.getOwnPropertyDescriptor(source, keys[i]));
-      }
-    };
-    module.exports.wrapperSymbol = Symbol("wrapper");
-    module.exports.implSymbol = Symbol("impl");
-    module.exports.wrapperForImpl = function(impl) {
-      return impl[module.exports.wrapperSymbol];
-    };
-    module.exports.implForWrapper = function(wrapper) {
-      return wrapper[module.exports.implSymbol];
-    };
-  }
-});
-
-// 
-var require_url_state_machine4 = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    var punycode = __require("punycode");
-    var tr46 = require_tr46();
-    var specialSchemes = {
-      ftp: 21,
-      file: null,
-      gopher: 70,
-      http: 80,
-      https: 443,
-      ws: 80,
-      wss: 443
-    };
-    var failure = Symbol("failure");
-    function countSymbols(str) {
-      return punycode.ucs2.decode(str).length;
-    }
-    function at(input, idx) {
-      const c = input[idx];
-      return isNaN(c) ? void 0 : String.fromCodePoint(c);
-    }
-    function isASCIIDigit(c) {
-      return c >= 48 && c <= 57;
-    }
-    function isASCIIAlpha(c) {
-      return c >= 65 && c <= 90 || c >= 97 && c <= 122;
-    }
-    function isASCIIAlphanumeric(c) {
-      return isASCIIAlpha(c) || isASCIIDigit(c);
-    }
-    function isASCIIHex(c) {
-      return isASCIIDigit(c) || c >= 65 && c <= 70 || c >= 97 && c <= 102;
-    }
-    function isSingleDot(buffer) {
-      return buffer === "." || buffer.toLowerCase() === "%2e";
-    }
-    function isDoubleDot(buffer) {
-      buffer = buffer.toLowerCase();
-      return buffer === ".." || buffer === "%2e." || buffer === ".%2e" || buffer === "%2e%2e";
-    }
-    function isWindowsDriveLetterCodePoints(cp1, cp2) {
-      return isASCIIAlpha(cp1) && (cp2 === 58 || cp2 === 124);
-    }
-    function isWindowsDriveLetterString(string) {
-      return string.length === 2 && isASCIIAlpha(string.codePointAt(0)) && (string[1] === ":" || string[1] === "|");
-    }
-    function isNormalizedWindowsDriveLetterString(string) {
-      return string.length === 2 && isASCIIAlpha(string.codePointAt(0)) && string[1] === ":";
-    }
-    function containsForbiddenHostCodePoint(string) {
-      return string.search(/\u0000|\u0009|\u000A|\u000D|\u0020|#|%|\/|:|\?|@|\[|\\|\]/) !== -1;
-    }
-    function containsForbiddenHostCodePointExcludingPercent(string) {
-      return string.search(/\u0000|\u0009|\u000A|\u000D|\u0020|#|\/|:|\?|@|\[|\\|\]/) !== -1;
-    }
-    function isSpecialScheme(scheme) {
-      return specialSchemes[scheme] !== void 0;
-    }
-    function isSpecial(url) {
-      return isSpecialScheme(url.scheme);
-    }
-    function defaultPort(scheme) {
-      return specialSchemes[scheme];
-    }
-    function percentEncode(c) {
-      let hex = c.toString(16).toUpperCase();
-      if (hex.length === 1) {
-        hex = "0" + hex;
-      }
-      return "%" + hex;
-    }
-    function utf8PercentEncode(c) {
-      const buf = new Buffer(c);
-      let str = "";
-      for (let i = 0; i < buf.length; ++i) {
-        str += percentEncode(buf[i]);
-      }
-      return str;
-    }
-    function utf8PercentDecode(str) {
-      const input = new Buffer(str);
-      const output = [];
-      for (let i = 0; i < input.length; ++i) {
-        if (input[i] !== 37) {
-          output.push(input[i]);
-        } else if (input[i] === 37 && isASCIIHex(input[i + 1]) && isASCIIHex(input[i + 2])) {
-          output.push(parseInt(input.slice(i + 1, i + 3).toString(), 16));
-          i += 2;
-        } else {
-          output.push(input[i]);
-        }
-      }
-      return new Buffer(output).toString();
-    }
-    function isC0ControlPercentEncode(c) {
-      return c <= 31 || c > 126;
-    }
-    var extraPathPercentEncodeSet = /* @__PURE__ */ new Set([32, 34, 35, 60, 62, 63, 96, 123, 125]);
-    function isPathPercentEncode(c) {
-      return isC0ControlPercentEncode(c) || extraPathPercentEncodeSet.has(c);
-    }
-    var extraUserinfoPercentEncodeSet = /* @__PURE__ */ new Set([47, 58, 59, 61, 64, 91, 92, 93, 94, 124]);
-    function isUserinfoPercentEncode(c) {
-      return isPathPercentEncode(c) || extraUserinfoPercentEncodeSet.has(c);
-    }
-    function percentEncodeChar(c, encodeSetPredicate) {
-      const cStr = String.fromCodePoint(c);
-      if (encodeSetPredicate(c)) {
-        return utf8PercentEncode(cStr);
-      }
-      return cStr;
-    }
-    function parseIPv4Number(input) {
-      let R = 10;
-      if (input.length >= 2 && input.charAt(0) === "0" && input.charAt(1).toLowerCase() === "x") {
-        input = input.substring(2);
-        R = 16;
-      } else if (input.length >= 2 && input.charAt(0) === "0") {
-        input = input.substring(1);
-        R = 8;
-      }
-      if (input === "") {
-        return 0;
-      }
-      const regex = R === 10 ? /[^0-9]/ : R === 16 ? /[^0-9A-Fa-f]/ : /[^0-7]/;
-      if (regex.test(input)) {
-        return failure;
-      }
-      return parseInt(input, R);
-    }
-    function parseIPv4(input) {
-      const parts = input.split(".");
-      if (parts[parts.length - 1] === "") {
-        if (parts.length > 1) {
-          parts.pop();
-        }
-      }
-      if (parts.length > 4) {
-        return input;
-      }
-      const numbers = [];
-      for (const part of parts) {
-        if (part === "") {
-          return input;
-        }
-        const n = parseIPv4Number(part);
-        if (n === failure) {
-          return input;
-        }
-        numbers.push(n);
-      }
-      for (let i = 0; i < numbers.length - 1; ++i) {
-        if (numbers[i] > 255) {
-          return failure;
-        }
-      }
-      if (numbers[numbers.length - 1] >= Math.pow(256, 5 - numbers.length)) {
-        return failure;
-      }
-      let ipv4 = numbers.pop();
-      let counter = 0;
-      for (const n of numbers) {
-        ipv4 += n * Math.pow(256, 3 - counter);
-        ++counter;
-      }
-      return ipv4;
-    }
-    function serializeIPv4(address) {
-      let output = "";
-      let n = address;
-      for (let i = 1; i <= 4; ++i) {
-        output = String(n % 256) + output;
-        if (i !== 4) {
-          output = "." + output;
-        }
-        n = Math.floor(n / 256);
-      }
-      return output;
-    }
-    function parseIPv6(input) {
-      const address = [0, 0, 0, 0, 0, 0, 0, 0];
-      let pieceIndex = 0;
-      let compress = null;
-      let pointer = 0;
-      input = punycode.ucs2.decode(input);
-      if (input[pointer] === 58) {
-        if (input[pointer + 1] !== 58) {
-          return failure;
-        }
-        pointer += 2;
-        ++pieceIndex;
-        compress = pieceIndex;
-      }
-      while (pointer < input.length) {
-        if (pieceIndex === 8) {
-          return failure;
-        }
-        if (input[pointer] === 58) {
-          if (compress !== null) {
-            return failure;
-          }
-          ++pointer;
-          ++pieceIndex;
-          compress = pieceIndex;
-          continue;
-        }
-        let value = 0;
-        let length = 0;
-        while (length < 4 && isASCIIHex(input[pointer])) {
-          value = value * 16 + parseInt(at(input, pointer), 16);
-          ++pointer;
-          ++length;
-        }
-        if (input[pointer] === 46) {
-          if (length === 0) {
-            return failure;
-          }
-          pointer -= length;
-          if (pieceIndex > 6) {
-            return failure;
-          }
-          let numbersSeen = 0;
-          while (input[pointer] !== void 0) {
-            let ipv4Piece = null;
-            if (numbersSeen > 0) {
-              if (input[pointer] === 46 && numbersSeen < 4) {
-                ++pointer;
-              } else {
-                return failure;
-              }
-            }
-            if (!isASCIIDigit(input[pointer])) {
-              return failure;
-            }
-            while (isASCIIDigit(input[pointer])) {
-              const number = parseInt(at(input, pointer));
-              if (ipv4Piece === null) {
-                ipv4Piece = number;
-              } else if (ipv4Piece === 0) {
-                return failure;
-              } else {
-                ipv4Piece = ipv4Piece * 10 + number;
-              }
-              if (ipv4Piece > 255) {
-                return failure;
-              }
-              ++pointer;
-            }
-            address[pieceIndex] = address[pieceIndex] * 256 + ipv4Piece;
-            ++numbersSeen;
-            if (numbersSeen === 2 || numbersSeen === 4) {
-              ++pieceIndex;
-            }
-          }
-          if (numbersSeen !== 4) {
-            return failure;
-          }
-          break;
-        } else if (input[pointer] === 58) {
-          ++pointer;
-          if (input[pointer] === void 0) {
-            return failure;
-          }
-        } else if (input[pointer] !== void 0) {
-          return failure;
-        }
-        address[pieceIndex] = value;
-        ++pieceIndex;
-      }
-      if (compress !== null) {
-        let swaps = pieceIndex - compress;
-        pieceIndex = 7;
-        while (pieceIndex !== 0 && swaps > 0) {
-          const temp = address[compress + swaps - 1];
-          address[compress + swaps - 1] = address[pieceIndex];
-          address[pieceIndex] = temp;
-          --pieceIndex;
-          --swaps;
-        }
-      } else if (compress === null && pieceIndex !== 8) {
-        return failure;
-      }
-      return address;
-    }
-    function serializeIPv6(address) {
-      let output = "";
-      const seqResult = findLongestZeroSequence(address);
-      const compress = seqResult.idx;
-      let ignore0 = false;
-      for (let pieceIndex = 0; pieceIndex <= 7; ++pieceIndex) {
-        if (ignore0 && address[pieceIndex] === 0) {
-          continue;
-        } else if (ignore0) {
-          ignore0 = false;
-        }
-        if (compress === pieceIndex) {
-          const separator = pieceIndex === 0 ? "::" : ":";
-          output += separator;
-          ignore0 = true;
-          continue;
-        }
-        output += address[pieceIndex].toString(16);
-        if (pieceIndex !== 7) {
-          output += ":";
-        }
-      }
-      return output;
-    }
-    function parseHost(input, isSpecialArg) {
-      if (input[0] === "[") {
-        if (input[input.length - 1] !== "]") {
-          return failure;
-        }
-        return parseIPv6(input.substring(1, input.length - 1));
-      }
-      if (!isSpecialArg) {
-        return parseOpaqueHost(input);
-      }
-      const domain = utf8PercentDecode(input);
-      const asciiDomain = tr46.toASCII(domain, false, tr46.PROCESSING_OPTIONS.NONTRANSITIONAL, false);
-      if (asciiDomain === null) {
-        return failure;
-      }
-      if (containsForbiddenHostCodePoint(asciiDomain)) {
-        return failure;
-      }
-      const ipv4Host = parseIPv4(asciiDomain);
-      if (typeof ipv4Host === "number" || ipv4Host === failure) {
-        return ipv4Host;
-      }
-      return asciiDomain;
-    }
-    function parseOpaqueHost(input) {
-      if (containsForbiddenHostCodePointExcludingPercent(input)) {
-        return failure;
-      }
-      let output = "";
-      const decoded = punycode.ucs2.decode(input);
-      for (let i = 0; i < decoded.length; ++i) {
-        output += percentEncodeChar(decoded[i], isC0ControlPercentEncode);
-      }
-      return output;
-    }
-    function findLongestZeroSequence(arr) {
-      let maxIdx = null;
-      let maxLen = 1;
-      let currStart = null;
-      let currLen = 0;
-      for (let i = 0; i < arr.length; ++i) {
-        if (arr[i] !== 0) {
-          if (currLen > maxLen) {
-            maxIdx = currStart;
-            maxLen = currLen;
-          }
-          currStart = null;
-          currLen = 0;
-        } else {
-          if (currStart === null) {
-            currStart = i;
-          }
-          ++currLen;
-        }
-      }
-      if (currLen > maxLen) {
-        maxIdx = currStart;
-        maxLen = currLen;
-      }
-      return {
-        idx: maxIdx,
-        len: maxLen
-      };
-    }
-    function serializeHost(host) {
-      if (typeof host === "number") {
-        return serializeIPv4(host);
-      }
-      if (host instanceof Array) {
-        return "[" + serializeIPv6(host) + "]";
-      }
-      return host;
-    }
-    function trimControlChars(url) {
-      return url.replace(/^[\u0000-\u001F\u0020]+|[\u0000-\u001F\u0020]+$/g, "");
-    }
-    function trimTabAndNewline(url) {
-      return url.replace(/\u0009|\u000A|\u000D/g, "");
-    }
-    function shortenPath(url) {
-      const path = url.path;
-      if (path.length === 0) {
-        return;
-      }
-      if (url.scheme === "file" && path.length === 1 && isNormalizedWindowsDriveLetter(path[0])) {
-        return;
-      }
-      path.pop();
-    }
-    function includesCredentials(url) {
-      return url.username !== "" || url.password !== "";
-    }
-    function cannotHaveAUsernamePasswordPort(url) {
-      return url.host === null || url.host === "" || url.cannotBeABaseURL || url.scheme === "file";
-    }
-    function isNormalizedWindowsDriveLetter(string) {
-      return /^[A-Za-z]:$/.test(string);
-    }
-    function URLStateMachine(input, base, encodingOverride, url, stateOverride) {
-      this.pointer = 0;
-      this.input = input;
-      this.base = base || null;
-      this.encodingOverride = encodingOverride || "utf-8";
-      this.stateOverride = stateOverride;
-      this.url = url;
-      this.failure = false;
-      this.parseError = false;
-      if (!this.url) {
-        this.url = {
-          scheme: "",
-          username: "",
-          password: "",
-          host: null,
-          port: null,
-          path: [],
-          query: null,
-          fragment: null,
-          cannotBeABaseURL: false
-        };
-        const res2 = trimControlChars(this.input);
-        if (res2 !== this.input) {
-          this.parseError = true;
-        }
-        this.input = res2;
-      }
-      const res = trimTabAndNewline(this.input);
-      if (res !== this.input) {
-        this.parseError = true;
-      }
-      this.input = res;
-      this.state = stateOverride || "scheme start";
-      this.buffer = "";
-      this.atFlag = false;
-      this.arrFlag = false;
-      this.passwordTokenSeenFlag = false;
-      this.input = punycode.ucs2.decode(this.input);
-      for (; this.pointer <= this.input.length; ++this.pointer) {
-        const c = this.input[this.pointer];
-        const cStr = isNaN(c) ? void 0 : String.fromCodePoint(c);
-        const ret = this["parse " + this.state](c, cStr);
-        if (!ret) {
-          break;
-        } else if (ret === failure) {
-          this.failure = true;
-          break;
-        }
-      }
-    }
-    URLStateMachine.prototype["parse scheme start"] = function parseSchemeStart(c, cStr) {
-      if (isASCIIAlpha(c)) {
-        this.buffer += cStr.toLowerCase();
-        this.state = "scheme";
-      } else if (!this.stateOverride) {
-        this.state = "no scheme";
-        --this.pointer;
-      } else {
-        this.parseError = true;
-        return failure;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse scheme"] = function parseScheme(c, cStr) {
-      if (isASCIIAlphanumeric(c) || c === 43 || c === 45 || c === 46) {
-        this.buffer += cStr.toLowerCase();
-      } else if (c === 58) {
-        if (this.stateOverride) {
-          if (isSpecial(this.url) && !isSpecialScheme(this.buffer)) {
-            return false;
-          }
-          if (!isSpecial(this.url) && isSpecialScheme(this.buffer)) {
-            return false;
-          }
-          if ((includesCredentials(this.url) || this.url.port !== null) && this.buffer === "file") {
-            return false;
-          }
-          if (this.url.scheme === "file" && (this.url.host === "" || this.url.host === null)) {
-            return false;
-          }
-        }
-        this.url.scheme = this.buffer;
-        this.buffer = "";
-        if (this.stateOverride) {
-          return false;
-        }
-        if (this.url.scheme === "file") {
-          if (this.input[this.pointer + 1] !== 47 || this.input[this.pointer + 2] !== 47) {
-            this.parseError = true;
-          }
-          this.state = "file";
-        } else if (isSpecial(this.url) && this.base !== null && this.base.scheme === this.url.scheme) {
-          this.state = "special relative or authority";
-        } else if (isSpecial(this.url)) {
-          this.state = "special authority slashes";
-        } else if (this.input[this.pointer + 1] === 47) {
-          this.state = "path or authority";
-          ++this.pointer;
-        } else {
-          this.url.cannotBeABaseURL = true;
-          this.url.path.push("");
-          this.state = "cannot-be-a-base-URL path";
-        }
-      } else if (!this.stateOverride) {
-        this.buffer = "";
-        this.state = "no scheme";
-        this.pointer = -1;
-      } else {
-        this.parseError = true;
-        return failure;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse no scheme"] = function parseNoScheme(c) {
-      if (this.base === null || this.base.cannotBeABaseURL && c !== 35) {
-        return failure;
-      } else if (this.base.cannotBeABaseURL && c === 35) {
-        this.url.scheme = this.base.scheme;
-        this.url.path = this.base.path.slice();
-        this.url.query = this.base.query;
-        this.url.fragment = "";
-        this.url.cannotBeABaseURL = true;
-        this.state = "fragment";
-      } else if (this.base.scheme === "file") {
-        this.state = "file";
-        --this.pointer;
-      } else {
-        this.state = "relative";
-        --this.pointer;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse special relative or authority"] = function parseSpecialRelativeOrAuthority(c) {
-      if (c === 47 && this.input[this.pointer + 1] === 47) {
-        this.state = "special authority ignore slashes";
-        ++this.pointer;
-      } else {
-        this.parseError = true;
-        this.state = "relative";
-        --this.pointer;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse path or authority"] = function parsePathOrAuthority(c) {
-      if (c === 47) {
-        this.state = "authority";
-      } else {
-        this.state = "path";
-        --this.pointer;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse relative"] = function parseRelative(c) {
-      this.url.scheme = this.base.scheme;
-      if (isNaN(c)) {
-        this.url.username = this.base.username;
-        this.url.password = this.base.password;
-        this.url.host = this.base.host;
-        this.url.port = this.base.port;
-        this.url.path = this.base.path.slice();
-        this.url.query = this.base.query;
-      } else if (c === 47) {
-        this.state = "relative slash";
-      } else if (c === 63) {
-        this.url.username = this.base.username;
-        this.url.password = this.base.password;
-        this.url.host = this.base.host;
-        this.url.port = this.base.port;
-        this.url.path = this.base.path.slice();
-        this.url.query = "";
-        this.state = "query";
-      } else if (c === 35) {
-        this.url.username = this.base.username;
-        this.url.password = this.base.password;
-        this.url.host = this.base.host;
-        this.url.port = this.base.port;
-        this.url.path = this.base.path.slice();
-        this.url.query = this.base.query;
-        this.url.fragment = "";
-        this.state = "fragment";
-      } else if (isSpecial(this.url) && c === 92) {
-        this.parseError = true;
-        this.state = "relative slash";
-      } else {
-        this.url.username = this.base.username;
-        this.url.password = this.base.password;
-        this.url.host = this.base.host;
-        this.url.port = this.base.port;
-        this.url.path = this.base.path.slice(0, this.base.path.length - 1);
-        this.state = "path";
-        --this.pointer;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse relative slash"] = function parseRelativeSlash(c) {
-      if (isSpecial(this.url) && (c === 47 || c === 92)) {
-        if (c === 92) {
-          this.parseError = true;
-        }
-        this.state = "special authority ignore slashes";
-      } else if (c === 47) {
-        this.state = "authority";
-      } else {
-        this.url.username = this.base.username;
-        this.url.password = this.base.password;
-        this.url.host = this.base.host;
-        this.url.port = this.base.port;
-        this.state = "path";
-        --this.pointer;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse special authority slashes"] = function parseSpecialAuthoritySlashes(c) {
-      if (c === 47 && this.input[this.pointer + 1] === 47) {
-        this.state = "special authority ignore slashes";
-        ++this.pointer;
-      } else {
-        this.parseError = true;
-        this.state = "special authority ignore slashes";
-        --this.pointer;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse special authority ignore slashes"] = function parseSpecialAuthorityIgnoreSlashes(c) {
-      if (c !== 47 && c !== 92) {
-        this.state = "authority";
-        --this.pointer;
-      } else {
-        this.parseError = true;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse authority"] = function parseAuthority(c, cStr) {
-      if (c === 64) {
-        this.parseError = true;
-        if (this.atFlag) {
-          this.buffer = "%40" + this.buffer;
-        }
-        this.atFlag = true;
-        const len = countSymbols(this.buffer);
-        for (let pointer = 0; pointer < len; ++pointer) {
-          const codePoint = this.buffer.codePointAt(pointer);
-          if (codePoint === 58 && !this.passwordTokenSeenFlag) {
-            this.passwordTokenSeenFlag = true;
-            continue;
-          }
-          const encodedCodePoints = percentEncodeChar(codePoint, isUserinfoPercentEncode);
-          if (this.passwordTokenSeenFlag) {
-            this.url.password += encodedCodePoints;
-          } else {
-            this.url.username += encodedCodePoints;
-          }
-        }
-        this.buffer = "";
-      } else if (isNaN(c) || c === 47 || c === 63 || c === 35 || isSpecial(this.url) && c === 92) {
-        if (this.atFlag && this.buffer === "") {
-          this.parseError = true;
-          return failure;
-        }
-        this.pointer -= countSymbols(this.buffer) + 1;
-        this.buffer = "";
-        this.state = "host";
-      } else {
-        this.buffer += cStr;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse hostname"] = URLStateMachine.prototype["parse host"] = function parseHostName(c, cStr) {
-      if (this.stateOverride && this.url.scheme === "file") {
-        --this.pointer;
-        this.state = "file host";
-      } else if (c === 58 && !this.arrFlag) {
-        if (this.buffer === "") {
-          this.parseError = true;
-          return failure;
-        }
-        const host = parseHost(this.buffer, isSpecial(this.url));
-        if (host === failure) {
-          return failure;
-        }
-        this.url.host = host;
-        this.buffer = "";
-        this.state = "port";
-        if (this.stateOverride === "hostname") {
-          return false;
-        }
-      } else if (isNaN(c) || c === 47 || c === 63 || c === 35 || isSpecial(this.url) && c === 92) {
-        --this.pointer;
-        if (isSpecial(this.url) && this.buffer === "") {
-          this.parseError = true;
-          return failure;
-        } else if (this.stateOverride && this.buffer === "" && (includesCredentials(this.url) || this.url.port !== null)) {
-          this.parseError = true;
-          return false;
-        }
-        const host = parseHost(this.buffer, isSpecial(this.url));
-        if (host === failure) {
-          return failure;
-        }
-        this.url.host = host;
-        this.buffer = "";
-        this.state = "path start";
-        if (this.stateOverride) {
-          return false;
-        }
-      } else {
-        if (c === 91) {
-          this.arrFlag = true;
-        } else if (c === 93) {
-          this.arrFlag = false;
-        }
-        this.buffer += cStr;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse port"] = function parsePort(c, cStr) {
-      if (isASCIIDigit(c)) {
-        this.buffer += cStr;
-      } else if (isNaN(c) || c === 47 || c === 63 || c === 35 || isSpecial(this.url) && c === 92 || this.stateOverride) {
-        if (this.buffer !== "") {
-          const port = parseInt(this.buffer);
-          if (port > Math.pow(2, 16) - 1) {
-            this.parseError = true;
-            return failure;
-          }
-          this.url.port = port === defaultPort(this.url.scheme) ? null : port;
-          this.buffer = "";
-        }
-        if (this.stateOverride) {
-          return false;
-        }
-        this.state = "path start";
-        --this.pointer;
-      } else {
-        this.parseError = true;
-        return failure;
-      }
-      return true;
-    };
-    var fileOtherwiseCodePoints = /* @__PURE__ */ new Set([47, 92, 63, 35]);
-    URLStateMachine.prototype["parse file"] = function parseFile(c) {
-      this.url.scheme = "file";
-      if (c === 47 || c === 92) {
-        if (c === 92) {
-          this.parseError = true;
-        }
-        this.state = "file slash";
-      } else if (this.base !== null && this.base.scheme === "file") {
-        if (isNaN(c)) {
-          this.url.host = this.base.host;
-          this.url.path = this.base.path.slice();
-          this.url.query = this.base.query;
-        } else if (c === 63) {
-          this.url.host = this.base.host;
-          this.url.path = this.base.path.slice();
-          this.url.query = "";
-          this.state = "query";
-        } else if (c === 35) {
-          this.url.host = this.base.host;
-          this.url.path = this.base.path.slice();
-          this.url.query = this.base.query;
-          this.url.fragment = "";
-          this.state = "fragment";
-        } else {
-          if (this.input.length - this.pointer - 1 === 0 || !isWindowsDriveLetterCodePoints(c, this.input[this.pointer + 1]) || this.input.length - this.pointer - 1 >= 2 && !fileOtherwiseCodePoints.has(this.input[this.pointer + 2])) {
-            this.url.host = this.base.host;
-            this.url.path = this.base.path.slice();
-            shortenPath(this.url);
-          } else {
-            this.parseError = true;
-          }
-          this.state = "path";
-          --this.pointer;
-        }
-      } else {
-        this.state = "path";
-        --this.pointer;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse file slash"] = function parseFileSlash(c) {
-      if (c === 47 || c === 92) {
-        if (c === 92) {
-          this.parseError = true;
-        }
-        this.state = "file host";
-      } else {
-        if (this.base !== null && this.base.scheme === "file") {
-          if (isNormalizedWindowsDriveLetterString(this.base.path[0])) {
-            this.url.path.push(this.base.path[0]);
-          } else {
-            this.url.host = this.base.host;
-          }
-        }
-        this.state = "path";
-        --this.pointer;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse file host"] = function parseFileHost(c, cStr) {
-      if (isNaN(c) || c === 47 || c === 92 || c === 63 || c === 35) {
-        --this.pointer;
-        if (!this.stateOverride && isWindowsDriveLetterString(this.buffer)) {
-          this.parseError = true;
-          this.state = "path";
-        } else if (this.buffer === "") {
-          this.url.host = "";
-          if (this.stateOverride) {
-            return false;
-          }
-          this.state = "path start";
-        } else {
-          let host = parseHost(this.buffer, isSpecial(this.url));
-          if (host === failure) {
-            return failure;
-          }
-          if (host === "localhost") {
-            host = "";
-          }
-          this.url.host = host;
-          if (this.stateOverride) {
-            return false;
-          }
-          this.buffer = "";
-          this.state = "path start";
-        }
-      } else {
-        this.buffer += cStr;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse path start"] = function parsePathStart(c) {
-      if (isSpecial(this.url)) {
-        if (c === 92) {
-          this.parseError = true;
-        }
-        this.state = "path";
-        if (c !== 47 && c !== 92) {
-          --this.pointer;
-        }
-      } else if (!this.stateOverride && c === 63) {
-        this.url.query = "";
-        this.state = "query";
-      } else if (!this.stateOverride && c === 35) {
-        this.url.fragment = "";
-        this.state = "fragment";
-      } else if (c !== void 0) {
-        this.state = "path";
-        if (c !== 47) {
-          --this.pointer;
-        }
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse path"] = function parsePath(c) {
-      if (isNaN(c) || c === 47 || isSpecial(this.url) && c === 92 || !this.stateOverride && (c === 63 || c === 35)) {
-        if (isSpecial(this.url) && c === 92) {
-          this.parseError = true;
-        }
-        if (isDoubleDot(this.buffer)) {
-          shortenPath(this.url);
-          if (c !== 47 && !(isSpecial(this.url) && c === 92)) {
-            this.url.path.push("");
-          }
-        } else if (isSingleDot(this.buffer) && c !== 47 && !(isSpecial(this.url) && c === 92)) {
-          this.url.path.push("");
-        } else if (!isSingleDot(this.buffer)) {
-          if (this.url.scheme === "file" && this.url.path.length === 0 && isWindowsDriveLetterString(this.buffer)) {
-            if (this.url.host !== "" && this.url.host !== null) {
-              this.parseError = true;
-              this.url.host = "";
-            }
-            this.buffer = this.buffer[0] + ":";
-          }
-          this.url.path.push(this.buffer);
-        }
-        this.buffer = "";
-        if (this.url.scheme === "file" && (c === void 0 || c === 63 || c === 35)) {
-          while (this.url.path.length > 1 && this.url.path[0] === "") {
-            this.parseError = true;
-            this.url.path.shift();
-          }
-        }
-        if (c === 63) {
-          this.url.query = "";
-          this.state = "query";
-        }
-        if (c === 35) {
-          this.url.fragment = "";
-          this.state = "fragment";
-        }
-      } else {
-        if (c === 37 && (!isASCIIHex(this.input[this.pointer + 1]) || !isASCIIHex(this.input[this.pointer + 2]))) {
-          this.parseError = true;
-        }
-        this.buffer += percentEncodeChar(c, isPathPercentEncode);
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse cannot-be-a-base-URL path"] = function parseCannotBeABaseURLPath(c) {
-      if (c === 63) {
-        this.url.query = "";
-        this.state = "query";
-      } else if (c === 35) {
-        this.url.fragment = "";
-        this.state = "fragment";
-      } else {
-        if (!isNaN(c) && c !== 37) {
-          this.parseError = true;
-        }
-        if (c === 37 && (!isASCIIHex(this.input[this.pointer + 1]) || !isASCIIHex(this.input[this.pointer + 2]))) {
-          this.parseError = true;
-        }
-        if (!isNaN(c)) {
-          this.url.path[0] = this.url.path[0] + percentEncodeChar(c, isC0ControlPercentEncode);
-        }
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse query"] = function parseQuery(c, cStr) {
-      if (isNaN(c) || !this.stateOverride && c === 35) {
-        if (!isSpecial(this.url) || this.url.scheme === "ws" || this.url.scheme === "wss") {
-          this.encodingOverride = "utf-8";
-        }
-        const buffer = new Buffer(this.buffer);
-        for (let i = 0; i < buffer.length; ++i) {
-          if (buffer[i] < 33 || buffer[i] > 126 || buffer[i] === 34 || buffer[i] === 35 || buffer[i] === 60 || buffer[i] === 62) {
-            this.url.query += percentEncode(buffer[i]);
-          } else {
-            this.url.query += String.fromCodePoint(buffer[i]);
-          }
-        }
-        this.buffer = "";
-        if (c === 35) {
-          this.url.fragment = "";
-          this.state = "fragment";
-        }
-      } else {
-        if (c === 37 && (!isASCIIHex(this.input[this.pointer + 1]) || !isASCIIHex(this.input[this.pointer + 2]))) {
-          this.parseError = true;
-        }
-        this.buffer += cStr;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse fragment"] = function parseFragment(c) {
-      if (isNaN(c)) {
-      } else if (c === 0) {
-        this.parseError = true;
-      } else {
-        if (c === 37 && (!isASCIIHex(this.input[this.pointer + 1]) || !isASCIIHex(this.input[this.pointer + 2]))) {
-          this.parseError = true;
-        }
-        this.url.fragment += percentEncodeChar(c, isC0ControlPercentEncode);
-      }
-      return true;
-    };
-    function serializeURL(url, excludeFragment) {
-      let output = url.scheme + ":";
-      if (url.host !== null) {
-        output += "//";
-        if (url.username !== "" || url.password !== "") {
-          output += url.username;
-          if (url.password !== "") {
-            output += ":" + url.password;
-          }
-          output += "@";
-        }
-        output += serializeHost(url.host);
-        if (url.port !== null) {
-          output += ":" + url.port;
-        }
-      } else if (url.host === null && url.scheme === "file") {
-        output += "//";
-      }
-      if (url.cannotBeABaseURL) {
-        output += url.path[0];
-      } else {
-        for (const string of url.path) {
-          output += "/" + string;
-        }
-      }
-      if (url.query !== null) {
-        output += "?" + url.query;
-      }
-      if (!excludeFragment && url.fragment !== null) {
-        output += "#" + url.fragment;
-      }
-      return output;
-    }
-    function serializeOrigin(tuple) {
-      let result = tuple.scheme + "://";
-      result += serializeHost(tuple.host);
-      if (tuple.port !== null) {
-        result += ":" + tuple.port;
-      }
-      return result;
-    }
-    module.exports.serializeURL = serializeURL;
-    module.exports.serializeURLOrigin = function(url) {
-      switch (url.scheme) {
-        case "blob":
-          try {
-            return module.exports.serializeURLOrigin(module.exports.parseURL(url.path[0]));
-          } catch (e) {
-            return "null";
-          }
-        case "ftp":
-        case "gopher":
-        case "http":
-        case "https":
-        case "ws":
-        case "wss":
-          return serializeOrigin({
-            scheme: url.scheme,
-            host: url.host,
-            port: url.port
-          });
-        case "file":
-          return "file://";
-        default:
-          return "null";
-      }
-    };
-    module.exports.basicURLParse = function(input, options) {
-      if (options === void 0) {
-        options = {};
-      }
-      const usm = new URLStateMachine(input, options.baseURL, options.encodingOverride, options.url, options.stateOverride);
-      if (usm.failure) {
-        return "failure";
-      }
-      return usm.url;
-    };
-    module.exports.setTheUsername = function(url, username) {
-      url.username = "";
-      const decoded = punycode.ucs2.decode(username);
-      for (let i = 0; i < decoded.length; ++i) {
-        url.username += percentEncodeChar(decoded[i], isUserinfoPercentEncode);
-      }
-    };
-    module.exports.setThePassword = function(url, password) {
-      url.password = "";
-      const decoded = punycode.ucs2.decode(password);
-      for (let i = 0; i < decoded.length; ++i) {
-        url.password += percentEncodeChar(decoded[i], isUserinfoPercentEncode);
-      }
-    };
-    module.exports.serializeHost = serializeHost;
-    module.exports.cannotHaveAUsernamePasswordPort = cannotHaveAUsernamePasswordPort;
-    module.exports.serializeInteger = function(integer) {
-      return String(integer);
-    };
-    module.exports.parseURL = function(input, options) {
-      if (options === void 0) {
-        options = {};
-      }
-      return module.exports.basicURLParse(input, { baseURL: options.baseURL, encodingOverride: options.encodingOverride });
-    };
-  }
-});
-
-// 
-var require_URL_impl4 = __commonJS({
-  ""(exports) {
-    "use strict";
-    var usm = require_url_state_machine4();
-    exports.implementation = class URLImpl {
-      constructor(constructorArgs) {
-        const url = constructorArgs[0];
-        const base = constructorArgs[1];
-        let parsedBase = null;
-        if (base !== void 0) {
-          parsedBase = usm.basicURLParse(base);
-          if (parsedBase === "failure") {
-            throw new TypeError("Invalid base URL");
-          }
-        }
-        const parsedURL = usm.basicURLParse(url, { baseURL: parsedBase });
-        if (parsedURL === "failure") {
-          throw new TypeError("Invalid URL");
-        }
-        this._url = parsedURL;
-      }
-      get href() {
-        return usm.serializeURL(this._url);
-      }
-      set href(v) {
-        const parsedURL = usm.basicURLParse(v);
-        if (parsedURL === "failure") {
-          throw new TypeError("Invalid URL");
-        }
-        this._url = parsedURL;
-      }
-      get origin() {
-        return usm.serializeURLOrigin(this._url);
-      }
-      get protocol() {
-        return this._url.scheme + ":";
-      }
-      set protocol(v) {
-        usm.basicURLParse(v + ":", { url: this._url, stateOverride: "scheme start" });
-      }
-      get username() {
-        return this._url.username;
-      }
-      set username(v) {
-        if (usm.cannotHaveAUsernamePasswordPort(this._url)) {
-          return;
-        }
-        usm.setTheUsername(this._url, v);
-      }
-      get password() {
-        return this._url.password;
-      }
-      set password(v) {
-        if (usm.cannotHaveAUsernamePasswordPort(this._url)) {
-          return;
-        }
-        usm.setThePassword(this._url, v);
-      }
-      get host() {
-        const url = this._url;
-        if (url.host === null) {
-          return "";
-        }
-        if (url.port === null) {
-          return usm.serializeHost(url.host);
-        }
-        return usm.serializeHost(url.host) + ":" + usm.serializeInteger(url.port);
-      }
-      set host(v) {
-        if (this._url.cannotBeABaseURL) {
-          return;
-        }
-        usm.basicURLParse(v, { url: this._url, stateOverride: "host" });
-      }
-      get hostname() {
-        if (this._url.host === null) {
-          return "";
-        }
-        return usm.serializeHost(this._url.host);
-      }
-      set hostname(v) {
-        if (this._url.cannotBeABaseURL) {
-          return;
-        }
-        usm.basicURLParse(v, { url: this._url, stateOverride: "hostname" });
-      }
-      get port() {
-        if (this._url.port === null) {
-          return "";
-        }
-        return usm.serializeInteger(this._url.port);
-      }
-      set port(v) {
-        if (usm.cannotHaveAUsernamePasswordPort(this._url)) {
-          return;
-        }
-        if (v === "") {
-          this._url.port = null;
-        } else {
-          usm.basicURLParse(v, { url: this._url, stateOverride: "port" });
-        }
-      }
-      get pathname() {
-        if (this._url.cannotBeABaseURL) {
-          return this._url.path[0];
-        }
-        if (this._url.path.length === 0) {
-          return "";
-        }
-        return "/" + this._url.path.join("/");
-      }
-      set pathname(v) {
-        if (this._url.cannotBeABaseURL) {
-          return;
-        }
-        this._url.path = [];
-        usm.basicURLParse(v, { url: this._url, stateOverride: "path start" });
-      }
-      get search() {
-        if (this._url.query === null || this._url.query === "") {
-          return "";
-        }
-        return "?" + this._url.query;
-      }
-      set search(v) {
-        const url = this._url;
-        if (v === "") {
-          url.query = null;
-          return;
-        }
-        const input = v[0] === "?" ? v.substring(1) : v;
-        url.query = "";
-        usm.basicURLParse(input, { url, stateOverride: "query" });
-      }
-      get hash() {
-        if (this._url.fragment === null || this._url.fragment === "") {
-          return "";
-        }
-        return "#" + this._url.fragment;
-      }
-      set hash(v) {
-        if (v === "") {
-          this._url.fragment = null;
-          return;
-        }
-        const input = v[0] === "#" ? v.substring(1) : v;
-        this._url.fragment = "";
-        usm.basicURLParse(input, { url: this._url, stateOverride: "fragment" });
-      }
-      toJSON() {
-        return this.href;
-      }
-    };
-  }
-});
-
-// 
-var require_URL4 = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    var conversions = require_lib10();
-    var utils = require_utils9();
-    var Impl = require_URL_impl4();
-    var impl = utils.implSymbol;
-    function URL3(url) {
-      if (!this || this[impl] || !(this instanceof URL3)) {
-        throw new TypeError("Failed to construct 'URL': Please use the 'new' operator, this DOM object constructor cannot be called as a function.");
-      }
-      if (arguments.length < 1) {
-        throw new TypeError("Failed to construct 'URL': 1 argument required, but only " + arguments.length + " present.");
-      }
-      const args = [];
-      for (let i = 0; i < arguments.length && i < 2; ++i) {
-        args[i] = arguments[i];
-      }
-      args[0] = conversions["USVString"](args[0]);
-      if (args[1] !== void 0) {
-        args[1] = conversions["USVString"](args[1]);
-      }
-      module.exports.setup(this, args);
-    }
-    URL3.prototype.toJSON = function toJSON() {
-      if (!this || !module.exports.is(this)) {
-        throw new TypeError("Illegal invocation");
-      }
-      const args = [];
-      for (let i = 0; i < arguments.length && i < 0; ++i) {
-        args[i] = arguments[i];
-      }
-      return this[impl].toJSON.apply(this[impl], args);
-    };
-    Object.defineProperty(URL3.prototype, "href", {
-      get() {
-        return this[impl].href;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].href = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    URL3.prototype.toString = function() {
-      if (!this || !module.exports.is(this)) {
-        throw new TypeError("Illegal invocation");
-      }
-      return this.href;
-    };
-    Object.defineProperty(URL3.prototype, "origin", {
-      get() {
-        return this[impl].origin;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "protocol", {
-      get() {
-        return this[impl].protocol;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].protocol = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "username", {
-      get() {
-        return this[impl].username;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].username = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "password", {
-      get() {
-        return this[impl].password;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].password = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "host", {
-      get() {
-        return this[impl].host;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].host = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "hostname", {
-      get() {
-        return this[impl].hostname;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].hostname = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "port", {
-      get() {
-        return this[impl].port;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].port = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "pathname", {
-      get() {
-        return this[impl].pathname;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].pathname = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "search", {
-      get() {
-        return this[impl].search;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].search = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "hash", {
-      get() {
-        return this[impl].hash;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].hash = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    module.exports = {
-      is(obj) {
-        return !!obj && obj[impl] instanceof Impl.implementation;
-      },
-      create(constructorArgs, privateData) {
-        let obj = Object.create(URL3.prototype);
-        this.setup(obj, constructorArgs, privateData);
-        return obj;
-      },
-      setup(obj, constructorArgs, privateData) {
-        if (!privateData)
-          privateData = {};
-        privateData.wrapper = obj;
-        obj[impl] = new Impl.implementation(constructorArgs, privateData);
-        obj[impl][utils.wrapperSymbol] = obj;
-      },
-      interface: URL3,
-      expose: {
-        Window: { URL: URL3 },
-        Worker: { URL: URL3 }
-      }
-    };
-  }
-});
-
-// 
-var require_public_api4 = __commonJS({
-  ""(exports) {
-    "use strict";
-    exports.URL = require_URL4().interface;
-    exports.serializeURL = require_url_state_machine4().serializeURL;
-    exports.serializeURLOrigin = require_url_state_machine4().serializeURLOrigin;
-    exports.basicURLParse = require_url_state_machine4().basicURLParse;
-    exports.setTheUsername = require_url_state_machine4().setTheUsername;
-    exports.setThePassword = require_url_state_machine4().setThePassword;
-    exports.serializeHost = require_url_state_machine4().serializeHost;
-    exports.serializeInteger = require_url_state_machine4().serializeInteger;
-    exports.parseURL = require_url_state_machine4().parseURL;
-  }
-});
-
-// 
-var require_lib11 = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    function _interopDefault(ex) {
-      return ex && typeof ex === "object" && "default" in ex ? ex["default"] : ex;
-    }
-    var Stream = _interopDefault(__require("stream"));
-    var http = _interopDefault(__require("http"));
-    var Url = _interopDefault(__require("url"));
-    var whatwgUrl = _interopDefault(require_public_api4());
-    var https = _interopDefault(__require("https"));
-    var zlib = _interopDefault(__require("zlib"));
-    var Readable = Stream.Readable;
-    var BUFFER = Symbol("buffer");
-    var TYPE = Symbol("type");
-    var Blob = class {
-      constructor() {
-        this[TYPE] = "";
-        const blobParts = arguments[0];
-        const options = arguments[1];
-        const buffers = [];
-        let size = 0;
-        if (blobParts) {
-          const a = blobParts;
-          const length = Number(a.length);
-          for (let i = 0; i < length; i++) {
-            const element = a[i];
-            let buffer;
-            if (element instanceof Buffer) {
-              buffer = element;
-            } else if (ArrayBuffer.isView(element)) {
-              buffer = Buffer.from(element.buffer, element.byteOffset, element.byteLength);
-            } else if (element instanceof ArrayBuffer) {
-              buffer = Buffer.from(element);
-            } else if (element instanceof Blob) {
-              buffer = element[BUFFER];
-            } else {
-              buffer = Buffer.from(typeof element === "string" ? element : String(element));
-            }
-            size += buffer.length;
-            buffers.push(buffer);
-          }
-        }
-        this[BUFFER] = Buffer.concat(buffers);
-        let type = options && options.type !== void 0 && String(options.type).toLowerCase();
-        if (type && !/[^\u0020-\u007E]/.test(type)) {
-          this[TYPE] = type;
-        }
-      }
-      get size() {
-        return this[BUFFER].length;
-      }
-      get type() {
-        return this[TYPE];
-      }
-      text() {
-        return Promise.resolve(this[BUFFER].toString());
-      }
-      arrayBuffer() {
-        const buf = this[BUFFER];
-        const ab = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
-        return Promise.resolve(ab);
-      }
-      stream() {
-        const readable = new Readable();
-        readable._read = function() {
-        };
-        readable.push(this[BUFFER]);
-        readable.push(null);
-        return readable;
-      }
-      toString() {
-        return "[object Blob]";
-      }
-      slice() {
-        const size = this.size;
-        const start = arguments[0];
-        const end = arguments[1];
-        let relativeStart, relativeEnd;
-        if (start === void 0) {
-          relativeStart = 0;
-        } else if (start < 0) {
-          relativeStart = Math.max(size + start, 0);
-        } else {
-          relativeStart = Math.min(start, size);
-        }
-        if (end === void 0) {
-          relativeEnd = size;
-        } else if (end < 0) {
-          relativeEnd = Math.max(size + end, 0);
-        } else {
-          relativeEnd = Math.min(end, size);
-        }
-        const span = Math.max(relativeEnd - relativeStart, 0);
-        const buffer = this[BUFFER];
-        const slicedBuffer = buffer.slice(relativeStart, relativeStart + span);
-        const blob = new Blob([], { type: arguments[2] });
-        blob[BUFFER] = slicedBuffer;
-        return blob;
-      }
-    };
-    Object.defineProperties(Blob.prototype, {
-      size: { enumerable: true },
-      type: { enumerable: true },
-      slice: { enumerable: true }
-    });
-    Object.defineProperty(Blob.prototype, Symbol.toStringTag, {
-      value: "Blob",
-      writable: false,
-      enumerable: false,
-      configurable: true
-    });
-    function FetchError(message, type, systemError) {
-      Error.call(this, message);
-      this.message = message;
-      this.type = type;
-      if (systemError) {
-        this.code = this.errno = systemError.code;
-      }
-      Error.captureStackTrace(this, this.constructor);
-    }
-    FetchError.prototype = Object.create(Error.prototype);
-    FetchError.prototype.constructor = FetchError;
-    FetchError.prototype.name = "FetchError";
-    var convert;
-    try {
-      convert = require_encoding().convert;
-    } catch (e) {
-    }
-    var INTERNALS = Symbol("Body internals");
-    var PassThrough = Stream.PassThrough;
-    function Body(body) {
-      var _this = this;
-      var _ref = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {}, _ref$size = _ref.size;
-      let size = _ref$size === void 0 ? 0 : _ref$size;
-      var _ref$timeout = _ref.timeout;
-      let timeout = _ref$timeout === void 0 ? 0 : _ref$timeout;
-      if (body == null) {
-        body = null;
-      } else if (isURLSearchParams(body)) {
-        body = Buffer.from(body.toString());
-      } else if (isBlob(body))
-        ;
-      else if (Buffer.isBuffer(body))
-        ;
-      else if (Object.prototype.toString.call(body) === "[object ArrayBuffer]") {
-        body = Buffer.from(body);
-      } else if (ArrayBuffer.isView(body)) {
-        body = Buffer.from(body.buffer, body.byteOffset, body.byteLength);
-      } else if (body instanceof Stream)
-        ;
-      else {
-        body = Buffer.from(String(body));
-      }
-      this[INTERNALS] = {
-        body,
-        disturbed: false,
-        error: null
-      };
-      this.size = size;
-      this.timeout = timeout;
-      if (body instanceof Stream) {
-        body.on("error", function(err) {
-          const error2 = err.name === "AbortError" ? err : new FetchError(`Invalid response body while trying to fetch ${_this.url}: ${err.message}`, "system", err);
-          _this[INTERNALS].error = error2;
-        });
-      }
-    }
-    Body.prototype = {
-      get body() {
-        return this[INTERNALS].body;
-      },
-      get bodyUsed() {
-        return this[INTERNALS].disturbed;
-      },
-      arrayBuffer() {
-        return consumeBody.call(this).then(function(buf) {
-          return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
-        });
-      },
-      blob() {
-        let ct = this.headers && this.headers.get("content-type") || "";
-        return consumeBody.call(this).then(function(buf) {
-          return Object.assign(new Blob([], {
-            type: ct.toLowerCase()
-          }), {
-            [BUFFER]: buf
-          });
-        });
-      },
-      json() {
-        var _this2 = this;
-        return consumeBody.call(this).then(function(buffer) {
-          try {
-            return JSON.parse(buffer.toString());
-          } catch (err) {
-            return Body.Promise.reject(new FetchError(`invalid json response body at ${_this2.url} reason: ${err.message}`, "invalid-json"));
-          }
-        });
-      },
-      text() {
-        return consumeBody.call(this).then(function(buffer) {
-          return buffer.toString();
-        });
-      },
-      buffer() {
-        return consumeBody.call(this);
-      },
-      textConverted() {
-        var _this3 = this;
-        return consumeBody.call(this).then(function(buffer) {
-          return convertBody(buffer, _this3.headers);
-        });
-      }
-    };
-    Object.defineProperties(Body.prototype, {
-      body: { enumerable: true },
-      bodyUsed: { enumerable: true },
-      arrayBuffer: { enumerable: true },
-      blob: { enumerable: true },
-      json: { enumerable: true },
-      text: { enumerable: true }
-    });
-    Body.mixIn = function(proto2) {
-      for (const name of Object.getOwnPropertyNames(Body.prototype)) {
-        if (!(name in proto2)) {
-          const desc = Object.getOwnPropertyDescriptor(Body.prototype, name);
-          Object.defineProperty(proto2, name, desc);
-        }
-      }
-    };
-    function consumeBody() {
-      var _this4 = this;
-      if (this[INTERNALS].disturbed) {
-        return Body.Promise.reject(new TypeError(`body used already for: ${this.url}`));
-      }
-      this[INTERNALS].disturbed = true;
-      if (this[INTERNALS].error) {
-        return Body.Promise.reject(this[INTERNALS].error);
-      }
-      let body = this.body;
-      if (body === null) {
-        return Body.Promise.resolve(Buffer.alloc(0));
-      }
-      if (isBlob(body)) {
-        body = body.stream();
-      }
-      if (Buffer.isBuffer(body)) {
-        return Body.Promise.resolve(body);
-      }
-      if (!(body instanceof Stream)) {
-        return Body.Promise.resolve(Buffer.alloc(0));
-      }
-      let accum = [];
-      let accumBytes = 0;
-      let abort = false;
-      return new Body.Promise(function(resolve, reject) {
-        let resTimeout;
-        if (_this4.timeout) {
-          resTimeout = setTimeout(function() {
-            abort = true;
-            reject(new FetchError(`Response timeout while trying to fetch ${_this4.url} (over ${_this4.timeout}ms)`, "body-timeout"));
-          }, _this4.timeout);
-        }
-        body.on("error", function(err) {
-          if (err.name === "AbortError") {
-            abort = true;
-            reject(err);
-          } else {
-            reject(new FetchError(`Invalid response body while trying to fetch ${_this4.url}: ${err.message}`, "system", err));
-          }
-        });
-        body.on("data", function(chunk) {
-          if (abort || chunk === null) {
-            return;
-          }
-          if (_this4.size && accumBytes + chunk.length > _this4.size) {
-            abort = true;
-            reject(new FetchError(`content size at ${_this4.url} over limit: ${_this4.size}`, "max-size"));
-            return;
-          }
-          accumBytes += chunk.length;
-          accum.push(chunk);
-        });
-        body.on("end", function() {
-          if (abort) {
-            return;
-          }
-          clearTimeout(resTimeout);
-          try {
-            resolve(Buffer.concat(accum, accumBytes));
-          } catch (err) {
-            reject(new FetchError(`Could not create Buffer from response body for ${_this4.url}: ${err.message}`, "system", err));
-          }
-        });
-      });
-    }
-    function convertBody(buffer, headers) {
-      if (typeof convert !== "function") {
-        throw new Error("The package `encoding` must be installed to use the textConverted() function");
-      }
-      const ct = headers.get("content-type");
-      let charset = "utf-8";
-      let res, str;
-      if (ct) {
-        res = /charset=([^;]*)/i.exec(ct);
-      }
-      str = buffer.slice(0, 1024).toString();
-      if (!res && str) {
-        res = /<meta.+?charset=(['"])(.+?)\1/i.exec(str);
-      }
-      if (!res && str) {
-        res = /<meta[\s]+?http-equiv=(['"])content-type\1[\s]+?content=(['"])(.+?)\2/i.exec(str);
-        if (!res) {
-          res = /<meta[\s]+?content=(['"])(.+?)\1[\s]+?http-equiv=(['"])content-type\3/i.exec(str);
-          if (res) {
-            res.pop();
-          }
-        }
-        if (res) {
-          res = /charset=(.*)/i.exec(res.pop());
-        }
-      }
-      if (!res && str) {
-        res = /<\?xml.+?encoding=(['"])(.+?)\1/i.exec(str);
-      }
-      if (res) {
-        charset = res.pop();
-        if (charset === "gb2312" || charset === "gbk") {
-          charset = "gb18030";
-        }
-      }
-      return convert(buffer, "UTF-8", charset).toString();
-    }
-    function isURLSearchParams(obj) {
-      if (typeof obj !== "object" || typeof obj.append !== "function" || typeof obj.delete !== "function" || typeof obj.get !== "function" || typeof obj.getAll !== "function" || typeof obj.has !== "function" || typeof obj.set !== "function") {
-        return false;
-      }
-      return obj.constructor.name === "URLSearchParams" || Object.prototype.toString.call(obj) === "[object URLSearchParams]" || typeof obj.sort === "function";
-    }
-    function isBlob(obj) {
-      return typeof obj === "object" && typeof obj.arrayBuffer === "function" && typeof obj.type === "string" && typeof obj.stream === "function" && typeof obj.constructor === "function" && typeof obj.constructor.name === "string" && /^(Blob|File)$/.test(obj.constructor.name) && /^(Blob|File)$/.test(obj[Symbol.toStringTag]);
-    }
-    function clone(instance) {
-      let p1, p2;
-      let body = instance.body;
-      if (instance.bodyUsed) {
-        throw new Error("cannot clone body after it is used");
-      }
-      if (body instanceof Stream && typeof body.getBoundary !== "function") {
-        p1 = new PassThrough();
-        p2 = new PassThrough();
-        body.pipe(p1);
-        body.pipe(p2);
-        instance[INTERNALS].body = p1;
-        body = p2;
-      }
-      return body;
-    }
-    function extractContentType(body) {
-      if (body === null) {
-        return null;
-      } else if (typeof body === "string") {
-        return "text/plain;charset=UTF-8";
-      } else if (isURLSearchParams(body)) {
-        return "application/x-www-form-urlencoded;charset=UTF-8";
-      } else if (isBlob(body)) {
-        return body.type || null;
-      } else if (Buffer.isBuffer(body)) {
-        return null;
-      } else if (Object.prototype.toString.call(body) === "[object ArrayBuffer]") {
-        return null;
-      } else if (ArrayBuffer.isView(body)) {
-        return null;
-      } else if (typeof body.getBoundary === "function") {
-        return `multipart/form-data;boundary=${body.getBoundary()}`;
-      } else if (body instanceof Stream) {
-        return null;
-      } else {
-        return "text/plain;charset=UTF-8";
-      }
-    }
-    function getTotalBytes(instance) {
-      const body = instance.body;
-      if (body === null) {
-        return 0;
-      } else if (isBlob(body)) {
-        return body.size;
-      } else if (Buffer.isBuffer(body)) {
-        return body.length;
-      } else if (body && typeof body.getLengthSync === "function") {
-        if (body._lengthRetrievers && body._lengthRetrievers.length == 0 || body.hasKnownLength && body.hasKnownLength()) {
-          return body.getLengthSync();
-        }
-        return null;
-      } else {
-        return null;
-      }
-    }
-    function writeToStream(dest, instance) {
-      const body = instance.body;
-      if (body === null) {
-        dest.end();
-      } else if (isBlob(body)) {
-        body.stream().pipe(dest);
-      } else if (Buffer.isBuffer(body)) {
-        dest.write(body);
-        dest.end();
-      } else {
-        body.pipe(dest);
-      }
-    }
-    Body.Promise = global.Promise;
-    var invalidTokenRegex = /[^\^_`a-zA-Z\-0-9!#$%&'*+.|~]/;
-    var invalidHeaderCharRegex = /[^\t\x20-\x7e\x80-\xff]/;
-    function validateName(name) {
-      name = `${name}`;
-      if (invalidTokenRegex.test(name) || name === "") {
-        throw new TypeError(`${name} is not a legal HTTP header name`);
-      }
-    }
-    function validateValue(value) {
-      value = `${value}`;
-      if (invalidHeaderCharRegex.test(value)) {
-        throw new TypeError(`${value} is not a legal HTTP header value`);
-      }
-    }
-    function find(map, name) {
-      name = name.toLowerCase();
-      for (const key in map) {
-        if (key.toLowerCase() === name) {
-          return key;
-        }
-      }
-      return void 0;
-    }
-    var MAP = Symbol("map");
-    var Headers = class {
-      constructor() {
-        let init = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : void 0;
-        this[MAP] = /* @__PURE__ */ Object.create(null);
-        if (init instanceof Headers) {
-          const rawHeaders = init.raw();
-          const headerNames = Object.keys(rawHeaders);
-          for (const headerName of headerNames) {
-            for (const value of rawHeaders[headerName]) {
-              this.append(headerName, value);
-            }
-          }
-          return;
-        }
-        if (init == null)
-          ;
-        else if (typeof init === "object") {
-          const method = init[Symbol.iterator];
-          if (method != null) {
-            if (typeof method !== "function") {
-              throw new TypeError("Header pairs must be iterable");
-            }
-            const pairs = [];
-            for (const pair of init) {
-              if (typeof pair !== "object" || typeof pair[Symbol.iterator] !== "function") {
-                throw new TypeError("Each header pair must be iterable");
-              }
-              pairs.push(Array.from(pair));
-            }
-            for (const pair of pairs) {
-              if (pair.length !== 2) {
-                throw new TypeError("Each header pair must be a name/value tuple");
-              }
-              this.append(pair[0], pair[1]);
-            }
-          } else {
-            for (const key of Object.keys(init)) {
-              const value = init[key];
-              this.append(key, value);
-            }
-          }
-        } else {
-          throw new TypeError("Provided initializer must be an object");
-        }
-      }
-      get(name) {
-        name = `${name}`;
-        validateName(name);
-        const key = find(this[MAP], name);
-        if (key === void 0) {
-          return null;
-        }
-        return this[MAP][key].join(", ");
-      }
-      forEach(callback) {
-        let thisArg = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : void 0;
-        let pairs = getHeaders(this);
-        let i = 0;
-        while (i < pairs.length) {
-          var _pairs$i = pairs[i];
-          const name = _pairs$i[0], value = _pairs$i[1];
-          callback.call(thisArg, value, name, this);
-          pairs = getHeaders(this);
-          i++;
-        }
-      }
-      set(name, value) {
-        name = `${name}`;
-        value = `${value}`;
-        validateName(name);
-        validateValue(value);
-        const key = find(this[MAP], name);
-        this[MAP][key !== void 0 ? key : name] = [value];
-      }
-      append(name, value) {
-        name = `${name}`;
-        value = `${value}`;
-        validateName(name);
-        validateValue(value);
-        const key = find(this[MAP], name);
-        if (key !== void 0) {
-          this[MAP][key].push(value);
-        } else {
-          this[MAP][name] = [value];
-        }
-      }
-      has(name) {
-        name = `${name}`;
-        validateName(name);
-        return find(this[MAP], name) !== void 0;
-      }
-      delete(name) {
-        name = `${name}`;
-        validateName(name);
-        const key = find(this[MAP], name);
-        if (key !== void 0) {
-          delete this[MAP][key];
-        }
-      }
-      raw() {
-        return this[MAP];
-      }
-      keys() {
-        return createHeadersIterator(this, "key");
-      }
-      values() {
-        return createHeadersIterator(this, "value");
-      }
-      [Symbol.iterator]() {
-        return createHeadersIterator(this, "key+value");
-      }
-    };
-    Headers.prototype.entries = Headers.prototype[Symbol.iterator];
-    Object.defineProperty(Headers.prototype, Symbol.toStringTag, {
-      value: "Headers",
-      writable: false,
-      enumerable: false,
-      configurable: true
-    });
-    Object.defineProperties(Headers.prototype, {
-      get: { enumerable: true },
-      forEach: { enumerable: true },
-      set: { enumerable: true },
-      append: { enumerable: true },
-      has: { enumerable: true },
-      delete: { enumerable: true },
-      keys: { enumerable: true },
-      values: { enumerable: true },
-      entries: { enumerable: true }
-    });
-    function getHeaders(headers) {
-      let kind = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : "key+value";
-      const keys = Object.keys(headers[MAP]).sort();
-      return keys.map(kind === "key" ? function(k) {
-        return k.toLowerCase();
-      } : kind === "value" ? function(k) {
-        return headers[MAP][k].join(", ");
-      } : function(k) {
-        return [k.toLowerCase(), headers[MAP][k].join(", ")];
-      });
-    }
-    var INTERNAL = Symbol("internal");
-    function createHeadersIterator(target, kind) {
-      const iterator = Object.create(HeadersIteratorPrototype);
-      iterator[INTERNAL] = {
-        target,
-        kind,
-        index: 0
-      };
-      return iterator;
-    }
-    var HeadersIteratorPrototype = Object.setPrototypeOf({
-      next() {
-        if (!this || Object.getPrototypeOf(this) !== HeadersIteratorPrototype) {
-          throw new TypeError("Value of `this` is not a HeadersIterator");
-        }
-        var _INTERNAL = this[INTERNAL];
-        const target = _INTERNAL.target, kind = _INTERNAL.kind, index = _INTERNAL.index;
-        const values = getHeaders(target, kind);
-        const len = values.length;
-        if (index >= len) {
-          return {
-            value: void 0,
-            done: true
-          };
-        }
-        this[INTERNAL].index = index + 1;
-        return {
-          value: values[index],
-          done: false
-        };
-      }
-    }, Object.getPrototypeOf(Object.getPrototypeOf([][Symbol.iterator]())));
-    Object.defineProperty(HeadersIteratorPrototype, Symbol.toStringTag, {
-      value: "HeadersIterator",
-      writable: false,
-      enumerable: false,
-      configurable: true
-    });
-    function exportNodeCompatibleHeaders(headers) {
-      const obj = Object.assign({ __proto__: null }, headers[MAP]);
-      const hostHeaderKey = find(headers[MAP], "Host");
-      if (hostHeaderKey !== void 0) {
-        obj[hostHeaderKey] = obj[hostHeaderKey][0];
-      }
-      return obj;
-    }
-    function createHeadersLenient(obj) {
-      const headers = new Headers();
-      for (const name of Object.keys(obj)) {
-        if (invalidTokenRegex.test(name)) {
-          continue;
-        }
-        if (Array.isArray(obj[name])) {
-          for (const val of obj[name]) {
-            if (invalidHeaderCharRegex.test(val)) {
-              continue;
-            }
-            if (headers[MAP][name] === void 0) {
-              headers[MAP][name] = [val];
-            } else {
-              headers[MAP][name].push(val);
-            }
-          }
-        } else if (!invalidHeaderCharRegex.test(obj[name])) {
-          headers[MAP][name] = [obj[name]];
-        }
-      }
-      return headers;
-    }
-    var INTERNALS$1 = Symbol("Response internals");
-    var STATUS_CODES = http.STATUS_CODES;
-    var Response = class {
-      constructor() {
-        let body = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : null;
-        let opts = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
-        Body.call(this, body, opts);
-        const status = opts.status || 200;
-        const headers = new Headers(opts.headers);
-        if (body != null && !headers.has("Content-Type")) {
-          const contentType = extractContentType(body);
-          if (contentType) {
-            headers.append("Content-Type", contentType);
-          }
-        }
-        this[INTERNALS$1] = {
-          url: opts.url,
-          status,
-          statusText: opts.statusText || STATUS_CODES[status],
-          headers,
-          counter: opts.counter
-        };
-      }
-      get url() {
-        return this[INTERNALS$1].url || "";
-      }
-      get status() {
-        return this[INTERNALS$1].status;
-      }
-      get ok() {
-        return this[INTERNALS$1].status >= 200 && this[INTERNALS$1].status < 300;
-      }
-      get redirected() {
-        return this[INTERNALS$1].counter > 0;
-      }
-      get statusText() {
-        return this[INTERNALS$1].statusText;
-      }
-      get headers() {
-        return this[INTERNALS$1].headers;
-      }
-      clone() {
-        return new Response(clone(this), {
-          url: this.url,
-          status: this.status,
-          statusText: this.statusText,
-          headers: this.headers,
-          ok: this.ok,
-          redirected: this.redirected
-        });
-      }
-    };
-    Body.mixIn(Response.prototype);
-    Object.defineProperties(Response.prototype, {
-      url: { enumerable: true },
-      status: { enumerable: true },
-      ok: { enumerable: true },
-      redirected: { enumerable: true },
-      statusText: { enumerable: true },
-      headers: { enumerable: true },
-      clone: { enumerable: true }
-    });
-    Object.defineProperty(Response.prototype, Symbol.toStringTag, {
-      value: "Response",
-      writable: false,
-      enumerable: false,
-      configurable: true
-    });
-    var INTERNALS$2 = Symbol("Request internals");
-    var URL3 = Url.URL || whatwgUrl.URL;
-    var parse_url = Url.parse;
-    var format_url = Url.format;
-    function parseURL(urlStr) {
-      if (/^[a-zA-Z][a-zA-Z\d+\-.]*:/.exec(urlStr)) {
-        urlStr = new URL3(urlStr).toString();
-      }
-      return parse_url(urlStr);
-    }
-    var streamDestructionSupported = "destroy" in Stream.Readable.prototype;
-    function isRequest(input) {
-      return typeof input === "object" && typeof input[INTERNALS$2] === "object";
-    }
-    function isAbortSignal(signal) {
-      const proto2 = signal && typeof signal === "object" && Object.getPrototypeOf(signal);
-      return !!(proto2 && proto2.constructor.name === "AbortSignal");
-    }
-    var Request = class {
-      constructor(input) {
-        let init = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
-        let parsedURL;
-        if (!isRequest(input)) {
-          if (input && input.href) {
-            parsedURL = parseURL(input.href);
-          } else {
-            parsedURL = parseURL(`${input}`);
-          }
-          input = {};
-        } else {
-          parsedURL = parseURL(input.url);
-        }
-        let method = init.method || input.method || "GET";
-        method = method.toUpperCase();
-        if ((init.body != null || isRequest(input) && input.body !== null) && (method === "GET" || method === "HEAD")) {
-          throw new TypeError("Request with GET/HEAD method cannot have body");
-        }
-        let inputBody = init.body != null ? init.body : isRequest(input) && input.body !== null ? clone(input) : null;
-        Body.call(this, inputBody, {
-          timeout: init.timeout || input.timeout || 0,
-          size: init.size || input.size || 0
-        });
-        const headers = new Headers(init.headers || input.headers || {});
-        if (inputBody != null && !headers.has("Content-Type")) {
-          const contentType = extractContentType(inputBody);
-          if (contentType) {
-            headers.append("Content-Type", contentType);
-          }
-        }
-        let signal = isRequest(input) ? input.signal : null;
-        if ("signal" in init)
-          signal = init.signal;
-        if (signal != null && !isAbortSignal(signal)) {
-          throw new TypeError("Expected signal to be an instanceof AbortSignal");
-        }
-        this[INTERNALS$2] = {
-          method,
-          redirect: init.redirect || input.redirect || "follow",
-          headers,
-          parsedURL,
-          signal
-        };
-        this.follow = init.follow !== void 0 ? init.follow : input.follow !== void 0 ? input.follow : 20;
-        this.compress = init.compress !== void 0 ? init.compress : input.compress !== void 0 ? input.compress : true;
-        this.counter = init.counter || input.counter || 0;
-        this.agent = init.agent || input.agent;
-      }
-      get method() {
-        return this[INTERNALS$2].method;
-      }
-      get url() {
-        return format_url(this[INTERNALS$2].parsedURL);
-      }
-      get headers() {
-        return this[INTERNALS$2].headers;
-      }
-      get redirect() {
-        return this[INTERNALS$2].redirect;
-      }
-      get signal() {
-        return this[INTERNALS$2].signal;
-      }
-      clone() {
-        return new Request(this);
-      }
-    };
-    Body.mixIn(Request.prototype);
-    Object.defineProperty(Request.prototype, Symbol.toStringTag, {
-      value: "Request",
-      writable: false,
-      enumerable: false,
-      configurable: true
-    });
-    Object.defineProperties(Request.prototype, {
-      method: { enumerable: true },
-      url: { enumerable: true },
-      headers: { enumerable: true },
-      redirect: { enumerable: true },
-      clone: { enumerable: true },
-      signal: { enumerable: true }
-    });
-    function getNodeRequestOptions(request) {
-      const parsedURL = request[INTERNALS$2].parsedURL;
-      const headers = new Headers(request[INTERNALS$2].headers);
-      if (!headers.has("Accept")) {
-        headers.set("Accept", "*/*");
-      }
-      if (!parsedURL.protocol || !parsedURL.hostname) {
-        throw new TypeError("Only absolute URLs are supported");
-      }
-      if (!/^https?:$/.test(parsedURL.protocol)) {
-        throw new TypeError("Only HTTP(S) protocols are supported");
-      }
-      if (request.signal && request.body instanceof Stream.Readable && !streamDestructionSupported) {
-        throw new Error("Cancellation of streamed requests with AbortSignal is not supported in node < 8");
-      }
-      let contentLengthValue = null;
-      if (request.body == null && /^(POST|PUT)$/i.test(request.method)) {
-        contentLengthValue = "0";
-      }
-      if (request.body != null) {
-        const totalBytes = getTotalBytes(request);
-        if (typeof totalBytes === "number") {
-          contentLengthValue = String(totalBytes);
-        }
-      }
-      if (contentLengthValue) {
-        headers.set("Content-Length", contentLengthValue);
-      }
-      if (!headers.has("User-Agent")) {
-        headers.set("User-Agent", "node-fetch/1.0 (+https://github.com/bitinn/node-fetch)");
-      }
-      if (request.compress && !headers.has("Accept-Encoding")) {
-        headers.set("Accept-Encoding", "gzip,deflate");
-      }
-      let agent = request.agent;
-      if (typeof agent === "function") {
-        agent = agent(parsedURL);
-      }
-      if (!headers.has("Connection") && !agent) {
-        headers.set("Connection", "close");
-      }
-      return Object.assign({}, parsedURL, {
-        method: request.method,
-        headers: exportNodeCompatibleHeaders(headers),
-        agent
-      });
-    }
-    function AbortError(message) {
-      Error.call(this, message);
-      this.type = "aborted";
-      this.message = message;
-      Error.captureStackTrace(this, this.constructor);
-    }
-    AbortError.prototype = Object.create(Error.prototype);
-    AbortError.prototype.constructor = AbortError;
-    AbortError.prototype.name = "AbortError";
-    var URL$1 = Url.URL || whatwgUrl.URL;
-    var PassThrough$1 = Stream.PassThrough;
-    var isDomainOrSubdomain = function isDomainOrSubdomain2(destination, original) {
-      const orig = new URL$1(original).hostname;
-      const dest = new URL$1(destination).hostname;
-      return orig === dest || orig[orig.length - dest.length - 1] === "." && orig.endsWith(dest);
-    };
-    function fetch(url, opts) {
-      if (!fetch.Promise) {
-        throw new Error("native promise missing, set fetch.Promise to your favorite alternative");
-      }
-      Body.Promise = fetch.Promise;
-      return new fetch.Promise(function(resolve, reject) {
-        const request = new Request(url, opts);
-        const options = getNodeRequestOptions(request);
-        const send = (options.protocol === "https:" ? https : http).request;
-        const signal = request.signal;
-        let response = null;
-        const abort = function abort2() {
-          let error2 = new AbortError("The user aborted a request.");
-          reject(error2);
-          if (request.body && request.body instanceof Stream.Readable) {
-            request.body.destroy(error2);
-          }
-          if (!response || !response.body)
-            return;
-          response.body.emit("error", error2);
-        };
-        if (signal && signal.aborted) {
-          abort();
-          return;
-        }
-        const abortAndFinalize = function abortAndFinalize2() {
-          abort();
-          finalize();
-        };
-        const req = send(options);
-        let reqTimeout;
-        if (signal) {
-          signal.addEventListener("abort", abortAndFinalize);
-        }
-        function finalize() {
-          req.abort();
-          if (signal)
-            signal.removeEventListener("abort", abortAndFinalize);
-          clearTimeout(reqTimeout);
-        }
-        if (request.timeout) {
-          req.once("socket", function(socket) {
-            reqTimeout = setTimeout(function() {
-              reject(new FetchError(`network timeout at: ${request.url}`, "request-timeout"));
-              finalize();
-            }, request.timeout);
-          });
-        }
-        req.on("error", function(err) {
-          reject(new FetchError(`request to ${request.url} failed, reason: ${err.message}`, "system", err));
-          finalize();
-        });
-        req.on("response", function(res) {
-          clearTimeout(reqTimeout);
-          const headers = createHeadersLenient(res.headers);
-          if (fetch.isRedirect(res.statusCode)) {
-            const location = headers.get("Location");
-            let locationURL = null;
-            try {
-              locationURL = location === null ? null : new URL$1(location, request.url).toString();
-            } catch (err) {
-              if (request.redirect !== "manual") {
-                reject(new FetchError(`uri requested responds with an invalid redirect URL: ${location}`, "invalid-redirect"));
-                finalize();
-                return;
-              }
-            }
-            switch (request.redirect) {
-              case "error":
-                reject(new FetchError(`uri requested responds with a redirect, redirect mode is set to error: ${request.url}`, "no-redirect"));
-                finalize();
-                return;
-              case "manual":
-                if (locationURL !== null) {
-                  try {
-                    headers.set("Location", locationURL);
-                  } catch (err) {
-                    reject(err);
-                  }
-                }
-                break;
-              case "follow":
-                if (locationURL === null) {
-                  break;
-                }
-                if (request.counter >= request.follow) {
-                  reject(new FetchError(`maximum redirect reached at: ${request.url}`, "max-redirect"));
-                  finalize();
-                  return;
-                }
-                const requestOpts = {
-                  headers: new Headers(request.headers),
-                  follow: request.follow,
-                  counter: request.counter + 1,
-                  agent: request.agent,
-                  compress: request.compress,
-                  method: request.method,
-                  body: request.body,
-                  signal: request.signal,
-                  timeout: request.timeout,
-                  size: request.size
-                };
-                if (!isDomainOrSubdomain(request.url, locationURL)) {
-                  for (const name of ["authorization", "www-authenticate", "cookie", "cookie2"]) {
-                    requestOpts.headers.delete(name);
-                  }
-                }
-                if (res.statusCode !== 303 && request.body && getTotalBytes(request) === null) {
-                  reject(new FetchError("Cannot follow redirect with body being a readable stream", "unsupported-redirect"));
-                  finalize();
-                  return;
-                }
-                if (res.statusCode === 303 || (res.statusCode === 301 || res.statusCode === 302) && request.method === "POST") {
-                  requestOpts.method = "GET";
-                  requestOpts.body = void 0;
-                  requestOpts.headers.delete("content-length");
-                }
-                resolve(fetch(new Request(locationURL, requestOpts)));
-                finalize();
-                return;
-            }
-          }
-          res.once("end", function() {
-            if (signal)
-              signal.removeEventListener("abort", abortAndFinalize);
-          });
-          let body = res.pipe(new PassThrough$1());
-          const response_options = {
-            url: request.url,
-            status: res.statusCode,
-            statusText: res.statusMessage,
-            headers,
-            size: request.size,
-            timeout: request.timeout,
-            counter: request.counter
-          };
-          const codings = headers.get("Content-Encoding");
-          if (!request.compress || request.method === "HEAD" || codings === null || res.statusCode === 204 || res.statusCode === 304) {
-            response = new Response(body, response_options);
-            resolve(response);
-            return;
-          }
-          const zlibOptions = {
-            flush: zlib.Z_SYNC_FLUSH,
-            finishFlush: zlib.Z_SYNC_FLUSH
-          };
-          if (codings == "gzip" || codings == "x-gzip") {
-            body = body.pipe(zlib.createGunzip(zlibOptions));
-            response = new Response(body, response_options);
-            resolve(response);
-            return;
-          }
-          if (codings == "deflate" || codings == "x-deflate") {
-            const raw = res.pipe(new PassThrough$1());
-            raw.once("data", function(chunk) {
-              if ((chunk[0] & 15) === 8) {
-                body = body.pipe(zlib.createInflate());
-              } else {
-                body = body.pipe(zlib.createInflateRaw());
-              }
-              response = new Response(body, response_options);
-              resolve(response);
-            });
-            return;
-          }
-          if (codings == "br" && typeof zlib.createBrotliDecompress === "function") {
-            body = body.pipe(zlib.createBrotliDecompress());
-            response = new Response(body, response_options);
-            resolve(response);
-            return;
-          }
-          response = new Response(body, response_options);
-          resolve(response);
-        });
-        writeToStream(req, request);
-      });
-    }
-    fetch.isRedirect = function(code) {
-      return code === 301 || code === 302 || code === 303 || code === 307 || code === 308;
-    };
-    fetch.Promise = global.Promise;
-    module.exports = exports = fetch;
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = exports;
-    exports.Headers = Headers;
-    exports.Request = Request;
-    exports.Response = Response;
-    exports.FetchError = FetchError;
-  }
-});
-
-// 
-var require_dist_node27 = __commonJS({
-  ""(exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    function _interopDefault(ex) {
-      return ex && typeof ex === "object" && "default" in ex ? ex["default"] : ex;
-    }
-    var deprecation = require_dist_node3();
-    var once = _interopDefault(require_once());
-    var logOnceCode = once((deprecation2) => console.warn(deprecation2));
-    var logOnceHeaders = once((deprecation2) => console.warn(deprecation2));
-    var RequestError = class extends Error {
-      constructor(message, statusCode, options) {
-        super(message);
-        if (Error.captureStackTrace) {
-          Error.captureStackTrace(this, this.constructor);
-        }
-        this.name = "HttpError";
-        this.status = statusCode;
-        let headers;
-        if ("headers" in options && typeof options.headers !== "undefined") {
-          headers = options.headers;
-        }
-        if ("response" in options) {
-          this.response = options.response;
-          headers = options.response.headers;
-        }
-        const requestCopy = Object.assign({}, options.request);
-        if (options.request.headers.authorization) {
-          requestCopy.headers = Object.assign({}, options.request.headers, {
-            authorization: options.request.headers.authorization.replace(/ .*$/, " [REDACTED]")
-          });
-        }
-        requestCopy.url = requestCopy.url.replace(/\bclient_secret=\w+/g, "client_secret=[REDACTED]").replace(/\baccess_token=\w+/g, "access_token=[REDACTED]");
-        this.request = requestCopy;
-        Object.defineProperty(this, "code", {
-          get() {
-            logOnceCode(new deprecation.Deprecation("[@octokit/request-error] `error.code` is deprecated, use `error.status`."));
-            return statusCode;
-          }
-        });
-        Object.defineProperty(this, "headers", {
-          get() {
-            logOnceHeaders(new deprecation.Deprecation("[@octokit/request-error] `error.headers` is deprecated, use `error.response.headers`."));
-            return headers || {};
-          }
-        });
-      }
-    };
-    exports.RequestError = RequestError;
-  }
-});
-
-// 
-var require_dist_node28 = __commonJS({
-  ""(exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    function _interopDefault(ex) {
-      return ex && typeof ex === "object" && "default" in ex ? ex["default"] : ex;
-    }
-    var endpoint = require_dist_node2();
-    var universalUserAgent = require_dist_node();
-    var isPlainObject = require_is_plain_object();
-    var nodeFetch = _interopDefault(require_lib11());
-    var requestError = require_dist_node27();
-    var VERSION = "5.6.3";
-    function getBufferResponse(response) {
-      return response.arrayBuffer();
-    }
-    function fetchWrapper(requestOptions) {
-      const log = requestOptions.request && requestOptions.request.log ? requestOptions.request.log : console;
-      if (isPlainObject.isPlainObject(requestOptions.body) || Array.isArray(requestOptions.body)) {
-        requestOptions.body = JSON.stringify(requestOptions.body);
-      }
-      let headers = {};
-      let status;
-      let url;
-      const fetch = requestOptions.request && requestOptions.request.fetch || nodeFetch;
-      return fetch(requestOptions.url, Object.assign({
-        method: requestOptions.method,
-        body: requestOptions.body,
-        headers: requestOptions.headers,
-        redirect: requestOptions.redirect
-      }, requestOptions.request)).then(async (response) => {
-        url = response.url;
-        status = response.status;
-        for (const keyAndValue of response.headers) {
-          headers[keyAndValue[0]] = keyAndValue[1];
-        }
-        if ("deprecation" in headers) {
-          const matches = headers.link && headers.link.match(/<([^>]+)>; rel="deprecation"/);
-          const deprecationLink = matches && matches.pop();
-          log.warn(`[@octokit/request] "${requestOptions.method} ${requestOptions.url}" is deprecated. It is scheduled to be removed on ${headers.sunset}${deprecationLink ? `. See ${deprecationLink}` : ""}`);
-        }
-        if (status === 204 || status === 205) {
-          return;
-        }
-        if (requestOptions.method === "HEAD") {
-          if (status < 400) {
-            return;
-          }
-          throw new requestError.RequestError(response.statusText, status, {
-            response: {
-              url,
-              status,
-              headers,
-              data: void 0
-            },
-            request: requestOptions
-          });
-        }
-        if (status === 304) {
-          throw new requestError.RequestError("Not modified", status, {
-            response: {
-              url,
-              status,
-              headers,
-              data: await getResponseData(response)
-            },
-            request: requestOptions
-          });
-        }
-        if (status >= 400) {
-          const data = await getResponseData(response);
-          const error2 = new requestError.RequestError(toErrorMessage(data), status, {
-            response: {
-              url,
-              status,
-              headers,
-              data
-            },
-            request: requestOptions
-          });
-          throw error2;
-        }
-        return getResponseData(response);
-      }).then((data) => {
-        return {
-          status,
-          url,
-          headers,
-          data
-        };
-      }).catch((error2) => {
-        if (error2 instanceof requestError.RequestError)
-          throw error2;
-        throw new requestError.RequestError(error2.message, 500, {
-          request: requestOptions
-        });
-      });
-    }
-    async function getResponseData(response) {
-      const contentType = response.headers.get("content-type");
-      if (/application\/json/.test(contentType)) {
-        return response.json();
-      }
-      if (!contentType || /^text\/|charset=utf-8$/.test(contentType)) {
-        return response.text();
-      }
-      return getBufferResponse(response);
-    }
-    function toErrorMessage(data) {
-      if (typeof data === "string")
-        return data;
-      if ("message" in data) {
-        if (Array.isArray(data.errors)) {
-          return `${data.message}: ${data.errors.map(JSON.stringify).join(", ")}`;
-        }
-        return data.message;
-      }
-      return `Unknown error: ${JSON.stringify(data)}`;
-    }
-    function withDefaults(oldEndpoint, newDefaults) {
-      const endpoint2 = oldEndpoint.defaults(newDefaults);
-      const newApi = function(route, parameters) {
-        const endpointOptions = endpoint2.merge(route, parameters);
-        if (!endpointOptions.request || !endpointOptions.request.hook) {
-          return fetchWrapper(endpoint2.parse(endpointOptions));
-        }
-        const request2 = (route2, parameters2) => {
-          return fetchWrapper(endpoint2.parse(endpoint2.merge(route2, parameters2)));
-        };
-        Object.assign(request2, {
-          endpoint: endpoint2,
-          defaults: withDefaults.bind(null, endpoint2)
-        });
-        return endpointOptions.request.hook(request2, endpointOptions);
-      };
-      return Object.assign(newApi, {
-        endpoint: endpoint2,
-        defaults: withDefaults.bind(null, endpoint2)
-      });
-    }
-    var request = withDefaults(endpoint.endpoint, {
-      headers: {
-        "user-agent": `octokit-request.js/${VERSION} ${universalUserAgent.getUserAgent()}`
-      }
-    });
-    exports.request = request;
-  }
-});
-
-// 
-var require_dist_node29 = __commonJS({
-  ""(exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    function _interopDefault(ex) {
-      return ex && typeof ex === "object" && "default" in ex ? ex["default"] : ex;
-    }
-    var oauthAuthorizationUrl = require_dist_node26();
-    var request = require_dist_node28();
-    var requestError = require_dist_node27();
-    var btoa = _interopDefault(require_btoa_node());
-    var VERSION = "1.2.6";
-    function ownKeys(object, enumerableOnly) {
-      var keys = Object.keys(object);
-      if (Object.getOwnPropertySymbols) {
-        var symbols = Object.getOwnPropertySymbols(object);
-        if (enumerableOnly) {
-          symbols = symbols.filter(function(sym) {
-            return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-          });
-        }
-        keys.push.apply(keys, symbols);
-      }
-      return keys;
-    }
-    function _objectSpread2(target) {
-      for (var i = 1; i < arguments.length; i++) {
-        var source = arguments[i] != null ? arguments[i] : {};
-        if (i % 2) {
-          ownKeys(Object(source), true).forEach(function(key) {
-            _defineProperty(target, key, source[key]);
-          });
-        } else if (Object.getOwnPropertyDescriptors) {
-          Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-        } else {
-          ownKeys(Object(source)).forEach(function(key) {
-            Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-          });
-        }
-      }
-      return target;
-    }
-    function _defineProperty(obj, key, value) {
-      if (key in obj) {
-        Object.defineProperty(obj, key, {
-          value,
-          enumerable: true,
-          configurable: true,
-          writable: true
-        });
-      } else {
-        obj[key] = value;
-      }
-      return obj;
-    }
-    function _objectWithoutPropertiesLoose(source, excluded) {
-      if (source == null)
-        return {};
-      var target = {};
-      var sourceKeys = Object.keys(source);
-      var key, i;
-      for (i = 0; i < sourceKeys.length; i++) {
-        key = sourceKeys[i];
-        if (excluded.indexOf(key) >= 0)
-          continue;
-        target[key] = source[key];
-      }
-      return target;
-    }
-    function _objectWithoutProperties(source, excluded) {
-      if (source == null)
-        return {};
-      var target = _objectWithoutPropertiesLoose(source, excluded);
-      var key, i;
-      if (Object.getOwnPropertySymbols) {
-        var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
-        for (i = 0; i < sourceSymbolKeys.length; i++) {
-          key = sourceSymbolKeys[i];
-          if (excluded.indexOf(key) >= 0)
-            continue;
-          if (!Object.prototype.propertyIsEnumerable.call(source, key))
-            continue;
-          target[key] = source[key];
-        }
-      }
-      return target;
-    }
-    function requestToOAuthBaseUrl(request2) {
-      const endpointDefaults = request2.endpoint.DEFAULTS;
-      return /^https:\/\/(api\.)?github\.com$/.test(endpointDefaults.baseUrl) ? "https://github.com" : endpointDefaults.baseUrl.replace("/api/v3", "");
-    }
-    async function oauthRequest(request2, route, parameters) {
-      const withOAuthParameters = _objectSpread2({
-        baseUrl: requestToOAuthBaseUrl(request2),
-        headers: {
-          accept: "application/json"
-        }
-      }, parameters);
-      const response = await request2(route, withOAuthParameters);
-      if ("error" in response.data) {
-        const error2 = new requestError.RequestError(`${response.data.error_description} (${response.data.error}, ${response.data.error_uri})`, 400, {
-          request: request2.endpoint.merge(route, withOAuthParameters),
-          headers: response.headers
-        });
-        error2.response = response;
-        throw error2;
-      }
-      return response;
-    }
-    var _excluded = ["request"];
-    function getWebFlowAuthorizationUrl(_ref) {
-      let {
-        request: request$1 = request.request
-      } = _ref, options = _objectWithoutProperties(_ref, _excluded);
-      const baseUrl = requestToOAuthBaseUrl(request$1);
-      return oauthAuthorizationUrl.oauthAuthorizationUrl(_objectSpread2(_objectSpread2({}, options), {}, {
-        baseUrl
-      }));
-    }
-    async function exchangeWebFlowCode(options) {
-      const request$1 = options.request || request.request;
-      const response = await oauthRequest(request$1, "POST /login/oauth/access_token", {
-        client_id: options.clientId,
-        client_secret: options.clientSecret,
-        code: options.code,
-        redirect_uri: options.redirectUrl
-      });
-      const authentication = {
-        clientType: options.clientType,
-        clientId: options.clientId,
-        clientSecret: options.clientSecret,
-        token: response.data.access_token,
-        scopes: response.data.scope.split(/\s+/).filter(Boolean)
-      };
-      if (options.clientType === "github-app") {
-        if ("refresh_token" in response.data) {
-          const apiTimeInMs = new Date(response.headers.date).getTime();
-          authentication.refreshToken = response.data.refresh_token, authentication.expiresAt = toTimestamp(apiTimeInMs, response.data.expires_in), authentication.refreshTokenExpiresAt = toTimestamp(apiTimeInMs, response.data.refresh_token_expires_in);
-        }
-        delete authentication.scopes;
-      }
-      return _objectSpread2(_objectSpread2({}, response), {}, {
-        authentication
-      });
-    }
-    function toTimestamp(apiTimeInMs, expirationInSeconds) {
-      return new Date(apiTimeInMs + expirationInSeconds * 1e3).toISOString();
-    }
-    async function createDeviceCode(options) {
-      const request$1 = options.request || request.request;
-      const parameters = {
-        client_id: options.clientId
-      };
-      if ("scopes" in options && Array.isArray(options.scopes)) {
-        parameters.scope = options.scopes.join(" ");
-      }
-      return oauthRequest(request$1, "POST /login/device/code", parameters);
-    }
-    async function exchangeDeviceCode(options) {
-      const request$1 = options.request || request.request;
-      const response = await oauthRequest(request$1, "POST /login/oauth/access_token", {
-        client_id: options.clientId,
-        device_code: options.code,
-        grant_type: "urn:ietf:params:oauth:grant-type:device_code"
-      });
-      const authentication = {
-        clientType: options.clientType,
-        clientId: options.clientId,
-        token: response.data.access_token,
-        scopes: response.data.scope.split(/\s+/).filter(Boolean)
-      };
-      if ("clientSecret" in options) {
-        authentication.clientSecret = options.clientSecret;
-      }
-      if (options.clientType === "github-app") {
-        if ("refresh_token" in response.data) {
-          const apiTimeInMs = new Date(response.headers.date).getTime();
-          authentication.refreshToken = response.data.refresh_token, authentication.expiresAt = toTimestamp$1(apiTimeInMs, response.data.expires_in), authentication.refreshTokenExpiresAt = toTimestamp$1(apiTimeInMs, response.data.refresh_token_expires_in);
-        }
-        delete authentication.scopes;
-      }
-      return _objectSpread2(_objectSpread2({}, response), {}, {
-        authentication
-      });
-    }
-    function toTimestamp$1(apiTimeInMs, expirationInSeconds) {
-      return new Date(apiTimeInMs + expirationInSeconds * 1e3).toISOString();
-    }
-    async function checkToken(options) {
-      const request$1 = options.request || request.request;
-      const response = await request$1("POST /applications/{client_id}/token", {
-        headers: {
-          authorization: `basic ${btoa(`${options.clientId}:${options.clientSecret}`)}`
-        },
-        client_id: options.clientId,
-        access_token: options.token
-      });
-      const authentication = {
-        clientType: options.clientType,
-        clientId: options.clientId,
-        clientSecret: options.clientSecret,
-        token: options.token,
-        scopes: response.data.scopes
-      };
-      if (response.data.expires_at)
-        authentication.expiresAt = response.data.expires_at;
-      if (options.clientType === "github-app") {
-        delete authentication.scopes;
-      }
-      return _objectSpread2(_objectSpread2({}, response), {}, {
-        authentication
-      });
-    }
-    async function refreshToken(options) {
-      const request$1 = options.request || request.request;
-      const response = await oauthRequest(request$1, "POST /login/oauth/access_token", {
-        client_id: options.clientId,
-        client_secret: options.clientSecret,
-        grant_type: "refresh_token",
-        refresh_token: options.refreshToken
-      });
-      const apiTimeInMs = new Date(response.headers.date).getTime();
-      const authentication = {
-        clientType: "github-app",
-        clientId: options.clientId,
-        clientSecret: options.clientSecret,
-        token: response.data.access_token,
-        refreshToken: response.data.refresh_token,
-        expiresAt: toTimestamp$2(apiTimeInMs, response.data.expires_in),
-        refreshTokenExpiresAt: toTimestamp$2(apiTimeInMs, response.data.refresh_token_expires_in)
-      };
-      return _objectSpread2(_objectSpread2({}, response), {}, {
-        authentication
-      });
-    }
-    function toTimestamp$2(apiTimeInMs, expirationInSeconds) {
-      return new Date(apiTimeInMs + expirationInSeconds * 1e3).toISOString();
-    }
-    var _excluded$1 = ["request", "clientType", "clientId", "clientSecret", "token"];
-    async function scopeToken(options) {
-      const {
-        request: request$1,
-        clientType,
-        clientId,
-        clientSecret,
-        token
-      } = options, requestOptions = _objectWithoutProperties(options, _excluded$1);
-      const response = await (request$1 || request.request)("POST /applications/{client_id}/token/scoped", _objectSpread2({
-        headers: {
-          authorization: `basic ${btoa(`${clientId}:${clientSecret}`)}`
-        },
-        client_id: clientId,
-        access_token: token
-      }, requestOptions));
-      const authentication = Object.assign({
-        clientType,
-        clientId,
-        clientSecret,
-        token: response.data.token
-      }, response.data.expires_at ? {
-        expiresAt: response.data.expires_at
-      } : {});
-      return _objectSpread2(_objectSpread2({}, response), {}, {
-        authentication
-      });
-    }
-    async function resetToken(options) {
-      const request$1 = options.request || request.request;
-      const auth = btoa(`${options.clientId}:${options.clientSecret}`);
-      const response = await request$1("PATCH /applications/{client_id}/token", {
-        headers: {
-          authorization: `basic ${auth}`
-        },
-        client_id: options.clientId,
-        access_token: options.token
-      });
-      const authentication = {
-        clientType: options.clientType,
-        clientId: options.clientId,
-        clientSecret: options.clientSecret,
-        token: response.data.token,
-        scopes: response.data.scopes
-      };
-      if (response.data.expires_at)
-        authentication.expiresAt = response.data.expires_at;
-      if (options.clientType === "github-app") {
-        delete authentication.scopes;
-      }
-      return _objectSpread2(_objectSpread2({}, response), {}, {
-        authentication
-      });
-    }
-    async function deleteToken(options) {
-      const request$1 = options.request || request.request;
-      const auth = btoa(`${options.clientId}:${options.clientSecret}`);
-      return request$1("DELETE /applications/{client_id}/token", {
-        headers: {
-          authorization: `basic ${auth}`
-        },
-        client_id: options.clientId,
-        access_token: options.token
-      });
-    }
-    async function deleteAuthorization(options) {
-      const request$1 = options.request || request.request;
-      const auth = btoa(`${options.clientId}:${options.clientSecret}`);
-      return request$1("DELETE /applications/{client_id}/grant", {
-        headers: {
-          authorization: `basic ${auth}`
-        },
-        client_id: options.clientId,
-        access_token: options.token
-      });
-    }
-    exports.VERSION = VERSION;
-    exports.checkToken = checkToken;
-    exports.createDeviceCode = createDeviceCode;
-    exports.deleteAuthorization = deleteAuthorization;
-    exports.deleteToken = deleteToken;
-    exports.exchangeDeviceCode = exchangeDeviceCode;
-    exports.exchangeWebFlowCode = exchangeWebFlowCode;
-    exports.getWebFlowAuthorizationUrl = getWebFlowAuthorizationUrl;
-    exports.refreshToken = refreshToken;
-    exports.resetToken = resetToken;
-    exports.scopeToken = scopeToken;
-  }
-});
-
-// 
-var require_dist_node30 = __commonJS({
-  ""(exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
     function _interopDefault(ex) {
       return ex && typeof ex === "object" && "default" in ex ? ex["default"] : ex;
     }
     var universalUserAgent = require_dist_node();
     var request = require_dist_node13();
     var authOauthDevice = require_dist_node25();
-    var oauthMethods = require_dist_node29();
+    var oauthMethods = require_dist_node24();
     var btoa = _interopDefault(require_btoa_node());
-    var VERSION = "2.0.1";
+    var VERSION = "2.0.2";
     async function getAuthentication(state) {
       if ("code" in state.strategyOptions) {
         const {
@@ -65695,7 +62557,7 @@ var require_dist_node30 = __commonJS({
 });
 
 // 
-var require_dist_node31 = __commonJS({
+var require_dist_node27 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -65705,7 +62567,7 @@ var require_dist_node31 = __commonJS({
     var universalUserAgent = require_dist_node();
     var request = require_dist_node22();
     var btoa = _interopDefault(require_btoa_node());
-    var authOauthUser = require_dist_node30();
+    var authOauthUser = require_dist_node26();
     async function auth(state, authOptions) {
       if (authOptions.type === "oauth-app") {
         return {
@@ -68544,7 +65406,7 @@ var require_jsonwebtoken = __commonJS({
 });
 
 // 
-var require_dist_node32 = __commonJS({
+var require_dist_node28 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -68587,7 +65449,7 @@ var require_dist_node32 = __commonJS({
 });
 
 // 
-var require_dist_node33 = __commonJS({
+var require_dist_node29 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -68596,11 +65458,11 @@ var require_dist_node33 = __commonJS({
     }
     var universalUserAgent = require_dist_node();
     var request = require_dist_node13();
-    var authOauthApp = require_dist_node31();
+    var authOauthApp = require_dist_node27();
     var deprecation = require_dist_node3();
-    var universalGithubAppJwt = require_dist_node32();
+    var universalGithubAppJwt = require_dist_node28();
     var LRU = _interopDefault(require_lru_cache());
-    var authOauthUser = require_dist_node30();
+    var authOauthUser = require_dist_node26();
     async function getAppAuthentication({
       appId,
       privateKey,
@@ -71024,7 +67886,7 @@ AuthenticatedGitClient._authenticatedInstance = null;
 // 
 var import_core = __toESM(require_core());
 var import_rest2 = __toESM(require_dist_node20());
-var import_auth_app = __toESM(require_dist_node33());
+var import_auth_app = __toESM(require_dist_node29());
 var import_github3 = __toESM(require_github());
 var ANGULAR_ROBOT = [43341, "angular-robot-key"];
 async function getJwtAuthedAppClient([appId, inputKey]) {

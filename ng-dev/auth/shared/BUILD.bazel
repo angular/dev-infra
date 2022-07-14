@@ -1,0 +1,19 @@
+load("//tools:defaults.bzl", "ts_library")
+
+ts_library(
+    name = "shared",
+    srcs = glob(["*.ts"]),
+    visibility = [
+        "//ng-dev/auth:__subpackages__",
+        "//ng-dev/utils:__pkg__",
+    ],
+    deps = [
+        "//ng-dev/utils",
+        "@npm//@openid/appauth",
+        "@npm//@types/node",
+        "@npm//@types/opener",
+        "@npm//firebase",
+        "@npm//node-fetch",
+        "@npm//opener",
+    ],
+)

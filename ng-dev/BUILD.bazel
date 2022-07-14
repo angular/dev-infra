@@ -20,6 +20,7 @@ ts_library(
         "//ng-dev:__subpackages__",
     ],
     deps = [
+        "//ng-dev/auth",
         "//ng-dev/caretaker",
         "//ng-dev/ci",
         "//ng-dev/commit-message",
