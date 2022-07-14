@@ -69,7 +69,9 @@ describe('configure next as major action', () => {
       .expectBranchRequest('master', 'MASTER_COMMIT_SHA')
       .expectCommitStatusCheck('MASTER_COMMIT_SHA', 'success')
       .expectFindForkRequest(fork)
-      .expectPullRequestToBeCreated('master', fork, expectedForkBranch, 200);
+      .expectPullRequestToBeCreated('master', fork, expectedForkBranch, 200)
+      .expectPullRequestMergeCheck(200, false)
+      .expectPullRequestMerge(200);
 
     // In the fork, we make the staging branch appear as non-existent,
     // so that the PR can be created properly without collisions.
