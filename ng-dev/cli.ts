@@ -20,12 +20,14 @@ import {buildPullapproveParser} from './pullapprove/cli.js';
 import {buildReleaseParser} from './release/cli.js';
 import {tsCircularDependenciesBuilder} from './ts-circular-dependencies/index.js';
 import {captureLogOutputForCommand} from './utils/logging.js';
+import {buildAuthParser} from './auth/cli.js';
 
 yargs(process.argv.slice(2))
   .scriptName('ng-dev')
   .middleware(captureLogOutputForCommand)
   .demandCommand()
   .recommendCommands()
+  .command('auth <command>', false, buildAuthParser)
   .command('commit-message <command>', '', buildCommitMessageParser)
   .command('format <command>', '', buildFormatParser)
   .command('pr <command>', '', buildPrParser)
