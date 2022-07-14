@@ -18,7 +18,8 @@ ts_library(
     ],
     deps = [
         "//apps/functions/githubWebhook",
-        "@npm//firebase-functions",
+        "//apps/functions/ng-dev",
+        "@npm//firebase-admin",
     ],
 )
 
