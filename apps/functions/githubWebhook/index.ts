@@ -1,11 +1,8 @@
 import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
 import {handlePullRequestEvent} from './pull-request.js';
 import {handleStatusEvent} from './status.js';
 import {LabelEvent, StatusEvent} from '@octokit/webhooks-types';
 import {handleLabelEvent} from './label.js';
-
-admin.initializeApp({...functions.firebaseConfig()});
 
 /**
  * Firebase function to handle all incoming webhooks from Github. This function checks the incoming

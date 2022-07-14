@@ -1,0 +1,27 @@
+load("//tools:defaults.bzl", "ts_library")
+
+package(default_visibility = ["//visibility:private"])
+
+ts_library(
+    name = "ng-dev",
+    srcs = [
+        "index.ts",
+    ],
+    visibility = [
+        "//apps/functions:__pkg__",
+    ],
+    deps = [
+    ],
+)
+
+ts_library(
+    name = "lib",
+    srcs = [
+        "ng-dev-token.ts",
+    ],
+    deps = [
+        "//apps/shared/models:server",
+        "@npm//@octokit/webhooks-types",
+        "@npm//firebase-admin",
+    ],
+)

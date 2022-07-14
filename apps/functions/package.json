@@ -3,7 +3,7 @@
   "engines": {
     "node": "16"
   },
-  "main": "functions_compiled/index.js",
+  "main": "functions_compiled/index.mjs",
   "type": "module",
   "private": true
 }
