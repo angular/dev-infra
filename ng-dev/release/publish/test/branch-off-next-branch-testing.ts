@@ -52,7 +52,8 @@ async function expectGithubApiRequestsForBranchOff(
     })
     .expectTagToBeCreated(expectedTagName, 'STAGING_COMMIT_SHA')
     .expectReleaseToBeCreated(`v${expectedVersion}`, expectedTagName)
-    .expectPullRequestToBeCreated('master', fork, expectedNextUpdateBranch, 100);
+    .expectPullRequestToBeCreated('master', fork, expectedNextUpdateBranch, 100)
+    .expectPullRequestWait(100);
 
   // In the fork, we make the following branches appear as non-existent,
   // so that the PRs can be created properly without collisions.
