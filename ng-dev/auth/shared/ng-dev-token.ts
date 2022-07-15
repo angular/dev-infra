@@ -1,4 +1,4 @@
-import {getFunctions, httpsCallable} from 'firebase/functions';
+import {getFunctions, httpsCallable, HttpsCallableResult} from 'firebase/functions';
 import {getAuth} from 'firebase/auth';
 import {mkdir, readFile, stat, writeFile} from 'fs/promises';
 import {homedir} from 'os';
@@ -22,7 +22,10 @@ let ngDevToken: NgDevToken | null = null;
  * Setup and invoke a firebase function on the server, unsafe as the authentication is not
  * automatically included in the invocation.
  */
-async function invokeServerFunctionUnsafe<P extends {}, R>(name: string, params: P) {
+async function invokeServerFunctionUnsafe<P extends {}, R>(
+  name: string,
+  params: P,
+): Promise<HttpsCallableResult<R>> {
   const func = httpsCallable<P, R>(getFunctions(), name);
   return await func(params);
 }
@@ -30,7 +33,10 @@ async function invokeServerFunctionUnsafe<P extends {}, R>(name: string, params:
 /**
  * Setup and invoke a firebase function on the server after confirming a ng-dev token is present.
  */
-export function invokeServerFunction<P extends {}, R>(name: string, params: P = {} as P) {
+export function invokeServerFunction<P extends {}, R>(
+  name: string,
+  params: P = {} as P,
+): Promise<HttpsCallableResult<R>> {
   if (ngDevToken === null) {
     throw Error(`Cannot invoke ${name} prior to a user logging in, please run "ng-dev auth login"`);
   }
@@ -49,13 +55,15 @@ export async function requestNgDevToken() {
   const {data: token} = await invokeServerFunctionUnsafe<{}, string>('ngDevTokenRequest', {
     idToken: await auth.currentUser.getIdToken(),
   });
-  await saveTokenToFileSystem({token, email: auth.currentUser.email || 'unknown email'});
+  ngDevToken = {token, email: auth.currentUser.email || 'unknown email'};
+  await saveTokenToFileSystem(ngDevToken);
 }
 
 /**
- * Check the validity of the local ng-dev token with the server.
+ * Check the validity of the local ng-dev token with the server, if a local token is present. If a
+ * valid token is present, restores it to the current ngDevToken in memory.
  */
-export async function checkNgDevTokenState() {
+export async function restoreNgTokenFromDiskIfValid() {
   try {
     const data = await retrieveTokenFromFileSystem();
     if (data === null) {
@@ -82,12 +90,11 @@ export async function getCurrentUser() {
 async function saveTokenToFileSystem(data: NgDevToken) {
   await mkdir(tokenDir, {recursive: true});
   await writeFile(tokenPath, Buffer.from(JSON.stringify(data), 'utf8').toString('base64'));
-  ngDevToken = data;
 }
 
 /** Retrieve the token from the file system. */
 async function retrieveTokenFromFileSystem(): Promise<NgDevToken | null> {
-  if (await stat(tokenPath)) {
+  if (!(await stat(tokenPath))) {
     return null;
   }
 

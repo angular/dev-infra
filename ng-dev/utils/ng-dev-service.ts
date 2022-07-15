@@ -8,7 +8,7 @@
 
 import {Argv} from 'yargs';
 
-import {checkNgDevTokenState} from '../auth/shared/ng-dev-token.js';
+import {restoreNgTokenFromDiskIfValid} from '../auth/shared/ng-dev-token.js';
 import {initializeApp} from 'firebase/app';
 import {Log} from './logging.js';
 
@@ -27,7 +27,7 @@ export function requiresNgDevService(argv: Argv): Argv {
         messagingSenderId: '823469418460',
         appId: '1:823469418460:web:009b51c93132b218761119',
       });
-      await checkNgDevTokenState();
+      await restoreNgTokenFromDiskIfValid();
     } catch (e) {
       Log.debug(e);
     }

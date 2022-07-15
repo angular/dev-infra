@@ -29,7 +29,7 @@ interface OAuthDanceConfig {
   scope: string;
 }
 
-export async function doTheOAuthDanceWithLoopback({
+export async function deviceCodeOAuthDance({
   loopback: {client_id, client_secret},
   authConfig,
   scope,
@@ -80,7 +80,7 @@ export async function doTheOAuthDanceWithLoopback({
   });
 }
 
-export async function doTheOAuthDanceWithOob({
+export async function authorizationCodeOAuthDance({
   oob: {client_id, client_secret},
   authConfig,
   deviceAuthEndpoint,
@@ -198,11 +198,16 @@ async function pollAuthServer(
   }).then((x) => x.json() as Promise<any>);
 }
 
+// NOTE: the `client_secret`s are okay to be included in this code as these values are sent
+// in the clear in HTTP requests anyway.
+
 export const GoogleOAuthDanceConfig: OAuthDanceConfig = {
+  /** client_id and client_secret for "ng-dev CLI" in the DevInfra GCP project. */
   loopback: {
     client_id: '823469418460-ta0oojev0ovg2qlmv6kn46qiaebkr4gi.apps.googleusercontent.com',
     client_secret: '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',
   },
+  /** client_id and client_secret for "ng-dev CLI Out of Band" in the DevInfra GCP project. */
   oob: {
     client_id: '823469418460-puj3s53su005dp2ima1uim3gil2uggur.apps.googleusercontent.com',
     client_secret: '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',
@@ -219,6 +224,8 @@ export const GoogleOAuthDanceConfig: OAuthDanceConfig = {
 };
 
 export const GithubOAuthDanceConfig: OAuthDanceConfig = {
+  /** client_id and client_secret for ng-caretaker Github App. */
+  // TODO(josephperrott): Migrate to angular-robot Github App.
   loopback: {
     client_id: 'Iv1.58b338d4f1a5ba12',
     client_secret: '4a75aa1531f5ffa2b6ff793468ad2de90cb1d8cd',

@@ -475,9 +475,7 @@ __metadata:
     "@types/inquirer": 8.2.1
     "@types/jasmine": ^4.0.0
     "@types/jsdom": ^16.2.13
-    "@types/jsonwebtoken": ^8.5.8
     "@types/node": 16.10.9
-    "@types/node-ssh": ^7.0.1
     "@types/opener": ^1.4.0
     "@types/selenium-webdriver": ^4.0.18
     "@types/semver": ^7.3.6
@@ -510,7 +508,6 @@ __metadata:
     jasmine: ~4.2.0
     jasmine-core: ~4.2.0
     jsdom: ^20.0.0
-    jwt-decode: ^3.1.2
     karma: ^6.3.15
     karma-chrome-launcher: ^3.1.0
     karma-coverage: ~2.2.0
@@ -524,7 +521,6 @@ __metadata:
     multimatch: ^6.0.0
     nock: ^13.0.3
     node-fetch: ^3.2.5
-    node-ssh: ^12.0.4
     opener: ^1.5.2
     prettier: 2.7.1
     protobufjs: ^7.0.0
@@ -4182,17 +4178,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node-ssh@npm:^7.0.1":
-  version: 7.0.1
-  resolution: "@types/node-ssh@npm:7.0.1"
-  dependencies:
-    "@types/node": "*"
-    "@types/ssh2": "*"
-    "@types/ssh2-streams": "*"
-  checksum: 039c965c8384822e76a799903b899fe009ba9f76c290be945113ee84694338f9fe52a4e02d873022ab51ba005d999ea5c9e1ee3e6cb53df5b9f0900ba85c74a5
-  languageName: node
-  linkType: hard
-
 "@types/node@npm:*, @types/node@npm:>=10.0.0, @types/node@npm:>=12.12.47, @types/node@npm:>=13.7.0":
   version: 18.0.3
   resolution: "@types/node@npm:18.0.3"
@@ -4367,24 +4352,6 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: b9bbb2b5c5ead2fb884bb019f61a014e37410bddd295de28184e1b2e71ee6b04120c5ba7b9954617f0bdf962c13d06249ce65004490889c747c80d3f628ea842
-  languageName: node
-  linkType: hard
-
-"@types/ssh2-streams@npm:*":
-  version: 0.1.9
-  resolution: "@types/ssh2-streams@npm:0.1.9"
-  dependencies:
-    "@types/node": "*"
-  checksum: 190f3c235bf19787cd255f366d3ac9233875750095f3c73d15e72a1e67a826aed7e7c389603c5e89cb6420b87ff6dffc566f9174e546ddb7ff8c8dc2e8b00def
-  languageName: node
-  linkType: hard
-
-"@types/ssh2@npm:*":
-  version: 1.11.4
-  resolution: "@types/ssh2@npm:1.11.4"
-  dependencies:
-    "@types/node": "*"
-  checksum: 6fab1cf7e3c38241fc1bddb6f9d553920d7868ae061dc635451a2d7cbc7424f8f21bbaa9d3f2cbac4d15c3f7e6dd536cfa8fa85817d22054fd6f98013b958f58
   languageName: node
   linkType: hard
 
@@ -5106,7 +5073,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"asn1@npm:^0.2.4, asn1@npm:~0.2.3":
+"asn1@npm:~0.2.3":
   version: 0.2.6
   resolution: "asn1@npm:0.2.6"
   dependencies:
@@ -5346,7 +5313,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bcrypt-pbkdf@npm:^1.0.0, bcrypt-pbkdf@npm:^1.0.2":
+"bcrypt-pbkdf@npm:^1.0.0":
   version: 1.0.2
   resolution: "bcrypt-pbkdf@npm:1.0.2"
   dependencies:
@@ -5688,13 +5655,6 @@ __metadata:
   version: 0.1.1
   resolution: "buffers@npm:0.1.1"
   checksum: ad6f8e483efab39cefd92bdc04edbff6805e4211b002f4d1cfb70c6c472a61cc89fb18c37bcdfdd4ee416ca096e9ff606286698a7d41a18b539bac12fd76d4d5
-  languageName: node
-  linkType: hard
-
-"buildcheck@npm:0.0.3":
-  version: 0.0.3
-  resolution: "buildcheck@npm:0.0.3"
-  checksum: baf30605c56e80c2ca0502e40e18f2ebc7075bb4a861c941c0b36cd468b27957ed11a62248003ce99b9e5f91a7dfa859b30aad4fa50f0090c77a6f596ba20e6d
   languageName: node
   linkType: hard
 
@@ -6520,17 +6480,6 @@ __metadata:
     path-type: ^4.0.0
     yaml: ^1.10.0
   checksum: 4be63e7117955fd88333d7460e4c466a90f556df6ef34efd59034d2463484e339666c41f02b523d574a797ec61f4a91918c5b89a316db2ea2f834e0d2d09465b
-  languageName: node
-  linkType: hard
-
-"cpu-features@npm:~0.0.4":
-  version: 0.0.4
-  resolution: "cpu-features@npm:0.0.4"
-  dependencies:
-    buildcheck: 0.0.3
-    nan: ^2.15.0
-    node-gyp: latest
-  checksum: a20d58e41e63182b34753dfe23bd1d967944ec13d84b70849b5d334fb4a558b7e71e7f955ed86c8e75dd65b5c5b882f1c494174d342cb6d8a062d77f79d39596
   languageName: node
   linkType: hard
 
@@ -10584,13 +10533,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jwt-decode@npm:^3.1.2":
-  version: 3.1.2
-  resolution: "jwt-decode@npm:3.1.2"
-  checksum: 20a4b072d44ce3479f42d0d2c8d3dabeb353081ba4982e40b83a779f2459a70be26441be6c160bfc8c3c6eadf9f6380a036fbb06ac5406b5674e35d8c4205eeb
-  languageName: node
-  linkType: hard
-
 "karma-chrome-launcher@npm:^3.1.0":
   version: 3.1.1
   resolution: "karma-chrome-launcher@npm:3.1.1"
@@ -11733,7 +11675,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nan@npm:^2.15.0, nan@npm:^2.16.0":
+"nan@npm:^2.16.0":
   version: 2.16.0
   resolution: "nan@npm:2.16.0"
   dependencies:
@@ -11946,20 +11888,6 @@ __metadata:
   version: 2.0.6
   resolution: "node-releases@npm:2.0.6"
   checksum: e86a926dc9fbb3b41b4c4a89d998afdf140e20a4e8dbe6c0a807f7b2948b42ea97d7fd3ad4868041487b6e9ee98409829c6e4d84a734a4215dff060a7fbeb4bf
-  languageName: node
-  linkType: hard
-
-"node-ssh@npm:^12.0.4":
-  version: 12.0.4
-  resolution: "node-ssh@npm:12.0.4"
-  dependencies:
-    is-stream: ^2.0.0
-    make-dir: ^3.1.0
-    sb-promise-queue: ^2.1.0
-    sb-scandir: ^3.1.0
-    shell-escape: ^0.2.0
-    ssh2: ^1.5.0
-  checksum: acf54798f13d7ce7dbc5a80c55fd89a494835797e80d7239d0fd7880b28ede00b69363b6d213422bcf46718233d014ba295fb0ba0cf03842f655d1813c6b0b06
   languageName: node
   linkType: hard
 
@@ -14294,22 +14222,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sb-promise-queue@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "sb-promise-queue@npm:2.1.0"
-  checksum: bf84c816f854d7773a9fac6c0c3f8264bae9d0f8db527f6f4da2b9e3ace1f549fbad70984942baddf45b797b2094afc9aedc3688e24b800e9aa55492cd72cdc9
-  languageName: node
-  linkType: hard
-
-"sb-scandir@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "sb-scandir@npm:3.1.0"
-  dependencies:
-    sb-promise-queue: ^2.1.0
-  checksum: f3b93aefa48344c5ad9e92426b3708b515136e99bfa77f3f38c0e157554ad4c54858e29850cfbad375d3a46f3f5d6e127d9b89a46697a2c969fff2cb9d131a56
-  languageName: node
-  linkType: hard
-
 "schema-utils@npm:^2.6.5":
   version: 2.7.1
   resolution: "schema-utils@npm:2.7.1"
@@ -14613,13 +14525,6 @@ __metadata:
   version: 3.0.0
   resolution: "shebang-regex@npm:3.0.0"
   checksum: 1a2bcae50de99034fcd92ad4212d8e01eedf52c7ec7830eedcf886622804fe36884278f2be8be0ea5fde3fd1c23911643a4e0f726c8685b61871c8908af01222
-  languageName: node
-  linkType: hard
-
-"shell-escape@npm:^0.2.0":
-  version: 0.2.0
-  resolution: "shell-escape@npm:0.2.0"
-  checksum: 0d87f1ae22ad22a74e148348ceaf64721e3024f83c90afcfb527318ce10ece654dd62e103dd89a242f2f4e4ce3cecdef63e3d148c40e5fabca8ba6c508f97d9f
   languageName: node
   linkType: hard
 
@@ -14960,23 +14865,6 @@ __metadata:
   version: 1.0.3
   resolution: "sprintf-js@npm:1.0.3"
   checksum: 19d79aec211f09b99ec3099b5b2ae2f6e9cdefe50bc91ac4c69144b6d3928a640bb6ae5b3def70c2e85a2c3d9f5ec2719921e3a59d3ca3ef4b2fd1a4656a0df3
-  languageName: node
-  linkType: hard
-
-"ssh2@npm:^1.5.0":
-  version: 1.11.0
-  resolution: "ssh2@npm:1.11.0"
-  dependencies:
-    asn1: ^0.2.4
-    bcrypt-pbkdf: ^1.0.2
-    cpu-features: ~0.0.4
-    nan: ^2.16.0
-  dependenciesMeta:
-    cpu-features:
-      optional: true
-    nan:
-      optional: true
-  checksum: e40cb9f171741a807c170dc555078aa8c49dc93dd36fc9c8be026fce1cfd31f0d37078d9b60a0f2cfb11d0e007ed5407376b72f8a0ef9f2cb89574632bbfb824
   languageName: node
   linkType: hard
 

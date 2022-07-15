@@ -20,9 +20,7 @@ async function handler() {
     return;
   }
 
-  /** Whether the user successfully logged into Firebase to request a token. */
-  const isLoggedIntoFirebase = await loginToFirebase();
-  if (isLoggedIntoFirebase) {
+  if (await loginToFirebase()) {
     await requestNgDevToken();
 
     const expireTimestamp = new Date(Date.now() + 1000 * 60 * 60 * 20).toISOString();
