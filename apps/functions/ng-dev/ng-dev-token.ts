@@ -4,20 +4,31 @@ import {CallableContext} from 'firebase-functions/lib/providers/https';
 
 /**
  * Request a short lived ng-dev token.  If granted, we rely on session cookies as this token.  The token
+ * is to be used for all requests to the ng-dev service.
  */
 export const ngDevTokenRequest = functions.https.onCall(
   async ({idToken}: {idToken: string}, context: CallableContext) => {
     if (!context.auth) {
       // Throwing an HttpsError so that the client gets the error details.
       throw new functions.https.HttpsError(
-        'failed-precondition',
-        'Requesting an ngDevToken requires being authenticated first.',
+        'unauthenticated',
+        'Requesting an ng-dev token requires authentication',
       );
     }
+    const {auth_time} = await admin.auth().verifyIdToken(idToken, /* checkRevoked */ true);
+
+    // Only allow creation if the user signed in in the last minute. We use one minute, as this
+    // token should be immediately requested upon login, rather than using a long lived session.
+    if (new Date().getTime() / 1000 - auth_time > 1 * 60) {
+      throw new functions.https.HttpsError(
+        'permission-denied',
+        'ng-dev tokens must be requested within one minute of verifying login',
+      );
+    }
+
     /** Twenty hours in ms. */
     const twentyHours = 1000 * 60 * 60 * 20;
-
-    return await admin.auth().createSessionCookie(idToken, {expiresIn: twentyHours});
+    return admin.auth().createSessionCookie(idToken, {expiresIn: twentyHours});
   },
 );
 
@@ -33,8 +44,8 @@ export const ngDevRevokeToken = functions.https.onCall(async ({token}: {token: s
   await admin
     .auth()
     .verifySessionCookie(token)
-    .then((claims: admin.auth.DecodedIdToken) => {
-      return admin.auth().revokeRefreshTokens(claims.uid);
+    .then((decodedToken: admin.auth.DecodedIdToken) => {
+      return admin.auth().revokeRefreshTokens(decodedToken.uid);
     });
 });
 
@@ -42,5 +53,5 @@ export const ngDevRevokeToken = functions.https.onCall(async ({token}: {token: s
  * Verify a ng-dev token is still valid.
  */
 async function validateToken({token}: {token: string}) {
-  return !!(token && (await admin.auth().verifySessionCookie(token, true)));
+  return !!(token && (await admin.auth().verifySessionCookie(token, /* checkRevoked */ true)));
 }
