@@ -1,3 +1,14 @@
+<a name="2022.3.13"></a>
+# 2022.3.13 (2022-03-13)
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c0d2a02](https://github.com/angular/dev-infra/commit/c0d2a028bb46e37c52911273cb3b8e7dcfd496c1) | feat | format yaml files with prettier by default |
+| [fa77b14](https://github.com/angular/dev-infra/commit/fa77b144ff927a719ab33c510830d1453e89db1d) | fix | correctly indent bullets in breaking changes and deprecations sections |
+## Special Thanks
+Alan Agius and Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.3.6"></a>
 # 2022.3.6 (2022-03-06)
 ### bazel

@@ -1,3 +1,27 @@
+<a name="2022.7.17"></a>
+# 2022.7.17 (2022-07-17)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0fb1e5b](https://github.com/angular/dev-infra/commit/0fb1e5b54ecfaf8d4e1bedb59e39392ef5a54f2b) | feat | always fake home-system directories in integration tests |
+| [a3f061f](https://github.com/angular/dev-infra/commit/a3f061fdc7c836e1dfaf5a972531fa52bf189b5b) | feat | expose individual `.map` files for optimized bundles |
+| [8a1e3fa](https://github.com/angular/dev-infra/commit/8a1e3fa0283e7e6932081037c0ed41dc84657414) | fix | consistently run integration tests in sandbox-like directories |
+| [6b5886c](https://github.com/angular/dev-infra/commit/6b5886c9a64906173b89cf26ba093c7e9d8c7b73) | fix | do not put temporary test folders next to test files |
+| [0268158](https://github.com/angular/dev-infra/commit/0268158ec3bcce2bba0b02d263965383b60b18a3) | fix | ensure terser knows about input sourcemap to trace-back |
+### github-actions
+| Commit | Type | Description |
+| -- | -- | -- |
+| [7b43ff7](https://github.com/angular/dev-infra/commit/7b43ff7dd1942c276f9f67b0c686390e24bfb508) | feat | skip angular-robot in postapproval action |
+| [698f64c](https://github.com/angular/dev-infra/commit/698f64c135cb8f7bf098282d2817393c4a43868f) | fix | add missing `return` to actually skip owned robots in post-approval action |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e795433](https://github.com/angular/dev-infra/commit/e795433f416d0ecd1d38afd27f8d72c94513e0cb) | fix | **release:** wait for final branch-off PR before finishing release action |
+| [6c6c6b0](https://github.com/angular/dev-infra/commit/6c6c6b0ad1732f437c0d0fb4c195b4d05cc90f03) | fix | do not throw if there is no diff between `g3` and `main` |
+## Special Thanks
+Paul Gschwendtner and Suvanjan Mukherjee
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.7.7"></a>
 # 2022.7.7 (2022-07-07)
 ### bazel
@@ -210,14 +234,3 @@ Paul Gschwendtner
 | [2c7dece](https://github.com/angular/dev-infra/commit/2c7dece49c9a83992899140c4c6e636a926d2bb2) | fix | avoid runtime error when pull request does not have status/checks |
 ## Special Thanks
 George Kalpakas, Paul Gschwendtner and renovate[bot]
-
-<!-- CHANGELOG SPLIT MARKER -->
-<a name="2022.3.13"></a>
-# 2022.3.13 (2022-03-13)
-### ng-dev
-| Commit | Type | Description |
-| -- | -- | -- |
-| [c0d2a02](https://github.com/angular/dev-infra/commit/c0d2a028bb46e37c52911273cb3b8e7dcfd496c1) | feat | format yaml files with prettier by default |
-| [fa77b14](https://github.com/angular/dev-infra/commit/fa77b144ff927a719ab33c510830d1453e89db1d) | fix | correctly indent bullets in breaking changes and deprecations sections |
-## Special Thanks
-Alan Agius and Paul Gschwendtner
