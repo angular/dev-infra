@@ -31,7 +31,7 @@ async function handler() {
   }
 }
 
-/** yargs command module for assisting in handing off caretaker.  */
+/** yargs command module for logging into the ng-dev service. */
 export const LoginModule: CommandModule<{}, Options> = {
   handler,
   builder,

@@ -22,7 +22,7 @@ async function handler() {
   Log.info('No user currently logged in.');
 }
 
-/** yargs command module for assisting in handing off caretaker.  */
+/** yargs command module for logging out of the ng-dev service. */
 export const LogoutModule: CommandModule<{}, Options> = {
   handler,
   builder,

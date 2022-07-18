@@ -5,15 +5,13 @@ import {
   AuthorizationNotifier,
   AuthorizationRequest,
   AuthorizationServiceConfiguration,
-  AuthorizationServiceConfiguration as _AuthorizationServiceConfiguration,
   BaseTokenRequestHandler,
   GRANT_TYPE_AUTHORIZATION_CODE,
   TokenRequest,
   TokenResponse,
 } from '@openid/appauth';
 import {NodeRequestor} from '@openid/appauth/built/node_support/node_requestor.js';
-//import {NodeBasedHandler} from '@openid/appauth/built/node_support/node_request_handler.js';
-import {NodeBasedHandler} from './node-handler.js';
+import {NodeBasedHandler} from '@openid/appauth/built/node_support/node_request_handler.js';
 
 interface OAuthDanceConfig {
   authConfig: AuthorizationServiceConfiguration;
@@ -29,7 +27,7 @@ interface OAuthDanceConfig {
   scope: string;
 }
 
-export async function deviceCodeOAuthDance({
+export async function authorizationCodeOAuthDance({
   loopback: {client_id, client_secret},
   authConfig,
   scope,
@@ -80,7 +78,7 @@ export async function deviceCodeOAuthDance({
   });
 }
 
-export async function authorizationCodeOAuthDance({
+export async function deviceCodeOAuthDance({
   oob: {client_id, client_secret},
   authConfig,
   deviceAuthEndpoint,

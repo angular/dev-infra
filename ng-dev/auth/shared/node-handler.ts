@@ -2,16 +2,23 @@ import {EventEmitter} from 'events';
 import * as Http from 'http';
 import * as Url from 'url';
 
-import {AuthorizationRequest} from '@openid/appauth';
-import {AuthorizationRequestHandler, AuthorizationRequestResponse} from '@openid/appauth';
-import {AuthorizationError, AuthorizationResponse} from '@openid/appauth';
-import {AuthorizationServiceConfiguration} from '@openid/appauth';
-import {Crypto} from '@openid/appauth';
-import {log} from '@openid/appauth';
-import {BasicQueryStringUtils, QueryStringUtils} from '@openid/appauth';
+import {
+  AuthorizationRequest,
+  AuthorizationRequestHandler,
+  AuthorizationRequestResponse,
+  AuthorizationError,
+  AuthorizationResponse,
+  AuthorizationServiceConfiguration,
+  Crypto,
+  log,
+  BasicQueryStringUtils,
+  QueryStringUtils,
+} from '@openid/appauth';
 import {NodeCrypto} from '@openid/appauth/built/node_support/crypto_utils.js';
 
 import opener from 'opener';
+
+// TODO(josephperrott): Migrate to extending the NodeBaseHandler from @openid/appauth after their next release.
 
 class ServerEventsEmitter extends EventEmitter {
   static ON_UNABLE_TO_START = 'unable_to_start';
