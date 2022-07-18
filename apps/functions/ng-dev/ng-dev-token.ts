@@ -3,7 +3,7 @@ import * as admin from 'firebase-admin';
 import {CallableContext} from 'firebase-functions/lib/providers/https';
 
 /**
- * Request a short lived ng-dev token.  If granted, we rely on session cookies as this token.  The token
+ * Request a short lived ng-dev token. If granted, we rely on session cookies as this token. The token
  * is to be used for all requests to the ng-dev service.
  */
 export const ngDevTokenRequest = functions.https.onCall(
@@ -26,9 +26,7 @@ export const ngDevTokenRequest = functions.https.onCall(
       );
     }
 
-    /** Twenty hours in ms. */
-    const twentyHours = 1000 * 60 * 60 * 20;
-    return admin.auth().createSessionCookie(idToken, {expiresIn: twentyHours});
+    return admin.auth().createSessionCookie(idToken, {expiresIn: /* 20 Hours in ms */ 72000000});
   },
 );
 
