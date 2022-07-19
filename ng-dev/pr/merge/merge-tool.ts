@@ -13,12 +13,11 @@ import {prompt} from 'inquirer';
 import {Log, red, yellow} from '../../utils/logging.js';
 
 import {PullRequestConfig} from '../config/index.js';
-import {PullRequestFailure} from '../common/validation/failures.js';
 import {
   getCaretakerNotePromptMessage,
-  getTargettedBranchesConfirmationPromptMessage,
+  getTargetedBranchesConfirmationPromptMessage,
 } from './messages.js';
-import {isPullRequest, loadAndValidatePullRequest, PullRequest} from './pull-request.js';
+import {loadAndValidatePullRequest, PullRequest} from './pull-request.js';
 import {GithubApiMergeStrategy} from './strategies/api-merge.js';
 import {AutosquashMergeStrategy} from './strategies/autosquash-merge.js';
 import {GithubConfig, NgDevConfig} from '../../utils/config.js';
@@ -29,32 +28,15 @@ import {
   getNextBranchName,
 } from '../../release/versioning/index.js';
 import {Prompt} from '../../utils/prompt.js';
+import {FatalMergeToolError, UserAbortedMergeToolError} from './failures.js';
+import {PullRequestFailure} from '../common/validation/pull-request-failure.js';
 
-/** Describes the status of a pull request merge. */
-export const enum MergeStatus {
-  UNKNOWN_GIT_ERROR,
-  DIRTY_WORKING_DIR,
-  UNEXPECTED_SHALLOW_REPO,
-  SUCCESS,
-  FAILED,
-  USER_ABORTED,
-  GITHUB_ERROR,
-}
-
-/** Result of a pull request merge. */
-export interface MergeResult {
-  /** Overall status of the merge. */
-  status: MergeStatus;
-  /** List of pull request failures. */
-  failure?: PullRequestFailure;
-}
-
-export interface PullRequestMergeTaskFlags {
+export interface PullRequestMergeFlags {
   branchPrompt: boolean;
   forceManualBranches: boolean;
 }
 
-const defaultPullRequestMergeTaskFlags: PullRequestMergeTaskFlags = {
+const defaultPullRequestMergeFlags: PullRequestMergeFlags = {
   branchPrompt: true,
   forceManualBranches: false,
 };
@@ -64,16 +46,16 @@ const defaultPullRequestMergeTaskFlags: PullRequestMergeTaskFlags = {
  * a programmatic interface for merging multiple pull requests based on their
  * labels that have been resolved through the merge script configuration.
  */
-export class PullRequestMergeTask {
-  private flags: PullRequestMergeTaskFlags;
+export class MergeTool {
+  private flags: PullRequestMergeFlags;
 
   constructor(
     public config: NgDevConfig<{pullRequest: PullRequestConfig; github: GithubConfig}>,
     public git: AuthenticatedGitClient,
-    flags: Partial<PullRequestMergeTaskFlags>,
+    flags: Partial<PullRequestMergeFlags>,
   ) {
     // Update flags property with the provided flags values as patches to the default flag values.
-    this.flags = {...defaultPullRequestMergeTaskFlags, ...flags};
+    this.flags = {...defaultPullRequestMergeFlags, ...flags};
   }
 
   /**
@@ -81,13 +63,20 @@ export class PullRequestMergeTask {
    * @param prNumber Pull request that should be merged.
    * @param force Whether non-critical pull request failures should be ignored.
    */
-  async merge(prNumber: number, force = false): Promise<MergeResult> {
+  async merge(prNumber: number, force = false): Promise<void> {
     if (this.git.hasUncommittedChanges()) {
-      return {status: MergeStatus.DIRTY_WORKING_DIR};
+      throw new FatalMergeToolError(
+        'Local working repository not clean. Please make sure there are ' +
+          'no uncommitted changes.',
+      );
     }
 
     if (this.git.isShallowRepo()) {
-      return {status: MergeStatus.UNEXPECTED_SHALLOW_REPO};
+      throw new FatalMergeToolError(
+        `Unable to perform merge in a local repository that is configured as shallow.\n` +
+          `Please convert the repository to a complete one by syncing with upstream.\n` +
+          `https://git-scm.com/docs/git-fetch#Documentation/git-fetch.txt---unshallow`,
+      );
     }
 
     // Check whether the given Github token has sufficient permissions for writing
@@ -113,32 +102,22 @@ export class PullRequestMergeTask {
     });
 
     if (hasOauthScopes !== true) {
-      return {
-        status: MergeStatus.GITHUB_ERROR,
-        failure: PullRequestFailure.insufficientPermissionsToMerge(hasOauthScopes.error),
-      };
+      throw new FatalMergeToolError(hasOauthScopes.error);
     }
 
     const pullRequest = await loadAndValidatePullRequest(this, prNumber, force);
 
-    if (!isPullRequest(pullRequest)) {
-      return {status: MergeStatus.FAILED, failure: pullRequest};
-    }
-
     if (this.flags.forceManualBranches) {
-      const forceManualBranchesFailure = await this.setTargetedBranchesManually(pullRequest);
-      if (forceManualBranchesFailure) {
-        return forceManualBranchesFailure;
-      }
+      await this.updatePullRequestTargetedBranchesFromPrompt(pullRequest);
     }
 
     if (
       // In cases where manual branch targeting is used, the user already confirmed.
       !this.flags.forceManualBranches &&
       this.flags.branchPrompt &&
-      !(await Prompt.confirm(getTargettedBranchesConfirmationPromptMessage(pullRequest)))
+      !(await Prompt.confirm(getTargetedBranchesConfirmationPromptMessage(pullRequest)))
     ) {
-      return {status: MergeStatus.USER_ABORTED};
+      throw new UserAbortedMergeToolError();
     }
 
     // If the pull request has a caretaker note applied, raise awareness by prompting
@@ -147,7 +126,7 @@ export class PullRequestMergeTask {
       pullRequest.hasCaretakerNote &&
       !(await Prompt.confirm(getCaretakerNotePromptMessage(pullRequest)))
     ) {
-      return {status: MergeStatus.USER_ABORTED};
+      throw new UserAbortedMergeToolError();
     }
 
     const strategy = this.config.pullRequest.githubApiMerge
@@ -164,21 +143,8 @@ export class PullRequestMergeTask {
       // Run preparations for the merge (e.g. fetching branches).
       await strategy.prepare(pullRequest);
 
-      // Perform the merge and capture potential failures.
-      const failure = await strategy.merge(pullRequest);
-      if (failure !== null) {
-        return {status: MergeStatus.FAILED, failure};
-      }
-
-      // Return a successful merge status.
-      return {status: MergeStatus.SUCCESS};
-    } catch (e) {
-      // Catch all git command errors and return a merge result w/ git error status code.
-      // Other unknown errors which aren't caused by a git command are re-thrown.
-      if (e instanceof GitCommandError) {
-        return {status: MergeStatus.UNKNOWN_GIT_ERROR};
-      }
-      throw e;
+      // Perform the merge and pass-through potential failures.
+      await strategy.merge(pullRequest);
     } finally {
       // Switch back to the previous branch. We need to do this before deleting the temporary
       // branches because we cannot delete branches which are currently checked out.
@@ -189,10 +155,12 @@ export class PullRequestMergeTask {
   }
 
   /**
-   * Modifies the pull request in place with new target branches based on user selection from
-   * the available active branches.
+   * Modifies the pull request in place with new target branches based on user
+   * selection from the available active branches.
    */
-  private async setTargetedBranchesManually(pullRequest: PullRequest): Promise<void | MergeResult> {
+  private async updatePullRequestTargetedBranchesFromPrompt(
+    pullRequest: PullRequest,
+  ): Promise<void> {
     const {name: repoName, owner} = this.config.github;
 
     // Attempt to retrieve the active LTS branches to be included in the selection.
@@ -263,18 +231,15 @@ export class PullRequestMergeTask {
     ]);
 
     if (confirm === false) {
-      return {status: MergeStatus.USER_ABORTED};
+      throw new UserAbortedMergeToolError();
     }
 
     // The Github Targeted branch must always be selected. It is not currently possible to make a
     // readonly selection in inquirer's checkbox.
     if (!selectedBranches.includes(pullRequest.githubTargetBranch)) {
-      return {
-        status: MergeStatus.FAILED,
-        failure: PullRequestFailure.failedToManualSelectGithubTargetBranch(
-          pullRequest.githubTargetBranch,
-        ),
-      };
+      throw PullRequestFailure.failedToManualSelectGithubTargetBranch(
+        pullRequest.githubTargetBranch,
+      );
     }
 
     pullRequest.targetBranches = selectedBranches;

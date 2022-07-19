@@ -10,7 +10,7 @@ import {Argv, Arguments, CommandModule} from 'yargs';
 
 import {addGithubTokenOption} from '../../utils/git/github-yargs.js';
 
-import {mergePullRequest} from './index.js';
+import {mergePullRequest} from './merge-pull-request.js';
 
 /** The options available to the merge command via CLI. */
 export interface MergeCommandOptions {

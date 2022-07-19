@@ -16,7 +16,7 @@ export function getCaretakerNotePromptMessage(pullRequest: PullRequest): string 
   );
 }
 
-export function getTargettedBranchesConfirmationPromptMessage(pullRequest: PullRequest): string {
+export function getTargetedBranchesConfirmationPromptMessage(pullRequest: PullRequest): string {
   const targetBranchListAsString = pullRequest.targetBranches.map((b) => ` - ${b}\n`).join('');
   return `Pull request #${pullRequest.prNumber} will merge into:\n${targetBranchListAsString}\nDo you want to proceed merging?`;
 }

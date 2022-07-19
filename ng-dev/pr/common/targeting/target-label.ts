@@ -11,7 +11,7 @@ import {getTargetLabelsForActiveReleaseTrains} from './labels.js';
 import {GithubConfig, NgDevConfig} from '../../../utils/config.js';
 import {Commit} from '../../../commit-message/parse.js';
 import {assertChangesAllowForTargetLabel} from '../validation/validations.js';
-import {PullRequestFailure} from '../validation/failures.js';
+import {PullRequestFailure} from '../validation/pull-request-failure.js';
 import {GithubClient} from '../../../utils/git/github.js';
 import {ActiveReleaseTrains} from '../../../release/versioning/index.js';
 

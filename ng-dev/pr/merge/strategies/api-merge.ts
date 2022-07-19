@@ -12,11 +12,12 @@ import {prompt} from 'inquirer';
 import {parseCommitMessage} from '../../../commit-message/parse.js';
 import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client.js';
 import {GithubApiMergeMethod, GithubApiMergeStrategyConfig} from '../../config/index.js';
-import {PullRequestFailure} from '../../common/validation/failures.js';
 import {PullRequest} from '../pull-request.js';
 
 import {MergeStrategy, TEMP_PR_HEAD_BRANCH} from './strategy.js';
 import {GithubApiRequestError} from '../../../utils/git/github.js';
+import {PullRequestFailure} from '../../common/validation/pull-request-failure.js';
+import {FatalMergeToolError} from '../failures.js';
 
 /** Type describing the parameters for the Octokit `merge` API endpoint. */
 type OctokitMergeParams = RestEndpointMethodTypes['pulls']['merge']['parameters'];
@@ -36,13 +37,13 @@ export class GithubApiMergeStrategy extends MergeStrategy {
     super(git);
   }
 
-  override async merge(pullRequest: PullRequest): Promise<PullRequestFailure | null> {
+  override async merge(pullRequest: PullRequest): Promise<void> {
     const {githubTargetBranch, prNumber, targetBranches, requiredBaseSha, needsCommitMessageFixup} =
       pullRequest;
     // If the pull request does not have its base branch set to any determined target
     // branch, we cannot merge using the API.
     if (targetBranches.every((t) => t !== githubTargetBranch)) {
-      return PullRequestFailure.mismatchingTargetBranch(targetBranches);
+      throw PullRequestFailure.mismatchingTargetBranch(targetBranches);
     }
 
     // In cases where a required base commit is specified for this pull request, check if
@@ -51,7 +52,7 @@ export class GithubApiMergeStrategy extends MergeStrategy {
     // e.g. a commit that changes the code ownership validation. PRs which are not rebased
     // could bypass new codeowner ship rules.
     if (requiredBaseSha && !this.git.hasCommit(TEMP_PR_HEAD_BRANCH, requiredBaseSha)) {
-      return PullRequestFailure.unsatisfiedBaseSha();
+      throw PullRequestFailure.unsatisfiedBaseSha();
     }
 
     const method = this._getMergeActionFromPullRequest(pullRequest);
@@ -61,13 +62,7 @@ export class GithubApiMergeStrategy extends MergeStrategy {
     // purely for testing so that we can figure out whether the PR can be cherry-picked
     // into the other target branches. We don't want to merge the PR through the API, and
     // then run into cherry-pick conflicts after the initial merge already completed.
-    const failure = await this._checkMergability(pullRequest, cherryPickTargetBranches);
-
-    // If the PR could not be cherry-picked into all target branches locally, we know it can't
-    // be done through the Github API either. We abort merging and pass-through the failure.
-    if (failure !== null) {
-      return failure;
-    }
+    await this._assertMergeableOrThrow(pullRequest, cherryPickTargetBranches);
 
     const mergeOptions: OctokitMergeParams = {
       pull_number: prNumber,
@@ -79,7 +74,7 @@ export class GithubApiMergeStrategy extends MergeStrategy {
       // Commit message fixup does not work with other merge methods as the Github API only
       // allows commit message modifications for squash merging.
       if (method !== 'squash') {
-        return PullRequestFailure.unableToFixupCommitMessageSquashOnly();
+        throw PullRequestFailure.unableToFixupCommitMessageSquashOnly();
       }
       await this._promptCommitMessageEdit(pullRequest, mergeOptions);
     }
@@ -99,7 +94,7 @@ export class GithubApiMergeStrategy extends MergeStrategy {
       // to leak whether a repository exists or not. In our case we expect a certain
       // repository to exist, so we always treat this as a permission failure.
       if (e instanceof GithubApiRequestError && (e.status === 403 || e.status === 404)) {
-        return PullRequestFailure.insufficientPermissionsToMerge();
+        throw new FatalMergeToolError('Insufficient Github API permissions to merge pull request.');
       }
       throw e;
     }
@@ -107,16 +102,16 @@ export class GithubApiMergeStrategy extends MergeStrategy {
     // https://developer.github.com/v3/pulls/#response-if-merge-cannot-be-performed
     // Pull request cannot be merged due to merge conflicts.
     if (mergeStatusCode === 405) {
-      return PullRequestFailure.mergeConflicts([githubTargetBranch]);
+      throw PullRequestFailure.mergeConflicts([githubTargetBranch]);
     }
     if (mergeStatusCode !== 200) {
-      return PullRequestFailure.unknownMergeError();
+      throw PullRequestFailure.unknownMergeError();
     }
 
-    // If the PR does  not need to be merged into any other target branches,
+    // If the PR does not need to be merged into any other target branches,
     // we exit here as we already completed the merge.
     if (!cherryPickTargetBranches.length) {
-      return null;
+      return;
     }
 
     // Refresh the target branch the PR has been merged into through the API. We need
@@ -145,11 +140,10 @@ export class GithubApiMergeStrategy extends MergeStrategy {
     // but in case the cherry-pick somehow fails, we still handle the conflicts here. The
     // commits created through the Github API could be different (i.e. through squash).
     if (failedBranches.length) {
-      return PullRequestFailure.mergeConflicts(failedBranches);
+      throw PullRequestFailure.mergeConflicts(failedBranches);
     }
 
     this.pushTargetBranchesUpstream(cherryPickTargetBranches);
-    return null;
   }
 
   /**
@@ -206,10 +200,9 @@ export class GithubApiMergeStrategy extends MergeStrategy {
   }
 
   /**
-   * Checks if given pull request could be merged into its target branches.
-   * @returns A pull request failure if it the PR could not be merged.
+   * Asserts that given pull request could be merged into its target branches.
    */
-  private async _checkMergability(
+  private async _assertMergeableOrThrow(
     pullRequest: PullRequest,
     targetBranches: string[],
   ): Promise<null | PullRequestFailure> {
@@ -219,7 +212,7 @@ export class GithubApiMergeStrategy extends MergeStrategy {
     });
 
     if (failedBranches.length) {
-      return PullRequestFailure.mergeConflicts(failedBranches);
+      throw PullRequestFailure.mergeConflicts(failedBranches);
     }
     return null;
   }

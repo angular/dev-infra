@@ -10,16 +10,17 @@ import {breakingChangeLabel} from '../../config/index.js';
 import {TargetLabel} from '../targeting/target-label.js';
 
 /**
- * Class that can be used to describe pull request failures. A failure
- * is described through a human-readable message and a flag indicating
- * whether it is non-fatal or not.
+ * Class that can be used to describe pull request failures.
+ *
+ * A failure is described by a human-readable message and a flag indicating
+ * whether the failure can be forcibly ignore or not.
  */
 export class PullRequestFailure {
   constructor(
     /** Human-readable message for the failure */
     public message: string,
     /** Whether the failure is non-fatal and can be forcibly ignored. */
-    public nonFatal = false,
+    public canBeIgnoredForcibly = false,
   ) {}
 
   static claUnsigned() {
@@ -80,17 +81,6 @@ export class PullRequestFailure {
       `Unable to fixup commit message of pull request. Commit message can only be ` +
         `modified if the PR is merged using squash.`,
     );
-  }
-
-  static notFound() {
-    return new this(`Pull request could not be found upstream.`);
-  }
-
-  static insufficientPermissionsToMerge(
-    message = `Insufficient Github API permissions to merge pull request. Please ensure that ` +
-      `your auth token has write access.`,
-  ) {
-    return new this(message);
   }
 
   static hasBreakingChanges(label: TargetLabel) {

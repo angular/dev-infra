@@ -9,7 +9,7 @@
 import {Commit} from '../../../commit-message/parse.js';
 import {TargetLabel, TargetLabelName} from '../targeting/target-label.js';
 import {breakingChangeLabel, PullRequestConfig} from '../../config/index.js';
-import {PullRequestFailure} from './failures.js';
+import {PullRequestFailure} from './pull-request-failure.js';
 import {Log, red} from '../../../utils/logging.js';
 import {
   getStatusesForPullRequest,

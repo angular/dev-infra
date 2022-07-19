@@ -8,7 +8,7 @@
 
 import {dirname, join} from 'path';
 import {fileURLToPath} from 'url';
-import {PullRequestFailure} from '../../common/validation/failures.js';
+import {PullRequestFailure} from '../../common/validation/pull-request-failure.js';
 import {PullRequest} from '../pull-request.js';
 import {MergeStrategy, TEMP_PR_HEAD_BRANCH} from './strategy.js';
 
@@ -27,9 +27,10 @@ export class AutosquashMergeStrategy extends MergeStrategy {
    * would causes unnecessary multiple fetch requests when multiple PRs are merged.
    * @throws {GitCommandError} An unknown Git command error occurred that is not
    *   specific to the pull request merge.
-   * @returns A pull request failure or null in case of success.
+   * @throws {PullRequestFailure} A pull request failure if the the pull request could not
+   *   be merged and the pull request is misconfigured.
    */
-  override async merge(pullRequest: PullRequest): Promise<PullRequestFailure | null> {
+  override async merge(pullRequest: PullRequest): Promise<void> {
     const {prNumber, targetBranches, requiredBaseSha, needsCommitMessageFixup, githubTargetBranch} =
       pullRequest;
     // In case a required base is specified for this pull request, check if the pull
@@ -38,7 +39,7 @@ export class AutosquashMergeStrategy extends MergeStrategy {
     // a commit that changes the codeowner ship validation. PRs which are not rebased
     // could bypass new codeowner ship rules.
     if (requiredBaseSha && !this.git.hasCommit(TEMP_PR_HEAD_BRANCH, requiredBaseSha)) {
-      return PullRequestFailure.unsatisfiedBaseSha();
+      throw PullRequestFailure.unsatisfiedBaseSha();
     }
 
     // SHA for the first commit the pull request is based on. Usually we would able
@@ -86,7 +87,7 @@ export class AutosquashMergeStrategy extends MergeStrategy {
     const failedBranches = this.cherryPickIntoTargetBranches(revisionRange, targetBranches);
 
     if (failedBranches.length) {
-      return PullRequestFailure.mergeConflicts(failedBranches);
+      throw PullRequestFailure.mergeConflicts(failedBranches);
     }
 
     this.pushTargetBranchesUpstream(targetBranches);
@@ -116,8 +117,6 @@ export class AutosquashMergeStrategy extends MergeStrategy {
         state: 'closed',
       });
     }
-
-    return null;
   }
 }
 
