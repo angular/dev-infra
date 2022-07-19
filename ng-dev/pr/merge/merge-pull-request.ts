@@ -13,8 +13,10 @@ import {GithubApiRequestError} from '../../utils/git/github.js';
 import {GITHUB_TOKEN_GENERATE_URL} from '../../utils/git/github-urls.js';
 
 import {assertValidPullRequestConfig} from '../config/index.js';
-import {MergeResult, MergeStatus, PullRequestMergeTask, PullRequestMergeTaskFlags} from './task.js';
+import {MergeTool, PullRequestMergeFlags} from './merge-tool.js';
 import {Prompt} from '../../utils/prompt.js';
+import {FatalMergeToolError, UserAbortedMergeToolError} from './failures.js';
+import {PullRequestFailure} from '../common/validation/pull-request-failure.js';
 
 /**
  * Merges a given pull request based on labels configured in the given merge configuration.
@@ -27,12 +29,12 @@ import {Prompt} from '../../utils/prompt.js';
  * @param prNumber Number of the pull request that should be merged.
  * @param flags Configuration options for merging pull requests.
  */
-export async function mergePullRequest(prNumber: number, flags: PullRequestMergeTaskFlags) {
+export async function mergePullRequest(prNumber: number, flags: PullRequestMergeFlags) {
   // Set the environment variable to skip all git commit hooks triggered by husky. We are unable to
   // rely on `--no-verify` as some hooks still run, notably the `prepare-commit-msg` hook.
   process.env['HUSKY'] = '0';
 
-  const api = await createPullRequestMergeTask(flags);
+  const tool = await createPullRequestMergeTool(flags);
 
   // Perform the merge. Force mode can be activated through a command line flag.
   // Alternatively, if the merge fails with non-fatal failures, the script
@@ -44,8 +46,9 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
   /** Performs the merge and returns whether it was successful or not. */
   async function performMerge(ignoreFatalErrors: boolean): Promise<boolean> {
     try {
-      const result = await api.merge(prNumber, ignoreFatalErrors);
-      return await handleMergeResult(result, ignoreFatalErrors);
+      await tool.merge(prNumber, /* force */ ignoreFatalErrors);
+      Log.info(green(`Successfully merged the pull request: #${prNumber}`));
+      return true;
     } catch (e) {
       // Catch errors to the Github API for invalid requests. We want to
       // exit the script with a better explanation of the error.
@@ -53,15 +56,41 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
         Log.error('Github API request failed. ' + e.message);
         Log.error('Please ensure that your provided token is valid.');
         Log.warn(`You can generate a token here: ${GITHUB_TOKEN_GENERATE_URL}`);
-        process.exit(1);
+        return false;
       }
+      if (e instanceof UserAbortedMergeToolError) {
+        Log.warn('Manually aborted merging..');
+        return false;
+      }
+      if (e instanceof FatalMergeToolError) {
+        Log.error(`Could not merge the specified pull request.`);
+        Log.error(e.message);
+        return false;
+      }
+      if (e instanceof PullRequestFailure) {
+        Log.error(`Could not merge the specified pull request.`);
+        Log.error(e.message);
+
+        // If the failure can be ignored forcibly and we didn't attempt the current
+        // merge forcibly already, we can prompt and ask for force attempting.
+        if (e.canBeIgnoredForcibly && !ignoreFatalErrors) {
+          Log.info();
+          Log.info(yellow('The pull request above failed due to non-critical errors.'));
+          Log.info(yellow(`This error can be forcibly ignored if desired.`));
+          return await promptAndPerformForceMerge();
+        } else {
+          return false;
+        }
+      }
+
+      // For unknown errors, always re-throw.
       throw e;
     }
   }
 
   /**
    * Prompts whether the specified pull request should be forcibly merged. If so, merges
-   * the specified pull request forcibly (ignoring non-critical failures).
+   * the specified pull request forcibly (ignoring non-fatal failures).
    * @returns Whether the specified pull request has been forcibly merged.
    */
   async function promptAndPerformForceMerge(): Promise<boolean> {
@@ -72,65 +101,15 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
     }
     return false;
   }
-
-  /**
-   * Handles the merge result by printing console messages, exiting the process
-   * based on the result, or by restarting the merge if force mode has been enabled.
-   * @returns Whether the merge completed without errors or not.
-   */
-  async function handleMergeResult(result: MergeResult, disableForceMergePrompt = false) {
-    const {failure, status} = result;
-    const canForciblyMerge = failure && failure.nonFatal;
-
-    switch (status) {
-      case MergeStatus.SUCCESS:
-        Log.info(green(`Successfully merged the pull request: #${prNumber}`));
-        return true;
-      case MergeStatus.DIRTY_WORKING_DIR:
-        Log.error(
-          `Local working repository not clean. Please make sure there are ` +
-            `no uncommitted changes.`,
-        );
-        return false;
-      case MergeStatus.UNEXPECTED_SHALLOW_REPO:
-        Log.error(`Unable to perform merge in a local repository that is configured as shallow.`);
-        Log.error(`Please convert the repository to a complete one by syncing with upstream.`);
-        Log.error(`https://git-scm.com/docs/git-fetch#Documentation/git-fetch.txt---unshallow`);
-        return false;
-      case MergeStatus.UNKNOWN_GIT_ERROR:
-        Log.error(
-          'An unknown Git error has been thrown. Please check the output ' + 'above for details.',
-        );
-        return false;
-      case MergeStatus.GITHUB_ERROR:
-        Log.error('An error related to interacting with Github has been discovered.');
-        Log.error(failure!.message);
-        return false;
-      case MergeStatus.USER_ABORTED:
-        Log.info(`Merge of pull request has been aborted manually: #${prNumber}`);
-        return true;
-      case MergeStatus.FAILED:
-        Log.error(`Could not merge the specified pull request.`);
-        Log.error(failure!.message);
-        if (canForciblyMerge && !disableForceMergePrompt) {
-          Log.info();
-          Log.info(yellow('The pull request above failed due to non-critical errors.'));
-          Log.info(yellow(`This error can be forcibly ignored if desired.`));
-          return await promptAndPerformForceMerge();
-        }
-        return false;
-      default:
-        throw Error(`Unexpected merge result: ${status}`);
-    }
-  }
 }
 
 /**
- * Creates the pull request merge task using the given configuration options. Explicit configuration
- * options can be specified when the merge script is used outside of an `ng-dev` configured
- * repository.
+ * Creates the pull request merge tool using the given configuration options.
+ *
+ * Explicit configuration options can be specified when the merge script is used
+ * outside of an `ng-dev` configured repository.
  */
-async function createPullRequestMergeTask(flags: PullRequestMergeTaskFlags) {
+async function createPullRequestMergeTool(flags: PullRequestMergeFlags) {
   try {
     const config = await getConfig();
     assertValidGithubConfig(config);
@@ -138,7 +117,7 @@ async function createPullRequestMergeTask(flags: PullRequestMergeTaskFlags) {
     /** The singleton instance of the authenticated git client. */
     const git = await AuthenticatedGitClient.get();
 
-    return new PullRequestMergeTask(config, git, flags);
+    return new MergeTool(config, git, flags);
   } catch (e) {
     if (e instanceof ConfigValidationError) {
       if (e.errors.length) {

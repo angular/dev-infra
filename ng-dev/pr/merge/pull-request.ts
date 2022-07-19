@@ -7,7 +7,6 @@
  */
 
 import {parseCommitMessage} from '../../commit-message/parse.js';
-import {PullRequestFailure} from '../common/validation/failures.js';
 import {PullRequestMergeTask} from './task.js';
 import {getTargetBranchesForPullRequest} from '../common/targeting/target-label.js';
 import {
@@ -18,6 +17,8 @@ import {
   assertPassingCi,
 } from '../common/validation/validations.js';
 import {fetchPullRequestFromGithub} from '../common/fetch-pull-request.js';
+import {PullRequestFailure} from '../common/validation/pull-request-failure.js';
+import {FatalMergeToolError} from './failures.js';
 
 /** Interface that describes a pull request. */
 export interface PullRequest {
@@ -46,16 +47,21 @@ export interface PullRequest {
 /**
  * Loads and validates the specified pull request against the given configuration.
  * If the pull requests fails, a pull request failure is returned.
+ *
+ * @throws {PullRequestFailure} A pull request failure if the pull request does not
+ *   pass the validation.
+ * @throws {FatalMergeToolError} A fatal error might be thrown when e.g. the pull request
+ *   does not exist upstream.
  */
 export async function loadAndValidatePullRequest(
   {git, config}: PullRequestMergeTask,
   prNumber: number,
   ignoreNonFatalFailures = false,
-): Promise<PullRequest | PullRequestFailure> {
+): Promise<PullRequest> {
   const prData = await fetchPullRequestFromGithub(git, prNumber);
 
   if (prData === null) {
-    return PullRequestFailure.notFound();
+    throw new FatalMergeToolError('Pull request could not be found.');
   }
 
   const labels = prData.labels.nodes.map((l) => l.name);
@@ -72,22 +78,13 @@ export async function loadAndValidatePullRequest(
     commitsInPr,
   );
 
-  try {
-    assertMergeReady(prData, config.pullRequest);
-    assertSignedCla(prData);
-    assertPendingState(prData);
-    assertCorrectBreakingChangeLabeling(commitsInPr, labels);
+  assertMergeReady(prData, config.pullRequest);
+  assertSignedCla(prData);
+  assertPendingState(prData);
+  assertCorrectBreakingChangeLabeling(commitsInPr, labels);
 
-    if (!ignoreNonFatalFailures) {
-      assertPassingCi(prData);
-    }
-  } catch (error) {
-    // If the error is a pull request failure, we pass it through gracefully
-    // as the tool expects such failures to be returned from the function.
-    if (error instanceof PullRequestFailure) {
-      return error;
-    }
-    throw error;
+  if (!ignoreNonFatalFailures) {
+    assertPassingCi(prData);
   }
 
   const requiredBaseSha =
@@ -112,9 +109,4 @@ export async function loadAndValidatePullRequest(
     title: prData.title,
     commitCount: prData.commits.totalCount,
   };
-}
-
-/** Whether the specified value resolves to a pull request. */
-export function isPullRequest(v: PullRequestFailure | PullRequest): v is PullRequest {
-  return (v as PullRequest).targetBranches !== undefined;
 }
