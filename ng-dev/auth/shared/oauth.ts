@@ -2,6 +2,8 @@ import {Log} from '../../utils/logging.js';
 import fetch from 'node-fetch';
 
 import {
+  AuthorizationError,
+  AuthorizationErrorJson,
   AuthorizationNotifier,
   AuthorizationRequest,
   AuthorizationServiceConfiguration,
@@ -9,6 +11,7 @@ import {
   GRANT_TYPE_AUTHORIZATION_CODE,
   TokenRequest,
   TokenResponse,
+  TokenResponseJson,
 } from '@openid/appauth';
 import {NodeRequestor} from '@openid/appauth/built/node_support/node_requestor.js';
 import {NodeBasedHandler} from '@openid/appauth/built/node_support/node_request_handler.js';
@@ -32,16 +35,16 @@ export async function authorizationCodeOAuthDance({
   authConfig,
   scope,
 }: OAuthDanceConfig): Promise<TokenResponse> {
-  if (client_id === undefined) {
-    throw Error();
-  }
+  /** Requestor instance for NodeJS usage. */
   const requestor = new NodeRequestor();
-
+  /** Notifier to watch for authorization completion. */
   const notifier = new AuthorizationNotifier();
+  /** Handler for node based requests. */
   const authorizationHandler = new NodeBasedHandler();
 
   authorizationHandler.setAuthorizationNotifier(notifier);
 
+  /** The authorization request. */
   let request = new AuthorizationRequest({
     client_id,
     scope,
@@ -51,6 +54,7 @@ export async function authorizationCodeOAuthDance({
       'access_type': 'offline',
     },
   });
+
   authorizationHandler.performAuthorizationRequest(authConfig, request);
   await authorizationHandler.completeAuthorizationRequestIfPossible();
   const authorization = await authorizationHandler.authorizationPromise;
@@ -84,10 +88,6 @@ export async function deviceCodeOAuthDance({
   deviceAuthEndpoint,
   scope,
 }: OAuthDanceConfig): Promise<TokenResponse> {
-  if (client_id === undefined) {
-    throw Error();
-  }
-
   // Set up and configure the authentication url to initiate the OAuth dance.
   const url = new URL(deviceAuthEndpoint);
   url.searchParams.append('scope', scope);
@@ -101,15 +101,25 @@ export async function deviceCodeOAuthDance({
     headers: {'Accept': 'application/json'},
   }).then(
     (resp) =>
-      resp.json() as unknown as {
+      resp.json() as Promise<{
         verification_uri: string;
         verification_url: string;
         interval: number;
         user_code: string;
         expires_in: number;
         device_code: string;
-      },
+      }>,
   );
+
+  if (
+    isAuthorizationError(response) &&
+    (response.error === 'invalid_client' ||
+      response.error === 'unsupported_grant_type' ||
+      response.error === 'invalid_grant' ||
+      response.error === 'invalid_request')
+  ) {
+    throw new OAuthDanceError(new AuthorizationError(response).errorDescription || 'Unknown Error');
+  }
 
   Log.info(`Please visit: ${response.verification_uri || response.verification_url}`);
   Log.info(`Enter your one time ID code: ${response.user_code}`);
@@ -124,59 +134,36 @@ export async function deviceCodeOAuthDance({
 
   while (true) {
     if (Date.now() > oauthDanceTimeout) {
-      throw {
-        authenticated: false,
-        message: 'Failed to completed OAuth authentication before the user code expired.',
-      };
+      throw new OAuthDanceError(
+        'Failed to completed OAuth authentication before the user code expired.',
+      );
     }
     // Wait for the requested interval before polling, this is done before the request as it is unnecessary to
     //immediately poll while the user has to perform the auth out of this flow.
     await new Promise((resolve) => setTimeout(resolve, response.interval * 1000 + pollingBackoff));
 
-    const result = await pollAuthServer(
+    const result = await checkStatusOfAuthServer(
       authConfig.tokenEndpoint,
       response.device_code,
       client_id,
       client_secret,
     );
-    if (!result.error) {
-      return {
-        ...result,
-        idToken: result.id_token,
-        accessToken: result.access_token,
-      };
+
+    if (!isAuthorizationError(result)) {
+      return new TokenResponse(result);
     }
     if (result.error === 'access_denied') {
-      throw {
-        authenticated: false,
-        message: 'Unable to authorize, as access was denied during the OAuth flow.',
-      };
-    }
-
-    if (result.error === 'authorization_pending') {
-      // Update messaging.
+      throw new OAuthDanceError('Unable to authorize, as access was denied during the OAuth flow.');
     }
 
     if (result.error === 'slow_down') {
-      // Update messaging.
+      Log.debug('"slow_down" response from server, backing off polling interval by 5 seconds');
       pollingBackoff += 5000;
-    }
-
-    if (
-      result.error === 'invalid_client' ||
-      result.error === 'unsupported_grant_type' ||
-      result.error === 'invalid_grant' ||
-      result.error === 'invalid_request'
-    ) {
-      throw {
-        authenticated: false,
-        message: result.errorDescription,
-      };
     }
   }
 }
 
-async function pollAuthServer(
+async function checkStatusOfAuthServer(
   serverUrl: string,
   deviceCode: string,
   clientId: string,
@@ -193,7 +180,7 @@ async function pollAuthServer(
   return await fetch(url.toString(), {
     method: 'POST',
     headers: {'Accept': 'application/json'},
-  }).then((x) => x.json() as Promise<any>);
+  }).then((x) => x.json() as Promise<TokenResponseJson | AuthorizationErrorJson>);
 }
 
 // NOTE: the `client_secret`s are okay to be included in this code as these values are sent
@@ -242,3 +229,18 @@ export const GithubOAuthDanceConfig: OAuthDanceConfig = {
   }),
   deviceAuthEndpoint: 'https://github.com/login/device/code',
 };
+
+class OAuthDanceError extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+function isAuthorizationError<T>(
+  result: T | AuthorizationErrorJson,
+): result is AuthorizationErrorJson {
+  if ((result as AuthorizationErrorJson).error !== undefined) {
+    return true;
+  }
+  return false;
+}

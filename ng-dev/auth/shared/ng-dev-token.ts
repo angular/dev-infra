@@ -4,6 +4,16 @@ import {mkdir, readFile, stat, writeFile} from 'fs/promises';
 import {homedir} from 'os';
 import {join} from 'path';
 import {Log} from '../../utils/logging.js';
+import {randomBytes, createCipheriv, createDecipheriv, createHash} from 'crypto';
+
+/** Algorithm to use for encryption. */
+const algorithm = 'aes-256-ctr';
+
+/** Encryption key for encrypting the token. */
+const ENCRYPTION_KEY = createHash('sha256')
+  .update(Buffer.from('Angular'))
+  .digest('hex')
+  .substring(0, 32);
 
 /** Data for an ng-dev token. */
 interface NgDevToken {
@@ -89,7 +99,7 @@ export async function getCurrentUser() {
 /** Save the token to the file system as a base64 encoded string. */
 async function saveTokenToFileSystem(data: NgDevToken) {
   await mkdir(tokenDir, {recursive: true});
-  await writeFile(tokenPath, Buffer.from(JSON.stringify(data), 'utf8').toString('base64'));
+  await writeFile(tokenPath, encrypt(JSON.stringify(data)));
 }
 
 /** Retrieve the token from the file system. */
@@ -98,6 +108,24 @@ async function retrieveTokenFromFileSystem(): Promise<NgDevToken | null> {
     return null;
   }
 
-  const rawToken = Buffer.from(await readFile(tokenPath, 'utf8'), 'base64').toString('utf8');
-  return JSON.parse(rawToken) as NgDevToken;
+  const rawToken = Buffer.from(await readFile(tokenPath)).toString();
+  return JSON.parse(decrypt(rawToken)) as NgDevToken;
+}
+
+/** Encrypt the provided string. */
+function encrypt(text: string) {
+  const iv = randomBytes(16);
+  let cipher = createCipheriv(algorithm, ENCRYPTION_KEY, iv);
+  const encrypted = Buffer.concat([cipher.update(text), cipher.final()]);
+  return iv.toString('hex') + ':' + encrypted.toString('hex');
+}
+
+/** Decrypt the provided string. */
+function decrypt(text: string) {
+  let textParts = text.split(':');
+  let iv = Buffer.from(textParts.shift()!, 'hex');
+  let encryptedText = Buffer.from(textParts.join(':'), 'hex');
+  let decipher = createDecipheriv(algorithm, ENCRYPTION_KEY, iv);
+  const decrypted = Buffer.concat([decipher.update(encryptedText), decipher.final()]);
+  return decrypted.toString();
 }
