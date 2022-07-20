@@ -20,7 +20,7 @@ export class PullRequestFailure {
     /** Human-readable message for the failure */
     public message: string,
     /** Whether the failure is non-fatal and can be forcibly ignored. */
-    public canBeIgnoredForcibly = false,
+    public canBeIgnoredNonFatal = false,
   ) {}
 
   static claUnsigned() {
