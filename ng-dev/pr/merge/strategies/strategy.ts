@@ -38,8 +38,6 @@ export abstract class MergeStrategy {
    * Performs the merge of the given pull request. This needs to be implemented
    * by individual merge strategies.
    *
-   * @throws {PullRequestFailure} A pull request failure if the the pull request could not
-   *   be merged and the pull request is misconfigured.
    * @throws {FatalMergeToolError} A fatal error has occurred when attempting to merge the
    *   pull request.
    */

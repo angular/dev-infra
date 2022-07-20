@@ -7,6 +7,7 @@ ts_library(
     deps = [
         "//ng-dev/pr/common",
         "//ng-dev/pr/config",
+        "//ng-dev/release/versioning",
         "//ng-dev/utils",
         "@npm//@types/yargs",
     ],

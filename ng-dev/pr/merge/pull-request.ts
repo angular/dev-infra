@@ -8,16 +8,12 @@
 
 import {parseCommitMessage} from '../../commit-message/parse.js';
 import {MergeTool} from './merge-tool.js';
-import {getTargetBranchesForPullRequest} from '../common/targeting/target-label.js';
-import {
-  assertCorrectBreakingChangeLabeling,
-  assertMergeReady,
-  assertPendingState,
-  assertSignedCla,
-  assertPassingCi,
-} from '../common/validation/validations.js';
+import {getTargetBranchesAndLabelForPullRequest} from '../common/targeting/target-label.js';
 import {fetchPullRequestFromGithub} from '../common/fetch-pull-request.js';
 import {FatalMergeToolError} from './failures.js';
+import {ActiveReleaseTrains} from '../../release/versioning/active-release-trains.js';
+import {PullRequestValidationConfig} from '../common/validation/validation-config.js';
+import {assertValidPullRequest} from '../common/validation/validate-pull-request.js';
 
 /** Interface that describes a pull request. */
 export interface PullRequest {
@@ -47,7 +43,7 @@ export interface PullRequest {
  * Loads and validates the specified pull request against the given configuration.
  * If the pull requests fails, a pull request failure is returned.
  *
- * @throws {PullRequestFailure} A pull request failure if the pull request does not
+ * @throws {PullRequestValidationFailure} A pull request failure if the pull request does not
  *   pass the validation.
  * @throws {FatalMergeToolError} A fatal error might be thrown when e.g. the pull request
  *   does not exist upstream.
@@ -55,7 +51,7 @@ export interface PullRequest {
 export async function loadAndValidatePullRequest(
   {git, config}: MergeTool,
   prNumber: number,
-  ignoreNonFatalFailures = false,
+  validationConfig: PullRequestValidationConfig,
 ): Promise<PullRequest> {
   const prData = await fetchPullRequestFromGithub(git, prNumber);
 
@@ -64,27 +60,25 @@ export async function loadAndValidatePullRequest(
   }
 
   const labels = prData.labels.nodes.map((l) => l.name);
-
-  /** List of parsed commits for all of the commits in the pull request. */
-  const commitsInPr = prData.commits.nodes.map((n) => parseCommitMessage(n.commit.message));
   const githubTargetBranch = prData.baseRefName;
 
-  const targetBranches = await getTargetBranchesForPullRequest(
+  const {mainBranchName, name, owner} = config.github;
+  const activeReleaseTrains = await ActiveReleaseTrains.fetch({
+    name,
+    nextBranchName: mainBranchName,
+    owner,
+    api: git.github,
+  });
+
+  const target = await getTargetBranchesAndLabelForPullRequest(
+    activeReleaseTrains,
     git.github,
     config,
     labels,
     githubTargetBranch,
-    commitsInPr,
   );
 
-  assertMergeReady(prData, config.pullRequest);
-  assertSignedCla(prData);
-  assertPendingState(prData);
-  assertCorrectBreakingChangeLabeling(commitsInPr, labels);
-
-  if (!ignoreNonFatalFailures) {
-    assertPassingCi(prData);
-  }
+  assertValidPullRequest(prData, validationConfig, config, activeReleaseTrains, target);
 
   const requiredBaseSha =
     config.pullRequest.requiredBaseCommits &&
@@ -104,7 +98,7 @@ export async function loadAndValidatePullRequest(
     githubTargetBranch,
     needsCommitMessageFixup,
     hasCaretakerNote,
-    targetBranches,
+    targetBranches: target.branches,
     title: prData.title,
     commitCount: prData.commits.totalCount,
   };

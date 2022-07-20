@@ -9,11 +9,16 @@
 import {PullRequestConfig} from '../../config/index.js';
 import {getTargetLabelsForActiveReleaseTrains} from './labels.js';
 import {GithubConfig, NgDevConfig} from '../../../utils/config.js';
-import {Commit} from '../../../commit-message/parse.js';
-import {assertChangesAllowForTargetLabel} from '../validation/validations.js';
-import {PullRequestFailure} from '../validation/pull-request-failure.js';
 import {GithubClient} from '../../../utils/git/github.js';
 import {ActiveReleaseTrains} from '../../../release/versioning/index.js';
+
+/** Type describing the determined target of a pull request. */
+export interface PullRequestTarget {
+  /** Branches which the pull request targets. */
+  branches: string[];
+  /** Target label applied to the pull request. */
+  labelName: TargetLabelName;
+}
 
 /**
  * Enum capturing available target label names in the Angular organization. A target
@@ -95,53 +100,35 @@ export async function getMatchingTargetLabelForPullRequest(
   );
 }
 
-/** Get the branches the pull request should be merged into. */
-export async function getTargetBranchesForPullRequest(
-  api: GithubClient,
+/** Gets the target branches and label of the given pull request. */
+export async function getTargetBranchesAndLabelForPullRequest(
+  activeReleaseTrains: ActiveReleaseTrains,
+  github: GithubClient,
   config: NgDevConfig<{pullRequest: PullRequestConfig; github: GithubConfig}>,
   labelsOnPullRequest: string[],
   githubTargetBranch: string,
-  commits: Commit[],
-): Promise<string[]> {
+): Promise<PullRequestTarget> {
   if (config.pullRequest.noTargetLabeling) {
-    return [config.github.mainBranchName];
+    // If there is no target labeling, we always target the main branch and treat the PR as
+    // if it has been labeled with the `target: major` label (allowing for all types of changes).
+    return {branches: [config.github.mainBranchName], labelName: TargetLabelName.MAJOR};
   }
 
-  // If branches are determined for a given target label, capture errors that are
-  // thrown as part of branch computation. This is expected because a merge configuration
-  // can lazily compute branches for a target label and throw. e.g. if an invalid target
-  // label is applied, we want to exit the script gracefully with an error message.
-  try {
-    const {mainBranchName, name, owner} = config.github;
-    const releaseTrains = await ActiveReleaseTrains.fetch({
-      name,
-      nextBranchName: mainBranchName,
-      owner,
-      api,
-    });
-    const targetLabels = await getTargetLabelsForActiveReleaseTrains(releaseTrains, api, config);
-    const matchingLabel = await getMatchingTargetLabelForPullRequest(
-      config.pullRequest,
-      labelsOnPullRequest,
-      targetLabels,
-    );
-    const targetBranches = await getBranchesFromTargetLabel(matchingLabel, githubTargetBranch);
+  const targetLabels = await getTargetLabelsForActiveReleaseTrains(
+    activeReleaseTrains,
+    github,
+    config,
+  );
+  const matchingLabel = await getMatchingTargetLabelForPullRequest(
+    config.pullRequest,
+    labelsOnPullRequest,
+    targetLabels,
+  );
 
-    assertChangesAllowForTargetLabel(
-      commits,
-      matchingLabel,
-      config.pullRequest,
-      releaseTrains,
-      labelsOnPullRequest,
-    );
-
-    return targetBranches;
-  } catch (error) {
-    if (error instanceof InvalidTargetBranchError || error instanceof InvalidTargetLabelError) {
-      throw new PullRequestFailure(error.failureMessage);
-    }
-    throw error;
-  }
+  return {
+    branches: await getBranchesFromTargetLabel(matchingLabel, githubTargetBranch),
+    labelName: matchingLabel.name,
+  };
 }
 
 /**
