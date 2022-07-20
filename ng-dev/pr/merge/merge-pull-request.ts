@@ -7,16 +7,16 @@
  */
 
 import {assertValidGithubConfig, ConfigValidationError, getConfig} from '../../utils/config.js';
-import {green, Log, yellow} from '../../utils/logging.js';
+import {bold, green, Log} from '../../utils/logging.js';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {GithubApiRequestError} from '../../utils/git/github.js';
 import {GITHUB_TOKEN_GENERATE_URL} from '../../utils/git/github-urls.js';
 
 import {assertValidPullRequestConfig} from '../config/index.js';
 import {MergeTool, PullRequestMergeFlags} from './merge-tool.js';
-import {Prompt} from '../../utils/prompt.js';
 import {FatalMergeToolError, UserAbortedMergeToolError} from './failures.js';
-import {PullRequestFailure} from '../common/validation/pull-request-failure.js';
+import {PullRequestValidationConfig} from '../common/validation/validation-config.js';
+import {PullRequestValidationFailure} from '../common/validation/validation-failure.js';
 
 /**
  * Merges a given pull request based on labels configured in the given merge configuration.
@@ -36,17 +36,18 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
 
   const tool = await createPullRequestMergeTool(flags);
 
-  // Perform the merge. Force mode can be activated through a command line flag.
-  // Alternatively, if the merge fails with non-fatal failures, the script
-  // will prompt whether it should rerun in force mode.
-  if (!(await performMerge(false))) {
+  // Perform the merge. If the merge fails with non-fatal failures, the script
+  // will prompt whether it should rerun in force mode with the ignored failure.
+  if (!(await performMerge())) {
     process.exit(1);
   }
 
   /** Performs the merge and returns whether it was successful or not. */
-  async function performMerge(ignoreFatalErrors: boolean): Promise<boolean> {
+  async function performMerge(
+    validationConfig: PullRequestValidationConfig = new PullRequestValidationConfig(),
+  ): Promise<boolean> {
     try {
-      await tool.merge(prNumber, /* force */ ignoreFatalErrors);
+      await tool.merge(prNumber, validationConfig);
       Log.info(green(`Successfully merged the pull request: #${prNumber}`));
       return true;
     } catch (e) {
@@ -63,43 +64,19 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
         return false;
       }
       if (e instanceof FatalMergeToolError) {
-        Log.error(`Could not merge the specified pull request.`);
-        Log.error(e.message);
+        Log.error(`Could not merge the specified pull request. Error:`);
+        Log.error(` -> ${bold(e.message)}`);
         return false;
       }
-      if (e instanceof PullRequestFailure) {
-        Log.error(`Could not merge the specified pull request.`);
-        Log.error(e.message);
-
-        // If the failure can be ignored forcibly and we didn't attempt the current
-        // merge forcibly already, we can prompt and ask for force attempting.
-        if (e.canBeIgnoredNonFatal && !ignoreFatalErrors) {
-          Log.info();
-          Log.info(yellow('The pull request above failed due to non-critical errors.'));
-          Log.info(yellow(`This error can be forcibly ignored if desired.`));
-          return await promptAndPerformForceMerge();
-        } else {
-          return false;
-        }
+      if (e instanceof PullRequestValidationFailure) {
+        Log.error(`Pull request did not pass validation check. Error:`);
+        Log.error(` -> ${bold(e.message)}`);
+        return false;
       }
 
       // For unknown errors, always re-throw.
       throw e;
     }
-  }
-
-  /**
-   * Prompts whether the specified pull request should be forcibly merged. If so, merges
-   * the specified pull request forcibly (ignoring non-fatal failures).
-   * @returns Whether the specified pull request has been forcibly merged.
-   */
-  async function promptAndPerformForceMerge(): Promise<boolean> {
-    if (await Prompt.confirm('Do you want to forcibly proceed with merging?')) {
-      // Perform the merge in force mode. This means that non-fatal failures
-      // are ignored and the merge continues.
-      return performMerge(true);
-    }
-    return false;
   }
 }
 

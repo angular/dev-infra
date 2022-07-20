@@ -16,8 +16,12 @@ import {PullRequest} from '../pull-request.js';
 
 import {MergeStrategy, TEMP_PR_HEAD_BRANCH} from './strategy.js';
 import {GithubApiRequestError} from '../../../utils/git/github.js';
-import {PullRequestFailure} from '../../common/validation/pull-request-failure.js';
-import {FatalMergeToolError} from '../failures.js';
+import {
+  FatalMergeToolError,
+  MergeConflictsFatalError,
+  MismatchedTargetBranchFatalError,
+  UnsatisfiedBaseShaFatalError,
+} from '../failures.js';
 
 /** Type describing the parameters for the Octokit `merge` API endpoint. */
 type OctokitMergeParams = RestEndpointMethodTypes['pulls']['merge']['parameters'];
@@ -43,7 +47,7 @@ export class GithubApiMergeStrategy extends MergeStrategy {
     // If the pull request does not have its base branch set to any determined target
     // branch, we cannot merge using the API.
     if (targetBranches.every((t) => t !== githubTargetBranch)) {
-      throw PullRequestFailure.mismatchingTargetBranch(targetBranches);
+      throw new MismatchedTargetBranchFatalError(targetBranches);
     }
 
     // In cases where a required base commit is specified for this pull request, check if
@@ -52,7 +56,7 @@ export class GithubApiMergeStrategy extends MergeStrategy {
     // e.g. a commit that changes the code ownership validation. PRs which are not rebased
     // could bypass new codeowner ship rules.
     if (requiredBaseSha && !this.git.hasCommit(TEMP_PR_HEAD_BRANCH, requiredBaseSha)) {
-      throw PullRequestFailure.unsatisfiedBaseSha();
+      throw new UnsatisfiedBaseShaFatalError();
     }
 
     const method = this._getMergeActionFromPullRequest(pullRequest);
@@ -74,12 +78,16 @@ export class GithubApiMergeStrategy extends MergeStrategy {
       // Commit message fixup does not work with other merge methods as the Github API only
       // allows commit message modifications for squash merging.
       if (method !== 'squash') {
-        throw PullRequestFailure.unableToFixupCommitMessageSquashOnly();
+        throw new FatalMergeToolError(
+          `Unable to fixup commit message of pull request. Commit message can only be ` +
+            `modified if the PR is merged using squash.`,
+        );
       }
       await this._promptCommitMessageEdit(pullRequest, mergeOptions);
     }
 
     let mergeStatusCode: number;
+    let mergeResponseMessage: string;
     let targetSha: string;
 
     try {
@@ -87,6 +95,7 @@ export class GithubApiMergeStrategy extends MergeStrategy {
       const result = await this.git.github.pulls.merge(mergeOptions);
 
       mergeStatusCode = result.status;
+      mergeResponseMessage = result.data.message;
       targetSha = result.data.sha;
     } catch (e) {
       // Note: Github usually returns `404` as status code if the API request uses a
@@ -102,10 +111,12 @@ export class GithubApiMergeStrategy extends MergeStrategy {
     // https://developer.github.com/v3/pulls/#response-if-merge-cannot-be-performed
     // Pull request cannot be merged due to merge conflicts.
     if (mergeStatusCode === 405) {
-      throw PullRequestFailure.mergeConflicts([githubTargetBranch]);
+      throw new MergeConflictsFatalError([githubTargetBranch]);
     }
     if (mergeStatusCode !== 200) {
-      throw PullRequestFailure.unknownMergeError();
+      throw new FatalMergeToolError(
+        `Unexpected merge status code: ${mergeStatusCode}: ${mergeResponseMessage}`,
+      );
     }
 
     // If the PR does not need to be merged into any other target branches,
@@ -140,7 +151,7 @@ export class GithubApiMergeStrategy extends MergeStrategy {
     // but in case the cherry-pick somehow fails, we still handle the conflicts here. The
     // commits created through the Github API could be different (i.e. through squash).
     if (failedBranches.length) {
-      throw PullRequestFailure.mergeConflicts(failedBranches);
+      throw new MergeConflictsFatalError(failedBranches);
     }
 
     this.pushTargetBranchesUpstream(cherryPickTargetBranches);
@@ -205,14 +216,14 @@ export class GithubApiMergeStrategy extends MergeStrategy {
   private async _assertMergeableOrThrow(
     pullRequest: PullRequest,
     targetBranches: string[],
-  ): Promise<null | PullRequestFailure> {
+  ): Promise<null> {
     const revisionRange = this.getPullRequestRevisionRange(pullRequest);
     const failedBranches = this.cherryPickIntoTargetBranches(revisionRange, targetBranches, {
       dryRun: true,
     });
 
     if (failedBranches.length) {
-      throw PullRequestFailure.mergeConflicts(failedBranches);
+      throw new MergeConflictsFatalError(failedBranches);
     }
     return null;
   }

@@ -10,7 +10,9 @@ import {assertValidGithubConfig, getConfig, GithubConfig, NgDevConfig} from '../
 import {Log} from '../../utils/logging.js';
 import {GitClient} from '../../utils/git/git-client.js';
 import {assertValidPullRequestConfig, PullRequestConfig} from '../config/index.js';
-import {getTargetBranchesForPullRequest} from '../common/targeting/target-label.js';
+import {getTargetBranchesAndLabelForPullRequest} from '../common/targeting/target-label.js';
+import {ActiveReleaseTrains} from '../../release/versioning/active-release-trains.js';
+import {getNextBranchName} from '../../release/versioning/version-branches.js';
 
 async function getTargetBranchesForPr(
   prNumber: number,
@@ -32,9 +34,22 @@ async function getTargetBranchesForPr(
   /** The branch targetted via the Github UI. */
   const githubTargetBranch = prData.base.ref;
 
+  const activeReleaseTrains = await ActiveReleaseTrains.fetch({
+    name: repo,
+    owner: owner,
+    nextBranchName: getNextBranchName(config.github),
+    api: git.github,
+  });
+
   // Note: We do not pass a list of commits here because we did not fetch this information
   // and the commits are only used for validation (which we can skip here).
-  return getTargetBranchesForPullRequest(git.github, config, labels, githubTargetBranch, []);
+  return getTargetBranchesAndLabelForPullRequest(
+    activeReleaseTrains,
+    git.github,
+    config,
+    labels,
+    githubTargetBranch,
+  );
 }
 
 export async function printTargetBranchesForPr(prNumber: number) {
@@ -42,13 +57,15 @@ export async function printTargetBranchesForPr(prNumber: number) {
   assertValidGithubConfig(config);
   assertValidPullRequestConfig(config);
 
-  if (config.pullRequest.noTargetLabeling) {
+  if (config.pullRequest.__noTargetLabeling) {
+    Log.info(`This repository does not use target labeling (special flag enabled).`);
     Log.info(`PR #${prNumber} will merge into: ${config.github.mainBranchName}`);
     return;
   }
 
-  const targets = await getTargetBranchesForPr(prNumber, config);
+  const target = await getTargetBranchesForPr(prNumber, config);
+  Log.info(`PR has the following target label: ${target.labelName}`);
   Log.info.group(`PR #${prNumber} will merge into:`);
-  targets.forEach((target) => Log.info(`- ${target}`));
+  target.branches.forEach((name) => Log.info(`- ${name}`));
   Log.info.groupEnd();
 }

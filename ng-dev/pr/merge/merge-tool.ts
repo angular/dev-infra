@@ -29,7 +29,7 @@ import {
 } from '../../release/versioning/index.js';
 import {Prompt} from '../../utils/prompt.js';
 import {FatalMergeToolError, UserAbortedMergeToolError} from './failures.js';
-import {PullRequestFailure} from '../common/validation/pull-request-failure.js';
+import {PullRequestValidationConfig} from '../common/validation/validation-config.js';
 
 export interface PullRequestMergeFlags {
   branchPrompt: boolean;
@@ -61,9 +61,10 @@ export class MergeTool {
   /**
    * Merges the given pull request and pushes it upstream.
    * @param prNumber Pull request that should be merged.
-   * @param force Whether non-critical pull request failures should be ignored.
+   * @param validationConfig Pull request validation config. Can be modified to skip
+   *   certain non-fatal validations.
    */
-  async merge(prNumber: number, force = false): Promise<void> {
+  async merge(prNumber: number, validationConfig: PullRequestValidationConfig): Promise<void> {
     if (this.git.hasUncommittedChanges()) {
       throw new FatalMergeToolError(
         'Local working repository not clean. Please make sure there are ' +
@@ -105,7 +106,7 @@ export class MergeTool {
       throw new FatalMergeToolError(hasOauthScopes.error);
     }
 
-    const pullRequest = await loadAndValidatePullRequest(this, prNumber, force);
+    const pullRequest = await loadAndValidatePullRequest(this, prNumber, validationConfig);
 
     if (this.flags.forceManualBranches) {
       await this.updatePullRequestTargetedBranchesFromPrompt(pullRequest);
@@ -234,11 +235,12 @@ export class MergeTool {
       throw new UserAbortedMergeToolError();
     }
 
-    // The Github Targeted branch must always be selected. It is not currently possible to make a
-    // readonly selection in inquirer's checkbox.
+    // The Github Targeted branch must always be selected. It is not currently possible
+    // to make a readonly selection in inquirer's checkbox.
     if (!selectedBranches.includes(pullRequest.githubTargetBranch)) {
-      throw PullRequestFailure.failedToManualSelectGithubTargetBranch(
-        pullRequest.githubTargetBranch,
+      throw new FatalMergeToolError(
+        `Pull Requests must merge into their targeted Github branch. If this branch (${pullRequest.githubTargetBranch}) ` +
+          'should not be included, please change the targeted branch via the Github UI.',
       );
     }
 
