@@ -7,7 +7,7 @@
  */
 
 import {parseCommitMessage} from '../../commit-message/parse.js';
-import {PullRequestMergeTask} from './task.js';
+import {MergeTool} from './merge-tool.js';
 import {getTargetBranchesForPullRequest} from '../common/targeting/target-label.js';
 import {
   assertCorrectBreakingChangeLabeling,
@@ -17,7 +17,6 @@ import {
   assertPassingCi,
 } from '../common/validation/validations.js';
 import {fetchPullRequestFromGithub} from '../common/fetch-pull-request.js';
-import {PullRequestFailure} from '../common/validation/pull-request-failure.js';
 import {FatalMergeToolError} from './failures.js';
 
 /** Interface that describes a pull request. */
@@ -54,7 +53,7 @@ export interface PullRequest {
  *   does not exist upstream.
  */
 export async function loadAndValidatePullRequest(
-  {git, config}: PullRequestMergeTask,
+  {git, config}: MergeTool,
   prNumber: number,
   ignoreNonFatalFailures = false,
 ): Promise<PullRequest> {

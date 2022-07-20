@@ -73,7 +73,7 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
 
         // If the failure can be ignored forcibly and we didn't attempt the current
         // merge forcibly already, we can prompt and ask for force attempting.
-        if (e.canBeIgnoredForcibly && !ignoreFatalErrors) {
+        if (e.canBeIgnoredNonFatal && !ignoreFatalErrors) {
           Log.info();
           Log.info(yellow('The pull request above failed due to non-critical errors.'));
           Log.info(yellow(`This error can be forcibly ignored if desired.`));
