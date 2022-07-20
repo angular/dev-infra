@@ -2719,10 +2719,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dequal@npm:2.0.2":
-  version: 2.0.2
-  resolution: "dequal@npm:2.0.2"
-  checksum: 86c7a2c59f7b0797ed397c74b5fcdb744e48fc19440b70ad6ac59f57550a96b0faef3f1cfd5760ec5e6d3f7cb101f634f1f80db4e727b1dc8389bf62d977c0a0
+"dequal@npm:2.0.3":
+  version: 2.0.3
+  resolution: "dequal@npm:2.0.3"
+  checksum: 8679b850e1a3d0ebbc46ee780d5df7b478c23f335887464023a631d1b9af051ad4a6595a44220f9ff8ff95a8ddccf019b5ad778a976fd7bbf77383d36f412f90
   languageName: node
   linkType: hard
 
@@ -4652,7 +4652,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: 32.119.0
+    renovate: 32.120.0
   languageName: unknown
   linkType: soft
 
@@ -5322,9 +5322,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:32.119.0":
-  version: 32.119.0
-  resolution: "renovate@npm:32.119.0"
+"renovate@npm:32.120.0":
+  version: 32.120.0
+  resolution: "renovate@npm:32.120.0"
   dependencies:
     "@aws-sdk/client-ec2": 3.112.0
     "@aws-sdk/client-ecr": 3.112.0
@@ -5351,7 +5351,7 @@ __metadata:
     crypto-random-string: 3.3.1
     deepmerge: 4.2.2
     delay: 5.0.0
-    dequal: 2.0.2
+    dequal: 2.0.3
     detect-indent: 6.1.0
     editorconfig: 0.15.3
     email-addresses: 5.0.0
@@ -5413,7 +5413,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: dc30b5b3d911c8fcb0841013ca17e9cc0a65bdc778aaa24e5eee08489c272fb0162069adc9577dd99d151a9a66aba7b57bc598ba87cb2cf3af100085a9772c95
+  checksum: e5a348c90e85041b5bb6668ab28a9bbb2274096be4b77704c59081ccc3fca05ec64aaa7c9eaedeec924abd9813dedfe30f4a2b1734550ba782878555c342b781
   languageName: node
   linkType: hard
 
