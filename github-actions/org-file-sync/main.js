@@ -381,18 +381,18 @@ var require_tunnel = __commonJS({
         if (res.statusCode !== 200) {
           debug("tunneling socket could not be established, statusCode=%d", res.statusCode);
           socket.destroy();
-          var error2 = new Error("tunneling socket could not be established, statusCode=" + res.statusCode);
-          error2.code = "ECONNRESET";
-          options.request.emit("error", error2);
+          var error = new Error("tunneling socket could not be established, statusCode=" + res.statusCode);
+          error.code = "ECONNRESET";
+          options.request.emit("error", error);
           self.removeSocket(placeholder);
           return;
         }
         if (head.length > 0) {
           debug("got illegal response body from proxy");
           socket.destroy();
-          var error2 = new Error("got illegal response body from proxy");
-          error2.code = "ECONNRESET";
-          options.request.emit("error", error2);
+          var error = new Error("got illegal response body from proxy");
+          error.code = "ECONNRESET";
+          options.request.emit("error", error);
           self.removeSocket(placeholder);
           return;
         }
@@ -403,9 +403,9 @@ var require_tunnel = __commonJS({
       function onError(cause) {
         connectReq.removeAllListeners();
         debug("tunneling socket could not be established, cause=%s\n", cause.message, cause.stack);
-        var error2 = new Error("tunneling socket could not be established, cause=" + cause.message);
-        error2.code = "ECONNRESET";
-        options.request.emit("error", error2);
+        var error = new Error("tunneling socket could not be established, cause=" + cause.message);
+        error.code = "ECONNRESET";
+        options.request.emit("error", error);
         self.removeSocket(placeholder);
       }
     };
@@ -1197,12 +1197,12 @@ var require_oidc_utils = __commonJS({
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
           const httpclient = OidcClient.createHttpClient();
-          const res = yield httpclient.getJson(id_token_url).catch((error2) => {
+          const res = yield httpclient.getJson(id_token_url).catch((error) => {
             throw new Error(`Failed to get ID Token. 
  
-        Error Code : ${error2.statusCode}
+        Error Code : ${error.statusCode}
  
-        Error Message: ${error2.result.message}`);
+        Error Message: ${error.result.message}`);
           });
           const id_token = (_a = res.result) === null || _a === void 0 ? void 0 : _a.value;
           if (!id_token) {
@@ -1223,8 +1223,8 @@ var require_oidc_utils = __commonJS({
             const id_token = yield OidcClient.getCall(id_token_url);
             core_1.setSecret(id_token);
             return id_token;
-          } catch (error2) {
-            throw new Error(`Error message: ${error2.message}`);
+          } catch (error) {
+            throw new Error(`Error message: ${error.message}`);
           }
         });
       }
@@ -1586,7 +1586,7 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
     exports.setCommandEcho = setCommandEcho;
     function setFailed2(message) {
       process.exitCode = ExitCode.Failure;
-      error2(message);
+      error(message);
     }
     exports.setFailed = setFailed2;
     function isDebug() {
@@ -1597,10 +1597,10 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
       command_1.issueCommand("debug", {}, message);
     }
     exports.debug = debug;
-    function error2(message, properties = {}) {
+    function error(message, properties = {}) {
       command_1.issueCommand("error", utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
     }
-    exports.error = error2;
+    exports.error = error;
     function warning2(message, properties = {}) {
       command_1.issueCommand("warning", utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
     }
@@ -1853,8 +1853,8 @@ var require_add = __commonJS({
       }
       if (kind === "error") {
         hook = function(method, options) {
-          return Promise.resolve().then(method.bind(null, options)).catch(function(error2) {
-            return orig(error2, options);
+          return Promise.resolve().then(method.bind(null, options)).catch(function(error) {
+            return orig(error, options);
           });
         };
       }
@@ -2536,21 +2536,21 @@ var require_tr46 = __commonJS({
         label = punycode.toUnicode(label);
         processing_option = PROCESSING_OPTIONS.NONTRANSITIONAL;
       }
-      var error2 = false;
+      var error = false;
       if (normalize(label) !== label || label[3] === "-" && label[4] === "-" || label[0] === "-" || label[label.length - 1] === "-" || label.indexOf(".") !== -1 || label.search(combiningMarksRegex) === 0) {
-        error2 = true;
+        error = true;
       }
       var len = countSymbols(label);
       for (var i = 0; i < len; ++i) {
         var status = findStatus(label.codePointAt(i));
         if (processing === PROCESSING_OPTIONS.TRANSITIONAL && status[1] !== "valid" || processing === PROCESSING_OPTIONS.NONTRANSITIONAL && status[1] !== "valid" && status[1] !== "deviation") {
-          error2 = true;
+          error = true;
           break;
         }
       }
       return {
         label,
-        error: error2
+        error
       };
     }
     function processing(domain_name, useSTD3, processing_option) {
@@ -7831,8 +7831,8 @@ var require_lib4 = __commonJS({
       this.timeout = timeout;
       if (body instanceof Stream) {
         body.on("error", function(err) {
-          const error2 = err.name === "AbortError" ? err : new FetchError(`Invalid response body while trying to fetch ${_this.url}: ${err.message}`, "system", err);
-          _this[INTERNALS].error = error2;
+          const error = err.name === "AbortError" ? err : new FetchError(`Invalid response body while trying to fetch ${_this.url}: ${err.message}`, "system", err);
+          _this[INTERNALS].error = error;
         });
       }
     }
@@ -8559,14 +8559,14 @@ var require_lib4 = __commonJS({
         const signal = request.signal;
         let response = null;
         const abort = function abort2() {
-          let error2 = new AbortError("The user aborted a request.");
-          reject(error2);
+          let error = new AbortError("The user aborted a request.");
+          reject(error);
           if (request.body && request.body instanceof Stream.Readable) {
-            request.body.destroy(error2);
+            request.body.destroy(error);
           }
           if (!response || !response.body)
             return;
-          response.body.emit("error", error2);
+          response.body.emit("error", error);
         };
         if (signal && signal.aborted) {
           abort();
@@ -8958,7 +8958,7 @@ var require_dist_node5 = __commonJS({
         }
         if (status >= 400) {
           const data = await getResponseData(response);
-          const error2 = new requestError.RequestError(toErrorMessage(data), status, {
+          const error = new requestError.RequestError(toErrorMessage(data), status, {
             response: {
               url,
               status,
@@ -8967,7 +8967,7 @@ var require_dist_node5 = __commonJS({
             },
             request: requestOptions
           });
-          throw error2;
+          throw error;
         }
         return getResponseData(response);
       }).then((data) => {
@@ -8977,10 +8977,10 @@ var require_dist_node5 = __commonJS({
           headers,
           data
         };
-      }).catch((error2) => {
-        if (error2 instanceof requestError.RequestError)
-          throw error2;
-        throw new requestError.RequestError(error2.message, 500, {
+      }).catch((error) => {
+        if (error instanceof requestError.RequestError)
+          throw error;
+        throw new requestError.RequestError(error.message, 500, {
           request: requestOptions
         });
       });
@@ -10481,9 +10481,9 @@ var require_dist_node10 = __commonJS({
               return {
                 value: normalizedResponse
               };
-            } catch (error2) {
-              if (error2.status !== 409)
-                throw error2;
+            } catch (error) {
+              if (error.status !== 409)
+                throw error;
               url = "";
               return {
                 value: {
@@ -12718,8 +12718,8 @@ var require_lib6 = __commonJS({
       this.timeout = timeout;
       if (body instanceof Stream) {
         body.on("error", function(err) {
-          const error2 = err.name === "AbortError" ? err : new FetchError(`Invalid response body while trying to fetch ${_this.url}: ${err.message}`, "system", err);
-          _this[INTERNALS].error = error2;
+          const error = err.name === "AbortError" ? err : new FetchError(`Invalid response body while trying to fetch ${_this.url}: ${err.message}`, "system", err);
+          _this[INTERNALS].error = error;
         });
       }
     }
@@ -13446,14 +13446,14 @@ var require_lib6 = __commonJS({
         const signal = request.signal;
         let response = null;
         const abort = function abort2() {
-          let error2 = new AbortError("The user aborted a request.");
-          reject(error2);
+          let error = new AbortError("The user aborted a request.");
+          reject(error);
           if (request.body && request.body instanceof Stream.Readable) {
-            request.body.destroy(error2);
+            request.body.destroy(error);
           }
           if (!response || !response.body)
             return;
-          response.body.emit("error", error2);
+          response.body.emit("error", error);
         };
         if (signal && signal.aborted) {
           abort();
@@ -13751,7 +13751,7 @@ var require_dist_node13 = __commonJS({
         }
         if (status >= 400) {
           const data = await getResponseData(response);
-          const error2 = new requestError.RequestError(toErrorMessage(data), status, {
+          const error = new requestError.RequestError(toErrorMessage(data), status, {
             response: {
               url,
               status,
@@ -13760,7 +13760,7 @@ var require_dist_node13 = __commonJS({
             },
             request: requestOptions
           });
-          throw error2;
+          throw error;
         }
         return getResponseData(response);
       }).then((data) => {
@@ -13770,10 +13770,10 @@ var require_dist_node13 = __commonJS({
           headers,
           data
         };
-      }).catch((error2) => {
-        if (error2 instanceof requestError.RequestError)
-          throw error2;
-        throw new requestError.RequestError(error2.message, 500, {
+      }).catch((error) => {
+        if (error instanceof requestError.RequestError)
+          throw error;
+        throw new requestError.RequestError(error.message, 500, {
           request: requestOptions
         });
       });
@@ -14092,9 +14092,9 @@ var require_dist_node17 = __commonJS({
         return request(options).then((response) => {
           octokit.log.info(`${requestOptions.method} ${path} - ${response.status} in ${Date.now() - start}ms`);
           return response;
-        }).catch((error2) => {
-          octokit.log.info(`${requestOptions.method} ${path} - ${error2.status} in ${Date.now() - start}ms`);
-          throw error2;
+        }).catch((error) => {
+          octokit.log.info(`${requestOptions.method} ${path} - ${error.status} in ${Date.now() - start}ms`);
+          throw error;
         });
       });
     }
@@ -14161,9 +14161,9 @@ var require_dist_node18 = __commonJS({
               return {
                 value: normalizedResponse
               };
-            } catch (error2) {
-              if (error2.status !== 409)
-                throw error2;
+            } catch (error) {
+              if (error.status !== 409)
+                throw error;
               url = "";
               return {
                 value: {
@@ -17044,8 +17044,8 @@ var require_lib8 = __commonJS({
       this.timeout = timeout;
       if (body instanceof Stream) {
         body.on("error", function(err) {
-          const error2 = err.name === "AbortError" ? err : new FetchError(`Invalid response body while trying to fetch ${_this.url}: ${err.message}`, "system", err);
-          _this[INTERNALS].error = error2;
+          const error = err.name === "AbortError" ? err : new FetchError(`Invalid response body while trying to fetch ${_this.url}: ${err.message}`, "system", err);
+          _this[INTERNALS].error = error;
         });
       }
     }
@@ -17772,14 +17772,14 @@ var require_lib8 = __commonJS({
         const signal = request.signal;
         let response = null;
         const abort = function abort2() {
-          let error2 = new AbortError("The user aborted a request.");
-          reject(error2);
+          let error = new AbortError("The user aborted a request.");
+          reject(error);
           if (request.body && request.body instanceof Stream.Readable) {
-            request.body.destroy(error2);
+            request.body.destroy(error);
           }
           if (!response || !response.body)
             return;
-          response.body.emit("error", error2);
+          response.body.emit("error", error);
         };
         if (signal && signal.aborted) {
           abort();
@@ -18077,7 +18077,7 @@ var require_dist_node22 = __commonJS({
         }
         if (status >= 400) {
           const data = await getResponseData(response);
-          const error2 = new requestError.RequestError(toErrorMessage(data), status, {
+          const error = new requestError.RequestError(toErrorMessage(data), status, {
             response: {
               url,
               status,
@@ -18086,7 +18086,7 @@ var require_dist_node22 = __commonJS({
             },
             request: requestOptions
           });
-          throw error2;
+          throw error;
         }
         return getResponseData(response);
       }).then((data) => {
@@ -18096,10 +18096,10 @@ var require_dist_node22 = __commonJS({
           headers,
           data
         };
-      }).catch((error2) => {
-        if (error2 instanceof requestError.RequestError)
-          throw error2;
-        throw new requestError.RequestError(error2.message, 500, {
+      }).catch((error) => {
+        if (error instanceof requestError.RequestError)
+          throw error;
+        throw new requestError.RequestError(error.message, 500, {
           request: requestOptions
         });
       });
@@ -18241,12 +18241,12 @@ var require_dist_node24 = __commonJS({
       };
       const response = await request2(route, withOAuthParameters);
       if ("error" in response.data) {
-        const error2 = new requestError.RequestError(`${response.data.error_description} (${response.data.error}, ${response.data.error_uri})`, 400, {
+        const error = new requestError.RequestError(`${response.data.error_description} (${response.data.error}, ${response.data.error_uri})`, 400, {
           request: request2.endpoint.merge(route, withOAuthParameters),
           headers: response.headers
         });
-        error2.response = response;
-        throw error2;
+        error.response = response;
+        throw error;
       }
       return response;
     }
@@ -18538,10 +18538,10 @@ var require_dist_node25 = __commonJS({
           tokenType: "oauth",
           ...authentication
         };
-      } catch (error2) {
-        if (!error2.response)
-          throw error2;
-        const errorType = error2.response.data.error;
+      } catch (error) {
+        if (!error.response)
+          throw error;
+        const errorType = error.response.data.error;
         if (errorType === "authorization_pending") {
           await wait(verification.interval);
           return waitForAccessToken(request2, clientId, clientType, verification);
@@ -18550,7 +18550,7 @@ var require_dist_node25 = __commonJS({
           await wait(verification.interval + 5);
           return waitForAccessToken(request2, clientId, clientType, verification);
         }
-        throw error2;
+        throw error;
       }
     }
     async function auth(state, authOptions) {
@@ -18719,12 +18719,12 @@ var require_dist_node26 = __commonJS({
             ...authentication
           };
           return state.authentication;
-        } catch (error2) {
-          if (error2.status === 404) {
-            error2.message = "[@octokit/auth-oauth-user] Token is invalid";
+        } catch (error) {
+          if (error.status === 404) {
+            error.message = "[@octokit/auth-oauth-user] Token is invalid";
             state.authentication.invalid = true;
           }
-          throw error2;
+          throw error;
         }
       }
       if (options.type === "delete" || options.type === "deleteAuthorization") {
@@ -18737,9 +18737,9 @@ var require_dist_node26 = __commonJS({
             token: state.authentication.token,
             request: state.request
           });
-        } catch (error2) {
-          if (error2.status !== 404)
-            throw error2;
+        } catch (error) {
+          if (error.status !== 404)
+            throw error;
         }
         state.authentication.invalid = true;
         return state.authentication;
@@ -18861,11 +18861,11 @@ var require_dist_node27 = __commonJS({
       endpoint.headers.authorization = `basic ${credentials}`;
       try {
         return await request2(endpoint);
-      } catch (error2) {
-        if (error2.status !== 401)
-          throw error2;
-        error2.message = `[@octokit/auth-oauth-app] "${endpoint.method} ${endpoint.url}" does not support clientId/clientSecret basic authentication.`;
-        throw error2;
+      } catch (error) {
+        if (error.status !== 401)
+          throw error;
+        error.message = `[@octokit/auth-oauth-app] "${endpoint.method} ${endpoint.url}" does not support clientId/clientSecret basic authentication.`;
+        throw error;
       }
     }
     var VERSION = "5.0.1";
@@ -19671,15 +19671,15 @@ var require_decode = __commonJS({
 // 
 var require_JsonWebTokenError = __commonJS({
   ""(exports, module) {
-    var JsonWebTokenError = function(message, error2) {
+    var JsonWebTokenError = function(message, error) {
       Error.call(this, message);
       if (Error.captureStackTrace) {
         Error.captureStackTrace(this, this.constructor);
       }
       this.name = "JsonWebTokenError";
       this.message = message;
-      if (error2)
-        this.inner = error2;
+      if (error)
+        this.inner = error;
     };
     JsonWebTokenError.prototype = Object.create(Error.prototype);
     JsonWebTokenError.prototype.constructor = JsonWebTokenError;
@@ -21615,8 +21615,8 @@ var require_sign = __commonJS({
       } else if (isObjectPayload) {
         try {
           validatePayload(payload);
-        } catch (error2) {
-          return failure(error2);
+        } catch (error) {
+          return failure(error);
         }
         if (!options.mutatePayload) {
           payload = Object.assign({}, payload);
@@ -21637,8 +21637,8 @@ var require_sign = __commonJS({
       }
       try {
         validateOptions(options);
-      } catch (error2) {
-        return failure(error2);
+      } catch (error) {
+        return failure(error);
       }
       var timestamp = payload.iat || Math.floor(Date.now() / 1e3);
       if (options.noTimestamp) {
@@ -22433,11 +22433,11 @@ var require_dist_node29 = __commonJS({
           appId: appAuthentication.appId,
           expiresAt: new Date(appAuthentication.expiration * 1e3).toISOString()
         };
-      } catch (error2) {
+      } catch (error) {
         if (privateKey === "-----BEGIN RSA PRIVATE KEY-----") {
           throw new Error("The 'privateKey` option contains only the first line '-----BEGIN RSA PRIVATE KEY-----'. If you are setting it using a `.env` file, make sure it is set on a single line with newlines replaced by '\n'");
         } else {
-          throw error2;
+          throw error;
         }
       }
     }
@@ -22646,8 +22646,8 @@ var require_dist_node29 = __commonJS({
       return !!url && REGEX.test(url);
     }
     var FIVE_SECONDS_IN_MS = 5 * 1e3;
-    function isNotTimeSkewError(error2) {
-      return !(error2.message.match(/'Expiration time' claim \('exp'\) must be a numeric value representing the future time at which the assertion expires/) || error2.message.match(/'Issued at' claim \('iat'\) must be an Integer representing the time that the assertion was issued/));
+    function isNotTimeSkewError(error) {
+      return !(error.message.match(/'Expiration time' claim \('exp'\) must be a numeric value representing the future time at which the assertion expires/) || error.message.match(/'Issued at' claim \('iat'\) must be an Integer representing the time that the assertion was issued/));
     }
     async function hook(state, request2, route, parameters) {
       const endpoint = request2.endpoint.merge(route, parameters);
@@ -22663,15 +22663,15 @@ var require_dist_node29 = __commonJS({
         let response;
         try {
           response = await request2(endpoint);
-        } catch (error2) {
-          if (isNotTimeSkewError(error2)) {
-            throw error2;
+        } catch (error) {
+          if (isNotTimeSkewError(error)) {
+            throw error;
           }
-          if (typeof error2.response.headers.date === "undefined") {
-            throw error2;
+          if (typeof error.response.headers.date === "undefined") {
+            throw error;
           }
-          const diff = Math.floor((Date.parse(error2.response.headers.date) - Date.parse(new Date().toString())) / 1e3);
-          state.log.warn(error2.message);
+          const diff = Math.floor((Date.parse(error.response.headers.date) - Date.parse(new Date().toString())) / 1e3);
+          state.log.warn(error.message);
           state.log.warn(`[@octokit/auth-app] GitHub API time and system time are different by ${diff} seconds. Retrying request with the difference accounted for.`);
           const {
             token: token3
@@ -22702,15 +22702,15 @@ var require_dist_node29 = __commonJS({
       const timeSinceTokenCreationInMs = +new Date() - +new Date(createdAt);
       try {
         return await request2(options);
-      } catch (error2) {
-        if (error2.status !== 401) {
-          throw error2;
+      } catch (error) {
+        if (error.status !== 401) {
+          throw error;
         }
         if (timeSinceTokenCreationInMs >= FIVE_SECONDS_IN_MS) {
           if (retries > 0) {
-            error2.message = `After ${retries} retries within ${timeSinceTokenCreationInMs / 1e3}s of creating the installation access token, the response remains 401. At this point, the cause may be an authentication problem or a system outage. Please check https://www.githubstatus.com for status information`;
+            error.message = `After ${retries} retries within ${timeSinceTokenCreationInMs / 1e3}s of creating the installation access token, the response remains 401. At this point, the cause may be an authentication problem or a system outage. Please check https://www.githubstatus.com for status information`;
           }
-          throw error2;
+          throw error;
         }
         ++retries;
         const awaitTime = retries * 1e3;
@@ -22814,7 +22814,8 @@ async function getFilesForRepo(github, repo) {
   for (const path of filesToSync) {
     fileMap.set(path, await getFile(github, repo, path));
   }
-  core.info(`Retrieved ${fileMap.size} file(s)`);
+  const fileCount = [...fileMap.values()].filter((file) => file !== null).length;
+  core.info(`Retrieved ${fileCount} file(s)`);
   core.endGroup();
   return fileMap;
 }
@@ -22834,11 +22835,11 @@ async function getFile(github, repo, path) {
   });
 }
 async function updateRepoWithFiles(github, repo, goldenFiles) {
-  let updates = [];
+  core.startGroup(`Update files in "${repo}" repo`);
   const repoFiles = await getFilesForRepo(github, repo);
-  goldenFiles.forEach((goldenFile, path) => {
+  for (let [path, goldenFile] of goldenFiles.entries()) {
     if (goldenFile === null) {
-      return;
+      continue;
     }
     const repoFile = repoFiles.get(path) || null;
     let repoSha = void 0;
@@ -22849,19 +22850,24 @@ async function updateRepoWithFiles(github, repo, goldenFiles) {
     }
     if (repoFileContent !== goldenFile.content) {
       core.info(`Updating "${path}" in "${repo}" repo`);
-      updates.push(github.repos.createOrUpdateFileContents({
-        content: goldenFile.content,
-        owner: import_github2.context.repo.owner,
-        repo,
-        path,
-        message: `build: update \`${path}\` to match the content of \`${import_github2.context.repo.owner}/${import_github2.context.repo.repo}\``,
-        sha: repoSha
-      }));
+      try {
+        await github.repos.createOrUpdateFileContents({
+          content: goldenFile.content,
+          owner: import_github2.context.repo.owner,
+          repo,
+          path,
+          message: `build: update \`${path}\` to match the content of \`${import_github2.context.repo.owner}/${import_github2.context.repo.repo}\``,
+          sha: repoSha
+        });
+      } catch (e) {
+        core.info(`Failed to update "${path}"`);
+        console.error(e);
+      }
     } else {
       core.info(`"${path}" is already in sync`);
     }
-  });
-  await Promise.all(updates);
+  }
+  core.endGroup();
 }
 async function main() {
   const github = new import_rest2.Octokit({ auth: await getAuthTokenFor(ANGULAR_ROBOT) });
@@ -22876,7 +22882,7 @@ async function main() {
   }
 }
 main().catch((err) => {
-  core.error(err);
+  console.error(err);
   core.setFailed("Failed with the above error");
 });
 /*!
