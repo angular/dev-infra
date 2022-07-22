@@ -45,9 +45,9 @@ export class GithubApiMergeStrategy extends MergeStrategy {
    * @throws {FatalMergeToolError} A fatal error if the merge could not be performed.
    */
   override async merge(pullRequest: PullRequest): Promise<void> {
-    const {githubTargetBranch, prNumber, needsCommitMessageFixup, cherryPickTargetBranches} =
-      pullRequest;
+    const {githubTargetBranch, prNumber, needsCommitMessageFixup, targetBranches} = pullRequest;
     const method = this._getMergeActionFromPullRequest(pullRequest);
+    const cherryPickTargetBranches = targetBranches.filter((b) => b !== githubTargetBranch);
 
     const mergeOptions: OctokitMergeParams = {
       pull_number: prNumber,
