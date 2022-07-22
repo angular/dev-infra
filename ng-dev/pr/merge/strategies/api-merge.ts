@@ -14,14 +14,9 @@ import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-clien
 import {GithubApiMergeMethod, GithubApiMergeStrategyConfig} from '../../config/index.js';
 import {PullRequest} from '../pull-request.js';
 
-import {MergeStrategy, TEMP_PR_HEAD_BRANCH} from './strategy.js';
+import {MergeStrategy} from './strategy.js';
 import {GithubApiRequestError} from '../../../utils/git/github.js';
-import {
-  FatalMergeToolError,
-  MergeConflictsFatalError,
-  MismatchedTargetBranchFatalError,
-  UnsatisfiedBaseShaFatalError,
-} from '../failures.js';
+import {FatalMergeToolError, MergeConflictsFatalError} from '../failures.js';
 
 /** Type describing the parameters for the Octokit `merge` API endpoint. */
 type OctokitMergeParams = RestEndpointMethodTypes['pulls']['merge']['parameters'];
@@ -41,32 +36,18 @@ export class GithubApiMergeStrategy extends MergeStrategy {
     super(git);
   }
 
+  /**
+   * Merges the specified pull request via the Github API, cherry-picks the change into the other
+   * target branhces and pushes the branches upstream.
+   *
+   * @throws {GitCommandError} An unknown Git command error occurred that is not
+   *   specific to the pull request merge.
+   * @throws {FatalMergeToolError} A fatal error if the merge could not be performed.
+   */
   override async merge(pullRequest: PullRequest): Promise<void> {
-    const {githubTargetBranch, prNumber, targetBranches, requiredBaseSha, needsCommitMessageFixup} =
+    const {githubTargetBranch, prNumber, needsCommitMessageFixup, cherryPickTargetBranches} =
       pullRequest;
-    // If the pull request does not have its base branch set to any determined target
-    // branch, we cannot merge using the API.
-    if (targetBranches.every((t) => t !== githubTargetBranch)) {
-      throw new MismatchedTargetBranchFatalError(targetBranches);
-    }
-
-    // In cases where a required base commit is specified for this pull request, check if
-    // the pull request contains the given commit. If not, return a pull request failure.
-    // This check is useful for enforcing that PRs are rebased on top of a given commit.
-    // e.g. a commit that changes the code ownership validation. PRs which are not rebased
-    // could bypass new codeowner ship rules.
-    if (requiredBaseSha && !this.git.hasCommit(TEMP_PR_HEAD_BRANCH, requiredBaseSha)) {
-      throw new UnsatisfiedBaseShaFatalError();
-    }
-
     const method = this._getMergeActionFromPullRequest(pullRequest);
-    const cherryPickTargetBranches = targetBranches.filter((b) => b !== githubTargetBranch);
-
-    // First cherry-pick the PR into all local target branches in dry-run mode. This is
-    // purely for testing so that we can figure out whether the PR can be cherry-picked
-    // into the other target branches. We don't want to merge the PR through the API, and
-    // then run into cherry-pick conflicts after the initial merge already completed.
-    await this._assertMergeableOrThrow(pullRequest, cherryPickTargetBranches);
 
     const mergeOptions: OctokitMergeParams = {
       pull_number: prNumber,
@@ -208,24 +189,6 @@ export class GithubApiMergeStrategy extends MergeStrategy {
       pull_number: prNumber,
     });
     return allCommits.map(({commit}) => commit.message);
-  }
-
-  /**
-   * Asserts that given pull request could be merged into its target branches.
-   */
-  private async _assertMergeableOrThrow(
-    pullRequest: PullRequest,
-    targetBranches: string[],
-  ): Promise<null> {
-    const revisionRange = this.getPullRequestRevisionRange(pullRequest);
-    const failedBranches = this.cherryPickIntoTargetBranches(revisionRange, targetBranches, {
-      dryRun: true,
-    });
-
-    if (failedBranches.length) {
-      throw new MergeConflictsFatalError(failedBranches);
-    }
-    return null;
   }
 
   /** Determines the merge action from the given pull request. */

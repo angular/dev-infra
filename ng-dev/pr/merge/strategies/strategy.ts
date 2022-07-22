@@ -7,6 +7,11 @@
  */
 
 import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client.js';
+import {
+  MergeConflictsFatalError,
+  MismatchedTargetBranchFatalError,
+  UnsatisfiedBaseShaFatalError,
+} from '../failures.js';
 import {PullRequest} from '../pull-request.js';
 
 /**
@@ -43,6 +48,42 @@ export abstract class MergeStrategy {
    */
   abstract merge(pullRequest: PullRequest): Promise<void>;
 
+  /**
+   * Checks to confirm that a pull request in its current state is able to merge as expected to
+   * the targeted branches. This method notably does not commit any attempted cherry-picks during
+   * its check, but instead leaves this to the merging action.
+   *
+   * @throws {GitCommandError} An unknown Git command error occurred that is not
+   *   specific to the pull request merge.
+   * @throws {UnsatisfiedBaseShaFatalError} A fatal error if a specific is required to be present
+   *   in the pull requests branch and is not present in that branch.
+   * @throws {MismatchedTargetBranchFatalError} A fatal error if the pull request does not target
+   *   a branch via the Github UI that is managed by merge tooling.
+   */
+  async check(pullRequest: PullRequest): Promise<void> {
+    const {githubTargetBranch, targetBranches, requiredBaseSha} = pullRequest;
+    // If the pull request does not have its base branch set to any determined target
+    // branch, we cannot merge using the API.
+    if (targetBranches.every((t) => t !== githubTargetBranch)) {
+      throw new MismatchedTargetBranchFatalError(targetBranches);
+    }
+
+    // In cases where a required base commit is specified for this pull request, check if
+    // the pull request contains the given commit. If not, return a pull request failure.
+    // This check is useful for enforcing that PRs are rebased on top of a given commit.
+    // e.g. a commit that changes the code ownership validation. PRs which are not rebased
+    // could bypass new codeowner ship rules.
+    if (requiredBaseSha && !this.git.hasCommit(TEMP_PR_HEAD_BRANCH, requiredBaseSha)) {
+      throw new UnsatisfiedBaseShaFatalError();
+    }
+
+    // First cherry-pick the PR into all local target branches in dry-run mode. This is
+    // purely for testing so that we can figure out whether the PR can be cherry-picked
+    // into the other target branches. We don't want to merge the PR through the API, and
+    // then run into cherry-pick conflicts after the initial merge already completed.
+    await this._assertMergeableOrThrow(pullRequest, targetBranches);
+  }
+
   /** Cleans up the pull request merge. e.g. deleting temporary local branches. */
   async cleanup(pullRequest: PullRequest) {
     // Delete all temporary target branches.
@@ -52,16 +93,6 @@ export abstract class MergeStrategy {
 
     // Delete temporary branch for the pull request head.
     this.git.run(['branch', '-D', TEMP_PR_HEAD_BRANCH]);
-  }
-
-  /** Gets the revision range for all commits in the given pull request. */
-  protected getPullRequestRevisionRange(pullRequest: PullRequest): string {
-    return `${this.getPullRequestBaseRevision(pullRequest)}..${TEMP_PR_HEAD_BRANCH}`;
-  }
-
-  /** Gets the base revision of a pull request. i.e. the commit the PR is based on. */
-  protected getPullRequestBaseRevision(pullRequest: PullRequest): string {
-    return `${TEMP_PR_HEAD_BRANCH}~${pullRequest.commitCount}`;
   }
 
   /** Gets a deterministic local branch name for a given branch. */
@@ -152,5 +183,21 @@ export abstract class MergeStrategy {
     // Push all target branches with a single command if we don't run in dry-run mode.
     // We don't want to push them individually as that could cause an unnecessary slow-down.
     this.git.run(['push', this.git.getRepoGitUrl(), ...pushRefspecs]);
+  }
+
+  /**
+   * Asserts that given pull request could be merged into its target branches.
+   */
+  protected async _assertMergeableOrThrow(
+    {revisionRange}: PullRequest,
+    targetBranches: string[],
+  ): Promise<void> {
+    const failedBranches = this.cherryPickIntoTargetBranches(revisionRange, targetBranches, {
+      dryRun: true,
+    });
+
+    if (failedBranches.length) {
+      throw new MergeConflictsFatalError(failedBranches);
+    }
   }
 }

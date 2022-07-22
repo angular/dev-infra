@@ -8,7 +8,6 @@
 
 import {dirname, join} from 'path';
 import {fileURLToPath} from 'url';
-import {MergeConflictsFatalError, UnsatisfiedBaseShaFatalError} from '../failures.js';
 import {PullRequest} from '../pull-request.js';
 import {MergeStrategy, TEMP_PR_HEAD_BRANCH} from './strategy.js';
 
@@ -25,33 +24,20 @@ export class AutosquashMergeStrategy extends MergeStrategy {
    * branches upstream. This method requires the temporary target branches to be fetched
    * already as we don't want to fetch the target branches per pull request merge. This
    * would causes unnecessary multiple fetch requests when multiple PRs are merged.
+   *
    * @throws {GitCommandError} An unknown Git command error occurred that is not
    *   specific to the pull request merge.
    * @throws {FatalMergeToolError} A fatal error if the merge could not be performed.
    */
   override async merge(pullRequest: PullRequest): Promise<void> {
-    const {prNumber, targetBranches, requiredBaseSha, needsCommitMessageFixup, githubTargetBranch} =
-      pullRequest;
-    // In case a required base is specified for this pull request, check if the pull
-    // request contains the given commit. If not, return a pull request failure. This
-    // check is useful for enforcing that PRs are rebased on top of a given commit. e.g.
-    // a commit that changes the codeowner ship validation. PRs which are not rebased
-    // could bypass new codeowner ship rules.
-    if (requiredBaseSha && !this.git.hasCommit(TEMP_PR_HEAD_BRANCH, requiredBaseSha)) {
-      throw new UnsatisfiedBaseShaFatalError();
-    }
-
-    // SHA for the first commit the pull request is based on. Usually we would able
-    // to just rely on the base revision provided by `getPullRequestBaseRevision`, but
-    // the revision would rely on the amount of commits in a pull request. This is not
-    // reliable as we rebase the PR with autosquash where the amount of commits could
-    // change. We work around this by parsing the base revision so that we have a fixated
-    // SHA before the autosquash rebase is performed.
-    const baseSha = this.git
-      .run(['rev-parse', this.getPullRequestBaseRevision(pullRequest)])
-      .stdout.trim();
-    // Git revision range that matches the pull request commits.
-    const revisionRange = `${baseSha}..${TEMP_PR_HEAD_BRANCH}`;
+    const {
+      githubTargetBranch,
+      targetBranches,
+      revisionRange,
+      needsCommitMessageFixup,
+      baseSha,
+      prNumber,
+    } = pullRequest;
 
     // We always rebase the pull request so that fixup or squash commits are automatically
     // collapsed. Git's autosquash functionality does only work in interactive rebases, so
@@ -82,13 +68,9 @@ export class AutosquashMergeStrategy extends MergeStrategy {
       revisionRange,
     ]);
 
-    // Cherry-pick the pull request into all determined target branches.
-    const failedBranches = this.cherryPickIntoTargetBranches(revisionRange, targetBranches);
-
-    if (failedBranches.length) {
-      throw new MergeConflictsFatalError(failedBranches);
-    }
-
+    // Perform the actual cherry picking into target branches.
+    this.cherryPickIntoTargetBranches(revisionRange, targetBranches);
+    // Push the cherry picked branches upstream.
     this.pushTargetBranchesUpstream(targetBranches);
 
     /** The local branch name of the github targeted branch. */
