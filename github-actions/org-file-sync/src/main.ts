@@ -32,7 +32,8 @@ async function getFilesForRepo(github: Octokit, repo: string): Promise<Files> {
   for (const path of filesToSync) {
     fileMap.set(path, await getFile(github, repo, path));
   }
-  core.info(`Retrieved ${fileMap.size} file(s)`);
+  const fileCount = [...fileMap.values()].filter(file => file !== null).length;
+  core.info(`Retrieved ${fileCount} file(s)`);
   core.endGroup();
   return fileMap;
 }
@@ -65,18 +66,13 @@ async function getFile(github: Octokit, repo: string, path: string): Promise<Fil
  * with the same path in the repo.
  */
 async function updateRepoWithFiles(github: Octokit, repo: string, goldenFiles: Files) {
-  /**
-   * Promises resolved when an update is completed.
-   * Note: An array is used to allow for awaiting everything via `Promise.all`
-   */
-  let updates: Promise<unknown>[] = [];
   /** The current files, or lack of files, for synchronizing in target repo. */
   const repoFiles = await getFilesForRepo(github, repo);
 
-  goldenFiles.forEach((goldenFile, path) => {
+  for (let [path, goldenFile] of goldenFiles.entries()) {
     // If the golden file does not exist, we have nothing to syncronize.
     if (goldenFile === null) {
-      return;
+      continue;
     }
     /** The target repository's File for the path. */
     const repoFile = repoFiles.get(path) || null;
@@ -93,8 +89,8 @@ async function updateRepoWithFiles(github: Octokit, repo: string, goldenFiles: F
 
     if (repoFileContent !== goldenFile.content) {
       core.info(`Updating "${path}" in "${repo}" repo`);
-      updates.push(
-        github.repos.createOrUpdateFileContents({
+      try {
+        await github.repos.createOrUpdateFileContents({
           content: goldenFile.content,
           owner: context.repo.owner,
           repo,
@@ -102,14 +98,15 @@ async function updateRepoWithFiles(github: Octokit, repo: string, goldenFiles: F
           message: `build: update \`${path}\` to match the content of \`${context.repo.owner}/${context.repo.repo}\``,
           // The SHA of the previous file content change is used if an update is occuring.
           sha: repoSha,
-        }),
-      );
+        });
+      } catch (e) {
+        core.info(`Failed to update "${path}"`);
+        console.error(e);
+      }
     } else {
       core.info(`"${path}" is already in sync`);
     }
-  });
-
-  await Promise.all(updates);
+  }
 }
 
 async function main() {
@@ -127,6 +124,6 @@ async function main() {
 }
 
 main().catch((err) => {
-  core.error(err);
+  console.error(err);
   core.setFailed('Failed with the above error');
 });
