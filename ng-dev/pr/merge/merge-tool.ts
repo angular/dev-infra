@@ -64,6 +64,7 @@ export class MergeTool {
    * @param validationConfig Pull request validation config. Can be modified to skip
    *   certain non-fatal validations.
    */
+
   async merge(prNumber: number, validationConfig: PullRequestValidationConfig): Promise<void> {
     if (this.git.hasUncommittedChanges()) {
       throw new FatalMergeToolError(
@@ -112,15 +113,6 @@ export class MergeTool {
       await this.updatePullRequestTargetedBranchesFromPrompt(pullRequest);
     }
 
-    if (
-      // In cases where manual branch targeting is used, the user already confirmed.
-      !this.flags.forceManualBranches &&
-      this.flags.branchPrompt &&
-      !(await Prompt.confirm(getTargetedBranchesConfirmationPromptMessage(pullRequest)))
-    ) {
-      throw new UserAbortedMergeToolError();
-    }
-
     // If the pull request has a caretaker note applied, raise awareness by prompting
     // the caretaker. The caretaker can then decide to proceed or abort the merge.
     if (
@@ -143,6 +135,18 @@ export class MergeTool {
     try {
       // Run preparations for the merge (e.g. fetching branches).
       await strategy.prepare(pullRequest);
+
+      // Check for conflicts between the pull request and target branches.
+      await strategy.check(pullRequest);
+
+      if (
+        // In cases where manual branch targeting is used, the user already confirmed.
+        !this.flags.forceManualBranches &&
+        this.flags.branchPrompt &&
+        !(await Prompt.confirm(getTargetedBranchesConfirmationPromptMessage(pullRequest)))
+      ) {
+        throw new UserAbortedMergeToolError();
+      }
 
       // Perform the merge and pass-through potential failures.
       await strategy.merge(pullRequest);

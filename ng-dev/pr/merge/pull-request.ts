@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {parseCommitMessage} from '../../commit-message/parse.js';
 import {MergeTool} from './merge-tool.js';
 import {
   getTargetBranchesAndLabelForPullRequest,
@@ -18,6 +17,7 @@ import {FatalMergeToolError} from './failures.js';
 import {ActiveReleaseTrains} from '../../release/versioning/active-release-trains.js';
 import {PullRequestValidationConfig} from '../common/validation/validation-config.js';
 import {assertValidPullRequest} from '../common/validation/validate-pull-request.js';
+import {TEMP_PR_HEAD_BRANCH} from './strategies/strategy.js';
 
 /** Interface that describes a pull request. */
 export interface PullRequest {
@@ -33,6 +33,8 @@ export interface PullRequest {
   targetBranches: string[];
   /** Branch that the PR targets in the Github UI. */
   githubTargetBranch: string;
+  /** List of branches this PR must be cherry picked into. */
+  cherryPickTargetBranches: string[];
   /** Count of commits in this pull request. */
   commitCount: number;
   /** Optional SHA that this pull request needs to be based on. */
@@ -41,6 +43,10 @@ export interface PullRequest {
   needsCommitMessageFixup: boolean;
   /** Whether the pull request has a caretaker note. */
   hasCaretakerNote: boolean;
+  /** The SHA for the first commit the pull request is based on. */
+  baseSha: string;
+  /** Git revision range that matches the pull request commits. */
+  revisionRange: string;
 }
 
 /**
@@ -106,6 +112,21 @@ export async function loadAndValidatePullRequest(
     !!config.pullRequest.caretakerNoteLabel &&
     labels.includes(config.pullRequest.caretakerNoteLabel);
 
+  /** Number of commits in the pull request. */
+  const commitCount = prData.commits.totalCount;
+  /**
+   * SHA for the first commit the pull request is based on.
+   *
+   * Typically we would be able to rely on referencing the the base revision as the temprorary
+   * pull request head commmit minus the number of commits in the pull request. This is not
+   * always the case when we rebase the PR with autosquash where the amount of commits could
+   * change. We avoid this issue around this by parsing the base revision so that we are able
+   * to reference a specific SHA before a autosquash rebase could be performed.
+   */
+  const baseSha = git.run(['rev-parse', `${TEMP_PR_HEAD_BRANCH}~${commitCount}`]).stdout.trim();
+  /* Git revision range that matches the pull request commits. */
+  const revisionRange = `${baseSha}..${TEMP_PR_HEAD_BRANCH}`;
+
   return {
     url: prData.url,
     prNumber,
@@ -113,9 +134,12 @@ export async function loadAndValidatePullRequest(
     requiredBaseSha,
     githubTargetBranch,
     needsCommitMessageFixup,
+    commitCount,
+    baseSha,
+    revisionRange,
     hasCaretakerNote,
     targetBranches: target.branches,
+    cherryPickTargetBranches: target.branches.filter((b) => b !== githubTargetBranch),
     title: prData.title,
-    commitCount: prData.commits.totalCount,
   };
 }
