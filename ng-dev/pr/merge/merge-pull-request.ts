@@ -48,7 +48,6 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
   ): Promise<boolean> {
     try {
       await tool.merge(prNumber, validationConfig);
-      Log.info(green(`Successfully merged the pull request: #${prNumber}`));
       return true;
     } catch (e) {
       // Catch errors to the Github API for invalid requests. We want to
@@ -63,6 +62,7 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
         Log.warn('Manually aborted merging..');
         return false;
       }
+
       if (e instanceof FatalMergeToolError) {
         Log.error(`Could not merge the specified pull request. Error:`);
         Log.error(` -> ${bold(e.message)}`);

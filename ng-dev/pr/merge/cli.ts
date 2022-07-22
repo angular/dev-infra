@@ -7,6 +7,7 @@
  */
 
 import {Argv, Arguments, CommandModule} from 'yargs';
+import {addDryRunFlag} from '../../utils/dry-run.js';
 
 import {addGithubTokenOption} from '../../utils/git/github-yargs.js';
 
@@ -18,11 +19,12 @@ export interface MergeCommandOptions {
   pr: number;
   branchPrompt: boolean;
   forceManualBranches: boolean;
+  dryRun: boolean;
 }
 
 /** Builds the command. */
 function builder(argv: Argv) {
-  return addGithubTokenOption(argv)
+  return addDryRunFlag(addGithubTokenOption(argv))
     .help()
     .strict()
     .positional('pr', {
@@ -43,8 +45,13 @@ function builder(argv: Argv) {
 }
 
 /** Handles the command. */
-async function handler({pr, branchPrompt, forceManualBranches}: Arguments<MergeCommandOptions>) {
-  await mergePullRequest(pr, {branchPrompt, forceManualBranches});
+async function handler({
+  pr,
+  branchPrompt,
+  forceManualBranches,
+  dryRun,
+}: Arguments<MergeCommandOptions>) {
+  await mergePullRequest(pr, {branchPrompt, forceManualBranches, dryRun});
 }
 
 /** yargs command module describing the command. */

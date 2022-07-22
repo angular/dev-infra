@@ -13,7 +13,7 @@ export class FatalMergeToolError extends Error {
   }
 }
 
-/** Error class that can be thrown the user aborted the merge manually. */
+/** Error class that can be thrown when the user aborted the merge manually. */
 export class UserAbortedMergeToolError extends Error {}
 
 export class MismatchedTargetBranchFatalError extends FatalMergeToolError {
