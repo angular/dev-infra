@@ -54,7 +54,7 @@ export function createPullRequestValidation<T extends PullRequestValidation>(
         } catch (e) {
           if (e instanceof PullRequestValidationFailure && canBeForceIgnored) {
             Log.error(`Pull request did not pass validation check. Error:`);
-            Log.error(bold(e.message));
+            Log.error(` -> ${bold(e.message)}`);
             Log.info();
             Log.info(yellow(`This validation is non-fatal and can be forcibly ignored.`));
 

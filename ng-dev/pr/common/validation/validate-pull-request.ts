@@ -29,28 +29,30 @@ import {PullRequestValidationConfig} from './validation-config.js';
  * @throws {PullRequestValidationFailure} A validation failure will be raised when
  *   an activated validation failed.
  */
-export function assertValidPullRequest(
+export async function assertValidPullRequest(
   pullRequest: PullRequestFromGithub,
   validationConfig: PullRequestValidationConfig,
   ngDevConfig: NgDevConfig<{pullRequest: PullRequestConfig; github: GithubConfig}>,
   activeReleaseTrains: ActiveReleaseTrains | null,
   target: PullRequestTarget,
-): void {
+): Promise<void> {
   const labels = pullRequest.labels.nodes.map((l) => l.name);
   const commitsInPr = pullRequest.commits.nodes.map((n) => {
     return parseCommitMessage(n.commit.message);
   });
 
-  mergeReadyValidation.run(validationConfig, (v) => v.assert(pullRequest, ngDevConfig.pullRequest));
-  signedClaValidation.run(validationConfig, (v) => v.assert(pullRequest));
-  pendingStateValidation.run(validationConfig, (v) => v.assert(pullRequest));
+  await mergeReadyValidation.run(validationConfig, (v) =>
+    v.assert(pullRequest, ngDevConfig.pullRequest),
+  );
+  await signedClaValidation.run(validationConfig, (v) => v.assert(pullRequest));
+  await pendingStateValidation.run(validationConfig, (v) => v.assert(pullRequest));
 
   if (activeReleaseTrains !== null) {
-    changesAllowForTargetLabelValidation.run(validationConfig, (v) =>
+    await changesAllowForTargetLabelValidation.run(validationConfig, (v) =>
       v.assert(commitsInPr, target.labelName, ngDevConfig.pullRequest, activeReleaseTrains, labels),
     );
   }
 
-  breakingChangeInfoValidation.run(validationConfig, (v) => v.assert(commitsInPr, labels));
-  passingCiValidation.run(validationConfig, (v) => v.assert(pullRequest));
+  await breakingChangeInfoValidation.run(validationConfig, (v) => v.assert(commitsInPr, labels));
+  await passingCiValidation.run(validationConfig, (v) => v.assert(pullRequest));
 }

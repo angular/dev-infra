@@ -65,12 +65,12 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
       }
       if (e instanceof FatalMergeToolError) {
         Log.error(`Could not merge the specified pull request. Error:`);
-        Log.error(bold(e.message));
+        Log.error(` -> ${bold(e.message)}`);
         return false;
       }
       if (e instanceof PullRequestValidationFailure) {
         Log.error(`Pull request did not pass validation check. Error:`);
-        Log.error(bold(e.message));
+        Log.error(` -> ${bold(e.message)}`);
         return false;
       }
 

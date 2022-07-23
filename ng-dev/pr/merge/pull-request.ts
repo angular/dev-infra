@@ -94,7 +94,7 @@ export async function loadAndValidatePullRequest(
     );
   }
 
-  assertValidPullRequest(prData, validationConfig, config, activeReleaseTrains, target);
+  await assertValidPullRequest(prData, validationConfig, config, activeReleaseTrains, target);
 
   const requiredBaseSha =
     config.pullRequest.requiredBaseCommits &&
