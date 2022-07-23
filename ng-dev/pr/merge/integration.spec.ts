@@ -124,7 +124,7 @@ describe('default target labels', () => {
     });
     let label: TargetLabel;
     try {
-      label = await getMatchingTargetLabelForPullRequest({}, [name], targetLabels);
+      label = await getMatchingTargetLabelForPullRequest([name], targetLabels);
     } catch (error) {
       return null;
     }
