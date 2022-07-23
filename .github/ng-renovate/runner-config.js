@@ -11,6 +11,7 @@ module.exports = {
     'angular/angular-cli',
     'angular/universal',
     'angular/vscode-ng-language-service',
+    'angular/.github',
     // Disable fork-mode for ngcc validation to support auto-merging
     // and multiple base branches.
     {repository: 'angular/ngcc-validation', forkMode: false},
