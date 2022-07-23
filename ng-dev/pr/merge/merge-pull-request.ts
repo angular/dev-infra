@@ -7,7 +7,7 @@
  */
 
 import {assertValidGithubConfig, ConfigValidationError, getConfig} from '../../utils/config.js';
-import {green, Log} from '../../utils/logging.js';
+import {bold, green, Log} from '../../utils/logging.js';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {GithubApiRequestError} from '../../utils/git/github.js';
 import {GITHUB_TOKEN_GENERATE_URL} from '../../utils/git/github-urls.js';
@@ -64,13 +64,13 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
         return false;
       }
       if (e instanceof FatalMergeToolError) {
-        Log.error(`Could not merge the specified pull request.`);
-        Log.error(e.message);
+        Log.error(`Could not merge the specified pull request. Error:`);
+        Log.error(bold(e.message));
         return false;
       }
       if (e instanceof PullRequestValidationFailure) {
-        Log.error(`Pull request did not pass validation checks.`);
-        Log.error(e.message);
+        Log.error(`Pull request did not pass validation check. Error:`);
+        Log.error(bold(e.message));
         return false;
       }
 

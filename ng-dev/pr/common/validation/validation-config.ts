@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {yellow, Log} from '../../../utils/logging.js';
+import {yellow, Log, bold} from '../../../utils/logging.js';
 import {Prompt} from '../../../utils/prompt.js';
 import {PullRequestValidationFailure} from './validation-failure.js';
 
@@ -53,8 +53,8 @@ export function createPullRequestValidation<T extends PullRequestValidation>(
           fn(validation);
         } catch (e) {
           if (e instanceof PullRequestValidationFailure && canBeForceIgnored) {
-            Log.error(`Pull request did not pass validation check.`);
-            Log.error(e.message);
+            Log.error(`Pull request did not pass validation check. Error:`);
+            Log.error(bold(e.message));
             Log.info();
             Log.info(yellow(`This validation is non-fatal and can be forcibly ignored.`));
 
