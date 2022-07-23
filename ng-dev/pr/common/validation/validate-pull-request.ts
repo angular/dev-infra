@@ -24,6 +24,8 @@ import {PullRequestValidationConfig} from './validation-config.js';
  * Asserts that the given pull request is valid. Certain non-fatal validations
  * can be disabled through the validation config.
  *
+ * Active release trains may be available for additional checks or not.
+ *
  * @throws {PullRequestValidationFailure} A validation failure will be raised when
  *   an activated validation failed.
  */
@@ -31,7 +33,7 @@ export function assertValidPullRequest(
   pullRequest: PullRequestFromGithub,
   validationConfig: PullRequestValidationConfig,
   ngDevConfig: NgDevConfig<{pullRequest: PullRequestConfig; github: GithubConfig}>,
-  activeReleaseTrains: ActiveReleaseTrains,
+  activeReleaseTrains: ActiveReleaseTrains | null,
   target: PullRequestTarget,
 ): void {
   const labels = pullRequest.labels.nodes.map((l) => l.name);
@@ -43,9 +45,11 @@ export function assertValidPullRequest(
   signedClaValidation.run(validationConfig, (v) => v.assert(pullRequest));
   pendingStateValidation.run(validationConfig, (v) => v.assert(pullRequest));
 
-  changesAllowForTargetLabelValidation.run(validationConfig, (v) =>
-    v.assert(commitsInPr, target.labelName, ngDevConfig.pullRequest, activeReleaseTrains, labels),
-  );
+  if (activeReleaseTrains !== null) {
+    changesAllowForTargetLabelValidation.run(validationConfig, (v) =>
+      v.assert(commitsInPr, target.labelName, ngDevConfig.pullRequest, activeReleaseTrains, labels),
+    );
+  }
 
   breakingChangeInfoValidation.run(validationConfig, (v) => v.assert(commitsInPr, labels));
   passingCiValidation.run(validationConfig, (v) => v.assert(pullRequest));

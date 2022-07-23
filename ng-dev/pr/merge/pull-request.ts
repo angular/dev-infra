@@ -8,7 +8,11 @@
 
 import {parseCommitMessage} from '../../commit-message/parse.js';
 import {MergeTool} from './merge-tool.js';
-import {getTargetBranchesAndLabelForPullRequest} from '../common/targeting/target-label.js';
+import {
+  getTargetBranchesAndLabelForPullRequest,
+  PullRequestTarget,
+  TargetLabelName,
+} from '../common/targeting/target-label.js';
 import {fetchPullRequestFromGithub} from '../common/fetch-pull-request.js';
 import {FatalMergeToolError} from './failures.js';
 import {ActiveReleaseTrains} from '../../release/versioning/active-release-trains.js';
@@ -63,20 +67,32 @@ export async function loadAndValidatePullRequest(
   const githubTargetBranch = prData.baseRefName;
 
   const {mainBranchName, name, owner} = config.github;
-  const activeReleaseTrains = await ActiveReleaseTrains.fetch({
-    name,
-    nextBranchName: mainBranchName,
-    owner,
-    api: git.github,
-  });
 
-  const target = await getTargetBranchesAndLabelForPullRequest(
-    activeReleaseTrains,
-    git.github,
-    config,
-    labels,
-    githubTargetBranch,
-  );
+  // Active release trains fetched. May be `null` if e.g. target labeling is disabled
+  // and the active release train information is not available/computable.
+  let activeReleaseTrains: ActiveReleaseTrains | null = null;
+  let target: PullRequestTarget | null = null;
+
+  if (config.pullRequest.__noTargetLabeling) {
+    // If there is no target labeling, we always target the main branch and treat the PR as
+    // if it has been labeled with the `target: major` label (allowing for all types of changes).
+    target = {branches: [config.github.mainBranchName], labelName: TargetLabelName.MAJOR};
+  } else {
+    activeReleaseTrains = await ActiveReleaseTrains.fetch({
+      name,
+      nextBranchName: mainBranchName,
+      owner,
+      api: git.github,
+    });
+
+    target = await getTargetBranchesAndLabelForPullRequest(
+      activeReleaseTrains,
+      git.github,
+      config,
+      labels,
+      githubTargetBranch,
+    );
+  }
 
   assertValidPullRequest(prData, validationConfig, config, activeReleaseTrains, target);
 

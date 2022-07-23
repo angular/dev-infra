@@ -29,8 +29,6 @@ export interface PullRequestConfig {
    * defaults are provided by the common dev-infra github configuration.
    */
   remote?: GithubConfig;
-  /** List of target labels. */
-  noTargetLabeling?: boolean;
   /** Required base commits for given branches. */
   requiredBaseCommits?: {[branchName: string]: string};
   /** Pattern that matches labels which imply a merge ready pull request. */
@@ -59,6 +57,15 @@ export interface PullRequestConfig {
    *    - changing `target: minor` to point to `target: rc` (without the RC merge restrictions)
    */
   __specialTreatRcAsExceptionalMinor?: boolean;
+
+  /**
+   * Whether target labeling should be disabled. Special option for repositories
+   * not working with the canonical versioning and branching of Angular projects.
+   *
+   * Generally not recommended as Angular-owned projects are supposed to consistently
+   * follow the canonical branching/versioning.
+   */
+  __noTargetLabeling?: boolean;
 }
 
 /** Loads and validates the merge configuration. */

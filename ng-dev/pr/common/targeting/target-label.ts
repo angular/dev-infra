@@ -108,12 +108,6 @@ export async function getTargetBranchesAndLabelForPullRequest(
   labelsOnPullRequest: string[],
   githubTargetBranch: string,
 ): Promise<PullRequestTarget> {
-  if (config.pullRequest.noTargetLabeling) {
-    // If there is no target labeling, we always target the main branch and treat the PR as
-    // if it has been labeled with the `target: major` label (allowing for all types of changes).
-    return {branches: [config.github.mainBranchName], labelName: TargetLabelName.MAJOR};
-  }
-
   const targetLabels = await getTargetLabelsForActiveReleaseTrains(
     activeReleaseTrains,
     github,

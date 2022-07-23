@@ -6,5 +6,8 @@ export const pullRequest: PullRequestConfig = {
   mergeReadyLabel: 'action: merge',
   caretakerNoteLabel: 'merge note',
   commitMessageFixupLabel: 'needs commit fixup',
-  noTargetLabeling: true,
+
+  // Disable target labeling in the dev-infra repo as we don't have
+  // any release trains and version branches.
+  __noTargetLabeling: true,
 };
