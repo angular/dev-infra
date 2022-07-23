@@ -71,14 +71,9 @@ export class InvalidTargetLabelError {
 
 /** Gets the target label from the specified pull request labels. */
 export async function getMatchingTargetLabelForPullRequest(
-  config: Pick<PullRequestConfig, 'noTargetLabeling'>,
   labelsOnPullRequest: string[],
   allTargetLabels: TargetLabel[],
 ): Promise<TargetLabel> {
-  if (config.noTargetLabeling) {
-    throw Error('This repository does not use target labels');
-  }
-
   const matches: TargetLabel[] = [];
 
   for (const label of labelsOnPullRequest) {
@@ -114,7 +109,6 @@ export async function getTargetBranchesAndLabelForPullRequest(
     config,
   );
   const matchingLabel = await getMatchingTargetLabelForPullRequest(
-    config.pullRequest,
     labelsOnPullRequest,
     targetLabels,
   );

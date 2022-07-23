@@ -57,7 +57,8 @@ export async function printTargetBranchesForPr(prNumber: number) {
   assertValidGithubConfig(config);
   assertValidPullRequestConfig(config);
 
-  if (config.pullRequest.noTargetLabeling) {
+  if (config.pullRequest.__noTargetLabeling) {
+    Log.info(`This repository does not use target labeling (special flag enabled).`);
     Log.info(`PR #${prNumber} will merge into: ${config.github.mainBranchName}`);
     return;
   }
