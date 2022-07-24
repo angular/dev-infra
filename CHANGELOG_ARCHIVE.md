@@ -1,3 +1,17 @@
+<a name="2022.3.20"></a>
+# 2022.3.20 (2022-03-20)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cd25674](https://github.com/angular/dev-infra/commit/cd25674bf426cd367b6b5700550c6b75b07de6e9) | fix | use correct `LinkerPackageMappingInfo` field name |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2c7dece](https://github.com/angular/dev-infra/commit/2c7dece49c9a83992899140c4c6e636a926d2bb2) | fix | avoid runtime error when pull request does not have status/checks |
+## Special Thanks
+George Kalpakas, Paul Gschwendtner and renovate[bot]
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.3.13"></a>
 # 2022.3.13 (2022-03-13)
 ### ng-dev
