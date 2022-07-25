@@ -18,6 +18,7 @@ import {ActiveReleaseTrains} from '../../release/versioning/active-release-train
 import {PullRequestValidationConfig} from '../common/validation/validation-config.js';
 import {assertValidPullRequest} from '../common/validation/validate-pull-request.js';
 import {TEMP_PR_HEAD_BRANCH} from './strategies/strategy.js';
+import {getRepositoryGitUrl} from '../../utils/git/github-urls.js';
 
 /** Interface that describes a pull request. */
 export interface PullRequest {
@@ -33,8 +34,6 @@ export interface PullRequest {
   targetBranches: string[];
   /** Branch that the PR targets in the Github UI. */
   githubTargetBranch: string;
-  /** List of branches this PR must be cherry picked into. */
-  cherryPickTargetBranches: string[];
   /** Count of commits in this pull request. */
   commitCount: number;
   /** Optional SHA that this pull request needs to be based on. */
@@ -112,6 +111,8 @@ export async function loadAndValidatePullRequest(
     !!config.pullRequest.caretakerNoteLabel &&
     labels.includes(config.pullRequest.caretakerNoteLabel);
 
+  git.runGraceful(['fetch', getRepositoryGitUrl(config.github), `pull/${prNumber}/head`]);
+
   /** Number of commits in the pull request. */
   const commitCount = prData.commits.totalCount;
   /**
@@ -123,7 +124,7 @@ export async function loadAndValidatePullRequest(
    * change. We avoid this issue around this by parsing the base revision so that we are able
    * to reference a specific SHA before a autosquash rebase could be performed.
    */
-  const baseSha = git.run(['rev-parse', `${TEMP_PR_HEAD_BRANCH}~${commitCount}`]).stdout.trim();
+  const baseSha = git.run(['rev-parse', `${prData.headRefOid}~${commitCount}`]).stdout.trim();
   /* Git revision range that matches the pull request commits. */
   const revisionRange = `${baseSha}..${TEMP_PR_HEAD_BRANCH}`;
 
@@ -139,7 +140,6 @@ export async function loadAndValidatePullRequest(
     revisionRange,
     hasCaretakerNote,
     targetBranches: target.branches,
-    cherryPickTargetBranches: target.branches.filter((b) => b !== githubTargetBranch),
     title: prData.title,
   };
 }

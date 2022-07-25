@@ -15,6 +15,7 @@ import {PullRequestConfig} from '../config/index.js';
 import {
   getCaretakerNotePromptMessage,
   getTargetedBranchesConfirmationPromptMessage,
+  getTargetedBranchesMessage,
 } from './messages.js';
 import {loadAndValidatePullRequest, PullRequest} from './pull-request.js';
 import {GithubApiMergeStrategy} from './strategies/api-merge.js';
@@ -140,6 +141,7 @@ export class MergeTool {
       await strategy.check(pullRequest);
 
       if (this.flags.dryRun) {
+        Log.info(getTargetedBranchesMessage(pullRequest));
         Log.info(green(`  ✓  Mergeablility of pull request confirmed, exiting dry run.`));
         return;
       }
