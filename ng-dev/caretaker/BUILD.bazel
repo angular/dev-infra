@@ -31,6 +31,8 @@ ts_library(
         "//ng-dev/release/versioning",
         "//ng-dev/utils",
         "//ng-dev/utils/testing",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
         "@npm//@types/semver",
         "@npm//semver",
     ],

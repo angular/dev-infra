@@ -24,6 +24,7 @@ def app_bundle(
         name,
         entry_point,
         visibility = None,
+        testonly = False,
         platform = "browser",
         target = "es2020",
         format = "iife",
@@ -43,15 +44,20 @@ def app_bundle(
         JS debug minified (beautified)   : "%{name}.debug.min.beautified.js"
     """
 
+    common_base_attributes = {
+        "testonly": testonly,
+        "visibility": visibility,
+    }
+
     expand_template(
         name = "%s_config_file" % name,
         output_name = "%s_config.mjs" % name,
         template = "//bazel/app-bundling:esbuild.config-tmpl.mjs",
-        visibility = visibility,
         substitutions = {
             "TMPL_ENTRY_POINT_ROOTPATH": "$(rootpath %s)" % entry_point,
         },
         data = [entry_point],
+        **common_base_attributes
     )
 
     esbuild_config(
@@ -61,24 +67,22 @@ def app_bundle(
             "@npm//@angular/compiler-cli",
             "//shared-scripts/angular-optimization:js_lib",
         ],
-        visibility = visibility,
+        **common_base_attributes
     )
 
-    common_esbuild_options = {
+    common_esbuild_options = dict({
         "config": "%s_esbuild_config" % name,
         "entry_point": entry_point,
         "target": target,
         "platform": platform,
         "format": format,
         "sourcemap": "external",
-        "visibility": visibility,
-    }
+    }, **common_base_attributes)
 
-    common_terser_options = {
-        "visibility": visibility,
+    common_terser_options = dict({
         "config_file": "//bazel/app-bundling:terser_config.json",
         "sourcemap": True,
-    }
+    }, **common_base_attributes)
 
     esbuild(
         name = name,
@@ -93,12 +97,12 @@ def app_bundle(
     )
 
     terser_minified(name = name + ".min", src = ":%s" % name, **common_terser_options)
-    filter_outputs(name = name + ".min.js", target = ":%s.min" % name, filters = ["%s.min.js" % name], visibility = visibility)
-    filter_outputs(name = name + ".min.js.map", target = ":%s.min" % name, filters = ["%s.min.js.map" % name], visibility = visibility)
+    filter_outputs(name = name + ".min.js", target = ":%s.min" % name, filters = ["%s.min.js" % name], **common_base_attributes)
+    filter_outputs(name = name + ".min.js.map", target = ":%s.min" % name, filters = ["%s.min.js.map" % name], **common_base_attributes)
 
     terser_minified(name = name + ".debug.min", src = ":%s.debug" % name, debug = True, tags = ["manual"], **common_terser_options)
-    filter_outputs(name = name + ".debug.min.js", target = ":%s.debug.min" % name, filters = ["%s.debug.min.js" % name], visibility = visibility)
-    filter_outputs(name = name + ".debug.min.js.map", target = ":%s.debug.min" % name, filters = ["%s.debug.min.js.map" % name], visibility = visibility)
+    filter_outputs(name = name + ".debug.min.js", target = ":%s.debug.min" % name, filters = ["%s.debug.min.js" % name], **common_base_attributes)
+    filter_outputs(name = name + ".debug.min.js.map", target = ":%s.debug.min" % name, filters = ["%s.debug.min.js.map" % name], **common_base_attributes)
 
     # For better debugging, we also run prettier on the minified debug bundle. This is
     # necessary as Terser no longer has beautify/formatting functionality.
@@ -109,8 +113,8 @@ def app_bundle(
         outs = [],
         stdout = name + ".debug.min.beautified.js",
         data = [name + ".debug.min"],
-        visibility = visibility,
         tags = ["manual"],
+        **common_base_attributes
     )
 
     npm_package_bin(
@@ -122,5 +126,5 @@ def app_bundle(
             "--output=$(execpath %s.min.js.br)" % name,
             "$(execpath %s.min.js)" % name,
         ],
-        visibility = visibility,
+        **common_base_attributes
     )

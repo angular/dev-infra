@@ -12,6 +12,7 @@ esbuild_config = _esbuild_config
 def _esbuild_devmode_prioritize(
         esbuild_rule,
         name,
+        testonly = False,
         platform = "node",
         target = "node14",
         deps = [],
@@ -23,6 +24,7 @@ def _esbuild_devmode_prioritize(
     extract_js_module_output(
         name = "%s_devmode_deps" % name,
         deps = deps,
+        testonly = testonly,
         provider = "JSModuleInfo",
         forward_linker_mappings = True,
         include_external_npm_packages = True,
@@ -34,6 +36,7 @@ def _esbuild_devmode_prioritize(
         name = name,
         platform = platform,
         target = target,
+        testonly = testonly,
         deps = [":%s_devmode_deps" % name],
         **kwargs
     )

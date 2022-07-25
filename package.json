@@ -1,9 +1,6 @@
 {
-  "name": "@angular/dev-infra-private",
+  "name": "@angular/build-tooling",
   "version": "0.0.0-{SCM_HEAD_SHA}",
-  "bin": {
-    "ng-dev": "./ng-dev/bundles/cli.mjs"
-  },
   "private": true,
   "scripts": {
     "prepare": "husky install",
@@ -13,14 +10,6 @@
     "update-generated-files": "ts-node --transpile-only --esm --project tsconfig.json ./tools/update-generated-files.ts"
   },
   "exports": {
-    "./ng-dev": {
-      "types": "./ng-dev/index.d.ts",
-      "default": "./ng-dev/bundles/index.mjs"
-    },
-    "./ng-dev/*": {
-      "types": "./ng-dev/*.d.ts",
-      "default": "./ng-dev/bundles/*.mjs"
-    },
     "./*": {
       "default": "./*"
     }
@@ -45,7 +34,6 @@
     "@types/tmp": "^0.2.1",
     "@types/uuid": "^8.3.1",
     "@types/yargs": "^17.0.0",
-    "@yarnpkg/lockfile": "^1.1.0",
     "browser-sync": "^2.27.7",
     "clang-format": "1.8.0",
     "prettier": "2.7.1",
@@ -109,6 +97,7 @@
     "@types/wait-on": "^5.3.1",
     "@types/which": "^2.0.1",
     "@types/yarnpkg__lockfile": "^1.1.5",
+    "@yarnpkg/lockfile": "^1.1.0",
     "chalk": "^5.0.1",
     "cli-progress": "^3.7.0",
     "conventional-commits-parser": "^3.2.1",

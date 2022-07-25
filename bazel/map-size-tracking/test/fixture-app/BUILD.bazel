@@ -5,6 +5,7 @@ package(default_visibility = ["//bazel/map-size-tracking/test:__pkg__"])
 
 ts_library(
     name = "fixture-app",
+    testonly = True,
     srcs = [
         "main.ts",
         "test-component.ts",
@@ -16,6 +17,7 @@ ts_library(
 
 app_bundle(
     name = "bundle",
+    testonly = True,
     entry_point = "main.ts",
     deps = [":fixture-app"],
 )

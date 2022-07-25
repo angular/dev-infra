@@ -33,6 +33,8 @@ ts_library(
         ":notes",
         "//ng-dev/utils",
         "//ng-dev/utils/testing",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
         "@npm//@types/semver",
         "@npm//semver",
     ],

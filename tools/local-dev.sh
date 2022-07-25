@@ -6,7 +6,7 @@
 set -e
 
 devInfraProjectDir="$(dirname ${0})/.."
-ngDevBinFile="${devInfraProjectDir}/dist/bin/npm_package/ng-dev/bundles/cli.mjs"
+ngDevBinFile="${devInfraProjectDir}/dist/bin/ng-dev/npm_package/bundles/cli.mjs"
 bazelCommand=${BAZEL:-"yarn bazel"}
 
 # Build the `ng-dev` binary into the `dev-infra/dist` directory.
@@ -14,7 +14,7 @@ bazelCommand=${BAZEL:-"yarn bazel"}
 # directory to be in the workspace folder to allow for building.
 (
   cd ${devInfraProjectDir}
-  ${bazelCommand} build :npm_package
+  ${bazelCommand} build ng-dev:npm_package
 )
 
 export TS_NODE_TRANSPILE_ONLY=1

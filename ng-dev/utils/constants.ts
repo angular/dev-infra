@@ -7,7 +7,7 @@
  */
 
 /** NPM package name that is used for the `ng-dev` tool. */
-export const ngDevNpmPackageName = '@angular/dev-infra-private';
+export const ngDevNpmPackageName = '@angular/ng-dev';
 
 /** Workspace-relative path for the "package.json" file. */
 export const workspaceRelativePackageJsonPath = 'package.json';

@@ -29,6 +29,8 @@ ts_library(
         ":precheck",
         "//ng-dev/release/config",
         "//ng-dev/utils",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
         "@npm//@types/semver",
         "@npm//semver",
     ],

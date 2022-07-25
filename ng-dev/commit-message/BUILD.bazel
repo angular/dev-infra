@@ -32,6 +32,7 @@ ts_library(
         ":commit-message",
         "//ng-dev/utils",
         "@npm//@types/events",
+        "@npm//@types/jasmine",
         "@npm//inquirer",
     ],
 )

@@ -5,7 +5,7 @@ package(default_visibility = ["//visibility:public"])
 ts_library(
     name = "test_runner",
     srcs = glob(["*.ts"]),
-    module_name = "@angular/dev-infra-private/bazel/integration/test_runner",
+    module_name = "@angular/build-tooling/bazel/integration/test_runner",
     # A tsconfig needs to be specified as otherwise `ts_library` will look for the config
     # in `//:package.json` and this breaks when the BUILD file is copied to `@npm//`.
     tsconfig = "//:tsconfig.json",

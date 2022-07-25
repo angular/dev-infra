@@ -5,7 +5,7 @@ package(default_visibility = ["//visibility:public"])
 ts_library(
     name = "driver-utilities",
     srcs = glob(["*.ts"]),
-    module_name = "@angular/dev-infra-private/bazel/benchmark/driver-utilities",
+    module_name = "@angular/build-tooling/bazel/benchmark/driver-utilities",
     tsconfig = "//bazel/benchmark/component_benchmark:tsconfig-e2e.json",
     deps = [
         "@npm//@angular/benchpress",

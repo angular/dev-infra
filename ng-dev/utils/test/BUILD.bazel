@@ -9,6 +9,8 @@ ts_library(
     deps = [
         "//ng-dev/utils",
         "//ng-dev/utils/testing",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
     ],
 )
 

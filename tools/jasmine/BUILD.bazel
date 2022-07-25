@@ -10,6 +10,7 @@ ts_library(
     deps = [
         "//ng-dev/utils:config_cache",
         "//ng-dev/utils/testing:bazel-env",
+        "@npm//@types/jasmine",
     ],
 )
 
@@ -23,6 +24,7 @@ ts_library(
         ":bootstrap",
         "//ng-dev/utils",
         "//ng-dev/utils/testing:bazel-env",
+        "@npm//@types/node",
     ],
 )
 

@@ -8,20 +8,33 @@ noStampSubstitutions = dict(stampSubstitutions, **{})
 
 basePackageSubstitutions = {
     "    \"prepare\": \"husky install\",\n": "",
-    "@dev-infra//bazel/": "@npm//@angular/dev-infra-private/bazel/",
-    "rlocation \"dev-infra/": "rlocation \"npm/@angular/dev-infra-private/",
-    "//bazel/": "@npm//@angular/dev-infra-private/bazel/",
-    "//bazel:": "@npm//@angular/dev-infra-private/bazel:",
-    "//ng-dev/": "@npm//@angular/dev-infra-private/ng-dev/",
-    "//ng-dev:": "@npm//@angular/dev-infra-private/ng-dev:",
-    "//tslint-rules/": "@npm//@angular/dev-infra-private/tslint-rules/",
-    "//tslint-rules:": "@npm//@angular/dev-infra-private/tslint-rules:",
-    "//shared-scripts/": "@npm//@angular/dev-infra-private/shared-scripts/",
-    "//shared-scripts:": "@npm//@angular/dev-infra-private/shared-scripts:",
-    "//:tsconfig.json": "@npm//@angular/dev-infra-private:tsconfig.json",
+    "@dev-infra//bazel/": "@npm//@angular/build-tooling/bazel/",
+    "rlocation \"dev-infra/": "rlocation \"npm/@angular/build-tooling/",
+    "//bazel/": "@npm//@angular/build-tooling/bazel/",
+    "//bazel:": "@npm//@angular/build-tooling/bazel:",
+    "//tslint-rules/": "@npm//@angular/build-tooling/tslint-rules/",
+    "//tslint-rules:": "@npm//@angular/build-tooling/tslint-rules:",
+    "//shared-scripts/": "@npm//@angular/build-tooling/shared-scripts/",
+    "//shared-scripts:": "@npm//@angular/build-tooling/shared-scripts:",
+    "//:tsconfig.json": "@npm//@angular/build-tooling:tsconfig.json",
 }
 
 NPM_PACKAGE_SUBSTITUTIONS = select({
     "//tools:stamp": dict(basePackageSubstitutions, **stampSubstitutions),
     "//conditions:default": dict(basePackageSubstitutions, **noStampSubstitutions),
 })
+
+# These packages are allowed to use macros from `defaults.bzl`. This is a
+# little safety improvement to avoid accidentally relying on the defaults
+# which are not available when the dev-infra tooling is consumed.
+BZL_DEFAULTS_ALLOW_PACKAGES = [
+    ".github/local-actions",
+    "",
+    "apps",
+    "bazel/browsers/update-script",
+    "circleci-orb",
+    "github-actions",
+    "ng-dev",
+    "tools",
+    "tslint-rules",
+]

@@ -8,7 +8,7 @@
 
 import * as path from 'path';
 
-import {createEsbuildAngularOptimizePlugin} from '@angular/dev-infra-private/shared-scripts/angular-optimization/esbuild-plugin.mjs';
+import {createEsbuildAngularOptimizePlugin} from '@angular/build-tooling/shared-scripts/angular-optimization/esbuild-plugin.mjs';
 import {createEs2015LinkerPlugin} from '@angular/compiler-cli/linker/babel';
 import {ConsoleLogger, NodeJSFileSystem, LogLevel} from '@angular/compiler-cli';
 import {GLOBAL_DEFS_FOR_TERSER_WITH_AOT} from '@angular/compiler-cli/private/tooling';
