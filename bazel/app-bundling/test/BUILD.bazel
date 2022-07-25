@@ -27,7 +27,9 @@ ts_library(
     ],
     deps = [
         "@npm//@bazel/runfiles",
+        "@npm//@types/jasmine",
         "@npm//@types/jsdom",
+        "@npm//@types/node",
         "@npm//jsdom",
     ],
 )

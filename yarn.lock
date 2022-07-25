@@ -267,9 +267,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/bazel@patch:@angular/bazel@npm:14.1.0-next.2#.yarn/patches/@angular-bazel-npm.patch::locator=%40angular%2Fdev-infra-private%40workspace%3A.":
+"@angular/bazel@patch:@angular/bazel@npm:14.1.0-next.2#.yarn/patches/@angular-bazel-npm.patch::locator=%40angular%2Fbuild-tooling%40workspace%3A.":
   version: 14.1.0-next.2
-  resolution: "@angular/bazel@patch:@angular/bazel@npm%3A14.1.0-next.2#.yarn/patches/@angular-bazel-npm.patch::version=14.1.0-next.2&hash=1cca23&locator=%40angular%2Fdev-infra-private%40workspace%3A."
+  resolution: "@angular/bazel@patch:@angular/bazel@npm%3A14.1.0-next.2#.yarn/patches/@angular-bazel-npm.patch::version=14.1.0-next.2&hash=1cca23&locator=%40angular%2Fbuild-tooling%40workspace%3A."
   dependencies:
     "@microsoft/api-extractor": ^7.24.2
     shelljs: ^0.8.5
@@ -307,119 +307,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/cdk@npm:14.1.0-rc.0":
-  version: 14.1.0-rc.0
-  resolution: "@angular/cdk@npm:14.1.0-rc.0"
-  dependencies:
-    parse5: ^5.0.0
-    tslib: ^2.3.0
-  peerDependencies:
-    "@angular/common": ^14.0.0 || ^15.0.0
-    "@angular/core": ^14.0.0 || ^15.0.0
-    rxjs: ^6.5.3 || ^7.4.0
-  dependenciesMeta:
-    parse5:
-      optional: true
-  checksum: 3ce059c54df66aaeed90349a361c02c93414d11d0b355a421662ba1485a638f7aa2e34531be5e7dd8951a03b5430112e80d1e1e3105e4be341050273b22994ca
-  languageName: node
-  linkType: hard
-
-"@angular/cli@npm:14.1.0-rc.3":
-  version: 14.1.0-rc.3
-  resolution: "@angular/cli@npm:14.1.0-rc.3"
-  dependencies:
-    "@angular-devkit/architect": 0.1401.0-rc.3
-    "@angular-devkit/core": 14.1.0-rc.3
-    "@angular-devkit/schematics": 14.1.0-rc.3
-    "@schematics/angular": 14.1.0-rc.3
-    "@yarnpkg/lockfile": 1.1.0
-    ansi-colors: 4.1.3
-    debug: 4.3.4
-    ini: 3.0.0
-    inquirer: 8.2.4
-    jsonc-parser: 3.0.0
-    npm-package-arg: 9.1.0
-    npm-pick-manifest: 7.0.1
-    open: 8.4.0
-    ora: 5.4.1
-    pacote: 13.6.1
-    resolve: 1.22.1
-    semver: 7.3.7
-    symbol-observable: 4.0.0
-    uuid: 8.3.2
-    yargs: 17.5.1
-  bin:
-    ng: bin/ng.js
-  checksum: 3f6c2d08b8f338f0a41d0999573aafbf14290ae81e72a797e232e14f4e99039adfebde7deceb74e4b8377daea4dd7fdfac186f3090467c9253d72b20a369280d
-  languageName: node
-  linkType: hard
-
-"@angular/common@npm:14.1.0-rc.0":
-  version: 14.1.0-rc.0
-  resolution: "@angular/common@npm:14.1.0-rc.0"
-  dependencies:
-    tslib: ^2.3.0
-  peerDependencies:
-    "@angular/core": 14.1.0-rc.0
-    rxjs: ^6.5.3 || ^7.4.0
-  checksum: 6347c1db6cbfcd502b01f9c90f9a28d171687f3a642fe4b281f8a267480ac8eb559b2989fff769e4355f076f35c7a89f4ffd97cd80e013a6500756903d6397df
-  languageName: node
-  linkType: hard
-
-"@angular/compiler-cli@npm:14.1.0-rc.0":
-  version: 14.1.0-rc.0
-  resolution: "@angular/compiler-cli@npm:14.1.0-rc.0"
-  dependencies:
-    "@babel/core": ^7.17.2
-    chokidar: ^3.0.0
-    convert-source-map: ^1.5.1
-    dependency-graph: ^0.11.0
-    magic-string: ^0.26.0
-    reflect-metadata: ^0.1.2
-    semver: ^7.0.0
-    sourcemap-codec: ^1.4.8
-    tslib: ^2.3.0
-    yargs: ^17.2.1
-  peerDependencies:
-    "@angular/compiler": 14.1.0-rc.0
-    typescript: ">=4.6.2 <4.8"
-  bin:
-    ng-xi18n: bundles/src/bin/ng_xi18n.js
-    ngc: bundles/src/bin/ngc.js
-    ngcc: bundles/ngcc/main-ngcc.js
-  checksum: 830b7fcfb5bf4e87adcd0daa2089ce37514c3497b50ff40c9cc9e2f8f3ef97a8eb7e73be56fd0cbee8e9a0a66985a028ca11fb152f08239b57f5a4daf013ae2e
-  languageName: node
-  linkType: hard
-
-"@angular/compiler@npm:14.1.0-rc.0":
-  version: 14.1.0-rc.0
-  resolution: "@angular/compiler@npm:14.1.0-rc.0"
-  dependencies:
-    tslib: ^2.3.0
-  peerDependencies:
-    "@angular/core": 14.1.0-rc.0
-  peerDependenciesMeta:
-    "@angular/core":
-      optional: true
-  checksum: cf4cbd183d8c22107043ade6d3f86239cf6edf778239b19347f7206a129713828e8144c11cfe99d3329fcb9a6ab2e27e4713d96e2f71af6443caafa2f88586a2
-  languageName: node
-  linkType: hard
-
-"@angular/core@npm:14.1.0-rc.0":
-  version: 14.1.0-rc.0
-  resolution: "@angular/core@npm:14.1.0-rc.0"
-  dependencies:
-    tslib: ^2.3.0
-  peerDependencies:
-    rxjs: ^6.5.3 || ^7.4.0
-    zone.js: ~0.11.4
-  checksum: 421e4085f754d7a644950efc6e47b645a3fa9320ad277e4174b0c44385b3f4bbfa280b63336dabdf6083c9060a2a6b9ecca2356b5cef19cd4fef8235b473819a
-  languageName: node
-  linkType: hard
-
-"@angular/dev-infra-private@workspace:.":
+"@angular/build-tooling@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@angular/dev-infra-private@workspace:."
+  resolution: "@angular/build-tooling@workspace:."
   dependencies:
     "@actions/core": ^1.4.0
     "@actions/github": ^5.0.0
@@ -549,10 +439,118 @@ __metadata:
   dependenciesMeta:
     re2:
       built: false
-  bin:
-    ng-dev: ./ng-dev/bundles/cli.mjs
   languageName: unknown
   linkType: soft
+
+"@angular/cdk@npm:14.1.0-rc.0":
+  version: 14.1.0-rc.0
+  resolution: "@angular/cdk@npm:14.1.0-rc.0"
+  dependencies:
+    parse5: ^5.0.0
+    tslib: ^2.3.0
+  peerDependencies:
+    "@angular/common": ^14.0.0 || ^15.0.0
+    "@angular/core": ^14.0.0 || ^15.0.0
+    rxjs: ^6.5.3 || ^7.4.0
+  dependenciesMeta:
+    parse5:
+      optional: true
+  checksum: 3ce059c54df66aaeed90349a361c02c93414d11d0b355a421662ba1485a638f7aa2e34531be5e7dd8951a03b5430112e80d1e1e3105e4be341050273b22994ca
+  languageName: node
+  linkType: hard
+
+"@angular/cli@npm:14.1.0-rc.3":
+  version: 14.1.0-rc.3
+  resolution: "@angular/cli@npm:14.1.0-rc.3"
+  dependencies:
+    "@angular-devkit/architect": 0.1401.0-rc.3
+    "@angular-devkit/core": 14.1.0-rc.3
+    "@angular-devkit/schematics": 14.1.0-rc.3
+    "@schematics/angular": 14.1.0-rc.3
+    "@yarnpkg/lockfile": 1.1.0
+    ansi-colors: 4.1.3
+    debug: 4.3.4
+    ini: 3.0.0
+    inquirer: 8.2.4
+    jsonc-parser: 3.0.0
+    npm-package-arg: 9.1.0
+    npm-pick-manifest: 7.0.1
+    open: 8.4.0
+    ora: 5.4.1
+    pacote: 13.6.1
+    resolve: 1.22.1
+    semver: 7.3.7
+    symbol-observable: 4.0.0
+    uuid: 8.3.2
+    yargs: 17.5.1
+  bin:
+    ng: bin/ng.js
+  checksum: 3f6c2d08b8f338f0a41d0999573aafbf14290ae81e72a797e232e14f4e99039adfebde7deceb74e4b8377daea4dd7fdfac186f3090467c9253d72b20a369280d
+  languageName: node
+  linkType: hard
+
+"@angular/common@npm:14.1.0-rc.0":
+  version: 14.1.0-rc.0
+  resolution: "@angular/common@npm:14.1.0-rc.0"
+  dependencies:
+    tslib: ^2.3.0
+  peerDependencies:
+    "@angular/core": 14.1.0-rc.0
+    rxjs: ^6.5.3 || ^7.4.0
+  checksum: 6347c1db6cbfcd502b01f9c90f9a28d171687f3a642fe4b281f8a267480ac8eb559b2989fff769e4355f076f35c7a89f4ffd97cd80e013a6500756903d6397df
+  languageName: node
+  linkType: hard
+
+"@angular/compiler-cli@npm:14.1.0-rc.0":
+  version: 14.1.0-rc.0
+  resolution: "@angular/compiler-cli@npm:14.1.0-rc.0"
+  dependencies:
+    "@babel/core": ^7.17.2
+    chokidar: ^3.0.0
+    convert-source-map: ^1.5.1
+    dependency-graph: ^0.11.0
+    magic-string: ^0.26.0
+    reflect-metadata: ^0.1.2
+    semver: ^7.0.0
+    sourcemap-codec: ^1.4.8
+    tslib: ^2.3.0
+    yargs: ^17.2.1
+  peerDependencies:
+    "@angular/compiler": 14.1.0-rc.0
+    typescript: ">=4.6.2 <4.8"
+  bin:
+    ng-xi18n: bundles/src/bin/ng_xi18n.js
+    ngc: bundles/src/bin/ngc.js
+    ngcc: bundles/ngcc/main-ngcc.js
+  checksum: 830b7fcfb5bf4e87adcd0daa2089ce37514c3497b50ff40c9cc9e2f8f3ef97a8eb7e73be56fd0cbee8e9a0a66985a028ca11fb152f08239b57f5a4daf013ae2e
+  languageName: node
+  linkType: hard
+
+"@angular/compiler@npm:14.1.0-rc.0":
+  version: 14.1.0-rc.0
+  resolution: "@angular/compiler@npm:14.1.0-rc.0"
+  dependencies:
+    tslib: ^2.3.0
+  peerDependencies:
+    "@angular/core": 14.1.0-rc.0
+  peerDependenciesMeta:
+    "@angular/core":
+      optional: true
+  checksum: cf4cbd183d8c22107043ade6d3f86239cf6edf778239b19347f7206a129713828e8144c11cfe99d3329fcb9a6ab2e27e4713d96e2f71af6443caafa2f88586a2
+  languageName: node
+  linkType: hard
+
+"@angular/core@npm:14.1.0-rc.0":
+  version: 14.1.0-rc.0
+  resolution: "@angular/core@npm:14.1.0-rc.0"
+  dependencies:
+    tslib: ^2.3.0
+  peerDependencies:
+    rxjs: ^6.5.3 || ^7.4.0
+    zone.js: ~0.11.4
+  checksum: 421e4085f754d7a644950efc6e47b645a3fa9320ad277e4174b0c44385b3f4bbfa280b63336dabdf6083c9060a2a6b9ecca2356b5cef19cd4fef8235b473819a
+  languageName: node
+  linkType: hard
 
 "@angular/fire@npm:^7.1.0-rc":
   version: 7.4.1

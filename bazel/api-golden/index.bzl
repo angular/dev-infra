@@ -66,6 +66,7 @@ def api_golden_test(
     # specifically concerned with type definitions that we can extract manually here.
     extract_types(
         name = "%s_data_typings" % name,
+        testonly = True,
         deps = data,
     )
 

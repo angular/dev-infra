@@ -4,5 +4,6 @@ package(default_visibility = ["//bazel/api-golden/test/fixtures:__pkg__"])
 
 ts_library(
     name = "transitive_target",
+    testonly = True,
     srcs = ["index.ts"],
 )

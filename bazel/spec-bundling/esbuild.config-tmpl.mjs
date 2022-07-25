@@ -16,7 +16,7 @@ async function fetchAndCreateLinkerEsbuildPlugin() {
   // Note: This needs to be a NPM module path as this ESBuild config is generated and can
   // end up in arbitrary Bazel packages or differently-named consumer workspaces.
   const {createLinkerEsbuildPlugin} = await import(
-    '@angular/dev-infra-private/shared-scripts/angular-linker/esbuild-plugin.mjs'
+    '@angular/build-tooling/shared-scripts/angular-linker/esbuild-plugin.mjs'
   );
   return await createLinkerEsbuildPlugin(/.*/, /* ensureNoPartialDeclaration */ true, {
     unknownDeclarationVersionHandling: TMPL_LINKER_UNKNOWN_DECLARATION_HANDLING,

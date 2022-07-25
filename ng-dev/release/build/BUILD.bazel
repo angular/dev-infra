@@ -31,6 +31,8 @@ ts_library(
         ":build",
         "//ng-dev/release/config",
         "//ng-dev/utils",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
     ],
 )
 

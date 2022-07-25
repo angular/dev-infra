@@ -19,6 +19,8 @@ ts_library(
         "//ng-dev/utils/testing",
         "@npm//@octokit/plugin-rest-endpoint-methods",
         "@npm//@types/folder-hash",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
         "@npm//@types/semver",
         "@npm//@types/yargs",
         "@npm//folder-hash",

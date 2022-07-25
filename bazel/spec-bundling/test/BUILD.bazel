@@ -10,6 +10,7 @@ ts_library(
     srcs = ["core_apf_esm.spec.ts"],
     deps = [
         "@npm//@angular/core",
+        "@npm//@types/jasmine",
     ],
 )
 
@@ -19,6 +20,7 @@ ts_library(
     srcs = ["core_invalid_linker_decl.spec.ts"],
     deps = [
         "@npm//@angular/core",
+        "@npm//@types/jasmine",
     ],
 )
 

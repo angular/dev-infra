@@ -38,21 +38,18 @@ package_group(
 
 pkg_npm(
     name = "npm_package",
-    package_name = "@angular/dev-infra-private",
+    package_name = "@angular/build-tooling",
     srcs = [
         "BUILD.bazel",
         "package.json",
         "tsconfig.json",
         ":index.bzl",
         "//bazel:static_files",
-        "//ng-dev:static_files",
         "//shared-scripts:static_files",
         "//tslint-rules:static_files",
     ],
     substitutions = NPM_PACKAGE_SUBSTITUTIONS,
     deps = [
-        "//ng-dev:bundles",
-        "//ng-dev:types",
         "//tslint-rules:lib",
     ],
 )

@@ -16,7 +16,7 @@ copy_to_bin(
 
 js_library(
     name = "js_lib",
-    package_name = "@angular/dev-infra-private/shared-scripts/angular-optimization",
+    package_name = "@angular/build-tooling/shared-scripts/angular-optimization",
     srcs = [":js_lib_files"],
     deps = [
         "@npm//@angular-devkit/build-angular",

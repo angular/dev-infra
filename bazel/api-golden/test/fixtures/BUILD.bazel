@@ -15,6 +15,7 @@ copy_to_bin(
 
 ts_library(
     name = "test_lib",
+    testonly = True,
     srcs = ["test_fixture.ts"],
     deps = [
         "//bazel/api-golden/test/fixtures/transitive_target",

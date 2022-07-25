@@ -11,6 +11,8 @@ ts_library(
     devmode_module = "commonjs",
     deps = [
         "//bazel/map-size-tracking",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
         "@npm//source-map",
     ],
 )

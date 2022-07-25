@@ -24,6 +24,7 @@ ts_library(
     devmode_module = "commonjs",
     deps = [
         "@npm//@bazel/runfiles",
+        "@npm//@types/node",
         "@npm//@types/selenium-webdriver",
         "@npm//@types/wait-on",
         "@npm//selenium-webdriver",
