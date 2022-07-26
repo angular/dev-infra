@@ -10363,11 +10363,11 @@ var require_dist_node9 = __commonJS({
         }
         if (decorations.renamedParameters) {
           const options2 = requestWithDefaults.endpoint.merge(...args);
-          for (const [name, alias] of Object.entries(decorations.renamedParameters)) {
+          for (const [name, alias2] of Object.entries(decorations.renamedParameters)) {
             if (name in options2) {
-              octokit.log.warn(`"${name}" parameter is deprecated for "octokit.${scope}.${methodName}()". Use "${alias}" instead`);
-              if (!(alias in options2)) {
-                options2[alias] = options2[name];
+              octokit.log.warn(`"${name}" parameter is deprecated for "octokit.${scope}.${methodName}()". Use "${alias2}" instead`);
+              if (!(alias2 in options2)) {
+                options2[alias2] = options2[name];
               }
               delete options2[name];
             }
@@ -25360,8 +25360,8 @@ var require_dist = __commonJS({
       input[paramsSymbol] = params5;
       return input;
     }
-    function alias(alias2, target) {
-      return "".concat(alias2, ":").concat(target);
+    function alias2(alias3, target) {
+      return "".concat(alias3, ":").concat(target);
     }
     function fragment(name, typeName, input) {
       var _a, _b;
@@ -25440,7 +25440,7 @@ var require_dist = __commonJS({
       types6.optional = types6;
       return types6;
     }();
-    exports.alias = alias;
+    exports.alias = alias2;
     exports.fragment = fragment;
     exports.fragmentToString = fragmentToString;
     exports.mutation = mutation;
@@ -30031,11 +30031,11 @@ var require_dist_node19 = __commonJS({
         }
         if (decorations.renamedParameters) {
           const options2 = requestWithDefaults.endpoint.merge(...args);
-          for (const [name, alias] of Object.entries(decorations.renamedParameters)) {
+          for (const [name, alias2] of Object.entries(decorations.renamedParameters)) {
             if (name in options2) {
-              octokit.log.warn(`"${name}" parameter is deprecated for "octokit.${scope}.${methodName}()". Use "${alias}" instead`);
-              if (!(alias in options2)) {
-                options2[alias] = options2[name];
+              octokit.log.warn(`"${name}" parameter is deprecated for "octokit.${scope}.${methodName}()". Use "${alias2}" instead`);
+              if (!(alias2 in options2)) {
+                options2[alias2] = options2[name];
               }
               delete options2[name];
             }
@@ -69288,6 +69288,7 @@ var PR_SCHEMA = {
   number: import_typed_graphqlify4.types.number,
   mergeable: import_typed_graphqlify4.types.custom(),
   updatedAt: import_typed_graphqlify4.types.string,
+  [(0, import_typed_graphqlify4.alias)("baseCommitInfo", "commits")]: (0, import_typed_graphqlify4.params)({ first: 1 }, { nodes: [{ commit: { parents: (0, import_typed_graphqlify4.params)({ first: 1 }, { nodes: [{ oid: import_typed_graphqlify4.types.string }] }) } }] }),
   commits: (0, import_typed_graphqlify4.params)({ last: 100 }, {
     totalCount: import_typed_graphqlify4.types.number,
     nodes: [
