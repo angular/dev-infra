@@ -14,7 +14,7 @@ import {
   StatusState,
 } from '@octokit/graphql-schema';
 import {getPendingPrs, getPr} from '../../utils/github.js';
-import {types as graphqlTypes, onUnion, optional, params} from 'typed-graphqlify';
+import {alias, types as graphqlTypes, onUnion, optional, params} from 'typed-graphqlify';
 
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 
@@ -33,6 +33,13 @@ export const PR_SCHEMA = {
   number: graphqlTypes.number,
   mergeable: graphqlTypes.custom<MergeableState>(),
   updatedAt: graphqlTypes.string,
+  // Along with the `commits` queried below, we always query the oldest commit in the PR and
+  // determine its parent SHA. This is the base SHA of a pull request. Note that this is different
+  // to the `baseRefOid` which is based on when the PR has been created and the attached base branch.
+  [alias('baseCommitInfo', 'commits')]: params(
+    {first: 1},
+    {nodes: [{commit: {parents: params({first: 1}, {nodes: [{oid: graphqlTypes.string}]})}}]},
+  ),
   // Only the last 100 commits from a pull request are obtained as we likely will never see a pull
   // requests with more than 100 commits.
   commits: params(

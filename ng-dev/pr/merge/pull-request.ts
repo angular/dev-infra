@@ -111,21 +111,14 @@ export async function loadAndValidatePullRequest(
     !!config.pullRequest.caretakerNoteLabel &&
     labels.includes(config.pullRequest.caretakerNoteLabel);
 
-  git.runGraceful(['fetch', getRepositoryGitUrl(config.github), `pull/${prNumber}/head`]);
+  // The parent of the first commit in a PR is the base SHA.
+  const baseSha = prData.baseCommitInfo.nodes[0].commit.parents.nodes[0].oid;
 
-  /** Number of commits in the pull request. */
-  const commitCount = prData.commits.totalCount;
-  /**
-   * SHA for the first commit the pull request is based on.
-   *
-   * Typically we would be able to rely on referencing the the base revision as the temprorary
-   * pull request head commmit minus the number of commits in the pull request. This is not
-   * always the case when we rebase the PR with autosquash where the amount of commits could
-   * change. We avoid this issue around this by parsing the base revision so that we are able
-   * to reference a specific SHA before a autosquash rebase could be performed.
-   */
-  const baseSha = git.run(['rev-parse', `${prData.headRefOid}~${commitCount}`]).stdout.trim();
-  /* Git revision range that matches the pull request commits. */
+  // Typically we would be able to rely on referencing the the base revision as the pull
+  // request head commit minus the number of commits in the pull request. This is not always
+  // reliable when we rebase e.g. the PR with autosquash where the amount of commits could
+  // change. We avoid this issue around this by using the resolved base revision so that we are
+  // able to reference an explicit SHA before a autosquash rebase could be performed.
   const revisionRange = `${baseSha}..${TEMP_PR_HEAD_BRANCH}`;
 
   return {
@@ -135,11 +128,11 @@ export async function loadAndValidatePullRequest(
     requiredBaseSha,
     githubTargetBranch,
     needsCommitMessageFixup,
-    commitCount,
     baseSha,
     revisionRange,
     hasCaretakerNote,
     targetBranches: target.branches,
     title: prData.title,
+    commitCount: prData.commits.totalCount,
   };
 }

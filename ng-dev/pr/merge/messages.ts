@@ -16,8 +16,8 @@ export function getCaretakerNotePromptMessage(pullRequest: PullRequest): string 
   );
 }
 
-export function getTargetedBranchesConfirmationPromptMessage(pullRequest: PullRequest): string {
-  return `${getTargetedBranchesMessage(pullRequest)}}\nDo you want to proceed merging?`;
+export function getTargetedBranchesConfirmationPromptMessage(): string {
+  return `Do you want to proceed merging?`;
 }
 
 export function getTargetedBranchesMessage(pullRequest: PullRequest): string {
