@@ -138,6 +138,7 @@ export class MergeTool {
       await strategy.prepare(pullRequest);
 
       // Print the target branches.
+      Log.info();
       Log.info(getTargetedBranchesMessage(pullRequest));
 
       // Check for conflicts between the pull request and target branches.
