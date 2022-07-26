@@ -5,7 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {red} from '../../utils/logging.js';
+import {red, bold} from '../../utils/logging.js';
 
 import {PullRequest} from './pull-request.js';
 
@@ -21,6 +21,8 @@ export function getTargetedBranchesConfirmationPromptMessage(): string {
 }
 
 export function getTargetedBranchesMessage(pullRequest: PullRequest): string {
-  const targetBranchListAsString = pullRequest.targetBranches.map((b) => ` - ${b}`).join('\n');
+  const targetBranchListAsString = pullRequest.targetBranches
+    .map((b) => `  - ${bold(b)}`)
+    .join('\n');
   return `Pull request #${pullRequest.prNumber} will merge into:\n${targetBranchListAsString}`;
 }

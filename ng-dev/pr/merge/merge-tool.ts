@@ -143,6 +143,7 @@ export class MergeTool {
       // Check for conflicts between the pull request and target branches.
       await strategy.check(pullRequest);
 
+      Log.info('');
       Log.info(green(`  ✓  Pull request can be merged into all target branches.`));
       Log.info();
 
