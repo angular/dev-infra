@@ -198,7 +198,7 @@ jobs:
           name: Publish snapshot builds to GitHub
           command: |
             ./.circleci/publish_to_github.sh "@angular/build-tooling" "dev-infra-private-build-tooling-builds" "dist/bin/npm_package"
-            ./.circleci/publish_to_github.sh "@angular-ng-dev" "dev-infra-ng-dev-builds" "dist/bin/ng-dev/npm_package"
+            ./.circleci/publish_to_github.sh "@angular-ng-dev" "dev-infra-private-ng-dev-builds" "dist/bin/ng-dev/npm_package"
 
 
 workflows:
