@@ -22,7 +22,7 @@ fi
 
 packageName="${1}"
 packageRepo="${2}"
-packageDistDir="${3}"
+packageDistDir="$(realpath ${3})"
 
 buildVersion=$(cd ${packageDistDir} && node -pe "require('./package.json').version")
 branchName=${CIRCLE_BRANCH:-'main'}
