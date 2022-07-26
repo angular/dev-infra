@@ -185,9 +185,7 @@ export abstract class MergeStrategy {
     this.git.run(['push', this.git.getRepoGitUrl(), ...pushRefspecs]);
   }
 
-  /**
-   * Asserts that given pull request could be merged into its target branches.
-   */
+  /** Asserts that given pull request could be merged into the given target branches. */
   protected async _assertMergeableOrThrow(
     {revisionRange}: PullRequest,
     targetBranches: string[],

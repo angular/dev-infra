@@ -137,12 +137,19 @@ export class MergeTool {
       // Run preparations for the merge (e.g. fetching branches).
       await strategy.prepare(pullRequest);
 
+      // Print the target branches.
+      Log.info();
+      Log.info(getTargetedBranchesMessage(pullRequest));
+
       // Check for conflicts between the pull request and target branches.
       await strategy.check(pullRequest);
 
+      Log.info('');
+      Log.info(green(`  ✓  Pull request can be merged into all target branches.`));
+      Log.info();
+
       if (this.flags.dryRun) {
-        Log.info(getTargetedBranchesMessage(pullRequest));
-        Log.info(green(`  ✓  Mergeablility of pull request confirmed, exiting dry run.`));
+        Log.info(green(`  ✓  Exiting due to dry run mode.`));
         return;
       }
 
@@ -150,7 +157,7 @@ export class MergeTool {
         // In cases where manual branch targeting is used, the user already confirmed.
         !this.flags.forceManualBranches &&
         this.flags.branchPrompt &&
-        !(await Prompt.confirm(getTargetedBranchesConfirmationPromptMessage(pullRequest)))
+        !(await Prompt.confirm(getTargetedBranchesConfirmationPromptMessage()))
       ) {
         throw new UserAbortedMergeToolError();
       }
