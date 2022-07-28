@@ -6,6 +6,7 @@ import {Octokit} from '@octokit/rest';
 import {createAppAuth} from '@octokit/auth-app';
 import {Duplex} from 'stream';
 import admin, {AppOptions} from 'firebase-admin';
+import assert from 'assert';
 
 /** The temporary access token and a convience method for revoking it. */
 interface AccessTokenAndRevocation {
@@ -18,13 +19,17 @@ const authorizationRegex = new RegExp(/Bearer (.*)/);
 /** The length of time in ms between heartbeat checks. */
 const heartBeatIntervalLength = 5000;
 /** The port to bind the server to */
-const PORT = process.env.PORT!;
+assert(process.env.PORT, 'PORT is not defined in the environment');
+const PORT = process.env.PORT;
 /** The ID of the Github app used to generating tokens. */
-const GITHUB_APP_ID = process.env.GITHUB_APP_ID!;
+assert(process.env.GITHUB_APP_ID, 'GITHUB_APP_ID is not defined in the environment');
+const GITHUB_APP_ID = process.env.GITHUB_APP_ID;
 /** The PEM key of the Github app used to generating tokens. */
+assert(process.env.GITHUB_APP_PEM, 'GITHUB_APP_PEM is not defined in the environment');
 const GITHUB_APP_PEM = process.env.GITHUB_APP_PEM;
 /** The firebase confgiuration for the firebase application being used for authentication. */
-const FIREBASE_APP_CONFIG = JSON.parse(process.env.FIREBASE_APP_CONFIG!) as AppOptions;
+assert(process.env.FIREBASE_APP_CONFIG, 'FIREBASE_APP_CONFIG is not defined in the environment');
+const FIREBASE_APP_CONFIG = JSON.parse(process.env.FIREBASE_APP_CONFIG) as AppOptions;
 
 // Initialize the Firebase application.
 admin.initializeApp(FIREBASE_APP_CONFIG);
@@ -57,7 +62,7 @@ export async function generateAccessToken(
  */
 async function wsHandler(ws: WebSocket, req: IncomingMessage) {
   /** Whether the websocket heartbeat check is still alive. */
-  let hasHeartbeat: boolean;
+  let receivedHeartbeatResponse: boolean;
   /** The interval instance for checking the heartbeat. */
   let heartbeatInterval = setInterval(checkHeartbeat, heartBeatIntervalLength);
   /**
@@ -65,17 +70,20 @@ async function wsHandler(ws: WebSocket, req: IncomingMessage) {
    * Note: We safely case the header type as having these fields because they are checked prior
    *       to the WebSocket handler function being invoked.
    */
-  const {repo, owner} = req.headers as {repo: string; owner: string};
+  const {NgDevTargetRepoOwner: owner, NgDevTargetRepoName: repo} = req.headers as {
+    NgDevTargetRepoName: string;
+    NgDevTargetRepoOwner: string;
+  };
 
   /** The temporary Github access token and function to revoke the token.. */
   const {token, revokeToken} = await generateAccessToken(owner, repo);
   /** Check to make sure the heartbeat is still alive. */
   function checkHeartbeat() {
-    if (hasHeartbeat === false) {
+    if (receivedHeartbeatResponse === false) {
       ws.close(1008, 'Cannot find socket via heartbeat check');
       ws.terminate();
     }
-    hasHeartbeat = false;
+    receivedHeartbeatResponse = false;
     ws.ping();
   }
 
@@ -92,7 +100,7 @@ async function wsHandler(ws: WebSocket, req: IncomingMessage) {
   ws.on('error', complete);
 
   // Handle the pong response from the websocket client, updating the heartbeat as alive.
-  ws.on('pong', () => (hasHeartbeat = true));
+  ws.on('pong', () => (receivedHeartbeatResponse = true));
 
   // Send the temporary Github token to the websocket client
   ws.send(token);
@@ -124,7 +132,10 @@ async function upgradeHandler(req: IncomingMessage, socket: Duplex, head: Buffer
   }
 
   /** The repository name and owner for the request. */
-  const {repo, owner} = req.headers as {repo: string; owner: string};
+  const {NgDevTargetRepoName: repo, NgDevTargetRepoOwner: owner} = req.headers as {
+    NgDevTargetRepoName: string;
+    NgDevTargetRepoOwner: string;
+  };
 
   if (!repo || !owner) {
     console.error('Missing a repo or owner parameter');
@@ -146,4 +157,4 @@ const wss = new WebSocketServer({noServer: true});
 wss.on('connection', wsHandler);
 server.on('upgrade', upgradeHandler);
 server.on('listening', () => console.log('Credential Service startup complete, listening'));
-server.listen(parseInt(PORT, 10));
+server.listen(Number(PORT));
