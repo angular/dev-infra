@@ -6,9 +6,9 @@ exports_files([
 
 ts_library(
     name = "lib",
-    srcs = glob([
+    srcs = [
         "server.ts",
-    ]),
+    ],
     visibility = [
         "//apps/credential-service:__pkg__",
     ],
