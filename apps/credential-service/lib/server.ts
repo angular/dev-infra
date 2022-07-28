@@ -61,7 +61,7 @@ export async function generateAccessToken(
  * The access token is automatically revoked when the websocket is closed.
  */
 async function wsHandler(ws: WebSocket, req: IncomingMessage) {
-  /** Whether the websocket heartbeat check is still alive. */
+  /** Whether the websocket has confirmed the heartbeat response since the most recent check. */
   let receivedHeartbeatResponse: boolean;
   /** The interval instance for checking the heartbeat. */
   let heartbeatInterval = setInterval(checkHeartbeat, heartBeatIntervalLength);
@@ -112,11 +112,15 @@ async function wsHandler(ws: WebSocket, req: IncomingMessage) {
  */
 async function upgradeHandler(req: IncomingMessage, socket: Duplex, head: Buffer) {
   try {
-    if (!authorizationRegex.test(req.headers.authorization!)) {
-      throw Error('Missing or invalid authorization header syntax');
+    assert(req.headers.authorization, Error('Missing authorization header'));
+    if (!authorizationRegex.test(req.headers.authorization)) {
+      throw Error('Invalid authorization header syntax');
     }
-    /** The NgDev token from the user to be verified. */
-    const [_, ngDevToken] = req.headers.authorization!.match(/Bearer (.*)/)!;
+    /**
+     * The NgDev token from the user to be verified.
+     * We use a non-null assertion as the regex was already tested above.
+     */
+    const [_, ngDevToken] = authorizationRegex.exec(req.headers.authorization)!;
     await admin
       .auth()
       .verifySessionCookie(ngDevToken, /* checkRevoked */ true)
@@ -144,8 +148,8 @@ async function upgradeHandler(req: IncomingMessage, socket: Duplex, head: Buffer
     return;
   }
 
-  wss.handleUpgrade(req, socket, head, (ws: WebSocket, req: IncomingMessage) => {
-    wss.emit('connection', ws, req);
+  wss.handleUpgrade(req, socket, head, (ws: WebSocket, msg: IncomingMessage) => {
+    wss.emit('connection', ws, msg);
   });
 }
 
