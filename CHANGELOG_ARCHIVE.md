@@ -1,3 +1,18 @@
+<a name="2022.3.27"></a>
+# 2022.3.27 (2022-03-27)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6379fcf](https://github.com/angular/dev-infra/commit/6379fcf00a013f3695d18b5281888f671424e37a) | feat | api-golden test should leverage package exports information for finding entries |
+| [38f2a98](https://github.com/angular/dev-infra/commit/38f2a980e08337f150c2840d961e44cc361aa37d) | fix | continue to support non-exports resolution in api-golden test |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d831eaa](https://github.com/angular/dev-infra/commit/d831eaabed39001fe776a4d4d0f11c7fdcf4afae) | fix | lock formatting dependencies to avoid formating failures |
+## Special Thanks
+Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.3.20"></a>
 # 2022.3.20 (2022-03-20)
 ### bazel

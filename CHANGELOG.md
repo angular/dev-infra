@@ -1,3 +1,18 @@
+<a name="2022.7.31"></a>
+# 2022.7.31 (2022-07-31)
+### apps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1609543](https://github.com/angular/dev-infra/commit/1609543e7d76ccf66fbbab1bfa8ae4c2767adb80) | feat | create credential service server ([#729](https://github.com/angular/dev-infra/pull/729)) |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [934abb0](https://github.com/angular/dev-infra/commit/934abb0169fbd113021fe8bad1adef130bdd5724) | feat | **pr:** add dry-run flag to pr merge tooling ([#733](https://github.com/angular/dev-infra/pull/733)) |
+| [64e801f](https://github.com/angular/dev-infra/commit/64e801fe2e99adfc960ab1fb8d3789f29e0dab0a) | feat | **pr:** check for branch conflicts before confirming merge in pr merge tooling ([#733](https://github.com/angular/dev-infra/pull/733)) |
+## Special Thanks
+Joey Perrott and Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.7.24"></a>
 # 2022.7.24 (2022-07-24)
 ### apps
@@ -227,18 +242,3 @@ Joey Perrott and Paul Gschwendtner
 | [e9ce8d5](https://github.com/angular/dev-infra/commit/e9ce8d577f2eb459704e341417821e5523f14b86) | fix | fix github token retrieval logic |
 ## Special Thanks
 Alan Agius, Paul Gschwendtner and renovate[bot]
-
-<!-- CHANGELOG SPLIT MARKER -->
-<a name="2022.3.27"></a>
-# 2022.3.27 (2022-03-27)
-### bazel
-| Commit | Type | Description |
-| -- | -- | -- |
-| [6379fcf](https://github.com/angular/dev-infra/commit/6379fcf00a013f3695d18b5281888f671424e37a) | feat | api-golden test should leverage package exports information for finding entries |
-| [38f2a98](https://github.com/angular/dev-infra/commit/38f2a980e08337f150c2840d961e44cc361aa37d) | fix | continue to support non-exports resolution in api-golden test |
-### ng-dev
-| Commit | Type | Description |
-| -- | -- | -- |
-| [d831eaa](https://github.com/angular/dev-infra/commit/d831eaabed39001fe776a4d4d0f11c7fdcf4afae) | fix | lock formatting dependencies to avoid formating failures |
-## Special Thanks
-Paul Gschwendtner
