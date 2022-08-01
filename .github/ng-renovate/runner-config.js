@@ -4,6 +4,7 @@ module.exports = {
   platform: 'github',
   forkMode: true,
   onboarding: false,
+  allowedPostUpgradeCommands: ['^yarn run '],
   repositories: [
     'angular/angular',
     'angular/dev-infra',
