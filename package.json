@@ -68,7 +68,7 @@
     "@angular/router": "14.1.0-rc.0",
     "@bazel/bazelisk": "^1.11.0",
     "@bazel/jasmine": "5.5.3",
-    "@google-cloud/firestore": "^5.0.2",
+    "@google-cloud/firestore": "^6.0.0",
     "@google-cloud/storage": "^6.0.0",
     "@octokit/auth-app": "^4.0.0",
     "@octokit/core": "^4.0.0",
