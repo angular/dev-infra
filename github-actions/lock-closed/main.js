@@ -26,7 +26,10 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target, mod));
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 
 // 
 var require_utils = __commonJS({
@@ -379,7 +382,10 @@ var require_tunnel = __commonJS({
         connectReq.removeAllListeners();
         socket.removeAllListeners();
         if (res.statusCode !== 200) {
-          debug2("tunneling socket could not be established, statusCode=%d", res.statusCode);
+          debug2(
+            "tunneling socket could not be established, statusCode=%d",
+            res.statusCode
+          );
           socket.destroy();
           var error2 = new Error("tunneling socket could not be established, statusCode=" + res.statusCode);
           error2.code = "ECONNRESET";
@@ -402,7 +408,11 @@ var require_tunnel = __commonJS({
       }
       function onError(cause) {
         connectReq.removeAllListeners();
-        debug2("tunneling socket could not be established, cause=%s\n", cause.message, cause.stack);
+        debug2(
+          "tunneling socket could not be established, cause=%s\n",
+          cause.message,
+          cause.stack
+        );
         var error2 = new Error("tunneling socket could not be established, cause=" + cause.message);
         error2.code = "ECONNRESET";
         options.request.emit("error", error2);
@@ -7851,11 +7861,14 @@ var require_lib4 = __commonJS({
       blob() {
         let ct = this.headers && this.headers.get("content-type") || "";
         return consumeBody.call(this).then(function(buf) {
-          return Object.assign(new Blob([], {
-            type: ct.toLowerCase()
-          }), {
-            [BUFFER]: buf
-          });
+          return Object.assign(
+            new Blob([], {
+              type: ct.toLowerCase()
+            }),
+            {
+              [BUFFER]: buf
+            }
+          );
         });
       },
       json() {
@@ -8912,12 +8925,15 @@ var require_dist_node5 = __commonJS({
       let status;
       let url;
       const fetch = requestOptions.request && requestOptions.request.fetch || nodeFetch;
-      return fetch(requestOptions.url, Object.assign({
-        method: requestOptions.method,
-        body: requestOptions.body,
-        headers: requestOptions.headers,
-        redirect: requestOptions.redirect
-      }, requestOptions.request)).then(async (response) => {
+      return fetch(requestOptions.url, Object.assign(
+        {
+          method: requestOptions.method,
+          body: requestOptions.body,
+          headers: requestOptions.headers,
+          redirect: requestOptions.redirect
+        },
+        requestOptions.request
+      )).then(async (response) => {
         url = response.url;
         status = response.status;
         for (const keyAndValue of response.headers) {
@@ -10408,7 +10424,7 @@ var require_dist_node10 = __commonJS({
     }
     function _objectSpread2(target) {
       for (var i = 1; i < arguments.length; i++) {
-        var source = arguments[i] != null ? arguments[i] : {};
+        var source = null != arguments[i] ? arguments[i] : {};
         i % 2 ? ownKeys(Object(source), true).forEach(function(key) {
           _defineProperty(target, key, source[key]);
         }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function(key) {
@@ -12738,11 +12754,14 @@ var require_lib6 = __commonJS({
       blob() {
         let ct = this.headers && this.headers.get("content-type") || "";
         return consumeBody.call(this).then(function(buf) {
-          return Object.assign(new Blob([], {
-            type: ct.toLowerCase()
-          }), {
-            [BUFFER]: buf
-          });
+          return Object.assign(
+            new Blob([], {
+              type: ct.toLowerCase()
+            }),
+            {
+              [BUFFER]: buf
+            }
+          );
         });
       },
       json() {
@@ -13705,12 +13724,15 @@ var require_dist_node13 = __commonJS({
       let status;
       let url;
       const fetch = requestOptions.request && requestOptions.request.fetch || globalThis.fetch || nodeFetch;
-      return fetch(requestOptions.url, Object.assign({
-        method: requestOptions.method,
-        body: requestOptions.body,
-        headers: requestOptions.headers,
-        redirect: requestOptions.redirect
-      }, requestOptions.request)).then(async (response) => {
+      return fetch(requestOptions.url, Object.assign(
+        {
+          method: requestOptions.method,
+          body: requestOptions.body,
+          headers: requestOptions.headers,
+          redirect: requestOptions.redirect
+        },
+        requestOptions.request
+      )).then(async (response) => {
         url = response.url;
         status = response.status;
         for (const keyAndValue of response.headers) {
@@ -17064,11 +17086,14 @@ var require_lib8 = __commonJS({
       blob() {
         let ct = this.headers && this.headers.get("content-type") || "";
         return consumeBody.call(this).then(function(buf) {
-          return Object.assign(new Blob([], {
-            type: ct.toLowerCase()
-          }), {
-            [BUFFER]: buf
-          });
+          return Object.assign(
+            new Blob([], {
+              type: ct.toLowerCase()
+            }),
+            {
+              [BUFFER]: buf
+            }
+          );
         });
       },
       json() {
@@ -18031,12 +18056,15 @@ var require_dist_node22 = __commonJS({
       let status;
       let url;
       const fetch = requestOptions.request && requestOptions.request.fetch || nodeFetch;
-      return fetch(requestOptions.url, Object.assign({
-        method: requestOptions.method,
-        body: requestOptions.body,
-        headers: requestOptions.headers,
-        redirect: requestOptions.redirect
-      }, requestOptions.request)).then(async (response) => {
+      return fetch(requestOptions.url, Object.assign(
+        {
+          method: requestOptions.method,
+          body: requestOptions.body,
+          headers: requestOptions.headers,
+          redirect: requestOptions.redirect
+        },
+        requestOptions.request
+      )).then(async (response) => {
         url = response.url;
         status = response.status;
         for (const keyAndValue of response.headers) {
@@ -19075,7 +19103,7 @@ var require_ecdsa_sig_formatter = __commonJS({
     function signatureAsBuffer(signature) {
       if (Buffer2.isBuffer(signature)) {
         return signature;
-      } else if (typeof signature === "string") {
+      } else if ("string" === typeof signature) {
         return Buffer2.from(signature, "base64");
       }
       throw new TypeError("ECDSA signature must be a Base64 string or a Buffer");
@@ -19734,14 +19762,18 @@ var require_ms = __commonJS({
       } else if (type === "number" && isFinite(val)) {
         return options.long ? fmtLong(val) : fmtShort(val);
       }
-      throw new Error("val is not a non-empty string or a valid number. val=" + JSON.stringify(val));
+      throw new Error(
+        "val is not a non-empty string or a valid number. val=" + JSON.stringify(val)
+      );
     };
     function parse(str) {
       str = String(str);
       if (str.length > 100) {
         return;
       }
-      var match = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)?$/i.exec(str);
+      var match = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)?$/i.exec(
+        str
+      );
       if (!match) {
         return;
       }
@@ -22619,7 +22651,9 @@ var require_dist_node29 = __commonJS({
         case "app":
           return getAppAuthentication(state);
         case "oauth":
-          state.log.warn(new deprecation.Deprecation(`[@octokit/auth-app] {type: "oauth"} is deprecated. Use {type: "oauth-app"} instead`));
+          state.log.warn(
+            new deprecation.Deprecation(`[@octokit/auth-app] {type: "oauth"} is deprecated. Use {type: "oauth-app"} instead`)
+          );
         case "oauth-app":
           return state.oauthApp({
             type: "oauth-app"
@@ -22694,7 +22728,11 @@ var require_dist_node29 = __commonJS({
       const {
         token,
         createdAt
-      } = await getInstallationAuthentication(state, {}, request2);
+      } = await getInstallationAuthentication(
+        state,
+        {},
+        request2
+      );
       endpoint.headers.authorization = `token ${token}`;
       return sendRequestWithRetries(state, request2, endpoint, createdAt);
     }
