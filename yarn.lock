@@ -339,7 +339,7 @@ __metadata:
     "@bazel/runfiles": 5.5.3
     "@bazel/terser": 5.5.3
     "@bazel/typescript": 5.5.3
-    "@google-cloud/firestore": ^5.0.2
+    "@google-cloud/firestore": ^6.0.0
     "@google-cloud/storage": ^6.0.0
     "@microsoft/api-extractor": 7.28.4
     "@octokit/auth-app": ^4.0.0
@@ -2778,6 +2778,18 @@ __metadata:
     google-gax: ^2.24.1
     protobufjs: ^6.8.6
   checksum: 4b669f54a7da2287d0559435586bcf9792a3e240d1b75868a6557c4c1a7265aae335ab24d0d1458ed32320ee258c107802f9650ed24f86b0d03ff49f202ee530
+  languageName: node
+  linkType: hard
+
+"@google-cloud/firestore@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "@google-cloud/firestore@npm:6.0.0"
+  dependencies:
+    fast-deep-equal: ^3.1.1
+    functional-red-black-tree: ^1.0.1
+    google-gax: ^3.0.1
+    protobufjs: ^7.0.0
+  checksum: 4b51ed6da004fe9c699cecde3e663f4b6c94937fdf4dd01c27a22df9845bac202d9869d39d8b4a3b9bd38637762754f925b32e4ea4f8ffb755fcf6528988aadf
   languageName: node
   linkType: hard
 
