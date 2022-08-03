@@ -66941,7 +66941,7 @@ var GITHUB_TOKEN_GENERATE_URL = "https://github.com/settings/tokens/new";
 function addTokenToGitHttpsUrl(githubHttpsUrl, token) {
   const url = new URL2(githubHttpsUrl);
   url.password = token;
-  url.username = "_";
+  url.username = "x-access-token";
   return url.href;
 }
 function getRepositoryGitUrl(config2, githubToken) {

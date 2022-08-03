@@ -21,7 +21,7 @@ export const GITHUB_TOKEN_GENERATE_URL = 'https://github.com/settings/tokens/new
 export function addTokenToGitHttpsUrl(githubHttpsUrl: string, token: string) {
   const url = new URL(githubHttpsUrl);
   url.password = token;
-  url.username = '_';
+  url.username = 'x-access-token';
   return url.href;
 }
 
