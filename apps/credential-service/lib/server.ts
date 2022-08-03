@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import {createServer, IncomingMessage} from 'http';
+import {createServer, IncomingHttpHeaders, IncomingMessage} from 'http';
 import {WebSocketServer, WebSocket} from 'ws';
 import {Octokit} from '@octokit/rest';
 import {createAppAuth} from '@octokit/auth-app';
@@ -14,13 +14,17 @@ interface AccessTokenAndRevocation {
   revokeToken: () => void;
 }
 
+interface RequestParameterHeaders extends IncomingHttpHeaders {
+  ng_repo_name: string;
+  ng_repo_owner: string;
+}
+
 /** Regex for matching authorization header uses. */
 const authorizationRegex = new RegExp(/Bearer (.*)/);
 /** The length of time in ms between heartbeat checks. */
-const heartBeatIntervalLength = 5000;
+const heartBeatIntervalLength = 10000;
 /** The port to bind the server to */
-assert(process.env.PORT, 'PORT is not defined in the environment');
-const PORT = process.env.PORT;
+const PORT = 8080;
 /** The ID of the Github app used to generating tokens. */
 assert(process.env.GITHUB_APP_ID, 'GITHUB_APP_ID is not defined in the environment');
 const GITHUB_APP_ID = process.env.GITHUB_APP_ID;
@@ -51,7 +55,7 @@ export async function generateAccessToken(
 
   return {
     token,
-    revokeToken: async () => await github.apps.revokeInstallationAccessToken(),
+    revokeToken: async () => await new Octokit({auth: token}).apps.revokeInstallationAccessToken(),
   };
 }
 
@@ -70,10 +74,7 @@ async function wsHandler(ws: WebSocket, req: IncomingMessage) {
    * Note: We safely case the header type as having these fields because they are checked prior
    *       to the WebSocket handler function being invoked.
    */
-  const {NgDevTargetRepoOwner: owner, NgDevTargetRepoName: repo} = req.headers as {
-    NgDevTargetRepoName: string;
-    NgDevTargetRepoOwner: string;
-  };
+  const {ng_repo_owner: owner, ng_repo_name: repo} = req.headers as RequestParameterHeaders;
 
   /** The temporary Github access token and function to revoke the token.. */
   const {token, revokeToken} = await generateAccessToken(owner, repo);
@@ -136,10 +137,7 @@ async function upgradeHandler(req: IncomingMessage, socket: Duplex, head: Buffer
   }
 
   /** The repository name and owner for the request. */
-  const {NgDevTargetRepoName: repo, NgDevTargetRepoOwner: owner} = req.headers as {
-    NgDevTargetRepoName: string;
-    NgDevTargetRepoOwner: string;
-  };
+  const {ng_repo_name: repo, ng_repo_owner: owner} = req.headers as RequestParameterHeaders;
 
   if (!repo || !owner) {
     console.error('Missing a repo or owner parameter');
@@ -161,4 +159,4 @@ const wss = new WebSocketServer({noServer: true});
 wss.on('connection', wsHandler);
 server.on('upgrade', upgradeHandler);
 server.on('listening', () => console.log('Credential Service startup complete, listening'));
-server.listen(Number(PORT));
+server.listen(PORT);
