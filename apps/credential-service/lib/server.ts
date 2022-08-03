@@ -21,7 +21,12 @@ interface RequestParameterHeaders extends IncomingHttpHeaders {
 
 /** Regex for matching authorization header uses. */
 const authorizationRegex = new RegExp(/Bearer (.*)/);
-/** The length of time in ms between heartbeat checks. */
+/**
+ * The length of time in ms between heartbeat checks.
+ *
+ * 10 seconds is used as during the local PR validation process, the javascript thread
+ * becomes blocked, and can cause a timeout.
+ */
 const heartBeatIntervalLength = 10000;
 /** The port to bind the server to */
 const PORT = 8080;
