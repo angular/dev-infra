@@ -4,10 +4,7 @@ module.exports = {
   platform: 'github',
   forkMode: true,
   onboarding: false,
-  allowedPostUpgradeCommands: [
-    // See https://github.com/angular/angular/pull/47040.
-    '^yarn --cwd=aio/tools/examples/shared run sync-deps$',
-  ],
+  allowedPostUpgradeCommands: ['.'],
   repositories: [
     'angular/angular',
     'angular/dev-infra',
