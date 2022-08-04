@@ -12,6 +12,7 @@ nodejs_binary(
 copy_to_bin(
     name = "bin_files",
     srcs = [
+        "Dockerfile",
         "package.json",
     ],
 )
@@ -25,5 +26,16 @@ esbuild_esm_bundle(
     ],
     deps = [
         "//apps/credential-service/lib",
+    ],
+)
+
+sh_binary(
+    name = "deploy",
+    srcs = [
+        "deploy.sh",
+    ],
+    data = [
+        ":bin_files",
+        ":credential-service.js",
     ],
 )
