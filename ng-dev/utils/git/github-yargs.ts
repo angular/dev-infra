@@ -12,10 +12,8 @@ import {Argv} from 'yargs';
 import {AuthenticatedGitClient} from './authenticated-git-client.js';
 import {GITHUB_TOKEN_GENERATE_URL} from './github-urls.js';
 
-export type ArgvWithGithubToken = Argv<{githubToken: string}>;
-
 /** Sets up the `github-token` command option for the given Yargs instance. */
-export function addGithubTokenOption(argv: Argv): ArgvWithGithubToken {
+export function addGithubTokenOption<T>(argv: Argv<T>) {
   return (
     argv
       // 'github-token' is casted to 'githubToken' to properly set up typings to reflect the key in
@@ -24,7 +22,10 @@ export function addGithubTokenOption(argv: Argv): ArgvWithGithubToken {
       .option('github-token' as 'githubToken', {
         type: 'string',
         description: 'Github token. If not set, token is retrieved from the environment variables.',
-        coerce: (token: string) => {
+        coerce: (token: string | null) => {
+          if (token === null) {
+            return '';
+          }
           const githubToken = token || findGithubTokenInEnvironment();
           if (!githubToken) {
             Log.error('No Github token set. Please set the `GITHUB_TOKEN` environment variable.');
