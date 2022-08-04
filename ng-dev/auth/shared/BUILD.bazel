@@ -12,8 +12,10 @@ ts_library(
         "@npm//@openid/appauth",
         "@npm//@types/node",
         "@npm//@types/opener",
+        "@npm//@types/ws",
         "@npm//firebase",
         "@npm//node-fetch",
         "@npm//opener",
+        "@npm//ws",
     ],
 )

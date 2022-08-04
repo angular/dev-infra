@@ -35,7 +35,7 @@ export class SandboxGitClient extends AuthenticatedGitClient {
     config: {github: GithubConfig},
     baseDir?: string,
   ) {
-    super(githubToken, config, baseDir);
+    super(githubToken, 'user', config, baseDir);
   }
 
   /** Override for the actual Git client command execution. */

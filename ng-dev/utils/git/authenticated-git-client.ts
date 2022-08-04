@@ -21,6 +21,9 @@ import {
 /** Describes a function that can be used to test for given Github OAuth scopes. */
 export type OAuthScopeTestFunction = (scopes: string[], missing: string[]) => void;
 
+/** The possible types of users which could be used for authentication. */
+type UserType = 'bot' | 'user';
+
 /**
  * Extension of the `GitClient` with additional utilities which are useful for
  * authenticated Git client instances.
@@ -43,6 +46,7 @@ export class AuthenticatedGitClient extends GitClient {
 
   protected constructor(
     readonly githubToken: string,
+    readonly userType: UserType,
     config: {github: GithubConfig},
     baseDir?: string,
   ) {
@@ -64,6 +68,12 @@ export class AuthenticatedGitClient extends GitClient {
    * provided OAuth scopes.
    */
   async hasOauthScopes(testFn: OAuthScopeTestFunction): Promise<true | {error: string}> {
+    // Because bot accounts do not have the same structure for OAuth scopes, we always assume they
+    // have the correct access.
+    if (this.userType === 'bot') {
+      return true;
+    }
+
     const scopes = await this._fetchAuthScopesForToken();
     const missingScopes: string[] = [];
     // Test Github OAuth scopes and collect missing ones.
@@ -145,6 +155,8 @@ export class AuthenticatedGitClient extends GitClient {
   private static _token: string | null = null;
   /** The singleton instance of the `AuthenticatedGitClient`. */
   private static _authenticatedInstance: Promise<AuthenticatedGitClient> | null = null;
+  /** The previously configured user type. */
+  private static _userType: 'user' | 'bot';
 
   /**
    * Static method to get the singleton instance of the `AuthenticatedGitClient`,
@@ -159,16 +171,23 @@ export class AuthenticatedGitClient extends GitClient {
     // immediately. This avoids constructing a client twice accidentally when e.g. waiting
     // for the configuration to be loaded.
     if (AuthenticatedGitClient._authenticatedInstance === null) {
-      AuthenticatedGitClient._authenticatedInstance = (async (token: string) => {
-        return new AuthenticatedGitClient(token, await getConfig([assertValidGithubConfig]));
-      })(AuthenticatedGitClient._token);
+      AuthenticatedGitClient._authenticatedInstance = (async (
+        token: string,
+        userType: UserType,
+      ) => {
+        return new AuthenticatedGitClient(
+          token,
+          userType,
+          await getConfig([assertValidGithubConfig]),
+        );
+      })(AuthenticatedGitClient._token, AuthenticatedGitClient._userType);
     }
 
     return AuthenticatedGitClient._authenticatedInstance;
   }
 
   /** Configures an authenticated git client. */
-  static configure(token: string): void {
+  static configure(token: string, userType: UserType = 'user'): void {
     if (AuthenticatedGitClient._authenticatedInstance) {
       throw Error(
         'Unable to configure `AuthenticatedGitClient` as it has been configured already.',
@@ -176,5 +195,6 @@ export class AuthenticatedGitClient extends GitClient {
     }
 
     AuthenticatedGitClient._token = token;
+    AuthenticatedGitClient._userType = userType;
   }
 }
