@@ -8,8 +8,9 @@
 
 import {Argv, Arguments, CommandModule} from 'yargs';
 import {addDryRunFlag} from '../../utils/dry-run.js';
-
 import {addGithubTokenOption} from '../../utils/git/github-yargs.js';
+
+import {canUseNgDevService} from '../../utils/ng-dev-service.js';
 
 import {mergePullRequest} from './merge-pull-request.js';
 
@@ -24,7 +25,7 @@ export interface MergeCommandOptions {
 
 /** Builds the command. */
 function builder(argv: Argv) {
-  return addDryRunFlag(addGithubTokenOption(argv))
+  return canUseNgDevService(addGithubTokenOption(addDryRunFlag(argv)))
     .help()
     .strict()
     .positional('pr', {

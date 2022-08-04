@@ -1,22 +1,22 @@
 import {Argv, CommandModule} from 'yargs';
 import {bold, Log} from '../../utils/logging.js';
 import {invokeServerFunction, getCurrentUser} from '../shared/ng-dev-token.js';
-import {requiresNgDevService} from '../../utils/ng-dev-service.js';
+import {canUseNgDevService} from '../../utils/ng-dev-service.js';
 
 export interface Options {}
 
 /** Builds the command. */
 function builder(yargs: Argv) {
-  return requiresNgDevService(yargs);
+  return canUseNgDevService(yargs, /** isAuthCommand */ true);
 }
 
 /** Handles the command. */
 async function handler() {
-  /** The currently logged in user email, if a user is logged in. */
-  const email = await getCurrentUser();
-  if (email) {
+  /** The currently logged in user, if a user is logged in. */
+  const user = await getCurrentUser();
+  if (user) {
     await invokeServerFunction<{}, void>('ngDevRevokeToken');
-    Log.info(`Successfully logged out, ${bold(email)}.`);
+    Log.info(`Successfully logged out, ${bold(user.email)}.`);
     return;
   }
   Log.info('No user currently logged in.');

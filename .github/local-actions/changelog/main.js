@@ -68010,9 +68010,10 @@ var findOwnedForksOfRepoQuery = (0, import_typed_graphqlify2.params)({
 
 // 
 var AuthenticatedGitClient = class extends GitClient {
-  constructor(githubToken, config2, baseDir) {
+  constructor(githubToken, userType, config2, baseDir) {
     super(config2, baseDir);
     this.githubToken = githubToken;
+    this.userType = userType;
     this._githubTokenRegex = new RegExp(this.githubToken, "g");
     this._cachedOauthScopes = null;
     this._cachedForkRepositories = null;
@@ -68025,6 +68026,9 @@ var AuthenticatedGitClient = class extends GitClient {
     return getRepositoryGitUrl(this.remoteConfig, this.githubToken);
   }
   async hasOauthScopes(testFn) {
+    if (this.userType === "bot") {
+      return true;
+    }
     const scopes = await this._fetchAuthScopesForToken();
     const missingScopes = [];
     testFn(scopes, missingScopes);
@@ -68075,17 +68079,18 @@ Alternatively, a new token can be created at: ${GITHUB_TOKEN_GENERATE_URL}
       throw new Error("No instance of `AuthenticatedGitClient` has been configured.");
     }
     if (AuthenticatedGitClient._authenticatedInstance === null) {
-      AuthenticatedGitClient._authenticatedInstance = (async (token) => {
-        return new AuthenticatedGitClient(token, await getConfig([assertValidGithubConfig]));
-      })(AuthenticatedGitClient._token);
+      AuthenticatedGitClient._authenticatedInstance = (async (token, userType) => {
+        return new AuthenticatedGitClient(token, userType, await getConfig([assertValidGithubConfig]));
+      })(AuthenticatedGitClient._token, AuthenticatedGitClient._userType);
     }
     return AuthenticatedGitClient._authenticatedInstance;
   }
-  static configure(token) {
+  static configure(token, userType = "user") {
     if (AuthenticatedGitClient._authenticatedInstance) {
       throw Error("Unable to configure `AuthenticatedGitClient` as it has been configured already.");
     }
     AuthenticatedGitClient._token = token;
+    AuthenticatedGitClient._userType = userType;
   }
 };
 AuthenticatedGitClient._token = null;

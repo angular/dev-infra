@@ -70,7 +70,7 @@ export class VirtualGitClient extends AuthenticatedGitClient {
   pushed: {remote: RemoteRef; head: GitHead}[] = [];
 
   constructor(githubToken: string, config: {github: GithubConfig}, baseDir?: string) {
-    super(githubToken, config, baseDir);
+    super(githubToken, 'user', config, baseDir);
   }
 
   /** Override for the actual Git client command execution. */
