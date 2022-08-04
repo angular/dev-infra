@@ -33,9 +33,15 @@ const PORT = 8080;
 /** The ID of the Github app used to generating tokens. */
 assert(process.env.GITHUB_APP_ID, 'GITHUB_APP_ID is not defined in the environment');
 const GITHUB_APP_ID = process.env.GITHUB_APP_ID;
-/** The PEM key of the Github app used to generating tokens. */
-assert(process.env.GITHUB_APP_PEM, 'GITHUB_APP_PEM is not defined in the environment');
-const GITHUB_APP_PEM = process.env.GITHUB_APP_PEM;
+/**
+ * The PEM key of the Github app used to generating tokens, the value is stored in the environment
+ * variable in Base64 to make it easier to manage it being a multiline string.
+ */
+assert(
+  process.env.GITHUB_APP_PEM_BASE64,
+  'GITHUB_APP_PEM_BASE64 is not defined in the environment',
+);
+const GITHUB_APP_PEM = Buffer.from(process.env.GITHUB_APP_PEM_BASE64, 'base64').toString('utf-8');
 /** The firebase confgiuration for the firebase application being used for authentication. */
 assert(process.env.FIREBASE_APP_CONFIG, 'FIREBASE_APP_CONFIG is not defined in the environment');
 const FIREBASE_APP_CONFIG = JSON.parse(process.env.FIREBASE_APP_CONFIG) as AppOptions;
