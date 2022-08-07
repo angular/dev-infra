@@ -1,3 +1,19 @@
+<a name="2022.8.7"></a>
+# 2022.8.7 (2022-08-07)
+### apps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8dcf210](https://github.com/angular/dev-infra/commit/8dcf210b8326224dfc8b018735625fdaf8a0d615) | feat | create serve script for credential-service ([#757](https://github.com/angular/dev-infra/pull/757)) |
+| [8fa6149](https://github.com/angular/dev-infra/commit/8fa614960c2b5950438d4d33292ac16c23180d77) | fix | misc fixes from testing ([#752](https://github.com/angular/dev-infra/pull/752)) |
+| [2c5f643](https://github.com/angular/dev-infra/commit/2c5f6431d687c8d4e23f86a3b759f55964f1471e) | fix | use base64 for parsing the github app key ([#757](https://github.com/angular/dev-infra/pull/757)) |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [afa79a5](https://github.com/angular/dev-infra/commit/afa79a5a73b3bf5e60c9a4263467bca11807fd25) | fix | use `x-access-token` as username for git url ([#756](https://github.com/angular/dev-infra/pull/756)) |
+## Special Thanks
+George Kalpakas, Joey Perrott and Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.7.31"></a>
 # 2022.7.31 (2022-07-31)
 ### apps
@@ -223,22 +239,3 @@ Joey Perrott and Paul Gschwendtner
 | [82ecd90](https://github.com/angular/dev-infra/commit/82ecd903e2a1b79b79f4ec4c7d282c330138270e) | feat | establish firebase base for functions and local emulation |
 ## Special Thanks
 Joey Perrott and Paul Gschwendtner
-
-<!-- CHANGELOG SPLIT MARKER -->
-<a name="2022.4.3"></a>
-# 2022.4.3 (2022-04-03)
-### bazel
-| Commit | Type | Description |
-| -- | -- | -- |
-| [e80739b](https://github.com/angular/dev-infra/commit/e80739bfd27297af647953b950ec0e62d58ca21c) | feat | **api-golden:** allow for module types to be provided |
-### ng-dev
-| Commit | Type | Description |
-| -- | -- | -- |
-| [c05de8e](https://github.com/angular/dev-infra/commit/c05de8e176d7930fb959bc1a893cad9f3b984458) | feat | **pullapprove:** handle references to `author` in condition |
-| [9b5b3d4](https://github.com/angular/dev-infra/commit/9b5b3d453d8beea74bbb7b7d29ed8c0b85a070af) | feat | **pullapprove:** support `in` operator in condition evaluation |
-| [87e5ec9](https://github.com/angular/dev-infra/commit/87e5ec9d2b01e5b9f89f758fc1e72763bc2e96de) | feat | add simple migration command for master branch rename |
-| [31fa837](https://github.com/angular/dev-infra/commit/31fa8373b90641452197a4539f7a06ef2b225943) | feat | improve debug output for git client command dispatching |
-| [72fcac4](https://github.com/angular/dev-infra/commit/72fcac4a9272a4d4566ac78566cab00ac2f34bd1) | fix | do not print git client command stderr on success |
-| [e9ce8d5](https://github.com/angular/dev-infra/commit/e9ce8d577f2eb459704e341417821e5523f14b86) | fix | fix github token retrieval logic |
-## Special Thanks
-Alan Agius, Paul Gschwendtner and renovate[bot]
