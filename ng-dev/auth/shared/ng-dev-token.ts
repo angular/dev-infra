@@ -7,7 +7,6 @@ import {randomBytes, createCipheriv, createDecipheriv, createHash} from 'crypto'
 import {RawData, WebSocket} from 'ws';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {assertValidGithubConfig, getConfig} from '../../utils/config.js';
-import {getApp, initializeApp} from 'firebase/app';
 
 /** Algorithm to use for encryption. */
 const algorithm = 'aes-256-ctr';
@@ -24,19 +23,10 @@ interface NgDevUser {
 }
 
 /** Data for the user of an ng-dev token, including the raw token. */
-interface NgDevUserWithToken extends NgDevUser {
+interface NgDevUserWithToken {
   token: string;
+  user: NgDevUser;
 }
-
-/** Configuration for the firebase application used for ng-dev token management. */
-const firebaseConfig = {
-  apiKey: 'AIzaSyDM3rXWUgYuxYCmBKwnZvvnraYoYIE5_5U',
-  authDomain: 'internal-200822.firebaseapp.com',
-  projectId: 'internal-200822',
-  storageBucket: 'internal-200822.appspot.com',
-  messagingSenderId: '823469418460',
-  appId: '1:823469418460:web:009b51c93132b218761119',
-};
 
 /** The directory the token is stored in. */
 const tokenDir = join(homedir(), '.ng-dev');
@@ -53,12 +43,6 @@ async function invokeServerFunctionUnsafe<P extends {}, R>(
   name: string,
   params: P,
 ): Promise<HttpsCallableResult<R>> {
-  // Always confirm the application has been initialized before invoking a function.
-  try {
-    getApp();
-  } catch {
-    initializeApp(firebaseConfig);
-  }
   const func = httpsCallable<P, R>(getFunctions(), name);
   return await func(params);
 }
@@ -70,9 +54,7 @@ export function invokeServerFunction<P extends {}, R>(
   name: string,
   params: P = {} as P,
 ): Promise<HttpsCallableResult<R>> {
-  if (ngDevUserToken === null) {
-    throw Error(`Cannot invoke ${name} prior to a user logging in, please run "ng-dev auth login"`);
-  }
+  assertLoggedIn(ngDevUserToken);
   return invokeServerFunctionUnsafe<P, R>(name, {...params, token: ngDevUserToken.token});
 }
 
@@ -88,9 +70,9 @@ export async function requestNgDevToken(): Promise<NgDevUser> {
   const {data: token} = await invokeServerFunctionUnsafe<{}, string>('ngDevTokenRequest', {
     idToken: await auth.currentUser.getIdToken(),
   });
-  ngDevUserToken = {token, email: auth.currentUser.email || 'unknown email'};
+  ngDevUserToken = {token, user: {email: auth.currentUser.email || 'unknown email'}};
   await saveTokenToFileSystem(ngDevUserToken);
-  return getUserWithoutToken(ngDevUserToken);
+  return ngDevUserToken.user;
 }
 
 /**
@@ -102,7 +84,7 @@ export async function restoreNgTokenFromDiskIfValid() {
   if (data === null) {
     return;
   }
-  await invokeServerFunctionUnsafe<NgDevUser, boolean>('ngDevTokenValidate', data).then(
+  await invokeServerFunctionUnsafe<NgDevUserWithToken, boolean>('ngDevTokenValidate', data).then(
     () => (ngDevUserToken = data),
     () => {},
   );
@@ -113,7 +95,7 @@ export async function getCurrentUser() {
   if (ngDevUserToken === null) {
     return null;
   }
-  return getUserWithoutToken(ngDevUserToken);
+  return ngDevUserToken.user;
 }
 
 /** Save the token to the file system as a base64 encoded string. */
@@ -157,12 +139,8 @@ function decrypt(text: string) {
  */
 export function configureAuthorizedGitClientWithTemporaryToken() {
   return new Promise<void>(async (resolve, reject) => {
-    await restoreNgTokenFromDiskIfValid();
-    if (ngDevUserToken === null) {
-      return reject(new Error('Cannot run the command without first logging into ng-dev'));
-    }
-
     try {
+      assertLoggedIn(ngDevUserToken);
       /** The ng-dev configuration for the repoistory. */
       const config = await getConfig([assertValidGithubConfig]);
       /** The name and owner of the repository. */
@@ -178,7 +156,8 @@ export function configureAuthorizedGitClientWithTemporaryToken() {
       });
 
       // When the token is provided via the websocket message, use the token to set up
-      // the AuthenticatedGitClient
+      // the AuthenticatedGitClient. The token is valid as long as the socket remains open,
+      // with the server emposing a limit of 1 hour.
       socket.on('message', (msg: RawData) => {
         AuthenticatedGitClient.configure(msg.toString('utf8'), 'bot');
         resolve();
@@ -189,9 +168,9 @@ export function configureAuthorizedGitClientWithTemporaryToken() {
   });
 }
 
-/** Get the NgDevUser (without the token) from the NgDevUserWithToken. */
-function getUserWithoutToken(user: NgDevUserWithToken): NgDevUser {
-  const token: Partial<NgDevUserWithToken> = {...user};
-  delete token.token;
-  return token as NgDevUser;
+/** Assert the provied token is non-null. */
+function assertLoggedIn(token: NgDevUserWithToken | null): asserts token is NgDevUserWithToken {
+  if (token == null) {
+    throw new Error('You must be logged in');
+  }
 }

@@ -82,31 +82,7 @@ export class MergeTool {
       );
     }
 
-    // Check whether the given Github token has sufficient permissions for writing
-    // to the configured repository. If the repository is not private, only the
-    // reduced `public_repo` OAuth scope is sufficient for performing merges.
-    const hasOauthScopes = await this.git.hasOauthScopes((scopes, missing) => {
-      if (!scopes.includes('repo')) {
-        if (this.config.github.private) {
-          missing.push('repo');
-        } else if (!scopes.includes('public_repo')) {
-          missing.push('public_repo');
-        }
-      }
-
-      // Pull requests can modify Github action workflow files. In such cases Github requires us to
-      // push with a token that has the `workflow` oauth scope set. To avoid errors when the
-      // caretaker intends to merge such PRs, we ensure the scope is always set on the token before
-      // the merge process starts.
-      // https://docs.github.com/en/developers/apps/scopes-for-oauth-apps#available-scopes
-      if (!scopes.includes('workflow')) {
-        missing.push('workflow');
-      }
-    });
-
-    if (hasOauthScopes !== true) {
-      throw new FatalMergeToolError(hasOauthScopes.error);
-    }
+    await this.confirmMergeAccess();
 
     const pullRequest = await loadAndValidatePullRequest(this, prNumber, validationConfig);
 
@@ -264,5 +240,39 @@ export class MergeTool {
     }
 
     pullRequest.targetBranches = selectedBranches;
+  }
+
+  async confirmMergeAccess() {
+    if (this.git.userType === 'user') {
+      // Check whether the given Github token has sufficient permissions for writing
+      // to the configured repository. If the repository is not private, only the
+      // reduced `public_repo` OAuth scope is sufficient for performing merges.
+      const hasOauthScopes = await this.git.hasOauthScopes((scopes, missing) => {
+        if (!scopes.includes('repo')) {
+          if (this.config.github.private) {
+            missing.push('repo');
+          } else if (!scopes.includes('public_repo')) {
+            missing.push('public_repo');
+          }
+        }
+
+        // Pull requests can modify Github action workflow files. In such cases Github requires us to
+        // push with a token that has the `workflow` oauth scope set. To avoid errors when the
+        // caretaker intends to merge such PRs, we ensure the scope is always set on the token before
+        // the merge process starts.
+        // https://docs.github.com/en/developers/apps/scopes-for-oauth-apps#available-scopes
+        if (!scopes.includes('workflow')) {
+          missing.push('workflow');
+        }
+      });
+
+      if (hasOauthScopes !== true) {
+        throw new FatalMergeToolError(hasOauthScopes.error);
+      }
+      return;
+    } else {
+      // TODO(josephperrott): Find a way to check access of the installation without using a JWT.
+      Log.debug('Assuming correct access because this a bot account.');
+    }
   }
 }
