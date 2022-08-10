@@ -6,65 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {Argv} from 'yargs';
-import {GitClient} from '../utils/git/git-client.js';
-
-import {checkFiles, formatFiles} from './format.js';
+import {AllFilesModule} from './all.js';
+import {ChangedModule} from './changed.js';
+import {FilesModule} from './files.js';
+import {StagedModule} from './staged.js';
 
 /** Build the parser for the format commands. */
 export function buildFormatParser(localYargs: Argv) {
   return localYargs
-    .help()
-    .strict()
-    .demandCommand()
-    .option('check', {
-      type: 'boolean',
-      default: process.env['CI'] ? true : false,
-      description: 'Run the formatter to check formatting rather than updating code format',
-    })
-    .command(
-      'all',
-      'Run the formatter on all files in the repository',
-      (args) => args,
-      async ({check}) => {
-        const git = await GitClient.get();
-        const executionCmd = check ? checkFiles : formatFiles;
-        const allFiles = git.allFiles();
-        process.exitCode = await executionCmd(allFiles);
-      },
-    )
-    .command(
-      'changed [shaOrRef]',
-      'Run the formatter on files changed since the provided sha/ref',
-      (args) => args.positional('shaOrRef', {type: 'string'}),
-      async ({shaOrRef, check}) => {
-        const git = await GitClient.get();
-        const sha = shaOrRef || git.mainBranchName;
-        const executionCmd = check ? checkFiles : formatFiles;
-        const allChangedFilesSince = git.allChangesFilesSince(sha);
-        process.exitCode = await executionCmd(allChangedFilesSince);
-      },
-    )
-    .command(
-      'staged',
-      'Run the formatter on all staged files',
-      (args) => args,
-      async ({check}) => {
-        const git = await GitClient.get();
-        const executionCmd = check ? checkFiles : formatFiles;
-        const allStagedFiles = git.allStagedFiles();
-        process.exitCode = await executionCmd(allStagedFiles);
-        if (!check && process.exitCode === 0) {
-          git.runGraceful(['add', ...allStagedFiles]);
-        }
-      },
-    )
-    .command(
-      'files <files..>',
-      'Run the formatter on provided files',
-      (args) => args.positional('files', {array: true, type: 'string'}),
-      async ({check, files}) => {
-        const executionCmd = check ? checkFiles : formatFiles;
-        process.exitCode = await executionCmd(files!);
-      },
-    );
+    .command(AllFilesModule)
+    .command(StagedModule)
+    .command(ChangedModule)
+    .command(FilesModule);
 }
