@@ -39,6 +39,8 @@ export interface GithubConfig {
   useSsh?: boolean;
   /** Whether the specified repository is private. */
   private?: boolean;
+  /** Whether to default to use NgDevService for authentication. */
+  useNgDevService?: boolean;
 }
 
 /**
