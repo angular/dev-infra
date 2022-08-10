@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {Argv} from 'yargs';
+import {registerCompletedFunction} from '../utils/yargs.js';
 import {AllFilesModule} from './all.js';
 import {ChangedModule} from './changed.js';
 import {FilesModule} from './files.js';

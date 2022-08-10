@@ -7,7 +7,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import yargs from 'yargs';
+import {runParserWithCompletedFunctions} from './utils/yargs.js';
 
 import {buildCaretakerParser} from './caretaker/cli.js';
 import {buildCiParser} from './ci/cli.js';
@@ -21,23 +21,25 @@ import {buildReleaseParser} from './release/cli.js';
 import {tsCircularDependenciesBuilder} from './ts-circular-dependencies/index.js';
 import {captureLogOutputForCommand} from './utils/logging.js';
 import {buildAuthParser} from './auth/cli.js';
+import {Argv} from 'yargs';
 
-yargs(process.argv.slice(2))
-  .scriptName('ng-dev')
-  .middleware(captureLogOutputForCommand)
-  .demandCommand()
-  .recommendCommands()
-  .command('auth <command>', false, buildAuthParser)
-  .command('commit-message <command>', '', buildCommitMessageParser)
-  .command('format <command>', '', buildFormatParser)
-  .command('pr <command>', '', buildPrParser)
-  .command('pullapprove <command>', '', buildPullapproveParser)
-  .command('release <command>', '', buildReleaseParser)
-  .command('ts-circular-deps <command>', '', tsCircularDependenciesBuilder)
-  .command('caretaker <command>', '', buildCaretakerParser)
-  .command('misc <command>', '', buildMiscParser)
-  .command('ngbot <command>', false, buildNgbotParser)
-  .command('ci <command>', false, buildCiParser)
-  .wrap(120)
-  .strict()
-  .parse();
+runParserWithCompletedFunctions((yargs: Argv) => {
+  return yargs
+    .scriptName('ng-dev')
+    .middleware(captureLogOutputForCommand, true)
+    .demandCommand()
+    .recommendCommands()
+    .command('auth <command>', false, buildAuthParser)
+    .command('commit-message <command>', '', buildCommitMessageParser)
+    .command('format <command>', '', buildFormatParser)
+    .command('pr <command>', '', buildPrParser)
+    .command('pullapprove <command>', '', buildPullapproveParser)
+    .command('release <command>', '', buildReleaseParser)
+    .command('ts-circular-deps <command>', '', tsCircularDependenciesBuilder)
+    .command('caretaker <command>', '', buildCaretakerParser)
+    .command('misc <command>', '', buildMiscParser)
+    .command('ngbot <command>', false, buildNgbotParser)
+    .command('ci <command>', false, buildCiParser)
+    .wrap(120)
+    .strict();
+});

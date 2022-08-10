@@ -28,6 +28,9 @@ const firebaseConfig = {
   appId: '1:823469418460:web:009b51c93132b218761119',
 };
 
+/** Whether or not the middleware has already been run. */
+let ngDevServiceMiddlewareHasRun = false;
+
 /**
  * Sets up middleware to ensure that configuration and setup is completed for commands which
  *  require the ng-dev service
@@ -54,6 +57,13 @@ export async function useNgDevService<T>(
       })
       .middleware(
         async (args: Arguments<T & {githubToken: string | null; githubEscapeHatch: boolean}>) => {
+          // TODO(josephperrott): remove this guard against running multiple times after
+          //   https://github.com/yargs/yargs/issues/2223 is fixed
+          if (ngDevServiceMiddlewareHasRun) {
+            return;
+          }
+          ngDevServiceMiddlewareHasRun = true;
+
           initializeApp(firebaseConfig);
           await restoreNgTokenFromDiskIfValid();
 
@@ -82,6 +92,7 @@ export async function useNgDevService<T>(
           Log.log('  yarn ng-dev auth login');
           throw new Error('The user is not logged in');
         },
+        true,
       )
   );
 }
