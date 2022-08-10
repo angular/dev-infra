@@ -133,8 +133,10 @@ const LOG_LEVEL_COLUMNS = 7;
  * response is executed.
  */
 export async function captureLogOutputForCommand(argv: Arguments) {
+  // TODO(josephperrott): remove this guard against running multiple times after
+  //   https://github.com/yargs/yargs/issues/2223 is fixed
   if (FILE_LOGGING_ENABLED) {
-    throw Error('`captureLogOutputForCommand` cannot be called multiple times');
+    return;
   }
 
   const repoDir = determineRepoBaseDirFromCwd();

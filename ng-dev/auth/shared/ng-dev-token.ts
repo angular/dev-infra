@@ -7,6 +7,7 @@ import {randomBytes, createCipheriv, createDecipheriv, createHash} from 'crypto'
 import {RawData, WebSocket} from 'ws';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {assertValidGithubConfig, getConfig} from '../../utils/config.js';
+import {registerCompletedFunction} from '../../utils/yargs.js';
 
 /** Algorithm to use for encryption. */
 const algorithm = 'aes-256-ctr';
@@ -158,6 +159,9 @@ export function configureAuthorizedGitClientWithTemporaryToken() {
           ng_repo_owner: owner,
         },
       });
+
+      // Close the socket whenever the command which established it is complete.
+      registerCompletedFunction(() => socket.close());
 
       // When the token is provided via the websocket message, use the token to set up
       // the AuthenticatedGitClient. The token is valid as long as the socket remains open,
