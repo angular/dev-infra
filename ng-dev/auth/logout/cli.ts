@@ -1,13 +1,13 @@
 import {Argv, CommandModule} from 'yargs';
 import {bold, Log} from '../../utils/logging.js';
 import {invokeServerFunction, getCurrentUser} from '../shared/ng-dev-token.js';
-import {canUseNgDevService} from '../../utils/ng-dev-service.js';
+import {useNgDevService} from '../../utils/ng-dev-service.js';
 
 export interface Options {}
 
 /** Builds the command. */
-function builder(yargs: Argv) {
-  return canUseNgDevService(yargs, /** isAuthCommand */ true);
+async function builder(yargs: Argv) {
+  return await useNgDevService(yargs, /** isAuthCommand */ true);
 }
 
 /** Handles the command. */

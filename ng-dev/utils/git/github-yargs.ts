@@ -21,6 +21,8 @@ export function addGithubTokenOption<T>(argv: Argv<T>) {
       // config: https://github.com/yargs/yargs-parser#camel-case-expansion
       .option('github-token' as 'githubToken', {
         type: 'string',
+        default: '',
+        defaultDescription: '<LOCAL_TOKEN>',
         description: 'Github token. If not set, token is retrieved from the environment variables.',
         coerce: (token: string | null) => {
           if (token === null) {
@@ -38,7 +40,6 @@ export function addGithubTokenOption<T>(argv: Argv<T>) {
           return githubToken;
         },
       })
-      .default('github-token' as 'githubToken', '', '<LOCAL TOKEN>')
   );
 }
 
