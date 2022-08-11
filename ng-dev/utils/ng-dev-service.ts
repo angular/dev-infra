@@ -57,15 +57,15 @@ export async function useNgDevService<T>(
       })
       .middleware(
         async (args: Arguments<T & {githubToken: string | null; githubEscapeHatch: boolean}>) => {
-        // TODO(josephperrott): remove this guard against running multiple times after
-        //   https://github.com/yargs/yargs/issues/2223 is fixed
-        if (ngDevServiceMiddlewareHasRun) {
-          return;
-        }
-        ngDevServiceMiddlewareHasRun = true;
+          // TODO(josephperrott): remove this guard against running multiple times after
+          //   https://github.com/yargs/yargs/issues/2223 is fixed
+          if (ngDevServiceMiddlewareHasRun) {
+            return;
+          }
+          ngDevServiceMiddlewareHasRun = true;
 
-        initializeApp(firebaseConfig);
-        await restoreNgTokenFromDiskIfValid();
+          initializeApp(firebaseConfig);
+          await restoreNgTokenFromDiskIfValid();
 
           if (args.githubEscapeHatch === true) {
             Log.warn('This escape hatch should only be used if the service is erroring. Please');
@@ -91,6 +91,8 @@ export async function useNgDevService<T>(
           Log.log('Log in by running the following command:');
           Log.log('  yarn ng-dev auth login');
           throw new Error('The user is not logged in');
-      }, true)
+        },
+        true,
+      )
   );
 }
