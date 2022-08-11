@@ -106,7 +106,11 @@ async function saveTokenToFileSystem(data: NgDevUserWithToken) {
 
 /** Retrieve the token from the file system. */
 async function retrieveTokenFromFileSystem(): Promise<NgDevUserWithToken | null> {
-  if (!(await stat(tokenPath))) {
+  try {
+    if (!(await stat(tokenPath))) {
+      return null;
+    }
+  } catch {
     return null;
   }
 
