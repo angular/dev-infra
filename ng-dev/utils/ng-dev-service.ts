@@ -40,7 +40,7 @@ export async function useNgDevService<T>(
 ): Promise<Argv<T>> {
   const {github} = await getConfig([assertValidGithubConfig]);
 
-  if (github.useNgDevService !== true) {
+  if (github.useNgDevAuthService !== true) {
     return argv;
   }
 
