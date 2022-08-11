@@ -54,18 +54,33 @@ describe('GithubQueriesModule', () => {
           issueCount: 1,
           nodes: [{url: 'http://github.com/owner/name/issue/1'}],
         },
+        'query_with_colon': {
+          issueCount: 0,
+          nodes: [],
+        },
       });
       const module = new GithubQueriesModule(git, {
         ...mockNgDevConfig,
-        caretaker: {githubQueries: [{name: 'key name with spaces', query: 'issue: yes'}]},
+        caretaker: {
+          githubQueries: [
+            {name: 'key name with spaces', query: 'issue: yes'},
+            {name: 'query_with_colon', query: 'is:milestone'},
+          ],
+        },
       });
 
       expect(await module.data).toEqual([
         {
           queryName: 'key name with spaces',
           count: 1,
-          queryUrl: 'https://github.com/owner/name/issues?q=issue:%20yes',
+          queryUrl: 'https://github.com/owner/name/issues?q=issue%3A%20yes',
           matchedUrls: ['http://github.com/owner/name/issue/1'],
+        },
+        {
+          queryName: 'query_with_colon',
+          count: 0,
+          queryUrl: 'https://github.com/owner/name/issues?q=is%3Amilestone',
+          matchedUrls: [],
         },
       ]);
     });

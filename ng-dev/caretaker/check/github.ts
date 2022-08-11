@@ -66,10 +66,13 @@ export class GithubQueriesModule extends BaseModule<GithubQueryResults | void> {
     const {owner, name: repo} = this.git.remoteConfig;
 
     return results.map((result, i) => {
+      const query = queries[i];
+      const queryURLParam = encodeURIComponent(query.query);
+
       return {
-        queryName: queries[i].name,
+        queryName: query.name,
         count: result.issueCount,
-        queryUrl: encodeURI(`https://github.com/${owner}/${repo}/issues?q=${queries[i].query}`),
+        queryUrl: `https://github.com/${owner}/${repo}/issues?q=${queryURLParam}`,
         matchedUrls: result.nodes.map((node) => node.url),
       };
     });
