@@ -80,7 +80,7 @@ export async function useNgDevService<T>(
           Log.error('  ✘  You must be logged in to run this command\n');
           Log.log('Log in by running the following command:');
           Log.log('  yarn ng-dev auth login');
-          argv.exit(1, new Error('The user is not logged in'));
+          throw new Error('The user is not logged in');
         },
       )
   );
