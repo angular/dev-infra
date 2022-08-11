@@ -5,5 +5,5 @@ export const github: GithubConfig = {
   owner: 'angular',
   name: 'dev-infra',
   mainBranchName: 'main',
-  useNgDevService: true,
+  useNgDevAuthService: true,
 };
