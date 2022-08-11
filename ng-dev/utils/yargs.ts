@@ -27,8 +27,14 @@ export function runParserWithCompletedFunctions(applyConfiguration: (argv: Argv)
   applyConfiguration(yargs([])).parse(
     process.argv.slice(2),
     async (err: Error | null, _: Arguments, output: string) => {
+      if (err && [undefined, 0].includes(process.exitCode)) {
+        process.exitCode = 1;
+      }
+      if (err) {
+        Log.debug(err);
+      }
       if (output) {
-        err = new YargsError();
+        err = err || new YargsError();
         Log.log(output);
       }
       for (const completedFunc of completedFunctions) {
