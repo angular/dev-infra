@@ -211,6 +211,497 @@ var require_file_command = __commonJS({
 });
 
 // 
+var require_rng = __commonJS({
+  ""(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = rng;
+    var _crypto = _interopRequireDefault(__require("crypto"));
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    var rnds8Pool = new Uint8Array(256);
+    var poolPtr = rnds8Pool.length;
+    function rng() {
+      if (poolPtr > rnds8Pool.length - 16) {
+        _crypto.default.randomFillSync(rnds8Pool);
+        poolPtr = 0;
+      }
+      return rnds8Pool.slice(poolPtr, poolPtr += 16);
+    }
+  }
+});
+
+// 
+var require_regex = __commonJS({
+  ""(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _default = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
+    exports.default = _default;
+  }
+});
+
+// 
+var require_validate = __commonJS({
+  ""(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _regex = _interopRequireDefault(require_regex());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    function validate(uuid) {
+      return typeof uuid === "string" && _regex.default.test(uuid);
+    }
+    var _default = validate;
+    exports.default = _default;
+  }
+});
+
+// 
+var require_stringify = __commonJS({
+  ""(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _validate = _interopRequireDefault(require_validate());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    var byteToHex = [];
+    for (let i2 = 0; i2 < 256; ++i2) {
+      byteToHex.push((i2 + 256).toString(16).substr(1));
+    }
+    function stringify(arr, offset = 0) {
+      const uuid = (byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + "-" + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + "-" + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + "-" + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + "-" + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]]).toLowerCase();
+      if (!(0, _validate.default)(uuid)) {
+        throw TypeError("Stringified UUID is invalid");
+      }
+      return uuid;
+    }
+    var _default = stringify;
+    exports.default = _default;
+  }
+});
+
+// 
+var require_v1 = __commonJS({
+  ""(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _rng = _interopRequireDefault(require_rng());
+    var _stringify = _interopRequireDefault(require_stringify());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    var _nodeId;
+    var _clockseq;
+    var _lastMSecs = 0;
+    var _lastNSecs = 0;
+    function v1(options, buf, offset) {
+      let i2 = buf && offset || 0;
+      const b = buf || new Array(16);
+      options = options || {};
+      let node = options.node || _nodeId;
+      let clockseq = options.clockseq !== void 0 ? options.clockseq : _clockseq;
+      if (node == null || clockseq == null) {
+        const seedBytes = options.random || (options.rng || _rng.default)();
+        if (node == null) {
+          node = _nodeId = [seedBytes[0] | 1, seedBytes[1], seedBytes[2], seedBytes[3], seedBytes[4], seedBytes[5]];
+        }
+        if (clockseq == null) {
+          clockseq = _clockseq = (seedBytes[6] << 8 | seedBytes[7]) & 16383;
+        }
+      }
+      let msecs = options.msecs !== void 0 ? options.msecs : Date.now();
+      let nsecs = options.nsecs !== void 0 ? options.nsecs : _lastNSecs + 1;
+      const dt = msecs - _lastMSecs + (nsecs - _lastNSecs) / 1e4;
+      if (dt < 0 && options.clockseq === void 0) {
+        clockseq = clockseq + 1 & 16383;
+      }
+      if ((dt < 0 || msecs > _lastMSecs) && options.nsecs === void 0) {
+        nsecs = 0;
+      }
+      if (nsecs >= 1e4) {
+        throw new Error("uuid.v1(): Can't create more than 10M uuids/sec");
+      }
+      _lastMSecs = msecs;
+      _lastNSecs = nsecs;
+      _clockseq = clockseq;
+      msecs += 122192928e5;
+      const tl = ((msecs & 268435455) * 1e4 + nsecs) % 4294967296;
+      b[i2++] = tl >>> 24 & 255;
+      b[i2++] = tl >>> 16 & 255;
+      b[i2++] = tl >>> 8 & 255;
+      b[i2++] = tl & 255;
+      const tmh = msecs / 4294967296 * 1e4 & 268435455;
+      b[i2++] = tmh >>> 8 & 255;
+      b[i2++] = tmh & 255;
+      b[i2++] = tmh >>> 24 & 15 | 16;
+      b[i2++] = tmh >>> 16 & 255;
+      b[i2++] = clockseq >>> 8 | 128;
+      b[i2++] = clockseq & 255;
+      for (let n = 0; n < 6; ++n) {
+        b[i2 + n] = node[n];
+      }
+      return buf || (0, _stringify.default)(b);
+    }
+    var _default = v1;
+    exports.default = _default;
+  }
+});
+
+// 
+var require_parse = __commonJS({
+  ""(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _validate = _interopRequireDefault(require_validate());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    function parse2(uuid) {
+      if (!(0, _validate.default)(uuid)) {
+        throw TypeError("Invalid UUID");
+      }
+      let v;
+      const arr = new Uint8Array(16);
+      arr[0] = (v = parseInt(uuid.slice(0, 8), 16)) >>> 24;
+      arr[1] = v >>> 16 & 255;
+      arr[2] = v >>> 8 & 255;
+      arr[3] = v & 255;
+      arr[4] = (v = parseInt(uuid.slice(9, 13), 16)) >>> 8;
+      arr[5] = v & 255;
+      arr[6] = (v = parseInt(uuid.slice(14, 18), 16)) >>> 8;
+      arr[7] = v & 255;
+      arr[8] = (v = parseInt(uuid.slice(19, 23), 16)) >>> 8;
+      arr[9] = v & 255;
+      arr[10] = (v = parseInt(uuid.slice(24, 36), 16)) / 1099511627776 & 255;
+      arr[11] = v / 4294967296 & 255;
+      arr[12] = v >>> 24 & 255;
+      arr[13] = v >>> 16 & 255;
+      arr[14] = v >>> 8 & 255;
+      arr[15] = v & 255;
+      return arr;
+    }
+    var _default = parse2;
+    exports.default = _default;
+  }
+});
+
+// 
+var require_v35 = __commonJS({
+  ""(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = _default;
+    exports.URL = exports.DNS = void 0;
+    var _stringify = _interopRequireDefault(require_stringify());
+    var _parse = _interopRequireDefault(require_parse());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    function stringToBytes(str) {
+      str = unescape(encodeURIComponent(str));
+      const bytes = [];
+      for (let i2 = 0; i2 < str.length; ++i2) {
+        bytes.push(str.charCodeAt(i2));
+      }
+      return bytes;
+    }
+    var DNS = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
+    exports.DNS = DNS;
+    var URL3 = "6ba7b811-9dad-11d1-80b4-00c04fd430c8";
+    exports.URL = URL3;
+    function _default(name, version, hashfunc) {
+      function generateUUID(value, namespace, buf, offset) {
+        if (typeof value === "string") {
+          value = stringToBytes(value);
+        }
+        if (typeof namespace === "string") {
+          namespace = (0, _parse.default)(namespace);
+        }
+        if (namespace.length !== 16) {
+          throw TypeError("Namespace must be array-like (16 iterable integer values, 0-255)");
+        }
+        let bytes = new Uint8Array(16 + value.length);
+        bytes.set(namespace);
+        bytes.set(value, namespace.length);
+        bytes = hashfunc(bytes);
+        bytes[6] = bytes[6] & 15 | version;
+        bytes[8] = bytes[8] & 63 | 128;
+        if (buf) {
+          offset = offset || 0;
+          for (let i2 = 0; i2 < 16; ++i2) {
+            buf[offset + i2] = bytes[i2];
+          }
+          return buf;
+        }
+        return (0, _stringify.default)(bytes);
+      }
+      try {
+        generateUUID.name = name;
+      } catch (err) {
+      }
+      generateUUID.DNS = DNS;
+      generateUUID.URL = URL3;
+      return generateUUID;
+    }
+  }
+});
+
+// 
+var require_md5 = __commonJS({
+  ""(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _crypto = _interopRequireDefault(__require("crypto"));
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    function md5(bytes) {
+      if (Array.isArray(bytes)) {
+        bytes = Buffer.from(bytes);
+      } else if (typeof bytes === "string") {
+        bytes = Buffer.from(bytes, "utf8");
+      }
+      return _crypto.default.createHash("md5").update(bytes).digest();
+    }
+    var _default = md5;
+    exports.default = _default;
+  }
+});
+
+// 
+var require_v3 = __commonJS({
+  ""(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _v = _interopRequireDefault(require_v35());
+    var _md = _interopRequireDefault(require_md5());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    var v3 = (0, _v.default)("v3", 48, _md.default);
+    var _default = v3;
+    exports.default = _default;
+  }
+});
+
+// 
+var require_v4 = __commonJS({
+  ""(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _rng = _interopRequireDefault(require_rng());
+    var _stringify = _interopRequireDefault(require_stringify());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    function v4(options, buf, offset) {
+      options = options || {};
+      const rnds = options.random || (options.rng || _rng.default)();
+      rnds[6] = rnds[6] & 15 | 64;
+      rnds[8] = rnds[8] & 63 | 128;
+      if (buf) {
+        offset = offset || 0;
+        for (let i2 = 0; i2 < 16; ++i2) {
+          buf[offset + i2] = rnds[i2];
+        }
+        return buf;
+      }
+      return (0, _stringify.default)(rnds);
+    }
+    var _default = v4;
+    exports.default = _default;
+  }
+});
+
+// 
+var require_sha1 = __commonJS({
+  ""(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _crypto = _interopRequireDefault(__require("crypto"));
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    function sha1(bytes) {
+      if (Array.isArray(bytes)) {
+        bytes = Buffer.from(bytes);
+      } else if (typeof bytes === "string") {
+        bytes = Buffer.from(bytes, "utf8");
+      }
+      return _crypto.default.createHash("sha1").update(bytes).digest();
+    }
+    var _default = sha1;
+    exports.default = _default;
+  }
+});
+
+// 
+var require_v5 = __commonJS({
+  ""(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _v = _interopRequireDefault(require_v35());
+    var _sha = _interopRequireDefault(require_sha1());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    var v5 = (0, _v.default)("v5", 80, _sha.default);
+    var _default = v5;
+    exports.default = _default;
+  }
+});
+
+// 
+var require_nil = __commonJS({
+  ""(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _default = "00000000-0000-0000-0000-000000000000";
+    exports.default = _default;
+  }
+});
+
+// 
+var require_version = __commonJS({
+  ""(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _validate = _interopRequireDefault(require_validate());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    function version(uuid) {
+      if (!(0, _validate.default)(uuid)) {
+        throw TypeError("Invalid UUID");
+      }
+      return parseInt(uuid.substr(14, 1), 16);
+    }
+    var _default = version;
+    exports.default = _default;
+  }
+});
+
+// 
+var require_dist = __commonJS({
+  ""(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    Object.defineProperty(exports, "v1", {
+      enumerable: true,
+      get: function() {
+        return _v.default;
+      }
+    });
+    Object.defineProperty(exports, "v3", {
+      enumerable: true,
+      get: function() {
+        return _v2.default;
+      }
+    });
+    Object.defineProperty(exports, "v4", {
+      enumerable: true,
+      get: function() {
+        return _v3.default;
+      }
+    });
+    Object.defineProperty(exports, "v5", {
+      enumerable: true,
+      get: function() {
+        return _v4.default;
+      }
+    });
+    Object.defineProperty(exports, "NIL", {
+      enumerable: true,
+      get: function() {
+        return _nil.default;
+      }
+    });
+    Object.defineProperty(exports, "version", {
+      enumerable: true,
+      get: function() {
+        return _version.default;
+      }
+    });
+    Object.defineProperty(exports, "validate", {
+      enumerable: true,
+      get: function() {
+        return _validate.default;
+      }
+    });
+    Object.defineProperty(exports, "stringify", {
+      enumerable: true,
+      get: function() {
+        return _stringify.default;
+      }
+    });
+    Object.defineProperty(exports, "parse", {
+      enumerable: true,
+      get: function() {
+        return _parse.default;
+      }
+    });
+    var _v = _interopRequireDefault(require_v1());
+    var _v2 = _interopRequireDefault(require_v3());
+    var _v3 = _interopRequireDefault(require_v4());
+    var _v4 = _interopRequireDefault(require_v5());
+    var _nil = _interopRequireDefault(require_nil());
+    var _version = _interopRequireDefault(require_version());
+    var _validate = _interopRequireDefault(require_validate());
+    var _stringify = _interopRequireDefault(require_stringify());
+    var _parse = _interopRequireDefault(require_parse());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+  }
+});
+
+// 
 var require_proxy = __commonJS({
   ""(exports) {
     "use strict";
@@ -1531,6 +2022,7 @@ var require_core = __commonJS({
     var utils_1 = require_utils();
     var os3 = __importStar(__require("os"));
     var path = __importStar(__require("path"));
+    var uuid_1 = require_dist();
     var oidc_utils_1 = require_oidc_utils();
     var ExitCode;
     (function(ExitCode2) {
@@ -1542,7 +2034,13 @@ var require_core = __commonJS({
       process.env[name] = convertedVal;
       const filePath = process.env["GITHUB_ENV"] || "";
       if (filePath) {
-        const delimiter = "_GitHubActionsFileCommandDelimeter_";
+        const delimiter = `ghadelimiter_${uuid_1.v4()}`;
+        if (name.includes(delimiter)) {
+          throw new Error(`Unexpected input: name should not contain the delimiter "${delimiter}"`);
+        }
+        if (convertedVal.includes(delimiter)) {
+          throw new Error(`Unexpected input: value should not contain the delimiter "${delimiter}"`);
+        }
         const commandValue = `${name}<<${delimiter}${os3.EOL}${convertedVal}${os3.EOL}${delimiter}`;
         file_command_1.issueCommand("ENV", commandValue);
       } else {
@@ -10418,7 +10916,7 @@ var require_dist_node10 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var VERSION = "2.21.2";
+    var VERSION = "2.21.3";
     function ownKeys(object, enumerableOnly) {
       var keys = Object.keys(object);
       if (Object.getOwnPropertySymbols) {
@@ -25082,7 +25580,7 @@ var require_parser = __commonJS({
 });
 
 // 
-var require_regex = __commonJS({
+var require_regex2 = __commonJS({
   ""(exports, module) {
     "use strict";
     var reNomatch = /(?!.*)/;
@@ -25137,7 +25635,7 @@ var require_conventional_commits_parser = __commonJS({
   ""(exports, module) {
     "use strict";
     var parser = require_parser();
-    var regex = require_regex();
+    var regex = require_regex2();
     var through = require_through2();
     var _ = require_lodash();
     function assignOpts(options) {
@@ -25223,7 +25721,7 @@ var require_conventional_commits_parser = __commonJS({
 });
 
 // 
-var require_dist = __commonJS({
+var require_dist2 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -25790,7 +26288,7 @@ var require_dist_node11 = __commonJS({
         parse: parse2
       });
     }
-    var VERSION = "7.0.0";
+    var VERSION = "7.0.1";
     var userAgent = `octokit-endpoint.js/${VERSION} ${universalUserAgent.getUserAgent()}`;
     var DEFAULTS = {
       method: "GET",
@@ -28555,7 +29053,7 @@ var require_dist_node13 = __commonJS({
     var isPlainObject = require_is_plain_object();
     var nodeFetch = _interopDefault(require_lib6());
     var requestError = require_dist_node12();
-    var VERSION = "6.1.0";
+    var VERSION = "6.2.1";
     function getBufferResponse(response) {
       return response.arrayBuffer();
     }
@@ -28639,6 +29137,8 @@ var require_dist_node13 = __commonJS({
       }).catch((error3) => {
         if (error3 instanceof requestError.RequestError)
           throw error3;
+        else if (error3.name === "AbortError")
+          throw error3;
         throw new requestError.RequestError(error3.message, 500, {
           request: requestOptions
         });
@@ -28702,7 +29202,7 @@ var require_dist_node14 = __commonJS({
     Object.defineProperty(exports, "__esModule", { value: true });
     var request = require_dist_node13();
     var universalUserAgent = require_dist_node();
-    var VERSION = "5.0.0";
+    var VERSION = "5.0.1";
     function _buildMessageForResponseErrors(data) {
       return `Request failed due to following response errors:
 ` + data.errors.map((e2) => ` - ${e2.message}`).join("\n");
@@ -28849,7 +29349,7 @@ var require_dist_node16 = __commonJS({
     var request = require_dist_node13();
     var graphql2 = require_dist_node14();
     var authToken = require_dist_node15();
-    var VERSION = "4.0.4";
+    var VERSION = "4.0.5";
     var Octokit4 = class {
       constructor(options = {}) {
         const hook = new beforeAfterHook.Collection();
@@ -28974,7 +29474,7 @@ var require_dist_node18 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var VERSION = "3.0.0";
+    var VERSION = "4.0.0";
     function normalizePaginatedListResponse(response) {
       if (!response.data) {
         return {
@@ -29069,7 +29569,7 @@ var require_dist_node18 = __commonJS({
     var composePaginateRest = Object.assign(paginate, {
       iterator
     });
-    var paginatingEndpoints = ["GET /app/hook/deliveries", "GET /app/installations", "GET /applications/grants", "GET /authorizations", "GET /enterprises/{enterprise}/actions/permissions/organizations", "GET /enterprises/{enterprise}/actions/runner-groups", "GET /enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/organizations", "GET /enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/runners", "GET /enterprises/{enterprise}/actions/runners", "GET /enterprises/{enterprise}/audit-log", "GET /enterprises/{enterprise}/secret-scanning/alerts", "GET /enterprises/{enterprise}/settings/billing/advanced-security", "GET /events", "GET /gists", "GET /gists/public", "GET /gists/starred", "GET /gists/{gist_id}/comments", "GET /gists/{gist_id}/commits", "GET /gists/{gist_id}/forks", "GET /installation/repositories", "GET /issues", "GET /licenses", "GET /marketplace_listing/plans", "GET /marketplace_listing/plans/{plan_id}/accounts", "GET /marketplace_listing/stubbed/plans", "GET /marketplace_listing/stubbed/plans/{plan_id}/accounts", "GET /networks/{owner}/{repo}/events", "GET /notifications", "GET /organizations", "GET /orgs/{org}/actions/cache/usage-by-repository", "GET /orgs/{org}/actions/permissions/repositories", "GET /orgs/{org}/actions/runner-groups", "GET /orgs/{org}/actions/runner-groups/{runner_group_id}/repositories", "GET /orgs/{org}/actions/runner-groups/{runner_group_id}/runners", "GET /orgs/{org}/actions/runners", "GET /orgs/{org}/actions/secrets", "GET /orgs/{org}/actions/secrets/{secret_name}/repositories", "GET /orgs/{org}/audit-log", "GET /orgs/{org}/blocks", "GET /orgs/{org}/code-scanning/alerts", "GET /orgs/{org}/codespaces", "GET /orgs/{org}/credential-authorizations", "GET /orgs/{org}/dependabot/secrets", "GET /orgs/{org}/dependabot/secrets/{secret_name}/repositories", "GET /orgs/{org}/events", "GET /orgs/{org}/external-groups", "GET /orgs/{org}/failed_invitations", "GET /orgs/{org}/hooks", "GET /orgs/{org}/hooks/{hook_id}/deliveries", "GET /orgs/{org}/installations", "GET /orgs/{org}/invitations", "GET /orgs/{org}/invitations/{invitation_id}/teams", "GET /orgs/{org}/issues", "GET /orgs/{org}/members", "GET /orgs/{org}/migrations", "GET /orgs/{org}/migrations/{migration_id}/repositories", "GET /orgs/{org}/outside_collaborators", "GET /orgs/{org}/packages", "GET /orgs/{org}/packages/{package_type}/{package_name}/versions", "GET /orgs/{org}/projects", "GET /orgs/{org}/public_members", "GET /orgs/{org}/repos", "GET /orgs/{org}/secret-scanning/alerts", "GET /orgs/{org}/settings/billing/advanced-security", "GET /orgs/{org}/team-sync/groups", "GET /orgs/{org}/teams", "GET /orgs/{org}/teams/{team_slug}/discussions", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions", "GET /orgs/{org}/teams/{team_slug}/invitations", "GET /orgs/{org}/teams/{team_slug}/members", "GET /orgs/{org}/teams/{team_slug}/projects", "GET /orgs/{org}/teams/{team_slug}/repos", "GET /orgs/{org}/teams/{team_slug}/teams", "GET /projects/columns/{column_id}/cards", "GET /projects/{project_id}/collaborators", "GET /projects/{project_id}/columns", "GET /repos/{owner}/{repo}/actions/artifacts", "GET /repos/{owner}/{repo}/actions/caches", "GET /repos/{owner}/{repo}/actions/runners", "GET /repos/{owner}/{repo}/actions/runs", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/jobs", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs", "GET /repos/{owner}/{repo}/actions/secrets", "GET /repos/{owner}/{repo}/actions/workflows", "GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs", "GET /repos/{owner}/{repo}/assignees", "GET /repos/{owner}/{repo}/branches", "GET /repos/{owner}/{repo}/check-runs/{check_run_id}/annotations", "GET /repos/{owner}/{repo}/check-suites/{check_suite_id}/check-runs", "GET /repos/{owner}/{repo}/code-scanning/alerts", "GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances", "GET /repos/{owner}/{repo}/code-scanning/analyses", "GET /repos/{owner}/{repo}/codespaces", "GET /repos/{owner}/{repo}/codespaces/devcontainers", "GET /repos/{owner}/{repo}/codespaces/secrets", "GET /repos/{owner}/{repo}/collaborators", "GET /repos/{owner}/{repo}/comments", "GET /repos/{owner}/{repo}/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/commits", "GET /repos/{owner}/{repo}/commits/{commit_sha}/comments", "GET /repos/{owner}/{repo}/commits/{commit_sha}/pulls", "GET /repos/{owner}/{repo}/commits/{ref}/check-runs", "GET /repos/{owner}/{repo}/commits/{ref}/check-suites", "GET /repos/{owner}/{repo}/commits/{ref}/status", "GET /repos/{owner}/{repo}/commits/{ref}/statuses", "GET /repos/{owner}/{repo}/contributors", "GET /repos/{owner}/{repo}/dependabot/secrets", "GET /repos/{owner}/{repo}/deployments", "GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses", "GET /repos/{owner}/{repo}/environments", "GET /repos/{owner}/{repo}/events", "GET /repos/{owner}/{repo}/forks", "GET /repos/{owner}/{repo}/git/matching-refs/{ref}", "GET /repos/{owner}/{repo}/hooks", "GET /repos/{owner}/{repo}/hooks/{hook_id}/deliveries", "GET /repos/{owner}/{repo}/invitations", "GET /repos/{owner}/{repo}/issues", "GET /repos/{owner}/{repo}/issues/comments", "GET /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/issues/events", "GET /repos/{owner}/{repo}/issues/{issue_number}/comments", "GET /repos/{owner}/{repo}/issues/{issue_number}/events", "GET /repos/{owner}/{repo}/issues/{issue_number}/labels", "GET /repos/{owner}/{repo}/issues/{issue_number}/reactions", "GET /repos/{owner}/{repo}/issues/{issue_number}/timeline", "GET /repos/{owner}/{repo}/keys", "GET /repos/{owner}/{repo}/labels", "GET /repos/{owner}/{repo}/milestones", "GET /repos/{owner}/{repo}/milestones/{milestone_number}/labels", "GET /repos/{owner}/{repo}/notifications", "GET /repos/{owner}/{repo}/pages/builds", "GET /repos/{owner}/{repo}/projects", "GET /repos/{owner}/{repo}/pulls", "GET /repos/{owner}/{repo}/pulls/comments", "GET /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/pulls/{pull_number}/comments", "GET /repos/{owner}/{repo}/pulls/{pull_number}/commits", "GET /repos/{owner}/{repo}/pulls/{pull_number}/files", "GET /repos/{owner}/{repo}/pulls/{pull_number}/requested_reviewers", "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews", "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/comments", "GET /repos/{owner}/{repo}/releases", "GET /repos/{owner}/{repo}/releases/{release_id}/assets", "GET /repos/{owner}/{repo}/releases/{release_id}/reactions", "GET /repos/{owner}/{repo}/secret-scanning/alerts", "GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}/locations", "GET /repos/{owner}/{repo}/stargazers", "GET /repos/{owner}/{repo}/subscribers", "GET /repos/{owner}/{repo}/tags", "GET /repos/{owner}/{repo}/teams", "GET /repos/{owner}/{repo}/topics", "GET /repositories", "GET /repositories/{repository_id}/environments/{environment_name}/secrets", "GET /search/code", "GET /search/commits", "GET /search/issues", "GET /search/labels", "GET /search/repositories", "GET /search/topics", "GET /search/users", "GET /teams/{team_id}/discussions", "GET /teams/{team_id}/discussions/{discussion_number}/comments", "GET /teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}/reactions", "GET /teams/{team_id}/discussions/{discussion_number}/reactions", "GET /teams/{team_id}/invitations", "GET /teams/{team_id}/members", "GET /teams/{team_id}/projects", "GET /teams/{team_id}/repos", "GET /teams/{team_id}/teams", "GET /user/blocks", "GET /user/codespaces", "GET /user/codespaces/secrets", "GET /user/emails", "GET /user/followers", "GET /user/following", "GET /user/gpg_keys", "GET /user/installations", "GET /user/installations/{installation_id}/repositories", "GET /user/issues", "GET /user/keys", "GET /user/marketplace_purchases", "GET /user/marketplace_purchases/stubbed", "GET /user/memberships/orgs", "GET /user/migrations", "GET /user/migrations/{migration_id}/repositories", "GET /user/orgs", "GET /user/packages", "GET /user/packages/{package_type}/{package_name}/versions", "GET /user/public_emails", "GET /user/repos", "GET /user/repository_invitations", "GET /user/starred", "GET /user/subscriptions", "GET /user/teams", "GET /users", "GET /users/{username}/events", "GET /users/{username}/events/orgs/{org}", "GET /users/{username}/events/public", "GET /users/{username}/followers", "GET /users/{username}/following", "GET /users/{username}/gists", "GET /users/{username}/gpg_keys", "GET /users/{username}/keys", "GET /users/{username}/orgs", "GET /users/{username}/packages", "GET /users/{username}/projects", "GET /users/{username}/received_events", "GET /users/{username}/received_events/public", "GET /users/{username}/repos", "GET /users/{username}/starred", "GET /users/{username}/subscriptions"];
+    var paginatingEndpoints = ["GET /app/hook/deliveries", "GET /app/installations", "GET /enterprises/{enterprise}/actions/permissions/organizations", "GET /enterprises/{enterprise}/actions/runner-groups", "GET /enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/organizations", "GET /enterprises/{enterprise}/actions/runner-groups/{runner_group_id}/runners", "GET /enterprises/{enterprise}/actions/runners", "GET /enterprises/{enterprise}/audit-log", "GET /enterprises/{enterprise}/code-scanning/alerts", "GET /enterprises/{enterprise}/secret-scanning/alerts", "GET /enterprises/{enterprise}/settings/billing/advanced-security", "GET /events", "GET /gists", "GET /gists/public", "GET /gists/starred", "GET /gists/{gist_id}/comments", "GET /gists/{gist_id}/commits", "GET /gists/{gist_id}/forks", "GET /installation/repositories", "GET /issues", "GET /licenses", "GET /marketplace_listing/plans", "GET /marketplace_listing/plans/{plan_id}/accounts", "GET /marketplace_listing/stubbed/plans", "GET /marketplace_listing/stubbed/plans/{plan_id}/accounts", "GET /networks/{owner}/{repo}/events", "GET /notifications", "GET /organizations", "GET /orgs/{org}/actions/cache/usage-by-repository", "GET /orgs/{org}/actions/permissions/repositories", "GET /orgs/{org}/actions/runner-groups", "GET /orgs/{org}/actions/runner-groups/{runner_group_id}/repositories", "GET /orgs/{org}/actions/runner-groups/{runner_group_id}/runners", "GET /orgs/{org}/actions/runners", "GET /orgs/{org}/actions/secrets", "GET /orgs/{org}/actions/secrets/{secret_name}/repositories", "GET /orgs/{org}/audit-log", "GET /orgs/{org}/blocks", "GET /orgs/{org}/code-scanning/alerts", "GET /orgs/{org}/codespaces", "GET /orgs/{org}/credential-authorizations", "GET /orgs/{org}/dependabot/secrets", "GET /orgs/{org}/dependabot/secrets/{secret_name}/repositories", "GET /orgs/{org}/events", "GET /orgs/{org}/external-groups", "GET /orgs/{org}/failed_invitations", "GET /orgs/{org}/hooks", "GET /orgs/{org}/hooks/{hook_id}/deliveries", "GET /orgs/{org}/installations", "GET /orgs/{org}/invitations", "GET /orgs/{org}/invitations/{invitation_id}/teams", "GET /orgs/{org}/issues", "GET /orgs/{org}/members", "GET /orgs/{org}/migrations", "GET /orgs/{org}/migrations/{migration_id}/repositories", "GET /orgs/{org}/outside_collaborators", "GET /orgs/{org}/packages", "GET /orgs/{org}/packages/{package_type}/{package_name}/versions", "GET /orgs/{org}/projects", "GET /orgs/{org}/public_members", "GET /orgs/{org}/repos", "GET /orgs/{org}/secret-scanning/alerts", "GET /orgs/{org}/settings/billing/advanced-security", "GET /orgs/{org}/team-sync/groups", "GET /orgs/{org}/teams", "GET /orgs/{org}/teams/{team_slug}/discussions", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions", "GET /orgs/{org}/teams/{team_slug}/invitations", "GET /orgs/{org}/teams/{team_slug}/members", "GET /orgs/{org}/teams/{team_slug}/projects", "GET /orgs/{org}/teams/{team_slug}/repos", "GET /orgs/{org}/teams/{team_slug}/teams", "GET /projects/columns/{column_id}/cards", "GET /projects/{project_id}/collaborators", "GET /projects/{project_id}/columns", "GET /repos/{owner}/{repo}/actions/artifacts", "GET /repos/{owner}/{repo}/actions/caches", "GET /repos/{owner}/{repo}/actions/runners", "GET /repos/{owner}/{repo}/actions/runs", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/jobs", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs", "GET /repos/{owner}/{repo}/actions/secrets", "GET /repos/{owner}/{repo}/actions/workflows", "GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs", "GET /repos/{owner}/{repo}/assignees", "GET /repos/{owner}/{repo}/branches", "GET /repos/{owner}/{repo}/check-runs/{check_run_id}/annotations", "GET /repos/{owner}/{repo}/check-suites/{check_suite_id}/check-runs", "GET /repos/{owner}/{repo}/code-scanning/alerts", "GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances", "GET /repos/{owner}/{repo}/code-scanning/analyses", "GET /repos/{owner}/{repo}/codespaces", "GET /repos/{owner}/{repo}/codespaces/devcontainers", "GET /repos/{owner}/{repo}/codespaces/secrets", "GET /repos/{owner}/{repo}/collaborators", "GET /repos/{owner}/{repo}/comments", "GET /repos/{owner}/{repo}/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/commits", "GET /repos/{owner}/{repo}/commits/{commit_sha}/comments", "GET /repos/{owner}/{repo}/commits/{commit_sha}/pulls", "GET /repos/{owner}/{repo}/commits/{ref}/check-runs", "GET /repos/{owner}/{repo}/commits/{ref}/check-suites", "GET /repos/{owner}/{repo}/commits/{ref}/status", "GET /repos/{owner}/{repo}/commits/{ref}/statuses", "GET /repos/{owner}/{repo}/contributors", "GET /repos/{owner}/{repo}/dependabot/secrets", "GET /repos/{owner}/{repo}/deployments", "GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses", "GET /repos/{owner}/{repo}/environments", "GET /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies", "GET /repos/{owner}/{repo}/events", "GET /repos/{owner}/{repo}/forks", "GET /repos/{owner}/{repo}/hooks", "GET /repos/{owner}/{repo}/hooks/{hook_id}/deliveries", "GET /repos/{owner}/{repo}/invitations", "GET /repos/{owner}/{repo}/issues", "GET /repos/{owner}/{repo}/issues/comments", "GET /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/issues/events", "GET /repos/{owner}/{repo}/issues/{issue_number}/comments", "GET /repos/{owner}/{repo}/issues/{issue_number}/events", "GET /repos/{owner}/{repo}/issues/{issue_number}/labels", "GET /repos/{owner}/{repo}/issues/{issue_number}/reactions", "GET /repos/{owner}/{repo}/issues/{issue_number}/timeline", "GET /repos/{owner}/{repo}/keys", "GET /repos/{owner}/{repo}/labels", "GET /repos/{owner}/{repo}/milestones", "GET /repos/{owner}/{repo}/milestones/{milestone_number}/labels", "GET /repos/{owner}/{repo}/notifications", "GET /repos/{owner}/{repo}/pages/builds", "GET /repos/{owner}/{repo}/projects", "GET /repos/{owner}/{repo}/pulls", "GET /repos/{owner}/{repo}/pulls/comments", "GET /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/pulls/{pull_number}/comments", "GET /repos/{owner}/{repo}/pulls/{pull_number}/commits", "GET /repos/{owner}/{repo}/pulls/{pull_number}/files", "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews", "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/comments", "GET /repos/{owner}/{repo}/releases", "GET /repos/{owner}/{repo}/releases/{release_id}/assets", "GET /repos/{owner}/{repo}/releases/{release_id}/reactions", "GET /repos/{owner}/{repo}/secret-scanning/alerts", "GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}/locations", "GET /repos/{owner}/{repo}/stargazers", "GET /repos/{owner}/{repo}/subscribers", "GET /repos/{owner}/{repo}/tags", "GET /repos/{owner}/{repo}/teams", "GET /repos/{owner}/{repo}/topics", "GET /repositories", "GET /repositories/{repository_id}/environments/{environment_name}/secrets", "GET /search/code", "GET /search/commits", "GET /search/issues", "GET /search/labels", "GET /search/repositories", "GET /search/topics", "GET /search/users", "GET /teams/{team_id}/discussions", "GET /teams/{team_id}/discussions/{discussion_number}/comments", "GET /teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}/reactions", "GET /teams/{team_id}/discussions/{discussion_number}/reactions", "GET /teams/{team_id}/invitations", "GET /teams/{team_id}/members", "GET /teams/{team_id}/projects", "GET /teams/{team_id}/repos", "GET /teams/{team_id}/teams", "GET /user/blocks", "GET /user/codespaces", "GET /user/codespaces/secrets", "GET /user/emails", "GET /user/followers", "GET /user/following", "GET /user/gpg_keys", "GET /user/installations", "GET /user/installations/{installation_id}/repositories", "GET /user/issues", "GET /user/keys", "GET /user/marketplace_purchases", "GET /user/marketplace_purchases/stubbed", "GET /user/memberships/orgs", "GET /user/migrations", "GET /user/migrations/{migration_id}/repositories", "GET /user/orgs", "GET /user/packages", "GET /user/packages/{package_type}/{package_name}/versions", "GET /user/public_emails", "GET /user/repos", "GET /user/repository_invitations", "GET /user/starred", "GET /user/subscriptions", "GET /user/teams", "GET /users", "GET /users/{username}/events", "GET /users/{username}/events/orgs/{org}", "GET /users/{username}/events/public", "GET /users/{username}/followers", "GET /users/{username}/following", "GET /users/{username}/gists", "GET /users/{username}/gpg_keys", "GET /users/{username}/keys", "GET /users/{username}/orgs", "GET /users/{username}/packages", "GET /users/{username}/projects", "GET /users/{username}/received_events", "GET /users/{username}/received_events/public", "GET /users/{username}/repos", "GET /users/{username}/starred", "GET /users/{username}/subscriptions"];
     function isPaginatingEndpoint(arg) {
       if (typeof arg === "string") {
         return paginatingEndpoints.includes(arg);
@@ -29314,6 +29814,7 @@ var require_dist_node19 = __commonJS({
         getAnalysis: ["GET /repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}"],
         getSarif: ["GET /repos/{owner}/{repo}/code-scanning/sarifs/{sarif_id}"],
         listAlertInstances: ["GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances"],
+        listAlertsForEnterprise: ["GET /enterprises/{enterprise}/code-scanning/alerts"],
         listAlertsForOrg: ["GET /orgs/{org}/code-scanning/alerts"],
         listAlertsForRepo: ["GET /repos/{owner}/{repo}/code-scanning/alerts"],
         listAlertsInstances: ["GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances", {}, {
@@ -29357,6 +29858,7 @@ var require_dist_node19 = __commonJS({
         listRepoSecrets: ["GET /repos/{owner}/{repo}/codespaces/secrets"],
         listRepositoriesForSecretForAuthenticatedUser: ["GET /user/codespaces/secrets/{secret_name}/repositories"],
         listSecretsForAuthenticatedUser: ["GET /user/codespaces/secrets"],
+        preFlightWithRepoForAuthenticatedUser: ["GET /repos/{owner}/{repo}/codespaces/new"],
         removeRepositoryForSecretForAuthenticatedUser: ["DELETE /user/codespaces/secrets/{secret_name}/repositories/{repository_id}"],
         repoMachinesForAuthenticatedUser: ["GET /repos/{owner}/{repo}/codespaces/machines"],
         setRepositoriesForSecretForAuthenticatedUser: ["PUT /user/codespaces/secrets/{secret_name}/repositories"],
@@ -29553,6 +30055,7 @@ var require_dist_node19 = __commonJS({
         updateImport: ["PATCH /repos/{owner}/{repo}/import"]
       },
       orgs: {
+        addSecurityManagerTeam: ["PUT /orgs/{org}/security-managers/teams/{team_slug}"],
         blockUser: ["PUT /orgs/{org}/blocks/{username}"],
         cancelInvitation: ["DELETE /orgs/{org}/invitations/{invitation_id}"],
         checkBlockedUser: ["GET /orgs/{org}/blocks/{username}"],
@@ -29581,6 +30084,7 @@ var require_dist_node19 = __commonJS({
         listOutsideCollaborators: ["GET /orgs/{org}/outside_collaborators"],
         listPendingInvitations: ["GET /orgs/{org}/invitations"],
         listPublicMembers: ["GET /orgs/{org}/public_members"],
+        listSecurityManagerTeams: ["GET /orgs/{org}/security-managers"],
         listWebhookDeliveries: ["GET /orgs/{org}/hooks/{hook_id}/deliveries"],
         listWebhooks: ["GET /orgs/{org}/hooks"],
         pingWebhook: ["POST /orgs/{org}/hooks/{hook_id}/pings"],
@@ -29589,6 +30093,7 @@ var require_dist_node19 = __commonJS({
         removeMembershipForUser: ["DELETE /orgs/{org}/memberships/{username}"],
         removeOutsideCollaborator: ["DELETE /orgs/{org}/outside_collaborators/{username}"],
         removePublicMembershipForAuthenticatedUser: ["DELETE /orgs/{org}/public_members/{username}"],
+        removeSecurityManagerTeam: ["DELETE /orgs/{org}/security-managers/teams/{team_slug}"],
         setMembershipForUser: ["PUT /orgs/{org}/memberships/{username}"],
         setPublicMembershipForAuthenticatedUser: ["PUT /orgs/{org}/public_members/{username}"],
         unblockUser: ["DELETE /orgs/{org}/blocks/{username}"],
@@ -29740,6 +30245,7 @@ var require_dist_node19 = __commonJS({
         createCommitStatus: ["POST /repos/{owner}/{repo}/statuses/{sha}"],
         createDeployKey: ["POST /repos/{owner}/{repo}/keys"],
         createDeployment: ["POST /repos/{owner}/{repo}/deployments"],
+        createDeploymentBranchPolicy: ["POST /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies"],
         createDeploymentStatus: ["POST /repos/{owner}/{repo}/deployments/{deployment_id}/statuses"],
         createDispatchEvent: ["POST /repos/{owner}/{repo}/dispatches"],
         createForAuthenticatedUser: ["POST /user/repos"],
@@ -29747,6 +30253,7 @@ var require_dist_node19 = __commonJS({
         createInOrg: ["POST /orgs/{org}/repos"],
         createOrUpdateEnvironment: ["PUT /repos/{owner}/{repo}/environments/{environment_name}"],
         createOrUpdateFileContents: ["PUT /repos/{owner}/{repo}/contents/{path}"],
+        createPagesDeployment: ["POST /repos/{owner}/{repo}/pages/deployment"],
         createPagesSite: ["POST /repos/{owner}/{repo}/pages"],
         createRelease: ["POST /repos/{owner}/{repo}/releases"],
         createTagProtection: ["POST /repos/{owner}/{repo}/tags/protection"],
@@ -29766,6 +30273,7 @@ var require_dist_node19 = __commonJS({
         deleteCommitSignatureProtection: ["DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_signatures"],
         deleteDeployKey: ["DELETE /repos/{owner}/{repo}/keys/{key_id}"],
         deleteDeployment: ["DELETE /repos/{owner}/{repo}/deployments/{deployment_id}"],
+        deleteDeploymentBranchPolicy: ["DELETE /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id}"],
         deleteFile: ["DELETE /repos/{owner}/{repo}/contents/{path}"],
         deleteInvitation: ["DELETE /repos/{owner}/{repo}/invitations/{invitation_id}"],
         deletePagesSite: ["DELETE /repos/{owner}/{repo}/pages"],
@@ -29809,6 +30317,7 @@ var require_dist_node19 = __commonJS({
         getContributorsStats: ["GET /repos/{owner}/{repo}/stats/contributors"],
         getDeployKey: ["GET /repos/{owner}/{repo}/keys/{key_id}"],
         getDeployment: ["GET /repos/{owner}/{repo}/deployments/{deployment_id}"],
+        getDeploymentBranchPolicy: ["GET /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id}"],
         getDeploymentStatus: ["GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses/{status_id}"],
         getEnvironment: ["GET /repos/{owner}/{repo}/environments/{environment_name}"],
         getLatestPagesBuild: ["GET /repos/{owner}/{repo}/pages/builds/latest"],
@@ -29843,6 +30352,7 @@ var require_dist_node19 = __commonJS({
         listCommits: ["GET /repos/{owner}/{repo}/commits"],
         listContributors: ["GET /repos/{owner}/{repo}/contributors"],
         listDeployKeys: ["GET /repos/{owner}/{repo}/keys"],
+        listDeploymentBranchPolicies: ["GET /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies"],
         listDeploymentStatuses: ["GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses"],
         listDeployments: ["GET /repos/{owner}/{repo}/deployments"],
         listForAuthenticatedUser: ["GET /user/repos"],
@@ -29901,6 +30411,7 @@ var require_dist_node19 = __commonJS({
         update: ["PATCH /repos/{owner}/{repo}"],
         updateBranchProtection: ["PUT /repos/{owner}/{repo}/branches/{branch}/protection"],
         updateCommitComment: ["PATCH /repos/{owner}/{repo}/comments/{comment_id}"],
+        updateDeploymentBranchPolicy: ["PUT /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id}"],
         updateInformationAboutPagesSite: ["PUT /repos/{owner}/{repo}/pages"],
         updateInvitation: ["PATCH /repos/{owner}/{repo}/invitations/{invitation_id}"],
         updatePullRequestReviewProtection: ["PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews"],
@@ -30045,7 +30556,7 @@ var require_dist_node19 = __commonJS({
         updateAuthenticated: ["PATCH /user"]
       }
     };
-    var VERSION = "6.0.0";
+    var VERSION = "6.3.0";
     function endpointsToMethods(octokit, endpointsMap) {
       const newMethods = {};
       for (const [scope, endpoints] of Object.entries(endpointsMap)) {
@@ -30133,7 +30644,7 @@ var require_dist_node20 = __commonJS({
     var pluginRequestLog = require_dist_node17();
     var pluginPaginateRest = require_dist_node18();
     var pluginRestEndpointMethods = require_dist_node19();
-    var VERSION = "19.0.3";
+    var VERSION = "19.0.4";
     var Octokit4 = core3.Octokit.plugin(pluginRequestLog.requestLog, pluginRestEndpointMethods.legacyRestEndpointMethods, pluginPaginateRest.paginateRest).defaults({
       userAgent: `octokit-rest.js/${VERSION}`
     });
@@ -46154,6 +46665,19 @@ var require_spinners = __commonJS({
           "\u2800\u2840"
         ]
       },
+      dots13: {
+        interval: 80,
+        frames: [
+          "\u28FC",
+          "\u28F9",
+          "\u28BB",
+          "\u283F",
+          "\u285F",
+          "\u28CF",
+          "\u28E7",
+          "\u28F6"
+        ]
+      },
       dots8Bit: {
         interval: 80,
         frames: [
@@ -46413,6 +46937,46 @@ var require_spinners = __commonJS({
           "\u28FD",
           "\u28FE",
           "\u28FF"
+        ]
+      },
+      sand: {
+        interval: 80,
+        frames: [
+          "\u2801",
+          "\u2802",
+          "\u2804",
+          "\u2840",
+          "\u2848",
+          "\u2850",
+          "\u2860",
+          "\u28C0",
+          "\u28C1",
+          "\u28C2",
+          "\u28C4",
+          "\u28CC",
+          "\u28D4",
+          "\u28E4",
+          "\u28E5",
+          "\u28E6",
+          "\u28EE",
+          "\u28F6",
+          "\u28F7",
+          "\u28FF",
+          "\u287F",
+          "\u283F",
+          "\u289F",
+          "\u281F",
+          "\u285B",
+          "\u281B",
+          "\u282B",
+          "\u288B",
+          "\u280B",
+          "\u280D",
+          "\u2849",
+          "\u2809",
+          "\u2811",
+          "\u2821",
+          "\u2881"
         ]
       },
       line: {
@@ -62880,7 +63444,7 @@ var require_dist_node25 = __commonJS({
       endpoint.headers.authorization = `token ${token}`;
       return request2(endpoint);
     }
-    var VERSION = "4.0.0";
+    var VERSION = "4.0.1";
     function createOAuthDeviceAuth(options) {
       const requestWithDefaults = options.request || request.request.defaults({
         headers: {
@@ -62928,7 +63492,7 @@ var require_dist_node26 = __commonJS({
     var authOauthDevice = require_dist_node25();
     var oauthMethods = require_dist_node24();
     var btoa = _interopDefault(require_btoa_node());
-    var VERSION = "2.0.2";
+    var VERSION = "2.0.3";
     async function getAuthentication(state) {
       if ("code" in state.strategyOptions) {
         const {
@@ -63174,7 +63738,7 @@ var require_dist_node27 = __commonJS({
         throw error3;
       }
     }
-    var VERSION = "5.0.1";
+    var VERSION = "5.0.2";
     function createOAuthAppAuth(options) {
       const state = Object.assign({
         request: request.request.defaults({
@@ -66977,7 +67541,7 @@ var require_dist_node29 = __commonJS({
         return sendRequestWithRetries(state, request2, options, createdAt, retries);
       }
     }
-    var VERSION = "4.0.4";
+    var VERSION = "4.0.5";
     function createAppAuth2(options) {
       if (!options.appId) {
         throw new Error("[@octokit/auth-app] appId option is required");
@@ -67126,6 +67690,11 @@ var isDomainOrSubdomain = (destination, original) => {
   const orig = new URL(original).hostname;
   const dest = new URL(destination).hostname;
   return orig === dest || orig.endsWith(`.${dest}`);
+};
+var isSameProtocol = (destination, original) => {
+  const orig = new URL(original).protocol;
+  const dest = new URL(destination).protocol;
+  return orig === dest;
 };
 
 // 
@@ -67677,7 +68246,7 @@ function isOriginPotentiallyTrustworthy(url) {
   if (hostIPVersion === 6 && /^(((0+:){7})|(::(0+:){0,6}))0*1$/.test(hostIp)) {
     return true;
   }
-  if (/^(.+\.)*localhost$/.test(url.host)) {
+  if (url.host === "localhost" || url.host.endsWith(".localhost")) {
     return false;
   }
   if (url.protocol === "file:") {
@@ -67795,7 +68364,7 @@ var Request = class extends Body {
     if (/^(delete|get|head|options|post|put)$/i.test(method)) {
       method = method.toUpperCase();
     }
-    if ("data" in init) {
+    if (!isRequest(init) && "data" in init) {
       doBadDataWarn();
     }
     if ((init.body != null || isRequest(input) && input.body !== null) && (method === "GET" || method === "HEAD")) {
@@ -68075,7 +68644,7 @@ async function fetch(url, options_) {
               referrer: request.referrer,
               referrerPolicy: request.referrerPolicy
             };
-            if (!isDomainOrSubdomain(request.url, locationURL)) {
+            if (!isDomainOrSubdomain(request.url, locationURL) || !isSameProtocol(request.url, locationURL)) {
               for (const name of ["authorization", "www-authenticate", "cookie", "cookie2"]) {
                 requestOptions.headers.delete(name);
               }
@@ -68260,7 +68829,7 @@ async function getCircleCiWorkflowIdForPullRequest(pullRequest, github, circleci
     ref: pullRequest.head.ref
   })).data;
   let targetUrl = (_a = statuses.reverse().find((status) => status.context.startsWith("ci/circleci:"))) == null ? void 0 : _a.target_url;
-  if (targetUrl === void 0) {
+  if (targetUrl === void 0 || targetUrl === null) {
     throw Error("No status for a CircleCI workflow was found on the pull request to be rerun.");
   }
   const jobIdMatcher = targetUrl.match(`https://circleci.com/gh/${owner}/${repo}/(\\d+)`);
@@ -69188,7 +69757,7 @@ async function readConfigFile(configPath, returnEmptyObjectOnError = false) {
 }
 
 // 
-var import_typed_graphqlify = __toESM(require_dist());
+var import_typed_graphqlify = __toESM(require_dist2());
 var findOwnedForksOfRepoQuery = (0, import_typed_graphqlify.params)({
   $owner: "String!",
   $name: "String!"
@@ -69223,7 +69792,7 @@ import { spawnSync } from "child_process";
 // 
 var import_graphql = __toESM(require_dist_node14());
 var import_rest = __toESM(require_dist_node20());
-var import_typed_graphqlify2 = __toESM(require_dist());
+var import_typed_graphqlify2 = __toESM(require_dist2());
 var GithubClient = class {
   constructor(_octokitOptions) {
     this._octokitOptions = _octokitOptions;
@@ -69481,7 +70050,7 @@ var Prompt = class {
 };
 
 // 
-var import_typed_graphqlify3 = __toESM(require_dist());
+var import_typed_graphqlify3 = __toESM(require_dist2());
 var import_graphql2 = __toESM(require_dist_node14());
 async function getPr(prSchema, prNumber, git) {
   var _a;
@@ -69507,7 +70076,7 @@ async function getPr(prSchema, prNumber, git) {
 }
 
 // 
-var import_typed_graphqlify4 = __toESM(require_dist());
+var import_typed_graphqlify4 = __toESM(require_dist2());
 var PullRequestStatus;
 (function(PullRequestStatus2) {
   PullRequestStatus2[PullRequestStatus2["PASSING"] = 0] = "PASSING";
