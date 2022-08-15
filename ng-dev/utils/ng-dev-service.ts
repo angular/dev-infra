@@ -15,7 +15,10 @@ import {
   restoreNgTokenFromDiskIfValid,
 } from '../auth/shared/ng-dev-token.js';
 import {assertValidGithubConfig, getConfig} from './config.js';
-import {configureGitClientWithTokenOrFromEnvironment} from './git/github-yargs.js';
+import {
+  addGithubTokenOption,
+  configureGitClientWithTokenOrFromEnvironment,
+} from './git/github-yargs.js';
 import {Log} from './logging.js';
 
 /** Configuration for the firebase application used for ng-dev token management. */
@@ -44,7 +47,7 @@ export async function useNgDevService<T>(
   const {github} = await getConfig([assertValidGithubConfig]);
 
   if (github.useNgDevAuthService !== true) {
-    return argv;
+    return addGithubTokenOption(argv);
   }
 
   return (
