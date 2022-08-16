@@ -8,7 +8,7 @@
 
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import semver from 'semver';
-import {prompt} from 'inquirer';
+import inquirer from 'inquirer';
 import {green, Log, red, yellow} from '../../utils/logging.js';
 
 import {PullRequestConfig} from '../config/index.js';
@@ -194,7 +194,7 @@ export class MergeTool {
       activeBranches.splice(1, 0, releaseCandidate);
     }
 
-    const {selectedBranches, confirm} = await prompt([
+    const {selectedBranches, confirm} = await inquirer.prompt([
       {
         type: 'checkbox',
         default: pullRequest.targetBranches,

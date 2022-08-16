@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {prompt} from 'inquirer';
+import inquirer from 'inquirer';
 import {getConfig} from '../../utils/config.js';
 
 import {green, Log, yellow} from '../../utils/logging.js';
@@ -32,7 +32,7 @@ export async function updateCaretakerTeamViaPrompt() {
     selected,
     /** Whether the user positively confirmed the selected made. */
     confirm,
-  } = await prompt([
+  } = await inquirer.prompt([
     {
       type: 'checkbox',
       choices: roster,
