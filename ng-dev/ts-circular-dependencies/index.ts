@@ -67,8 +67,15 @@ export function main(
   config: CircularDependenciesTestConfig,
   printWarnings: boolean,
 ): number {
-  const {baseDir, goldenFile, glob: globPattern, resolveModule, approveCommand} = config;
-  const analyzer = new Analyzer(resolveModule);
+  const {
+    baseDir,
+    goldenFile,
+    glob: globPattern,
+    resolveModule,
+    approveCommand,
+    ignoreTypeOnlyChecks,
+  } = config;
+  const analyzer = new Analyzer(resolveModule, ignoreTypeOnlyChecks);
   const cycles: ReferenceChain[] = [];
   const checkedNodes = new WeakSet<ts.SourceFile>();
 

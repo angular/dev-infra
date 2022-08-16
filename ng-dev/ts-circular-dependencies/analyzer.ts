@@ -9,6 +9,7 @@
 import {readFileSync} from 'fs';
 import {dirname, join, resolve} from 'path';
 import ts from 'typescript';
+import {CircularDependenciesParserOptions} from './config.js';
 
 import {getFileStatus} from './file_system.js';
 import {getModuleReferences} from './parser.js';
@@ -32,13 +33,18 @@ const DEFAULT_EXTENSIONS = ['ts', 'js', 'd.ts'];
 export class Analyzer {
   private _sourceFileCache = new Map<string, ts.SourceFile>();
 
+  private _ignoreTypeOnlyChecks: boolean;
+
   unresolvedModules = new Set<string>();
   unresolvedFiles = new Map<string, string[]>();
 
   constructor(
     public resolveModuleFn?: ModuleResolver,
+    ignoreTypeOnlyChecks: boolean = false,
     public extensions: string[] = DEFAULT_EXTENSIONS,
-  ) {}
+  ) {
+    this._ignoreTypeOnlyChecks = !!ignoreTypeOnlyChecks;
+  }
 
   /** Finds all cycles in the specified source file. */
   findCycles(
@@ -61,7 +67,7 @@ export class Analyzer {
     visited.add(sf);
     // Go through all edges, which are determined through import/exports, and collect cycles.
     const result: ReferenceChain[] = [];
-    for (const ref of getModuleReferences(sf)) {
+    for (const ref of getModuleReferences(sf, this._ignoreTypeOnlyChecks)) {
       const targetFile = this._resolveImport(ref, sf.fileName);
       if (targetFile !== null) {
         result.push(...this.findCycles(this.getSourceFile(targetFile), visited, path.slice()));
