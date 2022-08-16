@@ -65,7 +65,7 @@ async function getCircleCiWorkflowIdForPullRequest(
     .reverse()
     .find((status) => status.context.startsWith('ci/circleci:'))?.target_url;
 
-  if (targetUrl === undefined) {
+  if (targetUrl === undefined || targetUrl === null) {
     throw Error('No status for a CircleCI workflow was found on the pull request to be rerun.');
   }
 
