@@ -13,15 +13,25 @@ import ts from 'typescript';
  * @param node Source file which should be parsed.
  * @returns List of import specifiers in the source file.
  */
-export function getModuleReferences(initialNode: ts.SourceFile): string[] {
+export function getModuleReferences(
+  initialNode: ts.SourceFile,
+  ignoreTypeOnlyChecks: boolean,
+): string[] {
   const references: string[] = [];
   const visitNode = (node: ts.Node) => {
-    if (
-      (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) &&
-      node.moduleSpecifier !== undefined &&
-      ts.isStringLiteral(node.moduleSpecifier)
-    ) {
-      references.push(node.moduleSpecifier.text);
+    if (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) {
+      // When ignoreTypeOnlyChecks are enabled, if the declaration is found to be type only, it is skipped.
+      if (
+        ignoreTypeOnlyChecks &&
+        ((ts.isImportDeclaration(node) && node.importClause?.isTypeOnly) ||
+          (ts.isExportDeclaration(node) && node.isTypeOnly))
+      ) {
+        return;
+      }
+
+      if (node.moduleSpecifier !== undefined && ts.isStringLiteral(node.moduleSpecifier)) {
+        references.push(node.moduleSpecifier.text);
+      }
     }
     ts.forEachChild(node, visitNode);
   };

@@ -68,7 +68,7 @@ export function main(
   printWarnings: boolean,
 ): number {
   const {baseDir, goldenFile, glob: globPattern, resolveModule, approveCommand} = config;
-  const analyzer = new Analyzer(resolveModule);
+  const analyzer = new Analyzer(resolveModule, config);
   const cycles: ReferenceChain[] = [];
   const checkedNodes = new WeakSet<ts.SourceFile>();
 
