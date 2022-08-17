@@ -14,7 +14,6 @@ import {checkOutPullRequestLocally} from '../common/checkout-pr.js';
 
 export interface CheckoutOptions {
   pr: number;
-  githubToken: string;
 }
 
 /** Builds the checkout pull request command. */

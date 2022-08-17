@@ -17,9 +17,7 @@ import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.j
 import {green, Log, yellow} from '../../utils/logging.js';
 
 /** Command line options for publishing a release. */
-export interface ReleasePublishOptions {
-  githubToken: string;
-}
+export interface ReleasePublishOptions {}
 
 /** Yargs command builder for configuring the `ng-dev release publish` command. */
 function builder(argv: Argv): Argv<ReleasePublishOptions> {
