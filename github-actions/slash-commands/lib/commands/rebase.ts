@@ -15,7 +15,7 @@ export async function rebase(installationClient: Octokit, installationToken: str
 
   AuthenticatedGitClient.configure(installationToken);
 
-  if ((await rebasePr(context.issue.number, installationToken)) !== 0) {
+  if ((await rebasePr(context.issue.number)) !== 0) {
     // For any failure to rebase, comment on the PR informing the user a rebase was unable to be
     // be completed.
     await installationClient.issues.createComment({
