@@ -13,9 +13,6 @@ import {assertValidPullRequestConfig, PullRequestConfig} from '../config/index.j
 import {getTargetBranchesAndLabelForPullRequest} from '../common/targeting/target-label.js';
 import {ActiveReleaseTrains} from '../../release/versioning/active-release-trains.js';
 import {getNextBranchName} from '../../release/versioning/version-branches.js';
-import {RestEndpointMethodTypes} from '@octokit/plugin-rest-endpoint-methods';
-
-type GithubLabel = RestEndpointMethodTypes['pulls']['get']['response']['data']['labels'][number];
 
 async function getTargetBranchesForPr(
   prNumber: number,
@@ -33,7 +30,7 @@ async function getTargetBranchesForPr(
   // here.
   // TODO(devversion): Remove the non-null cast once
   // https://github.com/github/rest-api-description/issues/169 is fixed.
-  const labels = prData.labels.map((l: GithubLabel) => l.name!);
+  const labels = prData.labels.map((l) => l.name!);
   /** The branch targetted via the Github UI. */
   const githubTargetBranch = prData.base.ref;
 
