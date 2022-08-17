@@ -40,7 +40,7 @@ export class Analyzer {
 
   constructor(
     public resolveModuleFn?: ModuleResolver,
-    {ignoreTypeOnlyChecks}: CircularDependenciesParserOptions = {},
+    ignoreTypeOnlyChecks: boolean = false,
     public extensions: string[] = DEFAULT_EXTENSIONS,
   ) {
     this._ignoreTypeOnlyChecks = !!ignoreTypeOnlyChecks;
