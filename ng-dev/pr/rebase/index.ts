@@ -19,7 +19,7 @@ import {fetchPullRequestFromGithub} from '../common/fetch-pull-request.js';
  *
  * @returns a status code indicating whether the rebase was successful.
  */
-export async function rebasePr(prNumber: number, githubToken: string): Promise<number> {
+export async function rebasePr(prNumber: number): Promise<number> {
   /** The singleton instance of the authenticated git client. */
   const git = await AuthenticatedGitClient.get();
 
@@ -45,8 +45,8 @@ export async function rebasePr(prNumber: number, githubToken: string): Promise<n
   const baseRefName = pr.baseRef.name;
   const fullHeadRef = `${pr.headRef.repository.nameWithOwner}:${headRefName}`;
   const fullBaseRef = `${pr.baseRef.repository.nameWithOwner}:${baseRefName}`;
-  const headRefUrl = addTokenToGitHttpsUrl(pr.headRef.repository.url, githubToken);
-  const baseRefUrl = addTokenToGitHttpsUrl(pr.baseRef.repository.url, githubToken);
+  const headRefUrl = addTokenToGitHttpsUrl(pr.headRef.repository.url, git.githubToken);
+  const baseRefUrl = addTokenToGitHttpsUrl(pr.baseRef.repository.url, git.githubToken);
 
   // Note: Since we use a detached head for rebasing the PR and therefore do not have
   // remote-tracking branches configured, we need to set our expected ref and SHA. This

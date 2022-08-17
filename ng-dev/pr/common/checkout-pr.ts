@@ -61,7 +61,6 @@ export interface PullRequestCheckoutOptions {
  */
 export async function checkOutPullRequestLocally(
   prNumber: number,
-  githubToken: string,
   opts: PullRequestCheckoutOptions = {},
 ) {
   /** The singleton instance of the authenticated git client. */
@@ -90,7 +89,7 @@ export async function checkOutPullRequestLocally(
   /** The full ref for the repository and branch the PR came from. */
   const fullHeadRef = `${pr.headRef.repository.nameWithOwner}:${headRefName}`;
   /** The full URL path of the repository the PR came from with github token as authentication. */
-  const headRefUrl = addTokenToGitHttpsUrl(pr.headRef.repository.url, githubToken);
+  const headRefUrl = addTokenToGitHttpsUrl(pr.headRef.repository.url, git.githubToken);
   // Note: Since we use a detached head for rebasing the PR and therefore do not have
   // remote-tracking branches configured, we need to set our expected ref and SHA. This
   // allows us to use `--force-with-lease` for the detached head while ensuring that we

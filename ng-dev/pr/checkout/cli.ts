@@ -23,9 +23,9 @@ function builder(yargs: Argv) {
 }
 
 /** Handles the checkout pull request command. */
-async function handler({pr, githubToken}: Arguments<CheckoutOptions>) {
+async function handler({pr}: Arguments<CheckoutOptions>) {
   const options = {allowIfMaintainerCannotModify: true, branchName: `pr-${pr}`};
-  const {pushToUpstreamCommand} = await checkOutPullRequestLocally(pr, githubToken, options);
+  const {pushToUpstreamCommand} = await checkOutPullRequestLocally(pr, options);
   Log.info(`Checked out the remote branch for pull request #${pr}\n`);
   Log.info('To push the checked out branch back to its PR, run the following command:');
   Log.info(`  $ ${pushToUpstreamCommand}`);
