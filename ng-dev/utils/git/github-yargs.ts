@@ -36,9 +36,9 @@ export function addGithubTokenOption<T>(argv: Argv<T>) {
  * present in the environment, it is used to set the configuration for the AuthenticatedGitClient.
  * Otherwise, an error is thrown.
  *
- * We explicitly return void for this funciton to allowthis function to be used as a `coerce`
- * function for yargs. This allows for the option, github-token to be usable for users but does not
- * enter the generated types for the `Argv` object on a command, helping us to continue enforcing
+ * We explicitly return void for this function to allow this function to be used as a `coerce`
+ * function for yargs. This allows for the option, `github-token` to be available for users without
+ * including it in the generated types for the `Argv` object on a command, helping us to enforce
  * that the token should only be accessed from the AuthenticatedGitClient itself.
  */
 export function configureGitClientWithTokenOrFromEnvironment(token: string | undefined): void {
