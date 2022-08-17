@@ -70153,7 +70153,7 @@ async function fetchPullRequestFromGithub(git, prNumber) {
 }
 
 // 
-async function rebasePr(prNumber, githubToken) {
+async function rebasePr(prNumber) {
   const git = await AuthenticatedGitClient.get();
   if (git.hasUncommittedChanges()) {
     Log.error("Cannot perform rebase of PR with local changes.");
@@ -70169,8 +70169,8 @@ async function rebasePr(prNumber, githubToken) {
   const baseRefName = pr.baseRef.name;
   const fullHeadRef = `${pr.headRef.repository.nameWithOwner}:${headRefName}`;
   const fullBaseRef = `${pr.baseRef.repository.nameWithOwner}:${baseRefName}`;
-  const headRefUrl = addTokenToGitHttpsUrl(pr.headRef.repository.url, githubToken);
-  const baseRefUrl = addTokenToGitHttpsUrl(pr.baseRef.repository.url, githubToken);
+  const headRefUrl = addTokenToGitHttpsUrl(pr.headRef.repository.url, git.githubToken);
+  const baseRefUrl = addTokenToGitHttpsUrl(pr.baseRef.repository.url, git.githubToken);
   const forceWithLeaseFlag = `--force-with-lease=${headRefName}:${pr.headRefOid}`;
   if (!pr.maintainerCanModify && !pr.viewerDidAuthor) {
     Log.error(`Cannot rebase as you did not author the PR and the PR does not allow maintainersto modify the PR`);
@@ -70229,7 +70229,7 @@ async function rebase(installationClient, installationToken) {
     }
   });
   AuthenticatedGitClient.configure(installationToken);
-  if (await rebasePr(import_github5.context.issue.number, installationToken) !== 0) {
+  if (await rebasePr(import_github5.context.issue.number) !== 0) {
     await installationClient.issues.createComment({
       ...import_github5.context.repo,
       issue_number: import_github5.context.issue.number,

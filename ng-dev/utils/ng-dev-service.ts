@@ -15,7 +15,7 @@ import {
   restoreNgTokenFromDiskIfValid,
 } from '../auth/shared/ng-dev-token.js';
 import {assertValidGithubConfig, getConfig} from './config.js';
-import {addGithubTokenOption} from './git/github-yargs.js';
+import {configureGitClientWithTokenOrFromEnvironment} from './git/github-yargs.js';
 import {Log} from './logging.js';
 
 /** Configuration for the firebase application used for ng-dev token management. */
@@ -48,15 +48,19 @@ export async function useNgDevService<T>(
   }
 
   return (
-    addGithubTokenOption(argv)
+    argv
       // TODO(josephperrott): remove once stability is validated.
       .option('github-escape-hatch' as 'githubEscapeHatch', {
         type: 'boolean',
-        default: false,
+        hidden: true,
+      })
+      .option('github-token' as 'githubToken', {
+        type: 'string',
+        implies: 'github-escape-hatch',
         hidden: true,
       })
       .middleware(
-        async (args: Arguments<T & {githubToken: string | null; githubEscapeHatch: boolean}>) => {
+        async (args: Arguments<T & {githubToken?: string; githubEscapeHatch?: boolean}>) => {
           // TODO(josephperrott): remove this guard against running multiple times after
           //   https://github.com/yargs/yargs/issues/2223 is fixed
           if (ngDevServiceMiddlewareHasRun) {
@@ -67,17 +71,17 @@ export async function useNgDevService<T>(
           initializeApp(firebaseConfig);
           await restoreNgTokenFromDiskIfValid();
 
-          if (args.githubEscapeHatch === true) {
-            Log.warn('This escape hatch should only be used if the service is erroring. Please');
-            Log.warn(
-              'inform #dev-infra of the need to use this escape hatch so it can be triaged.',
-            );
-            return;
-          }
-          args.githubToken = null;
-
           if (isAuthCommand) {
             Log.debug('Skipping ng-dev token request as this is an auth command');
+            return;
+          }
+
+          if (args.githubEscapeHatch === true) {
+            // Use the configuration helper to set up the GithubClient using the provided auth
+            // token or environment.
+            configureGitClientWithTokenOrFromEnvironment(args.githubToken);
+            Log.warn('This escape hatch should only be used if the service is erroring. Please');
+            Log.warn('inform #dev-infra of using this escape hatch so it can be triaged.');
             return;
           }
 
