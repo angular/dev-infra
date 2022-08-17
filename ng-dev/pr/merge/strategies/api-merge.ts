@@ -20,6 +20,8 @@ import {FatalMergeToolError, MergeConflictsFatalError} from '../failures.js';
 
 /** Type describing the parameters for the Octokit `merge` API endpoint. */
 type OctokitMergeParams = RestEndpointMethodTypes['pulls']['merge']['parameters'];
+type OctokitListCommitsEntry =
+  RestEndpointMethodTypes['pulls']['listCommits']['response']['data'][number];
 
 /** Separator between commit message header and body. */
 const COMMIT_HEADER_SEPARATOR = '\n\n';
@@ -183,12 +185,12 @@ export class GithubApiMergeStrategy extends MergeStrategy {
   }
 
   /** Gets all commit messages of commits in the pull request. */
-  private async _getPullRequestCommitMessages({prNumber}: PullRequest) {
+  private async _getPullRequestCommitMessages({prNumber}: PullRequest): Promise<string[]> {
     const allCommits = await this.git.github.paginate(this.git.github.pulls.listCommits, {
       ...this.git.remoteParams,
       pull_number: prNumber,
     });
-    return allCommits.map(({commit}) => commit.message);
+    return allCommits.map(({commit}: OctokitListCommitsEntry) => commit.message);
   }
 
   /** Determines the merge action from the given pull request. */

@@ -12,6 +12,10 @@ import {getConfig} from '../../utils/config.js';
 import {green, Log, yellow} from '../../utils/logging.js';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {assertValidCaretakerConfig} from '../config.js';
+import {RestEndpointMethodTypes} from '@octokit/plugin-rest-endpoint-methods';
+
+type GithubOrgMember =
+  RestEndpointMethodTypes['teams']['listMembersInOrg']['response']['data'][number];
 
 /** Update the Github caretaker group, using a prompt to obtain the new caretaker group members.  */
 export async function updateCaretakerTeamViaPrompt() {
@@ -86,8 +90,8 @@ async function getGroupMembers(group: string) {
       team_slug: group,
     })
   ).data
-    .filter((_) => !!_)
-    .map((member) => member!.login);
+    .filter((member: GithubOrgMember) => !!member)
+    .map((member: GithubOrgMember) => member!.login);
 }
 
 async function setCaretakerGroup(group: string, members: string[]) {
@@ -98,7 +102,7 @@ async function setCaretakerGroup(group: string, members: string[]) {
   /** The list of current members of the group. */
   const current = await getGroupMembers(group);
   /** The list of users to be removed from the group. */
-  const removed = current.filter((login) => !members.includes(login));
+  const removed = current.filter((login: string) => !members.includes(login));
   /** Add a user to the group. */
   const add = async (username: string) => {
     Log.debug(`Adding ${username} to ${fullSlug}.`);

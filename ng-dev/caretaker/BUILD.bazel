@@ -10,6 +10,7 @@ ts_library(
     deps = [
         "//ng-dev/release/versioning",
         "//ng-dev/utils",
+        "@npm//@octokit/plugin-rest-endpoint-methods",
         "@npm//@types/inquirer",
         "@npm//@types/node",
         "@npm//@types/yargs",
