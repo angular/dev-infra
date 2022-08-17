@@ -130,15 +130,6 @@ __metadata:
     webpack-dev-server: 4.10.0
     webpack-merge: 5.8.0
     webpack-subresource-integrity: 5.1.0
-  peerDependencies:
-    "@angular/compiler-cli": ^14.0.0 || ^14.0.0-next || ^14.1.0-next
-    "@angular/localize": ^14.0.0 || ^14.0.0-next || ^14.1.0-next
-    "@angular/service-worker": ^14.0.0 || ^14.0.0-next || ^14.1.0-next
-    karma: ^6.3.0
-    ng-packagr: ^14.0.0 || ^14.0.0-next || ^14.1.0-next
-    protractor: ^7.0.0
-    tailwindcss: ^2.0.0 || ^3.0.0
-    typescript: ">=4.6.2 <4.8"
   dependenciesMeta:
     esbuild:
       optional: true
@@ -432,6 +423,9 @@ __metadata:
     semver: ^7.3.5
     send: ^0.18.0
     source-map: ^0.7.4
+    spdx-exceptions: ^2.3.0
+    spdx-license-ids: ^3.0.11
+    spdx-ranges: ^2.1.1
     spdx-satisfies: ^5.0.1
     supports-color: 9.2.2
     terser: ^5.14.1
@@ -3220,7 +3214,6 @@ __metadata:
   version: 14.2.0-rc.0
   resolution: "@ngtools/webpack@npm:14.2.0-rc.0"
   peerDependencies:
-    "@angular/compiler-cli": ^14.0.0 || ^14.0.0-next || ^14.1.0-next
     typescript: ">=4.6.2 <4.8"
     webpack: ^5.54.0
   checksum: 211632fb0472a6746cd3e16aa07b2d3745b22d7d50412c5c64acd793068dc8a846564aba76929fddd8412c7a03e0c553a57586d600b9137b534d401a607a33b7
@@ -15222,7 +15215,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"spdx-exceptions@npm:^2.1.0":
+"spdx-exceptions@npm:^2.1.0, spdx-exceptions@npm:^2.3.0":
   version: 2.3.0
   resolution: "spdx-exceptions@npm:2.3.0"
   checksum: cb69a26fa3b46305637123cd37c85f75610e8c477b6476fa7354eb67c08128d159f1d36715f19be6f9daf4b680337deb8c65acdcae7f2608ba51931540687ac0
@@ -15239,14 +15232,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"spdx-license-ids@npm:^3.0.0":
+"spdx-license-ids@npm:^3.0.0, spdx-license-ids@npm:^3.0.11":
   version: 3.0.11
   resolution: "spdx-license-ids@npm:3.0.11"
   checksum: 1da1acb090257773e60b022094050e810ae9fec874dc1461f65dc0400cd42dd830ab2df6e64fb49c2db3dce386dd0362110780e1b154db7c0bb413488836aaeb
   languageName: node
   linkType: hard
 
-"spdx-ranges@npm:^2.0.0":
+"spdx-ranges@npm:^2.0.0, spdx-ranges@npm:^2.1.1":
   version: 2.1.1
   resolution: "spdx-ranges@npm:2.1.1"
   checksum: f807bd915aa2975bcebd9c4b4805661f248efcd4953ee62557626452fcd2933183f5b1a307d65507d8be6b9519b4e46dce05b61db0fbd5fce253b8f6d69bbbad

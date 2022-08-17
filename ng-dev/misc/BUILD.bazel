@@ -5,15 +5,12 @@ ts_library(
     srcs = glob(["**/*.ts"]),
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
+        "//ng-dev/misc/validate-licenses",
         "//ng-dev/release/build",
         "//ng-dev/release/config",
         "//ng-dev/utils",
         "@npm//@types/node",
         "@npm//@types/yargs",
         "@npm//chalk",
-        "@npm//license-checker",
-        "@npm//@types/license-checker",
-        "@npm//spdx-satisfies",
-        "@npm//@types/spdx-satisfies",
     ],
 )

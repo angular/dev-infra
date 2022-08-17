@@ -5,9 +5,8 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import { init, ModuleInfo, ModuleInfos } from 'license-checker';
+import licenseChecker, {ModuleInfo, ModuleInfos} from 'license-checker';
 import spdx from 'spdx-satisfies';
-
 
 // A general note on some disallowed licenses:
 // - CC0
@@ -17,7 +16,6 @@ import spdx from 'spdx-satisfies';
 //    We cannot use nor contribute to CC0 licenses.
 // - Public Domain
 //    Same as CC0, it is not a valid license.
-
 
 /** List of established allowed licenses for depdenencies. */
 const allowedLicenses = [
@@ -61,38 +59,44 @@ interface ExpandedModuleInfo extends ModuleInfo {
   allowed: boolean;
 }
 
-export interface LicenseCheckResult { valid: boolean, packages: ExpandedModuleInfo[], maxPkgNameLength: number };
-
+export interface LicenseCheckResult {
+  valid: boolean;
+  packages: ExpandedModuleInfo[];
+  maxPkgNameLength: number;
+}
 
 export async function checkAllLicenses(start: string): Promise<LicenseCheckResult> {
   return new Promise((resolve, reject) => {
     let maxPkgNameLength = 0;
-    init({ start }, (err: Error, pkgInfoObject: ModuleInfos) => {
+    licenseChecker.init({start}, (err: Error, pkgInfoObject: ModuleInfos) => {
       // If the license processor fails, reject the process with the error.
       if (err) {
+        console.log('thats an error');
         return reject(err);
       }
 
       // Check each package to ensure its license(s) are allowed.
-      const packages = Object.entries(pkgInfoObject).map<ExpandedModuleInfo>(([name, pkg]: [string, ModuleInfo]) => {
-        maxPkgNameLength = Math.max(maxPkgNameLength, name.length);
-        /** 
-         * Array of licenses for the package.
-         * 
-         * Note: Typically a package will only have one license, but support for multiple license
-         *       is necessary for full support.
-         */
-        const licenses = Array.isArray(pkg.licenses) ? pkg.licenses : [pkg.licenses!];
+      const packages = Object.entries(pkgInfoObject).map<ExpandedModuleInfo>(
+        ([name, pkg]: [string, ModuleInfo]) => {
+          maxPkgNameLength = Math.max(maxPkgNameLength, name.length);
+          /**
+           * Array of licenses for the package.
+           *
+           * Note: Typically a package will only have one license, but support for multiple license
+           *       is necessary for full support.
+           */
+          const licenses = Array.isArray(pkg.licenses) ? pkg.licenses : [pkg.licenses!];
 
-        return {
-          ...pkg,
-          name,
-          allowed: licenses.reduce((invalid, license) => invalid || assertAllowedLicense(license), false),
-        }
-      });
+          return {
+            ...pkg,
+            name,
+            allowed: licenses.some(assertAllowedLicense),
+          };
+        },
+      );
 
       resolve({
-        valid: packages.every(pkg => pkg.allowed),
+        valid: packages.every((pkg) => pkg.allowed),
         packages,
         maxPkgNameLength,
       });
@@ -100,15 +104,18 @@ export async function checkAllLicenses(start: string): Promise<LicenseCheckResul
   });
 }
 
-
-const allowedLicensesString = allowedLicenses.join(' OR ');
+const allowedLicensesSpdxExpression = allowedLicenses.join(' OR ');
 // Check if a license is accepted by an array of accepted licenses
 function assertAllowedLicense(license: string) {
   // Licenses which are determined based on a file other than LICENSE are have an * appended.
+  // See https://www.npmjs.com/package/license-checker#how-licenses-are-found
   const strippedLicense = license.endsWith('*') ? license.slice(0, -1) : license;
   try {
     // If the license is included in the known replacements, use the replacement instead.
-    return spdx(licenseReplacements.get(strippedLicense) ?? strippedLicense, allowedLicensesString);
+    return spdx(
+      licenseReplacements.get(strippedLicense) ?? strippedLicense,
+      allowedLicensesSpdxExpression,
+    );
   } catch {
     return false;
   }
