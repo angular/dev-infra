@@ -188,7 +188,7 @@ export class AuthenticatedGitClient extends GitClient {
 
   /** Configures an authenticated git client. */
   static configure(token: string, userType: UserType = 'user'): void {
-    if (AuthenticatedGitClient._authenticatedInstance) {
+    if (AuthenticatedGitClient._token) {
       throw Error(
         'Unable to configure `AuthenticatedGitClient` as it has been configured already.',
       );

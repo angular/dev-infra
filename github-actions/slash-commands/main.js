@@ -70023,7 +70023,7 @@ Alternatively, a new token can be created at: ${GITHUB_TOKEN_GENERATE_URL}
     return AuthenticatedGitClient._authenticatedInstance;
   }
   static configure(token, userType = "user") {
-    if (AuthenticatedGitClient._authenticatedInstance) {
+    if (AuthenticatedGitClient._token) {
       throw Error("Unable to configure `AuthenticatedGitClient` as it has been configured already.");
     }
     AuthenticatedGitClient._token = token;
