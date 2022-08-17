@@ -24,29 +24,30 @@ export function addGithubTokenOption<T>(argv: Argv<T>) {
         default: '',
         defaultDescription: '<LOCAL_TOKEN>',
         description: 'Github token. If not set, token is retrieved from the environment variables.',
-        coerce: (token: string | null) => {
-          if (token === null) {
-            return '';
-          }
-          const githubToken = token || findGithubTokenInEnvironment();
-          if (!githubToken) {
-            Log.error('No Github token set. Please set the `GITHUB_TOKEN` environment variable.');
-            Log.error('Alternatively, pass the `--github-token` command line flag.');
-            Log.warn(`You can generate a token here: ${GITHUB_TOKEN_GENERATE_URL}`);
-            process.exit(1);
-          }
-
-          AuthenticatedGitClient.configure(githubToken);
-          return githubToken;
-        },
+        // We use the coerce function as a way of allowing the user to provide the value, otherwise
+        // looking for it in the environment.
+        coerce: configureGitClientWithTokenOrFromEnvironment,
       })
   );
 }
 
 /**
- * Finds a non-explicitly provided Github token in the local environment.
- * The function looks for `GITHUB_TOKEN` or `TOKEN` in the environment variables.
+ * If the github token is able to be determined, either by being provided as a parameter or being
+ * present in the environment, it is used to set the configuration for the AuthenticatedGitClient.
+ * Otherwise, an error is thrown.
+ *
+ * By returning void, we enable the usage of this function as a coerce function for yargs which is
+ * present for users but does not become present in the type structure of the args values at
+ * runtime.
  */
-export function findGithubTokenInEnvironment(): string | undefined {
-  return process.env.GITHUB_TOKEN ?? process.env.TOKEN;
+export function configureGitClientWithTokenOrFromEnvironment(token: string | undefined) {
+  const githubToken = token || (process.env.GITHUB_TOKEN ?? process.env.TOKEN);
+  if (!githubToken) {
+    Log.error('No Github token set. Please set the `GITHUB_TOKEN` environment variable.');
+    Log.error('Alternatively, pass the `--github-token` command line flag.');
+    Log.warn(`You can generate a token here: ${GITHUB_TOKEN_GENERATE_URL}`);
+    throw Error('Unable to determine the Github token.');
+  }
+
+  AuthenticatedGitClient.configure(githubToken);
 }

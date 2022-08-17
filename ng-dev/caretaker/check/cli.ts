@@ -12,9 +12,7 @@ import {addGithubTokenOption} from '../../utils/git/github-yargs.js';
 
 import {checkServiceStatuses} from './check.js';
 
-export interface CaretakerCheckOptions {
-  githubToken: string;
-}
+export interface CaretakerCheckOptions {}
 
 /** Builds the command. */
 function builder(argv: Argv) {

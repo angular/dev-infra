@@ -12,9 +12,7 @@ import {addGithubTokenOption} from '../../utils/git/github-yargs.js';
 
 import {updateCaretakerTeamViaPrompt} from './update-github-team.js';
 
-export interface CaretakerHandoffOptions {
-  githubToken: string;
-}
+export interface CaretakerHandoffOptions {}
 
 /** Builds the command. */
 function builder(argv: Argv) {

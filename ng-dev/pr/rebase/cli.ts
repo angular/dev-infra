@@ -15,7 +15,6 @@ import {rebasePr} from './index.js';
 /** The options available to the rebase command via CLI. */
 export interface RebaseOptions {
   pr: number;
-  githubToken: string;
 }
 
 /** Builds the rebase pull request command. */
