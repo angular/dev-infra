@@ -396,7 +396,7 @@ __metadata:
     git-raw-commits: ^2.0.10
     glob: 8.0.3
     husky: ^8.0.0
-    inquirer: ^9.0.0
+    inquirer: 9.1.0
     jasmine: ~4.2.0
     jasmine-core: ~4.2.0
     jsdom: ^20.0.0
@@ -9977,7 +9977,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inquirer@npm:^9.0.0":
+"inquirer@npm:9.1.0":
   version: 9.1.0
   resolution: "inquirer@npm:9.1.0"
   dependencies:

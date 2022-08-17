@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ListChoiceOptions, prompt} from 'inquirer';
+import inquirer, {ListChoiceOptions} from 'inquirer';
 
 import {semverInc} from '../../../utils/semver.js';
 import {ActiveReleaseTrains} from '../../versioning/active-release-trains.js';
@@ -65,7 +65,7 @@ export class CutLongTermSupportPatchAction extends ReleaseAction {
       activeBranchChoices.push({name: 'Inactive LTS versions (not recommended)', value: null});
     }
 
-    const {activeLtsBranch, inactiveLtsBranch} = await prompt<{
+    const {activeLtsBranch, inactiveLtsBranch} = await inquirer.prompt<{
       activeLtsBranch: LtsBranch | null;
       inactiveLtsBranch: LtsBranch;
     }>([

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ListChoiceOptions, prompt} from 'inquirer';
+import inquirer, {ListChoiceOptions} from 'inquirer';
 
 import {GithubConfig} from '../../utils/config.js';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
@@ -126,7 +126,7 @@ export class ReleaseTool {
 
     Log.info('Please select the type of release you want to perform.');
 
-    const {releaseAction} = await prompt<{releaseAction: ReleaseAction}>({
+    const {releaseAction} = await inquirer.prompt<{releaseAction: ReleaseAction}>({
       name: 'releaseAction',
       message: 'Please select an action:',
       type: 'list',

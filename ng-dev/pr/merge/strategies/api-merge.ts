@@ -7,7 +7,7 @@
  */
 
 import {RestEndpointMethodTypes} from '@octokit/plugin-rest-endpoint-methods';
-import {prompt} from 'inquirer';
+import inquirer from 'inquirer';
 
 import {parseCommitMessage} from '../../../commit-message/parse.js';
 import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client.js';
@@ -150,7 +150,7 @@ export class GithubApiMergeStrategy extends MergeStrategy {
     mergeOptions: OctokitMergeParams,
   ) {
     const commitMessage = await this._getDefaultSquashCommitMessage(pullRequest);
-    const {result} = await prompt<{result: string}>({
+    const {result} = await inquirer.prompt<{result: string}>({
       type: 'editor',
       name: 'result',
       message: 'Please update the commit message',
