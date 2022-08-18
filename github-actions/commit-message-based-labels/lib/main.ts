@@ -20,8 +20,12 @@ class CommitMessageBasedLabelManager {
   static run = async () => {
     const token = await getAuthTokenFor(ANGULAR_ROBOT);
     const git = new Octokit({auth: token});
-    const inst = new this(git);
-    await inst.run();
+    try {
+      const inst = new this(git);
+      await inst.run();
+    } finally {
+      await revokeActiveInstallationToken(git);
+    }
   };
 
   /** Labels currently applied to the PR. */
@@ -33,37 +37,33 @@ class CommitMessageBasedLabelManager {
 
   /** Run the action, and revoke the installation token on completion. */
   async run() {
-    try {
-      // Initialize the labels and commits before performing the action.
-      await this.initialize();
-      core.info(`PR #${context.issue.number}`);
+    // Initialize the labels and commits before performing the action.
+    await this.initialize();
+    core.info(`PR #${context.issue.number}`);
 
-      // Add or Remove label as appropriate for each of the supported label and commit messaage
-      // combinations.
-      for (const [label, commitProperty] of supportedLabels) {
-        const hasCommit = [...this.commits].some((commit) => commit[commitProperty].length > 0);
-        const hasLabel = this.labels.has(label);
-        core.info(`${commitProperty} | hasLabel: ${hasLabel} | hasCommit: ${hasCommit}`);
+    // Add or Remove label as appropriate for each of the supported label and commit messaage
+    // combinations.
+    for (const [label, commitProperty] of supportedLabels) {
+      const hasCommit = [...this.commits].some((commit) => commit[commitProperty].length > 0);
+      const hasLabel = this.labels.has(label);
+      core.info(`${commitProperty} | hasLabel: ${hasLabel} | hasCommit: ${hasCommit}`);
 
-        if (hasCommit && !hasLabel) {
-          await this.addLabel(label);
-        }
-        if (!hasCommit && hasLabel) {
-          await this.removeLabel(label);
+      if (hasCommit && !hasLabel) {
+        await this.addLabel(label);
+      }
+      if (!hasCommit && hasLabel) {
+        await this.removeLabel(label);
+      }
+    }
+
+    // Add 'comp: docs' label for changes which contain a docs commit.
+    if (!this.labels.has(compDocsLabel)) {
+      for (const commit of this.commits) {
+        if (commit.type === COMMIT_TYPES['docs'].name) {
+          await this.addLabel(compDocsLabel);
+          break;
         }
       }
-
-      // Add 'comp: docs' label for changes which contain a docs commit.
-      if (!this.labels.has(compDocsLabel)) {
-        for (const commit of this.commits) {
-          if (commit.type === COMMIT_TYPES['docs'].name) {
-            await this.addLabel(compDocsLabel);
-            break;
-          }
-        }
-      }
-    } finally {
-      await revokeActiveInstallationToken(this.git);
     }
   }
 

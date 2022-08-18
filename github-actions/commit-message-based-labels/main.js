@@ -32825,30 +32825,26 @@ var CommitMessageBasedLabelManager = class {
     this.commits = /* @__PURE__ */ new Set();
   }
   async run() {
-    try {
-      await this.initialize();
-      core.info(`PR #${import_github2.context.issue.number}`);
-      for (const [label, commitProperty] of supportedLabels) {
-        const hasCommit = [...this.commits].some((commit) => commit[commitProperty].length > 0);
-        const hasLabel = this.labels.has(label);
-        core.info(`${commitProperty} | hasLabel: ${hasLabel} | hasCommit: ${hasCommit}`);
-        if (hasCommit && !hasLabel) {
-          await this.addLabel(label);
-        }
-        if (!hasCommit && hasLabel) {
-          await this.removeLabel(label);
+    await this.initialize();
+    core.info(`PR #${import_github2.context.issue.number}`);
+    for (const [label, commitProperty] of supportedLabels) {
+      const hasCommit = [...this.commits].some((commit) => commit[commitProperty].length > 0);
+      const hasLabel = this.labels.has(label);
+      core.info(`${commitProperty} | hasLabel: ${hasLabel} | hasCommit: ${hasCommit}`);
+      if (hasCommit && !hasLabel) {
+        await this.addLabel(label);
+      }
+      if (!hasCommit && hasLabel) {
+        await this.removeLabel(label);
+      }
+    }
+    if (!this.labels.has(compDocsLabel)) {
+      for (const commit of this.commits) {
+        if (commit.type === COMMIT_TYPES["docs"].name) {
+          await this.addLabel(compDocsLabel);
+          break;
         }
       }
-      if (!this.labels.has(compDocsLabel)) {
-        for (const commit of this.commits) {
-          if (commit.type === COMMIT_TYPES["docs"].name) {
-            await this.addLabel(compDocsLabel);
-            break;
-          }
-        }
-      }
-    } finally {
-      await revokeActiveInstallationToken(this.git);
     }
   }
   async addLabel(label) {
@@ -32883,8 +32879,12 @@ _a = CommitMessageBasedLabelManager;
 CommitMessageBasedLabelManager.run = async () => {
   const token = await getAuthTokenFor(ANGULAR_ROBOT);
   const git = new import_rest2.Octokit({ auth: token });
-  const inst = new _a(git);
-  await inst.run();
+  try {
+    const inst = new _a(git);
+    await inst.run();
+  } finally {
+    await revokeActiveInstallationToken(git);
+  }
 };
 if (import_github2.context.repo.owner === "angular") {
   CommitMessageBasedLabelManager.run().catch((e) => {
