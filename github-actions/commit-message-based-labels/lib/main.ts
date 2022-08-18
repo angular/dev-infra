@@ -1,7 +1,8 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {Octokit} from '@octokit/rest';
-import {parseCommitMessage} from '../../../ng-dev/commit-message/parse.js';
+import {Commit, parseCommitMessage} from '../../../ng-dev/commit-message/parse.js';
+import {COMMIT_TYPES} from '../../../ng-dev/commit-message/config.js';
 import {breakingChangeLabel, deprecationLabel} from '../../../ng-dev/pr/config/index.js';
 import {ANGULAR_ROBOT, getAuthTokenFor, revokeActiveInstallationToken} from '../../utils.js';
 
@@ -11,66 +12,107 @@ const supportedLabels = [
   [deprecationLabel, 'deprecations'],
 ] as const;
 
-async function main() {
-  let installationClient: Octokit | null = null;
+/** Label for docs changes. */
+const compDocsLabel = 'comp: docs';
 
-  try {
+class CommitMessageBasedLabelManager {
+  /** Run the commit message based labelling process. */
+  static run = async () => {
     const token = await getAuthTokenFor(ANGULAR_ROBOT);
-    installationClient = new Octokit({auth: token});
+    const git = new Octokit({auth: token});
+    const inst = new this(git);
+    await inst.run();
+  };
 
-    await runCommitMessageBasedLabelsAction(installationClient);
-  } finally {
-    if (installationClient !== null) {
-      await revokeActiveInstallationToken(installationClient);
+  /** Labels currently applied to the PR. */
+  labels = new Set<string>();
+  /** Parsed commit message for every commit on the PR. */
+  commits = new Set<Commit>();
+
+  private constructor(private git: Octokit) {}
+
+  /** Run the action, and revoke the installation token on completion. */
+  async run() {
+    try {
+      // Initialize the labels and commits before performing the action.
+      await this.initialize();
+      core.info(`PR #${context.issue.number}`);
+
+      // Add or Remove label as appropriate for each of the supported label and commit messaage
+      // combinations.
+      for (const [label, commitProperty] of supportedLabels) {
+        const hasCommit = [...this.commits].some((commit) => commit[commitProperty].length > 0);
+        const hasLabel = this.labels.has(label);
+        core.info(`${commitProperty} | hasLabel: ${hasLabel} | hasCommit: ${hasCommit}`);
+
+        if (hasCommit && !hasLabel) {
+          await this.addLabel(label);
+        }
+        if (!hasCommit && hasLabel) {
+          await this.removeLabel(label);
+        }
+      }
+
+      // Add 'comp: docs' label for changes which contain a docs commit.
+      if (!this.labels.has(compDocsLabel)) {
+        for (const commit of this.commits) {
+          if (commit.type === COMMIT_TYPES['docs'].name) {
+            await this.addLabel(compDocsLabel);
+            break;
+          }
+        }
+      }
+    } finally {
+      await revokeActiveInstallationToken(this.git);
     }
   }
-}
 
-async function runCommitMessageBasedLabelsAction(client: Octokit): Promise<void> {
-  const {number, owner, repo} = context.issue;
-  /** Labels currently applied to the PR. */
-  const labels = await (
-    await client.issues.listLabelsOnIssue({issue_number: number, owner, repo})
-  ).data;
-  /** Parsed commit message for every commit on the PR. */
-  const commits = await (
-    await client.paginate(client.pulls.listCommits, {owner, pull_number: number, repo})
-  ).map(({commit: {message}}) => parseCommitMessage(message));
-
-  console.log(`PR #${number}`);
-
-  // Add or Remove label as appropriate for each of the supported label and commit messaage
-  // combinations.
-  for (const [label, commitProperty] of supportedLabels) {
-    const hasCommit = commits.some((commit) => commit[commitProperty].length > 0);
-    const hasLabel = labels.some(({name}) => name === label);
-    console.log(`${commitProperty} | hasLabel: ${hasLabel} | hasCommit: ${hasCommit}`);
-
-    if (hasCommit && !hasLabel) {
-      await client.issues.addLabels({
-        repo,
-        owner,
-        issue_number: number,
-        labels: [label],
-      });
-      console.log(`Added ${label} label to PR #${number}`);
+  /** Add the provided label to the pull request. */
+  async addLabel(label: string) {
+    const {number: issue_number, owner, repo} = context.issue;
+    try {
+      await this.git.issues.addLabels({repo, owner, issue_number, labels: [label]});
+      core.info(`Added ${label} label to PR #${issue_number}`);
+      this.labels.add(label);
+    } catch (err) {
+      core.error(`Failed to add ${label} label to PR #${issue_number}`);
+      core.debug(err as string);
     }
-    if (!hasCommit && hasLabel) {
-      await client.issues.removeLabel({
-        repo,
-        owner,
-        issue_number: number,
-        name: label,
-      });
-      console.log(`Removed ${label} label from PR #${number}`);
+  }
+
+  /** Remove the provided label from the pull request. */
+  async removeLabel(name: string) {
+    const {number: issue_number, owner, repo} = context.issue;
+    try {
+      await this.git.issues.removeLabel({repo, owner, issue_number, name});
+      core.info(`Added ${name} label to PR #${issue_number}`);
+      this.labels.delete(name);
+    } catch (err) {
+      core.error(`Failed to add ${name} label to PR #${issue_number}`);
+      core.debug(err as string);
     }
+  }
+
+  /** Initialize the current labels and commits for the PR. */
+  async initialize() {
+    const {number, owner, repo} = context.issue;
+
+    await this.git
+      .paginate(this.git.pulls.listCommits, {owner, pull_number: number, repo})
+      .then((commits) =>
+        commits.forEach(({commit}) => this.commits.add(parseCommitMessage(commit.message))),
+      );
+
+    await this.git.issues
+      .listLabelsOnIssue({issue_number: number, owner, repo})
+      .then((resp) => resp.data.forEach(({name}) => this.labels.add(name)));
   }
 }
 
 // Only run if the action is executed in a repository within the Angular org. This is in place
 // to prevent the action from actually running in a fork of a repository with this action set up.
 if (context.repo.owner === 'angular') {
-  main().catch((e: Error) => {
+  CommitMessageBasedLabelManager.run().catch((e: Error) => {
     core.error(e);
     core.setFailed(e.message);
   });

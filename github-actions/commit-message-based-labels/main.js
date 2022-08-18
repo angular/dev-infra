@@ -853,7 +853,7 @@ var require_tunnel = __commonJS({
         connectOptions.headers = connectOptions.headers || {};
         connectOptions.headers["Proxy-Authorization"] = "Basic " + new Buffer(connectOptions.proxyAuth).toString("base64");
       }
-      debug("making CONNECT request");
+      debug2("making CONNECT request");
       var connectReq = self2.request(connectOptions);
       connectReq.useChunkedEncodingByDefault = false;
       connectReq.once("response", onResponse);
@@ -873,7 +873,7 @@ var require_tunnel = __commonJS({
         connectReq.removeAllListeners();
         socket.removeAllListeners();
         if (res.statusCode !== 200) {
-          debug(
+          debug2(
             "tunneling socket could not be established, statusCode=%d",
             res.statusCode
           );
@@ -885,7 +885,7 @@ var require_tunnel = __commonJS({
           return;
         }
         if (head.length > 0) {
-          debug("got illegal response body from proxy");
+          debug2("got illegal response body from proxy");
           socket.destroy();
           var error2 = new Error("got illegal response body from proxy");
           error2.code = "ECONNRESET";
@@ -893,13 +893,13 @@ var require_tunnel = __commonJS({
           self2.removeSocket(placeholder);
           return;
         }
-        debug("tunneling connection has established");
+        debug2("tunneling connection has established");
         self2.sockets[self2.sockets.indexOf(placeholder)] = socket;
         return cb(socket);
       }
       function onError(cause) {
         connectReq.removeAllListeners();
-        debug(
+        debug2(
           "tunneling socket could not be established, cause=%s\n",
           cause.message,
           cause.stack
@@ -961,9 +961,9 @@ var require_tunnel = __commonJS({
       }
       return target;
     }
-    var debug;
+    var debug2;
     if (process.env.NODE_DEBUG && /\btunnel\b/.test(process.env.NODE_DEBUG)) {
-      debug = function() {
+      debug2 = function() {
         var args = Array.prototype.slice.call(arguments);
         if (typeof args[0] === "string") {
           args[0] = "TUNNEL: " + args[0];
@@ -973,10 +973,10 @@ var require_tunnel = __commonJS({
         console.error.apply(console, args);
       };
     } else {
-      debug = function() {
+      debug2 = function() {
       };
     }
-    exports.debug = debug;
+    exports.debug = debug2;
   }
 });
 
@@ -1262,12 +1262,12 @@ var require_lib = __commonJS({
             throw new Error("Client has already been disposed.");
           }
           const parsedUrl = new URL(requestUrl);
-          let info2 = this._prepareRequest(verb, parsedUrl, headers);
+          let info3 = this._prepareRequest(verb, parsedUrl, headers);
           const maxTries = this._allowRetries && RetryableHttpVerbs.includes(verb) ? this._maxRetries + 1 : 1;
           let numTries = 0;
           let response;
           do {
-            response = yield this.requestRaw(info2, data);
+            response = yield this.requestRaw(info3, data);
             if (response && response.message && response.message.statusCode === HttpCodes.Unauthorized) {
               let authenticationHandler;
               for (const handler of this.handlers) {
@@ -1277,7 +1277,7 @@ var require_lib = __commonJS({
                 }
               }
               if (authenticationHandler) {
-                return authenticationHandler.handleAuthentication(this, info2, data);
+                return authenticationHandler.handleAuthentication(this, info3, data);
               } else {
                 return response;
               }
@@ -1300,8 +1300,8 @@ var require_lib = __commonJS({
                   }
                 }
               }
-              info2 = this._prepareRequest(verb, parsedRedirectUrl, headers);
-              response = yield this.requestRaw(info2, data);
+              info3 = this._prepareRequest(verb, parsedRedirectUrl, headers);
+              response = yield this.requestRaw(info3, data);
               redirectsRemaining--;
             }
             if (!response.message.statusCode || !HttpResponseRetryCodes.includes(response.message.statusCode)) {
@@ -1322,7 +1322,7 @@ var require_lib = __commonJS({
         }
         this._disposed = true;
       }
-      requestRaw(info2, data) {
+      requestRaw(info3, data) {
         return __awaiter(this, void 0, void 0, function* () {
           return new Promise((resolve, reject) => {
             function callbackForResult(err, res) {
@@ -1334,16 +1334,16 @@ var require_lib = __commonJS({
                 resolve(res);
               }
             }
-            this.requestRawWithCallback(info2, data, callbackForResult);
+            this.requestRawWithCallback(info3, data, callbackForResult);
           });
         });
       }
-      requestRawWithCallback(info2, data, onResult) {
+      requestRawWithCallback(info3, data, onResult) {
         if (typeof data === "string") {
-          if (!info2.options.headers) {
-            info2.options.headers = {};
+          if (!info3.options.headers) {
+            info3.options.headers = {};
           }
-          info2.options.headers["Content-Length"] = Buffer.byteLength(data, "utf8");
+          info3.options.headers["Content-Length"] = Buffer.byteLength(data, "utf8");
         }
         let callbackCalled = false;
         function handleResult(err, res) {
@@ -1352,7 +1352,7 @@ var require_lib = __commonJS({
             onResult(err, res);
           }
         }
-        const req = info2.httpModule.request(info2.options, (msg) => {
+        const req = info3.httpModule.request(info3.options, (msg) => {
           const res = new HttpClientResponse(msg);
           handleResult(void 0, res);
         });
@@ -1364,7 +1364,7 @@ var require_lib = __commonJS({
           if (socket) {
             socket.end();
           }
-          handleResult(new Error(`Request timeout: ${info2.options.path}`));
+          handleResult(new Error(`Request timeout: ${info3.options.path}`));
         });
         req.on("error", function(err) {
           handleResult(err);
@@ -1386,27 +1386,27 @@ var require_lib = __commonJS({
         return this._getAgent(parsedUrl);
       }
       _prepareRequest(method, requestUrl, headers) {
-        const info2 = {};
-        info2.parsedUrl = requestUrl;
-        const usingSsl = info2.parsedUrl.protocol === "https:";
-        info2.httpModule = usingSsl ? https : http;
+        const info3 = {};
+        info3.parsedUrl = requestUrl;
+        const usingSsl = info3.parsedUrl.protocol === "https:";
+        info3.httpModule = usingSsl ? https : http;
         const defaultPort = usingSsl ? 443 : 80;
-        info2.options = {};
-        info2.options.host = info2.parsedUrl.hostname;
-        info2.options.port = info2.parsedUrl.port ? parseInt(info2.parsedUrl.port) : defaultPort;
-        info2.options.path = (info2.parsedUrl.pathname || "") + (info2.parsedUrl.search || "");
-        info2.options.method = method;
-        info2.options.headers = this._mergeHeaders(headers);
+        info3.options = {};
+        info3.options.host = info3.parsedUrl.hostname;
+        info3.options.port = info3.parsedUrl.port ? parseInt(info3.parsedUrl.port) : defaultPort;
+        info3.options.path = (info3.parsedUrl.pathname || "") + (info3.parsedUrl.search || "");
+        info3.options.method = method;
+        info3.options.headers = this._mergeHeaders(headers);
         if (this.userAgent != null) {
-          info2.options.headers["user-agent"] = this.userAgent;
+          info3.options.headers["user-agent"] = this.userAgent;
         }
-        info2.options.agent = this._getAgent(info2.parsedUrl);
+        info3.options.agent = this._getAgent(info3.parsedUrl);
         if (this.handlers) {
           for (const handler of this.handlers) {
-            handler.prepareRequest(info2.options);
+            handler.prepareRequest(info3.options);
           }
         }
-        return info2;
+        return info3;
       }
       _mergeHeaders(headers) {
         if (this.requestOptions && this.requestOptions.headers) {
@@ -1695,7 +1695,7 @@ var require_oidc_utils = __commonJS({
         return runtimeUrl;
       }
       static getCall(id_token_url) {
-        var _a;
+        var _a2;
         return __awaiter(this, void 0, void 0, function* () {
           const httpclient = OidcClient.createHttpClient();
           const res = yield httpclient.getJson(id_token_url).catch((error2) => {
@@ -1705,7 +1705,7 @@ var require_oidc_utils = __commonJS({
  
         Error Message: ${error2.result.message}`);
           });
-          const id_token = (_a = res.result) === null || _a === void 0 ? void 0 : _a.value;
+          const id_token = (_a2 = res.result) === null || _a2 === void 0 ? void 0 : _a2.value;
           if (!id_token) {
             throw new Error("Response json body do not have ID Token field");
           }
@@ -1787,7 +1787,7 @@ var require_summary = __commonJS({
           }
           try {
             yield access(pathFromEnv, fs_1.constants.R_OK | fs_1.constants.W_OK);
-          } catch (_a) {
+          } catch (_a2) {
             throw new Error(`Unable to access summary file: '${pathFromEnv}'. Check if the file has correct read/write permissions.`);
           }
           this._filePath = pathFromEnv;
@@ -2101,10 +2101,10 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
       return process.env["RUNNER_DEBUG"] === "1";
     }
     exports.isDebug = isDebug;
-    function debug(message) {
+    function debug2(message) {
       command_1.issueCommand("debug", {}, message);
     }
-    exports.debug = debug;
+    exports.debug = debug2;
     function error2(message, properties = {}) {
       command_1.issueCommand("error", utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
     }
@@ -2117,10 +2117,10 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
       command_1.issueCommand("notice", utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
     }
     exports.notice = notice;
-    function info2(message) {
+    function info3(message) {
       process.stdout.write(message + os3.EOL);
     }
-    exports.info = info2;
+    exports.info = info3;
     function startGroup(name) {
       command_1.issue("group", name);
     }
@@ -2187,7 +2187,7 @@ var require_context = __commonJS({
     var os_1 = __require("os");
     var Context = class {
       constructor() {
-        var _a, _b, _c;
+        var _a2, _b, _c;
         this.payload = {};
         if (process.env.GITHUB_EVENT_PATH) {
           if (fs_1.existsSync(process.env.GITHUB_EVENT_PATH)) {
@@ -2206,7 +2206,7 @@ var require_context = __commonJS({
         this.job = process.env.GITHUB_JOB;
         this.runNumber = parseInt(process.env.GITHUB_RUN_NUMBER, 10);
         this.runId = parseInt(process.env.GITHUB_RUN_ID, 10);
-        this.apiUrl = (_a = process.env.GITHUB_API_URL) !== null && _a !== void 0 ? _a : `https://api.github.com`;
+        this.apiUrl = (_a2 = process.env.GITHUB_API_URL) !== null && _a2 !== void 0 ? _a2 : `https://api.github.com`;
         this.serverUrl = (_b = process.env.GITHUB_SERVER_URL) !== null && _b !== void 0 ? _b : `https://github.com`;
         this.graphqlUrl = (_c = process.env.GITHUB_GRAPHQL_URL) !== null && _c !== void 0 ? _c : `https://api.github.com/graphql`;
       }
@@ -9817,10 +9817,10 @@ var require_dist_node8 = __commonJS({
         return OctokitWithDefaults;
       }
       static plugin(...newPlugins) {
-        var _a;
+        var _a2;
         const currentPlugins = this.plugins;
-        const NewOctokit = (_a = class extends this {
-        }, _a.plugins = currentPlugins.concat(newPlugins.filter((plugin) => !currentPlugins.includes(plugin))), _a);
+        const NewOctokit = (_a2 = class extends this {
+        }, _a2.plugins = currentPlugins.concat(newPlugins.filter((plugin) => !currentPlugins.includes(plugin))), _a2);
         return NewOctokit;
       }
     };
@@ -14586,10 +14586,10 @@ var require_dist_node16 = __commonJS({
         return OctokitWithDefaults;
       }
       static plugin(...newPlugins) {
-        var _a;
+        var _a2;
         const currentPlugins = this.plugins;
-        const NewOctokit = (_a = class extends this {
-        }, _a.plugins = currentPlugins.concat(newPlugins.filter((plugin) => !currentPlugins.includes(plugin))), _a);
+        const NewOctokit = (_a2 = class extends this {
+        }, _a2.plugins = currentPlugins.concat(newPlugins.filter((plugin) => !currentPlugins.includes(plugin))), _a2);
         return NewOctokit;
       }
     };
@@ -23248,13 +23248,13 @@ var require_from = __commonJS({
     "use strict";
     function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
       try {
-        var info2 = gen[key](arg);
-        var value = info2.value;
+        var info3 = gen[key](arg);
+        var value = info3.value;
       } catch (error2) {
         reject(error2);
         return;
       }
-      if (info2.done) {
+      if (info3.done) {
         resolve(value);
       } else {
         Promise.resolve(value).then(_next, _throw);
@@ -23381,11 +23381,11 @@ var require_stream_readable = __commonJS({
       return Buffer2.isBuffer(obj) || obj instanceof OurUint8Array;
     }
     var debugUtil = __require("util");
-    var debug;
+    var debug2;
     if (debugUtil && debugUtil.debuglog) {
-      debug = debugUtil.debuglog("stream");
+      debug2 = debugUtil.debuglog("stream");
     } else {
-      debug = function debug2() {
+      debug2 = function debug3() {
       };
     }
     var BufferList = require_buffer_list();
@@ -23507,7 +23507,7 @@ var require_stream_readable = __commonJS({
       return readableAddChunk(this, chunk, null, true, false);
     };
     function readableAddChunk(stream, chunk, encoding, addToFront, skipChunkCheck) {
-      debug("readableAddChunk", chunk);
+      debug2("readableAddChunk", chunk);
       var state = stream._readableState;
       if (chunk === null) {
         state.reading = false;
@@ -23630,14 +23630,14 @@ var require_stream_readable = __commonJS({
       return state.length;
     }
     Readable.prototype.read = function(n) {
-      debug("read", n);
+      debug2("read", n);
       n = parseInt(n, 10);
       var state = this._readableState;
       var nOrig = n;
       if (n !== 0)
         state.emittedReadable = false;
       if (n === 0 && state.needReadable && ((state.highWaterMark !== 0 ? state.length >= state.highWaterMark : state.length > 0) || state.ended)) {
-        debug("read: emitReadable", state.length, state.ended);
+        debug2("read: emitReadable", state.length, state.ended);
         if (state.length === 0 && state.ended)
           endReadable(this);
         else
@@ -23651,16 +23651,16 @@ var require_stream_readable = __commonJS({
         return null;
       }
       var doRead = state.needReadable;
-      debug("need readable", doRead);
+      debug2("need readable", doRead);
       if (state.length === 0 || state.length - n < state.highWaterMark) {
         doRead = true;
-        debug("length less than watermark", doRead);
+        debug2("length less than watermark", doRead);
       }
       if (state.ended || state.reading) {
         doRead = false;
-        debug("reading or ended", doRead);
+        debug2("reading or ended", doRead);
       } else if (doRead) {
-        debug("do read");
+        debug2("do read");
         state.reading = true;
         state.sync = true;
         if (state.length === 0)
@@ -23693,7 +23693,7 @@ var require_stream_readable = __commonJS({
       return ret;
     };
     function onEofChunk(stream, state) {
-      debug("onEofChunk");
+      debug2("onEofChunk");
       if (state.ended)
         return;
       if (state.decoder) {
@@ -23716,17 +23716,17 @@ var require_stream_readable = __commonJS({
     }
     function emitReadable(stream) {
       var state = stream._readableState;
-      debug("emitReadable", state.needReadable, state.emittedReadable);
+      debug2("emitReadable", state.needReadable, state.emittedReadable);
       state.needReadable = false;
       if (!state.emittedReadable) {
-        debug("emitReadable", state.flowing);
+        debug2("emitReadable", state.flowing);
         state.emittedReadable = true;
         process.nextTick(emitReadable_, stream);
       }
     }
     function emitReadable_(stream) {
       var state = stream._readableState;
-      debug("emitReadable_", state.destroyed, state.length, state.ended);
+      debug2("emitReadable_", state.destroyed, state.length, state.ended);
       if (!state.destroyed && (state.length || state.ended)) {
         stream.emit("readable");
         state.emittedReadable = false;
@@ -23743,7 +23743,7 @@ var require_stream_readable = __commonJS({
     function maybeReadMore_(stream, state) {
       while (!state.reading && !state.ended && (state.length < state.highWaterMark || state.flowing && state.length === 0)) {
         var len = state.length;
-        debug("maybeReadMore read 0");
+        debug2("maybeReadMore read 0");
         stream.read(0);
         if (len === state.length)
           break;
@@ -23768,7 +23768,7 @@ var require_stream_readable = __commonJS({
           break;
       }
       state.pipesCount += 1;
-      debug("pipe count=%d opts=%j", state.pipesCount, pipeOpts);
+      debug2("pipe count=%d opts=%j", state.pipesCount, pipeOpts);
       var doEnd = (!pipeOpts || pipeOpts.end !== false) && dest !== process.stdout && dest !== process.stderr;
       var endFn = doEnd ? onend : unpipe;
       if (state.endEmitted)
@@ -23777,7 +23777,7 @@ var require_stream_readable = __commonJS({
         src.once("end", endFn);
       dest.on("unpipe", onunpipe);
       function onunpipe(readable, unpipeInfo) {
-        debug("onunpipe");
+        debug2("onunpipe");
         if (readable === src) {
           if (unpipeInfo && unpipeInfo.hasUnpiped === false) {
             unpipeInfo.hasUnpiped = true;
@@ -23786,14 +23786,14 @@ var require_stream_readable = __commonJS({
         }
       }
       function onend() {
-        debug("onend");
+        debug2("onend");
         dest.end();
       }
       var ondrain = pipeOnDrain(src);
       dest.on("drain", ondrain);
       var cleanedUp = false;
       function cleanup() {
-        debug("cleanup");
+        debug2("cleanup");
         dest.removeListener("close", onclose);
         dest.removeListener("finish", onfinish);
         dest.removeListener("drain", ondrain);
@@ -23808,19 +23808,19 @@ var require_stream_readable = __commonJS({
       }
       src.on("data", ondata);
       function ondata(chunk) {
-        debug("ondata");
+        debug2("ondata");
         var ret = dest.write(chunk);
-        debug("dest.write", ret);
+        debug2("dest.write", ret);
         if (ret === false) {
           if ((state.pipesCount === 1 && state.pipes === dest || state.pipesCount > 1 && indexOf(state.pipes, dest) !== -1) && !cleanedUp) {
-            debug("false write response, pause", state.awaitDrain);
+            debug2("false write response, pause", state.awaitDrain);
             state.awaitDrain++;
           }
           src.pause();
         }
       }
       function onerror(er) {
-        debug("onerror", er);
+        debug2("onerror", er);
         unpipe();
         dest.removeListener("error", onerror);
         if (EElistenerCount(dest, "error") === 0)
@@ -23833,18 +23833,18 @@ var require_stream_readable = __commonJS({
       }
       dest.once("close", onclose);
       function onfinish() {
-        debug("onfinish");
+        debug2("onfinish");
         dest.removeListener("close", onclose);
         unpipe();
       }
       dest.once("finish", onfinish);
       function unpipe() {
-        debug("unpipe");
+        debug2("unpipe");
         src.unpipe(dest);
       }
       dest.emit("pipe", src);
       if (!state.flowing) {
-        debug("pipe resume");
+        debug2("pipe resume");
         src.resume();
       }
       return dest;
@@ -23852,7 +23852,7 @@ var require_stream_readable = __commonJS({
     function pipeOnDrain(src) {
       return function pipeOnDrainFunctionResult() {
         var state = src._readableState;
-        debug("pipeOnDrain", state.awaitDrain);
+        debug2("pipeOnDrain", state.awaitDrain);
         if (state.awaitDrain)
           state.awaitDrain--;
         if (state.awaitDrain === 0 && EElistenerCount(src, "data")) {
@@ -23915,7 +23915,7 @@ var require_stream_readable = __commonJS({
           state.readableListening = state.needReadable = true;
           state.flowing = false;
           state.emittedReadable = false;
-          debug("on readable", state.length, state.reading);
+          debug2("on readable", state.length, state.reading);
           if (state.length) {
             emitReadable(this);
           } else if (!state.reading) {
@@ -23950,13 +23950,13 @@ var require_stream_readable = __commonJS({
       }
     }
     function nReadingNextTick(self2) {
-      debug("readable nexttick read 0");
+      debug2("readable nexttick read 0");
       self2.read(0);
     }
     Readable.prototype.resume = function() {
       var state = this._readableState;
       if (!state.flowing) {
-        debug("resume");
+        debug2("resume");
         state.flowing = !state.readableListening;
         resume(this, state);
       }
@@ -23970,7 +23970,7 @@ var require_stream_readable = __commonJS({
       }
     }
     function resume_(stream, state) {
-      debug("resume", state.reading);
+      debug2("resume", state.reading);
       if (!state.reading) {
         stream.read(0);
       }
@@ -23981,9 +23981,9 @@ var require_stream_readable = __commonJS({
         stream.read(0);
     }
     Readable.prototype.pause = function() {
-      debug("call pause flowing=%j", this._readableState.flowing);
+      debug2("call pause flowing=%j", this._readableState.flowing);
       if (this._readableState.flowing !== false) {
-        debug("pause");
+        debug2("pause");
         this._readableState.flowing = false;
         this.emit("pause");
       }
@@ -23992,7 +23992,7 @@ var require_stream_readable = __commonJS({
     };
     function flow(stream) {
       var state = stream._readableState;
-      debug("flow", state.flowing);
+      debug2("flow", state.flowing);
       while (state.flowing && stream.read() !== null) {
         ;
       }
@@ -24002,7 +24002,7 @@ var require_stream_readable = __commonJS({
       var state = this._readableState;
       var paused = false;
       stream.on("end", function() {
-        debug("wrapped end");
+        debug2("wrapped end");
         if (state.decoder && !state.ended) {
           var chunk = state.decoder.end();
           if (chunk && chunk.length)
@@ -24011,7 +24011,7 @@ var require_stream_readable = __commonJS({
         _this.push(null);
       });
       stream.on("data", function(chunk) {
-        debug("wrapped data");
+        debug2("wrapped data");
         if (state.decoder)
           chunk = state.decoder.write(chunk);
         if (state.objectMode && (chunk === null || chunk === void 0))
@@ -24037,7 +24037,7 @@ var require_stream_readable = __commonJS({
         stream.on(kProxyEvents[n], this.emit.bind(this, kProxyEvents[n]));
       }
       this._read = function(n2) {
-        debug("wrapped _read", n2);
+        debug2("wrapped _read", n2);
         if (paused) {
           paused = false;
           stream.resume();
@@ -24104,14 +24104,14 @@ var require_stream_readable = __commonJS({
     }
     function endReadable(stream) {
       var state = stream._readableState;
-      debug("endReadable", state.endEmitted);
+      debug2("endReadable", state.endEmitted);
       if (!state.endEmitted) {
         state.ended = true;
         process.nextTick(endReadableNT, state, stream);
       }
     }
     function endReadableNT(state, stream) {
-      debug("endReadableNT", state.endEmitted, state.length);
+      debug2("endReadableNT", state.endEmitted, state.length);
       if (!state.endEmitted && state.length === 0) {
         state.endEmitted = true;
         stream.readable = false;
@@ -29073,15 +29073,15 @@ var require_timespan = __commonJS({
 var require_semver = __commonJS({
   ""(exports, module) {
     exports = module.exports = SemVer;
-    var debug;
+    var debug2;
     if (typeof process === "object" && process.env && process.env.NODE_DEBUG && /\bsemver\b/i.test(process.env.NODE_DEBUG)) {
-      debug = function() {
+      debug2 = function() {
         var args = Array.prototype.slice.call(arguments, 0);
         args.unshift("SEMVER");
         console.log.apply(console, args);
       };
     } else {
-      debug = function() {
+      debug2 = function() {
       };
     }
     exports.SEMVER_SPEC_VERSION = "2.0.0";
@@ -29170,7 +29170,7 @@ var require_semver = __commonJS({
     var STAR = R++;
     src[STAR] = "(<|>)?=?\\s*\\*";
     for (i = 0; i < R; i++) {
-      debug(i, src[i]);
+      debug2(i, src[i]);
       if (!re[i]) {
         re[i] = new RegExp(src[i]);
       }
@@ -29236,7 +29236,7 @@ var require_semver = __commonJS({
       if (!(this instanceof SemVer)) {
         return new SemVer(version, options);
       }
-      debug("SemVer", version, options);
+      debug2("SemVer", version, options);
       this.options = options;
       this.loose = !!options.loose;
       var m = version.trim().match(options.loose ? re[LOOSE] : re[FULL]);
@@ -29283,7 +29283,7 @@ var require_semver = __commonJS({
       return this.version;
     };
     SemVer.prototype.compare = function(other) {
-      debug("SemVer.compare", this.version, this.options, other);
+      debug2("SemVer.compare", this.version, this.options, other);
       if (!(other instanceof SemVer)) {
         other = new SemVer(other, this.options);
       }
@@ -29310,7 +29310,7 @@ var require_semver = __commonJS({
       do {
         var a = this.prerelease[i2];
         var b = other.prerelease[i2];
-        debug("prerelease compare", i2, a, b);
+        debug2("prerelease compare", i2, a, b);
         if (a === void 0 && b === void 0) {
           return 0;
         } else if (b === void 0) {
@@ -29563,7 +29563,7 @@ var require_semver = __commonJS({
       if (!(this instanceof Comparator)) {
         return new Comparator(comp, options);
       }
-      debug("comparator", comp, options);
+      debug2("comparator", comp, options);
       this.options = options;
       this.loose = !!options.loose;
       this.parse(comp);
@@ -29572,7 +29572,7 @@ var require_semver = __commonJS({
       } else {
         this.value = this.operator + this.semver.version;
       }
-      debug("comp", this);
+      debug2("comp", this);
     }
     var ANY = {};
     Comparator.prototype.parse = function(comp) {
@@ -29595,7 +29595,7 @@ var require_semver = __commonJS({
       return this.value;
     };
     Comparator.prototype.test = function(version) {
-      debug("Comparator.test", version, this.options.loose);
+      debug2("Comparator.test", version, this.options.loose);
       if (this.semver === ANY) {
         return true;
       }
@@ -29679,9 +29679,9 @@ var require_semver = __commonJS({
       range = range.trim();
       var hr = loose ? re[HYPHENRANGELOOSE] : re[HYPHENRANGE];
       range = range.replace(hr, hyphenReplace);
-      debug("hyphen replace", range);
+      debug2("hyphen replace", range);
       range = range.replace(re[COMPARATORTRIM], comparatorTrimReplace);
-      debug("comparator trim", range, re[COMPARATORTRIM]);
+      debug2("comparator trim", range, re[COMPARATORTRIM]);
       range = range.replace(re[TILDETRIM], tildeTrimReplace);
       range = range.replace(re[CARETTRIM], caretTrimReplace);
       range = range.split(/\s+/).join(" ");
@@ -29722,15 +29722,15 @@ var require_semver = __commonJS({
       });
     }
     function parseComparator(comp, options) {
-      debug("comp", comp, options);
+      debug2("comp", comp, options);
       comp = replaceCarets(comp, options);
-      debug("caret", comp);
+      debug2("caret", comp);
       comp = replaceTildes(comp, options);
-      debug("tildes", comp);
+      debug2("tildes", comp);
       comp = replaceXRanges(comp, options);
-      debug("xrange", comp);
+      debug2("xrange", comp);
       comp = replaceStars(comp, options);
-      debug("stars", comp);
+      debug2("stars", comp);
       return comp;
     }
     function isX(id) {
@@ -29744,7 +29744,7 @@ var require_semver = __commonJS({
     function replaceTilde(comp, options) {
       var r = options.loose ? re[TILDELOOSE] : re[TILDE];
       return comp.replace(r, function(_, M, m, p, pr) {
-        debug("tilde", comp, _, M, m, p, pr);
+        debug2("tilde", comp, _, M, m, p, pr);
         var ret;
         if (isX(M)) {
           ret = "";
@@ -29753,12 +29753,12 @@ var require_semver = __commonJS({
         } else if (isX(p)) {
           ret = ">=" + M + "." + m + ".0 <" + M + "." + (+m + 1) + ".0";
         } else if (pr) {
-          debug("replaceTilde pr", pr);
+          debug2("replaceTilde pr", pr);
           ret = ">=" + M + "." + m + "." + p + "-" + pr + " <" + M + "." + (+m + 1) + ".0";
         } else {
           ret = ">=" + M + "." + m + "." + p + " <" + M + "." + (+m + 1) + ".0";
         }
-        debug("tilde return", ret);
+        debug2("tilde return", ret);
         return ret;
       });
     }
@@ -29768,10 +29768,10 @@ var require_semver = __commonJS({
       }).join(" ");
     }
     function replaceCaret(comp, options) {
-      debug("caret", comp, options);
+      debug2("caret", comp, options);
       var r = options.loose ? re[CARETLOOSE] : re[CARET];
       return comp.replace(r, function(_, M, m, p, pr) {
-        debug("caret", comp, _, M, m, p, pr);
+        debug2("caret", comp, _, M, m, p, pr);
         var ret;
         if (isX(M)) {
           ret = "";
@@ -29784,7 +29784,7 @@ var require_semver = __commonJS({
             ret = ">=" + M + "." + m + ".0 <" + (+M + 1) + ".0.0";
           }
         } else if (pr) {
-          debug("replaceCaret pr", pr);
+          debug2("replaceCaret pr", pr);
           if (M === "0") {
             if (m === "0") {
               ret = ">=" + M + "." + m + "." + p + "-" + pr + " <" + M + "." + m + "." + (+p + 1);
@@ -29795,7 +29795,7 @@ var require_semver = __commonJS({
             ret = ">=" + M + "." + m + "." + p + "-" + pr + " <" + (+M + 1) + ".0.0";
           }
         } else {
-          debug("no pr");
+          debug2("no pr");
           if (M === "0") {
             if (m === "0") {
               ret = ">=" + M + "." + m + "." + p + " <" + M + "." + m + "." + (+p + 1);
@@ -29806,12 +29806,12 @@ var require_semver = __commonJS({
             ret = ">=" + M + "." + m + "." + p + " <" + (+M + 1) + ".0.0";
           }
         }
-        debug("caret return", ret);
+        debug2("caret return", ret);
         return ret;
       });
     }
     function replaceXRanges(comp, options) {
-      debug("replaceXRanges", comp, options);
+      debug2("replaceXRanges", comp, options);
       return comp.split(/\s+/).map(function(comp2) {
         return replaceXRange(comp2, options);
       }).join(" ");
@@ -29820,7 +29820,7 @@ var require_semver = __commonJS({
       comp = comp.trim();
       var r = options.loose ? re[XRANGELOOSE] : re[XRANGE];
       return comp.replace(r, function(ret, gtlt, M, m, p, pr) {
-        debug("xRange", comp, ret, gtlt, M, m, p, pr);
+        debug2("xRange", comp, ret, gtlt, M, m, p, pr);
         var xM = isX(M);
         var xm = xM || isX(m);
         var xp = xm || isX(p);
@@ -29863,12 +29863,12 @@ var require_semver = __commonJS({
         } else if (xp) {
           ret = ">=" + M + "." + m + ".0 <" + M + "." + (+m + 1) + ".0";
         }
-        debug("xRange return", ret);
+        debug2("xRange return", ret);
         return ret;
       });
     }
     function replaceStars(comp, options) {
-      debug("replaceStars", comp, options);
+      debug2("replaceStars", comp, options);
       return comp.trim().replace(re[STAR], "");
     }
     function hyphenReplace($0, from, fM, fm, fp, fpr, fb, to, tM, tm, tp, tpr, tb) {
@@ -29916,7 +29916,7 @@ var require_semver = __commonJS({
       }
       if (version.prerelease.length && !options.includePrerelease) {
         for (i2 = 0; i2 < set.length; i2++) {
-          debug(set[i2].semver);
+          debug2(set[i2].semver);
           if (set[i2].semver === ANY) {
             continue;
           }
@@ -32707,6 +32707,75 @@ function printToLogFile(logLevel, ...text) {
 }
 
 // 
+var ScopeRequirement;
+(function(ScopeRequirement2) {
+  ScopeRequirement2[ScopeRequirement2["Required"] = 0] = "Required";
+  ScopeRequirement2[ScopeRequirement2["Optional"] = 1] = "Optional";
+  ScopeRequirement2[ScopeRequirement2["Forbidden"] = 2] = "Forbidden";
+})(ScopeRequirement || (ScopeRequirement = {}));
+var ReleaseNotesLevel;
+(function(ReleaseNotesLevel2) {
+  ReleaseNotesLevel2[ReleaseNotesLevel2["Hidden"] = 0] = "Hidden";
+  ReleaseNotesLevel2[ReleaseNotesLevel2["Visible"] = 1] = "Visible";
+})(ReleaseNotesLevel || (ReleaseNotesLevel = {}));
+var COMMIT_TYPES = {
+  build: {
+    name: "build",
+    description: "Changes to local repository build system and tooling",
+    scope: ScopeRequirement.Optional,
+    releaseNotesLevel: ReleaseNotesLevel.Hidden
+  },
+  ci: {
+    name: "ci",
+    description: "Changes to CI configuration and CI specific tooling",
+    scope: ScopeRequirement.Forbidden,
+    releaseNotesLevel: ReleaseNotesLevel.Hidden
+  },
+  docs: {
+    name: "docs",
+    description: "Changes which exclusively affects documentation.",
+    scope: ScopeRequirement.Optional,
+    releaseNotesLevel: ReleaseNotesLevel.Hidden
+  },
+  feat: {
+    name: "feat",
+    description: "Creates a new feature",
+    scope: ScopeRequirement.Required,
+    releaseNotesLevel: ReleaseNotesLevel.Visible
+  },
+  fix: {
+    name: "fix",
+    description: "Fixes a previously discovered failure/bug",
+    scope: ScopeRequirement.Required,
+    releaseNotesLevel: ReleaseNotesLevel.Visible
+  },
+  perf: {
+    name: "perf",
+    description: "Improves performance without any change in functionality or API",
+    scope: ScopeRequirement.Required,
+    releaseNotesLevel: ReleaseNotesLevel.Visible
+  },
+  refactor: {
+    name: "refactor",
+    description: "Refactor without any change in functionality or API (includes style changes)",
+    scope: ScopeRequirement.Optional,
+    releaseNotesLevel: ReleaseNotesLevel.Hidden
+  },
+  release: {
+    name: "release",
+    description: "A release point in the repository",
+    scope: ScopeRequirement.Forbidden,
+    releaseNotesLevel: ReleaseNotesLevel.Hidden
+  },
+  test: {
+    name: "test",
+    description: "Improvements or corrections made to the project's test suite",
+    scope: ScopeRequirement.Optional,
+    releaseNotesLevel: ReleaseNotesLevel.Hidden
+  }
+};
+
+// 
 var breakingChangeLabel = "flag: breaking change";
 var deprecationLabel = "flag: deprecation";
 
@@ -32743,53 +32812,82 @@ async function revokeActiveInstallationToken(githubOrToken) {
 }
 
 // 
+var _a;
 var supportedLabels = [
   [breakingChangeLabel, "breakingChanges"],
   [deprecationLabel, "deprecations"]
 ];
-async function main() {
-  let installationClient = null;
-  try {
-    const token = await getAuthTokenFor(ANGULAR_ROBOT);
-    installationClient = new import_rest2.Octokit({ auth: token });
-    await runCommitMessageBasedLabelsAction(installationClient);
-  } finally {
-    if (installationClient !== null) {
-      await revokeActiveInstallationToken(installationClient);
+var compDocsLabel = "comp: docs";
+var CommitMessageBasedLabelManager = class {
+  constructor(git) {
+    this.git = git;
+    this.labels = /* @__PURE__ */ new Set();
+    this.commits = /* @__PURE__ */ new Set();
+  }
+  async run() {
+    try {
+      await this.initialize();
+      core.info(`PR #${import_github2.context.issue.number}`);
+      for (const [label, commitProperty] of supportedLabels) {
+        const hasCommit = [...this.commits].some((commit) => commit[commitProperty].length > 0);
+        const hasLabel = this.labels.has(label);
+        core.info(`${commitProperty} | hasLabel: ${hasLabel} | hasCommit: ${hasCommit}`);
+        if (hasCommit && !hasLabel) {
+          await this.addLabel(label);
+        }
+        if (!hasCommit && hasLabel) {
+          await this.removeLabel(label);
+        }
+      }
+      if (!this.labels.has(compDocsLabel)) {
+        for (const commit of this.commits) {
+          if (commit.type === COMMIT_TYPES["docs"].name) {
+            await this.addLabel(compDocsLabel);
+            break;
+          }
+        }
+      }
+    } finally {
+      await revokeActiveInstallationToken(this.git);
     }
   }
-}
-async function runCommitMessageBasedLabelsAction(client) {
-  const { number, owner, repo } = import_github2.context.issue;
-  const labels = await (await client.issues.listLabelsOnIssue({ issue_number: number, owner, repo })).data;
-  const commits = await (await client.paginate(client.pulls.listCommits, { owner, pull_number: number, repo })).map(({ commit: { message } }) => parseCommitMessage(message));
-  console.log(`PR #${number}`);
-  for (const [label, commitProperty] of supportedLabels) {
-    const hasCommit = commits.some((commit) => commit[commitProperty].length > 0);
-    const hasLabel = labels.some(({ name }) => name === label);
-    console.log(`${commitProperty} | hasLabel: ${hasLabel} | hasCommit: ${hasCommit}`);
-    if (hasCommit && !hasLabel) {
-      await client.issues.addLabels({
-        repo,
-        owner,
-        issue_number: number,
-        labels: [label]
-      });
-      console.log(`Added ${label} label to PR #${number}`);
-    }
-    if (!hasCommit && hasLabel) {
-      await client.issues.removeLabel({
-        repo,
-        owner,
-        issue_number: number,
-        name: label
-      });
-      console.log(`Removed ${label} label from PR #${number}`);
+  async addLabel(label) {
+    const { number: issue_number, owner, repo } = import_github2.context.issue;
+    try {
+      await this.git.issues.addLabels({ repo, owner, issue_number, labels: [label] });
+      core.info(`Added ${label} label to PR #${issue_number}`);
+      this.labels.add(label);
+    } catch (err) {
+      core.error(`Failed to add ${label} label to PR #${issue_number}`);
+      core.debug(err);
     }
   }
-}
+  async removeLabel(name) {
+    const { number: issue_number, owner, repo } = import_github2.context.issue;
+    try {
+      await this.git.issues.removeLabel({ repo, owner, issue_number, name });
+      core.info(`Added ${name} label to PR #${issue_number}`);
+      this.labels.delete(name);
+    } catch (err) {
+      core.error(`Failed to add ${name} label to PR #${issue_number}`);
+      core.debug(err);
+    }
+  }
+  async initialize() {
+    const { number, owner, repo } = import_github2.context.issue;
+    await this.git.paginate(this.git.pulls.listCommits, { owner, pull_number: number, repo }).then((commits) => commits.forEach(({ commit }) => this.commits.add(parseCommitMessage(commit.message))));
+    await this.git.issues.listLabelsOnIssue({ issue_number: number, owner, repo }).then((resp) => resp.data.forEach(({ name }) => this.labels.add(name)));
+  }
+};
+_a = CommitMessageBasedLabelManager;
+CommitMessageBasedLabelManager.run = async () => {
+  const token = await getAuthTokenFor(ANGULAR_ROBOT);
+  const git = new import_rest2.Octokit({ auth: token });
+  const inst = new _a(git);
+  await inst.run();
+};
 if (import_github2.context.repo.owner === "angular") {
-  main().catch((e) => {
+  CommitMessageBasedLabelManager.run().catch((e) => {
     core.error(e);
     core.setFailed(e.message);
   });
