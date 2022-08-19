@@ -9,11 +9,6 @@ NG_DEV_EXTERNALS = [
     # Package uses `__filename` and `__dirname` and cannot be bundled in ESM. We do not
     # intend to provide interop globals for this as it could hide other significant issues.
     "@yarnpkg/lockfile",
-    # SPDX uses dynamic imports that work at runtime, but esbuild complains about.
-    "spdx-ranges",
-    "spdx-license-ids",
-    "spdx-license-ids/deprecated",
-    "spdx-exceptions",
 ]
 
 ts_library(

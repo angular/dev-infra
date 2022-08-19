@@ -11,9 +11,6 @@ ts_library(
         "@npm//@types/spdx-satisfies",
         "@npm//@types/yargs",
         "@npm//license-checker",
-        "@npm//spdx-exceptions",
-        "@npm//spdx-license-ids",
-        "@npm//spdx-ranges",
         "@npm//spdx-satisfies",
     ],
 )
