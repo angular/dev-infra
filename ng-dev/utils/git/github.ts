@@ -45,6 +45,7 @@ export class GithubClient {
   readonly git = this._octokit.git;
   readonly rateLimit = this._octokit.rateLimit;
   readonly teams = this._octokit.teams;
+  readonly search = this._octokit.search;
 
   // Note: These are properties from `Octokit` that are brought in by optional plugins.
   // TypeScript requires us to provide an explicit type for these.

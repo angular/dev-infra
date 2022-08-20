@@ -1,0 +1,66 @@
+name: Create PR for changes
+
+description: |
+  Create a pull request from the current changes in the working copy.
+
+  Skip creating the pull request if no files have changed or if a pull request already exists (for the same changes and branches).
+
+author: Angular
+
+inputs:
+  branch-prefix:
+    required: true
+    description: |
+      The prefix of the branch name.
+
+      It will be combined with a hash computed from the changed files to generate the branch name.
+
+      Example: `branch-prefix: my-branch`
+  pr-title:
+    required: true
+    description: |
+      The pull request title. (This is also used as the commit message header.)
+
+      Example: `pr-title: docs(foo): update bar`
+  pr-description:
+    required: true
+    description: |
+      The pull request description. (This is also used as the commit message body.)
+
+      Example:
+      ```yaml
+      pr-description: |
+        A very important change
+        that cannot be described in a single line.
+
+        Additional info...
+      ```
+  pr-labels:
+    required: false
+    description: |
+      A list of newline-separated labels to add to the pull request.
+
+      Example:
+      ```yaml
+      pr-labels: |
+        action: review
+        target: patch
+      ```
+  angular-robot-key:
+    required: true
+    description: The private key for the Angular Robot Github app. Used to authenticate with GitHub.
+
+outputs:
+  result:
+    description: |
+      The outcome of the action execution.
+      One of:
+        - 'nothing' (if no pull request had to be created)
+        - 'created' (if a pull request was successfully created)
+        - 'failed' (if an error occurred)
+  pr-number:
+    description: The number of the created pull request or an empty string (if no pull request was created).
+
+runs:
+  using: node16
+  main: main.js
