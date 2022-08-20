@@ -3,6 +3,7 @@
 ng-dev/utils/protos/*.d.ts
 ng-dev/utils/protos/*.js
 
+github-actions/create-pr-for-changes/main.js
 github-actions/feature-request/main.js
 github-actions/lock-closed/main.js
 github-actions/commit-message-based-labels/main.js

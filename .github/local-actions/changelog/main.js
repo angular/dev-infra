@@ -64361,6 +64361,7 @@ var GithubClient = class {
     this.git = this._octokit.git;
     this.rateLimit = this._octokit.rateLimit;
     this.teams = this._octokit.teams;
+    this.search = this._octokit.search;
     this.rest = this._octokit.rest;
     this.paginate = this._octokit.paginate;
   }

@@ -1,0 +1,10 @@
+load("//tools:defaults.bzl", "esbuild_checked_in")
+
+esbuild_checked_in(
+    name = "main",
+    entry_point = "//github-actions/create-pr-for-changes/lib:main.ts",
+    target = "node16",
+    deps = [
+        "//github-actions/create-pr-for-changes/lib",
+    ],
+)
