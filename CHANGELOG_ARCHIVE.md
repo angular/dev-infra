@@ -1,3 +1,17 @@
+<a name="2022.4.17"></a>
+# 2022.4.17 (2022-04-17)
+### apps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [44e81e1](https://github.com/angular/dev-infra/commit/44e81e16f235c8bdc846c854128a60987bd2ee38) | feat | create the base of the pull request table |
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [03acd84](https://github.com/angular/dev-infra/commit/03acd844a311d66ed63a70edcccffc405570513b) | feat | improve error output on intgeration test failure |
+## Special Thanks
+Joey Perrott and Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.4.10"></a>
 # 2022.4.10 (2022-04-10)
 ### apps
