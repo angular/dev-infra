@@ -15,7 +15,7 @@ inputs:
 
       It will be combined with a hash computed from the changed files to generate the branch name.
 
-      Example: `branch-prefix: my-branch`
+      Example: `branch-prefix: my-task-branch`
   pr-title:
     required: true
     description: |
@@ -46,6 +46,16 @@ inputs:
         action: review
         target: patch
       ```
+  clean-up-branches:
+    required: false
+    default: true
+    description: |
+      Enable/Disable automatically cleaning up branches.
+
+      By default, this action will check for and delete obsolete branches - i.e. branches that start with the specified `branch-prefix` and correspond to closed pull requests.
+      To skip the automatic clean up of obsolete branches, set this option to `false`.
+
+      Example: `clean-up-branches: false`
   angular-robot-key:
     required: true
     description: The private key for the Angular Robot Github app. Used to authenticate with GitHub.
