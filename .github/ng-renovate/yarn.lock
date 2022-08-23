@@ -1267,17 +1267,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jamiemagee/osv-offline@npm:1.2.10":
-  version: 1.2.10
-  resolution: "@jamiemagee/osv-offline@npm:1.2.10"
+"@jamiemagee/osv-offline@npm:1.2.11":
+  version: 1.2.11
+  resolution: "@jamiemagee/osv-offline@npm:1.2.11"
   dependencies:
     "@jamiemagee/osv-offline-db": 1.1.4
-    "@octokit/rest": 19.0.3
+    "@octokit/rest": 19.0.4
     adm-zip: ^0.5.9
     fs-extra: 10.0.0
     got: 11.8.5
     luxon: 3.0.1
-  checksum: 731e4b034d8c9d481a8d1d335f119669c48f54689840340be2b6af409fe6604324fc4007bbd9ea3fd0eb0af34231fc73e928ea1738ccfb7091eba7b944308bab
+  checksum: 0447ae5304a75e59d747f381395c08029884408f16981e165fc198a34b23771ff172af6e2a7229295d634852d9876420104daf9271570291b0d074cd960229aa
   languageName: node
   linkType: hard
 
@@ -1390,13 +1390,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/openapi-types@npm:^12.11.0":
-  version: 12.11.0
-  resolution: "@octokit/openapi-types@npm:12.11.0"
-  checksum: 8a7d4bd6288cc4085cabe0ca9af2b87c875c303af932cb138aa1b2290eb69d32407759ac23707bb02776466e671244a902e9857896903443a69aff4b6b2b0e3b
-  languageName: node
-  linkType: hard
-
 "@octokit/openapi-types@npm:^13.1.0":
   version: 13.1.0
   resolution: "@octokit/openapi-types@npm:13.1.0"
@@ -1404,14 +1397,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/plugin-paginate-rest@npm:^3.0.0":
-  version: 3.1.0
-  resolution: "@octokit/plugin-paginate-rest@npm:3.1.0"
+"@octokit/openapi-types@npm:^13.4.0":
+  version: 13.4.0
+  resolution: "@octokit/openapi-types@npm:13.4.0"
+  checksum: e5bb4573f065d0847c783db818eaa28fe2f8ec160334060e606c65dbf96a8c2108bcfed03da457e25b5dd9c0847b09cccf1206c709ee45c43108bb5d29808e9e
+  languageName: node
+  linkType: hard
+
+"@octokit/plugin-paginate-rest@npm:^4.0.0":
+  version: 4.1.0
+  resolution: "@octokit/plugin-paginate-rest@npm:4.1.0"
   dependencies:
-    "@octokit/types": ^6.41.0
+    "@octokit/types": ^7.1.1
   peerDependencies:
     "@octokit/core": ">=4"
-  checksum: a09212a1c6e0be4a7929acd192659cb204fcb7c6a52cf7e7f1b87da0338d812c8c26e7ee44d00e8b9824d8904d6caaa978a84c26001ab982ffec5123600aa4d8
+  checksum: bca2481b8add3b01b2ca447c0b534b0ec60a8cf45e58577f78ef3e5dd95274eac065d7e6dc4b8e1a5e37c69f37e6bf314b2139c15816e0c0c6f80c18e12a7192
   languageName: node
   linkType: hard
 
@@ -1461,24 +1461,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/rest@npm:19.0.3":
-  version: 19.0.3
-  resolution: "@octokit/rest@npm:19.0.3"
+"@octokit/rest@npm:19.0.4":
+  version: 19.0.4
+  resolution: "@octokit/rest@npm:19.0.4"
   dependencies:
     "@octokit/core": ^4.0.0
-    "@octokit/plugin-paginate-rest": ^3.0.0
+    "@octokit/plugin-paginate-rest": ^4.0.0
     "@octokit/plugin-request-log": ^1.0.4
     "@octokit/plugin-rest-endpoint-methods": ^6.0.0
-  checksum: 9ee96976c4c22dab11b3dacd541e694f3ad9bb1d44243985dc90ce6e8a42c3e3176a206e8d3a883b63b517fc15af8c8c88d8d0ecd9bac2b86a635a9667fc6ff4
-  languageName: node
-  linkType: hard
-
-"@octokit/types@npm:^6.41.0":
-  version: 6.41.0
-  resolution: "@octokit/types@npm:6.41.0"
-  dependencies:
-    "@octokit/openapi-types": ^12.11.0
-  checksum: fd6f75e0b19b90d1a3d244d2b0c323ed8f2f05e474a281f60a321986683548ef2e0ec2b3a946aa9405d6092e055344455f69f58957c60f58368c8bdda5b7d2ab
+  checksum: 7eba9148b707c713705ba8d75c25fbb22488f30abef7967ce92884a51e411e709b90ff56b0e6fa5521b261f343a7fd33b8ad5d0b87cab4bc2e178002b2566cf2
   languageName: node
   linkType: hard
 
@@ -1488,6 +1479,15 @@ __metadata:
   dependencies:
     "@octokit/openapi-types": ^13.1.0
   checksum: d60b6b94b0fc851c2de99cabfd709810ff539ea5461ccff6bc8f4af69341fcabdee7ee983eb6a2054957696c0d59afcf71f7792cec8d1daee08b1845024c7125
+  languageName: node
+  linkType: hard
+
+"@octokit/types@npm:^7.1.1":
+  version: 7.1.1
+  resolution: "@octokit/types@npm:7.1.1"
+  dependencies:
+    "@octokit/openapi-types": ^13.4.0
+  checksum: fe7847fe996b14761d1ca3e6dbb1b33bb180fc9b28ac602fab939fcdb729d99ec30a210f9ede6cd88a41cd04b3b49126ec3794220724a3be3d7863cdfbd9d490
   languageName: node
   linkType: hard
 
@@ -2280,7 +2280,33 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cacache@npm:16.1.1, cacache@npm:^16.1.0":
+"cacache@npm:16.1.2":
+  version: 16.1.2
+  resolution: "cacache@npm:16.1.2"
+  dependencies:
+    "@npmcli/fs": ^2.1.0
+    "@npmcli/move-file": ^2.0.0
+    chownr: ^2.0.0
+    fs-minipass: ^2.1.0
+    glob: ^8.0.1
+    infer-owner: ^1.0.4
+    lru-cache: ^7.7.1
+    minipass: ^3.1.6
+    minipass-collect: ^1.0.2
+    minipass-flush: ^1.0.5
+    minipass-pipeline: ^1.2.4
+    mkdirp: ^1.0.4
+    p-map: ^4.0.0
+    promise-inflight: ^1.0.1
+    rimraf: ^3.0.2
+    ssri: ^9.0.0
+    tar: ^6.1.11
+    unique-filename: ^1.1.1
+  checksum: defe1d6f557ddda178204cac111990da27e8a60ed276fcd608dad7109cc1936e7dcd57d7263d22cdb06a80e7ceb76ab5eb05133c7c7f886abf1d870d722abd6c
+  languageName: node
+  linkType: hard
+
+"cacache@npm:^16.1.0":
   version: 16.1.1
   resolution: "cacache@npm:16.1.1"
   dependencies:
@@ -4656,7 +4682,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: 32.171.0
+    renovate: 32.173.0
   languageName: unknown
   linkType: soft
 
@@ -5326,9 +5352,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:32.171.0":
-  version: 32.171.0
-  resolution: "renovate@npm:32.171.0"
+"renovate@npm:32.173.0":
+  version: 32.173.0
+  resolution: "renovate@npm:32.173.0"
   dependencies:
     "@aws-sdk/client-ec2": 3.112.0
     "@aws-sdk/client-ecr": 3.112.0
@@ -5336,7 +5362,7 @@ __metadata:
     "@breejs/later": 4.1.0
     "@cheap-glitch/mi-cron": 1.0.1
     "@iarna/toml": 2.2.5
-    "@jamiemagee/osv-offline": 1.2.10
+    "@jamiemagee/osv-offline": 1.2.11
     "@renovatebot/pep440": 2.1.3
     "@renovatebot/ruby-semver": 1.1.4
     "@sindresorhus/is": 4.6.0
@@ -5346,7 +5372,7 @@ __metadata:
     auth-header: 1.0.0
     azure-devops-node-api: 11.2.0
     bunyan: 1.8.15
-    cacache: 16.1.1
+    cacache: 16.1.2
     chalk: 4.1.2
     changelog-filename-regex: 2.0.1
     clean-git-ref: 2.0.1
@@ -5417,7 +5443,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 9089c080b767c320f8992e4d99b40c77ab322a8225700e9c1c9de7ad17e78e0b0e46abb5084e9d24c6095fe6e8b1ddd55b63a1c380a536137b1a632d172da93f
+  checksum: de352ef442713d134b67f0570e0439464cff746b38f3c74f103eb22a850eb16cb4da490779d83b94e9e5512df4e8a6853689702fb6f87dea7872e0cd3304042a
   languageName: node
   linkType: hard
 
