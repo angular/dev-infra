@@ -21,6 +21,11 @@ def define_chromium_repositories():
         named_files = {
             "CHROMIUM": "chrome-linux/chrome",
         },
+        exclude_patterns = [
+            # Exclude a log file that chromium writes to each run, causing remote cache
+            # misses in downstream targets.
+            "chrome-linux/chrome_debug.log",
+        ],
     )
 
     browser_archive(
