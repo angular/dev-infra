@@ -30,4 +30,4 @@ export async function getActiveFormatters() {
 }
 
 // Rexport symbols used for types elsewhere.
-export {Formatter, FormatterAction} from './base-formatter.js';
+export {Formatter, type FormatterAction} from './base-formatter.js';
