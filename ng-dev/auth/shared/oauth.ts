@@ -15,6 +15,7 @@ import {
 } from '@openid/appauth';
 import {NodeRequestor} from '@openid/appauth/built/node_support/node_requestor.js';
 import {NodeBasedHandler} from '@openid/appauth/built/node_support/node_request_handler.js';
+import {Spinner} from '../../utils/spinner.js';
 
 interface OAuthDanceConfig {
   authConfig: AuthorizationServiceConfiguration;
@@ -121,8 +122,11 @@ export async function deviceCodeOAuthDance({
     throw new OAuthDanceError(new AuthorizationError(response).errorDescription || 'Unknown Error');
   }
 
-  Log.info(`Please visit: ${response.verification_uri || response.verification_url}`);
-  Log.info(`Enter your one time ID code: ${response.user_code}`);
+  Log.info(`  Please visit: ${response.verification_uri || response.verification_url}`);
+  Log.info(`  Enter your one time ID code: ${response.user_code}`);
+  Log.info('');
+
+  const pollingSpinner = new Spinner('Polling auth server for login confirmation');
 
   /**
    * The number of milliseconds to add to the requested internal from Google, utilized if Google requests
@@ -132,34 +136,43 @@ export async function deviceCodeOAuthDance({
 
   const oauthDanceTimeout = Date.now() + response.expires_in * 1000;
 
-  while (true) {
-    if (Date.now() > oauthDanceTimeout) {
-      throw new OAuthDanceError(
-        'Failed to completed OAuth authentication before the user code expired.',
+  try {
+    while (true) {
+      if (Date.now() > oauthDanceTimeout) {
+        throw new OAuthDanceError(
+          'Failed to completed OAuth authentication before the user code expired.',
+        );
+      }
+      // Wait for the requested interval before polling, this is done before the request as it is unnecessary to
+      //immediately poll while the user has to perform the auth out of this flow.
+      await new Promise((resolve) =>
+        setTimeout(resolve, response.interval * 1000 + pollingBackoff),
       );
-    }
-    // Wait for the requested interval before polling, this is done before the request as it is unnecessary to
-    //immediately poll while the user has to perform the auth out of this flow.
-    await new Promise((resolve) => setTimeout(resolve, response.interval * 1000 + pollingBackoff));
 
-    const result = await checkStatusOfAuthServer(
-      authConfig.tokenEndpoint,
-      response.device_code,
-      client_id,
-      client_secret,
-    );
+      const result = await checkStatusOfAuthServer(
+        authConfig.tokenEndpoint,
+        response.device_code,
+        client_id,
+        client_secret,
+      );
 
-    if (!isAuthorizationError(result)) {
-      return new TokenResponse(result);
-    }
-    if (result.error === 'access_denied') {
-      throw new OAuthDanceError('Unable to authorize, as access was denied during the OAuth flow.');
-    }
+      if (!isAuthorizationError(result)) {
+        return new TokenResponse(result);
+      }
+      if (result.error === 'access_denied') {
+        throw new OAuthDanceError(
+          'Unable to authorize, as access was denied during the OAuth flow.',
+        );
+      }
 
-    if (result.error === 'slow_down') {
-      Log.debug('"slow_down" response from server, backing off polling interval by 5 seconds');
-      pollingBackoff += 5000;
+      if (result.error === 'slow_down') {
+        Log.debug('"slow_down" response from server, backing off polling interval by 5 seconds');
+        pollingBackoff += 5000;
+      }
     }
+  } finally {
+    pollingSpinner.update('');
+    pollingSpinner.complete();
   }
 }
 

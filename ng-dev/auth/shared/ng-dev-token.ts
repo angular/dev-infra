@@ -107,16 +107,12 @@ async function saveTokenToFileSystem(data: NgDevUserWithToken) {
 
 /** Retrieve the token from the file system. */
 async function retrieveTokenFromFileSystem(): Promise<NgDevUserWithToken | null> {
-  try {
-    if (!(await stat(tokenPath))) {
-      return null;
-    }
-  } catch {
-    return null;
+  if (await hasTokenStoreFile()) {
+    const rawToken = Buffer.from(await readFile(tokenPath)).toString();
+    return JSON.parse(decrypt(rawToken)) as NgDevUserWithToken;
   }
 
-  const rawToken = Buffer.from(await readFile(tokenPath)).toString();
-  return JSON.parse(decrypt(rawToken)) as NgDevUserWithToken;
+  return null;
 }
 
 /** Encrypt the provided string. */
@@ -181,6 +177,15 @@ export function configureAuthorizedGitClientWithTemporaryToken() {
       reject(e);
     }
   });
+}
+
+/** Whether there is already a file at the location used for login credentials. */
+export async function hasTokenStoreFile() {
+  try {
+    return !!(await stat(tokenPath));
+  } catch {
+    return false;
+  }
 }
 
 /** Assert the provied token is non-null. */
