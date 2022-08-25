@@ -22,7 +22,7 @@ export const findOwnedForksOfRepoQuery = params(
       {owner: '$owner', name: '$name'},
       {
         forks: params(
-          {affiliations: 'OWNER', first: 1},
+          {affiliations: 'OWNER', first: 1, orderBy: {field: 'NAME', direction: 'ASC'}},
           {
             nodes: [
               {

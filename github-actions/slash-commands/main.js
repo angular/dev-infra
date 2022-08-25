@@ -63521,7 +63521,7 @@ var findOwnedForksOfRepoQuery = (0, import_typed_graphqlify.params)({
   $name: "String!"
 }, {
   repository: (0, import_typed_graphqlify.params)({ owner: "$owner", name: "$name" }, {
-    forks: (0, import_typed_graphqlify.params)({ affiliations: "OWNER", first: 1 }, {
+    forks: (0, import_typed_graphqlify.params)({ affiliations: "OWNER", first: 1, orderBy: { field: "NAME", direction: "ASC" } }, {
       nodes: [
         {
           owner: {
