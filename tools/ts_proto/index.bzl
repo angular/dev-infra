@@ -9,13 +9,19 @@ def generate_ts_proto_module(name, protofile, visibility = None):
     npm_package_bin(
         name = "generate_js_" + name,
         tool = "@ts_proto_npm//protobufjs-cli/bin:pbjs",
-        data = [protofile],
+        data = [
+            protofile,
+            "//tools/ts_proto:esm-wrapper",
+        ],
         testonly = True,
         args = [
             "-t",
             "static-module",
+            "--dependency",
+            "protobufjs",
+            "--es6",
             "-w",
-            "commonjs",
+            "$(execpath //tools/ts_proto:esm-wrapper)",
             "$(execpath %s)" % protofile,
         ],
         stdout = "generated_" + js_file,
