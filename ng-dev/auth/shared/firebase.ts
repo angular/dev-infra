@@ -7,7 +7,7 @@ import {
 } from 'firebase/auth';
 import {bold, Log} from '../../utils/logging.js';
 import {Prompt} from '../../utils/prompt.js';
-import {hasEvidenceOfPreviousLogin} from './ng-dev-token.js';
+import {hasTokenStoreFile} from './ng-dev-token.js';
 import {
   deviceCodeOAuthDance,
   authorizationCodeOAuthDance,
@@ -21,7 +21,7 @@ export async function loginToFirebase() {
   try {
     // Only present intial information about usage of login when it appears that the user has
     // not logged into the service in the past.
-    if (!(await hasEvidenceOfPreviousLogin())) {
+    if (!(await hasTokenStoreFile())) {
       Log.warn(Array(80).fill('#').join(''));
       Log.warn('The ng-dev auth service uses Google OAuth credentials to log in and create a');
       Log.warn('short lived credential used for authenticating with the ng-dev service.');
