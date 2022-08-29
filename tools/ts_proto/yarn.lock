@@ -119,13 +119,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/long@npm:^4.0.1":
-  version: 4.0.2
-  resolution: "@types/long@npm:4.0.2"
-  checksum: d16cde7240d834cf44ba1eaec49e78ae3180e724cd667052b194a372f350d024cba8dd3f37b0864931683dab09ca935d52f0c4c1687178af5ada9fc85b0635f4
-  languageName: node
-  linkType: hard
-
 "@types/markdown-it@npm:^12.2.3":
   version: 12.2.3
   resolution: "@types/markdown-it@npm:12.2.3"
@@ -617,9 +610,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"protobufjs-cli@npm:1.0.0":
-  version: 1.0.0
-  resolution: "protobufjs-cli@npm:1.0.0"
+"protobufjs-cli@npm:1.0.1":
+  version: 1.0.1
+  resolution: "protobufjs-cli@npm:1.0.1"
   dependencies:
     chalk: ^4.0.0
     escodegen: ^1.13.0
@@ -636,13 +629,13 @@ __metadata:
   bin:
     pbjs: bin/pbjs
     pbts: bin/pbts
-  checksum: 3346b3ebb0b8a1e6eb2c319f92d0e193632c8068a4b3f2379e8a655c03c359a7a723606f356014eaba70e23423a9e112c274262dfb36369ca57eb6219248bf38
+  checksum: 7dac1f645070b407e6e3070b63c31509034b9db5d3f0de70feda9a86c0ab955d3d5731b8334fea5adafc9bde0097ec14c415282dde026bac305d47ca221fc40d
   languageName: node
   linkType: hard
 
-"protobufjs@npm:7.0.0":
-  version: 7.0.0
-  resolution: "protobufjs@npm:7.0.0"
+"protobufjs@npm:7.1.0":
+  version: 7.1.0
+  resolution: "protobufjs@npm:7.1.0"
   dependencies:
     "@protobufjs/aspromise": ^1.1.2
     "@protobufjs/base64": ^1.1.2
@@ -654,10 +647,9 @@ __metadata:
     "@protobufjs/path": ^1.1.2
     "@protobufjs/pool": ^1.1.0
     "@protobufjs/utf8": ^1.1.0
-    "@types/long": ^4.0.1
     "@types/node": ">=13.7.0"
     long: ^5.0.0
-  checksum: 84c12ceef34d190bb0e08c7203a4e066c66b67fa788ac18575b5c45a269a515c3921b13116e12fe55ffe1fd4831ce208481d44231b75dbe0a8730ab4ca51c84b
+  checksum: 11946cef7002cd28837abdfe6294841763dfaad9d4176260c98ccee092ae1afed8a626910f1c2d28177b2e654a838a9cb71710fe52650dc5fc8543229693dbb6
   languageName: node
   linkType: hard
 
@@ -742,8 +734,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ts_proto@workspace:."
   dependencies:
-    protobufjs: 7.0.0
-    protobufjs-cli: 1.0.0
+    protobufjs: 7.1.0
+    protobufjs-cli: 1.0.1
   languageName: unknown
   linkType: soft
 
