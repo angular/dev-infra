@@ -64012,7 +64012,7 @@ var mainSymbols = {
   tick: "\u2714",
   info: "\u2139",
   warning: "\u26A0",
-  cross: "\u2716",
+  cross: "\u2718",
   squareSmall: "\u25FB",
   squareSmallFilled: "\u25FC",
   circle: "\u25EF",

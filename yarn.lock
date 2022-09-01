@@ -396,7 +396,7 @@ __metadata:
     git-raw-commits: ^2.0.10
     glob: 8.0.3
     husky: ^8.0.0
-    inquirer: 9.1.0
+    inquirer: 9.1.1
     jasmine: ~4.3.0
     jasmine-core: ~4.3.0
     jsdom: ^20.0.0
@@ -8350,13 +8350,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"figures@npm:^4.0.1":
-  version: 4.0.1
-  resolution: "figures@npm:4.0.1"
+"figures@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "figures@npm:5.0.0"
   dependencies:
     escape-string-regexp: ^5.0.0
     is-unicode-supported: ^1.2.0
-  checksum: 08564c70ec6be8dbd26e24e4f35bacb8d9beb729b3b7faa9cd7ad54f5232b7f9a39f788a847ec45677664d568c86323001d1042482d089c0d0f311e197ad1148
+  checksum: e6e8b6d1df2f554d4effae4a5ceff5d796f9449f6d4e912d74dab7d5f25916ecda6c305b9084833157d56485a0c78b37164430ddc5675bcee1330e346710669e
   languageName: node
   linkType: hard
 
@@ -9946,16 +9946,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inquirer@npm:9.1.0":
-  version: 9.1.0
-  resolution: "inquirer@npm:9.1.0"
+"inquirer@npm:9.1.1":
+  version: 9.1.1
+  resolution: "inquirer@npm:9.1.1"
   dependencies:
     ansi-escapes: ^5.0.0
     chalk: ^5.0.1
     cli-cursor: ^4.0.0
     cli-width: ^4.0.0
     external-editor: ^3.0.3
-    figures: ^4.0.1
+    figures: ^5.0.0
     lodash: ^4.17.21
     mute-stream: 0.0.8
     ora: ^6.1.2
@@ -9965,7 +9965,7 @@ __metadata:
     strip-ansi: ^7.0.1
     through: ^2.3.6
     wrap-ansi: ^8.0.1
-  checksum: dec2a062c0710396e14712bff6e08c0f150ab1021754ab9f66d600dd828abea4263b49ddbf8d100173843cb14cbe790abb8d5d5b2ae9e11b222324638c9674f2
+  checksum: e0b945c34e4ffcb2e4446e6821726e50b2936cd8a0b53d702d8d6ab18634695b69e7481be230fb924afe69087bb7df2afaf39a41c0c2e39854a9c7028507c67d
   languageName: node
   linkType: hard
 
