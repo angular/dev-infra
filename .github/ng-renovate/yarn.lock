@@ -2085,7 +2085,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"agentkeepalive@npm:^4.2.1":
+"agentkeepalive@npm:4.2.1, agentkeepalive@npm:^4.2.1":
   version: 4.2.1
   resolution: "agentkeepalive@npm:4.2.1"
   dependencies:
@@ -4753,7 +4753,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: 32.187.0
+    renovate: 32.188.1
   languageName: unknown
   linkType: soft
 
@@ -5423,9 +5423,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:32.187.0":
-  version: 32.187.0
-  resolution: "renovate@npm:32.187.0"
+"renovate@npm:32.188.1":
+  version: 32.188.1
+  resolution: "renovate@npm:32.188.1"
   dependencies:
     "@aws-sdk/client-ec2": 3.155.0
     "@aws-sdk/client-ecr": 3.154.0
@@ -5441,6 +5441,7 @@ __metadata:
     "@types/tmp": 0.2.3
     "@yarnpkg/core": 3.2.4
     "@yarnpkg/parsers": 2.5.1
+    agentkeepalive: 4.2.1
     auth-header: 1.0.0
     azure-devops-node-api: 11.2.0
     bunyan: 1.8.15
@@ -5517,7 +5518,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 2bce056c9560e3084c71263e40c44629028a6a29f83f25c36fc0c022060836acef269aa011173f74891f699cc849ad885ea62dc860ef97e4a53bc8eb86aeb2c6
+  checksum: 0a7ae5aa6ca12a5eb89d75eea6b2ac70bff01dcd6d44684f42e4b1808c9205b11a8f63b70493a2de5c390b8f796ace674e87d5a739c29ea377e6c7d759a18493
   languageName: node
   linkType: hard
 

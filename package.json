@@ -105,7 +105,7 @@
     "cli-progress": "^3.7.0",
     "conventional-commits-parser": "^3.2.1",
     "ejs": "^3.1.6",
-    "firebase": "9.9.3",
+    "firebase": "9.9.4",
     "firebase-admin": "^11.0.0",
     "firebase-functions": "^3.21.2",
     "firebase-tools": "^11.0.1",
