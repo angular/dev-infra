@@ -107,10 +107,10 @@ sass_repositories(
 )
 
 register_toolchains(
-    "//tools/git-toolchain:git_linux_toolchain",
-    "//tools/git-toolchain:git_macos_x86_toolchain",
-    "//tools/git-toolchain:git_macos_arm64_toolchain",
-    "//tools/git-toolchain:git_windows_toolchain",
+    "//bazel/git-toolchain:git_linux_toolchain",
+    "//bazel/git-toolchain:git_macos_x86_toolchain",
+    "//bazel/git-toolchain:git_macos_arm64_toolchain",
+    "//bazel/git-toolchain:git_windows_toolchain",
 )
 
 http_file(

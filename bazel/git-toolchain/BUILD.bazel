@@ -3,6 +3,12 @@ load(":alias.bzl", "git_toolchain_alias")
 
 package(default_visibility = ["//visibility:public"])
 
+# Make source files available for distribution via pkg_npm
+filegroup(
+    name = "files",
+    srcs = glob(["*"]),
+)
+
 toolchain_type(name = "toolchain_type")
 
 git_toolchain_alias(name = "current_git_toolchain")
