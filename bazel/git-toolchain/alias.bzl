@@ -1,5 +1,5 @@
 def _git_toolchain_alias_impl(ctx):
-    toolchain = ctx.toolchains["//tools/git-toolchain:toolchain_type"]
+    toolchain = ctx.toolchains["//bazel/git-toolchain:toolchain_type"]
 
     return [
         platform_common.TemplateVariableInfo({
@@ -9,7 +9,7 @@ def _git_toolchain_alias_impl(ctx):
 
 git_toolchain_alias = rule(
     implementation = _git_toolchain_alias_impl,
-    toolchains = ["//tools/git-toolchain:toolchain_type"],
+    toolchains = ["//bazel/git-toolchain:toolchain_type"],
     doc = """
       Exposes an alias for retrieving the resolved Git toolchain. Exposing a template variable for
       accessing the Git binary path using Bazel `Make variables`.

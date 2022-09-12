@@ -35,5 +35,5 @@ jasmine_node_test(
     args = ["'$(GIT_BIN_PATH)'"],
     shard_count = 6,
     specs = [":test_lib"],
-    toolchains = ["//tools/git-toolchain:current_git_toolchain"],
+    toolchains = ["//bazel/git-toolchain:current_git_toolchain"],
 )

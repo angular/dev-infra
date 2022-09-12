@@ -12,6 +12,7 @@ filegroup(
         "//bazel/browsers:files",
         "//bazel/constraints:files",
         "//bazel/esbuild:files",
+        "//bazel/git-toolchain:files",
         "//bazel/http-server:files",
         "//bazel/integration:files",
         "//bazel/karma:files",
