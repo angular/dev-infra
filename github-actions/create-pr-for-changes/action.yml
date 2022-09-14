@@ -8,6 +8,15 @@ description: |
 author: Angular
 
 inputs:
+  base-branch:
+    required: false
+    default: ${{ github.ref_name }}
+    description: |
+      The base branch of the pull request (if one is created).
+
+      Defaults to the branch that the workflow was triggered on.
+
+      Example: `base-branch: my-patch-branch`
   branch-prefix:
     required: true
     description: |

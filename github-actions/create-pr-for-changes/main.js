@@ -24749,7 +24749,7 @@ async function main() {
     git.run(["config", "user.name", "Angular Robot"]);
     core.info("Initialized git/GitHub client.");
     const branchPrefix = `${core.getInput("branch-prefix", { required: true })}-`;
-    const cleanUpBranches = core.getInput("clean-up-branches", { required: false }) === "true";
+    const cleanUpBranches = core.getInput("clean-up-branches", { required: true }) === "true";
     const forkRepo = await git.getForkOfAuthenticatedUser();
     if (cleanUpBranches) {
       await cleanUpObsoleteBranches(git, repo, forkRepo, branchPrefix);
@@ -24761,7 +24761,7 @@ async function main() {
     } else {
       core.info(`Found ${touchedFiles.length} affected file(s).`);
     }
-    const baseBranch = import_github4.context.ref.replace(/^refs\/heads\//, "");
+    const baseBranch = core.getInput("base-branch", { required: true });
     const branchName = `${branchPrefix}${repo.owner}-${repo.name}-${baseBranch}-${hashFiles(touchedFiles)}`;
     const { data: matchingPrs } = await git.github.pulls.list({
       owner: repo.owner,
