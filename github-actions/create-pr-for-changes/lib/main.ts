@@ -48,7 +48,7 @@ async function main(): Promise<void> {
 
     // Unless configured otherwise, clean up obsolete branches.
     const branchPrefix = `${core.getInput('branch-prefix', {required: true})}-`;
-    const cleanUpBranches = core.getInput('clean-up-branches', {required: false}) === 'true';
+    const cleanUpBranches = core.getInput('clean-up-branches', {required: true}) === 'true';
     const forkRepo = await git.getForkOfAuthenticatedUser();
 
     if (cleanUpBranches) {
@@ -79,7 +79,7 @@ async function main(): Promise<void> {
     //   Hashing the contents of the changed files is a heuristic to uniquely-ish represent a
     //   particular set of changes. It is not 100% accurate (and could result in both false
     //   positives and false negatives), but should be good enough for our purposes.
-    const baseBranch = context.ref.replace(/^refs\/heads\//, '');
+    const baseBranch = core.getInput('base-branch', {required: true});
     const branchName = `${branchPrefix}${repo.owner}-${repo.name}-${baseBranch}-${hashFiles(
       touchedFiles,
     )}`;
