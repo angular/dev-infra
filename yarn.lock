@@ -349,7 +349,7 @@ __metadata:
     "@bazel/typescript": 5.5.4
     "@google-cloud/firestore": ^6.0.0
     "@google-cloud/storage": ^6.0.0
-    "@microsoft/api-extractor": 7.29.5
+    "@microsoft/api-extractor": 7.31.0
     "@octokit/auth-app": ^4.0.0
     "@octokit/core": ^4.0.0
     "@octokit/graphql": ^5.0.0
@@ -406,8 +406,8 @@ __metadata:
     glob: 8.0.3
     husky: ^8.0.0
     inquirer: 9.1.1
-    jasmine: ~4.3.0
-    jasmine-core: ~4.3.0
+    jasmine: ~4.4.0
+    jasmine-core: ~4.4.0
     jsdom: ^20.0.0
     karma: ^6.3.15
     karma-chrome-launcher: ^3.1.0
@@ -433,7 +433,7 @@ __metadata:
     send: ^0.18.0
     source-map: ^0.7.4
     spdx-satisfies: ^5.0.1
-    supports-color: 9.2.2
+    supports-color: 9.2.3
     terser: ^5.14.1
     tmp: ^0.2.1
     true-case-path: ^2.2.1
@@ -4250,22 +4250,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor-model@npm:7.23.3":
-  version: 7.23.3
-  resolution: "@microsoft/api-extractor-model@npm:7.23.3"
+"@microsoft/api-extractor-model@npm:7.24.0":
+  version: 7.24.0
+  resolution: "@microsoft/api-extractor-model@npm:7.24.0"
   dependencies:
     "@microsoft/tsdoc": 0.14.1
     "@microsoft/tsdoc-config": ~0.16.1
     "@rushstack/node-core-library": 3.51.1
-  checksum: 00ec7a31d1f6d1583c3fcd97b16130bf8570e27cd3be2ecd07cf601b0c91ef63885a55bf068932c5d9278f8a9ab2046dc8305c0047158e6df5e86f5e56e35b77
+  checksum: d683ca227ed79f0bd8725caba190bb281b1f2088602268cbecd5d8dd690c601034c447a35e22f63866f79544f9648bc46631e0d724c3e54bc7438591e1f4312f
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor@npm:7.29.5":
-  version: 7.29.5
-  resolution: "@microsoft/api-extractor@npm:7.29.5"
+"@microsoft/api-extractor@npm:7.31.0":
+  version: 7.31.0
+  resolution: "@microsoft/api-extractor@npm:7.31.0"
   dependencies:
-    "@microsoft/api-extractor-model": 7.23.3
+    "@microsoft/api-extractor-model": 7.24.0
     "@microsoft/tsdoc": 0.14.1
     "@microsoft/tsdoc-config": ~0.16.1
     "@rushstack/node-core-library": 3.51.1
@@ -4279,7 +4279,7 @@ __metadata:
     typescript: ~4.7.4
   bin:
     api-extractor: bin/api-extractor
-  checksum: f80f5963591384029f71c8db2f3cd32eb098ce4f622e420b695ac947c104612a5a483126428aade638d5d751e840f79e4f36cb0c8e59c363663cf72971937b73
+  checksum: 834b0c534905e0c6cd5312da64dee15c9aa5384aae2dc77b139e136780eec2cabe51d3cd0cb8962f4d54ca40fba0284db374644d0686f11851bb58892ed375b9
   languageName: node
   linkType: hard
 
@@ -11535,10 +11535,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jasmine-core@npm:^4.1.0, jasmine-core@npm:^4.3.0, jasmine-core@npm:~4.3.0":
+"jasmine-core@npm:^4.1.0":
   version: 4.3.0
   resolution: "jasmine-core@npm:4.3.0"
   checksum: dc77281b84ca38e9c842958d913f45ddeaf5abafa5d7618f6954c21b9bcb5f32e56698934d607091a5fe1dfd6066e324681ebff8b0e0f8393a543dc06db656cb
+  languageName: node
+  linkType: hard
+
+"jasmine-core@npm:^4.4.0, jasmine-core@npm:~4.4.0":
+  version: 4.4.0
+  resolution: "jasmine-core@npm:4.4.0"
+  checksum: b52e2f17080dd33628dee73c8b6eb9fbe793126a5e4ceb77ecf164f15fc44f6b29baa1e034992630a866522f470d62dc2f3c364b234af3487a9507c9d1ae0d94
   languageName: node
   linkType: hard
 
@@ -11572,15 +11579,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jasmine@npm:~4.3.0":
-  version: 4.3.0
-  resolution: "jasmine@npm:4.3.0"
+"jasmine@npm:~4.4.0":
+  version: 4.4.0
+  resolution: "jasmine@npm:4.4.0"
   dependencies:
     glob: ^7.1.6
-    jasmine-core: ^4.3.0
+    jasmine-core: ^4.4.0
   bin:
     jasmine: bin/jasmine.js
-  checksum: c8e1c6e3fddcb7c91adcff4472315b3b65f946edfe90bef1e98f138d1246c1ba52c6d064db2dc129a82d0417a515bb22392c7bd196f0a3ced49438b19a3ee893
+  checksum: 4b0b1a35b4e0e719b1193afda12b2f0d798aee4b1d495beffa67fdb4258a54abfe12389470fce0751b11f53014e2c511f1860e81c9aedde691ddb76b9adad7c4
   languageName: node
   linkType: hard
 
@@ -16788,10 +16795,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"supports-color@npm:9.2.2":
-  version: 9.2.2
-  resolution: "supports-color@npm:9.2.2"
-  checksum: 976d84877402fc38c1d43b1fde20b0a8dc0283273f21cfebe4ff7507d27543cdfbeec7db108a96b82d694465f06d64e8577562b05d0520b41710088e0a33cc50
+"supports-color@npm:9.2.3":
+  version: 9.2.3
+  resolution: "supports-color@npm:9.2.3"
+  checksum: 47d598b70d2bac3cbce98950344134de17c2935f45e8ad6256cde78ebe5da440e240d9fa17c1146bd84b1c36f865239fef6c563d70068a8d901ca5a6c56960af
   languageName: node
   linkType: hard
 

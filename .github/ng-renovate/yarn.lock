@@ -1645,12 +1645,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@redis/json@npm:1.0.3":
-  version: 1.0.3
-  resolution: "@redis/json@npm:1.0.3"
+"@redis/json@npm:1.0.4":
+  version: 1.0.4
+  resolution: "@redis/json@npm:1.0.4"
   peerDependencies:
     "@redis/client": ^1.0.0
-  checksum: 26a7003c2fbacfa5998671e3a301cb2285432bf90f237adedcf76c0be0d379528e6710d469a8ea93c04bbd22951f9c2f41d460dbd79e85856f199248c4a250d5
+  checksum: de07f9c37abed603dec352593eb69fc8a94475e7f86b4f65b9805394492d448a1e4181db74269d80eb9dba6f3ae8a41804204821db36bb801cd7c1e30ac7ec80
   languageName: node
   linkType: hard
 
@@ -2096,7 +2096,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aggregate-error@npm:^3.0.0":
+"aggregate-error@npm:3.1.0, aggregate-error@npm:^3.0.0":
   version: 3.1.0
   resolution: "aggregate-error@npm:3.1.0"
   dependencies:
@@ -3470,15 +3470,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"good-enough-parser@npm:1.1.18":
-  version: 1.1.18
-  resolution: "good-enough-parser@npm:1.1.18"
+"good-enough-parser@npm:1.1.19":
+  version: 1.1.19
+  resolution: "good-enough-parser@npm:1.1.19"
   dependencies:
     "@thi.ng/zipper": 1.0.3
     "@types/moo": 0.5.5
     klona: 2.0.5
     moo: 0.5.1
-  checksum: f08083913824ade622a4e2e3420895beed741a47cb3cbdfdb15ae5719d0e5141fea83b7fe74744b0cdee009487ec6b742e17124d5ecfac2e1c31cd6edb37b1d2
+  checksum: e673bbb06a48ea40d4d69eaf840f0781885771399799bdfd9a95650f0c79d42d4335975945850408b5014441256956b808b99c03143ec11d61f9675ffb03787a
   languageName: node
   linkType: hard
 
@@ -4311,6 +4311,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"luxon@npm:3.0.3":
+  version: 3.0.3
+  resolution: "luxon@npm:3.0.3"
+  checksum: 67d143f102f520761c4202086579a5cf30b230ea299da27cacb31e9f9d372cadef90f14cbe7e2621b70825b267fe00128b8176ed8b7172b48f77a403a662d5aa
+  languageName: node
+  linkType: hard
+
 "make-fetch-happen@npm:^10.0.3":
   version: 10.2.0
   resolution: "make-fetch-happen@npm:10.2.0"
@@ -4753,7 +4760,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: 32.188.1
+    renovate: 32.195.5
   languageName: unknown
   linkType: soft
 
@@ -4791,13 +4798,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-html-parser@npm:5.4.1":
-  version: 5.4.1
-  resolution: "node-html-parser@npm:5.4.1"
+"node-html-parser@npm:5.4.2":
+  version: 5.4.2
+  resolution: "node-html-parser@npm:5.4.2"
   dependencies:
     css-select: ^4.2.1
     he: 1.2.0
-  checksum: 7067e2de97a10c0e6e63d6e4c039ddc682027b80c821a3a812ed11bfadd0433324cccb2f6955a30b174e35993fd8be2ce642b8ed6eed5ca9c6ab36a5d5ce0612
+  checksum: 2d2391147c83b402786eeab95d23ea4e24ca8608e0e70a2823bfd4f2a248be13a8cc31acfd55a0109e051131e4f0c17d7ada8d999ce70ff2e342ab0110f5da59
   languageName: node
   linkType: hard
 
@@ -4918,12 +4925,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"openpgp@npm:5.4.0":
-  version: 5.4.0
-  resolution: "openpgp@npm:5.4.0"
+"openpgp@npm:5.5.0":
+  version: 5.5.0
+  resolution: "openpgp@npm:5.5.0"
   dependencies:
     asn1.js: ^5.0.0
-  checksum: 7e7d049d0b500163b2e89286a622ae47a4bd54a8f2b34cb4868b29d60dc4f24fdc166cd92d641b383e2477916d12911e1b594bb8716481b20f7d88af53578587
+  checksum: 65ff3f47089449ce16b41929570487c682d114464d44965b50da7fbd7ae8681e4a8b3c0ba3abc7cbfcbe31d0c3b1d4e3a4b5efc743d217ffff122a19c296bc74
   languageName: node
   linkType: hard
 
@@ -5351,17 +5358,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redis@npm:4.3.0":
-  version: 4.3.0
-  resolution: "redis@npm:4.3.0"
+"redis@npm:4.3.1":
+  version: 4.3.1
+  resolution: "redis@npm:4.3.1"
   dependencies:
     "@redis/bloom": 1.0.2
     "@redis/client": 1.3.0
     "@redis/graph": 1.0.1
-    "@redis/json": 1.0.3
+    "@redis/json": 1.0.4
     "@redis/search": 1.1.0
     "@redis/time-series": 1.0.3
-  checksum: f5da538cbd79e864e2df7197c9fda1a2d8d4df3be1bdfd3a62a80c0be19b30616f366587e92cdb94b5c027cef4640ff1fc2f1d98873792545ef5f9b1ca53513f
+  checksum: fe20b548f80b55abb50e552c63a39e8e1bed1f48de0eaa87ed14b44b1168916a5ad4f51a766994f15fc2df7d5abc45123a97c3a3fa73da42492419978762244d
   languageName: node
   linkType: hard
 
@@ -5423,9 +5430,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:32.188.1":
-  version: 32.188.1
-  resolution: "renovate@npm:32.188.1"
+"renovate@npm:32.195.5":
+  version: 32.195.5
+  resolution: "renovate@npm:32.195.5"
   dependencies:
     "@aws-sdk/client-ec2": 3.155.0
     "@aws-sdk/client-ecr": 3.154.0
@@ -5442,6 +5449,7 @@ __metadata:
     "@yarnpkg/core": 3.2.4
     "@yarnpkg/parsers": 2.5.1
     agentkeepalive: 4.2.1
+    aggregate-error: 3.1.0
     auth-header: 1.0.0
     azure-devops-node-api: 11.2.0
     bunyan: 1.8.15
@@ -5469,7 +5477,7 @@ __metadata:
     git-url-parse: 12.0.0
     github-url-from-git: 1.5.0
     global-agent: 3.0.0
-    good-enough-parser: 1.1.18
+    good-enough-parser: 1.1.19
     got: 11.8.5
     graph-data-structure: 2.0.0
     handlebars: 4.7.7
@@ -5480,15 +5488,15 @@ __metadata:
     json-dup-key-validator: 1.0.3
     json-stringify-pretty-compact: 3.0.0
     json5: 2.2.1
-    luxon: 3.0.1
+    luxon: 3.0.3
     markdown-it: 13.0.1
     markdown-table: 2.0.0
     marshal: 0.5.4
     minimatch: 5.1.0
     moo: 0.5.1
     nanoid: 3.3.4
-    node-html-parser: 5.4.1
-    openpgp: 5.4.0
+    node-html-parser: 5.4.2
+    openpgp: 5.5.0
     p-all: 3.0.0
     p-map: 4.0.0
     p-queue: 6.6.2
@@ -5496,7 +5504,7 @@ __metadata:
     prettier: 2.7.1
     quick-lru: 5.1.1
     re2: 1.17.7
-    redis: 4.3.0
+    redis: 4.3.1
     remark: 13.0.0
     remark-github: 10.1.0
     safe-stable-stringify: 2.3.1
@@ -5504,7 +5512,7 @@ __metadata:
     semver-stable: 3.0.0
     semver-utils: 1.1.4
     shlex: 2.1.2
-    simple-git: 3.13.0
+    simple-git: 3.14.0
     slugify: 1.6.5
     traverse: 0.6.6
     tslib: 2.4.0
@@ -5518,7 +5526,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 0a7ae5aa6ca12a5eb89d75eea6b2ac70bff01dcd6d44684f42e4b1808c9205b11a8f63b70493a2de5c390b8f796ace674e87d5a739c29ea377e6c7d759a18493
+  checksum: 197e568b150d711cd24ae88e0439ab1b54e345c787a6c9bb6415b708d78b1d63eb9c0dbfc0877f165fd114896d04170b57822cc441396d969cc70b789dfa1e94
   languageName: node
   linkType: hard
 
@@ -5788,14 +5796,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"simple-git@npm:3.13.0":
-  version: 3.13.0
-  resolution: "simple-git@npm:3.13.0"
+"simple-git@npm:3.14.0":
+  version: 3.14.0
+  resolution: "simple-git@npm:3.14.0"
   dependencies:
     "@kwsites/file-exists": ^1.1.1
     "@kwsites/promise-deferred": ^1.1.1
     debug: ^4.3.4
-  checksum: 6f36a451d4614838026caebdb54ecfc74889939603c74245293afc33f0d8bca34b77a0f54e10504b94a0dfe6726cc0eda7016fa416e6316b1e6b7cfca467b350
+  checksum: 08cadd414ae0bbfcf3cfd91b19126a4fb09a4b6df49b6f8a107a57ec401a808f6067f28916b4eb4bb1a75ebdb9f0a96f0280da20d5cb4fba47bcac1766f81f70
   languageName: node
   linkType: hard
 
