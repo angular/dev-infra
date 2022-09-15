@@ -65,9 +65,9 @@ inputs:
       To skip the automatic clean up of obsolete branches, set this option to `false`.
 
       Example: `clean-up-branches: false`
-  angular-robot-key:
+  angular-robot-token:
     required: true
-    description: The private key for the Angular Robot Github app. Used to authenticate with GitHub.
+    description: A GitHub access token for Angular Robot. Used to authenticate with GitHub.
 
 outputs:
   result:

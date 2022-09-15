@@ -6,7 +6,6 @@ import {GithubConfig, setConfig} from '../../../ng-dev/utils/config.js';
 import {AuthenticatedGitClient} from '../../../ng-dev/utils/git/authenticated-git-client.js';
 import {GithubRepo} from '../../../ng-dev/utils/git/github.js';
 import {getRepositoryGitUrl} from '../../../ng-dev/utils/git/github-urls.js';
-import {ANGULAR_ROBOT, getAuthTokenFor, revokeActiveInstallationToken} from '../../utils.js';
 
 const enum ActionResult {
   created = 'created',
@@ -18,8 +17,6 @@ main();
 
 // Helpers
 async function main(): Promise<void> {
-  let authToken: string | null = null;
-
   try {
     // Initialize outputs.
     core.setOutput('result', ActionResult.nothing);
@@ -35,10 +32,10 @@ async function main(): Promise<void> {
     };
     setConfig(config);
 
-    // Configure the `AuthenticatedGitClient` to be authenticated with the token for the Angular
-    // Robot.
-    authToken = await getAuthTokenFor(ANGULAR_ROBOT);
-    AuthenticatedGitClient.configure(authToken);
+    // Configure the `AuthenticatedGitClient` to be authenticated with the provided GitHub access
+    // token for Angular Robot.
+    const accessToken = core.getInput('angular-robot-token', {required: true});
+    AuthenticatedGitClient.configure(accessToken);
     /** The authenticated GitClient. */
     const git = await AuthenticatedGitClient.get();
     git.run(['config', 'user.email', 'angular-robot@google.com']);
@@ -206,10 +203,6 @@ async function main(): Promise<void> {
     core.setOutput('result', ActionResult.failed);
     core.error(err);
     core.setFailed(err.message);
-  } finally {
-    if (authToken !== null) {
-      await revokeActiveInstallationToken(authToken);
-    }
   }
 }
 
