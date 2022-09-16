@@ -17320,7 +17320,7 @@ async function cleanUpObsoleteBranches(git, repo, forkRepo, branchPrefix) {
     sort: "created",
     order: "desc"
   });
-  core.info(`Found ${obsoletePrs.length} closed PR(s) match the specified branch name prefix: ` + (obsoletePrs.length === 0 ? "-" : obsoletePrs.map((pr) => `#${pr.number}`).join(", ")));
+  core.info(`Found ${obsoletePrs.length} closed PR(s) that match the specified branch name prefix: ` + (obsoletePrs.length === 0 ? "-" : obsoletePrs.map((pr) => `#${pr.number}`).join(", ")));
   const obsoleteBranches = await Promise.all(obsoletePrs.map((pr) => getBranchNameForPr(git, repo, pr.number)));
   core.info(`Found ${obsoleteBranches.length} obsolete branches that will be deleted: ` + (obsoleteBranches.length === 0 ? "-" : obsoleteBranches.join(", ")));
   for (const branchName of obsoleteBranches) {
