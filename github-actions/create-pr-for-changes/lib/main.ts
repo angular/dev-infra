@@ -267,7 +267,7 @@ async function cleanUpObsoleteBranches(
   });
 
   core.info(
-    `Found ${obsoletePrs.length} closed PR(s) match the specified branch name prefix: ` +
+    `Found ${obsoletePrs.length} closed PR(s) that match the specified branch name prefix: ` +
       (obsoletePrs.length === 0 ? '-' : obsoletePrs.map((pr) => `#${pr.number}`).join(', ')),
   );
 
