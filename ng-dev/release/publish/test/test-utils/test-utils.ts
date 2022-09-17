@@ -61,7 +61,7 @@ export function setupReleaseActionForTesting<
   });
 
   // Setup mocks for release action.
-  const {gitClient, builtPackagesWithInfo} = setupMocksForReleaseAction<
+  const {gitClient, builtPackagesWithInfo, promptConfirmSpy} = setupMocksForReleaseAction<
     OptionsWithDefaults['useSandboxGitClient']
   >(
     githubConfig,
@@ -81,6 +81,7 @@ export function setupReleaseActionForTesting<
     githubConfig,
     releaseConfig,
     gitClient,
+    promptConfirmSpy,
     builtPackagesWithInfo,
   };
 }

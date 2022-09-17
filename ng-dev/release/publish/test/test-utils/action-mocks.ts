@@ -87,7 +87,7 @@ export function setupMocksForReleaseAction<T extends boolean>(
   // Fake confirm any prompts. We do not want to make any changelog edits and
   // just proceed with the release action. Also we immediately want to confirm
   // when we are prompted whether the pull request should be merged.
-  spyOn(Prompt, 'confirm').and.resolveTo(true);
+  const promptConfirmSpy = spyOn(Prompt, 'confirm').and.resolveTo(true);
 
   const builtPackagesWithInfo: BuiltPackageWithInfo[] = testReleasePackages.map((pkg) => ({
     ...pkg,
@@ -136,5 +136,5 @@ export function setupMocksForReleaseAction<T extends boolean>(
     );
   }
 
-  return {gitClient, builtPackagesWithInfo};
+  return {gitClient, builtPackagesWithInfo, promptConfirmSpy};
 }
