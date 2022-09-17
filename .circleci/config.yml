@@ -5,6 +5,7 @@ version: 2.1
 orbs:
   buildalert: oss-tools/buildalert@0.1.0
   win: circleci/windows@2.2.0
+  devinfra: angular/dev-infra@0.0.3
 
 # **Note**: When updating the beginning of the cache key, also update the cache key to match
 # the new cache key prefix. This allows us to take advantage of CircleCI's fallback caching.
@@ -99,19 +100,10 @@ commands:
     description: Checkout and rebase the repository
     steps:
       - checkout
-      # After checkout, rebase on top of target branch.
-      - run:
-          name: Rebase PR on target branch
-          environment:
-            CIRCLE_GIT_BASE_REVISION: << pipeline.git.base_revision >>
-            CIRCLE_GIT_REVISION: << pipeline.git.revision >>
-          command: |
-            if [ -n "$CIRCLE_PR_NUMBER" ]; then
-              # User is required for rebase.
-              git config user.name "Angular Robot"
-              git config user.email "angular-robot@google.com"
-              node .circleci/rebase-pr.js
-            fi
+      # After checkout, rebase PRs on top of target branch.
+      - devinfra/rebase-pr-on-target-branch:
+          base_revision: << pipeline.git.base_revision >>
+          head_revision: << pipeline.git.revision >>
 
 # Job definitions
 # Jobs can include parameters that are passed in the workflow job invocation.
