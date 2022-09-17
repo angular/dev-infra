@@ -19,4 +19,5 @@ steps:
         CIRCLE_GIT_BASE_REVISION: << parameters.base_revision >>
         CIRCLE_GIT_HEAD_REVISION: << parameters.head_revision >>
       name: Rebasing PR on the target branch
+      shell: /bin/bash -eo pipefail
       command: << include(../dist/bin/circleci-orb/scripts/rebase-pr-on-target-branch/script.sh) >>
