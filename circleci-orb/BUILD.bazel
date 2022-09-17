@@ -1,6 +1,6 @@
 ORB_NAME = "angular/dev-infra"
 
-ORB_VERSION = "0.0.4"
+ORB_VERSION = "0.0.5"
 
 filegroup(
     name = "orb_generated_files",

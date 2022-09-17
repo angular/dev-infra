@@ -11,6 +11,11 @@ parameters:
     type: string
     description: The primary branch for the repository.
     default: 'main'
+  shell:
+    type: string
+    description: |
+      Shell to use for executing the command. Useful for Windows where a
+      non-bash shell is the default.
 
 steps:
   - run:
@@ -19,5 +24,5 @@ steps:
         CIRCLE_GIT_BASE_REVISION: << parameters.base_revision >>
         CIRCLE_GIT_HEAD_REVISION: << parameters.head_revision >>
       name: Rebasing PR on the target branch
-      shell: /bin/bash -eo pipefail
+      shell: << parameters.shell >>
       command: << include(../dist/bin/circleci-orb/scripts/rebase-pr-on-target-branch/script.sh) >>
