@@ -5,7 +5,7 @@ package(default_visibility = ["//circleci-orb:__subpackages__"])
 
 ts_library(
     name = "rebase-on-target-branch",
-    srcs = ["index.ts"],
+    srcs = glob(["*.ts"]),
     deps = ["@npm//@types/node"],
 )
 
