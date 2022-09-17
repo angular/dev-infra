@@ -6,12 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {readFileSync} from 'fs';
+import {readFileSync, writeFileSync} from 'fs';
 import {join} from 'path';
 import semver from 'semver';
 
 import {CommitFromGitLog, parseCommitFromGitLog} from '../../../commit-message/parse.js';
-import {NgDevConfig} from '../../../utils/config.js';
 import {GitClient} from '../../../utils/git/git-client.js';
 import {Log} from '../../../utils/logging.js';
 import {
@@ -191,6 +190,57 @@ describe('common release action logic', () => {
         'BEFORE_STAGING_SHA',
         'latest',
         'startTagForNotes',
+      );
+    });
+
+    it('should not allow for arbitrary edits to be made during changelog edit prompt', async () => {
+      const {repo, fork, instance, githubConfig, promptConfirmSpy} = setupReleaseActionForTesting(
+        DelegateTestAction,
+        baseReleaseTrains,
+        /* isNextPublishedToNpm */ true,
+        {useSandboxGitClient: true},
+      );
+      const {version, branchName} = baseReleaseTrains.next;
+
+      spyOn(Log, 'error');
+
+      let promptResolveFn: ((value: boolean) => void) | null = null;
+      const promptPromise = new Promise<boolean>((resolve) => (promptResolveFn = resolve));
+      promptConfirmSpy.and.returnValue(promptPromise);
+
+      const testFile = join(testTmpDir, 'some-file.txt');
+      const git =
+        SandboxGitRepo.withInitialCommit(githubConfig).createTagForHead('0.0.0-compare-base');
+
+      writeFileSync(testFile, 'content');
+      git.commit('feat(test): first commit');
+
+      repo
+        .expectBranchRequest(branchName, 'STAGING_SHA')
+        .expectCommitRequest('STAGING_SHA', `release: cut the v${version} release`)
+        .expectCommitStatusCheck('STAGING_SHA', 'success')
+        .expectFindForkRequest(fork)
+        .expectPullRequestToBeCreated(branchName, fork, 'release-stage-10.1.0-next.0', 10);
+
+      fork.expectBranchRequest('release-stage-10.1.0-next.0', null);
+
+      const stagingPromise = instance.testStagingWithBuild(
+        version,
+        branchName,
+        parse('0.0.0-compare-base'),
+      );
+
+      // Before confirming that we are good with the changelog changes, modify
+      // an unrelated file. This should trigger a release action fatal error.
+      writeFileSync(testFile, 'change content');
+      promptResolveFn!(true);
+
+      await expectAsync(stagingPromise).toBeRejected();
+
+      expect(Log.error).toHaveBeenCalledWith(
+        jasmine.stringContaining(
+          'Unrelated changes have been made as part of the changelog editing',
+        ),
       );
     });
 

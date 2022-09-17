@@ -195,11 +195,20 @@ export abstract class ReleaseAction {
 
     // Commit message for the release point.
     const commitMessage = getCommitMessageForRelease(newVersion);
+
     // Create a release staging commit including changelog and version bump.
     await this.createCommit(commitMessage, [
       workspaceRelativePackageJsonPath,
       workspaceRelativeChangelogPath,
     ]);
+
+    // The caretaker may have attempted to make additional changes. These changes would
+    // not be captured into the release commit. The working directory should remain clean,
+    // like we assume it being clean when we start the release actions.
+    if (this.git.hasUncommittedChanges()) {
+      Log.error('  ✘   Unrelated changes have been made as part of the changelog editing.');
+      throw new FatalReleaseActionError();
+    }
 
     Log.info(green(`  ✓   Created release commit for: "${newVersion}".`));
   }

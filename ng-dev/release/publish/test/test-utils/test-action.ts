@@ -7,6 +7,7 @@
  */
 
 import {GithubConfig} from '../../../../utils/config.js';
+import {Prompt} from '../../../../utils/prompt.js';
 import {
   GithubTestingRepo,
   SandboxGitClient,
@@ -57,6 +58,7 @@ export interface TestReleaseAction<
   projectDir: string;
   githubConfig: GithubConfig;
   releaseConfig: ReleaseConfig;
+  promptConfirmSpy: jasmine.Spy<typeof Prompt['confirm']>;
   builtPackagesWithInfo: BuiltPackageWithInfo[];
   gitClient: O['useSandboxGitClient'] extends true ? SandboxGitClient : VirtualGitClient;
 }
