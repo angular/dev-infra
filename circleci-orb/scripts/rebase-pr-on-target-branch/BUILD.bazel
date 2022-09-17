@@ -4,8 +4,8 @@ load("//circleci-orb:index.bzl", "nodejs_script_to_sh_script")
 package(default_visibility = ["//circleci-orb:__subpackages__"])
 
 ts_library(
-    name = "rebase-on-target-branch",
-    srcs = ["index.ts"],
+    name = "rebase-pr-on-target-branch",
+    srcs = glob(["*.ts"]),
     deps = ["@npm//@types/node"],
 )
 
@@ -14,7 +14,7 @@ esbuild(
     entry_point = "index.ts",
     format = "iife",
     sourcemap = "inline",
-    deps = [":rebase-on-target-branch"],
+    deps = [":rebase-pr-on-target-branch"],
 )
 
 nodejs_script_to_sh_script(
