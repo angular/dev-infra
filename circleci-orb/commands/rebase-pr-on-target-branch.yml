@@ -19,4 +19,4 @@ steps:
         CIRCLE_GIT_BASE_REVISION: << parameters.base_revision >>
         CIRCLE_GIT_HEAD_REVISION: << parameters.head_revision >>
       name: Rebasing PR on the target branch
-      command: << include(../dist/bin/circleci-orb/scripts/rebase-on-target-branch/script.sh) >>
+      command: << include(../dist/bin/circleci-orb/scripts/rebase-pr-on-target-branch/script.sh) >>

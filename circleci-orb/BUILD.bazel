@@ -1,11 +1,11 @@
 ORB_NAME = "angular/dev-infra"
 
-ORB_VERSION = "0.0.2"
+ORB_VERSION = "0.0.3"
 
 filegroup(
     name = "orb_generated_files",
     srcs = [
-        "//circleci-orb/scripts/rebase-on-target-branch:script",
+        "//circleci-orb/scripts/rebase-pr-on-target-branch:script",
     ],
 )
 
