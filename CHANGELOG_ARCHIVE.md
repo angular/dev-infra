@@ -1,3 +1,14 @@
+<a name="2022.5.1"></a>
+# 2022.5.1 (2022-05-01)
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [93fef04](https://github.com/angular/dev-infra/commit/93fef044b38a3818d292be5bad0817ca6578f3e5) | fix | do not throw if multiple remotes point to angular remote |
+| [f77a668](https://github.com/angular/dev-infra/commit/f77a6689d7dc27ec1e6e684a934cb1b47c83e887) | fix | make `new-main-branch` command more flexible to local setup |
+## Special Thanks
+Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.4.24"></a>
 # 2022.4.24 (2022-04-24)
 ### apps
