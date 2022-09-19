@@ -13,7 +13,7 @@ parameters:
     default: 'main'
   shell:
     type: string
-    default: ""
+    default: ''
     description: |
       Shell to use for executing the command. Useful for Windows where a
       non-bash shell is the default.

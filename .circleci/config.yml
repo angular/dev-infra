@@ -124,6 +124,12 @@ jobs:
 
     steps:
       - checkout_and_rebase
+
+      - run:
+          shell: /usr/bin/env node -e
+          command: |
+            console.error("OK")
+
       - *restore_cache
       - setup_bazel_config
       - yarn_install
