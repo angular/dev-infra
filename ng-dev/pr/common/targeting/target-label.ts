@@ -33,6 +33,7 @@ export enum TargetLabelName {
   PATCH = 'target: patch',
   RELEASE_CANDIDATE = 'target: rc',
   LONG_TERM_SUPPORT = 'target: lts',
+  FEATURE_BRANCH = 'target: feature',
 }
 
 /**

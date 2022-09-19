@@ -137,6 +137,17 @@ export async function getTargetLabelsForActiveReleaseTrains(
         return [nextBranchName, releaseCandidate.branchName];
       },
     },
+    {
+      name: TargetLabelName.FEATURE_BRANCH,
+      branches: (githubTargetBranch) => {
+        if (isVersionBranch(githubTargetBranch) || githubTargetBranch === nextBranchName) {
+          throw new InvalidTargetBranchError(
+            '"target: feature" pull requests cannot target a releasable branch',
+          );
+        }
+        return [githubTargetBranch];
+      },
+    },
   ];
 
   // LTS branches can only be determined if the release configuration is defined, and must be added
