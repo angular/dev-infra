@@ -13,6 +13,10 @@ import {exec, getCommonAncestorSha, lookupSha} from './helpers';
 // Parameter variables.
 const baseRevision = process.env.CIRCLE_GIT_BASE_REVISION!;
 const headRevision = process.env.CIRCLE_GIT_HEAD_REVISION!;
+const primaryBranchName = process.env.MAIN_BRANCH_NAME!;
+
+console.info('Provided variables to Orb script:');
+console.info({baseRevision, headRevision, primaryBranchName});
 
 // CircleCI environment variables.
 const baseRepoOwner = process.env.CIRCLE_PROJECT_USERNAME!;
@@ -20,7 +24,6 @@ const baseRepoName = process.env.CIRCLE_PROJECT_REPONAME!;
 const headRepoOwner = process.env.CIRCLE_PR_USERNAME!;
 const headRepoName = process.env.CIRCLE_PR_REPONAME!;
 const prNumber = process.env.CIRCLE_PR_NUMBER!;
-const primaryBranchName = process.env.MAIN_BRANCH_NAME!;
 
 if (!process.env.CIRCLE_PR_NUMBER) {
   console.info('Skipping rebase as the CircleCI run is not for a pull request.');
@@ -30,14 +33,14 @@ if (!process.env.CIRCLE_PR_NUMBER) {
 /** Rebase on the latest commit for the targeted branch. */
 (async () => {
   const base = lookupSha(baseRevision, baseRepoOwner, baseRepoName, primaryBranchName);
-  const target = lookupSha(headRevision, headRepoOwner, headRepoName, primaryBranchName);
-  const commonAncestorSha = getCommonAncestorSha(base.sha, target.sha);
+  const head = lookupSha(headRevision, headRepoOwner, headRepoName, primaryBranchName);
+  const commonAncestorSha = getCommonAncestorSha(base.sha, head.sha);
 
   // Log known refs and shas
   console.log(`--------------------------------`);
   console.log(`    Target Branch:                   ${base.ref}`);
-  console.log(`    Latest Commit for Target Branch: ${target.latestSha}`);
-  console.log(`    Latest Commit for PR:            ${base.latestSha}`);
+  console.log(`    Latest Commit for Target Branch: ${base.latestSha}`);
+  console.log(`    Latest Commit for PR:            ${head.latestSha}`);
   console.log(`    First Common Ancestor SHA:       ${commonAncestorSha}`);
   console.log(`--------------------------------`);
   console.log();
@@ -61,7 +64,7 @@ if (!process.env.CIRCLE_PR_NUMBER) {
         Rebase instructions for PR Author, please run the following commands:
 
           git fetch upstream ${base.ref};
-          git checkout ${target.ref};
+          git checkout ${head.ref};
           git rebase upstream/${base.ref};
           git push --force-with-lease;
 
