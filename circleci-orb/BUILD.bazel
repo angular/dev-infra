@@ -1,6 +1,17 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+
 ORB_NAME = "angular/dev-infra"
 
-ORB_VERSION = "0.0.7"
+ORB_VERSION = "0.0.16"
+
+nodejs_binary(
+    name = "pack_orb_script",
+    entry_point = "pack-orb-script.mjs",
+    templated_args = [
+        "--nobazel_run_linker",
+    ],
+    visibility = ["//circleci-orb:__subpackages__"],
+)
 
 filegroup(
     name = "orb_generated_files",
