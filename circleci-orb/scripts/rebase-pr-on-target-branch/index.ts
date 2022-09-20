@@ -8,7 +8,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {exec, getCommonAncestorSha, lookupSha} from './helpers';
+import {execGit, getCommonAncestorSha, lookupSha} from './helpers';
 
 // Parameter variables.
 const baseRevision = process.env.CIRCLE_GIT_BASE_REVISION!;
@@ -32,6 +32,10 @@ if (!process.env.CIRCLE_PR_NUMBER) {
 
 /** Rebase on the latest commit for the targeted branch. */
 (async () => {
+  // Rebasing requires a Git user set.
+  execGit(['config', 'user.email', 'angular-robot@google.com']);
+  execGit(['config', 'user.name', 'Angular Robot']);
+
   const base = lookupSha(baseRevision, baseRepoOwner, baseRepoName, primaryBranchName);
   const head = lookupSha(headRevision, headRepoOwner, headRepoName, primaryBranchName);
   const commonAncestorSha = getCommonAncestorSha(base.sha, head.sha);
@@ -46,14 +50,20 @@ if (!process.env.CIRCLE_PR_NUMBER) {
   console.log();
 
   // Get the count of commits between the latest commit from origin and the common ancestor SHA.
-  const commitCount = exec(`git rev-list --count origin/${base.ref}...${commonAncestorSha}`);
+  const commitCount = execGit(['rev-list', '--count', `origin/${base.ref}...${commonAncestorSha}`]);
   console.log(`Checking ${commitCount} commits for changes in the CircleCI config file.`);
 
   // Check if the files changed between the latest commit from origin and the common ancestor SHA
   // includes the CircleCI config.
-  const circleCIConfigChanged = exec(
-    `git diff --name-only origin/${base.ref} ${commonAncestorSha} -- .circleci/config.yml`,
-  );
+  const circleCIConfigChanged = execGit([
+    'diff',
+    '--name-only',
+    `origin/${base.ref}`,
+    commonAncestorSha,
+    '--',
+    '.circleci/config.yml',
+  ]);
+
   if (!!circleCIConfigChanged) {
     throw Error(`
         CircleCI config on ${base.ref} has been modified since commit
@@ -77,7 +87,7 @@ if (!process.env.CIRCLE_PR_NUMBER) {
   console.log();
 
   // Rebase the PR.
-  exec(`git rebase origin/${base.ref}`);
+  execGit(['rebase', `origin/${base.ref}`]);
   console.log(`Rebased current branch onto ${base.ref}.`);
 })().catch((err: unknown) => {
   console.error('Failed to rebase on top of target branch.');
