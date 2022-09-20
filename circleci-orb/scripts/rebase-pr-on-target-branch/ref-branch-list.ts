@@ -20,7 +20,7 @@ const semverRegex = /^(\d+)\.(\d+)\.x$/;
  * likely correct branch will be the first one encountered in the list.
  */
 export function getRefFromBranchList(gitOutput: string, primaryBranchName: string): string {
-  const branches = gitOutput.split('\n').map((b) => b.split('/').slice(1).join('').trim());
+  const branches = gitOutput.split(/\r?\n/g).map((b) => b.split('/').slice(1).join('').trim());
 
   return branches.sort((a: string, b: string) => {
     if (a === primaryBranchName) {
