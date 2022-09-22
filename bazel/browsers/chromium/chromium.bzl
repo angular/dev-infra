@@ -26,6 +26,7 @@ def define_chromium_repositories():
             # misses in downstream targets.
             "chrome-linux/chrome_debug.log",
         ],
+        exports_files = ["chrome-linux"],
     )
 
     browser_archive(
@@ -40,6 +41,7 @@ def define_chromium_repositories():
         named_files = {
             "CHROMIUM": "chrome-mac/Chromium.app/Contents/MacOS/Chromium",
         },
+        exports_files = ["chrome-mac"],
     )
 
     browser_archive(
@@ -54,6 +56,7 @@ def define_chromium_repositories():
         named_files = {
             "CHROMIUM": "chrome-mac/Chromium.app/Contents/MacOS/Chromium",
         },
+        exports_files = ["chrome-mac"],
     )
 
     browser_archive(
@@ -72,6 +75,7 @@ def define_chromium_repositories():
             # Exclude files with spaces to prevent errors when symlinked as runfiles (https://github.com/bazelbuild/bazel/issues/4327).
             "chrome-win/First Run",
         ],
+        exports_files = ["chrome-win"],
     )
 
     browser_archive(
