@@ -20,9 +20,12 @@ const semverRegex = /^(\d+)\.(\d+)\.x$/;
  * likely correct branch will be the first one encountered in the list.
  */
 export function getRefFromBranchList(gitOutput: string, primaryBranchName: string): string {
-  const branches = gitOutput.split(/\r?\n/g).map((b) => b.split('/').slice(1).join('').trim());
+  const branches = gitOutput.split(/\r?\n/g).map((b) => {
+    // Omit the leading remote name. e.g. my_remote/fix/whatever -> fix/whatever.
+    return b.split('/').slice(1).join('/').trim();
+  });
 
-  return branches.sort((a: string, b: string) => {
+  const sorted = branches.sort((a: string, b: string) => {
     if (a === primaryBranchName) {
       return -1;
     }
@@ -51,5 +54,10 @@ export function getRefFromBranchList(gitOutput: string, primaryBranchName: strin
     }
 
     return 0;
-  })[0];
+  });
+
+  if (sorted.length === 0) {
+    throw new Error(`Could not find ref from branch list: ${gitOutput}`);
+  }
+  return sorted[0];
 }
