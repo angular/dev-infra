@@ -37,10 +37,13 @@ browser_configure(
   named_files = %s,
   visibility = ["//visibility:public"],
 )
+
+exports_files(%s)
 """ % (
         str(ctx.attr.licenses),
         str(ctx.attr.exclude_patterns),
         str(ctx.attr.named_files),
+        str(ctx.attr.exports_files),
     ))
 
 """
@@ -103,6 +106,17 @@ browser_archive = repository_rule(
               This is useful for example when files with spaces are shipped as part of the
               archives of browsers. Runfiles with spaces cause issues within Bazel and if
               these files are not strictly needed, they should be omitted.
+            """,
+        ),
+        "exports_files": attr.string_list(
+            default = [],
+            doc = """Patterns of files which should be added to exports_files.
+
+              This is useful for example when files with spaces are shipped as part of the
+              archives of browsers. Instead of individual files, the top-level source directory
+              can be depended on which resolves the runfiles with spaces issue. NB: source
+              directories are not compatible with remote execution so a target that uses sources
+              directory inputs should be tagged "local".
             """,
         ),
     },
