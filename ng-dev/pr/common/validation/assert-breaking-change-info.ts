@@ -7,7 +7,7 @@
  */
 
 import {Commit} from '../../../commit-message/parse.js';
-import {breakingChangeLabel} from '../../config/index.js';
+import {ToolingPullRequestLabels} from '../../config/index.js';
 import {createPullRequestValidation, PullRequestValidation} from './validation-config.js';
 
 /** Assert the pull request is properly denoted if it contains breaking changes. */
@@ -19,7 +19,7 @@ export const breakingChangeInfoValidation = createPullRequestValidation(
 class Validation extends PullRequestValidation {
   assert(commits: Commit[], labels: string[]) {
     // Whether the PR has a label noting a breaking change.
-    const hasLabel = labels.includes(breakingChangeLabel);
+    const hasLabel = labels.includes(ToolingPullRequestLabels.BREAKING_CHANGE.label);
     // Whether the PR has at least one commit which notes a breaking change.
     const hasCommit = commits.some((commit) => commit.breakingChanges.length !== 0);
 
@@ -36,7 +36,7 @@ class Validation extends PullRequestValidation {
     const message =
       `Pull Request has at least one commit containing a breaking change note, ` +
       `but does not have a breaking change label. Make sure to apply the ` +
-      `following label: ${breakingChangeLabel}`;
+      `following label: ${ToolingPullRequestLabels.BREAKING_CHANGE.label}`;
     return this._createError(message);
   }
 

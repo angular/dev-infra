@@ -32707,77 +32707,24 @@ function printToLogFile(logLevel, ...text) {
 }
 
 // 
-var ScopeRequirement;
-(function(ScopeRequirement2) {
-  ScopeRequirement2[ScopeRequirement2["Required"] = 0] = "Required";
-  ScopeRequirement2[ScopeRequirement2["Optional"] = 1] = "Optional";
-  ScopeRequirement2[ScopeRequirement2["Forbidden"] = 2] = "Forbidden";
-})(ScopeRequirement || (ScopeRequirement = {}));
-var ReleaseNotesLevel;
-(function(ReleaseNotesLevel2) {
-  ReleaseNotesLevel2[ReleaseNotesLevel2["Hidden"] = 0] = "Hidden";
-  ReleaseNotesLevel2[ReleaseNotesLevel2["Visible"] = 1] = "Visible";
-})(ReleaseNotesLevel || (ReleaseNotesLevel = {}));
-var COMMIT_TYPES = {
-  build: {
-    name: "build",
-    description: "Changes to local repository build system and tooling",
-    scope: ScopeRequirement.Optional,
-    releaseNotesLevel: ReleaseNotesLevel.Hidden
+var ToolingPullRequestLabels = {
+  BREAKING_CHANGE: {
+    label: "flag: breaking change",
+    commitCheck: (c) => c.breakingChanges.length !== 0
   },
-  ci: {
-    name: "ci",
-    description: "Changes to CI configuration and CI specific tooling",
-    scope: ScopeRequirement.Forbidden,
-    releaseNotesLevel: ReleaseNotesLevel.Hidden
+  DEPRECATION: {
+    label: "flag: deprecation",
+    commitCheck: (c) => c.deprecations.length !== 0
   },
-  docs: {
-    name: "docs",
-    description: "Changes which exclusively affects documentation.",
-    scope: ScopeRequirement.Optional,
-    releaseNotesLevel: ReleaseNotesLevel.Hidden
+  FEATURE: {
+    label: "feature",
+    commitCheck: (c) => c.type === "feat"
   },
-  feat: {
-    name: "feat",
-    description: "Creates a new feature",
-    scope: ScopeRequirement.Required,
-    releaseNotesLevel: ReleaseNotesLevel.Visible
-  },
-  fix: {
-    name: "fix",
-    description: "Fixes a previously discovered failure/bug",
-    scope: ScopeRequirement.Required,
-    releaseNotesLevel: ReleaseNotesLevel.Visible
-  },
-  perf: {
-    name: "perf",
-    description: "Improves performance without any change in functionality or API",
-    scope: ScopeRequirement.Required,
-    releaseNotesLevel: ReleaseNotesLevel.Visible
-  },
-  refactor: {
-    name: "refactor",
-    description: "Refactor without any change in functionality or API (includes style changes)",
-    scope: ScopeRequirement.Optional,
-    releaseNotesLevel: ReleaseNotesLevel.Hidden
-  },
-  release: {
-    name: "release",
-    description: "A release point in the repository",
-    scope: ScopeRequirement.Forbidden,
-    releaseNotesLevel: ReleaseNotesLevel.Hidden
-  },
-  test: {
-    name: "test",
-    description: "Improvements or corrections made to the project's test suite",
-    scope: ScopeRequirement.Optional,
-    releaseNotesLevel: ReleaseNotesLevel.Hidden
+  DOCS_CHANGE: {
+    label: "comp: docs",
+    commitCheck: (c) => c.type === "docs"
   }
 };
-
-// 
-var breakingChangeLabel = "flag: breaking change";
-var deprecationLabel = "flag: deprecation";
 
 // 
 var import_core = __toESM(require_core());
@@ -32813,37 +32760,27 @@ async function revokeActiveInstallationToken(githubOrToken) {
 
 // 
 var _a;
-var supportedLabels = [
-  [breakingChangeLabel, "breakingChanges"],
-  [deprecationLabel, "deprecations"]
-];
-var compDocsLabel = "comp: docs";
 var CommitMessageBasedLabelManager = class {
   constructor(git) {
     this.git = git;
     this.labels = /* @__PURE__ */ new Set();
-    this.commits = /* @__PURE__ */ new Set();
+    this.commits = [];
   }
   async run() {
     await this.initialize();
     core.info(`PR #${import_github2.context.issue.number}`);
-    for (const [label, commitProperty] of supportedLabels) {
-      const hasCommit = [...this.commits].some((commit) => commit[commitProperty].length > 0);
+    for (const { commitCheck, label } of Object.values(ToolingPullRequestLabels)) {
+      if (commitCheck === false) {
+        continue;
+      }
+      const hasCommit = this.commits.some(commitCheck);
       const hasLabel = this.labels.has(label);
-      core.info(`${commitProperty} | hasLabel: ${hasLabel} | hasCommit: ${hasCommit}`);
+      core.info(`${label} | hasLabel: ${hasLabel} | hasCommit: ${hasCommit}`);
       if (hasCommit && !hasLabel) {
         await this.addLabel(label);
       }
       if (!hasCommit && hasLabel) {
         await this.removeLabel(label);
-      }
-    }
-    if (!this.labels.has(compDocsLabel)) {
-      for (const commit of this.commits) {
-        if (commit.type === COMMIT_TYPES["docs"].name) {
-          await this.addLabel(compDocsLabel);
-          break;
-        }
       }
     }
   }
@@ -32871,7 +32808,7 @@ var CommitMessageBasedLabelManager = class {
   }
   async initialize() {
     const { number, owner, repo } = import_github2.context.issue;
-    await this.git.paginate(this.git.pulls.listCommits, { owner, pull_number: number, repo }).then((commits) => commits.forEach(({ commit }) => this.commits.add(parseCommitMessage(commit.message))));
+    await this.git.paginate(this.git.pulls.listCommits, { owner, pull_number: number, repo }).then((commits) => this.commits = commits.map(({ commit }) => parseCommitMessage(commit.message)));
     await this.git.issues.listLabelsOnIssue({ issue_number: number, owner, repo }).then((resp) => resp.data.forEach(({ name }) => this.labels.add(name)));
   }
 };
