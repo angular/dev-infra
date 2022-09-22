@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Commit} from '../../commit-message/parse.js';
 import {ConfigValidationError, GithubConfig, NgDevConfig} from '../../utils/config.js';
 
 /**
@@ -90,9 +91,3 @@ export function assertValidPullRequestConfig<T extends NgDevConfig>(
     throw new ConfigValidationError('Invalid `pullRequest` configuration', errors);
   }
 }
-
-/** Label for pull requests containing a breaking change. */
-export const breakingChangeLabel = 'flag: breaking change';
-
-/** Label for pull requests containing a deprecation. */
-export const deprecationLabel = 'flag: deprecation';

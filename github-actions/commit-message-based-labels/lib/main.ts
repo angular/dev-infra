@@ -2,18 +2,8 @@ import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {Octokit} from '@octokit/rest';
 import {Commit, parseCommitMessage} from '../../../ng-dev/commit-message/parse.js';
-import {COMMIT_TYPES} from '../../../ng-dev/commit-message/config.js';
-import {breakingChangeLabel, deprecationLabel} from '../../../ng-dev/pr/config/index.js';
+import {ToolingPullRequestLabels} from '../../../ng-dev/pr/common/labels.js';
 import {ANGULAR_ROBOT, getAuthTokenFor, revokeActiveInstallationToken} from '../../utils.js';
-
-/** List of supported label and commit message attribute combinations. */
-const supportedLabels = [
-  [breakingChangeLabel, 'breakingChanges'],
-  [deprecationLabel, 'deprecations'],
-] as const;
-
-/** Label for docs changes. */
-const compDocsLabel = 'comp: docs';
 
 class CommitMessageBasedLabelManager {
   /** Run the commit message based labelling process. */
@@ -30,8 +20,8 @@ class CommitMessageBasedLabelManager {
 
   /** Labels currently applied to the PR. */
   labels = new Set<string>();
-  /** Parsed commit message for every commit on the PR. */
-  commits = new Set<Commit>();
+  /** All commits in the PR */
+  commits: Commit[] = [];
 
   private constructor(private git: Octokit) {}
 
@@ -43,26 +33,20 @@ class CommitMessageBasedLabelManager {
 
     // Add or Remove label as appropriate for each of the supported label and commit messaage
     // combinations.
-    for (const [label, commitProperty] of supportedLabels) {
-      const hasCommit = [...this.commits].some((commit) => commit[commitProperty].length > 0);
+    for (const {commitCheck, label} of Object.values(ToolingPullRequestLabels)) {
+      // If the commit check is set to false, no labeling is applied automatically.
+      if (commitCheck === false) {
+        continue;
+      }
+      const hasCommit = this.commits.some(commitCheck);
       const hasLabel = this.labels.has(label);
-      core.info(`${commitProperty} | hasLabel: ${hasLabel} | hasCommit: ${hasCommit}`);
+      core.info(`${label} | hasLabel: ${hasLabel} | hasCommit: ${hasCommit}`);
 
       if (hasCommit && !hasLabel) {
         await this.addLabel(label);
       }
       if (!hasCommit && hasLabel) {
         await this.removeLabel(label);
-      }
-    }
-
-    // Add 'comp: docs' label for changes which contain a docs commit.
-    if (!this.labels.has(compDocsLabel)) {
-      for (const commit of this.commits) {
-        if (commit.type === COMMIT_TYPES['docs'].name) {
-          await this.addLabel(compDocsLabel);
-          break;
-        }
       }
     }
   }
@@ -99,8 +83,8 @@ class CommitMessageBasedLabelManager {
 
     await this.git
       .paginate(this.git.pulls.listCommits, {owner, pull_number: number, repo})
-      .then((commits) =>
-        commits.forEach(({commit}) => this.commits.add(parseCommitMessage(commit.message))),
+      .then(
+        (commits) => (this.commits = commits.map(({commit}) => parseCommitMessage(commit.message))),
       );
 
     await this.git.issues

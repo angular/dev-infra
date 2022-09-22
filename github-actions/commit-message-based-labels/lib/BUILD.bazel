@@ -15,7 +15,7 @@ ts_library(
     deps = [
         "//github-actions:utils",
         "//ng-dev/commit-message",
-        "//ng-dev/pr/config",
+        "//ng-dev/pr/common",
         "@npm//@actions/core",
         "@npm//@actions/github",
         "@npm//@octokit/rest",
