@@ -34,11 +34,11 @@ ts_library(
     srcs = [
         "labels.ts",
     ],
-    deps = [
-        "//ng-dev/pr/common/labels",
-    ],
     visibility = [
         "//github-actions:__subpackages__",
         "//ng-dev:__subpackages__",
+    ],
+    deps = [
+        "//ng-dev/pr/common/labels",
     ],
 )

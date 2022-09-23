@@ -1,0 +1,16 @@
+name: 'Labels Sync'
+description: 'Synchronize labels in repositories throughout the organization'
+author: 'Angular'
+inputs:
+  angular-robot-key:
+    description: 'The private key for the Angular Robot Github app.'
+    required: true
+  repos:
+    description: |
+      The repositories in which to keep labels in sync. The organization name is derived from
+      the context in where the action runs.
+    required: true
+
+runs:
+  using: 'node16'
+  main: 'main.js'
