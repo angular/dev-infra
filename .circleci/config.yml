@@ -5,7 +5,7 @@ version: 2.1
 orbs:
   buildalert: oss-tools/buildalert@0.1.0
   win: circleci/windows@2.2.0
-  devinfra: angular/dev-infra@1.0.1
+  devinfra: angular/dev-infra@1.0.5
 
 # **Note**: When updating the beginning of the cache key, also update the cache key to match
 # the new cache key prefix. This allows us to take advantage of CircleCI's fallback caching.
@@ -15,8 +15,6 @@ var_1: &cache_key v2-{{arch}}-{{ checksum ".bazelversion" }}-{{ checksum "WORKSP
 # We do this because otherwise the `bazelisk` cache folder will contain all previously used
 # versions and ultimately cause the cache restoring to be slower.
 var_2: &cache_fallback_key v2-{{arch}}-{{ checksum ".bazelversion" }}-
-
-var_3: &gcp_decrypt_token 'angular'
 
 var_4: &restore_cache
   restore_cache:
@@ -37,8 +35,6 @@ var_6: &default_executor_settings
     resource_class:
       type: string
       default: medium
-  environment:
-    GCP_DECRYPT_TOKEN: *gcp_decrypt_token
   resource_class: << parameters.resource_class >>
   working_directory: ~/ng
 
@@ -84,7 +80,7 @@ commands:
     description: 'Setting up Bazel configuration for CI'
     steps:
       - run: echo "import %workspace%/.circleci/linux-bazel.rc" >> ./.bazelrc
-      - run: ./.circleci/setup-bazel.sh
+      - devinfra/setup-bazel-remote-exec
 
   prepare_and_store_test_results:
     description: 'Prepare and upload test results'
