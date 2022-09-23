@@ -1,0 +1,28 @@
+load("//tools:defaults.bzl", "esbuild_checked_in", "ts_library")
+
+package(default_visibility = ["//github-actions/labels-sync:__subpackages__"])
+
+ts_library(
+    name = "labels-sync",
+    srcs = glob(
+        ["src/*.ts"],
+    ),
+    deps = [
+        "//github-actions:utils",
+        "//ng-dev/pr/common:labels",
+        "@npm//@actions/core",
+        "@npm//@actions/github",
+        "@npm//@octokit/rest",
+        "@npm//@octokit/types",
+        "@npm//@types/node",
+    ],
+)
+
+esbuild_checked_in(
+    name = "main",
+    entry_point = ":src/main.ts",
+    target = "node16",
+    deps = [
+        ":labels-sync",
+    ],
+)

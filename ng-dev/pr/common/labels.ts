@@ -15,3 +15,4 @@ export const allLabels = {
 };
 
 export {managedLabels, actionLabels, mergeLabels, targetLabels, priorityLabels};
+export {Label} from './labels/base.js';
