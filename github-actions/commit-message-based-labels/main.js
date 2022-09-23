@@ -32059,23 +32059,156 @@ function parseInternal(fullText) {
 }
 
 // 
-var ToolingPullRequestLabels = {
-  BREAKING_CHANGE: {
+var createTypedObject = () => (v) => v;
+
+// 
+var managedLabels = createTypedObject()({
+  DETECTED_BREAKING_CHANGE: {
+    description: "PR contains a commit with a breaking change",
     label: "flag: breaking change",
     commitCheck: (c) => c.breakingChanges.length !== 0
   },
-  DEPRECATION: {
+  DETECTED_DEPRECATION: {
+    description: "PR contains a commit with a deprecation",
     label: "flag: deprecation",
     commitCheck: (c) => c.deprecations.length !== 0
   },
-  FEATURE: {
+  DETECTED_FEATURE: {
+    description: "PR contains a feature commit",
     label: "feature",
     commitCheck: (c) => c.type === "feat"
   },
-  DOCS_CHANGE: {
+  DETECTED_DOCS_CHANGE: {
+    description: "Related to the documentation",
     label: "comp: docs",
     commitCheck: (c) => c.type === "docs"
   }
+});
+
+// 
+var actionLabels = createTypedObject()({
+  ACTION_MERGE: {
+    description: "The PR is ready for merge by the caretaker",
+    label: "action: merge"
+  },
+  ACTION_CLEANUP: {
+    description: "The PR is in need of cleanup, either due to needing a rebase or in response to comments from a review.",
+    label: "action: cleanup"
+  },
+  ACTION_PRESUBMIT: {
+    description: "The PR is in need of a google3 presubmit",
+    label: "action: presubmit"
+  },
+  ACTION_REVIEW: {
+    description: "The PR is still awaiting reviews from at least one requested reviewer",
+    label: "action: review"
+  }
+});
+
+// 
+var mergeLabels = createTypedObject()({
+  MERGE_PRESERVE_COMMITS: {
+    description: "When the PR is merged, a rebase and merge should be performed",
+    label: "merge: preserve commits"
+  },
+  MERGE_SQUASH_COMMITS: {
+    description: "When the PR is merged, a squash and merge should be performed",
+    label: "merge: squash commits"
+  },
+  MERGE_FIX_COMMIT_MESSAGE: {
+    description: "When the PR is merged, rewrites/fixups of the commit messages are needed",
+    label: "merge: fix commit message"
+  },
+  MERGE_CARETAKER_NOTE: {
+    description: "Alert the caretaker performing the merge to check the PR for an out of normal action needed or note",
+    label: "merge: caretaker note"
+  }
+});
+
+// 
+var targetLabels = createTypedObject()({
+  TARGET_FEATURE: {
+    description: "This PR is targeted for a feature branch (outside of main and semver branches)",
+    label: "target: feature"
+  },
+  TARGET_LTS: {
+    description: "This PR is targeting a version currently in long-term support",
+    label: "target: lts"
+  },
+  TARGET_MAJOR: {
+    description: "This PR is targeted for the next major release",
+    label: "target: major"
+  },
+  TARGET_MINOR: {
+    description: "This PR is targeted for the next minor release",
+    label: "target: minor"
+  },
+  TARGET_PATCH: {
+    description: "This PR is targeted for the next patch release",
+    label: "target: patch"
+  },
+  TARGET_RC: {
+    description: "This PR is targeted for the next release-candidate",
+    label: "target: rc"
+  }
+});
+
+// 
+var priorityLabels = createTypedObject()({
+  P0: {
+    label: "P0",
+    description: "An issue that causes a full outage, breakage, or major function unavailability for everyone, without any known workaround. The issue must be fixed immediately, taking precedence over all other work. Should receive updates at least once per day."
+  },
+  P1: {
+    label: "P1",
+    description: "An issue that significantly impacts a large percentage of users; if there is a workaround it is partial or overly painful. The issue should be resolved before the next release."
+  },
+  P2: {
+    label: "P2",
+    description: "The issue is important to a large percentage of users, with a workaround. Issues that are significantly ugly or painful (especially first-use or install-time issues). Issues with workarounds that would otherwise be P0 or P1."
+  },
+  P3: {
+    label: "P3",
+    description: "An issue that is relevant to core functions, but does not impede progress. Important, but not urgent."
+  },
+  P4: {
+    label: "P4",
+    description: "A relatively minor issue that is not relevant to core functions, or relates only to the attractiveness or pleasantness of use of the system. Good to have but not necessary changes/fixes."
+  },
+  P5: {
+    label: "P5",
+    description: "The team acknowledges the request but (due to any number of reasons) does not plan to work on or accept contributions for this request. The issue remains open for discussion."
+  }
+});
+
+// 
+var featureLabels = createTypedObject()({
+  FEATURE_IN_BACKLOG: {
+    label: "feature: in backlog",
+    description: "Label used to distinguish feature requests, which are already part of the backlog"
+  },
+  FEATURE_VOTES_REQUIRED: {
+    label: "feature: votes required",
+    description: "Label used to distinguish requests in voting phase from other issues"
+  },
+  FEATURE_UNDER_CONSIDERATION: {
+    label: "feature: under consideration",
+    description: "Label used to distinguish features which are in our list for consideration"
+  },
+  FEATURE_INSUFFICIENT_VOTES: {
+    label: "feature: insufficient votes",
+    description: "Label to add when the `close-when-no-sufficient-votes` is set to false and there are no sufficient number of votes or comments from unique authors"
+  }
+});
+
+// 
+var allLabels = {
+  ...managedLabels,
+  ...actionLabels,
+  ...mergeLabels,
+  ...targetLabels,
+  ...priorityLabels,
+  ...featureLabels
 };
 
 // 
@@ -32121,10 +32254,7 @@ var CommitMessageBasedLabelManager = class {
   async run() {
     await this.initialize();
     core.info(`PR #${import_github2.context.issue.number}`);
-    for (const { commitCheck, label } of Object.values(ToolingPullRequestLabels)) {
-      if (commitCheck === false) {
-        continue;
-      }
+    for (const { commitCheck, label } of Object.values(managedLabels)) {
       const hasCommit = this.commits.some(commitCheck);
       const hasLabel = this.labels.has(label);
       core.info(`${label} | hasLabel: ${hasLabel} | hasCommit: ${hasCommit}`);

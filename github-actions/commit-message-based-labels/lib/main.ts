@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {Octokit} from '@octokit/rest';
 import {Commit, parseCommitMessage} from '../../../ng-dev/commit-message/parse.js';
-import {ToolingPullRequestLabels} from '../../../ng-dev/pr/common/labels.js';
+import {managedLabels} from '../../../ng-dev/pr/common/labels.js';
 import {ANGULAR_ROBOT, getAuthTokenFor, revokeActiveInstallationToken} from '../../utils.js';
 
 class CommitMessageBasedLabelManager {
@@ -33,11 +33,7 @@ class CommitMessageBasedLabelManager {
 
     // Add or Remove label as appropriate for each of the supported label and commit messaage
     // combinations.
-    for (const {commitCheck, label} of Object.values(ToolingPullRequestLabels)) {
-      // If the commit check is set to false, no labeling is applied automatically.
-      if (commitCheck === false) {
-        continue;
-      }
+    for (const {commitCheck, label} of Object.values(managedLabels)) {
       const hasCommit = this.commits.some(commitCheck);
       const hasLabel = this.labels.has(label);
       core.info(`${label} | hasLabel: ${hasLabel} | hasCommit: ${hasCommit}`);
