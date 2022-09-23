@@ -1,7 +1,6 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 
 ORB_NAME = "angular/dev-infra"
-
 ORB_VERSION = "1.0.5"
 
 nodejs_binary(
