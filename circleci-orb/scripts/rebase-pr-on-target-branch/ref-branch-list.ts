@@ -25,7 +25,11 @@ export function getRefFromBranchList(gitOutput: string, primaryBranchName: strin
     return b.split('/').slice(1).join('/').trim();
   });
 
-  const sorted = branches.sort((a: string, b: string) => {
+  if (branches.length === 0) {
+    throw new Error(`Could not find ref from branch list: ${gitOutput}`);
+  }
+
+  branches.sort((a: string, b: string) => {
     if (a === primaryBranchName) {
       return -1;
     }
@@ -56,8 +60,5 @@ export function getRefFromBranchList(gitOutput: string, primaryBranchName: strin
     return 0;
   });
 
-  if (sorted.length === 0) {
-    throw new Error(`Could not find ref from branch list: ${gitOutput}`);
-  }
-  return sorted[0];
+  return branches[0];
 }
