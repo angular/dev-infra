@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {Octokit} from '@octokit/rest';
 import {Commit, parseCommitMessage} from '../../../ng-dev/commit-message/parse.js';
-import {ToolingPullRequestLabels} from '../../../ng-dev/pr/config/index.js';
+import {ToolingPullRequestLabels} from '../../../ng-dev/pr/common/labels.js';
 import {ANGULAR_ROBOT, getAuthTokenFor, revokeActiveInstallationToken} from '../../utils.js';
 
 class CommitMessageBasedLabelManager {
