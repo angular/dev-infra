@@ -1,0 +1,24 @@
+description: Setup Bazel remote execution
+
+parameters:
+  bazelrc:
+    type: string
+    default: ''
+    description: |
+      If specified, the given `bazelrc` file is being updated to always run
+      with the `--config=remote` flag.
+  shell:
+    type: string
+    default: ''
+    description: |
+      Shell to use for executing the command. Useful for Windows where a
+      non-bash shell is the default.
+
+steps:
+  - run:
+      environment:
+        BAZELRC_PATH: << parameters.bazelrc >>
+        NGAT: 'HlA2BJMJAXPDI1UAn5gytw=='
+      name: Setting up Bazel remote execution
+      shell: << parameters.shell >>
+      command: << include(../dist/bin/circleci-orb/scripts/setup-bazel-remote-exec/script.sh) >>
