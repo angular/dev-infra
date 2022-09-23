@@ -3,14 +3,16 @@ description: Rebase PR on the target branch
 parameters:
   head_revision:
     type: string
+    default: ''
     description: The `pipeline.git.revision` pipeline value.
   base_revision:
     type: string
+    default: ''
     description: The `pipeline.git.base_revision` pipeline value.
   primary_branch_name:
     type: string
-    description: The primary branch for the repository.
     default: 'main'
+    description: The primary branch for the repository.
   shell:
     type: string
     default: ''
