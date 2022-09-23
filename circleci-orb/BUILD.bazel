@@ -1,8 +1,7 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 
 ORB_NAME = "angular/dev-infra"
-
-ORB_VERSION = "1.0.3"
+ORB_VERSION = "1.0.5"
 
 nodejs_binary(
     name = "pack_orb_script",
@@ -17,6 +16,7 @@ filegroup(
     name = "orb_generated_files",
     srcs = [
         "//circleci-orb/scripts/rebase-pr-on-target-branch:script",
+        "//circleci-orb/scripts/setup-bazel-remote-exec:script",
     ],
 )
 
