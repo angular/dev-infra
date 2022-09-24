@@ -28,9 +28,17 @@ async function main(bazelRcPath: string | undefined) {
   await fs.promises.writeFile(destPath, dec, 'utf8');
 
   if (bazelRcPath) {
-    let content = await fs.promises.readFile(bazelRcPath, 'utf8');
+    let content = await readFileGracefully(bazelRcPath);
     content += '\nbuild --config=remote';
     await fs.promises.writeFile(bazelRcPath, content, 'utf8');
+  }
+}
+
+async function readFileGracefully(filePath: string): Promise<string> {
+  try {
+    return await fs.promises.readFile(filePath, 'utf8');
+  } catch {
+    return '';
   }
 }
 

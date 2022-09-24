@@ -5,7 +5,7 @@ version: 2.1
 orbs:
   buildalert: oss-tools/buildalert@0.1.0
   win: circleci/windows@2.2.0
-  devinfra: angular/dev-infra@1.0.6
+  devinfra: angular/dev-infra@1.0.7
 
 # **Note**: When updating the beginning of the cache key, also update the cache key to match
 # the new cache key prefix. This allows us to take advantage of CircleCI's fallback caching.
@@ -79,9 +79,9 @@ commands:
   setup_bazel_config:
     description: 'Setting up Bazel configuration for CI'
     steps:
-      - run: echo "import %workspace%/.circleci/linux-bazel.rc" >> ./.bazelrc
+      - run: echo "import %workspace%/.circleci/linux-bazel.rc" >> ./.bazelrc.user
       - devinfra/setup-bazel-remote-exec:
-          bazelrc: .circleci/linux-bazel.rc
+          bazelrc: ./.bazelrc.user
 
   prepare_and_store_test_results:
     description: 'Prepare and upload test results'
