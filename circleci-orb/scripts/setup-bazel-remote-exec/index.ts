@@ -30,7 +30,7 @@ async function main(bazelRcPath: string | undefined) {
   if (bazelRcPath) {
     let content = await fs.promises.readFile(bazelRcPath, 'utf8');
     content += '\nbuild --config=remote';
-    await fs.promises.writeFile(bazelRcPath, 'utf8');
+    await fs.promises.writeFile(bazelRcPath, content, 'utf8');
   }
 }
 
