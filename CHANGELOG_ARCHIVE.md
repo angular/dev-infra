@@ -1,3 +1,14 @@
+<a name="2022.6.5"></a>
+# 2022.6.5 (2022-06-05)
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4fdbd00](https://github.com/angular/dev-infra/commit/4fdbd0060583d4b1549b5ad41a46698d8f993052) | feat | **release:** support for custom release pre-checks to be provided |
+| [6367f3d](https://github.com/angular/dev-infra/commit/6367f3d0c25936c3caf136782e07d6813b014637) | feat | move release output build and checks to staging phase |
+## Special Thanks
+Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.5.29"></a>
 # 2022.5.29 (2022-05-29)
 ### circleci-orb

@@ -1,3 +1,13 @@
+<a name="2022.10.2"></a>
+# 2022.10.2 (2022-10-02)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [40aaf38](https://github.com/angular/dev-infra/commit/40aaf3831425d472965dd61e58cbd5854abd7214) | feat | add a rule to filter the first matching output |
+## Special Thanks
+Derek Cormier
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.9.25"></a>
 # 2022.9.25 (2022-09-25)
 ### circleci-orb
@@ -238,14 +248,3 @@ Paul Gschwendtner
 | [23ccc87](https://github.com/angular/dev-infra/commit/23ccc87f9af0ada07e855aa4517508a3ae286649) | fix | **pr:** yargs positional placeholder does not match positional name |
 ## Special Thanks
 Derek Cormier and Paul Gschwendtner
-
-<!-- CHANGELOG SPLIT MARKER -->
-<a name="2022.6.5"></a>
-# 2022.6.5 (2022-06-05)
-### ng-dev
-| Commit | Type | Description |
-| -- | -- | -- |
-| [4fdbd00](https://github.com/angular/dev-infra/commit/4fdbd0060583d4b1549b5ad41a46698d8f993052) | feat | **release:** support for custom release pre-checks to be provided |
-| [6367f3d](https://github.com/angular/dev-infra/commit/6367f3d0c25936c3caf136782e07d6813b014637) | feat | move release output build and checks to staging phase |
-## Special Thanks
-Paul Gschwendtner
