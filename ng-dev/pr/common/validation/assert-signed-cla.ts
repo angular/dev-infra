@@ -15,7 +15,9 @@ import {createPullRequestValidation, PullRequestValidation} from './validation-c
 
 /** Assert the pull request has a signed CLA. */
 export const signedClaValidation = createPullRequestValidation(
-  {name: 'assertSignedCla', canBeForceIgnored: false},
+  // CLA check can be force-ignored but the caretaker needs to make sure
+  // the target pull requests has a signed CLA or is authored by another Googler.
+  {name: 'assertSignedCla', canBeForceIgnored: true},
   () => Validation,
 );
 
