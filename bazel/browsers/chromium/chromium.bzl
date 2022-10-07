@@ -22,8 +22,7 @@ def define_chromium_repositories():
             "CHROMIUM": "chrome-linux/chrome",
         },
         exclude_patterns = [
-            # Exclude a log file that chromium writes to each run, causing remote cache
-            # misses in downstream targets.
+            # Exclude a log file that chromium writes to each run, causing remote cache misses.
             "chrome-linux/chrome_debug.log",
         ],
         exports_files = ["chrome-linux"],
@@ -41,6 +40,10 @@ def define_chromium_repositories():
         named_files = {
             "CHROMIUM": "chrome-mac/Chromium.app/Contents/MacOS/Chromium",
         },
+        exclude_patterns = [
+            # Exclude a log file that chromium writes to each run, causing remote cache misses.
+            "chrome-mac/Chromium.app/Contents/Frameworks/Chromium Framework.framework/Versions/*/chrome_debug.log",
+        ],
         exports_files = ["chrome-mac"],
     )
 
@@ -56,6 +59,10 @@ def define_chromium_repositories():
         named_files = {
             "CHROMIUM": "chrome-mac/Chromium.app/Contents/MacOS/Chromium",
         },
+        exclude_patterns = [
+            # Exclude a log file that chromium writes to each run, causing remote cache misses.
+            "chrome-mac/Chromium.app/Contents/Frameworks/Chromium Framework.framework/Versions/*/chrome_debug.log",
+        ],
         exports_files = ["chrome-mac"],
     )
 
@@ -74,6 +81,8 @@ def define_chromium_repositories():
         exclude_patterns = [
             # Exclude files with spaces to prevent errors when symlinked as runfiles (https://github.com/bazelbuild/bazel/issues/4327).
             "chrome-win/First Run",
+            # Exclude a log file that chromium writes to each run, causing remote cache misses.
+            "chrome-win/debug.log",
         ],
         exports_files = ["chrome-win"],
     )
