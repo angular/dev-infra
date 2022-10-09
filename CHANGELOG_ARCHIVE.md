@@ -1,3 +1,18 @@
+<a name="2022.6.12"></a>
+# 2022.6.12 (2022-06-12)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8b36a85](https://github.com/angular/dev-infra/commit/8b36a853df8faefd9e9a6b9530b3b7797e3bdee2) | feat | **browsers:** add support for excluding files from browser runfiles |
+| [ec636aa](https://github.com/angular/dev-infra/commit/ec636aa679c65c37599dc30c316943ae4fb52ac3) | fix | **browsers:** exclude unnecessary chromium file containing spaces on windows |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [23ccc87](https://github.com/angular/dev-infra/commit/23ccc87f9af0ada07e855aa4517508a3ae286649) | fix | **pr:** yargs positional placeholder does not match positional name |
+## Special Thanks
+Derek Cormier and Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.6.5"></a>
 # 2022.6.5 (2022-06-05)
 ### ng-dev

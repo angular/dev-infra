@@ -1,3 +1,17 @@
+<a name="2022.10.9"></a>
+# 2022.10.9 (2022-10-09)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b12cd73](https://github.com/angular/dev-infra/commit/b12cd73948225d0d3056d9610eee2c60286e6fdd) | fix | **browsers:** exclude chromium debug logs on remaining platforms |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c9b2ff0](https://github.com/angular/dev-infra/commit/c9b2ff083a50d0eac742da1e69e0cbdb98bf53dd) | feat | support skipping CLA validation check forcibly |
+## Special Thanks
+Derek Cormier and Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.10.2"></a>
 # 2022.10.2 (2022-10-02)
 ### bazel
@@ -233,18 +247,3 @@ Joey Perrott, Paul Gschwendtner and angular-robot[bot]
 | [4505df9](https://github.com/angular/dev-infra/commit/4505df9ad7fefdf2154c7bf518abe144a42ff6d8) | fix | yarnpkg lockfile package cannot be bundled with ESM |
 ## Special Thanks
 Paul Gschwendtner
-
-<!-- CHANGELOG SPLIT MARKER -->
-<a name="2022.6.12"></a>
-# 2022.6.12 (2022-06-12)
-### bazel
-| Commit | Type | Description |
-| -- | -- | -- |
-| [8b36a85](https://github.com/angular/dev-infra/commit/8b36a853df8faefd9e9a6b9530b3b7797e3bdee2) | feat | **browsers:** add support for excluding files from browser runfiles |
-| [ec636aa](https://github.com/angular/dev-infra/commit/ec636aa679c65c37599dc30c316943ae4fb52ac3) | fix | **browsers:** exclude unnecessary chromium file containing spaces on windows |
-### ng-dev
-| Commit | Type | Description |
-| -- | -- | -- |
-| [23ccc87](https://github.com/angular/dev-infra/commit/23ccc87f9af0ada07e855aa4517508a3ae286649) | fix | **pr:** yargs positional placeholder does not match positional name |
-## Special Thanks
-Derek Cormier and Paul Gschwendtner
