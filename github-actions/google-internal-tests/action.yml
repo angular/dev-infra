@@ -1,0 +1,22 @@
+name: Google Internal Tests
+description: |
+  Action for identifying pull requests which require the execution of Google Internal
+  tests. For irrelevant PRs, a status check is added to indicate the irrelevance to G3.
+author: 'Angular'
+inputs:
+  github-token:
+    required: true
+    description: GitHub Token used for creating the commit statuses.
+  affected-file-patterns:
+    required: true
+    description: |
+      List of file patterns which match files synced into Google.
+      Multiple patterns should be separated by new lines.
+  run-tests-guide-url:
+    required: false
+    description: |
+      URL to post into the GitHub commit status when Google Internal
+      tests need to be run. This is useful for helping other Googlers.
+runs:
+  using: 'node16'
+  main: 'main.js'
