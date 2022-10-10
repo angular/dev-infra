@@ -7,7 +7,7 @@
  */
 
 import {assertValidGithubConfig, ConfigValidationError, getConfig} from '../../utils/config.js';
-import {bold, green, Log} from '../../utils/logging.js';
+import {bold, Log} from '../../utils/logging.js';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {GithubApiRequestError} from '../../utils/git/github.js';
 import {GITHUB_TOKEN_GENERATE_URL} from '../../utils/git/github-urls.js';
@@ -34,7 +34,7 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
   // rely on `--no-verify` as some hooks still run, notably the `prepare-commit-msg` hook.
   process.env['HUSKY'] = '0';
 
-  const tool = await createPullRequestMergeTool(flags);
+  const tool = await createPullRequestMergeTool(flags, prNumber);
 
   // Perform the merge. If the merge fails with non-fatal failures, the script
   // will prompt whether it should rerun in force mode with the ignored failure.
@@ -43,11 +43,11 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
   }
 
   /** Performs the merge and returns whether it was successful or not. */
-  async function performMerge(
-    validationConfig: PullRequestValidationConfig = new PullRequestValidationConfig(),
-  ): Promise<boolean> {
+  async function performMerge(): Promise<boolean> {
     try {
-      await tool.merge(prNumber, validationConfig);
+      await tool.prepare();
+      await tool.validate();
+      await tool.merge();
       return true;
     } catch (e) {
       // Catch errors to the Github API for invalid requests. We want to
@@ -85,15 +85,13 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
  * Explicit configuration options can be specified when the merge script is used
  * outside of an `ng-dev` configured repository.
  */
-async function createPullRequestMergeTool(flags: PullRequestMergeFlags) {
+async function createPullRequestMergeTool(flags: PullRequestMergeFlags, prNumber: number) {
   try {
-    const config = await getConfig();
-    assertValidGithubConfig(config);
-    assertValidPullRequestConfig(config);
+    const config = await getConfig([assertValidGithubConfig, assertValidPullRequestConfig]);
     /** The singleton instance of the authenticated git client. */
     const git = await AuthenticatedGitClient.get();
 
-    return new MergeTool(config, git, flags);
+    return new MergeTool(config, git, prNumber, new PullRequestValidationConfig(), flags);
   } catch (e) {
     if (e instanceof ConfigValidationError) {
       if (e.errors.length) {

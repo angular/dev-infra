@@ -51,23 +51,20 @@ const defaultPullRequestMergeFlags: PullRequestMergeFlags = {
  */
 export class MergeTool {
   private flags: PullRequestMergeFlags;
+  private pullRequest: PullRequest | undefined;
 
   constructor(
     public config: NgDevConfig<{pullRequest: PullRequestConfig; github: GithubConfig}>,
     public git: AuthenticatedGitClient,
+    private prNumber: number,
+    private validationConfig: PullRequestValidationConfig,
     flags: Partial<PullRequestMergeFlags>,
   ) {
     // Update flags property with the provided flags values as patches to the default flag values.
     this.flags = {...defaultPullRequestMergeFlags, ...flags};
   }
 
-  /**
-   * Merges the given pull request and pushes it upstream.
-   * @param prNumber Pull request that should be merged.
-   * @param validationConfig Pull request validation config. Can be modified to skip
-   *   certain non-fatal validations.
-   */
-  async merge(prNumber: number, validationConfig: PullRequestValidationConfig): Promise<void> {
+  async prepare() {
     if (this.git.hasUncommittedChanges()) {
       throw new FatalMergeToolError(
         'Local working repository not clean. Please make sure there are ' +
@@ -84,8 +81,10 @@ export class MergeTool {
     }
 
     await this.confirmMergeAccess();
+  }
 
-    const pullRequest = await loadAndValidatePullRequest(this, prNumber, validationConfig);
+  async validate() {
+    this.pullRequest = await loadAndValidatePullRequest(this, this.prNumber, this.validationConfig);
 
     if (pullRequest.validationFailures.length > 0) {
       Log.error(`Pull request did not pass one or more validation checks. Error:`);
@@ -106,14 +105,28 @@ export class MergeTool {
     }
 
     if (this.flags.forceManualBranches) {
-      await this.updatePullRequestTargetedBranchesFromPrompt(pullRequest);
+      await this.updatePullRequestTargetedBranchesFromPrompt(this.pullRequest);
+    }
+  }
+
+  /**
+   * Merges the given pull request and pushes it upstream.
+   */
+  async merge(): Promise<void> {
+    if (this.pullRequest === undefined) {
+      throw new FatalMergeToolError('`merge()` method called before the pull request validation');
+    }
+
+    if (this.flags.dryRun) {
+      Log.info(green(`  ✓  Exiting due to dry run mode.`));
+      return;
     }
 
     // If the pull request has a caretaker note applied, raise awareness by prompting
     // the caretaker. The caretaker can then decide to proceed or abort the merge.
     if (
-      pullRequest.hasCaretakerNote &&
-      !(await Prompt.confirm(getCaretakerNotePromptMessage(pullRequest)))
+      this.pullRequest.hasCaretakerNote &&
+      !(await Prompt.confirm(getCaretakerNotePromptMessage(this.pullRequest)))
     ) {
       throw new UserAbortedMergeToolError();
     }
@@ -130,23 +143,18 @@ export class MergeTool {
     // We want to capture these command errors and return an appropriate merge request status.
     try {
       // Run preparations for the merge (e.g. fetching branches).
-      await strategy.prepare(pullRequest);
+      await strategy.prepare(this.pullRequest);
 
       // Print the target branches.
       Log.info();
-      Log.info(getTargetedBranchesMessage(pullRequest));
+      Log.info(getTargetedBranchesMessage(this.pullRequest));
 
       // Check for conflicts between the pull request and target branches.
-      await strategy.check(pullRequest);
+      await strategy.check(this.pullRequest);
 
-      Log.info('');
+      Log.info();
       Log.info(green(`  ✓  Pull request can be merged into all target branches.`));
       Log.info();
-
-      if (this.flags.dryRun) {
-        Log.info(green(`  ✓  Exiting due to dry run mode.`));
-        return;
-      }
 
       if (
         // In cases where manual branch targeting is used, the user already confirmed.
@@ -158,14 +166,14 @@ export class MergeTool {
       }
 
       // Perform the merge and pass-through potential failures.
-      await strategy.merge(pullRequest);
-      Log.info(green(`  ✓  Successfully merged the pull request: #${prNumber}`));
+      await strategy.merge(this.pullRequest);
+      Log.info(green(`  ✓  Successfully merged the pull request: #${this.prNumber}`));
     } finally {
       // Switch back to the previous branch. We need to do this before deleting the temporary
       // branches because we cannot delete branches which are currently checked out.
       this.git.run(['checkout', '-f', previousBranchOrRevision]);
 
-      await strategy.cleanup(pullRequest);
+      await strategy.cleanup(this.pullRequest);
     }
   }
 
