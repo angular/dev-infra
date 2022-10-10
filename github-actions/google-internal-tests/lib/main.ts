@@ -37,28 +37,24 @@ async function main() {
     }
   }
 
-  const status = affectsGoogle
-    ? ({
-        state: 'pending',
-        // The initial waiting status is expected to be overridden by the
-        // internal presubmit status service then.
-        description: `Waiting for Google Internal Tests. ${
-          runTestGuideURL ? `@Googlers: See Details for instructions -->` : ''
-        }`.trim(),
-        url: runTestGuideURL,
-      } as const)
-    : ({
-        state: 'success',
-        description: 'Does not affect Google.',
-      } as const);
+  const waitingForG3Status = {
+    state: 'pending' as const,
+    // The initial waiting status is expected to be overridden by the
+    // internal presubmit status service then.
+    description: `Waiting for Google Internal Tests. ${
+      runTestGuideURL ? `@Googlers: See Details for instructions -->` : ''
+    }`.trim(),
+    target_url: runTestGuideURL,
+  };
+  const irrelevantToG3Status = {
+    state: 'success' as const,
+    description: 'Does not affect Google.',
+  };
 
   await github.repos.createCommitStatus({
     ...context.repo,
+    ...(affectsGoogle ? waitingForG3Status : irrelevantToG3Status),
     sha: prHeadSHA,
-    state: status.state,
-    description: status.description,
-    context: 'google-internal-tests',
-    target_url: status.url,
   });
 }
 

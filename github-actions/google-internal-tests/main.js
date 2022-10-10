@@ -16600,21 +16600,19 @@ async function main() {
       break;
     }
   }
-  const status = affectsGoogle ? {
+  const waitingForG3Status = {
     state: "pending",
     description: `Waiting for Google Internal Tests. ${runTestGuideURL ? `@Googlers: See Details for instructions -->` : ""}`.trim(),
-    url: runTestGuideURL
-  } : {
+    target_url: runTestGuideURL
+  };
+  const irrelevantToG3Status = {
     state: "success",
     description: "Does not affect Google."
   };
   await github.repos.createCommitStatus({
     ...import_github.context.repo,
-    sha: prHeadSHA,
-    state: status.state,
-    description: status.description,
-    context: "google-internal-tests",
-    target_url: status.url
+    ...affectsGoogle ? waitingForG3Status : irrelevantToG3Status,
+    sha: prHeadSHA
   });
 }
 function constructPatterns(rawPatterns) {
