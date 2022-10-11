@@ -10,6 +10,7 @@ on:
 # Declare default permissions as read only.
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   analysis:
