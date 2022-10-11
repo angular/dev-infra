@@ -16579,8 +16579,8 @@ async function main() {
     import_core.default.info("Skipping Google Internal Tests action for non-Angular repos.");
     return;
   }
-  if (import_github.context.eventName !== "pull_request_target" || import_github.context.payload.action !== "synchronize") {
-    throw new Error("Expected Google Internal Tests action to be triggered for `pull_request_target.synchronize` events.");
+  if (import_github.context.eventName !== "pull_request_target") {
+    throw new Error("Expected Google Internal Tests action to be triggered for `pull_request_target` events.");
   }
   const githubToken = import_core.default.getInput("github-token", { required: true });
   const rawPatterns = import_core.default.getInput("affected-file-patterns", { required: true });
