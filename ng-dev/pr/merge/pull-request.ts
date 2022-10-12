@@ -18,7 +18,7 @@ import {ActiveReleaseTrains} from '../../release/versioning/active-release-train
 import {PullRequestValidationConfig} from '../common/validation/validation-config.js';
 import {assertValidPullRequest} from '../common/validation/validate-pull-request.js';
 import {TEMP_PR_HEAD_BRANCH} from './strategies/strategy.js';
-import {getRepositoryGitUrl} from '../../utils/git/github-urls.js';
+import {mergeLabels} from '../common/labels.js';
 
 /** Interface that describes a pull request. */
 export interface PullRequest {
@@ -104,12 +104,8 @@ export async function loadAndValidatePullRequest(
   const requiredBaseSha =
     config.pullRequest.requiredBaseCommits &&
     config.pullRequest.requiredBaseCommits[githubTargetBranch];
-  const needsCommitMessageFixup =
-    !!config.pullRequest.commitMessageFixupLabel &&
-    labels.includes(config.pullRequest.commitMessageFixupLabel);
-  const hasCaretakerNote =
-    !!config.pullRequest.caretakerNoteLabel &&
-    labels.includes(config.pullRequest.caretakerNoteLabel);
+  const needsCommitMessageFixup = labels.includes(mergeLabels.MERGE_FIX_COMMIT_MESSAGE.label);
+  const hasCaretakerNote = labels.includes(mergeLabels.MERGE_CARETAKER_NOTE.label);
 
   // The parent of the first commit in a PR is the base SHA.
   const baseSha = prData.baseCommitInfo.nodes[0].commit.parents.nodes[0].oid;

@@ -23327,22 +23327,22 @@ var createTypedObject = () => (v) => v;
 var managedLabels = createTypedObject()({
   DETECTED_BREAKING_CHANGE: {
     description: "PR contains a commit with a breaking change",
-    label: "flag: breaking change",
+    label: "detected: breaking change",
     commitCheck: (c) => c.breakingChanges.length !== 0
   },
   DETECTED_DEPRECATION: {
     description: "PR contains a commit with a deprecation",
-    label: "flag: deprecation",
+    label: "detected: deprecation",
     commitCheck: (c) => c.deprecations.length !== 0
   },
   DETECTED_FEATURE: {
     description: "PR contains a feature commit",
-    label: "feature",
+    label: "detected: feature",
     commitCheck: (c) => c.type === "feat"
   },
   DETECTED_DOCS_CHANGE: {
     description: "Related to the documentation",
-    label: "comp: docs",
+    label: "area: docs",
     commitCheck: (c) => c.type === "docs"
   }
 });
