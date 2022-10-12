@@ -1,7 +1,12 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
-import {Octokit} from '@octokit/rest';
+import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
 import minimatch from 'minimatch';
+
+const statusContext = 'google-internal-tests';
+
+type GithubStatus =
+  RestEndpointMethodTypes['repos']['getCombinedStatusForRef']['response']['data']['statuses'][0];
 
 async function main() {
   if (context.repo.owner !== 'angular') {
@@ -26,6 +31,13 @@ async function main() {
   const github = new Octokit({auth: githubToken});
   const prNum = context.payload.pull_request!.number;
   const prHeadSHA = context.payload.pull_request!.head!.sha;
+  const existingGoogleStatus = await findExistingTestStatus(github, prHeadSHA);
+
+  // If there is an existing status already pointing to an internal CL, we do not override
+  // the status. This can happen when e.g. a presubmit-tested PR is closed and reopened.
+  if (existingGoogleStatus && existingGoogleStatus.target_url?.startsWith('http://cl/')) {
+    return;
+  }
 
   const files = await github.paginate(github.pulls.listFiles, {
     ...context.repo,
@@ -61,7 +73,7 @@ async function main() {
   await github.repos.createCommitStatus({
     ...context.repo,
     ...(affectsGoogle ? waitingForG3Status : irrelevantToG3Status),
-    context: 'google-internal-tests',
+    context: statusContext,
     sha: prHeadSHA,
   });
 }
@@ -78,6 +90,22 @@ function constructPatterns(rawPatterns: string): minimatch.IMinimatch[] {
     }
   }
   return patterns;
+}
+
+async function findExistingTestStatus(
+  github: Octokit,
+  prHeadSHA: string,
+): Promise<GithubStatus | null> {
+  const existingStatuses = await github.paginate(
+    github.repos.getCombinedStatusForRef,
+    {
+      ...context.repo,
+      ref: prHeadSHA,
+    },
+    (r) => r.data.statuses as GithubStatus[],
+  );
+
+  return existingStatuses.find((s) => s.context === statusContext) ?? null;
 }
 
 main().catch((e: Error) => {
