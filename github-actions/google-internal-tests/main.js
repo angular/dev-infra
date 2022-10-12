@@ -16574,7 +16574,9 @@ var core = __toESM(require_core());
 var import_github = __toESM(require_github());
 var import_rest = __toESM(require_dist_node20());
 var import_minimatch = __toESM(require_minimatch());
+var statusContext = "google-internal-tests";
 async function main() {
+  var _a;
   if (import_github.context.repo.owner !== "angular") {
     core.info("Skipping Google Internal Tests action for non-Angular repos.");
     return;
@@ -16591,6 +16593,10 @@ async function main() {
   const github = new import_rest.Octokit({ auth: githubToken });
   const prNum = import_github.context.payload.pull_request.number;
   const prHeadSHA = import_github.context.payload.pull_request.head.sha;
+  const existingGoogleStatus = await findExistingTestStatus(github, prHeadSHA);
+  if (existingGoogleStatus && ((_a = existingGoogleStatus.target_url) == null ? void 0 : _a.startsWith("http://cl/"))) {
+    return;
+  }
   const files = await github.paginate(github.pulls.listFiles, {
     ...import_github.context.repo,
     pull_number: prNum
@@ -16616,7 +16622,7 @@ async function main() {
   await github.repos.createCommitStatus({
     ...import_github.context.repo,
     ...affectsGoogle ? waitingForG3Status : irrelevantToG3Status,
-    context: "google-internal-tests",
+    context: statusContext,
     sha: prHeadSHA
   });
 }
@@ -16631,6 +16637,13 @@ function constructPatterns(rawPatterns) {
     }
   }
   return patterns;
+}
+async function findExistingTestStatus(github, prHeadSHA) {
+  const existingStatuses = await github.paginate(github.repos.getCombinedStatusForRef, {
+    ...import_github.context.repo,
+    ref: prHeadSHA
+  }, (r) => r.data.statuses);
+  return existingStatuses.find((s) => s.context === statusContext) ?? null;
 }
 main().catch((e) => {
   core.error(e);
