@@ -41,9 +41,7 @@ export async function assertValidPullRequest(
     return parseCommitMessage(n.commit.message);
   });
 
-  await mergeReadyValidation.run(validationConfig, (v) =>
-    v.assert(pullRequest, ngDevConfig.pullRequest),
-  );
+  await mergeReadyValidation.run(validationConfig, (v) => v.assert(pullRequest));
   await signedClaValidation.run(validationConfig, (v) => v.assert(pullRequest));
   await pendingStateValidation.run(validationConfig, (v) => v.assert(pullRequest));
 

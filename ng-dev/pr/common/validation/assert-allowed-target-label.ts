@@ -10,6 +10,7 @@ import {Commit} from '../../../commit-message/parse.js';
 import {ActiveReleaseTrains} from '../../../release/versioning/active-release-trains.js';
 import {Log, red} from '../../../utils/logging.js';
 import {PullRequestConfig} from '../../config/index.js';
+import {mergeLabels} from '../labels.js';
 import {TargetLabelName} from '../targeting/target-label.js';
 import {createPullRequestValidation, PullRequestValidation} from './validation-config.js';
 
@@ -27,10 +28,7 @@ class Validation extends PullRequestValidation {
     releaseTrains: ActiveReleaseTrains,
     labelsOnPullRequest: string[],
   ) {
-    if (
-      !!config.commitMessageFixupLabel &&
-      labelsOnPullRequest.includes(config.commitMessageFixupLabel)
-    ) {
+    if (labelsOnPullRequest.includes(mergeLabels.MERGE_FIX_COMMIT_MESSAGE.label)) {
       Log.debug(
         'Skipping commit message target label validation because the commit message fixup label is ' +
           'applied.',

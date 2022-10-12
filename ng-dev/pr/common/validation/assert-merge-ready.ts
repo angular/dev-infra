@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {PullRequestConfig} from '../../config/index.js';
 import {PullRequestFromGithub} from '../fetch-pull-request.js';
+import {actionLabels} from '../labels.js';
 import {createPullRequestValidation, PullRequestValidation} from './validation-config.js';
 
 /** Assert the pull request is merge ready. */
@@ -17,8 +17,8 @@ export const mergeReadyValidation = createPullRequestValidation(
 );
 
 class Validation extends PullRequestValidation {
-  assert(pullRequest: PullRequestFromGithub, pullRequestConfig: PullRequestConfig) {
-    if (!pullRequest.labels.nodes.some(({name}) => name === pullRequestConfig.mergeReadyLabel)) {
+  assert(pullRequest: PullRequestFromGithub) {
+    if (!pullRequest.labels.nodes.some(({name}) => name === actionLabels.ACTION_MERGE.label)) {
       throw this._createError('Pull request is not marked as merge ready.');
     }
   }
