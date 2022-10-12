@@ -16,13 +16,13 @@ inputs:
     default: 'feature'
   in-backlog-label:
     description: 'Label used to distinguish feature requests, which are already part of the backlog.'
-    default: 'in backlog'
+    default: 'feature: in backlog'
   requires-votes-label:
     description: 'Label used to distinguish requests in voting phase from other issues.'
-    default: 'votes required'
+    default: 'feature: votes required'
   under-consideration-label:
     description: 'Label used to distinguish features which are in our list for consideration.'
-    default: 'under consideration'
+    default: 'feature: under consideration'
   old-issue-warn-days-duration:
     description: 'Indicates in number of days how old an issue should be to directly get a warning comment rather than just a vote initiation.'
     default: 60
@@ -37,7 +37,7 @@ inputs:
     default: false
   insufficient-votes-label:
     description: 'Label to add when the `close-when-no-sufficient-votes` is set to false and there are no sufficient number of votes or comments from unique authors.'
-    default: 'insufficient votes'
+    default: 'feature: insufficient votes'
   limit:
     description: 'Limits the number of issues we are going to run the action over.'
     default: -1
