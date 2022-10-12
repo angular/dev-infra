@@ -3,6 +3,7 @@ import {context} from '@actions/github';
 import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
 import minimatch from 'minimatch';
 
+const syncBranch = 'main';
 const statusContext = 'google-internal-tests';
 
 type GithubStatus =
@@ -25,12 +26,19 @@ async function main() {
   const syncedFilesRaw = core.getInput('synced-files', {required: true});
   const alwaysExternalFilesRaw = core.getInput('always-external-files', {required: false});
 
+  const prNum = context.payload.pull_request!.number;
+  const prHeadSHA = context.payload.pull_request!.head!.sha;
+  const prBaseRef = context.payload.pull_request!.base!.ref;
+
+  if (syncBranch !== prBaseRef) {
+    core.info(`Skipping Google Internal Tests action for PRs not targeting: ${syncBranch}`);
+    return;
+  }
+
   const syncedFiles = constructPatterns(syncedFilesRaw);
   const alwaysExternalFiles = constructPatterns(alwaysExternalFilesRaw);
 
   const github = new Octokit({auth: githubToken});
-  const prNum = context.payload.pull_request!.number;
-  const prHeadSHA = context.payload.pull_request!.head!.sha;
   const existingGoogleStatus = await findExistingTestStatus(github, prHeadSHA);
 
   // If there is an existing status already pointing to an internal CL, we do not override

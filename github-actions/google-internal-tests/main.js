@@ -16574,6 +16574,7 @@ var core = __toESM(require_core());
 var import_github = __toESM(require_github());
 var import_rest = __toESM(require_dist_node20());
 var import_minimatch = __toESM(require_minimatch());
+var syncBranch = "main";
 var statusContext = "google-internal-tests";
 async function main() {
   var _a;
@@ -16588,11 +16589,16 @@ async function main() {
   const runTestGuideURL = core.getInput("run-tests-guide-url", { required: false });
   const syncedFilesRaw = core.getInput("synced-files", { required: true });
   const alwaysExternalFilesRaw = core.getInput("always-external-files", { required: false });
+  const prNum = import_github.context.payload.pull_request.number;
+  const prHeadSHA = import_github.context.payload.pull_request.head.sha;
+  const prBaseRef = import_github.context.payload.pull_request.base.ref;
+  if (syncBranch !== prBaseRef) {
+    core.info(`Skipping Google Internal Tests action for PRs not targeting: ${syncBranch}`);
+    return;
+  }
   const syncedFiles = constructPatterns(syncedFilesRaw);
   const alwaysExternalFiles = constructPatterns(alwaysExternalFilesRaw);
   const github = new import_rest.Octokit({ auth: githubToken });
-  const prNum = import_github.context.payload.pull_request.number;
-  const prHeadSHA = import_github.context.payload.pull_request.head.sha;
   const existingGoogleStatus = await findExistingTestStatus(github, prHeadSHA);
   if (existingGoogleStatus && ((_a = existingGoogleStatus.target_url) == null ? void 0 : _a.startsWith("http://cl/"))) {
     return;
