@@ -9,22 +9,22 @@ interface ManagedLabel extends Label {
 export const managedLabels = createTypedObject<ManagedLabel>()({
   DETECTED_BREAKING_CHANGE: {
     description: 'PR contains a commit with a breaking change',
-    label: 'flag: breaking change',
+    label: 'detected: breaking change',
     commitCheck: (c: Commit) => c.breakingChanges.length !== 0,
   },
   DETECTED_DEPRECATION: {
     description: 'PR contains a commit with a deprecation',
-    label: 'flag: deprecation',
+    label: 'detected: deprecation',
     commitCheck: (c: Commit) => c.deprecations.length !== 0,
   },
   DETECTED_FEATURE: {
     description: 'PR contains a feature commit',
-    label: 'feature',
+    label: 'detected: feature',
     commitCheck: (c: Commit) => c.type === 'feat',
   },
   DETECTED_DOCS_CHANGE: {
     description: 'Related to the documentation',
-    label: 'comp: docs',
+    label: 'area: docs',
     commitCheck: (c: Commit) => c.type === 'docs',
   },
 });
