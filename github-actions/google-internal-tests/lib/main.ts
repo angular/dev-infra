@@ -16,9 +16,12 @@ async function main() {
   }
 
   const githubToken = core.getInput('github-token', {required: true});
-  const rawPatterns = core.getInput('affected-file-patterns', {required: true});
   const runTestGuideURL = core.getInput('run-tests-guide-url', {required: false});
-  const patterns = constructPatterns(rawPatterns);
+  const syncedFilesRaw = core.getInput('synced-files', {required: true});
+  const alwaysExternalFilesRaw = core.getInput('always-external-files', {required: false});
+
+  const syncedFiles = constructPatterns(syncedFilesRaw);
+  const alwaysExternalFiles = constructPatterns(alwaysExternalFilesRaw);
 
   const github = new Octokit({auth: githubToken});
   const prNum = context.payload.pull_request!.number;
@@ -31,7 +34,11 @@ async function main() {
 
   let affectsGoogle = false;
   for (const f of files) {
-    if (patterns.some((p) => p.match(f.filename))) {
+    // Perf: Skip matching the external file patterns if the file is not even synced.
+    const isSynced = syncedFiles.some((p) => p.match(f.filename));
+    const isExcluded = !isSynced || alwaysExternalFiles.some((p) => p.match(f.filename));
+
+    if (isSynced && !isExcluded) {
       affectsGoogle = true;
       break;
     }
@@ -63,7 +70,10 @@ function constructPatterns(rawPatterns: string): minimatch.IMinimatch[] {
   const patterns: minimatch.IMinimatch[] = [];
   for (let p of rawPatterns.split(/\r?\n/g)) {
     p = p.trim();
-    if (p !== '') {
+    // Support comments, lines starting with a hashtag.
+    if (p.startsWith('#')) {
+      continue;
+    } else if (p !== '') {
       patterns.push(new minimatch.Minimatch(p));
     }
   }

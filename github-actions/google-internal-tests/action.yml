@@ -7,11 +7,22 @@ inputs:
   github-token:
     required: true
     description: GitHub Token used for creating the commit statuses.
-  affected-file-patterns:
+  synced-files:
     required: true
     description: |
-      List of file patterns which match files synced into Google.
-      Multiple patterns should be separated by new lines.
+      List of file patterns which match files synced into Google. May
+      be overridden below with the `always-external-files` option.
+
+      Multiple patterns should be separated by new lines. Comments using `#`
+      are supported.
+  always-external-files:
+    required: false
+    description: |
+      List of file patterns which are always considered external to Google.
+      Can be used to override files initially matched in `synced-files`.
+
+      Multiple patterns should be separated by new lines. Comments using `#`
+      are supported.
   run-tests-guide-url:
     required: false
     description: |

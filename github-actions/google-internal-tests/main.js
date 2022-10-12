@@ -16583,9 +16583,11 @@ async function main() {
     throw new Error("Expected Google Internal Tests action to be triggered for `pull_request_target` events.");
   }
   const githubToken = core.getInput("github-token", { required: true });
-  const rawPatterns = core.getInput("affected-file-patterns", { required: true });
   const runTestGuideURL = core.getInput("run-tests-guide-url", { required: false });
-  const patterns = constructPatterns(rawPatterns);
+  const syncedFilesRaw = core.getInput("synced-files", { required: true });
+  const alwaysExternalFilesRaw = core.getInput("always-external-files", { required: false });
+  const syncedFiles = constructPatterns(syncedFilesRaw);
+  const alwaysExternalFiles = constructPatterns(alwaysExternalFilesRaw);
   const github = new import_rest.Octokit({ auth: githubToken });
   const prNum = import_github.context.payload.pull_request.number;
   const prHeadSHA = import_github.context.payload.pull_request.head.sha;
@@ -16595,7 +16597,9 @@ async function main() {
   });
   let affectsGoogle = false;
   for (const f of files) {
-    if (patterns.some((p) => p.match(f.filename))) {
+    const isSynced = syncedFiles.some((p) => p.match(f.filename));
+    const isExcluded = !isSynced || alwaysExternalFiles.some((p) => p.match(f.filename));
+    if (isSynced && !isExcluded) {
       affectsGoogle = true;
       break;
     }
@@ -16620,7 +16624,9 @@ function constructPatterns(rawPatterns) {
   const patterns = [];
   for (let p of rawPatterns.split(/\r?\n/g)) {
     p = p.trim();
-    if (p !== "") {
+    if (p.startsWith("#")) {
+      continue;
+    } else if (p !== "") {
       patterns.push(new import_minimatch.default.Minimatch(p));
     }
   }
