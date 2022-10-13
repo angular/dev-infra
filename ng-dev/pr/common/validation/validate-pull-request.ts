@@ -41,16 +41,21 @@ export async function assertValidPullRequest(
     return parseCommitMessage(n.commit.message);
   });
 
-  await mergeReadyValidation.run(validationConfig, (v) => v.assert(pullRequest));
-  await signedClaValidation.run(validationConfig, (v) => v.assert(pullRequest));
-  await pendingStateValidation.run(validationConfig, (v) => v.assert(pullRequest));
+  await mergeReadyValidation.run(validationConfig, pullRequest);
+  await signedClaValidation.run(validationConfig, pullRequest);
+  await pendingStateValidation.run(validationConfig, pullRequest);
 
   if (activeReleaseTrains !== null) {
-    await changesAllowForTargetLabelValidation.run(validationConfig, (v) =>
-      v.assert(commitsInPr, target.labelName, ngDevConfig.pullRequest, activeReleaseTrains, labels),
+    await changesAllowForTargetLabelValidation.run(
+      validationConfig,
+      commitsInPr,
+      target.labelName,
+      ngDevConfig.pullRequest,
+      activeReleaseTrains,
+      labels,
     );
   }
 
-  await breakingChangeInfoValidation.run(validationConfig, (v) => v.assert(commitsInPr, labels));
-  await passingCiValidation.run(validationConfig, (v) => v.assert(pullRequest));
+  await breakingChangeInfoValidation.run(validationConfig, commitsInPr, labels);
+  await passingCiValidation.run(validationConfig, pullRequest);
 }
