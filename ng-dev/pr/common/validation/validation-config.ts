@@ -34,6 +34,9 @@ export abstract class PullRequestValidation {
     protected name: keyof PullRequestValidationConfig,
     protected _createError: PullRequestValidationErrorCreateFn,
   ) {}
+
+  /** Assertion function to be defined for the specific validator. */
+  abstract assert(...parameters: unknown[]): void;
 }
 
 /** Creates a pull request validation from a configuration and implementation class. */
@@ -42,15 +45,17 @@ export function createPullRequestValidation<T extends PullRequestValidation>(
   getValidationCtor: () => new (...args: ConstructorParameters<typeof PullRequestValidation>) => T,
 ) {
   return {
-    async run(validationConfig: PullRequestValidationConfig, fn: (v: T) => void): Promise<void> {
+    async run(
+      validationConfig: PullRequestValidationConfig,
+      ...args: Parameters<T['assert']>
+    ): Promise<void> {
       if (validationConfig[name]) {
         const validation = new (getValidationCtor())(
           name,
           (message) => new PullRequestValidationFailure(message, name),
         );
-
         try {
-          fn(validation);
+          validation.assert(args);
         } catch (e) {
           if (e instanceof PullRequestValidationFailure && canBeForceIgnored) {
             Log.error(`Pull request did not pass validation check. Error:`);
