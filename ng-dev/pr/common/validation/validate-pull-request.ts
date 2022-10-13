@@ -19,6 +19,7 @@ import {passingCiValidation} from './assert-passing-ci.js';
 import {pendingStateValidation} from './assert-pending.js';
 import {signedClaValidation} from './assert-signed-cla.js';
 import {PullRequestValidationConfig} from './validation-config.js';
+import {PullRequestValidationFailure} from './validation-failure.js';
 
 /**
  * Asserts that the given pull request is valid. Certain non-fatal validations
@@ -35,27 +36,38 @@ export async function assertValidPullRequest(
   ngDevConfig: NgDevConfig<{pullRequest: PullRequestConfig; github: GithubConfig}>,
   activeReleaseTrains: ActiveReleaseTrains | null,
   target: PullRequestTarget,
-): Promise<void> {
+): Promise<PullRequestValidationFailure[]> {
   const labels = pullRequest.labels.nodes.map((l) => l.name);
   const commitsInPr = pullRequest.commits.nodes.map((n) => {
     return parseCommitMessage(n.commit.message);
   });
 
-  await mergeReadyValidation.run(validationConfig, pullRequest);
-  await signedClaValidation.run(validationConfig, pullRequest);
-  await pendingStateValidation.run(validationConfig, pullRequest);
+  const validationResults = [
+    mergeReadyValidation.run(validationConfig, pullRequest),
+    signedClaValidation.run(validationConfig, pullRequest),
+    pendingStateValidation.run(validationConfig, pullRequest),
+    breakingChangeInfoValidation.run(validationConfig, commitsInPr, labels),
+    passingCiValidation.run(validationConfig, pullRequest),
+  ];
 
   if (activeReleaseTrains !== null) {
-    await changesAllowForTargetLabelValidation.run(
-      validationConfig,
-      commitsInPr,
-      target.labelName,
-      ngDevConfig.pullRequest,
-      activeReleaseTrains,
-      labels,
+    validationResults.push(
+      changesAllowForTargetLabelValidation.run(
+        validationConfig,
+        commitsInPr,
+        target.labelName,
+        ngDevConfig.pullRequest,
+        activeReleaseTrains,
+        labels,
+      ),
     );
   }
 
-  await breakingChangeInfoValidation.run(validationConfig, commitsInPr, labels);
-  await passingCiValidation.run(validationConfig, pullRequest);
+  return Promise.all(validationResults).then((results) => {
+    return results.filter(
+      <(result: null | PullRequestValidationFailure) => result is PullRequestValidationFailure>(
+        ((result) => result !== null)
+      ),
+    );
+  });
 }
