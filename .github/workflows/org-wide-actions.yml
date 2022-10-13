@@ -20,3 +20,6 @@ jobs:
           angular-robot-key: ${{ secrets.ANGULAR_ROBOT_PRIVATE_KEY }}
           repos: |
             dev-infra
+            angular
+            angular-cli
+            components

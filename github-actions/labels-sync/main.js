@@ -23520,7 +23520,7 @@ async function syncLabelsInRepo(github, repoName, managedLabels2) {
       return;
     }
     if ((description === void 0 || description === matchedLabel.description) && (name === void 0 || name === matchedLabel.name) && (color === void 0 || color === matchedLabel.color)) {
-      core.info(`${name}: Skipping, alraedy in sync`);
+      core.info(`${name}: Skipping, already in sync`);
       return;
     }
     core.info(`${name}: Updating in repository`);

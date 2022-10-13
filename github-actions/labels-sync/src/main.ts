@@ -41,7 +41,7 @@ async function syncLabelsInRepo(github: Octokit, repoName: string, managedLabels
       (name === undefined || name === matchedLabel.name) &&
       (color === undefined || color === matchedLabel.color)
     ) {
-      core.info(`${name}: Skipping, alraedy in sync`);
+      core.info(`${name}: Skipping, already in sync`);
       return;
     }
 
