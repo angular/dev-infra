@@ -33,16 +33,16 @@ class CommitMessageBasedLabelManager {
 
     // Add or Remove label as appropriate for each of the supported label and commit messaage
     // combinations.
-    for (const {commitCheck, label} of Object.values(managedLabels)) {
+    for (const {commitCheck, name} of Object.values(managedLabels)) {
       const hasCommit = this.commits.some(commitCheck);
-      const hasLabel = this.labels.has(label);
-      core.info(`${label} | hasLabel: ${hasLabel} | hasCommit: ${hasCommit}`);
+      const hasLabel = this.labels.has(name);
+      core.info(`${name} | hasLabel: ${hasLabel} | hasCommit: ${hasCommit}`);
 
       if (hasCommit && !hasLabel) {
-        await this.addLabel(label);
+        await this.addLabel(name);
       }
       if (!hasCommit && hasLabel) {
-        await this.removeLabel(label);
+        await this.removeLabel(name);
       }
     }
   }

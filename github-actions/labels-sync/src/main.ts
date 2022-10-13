@@ -22,16 +22,16 @@ async function syncLabelsInRepo(github: Octokit, repoName: string, managedLabels
   // For each label in the list of managed labels, ensure that it exists and is in sync.
   // NOTE: Not all labels in repositories are managed. Labels which are not included or managed in
   // our tooling definitions and configurations are ignored entirely by tooling.
-  for (const {description, label} of managedLabels) {
-    await core.group(`Syncing label: ${label}`, async () => {
+  for (const {description, name, color} of managedLabels) {
+    await core.group(`Syncing label: ${name}`, async () => {
       /** The label from Github if a match is found. */
-      const matchedLabel = repoLabels.find(({name}: GithubLabel) => name === label);
+      const matchedLabel = repoLabels.find((label: GithubLabel) => label.name === name);
 
       // When no matched label is found, Github doesn't currently have the label we intend to sync,
       // we create the label via the API directly.
       if (matchedLabel === undefined) {
         core.info('Adding label to repository');
-        await github.issues.createLabel({...repo, name: label, description: description});
+        await github.issues.createLabel({...repo, name, description, color});
         return;
       }
 
@@ -39,7 +39,8 @@ async function syncLabelsInRepo(github: Octokit, repoName: string, managedLabels
       // the current name and description of the label from Github, everything is in sync.
       if (
         (description === undefined || description === matchedLabel.description) &&
-        (label === undefined || label === matchedLabel.name)
+        (name === undefined || name === matchedLabel.name) &&
+        (color === undefined || color === matchedLabel.color)
       ) {
         core.info('Skipping, label already in sync');
         return;
@@ -50,9 +51,10 @@ async function syncLabelsInRepo(github: Octokit, repoName: string, managedLabels
       core.info('Updating label in repository');
       await github.issues.updateLabel({
         ...repo,
-        new_name: label,
+        new_name: name,
         name: matchedLabel.name,
-        description: description,
+        description,
+        color,
       });
     });
   }

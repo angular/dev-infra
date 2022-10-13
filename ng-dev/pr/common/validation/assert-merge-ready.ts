@@ -18,7 +18,7 @@ export const mergeReadyValidation = createPullRequestValidation(
 
 class Validation extends PullRequestValidation {
   assert(pullRequest: PullRequestFromGithub) {
-    if (!pullRequest.labels.nodes.some(({name}) => name === actionLabels.ACTION_MERGE.label)) {
+    if (!pullRequest.labels.nodes.some(({name}) => name === actionLabels.ACTION_MERGE.name)) {
       throw this._createError('Pull request is not marked as merge ready.');
     }
   }

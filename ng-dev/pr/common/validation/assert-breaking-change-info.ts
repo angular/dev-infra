@@ -19,7 +19,7 @@ export const breakingChangeInfoValidation = createPullRequestValidation(
 class Validation extends PullRequestValidation {
   assert(commits: Commit[], labels: string[]) {
     // Whether the PR has a label noting a breaking change.
-    const hasLabel = labels.includes(managedLabels.DETECTED_BREAKING_CHANGE.label);
+    const hasLabel = labels.includes(managedLabels.DETECTED_BREAKING_CHANGE.name);
     // Whether the PR has at least one commit which notes a breaking change.
     const hasCommit = commits.some((commit) => commit.breakingChanges.length !== 0);
 
@@ -36,7 +36,7 @@ class Validation extends PullRequestValidation {
     const message =
       `Pull Request has at least one commit containing a breaking change note, ` +
       `but does not have a breaking change label. Make sure to apply the ` +
-      `following label: ${managedLabels.DETECTED_BREAKING_CHANGE.label}`;
+      `following label: ${managedLabels.DETECTED_BREAKING_CHANGE.name}`;
     return this._createError(message);
   }
 

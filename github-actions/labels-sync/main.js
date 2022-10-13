@@ -23327,22 +23327,22 @@ var createTypedObject = () => (v) => v;
 var managedLabels = createTypedObject()({
   DETECTED_BREAKING_CHANGE: {
     description: "PR contains a commit with a breaking change",
-    label: "detected: breaking change",
+    name: "detected: breaking change",
     commitCheck: (c) => c.breakingChanges.length !== 0
   },
   DETECTED_DEPRECATION: {
     description: "PR contains a commit with a deprecation",
-    label: "detected: deprecation",
+    name: "detected: deprecation",
     commitCheck: (c) => c.deprecations.length !== 0
   },
   DETECTED_FEATURE: {
     description: "PR contains a feature commit",
-    label: "detected: feature",
+    name: "detected: feature",
     commitCheck: (c) => c.type === "feat"
   },
   DETECTED_DOCS_CHANGE: {
     description: "Related to the documentation",
-    label: "area: docs",
+    name: "area: docs",
     commitCheck: (c) => c.type === "docs"
   }
 });
@@ -23351,19 +23351,19 @@ var managedLabels = createTypedObject()({
 var actionLabels = createTypedObject()({
   ACTION_MERGE: {
     description: "The PR is ready for merge by the caretaker",
-    label: "action: merge"
+    name: "action: merge"
   },
   ACTION_CLEANUP: {
     description: "The PR is in need of cleanup, either due to needing a rebase or in response to comments from reviews",
-    label: "action: cleanup"
+    name: "action: cleanup"
   },
   ACTION_PRESUBMIT: {
     description: "The PR is in need of a google3 presubmit",
-    label: "action: presubmit"
+    name: "action: presubmit"
   },
   ACTION_REVIEW: {
     description: "The PR is still awaiting reviews from at least one requested reviewer",
-    label: "action: review"
+    name: "action: review"
   }
 });
 
@@ -23371,19 +23371,19 @@ var actionLabels = createTypedObject()({
 var mergeLabels = createTypedObject()({
   MERGE_PRESERVE_COMMITS: {
     description: "When the PR is merged, a rebase and merge should be performed",
-    label: "merge: preserve commits"
+    name: "merge: preserve commits"
   },
   MERGE_SQUASH_COMMITS: {
     description: "When the PR is merged, a squash and merge should be performed",
-    label: "merge: squash commits"
+    name: "merge: squash commits"
   },
   MERGE_FIX_COMMIT_MESSAGE: {
     description: "When the PR is merged, rewrites/fixups of the commit messages are needed",
-    label: "merge: fix commit message"
+    name: "merge: fix commit message"
   },
   MERGE_CARETAKER_NOTE: {
     description: "Alert the caretaker performing the merge to check the PR for an out of normal action needed or note",
-    label: "merge: caretaker note"
+    name: "merge: caretaker note"
   }
 });
 
@@ -23391,54 +23391,54 @@ var mergeLabels = createTypedObject()({
 var targetLabels = createTypedObject()({
   TARGET_FEATURE: {
     description: "This PR is targeted for a feature branch (outside of main and semver branches)",
-    label: "target: feature"
+    name: "target: feature"
   },
   TARGET_LTS: {
     description: "This PR is targeting a version currently in long-term support",
-    label: "target: lts"
+    name: "target: lts"
   },
   TARGET_MAJOR: {
     description: "This PR is targeted for the next major release",
-    label: "target: major"
+    name: "target: major"
   },
   TARGET_MINOR: {
     description: "This PR is targeted for the next minor release",
-    label: "target: minor"
+    name: "target: minor"
   },
   TARGET_PATCH: {
     description: "This PR is targeted for the next patch release",
-    label: "target: patch"
+    name: "target: patch"
   },
   TARGET_RC: {
     description: "This PR is targeted for the next release-candidate",
-    label: "target: rc"
+    name: "target: rc"
   }
 });
 
 // 
 var priorityLabels = createTypedObject()({
   P0: {
-    label: "P0",
+    name: "P0",
     description: "Issue that causes an outage, breakage, or major function to be unusable, with no known workarounds"
   },
   P1: {
-    label: "P1",
+    name: "P1",
     description: "Impacts a large percentage of users; if a workaround exists it is partial or overly painful"
   },
   P2: {
-    label: "P2",
+    name: "P2",
     description: "The issue is important to a large percentage of users, with a workaround"
   },
   P3: {
-    label: "P3",
+    name: "P3",
     description: "An issue that is relevant to core functions, but does not impede progress. Important, but not urgent"
   },
   P4: {
-    label: "P4",
+    name: "P4",
     description: "A relatively minor issue that is not relevant to core functions"
   },
   P5: {
-    label: "P5",
+    name: "P5",
     description: "The team acknowledges the request but does not plan to address it, it remains open for discussion"
   }
 });
@@ -23446,19 +23446,19 @@ var priorityLabels = createTypedObject()({
 // 
 var featureLabels = createTypedObject()({
   FEATURE_IN_BACKLOG: {
-    label: "feature: in backlog",
+    name: "feature: in backlog",
     description: "Feature request for which voting has completed and is now in the backlog"
   },
   FEATURE_VOTES_REQUIRED: {
-    label: "feature: votes required",
+    name: "feature: votes required",
     description: "Feature request which is currently still in the voting phase"
   },
   FEATURE_UNDER_CONSIDERATION: {
-    label: "feature: under consideration",
+    name: "feature: under consideration",
     description: "Feature request for which voting has completed and the request is now under consideration"
   },
   FEATURE_INSUFFICIENT_VOTES: {
-    label: "feature: insufficient votes",
+    name: "feature: insufficient votes",
     description: "Label to add when the not a sufficient number of votes or comments from unique authors"
   }
 });
@@ -23512,24 +23512,25 @@ async function syncLabelsInRepo(github, repoName, managedLabels2) {
   core.debug(`Requesting labels`);
   const repoLabels = await github.paginate(github.issues.listLabelsForRepo, import_github2.context.repo);
   core.debug(`Retrieved ${repoLabels.length} from Github`);
-  for (const { description, label } of managedLabels2) {
-    await core.group(`Syncing label: ${label}`, async () => {
-      const matchedLabel = repoLabels.find(({ name }) => name === label);
+  for (const { description, name, color } of managedLabels2) {
+    await core.group(`Syncing label: ${name}`, async () => {
+      const matchedLabel = repoLabels.find((label) => label.name === name);
       if (matchedLabel === void 0) {
         core.info("Adding label to repository");
-        await github.issues.createLabel({ ...repo, name: label, description });
+        await github.issues.createLabel({ ...repo, name, description, color });
         return;
       }
-      if ((description === void 0 || description === matchedLabel.description) && (label === void 0 || label === matchedLabel.name)) {
+      if ((description === void 0 || description === matchedLabel.description) && (name === void 0 || name === matchedLabel.name) && (color === void 0 || color === matchedLabel.color)) {
         core.info("Skipping, label already in sync");
         return;
       }
       core.info("Updating label in repository");
       await github.issues.updateLabel({
         ...repo,
-        new_name: label,
+        new_name: name,
         name: matchedLabel.name,
-        description
+        description,
+        color
       });
     });
   }
