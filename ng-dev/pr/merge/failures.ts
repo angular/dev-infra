@@ -13,8 +13,11 @@ export class FatalMergeToolError extends Error {
   }
 }
 
-/** Error class that can be thrown when the user aborted the merge manually. */
-export class UserAbortedMergeToolError extends Error {}
+export class UserAbortedMergeToolError extends FatalMergeToolError {
+  constructor() {
+    super('Tool exited due to user aborting merge attempt.');
+  }
+}
 
 export class MismatchedTargetBranchFatalError extends FatalMergeToolError {
   constructor(allowedBranches: string[]) {
@@ -40,5 +43,11 @@ export class MergeConflictsFatalError extends FatalMergeToolError {
       `Could not merge pull request into the following branches due to merge ` +
         `conflicts: ${failedBranches.join(', ')}. Please rebase the PR or update the target label.`,
     );
+  }
+}
+
+export class PullRequestValidationError extends FatalMergeToolError {
+  constructor() {
+    super('Tool exited as at least one pull request validation error was discovered.');
   }
 }

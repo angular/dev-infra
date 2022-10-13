@@ -9,7 +9,7 @@
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import semver from 'semver';
 import inquirer from 'inquirer';
-import {green, Log, red, yellow} from '../../utils/logging.js';
+import {bold, green, Log, red, yellow} from '../../utils/logging.js';
 
 import {PullRequestConfig} from '../config/index.js';
 import {
@@ -28,8 +28,13 @@ import {
   getNextBranchName,
 } from '../../release/versioning/index.js';
 import {Prompt} from '../../utils/prompt.js';
-import {FatalMergeToolError, UserAbortedMergeToolError} from './failures.js';
+import {
+  FatalMergeToolError,
+  PullRequestValidationError,
+  UserAbortedMergeToolError,
+} from './failures.js';
 import {PullRequestValidationConfig} from '../common/validation/validation-config.js';
+import {PullRequestValidationFailure} from '../common/validation/validation-failure.js';
 
 export interface PullRequestMergeFlags {
   branchPrompt: boolean;
@@ -85,6 +90,25 @@ export class MergeTool {
     await this.confirmMergeAccess();
 
     const pullRequest = await loadAndValidatePullRequest(this, prNumber, validationConfig);
+
+    if (pullRequest.validationFailures.length > 0) {
+      Log.error(`Pull request did not pass one or more validation checks. Error:`);
+
+      for (const failure of pullRequest.validationFailures) {
+        Log.error(` -> ${bold(failure.message)}`);
+      }
+      Log.info();
+
+      if (pullRequest.validationFailures.some((failure) => !failure.canBeForceIgnored)) {
+        Log.debug('Discovered a fatal error, which cannot be forced');
+        throw new PullRequestValidationError();
+      }
+
+      Log.info(yellow(`All discovered validations are non-fatal and can be forcibly ignored.`));
+      if (!(await Prompt.confirm('Do you want to forcibly ignore these validation failures?'))) {
+        throw new PullRequestValidationError();
+      }
+    }
 
     if (this.flags.forceManualBranches) {
       await this.updatePullRequestTargetedBranchesFromPrompt(pullRequest);
