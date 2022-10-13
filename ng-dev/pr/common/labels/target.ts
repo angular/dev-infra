@@ -5,26 +5,26 @@ interface TargetLabel extends Label {}
 export const targetLabels = createTypedObject<TargetLabel>()({
   TARGET_FEATURE: {
     description: 'This PR is targeted for a feature branch (outside of main and semver branches)',
-    label: 'target: feature',
+    name: 'target: feature',
   },
   TARGET_LTS: {
     description: 'This PR is targeting a version currently in long-term support',
-    label: 'target: lts',
+    name: 'target: lts',
   },
   TARGET_MAJOR: {
     description: 'This PR is targeted for the next major release',
-    label: 'target: major',
+    name: 'target: major',
   },
   TARGET_MINOR: {
     description: 'This PR is targeted for the next minor release',
-    label: 'target: minor',
+    name: 'target: minor',
   },
   TARGET_PATCH: {
     description: 'This PR is targeted for the next patch release',
-    label: 'target: patch',
+    name: 'target: patch',
   },
   TARGET_RC: {
     description: 'This PR is targeted for the next release-candidate',
-    label: 'target: rc',
+    name: 'target: rc',
   },
 });

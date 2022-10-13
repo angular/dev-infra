@@ -28,7 +28,7 @@ class Validation extends PullRequestValidation {
     releaseTrains: ActiveReleaseTrains,
     labelsOnPullRequest: string[],
   ) {
-    if (labelsOnPullRequest.includes(mergeLabels.MERGE_FIX_COMMIT_MESSAGE.label)) {
+    if (labelsOnPullRequest.includes(mergeLabels.MERGE_FIX_COMMIT_MESSAGE.name)) {
       Log.debug(
         'Skipping commit message target label validation because the commit message fixup label is ' +
           'applied.',

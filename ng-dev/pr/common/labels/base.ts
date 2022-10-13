@@ -5,7 +5,9 @@ export const createTypedObject =
 
 export interface Label {
   /* The label string. */
-  label: string;
+  name: string;
   /* The label description. */
   description: string;
+  /* The hexadecimal color code for the label, without the leading */
+  color?: string;
 }

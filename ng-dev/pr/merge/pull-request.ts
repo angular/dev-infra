@@ -104,8 +104,8 @@ export async function loadAndValidatePullRequest(
   const requiredBaseSha =
     config.pullRequest.requiredBaseCommits &&
     config.pullRequest.requiredBaseCommits[githubTargetBranch];
-  const needsCommitMessageFixup = labels.includes(mergeLabels.MERGE_FIX_COMMIT_MESSAGE.label);
-  const hasCaretakerNote = labels.includes(mergeLabels.MERGE_CARETAKER_NOTE.label);
+  const needsCommitMessageFixup = labels.includes(mergeLabels.MERGE_FIX_COMMIT_MESSAGE.name);
+  const hasCaretakerNote = labels.includes(mergeLabels.MERGE_CARETAKER_NOTE.name);
 
   // The parent of the first commit in a PR is the base SHA.
   const baseSha = prData.baseCommitInfo.nodes[0].commit.parents.nodes[0].oid;
