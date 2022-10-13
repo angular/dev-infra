@@ -10,7 +10,7 @@ type GithubLabel =
 
 /** Synchronize the provided managed labels with the given repository. */
 async function syncLabelsInRepo(github: Octokit, repoName: string, managedLabels: Label[]) {
-  core.startGroup(`Syncing ${repoName}`);
+  core.startGroup(`Repository: ${repoName}`);
   /** The current repository name and owner for usage in the Github API. */
   const repo = {repo: repoName, owner: context.repo.owner};
 
@@ -23,39 +23,37 @@ async function syncLabelsInRepo(github: Octokit, repoName: string, managedLabels
   // NOTE: Not all labels in repositories are managed. Labels which are not included or managed in
   // our tooling definitions and configurations are ignored entirely by tooling.
   for (const {description, name, color} of managedLabels) {
-    await core.group(`Syncing label: ${name}`, async () => {
-      /** The label from Github if a match is found. */
-      const matchedLabel = repoLabels.find((label: GithubLabel) => label.name === name);
+    /** The label from Github if a match is found. */
+    const matchedLabel = repoLabels.find((label: GithubLabel) => label.name === name);
 
-      // When no matched label is found, Github doesn't currently have the label we intend to sync,
-      // we create the label via the API directly.
-      if (matchedLabel === undefined) {
-        core.info('Adding label to repository');
-        await github.issues.createLabel({...repo, name, description, color});
-        return;
-      }
+    // When no matched label is found, Github doesn't currently have the label we intend to sync,
+    // we create the label via the API directly.
+    if (matchedLabel === undefined) {
+      core.info(`${name}: Adding label to repository`);
+      await github.issues.createLabel({...repo, name, description, color});
+      return;
+    }
 
-      // If a description and name of the label are defined for the managed label, and they match
-      // the current name and description of the label from Github, everything is in sync.
-      if (
-        (description === undefined || description === matchedLabel.description) &&
-        (name === undefined || name === matchedLabel.name) &&
-        (color === undefined || color === matchedLabel.color)
-      ) {
-        core.info('Skipping, label already in sync');
-        return;
-      }
+    // If a description and name of the label are defined for the managed label, and they match
+    // the current name and description of the label from Github, everything is in sync.
+    if (
+      (description === undefined || description === matchedLabel.description) &&
+      (name === undefined || name === matchedLabel.name) &&
+      (color === undefined || color === matchedLabel.color)
+    ) {
+      core.info(`${name}: Skipping, alraedy in sync`);
+      return;
+    }
 
-      // Since the synced and new label cases have been handled, the only remaining action would be
-      // to update the label to bring the name and description in sync without expectations.
-      core.info('Updating label in repository');
-      await github.issues.updateLabel({
-        ...repo,
-        new_name: name,
-        name: matchedLabel.name,
-        description,
-        color,
-      });
+    // Since the synced and new label cases have been handled, the only remaining action would be
+    // to update the label to bring the name and description in sync without expectations.
+    core.info(`${name}: Updating in repository`);
+    await github.issues.updateLabel({
+      ...repo,
+      new_name: name,
+      name: matchedLabel.name,
+      description: description,
+      color,
     });
   }
   core.endGroup();
