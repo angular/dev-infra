@@ -1,0 +1,26 @@
+name: Assistant to the Branch Manager
+
+# Because the branch manager does not work for dev-infra, due to not using target branches, we don't
+# actually use any automatic triggers.
+on:
+  repository_dispatch:
+  # push:
+  # pull_request_target:
+  #   types: [opened, synchronize, reopened, ready_for_review, labeled]
+
+# Declare default permissions as read only.
+permissions: read-all
+
+jobs:
+  assistant_to_the_branch_manager:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
+        with:
+          # Setting `persist-credentials: false` prevents the github-action account from being the
+          # account that is attempted to be used for authentication, instead the remote is set to
+          # an authenticated URL.
+          persist-credentials: false
+      - uses: ./github-actions/branch-manager
+        with:
+          angular-robot-key: ${{ secrets.ANGULAR_ROBOT_PRIVATE_KEY }}
