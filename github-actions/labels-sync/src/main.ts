@@ -31,7 +31,7 @@ async function syncLabelsInRepo(github: Octokit, repoName: string, managedLabels
     if (matchedLabel === undefined) {
       core.info(`${name}: Adding label to repository`);
       await github.issues.createLabel({...repo, name, description, color});
-      return;
+      continue;
     }
 
     // If a description and name of the label are defined for the managed label, and they match
@@ -42,7 +42,7 @@ async function syncLabelsInRepo(github: Octokit, repoName: string, managedLabels
       (color === undefined || color === matchedLabel.color)
     ) {
       core.info(`${name}: Skipping, already in sync`);
-      return;
+      continue;
     }
 
     // Since the synced and new label cases have been handled, the only remaining action would be

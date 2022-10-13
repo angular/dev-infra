@@ -23517,11 +23517,11 @@ async function syncLabelsInRepo(github, repoName, managedLabels2) {
     if (matchedLabel === void 0) {
       core.info(`${name}: Adding label to repository`);
       await github.issues.createLabel({ ...repo, name, description, color });
-      return;
+      continue;
     }
     if ((description === void 0 || description === matchedLabel.description) && (name === void 0 || name === matchedLabel.name) && (color === void 0 || color === matchedLabel.color)) {
       core.info(`${name}: Skipping, already in sync`);
-      return;
+      continue;
     }
     core.info(`${name}: Updating in repository`);
     await github.issues.updateLabel({
