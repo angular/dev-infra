@@ -1,0 +1,27 @@
+name: Assistant to the Branch Manager
+
+# Because the branch manager does not work for dev-infra, due to not using target branches, we don't
+# actually use any automatic triggers. Repository dispatch is included for our own testing use and
+# ensuring a valid config.
+on:
+  repository_dispatch:
+  # push:
+  # pull_request_target:
+  #   types: [opened, synchronize, reopened, ready_for_review, labeled]
+
+# Declare default permissions as read only.
+permissions: read-all
+
+jobs:
+  assistant_to_the_branch_manager:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
+        with:
+          # Setting persist-credentials instructs actions/checkout not to persist the credentials
+          # in configuration or environment.  Since we don't rely on the credentials used for
+          # checkout this is an improved security measure.
+          persist-credentials: false
+      - uses: ./github-actions/branch-manager
+        with:
+          angular-robot-key: ${{ secrets.ANGULAR_ROBOT_PRIVATE_KEY }}

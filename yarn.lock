@@ -354,6 +354,7 @@ __metadata:
     "@octokit/request-error": ^3.0.0
     "@octokit/rest": ^19.0.0
     "@octokit/types": ^8.0.0
+    "@octokit/webhooks-definitions": ^3.67.3
     "@octokit/webhooks-types": ^6.0.0
     "@openid/appauth": ^1.3.1
     "@types/babel__core": ^7.1.19
@@ -4738,6 +4739,13 @@ __metadata:
   dependencies:
     "@octokit/openapi-types": ^14.0.0
   checksum: 1a0197b2c4c522ac90f145e02b3f8cb048a47f71c2c6bdbf021a03db7dd30ca92a899c0186acb401337f218efe44e60d33cc1cc68715b622bb75bc1a4e79515d
+  languageName: node
+  linkType: hard
+
+"@octokit/webhooks-definitions@npm:^3.67.3":
+  version: 3.68.1
+  resolution: "@octokit/webhooks-definitions@npm:3.68.1"
+  checksum: ce479223ab11235c5f59e40bb8ef4fdbc161afd77de0def540d3ce4dc25f2d5beddf159fcee6a585e4aa064ae2f69ae5c87826f6a2a38dc576a175d6a2f76a75
   languageName: node
   linkType: hard
 
