@@ -69,8 +69,7 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
         return false;
       }
       if (e instanceof PullRequestValidationFailure) {
-        Log.error(`Pull request did not pass validation check. Error:`);
-        Log.error(` -> ${bold(e.message)}`);
+        Log.error(`Pull request did not pass validation check. See above for specific errors`);
         return false;
       }
 

@@ -19,6 +19,7 @@ import {PullRequestValidationConfig} from '../common/validation/validation-confi
 import {assertValidPullRequest} from '../common/validation/validate-pull-request.js';
 import {TEMP_PR_HEAD_BRANCH} from './strategies/strategy.js';
 import {mergeLabels} from '../common/labels.js';
+import {PullRequestValidationFailure} from '../common/validation/validation-failure.js';
 
 /** Interface that describes a pull request. */
 export interface PullRequest {
@@ -46,6 +47,8 @@ export interface PullRequest {
   baseSha: string;
   /** Git revision range that matches the pull request commits. */
   revisionRange: string;
+
+  validationFailures: PullRequestValidationFailure[];
 }
 
 /**
@@ -99,7 +102,13 @@ export async function loadAndValidatePullRequest(
     );
   }
 
-  await assertValidPullRequest(prData, validationConfig, config, activeReleaseTrains, target);
+  const validationFailures = await assertValidPullRequest(
+    prData,
+    validationConfig,
+    config,
+    activeReleaseTrains,
+    target,
+  );
 
   const requiredBaseSha =
     config.pullRequest.requiredBaseCommits &&
@@ -127,6 +136,7 @@ export async function loadAndValidatePullRequest(
     baseSha,
     revisionRange,
     hasCaretakerNote,
+    validationFailures,
     targetBranches: target.branches,
     title: prData.title,
     commitCount: prData.commits.totalCount,

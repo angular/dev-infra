@@ -12,8 +12,10 @@ import {PullRequestValidationConfig} from './validation-config.js';
 export class PullRequestValidationFailure {
   constructor(
     /** Human-readable message for the failure */
-    public message: string,
+    public readonly message: string,
     /** Validation config name for the failure. */
-    public validationName: keyof PullRequestValidationConfig,
+    public readonly validationName: keyof PullRequestValidationConfig,
+    /** Validation config name for the failure. */
+    public readonly canBeForceIgnored: boolean,
   ) {}
 }

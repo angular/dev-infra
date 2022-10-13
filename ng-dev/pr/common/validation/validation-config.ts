@@ -48,29 +48,22 @@ export function createPullRequestValidation<T extends PullRequestValidation>(
     async run(
       validationConfig: PullRequestValidationConfig,
       ...args: Parameters<T['assert']>
-    ): Promise<void> {
+    ): Promise<PullRequestValidationFailure | null> {
       if (validationConfig[name]) {
         const validation = new (getValidationCtor())(
           name,
-          (message) => new PullRequestValidationFailure(message, name),
+          (message) => new PullRequestValidationFailure(message, name, canBeForceIgnored),
         );
         try {
           validation.assert(args);
         } catch (e) {
-          if (e instanceof PullRequestValidationFailure && canBeForceIgnored) {
-            Log.error(`Pull request did not pass validation check. Error:`);
-            Log.error(` -> ${bold(e.message)}`);
-            Log.info();
-            Log.info(yellow(`This validation is non-fatal and can be forcibly ignored.`));
-
-            if (await Prompt.confirm('Do you want to forcibly ignore this validation?')) {
-              return;
-            }
+          if (e instanceof PullRequestValidationFailure) {
+            return e;
           }
-
           throw e;
         }
       }
+      return null;
     },
   };
 }
