@@ -23507,31 +23507,29 @@ async function revokeActiveInstallationToken(githubOrToken) {
 
 // 
 async function syncLabelsInRepo(github, repoName, managedLabels2) {
-  core.startGroup(`Syncing ${repoName}`);
+  core.startGroup(`Repository: ${repoName}`);
   const repo = { repo: repoName, owner: import_github2.context.repo.owner };
   core.debug(`Requesting labels`);
   const repoLabels = await github.paginate(github.issues.listLabelsForRepo, import_github2.context.repo);
   core.debug(`Retrieved ${repoLabels.length} from Github`);
   for (const { description, name, color } of managedLabels2) {
-    await core.group(`Syncing label: ${name}`, async () => {
-      const matchedLabel = repoLabels.find((label) => label.name === name);
-      if (matchedLabel === void 0) {
-        core.info("Adding label to repository");
-        await github.issues.createLabel({ ...repo, name, description, color });
-        return;
-      }
-      if ((description === void 0 || description === matchedLabel.description) && (name === void 0 || name === matchedLabel.name) && (color === void 0 || color === matchedLabel.color)) {
-        core.info("Skipping, label already in sync");
-        return;
-      }
-      core.info("Updating label in repository");
-      await github.issues.updateLabel({
-        ...repo,
-        new_name: name,
-        name: matchedLabel.name,
-        description,
-        color
-      });
+    const matchedLabel = repoLabels.find((label) => label.name === name);
+    if (matchedLabel === void 0) {
+      core.info(`${name}: Adding label to repository`);
+      await github.issues.createLabel({ ...repo, name, description, color });
+      return;
+    }
+    if ((description === void 0 || description === matchedLabel.description) && (name === void 0 || name === matchedLabel.name) && (color === void 0 || color === matchedLabel.color)) {
+      core.info(`${name}: Skipping, alraedy in sync`);
+      return;
+    }
+    core.info(`${name}: Updating in repository`);
+    await github.issues.updateLabel({
+      ...repo,
+      new_name: name,
+      name: matchedLabel.name,
+      description,
+      color
     });
   }
   core.endGroup();
