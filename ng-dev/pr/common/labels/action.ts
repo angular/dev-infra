@@ -9,7 +9,7 @@ export const actionLabels = createTypedObject<ActionLabel>()({
   },
   ACTION_CLEANUP: {
     description:
-      'The PR is in need of cleanup, either due to needing a rebase or in response to comments from a review',
+      'The PR is in need of cleanup, either due to needing a rebase or in response to comments from reviews',
     label: 'action: cleanup',
   },
   ACTION_PRESUBMIT: {
