@@ -17,6 +17,7 @@ ts_library(
         "//bazel/browsers/update-script:__pkg__",
         "//github-actions/create-pr-for-changes/lib:__subpackages__",
         "//github-actions/slash-commands/lib:__subpackages__",
+        "//github-actions/branch-manager/lib:__subpackages__",
         "//ng-dev:__subpackages__",
         "//tools/jasmine:__pkg__",
     ],

@@ -86,14 +86,14 @@ export class MergeTool {
   async validate() {
     this.pullRequest = await loadAndValidatePullRequest(this, this.prNumber, this.validationConfig);
 
-    if (pullRequest.validationFailures.length > 0) {
+    if (this.pullRequest.validationFailures.length > 0) {
       Log.error(`Pull request did not pass one or more validation checks. Error:`);
 
-      for (const failure of pullRequest.validationFailures) {
+      for (const failure of this.pullRequest.validationFailures) {
         Log.error(` -> ${bold(failure.message)}`);
       }
       Log.info();
-      if (pullRequest.validationFailures.find((failure) => !failure.canBeForceIgnored)) {
+      if (this.pullRequest.validationFailures.find((failure) => !failure.canBeForceIgnored)) {
         Log.info(yellow(`All discovered validations are non-fatal and can be forcibly ignored.`));
 
         if (await Prompt.confirm('Do you want to forcibly ignore these validation failures?')) {
@@ -101,7 +101,7 @@ export class MergeTool {
         }
       }
 
-      throw pullRequest.validationFailures[0];
+      throw this.pullRequest.validationFailures[0];
     }
 
     if (this.flags.forceManualBranches) {

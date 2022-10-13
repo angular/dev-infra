@@ -30,14 +30,13 @@ async function getJwtAuthedAppClient([appId, inputKey]: GithubAppMetadata) {
  * act on a repository, unlike the github-actions robot account which implicitly has access based on
  * where it was  executed from.
  */
-export async function getAuthTokenFor(app: GithubAppMetadata): Promise<string> {
+export async function getAuthTokenFor(app: GithubAppMetadata, useOrgInstallation: boolean = false): Promise<string> {
   const github = await getJwtAuthedAppClient(app);
 
-  const {id: installationId} = (
-    await github.apps.getRepoInstallation({
-      ...context.repo,
-    })
-  ).data;
+  const {id: installationId} = (await 
+    (useOrgInstallation ? 
+      github.apps.getOrgInstallation({org: context.repo.owner}) :
+      github.apps.getRepoInstallation({...context.repo}))).data;
 
   const {token} = (
     await github.rest.apps.createInstallationAccessToken({

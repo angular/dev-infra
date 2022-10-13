@@ -64,8 +64,9 @@ export async function loadAndValidatePullRequest(
   {git, config}: MergeTool,
   prNumber: number,
   validationConfig: PullRequestValidationConfig,
+  prDataFromGithub = fetchPullRequestFromGithub(git, prNumber),
 ): Promise<PullRequest> {
-  const prData = await fetchPullRequestFromGithub(git, prNumber);
+  const prData = await prDataFromGithub;
 
   if (prData === null) {
     throw new FatalMergeToolError('Pull request could not be found.');

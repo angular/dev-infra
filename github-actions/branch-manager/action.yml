@@ -1,0 +1,13 @@
+name: 'Assistant to the Branch Manager'
+description: 'Automatically determines if active pull requests are mergable to all of their target branches.'
+author: 'Angular'
+inputs:
+  angular-robot-key:
+    description: 'The private key for the Angular Robot Github app.'
+    required: true
+  pr:
+    description: 'The pr'
+    required: false
+runs:
+  using: 'node16'
+  main: 'main.js'

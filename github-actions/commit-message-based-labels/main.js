@@ -32224,11 +32224,9 @@ async function getJwtAuthedAppClient([appId, inputKey]) {
     auth: { appId, privateKey }
   });
 }
-async function getAuthTokenFor(app) {
+async function getAuthTokenFor(app, useOrgInstallation = false) {
   const github = await getJwtAuthedAppClient(app);
-  const { id: installationId } = (await github.apps.getRepoInstallation({
-    ...import_github.context.repo
-  })).data;
+  const { id: installationId } = (await (useOrgInstallation ? github.apps.getOrgInstallation({ org: import_github.context.repo.owner }) : github.apps.getRepoInstallation({ ...import_github.context.repo }))).data;
   const { token } = (await github.rest.apps.createInstallationAccessToken({
     installation_id: installationId
   })).data;

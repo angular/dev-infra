@@ -1,0 +1,28 @@
+load("//tools:defaults.bzl", "ts_library")
+
+package(default_visibility = ["//github-actions/branch-manager:__subpackages__"])
+
+exports_files([
+    "main.ts",
+])
+
+ts_library(
+    name = "lib",
+    srcs = glob(
+        ["*.ts"],
+        exclude = ["*.spec.ts"],
+    ),
+    deps = [
+        "//github-actions:utils",
+        "//ng-dev/pr/merge",
+        "//ng-dev/pr/config",
+        "//ng-dev/pr/common",
+        "//ng-dev/pr/common:labels",
+        "//ng-dev/utils",
+        "@npm//typed-graphqlify",
+        "@npm//@actions/core",
+        "@npm//@actions/github",
+        "@npm//@octokit/rest",
+        "@npm//@types/node",
+    ],
+)
