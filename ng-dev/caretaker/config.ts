@@ -16,6 +16,11 @@ export interface CaretakerConfig {
    * name "<group-name>-roster" containing a list of all users eligible for the caretaker group.
    * */
   caretakerGroup?: string;
+  /**
+   * Project-relative path to a config file describing how the project is synced into Google.
+   * The configuration file is expected to be valid JSONC and match {@see GoogleSyncConfig}.
+   */
+  g3SyncConfigPath?: string;
 }
 
 /** Retrieve and validate the config as `CaretakerConfig`. */

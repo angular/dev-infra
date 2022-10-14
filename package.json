@@ -119,6 +119,7 @@
     "jasmine": "~4.4.0",
     "jasmine-core": "~4.4.0",
     "jsdom": "^20.0.0",
+    "jsonc-parser": "^3.2.0",
     "karma": "^6.3.15",
     "karma-chrome-launcher": "^3.1.0",
     "karma-coverage": "~2.2.0",
