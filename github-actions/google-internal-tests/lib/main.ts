@@ -1,7 +1,8 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
-import minimatch from 'minimatch';
+import {readConfigFile} from '../../../ng-dev/caretaker/g3-sync-config.js';
+import path from 'path';
 
 const syncBranch = 'main';
 const statusContext = 'google-internal-tests';
@@ -23,8 +24,8 @@ async function main() {
 
   const githubToken = core.getInput('github-token', {required: true});
   const runTestGuideURL = core.getInput('run-tests-guide-url', {required: false});
-  const syncedFilesRaw = core.getInput('synced-files', {required: true});
-  const alwaysExternalFilesRaw = core.getInput('always-external-files', {required: false});
+  const syncConfigPath = path.resolve(core.getInput('sync-config', {required: true}));
+  const syncConfig = await readConfigFile(syncConfigPath);
 
   const prNum = context.payload.pull_request!.number;
   const prHeadSHA = context.payload.pull_request!.head!.sha;
@@ -34,9 +35,6 @@ async function main() {
     core.info(`Skipping Google Internal Tests action for PRs not targeting: ${syncBranch}`);
     return;
   }
-
-  const syncedFiles = constructPatterns(syncedFilesRaw);
-  const alwaysExternalFiles = constructPatterns(alwaysExternalFilesRaw);
 
   const github = new Octokit({auth: githubToken});
   const existingGoogleStatus = await findExistingTestStatus(github, prHeadSHA);
@@ -54,11 +52,7 @@ async function main() {
 
   let affectsGoogle = false;
   for (const f of files) {
-    // Perf: Skip matching the external file patterns if the file is not even synced.
-    const isSynced = syncedFiles.some((p) => p.match(f.filename));
-    const isExcluded = !isSynced || alwaysExternalFiles.some((p) => p.match(f.filename));
-
-    if (isSynced && !isExcluded) {
+    if (syncConfig.matchFn(f.filename)) {
       affectsGoogle = true;
       break;
     }
@@ -84,20 +78,6 @@ async function main() {
     context: statusContext,
     sha: prHeadSHA,
   });
-}
-
-function constructPatterns(rawPatterns: string): minimatch.IMinimatch[] {
-  const patterns: minimatch.IMinimatch[] = [];
-  for (let p of rawPatterns.split(/\r?\n/g)) {
-    p = p.trim();
-    // Support comments, lines starting with a hashtag.
-    if (p.startsWith('#')) {
-      continue;
-    } else if (p !== '') {
-      patterns.push(new minimatch.Minimatch(p));
-    }
-  }
-  return patterns;
 }
 
 async function findExistingTestStatus(
