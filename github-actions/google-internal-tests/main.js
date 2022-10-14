@@ -18754,6 +18754,8 @@ function printParseErrorCode(code) {
 }
 
 // 
+var InvalidGoogleSyncConfigError = class extends Error {
+};
 function transformConfigIntoMatcher(config) {
   const syncedFilePatterns = config.syncedFilePatterns.map((p) => new import_minimatch.default.Minimatch(p));
   const alwaysExternalFilePatterns = config.alwaysExternalFilePatterns.map((p) => new import_minimatch.default.Minimatch(p));
@@ -18764,7 +18766,7 @@ async function readConfigFile(absolutePath) {
   const errors = [];
   const config = parse4(content, errors);
   if (errors.length !== 0) {
-    throw new Error(`Google Sync Configuration is invalid: ` + errors.map((e) => printParseErrorCode(e.error)).join("\n"));
+    throw new InvalidGoogleSyncConfigError(`Google Sync Configuration is invalid: ` + errors.map((e) => printParseErrorCode(e.error)).join("\n"));
   }
   return {
     config,
