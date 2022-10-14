@@ -20,7 +20,7 @@ export abstract class BaseModule<Data> {
     protected config: {caretaker: CaretakerConfig; github: GithubConfig},
   ) {}
 
-  /** Asyncronously retrieve data for the module. */
+  /** Asynchronously retrieve data for the module. */
   protected abstract retrieveData(): Promise<Data>;
 
   /** Print the information discovered for the module to the terminal. */

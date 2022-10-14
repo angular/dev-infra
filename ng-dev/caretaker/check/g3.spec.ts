@@ -6,16 +6,18 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {SpawnSyncReturns} from 'child_process';
+import fs from 'fs';
+import path from 'path';
 
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {GitClient} from '../../utils/git/git-client.js';
 import {Log} from '../../utils/logging.js';
 import {installVirtualGitClientSpies, mockNgDevConfig} from '../../utils/testing/index.js';
+import {GoogleSyncConfig} from '../g3-sync-config.js';
 
 import {G3Module, G3StatsData} from './g3.js';
 
 describe('G3Module', () => {
-  let getG3FileIncludeAndExcludeLists: jasmine.Spy;
   let getLatestShas: jasmine.Spy;
   let getDiffStats: jasmine.Spy;
   let infoSpy: jasmine.Spy;
@@ -23,19 +25,20 @@ describe('G3Module', () => {
 
   beforeEach(async () => {
     installVirtualGitClientSpies();
-    getG3FileIncludeAndExcludeLists = spyOn(
-      G3Module.prototype,
-      'getG3FileIncludeAndExcludeLists' as any,
-    ).and.returnValue(null);
     getLatestShas = spyOn(G3Module.prototype, 'getLatestShas' as any).and.returnValue(null);
     getDiffStats = spyOn(G3Module.prototype, 'getDiffStats' as any).and.returnValue(null);
     infoSpy = spyOn(Log, 'info');
     git = await AuthenticatedGitClient.get();
   });
 
+  function setupFakeSyncConfig(config: GoogleSyncConfig): string {
+    const configFileName = 'sync-test-conf.json';
+    fs.writeFileSync(path.join(git.baseDir, configFileName), JSON.stringify(config));
+    return configFileName;
+  }
+
   describe('gathering stats', () => {
-    it('unless the g3 merge config is not defined in the angular robot file', async () => {
-      getG3FileIncludeAndExcludeLists.and.returnValue(null);
+    it('unless the g3 merge config is not defined in the caretaker config', async () => {
       getLatestShas.and.returnValue({g3: 'abc123', master: 'zxy987'});
       const module = new G3Module(git, {caretaker: {}, ...mockNgDevConfig});
 
@@ -45,8 +48,15 @@ describe('G3Module', () => {
 
     it('unless the branch shas are not able to be retrieved', async () => {
       getLatestShas.and.returnValue(null);
-      getG3FileIncludeAndExcludeLists.and.returnValue({include: ['file1'], exclude: []});
-      const module = new G3Module(git, {caretaker: {}, ...mockNgDevConfig});
+      const module = new G3Module(git, {
+        caretaker: {
+          g3SyncConfigPath: setupFakeSyncConfig({
+            syncedFilePatterns: ['file1'],
+            alwaysExternalFilePatterns: [],
+          }),
+        },
+        ...mockNgDevConfig,
+      });
 
       expect(getDiffStats).not.toHaveBeenCalled();
       expect(await module.data).toBe(undefined);
@@ -54,7 +64,6 @@ describe('G3Module', () => {
 
     it('for the files which are being synced to g3', async () => {
       getLatestShas.and.returnValue({g3: 'abc123', master: 'zxy987'});
-      getG3FileIncludeAndExcludeLists.and.returnValue({include: ['project1/*'], exclude: []});
       getDiffStats.and.callThrough();
       spyOn(GitClient.prototype, 'run').and.callFake((args: string[]): any => {
         const output: Partial<SpawnSyncReturns<string>> = {};
@@ -67,7 +76,15 @@ describe('G3Module', () => {
         return output;
       });
 
-      const module = new G3Module(git, {caretaker: {}, ...mockNgDevConfig});
+      const module = new G3Module(git, {
+        caretaker: {
+          g3SyncConfigPath: setupFakeSyncConfig({
+            syncedFilePatterns: ['project1/*'],
+            alwaysExternalFilePatterns: [],
+          }),
+        },
+        ...mockNgDevConfig,
+      });
       const {insertions, deletions, files, commits} = (await module.data) as G3StatsData;
 
       expect(insertions).toBe(12);
@@ -78,7 +95,6 @@ describe('G3Module', () => {
 
     it('should not throw when there is no diff between the g3 and main branch', async () => {
       getLatestShas.and.returnValue({g3: 'abc123', master: 'zxy987'});
-      getG3FileIncludeAndExcludeLists.and.returnValue({include: ['project1/*'], exclude: []});
       getDiffStats.and.callThrough();
 
       spyOn(GitClient.prototype, 'run').and.callFake((args: string[]): any => {
@@ -92,7 +108,15 @@ describe('G3Module', () => {
         return output;
       });
 
-      const module = new G3Module(git, {caretaker: {}, ...mockNgDevConfig});
+      const module = new G3Module(git, {
+        caretaker: {
+          g3SyncConfigPath: setupFakeSyncConfig({
+            syncedFilePatterns: ['project1/*'],
+            alwaysExternalFilePatterns: [],
+          }),
+        },
+        ...mockNgDevConfig,
+      });
       const {insertions, deletions, files, commits} = (await module.data) as G3StatsData;
 
       expect(insertions).toBe(0);

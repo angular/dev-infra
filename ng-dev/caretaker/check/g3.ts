@@ -6,11 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {existsSync, readFileSync} from 'fs';
-import multimatch from 'multimatch';
-import {join} from 'path';
-import {parse as parseYaml} from 'yaml';
 import {bold, Log} from '../../utils/logging.js';
+import {readConfigFile, SyncFileMatchFn} from '../g3-sync-config.js';
+import path from 'path';
 
 import {BaseModule} from './base.js';
 
@@ -24,14 +22,14 @@ export interface G3StatsData {
 
 export class G3Module extends BaseModule<G3StatsData | void> {
   override async retrieveData() {
-    const toCopyToG3 = this.getG3FileIncludeAndExcludeLists();
+    const syncFileMatchFn = await this.getG3SyncFileMatchFn();
     const latestSha = this.getLatestShas();
 
-    if (toCopyToG3 === null || latestSha === null) {
+    if (syncFileMatchFn === null || latestSha === null) {
       return;
     }
 
-    return this.getDiffStats(latestSha.g3, latestSha.main, toCopyToG3.include, toCopyToG3.exclude);
+    return this.getDiffStats(latestSha.g3, latestSha.main, syncFileMatchFn);
   }
 
   override async printToTerminal() {
@@ -73,12 +71,7 @@ export class G3Module extends BaseModule<G3StatsData | void> {
    * Get git diff stats between main and g3, for all files and filtered to only g3 affecting
    * files.
    */
-  private getDiffStats(
-    g3Ref: string,
-    mainRef: string,
-    includeFiles: string[],
-    excludeFiles: string[],
-  ) {
+  private getDiffStats(g3Ref: string, mainRef: string, syncFileMatchFn: SyncFileMatchFn) {
     /** The diff stats to be returned. */
     const stats = {
       insertions: 0,
@@ -117,7 +110,7 @@ export class G3Module extends BaseModule<G3StatsData | void> {
       // Add each line's value to the diff stats, and conditionally to the g3
       // stats as well if the file name is included in the files synced to g3.
       .forEach(([insertions, deletions, fileName]) => {
-        if (this.checkMatchAgainstIncludeAndExclude(fileName, includeFiles, excludeFiles)) {
+        if (syncFileMatchFn(fileName)) {
           stats.insertions += insertions;
           stats.deletions += deletions;
           stats.files += 1;
@@ -126,35 +119,19 @@ export class G3Module extends BaseModule<G3StatsData | void> {
 
     return stats;
   }
-  /** Determine whether the file name passes both include and exclude checks. */
-  private checkMatchAgainstIncludeAndExclude(file: string, includes: string[], excludes: string[]) {
-    return (
-      multimatch.call(undefined, file, includes).length >= 1 &&
-      multimatch.call(undefined, file, excludes).length === 0
-    );
-  }
 
-  private getG3FileIncludeAndExcludeLists() {
-    const angularRobotFilePath = join(this.git.baseDir, '.github/angular-robot.yml');
-    if (!existsSync(angularRobotFilePath)) {
-      Log.debug('No angular robot configuration file exists, skipping.');
-      return null;
-    }
-    /** The configuration defined for the angular robot. */
-    const robotConfig = parseYaml(readFileSync(angularRobotFilePath).toString());
-    /** The files to be included in the g3 sync. */
-    const include: string[] = robotConfig?.merge?.g3Status?.include || [];
-    /** The files to be expected in the g3 sync. */
-    const exclude: string[] = robotConfig?.merge?.g3Status?.exclude || [];
-
-    if (include.length === 0 && exclude.length === 0) {
-      Log.debug(
-        'No g3Status include or exclude lists are defined in the angular robot configuration',
-      );
+  private async getG3SyncFileMatchFn(): Promise<null | SyncFileMatchFn> {
+    if (this.config.caretaker.g3SyncConfigPath === undefined) {
+      Log.debug('No Google Sync configuration specified.');
       return null;
     }
 
-    return {include, exclude};
+    const configPath = path.join(this.git.baseDir, this.config.caretaker.g3SyncConfigPath);
+    const {matchFn, config} = await readConfigFile(configPath);
+    if (config.syncedFilePatterns.length === 0) {
+      Log.warn('Google Sync configuration does not specify any files being synced.');
+    }
+    return matchFn;
   }
 
   private getLatestShas() {
