@@ -98,15 +98,16 @@ export class MergeTool {
         Log.error(` -> ${bold(failure.message)}`);
       }
       Log.info();
-      if (pullRequest.validationFailures.some((failure) => !failure.canBeForceIgnored)) {
-        Log.info(yellow(`All discovered validations are non-fatal and can be forcibly ignored.`));
 
-        if (await Prompt.confirm('Do you want to forcibly ignore these validation failures?')) {
-          return;
-        }
+      if (pullRequest.validationFailures.some((failure) => !failure.canBeForceIgnored)) {
+        Log.debug('Discovered a fatal error, which cannot be forced');
+        throw new PullRequestValidationError();
       }
 
-      throw new PullRequestValidationError();
+      Log.info(yellow(`All discovered validations are non-fatal and can be forcibly ignored.`));
+      if (!(await Prompt.confirm('Do you want to forcibly ignore these validation failures?'))) {
+        throw new PullRequestValidationError();
+      }
     }
 
     if (this.flags.forceManualBranches) {

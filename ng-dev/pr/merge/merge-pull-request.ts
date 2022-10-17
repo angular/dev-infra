@@ -20,7 +20,6 @@ import {
   UserAbortedMergeToolError,
 } from './failures.js';
 import {PullRequestValidationConfig} from '../common/validation/validation-config.js';
-import {PullRequestValidationFailure} from '../common/validation/validation-failure.js';
 
 /**
  * Merges a given pull request based on labels configured in the given merge configuration.
