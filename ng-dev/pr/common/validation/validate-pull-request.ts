@@ -22,13 +22,10 @@ import {PullRequestValidationConfig} from './validation-config.js';
 import {PullRequestValidationFailure} from './validation-failure.js';
 
 /**
- * Asserts that the given pull request is valid. Certain non-fatal validations
- * can be disabled through the validation config.
+ * Runs all valiations that the given pull request is valid, returning a list of all failing
+ * validations.
  *
  * Active release trains may be available for additional checks or not.
- *
- * @throws {PullRequestValidationFailure} A validation failure will be raised when
- *   an activated validation failed.
  */
 export async function assertValidPullRequest(
   pullRequest: PullRequestFromGithub,

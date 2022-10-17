@@ -28,7 +28,11 @@ import {
   getNextBranchName,
 } from '../../release/versioning/index.js';
 import {Prompt} from '../../utils/prompt.js';
-import {FatalMergeToolError, UserAbortedMergeToolError} from './failures.js';
+import {
+  FatalMergeToolError,
+  PullRequestValidationError,
+  UserAbortedMergeToolError,
+} from './failures.js';
 import {PullRequestValidationConfig} from '../common/validation/validation-config.js';
 import {PullRequestValidationFailure} from '../common/validation/validation-failure.js';
 
@@ -94,7 +98,7 @@ export class MergeTool {
         Log.error(` -> ${bold(failure.message)}`);
       }
       Log.info();
-      if (pullRequest.validationFailures.find((failure) => !failure.canBeForceIgnored)) {
+      if (pullRequest.validationFailures.some((failure) => !failure.canBeForceIgnored)) {
         Log.info(yellow(`All discovered validations are non-fatal and can be forcibly ignored.`));
 
         if (await Prompt.confirm('Do you want to forcibly ignore these validation failures?')) {
@@ -102,7 +106,7 @@ export class MergeTool {
         }
       }
 
-      throw pullRequest.validationFailures[0];
+      throw new PullRequestValidationError();
     }
 
     if (this.flags.forceManualBranches) {

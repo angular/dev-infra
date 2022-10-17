@@ -14,7 +14,11 @@ import {GITHUB_TOKEN_GENERATE_URL} from '../../utils/git/github-urls.js';
 
 import {assertValidPullRequestConfig} from '../config/index.js';
 import {MergeTool, PullRequestMergeFlags} from './merge-tool.js';
-import {FatalMergeToolError, UserAbortedMergeToolError} from './failures.js';
+import {
+  FatalMergeToolError,
+  PullRequestValidationError,
+  UserAbortedMergeToolError,
+} from './failures.js';
 import {PullRequestValidationConfig} from '../common/validation/validation-config.js';
 import {PullRequestValidationFailure} from '../common/validation/validation-failure.js';
 
@@ -63,13 +67,18 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
         return false;
       }
 
+      if (e instanceof PullRequestValidationError) {
+        Log.error('Pull request failed at least one validation check.');
+        Log.error('See above for specific error information');
+        return false;
+      }
+
+      // Note: Known errors in the merge tooling extend from the FatalMergeToolError, as such
+      // the instance check for FatalMergeToolError should remain last as it will be truthy for
+      // all of the subclasses.
       if (e instanceof FatalMergeToolError) {
         Log.error(`Could not merge the specified pull request. Error:`);
         Log.error(` -> ${bold(e.message)}`);
-        return false;
-      }
-      if (e instanceof PullRequestValidationFailure) {
-        Log.error(`Pull request did not pass validation check. See above for specific errors`);
         return false;
       }
 

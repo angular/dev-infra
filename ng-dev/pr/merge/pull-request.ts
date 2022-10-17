@@ -47,7 +47,7 @@ export interface PullRequest {
   baseSha: string;
   /** Git revision range that matches the pull request commits. */
   revisionRange: string;
-
+  /** A list of validation failures found for the pull request, empty if no failures are discovered. */
   validationFailures: PullRequestValidationFailure[];
 }
 
@@ -55,8 +55,6 @@ export interface PullRequest {
  * Loads and validates the specified pull request against the given configuration.
  * If the pull requests fails, a pull request failure is returned.
  *
- * @throws {PullRequestValidationFailure} A pull request failure if the pull request does not
- *   pass the validation.
  * @throws {FatalMergeToolError} A fatal error might be thrown when e.g. the pull request
  *   does not exist upstream.
  */
