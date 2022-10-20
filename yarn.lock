@@ -46,24 +46,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular-devkit/architect@npm:0.1500.0-next.6":
-  version: 0.1500.0-next.6
-  resolution: "@angular-devkit/architect@npm:0.1500.0-next.6"
+"@angular-devkit/architect@npm:0.1500.0-rc.0":
+  version: 0.1500.0-rc.0
+  resolution: "@angular-devkit/architect@npm:0.1500.0-rc.0"
   dependencies:
-    "@angular-devkit/core": 15.0.0-next.6
+    "@angular-devkit/core": 15.0.0-rc.0
     rxjs: 6.6.7
-  checksum: 73a491347605290b7a6957c6589dc4c2d289773780d22b2d746cdfdb2129de55c5a1bee19111299d031635b58ba9dd2d125748307a2809ca93a045ace665c5d4
+  checksum: 7b9c642c933badccfcc529eba13feca120c0d6aef3b89d4be83a3a01052739863bf5405194190f768c4f4b79cc17b7aa0c8569700645d68b8e92bed6853667d3
   languageName: node
   linkType: hard
 
-"@angular-devkit/build-angular@npm:15.0.0-next.6":
-  version: 15.0.0-next.6
-  resolution: "@angular-devkit/build-angular@npm:15.0.0-next.6"
+"@angular-devkit/build-angular@npm:15.0.0-rc.0":
+  version: 15.0.0-rc.0
+  resolution: "@angular-devkit/build-angular@npm:15.0.0-rc.0"
   dependencies:
     "@ampproject/remapping": 2.2.0
-    "@angular-devkit/architect": 0.1500.0-next.6
-    "@angular-devkit/build-webpack": 0.1500.0-next.6
-    "@angular-devkit/core": 15.0.0-next.6
+    "@angular-devkit/architect": 0.1500.0-rc.0
+    "@angular-devkit/build-webpack": 0.1500.0-rc.0
+    "@angular-devkit/core": 15.0.0-rc.0
     "@babel/core": 7.19.3
     "@babel/generator": 7.19.5
     "@babel/helper-annotate-as-pure": 7.18.6
@@ -74,7 +74,7 @@ __metadata:
     "@babel/runtime": 7.19.4
     "@babel/template": 7.18.10
     "@discoveryjs/json-ext": 0.5.7
-    "@ngtools/webpack": 15.0.0-next.6
+    "@ngtools/webpack": 15.0.0-rc.0
     ansi-colors: 4.1.3
     autoprefixer: 10.4.12
     babel-loader: 8.2.5
@@ -85,8 +85,8 @@ __metadata:
     copy-webpack-plugin: 11.0.0
     critters: 0.0.16
     css-loader: 6.7.1
-    esbuild: 0.15.10
-    esbuild-wasm: 0.15.10
+    esbuild: 0.15.11
+    esbuild-wasm: 0.15.11
     glob: 8.0.3
     https-proxy-agent: 5.0.1
     inquirer: 8.2.4
@@ -149,20 +149,20 @@ __metadata:
       optional: true
     tailwindcss:
       optional: true
-  checksum: 51738696dd0b4c5bbca3703caae4a598c8d6e0a19c229b9e896f2172bbc6eda2d3d796946e3b09de764fe6daf7cb6c70f7d5390ae59dd6afee8212004080e357
+  checksum: 73f687210787ed5dc3f38d5a248df70e23fa6cc94b2fd2d13ae1081c2d1588891ef8b964701186f575ed9147ce6c29aa84aa6e80ab52800e5c785a397ec94e2e
   languageName: node
   linkType: hard
 
-"@angular-devkit/build-webpack@npm:0.1500.0-next.6":
-  version: 0.1500.0-next.6
-  resolution: "@angular-devkit/build-webpack@npm:0.1500.0-next.6"
+"@angular-devkit/build-webpack@npm:0.1500.0-rc.0":
+  version: 0.1500.0-rc.0
+  resolution: "@angular-devkit/build-webpack@npm:0.1500.0-rc.0"
   dependencies:
-    "@angular-devkit/architect": 0.1500.0-next.6
+    "@angular-devkit/architect": 0.1500.0-rc.0
     rxjs: 6.6.7
   peerDependencies:
     webpack: ^5.30.0
     webpack-dev-server: ^4.0.0
-  checksum: 66542a524b7f11fc1ff2e064935e3fdf8f08ddc40662569c1ea66a38e4306c00c9606d134c9544666dd3befe8fd139f2abbdfe77ef74859935c74b61eafb878c
+  checksum: cd5c77759844ddec4259bcd9f613aa83043a788baa2554a5a7c6ded75d67c25545a5bf392d6ff8de5068a6175fe1664da7c3ed870ef0f55092b7e23e3307c266
   languageName: node
   linkType: hard
 
@@ -184,9 +184,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular-devkit/core@npm:15.0.0-next.6":
-  version: 15.0.0-next.6
-  resolution: "@angular-devkit/core@npm:15.0.0-next.6"
+"@angular-devkit/core@npm:15.0.0-rc.0":
+  version: 15.0.0-rc.0
+  resolution: "@angular-devkit/core@npm:15.0.0-rc.0"
   dependencies:
     ajv: 8.11.0
     ajv-formats: 2.1.1
@@ -198,7 +198,7 @@ __metadata:
   peerDependenciesMeta:
     chokidar:
       optional: true
-  checksum: 2c0e123f5bc4cb812c6f9520942084eb3309feeca6216c57f23fe397cad7e3b41268ff5ba0a083357e6080f1fdfd881cb4916e07ec09756423412c75d462e0bf
+  checksum: 7a767dc6cc52be06b817200d8d047d9896b7873a167ae66fd37cbf2ee848725609ce6f18cc6fd0451ab7b608553910148e6e33bd1ee0290e576477d2f01b711f
   languageName: node
   linkType: hard
 
@@ -215,27 +215,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular-devkit/schematics@npm:15.0.0-next.6":
-  version: 15.0.0-next.6
-  resolution: "@angular-devkit/schematics@npm:15.0.0-next.6"
+"@angular-devkit/schematics@npm:15.0.0-rc.0":
+  version: 15.0.0-rc.0
+  resolution: "@angular-devkit/schematics@npm:15.0.0-rc.0"
   dependencies:
-    "@angular-devkit/core": 15.0.0-next.6
+    "@angular-devkit/core": 15.0.0-rc.0
     jsonc-parser: 3.2.0
     magic-string: 0.26.7
     ora: 5.4.1
     rxjs: 6.6.7
-  checksum: 13699eadb7600d6464057777d59a144f452bf24e171f75904e67457bc83e8ed73ecb7aba1969960c067638f744e3366b94aba191cea1590b393fe059f6ad2db1
+  checksum: 85d945de1c69e2a2c1a3b1ab1c9213df8c4cc00158137df79726b76e1555087fb3a982435342a5db104a4ac342e12ccdfe3724f4929a4e4d726b0ab660a4909a
   languageName: node
   linkType: hard
 
-"@angular/animations@npm:15.0.0-next.6":
-  version: 15.0.0-next.6
-  resolution: "@angular/animations@npm:15.0.0-next.6"
+"@angular/animations@npm:15.0.0-rc.0":
+  version: 15.0.0-rc.0
+  resolution: "@angular/animations@npm:15.0.0-rc.0"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/core": 15.0.0-next.6
-  checksum: 942506f36c6bfb8f796425d573ee8e2614812f5b181a32f614217058a4ca862cfd0261533bffc017eacf31f510404e1e92f738eb08e042451fdae2425a272849
+    "@angular/core": 15.0.0-rc.0
+  checksum: f08a8fe7d243bd57a7b542f510708a037321f420f9b2f1fe44047d0dc06b8c0643cbdbcc067becf9d9c447f85941ef5b0f02b7897662078ce1b808190f3cea85
   languageName: node
   linkType: hard
 
@@ -315,22 +315,22 @@ __metadata:
   dependencies:
     "@actions/core": ^1.4.0
     "@actions/github": ^5.0.0
-    "@angular-devkit/build-angular": 15.0.0-next.6
-    "@angular/animations": 15.0.0-next.6
+    "@angular-devkit/build-angular": 15.0.0-rc.0
+    "@angular/animations": 15.0.0-rc.0
     "@angular/bazel": "patch:@angular/bazel@npm:14.1.0-next.2#.yarn/patches/@angular-bazel-npm.patch"
     "@angular/benchpress": 0.3.0
     "@angular/cdk": 15.0.0-next.5
-    "@angular/cli": 15.0.0-next.6
-    "@angular/common": 15.0.0-next.6
-    "@angular/compiler": 15.0.0-next.6
-    "@angular/compiler-cli": 15.0.0-next.6
-    "@angular/core": 15.0.0-next.6
+    "@angular/cli": 15.0.0-rc.0
+    "@angular/common": 15.0.0-rc.0
+    "@angular/compiler": 15.0.0-rc.0
+    "@angular/compiler-cli": 15.0.0-rc.0
+    "@angular/core": 15.0.0-rc.0
     "@angular/fire": ^7.1.0-rc
-    "@angular/forms": 15.0.0-next.6
+    "@angular/forms": 15.0.0-rc.0
     "@angular/material": 15.0.0-next.5
-    "@angular/platform-browser": 15.0.0-next.6
-    "@angular/platform-browser-dynamic": 15.0.0-next.6
-    "@angular/router": 15.0.0-next.6
+    "@angular/platform-browser": 15.0.0-rc.0
+    "@angular/platform-browser-dynamic": 15.0.0-rc.0
+    "@angular/router": 15.0.0-rc.0
     "@babel/core": ^7.16.0
     "@bazel/bazelisk": ^1.11.0
     "@bazel/buildifier": 5.1.0
@@ -467,21 +467,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/cli@npm:15.0.0-next.6":
-  version: 15.0.0-next.6
-  resolution: "@angular/cli@npm:15.0.0-next.6"
+"@angular/cli@npm:15.0.0-rc.0":
+  version: 15.0.0-rc.0
+  resolution: "@angular/cli@npm:15.0.0-rc.0"
   dependencies:
-    "@angular-devkit/architect": 0.1500.0-next.6
-    "@angular-devkit/core": 15.0.0-next.6
-    "@angular-devkit/schematics": 15.0.0-next.6
-    "@schematics/angular": 15.0.0-next.6
+    "@angular-devkit/architect": 0.1500.0-rc.0
+    "@angular-devkit/core": 15.0.0-rc.0
+    "@angular-devkit/schematics": 15.0.0-rc.0
+    "@schematics/angular": 15.0.0-rc.0
     "@yarnpkg/lockfile": 1.1.0
     ansi-colors: 4.1.3
     ini: 3.0.1
     inquirer: 8.2.4
     jsonc-parser: 3.2.0
     npm-package-arg: 9.1.2
-    npm-pick-manifest: 7.0.2
+    npm-pick-manifest: 8.0.0
     open: 8.4.0
     ora: 5.4.1
     pacote: 15.0.0
@@ -491,25 +491,25 @@ __metadata:
     yargs: 17.6.0
   bin:
     ng: bin/ng.js
-  checksum: 0dd9148f218f28d47a07c0d54f2014224b1cf2ee04a78f7d8a168c7fa2957b17743c754eae5ad795671e1a988536de04385fa9c3fa05c1ba4773d6a812ce95f1
+  checksum: d0159434ebd344c5c20949271402ca0d677ca929cfb775a5e820f0498a974028150596ae35f131004a99c7b12e1055fa169739571fe78918ec4b085b3378cf3d
   languageName: node
   linkType: hard
 
-"@angular/common@npm:15.0.0-next.6":
-  version: 15.0.0-next.6
-  resolution: "@angular/common@npm:15.0.0-next.6"
+"@angular/common@npm:15.0.0-rc.0":
+  version: 15.0.0-rc.0
+  resolution: "@angular/common@npm:15.0.0-rc.0"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/core": 15.0.0-next.6
+    "@angular/core": 15.0.0-rc.0
     rxjs: ^6.5.3 || ^7.4.0
-  checksum: b0ed6d028e8750e0f67d29dd451476f9f11a3cbf0c28a2937e79f8e502d1e4b2ef74e51d4fadf44c85144e998b5f8707fed49280e27de1593cd332ec9b11a61d
+  checksum: 951206c6c960d3e1954ff3bf89d37c93fc3d864aeac478b8d88ad8d987ca81add335b18059f95ef683253553ceede65a95804f2da9cc10ad4d564f6a3eacfd38
   languageName: node
   linkType: hard
 
-"@angular/compiler-cli@npm:15.0.0-next.6":
-  version: 15.0.0-next.6
-  resolution: "@angular/compiler-cli@npm:15.0.0-next.6"
+"@angular/compiler-cli@npm:15.0.0-rc.0":
+  version: 15.0.0-rc.0
+  resolution: "@angular/compiler-cli@npm:15.0.0-rc.0"
   dependencies:
     "@babel/core": ^7.17.2
     chokidar: ^3.0.0
@@ -522,39 +522,39 @@ __metadata:
     tslib: ^2.3.0
     yargs: ^17.2.1
   peerDependencies:
-    "@angular/compiler": 15.0.0-next.6
+    "@angular/compiler": 15.0.0-rc.0
     typescript: ">=4.8.2 <4.9"
   bin:
     ng-xi18n: bundles/src/bin/ng_xi18n.js
     ngc: bundles/src/bin/ngc.js
     ngcc: bundles/ngcc/main-ngcc.js
-  checksum: ea9381d61561893c7772599ae7343617683f711dd853c65fe157515d01e28b5c427378022ff5ada250c600e1c71016d078eb10ebfbfd57bc5819df771d1b61c9
+  checksum: a219e01116815de3880f3104f4a9a60f8b65b4625e39a3eeca354da050ff82c61867901b3a68fd3d6107c18fc686ded65480dc242f101fdaa1aa10e26ced56ef
   languageName: node
   linkType: hard
 
-"@angular/compiler@npm:15.0.0-next.6":
-  version: 15.0.0-next.6
-  resolution: "@angular/compiler@npm:15.0.0-next.6"
+"@angular/compiler@npm:15.0.0-rc.0":
+  version: 15.0.0-rc.0
+  resolution: "@angular/compiler@npm:15.0.0-rc.0"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/core": 15.0.0-next.6
+    "@angular/core": 15.0.0-rc.0
   peerDependenciesMeta:
     "@angular/core":
       optional: true
-  checksum: ff2c589f00eb06833e01509955a2187f8fe8fa8f207dcef02dfc195955b89d3c0310f0a2affb094d3dc5f0130a02d8afa3ca465efe4a2313f8b4d0fd5a113923
+  checksum: b82ee185be96a22eb0447d2c5425698624f75a20d1cb425818de8731c7dc69fac06e364c3c8b9f554629ee2c1fb270787847bca95b704eeddb6829bf1a6b44a7
   languageName: node
   linkType: hard
 
-"@angular/core@npm:15.0.0-next.6":
-  version: 15.0.0-next.6
-  resolution: "@angular/core@npm:15.0.0-next.6"
+"@angular/core@npm:15.0.0-rc.0":
+  version: 15.0.0-rc.0
+  resolution: "@angular/core@npm:15.0.0-rc.0"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
     rxjs: ^6.5.3 || ^7.4.0
     zone.js: ~0.11.4
-  checksum: 8eda12bcafc2185a1c899aa6487b1711c5e8fb14dd8a3ba573344d525cc5eb37634f1ab56ee833fae039ba2663de644ddc03ce323a9d0b2ff2f4da1012aee340
+  checksum: 366e8e6b7ceb5de0f5833dfb1f53a11b802eec4c8b14d6ed904eb084e74f70d6293dbb0970101bdf3a01e979ccdd10e72c2c016ebaa63744a43a8bd09ad31631
   languageName: node
   linkType: hard
 
@@ -593,17 +593,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/forms@npm:15.0.0-next.6":
-  version: 15.0.0-next.6
-  resolution: "@angular/forms@npm:15.0.0-next.6"
+"@angular/forms@npm:15.0.0-rc.0":
+  version: 15.0.0-rc.0
+  resolution: "@angular/forms@npm:15.0.0-rc.0"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/common": 15.0.0-next.6
-    "@angular/core": 15.0.0-next.6
-    "@angular/platform-browser": 15.0.0-next.6
+    "@angular/common": 15.0.0-rc.0
+    "@angular/core": 15.0.0-rc.0
+    "@angular/platform-browser": 15.0.0-rc.0
     rxjs: ^6.5.3 || ^7.4.0
-  checksum: 09719fe0a634abbaa2eb41263a718d33a790eb8b6186782460efe0a105e1f93d8cc8b648c49b035a225f0b7713cb0161eb4b9aa7b46758d806b1d46ae75f9887
+  checksum: 55932b440b68eef778893f62a09422e2d1cd8c992d63f725ddf65683184ff9fc5e7f9e9a55af4eca4f581ab5c76f45a1282042af289596a55a4e10c016a89eb1
   languageName: node
   linkType: hard
 
@@ -671,47 +671,47 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/platform-browser-dynamic@npm:15.0.0-next.6":
-  version: 15.0.0-next.6
-  resolution: "@angular/platform-browser-dynamic@npm:15.0.0-next.6"
+"@angular/platform-browser-dynamic@npm:15.0.0-rc.0":
+  version: 15.0.0-rc.0
+  resolution: "@angular/platform-browser-dynamic@npm:15.0.0-rc.0"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/common": 15.0.0-next.6
-    "@angular/compiler": 15.0.0-next.6
-    "@angular/core": 15.0.0-next.6
-    "@angular/platform-browser": 15.0.0-next.6
-  checksum: f0a77130982aa80d903aac1c3da789db7071ba3825e56912ccbb05f7eab983e4e70e6e411e9f5f4a001e0bfc55d2cb7baf8deedb0ee2875e8ca5c9a501f3e56f
+    "@angular/common": 15.0.0-rc.0
+    "@angular/compiler": 15.0.0-rc.0
+    "@angular/core": 15.0.0-rc.0
+    "@angular/platform-browser": 15.0.0-rc.0
+  checksum: c26ae885d4cfb923138d7b5aa516fb63c036e7a16d568d75ee6f08b2d0a4466edbc2008141ae9ac828ac8e79f13b770ec61b4f3df82e30378c0919c286918175
   languageName: node
   linkType: hard
 
-"@angular/platform-browser@npm:15.0.0-next.6":
-  version: 15.0.0-next.6
-  resolution: "@angular/platform-browser@npm:15.0.0-next.6"
+"@angular/platform-browser@npm:15.0.0-rc.0":
+  version: 15.0.0-rc.0
+  resolution: "@angular/platform-browser@npm:15.0.0-rc.0"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/animations": 15.0.0-next.6
-    "@angular/common": 15.0.0-next.6
-    "@angular/core": 15.0.0-next.6
+    "@angular/animations": 15.0.0-rc.0
+    "@angular/common": 15.0.0-rc.0
+    "@angular/core": 15.0.0-rc.0
   peerDependenciesMeta:
     "@angular/animations":
       optional: true
-  checksum: 5b8bf9fe8fff0624e09ebcfebd0c1072cc81b1fdaa27d5a2856ece43b81d9958a6566ae84f3994513782e558173c6d2755c6f9ce0add530631f02b812a637aa5
+  checksum: dd822e4cd4f884154b5b3807b049b7a9adcd6735cf96c2ff3dd316ec6621241598c0ca6dbf7fa755269d8d797478f266873505d78a4596046dd84e8da37cb02d
   languageName: node
   linkType: hard
 
-"@angular/router@npm:15.0.0-next.6":
-  version: 15.0.0-next.6
-  resolution: "@angular/router@npm:15.0.0-next.6"
+"@angular/router@npm:15.0.0-rc.0":
+  version: 15.0.0-rc.0
+  resolution: "@angular/router@npm:15.0.0-rc.0"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/common": 15.0.0-next.6
-    "@angular/core": 15.0.0-next.6
-    "@angular/platform-browser": 15.0.0-next.6
+    "@angular/common": 15.0.0-rc.0
+    "@angular/core": 15.0.0-rc.0
+    "@angular/platform-browser": 15.0.0-rc.0
     rxjs: ^6.5.3 || ^7.4.0
-  checksum: 8bfc71be71bf5a372ad8ec3fb446dcf58df79a3a8c5acf6e86dc046ce91cd13772271e95ba7e4d61f2156b01430120be77213fe43cbfffda7a1ad527122a601b
+  checksum: e03606c2adfb98d09d68187ec8bc2511f726a7331324209620ee69b1dd252ed477e8f5588d1202d0bf3f55000c1c82381c2bd11d379a27af542f99b8894956d0
   languageName: node
   linkType: hard
 
@@ -2415,16 +2415,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@esbuild/android-arm@npm:0.15.10":
-  version: 0.15.10
-  resolution: "@esbuild/android-arm@npm:0.15.10"
+"@esbuild/android-arm@npm:0.15.11":
+  version: 0.15.11
+  resolution: "@esbuild/android-arm@npm:0.15.11"
   conditions: os=android & cpu=arm
   languageName: node
   linkType: hard
 
-"@esbuild/linux-loong64@npm:0.15.10":
-  version: 0.15.10
-  resolution: "@esbuild/linux-loong64@npm:0.15.10"
+"@esbuild/linux-loong64@npm:0.15.11":
+  version: 0.15.11
+  resolution: "@esbuild/linux-loong64@npm:0.15.11"
   conditions: os=linux & cpu=loong64
   languageName: node
   linkType: hard
@@ -4258,14 +4258,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ngtools/webpack@npm:15.0.0-next.6":
-  version: 15.0.0-next.6
-  resolution: "@ngtools/webpack@npm:15.0.0-next.6"
+"@ngtools/webpack@npm:15.0.0-rc.0":
+  version: 15.0.0-rc.0
+  resolution: "@ngtools/webpack@npm:15.0.0-rc.0"
   peerDependencies:
     "@angular/compiler-cli": ^15.0.0-next
     typescript: ~4.8.2
     webpack: ^5.54.0
-  checksum: ac366a0b078848d52b03a77e7c1de42aca296ee940e4b6c5557a5031f5309e4fc8ca75db158e46b4b243baadb12deb52864952ef39fccbf2c9a5126517ce04a5
+  checksum: 9a8e26ca342f445b6fe54cd62f2e6c058c5701e6a55adf024fb73bc938b525b3013e85be61290373d311c2937c5ffbebef950f92a23977a56b116de8eaa6402c
   languageName: node
   linkType: hard
 
@@ -4910,14 +4910,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@schematics/angular@npm:15.0.0-next.6":
-  version: 15.0.0-next.6
-  resolution: "@schematics/angular@npm:15.0.0-next.6"
+"@schematics/angular@npm:15.0.0-rc.0":
+  version: 15.0.0-rc.0
+  resolution: "@schematics/angular@npm:15.0.0-rc.0"
   dependencies:
-    "@angular-devkit/core": 15.0.0-next.6
-    "@angular-devkit/schematics": 15.0.0-next.6
+    "@angular-devkit/core": 15.0.0-rc.0
+    "@angular-devkit/schematics": 15.0.0-rc.0
     jsonc-parser: 3.2.0
-  checksum: 9ffb183a2ca2413da07ab9dad3e56bd3c26547ff4bea075597b1d454d862248c1fae6df3f5d1d9aadd78c2de7450592507cff38f0ca735d1b32632e173330616
+  checksum: 6f462e793ed234205f70c0c0e4d35b7f674d34bbf66e3e31b9d7414e51d5969fbdffc9192afc670a80b8f7cdf16d03ec99e896cd24a2ead68430d80db9c7a897
   languageName: node
   linkType: hard
 
@@ -8759,181 +8759,181 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-android-64@npm:0.15.10":
-  version: 0.15.10
-  resolution: "esbuild-android-64@npm:0.15.10"
+"esbuild-android-64@npm:0.15.11":
+  version: 0.15.11
+  resolution: "esbuild-android-64@npm:0.15.11"
   conditions: os=android & cpu=x64
   languageName: node
   linkType: hard
 
-"esbuild-android-arm64@npm:0.15.10":
-  version: 0.15.10
-  resolution: "esbuild-android-arm64@npm:0.15.10"
+"esbuild-android-arm64@npm:0.15.11":
+  version: 0.15.11
+  resolution: "esbuild-android-arm64@npm:0.15.11"
   conditions: os=android & cpu=arm64
   languageName: node
   linkType: hard
 
-"esbuild-darwin-64@npm:0.15.10":
-  version: 0.15.10
-  resolution: "esbuild-darwin-64@npm:0.15.10"
+"esbuild-darwin-64@npm:0.15.11":
+  version: 0.15.11
+  resolution: "esbuild-darwin-64@npm:0.15.11"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"esbuild-darwin-arm64@npm:0.15.10":
-  version: 0.15.10
-  resolution: "esbuild-darwin-arm64@npm:0.15.10"
+"esbuild-darwin-arm64@npm:0.15.11":
+  version: 0.15.11
+  resolution: "esbuild-darwin-arm64@npm:0.15.11"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"esbuild-freebsd-64@npm:0.15.10":
-  version: 0.15.10
-  resolution: "esbuild-freebsd-64@npm:0.15.10"
+"esbuild-freebsd-64@npm:0.15.11":
+  version: 0.15.11
+  resolution: "esbuild-freebsd-64@npm:0.15.11"
   conditions: os=freebsd & cpu=x64
   languageName: node
   linkType: hard
 
-"esbuild-freebsd-arm64@npm:0.15.10":
-  version: 0.15.10
-  resolution: "esbuild-freebsd-arm64@npm:0.15.10"
+"esbuild-freebsd-arm64@npm:0.15.11":
+  version: 0.15.11
+  resolution: "esbuild-freebsd-arm64@npm:0.15.11"
   conditions: os=freebsd & cpu=arm64
   languageName: node
   linkType: hard
 
-"esbuild-linux-32@npm:0.15.10":
-  version: 0.15.10
-  resolution: "esbuild-linux-32@npm:0.15.10"
+"esbuild-linux-32@npm:0.15.11":
+  version: 0.15.11
+  resolution: "esbuild-linux-32@npm:0.15.11"
   conditions: os=linux & cpu=ia32
   languageName: node
   linkType: hard
 
-"esbuild-linux-64@npm:0.15.10":
-  version: 0.15.10
-  resolution: "esbuild-linux-64@npm:0.15.10"
+"esbuild-linux-64@npm:0.15.11":
+  version: 0.15.11
+  resolution: "esbuild-linux-64@npm:0.15.11"
   conditions: os=linux & cpu=x64
   languageName: node
   linkType: hard
 
-"esbuild-linux-arm64@npm:0.15.10":
-  version: 0.15.10
-  resolution: "esbuild-linux-arm64@npm:0.15.10"
+"esbuild-linux-arm64@npm:0.15.11":
+  version: 0.15.11
+  resolution: "esbuild-linux-arm64@npm:0.15.11"
   conditions: os=linux & cpu=arm64
   languageName: node
   linkType: hard
 
-"esbuild-linux-arm@npm:0.15.10":
-  version: 0.15.10
-  resolution: "esbuild-linux-arm@npm:0.15.10"
+"esbuild-linux-arm@npm:0.15.11":
+  version: 0.15.11
+  resolution: "esbuild-linux-arm@npm:0.15.11"
   conditions: os=linux & cpu=arm
   languageName: node
   linkType: hard
 
-"esbuild-linux-mips64le@npm:0.15.10":
-  version: 0.15.10
-  resolution: "esbuild-linux-mips64le@npm:0.15.10"
+"esbuild-linux-mips64le@npm:0.15.11":
+  version: 0.15.11
+  resolution: "esbuild-linux-mips64le@npm:0.15.11"
   conditions: os=linux & cpu=mips64el
   languageName: node
   linkType: hard
 
-"esbuild-linux-ppc64le@npm:0.15.10":
-  version: 0.15.10
-  resolution: "esbuild-linux-ppc64le@npm:0.15.10"
+"esbuild-linux-ppc64le@npm:0.15.11":
+  version: 0.15.11
+  resolution: "esbuild-linux-ppc64le@npm:0.15.11"
   conditions: os=linux & cpu=ppc64
   languageName: node
   linkType: hard
 
-"esbuild-linux-riscv64@npm:0.15.10":
-  version: 0.15.10
-  resolution: "esbuild-linux-riscv64@npm:0.15.10"
+"esbuild-linux-riscv64@npm:0.15.11":
+  version: 0.15.11
+  resolution: "esbuild-linux-riscv64@npm:0.15.11"
   conditions: os=linux & cpu=riscv64
   languageName: node
   linkType: hard
 
-"esbuild-linux-s390x@npm:0.15.10":
-  version: 0.15.10
-  resolution: "esbuild-linux-s390x@npm:0.15.10"
+"esbuild-linux-s390x@npm:0.15.11":
+  version: 0.15.11
+  resolution: "esbuild-linux-s390x@npm:0.15.11"
   conditions: os=linux & cpu=s390x
   languageName: node
   linkType: hard
 
-"esbuild-netbsd-64@npm:0.15.10":
-  version: 0.15.10
-  resolution: "esbuild-netbsd-64@npm:0.15.10"
+"esbuild-netbsd-64@npm:0.15.11":
+  version: 0.15.11
+  resolution: "esbuild-netbsd-64@npm:0.15.11"
   conditions: os=netbsd & cpu=x64
   languageName: node
   linkType: hard
 
-"esbuild-openbsd-64@npm:0.15.10":
-  version: 0.15.10
-  resolution: "esbuild-openbsd-64@npm:0.15.10"
+"esbuild-openbsd-64@npm:0.15.11":
+  version: 0.15.11
+  resolution: "esbuild-openbsd-64@npm:0.15.11"
   conditions: os=openbsd & cpu=x64
   languageName: node
   linkType: hard
 
-"esbuild-sunos-64@npm:0.15.10":
-  version: 0.15.10
-  resolution: "esbuild-sunos-64@npm:0.15.10"
+"esbuild-sunos-64@npm:0.15.11":
+  version: 0.15.11
+  resolution: "esbuild-sunos-64@npm:0.15.11"
   conditions: os=sunos & cpu=x64
   languageName: node
   linkType: hard
 
-"esbuild-wasm@npm:0.15.10":
-  version: 0.15.10
-  resolution: "esbuild-wasm@npm:0.15.10"
+"esbuild-wasm@npm:0.15.11":
+  version: 0.15.11
+  resolution: "esbuild-wasm@npm:0.15.11"
   bin:
     esbuild: bin/esbuild
-  checksum: c448d2185e9c475e804704f1fa76e662f1a1aa8d339b556f1957c76bd62e9ce05e45b57677f479f969d9055b82c8b7d1786020c9b7e36d6f2e97960f17b70702
+  checksum: 45c552305ab11c1f0cd6d7836236b436dcabb805a110096d5a0f011994932c730c6588ce62d878e59235957cd95e3ee66d6c213ff8afd605703cc60b4ed12791
   languageName: node
   linkType: hard
 
-"esbuild-windows-32@npm:0.15.10":
-  version: 0.15.10
-  resolution: "esbuild-windows-32@npm:0.15.10"
+"esbuild-windows-32@npm:0.15.11":
+  version: 0.15.11
+  resolution: "esbuild-windows-32@npm:0.15.11"
   conditions: os=win32 & cpu=ia32
   languageName: node
   linkType: hard
 
-"esbuild-windows-64@npm:0.15.10":
-  version: 0.15.10
-  resolution: "esbuild-windows-64@npm:0.15.10"
+"esbuild-windows-64@npm:0.15.11":
+  version: 0.15.11
+  resolution: "esbuild-windows-64@npm:0.15.11"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
-"esbuild-windows-arm64@npm:0.15.10":
-  version: 0.15.10
-  resolution: "esbuild-windows-arm64@npm:0.15.10"
+"esbuild-windows-arm64@npm:0.15.11":
+  version: 0.15.11
+  resolution: "esbuild-windows-arm64@npm:0.15.11"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"esbuild@npm:0.15.10":
-  version: 0.15.10
-  resolution: "esbuild@npm:0.15.10"
+"esbuild@npm:0.15.11":
+  version: 0.15.11
+  resolution: "esbuild@npm:0.15.11"
   dependencies:
-    "@esbuild/android-arm": 0.15.10
-    "@esbuild/linux-loong64": 0.15.10
-    esbuild-android-64: 0.15.10
-    esbuild-android-arm64: 0.15.10
-    esbuild-darwin-64: 0.15.10
-    esbuild-darwin-arm64: 0.15.10
-    esbuild-freebsd-64: 0.15.10
-    esbuild-freebsd-arm64: 0.15.10
-    esbuild-linux-32: 0.15.10
-    esbuild-linux-64: 0.15.10
-    esbuild-linux-arm: 0.15.10
-    esbuild-linux-arm64: 0.15.10
-    esbuild-linux-mips64le: 0.15.10
-    esbuild-linux-ppc64le: 0.15.10
-    esbuild-linux-riscv64: 0.15.10
-    esbuild-linux-s390x: 0.15.10
-    esbuild-netbsd-64: 0.15.10
-    esbuild-openbsd-64: 0.15.10
-    esbuild-sunos-64: 0.15.10
-    esbuild-windows-32: 0.15.10
-    esbuild-windows-64: 0.15.10
-    esbuild-windows-arm64: 0.15.10
+    "@esbuild/android-arm": 0.15.11
+    "@esbuild/linux-loong64": 0.15.11
+    esbuild-android-64: 0.15.11
+    esbuild-android-arm64: 0.15.11
+    esbuild-darwin-64: 0.15.11
+    esbuild-darwin-arm64: 0.15.11
+    esbuild-freebsd-64: 0.15.11
+    esbuild-freebsd-arm64: 0.15.11
+    esbuild-linux-32: 0.15.11
+    esbuild-linux-64: 0.15.11
+    esbuild-linux-arm: 0.15.11
+    esbuild-linux-arm64: 0.15.11
+    esbuild-linux-mips64le: 0.15.11
+    esbuild-linux-ppc64le: 0.15.11
+    esbuild-linux-riscv64: 0.15.11
+    esbuild-linux-s390x: 0.15.11
+    esbuild-netbsd-64: 0.15.11
+    esbuild-openbsd-64: 0.15.11
+    esbuild-sunos-64: 0.15.11
+    esbuild-windows-32: 0.15.11
+    esbuild-windows-64: 0.15.11
+    esbuild-windows-arm64: 0.15.11
   dependenciesMeta:
     "@esbuild/android-arm":
       optional: true
@@ -8981,7 +8981,7 @@ __metadata:
       optional: true
   bin:
     esbuild: bin/esbuild
-  checksum: bc2daadb952c527e7ab0a972fd4f79071c9fd3d948cd97290d3de8811b6b7fc0abc43fb20116dffa24dc923550f4fe7b0d930ff6418ae7dfbff3034c1a01d59a
+  checksum: afe5f2e6fb4013760fd12f0662569778317d2d0ba0f96c97e4cc01d38551427b7e7110ac6ab1ab6491f5fbfeb7b97fafa2652ab470251667a5d3b4a7ce68a881
   languageName: node
   linkType: hard
 
@@ -13434,6 +13434,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"npm-install-checks@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "npm-install-checks@npm:6.0.0"
+  dependencies:
+    semver: ^7.1.1
+  checksum: 5476a26dccb83c24d9ffaf3d0592e8001f9804a40c6b3f441c9a1b2c8d643e90d8352c4ce27ffce72296de7f9744750d0124a6db55b68071971d4b4e74787818
+  languageName: node
+  linkType: hard
+
 "npm-normalize-package-bin@npm:^1.0.0, npm-normalize-package-bin@npm:^1.0.1":
   version: 1.0.1
   resolution: "npm-normalize-package-bin@npm:1.0.1"
@@ -13445,6 +13454,13 @@ __metadata:
   version: 2.0.0
   resolution: "npm-normalize-package-bin@npm:2.0.0"
   checksum: 7c5379f9b188b564c4332c97bdd9a5d6b7b15f02b5823b00989d6a0e6fb31eb0280f02b0a924f930e1fcaf00e60fae333aec8923d2a4c7747613c7d629d8aa25
+  languageName: node
+  linkType: hard
+
+"npm-normalize-package-bin@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "npm-normalize-package-bin@npm:3.0.0"
+  checksum: 6a34886c150b0f5302aad52a9446e5c939aa14eeb462323e75681517b36c6b9eaef83e1f5bc2d7e5154b3b752cbce81bed05e290db3f1f7edf857cbb895e35c0
   languageName: node
   linkType: hard
 
@@ -13481,15 +13497,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"npm-pick-manifest@npm:7.0.2":
-  version: 7.0.2
-  resolution: "npm-pick-manifest@npm:7.0.2"
+"npm-pick-manifest@npm:8.0.0":
+  version: 8.0.0
+  resolution: "npm-pick-manifest@npm:8.0.0"
   dependencies:
-    npm-install-checks: ^5.0.0
-    npm-normalize-package-bin: ^2.0.0
+    npm-install-checks: ^6.0.0
+    npm-normalize-package-bin: ^3.0.0
     npm-package-arg: ^9.0.0
     semver: ^7.3.5
-  checksum: a93ec449c12219a2be8556837db9ac5332914f304a69469bb6f1f47717adc6e262aa318f79166f763512688abd9c4e4b6a2d83b2dd19753a7abe5f0360f2c8bc
+  checksum: be61f9220d754db4172ab828574e2cf43bc87fc88c4eb81ede2e51933d76085dc2e4cd8b707a3879523a2deb094cb50397091d063d9a1eef9c2f5ec9faf27b02
   languageName: node
   linkType: hard
 
