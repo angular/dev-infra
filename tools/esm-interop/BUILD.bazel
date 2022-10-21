@@ -1,0 +1,21 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
+load("//tools:defaults.bzl", "esbuild")
+
+package(default_visibility = [
+    "//github-actions:__subpackages__",
+    "//ng-dev:__subpackages__",
+])
+
+esbuild(
+    name = "jsonc_parser_bundle",
+    entry_point = "@npm//:node_modules/jsonc-parser/lib/esm/main.js",
+    output = "jsonc-parser.js",
+    deps = ["@npm//jsonc-parser"],
+)
+
+# Workaround for: https://github.com/microsoft/node-jsonc-parser/issues/57.
+js_library(
+    name = "jsonc-parser",
+    srcs = ["jsonc-parser.d.ts"],
+    deps = [":jsonc_parser_bundle"],
+)

@@ -115,7 +115,7 @@ async function runLockClosedAction(github: Octokit): Promise<void> {
 // Runs triggered via 'workflow_dispatch' are also allowed to run.
 if (context.repo.owner === 'angular' || context.eventName === 'workflow_dispatch') {
   main().catch((e: Error) => {
-    core.error(e);
+    console.error(e);
     core.setFailed(e.message);
   });
 } else {

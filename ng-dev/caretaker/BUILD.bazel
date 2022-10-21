@@ -8,9 +8,9 @@ ts_library(
         "//ng-dev:__subpackages__",
     ],
     deps = [
+        "//tools/esm-interop:jsonc-parser",
         "@npm//@types/minimatch",
         "@npm//@types/node",
-        "@npm//jsonc-parser",
         "@npm//minimatch",
     ],
 )
