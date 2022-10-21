@@ -201,7 +201,7 @@ async function main(): Promise<void> {
     }
   } catch (err: any) {
     core.setOutput('result', ActionResult.failed);
-    core.error(err);
+    console.error(err);
     core.setFailed(err.message);
   }
 }

@@ -97,6 +97,6 @@ async function findExistingTestStatus(
 }
 
 main().catch((e: Error) => {
-  core.error(e);
+  console.error(e);
   core.setFailed(e.message);
 });

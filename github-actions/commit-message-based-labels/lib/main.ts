@@ -93,7 +93,7 @@ class CommitMessageBasedLabelManager {
 // to prevent the action from actually running in a fork of a repository with this action set up.
 if (context.repo.owner === 'angular') {
   CommitMessageBasedLabelManager.run().catch((e: Error) => {
-    core.error(e);
+    console.error(e);
     core.setFailed(e.message);
   });
 } else {
