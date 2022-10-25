@@ -62,8 +62,8 @@ async function main() {
     state: 'pending' as const,
     // The initial waiting status is expected to be overridden by the
     // internal presubmit status service then.
-    description: `Waiting for Google Internal Tests. ${
-      runTestGuideURL ? `@Googlers: See Details for instructions -->` : ''
+    description: `Waiting for tests to start. ${
+      runTestGuideURL ? `@Googlers: Initiate a presubmit. See -->` : ''
     }`.trim(),
     target_url: runTestGuideURL,
   };
