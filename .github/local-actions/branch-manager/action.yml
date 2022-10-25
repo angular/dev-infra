@@ -1,0 +1,19 @@
+name: 'Branch Manager'
+description: 'Determine if a provided pull request is able to merge into its target branches'
+author: 'Angular'
+inputs:
+  angular-robot-key:
+    description: 'The private key for the Angular Robot Github app.'
+    required: true
+  pr:
+    description: 'The pull request number'
+    required: true
+  repo:
+    description: 'The name of the repo for the pull request'
+    required: true
+  owner:
+    description: 'The owner of the repo for the pull request'
+    required: true
+runs:
+  using: 'node16'
+  main: 'main.js'

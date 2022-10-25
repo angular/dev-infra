@@ -4,6 +4,7 @@ ts_library(
     name = "config",
     srcs = ["index.ts"],
     visibility = [
+        "//.github/local-actions/branch-manager:__subpackages__",
         "//ng-dev:__subpackages__",
     ],
     deps = [

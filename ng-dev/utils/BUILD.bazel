@@ -13,6 +13,7 @@ ts_library(
         ],
     ),
     visibility = [
+        "//.github/local-actions/branch-manager:__subpackages__",
         "//.github/local-actions/changelog/lib:__subpackages__",
         "//bazel/browsers/update-script:__pkg__",
         "//github-actions/create-pr-for-changes/lib:__subpackages__",

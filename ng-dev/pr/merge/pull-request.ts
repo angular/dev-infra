@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {MergeTool} from './merge-tool.js';
 import {
   getTargetBranchesAndLabelForPullRequest,
   PullRequestTarget,
@@ -20,6 +19,9 @@ import {assertValidPullRequest} from '../common/validation/validate-pull-request
 import {TEMP_PR_HEAD_BRANCH} from './strategies/strategy.js';
 import {mergeLabels} from '../common/labels.js';
 import {PullRequestValidationFailure} from '../common/validation/validation-failure.js';
+import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
+import {GithubConfig, NgDevConfig} from '../../utils/config.js';
+import {PullRequestConfig} from '../config/index.js';
 
 /** Interface that describes a pull request. */
 export interface PullRequest {
@@ -49,6 +51,8 @@ export interface PullRequest {
   revisionRange: string;
   /** A list of validation failures found for the pull request, empty if no failures are discovered. */
   validationFailures: PullRequestValidationFailure[];
+  /** The SHA for the latest commit in the pull request. */
+  headSha: string;
 }
 
 /**
@@ -59,7 +63,13 @@ export interface PullRequest {
  *   does not exist upstream.
  */
 export async function loadAndValidatePullRequest(
-  {git, config}: MergeTool,
+  {
+    git,
+    config,
+  }: {
+    git: AuthenticatedGitClient;
+    config: NgDevConfig<{pullRequest: PullRequestConfig; github: GithubConfig}>;
+  },
   prNumber: number,
   validationConfig: PullRequestValidationConfig,
 ): Promise<PullRequest> {
@@ -138,5 +148,6 @@ export async function loadAndValidatePullRequest(
     targetBranches: target.branches,
     title: prData.title,
     commitCount: prData.commits.totalCount,
+    headSha: prData.headRefOid,
   };
 }
