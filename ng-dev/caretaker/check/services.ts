@@ -14,6 +14,7 @@ import {BaseModule} from './base.js';
 interface ServiceConfig {
   name: string;
   url: string;
+  prettyUrl: string;
 }
 
 /**
@@ -36,23 +37,28 @@ interface StatusCheckResult {
   status: 'passing' | 'failing';
   description: string;
   lastUpdated: Date;
+  statusUrl: string;
 }
 
 /** List of services Angular relies on. */
 export const services: ServiceConfig[] = [
   {
+    prettyUrl: 'https://status.us-west-1.saucelabs.com',
     url: 'https://status.us-west-1.saucelabs.com/api/v2/status.json',
     name: 'Saucelabs',
   },
   {
+    prettyUrl: 'https://status.npmjs.org/',
     url: 'https://status.npmjs.org/api/v2/status.json',
     name: 'Npm',
   },
   {
+    prettyUrl: 'https://status.circleci.com',
     url: 'https://status.circleci.com/api/v2/status.json',
     name: 'CircleCi',
   },
   {
+    prettyUrl: 'https://www.githubstatus.com',
     url: 'https://www.githubstatus.com/api/v2/status.json',
     name: 'Github',
   },
@@ -74,6 +80,7 @@ export class ServicesModule extends BaseModule<StatusCheckResult[]> {
       } else {
         Log.info.group(`${name} ❌ (Updated: ${status.lastUpdated.toLocaleString()})`);
         Log.info(`  Details: ${status.description}`);
+        Log.info(`  Status URL: ${status.statusUrl}`);
         Log.info.groupEnd();
       }
     }
@@ -87,6 +94,7 @@ export class ServicesModule extends BaseModule<StatusCheckResult[]> {
     const status = result.status.indicator === 'none' ? 'passing' : 'failing';
     return {
       name: service.name,
+      statusUrl: service.prettyUrl,
       status,
       description: result.status.description,
       lastUpdated: new Date(result.page.updated_at),
