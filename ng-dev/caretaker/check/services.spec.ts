@@ -18,7 +18,11 @@ describe('ServicesModule', () => {
   let infoGroupSpy: jasmine.Spy;
   let git: AuthenticatedGitClient;
 
-  services.splice(0, Infinity, {url: 'fakeStatus.com/api.json', name: 'Service Name'});
+  services.splice(0, Infinity, {
+    url: 'fakeStatus.com/api.json',
+    prettyUrl: 'fakeStatus.com',
+    name: 'Service Name',
+  });
 
   beforeEach(async () => {
     getStatusFromStandardApiSpy = spyOn(ServicesModule.prototype, 'getStatusFromStandardApi');
@@ -35,6 +39,7 @@ describe('ServicesModule', () => {
       expect(getStatusFromStandardApiSpy).toHaveBeenCalledWith({
         url: 'fakeStatus.com/api.json',
         name: 'Service Name',
+        prettyUrl: 'fakeStatus.com',
       });
     });
   });
@@ -47,12 +52,14 @@ describe('ServicesModule', () => {
           status: 'passing',
           description: 'Everything is working great',
           lastUpdated: new Date(0),
+          statusUrl: 'http://google.com',
         },
         {
           name: 'Service 2',
           status: 'failing',
           description: 'Literally everything is broken',
           lastUpdated: new Date(0),
+          statusUrl: 'http://notgoogle.com',
         },
       ]);
 
@@ -66,6 +73,7 @@ describe('ServicesModule', () => {
         `Service 2 ❌ (Updated: ${new Date(0).toLocaleString()})`,
       );
       expect(infoSpy).toHaveBeenCalledWith('  Details: Literally everything is broken');
+      expect(infoSpy).toHaveBeenCalledWith('  Status URL: http://notgoogle.com');
     });
   });
 });
