@@ -7,8 +7,9 @@ import path from 'path';
 const syncBranch = 'main';
 const statusContext = 'google-internal-tests';
 
-type GithubStatus =
-  RestEndpointMethodTypes['repos']['getCombinedStatusForRef']['response']['data']['statuses'][0];
+type GetCombinedStatusForRefResponse =
+  RestEndpointMethodTypes['repos']['getCombinedStatusForRef']['response'];
+type GithubStatus = GetCombinedStatusForRefResponse['data']['statuses'][0];
 
 async function main() {
   if (context.repo.owner !== 'angular') {
@@ -30,20 +31,29 @@ async function main() {
   const prNum = context.payload.pull_request!.number;
   const prHeadSHA = context.payload.pull_request!.head!.sha;
   const prBaseRef = context.payload.pull_request!.base!.ref;
-
-  if (syncBranch !== prBaseRef) {
-    core.info(`Skipping Google Internal Tests action for PRs not targeting: ${syncBranch}`);
-    return;
-  }
-
   const github = new Octokit({auth: githubToken});
   const existingGoogleStatus = await findExistingTestStatus(github, prHeadSHA);
 
   // If there is an existing status already pointing to an internal CL, we do not override
   // the status. This can happen when e.g. a presubmit-tested PR is closed and reopened.
   if (existingGoogleStatus && existingGoogleStatus.target_url?.startsWith('http://cl/')) {
+    core.info(`Pull request HEAD commit already has existing test status.`);
     return;
   }
+
+  if (syncBranch !== prBaseRef) {
+    core.info(`Skipping Google Internal Tests action for PRs not targeting: ${syncBranch}`);
+    await github.repos.createCommitStatus({
+      ...context.repo,
+      state: 'success',
+      description: `Skipped. PR does not target \`${syncBranch}\` branch`,
+      context: statusContext,
+      sha: prHeadSHA,
+    });
+    return;
+  }
+
+  core.info(`Checking pull request for files being synced into Google.`);
 
   const files = await github.paginate(github.pulls.listFiles, {
     ...context.repo,
@@ -84,13 +94,13 @@ async function findExistingTestStatus(
   github: Octokit,
   prHeadSHA: string,
 ): Promise<GithubStatus | null> {
-  const existingStatuses = await github.paginate(
+  const existingStatuses: GithubStatus[] = await github.paginate(
     github.repos.getCombinedStatusForRef,
     {
       ...context.repo,
       ref: prHeadSHA,
     },
-    (r) => r.data.statuses as GithubStatus[],
+    (r: GetCombinedStatusForRefResponse) => r.data.statuses,
   );
 
   return existingStatuses.find((s) => s.context === statusContext) ?? null;
