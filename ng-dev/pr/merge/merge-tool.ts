@@ -145,6 +145,7 @@ export class MergeTool {
       await strategy.check(pullRequest);
 
       Log.info('');
+      Log.info(green(`     PR: ${bold(pullRequest.title)}`));
       Log.info(green(`  ✓  Pull request can be merged into all target branches.`));
       Log.info();
 
