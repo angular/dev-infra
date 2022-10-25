@@ -24,5 +24,5 @@ export function getTargetedBranchesMessage(pullRequest: PullRequest): string {
   const targetBranchListAsString = pullRequest.targetBranches
     .map((b) => `  - ${bold(b)}`)
     .join('\n');
-  return `Pull request #${pullRequest.prNumber} will merge into:\n${targetBranchListAsString}`;
+  return `Pull Request #${pullRequest.prNumber} will merge into:\n${targetBranchListAsString}`;
 }
