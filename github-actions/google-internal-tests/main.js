@@ -18165,7 +18165,7 @@ async function main() {
   }
   const waitingForG3Status = {
     state: "pending",
-    description: `Waiting for Google Internal Tests. ${runTestGuideURL ? `@Googlers: See Details for instructions -->` : ""}`.trim(),
+    description: `Waiting for tests to start. ${runTestGuideURL ? `@Googlers: Initiate a presubmit. See -->` : ""}`.trim(),
     target_url: runTestGuideURL
   };
   const irrelevantToG3Status = {
