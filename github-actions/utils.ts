@@ -28,20 +28,19 @@ async function getJwtAuthedAppClient([appId, inputKey]: GithubAppMetadata) {
  * issue/pr event that this was performed by the Angular team. Additionally, this allows for us to
  * have another layer of ability to manage access as the Angular app needs to obtain permission to
  * act on a repository, unlike the github-actions robot account which implicitly has access based on
- * where it was  executed from.
+ * where it was executed from.
  */
-export async function getAuthTokenFor(app: GithubAppMetadata): Promise<string> {
+export async function getAuthTokenFor(
+  app: GithubAppMetadata,
+  repo = context.repo,
+): Promise<string> {
   const github = await getJwtAuthedAppClient(app);
 
-  const {id: installationId} = (
-    await github.apps.getRepoInstallation({
-      ...context.repo,
-    })
-  ).data;
+  const {id} = (await github.apps.getRepoInstallation({...repo})).data;
 
   const {token} = (
     await github.rest.apps.createInstallationAccessToken({
-      installation_id: installationId,
+      installation_id: id,
     })
   ).data;
 

@@ -38,7 +38,7 @@ export class UnsatisfiedBaseShaFatalError extends FatalMergeToolError {
 }
 
 export class MergeConflictsFatalError extends FatalMergeToolError {
-  constructor(failedBranches: string[]) {
+  constructor(public failedBranches: string[]) {
     super(
       `Could not merge pull request into the following branches due to merge ` +
         `conflicts: ${failedBranches.join(', ')}. Please rebase the PR or update the target label.`,
