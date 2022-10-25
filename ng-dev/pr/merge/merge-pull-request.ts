@@ -56,9 +56,13 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
       // Catch errors to the Github API for invalid requests. We want to
       // exit the script with a better explanation of the error.
       if (e instanceof GithubApiRequestError && e.status === 401) {
-        Log.error('Github API request failed. ' + e.message);
+        Log.error('Github API request failed: ' + bold(e.message));
         Log.error('Please ensure that your provided token is valid.');
         Log.warn(`You can generate a token here: ${GITHUB_TOKEN_GENERATE_URL}`);
+        return false;
+      }
+      if (e instanceof GithubApiRequestError) {
+        Log.error('Github API request failed: ' + bold(e.message));
         return false;
       }
       if (e instanceof UserAbortedMergeToolError) {
