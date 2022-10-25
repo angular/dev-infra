@@ -18143,15 +18143,24 @@ async function main() {
   const prNum = import_github.context.payload.pull_request.number;
   const prHeadSHA = import_github.context.payload.pull_request.head.sha;
   const prBaseRef = import_github.context.payload.pull_request.base.ref;
-  if (syncBranch !== prBaseRef) {
-    core.info(`Skipping Google Internal Tests action for PRs not targeting: ${syncBranch}`);
-    return;
-  }
   const github = new import_rest.Octokit({ auth: githubToken });
   const existingGoogleStatus = await findExistingTestStatus(github, prHeadSHA);
   if (existingGoogleStatus && ((_a = existingGoogleStatus.target_url) == null ? void 0 : _a.startsWith("http://cl/"))) {
+    core.info(`Pull request HEAD commit already has existing test status.`);
     return;
   }
+  if (syncBranch !== prBaseRef) {
+    core.info(`Skipping Google Internal Tests action for PRs not targeting: ${syncBranch}`);
+    await github.repos.createCommitStatus({
+      ...import_github.context.repo,
+      state: "success",
+      description: `Skipped. PR does not target \`${syncBranch}\` branch`,
+      context: statusContext,
+      sha: prHeadSHA
+    });
+    return;
+  }
+  core.info(`Checking pull request for files being synced into Google.`);
   const files = await github.paginate(github.pulls.listFiles, {
     ...import_github.context.repo,
     pull_number: prNum
