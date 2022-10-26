@@ -7,11 +7,32 @@ filegroup(
     srcs = glob(["*"]),
 )
 
+# This is a re-export of the Babel plugin code of `@angular-devkit/build-angular`. The
+# package has lots of dependencies which are not relevant for the Babel plugins so we
+# want to expose a more optimized `js_library` where all transitive unused dependencies
+# are not accidentally collected- speeding up and avoiding RBE input limits.
+js_library(
+    name = "angular_devkit_plugins",
+    package_name = "@angular-devkit/build-angular/src/babel/plugins",
+    srcs = [
+        "@npm//:node_modules/@angular-devkit/build-angular/src/babel/plugins/adjust-static-class-members.js",
+        "@npm//:node_modules/@angular-devkit/build-angular/src/babel/plugins/adjust-typescript-enums.js",
+        "@npm//:node_modules/@angular-devkit/build-angular/src/babel/plugins/elide-angular-metadata.js",
+        "@npm//:node_modules/@angular-devkit/build-angular/src/babel/plugins/pure-toplevel-functions.js",
+    ],
+    deps = [
+        "@npm//@babel/core",
+        "@npm//@babel/helper-annotate-as-pure",
+    ],
+)
+
 # Exposed `js_library` targets need to copy files to `bazel-out`. More details here:
 # https://github.com/bazelbuild/rules_nodejs/pull/3083.
 copy_to_bin(
     name = "js_lib_files",
-    srcs = ["esbuild-plugin.mjs"],
+    srcs = [
+        "esbuild-plugin.mjs",
+    ],
 )
 
 js_library(
@@ -19,7 +40,7 @@ js_library(
     package_name = "@angular/build-tooling/shared-scripts/angular-optimization",
     srcs = [":js_lib_files"],
     deps = [
-        "@npm//@angular-devkit/build-angular",
+        ":angular_devkit_plugins",
         "@npm//@babel/core",
     ],
 )
