@@ -68759,9 +68759,10 @@ async function main2(repo2, token2, pr2) {
       let description;
       if (e2 instanceof MergeConflictsFatalError) {
         core.info("Merge conflict found");
-        description = `Unable to merge into ${e2.failedBranches.join(", ")} please update changes or PR target`;
+        description = `Unable to merge into ${e2.failedBranches.join(", ")}`;
       } else {
-        core.info("Unknown error found when checking merge");
+        core.info("Unknown error found when checking merge:");
+        core.error(e2);
         description = "Cannot cleanly merge to all target branches, please update changes or PR target";
       }
       return {
@@ -68772,9 +68773,10 @@ async function main2(repo2, token2, pr2) {
   })();
   await git.github.repos.createCommitStatus({
     ...repo2,
-    ...statusInfo,
+    state: statusInfo.state,
+    description: statusInfo.description.substring(0, 139),
     sha: pullRequest.headSha,
-    context: "Branch Manager"
+    context: "mergeability"
   });
 }
 var token = await getAuthTokenFor(ANGULAR_ROBOT, true);

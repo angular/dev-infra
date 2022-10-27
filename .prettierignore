@@ -12,6 +12,7 @@ github-actions/slash-commands/main.js
 github-actions/post-approval-changes/main.js
 github-actions/org-file-sync/main.js
 github-actions/labels-sync/main.js
+.github/local-actions/branch-manager/main.js
 .github/local-actions/changelog/main.js
 
 bazel/map-size-tracking/test/size-golden.json

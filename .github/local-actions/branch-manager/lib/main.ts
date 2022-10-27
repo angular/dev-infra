@@ -118,11 +118,10 @@ async function main(repo: {owner: string; repo: string}, token: string, pr: numb
       let description: string;
       if (e instanceof MergeConflictsFatalError) {
         core.info('Merge conflict found');
-        description = `Unable to merge into ${e.failedBranches.join(
-          ', ',
-        )} please update changes or PR target`;
+        description = `Unable to merge into ${e.failedBranches.join(', ')}`;
       } else {
-        core.info('Unknown error found when checking merge');
+        core.info('Unknown error found when checking merge:');
+        core.error(e as Error);
         description =
           'Cannot cleanly merge to all target branches, please update changes or PR target';
       }
@@ -135,9 +134,11 @@ async function main(repo: {owner: string; repo: string}, token: string, pr: numb
 
   await git.github.repos.createCommitStatus({
     ...repo,
-    ...statusInfo,
+    state: statusInfo.state,
+    // Status descriptions are limited to 140 characters.
+    description: statusInfo.description.substring(0, 139),
     sha: pullRequest.headSha,
-    context: 'Branch Manager',
+    context: 'mergeability',
   });
 }
 
