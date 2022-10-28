@@ -1,13 +1,11 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import {CallableContext} from 'firebase-functions/lib/providers/https';
-
 /**
  * Request a short lived ng-dev token. If granted, we rely on session cookies as this token. The token
  * is to be used for all requests to the ng-dev service.
  */
 export const ngDevTokenRequest = functions.https.onCall(
-  async ({idToken}: {idToken: string}, context: CallableContext) => {
+  async ({idToken}: {idToken: string}, context: functions.https.CallableContext) => {
     if (!context.auth) {
       // Throwing an HttpsError so that the client gets the error details.
       throw new functions.https.HttpsError(
