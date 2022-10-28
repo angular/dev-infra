@@ -68679,11 +68679,11 @@ async function getJwtAuthedAppClient([appId, inputKey]) {
     auth: { appId, privateKey }
   });
 }
-async function getAuthTokenFor(app, useOrgInstallation = false) {
+async function getAuthTokenFor(app, repo2 = import_github4.context.repo) {
   const github = await getJwtAuthedAppClient(app);
-  const { id: installationId } = (await (useOrgInstallation ? github.apps.getOrgInstallation({ org: "angular" }) : github.apps.getRepoInstallation({ ...import_github4.context.repo }))).data;
+  const { id } = (await github.apps.getRepoInstallation({ ...repo2 })).data;
   const { token: token2 } = (await github.rest.apps.createInstallationAccessToken({
-    installation_id: installationId
+    installation_id: id
   })).data;
   return token2;
 }
@@ -68703,10 +68703,6 @@ var tempRepo = "branch-mananger-repo";
 var statusContextName = "mergeability";
 var mainBranchName = "main";
 async function main2(repo2, token2, pr2) {
-  if (isNaN(pr2)) {
-    core.setFailed("The provided pr value was not a number");
-    return;
-  }
   chdir("/tmp");
   console.log(spawnSync2("git", [
     "clone",
@@ -68783,10 +68779,14 @@ async function main2(repo2, token2, pr2) {
     context: statusContextName
   });
 }
-var token = await getAuthTokenFor(ANGULAR_ROBOT, true);
 var repo = core.getInput("repo", { required: true, trimWhitespace: true });
 var owner = core.getInput("owner", { required: true, trimWhitespace: true });
 var pr = Number(core.getInput("pr", { required: true, trimWhitespace: true }));
+if (isNaN(pr)) {
+  core.setFailed("The provided pr value was not a number");
+  process.exit();
+}
+var token = await getAuthTokenFor(ANGULAR_ROBOT, { repo, owner });
 try {
   await main2({ repo, owner }, token, pr).catch((e2) => {
     core.error(e2);

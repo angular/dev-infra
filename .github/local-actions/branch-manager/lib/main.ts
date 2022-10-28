@@ -35,11 +35,6 @@ const statusContextName = 'mergeability';
 const mainBranchName = 'main';
 
 async function main(repo: {owner: string; repo: string}, token: string, pr: number) {
-  if (isNaN(pr)) {
-    core.setFailed('The provided pr value was not a number');
-    return;
-  }
-
   // Because we want to perform this check in the targetted repository, we first need to check out the repo
   // and then move to the directory it is cloned into.
   chdir('/tmp');
@@ -150,14 +145,19 @@ async function main(repo: {owner: string; repo: string}, token: string, pr: numb
   });
 }
 
-/** The token for the angular robot to perform actions. */
-const token = await getAuthTokenFor(ANGULAR_ROBOT, true);
 /** The repository name for the pull request. */
 const repo = core.getInput('repo', {required: true, trimWhitespace: true});
 /** The owner of the repository for the pull request. */
 const owner = core.getInput('owner', {required: true, trimWhitespace: true});
 /** The pull request number. */
 const pr = Number(core.getInput('pr', {required: true, trimWhitespace: true}));
+// If the provided pr is not a number, we cannot evaluate the mergeability.
+if (isNaN(pr)) {
+  core.setFailed('The provided pr value was not a number');
+  process.exit();
+}
+/** The token for the angular robot to perform actions in the requested repo. */
+const token = await getAuthTokenFor(ANGULAR_ROBOT, {repo, owner});
 
 try {
   await main({repo, owner}, token, pr).catch((e: Error) => {

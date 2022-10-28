@@ -66774,11 +66774,11 @@ async function getJwtAuthedAppClient([appId, inputKey]) {
     auth: { appId, privateKey }
   });
 }
-async function getAuthTokenFor(app, useOrgInstallation = false) {
+async function getAuthTokenFor(app, repo = import_github6.context.repo) {
   const github = await getJwtAuthedAppClient(app);
-  const { id: installationId } = (await (useOrgInstallation ? github.apps.getOrgInstallation({ org: "angular" }) : github.apps.getRepoInstallation({ ...import_github6.context.repo }))).data;
+  const { id } = (await github.apps.getRepoInstallation({ ...repo })).data;
   const { token } = (await github.rest.apps.createInstallationAccessToken({
-    installation_id: installationId
+    installation_id: id
   })).data;
   return token;
 }
