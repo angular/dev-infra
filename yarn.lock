@@ -392,7 +392,7 @@ __metadata:
     ejs: ^3.1.6
     firebase: 9.9.4
     firebase-admin: ^11.0.0
-    firebase-functions: ^3.21.2
+    firebase-functions: ^4.0.0
     firebase-tools: ^11.0.1
     folder-hash: ^4.0.2
     font-color-contrast: ^11.1.0
@@ -9564,21 +9564,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"firebase-functions@npm:^3.21.2":
-  version: 3.22.0
-  resolution: "firebase-functions@npm:3.22.0"
+"firebase-functions@npm:^4.0.0":
+  version: 4.0.1
+  resolution: "firebase-functions@npm:4.0.1"
   dependencies:
     "@types/cors": ^2.8.5
     "@types/express": 4.17.3
     cors: ^2.8.5
     express: ^4.17.1
-    lodash: ^4.17.14
     node-fetch: ^2.6.7
   peerDependencies:
-    firebase-admin: ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0
+    firebase-admin: ^10.0.0 || ^11.0.0
   bin:
     firebase-functions: lib/bin/firebase-functions.js
-  checksum: 5006209ed6cbf541c5c3cfb036b51a1566cf8c63239d74d63d01fe46a5e5604ff12d25ecfdaaef68c6084505396eba22dc7130dfaa84957a5f2722ed5fde8656
+  checksum: d5b6be7be816e3bd0ee51a99fec339f2341364890217ca0afb7ac91bfb04293dc26ba26a70e375b6b09ab14923b3249c7d8db03cd4fb29fab12e00693cd65e5e
   languageName: node
   linkType: hard
 
