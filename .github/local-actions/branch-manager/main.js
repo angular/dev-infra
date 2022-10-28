@@ -68307,7 +68307,7 @@ async function loadAndValidatePullRequest({ git, config }, prNumber, validationC
   }
   const labels = prData.labels.nodes.map((l) => l.name);
   const githubTargetBranch = prData.baseRefName;
-  const { mainBranchName, name, owner: owner2 } = config.github;
+  const { mainBranchName: mainBranchName2, name, owner: owner2 } = config.github;
   let activeReleaseTrains = null;
   let target = null;
   if (config.pullRequest.__noTargetLabeling) {
@@ -68315,7 +68315,7 @@ async function loadAndValidatePullRequest({ git, config }, prNumber, validationC
   } else {
     activeReleaseTrains = await ActiveReleaseTrains.fetch({
       name,
-      nextBranchName: mainBranchName,
+      nextBranchName: mainBranchName2,
       owner: owner2,
       api: git.github
     });
@@ -68699,6 +68699,9 @@ async function revokeActiveInstallationToken(githubOrToken) {
 // 
 import { chdir } from "process";
 import { spawnSync as spawnSync2 } from "child_process";
+var tempRepo = "branch-mananger-repo";
+var statusContextName = "mergeability";
+var mainBranchName = "main";
 async function main2(repo2, token2, pr2) {
   if (isNaN(pr2)) {
     core.setFailed("The provided pr value was not a number");
@@ -68707,13 +68710,14 @@ async function main2(repo2, token2, pr2) {
   chdir("/tmp");
   console.log(spawnSync2("git", [
     "clone",
+    "--depth=1",
     `https://github.com/${repo2.owner}/${repo2.repo}.git`,
-    "./branch-manager-repo"
+    `./${tempRepo}`
   ]).output.toString());
-  chdir("/tmp/branch-manager-repo");
+  chdir(`/tmp/${tempRepo}`);
   setConfig({
     github: {
-      mainBranchName: "main",
+      mainBranchName,
       owner: repo2.owner,
       name: repo2.repo
     },
@@ -68746,7 +68750,7 @@ async function main2(repo2, token2, pr2) {
       };
     }
     try {
-      git.run(["checkout", "main"]);
+      git.run(["checkout", mainBranchName]);
       const strategy = new AutosquashMergeStrategy(git);
       await strategy.prepare(pullRequest);
       await strategy.check(pullRequest);
@@ -68759,7 +68763,7 @@ async function main2(repo2, token2, pr2) {
       let description;
       if (e2 instanceof MergeConflictsFatalError) {
         core.info("Merge conflict found");
-        description = `Unable to merge into ${e2.failedBranches.join(", ")}`;
+        description = `Unable to merge into: ${e2.failedBranches.join(", ")}`;
       } else {
         core.info("Unknown error found when checking merge:");
         core.error(e2);
@@ -68776,7 +68780,7 @@ async function main2(repo2, token2, pr2) {
     state: statusInfo.state,
     description: statusInfo.description.substring(0, 139),
     sha: pullRequest.headSha,
-    context: "mergeability"
+    context: statusContextName
   });
 }
 var token = await getAuthTokenFor(ANGULAR_ROBOT, true);

@@ -27,6 +27,13 @@ interface CommmitStatus {
   description: string;
 }
 
+/** The directory name for the temporary repo used for validation. */
+const tempRepo = 'branch-mananger-repo';
+/** The context name used for the commmit status applied. */
+const statusContextName = 'mergeability';
+/** The branch used as the primary branch for the temporary repo. */
+const mainBranchName = 'main';
+
 async function main(repo: {owner: string; repo: string}, token: string, pr: number) {
   if (isNaN(pr)) {
     core.setFailed('The provided pr value was not a number');
@@ -39,18 +46,19 @@ async function main(repo: {owner: string; repo: string}, token: string, pr: numb
   console.log(
     spawnSync('git', [
       'clone',
+      '--depth=1',
       `https://github.com/${repo.owner}/${repo.repo}.git`,
-      './branch-manager-repo',
+      `./${tempRepo}`,
     ]).output.toString(),
   );
-  chdir('/tmp/branch-manager-repo');
+  chdir(`/tmp/${tempRepo}`);
 
   // Manually define the configuration for the pull request and github to prevent having to
   // checkout the repository before defining the config.
   // TODO(josephperrott): Load this from the actual repository.
   setConfig(<{pullRequest: PullRequestConfig; github: GithubConfig}>{
     github: {
-      mainBranchName: 'main',
+      mainBranchName,
       owner: repo.owner,
       name: repo.repo,
     },
@@ -98,7 +106,7 @@ async function main(repo: {owner: string; repo: string}, token: string, pr: numb
     }
 
     try {
-      git.run(['checkout', 'main']);
+      git.run(['checkout', mainBranchName]);
       /**
        * A merge strategy used to perform the merge check.
        * Any concrete class implementing MergeStrategy is sufficient as all of our usage is
@@ -118,7 +126,7 @@ async function main(repo: {owner: string; repo: string}, token: string, pr: numb
       let description: string;
       if (e instanceof MergeConflictsFatalError) {
         core.info('Merge conflict found');
-        description = `Unable to merge into ${e.failedBranches.join(', ')}`;
+        description = `Unable to merge into: ${e.failedBranches.join(', ')}`;
       } else {
         core.info('Unknown error found when checking merge:');
         core.error(e as Error);
@@ -138,7 +146,7 @@ async function main(repo: {owner: string; repo: string}, token: string, pr: numb
     // Status descriptions are limited to 140 characters.
     description: statusInfo.description.substring(0, 139),
     sha: pullRequest.headSha,
-    context: 'mergeability',
+    context: statusContextName,
   });
 }
 
