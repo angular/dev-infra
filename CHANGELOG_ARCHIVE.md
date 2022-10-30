@@ -1,3 +1,28 @@
+<a name="2022.7.7"></a>
+# 2022.7.7 (2022-07-07)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [73d4292](https://github.com/angular/dev-infra/commit/73d42922727304bf3d7c606cdef627dc7c773164) | feat | move `app_bundle` rule outside of `benchmark` toolkit |
+| [4627840](https://github.com/angular/dev-infra/commit/4627840d02f712732735fbd116a29b088e896e49) | feat | move js mapping size tracking tool to dev-infra |
+### circleci-orb
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e258a71](https://github.com/angular/dev-infra/commit/e258a714881810c97f993dc90f4ea3bcf5f49fd6) | feat | create orb command for rebasing pull requests on the target branch |
+### github-actions
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4abbb11](https://github.com/angular/dev-infra/commit/4abbb1173fa43b729c101f7dfcffa629f2aa7fe2) | feat | create org-file-sync action |
+| [02950c9](https://github.com/angular/dev-infra/commit/02950c964f8c0cfc855685748c42b35c5aaa3ca5) | fix | actually log the repos and files being synced |
+| [9db43e7](https://github.com/angular/dev-infra/commit/9db43e72dd8c2d92a919c2ae895f33a54e626aa4) | fix | add logging and set undefined for `repoSha` and `repoFileContent` |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1fd5d8a](https://github.com/angular/dev-infra/commit/1fd5d8a97b8d3f0a70dc4db36ff755fb245bdfc3) | feat | **pr:** provide instructions for pushing back to the remote branch for pr checkout |
+## Special Thanks
+Joey Perrott, Paul Gschwendtner and angular-robot[bot]
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.6.28"></a>
 # 2022.6.28 (2022-06-28)
 ### bazel
