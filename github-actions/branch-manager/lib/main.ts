@@ -14,11 +14,13 @@ async function run() {
     const {ref} = context.payload as PushEvent;
     if (ref.startsWith('refs/tags/')) {
       core.info('No evaluation needed as tags do not cause branches to need to be rechecked');
+      return;
     }
 
     if (ref !== 'refs/heads/main') {
       // TODO: support pushes to all releasable branches rather than just main.
       core.info('Skipping evaluation as the push does not affect the main branch');
+      return;
     }
 
     core.info(`Evaluating pull requests as a result of a push to '${ref}'`);
@@ -66,7 +68,7 @@ type WorkflowInputs = typeof pullRequestFromContext;
 /** Create a workflow dispatch event to trigger the pr to be evaluated for mergeability. */
 function createWorkflowForPullRequest(prInfo?: Partial<WorkflowInputs>) {
   const inputs = {...pullRequestFromContext, ...prInfo};
-  core.info(`Requesting workflow run for: ${JSON.stringify(inputs)}`);
+  console.info(`Requesting workflow run for: ${JSON.stringify(inputs)}`);
   return github().then((api) =>
     api.actions.createWorkflowDispatch({
       headers: {
@@ -98,7 +100,7 @@ async function github() {
 
 try {
   await run().catch((e: Error) => {
-    core.error(e);
+    console.error(e);
     core.setFailed(e.message);
   });
 } finally {
