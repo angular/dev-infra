@@ -71,11 +71,6 @@ function createWorkflowForPullRequest(prInfo?: Partial<WorkflowInputs>) {
   console.info(`Requesting workflow run for: ${JSON.stringify(inputs)}`);
   return github().then((api) =>
     api.actions.createWorkflowDispatch({
-      headers: {
-        // Github requires the authorization to be `token <token>` for this endpoint instead of the
-        // standard `Bearer <token>`.
-        'authorization': `token ${token}`,
-      },
       owner: 'angular',
       repo: 'dev-infra',
       ref: 'main',
@@ -85,15 +80,13 @@ function createWorkflowForPullRequest(prInfo?: Partial<WorkflowInputs>) {
   );
 }
 
-/** The authorization token for the Github app. */
-let token: string;
-/** The Octokit instance, if defined to allow token revokation after the action executes. */
+/** The Octokit instance, if defined to allow token revocation after the action executes. */
 let _github: Octokit | null = null;
 /** Get the shared instance of Octokit, first creating the instance if necessary. */
 async function github() {
   if (_github === null) {
-    token = await getAuthTokenFor(ANGULAR_ROBOT);
-    _github = new Octokit({token});
+    const token = await getAuthTokenFor(ANGULAR_ROBOT);
+    _github = new Octokit({auth: token});
   }
   return _github;
 }
