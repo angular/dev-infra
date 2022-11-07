@@ -16,7 +16,7 @@ async function syncLabelsInRepo(github: Octokit, repoName: string, managedLabels
 
   core.debug(`Requesting labels`);
   /** The list of current labels from Github for the repository. */
-  const repoLabels = await github.paginate(github.issues.listLabelsForRepo, context.repo);
+  const repoLabels = await github.paginate(github.issues.listLabelsForRepo, repo);
   core.debug(`Retrieved ${repoLabels.length} from Github`);
 
   // For each label in the list of managed labels, ensure that it exists and is in sync.
