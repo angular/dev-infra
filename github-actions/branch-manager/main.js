@@ -1594,8 +1594,8 @@ var require_auth = __commonJS({
     };
     exports.BasicCredentialHandler = BasicCredentialHandler;
     var BearerCredentialHandler = class {
-      constructor(token2) {
-        this.token = token2;
+      constructor(token) {
+        this.token = token;
       }
       prepareRequest(options) {
         if (!options.headers) {
@@ -1614,8 +1614,8 @@ var require_auth = __commonJS({
     };
     exports.BearerCredentialHandler = BearerCredentialHandler;
     var PersonalAccessTokenCredentialHandler = class {
-      constructor(token2) {
-        this.token = token2;
+      constructor(token) {
+        this.token = token;
       }
       prepareRequest(options) {
         if (!options.headers) {
@@ -1681,11 +1681,11 @@ var require_oidc_utils = __commonJS({
         return new http_client_1.HttpClient("actions/oidc-client", [new auth_1.BearerCredentialHandler(OidcClient.getRequestToken())], requestOptions);
       }
       static getRequestToken() {
-        const token2 = process.env["ACTIONS_ID_TOKEN_REQUEST_TOKEN"];
-        if (!token2) {
+        const token = process.env["ACTIONS_ID_TOKEN_REQUEST_TOKEN"];
+        if (!token) {
           throw new Error("Unable to get ACTIONS_ID_TOKEN_REQUEST_TOKEN env variable");
         }
-        return token2;
+        return token;
       }
       static getIDTokenUrl() {
         const runtimeUrl = process.env["ACTIONS_ID_TOKEN_REQUEST_URL"];
@@ -2267,13 +2267,13 @@ var require_utils2 = __commonJS({
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.getApiBaseUrl = exports.getProxyAgent = exports.getAuthString = void 0;
     var httpClient = __importStar(require_lib());
-    function getAuthString(token2, options) {
-      if (!token2 && !options.auth) {
+    function getAuthString(token, options) {
+      if (!token && !options.auth) {
         throw new Error("Parameter token or opts.auth is required");
-      } else if (token2 && options.auth) {
+      } else if (token && options.auth) {
         throw new Error("Parameters token and opts.auth may not both be specified");
       }
-      return typeof options.auth === "string" ? options.auth : `token ${token2}`;
+      return typeof options.auth === "string" ? options.auth : `token ${token}`;
     }
     exports.getAuthString = getAuthString;
     function getProxyAgent(destinationUrl) {
@@ -9656,38 +9656,38 @@ var require_dist_node7 = __commonJS({
     var REGEX_IS_INSTALLATION_LEGACY = /^v1\./;
     var REGEX_IS_INSTALLATION = /^ghs_/;
     var REGEX_IS_USER_TO_SERVER = /^ghu_/;
-    async function auth(token2) {
-      const isApp = token2.split(/\./).length === 3;
-      const isInstallation = REGEX_IS_INSTALLATION_LEGACY.test(token2) || REGEX_IS_INSTALLATION.test(token2);
-      const isUserToServer = REGEX_IS_USER_TO_SERVER.test(token2);
+    async function auth(token) {
+      const isApp = token.split(/\./).length === 3;
+      const isInstallation = REGEX_IS_INSTALLATION_LEGACY.test(token) || REGEX_IS_INSTALLATION.test(token);
+      const isUserToServer = REGEX_IS_USER_TO_SERVER.test(token);
       const tokenType = isApp ? "app" : isInstallation ? "installation" : isUserToServer ? "user-to-server" : "oauth";
       return {
         type: "token",
-        token: token2,
+        token,
         tokenType
       };
     }
-    function withAuthorizationPrefix(token2) {
-      if (token2.split(/\./).length === 3) {
-        return `bearer ${token2}`;
+    function withAuthorizationPrefix(token) {
+      if (token.split(/\./).length === 3) {
+        return `bearer ${token}`;
       }
-      return `token ${token2}`;
+      return `token ${token}`;
     }
-    async function hook(token2, request, route, parameters) {
+    async function hook(token, request, route, parameters) {
       const endpoint = request.endpoint.merge(route, parameters);
-      endpoint.headers.authorization = withAuthorizationPrefix(token2);
+      endpoint.headers.authorization = withAuthorizationPrefix(token);
       return request(endpoint);
     }
-    var createTokenAuth = function createTokenAuth2(token2) {
-      if (!token2) {
+    var createTokenAuth = function createTokenAuth2(token) {
+      if (!token) {
         throw new Error("[@octokit/auth-token] No token passed to createTokenAuth");
       }
-      if (typeof token2 !== "string") {
+      if (typeof token !== "string") {
         throw new Error("[@octokit/auth-token] Token passed to createTokenAuth is not a string");
       }
-      token2 = token2.replace(/^(token|bearer) +/i, "");
-      return Object.assign(auth.bind(null, token2), {
-        hook: hook.bind(null, token2)
+      token = token.replace(/^(token|bearer) +/i, "");
+      return Object.assign(auth.bind(null, token), {
+        hook: hook.bind(null, token)
       });
     };
     exports.createTokenAuth = createTokenAuth;
@@ -11108,9 +11108,9 @@ var require_utils4 = __commonJS({
       }
     };
     exports.GitHub = core_1.Octokit.plugin(plugin_rest_endpoint_methods_1.restEndpointMethods, plugin_paginate_rest_1.paginateRest).defaults(defaults);
-    function getOctokitOptions(token2, options) {
+    function getOctokitOptions(token, options) {
       const opts = Object.assign({}, options || {});
-      const auth = Utils.getAuthString(token2, opts);
+      const auth = Utils.getAuthString(token, opts);
       if (auth) {
         opts.auth = auth;
       }
@@ -11157,8 +11157,8 @@ var require_github = __commonJS({
     var Context = __importStar(require_context());
     var utils_1 = require_utils4();
     exports.context = new Context.Context();
-    function getOctokit(token2, options) {
-      return new utils_1.GitHub(utils_1.getOctokitOptions(token2, options));
+    function getOctokit(token, options) {
+      return new utils_1.GitHub(utils_1.getOctokitOptions(token, options));
     }
     exports.getOctokit = getOctokit;
   }
@@ -14457,38 +14457,38 @@ var require_dist_node15 = __commonJS({
     var REGEX_IS_INSTALLATION_LEGACY = /^v1\./;
     var REGEX_IS_INSTALLATION = /^ghs_/;
     var REGEX_IS_USER_TO_SERVER = /^ghu_/;
-    async function auth(token2) {
-      const isApp = token2.split(/\./).length === 3;
-      const isInstallation = REGEX_IS_INSTALLATION_LEGACY.test(token2) || REGEX_IS_INSTALLATION.test(token2);
-      const isUserToServer = REGEX_IS_USER_TO_SERVER.test(token2);
+    async function auth(token) {
+      const isApp = token.split(/\./).length === 3;
+      const isInstallation = REGEX_IS_INSTALLATION_LEGACY.test(token) || REGEX_IS_INSTALLATION.test(token);
+      const isUserToServer = REGEX_IS_USER_TO_SERVER.test(token);
       const tokenType = isApp ? "app" : isInstallation ? "installation" : isUserToServer ? "user-to-server" : "oauth";
       return {
         type: "token",
-        token: token2,
+        token,
         tokenType
       };
     }
-    function withAuthorizationPrefix(token2) {
-      if (token2.split(/\./).length === 3) {
-        return `bearer ${token2}`;
+    function withAuthorizationPrefix(token) {
+      if (token.split(/\./).length === 3) {
+        return `bearer ${token}`;
       }
-      return `token ${token2}`;
+      return `token ${token}`;
     }
-    async function hook(token2, request, route, parameters) {
+    async function hook(token, request, route, parameters) {
       const endpoint = request.endpoint.merge(route, parameters);
-      endpoint.headers.authorization = withAuthorizationPrefix(token2);
+      endpoint.headers.authorization = withAuthorizationPrefix(token);
       return request(endpoint);
     }
-    var createTokenAuth = function createTokenAuth2(token2) {
-      if (!token2) {
+    var createTokenAuth = function createTokenAuth2(token) {
+      if (!token) {
         throw new Error("[@octokit/auth-token] No token passed to createTokenAuth");
       }
-      if (typeof token2 !== "string") {
+      if (typeof token !== "string") {
         throw new Error("[@octokit/auth-token] Token passed to createTokenAuth is not a string");
       }
-      token2 = token2.replace(/^(token|bearer) +/i, "");
-      return Object.assign(auth.bind(null, token2), {
-        hook: hook.bind(null, token2)
+      token = token.replace(/^(token|bearer) +/i, "");
+      return Object.assign(auth.bind(null, token), {
+        hook: hook.bind(null, token)
       });
     };
     exports.createTokenAuth = createTokenAuth;
@@ -18928,7 +18928,7 @@ var require_dist_node24 = __commonJS({
         clientType,
         clientId,
         clientSecret,
-        token: token2,
+        token,
         ...requestOptions
       } = options;
       const response = await (request$1 || request.request)("POST /applications/{client_id}/token/scoped", {
@@ -18936,7 +18936,7 @@ var require_dist_node24 = __commonJS({
           authorization: `basic ${btoa(`${clientId}:${clientSecret}`)}`
         },
         client_id: clientId,
-        access_token: token2,
+        access_token: token,
         ...requestOptions
       });
       const authentication = Object.assign({
@@ -19103,14 +19103,14 @@ var require_dist_node25 = __commonJS({
         return request2(endpoint);
       }
       const {
-        token: token2
+        token
       } = await getOAuthAccessToken(state, {
         request: request2,
         auth: {
           type: "oauth"
         }
       });
-      endpoint.headers.authorization = `token ${token2}`;
+      endpoint.headers.authorization = `token ${token}`;
       return request2(endpoint);
     }
     var VERSION = "4.0.1";
@@ -19300,7 +19300,7 @@ var require_dist_node26 = __commonJS({
         return request2(endpoint);
       }
       const {
-        token: token2
+        token
       } = state.clientType === "oauth-app" ? await auth({
         ...state,
         request: request2
@@ -19308,7 +19308,7 @@ var require_dist_node26 = __commonJS({
         ...state,
         request: request2
       });
-      endpoint.headers.authorization = "token " + token2;
+      endpoint.headers.authorization = "token " + token;
       return request2(endpoint);
     }
     function createOAuthUserAuth({
@@ -22279,14 +22279,14 @@ var require_dist_node28 = __commonJS({
         exp: expiration,
         iss: id
       };
-      const token2 = await getToken({
+      const token = await getToken({
         privateKey,
         payload
       });
       return {
         appId: id,
         expiration,
-        token: token2
+        token
       };
     }
     exports.githubAppJwt = githubAppJwt;
@@ -22996,7 +22996,7 @@ var require_dist_node29 = __commonJS({
       if (!result) {
         return;
       }
-      const [token2, createdAt, expiresAt, repositorySelection, permissionsString, singleFileName] = result.split("|");
+      const [token, createdAt, expiresAt, repositorySelection, permissionsString, singleFileName] = result.split("|");
       const permissions = options.permissions || permissionsString.split(/,/).reduce((permissions2, string) => {
         if (/!$/.test(string)) {
           permissions2[string.slice(0, -1)] = "write";
@@ -23006,7 +23006,7 @@ var require_dist_node29 = __commonJS({
         return permissions2;
       }, {});
       return {
-        token: token2,
+        token,
         createdAt,
         expiresAt,
         permissions,
@@ -23035,7 +23035,7 @@ var require_dist_node29 = __commonJS({
     }
     function toTokenAuthentication({
       installationId,
-      token: token2,
+      token,
       createdAt,
       expiresAt,
       repositorySelection,
@@ -23047,7 +23047,7 @@ var require_dist_node29 = __commonJS({
       return Object.assign({
         type: "token",
         tokenType: "installation",
-        token: token2,
+        token,
         installationId,
         permissions,
         createdAt,
@@ -23085,7 +23085,7 @@ var require_dist_node29 = __commonJS({
         const result = await get(state.cache, optionsWithInstallationTokenFromState);
         if (result) {
           const {
-            token: token3,
+            token: token2,
             createdAt: createdAt2,
             expiresAt: expiresAt2,
             permissions: permissions2,
@@ -23096,7 +23096,7 @@ var require_dist_node29 = __commonJS({
           } = result;
           return toTokenAuthentication({
             installationId,
-            token: token3,
+            token: token2,
             createdAt: createdAt2,
             expiresAt: expiresAt2,
             permissions: permissions2,
@@ -23111,7 +23111,7 @@ var require_dist_node29 = __commonJS({
       const request2 = customRequest || state.request;
       const {
         data: {
-          token: token2,
+          token,
           expires_at: expiresAt,
           repositories,
           permissions: permissionsOptional,
@@ -23136,7 +23136,7 @@ var require_dist_node29 = __commonJS({
       const repositoryNames = repositories ? repositories.map((repo) => repo.name) : void 0;
       const createdAt = new Date().toISOString();
       await set(state.cache, optionsWithInstallationTokenFromState, {
-        token: token2,
+        token,
         createdAt,
         expiresAt,
         repositorySelection,
@@ -23147,7 +23147,7 @@ var require_dist_node29 = __commonJS({
       });
       return toTokenAuthentication({
         installationId,
-        token: token2,
+        token,
         createdAt,
         expiresAt,
         repositorySelection,
@@ -23202,9 +23202,9 @@ var require_dist_node29 = __commonJS({
       }
       if (requiresAppAuth(url.replace(request2.endpoint.DEFAULTS.baseUrl, ""))) {
         const {
-          token: token3
+          token: token2
         } = await getAppAuthentication(state);
-        endpoint.headers.authorization = `bearer ${token3}`;
+        endpoint.headers.authorization = `bearer ${token2}`;
         let response;
         try {
           response = await request2(endpoint);
@@ -23219,12 +23219,12 @@ var require_dist_node29 = __commonJS({
           state.log.warn(error.message);
           state.log.warn(`[@octokit/auth-app] GitHub API time and system time are different by ${diff} seconds. Retrying request with the difference accounted for.`);
           const {
-            token: token4
+            token: token3
           } = await getAppAuthentication({
             ...state,
             timeDifference: diff
           });
-          endpoint.headers.authorization = `bearer ${token4}`;
+          endpoint.headers.authorization = `bearer ${token3}`;
           return request2(endpoint);
         }
         return response;
@@ -23237,14 +23237,14 @@ var require_dist_node29 = __commonJS({
         return request2(endpoint);
       }
       const {
-        token: token2,
+        token,
         createdAt
       } = await getInstallationAuthentication(
         state,
         {},
         request2
       );
-      endpoint.headers.authorization = `token ${token2}`;
+      endpoint.headers.authorization = `token ${token}`;
       return sendRequestWithRetries(state, request2, endpoint, createdAt);
     }
     async function sendRequestWithRetries(state, request2, options, createdAt, retries = 0) {
@@ -23489,10 +23489,10 @@ async function getJwtAuthedAppClient([appId, inputKey]) {
 async function getAuthTokenFor(app, repo = import_github.context.repo) {
   const github2 = await getJwtAuthedAppClient(app);
   const { id } = (await github2.apps.getRepoInstallation({ ...repo })).data;
-  const { token: token2 } = (await github2.rest.apps.createInstallationAccessToken({
+  const { token } = (await github2.rest.apps.createInstallationAccessToken({
     installation_id: id
   })).data;
-  return token2;
+  return token;
 }
 async function revokeActiveInstallationToken(githubOrToken) {
   if (typeof githubOrToken === "string") {
@@ -23545,9 +23545,6 @@ function createWorkflowForPullRequest(prInfo) {
   const inputs = { ...pullRequestFromContext, ...prInfo };
   console.info(`Requesting workflow run for: ${JSON.stringify(inputs)}`);
   return github().then((api) => api.actions.createWorkflowDispatch({
-    headers: {
-      "authorization": `token ${token}`
-    },
     owner: "angular",
     repo: "dev-infra",
     ref: "main",
@@ -23555,12 +23552,11 @@ function createWorkflowForPullRequest(prInfo) {
     inputs
   }));
 }
-var token;
 var _github = null;
 async function github() {
   if (_github === null) {
-    token = await getAuthTokenFor(ANGULAR_ROBOT);
-    _github = new import_rest2.Octokit({ token });
+    const token = await getAuthTokenFor(ANGULAR_ROBOT);
+    _github = new import_rest2.Octokit({ auth: token });
   }
   return _github;
 }
