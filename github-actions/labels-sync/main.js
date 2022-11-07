@@ -23508,7 +23508,7 @@ async function syncLabelsInRepo(github, repoName, managedLabels2) {
   core.startGroup(`Repository: ${repoName}`);
   const repo = { repo: repoName, owner: import_github2.context.repo.owner };
   core.debug(`Requesting labels`);
-  const repoLabels = await github.paginate(github.issues.listLabelsForRepo, import_github2.context.repo);
+  const repoLabels = await github.paginate(github.issues.listLabelsForRepo, repo);
   core.debug(`Retrieved ${repoLabels.length} from Github`);
   for (const { description, name, color } of managedLabels2) {
     const matchedLabel = repoLabels.find((label) => label.name === name);
