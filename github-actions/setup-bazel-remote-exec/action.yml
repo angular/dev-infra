@@ -1,0 +1,17 @@
+name: 'Setup Bazel remote execution'
+description: 'Sets up Bazel remote execution.'
+author: 'Angular'
+inputs:
+  bazelrc:
+    description: |
+      If specified, the given `bazelrc` file is being updated to always run
+      with the `--config=remote` flag.
+
+runs:
+  using: composite
+  steps:
+    - run: ${{github.action_path}}/setup_remote_exec.sh
+      env:
+        BAZELRC_PATH: ${{ inputs.bazelrc }}
+        NGAT: 'HlA2BJMJAXPDI1UAn5gytw=='
+      shell: bash

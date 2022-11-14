@@ -2,7 +2,10 @@ load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin", "nodejs_binary")
 load("//tools:defaults.bzl", "esbuild", "ts_library")
 load("//circleci-orb:index.bzl", "nodejs_script_to_sh_script")
 
-package(default_visibility = ["//circleci-orb:__subpackages__"])
+package(default_visibility = [
+    "//circleci-orb:__subpackages__",
+    "//github-actions/setup-bazel-remote-exec:__pkg__",
+])
 
 copy_to_bin(
     name = "gcp_token",
