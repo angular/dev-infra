@@ -18,6 +18,7 @@ ${content}
 NGEOF
 `;
   await fs.promises.writeFile(outputExecpath, output, 'utf8');
+  await fs.promises.chmod(outputExecpath, 0o777);
 }
 
 try {
