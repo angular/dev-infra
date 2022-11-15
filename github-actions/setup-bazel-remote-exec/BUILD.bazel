@@ -2,6 +2,8 @@ load("@build_bazel_rules_nodejs//:index.bzl", "generated_file_test")
 
 package(default_visibility = ["//github-actions/slash-commands:__subpackages__"])
 
+exports_files(["setup_remote_exec.sh"])
+
 generated_file_test(
     name = "setup_remote_exec_script",
     src = "setup_remote_exec.sh",
