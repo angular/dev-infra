@@ -68205,6 +68205,11 @@ var managedLabels = createTypedObject()({
     description: "Related to the documentation",
     name: "area: docs",
     commitCheck: (c) => c.type === "docs"
+  },
+  DETECTED_INFRA_CHANGE: {
+    description: "Related the build and CI infrastructure of the project",
+    name: "area: build & ci",
+    commitCheck: (c) => c.type === "build" || c.type === "ci"
   }
 });
 
