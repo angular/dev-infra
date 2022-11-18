@@ -27,4 +27,9 @@ export const managedLabels = createTypedObject<ManagedLabel>()({
     name: 'area: docs',
     commitCheck: (c: Commit) => c.type === 'docs',
   },
+  DETECTED_INFRA_CHANGE: {
+    description: 'Related the build and CI infrastructure of the project',
+    name: 'area: build & ci',
+    commitCheck: (c: Commit) => c.type === 'build' || c.type === 'ci',
+  },
 });
