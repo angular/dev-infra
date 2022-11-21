@@ -223,14 +223,13 @@ export const GoogleOAuthDanceConfig: OAuthDanceConfig = {
 
 export const GithubOAuthDanceConfig: OAuthDanceConfig = {
   /** client_id and client_secret for ng-caretaker Github App. */
-  // TODO(josephperrott): Migrate to angular-robot Github App.
   loopback: {
-    client_id: 'Iv1.58b338d4f1a5ba12',
-    client_secret: '4a75aa1531f5ffa2b6ff793468ad2de90cb1d8cd',
+    client_id: 'Iv1.57e16107abc663d9',
+    client_secret: 'c9b2b8cfbd59d6a36311607154dccabd8ce042e6',
   },
   oob: {
-    client_id: 'Iv1.58b338d4f1a5ba12',
-    client_secret: '4a75aa1531f5ffa2b6ff793468ad2de90cb1d8cd',
+    client_id: 'Iv1.57e16107abc663d9',
+    client_secret: 'c9b2b8cfbd59d6a36311607154dccabd8ce042e6',
   },
   scope: [].join(' '),
   authConfig: new AuthorizationServiceConfiguration({
