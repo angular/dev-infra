@@ -1,3 +1,18 @@
+<a name="2022.7.31"></a>
+# 2022.7.31 (2022-07-31)
+### apps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1609543](https://github.com/angular/dev-infra/commit/1609543e7d76ccf66fbbab1bfa8ae4c2767adb80) | feat | create credential service server ([#729](https://github.com/angular/dev-infra/pull/729)) |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [934abb0](https://github.com/angular/dev-infra/commit/934abb0169fbd113021fe8bad1adef130bdd5724) | feat | **pr:** add dry-run flag to pr merge tooling ([#733](https://github.com/angular/dev-infra/pull/733)) |
+| [64e801f](https://github.com/angular/dev-infra/commit/64e801fe2e99adfc960ab1fb8d3789f29e0dab0a) | feat | **pr:** check for branch conflicts before confirming merge in pr merge tooling ([#733](https://github.com/angular/dev-infra/pull/733)) |
+## Special Thanks
+Joey Perrott and Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.7.24"></a>
 # 2022.7.24 (2022-07-24)
 ### apps
