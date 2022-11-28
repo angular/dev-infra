@@ -1,0 +1,49 @@
+name: Pack and upload Artifacts to Workflow
+author: 'Angular'
+description: |
+  Action that takes a built artifact, injects metadata, zips it up, uploads
+  it to the current GitHub action workflow.
+
+  Following best-practices from:
+  https://securitylab.github.com/research/github-actions-preventing-pwn-requests
+
+# NOTE: All inputs here are considered unsafe since this action is expected
+# to run in workflows from forked builds (allowing for arbitrary changes).
+inputs:
+  workflow-artifact-name:
+    required: true
+    description: |
+      Name of the artifact that should be deployed. A workflow may contain
+      multiple artifacts but only a single one can be picked for deployment.
+
+  pull-number:
+    required: true
+    description: Pull request for which the artifact is built for.
+
+  artifact-build-revision:
+    required: true
+    description: |
+      A unique identifier describing the revision of the artifact. This is
+      usually the Git SHA for which the artifact has been built.
+
+  deploy-directory:
+    required: true
+    description: |
+      Project-relative path to the directory contents that should be deployed.
+      This is usually the distribution directory, like `dist/my-app/`.
+
+runs:
+  using: composite
+  steps:
+    - name: Injecting artifact metadata
+      shell: bash
+      run: |
+        node ${{github.action_path}}/inject-artifact-metadata.js \
+          '${{inputs.deploy-directory}}' \
+          '${{inputs.pull-number}}' \
+          '${{inputs.artifact-build-revision}}'
+
+    - uses: actions/upload-artifact@82c141cc518b40d92cc801eee768e7aafc9c2fa2 # renovate: tag=v2.0.0
+      with:
+        name: '${{inputs.workflow-artifact-name}}'
+        path: '${{inputs.deploy-directory}}'

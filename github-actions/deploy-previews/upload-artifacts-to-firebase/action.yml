@@ -1,0 +1,87 @@
+name: Upload Artifacts to Firebase previews
+author: 'Angular'
+description: |
+  Action that downloads a named artifact from a GitHub workflow and uploads
+  it to a Firebase preview channel. The deployment to Firebase happens through
+  a separate upload artifact workflow to avoid executing build processes in
+  privileged environments.
+
+  Following best-practices from:
+  https://securitylab.github.com/research/github-actions-preventing-pwn-requests
+
+# NOTE: There are two categories of input data to this action:
+#
+#  - TRUSTED: Values for such inputs should not be changeable by third-parties.
+#             This is information usually hard-coded in the privileged job running from `main`.
+#
+#  - RISK: These inputs are considered unsafe and values may be abused by third-parties.
+#          This is usually information coming directly from the build job portion.
+inputs:
+  github-token:
+    required: true
+    description: |
+      TRUSTED: GitHub Token used for creating the commit statuses.
+
+  workflow-artifact-name:
+    required: true
+    description: |
+      TRUSTED: Name of the artifact that should be deployed. A workflow may contain
+      multiple artifacts but only a single one can be picked for deployment.
+
+  firebase-config-dir:
+    default: './'
+    description: |
+      TRUSTED: Project-relative path to the directory containing the `firebase.json` file.
+  firebase-public-dir:
+    required: true
+    description: |
+      TRUSTED: Project-relative path to the directory where artifacts should be put into.
+  firebase-project-id:
+    required: true
+    description: |
+      TRUSTED: ID of the Firebase project used for deployment.
+  firebase-service-key:
+    required: true
+    description: |
+      TRUSTED: Contents of a Firebase service key authorizing the deployment.
+
+runs:
+  using: composite
+  steps:
+    - name: 'Download artifact from build job'
+      shell: bash
+      run: |
+        node ${{github.action_path}}/fetch-workflow-artifact.js \
+          '${{github.event.workflow_run.id}}' '${{inputs.workflow-artifact-name}}' > unsafe-artifact.zip"
+      env:
+        GITHUB_TOKEN: '${{inputs.github-token}}'
+
+    # RISK: The downloaded `unsafe-artifact` is of input category `RISK`.
+    - name: Extracting workflow artifact into Firebase public directory.
+      shell: bash
+      run: |
+        mkdir -p '${{inputs.firebase-public-dir}}'
+        unzip unsafe-artifact.zip -d '${{inputs.firebase-public-dir}}'
+
+    - name: Extracting artifact metadata
+      id: artifact-info
+      shell: bash
+      run: node ${{github.action_path}}/extract-artifact-metadata.js '${{inputs.firebase-public-dir}}'
+
+    - uses: FirebaseExtended/action-hosting-deploy@276388dd6c2cde23455b30293105cc866c22282d # renovate: tag=v0.0.0
+      id: deploy
+      with:
+        # Note: No token used here as the action otherwise may attempt to post a
+        # comment. We use our own sticky non-spam comments below.
+        repoToken: ''
+        firebaseServiceAccount: '${{inputs.firebase-service-key}}'
+        expires: 20d
+        projectId: '${{inputs.firebase-project-id}}'
+        entryPoint: '${{inputs.firebase-config-dir}'
+        channelId: pr-${{steps.artifact-info.outputs.pull-number}}-${{steps.artifact-info.outputs.build-revision}}
+
+    - uses: marocchino/sticky-pull-request-comment@39c5b5dc7717447d0cba270cd115037d32d28443 # renovate: tag=v2.0.0
+      with:
+        message: |
+          Deployed ${{inputs.workflow-artifact-name}} to: ${{steps.deploy.outputs.details_url}}
+        number: ${{steps.artifact-info.outputs.pull-number}}
