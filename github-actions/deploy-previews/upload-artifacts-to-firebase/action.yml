@@ -80,7 +80,7 @@ runs:
         entryPoint: '${{inputs.firebase-config-dir}'
         channelId: pr-${{steps.artifact-info.outputs.pull-number}}-${{steps.artifact-info.outputs.build-revision}}
 
-    - uses: marocchino/sticky-pull-request-comment@39c5b5dc7717447d0cba270cd115037d32d28443 # renovate: tag=v2.0.0
+    - uses: marocchino/sticky-pull-request-comment@f3bbb8300013c686241004a1c1b5d4045b10bc30 # tag=v2.0.0
       with:
         message: |
           Deployed ${{inputs.workflow-artifact-name}} to: ${{steps.deploy.outputs.details_url}}
