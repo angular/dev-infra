@@ -5,6 +5,7 @@ ng-dev/utils/protos/*.js
 
 github-actions/create-pr-for-changes/main.js
 github-actions/feature-request/main.js
+github-actions/unified-status-check/main.js
 github-actions/google-internal-tests/main.js
 github-actions/lock-closed/main.js
 github-actions/commit-message-based-labels/main.js

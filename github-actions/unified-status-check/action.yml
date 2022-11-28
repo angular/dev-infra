@@ -1,0 +1,17 @@
+name: 'Unified Status Check'
+description: 'Monitor the statuses on a pull request to ensure all expected statuses are passing'
+author: 'Angular'
+inputs:
+  angular-robot-key:
+    description: 'The private key for the Angular Robot Github app.'
+    required: true
+  ignored:
+    description: 'Status matchers (string or regex) to be ignored.'
+    required: false
+  required:
+    description: 'Status matchers (string or regex) required to match at least one status.'
+    required: false
+
+runs:
+  using: 'node16'
+  main: 'main.js'
