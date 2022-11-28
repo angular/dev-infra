@@ -1,10 +1,13 @@
 name: 'Unified Status Check'
-description: 'Monitor the statuses on a pull request to ensure all expected stauses are passing'
+description: 'Monitor the statuses on a pull request to ensure all expected statuses are passing'
 author: 'Angular'
 inputs:
   angular-robot-key:
     description: 'The private key for the Angular Robot Github app.'
     required: true
+  ignored-statuses:
+    description: 'Statuses which should be ignored by the united status check action.'
+    required: false
 
 runs:
   using: 'node16'

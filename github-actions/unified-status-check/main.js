@@ -2066,11 +2066,11 @@ var require_core = __commonJS({
       return val.trim();
     }
     exports.getInput = getInput2;
-    function getMultilineInput(name, options) {
+    function getMultilineInput2(name, options) {
       const inputs = getInput2(name, options).split("\n").filter((x) => x !== "");
       return inputs;
     }
-    exports.getMultilineInput = getMultilineInput;
+    exports.getMultilineInput = getMultilineInput2;
     function getBooleanInput(name, options) {
       const trueValue = ["true", "True", "TRUE"];
       const falseValue = ["false", "False", "FALSE"];
@@ -23644,6 +23644,10 @@ var unifiedStatusCheckName = "Unified Status";
 async function main() {
   const github = new import_rest2.Octokit({ auth: await getAuthTokenFor(ANGULAR_ROBOT) });
   try {
+    const ignoredStatuses = [
+      unifiedStatusCheckName,
+      ...core.getMultilineInput("ignored-statuses", { trimWhitespace: true })
+    ];
     const pullRequest = (await github.graphql((0, import_typed_graphqlify.query)(PR_SCHEMA).toString(), {
       ...import_github2.context.issue
     })).repository.pullRequest;
@@ -23672,18 +23676,18 @@ async function main() {
         };
       }
       throw Error();
-    }).filter(({ name }) => name !== unifiedStatusCheckName);
-    const counts = statuses.reduce((counts2, { state }) => {
+    }).filter(({ name }) => !ignoredStatuses.includes(name));
+    const counts = statuses.reduce((count, { state }) => {
       if (isPassingState(state)) {
-        counts2.passing += 1;
+        count.passing += 1;
       }
       if (isPendingState(state)) {
-        counts2.pending += 1;
+        count.pending += 1;
       }
       if (isFailingState(state)) {
-        counts2.failing += 1;
+        count.failing += 1;
       }
-      return counts2;
+      return count;
     }, { passing: 0, failing: 0, pending: 0 });
     if (counts.failing > 0) {
       await github.repos.createCommitStatus({

@@ -12,6 +12,11 @@ async function main() {
   const github = new Octokit({auth: await getAuthTokenFor(ANGULAR_ROBOT)});
 
   try {
+    /** Statuses to ignore within the context of the action, always ignoring the actions own status. */
+    const ignoredStatuses = [
+      unifiedStatusCheckName,
+      ...core.getMultilineInput('ignored-statuses', {trimWhitespace: true}),
+    ];
     /** The pull request triggering the event */
     const pullRequest = (
       await github.graphql<typeof PR_SCHEMA>(query(PR_SCHEMA).toString(), {
@@ -51,21 +56,20 @@ async function main() {
         }
         throw Error();
       })
-      // Do not check the unified status for its state as it can prevent itself from ever passing.
-      .filter(({name}) => name !== unifiedStatusCheckName);
+      .filter(({name}) => !ignoredStatuses.includes(name));
 
     const counts = statuses.reduce(
-      (counts, {state}) => {
+      (count, {state}) => {
         if (isPassingState(state)) {
-          counts.passing += 1;
+          count.passing += 1;
         }
         if (isPendingState(state)) {
-          counts.pending += 1;
+          count.pending += 1;
         }
         if (isFailingState(state)) {
-          counts.failing += 1;
+          count.failing += 1;
         }
-        return counts;
+        return count;
       },
       {passing: 0, failing: 0, pending: 0},
     );
