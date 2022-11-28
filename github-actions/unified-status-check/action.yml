@@ -1,0 +1,11 @@
+name: 'Unified Status Check'
+description: 'Monitor the statuses on a pull request to ensure all expected stauses are passing'
+author: 'Angular'
+inputs:
+  angular-robot-key:
+    description: 'The private key for the Angular Robot Github app.'
+    required: true
+
+runs:
+  using: 'node16'
+  main: 'main.js'
