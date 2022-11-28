@@ -1,0 +1,12 @@
+load("//tools:defaults.bzl", "ts_library")
+
+package(default_visibility = ["//github-actions/deploy-previews:__subpackages__"])
+
+ts_library(
+    name = "inject_artifact_metadata_lib",
+    srcs = ["inject-artifact-metadata.ts"],
+    deps = [
+        "//github-actions/deploy-previews:constants_lib",
+        "@npm//@types/node",
+    ],
+)
