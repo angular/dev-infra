@@ -5,8 +5,11 @@ inputs:
   angular-robot-key:
     description: 'The private key for the Angular Robot Github app.'
     required: true
-  ignored-statuses:
-    description: 'Statuses which should be ignored by the united status check action.'
+  ignored:
+    description: 'Status matchers to be ignored.'
+    required: false
+  required:
+    description: 'Status matchers required to match at least one status.'
     required: false
 
 runs:

@@ -23644,22 +23644,27 @@ var unifiedStatusCheckName = "Unified Status";
 async function main() {
   const github = new import_rest2.Octokit({ auth: await getAuthTokenFor(ANGULAR_ROBOT) });
   try {
-    const ignoredStatuses = [
+    const ignored = [
       unifiedStatusCheckName,
-      ...core.getMultilineInput("ignored-statuses", { trimWhitespace: true })
+      ...core.getMultilineInput("ignored", { trimWhitespace: true })
     ];
+    const required = core.getMultilineInput("required", { trimWhitespace: true });
     const pullRequest = (await github.graphql((0, import_typed_graphqlify.query)(PR_SCHEMA).toString(), {
       ...import_github2.context.issue
     })).repository.pullRequest;
     const statusChecks = pullRequest.commits.nodes[0].commit.statusCheckRollup;
-    if (!statusChecks || pullRequest.isDraft) {
+    const setStatus = async (state, description) => {
       await github.repos.createCommitStatus({
         ...import_github2.context.repo,
-        state: "pending",
         sha: pullRequest.commits.nodes[0].commit.oid,
         context: unifiedStatusCheckName,
-        description: "Unified Status checks have not yet started"
+        state,
+        description
       });
+      return;
+    };
+    if (!statusChecks || pullRequest.isDraft) {
+      await setStatus("pending", "Unified Status checks have not yet started");
       return;
     }
     const statuses = statusChecks.contexts.nodes.map((checkOrStatus) => {
@@ -23675,8 +23680,13 @@ async function main() {
           name: checkOrStatus.name || "Unknown Check Run"
         };
       }
-      throw Error();
-    }).filter(({ name }) => !ignoredStatuses.includes(name));
+      throw Error("CheckOrStatus was not found to be a check or a status");
+    }).filter(({ name }) => !ignored.includes(name));
+    const missedStatuses = required.filter((matcher) => !statuses.some(({ name }) => name.match(matcher)));
+    if (missedStatuses.length > 0) {
+      await setStatus("pending", `Waiting for missing required status: ${missedStatuses.join(", ")}`);
+      return;
+    }
     const counts = statuses.reduce((count, { state }) => {
       if (isPassingState(state)) {
         count.passing += 1;
@@ -23690,31 +23700,14 @@ async function main() {
       return count;
     }, { passing: 0, failing: 0, pending: 0 });
     if (counts.failing > 0) {
-      await github.repos.createCommitStatus({
-        ...import_github2.context.repo,
-        sha: pullRequest.commits.nodes[0].commit.oid,
-        context: unifiedStatusCheckName,
-        state: "failure",
-        description: `${counts.failing} expected status(es) failing`
-      });
+      await setStatus("failure", `${counts.failing} expected status(es) failing`);
       return;
     }
     if (counts.pending > 0) {
-      await github.repos.createCommitStatus({
-        ...import_github2.context.repo,
-        state: "pending",
-        sha: pullRequest.commits.nodes[0].commit.oid,
-        context: unifiedStatusCheckName,
-        description: "Expected statuses are still pending"
-      });
+      await setStatus("pending", "Expected statuses are still pending");
       return;
     }
-    await github.repos.createCommitStatus({
-      ...import_github2.context.repo,
-      sha: pullRequest.commits.nodes[0].commit.oid,
-      context: unifiedStatusCheckName,
-      state: "success"
-    });
+    await setStatus("success");
   } finally {
     await revokeActiveInstallationToken(github);
   }
