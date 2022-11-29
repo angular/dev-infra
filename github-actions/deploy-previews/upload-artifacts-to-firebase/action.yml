@@ -52,7 +52,7 @@ runs:
       shell: bash
       run: |
         node ${{github.action_path}}/fetch-workflow-artifact.js \
-          '${{github.event.workflow_run.id}}' '${{inputs.workflow-artifact-name}}' > unsafe-artifact.zip"
+          '${{github.event.workflow_run.id}}' '${{inputs.workflow-artifact-name}}' > unsafe-artifact.zip
       env:
         GITHUB_TOKEN: '${{inputs.github-token}}'
 
