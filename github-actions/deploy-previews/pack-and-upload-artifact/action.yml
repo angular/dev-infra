@@ -35,15 +35,25 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Copying artifact to temp directory to allow for metadata injection.
+      id: copy
+      shell: bash
+      run: |
+        dir="$RUNNER_TEMP/pack-and-upload-tmp-dir"
+        mkdir -p $dir
+        cp "${{inputs.deploy-directory}}/*" "$dir"
+        chmod -R 644 "$dir"
+        echo "deploy-dir=$dir" >> $GITHUB_OUTPUT
+
     - name: Injecting artifact metadata
       shell: bash
       run: |
         node ${{github.action_path}}/inject-artifact-metadata.js \
-          '${{inputs.deploy-directory}}' \
+          '${{steps.copy.outputs.deploy-dir}}' \
           '${{inputs.pull-number}}' \
           '${{inputs.artifact-build-revision}}'
 
     - uses: actions/upload-artifact@82c141cc518b40d92cc801eee768e7aafc9c2fa2 # renovate: tag=v2.0.0
       with:
         name: '${{inputs.workflow-artifact-name}}'
-        path: '${{inputs.deploy-directory}}'
+        path: '${{steps.copy.outputs.deploy-dir}}'
