@@ -41,7 +41,7 @@ runs:
       run: |
         dir="$RUNNER_TEMP/pack-and-upload-tmp-dir"
         mkdir -p $dir
-        cp "${{inputs.deploy-directory}}/*" "$dir"
+        cp -R "${{inputs.deploy-directory}}" "$dir"
         chmod -R 644 "$dir"
         echo "deploy-dir=$dir" >> $GITHUB_OUTPUT
 
