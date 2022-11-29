@@ -6,10 +6,10 @@ inputs:
     description: 'The private key for the Angular Robot Github app.'
     required: true
   ignored:
-    description: 'Status matchers to be ignored.'
+    description: 'Status matchers (string or regex) to be ignored.'
     required: false
   required:
-    description: 'Status matchers required to match at least one status.'
+    description: 'Status matchers (string or regex) required to match at least one status.'
     required: false
 
 runs:

@@ -23653,38 +23653,49 @@ async function main() {
       ...import_github2.context.issue
     })).repository.pullRequest;
     const statusChecks = pullRequest.commits.nodes[0].commit.statusCheckRollup;
-    const setStatus = async (state, description) => {
-      await github.repos.createCommitStatus({
-        ...import_github2.context.repo,
-        sha: pullRequest.commits.nodes[0].commit.oid,
-        context: unifiedStatusCheckName,
-        state,
-        description
-      });
-      return;
-    };
-    if (!statusChecks || pullRequest.isDraft) {
-      await setStatus("pending", "Unified Status checks have not yet started");
+    if (!statusChecks) {
       return;
     }
-    const statuses = statusChecks.contexts.nodes.map((checkOrStatus) => {
+    const allStatuses = statusChecks.contexts.nodes.map((checkOrStatus) => {
       if (checkOrStatus.__typename === "StatusContext") {
         return {
           state: checkOrStatus.state,
-          name: checkOrStatus.context
+          name: checkOrStatus.context,
+          description: checkOrStatus.description || void 0
         };
       }
       if (checkOrStatus.__typename === "CheckRun") {
         return {
           state: checkOrStatus.conclusion ? checkConclusionStateToStatusStateMap.get(checkOrStatus.conclusion) : "PENDING",
-          name: checkOrStatus.name || "Unknown Check Run"
+          description: checkOrStatus.title || void 0,
+          name: checkOrStatus.name || "unknown-check-run"
         };
       }
       throw Error("CheckOrStatus was not found to be a check or a status");
-    }).filter(({ name }) => !ignored.includes(name));
+    });
+    const statuses = allStatuses.filter(({ name }) => !ignored.includes(name));
+    const unifiedCheckStatus = allStatuses.find(({ name }) => name === unifiedStatusCheckName);
+    const setStatus = async (state, description) => {
+      if (unifiedCheckStatus && unifiedCheckStatus.state === state && unifiedCheckStatus.description === description) {
+        console.log("Skipping status update as the request status and information is the same as the current status");
+        return;
+      }
+      await github.repos.createCommitStatus({
+        ...import_github2.context.repo,
+        sha: pullRequest.commits.nodes[0].commit.oid,
+        context: unifiedStatusCheckName,
+        state: state.toLowerCase(),
+        description
+      });
+      return;
+    };
+    if (pullRequest.isDraft) {
+      await setStatus("PENDING", "PR is still a draft");
+      return;
+    }
     const missedStatuses = required.filter((matcher) => !statuses.some(({ name }) => name.match(matcher)));
     if (missedStatuses.length > 0) {
-      await setStatus("pending", `Waiting for missing required status: ${missedStatuses.join(", ")}`);
+      await setStatus("PENDING", `Pending ${missedStatuses.length} status(es): ${missedStatuses.join(", ")}`);
       return;
     }
     const counts = statuses.reduce((count, { state }) => {
@@ -23700,14 +23711,14 @@ async function main() {
       return count;
     }, { passing: 0, failing: 0, pending: 0 });
     if (counts.failing > 0) {
-      await setStatus("failure", `${counts.failing} expected status(es) failing`);
+      await setStatus("FAILURE", `${counts.failing} expected status(es) failing`);
       return;
     }
     if (counts.pending > 0) {
-      await setStatus("pending", "Expected statuses are still pending");
+      await setStatus("PENDING", "Other tracked statuses are still pending");
       return;
     }
-    await setStatus("success");
+    await setStatus("SUCCESS");
   } finally {
     await revokeActiveInstallationToken(github);
   }
@@ -23754,12 +23765,14 @@ var PR_SCHEMA = (0, import_typed_graphqlify.params)({
                       CheckRun: {
                         __typename: import_typed_graphqlify.types.constant("CheckRun"),
                         conclusion: import_typed_graphqlify.types.custom(),
-                        name: import_typed_graphqlify.types.string
+                        name: import_typed_graphqlify.types.string,
+                        title: (0, import_typed_graphqlify.optional)(import_typed_graphqlify.types.string)
                       },
                       StatusContext: {
                         __typename: import_typed_graphqlify.types.constant("StatusContext"),
                         state: import_typed_graphqlify.types.custom(),
-                        context: import_typed_graphqlify.types.string
+                        context: import_typed_graphqlify.types.string,
+                        description: (0, import_typed_graphqlify.optional)(import_typed_graphqlify.types.string)
                       }
                     })
                   ]

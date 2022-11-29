@@ -28,32 +28,18 @@ async function main() {
     /** The status check rollup results. */
     const statusChecks = pullRequest.commits.nodes[0].commit.statusCheckRollup;
 
-    const setStatus = async (
-      state: 'pending' | 'error' | 'failure' | 'success',
-      description?: string,
-    ) => {
-      await github.repos.createCommitStatus({
-        ...context.repo,
-        sha: pullRequest.commits.nodes[0].commit.oid,
-        context: unifiedStatusCheckName,
-        state,
-        description,
-      });
-      return;
-    };
-
-    /** If no status checks are present, or if the pull request is in a draft state the unified status is in a pending state. */
-    if (!statusChecks || pullRequest.isDraft) {
-      await setStatus('pending', 'Unified Status checks have not yet started');
+    /** If no status checks are present yet, we ignore the event. */
+    if (!statusChecks) {
       return;
     }
 
-    const statuses: {state: StatusState; name: string}[] = statusChecks.contexts.nodes
-      .map((checkOrStatus) => {
+    const allStatuses: {state: StatusState; name: string; description: string | undefined}[] =
+      statusChecks.contexts.nodes.map((checkOrStatus) => {
         if (checkOrStatus.__typename === 'StatusContext') {
           return {
             state: checkOrStatus.state,
             name: checkOrStatus.context,
+            description: checkOrStatus.description || undefined,
           };
         }
         if (checkOrStatus.__typename === 'CheckRun') {
@@ -61,20 +47,50 @@ async function main() {
             state: checkOrStatus.conclusion
               ? checkConclusionStateToStatusStateMap.get(checkOrStatus.conclusion)!
               : 'PENDING',
-            name: checkOrStatus.name || 'Unknown Check Run',
+            description: checkOrStatus.title || undefined,
+            name: checkOrStatus.name || 'unknown-check-run',
           };
         }
         throw Error('CheckOrStatus was not found to be a check or a status');
-      })
-      .filter(({name}) => !ignored.includes(name));
+      });
+    const statuses = allStatuses.filter(({name}) => !ignored.includes(name));
+    const unifiedCheckStatus = allStatuses.find(({name}) => name === unifiedStatusCheckName);
+
+    const setStatus = async (state: StatusState, description?: string) => {
+      if (
+        unifiedCheckStatus &&
+        unifiedCheckStatus.state === state &&
+        unifiedCheckStatus.description === description
+      ) {
+        console.log(
+          'Skipping status update as the request status and information is the same as the current status',
+        );
+        return;
+      }
+
+      await github.repos.createCommitStatus({
+        ...context.repo,
+        sha: pullRequest.commits.nodes[0].commit.oid,
+        context: unifiedStatusCheckName,
+        state: state.toLowerCase() as 'pending' | 'success' | 'failure',
+        description,
+      });
+      return;
+    };
+
+    /** If no status checks are present, or if the pull request is in a draft state the unified status is in a pending state. */
+    if (pullRequest.isDraft) {
+      await setStatus('PENDING', 'PR is still a draft');
+      return;
+    }
 
     const missedStatuses = required.filter(
       (matcher) => !statuses.some(({name}) => name.match(matcher)),
     );
     if (missedStatuses.length > 0) {
       await setStatus(
-        'pending',
-        `Waiting for missing required status: ${missedStatuses.join(', ')}`,
+        'PENDING',
+        `Pending ${missedStatuses.length} status(es): ${missedStatuses.join(', ')}`,
       );
       return;
     }
@@ -96,16 +112,16 @@ async function main() {
     );
 
     if (counts.failing > 0) {
-      await setStatus('failure', `${counts.failing} expected status(es) failing`);
+      await setStatus('FAILURE', `${counts.failing} expected status(es) failing`);
       return;
     }
 
     if (counts.pending > 0) {
-      await setStatus('pending', 'Expected statuses are still pending');
+      await setStatus('PENDING', 'Other tracked statuses are still pending');
       return;
     }
 
-    await setStatus('success');
+    await setStatus('SUCCESS');
   } finally {
     await revokeActiveInstallationToken(github);
   }
@@ -173,11 +189,13 @@ const PR_SCHEMA = params(
                                   __typename: graphqlTypes.constant('CheckRun'),
                                   conclusion: graphqlTypes.custom<CheckConclusionState | null>(),
                                   name: graphqlTypes.string,
+                                  title: optional(graphqlTypes.string),
                                 },
                                 StatusContext: {
                                   __typename: graphqlTypes.constant('StatusContext'),
                                   state: graphqlTypes.custom<StatusState>(),
                                   context: graphqlTypes.string,
+                                  description: optional(graphqlTypes.string),
                                 },
                               }),
                             ],
