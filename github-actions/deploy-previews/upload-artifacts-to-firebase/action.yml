@@ -77,7 +77,7 @@ runs:
         firebaseServiceAccount: '${{inputs.firebase-service-key}}'
         expires: 20d
         projectId: '${{inputs.firebase-project-id}}'
-        entryPoint: '${{inputs.firebase-config-dir}'
+        entryPoint: '${{inputs.firebase-config-dir}}'
         channelId: pr-${{steps.artifact-info.outputs.pull-number}}-${{steps.artifact-info.outputs.build-revision}}
 
     - uses: marocchino/sticky-pull-request-comment@39c5b5dc7717447d0cba270cd115037d32d28443 # renovate: tag=v2.0.0
