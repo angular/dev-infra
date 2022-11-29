@@ -42,7 +42,7 @@ runs:
         dir="$RUNNER_TEMP/pack-and-upload-tmp-dir"
         mkdir -p $dir
         cp -R "${{inputs.deploy-directory}}" "$dir"
-        chmod -R 644 "$dir"
+        chmod -R u+w "$dir"
         echo "deploy-dir=$dir" >> $GITHUB_OUTPUT
 
     - name: Injecting artifact metadata
