@@ -78,10 +78,10 @@ runs:
         expires: 20d
         projectId: '${{inputs.firebase-project-id}}'
         entryPoint: '${{inputs.firebase-config-dir}}'
-        channelId: pr-${{steps.artifact-info.outputs.pull-number}}-${{steps.artifact-info.outputs.build-revision}}
+        channelId: pr-${{steps.artifact-info.outputs.unsafe-pull-number}}-${{steps.artifact-info.outputs.unsafe-build-revision}}
 
     - uses: marocchino/sticky-pull-request-comment@f3bbb8300013c686241004a1c1b5d4045b10bc30 # tag=v2.0.0
       with:
         message: |
           Deployed ${{inputs.workflow-artifact-name}} to: ${{steps.deploy.outputs.details_url}}
-        number: ${{steps.artifact-info.outputs.pull-number}}
+        number: ${{steps.artifact-info.outputs.unsafe-pull-number}}
