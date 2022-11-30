@@ -20,7 +20,8 @@ inputs:
   github-token:
     required: true
     description: |
-      TRUSTED: GitHub Token used for creating the commit statuses.
+      TRUSTED: GitHub Token used for creating the comment and fetching
+        the artifact.
 
   workflow-artifact-name:
     required: true
@@ -68,7 +69,7 @@ runs:
       shell: bash
       run: node ${{github.action_path}}/extract-artifact-metadata.js '${{inputs.firebase-public-dir}}'
 
-    - uses: FirebaseExtended/action-hosting-deploy@276388dd6c2cde23455b30293105cc866c22282d # renovate: tag=v0.0.0
+    - uses: FirebaseExtended/action-hosting-deploy@4d0d0023f1d92b9b7d16dda64b3d7abd2c98974b # tag=v0
       id: deploy
       with:
         # Note: No token used here as the action otherwise may attempt to post a
@@ -80,8 +81,9 @@ runs:
         entryPoint: '${{inputs.firebase-config-dir}}'
         channelId: pr-${{steps.artifact-info.outputs.unsafe-pull-number}}-${{steps.artifact-info.outputs.unsafe-build-revision}}
 
-    - uses: marocchino/sticky-pull-request-comment@f3bbb8300013c686241004a1c1b5d4045b10bc30 # tag=v2.0.0
+    - uses: marocchino/sticky-pull-request-comment@fcf6fe9e4a0409cd9316a5011435be0f3327f1e1 # tag=v2
       with:
         message: |
           Deployed ${{inputs.workflow-artifact-name}} to: ${{steps.deploy.outputs.details_url}}
         number: ${{steps.artifact-info.outputs.unsafe-pull-number}}
+        GITHUB_TOKEN: '${{inputs.github-token}}'

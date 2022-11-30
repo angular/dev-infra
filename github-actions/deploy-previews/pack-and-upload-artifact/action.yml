@@ -52,7 +52,7 @@ runs:
           '${{inputs.pull-number}}' \
           '${{inputs.artifact-build-revision}}'
 
-    - uses: actions/upload-artifact@82c141cc518b40d92cc801eee768e7aafc9c2fa2 # renovate: tag=v2.0.0
+    - uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb # renovate: tag=v3
       with:
         name: '${{inputs.workflow-artifact-name}}'
         path: '${{steps.copy.outputs.deploy-dir}}'
