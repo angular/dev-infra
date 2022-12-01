@@ -56,6 +56,9 @@ const PR_SCHEMA = {
   ),
 };
 
+/** A pull request retrieved from Github. */
+export type PullRequest = typeof PR_SCHEMA.repository.pullRequest;
+
 /** Get the pull request for the status check */
 export async function getPullRequest(github: Octokit) {
   return github
