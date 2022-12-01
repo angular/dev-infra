@@ -4,6 +4,7 @@ import {Octokit} from '@octokit/rest';
 import {getAuthTokenFor, ANGULAR_ROBOT, revokeActiveInstallationToken} from '../../utils.js';
 import {CheckConclusionState, StatusState} from '@octokit/graphql-schema';
 import {getPullRequest} from './pull-request.js';
+import {isDraft} from './draft-mode.js';
 
 const unifiedStatusCheckName = 'Unified Status';
 
@@ -75,8 +76,9 @@ async function main() {
     };
 
     /** If no status checks are present, or if the pull request is in a draft state the unified status is in a pending state. */
-    if (pullRequest.isDraft) {
-      await setStatus('PENDING', 'PR is still a draft');
+    const isDraftValidationResult = isDraft(pullRequest);
+    if (isDraftValidationResult.state === 'PENDING') {
+      await setStatus(isDraftValidationResult.state, isDraftValidationResult.description);
       return;
     }
 

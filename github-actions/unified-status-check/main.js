@@ -23684,6 +23684,20 @@ async function getPullRequest(github) {
 }
 
 // 
+var isDraft = (pullRequest) => {
+  if (pullRequest.isDraft) {
+    return {
+      description: "Pull Request is still in draft",
+      state: "PENDING"
+    };
+  }
+  return {
+    description: "Pull Request is marked ready",
+    state: "SUCCESS"
+  };
+};
+
+// 
 var unifiedStatusCheckName = "Unified Status";
 async function main() {
   const github = new import_rest2.Octokit({ auth: await getAuthTokenFor(ANGULAR_ROBOT) });
@@ -23731,8 +23745,9 @@ async function main() {
       });
       return;
     };
-    if (pullRequest.isDraft) {
-      await setStatus("PENDING", "PR is still a draft");
+    const isDraftValidationResult = isDraft(pullRequest);
+    if (isDraftValidationResult.state === "PENDING") {
+      await setStatus(isDraftValidationResult.state, isDraftValidationResult.description);
       return;
     }
     const missedStatuses = required.filter((matcher) => !statuses.some(({ name }) => name.match(matcher)));
