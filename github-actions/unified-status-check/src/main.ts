@@ -1,9 +1,9 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
-import {types as graphqlTypes, params, optional, onUnion, query} from 'typed-graphqlify';
 import {Octokit} from '@octokit/rest';
 import {getAuthTokenFor, ANGULAR_ROBOT, revokeActiveInstallationToken} from '../../utils.js';
-import {CheckConclusionState, PullRequestState, StatusState} from '@octokit/graphql-schema';
+import {CheckConclusionState, StatusState} from '@octokit/graphql-schema';
+import {getPullRequest} from './pull-request.js';
 
 const unifiedStatusCheckName = 'Unified Status';
 
@@ -20,11 +20,7 @@ async function main() {
     /** Status matchers which must match at least one of the current statuses . */
     const required = core.getMultilineInput('required', {trimWhitespace: true});
     /** The pull request triggering the event */
-    const pullRequest = (
-      await github.graphql<typeof PR_SCHEMA>(query(PR_SCHEMA).toString(), {
-        ...context.issue,
-      })
-    ).repository.pullRequest;
+    const pullRequest = await getPullRequest(github);
     /** The status check rollup results. */
     const statusChecks = pullRequest.commits.nodes[0].commit.statusCheckRollup;
 
@@ -154,65 +150,6 @@ const checkConclusionStateToStatusStateMap = new Map<CheckConclusionState, Statu
   ['SUCCESS', 'SUCCESS'],
   ['TIMED_OUT', 'FAILURE'],
 ]);
-
-/** GraphQL schema for requesting the status information for a given pull request. */
-const PR_SCHEMA = params(
-  {
-    $number: 'Int!', // The PR number
-    $owner: 'String!', // The name of the owner
-    $repo: 'String!', // The name of the repository
-  },
-  {
-    repository: params(
-      {owner: '$owner', name: '$repo'},
-      {
-        pullRequest: params(
-          {number: '$number'},
-          {
-            isDraft: graphqlTypes.boolean,
-            state: graphqlTypes.custom<PullRequestState>(),
-            number: graphqlTypes.number,
-            commits: params(
-              {last: 1},
-              {
-                nodes: [
-                  {
-                    commit: {
-                      oid: graphqlTypes.string,
-                      statusCheckRollup: optional({
-                        contexts: params(
-                          {last: 100},
-                          {
-                            nodes: [
-                              onUnion({
-                                CheckRun: {
-                                  __typename: graphqlTypes.constant('CheckRun'),
-                                  conclusion: graphqlTypes.custom<CheckConclusionState | null>(),
-                                  name: graphqlTypes.string,
-                                  title: optional(graphqlTypes.string),
-                                },
-                                StatusContext: {
-                                  __typename: graphqlTypes.constant('StatusContext'),
-                                  state: graphqlTypes.custom<StatusState>(),
-                                  context: graphqlTypes.string,
-                                  description: optional(graphqlTypes.string),
-                                },
-                              }),
-                            ],
-                          },
-                        ),
-                      }),
-                    },
-                  },
-                ],
-              },
-            ),
-          },
-        ),
-      },
-    ),
-  },
-);
 
 main().catch((err) => {
   console.error(err);

@@ -2592,8 +2592,8 @@ var require_dist_node2 = __commonJS({
     function isKeyOperator(operator) {
       return operator === ";" || operator === "&" || operator === "?";
     }
-    function getValues(context3, operator, key, modifier) {
-      var value = context3[key], result = [];
+    function getValues(context4, operator, key, modifier) {
+      var value = context4[key], result = [];
       if (isDefined(value) && value !== "") {
         if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
           value = value.toString();
@@ -2653,7 +2653,7 @@ var require_dist_node2 = __commonJS({
         expand: expand.bind(null, template)
       };
     }
-    function expand(template, context3) {
+    function expand(template, context4) {
       var operators = ["+", "#", ".", "/", ";", "?", "&"];
       return template.replace(/\{([^\{\}]+)\}|([^\{\}]+)/g, function(_, expression, literal) {
         if (expression) {
@@ -2665,7 +2665,7 @@ var require_dist_node2 = __commonJS({
           }
           expression.split(/,/g).forEach(function(variable) {
             var tmp = /([^:\*]*)(?::(\d+)|(\*))?/.exec(variable);
-            values.push(getValues(context3, operator, tmp[1], tmp[2] || tmp[3]));
+            values.push(getValues(context4, operator, tmp[1], tmp[2] || tmp[3]));
           });
           if (operator && operator !== "+") {
             var separator = ",";
@@ -11165,294 +11165,6 @@ var require_github = __commonJS({
 });
 
 // 
-var require_dist2 = __commonJS({
-  ""(exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.GraphQLType = void 0;
-    (function(GraphQLType) {
-      GraphQLType[GraphQLType["SCALAR"] = 0] = "SCALAR";
-      GraphQLType[GraphQLType["INLINE_FRAGMENT"] = 1] = "INLINE_FRAGMENT";
-      GraphQLType[GraphQLType["FRAGMENT"] = 2] = "FRAGMENT";
-    })(exports.GraphQLType || (exports.GraphQLType = {}));
-    var typeSymbol = Symbol("GraphQL Type");
-    var paramsSymbol = Symbol("GraphQL Params");
-    function isInlineFragmentObject(value) {
-      return typeof value === "object" && value !== null && value[typeSymbol] === exports.GraphQLType.INLINE_FRAGMENT;
-    }
-    function isFragmentObject(value) {
-      return typeof value === "object" && value !== null && value[typeSymbol] === exports.GraphQLType.FRAGMENT;
-    }
-    function isScalarObject(value) {
-      return typeof value === "object" && value !== null && value[typeSymbol] === exports.GraphQLType.SCALAR;
-    }
-    function renderName(name) {
-      return name === void 0 ? "" : name;
-    }
-    function renderParams(params3, brackets, array) {
-      if (brackets === void 0) {
-        brackets = true;
-      }
-      if (array === void 0) {
-        array = false;
-      }
-      if (!params3) {
-        return "";
-      }
-      var builder = [];
-      for (var _i = 0, _a = Object.entries(params3); _i < _a.length; _i++) {
-        var _b = _a[_i], key = _b[0], value = _b[1];
-        var params_1 = void 0;
-        if (value === null) {
-          params_1 = "null";
-        } else if (Array.isArray(value)) {
-          params_1 = "[".concat(renderParams(value, false, true), "]");
-        } else if (typeof value === "object") {
-          params_1 = "{".concat(renderParams(value, false), "}");
-        } else {
-          params_1 = "".concat(value);
-        }
-        builder.push(array ? "".concat(params_1) : "".concat(key, ":").concat(params_1));
-      }
-      var built = builder.join(",");
-      if (brackets) {
-        built = "(".concat(built, ")");
-      }
-      return built;
-    }
-    function renderScalar(name, params3) {
-      return renderName(name) + renderParams(params3);
-    }
-    function renderInlineFragment(fragment2, context3) {
-      return "...on ".concat(fragment2.typeName).concat(renderObject(void 0, fragment2.internal, context3));
-    }
-    function renderFragment(fragment2, context3) {
-      return "fragment ".concat(fragment2.name, " on ").concat(fragment2.typeName).concat(renderObject(void 0, fragment2.internal, context3));
-    }
-    function renderArray(name, arr, context3) {
-      var first = arr[0];
-      if (first === void 0 || first === null) {
-        throw new Error("Cannot render array with no first value");
-      }
-      first[paramsSymbol] = arr[paramsSymbol];
-      return renderType(name, first, context3);
-    }
-    function renderType(name, value, context3) {
-      switch (typeof value) {
-        case "bigint":
-        case "boolean":
-        case "number":
-        case "string":
-          throw new Error("Rendering type ".concat(typeof value, " directly is disallowed"));
-        case "object":
-          if (value === null) {
-            throw new Error("Cannot render null");
-          }
-          if (isScalarObject(value)) {
-            return "".concat(renderScalar(name, value[paramsSymbol]), " ");
-          } else if (Array.isArray(value)) {
-            return renderArray(name, value, context3);
-          } else {
-            return renderObject(name, value, context3);
-          }
-        case "undefined":
-          return "";
-        default:
-          throw new Error("Cannot render type ".concat(typeof value));
-      }
-    }
-    function renderObject(name, obj, context3) {
-      var fields = [];
-      for (var _i = 0, _a = Object.entries(obj); _i < _a.length; _i++) {
-        var _b = _a[_i], key = _b[0], value = _b[1];
-        fields.push(renderType(key, value, context3));
-      }
-      for (var _c = 0, _d = Object.getOwnPropertySymbols(obj); _c < _d.length; _c++) {
-        var sym = _d[_c];
-        var value = obj[sym];
-        if (isInlineFragmentObject(value)) {
-          fields.push(renderInlineFragment(value, context3));
-        } else if (isFragmentObject(value)) {
-          context3.fragments.set(sym, value);
-          fields.push("...".concat(value.name));
-        }
-      }
-      if (fields.length === 0) {
-        throw new Error("Object cannot have no fields");
-      }
-      return "".concat(renderName(name)).concat(renderParams(obj[paramsSymbol]), "{").concat(fields.join("").trim(), "}");
-    }
-    function render(value) {
-      var context3 = {
-        fragments: /* @__PURE__ */ new Map()
-      };
-      var rend = renderObject(void 0, value, context3);
-      var rendered = /* @__PURE__ */ new Map();
-      var executingContext = context3;
-      var currentContext = {
-        fragments: /* @__PURE__ */ new Map()
-      };
-      while (executingContext.fragments.size > 0) {
-        for (var _i = 0, _a = Array.from(executingContext.fragments.entries()); _i < _a.length; _i++) {
-          var _b = _a[_i], sym = _b[0], fragment2 = _b[1];
-          if (!rendered.has(sym)) {
-            rendered.set(sym, renderFragment(fragment2, currentContext));
-          }
-        }
-        executingContext = currentContext;
-        currentContext = {
-          fragments: /* @__PURE__ */ new Map()
-        };
-      }
-      return rend + Array.from(rendered.values()).join("");
-    }
-    function fragmentToString(value) {
-      var context3 = {
-        fragments: /* @__PURE__ */ new Map()
-      };
-      renderObject(void 0, value, context3);
-      var currentContext = {
-        fragments: /* @__PURE__ */ new Map()
-      };
-      var output = "";
-      for (var _i = 0, _a = Array.from(context3.fragments.entries()); _i < _a.length; _i++) {
-        var _b = _a[_i], fragment2 = _b[1];
-        output = output + renderFragment(fragment2, currentContext);
-      }
-      return output;
-    }
-    function createOperate(operateType) {
-      function operate(opNameOrQueryObject, queryObject) {
-        if (typeof opNameOrQueryObject === "string") {
-          if (!queryObject) {
-            throw new Error("queryObject is not set");
-          }
-          return {
-            toString: function() {
-              return "".concat(operateType, " ").concat(opNameOrQueryObject).concat(render(queryObject));
-            }
-          };
-        }
-        return {
-          toString: function() {
-            return "".concat(operateType).concat(render(opNameOrQueryObject));
-          }
-        };
-      }
-      return operate;
-    }
-    var query2 = createOperate("query");
-    var mutation = createOperate("mutation");
-    var subscription = createOperate("subscription");
-    function params2(params3, input) {
-      if (typeof params3 !== "object") {
-        throw new Error("Params have to be an object");
-      }
-      if (typeof input !== "object") {
-        throw new Error("Cannot apply params to JS ".concat(typeof params3));
-      }
-      input[paramsSymbol] = params3;
-      return input;
-    }
-    function alias(alias2, target) {
-      return "".concat(alias2, ":").concat(target);
-    }
-    function fragment(name, typeName, input) {
-      var _a, _b;
-      var fragment2 = (_a = {}, _a[typeSymbol] = exports.GraphQLType.FRAGMENT, _a.name = name, _a.typeName = typeName, _a.internal = input, _a);
-      return _b = {}, _b[Symbol("Fragment(".concat(name, " on ").concat(typeName, ")"))] = fragment2, _b;
-    }
-    function rawString(input) {
-      return JSON.stringify(input);
-    }
-    var __assign = function() {
-      __assign = Object.assign || function __assign2(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-          s = arguments[i];
-          for (var p in s)
-            if (Object.prototype.hasOwnProperty.call(s, p))
-              t[p] = s[p];
-        }
-        return t;
-      };
-      return __assign.apply(this, arguments);
-    };
-    function optional2(obj) {
-      return obj;
-    }
-    function on(typeName, internal) {
-      var _a, _b;
-      var fragment2 = (_a = {}, _a[typeSymbol] = exports.GraphQLType.INLINE_FRAGMENT, _a.typeName = typeName, _a.internal = internal, _a);
-      return _b = {}, _b[Symbol("InlineFragment(".concat(typeName, ")"))] = fragment2, _b;
-    }
-    function onUnion2(types2) {
-      var fragments = {};
-      for (var _i = 0, _a = Object.entries(types2); _i < _a.length; _i++) {
-        var _b = _a[_i], typeName = _b[0], internal = _b[1];
-        fragments = __assign(__assign({}, fragments), on(typeName, internal));
-      }
-      return fragments;
-    }
-    function scalarType() {
-      var _a;
-      var scalar = (_a = {}, _a[typeSymbol] = exports.GraphQLType.SCALAR, _a);
-      return scalar;
-    }
-    var types = function() {
-      function types2() {
-      }
-      Object.defineProperty(types2, "number", {
-        get: function() {
-          return scalarType();
-        },
-        enumerable: false,
-        configurable: true
-      });
-      Object.defineProperty(types2, "string", {
-        get: function() {
-          return scalarType();
-        },
-        enumerable: false,
-        configurable: true
-      });
-      Object.defineProperty(types2, "boolean", {
-        get: function() {
-          return scalarType();
-        },
-        enumerable: false,
-        configurable: true
-      });
-      types2.constant = function(_c) {
-        return scalarType();
-      };
-      types2.oneOf = function(_e) {
-        return scalarType();
-      };
-      types2.custom = function() {
-        return scalarType();
-      };
-      types2.optional = types2;
-      return types2;
-    }();
-    exports.alias = alias;
-    exports.fragment = fragment;
-    exports.fragmentToString = fragmentToString;
-    exports.mutation = mutation;
-    exports.on = on;
-    exports.onUnion = onUnion2;
-    exports.optional = optional2;
-    exports.params = params2;
-    exports.paramsSymbol = paramsSymbol;
-    exports.query = query2;
-    exports.rawString = rawString;
-    exports.render = render;
-    exports.subscription = subscription;
-    exports.typeSymbol = typeSymbol;
-    exports.types = types;
-  }
-});
-
-// 
 var require_dist_node11 = __commonJS({
   ""(exports) {
     "use strict";
@@ -11573,8 +11285,8 @@ var require_dist_node11 = __commonJS({
     function isKeyOperator(operator) {
       return operator === ";" || operator === "&" || operator === "?";
     }
-    function getValues(context3, operator, key, modifier) {
-      var value = context3[key], result = [];
+    function getValues(context4, operator, key, modifier) {
+      var value = context4[key], result = [];
       if (isDefined(value) && value !== "") {
         if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
           value = value.toString();
@@ -11634,7 +11346,7 @@ var require_dist_node11 = __commonJS({
         expand: expand.bind(null, template)
       };
     }
-    function expand(template, context3) {
+    function expand(template, context4) {
       var operators = ["+", "#", ".", "/", ";", "?", "&"];
       return template.replace(/\{([^\{\}]+)\}|([^\{\}]+)/g, function(_, expression, literal) {
         if (expression) {
@@ -11646,7 +11358,7 @@ var require_dist_node11 = __commonJS({
           }
           expression.split(/,/g).forEach(function(variable) {
             var tmp = /([^:\*]*)(?::(\d+)|(\*))?/.exec(variable);
-            values.push(getValues(context3, operator, tmp[1], tmp[2] || tmp[3]));
+            values.push(getValues(context4, operator, tmp[1], tmp[2] || tmp[3]));
           });
           if (operator && operator !== "+") {
             var separator = ",";
@@ -23604,9 +23316,296 @@ var require_dist_node29 = __commonJS({
 });
 
 // 
+var require_dist2 = __commonJS({
+  ""(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.GraphQLType = void 0;
+    (function(GraphQLType) {
+      GraphQLType[GraphQLType["SCALAR"] = 0] = "SCALAR";
+      GraphQLType[GraphQLType["INLINE_FRAGMENT"] = 1] = "INLINE_FRAGMENT";
+      GraphQLType[GraphQLType["FRAGMENT"] = 2] = "FRAGMENT";
+    })(exports.GraphQLType || (exports.GraphQLType = {}));
+    var typeSymbol = Symbol("GraphQL Type");
+    var paramsSymbol = Symbol("GraphQL Params");
+    function isInlineFragmentObject(value) {
+      return typeof value === "object" && value !== null && value[typeSymbol] === exports.GraphQLType.INLINE_FRAGMENT;
+    }
+    function isFragmentObject(value) {
+      return typeof value === "object" && value !== null && value[typeSymbol] === exports.GraphQLType.FRAGMENT;
+    }
+    function isScalarObject(value) {
+      return typeof value === "object" && value !== null && value[typeSymbol] === exports.GraphQLType.SCALAR;
+    }
+    function renderName(name) {
+      return name === void 0 ? "" : name;
+    }
+    function renderParams(params3, brackets, array) {
+      if (brackets === void 0) {
+        brackets = true;
+      }
+      if (array === void 0) {
+        array = false;
+      }
+      if (!params3) {
+        return "";
+      }
+      var builder = [];
+      for (var _i = 0, _a = Object.entries(params3); _i < _a.length; _i++) {
+        var _b = _a[_i], key = _b[0], value = _b[1];
+        var params_1 = void 0;
+        if (value === null) {
+          params_1 = "null";
+        } else if (Array.isArray(value)) {
+          params_1 = "[".concat(renderParams(value, false, true), "]");
+        } else if (typeof value === "object") {
+          params_1 = "{".concat(renderParams(value, false), "}");
+        } else {
+          params_1 = "".concat(value);
+        }
+        builder.push(array ? "".concat(params_1) : "".concat(key, ":").concat(params_1));
+      }
+      var built = builder.join(",");
+      if (brackets) {
+        built = "(".concat(built, ")");
+      }
+      return built;
+    }
+    function renderScalar(name, params3) {
+      return renderName(name) + renderParams(params3);
+    }
+    function renderInlineFragment(fragment2, context4) {
+      return "...on ".concat(fragment2.typeName).concat(renderObject(void 0, fragment2.internal, context4));
+    }
+    function renderFragment(fragment2, context4) {
+      return "fragment ".concat(fragment2.name, " on ").concat(fragment2.typeName).concat(renderObject(void 0, fragment2.internal, context4));
+    }
+    function renderArray(name, arr, context4) {
+      var first = arr[0];
+      if (first === void 0 || first === null) {
+        throw new Error("Cannot render array with no first value");
+      }
+      first[paramsSymbol] = arr[paramsSymbol];
+      return renderType(name, first, context4);
+    }
+    function renderType(name, value, context4) {
+      switch (typeof value) {
+        case "bigint":
+        case "boolean":
+        case "number":
+        case "string":
+          throw new Error("Rendering type ".concat(typeof value, " directly is disallowed"));
+        case "object":
+          if (value === null) {
+            throw new Error("Cannot render null");
+          }
+          if (isScalarObject(value)) {
+            return "".concat(renderScalar(name, value[paramsSymbol]), " ");
+          } else if (Array.isArray(value)) {
+            return renderArray(name, value, context4);
+          } else {
+            return renderObject(name, value, context4);
+          }
+        case "undefined":
+          return "";
+        default:
+          throw new Error("Cannot render type ".concat(typeof value));
+      }
+    }
+    function renderObject(name, obj, context4) {
+      var fields = [];
+      for (var _i = 0, _a = Object.entries(obj); _i < _a.length; _i++) {
+        var _b = _a[_i], key = _b[0], value = _b[1];
+        fields.push(renderType(key, value, context4));
+      }
+      for (var _c = 0, _d = Object.getOwnPropertySymbols(obj); _c < _d.length; _c++) {
+        var sym = _d[_c];
+        var value = obj[sym];
+        if (isInlineFragmentObject(value)) {
+          fields.push(renderInlineFragment(value, context4));
+        } else if (isFragmentObject(value)) {
+          context4.fragments.set(sym, value);
+          fields.push("...".concat(value.name));
+        }
+      }
+      if (fields.length === 0) {
+        throw new Error("Object cannot have no fields");
+      }
+      return "".concat(renderName(name)).concat(renderParams(obj[paramsSymbol]), "{").concat(fields.join("").trim(), "}");
+    }
+    function render(value) {
+      var context4 = {
+        fragments: /* @__PURE__ */ new Map()
+      };
+      var rend = renderObject(void 0, value, context4);
+      var rendered = /* @__PURE__ */ new Map();
+      var executingContext = context4;
+      var currentContext = {
+        fragments: /* @__PURE__ */ new Map()
+      };
+      while (executingContext.fragments.size > 0) {
+        for (var _i = 0, _a = Array.from(executingContext.fragments.entries()); _i < _a.length; _i++) {
+          var _b = _a[_i], sym = _b[0], fragment2 = _b[1];
+          if (!rendered.has(sym)) {
+            rendered.set(sym, renderFragment(fragment2, currentContext));
+          }
+        }
+        executingContext = currentContext;
+        currentContext = {
+          fragments: /* @__PURE__ */ new Map()
+        };
+      }
+      return rend + Array.from(rendered.values()).join("");
+    }
+    function fragmentToString(value) {
+      var context4 = {
+        fragments: /* @__PURE__ */ new Map()
+      };
+      renderObject(void 0, value, context4);
+      var currentContext = {
+        fragments: /* @__PURE__ */ new Map()
+      };
+      var output = "";
+      for (var _i = 0, _a = Array.from(context4.fragments.entries()); _i < _a.length; _i++) {
+        var _b = _a[_i], fragment2 = _b[1];
+        output = output + renderFragment(fragment2, currentContext);
+      }
+      return output;
+    }
+    function createOperate(operateType) {
+      function operate(opNameOrQueryObject, queryObject) {
+        if (typeof opNameOrQueryObject === "string") {
+          if (!queryObject) {
+            throw new Error("queryObject is not set");
+          }
+          return {
+            toString: function() {
+              return "".concat(operateType, " ").concat(opNameOrQueryObject).concat(render(queryObject));
+            }
+          };
+        }
+        return {
+          toString: function() {
+            return "".concat(operateType).concat(render(opNameOrQueryObject));
+          }
+        };
+      }
+      return operate;
+    }
+    var query2 = createOperate("query");
+    var mutation = createOperate("mutation");
+    var subscription = createOperate("subscription");
+    function params2(params3, input) {
+      if (typeof params3 !== "object") {
+        throw new Error("Params have to be an object");
+      }
+      if (typeof input !== "object") {
+        throw new Error("Cannot apply params to JS ".concat(typeof params3));
+      }
+      input[paramsSymbol] = params3;
+      return input;
+    }
+    function alias(alias2, target) {
+      return "".concat(alias2, ":").concat(target);
+    }
+    function fragment(name, typeName, input) {
+      var _a, _b;
+      var fragment2 = (_a = {}, _a[typeSymbol] = exports.GraphQLType.FRAGMENT, _a.name = name, _a.typeName = typeName, _a.internal = input, _a);
+      return _b = {}, _b[Symbol("Fragment(".concat(name, " on ").concat(typeName, ")"))] = fragment2, _b;
+    }
+    function rawString(input) {
+      return JSON.stringify(input);
+    }
+    var __assign = function() {
+      __assign = Object.assign || function __assign2(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+          s = arguments[i];
+          for (var p in s)
+            if (Object.prototype.hasOwnProperty.call(s, p))
+              t[p] = s[p];
+        }
+        return t;
+      };
+      return __assign.apply(this, arguments);
+    };
+    function optional2(obj) {
+      return obj;
+    }
+    function on(typeName, internal) {
+      var _a, _b;
+      var fragment2 = (_a = {}, _a[typeSymbol] = exports.GraphQLType.INLINE_FRAGMENT, _a.typeName = typeName, _a.internal = internal, _a);
+      return _b = {}, _b[Symbol("InlineFragment(".concat(typeName, ")"))] = fragment2, _b;
+    }
+    function onUnion2(types2) {
+      var fragments = {};
+      for (var _i = 0, _a = Object.entries(types2); _i < _a.length; _i++) {
+        var _b = _a[_i], typeName = _b[0], internal = _b[1];
+        fragments = __assign(__assign({}, fragments), on(typeName, internal));
+      }
+      return fragments;
+    }
+    function scalarType() {
+      var _a;
+      var scalar = (_a = {}, _a[typeSymbol] = exports.GraphQLType.SCALAR, _a);
+      return scalar;
+    }
+    var types = function() {
+      function types2() {
+      }
+      Object.defineProperty(types2, "number", {
+        get: function() {
+          return scalarType();
+        },
+        enumerable: false,
+        configurable: true
+      });
+      Object.defineProperty(types2, "string", {
+        get: function() {
+          return scalarType();
+        },
+        enumerable: false,
+        configurable: true
+      });
+      Object.defineProperty(types2, "boolean", {
+        get: function() {
+          return scalarType();
+        },
+        enumerable: false,
+        configurable: true
+      });
+      types2.constant = function(_c) {
+        return scalarType();
+      };
+      types2.oneOf = function(_e) {
+        return scalarType();
+      };
+      types2.custom = function() {
+        return scalarType();
+      };
+      types2.optional = types2;
+      return types2;
+    }();
+    exports.alias = alias;
+    exports.fragment = fragment;
+    exports.fragmentToString = fragmentToString;
+    exports.mutation = mutation;
+    exports.on = on;
+    exports.onUnion = onUnion2;
+    exports.optional = optional2;
+    exports.params = params2;
+    exports.paramsSymbol = paramsSymbol;
+    exports.query = query2;
+    exports.rawString = rawString;
+    exports.render = render;
+    exports.subscription = subscription;
+    exports.typeSymbol = typeSymbol;
+    exports.types = types;
+  }
+});
+
+// 
 var core = __toESM(require_core());
-var import_github2 = __toESM(require_github());
-var import_typed_graphqlify = __toESM(require_dist2());
+var import_github3 = __toESM(require_github());
 var import_rest2 = __toESM(require_dist_node20());
 
 // 
@@ -23640,6 +23639,51 @@ async function revokeActiveInstallationToken(githubOrToken) {
 }
 
 // 
+var import_typed_graphqlify = __toESM(require_dist2());
+var import_github2 = __toESM(require_github());
+var PR_SCHEMA = {
+  repository: (0, import_typed_graphqlify.params)({ owner: import_github2.context.repo.owner, name: import_github2.context.repo.repo }, {
+    pullRequest: (0, import_typed_graphqlify.params)({ number: import_github2.context.issue.number }, {
+      isDraft: import_typed_graphqlify.types.boolean,
+      state: import_typed_graphqlify.types.custom(),
+      number: import_typed_graphqlify.types.number,
+      commits: (0, import_typed_graphqlify.params)({ last: 1 }, {
+        nodes: [
+          {
+            commit: {
+              oid: import_typed_graphqlify.types.string,
+              statusCheckRollup: (0, import_typed_graphqlify.optional)({
+                contexts: (0, import_typed_graphqlify.params)({ last: 100 }, {
+                  nodes: [
+                    (0, import_typed_graphqlify.onUnion)({
+                      CheckRun: {
+                        __typename: import_typed_graphqlify.types.constant("CheckRun"),
+                        conclusion: import_typed_graphqlify.types.custom(),
+                        name: import_typed_graphqlify.types.string,
+                        title: (0, import_typed_graphqlify.optional)(import_typed_graphqlify.types.string)
+                      },
+                      StatusContext: {
+                        __typename: import_typed_graphqlify.types.constant("StatusContext"),
+                        state: import_typed_graphqlify.types.custom(),
+                        context: import_typed_graphqlify.types.string,
+                        description: (0, import_typed_graphqlify.optional)(import_typed_graphqlify.types.string)
+                      }
+                    })
+                  ]
+                })
+              })
+            }
+          }
+        ]
+      })
+    })
+  })
+};
+async function getPullRequest(github) {
+  return github.graphql((0, import_typed_graphqlify.query)(PR_SCHEMA).toString()).then((response) => response.repository.pullRequest);
+}
+
+// 
 var unifiedStatusCheckName = "Unified Status";
 async function main() {
   const github = new import_rest2.Octokit({ auth: await getAuthTokenFor(ANGULAR_ROBOT) });
@@ -23649,9 +23693,7 @@ async function main() {
       ...core.getMultilineInput("ignored", { trimWhitespace: true })
     ];
     const required = core.getMultilineInput("required", { trimWhitespace: true });
-    const pullRequest = (await github.graphql((0, import_typed_graphqlify.query)(PR_SCHEMA).toString(), {
-      ...import_github2.context.issue
-    })).repository.pullRequest;
+    const pullRequest = await getPullRequest(github);
     const statusChecks = pullRequest.commits.nodes[0].commit.statusCheckRollup;
     if (!statusChecks) {
       return;
@@ -23681,7 +23723,7 @@ async function main() {
         return;
       }
       await github.repos.createCommitStatus({
-        ...import_github2.context.repo,
+        ...import_github3.context.repo,
         sha: pullRequest.commits.nodes[0].commit.oid,
         context: unifiedStatusCheckName,
         state: state.toLowerCase(),
@@ -23743,48 +23785,6 @@ var checkConclusionStateToStatusStateMap = /* @__PURE__ */ new Map([
   ["SUCCESS", "SUCCESS"],
   ["TIMED_OUT", "FAILURE"]
 ]);
-var PR_SCHEMA = (0, import_typed_graphqlify.params)({
-  $number: "Int!",
-  $owner: "String!",
-  $repo: "String!"
-}, {
-  repository: (0, import_typed_graphqlify.params)({ owner: "$owner", name: "$repo" }, {
-    pullRequest: (0, import_typed_graphqlify.params)({ number: "$number" }, {
-      isDraft: import_typed_graphqlify.types.boolean,
-      state: import_typed_graphqlify.types.custom(),
-      number: import_typed_graphqlify.types.number,
-      commits: (0, import_typed_graphqlify.params)({ last: 1 }, {
-        nodes: [
-          {
-            commit: {
-              oid: import_typed_graphqlify.types.string,
-              statusCheckRollup: (0, import_typed_graphqlify.optional)({
-                contexts: (0, import_typed_graphqlify.params)({ last: 100 }, {
-                  nodes: [
-                    (0, import_typed_graphqlify.onUnion)({
-                      CheckRun: {
-                        __typename: import_typed_graphqlify.types.constant("CheckRun"),
-                        conclusion: import_typed_graphqlify.types.custom(),
-                        name: import_typed_graphqlify.types.string,
-                        title: (0, import_typed_graphqlify.optional)(import_typed_graphqlify.types.string)
-                      },
-                      StatusContext: {
-                        __typename: import_typed_graphqlify.types.constant("StatusContext"),
-                        state: import_typed_graphqlify.types.custom(),
-                        context: import_typed_graphqlify.types.string,
-                        description: (0, import_typed_graphqlify.optional)(import_typed_graphqlify.types.string)
-                      }
-                    })
-                  ]
-                })
-              })
-            }
-          }
-        ]
-      })
-    })
-  })
-});
 main().catch((err) => {
   console.error(err);
   core.setFailed("Failed with the above error");
