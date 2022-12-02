@@ -5,12 +5,12 @@ export const isDraft: ValidationFunction = (pullRequest: PullRequest) => {
   if (pullRequest.isDraft) {
     return {
       description: 'Pull Request is still in draft',
-      state: 'PENDING',
+      state: 'pending',
     };
   }
 
   return {
     description: 'Pull Request is marked ready',
-    state: 'SUCCESS',
+    state: 'success',
   };
 };
