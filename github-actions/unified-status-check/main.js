@@ -2066,11 +2066,11 @@ var require_core = __commonJS({
       return val.trim();
     }
     exports.getInput = getInput2;
-    function getMultilineInput2(name, options) {
+    function getMultilineInput3(name, options) {
       const inputs = getInput2(name, options).split("\n").filter((x) => x !== "");
       return inputs;
     }
-    exports.getMultilineInput = getMultilineInput2;
+    exports.getMultilineInput = getMultilineInput3;
     function getBooleanInput(name, options) {
       const trueValue = ["true", "True", "TRUE"];
       const falseValue = ["false", "False", "FALSE"];
@@ -15796,12 +15796,12 @@ var require_dist_node20 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var core2 = require_dist_node16();
+    var core4 = require_dist_node16();
     var pluginRequestLog = require_dist_node17();
     var pluginPaginateRest = require_dist_node18();
     var pluginRestEndpointMethods = require_dist_node19();
     var VERSION = "19.0.4";
-    var Octokit3 = core2.Octokit.plugin(pluginRequestLog.requestLog, pluginRestEndpointMethods.legacyRestEndpointMethods, pluginPaginateRest.paginateRest).defaults({
+    var Octokit3 = core4.Octokit.plugin(pluginRequestLog.requestLog, pluginRestEndpointMethods.legacyRestEndpointMethods, pluginPaginateRest.paginateRest).defaults({
       userAgent: `octokit-rest.js/${VERSION}`
     });
     exports.Octokit = Octokit3;
@@ -23604,7 +23604,7 @@ var require_dist2 = __commonJS({
 });
 
 // 
-var core = __toESM(require_core());
+var core3 = __toESM(require_core());
 var import_github3 = __toESM(require_github());
 var import_rest2 = __toESM(require_dist_node20());
 
@@ -23640,7 +23640,56 @@ async function revokeActiveInstallationToken(githubOrToken) {
 
 // 
 var import_typed_graphqlify = __toESM(require_dist2());
+var core = __toESM(require_core());
 var import_github2 = __toESM(require_github());
+var unifiedStatusCheckName = "Unified Status";
+var Statuses = class {
+  constructor() {
+    this.pending = [];
+    this.failing = [];
+    this.passing = [];
+    this.ignored = [];
+    this.all = [];
+  }
+  populate(statuses) {
+    const ignored = [
+      unifiedStatusCheckName,
+      ...core.getMultilineInput("ignored", { trimWhitespace: true })
+    ];
+    for (const status of statuses) {
+      if (ignored.includes(status.name)) {
+        this.ignored.push(status);
+        if (status.name === unifiedStatusCheckName) {
+          this.unifiedCheckStatus = status;
+        }
+        continue;
+      }
+      switch (status.state) {
+        case "ERROR":
+        case "FAILURE":
+          this.failing.push(status);
+        case "EXPECTED":
+        case "SUCCESS":
+          this.passing.push(status);
+        case "PENDING":
+          this.pending.push(status);
+        default:
+          this.all.push(status);
+      }
+    }
+  }
+};
+var checkConclusionStateToStatusStateMap = /* @__PURE__ */ new Map([
+  ["ACTION_REQUIRED", "PENDING"],
+  ["CANCELLED", "ERROR"],
+  ["FAILURE", "FAILURE"],
+  ["NEUTRAL", "EXPECTED"],
+  ["SKIPPED", "EXPECTED"],
+  ["STALE", "ERROR"],
+  ["STARTUP_FAILURE", "FAILURE"],
+  ["SUCCESS", "SUCCESS"],
+  ["TIMED_OUT", "FAILURE"]
+]);
 var PR_SCHEMA = {
   repository: (0, import_typed_graphqlify.params)({ owner: import_github2.context.repo.owner, name: import_github2.context.repo.repo }, {
     pullRequest: (0, import_typed_graphqlify.params)({ number: import_github2.context.issue.number }, {
@@ -23680,7 +23729,37 @@ var PR_SCHEMA = {
   })
 };
 async function getPullRequest(github) {
-  return github.graphql((0, import_typed_graphqlify.query)(PR_SCHEMA).toString()).then((response) => response.repository.pullRequest);
+  return github.graphql((0, import_typed_graphqlify.query)(PR_SCHEMA).toString()).then(parseGithubPullRequest);
+}
+function parseGithubPullRequest({ repository: { pullRequest } }) {
+  let statuses = new Statuses();
+  const statusCheckRollup = pullRequest.commits.nodes[0].commit.statusCheckRollup;
+  if (statusCheckRollup) {
+    statuses.populate(statusCheckRollup.contexts.nodes.map((checkOrStatus) => {
+      if (checkOrStatus.__typename === "StatusContext") {
+        return {
+          state: checkOrStatus.state,
+          name: checkOrStatus.context,
+          description: checkOrStatus.description || void 0
+        };
+      }
+      if (checkOrStatus.__typename === "CheckRun") {
+        return {
+          state: checkOrStatus.conclusion ? checkConclusionStateToStatusStateMap.get(checkOrStatus.conclusion) : "PENDING",
+          description: checkOrStatus.title || void 0,
+          name: checkOrStatus.name || "unknown-check-run"
+        };
+      }
+      throw Error("CheckOrStatus was not found to be a check or a status");
+    }));
+  }
+  return {
+    sha: pullRequest.commits.nodes[0].commit.oid,
+    isDraft: pullRequest.isDraft,
+    labels: [],
+    state: pullRequest.state,
+    statuses
+  };
 }
 
 // 
@@ -23698,39 +23777,46 @@ var isDraft = (pullRequest) => {
 };
 
 // 
-var unifiedStatusCheckName = "Unified Status";
+var core2 = __toESM(require_core());
+var hasRequiredStatuses = ({ statuses }) => {
+  const required = core2.getMultilineInput("required", { trimWhitespace: true });
+  const missingStatuses = required.filter((matcher) => !statuses.all.some(({ name }) => name.match(matcher)));
+  if (missingStatuses.length > 0) {
+    return {
+      state: "PENDING",
+      description: `Pending ${missingStatuses.length} status(es): ${missingStatuses.join(", ")}`
+    };
+  }
+  return {
+    state: "SUCCESS",
+    description: "All expected statuses are present"
+  };
+};
+var hasPassingStatuses = ({ statuses }) => {
+  if (statuses.failing.length > 0) {
+    return {
+      state: "FAILURE",
+      description: `${statuses.failing} expected status(es) failing`
+    };
+  }
+  if (statuses.pending.length > 0) {
+    return {
+      state: "PENDING",
+      description: "Other tracked statuses are still pending"
+    };
+  }
+  return {
+    state: "SUCCESS",
+    description: "All tracked statuses are passing"
+  };
+};
+
+// 
 async function main() {
   const github = new import_rest2.Octokit({ auth: await getAuthTokenFor(ANGULAR_ROBOT) });
   try {
-    const ignored = [
-      unifiedStatusCheckName,
-      ...core.getMultilineInput("ignored", { trimWhitespace: true })
-    ];
-    const required = core.getMultilineInput("required", { trimWhitespace: true });
     const pullRequest = await getPullRequest(github);
-    const statusChecks = pullRequest.commits.nodes[0].commit.statusCheckRollup;
-    if (!statusChecks) {
-      return;
-    }
-    const allStatuses = statusChecks.contexts.nodes.map((checkOrStatus) => {
-      if (checkOrStatus.__typename === "StatusContext") {
-        return {
-          state: checkOrStatus.state,
-          name: checkOrStatus.context,
-          description: checkOrStatus.description || void 0
-        };
-      }
-      if (checkOrStatus.__typename === "CheckRun") {
-        return {
-          state: checkOrStatus.conclusion ? checkConclusionStateToStatusStateMap.get(checkOrStatus.conclusion) : "PENDING",
-          description: checkOrStatus.title || void 0,
-          name: checkOrStatus.name || "unknown-check-run"
-        };
-      }
-      throw Error("CheckOrStatus was not found to be a check or a status");
-    });
-    const statuses = allStatuses.filter(({ name }) => !ignored.includes(name));
-    const unifiedCheckStatus = allStatuses.find(({ name }) => name === unifiedStatusCheckName);
+    const unifiedCheckStatus = pullRequest.statuses.unifiedCheckStatus;
     const setStatus = async (state, description) => {
       if (unifiedCheckStatus && unifiedCheckStatus.state === state && unifiedCheckStatus.description === description) {
         console.log("Skipping status update as the request status and information is the same as the current status");
@@ -23738,7 +23824,7 @@ async function main() {
       }
       await github.repos.createCommitStatus({
         ...import_github3.context.repo,
-        sha: pullRequest.commits.nodes[0].commit.oid,
+        sha: pullRequest.sha,
         context: unifiedStatusCheckName,
         state: state.toLowerCase(),
         description
@@ -23750,59 +23836,23 @@ async function main() {
       await setStatus(isDraftValidationResult.state, isDraftValidationResult.description);
       return;
     }
-    const missedStatuses = required.filter((matcher) => !statuses.some(({ name }) => name.match(matcher)));
-    if (missedStatuses.length > 0) {
-      await setStatus("PENDING", `Pending ${missedStatuses.length} status(es): ${missedStatuses.join(", ")}`);
+    const hasRequiredStatusesResult = hasRequiredStatuses(pullRequest);
+    if (hasRequiredStatusesResult.state === "PENDING") {
+      await setStatus(hasRequiredStatusesResult.state, hasRequiredStatusesResult.description);
       return;
     }
-    const counts = statuses.reduce((count, { state }) => {
-      if (isPassingState(state)) {
-        count.passing += 1;
-      }
-      if (isPendingState(state)) {
-        count.pending += 1;
-      }
-      if (isFailingState(state)) {
-        count.failing += 1;
-      }
-      return count;
-    }, { passing: 0, failing: 0, pending: 0 });
-    if (counts.failing > 0) {
-      await setStatus("FAILURE", `${counts.failing} expected status(es) failing`);
+    const hasPassingStatusesResult = hasPassingStatuses(pullRequest);
+    if (hasPassingStatusesResult.state === "PENDING") {
+      await setStatus(hasPassingStatusesResult.state, hasPassingStatusesResult.description);
       return;
     }
-    if (counts.pending > 0) {
-      await setStatus("PENDING", "Other tracked statuses are still pending");
-      return;
-    }
-    await setStatus("SUCCESS");
   } finally {
     await revokeActiveInstallationToken(github);
   }
 }
-function isPassingState(state) {
-  return state === "SUCCESS" || state === "EXPECTED";
-}
-function isPendingState(state) {
-  return state === "PENDING";
-}
-function isFailingState(state) {
-  return state === "ERROR" || state === "FAILURE";
-}
-var checkConclusionStateToStatusStateMap = /* @__PURE__ */ new Map([
-  ["ACTION_REQUIRED", "PENDING"],
-  ["CANCELLED", "ERROR"],
-  ["FAILURE", "FAILURE"],
-  ["NEUTRAL", "EXPECTED"],
-  ["SKIPPED", "EXPECTED"],
-  ["STALE", "ERROR"],
-  ["STARTUP_FAILURE", "FAILURE"],
-  ["SUCCESS", "SUCCESS"],
-  ["TIMED_OUT", "FAILURE"]
-]);
 main().catch((err) => {
   console.error(err);
-  core.setFailed("Failed with the above error");
+  core3.setFailed("Failed with the above error");
 });
 /*!
  * is-plain-object <https://github.com/jonschlinkert/is-plain-object>
