@@ -23697,6 +23697,13 @@ var PR_SCHEMA = {
       isDraft: import_typed_graphqlify.types.boolean,
       state: import_typed_graphqlify.types.custom(),
       number: import_typed_graphqlify.types.number,
+      labels: (0, import_typed_graphqlify.params)({ last: 100 }, {
+        nodes: [
+          {
+            name: import_typed_graphqlify.types.string
+          }
+        ]
+      }),
       commits: (0, import_typed_graphqlify.params)({ last: 1 }, {
         nodes: [
           {
@@ -23757,6 +23764,7 @@ function parseGithubPullRequest({ repository: { pullRequest } }) {
   return {
     sha: pullRequest.commits.nodes[0].commit.oid,
     isDraft: pullRequest.isDraft,
+    labels: pullRequest.labels.nodes.map(({ name }) => name),
     state: pullRequest.state,
     statuses
   };
@@ -23812,6 +23820,203 @@ var checkOnlyPassingStatuses = ({ statuses }) => {
 };
 
 // 
+var createTypedObject = () => (v) => v;
+
+// 
+var managedLabels = createTypedObject()({
+  DETECTED_BREAKING_CHANGE: {
+    description: "PR contains a commit with a breaking change",
+    name: "detected: breaking change",
+    commitCheck: (c) => c.breakingChanges.length !== 0
+  },
+  DETECTED_DEPRECATION: {
+    description: "PR contains a commit with a deprecation",
+    name: "detected: deprecation",
+    commitCheck: (c) => c.deprecations.length !== 0
+  },
+  DETECTED_FEATURE: {
+    description: "PR contains a feature commit",
+    name: "detected: feature",
+    commitCheck: (c) => c.type === "feat"
+  },
+  DETECTED_DOCS_CHANGE: {
+    description: "Related to the documentation",
+    name: "area: docs",
+    commitCheck: (c) => c.type === "docs"
+  },
+  DETECTED_INFRA_CHANGE: {
+    description: "Related the build and CI infrastructure of the project",
+    name: "area: build & ci",
+    commitCheck: (c) => c.type === "build" || c.type === "ci"
+  }
+});
+
+// 
+var actionLabels = createTypedObject()({
+  ACTION_MERGE: {
+    description: "The PR is ready for merge by the caretaker",
+    name: "action: merge"
+  },
+  ACTION_CLEANUP: {
+    description: "The PR is in need of cleanup, either due to needing a rebase or in response to comments from reviews",
+    name: "action: cleanup"
+  },
+  ACTION_PRESUBMIT: {
+    description: "The PR is in need of a google3 presubmit",
+    name: "action: presubmit"
+  },
+  ACTION_REVIEW: {
+    description: "The PR is still awaiting reviews from at least one requested reviewer",
+    name: "action: review"
+  }
+});
+
+// 
+var mergeLabels = createTypedObject()({
+  MERGE_PRESERVE_COMMITS: {
+    description: "When the PR is merged, a rebase and merge should be performed",
+    name: "merge: preserve commits"
+  },
+  MERGE_SQUASH_COMMITS: {
+    description: "When the PR is merged, a squash and merge should be performed",
+    name: "merge: squash commits"
+  },
+  MERGE_FIX_COMMIT_MESSAGE: {
+    description: "When the PR is merged, rewrites/fixups of the commit messages are needed",
+    name: "merge: fix commit message"
+  },
+  MERGE_CARETAKER_NOTE: {
+    description: "Alert the caretaker performing the merge to check the PR for an out of normal action needed or note",
+    name: "merge: caretaker note"
+  }
+});
+
+// 
+var targetLabels = createTypedObject()({
+  TARGET_FEATURE: {
+    description: "This PR is targeted for a feature branch (outside of main and semver branches)",
+    name: "target: feature"
+  },
+  TARGET_LTS: {
+    description: "This PR is targeting a version currently in long-term support",
+    name: "target: lts"
+  },
+  TARGET_MAJOR: {
+    description: "This PR is targeted for the next major release",
+    name: "target: major"
+  },
+  TARGET_MINOR: {
+    description: "This PR is targeted for the next minor release",
+    name: "target: minor"
+  },
+  TARGET_PATCH: {
+    description: "This PR is targeted for the next patch release",
+    name: "target: patch"
+  },
+  TARGET_RC: {
+    description: "This PR is targeted for the next release-candidate",
+    name: "target: rc"
+  }
+});
+
+// 
+var priorityLabels = createTypedObject()({
+  P0: {
+    name: "P0",
+    description: "Issue that causes an outage, breakage, or major function to be unusable, with no known workarounds"
+  },
+  P1: {
+    name: "P1",
+    description: "Impacts a large percentage of users; if a workaround exists it is partial or overly painful"
+  },
+  P2: {
+    name: "P2",
+    description: "The issue is important to a large percentage of users, with a workaround"
+  },
+  P3: {
+    name: "P3",
+    description: "An issue that is relevant to core functions, but does not impede progress. Important, but not urgent"
+  },
+  P4: {
+    name: "P4",
+    description: "A relatively minor issue that is not relevant to core functions"
+  },
+  P5: {
+    name: "P5",
+    description: "The team acknowledges the request but does not plan to address it, it remains open for discussion"
+  }
+});
+
+// 
+var featureLabels = createTypedObject()({
+  FEATURE_IN_BACKLOG: {
+    name: "feature: in backlog",
+    description: "Feature request for which voting has completed and is now in the backlog"
+  },
+  FEATURE_VOTES_REQUIRED: {
+    name: "feature: votes required",
+    description: "Feature request which is currently still in the voting phase"
+  },
+  FEATURE_UNDER_CONSIDERATION: {
+    name: "feature: under consideration",
+    description: "Feature request for which voting has completed and the request is now under consideration"
+  },
+  FEATURE_INSUFFICIENT_VOTES: {
+    name: "feature: insufficient votes",
+    description: "Label to add when the not a sufficient number of votes or comments from unique authors"
+  }
+});
+
+// 
+var allLabels = {
+  ...managedLabels,
+  ...actionLabels,
+  ...mergeLabels,
+  ...targetLabels,
+  ...priorityLabels,
+  ...featureLabels
+};
+
+// 
+var checkForTargelLabel = (pullRequest) => {
+  const appliedLabel = Object.values(targetLabels).find((label) => pullRequest.labels.includes(label.name));
+  if (appliedLabel !== void 0) {
+    return {
+      state: "success",
+      description: `Pull request has target label: "${appliedLabel.name}"`
+    };
+  }
+  return {
+    state: "pending",
+    description: "Waiting for target label on the pull request"
+  };
+};
+var isMergeReady = (pullRequest) => {
+  if (!pullRequest.labels.includes(actionLabels.ACTION_MERGE.name)) {
+    return {
+      state: "pending",
+      description: `Waiting for "${actionLabels.ACTION_MERGE.name}" label`
+    };
+  }
+  if (pullRequest.labels.includes(actionLabels.ACTION_REVIEW.name)) {
+    return {
+      state: "failure",
+      description: `Marked for merge but still has the "${actionLabels.ACTION_REVIEW.name}" label`
+    };
+  }
+  if (pullRequest.labels.includes(actionLabels.ACTION_CLEANUP.name)) {
+    return {
+      state: "failure",
+      description: `Marked for merge but still has the "${actionLabels.ACTION_CLEANUP.name}" label`
+    };
+  }
+  return {
+    state: "success",
+    description: `Marked for merge by the "${actionLabels.ACTION_MERGE.name}" label`
+  };
+};
+
+// 
 async function main() {
   const github = new import_rest2.Octokit({ auth: await getAuthTokenFor(ANGULAR_ROBOT) });
   try {
@@ -23836,6 +24041,11 @@ async function main() {
       await setStatus(isDraftValidationResult.state, isDraftValidationResult.description);
       return;
     }
+    const isMergeReadyResult = isMergeReady(pullRequest);
+    if (isMergeReadyResult.state === "pending") {
+      await setStatus(isMergeReadyResult.state, isMergeReadyResult.description);
+      return;
+    }
     const requiredStatusesResult = checkRequiredStatuses(pullRequest);
     if (requiredStatusesResult.state === "pending") {
       await setStatus(requiredStatusesResult.state, requiredStatusesResult.description);
@@ -23844,6 +24054,11 @@ async function main() {
     const onlyPassingStatusesResult = checkOnlyPassingStatuses(pullRequest);
     if (onlyPassingStatusesResult.state === "pending") {
       await setStatus(onlyPassingStatusesResult.state, onlyPassingStatusesResult.description);
+      return;
+    }
+    const targetLabelResult = checkForTargelLabel(pullRequest);
+    if (targetLabelResult.state === "pending") {
+      await setStatus(targetLabelResult.state, targetLabelResult.description);
       return;
     }
   } finally {

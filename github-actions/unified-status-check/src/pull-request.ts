@@ -54,6 +54,7 @@ export type PullRequest = {
   sha: string;
   isDraft: boolean;
   state: PullRequestState;
+  labels: string[];
   statuses: Statuses;
 };
 
@@ -87,6 +88,16 @@ const PR_SCHEMA = {
           isDraft: graphqlTypes.boolean,
           state: graphqlTypes.custom<PullRequestState>(),
           number: graphqlTypes.number,
+          labels: params(
+            {last: 100},
+            {
+              nodes: [
+                {
+                  name: graphqlTypes.string,
+                },
+              ],
+            },
+          ),
           commits: params(
             {last: 1},
             {
@@ -164,6 +175,7 @@ function parseGithubPullRequest({repository: {pullRequest}}: typeof PR_SCHEMA): 
   return {
     sha: pullRequest.commits.nodes[0].commit.oid,
     isDraft: pullRequest.isDraft,
+    labels: pullRequest.labels.nodes.map(({name}) => name),
     state: pullRequest.state,
     statuses,
   };

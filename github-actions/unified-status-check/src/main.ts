@@ -5,6 +5,7 @@ import {getAuthTokenFor, ANGULAR_ROBOT, revokeActiveInstallationToken} from '../
 import {getPullRequest, NormalizedState, unifiedStatusCheckName} from './pull-request.js';
 import {isDraft} from './draft-mode.js';
 import {checkOnlyPassingStatuses, checkRequiredStatuses} from './statuses.js';
+import {checkForTargelLabel, isMergeReady} from './labels.js';
 
 async function main() {
   /** A Github API instance. */
@@ -44,6 +45,12 @@ async function main() {
       return;
     }
 
+    const isMergeReadyResult = isMergeReady(pullRequest);
+    if (isMergeReadyResult.state === 'pending') {
+      await setStatus(isMergeReadyResult.state, isMergeReadyResult.description);
+      return;
+    }
+
     const requiredStatusesResult = checkRequiredStatuses(pullRequest);
     if (requiredStatusesResult.state === 'pending') {
       await setStatus(requiredStatusesResult.state, requiredStatusesResult.description);
@@ -53,6 +60,12 @@ async function main() {
     const onlyPassingStatusesResult = checkOnlyPassingStatuses(pullRequest);
     if (onlyPassingStatusesResult.state === 'pending') {
       await setStatus(onlyPassingStatusesResult.state, onlyPassingStatusesResult.description);
+      return;
+    }
+
+    const targetLabelResult = checkForTargelLabel(pullRequest);
+    if (targetLabelResult.state === 'pending') {
+      await setStatus(targetLabelResult.state, targetLabelResult.description);
       return;
     }
   } finally {
