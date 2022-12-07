@@ -84,7 +84,7 @@ runs:
         expires: 20d
         projectId: '${{inputs.firebase-project-id}}'
         entryPoint: '${{inputs.firebase-config-dir}}'
-        channelId: pr-${{steps.artifact-info.outputs.unsafe-pull-number}}-${{steps.artifact-info.outputs.unsafe-build-revision}}
+        channelId: pr-${{github.repository}}-${{steps.artifact-info.outputs.unsafe-pull-number}}-${{steps.artifact-info.outputs.unsafe-build-revision}}
 
     - uses: marocchino/sticky-pull-request-comment@fcf6fe9e4a0409cd9316a5011435be0f3327f1e1 # tag=v2
       with:
