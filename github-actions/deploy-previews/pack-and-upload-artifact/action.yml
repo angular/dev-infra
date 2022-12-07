@@ -52,7 +52,16 @@ runs:
           '${{inputs.pull-number}}' \
           '${{inputs.artifact-build-revision}}'
 
+    - name: Creating compressed tarball of artifact
+      id: pack
+      shell: bash
+      run: |
+        pkg="$RUNNER_TEMP/deploy-artifact.tar.gz"
+
+        tar -czvf "$pkg" -C '${{steps.copy.outputs.deploy-dir}}' .
+        echo "artifact-path=$pkg" >> $GITHUB_OUTPUT
+
     - uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb # renovate: tag=v3
       with:
         name: '${{inputs.workflow-artifact-name}}'
-        path: '${{steps.copy.outputs.deploy-dir}}'
+        path: '${{steps.pack.outputs.artifact-path}}'
