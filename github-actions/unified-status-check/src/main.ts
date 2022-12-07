@@ -5,7 +5,7 @@ import {getAuthTokenFor, ANGULAR_ROBOT, revokeActiveInstallationToken} from '../
 import {StatusState} from '@octokit/graphql-schema';
 import {getPullRequest, unifiedStatusCheckName} from './pull-request.js';
 import {isDraft} from './draft-mode.js';
-import {hasPassingStatuses, hasRequiredStatuses} from './statuses.js';
+import {checkOnlyPassingStatuses, checkRequiredStatuses} from './statuses.js';
 
 async function main() {
   /** A Github API instance. */
@@ -48,13 +48,13 @@ async function main() {
       return;
     }
 
-    const hasRequiredStatusesResult = hasRequiredStatuses(pullRequest);
+    const hasRequiredStatusesResult = checkRequiredStatuses(pullRequest);
     if (hasRequiredStatusesResult.state === 'PENDING') {
       await setStatus(hasRequiredStatusesResult.state, hasRequiredStatusesResult.description);
       return;
     }
 
-    const hasPassingStatusesResult = hasPassingStatuses(pullRequest);
+    const hasPassingStatusesResult = checkOnlyPassingStatuses(pullRequest);
     if (hasPassingStatusesResult.state === 'PENDING') {
       await setStatus(hasPassingStatusesResult.state, hasPassingStatusesResult.description);
       return;

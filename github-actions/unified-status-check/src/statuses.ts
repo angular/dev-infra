@@ -2,11 +2,11 @@ import * as core from '@actions/core';
 import {PullRequest} from './pull-request.js';
 import {ValidationFunction} from './validation.js';
 
-export const hasRequiredStatuses: ValidationFunction = ({statuses}: PullRequest) => {
-  /** Status matchers which must match at least one of the current statuses . */
-  const required = core.getMultilineInput('required', {trimWhitespace: true});
+/** Status matchers which must match at least one of the current statuses . */
+const requiredStatuses = core.getMultilineInput('required', {trimWhitespace: true});
 
-  const missingStatuses = required.filter(
+export const checkRequiredStatuses: ValidationFunction = ({statuses}: PullRequest) => {
+  const missingStatuses = requiredStatuses.filter(
     (matcher) => !statuses.all.some(({name}) => name.match(matcher)),
   );
   if (missingStatuses.length > 0) {
@@ -21,7 +21,7 @@ export const hasRequiredStatuses: ValidationFunction = ({statuses}: PullRequest)
   };
 };
 
-export const hasPassingStatuses: ValidationFunction = ({statuses}: PullRequest) => {
+export const checkOnlyPassingStatuses: ValidationFunction = ({statuses}: PullRequest) => {
   if (statuses.failing.length > 0) {
     return {
       state: 'FAILURE',

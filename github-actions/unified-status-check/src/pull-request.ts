@@ -24,7 +24,7 @@ class Statuses {
     ];
 
     for (const status of statuses) {
-      if (ignored.includes(status.name)) {
+      if (ignored.some((matcher) => status.name.match(matcher))) {
         this.ignored.push(status);
         if (status.name === unifiedStatusCheckName) {
           this.unifiedCheckStatus = status;
@@ -35,14 +35,17 @@ class Statuses {
         case 'ERROR':
         case 'FAILURE':
           this.failing.push(status);
+          break;
         case 'EXPECTED':
         case 'SUCCESS':
           this.passing.push(status);
+          break;
         case 'PENDING':
           this.pending.push(status);
-        default:
-          this.all.push(status);
+          break;
       }
+
+      this.all.push(status);
     }
   }
 }
@@ -52,12 +55,14 @@ export type PullRequest = {
   sha: string;
   isDraft: boolean;
   state: PullRequestState;
-  labels: string[];
   statuses: Statuses;
 };
 
 /** Mapping of Github Check Conclusion states to Status states. */
-const checkConclusionStateToStatusStateMap = new Map<CheckConclusionState, StatusState>([
+const checkConclusionStateToStatusStateMap = new Map<
+  CheckConclusionState,
+  Omit<StatusState, 'ERROR' | 'EXPECTED'>
+>([
   ['ACTION_REQUIRED', 'PENDING'],
   ['CANCELLED', 'ERROR'],
   ['FAILURE', 'FAILURE'],
@@ -157,7 +162,6 @@ function parseGithubPullRequest({repository: {pullRequest}}: typeof PR_SCHEMA): 
   return {
     sha: pullRequest.commits.nodes[0].commit.oid,
     isDraft: pullRequest.isDraft,
-    labels: [],
     state: pullRequest.state,
     statuses,
   };
