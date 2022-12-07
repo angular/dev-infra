@@ -61,8 +61,13 @@ runs:
     - name: Extracting workflow artifact into Firebase public directory.
       shell: bash
       run: |
+        extractDir="$RUNNER_TEMP/artifact-unpack"
+
         mkdir -p '${{inputs.firebase-public-dir}}'
-        unzip unsafe-artifact.zip -d '${{inputs.firebase-public-dir}}'
+        mkdir -p "$extractDir"
+
+        unzip unsafe-artifact.zip -d "$extractDir"
+        tar -xvzf "$extractDir/deploy-artifact.tar.gz" -C '${{inputs.firebase-public-dir}}'
 
     - name: Extracting artifact metadata
       id: artifact-info
