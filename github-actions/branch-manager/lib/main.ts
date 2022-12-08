@@ -1,13 +1,16 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {Octokit} from '@octokit/rest';
-import {actionLabels} from '../../../ng-dev/pr/common/labels.js';
+import {actionLabels, mergeLabels, targetLabels} from '../../../ng-dev/pr/common/labels.js';
 import {revokeActiveInstallationToken, getAuthTokenFor, ANGULAR_ROBOT} from '../../utils.js';
 import {
   PullRequestLabeledEvent,
   PullRequestEvent,
   PushEvent,
 } from '@octokit/webhooks-definitions/schema.js';
+
+/** Set of target label names. */
+const targetLabelNames = new Set(Object.values(targetLabels).map((t) => t.name));
 
 async function run() {
   if (context.eventName === 'push') {
@@ -50,7 +53,12 @@ async function run() {
 
     if (context.payload.action === 'labeled') {
       const event = context.payload as PullRequestLabeledEvent;
-      if (event.label.name === actionLabels.ACTION_MERGE.name) {
+      // If the merge label has been added, or if target labels have changed,
+      // another update of the merge status is needed.
+      if (
+        event.label.name === actionLabels.ACTION_MERGE.name ||
+        targetLabelNames.has(event.label.name)
+      ) {
         await createWorkflowForPullRequest();
       }
     }
