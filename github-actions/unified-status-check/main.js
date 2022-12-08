@@ -23642,6 +23642,7 @@ async function revokeActiveInstallationToken(githubOrToken) {
 var import_typed_graphqlify = __toESM(require_dist2());
 var core = __toESM(require_core());
 var import_github2 = __toESM(require_github());
+var ignoredStatuses = core.getMultilineInput("ignored", { trimWhitespace: true });
 var unifiedStatusCheckName = "Unified Status";
 var Statuses = class {
   constructor() {
@@ -23652,12 +23653,9 @@ var Statuses = class {
     this.all = [];
   }
   populate(statuses) {
-    const ignored = [
-      unifiedStatusCheckName,
-      ...core.getMultilineInput("ignored", { trimWhitespace: true })
-    ];
+    const ignored = [unifiedStatusCheckName, ...ignoredStatuses];
     for (const status of statuses) {
-      if (ignored.includes(status.name)) {
+      if (ignored.some((matcher) => status.name.match(matcher))) {
         this.ignored.push(status);
         if (status.name === unifiedStatusCheckName) {
           this.unifiedCheckStatus = status;
@@ -23665,30 +23663,33 @@ var Statuses = class {
         continue;
       }
       switch (status.state) {
-        case "ERROR":
-        case "FAILURE":
+        case "failure":
           this.failing.push(status);
-        case "EXPECTED":
-        case "SUCCESS":
+          break;
+        case "success":
           this.passing.push(status);
-        case "PENDING":
+          break;
+        case "pending":
           this.pending.push(status);
-        default:
-          this.all.push(status);
+          break;
       }
+      this.all.push(status);
     }
   }
 };
 var checkConclusionStateToStatusStateMap = /* @__PURE__ */ new Map([
-  ["ACTION_REQUIRED", "PENDING"],
-  ["CANCELLED", "ERROR"],
-  ["FAILURE", "FAILURE"],
-  ["NEUTRAL", "EXPECTED"],
-  ["SKIPPED", "EXPECTED"],
-  ["STALE", "ERROR"],
-  ["STARTUP_FAILURE", "FAILURE"],
-  ["SUCCESS", "SUCCESS"],
-  ["TIMED_OUT", "FAILURE"]
+  ["ACTION_REQUIRED", "pending"],
+  ["CANCELLED", "failure"],
+  ["ERROR", "failure"],
+  ["EXPECTED", "success"],
+  ["FAILURE", "failure"],
+  ["NEUTRAL", "success"],
+  ["PENDING", "pending"],
+  ["SKIPPED", "success"],
+  ["STALE", "failure"],
+  ["STARTUP_FAILURE", "failure"],
+  ["SUCCESS", "success"],
+  ["TIMED_OUT", "failure"]
 ]);
 var PR_SCHEMA = {
   repository: (0, import_typed_graphqlify.params)({ owner: import_github2.context.repo.owner, name: import_github2.context.repo.repo }, {
@@ -23738,14 +23739,14 @@ function parseGithubPullRequest({ repository: { pullRequest } }) {
     statuses.populate(statusCheckRollup.contexts.nodes.map((checkOrStatus) => {
       if (checkOrStatus.__typename === "StatusContext") {
         return {
-          state: checkOrStatus.state,
+          state: checkConclusionStateToStatusStateMap.get(checkOrStatus.state),
           name: checkOrStatus.context,
           description: checkOrStatus.description || void 0
         };
       }
       if (checkOrStatus.__typename === "CheckRun") {
         return {
-          state: checkOrStatus.conclusion ? checkConclusionStateToStatusStateMap.get(checkOrStatus.conclusion) : "PENDING",
+          state: checkOrStatus.conclusion ? checkConclusionStateToStatusStateMap.get(checkOrStatus.conclusion) : "pending",
           description: checkOrStatus.title || void 0,
           name: checkOrStatus.name || "unknown-check-run"
         };
@@ -23756,7 +23757,6 @@ function parseGithubPullRequest({ repository: { pullRequest } }) {
   return {
     sha: pullRequest.commits.nodes[0].commit.oid,
     isDraft: pullRequest.isDraft,
-    labels: [],
     state: pullRequest.state,
     statuses
   };
@@ -23767,46 +23767,46 @@ var isDraft = (pullRequest) => {
   if (pullRequest.isDraft) {
     return {
       description: "Pull Request is still in draft",
-      state: "PENDING"
+      state: "pending"
     };
   }
   return {
     description: "Pull Request is marked ready",
-    state: "SUCCESS"
+    state: "success"
   };
 };
 
 // 
 var core2 = __toESM(require_core());
-var hasRequiredStatuses = ({ statuses }) => {
-  const required = core2.getMultilineInput("required", { trimWhitespace: true });
-  const missingStatuses = required.filter((matcher) => !statuses.all.some(({ name }) => name.match(matcher)));
+var requiredStatuses = core2.getMultilineInput("required", { trimWhitespace: true });
+var checkRequiredStatuses = ({ statuses }) => {
+  const missingStatuses = requiredStatuses.filter((matcher) => !statuses.all.some(({ name }) => name.match(matcher)));
   if (missingStatuses.length > 0) {
     return {
-      state: "PENDING",
+      state: "pending",
       description: `Pending ${missingStatuses.length} status(es): ${missingStatuses.join(", ")}`
     };
   }
   return {
-    state: "SUCCESS",
+    state: "success",
     description: "All expected statuses are present"
   };
 };
-var hasPassingStatuses = ({ statuses }) => {
+var checkOnlyPassingStatuses = ({ statuses }) => {
   if (statuses.failing.length > 0) {
     return {
-      state: "FAILURE",
+      state: "failure",
       description: `${statuses.failing} expected status(es) failing`
     };
   }
   if (statuses.pending.length > 0) {
     return {
-      state: "PENDING",
+      state: "pending",
       description: "Other tracked statuses are still pending"
     };
   }
   return {
-    state: "SUCCESS",
+    state: "success",
     description: "All tracked statuses are passing"
   };
 };
@@ -23826,24 +23826,24 @@ async function main() {
         ...import_github3.context.repo,
         sha: pullRequest.sha,
         context: unifiedStatusCheckName,
-        state: state.toLowerCase(),
+        state,
         description
       });
       return;
     };
     const isDraftValidationResult = isDraft(pullRequest);
-    if (isDraftValidationResult.state === "PENDING") {
+    if (isDraftValidationResult.state === "pending") {
       await setStatus(isDraftValidationResult.state, isDraftValidationResult.description);
       return;
     }
-    const hasRequiredStatusesResult = hasRequiredStatuses(pullRequest);
-    if (hasRequiredStatusesResult.state === "PENDING") {
-      await setStatus(hasRequiredStatusesResult.state, hasRequiredStatusesResult.description);
+    const requiredStatusesResult = checkRequiredStatuses(pullRequest);
+    if (requiredStatusesResult.state === "pending") {
+      await setStatus(requiredStatusesResult.state, requiredStatusesResult.description);
       return;
     }
-    const hasPassingStatusesResult = hasPassingStatuses(pullRequest);
-    if (hasPassingStatusesResult.state === "PENDING") {
-      await setStatus(hasPassingStatusesResult.state, hasPassingStatusesResult.description);
+    const onlyPassingStatusesResult = checkOnlyPassingStatuses(pullRequest);
+    if (onlyPassingStatusesResult.state === "pending") {
+      await setStatus(onlyPassingStatusesResult.state, onlyPassingStatusesResult.description);
       return;
     }
   } finally {

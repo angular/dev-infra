@@ -11,12 +11,12 @@ export const checkRequiredStatuses: ValidationFunction = ({statuses}: PullReques
   );
   if (missingStatuses.length > 0) {
     return {
-      state: 'PENDING',
+      state: 'pending',
       description: `Pending ${missingStatuses.length} status(es): ${missingStatuses.join(', ')}`,
     };
   }
   return {
-    state: 'SUCCESS',
+    state: 'success',
     description: 'All expected statuses are present',
   };
 };
@@ -24,20 +24,20 @@ export const checkRequiredStatuses: ValidationFunction = ({statuses}: PullReques
 export const checkOnlyPassingStatuses: ValidationFunction = ({statuses}: PullRequest) => {
   if (statuses.failing.length > 0) {
     return {
-      state: 'FAILURE',
+      state: 'failure',
       description: `${statuses.failing} expected status(es) failing`,
     };
   }
 
   if (statuses.pending.length > 0) {
     return {
-      state: 'PENDING',
+      state: 'pending',
       description: 'Other tracked statuses are still pending',
     };
   }
 
   return {
-    state: 'SUCCESS',
+    state: 'success',
     description: 'All tracked statuses are passing',
   };
 };

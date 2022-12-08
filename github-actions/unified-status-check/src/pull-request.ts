@@ -5,9 +5,13 @@ import {CheckConclusionState, PullRequestState, StatusState} from '@octokit/grap
 import {Octokit} from '@octokit/rest';
 import {context} from '@actions/github';
 
+const ignoredStatuses = core.getMultilineInput('ignored', {trimWhitespace: true});
+
 export const unifiedStatusCheckName = 'Unified Status';
 
-type NormalizedStatus = {state: StatusState; name: string; description?: string};
+export type NormalizedState = 'success' | 'failure' | 'pending';
+
+type NormalizedStatus = {state: NormalizedState; name: string; description?: string};
 
 class Statuses {
   pending: NormalizedStatus[] = [];
@@ -18,10 +22,7 @@ class Statuses {
   unifiedCheckStatus: NormalizedStatus | undefined;
 
   populate(statuses: NormalizedStatus[]) {
-    const ignored = [
-      unifiedStatusCheckName,
-      ...core.getMultilineInput('ignored', {trimWhitespace: true}),
-    ];
+    const ignored = [unifiedStatusCheckName, ...ignoredStatuses];
 
     for (const status of statuses) {
       if (ignored.some((matcher) => status.name.match(matcher))) {
@@ -32,15 +33,13 @@ class Statuses {
         continue;
       }
       switch (status.state) {
-        case 'ERROR':
-        case 'FAILURE':
+        case 'failure':
           this.failing.push(status);
           break;
-        case 'EXPECTED':
-        case 'SUCCESS':
+        case 'success':
           this.passing.push(status);
           break;
-        case 'PENDING':
+        case 'pending':
           this.pending.push(status);
           break;
       }
@@ -60,18 +59,21 @@ export type PullRequest = {
 
 /** Mapping of Github Check Conclusion states to Status states. */
 const checkConclusionStateToStatusStateMap = new Map<
-  CheckConclusionState,
-  Omit<StatusState, 'ERROR' | 'EXPECTED'>
+  CheckConclusionState | StatusState,
+  NormalizedState
 >([
-  ['ACTION_REQUIRED', 'PENDING'],
-  ['CANCELLED', 'ERROR'],
-  ['FAILURE', 'FAILURE'],
-  ['NEUTRAL', 'EXPECTED'],
-  ['SKIPPED', 'EXPECTED'],
-  ['STALE', 'ERROR'],
-  ['STARTUP_FAILURE', 'FAILURE'],
-  ['SUCCESS', 'SUCCESS'],
-  ['TIMED_OUT', 'FAILURE'],
+  ['ACTION_REQUIRED', 'pending'],
+  ['CANCELLED', 'failure'],
+  ['ERROR', 'failure'],
+  ['EXPECTED', 'success'],
+  ['FAILURE', 'failure'],
+  ['NEUTRAL', 'success'],
+  ['PENDING', 'pending'],
+  ['SKIPPED', 'success'],
+  ['STALE', 'failure'],
+  ['STARTUP_FAILURE', 'failure'],
+  ['SUCCESS', 'success'],
+  ['TIMED_OUT', 'failure'],
 ]);
 
 /** GraphQL schema for requesting the status information for a given pull request. */
@@ -140,7 +142,7 @@ function parseGithubPullRequest({repository: {pullRequest}}: typeof PR_SCHEMA): 
       statusCheckRollup.contexts.nodes.map((checkOrStatus) => {
         if (checkOrStatus.__typename === 'StatusContext') {
           return {
-            state: checkOrStatus.state,
+            state: checkConclusionStateToStatusStateMap.get(checkOrStatus.state)!,
             name: checkOrStatus.context,
             description: checkOrStatus.description || undefined,
           };
@@ -149,7 +151,7 @@ function parseGithubPullRequest({repository: {pullRequest}}: typeof PR_SCHEMA): 
           return {
             state: checkOrStatus.conclusion
               ? checkConclusionStateToStatusStateMap.get(checkOrStatus.conclusion)!
-              : 'PENDING',
+              : 'pending',
             description: checkOrStatus.title || undefined,
             name: checkOrStatus.name || 'unknown-check-run',
           };
