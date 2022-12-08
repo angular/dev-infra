@@ -23509,6 +23509,7 @@ async function revokeActiveInstallationToken(githubOrToken) {
 }
 
 // 
+var targetLabelNames = new Set(Object.values(targetLabels).map((t) => t.name));
 async function run() {
   if (import_github2.context.eventName === "push") {
     const { ref } = import_github2.context.payload;
@@ -23535,7 +23536,7 @@ async function run() {
     }
     if (import_github2.context.payload.action === "labeled") {
       const event = import_github2.context.payload;
-      if (event.label.name === actionLabels.ACTION_MERGE.name) {
+      if (event.label.name === actionLabels.ACTION_MERGE.name || targetLabelNames.has(event.label.name)) {
         await createWorkflowForPullRequest();
       }
     }
