@@ -90,5 +90,7 @@ runs:
       with:
         message: |
           Deployed ${{inputs.workflow-artifact-name}} to: ${{steps.deploy.outputs.details_url}}
+
+          _**Note**: As new commits are pushed to this pull request, this link is updated after the preview is rebuilt._
         number: ${{steps.artifact-info.outputs.unsafe-pull-number}}
         GITHUB_TOKEN: '${{inputs.github-token}}'
