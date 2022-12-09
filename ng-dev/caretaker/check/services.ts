@@ -43,8 +43,8 @@ interface StatusCheckResult {
 /** List of services Angular relies on. */
 export const services: ServiceConfig[] = [
   {
-    prettyUrl: 'https://status.us-west-1.saucelabs.com',
-    url: 'https://status.us-west-1.saucelabs.com/api/v2/status.json',
+    prettyUrl: 'https://status.saucelabs.com',
+    url: 'https://status.saucelabs.com/api/v2/status.json',
     name: 'Saucelabs',
   },
   {
