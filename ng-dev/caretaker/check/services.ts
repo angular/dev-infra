@@ -90,14 +90,24 @@ export class ServicesModule extends BaseModule<StatusCheckResult[]> {
 
   /** Retrieve the status information for a service which uses a standard API response. */
   async getStatusFromStandardApi(service: ServiceConfig): Promise<StatusCheckResult> {
-    const result = (await fetch(service.url).then((r) => r.json())) as StatusHttpResponse;
-    const status = result.status.indicator === 'none' ? 'passing' : 'failing';
-    return {
-      name: service.name,
-      statusUrl: service.prettyUrl,
-      status,
-      description: result.status.description,
-      lastUpdated: new Date(result.page.updated_at),
-    };
+    try {
+      const result = (await fetch(service.url).then((r) => r.json())) as StatusHttpResponse;
+      const status = result.status.indicator === 'none' ? 'passing' : 'failing';
+      return {
+        name: service.name,
+        statusUrl: service.prettyUrl,
+        status,
+        description: result.status.description,
+        lastUpdated: new Date(result.page.updated_at),
+      };
+    } catch {
+      return {
+        name: service.name,
+        statusUrl: service.prettyUrl,
+        status: 'failing',
+        description: `Unable to retrieve status from ${service.name}`,
+        lastUpdated: new Date(),
+      };
+    }
   }
 }
