@@ -1,3 +1,17 @@
+<a name="2022.8.14"></a>
+# 2022.8.14 (2022-08-14)
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [55daf7d](https://github.com/angular/dev-infra/commit/55daf7df431dd8a4c38628df746e9d7658e58a1f) | feat | create system for registering functions to be called on command completion ([#765](https://github.com/angular/dev-infra/pull/765)) |
+| [8842b87](https://github.com/angular/dev-infra/commit/8842b874929d1285c752ab6d5e78835878cb4793) | feat | enable the use of ng-dev credential service for pr merging ([#758](https://github.com/angular/dev-infra/pull/758)) |
+| [3b57ad6](https://github.com/angular/dev-infra/commit/3b57ad6c59cf7dad7a9ae950ba486865469af4b6) | feat | set usage of ng-dev service via repository configuration ([#764](https://github.com/angular/dev-infra/pull/764)) |
+| [c2cdc26](https://github.com/angular/dev-infra/commit/c2cdc26b7db0eba2647ece8718b883a6dd0590bb) | fix | properly catch errors for finding the ng-dev token in the filesystem ([#767](https://github.com/angular/dev-infra/pull/767)) |
+| [1c22264](https://github.com/angular/dev-infra/commit/1c22264e2b24f792a02ca397fa587bff03111a13) | fix | properly encode URLs for GitHub queries in caretaker check ([#766](https://github.com/angular/dev-infra/pull/766)) |
+## Special Thanks
+Joey Perrott and Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.8.7"></a>
 # 2022.8.7 (2022-08-07)
 ### apps

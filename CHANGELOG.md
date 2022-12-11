@@ -1,3 +1,27 @@
+<a name="2022.12.11"></a>
+# 2022.12.11 (2022-12-11)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3aaeb79](https://github.com/angular/dev-infra/commit/3aaeb793399fd74bdeea5c23940952fafdb938b0) | feat | expose `spec_entrypoint` rule as part of public API |
+### github-actions
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ffa92df](https://github.com/angular/dev-infra/commit/ffa92dff110f1f96cea2614bdc5760ac954544f9) | feat | add label checks to unified status check ([#927](https://github.com/angular/dev-infra/pull/927)) |
+| [75946ef](https://github.com/angular/dev-infra/commit/75946efdc475c60937e061ad8a252b424d5fa780) | feat | include note on comment being updated for previews |
+| [51f34ba](https://github.com/angular/dev-infra/commit/51f34baeaffbc8b5df200e9e8cf5a4bde1cc9714) | feat | include repository name in preview channel name |
+| [96fdaaa](https://github.com/angular/dev-infra/commit/96fdaaa056f1cfa7ffbc4c69b7e9007279f76c94) | fix | only create a single preview channel per PR |
+| [2a121d4](https://github.com/angular/dev-infra/commit/2a121d4efab3616a43fc8b3261cb3f9afb07db33) | fix | update merge status when target label changes |
+| [faf76ec](https://github.com/angular/dev-infra/commit/faf76ec6b24ea84584b48ff33abf1a50e1c2bfb3) | perf | compress preview artifacts before uploading |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6d049bb](https://github.com/angular/dev-infra/commit/6d049bb52bd72e2f08b94f0a37a5603e660ac27b) | fix | **caretaker:** gracefully handle failing URLs during caretaker check ([#933](https://github.com/angular/dev-infra/pull/933)) |
+| [b78ab75](https://github.com/angular/dev-infra/commit/b78ab750819c6667daed5534169a4e0ff2207a1f) | fix | **caretaker:** update to new saucelabs url ([#933](https://github.com/angular/dev-infra/pull/933)) |
+## Special Thanks
+Joey Perrott and Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.12.4"></a>
 # 2022.12.4 (2022-12-04)
 ### github-actions
@@ -207,17 +231,3 @@ Derek Cormier, George Kalpakas, Joey Perrott and Paul Gschwendtner
 | [9323859](https://github.com/angular/dev-infra/commit/9323859dd14fab851865ca6725d60f207c3545a7) | fix | use token to determine if the AuthenticatedGitClient has been configured ([#773](https://github.com/angular/dev-infra/pull/773)) |
 ## Special Thanks
 George Kalpakas, Joey Perrott and Paul Gschwendtner
-
-<!-- CHANGELOG SPLIT MARKER -->
-<a name="2022.8.14"></a>
-# 2022.8.14 (2022-08-14)
-### ng-dev
-| Commit | Type | Description |
-| -- | -- | -- |
-| [55daf7d](https://github.com/angular/dev-infra/commit/55daf7df431dd8a4c38628df746e9d7658e58a1f) | feat | create system for registering functions to be called on command completion ([#765](https://github.com/angular/dev-infra/pull/765)) |
-| [8842b87](https://github.com/angular/dev-infra/commit/8842b874929d1285c752ab6d5e78835878cb4793) | feat | enable the use of ng-dev credential service for pr merging ([#758](https://github.com/angular/dev-infra/pull/758)) |
-| [3b57ad6](https://github.com/angular/dev-infra/commit/3b57ad6c59cf7dad7a9ae950ba486865469af4b6) | feat | set usage of ng-dev service via repository configuration ([#764](https://github.com/angular/dev-infra/pull/764)) |
-| [c2cdc26](https://github.com/angular/dev-infra/commit/c2cdc26b7db0eba2647ece8718b883a6dd0590bb) | fix | properly catch errors for finding the ng-dev token in the filesystem ([#767](https://github.com/angular/dev-infra/pull/767)) |
-| [1c22264](https://github.com/angular/dev-infra/commit/1c22264e2b24f792a02ca397fa587bff03111a13) | fix | properly encode URLs for GitHub queries in caretaker check ([#766](https://github.com/angular/dev-infra/pull/766)) |
-## Special Thanks
-Joey Perrott and Paul Gschwendtner
