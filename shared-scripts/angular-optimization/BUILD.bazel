@@ -31,6 +31,8 @@ js_library(
 copy_to_bin(
     name = "js_lib_files",
     srcs = [
+        "ensure-no-linker-decl.mjs",
+        "esbuild-plugin.d.ts",
         "esbuild-plugin.mjs",
     ],
 )
@@ -41,6 +43,8 @@ js_library(
     srcs = [":js_lib_files"],
     deps = [
         ":angular_devkit_plugins",
+        "@npm//@angular/compiler-cli",
         "@npm//@babel/core",
+        "@npm//@babel/plugin-proposal-async-generator-functions",
     ],
 )
