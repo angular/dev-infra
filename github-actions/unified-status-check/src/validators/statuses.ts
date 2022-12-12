@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
-import {PullRequest} from './pull-request.js';
-import {ValidationFunction} from './validation.js';
+import {PullRequest} from '../pull-request.js';
+import {ValidationFunction} from '../validator.js';
 
 /** Status matchers which must match at least one of the current statuses . */
 const requiredStatuses = core.getMultilineInput('required', {trimWhitespace: true});
@@ -25,7 +25,7 @@ export const checkOnlyPassingStatuses: ValidationFunction = ({statuses}: PullReq
   if (statuses.failure.length > 0) {
     return {
       state: 'failure',
-      description: `${statuses.failure} expected status(es) failing`,
+      description: `${statuses.failure.length} expected status(es) failing`,
     };
   }
 

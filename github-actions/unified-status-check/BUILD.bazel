@@ -5,7 +5,7 @@ package(default_visibility = ["//github-actions/unified-status-check:__subpackag
 ts_library(
     name = "unified-status-check",
     srcs = glob(
-        ["src/*.ts"],
+        ["src/**/*.ts"],
     ),
     deps = [
         "//github-actions:utils",

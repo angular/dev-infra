@@ -2,9 +2,19 @@ import * as core from '@actions/core';
 import {Octokit} from '@octokit/rest';
 import {getAuthTokenFor, ANGULAR_ROBOT, revokeActiveInstallationToken} from '../../utils.js';
 import {PullRequest} from './pull-request.js';
-import {isDraft} from './draft-mode.js';
-import {checkOnlyPassingStatuses, checkRequiredStatuses} from './statuses.js';
-import {checkForTargelLabel, isMergeReady} from './labels.js';
+import {isDraft} from './validators/draft-mode.js';
+import {checkOnlyPassingStatuses, checkRequiredStatuses} from './validators/statuses.js';
+import {checkForTargelLabel, isMergeReady} from './validators/labels.js';
+import {buildCheckResultOutput, ValidationResults} from './validator.js';
+
+/** The validation functions for check against the pull request. */
+const validators = [
+  isDraft,
+  isMergeReady,
+  checkRequiredStatuses,
+  checkOnlyPassingStatuses,
+  checkForTargelLabel,
+];
 
 async function main() {
   /** A Github API instance. */
@@ -13,46 +23,20 @@ async function main() {
   try {
     /** The pull request triggering the event */
     const pullRequest = await PullRequest.get(github);
+    /** The results of the validation functions, organized by validation result state. */
+    const validationResultByState: ValidationResults = {
+      pending: [],
+      success: [],
+      failure: [],
+    };
 
-    /** If no status checks are present, or if the pull request is in a draft state the unified status is in a pending state. */
-    const isDraftValidationResult = isDraft(pullRequest);
-    if (isDraftValidationResult.state === 'pending') {
-      await pullRequest.setCheckResult(
-        isDraftValidationResult.state,
-        isDraftValidationResult.description,
-      );
-      return;
-    }
+    // Run all of the validators and sort the results.
+    validators.forEach((validator) => {
+      const result = validator(pullRequest);
+      validationResultByState[result.state].push(result);
+    });
 
-    const isMergeReadyResult = isMergeReady(pullRequest);
-    if (isMergeReadyResult.state === 'pending') {
-      await pullRequest.setCheckResult(isMergeReadyResult.state, isMergeReadyResult.description);
-      return;
-    }
-
-    const requiredStatusesResult = checkRequiredStatuses(pullRequest);
-    if (requiredStatusesResult.state === 'pending') {
-      await pullRequest.setCheckResult(
-        requiredStatusesResult.state,
-        requiredStatusesResult.description,
-      );
-      return;
-    }
-
-    const onlyPassingStatusesResult = checkOnlyPassingStatuses(pullRequest);
-    if (onlyPassingStatusesResult.state === 'pending') {
-      await pullRequest.setCheckResult(
-        onlyPassingStatusesResult.state,
-        onlyPassingStatusesResult.description,
-      );
-      return;
-    }
-
-    const targetLabelResult = checkForTargelLabel(pullRequest);
-    if (targetLabelResult.state === 'pending') {
-      await pullRequest.setCheckResult(targetLabelResult.state, targetLabelResult.description);
-      return;
-    }
+    await pullRequest.setCheckResult(buildCheckResultOutput(validationResultByState, pullRequest));
   } finally {
     await revokeActiveInstallationToken(github);
   }

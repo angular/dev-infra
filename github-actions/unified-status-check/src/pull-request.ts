@@ -124,7 +124,15 @@ export class PullRequest {
   }
 
   /** Set the check run result for the pull request. */
-  async setCheckResult(state: NormalizedState, description?: string) {
+  async setCheckResult({
+    state,
+    title,
+    summary,
+  }: {
+    state: NormalizedState;
+    title: string;
+    summary: string;
+  }) {
     /** The parameters for the check run update or creation. */
     const parameters = {
       ...context.repo,
@@ -133,7 +141,8 @@ export class PullRequest {
       status: state === 'pending' ? 'in_progress' : 'completed',
       conclusion: state === 'pending' ? undefined : state,
       output: {
-        summary: description,
+        title,
+        summary,
       },
     };
 
@@ -167,7 +176,7 @@ const checkConclusionStateToStatusStateMap = new Map<
 /** GraphQL schema for requesting the status information for a given pull request. */
 const PR_SCHEMA = {
   repository: params(
-    {owner: context.repo.owner, name: context.repo.repo},
+    {owner: `"${context.repo.owner}"`, name: `"${context.repo.repo}"`},
     {
       pullRequest: params(
         {number: context.issue.number},
