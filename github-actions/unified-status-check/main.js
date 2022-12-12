@@ -23725,7 +23725,7 @@ var PullRequest = class {
     }
   }
 };
-PullRequest.checkName = "Unified Status";
+PullRequest.checkName = "Merge Ready Tracking";
 PullRequest.ignored = [PullRequest.checkName, ...ignoredStatuses];
 var checkConclusionStateToStatusStateMap = /* @__PURE__ */ new Map([
   ["ACTION_REQUIRED", "pending"],
