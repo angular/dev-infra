@@ -52,7 +52,7 @@ export default {
   plugins: [
     await createEsbuildAngularOptimizePlugin({
       optimize: {
-        isFileSideEffectFree: isFileSideEffectFree,
+        isSideEffectFree: isFileSideEffectFree,
       },
       downlevelAsyncGeneratorsIfPresent: true,
       enableLinker: {
