@@ -22,10 +22,10 @@ export const checkRequiredStatuses: ValidationFunction = ({statuses}: PullReques
 };
 
 export const checkOnlyPassingStatuses: ValidationFunction = ({statuses}: PullRequest) => {
-  if (statuses.failing.length > 0) {
+  if (statuses.failure.length > 0) {
     return {
       state: 'failure',
-      description: `${statuses.failing} expected status(es) failing`,
+      description: `${statuses.failure} expected status(es) failing`,
     };
   }
 
