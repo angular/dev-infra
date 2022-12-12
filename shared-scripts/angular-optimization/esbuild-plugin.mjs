@@ -82,7 +82,7 @@ export async function createEsbuildAngularOptimizePlugin(opts, additionalBabelPl
 
           // If the current file is denoted as explicit side effect free, add the pure
           // top-level functions optimization plugin for this file.
-          if (opts.optimize.isSideEffectFreeFn && opts.optimize.isSideEffectFree(args.path)) {
+          if (opts.optimize.isSideEffectFree && opts.optimize.isSideEffectFree(args.path)) {
             plugins.push(devkitOptimizePlugins.pureToplevelFunctionsPlugin);
           }
         }
