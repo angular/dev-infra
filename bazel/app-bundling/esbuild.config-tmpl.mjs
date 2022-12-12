@@ -48,6 +48,14 @@ export default {
   treeShaking: true,
   pure: ['forwardRef'],
   legalComments: 'none',
+  supported: {
+    // We always downlevel `async/await` when bundling apps. The Angular CLI does the
+    // same with its ESBuild experimental builder, and with the non-esbuild pipeline
+    // Babel is used to downlevel async/await. See:
+    // https://github.com/angular/angular-cli/blob/afe9feaa45913cbebe7f22c678d693d96f38584a/packages/angular_devkit/build_angular/src/babel/webpack-loader.ts#L111
+    // https://github.com/angular/angular-cli/blob/afe9feaa45913/packages/angular_devkit/build_angular/src/builders/browser-esbuild/index.ts#L313-L318.
+    'async-await': false,
+  },
   // ESBuild requires the `define` option to take a string-based dictionary.
   define: convertObjectToStringDictionary(GLOBAL_DEFS_FOR_TERSER_WITH_AOT),
   plugins: [createEsbuildAngularOptimizePlugin(isFileSideEffectFree, [linkerBabelPlugin])],
