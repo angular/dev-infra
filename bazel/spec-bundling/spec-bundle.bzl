@@ -10,9 +10,9 @@ def spec_bundle(
         bootstrap = [],
         run_angular_linker = False,
         linker_unknown_declaration_handling = None,
-        # We cannot use `ES2017` or higher as that would result in `async/await` not being downleveled.
-        # ZoneJS needs to be able to intercept these as otherwise change detection would not work properly.
-        target = "es2016",
+        target = "es2020",
+        # For ZoneJS compatibility, async/await is downleveled.
+        downlevel_async_await = True,
         external = [],
         workspace_name = None):
     """Macro that will bundle all test files with their respective transitive dependencies.
@@ -30,6 +30,7 @@ def spec_bundle(
           ending with `init.js` are picked up.
         target: Target ECMAScript to use for the specs bundle.
         run_angular_linker: Whether the Angular linker should process the bundled code.
+        downlevel_async_await: Whether async/await native syntax should be downleveled.
         linker_unknown_declaration_handling: Control how unknown partial declarations should be
           treated. This passes through to the `unknownDeclarationVersionHandling` linker plugin option.
         external: List of modules/packages which should not be bundled.
@@ -55,6 +56,7 @@ def spec_bundle(
         testonly = True,
         output_name = "%s_config.mjs" % name,
         run_angular_linker = run_angular_linker,
+        downlevel_async_await = downlevel_async_await,
         linker_unknown_declaration_handling = linker_unknown_declaration_handling,
     )
 
