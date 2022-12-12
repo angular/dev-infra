@@ -24048,9 +24048,9 @@ function getState(results) {
   return "pending";
 }
 function getTitle(state, results) {
-  const openMoreInfoText = " (open details for more info)";
+  const openMoreInfoText = " (open details for more)";
   if (state === "success") {
-    return "Pull Request is ready for merge!";
+    return "Pull Request is ready for merge";
   }
   let title = results[state].map(({ description }) => description).join(" ");
   if (title.length >= 160) {
