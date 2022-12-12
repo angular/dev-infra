@@ -29,7 +29,7 @@ type CheckOrStatus = NonNullable<
 /** A pull request retrieved from Github. */
 export class PullRequest {
   /** The name of used for the check. */
-  private static checkName = 'Unified Status';
+  private static checkName = 'Merge Ready Tracking';
   /** All of the ignored statues and checks for pull requests */
   private static ignored = [PullRequest.checkName, ...ignoredStatuses];
   /** The sha of the pull request. */
