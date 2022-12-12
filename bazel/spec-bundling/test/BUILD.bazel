@@ -5,6 +5,21 @@ load("//bazel/spec-bundling:index.bzl", "spec_bundle")
 load("//tools:defaults.bzl", "ts_library")
 
 ts_library(
+    name = "test_async_await_lib",
+    testonly = True,
+    srcs = ["async-await.spec.ts"],
+    deps = [
+        "@npm//@angular/core",
+        "@npm//@angular/platform-browser-dynamic",
+        "@npm//@types/jasmine",
+        "@npm//@types/jsdom",
+        "@npm//@types/node",
+        "@npm//jsdom",
+        "@npm//zone.js",
+    ],
+)
+
+ts_library(
     name = "test_lib_apf",
     testonly = True,
     srcs = ["core_apf_esm.spec.ts"],
@@ -46,6 +61,14 @@ spec_bundle(
     deps = [":test_lib_invalid_linker_declaration"],
 )
 
+spec_bundle(
+    name = "test_bundle_async_await",
+    external = ["jsdom"],
+    platform = "node",
+    run_angular_linker = True,
+    deps = [":test_async_await_lib"],
+)
+
 jasmine_node_test(
     name = "test",
     deps = [
@@ -64,5 +87,13 @@ jasmine_node_test(
     name = "test_invalid_declaration_linker",
     deps = [
         ":test_bundle_invalid_declaration_linker",
+    ],
+)
+
+jasmine_node_test(
+    name = "test_async_await",
+    deps = [
+        ":test_bundle_async_await",
+        "@npm//jsdom",
     ],
 )
