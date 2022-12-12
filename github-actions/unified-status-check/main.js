@@ -2146,10 +2146,10 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
       command_1.issueCommand("save-state", { name }, value);
     }
     exports.saveState = saveState;
-    function getState(name) {
+    function getState2(name) {
       return process.env[`STATE_${name}`] || "";
     }
-    exports.getState = getState;
+    exports.getState = getState2;
     function getIDToken(aud) {
       return __awaiter(this, void 0, void 0, function* () {
         return yield oidc_utils_1.OidcClient.getIDToken(aud);
@@ -23706,7 +23706,7 @@ var PullRequest = class {
       this.statuses.all.push(status);
     });
   }
-  async setCheckResult(state, description) {
+  async setCheckResult({ state, title, summary }) {
     const parameters = {
       ...import_github2.context.repo,
       name: PullRequest.checkName,
@@ -23714,7 +23714,8 @@ var PullRequest = class {
       status: state === "pending" ? "in_progress" : "completed",
       conclusion: state === "pending" ? void 0 : state,
       output: {
-        summary: description
+        title,
+        summary
       }
     };
     if (this.previousRunId) {
@@ -23741,7 +23742,7 @@ var checkConclusionStateToStatusStateMap = /* @__PURE__ */ new Map([
   ["TIMED_OUT", "failure"]
 ]);
 var PR_SCHEMA = {
-  repository: (0, import_typed_graphqlify.params)({ owner: import_github2.context.repo.owner, name: import_github2.context.repo.repo }, {
+  repository: (0, import_typed_graphqlify.params)({ owner: `"${import_github2.context.repo.owner}"`, name: `"${import_github2.context.repo.repo}"` }, {
     pullRequest: (0, import_typed_graphqlify.params)({ number: import_github2.context.issue.number }, {
       isDraft: import_typed_graphqlify.types.boolean,
       state: import_typed_graphqlify.types.custom(),
@@ -23821,7 +23822,7 @@ var checkOnlyPassingStatuses = ({ statuses }) => {
   if (statuses.failure.length > 0) {
     return {
       state: "failure",
-      description: `${statuses.failure} expected status(es) failing`
+      description: `${statuses.failure.length} expected status(es) failing`
     };
   }
   if (statuses.pending.length > 0) {
@@ -24034,35 +24035,85 @@ var isMergeReady = (pullRequest) => {
 };
 
 // 
+function getState(results) {
+  if (results.failure.length > 0) {
+    return "failure";
+  }
+  if (results.pending.length > 0) {
+    return "pending";
+  }
+  if (results.success.length > 0) {
+    return "success";
+  }
+  return "pending";
+}
+function getTitle(state, results) {
+  const openMoreInfoText = " (open details for more info)";
+  if (state === "success") {
+    return "Pull Request is ready for merge!";
+  }
+  let title = results[state].map(({ description }) => description).join(" ");
+  if (title.length >= 160) {
+    return `${title.slice(0, 160 - openMoreInfoText.length)}${openMoreInfoText}`;
+  }
+  return title;
+}
+function getSummary(results, pullRequest) {
+  return `
+### Validations
+
+#### Failing
+${results.failure.length ? results.failure.map(({ description }) => ` - ${description}`).join("\n") : "No failing validations."}
+
+#### Pending
+${results.pending.length ? results.pending.map(({ description }) => ` - ${description}`).join("\n") : "No pending validations."}
+
+#### Success
+${results.success.length ? results.success.map(({ description }) => ` - ${description}`).join("\n") : "No successful validations."}
+
+
+### Status and Check Results
+${pullRequest.statuses.all.map(({ name, state, description }) => {
+    return ` - ${stateToIconMap.get(state)} **${name}**: ${description}`;
+  }).join("\n")}
+`;
+}
+var stateToIconMap = /* @__PURE__ */ new Map([
+  ["failure", "\u274C"],
+  ["pending", "\u{1F7E1}"],
+  ["success", "\u2705"]
+]);
+function buildCheckResultOutput(results, pullRequest) {
+  const state = getState(results);
+  return {
+    state,
+    title: getTitle(state, results),
+    summary: getSummary(results, pullRequest)
+  };
+}
+
+// 
+var validators = [
+  isDraft,
+  isMergeReady,
+  checkRequiredStatuses,
+  checkOnlyPassingStatuses,
+  checkForTargelLabel
+];
 async function main() {
   const github = new import_rest2.Octokit({ auth: await getAuthTokenFor(ANGULAR_ROBOT) });
   try {
     const pullRequest = await PullRequest.get(github);
-    const isDraftValidationResult = isDraft(pullRequest);
-    if (isDraftValidationResult.state === "pending") {
-      await pullRequest.setCheckResult(isDraftValidationResult.state, isDraftValidationResult.description);
-      return;
-    }
-    const isMergeReadyResult = isMergeReady(pullRequest);
-    if (isMergeReadyResult.state === "pending") {
-      await pullRequest.setCheckResult(isMergeReadyResult.state, isMergeReadyResult.description);
-      return;
-    }
-    const requiredStatusesResult = checkRequiredStatuses(pullRequest);
-    if (requiredStatusesResult.state === "pending") {
-      await pullRequest.setCheckResult(requiredStatusesResult.state, requiredStatusesResult.description);
-      return;
-    }
-    const onlyPassingStatusesResult = checkOnlyPassingStatuses(pullRequest);
-    if (onlyPassingStatusesResult.state === "pending") {
-      await pullRequest.setCheckResult(onlyPassingStatusesResult.state, onlyPassingStatusesResult.description);
-      return;
-    }
-    const targetLabelResult = checkForTargelLabel(pullRequest);
-    if (targetLabelResult.state === "pending") {
-      await pullRequest.setCheckResult(targetLabelResult.state, targetLabelResult.description);
-      return;
-    }
+    const validationResultByState = {
+      pending: [],
+      success: [],
+      failure: []
+    };
+    validators.forEach((validator) => {
+      const result = validator(pullRequest);
+      validationResultByState[result.state].push(result);
+    });
+    await pullRequest.setCheckResult(buildCheckResultOutput(validationResultByState, pullRequest));
   } finally {
     await revokeActiveInstallationToken(github);
   }

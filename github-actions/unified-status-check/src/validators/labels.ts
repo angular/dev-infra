@@ -1,6 +1,6 @@
-import {actionLabels, targetLabels} from '../../../ng-dev/pr/common/labels.js';
-import {PullRequest} from './pull-request.js';
-import {ValidationFunction} from './validation.js';
+import {actionLabels, targetLabels} from '../../../../ng-dev/pr/common/labels.js';
+import {PullRequest} from '../pull-request.js';
+import {ValidationFunction} from '../validator.js';
 
 export const checkForTargelLabel: ValidationFunction = (pullRequest: PullRequest) => {
   const appliedLabel = Object.values(targetLabels).find((label) =>

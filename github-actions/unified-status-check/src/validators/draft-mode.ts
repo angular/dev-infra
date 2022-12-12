@@ -1,5 +1,5 @@
-import {PullRequest} from './pull-request.js';
-import {ValidationFunction} from './validation.js';
+import {PullRequest} from '../pull-request.js';
+import {ValidationFunction} from '../validator.js';
 
 export const isDraft: ValidationFunction = (pullRequest: PullRequest) => {
   if (pullRequest.isDraft) {
