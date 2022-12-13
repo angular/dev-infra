@@ -22,7 +22,7 @@ ts_library(
 ts_library(
     name = "test_lib_apf",
     testonly = True,
-    srcs = ["core_apf_esm.spec.ts"],
+    srcs = ["core_apf_esm_test.ts"],
     deps = [
         "@npm//@angular/core",
         "@npm//@types/jasmine",
