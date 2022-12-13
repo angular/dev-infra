@@ -12,12 +12,15 @@ def _is_non_external_file_with_suffix(file, suffix):
     return basename.endswith("%s.js" % suffix) or \
            basename.endswith("%s.mjs" % suffix)
 
-def _filter_files(files, suffix):
-    """Filters the given list of files to only contain files with the given suffix."""
+def _filter_files(files, filter_suffixes):
+    """Filters the given list of files to only contain files with the given suffixes."""
     result = []
     for file in files:
-        if _is_non_external_file_with_suffix(file, suffix):
-            result.append(file)
+        for suffix in filter_suffixes:
+            if _is_non_external_file_with_suffix(file, suffix):
+                result.append(file)
+                break
+
     return result
 
 def _create_entrypoint_file(base_package, spec_files, bootstrap_files):
@@ -52,12 +55,12 @@ def _spec_entrypoint_impl(ctx):
     # Note: `to_list()` is an expensive operation but we need to do this for every
     # dependency here in order to be able to filter out spec files from depsets.
     all_spec_files = depset(transitive = spec_depsets).to_list()
-    spec_files = _filter_files(all_spec_files, "spec")
+    spec_files = _filter_files(all_spec_files, ["spec", "test"])
 
     # Note: `to_list()` is an expensive operation but we need to do this for every
     # dependency here in order to be able to filter out spec files from depsets.
     all_bootstrap_files = depset(transitive = bootstrap_depsets).to_list()
-    bootstrap_files = _filter_files(all_bootstrap_files, "init")
+    bootstrap_files = _filter_files(all_bootstrap_files, ["init"])
 
     ctx.actions.write(
         output = output,
