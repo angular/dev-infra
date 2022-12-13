@@ -37,30 +37,36 @@ def _create_entrypoint_file(base_package, spec_files, bootstrap_files):
 
 def _spec_entrypoint_impl(ctx):
     output = ctx.actions.declare_file("%s.mjs" % ctx.attr.name)
-    spec_depsets = []
-    bootstrap_depsets = []
+    spec_direct_deps = []
+    spec_all_deps = []
+    bootstrap_direct_deps = []
+    bootstrap_all_deps = []
 
     for dep in ctx.attr.deps:
         if JSModuleInfo in dep:
-            spec_depsets.append(dep[JSModuleInfo].sources)
+            spec_all_deps.append(dep[JSModuleInfo].sources)
+            spec_direct_deps.append(dep[JSModuleInfo].direct_sources)
         else:
-            spec_depsets.append(dep[DefaultInfo].files)
+            spec_all_deps.append(dep[DefaultInfo].files)
+            spec_direct_deps.append(dep[DefaultInfo].files)
 
     for dep in ctx.attr.bootstrap:
         if JSModuleInfo in dep:
-            bootstrap_depsets.append(dep[JSModuleInfo].sources)
+            bootstrap_all_deps.append(dep[JSModuleInfo].sources)
+            bootstrap_direct_deps.append(dep[JSModuleInfo].direct_sources)
         else:
-            bootstrap_depsets.append(dep[DefaultInfo].files)
+            bootstrap_all_deps.append(dep[DefaultInfo].files)
+            bootstrap_direct_deps.append(dep[DefaultInfo].files)
 
     # Note: `to_list()` is an expensive operation but we need to do this for every
     # dependency here in order to be able to filter out spec files from depsets.
-    all_spec_files = depset(transitive = spec_depsets).to_list()
-    spec_files = _filter_files(all_spec_files, ["spec", "test"])
+    direct_spec_files = depset(transitive = spec_direct_deps).to_list()
+    spec_files = _filter_files(direct_spec_files, ["spec", "test"])
 
     # Note: `to_list()` is an expensive operation but we need to do this for every
     # dependency here in order to be able to filter out spec files from depsets.
-    all_bootstrap_files = depset(transitive = bootstrap_depsets).to_list()
-    bootstrap_files = _filter_files(all_bootstrap_files, ["init"])
+    direct_bootstrap_files = depset(transitive = bootstrap_direct_deps).to_list()
+    bootstrap_files = _filter_files(direct_bootstrap_files, ["init"])
 
     ctx.actions.write(
         output = output,
@@ -73,7 +79,7 @@ def _spec_entrypoint_impl(ctx):
         DefaultInfo(files = out_depset),
         JSModuleInfo(
             direct_sources = out_depset,
-            sources = depset(transitive = [out_depset] + spec_depsets + bootstrap_depsets),
+            sources = depset(transitive = [out_depset] + spec_all_deps + bootstrap_all_deps),
         ),
     ]
 
