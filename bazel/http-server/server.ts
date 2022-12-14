@@ -101,7 +101,8 @@ export class HttpServer {
     ) {
       res.end(this._getIndexHtmlContent());
     } else {
-      const resolvedPath = this._resolveUrlFromRunfiles(req.url);
+      const pathname = this._getPathnameFromRequestURL(req.url);
+      const resolvedPath = this._resolveUrlFromRunfiles(pathname);
 
       if (resolvedPath === null) {
         res.statusCode = 404;
@@ -111,6 +112,14 @@ export class HttpServer {
 
       send(req, resolvedPath, {dotfiles: 'allow'}).pipe(res);
     }
+  }
+
+  /**
+   * Gets the pathname from a given request URL.
+   * e.g. `/some_file.json?jsonp=bla` -> `/some_file.json`.
+   */
+  private _getPathnameFromRequestURL(reqURL: string) {
+    return new URL(reqURL, `http://_`).pathname;
   }
 
   /** Resolves a given URL from the runfiles using the corresponding manifest path. */
