@@ -4,6 +4,7 @@ package(default_visibility = ["//visibility:public"])
 
 ts_library(
     name = "driver-utilities",
+    package_name = "@angular/build-tooling/bazel/benchmark/driver-utilities",
     srcs = glob(["*.ts"]),
     module_name = "@angular/build-tooling/bazel/benchmark/driver-utilities",
     tsconfig = "//bazel/benchmark/component_benchmark:tsconfig-e2e.json",
