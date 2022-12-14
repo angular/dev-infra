@@ -87,7 +87,11 @@ export async function createEsbuildAngularOptimizePlugin(opts, additionalBabelPl
           }
         }
 
-        if (opts.enableLinker) {
+        const shouldRunLinker =
+          opts.enableLinker &&
+          (opts.enableLinker.filterPaths == null || opts.enableLinker.filterPaths.test(args.path));
+
+        if (shouldRunLinker) {
           plugins.push(
             linkerCreator.babel.createEs2015LinkerPlugin({
               ...(opts.enableLinker.linkerOptions ?? {}),
