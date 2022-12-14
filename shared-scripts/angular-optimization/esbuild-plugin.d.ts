@@ -9,6 +9,7 @@
 export interface OptimizationOptions {
   enableLinker?: {
     ensureNoPartialDeclaration: boolean;
+    filterPaths?: RegExp;
     linkerOptions?: object;
   };
   optimize?: {
