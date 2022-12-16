@@ -86,7 +86,8 @@ async function main(
   process.exitCode = allTestsSucceeding ? 0 : 3;
 }
 
-if (require.main === module) {
+// Invoke main.
+(() => {
   const args = process.argv.slice(2);
   const goldenDir = runfiles.resolve(args[0]);
   const npmPackageDir = runfiles.resolve(args[1]);
@@ -98,4 +99,4 @@ if (require.main === module) {
     console.error(e);
     process.exit(1);
   });
-}
+})();

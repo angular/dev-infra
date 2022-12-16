@@ -7,9 +7,10 @@
  */
 
 import {readFileSync} from 'fs';
+import {runfiles} from '@bazel/runfiles';
 import browserSync from 'browser-sync';
-import * as http from 'http';
-import * as path from 'path';
+import http from 'http';
+import path from 'path';
 import send from 'send';
 
 /**
@@ -126,7 +127,7 @@ export class HttpServer {
   private _resolveUrlFromRunfiles(url: string): string | null {
     for (let rootPath of this._rootPaths) {
       try {
-        return require.resolve(path.posix.join(rootPath, getManifestPath(url)));
+        return runfiles.resolve(path.posix.join(rootPath, getManifestPath(url)));
       } catch {}
     }
     return null;
