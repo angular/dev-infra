@@ -3,6 +3,8 @@
 node_modules
 .angular/
 
+.history/
+
 # Include when developing application packages.
 .c9
 .idea/
