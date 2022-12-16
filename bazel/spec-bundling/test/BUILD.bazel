@@ -5,8 +5,12 @@ load("//bazel/spec-bundling:index.bzl", "spec_bundle", "spec_entrypoint")
 load("//tools:defaults.bzl", "ts_library")
 
 ts_library(
-    name = "transitive_should_not_be_loaded",
-    srcs = ["should_not_be_picked_up.spec.ts"],
+    name = "transitive_should_be_loaded",
+    srcs = ["should_be_picked_up.spec.ts"],
+    deps = [
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+    ],
 )
 
 ts_library(
@@ -14,7 +18,6 @@ ts_library(
     testonly = True,
     srcs = ["async-await.spec.ts"],
     deps = [
-        ":transitive_should_not_be_loaded",
         "@npm//@angular/core",
         "@npm//@angular/platform-browser-dynamic",
         "@npm//@types/jasmine",
@@ -26,11 +29,21 @@ ts_library(
 )
 
 ts_library(
+    name = "ensure_transitive_loaded_lib",
+    testonly = True,
+    srcs = ["ensure-transitive-loaded.spec.ts"],
+    deps = [
+        ":transitive_should_be_loaded",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+    ],
+)
+
+ts_library(
     name = "test_lib_apf",
     testonly = True,
     srcs = ["core_apf_esm_test.ts"],
     deps = [
-        ":transitive_should_not_be_loaded",
         "@npm//@angular/core",
         "@npm//@types/jasmine",
     ],
@@ -41,7 +54,6 @@ ts_library(
     testonly = True,
     srcs = ["core_invalid_linker_decl.spec.ts"],
     deps = [
-        ":transitive_should_not_be_loaded",
         "@npm//@angular/core",
         "@npm//@types/jasmine",
     ],
@@ -61,7 +73,10 @@ spec_bundle(
     name = "test_bundle",
     platform = "node",
     run_angular_linker = True,
-    deps = [":test_lib_apf"],
+    deps = [
+        ":ensure_transitive_loaded_lib",
+        ":test_lib_apf",
+    ],
 )
 
 spec_bundle(
