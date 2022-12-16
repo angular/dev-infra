@@ -61,7 +61,8 @@ export async function main(
   throw new Error('Actual size report does not match with golden file.');
 }
 
-if (require.main === module) {
+// Invoke main.
+(() => {
   const [
     fileRootPath,
     sourceMapRootPath,
@@ -82,4 +83,4 @@ if (require.main === module) {
     console.error(e);
     process.exitCode = 1;
   });
-}
+})();

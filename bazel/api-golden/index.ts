@@ -45,7 +45,8 @@ async function main(
   process.exitCode = succeeded ? 0 : 3;
 }
 
-if (require.main === module) {
+// Invoke main.
+(() => {
   const args = process.argv.slice(2);
   const goldenFilePath = runfiles.resolve(args[0]);
   const entryPointFilePath = runfiles.resolve(args[1]);
@@ -63,4 +64,4 @@ if (require.main === module) {
     console.error(e);
     process.exit(1);
   });
-}
+})();

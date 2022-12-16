@@ -16,7 +16,8 @@ import {
   ExtractorResult,
   IConfigFile,
 } from '@microsoft/api-extractor';
-import {basename, dirname} from 'path';
+import path from 'path';
+import fs from 'fs';
 
 import {AstModule} from '@microsoft/api-extractor/lib/analyzer/AstModule';
 import {ExportAnalyzer} from '@microsoft/api-extractor/lib/analyzer/ExportAnalyzer';
@@ -79,15 +80,15 @@ export async function testApiGolden(
           },
         },
     },
-    projectFolder: dirname(packageJsonPath),
+    projectFolder: path.dirname(packageJsonPath),
     mainEntryPointFilePath: indexFilePath,
     dtsRollup: {enabled: false},
     docModel: {enabled: false},
     apiReport: {
       enabled: true,
-      reportFolder: dirname(goldenFilePath),
+      reportFolder: path.dirname(goldenFilePath),
       reportTempFolder: tempDir,
-      reportFileName: basename(goldenFilePath),
+      reportFileName: path.basename(goldenFilePath),
     },
     tsdocMetadata: {enabled: false},
     newlineKind: 'lf',
@@ -105,7 +106,7 @@ export async function testApiGolden(
   // We read the specified `package.json` manually and build a package name that is
   // compatible with the API extractor. This is a workaround for a bug in api-extractor.
   // TODO remove once https://github.com/microsoft/rushstack/issues/2774 is resolved.
-  const packageJson = require(packageJsonPath);
+  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8')) as {name: string};
   const packageNameSegments = (customPackageName ?? packageJson.name).split('/');
   const isScopedPackage = packageNameSegments[0][0] === '@' && packageNameSegments.length > 1;
   // API extractor allows one-slash when the package uses the scoped-package convention.

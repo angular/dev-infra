@@ -56,9 +56,10 @@ async function main(): Promise<void> {
   await runner.run();
 }
 
-if (require.main === module) {
+// Invoke main.
+(() => {
   main().catch((e) => {
     console.error(e);
     process.exitCode = 1;
   });
-}
+})();
