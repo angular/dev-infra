@@ -86,7 +86,7 @@ def _spec_entrypoint_impl(ctx):
 spec_entrypoint = rule(
     implementation = _spec_entrypoint_impl,
     attrs = {
-        "deps": attr.label_list(allow_files = False, mandatory = True),
-        "bootstrap": attr.label_list(allow_files = False, mandatory = True),
+        "deps": attr.label_list(allow_files = True, mandatory = True),
+        "bootstrap": attr.label_list(allow_files = True, mandatory = True),
     },
 )

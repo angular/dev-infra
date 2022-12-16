@@ -1,7 +1,7 @@
 # NOTE: We need to test with the raw jasmine rule here because our default
 # repo rule uses spec-bundling as well, with some additional defaults.
 load("@npm//@bazel/jasmine:index.bzl", "jasmine_node_test")
-load("//bazel/spec-bundling:index.bzl", "spec_bundle")
+load("//bazel/spec-bundling:index.bzl", "spec_bundle", "spec_entrypoint")
 load("//tools:defaults.bzl", "ts_library")
 
 ts_library(
@@ -44,6 +44,16 @@ ts_library(
         ":transitive_should_not_be_loaded",
         "@npm//@angular/core",
         "@npm//@types/jasmine",
+    ],
+)
+
+spec_entrypoint(
+    name = "explicit_file_entrypoint",
+    testonly = True,
+    bootstrap = [],
+    deps = [
+        "some_spec.js",
+        ":test_lib_apf",
     ],
 )
 
