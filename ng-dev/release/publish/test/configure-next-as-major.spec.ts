@@ -17,6 +17,7 @@ describe('configure next as major action', () => {
     expect(
       await ConfigureNextAsMajorAction.isActive(
         new ActiveReleaseTrains({
+          exceptionalMinor: null,
           releaseCandidate: null,
           next: new ReleaseTrain('master', parse('10.1.0-next.3')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
@@ -29,6 +30,7 @@ describe('configure next as major action', () => {
     expect(
       await ConfigureNextAsMajorAction.isActive(
         new ActiveReleaseTrains({
+          exceptionalMinor: null,
           releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.1')),
           next: new ReleaseTrain('master', parse('10.2.0-next.3')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
@@ -41,6 +43,7 @@ describe('configure next as major action', () => {
     expect(
       await ConfigureNextAsMajorAction.isActive(
         new ActiveReleaseTrains({
+          exceptionalMinor: null,
           releaseCandidate: null,
           next: new ReleaseTrain('master', parse('11.0.0-next.0')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
@@ -53,6 +56,7 @@ describe('configure next as major action', () => {
     const action = setupReleaseActionForTesting(
       ConfigureNextAsMajorAction,
       new ActiveReleaseTrains({
+        exceptionalMinor: null,
         releaseCandidate: null,
         next: new ReleaseTrain('master', parse('10.1.0-next.3')),
         latest: new ReleaseTrain('10.0.x', parse('10.0.2')),

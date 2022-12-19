@@ -13,7 +13,7 @@ import {
   computeLtsEndDateOfMajor,
   fetchProjectNpmPackageInfo,
   getLtsNpmDistTagOfMajor,
-  getVersionOfBranch,
+  getVersionInfoForBranch,
   ReleaseRepoWithApi,
 } from '../../../release/versioning/index.js';
 import {Prompt} from '../../../utils/prompt.js';
@@ -35,7 +35,7 @@ export async function assertActiveLtsBranch(
   releaseConfig: ReleaseConfig,
   branchName: string,
 ) {
-  const version = await getVersionOfBranch(repo, branchName);
+  const {version} = await getVersionInfoForBranch(repo, branchName);
   const {'dist-tags': distTags, time} = await fetchProjectNpmPackageInfo(releaseConfig);
 
   // LTS versions should be tagged in NPM in the following format: `v{major}-lts`.

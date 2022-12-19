@@ -26,6 +26,7 @@ describe('cut stable action', () => {
     expect(
       await CutStableAction.isActive(
         new ActiveReleaseTrains({
+          exceptionalMinor: null,
           releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.1')),
           next: new ReleaseTrain('master', parse('10.2.0-next.0')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
@@ -38,6 +39,7 @@ describe('cut stable action', () => {
     expect(
       await CutStableAction.isActive(
         new ActiveReleaseTrains({
+          exceptionalMinor: null,
           // No longer in feature-freeze but in release-candidate phase.
           releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
           next: new ReleaseTrain('master', parse('10.2.0-next.0')),
@@ -51,6 +53,7 @@ describe('cut stable action', () => {
     expect(
       await CutStableAction.isActive(
         new ActiveReleaseTrains({
+          exceptionalMinor: null,
           releaseCandidate: null,
           next: new ReleaseTrain('master', parse('10.1.0-next.0')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
@@ -63,6 +66,7 @@ describe('cut stable action', () => {
     const action = setupReleaseActionForTesting(
       CutStableAction,
       new ActiveReleaseTrains({
+        exceptionalMinor: null,
         // No longer in feature-freeze but in release-candidate phase.
         releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
         next: new ReleaseTrain('master', parse('10.2.0-next.0')),
@@ -77,6 +81,7 @@ describe('cut stable action', () => {
     const action = setupReleaseActionForTesting(
       CutStableAction,
       new ActiveReleaseTrains({
+        exceptionalMinor: null,
         // No longer in feature-freeze but in release-candidate phase.
         releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
         next: new ReleaseTrain('master', parse('10.2.0-next.0')),
@@ -92,6 +97,7 @@ describe('cut stable action', () => {
     const action = setupReleaseActionForTesting(
       CutStableAction,
       new ActiveReleaseTrains({
+        exceptionalMinor: null,
         // No longer in feature-freeze but in release-candidate phase.
         releaseCandidate: new ReleaseTrain('11.0.x', parse('11.0.0-rc.0')),
         next: new ReleaseTrain('master', parse('10.2.0-next.0')),
@@ -126,6 +132,7 @@ describe('cut stable action', () => {
       const action = setupReleaseActionForTesting(
         CutStableAction,
         new ActiveReleaseTrains({
+          exceptionalMinor: null,
           releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
           next: new ReleaseTrain('master', parse('10.2.0-next.0')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
@@ -192,6 +199,7 @@ describe('cut stable action', () => {
       const action = setupReleaseActionForTesting(
         CutStableAction,
         new ActiveReleaseTrains({
+          exceptionalMinor: null,
           releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
           next: new ReleaseTrain('master', parse('10.2.0-next.0')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.3')),

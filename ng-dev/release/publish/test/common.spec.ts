@@ -39,6 +39,7 @@ import {
 
 describe('common release action logic', () => {
   const baseReleaseTrains = new ActiveReleaseTrains({
+    exceptionalMinor: null,
     releaseCandidate: null,
     next: new ReleaseTrain('master', parse('10.1.0-next.0')),
     latest: new ReleaseTrain('10.0.x', parse('10.0.1')),
@@ -47,6 +48,7 @@ describe('common release action logic', () => {
   describe('version computation', () => {
     it('should not modify release train versions and cause invalid other actions', async () => {
       const testReleaseTrain = new ActiveReleaseTrains({
+        exceptionalMinor: null,
         releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.3')),
         next: new ReleaseTrain('master', parse('10.2.0-next.0')),
         latest: new ReleaseTrain('10.0.x', parse('10.0.1')),
@@ -76,6 +78,7 @@ describe('common release action logic', () => {
 
     it('should properly show descriptions when a major is in RC-phase', async () => {
       const testReleaseTrain = new ActiveReleaseTrains({
+        exceptionalMinor: null,
         releaseCandidate: new ReleaseTrain('15.0.x', parse('15.0.0-rc.1')),
         next: new ReleaseTrain('main', parse('15.1.0-next.0')),
         latest: new ReleaseTrain('14.3.x', parse('14.3.1')),

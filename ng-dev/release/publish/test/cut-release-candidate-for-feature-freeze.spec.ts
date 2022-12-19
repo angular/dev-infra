@@ -22,6 +22,7 @@ describe('cut release candidate for feature-freeze action', () => {
     expect(
       await CutReleaseCandidateForFeatureFreezeAction.isActive(
         new ActiveReleaseTrains({
+          exceptionalMinor: null,
           releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.1')),
           next: new ReleaseTrain('master', parse('10.2.0-next.0')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
@@ -34,6 +35,7 @@ describe('cut release candidate for feature-freeze action', () => {
     expect(
       await CutReleaseCandidateForFeatureFreezeAction.isActive(
         new ActiveReleaseTrains({
+          exceptionalMinor: null,
           // No longer in feature-freeze but in release-candidate phase.
           releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
           next: new ReleaseTrain('master', parse('10.2.0-next.0')),
@@ -47,6 +49,7 @@ describe('cut release candidate for feature-freeze action', () => {
     expect(
       await CutReleaseCandidateForFeatureFreezeAction.isActive(
         new ActiveReleaseTrains({
+          exceptionalMinor: null,
           releaseCandidate: null,
           next: new ReleaseTrain('master', parse('10.1.0-next.0')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
@@ -59,6 +62,7 @@ describe('cut release candidate for feature-freeze action', () => {
     const action = setupReleaseActionForTesting(
       CutReleaseCandidateForFeatureFreezeAction,
       new ActiveReleaseTrains({
+        exceptionalMinor: null,
         releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.1')),
         next: new ReleaseTrain('master', parse('10.2.0-next.0')),
         latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
@@ -72,6 +76,7 @@ describe('cut release candidate for feature-freeze action', () => {
     const action = setupReleaseActionForTesting(
       CutReleaseCandidateForFeatureFreezeAction,
       new ActiveReleaseTrains({
+        exceptionalMinor: null,
         releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.1')),
         next: new ReleaseTrain('master', parse('10.2.0-next.0')),
         latest: new ReleaseTrain('10.0.x', parse('10.0.3')),

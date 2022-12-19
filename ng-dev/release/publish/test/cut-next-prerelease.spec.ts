@@ -30,6 +30,7 @@ describe('cut next pre-release action', () => {
     const action = setupReleaseActionForTesting(
       CutNextPrereleaseAction,
       new ActiveReleaseTrains({
+        exceptionalMinor: null,
         releaseCandidate: null,
         next: new ReleaseTrain('master', parse('10.2.0-next.0')),
         latest: new ReleaseTrain('10.1.x', parse('10.1.2')),
@@ -51,6 +52,7 @@ describe('cut next pre-release action', () => {
       const action = setupReleaseActionForTesting(
         CutNextPrereleaseAction,
         new ActiveReleaseTrains({
+          exceptionalMinor: null,
           releaseCandidate: null,
           next: new ReleaseTrain('master', parse('10.2.0-next.0')),
           latest: new ReleaseTrain('10.1.x', parse('10.1.0')),
@@ -75,6 +77,7 @@ describe('cut next pre-release action', () => {
         const action = setupReleaseActionForTesting(
           CutNextPrereleaseAction,
           new ActiveReleaseTrains({
+            exceptionalMinor: null,
             releaseCandidate: null,
             next: new ReleaseTrain('master', parse('10.2.0-next.0')),
             latest: new ReleaseTrain('10.1.x', parse('10.1.0')),
@@ -120,6 +123,7 @@ describe('cut next pre-release action', () => {
       const action = setupReleaseActionForTesting(
         CutNextPrereleaseAction,
         new ActiveReleaseTrains({
+          exceptionalMinor: null,
           releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.4')),
           next: new ReleaseTrain('master', parse('10.2.0-next.0')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
@@ -133,6 +137,7 @@ describe('cut next pre-release action', () => {
       const action = setupReleaseActionForTesting(
         CutNextPrereleaseAction,
         new ActiveReleaseTrains({
+          exceptionalMinor: null,
           releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.4')),
           next: new ReleaseTrain('master', parse('10.2.0-next.0')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
@@ -171,6 +176,7 @@ describe('cut next pre-release action', () => {
       const action = setupReleaseActionForTesting(
         CutNextPrereleaseAction,
         new ActiveReleaseTrains({
+          exceptionalMinor: null,
           releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
           next: new ReleaseTrain('master', parse('10.2.0-next.0')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
@@ -184,6 +190,7 @@ describe('cut next pre-release action', () => {
       const action = setupReleaseActionForTesting(
         CutNextPrereleaseAction,
         new ActiveReleaseTrains({
+          exceptionalMinor: null,
           releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
           next: new ReleaseTrain('master', parse('10.2.0-next.0')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
