@@ -87,11 +87,6 @@ export async function getTargetLabelsForActiveReleaseTrains(
       // the last-minor. If not, then an exceptional minor might be in progress. See:
       // https://docs.google.com/document/d/197kVillDwx-RZtSVOBtPb4BBIAw0E9RT3q3v6DZkykU/edit#heading=h.h7o5pjq6yqd0
       branches: () => {
-        // TODO(devversion): Remove this when we actually support exceptional minors.
-        if (config.pullRequest.__specialTreatRcAsExceptionalMinor && releaseCandidate !== null) {
-          return [nextBranchName, releaseCandidate.branchName];
-        }
-
         return [nextBranchName];
       },
     },
