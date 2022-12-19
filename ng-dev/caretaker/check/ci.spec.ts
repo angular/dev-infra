@@ -68,6 +68,12 @@ describe('CiModule', () => {
         status: 'not found',
       });
       expect(data[1]).toEqual({
+        active: false,
+        name: 'exceptionalMinor',
+        label: '',
+        status: 'not found',
+      });
+      expect(data[2]).toEqual({
         active: true,
         name: 'latest-branch',
         label: 'latest (latest-branch)',
@@ -120,5 +126,7 @@ function buildMockActiveReleaseTrains(withRc: boolean): ActiveReleaseTrains {
     releaseCandidate: withRc ? {branchName: 'rc-branch', ...baseResult} : null,
     latest: {branchName: 'latest-branch', ...baseResult},
     next: {branchName: 'next-branch', ...baseResult},
+    // TODO: Consider testing exceptional minor status too.
+    exceptionalMinor: null,
   });
 }

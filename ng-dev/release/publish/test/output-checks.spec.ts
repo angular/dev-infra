@@ -15,6 +15,7 @@ import {parse, setupReleaseActionForTesting, writePackageJson} from './test-util
 describe('package output checks', () => {
   const baseReleaseTrains = new ActiveReleaseTrains({
     releaseCandidate: null,
+    exceptionalMinor: null,
     latest: new ReleaseTrain('13.0.x', parse('13.0.1')),
     next: new ReleaseTrain('main', parse('13.1.0-next.2')),
   });

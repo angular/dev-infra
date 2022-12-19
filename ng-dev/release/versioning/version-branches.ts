@@ -30,8 +30,17 @@ export interface VersionBranch {
   parsed: semver.SemVer;
 }
 
+/** Describes the concrete version of a version branch. */
+export interface VersionInfo {
+  version: semver.SemVer;
+  isExceptionalMinor: boolean;
+}
+
 /** Regular expression that matches version-branches. */
 const versionBranchNameRegex = /^(\d+)\.(\d+)\.x$/;
+
+/** Field in `package.json` that is used to indicate an in-progress exceptional minor. */
+export const exceptionalMinorPackageIndicator = '__ngDevExceptionalMinor__';
 
 /**
  * Gets the name of the next branch from the Github configuration.
@@ -43,11 +52,11 @@ export function getNextBranchName(github: GithubConfig): string {
   return github.mainBranchName;
 }
 
-/** Gets the version of a given branch by reading the `package.json` upstream. */
-export async function getVersionOfBranch(
+/** Gets the version info for a branch by reading the `package.json` upstream. */
+export async function getVersionInfoForBranch(
   repo: ReleaseRepoWithApi,
   branchName: string,
-): Promise<semver.SemVer> {
+): Promise<VersionInfo> {
   const {data} = await repo.api.repos.getContent({
     owner: repo.owner,
     repo: repo.name,
@@ -60,31 +69,24 @@ export async function getVersionOfBranch(
   if (!content) {
     throw Error(`Unable to read "package.json" file from repository.`);
   }
-  const {version} = JSON.parse(Buffer.from(content, 'base64').toString()) as {
+  const pkgJson = JSON.parse(Buffer.from(content, 'base64').toString()) as {
     version: string;
+    [exceptionalMinorPackageIndicator]?: boolean;
     [key: string]: any;
   };
-  const parsedVersion = semver.parse(version);
+  const parsedVersion = semver.parse(pkgJson.version);
   if (parsedVersion === null) {
     throw Error(`Invalid version detected in following branch: ${branchName}.`);
   }
-  return parsedVersion;
+  return {
+    version: parsedVersion,
+    isExceptionalMinor: pkgJson[exceptionalMinorPackageIndicator] === true,
+  };
 }
 
 /** Whether the given branch corresponds to a version branch. */
 export function isVersionBranch(branchName: string): boolean {
   return versionBranchNameRegex.test(branchName);
-}
-
-/**
- * Converts a given version-branch into a SemVer version that can be used with SemVer
- * utilities. e.g. to determine semantic order, extract major digit, compare.
- *
- * For example `10.0.x` will become `10.0.0` in SemVer. The patch digit is not
- * relevant but needed for parsing. SemVer does not allow `x` as patch digit.
- */
-export function getVersionForVersionBranch(branchName: string): semver.SemVer | null {
-  return semver.parse(branchName.replace(versionBranchNameRegex, '$1.$2.0'));
 }
 
 /**
@@ -117,4 +119,15 @@ export async function getBranchesForMajorVersions(
 
   // Sort captured version-branches in descending order.
   return branches.sort((a, b) => semver.rcompare(a.parsed, b.parsed));
+}
+
+/**
+ * Converts a given version-branch into a SemVer version that can be used with SemVer
+ * utilities. e.g. to determine semantic order, extract major digit, compare.
+ *
+ * For example `10.0.x` will become `10.0.0` in SemVer. The patch digit is not
+ * relevant but needed for parsing. SemVer does not allow `x` as patch digit.
+ */
+function getVersionForVersionBranch(branchName: string): semver.SemVer | null {
+  return semver.parse(branchName.replace(versionBranchNameRegex, '$1.$2.0'));
 }

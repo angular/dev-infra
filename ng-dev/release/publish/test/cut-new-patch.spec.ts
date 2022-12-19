@@ -22,6 +22,7 @@ describe('cut new patch action', () => {
     expect(
       await CutNewPatchAction.isActive(
         new ActiveReleaseTrains({
+          exceptionalMinor: null,
           releaseCandidate: null,
           next: new ReleaseTrain('master', parse('10.1.0-next.3')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
@@ -34,6 +35,7 @@ describe('cut new patch action', () => {
     const action = setupReleaseActionForTesting(
       CutNewPatchAction,
       new ActiveReleaseTrains({
+        exceptionalMinor: null,
         releaseCandidate: null,
         next: new ReleaseTrain('master', parse('10.1.0-next.3')),
         latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
@@ -47,6 +49,7 @@ describe('cut new patch action', () => {
     const action = setupReleaseActionForTesting(
       CutNewPatchAction,
       new ActiveReleaseTrains({
+        exceptionalMinor: null,
         releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.3')),
         next: new ReleaseTrain('master', parse('10.2.0-next.0')),
         latest: new ReleaseTrain('10.0.x', parse('10.0.9')),
@@ -60,6 +63,7 @@ describe('cut new patch action', () => {
     const action = setupReleaseActionForTesting(
       CutNewPatchAction,
       new ActiveReleaseTrains({
+        exceptionalMinor: null,
         releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
         next: new ReleaseTrain('master', parse('10.2.0-next.0')),
         latest: new ReleaseTrain('10.0.x', parse('10.0.9')),
@@ -73,6 +77,7 @@ describe('cut new patch action', () => {
     const action = setupReleaseActionForTesting(
       CutNewPatchAction,
       new ActiveReleaseTrains({
+        exceptionalMinor: null,
         releaseCandidate: null,
         next: new ReleaseTrain('master', parse('10.1.0-next.3')),
         latest: new ReleaseTrain('10.0.x', parse('10.0.2')),

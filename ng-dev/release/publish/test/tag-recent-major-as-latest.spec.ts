@@ -25,6 +25,7 @@ describe('tag recent major as latest action', () => {
       await TagRecentMajorAsLatest.isActive(
         new ActiveReleaseTrains({
           releaseCandidate: null,
+          exceptionalMinor: null,
           next: new ReleaseTrain('master', parse('10.1.0-next.0')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.1')),
         }),
@@ -50,6 +51,7 @@ describe('tag recent major as latest action', () => {
         await TagRecentMajorAsLatest.isActive(
           new ActiveReleaseTrains({
             releaseCandidate: null,
+            exceptionalMinor: null,
             next: new ReleaseTrain('master', parse('10.1.0-next.0')),
             latest: new ReleaseTrain('10.0.x', parse('10.0.0')),
           }),
@@ -77,6 +79,7 @@ describe('tag recent major as latest action', () => {
         await TagRecentMajorAsLatest.isActive(
           new ActiveReleaseTrains({
             releaseCandidate: null,
+            exceptionalMinor: null,
             next: new ReleaseTrain('master', parse('10.1.0-next.0')),
             latest: new ReleaseTrain('10.0.x', parse('10.0.0')),
           }),
@@ -101,6 +104,7 @@ describe('tag recent major as latest action', () => {
         await TagRecentMajorAsLatest.isActive(
           new ActiveReleaseTrains({
             releaseCandidate: null,
+            exceptionalMinor: null,
             next: new ReleaseTrain('master', parse('10.1.0-next.0')),
             latest: new ReleaseTrain('10.0.x', parse('10.0.0')),
           }),
@@ -115,6 +119,7 @@ describe('tag recent major as latest action', () => {
       TagRecentMajorAsLatest,
       new ActiveReleaseTrains({
         releaseCandidate: null,
+        exceptionalMinor: null,
         next: new ReleaseTrain('master', parse('10.1.0-next.0')),
         latest: new ReleaseTrain('10.0.x', parse('10.0.0')),
       }),

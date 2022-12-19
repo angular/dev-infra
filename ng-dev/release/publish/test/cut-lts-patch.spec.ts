@@ -30,6 +30,7 @@ describe('cut an LTS patch action', () => {
     expect(
       await CutLongTermSupportPatchAction.isActive(
         new ActiveReleaseTrains({
+          exceptionalMinor: null,
           releaseCandidate: null,
           next: new ReleaseTrain('master', parse('10.1.0-next.3')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
@@ -42,6 +43,7 @@ describe('cut an LTS patch action', () => {
     expect(
       await CutLongTermSupportPatchAction.isActive(
         new ActiveReleaseTrains({
+          exceptionalMinor: null,
           releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.3')),
           next: new ReleaseTrain('master', parse('10.2.0-next.3')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
@@ -54,6 +56,7 @@ describe('cut an LTS patch action', () => {
     expect(
       await CutLongTermSupportPatchAction.isActive(
         new ActiveReleaseTrains({
+          exceptionalMinor: null,
           releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
           next: new ReleaseTrain('master', parse('10.2.0-next.3')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
@@ -66,6 +69,7 @@ describe('cut an LTS patch action', () => {
     const action = setupReleaseActionForTesting(
       CutLongTermSupportPatchAction,
       new ActiveReleaseTrains({
+        exceptionalMinor: null,
         releaseCandidate: null,
         next: new ReleaseTrain('master', parse('10.1.0-next.3')),
         latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
@@ -85,6 +89,7 @@ describe('cut an LTS patch action', () => {
     const action = setupReleaseActionForTesting(
       CutLongTermSupportPatchAction,
       new ActiveReleaseTrains({
+        exceptionalMinor: null,
         releaseCandidate: null,
         next: new ReleaseTrain('master', parse('10.1.0-next.3')),
         latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
@@ -127,6 +132,7 @@ describe('cut an LTS patch action', () => {
     const {releaseConfig, githubConfig} = getTestConfigurationsForAction();
     const gitClient = getMockGitClient(githubConfig, /* useSandboxGitClient */ false);
     const activeReleaseTrains = new ActiveReleaseTrains({
+      exceptionalMinor: null,
       releaseCandidate: null,
       next: new ReleaseTrain('master', parse('10.1.0-next.3')),
       latest: new ReleaseTrain('10.0.x', parse('10.0.2')),

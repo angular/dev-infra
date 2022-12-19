@@ -441,9 +441,7 @@ describe('default target labels', () => {
         interceptBranchesListRequest(['10.3.x', '10.4.x']);
 
         await expectAsync(getBranchesForLabel('target: patch')).toBeRejectedWithError(
-          'Unable to determine latest release-train. Found two consecutive ' +
-            'branches in feature-freeze/release-candidate phase. Did not expect both ' +
-            '"10.3.x" and "10.4.x" to be in feature-freeze/release-candidate mode.',
+          /No exceptional minors are allowed.+cannot be multiple feature-freeze\/release-candidate branches: "10.3.x"/,
         );
       });
     });
