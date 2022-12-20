@@ -61,6 +61,9 @@ export interface PullRequest {
  *
  * @throws {FatalMergeToolError} A fatal error might be thrown when e.g. the pull request
  *   does not exist upstream.
+ * @throws {InvalidTargetLabelError} Error thrown if an invalid target label is applied.
+ * @throws {InvalidTargetBranchError} Error thrown if an invalid GitHub PR destination branch
+ *   is selected.
  */
 export async function loadAndValidatePullRequest(
   {

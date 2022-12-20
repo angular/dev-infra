@@ -20,6 +20,10 @@ import {
   UserAbortedMergeToolError,
 } from './failures.js';
 import {PullRequestValidationConfig} from '../common/validation/validation-config.js';
+import {
+  InvalidTargetBranchError,
+  InvalidTargetLabelError,
+} from '../common/targeting/target-label.js';
 
 /**
  * Merges a given pull request based on labels configured in the given merge configuration.
@@ -68,6 +72,14 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
       if (e instanceof UserAbortedMergeToolError) {
         Log.warn('Manually aborted merging..');
         return false;
+      }
+      if (e instanceof InvalidTargetBranchError) {
+        Log.error(`Pull request selects an invalid GitHub destination branch:`);
+        Log.error(` -> ${bold(e.failureMessage)}`);
+      }
+      if (e instanceof InvalidTargetLabelError) {
+        Log.error(`Pull request target label could not be determined:`);
+        Log.error(` -> ${bold(e.failureMessage)}`);
       }
 
       if (e instanceof PullRequestValidationError) {

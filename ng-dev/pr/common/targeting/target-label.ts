@@ -40,22 +40,26 @@ export interface TargetLabelConfig {
 }
 
 /**
- * Unique error that can be thrown in the merge configuration if an
- * invalid branch is targeted.
+ * Unique error that will be thrown if an invalid branch is targeted.
  */
 export class InvalidTargetBranchError {
   constructor(public failureMessage: string) {}
 }
 
 /**
- * Unique error that can be thrown in the merge configuration if an
- * invalid label has been applied to a pull request.
+ * Unique error that will be thrown if an invalid label has been
+ * applied to a pull request.
  */
 export class InvalidTargetLabelError {
   constructor(public failureMessage: string) {}
 }
 
-/** Gets the matching target label config based on pull request labels. */
+/**
+ * Gets the matching target label config based on pull request labels.
+ *
+ * @throws {InvalidTargetLabelError} An invalid target label error is thrown
+ *   if no single valid target label is applied.
+ */
 export async function getMatchingTargetLabelConfigForPullRequest(
   labelsOnPullRequest: string[],
   labelConfigs: TargetLabelConfig[],
@@ -81,7 +85,12 @@ export async function getMatchingTargetLabelConfigForPullRequest(
   );
 }
 
-/** Gets the target branches and label of the given pull request. */
+/**
+ * Gets the target branches and label of the given pull request.
+ *
+ * @throws {InvalidTargetLabelError} An invalid target label error is thrown
+ *   if no single valid target label is applied.
+ */
 export async function getTargetBranchesAndLabelForPullRequest(
   activeReleaseTrains: ActiveReleaseTrains,
   github: GithubClient,
