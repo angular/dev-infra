@@ -10,8 +10,8 @@ import {Commit} from '../../../commit-message/parse.js';
 import {ActiveReleaseTrains} from '../../../release/versioning/active-release-trains.js';
 import {Log, red} from '../../../utils/logging.js';
 import {PullRequestConfig} from '../../config/index.js';
-import {mergeLabels} from '../labels.js';
-import {TargetLabelName} from '../targeting/target-label.js';
+import {mergeLabels} from '../labels/index.js';
+import {TargetLabel, targetLabels} from '../labels/target.js';
 import {createPullRequestValidation, PullRequestValidation} from './validation-config.js';
 
 /** Assert the commits provided are allowed to merge to the provided target label. */
@@ -23,7 +23,7 @@ export const changesAllowForTargetLabelValidation = createPullRequestValidation(
 class Validation extends PullRequestValidation {
   assert(
     commits: Commit[],
-    labelName: TargetLabelName,
+    targetLabel: TargetLabel,
     config: PullRequestConfig,
     releaseTrains: ActiveReleaseTrains,
     labelsOnPullRequest: string[],
@@ -44,55 +44,55 @@ class Validation extends PullRequestValidation {
     const hasBreakingChanges = commits.some((commit) => commit.breakingChanges.length !== 0);
     const hasDeprecations = commits.some((commit) => commit.deprecations.length !== 0);
     const hasFeatureCommits = commits.some((commit) => commit.type === 'feat');
-    switch (labelName) {
-      case TargetLabelName.MAJOR:
+    switch (targetLabel) {
+      case targetLabels.TARGET_MAJOR:
         break;
-      case TargetLabelName.MINOR:
+      case targetLabels.TARGET_MINOR:
         if (hasBreakingChanges) {
-          throw this._createHasBreakingChangesError(labelName);
+          throw this._createHasBreakingChangesError(targetLabel);
         }
         break;
-      case TargetLabelName.RELEASE_CANDIDATE:
-      case TargetLabelName.LONG_TERM_SUPPORT:
-      case TargetLabelName.PATCH:
+      case targetLabels.TARGET_RC:
+      case targetLabels.TARGET_LTS:
+      case targetLabels.TARGET_PATCH:
         if (hasBreakingChanges) {
-          throw this._createHasBreakingChangesError(labelName);
+          throw this._createHasBreakingChangesError(targetLabel);
         }
         if (hasFeatureCommits) {
-          throw this._createHasFeatureCommitsError(labelName);
+          throw this._createHasFeatureCommitsError(targetLabel);
         }
         // Deprecations should not be merged into RC, patch or LTS branches.
         // https://semver.org/#spec-item-7. Deprecations should be part of
         // minor releases, or major releases according to SemVer.
         if (hasDeprecations && !releaseTrains.isFeatureFreeze()) {
-          throw this._createHasDeprecationsError(labelName);
+          throw this._createHasDeprecationsError(targetLabel);
         }
         break;
       default:
         Log.warn(red('WARNING: Unable to confirm all commits in the pull request are'));
-        Log.warn(red(`eligible to be merged into the target branches for: ${labelName}`));
+        Log.warn(red(`eligible to be merged into the target branches for: ${targetLabel.name}`));
         break;
     }
   }
 
-  private _createHasBreakingChangesError(labelName: TargetLabelName) {
+  private _createHasBreakingChangesError(label: TargetLabel) {
     const message =
-      `Cannot merge into branch for "${labelName}" as the pull request has ` +
+      `Cannot merge into branch for "${label.name}" as the pull request has ` +
       `breaking changes. Breaking changes can only be merged with the "target: major" label.`;
     return this._createError(message);
   }
 
-  private _createHasDeprecationsError(labelName: TargetLabelName) {
+  private _createHasDeprecationsError(label: TargetLabel) {
     const message =
-      `Cannot merge into branch for "${labelName}" as the pull request ` +
+      `Cannot merge into branch for "${label.name}" as the pull request ` +
       `contains deprecations. Deprecations can only be merged with the "target: minor" or ` +
       `"target: major" label.`;
     return this._createError(message);
   }
 
-  private _createHasFeatureCommitsError(labelName: TargetLabelName) {
+  private _createHasFeatureCommitsError(label: TargetLabel) {
     const message =
-      `Cannot merge into branch for "${labelName}" as the pull request has ` +
+      `Cannot merge into branch for "${label.name}" as the pull request has ` +
       'commits with the "feat" type. New features can only be merged with the "target: minor" ' +
       'or "target: major" label.';
     return this._createError(message);

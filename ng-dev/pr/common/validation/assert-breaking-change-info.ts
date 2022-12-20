@@ -7,7 +7,7 @@
  */
 
 import {Commit} from '../../../commit-message/parse.js';
-import {managedLabels} from '../labels.js';
+import {managedLabels} from '../labels/index.js';
 import {createPullRequestValidation, PullRequestValidation} from './validation-config.js';
 
 /** Assert the pull request is properly denoted if it contains breaking changes. */

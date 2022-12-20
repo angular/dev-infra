@@ -1,4 +1,4 @@
-import {allLabels, Label} from './labels.js';
+import {allLabels, Label} from './index.js';
 
 describe('All labels:', () => {
   for (const {description, name, color} of Object.values<Label>(allLabels)) {

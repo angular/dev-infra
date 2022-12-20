@@ -7,7 +7,7 @@
  */
 
 import {PullRequestFromGithub} from '../fetch-pull-request.js';
-import {actionLabels} from '../labels.js';
+import {actionLabels} from '../labels/index.js';
 import {createPullRequestValidation, PullRequestValidation} from './validation-config.js';
 
 /** Assert the pull request is merge ready. */

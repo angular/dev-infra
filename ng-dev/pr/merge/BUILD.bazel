@@ -17,7 +17,7 @@ ts_library(
     deps = [
         "//ng-dev/commit-message",
         "//ng-dev/pr/common",
-        "//ng-dev/pr/common:labels",
+        "//ng-dev/pr/common/labels",
         "//ng-dev/pr/config",
         "//ng-dev/release/config",
         "//ng-dev/release/versioning",
