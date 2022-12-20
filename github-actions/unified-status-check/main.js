@@ -23839,6 +23839,13 @@ var checkOnlyPassingStatuses = ({ statuses }) => {
 
 // 
 var createTypedObject = () => (v) => v;
+var Label = class {
+  constructor({ name, description, color }) {
+    this.name = name;
+    this.description = description;
+    this.color = color;
+  }
+};
 
 // 
 var managedLabels = createTypedObject()({
@@ -23910,31 +23917,37 @@ var mergeLabels = createTypedObject()({
 });
 
 // 
+var TargetLabel = class extends Label {
+  constructor() {
+    super(...arguments);
+    this.__hasTargetLabelMarker__ = true;
+  }
+};
 var targetLabels = createTypedObject()({
-  TARGET_FEATURE: {
+  TARGET_FEATURE: new TargetLabel({
     description: "This PR is targeted for a feature branch (outside of main and semver branches)",
     name: "target: feature"
-  },
-  TARGET_LTS: {
+  }),
+  TARGET_LTS: new TargetLabel({
     description: "This PR is targeting a version currently in long-term support",
     name: "target: lts"
-  },
-  TARGET_MAJOR: {
+  }),
+  TARGET_MAJOR: new TargetLabel({
     description: "This PR is targeted for the next major release",
     name: "target: major"
-  },
-  TARGET_MINOR: {
+  }),
+  TARGET_MINOR: new TargetLabel({
     description: "This PR is targeted for the next minor release",
     name: "target: minor"
-  },
-  TARGET_PATCH: {
+  }),
+  TARGET_PATCH: new TargetLabel({
     description: "This PR is targeted for the next patch release",
     name: "target: patch"
-  },
-  TARGET_RC: {
+  }),
+  TARGET_RC: new TargetLabel({
     description: "This PR is targeted for the next release-candidate",
     name: "target: rc"
-  }
+  })
 });
 
 // 

@@ -63643,10 +63643,11 @@ var ReleaseTrain = class {
 // 
 var import_semver = __toESM(require_semver2());
 var versionBranchNameRegex = /^(\d+)\.(\d+)\.x$/;
+var exceptionalMinorPackageIndicator = "__ngDevExceptionalMinor__";
 function getNextBranchName(github) {
   return github.mainBranchName;
 }
-async function getVersionOfBranch(repo2, branchName) {
+async function getVersionInfoForBranch(repo2, branchName) {
   const { data } = await repo2.api.repos.getContent({
     owner: repo2.owner,
     repo: repo2.name,
@@ -63657,18 +63658,18 @@ async function getVersionOfBranch(repo2, branchName) {
   if (!content) {
     throw Error(`Unable to read "package.json" file from repository.`);
   }
-  const { version } = JSON.parse(Buffer.from(content, "base64").toString());
-  const parsedVersion = import_semver.default.parse(version);
+  const pkgJson = JSON.parse(Buffer.from(content, "base64").toString());
+  const parsedVersion = import_semver.default.parse(pkgJson.version);
   if (parsedVersion === null) {
     throw Error(`Invalid version detected in following branch: ${branchName}.`);
   }
-  return parsedVersion;
+  return {
+    version: parsedVersion,
+    isExceptionalMinor: pkgJson[exceptionalMinorPackageIndicator] === true
+  };
 }
 function isVersionBranch(branchName) {
   return versionBranchNameRegex.test(branchName);
-}
-function getVersionForVersionBranch(branchName) {
-  return import_semver.default.parse(branchName.replace(versionBranchNameRegex, "$1.$2.0"));
 }
 async function getBranchesForMajorVersions(repo2, majorVersions) {
   const branchData = await repo2.api.paginate(repo2.api.repos.listBranches, {
@@ -63688,14 +63689,18 @@ async function getBranchesForMajorVersions(repo2, majorVersions) {
   }
   return branches.sort((a, b) => import_semver.default.rcompare(a.parsed, b.parsed));
 }
+function getVersionForVersionBranch(branchName) {
+  return import_semver.default.parse(branchName.replace(versionBranchNameRegex, "$1.$2.0"));
+}
 
 // 
 var ActiveReleaseTrains = class {
   constructor(trains) {
     this.trains = trains;
-    this.releaseCandidate = this.trains.releaseCandidate || null;
+    this.releaseCandidate = this.trains.releaseCandidate;
     this.next = this.trains.next;
     this.latest = this.trains.latest;
+    this.exceptionalMinor = this.trains.exceptionalMinor;
   }
   isFeatureFreeze() {
     return this.releaseCandidate !== null && this.releaseCandidate.version.prerelease[0] === "next";
@@ -63706,54 +63711,81 @@ var ActiveReleaseTrains = class {
 };
 async function fetchActiveReleaseTrains(repo2) {
   const nextBranchName = repo2.nextBranchName;
-  const nextVersion = await getVersionOfBranch(repo2, nextBranchName);
+  const { version: nextVersion } = await getVersionInfoForBranch(repo2, nextBranchName);
   const next = new ReleaseTrain(nextBranchName, nextVersion);
-  const majorVersionsToConsider = [];
-  let expectedReleaseCandidateMajor;
+  const majorVersionsToFetch = [];
+  const checks = {
+    canHaveExceptionalMinor: () => false,
+    isValidReleaseCandidateVersion: () => false,
+    isValidExceptionalMinorVersion: () => false
+  };
   if (nextVersion.minor === 0) {
-    expectedReleaseCandidateMajor = nextVersion.major - 1;
-    majorVersionsToConsider.push(nextVersion.major - 1);
+    majorVersionsToFetch.push(nextVersion.major - 1, nextVersion.major - 2);
+    checks.isValidReleaseCandidateVersion = (v) => v.major === nextVersion.major - 1;
+    checks.canHaveExceptionalMinor = (rc) => rc === null || rc.isMajor;
+    checks.isValidExceptionalMinorVersion = (v, rc) => v.major === (rc === null ? nextVersion.major : rc.version.major) - 1;
   } else if (nextVersion.minor === 1) {
-    expectedReleaseCandidateMajor = nextVersion.major;
-    majorVersionsToConsider.push(nextVersion.major, nextVersion.major - 1);
+    majorVersionsToFetch.push(nextVersion.major, nextVersion.major - 1);
+    checks.isValidReleaseCandidateVersion = (v) => v.major === nextVersion.major;
+    checks.canHaveExceptionalMinor = (rc) => rc !== null && rc.isMajor;
+    checks.isValidExceptionalMinorVersion = (v, rc) => v.major === rc.version.major - 1;
   } else {
-    expectedReleaseCandidateMajor = nextVersion.major;
-    majorVersionsToConsider.push(nextVersion.major);
+    majorVersionsToFetch.push(nextVersion.major);
+    checks.isValidReleaseCandidateVersion = (v) => v.major === nextVersion.major;
+    checks.canHaveExceptionalMinor = () => false;
   }
-  const branches = await getBranchesForMajorVersions(repo2, majorVersionsToConsider);
-  const { latest, releaseCandidate } = await findActiveReleaseTrainsFromVersionBranches(repo2, nextVersion, branches, expectedReleaseCandidateMajor);
+  const branches = await getBranchesForMajorVersions(repo2, majorVersionsToFetch);
+  const { latest, releaseCandidate, exceptionalMinor } = await findActiveReleaseTrainsFromVersionBranches(repo2, next, branches, checks);
   if (latest === null) {
     throw Error(`Unable to determine the latest release-train. The following branches have been considered: [${branches.map((b) => b.name).join(", ")}]`);
   }
-  return new ActiveReleaseTrains({ releaseCandidate, next, latest });
+  return new ActiveReleaseTrains({ releaseCandidate, next, latest, exceptionalMinor });
 }
-async function findActiveReleaseTrainsFromVersionBranches(repo2, nextVersion, branches, expectedReleaseCandidateMajor) {
-  const nextReleaseTrainVersion = import_semver2.default.parse(`${nextVersion.major}.${nextVersion.minor}.0`);
+async function findActiveReleaseTrainsFromVersionBranches(repo2, next, branches, checks) {
+  const nextReleaseTrainVersion = import_semver2.default.parse(`${next.version.major}.${next.version.minor}.0`);
   const nextBranchName = repo2.nextBranchName;
   let latest = null;
   let releaseCandidate = null;
+  let exceptionalMinor = null;
   for (const { name, parsed } of branches) {
     if (import_semver2.default.gt(parsed, nextReleaseTrainVersion)) {
       throw Error(`Discovered unexpected version-branch "${name}" for a release-train that is more recent than the release-train currently in the "${nextBranchName}" branch. Please either delete the branch if created by accident, or update the outdated version in the next branch (${nextBranchName}).`);
     } else if (import_semver2.default.eq(parsed, nextReleaseTrainVersion)) {
       throw Error(`Discovered unexpected version-branch "${name}" for a release-train that is already active in the "${nextBranchName}" branch. Please either delete the branch if created by accident, or update the version in the next branch (${nextBranchName}).`);
     }
-    const version = await getVersionOfBranch(repo2, name);
+    const { version, isExceptionalMinor } = await getVersionInfoForBranch(repo2, name);
     const releaseTrain = new ReleaseTrain(name, version);
     const isPrerelease = version.prerelease[0] === "rc" || version.prerelease[0] === "next";
+    if (isExceptionalMinor) {
+      if (exceptionalMinor !== null) {
+        throw Error(`Unable to determine latest release-train. Found an additional exceptional minor version branch: "${name}". Already discovered: ${exceptionalMinor.branchName}.`);
+      }
+      if (!checks.canHaveExceptionalMinor(releaseCandidate)) {
+        throw Error(`Unable to determine latest release-train. Found an unexpected exceptional minor version branch: "${name}". No exceptional minor is currently allowed.`);
+      }
+      if (!checks.isValidExceptionalMinorVersion(version, releaseCandidate)) {
+        throw Error(`Unable to determine latest release-train. Found an invalid exceptional minor version branch: "${name}". Invalid version: ${version}.`);
+      }
+      exceptionalMinor = releaseTrain;
+      continue;
+    }
     if (isPrerelease) {
+      if (exceptionalMinor !== null) {
+        throw Error(`Unable to determine latest release-train. Discovered a feature-freeze/release-candidate version branch (${name}) that is older than an in-progress exceptional minor (${exceptionalMinor.branchName}).`);
+      }
       if (releaseCandidate !== null) {
-        throw Error(`Unable to determine latest release-train. Found two consecutive branches in feature-freeze/release-candidate phase. Did not expect both "${name}" and "${releaseCandidate.branchName}" to be in feature-freeze/release-candidate mode.`);
-      } else if (version.major !== expectedReleaseCandidateMajor) {
+        throw Error(`Unable to determine latest release-train. Found two consecutive pre-release version branches. No exceptional minors are allowed currently, and there cannot be multiple feature-freeze/release-candidate branches: "${name}".`);
+      }
+      if (!checks.isValidReleaseCandidateVersion(version)) {
         throw Error(`Discovered unexpected old feature-freeze/release-candidate branch. Expected no version-branch in feature-freeze/release-candidate mode for v${version.major}.`);
       }
       releaseCandidate = releaseTrain;
-    } else {
-      latest = releaseTrain;
-      break;
+      continue;
     }
+    latest = releaseTrain;
+    break;
   }
-  return { releaseCandidate, latest };
+  return { releaseCandidate, exceptionalMinor, latest };
 }
 
 // 
@@ -67766,7 +67798,7 @@ var defaultLocale = "en-US";
 
 // 
 async function assertActiveLtsBranch(repo2, releaseConfig, branchName) {
-  const version = await getVersionOfBranch(repo2, branchName);
+  const { version } = await getVersionInfoForBranch(repo2, branchName);
   const { "dist-tags": distTags, time } = await fetchProjectNpmPackageInfo(releaseConfig);
   const ltsNpmTag = getLtsNpmDistTagOfMajor(version.major);
   const ltsVersion = import_semver4.default.parse(distTags[ltsNpmTag]);
@@ -67791,7 +67823,51 @@ async function assertActiveLtsBranch(repo2, releaseConfig, branchName) {
 }
 
 // 
-async function getTargetLabelsForActiveReleaseTrains({ latest, releaseCandidate, next }, api, config) {
+var createTypedObject = () => (v) => v;
+var Label = class {
+  constructor({ name, description, color }) {
+    this.name = name;
+    this.description = description;
+    this.color = color;
+  }
+};
+
+// 
+var TargetLabel = class extends Label {
+  constructor() {
+    super(...arguments);
+    this.__hasTargetLabelMarker__ = true;
+  }
+};
+var targetLabels = createTypedObject()({
+  TARGET_FEATURE: new TargetLabel({
+    description: "This PR is targeted for a feature branch (outside of main and semver branches)",
+    name: "target: feature"
+  }),
+  TARGET_LTS: new TargetLabel({
+    description: "This PR is targeting a version currently in long-term support",
+    name: "target: lts"
+  }),
+  TARGET_MAJOR: new TargetLabel({
+    description: "This PR is targeted for the next major release",
+    name: "target: major"
+  }),
+  TARGET_MINOR: new TargetLabel({
+    description: "This PR is targeted for the next minor release",
+    name: "target: minor"
+  }),
+  TARGET_PATCH: new TargetLabel({
+    description: "This PR is targeted for the next patch release",
+    name: "target: patch"
+  }),
+  TARGET_RC: new TargetLabel({
+    description: "This PR is targeted for the next release-candidate",
+    name: "target: rc"
+  })
+});
+
+// 
+async function getTargetLabelConfigsForActiveReleaseTrains({ latest, releaseCandidate, next }, api, config) {
   assertValidGithubConfig(config);
   assertValidPullRequestConfig(config);
   const nextBranchName = getNextBranchName(config.github);
@@ -67801,9 +67877,9 @@ async function getTargetLabelsForActiveReleaseTrains({ latest, releaseCandidate,
     nextBranchName,
     api
   };
-  const targetLabels2 = [
+  const labelConfigs = [
     {
-      name: TargetLabelName.MAJOR,
+      label: targetLabels.TARGET_MAJOR,
       branches: () => {
         if (!next.isMajor) {
           throw new InvalidTargetLabelError(`Unable to merge pull request. The "${nextBranchName}" branch will be released as a minor version.`);
@@ -67812,16 +67888,13 @@ async function getTargetLabelsForActiveReleaseTrains({ latest, releaseCandidate,
       }
     },
     {
-      name: TargetLabelName.MINOR,
+      label: targetLabels.TARGET_MINOR,
       branches: () => {
-        if (config.pullRequest.__specialTreatRcAsExceptionalMinor && releaseCandidate !== null) {
-          return [nextBranchName, releaseCandidate.branchName];
-        }
         return [nextBranchName];
       }
     },
     {
-      name: TargetLabelName.PATCH,
+      label: targetLabels.TARGET_PATCH,
       branches: (githubTargetBranch) => {
         if (githubTargetBranch === latest.branchName) {
           return [latest.branchName];
@@ -67834,7 +67907,7 @@ async function getTargetLabelsForActiveReleaseTrains({ latest, releaseCandidate,
       }
     },
     {
-      name: TargetLabelName.RELEASE_CANDIDATE,
+      label: targetLabels.TARGET_RC,
       branches: (githubTargetBranch) => {
         if (releaseCandidate === null) {
           throw new InvalidTargetLabelError(`No active feature-freeze/release-candidate branch. Unable to merge pull request using "target: rc" label.`);
@@ -67846,7 +67919,7 @@ async function getTargetLabelsForActiveReleaseTrains({ latest, releaseCandidate,
       }
     },
     {
-      name: TargetLabelName.FEATURE_BRANCH,
+      label: targetLabels.TARGET_FEATURE,
       branches: (githubTargetBranch) => {
         if (isVersionBranch(githubTargetBranch) || githubTargetBranch === nextBranchName) {
           throw new InvalidTargetBranchError('"target: feature" pull requests cannot target a releasable branch');
@@ -67857,8 +67930,8 @@ async function getTargetLabelsForActiveReleaseTrains({ latest, releaseCandidate,
   ];
   try {
     assertValidReleaseConfig(config);
-    targetLabels2.push({
-      name: TargetLabelName.LONG_TERM_SUPPORT,
+    labelConfigs.push({
+      label: targetLabels.TARGET_LTS,
       branches: async (githubTargetBranch) => {
         if (!isVersionBranch(githubTargetBranch)) {
           throw new InvalidTargetBranchError(`PR cannot be merged as it does not target a long-term support branch: "${githubTargetBranch}"`);
@@ -67882,19 +67955,10 @@ async function getTargetLabelsForActiveReleaseTrains({ latest, releaseCandidate,
       throw err;
     }
   }
-  return targetLabels2;
+  return labelConfigs;
 }
 
 // 
-var TargetLabelName;
-(function(TargetLabelName2) {
-  TargetLabelName2["MAJOR"] = "target: major";
-  TargetLabelName2["MINOR"] = "target: minor";
-  TargetLabelName2["PATCH"] = "target: patch";
-  TargetLabelName2["RELEASE_CANDIDATE"] = "target: rc";
-  TargetLabelName2["LONG_TERM_SUPPORT"] = "target: lts";
-  TargetLabelName2["FEATURE_BRANCH"] = "target: feature";
-})(TargetLabelName || (TargetLabelName = {}));
 var InvalidTargetBranchError = class {
   constructor(failureMessage) {
     this.failureMessage = failureMessage;
@@ -67905,10 +67969,10 @@ var InvalidTargetLabelError = class {
     this.failureMessage = failureMessage;
   }
 };
-async function getMatchingTargetLabelForPullRequest(labelsOnPullRequest, allTargetLabels) {
+async function getMatchingTargetLabelConfigForPullRequest(labelsOnPullRequest, labelConfigs) {
   const matches = [];
-  for (const label of labelsOnPullRequest) {
-    const match = allTargetLabels.find(({ name }) => label === name);
+  for (const prLabelName of labelsOnPullRequest) {
+    const match = labelConfigs.find(({ label }) => label.name === prLabelName);
     if (match !== void 0) {
       matches.push(match);
     }
@@ -67922,15 +67986,15 @@ async function getMatchingTargetLabelForPullRequest(labelsOnPullRequest, allTarg
   throw new InvalidTargetLabelError("Unable to determine target for the PR as it has multiple target labels.");
 }
 async function getTargetBranchesAndLabelForPullRequest(activeReleaseTrains, github, config, labelsOnPullRequest, githubTargetBranch) {
-  const targetLabels2 = await getTargetLabelsForActiveReleaseTrains(activeReleaseTrains, github, config);
-  const matchingLabel = await getMatchingTargetLabelForPullRequest(labelsOnPullRequest, targetLabels2);
+  const labelConfigs = await getTargetLabelConfigsForActiveReleaseTrains(activeReleaseTrains, github, config);
+  const matchingConfig = await getMatchingTargetLabelConfigForPullRequest(labelsOnPullRequest, labelConfigs);
   return {
-    branches: await getBranchesFromTargetLabel(matchingLabel, githubTargetBranch),
-    labelName: matchingLabel.name
+    branches: await getBranchesForTargetLabel(matchingConfig, githubTargetBranch),
+    label: matchingConfig.label
   };
 }
-async function getBranchesFromTargetLabel(label, githubTargetBranch) {
-  return typeof label.branches === "function" ? await label.branches(githubTargetBranch) : await label.branches;
+async function getBranchesForTargetLabel(labelConfig, githubTargetBranch) {
+  return typeof labelConfig.branches === "function" ? await labelConfig.branches(githubTargetBranch) : await labelConfig.branches;
 }
 
 // 
@@ -68182,9 +68246,6 @@ function parseInternal(fullText) {
 }
 
 // 
-var createTypedObject = () => (v) => v;
-
-// 
 var managedLabels = createTypedObject()({
   DETECTED_BREAKING_CHANGE: {
     description: "PR contains a commit with a breaking change",
@@ -68254,34 +68315,6 @@ var mergeLabels = createTypedObject()({
 });
 
 // 
-var targetLabels = createTypedObject()({
-  TARGET_FEATURE: {
-    description: "This PR is targeted for a feature branch (outside of main and semver branches)",
-    name: "target: feature"
-  },
-  TARGET_LTS: {
-    description: "This PR is targeting a version currently in long-term support",
-    name: "target: lts"
-  },
-  TARGET_MAJOR: {
-    description: "This PR is targeted for the next major release",
-    name: "target: major"
-  },
-  TARGET_MINOR: {
-    description: "This PR is targeted for the next minor release",
-    name: "target: minor"
-  },
-  TARGET_PATCH: {
-    description: "This PR is targeted for the next patch release",
-    name: "target: patch"
-  },
-  TARGET_RC: {
-    description: "This PR is targeted for the next release-candidate",
-    name: "target: rc"
-  }
-});
-
-// 
 var priorityLabels = createTypedObject()({
   P0: {
     name: "P0",
@@ -68342,7 +68375,7 @@ var allLabels = {
 // 
 var changesAllowForTargetLabelValidation = createPullRequestValidation({ name: "assertChangesAllowForTargetLabel", canBeForceIgnored: true }, () => Validation);
 var Validation = class extends PullRequestValidation {
-  assert(commits, labelName, config, releaseTrains, labelsOnPullRequest) {
+  assert(commits, targetLabel, config, releaseTrains, labelsOnPullRequest) {
     if (labelsOnPullRequest.includes(mergeLabels.MERGE_FIX_COMMIT_MESSAGE.name)) {
       Log.debug("Skipping commit message target label validation because the commit message fixup label is applied.");
       return;
@@ -68352,43 +68385,43 @@ var Validation = class extends PullRequestValidation {
     const hasBreakingChanges = commits.some((commit) => commit.breakingChanges.length !== 0);
     const hasDeprecations = commits.some((commit) => commit.deprecations.length !== 0);
     const hasFeatureCommits = commits.some((commit) => commit.type === "feat");
-    switch (labelName) {
-      case TargetLabelName.MAJOR:
+    switch (targetLabel) {
+      case targetLabels.TARGET_MAJOR:
         break;
-      case TargetLabelName.MINOR:
+      case targetLabels.TARGET_MINOR:
         if (hasBreakingChanges) {
-          throw this._createHasBreakingChangesError(labelName);
+          throw this._createHasBreakingChangesError(targetLabel);
         }
         break;
-      case TargetLabelName.RELEASE_CANDIDATE:
-      case TargetLabelName.LONG_TERM_SUPPORT:
-      case TargetLabelName.PATCH:
+      case targetLabels.TARGET_RC:
+      case targetLabels.TARGET_LTS:
+      case targetLabels.TARGET_PATCH:
         if (hasBreakingChanges) {
-          throw this._createHasBreakingChangesError(labelName);
+          throw this._createHasBreakingChangesError(targetLabel);
         }
         if (hasFeatureCommits) {
-          throw this._createHasFeatureCommitsError(labelName);
+          throw this._createHasFeatureCommitsError(targetLabel);
         }
         if (hasDeprecations && !releaseTrains.isFeatureFreeze()) {
-          throw this._createHasDeprecationsError(labelName);
+          throw this._createHasDeprecationsError(targetLabel);
         }
         break;
       default:
         Log.warn(red("WARNING: Unable to confirm all commits in the pull request are"));
-        Log.warn(red(`eligible to be merged into the target branches for: ${labelName}`));
+        Log.warn(red(`eligible to be merged into the target branches for: ${targetLabel.name}`));
         break;
     }
   }
-  _createHasBreakingChangesError(labelName) {
-    const message = `Cannot merge into branch for "${labelName}" as the pull request has breaking changes. Breaking changes can only be merged with the "target: major" label.`;
+  _createHasBreakingChangesError(label) {
+    const message = `Cannot merge into branch for "${label.name}" as the pull request has breaking changes. Breaking changes can only be merged with the "target: major" label.`;
     return this._createError(message);
   }
-  _createHasDeprecationsError(labelName) {
-    const message = `Cannot merge into branch for "${labelName}" as the pull request contains deprecations. Deprecations can only be merged with the "target: minor" or "target: major" label.`;
+  _createHasDeprecationsError(label) {
+    const message = `Cannot merge into branch for "${label.name}" as the pull request contains deprecations. Deprecations can only be merged with the "target: minor" or "target: major" label.`;
     return this._createError(message);
   }
-  _createHasFeatureCommitsError(labelName) {
-    const message = `Cannot merge into branch for "${labelName}" as the pull request has commits with the "feat" type. New features can only be merged with the "target: minor" or "target: major" label.`;
+  _createHasFeatureCommitsError(label) {
+    const message = `Cannot merge into branch for "${label.name}" as the pull request has commits with the "feat" type. New features can only be merged with the "target: minor" or "target: major" label.`;
     return this._createError(message);
   }
 };
@@ -68486,7 +68519,7 @@ async function assertValidPullRequest(pullRequest, validationConfig, ngDevConfig
     passingCiValidation.run(validationConfig, pullRequest)
   ];
   if (activeReleaseTrains !== null) {
-    validationResults.push(changesAllowForTargetLabelValidation.run(validationConfig, commitsInPr, target.labelName, ngDevConfig.pullRequest, activeReleaseTrains, labels));
+    validationResults.push(changesAllowForTargetLabelValidation.run(validationConfig, commitsInPr, target.label, ngDevConfig.pullRequest, activeReleaseTrains, labels));
   }
   return Promise.all(validationResults).then((results) => {
     return results.filter((result) => result !== null);
@@ -68584,7 +68617,7 @@ async function loadAndValidatePullRequest({ git, config }, prNumber, validationC
   let activeReleaseTrains = null;
   let target = null;
   if (config.pullRequest.__noTargetLabeling) {
-    target = { branches: [config.github.mainBranchName], labelName: TargetLabelName.MAJOR };
+    target = { branches: [config.github.mainBranchName], label: targetLabels.TARGET_MAJOR };
   } else {
     activeReleaseTrains = await ActiveReleaseTrains.fetch({
       name,

@@ -13,12 +13,12 @@ import {_npmPackageInfoCache, NpmPackageInfo} from '../../release/versioning/npm
 import {GithubConfig} from '../../utils/config.js';
 import {GithubClient} from '../../utils/git/github.js';
 import {
-  getBranchesFromTargetLabel,
-  getMatchingTargetLabelForPullRequest,
-  TargetLabel,
+  getBranchesForTargetLabel,
+  getMatchingTargetLabelConfigForPullRequest,
+  TargetLabelConfig,
 } from '../common/targeting/target-label.js';
 import {fakeGithubPaginationResponse} from '../../utils/testing/github-interception.js';
-import {getTargetLabelsForActiveReleaseTrains} from '../common/targeting/labels.js';
+import {getTargetLabelConfigsForActiveReleaseTrains} from '../common/targeting/labels.js';
 import {ActiveReleaseTrains} from '../../release/versioning/index.js';
 import {Prompt} from '../../utils/prompt.js';
 
@@ -112,7 +112,7 @@ describe('default target labels', () => {
       owner,
       api,
     });
-    const targetLabels = await getTargetLabelsForActiveReleaseTrains(releaseTrains, api, {
+    const labelConfigs = await getTargetLabelConfigsForActiveReleaseTrains(releaseTrains, api, {
       github: githubConfig,
       release: releaseConfig,
       pullRequest: {
@@ -120,13 +120,13 @@ describe('default target labels', () => {
       },
       __isNgDevConfigObject: true,
     });
-    let label: TargetLabel;
+    let label: TargetLabelConfig;
     try {
-      label = await getMatchingTargetLabelForPullRequest([name], targetLabels);
+      label = await getMatchingTargetLabelConfigForPullRequest([name], labelConfigs);
     } catch (error) {
       return null;
     }
-    return await getBranchesFromTargetLabel(label, githubTargetBranch);
+    return await getBranchesForTargetLabel(label, githubTargetBranch);
   }
 
   it('should detect "master" as branch for target: minor', async () => {

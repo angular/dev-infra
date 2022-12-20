@@ -9,7 +9,6 @@
 import {
   getTargetBranchesAndLabelForPullRequest,
   PullRequestTarget,
-  TargetLabelName,
 } from '../common/targeting/target-label.js';
 import {fetchPullRequestFromGithub} from '../common/fetch-pull-request.js';
 import {FatalMergeToolError} from './failures.js';
@@ -17,11 +16,12 @@ import {ActiveReleaseTrains} from '../../release/versioning/active-release-train
 import {PullRequestValidationConfig} from '../common/validation/validation-config.js';
 import {assertValidPullRequest} from '../common/validation/validate-pull-request.js';
 import {TEMP_PR_HEAD_BRANCH} from './strategies/strategy.js';
-import {mergeLabels} from '../common/labels.js';
+import {mergeLabels} from '../common/labels/merge.js';
 import {PullRequestValidationFailure} from '../common/validation/validation-failure.js';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {GithubConfig, NgDevConfig} from '../../utils/config.js';
 import {PullRequestConfig} from '../config/index.js';
+import {targetLabels} from '../common/labels/target.js';
 
 /** Interface that describes a pull request. */
 export interface PullRequest {
@@ -92,7 +92,7 @@ export async function loadAndValidatePullRequest(
   if (config.pullRequest.__noTargetLabeling) {
     // If there is no target labeling, we always target the main branch and treat the PR as
     // if it has been labeled with the `target: major` label (allowing for all types of changes).
-    target = {branches: [config.github.mainBranchName], labelName: TargetLabelName.MAJOR};
+    target = {branches: [config.github.mainBranchName], label: targetLabels.TARGET_MAJOR};
   } else {
     activeReleaseTrains = await ActiveReleaseTrains.fetch({
       name,

@@ -29,7 +29,7 @@ ts_library(
         "//ng-dev/misc",
         "//ng-dev/ngbot",
         "//ng-dev/pr",
-        "//ng-dev/pr/common:labels",
+        "//ng-dev/pr/common/labels",
         "//ng-dev/pr/config",
         "//ng-dev/pullapprove",
         "//ng-dev/release",

@@ -15,7 +15,7 @@ ts_library(
     deps = [
         "//github-actions:utils",
         "//ng-dev/pr/common",
-        "//ng-dev/pr/common:labels",
+        "//ng-dev/pr/common/labels",
         "//ng-dev/pr/config",
         "//ng-dev/pr/merge",
         "//ng-dev/utils",

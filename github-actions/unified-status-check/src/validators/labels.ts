@@ -1,4 +1,4 @@
-import {actionLabels, targetLabels} from '../../../../ng-dev/pr/common/labels.js';
+import {actionLabels, targetLabels} from '../../../../ng-dev/pr/common/labels/index.js';
 import {PullRequest} from '../pull-request.js';
 import {ValidationFunction} from '../validator.js';
 

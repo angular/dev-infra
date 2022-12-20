@@ -15,7 +15,7 @@ export * from './pr/config/index.js';
 export * from './release/config/index.js';
 
 // Expose all standardized labels to ease tooling relying on labels.
-export * from './pr/common/labels.js';
+export * from './pr/common/labels/index.js';
 
 // Exposes versioning utilities which are useful for building scripts with
 // respect to Angular's branching/versioning and release process.

@@ -52,7 +52,7 @@ export async function assertValidPullRequest(
       changesAllowForTargetLabelValidation.run(
         validationConfig,
         commitsInPr,
-        target.labelName,
+        target.label,
         ngDevConfig.pullRequest,
         activeReleaseTrains,
         labels,

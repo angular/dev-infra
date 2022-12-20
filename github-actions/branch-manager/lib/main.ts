@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {Octokit} from '@octokit/rest';
-import {actionLabels, mergeLabels, targetLabels} from '../../../ng-dev/pr/common/labels.js';
+import {actionLabels, mergeLabels, targetLabels} from '../../../ng-dev/pr/common/labels/index.js';
 import {revokeActiveInstallationToken, getAuthTokenFor, ANGULAR_ROBOT} from '../../utils.js';
 import {
   PullRequestLabeledEvent,

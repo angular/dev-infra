@@ -1,12 +1,34 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
 
 ts_library(
     name = "labels",
-    srcs = glob(["*.ts"]),
+    srcs = glob(
+        ["*.ts"],
+        exclude = ["*.spec.ts"],
+    ),
     visibility = [
-        "//ng-dev/pr/common:__subpackages__",
+        "//.github/local-actions/branch-manager:__subpackages__",
+        "//github-actions:__subpackages__",
+        "//ng-dev:__subpackages__",
     ],
     deps = [
         "//ng-dev/commit-message",
+    ],
+)
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob(["*.spec.ts"]),
+    deps = [
+        ":labels",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "test",
+    specs = [
+        ":test_lib",
     ],
 )
