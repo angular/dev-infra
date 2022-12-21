@@ -17,12 +17,20 @@ export abstract class NpmCommand {
    * Runs NPM publish within a specified package directory.
    * @throws With the process log output if the publish failed.
    */
-  static async publish(packagePath: string, distTag: NpmDistTag, registryUrl: string | undefined) {
-    const args = ['publish', '--access', 'public', '--tag', distTag];
-    // If a custom registry URL has been specified, add the `--registry` flag.
+  static async publish(
+    packagePath: string,
+    distTag: NpmDistTag | null,
+    registryUrl: string | undefined,
+  ) {
+    const args = ['publish', '--access', 'public'];
+
+    if (distTag !== null) {
+      args.push('--tag', distTag);
+    }
     if (registryUrl !== undefined) {
       args.push('--registry', registryUrl);
     }
+
     await ChildProcess.spawn('npm', args, {cwd: packagePath, mode: 'silent'});
   }
 
