@@ -8,7 +8,7 @@
 
 import semver from 'semver';
 
-import {green, Log, yellow} from '../../../utils/logging.js';
+import {green, Log} from '../../../utils/logging.js';
 import {workspaceRelativePackageJsonPath} from '../../../utils/constants.js';
 import {ActiveReleaseTrains} from '../../versioning/active-release-trains.js';
 import {ReleaseAction} from '../actions.js';

@@ -91,7 +91,7 @@ export class CutLongTermSupportPatchAction extends ReleaseAction {
     return {name: `v${branch.version.major} (from ${branch.name})`, value: branch};
   }
 
-  static override async isActive(active: ActiveReleaseTrains) {
+  static override async isActive(_active: ActiveReleaseTrains) {
     // LTS patch versions can be only cut if there are release trains in LTS phase.
     // This action is always selectable as we support publishing of old LTS branches,
     // and have prompt for selecting an LTS branch when the action performs.

@@ -7,7 +7,7 @@
  */
 
 import {ReleaseTrain} from '../../versioning/release-trains.js';
-import {CutReleaseCandidateForFeatureFreezeAction} from '../actions/cut-release-candidate-for-feature-freeze.js';
+import {CutNpmNextReleaseCandidateAction} from '../actions/cut-npm-next-release-candidate.js';
 import {changelogPattern, parse, setupReleaseActionForTesting} from './test-utils/test-utils.js';
 import {
   expectGithubApiRequestsForStaging,
@@ -17,10 +17,10 @@ import {readFileSync} from 'fs';
 import {testTmpDir, SandboxGitRepo} from '../../../utils/testing/index.js';
 import {ActiveReleaseTrains} from '../../versioning/index.js';
 
-describe('cut release candidate for feature-freeze action', () => {
+describe('cut npm next release candidate action', () => {
   it('should activate if a feature-freeze release-train is active', async () => {
     expect(
-      await CutReleaseCandidateForFeatureFreezeAction.isActive(
+      await CutNpmNextReleaseCandidateAction.isActive(
         new ActiveReleaseTrains({
           exceptionalMinor: null,
           releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.1')),
@@ -33,7 +33,7 @@ describe('cut release candidate for feature-freeze action', () => {
 
   it('should not activate if release-candidate release-train is active', async () => {
     expect(
-      await CutReleaseCandidateForFeatureFreezeAction.isActive(
+      await CutNpmNextReleaseCandidateAction.isActive(
         new ActiveReleaseTrains({
           exceptionalMinor: null,
           // No longer in feature-freeze but in release-candidate phase.
@@ -47,7 +47,7 @@ describe('cut release candidate for feature-freeze action', () => {
 
   it('should not activate if no FF/RC release-train is active', async () => {
     expect(
-      await CutReleaseCandidateForFeatureFreezeAction.isActive(
+      await CutNpmNextReleaseCandidateAction.isActive(
         new ActiveReleaseTrains({
           exceptionalMinor: null,
           releaseCandidate: null,
@@ -60,7 +60,7 @@ describe('cut release candidate for feature-freeze action', () => {
 
   it('should create a proper new version and select correct branch', async () => {
     const action = setupReleaseActionForTesting(
-      CutReleaseCandidateForFeatureFreezeAction,
+      CutNpmNextReleaseCandidateAction,
       new ActiveReleaseTrains({
         exceptionalMinor: null,
         releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.1')),
@@ -74,7 +74,7 @@ describe('cut release candidate for feature-freeze action', () => {
 
   it('should generate release notes capturing changes to the previous pre-release', async () => {
     const action = setupReleaseActionForTesting(
-      CutReleaseCandidateForFeatureFreezeAction,
+      CutNpmNextReleaseCandidateAction,
       new ActiveReleaseTrains({
         exceptionalMinor: null,
         releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.1')),

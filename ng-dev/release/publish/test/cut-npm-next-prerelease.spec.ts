@@ -10,7 +10,7 @@ import {readFileSync} from 'fs';
 import {join} from 'path';
 
 import {ReleaseTrain} from '../../versioning/release-trains.js';
-import {CutNextPrereleaseAction} from '../actions/cut-next-prerelease.js';
+import {CutNpmNextPrereleaseAction} from '../actions/cut-npm-next-prerelease.js';
 import {changelogPattern, parse, setupReleaseActionForTesting} from './test-utils/test-utils.js';
 import {
   expectGithubApiRequestsForStaging,
@@ -21,14 +21,19 @@ import {testTmpDir, SandboxGitRepo} from '../../../utils/testing/index.js';
 import {ActiveReleaseTrains} from '../../versioning/index.js';
 import {workspaceRelativePackageJsonPath} from '../../../utils/constants.js';
 
-describe('cut next pre-release action', () => {
+describe('cut npm next pre-release action', () => {
   it('should always be active regardless of release-trains', async () => {
-    expect(await CutNextPrereleaseAction.isActive()).toBe(true);
+    expect(
+      await CutNpmNextPrereleaseAction.isActive(
+        // Passing an empty object to ensure active trains are irrelevant.
+        {} as any,
+      ),
+    ).toBe(true);
   });
 
   it('should cut a pre-release for the next branch if there is no FF/RC branch', async () => {
     const action = setupReleaseActionForTesting(
-      CutNextPrereleaseAction,
+      CutNpmNextPrereleaseAction,
       new ActiveReleaseTrains({
         exceptionalMinor: null,
         releaseCandidate: null,
@@ -50,7 +55,7 @@ describe('cut next pre-release action', () => {
   describe('current next version has not been published', () => {
     it('should not bump the version', async () => {
       const action = setupReleaseActionForTesting(
-        CutNextPrereleaseAction,
+        CutNpmNextPrereleaseAction,
         new ActiveReleaseTrains({
           exceptionalMinor: null,
           releaseCandidate: null,
@@ -75,7 +80,7 @@ describe('cut next pre-release action', () => {
         'changes that have also landed in the current patch',
       async () => {
         const action = setupReleaseActionForTesting(
-          CutNextPrereleaseAction,
+          CutNpmNextPrereleaseAction,
           new ActiveReleaseTrains({
             exceptionalMinor: null,
             releaseCandidate: null,
@@ -121,7 +126,7 @@ describe('cut next pre-release action', () => {
   describe('with active feature-freeze', () => {
     it('should create a proper new version and select correct branch', async () => {
       const action = setupReleaseActionForTesting(
-        CutNextPrereleaseAction,
+        CutNpmNextPrereleaseAction,
         new ActiveReleaseTrains({
           exceptionalMinor: null,
           releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.4')),
@@ -135,7 +140,7 @@ describe('cut next pre-release action', () => {
 
     it('should generate release notes capturing changes to the previous pre-release', async () => {
       const action = setupReleaseActionForTesting(
-        CutNextPrereleaseAction,
+        CutNpmNextPrereleaseAction,
         new ActiveReleaseTrains({
           exceptionalMinor: null,
           releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-next.4')),
@@ -174,7 +179,7 @@ describe('cut next pre-release action', () => {
   describe('with active release-candidate', () => {
     it('should create a proper new version and select correct branch', async () => {
       const action = setupReleaseActionForTesting(
-        CutNextPrereleaseAction,
+        CutNpmNextPrereleaseAction,
         new ActiveReleaseTrains({
           exceptionalMinor: null,
           releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
@@ -188,7 +193,7 @@ describe('cut next pre-release action', () => {
 
     it('should generate release notes capturing changes to the previous pre-release', async () => {
       const action = setupReleaseActionForTesting(
-        CutNextPrereleaseAction,
+        CutNpmNextPrereleaseAction,
         new ActiveReleaseTrains({
           exceptionalMinor: null,
           releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),

@@ -12,7 +12,7 @@ import {getBranchPushMatcher, testTmpDir} from '../../../utils/testing/index.js'
 import {ActiveReleaseTrains} from '../../versioning/index.js';
 import {NpmCommand} from '../../versioning/npm-command.js';
 import {ReleaseActionConstructor} from '../actions.js';
-import {BranchOffNextBranchBaseAction} from '../actions/branch-off-next-branch.js';
+import {BranchOffNextBranchBaseAction} from '../actions/shared/branch-off-next-branch.js';
 import {ExternalCommands} from '../external-commands.js';
 import {testReleasePackages} from './test-utils/action-mocks.js';
 import {TestReleaseAction} from './test-utils/test-action.js';
