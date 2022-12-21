@@ -8,7 +8,7 @@
 
 import {ActiveReleaseTrains} from '../../versioning/index.js';
 
-import {BranchOffNextBranchBaseAction} from './branch-off-next-branch.js';
+import {BranchOffNextBranchBaseAction} from './shared/branch-off-next-branch.js';
 
 /**
  * Release action that moves the next release-train into the feature-freeze phase. This means

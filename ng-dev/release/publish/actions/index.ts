@@ -10,8 +10,8 @@ import {ReleaseActionConstructor} from '../actions.js';
 
 import {CutLongTermSupportPatchAction} from './cut-lts-patch.js';
 import {CutNewPatchAction} from './cut-new-patch.js';
-import {CutNextPrereleaseAction} from './cut-next-prerelease.js';
-import {CutReleaseCandidateForFeatureFreezeAction} from './cut-release-candidate-for-feature-freeze.js';
+import {CutNpmNextPrereleaseAction} from './cut-npm-next-prerelease.js';
+import {CutNpmNextReleaseCandidateAction} from './cut-npm-next-release-candidate.js';
 import {CutStableAction} from './cut-stable.js';
 import {MoveNextIntoFeatureFreezeAction} from './move-next-into-feature-freeze.js';
 import {MoveNextIntoReleaseCandidateAction} from './move-next-into-release-candidate.js';
@@ -24,9 +24,9 @@ import {TagRecentMajorAsLatest} from './tag-recent-major-as-latest.js';
 export const actions: ReleaseActionConstructor[] = [
   TagRecentMajorAsLatest,
   CutStableAction,
-  CutReleaseCandidateForFeatureFreezeAction,
+  CutNpmNextReleaseCandidateAction,
   CutNewPatchAction,
-  CutNextPrereleaseAction,
+  CutNpmNextPrereleaseAction,
   MoveNextIntoFeatureFreezeAction,
   MoveNextIntoReleaseCandidateAction,
   CutLongTermSupportPatchAction,

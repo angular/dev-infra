@@ -69,9 +69,9 @@ describe('common release action logic', () => {
       }
 
       expect(descriptions).toEqual([
-        `Cut a first release-candidate for the "10.1.x" feature-freeze branch (v10.1.0-rc.0).`,
+        `Cut a first release-candidate for the "10.1.x" branch (v10.1.0-rc.0).`,
         `Cut a new patch release for the "10.0.x" branch (v10.0.2).`,
-        `Cut a new next pre-release for the "10.1.x" branch (v10.1.0-next.4).`,
+        `Cut a new pre-release for the "10.1.x" branch (v10.1.0-next.4).`,
         `Cut a new release for an active LTS branch (0 active).`,
       ]);
     });
@@ -101,7 +101,7 @@ describe('common release action logic', () => {
       expect(descriptions).toEqual([
         'Cut a stable release for the release-candidate branch — published as `@next` (v15.0.0).',
         'Cut a new patch release for the "14.3.x" branch (v14.3.2).',
-        `Cut a new next pre-release for the "15.0.x" branch (v15.0.0-rc.2).`,
+        `Cut a new pre-release for the "15.0.x" branch (v15.0.0-rc.2).`,
         `Cut a new release for an active LTS branch (0 active).`,
       ]);
     });

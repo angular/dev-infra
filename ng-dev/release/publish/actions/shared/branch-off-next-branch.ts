@@ -8,34 +8,45 @@
 
 import semver from 'semver';
 
-import {green, Log, yellow} from '../../../utils/logging.js';
-import {workspaceRelativePackageJsonPath} from '../../../utils/constants.js';
-import {semverInc} from '../../../utils/semver.js';
-import {ReleaseNotes, workspaceRelativeChangelogPath} from '../../notes/release-notes.js';
-import {
-  computeNewPrereleaseVersionForNext,
-  getReleaseNotesCompareVersionForNext,
-} from '../../versioning/next-prerelease-version.js';
-import {PullRequest, ReleaseAction} from '../actions.js';
+import {green, Log} from '../../../../utils/logging.js';
+import {workspaceRelativePackageJsonPath} from '../../../../utils/constants.js';
+import {ReleaseNotes, workspaceRelativeChangelogPath} from '../../../notes/release-notes.js';
+import {PullRequest} from '../../actions.js';
 import {
   getCommitMessageForExceptionalNextVersionBump,
   getReleaseNoteCherryPickCommitMessage,
-} from '../commit-message.js';
+} from '../../commit-message.js';
+import {CutNpmNextPrereleaseAction} from '../cut-npm-next-prerelease.js';
+import {CutNpmNextReleaseCandidateAction} from '../cut-npm-next-release-candidate.js';
+import {ActiveReleaseTrains} from '../../../versioning/active-release-trains.js';
 
 /**
- * Base action that can be used to move the next release-train into the feature-freeze or
- * release-candidate phase. This means that a new version branch is created from the next
- * branch, and a new pre-release (either RC or another `next`) is cut indicating the new phase.
+ * Base action that can be used to move the next release-train into the dedicated FF/RC
+ * release-train while also cutting a release to move the train into the `feature-freeze`
+ * or `release-candidate` phase.
+ *
+ * This means that a new version branch is created based on the next branch, and a new
+ * pre-release (either RC or another `next`) is cut- indicating the new phase.
  */
-export abstract class BranchOffNextBranchBaseAction extends ReleaseAction {
-  /**
-   * Phase which the release-train currently in the `next` phase will move into.
-   *
-   * Note that we only allow for a next version to branch into feature-freeze or
-   * directly into the release-candidate phase. A stable version cannot be released
-   * without release-candidate.
-   */
+export abstract class BranchOffNextBranchBaseAction extends CutNpmNextPrereleaseAction {
+  /** Phase which the release-train currently in the `next` phase will move into. */
   abstract newPhaseName: 'feature-freeze' | 'release-candidate';
+
+  // Instances of the action for cutting a NPM next pre-releases. We will re-use
+  // these for determining the "new versions" and "release notes comparison version".
+  // This helps avoiding duplication, especially since there are is some special logic.
+  private _nextPrerelease = new CutNpmNextPrereleaseAction(
+    new ActiveReleaseTrains({...this.active, releaseCandidate: null}),
+    this.git,
+    this.config,
+    this.projectDir,
+  );
+  private _rcPrerelease = new CutNpmNextReleaseCandidateAction(
+    new ActiveReleaseTrains({...this.active, releaseCandidate: this.active.next}),
+    this.git,
+    this.config,
+    this.projectDir,
+  );
 
   override async getDescription() {
     const {branchName} = this.active.next;
@@ -45,10 +56,7 @@ export abstract class BranchOffNextBranchBaseAction extends ReleaseAction {
 
   override async perform() {
     const nextBranchName = this.active.next.branchName;
-    const compareVersionForReleaseNotes = await getReleaseNotesCompareVersionForNext(
-      this.active,
-      this.config,
-    );
+    const compareVersionForReleaseNotes = await this._computeReleaseNoteCompareVersion();
     const newVersion = await this._computeNewVersion();
     const newBranch = `${newVersion.major}.${newVersion.minor}.x`;
     const beforeStagingSha = await this.getLatestCommitOfBranch(nextBranchName);
@@ -83,12 +91,21 @@ export abstract class BranchOffNextBranchBaseAction extends ReleaseAction {
   }
 
   /** Computes the new version for the release-train being branched-off. */
-  private async _computeNewVersion() {
+  private async _computeNewVersion(): Promise<semver.SemVer> {
     if (this.newPhaseName === 'feature-freeze') {
-      return computeNewPrereleaseVersionForNext(this.active, this.config);
+      return this._nextPrerelease.getNewVersion();
     } else {
-      return semverInc(this.active.next.version, 'prerelease', 'rc');
+      return this._rcPrerelease.getNewVersion();
     }
+  }
+
+  /** Gets the release notes compare version for the branching-off release. */
+  private async _computeReleaseNoteCompareVersion(): Promise<semver.SemVer> {
+    // Regardless of the new phase, the release notes compare version should
+    // always be the one as if a pre-release is cut on the `next` branch.
+    // We cannot rely on the `CutNpmNextReleaseCandidateAction` here because it
+    // assumes a published release for the train. This is not guaranteed.
+    return await this._nextPrerelease.releaseNotesCompareVersion;
   }
 
   /** Creates a new version branch from the next branch. */
