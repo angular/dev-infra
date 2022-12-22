@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {blue, bold, Log} from '../../utils/logging.js';
+import {blue, bold, underline, Log} from '../../utils/logging.js';
 import {ReleaseConfig} from '../config/index.js';
 
 import {ActiveReleaseTrains} from './active-release-trains.js';
@@ -22,13 +22,32 @@ export async function printActiveReleaseTrains(
   active: ActiveReleaseTrains,
   config: ReleaseConfig,
 ): Promise<void> {
-  const {releaseCandidate, next, latest} = active;
+  const {releaseCandidate, next, latest, exceptionalMinor} = active;
   const isNextPublishedToNpm = await isVersionPublishedToNpm(next.version, config);
   const nextTrainType = next.isMajor ? 'major' : 'minor';
   const ltsBranches = await fetchLongTermSupportBranchesFromNpm(config);
 
   Log.info();
   Log.info(blue('Current version branches in the project:'));
+
+  if (exceptionalMinor !== null) {
+    const version = exceptionalMinor.version;
+    const exceptionalMinorPublished = await isVersionPublishedToNpm(version, config);
+    const trainPhase = version.prerelease[0] === 'next' ? 'next' : 'release-candidate';
+    const minorLabel = underline('exceptional minor');
+
+    Log.info(
+      ` • ${bold(exceptionalMinor.branchName)} contains changes for an ${minorLabel} ` +
+        `that is currently in ${bold(trainPhase)} phase.`,
+    );
+    // An exceptional minor may not be published yet. e.g. when we branch off there
+    // will not be a release immediately.
+    if (exceptionalMinorPublished) {
+      Log.info(`   Most recent pre-release for this branch is "${bold(`v${version}`)}".`);
+    } else {
+      Log.info(`   Version is set to "${bold(`v${version}`)}", but has not been published yet.`);
+    }
+  }
 
   // Print information for release trains in the feature-freeze/release-candidate phase.
   if (releaseCandidate !== null) {
