@@ -21,12 +21,9 @@ describe('package output checks', () => {
   });
 
   it('should not error if correct versions are set within `package.json` files', async () => {
-    const action = setupReleaseActionForTesting(
-      DelegateTestAction,
-      baseReleaseTrains,
-      /* isNextPublishedToNpm */ true,
-      {stubBuiltPackageOutputChecks: false},
-    );
+    const action = setupReleaseActionForTesting(DelegateTestAction, baseReleaseTrains, {
+      stubBuiltPackageOutputChecks: false,
+    });
     const {version, branchName} = baseReleaseTrains.latest;
     const versionName = version.format();
 
@@ -47,12 +44,9 @@ describe('package output checks', () => {
 
   describe('non-experimental packages', () => {
     it('should error if wrong versions are set within `package.json` files', async () => {
-      const action = setupReleaseActionForTesting(
-        DelegateTestAction,
-        baseReleaseTrains,
-        /* isNextPublishedToNpm */ true,
-        {stubBuiltPackageOutputChecks: false},
-      );
+      const action = setupReleaseActionForTesting(DelegateTestAction, baseReleaseTrains, {
+        stubBuiltPackageOutputChecks: false,
+      });
       const {version, branchName} = baseReleaseTrains.latest;
       const versionName = version.format();
 
@@ -78,12 +72,9 @@ describe('package output checks', () => {
 
   describe('experimental packages', () => {
     it('should error if wrong versions are set within `package.json` files', async () => {
-      const action = setupReleaseActionForTesting(
-        DelegateTestAction,
-        baseReleaseTrains,
-        /* isNextPublishedToNpm */ true,
-        {stubBuiltPackageOutputChecks: false},
-      );
+      const action = setupReleaseActionForTesting(DelegateTestAction, baseReleaseTrains, {
+        stubBuiltPackageOutputChecks: false,
+      });
       const {version, branchName} = baseReleaseTrains.latest;
       const versionName = version.format();
 

@@ -137,7 +137,6 @@ describe('cut stable action', () => {
           next: new ReleaseTrain('master', parse('10.2.0-next.0')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
         }),
-        true,
         {useSandboxGitClient: true},
       );
 
@@ -204,7 +203,6 @@ describe('cut stable action', () => {
           next: new ReleaseTrain('master', parse('10.2.0-next.0')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
         }),
-        true,
         {useSandboxGitClient: true},
       );
 

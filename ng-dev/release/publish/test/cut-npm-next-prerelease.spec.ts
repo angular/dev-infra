@@ -62,7 +62,7 @@ describe('cut npm next pre-release action', () => {
           next: new ReleaseTrain('master', parse('10.2.0-next.0')),
           latest: new ReleaseTrain('10.1.x', parse('10.1.0')),
         }),
-        /* isNextPublishedToNpm */ false,
+        {isNextPublishedToNpm: false},
       );
 
       await expectStagingAndPublishWithoutCherryPick(action, 'master', '10.2.0-next.0', 'next');
@@ -87,8 +87,7 @@ describe('cut npm next pre-release action', () => {
             next: new ReleaseTrain('master', parse('10.2.0-next.0')),
             latest: new ReleaseTrain('10.1.x', parse('10.1.0')),
           }),
-          /* isNextPublishedToNpm */ false,
-          {useSandboxGitClient: true},
+          {useSandboxGitClient: true, isNextPublishedToNpm: false},
         );
 
         SandboxGitRepo.withInitialCommit(action.githubConfig)
@@ -147,7 +146,6 @@ describe('cut npm next pre-release action', () => {
           next: new ReleaseTrain('master', parse('10.2.0-next.0')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
         }),
-        true,
         {useSandboxGitClient: true},
       );
 
@@ -200,7 +198,6 @@ describe('cut npm next pre-release action', () => {
           next: new ReleaseTrain('master', parse('10.2.0-next.0')),
           latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
         }),
-        true,
         {useSandboxGitClient: true},
       );
 
