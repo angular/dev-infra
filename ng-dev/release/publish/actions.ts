@@ -604,15 +604,14 @@ export abstract class ReleaseAction {
    * @param releaseNotes The release notes for the version being published.
    * @param versionBumpCommitSha Commit that bumped the version. The release tag
    *   will point to this commit.
+   * @param isPrerelease Whether the new version is published as a pre-release.
    */
   private async _createGithubReleaseForVersion(
     releaseNotes: ReleaseNotes,
     versionBumpCommitSha: string,
+    isPrerelease: boolean,
   ) {
-    const newVersion = releaseNotes.version;
-    const isPrerelease = newVersion.prerelease.length !== 0;
     const tagName = getReleaseTagForVersion(releaseNotes.version);
-
     await this.git.github.git.createRef({
       ...this.git.remoteParams,
       ref: `refs/tags/${tagName}`,
@@ -666,7 +665,7 @@ export abstract class ReleaseAction {
     releaseNotes: ReleaseNotes,
     beforeStagingSha: string,
     publishBranch: string,
-    npmDistTag: NpmDistTag | null,
+    npmDistTag: NpmDistTag,
   ) {
     const versionBumpCommitSha = await this.getLatestCommitOfBranch(publishBranch);
 
@@ -692,7 +691,11 @@ export abstract class ReleaseAction {
     await assertIntegrityOfBuiltPackages(builtPackagesWithInfo);
 
     // Create a Github release for the new version.
-    await this._createGithubReleaseForVersion(releaseNotes, versionBumpCommitSha);
+    await this._createGithubReleaseForVersion(
+      releaseNotes,
+      versionBumpCommitSha,
+      npmDistTag === 'next',
+    );
 
     // Walk through all built packages and publish them to NPM.
     for (const pkg of builtPackagesWithInfo) {
@@ -703,7 +706,7 @@ export abstract class ReleaseAction {
   }
 
   /** Publishes the given built package to NPM with the specified NPM dist tag. */
-  private async _publishBuiltPackageToNpm(pkg: BuiltPackage, npmDistTag: NpmDistTag | null) {
+  private async _publishBuiltPackageToNpm(pkg: BuiltPackage, npmDistTag: NpmDistTag) {
     Log.debug(`Starting publish of "${pkg.name}".`);
     const spinner = new Spinner(`Publishing "${pkg.name}"`);
 
