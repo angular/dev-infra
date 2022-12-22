@@ -11,15 +11,21 @@ import {ReleaseTrain} from '../../versioning/release-trains.js';
 import {CutStableAction} from '../actions/cut-stable.js';
 import {ExternalCommands} from '../external-commands.js';
 
-import {readFileSync} from 'fs';
+import path from 'path';
+import fs from 'fs';
 import {changelogPattern, parse, setupReleaseActionForTesting} from './test-utils/test-utils.js';
 import {
   expectGithubApiRequestsForStaging,
   expectStagingAndPublishWithCherryPick,
 } from './test-utils/staging-test.js';
 import {testTmpDir, SandboxGitRepo} from '../../../utils/testing/index.js';
-import {ActiveReleaseTrains} from '../../versioning/index.js';
+import {
+  ActiveReleaseTrains,
+  exceptionalMinorPackageIndicator,
+  PackageJson,
+} from '../../versioning/index.js';
 import {ReleaseNotes} from '../../notes/release-notes.js';
+import {workspaceRelativePackageJsonPath} from '../../../utils/constants.js';
 
 describe('cut stable action', () => {
   it('should not activate if a feature-freeze release-train is active', async () => {
@@ -34,6 +40,23 @@ describe('cut stable action', () => {
       ),
     ).toBe(false);
   });
+
+  it(
+    'should activate if a feature-freeze release-train is active ' +
+      'but there is an exceptional minor in RC-phase',
+    async () => {
+      expect(
+        await CutStableAction.isActive(
+          new ActiveReleaseTrains({
+            latest: new ReleaseTrain('14.4.x', parse('14.4.3')),
+            exceptionalMinor: new ReleaseTrain('14.5.x', parse('14.5.0-rc.10')),
+            releaseCandidate: new ReleaseTrain('15.0.x', parse('15.0.0-next.2')),
+            next: new ReleaseTrain('master', parse('15.1.0-next.0')),
+          }),
+        ),
+      ).toBe(true);
+    },
+  );
 
   it('should activate if release-candidate release-train is active', async () => {
     expect(
@@ -60,6 +83,19 @@ describe('cut stable action', () => {
         }),
       ),
     ).toBe(false);
+  });
+
+  it('should activate if there is no FF/RC train but there is an exceptional minor in RC-phase', async () => {
+    expect(
+      await CutStableAction.isActive(
+        new ActiveReleaseTrains({
+          latest: new ReleaseTrain('14.4.x', parse('14.4.3')),
+          exceptionalMinor: new ReleaseTrain('14.5.x', parse('14.5.0-rc.10')),
+          releaseCandidate: null,
+          next: new ReleaseTrain('master', parse('15.0.0-next.0')),
+        }),
+      ),
+    ).toBe(true);
   });
 
   it('should create a proper new version and select correct branch', async () => {
@@ -170,7 +206,7 @@ describe('cut stable action', () => {
       await expectGithubApiRequestsForStaging(action, '10.1.x', '10.1.0', true);
       await action.instance.perform();
 
-      const changelog = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
+      const changelog = fs.readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
 
       expect(changelog).toMatch(changelogPattern`
       # 10.1.0 <..>
@@ -242,7 +278,7 @@ describe('cut stable action', () => {
       }
 
       // Assert the existence of the expected versions in the changelog.
-      const changelogBeforeAction = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
+      const changelogBeforeAction = fs.readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
       expect(changelogBeforeAction).toContain('<a name="10.0.3"></a>');
       expect(changelogBeforeAction).toContain('<a name="10.1.0-next.0"></a>');
       expect(changelogBeforeAction).toContain('<a name="10.1.0-next.1"></a>');
@@ -254,7 +290,7 @@ describe('cut stable action', () => {
 
       // Assert the removal of changelog entries for the prerelease versions expected to be removed
       // and now has the new stable entry.
-      const changelogAfterAction = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
+      const changelogAfterAction = fs.readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
       expect(changelogAfterAction).not.toContain('<a name="10.0.3"></a>');
       expect(changelogAfterAction).not.toContain('<a name="10.1.0-next.0"></a>');
       expect(changelogAfterAction).not.toContain('<a name="10.1.0-next.1"></a>');
@@ -262,4 +298,121 @@ describe('cut stable action', () => {
       expect(changelogAfterAction).toContain('<a name="10.1.0"></a>');
     },
   );
+
+  describe('exceptional minor is in-progress', () => {
+    it('should create a proper new version and select correct branch', async () => {
+      const action = setupReleaseActionForTesting(
+        CutStableAction,
+        new ActiveReleaseTrains({
+          latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
+          exceptionalMinor: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
+          releaseCandidate: null,
+          next: new ReleaseTrain('master', parse('11.0.0-next.0')),
+        }),
+      );
+
+      await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0', 'latest');
+    });
+
+    it('should update the `package.json` to remove the exceptional minor indicator', async () => {
+      const action = setupReleaseActionForTesting(
+        CutStableAction,
+        new ActiveReleaseTrains({
+          latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
+          exceptionalMinor: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
+          releaseCandidate: null,
+          next: new ReleaseTrain('master', parse('11.0.0-next.0')),
+        }),
+      );
+
+      const pkgJsonPath = path.join(action.projectDir, workspaceRelativePackageJsonPath);
+
+      // The test action will just operate in the project dir and think this is
+      // the `package.json` for the exceptional minor branch. There is no real Git involved.
+      await fs.promises.writeFile(
+        pkgJsonPath,
+        JSON.stringify({
+          version: 'irrelevant',
+          [exceptionalMinorPackageIndicator]: true,
+        }),
+      );
+
+      await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0', 'latest');
+
+      const pgkJsonRaw = await fs.promises.readFile(pkgJsonPath, 'utf8');
+      const pkgJson = JSON.parse(pgkJsonRaw) as PackageJson;
+
+      expect(pkgJson[exceptionalMinorPackageIndicator]).toBe(undefined);
+    });
+
+    it(
+      'should generate release notes capturing all associated RC, next releases while ' +
+        'deduping commits that have been cherry-picked from patch and are already released',
+      async () => {
+        const action = setupReleaseActionForTesting(
+          CutStableAction,
+          new ActiveReleaseTrains({
+            latest: new ReleaseTrain('10.0.x', parse('10.0.4')),
+            exceptionalMinor: new ReleaseTrain('10.1.x', parse('10.1.0-rc.4')),
+            releaseCandidate: null,
+            next: new ReleaseTrain('master', parse('11.0.0-next.0')),
+          }),
+          {useSandboxGitClient: true},
+        );
+
+        SandboxGitRepo.withInitialCommit(action.githubConfig)
+          .commit('fix(pkg1): landed in all release trains *1')
+          .branchOff('10.0.x')
+          .commit('fix(pkg1): released in patch *1')
+          .createTagForHead('10.0.3')
+          .branchOff('10.1.x')
+          .switchToBranch('10.0.x')
+          // These commits landed after we already branched off.
+          .commit('fix(pkg1): released in patch, cherry-picked *1', 1)
+          .commit('fix(pkg1): released in patch, cherry-picked *2', 2)
+          .createTagForHead('10.0.4')
+          .commit('fix(pkg1): landed in patch, not released but cherry-picked *1', 3)
+          .switchToBranch('10.1.x')
+          .cherryPick(1)
+          .cherryPick(2)
+          // All commits below are new to this current exceptional minor train, and are expected
+          // to be captured in the release notes. The cherry-picked commits from above have
+          // already been released as part of `10.0.3` and should be omitted.
+          .cherryPick(3)
+          .commit('fix(pkg1): released first -next pre-release *1')
+          .commit('fix(pkg1): released first -next pre-release *2')
+          .createTagForHead('10.1.0-next.0')
+          .commit('fix(pkg1): released second -next pre-release *1')
+          .commit('fix(pkg1): released second -next pre-release *2')
+          .createTagForHead('10.1.0-next.1')
+          .commit('fix(pkg1): released -rc pre-release *1')
+          .commit('fix(pkg1): released -rc pre-release *2')
+          .createTagForHead('10.1.0-rc.0')
+          .commit('fix(pkg1): not yet released *1')
+          .commit('fix(pkg1): not yet released *2');
+
+        await expectGithubApiRequestsForStaging(action, '10.1.x', '10.1.0', true);
+        await action.instance.perform();
+
+        const changelog = fs.readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
+
+        expect(changelog).toMatch(changelogPattern`
+        # 10.1.0 <..>
+        ### pkg1
+        | Commit | Type | Description |
+        | -- | -- | -- |
+        | <..> | fix | landed in patch, not released but cherry-picked *1 |
+        | <..> | fix | not yet released *1 |
+        | <..> | fix | not yet released *2 |
+        | <..> | fix | released -rc pre-release *1 |
+        | <..> | fix | released -rc pre-release *2 |
+        | <..> | fix | released first -next pre-release *1 |
+        | <..> | fix | released first -next pre-release *2 |
+        | <..> | fix | released second -next pre-release *1 |
+        | <..> | fix | released second -next pre-release *2 |
+        ## Special Thanks
+      `);
+      },
+    );
+  });
 });

@@ -23,7 +23,7 @@ import {Prompt} from '../../utils/prompt.js';
 import {Spinner} from '../../utils/spinner.js';
 import {BuiltPackage, BuiltPackageWithInfo, ReleaseConfig} from '../config/index.js';
 import {ReleaseNotes, workspaceRelativeChangelogPath} from '../notes/release-notes.js';
-import {NpmDistTag} from '../versioning/index.js';
+import {NpmDistTag, PackageJson} from '../versioning/index.js';
 import {ActiveReleaseTrains} from '../versioning/active-release-trains.js';
 import {createExperimentalSemver} from '../versioning/experimental-versions.js';
 import {NpmCommand} from '../versioning/npm-command.js';
@@ -57,6 +57,16 @@ export interface PullRequest {
   fork: GithubRepo;
   /** Branch name in the fork that defines this pull request. */
   forkBranch: string;
+}
+
+/** Options that can be used to control the staging of a new version. */
+export interface StagingOptions {
+  /**
+   * As part of staging, the `package.json` can be updated before the
+   * new version is set.
+   * @see {ReleaseAction.updateProjectVersion}
+   */
+  updatePkgJsonFn?: (pkgJson: PackageJson) => void;
 }
 
 /** Constructor type for instantiating a release action */
@@ -94,13 +104,25 @@ export abstract class ReleaseAction {
     protected projectDir: string,
   ) {}
 
-  /** Updates the version in the project top-level `package.json` file. */
-  protected async updateProjectVersion(newVersion: semver.SemVer) {
+  /**
+   * Updates the version in the project top-level `package.json` file.
+   *
+   * @param newVersion New SemVer version to be set in the file.
+   * @param additionalUpdateFn Optional update function that runs before
+   *   the version update. Can be used to update other fields.
+   */
+  protected async updateProjectVersion(
+    newVersion: semver.SemVer,
+    additionalUpdateFn?: (pkgJson: PackageJson) => void,
+  ) {
     const pkgJsonPath = join(this.projectDir, workspaceRelativePackageJsonPath);
     const pkgJson = JSON.parse(await fs.readFile(pkgJsonPath, 'utf8')) as {
       version: string;
       [key: string]: any;
     };
+    if (additionalUpdateFn !== undefined) {
+      additionalUpdateFn(pkgJson);
+    }
     pkgJson.version = newVersion.format();
     // Write the `package.json` file. Note that we add a trailing new line
     // to avoid unnecessary diff. IDEs usually add a trailing new line.
@@ -417,12 +439,15 @@ export abstract class ReleaseAction {
    * @param compareVersionForReleaseNotes Version used for comparing with the current
    *   `HEAD` in order build the release notes.
    * @param pullRequestTargetBranch Branch the pull request should target.
+   * @param opts Non-mandatory options for controlling the staging, e.g.
+   *   allowing for additional `package.json` modifications.
    * @returns an object capturing actions performed as part of staging.
    */
   protected async stageVersionForBranchAndCreatePullRequest(
     newVersion: semver.SemVer,
     compareVersionForReleaseNotes: semver.SemVer,
     pullRequestTargetBranch: string,
+    opts?: StagingOptions,
   ): Promise<{
     releaseNotes: ReleaseNotes;
     pullRequest: PullRequest;
@@ -448,7 +473,7 @@ export abstract class ReleaseAction {
       'HEAD',
     );
 
-    await this.updateProjectVersion(newVersion);
+    await this.updateProjectVersion(newVersion, opts?.updatePkgJsonFn);
     await this.prependReleaseNotesToChangelog(releaseNotes);
     await this.waitForEditsAndCreateReleaseCommit(newVersion);
 
@@ -486,12 +511,15 @@ export abstract class ReleaseAction {
    * @param compareVersionForReleaseNotes Version used for comparing with `HEAD` of
    *   the staging branch in order build the release notes.
    * @param stagingBranch Branch within the new version should be staged.
+   * @param stagingOptions Non-mandatory options for controlling the staging of
+   *   the new version. e.g. allowing for additional `package.json` modifications.
    * @returns an object capturing actions performed as part of staging.
    */
   protected async checkoutBranchAndStageVersion(
     newVersion: semver.SemVer,
     compareVersionForReleaseNotes: semver.SemVer,
     stagingBranch: string,
+    stagingOpts?: StagingOptions,
   ): Promise<{
     releaseNotes: ReleaseNotes;
     pullRequest: PullRequest;
@@ -510,6 +538,7 @@ export abstract class ReleaseAction {
       newVersion,
       compareVersionForReleaseNotes,
       stagingBranch,
+      stagingOpts,
     );
 
     return {

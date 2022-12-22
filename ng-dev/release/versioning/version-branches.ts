@@ -10,6 +10,12 @@ import semver from 'semver';
 import {GithubClient, GithubRepo} from '../../utils/git/github.js';
 import {GithubConfig} from '../../utils/config.js';
 
+/** Regular expression that matches version-branches. */
+const versionBranchNameRegex = /^(\d+)\.(\d+)\.x$/;
+
+/** Field in `package.json` that is used to indicate an in-progress exceptional minor. */
+export const exceptionalMinorPackageIndicator = '__ngDevExceptionalMinor__' as const;
+
 /** Object describing a repository that can be released, together with an API client. */
 export interface ReleaseRepoWithApi extends GithubRepo {
   /** API client that can access the repository. */
@@ -36,11 +42,12 @@ export interface VersionInfo {
   isExceptionalMinor: boolean;
 }
 
-/** Regular expression that matches version-branches. */
-const versionBranchNameRegex = /^(\d+)\.(\d+)\.x$/;
-
-/** Field in `package.json` that is used to indicate an in-progress exceptional minor. */
-export const exceptionalMinorPackageIndicator = '__ngDevExceptionalMinor__';
+/** Type describing the parsed contents of a `package.json`. */
+export type PackageJson = {
+  version: string;
+  [exceptionalMinorPackageIndicator]?: boolean;
+  [otherUnknownFields: string]: unknown;
+};
 
 /**
  * Gets the name of the next branch from the Github configuration.
@@ -69,11 +76,7 @@ export async function getVersionInfoForBranch(
   if (!content) {
     throw Error(`Unable to read "package.json" file from repository.`);
   }
-  const pkgJson = JSON.parse(Buffer.from(content, 'base64').toString()) as {
-    version: string;
-    [exceptionalMinorPackageIndicator]?: boolean;
-    [key: string]: any;
-  };
+  const pkgJson = JSON.parse(Buffer.from(content, 'base64').toString()) as PackageJson;
   const parsedVersion = semver.parse(pkgJson.version);
   if (parsedVersion === null) {
     throw Error(`Invalid version detected in following branch: ${branchName}.`);

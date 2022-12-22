@@ -10,58 +10,72 @@ import semver from 'semver';
 
 import {ActiveReleaseTrains} from '../../versioning/active-release-trains.js';
 import {getLtsNpmDistTagOfMajor} from '../../versioning/long-term-support.js';
-import {ReleaseAction} from '../actions.js';
+import {NpmDistTag} from '../../versioning/npm-registry.js';
+import {ReleaseTrain} from '../../versioning/release-trains.js';
+import {exceptionalMinorPackageIndicator} from '../../versioning/version-branches.js';
+import {FatalReleaseActionError} from '../actions-error.js';
+import {ReleaseAction, StagingOptions} from '../actions.js';
 import {ExternalCommands} from '../external-commands.js';
 
 /**
- * Release action that cuts a stable version for the current release-train in the release
- * candidate phase. The pre-release release-candidate version label is removed.
+ * Release action that cuts a stable version for the current release-train
+ * in the "release-candidate" phase.
+ *
+ * There are only two possible release-trains that can ever be in the RC phase.
+ * This is either an exceptional-minor or the dedicated FF/RC release-train.
  */
 export class CutStableAction extends ReleaseAction {
-  private _newVersion = this._computeNewVersion();
-  private _isNewMajor = this.active.releaseCandidate!.isMajor;
+  private _train = (this.active.exceptionalMinor ?? this.active.releaseCandidate)!;
+  private _branch = this._train.branchName;
+  private _newVersion = this._computeNewVersion(this._train);
+  private _isNewMajor = this._train.isMajor;
 
   override async getDescription() {
     if (this._isNewMajor) {
-      return `Cut a stable release for the release-candidate branch — published as \`@next\` (v${this._newVersion}).`;
+      return `Cut a stable release for the "${this._branch}" branch — published as \`@next\` (v${this._newVersion}).`;
     } else {
-      return `Cut a stable release for the release-candidate branch — published as \`@latest\` (v${this._newVersion}).`;
+      return `Cut a stable release for the "${this._branch}" branch — published as \`@latest\` (v${this._newVersion}).`;
     }
   }
 
   override async perform() {
-    const {branchName} = this.active.releaseCandidate!;
+    // This should never happen, but we add a sanity check just to be sure.
+    if (this._isNewMajor && this._train === this.active.exceptionalMinor) {
+      throw new FatalReleaseActionError('Unexpected major release of an `exceptional-minor`.');
+    }
+
+    const branchName = this._branch;
     const newVersion = this._newVersion;
 
-    // When cutting a new stable minor/major, we want to build the release notes capturing
-    // all changes that have landed in the individual next and RC pre-releases.
+    // When cutting a new stable minor/major or an exceptional minor, we want to build the
+    // notes capturing all changes that have landed in the individual `-next`/RC pre-releases.
     const compareVersionForReleaseNotes = this.active.latest.version;
+
+    // We always remove a potential exceptional-minor indicator. If we would
+    // publish a stable version of an exceptional minor here- it would leave
+    // the exceptional minor train and the indicator should be removed.
+    const stagingOpts: StagingOptions = {
+      updatePkgJsonFn: (pkgJson) => {
+        pkgJson[exceptionalMinorPackageIndicator] = undefined;
+      },
+    };
 
     const {pullRequest, releaseNotes, builtPackagesWithInfo, beforeStagingSha} =
       await this.checkoutBranchAndStageVersion(
         newVersion,
         compareVersionForReleaseNotes,
         branchName,
+        stagingOpts,
       );
 
     await this.promptAndWaitForPullRequestMerged(pullRequest);
 
-    // If a new major version is published, we publish to the `next` NPM dist tag temporarily.
-    // We do this because for major versions, we want all main Angular projects to have their
-    // new major become available at the same time. Publishing immediately to the `latest` NPM
-    // dist tag could cause inconsistent versions when users install packages with `@latest`.
-    // For example: Consider Angular Framework releases v12. CLI and Components would need to
-    // wait for that release to complete. Once done, they can update their dependencies to point
-    // to v12. Afterwards they could start the release process. In the meanwhile though, the FW
-    // dependencies were already available as `@latest`, so users could end up installing v12 while
-    // still having the older (but currently still latest) CLI version that is incompatible.
-    // The major release can be re-tagged to `latest` through a separate release action.
     await this.publish(
       builtPackagesWithInfo,
       releaseNotes,
       beforeStagingSha,
       branchName,
-      this._isNewMajor ? 'next' : 'latest',
+      this._getNpmDistTag(),
     );
 
     // If a new major version is published and becomes the "latest" release-train, we need
@@ -93,18 +107,39 @@ export class CutStableAction extends ReleaseAction {
     await this.cherryPickChangelogIntoNextBranch(releaseNotes, branchName);
   }
 
-  /** Gets the new stable version of the release candidate release-train. */
-  private _computeNewVersion(): semver.SemVer {
-    const {version} = this.active.releaseCandidate!;
+  private _getNpmDistTag(): NpmDistTag {
+    // If a new major version is published, we publish to the `next` NPM dist tag temporarily.
+    // We do this because for major versions, we want all main Angular projects to have their
+    // new major become available at the same time. Publishing immediately to the `latest` NPM
+    // dist tag could cause inconsistent versions when users install packages with `@latest`.
+    // For example: Consider Angular Framework releases v12. CLI and Components would need to
+    // wait for that release to complete. Once done, they can update their dependencies to point
+    // to v12. Afterwards they could start the release process. In the meanwhile though, the FW
+    // dependencies were already available as `@latest`, so users could end up installing v12 while
+    // still having the older (but currently still latest) CLI version that is incompatible.
+    // The major release can be re-tagged to `latest` through a separate release action.
+    return this._isNewMajor ? 'next' : 'latest';
+  }
+
+  /** Gets the new stable version of the given release-train. */
+  private _computeNewVersion({version}: ReleaseTrain): semver.SemVer {
     return semver.parse(`${version.major}.${version.minor}.${version.patch}`)!;
   }
 
   static override async isActive(active: ActiveReleaseTrains) {
-    // A stable version can be cut for an active release-train currently in the
-    // release-candidate phase. Note: It is not possible to directly release from
-    // feature-freeze phase into a stable version.
-    return (
-      active.releaseCandidate !== null && active.releaseCandidate.version.prerelease[0] === 'rc'
-    );
+    // -- Notes -- :
+    //   * A stable version can be cut for an active release-train currently in the
+    //     release-candidate phase.
+    //   * If there is an exceptional minor, **only** the exceptional minor considered
+    //     because it would be problematic if an in-progress RC would suddenly take over
+    //     while there is still an in-progress exceptional minor.
+    //   * It is impossible to directly release from feature-freeze phase into stable.
+    if (active.exceptionalMinor !== null) {
+      return active.exceptionalMinor.version.prerelease[0] === 'rc';
+    }
+    if (active.releaseCandidate !== null) {
+      return active.releaseCandidate.version.prerelease[0] === 'rc';
+    }
+    return false;
   }
 }

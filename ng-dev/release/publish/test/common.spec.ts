@@ -99,7 +99,7 @@ describe('common release action logic', () => {
       }
 
       expect(descriptions).toEqual([
-        'Cut a stable release for the release-candidate branch — published as `@next` (v15.0.0).',
+        'Cut a stable release for the "15.0.x" branch — published as `@next` (v15.0.0).',
         'Cut a new patch release for the "14.3.x" branch (v14.3.2).',
         `Cut a new pre-release for the "15.0.x" branch (v15.0.0-rc.2).`,
         `Cut a new release for an active LTS branch (0 active).`,

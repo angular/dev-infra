@@ -3,9 +3,7 @@ load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
 ts_library(
     name = "test_lib",
     testonly = True,
-    srcs = glob([
-        "**/*.ts",
-    ]),
+    srcs = glob(["**/*.ts"]),
     visibility = [
         "//ng-dev/release/notes:__subpackages__",
     ],
