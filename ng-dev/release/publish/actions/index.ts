@@ -13,6 +13,9 @@ import {CutNewPatchAction} from './cut-new-patch.js';
 import {CutNpmNextPrereleaseAction} from './cut-npm-next-prerelease.js';
 import {CutNpmNextReleaseCandidateAction} from './cut-npm-next-release-candidate.js';
 import {CutStableAction} from './cut-stable.js';
+import {CutExceptionalMinorPrereleaseAction} from './exceptional-minor/cut-exceptional-minor-prerelease.js';
+import {CutExceptionalMinorReleaseCandidateAction} from './exceptional-minor/cut-exceptional-minor-release-candidate.js';
+import {PrepareExceptionalMinorAction} from './exceptional-minor/prepare-exceptional-minor.js';
 import {MoveNextIntoFeatureFreezeAction} from './move-next-into-feature-freeze.js';
 import {MoveNextIntoReleaseCandidateAction} from './move-next-into-release-candidate.js';
 import {TagRecentMajorAsLatest} from './tag-recent-major-as-latest.js';
@@ -22,6 +25,8 @@ import {TagRecentMajorAsLatest} from './tag-recent-major-as-latest.js';
  * by priority. Actions which are selectable are sorted based on this declaration order.
  */
 export const actions: ReleaseActionConstructor[] = [
+  CutExceptionalMinorReleaseCandidateAction,
+  CutExceptionalMinorPrereleaseAction,
   TagRecentMajorAsLatest,
   CutStableAction,
   CutNpmNextReleaseCandidateAction,
@@ -29,5 +34,6 @@ export const actions: ReleaseActionConstructor[] = [
   CutNpmNextPrereleaseAction,
   MoveNextIntoFeatureFreezeAction,
   MoveNextIntoReleaseCandidateAction,
+  PrepareExceptionalMinorAction,
   CutLongTermSupportPatchAction,
 ];

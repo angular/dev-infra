@@ -102,6 +102,69 @@ describe('common release action logic', () => {
         'Cut a stable release for the "15.0.x" branch — published as `@next` (v15.0.0).',
         'Cut a new patch release for the "14.3.x" branch (v14.3.2).',
         `Cut a new pre-release for the "15.0.x" branch (v15.0.0-rc.2).`,
+        `Prepare an exceptional minor based on the existing "14.3.x" branch (14.4.x).`,
+        `Cut a new release for an active LTS branch (0 active).`,
+      ]);
+    });
+
+    it('should show actions when an exceptional minor is in-progress', async () => {
+      const testReleaseTrain = new ActiveReleaseTrains({
+        latest: new ReleaseTrain('14.3.x', parse('14.3.1')),
+        exceptionalMinor: new ReleaseTrain('14.4.x', parse('14.4.0-next.0')),
+        releaseCandidate: new ReleaseTrain('15.0.x', parse('15.0.0-rc.1')),
+        next: new ReleaseTrain('main', parse('15.1.0-next.0')),
+      });
+
+      const {releaseConfig, githubConfig} = getTestConfigurationsForAction();
+      const gitClient = getMockGitClient(githubConfig, /* useSandboxGitClient */ false);
+      const descriptions: string[] = [];
+
+      // Fake the NPM package request as otherwise the test would rely on `npmjs.org`.
+      fakeNpmPackageQueryRequest(releaseConfig.representativeNpmPackage, {'dist-tags': {}});
+
+      for (const actionCtor of actions) {
+        if (await actionCtor.isActive(testReleaseTrain, releaseConfig)) {
+          const action = new actionCtor(testReleaseTrain, gitClient, releaseConfig, testTmpDir);
+          descriptions.push(await action.getDescription());
+        }
+      }
+
+      expect(descriptions).toEqual([
+        `Exceptional Minor: Cut a first release-candidate for the "14.4.x" branch (v14.4.0-rc.0).`,
+        `Exceptional Minor: Cut a new pre-release for the "14.4.x" branch (v14.4.0-next.0).`,
+        'Cut a new patch release for the "14.3.x" branch (v14.3.2).',
+        `Cut a new pre-release for the "15.0.x" branch (v15.0.0-rc.2).`,
+        `Cut a new release for an active LTS branch (0 active).`,
+      ]);
+    });
+
+    it('should show actions when an exceptional minor is ready for becoming "stable"', async () => {
+      const testReleaseTrain = new ActiveReleaseTrains({
+        latest: new ReleaseTrain('14.3.x', parse('14.3.1')),
+        exceptionalMinor: new ReleaseTrain('14.4.x', parse('14.4.0-rc.3')),
+        releaseCandidate: new ReleaseTrain('15.0.x', parse('15.0.0-rc.1')),
+        next: new ReleaseTrain('main', parse('15.1.0-next.0')),
+      });
+
+      const {releaseConfig, githubConfig} = getTestConfigurationsForAction();
+      const gitClient = getMockGitClient(githubConfig, /* useSandboxGitClient */ false);
+      const descriptions: string[] = [];
+
+      // Fake the NPM package request as otherwise the test would rely on `npmjs.org`.
+      fakeNpmPackageQueryRequest(releaseConfig.representativeNpmPackage, {'dist-tags': {}});
+
+      for (const actionCtor of actions) {
+        if (await actionCtor.isActive(testReleaseTrain, releaseConfig)) {
+          const action = new actionCtor(testReleaseTrain, gitClient, releaseConfig, testTmpDir);
+          descriptions.push(await action.getDescription());
+        }
+      }
+
+      expect(descriptions).toEqual([
+        `Exceptional Minor: Cut a new pre-release for the "14.4.x" branch (v14.4.0-rc.4).`,
+        `Cut a stable release for the "14.4.x" branch — published as \`@latest\` (v14.4.0).`,
+        'Cut a new patch release for the "14.3.x" branch (v14.3.2).',
+        `Cut a new pre-release for the "15.0.x" branch (v15.0.0-rc.2).`,
         `Cut a new release for an active LTS branch (0 active).`,
       ]);
     });
