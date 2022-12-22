@@ -36,9 +36,10 @@ export class CutNpmNextPrereleaseAction extends CutPrereleaseBaseAction {
   })();
 
   releaseNotesCompareVersion = (async () => {
-    // If we happen to detect the case from above, we use the most recent patch version as base for
-    // building release notes. This is better than finding the "next" version when we branched-off
-    // as it also prevents us from duplicating many commits that have already landed in the FF/RC.
+    // If we happen to detect the case from above, we use the most recent patch version as base
+    // for building release notes. This is better than finding the "next" version when we
+    // branched off as it also prevents us from duplicating many commits that have already
+    // landed in the new patch that was worked on when we branched off.
     // For more details see the release notes generation and commit range determination.
     if (this.releaseTrain === this.active.next && (await this.shouldUseExistingVersion)) {
       return this.active.latest.version;

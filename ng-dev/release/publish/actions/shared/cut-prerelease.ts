@@ -18,11 +18,12 @@ import {ReleaseAction} from '../../actions.js';
  * A minor or major can have an arbitrary amount of next pre-releases.
  *
  * This base action is used for supporting pre-releases of the `next` train,
- * or an exceptional minor train, or an in-progress FF/RC train.
+ * or an exceptional minor train, or an in-progress FF/RC train. Also used
+ * for cutting first release-candidates.
  */
 export abstract class CutPrereleaseBaseAction extends ReleaseAction {
   abstract releaseTrain: ReleaseTrain;
-  abstract npmDistTag: NpmDistTag | null;
+  abstract npmDistTag: NpmDistTag;
 
   /**
    * Whether the existing version of the release train should be used. This
@@ -49,6 +50,14 @@ export abstract class CutPrereleaseBaseAction extends ReleaseAction {
     const branch = this._getBranch();
     const newVersion = await this.getNewVersion();
     return `Cut a new pre-release for the "${branch}" branch (v${newVersion}).`;
+  }
+
+  // This action is also used for cutting a first release candidate. To avoid duplication,
+  // we expose the canonical description here (especially since it's an actual pre-release).
+  async getReleaseCandidateDescription() {
+    const branch = this._getBranch();
+    const newVersion = await this.getNewVersion();
+    return `Cut a first release-candidate for the "${branch}" branch (v${newVersion}).`;
   }
 
   override async perform() {
@@ -80,7 +89,10 @@ export abstract class CutPrereleaseBaseAction extends ReleaseAction {
     }
   }
 
-  /** Gets the new version that will be published. */
+  /**
+   * Gets the new version that will be published.
+   * Note: Might be overridden by derived actions for e.g. cutting an RC.
+   */
   async getNewVersion(): Promise<semver.SemVer> {
     if (await this.shouldUseExistingVersion) {
       return this.releaseTrain.version;

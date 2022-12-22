@@ -51,14 +51,19 @@ export function setupReleaseActionForTesting<
   const repo = new GithubTestingRepo(githubConfig.owner, githubConfig.name);
   const fork = new GithubTestingRepo('some-user', 'fork');
 
-  // The version for the release-train in the next phase does not necessarily need to be
-  // published to NPM. We mock the NPM package request and fake the state of the next
-  // version based on the `isNextPublishedToNpm` testing parameter. More details on the
-  // special case for the next release train can be found in the next pre-release action.
+  // The version for the next release-train or exceptional minor train do not necessarily
+  // need to be published to NPM. We mock the NPM package request and fake the state of
+  // the next version based on the test options. More details on e.g. the special case
+  // for the next release train can be found in the next pre-release action.
+  const fakeNpmVersions: Record<string, {} | undefined> = {};
+  if (testOptionsWithDefaults.isNextPublishedToNpm) {
+    fakeNpmVersions[active.next.version.format()] = {};
+  }
+  if (testOptionsWithDefaults.isExceptionalMinorPublishedToNpm && active.exceptionalMinor) {
+    fakeNpmVersions[active.exceptionalMinor.version.format()] = {};
+  }
   fakeNpmPackageQueryRequest(releaseConfig.representativeNpmPackage, {
-    versions: {
-      [active.next.version.format()]: testOptionsWithDefaults.isNextPublishedToNpm ? {} : undefined,
-    },
+    versions: fakeNpmVersions,
   });
 
   // Setup mocks for release action.

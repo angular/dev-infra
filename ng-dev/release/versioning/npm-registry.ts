@@ -12,8 +12,15 @@ import semver from 'semver';
 import {ReleaseConfig} from '../config/index.js';
 import {LtsNpmDistTag} from './long-term-support.js';
 
-/** Type describing the possible NPM dist tags used by Angular packages. */
-export type NpmDistTag = 'latest' | 'next' | LtsNpmDistTag;
+/**
+ * Type describing the possible NPM dist tags used by Angular packages:
+ *   - latest: Stable versions. These are releases from the "latest" train.
+ *   - next: Next versions. These are releases from the FF/RC or "next" train.
+ *   - exceptional-minor: Exceptional minors have their own NPM dist tag since we
+ *     would not want to override `latest`, nor would we want to revert `@next` if
+ *     the version is already ahead.
+ */
+export type NpmDistTag = 'latest' | 'next' | 'exceptional-minor' | LtsNpmDistTag;
 
 /** Type describing an NPM package fetched from the registry. */
 export interface NpmPackageInfo {
