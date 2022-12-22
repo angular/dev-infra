@@ -72,6 +72,7 @@ describe('common release action logic', () => {
         `Cut a first release-candidate for the "10.1.x" branch (v10.1.0-rc.0).`,
         `Cut a new patch release for the "10.0.x" branch (v10.0.2).`,
         `Cut a new pre-release for the "10.1.x" branch (v10.1.0-next.4).`,
+        `Configure the "master" branch to be released as major (v11.0.0-next.0).`,
         `Cut a new release for an active LTS branch (0 active).`,
       ]);
     });
@@ -102,6 +103,7 @@ describe('common release action logic', () => {
         'Cut a stable release for the "15.0.x" branch — published as `@next` (v15.0.0).',
         'Cut a new patch release for the "14.3.x" branch (v14.3.2).',
         `Cut a new pre-release for the "15.0.x" branch (v15.0.0-rc.2).`,
+        `Configure the "main" branch to be released as major (v16.0.0-next.0).`,
         `Prepare an exceptional minor based on the existing "14.3.x" branch (14.4.x).`,
         `Cut a new release for an active LTS branch (0 active).`,
       ]);
@@ -134,6 +136,7 @@ describe('common release action logic', () => {
         `Exceptional Minor: Cut a new pre-release for the "14.4.x" branch (v14.4.0-next.0).`,
         'Cut a new patch release for the "14.3.x" branch (v14.3.2).',
         `Cut a new pre-release for the "15.0.x" branch (v15.0.0-rc.2).`,
+        `Configure the "main" branch to be released as major (v16.0.0-next.0).`,
         `Cut a new release for an active LTS branch (0 active).`,
       ]);
     });
@@ -165,6 +168,7 @@ describe('common release action logic', () => {
         `Cut a stable release for the "14.4.x" branch — published as \`@latest\` (v14.4.0).`,
         'Cut a new patch release for the "14.3.x" branch (v14.3.2).',
         `Cut a new pre-release for the "15.0.x" branch (v15.0.0-rc.2).`,
+        `Configure the "main" branch to be released as major (v16.0.0-next.0).`,
         `Cut a new release for an active LTS branch (0 active).`,
       ]);
     });

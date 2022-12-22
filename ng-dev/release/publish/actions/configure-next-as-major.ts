@@ -13,6 +13,9 @@ import {workspaceRelativePackageJsonPath} from '../../../utils/constants.js';
 import {ActiveReleaseTrains} from '../../versioning/active-release-trains.js';
 import {ReleaseAction} from '../actions.js';
 import {getCommitMessageForNextBranchMajorSwitch} from '../commit-message.js';
+import {isFirstNextPrerelease} from '../../versioning/prerelease-version.js';
+import {isVersionPublishedToNpm} from '../../versioning/npm-registry.js';
+import {ReleaseConfig} from '../../config/index.js';
 
 /**
  * Release action that configures the active next release-train to be for a major
@@ -49,10 +52,13 @@ export class ConfigureNextAsMajorAction extends ReleaseAction {
     await this.promptAndWaitForPullRequestMerged(pullRequest);
   }
 
-  static override async isActive(active: ActiveReleaseTrains) {
-    // The `next` branch can always be switched to a major version, unless it already
-    // is targeting a new major. A major can contain minor changes, so we can always
-    // change the target from a minor to a major.
-    return !active.next.isMajor;
+  static override async isActive(active: ActiveReleaseTrains, config: ReleaseConfig) {
+    // The `next` branch can be switched to a major version, unless it already
+    // is targeting a new major, or if pre-releases have already started.
+    return (
+      !active.next.isMajor &&
+      isFirstNextPrerelease(active.next.version) &&
+      !(await isVersionPublishedToNpm(active.next.version, config))
+    );
   }
 }
