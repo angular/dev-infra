@@ -40,7 +40,6 @@ export function setupReleaseActionForTesting<
 >(
   actionCtor: ReleaseActionConstructor<Type>,
   active: ActiveReleaseTrains,
-  isNextPublishedToNpm = true,
   testOptions?: Options,
 ): TestReleaseAction<Type, OptionsWithDefaults> {
   // Reset existing HTTP interceptors.
@@ -57,7 +56,9 @@ export function setupReleaseActionForTesting<
   // version based on the `isNextPublishedToNpm` testing parameter. More details on the
   // special case for the next release train can be found in the next pre-release action.
   fakeNpmPackageQueryRequest(releaseConfig.representativeNpmPackage, {
-    versions: {[active.next.version.format()]: isNextPublishedToNpm ? {} : undefined},
+    versions: {
+      [active.next.version.format()]: testOptionsWithDefaults.isNextPublishedToNpm ? {} : undefined,
+    },
   });
 
   // Setup mocks for release action.

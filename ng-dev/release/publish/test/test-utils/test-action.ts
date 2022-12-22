@@ -27,18 +27,26 @@ export interface TestOptions {
    * as noop for this test.
    */
   stubBuiltPackageOutputChecks?: boolean;
+
+  /**
+   * Whether the version in the next release-train should appear as\
+   * published to NPM or not.
+   */
+  isNextPublishedToNpm?: boolean;
 }
 
 /** Type describing the default options. Used for narrowing in generics. */
 export type defaultTestOptionsType = TestOptions & {
   useSandboxGitClient: false;
   stubBuiltPackageOutputChecks: true;
+  isNextPublishedToNpm: true;
 };
 
 /** Default options for tests. Need to match with the default options type. */
 export const defaultTestOptions: defaultTestOptionsType = {
   useSandboxGitClient: false,
   stubBuiltPackageOutputChecks: true,
+  isNextPublishedToNpm: true,
 };
 
 /** Type describing test options with defaults merged. */

@@ -153,7 +153,6 @@ describe('common release action logic', () => {
       const {repo, instance, githubConfig, builtPackagesWithInfo} = setupReleaseActionForTesting(
         DelegateTestAction,
         baseReleaseTrains,
-        /* isNextPublishedToNpm */ true,
         {useSandboxGitClient: true},
       );
       const {version, branchName} = baseReleaseTrains.next;
@@ -200,7 +199,6 @@ describe('common release action logic', () => {
       const {repo, fork, instance, githubConfig, promptConfirmSpy} = setupReleaseActionForTesting(
         DelegateTestAction,
         baseReleaseTrains,
-        /* isNextPublishedToNpm */ true,
         {useSandboxGitClient: true},
       );
       const {version, branchName} = baseReleaseTrains.next;
@@ -329,12 +327,9 @@ describe('common release action logic', () => {
     });
 
     it('should ensure that the release output has not been modified during staging', async () => {
-      const action = setupReleaseActionForTesting(
-        DelegateTestAction,
-        baseReleaseTrains,
-        /* isNextPublishedToNpm */ true,
-        {stubBuiltPackageOutputChecks: false},
-      );
+      const action = setupReleaseActionForTesting(DelegateTestAction, baseReleaseTrains, {
+        stubBuiltPackageOutputChecks: false,
+      });
       const {version, branchName} = baseReleaseTrains.latest;
 
       await writePackageJson('@angular/pkg1', '10.0.1');

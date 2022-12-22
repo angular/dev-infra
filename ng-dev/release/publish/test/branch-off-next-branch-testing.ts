@@ -78,7 +78,7 @@ export async function expectBranchOffActionToRun(
   expectedVersion: string,
   expectedNewBranch: string,
 ) {
-  const action = setupReleaseActionForTesting(actionType, active, isNextPublishedToNpm);
+  const action = setupReleaseActionForTesting(actionType, active, {isNextPublishedToNpm});
   const {repo, fork, instance, gitClient} = action;
 
   const {expectedStagingForkBranch, expectedNextUpdateBranch} =
@@ -166,7 +166,8 @@ export function prepareBranchOffActionForChangelog(
   expectedVersion: string,
   expectedNewBranch: string,
 ) {
-  const action = setupReleaseActionForTesting(actionType, active, isNextPublishedToNpm, {
+  const action = setupReleaseActionForTesting(actionType, active, {
+    isNextPublishedToNpm,
     useSandboxGitClient: true,
   });
 

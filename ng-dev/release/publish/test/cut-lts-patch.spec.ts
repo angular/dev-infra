@@ -94,7 +94,6 @@ describe('cut an LTS patch action', () => {
         next: new ReleaseTrain('master', parse('10.1.0-next.3')),
         latest: new ReleaseTrain('10.0.x', parse('10.0.2')),
       }),
-      true,
       {useSandboxGitClient: true},
     );
 

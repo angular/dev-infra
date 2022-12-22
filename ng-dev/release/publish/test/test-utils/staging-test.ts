@@ -10,9 +10,12 @@ import {getBranchPushMatcher, testTmpDir} from '../../../../utils/testing/index.
 import {NpmPackage} from '../../../config/index.js';
 import {NpmDistTag} from '../../../versioning/index.js';
 import {NpmCommand} from '../../../versioning/npm-command.js';
+import {ReleaseAction} from '../../actions.js';
 import {ExternalCommands} from '../../external-commands.js';
 import {testReleasePackages} from './action-mocks.js';
 import {TestReleaseAction} from './test-action.js';
+
+type TestActionWithMockGitClient = TestReleaseAction<ReleaseAction, {useSandboxGitClient: false}>;
 
 /**
  * Expects and fakes the necessary Github API requests for staging
@@ -82,7 +85,7 @@ function expectNpmPublishToBeInvoked(packages: NpmPackage[], expectedNpmDistTag:
 }
 
 export async function expectStagingAndPublishWithoutCherryPick(
-  action: TestReleaseAction,
+  action: TestActionWithMockGitClient,
   expectedBranch: string,
   expectedVersion: string,
   expectedNpmDistTag: NpmDistTag,
@@ -116,7 +119,7 @@ export async function expectStagingAndPublishWithoutCherryPick(
 }
 
 export async function expectStagingAndPublishWithCherryPick(
-  action: TestReleaseAction,
+  action: TestActionWithMockGitClient,
   expectedBranch: string,
   expectedVersion: string,
   expectedNpmDistTag: NpmDistTag,
