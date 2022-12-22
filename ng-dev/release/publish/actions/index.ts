@@ -7,7 +7,7 @@
  */
 
 import {ReleaseActionConstructor} from '../actions.js';
-
+import {ConfigureNextAsMajorAction} from './configure-next-as-major.js';
 import {CutLongTermSupportPatchAction} from './cut-lts-patch.js';
 import {CutNewPatchAction} from './cut-new-patch.js';
 import {CutNpmNextPrereleaseAction} from './cut-npm-next-prerelease.js';
@@ -34,6 +34,7 @@ export const actions: ReleaseActionConstructor[] = [
   CutNpmNextPrereleaseAction,
   MoveNextIntoFeatureFreezeAction,
   MoveNextIntoReleaseCandidateAction,
+  ConfigureNextAsMajorAction,
   PrepareExceptionalMinorAction,
   CutLongTermSupportPatchAction,
 ];
