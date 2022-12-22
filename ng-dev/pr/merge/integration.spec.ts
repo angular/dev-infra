@@ -19,7 +19,11 @@ import {
 } from '../common/targeting/target-label.js';
 import {fakeGithubPaginationResponse} from '../../utils/testing/github-interception.js';
 import {getTargetLabelConfigsForActiveReleaseTrains} from '../common/targeting/labels.js';
-import {ActiveReleaseTrains} from '../../release/versioning/index.js';
+import {
+  ActiveReleaseTrains,
+  exceptionalMinorPackageIndicator,
+  PackageJson,
+} from '../../release/versioning/index.js';
 import {Prompt} from '../../utils/prompt.js';
 
 const API_ENDPOINT = `https://api.github.com`;
@@ -53,11 +57,20 @@ describe('default target labels', () => {
    * Mocks a branch `package.json` version API request.
    * https://docs.github.com/en/rest/reference/repos#get-repository-content.
    */
-  function interceptBranchVersionRequest(branchName: string, version: string) {
+  function interceptBranchVersionRequest(
+    branchName: string,
+    version: string,
+    opts?: {exceptionalMinor: boolean},
+  ) {
+    const pkgJson: PackageJson = {version};
+    if (opts?.exceptionalMinor) {
+      pkgJson[exceptionalMinorPackageIndicator] = true;
+    }
+
     nock(getRepoApiRequestUrl())
       .get('/contents/%2Fpackage.json')
       .query((params) => params.ref === branchName)
-      .reply(200, {content: Buffer.from(JSON.stringify({version})).toString('base64')});
+      .reply(200, {content: Buffer.from(JSON.stringify(pkgJson)).toString('base64')});
   }
 
   /** Fakes a prompt confirm question with the given value. */
@@ -522,6 +535,90 @@ describe('default target labels', () => {
 
         expect(await getBranchesForLabel('target: rc')).toEqual(['master', '11.1.x']);
       });
+    });
+  });
+
+  describe('with an in-progress exceptional minor', () => {
+    describe('major in FF/RC release-train', () => {
+      it('patch changes should always be included in the exceptional minor train', async () => {
+        interceptBranchVersionRequest('master', '13.1.0-next.0');
+        interceptBranchVersionRequest('13.0.x', '13.0.0-rc.3');
+        interceptBranchVersionRequest('12.2.x', '12.2.0-next.0', {exceptionalMinor: true});
+        interceptBranchVersionRequest('12.1.x', '12.1.0');
+        interceptBranchesListRequest(['12.1.x', '12.2.x', '13.0.x']);
+
+        expect(await getBranchesForLabel('target: patch')).toEqual([
+          'master',
+          '12.1.x',
+          '13.0.x',
+          '12.2.x',
+        ]);
+      });
+
+      it('minor changes should still go into `master` if GitHub PR target is `main`', async () => {
+        interceptBranchVersionRequest('master', '13.1.0-next.0');
+        interceptBranchVersionRequest('13.0.x', '13.0.0-rc.3');
+        interceptBranchVersionRequest('12.2.x', '12.2.0-next.0', {exceptionalMinor: true});
+        interceptBranchVersionRequest('12.1.x', '12.1.0');
+        interceptBranchesListRequest(['12.1.x', '12.2.x', '13.0.x']);
+
+        expect(await getBranchesForLabel('target: minor')).toEqual(['master']);
+      });
+
+      it('minor changes can go into an exceptional minor if explicitly targeted', async () => {
+        interceptBranchVersionRequest('master', '13.1.0-next.0');
+        interceptBranchVersionRequest('13.0.x', '13.0.0-rc.3');
+        interceptBranchVersionRequest('12.2.x', '12.2.0-next.0', {exceptionalMinor: true});
+        interceptBranchVersionRequest('12.1.x', '12.1.0');
+        interceptBranchesListRequest(['12.1.x', '12.2.x', '13.0.x']);
+
+        expect(await getBranchesForLabel('target: minor', '12.2.x')).toEqual(['12.2.x']);
+      });
+
+      it('should be possible to target exceptional minor + rc + next trains via two PRs', async () => {
+        const installMocks = () => {
+          interceptBranchVersionRequest('master', '13.1.0-next.0');
+          interceptBranchVersionRequest('13.0.x', '13.0.0-rc.3');
+          interceptBranchVersionRequest('12.2.x', '12.2.0-next.0', {exceptionalMinor: true});
+          interceptBranchVersionRequest('12.1.x', '12.1.0');
+          interceptBranchesListRequest(['12.1.x', '12.2.x', '13.0.x']);
+        };
+
+        // First PR to land in FF/RC + main trains.
+        installMocks();
+        expect(await getBranchesForLabel('target: rc')).toEqual(['master', '13.0.x']);
+
+        // Second PR to explicitly backport a change into the exceptional minor.
+        installMocks();
+        expect(await getBranchesForLabel('target: minor', '12.2.x')).toEqual(['12.2.x']);
+      });
+    });
+
+    it('patch changes should always be included in the exceptional minor train', async () => {
+      interceptBranchVersionRequest('master', '13.0.0-next.0');
+      interceptBranchVersionRequest('12.2.x', '12.2.0-next.0', {exceptionalMinor: true});
+      interceptBranchVersionRequest('12.1.x', '12.1.0');
+      interceptBranchesListRequest(['12.1.x', '12.2.x']);
+
+      expect(await getBranchesForLabel('target: patch')).toEqual(['master', '12.1.x', '12.2.x']);
+    });
+
+    it('minor changes should still go into `master` if GitHub PR target is `main`', async () => {
+      interceptBranchVersionRequest('master', '13.0.0-next.0');
+      interceptBranchVersionRequest('12.2.x', '12.2.0-next.0', {exceptionalMinor: true});
+      interceptBranchVersionRequest('12.1.x', '12.1.0');
+      interceptBranchesListRequest(['12.1.x', '12.2.x']);
+
+      expect(await getBranchesForLabel('target: minor')).toEqual(['master']);
+    });
+
+    it('minor changes can go into an exceptional minor if explicitly targeted', async () => {
+      interceptBranchVersionRequest('master', '13.0.0-next.0');
+      interceptBranchVersionRequest('12.2.x', '12.2.0-next.0', {exceptionalMinor: true});
+      interceptBranchVersionRequest('12.1.x', '12.1.0');
+      interceptBranchesListRequest(['12.1.x', '12.2.x']);
+
+      expect(await getBranchesForLabel('target: minor', '12.2.x')).toEqual(['12.2.x']);
     });
   });
 });
