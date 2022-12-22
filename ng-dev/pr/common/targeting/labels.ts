@@ -45,7 +45,7 @@ import {targetLabels} from '../labels/target.js';
  *   NPM version data when LTS version branches are validated.
  */
 export async function getTargetLabelConfigsForActiveReleaseTrains(
-  {latest, releaseCandidate, next}: ActiveReleaseTrains,
+  {latest, releaseCandidate, next, exceptionalMinor}: ActiveReleaseTrains,
   api: GithubClient,
   config: NgDevConfig<{
     github: GithubConfig;
@@ -81,7 +81,15 @@ export async function getTargetLabelConfigsForActiveReleaseTrains(
     },
     {
       label: targetLabels.TARGET_MINOR,
-      branches: () => {
+      branches: (githubTargetBranch) => {
+        // If there is an exceptional minor in-progress, and a PR specifically sets
+        // its destination to it, along with `target: minor`, then we merge into it.
+        // This allows for an exceptional minor train to receive e.g. features.
+        // See: http://go/angular-exceptional-minor
+        if (githubTargetBranch === exceptionalMinor?.branchName) {
+          return [exceptionalMinor.branchName];
+        }
+
         return [nextBranchName];
       },
     },
@@ -101,6 +109,13 @@ export async function getTargetLabelConfigsForActiveReleaseTrains(
         // currently active, also merge the PR into that version-branch.
         if (releaseCandidate !== null) {
           branches.push(releaseCandidate.branchName);
+        }
+        // If there is an exceptional minor, patch changes should always go into it.
+        // It would be a potential loss of fixes/patches if suddenly the exceptional
+        // minor becomes the new patch- but misses some commits.
+        // More details here: http://go/angular-exceptional-minor.
+        if (exceptionalMinor !== null) {
+          branches.push(exceptionalMinor.branchName);
         }
         return branches;
       },
