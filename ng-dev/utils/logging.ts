@@ -35,6 +35,7 @@ export const green = chalk.green;
 export const yellow = chalk.yellow;
 export const bold = chalk.bold;
 export const blue = chalk.blue;
+export const underline = chalk.underline;
 
 /** Class used for logging to the console and to a ng-dev log file. */
 export abstract class Log {
