@@ -16795,6 +16795,7 @@ var green = source_default.green;
 var yellow = source_default.yellow;
 var bold = source_default.bold;
 var blue = source_default.blue;
+var underline = source_default.underline;
 var Log = class {
 };
 Log.info = buildLogLevelFunction(() => console.info, LogLevel.INFO, null);

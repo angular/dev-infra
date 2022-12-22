@@ -63468,6 +63468,7 @@ var green = source_default.green;
 var yellow = source_default.yellow;
 var bold = source_default.bold;
 var blue = source_default.blue;
+var underline = source_default.underline;
 var Log = class {
 };
 Log.info = buildLogLevelFunction(() => console.info, LogLevel.INFO, null);
@@ -67867,7 +67868,7 @@ var targetLabels = createTypedObject()({
 });
 
 // 
-async function getTargetLabelConfigsForActiveReleaseTrains({ latest, releaseCandidate, next }, api, config) {
+async function getTargetLabelConfigsForActiveReleaseTrains({ latest, releaseCandidate, next, exceptionalMinor }, api, config) {
   assertValidGithubConfig(config);
   assertValidPullRequestConfig(config);
   const nextBranchName = getNextBranchName(config.github);
@@ -67889,7 +67890,10 @@ async function getTargetLabelConfigsForActiveReleaseTrains({ latest, releaseCand
     },
     {
       label: targetLabels.TARGET_MINOR,
-      branches: () => {
+      branches: (githubTargetBranch) => {
+        if (githubTargetBranch === (exceptionalMinor == null ? void 0 : exceptionalMinor.branchName)) {
+          return [exceptionalMinor.branchName];
+        }
         return [nextBranchName];
       }
     },
@@ -67902,6 +67906,9 @@ async function getTargetLabelConfigsForActiveReleaseTrains({ latest, releaseCand
         const branches = [nextBranchName, latest.branchName];
         if (releaseCandidate !== null) {
           branches.push(releaseCandidate.branchName);
+        }
+        if (exceptionalMinor !== null) {
+          branches.push(exceptionalMinor.branchName);
         }
         return branches;
       }
