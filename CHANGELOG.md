@@ -1,3 +1,19 @@
+<a name="2022.12.25"></a>
+# 2022.12.25 (2022-12-25)
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d5693db](https://github.com/angular/dev-infra/commit/d5693db584b780f669f5685c13549396a05d3e98) | feat | release info should print exceptional minors |
+| [12034dc](https://github.com/angular/dev-infra/commit/12034dcd44ff6d234299792df2220f62c5dd3bab) | feat | support exceptional minor release train in merge targeting |
+| [50b9d66](https://github.com/angular/dev-infra/commit/50b9d664740bc71710a25d56d0f3ed86c0cf6da5) | feat | support exceptional minor release trains |
+| [b7beaeb](https://github.com/angular/dev-infra/commit/b7beaeb3ad3f2bf6bf23a9d10638698b98d06435) | feat | support exceptional minors in release publish tool |
+| [4058cc6](https://github.com/angular/dev-infra/commit/4058cc6be9bc55102a5fc3429b48b9fbf232bed6) | feat | wire up exceptional minor actions in publish tool |
+| [c37e8ac](https://github.com/angular/dev-infra/commit/c37e8ac8e5007ff680fc0cd0fb7609652a0fcb72) | fix | configure next as major action never selectable |
+| [5cffacd](https://github.com/angular/dev-infra/commit/5cffacd8e5d029d1df8fede70306f5e0e587960e) | fix | properly catch target label/branch errors |
+## Special Thanks
+Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.12.18"></a>
 # 2022.12.18 (2022-12-18)
 ### bazel
@@ -219,27 +235,3 @@ Greg Magolan, Joey Perrott and Paul Gschwendtner
 | [5497ef9](https://github.com/angular/dev-infra/commit/5497ef98db930407f058f675fbc9454af2796d1b) | fix | use GitHub PAT instead of GitHub App key in `create-pr-for-changes` |
 ## Special Thanks
 Derek Cormier, George Kalpakas and angular-robot[bot]
-
-<!-- CHANGELOG SPLIT MARKER -->
-<a name="2022.8.28"></a>
-# 2022.8.28 (2022-08-28)
-### apps
-| Commit | Type | Description |
-| -- | -- | -- |
-| [c5cbcd3](https://github.com/angular/dev-infra/commit/c5cbcd31cf2dc3680d247db84fbb76f52cf2934d) | fix | ensure credential service login only works with `@google.com` mail ([#789](https://github.com/angular/dev-infra/pull/789)) |
-### bazel
-| Commit | Type | Description |
-| -- | -- | -- |
-| [7af5d34](https://github.com/angular/dev-infra/commit/7af5d349d13b39e2f7fe87716f8eb9e870072468) | fix | **browsers:** exclude a log file that chromium writes to on linux ([#795](https://github.com/angular/dev-infra/pull/795)) |
-### github-actions
-| Commit | Type | Description |
-| -- | -- | -- |
-| [2078bb2](https://github.com/angular/dev-infra/commit/2078bb254583653e99b932c33b43404d5613d358) | feat | implement GitHub Action for creating a PR from local changes |
-| [4b84feb](https://github.com/angular/dev-infra/commit/4b84feb3bfdcbb88dd0199dd3593658da61da404) | fix | update generated `main.js` for `create-pr-for-changes` GitHub Action |
-### ng-dev
-| Commit | Type | Description |
-| -- | -- | -- |
-| [88c198a](https://github.com/angular/dev-infra/commit/88c198ae1a3462223cb5c1e83338e4b94b435283) | feat | add logging and messaging to ng-dev auth login ([#798](https://github.com/angular/dev-infra/pull/798)) |
-| [806c568](https://github.com/angular/dev-infra/commit/806c568a439877f69b975aedbf5e4eb26fd7eaaf) | fix | order results of forks when searching for user owned forks ([#796](https://github.com/angular/dev-infra/pull/796)) |
-## Special Thanks
-Derek Cormier, George Kalpakas, Joey Perrott and Paul Gschwendtner
