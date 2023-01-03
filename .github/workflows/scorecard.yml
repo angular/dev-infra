@@ -12,7 +12,7 @@ permissions:
   contents: read
   # Needed to upload the results to code-scanning dashboard.
   security-events: write
-  # Needed for signing and publishing of results for the badge. 
+  # Needed for signing and publishing of results for the badge.
   id-token: write
 
 jobs:
