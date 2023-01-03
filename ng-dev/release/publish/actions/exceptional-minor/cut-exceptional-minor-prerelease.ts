@@ -29,8 +29,7 @@ export class CutExceptionalMinorPrereleaseAction extends CutPrereleaseBaseAction
   // should not prevent actual pre-releases for an on-going FF/RC or the next branch.
   // Note that NPM always requires a dist-tag, so we explicitly have one dedicated
   // for exceptional minors. This tag could be deleted in the future.
-  // TODO(devversion): consider automatically deleting this tag- or keep it around.
-  npmDistTag = 'exceptional-minor' as const;
+  npmDistTag = 'do-not-use-exceptional-minor' as const;
 
   shouldUseExistingVersion = (async () => {
     // If an exceptional minor branch has just been created, the actual version

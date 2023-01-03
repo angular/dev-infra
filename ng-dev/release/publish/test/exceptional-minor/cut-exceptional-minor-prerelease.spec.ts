@@ -65,7 +65,7 @@ describe('cut exceptional minor pre-release action', () => {
         action,
         '10.2.x',
         '10.2.0-next.0',
-        'exceptional-minor',
+        'do-not-use-exceptional-minor',
       );
 
       const pkgJsonContents = readFileSync(
@@ -131,7 +131,7 @@ describe('cut exceptional minor pre-release action', () => {
         action,
         '10.1.x',
         '10.1.0-next.1',
-        'exceptional-minor',
+        'do-not-use-exceptional-minor',
       );
     });
 
@@ -188,7 +188,7 @@ describe('cut exceptional minor pre-release action', () => {
         action,
         '10.1.x',
         '10.1.0-rc.1',
-        'exceptional-minor',
+        'do-not-use-exceptional-minor',
       );
     });
 
