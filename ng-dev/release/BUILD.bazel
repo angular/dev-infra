@@ -10,6 +10,7 @@ ts_library(
         "//ng-dev/release/build",
         "//ng-dev/release/info",
         "//ng-dev/release/notes",
+        "//ng-dev/release/npm-dist-tag",
         "//ng-dev/release/precheck",
         "//ng-dev/release/publish",
         "//ng-dev/release/set-dist-tag",
