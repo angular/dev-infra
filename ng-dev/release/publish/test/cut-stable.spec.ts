@@ -299,6 +299,23 @@ describe('cut stable action', () => {
     },
   );
 
+  it('should not attempting deleting temporary exceptional-minor NPM dist tags', async () => {
+    const action = setupReleaseActionForTesting(
+      CutStableAction,
+      new ActiveReleaseTrains({
+        exceptionalMinor: null,
+        // No longer in feature-freeze but in release-candidate phase.
+        releaseCandidate: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
+        next: new ReleaseTrain('master', parse('10.2.0-next.0')),
+        latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
+      }),
+    );
+
+    await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0', 'latest');
+
+    expect(ExternalCommands.invokeDeleteNpmDistTag).toHaveBeenCalledTimes(0);
+  });
+
   describe('exceptional minor is in-progress', () => {
     it('should create a proper new version and select correct branch', async () => {
       const action = setupReleaseActionForTesting(
@@ -343,6 +360,22 @@ describe('cut stable action', () => {
       const pkgJson = JSON.parse(pgkJsonRaw) as PackageJson;
 
       expect(pkgJson[exceptionalMinorPackageIndicator]).toBe(undefined);
+    });
+
+    it('should delete the temporary exceptional-minor NPM dist tag', async () => {
+      const action = setupReleaseActionForTesting(
+        CutStableAction,
+        new ActiveReleaseTrains({
+          latest: new ReleaseTrain('10.0.x', parse('10.0.3')),
+          exceptionalMinor: new ReleaseTrain('10.1.x', parse('10.1.0-rc.0')),
+          releaseCandidate: null,
+          next: new ReleaseTrain('master', parse('11.0.0-next.0')),
+        }),
+      );
+
+      await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0', 'latest');
+
+      expect(ExternalCommands.invokeDeleteNpmDistTag).toHaveBeenCalledTimes(1);
     });
 
     it(

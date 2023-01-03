@@ -74,7 +74,7 @@ describe('cut exceptional minor next release candidate action', () => {
       action,
       '10.1.x',
       '10.1.0-rc.0',
-      'exceptional-minor',
+      'do-not-use-exceptional-minor',
     );
   });
 

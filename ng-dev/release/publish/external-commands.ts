@@ -83,6 +83,40 @@ export abstract class ExternalCommands {
   }
 
   /**
+   * Invokes the `ng-dev release npm-dist-tag delete` command in order to delete the
+   * NPM dist tag for all packages in the checked-out version branch.
+   */
+  static async invokeDeleteNpmDistTag(projectDir: string, npmDistTag: NpmDistTag) {
+    // Note: We cannot use `yarn` directly as command because we might operate in
+    // a different publish branch and the current `PATH` will point to the Yarn version
+    // that invoked the release tool. More details in the function description.
+    const yarnCommand = await resolveYarnScriptForProject(projectDir);
+
+    try {
+      // Note: No progress indicator needed as that is the responsibility of the command.
+      // TODO: detect yarn berry and handle flag differences properly.
+      await ChildProcess.spawn(
+        yarnCommand.binary,
+        [
+          ...yarnCommand.args,
+          '--silent',
+          'ng-dev',
+          'release',
+          'npm-dist-tag',
+          'delete',
+          npmDistTag,
+        ],
+        {cwd: projectDir},
+      );
+      Log.info(green(`  ✓   Deleted "${npmDistTag}" NPM dist tag for all packages.`));
+    } catch (e) {
+      Log.error(e);
+      Log.error(`  ✘   An error occurred while deleting the NPM dist tag: "${npmDistTag}".`);
+      throw new FatalReleaseActionError();
+    }
+  }
+
+  /**
    * Invokes the `ng-dev release build` command in order to build the release
    * packages for the currently checked out branch.
    */

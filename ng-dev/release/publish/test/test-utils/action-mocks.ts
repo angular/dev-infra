@@ -103,6 +103,7 @@ export function setupMocksForReleaseAction<T extends boolean>(
   // Fake all external commands for the release tool.
   spyOn(NpmCommand, 'publish').and.resolveTo();
   spyOn(ExternalCommands, 'invokeSetNpmDist').and.resolveTo();
+  spyOn(ExternalCommands, 'invokeDeleteNpmDistTag').and.resolveTo();
   spyOn(ExternalCommands, 'invokeYarnInstall').and.resolveTo();
   spyOn(ExternalCommands, 'invokeReleaseInfo').and.resolveTo(releaseConfig);
   spyOn(ExternalCommands, 'invokeReleaseBuild').and.resolveTo(builtPackages);

@@ -78,6 +78,16 @@ export class CutStableAction extends ReleaseAction {
       this._getNpmDistTag(),
     );
 
+    // If we turned an exceptional minor into the new patch, the temporary
+    // NPM dist tag for the exceptional minor can be deleted. For more details
+    // see the `CutExceptionalMinorPrereleaseAction` class.
+    if (this._train === this.active.exceptionalMinor) {
+      await ExternalCommands.invokeDeleteNpmDistTag(
+        this.projectDir,
+        'do-not-use-exceptional-minor',
+      );
+    }
+
     // If a new major version is published and becomes the "latest" release-train, we need
     // to set the LTS npm dist tag for the previous latest release-train (the current patch).
     if (this._isNewMajor) {
