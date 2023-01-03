@@ -45,6 +45,23 @@ export abstract class NpmCommand {
   }
 
   /**
+   * Deletes the specified NPM tag for the given package.
+   * @throws With the process log output if the removal failed.
+   */
+  static async deleteDistTagForPackage(
+    packageName: string,
+    distTag: string,
+    registryUrl: string | undefined,
+  ) {
+    const args = ['dist-tag', 'rm', packageName, distTag];
+    // If a custom registry URL has been specified, add the `--registry` flag.
+    if (registryUrl !== undefined) {
+      args.push('--registry', registryUrl);
+    }
+    await ChildProcess.spawn('npm', args, {mode: 'silent'});
+  }
+
+  /**
    * Checks whether the user is currently logged into NPM.
    * @returns Whether the user is currently logged into NPM.
    */
