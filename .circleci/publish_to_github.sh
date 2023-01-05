@@ -14,9 +14,9 @@ set -e
 # Go to the project root directory
 cd $(dirname ${0})/..
 
-if [ -z ${DEV_INFRA_BUILDS_TOKEN} ]; then
+if [ -z ${SNAPSHOT_BUILDS_GITHUB_TOKEN} ]; then
   echo "Error: No access token for GitHub could be found." \
-       "Please set the environment variable 'DEV_INFRA_BUILDS_TOKEN'."
+       "Please set the environment variable 'SNAPSHOT_BUILDS_GITHUB_TOKEN'."
   exit 1
 fi
 
@@ -36,7 +36,7 @@ buildTagName="${branchName}-${commitSha}"
 buildCommitMessage="${branchName} - ${commitMessage}"
 
 repoUrl="https://github.com/angular/${packageRepo}.git"
-authenticatedRepoUrl="https://${DEV_INFRA_BUILDS_TOKEN}:@github.com/angular/${packageRepo}.git"
+authenticatedRepoUrl="https://${SNAPSHOT_BUILDS_GITHUB_TOKEN}:@github.com/angular/${packageRepo}.git"
 repoDir="/tmp/${packageRepo}"
 
 echo "Starting publish process of ${packageName} for ${buildVersionName} into ${branchName}.."
