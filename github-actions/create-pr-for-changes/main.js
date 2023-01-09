@@ -16578,7 +16578,7 @@ var source_default = chalk;
 import process3 from "node:process";
 import os2 from "node:os";
 import tty2 from "node:tty";
-function hasFlag2(flag, argv = process3.argv) {
+function hasFlag2(flag, argv = globalThis.Deno ? globalThis.Deno.args : process3.argv) {
   const prefix = flag.startsWith("-") ? "" : flag.length === 1 ? "-" : "--";
   const position = argv.indexOf(prefix + flag);
   const terminatorPosition = argv.indexOf("--");
@@ -16630,6 +16630,9 @@ function _supportsColor2(haveStream, { streamIsTTY, sniffFlags = true } = {}) {
       return 2;
     }
   }
+  if ("TF_BUILD" in env2 && "AGENT_NAME" in env2) {
+    return 1;
+  }
   if (haveStream && !streamIsTTY && forceColor === void 0) {
     return 0;
   }
@@ -16645,7 +16648,10 @@ function _supportsColor2(haveStream, { streamIsTTY, sniffFlags = true } = {}) {
     return 1;
   }
   if ("CI" in env2) {
-    if (["TRAVIS", "CIRCLECI", "APPVEYOR", "GITLAB_CI", "GITHUB_ACTIONS", "BUILDKITE", "DRONE"].some((sign) => sign in env2) || env2.CI_NAME === "codeship") {
+    if ("GITHUB_ACTIONS" in env2) {
+      return 3;
+    }
+    if (["TRAVIS", "CIRCLECI", "APPVEYOR", "GITLAB_CI", "BUILDKITE", "DRONE"].some((sign) => sign in env2) || env2.CI_NAME === "codeship") {
       return 1;
     }
     return min;
@@ -16653,19 +16659,21 @@ function _supportsColor2(haveStream, { streamIsTTY, sniffFlags = true } = {}) {
   if ("TEAMCITY_VERSION" in env2) {
     return /^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(env2.TEAMCITY_VERSION) ? 1 : 0;
   }
-  if ("TF_BUILD" in env2 && "AGENT_NAME" in env2) {
-    return 1;
-  }
   if (env2.COLORTERM === "truecolor") {
+    return 3;
+  }
+  if (env2.TERM === "xterm-kitty") {
     return 3;
   }
   if ("TERM_PROGRAM" in env2) {
     const version = Number.parseInt((env2.TERM_PROGRAM_VERSION || "").split(".")[0], 10);
     switch (env2.TERM_PROGRAM) {
-      case "iTerm.app":
+      case "iTerm.app": {
         return version >= 3 ? 3 : 2;
-      case "Apple_Terminal":
+      }
+      case "Apple_Terminal": {
         return 2;
+      }
     }
   }
   if (/-256(color)?$/i.test(env2.TERM)) {

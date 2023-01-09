@@ -23643,6 +23643,10 @@ var core = __toESM(require_core());
 var import_github2 = __toESM(require_github());
 var ignoredStatuses = core.getMultilineInput("ignored", { trimWhitespace: true });
 var PullRequest = class {
+  static async get(github) {
+    const pullRequest = await github.graphql((0, import_typed_graphqlify.query)(PR_SCHEMA).toString());
+    return new PullRequest(github, pullRequest.repository.pullRequest);
+  }
   constructor(github, pullRequest) {
     var _a;
     this.github = github;
@@ -23662,10 +23666,6 @@ var PullRequest = class {
     if (checksAndStatuses) {
       this.normalizeAndPopulateStatuses(checksAndStatuses);
     }
-  }
-  static async get(github) {
-    const pullRequest = await github.graphql((0, import_typed_graphqlify.query)(PR_SCHEMA).toString());
-    return new PullRequest(github, pullRequest.repository.pullRequest);
   }
   normalizeAndPopulateStatuses(checksAndStatuses = []) {
     checksAndStatuses.forEach((checkOrStatus) => {

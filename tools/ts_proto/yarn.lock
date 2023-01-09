@@ -633,9 +633,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"protobufjs@npm:7.1.1":
-  version: 7.1.1
-  resolution: "protobufjs@npm:7.1.1"
+"protobufjs@npm:7.1.2":
+  version: 7.1.2
+  resolution: "protobufjs@npm:7.1.2"
   dependencies:
     "@protobufjs/aspromise": ^1.1.2
     "@protobufjs/base64": ^1.1.2
@@ -649,7 +649,7 @@ __metadata:
     "@protobufjs/utf8": ^1.1.0
     "@types/node": ">=13.7.0"
     long: ^5.0.0
-  checksum: f6b0e7cec29056cefb83902009b39d24ac14a6117b52bc9b291b29778dad010e42d5563a20045e4de89b880114f4214f984396c8296a0d1b22f5dc7d9fe6705e
+  checksum: ae41669b1b0372fb1d49f506f2d1f2b0fb3dc3cece85987b17bcb544e4cef7c8d27f480486cdec324146ad0a5d22a327166a7ea864a9b3e49cc3c92a5d3f6500
   languageName: node
   linkType: hard
 
@@ -734,7 +734,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ts_proto@workspace:."
   dependencies:
-    protobufjs: 7.1.1
+    protobufjs: 7.1.2
     protobufjs-cli: 1.0.2
   languageName: unknown
   linkType: soft
