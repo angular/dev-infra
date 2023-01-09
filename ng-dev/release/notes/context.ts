@@ -18,7 +18,13 @@ const typesToIncludeInReleaseNotes = Object.values(COMMIT_TYPES)
   .map((type) => type.name);
 
 /** List of commit authors which are bots. */
-const botsAuthorNames = ['dependabot[bot]', 'Renovate Bot', 'angular-robot', 'Angular Robot'];
+const botsAuthorNames = [
+  'dependabot[bot]',
+  'Renovate Bot',
+  'angular-robot',
+  'angular-robot[bot]',
+  'Angular Robot',
+];
 
 /** Data used for context during rendering. */
 export interface RenderContextData {
