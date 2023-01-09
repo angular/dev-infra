@@ -4,17 +4,11 @@ import fetch from 'node-fetch';
 import {
   AuthorizationError,
   AuthorizationErrorJson,
-  AuthorizationNotifier,
   AuthorizationRequest,
   AuthorizationServiceConfiguration,
-  BaseTokenRequestHandler,
-  GRANT_TYPE_AUTHORIZATION_CODE,
-  TokenRequest,
   TokenResponse,
   TokenResponseJson,
 } from '@openid/appauth';
-import {NodeRequestor} from '@openid/appauth/built/node_support/node_requestor.js';
-import {NodeBasedHandler} from '@openid/appauth/built/node_support/node_request_handler.js';
 import {Spinner} from '../../utils/spinner.js';
 
 interface OAuthDanceConfig {
@@ -24,63 +18,7 @@ interface OAuthDanceConfig {
     client_id: string;
     client_secret?: string;
   };
-  loopback: {
-    client_id: string;
-    client_secret?: string;
-  };
   scope: string;
-}
-
-export async function authorizationCodeOAuthDance({
-  loopback: {client_id, client_secret},
-  authConfig,
-  scope,
-}: OAuthDanceConfig): Promise<TokenResponse> {
-  /** Requestor instance for NodeJS usage. */
-  const requestor = new NodeRequestor();
-  /** Notifier to watch for authorization completion. */
-  const notifier = new AuthorizationNotifier();
-  /** Handler for node based requests. */
-  const authorizationHandler = new NodeBasedHandler();
-
-  authorizationHandler.setAuthorizationNotifier(notifier);
-
-  /** The authorization request. */
-  let request = new AuthorizationRequest({
-    client_id,
-    scope,
-    redirect_uri: 'http://127.0.0.1:' + authorizationHandler.httpServerPort,
-    response_type: AuthorizationRequest.RESPONSE_TYPE_CODE,
-    extras: {
-      'access_type': 'offline',
-    },
-  });
-
-  authorizationHandler.performAuthorizationRequest(authConfig, request);
-  await authorizationHandler.completeAuthorizationRequestIfPossible();
-  const authorization = await authorizationHandler.authorizationPromise;
-  const authorizationCode = authorization!.response!.code;
-  notifier.onAuthorizationComplete(
-    authorization!.request,
-    authorization!.response,
-    authorization!.error,
-  );
-
-  const tokenHandler = new BaseTokenRequestHandler(requestor);
-  const tokenRequest = new TokenRequest({
-    client_id,
-    redirect_uri: 'http://127.0.0.1:' + authorizationHandler.httpServerPort,
-    grant_type: GRANT_TYPE_AUTHORIZATION_CODE,
-    code: authorizationCode,
-    extras: {
-      client_secret: client_secret || '',
-    },
-  });
-
-  return await tokenHandler.performTokenRequest(authConfig, tokenRequest).catch((e) => {
-    console.error(e);
-    process.exit(1);
-  });
 }
 
 export async function deviceCodeOAuthDance({
@@ -200,11 +138,6 @@ async function checkStatusOfAuthServer(
 // in the clear in HTTP requests anyway.
 
 export const GoogleOAuthDanceConfig: OAuthDanceConfig = {
-  /** client_id and client_secret for "ng-dev CLI" in the DevInfra GCP project. */
-  loopback: {
-    client_id: '823469418460-ta0oojev0ovg2qlmv6kn46qiaebkr4gi.apps.googleusercontent.com',
-    client_secret: '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',
-  },
   /** client_id and client_secret for "ng-dev CLI Out of Band" in the DevInfra GCP project. */
   oob: {
     client_id: '823469418460-puj3s53su005dp2ima1uim3gil2uggur.apps.googleusercontent.com',
@@ -222,11 +155,6 @@ export const GoogleOAuthDanceConfig: OAuthDanceConfig = {
 };
 
 export const GithubOAuthDanceConfig: OAuthDanceConfig = {
-  /** client_id and client_secret for ng-caretaker Github App. */
-  loopback: {
-    client_id: 'Iv1.57e16107abc663d9',
-    client_secret: 'c9b2b8cfbd59d6a36311607154dccabd8ce042e6',
-  },
   oob: {
     client_id: 'Iv1.57e16107abc663d9',
     client_secret: 'c9b2b8cfbd59d6a36311607154dccabd8ce042e6',
