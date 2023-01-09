@@ -12,10 +12,13 @@ def esbuild(
         # as workspace in the Chrome devtools.
         # https://github.com/bazelbuild/rules_nodejs/blob/c30a26c13d20dac48dc9f220370cb02a317b13f3/packages/esbuild/esbuild.bzl#L333.
         sources_content = True,
+        # Never build a metadata file by default. It's not needed in most use-cases.
+        metafile = False,
         **kwargs):
     _esbuild(
         name = name,
         sources_content = sources_content,
+        metafile = metafile,
         **kwargs
     )
 
