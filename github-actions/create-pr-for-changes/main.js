@@ -17307,8 +17307,14 @@ ${prBody}`;
           issue_number: pr.number,
           body: `Superseded by PR #${createdPr.number}.`
         });
+        await git.github.issues.update({
+          owner: repo.owner,
+          repo: repo.name,
+          issue_number: pr.number,
+          state: "closed"
+        });
       }
-      core.info(`Commented on ${supersededPrs.length} superseded PRs.`);
+      core.info(`Commented and closed ${supersededPrs.length} superseded PRs.`);
     }
   } catch (err) {
     core.setOutput("result", "failed");
