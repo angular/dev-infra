@@ -191,13 +191,16 @@ async function main(): Promise<void> {
           body: `Superseded by PR #${createdPr.number}.`,
         });
 
-        // TODO(gkalpak):
-        //   Do we want to add/remove labels on superseded PRs?
-        //   For example, we could add `state: blocked` and remove `action: merge[-assistance]` by
-        //   default (or we could make these configurable).
+        // Close superseded PR.
+        await git.github.issues.update({
+          owner: repo.owner,
+          repo: repo.name,
+          issue_number: pr.number,
+          state: 'closed',
+        });
       }
 
-      core.info(`Commented on ${supersededPrs.length} superseded PRs.`);
+      core.info(`Commented and closed ${supersededPrs.length} superseded PRs.`);
     }
   } catch (err: any) {
     core.setOutput('result', ActionResult.failed);
