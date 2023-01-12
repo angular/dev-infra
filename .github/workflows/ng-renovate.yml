@@ -14,13 +14,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # tag=v3.3.0
-      - uses: actions/cache@v3
+      # Note: we use `restore` and `save` actions independently so that we can save the cache based on
+      # the hash of the cache that will be generated during the run.
+      - name: Restore cache
+        id: cache-restore
+        uses: actions/cache/restore@v3
         with:
           path: |
+            /tmp/renovate
             .github/ng-renovate/.yarn/cache
-          key: v4-${{hashFiles('.github/ng-renovate/yarn.lock')}}
-          restore-keys: v4-
-
+          key: v2-renovate-${{hashFiles('.github/ng-renovate/yarn.lock')}}
+          restore-keys: v2-renovate-
       - run: yarn install --immutable --cwd .github/ng-renovate
         shell: bash
 
@@ -33,3 +37,11 @@ jobs:
           RENOVATE_TOKEN: ${{ secrets.NG_RENOVATE_USER_ACCESS_TOKEN }}
           RENOVATE_FORK_TOKEN: ${{ secrets.NG_RENOVATE_USER_ACCESS_TOKEN }}
           RENOVATE_CONFIG_FILE: .github/ng-renovate/runner-config.js
+      - name: Save cache
+        id: cache-save
+        uses: actions/cache/save@v3
+        with:
+          path: |
+            /tmp/renovate
+            .github/ng-renovate/.yarn/cache
+          key: ${{ steps.cache-restore.outputs.cache-primary-key }}-${{ github.run_id }}
