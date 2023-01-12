@@ -16,7 +16,7 @@ import {join} from 'path';
 export type EnvStampMode = 'snapshot' | 'release';
 
 /** Log the environment variables expected by Bazel for stamping. */
-export async function buildEnvStamp(mode: EnvStampMode, includeVersion: boolean) {
+export async function printEnvStamp(mode: EnvStampMode, includeVersion: boolean) {
   const git = await GitClient.get();
 
   console.info(`BUILD_SCM_BRANCH ${getCurrentBranch(git)}`);
@@ -32,8 +32,6 @@ export async function buildEnvStamp(mode: EnvStampMode, includeVersion: boolean)
     console.info(`BUILD_SCM_VERSION ${version}`);
     console.info(`BUILD_SCM_EXPERIMENTAL_VERSION ${experimentalVersion}`);
   }
-
-  process.exit();
 }
 
 /** Whether the repo has local changes. */

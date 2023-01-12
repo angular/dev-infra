@@ -6,13 +6,22 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import path from 'path';
+import url from 'url';
 import {Argv, Arguments, CommandModule} from 'yargs';
 
-import {buildEnvStamp, EnvStampMode} from './env-stamp.js';
+import {printEnvStamp, EnvStampMode} from './env-stamp.js';
+
+/**
+ * Type describing a custom stamping function that
+ * can be exposed through the `--additional-stamping-script`.
+ */
+export type EnvStampCustomPrintFn = (mode: EnvStampMode) => Promise<void>;
 
 export interface Options {
   mode: EnvStampMode;
   includeVersion: boolean;
+  additionalStampingScript: string | undefined;
 }
 
 function builder(args: Argv): Argv<Options> {
@@ -26,11 +35,27 @@ function builder(args: Argv): Argv<Options> {
       type: 'boolean',
       description: 'Whether the version should be included in the stamp.',
       default: true,
+    })
+    .option('additionalStampingScript', {
+      type: 'string',
+      description:
+        'Working-dir relative or absolute path to an ESM script which can ' +
+        'print additional stamping variables',
     });
 }
 
-async function handler({mode, includeVersion}: Arguments<Options>) {
-  await buildEnvStamp(mode, includeVersion);
+async function handler({mode, includeVersion, additionalStampingScript}: Arguments<Options>) {
+  await printEnvStamp(mode, includeVersion);
+
+  // Support for additional stamping. We import the script and call the default
+  // function while providing the stamping mode.
+  if (additionalStampingScript !== undefined) {
+    const scriptURL = url.pathToFileURL(path.resolve(additionalStampingScript));
+    const stampingExports = (await import(scriptURL.toString())) as {
+      default: EnvStampCustomPrintFn;
+    };
+    await stampingExports.default(mode);
+  }
 }
 
 /** CLI command module for building the environment stamp. */

@@ -25,6 +25,11 @@ export * from './release/versioning/index.js';
 // as they are needed for authoring pre-release custom checks.
 export {ReleasePrecheckError} from './release/precheck/index.js';
 
+// Expose the default Bazel workspace stamping. This might be used
+// by repositories for additional custom stamping variables.
+export {EnvStampMode} from './release/stamping/env-stamp.js';
+export {EnvStampCustomPrintFn} from './release/stamping/cli.js';
+
 // Exposes logging and console utils that can be used by consumers to e.g. add
 // messages to the dev-infra log which is stored on failures.
 export * from './utils/logging.js';
