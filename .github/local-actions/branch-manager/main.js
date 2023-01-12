@@ -63712,14 +63712,14 @@ async function getBranchesForMajorVersions(repo2, majorVersions) {
     if (!isVersionBranch(name)) {
       continue;
     }
-    const parsed = getVersionForVersionBranch(name);
+    const parsed = convertVersionBranchToSemVer(name);
     if (parsed !== null && majorVersions.includes(parsed.major)) {
       branches.push({ name, parsed });
     }
   }
   return branches.sort((a, b) => import_semver.default.rcompare(a.parsed, b.parsed));
 }
-function getVersionForVersionBranch(branchName) {
+function convertVersionBranchToSemVer(branchName) {
   return import_semver.default.parse(branchName.replace(versionBranchNameRegex, "$1.$2.0"));
 }
 
