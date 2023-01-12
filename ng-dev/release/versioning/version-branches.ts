@@ -113,7 +113,7 @@ export async function getBranchesForMajorVersions(
     }
     // Convert the version-branch into a SemVer version that can be used with the
     // SemVer utilities. e.g. to determine semantic order, compare versions.
-    const parsed = getVersionForVersionBranch(name);
+    const parsed = convertVersionBranchToSemVer(name);
     // Collect all version-branches that match the specified major versions.
     if (parsed !== null && majorVersions.includes(parsed.major)) {
       branches.push({name, parsed});
@@ -131,6 +131,6 @@ export async function getBranchesForMajorVersions(
  * For example `10.0.x` will become `10.0.0` in SemVer. The patch digit is not
  * relevant but needed for parsing. SemVer does not allow `x` as patch digit.
  */
-function getVersionForVersionBranch(branchName: string): semver.SemVer | null {
+export function convertVersionBranchToSemVer(branchName: string): semver.SemVer | null {
   return semver.parse(branchName.replace(versionBranchNameRegex, '$1.$2.0'));
 }
