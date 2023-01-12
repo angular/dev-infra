@@ -29,8 +29,12 @@ export async function printEnvStamp(mode: EnvStampMode, includeVersion: boolean)
 
   if (includeVersion === true) {
     const {version, experimentalVersion} = getSCMVersions(git, mode);
-    console.info(`BUILD_SCM_VERSION ${version}`);
-    console.info(`BUILD_SCM_EXPERIMENTAL_VERSION ${experimentalVersion}`);
+    // Note: We need to use the `STABLE_` prefix to tell Bazel that these
+    // variables are changing rarely, and if they do- the targets relying
+    // on it should be rebuilt. e.g. the NPM package would need to be re-assembled.
+    // https://bazel.build/docs/user-manual#workspace-status-command.
+    console.info(`STABLE_PROJECT_VERSION ${version}`);
+    console.info(`STABLE_PROJECT_EXPERIMENTAL_VERSION ${experimentalVersion}`);
   }
 }
 
