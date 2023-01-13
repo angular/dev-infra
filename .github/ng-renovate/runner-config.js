@@ -5,6 +5,7 @@ module.exports = {
   branchNameStrict: true,
   forkMode: true,
   onboarding: false,
+  persistRepoData: true,
   allowedPostUpgradeCommands: ['.'],
   repositories: [
     'angular/angular',
