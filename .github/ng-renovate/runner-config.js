@@ -16,6 +16,12 @@ module.exports = {
     'angular/vscode-ng-language-service',
     'angular/.github',
   ],
+  hostRules: [
+    {
+      matchHost: 'api.github.com',
+      concurrentRequestLimit: 1,
+    },
+  ],
   productLinks: {
     documentation: 'https://docs.renovatebot.com/',
     help: 'https://github.com/angular/dev-infra',
