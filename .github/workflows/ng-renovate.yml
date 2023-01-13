@@ -16,13 +16,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # tag=v3.3.0
+      - name: Get current date
+        id: date
+        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+      # Note: we use `date` as part of the key hash so that we create a new cache every day.
+      # We do not use `restore-keys` so that the cache does not keep growing.
       - uses: actions/cache@v3
         with:
           path: |
             .github/ng-renovate/.yarn/cache
-          key: v4-${{hashFiles('.github/ng-renovate/yarn.lock')}}
-          restore-keys: v4-
-
+            /tmp/renovate
+          key: v2-renovate-${{hashFiles('.github/ng-renovate/yarn.lock')}}-${{ steps.date.outputs.date }}
       - run: yarn install --immutable --cwd .github/ng-renovate
         shell: bash
 
