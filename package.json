@@ -132,7 +132,7 @@
     "karma-requirejs": "^1.1.0",
     "karma-sourcemap-loader": "^0.3.8",
     "license-checker": "^25.0.1",
-    "minimatch": "^5.0.0",
+    "minimatch": "^6.0.0",
     "multimatch": "^6.0.0",
     "nock": "^13.0.3",
     "node-fetch": "^3.2.5",
