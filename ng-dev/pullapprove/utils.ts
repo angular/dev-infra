@@ -5,10 +5,10 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import Minimatch from 'minimatch';
+import {Minimatch} from 'minimatch';
 
 /** Map that holds patterns and their corresponding Minimatch globs. */
-const patternCache = new Map<string, Minimatch.IMinimatch>();
+const patternCache = new Map<string, Minimatch>();
 
 /**
  * Gets a glob for the given pattern. The cached glob will be returned
@@ -18,7 +18,7 @@ export function getOrCreateGlob(pattern: string) {
   if (patternCache.has(pattern)) {
     return patternCache.get(pattern)!;
   }
-  const glob = new Minimatch.Minimatch(pattern, {dot: false, nobrace: false});
+  const glob = new Minimatch(pattern, {dot: false, nobrace: false});
   patternCache.set(pattern, glob);
   return glob;
 }
