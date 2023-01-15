@@ -1,3 +1,27 @@
+<a name="2023.1.15"></a>
+# 2023.1.15 (2023-01-15)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3115c3d](https://github.com/angular/dev-infra/commit/3115c3d1eeeb4311fc67605838766c3bab7d6c5e) | feat | never build metafile by default in esbuild actions |
+### github-actions
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ad1374e](https://github.com/angular/dev-infra/commit/ad1374e8222825244b36a91d0f085f8fc3c7126d) | fix | close superseded PRs when using create-pr-for-changes |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9666ef2](https://github.com/angular/dev-infra/commit/9666ef229408b6bc23b5069bf00d1eb4e6e19b15) | feat | allow for additional custom stamping |
+| [156cc26](https://github.com/angular/dev-infra/commit/156cc268d0e823a64267baa765c133d6a41761b0) | feat | delete the temporary exceptional minor NPM dist tag when turning stable |
+| [668a07a](https://github.com/angular/dev-infra/commit/668a07a6f07d0a75f530728f77da8e3c78f0374a) | feat | expose `convertVersionBranchToSemVer` function |
+| [9cf7591](https://github.com/angular/dev-infra/commit/9cf75915e1a040d4fbf651076df6823568b956ed) | feat | introduce combined command for dealing with NPM dist tags |
+| [10e6f1b](https://github.com/angular/dev-infra/commit/10e6f1bf1532550063043cf0d8b519e269b61e3b) | fix | always emit project version info as stable stamping keys |
+| [2aee1b5](https://github.com/angular/dev-infra/commit/2aee1b570eb5aef6d8c0b8d192ba88916a20e57d) | fix | filter alternate angular robot name from changelogs |
+| [5c674f2](https://github.com/angular/dev-infra/commit/5c674f284f19ce71fc717437419fd5a058b7a234) | fix | remove loopback authentication schema ([#970](https://github.com/angular/dev-infra/pull/970)) |
+## Special Thanks
+Alan Agius, Charles Lyding, Joey Perrott and Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.12.25"></a>
 # 2022.12.25 (2022-12-25)
 ### ng-dev
@@ -220,18 +244,3 @@ Derek Cormier
 | [5b747aa](https://github.com/angular/dev-infra/commit/5b747aa0f3198901823476ace4e0ffc4ba2dd61f) | fix | **release:** avoid accidentally incorporating unexpected changes in release build |
 ## Special Thanks
 Greg Magolan, Joey Perrott and Paul Gschwendtner
-
-<!-- CHANGELOG SPLIT MARKER -->
-<a name="2022.9.18"></a>
-# 2022.9.18 (2022-09-18)
-### bazel
-| Commit | Type | Description |
-| -- | -- | -- |
-| [4165870](https://github.com/angular/dev-infra/commit/4165870dc0579d1497a80f3138aa04e6455ce646) | feat | **remote-execution:** expose exec_properties constant to enable networking on remote |
-### github-actions
-| Commit | Type | Description |
-| -- | -- | -- |
-| [639ed26](https://github.com/angular/dev-infra/commit/639ed26765ceff0353822ff96b228816f69dc7b0) | feat | allow specifying a base branch in `create-pr-for-changes` |
-| [5497ef9](https://github.com/angular/dev-infra/commit/5497ef98db930407f058f675fbc9454af2796d1b) | fix | use GitHub PAT instead of GitHub App key in `create-pr-for-changes` |
-## Special Thanks
-Derek Cormier, George Kalpakas and angular-robot[bot]

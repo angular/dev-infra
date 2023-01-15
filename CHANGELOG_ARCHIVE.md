@@ -1,3 +1,18 @@
+<a name="2022.9.18"></a>
+# 2022.9.18 (2022-09-18)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [4165870](https://github.com/angular/dev-infra/commit/4165870dc0579d1497a80f3138aa04e6455ce646) | feat | **remote-execution:** expose exec_properties constant to enable networking on remote |
+### github-actions
+| Commit | Type | Description |
+| -- | -- | -- |
+| [639ed26](https://github.com/angular/dev-infra/commit/639ed26765ceff0353822ff96b228816f69dc7b0) | feat | allow specifying a base branch in `create-pr-for-changes` |
+| [5497ef9](https://github.com/angular/dev-infra/commit/5497ef98db930407f058f675fbc9454af2796d1b) | fix | use GitHub PAT instead of GitHub App key in `create-pr-for-changes` |
+## Special Thanks
+Derek Cormier, George Kalpakas and angular-robot[bot]
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.8.28"></a>
 # 2022.8.28 (2022-08-28)
 ### apps
