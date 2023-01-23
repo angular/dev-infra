@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {Octokit} from '@octokit/rest';
-import {actionLabels, mergeLabels, targetLabels} from '../../../ng-dev/pr/common/labels/index.js';
+import {actionLabels, targetLabels} from '../../../ng-dev/pr/common/labels/index.js';
 import {revokeActiveInstallationToken, getAuthTokenFor, ANGULAR_ROBOT} from '../../utils.js';
 import {
   PullRequestLabeledEvent,
@@ -35,7 +35,12 @@ async function run() {
       ),
     );
     core.info(`Triggering ${prs.length} prs to be evaluated`);
-    await Promise.all([...prs.map((pr) => createWorkflowForPullRequest({pr}))]);
+
+    // Invoke sequentially to avoid github secondary rate limits
+    // https://docs.github.com/en/rest/guides/best-practices-for-integrators?apiVersion=2022-11-28#dealing-with-secondary-rate-limits
+    for (const pr of prs) {
+      await createWorkflowForPullRequest({pr});
+    }
   }
 
   if (context.eventName === 'pull_request_target') {
