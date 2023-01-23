@@ -23537,7 +23537,9 @@ async function run() {
     core.info(`Evaluating pull requests as a result of a push to '${ref}'`);
     const prs = await github().then((api) => api.paginate(api.pulls.list, { ...import_github2.context.repo, state: "open", labels: actionLabels.ACTION_MERGE.name }, (pulls) => pulls.data.map((pull) => `${pull.number}`)));
     core.info(`Triggering ${prs.length} prs to be evaluated`);
-    await Promise.all([...prs.map((pr) => createWorkflowForPullRequest({ pr }))]);
+    for (const pr of prs) {
+      await createWorkflowForPullRequest({ pr });
+    }
   }
   if (import_github2.context.eventName === "pull_request_target") {
     if (["opened", "synchronize", "reopened", "ready_for_review"].includes(import_github2.context.payload.action)) {
