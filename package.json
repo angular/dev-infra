@@ -54,14 +54,13 @@
   "devDependencies": {
     "@actions/core": "^1.4.0",
     "@actions/github": "^5.0.0",
-    "@angular/animations": "16.0.0-next.0",
-    "@angular/bazel": "patch:@angular/bazel@npm:14.1.0-next.2#.yarn/patches/@angular-bazel-npm.patch",
-    "@angular/cdk": "15.2.0-rc.0",
-    "@angular/cli": "16.0.0-next.1",
-    "@angular/common": "16.0.0-next.0",
-    "@angular/compiler": "16.0.0-next.0",
-    "@angular/compiler-cli": "16.0.0-next.0",
-    "@angular/core": "16.0.0-next.0",
+    "@angular/animations": "15.2.0-next.2",
+    "@angular/cdk": "15.2.0-next.1",
+    "@angular/cli": "15.2.0-next.1",
+    "@angular/common": "15.2.0-next.2",
+    "@angular/compiler": "15.2.0-next.2",
+    "@angular/compiler-cli": "15.2.0-next.2",
+    "@angular/core": "15.2.0-next.2",
     "@angular/fire": "^7.1.0-rc",
     "@angular/forms": "16.0.0-next.0",
     "@angular/material": "15.2.0-rc.0",
@@ -161,6 +160,6 @@
     }
   },
   "resolutions": {
-    "@angular/benchpress/@angular/core": "16.0.0-next.0"
+    "@angular/core": "16.0.0-next.0"
   }
 }

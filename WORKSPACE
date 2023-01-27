@@ -25,16 +25,16 @@ http_archive(
     ],
 )
 
-# Fetch rules_nodejs and install its dependencies so we can install our npm dependencies.
 http_archive(
-    name = "build_bazel_rules_nodejs",
-    sha256 = "94070eff79305be05b7699207fbac5d2608054dd53e6109f7d00d923919ff45a",
-    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.8.2/rules_nodejs-5.8.2.tar.gz"],
+    name = "aspect_rules_js",
+    sha256 = "9f51475dd2f99abb015939b1cf57ab5f15ef36ca6d2a67104450893fd0aa5c8b",
+    strip_prefix = "rules_js-1.16.0",
+    url = "https://github.com/aspect-build/rules_js/archive/refs/tags/v1.16.0.tar.gz",
 )
 
-load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_dependencies")
+load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
 
-build_bazel_rules_nodejs_dependencies()
+rules_js_dependencies()
 
 load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
 
@@ -43,44 +43,43 @@ nodejs_register_toolchains(
     node_version = "16.10.0",
 )
 
-load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
+load("@aspect_rules_js//npm:npm_import.bzl", "npm_translate_lock")
 
-yarn_install(
+npm_translate_lock(
     name = "npm",
-    # Yarn Berry/v2+ expects `--immutable` instead of `--frozen-lockfile`.
-    args = ["--immutable"],
-    data = [
-        "//:.yarn/releases/yarn-3.4.1.cjs",
-        "//:.yarnrc.yml",
-    ],
-    # Currently disabled due to:
-    #  1. Missing Windows support currently.
-    #  2. Incompatibilites with the `ts_library` rule.
-    exports_directories_only = False,
-    package_json = "//:package.json",
-    # We prefer to symlink the `node_modules` to only maintain a single install.
-    # See https://github.com/angular/dev-infra/pull/446#issuecomment-1059820287 for details.
-    symlink_node_modules = True,
-    yarn = "//:.yarn/releases/yarn-3.4.1.cjs",
-    yarn_lock = "//:yarn.lock",
+    npmrc = "//:.npmrc",
+    pnpm_lock = "//:pnpm-lock.yaml",
+    verify_node_modules_ignored = "//:.bazelignore",
 )
 
-yarn_install(
-    name = "ts_proto_npm",
-    args = ["--immutable"],
-    data = [
-        "//:.yarn/releases/yarn-3.4.1.cjs",
-        "//tools/ts_proto:.yarnrc.yml",
+load("@npm//:repositories.bzl", "npm_repositories")
+
+npm_repositories()
+
+#yarn_install(
+#    name = "ts_proto_npm",
+##    args = ["--immutable"],
+#    data = [
+#        "//:.yarn/releases/yarn-3.2.3.cjs",
+#        "//tools/ts_proto:.yarnrc.yml",
+#    ],
+#    exports_directories_only = False,
+#    package_json = "//tools/ts_proto:package.json",
+#    yarn = "//:.yarn/releases/yarn-3.2.3.cjs",
+#    yarn_lock = "//tools/ts_proto:yarn.lock",
+#)
+
+#load("@npm//@bazel/protractor:package.bzl", "npm_bazel_protractor_dependencies")
+
+#npm_bazel_protractor_dependencies()
+
+http_archive(
+    name = "io_bazel_rules_webtesting",
+    sha256 = "e9abb7658b6a129740c0b3ef6f5a2370864e102a5ba5ffca2cea565829ed825a",
+    urls = [
+        "https://github.com/bazelbuild/rules_webtesting/releases/download/0.3.5/rules_webtesting.tar.gz",
     ],
-    exports_directories_only = False,
-    package_json = "//tools/ts_proto:package.json",
-    yarn = "//:.yarn/releases/yarn-3.4.1.cjs",
-    yarn_lock = "//tools/ts_proto:yarn.lock",
 )
-
-load("@npm//@bazel/protractor:package.bzl", "npm_bazel_protractor_dependencies")
-
-npm_bazel_protractor_dependencies()
 
 load("@io_bazel_rules_webtesting//web:repositories.bzl", "web_test_repositories")
 
@@ -90,21 +89,21 @@ load("//bazel/browsers:browser_repositories.bzl", "browser_repositories")
 
 browser_repositories()
 
-load("@build_bazel_rules_nodejs//toolchains/esbuild:esbuild_repositories.bzl", "esbuild_repositories")
+#load("@build_bazel_rules_nodejs//toolchains/esbuild:esbuild_repositories.bzl", "esbuild_repositories")
 
-esbuild_repositories(
-    npm_repository = "npm",
-)
+#esbuild_repositories(
+#    npm_repository = "npm",
+#)
 
 load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 
 rules_pkg_dependencies()
 
-load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
+#load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
 
-sass_repositories(
-    yarn_script = "//:.yarn/releases/yarn-1.22.17.cjs",
-)
+#sass_repositories(
+#    yarn_script = "//:.yarn/releases/yarn-1.22.17.cjs",
+#)
 
 register_toolchains(
     "//bazel/git-toolchain:git_linux_toolchain",
