@@ -14,6 +14,7 @@ ts_library(
         "//ng-dev/utils",
         "@npm//@actions/core",
         "@npm//@actions/github",
+        "@npm//@octokit/openapi-types",
         "@npm//@octokit/plugin-rest-endpoint-methods",
         "@npm//@octokit/rest",
         "@npm//@types/node",

@@ -1,8 +1,8 @@
 import * as core from '@actions/core';
 import {Octokit} from '@octokit/rest';
+import {components as OctokitTypes} from '@octokit/openapi-types';
 import {context} from '@actions/github';
 import fetch, {HeadersInit, RequestInit} from 'node-fetch';
-import {RestEndpointMethodTypes} from '@octokit/plugin-rest-endpoint-methods';
 
 /** CircleCI JSON response on errors. See: https://circleci.com/docs/api/v2. */
 interface CircleErrorResponse {
@@ -45,7 +45,7 @@ export async function rerunCircleCi(installationGithub: Octokit) {
 // TODO(josephperrott): Find multiple workflows on a pr.
 /** Retrieve the workflow ID of the latest CircleCI run for the provided pull request. */
 async function getCircleCiWorkflowIdForPullRequest(
-  pullRequest: RestEndpointMethodTypes['pulls']['get']['response']['data'],
+  pullRequest: OctokitTypes['schemas']['pull-request'],
   github: Octokit,
   circleci: CircleCiClient,
 ) {
