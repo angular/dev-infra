@@ -1,8 +1,8 @@
 import * as core from '@actions/core';
-import {Octokit} from '@octokit/rest';
+import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
+import {components as OctokitTypes} from '@octokit/openapi-types';
 import {context} from '@actions/github';
 import fetch, {HeadersInit, RequestInit} from 'node-fetch';
-import {RestEndpointMethodTypes} from '@octokit/plugin-rest-endpoint-methods';
 
 /** CircleCI JSON response on errors. See: https://circleci.com/docs/api/v2. */
 interface CircleErrorResponse {

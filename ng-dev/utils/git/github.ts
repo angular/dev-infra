@@ -7,8 +7,6 @@
  */
 
 import type {OctokitOptions} from '@octokit/core/dist-types/types.js';
-import type {RestEndpointMethods} from '@octokit/plugin-rest-endpoint-methods/dist-types/generated/method-types.js';
-import type {PaginateInterface} from '@octokit/plugin-paginate-rest';
 
 import {graphql} from '@octokit/graphql';
 import {Octokit} from '@octokit/rest';
@@ -46,11 +44,8 @@ export class GithubClient {
   readonly rateLimit = this._octokit.rateLimit;
   readonly teams = this._octokit.teams;
   readonly search = this._octokit.search;
-
-  // Note: These are properties from `Octokit` that are brought in by optional plugins.
-  // TypeScript requires us to provide an explicit type for these.
-  readonly rest: RestEndpointMethods = this._octokit.rest;
-  readonly paginate: PaginateInterface = this._octokit.paginate;
+  readonly rest = this._octokit.rest;
+  readonly paginate = this._octokit.paginate;
 
   constructor(private _octokitOptions?: OctokitOptions) {}
 }
