@@ -1,18 +1,28 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "generated_file_test", "js_library", "npm_package_bin")
+load("@npm//:protobufjs-cli/package_json.bzl", "bin")
+load("//tools:defaults_new.bzl", "js_library", "write_source_files")
+load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
 
 def generate_ts_proto_module(name, protofile, visibility = None):
-    """Generate a typescript module for decoding a proto binary file based on a provided .proto file."""
+    """Generate a typescript module for decoding a proto binary file based
+      on a provided .proto file."""
 
     js_file = name + "_pb.js"
     d_ts_file = name + "_pb.d.ts"
+    protofile_bin_name = "proto_file_%s" % name
 
-    npm_package_bin(
+    copy_file(
+        name = protofile_bin_name,
+        src = protofile,
+        out = "proto_input_%s.proto" % name,
+    )
+
+    bin.pbjs(
         name = "generate_js_" + name,
-        tool = "@ts_proto_npm//protobufjs-cli/bin:pbjs",
-        data = [
-            protofile,
+        srcs = [
+            ":%s" % protofile_bin_name,
             "//tools/ts_proto:esm-wrapper",
         ],
+        copy_srcs_to_bin = False,
         testonly = True,
         args = [
             "-t",
@@ -21,35 +31,30 @@ def generate_ts_proto_module(name, protofile, visibility = None):
             "protobufjs",
             "--es6",
             "-w",
-            "$(execpath //tools/ts_proto:esm-wrapper)",
-            "$(execpath %s)" % protofile,
+            "$(rootpath //tools/ts_proto:esm-wrapper)",
+            "$(rootpath :%s)" % protofile_bin_name,
         ],
         stdout = "generated_" + js_file,
     )
 
-    npm_package_bin(
+    bin.pbts(
         name = "generate_ts_" + name,
-        tool = "@ts_proto_npm//protobufjs-cli/bin:pbts",
-        data = [":generate_js_%s" % name],
+        srcs = [":generate_js_%s" % name],
+        copy_srcs_to_bin = False,
         testonly = True,
         args = [
-            "$(execpath :generate_js_%s)" % name,
+            "$(rootpath :generate_js_%s)" % name,
         ],
         stdout = "generated_" + d_ts_file,
     )
 
-    generated_file_test(
-        name = name + "_dts",
-        src = d_ts_file,
+    write_source_files(
+        name = name + "_files",
+        files = {
+            d_ts_file: ":generated_" + d_ts_file,
+            js_file: ":generated_" + js_file,
+        },
         testonly = True,
-        generated = "generated_" + d_ts_file,
-    )
-
-    generated_file_test(
-        name = name + "_js",
-        testonly = True,
-        src = js_file,
-        generated = "generated_" + js_file,
     )
 
     js_library(
@@ -59,7 +64,7 @@ def generate_ts_proto_module(name, protofile, visibility = None):
             js_file,
         ],
         deps = [
-            "@npm//protobufjs",
+            "//:node_modules/protobufjs",
         ],
         visibility = visibility,
     )

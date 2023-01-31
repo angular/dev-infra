@@ -1,9 +1,6 @@
-# BEGIN-INTERNAL
-load("//:package.bzl", "NPM_PACKAGE_SUBSTITUTIONS")
-load("@aspect_rules_js//npm:defs.bzl", "npm_package")
-
 #load("//tools:defaults.bzl", "pkg_npm")
 load("@npm//:defs.bzl", "npm_link_all_packages")
+load("//tools:defaults_new.bzl", "ts_config")
 
 npm_link_all_packages()
 
@@ -12,11 +9,11 @@ exports_files([
     ".yarnrc.yml",
 ])
 
-#ts_config(
-#    name = "tsconfig",
-#    src = "tsconfig.json",
-#    visibility = ["//visibility:public"],
-#)
+ts_config(
+    name = "tsconfig",
+    src = "tsconfig.json",
+    visibility = ["//visibility:public"],
+)
 
 package_group(
     name = "npm",
@@ -25,25 +22,24 @@ package_group(
     ],
 )
 
-npm_package(
-    name = "npm_package",
-    package_name = "@angular/build-tooling",
-    srcs = [
-        "BUILD.bazel",
-        "package.json",
-        "tsconfig.json",
-        ":index.bzl",
-        "//bazel:static_files",
-        "//lint-rules/stylelint:static_files",
-        "//lint-rules/tslint:static_files",
-        "//shared-scripts:static_files",
-    ],
-    substitutions = NPM_PACKAGE_SUBSTITUTIONS,
-    deps = [
-        "//lint-rules/stylelint:lib",
-        "//lint-rules/tslint:lib",
-    ],
-)
+#npm_package(
+#    name = "npm_package",
+#    srcs = [
+#        "BUILD.bazel",
+#        "package.json",
+#        "tsconfig.json",
+#        ":index.bzl",
+#        "//bazel:static_files",
+#        "//lint-rules/stylelint:static_files",
+#        "//lint-rules/tslint:static_files",
+#        "//shared-scripts:static_files",
+#    ],
+#    substitutions = NPM_PACKAGE_SUBSTITUTIONS,
+#    deps = [
+#        "//lint-rules/stylelint:lib",
+#        "//lint-rules/tslint:lib",
+#    ],
+#)
 # END-INTERNAL
 
 exports_files(["tsconfig.json"])

@@ -4,6 +4,7 @@
     "target": "es2020",
     "lib": ["es2020", "dom"],
     "experimentalDecorators": true,
+    "declaration": true,
     "strict": true,
     "outDir": "./dist/tsc-non-bazel-out",
     "skipLibCheck": true,

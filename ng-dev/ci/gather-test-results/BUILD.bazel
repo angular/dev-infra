@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults_new.bzl", "ts_library")
 
 ts_library(
     name = "gather-test-results",
@@ -8,9 +8,9 @@ ts_library(
     ],
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/yargs",
         "//ng-dev/utils",
         "//ng-dev/utils/protos:bazel_test_status",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
     ],
 )

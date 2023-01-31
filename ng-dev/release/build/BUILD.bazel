@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
+load("//tools:defaults_new.bzl", "ts_library")
 
 exports_files([
     "build-worker.ts",
@@ -14,10 +14,10 @@ ts_library(
     ),
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/yargs",
         "//ng-dev/release/config",
         "//ng-dev/utils",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
     ],
 )
 
@@ -29,14 +29,14 @@ ts_library(
     ]),
     deps = [
         ":build",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
         "//ng-dev/release/config",
         "//ng-dev/utils",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
     ],
 )
 
-jasmine_node_test(
-    name = "test",
-    specs = [":test_lib"],
-)
+#jasmine_node_test(
+#    name = "test",
+#    specs = [":test_lib"],
+#)

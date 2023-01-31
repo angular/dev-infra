@@ -7,16 +7,16 @@ ts_library(
         "**/*.ts",
     ]),
     deps = [
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
         "//ng-dev/utils",
         "//ng-dev/utils/testing",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
     ],
 )
 
 jasmine_node_test(
     name = "test",
-    data = ["@npm//@yarnpkg/lockfile"],
+    data = ["//:node_modules/@yarnpkg/lockfile"],
     # Same reasoning as in "ng-dev/BUILD.bazel". This package cannot be bundled.
     external = ["@yarnpkg/lockfile"],
     specs = [":test_lib"],

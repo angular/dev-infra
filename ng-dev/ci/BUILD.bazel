@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults_new.bzl", "ts_library")
 
 ts_library(
     name = "ci",
@@ -7,7 +7,7 @@ ts_library(
     ],
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
+        "//:node_modules/@types/yargs",
         "//ng-dev/ci/gather-test-results",
-        "@npm//@types/yargs",
     ],
 )

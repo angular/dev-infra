@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults_new.bzl", "ts_library")
 
 ts_library(
     name = "publish",
@@ -7,6 +7,18 @@ ts_library(
     ]),
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
+        "//:node_modules/@octokit/rest",
+        "//:node_modules/@types/ejs",
+        "//:node_modules/@types/folder-hash",
+        "//:node_modules/@types/inquirer",
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/semver",
+        "//:node_modules/@types/yargs",
+        "//:node_modules/ejs",
+        "//:node_modules/folder-hash",
+        "//:node_modules/inquirer",
+        "//:node_modules/semver",
+        "//:node_modules/typed-graphqlify",
         "//ng-dev/commit-message",
         "//ng-dev/pr/merge",
         "//ng-dev/release/build",
@@ -16,17 +28,5 @@ ts_library(
         "//ng-dev/release/precheck",
         "//ng-dev/release/versioning",
         "//ng-dev/utils",
-        "@npm//@octokit/rest",
-        "@npm//@types/ejs",
-        "@npm//@types/folder-hash",
-        "@npm//@types/inquirer",
-        "@npm//@types/node",
-        "@npm//@types/semver",
-        "@npm//@types/yargs",
-        "@npm//ejs",
-        "@npm//folder-hash",
-        "@npm//inquirer",
-        "@npm//semver",
-        "@npm//typed-graphqlify",
     ],
 )

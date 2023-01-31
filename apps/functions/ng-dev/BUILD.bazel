@@ -21,9 +21,9 @@ ts_library(
         "ng-dev-token.ts",
     ],
     deps = [
+        "//:node_modules/@octokit/webhooks-types",
+        "//:node_modules/firebase-admin",
+        "//:node_modules/firebase-functions",
         "//apps/shared/models:server",
-        "@npm//@octokit/webhooks-types",
-        "@npm//firebase-admin",
-        "@npm//firebase-functions",
     ],
 )

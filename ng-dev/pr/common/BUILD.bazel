@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults_new.bzl", "ts_library")
 
 ts_library(
     name = "common",
@@ -16,16 +16,16 @@ ts_library(
         "//ng-dev:__subpackages__",
     ],
     deps = [
+        "//:node_modules/@octokit/graphql-schema",
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/semver",
+        "//:node_modules/semver",
+        "//:node_modules/typed-graphqlify",
         "//ng-dev/commit-message",
         "//ng-dev/pr/common/labels",
         "//ng-dev/pr/config",
         "//ng-dev/release/config",
         "//ng-dev/release/versioning",
         "//ng-dev/utils",
-        "@npm//@octokit/graphql-schema",
-        "@npm//@types/node",
-        "@npm//@types/semver",
-        "@npm//semver",
-        "@npm//typed-graphqlify",
     ],
 )

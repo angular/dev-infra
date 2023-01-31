@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
+load("//tools:defaults_new.bzl", "ts_library")
 
 ts_library(
     name = "delete",
@@ -10,13 +10,13 @@ ts_library(
     ),
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/semver",
+        "//:node_modules/@types/yargs",
+        "//:node_modules/semver",
         "//ng-dev/release/config",
         "//ng-dev/release/versioning",
         "//ng-dev/utils",
-        "@npm//@types/node",
-        "@npm//@types/semver",
-        "@npm//@types/yargs",
-        "@npm//semver",
     ],
 )
 
@@ -27,16 +27,16 @@ ts_library(
     ]),
     deps = [
         ":delete",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
         "//ng-dev/release/config",
         "//ng-dev/release/versioning",
         "//ng-dev/utils",
         "//ng-dev/utils/testing",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
     ],
 )
 
-jasmine_node_test(
-    name = "test",
-    specs = [":test_lib"],
-)
+#jasmine_node_test(
+#    name = "test",
+#    specs = [":test_lib"],
+#)

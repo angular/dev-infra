@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults_new.bzl", "ts_library")
 
 ts_library(
     name = "npm-dist-tag",
@@ -7,10 +7,10 @@ ts_library(
     ]),
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/yargs",
+        "//:node_modules/yargs",
         "//ng-dev/release/npm-dist-tag/delete",
         "//ng-dev/release/npm-dist-tag/set",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
-        "@npm//yargs",
     ],
 )

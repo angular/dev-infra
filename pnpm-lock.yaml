@@ -62,6 +62,7 @@ specifiers:
   '@types/jasmine': ^4.0.0
   '@types/jsdom': ^21.0.0
   '@types/license-checker': ^25.0.3
+  '@types/minimatch': ^5.1.2
   '@types/node': 16.10.9
   '@types/opener': ^1.4.0
   '@types/selenium-webdriver': ^4.0.18
@@ -114,6 +115,8 @@ specifiers:
   opener: ^1.5.2
   prettier: 2.8.4
   protobufjs: ^7.0.0
+  protobufjs-cli: ^1.1.0
+  protoc-gen-ts: ^0.8.5
   protractor: ^7.0.0
   requirejs: ^2.3.6
   rxjs: ^7.4.0
@@ -131,7 +134,7 @@ specifiers:
   tslib: ^2.3.0
   tslint: ^6.1.3
   typed-graphqlify: ^3.1.1
-  typescript: ~4.9.0
+  typescript: 4.9.4
   uuid: ^9.0.0
   wait-on: ^7.0.0
   which: ^3.0.0
@@ -221,6 +224,7 @@ devDependencies:
   '@types/jasmine': 4.0.3
   '@types/jsdom': 21.1.0
   '@types/license-checker': 25.0.3
+  '@types/minimatch': 5.1.2
   '@types/opener': 1.4.0
   '@types/semver': 7.3.12
   '@types/spdx-satisfies': 0.1.0
@@ -263,6 +267,8 @@ devDependencies:
   node-fetch: 3.2.10
   opener: 1.5.2
   protobufjs: 7.0.0
+  protobufjs-cli: 1.1.0_protobufjs@7.0.0
+  protoc-gen-ts: 0.8.5_typescript@4.9.4
   requirejs: 2.3.6
   rxjs: 7.8.0
   semver: 7.3.8
@@ -3285,6 +3291,13 @@ packages:
     resolution: {integrity: sha512-4JQNk+3mVzK3xh2rqd6RB4J46qUR19azEHBneZyTZM+c456qOrbbM/5xcR8huNCCcbVt7+UmizG6GuUvPvKUYg==}
     dev: true
 
+  /@jsdoc/salty/0.2.3:
+    resolution: {integrity: sha512-bbtCxCkxcnWhi50I+4Lj6mdz9w3pOXOgEQrID8TCZ/DF51fW7M9GCQW2y45SpBDdHd1Eirm1X/Cf6CkAAe8HPg==}
+    engines: {node: '>=v12.0.0'}
+    dependencies:
+      lodash: 4.17.21
+    dev: true
+
   /@leichtgewicht/ip-codec/2.0.4:
     resolution: {integrity: sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==}
     dev: false
@@ -4766,7 +4779,7 @@ packages:
   /@types/glob/8.0.0:
     resolution: {integrity: sha512-l6NQsDDyQUVeoTynNpC9uRvCUint/gSUXQA2euwmTuWGvPY5LSDUu6tkCtJB2SvGQlJQzLaKqcGZP4//7EDveA==}
     dependencies:
-      '@types/minimatch': 3.0.5
+      '@types/minimatch': 5.1.2
       '@types/node': 18.7.4
     dev: true
 
@@ -4865,6 +4878,10 @@ packages:
 
   /@types/minimatch/3.0.5:
     resolution: {integrity: sha512-Klz949h02Gz2uZCMGwDUSDS1YBlTdDDgbWHi+81l29tQALUtvz4rAYi5uoVhE5Lagoq6DeqAUlbrHvW/mXDgdQ==}
+    dev: true
+
+  /@types/minimatch/5.1.2:
+    resolution: {integrity: sha512-K0VQKziLUWkVKiRVrx4a40iPaxTUefQmjtkQofBkYRcoaaL/8rhwDWww9qWbrgicNOgnpIsMxyNIUM4+n6dUIA==}
     dev: true
 
   /@types/minimist/1.2.2:
@@ -9281,6 +9298,28 @@ packages:
       underscore: 1.13.4
     dev: true
 
+  /jsdoc/4.0.0:
+    resolution: {integrity: sha512-tzTgkklbWKrlaQL2+e3NNgLcZu3NaK2vsHRx7tyHQ+H5jcB9Gx0txSd2eJWlMC/xU1+7LQu4s58Ry0RkuaEQVg==}
+    engines: {node: '>=12.0.0'}
+    hasBin: true
+    dependencies:
+      '@babel/parser': 7.20.7
+      '@jsdoc/salty': 0.2.3
+      '@types/markdown-it': 12.2.3
+      bluebird: 3.7.2
+      catharsis: 0.9.0
+      escape-string-regexp: 2.0.0
+      js2xmlparser: 4.0.2
+      klaw: 3.0.0
+      markdown-it: 12.3.2
+      markdown-it-anchor: 8.6.4_2zb4u3vubltivolgu556vv4aom
+      marked: 4.0.18
+      mkdirp: 1.0.4
+      requizzle: 0.2.3
+      strip-json-comments: 3.1.1
+      underscore: 1.13.4
+    dev: true
+
   /jsdom/21.0.0_supports-color@9.3.1:
     resolution: {integrity: sha512-AIw+3ZakSUtDYvhwPwWHiZsUi3zHugpMEKlNPaurviseYoBqo0zBd3zqoUi3LPCNtPFlEP8FiW9MqCZdjb2IYA==}
     engines: {node: '>=14'}
@@ -11327,6 +11366,26 @@ packages:
       uglify-js: 3.16.3
     dev: true
 
+  /protobufjs-cli/1.1.0_protobufjs@7.0.0:
+    resolution: {integrity: sha512-VXMQn+z3yG2WbN2E+mx5vcyIHF7yJSg2jqyqfxcZLWNOSTqUzSSgAE5vu04/JEpwxTI04JGyrZRDHC36wr04uw==}
+    engines: {node: '>=12.0.0'}
+    hasBin: true
+    peerDependencies:
+      protobufjs: ^7.0.0
+    dependencies:
+      chalk: 4.1.2
+      escodegen: 1.14.3
+      espree: 9.3.3
+      estraverse: 5.3.0
+      glob: 8.0.3
+      jsdoc: 4.0.0
+      minimist: 1.2.7
+      protobufjs: 7.0.0
+      semver: 7.3.8
+      tmp: 0.2.1
+      uglify-js: 3.16.3
+    dev: true
+
   /protobufjs/6.11.3:
     resolution: {integrity: sha512-xL96WDdCZYdU7Slin569tFX712BxsxslWwAfAhCYjQKGTq7dAU91Lomy6nLLhh/dyGhk/YH4TwTSRxTzhuHyZg==}
     hasBin: true
@@ -11385,6 +11444,16 @@ packages:
       '@types/long': 4.0.2
       '@types/node': 18.7.4
       long: 5.2.0
+    dev: true
+
+  /protoc-gen-ts/0.8.5_typescript@4.9.4:
+    resolution: {integrity: sha512-LHZ+w/+DqmdgnhPtShgqtPtdv+hJ9bAXEIqNU0kkY2bPcCVIEWz5seOv20FCw6gbKorriTGP8xgz2RsIcrRvVw==}
+    hasBin: true
+    peerDependencies:
+      google-protobuf: ^3.13.0
+      typescript: '>=4'
+    dependencies:
+      typescript: 4.9.4
     dev: true
 
   /protractor/7.0.0_supports-color@9.3.1:

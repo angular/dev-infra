@@ -1,14 +1,14 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults_new.bzl", "ts_library")
 
 ts_library(
     name = "info",
     srcs = ["cli.ts"],
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/yargs",
         "//ng-dev/release/config",
         "//ng-dev/release/versioning",
         "//ng-dev/utils",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
     ],
 )

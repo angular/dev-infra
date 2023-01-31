@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults_new.bzl", "ts_library")
 
 ts_library(
     name = "testing",
@@ -11,15 +11,15 @@ ts_library(
     ],
     deps = [
         ":bazel-env",
+        "//:node_modules/@octokit/plugin-rest-endpoint-methods",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/semver",
+        "//:node_modules/@types/yargs",
+        "//:node_modules/nock",
+        "//:node_modules/semver",
+        "//:node_modules/yargs",
         "//ng-dev/utils",
-        "@npm//@octokit/plugin-rest-endpoint-methods",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
-        "@npm//@types/semver",
-        "@npm//@types/yargs",
-        "@npm//nock",
-        "@npm//semver",
-        "@npm//yargs",
     ],
 )
 
@@ -33,6 +33,6 @@ ts_library(
         "//tools/jasmine:__subpackages__",
     ],
     deps = [
-        "@npm//@types/node",
+        "//:node_modules/@types/node",
     ],
 )

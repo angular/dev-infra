@@ -126,7 +126,7 @@ export const blaze = $root.blaze = (() => {
          * @memberof blaze.TestCase
          * @instance
          */
-        TestCase.prototype.runDurationMillis = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+        TestCase.prototype.runDurationMillis = 0;
 
         /**
          * TestCase result.
@@ -388,12 +388,6 @@ export const blaze = $root.blaze = (() => {
             if (object.result != null)
                 message.result = String(object.result);
             switch (object.type) {
-            default:
-                if (typeof object.type === "number") {
-                    message.type = object.type;
-                    break;
-                }
-                break;
             case "TEST_CASE":
             case 0:
                 message.type = 0;
@@ -412,12 +406,6 @@ export const blaze = $root.blaze = (() => {
                 break;
             }
             switch (object.status) {
-            default:
-                if (typeof object.status === "number") {
-                    message.status = object.status;
-                    break;
-                }
-                break;
             case "PASSED":
             case 0:
                 message.status = 0;
@@ -454,11 +442,7 @@ export const blaze = $root.blaze = (() => {
             if (options.defaults) {
                 object.name = "";
                 object.className = "";
-                if ($util.Long) {
-                    let long = new $util.Long(0, 0, false);
-                    object.runDurationMillis = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
-                } else
-                    object.runDurationMillis = options.longs === String ? "0" : 0;
+                object.runDurationMillis = 0;
                 object.result = "";
                 object.type = options.enums === String ? "TEST_CASE" : 0;
                 object.status = options.enums === String ? "PASSED" : 0;
@@ -481,9 +465,9 @@ export const blaze = $root.blaze = (() => {
             if (message.result != null && message.hasOwnProperty("result"))
                 object.result = message.result;
             if (message.type != null && message.hasOwnProperty("type"))
-                object.type = options.enums === String ? $root.blaze.TestCase.Type[message.type] === undefined ? message.type : $root.blaze.TestCase.Type[message.type] : message.type;
+                object.type = options.enums === String ? $root.blaze.TestCase.Type[message.type] : message.type;
             if (message.status != null && message.hasOwnProperty("status"))
-                object.status = options.enums === String ? $root.blaze.TestCase.Status[message.status] === undefined ? message.status : $root.blaze.TestCase.Status[message.status] : message.status;
+                object.status = options.enums === String ? $root.blaze.TestCase.Status[message.status] : message.status;
             if (message.run != null && message.hasOwnProperty("run"))
                 object.run = message.run;
             return object;
@@ -697,7 +681,7 @@ export const blaze = $root.blaze = (() => {
          * @memberof blaze.TestResultData
          * @instance
          */
-        TestResultData.prototype.runDurationMillis = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+        TestResultData.prototype.runDurationMillis = 0;
 
         /**
          * TestResultData startTimeMillisEpoch.
@@ -705,7 +689,7 @@ export const blaze = $root.blaze = (() => {
          * @memberof blaze.TestResultData
          * @instance
          */
-        TestResultData.prototype.startTimeMillisEpoch = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+        TestResultData.prototype.startTimeMillisEpoch = 0;
 
         /**
          * TestResultData testCase.
@@ -1039,12 +1023,6 @@ export const blaze = $root.blaze = (() => {
             if (object.testPassed != null)
                 message.testPassed = Boolean(object.testPassed);
             switch (object.status) {
-            default:
-                if (typeof object.status === "number") {
-                    message.status = object.status;
-                    break;
-                }
-                break;
             case "NO_STATUS":
             case 0:
                 message.status = 0;
@@ -1158,12 +1136,6 @@ export const blaze = $root.blaze = (() => {
                 message.testCase = $root.blaze.TestCase.fromObject(object.testCase);
             }
             switch (object.failedStatus) {
-            default:
-                if (typeof object.failedStatus === "number") {
-                    message.failedStatus = object.failedStatus;
-                    break;
-                }
-                break;
             case "FULL":
             case 1:
                 message.failedStatus = 1;
@@ -1211,18 +1183,10 @@ export const blaze = $root.blaze = (() => {
                 object.remotelyCached = false;
                 object.isRemoteStrategy = false;
                 object.passedLog = "";
-                if ($util.Long) {
-                    let long = new $util.Long(0, 0, false);
-                    object.runDurationMillis = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
-                } else
-                    object.runDurationMillis = options.longs === String ? "0" : 0;
+                object.runDurationMillis = 0;
                 object.testCase = null;
                 object.failedStatus = options.enums === String ? "FULL" : 1;
-                if ($util.Long) {
-                    let long = new $util.Long(0, 0, false);
-                    object.startTimeMillisEpoch = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
-                } else
-                    object.startTimeMillisEpoch = options.longs === String ? "0" : 0;
+                object.startTimeMillisEpoch = 0;
                 object.statusDetails = "";
             }
             if (message.cachable != null && message.hasOwnProperty("cachable"))
@@ -1230,7 +1194,7 @@ export const blaze = $root.blaze = (() => {
             if (message.testPassed != null && message.hasOwnProperty("testPassed"))
                 object.testPassed = message.testPassed;
             if (message.status != null && message.hasOwnProperty("status"))
-                object.status = options.enums === String ? $root.blaze.BlazeTestStatus[message.status] === undefined ? message.status : $root.blaze.BlazeTestStatus[message.status] : message.status;
+                object.status = options.enums === String ? $root.blaze.BlazeTestStatus[message.status] : message.status;
             if (message.failedLogs && message.failedLogs.length) {
                 object.failedLogs = [];
                 for (let j = 0; j < message.failedLogs.length; ++j)
@@ -1273,7 +1237,7 @@ export const blaze = $root.blaze = (() => {
             if (message.testCase != null && message.hasOwnProperty("testCase"))
                 object.testCase = $root.blaze.TestCase.toObject(message.testCase, options);
             if (message.failedStatus != null && message.hasOwnProperty("failedStatus"))
-                object.failedStatus = options.enums === String ? $root.blaze.FailedTestCasesStatus[message.failedStatus] === undefined ? message.failedStatus : $root.blaze.FailedTestCasesStatus[message.failedStatus] : message.failedStatus;
+                object.failedStatus = options.enums === String ? $root.blaze.FailedTestCasesStatus[message.failedStatus] : message.failedStatus;
             if (message.startTimeMillisEpoch != null && message.hasOwnProperty("startTimeMillisEpoch"))
                 if (typeof message.startTimeMillisEpoch === "number")
                     object.startTimeMillisEpoch = options.longs === String ? String(message.startTimeMillisEpoch) : message.startTimeMillisEpoch;

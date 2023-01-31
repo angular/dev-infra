@@ -14,7 +14,7 @@
       "default": "./*"
     }
   },
-  "packageManager": "yarn@3.4.1",
+  "packageManager": "pnpm@7.26.1+",
   "dependencies": {
     "@angular-devkit/build-angular": "16.0.0-next.1",
     "@angular/benchpress": "0.3.0",
@@ -47,7 +47,7 @@
     "tmp": "^0.2.1",
     "true-case-path": "^2.2.1",
     "tslib": "^2.3.0",
-    "typescript": "~4.9.0",
+    "typescript": "4.9.4",
     "uuid": "^9.0.0",
     "yargs": "^17.0.0"
   },
@@ -96,6 +96,7 @@
     "@types/jasmine": "^4.0.0",
     "@types/jsdom": "^21.0.0",
     "@types/license-checker": "^25.0.3",
+    "@types/minimatch": "^5.1.2",
     "@types/opener": "^1.4.0",
     "@types/semver": "^7.3.6",
     "@types/spdx-satisfies": "^0.1.0",
@@ -138,6 +139,8 @@
     "node-fetch": "^3.2.5",
     "opener": "^1.5.2",
     "protobufjs": "^7.0.0",
+    "protobufjs-cli": "^1.1.0",
+    "protoc-gen-ts": "^0.8.5",
     "requirejs": "^2.3.6",
     "rxjs": "^7.4.0",
     "semver": "^7.3.5",

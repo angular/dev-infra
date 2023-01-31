@@ -32,6 +32,20 @@ http_archive(
     url = "https://github.com/aspect-build/rules_js/archive/refs/tags/v1.16.0.tar.gz",
 )
 
+http_archive(
+    name = "aspect_rules_ts",
+    sha256 = "acb20a4e41295d07441fa940c8da9fd02f8637391fd74a14300586a3ee244d59",
+    strip_prefix = "rules_ts-1.2.0",
+    url = "https://github.com/aspect-build/rules_ts/archive/refs/tags/v1.2.0.tar.gz",
+)
+
+http_archive(
+    name = "aspect_rules_esbuild",
+    sha256 = "f05e9a53ae4b394ca45742ac35f7e658a8ba32cba14b5d531b79466ae86dc7f0",
+    strip_prefix = "rules_esbuild-0.14.0",
+    url = "https://github.com/aspect-build/rules_esbuild/archive/refs/tags/v0.14.0.tar.gz",
+)
+
 load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
 
 rules_js_dependencies()
@@ -55,6 +69,23 @@ npm_translate_lock(
 load("@npm//:repositories.bzl", "npm_repositories")
 
 npm_repositories()
+
+load("@aspect_rules_ts//ts:repositories.bzl", "rules_ts_dependencies")
+
+rules_ts_dependencies(
+    ts_version_from = "//:package.json",
+)
+
+load("@aspect_rules_esbuild//esbuild:dependencies.bzl", "rules_esbuild_dependencies")
+
+rules_esbuild_dependencies()
+
+load("@aspect_rules_esbuild//esbuild:repositories.bzl", "LATEST_VERSION", "esbuild_register_toolchains")
+
+esbuild_register_toolchains(
+    name = "esbuild",
+    esbuild_version = LATEST_VERSION,
+)
 
 #yarn_install(
 #    name = "ts_proto_npm",

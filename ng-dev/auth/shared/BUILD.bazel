@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults_new.bzl", "ts_library")
 
 ts_library(
     name = "shared",
@@ -8,14 +8,14 @@ ts_library(
         "//ng-dev/utils:__pkg__",
     ],
     deps = [
+        "//:node_modules/@openid/appauth",
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/opener",
+        "//:node_modules/@types/ws",
+        "//:node_modules/firebase",
+        "//:node_modules/node-fetch",
+        "//:node_modules/opener",
+        "//:node_modules/ws",
         "//ng-dev/utils",
-        "@npm//@openid/appauth",
-        "@npm//@types/node",
-        "@npm//@types/opener",
-        "@npm//@types/ws",
-        "@npm//firebase",
-        "@npm//node-fetch",
-        "@npm//opener",
-        "@npm//ws",
     ],
 )

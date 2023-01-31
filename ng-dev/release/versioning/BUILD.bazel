@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults_new.bzl", "ts_library")
 
 ts_library(
     name = "versioning",
@@ -7,10 +7,10 @@ ts_library(
     ]),
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
+        "//:node_modules/@types/semver",
+        "//:node_modules/node-fetch",
+        "//:node_modules/semver",
         "//ng-dev/release/config",
         "//ng-dev/utils",
-        "@npm//@types/semver",
-        "@npm//node-fetch",
-        "@npm//semver",
     ],
 )
