@@ -27,11 +27,20 @@ async function run() {
     }
 
     core.info(`Evaluating pull requests as a result of a push to '${ref}'`);
+
+    const mergeReadyPrQuery =
+      `repo:${context.repo.owner}/${context.repo.repo} ` +
+      `is:pr ` +
+      `is:open ` +
+      `label:"${actionLabels.ACTION_MERGE.name}"`;
+
     const prs = await github().then((api) =>
       api.paginate(
-        api.pulls.list,
-        {...context.repo, state: 'open', labels: actionLabels.ACTION_MERGE.name},
-        (pulls) => pulls.data.map((pull) => `${pull.number}`),
+        api.search.issuesAndPullRequests,
+        {
+          q: mergeReadyPrQuery,
+        },
+        (issues) => issues.data.map((i) => `${i.number}`),
       ),
     );
     core.info(`Triggering ${prs.length} prs to be evaluated`);

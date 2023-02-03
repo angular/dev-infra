@@ -23535,7 +23535,10 @@ async function run() {
       return;
     }
     core.info(`Evaluating pull requests as a result of a push to '${ref}'`);
-    const prs = await github().then((api) => api.paginate(api.pulls.list, { ...import_github2.context.repo, state: "open", labels: actionLabels.ACTION_MERGE.name }, (pulls) => pulls.data.map((pull) => `${pull.number}`)));
+    const mergeReadyPrQuery = `repo:${import_github2.context.repo.owner}/${import_github2.context.repo.repo} is:pr is:open label:"${actionLabels.ACTION_MERGE.name}"`;
+    const prs = await github().then((api) => api.paginate(api.search.issuesAndPullRequests, {
+      q: mergeReadyPrQuery
+    }, (issues) => issues.data.map((i) => `${i.number}`)));
     core.info(`Triggering ${prs.length} prs to be evaluated`);
     for (const pr of prs) {
       await createWorkflowForPullRequest({ pr });
