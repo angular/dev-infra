@@ -1,3 +1,13 @@
+<a name="2022.10.2"></a>
+# 2022.10.2 (2022-10-02)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [40aaf38](https://github.com/angular/dev-infra/commit/40aaf3831425d472965dd61e58cbd5854abd7214) | feat | add a rule to filter the first matching output |
+## Special Thanks
+Derek Cormier
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.9.25"></a>
 # 2022.9.25 (2022-09-25)
 ### circleci-orb

@@ -1,3 +1,13 @@
+<a name="2023.2.5"></a>
+# 2023.2.5 (2023-02-05)
+### github-actions
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e8ed81e](https://github.com/angular/dev-infra/commit/e8ed81e6188999368c573e9c76d1eb0376488f44) | fix | branch manager incorrectly syncs all PRs |
+## Special Thanks
+Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2023.1.29"></a>
 # 2023.1.29 (2023-01-29)
 ### github-actions
@@ -222,13 +232,3 @@ Joey Perrott and Paul Gschwendtner
 | [c9b2ff0](https://github.com/angular/dev-infra/commit/c9b2ff083a50d0eac742da1e69e0cbdb98bf53dd) | feat | support skipping CLA validation check forcibly |
 ## Special Thanks
 Derek Cormier and Paul Gschwendtner
-
-<!-- CHANGELOG SPLIT MARKER -->
-<a name="2022.10.2"></a>
-# 2022.10.2 (2022-10-02)
-### bazel
-| Commit | Type | Description |
-| -- | -- | -- |
-| [40aaf38](https://github.com/angular/dev-infra/commit/40aaf3831425d472965dd61e58cbd5854abd7214) | feat | add a rule to filter the first matching output |
-## Special Thanks
-Derek Cormier
