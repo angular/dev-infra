@@ -368,7 +368,7 @@ __metadata:
     "@types/glob": ^8.0.0
     "@types/inquirer": 9.0.3
     "@types/jasmine": ^4.0.0
-    "@types/jsdom": ^20.0.0
+    "@types/jsdom": ^21.0.0
     "@types/license-checker": ^25.0.3
     "@types/node": 16.10.9
     "@types/opener": ^1.4.0
@@ -6097,14 +6097,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jsdom@npm:^20.0.0":
-  version: 20.0.0
-  resolution: "@types/jsdom@npm:20.0.0"
+"@types/jsdom@npm:^21.0.0":
+  version: 21.1.0
+  resolution: "@types/jsdom@npm:21.1.0"
   dependencies:
     "@types/node": "*"
     "@types/tough-cookie": "*"
     parse5: ^7.0.0
-  checksum: 13e67d31347e02d46ec6a23919b3ce39d86136665922a2a6cb977e216a2f46c22d2f025d0586a64ab492ebaa5f43da669b6f173a5a8cfd3e3bb7c9d19b6cfa9e
+  checksum: 39d3c580283cb7cc3b2729738fd2cd64344e44c815d08f7b6ee7d9c973f7512eff7e7187408649c9da69b76ec81c118868e8b8787d50320f3e2f9cbbd0b000d4
   languageName: node
   linkType: hard
 
