@@ -57,7 +57,7 @@ executors:
   macos-x64-executor:
     <<: *default_executor_settings
     macos:
-      xcode: '13.3.0'
+      xcode: '13.3.1'
 
 # Command Definitions
 # https://circleci.com/docs/2.0/reusing-config/#authoring-reusable-commands
@@ -126,7 +126,9 @@ jobs:
       - *save_cache
 
   test_macos_x64:
-    executor: macos-x64-executor
+    executor:
+      name: macos-x64-executor
+      resource_class: macos.x86.medium.gen2
     steps:
       - checkout
       - *restore_cache
