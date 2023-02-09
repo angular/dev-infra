@@ -157,14 +157,7 @@ export function configureAuthorizedGitClientWithTemporaryToken() {
       });
 
       // Close the socket whenever the command which established it is complete.
-      registerCompletedFunction(async () => {
-        socket.close();
-
-        // After the action is done, request it to be forgotten by the local git client as it is no
-        // longer valid.
-        const git = await AuthenticatedGitClient.get();
-        git.runGraceful(['credential', 'reject'], {input: `url=${git.getRepoGitUrl()}\n\n`});
-      });
+      registerCompletedFunction(() => socket.close());
 
       // When the token is provided via the websocket message, use the token to set up
       // the AuthenticatedGitClient. The token is valid as long as the socket remains open,

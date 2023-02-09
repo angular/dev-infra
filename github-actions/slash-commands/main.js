@@ -63657,6 +63657,7 @@ var GitClient = class {
       Log.debug(`"git push" is not able to be run in dryRun mode.`);
       throw new DryRunError();
     }
+    args = ["-c", "credential.helper=", ...args];
     Log.debug("Executing: git", this.sanitizeConsoleOutput(args.join(" ")));
     const result = spawnSync(this.gitBinPath, args, {
       cwd: this.baseDir,
