@@ -17,8 +17,6 @@ test --nolegacy_external_runfiles
 build --deleted_packages=bazel/integration/tests/nested_bazel_workspaces/basic
 query --deleted_packages=bazel/integration/tests/nested_bazel_workspaces/basic
 
-build --define=angular_ivy_enabled=True
-
 ###############################
 # Filesystem interactions     #
 ###############################
@@ -80,6 +78,13 @@ build:remote --platforms=//bazel/remote-execution:platform_with_network
 
 # Set remote caching settings
 build:remote --remote_accept_cached=true
+
+# Enable Build Event Service
+build:remote --bes_backend=buildeventservice.googleapis.com
+build:remote --project_id=internal-200822
+build:remote --bes_header=X-Goog-User-Project=internal-200822
+build:remote --bes_results_url=https://source.cloud.google.com/results/invocations
+build:remote --bes_upload_mode=fully_async
 
 ################################
 #     Release setup            #
