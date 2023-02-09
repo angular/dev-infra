@@ -16,6 +16,7 @@ import {Spinner} from '../../utils/spinner.js';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {addGithubTokenOption} from '../../utils/git/github-yargs.js';
 import {getYarnPathFromNpmGlobalBinaries} from '../../utils/resolve-yarn-bin.js';
+import {getRepositoryGitUrl} from '../../utils/git/github-urls.js';
 
 async function builder(argv: Argv) {
   return addGithubTokenOption(argv);
@@ -91,15 +92,23 @@ async function handler() {
     const commitMessage = `${title}\n\n${body}`;
     /** The name of the branch to use on remote. */
     const branchName = `yarn-update-v${newYarnVersion}`;
+    /** The fork of the user */
+    const userFork = await git.getForkOfAuthenticatedUser();
     /** The name of the owner for remote branch on Github. */
-    const {owner: localOwner} = await git.getForkOfAuthenticatedUser();
+    const {owner: localOwner} = userFork;
 
     spinner.update('Staging yarn vendoring files and creating commit');
     git.run(['add', '.yarn/releases/**', '.yarnrc']);
     git.run(['commit', '-q', '--no-verify', '-m', commitMessage], {env: skipHuskyEnv});
 
     spinner.update('Pushing commit changes to github.');
-    git.run(['push', '-q', 'origin', '--force-with-lease', `HEAD:refs/heads/${branchName}`]);
+    git.run([
+      'push',
+      '-q',
+      getRepositoryGitUrl(userFork, git.githubToken),
+      '--force-with-lease',
+      `HEAD:refs/heads/${branchName}`,
+    ]);
 
     spinner.update('Creating a PR for the changes.');
     const {number} = (
