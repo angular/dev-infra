@@ -90,6 +90,9 @@ export class GitClient {
       throw new DryRunError();
     }
 
+    // Clear the credential helper that is used, preventing the temporary token from being saved as a
+    // valid token for future use.
+    args = ['-c', 'credential.helper=', ...args];
     // To improve the debugging experience in case something fails, we print all executed Git
     // commands at the DEBUG level to better understand the git actions occurring.
     // Note that we sanitize the command before printing it to the console. We do not want to
