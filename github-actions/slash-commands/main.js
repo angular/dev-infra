@@ -68099,14 +68099,22 @@ var PR_SCHEMA = {
     name: import_typed_graphqlify4.types.string,
     repository: {
       url: import_typed_graphqlify4.types.string,
-      nameWithOwner: import_typed_graphqlify4.types.string
+      nameWithOwner: import_typed_graphqlify4.types.string,
+      name: import_typed_graphqlify4.types.string,
+      owner: {
+        login: import_typed_graphqlify4.types.string
+      }
     }
   },
   baseRef: {
     name: import_typed_graphqlify4.types.string,
     repository: {
       url: import_typed_graphqlify4.types.string,
-      nameWithOwner: import_typed_graphqlify4.types.string
+      nameWithOwner: import_typed_graphqlify4.types.string,
+      name: import_typed_graphqlify4.types.string,
+      owner: {
+        login: import_typed_graphqlify4.types.string
+      }
     }
   },
   baseRefName: import_typed_graphqlify4.types.string,

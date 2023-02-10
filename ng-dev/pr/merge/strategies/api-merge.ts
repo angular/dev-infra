@@ -14,9 +14,11 @@ import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-clien
 import {GithubApiMergeMethod, GithubApiMergeStrategyConfig} from '../../config/index.js';
 import {PullRequest} from '../pull-request.js';
 
-import {MergeStrategy} from './strategy.js';
+import {MergeStrategy, TEMP_PR_HEAD_BRANCH} from './strategy.js';
 import {GithubApiRequestError} from '../../../utils/git/github.js';
 import {FatalMergeToolError, MergeConflictsFatalError} from '../failures.js';
+import {getRepositoryGitUrl} from '../../../utils/git/github-urls.js';
+import {Spinner} from '../../../utils/spinner.js';
 
 /** Type describing the parameters for the Octokit `merge` API endpoint. */
 type OctokitMergeParams = RestEndpointMethodTypes['pulls']['merge']['parameters'];
@@ -45,7 +47,16 @@ export class GithubApiMergeStrategy extends MergeStrategy {
    * @throws {FatalMergeToolError} A fatal error if the merge could not be performed.
    */
   override async merge(pullRequest: PullRequest): Promise<void> {
-    const {githubTargetBranch, prNumber, needsCommitMessageFixup, targetBranches} = pullRequest;
+    const {
+      githubTargetBranch,
+      prNumber,
+      needsCommitMessageFixup,
+      targetBranches,
+      commits,
+      baseSha,
+      headRef,
+      headSha,
+    } = pullRequest;
     const method = this._getMergeActionFromPullRequest(pullRequest);
     const cherryPickTargetBranches = targetBranches.filter((b) => b !== githubTargetBranch);
 
@@ -71,13 +82,34 @@ export class GithubApiMergeStrategy extends MergeStrategy {
     let mergeResponseMessage: string;
     let targetSha: string;
 
+    const spinner = new Spinner('');
     try {
+      if (method !== 'squash' && commits.some((c) => c.isFixup)) {
+        spinner.update('Rebasing commits to autosquash fixup commits');
+        this.git.run(['rebase', '--interactive', '--autosquash', baseSha, TEMP_PR_HEAD_BRANCH], {
+          stdio: 'inherit',
+          env: {...process.env, GIT_SEQUENCE_EDITOR: 'true'},
+        });
+        spinner.update('Pushing rebased commits to pull request for merging');
+        this.git.run([
+          'push',
+          '-q',
+          getRepositoryGitUrl(headRef.repo, this.git.githubToken),
+          `HEAD:${headRef.name}`,
+          `--force-with-lease=${headRef.name}:${headSha}`,
+        ]);
+        // Wait file seconds to prevent race condition with immediate merging.
+        await new Promise((resolve) => setTimeout(resolve, 5000));
+      }
+
+      spinner.update('Merging pull request');
       // Merge the pull request using the Github API into the selected base branch.
       const result = await this.git.github.pulls.merge(mergeOptions);
 
       mergeStatusCode = result.status;
       mergeResponseMessage = result.data.message;
       targetSha = result.data.sha;
+      spinner.update('');
     } catch (e) {
       // Note: Github usually returns `404` as status code if the API request uses a
       // token with insufficient permissions. Github does this because it doesn't want
@@ -87,6 +119,8 @@ export class GithubApiMergeStrategy extends MergeStrategy {
         throw new FatalMergeToolError('Insufficient Github API permissions to merge pull request.');
       }
       throw e;
+    } finally {
+      spinner.complete();
     }
 
     // https://developer.github.com/v3/pulls/#response-if-merge-cannot-be-performed

@@ -69529,14 +69529,22 @@ var PR_SCHEMA = {
     name: import_typed_graphqlify2.types.string,
     repository: {
       url: import_typed_graphqlify2.types.string,
-      nameWithOwner: import_typed_graphqlify2.types.string
+      nameWithOwner: import_typed_graphqlify2.types.string,
+      name: import_typed_graphqlify2.types.string,
+      owner: {
+        login: import_typed_graphqlify2.types.string
+      }
     }
   },
   baseRef: {
     name: import_typed_graphqlify2.types.string,
     repository: {
       url: import_typed_graphqlify2.types.string,
-      nameWithOwner: import_typed_graphqlify2.types.string
+      nameWithOwner: import_typed_graphqlify2.types.string,
+      name: import_typed_graphqlify2.types.string,
+      owner: {
+        login: import_typed_graphqlify2.types.string
+      }
     }
   },
   baseRefName: import_typed_graphqlify2.types.string,
@@ -70064,6 +70072,14 @@ async function loadAndValidatePullRequest({ git, config }, prNumber, validationC
   if (prData === null) {
     throw new FatalMergeToolError("Pull request could not be found.");
   }
+  const headRef = {
+    name: prData.headRef.name,
+    repo: {
+      owner: prData.headRef.repository.owner.login,
+      name: prData.headRef.repository.name
+    }
+  };
+  const commits = prData.commits.nodes.map(({ commit }) => parseCommitMessage(commit.message));
   const labels = prData.labels.nodes.map((l) => l.name);
   const githubTargetBranch = prData.baseRefName;
   const { mainBranchName: mainBranchName2, name, owner: owner2 } = config.github;
@@ -70098,8 +70114,10 @@ async function loadAndValidatePullRequest({ git, config }, prNumber, validationC
     hasCaretakerNote,
     validationFailures,
     targetBranches: target.branches,
+    commits,
+    headRef,
     title: prData.title,
-    commitCount: prData.commits.totalCount,
+    commitCount: commits.length,
     headSha: prData.headRefOid
   };
 }

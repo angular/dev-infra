@@ -22,6 +22,7 @@ import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.j
 import {GithubConfig, NgDevConfig} from '../../utils/config.js';
 import {PullRequestConfig} from '../config/index.js';
 import {targetLabels} from '../common/labels/target.js';
+import {Commit, parseCommitMessage} from '../../commit-message/parse.js';
 
 /** Interface that describes a pull request. */
 export interface PullRequest {
@@ -38,6 +39,8 @@ export interface PullRequest {
   /** Branch that the PR targets in the Github UI. */
   githubTargetBranch: string;
   /** Count of commits in this pull request. */
+  commits: Commit[];
+  /** Count of commits in this pull request. */
   commitCount: number;
   /** Optional SHA that this pull request needs to be based on. */
   requiredBaseSha?: string;
@@ -53,6 +56,14 @@ export interface PullRequest {
   validationFailures: PullRequestValidationFailure[];
   /** The SHA for the latest commit in the pull request. */
   headSha: string;
+  /** The SHA for the latest commit in the pull request. */
+  headRef: {
+    name: string;
+    repo: {
+      owner: string;
+      name: string;
+    };
+  };
 }
 
 /**
@@ -82,6 +93,14 @@ export async function loadAndValidatePullRequest(
     throw new FatalMergeToolError('Pull request could not be found.');
   }
 
+  const headRef = {
+    name: prData.headRef.name,
+    repo: {
+      owner: prData.headRef.repository.owner.login,
+      name: prData.headRef.repository.name,
+    },
+  };
+  const commits = prData.commits.nodes.map(({commit}) => parseCommitMessage(commit.message));
   const labels = prData.labels.nodes.map((l) => l.name);
   const githubTargetBranch = prData.baseRefName;
 
@@ -149,8 +168,10 @@ export async function loadAndValidatePullRequest(
     hasCaretakerNote,
     validationFailures,
     targetBranches: target.branches,
+    commits,
+    headRef,
     title: prData.title,
-    commitCount: prData.commits.totalCount,
+    commitCount: commits.length,
     headSha: prData.headRefOid,
   };
 }

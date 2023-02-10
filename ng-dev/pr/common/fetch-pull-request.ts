@@ -86,6 +86,10 @@ export const PR_SCHEMA = {
     repository: {
       url: graphqlTypes.string,
       nameWithOwner: graphqlTypes.string,
+      name: graphqlTypes.string,
+      owner: {
+        login: graphqlTypes.string,
+      },
     },
   },
   baseRef: {
@@ -93,6 +97,10 @@ export const PR_SCHEMA = {
     repository: {
       url: graphqlTypes.string,
       nameWithOwner: graphqlTypes.string,
+      name: graphqlTypes.string,
+      owner: {
+        login: graphqlTypes.string,
+      },
     },
   },
   baseRefName: graphqlTypes.string,
