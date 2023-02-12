@@ -1,3 +1,17 @@
+<a name="2022.10.9"></a>
+# 2022.10.9 (2022-10-09)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b12cd73](https://github.com/angular/dev-infra/commit/b12cd73948225d0d3056d9610eee2c60286e6fdd) | fix | **browsers:** exclude chromium debug logs on remaining platforms |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c9b2ff0](https://github.com/angular/dev-infra/commit/c9b2ff083a50d0eac742da1e69e0cbdb98bf53dd) | feat | support skipping CLA validation check forcibly |
+## Special Thanks
+Derek Cormier and Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.10.2"></a>
 # 2022.10.2 (2022-10-02)
 ### bazel

@@ -1,3 +1,14 @@
+<a name="2023.2.12"></a>
+# 2023.2.12 (2023-02-12)
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0e1bb89](https://github.com/angular/dev-infra/commit/0e1bb894046dd3b071d8fa6e18877f2bba180431) | fix | ignore all credential helpers when using the git client ([#1005](https://github.com/angular/dev-infra/pull/1005)) |
+| [511c2b3](https://github.com/angular/dev-infra/commit/511c2b31c65d9a8d23c481e12c125086d87d51d8) | fix | properly use the fork of the user when updating yarn ([#1005](https://github.com/angular/dev-infra/pull/1005)) |
+## Special Thanks
+Joey Perrott
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2023.2.5"></a>
 # 2023.2.5 (2023-02-05)
 ### github-actions
@@ -218,17 +229,3 @@ Joey Perrott and Paul Gschwendtner
 | [03c8a7b](https://github.com/angular/dev-infra/commit/03c8a7b5bc743d1d6198b6a26789c6512fbc4037) | fix | update `caretaker check` to support canonical config for g3-sync |
 ## Special Thanks
 Joey Perrott and Paul Gschwendtner
-
-<!-- CHANGELOG SPLIT MARKER -->
-<a name="2022.10.9"></a>
-# 2022.10.9 (2022-10-09)
-### bazel
-| Commit | Type | Description |
-| -- | -- | -- |
-| [b12cd73](https://github.com/angular/dev-infra/commit/b12cd73948225d0d3056d9610eee2c60286e6fdd) | fix | **browsers:** exclude chromium debug logs on remaining platforms |
-### ng-dev
-| Commit | Type | Description |
-| -- | -- | -- |
-| [c9b2ff0](https://github.com/angular/dev-infra/commit/c9b2ff083a50d0eac742da1e69e0cbdb98bf53dd) | feat | support skipping CLA validation check forcibly |
-## Special Thanks
-Derek Cormier and Paul Gschwendtner
