@@ -1,5 +1,5 @@
 import * as core from '@actions/core';
-import {Octokit} from '@octokit/rest';
+import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
 import {components as OctokitTypes} from '@octokit/openapi-types';
 import {context} from '@actions/github';
 import fetch, {HeadersInit, RequestInit} from 'node-fetch';
@@ -45,7 +45,7 @@ export async function rerunCircleCi(installationGithub: Octokit) {
 // TODO(josephperrott): Find multiple workflows on a pr.
 /** Retrieve the workflow ID of the latest CircleCI run for the provided pull request. */
 async function getCircleCiWorkflowIdForPullRequest(
-  pullRequest: OctokitTypes['schemas']['pull-request'],
+  pullRequest: RestEndpointMethodTypes['pulls']['get']['response']['data'],
   github: Octokit,
   circleci: CircleCiClient,
 ) {
