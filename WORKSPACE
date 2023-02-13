@@ -9,10 +9,10 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file"
 # rule in `@bazel_tools` is not Windows compatible and outdated.
 http_archive(
     name = "rules_pkg",
-    sha256 = "8a298e832762eda1830597d64fe7db58178aa84cd5926d76d5b744d6558941c2",
+    sha256 = "8c20f74bca25d2d442b327ae26768c02cf3c99e93fad0381f32be9aab1967675",
     urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/rules_pkg/releases/download/0.7.0/rules_pkg-0.7.0.tar.gz",
-        "https://github.com/bazelbuild/rules_pkg/releases/download/0.7.0/rules_pkg-0.7.0.tar.gz",
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_pkg/releases/download/0.8.1/rules_pkg-0.8.1.tar.gz",
+        "https://github.com/bazelbuild/rules_pkg/releases/download/0.8.1/rules_pkg-0.8.1.tar.gz",
     ],
 )
 
@@ -50,7 +50,7 @@ yarn_install(
     # Yarn Berry/v2+ expects `--immutable` instead of `--frozen-lockfile`.
     args = ["--immutable"],
     data = [
-        "//:.yarn/releases/yarn-3.2.3.cjs",
+        "//:.yarn/releases/yarn-3.4.1.cjs",
         "//:.yarnrc.yml",
     ],
     # Currently disabled due to:
@@ -61,7 +61,7 @@ yarn_install(
     # We prefer to symlink the `node_modules` to only maintain a single install.
     # See https://github.com/angular/dev-infra/pull/446#issuecomment-1059820287 for details.
     symlink_node_modules = True,
-    yarn = "//:.yarn/releases/yarn-3.2.3.cjs",
+    yarn = "//:.yarn/releases/yarn-3.4.1.cjs",
     yarn_lock = "//:yarn.lock",
 )
 
@@ -69,12 +69,12 @@ yarn_install(
     name = "ts_proto_npm",
     args = ["--immutable"],
     data = [
-        "//:.yarn/releases/yarn-3.2.3.cjs",
+        "//:.yarn/releases/yarn-3.4.1.cjs",
         "//tools/ts_proto:.yarnrc.yml",
     ],
     exports_directories_only = False,
     package_json = "//tools/ts_proto:package.json",
-    yarn = "//:.yarn/releases/yarn-3.2.3.cjs",
+    yarn = "//:.yarn/releases/yarn-3.4.1.cjs",
     yarn_lock = "//tools/ts_proto:yarn.lock",
 )
 

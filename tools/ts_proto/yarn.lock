@@ -39,6 +39,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jsdoc/salty@npm:^0.2.1":
+  version: 0.2.3
+  resolution: "@jsdoc/salty@npm:0.2.3"
+  dependencies:
+    lodash: ^4.17.21
+  checksum: d2b29089e6ba942bf3228087d35379ada248c34f136357d1a4bf5c0350a0d5bde0f90dc68d5e7271728bac1951f85fe749075df0a32a9d584ad5d198492bf7f1
+  languageName: node
+  linkType: hard
+
 "@protobufjs/aspromise@npm:^1.1.1, @protobufjs/aspromise@npm:^1.1.2":
   version: 1.1.2
   resolution: "@protobufjs/aspromise@npm:1.1.2"
@@ -422,11 +431,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsdoc@npm:^3.6.3":
-  version: 3.6.11
-  resolution: "jsdoc@npm:3.6.11"
+"jsdoc@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "jsdoc@npm:4.0.0"
   dependencies:
     "@babel/parser": ^7.9.4
+    "@jsdoc/salty": ^0.2.1
     "@types/markdown-it": ^12.2.3
     bluebird: ^3.7.2
     catharsis: ^0.9.0
@@ -439,11 +449,10 @@ __metadata:
     mkdirp: ^1.0.4
     requizzle: ^0.2.3
     strip-json-comments: ^3.1.0
-    taffydb: 2.6.2
     underscore: ~1.13.2
   bin:
     jsdoc: jsdoc.js
-  checksum: 7920b5cba6200c8f56c9ac2ac5e89d06b6581dd1ce22e66976409fad8b68c16bfd8cd30fe9af58baeacc9f6bd9ba06d901ca4f5e234944f42a3c37e55e4ddcf0
+  checksum: 3aa99ccb13986e07929abda10276caa2b428faeb230563f89b3dea041f97bc9354f70eb4bd1add961b9041cd950fa8c5cdfad15f59e8ac6e6d3a58b153fc7184
   languageName: node
   linkType: hard
 
@@ -475,7 +484,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4.17.14, lodash@npm:^4.17.15":
+"lodash@npm:^4.17.14, lodash@npm:^4.17.15, lodash@npm:^4.17.21":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
@@ -610,16 +619,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"protobufjs-cli@npm:1.0.2":
-  version: 1.0.2
-  resolution: "protobufjs-cli@npm:1.0.2"
+"protobufjs-cli@npm:1.1.1":
+  version: 1.1.1
+  resolution: "protobufjs-cli@npm:1.1.1"
   dependencies:
     chalk: ^4.0.0
     escodegen: ^1.13.0
     espree: ^9.0.0
     estraverse: ^5.1.0
     glob: ^8.0.0
-    jsdoc: ^3.6.3
+    jsdoc: ^4.0.0
     minimist: ^1.2.0
     semver: ^7.1.2
     tmp: ^0.2.1
@@ -629,13 +638,13 @@ __metadata:
   bin:
     pbjs: bin/pbjs
     pbts: bin/pbts
-  checksum: 75dfa8bb76ea390c4f4926120439892fce6c730ec56960e85d5f03cac9c390fd7467d1254833542d722616ab4cb64a622e6de2fb7c75e7c42972878ae447b773
+  checksum: 124a2cb10d6fccdd6e8f2984b0f7d9a351d9c1efd17f237acd4a9e7c4b82d63265364b1c86bfa5c6a6fa17d7119182c4c323a8972c0078e1ac5c5f653d096f9b
   languageName: node
   linkType: hard
 
-"protobufjs@npm:7.1.2":
-  version: 7.1.2
-  resolution: "protobufjs@npm:7.1.2"
+"protobufjs@npm:7.2.2":
+  version: 7.2.2
+  resolution: "protobufjs@npm:7.2.2"
   dependencies:
     "@protobufjs/aspromise": ^1.1.2
     "@protobufjs/base64": ^1.1.2
@@ -649,7 +658,7 @@ __metadata:
     "@protobufjs/utf8": ^1.1.0
     "@types/node": ">=13.7.0"
     long: ^5.0.0
-  checksum: ae41669b1b0372fb1d49f506f2d1f2b0fb3dc3cece85987b17bcb544e4cef7c8d27f480486cdec324146ad0a5d22a327166a7ea864a9b3e49cc3c92a5d3f6500
+  checksum: 86166e8f3e46789fa4d117ae72c17356db36bf87c0e0710d224be32e543b1c378a94e66dc2b1de5af45edfc25f56acfc7e688c50c956426a3ae97bc474f4445c
   languageName: node
   linkType: hard
 
@@ -707,13 +716,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"taffydb@npm:2.6.2":
-  version: 2.6.2
-  resolution: "taffydb@npm:2.6.2"
-  checksum: 8fea9cdff71735a40320c4beeb80cb98837076cb89614bc55ac5d67561f35ebae158cfc07a193a1099b5e32746433b2c086b0cd6d56f29aa7c7678e74968335b
-  languageName: node
-  linkType: hard
-
 "tmp@npm:^0.2.1":
   version: 0.2.1
   resolution: "tmp@npm:0.2.1"
@@ -734,8 +736,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ts_proto@workspace:."
   dependencies:
-    protobufjs: 7.1.2
-    protobufjs-cli: 1.0.2
+    protobufjs: 7.2.2
+    protobufjs-cli: 1.1.1
   languageName: unknown
   linkType: soft
 
