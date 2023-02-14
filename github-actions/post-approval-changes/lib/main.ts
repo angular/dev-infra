@@ -1,36 +1,10 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {PullRequestEvent} from '@octokit/webhooks-types';
-import {Octokit} from '@octokit/rest';
+import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
 import {ANGULAR_ROBOT, getAuthTokenFor, revokeActiveInstallationToken} from '../../utils.js';
 
-/** Allow list of googlers whose pull request are allowed to include post approval changes. */
-const googlers = [
-  'alan-agius4',
-  'alxhub',
-  'amysorto',
-  'AndrewKushnir',
-  'andrewseguin',
-  'atscott',
-  'clydin',
-  'crisbeto',
-  'devversion',
-  'dgp1130',
-  'dylhunn',
-  'jelbourn',
-  'jessicajaniuk',
-  'josephperrott',
-  'madleinas',
-  'MarkTechson',
-  'mgechev',
-  'mmalerba',
-  'pkozlowski-opensource',
-  'thevis',
-  'twersky',
-  'wagnermaciel',
-  'zarend',
-];
-
+/** Allowlist of known Google owned robot accounts. */
 const googleOwnedRobots = ['angular-robot'];
 
 async function main() {
@@ -56,8 +30,10 @@ async function runPostApprovalChangesAction(client: Octokit): Promise<void> {
 
   const actionUser = context.actor;
 
-  if (googlers.includes(actionUser)) {
-    core.info('Action performed by a googler, skipping as post approval changes are allowed.');
+  if (await isGooglerOrgMember(client, actionUser)) {
+    core.info(
+      'Action performed by an account in the Googler Github Org, skipping as post approval changes are allowed.',
+    );
     return;
   }
 
@@ -86,23 +62,22 @@ async function runPostApprovalChangesAction(client: Octokit): Promise<void> {
   /** Set of reviewers whose latest review has already been processed. */
   const knownReviewers = new Set<string>();
   /** The latest approving reviews for each reviewer on the pull request. */
-  const reviews = allReviews
-    // Use new instance of array before reversing it.
-    .concat()
-    .reverse()
-    .filter((review) => {
-      /** The username of the reviewer, since all reviewers are users this should always exist. */
-      const user = review.user!.login;
-      // Only consider reviews by Googlers for this check.
-      if (!googlers.includes(user)) {
-        return false;
-      }
-      if (knownReviewers.has(user)) {
-        return false;
-      }
-      knownReviewers.add(user);
-      return true;
-    });
+  const reviews: RestEndpointMethodTypes['pulls']['listReviews']['response']['data'] = [];
+
+  // Use new instance of array before reversing it.
+  for (let review of allReviews.concat().reverse()) {
+    /** The username of the reviewer, since all reviewers are users this should always exist. */
+    const user = review.user!.login;
+    if (knownReviewers.has(user)) {
+      continue;
+    }
+    // Only consider reviews by Googlers for this check.
+    if (!(await isGooglerOrgMember(client, user))) {
+      continue;
+    }
+    knownReviewers.add(user);
+    reviews.push(review);
+  }
 
   console.group('Latest Reviews by Reviewer:');
   for (let review of reviews) {
@@ -133,6 +108,25 @@ async function runPostApprovalChangesAction(client: Octokit): Promise<void> {
     repo,
     reviewers: [reviewToRerequest.user!.login],
   });
+}
+
+/** Set of membership lookup results, used as cache for lookups. */
+const isGooglerOrgMemberCache = new Map<string, boolean>([]);
+
+async function isGooglerOrgMember(client: Octokit, username: string): Promise<boolean> {
+  if (isGooglerOrgMemberCache.has(username)) {
+    return isGooglerOrgMemberCache.get(username)!;
+  }
+  return await client.orgs
+    .checkMembershipForUser({org: 'googler', username})
+    .then(
+      ({status}) => (status as number) === 204,
+      () => false,
+    )
+    .then((result) => {
+      isGooglerOrgMemberCache.set(username, result);
+      return result;
+    });
 }
 
 // Only run if the action is executed in a repository with is in the Angular org. This is in place

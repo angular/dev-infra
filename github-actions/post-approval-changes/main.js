@@ -23351,31 +23351,6 @@ async function revokeActiveInstallationToken(githubOrToken) {
 }
 
 // 
-var googlers = [
-  "alan-agius4",
-  "alxhub",
-  "amysorto",
-  "AndrewKushnir",
-  "andrewseguin",
-  "atscott",
-  "clydin",
-  "crisbeto",
-  "devversion",
-  "dgp1130",
-  "dylhunn",
-  "jelbourn",
-  "jessicajaniuk",
-  "josephperrott",
-  "madleinas",
-  "MarkTechson",
-  "mgechev",
-  "mmalerba",
-  "pkozlowski-opensource",
-  "thevis",
-  "twersky",
-  "wagnermaciel",
-  "zarend"
-];
 var googleOwnedRobots = ["angular-robot"];
 async function main() {
   let installationClient = null;
@@ -23396,8 +23371,8 @@ async function runPostApprovalChangesAction(client) {
   }
   const { pull_request: pr } = import_github2.context.payload;
   const actionUser = import_github2.context.actor;
-  if (googlers.includes(actionUser)) {
-    core.info("Action performed by a googler, skipping as post approval changes are allowed.");
+  if (await isGooglerOrgMember(client, actionUser)) {
+    core.info("Action performed by an account in the Googler Github Org, skipping as post approval changes are allowed.");
     return;
   }
   if (googleOwnedRobots.includes(actionUser)) {
@@ -23414,17 +23389,18 @@ async function runPostApprovalChangesAction(client) {
   const pull_number = import_github2.context.issue.number;
   const allReviews = await client.paginate(client.pulls.listReviews, { owner, pull_number, repo });
   const knownReviewers = /* @__PURE__ */ new Set();
-  const reviews = allReviews.concat().reverse().filter((review) => {
+  const reviews = [];
+  for (let review of allReviews.concat().reverse()) {
     const user = review.user.login;
-    if (!googlers.includes(user)) {
-      return false;
-    }
     if (knownReviewers.has(user)) {
-      return false;
+      continue;
+    }
+    if (!await isGooglerOrgMember(client, user)) {
+      continue;
     }
     knownReviewers.add(user);
-    return true;
-  });
+    reviews.push(review);
+  }
   console.group("Latest Reviews by Reviewer:");
   for (let review of reviews) {
     console.log(`${(_a = review.user) == null ? void 0 : _a.login} - ${review.state}`);
@@ -23449,6 +23425,16 @@ async function runPostApprovalChangesAction(client) {
     pull_number,
     repo,
     reviewers: [reviewToRerequest.user.login]
+  });
+}
+var isGooglerOrgMemberCache = /* @__PURE__ */ new Map([]);
+async function isGooglerOrgMember(client, username) {
+  if (isGooglerOrgMemberCache.has(username)) {
+    return isGooglerOrgMemberCache.get(username);
+  }
+  return await client.orgs.checkMembershipForUser({ org: "googler", username }).then(({ status }) => status === 204, () => false).then((result) => {
+    isGooglerOrgMemberCache.set(username, result);
+    return result;
   });
 }
 if (import_github2.context.repo.owner === "angular") {
