@@ -23395,12 +23395,13 @@ async function runPostApprovalChangesAction(client) {
     throw Error("This action can only run for with pull_request_target events");
   }
   const { pull_request: pr } = import_github2.context.payload;
-  if (googlers.includes(pr.user.login)) {
-    core.info("PR author is a googler, skipping as post approval changes are allowed.");
+  const actionUser = import_github2.context.actor;
+  if (googlers.includes(actionUser)) {
+    core.info("Action performed by a googler, skipping as post approval changes are allowed.");
     return;
   }
-  if (googleOwnedRobots.includes(pr.user.login)) {
-    core.info("PR author is a robot owned by Google. Post approval changes are allowed.");
+  if (googleOwnedRobots.includes(actionUser)) {
+    core.info("Action performed by a robot owned by Google, skipping as post approval changes are allowed.");
     return;
   }
   console.debug(`Requested Reviewers: ${pr.requested_reviewers.join(", ")}`);

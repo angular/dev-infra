@@ -54,13 +54,17 @@ async function runPostApprovalChangesAction(client: Octokit): Promise<void> {
   }
   const {pull_request: pr} = context.payload as PullRequestEvent;
 
-  if (googlers.includes(pr.user.login)) {
-    core.info('PR author is a googler, skipping as post approval changes are allowed.');
+  const actionUser = context.actor;
+
+  if (googlers.includes(actionUser)) {
+    core.info('Action performed by a googler, skipping as post approval changes are allowed.');
     return;
   }
 
-  if (googleOwnedRobots.includes(pr.user.login)) {
-    core.info('PR author is a robot owned by Google. Post approval changes are allowed.');
+  if (googleOwnedRobots.includes(actionUser)) {
+    core.info(
+      'Action performed by a robot owned by Google, skipping as post approval changes are allowed.',
+    );
     return;
   }
 
