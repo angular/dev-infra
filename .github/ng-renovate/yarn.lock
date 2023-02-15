@@ -1830,15 +1830,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/instrumentation-bunyan@npm:0.31.0":
-  version: 0.31.0
-  resolution: "@opentelemetry/instrumentation-bunyan@npm:0.31.0"
+"@opentelemetry/instrumentation-bunyan@npm:0.31.1":
+  version: 0.31.1
+  resolution: "@opentelemetry/instrumentation-bunyan@npm:0.31.1"
   dependencies:
-    "@opentelemetry/instrumentation": ^0.34.0
+    "@opentelemetry/instrumentation": ^0.35.1
     "@types/bunyan": 1.8.7
   peerDependencies:
     "@opentelemetry/api": ^1.3.0
-  checksum: 661633ec1491b4d041fa429a89ca9a0b6413e37a345ac032bad4099c630c7cdd6e01c0c441f77753d3222cd154b4fc1f69034969d87d2ae973cfdbd24497c864
+  checksum: 4ae4dd6004a082138672a7c43e8871e69e998886b8aca52075727342ffab9f0813c4395323a5522e5d37b98b02c959a42179c8367e7b76d16df68047c7ce6add
   languageName: node
   linkType: hard
 
@@ -1856,7 +1856,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/instrumentation@npm:0.35.1":
+"@opentelemetry/instrumentation@npm:0.35.1, @opentelemetry/instrumentation@npm:^0.35.1":
   version: 0.35.1
   resolution: "@opentelemetry/instrumentation@npm:0.35.1"
   dependencies:
@@ -1866,19 +1866,6 @@ __metadata:
   peerDependencies:
     "@opentelemetry/api": ^1.3.0
   checksum: 67a6efa878b39962f92924610546883f8535192e9c7638fd36a9493dee49e42c0349fe57291158d55b7ea1ec0a5d74bfe0d94eb2b781cc2a7804c7c5026064ee
-  languageName: node
-  linkType: hard
-
-"@opentelemetry/instrumentation@npm:^0.34.0":
-  version: 0.34.0
-  resolution: "@opentelemetry/instrumentation@npm:0.34.0"
-  dependencies:
-    require-in-the-middle: ^5.0.3
-    semver: ^7.3.2
-    shimmer: ^1.2.1
-  peerDependencies:
-    "@opentelemetry/api": ^1.3.0
-  checksum: edea9748a18fa4452fca3f986662544dda97854fabad5b47972495946ced061f60875bd3aa71b53daadabad4ea5dad5abc7b5ba4c5acb88af9ebe9d71ca0ec1f
   languageName: node
   linkType: hard
 
@@ -2146,9 +2133,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@renovatebot/osv-offline@npm:1.1.5":
-  version: 1.1.5
-  resolution: "@renovatebot/osv-offline@npm:1.1.5"
+"@renovatebot/osv-offline@npm:1.2.0":
+  version: 1.2.0
+  resolution: "@renovatebot/osv-offline@npm:1.2.0"
   dependencies:
     "@octokit/rest": ^19.0.7
     "@renovatebot/osv-offline-db": 1.3.1
@@ -2156,7 +2143,7 @@ __metadata:
     fs-extra: ^11.1.0
     got: ^11.8.6
     luxon: ^3.2.1
-  checksum: ab76cb105ed298426e090ec261b30f8bf513ca7a851630b42cd43245642d8e0cfe576785db016233bf3087c38222596cfdda8bbf98e3363b2965088a5d05c3e7
+  checksum: f1431af7c3a2920e2cafb739b939cc0b265c64b564e1a093ad4796807aa3a59360fec19461fac1f40e8e2d98a4eab679cdf5ca76e0fc91de1ea5191c62f1a038
   languageName: node
   linkType: hard
 
@@ -5351,7 +5338,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: 34.138.0
+    renovate: 34.139.1
   languageName: unknown
   linkType: soft
 
@@ -5782,12 +5769,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:2.8.3":
-  version: 2.8.3
-  resolution: "prettier@npm:2.8.3"
+"prettier@npm:2.8.4":
+  version: 2.8.4
+  resolution: "prettier@npm:2.8.4"
   bin:
     prettier: bin-prettier.js
-  checksum: 92f2ceb522d454370e02082aa74ad27388672f7cee8975028b59517c069fe643bdc73e322675c8faf2ff173d7a626d1a6389f26b474000308e793aa25fff46e5
+  checksum: c173064bf3df57b6d93d19aa98753b9b9dd7657212e33b41ada8e2e9f9884066bb9ca0b4005b89b3ab137efffdf8fbe0b462785aba20364798ff4303aadda57e
   languageName: node
   linkType: hard
 
@@ -6056,9 +6043,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:34.138.0":
-  version: 34.138.0
-  resolution: "renovate@npm:34.138.0"
+"renovate@npm:34.139.1":
+  version: 34.139.1
+  resolution: "renovate@npm:34.139.1"
   dependencies:
     "@aws-sdk/client-codecommit": 3.256.0
     "@aws-sdk/client-ec2": 3.256.0
@@ -6073,14 +6060,14 @@ __metadata:
     "@opentelemetry/context-async-hooks": 1.9.1
     "@opentelemetry/exporter-trace-otlp-http": 0.35.1
     "@opentelemetry/instrumentation": 0.35.1
-    "@opentelemetry/instrumentation-bunyan": 0.31.0
+    "@opentelemetry/instrumentation-bunyan": 0.31.1
     "@opentelemetry/instrumentation-http": 0.35.1
     "@opentelemetry/resources": 1.9.1
     "@opentelemetry/sdk-trace-base": 1.9.1
     "@opentelemetry/sdk-trace-node": 1.9.1
     "@opentelemetry/semantic-conventions": 1.9.1
     "@qnighy/marshal": 0.1.3
-    "@renovatebot/osv-offline": 1.1.5
+    "@renovatebot/osv-offline": 1.2.0
     "@renovatebot/pep440": 2.1.13
     "@renovatebot/ruby-semver": 2.1.8
     "@sindresorhus/is": 4.6.0
@@ -6144,7 +6131,7 @@ __metadata:
     p-queue: 6.6.2
     p-throttle: 4.1.1
     parse-link-header: 2.0.0
-    prettier: 2.8.3
+    prettier: 2.8.4
     quick-lru: 5.1.1
     re2: 1.18.0
     redis: 4.6.4
@@ -6172,7 +6159,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: fe77cd9c3f95ace8643aef60da5287afbe6a38937abd82a9cd83b34e56799a1d214eafc2ebc299eb8bdc3d4c19947632bc6ff388110d983ba15a1ace6fd8b10e
+  checksum: fc9d565900a7190529ee2e19c5402899842c927e1d9999bf753dd19f21b555413ed0ff000067c4992f3989b189665bf38f21de3bbab17d810783e1dd82c9c82e
   languageName: node
   linkType: hard
 
