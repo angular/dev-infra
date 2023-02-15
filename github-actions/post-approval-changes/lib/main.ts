@@ -118,7 +118,7 @@ async function isGooglerOrgMember(client: Octokit, username: string): Promise<bo
     return isGooglerOrgMemberCache.get(username)!;
   }
   return await client.orgs
-    .checkMembershipForUser({org: 'googler', username})
+    .checkMembershipForUser({org: 'googlers', username})
     .then(
       ({status}) => (status as number) === 204,
       () => false,

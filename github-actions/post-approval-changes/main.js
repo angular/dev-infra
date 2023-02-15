@@ -23432,7 +23432,7 @@ async function isGooglerOrgMember(client, username) {
   if (isGooglerOrgMemberCache.has(username)) {
     return isGooglerOrgMemberCache.get(username);
   }
-  return await client.orgs.checkMembershipForUser({ org: "googler", username }).then(({ status }) => status === 204, () => false).then((result) => {
+  return await client.orgs.checkMembershipForUser({ org: "googlers", username }).then(({ status }) => status === 204, () => false).then((result) => {
     isGooglerOrgMemberCache.set(username, result);
     return result;
   });
