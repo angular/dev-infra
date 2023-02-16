@@ -35,6 +35,10 @@
       "groupName": "angular dependencies"
     },
     {
+      "matchPackageNames": "renovate",
+      "schedule": ["after 10:00pm", "before 5:00am"]
+    },
+    {
       "matchPackageNames": ["typescript"],
       "updateTypes": ["major"],
       "enabled": false
