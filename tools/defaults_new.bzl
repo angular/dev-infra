@@ -32,6 +32,7 @@ def ng_module(
         tsconfig = tsconfig,
         declaration = declaration,
         tsc = "//tools/ngc",
+        #tsc_worker = "//tools/ngc",
         tsc_worker = "//tools/ngc:worker",
         **kwargs
     )

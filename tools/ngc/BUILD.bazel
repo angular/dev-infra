@@ -16,10 +16,6 @@ ng_compiler_cli.ngc_binary(
 
 js_binary(
     name = "worker",
-    data = [
-        ":copy_worker_js",
-        "//:node_modules/@angular/compiler-cli",
-        "//:node_modules/typescript",
-    ],
-    entry_point = "ngc_worker.mjs",
+    data = ["//tools/ngc/worker"],
+    entry_point = "//tools/ngc/worker:index.mjs",
 )

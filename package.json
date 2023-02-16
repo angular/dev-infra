@@ -133,6 +133,7 @@
     "karma-requirejs": "^1.1.0",
     "karma-sourcemap-loader": "^0.4.0",
     "license-checker": "^25.0.1",
+    "memfs": "^3.4.13",
     "minimatch": "^7.0.0",
     "multimatch": "^6.0.0",
     "nock": "^13.0.3",

@@ -1,7 +1,7 @@
 import {Component, NgModule} from '@angular/core';
 
 @Component({
-  template: 'Works!',
+  template: 'Works! dyadydd!!',
 })
 export class TestCmp {}
 
