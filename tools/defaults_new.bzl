@@ -23,3 +23,15 @@ def ts_library(
         declaration = declaration,
         **kwargs
     )
+
+def ng_module(
+        tsconfig = "//:tsconfig",
+        declaration = True,
+        **kwargs):
+    _ts_project(
+        tsconfig = tsconfig,
+        declaration = declaration,
+        tsc = "//tools/ngc",
+        tsc_worker = "//tools/ngc:worker",
+        **kwargs
+    )

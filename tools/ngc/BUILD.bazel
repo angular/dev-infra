@@ -1,0 +1,25 @@
+load("@npm//:@angular/compiler-cli/package_json.bzl", ng_compiler_cli = "bin")
+load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
+
+package(default_visibility = ["//visibility:public"])
+
+copy_file(
+    name = "copy_worker_js",
+    src = "@aspect_rules_js//js/private/worker:worker.js",
+    out = "worker.js",
+)
+
+ng_compiler_cli.ngc_binary(
+    name = "ngc",
+)
+
+js_binary(
+    name = "worker",
+    data = [
+        ":copy_worker_js",
+        "//:node_modules/@angular/compiler-cli",
+        "//:node_modules/typescript",
+    ],
+    entry_point = "ngc_worker.mjs",
+)

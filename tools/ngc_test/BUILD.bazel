@@ -1,0 +1,10 @@
+load("//tools:defaults_new.bzl", "ng_module")
+
+ng_module(
+    name = "ngc_test",
+    srcs = [
+        "main.ts",
+        "package.json",
+    ],
+    deps = ["//:node_modules/@angular/core"],
+)
