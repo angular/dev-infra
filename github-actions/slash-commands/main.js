@@ -9586,7 +9586,7 @@ var require_dist_node6 = __commonJS({
     var NON_VARIABLE_OPTIONS = ["method", "baseUrl", "url", "headers", "request", "query", "mediaType"];
     var FORBIDDEN_VARIABLE_OPTIONS = ["query", "method", "url"];
     var GHES_V3_SUFFIX_REGEX = /\/api\/v3\/?$/;
-    function graphql2(request2, query2, options) {
+    function graphql(request2, query2, options) {
       if (options) {
         if (typeof query2 === "string" && "query" in options) {
           return Promise.reject(new Error(`[@octokit/graphql] "query" cannot be used as variable name`));
@@ -9629,7 +9629,7 @@ var require_dist_node6 = __commonJS({
     function withDefaults(request$1, newDefaults) {
       const newRequest = request$1.defaults(newDefaults);
       const newApi = (query2, options) => {
-        return graphql2(newRequest, query2, options);
+        return graphql(newRequest, query2, options);
       };
       return Object.assign(newApi, {
         defaults: withDefaults.bind(null, newRequest),
@@ -9709,7 +9709,7 @@ var require_dist_node8 = __commonJS({
     var universalUserAgent = require_dist_node();
     var beforeAfterHook = require_before_after_hook();
     var request = require_dist_node5();
-    var graphql2 = require_dist_node6();
+    var graphql = require_dist_node6();
     var authToken = require_dist_node7();
     function _objectWithoutPropertiesLoose(source, excluded) {
       if (source == null)
@@ -9770,7 +9770,7 @@ var require_dist_node8 = __commonJS({
           requestDefaults.headers["time-zone"] = options.timeZone;
         }
         this.request = request.request.defaults(requestDefaults);
-        this.graphql = graphql2.withCustomRequest(this.request).defaults(requestDefaults);
+        this.graphql = graphql.withCustomRequest(this.request).defaults(requestDefaults);
         this.log = Object.assign({
           debug: () => {
           },
@@ -29224,7 +29224,7 @@ var require_dist_node14 = __commonJS({
     var NON_VARIABLE_OPTIONS = ["method", "baseUrl", "url", "headers", "request", "query", "mediaType"];
     var FORBIDDEN_VARIABLE_OPTIONS = ["query", "method", "url"];
     var GHES_V3_SUFFIX_REGEX = /\/api\/v3\/?$/;
-    function graphql2(request2, query2, options) {
+    function graphql(request2, query2, options) {
       if (options) {
         if (typeof query2 === "string" && "query" in options) {
           return Promise.reject(new Error(`[@octokit/graphql] "query" cannot be used as variable name`));
@@ -29267,7 +29267,7 @@ var require_dist_node14 = __commonJS({
     function withDefaults(request$1, newDefaults) {
       const newRequest = request$1.defaults(newDefaults);
       const newApi = (query2, options) => {
-        return graphql2(newRequest, query2, options);
+        return graphql(newRequest, query2, options);
       };
       return Object.assign(newApi, {
         defaults: withDefaults.bind(null, newRequest),
@@ -29347,7 +29347,7 @@ var require_dist_node16 = __commonJS({
     var universalUserAgent = require_dist_node();
     var beforeAfterHook = require_before_after_hook();
     var request = require_dist_node13();
-    var graphql2 = require_dist_node14();
+    var graphql = require_dist_node14();
     var authToken = require_dist_node15();
     var VERSION = "4.0.5";
     var Octokit4 = class {
@@ -29375,7 +29375,7 @@ var require_dist_node16 = __commonJS({
           requestDefaults.headers["time-zone"] = options.timeZone;
         }
         this.request = request.request.defaults(requestDefaults);
-        this.graphql = graphql2.withCustomRequest(this.request).defaults(requestDefaults);
+        this.graphql = graphql.withCustomRequest(this.request).defaults(requestDefaults);
         this.log = Object.assign({
           debug: () => {
           },
@@ -63578,7 +63578,6 @@ var DryRunError = class extends Error {
 import { spawnSync } from "child_process";
 
 // 
-var import_graphql = __toESM(require_dist_node14());
 var import_rest = __toESM(require_dist_node20());
 var import_typed_graphqlify2 = __toESM(require_dist2());
 var GithubClient = class {
@@ -63597,13 +63596,11 @@ var GithubClient = class {
   }
 };
 var AuthenticatedGithubClient = class extends GithubClient {
-  constructor(_token) {
-    super({ auth: _token });
-    this._token = _token;
-    this._graphql = import_graphql.graphql.defaults({ headers: { authorization: `token ${this._token}` } });
+  constructor(token) {
+    super({ auth: token });
   }
   async graphql(queryObject, params4 = {}) {
-    return await this._graphql((0, import_typed_graphqlify2.query)(queryObject).toString(), params4);
+    return await this._octokit.graphql((0, import_typed_graphqlify2.query)(queryObject).toString(), params4);
   }
 };
 
@@ -68022,7 +68019,7 @@ var Prompt2 = class {
 
 // 
 var import_typed_graphqlify3 = __toESM(require_dist2());
-var import_graphql2 = __toESM(require_dist_node14());
+var import_graphql = __toESM(require_dist_node14());
 async function getPr(prSchema, prNumber, git) {
   var _a;
   const { owner, name } = git.remoteConfig;
@@ -68039,7 +68036,7 @@ async function getPr(prSchema, prNumber, git) {
     const result = await git.github.graphql(PR_QUERY, { number: prNumber, owner, name });
     return result.repository.pullRequest;
   } catch (e2) {
-    if (e2 instanceof import_graphql2.GraphqlResponseError && ((_a = e2.errors) == null ? void 0 : _a.every((e3) => e3.type === "NOT_FOUND"))) {
+    if (e2 instanceof import_graphql.GraphqlResponseError && ((_a = e2.errors) == null ? void 0 : _a.every((e3) => e3.type === "NOT_FOUND"))) {
       return null;
     }
     throw e2;
