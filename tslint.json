@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/SchemaStore/schemastore/6049f681741399cf73aea088680f58375c12592a/src/schemas/json/tslint.json",
-  "rulesDirectory": ["./tslint-rules"],
+  "rulesDirectory": ["./lint-rules/tslint"],
   "rules": {
     "ts-node-loader": true,
     "no-shadowed-variable": true,

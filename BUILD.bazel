@@ -45,12 +45,12 @@ pkg_npm(
         "tsconfig.json",
         ":index.bzl",
         "//bazel:static_files",
+        "//lint-rules/tslint:static_files",
         "//shared-scripts:static_files",
-        "//tslint-rules:static_files",
     ],
     substitutions = NPM_PACKAGE_SUBSTITUTIONS,
     deps = [
-        "//tslint-rules:lib",
+        "//lint-rules/tslint:lib",
     ],
 )
 # END-INTERNAL

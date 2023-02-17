@@ -12,8 +12,8 @@ basePackageSubstitutions = {
     "rlocation \"dev-infra/": "rlocation \"npm/@angular/build-tooling/",
     "//bazel/": "@npm//@angular/build-tooling/bazel/",
     "//bazel:": "@npm//@angular/build-tooling/bazel:",
-    "//tslint-rules/": "@npm//@angular/build-tooling/tslint-rules/",
-    "//tslint-rules:": "@npm//@angular/build-tooling/tslint-rules:",
+    "//lint-rules/tslint/": "@npm//@angular/build-tooling/tslint/",
+    "//lint-rules/tslint:": "@npm//@angular/build-tooling/tslint:",
     "//shared-scripts/": "@npm//@angular/build-tooling/shared-scripts/",
     "//shared-scripts:": "@npm//@angular/build-tooling/shared-scripts:",
     "//:tsconfig.json": "@npm//@angular/build-tooling:tsconfig.json",
@@ -36,5 +36,5 @@ BZL_DEFAULTS_ALLOW_PACKAGES = [
     "github-actions",
     "ng-dev",
     "tools",
-    "tslint-rules",
+    "lint-rules/tslint",
 ]
