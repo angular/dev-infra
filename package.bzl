@@ -14,6 +14,8 @@ basePackageSubstitutions = {
     "//bazel:": "@npm//@angular/build-tooling/bazel:",
     "//lint-rules/tslint/": "@npm//@angular/build-tooling/tslint/",
     "//lint-rules/tslint:": "@npm//@angular/build-tooling/tslint:",
+    "//lint-rules/stylelint/": "@npm//@angular/build-tooling/stylelint/",
+    "//lint-rules/stylelint:": "@npm//@angular/build-tooling/stylelint:",
     "//shared-scripts/": "@npm//@angular/build-tooling/shared-scripts/",
     "//shared-scripts:": "@npm//@angular/build-tooling/shared-scripts:",
     "//:tsconfig.json": "@npm//@angular/build-tooling:tsconfig.json",
@@ -37,4 +39,5 @@ BZL_DEFAULTS_ALLOW_PACKAGES = [
     "ng-dev",
     "tools",
     "lint-rules/tslint",
+    "lint-rules/stylelint",
 ]

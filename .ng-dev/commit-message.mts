@@ -43,7 +43,7 @@ export const commitMessage: CommitMessageConfig = {
       'ts-circular-dependencies',
     ]),
     ...buildScopesFor('apps', []),
-    ...buildScopesFor('lint-rules', ['tslint']),
+    ...buildScopesFor('lint-rules', ['tslint', 'stylelint']),
     ...buildScopesFor('shared-scripts', []),
     ...buildScopesFor('circleci-orb', []),
   ],
