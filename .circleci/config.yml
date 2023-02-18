@@ -5,7 +5,7 @@ version: 2.1
 orbs:
   buildalert: oss-tools/buildalert@0.1.0
   win: circleci/windows@2.2.0
-  devinfra: angular/dev-infra@1.0.7
+  devinfra: angular/dev-infra@1.0.8
 
 # **Note**: When updating the beginning of the cache key, also update the cache key to match
 # the new cache key prefix. This allows us to take advantage of CircleCI's fallback caching.
