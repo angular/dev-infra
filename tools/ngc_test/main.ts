@@ -1,12 +1,9 @@
 import {Component, NgModule} from '@angular/core';
 
 @Component({
-  template: 'Works! dyadydd!!',
+  selector: 'okd',
+  templateUrl: './template.html',
 })
-export class TestCmp {}
-
-@NgModule({
-  declarations: [TestCmp],
-  bootstrap: [TestCmp],
-})
-export class AppModule {}
+export class TestCmp {
+  ok: string = 'ok';
+}

@@ -2,12 +2,14 @@ import ts from 'typescript';
 import {blaze} from './worker_protocol.cjs';
 import {Volume} from 'memfs';
 import {matchFiles} from './file_system_match_files.mjs';
-import fs from 'fs';
+import fs, {Dirent} from 'fs';
 import path from 'path';
 import * as ngtsc from '@angular/compiler-cli';
 import {AbsoluteFsPath} from '@angular/compiler-cli';
 import {BazelSafeFilesystem} from './bazel_safe_filesystem.mjs';
 
+// Original TS file system options. Can be read on file load.
+const useCaseSensitiveFileNames = ts.sys.useCaseSensitiveFileNames;
 const typeScriptExecutingFilePath = ts.sys.getExecutingFilePath();
 
 const unsupportedFn = () => {
@@ -29,7 +31,8 @@ export class FileSystem extends BazelSafeFilesystem {
   }
 
   pwd(): ngtsc.AbsoluteFsPath {
-    // We are operating in the virtual bazel bin root.
+    // The `ts_project` rules passes options like `--project` relative to the bazel-bin,
+    // so we will mimic the execution running with this as working directory.
     return this._virtualBazelBinRoot as ngtsc.AbsoluteFsPath;
   }
 
@@ -74,6 +77,15 @@ export class FileSystem extends BazelSafeFilesystem {
     return fs.readFileSync(this.toDiskPath(filePath), {encoding: 'utf8'}) as string;
   }
 
+  writeFile(
+    path: ngtsc.AbsoluteFsPath,
+    data: string | Uint8Array,
+    exclusive?: boolean | undefined,
+  ): void {
+    // TODO: guard
+    fs.writeFileSync(this.toDiskPath(path), data, exclusive ? {flag: 'wx'} : undefined);
+  }
+
   exists(filePath: string): boolean {
     return this._vol.existsSync(this.resolve(filePath));
   }
@@ -113,11 +125,10 @@ export class FileSystem extends BazelSafeFilesystem {
       extensions,
       exclude,
       include,
-      ts.sys.useCaseSensitiveFileNames,
+      useCaseSensitiveFileNames,
       '/',
       depth,
-      // TODO:
-      (p) => ({directories: [], files: ['tools/ngc_test/main.ts']}),
+      (p) => this.getDirectoryEntries(p),
       (p) => this.realpath(p as AbsoluteFsPath),
       (p) => this.existsDirectory(p),
     );
@@ -125,20 +136,53 @@ export class FileSystem extends BazelSafeFilesystem {
 
   toTypeScriptSystem(): ts.System {
     return {
-      ...ts.sys,
-      getCurrentDirectory: () => '/',
+      getCurrentDirectory: () => this.pwd(),
       getExecutingFilePath: () => this.fromDiskPath(typeScriptExecutingFilePath),
+      resolvePath: this.resolve.bind(this),
 
       // Read operations. Using virtual FS.
       realpath: this.realpath.bind(this),
       fileExists: this.exists.bind(this),
       readDirectory: this.readDirectory.bind(this),
-      // Read operations, guarding hermetic operations, but real FS:
+      directoryExists: this.existsDirectory.bind(this),
+      getDirectories: (p) => [...this.getDirectoryEntries(p).directories],
+      // NOTE: Real FS, but guarded for hermeticity.
       readFile: this.readFile.bind(this),
+
       // Watch operations: None
       watchFile: unsupportedFn,
       watchDirectory: unsupportedFn,
+
+      // Write operations
+      // Note: Real FS, but guarded for hermeticity.
+      createDirectory: unsupportedFn,
+      writeFile: this.writeFile.bind(this),
+
+      // Arbitrary options
+      useCaseSensitiveFileNames: useCaseSensitiveFileNames,
+      write: console.log.bind(console),
+      exit: unsupportedFn,
+      newLine: '\n',
+      args: [],
     };
+  }
+
+  private getDirectoryEntries(filePath: string): ts.FileSystemEntries {
+    const entries = this._vol.readdirSync(this.resolve(filePath), {
+      withFileTypes: true,
+    }) as Dirent[];
+    const directories: string[] = [];
+    const files: string[] = [];
+
+    for (const e of entries) {
+      if (e.isDirectory()) {
+        directories.push(e.name);
+      } else if (e.isFile() || e.isSymbolicLink()) {
+        files.push(e.name);
+      }
+    }
+
+    return {directories, files};
   }
 
   private diskLstat(filePath: string): fs.Stats | null {
@@ -154,7 +198,7 @@ export class FileSystem extends BazelSafeFilesystem {
   }
 
   private toDiskPath(filePath: string): string {
-    return path.join(this._execroot, filePath);
+    return path.join(this._execroot, this.resolve(filePath));
   }
 
   private fromDiskPath(diskPath: string): string {

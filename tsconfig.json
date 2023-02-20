@@ -22,5 +22,8 @@
     "bazel/integration/tests/**",
     ".yarn/**",
     ".angular/**"
-  ]
+  ],
+  "angularCompilerOptions": {
+    "strictTemplates": true
+  }
 }

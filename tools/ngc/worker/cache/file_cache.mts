@@ -1,5 +1,6 @@
 import {Cache} from './cache.mjs';
 import ts from 'typescript';
+import path from 'path';
 import {blaze} from '../worker_protocol.cjs';
 
 /** Cache entry for `FileCache` */
@@ -48,11 +49,14 @@ export class FileCache {
 
     for (const input of digests) {
       // In the worker, execroot paths are absolute in the virtual FS.
-      this.lastDigests.set(`/${input.path}`, input.digest);
+      input.path = `/${input.path}`;
+
+      this.lastDigests.set(input.path, input.digest);
 
       // Evict the file entry if the digest has changed.
       const entry = this.fileCache.get(input.path, /*updateCache=*/ false);
-      if (entry && isSameDigest(entry.digest, input.digest)) {
+      if (entry && !isSameDigest(entry.digest, input.digest)) {
+        console.error('evicting', input.path);
         this.fileCache.delete(input.path);
       }
     }
@@ -64,14 +68,17 @@ export class FileCache {
     const digest = this.lastDigests.get(filePath);
     if (!digest) {
       const errorMsg = `missing input digest for ${filePath}. `;
-      const entriesToPrint = Array.from(this.lastDigests.keys());
+      const entriesToPrint = Array.from(this.lastDigests.keys())
+        // Look for files with a similar basename.
+        .filter((f) => f.includes(path.basename(filePath)));
+
       if (entriesToPrint.length > 100) {
         throw new Error(
           errorMsg +
-            `(only have ${entriesToPrint.slice(0, 100)} and ${entriesToPrint.length - 100} more)`,
+            `(only have: ${entriesToPrint.slice(0, 100)} and ${entriesToPrint.length - 100} more)`,
         );
       }
-      throw new Error(errorMsg + `(only have ${entriesToPrint})`);
+      throw new Error(errorMsg + `(only have: ${entriesToPrint})`);
     }
     return digest;
   }

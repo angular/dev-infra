@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "declaration": true,
+    "experimentalDecorators": true,
+    "lib": ["dom", "es2022"]
+  },
+  "angularCompilerOptions": {
+    "strictTemplates": true
+  }
+}
