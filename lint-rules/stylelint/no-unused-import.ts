@@ -7,7 +7,7 @@ const ruleName = '@angular/no-unused-import';
 const messages = utils.ruleMessages(ruleName, {
   expected: (namespace) => `Namespace ${namespace} is not being used.`,
   invalid: (rule) =>
-    `Failed to extract namespace from ${rule}. material/no-unused-` +
+    `Failed to extract namespace from ${rule}. @angular/no-unused-` +
     `imports Stylelint rule likely needs to be updated.`,
 });
 
