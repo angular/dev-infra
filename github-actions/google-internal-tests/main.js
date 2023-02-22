@@ -17559,6 +17559,56 @@ var minimatch = (p, pattern, options = {}) => {
   return new Minimatch(pattern, options).match(p);
 };
 var mjs_default = minimatch;
+var starDotExtRE = /^\*+([^+@!?\*\[\(]*)$/;
+var starDotExtTest = (ext2) => (f) => !f.startsWith(".") && f.endsWith(ext2);
+var starDotExtTestDot = (ext2) => (f) => f.endsWith(ext2);
+var starDotExtTestNocase = (ext2) => {
+  ext2 = ext2.toLowerCase();
+  return (f) => !f.startsWith(".") && f.toLowerCase().endsWith(ext2);
+};
+var starDotExtTestNocaseDot = (ext2) => {
+  ext2 = ext2.toLowerCase();
+  return (f) => f.toLowerCase().endsWith(ext2);
+};
+var starDotStarRE = /^\*+\.\*+$/;
+var starDotStarTest = (f) => !f.startsWith(".") && f.includes(".");
+var starDotStarTestDot = (f) => f !== "." && f !== ".." && f.includes(".");
+var dotStarRE = /^\.\*+$/;
+var dotStarTest = (f) => f !== "." && f !== ".." && f.startsWith(".");
+var starRE = /^\*+$/;
+var starTest = (f) => f.length !== 0 && !f.startsWith(".");
+var starTestDot = (f) => f.length !== 0 && f !== "." && f !== "..";
+var qmarksRE = /^\?+([^+@!?\*\[\(]*)?$/;
+var qmarksTestNocase = ([$0, ext2 = ""]) => {
+  const noext = qmarksTestNoExt([$0]);
+  if (!ext2)
+    return noext;
+  ext2 = ext2.toLowerCase();
+  return (f) => noext(f) && f.toLowerCase().endsWith(ext2);
+};
+var qmarksTestNocaseDot = ([$0, ext2 = ""]) => {
+  const noext = qmarksTestNoExtDot([$0]);
+  if (!ext2)
+    return noext;
+  ext2 = ext2.toLowerCase();
+  return (f) => noext(f) && f.toLowerCase().endsWith(ext2);
+};
+var qmarksTestDot = ([$0, ext2 = ""]) => {
+  const noext = qmarksTestNoExtDot([$0]);
+  return !ext2 ? noext : (f) => noext(f) && f.endsWith(ext2);
+};
+var qmarksTest = ([$0, ext2 = ""]) => {
+  const noext = qmarksTestNoExt([$0]);
+  return !ext2 ? noext : (f) => noext(f) && f.endsWith(ext2);
+};
+var qmarksTestNoExt = ([$0]) => {
+  const len = $0.length;
+  return (f) => f.length === len && !f.startsWith(".");
+};
+var qmarksTestNoExtDot = ([$0]) => {
+  const len = $0.length;
+  return (f) => f.length === len && f !== "." && f !== "..";
+};
 var platform = typeof process === "object" && process ? typeof process.env === "object" && process.env && process.env.__MINIMATCH_TESTING_PLATFORM__ || process.platform : "posix";
 var isWindows = platform === "win32";
 var path = isWindows ? { sep: "\\" } : { sep: "/" };
@@ -17583,7 +17633,6 @@ var charSet = (s) => s.split("").reduce((set, c) => {
 }, {});
 var reSpecials = charSet("().*{}+?[]^$\\!");
 var addPatternStartSet = charSet("[.(");
-var slashSplit = /\/+/;
 var filter = (pattern, options = {}) => (p) => minimatch(p, pattern, options);
 minimatch.filter = filter;
 var ext = (a, b = {}) => Object.assign({}, a, b);
@@ -17654,6 +17703,7 @@ var Minimatch = class {
   negate;
   comment;
   empty;
+  preserveMultipleSlashes;
   partial;
   globSet;
   globParts;
@@ -17662,18 +17712,21 @@ var Minimatch = class {
     assertValidPattern(pattern);
     options = options || {};
     this.options = options;
-    this.set = [];
     this.pattern = pattern;
     this.windowsPathsNoEscape = !!options.windowsPathsNoEscape || options.allowWindowsEscape === false;
     if (this.windowsPathsNoEscape) {
       this.pattern = this.pattern.replace(/\\/g, "/");
     }
+    this.preserveMultipleSlashes = !!options.preserveMultipleSlashes;
     this.regexp = null;
     this.negate = false;
     this.nonegate = !!options.nonegate;
     this.comment = false;
     this.empty = false;
     this.partial = !!options.partial;
+    this.globSet = [];
+    this.globParts = [];
+    this.set = [];
     this.make();
   }
   debug(..._) {
@@ -17690,17 +17743,146 @@ var Minimatch = class {
       return;
     }
     this.parseNegate();
-    const globSet = this.globSet = this.braceExpand();
+    this.globSet = [...new Set(this.braceExpand())];
     if (options.debug) {
       this.debug = (...args) => console.error(...args);
     }
-    this.debug(this.pattern, globSet);
-    const globParts = this.globParts = globSet.map((s) => s.split(slashSplit));
-    this.debug(this.pattern, globParts);
-    let set = globParts.map((s, _, __) => s.map((ss) => this.parse(ss)));
+    this.debug(this.pattern, this.globSet);
+    const rawGlobParts = this.globSet.map((s) => this.slashSplit(s));
+    this.globParts = this.preprocess(rawGlobParts);
+    this.debug(this.pattern, this.globParts);
+    let set = this.globParts.map((s, _, __) => s.map((ss) => this.parse(ss)));
     this.debug(this.pattern, set);
     this.set = set.filter((s) => s.indexOf(false) === -1);
+    if (isWindows) {
+      for (let i = 0; i < this.set.length; i++) {
+        const p = this.set[i];
+        if (p[0] === "" && p[1] === "" && this.globParts[i][2] === "?" && typeof p[3] === "string" && /^[a-z]:$/i.test(p[3])) {
+          p[2] = "?";
+        }
+      }
+    }
     this.debug(this.pattern, this.set);
+  }
+  preprocess(globParts) {
+    if (this.options.noglobstar) {
+      for (let i = 0; i < globParts.length; i++) {
+        for (let j = 0; j < globParts[i].length; j++) {
+          if (globParts[i][j] === "**") {
+            globParts[i][j] = "*";
+          }
+        }
+      }
+    }
+    globParts = this.firstPhasePreProcess(globParts);
+    globParts = this.secondPhasePreProcess(globParts);
+    return globParts;
+  }
+  firstPhasePreProcess(globParts) {
+    let didSomething = false;
+    do {
+      didSomething = false;
+      for (let parts of globParts) {
+        let gs = -1;
+        while (-1 !== (gs = parts.indexOf("**", gs + 1))) {
+          let gss = gs;
+          while (parts[gss + 1] === "**") {
+            gss++;
+          }
+          if (gss > gs) {
+            parts.splice(gs + 1, gss - gs);
+          }
+          let next = parts[gs + 1];
+          const p = parts[gs + 2];
+          if (next !== "..")
+            continue;
+          if (!p || p === "." || p === "..")
+            continue;
+          didSomething = true;
+          parts.splice(gs, 1);
+          const other = parts.slice(0);
+          other[gs] = "**";
+          globParts.push(other);
+          gs--;
+        }
+        if (!this.preserveMultipleSlashes) {
+          for (let i = 1; i < parts.length - 1; i++) {
+            const p = parts[i];
+            if (i === 1 && p === "" && parts[0] === "")
+              continue;
+            if (p === "." || p === "") {
+              didSomething = true;
+              parts.splice(i, 1);
+              i--;
+            }
+          }
+          if (parts[0] === ".") {
+            didSomething = true;
+            parts.shift();
+          }
+        }
+        let dd = 0;
+        while (-1 !== (dd = parts.indexOf("..", dd + 1))) {
+          const p = parts[dd - 1];
+          if (p && p !== "." && p !== ".." && p !== "**") {
+            didSomething = true;
+            parts.splice(dd - 1, 2);
+            if (parts.length === 0)
+              parts.push("");
+            dd -= 2;
+          }
+        }
+      }
+    } while (didSomething);
+    return globParts;
+  }
+  secondPhasePreProcess(globParts) {
+    for (let i = 0; i < globParts.length - 1; i++) {
+      for (let j = i + 1; j < globParts.length; j++) {
+        const matched = this.partsMatch(globParts[i], globParts[j], !this.preserveMultipleSlashes);
+        if (!matched)
+          continue;
+        globParts[i] = matched;
+        globParts[j] = [];
+      }
+    }
+    return globParts.filter((gs) => gs.length);
+  }
+  partsMatch(a, b, emptyGSMatch = false) {
+    let ai = 0;
+    let bi = 0;
+    let result = [];
+    let which = "";
+    while (ai < a.length && bi < b.length) {
+      if (a[ai] === b[bi]) {
+        result.push(which === "b" ? b[bi] : a[ai]);
+        ai++;
+        bi++;
+      } else if (emptyGSMatch && a[ai] === "**" && b[bi] === a[ai + 1]) {
+        result.push(a[ai]);
+        ai++;
+      } else if (emptyGSMatch && b[bi] === "**" && a[ai] === b[bi + 1]) {
+        result.push(b[bi]);
+        bi++;
+      } else if (a[ai] === "*" && b[bi] && (this.options.dot || !b[bi].startsWith(".")) && b[bi] !== "**") {
+        if (which === "b")
+          return false;
+        which = "a";
+        result.push(a[ai]);
+        ai++;
+        bi++;
+      } else if (b[bi] === "*" && a[ai] && (this.options.dot || !a[ai].startsWith(".")) && a[ai] !== "**") {
+        if (which === "a")
+          return false;
+        which = "b";
+        result.push(b[bi]);
+        ai++;
+        bi++;
+      } else {
+        return false;
+      }
+    }
+    return a.length === b.length && result;
   }
   parseNegate() {
     if (this.nonegate)
@@ -17717,8 +17899,32 @@ var Minimatch = class {
     this.negate = negate;
   }
   matchOne(file, pattern, partial = false) {
-    var options = this.options;
-    this.debug("matchOne", { this: this, file, pattern });
+    const options = this.options;
+    if (isWindows) {
+      const fileUNC = file[0] === "" && file[1] === "" && file[2] === "?" && typeof file[3] === "string" && /^[a-z]:$/i.test(file[3]);
+      const patternUNC = pattern[0] === "" && pattern[1] === "" && pattern[2] === "?" && typeof pattern[3] === "string" && /^[a-z]:$/i.test(pattern[3]);
+      if (fileUNC && patternUNC) {
+        const fd = file[3];
+        const pd = pattern[3];
+        if (fd.toLowerCase() === pd.toLowerCase()) {
+          file[3] = pd;
+        }
+      } else if (patternUNC && typeof file[0] === "string") {
+        const pd = pattern[3];
+        const fd = file[0];
+        if (pd.toLowerCase() === fd.toLowerCase()) {
+          pattern[3] = fd;
+          pattern = pattern.slice(3);
+        }
+      } else if (fileUNC && typeof pattern[0] === "string") {
+        const fd = file[3];
+        if (fd.toLowerCase() === pattern[0].toLowerCase()) {
+          pattern[0] = fd;
+          file = file.slice(3);
+        }
+      }
+    }
+    this.debug("matchOne", this, { file, pattern });
     this.debug("matchOne", file.length, pattern.length);
     for (var fi = 0, pi = 0, fl = file.length, pl = pattern.length; fi < fl && pi < pl; fi++, pi++) {
       this.debug("matchOne loop");
@@ -17764,6 +17970,9 @@ var Minimatch = class {
         return false;
       }
       let hit;
+      while (f === "." && fi < fl - 1) {
+        f = file[++fi];
+      }
       if (typeof p === "string") {
         hit = f === p;
         this.debug("string match", p, f, hit);
@@ -17790,14 +17999,25 @@ var Minimatch = class {
   parse(pattern, isSub) {
     assertValidPattern(pattern);
     const options = this.options;
-    if (pattern === "**") {
-      if (!options.noglobstar)
-        return GLOBSTAR;
-      else
-        pattern = "*";
-    }
+    if (pattern === "**")
+      return GLOBSTAR;
     if (pattern === "")
       return "";
+    let m;
+    let fastTest = null;
+    if (isSub !== SUBPARSE) {
+      if (m = pattern.match(starRE)) {
+        fastTest = options.dot ? starTestDot : starTest;
+      } else if (m = pattern.match(starDotExtRE)) {
+        fastTest = (options.nocase ? options.dot ? starDotExtTestNocaseDot : starDotExtTestNocase : options.dot ? starDotExtTestDot : starDotExtTest)(m[1]);
+      } else if (m = pattern.match(qmarksRE)) {
+        fastTest = (options.nocase ? options.dot ? qmarksTestNocaseDot : qmarksTestNocase : options.dot ? qmarksTestDot : qmarksTest)(m);
+      } else if (m = pattern.match(starDotStarRE)) {
+        fastTest = options.dot ? starDotStarTestDot : starDotStarTest;
+      } else if (m = pattern.match(dotStarRE)) {
+        fastTest = dotStarTest;
+      }
+    }
     let re = "";
     let hasMagic = false;
     let escaping = false;
@@ -17810,7 +18030,10 @@ var Minimatch = class {
     let cs;
     let pl;
     let sp;
-    const patternStart = pattern.charAt(0) === "." ? "" : options.dot ? "(?!(?:^|\\/)\\.{1,2}(?:$|\\/))" : "(?!\\.)";
+    let dotTravAllowed = pattern.charAt(0) === ".";
+    let dotFileAllowed = options.dot || dotTravAllowed;
+    const patternStart = () => dotTravAllowed ? "" : dotFileAllowed ? "(?!(?:^|\\/)\\.{1,2}(?:$|\\/))" : "(?!\\.)";
+    const subPatternStart = (p) => p.charAt(0) === "." ? "" : options.dot ? "(?!(?:^|\\/)\\.{1,2}(?:$|\\/))" : "(?!\\.)";
     const clearStateChar = () => {
       if (stateChar) {
         switch (stateChar) {
@@ -17874,7 +18097,7 @@ var Minimatch = class {
           if (options.noext)
             clearStateChar();
           continue;
-        case "(":
+        case "(": {
           if (inClass) {
             re += "(";
             continue;
@@ -17883,38 +18106,54 @@ var Minimatch = class {
             re += "\\(";
             continue;
           }
-          patternListStack.push({
+          const plEntry = {
             type: stateChar,
             start: i - 1,
             reStart: re.length,
             open: plTypes[stateChar].open,
             close: plTypes[stateChar].close
-          });
-          re += stateChar === "!" ? "(?:(?!(?:" : "(?:";
+          };
+          this.debug(this.pattern, "	", plEntry);
+          patternListStack.push(plEntry);
+          re += plEntry.open;
+          if (plEntry.start === 0 && plEntry.type !== "!") {
+            dotTravAllowed = true;
+            re += subPatternStart(pattern.slice(i + 1));
+          }
           this.debug("plType %j %j", stateChar, re);
           stateChar = false;
           continue;
-        case ")":
-          if (inClass || !patternListStack.length) {
+        }
+        case ")": {
+          const plEntry = patternListStack[patternListStack.length - 1];
+          if (inClass || !plEntry) {
             re += "\\)";
             continue;
           }
+          patternListStack.pop();
           clearStateChar();
           hasMagic = true;
-          pl = patternListStack.pop();
+          pl = plEntry;
           re += pl.close;
           if (pl.type === "!") {
             negativeLists.push(Object.assign(pl, { reEnd: re.length }));
           }
           continue;
-        case "|":
-          if (inClass || !patternListStack.length) {
+        }
+        case "|": {
+          const plEntry = patternListStack[patternListStack.length - 1];
+          if (inClass || !plEntry) {
             re += "\\|";
             continue;
           }
           clearStateChar();
           re += "|";
+          if (plEntry.start === 0 && plEntry.type !== "!") {
+            dotTravAllowed = true;
+            re += subPatternStart(pattern.slice(i + 1));
+          }
           continue;
+        }
         case "[":
           clearStateChar();
           if (inClass) {
@@ -17959,7 +18198,7 @@ var Minimatch = class {
     for (pl = patternListStack.pop(); pl; pl = patternListStack.pop()) {
       let tail;
       tail = re.slice(pl.reStart + pl.open.length);
-      this.debug("setting tail", re, pl);
+      this.debug(this.pattern, "setting tail", re, pl);
       tail = tail.replace(/((?:\\{2}){0,64})(\\?)\|/g, (_, $1, $2) => {
         if (!$2) {
           $2 = "\\";
@@ -17982,7 +18221,8 @@ var Minimatch = class {
       const nlFirst = re.slice(nl.reStart, nl.reEnd - 8);
       let nlAfter = re.slice(nl.reEnd);
       const nlLast = re.slice(nl.reEnd - 8, nl.reEnd) + nlAfter;
-      const openParensBefore = nlBefore.split("(").length - 1;
+      const closeParensBefore = nlBefore.split(")").length;
+      const openParensBefore = nlBefore.split("(").length - closeParensBefore;
       let cleanAfter = nlAfter;
       for (let i = 0; i < openParensBefore; i++) {
         cleanAfter = cleanAfter.replace(/\)[+*?]?/, "");
@@ -17995,12 +18235,12 @@ var Minimatch = class {
       re = "(?=.)" + re;
     }
     if (addPatternStart) {
-      re = patternStart + re;
+      re = patternStart() + re;
     }
     if (isSub === SUBPARSE) {
       return [re, hasMagic];
     }
-    if (options.nocase && !hasMagic) {
+    if (options.nocase && !hasMagic && !options.nocaseMagicOnly) {
       hasMagic = pattern.toUpperCase() !== pattern.toLowerCase();
     }
     if (!hasMagic) {
@@ -18008,10 +18248,15 @@ var Minimatch = class {
     }
     const flags = options.nocase ? "i" : "";
     try {
-      return Object.assign(new RegExp("^" + re + "$", flags), {
+      const ext2 = fastTest ? {
+        _glob: pattern,
+        _src: re,
+        test: fastTest
+      } : {
         _glob: pattern,
         _src: re
-      });
+      };
+      return Object.assign(new RegExp("^" + re + "$", flags), ext2);
     } catch (er) {
       this.debug("invalid regexp", er);
       return new RegExp("$.");
@@ -18029,13 +18274,7 @@ var Minimatch = class {
     const twoStar = options.noglobstar ? star : options.dot ? twoStarDot : twoStarNoDot;
     const flags = options.nocase ? "i" : "";
     let re = set.map((pattern) => {
-      const pp = pattern.map((p) => typeof p === "string" ? regExpEscape(p) : p === GLOBSTAR ? GLOBSTAR : p._src).reduce((set2, p) => {
-        if (set2[set2.length - 1] === GLOBSTAR && p === GLOBSTAR || p === void 0) {
-          return set2;
-        }
-        set2.push(p);
-        return set2;
-      }, []);
+      const pp = pattern.map((p) => typeof p === "string" ? regExpEscape(p) : p === GLOBSTAR ? GLOBSTAR : p._src);
       pp.forEach((p, i) => {
         const next = pp[i + 1];
         const prev = pp[i - 1];
@@ -18067,6 +18306,15 @@ var Minimatch = class {
     }
     return this.regexp;
   }
+  slashSplit(p) {
+    if (this.preserveMultipleSlashes) {
+      return p.split("/");
+    } else if (isWindows && /^\/\/[^\/]+/.test(p)) {
+      return ["", ...p.split(/\/+/)];
+    } else {
+      return p.split(/\/+/);
+    }
+  }
   match(f, partial = this.partial) {
     this.debug("match", f, this.pattern);
     if (this.comment) {
@@ -18075,13 +18323,14 @@ var Minimatch = class {
     if (this.empty) {
       return f === "";
     }
-    if (f === "/" && partial)
+    if (f === "/" && partial) {
       return true;
+    }
     const options = this.options;
     if (path.sep !== "/") {
       f = f.split(path.sep).join("/");
     }
-    const ff = f.split(slashSplit);
+    const ff = this.slashSplit(f);
     this.debug(this.pattern, "split", ff);
     const set = this.set;
     this.debug(this.pattern, "set", set);
@@ -18099,13 +18348,15 @@ var Minimatch = class {
       }
       const hit = this.matchOne(file, pattern, partial);
       if (hit) {
-        if (options.flipNegate)
+        if (options.flipNegate) {
           return true;
+        }
         return !this.negate;
       }
     }
-    if (options.flipNegate)
+    if (options.flipNegate) {
       return false;
+    }
     return this.negate;
   }
   static defaults(def) {
