@@ -5338,7 +5338,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: 34.148.0
+    renovate: 34.151.0
   languageName: unknown
   linkType: soft
 
@@ -6043,9 +6043,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:34.148.0":
-  version: 34.148.0
-  resolution: "renovate@npm:34.148.0"
+"renovate@npm:34.151.0":
+  version: 34.151.0
+  resolution: "renovate@npm:34.151.0"
   dependencies:
     "@aws-sdk/client-codecommit": 3.256.0
     "@aws-sdk/client-ec2": 3.256.0
@@ -6159,7 +6159,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 6b189bf6ba1ff083ab3380ec988d2352557f18ce2f76f86d5acc2fa4762619bf704112162d1037752f3dde9484af6b40a7db10ddeafdf757a02fde892c843ce9
+  checksum: 2cc36a650795c09113185db3f299fa17273372a1313b025a81d6c7aab653b43c551321fcb5439e0d72dc0c5f1e13ab4e6ee8caf2ad09950c68f41a8644ef1eb6
   languageName: node
   linkType: hard
 
