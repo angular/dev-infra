@@ -77,8 +77,11 @@ export class AutosquashMergeStrategy extends MergeStrategy {
     const localBranch = this.getLocalTargetBranchName(githubTargetBranch);
     /** The SHA of the commit pushed to github which represents closing the PR. */
     const sha = this.git.run(['rev-parse', localBranch]).stdout.trim();
-    // Wait five seconds to account for rate limiting of the token usage during merge.
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    // Allow user to set an amount of time to wait to account for rate limiting of the token usage
+    // during merge otherwise just waits 0 seconds.
+    await new Promise((resolve) =>
+      setTimeout(resolve, parseInt(process.env['AUTOSQUASH_TIMEOUT'] || '0')),
+    );
     // Github automatically closes PRs whose commits are merged into the main branch on Github.
     // However, it does not note them as merged using the purple merge badge as occurs when done via
     // the UI. To inform users that the PR was in fact merged, add a comment expressing the fact
