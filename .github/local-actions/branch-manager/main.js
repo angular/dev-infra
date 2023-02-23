@@ -70046,7 +70046,7 @@ var MergeStrategy = class {
       const localTargetBranch = this.getLocalTargetBranchName(targetBranch);
       return `${localTargetBranch}:refs/heads/${targetBranch}`;
     });
-    this.git.run(["push", this.git.getRepoGitUrl(), ...pushRefspecs]);
+    this.git.run(["push", "--atomic", this.git.getRepoGitUrl(), ...pushRefspecs]);
   }
   async _assertMergeableOrThrow({ revisionRange }, targetBranches) {
     const failedBranches = this.cherryPickIntoTargetBranches(revisionRange, targetBranches, {
@@ -70128,6 +70128,7 @@ var AutosquashMergeStrategy = class extends MergeStrategy {
     this.pushTargetBranchesUpstream(targetBranches);
     const localBranch = this.getLocalTargetBranchName(githubTargetBranch);
     const sha = this.git.run(["rev-parse", localBranch]).stdout.trim();
+    await new Promise((resolve) => setTimeout(resolve, parseInt(process.env["AUTOSQUASH_TIMEOUT"] || "0")));
     await this.git.github.issues.createComment({
       ...this.git.remoteParams,
       issue_number: pullRequest.prNumber,
