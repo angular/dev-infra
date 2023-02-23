@@ -182,7 +182,7 @@ export abstract class MergeStrategy {
     });
     // Push all target branches with a single command if we don't run in dry-run mode.
     // We don't want to push them individually as that could cause an unnecessary slow-down.
-    this.git.run(['push', this.git.getRepoGitUrl(), ...pushRefspecs]);
+    this.git.run(['push', '--atomic', this.git.getRepoGitUrl(), ...pushRefspecs]);
   }
 
   /** Asserts that given pull request could be merged into the given target branches. */
