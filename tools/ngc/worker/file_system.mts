@@ -49,8 +49,6 @@ export class FileSystem extends BazelSafeFilesystem {
   }
 
   lstat(path: ngtsc.AbsoluteFsPath): ngtsc.FileStats {
-    if (path.includes('template.html')) console.error('readFile -', path);
-
     return this._vol.lstatSync(this.resolve(path));
   }
 
@@ -66,11 +64,6 @@ export class FileSystem extends BazelSafeFilesystem {
     this._vol.mkdirSync(parentDir, {recursive: true});
 
     const stat = this.diskLstat(filePath);
-
-    if (filePath.includes('template.html')) {
-      console.error('Registering file', this.id, filePath);
-    }
-
     if (stat?.isSymbolicLink()) {
       const symlink = this.diskReadlink(filePath);
       this.addFile(symlink);
@@ -83,7 +76,6 @@ export class FileSystem extends BazelSafeFilesystem {
   }
 
   readFile(filePath: ngtsc.AbsoluteFsPath): string {
-    if (filePath.includes('template.html')) console.error('readFile -', filePath);
     // TODO: guard bazel inputs
     return fs.readFileSync(this.toDiskPath(filePath), {encoding: 'utf8'}) as string;
   }
@@ -98,9 +90,6 @@ export class FileSystem extends BazelSafeFilesystem {
   }
 
   exists(filePath: string, internal = false): boolean {
-    if (filePath.includes('template.html') && !internal)
-      console.error('exists -', filePath, this.id, this._vol.existsSync(this.resolve(filePath)));
-
     return this._vol.existsSync(this.resolve(filePath));
   }
 

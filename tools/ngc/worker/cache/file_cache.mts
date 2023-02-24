@@ -54,7 +54,6 @@ export class FileCache {
       // Evict the file entry if the digest has changed.
       const entry = this.fileCache.get(path, /*updateCache=*/ false);
       if (entry && !isSameDigest(entry.digest, digest)) {
-        console.error('evicting', path);
         this.fileCache.delete(path);
       }
     }

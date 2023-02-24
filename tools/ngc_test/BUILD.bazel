@@ -4,6 +4,7 @@ ng_module(
     name = "ngc_test",
     srcs = [
         "main.ts",
+        "style.css",
         "template.html",
     ],
     tsconfig = "tsconfig.json",

@@ -3,6 +3,8 @@
     "strict": true,
     "declaration": true,
     "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
     "lib": ["dom", "es2022"]
   },
   "angularCompilerOptions": {
