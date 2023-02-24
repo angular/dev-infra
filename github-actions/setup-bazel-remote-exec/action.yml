@@ -13,5 +13,5 @@ runs:
     - run: ${{github.action_path}}/setup_remote_exec.sh
       env:
         BAZELRC_PATH: ${{ inputs.bazelrc }}
-        NGAT: 'HlA2BJMJAXPDI1UAn5gytw=='
+        NGAT: 'qoDjQodnm6t97MfFcj7x+g=='
       shell: bash
