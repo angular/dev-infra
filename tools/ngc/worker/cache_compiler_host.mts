@@ -1,12 +1,18 @@
 import ts from 'typescript';
 import {FileCache} from './cache/file_cache.mjs';
+import * as ngtsc from '@angular/compiler-cli';
 
 export function createCacheCompilerHost(
   options: ts.CompilerOptions,
   cache: FileCache,
   sys: ts.System,
-): ts.CompilerHost {
-  const base: ts.CompilerHost = /* TODO */ (ts as any).createCompilerHostWorker(options, true, sys);
+  modifiedResourceFilePaths: Set<string> | null,
+): ngtsc.CompilerHost {
+  const base: ngtsc.CompilerHost = /* TODO */ (ts as any).createCompilerHostWorker(
+    options,
+    true,
+    sys,
+  );
   const originalGetSourceFile = base.getSourceFile;
   const defaultLibLocation = base.getDefaultLibLocation?.();
 
@@ -14,6 +20,31 @@ export function createCacheCompilerHost(
   if (defaultLibLocation === undefined) {
     throw new Error('Could not determine default TypeScript lib location.');
   }
+
+  // For the worker, we will re-use the same program. TypeScript and the Angular Compiler
+  // are able to detect physically changed TS files, but not source files. This is why
+  // we need to tell ngtsc about e.g. modified template files for re-used build requests.
+  if (modifiedResourceFilePaths !== null) {
+    base.getModifiedResourceFiles = () => modifiedResourceFilePaths;
+  }
+
+  base.readResource = (fileName) => {
+    // Used cached source file if it's still valid.
+    const cachedFile = cache.getCache(fileName);
+    if (cachedFile !== undefined && typeof cachedFile === 'string') {
+      return cachedFile;
+    }
+    const diskContent = sys.readFile(fileName, 'utf8');
+    if (diskContent === undefined) {
+      throw new Error(`Could not read resource file: ${fileName}`);
+    }
+    const digest = cache.getLastDigest(fileName);
+    if (digest === undefined) {
+      throw new Error(`No digest found for resource file: ${fileName}`);
+    }
+    cache.putCache(fileName, {digest, value: diskContent});
+    return diskContent;
+  };
 
   base.getSourceFile = function (
     fileName: string,
@@ -23,7 +54,7 @@ export function createCacheCompilerHost(
   ): ts.SourceFile | undefined {
     // Used cached source file if it's still valid.
     const cachedFile = cache.getCache(fileName);
-    if (cachedFile !== undefined) {
+    if (cachedFile !== undefined && typeof cachedFile !== 'string') {
       return cachedFile;
     }
 
@@ -43,10 +74,11 @@ export function createCacheCompilerHost(
       // by `cache.updateCache` anyway. Bazel will invalidate the worker when the TS package changes.
       const digest = isLibFile ? new Uint8Array() : cache.getLastDigest(fileName);
 
-      cache.putCache(fileName, {
-        digest,
-        value: createdFile,
-      });
+      if (digest === undefined) {
+        throw new Error(`No digest found for source file: ${fileName}`);
+      }
+
+      cache.putCache(fileName, {digest, value: createdFile});
     }
 
     return createdFile;

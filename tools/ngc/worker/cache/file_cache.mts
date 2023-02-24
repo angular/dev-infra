@@ -6,7 +6,8 @@ import {blaze} from '../worker_protocol.cjs';
 /** Cache entry for `FileCache` */
 export interface SourceFileEntry {
   digest: Uint8Array; // blaze's opaque digest of the file
-  value: ts.SourceFile;
+  // TODO: this mix is non-ideal?
+  value: ts.SourceFile | string;
 }
 
 const DEFAULT_MAX_MEM_USAGE = 1024 * (1 << 20); /* 1 MB */
@@ -44,46 +45,28 @@ export class FileCache {
    * updateCache must be called before loading files - only files that were
    * updated (with a digest) previously can be loaded.
    */
-  updateCache(digests: blaze.worker.WorkRequest['inputs']): void {
+  updateCache(inputs: Map<string, Uint8Array>): void {
     this.lastDigests = new Map();
 
-    for (const input of digests) {
-      // In the worker, execroot paths are absolute in the virtual FS.
-      input.path = `/${input.path}`;
-
-      this.lastDigests.set(input.path, input.digest);
+    for (const [path, digest] of inputs.entries()) {
+      this.lastDigests.set(path, digest);
 
       // Evict the file entry if the digest has changed.
-      const entry = this.fileCache.get(input.path, /*updateCache=*/ false);
-      if (entry && !isSameDigest(entry.digest, input.digest)) {
-        console.error('evicting', input.path);
-        this.fileCache.delete(input.path);
+      const entry = this.fileCache.get(path, /*updateCache=*/ false);
+      if (entry && !isSameDigest(entry.digest, digest)) {
+        console.error('evicting', path);
+        this.fileCache.delete(path);
       }
     }
 
     this.cannotEvict = false;
   }
 
-  getLastDigest(filePath: string): Uint8Array {
-    const digest = this.lastDigests.get(filePath);
-    if (!digest) {
-      const errorMsg = `missing input digest for ${filePath}. `;
-      const entriesToPrint = Array.from(this.lastDigests.keys())
-        // Look for files with a similar basename.
-        .filter((f) => f.includes(path.basename(filePath)));
-
-      if (entriesToPrint.length > 100) {
-        throw new Error(
-          errorMsg +
-            `(only have: ${entriesToPrint.slice(0, 100)} and ${entriesToPrint.length - 100} more)`,
-        );
-      }
-      throw new Error(errorMsg + `(only have: ${entriesToPrint})`);
-    }
-    return digest;
+  getLastDigest(filePath: string): Uint8Array | undefined {
+    return this.lastDigests.get(filePath);
   }
 
-  getCache(filePath: string): ts.SourceFile | undefined {
+  getCache(filePath: string): ts.SourceFile | string | undefined {
     const entry = this.fileCache.get(filePath, /*updateCache=*/ true);
     if (entry) return entry.value;
     return undefined;
@@ -131,7 +114,7 @@ export class FileCache {
   }
 }
 
-function isSameDigest(a: Uint8Array, b: Uint8Array): boolean {
+export function isSameDigest(a: Uint8Array, b: Uint8Array): boolean {
   if (a.length !== b.length) {
     return false;
   }

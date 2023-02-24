@@ -16,7 +16,11 @@ const unsupportedFn = () => {
   throw new Error('Unsupported');
 };
 
+let fsId = 0;
+
 export class FileSystem extends BazelSafeFilesystem {
+  id = fsId++;
+
   private _vol = new Volume();
   private _execroot = path.join(process.cwd(), '../../../');
 
@@ -45,13 +49,15 @@ export class FileSystem extends BazelSafeFilesystem {
   }
 
   lstat(path: ngtsc.AbsoluteFsPath): ngtsc.FileStats {
+    if (path.includes('template.html')) console.error('readFile -', path);
+
     return this._vol.lstatSync(this.resolve(path));
   }
 
   addFile(filePath: string): void {
     filePath = this.resolve(filePath);
 
-    if (this.exists(filePath)) {
+    if (this.exists(filePath, true)) {
       return;
     }
 
@@ -60,6 +66,10 @@ export class FileSystem extends BazelSafeFilesystem {
     this._vol.mkdirSync(parentDir, {recursive: true});
 
     const stat = this.diskLstat(filePath);
+
+    if (filePath.includes('template.html')) {
+      console.error('Registering file', this.id, filePath);
+    }
 
     if (stat?.isSymbolicLink()) {
       const symlink = this.diskReadlink(filePath);
@@ -73,6 +83,7 @@ export class FileSystem extends BazelSafeFilesystem {
   }
 
   readFile(filePath: ngtsc.AbsoluteFsPath): string {
+    if (filePath.includes('template.html')) console.error('readFile -', filePath);
     // TODO: guard bazel inputs
     return fs.readFileSync(this.toDiskPath(filePath), {encoding: 'utf8'}) as string;
   }
@@ -86,7 +97,10 @@ export class FileSystem extends BazelSafeFilesystem {
     fs.writeFileSync(this.toDiskPath(path), data, exclusive ? {flag: 'wx'} : undefined);
   }
 
-  exists(filePath: string): boolean {
+  exists(filePath: string, internal = false): boolean {
+    if (filePath.includes('template.html') && !internal)
+      console.error('exists -', filePath, this.id, this._vol.existsSync(this.resolve(filePath)));
+
     return this._vol.existsSync(this.resolve(filePath));
   }
 
@@ -205,10 +219,10 @@ export class FileSystem extends BazelSafeFilesystem {
     return `/${path.relative(this._execroot, diskPath)}`;
   }
 
-  static initialize(inputs: blaze.worker.WorkRequest['inputs']): FileSystem {
+  static initialize(inputs: Iterable<string>): FileSystem {
     const fs = new FileSystem();
     for (const f of inputs) {
-      fs.addFile(`/${f.path}`);
+      fs.addFile(f);
     }
     return fs;
   }

@@ -14,12 +14,10 @@ export class BazelSafeFilesystem extends ngtsc.NodeJSFileSystem {
   moveFile(from: ngtsc.AbsoluteFsPath, to: ngtsc.AbsoluteFsPath): void {
     throw new Error('Not implemented.');
   }
-
   getDefaultLibLocation(): ngtsc.AbsoluteFsPath {
-    throw new Error('Method not implemented.');
+    throw new Error('Not implemented.');
   }
-
   chdir(path: ngtsc.AbsoluteFsPath): void {
-    throw new Error('Method not implemented.');
+    throw new Error('Not implemented.');
   }
 }

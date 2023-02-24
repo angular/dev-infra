@@ -4,9 +4,8 @@ ng_module(
     name = "ngc_test",
     srcs = [
         "main.ts",
-        # "package.json",
+        "template.html",
     ],
-    assets = ["template.html"],
     tsconfig = "tsconfig.json",
     deps = ["//:node_modules/@angular/core"],
 )
