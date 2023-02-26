@@ -1,3 +1,23 @@
+<a name="2022.10.30"></a>
+# 2022.10.30 (2022-10-30)
+### github-actions
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cdea115](https://github.com/angular/dev-infra/commit/cdea11500841e703a84bfe141424898f9bd484b5) | feat | create a local branch manager github action ([#885](https://github.com/angular/dev-infra/pull/885)) |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d87b1b5](https://github.com/angular/dev-infra/commit/d87b1b56a970132f90301624cea6b6d70b6d9489) | feat | **caretaker:** add status urls to caretaker check |
+| [8a9577a](https://github.com/angular/dev-infra/commit/8a9577ac1b776828ab7bedeff80c2b7304234f9c) | feat | print pull request title when merging ([#877](https://github.com/angular/dev-infra/pull/877)) |
+| [8d84592](https://github.com/angular/dev-infra/commit/8d845921644134ea69ed3f1c1e26ea31911852ed) | fix | properly catch github API errors and print clean output ([#877](https://github.com/angular/dev-infra/pull/877)) |
+### shared-scripts
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e7b8ac6](https://github.com/angular/dev-infra/commit/e7b8ac68367700f09887e722ee13844cf9189aea) | fix | cut down on dependencies from `@angular-devkit/build-angular` |
+## Special Thanks
+Joey Perrott and Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.10.23"></a>
 # 2022.10.23 (2022-10-23)
 ### bazel
