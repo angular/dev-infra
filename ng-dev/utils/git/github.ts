@@ -37,15 +37,15 @@ export class GithubClient {
   /** The octokit instance actually performing API requests. */
   private _octokit = new Octokit(this._octokitOptions);
 
-  readonly pulls = this._octokit.pulls;
-  readonly repos = this._octokit.repos;
-  readonly issues = this._octokit.issues;
-  readonly git = this._octokit.git;
-  readonly rateLimit = this._octokit.rateLimit;
-  readonly teams = this._octokit.teams;
-  readonly search = this._octokit.search;
-  readonly rest = this._octokit.rest;
-  readonly paginate = this._octokit.paginate;
+  readonly pulls: Octokit['pulls'] = this._octokit.pulls;
+  readonly repos: Octokit['repos'] = this._octokit.repos;
+  readonly issues: Octokit['issues'] = this._octokit.issues;
+  readonly git: Octokit['git'] = this._octokit.git;
+  readonly rateLimit: Octokit['rateLimit'] = this._octokit.rateLimit;
+  readonly teams: Octokit['teams'] = this._octokit.teams;
+  readonly search: Octokit['search'] = this._octokit.search;
+  readonly rest: Octokit['rest'] = this._octokit.rest;
+  readonly paginate: Octokit['paginate'] = this._octokit.paginate;
 
   constructor(private _octokitOptions?: OctokitOptions) {}
 }

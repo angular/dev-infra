@@ -16,10 +16,12 @@ ts_config = _ts_config
 
 def ts_library(
         tsconfig = "//:tsconfig",
+        srcs = [],
         declaration = True,
         **kwargs):
     _ts_project(
         tsconfig = tsconfig,
+        srcs = srcs + ["//:package_json"],
         declaration = declaration,
         **kwargs
     )

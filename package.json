@@ -2,6 +2,7 @@
   "name": "@angular/build-tooling",
   "version": "0.0.0-{SCM_HEAD_SHA}",
   "private": true,
+  "type": "module",
   "scripts": {
     "prepare": "husky install",
     "ng-dev": "bash ./tools/local-dev.sh",

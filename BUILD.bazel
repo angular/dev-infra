@@ -1,6 +1,6 @@
 #load("//tools:defaults.bzl", "pkg_npm")
 load("@npm//:defs.bzl", "npm_link_all_packages")
-load("//tools:defaults_new.bzl", "ts_config")
+load("//tools:defaults_new.bzl", "copy_to_bin", "ts_config")
 
 npm_link_all_packages()
 
@@ -8,6 +8,12 @@ exports_files([
     "package.json",
     ".yarnrc.yml",
 ])
+
+copy_to_bin(
+    name = "package_json",
+    srcs = ["package.json"],
+    visibility = ["//visibility:public"],
+)
 
 ts_config(
     name = "tsconfig",
