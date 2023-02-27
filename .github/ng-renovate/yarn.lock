@@ -4039,10 +4039,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graph-data-structure@npm:3.1.1":
-  version: 3.1.1
-  resolution: "graph-data-structure@npm:3.1.1"
-  checksum: 2d1c2ca88ec61c2905d22b3ec6abc56d48da1e47a4cfa6d06beb86469aa0d7a58cb7553de8ee923f68dc547b0358c793bc77834ebb7f64acfecd6d552b3a2f56
+"graph-data-structure@npm:3.2.0":
+  version: 3.2.0
+  resolution: "graph-data-structure@npm:3.2.0"
+  checksum: 0312e7854eba1679cb42a0696bbf9686c3f80618975828edd3c5aed2b69987dcd4cfa549db0cada63e57c798a714b2322f596a42dcf5b228946897863a1740cd
   languageName: node
   linkType: hard
 
@@ -5338,7 +5338,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: 34.152.4
+    renovate: 34.153.2
   languageName: unknown
   linkType: soft
 
@@ -6043,9 +6043,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:34.152.4":
-  version: 34.152.4
-  resolution: "renovate@npm:34.152.4"
+"renovate@npm:34.153.2":
+  version: 34.153.2
+  resolution: "renovate@npm:34.153.2"
   dependencies:
     "@aws-sdk/client-codecommit": 3.256.0
     "@aws-sdk/client-ec2": 3.256.0
@@ -6107,7 +6107,7 @@ __metadata:
     global-agent: 3.0.0
     good-enough-parser: 1.1.22
     got: 11.8.6
-    graph-data-structure: 3.1.1
+    graph-data-structure: 3.2.0
     handlebars: 4.7.7
     hasha: 5.2.2
     hcl2-parser: 1.0.3
@@ -6159,7 +6159,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 5692646e263a466ed1dd0e55a241e3a463f21a2bdc17439746ad4463ed879ce37abef1a34079583cea473a1a42e7786a150be5b23abcf3ca101e690417ec8c70
+  checksum: 857175b5356b94ad2612220dca8a2a88e800edef43f96fd8a26792742417ae43763363025ff233afbffa0afa27dd50f797c38d08cac43e8ce0235e8e5ba11a3f
   languageName: node
   linkType: hard
 
