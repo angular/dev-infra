@@ -11,7 +11,7 @@ import {isAbsolute, relative, resolve} from 'path';
 import {Argv} from 'yargs';
 
 import ts from 'typescript';
-import glob from 'glob';
+import {globSync} from 'glob';
 
 import {green, Log, yellow} from '../utils/logging.js';
 
@@ -79,7 +79,7 @@ export function main(
   const cycles: ReferenceChain[] = [];
   const checkedNodes = new WeakSet<ts.SourceFile>();
 
-  glob.sync(globPattern, {absolute: true, ignore: ['**/node_modules/**']}).forEach((filePath) => {
+  globSync(globPattern, {absolute: true, ignore: ['**/node_modules/**']}).forEach((filePath) => {
     const sourceFile = analyzer.getSourceFile(filePath);
     cycles.push(...analyzer.findCycles(sourceFile, checkedNodes));
   });
