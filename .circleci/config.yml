@@ -52,7 +52,7 @@ executors:
   docker-linux-executor:
     <<: *default_executor_settings
     docker:
-      - image: cimg/node:18
+      - image: cimg/node:18.14.2
 
   macos-x64-executor:
     <<: *default_executor_settings
@@ -115,7 +115,8 @@ jobs:
           name: Install pnpm package manager
           command: |
             sudo corepack enable
-            sudo corepack prepare pnpm@latest-7 --activate
+            sudo corepack prepare pnpm@latest --activate
+
       - run: pnpm install --frozen-lockfile
       # Run all tests in the workspace. Also explicitly add the component benchmark test. Benchmark
       # tests are not run by default on CI but we want to verify the macro works.
