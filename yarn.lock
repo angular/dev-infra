@@ -401,7 +401,7 @@ __metadata:
     font-color-contrast: ^11.1.0
     gcip-cloud-functions: 0.1.1
     git-raw-commits: ^2.0.10
-    glob: 9.0.1
+    glob: 9.0.2
     husky: ^8.0.0
     inquirer: 9.1.4
     jasmine: ~4.5.0
@@ -11141,15 +11141,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:9.0.1":
-  version: 9.0.1
-  resolution: "glob@npm:9.0.1"
+"glob@npm:9.0.2":
+  version: 9.0.2
+  resolution: "glob@npm:9.0.2"
   dependencies:
     fs.realpath: ^1.0.0
     minimatch: ^7.3.0
     minipass: ^4.2.4
     path-scurry: ^1.5.0
-  checksum: 898b93b1310186abcf9a7b785aecf7db4abbda5a096cde19fa6bad928993fde4d1f3face98815040b5f0acc8d62bd5ff923ff24d574deec45d798bc3f7566d7b
+  checksum: 729074e08e26e9c679a6563c63015ba1bd846f8d3c298c38d0fef149c679d37188c9cf93a66687e5c43a94a8d8b6eca9a15b948a742468b7d8b648daaa9925f0
   languageName: node
   linkType: hard
 
