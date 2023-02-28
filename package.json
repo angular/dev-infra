@@ -15,7 +15,7 @@
       "default": "./*"
     }
   },
-  "packageManager": "pnpm@7.26.1+",
+  "packageManager": "pnpm@^7.26.1",
   "dependencies": {
     "@angular-devkit/build-angular": "16.0.0-next.1",
     "@angular/benchpress": "0.3.0",
