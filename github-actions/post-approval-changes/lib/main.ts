@@ -11,7 +11,9 @@ async function main() {
   let installationClient: Octokit | null = null;
 
   try {
-    const token = await getAuthTokenFor(ANGULAR_ROBOT);
+    // Use the `.github` repo from googlers to get an installation that has access to the googlers
+    // user membership.
+    const token = await getAuthTokenFor(ANGULAR_ROBOT, {owner: 'googlers', repo: '.github'});
     installationClient = new Octokit({auth: token});
 
     await runPostApprovalChangesAction(installationClient);

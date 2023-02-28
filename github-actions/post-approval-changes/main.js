@@ -23355,7 +23355,7 @@ var googleOwnedRobots = ["angular-robot"];
 async function main() {
   let installationClient = null;
   try {
-    const token = await getAuthTokenFor(ANGULAR_ROBOT);
+    const token = await getAuthTokenFor(ANGULAR_ROBOT, { owner: "googlers", repo: ".github" });
     installationClient = new import_rest2.Octokit({ auth: token });
     await runPostApprovalChangesAction(installationClient);
   } finally {
