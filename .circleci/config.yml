@@ -97,10 +97,6 @@ commands:
     description: Checkout and rebase the repository
     steps:
       - checkout
-      # After checkout, rebase PRs on top of target branch.
-      - devinfra/rebase-pr-on-target-branch:
-          base_revision: << pipeline.git.base_revision >>
-          head_revision: << pipeline.git.revision >>
 
 # Job definitions
 # Jobs can include parameters that are passed in the workflow job invocation.
