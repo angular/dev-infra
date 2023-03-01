@@ -117,7 +117,7 @@
     "font-color-contrast": "^11.1.0",
     "gcip-cloud-functions": "0.1.1",
     "git-raw-commits": "^2.0.10",
-    "glob": "9.0.2",
+    "glob": "9.1.0",
     "husky": "^8.0.0",
     "inquirer": "9.1.4",
     "jasmine": "~4.5.0",
