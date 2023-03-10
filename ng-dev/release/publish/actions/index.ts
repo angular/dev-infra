@@ -18,6 +18,7 @@ import {CutExceptionalMinorReleaseCandidateAction} from './exceptional-minor/cut
 import {PrepareExceptionalMinorAction} from './exceptional-minor/prepare-exceptional-minor.js';
 import {MoveNextIntoFeatureFreezeAction} from './move-next-into-feature-freeze.js';
 import {MoveNextIntoReleaseCandidateAction} from './move-next-into-release-candidate.js';
+import {SpecialCutLongTermSupportMinorAction} from './special/cut-lts-minor.js';
 import {TagRecentMajorAsLatest} from './tag-recent-major-as-latest.js';
 
 /**
@@ -37,4 +38,7 @@ export const actions: ReleaseActionConstructor[] = [
   ConfigureNextAsMajorAction,
   PrepareExceptionalMinorAction,
   CutLongTermSupportPatchAction,
+
+  // Special actions. Not displayed by default.
+  SpecialCutLongTermSupportMinorAction,
 ];
