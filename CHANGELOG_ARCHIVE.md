@@ -1,3 +1,13 @@
+<a name="2022.11.6"></a>
+# 2022.11.6 (2022-11-06)
+### github-actions
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e6c9fce](https://github.com/angular/dev-infra/commit/e6c9fceba1adedcfd68db1ad0feee6e086849fde) | feat | create an assistant to the branch manager ([#888](https://github.com/angular/dev-infra/pull/888)) |
+## Special Thanks
+Joey Perrott
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.10.30"></a>
 # 2022.10.30 (2022-10-30)
 ### github-actions

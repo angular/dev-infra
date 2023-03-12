@@ -1,3 +1,18 @@
+<a name="2023.3.12"></a>
+# 2023.3.12 (2023-03-12)
+### github-actions
+| Commit | Type | Description |
+| -- | -- | -- |
+| [203b517](https://github.com/angular/dev-infra/commit/203b51732903339c14a32304e7a7ae0a9d8bf2b5) | feat | use Googler organization to determine who is allowed to perform post approval changes ([#1015](https://github.com/angular/dev-infra/pull/1015)) |
+| [18f41e8](https://github.com/angular/dev-infra/commit/18f41e8ad9af5a585b249845bcd302fb5ea25f12) | fix | determine post approval change check based on the actor rather than author ([#1015](https://github.com/angular/dev-infra/pull/1015)) |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a9312d3](https://github.com/angular/dev-infra/commit/a9312d38d24c94636b7e135b58828c5732eb5212) | feat | support special action to cut lts minor release |
+## Special Thanks
+Joey Perrott and Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2023.2.26"></a>
 # 2023.2.26 (2023-02-26)
 ## Breaking Changes
@@ -202,13 +217,3 @@ Joey Perrott
 | [2f48b93](https://github.com/angular/dev-infra/commit/2f48b93e57be9eb898f4a5c7fc9f5fae1a5ecc7e) | feat | expose label definitions for org-wide labels ([#896](https://github.com/angular/dev-infra/pull/896)) |
 ## Special Thanks
 Joey Perrott and Paul Gschwendtner
-
-<!-- CHANGELOG SPLIT MARKER -->
-<a name="2022.11.6"></a>
-# 2022.11.6 (2022-11-06)
-### github-actions
-| Commit | Type | Description |
-| -- | -- | -- |
-| [e6c9fce](https://github.com/angular/dev-infra/commit/e6c9fceba1adedcfd68db1ad0feee6e086849fde) | feat | create an assistant to the branch manager ([#888](https://github.com/angular/dev-infra/pull/888)) |
-## Special Thanks
-Joey Perrott
