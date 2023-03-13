@@ -8,23 +8,38 @@ import {ANGULAR_ROBOT, getAuthTokenFor, revokeActiveInstallationToken} from '../
 const googleOwnedRobots = ['angular-robot'];
 
 async function main() {
-  let installationClient: Octokit | null = null;
+  let repoClient: Octokit | null = null;
+  let googlersOrgClient: Octokit | null = null;
 
   try {
     // Use the `.github` repo from googlers to get an installation that has access to the googlers
     // user membership.
-    const token = await getAuthTokenFor(ANGULAR_ROBOT, {owner: 'googlers', repo: '.github'});
-    installationClient = new Octokit({auth: token});
+    const googlersOrgToken = await getAuthTokenFor(ANGULAR_ROBOT, {
+      owner: 'googlers',
+      repo: '.github',
+    });
+    googlersOrgClient = new Octokit({auth: googlersOrgToken});
 
-    await runPostApprovalChangesAction(installationClient);
+    // Use the `.github` repo from googlers to get an installation that has access to the googlers
+    // user membership.
+    const repoToken = await getAuthTokenFor(ANGULAR_ROBOT, context.repo);
+    repoClient = new Octokit({auth: repoToken});
+
+    await runPostApprovalChangesAction(googlersOrgClient, repoClient);
   } finally {
-    if (installationClient !== null) {
-      await revokeActiveInstallationToken(installationClient);
+    if (googlersOrgClient !== null) {
+      await revokeActiveInstallationToken(googlersOrgClient);
+    }
+    if (repoClient !== null) {
+      await revokeActiveInstallationToken(repoClient);
     }
   }
 }
 
-async function runPostApprovalChangesAction(client: Octokit): Promise<void> {
+async function runPostApprovalChangesAction(
+  googlersOrgClient: Octokit,
+  repoClient: Octokit,
+): Promise<void> {
   if (context.eventName !== 'pull_request_target') {
     throw Error('This action can only run for with pull_request_target events');
   }
@@ -32,7 +47,7 @@ async function runPostApprovalChangesAction(client: Octokit): Promise<void> {
 
   const actionUser = context.actor;
 
-  if (await isGooglerOrgMember(client, actionUser)) {
+  if (await isGooglerOrgMember(googlersOrgClient, actionUser)) {
     core.info(
       'Action performed by an account in the Googler Github Org, skipping as post approval changes are allowed.',
     );
@@ -60,7 +75,11 @@ async function runPostApprovalChangesAction(client: Octokit): Promise<void> {
   const pull_number = context.issue.number;
 
   /** List of reviews for the pull request. */
-  const allReviews = await client.paginate(client.pulls.listReviews, {owner, pull_number, repo});
+  const allReviews = await repoClient.paginate(repoClient.pulls.listReviews, {
+    owner,
+    pull_number,
+    repo,
+  });
   /** Set of reviewers whose latest review has already been processed. */
   const knownReviewers = new Set<string>();
   /** The latest approving reviews for each reviewer on the pull request. */
@@ -74,7 +93,7 @@ async function runPostApprovalChangesAction(client: Octokit): Promise<void> {
       continue;
     }
     // Only consider reviews by Googlers for this check.
-    if (!(await isGooglerOrgMember(client, user))) {
+    if (!(await isGooglerOrgMember(googlersOrgClient, user))) {
       continue;
     }
     knownReviewers.add(user);
@@ -104,7 +123,7 @@ async function runPostApprovalChangesAction(client: Octokit): Promise<void> {
 
   const reviewToRerequest = reviews[0];
   core.info(`Requesting a new review from ${reviewToRerequest.user!.login}`);
-  await client.pulls.requestReviewers({
+  await repoClient.pulls.requestReviewers({
     owner,
     pull_number,
     repo,
