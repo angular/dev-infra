@@ -112,12 +112,21 @@ export class GithubTestingRepo {
     return this;
   }
 
-  expectReleaseToBeCreated(name: string, tagName: string, bodyRegex?: RegExp): this {
+  expectReleaseToBeCreated(
+    name: string,
+    tagName: string,
+    isLatestRelease: boolean,
+    bodyRegex?: RegExp,
+  ): this {
     nock(this.repoApiUrl)
       .post('/releases', (requestBody) => {
-        if (bodyRegex && !bodyRegex.test(requestBody.body)) {
+        if (requestBody.name !== name) {
           return false;
-        } else if (requestBody.name !== name) {
+        }
+        if (requestBody.make_latest !== (isLatestRelease ? 'true' : 'false')) {
+          return false;
+        }
+        if (bodyRegex && !bodyRegex.test(requestBody.body)) {
           return false;
         }
         return requestBody['tag_name'] === tagName;

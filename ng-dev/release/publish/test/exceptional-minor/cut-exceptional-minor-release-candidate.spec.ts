@@ -10,7 +10,7 @@ import {ReleaseTrain} from '../../../versioning/release-trains.js';
 import {CutExceptionalMinorReleaseCandidateAction} from '../../actions/exceptional-minor/cut-exceptional-minor-release-candidate.js';
 import {changelogPattern, parse, setupReleaseActionForTesting} from '../test-utils/test-utils.js';
 import {
-  expectGithubApiRequestsForStaging,
+  expectGithubApiRequests,
   expectStagingAndPublishWithCherryPick,
 } from '../test-utils/staging-test.js';
 import {readFileSync} from 'fs';
@@ -75,6 +75,7 @@ describe('cut exceptional minor next release candidate action', () => {
       '10.1.x',
       '10.1.0-rc.0',
       'do-not-use-exceptional-minor',
+      {willShowAsLatestOnGitHub: false},
     );
   });
 
@@ -96,7 +97,10 @@ describe('cut exceptional minor next release candidate action', () => {
       .createTagForHead('10.1.0-next.1')
       .commit('fix(pkg1): not yet released *2');
 
-    await expectGithubApiRequestsForStaging(action, '10.1.x', '10.1.0-rc.0', true);
+    await expectGithubApiRequests(action, '10.1.x', '10.1.0-rc.0', {
+      withCherryPicking: true,
+      willShowAsLatestOnGitHub: false,
+    });
     await action.instance.perform();
 
     const changelog = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
@@ -134,7 +138,10 @@ describe('cut exceptional minor next release candidate action', () => {
         .branchOff('10.1.x')
         .commit('fix(pkg1): not yet released *2');
 
-      await expectGithubApiRequestsForStaging(action, '10.1.x', '10.1.0-rc.0', true);
+      await expectGithubApiRequests(action, '10.1.x', '10.1.0-rc.0', {
+        willShowAsLatestOnGitHub: false,
+        withCherryPicking: true,
+      });
       await action.instance.perform();
 
       const changelog = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');

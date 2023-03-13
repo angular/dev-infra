@@ -38,7 +38,14 @@ export class CutNewPatchAction extends ReleaseAction {
       );
 
     await this.promptAndWaitForPullRequestMerged(pullRequest);
-    await this.publish(builtPackagesWithInfo, releaseNotes, beforeStagingSha, branchName, 'latest');
+    await this.publish(
+      builtPackagesWithInfo,
+      releaseNotes,
+      beforeStagingSha,
+      branchName,
+      'latest',
+      {shouldShowAsLatestOnGitHub: true},
+    );
     await this.cherryPickChangelogIntoNextBranch(releaseNotes, branchName);
   }
 

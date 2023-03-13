@@ -605,11 +605,14 @@ export abstract class ReleaseAction {
    * @param versionBumpCommitSha Commit that bumped the version. The release tag
    *   will point to this commit.
    * @param isPrerelease Whether the new version is published as a pre-release.
+   * @param shouldShowAsLatestOnGitHub Whether the version released will represent
+   *   the "latest" version of the project. I.e. GitHub will show this version as "latest".
    */
   private async _createGithubReleaseForVersion(
     releaseNotes: ReleaseNotes,
     versionBumpCommitSha: string,
     isPrerelease: boolean,
+    shouldShowAsLatestOnGitHub: boolean,
   ) {
     const tagName = getReleaseTagForVersion(releaseNotes.version);
     await this.git.github.git.createRef({
@@ -635,6 +638,7 @@ export abstract class ReleaseAction {
       name: `v${releaseNotes.version}`,
       tag_name: tagName,
       prerelease: isPrerelease,
+      make_latest: shouldShowAsLatestOnGitHub ? 'true' : 'false',
       body: releaseBody,
     });
     Log.info(green(`  ✓   Created v${releaseNotes.version} release in Github.`));
@@ -658,7 +662,7 @@ export abstract class ReleaseAction {
    *   additional changes after the release output has been built locally.
    * @param publishBranch Name of the branch that contains the new version.
    * @param npmDistTag NPM dist tag where the version should be published to.
-   * @param additionalOptions Additional options for building and publishing.
+   * @param additionalOptions Additional options needed for publishing a release.
    */
   protected async publish(
     builtPackagesWithInfo: BuiltPackageWithInfo[],
@@ -666,6 +670,7 @@ export abstract class ReleaseAction {
     beforeStagingSha: string,
     publishBranch: string,
     npmDistTag: NpmDistTag,
+    additionalOptions: {shouldShowAsLatestOnGitHub: boolean},
   ) {
     const versionBumpCommitSha = await this.getLatestCommitOfBranch(publishBranch);
 
@@ -695,6 +700,7 @@ export abstract class ReleaseAction {
       releaseNotes,
       versionBumpCommitSha,
       npmDistTag === 'next',
+      additionalOptions.shouldShowAsLatestOnGitHub,
     );
 
     // Walk through all built packages and publish them to NPM.

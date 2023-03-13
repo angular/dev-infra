@@ -17,7 +17,7 @@ import {
   setupReleaseActionForTesting,
 } from './test-utils/test-utils.js';
 import {
-  expectGithubApiRequestsForStaging,
+  expectGithubApiRequests,
   expectStagingAndPublishWithCherryPick,
 } from './test-utils/staging-test.js';
 import {getTestConfigurationsForAction} from './test-utils/action-mocks.js';
@@ -82,7 +82,9 @@ describe('cut an LTS patch action', () => {
       npmDistTag: 'v9-lts',
     });
 
-    await expectStagingAndPublishWithCherryPick(action, '9.2.x', '9.2.5', 'v9-lts');
+    await expectStagingAndPublishWithCherryPick(action, '9.2.x', '9.2.5', 'v9-lts', {
+      willShowAsLatestOnGitHub: false,
+    });
   });
 
   it('should generate release notes capturing changes to previous latest LTS version', async () => {
@@ -111,7 +113,10 @@ describe('cut an LTS patch action', () => {
       .commit('feat(pkg1): not yet released *1')
       .commit('feat(pkg1): not yet released *2');
 
-    await expectGithubApiRequestsForStaging(action, '9.2.x', '9.2.5', true);
+    await expectGithubApiRequests(action, '9.2.x', '9.2.5', {
+      withCherryPicking: true,
+      willShowAsLatestOnGitHub: false,
+    });
     await action.instance.perform();
 
     const changelog = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
