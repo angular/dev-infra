@@ -82,7 +82,7 @@ export abstract class BranchOffNextBranchBaseAction extends CutNpmNextPrerelease
     // the next minor too.
     await this.promptAndWaitForPullRequestMerged(pullRequest);
     await this.publish(builtPackagesWithInfo, releaseNotes, beforeStagingSha, newBranch, 'next', {
-      shouldShowAsLatestOnGitHub: false,
+      showAsLatestOnGitHub: false,
     });
 
     const branchOffPullRequest = await this._createNextBranchUpdatePullRequest(

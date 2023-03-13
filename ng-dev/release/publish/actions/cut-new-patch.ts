@@ -44,7 +44,7 @@ export class CutNewPatchAction extends ReleaseAction {
       beforeStagingSha,
       branchName,
       'latest',
-      {shouldShowAsLatestOnGitHub: true},
+      {showAsLatestOnGitHub: true},
     );
     await this.cherryPickChangelogIntoNextBranch(releaseNotes, branchName);
   }

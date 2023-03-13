@@ -54,7 +54,7 @@ export class SpecialCutLongTermSupportMinorAction extends ReleaseAction {
       beforeStagingSha,
       ltsBranch.branch,
       getLtsNpmDistTagOfMajor(newVersion.major),
-      {shouldShowAsLatestOnGitHub: false},
+      {showAsLatestOnGitHub: false},
     );
     await this.cherryPickChangelogIntoNextBranch(releaseNotes, ltsBranch.branch);
   }
