@@ -13,7 +13,7 @@ import {ReleaseTrain} from '../../../versioning/release-trains.js';
 import {CutExceptionalMinorPrereleaseAction} from '../../actions/exceptional-minor/cut-exceptional-minor-prerelease.js';
 import {changelogPattern, parse, setupReleaseActionForTesting} from '../test-utils/test-utils.js';
 import {
-  expectGithubApiRequestsForStaging,
+  expectGithubApiRequests,
   expectStagingAndPublishWithCherryPick,
 } from '../test-utils/staging-test.js';
 import {testTmpDir, SandboxGitRepo} from '../../../../utils/testing/index.js';
@@ -66,6 +66,7 @@ describe('cut exceptional minor pre-release action', () => {
         '10.2.x',
         '10.2.0-next.0',
         'do-not-use-exceptional-minor',
+        {willShowAsLatestOnGitHub: false},
       );
 
       const pkgJsonContents = readFileSync(
@@ -98,7 +99,10 @@ describe('cut exceptional minor pre-release action', () => {
         .commit('build: prepare for exceptional minor commit')
         .commit('feat(pkg1): not released yet *2');
 
-      await expectGithubApiRequestsForStaging(action, '10.2.x', '10.2.0-next.0', true);
+      await expectGithubApiRequests(action, '10.2.x', '10.2.0-next.0', {
+        withCherryPicking: true,
+        willShowAsLatestOnGitHub: false,
+      });
       await action.instance.perform();
 
       const changelog = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
@@ -132,6 +136,7 @@ describe('cut exceptional minor pre-release action', () => {
         '10.1.x',
         '10.1.0-next.1',
         'do-not-use-exceptional-minor',
+        {willShowAsLatestOnGitHub: false},
       );
     });
 
@@ -155,7 +160,10 @@ describe('cut exceptional minor pre-release action', () => {
         .commit('feat(pkg1): not released yet *1')
         .commit('feat(pkg1): not released yet *2');
 
-      await expectGithubApiRequestsForStaging(action, '10.1.x', '10.1.0-next.1', true);
+      await expectGithubApiRequests(action, '10.1.x', '10.1.0-next.1', {
+        withCherryPicking: true,
+        willShowAsLatestOnGitHub: false,
+      });
       await action.instance.perform();
 
       const changelog = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
@@ -189,6 +197,7 @@ describe('cut exceptional minor pre-release action', () => {
         '10.1.x',
         '10.1.0-rc.1',
         'do-not-use-exceptional-minor',
+        {willShowAsLatestOnGitHub: false},
       );
     });
 
@@ -212,7 +221,10 @@ describe('cut exceptional minor pre-release action', () => {
         .commit('feat(pkg1): not released yet *1')
         .commit('feat(pkg1): not released yet *2');
 
-      await expectGithubApiRequestsForStaging(action, '10.1.x', '10.1.0-rc.1', true);
+      await expectGithubApiRequests(action, '10.1.x', '10.1.0-rc.1', {
+        withCherryPicking: true,
+        willShowAsLatestOnGitHub: false,
+      });
       await action.instance.perform();
 
       const changelog = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');

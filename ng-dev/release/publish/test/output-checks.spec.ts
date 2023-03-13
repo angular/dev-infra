@@ -27,7 +27,9 @@ describe('package output checks', () => {
     const {version, branchName} = baseReleaseTrains.latest;
     const versionName = version.format();
 
-    await expectGithubApiRequestsForStaging(action, branchName, versionName, false);
+    await expectGithubApiRequestsForStaging(action, branchName, versionName, {
+      withCherryPicking: false,
+    });
 
     spyOn(Log, 'error');
 
@@ -50,7 +52,9 @@ describe('package output checks', () => {
       const {version, branchName} = baseReleaseTrains.latest;
       const versionName = version.format();
 
-      await expectGithubApiRequestsForStaging(action, branchName, versionName, false);
+      await expectGithubApiRequestsForStaging(action, branchName, versionName, {
+        withCherryPicking: false,
+      });
 
       spyOn(Log, 'error');
 
@@ -78,7 +82,9 @@ describe('package output checks', () => {
       const {version, branchName} = baseReleaseTrains.latest;
       const versionName = version.format();
 
-      await expectGithubApiRequestsForStaging(action, branchName, versionName, false);
+      await expectGithubApiRequestsForStaging(action, branchName, versionName, {
+        withCherryPicking: false,
+      });
 
       spyOn(Log, 'error');
 

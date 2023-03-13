@@ -79,6 +79,7 @@ export abstract class CutPrereleaseBaseAction extends ReleaseAction {
       beforeStagingSha,
       branchName,
       this.npmDistTag,
+      {shouldShowAsLatestOnGitHub: false},
     );
 
     // If the pre-release has been cut from a train that is not corresponding to

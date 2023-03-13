@@ -81,7 +81,9 @@ export abstract class BranchOffNextBranchBaseAction extends CutNpmNextPrerelease
     // cherry-pick the release notes into the next branch in combination with bumping the version to
     // the next minor too.
     await this.promptAndWaitForPullRequestMerged(pullRequest);
-    await this.publish(builtPackagesWithInfo, releaseNotes, beforeStagingSha, newBranch, 'next');
+    await this.publish(builtPackagesWithInfo, releaseNotes, beforeStagingSha, newBranch, 'next', {
+      shouldShowAsLatestOnGitHub: false,
+    });
 
     const branchOffPullRequest = await this._createNextBranchUpdatePullRequest(
       releaseNotes,

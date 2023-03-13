@@ -28,7 +28,7 @@ import {actions} from '../actions/index.js';
 import {githubReleaseBodyLimit} from '../constants.js';
 import {DelegateTestAction} from './delegate-test-action.js';
 import {getTestConfigurationsForAction, testReleasePackages} from './test-utils/action-mocks.js';
-import {expectGithubApiRequestsForStaging} from './test-utils/staging-test.js';
+import {expectGithubApiRequests} from './test-utils/staging-test.js';
 import {
   changelogPattern,
   fakeNpmPackageQueryRequest,
@@ -192,7 +192,7 @@ describe('common release action logic', () => {
           ahead_by: 1,
         })
         .expectTagToBeCreated(tagName, 'STAGING_SHA')
-        .expectReleaseToBeCreated(`v${version}`, tagName);
+        .expectReleaseToBeCreated(`v${version}`, tagName, true);
 
       // Set up a custom NPM registry.
       releaseConfig.publishRegistry = customRegistryUrl;
@@ -241,6 +241,7 @@ describe('common release action logic', () => {
         .expectReleaseToBeCreated(
           `v${version}`,
           tagName,
+          true,
           changelogPattern`
             # 10.1.0-next.0 <..>
             ### test
@@ -343,6 +344,7 @@ describe('common release action logic', () => {
         .expectReleaseToBeCreated(
           `v${version}`,
           tagName,
+          true,
           changelogPattern`
             Release notes are too large to be captured here. [View all changes here](https://github.com/angular/dev-infra-test/blob/10.0.1/CHANGELOG.md#10.0.1).
           `,
@@ -403,7 +405,10 @@ describe('common release action logic', () => {
       await writePackageJson('@angular/pkg2', '10.0.1');
       await writePackageJson('@experimental/somepkg', '0.1000.1');
 
-      await expectGithubApiRequestsForStaging(action, branchName, version.format(), false);
+      await expectGithubApiRequests(action, branchName, version.format(), {
+        withCherryPicking: false,
+        willShowAsLatestOnGitHub: true,
+      });
 
       spyOn(Log, 'error');
 

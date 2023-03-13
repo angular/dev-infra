@@ -13,7 +13,7 @@ import {ReleaseTrain} from '../../versioning/release-trains.js';
 import {CutNpmNextPrereleaseAction} from '../actions/cut-npm-next-prerelease.js';
 import {changelogPattern, parse, setupReleaseActionForTesting} from './test-utils/test-utils.js';
 import {
-  expectGithubApiRequestsForStaging,
+  expectGithubApiRequests,
   expectStagingAndPublishWithCherryPick,
   expectStagingAndPublishWithoutCherryPick,
 } from './test-utils/staging-test.js';
@@ -42,7 +42,9 @@ describe('cut npm next pre-release action', () => {
       }),
     );
 
-    await expectStagingAndPublishWithoutCherryPick(action, 'master', '10.2.0-next.1', 'next');
+    await expectStagingAndPublishWithoutCherryPick(action, 'master', '10.2.0-next.1', 'next', {
+      willShowAsLatestOnGitHub: false,
+    });
   });
 
   // This is test for a special case in the release tooling. Whenever we branch off for
@@ -65,7 +67,9 @@ describe('cut npm next pre-release action', () => {
         {isNextPublishedToNpm: false},
       );
 
-      await expectStagingAndPublishWithoutCherryPick(action, 'master', '10.2.0-next.0', 'next');
+      await expectStagingAndPublishWithoutCherryPick(action, 'master', '10.2.0-next.0', 'next', {
+        willShowAsLatestOnGitHub: false,
+      });
 
       const pkgJsonContents = readFileSync(
         join(action.projectDir, workspaceRelativePackageJsonPath),
@@ -103,7 +107,10 @@ describe('cut npm next pre-release action', () => {
           .cherryPick(1)
           .cherryPick(2);
 
-        await expectGithubApiRequestsForStaging(action, 'master', '10.2.0-next.0', false);
+        await expectGithubApiRequests(action, 'master', '10.2.0-next.0', {
+          withCherryPicking: false,
+          willShowAsLatestOnGitHub: false,
+        });
         await action.instance.perform();
 
         const changelog = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
@@ -134,7 +141,9 @@ describe('cut npm next pre-release action', () => {
         }),
       );
 
-      await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0-next.5', 'next');
+      await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0-next.5', 'next', {
+        willShowAsLatestOnGitHub: false,
+      });
     });
 
     it('should generate release notes capturing changes to the previous pre-release', async () => {
@@ -157,7 +166,10 @@ describe('cut npm next pre-release action', () => {
         .commit('feat(pkg1): not released yet *1')
         .commit('feat(pkg1): not released yet *2');
 
-      await expectGithubApiRequestsForStaging(action, '10.1.x', '10.1.0-next.5', true);
+      await expectGithubApiRequests(action, '10.1.x', '10.1.0-next.5', {
+        withCherryPicking: true,
+        willShowAsLatestOnGitHub: false,
+      });
       await action.instance.perform();
 
       const changelog = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
@@ -186,7 +198,9 @@ describe('cut npm next pre-release action', () => {
         }),
       );
 
-      await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0-rc.1', 'next');
+      await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0-rc.1', 'next', {
+        willShowAsLatestOnGitHub: false,
+      });
     });
 
     it('should generate release notes capturing changes to the previous pre-release', async () => {
@@ -209,7 +223,10 @@ describe('cut npm next pre-release action', () => {
         .commit('feat(pkg1): not released yet *1')
         .commit('feat(pkg1): not released yet *2');
 
-      await expectGithubApiRequestsForStaging(action, '10.1.x', '10.1.0-rc.1', true);
+      await expectGithubApiRequests(action, '10.1.x', '10.1.0-rc.1', {
+        withCherryPicking: true,
+        willShowAsLatestOnGitHub: false,
+      });
       await action.instance.perform();
 
       const changelog = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');

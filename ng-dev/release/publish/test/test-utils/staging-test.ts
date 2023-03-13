@@ -19,17 +19,16 @@ type TestActionWithMockGitClient = TestReleaseAction<ReleaseAction, {useSandboxG
 
 /**
  * Expects and fakes the necessary Github API requests for staging
- * a given version.
+ * process of a given version.
  */
 export async function expectGithubApiRequestsForStaging(
   action: Omit<TestReleaseAction, 'gitClient'>,
   expectedBranch: string,
   expectedVersion: string,
-  withCherryPicking: boolean,
+  opts: {withCherryPicking: boolean},
 ) {
   const {repo, fork} = action;
   const expectedStagingForkBranch = `release-stage-${expectedVersion}`;
-  const expectedTagName = expectedVersion;
 
   // We first mock the commit status check for the next branch, then expect two pull
   // requests from a fork that are targeting next and the new feature-freeze branch.
@@ -39,7 +38,43 @@ export async function expectGithubApiRequestsForStaging(
     .expectFindForkRequest(fork)
     .expectPullRequestToBeCreated(expectedBranch, fork, expectedStagingForkBranch, 200)
     .expectPullRequestMergeCheck(200, false)
-    .expectPullRequestMerge(200)
+    .expectPullRequestMerge(200);
+
+  // In the fork, we make the staging branch appear as non-existent,
+  // so that the PR can be created properly without collisions.
+  fork.expectBranchRequest(expectedStagingForkBranch, null);
+
+  if (opts.withCherryPicking) {
+    const expectedCherryPickForkBranch = `changelog-cherry-pick-${expectedVersion}`;
+
+    repo
+      .expectPullRequestToBeCreated('master', fork, expectedCherryPickForkBranch, 300)
+      .expectPullRequestMergeCheck(300, false)
+      .expectPullRequestMerge(300);
+
+    // In the fork, make the cherry-pick branch appear as non-existent, so that the
+    // cherry-pick PR can be created properly without collisions.
+    fork.expectBranchRequest(expectedCherryPickForkBranch, null);
+  }
+}
+
+/**
+ * Expects and fakes the necessary Github API requests for staging
+ * and publishing of a given version.
+ */
+export async function expectGithubApiRequests(
+  action: Omit<TestReleaseAction, 'gitClient'>,
+  expectedBranch: string,
+  expectedVersion: string,
+  opts: {withCherryPicking: boolean; willShowAsLatestOnGitHub: boolean},
+) {
+  const {repo} = action;
+  const expectedTagName = expectedVersion;
+
+  // Setup staging mock requests.
+  await expectGithubApiRequestsForStaging(action, expectedBranch, expectedVersion, opts);
+
+  repo
     .expectBranchRequest(expectedBranch, 'STAGING_COMMIT_SHA')
     .expectCommitRequest(
       'STAGING_COMMIT_SHA',
@@ -50,26 +85,11 @@ export async function expectGithubApiRequestsForStaging(
       ahead_by: 1,
     })
     .expectTagToBeCreated(expectedTagName, 'STAGING_COMMIT_SHA')
-    .expectReleaseToBeCreated(`v${expectedVersion}`, expectedTagName);
-
-  // In the fork, we make the staging branch appear as non-existent,
-  // so that the PR can be created properly without collisions.
-  fork.expectBranchRequest(expectedStagingForkBranch, null);
-
-  if (withCherryPicking) {
-    const expectedCherryPickForkBranch = `changelog-cherry-pick-${expectedVersion}`;
-
-    repo
-      .expectPullRequestToBeCreated('master', fork, expectedCherryPickForkBranch, 300)
-      .expectPullRequestMergeCheck(300, false)
-      .expectPullRequestMerge(300);
-
-    // In the fork, make the cherry-pick branch appear as non-existent, so that the
-    // cherry-pick PR can be created properly without collisions.
-    fork
-      .expectBranchRequest(expectedStagingForkBranch, null)
-      .expectBranchRequest(expectedCherryPickForkBranch, null);
-  }
+    .expectReleaseToBeCreated(
+      `v${expectedVersion}`,
+      expectedTagName,
+      opts.willShowAsLatestOnGitHub,
+    );
 }
 
 function expectNpmPublishToBeInvoked(packages: NpmPackage[], expectedNpmDistTag: NpmDistTag) {
@@ -89,11 +109,15 @@ export async function expectStagingAndPublishWithoutCherryPick(
   expectedBranch: string,
   expectedVersion: string,
   expectedNpmDistTag: NpmDistTag,
+  opts: {willShowAsLatestOnGitHub: boolean},
 ) {
   const {repo, fork, gitClient} = action;
   const expectedStagingForkBranch = `release-stage-${expectedVersion}`;
 
-  await expectGithubApiRequestsForStaging(action, expectedBranch, expectedVersion, false);
+  await expectGithubApiRequests(action, expectedBranch, expectedVersion, {
+    withCherryPicking: false,
+    willShowAsLatestOnGitHub: opts.willShowAsLatestOnGitHub,
+  });
   await action.instance.perform();
 
   expect(gitClient.pushed.length).toBe(1);
@@ -123,12 +147,16 @@ export async function expectStagingAndPublishWithCherryPick(
   expectedBranch: string,
   expectedVersion: string,
   expectedNpmDistTag: NpmDistTag,
+  opts: {willShowAsLatestOnGitHub: boolean},
 ) {
   const {repo, fork, gitClient} = action;
   const expectedStagingForkBranch = `release-stage-${expectedVersion}`;
   const expectedCherryPickForkBranch = `changelog-cherry-pick-${expectedVersion}`;
 
-  await expectGithubApiRequestsForStaging(action, expectedBranch, expectedVersion, true);
+  await expectGithubApiRequests(action, expectedBranch, expectedVersion, {
+    withCherryPicking: true,
+    willShowAsLatestOnGitHub: opts.willShowAsLatestOnGitHub,
+  });
   await action.instance.perform();
 
   expect(gitClient.pushed.length).toBe(2);

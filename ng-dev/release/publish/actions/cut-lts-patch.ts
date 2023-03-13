@@ -49,6 +49,7 @@ export class CutLongTermSupportPatchAction extends ReleaseAction {
       beforeStagingSha,
       ltsBranch.name,
       ltsBranch.npmDistTag,
+      {shouldShowAsLatestOnGitHub: false},
     );
     await this.cherryPickChangelogIntoNextBranch(releaseNotes, ltsBranch.name);
   }

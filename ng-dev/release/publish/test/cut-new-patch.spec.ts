@@ -10,7 +10,7 @@ import {ReleaseTrain} from '../../versioning/release-trains.js';
 import {CutNewPatchAction} from '../actions/cut-new-patch.js';
 import {changelogPattern, parse, setupReleaseActionForTesting} from './test-utils/test-utils.js';
 import {
-  expectGithubApiRequestsForStaging,
+  expectGithubApiRequests,
   expectStagingAndPublishWithCherryPick,
 } from './test-utils/staging-test.js';
 import {readFileSync} from 'fs';
@@ -42,7 +42,9 @@ describe('cut new patch action', () => {
       }),
     );
 
-    await expectStagingAndPublishWithCherryPick(action, '10.0.x', '10.0.3', 'latest');
+    await expectStagingAndPublishWithCherryPick(action, '10.0.x', '10.0.3', 'latest', {
+      willShowAsLatestOnGitHub: true,
+    });
   });
 
   it('should create a proper new version if there is a feature-freeze release-train', async () => {
@@ -56,7 +58,9 @@ describe('cut new patch action', () => {
       }),
     );
 
-    await expectStagingAndPublishWithCherryPick(action, '10.0.x', '10.0.10', 'latest');
+    await expectStagingAndPublishWithCherryPick(action, '10.0.x', '10.0.10', 'latest', {
+      willShowAsLatestOnGitHub: true,
+    });
   });
 
   it('should create a proper new version if there is a release-candidate train', async () => {
@@ -70,7 +74,9 @@ describe('cut new patch action', () => {
       }),
     );
 
-    await expectStagingAndPublishWithCherryPick(action, '10.0.x', '10.0.10', 'latest');
+    await expectStagingAndPublishWithCherryPick(action, '10.0.x', '10.0.10', 'latest', {
+      willShowAsLatestOnGitHub: true,
+    });
   });
 
   it('should generate release notes capturing changes to the previous latest patch version', async () => {
@@ -93,7 +99,10 @@ describe('cut new patch action', () => {
       .commit('feat(pkg1): not yet released *1')
       .commit('feat(pkg1): not yet released *2');
 
-    await expectGithubApiRequestsForStaging(action, '10.0.x', '10.0.3', true);
+    await expectGithubApiRequests(action, '10.0.x', '10.0.3', {
+      withCherryPicking: true,
+      willShowAsLatestOnGitHub: true,
+    });
     await action.instance.perform();
 
     const changelog = readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');

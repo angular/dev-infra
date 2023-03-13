@@ -15,7 +15,7 @@ import path from 'path';
 import fs from 'fs';
 import {changelogPattern, parse, setupReleaseActionForTesting} from './test-utils/test-utils.js';
 import {
-  expectGithubApiRequestsForStaging,
+  expectGithubApiRequests,
   expectStagingAndPublishWithCherryPick,
 } from './test-utils/staging-test.js';
 import {testTmpDir, SandboxGitRepo} from '../../../utils/testing/index.js';
@@ -110,7 +110,9 @@ describe('cut stable action', () => {
       }),
     );
 
-    await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0', 'latest');
+    await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0', 'latest', {
+      willShowAsLatestOnGitHub: true,
+    });
   });
 
   it('should not tag the previous latest release-train if a minor has been cut', async () => {
@@ -125,7 +127,9 @@ describe('cut stable action', () => {
       }),
     );
 
-    await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0', 'latest');
+    await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0', 'latest', {
+      willShowAsLatestOnGitHub: true,
+    });
     expect(ExternalCommands.invokeSetNpmDist).toHaveBeenCalledTimes(0);
   });
 
@@ -150,7 +154,9 @@ describe('cut stable action', () => {
 
     // Major is released to the `next` NPM dist tag initially. Can be re-tagged with
     // a separate release action. See `CutStableAction` for more details.
-    await expectStagingAndPublishWithCherryPick(action, '11.0.x', '11.0.0', 'next');
+    await expectStagingAndPublishWithCherryPick(action, '11.0.x', '11.0.0', 'next', {
+      willShowAsLatestOnGitHub: true,
+    });
     expect(ExternalCommands.invokeSetNpmDist).toHaveBeenCalledTimes(1);
     expect(ExternalCommands.invokeSetNpmDist).toHaveBeenCalledWith(
       action.projectDir,
@@ -203,7 +209,10 @@ describe('cut stable action', () => {
         .commit('fix(pkg1): not yet released *1')
         .commit('fix(pkg1): not yet released *2');
 
-      await expectGithubApiRequestsForStaging(action, '10.1.x', '10.1.0', true);
+      await expectGithubApiRequests(action, '10.1.x', '10.1.0', {
+        withCherryPicking: true,
+        willShowAsLatestOnGitHub: true,
+      });
       await action.instance.perform();
 
       const changelog = fs.readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
@@ -285,7 +294,10 @@ describe('cut stable action', () => {
       expect(changelogBeforeAction).toContain('<a name="10.1.0-rc.0"></a>');
       expect(changelogBeforeAction).not.toContain('<a name="10.1.0"></a>');
 
-      await expectGithubApiRequestsForStaging(action, '10.1.x', '10.1.0', true);
+      await expectGithubApiRequests(action, '10.1.x', '10.1.0', {
+        willShowAsLatestOnGitHub: true,
+        withCherryPicking: true,
+      });
       await action.instance.perform();
 
       // Assert the removal of changelog entries for the prerelease versions expected to be removed
@@ -311,7 +323,9 @@ describe('cut stable action', () => {
       }),
     );
 
-    await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0', 'latest');
+    await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0', 'latest', {
+      willShowAsLatestOnGitHub: true,
+    });
 
     expect(ExternalCommands.invokeDeleteNpmDistTag).toHaveBeenCalledTimes(0);
   });
@@ -328,7 +342,9 @@ describe('cut stable action', () => {
         }),
       );
 
-      await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0', 'latest');
+      await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0', 'latest', {
+        willShowAsLatestOnGitHub: true,
+      });
     });
 
     it('should update the `package.json` to remove the exceptional minor indicator', async () => {
@@ -354,7 +370,9 @@ describe('cut stable action', () => {
         }),
       );
 
-      await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0', 'latest');
+      await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0', 'latest', {
+        willShowAsLatestOnGitHub: true,
+      });
 
       const pgkJsonRaw = await fs.promises.readFile(pkgJsonPath, 'utf8');
       const pkgJson = JSON.parse(pgkJsonRaw) as PackageJson;
@@ -373,7 +391,9 @@ describe('cut stable action', () => {
         }),
       );
 
-      await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0', 'latest');
+      await expectStagingAndPublishWithCherryPick(action, '10.1.x', '10.1.0', 'latest', {
+        willShowAsLatestOnGitHub: true,
+      });
 
       expect(ExternalCommands.invokeDeleteNpmDistTag).toHaveBeenCalledTimes(1);
     });
@@ -424,7 +444,10 @@ describe('cut stable action', () => {
           .commit('fix(pkg1): not yet released *1')
           .commit('fix(pkg1): not yet released *2');
 
-        await expectGithubApiRequestsForStaging(action, '10.1.x', '10.1.0', true);
+        await expectGithubApiRequests(action, '10.1.x', '10.1.0', {
+          willShowAsLatestOnGitHub: true,
+          withCherryPicking: true,
+        });
         await action.instance.perform();
 
         const changelog = fs.readFileSync(`${testTmpDir}/CHANGELOG.md`, 'utf8');
