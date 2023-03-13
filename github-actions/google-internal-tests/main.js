@@ -151,59 +151,6 @@ var require_command = __commonJS({
 });
 
 // 
-var require_file_command = __commonJS({
-  ""(exports) {
-    "use strict";
-    var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
-      if (k2 === void 0)
-        k2 = k;
-      Object.defineProperty(o, k2, { enumerable: true, get: function() {
-        return m[k];
-      } });
-    } : function(o, m, k, k2) {
-      if (k2 === void 0)
-        k2 = k;
-      o[k2] = m[k];
-    });
-    var __setModuleDefault = exports && exports.__setModuleDefault || (Object.create ? function(o, v) {
-      Object.defineProperty(o, "default", { enumerable: true, value: v });
-    } : function(o, v) {
-      o["default"] = v;
-    });
-    var __importStar = exports && exports.__importStar || function(mod) {
-      if (mod && mod.__esModule)
-        return mod;
-      var result = {};
-      if (mod != null) {
-        for (var k in mod)
-          if (k !== "default" && Object.hasOwnProperty.call(mod, k))
-            __createBinding(result, mod, k);
-      }
-      __setModuleDefault(result, mod);
-      return result;
-    };
-    Object.defineProperty(exports, "__esModule", { value: true });
-    exports.issueCommand = void 0;
-    var fs2 = __importStar(__require("fs"));
-    var os = __importStar(__require("os"));
-    var utils_1 = require_utils();
-    function issueCommand(command, message) {
-      const filePath = process.env[`GITHUB_${command}`];
-      if (!filePath) {
-        throw new Error(`Unable to find environment variable for file command ${command}`);
-      }
-      if (!fs2.existsSync(filePath)) {
-        throw new Error(`Missing file at path: ${filePath}`);
-      }
-      fs2.appendFileSync(filePath, `${utils_1.toCommandValue(message)}${os.EOL}`, {
-        encoding: "utf8"
-      });
-    }
-    exports.issueCommand = issueCommand;
-  }
-});
-
-// 
 var require_rng = __commonJS({
   ""(exports) {
     "use strict";
@@ -691,6 +638,72 @@ var require_dist = __commonJS({
     function _interopRequireDefault(obj) {
       return obj && obj.__esModule ? obj : { default: obj };
     }
+  }
+});
+
+// 
+var require_file_command = __commonJS({
+  ""(exports) {
+    "use strict";
+    var __createBinding = exports && exports.__createBinding || (Object.create ? function(o, m, k, k2) {
+      if (k2 === void 0)
+        k2 = k;
+      Object.defineProperty(o, k2, { enumerable: true, get: function() {
+        return m[k];
+      } });
+    } : function(o, m, k, k2) {
+      if (k2 === void 0)
+        k2 = k;
+      o[k2] = m[k];
+    });
+    var __setModuleDefault = exports && exports.__setModuleDefault || (Object.create ? function(o, v) {
+      Object.defineProperty(o, "default", { enumerable: true, value: v });
+    } : function(o, v) {
+      o["default"] = v;
+    });
+    var __importStar = exports && exports.__importStar || function(mod) {
+      if (mod && mod.__esModule)
+        return mod;
+      var result = {};
+      if (mod != null) {
+        for (var k in mod)
+          if (k !== "default" && Object.hasOwnProperty.call(mod, k))
+            __createBinding(result, mod, k);
+      }
+      __setModuleDefault(result, mod);
+      return result;
+    };
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.prepareKeyValueMessage = exports.issueFileCommand = void 0;
+    var fs2 = __importStar(__require("fs"));
+    var os = __importStar(__require("os"));
+    var uuid_1 = require_dist();
+    var utils_1 = require_utils();
+    function issueFileCommand(command, message) {
+      const filePath = process.env[`GITHUB_${command}`];
+      if (!filePath) {
+        throw new Error(`Unable to find environment variable for file command ${command}`);
+      }
+      if (!fs2.existsSync(filePath)) {
+        throw new Error(`Missing file at path: ${filePath}`);
+      }
+      fs2.appendFileSync(filePath, `${utils_1.toCommandValue(message)}${os.EOL}`, {
+        encoding: "utf8"
+      });
+    }
+    exports.issueFileCommand = issueFileCommand;
+    function prepareKeyValueMessage(key, value) {
+      const delimiter = `ghadelimiter_${uuid_1.v4()}`;
+      const convertedValue = utils_1.toCommandValue(value);
+      if (key.includes(delimiter)) {
+        throw new Error(`Unexpected input: name should not contain the delimiter "${delimiter}"`);
+      }
+      if (convertedValue.includes(delimiter)) {
+        throw new Error(`Unexpected input: value should not contain the delimiter "${delimiter}"`);
+      }
+      return `${key}<<${delimiter}${os.EOL}${convertedValue}${os.EOL}${delimiter}`;
+    }
+    exports.prepareKeyValueMessage = prepareKeyValueMessage;
   }
 });
 
@@ -2015,7 +2028,6 @@ var require_core = __commonJS({
     var utils_1 = require_utils();
     var os = __importStar(__require("os"));
     var path3 = __importStar(__require("path"));
-    var uuid_1 = require_dist();
     var oidc_utils_1 = require_oidc_utils();
     var ExitCode;
     (function(ExitCode2) {
@@ -2027,18 +2039,9 @@ var require_core = __commonJS({
       process.env[name] = convertedVal;
       const filePath = process.env["GITHUB_ENV"] || "";
       if (filePath) {
-        const delimiter = `ghadelimiter_${uuid_1.v4()}`;
-        if (name.includes(delimiter)) {
-          throw new Error(`Unexpected input: name should not contain the delimiter "${delimiter}"`);
-        }
-        if (convertedVal.includes(delimiter)) {
-          throw new Error(`Unexpected input: value should not contain the delimiter "${delimiter}"`);
-        }
-        const commandValue = `${name}<<${delimiter}${os.EOL}${convertedVal}${os.EOL}${delimiter}`;
-        file_command_1.issueCommand("ENV", commandValue);
-      } else {
-        command_1.issueCommand("set-env", { name }, convertedVal);
+        return file_command_1.issueFileCommand("ENV", file_command_1.prepareKeyValueMessage(name, val));
       }
+      command_1.issueCommand("set-env", { name }, convertedVal);
     }
     exports.exportVariable = exportVariable;
     function setSecret(secret) {
@@ -2048,7 +2051,7 @@ var require_core = __commonJS({
     function addPath(inputPath) {
       const filePath = process.env["GITHUB_PATH"] || "";
       if (filePath) {
-        file_command_1.issueCommand("PATH", inputPath);
+        file_command_1.issueFileCommand("PATH", inputPath);
       } else {
         command_1.issueCommand("add-path", {}, inputPath);
       }
@@ -2068,7 +2071,10 @@ var require_core = __commonJS({
     exports.getInput = getInput2;
     function getMultilineInput(name, options) {
       const inputs = getInput2(name, options).split("\n").filter((x) => x !== "");
-      return inputs;
+      if (options && options.trimWhitespace === false) {
+        return inputs;
+      }
+      return inputs.map((input) => input.trim());
     }
     exports.getMultilineInput = getMultilineInput;
     function getBooleanInput(name, options) {
@@ -2084,8 +2090,12 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
     }
     exports.getBooleanInput = getBooleanInput;
     function setOutput(name, value) {
+      const filePath = process.env["GITHUB_OUTPUT"] || "";
+      if (filePath) {
+        return file_command_1.issueFileCommand("OUTPUT", file_command_1.prepareKeyValueMessage(name, value));
+      }
       process.stdout.write(os.EOL);
-      command_1.issueCommand("set-output", { name }, value);
+      command_1.issueCommand("set-output", { name }, utils_1.toCommandValue(value));
     }
     exports.setOutput = setOutput;
     function setCommandEcho(enabled) {
@@ -2143,7 +2153,11 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
     }
     exports.group = group;
     function saveState(name, value) {
-      command_1.issueCommand("save-state", { name }, value);
+      const filePath = process.env["GITHUB_STATE"] || "";
+      if (filePath) {
+        return file_command_1.issueFileCommand("STATE", file_command_1.prepareKeyValueMessage(name, value));
+      }
+      command_1.issueCommand("save-state", { name }, utils_1.toCommandValue(value));
     }
     exports.saveState = saveState;
     function getState(name) {
@@ -11093,7 +11107,7 @@ var require_utils4 = __commonJS({
       return result;
     };
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.getOctokitOptions = exports.GitHub = exports.context = void 0;
+    exports.getOctokitOptions = exports.GitHub = exports.defaults = exports.context = void 0;
     var Context = __importStar(require_context());
     var Utils = __importStar(require_utils2());
     var core_1 = require_dist_node8();
@@ -11101,13 +11115,13 @@ var require_utils4 = __commonJS({
     var plugin_paginate_rest_1 = require_dist_node10();
     exports.context = new Context.Context();
     var baseUrl = Utils.getApiBaseUrl();
-    var defaults2 = {
+    exports.defaults = {
       baseUrl,
       request: {
         agent: Utils.getProxyAgent(baseUrl)
       }
     };
-    exports.GitHub = core_1.Octokit.plugin(plugin_rest_endpoint_methods_1.restEndpointMethods, plugin_paginate_rest_1.paginateRest).defaults(defaults2);
+    exports.GitHub = core_1.Octokit.plugin(plugin_rest_endpoint_methods_1.restEndpointMethods, plugin_paginate_rest_1.paginateRest).defaults(exports.defaults);
     function getOctokitOptions(token, options) {
       const opts = Object.assign({}, options || {});
       const auth = Utils.getAuthString(token, opts);
@@ -11157,8 +11171,9 @@ var require_github = __commonJS({
     var Context = __importStar(require_context());
     var utils_1 = require_utils4();
     exports.context = new Context.Context();
-    function getOctokit(token, options) {
-      return new utils_1.GitHub(utils_1.getOctokitOptions(token, options));
+    function getOctokit(token, options, ...additionalPlugins) {
+      const GitHubWithPlugins = utils_1.GitHub.plugin(...additionalPlugins);
+      return new GitHubWithPlugins(utils_1.getOctokitOptions(token, options));
     }
     exports.getOctokit = getOctokit;
   }
@@ -17551,6 +17566,128 @@ var import_rest = __toESM(require_dist_node20());
 
 // 
 var import_brace_expansion = __toESM(require_brace_expansion(), 1);
+
+// 
+var posixClasses = {
+  "[:alnum:]": ["\\p{L}\\p{Nl}\\p{Nd}", true],
+  "[:alpha:]": ["\\p{L}\\p{Nl}", true],
+  "[:ascii:]": ["\\x00-\\x7f", false],
+  "[:blank:]": ["\\p{Zs}\\t", true],
+  "[:cntrl:]": ["\\p{Cc}", true],
+  "[:digit:]": ["\\p{Nd}", true],
+  "[:graph:]": ["\\p{Z}\\p{C}", true, true],
+  "[:lower:]": ["\\p{Ll}", true],
+  "[:print:]": ["\\p{C}", true],
+  "[:punct:]": ["\\p{P}", true],
+  "[:space:]": ["\\p{Z}\\t\\r\\n\\v\\f", true],
+  "[:upper:]": ["\\p{Lu}", true],
+  "[:word:]": ["\\p{L}\\p{Nl}\\p{Nd}\\p{Pc}", true],
+  "[:xdigit:]": ["A-Fa-f0-9", false]
+};
+var braceEscape = (s) => s.replace(/[[\]\\-]/g, "\\$&");
+var regexpEscape = (s) => s.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+var rangesToString = (ranges) => ranges.join("");
+var parseClass = (glob, position) => {
+  const pos = position;
+  if (glob.charAt(pos) !== "[") {
+    throw new Error("not in a brace expression");
+  }
+  const ranges = [];
+  const negs = [];
+  let i = pos + 1;
+  let sawStart = false;
+  let uflag = false;
+  let escaping = false;
+  let negate = false;
+  let endPos = pos;
+  let rangeStart = "";
+  WHILE:
+    while (i < glob.length) {
+      const c = glob.charAt(i);
+      if ((c === "!" || c === "^") && i === pos + 1) {
+        negate = true;
+        i++;
+        continue;
+      }
+      if (c === "]" && sawStart && !escaping) {
+        endPos = i + 1;
+        break;
+      }
+      sawStart = true;
+      if (c === "\\") {
+        if (!escaping) {
+          escaping = true;
+          i++;
+          continue;
+        }
+      }
+      if (c === "[" && !escaping) {
+        for (const [cls, [unip, u, neg]] of Object.entries(posixClasses)) {
+          if (glob.startsWith(cls, i)) {
+            if (rangeStart) {
+              return ["$.", false, glob.length - pos, true];
+            }
+            i += cls.length;
+            if (neg)
+              negs.push(unip);
+            else
+              ranges.push(unip);
+            uflag = uflag || u;
+            continue WHILE;
+          }
+        }
+      }
+      escaping = false;
+      if (rangeStart) {
+        if (c > rangeStart) {
+          ranges.push(braceEscape(rangeStart) + "-" + braceEscape(c));
+        } else if (c === rangeStart) {
+          ranges.push(braceEscape(c));
+        }
+        rangeStart = "";
+        i++;
+        continue;
+      }
+      if (glob.startsWith("-]", i + 1)) {
+        ranges.push(braceEscape(c + "-"));
+        i += 2;
+        continue;
+      }
+      if (glob.startsWith("-", i + 1)) {
+        rangeStart = c;
+        i += 2;
+        continue;
+      }
+      ranges.push(braceEscape(c));
+      i++;
+    }
+  if (endPos < i) {
+    return ["", false, 0, false];
+  }
+  if (!ranges.length && !negs.length) {
+    return ["$.", false, glob.length - pos, true];
+  }
+  if (negs.length === 0 && ranges.length === 1 && /^\\?.$/.test(ranges[0]) && !negate) {
+    const r = ranges[0].length === 2 ? ranges[0].slice(-1) : ranges[0];
+    return [regexpEscape(r), false, endPos - pos, false];
+  }
+  const sranges = "[" + (negate ? "^" : "") + rangesToString(ranges) + "]";
+  const snegs = "[" + (negate ? "" : "^") + rangesToString(negs) + "]";
+  const comb = ranges.length && negs.length ? "(" + sranges + "|" + snegs + ")" : ranges.length ? sranges : snegs;
+  return [comb, uflag, endPos - pos, true];
+};
+
+// 
+var escape = (s, { windowsPathsNoEscape = false } = {}) => {
+  return windowsPathsNoEscape ? s.replace(/[?*()[\]]/g, "[$&]") : s.replace(/[?*()[\]\\]/g, "\\$&");
+};
+
+// 
+var unescape2 = (s, { windowsPathsNoEscape = false } = {}) => {
+  return windowsPathsNoEscape ? s.replace(/\[([^\/\\])\]/g, "$1") : s.replace(/((?!\\).|^)\[([^\/\\])\]/g, "$1$2").replace(/\\([^\/])/g, "$1");
+};
+
+// 
 var minimatch = (p, pattern, options = {}) => {
   assertValidPattern(pattern);
   if (!options.nocomment && pattern.charAt(0) === "#") {
@@ -17609,10 +17746,12 @@ var qmarksTestNoExtDot = ([$0]) => {
   const len = $0.length;
   return (f) => f.length === len && f !== "." && f !== "..";
 };
-var platform = typeof process === "object" && process ? typeof process.env === "object" && process.env && process.env.__MINIMATCH_TESTING_PLATFORM__ || process.platform : "posix";
-var isWindows = platform === "win32";
-var path = isWindows ? { sep: "\\" } : { sep: "/" };
-var sep = path.sep;
+var defaultPlatform = typeof process === "object" && process ? typeof process.env === "object" && process.env && process.env.__MINIMATCH_TESTING_PLATFORM__ || process.platform : "posix";
+var path = {
+  win32: { sep: "\\" },
+  posix: { sep: "/" }
+};
+var sep = defaultPlatform === "win32" ? path.win32.sep : path.posix.sep;
 minimatch.sep = sep;
 var GLOBSTAR = Symbol("globstar **");
 minimatch.GLOBSTAR = GLOBSTAR;
@@ -17651,6 +17790,8 @@ var defaults = (def) => {
         return orig.defaults(ext(def, options)).Minimatch;
       }
     },
+    unescape: (s, options = {}) => orig.unescape(s, ext(def, options)),
+    escape: (s, options = {}) => orig.escape(s, ext(def, options)),
     filter: (pattern, options = {}) => orig.filter(pattern, ext(def, options)),
     defaults: (options) => orig.defaults(ext(def, options)),
     makeRe: (pattern, options = {}) => orig.makeRe(pattern, ext(def, options)),
@@ -17678,7 +17819,6 @@ var assertValidPattern = (pattern) => {
     throw new TypeError("pattern is too long");
   }
 };
-var SUBPARSE = Symbol("subparse");
 var makeRe = (pattern, options = {}) => new Minimatch(pattern, options).makeRe();
 minimatch.makeRe = makeRe;
 var match = (list, pattern, options = {}) => {
@@ -17691,9 +17831,8 @@ var match = (list, pattern, options = {}) => {
 };
 minimatch.match = match;
 var globUnescape = (s) => s.replace(/\\(.)/g, "$1");
-var charUnescape = (s) => s.replace(/\\([^-\]])/g, "$1");
+var globMagic = /[?*]|[+@!]\(.*?\)|\[|\]/;
 var regExpEscape = (s) => s.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-var braExpEscape = (s) => s.replace(/[[\]\\]/g, "\\$&");
 var Minimatch = class {
   options;
   set;
@@ -17707,12 +17846,18 @@ var Minimatch = class {
   partial;
   globSet;
   globParts;
+  nocase;
+  isWindows;
+  platform;
+  windowsNoMagicRoot;
   regexp;
   constructor(pattern, options = {}) {
     assertValidPattern(pattern);
     options = options || {};
     this.options = options;
     this.pattern = pattern;
+    this.platform = options.platform || defaultPlatform;
+    this.isWindows = this.platform === "win32";
     this.windowsPathsNoEscape = !!options.windowsPathsNoEscape || options.allowWindowsEscape === false;
     if (this.windowsPathsNoEscape) {
       this.pattern = this.pattern.replace(/\\/g, "/");
@@ -17724,10 +17869,24 @@ var Minimatch = class {
     this.comment = false;
     this.empty = false;
     this.partial = !!options.partial;
+    this.nocase = !!this.options.nocase;
+    this.windowsNoMagicRoot = options.windowsNoMagicRoot !== void 0 ? options.windowsNoMagicRoot : !!(this.isWindows && this.nocase);
     this.globSet = [];
     this.globParts = [];
     this.set = [];
     this.make();
+  }
+  hasMagic() {
+    if (this.options.magicalBraces && this.set.length > 1) {
+      return true;
+    }
+    for (const pattern of this.set) {
+      for (const part of pattern) {
+        if (typeof part !== "string")
+          return true;
+      }
+    }
+    return false;
   }
   debug(..._) {
   }
@@ -17751,10 +17910,21 @@ var Minimatch = class {
     const rawGlobParts = this.globSet.map((s) => this.slashSplit(s));
     this.globParts = this.preprocess(rawGlobParts);
     this.debug(this.pattern, this.globParts);
-    let set = this.globParts.map((s, _, __) => s.map((ss) => this.parse(ss)));
+    let set = this.globParts.map((s, _, __) => {
+      if (this.isWindows && this.windowsNoMagicRoot) {
+        const isUNC = s[0] === "" && s[1] === "" && (s[2] === "?" || !globMagic.test(s[2])) && !globMagic.test(s[3]);
+        const isDrive = /^[a-z]:/i.test(s[0]);
+        if (isUNC) {
+          return [...s.slice(0, 4), ...s.slice(4).map((ss) => this.parse(ss))];
+        } else if (isDrive) {
+          return [s[0], ...s.slice(1).map((ss) => this.parse(ss))];
+        }
+      }
+      return s.map((ss) => this.parse(ss));
+    });
     this.debug(this.pattern, set);
     this.set = set.filter((s) => s.indexOf(false) === -1);
-    if (isWindows) {
+    if (this.isWindows) {
       for (let i = 0; i < this.set.length; i++) {
         const p = this.set[i];
         if (p[0] === "" && p[1] === "" && this.globParts[i][2] === "?" && typeof p[3] === "string" && /^[a-z]:$/i.test(p[3])) {
@@ -17774,9 +17944,85 @@ var Minimatch = class {
         }
       }
     }
-    globParts = this.firstPhasePreProcess(globParts);
-    globParts = this.secondPhasePreProcess(globParts);
+    const { optimizationLevel = 1 } = this.options;
+    if (optimizationLevel >= 2) {
+      globParts = this.firstPhasePreProcess(globParts);
+      globParts = this.secondPhasePreProcess(globParts);
+    } else if (optimizationLevel >= 1) {
+      globParts = this.levelOneOptimize(globParts);
+    } else {
+      globParts = this.adjascentGlobstarOptimize(globParts);
+    }
     return globParts;
+  }
+  adjascentGlobstarOptimize(globParts) {
+    return globParts.map((parts) => {
+      let gs = -1;
+      while (-1 !== (gs = parts.indexOf("**", gs + 1))) {
+        let i = gs;
+        while (parts[i + 1] === "**") {
+          i++;
+        }
+        if (i !== gs) {
+          parts.splice(gs, i - gs);
+        }
+      }
+      return parts;
+    });
+  }
+  levelOneOptimize(globParts) {
+    return globParts.map((parts) => {
+      parts = parts.reduce((set, part) => {
+        const prev = set[set.length - 1];
+        if (part === "**" && prev === "**") {
+          return set;
+        }
+        if (part === "..") {
+          if (prev && prev !== ".." && prev !== "." && prev !== "**") {
+            set.pop();
+            return set;
+          }
+        }
+        set.push(part);
+        return set;
+      }, []);
+      return parts.length === 0 ? [""] : parts;
+    });
+  }
+  levelTwoFileOptimize(parts) {
+    if (!Array.isArray(parts)) {
+      parts = this.slashSplit(parts);
+    }
+    let didSomething = false;
+    do {
+      didSomething = false;
+      if (!this.preserveMultipleSlashes) {
+        for (let i = 1; i < parts.length - 1; i++) {
+          const p = parts[i];
+          if (i === 1 && p === "" && parts[0] === "")
+            continue;
+          if (p === "." || p === "") {
+            didSomething = true;
+            parts.splice(i, 1);
+            i--;
+          }
+        }
+        if (parts[0] === "." && parts.length === 2 && (parts[1] === "." || parts[1] === "")) {
+          didSomething = true;
+          parts.pop();
+        }
+      }
+      let dd = 0;
+      while (-1 !== (dd = parts.indexOf("..", dd + 1))) {
+        const p = parts[dd - 1];
+        if (p && p !== "." && p !== ".." && p !== "**") {
+          didSomething = true;
+          parts.splice(dd - 1, 2);
+          dd -= 2;
+        }
+      }
+    } while (didSomething);
+    return parts.length === 0 ? [""] : parts;
   }
   firstPhasePreProcess(globParts) {
     let didSomething = false;
@@ -17794,10 +18040,12 @@ var Minimatch = class {
           }
           let next = parts[gs + 1];
           const p = parts[gs + 2];
+          const p2 = parts[gs + 3];
           if (next !== "..")
             continue;
-          if (!p || p === "." || p === "..")
+          if (!p || p === "." || p === ".." || !p2 || p2 === "." || p2 === "..") {
             continue;
+          }
           didSomething = true;
           parts.splice(gs, 1);
           const other = parts.slice(0);
@@ -17816,9 +18064,9 @@ var Minimatch = class {
               i--;
             }
           }
-          if (parts[0] === ".") {
+          if (parts[0] === "." && parts.length === 2 && (parts[1] === "." || parts[1] === "")) {
             didSomething = true;
-            parts.shift();
+            parts.pop();
           }
         }
         let dd = 0;
@@ -17826,7 +18074,9 @@ var Minimatch = class {
           const p = parts[dd - 1];
           if (p && p !== "." && p !== ".." && p !== "**") {
             didSomething = true;
-            parts.splice(dd - 1, 2);
+            const needDot = dd === 1 && parts[dd + 1] === "**";
+            const splin = needDot ? ["."] : [];
+            parts.splice(dd - 1, 2, ...splin);
             if (parts.length === 0)
               parts.push("");
             dd -= 2;
@@ -17900,7 +18150,7 @@ var Minimatch = class {
   }
   matchOne(file, pattern, partial = false) {
     const options = this.options;
-    if (isWindows) {
+    if (this.isWindows) {
       const fileUNC = file[0] === "" && file[1] === "" && file[2] === "?" && typeof file[3] === "string" && /^[a-z]:$/i.test(file[3]);
       const patternUNC = pattern[0] === "" && pattern[1] === "" && pattern[2] === "?" && typeof pattern[3] === "string" && /^[a-z]:$/i.test(pattern[3]);
       if (fileUNC && patternUNC) {
@@ -17923,6 +18173,10 @@ var Minimatch = class {
           file = file.slice(3);
         }
       }
+    }
+    const { optimizationLevel = 1 } = this.options;
+    if (optimizationLevel >= 2) {
+      file = this.levelTwoFileOptimize(file);
     }
     this.debug("matchOne", this, { file, pattern });
     this.debug("matchOne", file.length, pattern.length);
@@ -17970,9 +18224,6 @@ var Minimatch = class {
         return false;
       }
       let hit;
-      while (f === "." && fi < fl - 1) {
-        f = file[++fi];
-      }
       if (typeof p === "string") {
         hit = f === p;
         this.debug("string match", p, f, hit);
@@ -17996,7 +18247,7 @@ var Minimatch = class {
   braceExpand() {
     return braceExpand(this.pattern, this.options);
   }
-  parse(pattern, isSub) {
+  parse(pattern) {
     assertValidPattern(pattern);
     const options = this.options;
     if (pattern === "**")
@@ -18005,18 +18256,16 @@ var Minimatch = class {
       return "";
     let m;
     let fastTest = null;
-    if (isSub !== SUBPARSE) {
-      if (m = pattern.match(starRE)) {
-        fastTest = options.dot ? starTestDot : starTest;
-      } else if (m = pattern.match(starDotExtRE)) {
-        fastTest = (options.nocase ? options.dot ? starDotExtTestNocaseDot : starDotExtTestNocase : options.dot ? starDotExtTestDot : starDotExtTest)(m[1]);
-      } else if (m = pattern.match(qmarksRE)) {
-        fastTest = (options.nocase ? options.dot ? qmarksTestNocaseDot : qmarksTestNocase : options.dot ? qmarksTestDot : qmarksTest)(m);
-      } else if (m = pattern.match(starDotStarRE)) {
-        fastTest = options.dot ? starDotStarTestDot : starDotStarTest;
-      } else if (m = pattern.match(dotStarRE)) {
-        fastTest = dotStarTest;
-      }
+    if (m = pattern.match(starRE)) {
+      fastTest = options.dot ? starTestDot : starTest;
+    } else if (m = pattern.match(starDotExtRE)) {
+      fastTest = (options.nocase ? options.dot ? starDotExtTestNocaseDot : starDotExtTestNocase : options.dot ? starDotExtTestDot : starDotExtTest)(m[1]);
+    } else if (m = pattern.match(qmarksRE)) {
+      fastTest = (options.nocase ? options.dot ? qmarksTestNocaseDot : qmarksTestNocase : options.dot ? qmarksTestDot : qmarksTest)(m);
+    } else if (m = pattern.match(starDotStarRE)) {
+      fastTest = options.dot ? starDotStarTestDot : starDotStarTest;
+    } else if (m = pattern.match(dotStarRE)) {
+      fastTest = dotStarTest;
     }
     let re = "";
     let hasMagic = false;
@@ -18024,12 +18273,8 @@ var Minimatch = class {
     const patternListStack = [];
     const negativeLists = [];
     let stateChar = false;
-    let inClass = false;
-    let reClassStart = -1;
-    let classStart = -1;
-    let cs;
+    let uflag = false;
     let pl;
-    let sp;
     let dotTravAllowed = pattern.charAt(0) === ".";
     let dotFileAllowed = options.dot || dotTravAllowed;
     const patternStart = () => dotTravAllowed ? "" : dotFileAllowed ? "(?!(?:^|\\/)\\.{1,2}(?:$|\\/))" : "(?!\\.)";
@@ -18071,10 +18316,6 @@ var Minimatch = class {
           return false;
         }
         case "\\":
-          if (inClass && pattern.charAt(i + 1) === "-") {
-            re += c;
-            continue;
-          }
           clearStateChar();
           escaping = true;
           continue;
@@ -18084,13 +18325,6 @@ var Minimatch = class {
         case "@":
         case "!":
           this.debug("%s	%s %s %j <-- stateChar", pattern, i, re, c);
-          if (inClass) {
-            this.debug("  in class");
-            if (c === "!" && i === classStart + 1)
-              c = "^";
-            re += c;
-            continue;
-          }
           this.debug("call clearStateChar %j", stateChar);
           clearStateChar();
           stateChar = c;
@@ -18098,10 +18332,6 @@ var Minimatch = class {
             clearStateChar();
           continue;
         case "(": {
-          if (inClass) {
-            re += "(";
-            continue;
-          }
           if (!stateChar) {
             re += "\\(";
             continue;
@@ -18126,7 +18356,7 @@ var Minimatch = class {
         }
         case ")": {
           const plEntry = patternListStack[patternListStack.length - 1];
-          if (inClass || !plEntry) {
+          if (!plEntry) {
             re += "\\)";
             continue;
           }
@@ -18142,7 +18372,7 @@ var Minimatch = class {
         }
         case "|": {
           const plEntry = patternListStack[patternListStack.length - 1];
-          if (inClass || !plEntry) {
+          if (!plEntry) {
             re += "\\|";
             continue;
           }
@@ -18156,44 +18386,24 @@ var Minimatch = class {
         }
         case "[":
           clearStateChar();
-          if (inClass) {
-            re += "\\" + c;
-            continue;
+          const [src, needUflag, consumed, magic] = parseClass(pattern, i);
+          if (consumed) {
+            re += src;
+            uflag = uflag || needUflag;
+            i += consumed - 1;
+            hasMagic = hasMagic || magic;
+          } else {
+            re += "\\[";
           }
-          inClass = true;
-          classStart = i;
-          reClassStart = re.length;
-          re += c;
           continue;
         case "]":
-          if (i === classStart + 1 || !inClass) {
-            re += "\\" + c;
-            continue;
-          }
-          cs = pattern.substring(classStart + 1, i);
-          try {
-            RegExp("[" + braExpEscape(charUnescape(cs)) + "]");
-            re += c;
-          } catch (er) {
-            re = re.substring(0, reClassStart) + "(?:$.)";
-          }
-          hasMagic = true;
-          inClass = false;
+          re += "\\" + c;
           continue;
         default:
           clearStateChar();
-          if (reSpecials[c] && !(c === "^" && inClass)) {
-            re += "\\";
-          }
-          re += c;
+          re += regExpEscape(c);
           break;
       }
-    }
-    if (inClass) {
-      cs = pattern.slice(classStart + 1);
-      sp = this.parse(cs, SUBPARSE);
-      re = re.substring(0, reClassStart) + "\\[" + sp[0];
-      hasMagic = hasMagic || sp[1];
     }
     for (pl = patternListStack.pop(); pl; pl = patternListStack.pop()) {
       let tail;
@@ -18228,7 +18438,7 @@ var Minimatch = class {
         cleanAfter = cleanAfter.replace(/\)[+*?]?/, "");
       }
       nlAfter = cleanAfter;
-      const dollar = nlAfter === "" && isSub !== SUBPARSE ? "(?:$|\\/)" : "";
+      const dollar = nlAfter === "" ? "(?:$|\\/)" : "";
       re = nlBefore + nlFirst + nlAfter + dollar + nlLast;
     }
     if (re !== "" && hasMagic) {
@@ -18237,16 +18447,13 @@ var Minimatch = class {
     if (addPatternStart) {
       re = patternStart() + re;
     }
-    if (isSub === SUBPARSE) {
-      return [re, hasMagic];
-    }
     if (options.nocase && !hasMagic && !options.nocaseMagicOnly) {
       hasMagic = pattern.toUpperCase() !== pattern.toLowerCase();
     }
     if (!hasMagic) {
-      return globUnescape(pattern);
+      return globUnescape(re);
     }
-    const flags = options.nocase ? "i" : "";
+    const flags = (options.nocase ? "i" : "") + (uflag ? "u" : "");
     try {
       const ext2 = fastTest ? {
         _glob: pattern,
@@ -18309,7 +18516,7 @@ var Minimatch = class {
   slashSplit(p) {
     if (this.preserveMultipleSlashes) {
       return p.split("/");
-    } else if (isWindows && /^\/\/[^\/]+/.test(p)) {
+    } else if (this.isWindows && /^\/\/[^\/]+/.test(p)) {
       return ["", ...p.split(/\/+/)];
     } else {
       return p.split(/\/+/);
@@ -18327,8 +18534,8 @@ var Minimatch = class {
       return true;
     }
     const options = this.options;
-    if (path.sep !== "/") {
-      f = f.split(path.sep).join("/");
+    if (this.isWindows) {
+      f = f.split("\\").join("/");
     }
     const ff = this.slashSplit(f);
     this.debug(this.pattern, "split", ff);
@@ -18364,6 +18571,8 @@ var Minimatch = class {
   }
 };
 minimatch.Minimatch = Minimatch;
+minimatch.escape = escape;
+minimatch.unescape = unescape2;
 
 // 
 var jsonc = __toESM(require_jsonc_parser());
