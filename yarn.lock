@@ -347,17 +347,17 @@ __metadata:
     "@google-cloud/storage": ^6.0.0
     "@microsoft/api-extractor": 7.34.4
     "@octokit/auth-app": ^4.0.0
-    "@octokit/core": ^4.0.0
-    "@octokit/graphql": ^5.0.0
-    "@octokit/graphql-schema": ^13.0.0
+    "@octokit/core": ^4.2.0
+    "@octokit/graphql": ^5.0.5
+    "@octokit/graphql-schema": ^13.7.0
     "@octokit/openapi-types": ^16.0.0
     "@octokit/plugin-paginate-rest": ^6.0.0
-    "@octokit/plugin-rest-endpoint-methods": ^7.0.0
-    "@octokit/request-error": ^3.0.0
-    "@octokit/rest": ^19.0.0
+    "@octokit/plugin-rest-endpoint-methods": ^7.0.1
+    "@octokit/request-error": ^3.0.3
+    "@octokit/rest": ^19.0.7
     "@octokit/types": ^9.0.0
     "@octokit/webhooks-definitions": ^3.67.3
-    "@octokit/webhooks-types": ^6.0.0
+    "@octokit/webhooks-types": ^6.10.0
     "@openid/appauth": ^1.3.1
     "@types/babel__core": ^7.1.19
     "@types/browser-sync": ^2.26.3
@@ -5316,18 +5316,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/core@npm:^4.0.0":
-  version: 4.0.5
-  resolution: "@octokit/core@npm:4.0.5"
+"@octokit/core@npm:^4.1.0, @octokit/core@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "@octokit/core@npm:4.2.0"
   dependencies:
     "@octokit/auth-token": ^3.0.0
     "@octokit/graphql": ^5.0.0
     "@octokit/request": ^6.0.0
     "@octokit/request-error": ^3.0.0
-    "@octokit/types": ^7.0.0
+    "@octokit/types": ^9.0.0
     before-after-hook: ^2.2.0
     universal-user-agent: ^6.0.0
-  checksum: 6e4a2161d22b9cb24cd1cf702e6d18200fc48a29dc66db08c37809d65243d29429123652072126d9f161e45aef6a57e72a5d56d7e975829c190e8c3c46b3f1b9
+  checksum: 5ac56e7f14b42a5da8d3075a2ae41483521a78bee061a01f4a81d8c0ecd6a684b2e945d66baba0cd1fdf264639deedc3a96d0f32c4d2fc39b49ca10f52f4de39
   languageName: node
   linkType: hard
 
@@ -5353,13 +5353,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/graphql-schema@npm:^13.0.0":
-  version: 13.0.0
-  resolution: "@octokit/graphql-schema@npm:13.0.0"
+"@octokit/graphql-schema@npm:^13.7.0":
+  version: 13.7.0
+  resolution: "@octokit/graphql-schema@npm:13.7.0"
   dependencies:
     graphql: ^16.0.0
     graphql-tag: ^2.10.3
-  checksum: 0389adc3e7ea3ac44bb9aff75ca9a0698106854bdf9c1b53d05dde8bf99f5612f92994d68c9f8cc00b16b9a56e7c2c659e2940484247256e6a8908dd0415d2ef
+  checksum: 1e3111571591f5df5d4865e60a12ca13c67b13cc332660cd388186a52d55c97e395eacc068582067d3f7dc141f55e8cf9eb4c7dc680b021f50cd5edf09fbd0c3
   languageName: node
   linkType: hard
 
@@ -5382,6 +5382,17 @@ __metadata:
     "@octokit/types": ^7.0.0
     universal-user-agent: ^6.0.0
   checksum: 310549c2d7966adb46428e943cd99cb766519819bd4945d8349d3ec0642e4ee39d9194e1b0a87a5404951c04c247fafb4a8456ed4c839c64bfb4042aa4a6812c
+  languageName: node
+  linkType: hard
+
+"@octokit/graphql@npm:^5.0.5":
+  version: 5.0.5
+  resolution: "@octokit/graphql@npm:5.0.5"
+  dependencies:
+    "@octokit/request": ^6.0.0
+    "@octokit/types": ^9.0.0
+    universal-user-agent: ^6.0.0
+  checksum: eb2d1a6305a3d1f55ff0ce92fb88b677f0bb789757152d58a79ef61171fb65ecf6fe18d6c27e236c0cee6a0c2600c2cb8370f5ac7184f8e9361c085aa4555bb1
   languageName: node
   linkType: hard
 
@@ -5437,17 +5448,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/plugin-paginate-rest@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "@octokit/plugin-paginate-rest@npm:4.0.0"
-  dependencies:
-    "@octokit/types": ^7.0.0
-  peerDependencies:
-    "@octokit/core": ">=4"
-  checksum: a3fbc1d540cc919df8935dea88b36d59ae85f417713476d8679f1cf8b733cfb44b96d3020094bd7f8daa7b84e4ac9b8403c1cdad323289d586fdb2ed1dcae7c0
-  languageName: node
-  linkType: hard
-
 "@octokit/plugin-paginate-rest@npm:^6.0.0":
   version: 6.0.0
   resolution: "@octokit/plugin-paginate-rest@npm:6.0.0"
@@ -5480,19 +5480,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/plugin-rest-endpoint-methods@npm:^6.0.0":
-  version: 6.3.0
-  resolution: "@octokit/plugin-rest-endpoint-methods@npm:6.3.0"
-  dependencies:
-    "@octokit/types": ^7.0.0
-    deprecation: ^2.3.1
-  peerDependencies:
-    "@octokit/core": ">=3"
-  checksum: 8fefbdcfc16fe39aa216c440cf52c2861f6c0c905f1fdfbd0e720fb59815c079100b877535bcd428cb782ef31a8d508470d69d4ecf307b8af4ccc34a5669c050
-  languageName: node
-  linkType: hard
-
-"@octokit/plugin-rest-endpoint-methods@npm:^7.0.0":
+"@octokit/plugin-rest-endpoint-methods@npm:^7.0.0, @octokit/plugin-rest-endpoint-methods@npm:^7.0.1":
   version: 7.0.1
   resolution: "@octokit/plugin-rest-endpoint-methods@npm:7.0.1"
   dependencies:
@@ -5526,6 +5514,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@octokit/request-error@npm:^3.0.3":
+  version: 3.0.3
+  resolution: "@octokit/request-error@npm:3.0.3"
+  dependencies:
+    "@octokit/types": ^9.0.0
+    deprecation: ^2.0.0
+    once: ^1.4.0
+  checksum: 5db0b514732686b627e6ed9ef1ccdbc10501f1b271a9b31f784783f01beee70083d7edcfeb35fbd7e569fa31fdd6762b1ff6b46101700d2d97e7e48e749520d0
+  languageName: node
+  linkType: hard
+
 "@octokit/request@npm:^5.6.0, @octokit/request@npm:^5.6.3":
   version: 5.6.3
   resolution: "@octokit/request@npm:5.6.3"
@@ -5554,15 +5553,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/rest@npm:^19.0.0":
-  version: 19.0.4
-  resolution: "@octokit/rest@npm:19.0.4"
+"@octokit/rest@npm:^19.0.7":
+  version: 19.0.7
+  resolution: "@octokit/rest@npm:19.0.7"
   dependencies:
-    "@octokit/core": ^4.0.0
-    "@octokit/plugin-paginate-rest": ^4.0.0
+    "@octokit/core": ^4.1.0
+    "@octokit/plugin-paginate-rest": ^6.0.0
     "@octokit/plugin-request-log": ^1.0.4
-    "@octokit/plugin-rest-endpoint-methods": ^6.0.0
-  checksum: 7eba9148b707c713705ba8d75c25fbb22488f30abef7967ce92884a51e411e709b90ff56b0e6fa5521b261f343a7fd33b8ad5d0b87cab4bc2e178002b2566cf2
+    "@octokit/plugin-rest-endpoint-methods": ^7.0.0
+  checksum: 1f970c4de2cf3d1691d3cf5dd4bfa5ac205629e76417b5c51561e1beb5b4a7e6c65ba647f368727e67e5243418e06ca9cdafd9e733173e1529385d4f4d053d3d
   languageName: node
   linkType: hard
 
@@ -5600,10 +5599,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/webhooks-types@npm:^6.0.0":
-  version: 6.3.5
-  resolution: "@octokit/webhooks-types@npm:6.3.5"
-  checksum: 80e48e03edadbfae2e39da66b1c9e9c920cf2d048499ca1bdb532c533333b2c1afa337b0af979173837c4694115abcc093faf5bdcc8f487715e9f6e380b92877
+"@octokit/webhooks-types@npm:^6.10.0":
+  version: 6.10.0
+  resolution: "@octokit/webhooks-types@npm:6.10.0"
+  checksum: 6eac226f070a48d9ef2594df952e8540b001e2a8760c4fa5ac2f78c1750694a6c3b8de42fb4dbb4bb78335f091d9268539d4261c52a1a91fb9ef1e9af1959b44
   languageName: node
   linkType: hard
 

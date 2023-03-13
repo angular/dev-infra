@@ -12,7 +12,7 @@ import semver from 'semver';
 
 import {workspaceRelativePackageJsonPath} from '../../utils/constants.js';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
-import {GithubApiRequestError} from '../../utils/git/github.js';
+import {isGithubApiError} from '../../utils/git/github.js';
 import {
   getFileContentsUrl,
   getListCommitsInBranchUrl,
@@ -258,7 +258,7 @@ export abstract class ReleaseAction {
     } catch (e) {
       // If the error has a `status` property set to `404`, then we know that the branch
       // does not exist. Otherwise, it might be an API error that we want to report/re-throw.
-      if (e instanceof GithubApiRequestError && e.status === 404) {
+      if (isGithubApiError(e) && e.status === 404) {
         return false;
       }
       throw e;
