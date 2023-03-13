@@ -96,7 +96,7 @@ http_server_rule = rule(
         "enable_dev_ui": attr.bool(
             default = False,
             doc = """
-              Whether an additional UI for development should be enabled. 
+              Whether an additional UI for development should be enabled.
               The development UI can be helpful for throttling network and more. This
               is a feature from the underlying browsersync implementation.
             """,
@@ -111,7 +111,7 @@ http_server_rule = rule(
         "environment_variables": attr.string_list(
             default = [],
             doc = """
-              List of environment variables that will be made available in the `index.html` 
+              List of environment variables that will be made available in the `index.html`
               file. Variables can be accessed through `window.<NAME>`.
 
               This is useful as an example when developers want to have an API key available
