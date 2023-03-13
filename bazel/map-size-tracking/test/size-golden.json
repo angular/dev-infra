@@ -1,5 +1,5 @@
 {
-  "unmapped": 6117,
+  "unmapped": 6345,
   "files": {
     "bazel/": {
       "map-size-tracking/": {
@@ -17,19 +17,19 @@
     },
     "node_modules/": {
       "rxjs/": {
-        "size": 3844,
+        "size": 3616,
         "src/": {
           "internal/": {
             "NotificationFactories.ts": 126,
             "Observable.ts": 557,
-            "Subscriber.ts": 1097,
-            "Subscription.ts": 1101,
-            "config.ts": 131,
+            "Subscriber.ts": 1029,
+            "Subscription.ts": 1026,
+            "config.ts": 53,
             "scheduler/": {
               "size": 62,
               "timeoutProvider.ts": 62
             },
-            "size": 3844,
+            "size": 3616,
             "symbol/": {
               "observable.ts": 16,
               "size": 16
@@ -38,20 +38,20 @@
               "UnsubscriptionError.ts": 69,
               "arrRemove.ts": 93,
               "createErrorClass.ts": 69,
-              "errorContext.ts": 187,
+              "errorContext.ts": 180,
               "identity.ts": 1,
               "isFunction.ts": 75,
               "noop.ts": 10,
               "pipe.ts": 104,
               "reportUnhandledError.ts": 146,
-              "size": 754
+              "size": 747
             }
           },
-          "size": 3844
+          "size": 3616
         }
       },
-      "size": 3844
+      "size": 3616
     },
-    "size": 3869
+    "size": 3641
   }
 }

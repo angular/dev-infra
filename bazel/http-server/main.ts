@@ -17,8 +17,8 @@ const {rootPaths, historyApiFallback, enableDevUi, environmentVariables, port} =
   .strict()
   .option('port', {type: 'number', default: 4200})
   .option('historyApiFallback', {type: 'boolean', default: false})
-  .option('rootPaths', {type: 'array', default: ['']})
-  .option('environmentVariables', {type: 'array', default: []})
+  .option('rootPaths', {type: 'array', string: true, default: ['']})
+  .option('environmentVariables', {type: 'array', string: true, default: []})
   .option('enableDevUi', {type: 'boolean', default: false})
   .parseSync();
 
