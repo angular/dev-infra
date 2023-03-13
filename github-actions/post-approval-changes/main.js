@@ -23368,34 +23368,34 @@ async function revokeActiveInstallationToken(githubOrToken) {
 // 
 var googleOwnedRobots = ["angular-robot"];
 async function main() {
-  let angularClient = null;
-  let googlerClient = null;
+  let repoClient = null;
+  let googlersOrgClient = null;
   try {
-    const googlersToken = await getAuthTokenFor(ANGULAR_ROBOT, {
+    const googlersOrgToken = await getAuthTokenFor(ANGULAR_ROBOT, {
       owner: "googlers",
       repo: ".github"
     });
-    googlerClient = new import_rest2.Octokit({ auth: googlersToken });
-    const angularToken = await getAuthTokenFor(ANGULAR_ROBOT, import_github2.context.repo);
-    angularClient = new import_rest2.Octokit({ auth: angularToken });
-    await runPostApprovalChangesAction(googlerClient, angularClient);
+    googlersOrgClient = new import_rest2.Octokit({ auth: googlersOrgToken });
+    const repoToken = await getAuthTokenFor(ANGULAR_ROBOT, import_github2.context.repo);
+    repoClient = new import_rest2.Octokit({ auth: repoToken });
+    await runPostApprovalChangesAction(googlersOrgClient, repoClient);
   } finally {
-    if (googlerClient !== null) {
-      await revokeActiveInstallationToken(googlerClient);
+    if (googlersOrgClient !== null) {
+      await revokeActiveInstallationToken(googlersOrgClient);
     }
-    if (angularClient !== null) {
-      await revokeActiveInstallationToken(angularClient);
+    if (repoClient !== null) {
+      await revokeActiveInstallationToken(repoClient);
     }
   }
 }
-async function runPostApprovalChangesAction(googlerClient, angularClient) {
+async function runPostApprovalChangesAction(googlersOrgClient, repoClient) {
   var _a;
   if (import_github2.context.eventName !== "pull_request_target") {
     throw Error("This action can only run for with pull_request_target events");
   }
   const { pull_request: pr } = import_github2.context.payload;
   const actionUser = import_github2.context.actor;
-  if (await isGooglerOrgMember(googlerClient, actionUser)) {
+  if (await isGooglerOrgMember(googlersOrgClient, actionUser)) {
     core.info("Action performed by an account in the Googler Github Org, skipping as post approval changes are allowed.");
     return;
   }
@@ -23411,7 +23411,7 @@ async function runPostApprovalChangesAction(googlerClient, angularClient) {
   }
   const { repo, owner } = import_github2.context.issue;
   const pull_number = import_github2.context.issue.number;
-  const allReviews = await angularClient.paginate(angularClient.pulls.listReviews, {
+  const allReviews = await repoClient.paginate(repoClient.pulls.listReviews, {
     owner,
     pull_number,
     repo
@@ -23423,7 +23423,7 @@ async function runPostApprovalChangesAction(googlerClient, angularClient) {
     if (knownReviewers.has(user)) {
       continue;
     }
-    if (!await isGooglerOrgMember(googlerClient, user)) {
+    if (!await isGooglerOrgMember(googlersOrgClient, user)) {
       continue;
     }
     knownReviewers.add(user);
@@ -23448,7 +23448,7 @@ async function runPostApprovalChangesAction(googlerClient, angularClient) {
   }
   const reviewToRerequest = reviews[0];
   core.info(`Requesting a new review from ${reviewToRerequest.user.login}`);
-  await angularClient.pulls.requestReviewers({
+  await repoClient.pulls.requestReviewers({
     owner,
     pull_number,
     repo,
