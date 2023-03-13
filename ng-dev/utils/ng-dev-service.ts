@@ -62,44 +62,41 @@ export async function useNgDevService<T>(
         implies: 'github-escape-hatch',
         hidden: true,
       })
-      .middleware(
-        async (args: Arguments<T & {githubToken?: string; githubEscapeHatch?: boolean}>) => {
-          // TODO(josephperrott): remove this guard against running multiple times after
-          //   https://github.com/yargs/yargs/issues/2223 is fixed
-          if (ngDevServiceMiddlewareHasRun) {
-            return;
-          }
-          ngDevServiceMiddlewareHasRun = true;
+      .middleware(async (args) => {
+        // TODO(josephperrott): remove this guard against running multiple times after
+        //   https://github.com/yargs/yargs/issues/2223 is fixed
+        if (ngDevServiceMiddlewareHasRun) {
+          return;
+        }
+        ngDevServiceMiddlewareHasRun = true;
 
-          initializeApp(firebaseConfig);
-          await restoreNgTokenFromDiskIfValid();
+        initializeApp(firebaseConfig);
+        await restoreNgTokenFromDiskIfValid();
 
-          if (isAuthCommand) {
-            Log.debug('Skipping ng-dev token request as this is an auth command');
-            return;
-          }
+        if (isAuthCommand) {
+          Log.debug('Skipping ng-dev token request as this is an auth command');
+          return;
+        }
 
-          if (args.githubEscapeHatch === true) {
-            // Use the configuration helper to set up the GithubClient using the provided auth
-            // token or environment.
-            configureGitClientWithTokenOrFromEnvironment(args.githubToken);
-            Log.warn('This escape hatch should only be used if the service is erroring. Please');
-            Log.warn('inform #dev-infra of using this escape hatch so it can be triaged.');
-            return;
-          }
+        if (args.githubEscapeHatch === true) {
+          // Use the configuration helper to set up the GithubClient using the provided auth
+          // token or environment.
+          configureGitClientWithTokenOrFromEnvironment(args.githubToken);
+          Log.warn('This escape hatch should only be used if the service is erroring. Please');
+          Log.warn('inform #dev-infra of using this escape hatch so it can be triaged.');
+          return;
+        }
 
-          if (await getCurrentUser()) {
-            await configureAuthorizedGitClientWithTemporaryToken();
-            Log.debug('Logged into github using temporary token');
-            return;
-          }
+        if (await getCurrentUser()) {
+          await configureAuthorizedGitClientWithTemporaryToken();
+          Log.debug('Logged into github using temporary token');
+          return;
+        }
 
-          Log.error('  ✘  You must be logged in to run this command\n');
-          Log.log('Log in by running the following command:');
-          Log.log('  yarn ng-dev auth login');
-          throw new Error('The user is not logged in');
-        },
-        true,
-      )
+        Log.error('  ✘  You must be logged in to run this command\n');
+        Log.log('Log in by running the following command:');
+        Log.log('  yarn ng-dev auth login');
+        throw new Error('The user is not logged in');
+      }, true)
   );
 }
