@@ -20,7 +20,7 @@ export type PullRequestState = 'merged' | 'unknown';
  *
  * More details here: https://github.com/angular/angular/pull/40181.
  *
- * @throws {GithubApiRequestError} May throw Github API request errors if e.g. a pull request
+ * @throws May throw Github API request errors if e.g. a pull request
  *   cannot be found, or the repository is not existing/visible.
  */
 export async function isPullRequestMerged(api: GitClient, id: number): Promise<boolean> {

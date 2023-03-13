@@ -9,7 +9,7 @@
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {bold, green, Log} from '../../utils/logging.js';
 import {Prompt} from '../../utils/prompt.js';
-import {GithubApiRequestError} from '../../utils/git/github.js';
+import {isGithubApiError} from '../../utils/git/github.js';
 
 import {PullRequest} from './actions.js';
 import {isPullRequestMerged} from './pull-request-state.js';
@@ -75,7 +75,7 @@ export async function promptToInitiatePullRequestMerge(
       Log.error(`      ${data.message} (${status})`);
       Log.debug(data, status, headers);
     } catch (e) {
-      if (!(e instanceof GithubApiRequestError)) {
+      if (!isGithubApiError(e)) {
         throw e;
       }
 
@@ -99,7 +99,7 @@ async function gracefulCheckIfPullRequestIsMerged(
   try {
     return await isPullRequestMerged(git, id);
   } catch (e) {
-    if (e instanceof GithubApiRequestError) {
+    if (isGithubApiError(e)) {
       Log.debug(`Unable to determine if pull request #${id} has been merged.`);
       Log.debug(e);
       return false;

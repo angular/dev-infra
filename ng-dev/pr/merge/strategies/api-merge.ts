@@ -15,7 +15,7 @@ import {GithubApiMergeMethod, GithubApiMergeStrategyConfig} from '../../config/i
 import {PullRequest} from '../pull-request.js';
 
 import {MergeStrategy} from './strategy.js';
-import {GithubApiRequestError} from '../../../utils/git/github.js';
+import {isGithubApiError} from '../../../utils/git/github.js';
 import {FatalMergeToolError, MergeConflictsFatalError} from '../failures.js';
 
 /** Type describing the parameters for the Octokit `merge` API endpoint. */
@@ -83,7 +83,7 @@ export class GithubApiMergeStrategy extends MergeStrategy {
       // token with insufficient permissions. Github does this because it doesn't want
       // to leak whether a repository exists or not. In our case we expect a certain
       // repository to exist, so we always treat this as a permission failure.
-      if (e instanceof GithubApiRequestError && (e.status === 403 || e.status === 404)) {
+      if (isGithubApiError(e) && (e.status === 403 || e.status === 404)) {
         throw new FatalMergeToolError('Insufficient Github API permissions to merge pull request.');
       }
       throw e;

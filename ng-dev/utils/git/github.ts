@@ -14,10 +14,6 @@ import {RequestParameters} from '@octokit/types';
 import {RequestError} from '@octokit/request-error';
 import {query} from 'typed-graphqlify';
 
-// Expose the `RequestError` class from Octokit with a more concrete
-// export name, making it easier to find and understand.
-export {RequestError as GithubApiRequestError};
-
 /**
  * An object representation of a Graphql Query to be used as a response type and
  * to generate a Graphql query string.
@@ -67,4 +63,15 @@ export class AuthenticatedGithubClient extends GithubClient {
   async graphql<T extends GraphqlQueryObject>(queryObject: T, params: RequestParameters = {}) {
     return (await this._graphql(query(queryObject).toString(), params)) as T;
   }
+}
+
+/** Whether the given object corresponds to an Octokit API request error.  */
+export function isGithubApiError(obj: unknown): obj is RequestError {
+  return (
+    obj instanceof Error &&
+    // Note: Cannot use `instanceof` here because Octokit may use a different
+    // version of `@octokit/request-error` due to version mismatch/hoisting.
+    obj.constructor.name === 'RequestError' &&
+    (obj as Partial<RequestError>).request !== undefined
+  );
 }

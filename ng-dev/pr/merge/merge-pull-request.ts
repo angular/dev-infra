@@ -7,9 +7,9 @@
  */
 
 import {assertValidGithubConfig, ConfigValidationError, getConfig} from '../../utils/config.js';
-import {bold, green, Log} from '../../utils/logging.js';
+import {bold, Log} from '../../utils/logging.js';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
-import {GithubApiRequestError} from '../../utils/git/github.js';
+import {isGithubApiError} from '../../utils/git/github.js';
 import {GITHUB_TOKEN_GENERATE_URL} from '../../utils/git/github-urls.js';
 
 import {assertValidPullRequestConfig} from '../config/index.js';
@@ -59,13 +59,13 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
     } catch (e) {
       // Catch errors to the Github API for invalid requests. We want to
       // exit the script with a better explanation of the error.
-      if (e instanceof GithubApiRequestError && e.status === 401) {
+      if (isGithubApiError(e) && e.status === 401) {
         Log.error('Github API request failed: ' + bold(e.message));
         Log.error('Please ensure that your provided token is valid.');
         Log.warn(`You can generate a token here: ${GITHUB_TOKEN_GENERATE_URL}`);
         return false;
       }
-      if (e instanceof GithubApiRequestError) {
+      if (isGithubApiError(e)) {
         Log.error('Github API request failed: ' + bold(e.message));
         return false;
       }
