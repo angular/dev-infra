@@ -76,7 +76,7 @@ export class CutStableAction extends ReleaseAction {
       beforeStagingSha,
       branchName,
       this._getNpmDistTag(),
-      {shouldShowAsLatestOnGitHub: true},
+      {showAsLatestOnGitHub: true},
     );
 
     // If we turned an exceptional minor into the new patch, the temporary

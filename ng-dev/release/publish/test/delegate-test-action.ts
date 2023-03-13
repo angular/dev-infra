@@ -45,7 +45,7 @@ export class DelegateTestAction extends ReleaseAction {
     beforeStagingSha: string,
     npmDistTag: NpmDistTag,
     releaseNotesCompareTag: string = '',
-    shouldShowAsLatestOnGitHub = true,
+    showAsLatestOnGitHub = true,
   ) {
     const releaseNotes = await ReleaseNotes.forRange(
       this.git,
@@ -59,7 +59,7 @@ export class DelegateTestAction extends ReleaseAction {
       beforeStagingSha,
       publishBranch,
       npmDistTag,
-      {shouldShowAsLatestOnGitHub},
+      {showAsLatestOnGitHub},
     );
   }
 

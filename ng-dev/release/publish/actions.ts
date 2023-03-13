@@ -605,14 +605,14 @@ export abstract class ReleaseAction {
    * @param versionBumpCommitSha Commit that bumped the version. The release tag
    *   will point to this commit.
    * @param isPrerelease Whether the new version is published as a pre-release.
-   * @param shouldShowAsLatestOnGitHub Whether the version released will represent
+   * @param showAsLatestOnGitHub Whether the version released will represent
    *   the "latest" version of the project. I.e. GitHub will show this version as "latest".
    */
   private async _createGithubReleaseForVersion(
     releaseNotes: ReleaseNotes,
     versionBumpCommitSha: string,
     isPrerelease: boolean,
-    shouldShowAsLatestOnGitHub: boolean,
+    showAsLatestOnGitHub: boolean,
   ) {
     const tagName = getReleaseTagForVersion(releaseNotes.version);
     await this.git.github.git.createRef({
@@ -638,7 +638,7 @@ export abstract class ReleaseAction {
       name: `v${releaseNotes.version}`,
       tag_name: tagName,
       prerelease: isPrerelease,
-      make_latest: shouldShowAsLatestOnGitHub ? 'true' : 'false',
+      make_latest: showAsLatestOnGitHub ? 'true' : 'false',
       body: releaseBody,
     });
     Log.info(green(`  ✓   Created v${releaseNotes.version} release in Github.`));
@@ -670,7 +670,7 @@ export abstract class ReleaseAction {
     beforeStagingSha: string,
     publishBranch: string,
     npmDistTag: NpmDistTag,
-    additionalOptions: {shouldShowAsLatestOnGitHub: boolean},
+    additionalOptions: {showAsLatestOnGitHub: boolean},
   ) {
     const versionBumpCommitSha = await this.getLatestCommitOfBranch(publishBranch);
 
@@ -700,7 +700,7 @@ export abstract class ReleaseAction {
       releaseNotes,
       versionBumpCommitSha,
       npmDistTag === 'next',
-      additionalOptions.shouldShowAsLatestOnGitHub,
+      additionalOptions.showAsLatestOnGitHub,
     );
 
     // Walk through all built packages and publish them to NPM.
