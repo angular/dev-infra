@@ -1,0 +1,31 @@
+name: CI
+
+on: pull_request_target
+
+permissions: {}
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # tag=v3.3.0
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - uses: ./github-actions/setup-bazel-remote-exec
+      - uses: actions/cache@v3
+        with:
+          path: |
+            .yarn/cache
+          key: v1-${{hashFiles('yarn.lock')}}
+      - run: yarn install --immutable
+        shell: bash
+      - run: yarn ng-dev format changed --check ${{ github.event.pull_request.base.sha }}
+        shell: bash
+      - run: yarn ng-dev commit-message validate-range ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}
+        shell: bash
+      - run: yarn lint
+        shell: bash
+      - run: yarn tsc -p tsconfig.json
+        shell: bash
