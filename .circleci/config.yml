@@ -151,28 +151,6 @@ jobs:
       - run: yarn bazel test --test_tag_filters=windows --build_tests_only -- ... -bazel/remote-execution/...
       - *save_cache
 
-  lint:
-    executor: docker-linux-executor
-    steps:
-      - checkout_and_rebase
-      - *restore_cache
-      - setup_bazel_config
-      - yarn_install
-      - run:
-          name: Check code format
-          command: yarn ng-dev format changed --check << pipeline.git.base_revision >>
-      - run:
-          name: Check commit messages
-          command: yarn ng-dev commit-message validate-range << pipeline.git.base_revision >> << pipeline.git.revision >>
-      - run:
-          name: Check code by running linters
-          command: yarn lint
-
-      # TODO(ESM): This can be removed when Bazel also uses the new `Node16/next` resolution.
-      - run:
-          name: Ensure TypeScript code passes type checking
-          command: yarn tsc -p tsconfig.json
-
   publish_snapshot_build:
     executor: docker-linux-executor
     steps:
@@ -211,7 +189,6 @@ workflows:
   default_workflow:
     jobs:
       - test
-      - lint
       - test_macos_x64:
           filters: *main_upstream_branches_filter
       - test_windows_x64:
