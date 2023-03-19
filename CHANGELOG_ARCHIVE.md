@@ -1,3 +1,21 @@
+<a name="2022.11.20"></a>
+# 2022.11.20 (2022-11-20)
+### github-actions
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d829965](https://github.com/angular/dev-infra/commit/d8299657f57570f77698684af4c7836af99b39b8) | feat | Add the `area: buid & ci` label automatically for PRs with `build` and `ci` type commits ([#904](https://github.com/angular/dev-infra/pull/904)) |
+| [bea95d6](https://github.com/angular/dev-infra/commit/bea95d6e50847f8a0bd69d0aa228bc58ce2d653a) | feat | setup action for enabling bazel remote exec ([#898](https://github.com/angular/dev-infra/pull/898)) |
+| [f60c5f4](https://github.com/angular/dev-infra/commit/f60c5f44a991b223685157e5add23b887fdcc42e) | fix | labels sync action not actually checking target repos ([#895](https://github.com/angular/dev-infra/pull/895)) |
+| [df2f203](https://github.com/angular/dev-infra/commit/df2f203d6be69088c60e32b0acccc5b7e511de58) | fix | properly pass auth token to octokit ([#897](https://github.com/angular/dev-infra/pull/897)) |
+| [a632a16](https://github.com/angular/dev-infra/commit/a632a1601469c0c0a2104cfa6bf1421d706ce80e) | fix | set remote exec script as executable and prevent regression |
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2f48b93](https://github.com/angular/dev-infra/commit/2f48b93e57be9eb898f4a5c7fc9f5fae1a5ecc7e) | feat | expose label definitions for org-wide labels ([#896](https://github.com/angular/dev-infra/pull/896)) |
+## Special Thanks
+Joey Perrott and Paul Gschwendtner
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.11.6"></a>
 # 2022.11.6 (2022-11-06)
 ### github-actions
