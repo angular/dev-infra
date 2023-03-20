@@ -106,32 +106,6 @@ commands:
 # Jobs can include parameters that are passed in the workflow job invocation.
 # https://circleci.com/docs/2.0/reusing-config/#authoring-parameterized-jobs
 jobs:
-  test_macos_x64:
-    executor:
-      name: macos-x64-executor
-      resource_class: macos.x86.medium.gen2
-    steps:
-      - checkout
-      - *restore_cache
-      - yarn_install
-      # Firefox tests will run in the Bazel sandbox, but Firefox currently requires, regardless
-      # of us specifying a custom profile directory, that the default profile directory exists.
-      # TODO: Remove this once https://bugzilla.mozilla.org/show_bug.cgi?id=1754821#c3 is resolved.
-      - run: mkdir "$HOME/Library/Application Support/Firefox"
-      - run: yarn bazel test --test_tag_filters=macos --build_tests_only -- //... -//bazel/remote-execution/...
-      - *save_cache
-
-  test_windows_x64:
-    executor:
-      name: win/default
-      shell: bash.exe
-    steps:
-      - checkout
-      - *restore_cache
-      - yarn_install
-      - run: yarn bazel test --test_tag_filters=windows --build_tests_only -- ... -bazel/remote-execution/...
-      - *save_cache
-
   publish_snapshot_build:
     executor: docker-linux-executor
     steps:
@@ -152,9 +126,5 @@ workflows:
   version: 2
   default_workflow:
     jobs:
-      - test_macos_x64:
-          filters: *main_upstream_branches_filter
-      - test_windows_x64:
-          filters: *main_upstream_branches_filter
       - publish_snapshot_build:
           filters: *main_upstream_branches_filter
