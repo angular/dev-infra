@@ -4,7 +4,7 @@ node <<"NGEOF"
 build --config=remote`,await o.default.promises.writeFile(e,_,"utf8")}}async function h(e){try{return await o.default.promises.readFile(e,"utf8")}catch{return""}}P(process.env.BAZELRC_PATH).catch(e=>{console.error(e),process.exitCode=1})});D();})();
 /**
  * @license
- * Copyright Google LLC All Rights Reserved.
+ * Copyright Google LLC
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license

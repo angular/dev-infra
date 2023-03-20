@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright Google LLC All Rights Reserved.
+ * Copyright Google LLC
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
@@ -74,7 +74,7 @@ export interface TestReleaseAction<
   projectDir: string;
   githubConfig: GithubConfig;
   releaseConfig: ReleaseConfig;
-  promptConfirmSpy: jasmine.Spy<typeof Prompt['confirm']>;
+  promptConfirmSpy: jasmine.Spy<(typeof Prompt)['confirm']>;
   builtPackagesWithInfo: BuiltPackageWithInfo[];
   gitClient: O['useSandboxGitClient'] extends true ? SandboxGitClient : VirtualGitClient;
 }
