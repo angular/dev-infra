@@ -106,25 +106,6 @@ commands:
 # Jobs can include parameters that are passed in the workflow job invocation.
 # https://circleci.com/docs/2.0/reusing-config/#authoring-parameterized-jobs
 jobs:
-  test:
-    executor:
-      name: docker-linux-executor
-      resource_class: xlarge
-
-    steps:
-      - checkout_and_rebase
-      - *restore_cache
-      - setup_bazel_config
-      - yarn_install
-      # Run all tests in the workspace. Also explicitly add the component benchmark test. Benchmark
-      # tests are not run by default on CI but we want to verify the macro works.
-      # Temporarily skip `//bazel/benchmark/component_benchmark/test`, due to `@angular/bazel` being
-      # incompatible with the latest `@bazel/*` packages.
-      # - run: yarn bazel test -- //... //bazel/benchmark/component_benchmark/test
-      - run: yarn bazel test -- //...
-      - prepare_and_store_test_results
-      - *save_cache
-
   test_macos_x64:
     executor:
       name: macos-x64-executor
@@ -169,26 +150,8 @@ jobs:
 
 workflows:
   version: 2
-  oss_abuse_monitoring:
-    triggers:
-      - schedule:
-          cron: '* * * * *'
-          filters:
-            branches:
-              only:
-                - main
-    jobs:
-      - buildalert/monitor-builds:
-          alert-threshold-max-builds: 5
-          alert-threshold-max-builds-per-user: 5
-          alert-threshold-seconds: 60
-          circle-project-org: 'angular'
-          circle-project-reponame: 'angular'
-          circle-token-envvar: 'OSS_ABUSE_CIRCLECI_TOKEN'
-          slack-app-url-envvar: 'OSS_ABUSE_SLACK_URL'
   default_workflow:
     jobs:
-      - test
       - test_macos_x64:
           filters: *main_upstream_branches_filter
       - test_windows_x64:
