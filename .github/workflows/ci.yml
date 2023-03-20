@@ -1,12 +1,22 @@
 name: CI
 
-on: pull_request_target
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ci-${{ github.sha }}
+  cancel-in-progress: true
 
 permissions: {}
 
 jobs:
   lint:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    if: ${{ contains(fromJSON('["synchronize", "opened", "reopened"]'), github.event.action) }}
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # tag=v3.3.0
         with:
@@ -18,19 +28,20 @@ jobs:
         with:
           path: |
             .yarn/cache
+            .yarn/install-state.gz
           key: v1-${{hashFiles('yarn.lock')}}
       - run: yarn install --immutable
-        shell: bash
       - run: yarn ng-dev format changed --check ${{ github.event.pull_request.base.sha }}
-        shell: bash
       - run: yarn ng-dev commit-message validate-range ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}
-        shell: bash
       - run: yarn lint
-        shell: bash
       - run: yarn tsc -p tsconfig.json
-        shell: bash
+
   test:
+    if: ${{ contains(fromJSON('["synchronize", "opened", "reopened"]'), github.event.action) }}
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # tag=v3.3.0
         with:
@@ -40,8 +51,51 @@ jobs:
         with:
           path: |
             .yarn/cache
+            .yarn/install-state.gz
           key: v1-${{hashFiles('yarn.lock')}}
       - run: yarn install --immutable
         shell: bash
       - run: yarn bazel test -- //...
         shell: bash
+
+  test-win:
+    if: ${{ contains(fromJSON('["synchronize", "opened", "reopened"]'), github.event.action) }}
+    defaults:
+      run:
+        shell: bash
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # tag=v3.3.0
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/cache@v3
+        with:
+          path: |
+            .yarn/cache
+            .yarn/install-state.gz
+          key: v1-${{hashFiles('yarn.lock')}}
+      - run: yarn install --immutable
+        shell: bash
+      - run: yarn bazel test --test_tag_filters=windows --build_tests_only -- ... -bazel/remote-execution/...
+        shell: bash
+
+  test-macos:
+    if: ${{ contains(fromJSON('["synchronize", "opened", "reopened"]'), github.event.action) }}
+    defaults:
+      run:
+        shell: bash
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # tag=v3.3.0
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: ./github-actions/setup-bazel-remote-exec
+      - uses: actions/cache@v3
+        with:
+          enableCrossOsArchive: true
+          path: |
+            .yarn/cache
+            .yarn/install-state.gz
+          key: v1-${{hashFiles('yarn.lock')}}
+      - run: yarn install --immutable
+      - run: yarn bazel test --test_tag_filters=macos --build_tests_only -- //... -//bazel/remote-execution/...
