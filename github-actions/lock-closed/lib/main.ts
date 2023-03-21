@@ -3,18 +3,23 @@ import {context} from '@actions/github';
 import {Octokit} from '@octokit/rest';
 import {ANGULAR_LOCK_BOT, getAuthTokenFor, revokeActiveInstallationToken} from '../../utils.js';
 
-async function lockIssue(client: Octokit, issue: number, message: string): Promise<void> {
+async function lockIssue(
+  client: Octokit,
+  issue: number,
+  repo: string,
+  message: string,
+): Promise<void> {
   await client.issues.createComment({
-    owner: context.repo.owner,
-    repo: context.repo.repo,
+    repo,
+    owner: 'angular',
     issue_number: issue,
     body: message,
   });
 
   // Actually lock the issue
   await client.issues.lock({
-    owner: context.repo.owner,
-    repo: context.repo.repo,
+    repo,
+    owner: 'angular',
     issue_number: issue,
   });
 }
@@ -25,13 +30,17 @@ function timeout(ms: number) {
 }
 
 async function main() {
-  let installationClient: Octokit | null = null;
+  const reposToBeChecked = core.getMultilineInput('repos', {required: true, trimWhitespace: true});
+  await core.group('Repos being checked for lockable issues:', async () =>
+    reposToBeChecked.forEach((repo) => core.info(`- ${repo}`)),
+  );
+  const token = await getAuthTokenFor(ANGULAR_LOCK_BOT, {org: 'angular'});
 
   try {
-    const token = await getAuthTokenFor(ANGULAR_LOCK_BOT);
-    installationClient = new Octokit({auth: token});
-
-    await runLockClosedAction(installationClient);
+    const github = new Octokit({auth: token});
+    for (let repo of reposToBeChecked) {
+      await runLockClosedAction(github, repo);
+    }
   } catch (error: any) {
     // TODO(josephperrott): properly set typings for error.
     core.debug(error.message);
@@ -40,13 +49,11 @@ async function main() {
       core.error(JSON.stringify(error.request, null, 2));
     }
   } finally {
-    if (installationClient !== null) {
-      await revokeActiveInstallationToken(installationClient);
-    }
+    await revokeActiveInstallationToken(token);
   }
 }
 
-async function runLockClosedAction(github: Octokit): Promise<void> {
+async function runLockClosedAction(github: Octokit, repo: string): Promise<void> {
   // NOTE: `days` and `message` must not be changed without dev-rel and dev-infra concurrence
 
   // Fixed amount of days a closed issue must be inactive before being locked
@@ -60,12 +67,11 @@ async function runLockClosedAction(github: Octokit): Promise<void> {
     `Read more about our [automatic conversation locking policy](${policyUrl}).\n\n` +
     '<sub>_This action has been performed automatically by a bot._</sub>';
 
-  const maxPerExecution = Math.min(+core.getInput('locks-per-execution') || 1, 100);
   // Set the threshold date based on the days inactive
   const threshold = new Date();
   threshold.setDate(threshold.getDate() - days);
 
-  const repositoryName = context.repo.owner + '/' + context.repo.repo;
+  const repositoryName = `angular/${repo}`;
   const updatedAt = threshold.toISOString().split('T')[0];
   const query = `repo:${repositoryName}+is:closed+is:unlocked+updated:<${updatedAt}+sort:updated-asc`;
   console.info('Query: ' + query);
@@ -73,7 +79,8 @@ async function runLockClosedAction(github: Octokit): Promise<void> {
   let lockCount = 0;
   let issueResponse = await github.search.issuesAndPullRequests({
     q: query,
-    per_page: maxPerExecution,
+    // We process 100 issues/prs per run, which will catch up over time as necessary.
+    per_page: 100,
   });
 
   console.info(`Query found ${issueResponse.data.total_count} items`);
@@ -86,21 +93,20 @@ async function runLockClosedAction(github: Octokit): Promise<void> {
   console.info(`Attempting to lock ${issueResponse.data.items.length} item(s)`);
   core.startGroup('Locking items');
   for (const item of issueResponse.data.items) {
-    let itemType: string | undefined;
+    const itemType = item.pull_request ? 'pull request' : 'issue';
     try {
-      itemType = item.pull_request ? 'pull request' : 'issue';
-      if ((item as any).locked) {
-        console.info(`Skipping ${itemType} #${item.number}, already locked`);
+      if (item.locked) {
+        console.info(`Skipping ${itemType} angular/${repo}#${item.number}, already locked`);
         continue;
       }
       console.info(`Locking ${itemType} #${item.number}`);
-      await lockIssue(github, item.number, message);
-      await timeout(500);
+      await lockIssue(github, item.number, repo, message);
+      await timeout(250);
       ++lockCount;
     } catch (error: any) {
       // TODO(josephperrott): properly set typings for error.
       core.debug(error);
-      core.warning(`Unable to lock ${itemType} #${item.number}: ${error.message}`);
+      core.warning(`Unable to lock ${itemType} angular/${repo}#${item.number}: ${error.message}`);
       if (typeof error.request === 'object') {
         core.error(JSON.stringify(error.request, null, 2));
       }
