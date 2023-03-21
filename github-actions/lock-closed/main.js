@@ -1275,12 +1275,12 @@ var require_lib = __commonJS({
             throw new Error("Client has already been disposed.");
           }
           const parsedUrl = new URL(requestUrl);
-          let info2 = this._prepareRequest(verb, parsedUrl, headers);
+          let info3 = this._prepareRequest(verb, parsedUrl, headers);
           const maxTries = this._allowRetries && RetryableHttpVerbs.includes(verb) ? this._maxRetries + 1 : 1;
           let numTries = 0;
           let response;
           do {
-            response = yield this.requestRaw(info2, data);
+            response = yield this.requestRaw(info3, data);
             if (response && response.message && response.message.statusCode === HttpCodes.Unauthorized) {
               let authenticationHandler;
               for (const handler of this.handlers) {
@@ -1290,7 +1290,7 @@ var require_lib = __commonJS({
                 }
               }
               if (authenticationHandler) {
-                return authenticationHandler.handleAuthentication(this, info2, data);
+                return authenticationHandler.handleAuthentication(this, info3, data);
               } else {
                 return response;
               }
@@ -1313,8 +1313,8 @@ var require_lib = __commonJS({
                   }
                 }
               }
-              info2 = this._prepareRequest(verb, parsedRedirectUrl, headers);
-              response = yield this.requestRaw(info2, data);
+              info3 = this._prepareRequest(verb, parsedRedirectUrl, headers);
+              response = yield this.requestRaw(info3, data);
               redirectsRemaining--;
             }
             if (!response.message.statusCode || !HttpResponseRetryCodes.includes(response.message.statusCode)) {
@@ -1335,7 +1335,7 @@ var require_lib = __commonJS({
         }
         this._disposed = true;
       }
-      requestRaw(info2, data) {
+      requestRaw(info3, data) {
         return __awaiter(this, void 0, void 0, function* () {
           return new Promise((resolve, reject) => {
             function callbackForResult(err, res) {
@@ -1347,16 +1347,16 @@ var require_lib = __commonJS({
                 resolve(res);
               }
             }
-            this.requestRawWithCallback(info2, data, callbackForResult);
+            this.requestRawWithCallback(info3, data, callbackForResult);
           });
         });
       }
-      requestRawWithCallback(info2, data, onResult) {
+      requestRawWithCallback(info3, data, onResult) {
         if (typeof data === "string") {
-          if (!info2.options.headers) {
-            info2.options.headers = {};
+          if (!info3.options.headers) {
+            info3.options.headers = {};
           }
-          info2.options.headers["Content-Length"] = Buffer.byteLength(data, "utf8");
+          info3.options.headers["Content-Length"] = Buffer.byteLength(data, "utf8");
         }
         let callbackCalled = false;
         function handleResult(err, res) {
@@ -1365,7 +1365,7 @@ var require_lib = __commonJS({
             onResult(err, res);
           }
         }
-        const req = info2.httpModule.request(info2.options, (msg) => {
+        const req = info3.httpModule.request(info3.options, (msg) => {
           const res = new HttpClientResponse(msg);
           handleResult(void 0, res);
         });
@@ -1377,7 +1377,7 @@ var require_lib = __commonJS({
           if (socket) {
             socket.end();
           }
-          handleResult(new Error(`Request timeout: ${info2.options.path}`));
+          handleResult(new Error(`Request timeout: ${info3.options.path}`));
         });
         req.on("error", function(err) {
           handleResult(err);
@@ -1399,27 +1399,27 @@ var require_lib = __commonJS({
         return this._getAgent(parsedUrl);
       }
       _prepareRequest(method, requestUrl, headers) {
-        const info2 = {};
-        info2.parsedUrl = requestUrl;
-        const usingSsl = info2.parsedUrl.protocol === "https:";
-        info2.httpModule = usingSsl ? https : http;
+        const info3 = {};
+        info3.parsedUrl = requestUrl;
+        const usingSsl = info3.parsedUrl.protocol === "https:";
+        info3.httpModule = usingSsl ? https : http;
         const defaultPort = usingSsl ? 443 : 80;
-        info2.options = {};
-        info2.options.host = info2.parsedUrl.hostname;
-        info2.options.port = info2.parsedUrl.port ? parseInt(info2.parsedUrl.port) : defaultPort;
-        info2.options.path = (info2.parsedUrl.pathname || "") + (info2.parsedUrl.search || "");
-        info2.options.method = method;
-        info2.options.headers = this._mergeHeaders(headers);
+        info3.options = {};
+        info3.options.host = info3.parsedUrl.hostname;
+        info3.options.port = info3.parsedUrl.port ? parseInt(info3.parsedUrl.port) : defaultPort;
+        info3.options.path = (info3.parsedUrl.pathname || "") + (info3.parsedUrl.search || "");
+        info3.options.method = method;
+        info3.options.headers = this._mergeHeaders(headers);
         if (this.userAgent != null) {
-          info2.options.headers["user-agent"] = this.userAgent;
+          info3.options.headers["user-agent"] = this.userAgent;
         }
-        info2.options.agent = this._getAgent(info2.parsedUrl);
+        info3.options.agent = this._getAgent(info3.parsedUrl);
         if (this.handlers) {
           for (const handler of this.handlers) {
-            handler.prepareRequest(info2.options);
+            handler.prepareRequest(info3.options);
           }
         }
-        return info2;
+        return info3;
       }
       _mergeHeaders(headers) {
         if (this.requestOptions && this.requestOptions.headers) {
@@ -2058,7 +2058,7 @@ var require_core = __commonJS({
       process.env["PATH"] = `${inputPath}${path.delimiter}${process.env["PATH"]}`;
     }
     exports.addPath = addPath;
-    function getInput3(name, options) {
+    function getInput2(name, options) {
       const val = process.env[`INPUT_${name.replace(/ /g, "_").toUpperCase()}`] || "";
       if (options && options.required && !val) {
         throw new Error(`Input required and not supplied: ${name}`);
@@ -2068,19 +2068,19 @@ var require_core = __commonJS({
       }
       return val.trim();
     }
-    exports.getInput = getInput3;
-    function getMultilineInput(name, options) {
-      const inputs = getInput3(name, options).split("\n").filter((x) => x !== "");
+    exports.getInput = getInput2;
+    function getMultilineInput2(name, options) {
+      const inputs = getInput2(name, options).split("\n").filter((x) => x !== "");
       if (options && options.trimWhitespace === false) {
         return inputs;
       }
       return inputs.map((input) => input.trim());
     }
-    exports.getMultilineInput = getMultilineInput;
+    exports.getMultilineInput = getMultilineInput2;
     function getBooleanInput(name, options) {
       const trueValue = ["true", "True", "TRUE"];
       const falseValue = ["false", "False", "FALSE"];
-      const val = getInput3(name, options);
+      const val = getInput2(name, options);
       if (trueValue.includes(val))
         return true;
       if (falseValue.includes(val))
@@ -2127,10 +2127,10 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
       command_1.issueCommand("notice", utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
     }
     exports.notice = notice;
-    function info2(message) {
+    function info3(message) {
       process.stdout.write(message + os.EOL);
     }
-    exports.info = info2;
+    exports.info = info3;
     function startGroup2(name) {
       command_1.issue("group", name);
     }
@@ -2139,7 +2139,7 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
       command_1.issue("endgroup");
     }
     exports.endGroup = endGroup2;
-    function group(name, fn) {
+    function group2(name, fn) {
       return __awaiter(this, void 0, void 0, function* () {
         startGroup2(name);
         let result;
@@ -2151,7 +2151,7 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
         return result;
       });
     }
-    exports.group = group;
+    exports.group = group2;
     function saveState(name, value) {
       const filePath = process.env["GITHUB_STATE"] || "";
       if (filePath) {
@@ -23464,16 +23464,18 @@ async function revokeActiveInstallationToken(githubOrToken) {
 }
 
 // 
-async function lockIssue(client, issue, message) {
+var reposToBeChecked = core.getMultilineInput("repos", { required: true, trimWhitespace: true });
+core.group("Repos being checked for lockable issues:", async () => reposToBeChecked.forEach((repo) => core.info(`- ${repo}`)));
+async function lockIssue(client, issue, repo, message) {
   await client.issues.createComment({
-    owner: import_github2.context.repo.owner,
-    repo: import_github2.context.repo.repo,
+    repo,
+    owner: "angular",
     issue_number: issue,
     body: message
   });
   await client.issues.lock({
-    owner: import_github2.context.repo.owner,
-    repo: import_github2.context.repo.repo,
+    repo,
+    owner: "angular",
     issue_number: issue
   });
 }
@@ -23481,11 +23483,12 @@ function timeout(ms) {
   return setTimeout.__promisify__(ms);
 }
 async function main() {
-  let installationClient = null;
+  const token = await getAuthTokenFor(ANGULAR_LOCK_BOT);
   try {
-    const token = await getAuthTokenFor(ANGULAR_LOCK_BOT);
-    installationClient = new import_rest2.Octokit({ auth: token });
-    await runLockClosedAction(installationClient);
+    const github = new import_rest2.Octokit({ auth: token });
+    for (let repo of reposToBeChecked) {
+      await runLockClosedAction(github, repo);
+    }
   } catch (error2) {
     core.debug(error2.message);
     core.setFailed(error2.message);
@@ -23493,12 +23496,10 @@ async function main() {
       core.error(JSON.stringify(error2.request, null, 2));
     }
   } finally {
-    if (installationClient !== null) {
-      await revokeActiveInstallationToken(installationClient);
-    }
+    await revokeActiveInstallationToken(token);
   }
 }
-async function runLockClosedAction(github) {
+async function runLockClosedAction(github, repo) {
   const days = 30;
   const policyUrl = "https://github.com/angular/angular/blob/8f24bc9443b3872fe095d9f7f77b308a361a13b4/docs/GITHUB_PROCESS.md#conversation-locking";
   const message = `This issue has been automatically locked due to inactivity.
@@ -23507,17 +23508,16 @@ Please file a new issue if you are encountering a similar or related problem.
 Read more about our [automatic conversation locking policy](${policyUrl}).
 
 <sub>_This action has been performed automatically by a bot._</sub>`;
-  const maxPerExecution = Math.min(+core.getInput("locks-per-execution") || 1, 100);
   const threshold = new Date();
   threshold.setDate(threshold.getDate() - days);
-  const repositoryName = import_github2.context.repo.owner + "/" + import_github2.context.repo.repo;
+  const repositoryName = `angular/${repo}`;
   const updatedAt = threshold.toISOString().split("T")[0];
   const query = `repo:${repositoryName}+is:closed+is:unlocked+updated:<${updatedAt}+sort:updated-asc`;
   console.info("Query: " + query);
   let lockCount = 0;
   let issueResponse = await github.search.issuesAndPullRequests({
     q: query,
-    per_page: maxPerExecution
+    per_page: 100
   });
   console.info(`Query found ${issueResponse.data.total_count} items`);
   if (!issueResponse.data.items.length) {
@@ -23531,16 +23531,16 @@ Read more about our [automatic conversation locking policy](${policyUrl}).
     try {
       itemType = item.pull_request ? "pull request" : "issue";
       if (item.locked) {
-        console.info(`Skipping ${itemType} #${item.number}, already locked`);
+        console.info(`Skipping ${itemType} angular/${repo}#${item.number}, already locked`);
         continue;
       }
       console.info(`Locking ${itemType} #${item.number}`);
-      await lockIssue(github, item.number, message);
-      await timeout(500);
+      await lockIssue(github, item.number, repo, message);
+      await timeout(250);
       ++lockCount;
     } catch (error2) {
       core.debug(error2);
-      core.warning(`Unable to lock ${itemType} #${item.number}: ${error2.message}`);
+      core.warning(`Unable to lock ${itemType} angular/${repo}#${item.number}: ${error2.message}`);
       if (typeof error2.request === "object") {
         core.error(JSON.stringify(error2.request, null, 2));
       }
