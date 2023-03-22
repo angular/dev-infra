@@ -382,7 +382,7 @@ __metadata:
     "@types/tmp": ^0.2.1
     "@types/uuid": ^9.0.0
     "@types/wait-on": ^5.3.1
-    "@types/which": ^2.0.1
+    "@types/which": ^3.0.0
     "@types/ws": 8.5.4
     "@types/yargs": ^17.0.0
     "@types/yarnpkg__lockfile": ^1.1.5
@@ -6648,10 +6648,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/which@npm:^2.0.1":
-  version: 2.0.2
-  resolution: "@types/which@npm:2.0.2"
-  checksum: 8626a3c2f6db676c449142e1082e33ea0c9d88b8a2bd796366b944891e6da0088b2aa83d3fa9c79e6696f7381a851fc76d43bd353eb6c4d98a7775b4ae0a96a5
+"@types/which@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@types/which@npm:3.0.0"
+  checksum: 0dccb4b39b19dbf24e45461da581e1e6329ca06f28e467348d982d57ce4da342762c6594d3aa759682d26b9238e0a05938eb64221e7420ea890a1aaca22c2fca
   languageName: node
   linkType: hard
 
