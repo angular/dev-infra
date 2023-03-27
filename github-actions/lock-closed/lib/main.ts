@@ -3,11 +3,6 @@ import {context} from '@actions/github';
 import {Octokit} from '@octokit/rest';
 import {ANGULAR_LOCK_BOT, getAuthTokenFor, revokeActiveInstallationToken} from '../../utils.js';
 
-const reposToBeChecked = core.getMultilineInput('repos', {required: true, trimWhitespace: true});
-core.group('Repos being checked for lockable issues:', async () =>
-  reposToBeChecked.forEach((repo) => core.info(`- ${repo}`)),
-);
-
 async function lockIssue(
   client: Octokit,
   issue: number,
@@ -35,7 +30,11 @@ function timeout(ms: number) {
 }
 
 async function main() {
-  const token = await getAuthTokenFor(ANGULAR_LOCK_BOT);
+  const reposToBeChecked = core.getMultilineInput('repos', {required: true, trimWhitespace: true});
+  await core.group('Repos being checked for lockable issues:', async () =>
+    reposToBeChecked.forEach((repo) => core.info(`- ${repo}`)),
+  );
+  const token = await getAuthTokenFor(ANGULAR_LOCK_BOT, {org: 'angular'});
 
   try {
     const github = new Octokit({auth: token});
@@ -80,6 +79,7 @@ async function runLockClosedAction(github: Octokit, repo: string): Promise<void>
   let lockCount = 0;
   let issueResponse = await github.search.issuesAndPullRequests({
     q: query,
+    // We process 100 issues/prs per run, which will catch up over time as necessary.
     per_page: 100,
   });
 
@@ -93,10 +93,9 @@ async function runLockClosedAction(github: Octokit, repo: string): Promise<void>
   console.info(`Attempting to lock ${issueResponse.data.items.length} item(s)`);
   core.startGroup('Locking items');
   for (const item of issueResponse.data.items) {
-    let itemType: string | undefined;
+    const itemType = item.pull_request ? 'pull request' : 'issue';
     try {
-      itemType = item.pull_request ? 'pull request' : 'issue';
-      if ((item as any).locked) {
+      if (item.locked) {
         console.info(`Skipping ${itemType} angular/${repo}#${item.number}, already locked`);
         continue;
       }

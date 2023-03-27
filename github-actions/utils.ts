@@ -21,6 +21,10 @@ async function getJwtAuthedAppClient([appId, inputKey]: GithubAppMetadata) {
   });
 }
 
+// Local types for Org and Repo to make the typings in getAuthTokenFor more readable.
+type Org = {org: string};
+type Repo = {repo: string; owner: string};
+
 /**
  * Retrieves an installation auth token for the provided app.
  *
@@ -30,13 +34,22 @@ async function getJwtAuthedAppClient([appId, inputKey]: GithubAppMetadata) {
  * act on a repository, unlike the github-actions robot account which implicitly has access based on
  * where it was executed from.
  */
+export async function getAuthTokenFor(app: GithubAppMetadata, org: Org): Promise<string>;
+export async function getAuthTokenFor(app: GithubAppMetadata, repo?: Repo): Promise<string>;
 export async function getAuthTokenFor(
   app: GithubAppMetadata,
-  repo = context.repo,
+  orgOrRepo: Org | Repo = context.repo,
 ): Promise<string> {
   const github = await getJwtAuthedAppClient(app);
+  let id: number;
+  let org = orgOrRepo as Org;
+  let repo = orgOrRepo as Repo;
 
-  const {id} = (await github.apps.getRepoInstallation({...repo})).data;
+  if (typeof org.org === 'string') {
+    id = (await github.apps.getOrgInstallation({...org})).data.id;
+  } else {
+    id = (await github.apps.getRepoInstallation({...repo})).data.id;
+  }
 
   const {token} = (
     await github.rest.apps.createInstallationAccessToken({

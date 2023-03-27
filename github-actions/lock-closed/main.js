@@ -23446,9 +23446,16 @@ async function getJwtAuthedAppClient([appId, inputKey]) {
     auth: { appId, privateKey }
   });
 }
-async function getAuthTokenFor(app, repo = import_github.context.repo) {
+async function getAuthTokenFor(app, orgOrRepo = import_github.context.repo) {
   const github = await getJwtAuthedAppClient(app);
-  const { id } = (await github.apps.getRepoInstallation({ ...repo })).data;
+  let id;
+  let org = orgOrRepo;
+  let repo = orgOrRepo;
+  if (typeof org.org === "string") {
+    id = (await github.apps.getOrgInstallation({ ...org })).data.id;
+  } else {
+    id = (await github.apps.getRepoInstallation({ ...repo })).data.id;
+  }
   const { token } = (await github.rest.apps.createInstallationAccessToken({
     installation_id: id
   })).data;
@@ -23464,8 +23471,6 @@ async function revokeActiveInstallationToken(githubOrToken) {
 }
 
 // 
-var reposToBeChecked = core.getMultilineInput("repos", { required: true, trimWhitespace: true });
-core.group("Repos being checked for lockable issues:", async () => reposToBeChecked.forEach((repo) => core.info(`- ${repo}`)));
 async function lockIssue(client, issue, repo, message) {
   await client.issues.createComment({
     repo,
@@ -23483,7 +23488,9 @@ function timeout(ms) {
   return setTimeout.__promisify__(ms);
 }
 async function main() {
-  const token = await getAuthTokenFor(ANGULAR_LOCK_BOT);
+  const reposToBeChecked = core.getMultilineInput("repos", { required: true, trimWhitespace: true });
+  await core.group("Repos being checked for lockable issues:", async () => reposToBeChecked.forEach((repo) => core.info(`- ${repo}`)));
+  const token = await getAuthTokenFor(ANGULAR_LOCK_BOT, { org: "angular" });
   try {
     const github = new import_rest2.Octokit({ auth: token });
     for (let repo of reposToBeChecked) {
@@ -23527,9 +23534,8 @@ Read more about our [automatic conversation locking policy](${policyUrl}).
   console.info(`Attempting to lock ${issueResponse.data.items.length} item(s)`);
   core.startGroup("Locking items");
   for (const item of issueResponse.data.items) {
-    let itemType;
+    const itemType = item.pull_request ? "pull request" : "issue";
     try {
-      itemType = item.pull_request ? "pull request" : "issue";
       if (item.locked) {
         console.info(`Skipping ${itemType} angular/${repo}#${item.number}, already locked`);
         continue;

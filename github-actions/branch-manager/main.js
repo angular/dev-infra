@@ -23617,9 +23617,16 @@ async function getJwtAuthedAppClient([appId, inputKey]) {
     auth: { appId, privateKey }
   });
 }
-async function getAuthTokenFor(app, repo = import_github.context.repo) {
+async function getAuthTokenFor(app, orgOrRepo = import_github.context.repo) {
   const github2 = await getJwtAuthedAppClient(app);
-  const { id } = (await github2.apps.getRepoInstallation({ ...repo })).data;
+  let id;
+  let org = orgOrRepo;
+  let repo = orgOrRepo;
+  if (typeof org.org === "string") {
+    id = (await github2.apps.getOrgInstallation({ ...org })).data.id;
+  } else {
+    id = (await github2.apps.getRepoInstallation({ ...repo })).data.id;
+  }
   const { token } = (await github2.rest.apps.createInstallationAccessToken({
     installation_id: id
   })).data;
