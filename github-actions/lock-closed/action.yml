@@ -5,9 +5,9 @@ inputs:
   lock-bot-key:
     description: 'A private key for the Lock Bot GitHub app'
     required: true
-  locks-per-execution:
-    description: 'Maximum number of issue locks per action execution'
-    default: 100
+  repos:
+    description: 'The repositories to check for lockable issues'
+    required: true
 runs:
   using: 'node16'
   main: 'main.js'
