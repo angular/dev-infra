@@ -2,6 +2,7 @@ import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {Octokit} from '@octokit/rest';
 import {ANGULAR_LOCK_BOT, getAuthTokenFor, revokeActiveInstallationToken} from '../../utils.js';
+import {setTimeout as setTimeoutPromise} from 'timers/promises';
 
 async function lockIssue(
   client: Octokit,
@@ -22,11 +23,6 @@ async function lockIssue(
     owner: 'angular',
     issue_number: issue,
   });
-}
-
-/** Creates a promise which resolves after a set period of time. */
-function timeout(ms: number) {
-  return setTimeout.__promisify__(ms);
 }
 
 async function main() {
@@ -101,7 +97,7 @@ async function runLockClosedAction(github: Octokit, repo: string): Promise<void>
       }
       console.info(`Locking ${itemType} #${item.number}`);
       await lockIssue(github, item.number, repo, message);
-      await timeout(250);
+      await setTimeoutPromise(250);
       ++lockCount;
     } catch (error: any) {
       // TODO(josephperrott): properly set typings for error.

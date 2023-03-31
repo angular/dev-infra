@@ -8326,7 +8326,7 @@ var require_lib4 = __commonJS({
       var _ref = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {}, _ref$size = _ref.size;
       let size = _ref$size === void 0 ? 0 : _ref$size;
       var _ref$timeout = _ref.timeout;
-      let timeout2 = _ref$timeout === void 0 ? 0 : _ref$timeout;
+      let timeout = _ref$timeout === void 0 ? 0 : _ref$timeout;
       if (body == null) {
         body = null;
       } else if (isURLSearchParams(body)) {
@@ -8350,7 +8350,7 @@ var require_lib4 = __commonJS({
         error: null
       };
       this.size = size;
-      this.timeout = timeout2;
+      this.timeout = timeout;
       if (body instanceof Stream) {
         body.on("error", function(err) {
           const error2 = err.name === "AbortError" ? err : new FetchError(`Invalid response body while trying to fetch ${_this.url}: ${err.message}`, "system", err);
@@ -13220,7 +13220,7 @@ var require_lib6 = __commonJS({
       var _ref = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {}, _ref$size = _ref.size;
       let size = _ref$size === void 0 ? 0 : _ref$size;
       var _ref$timeout = _ref.timeout;
-      let timeout2 = _ref$timeout === void 0 ? 0 : _ref$timeout;
+      let timeout = _ref$timeout === void 0 ? 0 : _ref$timeout;
       if (body == null) {
         body = null;
       } else if (isURLSearchParams(body)) {
@@ -13244,7 +13244,7 @@ var require_lib6 = __commonJS({
         error: null
       };
       this.size = size;
-      this.timeout = timeout2;
+      this.timeout = timeout;
       if (body instanceof Stream) {
         body.on("error", function(err) {
           const error2 = err.name === "AbortError" ? err : new FetchError(`Invalid response body while trying to fetch ${_this.url}: ${err.message}`, "system", err);
@@ -17609,7 +17609,7 @@ var require_lib8 = __commonJS({
       var _ref = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {}, _ref$size = _ref.size;
       let size = _ref$size === void 0 ? 0 : _ref$size;
       var _ref$timeout = _ref.timeout;
-      let timeout2 = _ref$timeout === void 0 ? 0 : _ref$timeout;
+      let timeout = _ref$timeout === void 0 ? 0 : _ref$timeout;
       if (body == null) {
         body = null;
       } else if (isURLSearchParams(body)) {
@@ -17633,7 +17633,7 @@ var require_lib8 = __commonJS({
         error: null
       };
       this.size = size;
-      this.timeout = timeout2;
+      this.timeout = timeout;
       if (body instanceof Stream) {
         body.on("error", function(err) {
           const error2 = err.name === "AbortError" ? err : new FetchError(`Invalid response body while trying to fetch ${_this.url}: ${err.message}`, "system", err);
@@ -23471,6 +23471,7 @@ async function revokeActiveInstallationToken(githubOrToken) {
 }
 
 // 
+import { setTimeout as setTimeoutPromise } from "timers/promises";
 async function lockIssue(client, issue, repo, message) {
   await client.issues.createComment({
     repo,
@@ -23483,9 +23484,6 @@ async function lockIssue(client, issue, repo, message) {
     owner: "angular",
     issue_number: issue
   });
-}
-function timeout(ms) {
-  return setTimeout.__promisify__(ms);
 }
 async function main() {
   const reposToBeChecked = core.getMultilineInput("repos", { required: true, trimWhitespace: true });
@@ -23542,7 +23540,7 @@ Read more about our [automatic conversation locking policy](${policyUrl}).
       }
       console.info(`Locking ${itemType} #${item.number}`);
       await lockIssue(github, item.number, repo, message);
-      await timeout(250);
+      await setTimeoutPromise(250);
       ++lockCount;
     } catch (error2) {
       core.debug(error2);
