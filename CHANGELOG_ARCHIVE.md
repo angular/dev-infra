@@ -1,3 +1,13 @@
+<a name="2022.11.27"></a>
+# 2022.11.27 (2022-11-27)
+### ng-dev
+| Commit | Type | Description |
+| -- | -- | -- |
+| [fcdcc61](https://github.com/angular/dev-infra/commit/fcdcc612303a4564848a9935582ba75a6316afae) | feat | update to use the proper Github app for authentication ([#905](https://github.com/angular/dev-infra/pull/905)) |
+## Special Thanks
+Joey Perrott
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2022.11.20"></a>
 # 2022.11.20 (2022-11-20)
 ### github-actions

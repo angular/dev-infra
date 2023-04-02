@@ -1,3 +1,15 @@
+<a name="2023.4.2"></a>
+# 2023.4.2 (2023-04-02)
+### github-actions
+| Commit | Type | Description |
+| -- | -- | -- |
+| [314a37b](https://github.com/angular/dev-infra/commit/314a37b96a11ff87f2aee3a2de7ab81d78c12e64) | feat | centralize lock-closed action ([#1079](https://github.com/angular/dev-infra/pull/1079)) |
+| [8b7f6b9](https://github.com/angular/dev-infra/commit/8b7f6b94197d14448c7fcc0e1bd4aa74a66f99aa) | fix | no longer use promisify ([#1084](https://github.com/angular/dev-infra/pull/1084)) |
+| [4d96664](https://github.com/angular/dev-infra/commit/4d96664b8fe4c1e8fbd51ffe89f402bd7e003dbf) | fix | update lock-closed inputs ([#1083](https://github.com/angular/dev-infra/pull/1083)) |
+## Special Thanks
+Joey Perrott
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2023.3.19"></a>
 # 2023.3.19 (2023-03-19)
 ### github-actions
@@ -203,13 +215,3 @@ Joey Perrott and Paul Gschwendtner
 | [f2bde1b](https://github.com/angular/dev-infra/commit/f2bde1bab32bd4496728d479d80d41874c7fcfad) | fix | use proper variable names when accessing deploy metadata |
 ## Special Thanks
 Joey Perrott and Paul Gschwendtner
-
-<!-- CHANGELOG SPLIT MARKER -->
-<a name="2022.11.27"></a>
-# 2022.11.27 (2022-11-27)
-### ng-dev
-| Commit | Type | Description |
-| -- | -- | -- |
-| [fcdcc61](https://github.com/angular/dev-infra/commit/fcdcc612303a4564848a9935582ba75a6316afae) | feat | update to use the proper Github app for authentication ([#905](https://github.com/angular/dev-infra/pull/905)) |
-## Special Thanks
-Joey Perrott
