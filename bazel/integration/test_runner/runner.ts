@@ -119,7 +119,7 @@ export class TestRunner {
           // manually and need full control over the directory persistence.
           keep: true,
         },
-        (err, tmpPath) => (err ? reject(err) : resolve(tmpPath)),
+        (err, tmpPath) => (err ? reject(err) : resolve(path.resolve(tmpPath))),
       );
     });
   }
