@@ -49,6 +49,26 @@ const require = __cjsCompatRequire(import.meta.url);
         **kwargs
     )
 
+def esbuild_cjs_bundle(name, **kwargs):
+    """ESBuild macro supports an ESM/CJS interop.
+
+    Args:
+      name: Name of the target
+      **kwargs: Other arguments passed to the `esbuild` rule.
+    """
+
+    args = dict(
+        resolveExtensions = [".cjs", ".js", ".json"],
+        outExtension = {".js": ".cjs"},
+    )
+
+    esbuild(
+        name = name,
+        format = "cjs",
+        args = args,
+        **kwargs
+    )
+
 def esbuild_amd(name, entry_point, module_name, testonly = False, config = None, deps = [], **kwargs):
     """Generates an AMD bundle for the specified entry-point with the given AMD module name."""
     expand_template(

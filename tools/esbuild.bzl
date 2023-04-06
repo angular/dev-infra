@@ -1,6 +1,7 @@
 load(
     "//bazel/esbuild:index.bzl",
     _esbuild = "esbuild",
+    _esbuild_cjs_bundle = "esbuild_cjs_bundle",
     _esbuild_config = "esbuild_config",
     _esbuild_esm_bundle = "esbuild_esm_bundle",
 )
@@ -50,6 +51,12 @@ def esbuild(**kwargs):
 def esbuild_esm_bundle(**kwargs):
     _esbuild_devmode_prioritize(
         _esbuild_esm_bundle,
+        **kwargs
+    )
+
+def esbuild_cjs_bundle(**kwargs):
+    _esbuild_devmode_prioritize(
+        _esbuild_cjs_bundle,
         **kwargs
     )
 

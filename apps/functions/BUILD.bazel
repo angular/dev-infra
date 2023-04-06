@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "esbuild_esm_bundle", "ts_library")
+load("//tools:defaults.bzl", "esbuild_cjs_bundle", "ts_library")
 load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
 
 package(default_visibility = ["//visibility:private"])
@@ -17,13 +17,14 @@ ts_library(
         "index.ts",
     ],
     deps = [
+        "//apps/functions/code-of-conduct",
         "//apps/functions/githubWebhook",
         "//apps/functions/ng-dev",
         "@npm//firebase-admin",
     ],
 )
 
-esbuild_esm_bundle(
+esbuild_cjs_bundle(
     name = "functions_compiled",
     entry_points = [
         "index.ts",

@@ -3,7 +3,7 @@
   "engines": {
     "node": "18"
   },
-  "main": "functions_compiled/index.mjs",
+  "main": "functions_compiled/index.cjs",
   "type": "module",
   "private": true
 }

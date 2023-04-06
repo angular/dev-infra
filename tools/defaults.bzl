@@ -6,6 +6,7 @@ load(
     "//tools:esbuild.bzl",
     _esbuild = "esbuild",
     _esbuild_checked_in = "esbuild_checked_in",
+    _esbuild_cjs_bundle = "esbuild_cjs_bundle",
     _esbuild_config = "esbuild_config",
     _esbuild_esm_bundle = "esbuild_esm_bundle",
 )
@@ -15,6 +16,7 @@ esbuild = _esbuild
 esbuild_config = _esbuild_config
 esbuild_esm_bundle = _esbuild_esm_bundle
 esbuild_checked_in = _esbuild_checked_in
+esbuild_cjs_bundle = _esbuild_cjs_bundle
 
 jasmine_node_test = _jasmine_node_test
 
