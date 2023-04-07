@@ -14,7 +14,7 @@ jobs:
     if: github.repository == 'angular/dev-infra'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # tag=v3.3.0
+      - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
       - uses: ./github-actions/labels-sync
         with:
           angular-robot-key: ${{ secrets.ANGULAR_ROBOT_PRIVATE_KEY }}
@@ -28,7 +28,7 @@ jobs:
     if: github.repository == 'angular/dev-infra'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # tag=v3.3.0
+      - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
       - uses: ./github-actions/lock-closed
         with:
           lock-bot-key: ${{ secrets.LOCK_BOT_PRIVATE_KEY }}
