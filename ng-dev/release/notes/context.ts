@@ -213,15 +213,6 @@ export class RenderContext {
   }
 
   /**
-   * Returns unique, sorted and filtered commit authors.
-   */
-  commitAuthors(commits: CategorizedCommit[]): string[] {
-    return [...new Set(commits.map((c) => c.author))]
-      .filter((a) => !botsAuthorNames.includes(a))
-      .sort();
-  }
-
-  /**
    * Convert a commit object to a Markdown linked badged.
    */
   commitToBadge(commit: CategorizedCommit): string {

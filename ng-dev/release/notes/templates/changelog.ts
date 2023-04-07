@@ -72,19 +72,4 @@ _%>
 }
 _%>
 
-<%_
-const authors = commitAuthors(commits);
-if (authors.length === 1) {
-_%>
-## Special Thanks
-<%- authors[0]%>
-<%_
-}
-if (authors.length > 1) {
-_%>
-## Special Thanks
-<%- authors.slice(0, -1).join(', ') %> and <%- authors.slice(-1)[0] %>
-<%_
-}
-_%>
 `;

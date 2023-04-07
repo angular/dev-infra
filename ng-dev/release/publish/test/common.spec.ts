@@ -249,7 +249,6 @@ describe('common release action logic', () => {
             | -- | -- |
             | <..> | first commit |
             | <..> | second commit |
-            ## Special Thanks
           `,
         );
 
