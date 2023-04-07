@@ -114,7 +114,6 @@ describe('cut new patch action', () => {
       | -- | -- | -- |
       | <..> | feat | not yet released *1 |
       | <..> | feat | not yet released *2 |
-      ## Special Thanks
     `);
   });
 });

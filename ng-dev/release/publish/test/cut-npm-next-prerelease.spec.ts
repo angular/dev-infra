@@ -123,7 +123,7 @@ describe('cut npm next pre-release action', () => {
           | <..> | feat | not released yet, but cherry-picked |
           | <..> | feat | only in next, not released yet *1 |
           | <..> | feat | only in next, not released yet *2 |
-          ## Special Thanks
+
         `);
       },
     );
@@ -181,7 +181,6 @@ describe('cut npm next pre-release action', () => {
         | -- | -- | -- |
         | <..> | feat | not released yet *1 |
         | <..> | feat | not released yet *2 |
-        ## Special Thanks
       `);
     });
   });
@@ -238,7 +237,6 @@ describe('cut npm next pre-release action', () => {
         | -- | -- | -- |
         | <..> | feat | not released yet *1 |
         | <..> | feat | not released yet *2 |
-        ## Special Thanks
       `);
     });
   });

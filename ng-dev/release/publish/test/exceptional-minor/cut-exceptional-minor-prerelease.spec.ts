@@ -114,7 +114,7 @@ describe('cut exceptional minor pre-release action', () => {
           | -- | -- | -- |
           | <..> | feat | not released yet *1 |
           | <..> | feat | not released yet *2 |
-          ## Special Thanks
+
         `);
     });
   });
@@ -175,7 +175,6 @@ describe('cut exceptional minor pre-release action', () => {
         | -- | -- | -- |
         | <..> | feat | not released yet *1 |
         | <..> | feat | not released yet *2 |
-        ## Special Thanks
       `);
     });
   });
@@ -236,7 +235,6 @@ describe('cut exceptional minor pre-release action', () => {
         | -- | -- | -- |
         | <..> | feat | not released yet *1 |
         | <..> | feat | not released yet *2 |
-        ## Special Thanks
       `);
     });
   });

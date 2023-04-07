@@ -111,7 +111,6 @@ describe('cut exceptional minor next release candidate action', () => {
       | Commit | Type | Description |
       | -- | -- | -- |
       | <..> | fix | not yet released *2 |
-      ## Special Thanks
     `);
   });
 
@@ -153,7 +152,6 @@ describe('cut exceptional minor next release candidate action', () => {
       | -- | -- | -- |
       | <..> | feat | patch, not released |
       | <..> | fix | not yet released *2 |
-      ## Special Thanks
     `);
     },
   );

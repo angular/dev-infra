@@ -11,6 +11,23 @@ export default `
 # <%- version %><% if (title) { %> "<%- title %>"<% } %> (<%- dateStamp %>)
 
 <%_
+const commitsInChangelog = commits.filter(includeInReleaseNotes());
+for (const group of asCommitGroups(commitsInChangelog)) {
+_%>
+
+### <%- group.title %>
+| Commit | Description |
+| -- | -- |
+<%_
+  for (const commit of group.commits) {
+_%>
+| <%- commitToBadge(commit) %> | <%- commit.description %> |
+<%_
+  }
+}
+_%>
+
+<%_
 const breakingChanges = commits.filter(hasBreakingChanges);
 if (breakingChanges.length) {
 _%>
@@ -50,39 +67,6 @@ _%>
       }
     }
   }
-}
-_%>
-
-<%_
-const commitsInChangelog = commits.filter(includeInReleaseNotes());
-for (const group of asCommitGroups(commitsInChangelog)) {
-_%>
-
-### <%- group.title %>
-| Commit | Description |
-| -- | -- |
-<%_
-  for (const commit of group.commits) {
-_%>
-| <%- commitToBadge(commit) %> | <%- commit.description %> |
-<%_
-  }
-}
-_%>
-
-<%_
-const authors = commitAuthors(commits);
-if (authors.length === 1) {
-_%>
-## Special Thanks
-<%- authors[0]%>
-<%_
-}
-if (authors.length > 1) {
-_%>
-## Special Thanks
-<%- authors.slice(0, -1).join(', ') %> and <%- authors.slice(-1)[0] %>
-<%_
 }
 _%>
 `;

@@ -231,7 +231,6 @@ describe('cut stable action', () => {
       | <..> | fix | released first next pre-release *2 |
       | <..> | fix | released release-candidate *1 |
       | <..> | fix | released release-candidate *2 |
-      ## Special Thanks
     `);
     },
   );
@@ -466,7 +465,6 @@ describe('cut stable action', () => {
         | <..> | fix | released first -next pre-release *2 |
         | <..> | fix | released second -next pre-release *1 |
         | <..> | fix | released second -next pre-release *2 |
-        ## Special Thanks
       `);
       },
     );

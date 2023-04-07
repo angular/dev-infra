@@ -69,7 +69,6 @@ describe('release notes generation', () => {
           | -- | -- | -- |
           | <..> | fix | commit *3 |
           | <..> | fix | commit *4 |
-          ## Special Thanks
         `);
       });
 
@@ -105,7 +104,6 @@ describe('release notes generation', () => {
           | -- | -- | -- |
           | <..> | fix | commit *3 |
           | <..> | fix | commit *4 |
-          ## Special Thanks
         `);
       });
 
@@ -143,7 +141,6 @@ describe('release notes generation', () => {
           | Commit | Type | Description |
           | -- | -- | -- |
           | <..> | fix | platform: fix detection of chromium |
-          ## Special Thanks
         `);
       });
 
@@ -187,7 +184,6 @@ describe('release notes generation', () => {
           | Commit | Type | Description |
           | -- | -- | -- |
           | <..> | fix | slider/testing: missing stabilization |
-          ## Special Thanks
         `);
       });
     });
@@ -207,7 +203,6 @@ describe('release notes generation', () => {
         | -- | -- | -- |
         | <..> | fix | commit ([#2](<..>/pull/2)) |
         | <..> | fix | commit [#1](<..>/pull/1) |
-        ## Special Thanks
       `);
     });
 
@@ -238,7 +233,6 @@ describe('release notes generation', () => {
         | -- | -- | -- |
         | <..> | fix | not yet released *1 |
         | <..> | refactor | with breaking change |
-        ## Special Thanks
       `);
     });
 
@@ -271,7 +265,6 @@ describe('release notes generation', () => {
         | -- | -- | -- |
         | <..> | fix | not yet released *1 |
         | <..> | refactor | with breaking change |
-        ## Special Thanks
       `);
     });
 
@@ -307,7 +300,6 @@ describe('release notes generation', () => {
         | -- | -- | -- |
         | <..> | fix | not yet released *1 |
         | <..> | refactor | with breaking change |
-        ## Special Thanks
       `);
     });
 
@@ -337,7 +329,6 @@ describe('release notes generation', () => {
         | -- | -- | -- |
         | <..> | fix | not yet released *1 |
         | <..> | refactor | with deprecation |
-        ## Special Thanks
       `);
     });
 
@@ -370,7 +361,6 @@ describe('release notes generation', () => {
         | -- | -- | -- |
         | <..> | fix | not yet released *1 |
         | <..> | refactor | with deprecation |
-        ## Special Thanks
       `);
     });
   });
@@ -404,7 +394,6 @@ describe('release notes generation', () => {
           | -- | -- |
           | <..> | commit *3 |
           | <..> | commit *4 |
-          ## Special Thanks
         `);
       });
 
@@ -440,7 +429,6 @@ describe('release notes generation', () => {
           | -- | -- |
           | <..> | commit *3 |
           | <..> | commit *4 |
-          ## Special Thanks
         `);
       });
 
@@ -478,7 +466,6 @@ describe('release notes generation', () => {
           | Commit | Description |
           | -- | -- |
           | <..> | platform: fix detection of chromium |
-          ## Special Thanks
         `);
       });
 
@@ -522,7 +509,6 @@ describe('release notes generation', () => {
           | Commit | Description |
           | -- | -- |
           | <..> | slider/testing: missing stabilization |
-          ## Special Thanks
         `);
       });
     });
@@ -546,15 +532,14 @@ describe('release notes generation', () => {
 
       expect(await releaseNotes.getGithubReleaseEntry()).toMatch(changelogPattern`
         # 13.0.0 <..>
-        ## Breaking Changes
-        ### cdk/a11y
-        - Description of breaking change.
         ### cdk/a11y
         | Commit | Description |
         | -- | -- |
         | <..> | not yet released *1 |
         | <..> | with breaking change |
-        ## Special Thanks
+        ## Breaking Changes
+        ### cdk/a11y
+        - Description of breaking change.
       `);
     });
 
@@ -578,16 +563,15 @@ describe('release notes generation', () => {
 
       expect(await releaseNotes.getGithubReleaseEntry()).toMatch(changelogPattern`
         # 13.0.0 <..>
-        ## Breaking Changes
-        ### cdk/a11y
-        - Description of breaking change.
-        - Description of breaking change 2.
         ### cdk/a11y
         | Commit | Description |
         | -- | -- |
         | <..> | not yet released *1 |
         | <..> | with breaking change |
-        ## Special Thanks
+        ## Breaking Changes
+        ### cdk/a11y
+        - Description of breaking change.
+        - Description of breaking change 2.
       `);
     });
 
@@ -609,15 +593,14 @@ describe('release notes generation', () => {
 
       expect(await releaseNotes.getGithubReleaseEntry()).toMatch(changelogPattern`
         # 13.0.0 <..>
-        ## Deprecations
-        ### cdk/a11y
-        - Description of deprecation.
         ### cdk/a11y
         | Commit | Description |
         | -- | -- |
         | <..> | not yet released *1 |
         | <..> | with deprecation |
-        ## Special Thanks
+        ## Deprecations
+        ### cdk/a11y
+        - Description of deprecation.
       `);
     });
   });
@@ -642,16 +625,15 @@ describe('release notes generation', () => {
 
     expect(await releaseNotes.getGithubReleaseEntry()).toMatch(changelogPattern`
       # 13.0.0 <..>
-      ## Deprecations
-      ### cdk/a11y
-      - Description of deprecation.
-      - Description of deprecation 2.
       ### cdk/a11y
       | Commit | Description |
       | -- | -- |
       | <..> | not yet released *1 |
       | <..> | with deprecation |
-      ## Special Thanks
+      ## Deprecations
+      ### cdk/a11y
+      - Description of deprecation.
+      - Description of deprecation 2.
     `);
   });
 

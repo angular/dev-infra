@@ -66128,13 +66128,6 @@ function compareString(a, b) {
 
 // 
 var typesToIncludeInReleaseNotes = Object.values(COMMIT_TYPES).filter((type) => type.releaseNotesLevel === ReleaseNotesLevel.Visible).map((type) => type.name);
-var botsAuthorNames = [
-  "dependabot[bot]",
-  "Renovate Bot",
-  "angular-robot",
-  "angular-robot[bot]",
-  "Angular Robot"
-];
 var RenderContext = class {
   constructor(data) {
     this.data = data;
@@ -66225,9 +66218,6 @@ var RenderContext = class {
   }
   bulletizeText(text) {
     return "- " + text.replace(/\n/g, "\n  ");
-  }
-  commitAuthors(commits) {
-    return [...new Set(commits.map((c) => c.author))].filter((a) => !botsAuthorNames.includes(a)).sort();
   }
   commitToBadge(commit) {
     let color = "yellow";
@@ -66321,27 +66311,29 @@ _%>
 }
 _%>
 
-<%_
-const authors = commitAuthors(commits);
-if (authors.length === 1) {
-_%>
-## Special Thanks
-<%- authors[0]%>
-<%_
-}
-if (authors.length > 1) {
-_%>
-## Special Thanks
-<%- authors.slice(0, -1).join(', ') %> and <%- authors.slice(-1)[0] %>
-<%_
-}
-_%>
 `;
 
 // 
 var github_release_default = `
 <a name="<%- urlFragmentForRelease %>"></a>
 # <%- version %><% if (title) { %> "<%- title %>"<% } %> (<%- dateStamp %>)
+
+<%_
+const commitsInChangelog = commits.filter(includeInReleaseNotes());
+for (const group of asCommitGroups(commitsInChangelog)) {
+_%>
+
+### <%- group.title %>
+| Commit | Description |
+| -- | -- |
+<%_
+  for (const commit of group.commits) {
+_%>
+| <%- commitToBadge(commit) %> | <%- commit.description %> |
+<%_
+  }
+}
+_%>
 
 <%_
 const breakingChanges = commits.filter(hasBreakingChanges);
@@ -66383,39 +66375,6 @@ _%>
       }
     }
   }
-}
-_%>
-
-<%_
-const commitsInChangelog = commits.filter(includeInReleaseNotes());
-for (const group of asCommitGroups(commitsInChangelog)) {
-_%>
-
-### <%- group.title %>
-| Commit | Description |
-| -- | -- |
-<%_
-  for (const commit of group.commits) {
-_%>
-| <%- commitToBadge(commit) %> | <%- commit.description %> |
-<%_
-  }
-}
-_%>
-
-<%_
-const authors = commitAuthors(commits);
-if (authors.length === 1) {
-_%>
-## Special Thanks
-<%- authors[0]%>
-<%_
-}
-if (authors.length > 1) {
-_%>
-## Special Thanks
-<%- authors.slice(0, -1).join(', ') %> and <%- authors.slice(-1)[0] %>
-<%_
 }
 _%>
 `;
