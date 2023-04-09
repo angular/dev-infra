@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import minimatch from 'minimatch';
+import {Minimatch} from 'minimatch';
 import fs from 'fs';
 import * as jsonc from '../../tools/esm-interop/jsonc-parser.js';
 
@@ -32,10 +32,8 @@ export class InvalidGoogleSyncConfigError extends Error {}
 
 /** Transforms the given sync configuration into a file match function. */
 export function transformConfigIntoMatcher(config: GoogleSyncConfig): SyncFileMatchFn {
-  const syncedFilePatterns = config.syncedFilePatterns.map((p) => new minimatch.Minimatch(p));
-  const alwaysExternalFilePatterns = config.alwaysExternalFilePatterns.map(
-    (p) => new minimatch.Minimatch(p),
-  );
+  const syncedFilePatterns = config.syncedFilePatterns.map((p) => new Minimatch(p));
+  const alwaysExternalFilePatterns = config.alwaysExternalFilePatterns.map((p) => new Minimatch(p));
 
   return (projectRelativePath: string) =>
     syncedFilePatterns.some((p) => p.match(projectRelativePath)) &&

@@ -417,7 +417,7 @@ __metadata:
     karma-requirejs: ^1.1.0
     karma-sourcemap-loader: ^0.4.0
     license-checker: ^25.0.1
-    minimatch: ^7.0.0
+    minimatch: ^9.0.0
     multimatch: ^6.0.0
     nock: ^13.0.3
     node-fetch: ^3.2.5
@@ -14020,15 +14020,6 @@ __metadata:
   dependencies:
     brace-expansion: ^2.0.1
   checksum: 0ffb77d05bd483fcc344ba3e64a501d569e658fa6c592d94e9716ffc7925de7a8c2ac294cafa822b160bd8b2cbf7e01012917e06ffb9a85cfa9604629b3f2c04
-  languageName: node
-  linkType: hard
-
-"minimatch@npm:^7.0.0":
-  version: 7.4.2
-  resolution: "minimatch@npm:7.4.2"
-  dependencies:
-    brace-expansion: ^2.0.1
-  checksum: 9e341b04e69d5ab03e4206dcb61c8a158e3b8709628bf5e1a4eaa9f3b72c0ba925e24ad959b1f6ce6835caa5a927131d5087fae6836b69e7d99d7d5e63ef0bd8
   languageName: node
   linkType: hard
 
