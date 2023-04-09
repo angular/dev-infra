@@ -1,3 +1,13 @@
+<a name="2023.4.9"></a>
+# 2023.4.9 (2023-04-09)
+### bazel
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d28e5f7](https://github.com/angular/dev-infra/commit/d28e5f71d00e1d55abafea9eea315bcccd3bc17c) | fix | resolve generated temporary directory ([#1086](https://github.com/angular/dev-infra/pull/1086)) |
+## Special Thanks
+Alan Agius
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2023.4.2"></a>
 # 2023.4.2 (2023-04-02)
 ### github-actions
@@ -195,23 +205,5 @@ Joey Perrott and Paul Gschwendtner
 | -- | -- | -- |
 | [6d049bb](https://github.com/angular/dev-infra/commit/6d049bb52bd72e2f08b94f0a37a5603e660ac27b) | fix | **caretaker:** gracefully handle failing URLs during caretaker check ([#933](https://github.com/angular/dev-infra/pull/933)) |
 | [b78ab75](https://github.com/angular/dev-infra/commit/b78ab750819c6667daed5534169a4e0ff2207a1f) | fix | **caretaker:** update to new saucelabs url ([#933](https://github.com/angular/dev-infra/pull/933)) |
-## Special Thanks
-Joey Perrott and Paul Gschwendtner
-
-<!-- CHANGELOG SPLIT MARKER -->
-<a name="2022.12.4"></a>
-# 2022.12.4 (2022-12-04)
-### github-actions
-| Commit | Type | Description |
-| -- | -- | -- |
-| [856c3ab](https://github.com/angular/dev-infra/commit/856c3ab37a47984cb859f1dc73c729e9e072cd0e) | feat | create a unified status action ([#912](https://github.com/angular/dev-infra/pull/912)) |
-| [a818bed](https://github.com/angular/dev-infra/commit/a818bed04b1cf671f9af4f61331b12250da39a49) | feat | introduce actions for safely deploying previews |
-| [d30e424](https://github.com/angular/dev-infra/commit/d30e42411eee61f75e39cb39ffd5e1c7946a7ed5) | feat | move deploy directory to temporary directory to allow for editing |
-| [49d2afa](https://github.com/angular/dev-infra/commit/49d2afadffb93beaf0753014ca0bbfa8b3a5c9b0) | fix | do not attempt to join path with |
-| [eba7bac](https://github.com/angular/dev-infra/commit/eba7bac8f0c7afd20cf63d48de1942d06efd0972) | fix | do not nest deploy directory in final tmp dir |
-| [f1a26a0](https://github.com/angular/dev-infra/commit/f1a26a04e1edb6d0f2cf239a4036fa67b062447c) | fix | fix missing close quote for actions yaml expression ([#916](https://github.com/angular/dev-infra/pull/916)) |
-| [4172435](https://github.com/angular/dev-infra/commit/41724359ffa36fe35e9846f01ffe5c8465dbf4a6) | fix | only change temporary directory to ensure write access |
-| [d98be19](https://github.com/angular/dev-infra/commit/d98be19c2fb18239eb86145a2bc2f63728da636c) | fix | remove unnecessary quote in action composite bash script |
-| [f2bde1b](https://github.com/angular/dev-infra/commit/f2bde1bab32bd4496728d479d80d41874c7fcfad) | fix | use proper variable names when accessing deploy metadata |
 ## Special Thanks
 Joey Perrott and Paul Gschwendtner
