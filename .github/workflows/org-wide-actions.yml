@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 jobs:
-  renovate:
+  labels_sync:
     if: github.repository == 'angular/dev-infra'
     runs-on: ubuntu-latest
     steps:
