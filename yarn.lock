@@ -349,7 +349,7 @@ __metadata:
     "@octokit/auth-app": ^4.0.0
     "@octokit/core": ^4.2.0
     "@octokit/graphql": ^5.0.5
-    "@octokit/graphql-schema": ^13.7.0
+    "@octokit/graphql-schema": ^14.0.0
     "@octokit/openapi-types": ^16.0.0
     "@octokit/plugin-paginate-rest": ^6.0.0
     "@octokit/plugin-rest-endpoint-methods": ^7.0.1
@@ -5403,13 +5403,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/graphql-schema@npm:^13.7.0":
-  version: 13.7.0
-  resolution: "@octokit/graphql-schema@npm:13.7.0"
+"@octokit/graphql-schema@npm:^14.0.0":
+  version: 14.0.0
+  resolution: "@octokit/graphql-schema@npm:14.0.0"
   dependencies:
     graphql: ^16.0.0
     graphql-tag: ^2.10.3
-  checksum: 1e3111571591f5df5d4865e60a12ca13c67b13cc332660cd388186a52d55c97e395eacc068582067d3f7dc141f55e8cf9eb4c7dc680b021f50cd5edf09fbd0c3
+  checksum: 2b1eed72c03e64ec47cfdb7a698333cd42bd7e14589af8fe3e71857c7e46cbd9300d5a9e8f7328cb244ea5db090c2c6b279c2f343be117021b958bae85dcd5de
   languageName: node
   linkType: hard
 
@@ -5650,9 +5650,9 @@ __metadata:
   linkType: hard
 
 "@octokit/webhooks-types@npm:^6.10.0":
-  version: 6.10.0
-  resolution: "@octokit/webhooks-types@npm:6.10.0"
-  checksum: 6eac226f070a48d9ef2594df952e8540b001e2a8760c4fa5ac2f78c1750694a6c3b8de42fb4dbb4bb78335f091d9268539d4261c52a1a91fb9ef1e9af1959b44
+  version: 6.11.0
+  resolution: "@octokit/webhooks-types@npm:6.11.0"
+  checksum: af35ac7a3d8d95bf9906fb3a8f6075cf9cb10707c79444fa82df2d64596125f515a35a4995b4548b84ee042c7c1b1cc120e05ece4a197af541a52f154bf4bcce
   languageName: node
   linkType: hard
 
