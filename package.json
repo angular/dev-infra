@@ -16,7 +16,7 @@
   },
   "packageManager": "yarn@3.4.1",
   "dependencies": {
-    "@angular-devkit/build-angular": "16.0.0-next.4",
+    "@angular-devkit/build-angular": "16.0.0-rc.0",
     "@angular/benchpress": "0.3.0",
     "@babel/core": "^7.16.0",
     "@babel/helper-annotate-as-pure": "^7.18.6",
@@ -54,20 +54,20 @@
   "devDependencies": {
     "@actions/core": "^1.4.0",
     "@actions/github": "^5.0.0",
-    "@angular/animations": "16.0.0-next.2",
+    "@angular/animations": "16.0.0-rc.0",
     "@angular/bazel": "patch:@angular/bazel@npm:14.1.0-next.2#.yarn/patches/@angular-bazel-npm.patch",
-    "@angular/cdk": "16.0.0-next.1",
-    "@angular/cli": "16.0.0-next.4",
-    "@angular/common": "16.0.0-next.2",
-    "@angular/compiler": "16.0.0-next.2",
-    "@angular/compiler-cli": "16.0.0-next.2",
-    "@angular/core": "16.0.0-next.2",
+    "@angular/cdk": "16.0.0-next.5",
+    "@angular/cli": "16.0.0-rc.0",
+    "@angular/common": "16.0.0-rc.0",
+    "@angular/compiler": "16.0.0-next.4",
+    "@angular/compiler-cli": "16.0.0-next.4",
+    "@angular/core": "16.0.0-rc.0",
     "@angular/fire": "^7.1.0-rc",
-    "@angular/forms": "16.0.0-next.2",
-    "@angular/material": "16.0.0-next.1",
-    "@angular/platform-browser": "16.0.0-next.2",
-    "@angular/platform-browser-dynamic": "16.0.0-next.2",
-    "@angular/router": "16.0.0-next.2",
+    "@angular/forms": "16.0.0-rc.0",
+    "@angular/material": "16.0.0-next.5",
+    "@angular/platform-browser": "16.0.0-rc.0",
+    "@angular/platform-browser-dynamic": "16.0.0-rc.0",
+    "@angular/router": "16.0.0-rc.0",
     "@bazel/bazelisk": "^1.11.0",
     "@bazel/jasmine": "5.8.1",
     "@google-cloud/firestore": "^6.0.0",
@@ -161,6 +161,6 @@
     }
   },
   "resolutions": {
-    "@angular/benchpress/@angular/core": "16.0.0-next.2"
+    "@angular/benchpress/@angular/core": "16.0.0-rc.0"
   }
 }
