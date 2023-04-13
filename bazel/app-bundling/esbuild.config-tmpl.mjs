@@ -32,8 +32,8 @@ function isFileSideEffectFree(filePath) {
 export default {
   // Note: We prefer `.mjs` here as this is the extension used by Angular APF packages.
   resolveExtensions: ['.mjs', '.js'],
-  conditions: ['es2020', 'es2015'],
-  mainFields: ['fesm2020', 'es2020', 'es2015', 'module', 'main'],
+  conditions: ['es2022'],
+  mainFields: ['fesm2022', 'es2022', 'module', 'main'],
   // The majority of these options match with the ones the CLI sets:
   // https://github.com/angular/angular-cli/blob/0d76bf04bca6e083865972b5398a32bbe9396e14/packages/angular_devkit/build_angular/src/webpack/plugins/javascript-optimizer-worker.ts#L133.
   treeShaking: true,

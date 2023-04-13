@@ -16,7 +16,7 @@
   },
   "packageManager": "yarn@3.4.1",
   "dependencies": {
-    "@angular-devkit/build-angular": "16.0.0-rc.0",
+    "@angular-devkit/build-angular": "16.0.0-rc.4",
     "@angular/benchpress": "0.3.0",
     "@babel/core": "^7.16.0",
     "@babel/helper-annotate-as-pure": "^7.18.6",
@@ -54,20 +54,20 @@
   "devDependencies": {
     "@actions/core": "^1.4.0",
     "@actions/github": "^5.0.0",
-    "@angular/animations": "16.0.0-rc.0",
+    "@angular/animations": "16.0.0-rc.4",
     "@angular/bazel": "patch:@angular/bazel@npm:14.1.0-next.2#.yarn/patches/@angular-bazel-npm.patch",
-    "@angular/cdk": "16.0.0-next.5",
-    "@angular/cli": "16.0.0-rc.0",
-    "@angular/common": "16.0.0-rc.0",
-    "@angular/compiler": "16.0.0-rc.0",
-    "@angular/compiler-cli": "16.0.0-rc.0",
-    "@angular/core": "16.0.0-rc.0",
+    "@angular/cdk": "16.0.0-rc.2",
+    "@angular/cli": "16.0.0-rc.4",
+    "@angular/common": "16.0.0-rc.4",
+    "@angular/compiler": "16.0.0-rc.4",
+    "@angular/compiler-cli": "16.0.0-rc.4",
+    "@angular/core": "16.0.0-rc.4",
     "@angular/fire": "^7.1.0-rc",
-    "@angular/forms": "16.0.0-rc.0",
-    "@angular/material": "16.0.0-next.5",
-    "@angular/platform-browser": "16.0.0-rc.0",
-    "@angular/platform-browser-dynamic": "16.0.0-rc.0",
-    "@angular/router": "16.0.0-rc.0",
+    "@angular/forms": "16.0.0-rc.4",
+    "@angular/material": "16.0.0-rc.2",
+    "@angular/platform-browser": "16.0.0-rc.4",
+    "@angular/platform-browser-dynamic": "16.0.0-rc.4",
+    "@angular/router": "16.0.0-rc.4",
     "@bazel/bazelisk": "^1.11.0",
     "@bazel/ibazel": "^0.16.2",
     "@bazel/jasmine": "5.8.1",
@@ -146,7 +146,7 @@
     "spdx-satisfies": "^5.0.1",
     "stylelint": "^15.1.0",
     "supports-color": "9.3.1",
-    "terser": "^5.14.1",
+    "terser": "5.17.1",
     "ts-node": "^10.8.1",
     "tslint": "^6.1.3",
     "typed-graphqlify": "^3.1.1",
@@ -162,6 +162,6 @@
     }
   },
   "resolutions": {
-    "@angular/benchpress/@angular/core": "16.0.0-rc.0"
+    "@angular/benchpress/@angular/core": "16.0.0-rc.4"
   }
 }
