@@ -335,8 +335,8 @@ __metadata:
     "@angular/cdk": 16.0.0-next.5
     "@angular/cli": 16.0.0-rc.0
     "@angular/common": 16.0.0-rc.0
-    "@angular/compiler": 16.0.0-rc.0
-    "@angular/compiler-cli": 16.0.0-rc.0
+    "@angular/compiler": 16.0.0-next.4
+    "@angular/compiler-cli": 16.0.0-next.4
     "@angular/core": 16.0.0-rc.0
     "@angular/fire": ^7.1.0-rc
     "@angular/forms": 16.0.0-rc.0
@@ -525,9 +525,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/compiler-cli@npm:16.0.0-rc.0":
-  version: 16.0.0-rc.0
-  resolution: "@angular/compiler-cli@npm:16.0.0-rc.0"
+"@angular/compiler-cli@npm:16.0.0-next.4":
+  version: 16.0.0-next.4
+  resolution: "@angular/compiler-cli@npm:16.0.0-next.4"
   dependencies:
     "@babel/core": 7.19.3
     "@jridgewell/sourcemap-codec": ^1.4.14
@@ -538,26 +538,26 @@ __metadata:
     tslib: ^2.3.0
     yargs: ^17.2.1
   peerDependencies:
-    "@angular/compiler": 16.0.0-rc.0
+    "@angular/compiler": 16.0.0-next.4
     typescript: ">=4.9.3 <5.1"
   bin:
     ng-xi18n: bundles/src/bin/ng_xi18n.js
     ngc: bundles/src/bin/ngc.js
-  checksum: 8e244aa6735d335c3b1589e079b6347a457fe6421a3eeadb0b8a3dd21f62cc450523f6a0f2e4a0d59e941dc9cc50f46f6bc95fb26a0190f4244f206fc63a5279
+  checksum: 0338f710815ad02f70278bd0161a1e026a6e806256ed598726cf70bfac03e5ba31a841d985b66abb9ce3a28b212d4d1fcd614cea46222e59fd0025221a37cb2e
   languageName: node
   linkType: hard
 
-"@angular/compiler@npm:16.0.0-rc.0":
-  version: 16.0.0-rc.0
-  resolution: "@angular/compiler@npm:16.0.0-rc.0"
+"@angular/compiler@npm:16.0.0-next.4":
+  version: 16.0.0-next.4
+  resolution: "@angular/compiler@npm:16.0.0-next.4"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/core": 16.0.0-rc.0
+    "@angular/core": 16.0.0-next.4
   peerDependenciesMeta:
     "@angular/core":
       optional: true
-  checksum: 3f9c5800f0ff6464e43f4c56724780488f533055473767cf10749048ad713fa35bbbd74abfd70c19511a6ff02c4ac291f134d8771381dfcb1318832e959a7fd9
+  checksum: 20fa3d01f24b812a717f3c12c709c383f2554c343bbbf7c107ab5b4aadf58cb72b8fc277bd2111fed529b83254745f8c566b33e89d47008dd2bc0d315529bde7
   languageName: node
   linkType: hard
 
