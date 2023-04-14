@@ -5427,12 +5427,12 @@ __metadata:
   linkType: hard
 
 "@octokit/graphql-schema@npm:^14.0.0":
-  version: 14.1.0
-  resolution: "@octokit/graphql-schema@npm:14.1.0"
+  version: 14.2.0
+  resolution: "@octokit/graphql-schema@npm:14.2.0"
   dependencies:
     graphql: ^16.0.0
     graphql-tag: ^2.10.3
-  checksum: 18d958866a76f06d965f1a393497c5144a1164f3e75bd2febf9887a13b247c5e9904cbbabf46e53f8fdc8c9b4e173cbb143b03faeb1643a4a131dbf7a3de079a
+  checksum: 455b231e13efd23ece08479a707c4948f3106ce3ec9eaee0c74248271b633886949416a282a0be5b3a066dbbd5378534efb7a5a74e193bb739eb26442b503ef2
   languageName: node
   linkType: hard
 
