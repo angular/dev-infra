@@ -17509,12 +17509,7 @@ async function cleanUpObsoleteBranches(git, repo, forkRepo, branchPrefix) {
   const obsoleteBranches = await Promise.all(obsoletePrs.map((pr) => getBranchNameForPr(git, repo, pr.number)));
   core.info(`Found ${obsoleteBranches.length} obsolete branches that will be deleted: ` + (obsoleteBranches.length === 0 ? "-" : obsoleteBranches.join(", ")));
   for (const branchName of obsoleteBranches) {
-    git.run([
-      "push",
-      "-d",
-      getRepositoryGitUrl(forkRepo, git.githubToken),
-      `:refs/heads/${branchName}`
-    ]);
+    git.run(["push", "-d", getRepositoryGitUrl(forkRepo, git.githubToken), branchName]);
   }
   core.info(`Deleted ${obsoleteBranches.length} obsolete branches.`);
 }
