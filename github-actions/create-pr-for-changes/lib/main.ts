@@ -286,7 +286,12 @@ async function cleanUpObsoleteBranches(
 
   // Delete the obsolete branches.
   for (const branchName of obsoleteBranches) {
-    git.run(['push', getRepositoryGitUrl(forkRepo, git.githubToken), `:refs/heads/${branchName}`]);
+    git.run([
+      'push',
+      '-d',
+      getRepositoryGitUrl(forkRepo, git.githubToken),
+      `:refs/heads/${branchName}`,
+    ]);
   }
 
   core.info(`Deleted ${obsoleteBranches.length} obsolete branches.`);
