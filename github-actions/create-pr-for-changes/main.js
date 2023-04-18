@@ -17207,7 +17207,12 @@ var GitClient = class {
       cwd: this.baseDir,
       stdio: "pipe",
       ...options,
-      encoding: "utf8"
+      encoding: "utf8",
+      env: {
+        ...process.env,
+        "GIT_CONFIG": "/dev/null",
+        ...options.env
+      }
     });
     Log.debug(`Status: ${result.status}, Error: ${!!result.error}, Signal: ${result.signal}`);
     if (result.status !== 0 && result.stderr !== null) {

@@ -107,6 +107,11 @@ export class GitClient {
       // Encoding is always `utf8` and not overridable. This ensures that this method
       // always returns `string` as output instead of buffers.
       encoding: 'utf8',
+      env: {
+        ...process.env,
+        'GIT_CONFIG': '/dev/null',
+        ...options.env,
+      },
     });
 
     Log.debug(`Status: ${result.status}, Error: ${!!result.error}, Signal: ${result.signal}`);
