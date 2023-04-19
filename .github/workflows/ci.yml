@@ -10,13 +10,13 @@ concurrency:
 
 permissions: {}
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   lint:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-    if: ${{ contains(fromJSON('["synchronize", "opened", "reopened"]'), github.event.action) }}
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # tag=v3.3.0
         with:
@@ -37,11 +37,7 @@ jobs:
       - run: yarn tsc -p tsconfig.json
 
   test:
-    if: ${{ contains(fromJSON('["synchronize", "opened", "reopened"]'), github.event.action) }}
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # tag=v3.3.0
         with:
@@ -54,15 +50,9 @@ jobs:
             .yarn/install-state.gz
           key: v1-${{hashFiles('yarn.lock')}}
       - run: yarn install --immutable
-        shell: bash
       - run: yarn bazel test -- //...
-        shell: bash
 
   test-win:
-    if: ${{ contains(fromJSON('["synchronize", "opened", "reopened"]'), github.event.action) }}
-    defaults:
-      run:
-        shell: bash
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # tag=v3.3.0
@@ -75,15 +65,9 @@ jobs:
             .yarn/install-state.gz
           key: v1-${{hashFiles('yarn.lock')}}
       - run: yarn install --immutable
-        shell: bash
       - run: yarn bazel test --test_tag_filters=windows --build_tests_only -- ... -bazel/remote-execution/...
-        shell: bash
 
   test-macos:
-    if: ${{ contains(fromJSON('["synchronize", "opened", "reopened"]'), github.event.action) }}
-    defaults:
-      run:
-        shell: bash
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # tag=v3.3.0
