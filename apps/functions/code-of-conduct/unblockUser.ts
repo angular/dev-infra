@@ -9,9 +9,10 @@ import {Octokit} from '@octokit/rest';
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 
+/** Unblocks the provided user from Github, clearing their records from our listing. */
 export const unblockUser = functions
   .runWith({
-    secrets: ['GITHUB_PEM', 'GITHUB_APP_ID'],
+    secrets: ['ANGULAR_ROBOT_APP_PRIVATE_KEY', 'ANGULAR_ROBOT_APP_ID'],
   })
   .https.onCall(async ({username}: UnblockUserParams, request) => {
     await checkAuthenticationAndAccess(request);
@@ -23,9 +24,10 @@ export const unblockUser = functions
     await performUnblock(github, doc);
   });
 
+/** Unblocks the all listed users who's block has expired, runs daily. */
 export const dailyUnblock = functions
   .runWith({
-    secrets: ['GITHUB_PEM', 'GITHUB_APP_ID'],
+    secrets: ['ANGULAR_ROBOT_APP_PRIVATE_KEY', 'ANGULAR_ROBOT_APP_ID'],
   })
   .pubsub.schedule('every day 08:00')
   .timeZone('America/Los_Angeles')

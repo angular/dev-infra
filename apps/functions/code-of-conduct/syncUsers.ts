@@ -5,17 +5,19 @@ import {
 } from './shared.js';
 import * as functions from 'firebase-functions';
 
+/** Runs the synchronization of blocked users from Github to the blocked users once per day. */
 export const dailySync = functions
   .runWith({
-    secrets: ['GITHUB_PEM', 'GITHUB_APP_ID'],
+    secrets: ['ANGULAR_ROBOT_APP_PRIVATE_KEY', 'ANGULAR_ROBOT_APP_ID'],
   })
   .pubsub.schedule('every day 08:00')
   .timeZone('America/Los_Angeles')
   .onRun(syncUsers);
 
+/** Runs the synchronization of blocked users from Github to the blocked users list on demand. */
 export const syncUsersFromGithub = functions
   .runWith({
-    secrets: ['GITHUB_PEM', 'GITHUB_APP_ID'],
+    secrets: ['ANGULAR_ROBOT_APP_PRIVATE_KEY', 'ANGULAR_ROBOT_APP_ID'],
   })
   .https.onCall(async (_: void, context) => {
     await checkAuthenticationAndAccess(context);

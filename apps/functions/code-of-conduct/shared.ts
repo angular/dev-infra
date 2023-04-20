@@ -6,7 +6,7 @@ import * as functions from 'firebase-functions';
 /** Parameters for blocking a user. */
 export interface BlockUserParams {
   username: string;
-  blockUntil: Date;
+  blockUntil: string;
   context: string;
   comments: string;
 }
@@ -58,6 +58,8 @@ interface AuthenticatedCallableContext extends functions.https.CallableContext {
 export function checkAuthenticationAndAccess(
   context: functions.https.CallableContext,
 ): asserts context is AuthenticatedCallableContext {
+  // Authentication is managed by firebase as this occurs within the Firebase functions context.
+  // If the user is unauthenticted, the authorization object will be undefined.
   if (context.auth == undefined) {
     // Throwing an HttpsError so that the client gets the error details.
     throw new functions.https.HttpsError('unauthenticated', 'This action requires authentication');
@@ -66,11 +68,14 @@ export function checkAuthenticationAndAccess(
 
 /** Retrieves a Github client instance authenticated as the Angular Robot Github App. */
 export async function getAuthenticatedGithubClient() {
-  const GITHUB_APP_PEM = Buffer.from(process.env['GITHUB_PEM']!, 'base64').toString('utf-8');
+  const GITHUB_APP_PEM = Buffer.from(
+    process.env['ANGULAR_ROBOT_APP_PRIVATE_KEY']!,
+    'base64',
+  ).toString('utf-8');
 
   const applicationGithub = new Octokit({
     authStrategy: createAppAuth,
-    auth: {appId: process.env['GITHUB_APP_ID']!, privateKey: GITHUB_APP_PEM},
+    auth: {appId: process.env['ANGULAR_ROBOT_APP_ID']!, privateKey: GITHUB_APP_PEM},
   });
   /** The specific installation id for the provided repository. */
   const {id: installation_id} = (await applicationGithub.apps.getOrgInstallation({org: 'angular'}))

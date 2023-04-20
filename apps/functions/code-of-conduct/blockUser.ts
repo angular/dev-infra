@@ -8,9 +8,10 @@ import {
 } from './shared.js';
 import {RequestError} from '@octokit/request-error';
 
+/** Blocks the requested user from Github for the prescribed amount of time. */
 export const blockUser = functions
   .runWith({
-    secrets: ['GITHUB_PEM', 'GITHUB_APP_ID'],
+    secrets: ['ANGULAR_ROBOT_APP_PRIVATE_KEY', 'ANGULAR_ROBOT_APP_ID'],
   })
   .https.onCall(async ({comments, blockUntil, context, username}: BlockUserParams, request) => {
     // Ensure that the request was authenticated.
