@@ -2119,10 +2119,10 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
       command_1.issueCommand("error", utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
     }
     exports.error = error;
-    function warning(message, properties = {}) {
+    function warning2(message, properties = {}) {
       command_1.issueCommand("warning", utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
     }
-    exports.warning = warning;
+    exports.warning = warning2;
     function notice(message, properties = {}) {
       command_1.issueCommand("notice", utils_1.toCommandProperties(properties), message instanceof Error ? message.toString() : message);
     }
@@ -17508,10 +17508,26 @@ async function cleanUpObsoleteBranches(git, repo, forkRepo, branchPrefix) {
   core.info(`Found ${obsoletePrs.length} closed PR(s) that match the specified branch name prefix: ` + (obsoletePrs.length === 0 ? "-" : obsoletePrs.map((pr) => `#${pr.number}`).join(", ")));
   const obsoleteBranches = await Promise.all(obsoletePrs.map((pr) => getBranchNameForPr(git, repo, pr.number)));
   core.info(`Found ${obsoleteBranches.length} obsolete branches that will be deleted: ` + (obsoleteBranches.length === 0 ? "-" : obsoleteBranches.join(", ")));
+  const failedToDelete = [];
+  let deletedCount = 0;
   for (const branchName of obsoleteBranches) {
-    git.run(["push", "-d", getRepositoryGitUrl(forkRepo, git.githubToken), branchName]);
+    const deleteProc = git.runGraceful([
+      "push",
+      "-d",
+      getRepositoryGitUrl(forkRepo, git.githubToken),
+      branchName
+    ]);
+    if (deleteProc.status === 0) {
+      deletedCount++;
+    } else {
+      failedToDelete.push(branchName);
+    }
   }
-  core.info(`Deleted ${obsoleteBranches.length} obsolete branches.`);
+  core.info(`Deleted ${deletedCount} obsolete branches.`);
+  if (failedToDelete.length > 0) {
+    core.warning(`Could not delete ${failedToDelete.length} branches.`);
+    core.warning(`Branches: ${failedToDelete.join(", ")}`);
+  }
 }
 async function getBranchNameForPr(git, repo, prNumber) {
   const { data: pr } = await git.github.pulls.get({
