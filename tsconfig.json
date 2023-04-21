@@ -19,6 +19,7 @@
     "bazel/benchmark/component_benchmark/**",
     "bazel/benchmark/driver-utilities/**",
     "bazel/integration/tests/**",
+    "apps/**",
     ".yarn/**",
     ".angular/**"
   ]

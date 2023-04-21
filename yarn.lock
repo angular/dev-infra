@@ -351,6 +351,7 @@ __metadata:
     "@bazel/buildifier": 6.1.0
     "@bazel/concatjs": 5.8.1
     "@bazel/esbuild": 5.8.1
+    "@bazel/ibazel": ^0.16.2
     "@bazel/jasmine": 5.8.1
     "@bazel/protractor": 5.8.1
     "@bazel/runfiles": 5.8.1
@@ -2607,6 +2608,15 @@ __metadata:
   version: 5.8.1
   resolution: "@bazel/esbuild@npm:5.8.1"
   checksum: 95cd1a576500869ce08641cba0253f020b0f204a13d3e43265a0c67c4d4d6156ee305f97922aff8bc91b4ec60761ae7c29071335dbbfc7befec86ebefd4f8440
+  languageName: node
+  linkType: hard
+
+"@bazel/ibazel@npm:^0.16.2":
+  version: 0.16.2
+  resolution: "@bazel/ibazel@npm:0.16.2"
+  bin:
+    ibazel: index.js
+  checksum: be182120732f06eea872f8daa84d3655808342fcf631d20f4289a475ea652284966573f94e9594ecf83f99af7f7415d128c62c83e93ee5dad38956619b318aad
   languageName: node
   linkType: hard
 
@@ -17985,7 +17995,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"terser@npm:5.16.9, terser@npm:^5.16.5":
+"terser@npm:5.16.9, terser@npm:^5.14.1, terser@npm:^5.16.5":
   version: 5.16.9
   resolution: "terser@npm:5.16.9"
   dependencies:
@@ -17996,20 +18006,6 @@ __metadata:
   bin:
     terser: bin/terser
   checksum: b373693ee01ce08cc9b9595d57df889acbbc899d929a7fe53662330ce954d53145582f6715c9cc4839d555f5769a28fbeb203155b54e3a9c6c646db292002edd
-  languageName: node
-  linkType: hard
-
-"terser@npm:^5.14.1":
-  version: 5.16.6
-  resolution: "terser@npm:5.16.6"
-  dependencies:
-    "@jridgewell/source-map": ^0.3.2
-    acorn: ^8.5.0
-    commander: ^2.20.0
-    source-map-support: ~0.5.20
-  bin:
-    terser: bin/terser
-  checksum: f763a7bcc7b98cb2bfc41434f7b92bfe8a701a12c92ea6049377736c8e6de328240d654a20dfe15ce170fd783491b9873fad9f4cd8fee4f6c6fb8ca407859dee
   languageName: node
   linkType: hard
 

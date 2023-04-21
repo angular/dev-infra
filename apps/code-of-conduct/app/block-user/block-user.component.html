@@ -1,0 +1,137 @@
+<h1 class="mat-headline-3" mat-dialog-title>
+  {{ editMode ? 
+    'Update Blocked user information' :
+    'Block a User from Angular Github Organization'
+  }}
+</h1>
+<mat-dialog-content>
+  <form [formGroup]="blockUserForm">
+    <div class="two-column-row form-item">
+      <span class="username">
+        <mat-form-field floatLabel="always">
+          <input
+            [readonly]="editMode"
+            required
+            matInput
+            type="text"
+            placeholder="example_username"
+            formControlName="username"
+          />
+          <mat-label>Username</mat-label>
+        </mat-form-field>
+      </span>
+      <span class="block-until">
+        <mat-form-field>
+          <mat-label>Block Until</mat-label>
+          <input
+            [style.display]="blockUserForm.controls.blockUntil.value === false ? 'none': ''"
+            readonly
+            required
+            matInput
+            [min]="tomorrow"
+            [max]="fiveYearsFromToday"
+            formControlName="blockUntil"
+            [matDatepicker]="picker">
+            <span class="block-until-indefinite" *ngIf="blockUserForm.controls.blockUntil.value === false">Blocked Indefinitely</span>
+            <mat-datepicker #picker></mat-datepicker>
+            <button #blockUntilMenuTrigger="matMenuTrigger" [matMenuTriggerFor]="blockUntilMenu" mat-icon-button matSuffix>
+              <mat-icon>arrow_drop_down</mat-icon>
+            </button>
+        </mat-form-field>
+        <mat-menu #blockUntilMenu="matMenu" yPosition="below" xPosition="before">
+          <button mat-menu-item (click)="picker.select(week)">
+            1 Week ({{ week | date }})
+          </button>
+          <button mat-menu-item (click)="picker.select(month)">
+            1 Month ({{ month | date }})
+          </button>
+          <button mat-menu-item (click)="picker.select(year)">
+            1 Year ({{ year | date }})
+          </button>
+          <button mat-menu-item (click)="picker.open()">
+            Select a Date
+          </button>
+          <button mat-menu-item (click)="setBlockUntilAsIndefinite();">
+            Indefinite
+          </button>
+        </mat-menu>
+      </span>
+    </div>
+    <div class="context form-item">
+      <mat-form-field>
+        <mat-label>Context</mat-label>
+        <input
+          formControlName="context"
+          [readonly]="editMode"
+          matInput
+          required
+          type="text"
+          placeholder="https://github.com/angular/angular/issue/123..."
+        />
+      </mat-form-field>
+    </div>
+
+    <div class="comments form-item">
+      <mat-form-field>
+        <mat-label>Comments</mat-label>
+        <textarea
+          formControlName="comments"
+          matInput
+          placeholder="The user broke the code of conduct by..."
+        ></textarea>
+      </mat-form-field>
+    </div>
+    <div class="two-column-row form-item" *ngIf="editMode">
+      <span>
+        <mat-form-field floatLabel="always">
+          <mat-label>Blocked By</mat-label>
+          <input
+          formControlName="blockedBy"
+          matInput
+          type="text"/>
+        </mat-form-field>
+      </span>
+      <span>
+        <mat-form-field floatLabel="always">
+          <input
+            readonly
+            matInput
+            formControlName="blockedOn"
+            [matDatepicker]="blockedOnPicker">
+            <mat-datepicker #blockedOnPicker></mat-datepicker>
+          <mat-label>Blocked On</mat-label>
+        </mat-form-field>
+      </span>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button
+      [disabled]="blockUserForm.disabled"
+      mat-stroked-button
+      matDialogClose>
+      Cancel
+    </button>
+    <button
+      *ngIf="!editMode"
+      [disabled]="blockUserForm.invalid || blockUserForm.disabled"
+      mat-raised-button
+      color="primary"
+      (click)="blockUser()"
+      class="block-user-button"
+    >
+      <span>Block User</span>
+      <mat-spinner *ngIf="blockUserForm.disabled" diameter="24"></mat-spinner>
+  </button>
+  <button
+      *ngIf="editMode"
+      [disabled]="blockUserForm.invalid || blockUserForm.disabled"
+      mat-raised-button
+      color="primary"
+      (click)="updateUser()"
+      class="block-user-button"
+    >
+      <span>Update User</span>
+      <mat-spinner *ngIf="blockUserForm.disabled" diameter="24"></mat-spinner>
+  </button>
+</mat-dialog-actions>

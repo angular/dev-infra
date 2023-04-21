@@ -1,0 +1,43 @@
+<mat-table [dataSource]="blockService.blockedUsers">
+  <ng-container matColumnDef="username">
+    <mat-header-cell *matHeaderCellDef> Username </mat-header-cell>
+    <mat-cell class="username-cell" *matCellDef="let user">
+      <img src="https://github.com/{{user.get('username')}}.png">
+      <span>{{user.get('username')}}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="blockUntil">
+    <mat-header-cell *matHeaderCellDef> Blocked Until </mat-header-cell>
+    <mat-cell *matCellDef="let user"> {{user.get('blockUntil') === false ? 'Blocked Indefinitely' : user.get('blockUntil').seconds * 1000 | date}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="blockedBy">
+    <mat-header-cell *matHeaderCellDef> Blocked By </mat-header-cell>
+    <mat-cell class="username-cell" *matCellDef="let user">
+      <span>{{user.get('blockedBy')}}</span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <mat-header-cell *matHeaderCellDef>
+      <button matTooltip="Resync blocked users from Github into the app" [disabled]="forceSyncInProgress" mat-icon-button (click)="forceSync()">
+        <mat-progress-spinner *ngIf="forceSyncInProgress" mode="indeterminate" diameter="24"></mat-progress-spinner>
+        <mat-icon *ngIf="!forceSyncInProgress">sync</mat-icon>
+      </button>
+    </mat-header-cell>
+    <mat-cell *matCellDef="let user;">
+      <button matTooltip="Unblock {{user.get('username') }} immediately" [disabled]="user.inProgress" mat-icon-button (click)="blockService.unblock(user, user)">
+        <mat-progress-spinner *ngIf="user.inProgress" mode="indeterminate" diameter="24"></mat-progress-spinner>
+        <mat-icon *ngIf="!user.inProgress">lock_open</mat-icon>
+      </button>
+      <button matTooltip="Edit information for {{user.get('username') }}" mat-icon-button (click)="editUser(user)">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+
+
+  <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: columns;"></mat-row>
+</mat-table>

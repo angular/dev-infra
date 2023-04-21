@@ -1,21 +1,29 @@
-import {Injectable} from '@angular/core';
-import {Subject} from 'rxjs';
+import {inject, Injectable} from '@angular/core';
+import {map, ReplaySubject} from 'rxjs';
 
-// TODO(devversion): Remove this when Angular Fire is using APF v13+
-import type * as authTypes from '@angular/fire/auth/angular-fire-auth.js';
-import type {Auth, UserInfo, User} from '@angular/fire/auth/angular-fire-auth.js';
-
-const {GithubAuthProvider, GoogleAuthProvider, linkWithPopup, signInWithPopup, unlink} =
-  (await import('@angular/fire/auth' as any)) as typeof authTypes;
+import {
+  Auth,
+  UserInfo,
+  User,
+  GithubAuthProvider,
+  GoogleAuthProvider,
+  linkWithPopup,
+  signInWithPopup,
+  unlink,
+} from '@angular/fire/auth';
+import {Octokit} from '@octokit/rest';
+import {Router} from '@angular/router';
 
 const DEFAULT_AVATAR_URL = 'https://lh3.googleusercontent.com/a/default-user=s64-c';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class AccountService {
   /** When the logged in state of the user changes. */
-  loggedInStateChange = new Subject<void>();
+  loggedInStateChange = new ReplaySubject<void>();
   /** Whether a user is logged in currently. */
   isLoggedIn: boolean = false;
+  /** Whether a user is logged in currently. */
+  isLoggedIn$ = this.loggedInStateChange.pipe(map(() => this.isLoggedIn));
   /** The Github account information for the current user, if a user is logged in and has linked their Github account. */
   githubInfo: UserInfo | null = null;
   /** The Google account information for the current user, if a user is logged in. */
@@ -25,15 +33,21 @@ export class AccountService {
   /** The display name for the user is available. */
   displayName: string | undefined;
   /** The current accounts github token, if available. */
-  private githubToken: string | null = null;
+  githubApi: Octokit = new Octokit();
 
-  constructor(private auth: Auth) {
+  private auth = inject(Auth);
+  private router = inject(Router);
+
+  constructor() {
     this.auth.onIdTokenChanged((user) => {
       if (user === null) {
-        this.githubToken = null;
+        this.githubApi = new Octokit();
       } else {
         user.getIdTokenResult().then((value) => {
-          this.githubToken = (value.claims.githubToken as string) || null;
+          const token = (value.claims['githubToken'] as string) || null;
+          if (token !== null) {
+            this.githubApi = new Octokit({auth: token});
+          }
         });
       }
 
@@ -48,7 +62,9 @@ export class AccountService {
 
   /** Sign the user out of the application. */
   async signOut() {
-    await this.auth.signOut();
+    await this.auth.signOut().then(() => {
+      return this.router.navigate(['login']);
+    });
   }
 
   /** Sign the user into the application using a Google account.. */

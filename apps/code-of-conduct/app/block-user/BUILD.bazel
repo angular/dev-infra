@@ -1,0 +1,26 @@
+load("//tools:defaults.bzl", "ng_module")
+load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
+
+package(default_visibility = ["//apps/code-of-conduct:__subpackages__"])
+
+ng_module(
+    name = "block-user",
+    srcs = glob(["*.ts"]),
+    assets = [
+        ":block-user.component.css",
+        ":block-user.component.html",
+    ],
+    deps = [
+        "//apps/code-of-conduct/app:block_service",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/fire",
+        "@npm//@angular/forms",
+        "@npm//@angular/material",
+    ],
+)
+
+sass_binary(
+    name = "block-user-style",
+    src = "block-user.component.scss",
+)

@@ -1,9 +1,27 @@
-import {Overlay} from '@angular/cdk/overlay';
+import {CdkAccordionModule} from '@angular/cdk/accordion';
+import {Overlay, OverlayModule} from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
+import {CommonModule} from '@angular/common';
 import {Component, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatCardModule} from '@angular/material/card';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {AccountService} from './account.service.js';
 
 @Component({
+  standalone: true,
+  imports: [
+    CommonModule,
+    CdkAccordionModule,
+    MatButtonModule,
+    MatIconModule,
+    MatCardModule,
+    MatMenuModule,
+    OverlayModule,
+    MatTooltipModule,
+  ],
   selector: 'account-menu-button',
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss'],

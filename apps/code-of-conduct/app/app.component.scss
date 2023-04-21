@@ -1,0 +1,19 @@
+block-user {
+  margin: 15px auto;
+}
+
+.app-header-bar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+
+  a {
+    color: inherit;
+    font-size: 1.5em;
+    text-decoration: none;
+  }
+
+  .spacer {
+    flex: 1;
+  }
+}

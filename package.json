@@ -69,6 +69,7 @@
     "@angular/platform-browser-dynamic": "16.0.0-rc.0",
     "@angular/router": "16.0.0-rc.0",
     "@bazel/bazelisk": "^1.11.0",
+    "@bazel/ibazel": "^0.16.2",
     "@bazel/jasmine": "5.8.1",
     "@google-cloud/firestore": "^6.0.0",
     "@google-cloud/storage": "^6.0.0",

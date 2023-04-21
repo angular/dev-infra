@@ -1,0 +1,55 @@
+load("//tools:defaults.bzl", "ng_module")
+load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
+
+package(default_visibility = ["//apps/code-of-conduct:__subpackages__"])
+
+ng_module(
+    name = "app",
+    srcs = [
+        "app.component.ts",
+    ],
+    assets = [
+        ":app.component.css",
+        "app.component.html",
+    ],
+    deps = [
+        "//apps/code-of-conduct/app/block-user",
+        "//apps/code-of-conduct/app/user-table",
+        "//apps/shared/account",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/router",
+    ],
+)
+
+sass_binary(
+    name = "app-style",
+    src = "app.component.scss",
+)
+
+ng_module(
+    name = "block_service",
+    srcs = [
+        "block.service.ts",
+    ],
+    deps = [
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/fire",
+        "@npm//@angular/material",
+        "@npm//rxjs",
+    ],
+)
+
+ng_module(
+    name = "app_routes",
+    srcs = [
+        "app.routes.ts",
+    ],
+    deps = [
+        "//apps/code-of-conduct/app/login",
+        "//apps/code-of-conduct/app/main",
+        "//apps/shared/account",
+        "@npm//@angular/router",
+    ],
+)
