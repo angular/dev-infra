@@ -284,12 +284,32 @@ async function cleanUpObsoleteBranches(
       (obsoleteBranches.length === 0 ? '-' : obsoleteBranches.join(', ')),
   );
 
+  const failedToDelete: string[] = [];
+  let deletedCount = 0;
+
   // Delete the obsolete branches.
   for (const branchName of obsoleteBranches) {
-    git.run(['push', '-d', getRepositoryGitUrl(forkRepo, git.githubToken), branchName]);
+    // Note: We gracefully attempt to delete branches. The branches might already
+    // be deleted from previous invocations of via a simultaneously-running action.
+    const deleteProc = git.runGraceful([
+      'push',
+      '-d',
+      getRepositoryGitUrl(forkRepo, git.githubToken),
+      branchName,
+    ]);
+
+    if (deleteProc.status === 0) {
+      deletedCount++;
+    } else {
+      failedToDelete.push(branchName);
+    }
   }
 
-  core.info(`Deleted ${obsoleteBranches.length} obsolete branches.`);
+  core.info(`Deleted ${deletedCount} obsolete branches.`);
+  if (failedToDelete.length > 0) {
+    core.warning(`Could not delete ${failedToDelete.length} branches.`);
+    core.warning(`Branches: ${failedToDelete.join(', ')}`);
+  }
 }
 
 /**
