@@ -3,6 +3,7 @@ load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin", "nodejs_binary")
 copy_to_bin(
     name = "static_runfiles",
     srcs = [
+        ".firebaserc",
         "firebase.json",
         "firestore.indexes.json",
         "firestore.rules",
@@ -19,8 +20,12 @@ nodejs_binary(
         # Firebase function files
         "//apps/functions:functions_compiled",
         "//apps/functions:functions_files",
+
+        # Firebase hosted application files
+        "//apps/code-of-conduct:application_files",
     ],
     entry_point = "@npm//:node_modules/firebase-tools/lib/bin/firebase.js",
+    tags = ["ibazel_notify_changes"],
     templated_args = [
         "--project",
         "internal-200822",

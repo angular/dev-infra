@@ -1,0 +1,80 @@
+load("//tools:defaults.bzl", "esbuild", "esbuild_config", "ng_module")
+load("@io_bazel_rules_sass//:defs.bzl", "npm_sass_library", "sass_binary")
+load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
+
+package(default_visibility = ["//apps/code-of-conduct:__subpackages__"])
+
+ng_module(
+    name = "main",
+    srcs = [
+        "environment.ts",
+        "main.ts",
+    ],
+    deps = [
+        "//apps/code-of-conduct/app",
+        "//apps/code-of-conduct/app:app_routes",
+        "@npm//@angular/common",
+        "@npm//@angular/compiler",
+        "@npm//@angular/fire",
+        "@npm//@angular/material",
+        "@npm//@angular/platform-browser",
+        "@npm//@angular/router",
+        "@npm//zone.js",
+    ],
+)
+
+npm_sass_library(
+    name = "angular_material_sass_deps",
+    deps = ["@npm//@angular/material"],
+)
+
+sass_binary(
+    name = "styles",
+    src = "styles.scss",
+    include_paths = [
+        "external/npm/node_modules",
+    ],
+    deps = [
+        ":angular_material_sass_deps",
+    ],
+)
+
+esbuild_config(
+    name = "esbuild_config",
+    config_file = "esbuild.config.mjs",
+    deps = [
+        "//shared-scripts/angular-optimization:js_lib",
+        "@npm//@angular/compiler-cli",
+    ],
+)
+
+esbuild(
+    name = "bundles",
+    config = ":esbuild_config",
+    entry_points = [":main.ts"],
+    platform = "browser",
+    target = "es2016",
+    deps = [
+        ":main",
+    ],
+)
+
+copy_to_bin(
+    name = "application_files_in_bin",
+    srcs = [
+        "favicon.ico",
+        "index.html",
+        "robots.txt",
+    ],
+)
+
+filegroup(
+    name = "application_files",
+    srcs = [
+        ":application_files_in_bin",
+        ":bundles",
+        ":styles",
+        "@npm//:node_modules/zone.js/dist/zone.js",
+    ],
+    visibility = ["//apps:__pkg__"],
+)

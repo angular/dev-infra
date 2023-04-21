@@ -1,0 +1,23 @@
+:host {
+  width: 800px;
+  margin: 0 auto;
+  display: block;
+}
+
+.username-cell {
+  img {
+    height: 1.5em;
+    border-radius: 50%;
+    margin-right: 4px;
+  }
+
+  span {
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
+
+.cdk-column-actions {
+  width: 110px;
+  flex: unset;
+}

@@ -1,0 +1,27 @@
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+$code-of-conduct-primary: mat.define-palette(mat.$teal-palette);
+$code-of-conduct-accent: mat.define-palette(mat.$blue-palette, A200, A100, A400);
+$code-of-conduct-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $code-of-conduct-primary,
+      accent: $code-of-conduct-accent,
+    ),
+    typography: mat.define-typography-config(),
+    density: -1,
+  )
+);
+
+@include mat.all-component-themes($code-of-conduct-theme);
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
