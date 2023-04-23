@@ -1,3 +1,16 @@
+<a name="2023.4.23"></a>
+# 2023.4.23 (2023-04-23)
+### apps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3f26e9e](https://github.com/angular/dev-infra/commit/3f26e9eca758ddbd54b744c03f25104c54b0811c) | feat | create the code of conduct managing functions ([#1109](https://github.com/angular/dev-infra/pull/1109)) |
+### github-actions
+| Commit | Type | Description |
+| -- | -- | -- |
+| [08f8d67](https://github.com/angular/dev-infra/commit/08f8d677da7b0811a00e2898596ef329e3450c88) | fix | gracefully attempt to delete PR branches |
+| [1564c4e](https://github.com/angular/dev-infra/commit/1564c4e45db49460f2351cba356311e28062aa2f) | fix | properly delete obsolete branches ([#1104](https://github.com/angular/dev-infra/pull/1104)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
 <a name="2023.4.16"></a>
 # 2023.4.16 (2023-04-16)
 ### ng-dev
@@ -159,35 +172,3 @@ Alan Agius, Charles Lyding, Joey Perrott and Paul Gschwendtner
 | [5cffacd](https://github.com/angular/dev-infra/commit/5cffacd8e5d029d1df8fede70306f5e0e587960e) | fix | properly catch target label/branch errors |
 ## Special Thanks
 Paul Gschwendtner
-
-<!-- CHANGELOG SPLIT MARKER -->
-<a name="2022.12.18"></a>
-# 2022.12.18 (2022-12-18)
-### bazel
-| Commit | Type | Description |
-| -- | -- | -- |
-| [d4d1329](https://github.com/angular/dev-infra/commit/d4d1329adbe1cdb5fd382d618e830c69e578c41b) | feat | allow for benchmark driver utilities to be linked |
-| [d2840aa](https://github.com/angular/dev-infra/commit/d2840aa6cb7326d00a925fa2fff350bc210d0867) | feat | always consider transitive specs for spec-entrypoint |
-| [246cebb](https://github.com/angular/dev-infra/commit/246cebbf2a78566ff1fe9b88fdde2459606568dc) | feat | avoid TS code relying on CommonJS-specific features |
-| [30acfb3](https://github.com/angular/dev-infra/commit/30acfb31077ddc552b6be501516833ec234ce5c1) | feat | support detection of `_test` files for spec-bundling |
-| [edfb9b5](https://github.com/angular/dev-infra/commit/edfb9b570b66e9196dc3b91b757dc2d3827274a8) | feat | support explicit files in spec-entrypoint |
-| [07c1c19](https://github.com/angular/dev-infra/commit/07c1c1998ee39322c2bdd1b7c5524e1e72aeb8f1) | feat | support using es2020 in spec-bundled tests |
-| [9a7aea3](https://github.com/angular/dev-infra/commit/9a7aea32300233a850eb3bb10874953a56cd2588) | fix | always downlevel async/await when bundling for production application |
-| [7246a9c](https://github.com/angular/dev-infra/commit/7246a9c004fe00231816f71c6433df329d8e6c1f) | fix | app bundle rule does not declare other files as side-effect free |
-| [c154da1](https://github.com/angular/dev-infra/commit/c154da1d34262b64173508b229302afa9a96cfaf) | fix | downlevel async generators along with async/await |
-| [4d9ea67](https://github.com/angular/dev-infra/commit/4d9ea67a331c5333fc4b0ffbfa32479a8ec0a17b) | fix | http server should support loading jsonp files |
-| [fc8badf](https://github.com/angular/dev-infra/commit/fc8badf89c5107486bb47c8c55b20747668db3d5) | fix | spec-bundle rule should never consider transitive files |
-| [e03e8fe](https://github.com/angular/dev-infra/commit/e03e8fe3c4ec565e07774caa1913d8ce243ba6af) | fix | spec-bundling rule should keep original names |
-### github-actions
-| Commit | Type | Description |
-| -- | -- | -- |
-| [47f3420](https://github.com/angular/dev-infra/commit/47f34200c206f119acb14e2e00e478b7fe2d4725) | feat | merge all validation results instead of exiting on first non-passing validation ([#938](https://github.com/angular/dev-infra/pull/938)) |
-| [51b292e](https://github.com/angular/dev-infra/commit/51b292edb052b047f57782fcd8f7dc8486394e09) | fix | make check title more succinct ([#941](https://github.com/angular/dev-infra/pull/941)) |
-| [f1e8862](https://github.com/angular/dev-infra/commit/f1e8862e5034f046cc0bc66641d37f5b36d3e9b5) | fix | rename status check name to `Merge Ready Tracking` ([#941](https://github.com/angular/dev-infra/pull/941)) |
-### shared-scripts
-| Commit | Type | Description |
-| -- | -- | -- |
-| [bc7bf8b](https://github.com/angular/dev-infra/commit/bc7bf8bfc84492f04d18dc1cbf4b7547e51c3786) | feat | support only running linker on subset of files |
-| [57b5fea](https://github.com/angular/dev-infra/commit/57b5fea0ace8cee1dff586d192383ddf00576b31) | fix | properly use `isSideEffectFree` function |
-## Special Thanks
-Joey Perrott and Paul Gschwendtner
