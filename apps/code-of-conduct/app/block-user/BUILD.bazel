@@ -5,7 +5,10 @@ package(default_visibility = ["//apps/code-of-conduct:__subpackages__"])
 
 ng_module(
     name = "block-user",
-    srcs = glob(["*.ts"]),
+    srcs = glob(
+        ["*.ts"],
+        exclude = ["*.spec.ts"],
+    ),
     assets = [
         ":block-user.component.css",
         ":block-user.component.html",

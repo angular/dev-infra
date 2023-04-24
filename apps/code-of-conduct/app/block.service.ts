@@ -15,23 +15,32 @@ import {httpsCallable, getFunctions} from '@angular/fire/functions';
 import {BehaviorSubject} from 'rxjs';
 
 export interface BlockUserParams {
+  /** The username of the user being blocked. */
   username: string;
+  /** The date to block the user until, or false if the block is indefinite. */
   blockUntil: Date | false;
+  /** A statement or link to the context for the blocking. */
   context: string;
+  /** Additional comments about the user block. */
   comments: string;
 }
 
 export interface UnblockUserParams {
+  /** The username of the user being unblocked. */
   username: string;
 }
 
 export interface BlockedUser extends BlockUserParams {
+  /** The display name of the person who blocked the user. */
   blockedBy: string;
+  /** The date the block began. */
   blockedOn: Date;
 }
 
 export type BlockedUserFromFirestore = BlockedUser & {
+  /** The date the block began, as a unix timestamp */
   blockedOn: number;
+  /** The date the block ends, as a unix timestamp, or false if the block is indefinite. */
   blockUntil: number | false;
 };
 

@@ -8,6 +8,7 @@ export const isLoggedInGuard = async () => {
   const router = inject(Router);
 
   if (!(await firstValueFrom(account.isLoggedIn$))) {
+    // TODO: Determine a way to better manage the path used.
     router.navigate(['login']);
     return false;
   }

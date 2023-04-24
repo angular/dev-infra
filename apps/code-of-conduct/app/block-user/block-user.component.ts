@@ -86,7 +86,7 @@ export class BlockUserComponent {
     blockedBy: new FormControl<string>('', {nonNullable: true}),
   });
 
-  async blockUser() {
+  blockUser() {
     this.blockUserForm.disable();
     this.dialogRef.disableClose = true;
 
@@ -101,7 +101,7 @@ export class BlockUserComponent {
       });
   }
 
-  async updateUser() {
+  updateUser() {
     this.dialogRef.disableClose = true;
     this.blockService
       .update(this.providedData.user!, this.blockUserForm.value)

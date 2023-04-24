@@ -8,7 +8,7 @@
   <form [formGroup]="blockUserForm">
     <div class="two-column-row form-item">
       <span class="username">
-        <mat-form-field floatLabel="always">
+        <mat-form-field>
           <input
             [readonly]="editMode"
             required
@@ -24,7 +24,7 @@
         <mat-form-field>
           <mat-label>Block Until</mat-label>
           <input
-            [style.display]="blockUserForm.controls.blockUntil.value === false ? 'none': ''"
+            [style.display]="blockUserForm.controls.blockUntil.value !== false"
             readonly
             required
             matInput
@@ -32,11 +32,11 @@
             [max]="fiveYearsFromToday"
             formControlName="blockUntil"
             [matDatepicker]="picker">
-            <span class="block-until-indefinite" *ngIf="blockUserForm.controls.blockUntil.value === false">Blocked Indefinitely</span>
-            <mat-datepicker #picker></mat-datepicker>
-            <button #blockUntilMenuTrigger="matMenuTrigger" [matMenuTriggerFor]="blockUntilMenu" mat-icon-button matSuffix>
-              <mat-icon>arrow_drop_down</mat-icon>
-            </button>
+          <span class="block-until-indefinite" *ngIf="blockUserForm.controls.blockUntil.value === false">Blocked Indefinitely</span>
+          <mat-datepicker #picker></mat-datepicker>
+          <button #blockUntilMenuTrigger="matMenuTrigger" [matMenuTriggerFor]="blockUntilMenu" mat-icon-button matSuffix>
+            <mat-icon>arrow_drop_down</mat-icon>
+          </button>
         </mat-form-field>
         <mat-menu #blockUntilMenu="matMenu" yPosition="below" xPosition="before">
           <button mat-menu-item (click)="picker.select(week)">
@@ -75,6 +75,7 @@
       <mat-form-field>
         <mat-label>Comments</mat-label>
         <textarea
+          rows="3"
           formControlName="comments"
           matInput
           placeholder="The user broke the code of conduct by..."
@@ -83,7 +84,7 @@
     </div>
     <div class="two-column-row form-item" *ngIf="editMode">
       <span>
-        <mat-form-field floatLabel="always">
+        <mat-form-field>
           <mat-label>Blocked By</mat-label>
           <input
           formControlName="blockedBy"
@@ -92,7 +93,7 @@
         </mat-form-field>
       </span>
       <span>
-        <mat-form-field floatLabel="always">
+        <mat-form-field>
           <input
             readonly
             matInput
