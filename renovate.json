@@ -26,6 +26,10 @@
       "groupName": "bazel setup"
     },
     {
+      "matchPackagePatterns": ["yarn.*"],
+      "groupName": "yarn"
+    },
+    {
       "matchPackagePrefixes": ["@octokit/"],
       "groupName": "octokit dependencies"
     },
