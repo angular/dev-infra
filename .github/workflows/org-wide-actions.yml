@@ -37,3 +37,6 @@ jobs:
             angular
             angular-cli
             components
+            flex-layout
+            vscode-ng-language-service
+            universal
