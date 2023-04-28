@@ -53753,131 +53753,124 @@ var require_through = __commonJS({
 });
 
 // 
-var require_mute = __commonJS({
+var require_lib8 = __commonJS({
   ""(exports, module) {
     var Stream3 = __require("stream");
-    module.exports = MuteStream2;
-    function MuteStream2(opts) {
-      Stream3.apply(this);
-      opts = opts || {};
-      this.writable = this.readable = true;
-      this.muted = false;
-      this.on("pipe", this._onpipe);
-      this.replace = opts.replace;
-      this._prompt = opts.prompt || null;
-      this._hadControl = false;
-    }
-    MuteStream2.prototype = Object.create(Stream3.prototype);
-    Object.defineProperty(MuteStream2.prototype, "constructor", {
-      value: MuteStream2,
-      enumerable: false
-    });
-    MuteStream2.prototype.mute = function() {
-      this.muted = true;
-    };
-    MuteStream2.prototype.unmute = function() {
-      this.muted = false;
-    };
-    Object.defineProperty(MuteStream2.prototype, "_onpipe", {
-      value: onPipe,
-      enumerable: false,
-      writable: true,
-      configurable: true
-    });
-    function onPipe(src) {
-      this._src = src;
-    }
-    Object.defineProperty(MuteStream2.prototype, "isTTY", {
-      get: getIsTTY,
-      set: setIsTTY,
-      enumerable: true,
-      configurable: true
-    });
-    function getIsTTY() {
-      return this._dest ? this._dest.isTTY : this._src ? this._src.isTTY : false;
-    }
-    function setIsTTY(isTTY) {
-      Object.defineProperty(this, "isTTY", {
-        value: isTTY,
-        enumerable: true,
-        writable: true,
-        configurable: true
-      });
-    }
-    Object.defineProperty(MuteStream2.prototype, "rows", {
-      get: function() {
-        return this._dest ? this._dest.rows : this._src ? this._src.rows : void 0;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(MuteStream2.prototype, "columns", {
-      get: function() {
-        return this._dest ? this._dest.columns : this._src ? this._src.columns : void 0;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    MuteStream2.prototype.pipe = function(dest, options) {
-      this._dest = dest;
-      return Stream3.prototype.pipe.call(this, dest, options);
-    };
-    MuteStream2.prototype.pause = function() {
-      if (this._src)
-        return this._src.pause();
-    };
-    MuteStream2.prototype.resume = function() {
-      if (this._src)
-        return this._src.resume();
-    };
-    MuteStream2.prototype.write = function(c) {
-      if (this.muted) {
-        if (!this.replace)
-          return true;
-        if (c.match(/^\u001b/)) {
-          if (c.indexOf(this._prompt) === 0) {
-            c = c.substr(this._prompt.length);
-            c = c.replace(/./g, this.replace);
-            c = this._prompt + c;
-          }
-          this._hadControl = true;
-          return this.emit("data", c);
-        } else {
-          if (this._prompt && this._hadControl && c.indexOf(this._prompt) === 0) {
-            this._hadControl = false;
-            this.emit("data", this._prompt);
-            c = c.substr(this._prompt.length);
-          }
-          c = c.toString().replace(/./g, this.replace);
+    var MuteStream2 = class extends Stream3 {
+      #isTTY = null;
+      constructor(opts = {}) {
+        super(opts);
+        this.writable = this.readable = true;
+        this.muted = false;
+        this.on("pipe", this._onpipe);
+        this.replace = opts.replace;
+        this._prompt = opts.prompt || null;
+        this._hadControl = false;
+      }
+      #destSrc(key, def) {
+        if (this._dest) {
+          return this._dest[key];
+        }
+        if (this._src) {
+          return this._src[key];
+        }
+        return def;
+      }
+      #proxy(method, ...args) {
+        var _a, _b;
+        if (typeof ((_a = this._dest) == null ? void 0 : _a[method]) === "function") {
+          this._dest[method](...args);
+        }
+        if (typeof ((_b = this._src) == null ? void 0 : _b[method]) === "function") {
+          this._src[method](...args);
         }
       }
-      this.emit("data", c);
-    };
-    MuteStream2.prototype.end = function(c) {
-      if (this.muted) {
-        if (c && this.replace) {
-          c = c.toString().replace(/./g, this.replace);
-        } else {
-          c = null;
+      get isTTY() {
+        if (this.#isTTY !== null) {
+          return this.#isTTY;
+        }
+        return this.#destSrc("isTTY", false);
+      }
+      set isTTY(val) {
+        this.#isTTY = val;
+      }
+      get rows() {
+        return this.#destSrc("rows");
+      }
+      get columns() {
+        return this.#destSrc("columns");
+      }
+      mute() {
+        this.muted = true;
+      }
+      unmute() {
+        this.muted = false;
+      }
+      _onpipe(src) {
+        this._src = src;
+      }
+      pipe(dest, options) {
+        this._dest = dest;
+        return super.pipe(dest, options);
+      }
+      pause() {
+        if (this._src) {
+          return this._src.pause();
         }
       }
-      if (c)
+      resume() {
+        if (this._src) {
+          return this._src.resume();
+        }
+      }
+      write(c) {
+        if (this.muted) {
+          if (!this.replace) {
+            return true;
+          }
+          if (c.match(/^\u001b/)) {
+            if (c.indexOf(this._prompt) === 0) {
+              c = c.slice(this._prompt.length);
+              c = c.replace(/./g, this.replace);
+              c = this._prompt + c;
+            }
+            this._hadControl = true;
+            return this.emit("data", c);
+          } else {
+            if (this._prompt && this._hadControl && c.indexOf(this._prompt) === 0) {
+              this._hadControl = false;
+              this.emit("data", this._prompt);
+              c = c.slice(this._prompt.length);
+            }
+            c = c.toString().replace(/./g, this.replace);
+          }
+        }
         this.emit("data", c);
-      this.emit("end");
+      }
+      end(c) {
+        if (this.muted) {
+          if (c && this.replace) {
+            c = c.toString().replace(/./g, this.replace);
+          } else {
+            c = null;
+          }
+        }
+        if (c) {
+          this.emit("data", c);
+        }
+        this.emit("end");
+      }
+      destroy(...args) {
+        return this.#proxy("destroy", ...args);
+      }
+      destroySoon(...args) {
+        return this.#proxy("destroySoon", ...args);
+      }
+      close(...args) {
+        return this.#proxy("close", ...args);
+      }
     };
-    function proxy(fn) {
-      return function() {
-        var d = this._dest;
-        var s2 = this._src;
-        if (d && d[fn])
-          d[fn].apply(d, arguments);
-        if (s2 && s2[fn])
-          s2[fn].apply(s2, arguments);
-      };
-    }
-    MuteStream2.prototype.destroy = proxy("destroy");
-    MuteStream2.prototype.destroySoon = proxy("destroySoon");
-    MuteStream2.prototype.close = proxy("close");
+    module.exports = MuteStream2;
   }
 });
 
@@ -54076,7 +54069,7 @@ var require_set = __commonJS({
 });
 
 // 
-var require_lib8 = __commonJS({
+var require_lib9 = __commonJS({
   ""(exports, module) {
     "use strict";
     var conversions = {};
@@ -55484,7 +55477,7 @@ var require_URL_impl3 = __commonJS({
 var require_URL3 = __commonJS({
   ""(exports, module) {
     "use strict";
-    var conversions = require_lib8();
+    var conversions = require_lib9();
     var utils = require_utils6();
     var Impl = require_URL_impl3();
     var impl = utils.implSymbol;
@@ -55680,7 +55673,7 @@ var require_public_api3 = __commonJS({
 });
 
 // 
-var require_lib9 = __commonJS({
+var require_lib10 = __commonJS({
   ""(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -56819,7 +56812,7 @@ var require_dist_node23 = __commonJS({
     var endpoint = require_dist_node2();
     var universalUserAgent = require_dist_node();
     var isPlainObject2 = require_is_plain_object();
-    var nodeFetch = _interopDefault(require_lib9());
+    var nodeFetch = _interopDefault(require_lib10());
     var requestError = require_dist_node22();
     var VERSION = "5.6.3";
     function getBufferResponse(response) {
@@ -67109,7 +67102,8 @@ var Prompt = class {
       filteringText: "",
       when: () => true,
       suffix: "",
-      prefix: source_default.green("?")
+      prefix: source_default.green("?"),
+      transformer: (val) => val
     });
     if (!this.opt.name) {
       this.throwParamError("name");
@@ -67527,6 +67521,8 @@ var ConfirmPrompt = class extends Prompt {
     let message = this.getQuestion();
     if (typeof answer === "boolean") {
       message += source_default.cyan(answer ? "Yes" : "No");
+    } else if (answer) {
+      message += answer;
     } else {
       message += this.rl.line;
     }
@@ -67535,7 +67531,10 @@ var ConfirmPrompt = class extends Prompt {
   }
   onEnd(input) {
     this.status = "answered";
-    const output = this.opt.filter(input);
+    let output = this.opt.filter(input);
+    if (this.opt.transformer) {
+      output = this.opt.transformer(output);
+    }
     this.render(output);
     this.screen.done();
     this.done(output);
@@ -68140,7 +68139,7 @@ var EditorPrompt = class extends Prompt {
 var import_through = __toESM(require_through(), 1);
 
 // 
-var import_mute_stream = __toESM(require_mute(), 1);
+var import_mute_stream = __toESM(require_lib8(), 1);
 import readline2 from "node:readline";
 var UI = class {
   constructor(opt) {
