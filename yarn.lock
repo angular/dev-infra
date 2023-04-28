@@ -363,7 +363,7 @@ __metadata:
     "@octokit/core": ^4.2.0
     "@octokit/graphql": ^5.0.5
     "@octokit/graphql-schema": ^14.0.0
-    "@octokit/openapi-types": ^16.0.0
+    "@octokit/openapi-types": ^17.0.0
     "@octokit/plugin-paginate-rest": ^6.0.0
     "@octokit/plugin-rest-endpoint-methods": ^7.0.1
     "@octokit/request-error": ^3.0.3
@@ -5427,12 +5427,12 @@ __metadata:
   linkType: hard
 
 "@octokit/graphql-schema@npm:^14.0.0":
-  version: 14.2.0
-  resolution: "@octokit/graphql-schema@npm:14.2.0"
+  version: 14.4.0
+  resolution: "@octokit/graphql-schema@npm:14.4.0"
   dependencies:
     graphql: ^16.0.0
     graphql-tag: ^2.10.3
-  checksum: 455b231e13efd23ece08479a707c4948f3106ce3ec9eaee0c74248271b633886949416a282a0be5b3a066dbbd5378534efb7a5a74e193bb739eb26442b503ef2
+  checksum: ffc54750a2b1ffdbeb5374bd7d1494467d8c75a4a1250a10fd225ca8071d32bae30282b7b3e4196a3ff3b4ef1a091ae143c10b2c0f659badd6f0eff7b1b9ddf8
   languageName: node
   linkType: hard
 
@@ -5503,10 +5503,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/openapi-types@npm:^16.0.0":
-  version: 16.0.0
-  resolution: "@octokit/openapi-types@npm:16.0.0"
-  checksum: 844f30a545da380d63c712e0eb733366bc567d1aab34529c79fdfbec3d73810e81d83f06fdab13058a5cbc7dae786db1a9b90b5b61b1e606854ee45d5ec5f194
+"@octokit/openapi-types@npm:^17.0.0":
+  version: 17.0.0
+  resolution: "@octokit/openapi-types@npm:17.0.0"
+  checksum: 64d8500891b18e9866f1e662a65041a37381c3f9e6e5ce070cd26416a85f1b93340feb068ec2e8a5d0c0f4196df02ee2de1e73c87234e3d17edf33e7483d9b69
   languageName: node
   linkType: hard
 
@@ -5657,11 +5657,11 @@ __metadata:
   linkType: hard
 
 "@octokit/types@npm:^9.0.0":
-  version: 9.0.0
-  resolution: "@octokit/types@npm:9.0.0"
+  version: 9.1.4
+  resolution: "@octokit/types@npm:9.1.4"
   dependencies:
-    "@octokit/openapi-types": ^16.0.0
-  checksum: 5c7f5cca8f00f7c4daa0d00f4fe991c1598ec47cd6ced50b1c5fbe9721bb9dee0adc2acdee265a3a715bb984e53ef3dc7f1cfb7326f712c6d809d59fc5c6648d
+    "@octokit/openapi-types": ^17.0.0
+  checksum: 354c555bbf6876858774b13508666daf2882ea1e958361f109dc9c4bad3753704f62a84bc9457661c8a3a0fba25eadf2f78fa24d6eaf95c852e3159b379ff8b8
   languageName: node
   linkType: hard
 
