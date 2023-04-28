@@ -24,7 +24,7 @@
         <mat-form-field>
           <mat-label>Block Until</mat-label>
           <input
-            [style.display]="blockUserForm.controls.blockUntil.value !== false"
+            [style.display]="blockUserForm.controls.blockUntil.value !== false ? '': 'none'"
             readonly
             required
             matInput

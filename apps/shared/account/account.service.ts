@@ -32,7 +32,7 @@ export class AccountService {
   avatarUrl = DEFAULT_AVATAR_URL;
   /** The display name for the user is available. */
   displayName: string | undefined;
-  /** The current accounts github token, if available. */
+  /** An octokit client instance, authenticed if the user is logged in. */
   githubApi: Octokit = new Octokit();
 
   private auth = inject(Auth);

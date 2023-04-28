@@ -9,7 +9,7 @@
 
   <ng-container matColumnDef="blockUntil">
     <mat-header-cell *matHeaderCellDef> Blocked Until </mat-header-cell>
-    <mat-cell *matCellDef="let user"> {{user.get('blockUntil') === false ? 'Blocked Indefinitely' : user.get('blockUntil').seconds * 1000 | date}} </mat-cell>
+    <mat-cell *matCellDef="let user"> {{user.data().blockUntil === false ? 'Blocked Indefinitely' : user.data().blockUntil | date}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="blockedBy">
