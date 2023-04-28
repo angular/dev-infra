@@ -117,7 +117,16 @@ export class Changelog {
    */
   private removePrereleaseEntriesForVersion(version: semver.SemVer) {
     this._entries = this.entries.filter((entry: ChangelogEntry) => {
-      return semver.diff(entry.version, version) !== 'prerelease';
+      // For entries which are a prerelease, ensure that at least one segment of the version is
+      // divergent from the version we are checking against.
+      if (entry.version.prerelease.length !== 0) {
+        return (
+          version.major !== entry.version.major ||
+          version.minor !== entry.version.minor ||
+          version.patch !== entry.version.patch
+        );
+      }
+      return true;
     });
     this.writeToChangelogFile();
   }
