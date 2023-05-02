@@ -77,7 +77,7 @@
     "@octokit/core": "^4.2.0",
     "@octokit/graphql": "^5.0.5",
     "@octokit/graphql-schema": "^14.0.0",
-    "@octokit/openapi-types": "^16.0.0",
+    "@octokit/openapi-types": "^17.0.0",
     "@octokit/plugin-paginate-rest": "^6.0.0",
     "@octokit/plugin-rest-endpoint-methods": "^7.0.1",
     "@octokit/request-error": "^3.0.3",
