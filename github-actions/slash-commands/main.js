@@ -33125,7 +33125,9 @@ var require_AsapAction = __commonJS({
         var actions = scheduler.actions;
         if (id != null && ((_a = actions[actions.length - 1]) === null || _a === void 0 ? void 0 : _a.id) !== id) {
           immediateProvider_1.immediateProvider.clearImmediate(id);
-          scheduler._scheduled = void 0;
+          if (scheduler._scheduled === id) {
+            scheduler._scheduled = void 0;
+          }
         }
         return void 0;
       };
@@ -39327,20 +39329,13 @@ var require_throttle = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.throttle = exports.defaultThrottleConfig = void 0;
+    exports.throttle = void 0;
     var lift_1 = require_lift();
     var OperatorSubscriber_1 = require_OperatorSubscriber();
     var innerFrom_1 = require_innerFrom();
-    exports.defaultThrottleConfig = {
-      leading: true,
-      trailing: false
-    };
     function throttle(durationSelector, config) {
-      if (config === void 0) {
-        config = exports.defaultThrottleConfig;
-      }
       return lift_1.operate(function(source, subscriber) {
-        var leading = config.leading, trailing = config.trailing;
+        var _a = config !== null && config !== void 0 ? config : {}, _b = _a.leading, leading = _b === void 0 ? true : _b, _c = _a.trailing, trailing = _c === void 0 ? false : _c;
         var hasValue = false;
         var sendValue = null;
         var throttled = null;
@@ -39395,9 +39390,6 @@ var require_throttleTime = __commonJS({
     function throttleTime(duration, scheduler, config) {
       if (scheduler === void 0) {
         scheduler = async_1.asyncScheduler;
-      }
-      if (config === void 0) {
-        config = throttle_1.defaultThrottleConfig;
       }
       var duration$ = timer_1.timer(duration, scheduler);
       return throttle_1.throttle(function() {

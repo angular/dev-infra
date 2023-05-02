@@ -12,6 +12,7 @@
     "enabled": true
   },
   "ignorePaths": ["bazel/integration/tests/**"],
+  "ignoreDeps": ["rules_pkg"],
   "enabledManagers": ["npm", "bazel", "github-actions"],
   "baseBranches": ["main"],
   "packageRules": [
