@@ -5,7 +5,7 @@ import {MatTableModule} from '@angular/material/table';
 import {MatButtonModule} from '@angular/material/button';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatIconModule} from '@angular/material/icon';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {MatDialog, MatDialogModule, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {BlockUserComponent} from '../block-user/block-user.component.js';
 import {MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipModule} from '@angular/material/tooltip';
 
@@ -39,4 +39,37 @@ export class UserTableComponent {
     this.forceSyncInProgress = true;
     this.blockService.syncUsersFromGithub().finally(() => (this.forceSyncInProgress = false));
   }
+
+  async unblock(user: any) {
+    user.inProgress = true;
+    const dialogRef = this.dialog.open(UnblockConfirmation, {
+      data: {username: user.username},
+    });
+    dialogRef.afterClosed().subscribe(async (result: boolean) => {
+      if (result === true) {
+        await this.blockService.unblock(user);
+      }
+      user.inProgress = false;
+    });
+  }
+}
+
+@Component({
+  selector: 'unblock-confirmation',
+  standalone: true,
+  imports: [CommonModule, MatButtonModule, MatDialogModule],
+  template: `
+    <mat-dialog-content>
+      <span>Are you sure you want to unblock {{ username }}?</span>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button (click)="dialogRef.close(false)">Cancel</button>
+      <button mat-raised-button color="primary" (click)="dialogRef.close(true)">Confirm</button>
+    </mat-dialog-actions>
+  `,
+})
+export class UnblockConfirmation {
+  private data = inject(MAT_DIALOG_DATA);
+  username = this.data.username;
+  public dialogRef = inject(MatDialogRef);
 }

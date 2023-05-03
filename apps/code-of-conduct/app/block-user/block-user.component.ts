@@ -8,10 +8,10 @@ import {MatMenuModule} from '@angular/material/menu';
 import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
-import {BlockedUserFromFirestore, BlockService} from '../block.service.js';
+import {BlockedUser, BlockService} from '../block.service.js';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatDialogModule, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {QueryDocumentSnapshot} from '@angular/fire/firestore';
+import {MatNativeDateModule} from '@angular/material/core';
 
 @Component({
   selector: 'block-user',
@@ -28,6 +28,7 @@ import {QueryDocumentSnapshot} from '@angular/fire/firestore';
     MatIconModule,
     MatDialogModule,
     MatDatepickerModule,
+    MatNativeDateModule,
   ],
   providers: [
     {
@@ -40,15 +41,12 @@ import {QueryDocumentSnapshot} from '@angular/fire/firestore';
 })
 export class BlockUserComponent {
   dialogRef = inject(MatDialogRef<BlockUserComponent>);
-  readonly providedData: {
-    editMode?: boolean;
-    user?: QueryDocumentSnapshot<BlockedUserFromFirestore>;
-  } = inject(MAT_DIALOG_DATA) || {};
+  readonly providedData: {user?: BlockedUser} = inject(MAT_DIALOG_DATA) || {};
   readonly editMode = this.providedData.user !== undefined;
-  private blockService = inject(BlockService);
+  private blockService = inject(BlockService, {optional: true})!;
 
   constructor() {
-    this.blockUserForm.patchValue(this.providedData.user?.data() || {});
+    this.blockUserForm.patchValue(this.providedData.user || {});
   }
 
   tomorrow = (() => {
@@ -104,10 +102,8 @@ export class BlockUserComponent {
   updateUser() {
     this.dialogRef.disableClose = true;
     this.blockService
-      .update(this.providedData.user!, this.blockUserForm.value)
-      .then(() => {
-        this.dialogRef.close();
-      }, console.error)
+      .update(this.providedData.user!.username, this.blockUserForm.value)
+      .then(() => this.dialogRef.close(), console.error)
       .finally(() => {
         this.blockUserForm.enable();
         this.setEditFormEnabledAndDisabledFields();

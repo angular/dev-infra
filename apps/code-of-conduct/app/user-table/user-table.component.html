@@ -2,20 +2,20 @@
   <ng-container matColumnDef="username">
     <mat-header-cell *matHeaderCellDef> Username </mat-header-cell>
     <mat-cell class="username-cell" *matCellDef="let user">
-      <img src="https://github.com/{{user.get('username')}}.png">
-      <span>{{user.get('username')}}</span>
+      <img src="https://github.com/{{user.username}}.png">
+      <span>{{user.username}}</span>
     </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="blockUntil">
     <mat-header-cell *matHeaderCellDef> Blocked Until </mat-header-cell>
-    <mat-cell *matCellDef="let user"> {{user.data().blockUntil === false ? 'Blocked Indefinitely' : user.data().blockUntil | date}} </mat-cell>
+    <mat-cell *matCellDef="let user"> {{user.blockUntil === false ? 'Blocked Indefinitely' : user.blockUntil | date}} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="blockedBy">
     <mat-header-cell *matHeaderCellDef> Blocked By </mat-header-cell>
     <mat-cell class="username-cell" *matCellDef="let user">
-      <span>{{user.get('blockedBy')}}</span>
+      <span>{{user.blockedBy}}</span>
     </mat-cell>
   </ng-container>
 
@@ -27,16 +27,15 @@
       </button>
     </mat-header-cell>
     <mat-cell *matCellDef="let user;">
-      <button matTooltip="Unblock {{user.get('username') }} immediately" [disabled]="user.inProgress" mat-icon-button (click)="blockService.unblock(user, user)">
+      <button matTooltip="Unblock {{user.username }} immediately" [disabled]="user.inProgress" mat-icon-button (click)="unblock(user)">
         <mat-progress-spinner *ngIf="user.inProgress" mode="indeterminate" diameter="24"></mat-progress-spinner>
         <mat-icon *ngIf="!user.inProgress">lock_open</mat-icon>
       </button>
-      <button matTooltip="Edit information for {{user.get('username') }}" mat-icon-button (click)="editUser(user)">
+      <button matTooltip="Edit information for {{user.username}}" mat-icon-button (click)="editUser(user)">
         <mat-icon>edit</mat-icon>
       </button>
     </mat-cell>
   </ng-container>
-
 
   <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
   <mat-row *matRowDef="let row; columns: columns;"></mat-row>
