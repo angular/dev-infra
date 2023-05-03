@@ -1784,15 +1784,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/instrumentation-bunyan@npm:0.31.1":
-  version: 0.31.1
-  resolution: "@opentelemetry/instrumentation-bunyan@npm:0.31.1"
+"@opentelemetry/instrumentation-bunyan@npm:0.31.2":
+  version: 0.31.2
+  resolution: "@opentelemetry/instrumentation-bunyan@npm:0.31.2"
   dependencies:
-    "@opentelemetry/instrumentation": ^0.35.1
+    "@opentelemetry/instrumentation": ^0.38.0
     "@types/bunyan": 1.8.7
   peerDependencies:
     "@opentelemetry/api": ^1.3.0
-  checksum: 4ae4dd6004a082138672a7c43e8871e69e998886b8aca52075727342ffab9f0813c4395323a5522e5d37b98b02c959a42179c8367e7b76d16df68047c7ce6add
+  checksum: 6316a1d21e4b21ded1569d438daa6f366aff1447450327b24814e610d4561c4a5975a0bc6070af9b57692ec149645fadbb677a98cc685e200e1d445b3978dc01
   languageName: node
   linkType: hard
 
@@ -1810,7 +1810,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/instrumentation@npm:0.38.0":
+"@opentelemetry/instrumentation@npm:0.38.0, @opentelemetry/instrumentation@npm:^0.38.0":
   version: 0.38.0
   resolution: "@opentelemetry/instrumentation@npm:0.38.0"
   dependencies:
@@ -1820,19 +1820,6 @@ __metadata:
   peerDependencies:
     "@opentelemetry/api": ^1.3.0
   checksum: 34c240fe8e37761eda1c55f43c94b7cfd5958b66fe5c176c69a41ee61e49cf4f3e595ae6320eb2fe0e310cac632a51794150165523f9bc4a0c33913cf0ea573d
-  languageName: node
-  linkType: hard
-
-"@opentelemetry/instrumentation@npm:^0.35.1":
-  version: 0.35.1
-  resolution: "@opentelemetry/instrumentation@npm:0.35.1"
-  dependencies:
-    require-in-the-middle: ^5.0.3
-    semver: ^7.3.2
-    shimmer: ^1.2.1
-  peerDependencies:
-    "@opentelemetry/api": ^1.3.0
-  checksum: 67a6efa878b39962f92924610546883f8535192e9c7638fd36a9493dee49e42c0349fe57291158d55b7ea1ec0a5d74bfe0d94eb2b781cc2a7804c7c5026064ee
   languageName: node
   linkType: hard
 
@@ -5373,7 +5360,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: 35.69.1
+    renovate: 35.69.5
   languageName: unknown
   linkType: soft
 
@@ -6102,9 +6089,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:35.69.1":
-  version: 35.69.1
-  resolution: "renovate@npm:35.69.1"
+"renovate@npm:35.69.5":
+  version: 35.69.5
+  resolution: "renovate@npm:35.69.5"
   dependencies:
     "@aws-sdk/client-codecommit": 3.312.0
     "@aws-sdk/client-ec2": 3.312.0
@@ -6119,7 +6106,7 @@ __metadata:
     "@opentelemetry/context-async-hooks": 1.12.0
     "@opentelemetry/exporter-trace-otlp-http": 0.38.0
     "@opentelemetry/instrumentation": 0.38.0
-    "@opentelemetry/instrumentation-bunyan": 0.31.1
+    "@opentelemetry/instrumentation-bunyan": 0.31.2
     "@opentelemetry/instrumentation-http": 0.38.0
     "@opentelemetry/resources": 1.12.0
     "@opentelemetry/sdk-trace-base": 1.12.0
@@ -6201,7 +6188,7 @@ __metadata:
     semver-stable: 3.0.0
     semver-utils: 1.1.4
     shlex: 2.1.2
-    simple-git: 3.17.0
+    simple-git: 3.18.0
     slugify: 1.6.6
     source-map-support: 0.5.21
     traverse: 0.6.7
@@ -6218,7 +6205,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 5fc86d153a3216436dd24ad1dfe297896af0b7c584425e420414a5ce50f3c2433ac12eebf7dd8ba581ad52e3a4fc1d602fb96a0b4d2f5c71d3754aba989bba42
+  checksum: 5f52c453799e2aafeaacf64bd35cc44c2a4a8b708b584ee2329b0703b3b2f456d310a4303c005346ce4c40d690e321641cf89b426d17383d0385b406528b965c
   languageName: node
   linkType: hard
 
@@ -6226,17 +6213,6 @@ __metadata:
   version: 1.6.1
   resolution: "repeat-string@npm:1.6.1"
   checksum: 1b809fc6db97decdc68f5b12c4d1a671c8e3f65ec4a40c238bc5200e44e85bcc52a54f78268ab9c29fcf5fe4f1343e805420056d1f30fa9a9ee4c2d93e3cc6c0
-  languageName: node
-  linkType: hard
-
-"require-in-the-middle@npm:^5.0.3":
-  version: 5.2.0
-  resolution: "require-in-the-middle@npm:5.2.0"
-  dependencies:
-    debug: ^4.1.1
-    module-details-from-path: ^1.0.3
-    resolve: ^1.22.1
-  checksum: 20bfdc0e9794ba10891867b2a7696bd4d189ef9dfd58196c06353ea57408f8cd29baa56a962ce4512de01aa679491f814d73e8d17cfe756cb294ebb4a16c64e0
   languageName: node
   linkType: hard
 
@@ -6532,14 +6508,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"simple-git@npm:3.17.0":
-  version: 3.17.0
-  resolution: "simple-git@npm:3.17.0"
+"simple-git@npm:3.18.0":
+  version: 3.18.0
+  resolution: "simple-git@npm:3.18.0"
   dependencies:
     "@kwsites/file-exists": ^1.1.1
     "@kwsites/promise-deferred": ^1.1.1
     debug: ^4.3.4
-  checksum: 977a05cb0b5087296348b5afa682ce552f43234f5fd29b44c3d7f56b3682d10dcb03752a418e508aaffcbdb6ea2e304a3ef10095197d6743d2353adb85f32592
+  checksum: 603a7a8b125836d58fe33f45453cc4e8e9305b6fdbd3bd919444e1f33e17d354ea75bc84097c33aab13639c639d976f32bbc6bef7ef35270c0b08a788a2e3303
   languageName: node
   linkType: hard
 
