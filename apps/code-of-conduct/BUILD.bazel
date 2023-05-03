@@ -16,7 +16,6 @@ ng_module(
         "@npm//@angular/common",
         "@npm//@angular/compiler",
         "@npm//@angular/fire",
-        "@npm//@angular/material",
         "@npm//@angular/platform-browser",
         "@npm//@angular/router",
         "@npm//zone.js",

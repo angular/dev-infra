@@ -1,18 +1,16 @@
-import {Component, inject} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {MatButtonModule} from '@angular/material/button';
-import {MatDialog, MatDialogModule, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {Injectable} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {
   updateDoc,
-  onSnapshot,
   collection,
-  getFirestore,
   QueryDocumentSnapshot,
   FirestoreDataConverter,
+  collectionSnapshots,
+  Firestore,
+  doc,
+  getDoc,
 } from '@angular/fire/firestore';
-import {httpsCallable, getFunctions} from '@angular/fire/functions';
-import {BehaviorSubject} from 'rxjs';
+import {httpsCallable, Functions} from '@angular/fire/functions';
+import {map, shareReplay} from 'rxjs';
 
 export interface BlockUserParams {
   /** The username of the user being blocked. */
@@ -44,81 +42,44 @@ export type BlockedUserFromFirestore = BlockedUser & {
   blockUntil: number | false;
 };
 
-@Injectable({
-  providedIn: 'any',
-})
+@Injectable({providedIn: 'root'})
 export class BlockService {
-  private firestore = getFirestore();
-  private usersCollection = collection(this.firestore, 'blockedUsers').withConverter(converter);
+  /** Firebase functions instance, provided from the root. */
+  private functions = inject(Functions);
+  /** Firebase firestore instance, provided from the root. */
+  private firestore = inject(Firestore);
 
-  public blockedUsers = new BehaviorSubject<QueryDocumentSnapshot<BlockedUser>[]>([]);
+  /** Request a user to be blocked by the blocking service. */
+  readonly block = httpsCallable(this.functions, 'blockUser');
 
-  constructor() {
-    onSnapshot(this.usersCollection, (snapshot) => {
-      this.blockedUsers.next(
-        snapshot.docs.sort((a, b) => (a.id.toLowerCase() > b.id.toLowerCase() ? 1 : -1)),
-      );
-    });
-  }
+  /** Request a user to be unblocked by the blocking service. */
+  readonly unblock = httpsCallable<UnblockUserParams>(this.functions, 'unblockUser');
 
-  private blockCallable = httpsCallable<BlockUserParams>(getFunctions(), 'blockUser');
-  async block(user: BlockUserParams) {
-    return this.blockCallable(user);
-  }
+  /** Request a sync of all blocked users with the current Github blockings. */
+  readonly syncUsersFromGithub = httpsCallable<void>(this.functions, 'syncUsersFromGithub');
 
-  dialog = inject(MatDialog, {optional: true});
-  private unblockCallable = httpsCallable<UnblockUserParams>(getFunctions(), 'unblockUser');
-  async unblock(
-    user: QueryDocumentSnapshot<BlockedUserFromFirestore>,
-    state: {inProgress: boolean},
-  ) {
-    state.inProgress = true;
-    if (this.dialog) {
-      const dialogRef = this.dialog.open(UnblockConfirmation, {
-        data: {
-          username: user.get('username'),
-        },
-      });
-      dialogRef.afterClosed().subscribe(async (result: boolean) => {
-        if (result === true) {
-          await this.unblockCallable({username: user.get('username')});
-        }
-        state.inProgress = false;
-      });
+  /** All blocked users current blocked by the blocking service. */
+  readonly blockedUsers = collectionSnapshots(
+    collection(this.firestore, 'blockedUsers').withConverter(converter),
+  ).pipe(
+    map((blockedUsers) =>
+      blockedUsers
+        .map((snapshot) => snapshot.data())
+        .sort((a, b) => (a.username.toLowerCase() > b.username.toLowerCase() ? 1 : -1)),
+    ),
+    shareReplay(1),
+  );
+
+  /** Update the metadata for a blocked user. */
+  async update(username: string, data: Partial<BlockedUser>) {
+    const userDoc = await getDoc(
+      doc(collection(this.firestore, 'blockedUsers').withConverter(converter), username),
+    );
+    if (userDoc.exists()) {
+      return await updateDoc(userDoc.ref, data);
     }
+    throw Error(`The entry for ${username} does not exist`);
   }
-
-  async update(
-    user: QueryDocumentSnapshot<BlockedUserFromFirestore>,
-    data: Partial<BlockUserParams>,
-  ) {
-    return await updateDoc(user.ref, data);
-  }
-
-  private syncUsersFromGithubCallable = httpsCallable(getFunctions(), 'syncUsersFromGithub');
-  async syncUsersFromGithub() {
-    return await this.syncUsersFromGithubCallable();
-  }
-}
-
-@Component({
-  selector: 'unblock-confirmation',
-  standalone: true,
-  imports: [CommonModule, MatButtonModule, MatDialogModule],
-  template: `
-    <mat-dialog-content>
-      <span>Are you sure you want to unblock {{ username }}?</span>
-    </mat-dialog-content>
-    <mat-dialog-actions align="end">
-      <button mat-button (click)="dialogRef.close(false)">Cancel</button>
-      <button mat-raised-button color="primary" (click)="dialogRef.close(true)">Confirm</button>
-    </mat-dialog-actions>
-  `,
-})
-export class UnblockConfirmation {
-  private data = inject(MAT_DIALOG_DATA);
-  username = this.data.username;
-  public dialogRef = inject(MatDialogRef);
 }
 
 export const converter: FirestoreDataConverter<BlockedUser> = {

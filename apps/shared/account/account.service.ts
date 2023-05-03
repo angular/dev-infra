@@ -2,14 +2,15 @@ import {inject, Injectable} from '@angular/core';
 import {map, ReplaySubject} from 'rxjs';
 
 import {
-  Auth,
   UserInfo,
   User,
   GithubAuthProvider,
   GoogleAuthProvider,
   linkWithPopup,
   signInWithPopup,
+  onIdTokenChanged,
   unlink,
+  Auth,
 } from '@angular/fire/auth';
 import {Octokit} from '@octokit/rest';
 import {Router} from '@angular/router';
@@ -18,6 +19,11 @@ const DEFAULT_AVATAR_URL = 'https://lh3.googleusercontent.com/a/default-user=s64
 
 @Injectable({providedIn: 'root'})
 export class AccountService {
+  /** The router for the application, if provided in root. */
+  private router = inject(Router, {optional: true});
+  /** The Firebase Auth instance for the application. */
+  private auth = inject(Auth);
+
   /** When the logged in state of the user changes. */
   loggedInStateChange = new ReplaySubject<void>();
   /** Whether a user is logged in currently. */
@@ -35,11 +41,8 @@ export class AccountService {
   /** An octokit client instance, authenticed if the user is logged in. */
   githubApi: Octokit = new Octokit();
 
-  private auth = inject(Auth);
-  private router = inject(Router);
-
   constructor() {
-    this.auth.onIdTokenChanged((user) => {
+    onIdTokenChanged(this.auth, (user) => {
       if (user === null) {
         this.githubApi = new Octokit();
       } else {
@@ -63,7 +66,7 @@ export class AccountService {
   /** Sign the user out of the application. */
   async signOut() {
     await this.auth.signOut().then(() => {
-      return this.router.navigate(['login']);
+      return this.router?.navigate(['login']);
     });
   }
 
