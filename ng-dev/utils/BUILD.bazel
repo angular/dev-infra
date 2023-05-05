@@ -57,19 +57,3 @@ ts_library(
     ],
     deps = [],
 )
-
-ts_library(
-    name = "ng-dev-service",
-    srcs = ["ng-dev-service.ts"],
-    visibility = [
-        "//ng-dev/auth:__subpackages__",
-        "//ng-dev/pr:__subpackages__",
-    ],
-    deps = [
-        ":utils",
-        "//ng-dev/auth/shared",
-        "@npm//@types/yargs",
-        "@npm//firebase",
-        "@npm//yargs",
-    ],
-)

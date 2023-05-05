@@ -9,7 +9,6 @@ ts_library(
     deps = [
         "//ng-dev/auth/login",
         "//ng-dev/auth/logout",
-        "//ng-dev/auth/shared",
         "@npm//@types/yargs",
         "@npm//firebase",
     ],
