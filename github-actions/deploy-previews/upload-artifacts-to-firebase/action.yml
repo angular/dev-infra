@@ -46,6 +46,11 @@ inputs:
     description: |
       TRUSTED: Contents of a Firebase service key authorizing the deployment.
 
+outputs:
+  url:
+    description: 'The base url of the preview deployed to firebase'
+    value: ${{ steps.deploy.outputs.details_url }}
+
 runs:
   using: composite
   steps:
