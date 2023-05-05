@@ -22,7 +22,6 @@ ts_library(
         "//ng-dev/release/config",
         "//ng-dev/release/versioning",
         "//ng-dev/utils",
-        "//ng-dev/utils:ng-dev-service",
         "@npm//@octokit/plugin-rest-endpoint-methods",
         "@npm//@octokit/rest",
         "@npm//@types/inquirer",

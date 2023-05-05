@@ -1,25 +1,17 @@
 import {Argv, CommandModule} from 'yargs';
-import {bold, Log} from '../../utils/logging.js';
-import {invokeServerFunction, getCurrentUser} from '../shared/ng-dev-token.js';
-import {useNgDevService} from '../../utils/ng-dev-service.js';
+import {Log} from '../../utils/logging.js';
 
 export interface Options {}
 
 /** Builds the command. */
 async function builder(yargs: Argv) {
-  return await useNgDevService(yargs, /** isAuthCommand */ true);
+  return yargs;
 }
 
 /** Handles the command. */
 async function handler() {
-  /** The currently logged in user, if a user is logged in. */
-  const user = await getCurrentUser();
-  if (user) {
-    await invokeServerFunction<{}, void>('ngDevRevokeToken');
-    Log.info(`Successfully logged out, ${bold(user.email)}.`);
-    return;
-  }
-  Log.info('No user currently logged in.');
+  Log.warn('ng-dev auth logout has been deprecated. Authentication will be done');
+  Log.warn('using local environment.');
 }
 
 /** yargs command module for logging out of the ng-dev service. */

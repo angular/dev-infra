@@ -7,12 +7,9 @@ ts_library(
     ],
     visibility = ["//ng-dev/auth:__pkg__"],
     deps = [
-        "//ng-dev/auth/shared",
         "//ng-dev/utils",
-        "//ng-dev/utils:ng-dev-service",
         "@npm//@types/node",
         "@npm//@types/yargs",
-        "@npm//firebase",
         "@npm//yargs",
     ],
 )
