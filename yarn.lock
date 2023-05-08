@@ -366,7 +366,7 @@ __metadata:
     "@google-cloud/firestore": ^6.0.0
     "@google-cloud/storage": ^6.0.0
     "@microsoft/api-extractor": 7.34.7
-    "@octokit/auth-app": 4.0.9
+    "@octokit/auth-app": 4.0.10
     "@octokit/core": 4.2.0
     "@octokit/graphql": 5.0.5
     "@octokit/graphql-schema": 14.4.0
@@ -5506,9 +5506,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/auth-app@npm:4.0.9":
-  version: 4.0.9
-  resolution: "@octokit/auth-app@npm:4.0.9"
+"@octokit/auth-app@npm:4.0.10":
+  version: 4.0.10
+  resolution: "@octokit/auth-app@npm:4.0.10"
   dependencies:
     "@octokit/auth-oauth-app": ^5.0.0
     "@octokit/auth-oauth-user": ^2.0.0
@@ -5520,7 +5520,7 @@ __metadata:
     lru-cache: ^6.0.0
     universal-github-app-jwt: ^1.1.1
     universal-user-agent: ^6.0.0
-  checksum: 3846ebeda40bf88684fa310741ec4b5838d57e18ba5c38986e422161e1ce95c750053fbb2aa18bdce120d6eb857d16bb8e9988597c3dfda40fec985dbdda1b2a
+  checksum: 6f2142114f50aa2a00d011af5544ae460fc67ef1941509728d0ec82105ed78851f65ec2d19a5555b4c7613043e7f722ee04884d59716582d2f7da458f2ad37f9
   languageName: node
   linkType: hard
 
