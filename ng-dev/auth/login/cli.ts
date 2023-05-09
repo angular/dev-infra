@@ -11,7 +11,7 @@ async function builder(yargs: Argv) {
 /** Handles the command. */
 async function handler() {
   Log.warn('ng-dev auth login has been deprecated. Authentication will be done');
-  Log.warn('using local environment.');
+  Log.warn('using TOKEN from the local environment.');
 }
 
 /** yargs command module for logging into the ng-dev service. */
