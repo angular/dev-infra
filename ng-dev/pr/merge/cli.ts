@@ -10,6 +10,7 @@ import {Argv, Arguments, CommandModule} from 'yargs';
 import {addDryRunFlag} from '../../utils/dry-run.js';
 
 import {mergePullRequest} from './merge-pull-request.js';
+import {addGithubTokenOption} from '../../utils/git/github-yargs.js';
 
 /** The options available to the merge command via CLI. */
 export interface MergeCommandOptions {
@@ -21,7 +22,7 @@ export interface MergeCommandOptions {
 
 /** Builds the command. */
 async function builder(argv: Argv) {
-  return addDryRunFlag(argv)
+  return addDryRunFlag(addGithubTokenOption(argv))
     .help()
     .strict()
     .positional('pr', {
