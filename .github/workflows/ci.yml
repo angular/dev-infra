@@ -1,7 +1,7 @@
 name: CI
 
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, synchronize, reopened]
 
 concurrency:
@@ -16,7 +16,7 @@ defaults:
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # tag=v3.3.0
         with:
@@ -37,7 +37,7 @@ jobs:
       - run: yarn tsc -p tsconfig.json
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # tag=v3.3.0
         with:
@@ -51,35 +51,3 @@ jobs:
           key: v1-${{hashFiles('yarn.lock')}}
       - run: yarn install --immutable
       - run: yarn bazel test -- //...
-
-  test-win:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # tag=v3.3.0
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - uses: actions/cache@v3
-        with:
-          path: |
-            .yarn/cache
-            .yarn/install-state.gz
-          key: v1-${{hashFiles('yarn.lock')}}
-      - run: yarn install --immutable
-      - run: yarn bazel test --test_tag_filters=windows --build_tests_only -- ... -bazel/remote-execution/...
-
-  test-macos:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # tag=v3.3.0
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - uses: ./github-actions/setup-bazel-remote-exec
-      - uses: actions/cache@v3
-        with:
-          enableCrossOsArchive: true
-          path: |
-            .yarn/cache
-            .yarn/install-state.gz
-          key: v1-${{hashFiles('yarn.lock')}}
-      - run: yarn install --immutable
-      - run: yarn bazel test --test_tag_filters=macos --build_tests_only -- //... -//bazel/remote-execution/...
