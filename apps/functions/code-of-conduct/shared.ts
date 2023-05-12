@@ -67,7 +67,7 @@ export function checkAuthenticationAndAccess(
 }
 
 /** Retrieves a Github client instance authenticated as the Angular Robot Github App. */
-export async function getAuthenticatedGithubClient() {
+export async function getAuthenticatedGithubClient(): Promise<Octokit> {
   const GITHUB_APP_PEM = Buffer.from(
     process.env['ANGULAR_ROBOT_APP_PRIVATE_KEY']!,
     'base64',
