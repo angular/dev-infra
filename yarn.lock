@@ -366,16 +366,16 @@ __metadata:
     "@google-cloud/firestore": ^6.0.0
     "@google-cloud/storage": ^6.0.0
     "@microsoft/api-extractor": 7.34.7
-    "@octokit/auth-app": 4.0.9
+    "@octokit/auth-app": 4.0.10
     "@octokit/core": 4.2.0
     "@octokit/graphql": 5.0.5
     "@octokit/graphql-schema": 14.4.0
-    "@octokit/openapi-types": 17.1.1
-    "@octokit/plugin-paginate-rest": 6.0.0
-    "@octokit/plugin-rest-endpoint-methods": 7.0.1
+    "@octokit/openapi-types": 17.1.2
+    "@octokit/plugin-paginate-rest": 6.1.0
+    "@octokit/plugin-rest-endpoint-methods": 7.1.0
     "@octokit/request-error": 3.0.3
     "@octokit/rest": 19.0.7
-    "@octokit/types": 9.2.1
+    "@octokit/types": 9.2.2
     "@octokit/webhooks-definitions": 3.67.3
     "@octokit/webhooks-types": 6.11.0
     "@openid/appauth": ^1.3.1
@@ -5506,9 +5506,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/auth-app@npm:4.0.9":
-  version: 4.0.9
-  resolution: "@octokit/auth-app@npm:4.0.9"
+"@octokit/auth-app@npm:4.0.10":
+  version: 4.0.10
+  resolution: "@octokit/auth-app@npm:4.0.10"
   dependencies:
     "@octokit/auth-oauth-app": ^5.0.0
     "@octokit/auth-oauth-user": ^2.0.0
@@ -5520,7 +5520,7 @@ __metadata:
     lru-cache: ^6.0.0
     universal-github-app-jwt: ^1.1.1
     universal-user-agent: ^6.0.0
-  checksum: 3846ebeda40bf88684fa310741ec4b5838d57e18ba5c38986e422161e1ce95c750053fbb2aa18bdce120d6eb857d16bb8e9988597c3dfda40fec985dbdda1b2a
+  checksum: 6f2142114f50aa2a00d011af5544ae460fc67ef1941509728d0ec82105ed78851f65ec2d19a5555b4c7613043e7f722ee04884d59716582d2f7da458f2ad37f9
   languageName: node
   linkType: hard
 
@@ -5698,10 +5698,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/openapi-types@npm:17.1.1, @octokit/openapi-types@npm:^17.1.1":
-  version: 17.1.1
-  resolution: "@octokit/openapi-types@npm:17.1.1"
-  checksum: 6d77f0cf55e051a386f57df63d9a7d75f5d0731340822e4f8460e31379560cc7756d224a46eed8ff4b0188be49e920621c6b3d524f9979df4497d5f24774c389
+"@octokit/openapi-types@npm:17.1.2, @octokit/openapi-types@npm:^17.1.2":
+  version: 17.1.2
+  resolution: "@octokit/openapi-types@npm:17.1.2"
+  checksum: 859516026a5a6c21d343608c29b137874cf5780adabf1e4a01d121dd1050c47e400f7723d179ed2fc691688d48c8740f70435107dd7bc4c51120447c52539cf7
   languageName: node
   linkType: hard
 
@@ -5726,14 +5726,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/plugin-paginate-rest@npm:6.0.0, @octokit/plugin-paginate-rest@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "@octokit/plugin-paginate-rest@npm:6.0.0"
+"@octokit/plugin-paginate-rest@npm:6.1.0":
+  version: 6.1.0
+  resolution: "@octokit/plugin-paginate-rest@npm:6.1.0"
   dependencies:
-    "@octokit/types": ^9.0.0
+    "@octokit/types": ^9.2.2
   peerDependencies:
     "@octokit/core": ">=4"
-  checksum: 4ad89568d883373898b733837cada7d849d51eef32157c11d4a81cef5ce8e509720d79b46918cada3c132f9b29847e383f17b7cd5c39ede7c93cdcd2f850b47f
+  checksum: e6f7d211d2ddae29762d447b5a0687fb4d48a36c623f4720a11dbd4343f04a149b4ae496392ad16a2cf7e1fbda0783abc3a7b9f1be523dd04e468a6a4e87fae2
   languageName: node
   linkType: hard
 
@@ -5748,6 +5748,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@octokit/plugin-paginate-rest@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "@octokit/plugin-paginate-rest@npm:6.0.0"
+  dependencies:
+    "@octokit/types": ^9.0.0
+  peerDependencies:
+    "@octokit/core": ">=4"
+  checksum: 4ad89568d883373898b733837cada7d849d51eef32157c11d4a81cef5ce8e509720d79b46918cada3c132f9b29847e383f17b7cd5c39ede7c93cdcd2f850b47f
+  languageName: node
+  linkType: hard
+
 "@octokit/plugin-request-log@npm:^1.0.4":
   version: 1.0.4
   resolution: "@octokit/plugin-request-log@npm:1.0.4"
@@ -5757,15 +5768,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/plugin-rest-endpoint-methods@npm:7.0.1, @octokit/plugin-rest-endpoint-methods@npm:^7.0.0":
-  version: 7.0.1
-  resolution: "@octokit/plugin-rest-endpoint-methods@npm:7.0.1"
+"@octokit/plugin-rest-endpoint-methods@npm:7.1.0":
+  version: 7.1.0
+  resolution: "@octokit/plugin-rest-endpoint-methods@npm:7.1.0"
   dependencies:
-    "@octokit/types": ^9.0.0
+    "@octokit/types": ^9.2.2
     deprecation: ^2.3.1
   peerDependencies:
     "@octokit/core": ">=3"
-  checksum: cdb8734ec960f75acc2405284920c58efac9a71b1c3b2a71662b9100ffbc22dac597150acff017a93459c57e9a492d9e1c27872b068387dbb90597de75065fcf
+  checksum: 4ac740dc74a0f7789601b4118c1f0ee42cd3480dfd0199515414dcbb670f126e31dd6856a9deb1578a2e2e8c70d4f5f1828cb85f4bd8a8cd5576dfb0cd5b29c7
   languageName: node
   linkType: hard
 
@@ -5778,6 +5789,18 @@ __metadata:
   peerDependencies:
     "@octokit/core": ">=3"
   checksum: 30fcc50c335d1093f03573d9fa3a4b7d027fc98b215c43e07e82ee8dabfa0af0cf1b963feb542312ae32d897a2f68dc671577206f30850215517bebedc5a2c73
+  languageName: node
+  linkType: hard
+
+"@octokit/plugin-rest-endpoint-methods@npm:^7.0.0":
+  version: 7.0.1
+  resolution: "@octokit/plugin-rest-endpoint-methods@npm:7.0.1"
+  dependencies:
+    "@octokit/types": ^9.0.0
+    deprecation: ^2.3.1
+  peerDependencies:
+    "@octokit/core": ">=3"
+  checksum: cdb8734ec960f75acc2405284920c58efac9a71b1c3b2a71662b9100ffbc22dac597150acff017a93459c57e9a492d9e1c27872b068387dbb90597de75065fcf
   languageName: node
   linkType: hard
 
@@ -5854,12 +5877,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/types@npm:9.2.1":
-  version: 9.2.1
-  resolution: "@octokit/types@npm:9.2.1"
+"@octokit/types@npm:9.2.2, @octokit/types@npm:^9.2.2":
+  version: 9.2.2
+  resolution: "@octokit/types@npm:9.2.2"
   dependencies:
-    "@octokit/openapi-types": ^17.1.1
-  checksum: 84ccab65d6f7aa7dd5c878e1737f5ccc671cfdc4146378bc4931b877c2e10c1f40440c1bf4c662ce6a08c7c6d8e9ca6cbb605b70c803f33d9f94ed3fbe51e384
+    "@octokit/openapi-types": ^17.1.2
+  checksum: 6bbf7e55c167f683ee68430f07be5d22e9ab4db92645872887bb040e09bf419d629600b811b3e502d70f7dfb6c2c11dbbc6239e0612e9a0b994673aeb5100d8b
   languageName: node
   linkType: hard
 
