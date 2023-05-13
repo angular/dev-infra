@@ -426,7 +426,7 @@ __metadata:
     husky: ^8.0.0
     inquirer: 9.2.6
     jasmine: ~4.6.0
-    jasmine-core: ~4.6.0
+    jasmine-core: ~5.0.0
     jsdom: ^22.0.0
     jsonc-parser: ^3.2.0
     karma: ^6.3.15
@@ -12559,7 +12559,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jasmine-core@npm:^4.6.0, jasmine-core@npm:~4.6.0":
+"jasmine-core@npm:^4.6.0":
   version: 4.6.0
   resolution: "jasmine-core@npm:4.6.0"
   checksum: c5c5ce16c512cf0bc8b6b4f2d4f0ac7b23cae90624e0cd9d22da3baab3266e9a4da5a9363fb7937b16e0a4cf550bb79183cd74483ce55cfff4b6678434d599b7
@@ -12570,6 +12570,13 @@ __metadata:
   version: 2.8.0
   resolution: "jasmine-core@npm:2.8.0"
   checksum: 1a1e73f6cd67ce1b0cb32897a6ead3a4add21233a49844ca7730ede6f518ea4b78be4256cdf4869ecbaf4f5836f80c2a80c96a4aaba2aa4e82f34094348d9447
+  languageName: node
+  linkType: hard
+
+"jasmine-core@npm:~5.0.0":
+  version: 5.0.0
+  resolution: "jasmine-core@npm:5.0.0"
+  checksum: e54b746d6fc54f2e36ea0bc48eb375ea3c31547ea9e7719e64184184d00c1845e6a3d82e7a5afada93e7ea16241e181c0bf68562fcd9699210cafc07ba2120cc
   languageName: node
   linkType: hard
 
