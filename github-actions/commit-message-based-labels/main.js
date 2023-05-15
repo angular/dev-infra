@@ -29189,11 +29189,23 @@ var require_constants = __commonJS({
     var MAX_LENGTH = 256;
     var MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER || 9007199254740991;
     var MAX_SAFE_COMPONENT_LENGTH = 16;
+    var RELEASE_TYPES = [
+      "major",
+      "premajor",
+      "minor",
+      "preminor",
+      "patch",
+      "prepatch",
+      "prerelease"
+    ];
     module.exports = {
-      SEMVER_SPEC_VERSION,
       MAX_LENGTH,
+      MAX_SAFE_COMPONENT_LENGTH,
       MAX_SAFE_INTEGER,
-      MAX_SAFE_COMPONENT_LENGTH
+      RELEASE_TYPES,
+      SEMVER_SPEC_VERSION,
+      FLAG_INCLUDE_PRERELEASE: 1,
+      FLAG_LOOSE: 2
     };
   }
 });
@@ -29273,11 +29285,17 @@ var require_re = __commonJS({
 // 
 var require_parse_options = __commonJS({
   ""(exports, module) {
-    var opts = ["includePrerelease", "loose", "rtl"];
-    var parseOptions2 = (options) => !options ? {} : typeof options !== "object" ? { loose: true } : opts.filter((k) => options[k]).reduce((o, k) => {
-      o[k] = true;
-      return o;
-    }, {});
+    var looseOption = Object.freeze({ loose: true });
+    var emptyOpts = Object.freeze({});
+    var parseOptions2 = (options) => {
+      if (!options) {
+        return emptyOpts;
+      }
+      if (typeof options !== "object") {
+        return looseOption;
+      }
+      return options;
+    };
     module.exports = parseOptions2;
   }
 });
@@ -29321,7 +29339,7 @@ var require_semver = __commonJS({
             version = version.version;
           }
         } else if (typeof version !== "string") {
-          throw new TypeError(`Invalid Version: ${version}`);
+          throw new TypeError(`Invalid version. Must be a string. Got type "${typeof version}".`);
         }
         if (version.length > MAX_LENGTH) {
           throw new TypeError(
@@ -29445,31 +29463,31 @@ var require_semver = __commonJS({
           }
         } while (++i);
       }
-      inc(release, identifier) {
+      inc(release, identifier, identifierBase) {
         switch (release) {
           case "premajor":
             this.prerelease.length = 0;
             this.patch = 0;
             this.minor = 0;
             this.major++;
-            this.inc("pre", identifier);
+            this.inc("pre", identifier, identifierBase);
             break;
           case "preminor":
             this.prerelease.length = 0;
             this.patch = 0;
             this.minor++;
-            this.inc("pre", identifier);
+            this.inc("pre", identifier, identifierBase);
             break;
           case "prepatch":
             this.prerelease.length = 0;
-            this.inc("patch", identifier);
-            this.inc("pre", identifier);
+            this.inc("patch", identifier, identifierBase);
+            this.inc("pre", identifier, identifierBase);
             break;
           case "prerelease":
             if (this.prerelease.length === 0) {
-              this.inc("patch", identifier);
+              this.inc("patch", identifier, identifierBase);
             }
-            this.inc("pre", identifier);
+            this.inc("pre", identifier, identifierBase);
             break;
           case "major":
             if (this.minor !== 0 || this.patch !== 0 || this.prerelease.length === 0) {
@@ -29492,9 +29510,13 @@ var require_semver = __commonJS({
             }
             this.prerelease = [];
             break;
-          case "pre":
+          case "pre": {
+            const base = Number(identifierBase) ? 1 : 0;
+            if (!identifier && identifierBase === false) {
+              throw new Error("invalid increment argument: identifier is empty");
+            }
             if (this.prerelease.length === 0) {
-              this.prerelease = [0];
+              this.prerelease = [base];
             } else {
               let i = this.prerelease.length;
               while (--i >= 0) {
@@ -29504,19 +29526,27 @@ var require_semver = __commonJS({
                 }
               }
               if (i === -1) {
-                this.prerelease.push(0);
+                if (identifier === this.prerelease.join(".") && identifierBase === false) {
+                  throw new Error("invalid increment argument: identifier already exists");
+                }
+                this.prerelease.push(base);
               }
             }
             if (identifier) {
+              let prerelease = [identifier, base];
+              if (identifierBase === false) {
+                prerelease = [identifier];
+              }
               if (compareIdentifiers(this.prerelease[0], identifier) === 0) {
                 if (isNaN(this.prerelease[1])) {
-                  this.prerelease = [identifier, 0];
+                  this.prerelease = prerelease;
                 }
               } else {
-                this.prerelease = [identifier, 0];
+                this.prerelease = prerelease;
               }
             }
             break;
+          }
           default:
             throw new Error(`invalid increment argument: ${release}`);
         }
@@ -29532,29 +29562,18 @@ var require_semver = __commonJS({
 // 
 var require_parse2 = __commonJS({
   ""(exports, module) {
-    var { MAX_LENGTH } = require_constants();
-    var { re, t } = require_re();
     var SemVer = require_semver();
-    var parseOptions2 = require_parse_options();
-    var parse2 = (version, options) => {
-      options = parseOptions2(options);
+    var parse2 = (version, options, throwErrors = false) => {
       if (version instanceof SemVer) {
         return version;
-      }
-      if (typeof version !== "string") {
-        return null;
-      }
-      if (version.length > MAX_LENGTH) {
-        return null;
-      }
-      const r = options.loose ? re[t.LOOSE] : re[t.FULL];
-      if (!r.test(version)) {
-        return null;
       }
       try {
         return new SemVer(version, options);
       } catch (er) {
-        return null;
+        if (!throwErrors) {
+          return null;
+        }
+        throw er;
       }
     };
     module.exports = parse2;
@@ -29589,8 +29608,9 @@ var require_clean = __commonJS({
 var require_inc = __commonJS({
   ""(exports, module) {
     var SemVer = require_semver();
-    var inc = (version, release, options, identifier) => {
+    var inc = (version, release, options, identifier, identifierBase) => {
       if (typeof options === "string") {
+        identifierBase = identifier;
         identifier = options;
         options = void 0;
       }
@@ -29598,7 +29618,7 @@ var require_inc = __commonJS({
         return new SemVer(
           version instanceof SemVer ? version.version : version,
           options
-        ).inc(release, identifier).version;
+        ).inc(release, identifier, identifierBase).version;
       } catch (er) {
         return null;
       }
@@ -29608,46 +29628,40 @@ var require_inc = __commonJS({
 });
 
 // 
-var require_compare = __commonJS({
-  ""(exports, module) {
-    var SemVer = require_semver();
-    var compare = (a, b, loose) => new SemVer(a, loose).compare(new SemVer(b, loose));
-    module.exports = compare;
-  }
-});
-
-// 
-var require_eq = __commonJS({
-  ""(exports, module) {
-    var compare = require_compare();
-    var eq = (a, b, loose) => compare(a, b, loose) === 0;
-    module.exports = eq;
-  }
-});
-
-// 
 var require_diff = __commonJS({
   ""(exports, module) {
     var parse2 = require_parse2();
-    var eq = require_eq();
     var diff = (version1, version2) => {
-      if (eq(version1, version2)) {
+      const v1 = parse2(version1, null, true);
+      const v2 = parse2(version2, null, true);
+      const comparison = v1.compare(v2);
+      if (comparison === 0) {
         return null;
-      } else {
-        const v1 = parse2(version1);
-        const v2 = parse2(version2);
-        const hasPre = v1.prerelease.length || v2.prerelease.length;
-        const prefix = hasPre ? "pre" : "";
-        const defaultResult = hasPre ? "prerelease" : "";
-        for (const key in v1) {
-          if (key === "major" || key === "minor" || key === "patch") {
-            if (v1[key] !== v2[key]) {
-              return prefix + key;
-            }
-          }
-        }
-        return defaultResult;
       }
+      const v1Higher = comparison > 0;
+      const highVersion = v1Higher ? v1 : v2;
+      const lowVersion = v1Higher ? v2 : v1;
+      const highHasPre = !!highVersion.prerelease.length;
+      const prefix = highHasPre ? "pre" : "";
+      if (v1.major !== v2.major) {
+        return prefix + "major";
+      }
+      if (v1.minor !== v2.minor) {
+        return prefix + "minor";
+      }
+      if (v1.patch !== v2.patch) {
+        return prefix + "patch";
+      }
+      if (highHasPre) {
+        return "prerelease";
+      }
+      if (lowVersion.patch) {
+        return "patch";
+      }
+      if (lowVersion.minor) {
+        return "minor";
+      }
+      return "major";
     };
     module.exports = diff;
   }
@@ -29689,6 +29703,15 @@ var require_prerelease = __commonJS({
       return parsed && parsed.prerelease.length ? parsed.prerelease : null;
     };
     module.exports = prerelease;
+  }
+});
+
+// 
+var require_compare = __commonJS({
+  ""(exports, module) {
+    var SemVer = require_semver();
+    var compare = (a, b, loose) => new SemVer(a, loose).compare(new SemVer(b, loose));
+    module.exports = compare;
   }
 });
 
@@ -29756,6 +29779,15 @@ var require_lt = __commonJS({
     var compare = require_compare();
     var lt = (a, b, loose) => compare(a, b, loose) < 0;
     module.exports = lt;
+  }
+});
+
+// 
+var require_eq = __commonJS({
+  ""(exports, module) {
+    var compare = require_compare();
+    var eq = (a, b, loose) => compare(a, b, loose) === 0;
+    module.exports = eq;
   }
 });
 
@@ -30579,8 +30611,8 @@ var require_range = __commonJS({
       }
       parseRange(range) {
         range = range.trim();
-        const memoOpts = Object.keys(this.options).join(",");
-        const memoKey = `parseRange:${memoOpts}:${range}`;
+        const memoOpts = (this.options.includePrerelease && FLAG_INCLUDE_PRERELEASE) | (this.options.loose && FLAG_LOOSE);
+        const memoKey = memoOpts + ":" + range;
         const cached = cache.get(memoKey);
         if (cached) {
           return cached;
@@ -30664,6 +30696,7 @@ var require_range = __commonJS({
       tildeTrimReplace,
       caretTrimReplace
     } = require_re();
+    var { FLAG_INCLUDE_PRERELEASE, FLAG_LOOSE } = require_constants();
     var isNullSet = (c) => c.value === "<0.0.0-0";
     var isAny = (c) => c.value === "";
     var isSatisfiable = (comparators, options) => {
@@ -30949,12 +30982,6 @@ var require_comparator = __commonJS({
         if (!(comp instanceof Comparator)) {
           throw new TypeError("a Comparator is required");
         }
-        if (!options || typeof options !== "object") {
-          options = {
-            loose: !!options,
-            includePrerelease: false
-          };
-        }
         if (this.operator === "") {
           if (this.value === "") {
             return true;
@@ -30966,13 +30993,29 @@ var require_comparator = __commonJS({
           }
           return new Range(this.value, options).test(comp.semver);
         }
-        const sameDirectionIncreasing = (this.operator === ">=" || this.operator === ">") && (comp.operator === ">=" || comp.operator === ">");
-        const sameDirectionDecreasing = (this.operator === "<=" || this.operator === "<") && (comp.operator === "<=" || comp.operator === "<");
-        const sameSemVer = this.semver.version === comp.semver.version;
-        const differentDirectionsInclusive = (this.operator === ">=" || this.operator === "<=") && (comp.operator === ">=" || comp.operator === "<=");
-        const oppositeDirectionsLessThan = cmp(this.semver, "<", comp.semver, options) && (this.operator === ">=" || this.operator === ">") && (comp.operator === "<=" || comp.operator === "<");
-        const oppositeDirectionsGreaterThan = cmp(this.semver, ">", comp.semver, options) && (this.operator === "<=" || this.operator === "<") && (comp.operator === ">=" || comp.operator === ">");
-        return sameDirectionIncreasing || sameDirectionDecreasing || sameSemVer && differentDirectionsInclusive || oppositeDirectionsLessThan || oppositeDirectionsGreaterThan;
+        options = parseOptions2(options);
+        if (options.includePrerelease && (this.value === "<0.0.0-0" || comp.value === "<0.0.0-0")) {
+          return false;
+        }
+        if (!options.includePrerelease && (this.value.startsWith("<0.0.0") || comp.value.startsWith("<0.0.0"))) {
+          return false;
+        }
+        if (this.operator.startsWith(">") && comp.operator.startsWith(">")) {
+          return true;
+        }
+        if (this.operator.startsWith("<") && comp.operator.startsWith("<")) {
+          return true;
+        }
+        if (this.semver.version === comp.semver.version && this.operator.includes("=") && comp.operator.includes("=")) {
+          return true;
+        }
+        if (cmp(this.semver, "<", comp.semver, options) && this.operator.startsWith(">") && comp.operator.startsWith("<")) {
+          return true;
+        }
+        if (cmp(this.semver, ">", comp.semver, options) && this.operator.startsWith("<") && comp.operator.startsWith(">")) {
+          return true;
+        }
+        return false;
       }
     };
     module.exports = Comparator;
@@ -31230,7 +31273,7 @@ var require_intersects = __commonJS({
     var intersects = (r1, r2, options) => {
       r1 = new Range(r1, options);
       r2 = new Range(r2, options);
-      return r1.intersects(r2);
+      return r1.intersects(r2, options);
     };
     module.exports = intersects;
   }
@@ -31315,6 +31358,8 @@ var require_subset = __commonJS({
         }
       return true;
     };
+    var minimumVersionWithPreRelease = [new Comparator(">=0.0.0-0")];
+    var minimumVersion = [new Comparator(">=0.0.0")];
     var simpleSubset = (sub, dom, options) => {
       if (sub === dom) {
         return true;
@@ -31323,16 +31368,16 @@ var require_subset = __commonJS({
         if (dom.length === 1 && dom[0].semver === ANY) {
           return true;
         } else if (options.includePrerelease) {
-          sub = [new Comparator(">=0.0.0-0")];
+          sub = minimumVersionWithPreRelease;
         } else {
-          sub = [new Comparator(">=0.0.0")];
+          sub = minimumVersion;
         }
       }
       if (dom.length === 1 && dom[0].semver === ANY) {
         if (options.includePrerelease) {
           return true;
         } else {
-          dom = [new Comparator(">=0.0.0")];
+          dom = minimumVersion;
         }
       }
       const eqSet = /* @__PURE__ */ new Set();
@@ -31532,6 +31577,7 @@ var require_semver2 = __commonJS({
       src: internalRe.src,
       tokens: internalRe.t,
       SEMVER_SPEC_VERSION: constants.SEMVER_SPEC_VERSION,
+      RELEASE_TYPES: constants.RELEASE_TYPES,
       compareIdentifiers: identifiers.compareIdentifiers,
       rcompareIdentifiers: identifiers.rcompareIdentifiers
     };
