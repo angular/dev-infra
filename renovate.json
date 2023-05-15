@@ -15,6 +15,10 @@
   "ignoreDeps": ["rules_pkg"],
   "enabledManagers": ["npm", "bazel", "github-actions"],
   "baseBranches": ["main"],
+  "postUpgradeTasks": {
+    "commands": ["yarn update-generated-files"],
+    "fileFilters": ["**/*"]
+  },
   "packageRules": [
     {
       "matchPackagePatterns": ["*"],
