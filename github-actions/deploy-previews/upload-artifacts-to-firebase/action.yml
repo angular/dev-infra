@@ -79,7 +79,7 @@ runs:
       shell: bash
       run: node ${{github.action_path}}/extract-artifact-metadata.js '${{inputs.firebase-public-dir}}'
 
-    - uses: FirebaseExtended/action-hosting-deploy@4d0d0023f1d92b9b7d16dda64b3d7abd2c98974b # tag=v0
+    - uses: FirebaseExtended/action-hosting-deploy@638d3c162747cead0c1c0d3093208ed59dfd8231 # v0
       id: deploy
       with:
         # Note: No token used here as the action otherwise may attempt to post a
