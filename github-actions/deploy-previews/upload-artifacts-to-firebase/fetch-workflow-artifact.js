@@ -7574,7 +7574,7 @@ var require_dist_node10 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var VERSION = "6.0.0";
+    var VERSION = "6.1.0";
     function normalizePaginatedListResponse(response) {
       if (!response.data) {
         return {
@@ -7669,7 +7669,7 @@ var require_dist_node10 = __commonJS({
     var composePaginateRest = Object.assign(paginate, {
       iterator
     });
-    var paginatingEndpoints = ["GET /app/hook/deliveries", "GET /app/installations", "GET /enterprises/{enterprise}/actions/runner-groups", "GET /enterprises/{enterprise}/dependabot/alerts", "GET /enterprises/{enterprise}/secret-scanning/alerts", "GET /events", "GET /gists", "GET /gists/public", "GET /gists/starred", "GET /gists/{gist_id}/comments", "GET /gists/{gist_id}/commits", "GET /gists/{gist_id}/forks", "GET /installation/repositories", "GET /issues", "GET /licenses", "GET /marketplace_listing/plans", "GET /marketplace_listing/plans/{plan_id}/accounts", "GET /marketplace_listing/stubbed/plans", "GET /marketplace_listing/stubbed/plans/{plan_id}/accounts", "GET /networks/{owner}/{repo}/events", "GET /notifications", "GET /organizations", "GET /orgs/{org}/actions/cache/usage-by-repository", "GET /orgs/{org}/actions/permissions/repositories", "GET /orgs/{org}/actions/required_workflows", "GET /orgs/{org}/actions/runner-groups", "GET /orgs/{org}/actions/runner-groups/{runner_group_id}/repositories", "GET /orgs/{org}/actions/runner-groups/{runner_group_id}/runners", "GET /orgs/{org}/actions/runners", "GET /orgs/{org}/actions/secrets", "GET /orgs/{org}/actions/secrets/{secret_name}/repositories", "GET /orgs/{org}/actions/variables", "GET /orgs/{org}/actions/variables/{name}/repositories", "GET /orgs/{org}/blocks", "GET /orgs/{org}/code-scanning/alerts", "GET /orgs/{org}/codespaces", "GET /orgs/{org}/codespaces/secrets", "GET /orgs/{org}/codespaces/secrets/{secret_name}/repositories", "GET /orgs/{org}/dependabot/alerts", "GET /orgs/{org}/dependabot/secrets", "GET /orgs/{org}/dependabot/secrets/{secret_name}/repositories", "GET /orgs/{org}/events", "GET /orgs/{org}/failed_invitations", "GET /orgs/{org}/hooks", "GET /orgs/{org}/hooks/{hook_id}/deliveries", "GET /orgs/{org}/installations", "GET /orgs/{org}/invitations", "GET /orgs/{org}/invitations/{invitation_id}/teams", "GET /orgs/{org}/issues", "GET /orgs/{org}/members", "GET /orgs/{org}/members/{username}/codespaces", "GET /orgs/{org}/migrations", "GET /orgs/{org}/migrations/{migration_id}/repositories", "GET /orgs/{org}/outside_collaborators", "GET /orgs/{org}/packages", "GET /orgs/{org}/packages/{package_type}/{package_name}/versions", "GET /orgs/{org}/projects", "GET /orgs/{org}/public_members", "GET /orgs/{org}/repos", "GET /orgs/{org}/secret-scanning/alerts", "GET /orgs/{org}/teams", "GET /orgs/{org}/teams/{team_slug}/discussions", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions", "GET /orgs/{org}/teams/{team_slug}/invitations", "GET /orgs/{org}/teams/{team_slug}/members", "GET /orgs/{org}/teams/{team_slug}/projects", "GET /orgs/{org}/teams/{team_slug}/repos", "GET /orgs/{org}/teams/{team_slug}/teams", "GET /projects/columns/{column_id}/cards", "GET /projects/{project_id}/collaborators", "GET /projects/{project_id}/columns", "GET /repos/{org}/{repo}/actions/required_workflows", "GET /repos/{owner}/{repo}/actions/artifacts", "GET /repos/{owner}/{repo}/actions/caches", "GET /repos/{owner}/{repo}/actions/required_workflows/{required_workflow_id_for_repo}/runs", "GET /repos/{owner}/{repo}/actions/runners", "GET /repos/{owner}/{repo}/actions/runs", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/jobs", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs", "GET /repos/{owner}/{repo}/actions/secrets", "GET /repos/{owner}/{repo}/actions/variables", "GET /repos/{owner}/{repo}/actions/workflows", "GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs", "GET /repos/{owner}/{repo}/assignees", "GET /repos/{owner}/{repo}/branches", "GET /repos/{owner}/{repo}/check-runs/{check_run_id}/annotations", "GET /repos/{owner}/{repo}/check-suites/{check_suite_id}/check-runs", "GET /repos/{owner}/{repo}/code-scanning/alerts", "GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances", "GET /repos/{owner}/{repo}/code-scanning/analyses", "GET /repos/{owner}/{repo}/codespaces", "GET /repos/{owner}/{repo}/codespaces/devcontainers", "GET /repos/{owner}/{repo}/codespaces/secrets", "GET /repos/{owner}/{repo}/collaborators", "GET /repos/{owner}/{repo}/comments", "GET /repos/{owner}/{repo}/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/commits", "GET /repos/{owner}/{repo}/commits/{commit_sha}/comments", "GET /repos/{owner}/{repo}/commits/{commit_sha}/pulls", "GET /repos/{owner}/{repo}/commits/{ref}/check-runs", "GET /repos/{owner}/{repo}/commits/{ref}/check-suites", "GET /repos/{owner}/{repo}/commits/{ref}/status", "GET /repos/{owner}/{repo}/commits/{ref}/statuses", "GET /repos/{owner}/{repo}/contributors", "GET /repos/{owner}/{repo}/dependabot/alerts", "GET /repos/{owner}/{repo}/dependabot/secrets", "GET /repos/{owner}/{repo}/deployments", "GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses", "GET /repos/{owner}/{repo}/environments", "GET /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies", "GET /repos/{owner}/{repo}/events", "GET /repos/{owner}/{repo}/forks", "GET /repos/{owner}/{repo}/hooks", "GET /repos/{owner}/{repo}/hooks/{hook_id}/deliveries", "GET /repos/{owner}/{repo}/invitations", "GET /repos/{owner}/{repo}/issues", "GET /repos/{owner}/{repo}/issues/comments", "GET /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/issues/events", "GET /repos/{owner}/{repo}/issues/{issue_number}/comments", "GET /repos/{owner}/{repo}/issues/{issue_number}/events", "GET /repos/{owner}/{repo}/issues/{issue_number}/labels", "GET /repos/{owner}/{repo}/issues/{issue_number}/reactions", "GET /repos/{owner}/{repo}/issues/{issue_number}/timeline", "GET /repos/{owner}/{repo}/keys", "GET /repos/{owner}/{repo}/labels", "GET /repos/{owner}/{repo}/milestones", "GET /repos/{owner}/{repo}/milestones/{milestone_number}/labels", "GET /repos/{owner}/{repo}/notifications", "GET /repos/{owner}/{repo}/pages/builds", "GET /repos/{owner}/{repo}/projects", "GET /repos/{owner}/{repo}/pulls", "GET /repos/{owner}/{repo}/pulls/comments", "GET /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/pulls/{pull_number}/comments", "GET /repos/{owner}/{repo}/pulls/{pull_number}/commits", "GET /repos/{owner}/{repo}/pulls/{pull_number}/files", "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews", "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/comments", "GET /repos/{owner}/{repo}/releases", "GET /repos/{owner}/{repo}/releases/{release_id}/assets", "GET /repos/{owner}/{repo}/releases/{release_id}/reactions", "GET /repos/{owner}/{repo}/secret-scanning/alerts", "GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}/locations", "GET /repos/{owner}/{repo}/stargazers", "GET /repos/{owner}/{repo}/subscribers", "GET /repos/{owner}/{repo}/tags", "GET /repos/{owner}/{repo}/teams", "GET /repos/{owner}/{repo}/topics", "GET /repositories", "GET /repositories/{repository_id}/environments/{environment_name}/secrets", "GET /repositories/{repository_id}/environments/{environment_name}/variables", "GET /search/code", "GET /search/commits", "GET /search/issues", "GET /search/labels", "GET /search/repositories", "GET /search/topics", "GET /search/users", "GET /teams/{team_id}/discussions", "GET /teams/{team_id}/discussions/{discussion_number}/comments", "GET /teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}/reactions", "GET /teams/{team_id}/discussions/{discussion_number}/reactions", "GET /teams/{team_id}/invitations", "GET /teams/{team_id}/members", "GET /teams/{team_id}/projects", "GET /teams/{team_id}/repos", "GET /teams/{team_id}/teams", "GET /user/blocks", "GET /user/codespaces", "GET /user/codespaces/secrets", "GET /user/emails", "GET /user/followers", "GET /user/following", "GET /user/gpg_keys", "GET /user/installations", "GET /user/installations/{installation_id}/repositories", "GET /user/issues", "GET /user/keys", "GET /user/marketplace_purchases", "GET /user/marketplace_purchases/stubbed", "GET /user/memberships/orgs", "GET /user/migrations", "GET /user/migrations/{migration_id}/repositories", "GET /user/orgs", "GET /user/packages", "GET /user/packages/{package_type}/{package_name}/versions", "GET /user/public_emails", "GET /user/repos", "GET /user/repository_invitations", "GET /user/ssh_signing_keys", "GET /user/starred", "GET /user/subscriptions", "GET /user/teams", "GET /users", "GET /users/{username}/events", "GET /users/{username}/events/orgs/{org}", "GET /users/{username}/events/public", "GET /users/{username}/followers", "GET /users/{username}/following", "GET /users/{username}/gists", "GET /users/{username}/gpg_keys", "GET /users/{username}/keys", "GET /users/{username}/orgs", "GET /users/{username}/packages", "GET /users/{username}/projects", "GET /users/{username}/received_events", "GET /users/{username}/received_events/public", "GET /users/{username}/repos", "GET /users/{username}/ssh_signing_keys", "GET /users/{username}/starred", "GET /users/{username}/subscriptions"];
+    var paginatingEndpoints = ["GET /app/hook/deliveries", "GET /app/installation-requests", "GET /app/installations", "GET /enterprises/{enterprise}/dependabot/alerts", "GET /enterprises/{enterprise}/secret-scanning/alerts", "GET /events", "GET /gists", "GET /gists/public", "GET /gists/starred", "GET /gists/{gist_id}/comments", "GET /gists/{gist_id}/commits", "GET /gists/{gist_id}/forks", "GET /installation/repositories", "GET /issues", "GET /licenses", "GET /marketplace_listing/plans", "GET /marketplace_listing/plans/{plan_id}/accounts", "GET /marketplace_listing/stubbed/plans", "GET /marketplace_listing/stubbed/plans/{plan_id}/accounts", "GET /networks/{owner}/{repo}/events", "GET /notifications", "GET /organizations", "GET /organizations/{org}/personal-access-token-requests", "GET /organizations/{org}/personal-access-token-requests/{pat_request_id}/repositories", "GET /organizations/{org}/personal-access-tokens", "GET /organizations/{org}/personal-access-tokens/{pat_id}/repositories", "GET /orgs/{org}/actions/cache/usage-by-repository", "GET /orgs/{org}/actions/permissions/repositories", "GET /orgs/{org}/actions/required_workflows", "GET /orgs/{org}/actions/runners", "GET /orgs/{org}/actions/secrets", "GET /orgs/{org}/actions/secrets/{secret_name}/repositories", "GET /orgs/{org}/actions/variables", "GET /orgs/{org}/actions/variables/{name}/repositories", "GET /orgs/{org}/blocks", "GET /orgs/{org}/code-scanning/alerts", "GET /orgs/{org}/codespaces", "GET /orgs/{org}/codespaces/secrets", "GET /orgs/{org}/codespaces/secrets/{secret_name}/repositories", "GET /orgs/{org}/dependabot/alerts", "GET /orgs/{org}/dependabot/secrets", "GET /orgs/{org}/dependabot/secrets/{secret_name}/repositories", "GET /orgs/{org}/events", "GET /orgs/{org}/failed_invitations", "GET /orgs/{org}/hooks", "GET /orgs/{org}/hooks/{hook_id}/deliveries", "GET /orgs/{org}/installations", "GET /orgs/{org}/invitations", "GET /orgs/{org}/invitations/{invitation_id}/teams", "GET /orgs/{org}/issues", "GET /orgs/{org}/members", "GET /orgs/{org}/members/{username}/codespaces", "GET /orgs/{org}/migrations", "GET /orgs/{org}/migrations/{migration_id}/repositories", "GET /orgs/{org}/outside_collaborators", "GET /orgs/{org}/packages", "GET /orgs/{org}/packages/{package_type}/{package_name}/versions", "GET /orgs/{org}/projects", "GET /orgs/{org}/public_members", "GET /orgs/{org}/repos", "GET /orgs/{org}/secret-scanning/alerts", "GET /orgs/{org}/teams", "GET /orgs/{org}/teams/{team_slug}/discussions", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions", "GET /orgs/{org}/teams/{team_slug}/invitations", "GET /orgs/{org}/teams/{team_slug}/members", "GET /orgs/{org}/teams/{team_slug}/projects", "GET /orgs/{org}/teams/{team_slug}/repos", "GET /orgs/{org}/teams/{team_slug}/teams", "GET /projects/columns/{column_id}/cards", "GET /projects/{project_id}/collaborators", "GET /projects/{project_id}/columns", "GET /repos/{org}/{repo}/actions/required_workflows", "GET /repos/{owner}/{repo}/actions/artifacts", "GET /repos/{owner}/{repo}/actions/caches", "GET /repos/{owner}/{repo}/actions/organization-secrets", "GET /repos/{owner}/{repo}/actions/organization-variables", "GET /repos/{owner}/{repo}/actions/required_workflows/{required_workflow_id_for_repo}/runs", "GET /repos/{owner}/{repo}/actions/runners", "GET /repos/{owner}/{repo}/actions/runs", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/jobs", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs", "GET /repos/{owner}/{repo}/actions/secrets", "GET /repos/{owner}/{repo}/actions/variables", "GET /repos/{owner}/{repo}/actions/workflows", "GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs", "GET /repos/{owner}/{repo}/assignees", "GET /repos/{owner}/{repo}/branches", "GET /repos/{owner}/{repo}/check-runs/{check_run_id}/annotations", "GET /repos/{owner}/{repo}/check-suites/{check_suite_id}/check-runs", "GET /repos/{owner}/{repo}/code-scanning/alerts", "GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances", "GET /repos/{owner}/{repo}/code-scanning/analyses", "GET /repos/{owner}/{repo}/codespaces", "GET /repos/{owner}/{repo}/codespaces/devcontainers", "GET /repos/{owner}/{repo}/codespaces/secrets", "GET /repos/{owner}/{repo}/collaborators", "GET /repos/{owner}/{repo}/comments", "GET /repos/{owner}/{repo}/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/commits", "GET /repos/{owner}/{repo}/commits/{commit_sha}/comments", "GET /repos/{owner}/{repo}/commits/{commit_sha}/pulls", "GET /repos/{owner}/{repo}/commits/{ref}/check-runs", "GET /repos/{owner}/{repo}/commits/{ref}/check-suites", "GET /repos/{owner}/{repo}/commits/{ref}/status", "GET /repos/{owner}/{repo}/commits/{ref}/statuses", "GET /repos/{owner}/{repo}/contributors", "GET /repos/{owner}/{repo}/dependabot/alerts", "GET /repos/{owner}/{repo}/dependabot/secrets", "GET /repos/{owner}/{repo}/deployments", "GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses", "GET /repos/{owner}/{repo}/environments", "GET /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies", "GET /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules/apps", "GET /repos/{owner}/{repo}/events", "GET /repos/{owner}/{repo}/forks", "GET /repos/{owner}/{repo}/hooks", "GET /repos/{owner}/{repo}/hooks/{hook_id}/deliveries", "GET /repos/{owner}/{repo}/invitations", "GET /repos/{owner}/{repo}/issues", "GET /repos/{owner}/{repo}/issues/comments", "GET /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/issues/events", "GET /repos/{owner}/{repo}/issues/{issue_number}/comments", "GET /repos/{owner}/{repo}/issues/{issue_number}/events", "GET /repos/{owner}/{repo}/issues/{issue_number}/labels", "GET /repos/{owner}/{repo}/issues/{issue_number}/reactions", "GET /repos/{owner}/{repo}/issues/{issue_number}/timeline", "GET /repos/{owner}/{repo}/keys", "GET /repos/{owner}/{repo}/labels", "GET /repos/{owner}/{repo}/milestones", "GET /repos/{owner}/{repo}/milestones/{milestone_number}/labels", "GET /repos/{owner}/{repo}/notifications", "GET /repos/{owner}/{repo}/pages/builds", "GET /repos/{owner}/{repo}/projects", "GET /repos/{owner}/{repo}/pulls", "GET /repos/{owner}/{repo}/pulls/comments", "GET /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/pulls/{pull_number}/comments", "GET /repos/{owner}/{repo}/pulls/{pull_number}/commits", "GET /repos/{owner}/{repo}/pulls/{pull_number}/files", "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews", "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/comments", "GET /repos/{owner}/{repo}/releases", "GET /repos/{owner}/{repo}/releases/{release_id}/assets", "GET /repos/{owner}/{repo}/releases/{release_id}/reactions", "GET /repos/{owner}/{repo}/secret-scanning/alerts", "GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}/locations", "GET /repos/{owner}/{repo}/security-advisories", "GET /repos/{owner}/{repo}/stargazers", "GET /repos/{owner}/{repo}/subscribers", "GET /repos/{owner}/{repo}/tags", "GET /repos/{owner}/{repo}/teams", "GET /repos/{owner}/{repo}/topics", "GET /repositories", "GET /repositories/{repository_id}/environments/{environment_name}/secrets", "GET /repositories/{repository_id}/environments/{environment_name}/variables", "GET /search/code", "GET /search/commits", "GET /search/issues", "GET /search/labels", "GET /search/repositories", "GET /search/topics", "GET /search/users", "GET /teams/{team_id}/discussions", "GET /teams/{team_id}/discussions/{discussion_number}/comments", "GET /teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}/reactions", "GET /teams/{team_id}/discussions/{discussion_number}/reactions", "GET /teams/{team_id}/invitations", "GET /teams/{team_id}/members", "GET /teams/{team_id}/projects", "GET /teams/{team_id}/repos", "GET /teams/{team_id}/teams", "GET /user/blocks", "GET /user/codespaces", "GET /user/codespaces/secrets", "GET /user/emails", "GET /user/followers", "GET /user/following", "GET /user/gpg_keys", "GET /user/installations", "GET /user/installations/{installation_id}/repositories", "GET /user/issues", "GET /user/keys", "GET /user/marketplace_purchases", "GET /user/marketplace_purchases/stubbed", "GET /user/memberships/orgs", "GET /user/migrations", "GET /user/migrations/{migration_id}/repositories", "GET /user/orgs", "GET /user/packages", "GET /user/packages/{package_type}/{package_name}/versions", "GET /user/public_emails", "GET /user/repos", "GET /user/repository_invitations", "GET /user/social_accounts", "GET /user/ssh_signing_keys", "GET /user/starred", "GET /user/subscriptions", "GET /user/teams", "GET /users", "GET /users/{username}/events", "GET /users/{username}/events/orgs/{org}", "GET /users/{username}/events/public", "GET /users/{username}/followers", "GET /users/{username}/following", "GET /users/{username}/gists", "GET /users/{username}/gpg_keys", "GET /users/{username}/keys", "GET /users/{username}/orgs", "GET /users/{username}/packages", "GET /users/{username}/projects", "GET /users/{username}/received_events", "GET /users/{username}/received_events/public", "GET /users/{username}/repos", "GET /users/{username}/social_accounts", "GET /users/{username}/ssh_signing_keys", "GET /users/{username}/starred", "GET /users/{username}/subscriptions"];
     function isPaginatingEndpoint(arg) {
       if (typeof arg === "string") {
         return paginatingEndpoints.includes(arg);
@@ -7786,6 +7786,8 @@ var require_dist_node11 = __commonJS({
         listLabelsForSelfHostedRunnerForRepo: ["GET /repos/{owner}/{repo}/actions/runners/{runner_id}/labels"],
         listOrgSecrets: ["GET /orgs/{org}/actions/secrets"],
         listOrgVariables: ["GET /orgs/{org}/actions/variables"],
+        listRepoOrganizationSecrets: ["GET /repos/{owner}/{repo}/actions/organization-secrets"],
+        listRepoOrganizationVariables: ["GET /repos/{owner}/{repo}/actions/organization-variables"],
         listRepoRequiredWorkflows: ["GET /repos/{org}/{repo}/actions/required_workflows"],
         listRepoSecrets: ["GET /repos/{owner}/{repo}/actions/secrets"],
         listRepoVariables: ["GET /repos/{owner}/{repo}/actions/variables"],
@@ -7813,6 +7815,7 @@ var require_dist_node11 = __commonJS({
         removeSelectedRepoFromOrgSecret: ["DELETE /orgs/{org}/actions/secrets/{secret_name}/repositories/{repository_id}"],
         removeSelectedRepoFromOrgVariable: ["DELETE /orgs/{org}/actions/variables/{name}/repositories/{repository_id}"],
         removeSelectedRepoFromRequiredWorkflow: ["DELETE /orgs/{org}/actions/required_workflows/{required_workflow_id}/repositories/{repository_id}"],
+        reviewCustomGatesForRun: ["POST /repos/{owner}/{repo}/actions/runs/{run_id}/deployment_protection_rule"],
         reviewPendingDeploymentsForRun: ["POST /repos/{owner}/{repo}/actions/runs/{run_id}/pending_deployments"],
         setAllowedActionsOrganization: ["PUT /orgs/{org}/actions/permissions/selected-actions"],
         setAllowedActionsRepository: ["PUT /repos/{owner}/{repo}/actions/permissions/selected-actions"],
@@ -7889,6 +7892,7 @@ var require_dist_node11 = __commonJS({
         listAccountsForPlan: ["GET /marketplace_listing/plans/{plan_id}/accounts"],
         listAccountsForPlanStubbed: ["GET /marketplace_listing/stubbed/plans/{plan_id}/accounts"],
         listInstallationReposForAuthenticatedUser: ["GET /user/installations/{installation_id}/repositories"],
+        listInstallationRequestsForAuthenticatedApp: ["GET /app/installation-requests"],
         listInstallations: ["GET /app/installations"],
         listInstallationsForAuthenticatedUser: ["GET /user/installations"],
         listPlans: ["GET /marketplace_listing/plans"],
@@ -7940,6 +7944,7 @@ var require_dist_node11 = __commonJS({
         }],
         getAnalysis: ["GET /repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}"],
         getCodeqlDatabase: ["GET /repos/{owner}/{repo}/code-scanning/codeql/databases/{language}"],
+        getDefaultSetup: ["GET /repos/{owner}/{repo}/code-scanning/default-setup"],
         getSarif: ["GET /repos/{owner}/{repo}/code-scanning/sarifs/{sarif_id}"],
         listAlertInstances: ["GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances"],
         listAlertsForOrg: ["GET /orgs/{org}/code-scanning/alerts"],
@@ -7950,6 +7955,7 @@ var require_dist_node11 = __commonJS({
         listCodeqlDatabases: ["GET /repos/{owner}/{repo}/code-scanning/codeql/databases"],
         listRecentAnalyses: ["GET /repos/{owner}/{repo}/code-scanning/analyses"],
         updateAlert: ["PATCH /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}"],
+        updateDefaultSetup: ["PATCH /repos/{owner}/{repo}/code-scanning/default-setup"],
         uploadSarif: ["POST /repos/{owner}/{repo}/code-scanning/sarifs"]
       },
       codesOfConduct: {
@@ -7966,6 +7972,7 @@ var require_dist_node11 = __commonJS({
         createOrUpdateSecretForAuthenticatedUser: ["PUT /user/codespaces/secrets/{secret_name}"],
         createWithPrForAuthenticatedUser: ["POST /repos/{owner}/{repo}/pulls/{pull_number}/codespaces"],
         createWithRepoForAuthenticatedUser: ["POST /repos/{owner}/{repo}/codespaces"],
+        deleteCodespacesBillingUsers: ["DELETE /orgs/{org}/codespaces/billing/selected_users"],
         deleteForAuthenticatedUser: ["DELETE /user/codespaces/{codespace_name}"],
         deleteFromOrganization: ["DELETE /orgs/{org}/members/{username}/codespaces/{codespace_name}"],
         deleteOrgSecret: ["DELETE /orgs/{org}/codespaces/secrets/{secret_name}"],
@@ -8000,6 +8007,7 @@ var require_dist_node11 = __commonJS({
         removeSelectedRepoFromOrgSecret: ["DELETE /orgs/{org}/codespaces/secrets/{secret_name}/repositories/{repository_id}"],
         repoMachinesForAuthenticatedUser: ["GET /repos/{owner}/{repo}/codespaces/machines"],
         setCodespacesBilling: ["PUT /orgs/{org}/codespaces/billing"],
+        setCodespacesBillingUsers: ["POST /orgs/{org}/codespaces/billing/selected_users"],
         setRepositoriesForSecretForAuthenticatedUser: ["PUT /user/codespaces/secrets/{secret_name}/repositories"],
         setSelectedReposForOrgSecret: ["PUT /orgs/{org}/codespaces/secrets/{secret_name}/repositories"],
         startForAuthenticatedUser: ["POST /user/codespaces/{codespace_name}/start"],
@@ -8030,15 +8038,11 @@ var require_dist_node11 = __commonJS({
       },
       dependencyGraph: {
         createRepositorySnapshot: ["POST /repos/{owner}/{repo}/dependency-graph/snapshots"],
-        diffRange: ["GET /repos/{owner}/{repo}/dependency-graph/compare/{basehead}"]
+        diffRange: ["GET /repos/{owner}/{repo}/dependency-graph/compare/{basehead}"],
+        exportSbom: ["GET /repos/{owner}/{repo}/dependency-graph/sbom"]
       },
       emojis: {
         get: ["GET /emojis"]
-      },
-      enterpriseAdmin: {
-        addCustomLabelsToSelfHostedRunnerForEnterprise: ["POST /enterprises/{enterprise}/actions/runners/{runner_id}/labels"],
-        enableSelectedOrganizationGithubActionsEnterprise: ["PUT /enterprises/{enterprise}/actions/permissions/organizations/{org_id}"],
-        listLabelsForSelfHostedRunnerForEnterprise: ["GET /enterprises/{enterprise}/actions/runners/{runner_id}/labels"]
       },
       gists: {
         checkIsStarred: ["GET /gists/{gist_id}/star"],
@@ -8200,6 +8204,7 @@ var require_dist_node11 = __commonJS({
         convertMemberToOutsideCollaborator: ["PUT /orgs/{org}/outside_collaborators/{username}"],
         createInvitation: ["POST /orgs/{org}/invitations"],
         createWebhook: ["POST /orgs/{org}/hooks"],
+        delete: ["DELETE /orgs/{org}"],
         deleteWebhook: ["DELETE /orgs/{org}/hooks/{hook_id}"],
         enableOrDisableSecurityProductOnAllOrgRepos: ["POST /orgs/{org}/{security_product}/{enablement}"],
         get: ["GET /orgs/{org}"],
@@ -8218,6 +8223,10 @@ var require_dist_node11 = __commonJS({
         listMembers: ["GET /orgs/{org}/members"],
         listMembershipsForAuthenticatedUser: ["GET /user/memberships/orgs"],
         listOutsideCollaborators: ["GET /orgs/{org}/outside_collaborators"],
+        listPatGrantRepositories: ["GET /organizations/{org}/personal-access-tokens/{pat_id}/repositories"],
+        listPatGrantRequestRepositories: ["GET /organizations/{org}/personal-access-token-requests/{pat_request_id}/repositories"],
+        listPatGrantRequests: ["GET /organizations/{org}/personal-access-token-requests"],
+        listPatGrants: ["GET /organizations/{org}/personal-access-tokens"],
         listPendingInvitations: ["GET /orgs/{org}/invitations"],
         listPublicMembers: ["GET /orgs/{org}/public_members"],
         listSecurityManagerTeams: ["GET /orgs/{org}/security-managers"],
@@ -8230,11 +8239,15 @@ var require_dist_node11 = __commonJS({
         removeOutsideCollaborator: ["DELETE /orgs/{org}/outside_collaborators/{username}"],
         removePublicMembershipForAuthenticatedUser: ["DELETE /orgs/{org}/public_members/{username}"],
         removeSecurityManagerTeam: ["DELETE /orgs/{org}/security-managers/teams/{team_slug}"],
+        reviewPatGrantRequest: ["POST /organizations/{org}/personal-access-token-requests/{pat_request_id}"],
+        reviewPatGrantRequestsInBulk: ["POST /organizations/{org}/personal-access-token-requests"],
         setMembershipForUser: ["PUT /orgs/{org}/memberships/{username}"],
         setPublicMembershipForAuthenticatedUser: ["PUT /orgs/{org}/public_members/{username}"],
         unblockUser: ["DELETE /orgs/{org}/blocks/{username}"],
         update: ["PATCH /orgs/{org}"],
         updateMembershipForAuthenticatedUser: ["PATCH /user/memberships/orgs/{org}"],
+        updatePatAccess: ["POST /organizations/{org}/personal-access-tokens/{pat_id}"],
+        updatePatAccesses: ["POST /organizations/{org}/personal-access-tokens"],
         updateWebhook: ["PATCH /orgs/{org}/hooks/{hook_id}"],
         updateWebhookConfigForOrg: ["PATCH /orgs/{org}/hooks/{hook_id}/config"]
       },
@@ -8260,6 +8273,9 @@ var require_dist_node11 = __commonJS({
         getPackageVersionForAuthenticatedUser: ["GET /user/packages/{package_type}/{package_name}/versions/{package_version_id}"],
         getPackageVersionForOrganization: ["GET /orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}"],
         getPackageVersionForUser: ["GET /users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}"],
+        listDockerMigrationConflictingPackagesForAuthenticatedUser: ["GET /user/docker/conflicts"],
+        listDockerMigrationConflictingPackagesForOrganization: ["GET /orgs/{org}/docker/conflicts"],
+        listDockerMigrationConflictingPackagesForUser: ["GET /users/{username}/docker/conflicts"],
         listPackagesForAuthenticatedUser: ["GET /user/packages"],
         listPackagesForOrganization: ["GET /orgs/{org}/packages"],
         listPackagesForUser: ["GET /users/{username}/packages"],
@@ -8382,6 +8398,7 @@ var require_dist_node11 = __commonJS({
         createDeployKey: ["POST /repos/{owner}/{repo}/keys"],
         createDeployment: ["POST /repos/{owner}/{repo}/deployments"],
         createDeploymentBranchPolicy: ["POST /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies"],
+        createDeploymentProtectionRule: ["POST /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules"],
         createDeploymentStatus: ["POST /repos/{owner}/{repo}/deployments/{deployment_id}/statuses"],
         createDispatchEvent: ["POST /repos/{owner}/{repo}/dispatches"],
         createForAuthenticatedUser: ["POST /user/repos"],
@@ -8389,9 +8406,11 @@ var require_dist_node11 = __commonJS({
         createInOrg: ["POST /orgs/{org}/repos"],
         createOrUpdateEnvironment: ["PUT /repos/{owner}/{repo}/environments/{environment_name}"],
         createOrUpdateFileContents: ["PUT /repos/{owner}/{repo}/contents/{path}"],
+        createOrgRuleset: ["POST /orgs/{org}/rulesets"],
         createPagesDeployment: ["POST /repos/{owner}/{repo}/pages/deployment"],
         createPagesSite: ["POST /repos/{owner}/{repo}/pages"],
         createRelease: ["POST /repos/{owner}/{repo}/releases"],
+        createRepoRuleset: ["POST /repos/{owner}/{repo}/rulesets"],
         createTagProtection: ["POST /repos/{owner}/{repo}/tags/protection"],
         createUsingTemplate: ["POST /repos/{template_owner}/{template_repo}/generate"],
         createWebhook: ["POST /repos/{owner}/{repo}/hooks"],
@@ -8412,13 +8431,16 @@ var require_dist_node11 = __commonJS({
         deleteDeploymentBranchPolicy: ["DELETE /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id}"],
         deleteFile: ["DELETE /repos/{owner}/{repo}/contents/{path}"],
         deleteInvitation: ["DELETE /repos/{owner}/{repo}/invitations/{invitation_id}"],
+        deleteOrgRuleset: ["DELETE /orgs/{org}/rulesets/{ruleset_id}"],
         deletePagesSite: ["DELETE /repos/{owner}/{repo}/pages"],
         deletePullRequestReviewProtection: ["DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews"],
         deleteRelease: ["DELETE /repos/{owner}/{repo}/releases/{release_id}"],
         deleteReleaseAsset: ["DELETE /repos/{owner}/{repo}/releases/assets/{asset_id}"],
+        deleteRepoRuleset: ["DELETE /repos/{owner}/{repo}/rulesets/{ruleset_id}"],
         deleteTagProtection: ["DELETE /repos/{owner}/{repo}/tags/protection/{tag_protection_id}"],
         deleteWebhook: ["DELETE /repos/{owner}/{repo}/hooks/{hook_id}"],
         disableAutomatedSecurityFixes: ["DELETE /repos/{owner}/{repo}/automated-security-fixes"],
+        disableDeploymentProtectionRule: ["DELETE /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules/{protection_rule_id}"],
         disableLfsForRepo: ["DELETE /repos/{owner}/{repo}/lfs"],
         disableVulnerabilityAlerts: ["DELETE /repos/{owner}/{repo}/vulnerability-alerts"],
         downloadArchive: ["GET /repos/{owner}/{repo}/zipball/{ref}", {}, {
@@ -8433,6 +8455,7 @@ var require_dist_node11 = __commonJS({
         get: ["GET /repos/{owner}/{repo}"],
         getAccessRestrictions: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/restrictions"],
         getAdminBranchProtection: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins"],
+        getAllDeploymentProtectionRules: ["GET /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules"],
         getAllEnvironments: ["GET /repos/{owner}/{repo}/environments"],
         getAllStatusCheckContexts: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks/contexts"],
         getAllTopics: ["GET /repos/{owner}/{repo}/topics"],
@@ -8440,6 +8463,7 @@ var require_dist_node11 = __commonJS({
         getAutolink: ["GET /repos/{owner}/{repo}/autolinks/{autolink_id}"],
         getBranch: ["GET /repos/{owner}/{repo}/branches/{branch}"],
         getBranchProtection: ["GET /repos/{owner}/{repo}/branches/{branch}/protection"],
+        getBranchRules: ["GET /repos/{owner}/{repo}/rules/branches/{branch}"],
         getClones: ["GET /repos/{owner}/{repo}/traffic/clones"],
         getCodeFrequencyStats: ["GET /repos/{owner}/{repo}/stats/code_frequency"],
         getCollaboratorPermissionLevel: ["GET /repos/{owner}/{repo}/collaborators/{username}/permission"],
@@ -8451,6 +8475,7 @@ var require_dist_node11 = __commonJS({
         getCommunityProfileMetrics: ["GET /repos/{owner}/{repo}/community/profile"],
         getContent: ["GET /repos/{owner}/{repo}/contents/{path}"],
         getContributorsStats: ["GET /repos/{owner}/{repo}/stats/contributors"],
+        getCustomDeploymentProtectionRule: ["GET /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules/{protection_rule_id}"],
         getDeployKey: ["GET /repos/{owner}/{repo}/keys/{key_id}"],
         getDeployment: ["GET /repos/{owner}/{repo}/deployments/{deployment_id}"],
         getDeploymentBranchPolicy: ["GET /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id}"],
@@ -8458,6 +8483,8 @@ var require_dist_node11 = __commonJS({
         getEnvironment: ["GET /repos/{owner}/{repo}/environments/{environment_name}"],
         getLatestPagesBuild: ["GET /repos/{owner}/{repo}/pages/builds/latest"],
         getLatestRelease: ["GET /repos/{owner}/{repo}/releases/latest"],
+        getOrgRuleset: ["GET /orgs/{org}/rulesets/{ruleset_id}"],
+        getOrgRulesets: ["GET /orgs/{org}/rulesets"],
         getPages: ["GET /repos/{owner}/{repo}/pages"],
         getPagesBuild: ["GET /repos/{owner}/{repo}/pages/builds/{build_id}"],
         getPagesHealthCheck: ["GET /repos/{owner}/{repo}/pages/health"],
@@ -8469,6 +8496,8 @@ var require_dist_node11 = __commonJS({
         getRelease: ["GET /repos/{owner}/{repo}/releases/{release_id}"],
         getReleaseAsset: ["GET /repos/{owner}/{repo}/releases/assets/{asset_id}"],
         getReleaseByTag: ["GET /repos/{owner}/{repo}/releases/tags/{tag}"],
+        getRepoRuleset: ["GET /repos/{owner}/{repo}/rulesets/{ruleset_id}"],
+        getRepoRulesets: ["GET /repos/{owner}/{repo}/rulesets"],
         getStatusChecksProtection: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks"],
         getTeamsWithAccessToProtectedBranch: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams"],
         getTopPaths: ["GET /repos/{owner}/{repo}/traffic/popular/paths"],
@@ -8487,6 +8516,7 @@ var require_dist_node11 = __commonJS({
         listCommitStatusesForRef: ["GET /repos/{owner}/{repo}/commits/{ref}/statuses"],
         listCommits: ["GET /repos/{owner}/{repo}/commits"],
         listContributors: ["GET /repos/{owner}/{repo}/contributors"],
+        listCustomDeploymentRuleIntegrations: ["GET /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules/apps"],
         listDeployKeys: ["GET /repos/{owner}/{repo}/keys"],
         listDeploymentBranchPolicies: ["GET /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies"],
         listDeploymentStatuses: ["GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses"],
@@ -8550,9 +8580,11 @@ var require_dist_node11 = __commonJS({
         updateDeploymentBranchPolicy: ["PUT /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id}"],
         updateInformationAboutPagesSite: ["PUT /repos/{owner}/{repo}/pages"],
         updateInvitation: ["PATCH /repos/{owner}/{repo}/invitations/{invitation_id}"],
+        updateOrgRuleset: ["PUT /orgs/{org}/rulesets/{ruleset_id}"],
         updatePullRequestReviewProtection: ["PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews"],
         updateRelease: ["PATCH /repos/{owner}/{repo}/releases/{release_id}"],
         updateReleaseAsset: ["PATCH /repos/{owner}/{repo}/releases/assets/{asset_id}"],
+        updateRepoRuleset: ["PUT /repos/{owner}/{repo}/rulesets/{ruleset_id}"],
         updateStatusCheckPotection: ["PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks", {}, {
           renamed: ["repos", "updateStatusCheckProtection"]
         }],
@@ -8574,14 +8606,18 @@ var require_dist_node11 = __commonJS({
       },
       secretScanning: {
         getAlert: ["GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}"],
-        getSecurityAnalysisSettingsForEnterprise: ["GET /enterprises/{enterprise}/code_security_and_analysis"],
         listAlertsForEnterprise: ["GET /enterprises/{enterprise}/secret-scanning/alerts"],
         listAlertsForOrg: ["GET /orgs/{org}/secret-scanning/alerts"],
         listAlertsForRepo: ["GET /repos/{owner}/{repo}/secret-scanning/alerts"],
         listLocationsForAlert: ["GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}/locations"],
-        patchSecurityAnalysisSettingsForEnterprise: ["PATCH /enterprises/{enterprise}/code_security_and_analysis"],
-        postSecurityProductEnablementForEnterprise: ["POST /enterprises/{enterprise}/{security_product}/{enablement}"],
         updateAlert: ["PATCH /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}"]
+      },
+      securityAdvisories: {
+        createPrivateVulnerabilityReport: ["POST /repos/{owner}/{repo}/security-advisories/reports"],
+        createRepositoryAdvisory: ["POST /repos/{owner}/{repo}/security-advisories"],
+        getRepositoryAdvisory: ["GET /repos/{owner}/{repo}/security-advisories/{ghsa_id}"],
+        listRepositoryAdvisories: ["GET /repos/{owner}/{repo}/security-advisories"],
+        updateRepositoryAdvisory: ["PATCH /repos/{owner}/{repo}/security-advisories/{ghsa_id}"]
       },
       teams: {
         addOrUpdateMembershipForUserInOrg: ["PUT /orgs/{org}/teams/{team_slug}/memberships/{username}"],
@@ -8620,6 +8656,7 @@ var require_dist_node11 = __commonJS({
           renamed: ["users", "addEmailForAuthenticatedUser"]
         }],
         addEmailForAuthenticatedUser: ["POST /user/emails"],
+        addSocialAccountForAuthenticatedUser: ["POST /user/social_accounts"],
         block: ["PUT /user/blocks/{username}"],
         checkBlocked: ["GET /user/blocks/{username}"],
         checkFollowingForUser: ["GET /users/{username}/following/{target_user}"],
@@ -8645,6 +8682,7 @@ var require_dist_node11 = __commonJS({
           renamed: ["users", "deletePublicSshKeyForAuthenticatedUser"]
         }],
         deletePublicSshKeyForAuthenticatedUser: ["DELETE /user/keys/{key_id}"],
+        deleteSocialAccountForAuthenticatedUser: ["DELETE /user/social_accounts"],
         deleteSshSigningKeyForAuthenticatedUser: ["DELETE /user/ssh_signing_keys/{ssh_signing_key_id}"],
         follow: ["PUT /user/following/{username}"],
         getAuthenticated: ["GET /user"],
@@ -8689,6 +8727,8 @@ var require_dist_node11 = __commonJS({
           renamed: ["users", "listPublicSshKeysForAuthenticatedUser"]
         }],
         listPublicSshKeysForAuthenticatedUser: ["GET /user/keys"],
+        listSocialAccountsForAuthenticatedUser: ["GET /user/social_accounts"],
+        listSocialAccountsForUser: ["GET /users/{username}/social_accounts"],
         listSshSigningKeysForAuthenticatedUser: ["GET /user/ssh_signing_keys"],
         listSshSigningKeysForUser: ["GET /users/{username}/ssh_signing_keys"],
         setPrimaryEmailVisibilityForAuthenticated: ["PATCH /user/email/visibility", {}, {
@@ -8700,7 +8740,7 @@ var require_dist_node11 = __commonJS({
         updateAuthenticated: ["PATCH /user"]
       }
     };
-    var VERSION = "7.0.1";
+    var VERSION = "7.1.0";
     function endpointsToMethods(octokit, endpointsMap) {
       const newMethods = {};
       for (const [scope, endpoints] of Object.entries(endpointsMap)) {
@@ -8788,7 +8828,7 @@ var require_dist_node12 = __commonJS({
     var pluginRequestLog = require_dist_node9();
     var pluginPaginateRest = require_dist_node10();
     var pluginRestEndpointMethods = require_dist_node11();
-    var VERSION = "19.0.7";
+    var VERSION = "19.0.8";
     var Octokit2 = core.Octokit.plugin(pluginRequestLog.requestLog, pluginRestEndpointMethods.legacyRestEndpointMethods, pluginPaginateRest.paginateRest).defaults({
       userAgent: `octokit-rest.js/${VERSION}`
     });
