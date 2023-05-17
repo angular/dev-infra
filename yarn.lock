@@ -248,14 +248,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/animations@npm:16.1.0-next.0":
-  version: 16.1.0-next.0
-  resolution: "@angular/animations@npm:16.1.0-next.0"
+"@angular/animations@npm:16.1.0-next.1":
+  version: 16.1.0-next.1
+  resolution: "@angular/animations@npm:16.1.0-next.1"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/core": 16.1.0-next.0
-  checksum: 3c0b41c6f90c3732c8e37caddc3112eb93186c0007b6de1c93f06500e25f217eec0431df26b902e085d95d700feaa6b46136a85512254a1eb396def47e0522a6
+    "@angular/core": 16.1.0-next.1
+  checksum: 5b44ac1214856c169fca67039ef53fa34ab505209d29418414b67d79352a4918c81df9c5510961c45d956a4e0a14aba4fd63262aeb47b48252f6b216cc288e5a
   languageName: node
   linkType: hard
 
@@ -336,21 +336,21 @@ __metadata:
     "@actions/core": ^1.4.0
     "@actions/github": ^5.0.0
     "@angular-devkit/build-angular": 16.1.0-next.0
-    "@angular/animations": 16.1.0-next.0
+    "@angular/animations": 16.1.0-next.1
     "@angular/bazel": "patch:@angular/bazel@npm:14.1.0-next.2#.yarn/patches/@angular-bazel-npm.patch"
     "@angular/benchpress": 0.3.0
     "@angular/cdk": 16.1.0-next.0
     "@angular/cli": 16.1.0-next.0
-    "@angular/common": 16.1.0-next.0
-    "@angular/compiler": 16.1.0-next.0
-    "@angular/compiler-cli": 16.1.0-next.0
-    "@angular/core": 16.1.0-next.0
+    "@angular/common": 16.1.0-next.1
+    "@angular/compiler": 16.1.0-next.1
+    "@angular/compiler-cli": 16.1.0-next.1
+    "@angular/core": 16.1.0-next.1
     "@angular/fire": ^7.1.0-rc
-    "@angular/forms": 16.1.0-next.0
+    "@angular/forms": 16.1.0-next.1
     "@angular/material": 16.1.0-next.0
-    "@angular/platform-browser": 16.1.0-next.0
-    "@angular/platform-browser-dynamic": 16.1.0-next.0
-    "@angular/router": 16.1.0-next.0
+    "@angular/platform-browser": 16.1.0-next.1
+    "@angular/platform-browser-dynamic": 16.1.0-next.1
+    "@angular/router": 16.1.0-next.1
     "@babel/core": ^7.16.0
     "@babel/helper-annotate-as-pure": ^7.18.6
     "@babel/plugin-proposal-async-generator-functions": ^7.20.1
@@ -521,21 +521,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/common@npm:16.1.0-next.0":
-  version: 16.1.0-next.0
-  resolution: "@angular/common@npm:16.1.0-next.0"
+"@angular/common@npm:16.1.0-next.1":
+  version: 16.1.0-next.1
+  resolution: "@angular/common@npm:16.1.0-next.1"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/core": 16.1.0-next.0
+    "@angular/core": 16.1.0-next.1
     rxjs: ^6.5.3 || ^7.4.0
-  checksum: 103fc3f50c5d6a0eaef7522751de5cff2cfbef775f4e7fc785ac090e2e634b6f6ecf2e31feb34e45091244cb73bf3c3e749e779226c6b707ed84eb43fdccc48f
+  checksum: a83d36ed78cd48cce582e0c635ae8c9fd3cf6cbdca621c43181bebc9e3b27805285bc46bc7199ab14e2cb65b6b73365b7ff175194d9ffad6d326471376cc22cf
   languageName: node
   linkType: hard
 
-"@angular/compiler-cli@npm:16.1.0-next.0":
-  version: 16.1.0-next.0
-  resolution: "@angular/compiler-cli@npm:16.1.0-next.0"
+"@angular/compiler-cli@npm:16.1.0-next.1":
+  version: 16.1.0-next.1
+  resolution: "@angular/compiler-cli@npm:16.1.0-next.1"
   dependencies:
     "@babel/core": 7.19.3
     "@jridgewell/sourcemap-codec": ^1.4.14
@@ -546,39 +546,39 @@ __metadata:
     tslib: ^2.3.0
     yargs: ^17.2.1
   peerDependencies:
-    "@angular/compiler": 16.1.0-next.0
+    "@angular/compiler": 16.1.0-next.1
     typescript: ">=4.9.3 <5.2"
   bin:
     ng-xi18n: bundles/src/bin/ng_xi18n.js
     ngc: bundles/src/bin/ngc.js
     ngcc: bundles/ngcc/index.js
-  checksum: 76fd7dbf54a534b30676899ea568bbb58bbda2eb82d4074bf0833f89834d3fe2a8f312497f66cf7132c2951e83fe6e6b9a3488c264d0663a7acc71e341439aed
+  checksum: f9b5ccca38d59a01bea4d543093ad828997b0e301b306c025d4d537df2b220c94256014a945e4bdba67376687f6ed35e386ba533e008b4346b99afc6a8136531
   languageName: node
   linkType: hard
 
-"@angular/compiler@npm:16.1.0-next.0":
-  version: 16.1.0-next.0
-  resolution: "@angular/compiler@npm:16.1.0-next.0"
+"@angular/compiler@npm:16.1.0-next.1":
+  version: 16.1.0-next.1
+  resolution: "@angular/compiler@npm:16.1.0-next.1"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/core": 16.1.0-next.0
+    "@angular/core": 16.1.0-next.1
   peerDependenciesMeta:
     "@angular/core":
       optional: true
-  checksum: 92a8470a2b31be28a307e4acb146ac5a096f9de75229b73ef252beae12942bcf82641facdb2ebd4174da498f4186e26d92cae73ca420ae54e1e4db83b4827cb1
+  checksum: 91dc1ea43bd33564df143c13a3b71608ea4bb7c8498b9dee66da145fda305d39acb8897d4eac003e7b40774eb8efe77677efc86944584762fe7cd3a03af451bc
   languageName: node
   linkType: hard
 
-"@angular/core@npm:16.1.0-next.0":
-  version: 16.1.0-next.0
-  resolution: "@angular/core@npm:16.1.0-next.0"
+"@angular/core@npm:16.1.0-next.1":
+  version: 16.1.0-next.1
+  resolution: "@angular/core@npm:16.1.0-next.1"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
     rxjs: ^6.5.3 || ^7.4.0
     zone.js: ~0.13.0
-  checksum: 725ba8ca99f8de8424acbfb576b7f1e1720a6e40ce8070e5b6c171cf54d3b2c67eb8a28315461d9a030e5aeb9e9299741f9f92acf1dcc30c77c7b7c0bdfdc3fb
+  checksum: 1980ef9339af4697003fb5d60d898e23b72d993d2a15619140369bdbfc58d46217e017f026050cd476e6332b841a632d0edb03e4bd6c14fea1356fdeb59a08ad
   languageName: node
   linkType: hard
 
@@ -617,17 +617,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/forms@npm:16.1.0-next.0":
-  version: 16.1.0-next.0
-  resolution: "@angular/forms@npm:16.1.0-next.0"
+"@angular/forms@npm:16.1.0-next.1":
+  version: 16.1.0-next.1
+  resolution: "@angular/forms@npm:16.1.0-next.1"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/common": 16.1.0-next.0
-    "@angular/core": 16.1.0-next.0
-    "@angular/platform-browser": 16.1.0-next.0
+    "@angular/common": 16.1.0-next.1
+    "@angular/core": 16.1.0-next.1
+    "@angular/platform-browser": 16.1.0-next.1
     rxjs: ^6.5.3 || ^7.4.0
-  checksum: fdbe7b708ca3bbfa60a4605f0ce371f418f577753aacd50e12690595387123ae41fb20442eb147337574c37bad404b324e35df3f511c3243050554ae045e4c0c
+  checksum: 000b24222deb5903a29825bd421c245507273e11ad8d5b37c21250c4493dd1cc9a1a6e2f77ad468960fdef9286b2a83a541d5aaa86ee4d45bd7834ed2f1959eb
   languageName: node
   linkType: hard
 
@@ -695,47 +695,47 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/platform-browser-dynamic@npm:16.1.0-next.0":
-  version: 16.1.0-next.0
-  resolution: "@angular/platform-browser-dynamic@npm:16.1.0-next.0"
+"@angular/platform-browser-dynamic@npm:16.1.0-next.1":
+  version: 16.1.0-next.1
+  resolution: "@angular/platform-browser-dynamic@npm:16.1.0-next.1"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/common": 16.1.0-next.0
-    "@angular/compiler": 16.1.0-next.0
-    "@angular/core": 16.1.0-next.0
-    "@angular/platform-browser": 16.1.0-next.0
-  checksum: 52e1949481fc42a7b8a6edd62270fc4e3ab24ed4dc0baa6c304a9891aa66b245b2a435dc45200a2178641c75b8e7bdc511b9de5075074ac3fd4c2c7e838096c3
+    "@angular/common": 16.1.0-next.1
+    "@angular/compiler": 16.1.0-next.1
+    "@angular/core": 16.1.0-next.1
+    "@angular/platform-browser": 16.1.0-next.1
+  checksum: 70d78b52af71d7f8f8c96dcb4428ef0eeebfdc7d58902394120781d9143b79c317f02264297ea3eaa96312fc23a952e62b063fb2ca64303ecff3e8229769ff25
   languageName: node
   linkType: hard
 
-"@angular/platform-browser@npm:16.1.0-next.0":
-  version: 16.1.0-next.0
-  resolution: "@angular/platform-browser@npm:16.1.0-next.0"
+"@angular/platform-browser@npm:16.1.0-next.1":
+  version: 16.1.0-next.1
+  resolution: "@angular/platform-browser@npm:16.1.0-next.1"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/animations": 16.1.0-next.0
-    "@angular/common": 16.1.0-next.0
-    "@angular/core": 16.1.0-next.0
+    "@angular/animations": 16.1.0-next.1
+    "@angular/common": 16.1.0-next.1
+    "@angular/core": 16.1.0-next.1
   peerDependenciesMeta:
     "@angular/animations":
       optional: true
-  checksum: 54839333407b60f68b038378c0fd9f45f54b86579486e9bff17cb3033895e01a92965a381d37a48cfc8c85032b013f6b6ba6cf314b95b8a2c222e1d223e7282f
+  checksum: 82d588e5e1f0b67cabc1617b6fed514f96f3d1afd42a6aef22c21cf93d67700c84fe72e5005a242a6c3f1000eb2bcd34a957957d2f944fec26a5093dd55f15a4
   languageName: node
   linkType: hard
 
-"@angular/router@npm:16.1.0-next.0":
-  version: 16.1.0-next.0
-  resolution: "@angular/router@npm:16.1.0-next.0"
+"@angular/router@npm:16.1.0-next.1":
+  version: 16.1.0-next.1
+  resolution: "@angular/router@npm:16.1.0-next.1"
   dependencies:
     tslib: ^2.3.0
   peerDependencies:
-    "@angular/common": 16.1.0-next.0
-    "@angular/core": 16.1.0-next.0
-    "@angular/platform-browser": 16.1.0-next.0
+    "@angular/common": 16.1.0-next.1
+    "@angular/core": 16.1.0-next.1
+    "@angular/platform-browser": 16.1.0-next.1
     rxjs: ^6.5.3 || ^7.4.0
-  checksum: 57d5a8aebecf19fd3782c1654a381a42e18a099fb6135950ed17ae4b73d662109ad5dfc6e0db133b01221d26edbc0df6dfff736e300991c65ae95b70cd506bd1
+  checksum: 40e5bbe1f71cb895317d937766446c3293fb3bd7905f9e968a746c37bb7cf34d83781563aa6a83f7ee4728942efb8f8b001e29297623d03c78c0b38c98908676
   languageName: node
   linkType: hard
 
