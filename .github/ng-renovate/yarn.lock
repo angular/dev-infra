@@ -3960,22 +3960,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:10.2.2":
-  version: 10.2.2
-  resolution: "glob@npm:10.2.2"
-  dependencies:
-    foreground-child: ^3.1.0
-    jackspeak: ^2.0.3
-    minimatch: ^9.0.0
-    minipass: ^5.0.0
-    path-scurry: ^1.7.0
-  bin:
-    glob: dist/cjs/src/bin.js
-  checksum: 33cbbbea74deb605107715f2ee51937953271ff2f6ce712b57d95a714e2f1bf272fa2c2b0c5101097bf98d3e5d40856941af498b05bce07567aca1a6e3cc7ae9
-  languageName: node
-  linkType: hard
-
-"glob@npm:^10.2.2":
+"glob@npm:10.2.3, glob@npm:^10.2.2":
   version: 10.2.3
   resolution: "glob@npm:10.2.3"
   dependencies:
@@ -5443,7 +5428,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: 35.88.0
+    renovate: 35.91.0
   languageName: unknown
   linkType: soft
 
@@ -6172,9 +6157,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:35.88.0":
-  version: 35.88.0
-  resolution: "renovate@npm:35.88.0"
+"renovate@npm:35.91.0":
+  version: 35.91.0
+  resolution: "renovate@npm:35.91.0"
   dependencies:
     "@aws-sdk/client-codecommit": 3.332.0
     "@aws-sdk/client-ec2": 3.332.0
@@ -6234,7 +6219,7 @@ __metadata:
     fs-extra: 11.1.1
     git-url-parse: 13.1.0
     github-url-from-git: 1.5.0
-    glob: 10.2.2
+    glob: 10.2.3
     global-agent: 3.0.0
     good-enough-parser: 1.1.23
     got: 11.8.6
@@ -6289,7 +6274,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 2144e4449109342c59a47b85f08b9e4637460e26dc8c9479c79222a5ff279b1d917657de8408d33ceeabcda2c6d68755fd74582b5b6b7b3bc3a7e94c9372d4a8
+  checksum: fb3ef49587debc615e4b54918143862bfa8dce69d8e062bff89b48982145bf40f9f26834454f7f93033f3270926bdf3eccac8fa94eb54ebedc29328eba0bae09
   languageName: node
   linkType: hard
 

@@ -8024,20 +8024,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browser-sync-client@npm:^2.29.1":
-  version: 2.29.1
-  resolution: "browser-sync-client@npm:2.29.1"
+"browser-sync-client@npm:^2.29.2":
+  version: 2.29.2
+  resolution: "browser-sync-client@npm:2.29.2"
   dependencies:
     etag: 1.8.1
     fresh: 0.5.2
     mitt: ^1.1.3
-  checksum: 9ed2828e1d7edab4cbb07b5e029d5a58a187e67e55220543aa8fa0cac5c6c6c64c7f701abb091345542353e342ac50e75df00a32f39eb8bec0d34db68c9730ba
+  checksum: 874fbbb6c4782f961787181414db151cf5ec8c93743b65c463a718e7f88e467fba3cdcda52666a83a55e4f5f71c2b8f450617bca12038283a8594dd0116343a6
   languageName: node
   linkType: hard
 
-"browser-sync-ui@npm:^2.29.1":
-  version: 2.29.1
-  resolution: "browser-sync-ui@npm:2.29.1"
+"browser-sync-ui@npm:^2.29.2":
+  version: 2.29.2
+  resolution: "browser-sync-ui@npm:2.29.2"
   dependencies:
     async-each-series: 0.1.1
     chalk: 4.1.2
@@ -8046,18 +8046,17 @@ __metadata:
     server-destroy: 1.0.1
     socket.io-client: ^4.4.1
     stream-throttle: ^0.1.3
-  checksum: db70373cc3eed83d2d76d906c0e23749950734c00a8cf426ec9a2adfa32e40ed30a8ae432d1a7873402907a5ae8d5b5286851a55d1130763659b8783c3d1f76d
+  checksum: 4ee41c1c20d9e91506dc6dbbcd3da69d1815a2a02e8e7a11933791e77c3047d3382dadf63a8797e3f02ff996aabe2924052b0752bedaff6a4cc99c8f282b4a33
   languageName: node
   linkType: hard
 
 "browser-sync@npm:^2.27.7":
-  version: 2.29.1
-  resolution: "browser-sync@npm:2.29.1"
+  version: 2.29.2
+  resolution: "browser-sync@npm:2.29.2"
   dependencies:
-    browser-sync-client: ^2.29.1
-    browser-sync-ui: ^2.29.1
+    browser-sync-client: ^2.29.2
+    browser-sync-ui: ^2.29.2
     bs-recipes: 1.3.4
-    bs-snippet-injector: ^2.0.1
     chalk: 4.1.2
     chokidar: ^3.5.1
     connect: 3.6.6
@@ -8074,7 +8073,6 @@ __metadata:
     micromatch: ^4.0.2
     opn: 5.3.0
     portscanner: 2.2.0
-    qs: ^6.11.0
     raw-body: ^2.3.2
     resp-modifier: 6.0.2
     rx: 4.1.0
@@ -8087,7 +8085,7 @@ __metadata:
     yargs: ^17.3.1
   bin:
     browser-sync: dist/bin.js
-  checksum: 5f04e6bdd76d194c5bf7687e09d070ec7511eefd722ef9b9ae676e56f2007a8e048eab9730c4ca8e948a2a69b704c38b5bc39343eada942529b980b7aa0fbaad
+  checksum: f869ebe6b725da5f3bfc1d73d63d2d58964baf0da11d7c2e4bd43ebe28e2841a9f26ed2b11c888c1bedfb016d9eb0f2284ec3ee376fa2235a867222d7a0589b5
   languageName: node
   linkType: hard
 
@@ -8146,13 +8144,6 @@ __metadata:
   version: 1.3.4
   resolution: "bs-recipes@npm:1.3.4"
   checksum: 2cd89e27730463dac8736f08042faae926f21fbc74788704825b727ad08a85fb5b663d57575aeda3fb188be3c0d446fce60d98560e7b0e76736f1e78e547d345
-  languageName: node
-  linkType: hard
-
-"bs-snippet-injector@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "bs-snippet-injector@npm:2.0.1"
-  checksum: f37863c6571fa5e23d80183eda2307ac001110eb149d9154ab68ccbda046d0ea546c9bbdcddec32bf5fe0e12ff2225581f84bddcfb623618bc7014fa753ca406
   languageName: node
   linkType: hard
 
@@ -10662,8 +10653,8 @@ __metadata:
   linkType: hard
 
 "firebase-tools@npm:^12.0.0":
-  version: 12.0.0
-  resolution: "firebase-tools@npm:12.0.0"
+  version: 12.0.1
+  resolution: "firebase-tools@npm:12.0.1"
   dependencies:
     "@google-cloud/pubsub": ^3.0.1
     abort-controller: ^3.0.0
@@ -10727,7 +10718,7 @@ __metadata:
     ws: ^7.2.3
   bin:
     firebase: lib/bin/firebase.js
-  checksum: f2aa2d7cf8ab00fcd06afda10cb00c402f2e19db1be7484225621c9359451e506c7a509f9e227e3cc639743ef1dfb5259a0d2840194584c6a80f07d5e1125372
+  checksum: e67008d8122e2f3bf60b93ac19807d5dfd9410046a34ceca1837518fb2d860879ff2b5aaa60cd9b04cc3e3de8ba6a9cae07ce5c860e8613f85345d98dd10e838
   languageName: node
   linkType: hard
 
@@ -16052,15 +16043,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qs@npm:^6.11.0":
-  version: 6.11.1
-  resolution: "qs@npm:6.11.1"
-  dependencies:
-    side-channel: ^1.0.4
-  checksum: 82ee78ef12a16f3372fae5b64f76f8aedecb000feea882bbff1af146c147f6eb66b08f9c3f34d7e076f28563586956318b9b2ca41141846cdd6d5ad6f241d52f
-  languageName: node
-  linkType: hard
-
 "qs@npm:^6.6.0":
   version: 6.11.0
   resolution: "qs@npm:6.11.0"
@@ -17885,8 +17867,8 @@ __metadata:
   linkType: hard
 
 "stylelint@npm:^15.1.0":
-  version: 15.6.1
-  resolution: "stylelint@npm:15.6.1"
+  version: 15.6.2
+  resolution: "stylelint@npm:15.6.2"
   dependencies:
     "@csstools/css-parser-algorithms": ^2.1.1
     "@csstools/css-tokenizer": ^2.1.1
@@ -17932,7 +17914,7 @@ __metadata:
     write-file-atomic: ^5.0.1
   bin:
     stylelint: bin/stylelint.js
-  checksum: 192ac3b5185cb59aaead62e1e2e53c42ffc9eba38e471bcb9e3a34381f688d2194a48ae5a356759e2368a9764626d2c6131dffd31933244519422ebcf76f6da6
+  checksum: b44949053b0500226d718d810af64a10b43d8faeed6c464ab1c8bebd8ace488135b47e3a6e4a97ae552d7e14f011dce82c6c69624e463476f8408751b7544b2f
   languageName: node
   linkType: hard
 
