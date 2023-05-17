@@ -30,6 +30,24 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
   mod
 ));
+var __accessCheck = (obj, member, msg) => {
+  if (!member.has(obj))
+    throw TypeError("Cannot " + msg);
+};
+var __privateGet = (obj, member, getter) => {
+  __accessCheck(obj, member, "read from private field");
+  return getter ? getter.call(obj) : member.get(obj);
+};
+var __privateAdd = (obj, member, value) => {
+  if (member.has(obj))
+    throw TypeError("Cannot add the same private member more than once");
+  member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
+};
+var __privateSet = (obj, member, value, setter) => {
+  __accessCheck(obj, member, "write to private field");
+  setter ? setter.call(obj, value) : member.set(obj, value);
+  return value;
+};
 
 // 
 var require_utils = __commonJS({
@@ -14645,7 +14663,7 @@ var require_dist_node18 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var VERSION = "6.0.0";
+    var VERSION = "6.1.0";
     function normalizePaginatedListResponse(response) {
       if (!response.data) {
         return {
@@ -14740,7 +14758,7 @@ var require_dist_node18 = __commonJS({
     var composePaginateRest = Object.assign(paginate, {
       iterator
     });
-    var paginatingEndpoints = ["GET /app/hook/deliveries", "GET /app/installations", "GET /enterprises/{enterprise}/actions/runner-groups", "GET /enterprises/{enterprise}/dependabot/alerts", "GET /enterprises/{enterprise}/secret-scanning/alerts", "GET /events", "GET /gists", "GET /gists/public", "GET /gists/starred", "GET /gists/{gist_id}/comments", "GET /gists/{gist_id}/commits", "GET /gists/{gist_id}/forks", "GET /installation/repositories", "GET /issues", "GET /licenses", "GET /marketplace_listing/plans", "GET /marketplace_listing/plans/{plan_id}/accounts", "GET /marketplace_listing/stubbed/plans", "GET /marketplace_listing/stubbed/plans/{plan_id}/accounts", "GET /networks/{owner}/{repo}/events", "GET /notifications", "GET /organizations", "GET /orgs/{org}/actions/cache/usage-by-repository", "GET /orgs/{org}/actions/permissions/repositories", "GET /orgs/{org}/actions/required_workflows", "GET /orgs/{org}/actions/runner-groups", "GET /orgs/{org}/actions/runner-groups/{runner_group_id}/repositories", "GET /orgs/{org}/actions/runner-groups/{runner_group_id}/runners", "GET /orgs/{org}/actions/runners", "GET /orgs/{org}/actions/secrets", "GET /orgs/{org}/actions/secrets/{secret_name}/repositories", "GET /orgs/{org}/actions/variables", "GET /orgs/{org}/actions/variables/{name}/repositories", "GET /orgs/{org}/blocks", "GET /orgs/{org}/code-scanning/alerts", "GET /orgs/{org}/codespaces", "GET /orgs/{org}/codespaces/secrets", "GET /orgs/{org}/codespaces/secrets/{secret_name}/repositories", "GET /orgs/{org}/dependabot/alerts", "GET /orgs/{org}/dependabot/secrets", "GET /orgs/{org}/dependabot/secrets/{secret_name}/repositories", "GET /orgs/{org}/events", "GET /orgs/{org}/failed_invitations", "GET /orgs/{org}/hooks", "GET /orgs/{org}/hooks/{hook_id}/deliveries", "GET /orgs/{org}/installations", "GET /orgs/{org}/invitations", "GET /orgs/{org}/invitations/{invitation_id}/teams", "GET /orgs/{org}/issues", "GET /orgs/{org}/members", "GET /orgs/{org}/members/{username}/codespaces", "GET /orgs/{org}/migrations", "GET /orgs/{org}/migrations/{migration_id}/repositories", "GET /orgs/{org}/outside_collaborators", "GET /orgs/{org}/packages", "GET /orgs/{org}/packages/{package_type}/{package_name}/versions", "GET /orgs/{org}/projects", "GET /orgs/{org}/public_members", "GET /orgs/{org}/repos", "GET /orgs/{org}/secret-scanning/alerts", "GET /orgs/{org}/teams", "GET /orgs/{org}/teams/{team_slug}/discussions", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions", "GET /orgs/{org}/teams/{team_slug}/invitations", "GET /orgs/{org}/teams/{team_slug}/members", "GET /orgs/{org}/teams/{team_slug}/projects", "GET /orgs/{org}/teams/{team_slug}/repos", "GET /orgs/{org}/teams/{team_slug}/teams", "GET /projects/columns/{column_id}/cards", "GET /projects/{project_id}/collaborators", "GET /projects/{project_id}/columns", "GET /repos/{org}/{repo}/actions/required_workflows", "GET /repos/{owner}/{repo}/actions/artifacts", "GET /repos/{owner}/{repo}/actions/caches", "GET /repos/{owner}/{repo}/actions/required_workflows/{required_workflow_id_for_repo}/runs", "GET /repos/{owner}/{repo}/actions/runners", "GET /repos/{owner}/{repo}/actions/runs", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/jobs", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs", "GET /repos/{owner}/{repo}/actions/secrets", "GET /repos/{owner}/{repo}/actions/variables", "GET /repos/{owner}/{repo}/actions/workflows", "GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs", "GET /repos/{owner}/{repo}/assignees", "GET /repos/{owner}/{repo}/branches", "GET /repos/{owner}/{repo}/check-runs/{check_run_id}/annotations", "GET /repos/{owner}/{repo}/check-suites/{check_suite_id}/check-runs", "GET /repos/{owner}/{repo}/code-scanning/alerts", "GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances", "GET /repos/{owner}/{repo}/code-scanning/analyses", "GET /repos/{owner}/{repo}/codespaces", "GET /repos/{owner}/{repo}/codespaces/devcontainers", "GET /repos/{owner}/{repo}/codespaces/secrets", "GET /repos/{owner}/{repo}/collaborators", "GET /repos/{owner}/{repo}/comments", "GET /repos/{owner}/{repo}/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/commits", "GET /repos/{owner}/{repo}/commits/{commit_sha}/comments", "GET /repos/{owner}/{repo}/commits/{commit_sha}/pulls", "GET /repos/{owner}/{repo}/commits/{ref}/check-runs", "GET /repos/{owner}/{repo}/commits/{ref}/check-suites", "GET /repos/{owner}/{repo}/commits/{ref}/status", "GET /repos/{owner}/{repo}/commits/{ref}/statuses", "GET /repos/{owner}/{repo}/contributors", "GET /repos/{owner}/{repo}/dependabot/alerts", "GET /repos/{owner}/{repo}/dependabot/secrets", "GET /repos/{owner}/{repo}/deployments", "GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses", "GET /repos/{owner}/{repo}/environments", "GET /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies", "GET /repos/{owner}/{repo}/events", "GET /repos/{owner}/{repo}/forks", "GET /repos/{owner}/{repo}/hooks", "GET /repos/{owner}/{repo}/hooks/{hook_id}/deliveries", "GET /repos/{owner}/{repo}/invitations", "GET /repos/{owner}/{repo}/issues", "GET /repos/{owner}/{repo}/issues/comments", "GET /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/issues/events", "GET /repos/{owner}/{repo}/issues/{issue_number}/comments", "GET /repos/{owner}/{repo}/issues/{issue_number}/events", "GET /repos/{owner}/{repo}/issues/{issue_number}/labels", "GET /repos/{owner}/{repo}/issues/{issue_number}/reactions", "GET /repos/{owner}/{repo}/issues/{issue_number}/timeline", "GET /repos/{owner}/{repo}/keys", "GET /repos/{owner}/{repo}/labels", "GET /repos/{owner}/{repo}/milestones", "GET /repos/{owner}/{repo}/milestones/{milestone_number}/labels", "GET /repos/{owner}/{repo}/notifications", "GET /repos/{owner}/{repo}/pages/builds", "GET /repos/{owner}/{repo}/projects", "GET /repos/{owner}/{repo}/pulls", "GET /repos/{owner}/{repo}/pulls/comments", "GET /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/pulls/{pull_number}/comments", "GET /repos/{owner}/{repo}/pulls/{pull_number}/commits", "GET /repos/{owner}/{repo}/pulls/{pull_number}/files", "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews", "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/comments", "GET /repos/{owner}/{repo}/releases", "GET /repos/{owner}/{repo}/releases/{release_id}/assets", "GET /repos/{owner}/{repo}/releases/{release_id}/reactions", "GET /repos/{owner}/{repo}/secret-scanning/alerts", "GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}/locations", "GET /repos/{owner}/{repo}/stargazers", "GET /repos/{owner}/{repo}/subscribers", "GET /repos/{owner}/{repo}/tags", "GET /repos/{owner}/{repo}/teams", "GET /repos/{owner}/{repo}/topics", "GET /repositories", "GET /repositories/{repository_id}/environments/{environment_name}/secrets", "GET /repositories/{repository_id}/environments/{environment_name}/variables", "GET /search/code", "GET /search/commits", "GET /search/issues", "GET /search/labels", "GET /search/repositories", "GET /search/topics", "GET /search/users", "GET /teams/{team_id}/discussions", "GET /teams/{team_id}/discussions/{discussion_number}/comments", "GET /teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}/reactions", "GET /teams/{team_id}/discussions/{discussion_number}/reactions", "GET /teams/{team_id}/invitations", "GET /teams/{team_id}/members", "GET /teams/{team_id}/projects", "GET /teams/{team_id}/repos", "GET /teams/{team_id}/teams", "GET /user/blocks", "GET /user/codespaces", "GET /user/codespaces/secrets", "GET /user/emails", "GET /user/followers", "GET /user/following", "GET /user/gpg_keys", "GET /user/installations", "GET /user/installations/{installation_id}/repositories", "GET /user/issues", "GET /user/keys", "GET /user/marketplace_purchases", "GET /user/marketplace_purchases/stubbed", "GET /user/memberships/orgs", "GET /user/migrations", "GET /user/migrations/{migration_id}/repositories", "GET /user/orgs", "GET /user/packages", "GET /user/packages/{package_type}/{package_name}/versions", "GET /user/public_emails", "GET /user/repos", "GET /user/repository_invitations", "GET /user/ssh_signing_keys", "GET /user/starred", "GET /user/subscriptions", "GET /user/teams", "GET /users", "GET /users/{username}/events", "GET /users/{username}/events/orgs/{org}", "GET /users/{username}/events/public", "GET /users/{username}/followers", "GET /users/{username}/following", "GET /users/{username}/gists", "GET /users/{username}/gpg_keys", "GET /users/{username}/keys", "GET /users/{username}/orgs", "GET /users/{username}/packages", "GET /users/{username}/projects", "GET /users/{username}/received_events", "GET /users/{username}/received_events/public", "GET /users/{username}/repos", "GET /users/{username}/ssh_signing_keys", "GET /users/{username}/starred", "GET /users/{username}/subscriptions"];
+    var paginatingEndpoints = ["GET /app/hook/deliveries", "GET /app/installation-requests", "GET /app/installations", "GET /enterprises/{enterprise}/dependabot/alerts", "GET /enterprises/{enterprise}/secret-scanning/alerts", "GET /events", "GET /gists", "GET /gists/public", "GET /gists/starred", "GET /gists/{gist_id}/comments", "GET /gists/{gist_id}/commits", "GET /gists/{gist_id}/forks", "GET /installation/repositories", "GET /issues", "GET /licenses", "GET /marketplace_listing/plans", "GET /marketplace_listing/plans/{plan_id}/accounts", "GET /marketplace_listing/stubbed/plans", "GET /marketplace_listing/stubbed/plans/{plan_id}/accounts", "GET /networks/{owner}/{repo}/events", "GET /notifications", "GET /organizations", "GET /organizations/{org}/personal-access-token-requests", "GET /organizations/{org}/personal-access-token-requests/{pat_request_id}/repositories", "GET /organizations/{org}/personal-access-tokens", "GET /organizations/{org}/personal-access-tokens/{pat_id}/repositories", "GET /orgs/{org}/actions/cache/usage-by-repository", "GET /orgs/{org}/actions/permissions/repositories", "GET /orgs/{org}/actions/required_workflows", "GET /orgs/{org}/actions/runners", "GET /orgs/{org}/actions/secrets", "GET /orgs/{org}/actions/secrets/{secret_name}/repositories", "GET /orgs/{org}/actions/variables", "GET /orgs/{org}/actions/variables/{name}/repositories", "GET /orgs/{org}/blocks", "GET /orgs/{org}/code-scanning/alerts", "GET /orgs/{org}/codespaces", "GET /orgs/{org}/codespaces/secrets", "GET /orgs/{org}/codespaces/secrets/{secret_name}/repositories", "GET /orgs/{org}/dependabot/alerts", "GET /orgs/{org}/dependabot/secrets", "GET /orgs/{org}/dependabot/secrets/{secret_name}/repositories", "GET /orgs/{org}/events", "GET /orgs/{org}/failed_invitations", "GET /orgs/{org}/hooks", "GET /orgs/{org}/hooks/{hook_id}/deliveries", "GET /orgs/{org}/installations", "GET /orgs/{org}/invitations", "GET /orgs/{org}/invitations/{invitation_id}/teams", "GET /orgs/{org}/issues", "GET /orgs/{org}/members", "GET /orgs/{org}/members/{username}/codespaces", "GET /orgs/{org}/migrations", "GET /orgs/{org}/migrations/{migration_id}/repositories", "GET /orgs/{org}/outside_collaborators", "GET /orgs/{org}/packages", "GET /orgs/{org}/packages/{package_type}/{package_name}/versions", "GET /orgs/{org}/projects", "GET /orgs/{org}/public_members", "GET /orgs/{org}/repos", "GET /orgs/{org}/secret-scanning/alerts", "GET /orgs/{org}/teams", "GET /orgs/{org}/teams/{team_slug}/discussions", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments/{comment_number}/reactions", "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/reactions", "GET /orgs/{org}/teams/{team_slug}/invitations", "GET /orgs/{org}/teams/{team_slug}/members", "GET /orgs/{org}/teams/{team_slug}/projects", "GET /orgs/{org}/teams/{team_slug}/repos", "GET /orgs/{org}/teams/{team_slug}/teams", "GET /projects/columns/{column_id}/cards", "GET /projects/{project_id}/collaborators", "GET /projects/{project_id}/columns", "GET /repos/{org}/{repo}/actions/required_workflows", "GET /repos/{owner}/{repo}/actions/artifacts", "GET /repos/{owner}/{repo}/actions/caches", "GET /repos/{owner}/{repo}/actions/organization-secrets", "GET /repos/{owner}/{repo}/actions/organization-variables", "GET /repos/{owner}/{repo}/actions/required_workflows/{required_workflow_id_for_repo}/runs", "GET /repos/{owner}/{repo}/actions/runners", "GET /repos/{owner}/{repo}/actions/runs", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/artifacts", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/attempts/{attempt_number}/jobs", "GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs", "GET /repos/{owner}/{repo}/actions/secrets", "GET /repos/{owner}/{repo}/actions/variables", "GET /repos/{owner}/{repo}/actions/workflows", "GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs", "GET /repos/{owner}/{repo}/assignees", "GET /repos/{owner}/{repo}/branches", "GET /repos/{owner}/{repo}/check-runs/{check_run_id}/annotations", "GET /repos/{owner}/{repo}/check-suites/{check_suite_id}/check-runs", "GET /repos/{owner}/{repo}/code-scanning/alerts", "GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances", "GET /repos/{owner}/{repo}/code-scanning/analyses", "GET /repos/{owner}/{repo}/codespaces", "GET /repos/{owner}/{repo}/codespaces/devcontainers", "GET /repos/{owner}/{repo}/codespaces/secrets", "GET /repos/{owner}/{repo}/collaborators", "GET /repos/{owner}/{repo}/comments", "GET /repos/{owner}/{repo}/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/commits", "GET /repos/{owner}/{repo}/commits/{commit_sha}/comments", "GET /repos/{owner}/{repo}/commits/{commit_sha}/pulls", "GET /repos/{owner}/{repo}/commits/{ref}/check-runs", "GET /repos/{owner}/{repo}/commits/{ref}/check-suites", "GET /repos/{owner}/{repo}/commits/{ref}/status", "GET /repos/{owner}/{repo}/commits/{ref}/statuses", "GET /repos/{owner}/{repo}/contributors", "GET /repos/{owner}/{repo}/dependabot/alerts", "GET /repos/{owner}/{repo}/dependabot/secrets", "GET /repos/{owner}/{repo}/deployments", "GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses", "GET /repos/{owner}/{repo}/environments", "GET /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies", "GET /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules/apps", "GET /repos/{owner}/{repo}/events", "GET /repos/{owner}/{repo}/forks", "GET /repos/{owner}/{repo}/hooks", "GET /repos/{owner}/{repo}/hooks/{hook_id}/deliveries", "GET /repos/{owner}/{repo}/invitations", "GET /repos/{owner}/{repo}/issues", "GET /repos/{owner}/{repo}/issues/comments", "GET /repos/{owner}/{repo}/issues/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/issues/events", "GET /repos/{owner}/{repo}/issues/{issue_number}/comments", "GET /repos/{owner}/{repo}/issues/{issue_number}/events", "GET /repos/{owner}/{repo}/issues/{issue_number}/labels", "GET /repos/{owner}/{repo}/issues/{issue_number}/reactions", "GET /repos/{owner}/{repo}/issues/{issue_number}/timeline", "GET /repos/{owner}/{repo}/keys", "GET /repos/{owner}/{repo}/labels", "GET /repos/{owner}/{repo}/milestones", "GET /repos/{owner}/{repo}/milestones/{milestone_number}/labels", "GET /repos/{owner}/{repo}/notifications", "GET /repos/{owner}/{repo}/pages/builds", "GET /repos/{owner}/{repo}/projects", "GET /repos/{owner}/{repo}/pulls", "GET /repos/{owner}/{repo}/pulls/comments", "GET /repos/{owner}/{repo}/pulls/comments/{comment_id}/reactions", "GET /repos/{owner}/{repo}/pulls/{pull_number}/comments", "GET /repos/{owner}/{repo}/pulls/{pull_number}/commits", "GET /repos/{owner}/{repo}/pulls/{pull_number}/files", "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews", "GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews/{review_id}/comments", "GET /repos/{owner}/{repo}/releases", "GET /repos/{owner}/{repo}/releases/{release_id}/assets", "GET /repos/{owner}/{repo}/releases/{release_id}/reactions", "GET /repos/{owner}/{repo}/secret-scanning/alerts", "GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}/locations", "GET /repos/{owner}/{repo}/security-advisories", "GET /repos/{owner}/{repo}/stargazers", "GET /repos/{owner}/{repo}/subscribers", "GET /repos/{owner}/{repo}/tags", "GET /repos/{owner}/{repo}/teams", "GET /repos/{owner}/{repo}/topics", "GET /repositories", "GET /repositories/{repository_id}/environments/{environment_name}/secrets", "GET /repositories/{repository_id}/environments/{environment_name}/variables", "GET /search/code", "GET /search/commits", "GET /search/issues", "GET /search/labels", "GET /search/repositories", "GET /search/topics", "GET /search/users", "GET /teams/{team_id}/discussions", "GET /teams/{team_id}/discussions/{discussion_number}/comments", "GET /teams/{team_id}/discussions/{discussion_number}/comments/{comment_number}/reactions", "GET /teams/{team_id}/discussions/{discussion_number}/reactions", "GET /teams/{team_id}/invitations", "GET /teams/{team_id}/members", "GET /teams/{team_id}/projects", "GET /teams/{team_id}/repos", "GET /teams/{team_id}/teams", "GET /user/blocks", "GET /user/codespaces", "GET /user/codespaces/secrets", "GET /user/emails", "GET /user/followers", "GET /user/following", "GET /user/gpg_keys", "GET /user/installations", "GET /user/installations/{installation_id}/repositories", "GET /user/issues", "GET /user/keys", "GET /user/marketplace_purchases", "GET /user/marketplace_purchases/stubbed", "GET /user/memberships/orgs", "GET /user/migrations", "GET /user/migrations/{migration_id}/repositories", "GET /user/orgs", "GET /user/packages", "GET /user/packages/{package_type}/{package_name}/versions", "GET /user/public_emails", "GET /user/repos", "GET /user/repository_invitations", "GET /user/social_accounts", "GET /user/ssh_signing_keys", "GET /user/starred", "GET /user/subscriptions", "GET /user/teams", "GET /users", "GET /users/{username}/events", "GET /users/{username}/events/orgs/{org}", "GET /users/{username}/events/public", "GET /users/{username}/followers", "GET /users/{username}/following", "GET /users/{username}/gists", "GET /users/{username}/gpg_keys", "GET /users/{username}/keys", "GET /users/{username}/orgs", "GET /users/{username}/packages", "GET /users/{username}/projects", "GET /users/{username}/received_events", "GET /users/{username}/received_events/public", "GET /users/{username}/repos", "GET /users/{username}/social_accounts", "GET /users/{username}/ssh_signing_keys", "GET /users/{username}/starred", "GET /users/{username}/subscriptions"];
     function isPaginatingEndpoint(arg) {
       if (typeof arg === "string") {
         return paginatingEndpoints.includes(arg);
@@ -14857,6 +14875,8 @@ var require_dist_node19 = __commonJS({
         listLabelsForSelfHostedRunnerForRepo: ["GET /repos/{owner}/{repo}/actions/runners/{runner_id}/labels"],
         listOrgSecrets: ["GET /orgs/{org}/actions/secrets"],
         listOrgVariables: ["GET /orgs/{org}/actions/variables"],
+        listRepoOrganizationSecrets: ["GET /repos/{owner}/{repo}/actions/organization-secrets"],
+        listRepoOrganizationVariables: ["GET /repos/{owner}/{repo}/actions/organization-variables"],
         listRepoRequiredWorkflows: ["GET /repos/{org}/{repo}/actions/required_workflows"],
         listRepoSecrets: ["GET /repos/{owner}/{repo}/actions/secrets"],
         listRepoVariables: ["GET /repos/{owner}/{repo}/actions/variables"],
@@ -14884,6 +14904,7 @@ var require_dist_node19 = __commonJS({
         removeSelectedRepoFromOrgSecret: ["DELETE /orgs/{org}/actions/secrets/{secret_name}/repositories/{repository_id}"],
         removeSelectedRepoFromOrgVariable: ["DELETE /orgs/{org}/actions/variables/{name}/repositories/{repository_id}"],
         removeSelectedRepoFromRequiredWorkflow: ["DELETE /orgs/{org}/actions/required_workflows/{required_workflow_id}/repositories/{repository_id}"],
+        reviewCustomGatesForRun: ["POST /repos/{owner}/{repo}/actions/runs/{run_id}/deployment_protection_rule"],
         reviewPendingDeploymentsForRun: ["POST /repos/{owner}/{repo}/actions/runs/{run_id}/pending_deployments"],
         setAllowedActionsOrganization: ["PUT /orgs/{org}/actions/permissions/selected-actions"],
         setAllowedActionsRepository: ["PUT /repos/{owner}/{repo}/actions/permissions/selected-actions"],
@@ -14960,6 +14981,7 @@ var require_dist_node19 = __commonJS({
         listAccountsForPlan: ["GET /marketplace_listing/plans/{plan_id}/accounts"],
         listAccountsForPlanStubbed: ["GET /marketplace_listing/stubbed/plans/{plan_id}/accounts"],
         listInstallationReposForAuthenticatedUser: ["GET /user/installations/{installation_id}/repositories"],
+        listInstallationRequestsForAuthenticatedApp: ["GET /app/installation-requests"],
         listInstallations: ["GET /app/installations"],
         listInstallationsForAuthenticatedUser: ["GET /user/installations"],
         listPlans: ["GET /marketplace_listing/plans"],
@@ -15011,6 +15033,7 @@ var require_dist_node19 = __commonJS({
         }],
         getAnalysis: ["GET /repos/{owner}/{repo}/code-scanning/analyses/{analysis_id}"],
         getCodeqlDatabase: ["GET /repos/{owner}/{repo}/code-scanning/codeql/databases/{language}"],
+        getDefaultSetup: ["GET /repos/{owner}/{repo}/code-scanning/default-setup"],
         getSarif: ["GET /repos/{owner}/{repo}/code-scanning/sarifs/{sarif_id}"],
         listAlertInstances: ["GET /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}/instances"],
         listAlertsForOrg: ["GET /orgs/{org}/code-scanning/alerts"],
@@ -15021,6 +15044,7 @@ var require_dist_node19 = __commonJS({
         listCodeqlDatabases: ["GET /repos/{owner}/{repo}/code-scanning/codeql/databases"],
         listRecentAnalyses: ["GET /repos/{owner}/{repo}/code-scanning/analyses"],
         updateAlert: ["PATCH /repos/{owner}/{repo}/code-scanning/alerts/{alert_number}"],
+        updateDefaultSetup: ["PATCH /repos/{owner}/{repo}/code-scanning/default-setup"],
         uploadSarif: ["POST /repos/{owner}/{repo}/code-scanning/sarifs"]
       },
       codesOfConduct: {
@@ -15037,6 +15061,7 @@ var require_dist_node19 = __commonJS({
         createOrUpdateSecretForAuthenticatedUser: ["PUT /user/codespaces/secrets/{secret_name}"],
         createWithPrForAuthenticatedUser: ["POST /repos/{owner}/{repo}/pulls/{pull_number}/codespaces"],
         createWithRepoForAuthenticatedUser: ["POST /repos/{owner}/{repo}/codespaces"],
+        deleteCodespacesBillingUsers: ["DELETE /orgs/{org}/codespaces/billing/selected_users"],
         deleteForAuthenticatedUser: ["DELETE /user/codespaces/{codespace_name}"],
         deleteFromOrganization: ["DELETE /orgs/{org}/members/{username}/codespaces/{codespace_name}"],
         deleteOrgSecret: ["DELETE /orgs/{org}/codespaces/secrets/{secret_name}"],
@@ -15071,6 +15096,7 @@ var require_dist_node19 = __commonJS({
         removeSelectedRepoFromOrgSecret: ["DELETE /orgs/{org}/codespaces/secrets/{secret_name}/repositories/{repository_id}"],
         repoMachinesForAuthenticatedUser: ["GET /repos/{owner}/{repo}/codespaces/machines"],
         setCodespacesBilling: ["PUT /orgs/{org}/codespaces/billing"],
+        setCodespacesBillingUsers: ["POST /orgs/{org}/codespaces/billing/selected_users"],
         setRepositoriesForSecretForAuthenticatedUser: ["PUT /user/codespaces/secrets/{secret_name}/repositories"],
         setSelectedReposForOrgSecret: ["PUT /orgs/{org}/codespaces/secrets/{secret_name}/repositories"],
         startForAuthenticatedUser: ["POST /user/codespaces/{codespace_name}/start"],
@@ -15101,15 +15127,11 @@ var require_dist_node19 = __commonJS({
       },
       dependencyGraph: {
         createRepositorySnapshot: ["POST /repos/{owner}/{repo}/dependency-graph/snapshots"],
-        diffRange: ["GET /repos/{owner}/{repo}/dependency-graph/compare/{basehead}"]
+        diffRange: ["GET /repos/{owner}/{repo}/dependency-graph/compare/{basehead}"],
+        exportSbom: ["GET /repos/{owner}/{repo}/dependency-graph/sbom"]
       },
       emojis: {
         get: ["GET /emojis"]
-      },
-      enterpriseAdmin: {
-        addCustomLabelsToSelfHostedRunnerForEnterprise: ["POST /enterprises/{enterprise}/actions/runners/{runner_id}/labels"],
-        enableSelectedOrganizationGithubActionsEnterprise: ["PUT /enterprises/{enterprise}/actions/permissions/organizations/{org_id}"],
-        listLabelsForSelfHostedRunnerForEnterprise: ["GET /enterprises/{enterprise}/actions/runners/{runner_id}/labels"]
       },
       gists: {
         checkIsStarred: ["GET /gists/{gist_id}/star"],
@@ -15271,6 +15293,7 @@ var require_dist_node19 = __commonJS({
         convertMemberToOutsideCollaborator: ["PUT /orgs/{org}/outside_collaborators/{username}"],
         createInvitation: ["POST /orgs/{org}/invitations"],
         createWebhook: ["POST /orgs/{org}/hooks"],
+        delete: ["DELETE /orgs/{org}"],
         deleteWebhook: ["DELETE /orgs/{org}/hooks/{hook_id}"],
         enableOrDisableSecurityProductOnAllOrgRepos: ["POST /orgs/{org}/{security_product}/{enablement}"],
         get: ["GET /orgs/{org}"],
@@ -15289,6 +15312,10 @@ var require_dist_node19 = __commonJS({
         listMembers: ["GET /orgs/{org}/members"],
         listMembershipsForAuthenticatedUser: ["GET /user/memberships/orgs"],
         listOutsideCollaborators: ["GET /orgs/{org}/outside_collaborators"],
+        listPatGrantRepositories: ["GET /organizations/{org}/personal-access-tokens/{pat_id}/repositories"],
+        listPatGrantRequestRepositories: ["GET /organizations/{org}/personal-access-token-requests/{pat_request_id}/repositories"],
+        listPatGrantRequests: ["GET /organizations/{org}/personal-access-token-requests"],
+        listPatGrants: ["GET /organizations/{org}/personal-access-tokens"],
         listPendingInvitations: ["GET /orgs/{org}/invitations"],
         listPublicMembers: ["GET /orgs/{org}/public_members"],
         listSecurityManagerTeams: ["GET /orgs/{org}/security-managers"],
@@ -15301,11 +15328,15 @@ var require_dist_node19 = __commonJS({
         removeOutsideCollaborator: ["DELETE /orgs/{org}/outside_collaborators/{username}"],
         removePublicMembershipForAuthenticatedUser: ["DELETE /orgs/{org}/public_members/{username}"],
         removeSecurityManagerTeam: ["DELETE /orgs/{org}/security-managers/teams/{team_slug}"],
+        reviewPatGrantRequest: ["POST /organizations/{org}/personal-access-token-requests/{pat_request_id}"],
+        reviewPatGrantRequestsInBulk: ["POST /organizations/{org}/personal-access-token-requests"],
         setMembershipForUser: ["PUT /orgs/{org}/memberships/{username}"],
         setPublicMembershipForAuthenticatedUser: ["PUT /orgs/{org}/public_members/{username}"],
         unblockUser: ["DELETE /orgs/{org}/blocks/{username}"],
         update: ["PATCH /orgs/{org}"],
         updateMembershipForAuthenticatedUser: ["PATCH /user/memberships/orgs/{org}"],
+        updatePatAccess: ["POST /organizations/{org}/personal-access-tokens/{pat_id}"],
+        updatePatAccesses: ["POST /organizations/{org}/personal-access-tokens"],
         updateWebhook: ["PATCH /orgs/{org}/hooks/{hook_id}"],
         updateWebhookConfigForOrg: ["PATCH /orgs/{org}/hooks/{hook_id}/config"]
       },
@@ -15331,6 +15362,9 @@ var require_dist_node19 = __commonJS({
         getPackageVersionForAuthenticatedUser: ["GET /user/packages/{package_type}/{package_name}/versions/{package_version_id}"],
         getPackageVersionForOrganization: ["GET /orgs/{org}/packages/{package_type}/{package_name}/versions/{package_version_id}"],
         getPackageVersionForUser: ["GET /users/{username}/packages/{package_type}/{package_name}/versions/{package_version_id}"],
+        listDockerMigrationConflictingPackagesForAuthenticatedUser: ["GET /user/docker/conflicts"],
+        listDockerMigrationConflictingPackagesForOrganization: ["GET /orgs/{org}/docker/conflicts"],
+        listDockerMigrationConflictingPackagesForUser: ["GET /users/{username}/docker/conflicts"],
         listPackagesForAuthenticatedUser: ["GET /user/packages"],
         listPackagesForOrganization: ["GET /orgs/{org}/packages"],
         listPackagesForUser: ["GET /users/{username}/packages"],
@@ -15453,6 +15487,7 @@ var require_dist_node19 = __commonJS({
         createDeployKey: ["POST /repos/{owner}/{repo}/keys"],
         createDeployment: ["POST /repos/{owner}/{repo}/deployments"],
         createDeploymentBranchPolicy: ["POST /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies"],
+        createDeploymentProtectionRule: ["POST /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules"],
         createDeploymentStatus: ["POST /repos/{owner}/{repo}/deployments/{deployment_id}/statuses"],
         createDispatchEvent: ["POST /repos/{owner}/{repo}/dispatches"],
         createForAuthenticatedUser: ["POST /user/repos"],
@@ -15460,9 +15495,11 @@ var require_dist_node19 = __commonJS({
         createInOrg: ["POST /orgs/{org}/repos"],
         createOrUpdateEnvironment: ["PUT /repos/{owner}/{repo}/environments/{environment_name}"],
         createOrUpdateFileContents: ["PUT /repos/{owner}/{repo}/contents/{path}"],
+        createOrgRuleset: ["POST /orgs/{org}/rulesets"],
         createPagesDeployment: ["POST /repos/{owner}/{repo}/pages/deployment"],
         createPagesSite: ["POST /repos/{owner}/{repo}/pages"],
         createRelease: ["POST /repos/{owner}/{repo}/releases"],
+        createRepoRuleset: ["POST /repos/{owner}/{repo}/rulesets"],
         createTagProtection: ["POST /repos/{owner}/{repo}/tags/protection"],
         createUsingTemplate: ["POST /repos/{template_owner}/{template_repo}/generate"],
         createWebhook: ["POST /repos/{owner}/{repo}/hooks"],
@@ -15483,13 +15520,16 @@ var require_dist_node19 = __commonJS({
         deleteDeploymentBranchPolicy: ["DELETE /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id}"],
         deleteFile: ["DELETE /repos/{owner}/{repo}/contents/{path}"],
         deleteInvitation: ["DELETE /repos/{owner}/{repo}/invitations/{invitation_id}"],
+        deleteOrgRuleset: ["DELETE /orgs/{org}/rulesets/{ruleset_id}"],
         deletePagesSite: ["DELETE /repos/{owner}/{repo}/pages"],
         deletePullRequestReviewProtection: ["DELETE /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews"],
         deleteRelease: ["DELETE /repos/{owner}/{repo}/releases/{release_id}"],
         deleteReleaseAsset: ["DELETE /repos/{owner}/{repo}/releases/assets/{asset_id}"],
+        deleteRepoRuleset: ["DELETE /repos/{owner}/{repo}/rulesets/{ruleset_id}"],
         deleteTagProtection: ["DELETE /repos/{owner}/{repo}/tags/protection/{tag_protection_id}"],
         deleteWebhook: ["DELETE /repos/{owner}/{repo}/hooks/{hook_id}"],
         disableAutomatedSecurityFixes: ["DELETE /repos/{owner}/{repo}/automated-security-fixes"],
+        disableDeploymentProtectionRule: ["DELETE /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules/{protection_rule_id}"],
         disableLfsForRepo: ["DELETE /repos/{owner}/{repo}/lfs"],
         disableVulnerabilityAlerts: ["DELETE /repos/{owner}/{repo}/vulnerability-alerts"],
         downloadArchive: ["GET /repos/{owner}/{repo}/zipball/{ref}", {}, {
@@ -15504,6 +15544,7 @@ var require_dist_node19 = __commonJS({
         get: ["GET /repos/{owner}/{repo}"],
         getAccessRestrictions: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/restrictions"],
         getAdminBranchProtection: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/enforce_admins"],
+        getAllDeploymentProtectionRules: ["GET /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules"],
         getAllEnvironments: ["GET /repos/{owner}/{repo}/environments"],
         getAllStatusCheckContexts: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks/contexts"],
         getAllTopics: ["GET /repos/{owner}/{repo}/topics"],
@@ -15511,6 +15552,7 @@ var require_dist_node19 = __commonJS({
         getAutolink: ["GET /repos/{owner}/{repo}/autolinks/{autolink_id}"],
         getBranch: ["GET /repos/{owner}/{repo}/branches/{branch}"],
         getBranchProtection: ["GET /repos/{owner}/{repo}/branches/{branch}/protection"],
+        getBranchRules: ["GET /repos/{owner}/{repo}/rules/branches/{branch}"],
         getClones: ["GET /repos/{owner}/{repo}/traffic/clones"],
         getCodeFrequencyStats: ["GET /repos/{owner}/{repo}/stats/code_frequency"],
         getCollaboratorPermissionLevel: ["GET /repos/{owner}/{repo}/collaborators/{username}/permission"],
@@ -15522,6 +15564,7 @@ var require_dist_node19 = __commonJS({
         getCommunityProfileMetrics: ["GET /repos/{owner}/{repo}/community/profile"],
         getContent: ["GET /repos/{owner}/{repo}/contents/{path}"],
         getContributorsStats: ["GET /repos/{owner}/{repo}/stats/contributors"],
+        getCustomDeploymentProtectionRule: ["GET /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules/{protection_rule_id}"],
         getDeployKey: ["GET /repos/{owner}/{repo}/keys/{key_id}"],
         getDeployment: ["GET /repos/{owner}/{repo}/deployments/{deployment_id}"],
         getDeploymentBranchPolicy: ["GET /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id}"],
@@ -15529,6 +15572,8 @@ var require_dist_node19 = __commonJS({
         getEnvironment: ["GET /repos/{owner}/{repo}/environments/{environment_name}"],
         getLatestPagesBuild: ["GET /repos/{owner}/{repo}/pages/builds/latest"],
         getLatestRelease: ["GET /repos/{owner}/{repo}/releases/latest"],
+        getOrgRuleset: ["GET /orgs/{org}/rulesets/{ruleset_id}"],
+        getOrgRulesets: ["GET /orgs/{org}/rulesets"],
         getPages: ["GET /repos/{owner}/{repo}/pages"],
         getPagesBuild: ["GET /repos/{owner}/{repo}/pages/builds/{build_id}"],
         getPagesHealthCheck: ["GET /repos/{owner}/{repo}/pages/health"],
@@ -15540,6 +15585,8 @@ var require_dist_node19 = __commonJS({
         getRelease: ["GET /repos/{owner}/{repo}/releases/{release_id}"],
         getReleaseAsset: ["GET /repos/{owner}/{repo}/releases/assets/{asset_id}"],
         getReleaseByTag: ["GET /repos/{owner}/{repo}/releases/tags/{tag}"],
+        getRepoRuleset: ["GET /repos/{owner}/{repo}/rulesets/{ruleset_id}"],
+        getRepoRulesets: ["GET /repos/{owner}/{repo}/rulesets"],
         getStatusChecksProtection: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks"],
         getTeamsWithAccessToProtectedBranch: ["GET /repos/{owner}/{repo}/branches/{branch}/protection/restrictions/teams"],
         getTopPaths: ["GET /repos/{owner}/{repo}/traffic/popular/paths"],
@@ -15558,6 +15605,7 @@ var require_dist_node19 = __commonJS({
         listCommitStatusesForRef: ["GET /repos/{owner}/{repo}/commits/{ref}/statuses"],
         listCommits: ["GET /repos/{owner}/{repo}/commits"],
         listContributors: ["GET /repos/{owner}/{repo}/contributors"],
+        listCustomDeploymentRuleIntegrations: ["GET /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules/apps"],
         listDeployKeys: ["GET /repos/{owner}/{repo}/keys"],
         listDeploymentBranchPolicies: ["GET /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies"],
         listDeploymentStatuses: ["GET /repos/{owner}/{repo}/deployments/{deployment_id}/statuses"],
@@ -15621,9 +15669,11 @@ var require_dist_node19 = __commonJS({
         updateDeploymentBranchPolicy: ["PUT /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies/{branch_policy_id}"],
         updateInformationAboutPagesSite: ["PUT /repos/{owner}/{repo}/pages"],
         updateInvitation: ["PATCH /repos/{owner}/{repo}/invitations/{invitation_id}"],
+        updateOrgRuleset: ["PUT /orgs/{org}/rulesets/{ruleset_id}"],
         updatePullRequestReviewProtection: ["PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_pull_request_reviews"],
         updateRelease: ["PATCH /repos/{owner}/{repo}/releases/{release_id}"],
         updateReleaseAsset: ["PATCH /repos/{owner}/{repo}/releases/assets/{asset_id}"],
+        updateRepoRuleset: ["PUT /repos/{owner}/{repo}/rulesets/{ruleset_id}"],
         updateStatusCheckPotection: ["PATCH /repos/{owner}/{repo}/branches/{branch}/protection/required_status_checks", {}, {
           renamed: ["repos", "updateStatusCheckProtection"]
         }],
@@ -15645,14 +15695,18 @@ var require_dist_node19 = __commonJS({
       },
       secretScanning: {
         getAlert: ["GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}"],
-        getSecurityAnalysisSettingsForEnterprise: ["GET /enterprises/{enterprise}/code_security_and_analysis"],
         listAlertsForEnterprise: ["GET /enterprises/{enterprise}/secret-scanning/alerts"],
         listAlertsForOrg: ["GET /orgs/{org}/secret-scanning/alerts"],
         listAlertsForRepo: ["GET /repos/{owner}/{repo}/secret-scanning/alerts"],
         listLocationsForAlert: ["GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}/locations"],
-        patchSecurityAnalysisSettingsForEnterprise: ["PATCH /enterprises/{enterprise}/code_security_and_analysis"],
-        postSecurityProductEnablementForEnterprise: ["POST /enterprises/{enterprise}/{security_product}/{enablement}"],
         updateAlert: ["PATCH /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}"]
+      },
+      securityAdvisories: {
+        createPrivateVulnerabilityReport: ["POST /repos/{owner}/{repo}/security-advisories/reports"],
+        createRepositoryAdvisory: ["POST /repos/{owner}/{repo}/security-advisories"],
+        getRepositoryAdvisory: ["GET /repos/{owner}/{repo}/security-advisories/{ghsa_id}"],
+        listRepositoryAdvisories: ["GET /repos/{owner}/{repo}/security-advisories"],
+        updateRepositoryAdvisory: ["PATCH /repos/{owner}/{repo}/security-advisories/{ghsa_id}"]
       },
       teams: {
         addOrUpdateMembershipForUserInOrg: ["PUT /orgs/{org}/teams/{team_slug}/memberships/{username}"],
@@ -15691,6 +15745,7 @@ var require_dist_node19 = __commonJS({
           renamed: ["users", "addEmailForAuthenticatedUser"]
         }],
         addEmailForAuthenticatedUser: ["POST /user/emails"],
+        addSocialAccountForAuthenticatedUser: ["POST /user/social_accounts"],
         block: ["PUT /user/blocks/{username}"],
         checkBlocked: ["GET /user/blocks/{username}"],
         checkFollowingForUser: ["GET /users/{username}/following/{target_user}"],
@@ -15716,6 +15771,7 @@ var require_dist_node19 = __commonJS({
           renamed: ["users", "deletePublicSshKeyForAuthenticatedUser"]
         }],
         deletePublicSshKeyForAuthenticatedUser: ["DELETE /user/keys/{key_id}"],
+        deleteSocialAccountForAuthenticatedUser: ["DELETE /user/social_accounts"],
         deleteSshSigningKeyForAuthenticatedUser: ["DELETE /user/ssh_signing_keys/{ssh_signing_key_id}"],
         follow: ["PUT /user/following/{username}"],
         getAuthenticated: ["GET /user"],
@@ -15760,6 +15816,8 @@ var require_dist_node19 = __commonJS({
           renamed: ["users", "listPublicSshKeysForAuthenticatedUser"]
         }],
         listPublicSshKeysForAuthenticatedUser: ["GET /user/keys"],
+        listSocialAccountsForAuthenticatedUser: ["GET /user/social_accounts"],
+        listSocialAccountsForUser: ["GET /users/{username}/social_accounts"],
         listSshSigningKeysForAuthenticatedUser: ["GET /user/ssh_signing_keys"],
         listSshSigningKeysForUser: ["GET /users/{username}/ssh_signing_keys"],
         setPrimaryEmailVisibilityForAuthenticated: ["PATCH /user/email/visibility", {}, {
@@ -15771,7 +15829,7 @@ var require_dist_node19 = __commonJS({
         updateAuthenticated: ["PATCH /user"]
       }
     };
-    var VERSION = "7.0.1";
+    var VERSION = "7.1.0";
     function endpointsToMethods(octokit, endpointsMap) {
       const newMethods = {};
       for (const [scope, endpoints] of Object.entries(endpointsMap)) {
@@ -15859,7 +15917,7 @@ var require_dist_node20 = __commonJS({
     var pluginRequestLog = require_dist_node17();
     var pluginPaginateRest = require_dist_node18();
     var pluginRestEndpointMethods = require_dist_node19();
-    var VERSION = "19.0.7";
+    var VERSION = "19.0.8";
     var Octokit3 = core2.Octokit.plugin(pluginRequestLog.requestLog, pluginRestEndpointMethods.legacyRestEndpointMethods, pluginPaginateRest.paginateRest).defaults({
       userAgent: `octokit-rest.js/${VERSION}`
     });
@@ -23919,10 +23977,10 @@ var require_lodash = __commonJS({
         }();
         var ctxClearTimeout = context3.clearTimeout !== root.clearTimeout && context3.clearTimeout, ctxNow = Date2 && Date2.now !== root.Date.now && Date2.now, ctxSetTimeout = context3.setTimeout !== root.setTimeout && context3.setTimeout;
         var nativeCeil = Math2.ceil, nativeFloor = Math2.floor, nativeGetSymbols = Object2.getOwnPropertySymbols, nativeIsBuffer = Buffer2 ? Buffer2.isBuffer : undefined2, nativeIsFinite = context3.isFinite, nativeJoin = arrayProto.join, nativeKeys = overArg(Object2.keys, Object2), nativeMax = Math2.max, nativeMin = Math2.min, nativeNow = Date2.now, nativeParseInt = context3.parseInt, nativeRandom = Math2.random, nativeReverse = arrayProto.reverse;
-        var DataView = getNative(context3, "DataView"), Map2 = getNative(context3, "Map"), Promise2 = getNative(context3, "Promise"), Set2 = getNative(context3, "Set"), WeakMap = getNative(context3, "WeakMap"), nativeCreate = getNative(Object2, "create");
-        var metaMap = WeakMap && new WeakMap();
+        var DataView = getNative(context3, "DataView"), Map2 = getNative(context3, "Map"), Promise2 = getNative(context3, "Promise"), Set2 = getNative(context3, "Set"), WeakMap2 = getNative(context3, "WeakMap"), nativeCreate = getNative(Object2, "create");
+        var metaMap = WeakMap2 && new WeakMap2();
         var realNames = {};
-        var dataViewCtorString = toSource(DataView), mapCtorString = toSource(Map2), promiseCtorString = toSource(Promise2), setCtorString = toSource(Set2), weakMapCtorString = toSource(WeakMap);
+        var dataViewCtorString = toSource(DataView), mapCtorString = toSource(Map2), promiseCtorString = toSource(Promise2), setCtorString = toSource(Set2), weakMapCtorString = toSource(WeakMap2);
         var symbolProto = Symbol2 ? Symbol2.prototype : undefined2, symbolValueOf = symbolProto ? symbolProto.valueOf : undefined2, symbolToString = symbolProto ? symbolProto.toString : undefined2;
         function lodash(value) {
           if (isObjectLike(value) && !isArray(value) && !(value instanceof LazyWrapper)) {
@@ -25936,7 +25994,7 @@ var require_lodash = __commonJS({
           return result2;
         };
         var getTag = baseGetTag;
-        if (DataView && getTag(new DataView(new ArrayBuffer(1))) != dataViewTag || Map2 && getTag(new Map2()) != mapTag || Promise2 && getTag(Promise2.resolve()) != promiseTag || Set2 && getTag(new Set2()) != setTag || WeakMap && getTag(new WeakMap()) != weakMapTag) {
+        if (DataView && getTag(new DataView(new ArrayBuffer(1))) != dataViewTag || Map2 && getTag(new Map2()) != mapTag || Promise2 && getTag(Promise2.resolve()) != promiseTag || Set2 && getTag(new Set2()) != setTag || WeakMap2 && getTag(new WeakMap2()) != weakMapTag) {
           getTag = function(value) {
             var result2 = baseGetTag(value), Ctor = result2 == objectTag ? value.constructor : undefined2, ctorString = Ctor ? toSource(Ctor) : "";
             if (ctorString) {
@@ -28920,270 +28978,1007 @@ var require_dist_node29 = __commonJS({
 });
 
 // 
-var require_lru_cache2 = __commonJS({
-  ""(exports, module) {
+var require_cjs = __commonJS({
+  ""(exports) {
     "use strict";
-    var Yallist = require_yallist();
-    var MAX = Symbol("max");
-    var LENGTH = Symbol("length");
-    var LENGTH_CALCULATOR = Symbol("lengthCalculator");
-    var ALLOW_STALE = Symbol("allowStale");
-    var MAX_AGE = Symbol("maxAge");
-    var DISPOSE = Symbol("dispose");
-    var NO_DISPOSE_ON_SET = Symbol("noDisposeOnSet");
-    var LRU_LIST = Symbol("lruList");
-    var CACHE = Symbol("cache");
-    var UPDATE_AGE_ON_GET = Symbol("updateAgeOnGet");
-    var naiveLength = () => 1;
-    var LRUCache = class {
-      constructor(options) {
-        if (typeof options === "number")
-          options = { max: options };
-        if (!options)
-          options = {};
-        if (options.max && (typeof options.max !== "number" || options.max < 0))
-          throw new TypeError("max must be a non-negative number");
-        const max = this[MAX] = options.max || Infinity;
-        const lc = options.length || naiveLength;
-        this[LENGTH_CALCULATOR] = typeof lc !== "function" ? naiveLength : lc;
-        this[ALLOW_STALE] = options.stale || false;
-        if (options.maxAge && typeof options.maxAge !== "number")
-          throw new TypeError("maxAge must be a number");
-        this[MAX_AGE] = options.maxAge || 0;
-        this[DISPOSE] = options.dispose;
-        this[NO_DISPOSE_ON_SET] = options.noDisposeOnSet || false;
-        this[UPDATE_AGE_ON_GET] = options.updateAgeOnGet || false;
-        this.reset();
+    Object.defineProperty(exports, "__esModule", { value: true });
+    exports.LRUCache = void 0;
+    var perf = typeof performance === "object" && performance && typeof performance.now === "function" ? performance : Date;
+    var warned = /* @__PURE__ */ new Set();
+    var emitWarning = (msg, type, code, fn) => {
+      typeof process === "object" && process && typeof process.emitWarning === "function" ? process.emitWarning(msg, type, code, fn) : console.error(`[${code}] ${type}: ${msg}`);
+    };
+    var shouldWarn = (code) => !warned.has(code);
+    var TYPE = Symbol("type");
+    var isPosInt = (n) => n && n === Math.floor(n) && n > 0 && isFinite(n);
+    var getUintArray = (max) => !isPosInt(max) ? null : max <= Math.pow(2, 8) ? Uint8Array : max <= Math.pow(2, 16) ? Uint16Array : max <= Math.pow(2, 32) ? Uint32Array : max <= Number.MAX_SAFE_INTEGER ? ZeroArray : null;
+    var ZeroArray = class extends Array {
+      constructor(size) {
+        super(size);
+        this.fill(0);
       }
-      set max(mL) {
-        if (typeof mL !== "number" || mL < 0)
-          throw new TypeError("max must be a non-negative number");
-        this[MAX] = mL || Infinity;
-        trim(this);
+    };
+    var _constructing;
+    var _Stack = class {
+      heap;
+      length;
+      static create(max) {
+        const HeapCls = getUintArray(max);
+        if (!HeapCls)
+          return [];
+        __privateSet(_Stack, _constructing, true);
+        const s = new _Stack(max, HeapCls);
+        __privateSet(_Stack, _constructing, false);
+        return s;
       }
-      get max() {
-        return this[MAX];
-      }
-      set allowStale(allowStale) {
-        this[ALLOW_STALE] = !!allowStale;
-      }
-      get allowStale() {
-        return this[ALLOW_STALE];
-      }
-      set maxAge(mA) {
-        if (typeof mA !== "number")
-          throw new TypeError("maxAge must be a non-negative number");
-        this[MAX_AGE] = mA;
-        trim(this);
-      }
-      get maxAge() {
-        return this[MAX_AGE];
-      }
-      set lengthCalculator(lC) {
-        if (typeof lC !== "function")
-          lC = naiveLength;
-        if (lC !== this[LENGTH_CALCULATOR]) {
-          this[LENGTH_CALCULATOR] = lC;
-          this[LENGTH] = 0;
-          this[LRU_LIST].forEach((hit) => {
-            hit.length = this[LENGTH_CALCULATOR](hit.value, hit.key);
-            this[LENGTH] += hit.length;
-          });
+      constructor(max, HeapCls) {
+        if (!__privateGet(_Stack, _constructing)) {
+          throw new TypeError("instantiate Stack using Stack.create(n)");
         }
-        trim(this);
+        this.heap = new HeapCls(max);
+        this.length = 0;
       }
-      get lengthCalculator() {
-        return this[LENGTH_CALCULATOR];
-      }
-      get length() {
-        return this[LENGTH];
-      }
-      get itemCount() {
-        return this[LRU_LIST].length;
-      }
-      rforEach(fn, thisp) {
-        thisp = thisp || this;
-        for (let walker = this[LRU_LIST].tail; walker !== null; ) {
-          const prev = walker.prev;
-          forEachStep(this, fn, walker, thisp);
-          walker = prev;
-        }
-      }
-      forEach(fn, thisp) {
-        thisp = thisp || this;
-        for (let walker = this[LRU_LIST].head; walker !== null; ) {
-          const next = walker.next;
-          forEachStep(this, fn, walker, thisp);
-          walker = next;
-        }
-      }
-      keys() {
-        return this[LRU_LIST].toArray().map((k) => k.key);
-      }
-      values() {
-        return this[LRU_LIST].toArray().map((k) => k.value);
-      }
-      reset() {
-        if (this[DISPOSE] && this[LRU_LIST] && this[LRU_LIST].length) {
-          this[LRU_LIST].forEach((hit) => this[DISPOSE](hit.key, hit.value));
-        }
-        this[CACHE] = /* @__PURE__ */ new Map();
-        this[LRU_LIST] = new Yallist();
-        this[LENGTH] = 0;
-      }
-      dump() {
-        return this[LRU_LIST].map((hit) => isStale(this, hit) ? false : {
-          k: hit.key,
-          v: hit.value,
-          e: hit.now + (hit.maxAge || 0)
-        }).toArray().filter((h) => h);
-      }
-      dumpLru() {
-        return this[LRU_LIST];
-      }
-      set(key, value, maxAge) {
-        maxAge = maxAge || this[MAX_AGE];
-        if (maxAge && typeof maxAge !== "number")
-          throw new TypeError("maxAge must be a number");
-        const now = maxAge ? Date.now() : 0;
-        const len = this[LENGTH_CALCULATOR](value, key);
-        if (this[CACHE].has(key)) {
-          if (len > this[MAX]) {
-            del(this, this[CACHE].get(key));
-            return false;
-          }
-          const node = this[CACHE].get(key);
-          const item = node.value;
-          if (this[DISPOSE]) {
-            if (!this[NO_DISPOSE_ON_SET])
-              this[DISPOSE](key, item.value);
-          }
-          item.now = now;
-          item.maxAge = maxAge;
-          item.value = value;
-          this[LENGTH] += len - item.length;
-          item.length = len;
-          this.get(key);
-          trim(this);
-          return true;
-        }
-        const hit = new Entry(key, value, len, now, maxAge);
-        if (hit.length > this[MAX]) {
-          if (this[DISPOSE])
-            this[DISPOSE](key, value);
-          return false;
-        }
-        this[LENGTH] += hit.length;
-        this[LRU_LIST].unshift(hit);
-        this[CACHE].set(key, this[LRU_LIST].head);
-        trim(this);
-        return true;
-      }
-      has(key) {
-        if (!this[CACHE].has(key))
-          return false;
-        const hit = this[CACHE].get(key).value;
-        return !isStale(this, hit);
-      }
-      get(key) {
-        return get(this, key, true);
-      }
-      peek(key) {
-        return get(this, key, false);
+      push(n) {
+        this.heap[this.length++] = n;
       }
       pop() {
-        const node = this[LRU_LIST].tail;
-        if (!node)
-          return null;
-        del(this, node);
-        return node.value;
+        return this.heap[--this.length];
       }
-      del(key) {
-        del(this, this[CACHE].get(key));
+    };
+    var Stack = _Stack;
+    _constructing = new WeakMap();
+    __privateAdd(Stack, _constructing, false);
+    var LRUCache = class {
+      #max;
+      #maxSize;
+      #dispose;
+      #disposeAfter;
+      #fetchMethod;
+      ttl;
+      ttlResolution;
+      ttlAutopurge;
+      updateAgeOnGet;
+      updateAgeOnHas;
+      allowStale;
+      noDisposeOnSet;
+      noUpdateTTL;
+      maxEntrySize;
+      sizeCalculation;
+      noDeleteOnFetchRejection;
+      noDeleteOnStaleGet;
+      allowStaleOnFetchAbort;
+      allowStaleOnFetchRejection;
+      ignoreFetchAbort;
+      #size;
+      #calculatedSize;
+      #keyMap;
+      #keyList;
+      #valList;
+      #next;
+      #prev;
+      #head;
+      #tail;
+      #free;
+      #disposed;
+      #sizes;
+      #starts;
+      #ttls;
+      #hasDispose;
+      #hasFetchMethod;
+      #hasDisposeAfter;
+      static unsafeExposeInternals(c) {
+        return {
+          starts: c.#starts,
+          ttls: c.#ttls,
+          sizes: c.#sizes,
+          keyMap: c.#keyMap,
+          keyList: c.#keyList,
+          valList: c.#valList,
+          next: c.#next,
+          prev: c.#prev,
+          get head() {
+            return c.#head;
+          },
+          get tail() {
+            return c.#tail;
+          },
+          free: c.#free,
+          isBackgroundFetch: (p) => c.#isBackgroundFetch(p),
+          backgroundFetch: (k, index, options, context3) => c.#backgroundFetch(k, index, options, context3),
+          moveToTail: (index) => c.#moveToTail(index),
+          indexes: (options) => c.#indexes(options),
+          rindexes: (options) => c.#rindexes(options),
+          isStale: (index) => c.#isStale(index)
+        };
       }
-      load(arr) {
-        this.reset();
-        const now = Date.now();
-        for (let l = arr.length - 1; l >= 0; l--) {
-          const hit = arr[l];
-          const expiresAt = hit.e || 0;
-          if (expiresAt === 0)
-            this.set(hit.k, hit.v);
-          else {
-            const maxAge = expiresAt - now;
-            if (maxAge > 0) {
-              this.set(hit.k, hit.v, maxAge);
+      get max() {
+        return this.#max;
+      }
+      get maxSize() {
+        return this.#maxSize;
+      }
+      get calculatedSize() {
+        return this.#calculatedSize;
+      }
+      get size() {
+        return this.#size;
+      }
+      get fetchMethod() {
+        return this.#fetchMethod;
+      }
+      get dispose() {
+        return this.#dispose;
+      }
+      get disposeAfter() {
+        return this.#disposeAfter;
+      }
+      constructor(options) {
+        const { max = 0, ttl, ttlResolution = 1, ttlAutopurge, updateAgeOnGet, updateAgeOnHas, allowStale, dispose, disposeAfter, noDisposeOnSet, noUpdateTTL, maxSize = 0, maxEntrySize = 0, sizeCalculation, fetchMethod, noDeleteOnFetchRejection, noDeleteOnStaleGet, allowStaleOnFetchRejection, allowStaleOnFetchAbort, ignoreFetchAbort } = options;
+        if (max !== 0 && !isPosInt(max)) {
+          throw new TypeError("max option must be a nonnegative integer");
+        }
+        const UintArray = max ? getUintArray(max) : Array;
+        if (!UintArray) {
+          throw new Error("invalid max value: " + max);
+        }
+        this.#max = max;
+        this.#maxSize = maxSize;
+        this.maxEntrySize = maxEntrySize || this.#maxSize;
+        this.sizeCalculation = sizeCalculation;
+        if (this.sizeCalculation) {
+          if (!this.#maxSize && !this.maxEntrySize) {
+            throw new TypeError("cannot set sizeCalculation without setting maxSize or maxEntrySize");
+          }
+          if (typeof this.sizeCalculation !== "function") {
+            throw new TypeError("sizeCalculation set to non-function");
+          }
+        }
+        if (fetchMethod !== void 0 && typeof fetchMethod !== "function") {
+          throw new TypeError("fetchMethod must be a function if specified");
+        }
+        this.#fetchMethod = fetchMethod;
+        this.#hasFetchMethod = !!fetchMethod;
+        this.#keyMap = /* @__PURE__ */ new Map();
+        this.#keyList = new Array(max).fill(void 0);
+        this.#valList = new Array(max).fill(void 0);
+        this.#next = new UintArray(max);
+        this.#prev = new UintArray(max);
+        this.#head = 0;
+        this.#tail = 0;
+        this.#free = Stack.create(max);
+        this.#size = 0;
+        this.#calculatedSize = 0;
+        if (typeof dispose === "function") {
+          this.#dispose = dispose;
+        }
+        if (typeof disposeAfter === "function") {
+          this.#disposeAfter = disposeAfter;
+          this.#disposed = [];
+        } else {
+          this.#disposeAfter = void 0;
+          this.#disposed = void 0;
+        }
+        this.#hasDispose = !!this.#dispose;
+        this.#hasDisposeAfter = !!this.#disposeAfter;
+        this.noDisposeOnSet = !!noDisposeOnSet;
+        this.noUpdateTTL = !!noUpdateTTL;
+        this.noDeleteOnFetchRejection = !!noDeleteOnFetchRejection;
+        this.allowStaleOnFetchRejection = !!allowStaleOnFetchRejection;
+        this.allowStaleOnFetchAbort = !!allowStaleOnFetchAbort;
+        this.ignoreFetchAbort = !!ignoreFetchAbort;
+        if (this.maxEntrySize !== 0) {
+          if (this.#maxSize !== 0) {
+            if (!isPosInt(this.#maxSize)) {
+              throw new TypeError("maxSize must be a positive integer if specified");
+            }
+          }
+          if (!isPosInt(this.maxEntrySize)) {
+            throw new TypeError("maxEntrySize must be a positive integer if specified");
+          }
+          this.#initializeSizeTracking();
+        }
+        this.allowStale = !!allowStale;
+        this.noDeleteOnStaleGet = !!noDeleteOnStaleGet;
+        this.updateAgeOnGet = !!updateAgeOnGet;
+        this.updateAgeOnHas = !!updateAgeOnHas;
+        this.ttlResolution = isPosInt(ttlResolution) || ttlResolution === 0 ? ttlResolution : 1;
+        this.ttlAutopurge = !!ttlAutopurge;
+        this.ttl = ttl || 0;
+        if (this.ttl) {
+          if (!isPosInt(this.ttl)) {
+            throw new TypeError("ttl must be a positive integer if specified");
+          }
+          this.#initializeTTLTracking();
+        }
+        if (this.#max === 0 && this.ttl === 0 && this.#maxSize === 0) {
+          throw new TypeError("At least one of max, maxSize, or ttl is required");
+        }
+        if (!this.ttlAutopurge && !this.#max && !this.#maxSize) {
+          const code = "LRU_CACHE_UNBOUNDED";
+          if (shouldWarn(code)) {
+            warned.add(code);
+            const msg = "TTL caching without ttlAutopurge, max, or maxSize can result in unbounded memory consumption.";
+            emitWarning(msg, "UnboundedCacheWarning", code, LRUCache);
+          }
+        }
+      }
+      getRemainingTTL(key) {
+        return this.#keyMap.has(key) ? Infinity : 0;
+      }
+      #initializeTTLTracking() {
+        const ttls = new ZeroArray(this.#max);
+        const starts = new ZeroArray(this.#max);
+        this.#ttls = ttls;
+        this.#starts = starts;
+        this.#setItemTTL = (index, ttl, start = perf.now()) => {
+          starts[index] = ttl !== 0 ? start : 0;
+          ttls[index] = ttl;
+          if (ttl !== 0 && this.ttlAutopurge) {
+            const t = setTimeout(() => {
+              if (this.#isStale(index)) {
+                this.delete(this.#keyList[index]);
+              }
+            }, ttl + 1);
+            if (t.unref) {
+              t.unref();
+            }
+          }
+        };
+        this.#updateItemAge = (index) => {
+          starts[index] = ttls[index] !== 0 ? perf.now() : 0;
+        };
+        this.#statusTTL = (status, index) => {
+          if (ttls[index]) {
+            const ttl = ttls[index];
+            const start = starts[index];
+            status.ttl = ttl;
+            status.start = start;
+            status.now = cachedNow || getNow();
+            status.remainingTTL = status.now + ttl - start;
+          }
+        };
+        let cachedNow = 0;
+        const getNow = () => {
+          const n = perf.now();
+          if (this.ttlResolution > 0) {
+            cachedNow = n;
+            const t = setTimeout(() => cachedNow = 0, this.ttlResolution);
+            if (t.unref) {
+              t.unref();
+            }
+          }
+          return n;
+        };
+        this.getRemainingTTL = (key) => {
+          const index = this.#keyMap.get(key);
+          if (index === void 0) {
+            return 0;
+          }
+          return ttls[index] === 0 || starts[index] === 0 ? Infinity : starts[index] + ttls[index] - (cachedNow || getNow());
+        };
+        this.#isStale = (index) => {
+          return ttls[index] !== 0 && starts[index] !== 0 && (cachedNow || getNow()) - starts[index] > ttls[index];
+        };
+      }
+      #updateItemAge = () => {
+      };
+      #statusTTL = () => {
+      };
+      #setItemTTL = () => {
+      };
+      #isStale = () => false;
+      #initializeSizeTracking() {
+        const sizes = new ZeroArray(this.#max);
+        this.#calculatedSize = 0;
+        this.#sizes = sizes;
+        this.#removeItemSize = (index) => {
+          this.#calculatedSize -= sizes[index];
+          sizes[index] = 0;
+        };
+        this.#requireSize = (k, v, size, sizeCalculation) => {
+          if (this.#isBackgroundFetch(v)) {
+            return 0;
+          }
+          if (!isPosInt(size)) {
+            if (sizeCalculation) {
+              if (typeof sizeCalculation !== "function") {
+                throw new TypeError("sizeCalculation must be a function");
+              }
+              size = sizeCalculation(v, k);
+              if (!isPosInt(size)) {
+                throw new TypeError("sizeCalculation return invalid (expect positive integer)");
+              }
+            } else {
+              throw new TypeError("invalid size value (must be positive integer). When maxSize or maxEntrySize is used, sizeCalculation or size must be set.");
+            }
+          }
+          return size;
+        };
+        this.#addItemSize = (index, size, status) => {
+          sizes[index] = size;
+          if (this.#maxSize) {
+            const maxSize = this.#maxSize - sizes[index];
+            while (this.#calculatedSize > maxSize) {
+              this.#evict(true);
+            }
+          }
+          this.#calculatedSize += sizes[index];
+          if (status) {
+            status.entrySize = size;
+            status.totalCalculatedSize = this.#calculatedSize;
+          }
+        };
+      }
+      #removeItemSize = (_i) => {
+      };
+      #addItemSize = (_i, _s, _st) => {
+      };
+      #requireSize = (_k, _v, size, sizeCalculation) => {
+        if (size || sizeCalculation) {
+          throw new TypeError("cannot set size without setting maxSize or maxEntrySize on cache");
+        }
+        return 0;
+      };
+      *#indexes({ allowStale = this.allowStale } = {}) {
+        if (this.#size) {
+          for (let i = this.#tail; true; ) {
+            if (!this.#isValidIndex(i)) {
+              break;
+            }
+            if (allowStale || !this.#isStale(i)) {
+              yield i;
+            }
+            if (i === this.#head) {
+              break;
+            } else {
+              i = this.#prev[i];
             }
           }
         }
       }
-      prune() {
-        this[CACHE].forEach((value, key) => get(this, key, false));
-      }
-    };
-    var get = (self2, key, doUse) => {
-      const node = self2[CACHE].get(key);
-      if (node) {
-        const hit = node.value;
-        if (isStale(self2, hit)) {
-          del(self2, node);
-          if (!self2[ALLOW_STALE])
-            return void 0;
-        } else {
-          if (doUse) {
-            if (self2[UPDATE_AGE_ON_GET])
-              node.value.now = Date.now();
-            self2[LRU_LIST].unshiftNode(node);
+      *#rindexes({ allowStale = this.allowStale } = {}) {
+        if (this.#size) {
+          for (let i = this.#head; true; ) {
+            if (!this.#isValidIndex(i)) {
+              break;
+            }
+            if (allowStale || !this.#isStale(i)) {
+              yield i;
+            }
+            if (i === this.#tail) {
+              break;
+            } else {
+              i = this.#next[i];
+            }
           }
         }
-        return hit.value;
       }
-    };
-    var isStale = (self2, hit) => {
-      if (!hit || !hit.maxAge && !self2[MAX_AGE])
+      #isValidIndex(index) {
+        return index !== void 0 && this.#keyMap.get(this.#keyList[index]) === index;
+      }
+      *entries() {
+        for (const i of this.#indexes()) {
+          if (this.#valList[i] !== void 0 && this.#keyList[i] !== void 0 && !this.#isBackgroundFetch(this.#valList[i])) {
+            yield [this.#keyList[i], this.#valList[i]];
+          }
+        }
+      }
+      *rentries() {
+        for (const i of this.#rindexes()) {
+          if (this.#valList[i] !== void 0 && this.#keyList[i] !== void 0 && !this.#isBackgroundFetch(this.#valList[i])) {
+            yield [this.#keyList[i], this.#valList[i]];
+          }
+        }
+      }
+      *keys() {
+        for (const i of this.#indexes()) {
+          const k = this.#keyList[i];
+          if (k !== void 0 && !this.#isBackgroundFetch(this.#valList[i])) {
+            yield k;
+          }
+        }
+      }
+      *rkeys() {
+        for (const i of this.#rindexes()) {
+          const k = this.#keyList[i];
+          if (k !== void 0 && !this.#isBackgroundFetch(this.#valList[i])) {
+            yield k;
+          }
+        }
+      }
+      *values() {
+        for (const i of this.#indexes()) {
+          const v = this.#valList[i];
+          if (v !== void 0 && !this.#isBackgroundFetch(this.#valList[i])) {
+            yield this.#valList[i];
+          }
+        }
+      }
+      *rvalues() {
+        for (const i of this.#rindexes()) {
+          const v = this.#valList[i];
+          if (v !== void 0 && !this.#isBackgroundFetch(this.#valList[i])) {
+            yield this.#valList[i];
+          }
+        }
+      }
+      [Symbol.iterator]() {
+        return this.entries();
+      }
+      find(fn, getOptions = {}) {
+        for (const i of this.#indexes()) {
+          const v = this.#valList[i];
+          const value = this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
+          if (value === void 0)
+            continue;
+          if (fn(value, this.#keyList[i], this)) {
+            return this.get(this.#keyList[i], getOptions);
+          }
+        }
+      }
+      forEach(fn, thisp = this) {
+        for (const i of this.#indexes()) {
+          const v = this.#valList[i];
+          const value = this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
+          if (value === void 0)
+            continue;
+          fn.call(thisp, value, this.#keyList[i], this);
+        }
+      }
+      rforEach(fn, thisp = this) {
+        for (const i of this.#rindexes()) {
+          const v = this.#valList[i];
+          const value = this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
+          if (value === void 0)
+            continue;
+          fn.call(thisp, value, this.#keyList[i], this);
+        }
+      }
+      purgeStale() {
+        let deleted = false;
+        for (const i of this.#rindexes({ allowStale: true })) {
+          if (this.#isStale(i)) {
+            this.delete(this.#keyList[i]);
+            deleted = true;
+          }
+        }
+        return deleted;
+      }
+      dump() {
+        const arr = [];
+        for (const i of this.#indexes({ allowStale: true })) {
+          const key = this.#keyList[i];
+          const v = this.#valList[i];
+          const value = this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
+          if (value === void 0 || key === void 0)
+            continue;
+          const entry = { value };
+          if (this.#ttls && this.#starts) {
+            entry.ttl = this.#ttls[i];
+            const age = perf.now() - this.#starts[i];
+            entry.start = Math.floor(Date.now() - age);
+          }
+          if (this.#sizes) {
+            entry.size = this.#sizes[i];
+          }
+          arr.unshift([key, entry]);
+        }
+        return arr;
+      }
+      load(arr) {
+        this.clear();
+        for (const [key, entry] of arr) {
+          if (entry.start) {
+            const age = Date.now() - entry.start;
+            entry.start = perf.now() - age;
+          }
+          this.set(key, entry.value, entry);
+        }
+      }
+      set(k, v, setOptions = {}) {
+        var _a, _b, _c;
+        const { ttl = this.ttl, start, noDisposeOnSet = this.noDisposeOnSet, sizeCalculation = this.sizeCalculation, status } = setOptions;
+        let { noUpdateTTL = this.noUpdateTTL } = setOptions;
+        const size = this.#requireSize(k, v, setOptions.size || 0, sizeCalculation);
+        if (this.maxEntrySize && size > this.maxEntrySize) {
+          if (status) {
+            status.set = "miss";
+            status.maxEntrySizeExceeded = true;
+          }
+          this.delete(k);
+          return this;
+        }
+        let index = this.#size === 0 ? void 0 : this.#keyMap.get(k);
+        if (index === void 0) {
+          index = this.#size === 0 ? this.#tail : this.#free.length !== 0 ? this.#free.pop() : this.#size === this.#max ? this.#evict(false) : this.#size;
+          this.#keyList[index] = k;
+          this.#valList[index] = v;
+          this.#keyMap.set(k, index);
+          this.#next[this.#tail] = index;
+          this.#prev[index] = this.#tail;
+          this.#tail = index;
+          this.#size++;
+          this.#addItemSize(index, size, status);
+          if (status)
+            status.set = "add";
+          noUpdateTTL = false;
+        } else {
+          this.#moveToTail(index);
+          const oldVal = this.#valList[index];
+          if (v !== oldVal) {
+            if (this.#hasFetchMethod && this.#isBackgroundFetch(oldVal)) {
+              oldVal.__abortController.abort(new Error("replaced"));
+            } else if (!noDisposeOnSet) {
+              if (this.#hasDispose) {
+                (_a = this.#dispose) == null ? void 0 : _a.call(this, oldVal, k, "set");
+              }
+              if (this.#hasDisposeAfter) {
+                (_b = this.#disposed) == null ? void 0 : _b.push([oldVal, k, "set"]);
+              }
+            }
+            this.#removeItemSize(index);
+            this.#addItemSize(index, size, status);
+            this.#valList[index] = v;
+            if (status) {
+              status.set = "replace";
+              const oldValue = oldVal && this.#isBackgroundFetch(oldVal) ? oldVal.__staleWhileFetching : oldVal;
+              if (oldValue !== void 0)
+                status.oldValue = oldValue;
+            }
+          } else if (status) {
+            status.set = "update";
+          }
+        }
+        if (ttl !== 0 && !this.#ttls) {
+          this.#initializeTTLTracking();
+        }
+        if (this.#ttls) {
+          if (!noUpdateTTL) {
+            this.#setItemTTL(index, ttl, start);
+          }
+          if (status)
+            this.#statusTTL(status, index);
+        }
+        if (!noDisposeOnSet && this.#hasDisposeAfter && this.#disposed) {
+          const dt = this.#disposed;
+          let task;
+          while (task = dt == null ? void 0 : dt.shift()) {
+            (_c = this.#disposeAfter) == null ? void 0 : _c.call(this, ...task);
+          }
+        }
+        return this;
+      }
+      pop() {
+        var _a;
+        try {
+          while (this.#size) {
+            const val = this.#valList[this.#head];
+            this.#evict(true);
+            if (this.#isBackgroundFetch(val)) {
+              if (val.__staleWhileFetching) {
+                return val.__staleWhileFetching;
+              }
+            } else if (val !== void 0) {
+              return val;
+            }
+          }
+        } finally {
+          if (this.#hasDisposeAfter && this.#disposed) {
+            const dt = this.#disposed;
+            let task;
+            while (task = dt == null ? void 0 : dt.shift()) {
+              (_a = this.#disposeAfter) == null ? void 0 : _a.call(this, ...task);
+            }
+          }
+        }
+      }
+      #evict(free) {
+        var _a, _b;
+        const head = this.#head;
+        const k = this.#keyList[head];
+        const v = this.#valList[head];
+        if (this.#hasFetchMethod && this.#isBackgroundFetch(v)) {
+          v.__abortController.abort(new Error("evicted"));
+        } else if (this.#hasDispose || this.#hasDisposeAfter) {
+          if (this.#hasDispose) {
+            (_a = this.#dispose) == null ? void 0 : _a.call(this, v, k, "evict");
+          }
+          if (this.#hasDisposeAfter) {
+            (_b = this.#disposed) == null ? void 0 : _b.push([v, k, "evict"]);
+          }
+        }
+        this.#removeItemSize(head);
+        if (free) {
+          this.#keyList[head] = void 0;
+          this.#valList[head] = void 0;
+          this.#free.push(head);
+        }
+        if (this.#size === 1) {
+          this.#head = this.#tail = 0;
+          this.#free.length = 0;
+        } else {
+          this.#head = this.#next[head];
+        }
+        this.#keyMap.delete(k);
+        this.#size--;
+        return head;
+      }
+      has(k, hasOptions = {}) {
+        const { updateAgeOnHas = this.updateAgeOnHas, status } = hasOptions;
+        const index = this.#keyMap.get(k);
+        if (index !== void 0) {
+          const v = this.#valList[index];
+          if (this.#isBackgroundFetch(v) && v.__staleWhileFetching === void 0) {
+            return false;
+          }
+          if (!this.#isStale(index)) {
+            if (updateAgeOnHas) {
+              this.#updateItemAge(index);
+            }
+            if (status) {
+              status.has = "hit";
+              this.#statusTTL(status, index);
+            }
+            return true;
+          } else if (status) {
+            status.has = "stale";
+            this.#statusTTL(status, index);
+          }
+        } else if (status) {
+          status.has = "miss";
+        }
         return false;
-      const diff = Date.now() - hit.now;
-      return hit.maxAge ? diff > hit.maxAge : self2[MAX_AGE] && diff > self2[MAX_AGE];
-    };
-    var trim = (self2) => {
-      if (self2[LENGTH] > self2[MAX]) {
-        for (let walker = self2[LRU_LIST].tail; self2[LENGTH] > self2[MAX] && walker !== null; ) {
-          const prev = walker.prev;
-          del(self2, walker);
-          walker = prev;
+      }
+      peek(k, peekOptions = {}) {
+        const { allowStale = this.allowStale } = peekOptions;
+        const index = this.#keyMap.get(k);
+        if (index !== void 0 && (allowStale || !this.#isStale(index))) {
+          const v = this.#valList[index];
+          return this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
+        }
+      }
+      #backgroundFetch(k, index, options, context3) {
+        const v = index === void 0 ? void 0 : this.#valList[index];
+        if (this.#isBackgroundFetch(v)) {
+          return v;
+        }
+        const ac = new AbortController();
+        const { signal } = options;
+        signal == null ? void 0 : signal.addEventListener("abort", () => ac.abort(signal.reason), {
+          signal: ac.signal
+        });
+        const fetchOpts = {
+          signal: ac.signal,
+          options,
+          context: context3
+        };
+        const cb = (v2, updateCache = false) => {
+          const { aborted } = ac.signal;
+          const ignoreAbort = options.ignoreFetchAbort && v2 !== void 0;
+          if (options.status) {
+            if (aborted && !updateCache) {
+              options.status.fetchAborted = true;
+              options.status.fetchError = ac.signal.reason;
+              if (ignoreAbort)
+                options.status.fetchAbortIgnored = true;
+            } else {
+              options.status.fetchResolved = true;
+            }
+          }
+          if (aborted && !ignoreAbort && !updateCache) {
+            return fetchFail(ac.signal.reason);
+          }
+          const bf2 = p;
+          if (this.#valList[index] === p) {
+            if (v2 === void 0) {
+              if (bf2.__staleWhileFetching) {
+                this.#valList[index] = bf2.__staleWhileFetching;
+              } else {
+                this.delete(k);
+              }
+            } else {
+              if (options.status)
+                options.status.fetchUpdated = true;
+              this.set(k, v2, fetchOpts.options);
+            }
+          }
+          return v2;
+        };
+        const eb = (er) => {
+          if (options.status) {
+            options.status.fetchRejected = true;
+            options.status.fetchError = er;
+          }
+          return fetchFail(er);
+        };
+        const fetchFail = (er) => {
+          const { aborted } = ac.signal;
+          const allowStaleAborted = aborted && options.allowStaleOnFetchAbort;
+          const allowStale = allowStaleAborted || options.allowStaleOnFetchRejection;
+          const noDelete = allowStale || options.noDeleteOnFetchRejection;
+          const bf2 = p;
+          if (this.#valList[index] === p) {
+            const del = !noDelete || bf2.__staleWhileFetching === void 0;
+            if (del) {
+              this.delete(k);
+            } else if (!allowStaleAborted) {
+              this.#valList[index] = bf2.__staleWhileFetching;
+            }
+          }
+          if (allowStale) {
+            if (options.status && bf2.__staleWhileFetching !== void 0) {
+              options.status.returnedStale = true;
+            }
+            return bf2.__staleWhileFetching;
+          } else if (bf2.__returned === bf2) {
+            throw er;
+          }
+        };
+        const pcall = (res, rej) => {
+          var _a;
+          const fmp = (_a = this.#fetchMethod) == null ? void 0 : _a.call(this, k, v, fetchOpts);
+          if (fmp && fmp instanceof Promise) {
+            fmp.then((v2) => res(v2), rej);
+          }
+          ac.signal.addEventListener("abort", () => {
+            if (!options.ignoreFetchAbort || options.allowStaleOnFetchAbort) {
+              res();
+              if (options.allowStaleOnFetchAbort) {
+                res = (v2) => cb(v2, true);
+              }
+            }
+          });
+        };
+        if (options.status)
+          options.status.fetchDispatched = true;
+        const p = new Promise(pcall).then(cb, eb);
+        const bf = Object.assign(p, {
+          __abortController: ac,
+          __staleWhileFetching: v,
+          __returned: void 0
+        });
+        if (index === void 0) {
+          this.set(k, bf, { ...fetchOpts.options, status: void 0 });
+          index = this.#keyMap.get(k);
+        } else {
+          this.#valList[index] = bf;
+        }
+        return bf;
+      }
+      #isBackgroundFetch(p) {
+        if (!this.#hasFetchMethod)
+          return false;
+        const b = p;
+        return !!b && b instanceof Promise && b.hasOwnProperty("__staleWhileFetching") && b.__abortController instanceof AbortController;
+      }
+      async fetch(k, fetchOptions = {}) {
+        const {
+          allowStale = this.allowStale,
+          updateAgeOnGet = this.updateAgeOnGet,
+          noDeleteOnStaleGet = this.noDeleteOnStaleGet,
+          ttl = this.ttl,
+          noDisposeOnSet = this.noDisposeOnSet,
+          size = 0,
+          sizeCalculation = this.sizeCalculation,
+          noUpdateTTL = this.noUpdateTTL,
+          noDeleteOnFetchRejection = this.noDeleteOnFetchRejection,
+          allowStaleOnFetchRejection = this.allowStaleOnFetchRejection,
+          ignoreFetchAbort = this.ignoreFetchAbort,
+          allowStaleOnFetchAbort = this.allowStaleOnFetchAbort,
+          context: context3,
+          forceRefresh = false,
+          status,
+          signal
+        } = fetchOptions;
+        if (!this.#hasFetchMethod) {
+          if (status)
+            status.fetch = "get";
+          return this.get(k, {
+            allowStale,
+            updateAgeOnGet,
+            noDeleteOnStaleGet,
+            status
+          });
+        }
+        const options = {
+          allowStale,
+          updateAgeOnGet,
+          noDeleteOnStaleGet,
+          ttl,
+          noDisposeOnSet,
+          size,
+          sizeCalculation,
+          noUpdateTTL,
+          noDeleteOnFetchRejection,
+          allowStaleOnFetchRejection,
+          allowStaleOnFetchAbort,
+          ignoreFetchAbort,
+          status,
+          signal
+        };
+        let index = this.#keyMap.get(k);
+        if (index === void 0) {
+          if (status)
+            status.fetch = "miss";
+          const p = this.#backgroundFetch(k, index, options, context3);
+          return p.__returned = p;
+        } else {
+          const v = this.#valList[index];
+          if (this.#isBackgroundFetch(v)) {
+            const stale = allowStale && v.__staleWhileFetching !== void 0;
+            if (status) {
+              status.fetch = "inflight";
+              if (stale)
+                status.returnedStale = true;
+            }
+            return stale ? v.__staleWhileFetching : v.__returned = v;
+          }
+          const isStale = this.#isStale(index);
+          if (!forceRefresh && !isStale) {
+            if (status)
+              status.fetch = "hit";
+            this.#moveToTail(index);
+            if (updateAgeOnGet) {
+              this.#updateItemAge(index);
+            }
+            if (status)
+              this.#statusTTL(status, index);
+            return v;
+          }
+          const p = this.#backgroundFetch(k, index, options, context3);
+          const hasStale = p.__staleWhileFetching !== void 0;
+          const staleVal = hasStale && allowStale;
+          if (status) {
+            status.fetch = isStale ? "stale" : "refresh";
+            if (staleVal && isStale)
+              status.returnedStale = true;
+          }
+          return staleVal ? p.__staleWhileFetching : p.__returned = p;
+        }
+      }
+      get(k, getOptions = {}) {
+        const { allowStale = this.allowStale, updateAgeOnGet = this.updateAgeOnGet, noDeleteOnStaleGet = this.noDeleteOnStaleGet, status } = getOptions;
+        const index = this.#keyMap.get(k);
+        if (index !== void 0) {
+          const value = this.#valList[index];
+          const fetching = this.#isBackgroundFetch(value);
+          if (status)
+            this.#statusTTL(status, index);
+          if (this.#isStale(index)) {
+            if (status)
+              status.get = "stale";
+            if (!fetching) {
+              if (!noDeleteOnStaleGet) {
+                this.delete(k);
+              }
+              if (status && allowStale)
+                status.returnedStale = true;
+              return allowStale ? value : void 0;
+            } else {
+              if (status && allowStale && value.__staleWhileFetching !== void 0) {
+                status.returnedStale = true;
+              }
+              return allowStale ? value.__staleWhileFetching : void 0;
+            }
+          } else {
+            if (status)
+              status.get = "hit";
+            if (fetching) {
+              return value.__staleWhileFetching;
+            }
+            this.#moveToTail(index);
+            if (updateAgeOnGet) {
+              this.#updateItemAge(index);
+            }
+            return value;
+          }
+        } else if (status) {
+          status.get = "miss";
+        }
+      }
+      #connect(p, n) {
+        this.#prev[n] = p;
+        this.#next[p] = n;
+      }
+      #moveToTail(index) {
+        if (index !== this.#tail) {
+          if (index === this.#head) {
+            this.#head = this.#next[index];
+          } else {
+            this.#connect(this.#prev[index], this.#next[index]);
+          }
+          this.#connect(this.#tail, index);
+          this.#tail = index;
+        }
+      }
+      delete(k) {
+        var _a, _b, _c, _d;
+        let deleted = false;
+        if (this.#size !== 0) {
+          const index = this.#keyMap.get(k);
+          if (index !== void 0) {
+            deleted = true;
+            if (this.#size === 1) {
+              this.clear();
+            } else {
+              this.#removeItemSize(index);
+              const v = this.#valList[index];
+              if (this.#isBackgroundFetch(v)) {
+                v.__abortController.abort(new Error("deleted"));
+              } else if (this.#hasDispose || this.#hasDisposeAfter) {
+                if (this.#hasDispose) {
+                  (_a = this.#dispose) == null ? void 0 : _a.call(this, v, k, "delete");
+                }
+                if (this.#hasDisposeAfter) {
+                  (_b = this.#disposed) == null ? void 0 : _b.push([v, k, "delete"]);
+                }
+              }
+              this.#keyMap.delete(k);
+              this.#keyList[index] = void 0;
+              this.#valList[index] = void 0;
+              if (index === this.#tail) {
+                this.#tail = this.#prev[index];
+              } else if (index === this.#head) {
+                this.#head = this.#next[index];
+              } else {
+                this.#next[this.#prev[index]] = this.#next[index];
+                this.#prev[this.#next[index]] = this.#prev[index];
+              }
+              this.#size--;
+              this.#free.push(index);
+            }
+          }
+        }
+        if (this.#hasDisposeAfter && ((_c = this.#disposed) == null ? void 0 : _c.length)) {
+          const dt = this.#disposed;
+          let task;
+          while (task = dt == null ? void 0 : dt.shift()) {
+            (_d = this.#disposeAfter) == null ? void 0 : _d.call(this, ...task);
+          }
+        }
+        return deleted;
+      }
+      clear() {
+        var _a, _b, _c;
+        for (const index of this.#rindexes({ allowStale: true })) {
+          const v = this.#valList[index];
+          if (this.#isBackgroundFetch(v)) {
+            v.__abortController.abort(new Error("deleted"));
+          } else {
+            const k = this.#keyList[index];
+            if (this.#hasDispose) {
+              (_a = this.#dispose) == null ? void 0 : _a.call(this, v, k, "delete");
+            }
+            if (this.#hasDisposeAfter) {
+              (_b = this.#disposed) == null ? void 0 : _b.push([v, k, "delete"]);
+            }
+          }
+        }
+        this.#keyMap.clear();
+        this.#valList.fill(void 0);
+        this.#keyList.fill(void 0);
+        if (this.#ttls && this.#starts) {
+          this.#ttls.fill(0);
+          this.#starts.fill(0);
+        }
+        if (this.#sizes) {
+          this.#sizes.fill(0);
+        }
+        this.#head = 0;
+        this.#tail = 0;
+        this.#free.length = 0;
+        this.#calculatedSize = 0;
+        this.#size = 0;
+        if (this.#hasDisposeAfter && this.#disposed) {
+          const dt = this.#disposed;
+          let task;
+          while (task = dt == null ? void 0 : dt.shift()) {
+            (_c = this.#disposeAfter) == null ? void 0 : _c.call(this, ...task);
+          }
         }
       }
     };
-    var del = (self2, node) => {
-      if (node) {
-        const hit = node.value;
-        if (self2[DISPOSE])
-          self2[DISPOSE](hit.key, hit.value);
-        self2[LENGTH] -= hit.length;
-        self2[CACHE].delete(hit.key);
-        self2[LRU_LIST].removeNode(node);
-      }
-    };
-    var Entry = class {
-      constructor(key, value, length, now, maxAge) {
-        this.key = key;
-        this.value = value;
-        this.length = length;
-        this.now = now;
-        this.maxAge = maxAge || 0;
-      }
-    };
-    var forEachStep = (self2, fn, node, thisp) => {
-      let hit = node.value;
-      if (isStale(self2, hit)) {
-        del(self2, node);
-        if (!self2[ALLOW_STALE])
-          hit = void 0;
-      }
-      if (hit)
-        fn.call(thisp, hit.value, hit.key, self2);
-    };
-    module.exports = LRUCache;
+    exports.LRUCache = LRUCache;
   }
 });
 
@@ -29192,15 +29987,12 @@ var require_dist_node30 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    function _interopDefault(ex) {
-      return ex && typeof ex === "object" && "default" in ex ? ex["default"] : ex;
-    }
     var universalUserAgent = require_dist_node();
     var request = require_dist_node13();
     var authOauthApp = require_dist_node28();
     var deprecation = require_dist_node3();
     var universalGithubAppJwt = require_dist_node29();
-    var LRU = _interopDefault(require_lru_cache2());
+    var lruCache = require_cjs();
     var authOauthUser = require_dist_node27();
     async function getAppAuthentication({
       appId,
@@ -29228,9 +30020,9 @@ var require_dist_node30 = __commonJS({
       }
     }
     function getCache() {
-      return new LRU({
+      return new lruCache.LRUCache({
         max: 15e3,
-        maxAge: 1e3 * 60 * 59
+        ttl: 1e3 * 60 * 59
       });
     }
     async function get(cache, options) {
@@ -29426,12 +30218,12 @@ var require_dist_node30 = __commonJS({
     var PATHS = ["/app", "/app/hook/config", "/app/hook/deliveries", "/app/hook/deliveries/{delivery_id}", "/app/hook/deliveries/{delivery_id}/attempts", "/app/installations", "/app/installations/{installation_id}", "/app/installations/{installation_id}/access_tokens", "/app/installations/{installation_id}/suspended", "/marketplace_listing/accounts/{account_id}", "/marketplace_listing/plan", "/marketplace_listing/plans", "/marketplace_listing/plans/{plan_id}/accounts", "/marketplace_listing/stubbed/accounts/{account_id}", "/marketplace_listing/stubbed/plan", "/marketplace_listing/stubbed/plans", "/marketplace_listing/stubbed/plans/{plan_id}/accounts", "/orgs/{org}/installation", "/repos/{owner}/{repo}/installation", "/users/{username}/installation"];
     function routeMatcher(paths) {
       const regexes = paths.map((p) => p.split("/").map((c) => c.startsWith("{") ? "(?:.+?)" : c).join("/"));
-      const regex = `^(?:${regexes.map((r) => `(?:${r})`).join("|")})[^/]*$`;
+      const regex = `^(?:${regexes.map((r) => `(?:${r})`).join("|")})$`;
       return new RegExp(regex, "i");
     }
     var REGEX = routeMatcher(PATHS);
     function requiresAppAuth(url) {
-      return !!url && REGEX.test(url);
+      return !!url && REGEX.test(url.split("?")[0]);
     }
     var FIVE_SECONDS_IN_MS = 5 * 1e3;
     function isNotTimeSkewError(error2) {
@@ -29511,7 +30303,7 @@ var require_dist_node30 = __commonJS({
         return sendRequestWithRetries(state, request2, options, createdAt, retries);
       }
     }
-    var VERSION = "4.0.9";
+    var VERSION = "4.0.12";
     function createAppAuth2(options) {
       if (!options.appId) {
         throw new Error("[@octokit/auth-app] appId option is required");
