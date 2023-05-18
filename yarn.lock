@@ -368,7 +368,7 @@ __metadata:
     "@google-cloud/storage": ^6.0.0
     "@microsoft/api-extractor": 7.34.9
     "@octokit/auth-app": 4.0.12
-    "@octokit/core": 4.2.0
+    "@octokit/core": 4.2.1
     "@octokit/graphql": 5.0.5
     "@octokit/graphql-schema": 14.5.0
     "@octokit/openapi-types": 17.2.0
@@ -5507,9 +5507,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/core@npm:4.2.0, @octokit/core@npm:^4.1.0":
-  version: 4.2.0
-  resolution: "@octokit/core@npm:4.2.0"
+"@octokit/core@npm:4.2.1":
+  version: 4.2.1
+  resolution: "@octokit/core@npm:4.2.1"
   dependencies:
     "@octokit/auth-token": ^3.0.0
     "@octokit/graphql": ^5.0.0
@@ -5518,7 +5518,7 @@ __metadata:
     "@octokit/types": ^9.0.0
     before-after-hook: ^2.2.0
     universal-user-agent: ^6.0.0
-  checksum: 5ac56e7f14b42a5da8d3075a2ae41483521a78bee061a01f4a81d8c0ecd6a684b2e945d66baba0cd1fdf264639deedc3a96d0f32c4d2fc39b49ca10f52f4de39
+  checksum: f82d52e937e12da1c7c163341c845b8e27e7fa75678f5e5954e6fa017a94f1833d6e5c4e43f0be796fbfea9dc5e1137087f655dbd5acb3d57879e1b28568e0a9
   languageName: node
   linkType: hard
 
@@ -5534,6 +5534,21 @@ __metadata:
     before-after-hook: ^2.2.0
     universal-user-agent: ^6.0.0
   checksum: f81160129037bd8555d47db60cd5381637b7e3602ad70735a7bdf8f3d250c7b7114a666bb12ef7a8746a326a5d72ed30a1b8f8a5a170007f7285c8e217bef1f0
+  languageName: node
+  linkType: hard
+
+"@octokit/core@npm:^4.1.0":
+  version: 4.2.0
+  resolution: "@octokit/core@npm:4.2.0"
+  dependencies:
+    "@octokit/auth-token": ^3.0.0
+    "@octokit/graphql": ^5.0.0
+    "@octokit/request": ^6.0.0
+    "@octokit/request-error": ^3.0.0
+    "@octokit/types": ^9.0.0
+    before-after-hook: ^2.2.0
+    universal-user-agent: ^6.0.0
+  checksum: 5ac56e7f14b42a5da8d3075a2ae41483521a78bee061a01f4a81d8c0ecd6a684b2e945d66baba0cd1fdf264639deedc3a96d0f32c4d2fc39b49ca10f52f4de39
   languageName: node
   linkType: hard
 
