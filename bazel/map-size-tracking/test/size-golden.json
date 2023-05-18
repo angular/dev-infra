@@ -1,68 +1,61 @@
 {
-  "unmapped": 14411,
+  "unmapped": 8371,
   "files": {
     "bazel/": {
       "map-size-tracking/": {
-        "size": 19,
+        "size": 38,
         "test/": {
           "fixture-app/": {
-            "main.ts": 3,
-            "size": 19,
-            "test-component.ts": 16
+            "main.ts": 1,
+            "size": 38,
+            "test-component.ts": 37
           },
-          "size": 19
+          "size": 38
         }
       },
-      "size": 19
+      "size": 38
     },
     "node_modules/": {
       "rxjs/": {
-        "node_modules/": {
-          "size": 6128,
-          "tslib/": {
-            "modules/": {
-              "index.js": 519,
-              "size": 519
-            },
-            "size": 6128,
-            "tslib.js": 5609
-          }
-        },
-        "size": 11761,
+        "size": 4177,
         "src/": {
           "internal/": {
-            "NotificationFactories.ts": 226,
-            "Observable.ts": 619,
-            "Subscriber.ts": 1694,
-            "Subscription.ts": 1119,
-            "config.ts": 61,
+            "NotificationFactories.ts": 173,
+            "Observable.ts": 806,
+            "Subscriber.ts": 1335,
+            "Subscription.ts": 742,
+            "config.ts": 70,
             "scheduler/": {
-              "size": 154,
-              "timeoutProvider.ts": 154
+              "size": 212,
+              "timeoutProvider.ts": 212
             },
-            "size": 5633,
+            "size": 4177,
             "symbol/": {
-              "observable.ts": 74,
-              "size": 74
+              "observable.ts": 97,
+              "size": 97
             },
             "util/": {
-              "UnsubscriptionError.ts": 142,
-              "arrRemove.ts": 190,
-              "createErrorClass.ts": 91,
-              "errorContext.ts": 359,
-              "identity.ts": 638,
-              "isFunction.ts": 86,
-              "noop.ts": 27,
-              "pipe.ts": 61,
-              "reportUnhandledError.ts": 92,
-              "size": 1686
+              "UnsubscriptionError.ts": 123,
+              "arrRemove.ts": 29,
+              "createErrorClass.ts": 90,
+              "errorContext.ts": 168,
+              "identity.ts": 34,
+              "isFunction.ts": 98,
+              "noop.ts": 18,
+              "pipe.ts": 83,
+              "reportUnhandledError.ts": 99,
+              "size": 742
             }
           },
-          "size": 5633
+          "size": 4177
         }
       },
-      "size": 11761
+      "size": 5099,
+      "tslib/": {
+        "size": 922,
+        "tslib.es6.js": 922
+      }
     },
-    "size": 11780
+    "size": 5137
   }
 }
