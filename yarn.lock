@@ -422,9 +422,9 @@ __metadata:
     font-color-contrast: ^11.1.0
     gcip-cloud-functions: 0.1.1
     git-raw-commits: ^2.0.10
-    glob: 10.2.4
+    glob: 10.2.5
     husky: ^8.0.0
-    inquirer: 9.2.3
+    inquirer: 9.2.4
     jasmine: ~4.6.0
     jasmine-core: ~4.6.0
     jsdom: ^22.0.0
@@ -7952,20 +7952,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browser-sync-client@npm:^2.29.2":
-  version: 2.29.2
-  resolution: "browser-sync-client@npm:2.29.2"
+"browser-sync-client@npm:^2.29.3":
+  version: 2.29.3
+  resolution: "browser-sync-client@npm:2.29.3"
   dependencies:
     etag: 1.8.1
     fresh: 0.5.2
     mitt: ^1.1.3
-  checksum: 874fbbb6c4782f961787181414db151cf5ec8c93743b65c463a718e7f88e467fba3cdcda52666a83a55e4f5f71c2b8f450617bca12038283a8594dd0116343a6
+  checksum: b73d7ffacd957597a1e7ee0b80133ef05908610e6a6e64c95b2dcb80803b6a35474ef9ae414748188c6c74c5ba56e510563e8f3c8d4f1bc7d8d797a689109e07
   languageName: node
   linkType: hard
 
-"browser-sync-ui@npm:^2.29.2":
-  version: 2.29.2
-  resolution: "browser-sync-ui@npm:2.29.2"
+"browser-sync-ui@npm:^2.29.3":
+  version: 2.29.3
+  resolution: "browser-sync-ui@npm:2.29.3"
   dependencies:
     async-each-series: 0.1.1
     chalk: 4.1.2
@@ -7974,16 +7974,16 @@ __metadata:
     server-destroy: 1.0.1
     socket.io-client: ^4.4.1
     stream-throttle: ^0.1.3
-  checksum: 4ee41c1c20d9e91506dc6dbbcd3da69d1815a2a02e8e7a11933791e77c3047d3382dadf63a8797e3f02ff996aabe2924052b0752bedaff6a4cc99c8f282b4a33
+  checksum: 0fa95676df642a82f70e339ed75b76ace0a827b97881b74305f03c0d4eb16fcab316fb1beb4b6abd64d62cc78a379c0cf3d3080a97866bccece1f153e23315d4
   languageName: node
   linkType: hard
 
 "browser-sync@npm:^2.27.7":
-  version: 2.29.2
-  resolution: "browser-sync@npm:2.29.2"
+  version: 2.29.3
+  resolution: "browser-sync@npm:2.29.3"
   dependencies:
-    browser-sync-client: ^2.29.2
-    browser-sync-ui: ^2.29.2
+    browser-sync-client: ^2.29.3
+    browser-sync-ui: ^2.29.3
     bs-recipes: 1.3.4
     chalk: 4.1.2
     chokidar: ^3.5.1
@@ -8013,7 +8013,7 @@ __metadata:
     yargs: ^17.3.1
   bin:
     browser-sync: dist/bin.js
-  checksum: f869ebe6b725da5f3bfc1d73d63d2d58964baf0da11d7c2e4bd43ebe28e2841a9f26ed2b11c888c1bedfb016d9eb0f2284ec3ee376fa2235a867222d7a0589b5
+  checksum: 232392bf4124767d55112ce98508d47838a8d640b81dd55d8adc03d0deff97c35406ef8fa9a0898e0a9a0f104cb329ad2a309b162257803e6f791fe883fcbcc2
   languageName: node
   linkType: hard
 
@@ -11194,18 +11194,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:10.2.4":
-  version: 10.2.4
-  resolution: "glob@npm:10.2.4"
+"glob@npm:10.2.5":
+  version: 10.2.5
+  resolution: "glob@npm:10.2.5"
   dependencies:
     foreground-child: ^3.1.0
     jackspeak: ^2.0.3
     minimatch: ^9.0.0
-    minipass: ^5.0.0 || ^6.0.0
+    minipass: ^5.0.0 || ^6.0.2
     path-scurry: ^1.7.0
   bin:
     glob: dist/cjs/src/bin.js
-  checksum: 29845faaa1a8bd2d1f2f26e0c4e5040898c7b4ccfb42e0a558319f6229d124dbc7ccf0ff214402505c5b62c1a39d9d2a1de9c582a74ad415591b96fa53cef466
+  checksum: 54d2b629c467953317c175903a049819577bcce679d437ff1ad43bf654091d3564e796351d705463b26a0194234acdea7f4de64993b0544ea86275c000498026
   languageName: node
   linkType: hard
 
@@ -12066,9 +12066,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inquirer@npm:9.2.3":
-  version: 9.2.3
-  resolution: "inquirer@npm:9.2.3"
+"inquirer@npm:9.2.4":
+  version: 9.2.4
+  resolution: "inquirer@npm:9.2.4"
   dependencies:
     ansi-escapes: ^4.3.2
     chalk: ^5.2.0
@@ -12085,7 +12085,7 @@ __metadata:
     strip-ansi: ^6.0.1
     through: ^2.3.6
     wrap-ansi: ^6.0.1
-  checksum: 234ad79eebd40d567241243bef0fd58635b364ff9de391140af84018b3ff9c26e82acf9e062f2f0307342e6a8ff180d7e3df00a3484f471d607905fb781c6192
+  checksum: bd117dbd0d7ed0ec982d5256600c9bba174ca652aa1fbd8d103bcb31bd3a42ac7ffac7220c31b3be5bb6a09fc089910de0c8c5e0f9f17d36d785cf4928abc570
   languageName: node
   linkType: hard
 
@@ -14249,10 +14249,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minipass@npm:^5.0.0 || ^6.0.0":
-  version: 6.0.0
-  resolution: "minipass@npm:6.0.0"
-  checksum: c408b1224b6e7f7389ac37121883691e8db693bfb36b8a75aeb638443e138af99bec3f145cd55c58467733b0a9cb810bee5c7b130eb9ea52e2e9e179ba663f14
+"minipass@npm:^5.0.0 || ^6.0.2":
+  version: 6.0.2
+  resolution: "minipass@npm:6.0.2"
+  checksum: d140b91f4ab2e5ce5a9b6c468c0e82223504acc89114c1a120d4495188b81fedf8cade72a9f4793642b4e66672f990f1e0d902dd858485216a07cd3c8a62fac9
   languageName: node
   linkType: hard
 
@@ -18311,7 +18311,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:2.5.0, tslib@npm:^2.3.0":
+"tslib@npm:2.5.0":
   version: 2.5.0
   resolution: "tslib@npm:2.5.0"
   checksum: ae3ed5f9ce29932d049908ebfdf21b3a003a85653a9a140d614da6b767a93ef94f460e52c3d787f0e4f383546981713f165037dc2274df212ea9f8a4541004e1
@@ -18332,10 +18332,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.0.0, tslib@npm:^2.0.1, tslib@npm:^2.1.0":
-  version: 2.4.0
-  resolution: "tslib@npm:2.4.0"
-  checksum: 8c4aa6a3c5a754bf76aefc38026134180c053b7bd2f81338cb5e5ebf96fefa0f417bff221592bf801077f5bf990562f6264fecbc42cd3309b33872cb6fc3b113
+"tslib@npm:^2.0.0, tslib@npm:^2.0.1, tslib@npm:^2.1.0, tslib@npm:^2.3.0":
+  version: 2.5.2
+  resolution: "tslib@npm:2.5.2"
+  checksum: 4d3c1e238b94127ed0e88aa0380db3c2ddae581dc0f4bae5a982345e9f50ee5eda90835b8bfba99b02df10a5734470be197158c36f9129ac49fdc14a6a9da222
   languageName: node
   linkType: hard
 
