@@ -70185,7 +70185,9 @@ var EditorPrompt = class extends Prompt {
   }
   startExternalEditor() {
     this.rl.pause();
-    (0, import_external_editor.editAsync)(this.currentText, this.endExternalEditor.bind(this));
+    (0, import_external_editor.editAsync)(this.currentText, this.endExternalEditor.bind(this), {
+      postfix: this.opt.postfix ?? ".txt"
+    });
   }
   endExternalEditor(error2, result) {
     this.rl.resume();
