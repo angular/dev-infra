@@ -5495,7 +5495,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: 35.98.2
+    renovate: 35.98.4
   languageName: unknown
   linkType: soft
 
@@ -5705,12 +5705,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"openpgp@npm:5.8.0":
-  version: 5.8.0
-  resolution: "openpgp@npm:5.8.0"
+"openpgp@npm:5.9.0":
+  version: 5.9.0
+  resolution: "openpgp@npm:5.9.0"
   dependencies:
     asn1.js: ^5.0.0
-  checksum: 81eb96bc6df5c7a5eef2b2e2e4602959315e09a1b10ed30326226a12086d4b4aacf981b8329ec3a10b99cf894a14d037b562e62e4b359b27214177704763cd20
+  checksum: 787e9e5169aa514ac309e1f813699d1c080ebd579db25d6ec89d1f2bf225d7eeb615364ca3ada543e6445d6363ea49ffec90ffa306274033a5cf01694b01632a
   languageName: node
   linkType: hard
 
@@ -6224,9 +6224,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:35.98.2":
-  version: 35.98.2
-  resolution: "renovate@npm:35.98.2"
+"renovate@npm:35.98.4":
+  version: 35.98.4
+  resolution: "renovate@npm:35.98.4"
   dependencies:
     "@aws-sdk/client-codecommit": 3.332.0
     "@aws-sdk/client-ec2": 3.332.0
@@ -6307,7 +6307,7 @@ __metadata:
     ms: 2.1.3
     nanoid: 3.3.6
     node-html-parser: 6.1.5
-    openpgp: 5.8.0
+    openpgp: 5.9.0
     p-all: 3.0.0
     p-map: 4.0.0
     p-queue: 6.6.2
@@ -6341,7 +6341,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: e2245ec359037c69fc9811c17dd5e6b8c8f58a83dbe8fb0e8495947e7307f9da0898b13873898841df39020b3781a7e50d41a653b2d6e8e20aa5f5432a031183
+  checksum: ba7ad7d24ee58ac335c06364968bb7a603ae69d7ca74cf5525f71c281bffd2c17d953b43fe1a96d2cc82454a38e44e83b7f5c615caa039434be43cc7aba005b1
   languageName: node
   linkType: hard
 

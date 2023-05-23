@@ -455,7 +455,7 @@ __metadata:
     spdx-satisfies: ^5.0.1
     stylelint: ^15.1.0
     supports-color: 9.3.1
-    terser: 5.17.5
+    terser: 5.17.6
     tmp: ^0.2.1
     true-case-path: ^2.2.1
     ts-node: ^10.8.1
@@ -18012,9 +18012,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"terser@npm:5.17.5":
-  version: 5.17.5
-  resolution: "terser@npm:5.17.5"
+"terser@npm:5.17.6":
+  version: 5.17.6
+  resolution: "terser@npm:5.17.6"
   dependencies:
     "@jridgewell/source-map": ^0.3.2
     acorn: ^8.5.0
@@ -18022,7 +18022,7 @@ __metadata:
     source-map-support: ~0.5.20
   bin:
     terser: bin/terser
-  checksum: f9990932a62ef6fcc424894f483d71aa647b0524ac18167f945201a32401c09702e480a3198dcaf9d6d755243d3d73c13418cdb28711ef167c028d3ff2a866bf
+  checksum: 9c0ab0261a99a61c5f53d05d4ecc7f68c552bae6af481464fdd596bc9d7e89ce8e21b1833cb3ce06ad5f658e2b226081d543e4fe6e324b2cdf03ee8b7eeec01a
   languageName: node
   linkType: hard
 
@@ -19628,9 +19628,9 @@ __metadata:
   linkType: hard
 
 "yaml@npm:^2.0.0":
-  version: 2.2.2
-  resolution: "yaml@npm:2.2.2"
-  checksum: d90c235e099e30094dcff61ba3350437aef53325db4a6bcd04ca96e1bfe7e348b191f6a7a52b5211e2dbc4eeedb22a00b291527da030de7c189728ef3f2b4eb3
+  version: 2.3.0
+  resolution: "yaml@npm:2.3.0"
+  checksum: 9c3d16c226472041fbdc9fb55e1645786d3a3e8d4fde67a502ed7bfbd9067b811e466679db590a0731b4405d4a3bef1f35d098fb650d2cf4bc24732fc829b961
   languageName: node
   linkType: hard
 
