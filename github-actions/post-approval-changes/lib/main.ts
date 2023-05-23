@@ -128,9 +128,7 @@ async function runPostApprovalChangesAction(
     pull_number,
     repo,
     reviewers: [reviewToRerequest.user!.login],
-    // TODO: remove as any when @octokit/types properly includes the POST params for request_reviewers.
-    // Tracked in https://github.com/octokit/types.ts/issues/534
-  } as any);
+  });
 }
 
 /** Set of membership lookup results, used as cache for lookups. */
