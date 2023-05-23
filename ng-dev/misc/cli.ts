@@ -8,7 +8,6 @@
 import {Argv} from 'yargs';
 
 import {BuildAndLinkCommandModule} from './build-and-link/cli.js';
-import {NewMainBranchCommandModule} from './new-main-branch/cli.js';
 import {UpdateYarnCommandModule} from './update-yarn/cli.js';
 import {ValidateLicensesModule} from './validate-licenses/cli.js';
 
@@ -18,7 +17,6 @@ export function buildMiscParser(localYargs: Argv) {
     .help()
     .strict()
     .command(BuildAndLinkCommandModule)
-    .command(NewMainBranchCommandModule)
     .command(UpdateYarnCommandModule)
     .command(ValidateLicensesModule);
 }
