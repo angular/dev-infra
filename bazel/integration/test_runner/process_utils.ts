@@ -53,7 +53,7 @@ export async function runCommandInChildProcess(
   // necessary as otherwise Node module resolution could behave unexpectedly when invoked
   // tools down-the-line resolve files with an actual system realpath. Here is an example
   // within Microsoft's `playwright`: https://github.com/microsoft/playwright/issues/9193.
-  const normalizedWorkingDir = await getCaseExactRealpath(path.posix.normalize(workingDir));
+  const normalizedWorkingDir = await getCaseExactRealpath(path.normalize(workingDir));
 
   debug(`Executing command: ${humanReadableCommand} in ${normalizedWorkingDir}`);
 

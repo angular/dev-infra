@@ -11,7 +11,7 @@ import {actionLabels} from '../labels/index.js';
 import {createPullRequestValidation, PullRequestValidation} from './validation-config.js';
 
 /** Assert the pull request is merge ready. */
-export const mergeReadyValidation: any = createPullRequestValidation(
+export const mergeReadyValidation = createPullRequestValidation<Validation>(
   {name: 'assertMergeReady', canBeForceIgnored: false},
   () => Validation,
 );

@@ -31,7 +31,7 @@ export async function getCaseExactRealpath(filePath: string): Promise<string> {
   // ability to find the path. As this project is abandoned, we do not expect any sort of fix in the
   // future. This can be safely done as if the file actually does not exist, then a failure will
   // occur when we actually try to act on the file, rather than this early failure.
-  return trueCasePath(filePath).catch(() => filePath);
+  return trueCasePath(filePath);
 }
 
 /** Adds the `write` permission to the given file using `chmod`. */
