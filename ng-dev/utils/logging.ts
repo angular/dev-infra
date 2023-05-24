@@ -107,12 +107,11 @@ function runConsoleCommand(loadCommand: () => Function, logLevel: LogLevel, ...t
  * logging level.
  */
 function getLogLevel(): LogLevel {
-  const logLevelEnvValue: any = (process.env[`LOG_LEVEL`] || '').toUpperCase();
-  const logLevel = LogLevel[logLevelEnvValue];
-  if (logLevel === undefined) {
-    return DEFAULT_LOG_LEVEL as LogLevel;
+  const logLevel = Object.keys(LogLevel).indexOf((process.env[`LOG_LEVEL`] || '').toUpperCase());
+  if (logLevel === -1) {
+    return DEFAULT_LOG_LEVEL;
   }
-  return logLevel as unknown as LogLevel;
+  return logLevel;
 }
 
 /** All text to write to the log file. */

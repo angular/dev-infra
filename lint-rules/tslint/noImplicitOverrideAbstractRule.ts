@@ -142,9 +142,12 @@ function getExtendsHeritageExpressions(
 
 /** Gets whether the specified node has the `abstract` modifier applied. */
 function hasAbstractModifier(node: ts.Node): boolean {
-  return !!(node as any).modifiers?.some(
-    (s: ts.Modifier) => s.kind === ts.SyntaxKind.AbstractKeyword,
-  );
+  if (!ts.canHaveModifiers(node)) {
+    return false;
+  }
+  return !!ts
+    .getModifiers(node)
+    ?.some((s: ts.Modifier) => s.kind === ts.SyntaxKind.AbstractKeyword);
 }
 
 /** Gets whether the specified node has the `override` modifier applied. */
