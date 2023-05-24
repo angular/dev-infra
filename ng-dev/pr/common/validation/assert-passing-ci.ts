@@ -14,7 +14,7 @@ import {
 import {createPullRequestValidation, PullRequestValidation} from './validation-config.js';
 
 /** Assert the pull request has a passing combined CI status. */
-export const passingCiValidation = createPullRequestValidation(
+export const passingCiValidation: any = createPullRequestValidation(
   {name: 'assertPassingCi', canBeForceIgnored: true},
   () => Validation,
 );
