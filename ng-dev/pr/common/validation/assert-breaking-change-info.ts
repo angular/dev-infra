@@ -11,7 +11,8 @@ import {managedLabels} from '../labels/index.js';
 import {createPullRequestValidation, PullRequestValidation} from './validation-config.js';
 
 /** Assert the pull request is properly denoted if it contains breaking changes. */
-export const breakingChangeInfoValidation = createPullRequestValidation(
+// TODO: update typings to make sure portability is properly handled for windows build.
+export const breakingChangeInfoValidation: any = createPullRequestValidation(
   {name: 'assertPending', canBeForceIgnored: false},
   () => Validation,
 );

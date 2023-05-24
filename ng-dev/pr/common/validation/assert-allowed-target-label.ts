@@ -15,7 +15,8 @@ import {TargetLabel, targetLabels} from '../labels/target.js';
 import {createPullRequestValidation, PullRequestValidation} from './validation-config.js';
 
 /** Assert the commits provided are allowed to merge to the provided target label. */
-export const changesAllowForTargetLabelValidation = createPullRequestValidation(
+// TODO: update typings to make sure portability is properly handled for windows build.
+export const changesAllowForTargetLabelValidation: any = createPullRequestValidation(
   {name: 'assertChangesAllowForTargetLabel', canBeForceIgnored: true},
   () => Validation,
 );

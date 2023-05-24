@@ -14,7 +14,8 @@ import {
 import {createPullRequestValidation, PullRequestValidation} from './validation-config.js';
 
 /** Assert the pull request has a passing combined CI status. */
-export const passingCiValidation = createPullRequestValidation(
+// TODO: update typings to make sure portability is properly handled for windows build.
+export const passingCiValidation: any = createPullRequestValidation(
   {name: 'assertPassingCi', canBeForceIgnored: true},
   () => Validation,
 );

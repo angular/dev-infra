@@ -60,6 +60,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
       - uses: actions/cache@v3
         with:
+          enableCrossOsArchive: true
           path: |
             .yarn/cache
             .yarn/install-state.gz
@@ -76,7 +77,6 @@ jobs:
       - uses: ./github-actions/setup-bazel-remote-exec
       - uses: actions/cache@v3
         with:
-          enableCrossOsArchive: true
           path: |
             .yarn/cache
             .yarn/install-state.gz

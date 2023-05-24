@@ -17385,9 +17385,8 @@ function runConsoleCommand(loadCommand, logLevel, ...text) {
   printToLogFile(logLevel, ...text);
 }
 function getLogLevel() {
-  const logLevelEnvValue = (process.env[`LOG_LEVEL`] || "").toUpperCase();
-  const logLevel = LogLevel[logLevelEnvValue];
-  if (logLevel === void 0) {
+  const logLevel = Object.keys(LogLevel).indexOf((process.env[`LOG_LEVEL`] || "").toUpperCase());
+  if (logLevel === -1) {
     return DEFAULT_LOG_LEVEL;
   }
   return logLevel;
