@@ -106,13 +106,13 @@ function runConsoleCommand(loadCommand: () => Function, logLevel: LogLevel, ...t
  * based on the LOG_LEVEL environment variable is undefined, return the default
  * logging level.
  */
-function getLogLevel() {
+function getLogLevel(): LogLevel {
   const logLevelEnvValue: any = (process.env[`LOG_LEVEL`] || '').toUpperCase();
   const logLevel = LogLevel[logLevelEnvValue];
   if (logLevel === undefined) {
-    return DEFAULT_LOG_LEVEL;
+    return DEFAULT_LOG_LEVEL as LogLevel;
   }
-  return logLevel;
+  return logLevel as unknown as LogLevel;
 }
 
 /** All text to write to the log file. */

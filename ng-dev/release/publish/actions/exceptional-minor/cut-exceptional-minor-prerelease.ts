@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {SemVer} from 'semver';
 import {ActiveReleaseTrains} from '../../../versioning/active-release-trains.js';
 import {isVersionPublishedToNpm} from '../../../versioning/npm-registry.js';
 import {isFirstNextPrerelease} from '../../../versioning/prerelease-version.js';
@@ -41,7 +42,7 @@ export class CutExceptionalMinorPrereleaseAction extends CutPrereleaseBaseAction
     );
   })();
 
-  releaseNotesCompareVersion = (async () => {
+  releaseNotesCompareVersion: Promise<SemVer> = (async () => {
     if (await this.shouldUseExistingVersion) {
       return this.active.latest.version;
     }

@@ -10,7 +10,7 @@ import {PullRequestFromGithub} from '../fetch-pull-request.js';
 import {createPullRequestValidation, PullRequestValidation} from './validation-config.js';
 
 /** Assert the pull request is pending, not closed, merged or in draft. */
-export const pendingStateValidation = createPullRequestValidation(
+export const pendingStateValidation: any = createPullRequestValidation(
   {name: 'assertPending', canBeForceIgnored: false},
   () => Validation,
 );
