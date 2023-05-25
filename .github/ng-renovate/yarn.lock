@@ -5482,7 +5482,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: 35.100.0
+    renovate: 35.101.0
   languageName: unknown
   linkType: soft
 
@@ -6211,9 +6211,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:35.100.0":
-  version: 35.100.0
-  resolution: "renovate@npm:35.100.0"
+"renovate@npm:35.101.0":
+  version: 35.101.0
+  resolution: "renovate@npm:35.101.0"
   dependencies:
     "@aws-sdk/client-codecommit": 3.332.0
     "@aws-sdk/client-ec2": 3.332.0
@@ -6315,7 +6315,7 @@ __metadata:
     slugify: 1.6.6
     source-map-support: 0.5.21
     traverse: 0.6.7
-    tslib: 2.5.0
+    tslib: 2.5.2
     upath: 2.0.1
     url-join: 4.0.1
     validate-npm-package-name: 5.0.0
@@ -6328,7 +6328,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: e02a46b482e0a48ff38909d762b1ee3ce9adf951c9211089911c656bb8079cc636582a9e76a7592ad6851de79d0b990839a49fff47a8541431715c28e1c9b23f
+  checksum: 24a0293ae62dfcd58f2c08239b589e3ab12d4aa00259931e16c9478a39a35731aa05d283ecdee7c15abfbbc387974f038b431637ecbb1f78c137da692523c832
   languageName: node
   linkType: hard
 
@@ -7049,10 +7049,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:2.5.0, tslib@npm:^2.5.0":
-  version: 2.5.0
-  resolution: "tslib@npm:2.5.0"
-  checksum: ae3ed5f9ce29932d049908ebfdf21b3a003a85653a9a140d614da6b767a93ef94f460e52c3d787f0e4f383546981713f165037dc2274df212ea9f8a4541004e1
+"tslib@npm:2.5.2":
+  version: 2.5.2
+  resolution: "tslib@npm:2.5.2"
+  checksum: 4d3c1e238b94127ed0e88aa0380db3c2ddae581dc0f4bae5a982345e9f50ee5eda90835b8bfba99b02df10a5734470be197158c36f9129ac49fdc14a6a9da222
   languageName: node
   linkType: hard
 
@@ -7067,6 +7067,13 @@ __metadata:
   version: 2.4.0
   resolution: "tslib@npm:2.4.0"
   checksum: 8c4aa6a3c5a754bf76aefc38026134180c053b7bd2f81338cb5e5ebf96fefa0f417bff221592bf801077f5bf990562f6264fecbc42cd3309b33872cb6fc3b113
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "tslib@npm:2.5.0"
+  checksum: ae3ed5f9ce29932d049908ebfdf21b3a003a85653a9a140d614da6b767a93ef94f460e52c3d787f0e4f383546981713f165037dc2274df212ea9f8a4541004e1
   languageName: node
   linkType: hard
 
