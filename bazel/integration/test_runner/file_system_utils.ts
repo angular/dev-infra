@@ -32,7 +32,7 @@ export async function getCaseExactRealpath(filePath: string): Promise<string> {
   // future. This can be safely done as if the file actually does not exist, then a failure will
   // occur when we actually try to act on the file, rather than this early failure.
   // Note: Need to use `realpath` first in case the path is abbreviated on Windows via tilde.
-  return trueCasePath(fs.realpathSync(filePath));
+  return trueCasePath(fs.realpathSync.native(filePath));
 }
 
 /** Adds the `write` permission to the given file using `chmod`. */
