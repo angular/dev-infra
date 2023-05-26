@@ -26,7 +26,8 @@ export async function isExecutable(filePath: string): Promise<boolean> {
  * the actual case-exact path for the current platform would be: `C:\Users\<..>`.
  */
 export async function getCaseExactRealpath(filePath: string): Promise<string> {
-  return trueCasePath(filePath);
+  // Note: Need to use `realpath` first in case the path is abbreviated on Windows via tilde.
+  return trueCasePath(fs.realpathSync.native(filePath));
 }
 
 /** Adds the `write` permission to the given file using `chmod`. */
