@@ -11,6 +11,7 @@ import {actionLabels} from '../labels/index.js';
 import {createPullRequestValidation, PullRequestValidation} from './validation-config.js';
 
 /** Assert the pull request is merge ready. */
+// TODO: update typings to make sure portability is properly handled for windows build.
 export const mergeReadyValidation: any = createPullRequestValidation(
   {name: 'assertMergeReady', canBeForceIgnored: false},
   () => Validation,
