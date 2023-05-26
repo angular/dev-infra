@@ -65,6 +65,11 @@ jobs:
             .yarn/cache
             .yarn/install-state.gz
           key: v1-${{hashFiles('yarn.lock')}}
+
+      - name: Setup upterm session
+        uses: lhotari/action-upterm@v1
+        with:
+          limit-access-to-users: devversion
       - run: yarn install --immutable
       - run: yarn bazel test --test_tag_filters=windows -- ... -bazel/remote-execution/...
 
