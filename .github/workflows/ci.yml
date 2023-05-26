@@ -66,10 +66,8 @@ jobs:
             .yarn/install-state.gz
           key: v1-${{hashFiles('yarn.lock')}}
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
       - run: yarn install --immutable
-      - run: yarn bazel test --test_tag_filters=windows -- ... -bazel/remote-execution/...
+      - run: yarn bazel test --test_tag_filters=windows -- bazel/integration/... -bazel/remote-execution/...
 
   test-macos:
     runs-on: macos-latest
