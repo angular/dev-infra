@@ -24,7 +24,7 @@ jobs:
           fetch-depth: 0
 
       - uses: ./github-actions/setup-bazel-remote-exec
-      - uses: actions/cache@v3
+      - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
         with:
           path: |
             .yarn/cache
@@ -43,7 +43,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - uses: ./github-actions/setup-bazel-remote-exec
-      - uses: actions/cache@v3
+      - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
         with:
           path: |
             .yarn/cache
@@ -58,7 +58,7 @@ jobs:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - uses: actions/cache@v3
+      - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
         with:
           enableCrossOsArchive: true
           path: |
@@ -75,7 +75,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - uses: ./github-actions/setup-bazel-remote-exec
-      - uses: actions/cache@v3
+      - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
         with:
           path: |
             .yarn/cache
