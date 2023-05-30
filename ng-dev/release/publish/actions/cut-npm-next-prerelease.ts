@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {SemVer} from 'semver';
+import semver from 'semver';
 import {ActiveReleaseTrains} from '../../versioning/active-release-trains.js';
 import {isVersionPublishedToNpm} from '../../versioning/npm-registry.js';
 import {isFirstNextPrerelease} from '../../versioning/prerelease-version.js';
@@ -36,7 +36,7 @@ export class CutNpmNextPrereleaseAction extends CutPrereleaseBaseAction {
     return false;
   })();
 
-  releaseNotesCompareVersion: Promise<SemVer> = (async () => {
+  releaseNotesCompareVersion: Promise<semver.SemVer> = (async () => {
     // If we happen to detect the case from above, we use the most recent patch version as base
     // for building release notes. This is better than finding the "next" version when we
     // branched off as it also prevents us from duplicating many commits that have already
