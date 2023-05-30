@@ -21,7 +21,7 @@ jobs:
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
       # Note: we use `date` as part of the key hash so that we create a new cache every day.
       # We do not use `restore-keys` so that the cache does not keep growing.
-      - uses: actions/cache@v3
+      - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
         with:
           path: |
             .github/ng-renovate/.yarn/cache
