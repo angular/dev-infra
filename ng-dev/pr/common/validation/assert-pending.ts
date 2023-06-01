@@ -11,7 +11,7 @@ import {createPullRequestValidation, PullRequestValidation} from './validation-c
 
 /** Assert the pull request is pending, not closed, merged or in draft. */
 // TODO: update typings to make sure portability is properly handled for windows build.
-export const pendingStateValidation: any = createPullRequestValidation(
+export const pendingStateValidation = createPullRequestValidation(
   {name: 'assertPending', canBeForceIgnored: false},
   () => Validation,
 );

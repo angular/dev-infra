@@ -12,7 +12,7 @@ import {createPullRequestValidation, PullRequestValidation} from './validation-c
 
 /** Assert the pull request is merge ready. */
 // TODO: update typings to make sure portability is properly handled for windows build.
-export const mergeReadyValidation: any = createPullRequestValidation(
+export const mergeReadyValidation = createPullRequestValidation(
   {name: 'assertMergeReady', canBeForceIgnored: false},
   () => Validation,
 );
