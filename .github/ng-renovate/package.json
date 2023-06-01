@@ -1,6 +1,6 @@
 {
   "name": "ng-renovate",
-  "packageManager": "yarn@3.5.1",
+  "packageManager": "yarn@3.6.0",
   "type": "commonjs",
   "dependencies": {
     "renovate": "35.109.0"
