@@ -15,7 +15,7 @@ import {createPullRequestValidation, PullRequestValidation} from './validation-c
 
 /** Assert the pull request has a signed CLA. */
 // TODO: update typings to make sure portability is properly handled for windows build.
-export const signedClaValidation: any = createPullRequestValidation(
+export const signedClaValidation = createPullRequestValidation(
   // CLA check can be force-ignored but the caretaker needs to make sure
   // the target pull requests has a signed CLA or is authored by another Googler.
   {name: 'assertSignedCla', canBeForceIgnored: true},
