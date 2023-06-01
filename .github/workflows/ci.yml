@@ -24,6 +24,8 @@ jobs:
           fetch-depth: 0
 
       - uses: ./github-actions/setup-bazel-remote-exec
+        with:
+          bazelrc: .bazelrc
       - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
         with:
           path: |
@@ -43,6 +45,8 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - uses: ./github-actions/setup-bazel-remote-exec
+        with:
+          bazelrc: .bazelrc
       - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
         with:
           path: |
@@ -75,6 +79,8 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - uses: ./github-actions/setup-bazel-remote-exec
+        with:
+          bazelrc: .bazelrc
       - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
         with:
           path: |
