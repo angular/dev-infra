@@ -17,8 +17,8 @@ ts_config(
 
 nodejs_binary(
     name = "yarn_berry_vendored",
-    data = [".yarn/releases/yarn-3.5.1.cjs"],
-    entry_point = ".yarn/releases/yarn-3.5.1.cjs",
+    data = [".yarn/releases/yarn-3.6.0.cjs"],
+    entry_point = ".yarn/releases/yarn-3.6.0.cjs",
     visibility = ["//bazel/integration/tests:__subpackages__"],
 )
 
