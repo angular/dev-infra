@@ -151,17 +151,19 @@ async function isRevisionAvailableForPlatform(
 
 /** Gets the latest revision currently in the `stable` release channel of Chromium. */
 async function getStableChromiumRevision(): Promise<number> {
-  // Omahaproxy is maintained by the Chromium team and can be consulted for determining
+  // Endpoint is maintained by the Chromium team and can be consulted for determining
   // the current latest revision in stable channel.
-  // https://chromium.googlesource.com/chromium/chromium/+/refs/heads/trunk/tools/omahaproxy.py.
-  const response = await fetch(`https://omahaproxy.appspot.com/all.json?channel=stable&os=linux`);
-  const revisionStr = ((await response.json()) as any)[0].versions[0].branch_base_position;
+  // https://github.com/googlechromelabs/chrome-for-testing/
+  const response = await fetch(
+    `https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json`,
+  );
+  const revisionStr = ((await response.json()) as any).channels.Stable.revision;
   return Number(revisionStr);
 }
 
 /** Gets the Chromium release information page URL for a given revision. */
 async function getReleaseInfoUrlForRevision(revision: number): Promise<string | null> {
-  // This is a site used and maintained by Omahaproxy which is owned by the Chromium team.
+  // This is a site used and maintained by the Chromium team.
   // https://chromium.googlesource.com/chromium/chromium/+/refs/heads/trunk/tools/omahaproxy.py.
   return `https://storage.googleapis.com/chromium-find-releases-static/index.html#r${revision}`;
 }
@@ -182,6 +184,6 @@ async function getSha256ChecksumForPlatform(
   artifactType: ArtifactType,
 ): Promise<string> {
   const response = await fetch(browser.getDownloadUrl(platform, artifactType));
-  const binaryContent = await response.buffer();
+  const binaryContent = Buffer.from(await response.arrayBuffer());
   return createHash('sha256').update(binaryContent).digest('hex');
 }
