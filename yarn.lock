@@ -367,7 +367,7 @@ __metadata:
     "@google-cloud/firestore": ^6.0.0
     "@google-cloud/storage": ^6.0.0
     "@microsoft/api-extractor": 7.35.1
-    "@octokit/auth-app": 4.0.13
+    "@octokit/auth-app": 5.0.3
     "@octokit/core": 4.2.1
     "@octokit/graphql": 5.0.6
     "@octokit/graphql-schema": 14.9.1
@@ -5973,35 +5973,35 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/auth-app@npm:4.0.13":
-  version: 4.0.13
-  resolution: "@octokit/auth-app@npm:4.0.13"
+"@octokit/auth-app@npm:5.0.3":
+  version: 5.0.3
+  resolution: "@octokit/auth-app@npm:5.0.3"
   dependencies:
-    "@octokit/auth-oauth-app": ^5.0.0
-    "@octokit/auth-oauth-user": ^2.0.0
+    "@octokit/auth-oauth-app": ^6.0.0
+    "@octokit/auth-oauth-user": ^3.0.0
     "@octokit/request": ^6.0.0
-    "@octokit/request-error": ^3.0.0
+    "@octokit/request-error": ^4.0.0
     "@octokit/types": ^9.0.0
     deprecation: ^2.3.1
     lru-cache: ^9.0.0
     universal-github-app-jwt: ^1.1.1
     universal-user-agent: ^6.0.0
-  checksum: 809004bc3e985fd4911cc42060fecd7b88e609e1334b90c4f79711aa27cade03fa1d930945ea8f7339ddd8d4514dd220a6ae8489faefa9e0ce6881519a02fc37
+  checksum: 8ef7fec27a989a71f99b253c746b385d4b41d42a8ebdd2a04ed1e234edbac50e429f4b1005d317197c21554cf1612c950aa13536072b7b54103cb6c17f21b48d
   languageName: node
   linkType: hard
 
-"@octokit/auth-oauth-app@npm:^5.0.0":
-  version: 5.0.2
-  resolution: "@octokit/auth-oauth-app@npm:5.0.2"
+"@octokit/auth-oauth-app@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "@octokit/auth-oauth-app@npm:6.0.0"
   dependencies:
     "@octokit/auth-oauth-device": ^4.0.0
     "@octokit/auth-oauth-user": ^2.0.0
-    "@octokit/request": ^5.6.3
-    "@octokit/types": ^7.0.0
+    "@octokit/request": ^6.0.0
+    "@octokit/types": ^9.0.0
     "@types/btoa-lite": ^1.0.0
     btoa-lite: ^1.0.0
     universal-user-agent: ^6.0.0
-  checksum: 3863cdb41c578cb1d2815777ef71ba3d231e4c335d136251ccab8b360e7980b02c93a86d0c91bcf25a2f1dae9b8f1817976077381e74992b907a92de12602a41
+  checksum: 167b78f13049304ff03d457ceb6198ae273ff38463b31e96841471b48d57aef57bebd4897262e12bc8bba90f771111f5398686deaf6789aae4365f002d939918
   languageName: node
   linkType: hard
 
@@ -6028,6 +6028,20 @@ __metadata:
     btoa-lite: ^1.0.0
     universal-user-agent: ^6.0.0
   checksum: a62f85021bf251de3987abdda747079f5b479d37de898f35c92816dda0e538a8837e1487ee639414fa83ab710d786c8bc1ea84c39c6a505f5d47dcc45beb9fb7
+  languageName: node
+  linkType: hard
+
+"@octokit/auth-oauth-user@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@octokit/auth-oauth-user@npm:3.0.0"
+  dependencies:
+    "@octokit/auth-oauth-device": ^4.0.0
+    "@octokit/oauth-methods": ^2.0.0
+    "@octokit/request": ^6.0.0
+    "@octokit/types": ^9.0.0
+    btoa-lite: ^1.0.0
+    universal-user-agent: ^6.0.0
+  checksum: 29a5bd4f35e14e3c6f2644880c2fc1d118add9a7ee47dae8b4b8ed1290ce20a319e9ab5b6499bb5fbbf418fa6b3711ea4842c5f81e7e187c18d167f18ae532df
   languageName: node
   linkType: hard
 
@@ -6278,7 +6292,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/request-error@npm:4.0.1":
+"@octokit/request-error@npm:4.0.1, @octokit/request-error@npm:^4.0.0":
   version: 4.0.1
   resolution: "@octokit/request-error@npm:4.0.1"
   dependencies:
