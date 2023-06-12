@@ -50,12 +50,12 @@
           "size": 4177
         }
       },
-      "size": 5099,
+      "size": 5100,
       "tslib/": {
-        "size": 922,
-        "tslib.es6.js": 922
+        "size": 923,
+        "tslib.es6.mjs": 923
       }
     },
-    "size": 5137
+    "size": 5138
   }
 }
