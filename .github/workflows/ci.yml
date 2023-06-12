@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-  pull_request_target:
+  pull_request:
     types: [opened, synchronize, reopened]
 
 concurrency:
@@ -23,7 +23,6 @@ jobs:
     steps:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
       - uses: ./github-actions/setup-bazel-remote-exec
@@ -46,7 +45,7 @@ jobs:
     steps:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
       - uses: ./github-actions/setup-bazel-remote-exec
         with:
           bazelrc: .bazelrc
@@ -64,7 +63,7 @@ jobs:
     steps:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
       - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
         with:
           enableCrossOsArchive: true
@@ -80,7 +79,7 @@ jobs:
     steps:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
       - uses: ./github-actions/setup-bazel-remote-exec
         with:
           bazelrc: .bazelrc
