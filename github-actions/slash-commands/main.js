@@ -65466,11 +65466,13 @@ var ConfirmPrompt = class extends Prompt {
     let rawDefault = true;
     Object.assign(this.opt, {
       filter(input) {
-        let value = rawDefault;
         if (input != null && input !== "") {
-          value = /^y(es)?/i.test(input);
+          if (/^y(es)?/i.test(input))
+            return true;
+          if (/^n(o)?/i.test(input))
+            return false;
         }
-        return value;
+        return rawDefault;
       }
     });
     if (this.opt.default != null) {
