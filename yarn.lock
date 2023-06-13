@@ -11125,8 +11125,8 @@ __metadata:
   linkType: hard
 
 "firebase-functions@npm:^4.0.0":
-  version: 4.4.0
-  resolution: "firebase-functions@npm:4.4.0"
+  version: 4.4.1
+  resolution: "firebase-functions@npm:4.4.1"
   dependencies:
     "@types/cors": ^2.8.5
     "@types/express": 4.17.3
@@ -11138,7 +11138,7 @@ __metadata:
     firebase-admin: ^10.0.0 || ^11.0.0
   bin:
     firebase-functions: lib/bin/firebase-functions.js
-  checksum: c9bf181e66f4262ce4a453e36aff88488d4adad8c7e9a2868bf0512d14263f27be8954c92b8de686e8e706d4237ee8ac0f8164c5a2a9814bf601c14b20a060bf
+  checksum: 27e912228b7604de860abae071083af9531ef90ff5f14d3ff5559f1d8cc375d8ef77c85b65cb85ac2486a1f2fe61768172c8c8b21994bff3a05370646bfe46a0
   languageName: node
   linkType: hard
 
@@ -20353,10 +20353,10 @@ __metadata:
   linkType: hard
 
 "zone.js@npm:^0.13.0":
-  version: 0.13.0
-  resolution: "zone.js@npm:0.13.0"
+  version: 0.13.1
+  resolution: "zone.js@npm:0.13.1"
   dependencies:
     tslib: ^2.3.0
-  checksum: 1889a915dc94dfa0e421fdef0143bc241a680c0119ae4f6043f096361f30aa6d3f3dd397e4a867955adbf033003d5fc23d0a4025f3983608d81b7f322136b0c5
+  checksum: 35d18f7a3016c5c98d793ef7dd78acd53da7df38f45dc4739c562ff04189682ee8d2f9ee25faf1ac756d97fdb19bbaa73f3dc0acb192e5c56786ff33a31db56f
   languageName: node
   linkType: hard
