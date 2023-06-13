@@ -37,17 +37,23 @@ export async function createEsbuildAngularOptimizePlugin(opts, additionalBabelPl
     devkitOptimizePlugins = {
       adjustStaticClassMembersPlugin: (
         await import(
-          '@angular-devkit/build-angular/src/babel/plugins/adjust-static-class-members.js'
+          '@angular-devkit/build-angular/src/tools/babel/plugins/adjust-static-class-members.js'
         )
       ).default,
       elideAngularMetadataPlugin: (
-        await import('@angular-devkit/build-angular/src/babel/plugins/elide-angular-metadata.js')
+        await import(
+          '@angular-devkit/build-angular/src/tools/babel/plugins/elide-angular-metadata.js'
+        )
       ).default,
       adjustTypeScriptEnumsPlugin: (
-        await import('@angular-devkit/build-angular/src/babel/plugins/adjust-typescript-enums.js')
+        await import(
+          '@angular-devkit/build-angular/src/tools/babel/plugins/adjust-typescript-enums.js'
+        )
       ).default,
       pureToplevelFunctionsPlugin: (
-        await import('@angular-devkit/build-angular/src/babel/plugins/pure-toplevel-functions.js')
+        await import(
+          '@angular-devkit/build-angular/src/tools/babel/plugins/pure-toplevel-functions.js'
+        )
       ).default,
     };
   }
