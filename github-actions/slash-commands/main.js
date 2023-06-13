@@ -761,6 +761,10 @@ var require_proxy = __commonJS({
       if (!reqUrl.hostname) {
         return false;
       }
+      const reqHost = reqUrl.hostname;
+      if (isLoopbackAddress(reqHost)) {
+        return true;
+      }
       const noProxy = process.env["no_proxy"] || process.env["NO_PROXY"] || "";
       if (!noProxy) {
         return false;
@@ -778,13 +782,17 @@ var require_proxy = __commonJS({
         upperReqHosts.push(`${upperReqHosts[0]}:${reqPort}`);
       }
       for (const upperNoProxyItem of noProxy.split(",").map((x2) => x2.trim().toUpperCase()).filter((x2) => x2)) {
-        if (upperReqHosts.some((x2) => x2 === upperNoProxyItem)) {
+        if (upperNoProxyItem === "*" || upperReqHosts.some((x2) => x2 === upperNoProxyItem || x2.endsWith(`.${upperNoProxyItem}`) || upperNoProxyItem.startsWith(".") && x2.endsWith(`${upperNoProxyItem}`))) {
           return true;
         }
       }
       return false;
     }
     exports.checkBypass = checkBypass;
+    function isLoopbackAddress(host) {
+      const hostLower = host.toLowerCase();
+      return hostLower === "localhost" || hostLower.startsWith("127.") || hostLower.startsWith("[::1]") || hostLower.startsWith("[0:0:0:0:0:0:0:1]");
+    }
   }
 });
 
@@ -2441,7 +2449,10 @@ var require_before_after_hook = __commonJS({
     var bind = Function.bind;
     var bindable = bind.bind(bind);
     function bindApi(hook, state, name) {
-      var removeHookRef = bindable(removeHook, null).apply(null, name ? [state, name] : [state]);
+      var removeHookRef = bindable(removeHook, null).apply(
+        null,
+        name ? [state, name] : [state]
+      );
       hook.api = { remove: removeHookRef };
       hook.remove = removeHookRef;
       ["before", "error", "after", "wrap"].forEach(function(kind) {
@@ -2469,7 +2480,9 @@ var require_before_after_hook = __commonJS({
     var collectionHookDeprecationMessageDisplayed = false;
     function Hook() {
       if (!collectionHookDeprecationMessageDisplayed) {
-        console.warn('[before-after-hook]: "Hook()" repurposing warning, use "Hook.Collection()". Read more: https://git.io/upgrade-before-after-hook-to-1.4');
+        console.warn(
+          '[before-after-hook]: "Hook()" repurposing warning, use "Hook.Collection()". Read more: https://git.io/upgrade-before-after-hook-to-1.4'
+        );
         collectionHookDeprecationMessageDisplayed = true;
       }
       return HookCollection();
@@ -9097,6 +9110,11 @@ var require_lib4 = __commonJS({
       const dest = new URL$1(destination).hostname;
       return orig === dest || orig[orig.length - dest.length - 1] === "." && orig.endsWith(dest);
     };
+    var isSameProtocol2 = function isSameProtocol3(destination, original) {
+      const orig = new URL$1(original).protocol;
+      const dest = new URL$1(destination).protocol;
+      return orig === dest;
+    };
     function fetch2(url, opts) {
       if (!fetch2.Promise) {
         throw new Error("native promise missing, set fetch.Promise to your favorite alternative");
@@ -9112,7 +9130,7 @@ var require_lib4 = __commonJS({
           let error2 = new AbortError2("The user aborted a request.");
           reject(error2);
           if (request.body && request.body instanceof Stream3.Readable) {
-            request.body.destroy(error2);
+            destroyStream(request.body, error2);
           }
           if (!response || !response.body)
             return;
@@ -9147,8 +9165,31 @@ var require_lib4 = __commonJS({
         }
         req.on("error", function(err) {
           reject(new FetchError2(`request to ${request.url} failed, reason: ${err.message}`, "system", err));
+          if (response && response.body) {
+            destroyStream(response.body, err);
+          }
           finalize();
         });
+        fixResponseChunkedTransferBadEnding2(req, function(err) {
+          if (signal && signal.aborted) {
+            return;
+          }
+          if (response && response.body) {
+            destroyStream(response.body, err);
+          }
+        });
+        if (parseInt(process.version.substring(1)) < 14) {
+          req.on("socket", function(s2) {
+            s2.addListener("close", function(hadError) {
+              const hasDataListener = s2.listenerCount("data") > 0;
+              if (response && hasDataListener && !hadError && !(signal && signal.aborted)) {
+                const err = new Error("Premature close");
+                err.code = "ERR_STREAM_PREMATURE_CLOSE";
+                response.body.emit("error", err);
+              }
+            });
+          });
+        }
         req.on("response", function(res) {
           clearTimeout(reqTimeout);
           const headers = createHeadersLenient(res.headers);
@@ -9199,7 +9240,7 @@ var require_lib4 = __commonJS({
                   timeout: request.timeout,
                   size: request.size
                 };
-                if (!isDomainOrSubdomain2(request.url, locationURL)) {
+                if (!isDomainOrSubdomain2(request.url, locationURL) || !isSameProtocol2(request.url, locationURL)) {
                   for (const name of ["authorization", "www-authenticate", "cookie", "cookie2"]) {
                     requestOpts.headers.delete(name);
                   }
@@ -9260,6 +9301,12 @@ var require_lib4 = __commonJS({
               response = new Response2(body, response_options);
               resolve(response);
             });
+            raw.on("end", function() {
+              if (!response) {
+                response = new Response2(body, response_options);
+                resolve(response);
+              }
+            });
             return;
           }
           if (codings == "br" && typeof zlib2.createBrotliDecompress === "function") {
@@ -9273,6 +9320,33 @@ var require_lib4 = __commonJS({
         });
         writeToStream2(req, request);
       });
+    }
+    function fixResponseChunkedTransferBadEnding2(request, errorCallback) {
+      let socket;
+      request.on("socket", function(s2) {
+        socket = s2;
+      });
+      request.on("response", function(response) {
+        const headers = response.headers;
+        if (headers["transfer-encoding"] === "chunked" && !headers["content-length"]) {
+          response.once("close", function(hadError) {
+            const hasDataListener = socket.listenerCount("data") > 0;
+            if (hasDataListener && !hadError) {
+              const err = new Error("Premature close");
+              err.code = "ERR_STREAM_PREMATURE_CLOSE";
+              errorCallback(err);
+            }
+          });
+        }
+      });
+    }
+    function destroyStream(stream, err) {
+      if (stream.destroy) {
+        stream.destroy(err);
+      } else {
+        stream.emit("error", err);
+        stream.end();
+      }
     }
     fetch2.isRedirect = function(code) {
       return code === 301 || code === 302 || code === 303 || code === 307 || code === 308;
@@ -15664,32 +15738,25 @@ var require_buffer_list = __commonJS({
       var keys = Object.keys(object);
       if (Object.getOwnPropertySymbols) {
         var symbols = Object.getOwnPropertySymbols(object);
-        if (enumerableOnly)
-          symbols = symbols.filter(function(sym) {
-            return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-          });
-        keys.push.apply(keys, symbols);
+        enumerableOnly && (symbols = symbols.filter(function(sym) {
+          return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+        })), keys.push.apply(keys, symbols);
       }
       return keys;
     }
     function _objectSpread(target) {
       for (var i2 = 1; i2 < arguments.length; i2++) {
-        var source = arguments[i2] != null ? arguments[i2] : {};
-        if (i2 % 2) {
-          ownKeys(Object(source), true).forEach(function(key) {
-            _defineProperty(target, key, source[key]);
-          });
-        } else if (Object.getOwnPropertyDescriptors) {
-          Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-        } else {
-          ownKeys(Object(source)).forEach(function(key) {
-            Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-          });
-        }
+        var source = null != arguments[i2] ? arguments[i2] : {};
+        i2 % 2 ? ownKeys(Object(source), true).forEach(function(key) {
+          _defineProperty(target, key, source[key]);
+        }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function(key) {
+          Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+        });
       }
       return target;
     }
     function _defineProperty(obj, key, value) {
+      key = _toPropertyKey(key);
       if (key in obj) {
         Object.defineProperty(obj, key, { value, enumerable: true, configurable: true, writable: true });
       } else {
@@ -15709,7 +15776,7 @@ var require_buffer_list = __commonJS({
         descriptor.configurable = true;
         if ("value" in descriptor)
           descriptor.writable = true;
-        Object.defineProperty(target, descriptor.key, descriptor);
+        Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor);
       }
     }
     function _createClass(Constructor, protoProps, staticProps) {
@@ -15717,7 +15784,24 @@ var require_buffer_list = __commonJS({
         _defineProperties(Constructor.prototype, protoProps);
       if (staticProps)
         _defineProperties(Constructor, staticProps);
+      Object.defineProperty(Constructor, "prototype", { writable: false });
       return Constructor;
+    }
+    function _toPropertyKey(arg) {
+      var key = _toPrimitive(arg, "string");
+      return typeof key === "symbol" ? key : String(key);
+    }
+    function _toPrimitive(input, hint) {
+      if (typeof input !== "object" || input === null)
+        return input;
+      var prim = input[Symbol.toPrimitive];
+      if (prim !== void 0) {
+        var res = prim.call(input, hint || "default");
+        if (typeof res !== "object")
+          return res;
+        throw new TypeError("@@toPrimitive must return a primitive value.");
+      }
+      return (hint === "string" ? String : Number)(input);
     }
     var _require = __require("buffer");
     var Buffer4 = _require.Buffer;
@@ -15786,9 +15870,8 @@ var require_buffer_list = __commonJS({
             return "";
           var p = this.head;
           var ret = "" + p.data;
-          while (p = p.next) {
+          while (p = p.next)
             ret += s2 + p.data;
-          }
           return ret;
         }
       }, {
@@ -15892,7 +15975,7 @@ var require_buffer_list = __commonJS({
       }, {
         key: custom,
         value: function value(_4, options) {
-          return inspect(this, _objectSpread({}, options, {
+          return inspect(this, _objectSpread(_objectSpread({}, options), {}, {
             depth: 0,
             customInspect: false
           }));
@@ -16195,7 +16278,7 @@ var require_stream_writable = __commonJS({
     };
     var Stream3 = require_stream();
     var Buffer4 = __require("buffer").Buffer;
-    var OurUint8Array = global.Uint8Array || function() {
+    var OurUint8Array = (typeof global !== "undefined" ? global : typeof window !== "undefined" ? window : typeof self !== "undefined" ? self : {}).Uint8Array || function() {
     };
     function _uint8ArrayToBuffer(chunk) {
       return Buffer4.from(chunk);
@@ -16669,9 +16752,8 @@ var require_stream_duplex = __commonJS({
     "use strict";
     var objectKeys = Object.keys || function(obj) {
       var keys2 = [];
-      for (var key in obj) {
+      for (var key in obj)
         keys2.push(key);
-      }
       return keys2;
     };
     module.exports = Duplex;
@@ -17176,12 +17258,29 @@ var require_async_iterator = __commonJS({
     "use strict";
     var _Object$setPrototypeO;
     function _defineProperty(obj, key, value) {
+      key = _toPropertyKey(key);
       if (key in obj) {
         Object.defineProperty(obj, key, { value, enumerable: true, configurable: true, writable: true });
       } else {
         obj[key] = value;
       }
       return obj;
+    }
+    function _toPropertyKey(arg) {
+      var key = _toPrimitive(arg, "string");
+      return typeof key === "symbol" ? key : String(key);
+    }
+    function _toPrimitive(input, hint) {
+      if (typeof input !== "object" || input === null)
+        return input;
+      var prim = input[Symbol.toPrimitive];
+      if (prim !== void 0) {
+        var res = prim.call(input, hint || "default");
+        if (typeof res !== "object")
+          return res;
+        throw new TypeError("@@toPrimitive must return a primitive value.");
+      }
+      return (hint === "string" ? String : Number)(input);
     }
     var finished = require_end_of_stream();
     var kLastResolve = Symbol("lastResolve");
@@ -17375,38 +17474,47 @@ var require_from = __commonJS({
       var keys = Object.keys(object);
       if (Object.getOwnPropertySymbols) {
         var symbols = Object.getOwnPropertySymbols(object);
-        if (enumerableOnly)
-          symbols = symbols.filter(function(sym) {
-            return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-          });
-        keys.push.apply(keys, symbols);
+        enumerableOnly && (symbols = symbols.filter(function(sym) {
+          return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+        })), keys.push.apply(keys, symbols);
       }
       return keys;
     }
     function _objectSpread(target) {
       for (var i2 = 1; i2 < arguments.length; i2++) {
-        var source = arguments[i2] != null ? arguments[i2] : {};
-        if (i2 % 2) {
-          ownKeys(Object(source), true).forEach(function(key) {
-            _defineProperty(target, key, source[key]);
-          });
-        } else if (Object.getOwnPropertyDescriptors) {
-          Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
-        } else {
-          ownKeys(Object(source)).forEach(function(key) {
-            Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-          });
-        }
+        var source = null != arguments[i2] ? arguments[i2] : {};
+        i2 % 2 ? ownKeys(Object(source), true).forEach(function(key) {
+          _defineProperty(target, key, source[key]);
+        }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function(key) {
+          Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+        });
       }
       return target;
     }
     function _defineProperty(obj, key, value) {
+      key = _toPropertyKey(key);
       if (key in obj) {
         Object.defineProperty(obj, key, { value, enumerable: true, configurable: true, writable: true });
       } else {
         obj[key] = value;
       }
       return obj;
+    }
+    function _toPropertyKey(arg) {
+      var key = _toPrimitive(arg, "string");
+      return typeof key === "symbol" ? key : String(key);
+    }
+    function _toPrimitive(input, hint) {
+      if (typeof input !== "object" || input === null)
+        return input;
+      var prim = input[Symbol.toPrimitive];
+      if (prim !== void 0) {
+        var res = prim.call(input, hint || "default");
+        if (typeof res !== "object")
+          return res;
+        throw new TypeError("@@toPrimitive must return a primitive value.");
+      }
+      return (hint === "string" ? String : Number)(input);
     }
     var ERR_INVALID_ARG_TYPE = require_errors().codes.ERR_INVALID_ARG_TYPE;
     function from3(Readable, iterable, opts) {
@@ -17435,7 +17543,7 @@ var require_from = __commonJS({
       function _next2() {
         _next2 = _asyncToGenerator(function* () {
           try {
-            var _ref = yield iterator.next(), value = _ref.value, done = _ref.done;
+            var _yield$iterator$next = yield iterator.next(), value = _yield$iterator$next.value, done = _yield$iterator$next.done;
             if (done) {
               readable.push(null);
             } else if (readable.push(yield value)) {
@@ -17468,7 +17576,7 @@ var require_stream_readable = __commonJS({
     };
     var Stream3 = require_stream();
     var Buffer4 = __require("buffer").Buffer;
-    var OurUint8Array = global.Uint8Array || function() {
+    var OurUint8Array = (typeof global !== "undefined" ? global : typeof window !== "undefined" ? window : typeof self !== "undefined" ? self : {}).Uint8Array || function() {
     };
     function _uint8ArrayToBuffer(chunk) {
       return Buffer4.from(chunk);
@@ -17982,11 +18090,10 @@ var require_stream_readable = __commonJS({
         state.pipes = null;
         state.pipesCount = 0;
         state.flowing = false;
-        for (var i2 = 0; i2 < len; i2++) {
+        for (var i2 = 0; i2 < len; i2++)
           dests[i2].emit("unpipe", this, {
             hasUnpiped: false
           });
-        }
         return this;
       }
       var index = indexOf(state.pipes, dest);
@@ -18089,9 +18196,8 @@ var require_stream_readable = __commonJS({
     function flow(stream) {
       var state = stream._readableState;
       debug("flow", state.flowing);
-      while (state.flowing && stream.read() !== null) {
+      while (state.flowing && stream.read() !== null)
         ;
-      }
     }
     Readable.prototype.wrap = function(stream) {
       var _this = this;
@@ -19355,11 +19461,30 @@ var require_dist2 = __commonJS({
 
 // 
 var require_dist_node11 = __commonJS({
-  ""(exports) {
+  ""(exports, module) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var isPlainObject2 = require_is_plain_object();
-    var universalUserAgent = require_dist_node();
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export2 = (target, all) => {
+      for (var name in all)
+        __defProp2(target, name, { get: all[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from3, except, desc) => {
+      if (from3 && typeof from3 === "object" || typeof from3 === "function") {
+        for (let key of __getOwnPropNames2(from3))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from3[key], enumerable: !(desc = __getOwnPropDesc2(from3, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export2(dist_src_exports, {
+      endpoint: () => endpoint
+    });
+    module.exports = __toCommonJS(dist_src_exports);
     function lowercaseKeys(object) {
       if (!object) {
         return {};
@@ -19369,20 +19494,17 @@ var require_dist_node11 = __commonJS({
         return newObj;
       }, {});
     }
+    var import_is_plain_object = require_is_plain_object();
     function mergeDeep(defaults2, options) {
       const result = Object.assign({}, defaults2);
       Object.keys(options).forEach((key) => {
-        if (isPlainObject2.isPlainObject(options[key])) {
+        if ((0, import_is_plain_object.isPlainObject)(options[key])) {
           if (!(key in defaults2))
-            Object.assign(result, {
-              [key]: options[key]
-            });
+            Object.assign(result, { [key]: options[key] });
           else
             result[key] = mergeDeep(defaults2[key], options[key]);
         } else {
-          Object.assign(result, {
-            [key]: options[key]
-          });
+          Object.assign(result, { [key]: options[key] });
         }
       });
       return result;
@@ -19398,12 +19520,7 @@ var require_dist_node11 = __commonJS({
     function merge(defaults2, route, options) {
       if (typeof route === "string") {
         let [method, url] = route.split(" ");
-        options = Object.assign(url ? {
-          method,
-          url
-        } : {
-          url: method
-        }, options);
+        options = Object.assign(url ? { method, url } : { url: method }, options);
       } else {
         options = Object.assign({}, route);
       }
@@ -19414,7 +19531,9 @@ var require_dist_node11 = __commonJS({
       if (defaults2 && defaults2.mediaType.previews.length) {
         mergedOptions.mediaType.previews = defaults2.mediaType.previews.filter((preview) => !mergedOptions.mediaType.previews.includes(preview)).concat(mergedOptions.mediaType.previews);
       }
-      mergedOptions.mediaType.previews = mergedOptions.mediaType.previews.map((preview) => preview.replace(/-preview/, ""));
+      mergedOptions.mediaType.previews = mergedOptions.mediaType.previews.map(
+        (preview) => preview.replace(/-preview/, "")
+      );
       return mergedOptions;
     }
     function addQueryParameters(url, parameters) {
@@ -19482,12 +19601,16 @@ var require_dist_node11 = __commonJS({
           if (modifier && modifier !== "*") {
             value = value.substring(0, parseInt(modifier, 10));
           }
-          result.push(encodeValue(operator, value, isKeyOperator(operator) ? key : ""));
+          result.push(
+            encodeValue(operator, value, isKeyOperator(operator) ? key : "")
+          );
         } else {
           if (modifier === "*") {
             if (Array.isArray(value)) {
               value.filter(isDefined).forEach(function(value2) {
-                result.push(encodeValue(operator, value2, isKeyOperator(operator) ? key : ""));
+                result.push(
+                  encodeValue(operator, value2, isKeyOperator(operator) ? key : "")
+                );
               });
             } else {
               Object.keys(value).forEach(function(k) {
@@ -19537,40 +19660,50 @@ var require_dist_node11 = __commonJS({
     }
     function expand(template, context5) {
       var operators = ["+", "#", ".", "/", ";", "?", "&"];
-      return template.replace(/\{([^\{\}]+)\}|([^\{\}]+)/g, function(_4, expression, literal) {
-        if (expression) {
-          let operator = "";
-          const values = [];
-          if (operators.indexOf(expression.charAt(0)) !== -1) {
-            operator = expression.charAt(0);
-            expression = expression.substr(1);
-          }
-          expression.split(/,/g).forEach(function(variable) {
-            var tmp = /([^:\*]*)(?::(\d+)|(\*))?/.exec(variable);
-            values.push(getValues(context5, operator, tmp[1], tmp[2] || tmp[3]));
-          });
-          if (operator && operator !== "+") {
-            var separator = ",";
-            if (operator === "?") {
-              separator = "&";
-            } else if (operator !== "#") {
-              separator = operator;
+      return template.replace(
+        /\{([^\{\}]+)\}|([^\{\}]+)/g,
+        function(_4, expression, literal) {
+          if (expression) {
+            let operator = "";
+            const values = [];
+            if (operators.indexOf(expression.charAt(0)) !== -1) {
+              operator = expression.charAt(0);
+              expression = expression.substr(1);
             }
-            return (values.length !== 0 ? operator : "") + values.join(separator);
+            expression.split(/,/g).forEach(function(variable) {
+              var tmp = /([^:\*]*)(?::(\d+)|(\*))?/.exec(variable);
+              values.push(getValues(context5, operator, tmp[1], tmp[2] || tmp[3]));
+            });
+            if (operator && operator !== "+") {
+              var separator = ",";
+              if (operator === "?") {
+                separator = "&";
+              } else if (operator !== "#") {
+                separator = operator;
+              }
+              return (values.length !== 0 ? operator : "") + values.join(separator);
+            } else {
+              return values.join(",");
+            }
           } else {
-            return values.join(",");
+            return encodeReserved(literal);
           }
-        } else {
-          return encodeReserved(literal);
         }
-      });
+      );
     }
     function parse2(options) {
       let method = options.method.toUpperCase();
       let url = (options.url || "/").replace(/:([a-z]\w+)/g, "{$1}");
       let headers = Object.assign({}, options.headers);
       let body;
-      let parameters = omit(options, ["method", "baseUrl", "url", "headers", "request", "mediaType"]);
+      let parameters = omit(options, [
+        "method",
+        "baseUrl",
+        "url",
+        "headers",
+        "request",
+        "mediaType"
+      ]);
       const urlVariableNames = extractUrlVariableNames(url);
       url = parseUrl(url).expand(parameters);
       if (!/^http/.test(url)) {
@@ -19581,7 +19714,12 @@ var require_dist_node11 = __commonJS({
       const isBinaryRequest = /application\/octet-stream/i.test(headers.accept);
       if (!isBinaryRequest) {
         if (options.mediaType.format) {
-          headers.accept = headers.accept.split(/,/).map((preview) => preview.replace(/application\/vnd(\.\w+)(\.v3)?(\.\w+)?(\+json)?$/, `application/vnd$1$2.${options.mediaType.format}`)).join(",");
+          headers.accept = headers.accept.split(/,/).map(
+            (preview) => preview.replace(
+              /application\/vnd(\.\w+)(\.v3)?(\.\w+)?(\+json)?$/,
+              `application/vnd$1$2.${options.mediaType.format}`
+            )
+          ).join(",");
         }
         if (options.mediaType.previews.length) {
           const previewsFromAcceptHeader = headers.accept.match(/[\w-]+(?=-preview)/g) || [];
@@ -19599,8 +19737,6 @@ var require_dist_node11 = __commonJS({
         } else {
           if (Object.keys(remainingParameters).length) {
             body = remainingParameters;
-          } else {
-            headers["content-length"] = 0;
           }
         }
       }
@@ -19610,15 +19746,11 @@ var require_dist_node11 = __commonJS({
       if (["PATCH", "PUT"].includes(method) && typeof body === "undefined") {
         body = "";
       }
-      return Object.assign({
-        method,
-        url,
-        headers
-      }, typeof body !== "undefined" ? {
-        body
-      } : null, options.request ? {
-        request: options.request
-      } : null);
+      return Object.assign(
+        { method, url, headers },
+        typeof body !== "undefined" ? { body } : null,
+        options.request ? { request: options.request } : null
+      );
     }
     function endpointWithDefaults(defaults2, route, options) {
       return parse2(merge(defaults2, route, options));
@@ -19633,8 +19765,9 @@ var require_dist_node11 = __commonJS({
         parse: parse2
       });
     }
-    var VERSION = "7.0.1";
-    var userAgent = `octokit-endpoint.js/${VERSION} ${universalUserAgent.getUserAgent()}`;
+    var import_universal_user_agent = require_dist_node();
+    var VERSION = "7.0.6";
+    var userAgent = `octokit-endpoint.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`;
     var DEFAULTS = {
       method: "GET",
       baseUrl: "https://api.github.com",
@@ -19648,1616 +19781,11 @@ var require_dist_node11 = __commonJS({
       }
     };
     var endpoint = withDefaults(null, DEFAULTS);
-    exports.endpoint = endpoint;
   }
 });
 
 // 
 var require_lib5 = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    var conversions = {};
-    module.exports = conversions;
-    function sign(x2) {
-      return x2 < 0 ? -1 : 1;
-    }
-    function evenRound(x2) {
-      if (x2 % 1 === 0.5 && (x2 & 1) === 0) {
-        return Math.floor(x2);
-      } else {
-        return Math.round(x2);
-      }
-    }
-    function createNumberConversion(bitLength, typeOpts) {
-      if (!typeOpts.unsigned) {
-        --bitLength;
-      }
-      const lowerBound = typeOpts.unsigned ? 0 : -Math.pow(2, bitLength);
-      const upperBound = Math.pow(2, bitLength) - 1;
-      const moduloVal = typeOpts.moduloBitLength ? Math.pow(2, typeOpts.moduloBitLength) : Math.pow(2, bitLength);
-      const moduloBound = typeOpts.moduloBitLength ? Math.pow(2, typeOpts.moduloBitLength - 1) : Math.pow(2, bitLength - 1);
-      return function(V, opts) {
-        if (!opts)
-          opts = {};
-        let x2 = +V;
-        if (opts.enforceRange) {
-          if (!Number.isFinite(x2)) {
-            throw new TypeError("Argument is not a finite number");
-          }
-          x2 = sign(x2) * Math.floor(Math.abs(x2));
-          if (x2 < lowerBound || x2 > upperBound) {
-            throw new TypeError("Argument is not in byte range");
-          }
-          return x2;
-        }
-        if (!isNaN(x2) && opts.clamp) {
-          x2 = evenRound(x2);
-          if (x2 < lowerBound)
-            x2 = lowerBound;
-          if (x2 > upperBound)
-            x2 = upperBound;
-          return x2;
-        }
-        if (!Number.isFinite(x2) || x2 === 0) {
-          return 0;
-        }
-        x2 = sign(x2) * Math.floor(Math.abs(x2));
-        x2 = x2 % moduloVal;
-        if (!typeOpts.unsigned && x2 >= moduloBound) {
-          return x2 - moduloVal;
-        } else if (typeOpts.unsigned) {
-          if (x2 < 0) {
-            x2 += moduloVal;
-          } else if (x2 === -0) {
-            return 0;
-          }
-        }
-        return x2;
-      };
-    }
-    conversions["void"] = function() {
-      return void 0;
-    };
-    conversions["boolean"] = function(val) {
-      return !!val;
-    };
-    conversions["byte"] = createNumberConversion(8, { unsigned: false });
-    conversions["octet"] = createNumberConversion(8, { unsigned: true });
-    conversions["short"] = createNumberConversion(16, { unsigned: false });
-    conversions["unsigned short"] = createNumberConversion(16, { unsigned: true });
-    conversions["long"] = createNumberConversion(32, { unsigned: false });
-    conversions["unsigned long"] = createNumberConversion(32, { unsigned: true });
-    conversions["long long"] = createNumberConversion(32, { unsigned: false, moduloBitLength: 64 });
-    conversions["unsigned long long"] = createNumberConversion(32, { unsigned: true, moduloBitLength: 64 });
-    conversions["double"] = function(V) {
-      const x2 = +V;
-      if (!Number.isFinite(x2)) {
-        throw new TypeError("Argument is not a finite floating-point value");
-      }
-      return x2;
-    };
-    conversions["unrestricted double"] = function(V) {
-      const x2 = +V;
-      if (isNaN(x2)) {
-        throw new TypeError("Argument is NaN");
-      }
-      return x2;
-    };
-    conversions["float"] = conversions["double"];
-    conversions["unrestricted float"] = conversions["unrestricted double"];
-    conversions["DOMString"] = function(V, opts) {
-      if (!opts)
-        opts = {};
-      if (opts.treatNullAsEmptyString && V === null) {
-        return "";
-      }
-      return String(V);
-    };
-    conversions["ByteString"] = function(V, opts) {
-      const x2 = String(V);
-      let c = void 0;
-      for (let i2 = 0; (c = x2.codePointAt(i2)) !== void 0; ++i2) {
-        if (c > 255) {
-          throw new TypeError("Argument is not a valid bytestring");
-        }
-      }
-      return x2;
-    };
-    conversions["USVString"] = function(V) {
-      const S2 = String(V);
-      const n = S2.length;
-      const U = [];
-      for (let i2 = 0; i2 < n; ++i2) {
-        const c = S2.charCodeAt(i2);
-        if (c < 55296 || c > 57343) {
-          U.push(String.fromCodePoint(c));
-        } else if (56320 <= c && c <= 57343) {
-          U.push(String.fromCodePoint(65533));
-        } else {
-          if (i2 === n - 1) {
-            U.push(String.fromCodePoint(65533));
-          } else {
-            const d = S2.charCodeAt(i2 + 1);
-            if (56320 <= d && d <= 57343) {
-              const a = c & 1023;
-              const b = d & 1023;
-              U.push(String.fromCodePoint((2 << 15) + (2 << 9) * a + b));
-              ++i2;
-            } else {
-              U.push(String.fromCodePoint(65533));
-            }
-          }
-        }
-      }
-      return U.join("");
-    };
-    conversions["Date"] = function(V, opts) {
-      if (!(V instanceof Date)) {
-        throw new TypeError("Argument is not a Date object");
-      }
-      if (isNaN(V)) {
-        return void 0;
-      }
-      return V;
-    };
-    conversions["RegExp"] = function(V, opts) {
-      if (!(V instanceof RegExp)) {
-        V = new RegExp(V);
-      }
-      return V;
-    };
-  }
-});
-
-// 
-var require_utils5 = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    module.exports.mixin = function mixin(target, source) {
-      const keys = Object.getOwnPropertyNames(source);
-      for (let i2 = 0; i2 < keys.length; ++i2) {
-        Object.defineProperty(target, keys[i2], Object.getOwnPropertyDescriptor(source, keys[i2]));
-      }
-    };
-    module.exports.wrapperSymbol = Symbol("wrapper");
-    module.exports.implSymbol = Symbol("impl");
-    module.exports.wrapperForImpl = function(impl) {
-      return impl[module.exports.wrapperSymbol];
-    };
-    module.exports.implForWrapper = function(wrapper) {
-      return wrapper[module.exports.implSymbol];
-    };
-  }
-});
-
-// 
-var require_url_state_machine2 = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    var punycode = __require("punycode");
-    var tr46 = require_tr46();
-    var specialSchemes = {
-      ftp: 21,
-      file: null,
-      gopher: 70,
-      http: 80,
-      https: 443,
-      ws: 80,
-      wss: 443
-    };
-    var failure = Symbol("failure");
-    function countSymbols(str) {
-      return punycode.ucs2.decode(str).length;
-    }
-    function at(input, idx) {
-      const c = input[idx];
-      return isNaN(c) ? void 0 : String.fromCodePoint(c);
-    }
-    function isASCIIDigit(c) {
-      return c >= 48 && c <= 57;
-    }
-    function isASCIIAlpha(c) {
-      return c >= 65 && c <= 90 || c >= 97 && c <= 122;
-    }
-    function isASCIIAlphanumeric(c) {
-      return isASCIIAlpha(c) || isASCIIDigit(c);
-    }
-    function isASCIIHex(c) {
-      return isASCIIDigit(c) || c >= 65 && c <= 70 || c >= 97 && c <= 102;
-    }
-    function isSingleDot(buffer) {
-      return buffer === "." || buffer.toLowerCase() === "%2e";
-    }
-    function isDoubleDot(buffer) {
-      buffer = buffer.toLowerCase();
-      return buffer === ".." || buffer === "%2e." || buffer === ".%2e" || buffer === "%2e%2e";
-    }
-    function isWindowsDriveLetterCodePoints(cp1, cp2) {
-      return isASCIIAlpha(cp1) && (cp2 === 58 || cp2 === 124);
-    }
-    function isWindowsDriveLetterString(string) {
-      return string.length === 2 && isASCIIAlpha(string.codePointAt(0)) && (string[1] === ":" || string[1] === "|");
-    }
-    function isNormalizedWindowsDriveLetterString(string) {
-      return string.length === 2 && isASCIIAlpha(string.codePointAt(0)) && string[1] === ":";
-    }
-    function containsForbiddenHostCodePoint(string) {
-      return string.search(/\u0000|\u0009|\u000A|\u000D|\u0020|#|%|\/|:|\?|@|\[|\\|\]/) !== -1;
-    }
-    function containsForbiddenHostCodePointExcludingPercent(string) {
-      return string.search(/\u0000|\u0009|\u000A|\u000D|\u0020|#|\/|:|\?|@|\[|\\|\]/) !== -1;
-    }
-    function isSpecialScheme(scheme) {
-      return specialSchemes[scheme] !== void 0;
-    }
-    function isSpecial(url) {
-      return isSpecialScheme(url.scheme);
-    }
-    function defaultPort(scheme) {
-      return specialSchemes[scheme];
-    }
-    function percentEncode(c) {
-      let hex = c.toString(16).toUpperCase();
-      if (hex.length === 1) {
-        hex = "0" + hex;
-      }
-      return "%" + hex;
-    }
-    function utf8PercentEncode(c) {
-      const buf = new Buffer(c);
-      let str = "";
-      for (let i2 = 0; i2 < buf.length; ++i2) {
-        str += percentEncode(buf[i2]);
-      }
-      return str;
-    }
-    function utf8PercentDecode(str) {
-      const input = new Buffer(str);
-      const output = [];
-      for (let i2 = 0; i2 < input.length; ++i2) {
-        if (input[i2] !== 37) {
-          output.push(input[i2]);
-        } else if (input[i2] === 37 && isASCIIHex(input[i2 + 1]) && isASCIIHex(input[i2 + 2])) {
-          output.push(parseInt(input.slice(i2 + 1, i2 + 3).toString(), 16));
-          i2 += 2;
-        } else {
-          output.push(input[i2]);
-        }
-      }
-      return new Buffer(output).toString();
-    }
-    function isC0ControlPercentEncode(c) {
-      return c <= 31 || c > 126;
-    }
-    var extraPathPercentEncodeSet = /* @__PURE__ */ new Set([32, 34, 35, 60, 62, 63, 96, 123, 125]);
-    function isPathPercentEncode(c) {
-      return isC0ControlPercentEncode(c) || extraPathPercentEncodeSet.has(c);
-    }
-    var extraUserinfoPercentEncodeSet = /* @__PURE__ */ new Set([47, 58, 59, 61, 64, 91, 92, 93, 94, 124]);
-    function isUserinfoPercentEncode(c) {
-      return isPathPercentEncode(c) || extraUserinfoPercentEncodeSet.has(c);
-    }
-    function percentEncodeChar(c, encodeSetPredicate) {
-      const cStr = String.fromCodePoint(c);
-      if (encodeSetPredicate(c)) {
-        return utf8PercentEncode(cStr);
-      }
-      return cStr;
-    }
-    function parseIPv4Number(input) {
-      let R = 10;
-      if (input.length >= 2 && input.charAt(0) === "0" && input.charAt(1).toLowerCase() === "x") {
-        input = input.substring(2);
-        R = 16;
-      } else if (input.length >= 2 && input.charAt(0) === "0") {
-        input = input.substring(1);
-        R = 8;
-      }
-      if (input === "") {
-        return 0;
-      }
-      const regex = R === 10 ? /[^0-9]/ : R === 16 ? /[^0-9A-Fa-f]/ : /[^0-7]/;
-      if (regex.test(input)) {
-        return failure;
-      }
-      return parseInt(input, R);
-    }
-    function parseIPv4(input) {
-      const parts = input.split(".");
-      if (parts[parts.length - 1] === "") {
-        if (parts.length > 1) {
-          parts.pop();
-        }
-      }
-      if (parts.length > 4) {
-        return input;
-      }
-      const numbers = [];
-      for (const part of parts) {
-        if (part === "") {
-          return input;
-        }
-        const n = parseIPv4Number(part);
-        if (n === failure) {
-          return input;
-        }
-        numbers.push(n);
-      }
-      for (let i2 = 0; i2 < numbers.length - 1; ++i2) {
-        if (numbers[i2] > 255) {
-          return failure;
-        }
-      }
-      if (numbers[numbers.length - 1] >= Math.pow(256, 5 - numbers.length)) {
-        return failure;
-      }
-      let ipv4 = numbers.pop();
-      let counter = 0;
-      for (const n of numbers) {
-        ipv4 += n * Math.pow(256, 3 - counter);
-        ++counter;
-      }
-      return ipv4;
-    }
-    function serializeIPv4(address) {
-      let output = "";
-      let n = address;
-      for (let i2 = 1; i2 <= 4; ++i2) {
-        output = String(n % 256) + output;
-        if (i2 !== 4) {
-          output = "." + output;
-        }
-        n = Math.floor(n / 256);
-      }
-      return output;
-    }
-    function parseIPv6(input) {
-      const address = [0, 0, 0, 0, 0, 0, 0, 0];
-      let pieceIndex = 0;
-      let compress = null;
-      let pointer = 0;
-      input = punycode.ucs2.decode(input);
-      if (input[pointer] === 58) {
-        if (input[pointer + 1] !== 58) {
-          return failure;
-        }
-        pointer += 2;
-        ++pieceIndex;
-        compress = pieceIndex;
-      }
-      while (pointer < input.length) {
-        if (pieceIndex === 8) {
-          return failure;
-        }
-        if (input[pointer] === 58) {
-          if (compress !== null) {
-            return failure;
-          }
-          ++pointer;
-          ++pieceIndex;
-          compress = pieceIndex;
-          continue;
-        }
-        let value = 0;
-        let length = 0;
-        while (length < 4 && isASCIIHex(input[pointer])) {
-          value = value * 16 + parseInt(at(input, pointer), 16);
-          ++pointer;
-          ++length;
-        }
-        if (input[pointer] === 46) {
-          if (length === 0) {
-            return failure;
-          }
-          pointer -= length;
-          if (pieceIndex > 6) {
-            return failure;
-          }
-          let numbersSeen = 0;
-          while (input[pointer] !== void 0) {
-            let ipv4Piece = null;
-            if (numbersSeen > 0) {
-              if (input[pointer] === 46 && numbersSeen < 4) {
-                ++pointer;
-              } else {
-                return failure;
-              }
-            }
-            if (!isASCIIDigit(input[pointer])) {
-              return failure;
-            }
-            while (isASCIIDigit(input[pointer])) {
-              const number = parseInt(at(input, pointer));
-              if (ipv4Piece === null) {
-                ipv4Piece = number;
-              } else if (ipv4Piece === 0) {
-                return failure;
-              } else {
-                ipv4Piece = ipv4Piece * 10 + number;
-              }
-              if (ipv4Piece > 255) {
-                return failure;
-              }
-              ++pointer;
-            }
-            address[pieceIndex] = address[pieceIndex] * 256 + ipv4Piece;
-            ++numbersSeen;
-            if (numbersSeen === 2 || numbersSeen === 4) {
-              ++pieceIndex;
-            }
-          }
-          if (numbersSeen !== 4) {
-            return failure;
-          }
-          break;
-        } else if (input[pointer] === 58) {
-          ++pointer;
-          if (input[pointer] === void 0) {
-            return failure;
-          }
-        } else if (input[pointer] !== void 0) {
-          return failure;
-        }
-        address[pieceIndex] = value;
-        ++pieceIndex;
-      }
-      if (compress !== null) {
-        let swaps = pieceIndex - compress;
-        pieceIndex = 7;
-        while (pieceIndex !== 0 && swaps > 0) {
-          const temp = address[compress + swaps - 1];
-          address[compress + swaps - 1] = address[pieceIndex];
-          address[pieceIndex] = temp;
-          --pieceIndex;
-          --swaps;
-        }
-      } else if (compress === null && pieceIndex !== 8) {
-        return failure;
-      }
-      return address;
-    }
-    function serializeIPv6(address) {
-      let output = "";
-      const seqResult = findLongestZeroSequence(address);
-      const compress = seqResult.idx;
-      let ignore0 = false;
-      for (let pieceIndex = 0; pieceIndex <= 7; ++pieceIndex) {
-        if (ignore0 && address[pieceIndex] === 0) {
-          continue;
-        } else if (ignore0) {
-          ignore0 = false;
-        }
-        if (compress === pieceIndex) {
-          const separator = pieceIndex === 0 ? "::" : ":";
-          output += separator;
-          ignore0 = true;
-          continue;
-        }
-        output += address[pieceIndex].toString(16);
-        if (pieceIndex !== 7) {
-          output += ":";
-        }
-      }
-      return output;
-    }
-    function parseHost(input, isSpecialArg) {
-      if (input[0] === "[") {
-        if (input[input.length - 1] !== "]") {
-          return failure;
-        }
-        return parseIPv6(input.substring(1, input.length - 1));
-      }
-      if (!isSpecialArg) {
-        return parseOpaqueHost(input);
-      }
-      const domain = utf8PercentDecode(input);
-      const asciiDomain = tr46.toASCII(domain, false, tr46.PROCESSING_OPTIONS.NONTRANSITIONAL, false);
-      if (asciiDomain === null) {
-        return failure;
-      }
-      if (containsForbiddenHostCodePoint(asciiDomain)) {
-        return failure;
-      }
-      const ipv4Host = parseIPv4(asciiDomain);
-      if (typeof ipv4Host === "number" || ipv4Host === failure) {
-        return ipv4Host;
-      }
-      return asciiDomain;
-    }
-    function parseOpaqueHost(input) {
-      if (containsForbiddenHostCodePointExcludingPercent(input)) {
-        return failure;
-      }
-      let output = "";
-      const decoded = punycode.ucs2.decode(input);
-      for (let i2 = 0; i2 < decoded.length; ++i2) {
-        output += percentEncodeChar(decoded[i2], isC0ControlPercentEncode);
-      }
-      return output;
-    }
-    function findLongestZeroSequence(arr) {
-      let maxIdx = null;
-      let maxLen = 1;
-      let currStart = null;
-      let currLen = 0;
-      for (let i2 = 0; i2 < arr.length; ++i2) {
-        if (arr[i2] !== 0) {
-          if (currLen > maxLen) {
-            maxIdx = currStart;
-            maxLen = currLen;
-          }
-          currStart = null;
-          currLen = 0;
-        } else {
-          if (currStart === null) {
-            currStart = i2;
-          }
-          ++currLen;
-        }
-      }
-      if (currLen > maxLen) {
-        maxIdx = currStart;
-        maxLen = currLen;
-      }
-      return {
-        idx: maxIdx,
-        len: maxLen
-      };
-    }
-    function serializeHost(host) {
-      if (typeof host === "number") {
-        return serializeIPv4(host);
-      }
-      if (host instanceof Array) {
-        return "[" + serializeIPv6(host) + "]";
-      }
-      return host;
-    }
-    function trimControlChars(url) {
-      return url.replace(/^[\u0000-\u001F\u0020]+|[\u0000-\u001F\u0020]+$/g, "");
-    }
-    function trimTabAndNewline(url) {
-      return url.replace(/\u0009|\u000A|\u000D/g, "");
-    }
-    function shortenPath(url) {
-      const path = url.path;
-      if (path.length === 0) {
-        return;
-      }
-      if (url.scheme === "file" && path.length === 1 && isNormalizedWindowsDriveLetter(path[0])) {
-        return;
-      }
-      path.pop();
-    }
-    function includesCredentials(url) {
-      return url.username !== "" || url.password !== "";
-    }
-    function cannotHaveAUsernamePasswordPort(url) {
-      return url.host === null || url.host === "" || url.cannotBeABaseURL || url.scheme === "file";
-    }
-    function isNormalizedWindowsDriveLetter(string) {
-      return /^[A-Za-z]:$/.test(string);
-    }
-    function URLStateMachine(input, base, encodingOverride, url, stateOverride) {
-      this.pointer = 0;
-      this.input = input;
-      this.base = base || null;
-      this.encodingOverride = encodingOverride || "utf-8";
-      this.stateOverride = stateOverride;
-      this.url = url;
-      this.failure = false;
-      this.parseError = false;
-      if (!this.url) {
-        this.url = {
-          scheme: "",
-          username: "",
-          password: "",
-          host: null,
-          port: null,
-          path: [],
-          query: null,
-          fragment: null,
-          cannotBeABaseURL: false
-        };
-        const res2 = trimControlChars(this.input);
-        if (res2 !== this.input) {
-          this.parseError = true;
-        }
-        this.input = res2;
-      }
-      const res = trimTabAndNewline(this.input);
-      if (res !== this.input) {
-        this.parseError = true;
-      }
-      this.input = res;
-      this.state = stateOverride || "scheme start";
-      this.buffer = "";
-      this.atFlag = false;
-      this.arrFlag = false;
-      this.passwordTokenSeenFlag = false;
-      this.input = punycode.ucs2.decode(this.input);
-      for (; this.pointer <= this.input.length; ++this.pointer) {
-        const c = this.input[this.pointer];
-        const cStr = isNaN(c) ? void 0 : String.fromCodePoint(c);
-        const ret = this["parse " + this.state](c, cStr);
-        if (!ret) {
-          break;
-        } else if (ret === failure) {
-          this.failure = true;
-          break;
-        }
-      }
-    }
-    URLStateMachine.prototype["parse scheme start"] = function parseSchemeStart(c, cStr) {
-      if (isASCIIAlpha(c)) {
-        this.buffer += cStr.toLowerCase();
-        this.state = "scheme";
-      } else if (!this.stateOverride) {
-        this.state = "no scheme";
-        --this.pointer;
-      } else {
-        this.parseError = true;
-        return failure;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse scheme"] = function parseScheme(c, cStr) {
-      if (isASCIIAlphanumeric(c) || c === 43 || c === 45 || c === 46) {
-        this.buffer += cStr.toLowerCase();
-      } else if (c === 58) {
-        if (this.stateOverride) {
-          if (isSpecial(this.url) && !isSpecialScheme(this.buffer)) {
-            return false;
-          }
-          if (!isSpecial(this.url) && isSpecialScheme(this.buffer)) {
-            return false;
-          }
-          if ((includesCredentials(this.url) || this.url.port !== null) && this.buffer === "file") {
-            return false;
-          }
-          if (this.url.scheme === "file" && (this.url.host === "" || this.url.host === null)) {
-            return false;
-          }
-        }
-        this.url.scheme = this.buffer;
-        this.buffer = "";
-        if (this.stateOverride) {
-          return false;
-        }
-        if (this.url.scheme === "file") {
-          if (this.input[this.pointer + 1] !== 47 || this.input[this.pointer + 2] !== 47) {
-            this.parseError = true;
-          }
-          this.state = "file";
-        } else if (isSpecial(this.url) && this.base !== null && this.base.scheme === this.url.scheme) {
-          this.state = "special relative or authority";
-        } else if (isSpecial(this.url)) {
-          this.state = "special authority slashes";
-        } else if (this.input[this.pointer + 1] === 47) {
-          this.state = "path or authority";
-          ++this.pointer;
-        } else {
-          this.url.cannotBeABaseURL = true;
-          this.url.path.push("");
-          this.state = "cannot-be-a-base-URL path";
-        }
-      } else if (!this.stateOverride) {
-        this.buffer = "";
-        this.state = "no scheme";
-        this.pointer = -1;
-      } else {
-        this.parseError = true;
-        return failure;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse no scheme"] = function parseNoScheme(c) {
-      if (this.base === null || this.base.cannotBeABaseURL && c !== 35) {
-        return failure;
-      } else if (this.base.cannotBeABaseURL && c === 35) {
-        this.url.scheme = this.base.scheme;
-        this.url.path = this.base.path.slice();
-        this.url.query = this.base.query;
-        this.url.fragment = "";
-        this.url.cannotBeABaseURL = true;
-        this.state = "fragment";
-      } else if (this.base.scheme === "file") {
-        this.state = "file";
-        --this.pointer;
-      } else {
-        this.state = "relative";
-        --this.pointer;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse special relative or authority"] = function parseSpecialRelativeOrAuthority(c) {
-      if (c === 47 && this.input[this.pointer + 1] === 47) {
-        this.state = "special authority ignore slashes";
-        ++this.pointer;
-      } else {
-        this.parseError = true;
-        this.state = "relative";
-        --this.pointer;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse path or authority"] = function parsePathOrAuthority(c) {
-      if (c === 47) {
-        this.state = "authority";
-      } else {
-        this.state = "path";
-        --this.pointer;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse relative"] = function parseRelative(c) {
-      this.url.scheme = this.base.scheme;
-      if (isNaN(c)) {
-        this.url.username = this.base.username;
-        this.url.password = this.base.password;
-        this.url.host = this.base.host;
-        this.url.port = this.base.port;
-        this.url.path = this.base.path.slice();
-        this.url.query = this.base.query;
-      } else if (c === 47) {
-        this.state = "relative slash";
-      } else if (c === 63) {
-        this.url.username = this.base.username;
-        this.url.password = this.base.password;
-        this.url.host = this.base.host;
-        this.url.port = this.base.port;
-        this.url.path = this.base.path.slice();
-        this.url.query = "";
-        this.state = "query";
-      } else if (c === 35) {
-        this.url.username = this.base.username;
-        this.url.password = this.base.password;
-        this.url.host = this.base.host;
-        this.url.port = this.base.port;
-        this.url.path = this.base.path.slice();
-        this.url.query = this.base.query;
-        this.url.fragment = "";
-        this.state = "fragment";
-      } else if (isSpecial(this.url) && c === 92) {
-        this.parseError = true;
-        this.state = "relative slash";
-      } else {
-        this.url.username = this.base.username;
-        this.url.password = this.base.password;
-        this.url.host = this.base.host;
-        this.url.port = this.base.port;
-        this.url.path = this.base.path.slice(0, this.base.path.length - 1);
-        this.state = "path";
-        --this.pointer;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse relative slash"] = function parseRelativeSlash(c) {
-      if (isSpecial(this.url) && (c === 47 || c === 92)) {
-        if (c === 92) {
-          this.parseError = true;
-        }
-        this.state = "special authority ignore slashes";
-      } else if (c === 47) {
-        this.state = "authority";
-      } else {
-        this.url.username = this.base.username;
-        this.url.password = this.base.password;
-        this.url.host = this.base.host;
-        this.url.port = this.base.port;
-        this.state = "path";
-        --this.pointer;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse special authority slashes"] = function parseSpecialAuthoritySlashes(c) {
-      if (c === 47 && this.input[this.pointer + 1] === 47) {
-        this.state = "special authority ignore slashes";
-        ++this.pointer;
-      } else {
-        this.parseError = true;
-        this.state = "special authority ignore slashes";
-        --this.pointer;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse special authority ignore slashes"] = function parseSpecialAuthorityIgnoreSlashes(c) {
-      if (c !== 47 && c !== 92) {
-        this.state = "authority";
-        --this.pointer;
-      } else {
-        this.parseError = true;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse authority"] = function parseAuthority(c, cStr) {
-      if (c === 64) {
-        this.parseError = true;
-        if (this.atFlag) {
-          this.buffer = "%40" + this.buffer;
-        }
-        this.atFlag = true;
-        const len = countSymbols(this.buffer);
-        for (let pointer = 0; pointer < len; ++pointer) {
-          const codePoint = this.buffer.codePointAt(pointer);
-          if (codePoint === 58 && !this.passwordTokenSeenFlag) {
-            this.passwordTokenSeenFlag = true;
-            continue;
-          }
-          const encodedCodePoints = percentEncodeChar(codePoint, isUserinfoPercentEncode);
-          if (this.passwordTokenSeenFlag) {
-            this.url.password += encodedCodePoints;
-          } else {
-            this.url.username += encodedCodePoints;
-          }
-        }
-        this.buffer = "";
-      } else if (isNaN(c) || c === 47 || c === 63 || c === 35 || isSpecial(this.url) && c === 92) {
-        if (this.atFlag && this.buffer === "") {
-          this.parseError = true;
-          return failure;
-        }
-        this.pointer -= countSymbols(this.buffer) + 1;
-        this.buffer = "";
-        this.state = "host";
-      } else {
-        this.buffer += cStr;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse hostname"] = URLStateMachine.prototype["parse host"] = function parseHostName(c, cStr) {
-      if (this.stateOverride && this.url.scheme === "file") {
-        --this.pointer;
-        this.state = "file host";
-      } else if (c === 58 && !this.arrFlag) {
-        if (this.buffer === "") {
-          this.parseError = true;
-          return failure;
-        }
-        const host = parseHost(this.buffer, isSpecial(this.url));
-        if (host === failure) {
-          return failure;
-        }
-        this.url.host = host;
-        this.buffer = "";
-        this.state = "port";
-        if (this.stateOverride === "hostname") {
-          return false;
-        }
-      } else if (isNaN(c) || c === 47 || c === 63 || c === 35 || isSpecial(this.url) && c === 92) {
-        --this.pointer;
-        if (isSpecial(this.url) && this.buffer === "") {
-          this.parseError = true;
-          return failure;
-        } else if (this.stateOverride && this.buffer === "" && (includesCredentials(this.url) || this.url.port !== null)) {
-          this.parseError = true;
-          return false;
-        }
-        const host = parseHost(this.buffer, isSpecial(this.url));
-        if (host === failure) {
-          return failure;
-        }
-        this.url.host = host;
-        this.buffer = "";
-        this.state = "path start";
-        if (this.stateOverride) {
-          return false;
-        }
-      } else {
-        if (c === 91) {
-          this.arrFlag = true;
-        } else if (c === 93) {
-          this.arrFlag = false;
-        }
-        this.buffer += cStr;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse port"] = function parsePort(c, cStr) {
-      if (isASCIIDigit(c)) {
-        this.buffer += cStr;
-      } else if (isNaN(c) || c === 47 || c === 63 || c === 35 || isSpecial(this.url) && c === 92 || this.stateOverride) {
-        if (this.buffer !== "") {
-          const port = parseInt(this.buffer);
-          if (port > Math.pow(2, 16) - 1) {
-            this.parseError = true;
-            return failure;
-          }
-          this.url.port = port === defaultPort(this.url.scheme) ? null : port;
-          this.buffer = "";
-        }
-        if (this.stateOverride) {
-          return false;
-        }
-        this.state = "path start";
-        --this.pointer;
-      } else {
-        this.parseError = true;
-        return failure;
-      }
-      return true;
-    };
-    var fileOtherwiseCodePoints = /* @__PURE__ */ new Set([47, 92, 63, 35]);
-    URLStateMachine.prototype["parse file"] = function parseFile(c) {
-      this.url.scheme = "file";
-      if (c === 47 || c === 92) {
-        if (c === 92) {
-          this.parseError = true;
-        }
-        this.state = "file slash";
-      } else if (this.base !== null && this.base.scheme === "file") {
-        if (isNaN(c)) {
-          this.url.host = this.base.host;
-          this.url.path = this.base.path.slice();
-          this.url.query = this.base.query;
-        } else if (c === 63) {
-          this.url.host = this.base.host;
-          this.url.path = this.base.path.slice();
-          this.url.query = "";
-          this.state = "query";
-        } else if (c === 35) {
-          this.url.host = this.base.host;
-          this.url.path = this.base.path.slice();
-          this.url.query = this.base.query;
-          this.url.fragment = "";
-          this.state = "fragment";
-        } else {
-          if (this.input.length - this.pointer - 1 === 0 || !isWindowsDriveLetterCodePoints(c, this.input[this.pointer + 1]) || this.input.length - this.pointer - 1 >= 2 && !fileOtherwiseCodePoints.has(this.input[this.pointer + 2])) {
-            this.url.host = this.base.host;
-            this.url.path = this.base.path.slice();
-            shortenPath(this.url);
-          } else {
-            this.parseError = true;
-          }
-          this.state = "path";
-          --this.pointer;
-        }
-      } else {
-        this.state = "path";
-        --this.pointer;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse file slash"] = function parseFileSlash(c) {
-      if (c === 47 || c === 92) {
-        if (c === 92) {
-          this.parseError = true;
-        }
-        this.state = "file host";
-      } else {
-        if (this.base !== null && this.base.scheme === "file") {
-          if (isNormalizedWindowsDriveLetterString(this.base.path[0])) {
-            this.url.path.push(this.base.path[0]);
-          } else {
-            this.url.host = this.base.host;
-          }
-        }
-        this.state = "path";
-        --this.pointer;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse file host"] = function parseFileHost(c, cStr) {
-      if (isNaN(c) || c === 47 || c === 92 || c === 63 || c === 35) {
-        --this.pointer;
-        if (!this.stateOverride && isWindowsDriveLetterString(this.buffer)) {
-          this.parseError = true;
-          this.state = "path";
-        } else if (this.buffer === "") {
-          this.url.host = "";
-          if (this.stateOverride) {
-            return false;
-          }
-          this.state = "path start";
-        } else {
-          let host = parseHost(this.buffer, isSpecial(this.url));
-          if (host === failure) {
-            return failure;
-          }
-          if (host === "localhost") {
-            host = "";
-          }
-          this.url.host = host;
-          if (this.stateOverride) {
-            return false;
-          }
-          this.buffer = "";
-          this.state = "path start";
-        }
-      } else {
-        this.buffer += cStr;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse path start"] = function parsePathStart(c) {
-      if (isSpecial(this.url)) {
-        if (c === 92) {
-          this.parseError = true;
-        }
-        this.state = "path";
-        if (c !== 47 && c !== 92) {
-          --this.pointer;
-        }
-      } else if (!this.stateOverride && c === 63) {
-        this.url.query = "";
-        this.state = "query";
-      } else if (!this.stateOverride && c === 35) {
-        this.url.fragment = "";
-        this.state = "fragment";
-      } else if (c !== void 0) {
-        this.state = "path";
-        if (c !== 47) {
-          --this.pointer;
-        }
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse path"] = function parsePath(c) {
-      if (isNaN(c) || c === 47 || isSpecial(this.url) && c === 92 || !this.stateOverride && (c === 63 || c === 35)) {
-        if (isSpecial(this.url) && c === 92) {
-          this.parseError = true;
-        }
-        if (isDoubleDot(this.buffer)) {
-          shortenPath(this.url);
-          if (c !== 47 && !(isSpecial(this.url) && c === 92)) {
-            this.url.path.push("");
-          }
-        } else if (isSingleDot(this.buffer) && c !== 47 && !(isSpecial(this.url) && c === 92)) {
-          this.url.path.push("");
-        } else if (!isSingleDot(this.buffer)) {
-          if (this.url.scheme === "file" && this.url.path.length === 0 && isWindowsDriveLetterString(this.buffer)) {
-            if (this.url.host !== "" && this.url.host !== null) {
-              this.parseError = true;
-              this.url.host = "";
-            }
-            this.buffer = this.buffer[0] + ":";
-          }
-          this.url.path.push(this.buffer);
-        }
-        this.buffer = "";
-        if (this.url.scheme === "file" && (c === void 0 || c === 63 || c === 35)) {
-          while (this.url.path.length > 1 && this.url.path[0] === "") {
-            this.parseError = true;
-            this.url.path.shift();
-          }
-        }
-        if (c === 63) {
-          this.url.query = "";
-          this.state = "query";
-        }
-        if (c === 35) {
-          this.url.fragment = "";
-          this.state = "fragment";
-        }
-      } else {
-        if (c === 37 && (!isASCIIHex(this.input[this.pointer + 1]) || !isASCIIHex(this.input[this.pointer + 2]))) {
-          this.parseError = true;
-        }
-        this.buffer += percentEncodeChar(c, isPathPercentEncode);
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse cannot-be-a-base-URL path"] = function parseCannotBeABaseURLPath(c) {
-      if (c === 63) {
-        this.url.query = "";
-        this.state = "query";
-      } else if (c === 35) {
-        this.url.fragment = "";
-        this.state = "fragment";
-      } else {
-        if (!isNaN(c) && c !== 37) {
-          this.parseError = true;
-        }
-        if (c === 37 && (!isASCIIHex(this.input[this.pointer + 1]) || !isASCIIHex(this.input[this.pointer + 2]))) {
-          this.parseError = true;
-        }
-        if (!isNaN(c)) {
-          this.url.path[0] = this.url.path[0] + percentEncodeChar(c, isC0ControlPercentEncode);
-        }
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse query"] = function parseQuery(c, cStr) {
-      if (isNaN(c) || !this.stateOverride && c === 35) {
-        if (!isSpecial(this.url) || this.url.scheme === "ws" || this.url.scheme === "wss") {
-          this.encodingOverride = "utf-8";
-        }
-        const buffer = new Buffer(this.buffer);
-        for (let i2 = 0; i2 < buffer.length; ++i2) {
-          if (buffer[i2] < 33 || buffer[i2] > 126 || buffer[i2] === 34 || buffer[i2] === 35 || buffer[i2] === 60 || buffer[i2] === 62) {
-            this.url.query += percentEncode(buffer[i2]);
-          } else {
-            this.url.query += String.fromCodePoint(buffer[i2]);
-          }
-        }
-        this.buffer = "";
-        if (c === 35) {
-          this.url.fragment = "";
-          this.state = "fragment";
-        }
-      } else {
-        if (c === 37 && (!isASCIIHex(this.input[this.pointer + 1]) || !isASCIIHex(this.input[this.pointer + 2]))) {
-          this.parseError = true;
-        }
-        this.buffer += cStr;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse fragment"] = function parseFragment(c) {
-      if (isNaN(c)) {
-      } else if (c === 0) {
-        this.parseError = true;
-      } else {
-        if (c === 37 && (!isASCIIHex(this.input[this.pointer + 1]) || !isASCIIHex(this.input[this.pointer + 2]))) {
-          this.parseError = true;
-        }
-        this.url.fragment += percentEncodeChar(c, isC0ControlPercentEncode);
-      }
-      return true;
-    };
-    function serializeURL(url, excludeFragment) {
-      let output = url.scheme + ":";
-      if (url.host !== null) {
-        output += "//";
-        if (url.username !== "" || url.password !== "") {
-          output += url.username;
-          if (url.password !== "") {
-            output += ":" + url.password;
-          }
-          output += "@";
-        }
-        output += serializeHost(url.host);
-        if (url.port !== null) {
-          output += ":" + url.port;
-        }
-      } else if (url.host === null && url.scheme === "file") {
-        output += "//";
-      }
-      if (url.cannotBeABaseURL) {
-        output += url.path[0];
-      } else {
-        for (const string of url.path) {
-          output += "/" + string;
-        }
-      }
-      if (url.query !== null) {
-        output += "?" + url.query;
-      }
-      if (!excludeFragment && url.fragment !== null) {
-        output += "#" + url.fragment;
-      }
-      return output;
-    }
-    function serializeOrigin(tuple) {
-      let result = tuple.scheme + "://";
-      result += serializeHost(tuple.host);
-      if (tuple.port !== null) {
-        result += ":" + tuple.port;
-      }
-      return result;
-    }
-    module.exports.serializeURL = serializeURL;
-    module.exports.serializeURLOrigin = function(url) {
-      switch (url.scheme) {
-        case "blob":
-          try {
-            return module.exports.serializeURLOrigin(module.exports.parseURL(url.path[0]));
-          } catch (e2) {
-            return "null";
-          }
-        case "ftp":
-        case "gopher":
-        case "http":
-        case "https":
-        case "ws":
-        case "wss":
-          return serializeOrigin({
-            scheme: url.scheme,
-            host: url.host,
-            port: url.port
-          });
-        case "file":
-          return "file://";
-        default:
-          return "null";
-      }
-    };
-    module.exports.basicURLParse = function(input, options) {
-      if (options === void 0) {
-        options = {};
-      }
-      const usm = new URLStateMachine(input, options.baseURL, options.encodingOverride, options.url, options.stateOverride);
-      if (usm.failure) {
-        return "failure";
-      }
-      return usm.url;
-    };
-    module.exports.setTheUsername = function(url, username) {
-      url.username = "";
-      const decoded = punycode.ucs2.decode(username);
-      for (let i2 = 0; i2 < decoded.length; ++i2) {
-        url.username += percentEncodeChar(decoded[i2], isUserinfoPercentEncode);
-      }
-    };
-    module.exports.setThePassword = function(url, password) {
-      url.password = "";
-      const decoded = punycode.ucs2.decode(password);
-      for (let i2 = 0; i2 < decoded.length; ++i2) {
-        url.password += percentEncodeChar(decoded[i2], isUserinfoPercentEncode);
-      }
-    };
-    module.exports.serializeHost = serializeHost;
-    module.exports.cannotHaveAUsernamePasswordPort = cannotHaveAUsernamePasswordPort;
-    module.exports.serializeInteger = function(integer) {
-      return String(integer);
-    };
-    module.exports.parseURL = function(input, options) {
-      if (options === void 0) {
-        options = {};
-      }
-      return module.exports.basicURLParse(input, { baseURL: options.baseURL, encodingOverride: options.encodingOverride });
-    };
-  }
-});
-
-// 
-var require_URL_impl2 = __commonJS({
-  ""(exports) {
-    "use strict";
-    var usm = require_url_state_machine2();
-    exports.implementation = class URLImpl {
-      constructor(constructorArgs) {
-        const url = constructorArgs[0];
-        const base = constructorArgs[1];
-        let parsedBase = null;
-        if (base !== void 0) {
-          parsedBase = usm.basicURLParse(base);
-          if (parsedBase === "failure") {
-            throw new TypeError("Invalid base URL");
-          }
-        }
-        const parsedURL = usm.basicURLParse(url, { baseURL: parsedBase });
-        if (parsedURL === "failure") {
-          throw new TypeError("Invalid URL");
-        }
-        this._url = parsedURL;
-      }
-      get href() {
-        return usm.serializeURL(this._url);
-      }
-      set href(v) {
-        const parsedURL = usm.basicURLParse(v);
-        if (parsedURL === "failure") {
-          throw new TypeError("Invalid URL");
-        }
-        this._url = parsedURL;
-      }
-      get origin() {
-        return usm.serializeURLOrigin(this._url);
-      }
-      get protocol() {
-        return this._url.scheme + ":";
-      }
-      set protocol(v) {
-        usm.basicURLParse(v + ":", { url: this._url, stateOverride: "scheme start" });
-      }
-      get username() {
-        return this._url.username;
-      }
-      set username(v) {
-        if (usm.cannotHaveAUsernamePasswordPort(this._url)) {
-          return;
-        }
-        usm.setTheUsername(this._url, v);
-      }
-      get password() {
-        return this._url.password;
-      }
-      set password(v) {
-        if (usm.cannotHaveAUsernamePasswordPort(this._url)) {
-          return;
-        }
-        usm.setThePassword(this._url, v);
-      }
-      get host() {
-        const url = this._url;
-        if (url.host === null) {
-          return "";
-        }
-        if (url.port === null) {
-          return usm.serializeHost(url.host);
-        }
-        return usm.serializeHost(url.host) + ":" + usm.serializeInteger(url.port);
-      }
-      set host(v) {
-        if (this._url.cannotBeABaseURL) {
-          return;
-        }
-        usm.basicURLParse(v, { url: this._url, stateOverride: "host" });
-      }
-      get hostname() {
-        if (this._url.host === null) {
-          return "";
-        }
-        return usm.serializeHost(this._url.host);
-      }
-      set hostname(v) {
-        if (this._url.cannotBeABaseURL) {
-          return;
-        }
-        usm.basicURLParse(v, { url: this._url, stateOverride: "hostname" });
-      }
-      get port() {
-        if (this._url.port === null) {
-          return "";
-        }
-        return usm.serializeInteger(this._url.port);
-      }
-      set port(v) {
-        if (usm.cannotHaveAUsernamePasswordPort(this._url)) {
-          return;
-        }
-        if (v === "") {
-          this._url.port = null;
-        } else {
-          usm.basicURLParse(v, { url: this._url, stateOverride: "port" });
-        }
-      }
-      get pathname() {
-        if (this._url.cannotBeABaseURL) {
-          return this._url.path[0];
-        }
-        if (this._url.path.length === 0) {
-          return "";
-        }
-        return "/" + this._url.path.join("/");
-      }
-      set pathname(v) {
-        if (this._url.cannotBeABaseURL) {
-          return;
-        }
-        this._url.path = [];
-        usm.basicURLParse(v, { url: this._url, stateOverride: "path start" });
-      }
-      get search() {
-        if (this._url.query === null || this._url.query === "") {
-          return "";
-        }
-        return "?" + this._url.query;
-      }
-      set search(v) {
-        const url = this._url;
-        if (v === "") {
-          url.query = null;
-          return;
-        }
-        const input = v[0] === "?" ? v.substring(1) : v;
-        url.query = "";
-        usm.basicURLParse(input, { url, stateOverride: "query" });
-      }
-      get hash() {
-        if (this._url.fragment === null || this._url.fragment === "") {
-          return "";
-        }
-        return "#" + this._url.fragment;
-      }
-      set hash(v) {
-        if (v === "") {
-          this._url.fragment = null;
-          return;
-        }
-        const input = v[0] === "#" ? v.substring(1) : v;
-        this._url.fragment = "";
-        usm.basicURLParse(input, { url: this._url, stateOverride: "fragment" });
-      }
-      toJSON() {
-        return this.href;
-      }
-    };
-  }
-});
-
-// 
-var require_URL2 = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    var conversions = require_lib5();
-    var utils = require_utils5();
-    var Impl = require_URL_impl2();
-    var impl = utils.implSymbol;
-    function URL3(url) {
-      if (!this || this[impl] || !(this instanceof URL3)) {
-        throw new TypeError("Failed to construct 'URL': Please use the 'new' operator, this DOM object constructor cannot be called as a function.");
-      }
-      if (arguments.length < 1) {
-        throw new TypeError("Failed to construct 'URL': 1 argument required, but only " + arguments.length + " present.");
-      }
-      const args = [];
-      for (let i2 = 0; i2 < arguments.length && i2 < 2; ++i2) {
-        args[i2] = arguments[i2];
-      }
-      args[0] = conversions["USVString"](args[0]);
-      if (args[1] !== void 0) {
-        args[1] = conversions["USVString"](args[1]);
-      }
-      module.exports.setup(this, args);
-    }
-    URL3.prototype.toJSON = function toJSON() {
-      if (!this || !module.exports.is(this)) {
-        throw new TypeError("Illegal invocation");
-      }
-      const args = [];
-      for (let i2 = 0; i2 < arguments.length && i2 < 0; ++i2) {
-        args[i2] = arguments[i2];
-      }
-      return this[impl].toJSON.apply(this[impl], args);
-    };
-    Object.defineProperty(URL3.prototype, "href", {
-      get() {
-        return this[impl].href;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].href = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    URL3.prototype.toString = function() {
-      if (!this || !module.exports.is(this)) {
-        throw new TypeError("Illegal invocation");
-      }
-      return this.href;
-    };
-    Object.defineProperty(URL3.prototype, "origin", {
-      get() {
-        return this[impl].origin;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "protocol", {
-      get() {
-        return this[impl].protocol;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].protocol = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "username", {
-      get() {
-        return this[impl].username;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].username = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "password", {
-      get() {
-        return this[impl].password;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].password = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "host", {
-      get() {
-        return this[impl].host;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].host = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "hostname", {
-      get() {
-        return this[impl].hostname;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].hostname = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "port", {
-      get() {
-        return this[impl].port;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].port = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "pathname", {
-      get() {
-        return this[impl].pathname;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].pathname = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "search", {
-      get() {
-        return this[impl].search;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].search = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "hash", {
-      get() {
-        return this[impl].hash;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].hash = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    module.exports = {
-      is(obj) {
-        return !!obj && obj[impl] instanceof Impl.implementation;
-      },
-      create(constructorArgs, privateData) {
-        let obj = Object.create(URL3.prototype);
-        this.setup(obj, constructorArgs, privateData);
-        return obj;
-      },
-      setup(obj, constructorArgs, privateData) {
-        if (!privateData)
-          privateData = {};
-        privateData.wrapper = obj;
-        obj[impl] = new Impl.implementation(constructorArgs, privateData);
-        obj[impl][utils.wrapperSymbol] = obj;
-      },
-      interface: URL3,
-      expose: {
-        Window: { URL: URL3 },
-        Worker: { URL: URL3 }
-      }
-    };
-  }
-});
-
-// 
-var require_public_api2 = __commonJS({
-  ""(exports) {
-    "use strict";
-    exports.URL = require_URL2().interface;
-    exports.serializeURL = require_url_state_machine2().serializeURL;
-    exports.serializeURLOrigin = require_url_state_machine2().serializeURLOrigin;
-    exports.basicURLParse = require_url_state_machine2().basicURLParse;
-    exports.setTheUsername = require_url_state_machine2().setTheUsername;
-    exports.setThePassword = require_url_state_machine2().setThePassword;
-    exports.serializeHost = require_url_state_machine2().serializeHost;
-    exports.serializeInteger = require_url_state_machine2().serializeInteger;
-    exports.parseURL = require_url_state_machine2().parseURL;
-  }
-});
-
-// 
-var require_lib6 = __commonJS({
   ""(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -21267,7 +19795,7 @@ var require_lib6 = __commonJS({
     var Stream3 = _interopDefault(__require("stream"));
     var http3 = _interopDefault(__require("http"));
     var Url = _interopDefault(__require("url"));
-    var whatwgUrl = _interopDefault(require_public_api2());
+    var whatwgUrl = _interopDefault(require_public_api());
     var https2 = _interopDefault(__require("https"));
     var zlib2 = _interopDefault(__require("zlib"));
     var Readable = Stream3.Readable;
@@ -22140,6 +20668,11 @@ var require_lib6 = __commonJS({
       const dest = new URL$1(destination).hostname;
       return orig === dest || orig[orig.length - dest.length - 1] === "." && orig.endsWith(dest);
     };
+    var isSameProtocol2 = function isSameProtocol3(destination, original) {
+      const orig = new URL$1(original).protocol;
+      const dest = new URL$1(destination).protocol;
+      return orig === dest;
+    };
     function fetch2(url, opts) {
       if (!fetch2.Promise) {
         throw new Error("native promise missing, set fetch.Promise to your favorite alternative");
@@ -22155,7 +20688,7 @@ var require_lib6 = __commonJS({
           let error2 = new AbortError2("The user aborted a request.");
           reject(error2);
           if (request.body && request.body instanceof Stream3.Readable) {
-            request.body.destroy(error2);
+            destroyStream(request.body, error2);
           }
           if (!response || !response.body)
             return;
@@ -22190,8 +20723,31 @@ var require_lib6 = __commonJS({
         }
         req.on("error", function(err) {
           reject(new FetchError2(`request to ${request.url} failed, reason: ${err.message}`, "system", err));
+          if (response && response.body) {
+            destroyStream(response.body, err);
+          }
           finalize();
         });
+        fixResponseChunkedTransferBadEnding2(req, function(err) {
+          if (signal && signal.aborted) {
+            return;
+          }
+          if (response && response.body) {
+            destroyStream(response.body, err);
+          }
+        });
+        if (parseInt(process.version.substring(1)) < 14) {
+          req.on("socket", function(s2) {
+            s2.addListener("close", function(hadError) {
+              const hasDataListener = s2.listenerCount("data") > 0;
+              if (response && hasDataListener && !hadError && !(signal && signal.aborted)) {
+                const err = new Error("Premature close");
+                err.code = "ERR_STREAM_PREMATURE_CLOSE";
+                response.body.emit("error", err);
+              }
+            });
+          });
+        }
         req.on("response", function(res) {
           clearTimeout(reqTimeout);
           const headers = createHeadersLenient(res.headers);
@@ -22242,7 +20798,7 @@ var require_lib6 = __commonJS({
                   timeout: request.timeout,
                   size: request.size
                 };
-                if (!isDomainOrSubdomain2(request.url, locationURL)) {
+                if (!isDomainOrSubdomain2(request.url, locationURL) || !isSameProtocol2(request.url, locationURL)) {
                   for (const name of ["authorization", "www-authenticate", "cookie", "cookie2"]) {
                     requestOpts.headers.delete(name);
                   }
@@ -22303,6 +20859,12 @@ var require_lib6 = __commonJS({
               response = new Response2(body, response_options);
               resolve(response);
             });
+            raw.on("end", function() {
+              if (!response) {
+                response = new Response2(body, response_options);
+                resolve(response);
+              }
+            });
             return;
           }
           if (codings == "br" && typeof zlib2.createBrotliDecompress === "function") {
@@ -22316,6 +20878,33 @@ var require_lib6 = __commonJS({
         });
         writeToStream2(req, request);
       });
+    }
+    function fixResponseChunkedTransferBadEnding2(request, errorCallback) {
+      let socket;
+      request.on("socket", function(s2) {
+        socket = s2;
+      });
+      request.on("response", function(response) {
+        const headers = response.headers;
+        if (headers["transfer-encoding"] === "chunked" && !headers["content-length"]) {
+          response.once("close", function(hadError) {
+            const hasDataListener = socket.listenerCount("data") > 0;
+            if (hasDataListener && !hadError) {
+              const err = new Error("Premature close");
+              err.code = "ERR_STREAM_PREMATURE_CLOSE";
+              errorCallback(err);
+            }
+          });
+        }
+      });
+    }
+    function destroyStream(stream, err) {
+      if (stream.destroy) {
+        stream.destroy(err);
+      } else {
+        stream.emit("error", err);
+        stream.end();
+      }
     }
     fetch2.isRedirect = function(code) {
       return code === 301 || code === 302 || code === 303 || code === 307 || code === 308;
@@ -22387,39 +20976,67 @@ var require_dist_node12 = __commonJS({
 
 // 
 var require_dist_node13 = __commonJS({
-  ""(exports) {
+  ""(exports, module) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    function _interopDefault(ex) {
-      return ex && typeof ex === "object" && "default" in ex ? ex["default"] : ex;
-    }
-    var endpoint = require_dist_node11();
-    var universalUserAgent = require_dist_node();
-    var isPlainObject2 = require_is_plain_object();
-    var nodeFetch = _interopDefault(require_lib6());
-    var requestError = require_dist_node12();
-    var VERSION = "6.2.1";
+    var __create2 = Object.create;
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __getProtoOf2 = Object.getPrototypeOf;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export2 = (target, all) => {
+      for (var name in all)
+        __defProp2(target, name, { get: all[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from3, except, desc) => {
+      if (from3 && typeof from3 === "object" || typeof from3 === "function") {
+        for (let key of __getOwnPropNames2(from3))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from3[key], enumerable: !(desc = __getOwnPropDesc2(from3, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toESM2 = (mod, isNodeMode, target) => (target = mod != null ? __create2(__getProtoOf2(mod)) : {}, __copyProps2(
+      isNodeMode || !mod || !mod.__esModule ? __defProp2(target, "default", { value: mod, enumerable: true }) : target,
+      mod
+    ));
+    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export2(dist_src_exports, {
+      request: () => request
+    });
+    module.exports = __toCommonJS(dist_src_exports);
+    var import_endpoint = require_dist_node11();
+    var import_universal_user_agent = require_dist_node();
+    var VERSION = "6.2.5";
+    var import_is_plain_object = require_is_plain_object();
+    var import_node_fetch2 = __toESM2(require_lib5());
+    var import_request_error = require_dist_node12();
     function getBufferResponse(response) {
       return response.arrayBuffer();
     }
     function fetchWrapper(requestOptions) {
       const log = requestOptions.request && requestOptions.request.log ? requestOptions.request.log : console;
-      if (isPlainObject2.isPlainObject(requestOptions.body) || Array.isArray(requestOptions.body)) {
+      if ((0, import_is_plain_object.isPlainObject)(requestOptions.body) || Array.isArray(requestOptions.body)) {
         requestOptions.body = JSON.stringify(requestOptions.body);
       }
       let headers = {};
       let status;
       let url;
-      const fetch2 = requestOptions.request && requestOptions.request.fetch || globalThis.fetch || nodeFetch;
-      return fetch2(requestOptions.url, Object.assign(
-        {
-          method: requestOptions.method,
-          body: requestOptions.body,
-          headers: requestOptions.headers,
-          redirect: requestOptions.redirect
-        },
-        requestOptions.request
-      )).then(async (response) => {
+      const fetch2 = requestOptions.request && requestOptions.request.fetch || globalThis.fetch || import_node_fetch2.default;
+      return fetch2(
+        requestOptions.url,
+        Object.assign(
+          {
+            method: requestOptions.method,
+            body: requestOptions.body,
+            headers: requestOptions.headers,
+            redirect: requestOptions.redirect,
+            ...requestOptions.body && { duplex: "half" }
+          },
+          requestOptions.request
+        )
+      ).then(async (response) => {
         url = response.url;
         status = response.status;
         for (const keyAndValue of response.headers) {
@@ -22428,7 +21045,9 @@ var require_dist_node13 = __commonJS({
         if ("deprecation" in headers) {
           const matches = headers.link && headers.link.match(/<([^>]+)>; rel="deprecation"/);
           const deprecationLink = matches && matches.pop();
-          log.warn(`[@octokit/request] "${requestOptions.method} ${requestOptions.url}" is deprecated. It is scheduled to be removed on ${headers.sunset}${deprecationLink ? `. See ${deprecationLink}` : ""}`);
+          log.warn(
+            `[@octokit/request] "${requestOptions.method} ${requestOptions.url}" is deprecated. It is scheduled to be removed on ${headers.sunset}${deprecationLink ? `. See ${deprecationLink}` : ""}`
+          );
         }
         if (status === 204 || status === 205) {
           return;
@@ -22437,7 +21056,7 @@ var require_dist_node13 = __commonJS({
           if (status < 400) {
             return;
           }
-          throw new requestError.RequestError(response.statusText, status, {
+          throw new import_request_error.RequestError(response.statusText, status, {
             response: {
               url,
               status,
@@ -22448,7 +21067,7 @@ var require_dist_node13 = __commonJS({
           });
         }
         if (status === 304) {
-          throw new requestError.RequestError("Not modified", status, {
+          throw new import_request_error.RequestError("Not modified", status, {
             response: {
               url,
               status,
@@ -22460,7 +21079,7 @@ var require_dist_node13 = __commonJS({
         }
         if (status >= 400) {
           const data = await getResponseData(response);
-          const error2 = new requestError.RequestError(toErrorMessage(data), status, {
+          const error2 = new import_request_error.RequestError(toErrorMessage(data), status, {
             response: {
               url,
               status,
@@ -22480,11 +21099,11 @@ var require_dist_node13 = __commonJS({
           data
         };
       }).catch((error2) => {
-        if (error2 instanceof requestError.RequestError)
+        if (error2 instanceof import_request_error.RequestError)
           throw error2;
         else if (error2.name === "AbortError")
           throw error2;
-        throw new requestError.RequestError(error2.message, 500, {
+        throw new import_request_error.RequestError(error2.message, 500, {
           request: requestOptions
         });
       });
@@ -22518,7 +21137,9 @@ var require_dist_node13 = __commonJS({
           return fetchWrapper(endpoint2.parse(endpointOptions));
         }
         const request2 = (route2, parameters2) => {
-          return fetchWrapper(endpoint2.parse(endpoint2.merge(route2, parameters2)));
+          return fetchWrapper(
+            endpoint2.parse(endpoint2.merge(route2, parameters2))
+          );
         };
         Object.assign(request2, {
           endpoint: endpoint2,
@@ -22531,12 +21152,11 @@ var require_dist_node13 = __commonJS({
         defaults: withDefaults.bind(null, endpoint2)
       });
     }
-    var request = withDefaults(endpoint.endpoint, {
+    var request = withDefaults(import_endpoint.endpoint, {
       headers: {
-        "user-agent": `octokit-request.js/${VERSION} ${universalUserAgent.getUserAgent()}`
+        "user-agent": `octokit-request.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`
       }
     });
-    exports.request = request;
   }
 });
 
@@ -22676,107 +21296,30 @@ var require_dist_node14 = __commonJS({
 
 // 
 var require_dist_node15 = __commonJS({
-  ""(exports) {
+  ""(exports, module) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var request = require_dist_node13();
-    var universalUserAgent = require_dist_node();
-    var VERSION = "5.0.1";
-    function _buildMessageForResponseErrors(data) {
-      return `Request failed due to following response errors:
-` + data.errors.map((e2) => ` - ${e2.message}`).join("\n");
-    }
-    var GraphqlResponseError2 = class extends Error {
-      constructor(request2, headers, response) {
-        super(_buildMessageForResponseErrors(response));
-        this.request = request2;
-        this.headers = headers;
-        this.response = response;
-        this.name = "GraphqlResponseError";
-        this.errors = response.errors;
-        this.data = response.data;
-        if (Error.captureStackTrace) {
-          Error.captureStackTrace(this, this.constructor);
-        }
-      }
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export2 = (target, all) => {
+      for (var name in all)
+        __defProp2(target, name, { get: all[name], enumerable: true });
     };
-    var NON_VARIABLE_OPTIONS = ["method", "baseUrl", "url", "headers", "request", "query", "mediaType"];
-    var FORBIDDEN_VARIABLE_OPTIONS = ["query", "method", "url"];
-    var GHES_V3_SUFFIX_REGEX = /\/api\/v3\/?$/;
-    function graphql2(request2, query2, options) {
-      if (options) {
-        if (typeof query2 === "string" && "query" in options) {
-          return Promise.reject(new Error(`[@octokit/graphql] "query" cannot be used as variable name`));
-        }
-        for (const key in options) {
-          if (!FORBIDDEN_VARIABLE_OPTIONS.includes(key))
-            continue;
-          return Promise.reject(new Error(`[@octokit/graphql] "${key}" cannot be used as variable name`));
-        }
+    var __copyProps2 = (to, from3, except, desc) => {
+      if (from3 && typeof from3 === "object" || typeof from3 === "function") {
+        for (let key of __getOwnPropNames2(from3))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from3[key], enumerable: !(desc = __getOwnPropDesc2(from3, key)) || desc.enumerable });
       }
-      const parsedOptions = typeof query2 === "string" ? Object.assign({
-        query: query2
-      }, options) : query2;
-      const requestOptions = Object.keys(parsedOptions).reduce((result, key) => {
-        if (NON_VARIABLE_OPTIONS.includes(key)) {
-          result[key] = parsedOptions[key];
-          return result;
-        }
-        if (!result.variables) {
-          result.variables = {};
-        }
-        result.variables[key] = parsedOptions[key];
-        return result;
-      }, {});
-      const baseUrl = parsedOptions.baseUrl || request2.endpoint.DEFAULTS.baseUrl;
-      if (GHES_V3_SUFFIX_REGEX.test(baseUrl)) {
-        requestOptions.url = baseUrl.replace(GHES_V3_SUFFIX_REGEX, "/api/graphql");
-      }
-      return request2(requestOptions).then((response) => {
-        if (response.data.errors) {
-          const headers = {};
-          for (const key of Object.keys(response.headers)) {
-            headers[key] = response.headers[key];
-          }
-          throw new GraphqlResponseError2(requestOptions, headers, response.data);
-        }
-        return response.data.data;
-      });
-    }
-    function withDefaults(request$1, newDefaults) {
-      const newRequest = request$1.defaults(newDefaults);
-      const newApi = (query2, options) => {
-        return graphql2(newRequest, query2, options);
-      };
-      return Object.assign(newApi, {
-        defaults: withDefaults.bind(null, newRequest),
-        endpoint: request.request.endpoint
-      });
-    }
-    var graphql$1 = withDefaults(request.request, {
-      headers: {
-        "user-agent": `octokit-graphql.js/${VERSION} ${universalUserAgent.getUserAgent()}`
-      },
-      method: "POST",
-      url: "/graphql"
+      return to;
+    };
+    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export2(dist_src_exports, {
+      createTokenAuth: () => createTokenAuth
     });
-    function withCustomRequest(customRequest) {
-      return withDefaults(customRequest, {
-        method: "POST",
-        url: "/graphql"
-      });
-    }
-    exports.GraphqlResponseError = GraphqlResponseError2;
-    exports.graphql = graphql$1;
-    exports.withCustomRequest = withCustomRequest;
-  }
-});
-
-// 
-var require_dist_node16 = __commonJS({
-  ""(exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
+    module.exports = __toCommonJS(dist_src_exports);
     var REGEX_IS_INSTALLATION_LEGACY = /^v1\./;
     var REGEX_IS_INSTALLATION = /^ghs_/;
     var REGEX_IS_USER_TO_SERVER = /^ghu_/;
@@ -22798,7 +21341,10 @@ var require_dist_node16 = __commonJS({
       return `token ${token}`;
     }
     async function hook(token, request, route, parameters) {
-      const endpoint = request.endpoint.merge(route, parameters);
+      const endpoint = request.endpoint.merge(
+        route,
+        parameters
+      );
       endpoint.headers.authorization = withAuthorizationPrefix(token);
       return request(endpoint);
     }
@@ -22807,19 +21353,20 @@ var require_dist_node16 = __commonJS({
         throw new Error("[@octokit/auth-token] No token passed to createTokenAuth");
       }
       if (typeof token !== "string") {
-        throw new Error("[@octokit/auth-token] Token passed to createTokenAuth is not a string");
+        throw new Error(
+          "[@octokit/auth-token] Token passed to createTokenAuth is not a string"
+        );
       }
       token = token.replace(/^(token|bearer) +/i, "");
       return Object.assign(auth.bind(null, token), {
         hook: hook.bind(null, token)
       });
     };
-    exports.createTokenAuth = createTokenAuth;
   }
 });
 
 // 
-var require_dist_node17 = __commonJS({
+var require_dist_node16 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -22847,8 +21394,8 @@ var require_dist_node17 = __commonJS({
     var import_universal_user_agent = require_dist_node();
     var import_before_after_hook = require_before_after_hook();
     var import_request2 = require_dist_node13();
-    var import_graphql3 = require_dist_node15();
-    var import_auth_token = require_dist_node16();
+    var import_graphql3 = require_dist_node14();
+    var import_auth_token = require_dist_node15();
     var VERSION = "4.2.1";
     var Octokit4 = class {
       static defaults(defaults2) {
@@ -22960,7 +21507,7 @@ var require_dist_node17 = __commonJS({
 });
 
 // 
-var require_dist_node18 = __commonJS({
+var require_dist_node17 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -22986,7 +21533,7 @@ var require_dist_node18 = __commonJS({
 });
 
 // 
-var require_dist_node19 = __commonJS({
+var require_dist_node18 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -23353,7 +21900,7 @@ var require_dist_node19 = __commonJS({
 });
 
 // 
-var require_dist_node20 = __commonJS({
+var require_dist_node19 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -24480,7 +23027,7 @@ var require_dist_node20 = __commonJS({
 });
 
 // 
-var require_dist_node21 = __commonJS({
+var require_dist_node20 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -24505,10 +23052,10 @@ var require_dist_node21 = __commonJS({
       Octokit: () => Octokit4
     });
     module.exports = __toCommonJS(dist_src_exports);
-    var import_core2 = require_dist_node17();
-    var import_plugin_request_log = require_dist_node18();
-    var import_plugin_paginate_rest = require_dist_node19();
-    var import_plugin_rest_endpoint_methods = require_dist_node20();
+    var import_core2 = require_dist_node16();
+    var import_plugin_request_log = require_dist_node17();
+    var import_plugin_paginate_rest = require_dist_node18();
+    var import_plugin_rest_endpoint_methods = require_dist_node19();
     var VERSION = "19.0.11";
     var Octokit4 = import_core2.Octokit.plugin(
       import_plugin_request_log.requestLog,
@@ -44653,6 +43200,21 @@ var require_spinners = __commonJS({
           "\u25E5"
         ]
       },
+      binary: {
+        interval: 80,
+        frames: [
+          "010010",
+          "001100",
+          "100101",
+          "111010",
+          "111101",
+          "010111",
+          "101011",
+          "111000",
+          "110011",
+          "110101"
+        ]
+      },
       arc: {
         interval: 100,
         frames: [
@@ -45331,6 +43893,144 @@ var require_spinners = __commonJS({
           "\u25B0\u25B0\u25B0\u25B0\u25B0\u25B0\u25B1",
           "\u25B0\u25B0\u25B0\u25B0\u25B0\u25B0\u25B0",
           "\u25B0\u25B1\u25B1\u25B1\u25B1\u25B1\u25B1"
+        ]
+      },
+      dwarfFortress: {
+        interval: 80,
+        frames: [
+          " \u2588\u2588\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "\u263A\u2588\u2588\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "\u263A\u2588\u2588\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "\u263A\u2593\u2588\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "\u263A\u2593\u2588\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "\u263A\u2592\u2588\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "\u263A\u2592\u2588\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "\u263A\u2591\u2588\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "\u263A\u2591\u2588\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "\u263A \u2588\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          " \u263A\u2588\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          " \u263A\u2588\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          " \u263A\u2593\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          " \u263A\u2593\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          " \u263A\u2592\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          " \u263A\u2592\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          " \u263A\u2591\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          " \u263A\u2591\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          " \u263A \u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "  \u263A\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "  \u263A\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "  \u263A\u2593\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "  \u263A\u2593\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "  \u263A\u2592\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "  \u263A\u2592\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "  \u263A\u2591\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "  \u263A\u2591\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "  \u263A \u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "   \u263A\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "   \u263A\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "   \u263A\u2593\u2588\u2588\xA3\xA3\xA3  ",
+          "   \u263A\u2593\u2588\u2588\xA3\xA3\xA3  ",
+          "   \u263A\u2592\u2588\u2588\xA3\xA3\xA3  ",
+          "   \u263A\u2592\u2588\u2588\xA3\xA3\xA3  ",
+          "   \u263A\u2591\u2588\u2588\xA3\xA3\xA3  ",
+          "   \u263A\u2591\u2588\u2588\xA3\xA3\xA3  ",
+          "   \u263A \u2588\u2588\xA3\xA3\xA3  ",
+          "    \u263A\u2588\u2588\xA3\xA3\xA3  ",
+          "    \u263A\u2588\u2588\xA3\xA3\xA3  ",
+          "    \u263A\u2593\u2588\xA3\xA3\xA3  ",
+          "    \u263A\u2593\u2588\xA3\xA3\xA3  ",
+          "    \u263A\u2592\u2588\xA3\xA3\xA3  ",
+          "    \u263A\u2592\u2588\xA3\xA3\xA3  ",
+          "    \u263A\u2591\u2588\xA3\xA3\xA3  ",
+          "    \u263A\u2591\u2588\xA3\xA3\xA3  ",
+          "    \u263A \u2588\xA3\xA3\xA3  ",
+          "     \u263A\u2588\xA3\xA3\xA3  ",
+          "     \u263A\u2588\xA3\xA3\xA3  ",
+          "     \u263A\u2593\xA3\xA3\xA3  ",
+          "     \u263A\u2593\xA3\xA3\xA3  ",
+          "     \u263A\u2592\xA3\xA3\xA3  ",
+          "     \u263A\u2592\xA3\xA3\xA3  ",
+          "     \u263A\u2591\xA3\xA3\xA3  ",
+          "     \u263A\u2591\xA3\xA3\xA3  ",
+          "     \u263A \xA3\xA3\xA3  ",
+          "      \u263A\xA3\xA3\xA3  ",
+          "      \u263A\xA3\xA3\xA3  ",
+          "      \u263A\u2593\xA3\xA3  ",
+          "      \u263A\u2593\xA3\xA3  ",
+          "      \u263A\u2592\xA3\xA3  ",
+          "      \u263A\u2592\xA3\xA3  ",
+          "      \u263A\u2591\xA3\xA3  ",
+          "      \u263A\u2591\xA3\xA3  ",
+          "      \u263A \xA3\xA3  ",
+          "       \u263A\xA3\xA3  ",
+          "       \u263A\xA3\xA3  ",
+          "       \u263A\u2593\xA3  ",
+          "       \u263A\u2593\xA3  ",
+          "       \u263A\u2592\xA3  ",
+          "       \u263A\u2592\xA3  ",
+          "       \u263A\u2591\xA3  ",
+          "       \u263A\u2591\xA3  ",
+          "       \u263A \xA3  ",
+          "        \u263A\xA3  ",
+          "        \u263A\xA3  ",
+          "        \u263A\u2593  ",
+          "        \u263A\u2593  ",
+          "        \u263A\u2592  ",
+          "        \u263A\u2592  ",
+          "        \u263A\u2591  ",
+          "        \u263A\u2591  ",
+          "        \u263A   ",
+          "        \u263A  &",
+          "        \u263A \u263C&",
+          "       \u263A \u263C &",
+          "       \u263A\u263C  &",
+          "      \u263A\u263C  & ",
+          "      \u203C   & ",
+          "     \u263A   &  ",
+          "    \u203C    &  ",
+          "   \u263A    &   ",
+          "  \u203C     &   ",
+          " \u263A     &    ",
+          "\u203C      &    ",
+          "      &     ",
+          "      &     ",
+          "     &   \u2591  ",
+          "     &   \u2592  ",
+          "    &    \u2593  ",
+          "    &    \xA3  ",
+          "   &    \u2591\xA3  ",
+          "   &    \u2592\xA3  ",
+          "  &     \u2593\xA3  ",
+          "  &     \xA3\xA3  ",
+          " &     \u2591\xA3\xA3  ",
+          " &     \u2592\xA3\xA3  ",
+          "&      \u2593\xA3\xA3  ",
+          "&      \xA3\xA3\xA3  ",
+          "      \u2591\xA3\xA3\xA3  ",
+          "      \u2592\xA3\xA3\xA3  ",
+          "      \u2593\xA3\xA3\xA3  ",
+          "      \u2588\xA3\xA3\xA3  ",
+          "     \u2591\u2588\xA3\xA3\xA3  ",
+          "     \u2592\u2588\xA3\xA3\xA3  ",
+          "     \u2593\u2588\xA3\xA3\xA3  ",
+          "     \u2588\u2588\xA3\xA3\xA3  ",
+          "    \u2591\u2588\u2588\xA3\xA3\xA3  ",
+          "    \u2592\u2588\u2588\xA3\xA3\xA3  ",
+          "    \u2593\u2588\u2588\xA3\xA3\xA3  ",
+          "    \u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "   \u2591\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "   \u2592\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "   \u2593\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "   \u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "  \u2591\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "  \u2592\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "  \u2593\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          "  \u2588\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          " \u2591\u2588\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          " \u2592\u2588\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          " \u2593\u2588\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          " \u2588\u2588\u2588\u2588\u2588\u2588\xA3\xA3\xA3  ",
+          " \u2588\u2588\u2588\u2588\u2588\u2588\xA3\xA3\xA3  "
         ]
       }
     };
@@ -55522,7 +54222,7 @@ var require_extend_node = __commonJS({
 });
 
 // 
-var require_lib7 = __commonJS({
+var require_lib6 = __commonJS({
   ""(exports, module) {
     "use strict";
     var Buffer4 = require_safer().Buffer;
@@ -56107,7 +54807,7 @@ var require_main = __commonJS({
     var chardet_1 = require_chardet();
     var child_process_1 = __require("child_process");
     var fs_1 = __require("fs");
-    var iconv_lite_1 = require_lib7();
+    var iconv_lite_1 = require_lib6();
     var tmp_1 = require_tmp();
     var CreateFileError_1 = require_CreateFileError();
     exports.CreateFileError = CreateFileError_1.CreateFileError;
@@ -56379,7 +55079,7 @@ var require_through = __commonJS({
 });
 
 // 
-var require_lib8 = __commonJS({
+var require_lib7 = __commonJS({
   ""(exports, module) {
     var Stream3 = __require("stream");
     var MuteStream2 = class extends Stream3 {
@@ -56796,7 +55496,7 @@ var require_btoa_node = __commonJS({
 });
 
 // 
-var require_dist_node22 = __commonJS({
+var require_dist_node21 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -56846,7 +55546,7 @@ var require_dist_node22 = __commonJS({
 });
 
 // 
-var require_dist_node23 = __commonJS({
+var require_dist_node22 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -56900,59 +55600,104 @@ var require_dist_node23 = __commonJS({
 });
 
 // 
-var require_dist_node24 = __commonJS({
-  ""(exports) {
+var require_dist_node23 = __commonJS({
+  ""(exports, module) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    function _interopDefault(ex) {
-      return ex && typeof ex === "object" && "default" in ex ? ex["default"] : ex;
-    }
-    var oauthAuthorizationUrl = require_dist_node22();
-    var request = require_dist_node13();
-    var requestError = require_dist_node23();
-    var btoa = _interopDefault(require_btoa_node());
-    var VERSION = "2.0.2";
-    function requestToOAuthBaseUrl(request2) {
-      const endpointDefaults = request2.endpoint.DEFAULTS;
+    var __create2 = Object.create;
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __getProtoOf2 = Object.getPrototypeOf;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export2 = (target, all) => {
+      for (var name in all)
+        __defProp2(target, name, { get: all[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from3, except, desc) => {
+      if (from3 && typeof from3 === "object" || typeof from3 === "function") {
+        for (let key of __getOwnPropNames2(from3))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from3[key], enumerable: !(desc = __getOwnPropDesc2(from3, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toESM2 = (mod, isNodeMode, target) => (target = mod != null ? __create2(__getProtoOf2(mod)) : {}, __copyProps2(
+      isNodeMode || !mod || !mod.__esModule ? __defProp2(target, "default", { value: mod, enumerable: true }) : target,
+      mod
+    ));
+    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export2(dist_src_exports, {
+      VERSION: () => VERSION,
+      checkToken: () => checkToken,
+      createDeviceCode: () => createDeviceCode,
+      deleteAuthorization: () => deleteAuthorization,
+      deleteToken: () => deleteToken,
+      exchangeDeviceCode: () => exchangeDeviceCode,
+      exchangeWebFlowCode: () => exchangeWebFlowCode,
+      getWebFlowAuthorizationUrl: () => getWebFlowAuthorizationUrl,
+      refreshToken: () => refreshToken,
+      resetToken: () => resetToken,
+      scopeToken: () => scopeToken
+    });
+    module.exports = __toCommonJS(dist_src_exports);
+    var VERSION = "2.0.6";
+    var import_oauth_authorization_url = require_dist_node21();
+    var import_request2 = require_dist_node13();
+    var import_request_error = require_dist_node22();
+    function requestToOAuthBaseUrl(request) {
+      const endpointDefaults = request.endpoint.DEFAULTS;
       return /^https:\/\/(api\.)?github\.com$/.test(endpointDefaults.baseUrl) ? "https://github.com" : endpointDefaults.baseUrl.replace("/api/v3", "");
     }
-    async function oauthRequest(request2, route, parameters) {
+    async function oauthRequest(request, route, parameters) {
       const withOAuthParameters = {
-        baseUrl: requestToOAuthBaseUrl(request2),
+        baseUrl: requestToOAuthBaseUrl(request),
         headers: {
           accept: "application/json"
         },
         ...parameters
       };
-      const response = await request2(route, withOAuthParameters);
+      const response = await request(route, withOAuthParameters);
       if ("error" in response.data) {
-        const error2 = new requestError.RequestError(`${response.data.error_description} (${response.data.error}, ${response.data.error_uri})`, 400, {
-          request: request2.endpoint.merge(route, withOAuthParameters),
-          headers: response.headers
-        });
+        const error2 = new import_request_error.RequestError(
+          `${response.data.error_description} (${response.data.error}, ${response.data.error_uri})`,
+          400,
+          {
+            request: request.endpoint.merge(
+              route,
+              withOAuthParameters
+            ),
+            headers: response.headers
+          }
+        );
         error2.response = response;
         throw error2;
       }
       return response;
     }
     function getWebFlowAuthorizationUrl({
-      request: request$1 = request.request,
+      request = import_request2.request,
       ...options
     }) {
-      const baseUrl = requestToOAuthBaseUrl(request$1);
-      return oauthAuthorizationUrl.oauthAuthorizationUrl({
+      const baseUrl = requestToOAuthBaseUrl(request);
+      return (0, import_oauth_authorization_url.oauthAuthorizationUrl)({
         ...options,
         baseUrl
       });
     }
+    var import_request22 = require_dist_node13();
     async function exchangeWebFlowCode(options) {
-      const request$1 = options.request || request.request;
-      const response = await oauthRequest(request$1, "POST /login/oauth/access_token", {
-        client_id: options.clientId,
-        client_secret: options.clientSecret,
-        code: options.code,
-        redirect_uri: options.redirectUrl
-      });
+      const request = options.request || import_request22.request;
+      const response = await oauthRequest(
+        request,
+        "POST /login/oauth/access_token",
+        {
+          client_id: options.clientId,
+          client_secret: options.clientSecret,
+          code: options.code,
+          redirect_uri: options.redirectUrl
+        }
+      );
       const authentication = {
         clientType: options.clientType,
         clientId: options.clientId,
@@ -56963,35 +55708,44 @@ var require_dist_node24 = __commonJS({
       if (options.clientType === "github-app") {
         if ("refresh_token" in response.data) {
           const apiTimeInMs = new Date(response.headers.date).getTime();
-          authentication.refreshToken = response.data.refresh_token, authentication.expiresAt = toTimestamp(apiTimeInMs, response.data.expires_in), authentication.refreshTokenExpiresAt = toTimestamp(apiTimeInMs, response.data.refresh_token_expires_in);
+          authentication.refreshToken = response.data.refresh_token, authentication.expiresAt = toTimestamp(
+            apiTimeInMs,
+            response.data.expires_in
+          ), authentication.refreshTokenExpiresAt = toTimestamp(
+            apiTimeInMs,
+            response.data.refresh_token_expires_in
+          );
         }
         delete authentication.scopes;
       }
-      return {
-        ...response,
-        authentication
-      };
+      return { ...response, authentication };
     }
     function toTimestamp(apiTimeInMs, expirationInSeconds) {
       return new Date(apiTimeInMs + expirationInSeconds * 1e3).toISOString();
     }
+    var import_request3 = require_dist_node13();
     async function createDeviceCode(options) {
-      const request$1 = options.request || request.request;
+      const request = options.request || import_request3.request;
       const parameters = {
         client_id: options.clientId
       };
       if ("scopes" in options && Array.isArray(options.scopes)) {
         parameters.scope = options.scopes.join(" ");
       }
-      return oauthRequest(request$1, "POST /login/device/code", parameters);
+      return oauthRequest(request, "POST /login/device/code", parameters);
     }
+    var import_request4 = require_dist_node13();
     async function exchangeDeviceCode(options) {
-      const request$1 = options.request || request.request;
-      const response = await oauthRequest(request$1, "POST /login/oauth/access_token", {
-        client_id: options.clientId,
-        device_code: options.code,
-        grant_type: "urn:ietf:params:oauth:grant-type:device_code"
-      });
+      const request = options.request || import_request4.request;
+      const response = await oauthRequest(
+        request,
+        "POST /login/oauth/access_token",
+        {
+          client_id: options.clientId,
+          device_code: options.code,
+          grant_type: "urn:ietf:params:oauth:grant-type:device_code"
+        }
+      );
       const authentication = {
         clientType: options.clientType,
         clientId: options.clientId,
@@ -57004,23 +55758,30 @@ var require_dist_node24 = __commonJS({
       if (options.clientType === "github-app") {
         if ("refresh_token" in response.data) {
           const apiTimeInMs = new Date(response.headers.date).getTime();
-          authentication.refreshToken = response.data.refresh_token, authentication.expiresAt = toTimestamp$1(apiTimeInMs, response.data.expires_in), authentication.refreshTokenExpiresAt = toTimestamp$1(apiTimeInMs, response.data.refresh_token_expires_in);
+          authentication.refreshToken = response.data.refresh_token, authentication.expiresAt = toTimestamp2(
+            apiTimeInMs,
+            response.data.expires_in
+          ), authentication.refreshTokenExpiresAt = toTimestamp2(
+            apiTimeInMs,
+            response.data.refresh_token_expires_in
+          );
         }
         delete authentication.scopes;
       }
-      return {
-        ...response,
-        authentication
-      };
+      return { ...response, authentication };
     }
-    function toTimestamp$1(apiTimeInMs, expirationInSeconds) {
+    function toTimestamp2(apiTimeInMs, expirationInSeconds) {
       return new Date(apiTimeInMs + expirationInSeconds * 1e3).toISOString();
     }
+    var import_request5 = require_dist_node13();
+    var import_btoa_lite = __toESM2(require_btoa_node());
     async function checkToken(options) {
-      const request$1 = options.request || request.request;
-      const response = await request$1("POST /applications/{client_id}/token", {
+      const request = options.request || import_request5.request;
+      const response = await request("POST /applications/{client_id}/token", {
         headers: {
-          authorization: `basic ${btoa(`${options.clientId}:${options.clientSecret}`)}`
+          authorization: `basic ${(0, import_btoa_lite.default)(
+            `${options.clientId}:${options.clientSecret}`
+          )}`
         },
         client_id: options.clientId,
         access_token: options.token
@@ -57037,19 +55798,21 @@ var require_dist_node24 = __commonJS({
       if (options.clientType === "github-app") {
         delete authentication.scopes;
       }
-      return {
-        ...response,
-        authentication
-      };
+      return { ...response, authentication };
     }
+    var import_request6 = require_dist_node13();
     async function refreshToken(options) {
-      const request$1 = options.request || request.request;
-      const response = await oauthRequest(request$1, "POST /login/oauth/access_token", {
-        client_id: options.clientId,
-        client_secret: options.clientSecret,
-        grant_type: "refresh_token",
-        refresh_token: options.refreshToken
-      });
+      const request = options.request || import_request6.request;
+      const response = await oauthRequest(
+        request,
+        "POST /login/oauth/access_token",
+        {
+          client_id: options.clientId,
+          client_secret: options.clientSecret,
+          grant_type: "refresh_token",
+          refresh_token: options.refreshToken
+        }
+      );
       const apiTimeInMs = new Date(response.headers.date).getTime();
       const authentication = {
         clientType: "github-app",
@@ -57057,57 +55820,66 @@ var require_dist_node24 = __commonJS({
         clientSecret: options.clientSecret,
         token: response.data.access_token,
         refreshToken: response.data.refresh_token,
-        expiresAt: toTimestamp$2(apiTimeInMs, response.data.expires_in),
-        refreshTokenExpiresAt: toTimestamp$2(apiTimeInMs, response.data.refresh_token_expires_in)
+        expiresAt: toTimestamp3(apiTimeInMs, response.data.expires_in),
+        refreshTokenExpiresAt: toTimestamp3(
+          apiTimeInMs,
+          response.data.refresh_token_expires_in
+        )
       };
-      return {
-        ...response,
-        authentication
-      };
+      return { ...response, authentication };
     }
-    function toTimestamp$2(apiTimeInMs, expirationInSeconds) {
+    function toTimestamp3(apiTimeInMs, expirationInSeconds) {
       return new Date(apiTimeInMs + expirationInSeconds * 1e3).toISOString();
     }
+    var import_request7 = require_dist_node13();
+    var import_btoa_lite2 = __toESM2(require_btoa_node());
     async function scopeToken(options) {
       const {
-        request: request$1,
+        request: optionsRequest,
         clientType,
         clientId,
         clientSecret,
         token,
         ...requestOptions
       } = options;
-      const response = await (request$1 || request.request)("POST /applications/{client_id}/token/scoped", {
-        headers: {
-          authorization: `basic ${btoa(`${clientId}:${clientSecret}`)}`
+      const request = optionsRequest || import_request7.request;
+      const response = await request(
+        "POST /applications/{client_id}/token/scoped",
+        {
+          headers: {
+            authorization: `basic ${(0, import_btoa_lite2.default)(`${clientId}:${clientSecret}`)}`
+          },
+          client_id: clientId,
+          access_token: token,
+          ...requestOptions
+        }
+      );
+      const authentication = Object.assign(
+        {
+          clientType,
+          clientId,
+          clientSecret,
+          token: response.data.token
         },
-        client_id: clientId,
-        access_token: token,
-        ...requestOptions
-      });
-      const authentication = Object.assign({
-        clientType,
-        clientId,
-        clientSecret,
-        token: response.data.token
-      }, response.data.expires_at ? {
-        expiresAt: response.data.expires_at
-      } : {});
-      return {
-        ...response,
-        authentication
-      };
+        response.data.expires_at ? { expiresAt: response.data.expires_at } : {}
+      );
+      return { ...response, authentication };
     }
+    var import_request8 = require_dist_node13();
+    var import_btoa_lite3 = __toESM2(require_btoa_node());
     async function resetToken(options) {
-      const request$1 = options.request || request.request;
-      const auth = btoa(`${options.clientId}:${options.clientSecret}`);
-      const response = await request$1("PATCH /applications/{client_id}/token", {
-        headers: {
-          authorization: `basic ${auth}`
-        },
-        client_id: options.clientId,
-        access_token: options.token
-      });
+      const request = options.request || import_request8.request;
+      const auth = (0, import_btoa_lite3.default)(`${options.clientId}:${options.clientSecret}`);
+      const response = await request(
+        "PATCH /applications/{client_id}/token",
+        {
+          headers: {
+            authorization: `basic ${auth}`
+          },
+          client_id: options.clientId,
+          access_token: options.token
+        }
+      );
       const authentication = {
         clientType: options.clientType,
         clientId: options.clientId,
@@ -57120,69 +55892,89 @@ var require_dist_node24 = __commonJS({
       if (options.clientType === "github-app") {
         delete authentication.scopes;
       }
-      return {
-        ...response,
-        authentication
-      };
+      return { ...response, authentication };
     }
+    var import_request9 = require_dist_node13();
+    var import_btoa_lite4 = __toESM2(require_btoa_node());
     async function deleteToken(options) {
-      const request$1 = options.request || request.request;
-      const auth = btoa(`${options.clientId}:${options.clientSecret}`);
-      return request$1("DELETE /applications/{client_id}/token", {
-        headers: {
-          authorization: `basic ${auth}`
-        },
-        client_id: options.clientId,
-        access_token: options.token
-      });
+      const request = options.request || import_request9.request;
+      const auth = (0, import_btoa_lite4.default)(`${options.clientId}:${options.clientSecret}`);
+      return request(
+        "DELETE /applications/{client_id}/token",
+        {
+          headers: {
+            authorization: `basic ${auth}`
+          },
+          client_id: options.clientId,
+          access_token: options.token
+        }
+      );
     }
+    var import_request10 = require_dist_node13();
+    var import_btoa_lite5 = __toESM2(require_btoa_node());
     async function deleteAuthorization(options) {
-      const request$1 = options.request || request.request;
-      const auth = btoa(`${options.clientId}:${options.clientSecret}`);
-      return request$1("DELETE /applications/{client_id}/grant", {
-        headers: {
-          authorization: `basic ${auth}`
-        },
-        client_id: options.clientId,
-        access_token: options.token
-      });
+      const request = options.request || import_request10.request;
+      const auth = (0, import_btoa_lite5.default)(`${options.clientId}:${options.clientSecret}`);
+      return request(
+        "DELETE /applications/{client_id}/grant",
+        {
+          headers: {
+            authorization: `basic ${auth}`
+          },
+          client_id: options.clientId,
+          access_token: options.token
+        }
+      );
     }
-    exports.VERSION = VERSION;
-    exports.checkToken = checkToken;
-    exports.createDeviceCode = createDeviceCode;
-    exports.deleteAuthorization = deleteAuthorization;
-    exports.deleteToken = deleteToken;
-    exports.exchangeDeviceCode = exchangeDeviceCode;
-    exports.exchangeWebFlowCode = exchangeWebFlowCode;
-    exports.getWebFlowAuthorizationUrl = getWebFlowAuthorizationUrl;
-    exports.refreshToken = refreshToken;
-    exports.resetToken = resetToken;
-    exports.scopeToken = scopeToken;
   }
 });
 
 // 
-var require_dist_node25 = __commonJS({
-  ""(exports) {
+var require_dist_node24 = __commonJS({
+  ""(exports, module) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var universalUserAgent = require_dist_node();
-    var request = require_dist_node13();
-    var oauthMethods = require_dist_node24();
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export2 = (target, all) => {
+      for (var name in all)
+        __defProp2(target, name, { get: all[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from3, except, desc) => {
+      if (from3 && typeof from3 === "object" || typeof from3 === "function") {
+        for (let key of __getOwnPropNames2(from3))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from3[key], enumerable: !(desc = __getOwnPropDesc2(from3, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export2(dist_src_exports, {
+      createOAuthDeviceAuth: () => createOAuthDeviceAuth
+    });
+    module.exports = __toCommonJS(dist_src_exports);
+    var import_universal_user_agent = require_dist_node();
+    var import_request2 = require_dist_node13();
+    var import_oauth_methods = require_dist_node23();
     async function getOAuthAccessToken(state, options) {
       const cachedAuthentication = getCachedAuthentication(state, options.auth);
       if (cachedAuthentication)
         return cachedAuthentication;
-      const {
-        data: verification
-      } = await oauthMethods.createDeviceCode({
+      const { data: verification } = await (0, import_oauth_methods.createDeviceCode)({
         clientType: state.clientType,
         clientId: state.clientId,
         request: options.request || state.request,
         scopes: options.auth.scopes || state.scopes
       });
       await state.onVerification(verification);
-      const authentication = await waitForAccessToken(options.request || state.request, state.clientId, state.clientType, verification);
+      const authentication = await waitForAccessToken(
+        options.request || state.request,
+        state.clientId,
+        state.clientType,
+        verification
+      );
       state.authentication = authentication;
       return authentication;
     }
@@ -57195,26 +55987,26 @@ var require_dist_node25 = __commonJS({
         return state.authentication;
       }
       const authentication = state.authentication;
-      const newScope = ("scopes" in auth2 && auth2.scopes || state.scopes).join(" ");
+      const newScope = ("scopes" in auth2 && auth2.scopes || state.scopes).join(
+        " "
+      );
       const currentScope = authentication.scopes.join(" ");
       return newScope === currentScope ? authentication : false;
     }
     async function wait(seconds) {
       await new Promise((resolve) => setTimeout(resolve, seconds * 1e3));
     }
-    async function waitForAccessToken(request2, clientId, clientType, verification) {
+    async function waitForAccessToken(request, clientId, clientType, verification) {
       try {
         const options = {
           clientId,
-          request: request2,
+          request,
           code: verification.device_code
         };
-        const {
-          authentication
-        } = clientType === "oauth-app" ? await oauthMethods.exchangeDeviceCode({
+        const { authentication } = clientType === "oauth-app" ? await (0, import_oauth_methods.exchangeDeviceCode)({
           ...options,
           clientType: "oauth-app"
-        }) : await oauthMethods.exchangeDeviceCode({
+        }) : await (0, import_oauth_methods.exchangeDeviceCode)({
           ...options,
           clientType: "github-app"
         });
@@ -57229,11 +56021,11 @@ var require_dist_node25 = __commonJS({
         const errorType = error2.response.data.error;
         if (errorType === "authorization_pending") {
           await wait(verification.interval);
-          return waitForAccessToken(request2, clientId, clientType, verification);
+          return waitForAccessToken(request, clientId, clientType, verification);
         }
         if (errorType === "slow_down") {
           await wait(verification.interval + 5);
-          return waitForAccessToken(request2, clientId, clientType, verification);
+          return waitForAccessToken(request, clientId, clientType, verification);
         }
         throw error2;
       }
@@ -57243,79 +56035,101 @@ var require_dist_node25 = __commonJS({
         auth: authOptions
       });
     }
-    async function hook(state, request2, route, parameters) {
-      let endpoint = request2.endpoint.merge(route, parameters);
+    async function hook(state, request, route, parameters) {
+      let endpoint = request.endpoint.merge(
+        route,
+        parameters
+      );
       if (/\/login\/(oauth\/access_token|device\/code)$/.test(endpoint.url)) {
-        return request2(endpoint);
+        return request(endpoint);
       }
-      const {
-        token
-      } = await getOAuthAccessToken(state, {
-        request: request2,
-        auth: {
-          type: "oauth"
-        }
+      const { token } = await getOAuthAccessToken(state, {
+        request,
+        auth: { type: "oauth" }
       });
       endpoint.headers.authorization = `token ${token}`;
-      return request2(endpoint);
+      return request(endpoint);
     }
-    var VERSION = "4.0.1";
+    var VERSION = "4.0.5";
     function createOAuthDeviceAuth(options) {
-      const requestWithDefaults = options.request || request.request.defaults({
+      const requestWithDefaults = options.request || import_request2.request.defaults({
         headers: {
-          "user-agent": `octokit-auth-oauth-device.js/${VERSION} ${universalUserAgent.getUserAgent()}`
+          "user-agent": `octokit-auth-oauth-device.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`
         }
       });
-      const {
-        request: request$1 = requestWithDefaults,
-        ...otherOptions
-      } = options;
+      const { request = requestWithDefaults, ...otherOptions } = options;
       const state = options.clientType === "github-app" ? {
         ...otherOptions,
         clientType: "github-app",
-        request: request$1
+        request
       } : {
         ...otherOptions,
         clientType: "oauth-app",
-        request: request$1,
+        request,
         scopes: options.scopes || []
       };
       if (!options.clientId) {
-        throw new Error('[@octokit/auth-oauth-device] "clientId" option must be set (https://github.com/octokit/auth-oauth-device.js#usage)');
+        throw new Error(
+          '[@octokit/auth-oauth-device] "clientId" option must be set (https://github.com/octokit/auth-oauth-device.js#usage)'
+        );
       }
       if (!options.onVerification) {
-        throw new Error('[@octokit/auth-oauth-device] "onVerification" option must be a function (https://github.com/octokit/auth-oauth-device.js#usage)');
+        throw new Error(
+          '[@octokit/auth-oauth-device] "onVerification" option must be a function (https://github.com/octokit/auth-oauth-device.js#usage)'
+        );
       }
       return Object.assign(auth.bind(null, state), {
         hook: hook.bind(null, state)
       });
     }
-    exports.createOAuthDeviceAuth = createOAuthDeviceAuth;
   }
 });
 
 // 
-var require_dist_node26 = __commonJS({
-  ""(exports) {
+var require_dist_node25 = __commonJS({
+  ""(exports, module) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    function _interopDefault(ex) {
-      return ex && typeof ex === "object" && "default" in ex ? ex["default"] : ex;
-    }
-    var universalUserAgent = require_dist_node();
-    var request = require_dist_node13();
-    var authOauthDevice = require_dist_node25();
-    var oauthMethods = require_dist_node24();
-    var btoa = _interopDefault(require_btoa_node());
-    var VERSION = "2.0.3";
+    var __create2 = Object.create;
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __getProtoOf2 = Object.getPrototypeOf;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export2 = (target, all) => {
+      for (var name in all)
+        __defProp2(target, name, { get: all[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from3, except, desc) => {
+      if (from3 && typeof from3 === "object" || typeof from3 === "function") {
+        for (let key of __getOwnPropNames2(from3))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from3[key], enumerable: !(desc = __getOwnPropDesc2(from3, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toESM2 = (mod, isNodeMode, target) => (target = mod != null ? __create2(__getProtoOf2(mod)) : {}, __copyProps2(
+      isNodeMode || !mod || !mod.__esModule ? __defProp2(target, "default", { value: mod, enumerable: true }) : target,
+      mod
+    ));
+    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export2(dist_src_exports, {
+      createOAuthUserAuth: () => createOAuthUserAuth2,
+      requiresBasicAuth: () => requiresBasicAuth
+    });
+    module.exports = __toCommonJS(dist_src_exports);
+    var import_universal_user_agent = require_dist_node();
+    var import_request2 = require_dist_node13();
+    var VERSION = "2.1.2";
+    var import_auth_oauth_device = require_dist_node24();
+    var import_oauth_methods = require_dist_node23();
     async function getAuthentication(state) {
       if ("code" in state.strategyOptions) {
-        const {
-          authentication
-        } = await oauthMethods.exchangeWebFlowCode({
+        const { authentication } = await (0, import_oauth_methods.exchangeWebFlowCode)({
           clientId: state.clientId,
           clientSecret: state.clientSecret,
           clientType: state.clientType,
+          onTokenCreated: state.onTokenCreated,
           ...state.strategyOptions,
           request: state.request
         });
@@ -57326,9 +56140,10 @@ var require_dist_node26 = __commonJS({
         };
       }
       if ("onVerification" in state.strategyOptions) {
-        const deviceAuth = authOauthDevice.createOAuthDeviceAuth({
+        const deviceAuth = (0, import_auth_oauth_device.createOAuthDeviceAuth)({
           clientType: state.clientType,
           clientId: state.clientId,
+          onTokenCreated: state.onTokenCreated,
           ...state.strategyOptions,
           request: state.request
         });
@@ -57347,12 +56162,15 @@ var require_dist_node26 = __commonJS({
           clientId: state.clientId,
           clientSecret: state.clientSecret,
           clientType: state.clientType,
+          onTokenCreated: state.onTokenCreated,
           ...state.strategyOptions
         };
       }
       throw new Error("[@octokit/auth-oauth-user] Invalid strategy options");
     }
+    var import_oauth_methods2 = require_dist_node23();
     async function auth(state, options = {}) {
+      var _a, _b;
       if (!state.authentication) {
         state.authentication = state.clientType === "oauth-app" ? await getAuthentication(state) : await getAuthentication(state);
       }
@@ -57361,10 +56179,8 @@ var require_dist_node26 = __commonJS({
       }
       const currentAuthentication = state.authentication;
       if ("expiresAt" in currentAuthentication) {
-        if (options.type === "refresh" || new Date(currentAuthentication.expiresAt) < new Date()) {
-          const {
-            authentication
-          } = await oauthMethods.refreshToken({
+        if (options.type === "refresh" || new Date(currentAuthentication.expiresAt) < /* @__PURE__ */ new Date()) {
+          const { authentication } = await (0, import_oauth_methods2.refreshToken)({
             clientType: "github-app",
             clientId: state.clientId,
             clientSecret: state.clientSecret,
@@ -57380,18 +56196,21 @@ var require_dist_node26 = __commonJS({
       }
       if (options.type === "refresh") {
         if (state.clientType === "oauth-app") {
-          throw new Error("[@octokit/auth-oauth-user] OAuth Apps do not support expiring tokens");
+          throw new Error(
+            "[@octokit/auth-oauth-user] OAuth Apps do not support expiring tokens"
+          );
         }
         if (!currentAuthentication.hasOwnProperty("expiresAt")) {
           throw new Error("[@octokit/auth-oauth-user] Refresh token missing");
         }
+        await ((_a = state.onTokenCreated) == null ? void 0 : _a.call(state, state.authentication, {
+          type: options.type
+        }));
       }
       if (options.type === "check" || options.type === "reset") {
-        const method = options.type === "check" ? oauthMethods.checkToken : oauthMethods.resetToken;
+        const method = options.type === "check" ? import_oauth_methods2.checkToken : import_oauth_methods2.resetToken;
         try {
-          const {
-            authentication
-          } = await method({
+          const { authentication } = await method({
             clientType: state.clientType,
             clientId: state.clientId,
             clientSecret: state.clientSecret,
@@ -57403,6 +56222,11 @@ var require_dist_node26 = __commonJS({
             type: "token",
             ...authentication
           };
+          if (options.type === "reset") {
+            await ((_b = state.onTokenCreated) == null ? void 0 : _b.call(state, state.authentication, {
+              type: options.type
+            }));
+          }
           return state.authentication;
         } catch (error2) {
           if (error2.status === 404) {
@@ -57413,7 +56237,7 @@ var require_dist_node26 = __commonJS({
         }
       }
       if (options.type === "delete" || options.type === "deleteAuthorization") {
-        const method = options.type === "delete" ? oauthMethods.deleteToken : oauthMethods.deleteAuthorization;
+        const method = options.type === "delete" ? import_oauth_methods2.deleteToken : import_oauth_methods2.deleteAuthorization;
         try {
           await method({
             clientType: state.clientType,
@@ -57431,62 +56255,58 @@ var require_dist_node26 = __commonJS({
       }
       return state.authentication;
     }
+    var import_btoa_lite = __toESM2(require_btoa_node());
     var ROUTES_REQUIRING_BASIC_AUTH = /\/applications\/[^/]+\/(token|grant)s?/;
     function requiresBasicAuth(url) {
       return url && ROUTES_REQUIRING_BASIC_AUTH.test(url);
     }
-    async function hook(state, request2, route, parameters = {}) {
-      const endpoint = request2.endpoint.merge(route, parameters);
+    async function hook(state, request, route, parameters = {}) {
+      const endpoint = request.endpoint.merge(
+        route,
+        parameters
+      );
       if (/\/login\/(oauth\/access_token|device\/code)$/.test(endpoint.url)) {
-        return request2(endpoint);
+        return request(endpoint);
       }
       if (requiresBasicAuth(endpoint.url)) {
-        const credentials = btoa(`${state.clientId}:${state.clientSecret}`);
+        const credentials = (0, import_btoa_lite.default)(`${state.clientId}:${state.clientSecret}`);
         endpoint.headers.authorization = `basic ${credentials}`;
-        return request2(endpoint);
+        return request(endpoint);
       }
-      const {
-        token
-      } = state.clientType === "oauth-app" ? await auth({
-        ...state,
-        request: request2
-      }) : await auth({
-        ...state,
-        request: request2
-      });
+      const { token } = state.clientType === "oauth-app" ? await auth({ ...state, request }) : await auth({ ...state, request });
       endpoint.headers.authorization = "token " + token;
-      return request2(endpoint);
+      return request(endpoint);
     }
     function createOAuthUserAuth2({
       clientId,
       clientSecret,
       clientType = "oauth-app",
-      request: request$1 = request.request.defaults({
+      request = import_request2.request.defaults({
         headers: {
-          "user-agent": `octokit-auth-oauth-app.js/${VERSION} ${universalUserAgent.getUserAgent()}`
+          "user-agent": `octokit-auth-oauth-app.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`
         }
       }),
+      onTokenCreated,
       ...strategyOptions
     }) {
       const state = Object.assign({
         clientType,
         clientId,
         clientSecret,
+        onTokenCreated,
         strategyOptions,
-        request: request$1
+        request
       });
       return Object.assign(auth.bind(null, state), {
         hook: hook.bind(null, state)
       });
     }
     createOAuthUserAuth2.VERSION = VERSION;
-    exports.createOAuthUserAuth = createOAuthUserAuth2;
-    exports.requiresBasicAuth = requiresBasicAuth;
   }
 });
 
 // 
-var require_dist_node27 = __commonJS({
+var require_dist_node26 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __create2 = Object.create;
@@ -57521,7 +56341,7 @@ var require_dist_node27 = __commonJS({
     var import_universal_user_agent = require_dist_node();
     var import_request2 = require_dist_node13();
     var import_btoa_lite = __toESM2(require_btoa_node());
-    var import_auth_oauth_user = require_dist_node26();
+    var import_auth_oauth_user = require_dist_node25();
     async function auth(state, authOptions) {
       if (authOptions.type === "oauth-app") {
         return {
@@ -57559,7 +56379,7 @@ var require_dist_node27 = __commonJS({
       return userAuth();
     }
     var import_btoa_lite2 = __toESM2(require_btoa_node());
-    var import_auth_oauth_user2 = require_dist_node26();
+    var import_auth_oauth_user2 = require_dist_node25();
     async function hook(state, request2, route, parameters) {
       let endpoint = request2.endpoint.merge(
         route,
@@ -57585,7 +56405,7 @@ var require_dist_node27 = __commonJS({
       }
     }
     var VERSION = "6.0.0";
-    var import_auth_oauth_user3 = require_dist_node26();
+    var import_auth_oauth_user3 = require_dist_node25();
     function createOAuthAppAuth(options) {
       const state = Object.assign(
         {
@@ -61442,7 +60262,7 @@ var require_jsonwebtoken = __commonJS({
 });
 
 // 
-var require_dist_node28 = __commonJS({
+var require_dist_node27 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -61492,9 +60312,48 @@ var require_cjs2 = __commonJS({
     exports.LRUCache = void 0;
     var perf = typeof performance === "object" && performance && typeof performance.now === "function" ? performance : Date;
     var warned = /* @__PURE__ */ new Set();
+    var PROCESS = typeof process === "object" && !!process ? process : {};
     var emitWarning = (msg, type, code, fn) => {
-      typeof process === "object" && process && typeof process.emitWarning === "function" ? process.emitWarning(msg, type, code, fn) : console.error(`[${code}] ${type}: ${msg}`);
+      typeof PROCESS.emitWarning === "function" ? PROCESS.emitWarning(msg, type, code, fn) : console.error(`[${code}] ${type}: ${msg}`);
     };
+    var AC = globalThis.AbortController;
+    var AS = globalThis.AbortSignal;
+    var _a;
+    if (typeof AC === "undefined") {
+      AS = class AbortSignal {
+        onabort;
+        _onabort = [];
+        reason;
+        aborted = false;
+        addEventListener(_4, fn) {
+          this._onabort.push(fn);
+        }
+      };
+      AC = class AbortController {
+        constructor() {
+          warnACPolyfill();
+        }
+        signal = new AS();
+        abort(reason) {
+          var _a2, _b;
+          if (this.signal.aborted)
+            return;
+          this.signal.reason = reason;
+          this.signal.aborted = true;
+          for (const fn of this.signal._onabort) {
+            fn(reason);
+          }
+          (_b = (_a2 = this.signal).onabort) == null ? void 0 : _b.call(_a2, reason);
+        }
+      };
+      let printACPolyfillWarning = ((_a = PROCESS.env) == null ? void 0 : _a.LRU_CACHE_IGNORE_AC_WARNING) !== "1";
+      const warnACPolyfill = () => {
+        if (!printACPolyfillWarning)
+          return;
+        printACPolyfillWarning = false;
+        emitWarning("AbortController is not defined. If using lru-cache in node 14, load an AbortController polyfill from the `node-abort-controller` package. A minimal polyfill is provided for use by LRUCache.fetch(), but it should not be relied upon in other contexts (eg, passing it to other APIs that use AbortController/AbortSignal might have undesirable effects). You may disable this with LRU_CACHE_IGNORE_AC_WARNING=1 in the env.", "NO_ABORT_CONTROLLER", "ENOTSUP", warnACPolyfill);
+      };
+    }
     var shouldWarn = (code) => !warned.has(code);
     var TYPE = Symbol("type");
     var isPosInt = (n) => n && n === Math.floor(n) && n > 0 && isFinite(n);
@@ -61741,7 +60600,8 @@ var require_cjs2 = __commonJS({
             status.ttl = ttl;
             status.start = start;
             status.now = cachedNow || getNow();
-            status.remainingTTL = status.now + ttl - start;
+            const age = status.now - start;
+            status.remainingTTL = ttl - age;
           }
         };
         let cachedNow = 0;
@@ -61761,7 +60621,13 @@ var require_cjs2 = __commonJS({
           if (index === void 0) {
             return 0;
           }
-          return ttls[index] === 0 || starts[index] === 0 ? Infinity : starts[index] + ttls[index] - (cachedNow || getNow());
+          const ttl = ttls[index];
+          const start = starts[index];
+          if (ttl === 0 || start === 0) {
+            return Infinity;
+          }
+          const age = (cachedNow || getNow()) - start;
+          return ttl - age;
         };
         this.#isStale = (index) => {
           return ttls[index] !== 0 && starts[index] !== 0 && (cachedNow || getNow()) - starts[index] > ttls[index];
@@ -61983,7 +60849,11 @@ var require_cjs2 = __commonJS({
         }
       }
       set(k, v, setOptions = {}) {
-        var _a, _b, _c;
+        var _a2, _b, _c;
+        if (v === void 0) {
+          this.delete(k);
+          return this;
+        }
         const { ttl = this.ttl, start, noDisposeOnSet = this.noDisposeOnSet, sizeCalculation = this.sizeCalculation, status } = setOptions;
         let { noUpdateTTL = this.noUpdateTTL } = setOptions;
         const size = this.#requireSize(k, v, setOptions.size || 0, sizeCalculation);
@@ -62017,7 +60887,7 @@ var require_cjs2 = __commonJS({
               oldVal.__abortController.abort(new Error("replaced"));
             } else if (!noDisposeOnSet) {
               if (this.#hasDispose) {
-                (_a = this.#dispose) == null ? void 0 : _a.call(this, oldVal, k, "set");
+                (_a2 = this.#dispose) == null ? void 0 : _a2.call(this, oldVal, k, "set");
               }
               if (this.#hasDisposeAfter) {
                 (_b = this.#disposed) == null ? void 0 : _b.push([oldVal, k, "set"]);
@@ -62056,7 +60926,7 @@ var require_cjs2 = __commonJS({
         return this;
       }
       pop() {
-        var _a;
+        var _a2;
         try {
           while (this.#size) {
             const val = this.#valList[this.#head];
@@ -62074,13 +60944,13 @@ var require_cjs2 = __commonJS({
             const dt = this.#disposed;
             let task;
             while (task = dt == null ? void 0 : dt.shift()) {
-              (_a = this.#disposeAfter) == null ? void 0 : _a.call(this, ...task);
+              (_a2 = this.#disposeAfter) == null ? void 0 : _a2.call(this, ...task);
             }
           }
         }
       }
       #evict(free) {
-        var _a, _b;
+        var _a2, _b;
         const head = this.#head;
         const k = this.#keyList[head];
         const v = this.#valList[head];
@@ -62088,7 +60958,7 @@ var require_cjs2 = __commonJS({
           v.__abortController.abort(new Error("evicted"));
         } else if (this.#hasDispose || this.#hasDisposeAfter) {
           if (this.#hasDispose) {
-            (_a = this.#dispose) == null ? void 0 : _a.call(this, v, k, "evict");
+            (_a2 = this.#dispose) == null ? void 0 : _a2.call(this, v, k, "evict");
           }
           if (this.#hasDisposeAfter) {
             (_b = this.#disposed) == null ? void 0 : _b.push([v, k, "evict"]);
@@ -62149,7 +61019,7 @@ var require_cjs2 = __commonJS({
         if (this.#isBackgroundFetch(v)) {
           return v;
         }
-        const ac = new AbortController();
+        const ac = new AC();
         const { signal } = options;
         signal == null ? void 0 : signal.addEventListener("abort", () => ac.abort(signal.reason), {
           signal: ac.signal
@@ -62222,8 +61092,8 @@ var require_cjs2 = __commonJS({
           }
         };
         const pcall = (res, rej) => {
-          var _a;
-          const fmp = (_a = this.#fetchMethod) == null ? void 0 : _a.call(this, k, v, fetchOpts);
+          var _a2;
+          const fmp = (_a2 = this.#fetchMethod) == null ? void 0 : _a2.call(this, k, v, fetchOpts);
           if (fmp && fmp instanceof Promise) {
             fmp.then((v2) => res(v2), rej);
           }
@@ -62256,7 +61126,7 @@ var require_cjs2 = __commonJS({
         if (!this.#hasFetchMethod)
           return false;
         const b = p;
-        return !!b && b instanceof Promise && b.hasOwnProperty("__staleWhileFetching") && b.__abortController instanceof AbortController;
+        return !!b && b instanceof Promise && b.hasOwnProperty("__staleWhileFetching") && b.__abortController instanceof AC;
       }
       async fetch(k, fetchOptions = {}) {
         const {
@@ -62399,7 +61269,7 @@ var require_cjs2 = __commonJS({
         }
       }
       delete(k) {
-        var _a, _b, _c, _d;
+        var _a2, _b, _c, _d;
         let deleted = false;
         if (this.#size !== 0) {
           const index = this.#keyMap.get(k);
@@ -62414,7 +61284,7 @@ var require_cjs2 = __commonJS({
                 v.__abortController.abort(new Error("deleted"));
               } else if (this.#hasDispose || this.#hasDisposeAfter) {
                 if (this.#hasDispose) {
-                  (_a = this.#dispose) == null ? void 0 : _a.call(this, v, k, "delete");
+                  (_a2 = this.#dispose) == null ? void 0 : _a2.call(this, v, k, "delete");
                 }
                 if (this.#hasDisposeAfter) {
                   (_b = this.#disposed) == null ? void 0 : _b.push([v, k, "delete"]);
@@ -62446,7 +61316,7 @@ var require_cjs2 = __commonJS({
         return deleted;
       }
       clear() {
-        var _a, _b, _c;
+        var _a2, _b, _c;
         for (const index of this.#rindexes({ allowStale: true })) {
           const v = this.#valList[index];
           if (this.#isBackgroundFetch(v)) {
@@ -62454,7 +61324,7 @@ var require_cjs2 = __commonJS({
           } else {
             const k = this.#keyList[index];
             if (this.#hasDispose) {
-              (_a = this.#dispose) == null ? void 0 : _a.call(this, v, k, "delete");
+              (_a2 = this.#dispose) == null ? void 0 : _a2.call(this, v, k, "delete");
             }
             if (this.#hasDisposeAfter) {
               (_b = this.#disposed) == null ? void 0 : _b.push([v, k, "delete"]);
@@ -62490,7 +61360,7 @@ var require_cjs2 = __commonJS({
 });
 
 // 
-var require_dist_node29 = __commonJS({
+var require_dist_node28 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __create2 = Object.create;
@@ -62525,8 +61395,8 @@ var require_dist_node29 = __commonJS({
     var import_universal_user_agent = require_dist_node();
     var import_request2 = require_dist_node13();
     var VERSION = "3.0.0";
-    var import_auth_oauth_device = require_dist_node25();
-    var import_oauth_methods = require_dist_node24();
+    var import_auth_oauth_device = require_dist_node24();
+    var import_oauth_methods = require_dist_node23();
     async function getAuthentication(state) {
       if ("code" in state.strategyOptions) {
         const { authentication } = await (0, import_oauth_methods.exchangeWebFlowCode)({
@@ -62572,7 +61442,7 @@ var require_dist_node29 = __commonJS({
       }
       throw new Error("[@octokit/auth-oauth-user] Invalid strategy options");
     }
-    var import_oauth_methods2 = require_dist_node24();
+    var import_oauth_methods2 = require_dist_node23();
     async function auth(state, options = {}) {
       var _a, _b;
       if (!state.authentication) {
@@ -62710,7 +61580,7 @@ var require_dist_node29 = __commonJS({
 });
 
 // 
-var require_dist_node30 = __commonJS({
+var require_dist_node29 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -62738,9 +61608,9 @@ var require_dist_node30 = __commonJS({
     module.exports = __toCommonJS(dist_src_exports);
     var import_universal_user_agent = require_dist_node();
     var import_request2 = require_dist_node13();
-    var import_auth_oauth_app = require_dist_node27();
+    var import_auth_oauth_app = require_dist_node26();
     var import_deprecation = require_dist_node3();
-    var import_universal_github_app_jwt = require_dist_node28();
+    var import_universal_github_app_jwt = require_dist_node27();
     async function getAppAuthentication({
       appId,
       privateKey,
@@ -62987,7 +61857,7 @@ var require_dist_node30 = __commonJS({
           throw new Error(`Invalid auth type: ${authOptions.type}`);
       }
     }
-    var import_auth_oauth_user = require_dist_node29();
+    var import_auth_oauth_user = require_dist_node28();
     var PATHS = [
       "/app",
       "/app/hook/config",
@@ -63106,7 +61976,7 @@ var require_dist_node30 = __commonJS({
       }
     }
     var VERSION = "5.0.3";
-    var import_auth_oauth_user2 = require_dist_node29();
+    var import_auth_oauth_user2 = require_dist_node28();
     function createAppAuth2(options) {
       if (!options.appId) {
         throw new Error("[@octokit/auth-app] appId option is required");
@@ -63192,7 +62062,7 @@ function dataUriToBuffer(uri) {
   for (let i2 = 1; i2 < meta.length; i2++) {
     if (meta[i2] === "base64") {
       base64 = true;
-    } else {
+    } else if (meta[i2]) {
       typeFull += `;${meta[i2]}`;
       if (meta[i2].indexOf("charset=") === 0) {
         charset = meta[i2].substring(8);
@@ -65396,7 +64266,7 @@ import { spawnSync } from "child_process";
 
 // 
 var import_graphql = __toESM(require_dist_node14());
-var import_rest = __toESM(require_dist_node21());
+var import_rest = __toESM(require_dist_node20());
 var import_typed_graphqlify2 = __toESM(require_dist2());
 var GithubClient = class {
   constructor(_octokitOptions) {
@@ -65649,7 +64519,7 @@ function isUnicodeSupported() {
   if (process4.platform !== "win32") {
     return process4.env.TERM !== "linux";
   }
-  return Boolean(process4.env.CI) || Boolean(process4.env.WT_SESSION) || process4.env.ConEmuTask === "{cmd::Cmder}" || process4.env.TERM_PROGRAM === "vscode" || process4.env.TERM === "xterm-256color" || process4.env.TERM === "alacritty" || process4.env.TERMINAL_EMULATOR === "JetBrains-JediTerm";
+  return Boolean(process4.env.CI) || Boolean(process4.env.WT_SESSION) || Boolean(process4.env.TERMINUS_SUBLIME) || process4.env.ConEmuTask === "{cmd::Cmder}" || process4.env.TERM_PROGRAM === "Terminus-Sublime" || process4.env.TERM_PROGRAM === "vscode" || process4.env.TERM === "xterm-256color" || process4.env.TERM === "alacritty" || process4.env.TERMINAL_EMULATOR === "JetBrains-JediTerm";
 }
 
 // 
@@ -67241,7 +66111,7 @@ var EditorPrompt = class extends Prompt {
 var import_through = __toESM(require_through(), 1);
 
 // 
-var import_mute_stream = __toESM(require_lib8(), 1);
+var import_mute_stream = __toESM(require_lib7(), 1);
 import readline from "node:readline";
 var UI = class {
   constructor(opt) {
@@ -67718,8 +66588,8 @@ async function rebase(installationClient, installationToken) {
 
 // 
 var import_core = __toESM(require_core());
-var import_rest2 = __toESM(require_dist_node21());
-var import_auth_app = __toESM(require_dist_node30());
+var import_rest2 = __toESM(require_dist_node20());
+var import_auth_app = __toESM(require_dist_node29());
 var import_github6 = __toESM(require_github());
 var ANGULAR_ROBOT = [43341, "angular-robot-key"];
 async function getJwtAuthedAppClient([appId, inputKey]) {
@@ -67754,7 +66624,7 @@ async function revokeActiveInstallationToken(githubOrToken) {
 }
 
 // 
-var import_rest3 = __toESM(require_dist_node21());
+var import_rest3 = __toESM(require_dist_node20());
 var commandMarker = "/ng-bot";
 var commandMatcher = new RegExp(`^${commandMarker} (.*)$`, "m");
 function parseCommandFromContext() {

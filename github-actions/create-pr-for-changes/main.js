@@ -736,6 +736,10 @@ var require_proxy = __commonJS({
       if (!reqUrl.hostname) {
         return false;
       }
+      const reqHost = reqUrl.hostname;
+      if (isLoopbackAddress(reqHost)) {
+        return true;
+      }
       const noProxy = process.env["no_proxy"] || process.env["NO_PROXY"] || "";
       if (!noProxy) {
         return false;
@@ -753,13 +757,17 @@ var require_proxy = __commonJS({
         upperReqHosts.push(`${upperReqHosts[0]}:${reqPort}`);
       }
       for (const upperNoProxyItem of noProxy.split(",").map((x) => x.trim().toUpperCase()).filter((x) => x)) {
-        if (upperReqHosts.some((x) => x === upperNoProxyItem)) {
+        if (upperNoProxyItem === "*" || upperReqHosts.some((x) => x === upperNoProxyItem || x.endsWith(`.${upperNoProxyItem}`) || upperNoProxyItem.startsWith(".") && x.endsWith(`${upperNoProxyItem}`))) {
           return true;
         }
       }
       return false;
     }
     exports.checkBypass = checkBypass;
+    function isLoopbackAddress(host) {
+      const hostLower = host.toLowerCase();
+      return hostLower === "localhost" || hostLower.startsWith("127.") || hostLower.startsWith("[::1]") || hostLower.startsWith("[0:0:0:0:0:0:0:1]");
+    }
   }
 });
 
@@ -2416,7 +2424,10 @@ var require_before_after_hook = __commonJS({
     var bind = Function.bind;
     var bindable = bind.bind(bind);
     function bindApi(hook, state, name) {
-      var removeHookRef = bindable(removeHook, null).apply(null, name ? [state, name] : [state]);
+      var removeHookRef = bindable(removeHook, null).apply(
+        null,
+        name ? [state, name] : [state]
+      );
       hook.api = { remove: removeHookRef };
       hook.remove = removeHookRef;
       ["before", "error", "after", "wrap"].forEach(function(kind) {
@@ -2444,7 +2455,9 @@ var require_before_after_hook = __commonJS({
     var collectionHookDeprecationMessageDisplayed = false;
     function Hook() {
       if (!collectionHookDeprecationMessageDisplayed) {
-        console.warn('[before-after-hook]: "Hook()" repurposing warning, use "Hook.Collection()". Read more: https://git.io/upgrade-before-after-hook-to-1.4');
+        console.warn(
+          '[before-after-hook]: "Hook()" repurposing warning, use "Hook.Collection()". Read more: https://git.io/upgrade-before-after-hook-to-1.4'
+        );
         collectionHookDeprecationMessageDisplayed = true;
       }
       return HookCollection();
@@ -9072,6 +9085,11 @@ var require_lib4 = __commonJS({
       const dest = new URL$1(destination).hostname;
       return orig === dest || orig[orig.length - dest.length - 1] === "." && orig.endsWith(dest);
     };
+    var isSameProtocol = function isSameProtocol2(destination, original) {
+      const orig = new URL$1(original).protocol;
+      const dest = new URL$1(destination).protocol;
+      return orig === dest;
+    };
     function fetch(url, opts) {
       if (!fetch.Promise) {
         throw new Error("native promise missing, set fetch.Promise to your favorite alternative");
@@ -9087,7 +9105,7 @@ var require_lib4 = __commonJS({
           let error = new AbortError("The user aborted a request.");
           reject(error);
           if (request.body && request.body instanceof Stream.Readable) {
-            request.body.destroy(error);
+            destroyStream(request.body, error);
           }
           if (!response || !response.body)
             return;
@@ -9122,8 +9140,31 @@ var require_lib4 = __commonJS({
         }
         req.on("error", function(err) {
           reject(new FetchError(`request to ${request.url} failed, reason: ${err.message}`, "system", err));
+          if (response && response.body) {
+            destroyStream(response.body, err);
+          }
           finalize();
         });
+        fixResponseChunkedTransferBadEnding(req, function(err) {
+          if (signal && signal.aborted) {
+            return;
+          }
+          if (response && response.body) {
+            destroyStream(response.body, err);
+          }
+        });
+        if (parseInt(process.version.substring(1)) < 14) {
+          req.on("socket", function(s) {
+            s.addListener("close", function(hadError) {
+              const hasDataListener = s.listenerCount("data") > 0;
+              if (response && hasDataListener && !hadError && !(signal && signal.aborted)) {
+                const err = new Error("Premature close");
+                err.code = "ERR_STREAM_PREMATURE_CLOSE";
+                response.body.emit("error", err);
+              }
+            });
+          });
+        }
         req.on("response", function(res) {
           clearTimeout(reqTimeout);
           const headers = createHeadersLenient(res.headers);
@@ -9174,7 +9215,7 @@ var require_lib4 = __commonJS({
                   timeout: request.timeout,
                   size: request.size
                 };
-                if (!isDomainOrSubdomain(request.url, locationURL)) {
+                if (!isDomainOrSubdomain(request.url, locationURL) || !isSameProtocol(request.url, locationURL)) {
                   for (const name of ["authorization", "www-authenticate", "cookie", "cookie2"]) {
                     requestOpts.headers.delete(name);
                   }
@@ -9235,6 +9276,12 @@ var require_lib4 = __commonJS({
               response = new Response(body, response_options);
               resolve(response);
             });
+            raw.on("end", function() {
+              if (!response) {
+                response = new Response(body, response_options);
+                resolve(response);
+              }
+            });
             return;
           }
           if (codings == "br" && typeof zlib.createBrotliDecompress === "function") {
@@ -9248,6 +9295,33 @@ var require_lib4 = __commonJS({
         });
         writeToStream(req, request);
       });
+    }
+    function fixResponseChunkedTransferBadEnding(request, errorCallback) {
+      let socket;
+      request.on("socket", function(s) {
+        socket = s;
+      });
+      request.on("response", function(response) {
+        const headers = response.headers;
+        if (headers["transfer-encoding"] === "chunked" && !headers["content-length"]) {
+          response.once("close", function(hadError) {
+            const hasDataListener = socket.listenerCount("data") > 0;
+            if (hasDataListener && !hadError) {
+              const err = new Error("Premature close");
+              err.code = "ERR_STREAM_PREMATURE_CLOSE";
+              errorCallback(err);
+            }
+          });
+        }
+      });
+    }
+    function destroyStream(stream, err) {
+      if (stream.destroy) {
+        stream.destroy(err);
+      } else {
+        stream.emit("error", err);
+        stream.end();
+      }
     }
     fetch.isRedirect = function(code) {
       return code === 301 || code === 302 || code === 303 || code === 307 || code === 308;
@@ -11469,11 +11543,30 @@ var require_dist2 = __commonJS({
 
 // 
 var require_dist_node11 = __commonJS({
-  ""(exports) {
+  ""(exports, module) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var isPlainObject = require_is_plain_object();
-    var universalUserAgent = require_dist_node();
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export = (target, all) => {
+      for (var name in all)
+        __defProp2(target, name, { get: all[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if (from && typeof from === "object" || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export(dist_src_exports, {
+      endpoint: () => endpoint
+    });
+    module.exports = __toCommonJS(dist_src_exports);
     function lowercaseKeys(object) {
       if (!object) {
         return {};
@@ -11483,20 +11576,17 @@ var require_dist_node11 = __commonJS({
         return newObj;
       }, {});
     }
+    var import_is_plain_object = require_is_plain_object();
     function mergeDeep(defaults, options) {
       const result = Object.assign({}, defaults);
       Object.keys(options).forEach((key) => {
-        if (isPlainObject.isPlainObject(options[key])) {
+        if ((0, import_is_plain_object.isPlainObject)(options[key])) {
           if (!(key in defaults))
-            Object.assign(result, {
-              [key]: options[key]
-            });
+            Object.assign(result, { [key]: options[key] });
           else
             result[key] = mergeDeep(defaults[key], options[key]);
         } else {
-          Object.assign(result, {
-            [key]: options[key]
-          });
+          Object.assign(result, { [key]: options[key] });
         }
       });
       return result;
@@ -11512,12 +11602,7 @@ var require_dist_node11 = __commonJS({
     function merge(defaults, route, options) {
       if (typeof route === "string") {
         let [method, url] = route.split(" ");
-        options = Object.assign(url ? {
-          method,
-          url
-        } : {
-          url: method
-        }, options);
+        options = Object.assign(url ? { method, url } : { url: method }, options);
       } else {
         options = Object.assign({}, route);
       }
@@ -11528,7 +11613,9 @@ var require_dist_node11 = __commonJS({
       if (defaults && defaults.mediaType.previews.length) {
         mergedOptions.mediaType.previews = defaults.mediaType.previews.filter((preview) => !mergedOptions.mediaType.previews.includes(preview)).concat(mergedOptions.mediaType.previews);
       }
-      mergedOptions.mediaType.previews = mergedOptions.mediaType.previews.map((preview) => preview.replace(/-preview/, ""));
+      mergedOptions.mediaType.previews = mergedOptions.mediaType.previews.map(
+        (preview) => preview.replace(/-preview/, "")
+      );
       return mergedOptions;
     }
     function addQueryParameters(url, parameters) {
@@ -11596,12 +11683,16 @@ var require_dist_node11 = __commonJS({
           if (modifier && modifier !== "*") {
             value = value.substring(0, parseInt(modifier, 10));
           }
-          result.push(encodeValue(operator, value, isKeyOperator(operator) ? key : ""));
+          result.push(
+            encodeValue(operator, value, isKeyOperator(operator) ? key : "")
+          );
         } else {
           if (modifier === "*") {
             if (Array.isArray(value)) {
               value.filter(isDefined).forEach(function(value2) {
-                result.push(encodeValue(operator, value2, isKeyOperator(operator) ? key : ""));
+                result.push(
+                  encodeValue(operator, value2, isKeyOperator(operator) ? key : "")
+                );
               });
             } else {
               Object.keys(value).forEach(function(k) {
@@ -11651,40 +11742,50 @@ var require_dist_node11 = __commonJS({
     }
     function expand(template, context2) {
       var operators = ["+", "#", ".", "/", ";", "?", "&"];
-      return template.replace(/\{([^\{\}]+)\}|([^\{\}]+)/g, function(_, expression, literal) {
-        if (expression) {
-          let operator = "";
-          const values = [];
-          if (operators.indexOf(expression.charAt(0)) !== -1) {
-            operator = expression.charAt(0);
-            expression = expression.substr(1);
-          }
-          expression.split(/,/g).forEach(function(variable) {
-            var tmp = /([^:\*]*)(?::(\d+)|(\*))?/.exec(variable);
-            values.push(getValues(context2, operator, tmp[1], tmp[2] || tmp[3]));
-          });
-          if (operator && operator !== "+") {
-            var separator = ",";
-            if (operator === "?") {
-              separator = "&";
-            } else if (operator !== "#") {
-              separator = operator;
+      return template.replace(
+        /\{([^\{\}]+)\}|([^\{\}]+)/g,
+        function(_, expression, literal) {
+          if (expression) {
+            let operator = "";
+            const values = [];
+            if (operators.indexOf(expression.charAt(0)) !== -1) {
+              operator = expression.charAt(0);
+              expression = expression.substr(1);
             }
-            return (values.length !== 0 ? operator : "") + values.join(separator);
+            expression.split(/,/g).forEach(function(variable) {
+              var tmp = /([^:\*]*)(?::(\d+)|(\*))?/.exec(variable);
+              values.push(getValues(context2, operator, tmp[1], tmp[2] || tmp[3]));
+            });
+            if (operator && operator !== "+") {
+              var separator = ",";
+              if (operator === "?") {
+                separator = "&";
+              } else if (operator !== "#") {
+                separator = operator;
+              }
+              return (values.length !== 0 ? operator : "") + values.join(separator);
+            } else {
+              return values.join(",");
+            }
           } else {
-            return values.join(",");
+            return encodeReserved(literal);
           }
-        } else {
-          return encodeReserved(literal);
         }
-      });
+      );
     }
     function parse(options) {
       let method = options.method.toUpperCase();
       let url = (options.url || "/").replace(/:([a-z]\w+)/g, "{$1}");
       let headers = Object.assign({}, options.headers);
       let body;
-      let parameters = omit(options, ["method", "baseUrl", "url", "headers", "request", "mediaType"]);
+      let parameters = omit(options, [
+        "method",
+        "baseUrl",
+        "url",
+        "headers",
+        "request",
+        "mediaType"
+      ]);
       const urlVariableNames = extractUrlVariableNames(url);
       url = parseUrl(url).expand(parameters);
       if (!/^http/.test(url)) {
@@ -11695,7 +11796,12 @@ var require_dist_node11 = __commonJS({
       const isBinaryRequest = /application\/octet-stream/i.test(headers.accept);
       if (!isBinaryRequest) {
         if (options.mediaType.format) {
-          headers.accept = headers.accept.split(/,/).map((preview) => preview.replace(/application\/vnd(\.\w+)(\.v3)?(\.\w+)?(\+json)?$/, `application/vnd$1$2.${options.mediaType.format}`)).join(",");
+          headers.accept = headers.accept.split(/,/).map(
+            (preview) => preview.replace(
+              /application\/vnd(\.\w+)(\.v3)?(\.\w+)?(\+json)?$/,
+              `application/vnd$1$2.${options.mediaType.format}`
+            )
+          ).join(",");
         }
         if (options.mediaType.previews.length) {
           const previewsFromAcceptHeader = headers.accept.match(/[\w-]+(?=-preview)/g) || [];
@@ -11713,8 +11819,6 @@ var require_dist_node11 = __commonJS({
         } else {
           if (Object.keys(remainingParameters).length) {
             body = remainingParameters;
-          } else {
-            headers["content-length"] = 0;
           }
         }
       }
@@ -11724,15 +11828,11 @@ var require_dist_node11 = __commonJS({
       if (["PATCH", "PUT"].includes(method) && typeof body === "undefined") {
         body = "";
       }
-      return Object.assign({
-        method,
-        url,
-        headers
-      }, typeof body !== "undefined" ? {
-        body
-      } : null, options.request ? {
-        request: options.request
-      } : null);
+      return Object.assign(
+        { method, url, headers },
+        typeof body !== "undefined" ? { body } : null,
+        options.request ? { request: options.request } : null
+      );
     }
     function endpointWithDefaults(defaults, route, options) {
       return parse(merge(defaults, route, options));
@@ -11747,8 +11847,9 @@ var require_dist_node11 = __commonJS({
         parse
       });
     }
-    var VERSION = "7.0.1";
-    var userAgent = `octokit-endpoint.js/${VERSION} ${universalUserAgent.getUserAgent()}`;
+    var import_universal_user_agent = require_dist_node();
+    var VERSION = "7.0.6";
+    var userAgent = `octokit-endpoint.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`;
     var DEFAULTS = {
       method: "GET",
       baseUrl: "https://api.github.com",
@@ -11762,1616 +11863,11 @@ var require_dist_node11 = __commonJS({
       }
     };
     var endpoint = withDefaults(null, DEFAULTS);
-    exports.endpoint = endpoint;
   }
 });
 
 // 
 var require_lib5 = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    var conversions = {};
-    module.exports = conversions;
-    function sign(x) {
-      return x < 0 ? -1 : 1;
-    }
-    function evenRound(x) {
-      if (x % 1 === 0.5 && (x & 1) === 0) {
-        return Math.floor(x);
-      } else {
-        return Math.round(x);
-      }
-    }
-    function createNumberConversion(bitLength, typeOpts) {
-      if (!typeOpts.unsigned) {
-        --bitLength;
-      }
-      const lowerBound = typeOpts.unsigned ? 0 : -Math.pow(2, bitLength);
-      const upperBound = Math.pow(2, bitLength) - 1;
-      const moduloVal = typeOpts.moduloBitLength ? Math.pow(2, typeOpts.moduloBitLength) : Math.pow(2, bitLength);
-      const moduloBound = typeOpts.moduloBitLength ? Math.pow(2, typeOpts.moduloBitLength - 1) : Math.pow(2, bitLength - 1);
-      return function(V, opts) {
-        if (!opts)
-          opts = {};
-        let x = +V;
-        if (opts.enforceRange) {
-          if (!Number.isFinite(x)) {
-            throw new TypeError("Argument is not a finite number");
-          }
-          x = sign(x) * Math.floor(Math.abs(x));
-          if (x < lowerBound || x > upperBound) {
-            throw new TypeError("Argument is not in byte range");
-          }
-          return x;
-        }
-        if (!isNaN(x) && opts.clamp) {
-          x = evenRound(x);
-          if (x < lowerBound)
-            x = lowerBound;
-          if (x > upperBound)
-            x = upperBound;
-          return x;
-        }
-        if (!Number.isFinite(x) || x === 0) {
-          return 0;
-        }
-        x = sign(x) * Math.floor(Math.abs(x));
-        x = x % moduloVal;
-        if (!typeOpts.unsigned && x >= moduloBound) {
-          return x - moduloVal;
-        } else if (typeOpts.unsigned) {
-          if (x < 0) {
-            x += moduloVal;
-          } else if (x === -0) {
-            return 0;
-          }
-        }
-        return x;
-      };
-    }
-    conversions["void"] = function() {
-      return void 0;
-    };
-    conversions["boolean"] = function(val) {
-      return !!val;
-    };
-    conversions["byte"] = createNumberConversion(8, { unsigned: false });
-    conversions["octet"] = createNumberConversion(8, { unsigned: true });
-    conversions["short"] = createNumberConversion(16, { unsigned: false });
-    conversions["unsigned short"] = createNumberConversion(16, { unsigned: true });
-    conversions["long"] = createNumberConversion(32, { unsigned: false });
-    conversions["unsigned long"] = createNumberConversion(32, { unsigned: true });
-    conversions["long long"] = createNumberConversion(32, { unsigned: false, moduloBitLength: 64 });
-    conversions["unsigned long long"] = createNumberConversion(32, { unsigned: true, moduloBitLength: 64 });
-    conversions["double"] = function(V) {
-      const x = +V;
-      if (!Number.isFinite(x)) {
-        throw new TypeError("Argument is not a finite floating-point value");
-      }
-      return x;
-    };
-    conversions["unrestricted double"] = function(V) {
-      const x = +V;
-      if (isNaN(x)) {
-        throw new TypeError("Argument is NaN");
-      }
-      return x;
-    };
-    conversions["float"] = conversions["double"];
-    conversions["unrestricted float"] = conversions["unrestricted double"];
-    conversions["DOMString"] = function(V, opts) {
-      if (!opts)
-        opts = {};
-      if (opts.treatNullAsEmptyString && V === null) {
-        return "";
-      }
-      return String(V);
-    };
-    conversions["ByteString"] = function(V, opts) {
-      const x = String(V);
-      let c = void 0;
-      for (let i = 0; (c = x.codePointAt(i)) !== void 0; ++i) {
-        if (c > 255) {
-          throw new TypeError("Argument is not a valid bytestring");
-        }
-      }
-      return x;
-    };
-    conversions["USVString"] = function(V) {
-      const S = String(V);
-      const n = S.length;
-      const U = [];
-      for (let i = 0; i < n; ++i) {
-        const c = S.charCodeAt(i);
-        if (c < 55296 || c > 57343) {
-          U.push(String.fromCodePoint(c));
-        } else if (56320 <= c && c <= 57343) {
-          U.push(String.fromCodePoint(65533));
-        } else {
-          if (i === n - 1) {
-            U.push(String.fromCodePoint(65533));
-          } else {
-            const d = S.charCodeAt(i + 1);
-            if (56320 <= d && d <= 57343) {
-              const a = c & 1023;
-              const b = d & 1023;
-              U.push(String.fromCodePoint((2 << 15) + (2 << 9) * a + b));
-              ++i;
-            } else {
-              U.push(String.fromCodePoint(65533));
-            }
-          }
-        }
-      }
-      return U.join("");
-    };
-    conversions["Date"] = function(V, opts) {
-      if (!(V instanceof Date)) {
-        throw new TypeError("Argument is not a Date object");
-      }
-      if (isNaN(V)) {
-        return void 0;
-      }
-      return V;
-    };
-    conversions["RegExp"] = function(V, opts) {
-      if (!(V instanceof RegExp)) {
-        V = new RegExp(V);
-      }
-      return V;
-    };
-  }
-});
-
-// 
-var require_utils5 = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    module.exports.mixin = function mixin(target, source) {
-      const keys = Object.getOwnPropertyNames(source);
-      for (let i = 0; i < keys.length; ++i) {
-        Object.defineProperty(target, keys[i], Object.getOwnPropertyDescriptor(source, keys[i]));
-      }
-    };
-    module.exports.wrapperSymbol = Symbol("wrapper");
-    module.exports.implSymbol = Symbol("impl");
-    module.exports.wrapperForImpl = function(impl) {
-      return impl[module.exports.wrapperSymbol];
-    };
-    module.exports.implForWrapper = function(wrapper) {
-      return wrapper[module.exports.implSymbol];
-    };
-  }
-});
-
-// 
-var require_url_state_machine2 = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    var punycode = __require("punycode");
-    var tr46 = require_tr46();
-    var specialSchemes = {
-      ftp: 21,
-      file: null,
-      gopher: 70,
-      http: 80,
-      https: 443,
-      ws: 80,
-      wss: 443
-    };
-    var failure = Symbol("failure");
-    function countSymbols(str) {
-      return punycode.ucs2.decode(str).length;
-    }
-    function at(input, idx) {
-      const c = input[idx];
-      return isNaN(c) ? void 0 : String.fromCodePoint(c);
-    }
-    function isASCIIDigit(c) {
-      return c >= 48 && c <= 57;
-    }
-    function isASCIIAlpha(c) {
-      return c >= 65 && c <= 90 || c >= 97 && c <= 122;
-    }
-    function isASCIIAlphanumeric(c) {
-      return isASCIIAlpha(c) || isASCIIDigit(c);
-    }
-    function isASCIIHex(c) {
-      return isASCIIDigit(c) || c >= 65 && c <= 70 || c >= 97 && c <= 102;
-    }
-    function isSingleDot(buffer) {
-      return buffer === "." || buffer.toLowerCase() === "%2e";
-    }
-    function isDoubleDot(buffer) {
-      buffer = buffer.toLowerCase();
-      return buffer === ".." || buffer === "%2e." || buffer === ".%2e" || buffer === "%2e%2e";
-    }
-    function isWindowsDriveLetterCodePoints(cp1, cp2) {
-      return isASCIIAlpha(cp1) && (cp2 === 58 || cp2 === 124);
-    }
-    function isWindowsDriveLetterString(string) {
-      return string.length === 2 && isASCIIAlpha(string.codePointAt(0)) && (string[1] === ":" || string[1] === "|");
-    }
-    function isNormalizedWindowsDriveLetterString(string) {
-      return string.length === 2 && isASCIIAlpha(string.codePointAt(0)) && string[1] === ":";
-    }
-    function containsForbiddenHostCodePoint(string) {
-      return string.search(/\u0000|\u0009|\u000A|\u000D|\u0020|#|%|\/|:|\?|@|\[|\\|\]/) !== -1;
-    }
-    function containsForbiddenHostCodePointExcludingPercent(string) {
-      return string.search(/\u0000|\u0009|\u000A|\u000D|\u0020|#|\/|:|\?|@|\[|\\|\]/) !== -1;
-    }
-    function isSpecialScheme(scheme) {
-      return specialSchemes[scheme] !== void 0;
-    }
-    function isSpecial(url) {
-      return isSpecialScheme(url.scheme);
-    }
-    function defaultPort(scheme) {
-      return specialSchemes[scheme];
-    }
-    function percentEncode(c) {
-      let hex = c.toString(16).toUpperCase();
-      if (hex.length === 1) {
-        hex = "0" + hex;
-      }
-      return "%" + hex;
-    }
-    function utf8PercentEncode(c) {
-      const buf = new Buffer(c);
-      let str = "";
-      for (let i = 0; i < buf.length; ++i) {
-        str += percentEncode(buf[i]);
-      }
-      return str;
-    }
-    function utf8PercentDecode(str) {
-      const input = new Buffer(str);
-      const output = [];
-      for (let i = 0; i < input.length; ++i) {
-        if (input[i] !== 37) {
-          output.push(input[i]);
-        } else if (input[i] === 37 && isASCIIHex(input[i + 1]) && isASCIIHex(input[i + 2])) {
-          output.push(parseInt(input.slice(i + 1, i + 3).toString(), 16));
-          i += 2;
-        } else {
-          output.push(input[i]);
-        }
-      }
-      return new Buffer(output).toString();
-    }
-    function isC0ControlPercentEncode(c) {
-      return c <= 31 || c > 126;
-    }
-    var extraPathPercentEncodeSet = /* @__PURE__ */ new Set([32, 34, 35, 60, 62, 63, 96, 123, 125]);
-    function isPathPercentEncode(c) {
-      return isC0ControlPercentEncode(c) || extraPathPercentEncodeSet.has(c);
-    }
-    var extraUserinfoPercentEncodeSet = /* @__PURE__ */ new Set([47, 58, 59, 61, 64, 91, 92, 93, 94, 124]);
-    function isUserinfoPercentEncode(c) {
-      return isPathPercentEncode(c) || extraUserinfoPercentEncodeSet.has(c);
-    }
-    function percentEncodeChar(c, encodeSetPredicate) {
-      const cStr = String.fromCodePoint(c);
-      if (encodeSetPredicate(c)) {
-        return utf8PercentEncode(cStr);
-      }
-      return cStr;
-    }
-    function parseIPv4Number(input) {
-      let R = 10;
-      if (input.length >= 2 && input.charAt(0) === "0" && input.charAt(1).toLowerCase() === "x") {
-        input = input.substring(2);
-        R = 16;
-      } else if (input.length >= 2 && input.charAt(0) === "0") {
-        input = input.substring(1);
-        R = 8;
-      }
-      if (input === "") {
-        return 0;
-      }
-      const regex = R === 10 ? /[^0-9]/ : R === 16 ? /[^0-9A-Fa-f]/ : /[^0-7]/;
-      if (regex.test(input)) {
-        return failure;
-      }
-      return parseInt(input, R);
-    }
-    function parseIPv4(input) {
-      const parts = input.split(".");
-      if (parts[parts.length - 1] === "") {
-        if (parts.length > 1) {
-          parts.pop();
-        }
-      }
-      if (parts.length > 4) {
-        return input;
-      }
-      const numbers = [];
-      for (const part of parts) {
-        if (part === "") {
-          return input;
-        }
-        const n = parseIPv4Number(part);
-        if (n === failure) {
-          return input;
-        }
-        numbers.push(n);
-      }
-      for (let i = 0; i < numbers.length - 1; ++i) {
-        if (numbers[i] > 255) {
-          return failure;
-        }
-      }
-      if (numbers[numbers.length - 1] >= Math.pow(256, 5 - numbers.length)) {
-        return failure;
-      }
-      let ipv4 = numbers.pop();
-      let counter = 0;
-      for (const n of numbers) {
-        ipv4 += n * Math.pow(256, 3 - counter);
-        ++counter;
-      }
-      return ipv4;
-    }
-    function serializeIPv4(address) {
-      let output = "";
-      let n = address;
-      for (let i = 1; i <= 4; ++i) {
-        output = String(n % 256) + output;
-        if (i !== 4) {
-          output = "." + output;
-        }
-        n = Math.floor(n / 256);
-      }
-      return output;
-    }
-    function parseIPv6(input) {
-      const address = [0, 0, 0, 0, 0, 0, 0, 0];
-      let pieceIndex = 0;
-      let compress = null;
-      let pointer = 0;
-      input = punycode.ucs2.decode(input);
-      if (input[pointer] === 58) {
-        if (input[pointer + 1] !== 58) {
-          return failure;
-        }
-        pointer += 2;
-        ++pieceIndex;
-        compress = pieceIndex;
-      }
-      while (pointer < input.length) {
-        if (pieceIndex === 8) {
-          return failure;
-        }
-        if (input[pointer] === 58) {
-          if (compress !== null) {
-            return failure;
-          }
-          ++pointer;
-          ++pieceIndex;
-          compress = pieceIndex;
-          continue;
-        }
-        let value = 0;
-        let length = 0;
-        while (length < 4 && isASCIIHex(input[pointer])) {
-          value = value * 16 + parseInt(at(input, pointer), 16);
-          ++pointer;
-          ++length;
-        }
-        if (input[pointer] === 46) {
-          if (length === 0) {
-            return failure;
-          }
-          pointer -= length;
-          if (pieceIndex > 6) {
-            return failure;
-          }
-          let numbersSeen = 0;
-          while (input[pointer] !== void 0) {
-            let ipv4Piece = null;
-            if (numbersSeen > 0) {
-              if (input[pointer] === 46 && numbersSeen < 4) {
-                ++pointer;
-              } else {
-                return failure;
-              }
-            }
-            if (!isASCIIDigit(input[pointer])) {
-              return failure;
-            }
-            while (isASCIIDigit(input[pointer])) {
-              const number = parseInt(at(input, pointer));
-              if (ipv4Piece === null) {
-                ipv4Piece = number;
-              } else if (ipv4Piece === 0) {
-                return failure;
-              } else {
-                ipv4Piece = ipv4Piece * 10 + number;
-              }
-              if (ipv4Piece > 255) {
-                return failure;
-              }
-              ++pointer;
-            }
-            address[pieceIndex] = address[pieceIndex] * 256 + ipv4Piece;
-            ++numbersSeen;
-            if (numbersSeen === 2 || numbersSeen === 4) {
-              ++pieceIndex;
-            }
-          }
-          if (numbersSeen !== 4) {
-            return failure;
-          }
-          break;
-        } else if (input[pointer] === 58) {
-          ++pointer;
-          if (input[pointer] === void 0) {
-            return failure;
-          }
-        } else if (input[pointer] !== void 0) {
-          return failure;
-        }
-        address[pieceIndex] = value;
-        ++pieceIndex;
-      }
-      if (compress !== null) {
-        let swaps = pieceIndex - compress;
-        pieceIndex = 7;
-        while (pieceIndex !== 0 && swaps > 0) {
-          const temp = address[compress + swaps - 1];
-          address[compress + swaps - 1] = address[pieceIndex];
-          address[pieceIndex] = temp;
-          --pieceIndex;
-          --swaps;
-        }
-      } else if (compress === null && pieceIndex !== 8) {
-        return failure;
-      }
-      return address;
-    }
-    function serializeIPv6(address) {
-      let output = "";
-      const seqResult = findLongestZeroSequence(address);
-      const compress = seqResult.idx;
-      let ignore0 = false;
-      for (let pieceIndex = 0; pieceIndex <= 7; ++pieceIndex) {
-        if (ignore0 && address[pieceIndex] === 0) {
-          continue;
-        } else if (ignore0) {
-          ignore0 = false;
-        }
-        if (compress === pieceIndex) {
-          const separator = pieceIndex === 0 ? "::" : ":";
-          output += separator;
-          ignore0 = true;
-          continue;
-        }
-        output += address[pieceIndex].toString(16);
-        if (pieceIndex !== 7) {
-          output += ":";
-        }
-      }
-      return output;
-    }
-    function parseHost(input, isSpecialArg) {
-      if (input[0] === "[") {
-        if (input[input.length - 1] !== "]") {
-          return failure;
-        }
-        return parseIPv6(input.substring(1, input.length - 1));
-      }
-      if (!isSpecialArg) {
-        return parseOpaqueHost(input);
-      }
-      const domain = utf8PercentDecode(input);
-      const asciiDomain = tr46.toASCII(domain, false, tr46.PROCESSING_OPTIONS.NONTRANSITIONAL, false);
-      if (asciiDomain === null) {
-        return failure;
-      }
-      if (containsForbiddenHostCodePoint(asciiDomain)) {
-        return failure;
-      }
-      const ipv4Host = parseIPv4(asciiDomain);
-      if (typeof ipv4Host === "number" || ipv4Host === failure) {
-        return ipv4Host;
-      }
-      return asciiDomain;
-    }
-    function parseOpaqueHost(input) {
-      if (containsForbiddenHostCodePointExcludingPercent(input)) {
-        return failure;
-      }
-      let output = "";
-      const decoded = punycode.ucs2.decode(input);
-      for (let i = 0; i < decoded.length; ++i) {
-        output += percentEncodeChar(decoded[i], isC0ControlPercentEncode);
-      }
-      return output;
-    }
-    function findLongestZeroSequence(arr) {
-      let maxIdx = null;
-      let maxLen = 1;
-      let currStart = null;
-      let currLen = 0;
-      for (let i = 0; i < arr.length; ++i) {
-        if (arr[i] !== 0) {
-          if (currLen > maxLen) {
-            maxIdx = currStart;
-            maxLen = currLen;
-          }
-          currStart = null;
-          currLen = 0;
-        } else {
-          if (currStart === null) {
-            currStart = i;
-          }
-          ++currLen;
-        }
-      }
-      if (currLen > maxLen) {
-        maxIdx = currStart;
-        maxLen = currLen;
-      }
-      return {
-        idx: maxIdx,
-        len: maxLen
-      };
-    }
-    function serializeHost(host) {
-      if (typeof host === "number") {
-        return serializeIPv4(host);
-      }
-      if (host instanceof Array) {
-        return "[" + serializeIPv6(host) + "]";
-      }
-      return host;
-    }
-    function trimControlChars(url) {
-      return url.replace(/^[\u0000-\u001F\u0020]+|[\u0000-\u001F\u0020]+$/g, "");
-    }
-    function trimTabAndNewline(url) {
-      return url.replace(/\u0009|\u000A|\u000D/g, "");
-    }
-    function shortenPath(url) {
-      const path = url.path;
-      if (path.length === 0) {
-        return;
-      }
-      if (url.scheme === "file" && path.length === 1 && isNormalizedWindowsDriveLetter(path[0])) {
-        return;
-      }
-      path.pop();
-    }
-    function includesCredentials(url) {
-      return url.username !== "" || url.password !== "";
-    }
-    function cannotHaveAUsernamePasswordPort(url) {
-      return url.host === null || url.host === "" || url.cannotBeABaseURL || url.scheme === "file";
-    }
-    function isNormalizedWindowsDriveLetter(string) {
-      return /^[A-Za-z]:$/.test(string);
-    }
-    function URLStateMachine(input, base, encodingOverride, url, stateOverride) {
-      this.pointer = 0;
-      this.input = input;
-      this.base = base || null;
-      this.encodingOverride = encodingOverride || "utf-8";
-      this.stateOverride = stateOverride;
-      this.url = url;
-      this.failure = false;
-      this.parseError = false;
-      if (!this.url) {
-        this.url = {
-          scheme: "",
-          username: "",
-          password: "",
-          host: null,
-          port: null,
-          path: [],
-          query: null,
-          fragment: null,
-          cannotBeABaseURL: false
-        };
-        const res2 = trimControlChars(this.input);
-        if (res2 !== this.input) {
-          this.parseError = true;
-        }
-        this.input = res2;
-      }
-      const res = trimTabAndNewline(this.input);
-      if (res !== this.input) {
-        this.parseError = true;
-      }
-      this.input = res;
-      this.state = stateOverride || "scheme start";
-      this.buffer = "";
-      this.atFlag = false;
-      this.arrFlag = false;
-      this.passwordTokenSeenFlag = false;
-      this.input = punycode.ucs2.decode(this.input);
-      for (; this.pointer <= this.input.length; ++this.pointer) {
-        const c = this.input[this.pointer];
-        const cStr = isNaN(c) ? void 0 : String.fromCodePoint(c);
-        const ret = this["parse " + this.state](c, cStr);
-        if (!ret) {
-          break;
-        } else if (ret === failure) {
-          this.failure = true;
-          break;
-        }
-      }
-    }
-    URLStateMachine.prototype["parse scheme start"] = function parseSchemeStart(c, cStr) {
-      if (isASCIIAlpha(c)) {
-        this.buffer += cStr.toLowerCase();
-        this.state = "scheme";
-      } else if (!this.stateOverride) {
-        this.state = "no scheme";
-        --this.pointer;
-      } else {
-        this.parseError = true;
-        return failure;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse scheme"] = function parseScheme(c, cStr) {
-      if (isASCIIAlphanumeric(c) || c === 43 || c === 45 || c === 46) {
-        this.buffer += cStr.toLowerCase();
-      } else if (c === 58) {
-        if (this.stateOverride) {
-          if (isSpecial(this.url) && !isSpecialScheme(this.buffer)) {
-            return false;
-          }
-          if (!isSpecial(this.url) && isSpecialScheme(this.buffer)) {
-            return false;
-          }
-          if ((includesCredentials(this.url) || this.url.port !== null) && this.buffer === "file") {
-            return false;
-          }
-          if (this.url.scheme === "file" && (this.url.host === "" || this.url.host === null)) {
-            return false;
-          }
-        }
-        this.url.scheme = this.buffer;
-        this.buffer = "";
-        if (this.stateOverride) {
-          return false;
-        }
-        if (this.url.scheme === "file") {
-          if (this.input[this.pointer + 1] !== 47 || this.input[this.pointer + 2] !== 47) {
-            this.parseError = true;
-          }
-          this.state = "file";
-        } else if (isSpecial(this.url) && this.base !== null && this.base.scheme === this.url.scheme) {
-          this.state = "special relative or authority";
-        } else if (isSpecial(this.url)) {
-          this.state = "special authority slashes";
-        } else if (this.input[this.pointer + 1] === 47) {
-          this.state = "path or authority";
-          ++this.pointer;
-        } else {
-          this.url.cannotBeABaseURL = true;
-          this.url.path.push("");
-          this.state = "cannot-be-a-base-URL path";
-        }
-      } else if (!this.stateOverride) {
-        this.buffer = "";
-        this.state = "no scheme";
-        this.pointer = -1;
-      } else {
-        this.parseError = true;
-        return failure;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse no scheme"] = function parseNoScheme(c) {
-      if (this.base === null || this.base.cannotBeABaseURL && c !== 35) {
-        return failure;
-      } else if (this.base.cannotBeABaseURL && c === 35) {
-        this.url.scheme = this.base.scheme;
-        this.url.path = this.base.path.slice();
-        this.url.query = this.base.query;
-        this.url.fragment = "";
-        this.url.cannotBeABaseURL = true;
-        this.state = "fragment";
-      } else if (this.base.scheme === "file") {
-        this.state = "file";
-        --this.pointer;
-      } else {
-        this.state = "relative";
-        --this.pointer;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse special relative or authority"] = function parseSpecialRelativeOrAuthority(c) {
-      if (c === 47 && this.input[this.pointer + 1] === 47) {
-        this.state = "special authority ignore slashes";
-        ++this.pointer;
-      } else {
-        this.parseError = true;
-        this.state = "relative";
-        --this.pointer;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse path or authority"] = function parsePathOrAuthority(c) {
-      if (c === 47) {
-        this.state = "authority";
-      } else {
-        this.state = "path";
-        --this.pointer;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse relative"] = function parseRelative(c) {
-      this.url.scheme = this.base.scheme;
-      if (isNaN(c)) {
-        this.url.username = this.base.username;
-        this.url.password = this.base.password;
-        this.url.host = this.base.host;
-        this.url.port = this.base.port;
-        this.url.path = this.base.path.slice();
-        this.url.query = this.base.query;
-      } else if (c === 47) {
-        this.state = "relative slash";
-      } else if (c === 63) {
-        this.url.username = this.base.username;
-        this.url.password = this.base.password;
-        this.url.host = this.base.host;
-        this.url.port = this.base.port;
-        this.url.path = this.base.path.slice();
-        this.url.query = "";
-        this.state = "query";
-      } else if (c === 35) {
-        this.url.username = this.base.username;
-        this.url.password = this.base.password;
-        this.url.host = this.base.host;
-        this.url.port = this.base.port;
-        this.url.path = this.base.path.slice();
-        this.url.query = this.base.query;
-        this.url.fragment = "";
-        this.state = "fragment";
-      } else if (isSpecial(this.url) && c === 92) {
-        this.parseError = true;
-        this.state = "relative slash";
-      } else {
-        this.url.username = this.base.username;
-        this.url.password = this.base.password;
-        this.url.host = this.base.host;
-        this.url.port = this.base.port;
-        this.url.path = this.base.path.slice(0, this.base.path.length - 1);
-        this.state = "path";
-        --this.pointer;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse relative slash"] = function parseRelativeSlash(c) {
-      if (isSpecial(this.url) && (c === 47 || c === 92)) {
-        if (c === 92) {
-          this.parseError = true;
-        }
-        this.state = "special authority ignore slashes";
-      } else if (c === 47) {
-        this.state = "authority";
-      } else {
-        this.url.username = this.base.username;
-        this.url.password = this.base.password;
-        this.url.host = this.base.host;
-        this.url.port = this.base.port;
-        this.state = "path";
-        --this.pointer;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse special authority slashes"] = function parseSpecialAuthoritySlashes(c) {
-      if (c === 47 && this.input[this.pointer + 1] === 47) {
-        this.state = "special authority ignore slashes";
-        ++this.pointer;
-      } else {
-        this.parseError = true;
-        this.state = "special authority ignore slashes";
-        --this.pointer;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse special authority ignore slashes"] = function parseSpecialAuthorityIgnoreSlashes(c) {
-      if (c !== 47 && c !== 92) {
-        this.state = "authority";
-        --this.pointer;
-      } else {
-        this.parseError = true;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse authority"] = function parseAuthority(c, cStr) {
-      if (c === 64) {
-        this.parseError = true;
-        if (this.atFlag) {
-          this.buffer = "%40" + this.buffer;
-        }
-        this.atFlag = true;
-        const len = countSymbols(this.buffer);
-        for (let pointer = 0; pointer < len; ++pointer) {
-          const codePoint = this.buffer.codePointAt(pointer);
-          if (codePoint === 58 && !this.passwordTokenSeenFlag) {
-            this.passwordTokenSeenFlag = true;
-            continue;
-          }
-          const encodedCodePoints = percentEncodeChar(codePoint, isUserinfoPercentEncode);
-          if (this.passwordTokenSeenFlag) {
-            this.url.password += encodedCodePoints;
-          } else {
-            this.url.username += encodedCodePoints;
-          }
-        }
-        this.buffer = "";
-      } else if (isNaN(c) || c === 47 || c === 63 || c === 35 || isSpecial(this.url) && c === 92) {
-        if (this.atFlag && this.buffer === "") {
-          this.parseError = true;
-          return failure;
-        }
-        this.pointer -= countSymbols(this.buffer) + 1;
-        this.buffer = "";
-        this.state = "host";
-      } else {
-        this.buffer += cStr;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse hostname"] = URLStateMachine.prototype["parse host"] = function parseHostName(c, cStr) {
-      if (this.stateOverride && this.url.scheme === "file") {
-        --this.pointer;
-        this.state = "file host";
-      } else if (c === 58 && !this.arrFlag) {
-        if (this.buffer === "") {
-          this.parseError = true;
-          return failure;
-        }
-        const host = parseHost(this.buffer, isSpecial(this.url));
-        if (host === failure) {
-          return failure;
-        }
-        this.url.host = host;
-        this.buffer = "";
-        this.state = "port";
-        if (this.stateOverride === "hostname") {
-          return false;
-        }
-      } else if (isNaN(c) || c === 47 || c === 63 || c === 35 || isSpecial(this.url) && c === 92) {
-        --this.pointer;
-        if (isSpecial(this.url) && this.buffer === "") {
-          this.parseError = true;
-          return failure;
-        } else if (this.stateOverride && this.buffer === "" && (includesCredentials(this.url) || this.url.port !== null)) {
-          this.parseError = true;
-          return false;
-        }
-        const host = parseHost(this.buffer, isSpecial(this.url));
-        if (host === failure) {
-          return failure;
-        }
-        this.url.host = host;
-        this.buffer = "";
-        this.state = "path start";
-        if (this.stateOverride) {
-          return false;
-        }
-      } else {
-        if (c === 91) {
-          this.arrFlag = true;
-        } else if (c === 93) {
-          this.arrFlag = false;
-        }
-        this.buffer += cStr;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse port"] = function parsePort(c, cStr) {
-      if (isASCIIDigit(c)) {
-        this.buffer += cStr;
-      } else if (isNaN(c) || c === 47 || c === 63 || c === 35 || isSpecial(this.url) && c === 92 || this.stateOverride) {
-        if (this.buffer !== "") {
-          const port = parseInt(this.buffer);
-          if (port > Math.pow(2, 16) - 1) {
-            this.parseError = true;
-            return failure;
-          }
-          this.url.port = port === defaultPort(this.url.scheme) ? null : port;
-          this.buffer = "";
-        }
-        if (this.stateOverride) {
-          return false;
-        }
-        this.state = "path start";
-        --this.pointer;
-      } else {
-        this.parseError = true;
-        return failure;
-      }
-      return true;
-    };
-    var fileOtherwiseCodePoints = /* @__PURE__ */ new Set([47, 92, 63, 35]);
-    URLStateMachine.prototype["parse file"] = function parseFile(c) {
-      this.url.scheme = "file";
-      if (c === 47 || c === 92) {
-        if (c === 92) {
-          this.parseError = true;
-        }
-        this.state = "file slash";
-      } else if (this.base !== null && this.base.scheme === "file") {
-        if (isNaN(c)) {
-          this.url.host = this.base.host;
-          this.url.path = this.base.path.slice();
-          this.url.query = this.base.query;
-        } else if (c === 63) {
-          this.url.host = this.base.host;
-          this.url.path = this.base.path.slice();
-          this.url.query = "";
-          this.state = "query";
-        } else if (c === 35) {
-          this.url.host = this.base.host;
-          this.url.path = this.base.path.slice();
-          this.url.query = this.base.query;
-          this.url.fragment = "";
-          this.state = "fragment";
-        } else {
-          if (this.input.length - this.pointer - 1 === 0 || !isWindowsDriveLetterCodePoints(c, this.input[this.pointer + 1]) || this.input.length - this.pointer - 1 >= 2 && !fileOtherwiseCodePoints.has(this.input[this.pointer + 2])) {
-            this.url.host = this.base.host;
-            this.url.path = this.base.path.slice();
-            shortenPath(this.url);
-          } else {
-            this.parseError = true;
-          }
-          this.state = "path";
-          --this.pointer;
-        }
-      } else {
-        this.state = "path";
-        --this.pointer;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse file slash"] = function parseFileSlash(c) {
-      if (c === 47 || c === 92) {
-        if (c === 92) {
-          this.parseError = true;
-        }
-        this.state = "file host";
-      } else {
-        if (this.base !== null && this.base.scheme === "file") {
-          if (isNormalizedWindowsDriveLetterString(this.base.path[0])) {
-            this.url.path.push(this.base.path[0]);
-          } else {
-            this.url.host = this.base.host;
-          }
-        }
-        this.state = "path";
-        --this.pointer;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse file host"] = function parseFileHost(c, cStr) {
-      if (isNaN(c) || c === 47 || c === 92 || c === 63 || c === 35) {
-        --this.pointer;
-        if (!this.stateOverride && isWindowsDriveLetterString(this.buffer)) {
-          this.parseError = true;
-          this.state = "path";
-        } else if (this.buffer === "") {
-          this.url.host = "";
-          if (this.stateOverride) {
-            return false;
-          }
-          this.state = "path start";
-        } else {
-          let host = parseHost(this.buffer, isSpecial(this.url));
-          if (host === failure) {
-            return failure;
-          }
-          if (host === "localhost") {
-            host = "";
-          }
-          this.url.host = host;
-          if (this.stateOverride) {
-            return false;
-          }
-          this.buffer = "";
-          this.state = "path start";
-        }
-      } else {
-        this.buffer += cStr;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse path start"] = function parsePathStart(c) {
-      if (isSpecial(this.url)) {
-        if (c === 92) {
-          this.parseError = true;
-        }
-        this.state = "path";
-        if (c !== 47 && c !== 92) {
-          --this.pointer;
-        }
-      } else if (!this.stateOverride && c === 63) {
-        this.url.query = "";
-        this.state = "query";
-      } else if (!this.stateOverride && c === 35) {
-        this.url.fragment = "";
-        this.state = "fragment";
-      } else if (c !== void 0) {
-        this.state = "path";
-        if (c !== 47) {
-          --this.pointer;
-        }
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse path"] = function parsePath(c) {
-      if (isNaN(c) || c === 47 || isSpecial(this.url) && c === 92 || !this.stateOverride && (c === 63 || c === 35)) {
-        if (isSpecial(this.url) && c === 92) {
-          this.parseError = true;
-        }
-        if (isDoubleDot(this.buffer)) {
-          shortenPath(this.url);
-          if (c !== 47 && !(isSpecial(this.url) && c === 92)) {
-            this.url.path.push("");
-          }
-        } else if (isSingleDot(this.buffer) && c !== 47 && !(isSpecial(this.url) && c === 92)) {
-          this.url.path.push("");
-        } else if (!isSingleDot(this.buffer)) {
-          if (this.url.scheme === "file" && this.url.path.length === 0 && isWindowsDriveLetterString(this.buffer)) {
-            if (this.url.host !== "" && this.url.host !== null) {
-              this.parseError = true;
-              this.url.host = "";
-            }
-            this.buffer = this.buffer[0] + ":";
-          }
-          this.url.path.push(this.buffer);
-        }
-        this.buffer = "";
-        if (this.url.scheme === "file" && (c === void 0 || c === 63 || c === 35)) {
-          while (this.url.path.length > 1 && this.url.path[0] === "") {
-            this.parseError = true;
-            this.url.path.shift();
-          }
-        }
-        if (c === 63) {
-          this.url.query = "";
-          this.state = "query";
-        }
-        if (c === 35) {
-          this.url.fragment = "";
-          this.state = "fragment";
-        }
-      } else {
-        if (c === 37 && (!isASCIIHex(this.input[this.pointer + 1]) || !isASCIIHex(this.input[this.pointer + 2]))) {
-          this.parseError = true;
-        }
-        this.buffer += percentEncodeChar(c, isPathPercentEncode);
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse cannot-be-a-base-URL path"] = function parseCannotBeABaseURLPath(c) {
-      if (c === 63) {
-        this.url.query = "";
-        this.state = "query";
-      } else if (c === 35) {
-        this.url.fragment = "";
-        this.state = "fragment";
-      } else {
-        if (!isNaN(c) && c !== 37) {
-          this.parseError = true;
-        }
-        if (c === 37 && (!isASCIIHex(this.input[this.pointer + 1]) || !isASCIIHex(this.input[this.pointer + 2]))) {
-          this.parseError = true;
-        }
-        if (!isNaN(c)) {
-          this.url.path[0] = this.url.path[0] + percentEncodeChar(c, isC0ControlPercentEncode);
-        }
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse query"] = function parseQuery(c, cStr) {
-      if (isNaN(c) || !this.stateOverride && c === 35) {
-        if (!isSpecial(this.url) || this.url.scheme === "ws" || this.url.scheme === "wss") {
-          this.encodingOverride = "utf-8";
-        }
-        const buffer = new Buffer(this.buffer);
-        for (let i = 0; i < buffer.length; ++i) {
-          if (buffer[i] < 33 || buffer[i] > 126 || buffer[i] === 34 || buffer[i] === 35 || buffer[i] === 60 || buffer[i] === 62) {
-            this.url.query += percentEncode(buffer[i]);
-          } else {
-            this.url.query += String.fromCodePoint(buffer[i]);
-          }
-        }
-        this.buffer = "";
-        if (c === 35) {
-          this.url.fragment = "";
-          this.state = "fragment";
-        }
-      } else {
-        if (c === 37 && (!isASCIIHex(this.input[this.pointer + 1]) || !isASCIIHex(this.input[this.pointer + 2]))) {
-          this.parseError = true;
-        }
-        this.buffer += cStr;
-      }
-      return true;
-    };
-    URLStateMachine.prototype["parse fragment"] = function parseFragment(c) {
-      if (isNaN(c)) {
-      } else if (c === 0) {
-        this.parseError = true;
-      } else {
-        if (c === 37 && (!isASCIIHex(this.input[this.pointer + 1]) || !isASCIIHex(this.input[this.pointer + 2]))) {
-          this.parseError = true;
-        }
-        this.url.fragment += percentEncodeChar(c, isC0ControlPercentEncode);
-      }
-      return true;
-    };
-    function serializeURL(url, excludeFragment) {
-      let output = url.scheme + ":";
-      if (url.host !== null) {
-        output += "//";
-        if (url.username !== "" || url.password !== "") {
-          output += url.username;
-          if (url.password !== "") {
-            output += ":" + url.password;
-          }
-          output += "@";
-        }
-        output += serializeHost(url.host);
-        if (url.port !== null) {
-          output += ":" + url.port;
-        }
-      } else if (url.host === null && url.scheme === "file") {
-        output += "//";
-      }
-      if (url.cannotBeABaseURL) {
-        output += url.path[0];
-      } else {
-        for (const string of url.path) {
-          output += "/" + string;
-        }
-      }
-      if (url.query !== null) {
-        output += "?" + url.query;
-      }
-      if (!excludeFragment && url.fragment !== null) {
-        output += "#" + url.fragment;
-      }
-      return output;
-    }
-    function serializeOrigin(tuple) {
-      let result = tuple.scheme + "://";
-      result += serializeHost(tuple.host);
-      if (tuple.port !== null) {
-        result += ":" + tuple.port;
-      }
-      return result;
-    }
-    module.exports.serializeURL = serializeURL;
-    module.exports.serializeURLOrigin = function(url) {
-      switch (url.scheme) {
-        case "blob":
-          try {
-            return module.exports.serializeURLOrigin(module.exports.parseURL(url.path[0]));
-          } catch (e) {
-            return "null";
-          }
-        case "ftp":
-        case "gopher":
-        case "http":
-        case "https":
-        case "ws":
-        case "wss":
-          return serializeOrigin({
-            scheme: url.scheme,
-            host: url.host,
-            port: url.port
-          });
-        case "file":
-          return "file://";
-        default:
-          return "null";
-      }
-    };
-    module.exports.basicURLParse = function(input, options) {
-      if (options === void 0) {
-        options = {};
-      }
-      const usm = new URLStateMachine(input, options.baseURL, options.encodingOverride, options.url, options.stateOverride);
-      if (usm.failure) {
-        return "failure";
-      }
-      return usm.url;
-    };
-    module.exports.setTheUsername = function(url, username) {
-      url.username = "";
-      const decoded = punycode.ucs2.decode(username);
-      for (let i = 0; i < decoded.length; ++i) {
-        url.username += percentEncodeChar(decoded[i], isUserinfoPercentEncode);
-      }
-    };
-    module.exports.setThePassword = function(url, password) {
-      url.password = "";
-      const decoded = punycode.ucs2.decode(password);
-      for (let i = 0; i < decoded.length; ++i) {
-        url.password += percentEncodeChar(decoded[i], isUserinfoPercentEncode);
-      }
-    };
-    module.exports.serializeHost = serializeHost;
-    module.exports.cannotHaveAUsernamePasswordPort = cannotHaveAUsernamePasswordPort;
-    module.exports.serializeInteger = function(integer) {
-      return String(integer);
-    };
-    module.exports.parseURL = function(input, options) {
-      if (options === void 0) {
-        options = {};
-      }
-      return module.exports.basicURLParse(input, { baseURL: options.baseURL, encodingOverride: options.encodingOverride });
-    };
-  }
-});
-
-// 
-var require_URL_impl2 = __commonJS({
-  ""(exports) {
-    "use strict";
-    var usm = require_url_state_machine2();
-    exports.implementation = class URLImpl {
-      constructor(constructorArgs) {
-        const url = constructorArgs[0];
-        const base = constructorArgs[1];
-        let parsedBase = null;
-        if (base !== void 0) {
-          parsedBase = usm.basicURLParse(base);
-          if (parsedBase === "failure") {
-            throw new TypeError("Invalid base URL");
-          }
-        }
-        const parsedURL = usm.basicURLParse(url, { baseURL: parsedBase });
-        if (parsedURL === "failure") {
-          throw new TypeError("Invalid URL");
-        }
-        this._url = parsedURL;
-      }
-      get href() {
-        return usm.serializeURL(this._url);
-      }
-      set href(v) {
-        const parsedURL = usm.basicURLParse(v);
-        if (parsedURL === "failure") {
-          throw new TypeError("Invalid URL");
-        }
-        this._url = parsedURL;
-      }
-      get origin() {
-        return usm.serializeURLOrigin(this._url);
-      }
-      get protocol() {
-        return this._url.scheme + ":";
-      }
-      set protocol(v) {
-        usm.basicURLParse(v + ":", { url: this._url, stateOverride: "scheme start" });
-      }
-      get username() {
-        return this._url.username;
-      }
-      set username(v) {
-        if (usm.cannotHaveAUsernamePasswordPort(this._url)) {
-          return;
-        }
-        usm.setTheUsername(this._url, v);
-      }
-      get password() {
-        return this._url.password;
-      }
-      set password(v) {
-        if (usm.cannotHaveAUsernamePasswordPort(this._url)) {
-          return;
-        }
-        usm.setThePassword(this._url, v);
-      }
-      get host() {
-        const url = this._url;
-        if (url.host === null) {
-          return "";
-        }
-        if (url.port === null) {
-          return usm.serializeHost(url.host);
-        }
-        return usm.serializeHost(url.host) + ":" + usm.serializeInteger(url.port);
-      }
-      set host(v) {
-        if (this._url.cannotBeABaseURL) {
-          return;
-        }
-        usm.basicURLParse(v, { url: this._url, stateOverride: "host" });
-      }
-      get hostname() {
-        if (this._url.host === null) {
-          return "";
-        }
-        return usm.serializeHost(this._url.host);
-      }
-      set hostname(v) {
-        if (this._url.cannotBeABaseURL) {
-          return;
-        }
-        usm.basicURLParse(v, { url: this._url, stateOverride: "hostname" });
-      }
-      get port() {
-        if (this._url.port === null) {
-          return "";
-        }
-        return usm.serializeInteger(this._url.port);
-      }
-      set port(v) {
-        if (usm.cannotHaveAUsernamePasswordPort(this._url)) {
-          return;
-        }
-        if (v === "") {
-          this._url.port = null;
-        } else {
-          usm.basicURLParse(v, { url: this._url, stateOverride: "port" });
-        }
-      }
-      get pathname() {
-        if (this._url.cannotBeABaseURL) {
-          return this._url.path[0];
-        }
-        if (this._url.path.length === 0) {
-          return "";
-        }
-        return "/" + this._url.path.join("/");
-      }
-      set pathname(v) {
-        if (this._url.cannotBeABaseURL) {
-          return;
-        }
-        this._url.path = [];
-        usm.basicURLParse(v, { url: this._url, stateOverride: "path start" });
-      }
-      get search() {
-        if (this._url.query === null || this._url.query === "") {
-          return "";
-        }
-        return "?" + this._url.query;
-      }
-      set search(v) {
-        const url = this._url;
-        if (v === "") {
-          url.query = null;
-          return;
-        }
-        const input = v[0] === "?" ? v.substring(1) : v;
-        url.query = "";
-        usm.basicURLParse(input, { url, stateOverride: "query" });
-      }
-      get hash() {
-        if (this._url.fragment === null || this._url.fragment === "") {
-          return "";
-        }
-        return "#" + this._url.fragment;
-      }
-      set hash(v) {
-        if (v === "") {
-          this._url.fragment = null;
-          return;
-        }
-        const input = v[0] === "#" ? v.substring(1) : v;
-        this._url.fragment = "";
-        usm.basicURLParse(input, { url: this._url, stateOverride: "fragment" });
-      }
-      toJSON() {
-        return this.href;
-      }
-    };
-  }
-});
-
-// 
-var require_URL2 = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    var conversions = require_lib5();
-    var utils = require_utils5();
-    var Impl = require_URL_impl2();
-    var impl = utils.implSymbol;
-    function URL3(url) {
-      if (!this || this[impl] || !(this instanceof URL3)) {
-        throw new TypeError("Failed to construct 'URL': Please use the 'new' operator, this DOM object constructor cannot be called as a function.");
-      }
-      if (arguments.length < 1) {
-        throw new TypeError("Failed to construct 'URL': 1 argument required, but only " + arguments.length + " present.");
-      }
-      const args = [];
-      for (let i = 0; i < arguments.length && i < 2; ++i) {
-        args[i] = arguments[i];
-      }
-      args[0] = conversions["USVString"](args[0]);
-      if (args[1] !== void 0) {
-        args[1] = conversions["USVString"](args[1]);
-      }
-      module.exports.setup(this, args);
-    }
-    URL3.prototype.toJSON = function toJSON() {
-      if (!this || !module.exports.is(this)) {
-        throw new TypeError("Illegal invocation");
-      }
-      const args = [];
-      for (let i = 0; i < arguments.length && i < 0; ++i) {
-        args[i] = arguments[i];
-      }
-      return this[impl].toJSON.apply(this[impl], args);
-    };
-    Object.defineProperty(URL3.prototype, "href", {
-      get() {
-        return this[impl].href;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].href = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    URL3.prototype.toString = function() {
-      if (!this || !module.exports.is(this)) {
-        throw new TypeError("Illegal invocation");
-      }
-      return this.href;
-    };
-    Object.defineProperty(URL3.prototype, "origin", {
-      get() {
-        return this[impl].origin;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "protocol", {
-      get() {
-        return this[impl].protocol;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].protocol = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "username", {
-      get() {
-        return this[impl].username;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].username = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "password", {
-      get() {
-        return this[impl].password;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].password = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "host", {
-      get() {
-        return this[impl].host;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].host = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "hostname", {
-      get() {
-        return this[impl].hostname;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].hostname = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "port", {
-      get() {
-        return this[impl].port;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].port = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "pathname", {
-      get() {
-        return this[impl].pathname;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].pathname = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "search", {
-      get() {
-        return this[impl].search;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].search = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    Object.defineProperty(URL3.prototype, "hash", {
-      get() {
-        return this[impl].hash;
-      },
-      set(V) {
-        V = conversions["USVString"](V);
-        this[impl].hash = V;
-      },
-      enumerable: true,
-      configurable: true
-    });
-    module.exports = {
-      is(obj) {
-        return !!obj && obj[impl] instanceof Impl.implementation;
-      },
-      create(constructorArgs, privateData) {
-        let obj = Object.create(URL3.prototype);
-        this.setup(obj, constructorArgs, privateData);
-        return obj;
-      },
-      setup(obj, constructorArgs, privateData) {
-        if (!privateData)
-          privateData = {};
-        privateData.wrapper = obj;
-        obj[impl] = new Impl.implementation(constructorArgs, privateData);
-        obj[impl][utils.wrapperSymbol] = obj;
-      },
-      interface: URL3,
-      expose: {
-        Window: { URL: URL3 },
-        Worker: { URL: URL3 }
-      }
-    };
-  }
-});
-
-// 
-var require_public_api2 = __commonJS({
-  ""(exports) {
-    "use strict";
-    exports.URL = require_URL2().interface;
-    exports.serializeURL = require_url_state_machine2().serializeURL;
-    exports.serializeURLOrigin = require_url_state_machine2().serializeURLOrigin;
-    exports.basicURLParse = require_url_state_machine2().basicURLParse;
-    exports.setTheUsername = require_url_state_machine2().setTheUsername;
-    exports.setThePassword = require_url_state_machine2().setThePassword;
-    exports.serializeHost = require_url_state_machine2().serializeHost;
-    exports.serializeInteger = require_url_state_machine2().serializeInteger;
-    exports.parseURL = require_url_state_machine2().parseURL;
-  }
-});
-
-// 
-var require_lib6 = __commonJS({
   ""(exports, module) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -13381,7 +11877,7 @@ var require_lib6 = __commonJS({
     var Stream = _interopDefault(__require("stream"));
     var http = _interopDefault(__require("http"));
     var Url = _interopDefault(__require("url"));
-    var whatwgUrl = _interopDefault(require_public_api2());
+    var whatwgUrl = _interopDefault(require_public_api());
     var https = _interopDefault(__require("https"));
     var zlib = _interopDefault(__require("zlib"));
     var Readable = Stream.Readable;
@@ -14254,6 +12750,11 @@ var require_lib6 = __commonJS({
       const dest = new URL$1(destination).hostname;
       return orig === dest || orig[orig.length - dest.length - 1] === "." && orig.endsWith(dest);
     };
+    var isSameProtocol = function isSameProtocol2(destination, original) {
+      const orig = new URL$1(original).protocol;
+      const dest = new URL$1(destination).protocol;
+      return orig === dest;
+    };
     function fetch(url, opts) {
       if (!fetch.Promise) {
         throw new Error("native promise missing, set fetch.Promise to your favorite alternative");
@@ -14269,7 +12770,7 @@ var require_lib6 = __commonJS({
           let error = new AbortError("The user aborted a request.");
           reject(error);
           if (request.body && request.body instanceof Stream.Readable) {
-            request.body.destroy(error);
+            destroyStream(request.body, error);
           }
           if (!response || !response.body)
             return;
@@ -14304,8 +12805,31 @@ var require_lib6 = __commonJS({
         }
         req.on("error", function(err) {
           reject(new FetchError(`request to ${request.url} failed, reason: ${err.message}`, "system", err));
+          if (response && response.body) {
+            destroyStream(response.body, err);
+          }
           finalize();
         });
+        fixResponseChunkedTransferBadEnding(req, function(err) {
+          if (signal && signal.aborted) {
+            return;
+          }
+          if (response && response.body) {
+            destroyStream(response.body, err);
+          }
+        });
+        if (parseInt(process.version.substring(1)) < 14) {
+          req.on("socket", function(s) {
+            s.addListener("close", function(hadError) {
+              const hasDataListener = s.listenerCount("data") > 0;
+              if (response && hasDataListener && !hadError && !(signal && signal.aborted)) {
+                const err = new Error("Premature close");
+                err.code = "ERR_STREAM_PREMATURE_CLOSE";
+                response.body.emit("error", err);
+              }
+            });
+          });
+        }
         req.on("response", function(res) {
           clearTimeout(reqTimeout);
           const headers = createHeadersLenient(res.headers);
@@ -14356,7 +12880,7 @@ var require_lib6 = __commonJS({
                   timeout: request.timeout,
                   size: request.size
                 };
-                if (!isDomainOrSubdomain(request.url, locationURL)) {
+                if (!isDomainOrSubdomain(request.url, locationURL) || !isSameProtocol(request.url, locationURL)) {
                   for (const name of ["authorization", "www-authenticate", "cookie", "cookie2"]) {
                     requestOpts.headers.delete(name);
                   }
@@ -14417,6 +12941,12 @@ var require_lib6 = __commonJS({
               response = new Response(body, response_options);
               resolve(response);
             });
+            raw.on("end", function() {
+              if (!response) {
+                response = new Response(body, response_options);
+                resolve(response);
+              }
+            });
             return;
           }
           if (codings == "br" && typeof zlib.createBrotliDecompress === "function") {
@@ -14430,6 +12960,33 @@ var require_lib6 = __commonJS({
         });
         writeToStream(req, request);
       });
+    }
+    function fixResponseChunkedTransferBadEnding(request, errorCallback) {
+      let socket;
+      request.on("socket", function(s) {
+        socket = s;
+      });
+      request.on("response", function(response) {
+        const headers = response.headers;
+        if (headers["transfer-encoding"] === "chunked" && !headers["content-length"]) {
+          response.once("close", function(hadError) {
+            const hasDataListener = socket.listenerCount("data") > 0;
+            if (hasDataListener && !hadError) {
+              const err = new Error("Premature close");
+              err.code = "ERR_STREAM_PREMATURE_CLOSE";
+              errorCallback(err);
+            }
+          });
+        }
+      });
+    }
+    function destroyStream(stream, err) {
+      if (stream.destroy) {
+        stream.destroy(err);
+      } else {
+        stream.emit("error", err);
+        stream.end();
+      }
     }
     fetch.isRedirect = function(code) {
       return code === 301 || code === 302 || code === 303 || code === 307 || code === 308;
@@ -14501,39 +13058,67 @@ var require_dist_node12 = __commonJS({
 
 // 
 var require_dist_node13 = __commonJS({
-  ""(exports) {
+  ""(exports, module) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    function _interopDefault(ex) {
-      return ex && typeof ex === "object" && "default" in ex ? ex["default"] : ex;
-    }
-    var endpoint = require_dist_node11();
-    var universalUserAgent = require_dist_node();
-    var isPlainObject = require_is_plain_object();
-    var nodeFetch = _interopDefault(require_lib6());
-    var requestError = require_dist_node12();
-    var VERSION = "6.2.1";
+    var __create2 = Object.create;
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __getProtoOf2 = Object.getPrototypeOf;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export = (target, all) => {
+      for (var name in all)
+        __defProp2(target, name, { get: all[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if (from && typeof from === "object" || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toESM2 = (mod, isNodeMode, target) => (target = mod != null ? __create2(__getProtoOf2(mod)) : {}, __copyProps2(
+      isNodeMode || !mod || !mod.__esModule ? __defProp2(target, "default", { value: mod, enumerable: true }) : target,
+      mod
+    ));
+    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export(dist_src_exports, {
+      request: () => request
+    });
+    module.exports = __toCommonJS(dist_src_exports);
+    var import_endpoint = require_dist_node11();
+    var import_universal_user_agent = require_dist_node();
+    var VERSION = "6.2.5";
+    var import_is_plain_object = require_is_plain_object();
+    var import_node_fetch = __toESM2(require_lib5());
+    var import_request_error = require_dist_node12();
     function getBufferResponse(response) {
       return response.arrayBuffer();
     }
     function fetchWrapper(requestOptions) {
       const log = requestOptions.request && requestOptions.request.log ? requestOptions.request.log : console;
-      if (isPlainObject.isPlainObject(requestOptions.body) || Array.isArray(requestOptions.body)) {
+      if ((0, import_is_plain_object.isPlainObject)(requestOptions.body) || Array.isArray(requestOptions.body)) {
         requestOptions.body = JSON.stringify(requestOptions.body);
       }
       let headers = {};
       let status;
       let url;
-      const fetch = requestOptions.request && requestOptions.request.fetch || globalThis.fetch || nodeFetch;
-      return fetch(requestOptions.url, Object.assign(
-        {
-          method: requestOptions.method,
-          body: requestOptions.body,
-          headers: requestOptions.headers,
-          redirect: requestOptions.redirect
-        },
-        requestOptions.request
-      )).then(async (response) => {
+      const fetch = requestOptions.request && requestOptions.request.fetch || globalThis.fetch || import_node_fetch.default;
+      return fetch(
+        requestOptions.url,
+        Object.assign(
+          {
+            method: requestOptions.method,
+            body: requestOptions.body,
+            headers: requestOptions.headers,
+            redirect: requestOptions.redirect,
+            ...requestOptions.body && { duplex: "half" }
+          },
+          requestOptions.request
+        )
+      ).then(async (response) => {
         url = response.url;
         status = response.status;
         for (const keyAndValue of response.headers) {
@@ -14542,7 +13127,9 @@ var require_dist_node13 = __commonJS({
         if ("deprecation" in headers) {
           const matches = headers.link && headers.link.match(/<([^>]+)>; rel="deprecation"/);
           const deprecationLink = matches && matches.pop();
-          log.warn(`[@octokit/request] "${requestOptions.method} ${requestOptions.url}" is deprecated. It is scheduled to be removed on ${headers.sunset}${deprecationLink ? `. See ${deprecationLink}` : ""}`);
+          log.warn(
+            `[@octokit/request] "${requestOptions.method} ${requestOptions.url}" is deprecated. It is scheduled to be removed on ${headers.sunset}${deprecationLink ? `. See ${deprecationLink}` : ""}`
+          );
         }
         if (status === 204 || status === 205) {
           return;
@@ -14551,7 +13138,7 @@ var require_dist_node13 = __commonJS({
           if (status < 400) {
             return;
           }
-          throw new requestError.RequestError(response.statusText, status, {
+          throw new import_request_error.RequestError(response.statusText, status, {
             response: {
               url,
               status,
@@ -14562,7 +13149,7 @@ var require_dist_node13 = __commonJS({
           });
         }
         if (status === 304) {
-          throw new requestError.RequestError("Not modified", status, {
+          throw new import_request_error.RequestError("Not modified", status, {
             response: {
               url,
               status,
@@ -14574,7 +13161,7 @@ var require_dist_node13 = __commonJS({
         }
         if (status >= 400) {
           const data = await getResponseData(response);
-          const error = new requestError.RequestError(toErrorMessage(data), status, {
+          const error = new import_request_error.RequestError(toErrorMessage(data), status, {
             response: {
               url,
               status,
@@ -14594,11 +13181,11 @@ var require_dist_node13 = __commonJS({
           data
         };
       }).catch((error) => {
-        if (error instanceof requestError.RequestError)
+        if (error instanceof import_request_error.RequestError)
           throw error;
         else if (error.name === "AbortError")
           throw error;
-        throw new requestError.RequestError(error.message, 500, {
+        throw new import_request_error.RequestError(error.message, 500, {
           request: requestOptions
         });
       });
@@ -14632,7 +13219,9 @@ var require_dist_node13 = __commonJS({
           return fetchWrapper(endpoint2.parse(endpointOptions));
         }
         const request2 = (route2, parameters2) => {
-          return fetchWrapper(endpoint2.parse(endpoint2.merge(route2, parameters2)));
+          return fetchWrapper(
+            endpoint2.parse(endpoint2.merge(route2, parameters2))
+          );
         };
         Object.assign(request2, {
           endpoint: endpoint2,
@@ -14645,12 +13234,11 @@ var require_dist_node13 = __commonJS({
         defaults: withDefaults.bind(null, endpoint2)
       });
     }
-    var request = withDefaults(endpoint.endpoint, {
+    var request = withDefaults(import_endpoint.endpoint, {
       headers: {
-        "user-agent": `octokit-request.js/${VERSION} ${universalUserAgent.getUserAgent()}`
+        "user-agent": `octokit-request.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`
       }
     });
-    exports.request = request;
   }
 });
 
@@ -14790,107 +13378,30 @@ var require_dist_node14 = __commonJS({
 
 // 
 var require_dist_node15 = __commonJS({
-  ""(exports) {
+  ""(exports, module) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    var request = require_dist_node13();
-    var universalUserAgent = require_dist_node();
-    var VERSION = "5.0.1";
-    function _buildMessageForResponseErrors(data) {
-      return `Request failed due to following response errors:
-` + data.errors.map((e) => ` - ${e.message}`).join("\n");
-    }
-    var GraphqlResponseError = class extends Error {
-      constructor(request2, headers, response) {
-        super(_buildMessageForResponseErrors(response));
-        this.request = request2;
-        this.headers = headers;
-        this.response = response;
-        this.name = "GraphqlResponseError";
-        this.errors = response.errors;
-        this.data = response.data;
-        if (Error.captureStackTrace) {
-          Error.captureStackTrace(this, this.constructor);
-        }
-      }
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export = (target, all) => {
+      for (var name in all)
+        __defProp2(target, name, { get: all[name], enumerable: true });
     };
-    var NON_VARIABLE_OPTIONS = ["method", "baseUrl", "url", "headers", "request", "query", "mediaType"];
-    var FORBIDDEN_VARIABLE_OPTIONS = ["query", "method", "url"];
-    var GHES_V3_SUFFIX_REGEX = /\/api\/v3\/?$/;
-    function graphql2(request2, query2, options) {
-      if (options) {
-        if (typeof query2 === "string" && "query" in options) {
-          return Promise.reject(new Error(`[@octokit/graphql] "query" cannot be used as variable name`));
-        }
-        for (const key in options) {
-          if (!FORBIDDEN_VARIABLE_OPTIONS.includes(key))
-            continue;
-          return Promise.reject(new Error(`[@octokit/graphql] "${key}" cannot be used as variable name`));
-        }
+    var __copyProps2 = (to, from, except, desc) => {
+      if (from && typeof from === "object" || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
       }
-      const parsedOptions = typeof query2 === "string" ? Object.assign({
-        query: query2
-      }, options) : query2;
-      const requestOptions = Object.keys(parsedOptions).reduce((result, key) => {
-        if (NON_VARIABLE_OPTIONS.includes(key)) {
-          result[key] = parsedOptions[key];
-          return result;
-        }
-        if (!result.variables) {
-          result.variables = {};
-        }
-        result.variables[key] = parsedOptions[key];
-        return result;
-      }, {});
-      const baseUrl = parsedOptions.baseUrl || request2.endpoint.DEFAULTS.baseUrl;
-      if (GHES_V3_SUFFIX_REGEX.test(baseUrl)) {
-        requestOptions.url = baseUrl.replace(GHES_V3_SUFFIX_REGEX, "/api/graphql");
-      }
-      return request2(requestOptions).then((response) => {
-        if (response.data.errors) {
-          const headers = {};
-          for (const key of Object.keys(response.headers)) {
-            headers[key] = response.headers[key];
-          }
-          throw new GraphqlResponseError(requestOptions, headers, response.data);
-        }
-        return response.data.data;
-      });
-    }
-    function withDefaults(request$1, newDefaults) {
-      const newRequest = request$1.defaults(newDefaults);
-      const newApi = (query2, options) => {
-        return graphql2(newRequest, query2, options);
-      };
-      return Object.assign(newApi, {
-        defaults: withDefaults.bind(null, newRequest),
-        endpoint: request.request.endpoint
-      });
-    }
-    var graphql$1 = withDefaults(request.request, {
-      headers: {
-        "user-agent": `octokit-graphql.js/${VERSION} ${universalUserAgent.getUserAgent()}`
-      },
-      method: "POST",
-      url: "/graphql"
+      return to;
+    };
+    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export(dist_src_exports, {
+      createTokenAuth: () => createTokenAuth
     });
-    function withCustomRequest(customRequest) {
-      return withDefaults(customRequest, {
-        method: "POST",
-        url: "/graphql"
-      });
-    }
-    exports.GraphqlResponseError = GraphqlResponseError;
-    exports.graphql = graphql$1;
-    exports.withCustomRequest = withCustomRequest;
-  }
-});
-
-// 
-var require_dist_node16 = __commonJS({
-  ""(exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
+    module.exports = __toCommonJS(dist_src_exports);
     var REGEX_IS_INSTALLATION_LEGACY = /^v1\./;
     var REGEX_IS_INSTALLATION = /^ghs_/;
     var REGEX_IS_USER_TO_SERVER = /^ghu_/;
@@ -14912,7 +13423,10 @@ var require_dist_node16 = __commonJS({
       return `token ${token}`;
     }
     async function hook(token, request, route, parameters) {
-      const endpoint = request.endpoint.merge(route, parameters);
+      const endpoint = request.endpoint.merge(
+        route,
+        parameters
+      );
       endpoint.headers.authorization = withAuthorizationPrefix(token);
       return request(endpoint);
     }
@@ -14921,19 +13435,20 @@ var require_dist_node16 = __commonJS({
         throw new Error("[@octokit/auth-token] No token passed to createTokenAuth");
       }
       if (typeof token !== "string") {
-        throw new Error("[@octokit/auth-token] Token passed to createTokenAuth is not a string");
+        throw new Error(
+          "[@octokit/auth-token] Token passed to createTokenAuth is not a string"
+        );
       }
       token = token.replace(/^(token|bearer) +/i, "");
       return Object.assign(auth.bind(null, token), {
         hook: hook.bind(null, token)
       });
     };
-    exports.createTokenAuth = createTokenAuth;
   }
 });
 
 // 
-var require_dist_node17 = __commonJS({
+var require_dist_node16 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -14961,8 +13476,8 @@ var require_dist_node17 = __commonJS({
     var import_universal_user_agent = require_dist_node();
     var import_before_after_hook = require_before_after_hook();
     var import_request = require_dist_node13();
-    var import_graphql2 = require_dist_node15();
-    var import_auth_token = require_dist_node16();
+    var import_graphql2 = require_dist_node14();
+    var import_auth_token = require_dist_node15();
     var VERSION = "4.2.1";
     var Octokit2 = class {
       static defaults(defaults) {
@@ -15074,7 +13589,7 @@ var require_dist_node17 = __commonJS({
 });
 
 // 
-var require_dist_node18 = __commonJS({
+var require_dist_node17 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -15100,7 +13615,7 @@ var require_dist_node18 = __commonJS({
 });
 
 // 
-var require_dist_node19 = __commonJS({
+var require_dist_node18 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -15467,7 +13982,7 @@ var require_dist_node19 = __commonJS({
 });
 
 // 
-var require_dist_node20 = __commonJS({
+var require_dist_node19 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -16594,7 +15109,7 @@ var require_dist_node20 = __commonJS({
 });
 
 // 
-var require_dist_node21 = __commonJS({
+var require_dist_node20 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -16619,10 +15134,10 @@ var require_dist_node21 = __commonJS({
       Octokit: () => Octokit2
     });
     module.exports = __toCommonJS(dist_src_exports);
-    var import_core = require_dist_node17();
-    var import_plugin_request_log = require_dist_node18();
-    var import_plugin_paginate_rest = require_dist_node19();
-    var import_plugin_rest_endpoint_methods = require_dist_node20();
+    var import_core = require_dist_node16();
+    var import_plugin_request_log = require_dist_node17();
+    var import_plugin_paginate_rest = require_dist_node18();
+    var import_plugin_rest_endpoint_methods = require_dist_node19();
     var VERSION = "19.0.11";
     var Octokit2 = import_core.Octokit.plugin(
       import_plugin_request_log.requestLog,
@@ -17503,7 +16018,7 @@ import { spawnSync } from "child_process";
 
 // 
 var import_graphql = __toESM(require_dist_node14());
-var import_rest = __toESM(require_dist_node21());
+var import_rest = __toESM(require_dist_node20());
 var import_typed_graphqlify2 = __toESM(require_dist2());
 var GithubClient = class {
   constructor(_octokitOptions) {
