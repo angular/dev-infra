@@ -7,6 +7,10 @@ or from GitHub packages. Only `pkg.dev` or `gcr.io`.
 gcloud auth configure-docker \
     us-west2-docker.pkg.dev
 
-sudo docker tag ghcr.io/puppeteer/puppeteer:20.5.0@sha256:c40e0fa5da89259dbd93e0421e7faec7c39efef36fd7cbb62b24ff7f7151602b \
+sudo docker build . --network=host -t angular-devinfra-rbe-image:latest
+
+sudo docker tag angular-devinfra-rbe-image:latest \
   us-west2-docker.pkg.dev/internal-200822/remote-execution-images/angular-devinfra-rbe-image:202305
+
+sudo docker push us-west2-docker.pkg.dev/internal-200822/remote-execution-images/angular-devinfra-rbe-image:202305
 ````
