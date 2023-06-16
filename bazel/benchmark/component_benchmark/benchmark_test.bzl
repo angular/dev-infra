@@ -16,6 +16,7 @@ def benchmark_test(name, server, tags = [], **kwargs):
         server = server,
         # Benchmark targets should not run on CI by default.
         tags = tags + [
+            "benchmark-test",
             "manual",
             "no-remote-exec",
         ],
