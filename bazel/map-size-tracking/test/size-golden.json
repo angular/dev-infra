@@ -1,61 +1,57 @@
 {
-  "unmapped": 8371,
+  "unmapped": 6345,
   "files": {
     "bazel/": {
       "map-size-tracking/": {
-        "size": 38,
+        "size": 25,
         "test/": {
           "fixture-app/": {
-            "main.ts": 1,
-            "size": 38,
-            "test-component.ts": 37
+            "main.ts": 5,
+            "size": 25,
+            "test-component.ts": 20
           },
-          "size": 38
+          "size": 25
         }
       },
-      "size": 38
+      "size": 25
     },
     "node_modules/": {
       "rxjs/": {
-        "size": 4177,
+        "size": 3616,
         "src/": {
           "internal/": {
-            "NotificationFactories.ts": 173,
-            "Observable.ts": 806,
-            "Subscriber.ts": 1335,
-            "Subscription.ts": 742,
-            "config.ts": 70,
+            "NotificationFactories.ts": 126,
+            "Observable.ts": 557,
+            "Subscriber.ts": 1029,
+            "Subscription.ts": 1026,
+            "config.ts": 53,
             "scheduler/": {
-              "size": 212,
-              "timeoutProvider.ts": 212
+              "size": 62,
+              "timeoutProvider.ts": 62
             },
-            "size": 4177,
+            "size": 3616,
             "symbol/": {
-              "observable.ts": 97,
-              "size": 97
+              "observable.ts": 16,
+              "size": 16
             },
             "util/": {
-              "UnsubscriptionError.ts": 123,
-              "arrRemove.ts": 29,
-              "createErrorClass.ts": 90,
-              "errorContext.ts": 168,
-              "identity.ts": 34,
-              "isFunction.ts": 98,
-              "noop.ts": 18,
-              "pipe.ts": 83,
-              "reportUnhandledError.ts": 99,
-              "size": 742
+              "UnsubscriptionError.ts": 69,
+              "arrRemove.ts": 93,
+              "createErrorClass.ts": 69,
+              "errorContext.ts": 180,
+              "identity.ts": 1,
+              "isFunction.ts": 75,
+              "noop.ts": 10,
+              "pipe.ts": 104,
+              "reportUnhandledError.ts": 146,
+              "size": 747
             }
           },
-          "size": 4177
+          "size": 3616
         }
       },
-      "size": 5100,
-      "tslib/": {
-        "size": 923,
-        "tslib.es6.mjs": 923
-      }
+      "size": 3616
     },
-    "size": 5138
+    "size": 3641
   }
 }
