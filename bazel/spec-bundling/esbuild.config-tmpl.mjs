@@ -21,11 +21,12 @@ if (downlevelAsyncAwait) {
 }
 
 export default {
-  // `tslib` sets the `module` condition to resolve to ESM.
-  conditions: ['es2022', 'module'],
-  // This ensures that we prioritize ES2020. RxJS would otherwise use the ESM5 output.
-  mainFields: ['es2022', 'module', 'main'],
-  // Addition of `.mjs` to the non-jsx defaults. https://esbuild.github.io/api/#resolve-extensions
+  // Based on the CLI configuration:
+  // https://github.com/angular/angular-cli/blame/8089c9388056b3caaf56f981848aca94f022da73/packages/angular_devkit/build_angular/src/tools/esbuild/application-code-bundle.ts#L51.
+  conditions: ['es2022', 'es2020', 'es2015', 'module'],
+  mainFields: ['fesm2022', 'es2022', 'es2020', 'module', 'main'],
+  // Addition of `.mjs` to the non-jsx defaults.
+  // https://esbuild.github.io/api/#resolve-extensions
   resolveExtensions: ['.mjs', '.js', '.json'],
   // Bundling specs may result in classes being aliased to avoid collisions. e.g. when
   // everything is bundled into a single AMD bundle. To avoid test failures for assertions
