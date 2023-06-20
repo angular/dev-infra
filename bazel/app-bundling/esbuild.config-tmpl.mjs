@@ -36,7 +36,8 @@ export default {
   // Based on the CLI configuration:
   // https://github.com/angular/angular-cli/blame/8089c9388056b3caaf56f981848aca94f022da73/packages/angular_devkit/build_angular/src/tools/esbuild/application-code-bundle.ts#L51.
   conditions: ['es2022', 'es2020', 'es2015', 'module'],
-  mainFields: ['fesm2022', 'es2022', 'es2020', 'module', 'main'],
+  // Note: ES2015 main condition is needed for `rxjs@v6`.
+  mainFields: ['fesm2022', 'es2022', 'es2020', 'es2015', 'module', 'main'],
   // The majority of these options match with the ones the CLI sets:
   // https://github.com/angular/angular-cli/blob/0d76bf04bca6e083865972b5398a32bbe9396e14/packages/angular_devkit/build_angular/src/webpack/plugins/javascript-optimizer-worker.ts#L133.
   treeShaking: true,
