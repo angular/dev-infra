@@ -24,7 +24,8 @@ export default {
   // Based on the CLI configuration:
   // https://github.com/angular/angular-cli/blame/8089c9388056b3caaf56f981848aca94f022da73/packages/angular_devkit/build_angular/src/tools/esbuild/application-code-bundle.ts#L51.
   conditions: ['es2022', 'es2020', 'es2015', 'module'],
-  mainFields: ['fesm2022', 'es2022', 'es2020', 'module', 'main'],
+  // Note: ES2015 main condition is needed for `rxjs@v6`.
+  mainFields: ['fesm2022', 'es2022', 'es2020', 'es2015', 'module', 'main'],
   // Addition of `.mjs` to the non-jsx defaults.
   // https://esbuild.github.io/api/#resolve-extensions
   resolveExtensions: ['.mjs', '.js', '.json'],
