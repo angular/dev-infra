@@ -1,0 +1,44 @@
+name: Publish Snapshot Builds
+
+on:
+  push:
+    branches:
+      - main
+      - snapshot-test
+
+permissions: {}
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
+        with:
+          fetch-depth: 0
+
+      - uses: ./github-actions/setup-bazel-remote-exec
+        with:
+          bazelrc: .bazelrc
+      - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # tag=v3.6.0
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+      - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
+        with:
+          path: |
+            ~/.cache/bazelisk
+          key: ${{ github.job }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ github.job }}-
+      - run: yarn install --immutable
+      - run: yarn bazel build //:npm_package //ng-dev:npm_package --config=release
+      - name: Publish Snapshots
+        env:
+          SNAPSHOT_BUILDS_GITHUB_TOKEN: ${{ secrets.SNAPSHOT_BUILDS_GITHUB_TOKEN }}
+        run: |
+          ./tools/publish_to_github.sh "@angular/build-tooling" "dev-infra-private-build-tooling-builds" "dist/bin/npm_package"
+          ./tools/publish_to_github.sh "@angular/ng-dev" "dev-infra-private-ng-dev-builds" "dist/bin/ng-dev/npm_package"
