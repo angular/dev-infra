@@ -33,9 +33,10 @@ jobs:
           cache: 'yarn'
       - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
         with:
+          # TODO: setup `build --repository_cache` flag and cache the result
           path: |
             ~/.cache/bazelisk
-          key: ${{ github.job }}-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ github.job }}-${{ runner.os }}-${{ hashFiles('**/.bazelversion') }}
           restore-keys: |
             ${{ github.job }}-${{ runner.os }}-
       - run: yarn install --immutable
@@ -59,9 +60,10 @@ jobs:
           cache: 'yarn'
       - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
         with:
+          # TODO: setup `build --repository_cache` flag and cache the result
           path: |
             ~/.cache/bazelisk
-          key: ${{ github.job }}-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ github.job }}-${{ runner.os }}-${{ hashFiles('**/.bazelversion') }}
           restore-keys: |
             ${{ github.job }}-${{ runner.os }}-
       - run: yarn install --immutable
@@ -80,9 +82,10 @@ jobs:
       - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
         with:
           enableCrossOsArchive: true
+          # TODO: setup `build --repository_cache` flag and cache the result
           path: |
             %AppData%/bazelisk
-          key: ${{ github.job }}-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ github.job }}-${{ runner.os }}-${{ hashFiles('**/.bazelversion') }}
           restore-keys: |
             ${{ github.job }}-${{ runner.os }}-
       - run: yarn install --immutable
@@ -103,9 +106,10 @@ jobs:
           cache: 'yarn'
       - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
         with:
+          # TODO: setup `build --repository_cache` flag and cache the result
           path: |
             ~/Library/Caches/bazelisk
-          key: ${{ github.job }}-${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ github.job }}-${{ runner.os }}-${{ hashFiles('**/.bazelversion') }}
           restore-keys: |
             ${{ github.job }}-${{ runner.os }}-
       - run: yarn install --immutable
