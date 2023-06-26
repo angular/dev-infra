@@ -37,8 +37,6 @@ jobs:
           path: |
             ~/.cache/bazelisk
           key: ${{ github.job }}-${{ runner.os }}-${{ hashFiles('**/.bazelversion') }}
-          restore-keys: |
-            ${{ github.job }}-${{ runner.os }}-
       - run: yarn install --immutable
       - run: yarn ng-dev format changed --check ${{ github.event.pull_request.base.sha }}
       - run: yarn ng-dev commit-message validate-range ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}
@@ -64,8 +62,6 @@ jobs:
           path: |
             ~/.cache/bazelisk
           key: ${{ github.job }}-${{ runner.os }}-${{ hashFiles('**/.bazelversion') }}
-          restore-keys: |
-            ${{ github.job }}-${{ runner.os }}-
       - run: yarn install --immutable
       - run: yarn bazel test -- //...
 
@@ -86,8 +82,6 @@ jobs:
           path: |
             %AppData%/bazelisk
           key: ${{ github.job }}-${{ runner.os }}-${{ hashFiles('**/.bazelversion') }}
-          restore-keys: |
-            ${{ github.job }}-${{ runner.os }}-
       - run: yarn install --immutable
       - run: yarn bazel test --test_tag_filters=windows --build_tests_only -- ... -bazel/remote-execution/...
 
@@ -110,7 +104,5 @@ jobs:
           path: |
             ~/Library/Caches/bazelisk
           key: ${{ github.job }}-${{ runner.os }}-${{ hashFiles('**/.bazelversion') }}
-          restore-keys: |
-            ${{ github.job }}-${{ runner.os }}-
       - run: yarn install --immutable
       - run: yarn bazel test --test_tag_filters=macos --build_tests_only -- //... -//bazel/remote-execution/...
