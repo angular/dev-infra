@@ -38,10 +38,16 @@ jobs:
             ~/.cache/bazelisk
           key: ${{ github.job }}-${{ runner.os }}-${{ hashFiles('**/.bazelversion') }}
       - run: yarn install --immutable
-      - run: yarn ng-dev format changed --check ${{ github.event.pull_request.base.sha }}
-      - run: yarn ng-dev commit-message validate-range ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}
-      - run: yarn lint
-      - run: yarn tsc -p tsconfig.json
+      - name: Check code format
+        if: github.event_name == 'pull_request'
+        run: yarn ng-dev format changed --check ${{ github.event.pull_request.base.sha }}
+      - name: Check commit message
+        if: github.event_name == 'pull_request'
+        run: yarn ng-dev commit-message validate-range ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}
+      - name: Check code lint
+        run: yarn lint
+      - name: Confirm code builds with typescript as expected
+        run: yarn tsc -p tsconfig.json
 
   test:
     runs-on: ubuntu-latest
