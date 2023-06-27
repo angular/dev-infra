@@ -3,9 +3,10 @@ description: 'Sets up Bazel remote execution.'
 author: 'Angular'
 inputs:
   bazelrc:
+    default: '.bazelrc.user'
     description: |
       If specified, the given `bazelrc` file is being updated to always run
-      with the `--config=remote` flag.
+      with the `--config=remote` flag. Defaults to `.bazelrc.user`
 
 runs:
   using: composite
