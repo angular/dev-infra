@@ -3,11 +3,11 @@ load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_test")
 nodejs_test(
     name = "test_file_permission_setup_script",
     args = [
-        "$(execpath //github-actions/setup-bazel-remote-exec:setup_remote_exec.sh)",
+        "$(execpath //github-actions/bazel/setup-bazel-remote-exec:setup_remote_exec.sh)",
     ],
     data = [
         "check-file-permission.mjs",
-        "//github-actions/setup-bazel-remote-exec:setup_remote_exec.sh",
+        "//github-actions/bazel/setup-bazel-remote-exec:setup_remote_exec.sh",
     ],
     entry_point = ":check-file-permission.mjs",
 )
