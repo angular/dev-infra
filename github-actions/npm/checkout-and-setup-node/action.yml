@@ -1,0 +1,53 @@
+name: 'Checkout and Setup Node'
+description: 'Checks out the repository and sets up node environment.'
+author: 'Angular'
+inputs:
+  fetch-depth:
+    default: 0
+    description: |
+      The number of commits to include in the fetch, defaulting to all commits in the history
+      of the repository
+
+  node-version:
+    description: |
+      A specific version of node to use for the node environment, exclusive with
+      node-version-file-path input.
+
+  node-version-file-path:
+    default: '.nvmrc'
+    description: |
+      Relative path to the nvm version file to set node version, exclusive with
+      node-version-file-path input. Defaults to .nvmrc
+
+  cache-node-modules:
+    default: true
+    type: boolean
+    description: |
+      Whether to cache the node_modules directory, this is helpful when postinstalls are performed
+      and modify the resulting node_modules directory. Defaults to False.
+
+  node-module-directories:
+    default: ./node_modules
+    description: |
+      Space delimited list of node_modules directories to cache. Defaults to `./node_modules`
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # tag=v3.5.3
+      with:
+        fetch-depth: ${{ inputs.fetch-depth }}
+        persist-credentials: false
+
+    - uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # tag=v3.6.0
+      with:
+        node-version-file: ${{ inputs.node-version-file-path }}
+        node-version: ${{ inputs.node-version }}
+        cache: 'yarn'
+
+    - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
+      if: ${{ inputs.cache-node-modules }} == 'true'
+      with:
+        enableCrossOsArchive: true
+        path: ${{ inputs.node-module-directories }}
+        key: ${{ github.job }}--${{ hashFiles('**/yarn.lock') }}
