@@ -16,11 +16,16 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
+      # Because the checkout and setup node action is contained in the dev-infra repo, we must
+      # checkout the repo to be able to run the action we have created.  Other repos will skip
+      # this step.
+      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # tag=v3.5.3
         with:
           fetch-depth: 1
-      - uses: ./github-actions/utils/checkout-and-setup-node
+      - uses: ./github-actions/npm/checkout-and-setup-node
       - uses: ./github-actions/bazel/setup-bazel-remote-exec
+        with:
+          bazelrc: .bazelrc
       - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
         with:
           path: |
