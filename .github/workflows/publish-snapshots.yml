@@ -23,16 +23,10 @@ jobs:
         with:
           fetch-depth: 1
       - uses: ./github-actions/npm/checkout-and-setup-node
+      - uses: ./github-actions/bazel/setup
       - uses: ./github-actions/bazel/setup-bazel-remote-exec
         with:
           bazelrc: .bazelrc
-      - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
-        with:
-          path: |
-            ~/.cache/bazelisk
-          key: ${{ github.job }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ github.job }}-
       - run: yarn install --immutable
       - run: yarn bazel build //:npm_package //ng-dev:npm_package --config=release
       - name: Publish Snapshots
