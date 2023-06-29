@@ -53,7 +53,7 @@ build --nobuild_runfile_links
 
 # Use the Angular team internal GCP instance for remote execution.
 build:remote --remote_instance_name=projects/internal-200822/instances/primary_instance
-build:remote --project_id=internal-200822
+build:remote --bes_instance_name=internal-200822
 
 # Needed due to: https://github.com/bazelbuild/bazel/issues/7254
 build:remote --define=EXECUTOR=remote
@@ -70,7 +70,7 @@ common:remote --jobs=100
 # Setup the remote build execution servers.
 build:remote --remote_cache=remotebuildexecution.googleapis.com
 build:remote --remote_executor=remotebuildexecution.googleapis.com
-build:remote --auth_enabled=true
+build:remote --google_default_credentials
 
 # Setup the toolchain and platform for the remote build execution. The platform
 # is provided by the shared dev-infra package and targets k8 remote containers.
