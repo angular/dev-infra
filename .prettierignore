@@ -15,9 +15,9 @@ github-actions/org-file-sync/main.js
 github-actions/labels-sync/main.js
 github-actions/branch-manager/main.js
 
-github-actions/deploy-previews/pack-and-upload-artifact/inject-artifact-metadata.js
-github-actions/deploy-previews/upload-artifacts-to-firebase/extract-artifact-metadata.js
-github-actions/deploy-previews/upload-artifacts-to-firebase/fetch-workflow-artifact.js
+github-actions/previews/pack-and-upload-artifact/inject-artifact-metadata.js
+github-actions/previews/upload-artifacts-to-firebase/extract-artifact-metadata.js
+github-actions/previews/upload-artifacts-to-firebase/fetch-workflow-artifact.js
 
 .github/local-actions/branch-manager/main.js
 .github/local-actions/changelog/main.js

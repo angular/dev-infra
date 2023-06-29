@@ -1,12 +1,12 @@
 load("//tools:defaults.bzl", "ts_library")
 
-package(default_visibility = ["//github-actions/deploy-previews:__subpackages__"])
+package(default_visibility = ["//github-actions/previews:__subpackages__"])
 
 ts_library(
     name = "extract_artifact_metadata_lib",
     srcs = ["extract-artifact-metadata.ts"],
     deps = [
-        "//github-actions/deploy-previews:constants_lib",
+        "//github-actions/previews:constants_lib",
         "@npm//@actions/core",
         "@npm//@types/node",
     ],
