@@ -2,7 +2,7 @@ name: 'Setup Bazel'
 description: 'Setup and configure bazel for CI use'
 author: 'Angular'
 
-nputs:
+inputs:
   bazelrc:
     default: .bazelrc.user
     description: |
@@ -12,8 +12,18 @@ nputs:
 runs:
   using: composite
   steps:
+    - name: Configure action caching for bazel version downloaded by bazelisk
+      uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
+      with:
+        path: |
+          ~/.cache/bazelisk
+          \%LocalAppData\%/bazelisk
+        key: bazel-version-${{ hashFiles('**/.bazelversion') }}
+        restore-keys: |
+          bazel-version-
+
     - name: Add repository cache directory to bazelrc config
-      run: ${{ github.action_path }}/add-repository-cache.sh
+      run: $GITHUB_ACTION_PATH/add-repository-cache.sh
       env:
         BAZELRC_PATH: ${{ inputs.bazelrc }}
       shell: bash
@@ -22,17 +32,7 @@ runs:
       uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
       with:
         enableCrossOsArchive: true
-        path: |
-          ~/bazel_repository_cache
+        path: '~/.cache/bazel_repo_cache'
         key: bazel-cache-${{ hashFiles('**/WORKSPACE') }}
         restore-keys: |
           bazel-cache-
-
-    - name: Configure action caching for downloaded bazel artifacts
-      uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
-      with:
-        path: |
-          ~/.cache/bazelisk
-        key: bazel-version-${{ runner.os }}-${{ hashFiles('**/.bazelversion') }}
-        restore-keys: |
-          bazel-version-${{ runner.os }}-
