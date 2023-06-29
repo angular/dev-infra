@@ -26,15 +26,10 @@ jobs:
       # this step.
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # tag=v3.5.3
       - uses: ./github-actions/npm/checkout-and-setup-node
+      - uses: ./github-actions/bazel/setup
       - uses: ./github-actions/bazel/setup-bazel-remote-exec
         with:
           bazelrc: .bazelrc
-      - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
-        with:
-          # TODO: setup `build --repository_cache` flag and cache the result
-          path: |
-            ~/.cache/bazelisk
-          key: ${{ github.job }}-${{ runner.os }}-${{ hashFiles('**/.bazelversion') }}
       - run: yarn install --immutable
       - name: Check code format
         if: github.event_name == 'pull_request'
@@ -55,15 +50,10 @@ jobs:
       # this step.
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # tag=v3.5.3
       - uses: ./github-actions/npm/checkout-and-setup-node
+      - uses: ./github-actions/bazel/setup
       - uses: ./github-actions/bazel/setup-bazel-remote-exec
         with:
           bazelrc: .bazelrc
-      - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
-        with:
-          # TODO: setup `build --repository_cache` flag and cache the result
-          path: |
-            ~/.cache/bazelisk
-          key: ${{ github.job }}-${{ runner.os }}-${{ hashFiles('**/.bazelversion') }}
       - run: yarn install --immutable
       - run: yarn bazel test -- //...
 
@@ -75,13 +65,7 @@ jobs:
       # this step.
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # tag=v3.5.3
       - uses: ./github-actions/npm/checkout-and-setup-node
-      - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
-        with:
-          enableCrossOsArchive: true
-          # TODO: setup `build --repository_cache` flag and cache the result
-          path: |
-            %AppData%/bazelisk
-          key: ${{ github.job }}-${{ runner.os }}-${{ hashFiles('**/.bazelversion') }}
+      - uses: ./github-actions/bazel/setup
       - run: yarn install --immutable
       - run: yarn bazel test --test_tag_filters=windows --build_tests_only -- ... -bazel/remote-execution/...
 
@@ -93,14 +77,9 @@ jobs:
       # this step.
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # tag=v3.5.3
       - uses: ./github-actions/npm/checkout-and-setup-node
+      - uses: ./github-actions/bazel/setup
       - uses: ./github-actions/bazel/setup-bazel-remote-exec
         with:
           bazelrc: .bazelrc
-      - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
-        with:
-          # TODO: setup `build --repository_cache` flag and cache the result
-          path: |
-            ~/Library/Caches/bazelisk
-          key: ${{ github.job }}-${{ runner.os }}-${{ hashFiles('**/.bazelversion') }}
       - run: yarn install --immutable
       - run: yarn bazel test --test_tag_filters=macos --build_tests_only -- //... -//bazel/remote-execution/...
