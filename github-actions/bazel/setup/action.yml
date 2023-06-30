@@ -19,8 +19,6 @@ runs:
           ~/.cache/bazelisk
           \%LocalAppData\%/bazelisk
         key: bazel-version-${{ hashFiles('**/.bazelversion') }}
-        restore-keys: |
-          bazel-version-
 
     - name: Add repository cache directory to bazelrc config
       run: $GITHUB_ACTION_PATH/add-repository-cache.sh
