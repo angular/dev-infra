@@ -15,11 +15,11 @@
     <ng-container cdkAccordionItem #providerPanel="cdkAccordionItem">
       <div *ngIf="providerPanel.expanded" class="provider-panel">
         <div class="provider-row">
-          <img class="provider-icon" src="http://google.com/favicon.ico" />
+          <img class="provider-icon" src="http://google.com/favicon.ico" alt="google icon"/>
           <span class="provider-email">{{ account.googleInfo?.email || "Unknown" }}</span>
         </div>
         <div class="provider-row">
-          <img class="provider-icon" src="http://github.com/favicon.ico" />
+          <img class="provider-icon" src="http://github.com/favicon.ico" alt="github icon"/>
           <span class="provider-email">{{ account.githubInfo?.email || "Account Not Linked" }}</span>
           <button matTooltip ="Link Github account" *ngIf="account.githubInfo === null" mat-icon-button class="link-provider-account"
             (click)="account.linkWithGithub()">
