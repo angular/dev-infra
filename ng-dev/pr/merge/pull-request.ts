@@ -130,7 +130,7 @@ export async function loadAndValidatePullRequest(
   // The parent of the first commit in a PR is the base SHA.
   const baseSha = prData.baseCommitInfo.nodes[0].commit.parents.nodes[0].oid;
 
-  // Typically we would be able to rely on referencing the the base revision as the pull
+  // Typically we would be able to rely on referencing the base revision as the pull
   // request head commit minus the number of commits in the pull request. This is not always
   // reliable when we rebase e.g. the PR with autosquash where the amount of commits could
   // change. We avoid this issue around this by using the resolved base revision so that we are
