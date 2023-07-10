@@ -16761,7 +16761,7 @@ var unescape2 = (s, { windowsPathsNoEscape = false } = {}) => {
 // 
 var types = /* @__PURE__ */ new Set(["!", "?", "+", "*", "@"]);
 var isExtglobType = (c) => types.has(c);
-var startNoTraversal = "(?!\\.\\.?(?:$|/))";
+var startNoTraversal = "(?!(?:^|/)\\.\\.?(?:$|/))";
 var startNoDot = "(?!\\.)";
 var addPatternStart = /* @__PURE__ */ new Set(["[", "."]);
 var justDots = /* @__PURE__ */ new Set(["..", "."]);
@@ -16770,10 +16770,11 @@ var regExpEscape = (s) => s.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 var qmark = "[^/]";
 var star = qmark + "*?";
 var starNoEmpty = qmark + "+?";
-var _root, _hasMagic, _uflag, _parts, _parent, _parentIndex, _negs, _filledNegs, _options, _toString, _emptyExt, _fillNegs, fillNegs_fn, _parseAST, parseAST_fn, _parseGlob, parseGlob_fn;
+var _root, _hasMagic, _uflag, _parts, _parent, _parentIndex, _negs, _filledNegs, _options, _toString, _emptyExt, _fillNegs, fillNegs_fn, _parseAST, parseAST_fn, _partsToRegExp, partsToRegExp_fn, _parseGlob, parseGlob_fn;
 var _AST = class {
   constructor(type, parent, options = {}) {
     __privateAdd(this, _fillNegs);
+    __privateAdd(this, _partsToRegExp);
     __publicField(this, "type");
     __privateAdd(this, _root, void 0);
     __privateAdd(this, _hasMagic, void 0);
@@ -16901,15 +16902,16 @@ var _AST = class {
       _glob: glob
     });
   }
-  toRegExpSource() {
+  toRegExpSource(allowDot) {
     var _a;
+    const dot = allowDot ?? !!__privateGet(this, _options).dot;
     if (__privateGet(this, _root) === this)
       __privateMethod(this, _fillNegs, fillNegs_fn).call(this);
     if (!this.type) {
       const noEmpty = this.isStart() && this.isEnd();
       const src = __privateGet(this, _parts).map((p) => {
         var _a2;
-        const [re, _, hasMagic, uflag] = typeof p === "string" ? __privateMethod(_a2 = _AST, _parseGlob, parseGlob_fn).call(_a2, p, __privateGet(this, _hasMagic), noEmpty) : p.toRegExpSource();
+        const [re, _, hasMagic, uflag] = typeof p === "string" ? __privateMethod(_a2 = _AST, _parseGlob, parseGlob_fn).call(_a2, p, __privateGet(this, _hasMagic), noEmpty) : p.toRegExpSource(allowDot);
         __privateSet(this, _hasMagic, __privateGet(this, _hasMagic) || hasMagic);
         __privateSet(this, _uflag, __privateGet(this, _uflag) || uflag);
         return re;
@@ -16920,8 +16922,8 @@ var _AST = class {
           const dotTravAllowed = __privateGet(this, _parts).length === 1 && justDots.has(__privateGet(this, _parts)[0]);
           if (!dotTravAllowed) {
             const aps = addPatternStart;
-            const needNoTrav = __privateGet(this, _options).dot && aps.has(src.charAt(0)) || src.startsWith("\\.") && aps.has(src.charAt(2)) || src.startsWith("\\.\\.") && aps.has(src.charAt(4));
-            const needNoDot = !__privateGet(this, _options).dot && aps.has(src.charAt(0));
+            const needNoTrav = dot && aps.has(src.charAt(0)) || src.startsWith("\\.") && aps.has(src.charAt(2)) || src.startsWith("\\.\\.") && aps.has(src.charAt(4));
+            const needNoDot = !dot && !allowDot && aps.has(src.charAt(0));
             start2 = needNoTrav ? startNoTraversal : needNoDot ? startNoDot : "";
           }
         }
@@ -16938,15 +16940,9 @@ var _AST = class {
         __privateGet(this, _uflag)
       ];
     }
+    const repeated = this.type === "*" || this.type === "+";
     const start = this.type === "!" ? "(?:(?!(?:" : "(?:";
-    const body = __privateGet(this, _parts).map((p) => {
-      if (typeof p === "string") {
-        throw new Error("string type in extglob ast??");
-      }
-      const [re, _, _hasMagic2, uflag] = p.toRegExpSource();
-      __privateSet(this, _uflag, __privateGet(this, _uflag) || uflag);
-      return re;
-    }).filter((p) => !(this.isStart() && this.isEnd()) || !!p).join("|");
+    let body = __privateMethod(this, _partsToRegExp, partsToRegExp_fn).call(this, dot);
     if (this.isStart() && this.isEnd() && !body && this.type !== "!") {
       const s = this.toString();
       __privateSet(this, _parts, [s]);
@@ -16954,11 +16950,18 @@ var _AST = class {
       __privateSet(this, _hasMagic, void 0);
       return [s, unescape2(this.toString()), false, false];
     }
+    let bodyDotAllowed = !repeated || allowDot || dot || !startNoDot ? "" : __privateMethod(this, _partsToRegExp, partsToRegExp_fn).call(this, true);
+    if (bodyDotAllowed === body) {
+      bodyDotAllowed = "";
+    }
+    if (bodyDotAllowed) {
+      body = `(?:${body})(?:${bodyDotAllowed})*?`;
+    }
     let final = "";
     if (this.type === "!" && __privateGet(this, _emptyExt)) {
-      final = (this.isStart() && !__privateGet(this, _options).dot ? startNoDot : "") + starNoEmpty;
+      final = (this.isStart() && !dot ? startNoDot : "") + starNoEmpty;
     } else {
-      const close = this.type === "!" ? "))" + (this.isStart() && !__privateGet(this, _options).dot ? startNoDot : "") + star + ")" : this.type === "@" ? ")" : `)${this.type}`;
+      const close = this.type === "!" ? "))" + (this.isStart() && !dot && !allowDot ? startNoDot : "") + star + ")" : this.type === "@" ? ")" : this.type === "?" ? ")?" : this.type === "+" && bodyDotAllowed ? ")" : this.type === "*" && bodyDotAllowed ? `)?` : `)${this.type}`;
       final = start + body + close;
     }
     return [
@@ -17115,6 +17118,17 @@ parseAST_fn = function(str, ast, pos, opt) {
   __privateSet(ast, _hasMagic, void 0);
   __privateSet(ast, _parts, [str.substring(pos - 1)]);
   return i;
+};
+_partsToRegExp = new WeakSet();
+partsToRegExp_fn = function(dot) {
+  return __privateGet(this, _parts).map((p) => {
+    if (typeof p === "string") {
+      throw new Error("string type in extglob ast??");
+    }
+    const [re, _, _hasMagic2, uflag] = p.toRegExpSource(dot);
+    __privateSet(this, _uflag, __privateGet(this, _uflag) || uflag);
+    return re;
+  }).filter((p) => !(this.isStart() && this.isEnd()) || !!p).join("|");
 };
 _parseGlob = new WeakSet();
 parseGlob_fn = function(glob, hasMagic, noEmpty = false) {

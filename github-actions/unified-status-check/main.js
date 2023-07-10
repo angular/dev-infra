@@ -13419,6 +13419,7 @@ var require_constants = __commonJS({
     var MAX_LENGTH = 256;
     var MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER || 9007199254740991;
     var MAX_SAFE_COMPONENT_LENGTH = 16;
+    var MAX_SAFE_BUILD_LENGTH = MAX_LENGTH - 6;
     var RELEASE_TYPES = [
       "major",
       "premajor",
@@ -13431,6 +13432,7 @@ var require_constants = __commonJS({
     module.exports = {
       MAX_LENGTH,
       MAX_SAFE_COMPONENT_LENGTH,
+      MAX_SAFE_BUILD_LENGTH,
       MAX_SAFE_INTEGER,
       RELEASE_TYPES,
       SEMVER_SPEC_VERSION,
@@ -13452,30 +13454,49 @@ var require_debug = __commonJS({
 // 
 var require_re = __commonJS({
   ""(exports, module) {
-    var { MAX_SAFE_COMPONENT_LENGTH } = require_constants();
+    var {
+      MAX_SAFE_COMPONENT_LENGTH,
+      MAX_SAFE_BUILD_LENGTH,
+      MAX_LENGTH
+    } = require_constants();
     var debug = require_debug();
     exports = module.exports = {};
     var re = exports.re = [];
+    var safeRe = exports.safeRe = [];
     var src = exports.src = [];
     var t = exports.t = {};
     var R = 0;
+    var LETTERDASHNUMBER = "[a-zA-Z0-9-]";
+    var safeRegexReplacements = [
+      ["\\s", 1],
+      ["\\d", MAX_LENGTH],
+      [LETTERDASHNUMBER, MAX_SAFE_BUILD_LENGTH]
+    ];
+    var makeSafeRegex = (value) => {
+      for (const [token, max] of safeRegexReplacements) {
+        value = value.split(`${token}*`).join(`${token}{0,${max}}`).split(`${token}+`).join(`${token}{1,${max}}`);
+      }
+      return value;
+    };
     var createToken = (name, value, isGlobal) => {
+      const safe = makeSafeRegex(value);
       const index = R++;
       debug(name, index, value);
       t[name] = index;
       src[index] = value;
       re[index] = new RegExp(value, isGlobal ? "g" : void 0);
+      safeRe[index] = new RegExp(safe, isGlobal ? "g" : void 0);
     };
     createToken("NUMERICIDENTIFIER", "0|[1-9]\\d*");
-    createToken("NUMERICIDENTIFIERLOOSE", "[0-9]+");
-    createToken("NONNUMERICIDENTIFIER", "\\d*[a-zA-Z-][a-zA-Z0-9-]*");
+    createToken("NUMERICIDENTIFIERLOOSE", "\\d+");
+    createToken("NONNUMERICIDENTIFIER", `\\d*[a-zA-Z-]${LETTERDASHNUMBER}*`);
     createToken("MAINVERSION", `(${src[t.NUMERICIDENTIFIER]})\\.(${src[t.NUMERICIDENTIFIER]})\\.(${src[t.NUMERICIDENTIFIER]})`);
     createToken("MAINVERSIONLOOSE", `(${src[t.NUMERICIDENTIFIERLOOSE]})\\.(${src[t.NUMERICIDENTIFIERLOOSE]})\\.(${src[t.NUMERICIDENTIFIERLOOSE]})`);
     createToken("PRERELEASEIDENTIFIER", `(?:${src[t.NUMERICIDENTIFIER]}|${src[t.NONNUMERICIDENTIFIER]})`);
     createToken("PRERELEASEIDENTIFIERLOOSE", `(?:${src[t.NUMERICIDENTIFIERLOOSE]}|${src[t.NONNUMERICIDENTIFIER]})`);
     createToken("PRERELEASE", `(?:-(${src[t.PRERELEASEIDENTIFIER]}(?:\\.${src[t.PRERELEASEIDENTIFIER]})*))`);
     createToken("PRERELEASELOOSE", `(?:-?(${src[t.PRERELEASEIDENTIFIERLOOSE]}(?:\\.${src[t.PRERELEASEIDENTIFIERLOOSE]})*))`);
-    createToken("BUILDIDENTIFIER", "[0-9A-Za-z-]+");
+    createToken("BUILDIDENTIFIER", `${LETTERDASHNUMBER}+`);
     createToken("BUILD", `(?:\\+(${src[t.BUILDIDENTIFIER]}(?:\\.${src[t.BUILDIDENTIFIER]})*))`);
     createToken("FULLPLAIN", `v?${src[t.MAINVERSION]}${src[t.PRERELEASE]}?${src[t.BUILD]}?`);
     createToken("FULL", `^${src[t.FULLPLAIN]}$`);
@@ -13556,7 +13577,7 @@ var require_semver = __commonJS({
   ""(exports, module) {
     var debug = require_debug();
     var { MAX_LENGTH, MAX_SAFE_INTEGER } = require_constants();
-    var { re, t } = require_re();
+    var { safeRe: re, t } = require_re();
     var parseOptions = require_parse_options();
     var { compareIdentifiers } = require_identifiers();
     var SemVer = class {
@@ -13780,8 +13801,10 @@ var require_semver = __commonJS({
           default:
             throw new Error(`invalid increment argument: ${release}`);
         }
-        this.format();
-        this.raw = this.version;
+        this.raw = this.format();
+        if (this.build.length) {
+          this.raw += `+${this.build.join(".")}`;
+        }
         return this;
       }
     };
@@ -13872,6 +13895,19 @@ var require_diff = __commonJS({
       const highVersion = v1Higher ? v1 : v2;
       const lowVersion = v1Higher ? v2 : v1;
       const highHasPre = !!highVersion.prerelease.length;
+      const lowHasPre = !!lowVersion.prerelease.length;
+      if (lowHasPre && !highHasPre) {
+        if (!lowVersion.patch && !lowVersion.minor) {
+          return "major";
+        }
+        if (highVersion.patch) {
+          return "patch";
+        }
+        if (highVersion.minor) {
+          return "minor";
+        }
+        return "major";
+      }
       const prefix = highHasPre ? "pre" : "";
       if (v1.major !== v2.major) {
         return prefix + "major";
@@ -13882,16 +13918,7 @@ var require_diff = __commonJS({
       if (v1.patch !== v2.patch) {
         return prefix + "patch";
       }
-      if (highHasPre) {
-        return "prerelease";
-      }
-      if (lowVersion.patch) {
-        return "patch";
-      }
-      if (lowVersion.minor) {
-        return "minor";
-      }
-      return "major";
+      return "prerelease";
     };
     module.exports = diff;
   }
@@ -14102,7 +14129,7 @@ var require_coerce = __commonJS({
   ""(exports, module) {
     var SemVer = require_semver();
     var parse = require_parse2();
-    var { re, t } = require_re();
+    var { safeRe: re, t } = require_re();
     var coerce = (version, options) => {
       if (version instanceof SemVer) {
         return version;
@@ -14809,10 +14836,10 @@ var require_range = __commonJS({
         this.options = options;
         this.loose = !!options.loose;
         this.includePrerelease = !!options.includePrerelease;
-        this.raw = range;
-        this.set = range.split("||").map((r) => this.parseRange(r.trim())).filter((c) => c.length);
+        this.raw = range.trim().split(/\s+/).join(" ");
+        this.set = this.raw.split("||").map((r) => this.parseRange(r.trim())).filter((c) => c.length);
         if (!this.set.length) {
-          throw new TypeError(`Invalid SemVer Range: ${range}`);
+          throw new TypeError(`Invalid SemVer Range: ${this.raw}`);
         }
         if (this.set.length > 1) {
           const first = this.set[0];
@@ -14831,16 +14858,13 @@ var require_range = __commonJS({
         this.format();
       }
       format() {
-        this.range = this.set.map((comps) => {
-          return comps.join(" ").trim();
-        }).join("||").trim();
+        this.range = this.set.map((comps) => comps.join(" ").trim()).join("||").trim();
         return this.range;
       }
       toString() {
         return this.range;
       }
       parseRange(range) {
-        range = range.trim();
         const memoOpts = (this.options.includePrerelease && FLAG_INCLUDE_PRERELEASE) | (this.options.loose && FLAG_LOOSE);
         const memoKey = memoOpts + ":" + range;
         const cached = cache.get(memoKey);
@@ -14854,8 +14878,9 @@ var require_range = __commonJS({
         range = range.replace(re[t.COMPARATORTRIM], comparatorTrimReplace);
         debug("comparator trim", range);
         range = range.replace(re[t.TILDETRIM], tildeTrimReplace);
+        debug("tilde trim", range);
         range = range.replace(re[t.CARETTRIM], caretTrimReplace);
-        range = range.split(/\s+/).join(" ");
+        debug("caret trim", range);
         let rangeList = range.split(" ").map((comp) => parseComparator(comp, this.options)).join(" ").split(/\s+/).map((comp) => replaceGTE0(comp, this.options));
         if (loose) {
           rangeList = rangeList.filter((comp) => {
@@ -14920,7 +14945,7 @@ var require_range = __commonJS({
     var debug = require_debug();
     var SemVer = require_semver();
     var {
-      re,
+      safeRe: re,
       t,
       comparatorTrimReplace,
       tildeTrimReplace,
@@ -14954,9 +14979,9 @@ var require_range = __commonJS({
       return comp;
     };
     var isX = (id) => !id || id.toLowerCase() === "x" || id === "*";
-    var replaceTildes = (comp, options) => comp.trim().split(/\s+/).map((c) => {
-      return replaceTilde(c, options);
-    }).join(" ");
+    var replaceTildes = (comp, options) => {
+      return comp.trim().split(/\s+/).map((c) => replaceTilde(c, options)).join(" ");
+    };
     var replaceTilde = (comp, options) => {
       const r = options.loose ? re[t.TILDELOOSE] : re[t.TILDE];
       return comp.replace(r, (_, M, m, p, pr) => {
@@ -14978,9 +15003,9 @@ var require_range = __commonJS({
         return ret;
       });
     };
-    var replaceCarets = (comp, options) => comp.trim().split(/\s+/).map((c) => {
-      return replaceCaret(c, options);
-    }).join(" ");
+    var replaceCarets = (comp, options) => {
+      return comp.trim().split(/\s+/).map((c) => replaceCaret(c, options)).join(" ");
+    };
     var replaceCaret = (comp, options) => {
       debug("caret", comp, options);
       const r = options.loose ? re[t.CARETLOOSE] : re[t.CARET];
@@ -15027,9 +15052,7 @@ var require_range = __commonJS({
     };
     var replaceXRanges = (comp, options) => {
       debug("replaceXRanges", comp, options);
-      return comp.split(/\s+/).map((c) => {
-        return replaceXRange(c, options);
-      }).join(" ");
+      return comp.split(/\s+/).map((c) => replaceXRange(c, options)).join(" ");
     };
     var replaceXRange = (comp, options) => {
       comp = comp.trim();
@@ -15164,6 +15187,7 @@ var require_comparator = __commonJS({
             comp = comp.value;
           }
         }
+        comp = comp.trim().split(/\s+/).join(" ");
         debug("comparator", comp, options);
         this.options = options;
         this.loose = !!options.loose;
@@ -15250,7 +15274,7 @@ var require_comparator = __commonJS({
     };
     module.exports = Comparator;
     var parseOptions = require_parse_options();
-    var { re, t } = require_re();
+    var { safeRe: re, t } = require_re();
     var cmp = require_cmp();
     var debug = require_debug();
     var SemVer = require_semver();
