@@ -14868,13 +14868,613 @@ var require_dist_node20 = __commonJS({
     var import_plugin_request_log = require_dist_node17();
     var import_plugin_paginate_rest = require_dist_node18();
     var import_plugin_rest_endpoint_methods = require_dist_node19();
-    var VERSION = "19.0.11";
+    var VERSION = "19.0.13";
     var Octokit3 = import_core2.Octokit.plugin(
       import_plugin_request_log.requestLog,
       import_plugin_rest_endpoint_methods.legacyRestEndpointMethods,
       import_plugin_paginate_rest.paginateRest
     ).defaults({
       userAgent: `octokit-rest.js/${VERSION}`
+    });
+  }
+});
+
+// 
+var require_dist_node21 = __commonJS({
+  ""(exports, module) {
+    "use strict";
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export = (target, all) => {
+      for (var name in all)
+        __defProp2(target, name, { get: all[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if (from && typeof from === "object" || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export(dist_src_exports, {
+      endpoint: () => endpoint
+    });
+    module.exports = __toCommonJS(dist_src_exports);
+    var import_universal_user_agent = require_dist_node();
+    var VERSION = "9.0.0";
+    var userAgent = `octokit-endpoint.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`;
+    var DEFAULTS = {
+      method: "GET",
+      baseUrl: "https://api.github.com",
+      headers: {
+        accept: "application/vnd.github.v3+json",
+        "user-agent": userAgent
+      },
+      mediaType: {
+        format: ""
+      }
+    };
+    function lowercaseKeys(object) {
+      if (!object) {
+        return {};
+      }
+      return Object.keys(object).reduce((newObj, key) => {
+        newObj[key.toLowerCase()] = object[key];
+        return newObj;
+      }, {});
+    }
+    var import_is_plain_object = require_is_plain_object();
+    function mergeDeep(defaults, options) {
+      const result = Object.assign({}, defaults);
+      Object.keys(options).forEach((key) => {
+        if ((0, import_is_plain_object.isPlainObject)(options[key])) {
+          if (!(key in defaults))
+            Object.assign(result, { [key]: options[key] });
+          else
+            result[key] = mergeDeep(defaults[key], options[key]);
+        } else {
+          Object.assign(result, { [key]: options[key] });
+        }
+      });
+      return result;
+    }
+    function removeUndefinedProperties(obj) {
+      for (const key in obj) {
+        if (obj[key] === void 0) {
+          delete obj[key];
+        }
+      }
+      return obj;
+    }
+    function merge(defaults, route, options) {
+      var _a;
+      if (typeof route === "string") {
+        let [method, url] = route.split(" ");
+        options = Object.assign(url ? { method, url } : { url: method }, options);
+      } else {
+        options = Object.assign({}, route);
+      }
+      options.headers = lowercaseKeys(options.headers);
+      removeUndefinedProperties(options);
+      removeUndefinedProperties(options.headers);
+      const mergedOptions = mergeDeep(defaults || {}, options);
+      if (options.url === "/graphql") {
+        if (defaults && ((_a = defaults.mediaType.previews) == null ? void 0 : _a.length)) {
+          mergedOptions.mediaType.previews = defaults.mediaType.previews.filter(
+            (preview) => !mergedOptions.mediaType.previews.includes(preview)
+          ).concat(mergedOptions.mediaType.previews);
+        }
+        mergedOptions.mediaType.previews = (mergedOptions.mediaType.previews || []).map((preview) => preview.replace(/-preview/, ""));
+      }
+      return mergedOptions;
+    }
+    function addQueryParameters(url, parameters) {
+      const separator = /\?/.test(url) ? "&" : "?";
+      const names = Object.keys(parameters);
+      if (names.length === 0) {
+        return url;
+      }
+      return url + separator + names.map((name) => {
+        if (name === "q") {
+          return "q=" + parameters.q.split("+").map(encodeURIComponent).join("+");
+        }
+        return `${name}=${encodeURIComponent(parameters[name])}`;
+      }).join("&");
+    }
+    var urlVariableRegex = /\{[^}]+\}/g;
+    function removeNonChars(variableName) {
+      return variableName.replace(/^\W+|\W+$/g, "").split(/,/);
+    }
+    function extractUrlVariableNames(url) {
+      const matches = url.match(urlVariableRegex);
+      if (!matches) {
+        return [];
+      }
+      return matches.map(removeNonChars).reduce((a, b) => a.concat(b), []);
+    }
+    function omit(object, keysToOmit) {
+      return Object.keys(object).filter((option) => !keysToOmit.includes(option)).reduce((obj, key) => {
+        obj[key] = object[key];
+        return obj;
+      }, {});
+    }
+    function encodeReserved(str) {
+      return str.split(/(%[0-9A-Fa-f]{2})/g).map(function(part) {
+        if (!/%[0-9A-Fa-f]/.test(part)) {
+          part = encodeURI(part).replace(/%5B/g, "[").replace(/%5D/g, "]");
+        }
+        return part;
+      }).join("");
+    }
+    function encodeUnreserved(str) {
+      return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
+        return "%" + c.charCodeAt(0).toString(16).toUpperCase();
+      });
+    }
+    function encodeValue(operator, value, key) {
+      value = operator === "+" || operator === "#" ? encodeReserved(value) : encodeUnreserved(value);
+      if (key) {
+        return encodeUnreserved(key) + "=" + value;
+      } else {
+        return value;
+      }
+    }
+    function isDefined(value) {
+      return value !== void 0 && value !== null;
+    }
+    function isKeyOperator(operator) {
+      return operator === ";" || operator === "&" || operator === "?";
+    }
+    function getValues(context3, operator, key, modifier) {
+      var value = context3[key], result = [];
+      if (isDefined(value) && value !== "") {
+        if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+          value = value.toString();
+          if (modifier && modifier !== "*") {
+            value = value.substring(0, parseInt(modifier, 10));
+          }
+          result.push(
+            encodeValue(operator, value, isKeyOperator(operator) ? key : "")
+          );
+        } else {
+          if (modifier === "*") {
+            if (Array.isArray(value)) {
+              value.filter(isDefined).forEach(function(value2) {
+                result.push(
+                  encodeValue(operator, value2, isKeyOperator(operator) ? key : "")
+                );
+              });
+            } else {
+              Object.keys(value).forEach(function(k) {
+                if (isDefined(value[k])) {
+                  result.push(encodeValue(operator, value[k], k));
+                }
+              });
+            }
+          } else {
+            const tmp = [];
+            if (Array.isArray(value)) {
+              value.filter(isDefined).forEach(function(value2) {
+                tmp.push(encodeValue(operator, value2));
+              });
+            } else {
+              Object.keys(value).forEach(function(k) {
+                if (isDefined(value[k])) {
+                  tmp.push(encodeUnreserved(k));
+                  tmp.push(encodeValue(operator, value[k].toString()));
+                }
+              });
+            }
+            if (isKeyOperator(operator)) {
+              result.push(encodeUnreserved(key) + "=" + tmp.join(","));
+            } else if (tmp.length !== 0) {
+              result.push(tmp.join(","));
+            }
+          }
+        }
+      } else {
+        if (operator === ";") {
+          if (isDefined(value)) {
+            result.push(encodeUnreserved(key));
+          }
+        } else if (value === "" && (operator === "&" || operator === "?")) {
+          result.push(encodeUnreserved(key) + "=");
+        } else if (value === "") {
+          result.push("");
+        }
+      }
+      return result;
+    }
+    function parseUrl(template) {
+      return {
+        expand: expand.bind(null, template)
+      };
+    }
+    function expand(template, context3) {
+      var operators = ["+", "#", ".", "/", ";", "?", "&"];
+      return template.replace(
+        /\{([^\{\}]+)\}|([^\{\}]+)/g,
+        function(_, expression, literal) {
+          if (expression) {
+            let operator = "";
+            const values = [];
+            if (operators.indexOf(expression.charAt(0)) !== -1) {
+              operator = expression.charAt(0);
+              expression = expression.substr(1);
+            }
+            expression.split(/,/g).forEach(function(variable) {
+              var tmp = /([^:\*]*)(?::(\d+)|(\*))?/.exec(variable);
+              values.push(getValues(context3, operator, tmp[1], tmp[2] || tmp[3]));
+            });
+            if (operator && operator !== "+") {
+              var separator = ",";
+              if (operator === "?") {
+                separator = "&";
+              } else if (operator !== "#") {
+                separator = operator;
+              }
+              return (values.length !== 0 ? operator : "") + values.join(separator);
+            } else {
+              return values.join(",");
+            }
+          } else {
+            return encodeReserved(literal);
+          }
+        }
+      );
+    }
+    function parse(options) {
+      var _a;
+      let method = options.method.toUpperCase();
+      let url = (options.url || "/").replace(/:([a-z]\w+)/g, "{$1}");
+      let headers = Object.assign({}, options.headers);
+      let body;
+      let parameters = omit(options, [
+        "method",
+        "baseUrl",
+        "url",
+        "headers",
+        "request",
+        "mediaType"
+      ]);
+      const urlVariableNames = extractUrlVariableNames(url);
+      url = parseUrl(url).expand(parameters);
+      if (!/^http/.test(url)) {
+        url = options.baseUrl + url;
+      }
+      const omittedParameters = Object.keys(options).filter((option) => urlVariableNames.includes(option)).concat("baseUrl");
+      const remainingParameters = omit(parameters, omittedParameters);
+      const isBinaryRequest = /application\/octet-stream/i.test(headers.accept);
+      if (!isBinaryRequest) {
+        if (options.mediaType.format) {
+          headers.accept = headers.accept.split(/,/).map(
+            (format) => format.replace(
+              /application\/vnd(\.\w+)(\.v3)?(\.\w+)?(\+json)?$/,
+              `application/vnd$1$2.${options.mediaType.format}`
+            )
+          ).join(",");
+        }
+        if (url.endsWith("/graphql")) {
+          if ((_a = options.mediaType.previews) == null ? void 0 : _a.length) {
+            const previewsFromAcceptHeader = headers.accept.match(/[\w-]+(?=-preview)/g) || [];
+            headers.accept = previewsFromAcceptHeader.concat(options.mediaType.previews).map((preview) => {
+              const format = options.mediaType.format ? `.${options.mediaType.format}` : "+json";
+              return `application/vnd.github.${preview}-preview${format}`;
+            }).join(",");
+          }
+        }
+      }
+      if (["GET", "HEAD"].includes(method)) {
+        url = addQueryParameters(url, remainingParameters);
+      } else {
+        if ("data" in remainingParameters) {
+          body = remainingParameters.data;
+        } else {
+          if (Object.keys(remainingParameters).length) {
+            body = remainingParameters;
+          }
+        }
+      }
+      if (!headers["content-type"] && typeof body !== "undefined") {
+        headers["content-type"] = "application/json; charset=utf-8";
+      }
+      if (["PATCH", "PUT"].includes(method) && typeof body === "undefined") {
+        body = "";
+      }
+      return Object.assign(
+        { method, url, headers },
+        typeof body !== "undefined" ? { body } : null,
+        options.request ? { request: options.request } : null
+      );
+    }
+    function endpointWithDefaults(defaults, route, options) {
+      return parse(merge(defaults, route, options));
+    }
+    function withDefaults(oldDefaults, newDefaults) {
+      const DEFAULTS2 = merge(oldDefaults, newDefaults);
+      const endpoint2 = endpointWithDefaults.bind(null, DEFAULTS2);
+      return Object.assign(endpoint2, {
+        DEFAULTS: DEFAULTS2,
+        defaults: withDefaults.bind(null, DEFAULTS2),
+        merge: merge.bind(null, DEFAULTS2),
+        parse
+      });
+    }
+    var endpoint = withDefaults(null, DEFAULTS);
+  }
+});
+
+// 
+var require_dist_node22 = __commonJS({
+  ""(exports, module) {
+    "use strict";
+    var __create2 = Object.create;
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __getProtoOf2 = Object.getPrototypeOf;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export = (target, all) => {
+      for (var name in all)
+        __defProp2(target, name, { get: all[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if (from && typeof from === "object" || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toESM2 = (mod, isNodeMode, target) => (target = mod != null ? __create2(__getProtoOf2(mod)) : {}, __copyProps2(
+      isNodeMode || !mod || !mod.__esModule ? __defProp2(target, "default", { value: mod, enumerable: true }) : target,
+      mod
+    ));
+    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export(dist_src_exports, {
+      RequestError: () => RequestError
+    });
+    module.exports = __toCommonJS(dist_src_exports);
+    var import_deprecation = require_dist_node3();
+    var import_once = __toESM2(require_once());
+    var logOnceCode = (0, import_once.default)((deprecation) => console.warn(deprecation));
+    var logOnceHeaders = (0, import_once.default)((deprecation) => console.warn(deprecation));
+    var RequestError = class extends Error {
+      constructor(message, statusCode, options) {
+        super(message);
+        if (Error.captureStackTrace) {
+          Error.captureStackTrace(this, this.constructor);
+        }
+        this.name = "HttpError";
+        this.status = statusCode;
+        let headers;
+        if ("headers" in options && typeof options.headers !== "undefined") {
+          headers = options.headers;
+        }
+        if ("response" in options) {
+          this.response = options.response;
+          headers = options.response.headers;
+        }
+        const requestCopy = Object.assign({}, options.request);
+        if (options.request.headers.authorization) {
+          requestCopy.headers = Object.assign({}, options.request.headers, {
+            authorization: options.request.headers.authorization.replace(
+              / .*$/,
+              " [REDACTED]"
+            )
+          });
+        }
+        requestCopy.url = requestCopy.url.replace(/\bclient_secret=\w+/g, "client_secret=[REDACTED]").replace(/\baccess_token=\w+/g, "access_token=[REDACTED]");
+        this.request = requestCopy;
+        Object.defineProperty(this, "code", {
+          get() {
+            logOnceCode(
+              new import_deprecation.Deprecation(
+                "[@octokit/request-error] `error.code` is deprecated, use `error.status`."
+              )
+            );
+            return statusCode;
+          }
+        });
+        Object.defineProperty(this, "headers", {
+          get() {
+            logOnceHeaders(
+              new import_deprecation.Deprecation(
+                "[@octokit/request-error] `error.headers` is deprecated, use `error.response.headers`."
+              )
+            );
+            return headers || {};
+          }
+        });
+      }
+    };
+  }
+});
+
+// 
+var require_dist_node23 = __commonJS({
+  ""(exports, module) {
+    "use strict";
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export = (target, all) => {
+      for (var name in all)
+        __defProp2(target, name, { get: all[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if (from && typeof from === "object" || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export(dist_src_exports, {
+      request: () => request
+    });
+    module.exports = __toCommonJS(dist_src_exports);
+    var import_endpoint = require_dist_node21();
+    var import_universal_user_agent = require_dist_node();
+    var VERSION = "8.0.2";
+    var import_is_plain_object = require_is_plain_object();
+    var import_request_error = require_dist_node22();
+    function getBufferResponse(response) {
+      return response.arrayBuffer();
+    }
+    function fetchWrapper(requestOptions) {
+      var _a;
+      const log = requestOptions.request && requestOptions.request.log ? requestOptions.request.log : console;
+      if ((0, import_is_plain_object.isPlainObject)(requestOptions.body) || Array.isArray(requestOptions.body)) {
+        requestOptions.body = JSON.stringify(requestOptions.body);
+      }
+      let headers = {};
+      let status;
+      let url;
+      let { fetch } = globalThis;
+      if ((_a = requestOptions.request) == null ? void 0 : _a.fetch) {
+        fetch = requestOptions.request.fetch;
+      }
+      if (!fetch) {
+        throw new Error(
+          'Global "fetch" not found. Please provide `options.request.fetch` to octokit or upgrade to node@18 or newer.'
+        );
+      }
+      return fetch(requestOptions.url, {
+        method: requestOptions.method,
+        body: requestOptions.body,
+        headers: requestOptions.headers,
+        signal: requestOptions.signal,
+        ...requestOptions.body && { duplex: "half" }
+      }).then(async (response) => {
+        url = response.url;
+        status = response.status;
+        for (const keyAndValue of response.headers) {
+          headers[keyAndValue[0]] = keyAndValue[1];
+        }
+        if ("deprecation" in headers) {
+          const matches = headers.link && headers.link.match(/<([^>]+)>; rel="deprecation"/);
+          const deprecationLink = matches && matches.pop();
+          log.warn(
+            `[@octokit/request] "${requestOptions.method} ${requestOptions.url}" is deprecated. It is scheduled to be removed on ${headers.sunset}${deprecationLink ? `. See ${deprecationLink}` : ""}`
+          );
+        }
+        if (status === 204 || status === 205) {
+          return;
+        }
+        if (requestOptions.method === "HEAD") {
+          if (status < 400) {
+            return;
+          }
+          throw new import_request_error.RequestError(response.statusText, status, {
+            response: {
+              url,
+              status,
+              headers,
+              data: void 0
+            },
+            request: requestOptions
+          });
+        }
+        if (status === 304) {
+          throw new import_request_error.RequestError("Not modified", status, {
+            response: {
+              url,
+              status,
+              headers,
+              data: await getResponseData(response)
+            },
+            request: requestOptions
+          });
+        }
+        if (status >= 400) {
+          const data = await getResponseData(response);
+          const error = new import_request_error.RequestError(toErrorMessage(data), status, {
+            response: {
+              url,
+              status,
+              headers,
+              data
+            },
+            request: requestOptions
+          });
+          throw error;
+        }
+        return getResponseData(response);
+      }).then((data) => {
+        return {
+          status,
+          url,
+          headers,
+          data
+        };
+      }).catch((error) => {
+        if (error instanceof import_request_error.RequestError)
+          throw error;
+        else if (error.name === "AbortError")
+          throw error;
+        throw new import_request_error.RequestError(error.message, 500, {
+          request: requestOptions
+        });
+      });
+    }
+    async function getResponseData(response) {
+      const contentType = response.headers.get("content-type");
+      if (/application\/json/.test(contentType)) {
+        return response.json();
+      }
+      if (!contentType || /^text\/|charset=utf-8$/.test(contentType)) {
+        return response.text();
+      }
+      return getBufferResponse(response);
+    }
+    function toErrorMessage(data) {
+      if (typeof data === "string")
+        return data;
+      if ("message" in data) {
+        if (Array.isArray(data.errors)) {
+          return `${data.message}: ${data.errors.map(JSON.stringify).join(", ")}`;
+        }
+        return data.message;
+      }
+      return `Unknown error: ${JSON.stringify(data)}`;
+    }
+    function withDefaults(oldEndpoint, newDefaults) {
+      const endpoint2 = oldEndpoint.defaults(newDefaults);
+      const newApi = function(route, parameters) {
+        const endpointOptions = endpoint2.merge(route, parameters);
+        if (!endpointOptions.request || !endpointOptions.request.hook) {
+          return fetchWrapper(endpoint2.parse(endpointOptions));
+        }
+        const request2 = (route2, parameters2) => {
+          return fetchWrapper(
+            endpoint2.parse(endpoint2.merge(route2, parameters2))
+          );
+        };
+        Object.assign(request2, {
+          endpoint: endpoint2,
+          defaults: withDefaults.bind(null, endpoint2)
+        });
+        return endpointOptions.request.hook(request2, endpointOptions);
+      };
+      return Object.assign(newApi, {
+        endpoint: endpoint2,
+        defaults: withDefaults.bind(null, endpoint2)
+      });
+    }
+    var request = withDefaults(import_endpoint.endpoint, {
+      headers: {
+        "user-agent": `octokit-request.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`
+      }
     });
   }
 });
@@ -14889,10 +15489,31 @@ var require_btoa_node = __commonJS({
 });
 
 // 
-var require_dist_node21 = __commonJS({
-  ""(exports) {
+var require_dist_node24 = __commonJS({
+  ""(exports, module) {
     "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export = (target, all) => {
+      for (var name in all)
+        __defProp2(target, name, { get: all[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if (from && typeof from === "object" || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export(dist_src_exports, {
+      oauthAuthorizationUrl: () => oauthAuthorizationUrl
+    });
+    module.exports = __toCommonJS(dist_src_exports);
     function oauthAuthorizationUrl(options) {
       const clientType = options.clientType || "oauth-app";
       const baseUrl = options.baseUrl || "https://github.com";
@@ -14934,66 +15555,11 @@ var require_dist_node21 = __commonJS({
       });
       return url;
     }
-    exports.oauthAuthorizationUrl = oauthAuthorizationUrl;
   }
 });
 
 // 
-var require_dist_node22 = __commonJS({
-  ""(exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    function _interopDefault(ex) {
-      return ex && typeof ex === "object" && "default" in ex ? ex["default"] : ex;
-    }
-    var deprecation = require_dist_node3();
-    var once = _interopDefault(require_once());
-    var logOnceCode = once((deprecation2) => console.warn(deprecation2));
-    var logOnceHeaders = once((deprecation2) => console.warn(deprecation2));
-    var RequestError = class extends Error {
-      constructor(message, statusCode, options) {
-        super(message);
-        if (Error.captureStackTrace) {
-          Error.captureStackTrace(this, this.constructor);
-        }
-        this.name = "HttpError";
-        this.status = statusCode;
-        let headers;
-        if ("headers" in options && typeof options.headers !== "undefined") {
-          headers = options.headers;
-        }
-        if ("response" in options) {
-          this.response = options.response;
-          headers = options.response.headers;
-        }
-        const requestCopy = Object.assign({}, options.request);
-        if (options.request.headers.authorization) {
-          requestCopy.headers = Object.assign({}, options.request.headers, {
-            authorization: options.request.headers.authorization.replace(/ .*$/, " [REDACTED]")
-          });
-        }
-        requestCopy.url = requestCopy.url.replace(/\bclient_secret=\w+/g, "client_secret=[REDACTED]").replace(/\baccess_token=\w+/g, "access_token=[REDACTED]");
-        this.request = requestCopy;
-        Object.defineProperty(this, "code", {
-          get() {
-            logOnceCode(new deprecation.Deprecation("[@octokit/request-error] `error.code` is deprecated, use `error.status`."));
-            return statusCode;
-          }
-        });
-        Object.defineProperty(this, "headers", {
-          get() {
-            logOnceHeaders(new deprecation.Deprecation("[@octokit/request-error] `error.headers` is deprecated, use `error.response.headers`."));
-            return headers || {};
-          }
-        });
-      }
-    };
-    exports.RequestError = RequestError;
-  }
-});
-
-// 
-var require_dist_node23 = __commonJS({
+var require_dist_node25 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __create2 = Object.create;
@@ -15034,9 +15600,9 @@ var require_dist_node23 = __commonJS({
       scopeToken: () => scopeToken
     });
     module.exports = __toCommonJS(dist_src_exports);
-    var VERSION = "2.0.6";
-    var import_oauth_authorization_url = require_dist_node21();
-    var import_request = require_dist_node13();
+    var VERSION = "4.0.0";
+    var import_oauth_authorization_url = require_dist_node24();
+    var import_request = require_dist_node23();
     var import_request_error = require_dist_node22();
     function requestToOAuthBaseUrl(request) {
       const endpointDefaults = request.endpoint.DEFAULTS;
@@ -15078,7 +15644,7 @@ var require_dist_node23 = __commonJS({
         baseUrl
       });
     }
-    var import_request2 = require_dist_node13();
+    var import_request2 = require_dist_node23();
     async function exchangeWebFlowCode(options) {
       const request = options.request || import_request2.request;
       const response = await oauthRequest(
@@ -15116,7 +15682,7 @@ var require_dist_node23 = __commonJS({
     function toTimestamp(apiTimeInMs, expirationInSeconds) {
       return new Date(apiTimeInMs + expirationInSeconds * 1e3).toISOString();
     }
-    var import_request3 = require_dist_node13();
+    var import_request3 = require_dist_node23();
     async function createDeviceCode(options) {
       const request = options.request || import_request3.request;
       const parameters = {
@@ -15127,7 +15693,7 @@ var require_dist_node23 = __commonJS({
       }
       return oauthRequest(request, "POST /login/device/code", parameters);
     }
-    var import_request4 = require_dist_node13();
+    var import_request4 = require_dist_node23();
     async function exchangeDeviceCode(options) {
       const request = options.request || import_request4.request;
       const response = await oauthRequest(
@@ -15166,7 +15732,7 @@ var require_dist_node23 = __commonJS({
     function toTimestamp2(apiTimeInMs, expirationInSeconds) {
       return new Date(apiTimeInMs + expirationInSeconds * 1e3).toISOString();
     }
-    var import_request5 = require_dist_node13();
+    var import_request5 = require_dist_node23();
     var import_btoa_lite = __toESM2(require_btoa_node());
     async function checkToken(options) {
       const request = options.request || import_request5.request;
@@ -15193,7 +15759,7 @@ var require_dist_node23 = __commonJS({
       }
       return { ...response, authentication };
     }
-    var import_request6 = require_dist_node13();
+    var import_request6 = require_dist_node23();
     async function refreshToken(options) {
       const request = options.request || import_request6.request;
       const response = await oauthRequest(
@@ -15224,7 +15790,7 @@ var require_dist_node23 = __commonJS({
     function toTimestamp3(apiTimeInMs, expirationInSeconds) {
       return new Date(apiTimeInMs + expirationInSeconds * 1e3).toISOString();
     }
-    var import_request7 = require_dist_node13();
+    var import_request7 = require_dist_node23();
     var import_btoa_lite2 = __toESM2(require_btoa_node());
     async function scopeToken(options) {
       const {
@@ -15258,7 +15824,7 @@ var require_dist_node23 = __commonJS({
       );
       return { ...response, authentication };
     }
-    var import_request8 = require_dist_node13();
+    var import_request8 = require_dist_node23();
     var import_btoa_lite3 = __toESM2(require_btoa_node());
     async function resetToken(options) {
       const request = options.request || import_request8.request;
@@ -15287,7 +15853,7 @@ var require_dist_node23 = __commonJS({
       }
       return { ...response, authentication };
     }
-    var import_request9 = require_dist_node13();
+    var import_request9 = require_dist_node23();
     var import_btoa_lite4 = __toESM2(require_btoa_node());
     async function deleteToken(options) {
       const request = options.request || import_request9.request;
@@ -15303,7 +15869,7 @@ var require_dist_node23 = __commonJS({
         }
       );
     }
-    var import_request10 = require_dist_node13();
+    var import_request10 = require_dist_node23();
     var import_btoa_lite5 = __toESM2(require_btoa_node());
     async function deleteAuthorization(options) {
       const request = options.request || import_request10.request;
@@ -15323,7 +15889,7 @@ var require_dist_node23 = __commonJS({
 });
 
 // 
-var require_dist_node24 = __commonJS({
+var require_dist_node26 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -15349,8 +15915,8 @@ var require_dist_node24 = __commonJS({
     });
     module.exports = __toCommonJS(dist_src_exports);
     var import_universal_user_agent = require_dist_node();
-    var import_request = require_dist_node13();
-    var import_oauth_methods = require_dist_node23();
+    var import_request = require_dist_node23();
+    var import_oauth_methods = require_dist_node25();
     async function getOAuthAccessToken(state, options) {
       const cachedAuthentication = getCachedAuthentication(state, options.auth);
       if (cachedAuthentication)
@@ -15443,7 +16009,7 @@ var require_dist_node24 = __commonJS({
       endpoint.headers.authorization = `token ${token}`;
       return request(endpoint);
     }
-    var VERSION = "4.0.5";
+    var VERSION = "6.0.0";
     function createOAuthDeviceAuth(options) {
       const requestWithDefaults = options.request || import_request.request.defaults({
         headers: {
@@ -15479,7 +16045,7 @@ var require_dist_node24 = __commonJS({
 });
 
 // 
-var require_dist_node25 = __commonJS({
+var require_dist_node27 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __create2 = Object.create;
@@ -15512,10 +16078,10 @@ var require_dist_node25 = __commonJS({
     });
     module.exports = __toCommonJS(dist_src_exports);
     var import_universal_user_agent = require_dist_node();
-    var import_request = require_dist_node13();
-    var VERSION = "2.1.2";
-    var import_auth_oauth_device = require_dist_node24();
-    var import_oauth_methods = require_dist_node23();
+    var import_request = require_dist_node23();
+    var VERSION = "4.0.0";
+    var import_auth_oauth_device = require_dist_node26();
+    var import_oauth_methods = require_dist_node25();
     async function getAuthentication(state) {
       if ("code" in state.strategyOptions) {
         const { authentication } = await (0, import_oauth_methods.exchangeWebFlowCode)({
@@ -15561,7 +16127,7 @@ var require_dist_node25 = __commonJS({
       }
       throw new Error("[@octokit/auth-oauth-user] Invalid strategy options");
     }
-    var import_oauth_methods2 = require_dist_node23();
+    var import_oauth_methods2 = require_dist_node25();
     async function auth(state, options = {}) {
       var _a, _b;
       if (!state.authentication) {
@@ -15699,7 +16265,7 @@ var require_dist_node25 = __commonJS({
 });
 
 // 
-var require_dist_node26 = __commonJS({
+var require_dist_node28 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __create2 = Object.create;
@@ -15732,9 +16298,9 @@ var require_dist_node26 = __commonJS({
     });
     module.exports = __toCommonJS(dist_src_exports);
     var import_universal_user_agent = require_dist_node();
-    var import_request = require_dist_node13();
+    var import_request = require_dist_node23();
     var import_btoa_lite = __toESM2(require_btoa_node());
-    var import_auth_oauth_user = require_dist_node25();
+    var import_auth_oauth_user = require_dist_node27();
     async function auth(state, authOptions) {
       if (authOptions.type === "oauth-app") {
         return {
@@ -15772,7 +16338,7 @@ var require_dist_node26 = __commonJS({
       return userAuth();
     }
     var import_btoa_lite2 = __toESM2(require_btoa_node());
-    var import_auth_oauth_user2 = require_dist_node25();
+    var import_auth_oauth_user2 = require_dist_node27();
     async function hook(state, request2, route, parameters) {
       let endpoint = request2.endpoint.merge(
         route,
@@ -15797,8 +16363,8 @@ var require_dist_node26 = __commonJS({
         throw error;
       }
     }
-    var VERSION = "6.0.0";
-    var import_auth_oauth_user3 = require_dist_node25();
+    var VERSION = "7.0.0";
+    var import_auth_oauth_user3 = require_dist_node27();
     function createOAuthAppAuth(options) {
       const state = Object.assign(
         {
@@ -25175,7 +25741,7 @@ var require_jsonwebtoken = __commonJS({
 });
 
 // 
-var require_dist_node27 = __commonJS({
+var require_dist_node29 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -26008,11 +26574,11 @@ var require_cjs = __commonJS({
           var _a2;
           const fmp = (_a2 = this.#fetchMethod) == null ? void 0 : _a2.call(this, k, v, fetchOpts);
           if (fmp && fmp instanceof Promise) {
-            fmp.then((v2) => res(v2), rej);
+            fmp.then((v2) => res(v2 === void 0 ? void 0 : v2), rej);
           }
           ac.signal.addEventListener("abort", () => {
             if (!options.ignoreFetchAbort || options.allowStaleOnFetchAbort) {
-              res();
+              res(void 0);
               if (options.allowStaleOnFetchAbort) {
                 res = (v2) => cb(v2, true);
               }
@@ -26273,7 +26839,7 @@ var require_cjs = __commonJS({
 });
 
 // 
-var require_dist_node28 = __commonJS({
+var require_dist_node30 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __create2 = Object.create;
@@ -26301,229 +26867,16 @@ var require_dist_node28 = __commonJS({
     var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var dist_src_exports = {};
     __export(dist_src_exports, {
-      createOAuthUserAuth: () => createOAuthUserAuth2,
-      requiresBasicAuth: () => requiresBasicAuth
-    });
-    module.exports = __toCommonJS(dist_src_exports);
-    var import_universal_user_agent = require_dist_node();
-    var import_request = require_dist_node13();
-    var VERSION = "3.0.0";
-    var import_auth_oauth_device = require_dist_node24();
-    var import_oauth_methods = require_dist_node23();
-    async function getAuthentication(state) {
-      if ("code" in state.strategyOptions) {
-        const { authentication } = await (0, import_oauth_methods.exchangeWebFlowCode)({
-          clientId: state.clientId,
-          clientSecret: state.clientSecret,
-          clientType: state.clientType,
-          onTokenCreated: state.onTokenCreated,
-          ...state.strategyOptions,
-          request: state.request
-        });
-        return {
-          type: "token",
-          tokenType: "oauth",
-          ...authentication
-        };
-      }
-      if ("onVerification" in state.strategyOptions) {
-        const deviceAuth = (0, import_auth_oauth_device.createOAuthDeviceAuth)({
-          clientType: state.clientType,
-          clientId: state.clientId,
-          onTokenCreated: state.onTokenCreated,
-          ...state.strategyOptions,
-          request: state.request
-        });
-        const authentication = await deviceAuth({
-          type: "oauth"
-        });
-        return {
-          clientSecret: state.clientSecret,
-          ...authentication
-        };
-      }
-      if ("token" in state.strategyOptions) {
-        return {
-          type: "token",
-          tokenType: "oauth",
-          clientId: state.clientId,
-          clientSecret: state.clientSecret,
-          clientType: state.clientType,
-          onTokenCreated: state.onTokenCreated,
-          ...state.strategyOptions
-        };
-      }
-      throw new Error("[@octokit/auth-oauth-user] Invalid strategy options");
-    }
-    var import_oauth_methods2 = require_dist_node23();
-    async function auth(state, options = {}) {
-      var _a, _b;
-      if (!state.authentication) {
-        state.authentication = state.clientType === "oauth-app" ? await getAuthentication(state) : await getAuthentication(state);
-      }
-      if (state.authentication.invalid) {
-        throw new Error("[@octokit/auth-oauth-user] Token is invalid");
-      }
-      const currentAuthentication = state.authentication;
-      if ("expiresAt" in currentAuthentication) {
-        if (options.type === "refresh" || new Date(currentAuthentication.expiresAt) < /* @__PURE__ */ new Date()) {
-          const { authentication } = await (0, import_oauth_methods2.refreshToken)({
-            clientType: "github-app",
-            clientId: state.clientId,
-            clientSecret: state.clientSecret,
-            refreshToken: currentAuthentication.refreshToken,
-            request: state.request
-          });
-          state.authentication = {
-            tokenType: "oauth",
-            type: "token",
-            ...authentication
-          };
-        }
-      }
-      if (options.type === "refresh") {
-        if (state.clientType === "oauth-app") {
-          throw new Error(
-            "[@octokit/auth-oauth-user] OAuth Apps do not support expiring tokens"
-          );
-        }
-        if (!currentAuthentication.hasOwnProperty("expiresAt")) {
-          throw new Error("[@octokit/auth-oauth-user] Refresh token missing");
-        }
-        await ((_a = state.onTokenCreated) == null ? void 0 : _a.call(state, state.authentication, {
-          type: options.type
-        }));
-      }
-      if (options.type === "check" || options.type === "reset") {
-        const method = options.type === "check" ? import_oauth_methods2.checkToken : import_oauth_methods2.resetToken;
-        try {
-          const { authentication } = await method({
-            clientType: state.clientType,
-            clientId: state.clientId,
-            clientSecret: state.clientSecret,
-            token: state.authentication.token,
-            request: state.request
-          });
-          state.authentication = {
-            tokenType: "oauth",
-            type: "token",
-            ...authentication
-          };
-          if (options.type === "reset") {
-            await ((_b = state.onTokenCreated) == null ? void 0 : _b.call(state, state.authentication, {
-              type: options.type
-            }));
-          }
-          return state.authentication;
-        } catch (error) {
-          if (error.status === 404) {
-            error.message = "[@octokit/auth-oauth-user] Token is invalid";
-            state.authentication.invalid = true;
-          }
-          throw error;
-        }
-      }
-      if (options.type === "delete" || options.type === "deleteAuthorization") {
-        const method = options.type === "delete" ? import_oauth_methods2.deleteToken : import_oauth_methods2.deleteAuthorization;
-        try {
-          await method({
-            clientType: state.clientType,
-            clientId: state.clientId,
-            clientSecret: state.clientSecret,
-            token: state.authentication.token,
-            request: state.request
-          });
-        } catch (error) {
-          if (error.status !== 404)
-            throw error;
-        }
-        state.authentication.invalid = true;
-        return state.authentication;
-      }
-      return state.authentication;
-    }
-    var import_btoa_lite = __toESM2(require_btoa_node());
-    var ROUTES_REQUIRING_BASIC_AUTH = /\/applications\/[^/]+\/(token|grant)s?/;
-    function requiresBasicAuth(url) {
-      return url && ROUTES_REQUIRING_BASIC_AUTH.test(url);
-    }
-    async function hook(state, request, route, parameters = {}) {
-      const endpoint = request.endpoint.merge(
-        route,
-        parameters
-      );
-      if (/\/login\/(oauth\/access_token|device\/code)$/.test(endpoint.url)) {
-        return request(endpoint);
-      }
-      if (requiresBasicAuth(endpoint.url)) {
-        const credentials = (0, import_btoa_lite.default)(`${state.clientId}:${state.clientSecret}`);
-        endpoint.headers.authorization = `basic ${credentials}`;
-        return request(endpoint);
-      }
-      const { token } = state.clientType === "oauth-app" ? await auth({ ...state, request }) : await auth({ ...state, request });
-      endpoint.headers.authorization = "token " + token;
-      return request(endpoint);
-    }
-    function createOAuthUserAuth2({
-      clientId,
-      clientSecret,
-      clientType = "oauth-app",
-      request = import_request.request.defaults({
-        headers: {
-          "user-agent": `octokit-auth-oauth-app.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`
-        }
-      }),
-      onTokenCreated,
-      ...strategyOptions
-    }) {
-      const state = Object.assign({
-        clientType,
-        clientId,
-        clientSecret,
-        onTokenCreated,
-        strategyOptions,
-        request
-      });
-      return Object.assign(auth.bind(null, state), {
-        hook: hook.bind(null, state)
-      });
-    }
-    createOAuthUserAuth2.VERSION = VERSION;
-  }
-});
-
-// 
-var require_dist_node29 = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    var __defProp2 = Object.defineProperty;
-    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
-    var __getOwnPropNames2 = Object.getOwnPropertyNames;
-    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
-      for (var name in all)
-        __defProp2(target, name, { get: all[name], enumerable: true });
-    };
-    var __copyProps2 = (to, from, except, desc) => {
-      if (from && typeof from === "object" || typeof from === "function") {
-        for (let key of __getOwnPropNames2(from))
-          if (!__hasOwnProp2.call(to, key) && key !== except)
-            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
-      }
-      return to;
-    };
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
-    var dist_src_exports = {};
-    __export(dist_src_exports, {
       createAppAuth: () => createAppAuth2,
       createOAuthUserAuth: () => import_auth_oauth_user2.createOAuthUserAuth
     });
     module.exports = __toCommonJS(dist_src_exports);
     var import_universal_user_agent = require_dist_node();
-    var import_request = require_dist_node13();
-    var import_auth_oauth_app = require_dist_node26();
+    var import_request = require_dist_node23();
+    var import_auth_oauth_app = require_dist_node28();
     var import_deprecation = require_dist_node3();
-    var import_universal_github_app_jwt = require_dist_node27();
+    var OAuthAppAuth = __toESM2(require_dist_node28());
+    var import_universal_github_app_jwt = require_dist_node29();
     async function getAppAuthentication({
       appId,
       privateKey,
@@ -26770,7 +27123,8 @@ var require_dist_node29 = __commonJS({
           throw new Error(`Invalid auth type: ${authOptions.type}`);
       }
     }
-    var import_auth_oauth_user = require_dist_node28();
+    var import_auth_oauth_user = require_dist_node27();
+    var import_request_error = require_dist_node22();
     var PATHS = [
       "/app",
       "/app/hook/config",
@@ -26888,8 +27242,8 @@ var require_dist_node29 = __commonJS({
         return sendRequestWithRetries(state, request, options, createdAt, retries);
       }
     }
-    var VERSION = "5.0.3";
-    var import_auth_oauth_user2 = require_dist_node28();
+    var VERSION = "6.0.0";
+    var import_auth_oauth_user2 = require_dist_node27();
     function createAppAuth2(options) {
       if (!options.appId) {
         throw new Error("[@octokit/auth-app] appId option is required");
@@ -27121,7 +27475,7 @@ var allLabels = {
 // 
 var import_core = __toESM(require_core());
 var import_rest = __toESM(require_dist_node20());
-var import_auth_app = __toESM(require_dist_node29());
+var import_auth_app = __toESM(require_dist_node30());
 var import_github = __toESM(require_github());
 var ANGULAR_ROBOT = [43341, "angular-robot-key"];
 async function getJwtAuthedAppClient([appId, inputKey]) {

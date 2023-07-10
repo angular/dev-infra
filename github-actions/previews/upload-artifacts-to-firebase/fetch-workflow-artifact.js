@@ -9314,7 +9314,7 @@ var require_dist_node12 = __commonJS({
     var import_plugin_request_log = require_dist_node9();
     var import_plugin_paginate_rest = require_dist_node10();
     var import_plugin_rest_endpoint_methods = require_dist_node11();
-    var VERSION = "19.0.11";
+    var VERSION = "19.0.13";
     var Octokit2 = import_core.Octokit.plugin(
       import_plugin_request_log.requestLog,
       import_plugin_rest_endpoint_methods.legacyRestEndpointMethods,

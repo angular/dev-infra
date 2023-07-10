@@ -8,11 +8,11 @@
 
 import type {OctokitOptions} from '@octokit/core/dist-types/types.js';
 
-import {graphql} from '@octokit/graphql';
-import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
+import {Octokit} from '@octokit/rest';
 import {RequestParameters} from '@octokit/types';
 import {RequestError} from '@octokit/request-error';
 import {query} from 'typed-graphqlify';
+import fetch from 'node-fetch';
 
 /**
  * An object representation of a Graphql Query to be used as a response type and
@@ -31,7 +31,7 @@ export interface GithubRepo {
 /** A Github client for interacting with the Github APIs. */
 export class GithubClient {
   /** The octokit instance actually performing API requests. */
-  private _octokit = new Octokit(this._octokitOptions);
+  protected _octokit = new Octokit({...this._octokitOptions, request: {fetch}});
 
   readonly pulls: Octokit['pulls'] = this._octokit.pulls;
   readonly repos: Octokit['repos'] = this._octokit.repos;
@@ -52,7 +52,9 @@ export class GithubClient {
  */
 export class AuthenticatedGithubClient extends GithubClient {
   /** The graphql instance with authentication set during construction. */
-  private _graphql = graphql.defaults({headers: {authorization: `token ${this._token}`}});
+  private _graphql = this._octokit.graphql.defaults({
+    headers: {authorization: `token ${this._token}`},
+  });
 
   constructor(private _token: string) {
     // Set the token for the octokit instance.
