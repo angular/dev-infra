@@ -30,6 +30,7 @@ export interface GithubRepo {
 
 /** A Github client for interacting with the Github APIs. */
 export class GithubClient {
+  // TODO: Consider remove providing fetch to Octokit once everything has moved to node 18.
   /** The octokit instance actually performing API requests. */
   protected _octokit = new Octokit({...this._octokitOptions, request: {fetch}});
 
