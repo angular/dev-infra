@@ -4509,6 +4509,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jsonata@npm:2.0.3":
+  version: 2.0.3
+  resolution: "jsonata@npm:2.0.3"
+  checksum: 877e97a56b5b92e5add968328d1b704936c1b61a0cb28f4fc1a45b45286f71dd9346f1277177fbb3f95d22f75a7ffb625bb92344ac6755fe492cd2e5c04ad5a6
+  languageName: node
+  linkType: hard
+
 "jsonfile@npm:^6.0.1":
   version: 6.1.0
   resolution: "jsonfile@npm:6.1.0"
@@ -5124,7 +5131,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: 36.3.0
+    renovate: 36.7.0
   languageName: unknown
   linkType: soft
 
@@ -5815,9 +5822,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:36.3.0":
-  version: 36.3.0
-  resolution: "renovate@npm:36.3.0"
+"renovate@npm:36.7.0":
+  version: 36.7.0
+  resolution: "renovate@npm:36.7.0"
   dependencies:
     "@aws-sdk/client-codecommit": 3.363.0
     "@aws-sdk/client-ec2": 3.363.0
@@ -5887,6 +5894,7 @@ __metadata:
     json-dup-key-validator: 1.0.3
     json-stringify-pretty-compact: 3.0.0
     json5: 2.2.3
+    jsonata: 2.0.3
     klona: 2.0.6
     luxon: 3.3.0
     markdown-it: 13.0.1
@@ -5930,7 +5938,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 2d3f473d3b9771d06dabdfdc4b3bd14d799cad7a8a61c5b9929bd0196d52876e360d497a2a1c9580f520fb1843f0612f2246c596f2711662d3c1cf2f31437f34
+  checksum: b0a5bad9202d7c8d9e354ab09c1f66c7f73f77ea7b86d2b844b05ff34bf79a752c6c8cf2de19c18a6ececf6765b585c3a311a8ee5e0d17fedbd98f04b6a48725
   languageName: node
   linkType: hard
 
