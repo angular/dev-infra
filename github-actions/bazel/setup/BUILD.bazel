@@ -1,0 +1,27 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "generated_file_test")
+load("//tools:defaults.bzl", "esbuild", "ts_library")
+
+ts_library(
+    name = "lib",
+    srcs = [
+        "configure-bazelrc.ts",
+    ],
+    deps = [
+        "@npm//@types/node",
+    ],
+)
+
+esbuild(
+    name = "bundle",
+    entry_point = "configure-bazelrc.ts",
+    format = "iife",
+    minify = True,
+    sourcemap = "",
+    deps = [":lib"],
+)
+
+generated_file_test(
+    name = "configure-bazelrc",
+    src = "configure-bazelrc.cjs",
+    generated = ":bundle.js",
+)

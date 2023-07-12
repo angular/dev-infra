@@ -20,8 +20,8 @@ runs:
           \%LocalAppData\%/bazelisk
         key: bazel-version-${{ hashFiles('**/.bazelversion') }}
 
-    - name: Add repository cache directory to bazelrc config
-      run: $GITHUB_ACTION_PATH/add-repository-cache.sh
+    - name: Update bazelrc file with additional configuration
+      run: node $GITHUB_ACTION_PATH/configure-bazelrc.cjs
       env:
         BAZELRC_PATH: ${{ inputs.bazelrc }}
       shell: bash

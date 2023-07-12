@@ -14,7 +14,7 @@ github-actions/post-approval-changes/main.js
 github-actions/org-file-sync/main.js
 .github/local-actions/labels-sync/main.js
 github-actions/branch-manager/main.js
-
+github-actions/bazel/setup/configure-bazelrc.cjs
 github-actions/previews/pack-and-upload-artifact/inject-artifact-metadata.js
 github-actions/previews/upload-artifacts-to-firebase/extract-artifact-metadata.js
 github-actions/previews/upload-artifacts-to-firebase/fetch-workflow-artifact.js
