@@ -1,9 +1,13 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
-import {allLabels, Label} from '../../../ng-dev/pr/common/labels/index.js';
-import {getAuthTokenFor, ANGULAR_ROBOT, revokeActiveInstallationToken} from '../../utils.js';
 import fetch from 'node-fetch';
+import {allLabels, Label} from '../../../../ng-dev/pr/common/labels/index.js';
+import {
+  getAuthTokenFor,
+  ANGULAR_ROBOT,
+  revokeActiveInstallationToken,
+} from '../../../../github-actions/utils.js';
 
 /** The type for a Github label returned from the Github API.  */
 type GithubLabel =

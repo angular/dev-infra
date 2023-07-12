@@ -7,7 +7,7 @@ ts_library(
         exclude = ["*.spec.ts"],
     ),
     visibility = [
-        "//.github/local-actions/branch-manager:__subpackages__",
+        "//.github/local-actions:__subpackages__",
         "//github-actions:__subpackages__",
         "//ng-dev:__subpackages__",
     ],

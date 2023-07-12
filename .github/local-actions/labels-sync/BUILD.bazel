@@ -1,6 +1,6 @@
 load("//tools:defaults.bzl", "esbuild_checked_in", "ts_library")
 
-package(default_visibility = ["//github-actions/labels-sync:__subpackages__"])
+package(default_visibility = ["//.github/local-actions/labels-sync:__subpackages__"])
 
 ts_library(
     name = "labels-sync",
