@@ -3,6 +3,7 @@ import {context} from '@actions/github';
 import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
 import {allLabels, Label} from '../../../ng-dev/pr/common/labels/index.js';
 import {getAuthTokenFor, ANGULAR_ROBOT, revokeActiveInstallationToken} from '../../utils.js';
+import fetch from 'node-fetch';
 
 /** The type for a Github label returned from the Github API.  */
 type GithubLabel =
@@ -61,7 +62,8 @@ async function syncLabelsInRepo(github: Octokit, repoName: string, managedLabels
 
 async function main() {
   /** The Github API instance to use for requests. */
-  const github = new Octokit({auth: await getAuthTokenFor(ANGULAR_ROBOT)});
+  // TODO: remove once GHA supports node18 as a target runner for Javascript action
+  const github = new Octokit({auth: await getAuthTokenFor(ANGULAR_ROBOT), request: {fetch}});
 
   try {
     /** The list of managed labels. */

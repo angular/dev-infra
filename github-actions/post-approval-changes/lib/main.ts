@@ -3,6 +3,7 @@ import {context} from '@actions/github';
 import {PullRequestEvent} from '@octokit/webhooks-types';
 import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
 import {ANGULAR_ROBOT, getAuthTokenFor, revokeActiveInstallationToken} from '../../utils.js';
+import fetch from 'node-fetch';
 
 /** Allowlist of known Google owned robot accounts. */
 const googleOwnedRobots = ['angular-robot'];
@@ -18,12 +19,14 @@ async function main() {
       owner: 'googlers',
       repo: '.github',
     });
-    googlersOrgClient = new Octokit({auth: googlersOrgToken});
+    // TODO: remove once GHA supports node18 as a target runner for Javascript action
+    googlersOrgClient = new Octokit({auth: googlersOrgToken, request: {fetch}});
 
     // Use the `.github` repo from googlers to get an installation that has access to the googlers
     // user membership.
     const repoToken = await getAuthTokenFor(ANGULAR_ROBOT, context.repo);
-    repoClient = new Octokit({auth: repoToken});
+    // TODO: remove once GHA supports node18 as a target runner for Javascript action
+    repoClient = new Octokit({auth: repoToken, request: {fetch}});
 
     await runPostApprovalChangesAction(googlersOrgClient, repoClient);
   } finally {

@@ -66371,7 +66371,8 @@ async function getJwtAuthedAppClient([appId, inputKey]) {
   const privateKey = (0, import_core.getInput)(inputKey, { required: true });
   return new import_rest2.Octokit({
     authStrategy: import_auth_app.createAppAuth,
-    auth: { appId, privateKey }
+    auth: { appId, privateKey },
+    request: { fetch }
   });
 }
 async function getAuthTokenFor(app, orgOrRepo = import_github6.context.repo) {
@@ -66442,7 +66443,7 @@ async function assertPermissionsToPerformCommand() {
     return true;
   }
   const token = await getAuthTokenFor(ANGULAR_ROBOT);
-  const github = new import_rest3.Octokit({ auth: token });
+  const github = new import_rest3.Octokit({ auth: token, request: { fetch } });
   await github.issues.createComment({
     ...import_github7.context.repo,
     issue_number: import_github7.context.payload.issue.number,
@@ -66454,7 +66455,7 @@ async function main() {
   let installationClient = null;
   try {
     const installationToken = await getAuthTokenFor(ANGULAR_ROBOT);
-    installationClient = new import_rest3.Octokit({ auth: installationToken });
+    installationClient = new import_rest3.Octokit({ auth: installationToken, request: { fetch } });
     await runSlashCommandsAction(installationToken, installationClient);
   } finally {
     if (installationClient !== null) {

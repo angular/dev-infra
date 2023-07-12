@@ -20,6 +20,7 @@ ts_library(
         "@npm//@octokit/rest",
         "@npm//@octokit/webhooks-definitions",
         "@npm//@types/node",
+        "@npm//node-fetch",
         "@npm//typed-graphqlify",
     ],
 )

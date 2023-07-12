@@ -3,6 +3,7 @@ import {context} from '@actions/github';
 import {Octokit} from '@octokit/rest';
 import {ANGULAR_LOCK_BOT, getAuthTokenFor, revokeActiveInstallationToken} from '../../utils.js';
 import {setTimeout as setTimeoutPromise} from 'timers/promises';
+import fetch from 'node-fetch';
 
 async function lockIssue(
   client: Octokit,
@@ -33,7 +34,8 @@ async function main() {
   const token = await getAuthTokenFor(ANGULAR_LOCK_BOT, {org: 'angular'});
 
   try {
-    const github = new Octokit({auth: token});
+    // TODO: remove once GHA supports node18 as a target runner for Javascript action
+    const github = new Octokit({auth: token, request: {fetch}});
     for (let repo of reposToBeChecked) {
       await runLockClosedAction(github, repo);
     }

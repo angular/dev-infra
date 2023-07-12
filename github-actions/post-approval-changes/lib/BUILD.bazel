@@ -15,5 +15,6 @@ ts_library(
         "@npm//@octokit/rest",
         "@npm//@octokit/webhooks-types",
         "@npm//@types/node",
+        "@npm//node-fetch",
     ],
 )

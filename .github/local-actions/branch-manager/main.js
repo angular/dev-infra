@@ -66934,7 +66934,8 @@ async function getJwtAuthedAppClient([appId, inputKey]) {
   const privateKey = (0, import_core.getInput)(inputKey, { required: true });
   return new import_rest2.Octokit({
     authStrategy: import_auth_app.createAppAuth,
-    auth: { appId, privateKey }
+    auth: { appId, privateKey },
+    request: { fetch }
   });
 }
 async function getAuthTokenFor(app, orgOrRepo = import_github4.context.repo) {

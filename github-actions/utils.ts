@@ -2,6 +2,7 @@ import {getInput, info} from '@actions/core';
 import {Octokit} from '@octokit/rest';
 import {createAppAuth} from '@octokit/auth-app';
 import {context} from '@actions/github';
+import fetch from 'node-fetch';
 
 export type GithubAppMetadata = [appId: number, inputKey: string];
 
@@ -18,6 +19,8 @@ async function getJwtAuthedAppClient([appId, inputKey]: GithubAppMetadata) {
   return new Octokit({
     authStrategy: createAppAuth,
     auth: {appId, privateKey},
+    // TODO: remove once GHA supports node18 as a target runner for Javascript action
+    request: {fetch},
   });
 }
 
