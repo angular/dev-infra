@@ -1,7 +1,11 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {Octokit} from '@octokit/rest';
-import {ANGULAR_LOCK_BOT, getAuthTokenFor, revokeActiveInstallationToken} from '../../utils.js';
+import {
+  ANGULAR_LOCK_BOT,
+  getAuthTokenFor,
+  revokeActiveInstallationToken,
+} from '../../../../github-actions/utils.js';
 import {setTimeout as setTimeoutPromise} from 'timers/promises';
 import fetch from 'node-fetch';
 
