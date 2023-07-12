@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
-      - uses: ./github-actions/lock-closed
+      - uses: ./.github/local-actions/lock-closed
         with:
           lock-bot-key: ${{ secrets.LOCK_BOT_PRIVATE_KEY }}
           repos: |
