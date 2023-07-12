@@ -3,6 +3,7 @@ import {context} from '@actions/github';
 import {Octokit} from '@octokit/rest';
 import {RequestError} from '@octokit/types';
 import {getAuthTokenFor, ANGULAR_ROBOT, revokeActiveInstallationToken} from '../../utils.js';
+import fetch from 'node-fetch';
 
 const reposToSync = core.getMultilineInput('repos', {required: true, trimWhitespace: true});
 core.group('Repos being synced:', async () =>
@@ -112,7 +113,8 @@ async function updateRepoWithFiles(github: Octokit, repo: string, goldenFiles: F
 }
 
 async function main() {
-  const github = new Octokit({auth: await getAuthTokenFor(ANGULAR_ROBOT)});
+  // TODO: remove once GHA supports node18 as a target runner for Javascript action
+  const github = new Octokit({auth: await getAuthTokenFor(ANGULAR_ROBOT), request: {fetch}});
   try {
     const goldenFiles: Files = await getFilesForRepo(github, context.repo.repo);
 

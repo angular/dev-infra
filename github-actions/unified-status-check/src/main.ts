@@ -6,6 +6,7 @@ import {isDraft} from './validators/draft-mode.js';
 import {checkOnlyPassingStatuses, checkRequiredStatuses} from './validators/statuses.js';
 import {checkForTargelLabel, isMergeReady} from './validators/labels.js';
 import {buildCheckResultOutput, ValidationResults} from './validator.js';
+import fetch from 'node-fetch';
 
 /** The validation functions for check against the pull request. */
 const validators = [
@@ -17,8 +18,9 @@ const validators = [
 ];
 
 async function main() {
+  // TODO: remove once GHA supports node18 as a target runner for Javascript action
   /** A Github API instance. */
-  const github = new Octokit({auth: await getAuthTokenFor(ANGULAR_ROBOT)});
+  const github = new Octokit({auth: await getAuthTokenFor(ANGULAR_ROBOT), request: {fetch}});
 
   try {
     /** The pull request triggering the event */

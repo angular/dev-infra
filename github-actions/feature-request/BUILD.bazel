@@ -15,6 +15,7 @@ ts_library(
         "@npm//@octokit/request-error",
         "@npm//@octokit/rest",
         "@npm//@types/node",
+        "@npm//node-fetch",
     ],
 )
 

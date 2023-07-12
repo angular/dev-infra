@@ -17,5 +17,6 @@ ts_library(
         "@npm//@octokit/auth-app",
         "@npm//@octokit/rest",
         "@npm//@types/node",
+        "@npm//node-fetch",
     ],
 )

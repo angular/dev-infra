@@ -10,6 +10,7 @@ import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
 import {RequestError} from '@octokit/request-error';
 import {Comment, GitHubAPI, GitHubIssueAPI, Issue, Query} from './api.js';
 import {log} from './log.js';
+import fetch from 'node-fetch';
 
 type IssuesGetResponse = RestEndpointMethodTypes['issues']['get']['response']['data'];
 type SearchIssuesAndPullRequestsResponseItemsItem =
@@ -31,7 +32,8 @@ export class OctoKit implements GitHubAPI {
     protected params: {repo: string; owner: string},
     protected options: {readonly: boolean} = {readonly: false},
   ) {
-    this.octokit = new Octokit({auth: token});
+    // TODO: remove once GHA supports node18 as a target runner for Javascript action
+    this.octokit = new Octokit({auth: token, request: {fetch}});
   }
 
   async *query(query: Query): AsyncIterableIterator<GitHubIssueAPI> {
