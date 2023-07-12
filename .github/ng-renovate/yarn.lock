@@ -1660,17 +1660,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@renovatebot/pep440@npm:2.1.19":
-  version: 2.1.19
-  resolution: "@renovatebot/pep440@npm:2.1.19"
-  checksum: 64cc648a446233970f660f076302d0e86d03e7f8c4885bd576410ca98e8a1f5ddef08a999a3a2ad3b58dc43f2418eb54fdf7c26288092938cfb5f669abadd1f3
+"@renovatebot/pep440@npm:2.1.20":
+  version: 2.1.20
+  resolution: "@renovatebot/pep440@npm:2.1.20"
+  checksum: 58ff26f52af8489497b7309aec9de752a63b065bf37da97091c01e6b753e4e47944ab7e9fe2c4eb1c374e327c2b08ade88e6fc7d781e32f8d47572f9f5128c3a
   languageName: node
   linkType: hard
 
-"@renovatebot/ruby-semver@npm:3.0.4":
-  version: 3.0.4
-  resolution: "@renovatebot/ruby-semver@npm:3.0.4"
-  checksum: 90b7a2917b88bd3865dd9f7acebb5326a74fb74ef2b3d30ece7e9446572c90678e7d9e6d454bb3c76673661dcfc152e0154a0ea7ab00f606b07c54161e785266
+"@renovatebot/ruby-semver@npm:3.0.5":
+  version: 3.0.5
+  resolution: "@renovatebot/ruby-semver@npm:3.0.5"
+  checksum: 24b75a5c7e9c4225632f590d268ecc744ec82735fddf40c5a30a5b1bb7a709116aae74ff1132cc1dfee8bd7ca32fe7e75c1581b91ac3b3db6ac2d9ab3e9ded61
   languageName: node
   linkType: hard
 
@@ -4509,6 +4509,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jsonata@npm:2.0.3":
+  version: 2.0.3
+  resolution: "jsonata@npm:2.0.3"
+  checksum: 877e97a56b5b92e5add968328d1b704936c1b61a0cb28f4fc1a45b45286f71dd9346f1277177fbb3f95d22f75a7ffb625bb92344ac6755fe492cd2e5c04ad5a6
+  languageName: node
+  linkType: hard
+
 "jsonfile@npm:^6.0.1":
   version: 6.1.0
   resolution: "jsonfile@npm:6.1.0"
@@ -5124,7 +5131,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: 36.6.1
+    renovate: 36.7.5
   languageName: unknown
   linkType: soft
 
@@ -5815,9 +5822,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:36.6.1":
-  version: 36.6.1
-  resolution: "renovate@npm:36.6.1"
+"renovate@npm:36.7.5":
+  version: 36.7.5
+  resolution: "renovate@npm:36.7.5"
   dependencies:
     "@aws-sdk/client-codecommit": 3.363.0
     "@aws-sdk/client-ec2": 3.363.0
@@ -5840,8 +5847,8 @@ __metadata:
     "@opentelemetry/semantic-conventions": 1.14.0
     "@qnighy/marshal": 0.1.3
     "@renovatebot/osv-offline": 1.3.1
-    "@renovatebot/pep440": 2.1.19
-    "@renovatebot/ruby-semver": 3.0.4
+    "@renovatebot/pep440": 2.1.20
+    "@renovatebot/ruby-semver": 3.0.5
     "@sindresorhus/is": 4.6.0
     "@types/ms": 0.7.31
     "@types/tmp": 0.2.3
@@ -5887,6 +5894,7 @@ __metadata:
     json-dup-key-validator: 1.0.3
     json-stringify-pretty-compact: 3.0.0
     json5: 2.2.3
+    jsonata: 2.0.3
     klona: 2.0.6
     luxon: 3.3.0
     markdown-it: 13.0.1
@@ -5930,7 +5938,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 3d19bbdb0234c449862263fe2b1c35788c174619bb11eb4d5a0f007637d46497dff59f65ef7f6630173068b99ab7c2ce47c78d6404be10ed3d04352d67830e2e
+  checksum: 38424f1955c1a3a5bf1756bc57e0567e4ece33176cabdf17f94be1710b0209d430ac6130c0ccf49ca1b1306ad4628d4005bade82bb6d68e41f4c3d1c35b17532
   languageName: node
   linkType: hard
 
