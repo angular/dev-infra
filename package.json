@@ -120,7 +120,7 @@
     "git-raw-commits": "^3.0.0",
     "glob": "10.3.3",
     "husky": "^8.0.0",
-    "inquirer": "9.2.7",
+    "inquirer": "9.2.8",
     "jasmine": "~4.6.0",
     "jasmine-core": "~5.0.0",
     "jsdom": "^22.0.0",
