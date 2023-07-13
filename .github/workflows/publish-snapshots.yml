@@ -24,7 +24,7 @@ jobs:
           fetch-depth: 1
       - uses: ./github-actions/npm/checkout-and-setup-node
       - uses: ./github-actions/bazel/setup
-      - uses: ./github-actions/bazel/setup-bazel-remote-exec
+      - uses: ./github-actions/bazel/configure-remote
         with:
           bazelrc: .bazelrc
       - run: yarn install --immutable
