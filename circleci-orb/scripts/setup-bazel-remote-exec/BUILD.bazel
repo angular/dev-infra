@@ -4,7 +4,7 @@ load("//circleci-orb:index.bzl", "nodejs_script_to_sh_script")
 
 package(default_visibility = [
     "//circleci-orb:__subpackages__",
-    "//github-actions/bazel/setup-bazel-remote-exec:__pkg__",
+    "//github-actions/bazel/configure-remote:__pkg__",
 ])
 
 copy_to_bin(

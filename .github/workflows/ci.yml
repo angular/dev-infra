@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # tag=v3.5.3
       - uses: ./github-actions/npm/checkout-and-setup-node
       - uses: ./github-actions/bazel/setup
-      - uses: ./github-actions/bazel/setup-bazel-remote-exec
+      - uses: ./github-actions/bazel/configure-remote
       - run: yarn install --immutable
       - name: Check code format
         if: github.event_name == 'pull_request'
@@ -49,7 +49,7 @@ jobs:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # tag=v3.5.3
       - uses: ./github-actions/npm/checkout-and-setup-node
       - uses: ./github-actions/bazel/setup
-      - uses: ./github-actions/bazel/setup-bazel-remote-exec
+      - uses: ./github-actions/bazel/configure-remote
       - run: yarn install --immutable
       - run: yarn bazel test -- //...
 
@@ -74,6 +74,6 @@ jobs:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # tag=v3.5.3
       - uses: ./github-actions/npm/checkout-and-setup-node
       - uses: ./github-actions/bazel/setup
-      - uses: ./github-actions/bazel/setup-bazel-remote-exec
+      - uses: ./github-actions/bazel/configure-remote
       - run: yarn install --immutable
       - run: yarn bazel test --test_tag_filters=macos --build_tests_only -- //... -//bazel/remote-execution/...
