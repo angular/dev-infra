@@ -90,6 +90,12 @@ build:remote --bes_header=X-Goog-User-Project=internal-200822
 build:remote --bes_results_url=https://source.cloud.google.com/results/invocations
 build:remote --bes_upload_mode=fully_async
 
+# Use HTTP remote cache
+build:remote-cache --remote_cache=https://storage.googleapis.com/angular-team-cache
+build:remote-cache --remote_accept_cached=true
+build:remote-cache --remote_upload_local_results=true
+build:remote-cache --google_default_credentials
+
 ################################
 #     Release setup            #
 ################################
