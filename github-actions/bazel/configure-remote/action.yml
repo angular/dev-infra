@@ -11,7 +11,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: $GITHUB_ACTION_PATH/setup_remote_exec.sh
+    - run: node $GITHUB_ACTION_PATH/configure-remote.cjs
       env:
         BAZELRC_PATH: ${{ inputs.bazelrc }}
         NGAT: 'qoDjQodnm6t97MfFcj7x+g=='
