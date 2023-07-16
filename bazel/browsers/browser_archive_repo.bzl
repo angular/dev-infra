@@ -53,7 +53,7 @@ exports_files(%s)
   which `browser_archive` repository is added as dependency.
 
   As an example for the concept of denoting archive files with an unique name, consider a case
-  where a a web test decides conditionally based on the current exec platform which
+  where a web test decides conditionally based on the current exec platform which
   `browser_archive` repository is used (e.g. mac, windows or linux). The archives are different
   for each platform. The test usually would need to determine the current platform, and know how
   each archive is structured in order to access the browser binary within the repository. By
