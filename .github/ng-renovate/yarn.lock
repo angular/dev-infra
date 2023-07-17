@@ -1014,13 +1014,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cheap-glitch/mi-cron@npm:1.0.1":
-  version: 1.0.1
-  resolution: "@cheap-glitch/mi-cron@npm:1.0.1"
-  checksum: 34522cf6ffa0b3af1954ffdc2609346b8f10d72b0cfc33c5c29e386ce5e915c6daadaa4f3d1edf2b7d01902c1d08f7c5227682c74024843444aed7b45fefd06f
-  languageName: node
-  linkType: hard
-
 "@chevrotain/types@npm:^9.1.0":
   version: 9.1.0
   resolution: "@chevrotain/types@npm:9.1.0"
@@ -3203,6 +3196,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cron-parser@npm:4.8.1":
+  version: 4.8.1
+  resolution: "cron-parser@npm:4.8.1"
+  dependencies:
+    luxon: ^3.2.1
+  checksum: e3e7b227cb45c8e3e16b5ceab9fd1b4769b878b430f009d5de26c3e20d4e0112fde6f90a663afbcd9cc2be92d73b6eefe2d939d1646f3a96704f73c63dd39b6f
+  languageName: node
+  linkType: hard
+
 "cross-spawn@npm:7.0.3, cross-spawn@npm:^7.0.0":
   version: 7.0.3
   resolution: "cross-spawn@npm:7.0.3"
@@ -3852,18 +3854,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:10.3.1":
-  version: 10.3.1
-  resolution: "glob@npm:10.3.1"
+"glob@npm:10.3.3":
+  version: 10.3.3
+  resolution: "glob@npm:10.3.3"
   dependencies:
     foreground-child: ^3.1.0
     jackspeak: ^2.0.3
     minimatch: ^9.0.1
-    minipass: ^5.0.0 || ^6.0.2
-    path-scurry: ^1.10.0
+    minipass: ^5.0.0 || ^6.0.2 || ^7.0.0
+    path-scurry: ^1.10.1
   bin:
     glob: dist/cjs/src/bin.js
-  checksum: 19c8c2805658b1002fecf0722cd609a33153d756a0d5260676bd0e9c5e6ef889ec9cce6d3dac0411aa90bce8de3d14f25b6f5589a3292582cccbfeddd0e98cc4
+  checksum: 29190d3291f422da0cb40b77a72fc8d2c51a36524e99b8bf412548b7676a6627489528b57250429612b6eec2e6fe7826d328451d3e694a9d15e575389308ec53
   languageName: node
   linkType: hard
 
@@ -4732,7 +4734,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"luxon@npm:3.3.0, luxon@npm:^3.3.0":
+"luxon@npm:3.3.0, luxon@npm:^3.2.1, luxon@npm:^3.3.0":
   version: 3.3.0
   resolution: "luxon@npm:3.3.0"
   checksum: 50cf17a0dc155c3dcacbeae8c0b7e80db425e0ba97b9cbdf12a7fc142d841ff1ab1560919f033af46240ed44e2f70c49f76e3422524c7fc8bb8d81ca47c66187
@@ -5089,6 +5091,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"minipass@npm:^5.0.0 || ^6.0.2 || ^7.0.0":
+  version: 7.0.2
+  resolution: "minipass@npm:7.0.2"
+  checksum: 46776de732eb7cef2c7404a15fb28c41f5c54a22be50d47b03c605bf21f5c18d61a173c0a20b49a97e7a65f78d887245066410642551e45fffe04e9ac9e325bc
+  languageName: node
+  linkType: hard
+
 "minizlib@npm:^2.1.1, minizlib@npm:^2.1.2":
   version: 2.1.2
   resolution: "minizlib@npm:2.1.2"
@@ -5210,7 +5219,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: 36.8.5
+    renovate: 36.9.0
   languageName: unknown
   linkType: soft
 
@@ -5597,13 +5606,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"path-scurry@npm:^1.10.0":
-  version: 1.10.0
-  resolution: "path-scurry@npm:1.10.0"
+"path-scurry@npm:^1.10.1":
+  version: 1.10.1
+  resolution: "path-scurry@npm:1.10.1"
   dependencies:
     lru-cache: ^9.1.1 || ^10.0.0
-    minipass: ^5.0.0 || ^6.0.2
-  checksum: 3b66a4a6ab66e45755b577c966ecf0da92d3e068b3c992d8f69aa2cc908ef4eda9358253e9b4f86cad43d3ad810ec445be164105975f5cb3fdab68459c59dc6e
+    minipass: ^5.0.0 || ^6.0.2 || ^7.0.0
+  checksum: e2557cff3a8fb8bc07afdd6ab163a92587884f9969b05bbbaf6fe7379348bfb09af9ed292af12ed32398b15fb443e81692047b786d1eeb6d898a51eb17ed7d90
   languageName: node
   linkType: hard
 
@@ -5901,9 +5910,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:36.8.5":
-  version: 36.8.5
-  resolution: "renovate@npm:36.8.5"
+"renovate@npm:36.9.0":
+  version: 36.9.0
+  resolution: "renovate@npm:36.9.0"
   dependencies:
     "@aws-sdk/client-codecommit": 3.363.0
     "@aws-sdk/client-ec2": 3.363.0
@@ -5912,7 +5921,6 @@ __metadata:
     "@aws-sdk/client-s3": 3.363.0
     "@breejs/later": 4.1.0
     "@cdktf/hcl2json": 0.17.1
-    "@cheap-glitch/mi-cron": 1.0.1
     "@iarna/toml": 3.0.0
     "@opentelemetry/api": 1.4.1
     "@opentelemetry/context-async-hooks": 1.15.0
@@ -5946,6 +5954,7 @@ __metadata:
     clean-git-ref: 2.0.1
     commander: 11.0.0
     conventional-commits-detector: 1.0.3
+    cron-parser: 4.8.1
     deepmerge: 4.3.1
     dequal: 2.0.3
     detect-indent: 6.1.0
@@ -5960,7 +5969,7 @@ __metadata:
     fs-extra: 11.1.1
     git-url-parse: 13.1.0
     github-url-from-git: 1.5.0
-    glob: 10.3.1
+    glob: 10.3.3
     global-agent: 3.0.0
     good-enough-parser: 1.1.23
     got: 11.8.6
@@ -5996,7 +6005,7 @@ __metadata:
     remark: 13.0.0
     remark-github: 10.1.0
     safe-stable-stringify: 2.4.3
-    semver: 7.5.3
+    semver: 7.5.4
     semver-stable: 3.0.0
     semver-utils: 1.1.4
     shlex: 2.1.2
@@ -6017,7 +6026,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 2576a784c52ea22915c8f285dfd7c7da3ea7183db77d5c2f8e770743d0dd8d0666cd03a0951dc8d3c3418e6ebc26fd4ba999c6d5345eec435b91c4a857c6b3a6
+  checksum: 2b2c790a87b0cd03fbf488a54191ed4e616768db93540485eb50a6778320c073d24ac515f40c137cec1e0ab6c0a47ea9819ff6a1d10b9aed34ee8e79fbdd345a
   languageName: node
   linkType: hard
 
@@ -6225,14 +6234,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:7.5.3, semver@npm:^7.5.3":
-  version: 7.5.3
-  resolution: "semver@npm:7.5.3"
+"semver@npm:7.5.4, semver@npm:^7.5.1":
+  version: 7.5.4
+  resolution: "semver@npm:7.5.4"
   dependencies:
     lru-cache: ^6.0.0
   bin:
     semver: bin/semver.js
-  checksum: 9d58db16525e9f749ad0a696a1f27deabaa51f66e91d2fa2b0db3de3e9644e8677de3b7d7a03f4c15bc81521e0c3916d7369e0572dbde250d9bedf5194e2a8a7
+  checksum: 12d8ad952fa353b0995bf180cdac205a4068b759a140e5d3c608317098b3575ac2f1e09182206bf2eb26120e1c0ed8fb92c48c592f6099680de56bb071423ca3
   languageName: node
   linkType: hard
 
@@ -6256,14 +6265,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:^7.5.1":
-  version: 7.5.4
-  resolution: "semver@npm:7.5.4"
+"semver@npm:^7.5.3":
+  version: 7.5.3
+  resolution: "semver@npm:7.5.3"
   dependencies:
     lru-cache: ^6.0.0
   bin:
     semver: bin/semver.js
-  checksum: 12d8ad952fa353b0995bf180cdac205a4068b759a140e5d3c608317098b3575ac2f1e09182206bf2eb26120e1c0ed8fb92c48c592f6099680de56bb071423ca3
+  checksum: 9d58db16525e9f749ad0a696a1f27deabaa51f66e91d2fa2b0db3de3e9644e8677de3b7d7a03f4c15bc81521e0c3916d7369e0572dbde250d9bedf5194e2a8a7
   languageName: node
   linkType: hard
 
