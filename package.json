@@ -54,20 +54,20 @@
   "devDependencies": {
     "@actions/core": "^1.4.0",
     "@actions/github": "^5.0.0",
-    "@angular/animations": "16.2.0-next.2",
+    "@angular/animations": "16.2.0-next.3",
     "@angular/bazel": "patch:@angular/bazel@npm:14.1.0-next.2#.yarn/patches/@angular-bazel-npm.patch",
     "@angular/cdk": "16.2.0-next.4",
     "@angular/cli": "16.2.0-next.2",
-    "@angular/common": "16.2.0-next.2",
-    "@angular/compiler": "16.2.0-next.2",
-    "@angular/compiler-cli": "16.2.0-next.2",
-    "@angular/core": "16.2.0-next.2",
+    "@angular/common": "16.2.0-next.3",
+    "@angular/compiler": "16.2.0-next.3",
+    "@angular/compiler-cli": "16.2.0-next.3",
+    "@angular/core": "16.2.0-next.3",
     "@angular/fire": "^7.1.0-rc",
-    "@angular/forms": "16.2.0-next.2",
+    "@angular/forms": "16.2.0-next.3",
     "@angular/material": "16.2.0-next.4",
-    "@angular/platform-browser": "16.2.0-next.2",
-    "@angular/platform-browser-dynamic": "16.2.0-next.2",
-    "@angular/router": "16.2.0-next.2",
+    "@angular/platform-browser": "16.2.0-next.3",
+    "@angular/platform-browser-dynamic": "16.2.0-next.3",
+    "@angular/router": "16.2.0-next.3",
     "@bazel/bazelisk": "^1.11.0",
     "@bazel/ibazel": "^0.16.2",
     "@bazel/jasmine": "5.8.1",
@@ -162,6 +162,6 @@
     }
   },
   "resolutions": {
-    "@angular/benchpress/@angular/core": "16.2.0-next.2"
+    "@angular/benchpress/@angular/core": "16.2.0-next.3"
   }
 }
