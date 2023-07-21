@@ -445,7 +445,7 @@ __metadata:
     spdx-satisfies: ^5.0.1
     stylelint: ^15.1.0
     supports-color: 9.4.0
-    terser: 5.19.1
+    terser: 5.19.2
     tmp: ^0.2.1
     true-case-path: ^2.2.1
     ts-node: ^10.8.1
@@ -17135,9 +17135,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"terser@npm:5.19.1":
-  version: 5.19.1
-  resolution: "terser@npm:5.19.1"
+"terser@npm:5.19.2":
+  version: 5.19.2
+  resolution: "terser@npm:5.19.2"
   dependencies:
     "@jridgewell/source-map": ^0.3.3
     acorn: ^8.8.2
@@ -17145,7 +17145,7 @@ __metadata:
     source-map-support: ~0.5.20
   bin:
     terser: bin/terser
-  checksum: 18657b2a282238a1ca9c825efa966f4dd043a33196b2f8a7a2cba406a2006e14f55295b9d9cf6380a18599b697e9579e4092c99b9f40c7871ceec01cc98e3606
+  checksum: e059177775b4d4f4cff219ad89293175aefbd1b081252270444dc83e42a2c5f07824eb2a85eae6e22ef6eb7ef04b21af36dd7d1dd7cfb93912310e57d416a205
   languageName: node
   linkType: hard
 
