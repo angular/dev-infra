@@ -9339,7 +9339,7 @@ var require_lib4 = __commonJS({
         const headers = response.headers;
         if (headers["transfer-encoding"] === "chunked" && !headers["content-length"]) {
           response.once("close", function(hadError) {
-            const hasDataListener = socket.listenerCount("data") > 0;
+            const hasDataListener = socket && socket.listenerCount("data") > 0;
             if (hasDataListener && !hadError) {
               const err = new Error("Premature close");
               err.code = "ERR_STREAM_PREMATURE_CLOSE";
@@ -23156,9 +23156,6 @@ var getNodeRequestOptions = (request) => {
   let { agent } = request;
   if (typeof agent === "function") {
     agent = agent(parsedURL);
-  }
-  if (!headers.has("Connection") && !agent) {
-    headers.set("Connection", "close");
   }
   const search = getSearch(parsedURL);
   const options = {

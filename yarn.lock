@@ -13734,8 +13734,8 @@ __metadata:
   linkType: hard
 
 "node-fetch@npm:^2.6.1, node-fetch@npm:^2.6.7":
-  version: 2.6.11
-  resolution: "node-fetch@npm:2.6.11"
+  version: 2.6.12
+  resolution: "node-fetch@npm:2.6.12"
   dependencies:
     whatwg-url: ^5.0.0
   peerDependencies:
@@ -13743,18 +13743,18 @@ __metadata:
   peerDependenciesMeta:
     encoding:
       optional: true
-  checksum: 249d0666a9497553384d46b5ab296ba223521ac88fed4d8a17d6ee6c2efb0fc890f3e8091cafe7f9fba8151a5b8d925db2671543b3409a56c3cd522b468b47b3
+  checksum: 3bc1655203d47ee8e313c0d96664b9673a3d4dd8002740318e9d27d14ef306693a4b2ef8d6525775056fd912a19e23f3ac0d7111ad8925877b7567b29a625592
   languageName: node
   linkType: hard
 
 "node-fetch@npm:^3.2.5":
-  version: 3.3.1
-  resolution: "node-fetch@npm:3.3.1"
+  version: 3.3.2
+  resolution: "node-fetch@npm:3.3.2"
   dependencies:
     data-uri-to-buffer: ^4.0.0
     fetch-blob: ^3.1.4
     formdata-polyfill: ^4.0.10
-  checksum: 62145fd3ba4770a76110bc31fdc0054ab2f5442b5ce96e9c4b39fc9e94a3d305560eec76e1165d9259eab866e02a8eecf9301062bb5dfc9f08a4d08b69d223dd
+  checksum: 06a04095a2ddf05b0830a0d5302699704d59bda3102894ea64c7b9d4c865ecdff2d90fd042df7f5bc40337266961cb6183dcc808ea4f3000d024f422b462da92
   languageName: node
   linkType: hard
 
@@ -17413,7 +17413,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:2.6.0, tslib@npm:^2.0.0, tslib@npm:^2.0.1, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.3.0, tslib@npm:^2.5.2":
+"tslib@npm:2.6.0":
   version: 2.6.0
   resolution: "tslib@npm:2.6.0"
   checksum: c01066038f950016a18106ddeca4649b4d76caa76ec5a31e2a26e10586a59fceb4ee45e96719bf6c715648e7c14085a81fee5c62f7e9ebee68e77a5396e5538f
@@ -17431,6 +17431,13 @@ __metadata:
   version: 2.1.0
   resolution: "tslib@npm:2.1.0"
   checksum: aa189c8179de0427b0906da30926fd53c59d96ec239dff87d6e6bc831f608df0cbd6f77c61dabc074408bd0aa0b9ae4ec35cb2c15f729e32f37274db5730cb78
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.0.0, tslib@npm:^2.0.1, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.3.0, tslib@npm:^2.5.2":
+  version: 2.6.1
+  resolution: "tslib@npm:2.6.1"
+  checksum: b0d176d176487905b66ae4d5856647df50e37beea7571c53b8d10ba9222c074b81f1410fb91da13debaf2cbc970663609068bdebafa844ea9d69b146527c38fe
   languageName: node
   linkType: hard
 
