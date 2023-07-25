@@ -9195,9 +9195,6 @@ var getNodeRequestOptions = (request) => {
   if (typeof agent === "function") {
     agent = agent(parsedURL);
   }
-  if (!headers.has("Connection") && !agent) {
-    headers.set("Connection", "close");
-  }
   const search = getSearch(parsedURL);
   const options = {
     path: parsedURL.pathname + search,
