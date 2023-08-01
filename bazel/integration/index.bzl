@@ -222,7 +222,7 @@ _integration_test_config = rule(
               The environment variable values can use Bazel make variable or location expansion,
               similar to the `commands` attribute. Additionally, values of `<TMP>` are replaced
               with a unique temporary directory. This can be useful when providing `HOME` for
-              bazelisk or puppeteer as as an example.
+              bazelisk or puppeteer as an example.
             """,
         ),
     },
