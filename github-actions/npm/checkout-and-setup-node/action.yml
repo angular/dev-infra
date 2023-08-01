@@ -4,8 +4,8 @@ author: 'Angular'
 inputs:
   fetch-depth:
     description: |
-      The number of commits to include in the fetch, defaulting to all commits in the history
-      of the repository
+      The number of commits to include in the fetch, defaulting to a single commit excepting pull
+      request events which fetches the number of commits in the pull request + 1
 
   node-version:
     description: |
@@ -33,9 +33,14 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: fetch-depth-calculation
+      env:
+        FETCH_DEPTH: ${{ inputs.fetch-depth || github.event.pull_request.commits || 0 }}
+      shell: bash
+      run: "FETCH_DEPTH=$(expr 1 + $FETCH_DEPTH)  >> $GITHUB_ENV"
     - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # tag=v3.5.3
       with:
-        fetch-depth: ${{ inputs.fetch-depth || github.event.pull_request.commits || 1 }}
+        fetch-depth: ${{ env.FETCH_DEPTH }}
         persist-credentials: false
 
     - uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8 # v3.7.0
