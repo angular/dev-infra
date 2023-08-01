@@ -15,7 +15,7 @@ export const ngDevTokenRequest = functions.https.onCall(
     }
     const {auth_time} = await admin.auth().verifyIdToken(idToken, /* checkRevoked */ true);
 
-    // Only allow creation if the user signed in in the last minute. We use one minute, as this
+    // Only allow creation if the user signed in the last minute. We use one minute, as this
     // token should be immediately requested upon login, rather than using a long lived session.
     if (new Date().getTime() / 1000 - auth_time > 1 * 60) {
       throw new functions.https.HttpsError(
