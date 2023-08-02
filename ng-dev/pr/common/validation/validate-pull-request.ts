@@ -14,6 +14,7 @@ import {PullRequestFromGithub} from '../fetch-pull-request.js';
 import {PullRequestTarget} from '../targeting/target-label.js';
 import {changesAllowForTargetLabelValidation} from './assert-allowed-target-label.js';
 import {breakingChangeInfoValidation} from './assert-breaking-change-info.js';
+import {completedReviewsValidation} from './assert-completed-reviews.js';
 import {mergeReadyValidation} from './assert-merge-ready.js';
 import {passingCiValidation} from './assert-passing-ci.js';
 import {pendingStateValidation} from './assert-pending.js';
@@ -40,6 +41,7 @@ export async function assertValidPullRequest(
   });
 
   const validationResults = [
+    completedReviewsValidation.run(validationConfig, pullRequest),
     mergeReadyValidation.run(validationConfig, pullRequest),
     signedClaValidation.run(validationConfig, pullRequest),
     pendingStateValidation.run(validationConfig, pullRequest),
