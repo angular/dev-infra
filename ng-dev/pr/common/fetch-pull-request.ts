@@ -78,6 +78,9 @@ export const PR_SCHEMA = {
       ],
     },
   ),
+  reviewRequests: {
+    totalCount: graphqlTypes.number,
+  },
   maintainerCanModify: graphqlTypes.boolean,
   viewerDidAuthor: graphqlTypes.boolean,
   headRefOid: graphqlTypes.string,

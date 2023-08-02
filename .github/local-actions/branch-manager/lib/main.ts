@@ -72,7 +72,7 @@ async function main(repo: {owner: string; repo: string}, token: string, pr: numb
   const pullRequest = await loadAndValidatePullRequest(
     {git, config},
     pr,
-    new PullRequestValidationConfig(),
+    PullRequestValidationConfig.create({assertPending: false}),
   );
   core.info('Validated PR information:');
   core.info(JSON.stringify(pullRequest));

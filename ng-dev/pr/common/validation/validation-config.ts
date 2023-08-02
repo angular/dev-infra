@@ -6,8 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {yellow, Log, bold} from '../../../utils/logging.js';
-import {Prompt} from '../../../utils/prompt.js';
 import {PullRequestValidationFailure} from './validation-failure.js';
 
 /**
@@ -20,6 +18,11 @@ export class PullRequestValidationConfig {
   assertSignedCla = true;
   assertChangesAllowForTargetLabel = true;
   assertPassingCi = true;
+  assertCompletedReviews = true;
+
+  static create(config: Partial<PullRequestValidationConfig>) {
+    return Object.assign(new PullRequestValidationConfig(), config);
+  }
 }
 
 /** Type describing a helper function for validations to create a validation failure. */

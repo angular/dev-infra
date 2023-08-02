@@ -21,6 +21,9 @@ import {FatalMergeToolError, MergeConflictsFatalError} from '../failures.js';
 /** Type describing the parameters for the Octokit `merge` API endpoint. */
 type OctokitMergeParams = RestEndpointMethodTypes['pulls']['merge']['parameters'];
 
+type OctokitPullRequestCommitsList =
+  RestEndpointMethodTypes['pulls']['listCommits']['response']['data'];
+
 /** Separator between commit message header and body. */
 const COMMIT_HEADER_SEPARATOR = '\n\n';
 
@@ -32,7 +35,10 @@ const COMMIT_HEADER_SEPARATOR = '\n\n';
  * is properly set, but a notable downside is that PRs cannot use fixup or squash commits.
  */
 export class GithubApiMergeStrategy extends MergeStrategy {
-  constructor(git: AuthenticatedGitClient, private _config: GithubApiMergeStrategyConfig) {
+  constructor(
+    git: AuthenticatedGitClient,
+    private _config: GithubApiMergeStrategyConfig,
+  ) {
     super(git);
   }
 
@@ -184,10 +190,13 @@ export class GithubApiMergeStrategy extends MergeStrategy {
 
   /** Gets all commit messages of commits in the pull request. */
   private async _getPullRequestCommitMessages({prNumber}: PullRequest) {
-    const allCommits = await this.git.github.paginate(this.git.github.pulls.listCommits, {
-      ...this.git.remoteParams,
-      pull_number: prNumber,
-    });
+    const allCommits: OctokitPullRequestCommitsList = await this.git.github.paginate(
+      this.git.github.pulls.listCommits,
+      {
+        ...this.git.remoteParams,
+        pull_number: prNumber,
+      },
+    );
     return allCommits.map(({commit}) => commit.message);
   }
 

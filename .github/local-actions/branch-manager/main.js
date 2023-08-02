@@ -62292,6 +62292,10 @@ var PullRequestValidationConfig = class {
     this.assertSignedCla = true;
     this.assertChangesAllowForTargetLabel = true;
     this.assertPassingCi = true;
+    this.assertCompletedReviews = true;
+  }
+  static create(config) {
+    return Object.assign(new PullRequestValidationConfig(), config);
   }
 };
 var PullRequestValidation = class {
@@ -66760,6 +66764,9 @@ var PR_SCHEMA = {
       }
     ]
   }),
+  reviewRequests: {
+    totalCount: import_typed_graphqlify2.types.number
+  },
   maintainerCanModify: import_typed_graphqlify2.types.boolean,
   viewerDidAuthor: import_typed_graphqlify2.types.boolean,
   headRefOid: import_typed_graphqlify2.types.string,
@@ -67141,8 +67148,20 @@ var Validation2 = class extends PullRequestValidation {
 };
 
 // 
-var mergeReadyValidation = createPullRequestValidation({ name: "assertMergeReady", canBeForceIgnored: false }, () => Validation3);
+var completedReviewsValidation = createPullRequestValidation({ name: "assertCompletedReviews", canBeForceIgnored: false }, () => Validation3);
 var Validation3 = class extends PullRequestValidation {
+  assert(pullRequest) {
+    console.log(pullRequest.title);
+    const totalCount = pullRequest.reviewRequests.totalCount;
+    if (totalCount !== 0) {
+      throw this._createError(`Pull request cannot be merged with pending reviews, it current has ${totalCount} pending review(s)`);
+    }
+  }
+};
+
+// 
+var mergeReadyValidation = createPullRequestValidation({ name: "assertMergeReady", canBeForceIgnored: false }, () => Validation4);
+var Validation4 = class extends PullRequestValidation {
   assert(pullRequest) {
     if (!pullRequest.labels.nodes.some(({ name }) => name === actionLabels.ACTION_MERGE.name)) {
       throw this._createError("Pull request is not marked as merge ready.");
@@ -67151,8 +67170,8 @@ var Validation3 = class extends PullRequestValidation {
 };
 
 // 
-var passingCiValidation = createPullRequestValidation({ name: "assertPassingCi", canBeForceIgnored: true }, () => Validation4);
-var Validation4 = class extends PullRequestValidation {
+var passingCiValidation = createPullRequestValidation({ name: "assertPassingCi", canBeForceIgnored: true }, () => Validation5);
+var Validation5 = class extends PullRequestValidation {
   assert(pullRequest) {
     const { combinedStatus } = getStatusesForPullRequest(pullRequest);
     if (combinedStatus === PullRequestStatus.PENDING) {
@@ -67165,8 +67184,8 @@ var Validation4 = class extends PullRequestValidation {
 };
 
 // 
-var pendingStateValidation = createPullRequestValidation({ name: "assertPending", canBeForceIgnored: false }, () => Validation5);
-var Validation5 = class extends PullRequestValidation {
+var pendingStateValidation = createPullRequestValidation({ name: "assertPending", canBeForceIgnored: false }, () => Validation6);
+var Validation6 = class extends PullRequestValidation {
   assert(pullRequest) {
     if (pullRequest.isDraft) {
       throw this._createError("Pull request is still a draft.");
@@ -67183,9 +67202,9 @@ var Validation5 = class extends PullRequestValidation {
 // 
 var signedClaValidation = createPullRequestValidation(
   { name: "assertSignedCla", canBeForceIgnored: true },
-  () => Validation6
+  () => Validation7
 );
-var Validation6 = class extends PullRequestValidation {
+var Validation7 = class extends PullRequestValidation {
   assert(pullRequest) {
     const passing = getStatusesForPullRequest(pullRequest).statuses.some(({ name, status }) => {
       return name === "cla/google" && status === PullRequestStatus.PASSING;
@@ -67203,6 +67222,7 @@ async function assertValidPullRequest(pullRequest, validationConfig, ngDevConfig
     return parseCommitMessage(n.commit.message);
   });
   const validationResults = [
+    completedReviewsValidation.run(validationConfig, pullRequest),
     mergeReadyValidation.run(validationConfig, pullRequest),
     signedClaValidation.run(validationConfig, pullRequest),
     pendingStateValidation.run(validationConfig, pullRequest),
@@ -67732,7 +67752,7 @@ async function main(repo2, token2, pr2) {
   const config = await getConfig([assertValidGithubConfig, assertValidPullRequestConfig]);
   AuthenticatedGitClient.configure(token2);
   const git = await AuthenticatedGitClient.get();
-  const pullRequest = await loadAndValidatePullRequest({ git, config }, pr2, new PullRequestValidationConfig());
+  const pullRequest = await loadAndValidatePullRequest({ git, config }, pr2, PullRequestValidationConfig.create({ assertPending: false }));
   core.info("Validated PR information:");
   core.info(JSON.stringify(pullRequest));
   let hasFatalFailures = false;
