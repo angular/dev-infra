@@ -1670,17 +1670,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@renovatebot/pep440@npm:2.1.20":
-  version: 2.1.20
-  resolution: "@renovatebot/pep440@npm:2.1.20"
-  checksum: 58ff26f52af8489497b7309aec9de752a63b065bf37da97091c01e6b753e4e47944ab7e9fe2c4eb1c374e327c2b08ade88e6fc7d781e32f8d47572f9f5128c3a
+"@renovatebot/pep440@npm:3.0.3":
+  version: 3.0.3
+  resolution: "@renovatebot/pep440@npm:3.0.3"
+  checksum: 843faa1f80accd01378dc5ee97b09de3ade55485c3d8a2a8cfb63b894a9cd49e3cef959e65731246b8511bd1906e4092230a829eb1d671d66c66c650f979b2d3
   languageName: node
   linkType: hard
 
-"@renovatebot/ruby-semver@npm:3.0.6":
-  version: 3.0.6
-  resolution: "@renovatebot/ruby-semver@npm:3.0.6"
-  checksum: 5ce17ba90945406311c2da210ea3cba381424f5d9004eff0fb7acfab448af7ac4ab2eecedb7353fb93cf98ba0a34ce66b6ffe6a08ef837384516270560951af7
+"@renovatebot/ruby-semver@npm:3.0.10":
+  version: 3.0.10
+  resolution: "@renovatebot/ruby-semver@npm:3.0.10"
+  checksum: ccc443b7f40a22f77aac30261816fbc829199571b58a879ca1b05ae2c7eb8bda845f2d52b680b4a03fe55291f4bf191dbe46430c756497461e2ad09ed998dd07
   languageName: node
   linkType: hard
 
@@ -5194,7 +5194,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: 36.27.1
+    renovate: 36.38.0
   languageName: unknown
   linkType: soft
 
@@ -5737,14 +5737,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"re2@npm:1.19.1":
-  version: 1.19.1
-  resolution: "re2@npm:1.19.1"
+"re2@npm:1.20.1":
+  version: 1.20.1
+  resolution: "re2@npm:1.20.1"
   dependencies:
     install-artifact-from-github: ^1.3.3
     nan: ^2.17.0
     node-gyp: ^9.4.0
-  checksum: 44f752ebc03b9973d797f126787664f2763dc983d52a872833b4c8988e64db644a74fa76570112b1cd6e44b2f845d3e58e9779f1a917cb5a511044a6ba62a206
+  checksum: 89a4e64f7cdf747a951116ad7aa007d8323f9083d5e171214f71f5c2c297e649476dde2caf08c9d48f5a0a82341c63bf2c1932c86652a78147b87ba17536ca9d
   languageName: node
   linkType: hard
 
@@ -5885,9 +5885,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:36.27.1":
-  version: 36.27.1
-  resolution: "renovate@npm:36.27.1"
+"renovate@npm:36.38.0":
+  version: 36.38.0
+  resolution: "renovate@npm:36.38.0"
   dependencies:
     "@aws-sdk/client-codecommit": 3.363.0
     "@aws-sdk/client-ec2": 3.363.0
@@ -5909,8 +5909,8 @@ __metadata:
     "@opentelemetry/semantic-conventions": 1.15.1
     "@qnighy/marshal": 0.1.3
     "@renovatebot/osv-offline": 1.3.1
-    "@renovatebot/pep440": 2.1.20
-    "@renovatebot/ruby-semver": 3.0.6
+    "@renovatebot/pep440": 3.0.3
+    "@renovatebot/ruby-semver": 3.0.10
     "@sindresorhus/is": 4.6.0
     "@types/ms": 0.7.31
     "@types/tmp": 0.2.3
@@ -5975,7 +5975,7 @@ __metadata:
     parse-link-header: 2.0.0
     prettier: 2.8.8
     quick-lru: 5.1.1
-    re2: 1.19.1
+    re2: 1.20.1
     redis: 4.6.7
     remark: 13.0.0
     remark-github: 10.1.0
@@ -6001,7 +6001,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: a0bc5363b51e9f29836c27f9d17114710766ca2dbaab5402363afb344e638354e12d799844a294cdd87f600d3780dfc4a9ed6d39c79b647c240c8410b9b4ff97
+  checksum: ede5eac852c4cec89d617b0d9ba03e26b457573eaab58d3f635323b57b63a2edf00da82773489610fe168306b3bd2e021f8f2abdcee2af82bf82e586f3f0886a
   languageName: node
   linkType: hard
 
