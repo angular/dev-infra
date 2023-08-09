@@ -3993,12 +3993,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"handlebars@npm:4.7.7":
-  version: 4.7.7
-  resolution: "handlebars@npm:4.7.7"
+"handlebars@npm:4.7.8":
+  version: 4.7.8
+  resolution: "handlebars@npm:4.7.8"
   dependencies:
     minimist: ^1.2.5
-    neo-async: ^2.6.0
+    neo-async: ^2.6.2
     source-map: ^0.6.1
     uglify-js: ^3.1.4
     wordwrap: ^1.0.0
@@ -4007,7 +4007,7 @@ __metadata:
       optional: true
   bin:
     handlebars: bin/handlebars
-  checksum: 1e79a43f5e18d15742977cb987923eab3e2a8f44f2d9d340982bcb69e1735ed049226e534d7c1074eaddaf37e4fb4f471a8adb71cddd5bc8cf3f894241df5cee
+  checksum: 00e68bb5c183fd7b8b63322e6234b5ac8fbb960d712cb3f25587d559c2951d9642df83c04a1172c918c41bcfc81bfbd7a7718bbce93b893e0135fc99edea93ff
   languageName: node
   linkType: hard
 
@@ -5183,7 +5183,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"neo-async@npm:^2.6.0":
+"neo-async@npm:^2.6.2":
   version: 2.6.2
   resolution: "neo-async@npm:2.6.2"
   checksum: deac9f8d00eda7b2e5cd1b2549e26e10a0faa70adaa6fdadca701cc55f49ee9018e427f424bac0c790b7c7e2d3068db97f3093f1093975f2acb8f8818b936ed9
@@ -5194,7 +5194,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: 36.38.0
+    renovate: 36.40.3
   languageName: unknown
   linkType: soft
 
@@ -5885,9 +5885,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:36.38.0":
-  version: 36.38.0
-  resolution: "renovate@npm:36.38.0"
+"renovate@npm:36.40.3":
+  version: 36.40.3
+  resolution: "renovate@npm:36.40.3"
   dependencies:
     "@aws-sdk/client-codecommit": 3.363.0
     "@aws-sdk/client-ec2": 3.363.0
@@ -5949,7 +5949,7 @@ __metadata:
     good-enough-parser: 1.1.23
     got: 11.8.6
     graph-data-structure: 3.3.0
-    handlebars: 4.7.7
+    handlebars: 4.7.8
     hasha: 5.2.2
     ignore: 5.2.4
     ini: 4.1.1
@@ -6001,7 +6001,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: ede5eac852c4cec89d617b0d9ba03e26b457573eaab58d3f635323b57b63a2edf00da82773489610fe168306b3bd2e021f8f2abdcee2af82bf82e586f3f0886a
+  checksum: 6469fac3cbfc4cbd72c0b49729b0af81e1fb9ad84bfa276a34914b60f03fa9ba635ed990a3a33a06aaf822659bfc529eb523e4b06dd30043cf1430375cca8949
   languageName: node
   linkType: hard
 
