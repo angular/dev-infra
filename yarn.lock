@@ -10029,8 +10029,8 @@ __metadata:
   linkType: hard
 
 "firebase-tools@npm:^12.0.0":
-  version: 12.4.7
-  resolution: "firebase-tools@npm:12.4.7"
+  version: 12.4.8
+  resolution: "firebase-tools@npm:12.4.8"
   dependencies:
     "@google-cloud/pubsub": ^3.0.1
     abort-controller: ^3.0.0
@@ -10094,7 +10094,7 @@ __metadata:
     ws: ^7.2.3
   bin:
     firebase: lib/bin/firebase.js
-  checksum: a218a5fb5133a016dcc420a47987371dee306cb58927e6d5d8f07a3889b2d24907eebc36d2d4561f722fe0d1d4aa7753e6b1b6e2c7920dca03060f55b6889bc5
+  checksum: 8cd13fcfd880fda9088c177c28f0b67c9c26a5d16d34ab8b0ac53f32a8cb7e2f704c17e28833f0cf926bbaa229c165d20ff8af8d207f2f9810becfdafeb42d5a
   languageName: node
   linkType: hard
 
@@ -13893,14 +13893,14 @@ __metadata:
   linkType: hard
 
 "nock@npm:^13.0.3":
-  version: 13.3.2
-  resolution: "nock@npm:13.3.2"
+  version: 13.3.3
+  resolution: "nock@npm:13.3.3"
   dependencies:
     debug: ^4.1.0
     json-stringify-safe: ^5.0.1
     lodash: ^4.17.21
     propagate: ^2.0.0
-  checksum: 1d7d5fda1816a3a0d2cb47f10283db139fcd15be6975db6f9b260efa781d5f0eeadf9bd7aab6db61191c519dd99bcd4c5c061e77880341be60abc39cd6163c1f
+  checksum: e3e4f0fb777ac63d74f89bbb7aebe8e815b891b64ac71983d91686f725fdab856fe189cf2fe23d4add9f5dd5da53f3568106a61116a771ce0f4ed0f5ad7b035b
   languageName: node
   linkType: hard
 
