@@ -63869,7 +63869,7 @@ var parseOptions = {
   headerPattern,
   headerCorrespondence,
   noteKeywords: [NoteSections.BREAKING_CHANGE, NoteSections.DEPRECATED],
-  notesPattern: (keywords) => new RegExp(`^s*(${keywords}): ?(.*)`)
+  notesPattern: (keywords) => new RegExp(`^\\s*(${keywords}): ?(.*)`)
 };
 var parseCommitFromGitLog = parseInternal;
 function parseInternal(fullText) {
