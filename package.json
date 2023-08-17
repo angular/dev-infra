@@ -14,7 +14,7 @@
       "default": "./*"
     }
   },
-  "packageManager": "yarn@3.6.1",
+  "packageManager": "yarn@3.6.2",
   "dependencies": {
     "@angular-devkit/build-angular": "16.2.0-rc.1",
     "@angular/benchpress": "0.3.0",
