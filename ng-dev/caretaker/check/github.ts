@@ -93,7 +93,7 @@ export class GithubQueriesModule extends BaseModule<GithubQueryResults | void> {
         {
           type: 'ISSUE',
           first: MAX_RETURNED_ISSUES,
-          query: `"${repoFilter} ${query.replace(/"/g, '\\"')}"`,
+          query: `"${repoFilter} ${query.replace(/\"/g, '\\"')}"`,
         },
         {...GithubQueryResultFragment},
       );
