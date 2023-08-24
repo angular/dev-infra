@@ -1005,12 +1005,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cdktf/hcl2json@npm:0.17.3":
-  version: 0.17.3
-  resolution: "@cdktf/hcl2json@npm:0.17.3"
+"@cdktf/hcl2json@npm:0.18.0":
+  version: 0.18.0
+  resolution: "@cdktf/hcl2json@npm:0.18.0"
   dependencies:
     fs-extra: ^11.1.1
-  checksum: 140f290a24a258720ae6d05ea124a229b1527a4726f1cb8c8a3ad315d9d6bb07b24d7e3ad14eba10761cc9a6efc34718346270d85961bb35390a7c19ccfd0f54
+  checksum: 08cc34d0b6f8e738e329ae635fbcccda3b8f60bf02d6ed214f0303b429a3bd1551c6f61e7499e3581ec5cb03ae58b3b555818239472c274a25feeea840e38f16
   languageName: node
   linkType: hard
 
@@ -1311,16 +1311,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/instrumentation-bunyan@npm:0.32.0":
-  version: 0.32.0
-  resolution: "@opentelemetry/instrumentation-bunyan@npm:0.32.0"
+"@opentelemetry/instrumentation-bunyan@npm:0.32.1":
+  version: 0.32.1
+  resolution: "@opentelemetry/instrumentation-bunyan@npm:0.32.1"
   dependencies:
-    "@opentelemetry/instrumentation": ^0.41.0
-    "@types/bunyan": 1.8.7
-    tslib: ^2.3.1
+    "@opentelemetry/instrumentation": ^0.41.2
+    "@types/bunyan": 1.8.8
   peerDependencies:
     "@opentelemetry/api": ^1.3.0
-  checksum: f67498b5e1dd7546b3111d68518f11ad5e5d36e12a25d622b9975942c4742a8b7e11b85799b89a81cc354ea9cd6d38184744b204ffb9f8a23411affa80e8dd0f
+  checksum: a60629d3f99e3d6410ac8887b4f9c243e2aee86eef4e29c6c0f73aa3a441e2c2ae8ed6d38313224fb4d6101817c3b96751c276911b247ac0ab742bd03c411289
   languageName: node
   linkType: hard
 
@@ -1338,7 +1337,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/instrumentation@npm:0.41.2":
+"@opentelemetry/instrumentation@npm:0.41.2, @opentelemetry/instrumentation@npm:^0.41.2":
   version: 0.41.2
   resolution: "@opentelemetry/instrumentation@npm:0.41.2"
   dependencies:
@@ -1350,22 +1349,6 @@ __metadata:
   peerDependencies:
     "@opentelemetry/api": ^1.3.0
   checksum: 73df84c356064aaf2465f691001d6c165877d7204d2c66063b89dfa8b7206bc47442cd6dec88c40af86b104dbe72081c2e234376a63b3afaa529a9648ac016cd
-  languageName: node
-  linkType: hard
-
-"@opentelemetry/instrumentation@npm:^0.41.0":
-  version: 0.41.0
-  resolution: "@opentelemetry/instrumentation@npm:0.41.0"
-  dependencies:
-    "@types/shimmer": ^1.0.2
-    import-in-the-middle: 1.4.1
-    require-in-the-middle: ^7.1.1
-    semver: ^7.5.1
-    shimmer: ^1.2.1
-    tslib: ^2.3.1
-  peerDependencies:
-    "@opentelemetry/api": ^1.3.0
-  checksum: ea6cf28ad6ce34549eef0501928a5070a7289a86431709ec2dde1c7f6e7e593137599d31c5de22269a259a3fca5116287e3b74bc717cdba0df1b072726265b8c
   languageName: node
   linkType: hard
 
@@ -1655,18 +1638,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@renovatebot/osv-offline@npm:1.3.1":
-  version: 1.3.1
-  resolution: "@renovatebot/osv-offline@npm:1.3.1"
+"@renovatebot/osv-offline@npm:1.3.2":
+  version: 1.3.2
+  resolution: "@renovatebot/osv-offline@npm:1.3.2"
   dependencies:
     "@octokit/rest": ^19.0.13
     "@renovatebot/osv-offline-db": 1.4.0
     adm-zip: ~0.5.10
     fs-extra: ^11.1.1
     got: ^11.8.6
-    luxon: ^3.3.0
+    luxon: ^3.4.0
     node-fetch: ^2.6.12
-  checksum: 0c69e055eaf8304d737ccbd5a9f0888be111d710b0ffd2a04aff4e19636e31b597b382680fd08edeac53e76e25f61c929cd11ec17008daf1a537b208b641fc9f
+  checksum: d9192ccaca57d7fb39b41b3da8ab0a9baa57fccbb827ba9efb78f0ecbe5c13160c0f5328e316a4f56d7ac75813aca1865c4f5273a7152cdb2a2474a923d70a54
   languageName: node
   linkType: hard
 
@@ -2296,12 +2279,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/bunyan@npm:1.8.7":
-  version: 1.8.7
-  resolution: "@types/bunyan@npm:1.8.7"
+"@types/bunyan@npm:1.8.8":
+  version: 1.8.8
+  resolution: "@types/bunyan@npm:1.8.8"
   dependencies:
     "@types/node": "*"
-  checksum: b641a6f95f4ae72ddc48324e4b6d19227c576ccd16da0bcfdee73853b57c629bee38405ee2853b1d3c1f80ad910d8efe02bf332f67a853b11df51c9f9597a9ce
+  checksum: b28966c13579b281ae75560d8c99ee4149348818cd4c4d6424afeee9fdab1039db2a0c06f1ab62fbf8c71f99dcebb70551bb45f2110d6a1fc3e3f891355b6b4b
   languageName: node
   linkType: hard
 
@@ -2897,7 +2880,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cacache@npm:17.1.3, cacache@npm:^17.0.0":
+"cacache@npm:17.1.4":
+  version: 17.1.4
+  resolution: "cacache@npm:17.1.4"
+  dependencies:
+    "@npmcli/fs": ^3.1.0
+    fs-minipass: ^3.0.0
+    glob: ^10.2.2
+    lru-cache: ^7.7.1
+    minipass: ^7.0.3
+    minipass-collect: ^1.0.2
+    minipass-flush: ^1.0.5
+    minipass-pipeline: ^1.2.4
+    p-map: ^4.0.0
+    ssri: ^10.0.0
+    tar: ^6.1.11
+    unique-filename: ^3.0.0
+  checksum: b7751df756656954a51201335addced8f63fc53266fa56392c9f5ae83c8d27debffb4458ac2d168a744a4517ec3f2163af05c20097f93d17bdc2dc8a385e14a6
+  languageName: node
+  linkType: hard
+
+"cacache@npm:^17.0.0":
   version: 17.1.3
   resolution: "cacache@npm:17.1.3"
   dependencies:
@@ -3189,12 +3192,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cron-parser@npm:4.8.1":
-  version: 4.8.1
-  resolution: "cron-parser@npm:4.8.1"
+"cron-parser@npm:4.9.0":
+  version: 4.9.0
+  resolution: "cron-parser@npm:4.9.0"
   dependencies:
     luxon: ^3.2.1
-  checksum: e3e7b227cb45c8e3e16b5ceab9fd1b4769b878b430f009d5de26c3e20d4e0112fde6f90a663afbcd9cc2be92d73b6eefe2d939d1646f3a96704f73c63dd39b6f
+  checksum: 3cf248fc5cae6c19ec7124962b1cd84b76f02b9bc4f58976b3bd07624db3ef10aaf1548efcc2d2dcdab0dad4f12029d640a55ecce05ea5e1596af9db585502cf
   languageName: node
   linkType: hard
 
@@ -4194,18 +4197,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"import-in-the-middle@npm:1.4.1":
-  version: 1.4.1
-  resolution: "import-in-the-middle@npm:1.4.1"
-  dependencies:
-    acorn: ^8.8.2
-    acorn-import-assertions: ^1.9.0
-    cjs-module-lexer: ^1.2.2
-    module-details-from-path: ^1.0.3
-  checksum: 39cf8ba24f660dfd7f57cd871ea39b0162cb80d6fefd9150988b8836e50c3c64d9ea8793777f631730de929e90d8bd5cf18bcb65338d05e810c8d26075cddb26
-  languageName: node
-  linkType: hard
-
 "import-in-the-middle@npm:1.4.2":
   version: 1.4.2
   resolution: "import-in-the-middle@npm:1.4.2"
@@ -4730,10 +4721,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"luxon@npm:3.3.0, luxon@npm:^3.2.1, luxon@npm:^3.3.0":
+"luxon@npm:3.4.0":
+  version: 3.4.0
+  resolution: "luxon@npm:3.4.0"
+  checksum: ca9b6d0e0a8d156574b7e84014ac8e4b60d116d6d7a0fb65ef48eeb8e4415dad6350b76c5ee34f795cadf8b3f9a5fe7a6885733f561e554c50dffb0b704a840b
+  languageName: node
+  linkType: hard
+
+"luxon@npm:^3.2.1":
   version: 3.3.0
   resolution: "luxon@npm:3.3.0"
   checksum: 50cf17a0dc155c3dcacbeae8c0b7e80db425e0ba97b9cbdf12a7fc142d841ff1ab1560919f033af46240ed44e2f70c49f76e3422524c7fc8bb8d81ca47c66187
+  languageName: node
+  linkType: hard
+
+"luxon@npm:^3.4.0":
+  version: 3.4.1
+  resolution: "luxon@npm:3.4.1"
+  checksum: cd5e2a407cdc55a10548f6e0c1ca83590574fa3cba4d03da37113cd7dc118e6ce46b2d71ddc32cfd35a0413c15ac9a3cfdef3a2702e6862814b691048ffe0be8
   languageName: node
   linkType: hard
 
@@ -5094,6 +5099,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"minipass@npm:^7.0.3":
+  version: 7.0.3
+  resolution: "minipass@npm:7.0.3"
+  checksum: 6f1614f5b5b55568a46bca5fec0e7c46dac027691db27d0e1923a8192866903144cd962ac772c0e9f89b608ea818b702709c042bce98e190d258847d85461531
+  languageName: node
+  linkType: hard
+
 "minizlib@npm:^2.1.1, minizlib@npm:^2.1.2":
   version: 2.1.2
   resolution: "minizlib@npm:2.1.2"
@@ -5215,7 +5227,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: 36.43.2
+    renovate: 36.57.8
   languageName: unknown
   linkType: soft
 
@@ -5268,13 +5280,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-html-parser@npm:6.1.5":
-  version: 6.1.5
-  resolution: "node-html-parser@npm:6.1.5"
+"node-html-parser@npm:6.1.6":
+  version: 6.1.6
+  resolution: "node-html-parser@npm:6.1.6"
   dependencies:
     css-select: ^5.1.0
     he: 1.2.0
-  checksum: b54257b31954be17d473c86a2fede53d5e238708f3d88577c98881c28ab66013fd37044903f6f3cd662b56d882681fb511bca75a80a80b62f7111b32b39eebae
+  checksum: 594dd7daf9c4894be632070e08491e2ac0397c64fabd2cba15c5e7f62f74c6f2d7e3be40931c22033233525dd8fb98ebf3e3017001d7030fa7d0d387f2a18680
   languageName: node
   linkType: hard
 
@@ -5906,9 +5918,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:36.43.2":
-  version: 36.43.2
-  resolution: "renovate@npm:36.43.2"
+"renovate@npm:36.57.8":
+  version: 36.57.8
+  resolution: "renovate@npm:36.57.8"
   dependencies:
     "@aws-sdk/client-codecommit": 3.363.0
     "@aws-sdk/client-ec2": 3.363.0
@@ -5916,20 +5928,20 @@ __metadata:
     "@aws-sdk/client-rds": 3.363.0
     "@aws-sdk/client-s3": 3.363.0
     "@breejs/later": 4.1.0
-    "@cdktf/hcl2json": 0.17.3
+    "@cdktf/hcl2json": 0.18.0
     "@iarna/toml": 3.0.0
     "@opentelemetry/api": 1.4.1
     "@opentelemetry/context-async-hooks": 1.15.2
     "@opentelemetry/exporter-trace-otlp-http": 0.41.2
     "@opentelemetry/instrumentation": 0.41.2
-    "@opentelemetry/instrumentation-bunyan": 0.32.0
+    "@opentelemetry/instrumentation-bunyan": 0.32.1
     "@opentelemetry/instrumentation-http": 0.41.2
     "@opentelemetry/resources": 1.15.2
     "@opentelemetry/sdk-trace-base": 1.15.2
     "@opentelemetry/sdk-trace-node": 1.15.2
     "@opentelemetry/semantic-conventions": 1.15.2
     "@qnighy/marshal": 0.1.3
-    "@renovatebot/osv-offline": 1.3.1
+    "@renovatebot/osv-offline": 1.3.2
     "@renovatebot/pep440": 3.0.3
     "@renovatebot/ruby-semver": 3.0.10
     "@sindresorhus/is": 4.6.0
@@ -5943,14 +5955,14 @@ __metadata:
     aws4: 1.12.0
     azure-devops-node-api: 12.1.0
     bunyan: 1.8.15
-    cacache: 17.1.3
+    cacache: 17.1.4
     cacheable-lookup: 5.0.4
     chalk: 4.1.2
     changelog-filename-regex: 2.0.1
     clean-git-ref: 2.0.1
     commander: 11.0.0
     conventional-commits-detector: 1.0.3
-    cron-parser: 4.8.1
+    cron-parser: 4.9.0
     deepmerge: 4.3.1
     dequal: 2.0.3
     detect-indent: 6.1.0
@@ -5980,14 +5992,14 @@ __metadata:
     json5: 2.2.3
     jsonata: 2.0.3
     klona: 2.0.6
-    luxon: 3.3.0
+    luxon: 3.4.0
     markdown-it: 13.0.1
     markdown-table: 2.0.0
     minimatch: 9.0.3
     moo: 0.5.2
     ms: 2.1.3
     nanoid: 3.3.6
-    node-html-parser: 6.1.5
+    node-html-parser: 6.1.6
     openpgp: 5.9.0
     p-all: 3.0.0
     p-map: 4.0.0
@@ -6015,14 +6027,14 @@ __metadata:
     validate-npm-package-name: 5.0.0
     vuln-vects: 1.1.0
     xmldoc: 1.3.0
-    zod: 3.21.4
+    zod: 3.22.2
   dependenciesMeta:
     re2:
       optional: true
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 7c3e7165387760b8ff8210a4758ffc38a89d7ce1d910f50156bbd6db2c0f4fa3624b54544554b0a7dcf3ca33e12541f5254a23ca896b502ade5fad1d30437f1d
+  checksum: b476cbae5622cf08072ff62d537208b697cae8ceeeae0f7e8a30b1337f9f7b92c84d12e1310d0624abf98d38aaa039ba9c65897f3b17059229c497fba2f76d1b
   languageName: node
   linkType: hard
 
@@ -7168,10 +7180,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:3.21.4":
-  version: 3.21.4
-  resolution: "zod@npm:3.21.4"
-  checksum: f185ba87342ff16f7a06686767c2b2a7af41110c7edf7c1974095d8db7a73792696bcb4a00853de0d2edeb34a5b2ea6a55871bc864227dace682a0a28de33e1f
+"zod@npm:3.22.2":
+  version: 3.22.2
+  resolution: "zod@npm:3.22.2"
+  checksum: 231e2180c8eabb56e88680d80baff5cf6cbe6d64df3c44c50ebe52f73081ecd0229b1c7215b9552537f537a36d9e36afac2737ddd86dc14e3519bdbc777e82b9
   languageName: node
   linkType: hard
 
