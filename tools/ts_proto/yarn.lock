@@ -619,9 +619,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"protobufjs-cli@npm:1.1.1":
-  version: 1.1.1
-  resolution: "protobufjs-cli@npm:1.1.1"
+"protobufjs-cli@npm:1.1.2":
+  version: 1.1.2
+  resolution: "protobufjs-cli@npm:1.1.2"
   dependencies:
     chalk: ^4.0.0
     escodegen: ^1.13.0
@@ -638,13 +638,13 @@ __metadata:
   bin:
     pbjs: bin/pbjs
     pbts: bin/pbts
-  checksum: 124a2cb10d6fccdd6e8f2984b0f7d9a351d9c1efd17f237acd4a9e7c4b82d63265364b1c86bfa5c6a6fa17d7119182c4c323a8972c0078e1ac5c5f653d096f9b
+  checksum: 21f8e329e7e04d9451f35768502efd4d7adf07153dd214853320ee94ffd22cfa8cf98d8df7b83692adf5e4f041fc78c469dadb508afa60d8c229bed4ebc79345
   languageName: node
   linkType: hard
 
-"protobufjs@npm:7.2.4":
-  version: 7.2.4
-  resolution: "protobufjs@npm:7.2.4"
+"protobufjs@npm:7.2.5":
+  version: 7.2.5
+  resolution: "protobufjs@npm:7.2.5"
   dependencies:
     "@protobufjs/aspromise": ^1.1.2
     "@protobufjs/base64": ^1.1.2
@@ -658,7 +658,7 @@ __metadata:
     "@protobufjs/utf8": ^1.1.0
     "@types/node": ">=13.7.0"
     long: ^5.0.0
-  checksum: a952cdf2a5e5250c16ae651b570849b6f5b20a5475c3eef63ffb290ad239aa2916adfc1cc676f7fc93c69f48113df268761c0c246f7f023118c85bdd1a170044
+  checksum: 3770a072114061faebbb17cfd135bc4e187b66bc6f40cd8bac624368b0270871ec0cfb43a02b9fb4f029c8335808a840f1afba3c2e7ede7063b98ae6b98a703f
   languageName: node
   linkType: hard
 
@@ -736,8 +736,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ts_proto@workspace:."
   dependencies:
-    protobufjs: 7.2.4
-    protobufjs-cli: 1.1.1
+    protobufjs: 7.2.5
+    protobufjs-cli: 1.1.2
   languageName: unknown
   linkType: soft
 
