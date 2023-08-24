@@ -67151,7 +67151,6 @@ var Validation2 = class extends PullRequestValidation {
 var completedReviewsValidation = createPullRequestValidation({ name: "assertCompletedReviews", canBeForceIgnored: false }, () => Validation3);
 var Validation3 = class extends PullRequestValidation {
   assert(pullRequest) {
-    console.log(pullRequest.title);
     const totalCount = pullRequest.reviewRequests.totalCount;
     if (totalCount !== 0) {
       throw this._createError(`Pull request cannot be merged with pending reviews, it current has ${totalCount} pending review(s)`);

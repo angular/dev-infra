@@ -17,7 +17,6 @@ export const completedReviewsValidation = createPullRequestValidation(
 
 class Validation extends PullRequestValidation {
   assert(pullRequest: PullRequestFromGithub) {
-    console.log(pullRequest.title);
     const totalCount = pullRequest.reviewRequests.totalCount;
     if (totalCount !== 0) {
       throw this._createError(

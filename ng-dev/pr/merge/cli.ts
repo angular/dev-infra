@@ -18,6 +18,7 @@ export interface MergeCommandOptions {
   branchPrompt: boolean;
   forceManualBranches: boolean;
   dryRun: boolean;
+  ignorePendingReviews: boolean;
 }
 
 /** Builds the command. */
@@ -39,6 +40,11 @@ async function builder(argv: Argv) {
       type: 'boolean',
       default: false,
       description: 'Whether to manually select the branches you wish to merge the PR into.',
+    })
+    .option('ignore-pending-reviews' as 'ignorePendingReviews', {
+      type: 'boolean',
+      default: false,
+      description: 'Bypass the check for pending reviews on the pull request',
     });
 }
 
@@ -48,8 +54,9 @@ async function handler({
   branchPrompt,
   forceManualBranches,
   dryRun,
+  ignorePendingReviews,
 }: Arguments<MergeCommandOptions>) {
-  await mergePullRequest(pr, {branchPrompt, forceManualBranches, dryRun});
+  await mergePullRequest(pr, {branchPrompt, forceManualBranches, dryRun, ignorePendingReviews});
 }
 
 /** yargs command module describing the command. */

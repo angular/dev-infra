@@ -51,7 +51,9 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
 
   /** Performs the merge and returns whether it was successful or not. */
   async function performMerge(
-    validationConfig: PullRequestValidationConfig = new PullRequestValidationConfig(),
+    validationConfig: PullRequestValidationConfig = PullRequestValidationConfig.create({
+      assertCompletedReviews: !flags.ignorePendingReviews,
+    }),
   ): Promise<boolean> {
     try {
       await tool.merge(prNumber, validationConfig);
