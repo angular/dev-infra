@@ -40,12 +40,14 @@ export interface PullRequestMergeFlags {
   branchPrompt: boolean;
   forceManualBranches: boolean;
   dryRun: boolean;
+  ignorePendingReviews: boolean;
 }
 
 const defaultPullRequestMergeFlags: PullRequestMergeFlags = {
   branchPrompt: true,
   forceManualBranches: false,
   dryRun: false,
+  ignorePendingReviews: false,
 };
 
 /**
