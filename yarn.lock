@@ -411,7 +411,7 @@ __metadata:
     folder-hash: ^4.0.2
     font-color-contrast: ^11.1.0
     gcip-cloud-functions: 0.2.0
-    git-raw-commits: ^3.0.0
+    git-raw-commits: ^4.0.0
     glob: 10.3.3
     husky: ^8.0.0
     inquirer: 9.2.10
@@ -8575,10 +8575,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dargs@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "dargs@npm:7.0.0"
-  checksum: b8f1e3cba59c42e1f13a114ad4848c3fc1cf7470f633ee9e9f1043762429bc97d91ae31b826fb135eefde203a3fdb20deb0c0a0222ac29d937b8046085d668d1
+"dargs@npm:^8.0.0":
+  version: 8.1.0
+  resolution: "dargs@npm:8.1.0"
+  checksum: 33f1b8f5f08e72c8a28355a87c0e1a9b6a0fec99252ecd9cf4735e65dd5f2e19747c860251ed5747b38e7204c7915fd7a7146aee5aaef5882c69169aae8b1d09
   languageName: node
   linkType: hard
 
@@ -10612,16 +10612,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"git-raw-commits@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "git-raw-commits@npm:3.0.0"
+"git-raw-commits@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "git-raw-commits@npm:4.0.0"
   dependencies:
-    dargs: ^7.0.0
-    meow: ^8.1.2
-    split2: ^3.2.2
+    dargs: ^8.0.0
+    meow: ^12.0.1
+    split2: ^4.0.0
   bin:
-    git-raw-commits: cli.js
-  checksum: 198892f307829d22fc8ec1c9b4a63876a1fde847763857bb74bd1b04c6f6bc0d7464340c25d0f34fd0fb395759363aa1f8ce324357027320d80523bf234676ab
+    git-raw-commits: cli.mjs
+  checksum: 95546f4afcb33cf00ff638f7fec55ad61d4d927447737900e1f6fcbbdbb341b3f150908424cc62acb6d9faaea6f1e8f55d0697b899f0589af9d2733afb20abfb
   languageName: node
   linkType: hard
 
