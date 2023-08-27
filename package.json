@@ -117,7 +117,7 @@
     "folder-hash": "^4.0.2",
     "font-color-contrast": "^11.1.0",
     "gcip-cloud-functions": "0.2.0",
-    "git-raw-commits": "^3.0.0",
+    "git-raw-commits": "^4.0.0",
     "glob": "10.3.3",
     "husky": "^8.0.0",
     "inquirer": "9.2.10",
