@@ -2371,12 +2371,12 @@ __metadata:
   linkType: hard
 
 "@bazel/bazelisk@npm:^1.11.0":
-  version: 1.12.1
-  resolution: "@bazel/bazelisk@npm:1.12.1"
+  version: 1.18.0
+  resolution: "@bazel/bazelisk@npm:1.18.0"
   bin:
     bazel: bazelisk.js
     bazelisk: bazelisk.js
-  checksum: cac778b9eecc06c78b0e866bb5d39aa63948e24517fc4a3413044172a7c91f4e80d9fadbe7741f63b81e22cb88e8f18b54d0532bced69c063807d5af40412e9b
+  checksum: 2997a0df38dfa35a41b52561188482db58fb842a6d43e2cdcf8f0bf8a450b38eb5dc4cbdd454e2a411edb1bc5ef5af21817b902c422987f2ef8984da7e4e22e7
   languageName: node
   linkType: hard
 
