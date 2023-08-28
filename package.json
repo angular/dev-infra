@@ -142,7 +142,7 @@
     "protobufjs": "^7.0.0",
     "requirejs": "^2.3.6",
     "rxjs": "^7.4.0",
-    "semver": "^7.3.5",
+    "semver": "^7.5.4",
     "spdx-satisfies": "^5.0.1",
     "stylelint": "^15.1.0",
     "supports-color": "9.4.0",
