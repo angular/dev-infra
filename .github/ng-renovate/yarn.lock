@@ -1638,9 +1638,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@renovatebot/osv-offline@npm:1.3.2":
-  version: 1.3.2
-  resolution: "@renovatebot/osv-offline@npm:1.3.2"
+"@renovatebot/osv-offline@npm:1.3.3":
+  version: 1.3.3
+  resolution: "@renovatebot/osv-offline@npm:1.3.3"
   dependencies:
     "@octokit/rest": ^19.0.13
     "@renovatebot/osv-offline-db": 1.4.0
@@ -1648,22 +1648,22 @@ __metadata:
     fs-extra: ^11.1.1
     got: ^11.8.6
     luxon: ^3.4.0
-    node-fetch: ^2.6.12
-  checksum: d9192ccaca57d7fb39b41b3da8ab0a9baa57fccbb827ba9efb78f0ecbe5c13160c0f5328e316a4f56d7ac75813aca1865c4f5273a7152cdb2a2474a923d70a54
+    node-fetch: ^2.6.13
+  checksum: 88cf1c64ee708a6aa0c2e22a81dc95099dc3039613cadd3b44c8c442055c90d549fb56d23bdb706bb2a427aee0403513c87f2d5f1d1a0cb90e6c9eaee0c72c1f
   languageName: node
   linkType: hard
 
-"@renovatebot/pep440@npm:3.0.3":
-  version: 3.0.3
-  resolution: "@renovatebot/pep440@npm:3.0.3"
-  checksum: 843faa1f80accd01378dc5ee97b09de3ade55485c3d8a2a8cfb63b894a9cd49e3cef959e65731246b8511bd1906e4092230a829eb1d671d66c66c650f979b2d3
+"@renovatebot/pep440@npm:3.0.5":
+  version: 3.0.5
+  resolution: "@renovatebot/pep440@npm:3.0.5"
+  checksum: cfc36edb79fe96cbd18368305737c2dd5bfdf721df64a78f656e4d882d8e11c24ad45226920eb7b12ea8787791853290c5f950e8684fa3e8087a2134f4353e47
   languageName: node
   linkType: hard
 
-"@renovatebot/ruby-semver@npm:3.0.10":
-  version: 3.0.10
-  resolution: "@renovatebot/ruby-semver@npm:3.0.10"
-  checksum: ccc443b7f40a22f77aac30261816fbc829199571b58a879ca1b05ae2c7eb8bda845f2d52b680b4a03fe55291f4bf191dbe46430c756497461e2ad09ed998dd07
+"@renovatebot/ruby-semver@npm:3.0.11":
+  version: 3.0.11
+  resolution: "@renovatebot/ruby-semver@npm:3.0.11"
+  checksum: 4aa2421b020cc46a50a6015b9e7a3a09647d2cbee9c17cd5653113b272da432ce9319a2a13ea6de0ae32bf9550829a25629538fb558ca293cfb445c334741a39
   languageName: node
   linkType: hard
 
@@ -2427,9 +2427,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/core@npm:3.5.2":
-  version: 3.5.2
-  resolution: "@yarnpkg/core@npm:3.5.2"
+"@yarnpkg/core@npm:3.5.3":
+  version: 3.5.3
+  resolution: "@yarnpkg/core@npm:3.5.3"
   dependencies:
     "@arcanis/slice-ansi": ^1.1.1
     "@types/semver": ^7.1.0
@@ -2438,7 +2438,7 @@ __metadata:
     "@yarnpkg/json-proxy": ^2.1.1
     "@yarnpkg/libzip": ^2.3.0
     "@yarnpkg/parsers": ^2.5.1
-    "@yarnpkg/pnp": ^3.3.3
+    "@yarnpkg/pnp": ^3.3.4
     "@yarnpkg/shell": ^3.2.5
     camelcase: ^5.3.1
     chalk: ^3.0.0
@@ -2463,7 +2463,7 @@ __metadata:
     treeify: ^1.1.0
     tslib: ^1.13.0
     tunnel: ^0.0.6
-  checksum: 7635ea96c79195afc2146a1b8c5adfcb765a83bce2721bc0c88799a01e0e0b73243631f47b57df14667d7349aa0cf0a6b28b6ecfc9814ef329c7dd1f4c7f3826
+  checksum: 203abb513eead0bbe048f56dd2f9f9f0e744fa17362ae1228ca77a9e353e794ec5cbefb09bdb738aecb3a12416b92d5e179bd1627455b1dd6dc27dbd792086f0
   languageName: node
   linkType: hard
 
@@ -2507,13 +2507,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/pnp@npm:^3.3.3":
-  version: 3.3.3
-  resolution: "@yarnpkg/pnp@npm:3.3.3"
+"@yarnpkg/pnp@npm:^3.3.4":
+  version: 3.3.5
+  resolution: "@yarnpkg/pnp@npm:3.3.5"
   dependencies:
     "@types/node": ^13.7.0
     "@yarnpkg/fslib": ^2.10.3
-  checksum: e379df5f8a6e1781f5af6f502b7d549642c62bf3c00fd9e6956389b7f6ccf4ee731b89d5c9569ff64eba5bf0b8d9003b7ad261d07a0506f7cba0cc70fedc4f33
+  checksum: 5197775e44eb24607473793e344e10007289800b156061d5bd57a593ad735a0a34bd8d412bd822508048bd7c2442008766ac336595de1fc91c8f94c8179b47c6
   languageName: node
   linkType: hard
 
@@ -5227,13 +5227,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: 36.57.8
+    renovate: 36.68.1
   languageName: unknown
   linkType: soft
 
-"node-fetch@npm:^2.6.12":
-  version: 2.6.12
-  resolution: "node-fetch@npm:2.6.12"
+"node-fetch@npm:^2.6.13":
+  version: 2.7.0
+  resolution: "node-fetch@npm:2.7.0"
   dependencies:
     whatwg-url: ^5.0.0
   peerDependencies:
@@ -5241,7 +5241,7 @@ __metadata:
   peerDependenciesMeta:
     encoding:
       optional: true
-  checksum: 3bc1655203d47ee8e313c0d96664b9673a3d4dd8002740318e9d27d14ef306693a4b2ef8d6525775056fd912a19e23f3ac0d7111ad8925877b7567b29a625592
+  checksum: d76d2f5edb451a3f05b15115ec89fc6be39de37c6089f1b6368df03b91e1633fd379a7e01b7ab05089a25034b2023d959b47e59759cb38d88341b2459e89d6e5
   languageName: node
   linkType: hard
 
@@ -5918,9 +5918,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:36.57.8":
-  version: 36.57.8
-  resolution: "renovate@npm:36.57.8"
+"renovate@npm:36.68.1":
+  version: 36.68.1
+  resolution: "renovate@npm:36.68.1"
   dependencies:
     "@aws-sdk/client-codecommit": 3.363.0
     "@aws-sdk/client-ec2": 3.363.0
@@ -5941,13 +5941,13 @@ __metadata:
     "@opentelemetry/sdk-trace-node": 1.15.2
     "@opentelemetry/semantic-conventions": 1.15.2
     "@qnighy/marshal": 0.1.3
-    "@renovatebot/osv-offline": 1.3.2
-    "@renovatebot/pep440": 3.0.3
-    "@renovatebot/ruby-semver": 3.0.10
+    "@renovatebot/osv-offline": 1.3.3
+    "@renovatebot/pep440": 3.0.5
+    "@renovatebot/ruby-semver": 3.0.11
     "@sindresorhus/is": 4.6.0
     "@types/ms": 0.7.31
     "@types/tmp": 0.2.3
-    "@yarnpkg/core": 3.5.2
+    "@yarnpkg/core": 3.5.3
     "@yarnpkg/parsers": 2.5.1
     agentkeepalive: 4.5.0
     aggregate-error: 3.1.0
@@ -6021,7 +6021,7 @@ __metadata:
     slugify: 1.6.6
     source-map-support: 0.5.21
     traverse: 0.6.7
-    tslib: 2.6.1
+    tslib: 2.6.2
     upath: 2.0.1
     url-join: 4.0.1
     validate-npm-package-name: 5.0.0
@@ -6034,7 +6034,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: b476cbae5622cf08072ff62d537208b697cae8ceeeae0f7e8a30b1337f9f7b92c84d12e1310d0624abf98d38aaa039ba9c65897f3b17059229c497fba2f76d1b
+  checksum: c8c2381e78edddd68a98cf66a79b7bdf210e846ed121a154186399826704403b6f1d8285c737fe05771aa13c7b915d4ba821ab6d31408658a641535bec50a5bf
   languageName: node
   linkType: hard
 
@@ -6724,10 +6724,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:2.6.1":
-  version: 2.6.1
-  resolution: "tslib@npm:2.6.1"
-  checksum: b0d176d176487905b66ae4d5856647df50e37beea7571c53b8d10ba9222c074b81f1410fb91da13debaf2cbc970663609068bdebafa844ea9d69b146527c38fe
+"tslib@npm:2.6.2":
+  version: 2.6.2
+  resolution: "tslib@npm:2.6.2"
+  checksum: 329ea56123005922f39642318e3d1f0f8265d1e7fcb92c633e0809521da75eeaca28d2cf96d7248229deb40e5c19adf408259f4b9640afd20d13aecc1430f3ad
   languageName: node
   linkType: hard
 
