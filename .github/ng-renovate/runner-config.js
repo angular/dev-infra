@@ -15,7 +15,6 @@ module.exports = {
     'angular/dev-infra',
     'angular/components',
     'angular/angular-cli',
-    'angular/universal',
     'angular/vscode-ng-language-service',
     'angular/.github',
   ],
