@@ -67751,24 +67751,27 @@ async function main(repo2, token2, pr2) {
   const config = await getConfig([assertValidGithubConfig, assertValidPullRequestConfig]);
   AuthenticatedGitClient.configure(token2);
   const git = await AuthenticatedGitClient.get();
-  const pullRequest = await loadAndValidatePullRequest({ git, config }, pr2, PullRequestValidationConfig.create({ assertPending: false }));
+  const pullRequest = await loadAndValidatePullRequest({ git, config }, pr2, PullRequestValidationConfig.create({
+    assertPending: false,
+    assertCompletedReviews: false
+  }));
   core.info("Validated PR information:");
   core.info(JSON.stringify(pullRequest));
   let hasFatalFailures = false;
   let statusInfo = await (async () => {
     if (pullRequest.validationFailures.length !== 0) {
       core.info(`Found ${pullRequest.validationFailures.length} failing validation(s)`);
-      for (const failure of pullRequest.validationFailures) {
-        hasFatalFailures = !failure.canBeForceIgnored || hasFatalFailures;
-        await core.group("Validation failures", async () => {
+      await core.group("Validation failures", async () => {
+        for (const failure of pullRequest.validationFailures) {
+          hasFatalFailures = !failure.canBeForceIgnored || hasFatalFailures;
           core.info(failure.message);
-        });
-      }
+        }
+      });
     }
     if (hasFatalFailures) {
       core.info("One of the validations was fatal, setting the status as pending for the pr");
       return {
-        description: "Waiting to check mergeability due to failing status(es)",
+        description: "Waiting to check until the pull request is ready",
         state: "pending"
       };
     }

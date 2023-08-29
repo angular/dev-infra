@@ -72,7 +72,10 @@ async function main(repo: {owner: string; repo: string}, token: string, pr: numb
   const pullRequest = await loadAndValidatePullRequest(
     {git, config},
     pr,
-    PullRequestValidationConfig.create({assertPending: false}),
+    PullRequestValidationConfig.create({
+      assertPending: false,
+      assertCompletedReviews: false,
+    }),
   );
   core.info('Validated PR information:');
   core.info(JSON.stringify(pullRequest));
@@ -83,19 +86,19 @@ async function main(repo: {owner: string; repo: string}, token: string, pr: numb
     // Log validation failures and check for any fatal failures.
     if (pullRequest.validationFailures.length !== 0) {
       core.info(`Found ${pullRequest.validationFailures.length} failing validation(s)`);
-      for (const failure of pullRequest.validationFailures) {
-        hasFatalFailures = !failure.canBeForceIgnored || hasFatalFailures;
-        await core.group('Validation failures', async () => {
+      await core.group('Validation failures', async () => {
+        for (const failure of pullRequest.validationFailures) {
+          hasFatalFailures = !failure.canBeForceIgnored || hasFatalFailures;
           core.info(failure.message);
-        });
-      }
+        }
+      });
     }
 
     // With any fatal failure the check is not necessary to do.
     if (hasFatalFailures) {
       core.info('One of the validations was fatal, setting the status as pending for the pr');
       return {
-        description: 'Waiting to check mergeability due to failing status(es)',
+        description: 'Waiting to check until the pull request is ready',
         state: 'pending',
       };
     }
