@@ -32291,7 +32291,7 @@ async function getAuthTokenFor(app, orgOrRepo = import_github.context.repo) {
 }
 async function revokeActiveInstallationToken(githubOrToken) {
   if (typeof githubOrToken === "string") {
-    await new import_rest.Octokit({ auth: githubOrToken }).apps.revokeInstallationAccessToken();
+    await new import_rest.Octokit({ auth: githubOrToken, request: { fetch } }).apps.revokeInstallationAccessToken();
   } else {
     await githubOrToken.apps.revokeInstallationAccessToken();
   }

@@ -71,7 +71,7 @@ export async function revokeActiveInstallationToken(
   githubOrToken: Octokit | string,
 ): Promise<void> {
   if (typeof githubOrToken === 'string') {
-    await new Octokit({auth: githubOrToken}).apps.revokeInstallationAccessToken();
+    await new Octokit({auth: githubOrToken, request: {fetch}}).apps.revokeInstallationAccessToken();
   } else {
     await githubOrToken.apps.revokeInstallationAccessToken();
   }
