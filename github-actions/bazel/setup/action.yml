@@ -29,8 +29,9 @@ runs:
     - name: Configure action caching for bazel repository cache
       uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
       with:
-        enableCrossOsArchive: true
+        # Note: Bazel repository cache is located in system locations and cannot use
+        # a shared cache between different runner operating systems.
         path: '~/.cache/bazel_repo_cache'
-        key: bazel-cache-${{ hashFiles('**/WORKSPACE') }}
+        key: bazel-cache-${{ runner.os }}-${{ hashFiles('**/WORKSPACE') }}
         restore-keys: |
-          bazel-cache-
+          bazel-cache-${{ runner.os }}-
