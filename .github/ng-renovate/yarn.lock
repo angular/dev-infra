@@ -1662,14 +1662,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@redis/client@npm:1.5.8":
-  version: 1.5.8
-  resolution: "@redis/client@npm:1.5.8"
+"@redis/client@npm:1.5.9":
+  version: 1.5.9
+  resolution: "@redis/client@npm:1.5.9"
   dependencies:
     cluster-key-slot: 1.1.2
     generic-pool: 3.9.0
     yallist: 4.0.0
-  checksum: ff4a6cbf4f132baad7e481cd4a60af7031a3528e290a646695a9a3be704ed5818f50e9676070c8bad5e4b18d99369b46fcdc052ef6c023fa2391be8696808ff1
+  checksum: 63ff34faca3ac076c76234901a47897a39bc971ab988508087d1513903b533620c54ee09a28f11b3d7b07464e239b6e756d76cc50694ed5b59418c514d2bf923
   languageName: node
   linkType: hard
 
@@ -1700,12 +1700,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@redis/time-series@npm:1.0.4":
-  version: 1.0.4
-  resolution: "@redis/time-series@npm:1.0.4"
+"@redis/time-series@npm:1.0.5":
+  version: 1.0.5
+  resolution: "@redis/time-series@npm:1.0.5"
   peerDependencies:
     "@redis/client": ^1.0.0
-  checksum: a5fca079deb04a2f204a7f9a375a6ff698a119d5dd53f7581fa8fd9e3bacacf1ecb0253b97fada484a012fea7a98014bc0f4f79707d4e92ff61c00318f2bfe04
+  checksum: 6bbdb0b793dcbd13518aa60a09a980f953554e4c745bfacc1611baa8098f360e0378e8ee6b7faf600a67f1de83f4b68bbec6f95a0740faee6164c14be3a30752
   languageName: node
   linkType: hard
 
@@ -1718,9 +1718,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@renovatebot/osv-offline@npm:1.3.4":
-  version: 1.3.4
-  resolution: "@renovatebot/osv-offline@npm:1.3.4"
+"@renovatebot/osv-offline@npm:1.3.5":
+  version: 1.3.5
+  resolution: "@renovatebot/osv-offline@npm:1.3.5"
   dependencies:
     "@octokit/rest": ^19.0.13
     "@renovatebot/osv-offline-db": 1.4.0
@@ -1728,22 +1728,22 @@ __metadata:
     fs-extra: ^11.1.1
     got: ^11.8.6
     luxon: ^3.4.1
-    node-fetch: ^2.6.13
-  checksum: 22d91c6f591f608dff3d1378da453ce60cc5654783c364358a9d50865948c18468457163ef6462a5d2aa037060d8fa2c409068ec811a5b5d4dfb5aabcec35358
+    node-fetch: ^2.7.0
+  checksum: 0bf461f06d0d053a29e04c7a55fb1761df12c1c70e9043e5d8a3034defe99134d6d572879c83c65a9b4e5118099081ee60fdafb6d998f99db8f13733407d1e5c
   languageName: node
   linkType: hard
 
-"@renovatebot/pep440@npm:3.0.5":
-  version: 3.0.5
-  resolution: "@renovatebot/pep440@npm:3.0.5"
-  checksum: cfc36edb79fe96cbd18368305737c2dd5bfdf721df64a78f656e4d882d8e11c24ad45226920eb7b12ea8787791853290c5f950e8684fa3e8087a2134f4353e47
+"@renovatebot/pep440@npm:3.0.6":
+  version: 3.0.6
+  resolution: "@renovatebot/pep440@npm:3.0.6"
+  checksum: 0ef1e085de390e065ff9868858cda2c5b7d0118c72f3306e2359dff7d3ae9ab8153fe140a3f9c0fba988e79106e7fe48ceb88da9025082539eca8c2404d1c893
   languageName: node
   linkType: hard
 
-"@renovatebot/ruby-semver@npm:3.0.11":
-  version: 3.0.11
-  resolution: "@renovatebot/ruby-semver@npm:3.0.11"
-  checksum: 4aa2421b020cc46a50a6015b9e7a3a09647d2cbee9c17cd5653113b272da432ce9319a2a13ea6de0ae32bf9550829a25629538fb558ca293cfb445c334741a39
+"@renovatebot/ruby-semver@npm:3.0.12":
+  version: 3.0.12
+  resolution: "@renovatebot/ruby-semver@npm:3.0.12"
+  checksum: 4677254ef7b360031b98b17c707dab86197981350ed4290fead349e59b57956058a7b263ab0093a96799f200aae2758ce6ebad40499fe496ba375e4fe1d22eb5
   languageName: node
   linkType: hard
 
@@ -5300,23 +5300,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: 36.74.0
+    renovate: 36.77.0
   languageName: unknown
   linkType: soft
-
-"node-fetch@npm:^2.6.13":
-  version: 2.7.0
-  resolution: "node-fetch@npm:2.7.0"
-  dependencies:
-    whatwg-url: ^5.0.0
-  peerDependencies:
-    encoding: ^0.1.0
-  peerDependenciesMeta:
-    encoding:
-      optional: true
-  checksum: d76d2f5edb451a3f05b15115ec89fc6be39de37c6089f1b6368df03b91e1633fd379a7e01b7ab05089a25034b2023d959b47e59759cb38d88341b2459e89d6e5
-  languageName: node
-  linkType: hard
 
 "node-fetch@npm:^2.6.7":
   version: 2.6.11
@@ -5329,6 +5315,20 @@ __metadata:
     encoding:
       optional: true
   checksum: 249d0666a9497553384d46b5ab296ba223521ac88fed4d8a17d6ee6c2efb0fc890f3e8091cafe7f9fba8151a5b8d925db2671543b3409a56c3cd522b468b47b3
+  languageName: node
+  linkType: hard
+
+"node-fetch@npm:^2.7.0":
+  version: 2.7.0
+  resolution: "node-fetch@npm:2.7.0"
+  dependencies:
+    whatwg-url: ^5.0.0
+  peerDependencies:
+    encoding: ^0.1.0
+  peerDependenciesMeta:
+    encoding:
+      optional: true
+  checksum: d76d2f5edb451a3f05b15115ec89fc6be39de37c6089f1b6368df03b91e1633fd379a7e01b7ab05089a25034b2023d959b47e59759cb38d88341b2459e89d6e5
   languageName: node
   linkType: hard
 
@@ -5843,14 +5843,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"re2@npm:1.20.1":
-  version: 1.20.1
-  resolution: "re2@npm:1.20.1"
+"re2@npm:1.20.3":
+  version: 1.20.3
+  resolution: "re2@npm:1.20.3"
   dependencies:
     install-artifact-from-github: ^1.3.3
     nan: ^2.17.0
     node-gyp: ^9.4.0
-  checksum: 89a4e64f7cdf747a951116ad7aa007d8323f9083d5e171214f71f5c2c297e649476dde2caf08c9d48f5a0a82341c63bf2c1932c86652a78147b87ba17536ca9d
+  checksum: 3d03f3357ab2a4605129dd16cd21bacda8f8c5b0e1bb226862d27c30d964d7bfcbcebcf95b91c368e44abf4502c71406547e9dedd2644ede9b4a8924b1cbd883
   languageName: node
   linkType: hard
 
@@ -5923,17 +5923,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redis@npm:4.6.7":
-  version: 4.6.7
-  resolution: "redis@npm:4.6.7"
+"redis@npm:4.6.8":
+  version: 4.6.8
+  resolution: "redis@npm:4.6.8"
   dependencies:
     "@redis/bloom": 1.2.0
-    "@redis/client": 1.5.8
+    "@redis/client": 1.5.9
     "@redis/graph": 1.1.0
     "@redis/json": 1.0.4
     "@redis/search": 1.1.3
-    "@redis/time-series": 1.0.4
-  checksum: d48ff22269d9f22962b40ecd7623c10ad18a26aaffea0987cf80d9ba4f5d72708c6d2782062e6fc1f4255e6aa111b3356e48f636ef26aa0cc75864470d1e60f8
+    "@redis/time-series": 1.0.5
+  checksum: 1626d0d739e5f2047824b77b472967af5938fba488a039bd0a5ad90814eb81cb29b7939e16adf0bc39b133165ec1bf147e4f944d0c54a2f9c32c8f004b015940
   languageName: node
   linkType: hard
 
@@ -5991,9 +5991,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:36.74.0":
-  version: 36.74.0
-  resolution: "renovate@npm:36.74.0"
+"renovate@npm:36.77.0":
+  version: 36.77.0
+  resolution: "renovate@npm:36.77.0"
   dependencies:
     "@aws-sdk/client-codecommit": 3.363.0
     "@aws-sdk/client-ec2": 3.363.0
@@ -6015,9 +6015,9 @@ __metadata:
     "@opentelemetry/sdk-trace-node": 1.15.2
     "@opentelemetry/semantic-conventions": 1.15.2
     "@qnighy/marshal": 0.1.3
-    "@renovatebot/osv-offline": 1.3.4
-    "@renovatebot/pep440": 3.0.5
-    "@renovatebot/ruby-semver": 3.0.11
+    "@renovatebot/osv-offline": 1.3.5
+    "@renovatebot/pep440": 3.0.6
+    "@renovatebot/ruby-semver": 3.0.12
     "@sindresorhus/is": 4.6.0
     "@types/ms": 0.7.31
     "@types/tmp": 0.2.3
@@ -6082,8 +6082,8 @@ __metadata:
     parse-link-header: 2.0.0
     prettier: 2.8.8
     quick-lru: 5.1.1
-    re2: 1.20.1
-    redis: 4.6.7
+    re2: 1.20.3
+    redis: 4.6.8
     remark: 13.0.0
     remark-github: 10.1.0
     safe-stable-stringify: 2.4.3
@@ -6108,7 +6108,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: c444ce2361b027fbeaa07bf8f05652900815a5d4711cf964f960b91125acdaf0d585b4cb74f6a4deeb849fb24c4e661a9f17c2a33ac79e29a0767e12022d28e7
+  checksum: 41e7684c3c66db28f50696b9b824fb8efd6fcf4fda556b909978301a09d213e8e2bb7b53c5970ce6bf892cea0dbecf645321898bf28a12f35a234f61fecc77c6
   languageName: node
   linkType: hard
 
