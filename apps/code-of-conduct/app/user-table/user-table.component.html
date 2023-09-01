@@ -2,7 +2,7 @@
   <ng-container matColumnDef="username">
     <mat-header-cell *matHeaderCellDef> Username </mat-header-cell>
     <mat-cell class="username-cell" *matCellDef="let user">
-      <img src="https://github.com/{{user.username}}.png">
+      <img src="https://github.com/{{user.username}}.png" alt="username">
       <span>{{user.username}}</span>
     </mat-cell>
   </ng-container>
