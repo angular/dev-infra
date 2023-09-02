@@ -6,10 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ArtifactType, BrowserArtifact} from './browser-artifact.js';
+import {ArtifactType, BrowserArtifact, detectArtifactExtension} from './browser-artifact.js';
 import {Browser} from './browser.js';
 import {Platform} from './platform.js';
-import {detectArtifactExtension} from './browser-artifact.js';
 
 const downloadLinuxUrls = {
   'browser-bin':
@@ -36,7 +35,10 @@ const downloadMacOsArm64Urls = {
 export class Firefox implements Browser<string> {
   name = 'firefox';
 
-  constructor(public revision: string, public driverVersion: string) {}
+  constructor(
+    public revision: string,
+    public driverVersion: string,
+  ) {}
 
   supports(platform: Platform): boolean {
     return (
