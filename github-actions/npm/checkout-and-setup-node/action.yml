@@ -20,7 +20,7 @@ inputs:
       node-version-file-path input. Defaults to .nvmrc
 
   cache-node-modules:
-    default: true
+    default: false
     type: boolean
     description: |
       Whether to cache the node_modules directory, this is helpful when postinstalls are performed
@@ -46,8 +46,7 @@ runs:
         cache: 'yarn'
 
     - uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # tag=v3.3.1
-      if: ${{ inputs.cache-node-modules }} == 'true'
+      if: ${{ inputs.cache-node-modules == 'true' }}
       with:
-        enableCrossOsArchive: true
         path: ${{ inputs.node-module-directories }}
-        key: ${{ github.job }}--${{ hashFiles('**/yarn.lock') }}
+        key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/*.patch') }}
