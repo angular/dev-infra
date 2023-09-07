@@ -8,6 +8,10 @@ inputs:
       The number of commits to include in the fetch, defaulting to all commits in the history
       of the repository
 
+  ref:
+    description: |
+      The branch, tag or SHA to checkout. Defaults to allowing actions/checkout to determine the ref.
+
   node-version:
     description: |
       A specific version of node to use for the node environment, exclusive with
@@ -36,6 +40,7 @@ runs:
   steps:
     - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
       with:
+        ref: ${{ inputs.ref }}
         fetch-depth: ${{ inputs.fetch-depth }}
         persist-credentials: false
 
