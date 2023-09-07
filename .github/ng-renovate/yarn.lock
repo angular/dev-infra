@@ -3930,9 +3930,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:10.3.3":
-  version: 10.3.3
-  resolution: "glob@npm:10.3.3"
+"glob@npm:10.3.4":
+  version: 10.3.4
+  resolution: "glob@npm:10.3.4"
   dependencies:
     foreground-child: ^3.1.0
     jackspeak: ^2.0.3
@@ -3941,7 +3941,7 @@ __metadata:
     path-scurry: ^1.10.1
   bin:
     glob: dist/cjs/src/bin.js
-  checksum: 29190d3291f422da0cb40b77a72fc8d2c51a36524e99b8bf412548b7676a6627489528b57250429612b6eec2e6fe7826d328451d3e694a9d15e575389308ec53
+  checksum: 176b97c124414401cb51329a93d2ba112cef8814adbed10348481916b9521b677773eee2691cb6b24d66632d8c8bb8913533f5ac4bfb2d0ef5454a1856082361
   languageName: node
   linkType: hard
 
@@ -4801,10 +4801,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"luxon@npm:3.4.2, luxon@npm:^3.4.2":
-  version: 3.4.2
-  resolution: "luxon@npm:3.4.2"
-  checksum: efefdfaea90f4c8e502db8eb255385e6dac6733b6a9e1372eaf1a866cc1118363e235a3f6df505b837abc8bbcdfd8f0718a8de387b80cef9ee624d8791ca0844
+"luxon@npm:3.4.3":
+  version: 3.4.3
+  resolution: "luxon@npm:3.4.3"
+  checksum: 3eade81506224d038ed24035a0cd0dd4887848d7eba9361dce9ad8ef81380596a68153240be3988721f9690c624fb449fcf8fd8c3fc0681a6a8496faf48e92a3
   languageName: node
   linkType: hard
 
@@ -4812,6 +4812,13 @@ __metadata:
   version: 3.3.0
   resolution: "luxon@npm:3.3.0"
   checksum: 50cf17a0dc155c3dcacbeae8c0b7e80db425e0ba97b9cbdf12a7fc142d841ff1ab1560919f033af46240ed44e2f70c49f76e3422524c7fc8bb8d81ca47c66187
+  languageName: node
+  linkType: hard
+
+"luxon@npm:^3.4.2":
+  version: 3.4.2
+  resolution: "luxon@npm:3.4.2"
+  checksum: efefdfaea90f4c8e502db8eb255385e6dac6733b6a9e1372eaf1a866cc1118363e235a3f6df505b837abc8bbcdfd8f0718a8de387b80cef9ee624d8791ca0844
   languageName: node
   linkType: hard
 
@@ -5300,7 +5307,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: 36.87.1
+    renovate: 36.87.6
   languageName: unknown
   linkType: soft
 
@@ -5991,9 +5998,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:36.87.1":
-  version: 36.87.1
-  resolution: "renovate@npm:36.87.1"
+"renovate@npm:36.87.6":
+  version: 36.87.6
+  resolution: "renovate@npm:36.87.6"
   dependencies:
     "@aws-sdk/client-codecommit": 3.363.0
     "@aws-sdk/client-ec2": 3.363.0
@@ -6051,7 +6058,7 @@ __metadata:
     fs-extra: 11.1.1
     git-url-parse: 13.1.0
     github-url-from-git: 1.5.0
-    glob: 10.3.3
+    glob: 10.3.4
     global-agent: 3.0.0
     good-enough-parser: 1.1.23
     got: 11.8.6
@@ -6066,7 +6073,7 @@ __metadata:
     json5: 2.2.3
     jsonata: 2.0.3
     klona: 2.0.6
-    luxon: 3.4.2
+    luxon: 3.4.3
     markdown-it: 13.0.1
     markdown-table: 2.0.0
     minimatch: 9.0.3
@@ -6108,7 +6115,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 4a2abc0cfef06a04297ebd5b8b2391d5eb2bd9860d6f790036724d2e20843d37d3ed580eeee01649ddbf89836a86a50c8f1d086741342fa177abd815bdf5a46a
+  checksum: f21b63190c0e031ea4fcb1ba591d029b0e3ac550b302fa1b8ba86847a8fc67ab926a4ea54c1967e9f22b90aee3707a84339d2415e5afcbb6c14ce06e8b5226ef
   languageName: node
   linkType: hard
 
