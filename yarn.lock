@@ -5755,11 +5755,11 @@ __metadata:
   linkType: hard
 
 "@types/cli-progress@npm:^3.9.1":
-  version: 3.11.1
-  resolution: "@types/cli-progress@npm:3.11.1"
+  version: 3.11.2
+  resolution: "@types/cli-progress@npm:3.11.2"
   dependencies:
     "@types/node": "*"
-  checksum: c207a29c84a1c04f1d01981abf82e9e51e651e6aab12db7663db36a9591a73c6269a9005d31e3eb44f18fd15c955775520e2a7e9a074429cc540d6f0514d49a0
+  checksum: 4068ef410137560cc4f0e036e0fbf096432e94a5acbcce934893148663569bf936f25e0d7ba156780c355b31a235a0db58b86b25b991f0ae6dcb21b4b294af57
   languageName: node
   linkType: hard
 
