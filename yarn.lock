@@ -6,12 +6,12 @@ __metadata:
   cacheKey: 8
 
 "@actions/core@npm:^1.4.0":
-  version: 1.10.0
-  resolution: "@actions/core@npm:1.10.0"
+  version: 1.10.1
+  resolution: "@actions/core@npm:1.10.1"
   dependencies:
     "@actions/http-client": ^2.0.1
     uuid: ^8.3.2
-  checksum: 0a75621e007ab20d887434cdd165f0b9036f14c22252a2faed33543d8b9d04ec95d823e69ca636a25245574e4585d73e1e9e47a845339553c664f9f2c9614669
+  checksum: 96524c2725e70e3c3176b4e4d93a1358a86f3c5ca777db9a2f65eadfa672f00877db359bf60fffc416c33838ffb4743db93bcc5bf53e76199dd28bf7f7ff8e80
   languageName: node
   linkType: hard
 
@@ -10129,8 +10129,8 @@ __metadata:
   linkType: hard
 
 "firebase-tools@npm:^12.0.0":
-  version: 12.5.2
-  resolution: "firebase-tools@npm:12.5.2"
+  version: 12.5.3
+  resolution: "firebase-tools@npm:12.5.3"
   dependencies:
     "@google-cloud/pubsub": ^3.0.1
     abort-controller: ^3.0.0
@@ -10194,7 +10194,7 @@ __metadata:
     ws: ^7.2.3
   bin:
     firebase: lib/bin/firebase.js
-  checksum: 3ebdac6bc03cc31458188ba309d2658fcfe6e3b3a0a52ae8322b4d6486539cbf9e4292fcb552b09144ba701391f667faf36d04deea3b6d32f4366bc91597e30d
+  checksum: f7f008e4ca4e2354c5af7be302d7c00927a5c9b3f061d6c3a2505a7d51b3babc16e039515a7ce60099d9bcb8923c70c28aed277e531680dff7de02b60b722721
   languageName: node
   linkType: hard
 
@@ -18824,8 +18824,8 @@ __metadata:
   linkType: hard
 
 "ws@npm:>=8.13.0, ws@npm:^8.13.0, ws@npm:^8.8.0":
-  version: 8.14.0
-  resolution: "ws@npm:8.14.0"
+  version: 8.14.1
+  resolution: "ws@npm:8.14.1"
   peerDependencies:
     bufferutil: ^4.0.1
     utf-8-validate: ">=5.0.2"
@@ -18834,7 +18834,7 @@ __metadata:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: dd91d055396c42552d8e2d26a0ab10221e73ca356de3db9109e337b8d9df216a0a308ace46a5e0520ed18ffcae3f54c2fa45a96711f94a063c816ef13a30b700
+  checksum: 9e310be2b0ff69e1f87d8c6d093ecd17a1ed4c37f281d17c35e8c30e2bd116401775b3d503249651374e6e0e1e9905db62fff096b694371c77561aee06bc3466
   languageName: node
   linkType: hard
 
