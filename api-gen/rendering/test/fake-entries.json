@@ -1,0 +1,12 @@
+{
+  "entries": [
+    {
+      "name": "NgTemplateOutlet",
+      "description": "*one* directive"
+    },
+    {
+      "name": "NgComponentOutlet",
+      "description": "two _directive_"
+    }
+  ]
+}

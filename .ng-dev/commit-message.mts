@@ -42,6 +42,7 @@ export const commitMessage: CommitMessageConfig = {
       'release',
       'ts-circular-dependencies',
     ]),
+    ...buildScopesFor('api-gen', []),
     ...buildScopesFor('apps', []),
     ...buildScopesFor('lint-rules', ['tslint', 'stylelint']),
     ...buildScopesFor('shared-scripts', []),

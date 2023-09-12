@@ -1,0 +1,7 @@
+load("//api-gen/extraction:extract_api_to_json.bzl", "extract_api_to_json")
+
+extract_api_to_json(
+    name = "test",
+    srcs = ["fake-source.ts"],
+    output_name = "api.json",
+)
