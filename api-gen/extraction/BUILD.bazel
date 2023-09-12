@@ -1,0 +1,29 @@
+load("@npm//@bazel/concatjs:index.bzl", "ts_library")
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+
+package(default_visibility = ["//api-gen:__subpackages__"])
+
+ts_library(
+    name = "extract_api_to_json_lib",
+    srcs = glob(["**/*.ts"]),
+    devmode_module = "commonjs",
+    deps = [
+        "@npm//@angular/compiler",
+        "@npm//@angular/compiler-cli",
+        "@npm//@bazel/runfiles",
+        "@npm//@types/node",
+    ],
+)
+
+# Action binary for the api_gen bazel rule.
+nodejs_binary(
+    name = "extract_api_to_json",
+    data = [
+        ":extract_api_to_json_lib",
+    ],
+    entry_point = "//api-gen/extraction:index.ts",
+    # Do not use the NodeJS linker because:
+    #  - it's brittle and causes race conditions on Windows.
+    #  - it requires additional work to setup the runtime linker.
+    templated_args = ["--bazel_patch_module_resolver"],
+)
