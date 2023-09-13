@@ -93,6 +93,7 @@ runs:
 
     - uses: marocchino/sticky-pull-request-comment@efaaab3fd41a9c3de579aba759d2552635e590fd # v2
       with:
+        header: ${{inputs.workflow-artifact-name}}
         message: |
           Deployed ${{inputs.workflow-artifact-name}} for ${{steps.artifact-info.outputs.unsafe-build-revision}} to: ${{steps.deploy.outputs.details_url}}
 
