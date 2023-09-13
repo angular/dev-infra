@@ -1,0 +1,6 @@
+{% from "class-member-list.njk" import classMemberList %}
+
+<h1>{{name}}</h1>
+<p>{{htmlDescription | safe}}</p>
+
+{% call classMemberList(members) -%}{%- endcall %}
