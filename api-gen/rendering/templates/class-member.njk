@@ -1,0 +1,39 @@
+{% macro classMember(member) %}
+
+  <div id="{{member.name}}" class="adev-reference-member-card">
+    <header>
+      <h3>{{member.name}}</h3>
+    </header>
+    <div class="adev-reference-card-body">
+      {{member.htmlDescription | safe}}
+
+      {# TODO: modifiers (static, protected, readonly) #}
+      {# TODO: asyncmetric getter/setter #}
+
+      {% if member.isDeprecated %}
+        <div>
+          <span class="adev-param-keyword adev-deprecated">@deprecated</span>
+          {{member.htmlDeprecatedComment | safe}}
+        </div>
+      {% endif %}
+
+      {% if member.params.length %}
+        {% for param in member.params %}
+          <div>
+            {# TODO: isOptional, isRestParam #}
+            <span class="adev-param-keyword">@param</span>
+            <span class="adev-param-name">{{param.name}}</span>
+            <code>{{param.type}}</code>
+            {{param.htmlDescription | safe}}
+          </div>
+        {% endfor %}
+        <div>
+          <span class="adev-param-keyword">@returns</span>
+          <code>{{member.returnType}}</code>
+          {{member.htmlReturnDescription | safe}}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+{% endmacro %}

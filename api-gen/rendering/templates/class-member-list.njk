@@ -1,0 +1,12 @@
+{% from "class-member.njk" import classMember %}
+
+{% macro classMemberList(members) %}
+
+  <div class="adev-reference-members">
+    {{class.members.length}}
+    {% for member in members %}
+      {% call classMember(member) -%}{%- endcall %}
+    {% endfor %}
+  </div>
+
+{% endmacro %}
