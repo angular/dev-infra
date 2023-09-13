@@ -35,10 +35,7 @@ describe('app bundling', () => {
     runInNewContext(code, {
       window,
       document,
-      require,
-      setTimeout,
-      global: {},
-      exports: {},
+      clearTimeout,
     });
 
     await window.bootstrapPromise;
