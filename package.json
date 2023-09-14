@@ -41,7 +41,7 @@
     "@types/yargs": "^17.0.0",
     "browser-sync": "^2.27.7",
     "clang-format": "1.8.0",
-    "marked": "^8.0.1",
+    "marked": "^9.0.0",
     "nunjucks": "^3.2.4",
     "prettier": "3.0.3",
     "protractor": "^7.0.0",
