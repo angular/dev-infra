@@ -73,7 +73,7 @@ filegroup(
         ":application_files_in_bin",
         ":bundles",
         ":styles",
-        "@npm//:node_modules/zone.js/dist/zone.js",
+        "@npm//:node_modules/zone.js/bundles/zone.umd.min.js",
     ],
     visibility = ["//apps:__pkg__"],
 )

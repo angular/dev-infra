@@ -27343,127 +27343,6 @@ var require_map2 = __commonJS({
 });
 
 // 
-var require_ansi_escapes = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    var ansiEscapes2 = module.exports;
-    module.exports.default = ansiEscapes2;
-    var ESC = "\x1B[";
-    var OSC = "\x1B]";
-    var BEL = "\x07";
-    var SEP = ";";
-    var isTerminalApp = process.env.TERM_PROGRAM === "Apple_Terminal";
-    ansiEscapes2.cursorTo = (x2, y) => {
-      if (typeof x2 !== "number") {
-        throw new TypeError("The `x` argument is required");
-      }
-      if (typeof y !== "number") {
-        return ESC + (x2 + 1) + "G";
-      }
-      return ESC + (y + 1) + ";" + (x2 + 1) + "H";
-    };
-    ansiEscapes2.cursorMove = (x2, y) => {
-      if (typeof x2 !== "number") {
-        throw new TypeError("The `x` argument is required");
-      }
-      let ret = "";
-      if (x2 < 0) {
-        ret += ESC + -x2 + "D";
-      } else if (x2 > 0) {
-        ret += ESC + x2 + "C";
-      }
-      if (y < 0) {
-        ret += ESC + -y + "A";
-      } else if (y > 0) {
-        ret += ESC + y + "B";
-      }
-      return ret;
-    };
-    ansiEscapes2.cursorUp = (count = 1) => ESC + count + "A";
-    ansiEscapes2.cursorDown = (count = 1) => ESC + count + "B";
-    ansiEscapes2.cursorForward = (count = 1) => ESC + count + "C";
-    ansiEscapes2.cursorBackward = (count = 1) => ESC + count + "D";
-    ansiEscapes2.cursorLeft = ESC + "G";
-    ansiEscapes2.cursorSavePosition = isTerminalApp ? "\x1B7" : ESC + "s";
-    ansiEscapes2.cursorRestorePosition = isTerminalApp ? "\x1B8" : ESC + "u";
-    ansiEscapes2.cursorGetPosition = ESC + "6n";
-    ansiEscapes2.cursorNextLine = ESC + "E";
-    ansiEscapes2.cursorPrevLine = ESC + "F";
-    ansiEscapes2.cursorHide = ESC + "?25l";
-    ansiEscapes2.cursorShow = ESC + "?25h";
-    ansiEscapes2.eraseLines = (count) => {
-      let clear = "";
-      for (let i2 = 0; i2 < count; i2++) {
-        clear += ansiEscapes2.eraseLine + (i2 < count - 1 ? ansiEscapes2.cursorUp() : "");
-      }
-      if (count) {
-        clear += ansiEscapes2.cursorLeft;
-      }
-      return clear;
-    };
-    ansiEscapes2.eraseEndLine = ESC + "K";
-    ansiEscapes2.eraseStartLine = ESC + "1K";
-    ansiEscapes2.eraseLine = ESC + "2K";
-    ansiEscapes2.eraseDown = ESC + "J";
-    ansiEscapes2.eraseUp = ESC + "1J";
-    ansiEscapes2.eraseScreen = ESC + "2J";
-    ansiEscapes2.scrollUp = ESC + "S";
-    ansiEscapes2.scrollDown = ESC + "T";
-    ansiEscapes2.clearScreen = "\x1Bc";
-    ansiEscapes2.clearTerminal = process.platform === "win32" ? `${ansiEscapes2.eraseScreen}${ESC}0f` : `${ansiEscapes2.eraseScreen}${ESC}3J${ESC}H`;
-    ansiEscapes2.beep = BEL;
-    ansiEscapes2.link = (text, url) => {
-      return [
-        OSC,
-        "8",
-        SEP,
-        SEP,
-        url,
-        BEL,
-        text,
-        OSC,
-        "8",
-        SEP,
-        SEP,
-        BEL
-      ].join("");
-    };
-    ansiEscapes2.image = (buffer, options = {}) => {
-      let ret = `${OSC}1337;File=inline=1`;
-      if (options.width) {
-        ret += `;width=${options.width}`;
-      }
-      if (options.height) {
-        ret += `;height=${options.height}`;
-      }
-      if (options.preserveAspectRatio === false) {
-        ret += ";preserveAspectRatio=0";
-      }
-      return ret + ":" + buffer.toString("base64") + BEL;
-    };
-    ansiEscapes2.iTerm = {
-      setCwd: (cwd = process.cwd()) => `${OSC}50;CurrentDir=${cwd}${BEL}`,
-      annotation: (message, options = {}) => {
-        let ret = `${OSC}1337;`;
-        const hasX = typeof options.x !== "undefined";
-        const hasY = typeof options.y !== "undefined";
-        if ((hasX || hasY) && !(hasX && hasY && typeof options.length !== "undefined")) {
-          throw new Error("`x`, `y` and `length` must be defined when `x` or `y` is defined");
-        }
-        message = message.replace(/\|/g, "");
-        ret += options.isHidden ? "AddHiddenAnnotation=" : "AddAnnotation=";
-        if (options.length > 0) {
-          ret += (hasX ? [message, options.length, options.x, options.y] : [options.length, message]).join("|");
-        } else {
-          ret += message;
-        }
-        return ret + BEL;
-      }
-    };
-  }
-});
-
-// 
 var require_cli_width = __commonJS({
   ""(exports, module) {
     "use strict";
@@ -35308,6 +35187,127 @@ var require_ora = __commonJS({
         }
       })();
       return spinner;
+    };
+  }
+});
+
+// 
+var require_ansi_escapes = __commonJS({
+  ""(exports, module) {
+    "use strict";
+    var ansiEscapes2 = module.exports;
+    module.exports.default = ansiEscapes2;
+    var ESC = "\x1B[";
+    var OSC = "\x1B]";
+    var BEL = "\x07";
+    var SEP = ";";
+    var isTerminalApp = process.env.TERM_PROGRAM === "Apple_Terminal";
+    ansiEscapes2.cursorTo = (x2, y) => {
+      if (typeof x2 !== "number") {
+        throw new TypeError("The `x` argument is required");
+      }
+      if (typeof y !== "number") {
+        return ESC + (x2 + 1) + "G";
+      }
+      return ESC + (y + 1) + ";" + (x2 + 1) + "H";
+    };
+    ansiEscapes2.cursorMove = (x2, y) => {
+      if (typeof x2 !== "number") {
+        throw new TypeError("The `x` argument is required");
+      }
+      let ret = "";
+      if (x2 < 0) {
+        ret += ESC + -x2 + "D";
+      } else if (x2 > 0) {
+        ret += ESC + x2 + "C";
+      }
+      if (y < 0) {
+        ret += ESC + -y + "A";
+      } else if (y > 0) {
+        ret += ESC + y + "B";
+      }
+      return ret;
+    };
+    ansiEscapes2.cursorUp = (count = 1) => ESC + count + "A";
+    ansiEscapes2.cursorDown = (count = 1) => ESC + count + "B";
+    ansiEscapes2.cursorForward = (count = 1) => ESC + count + "C";
+    ansiEscapes2.cursorBackward = (count = 1) => ESC + count + "D";
+    ansiEscapes2.cursorLeft = ESC + "G";
+    ansiEscapes2.cursorSavePosition = isTerminalApp ? "\x1B7" : ESC + "s";
+    ansiEscapes2.cursorRestorePosition = isTerminalApp ? "\x1B8" : ESC + "u";
+    ansiEscapes2.cursorGetPosition = ESC + "6n";
+    ansiEscapes2.cursorNextLine = ESC + "E";
+    ansiEscapes2.cursorPrevLine = ESC + "F";
+    ansiEscapes2.cursorHide = ESC + "?25l";
+    ansiEscapes2.cursorShow = ESC + "?25h";
+    ansiEscapes2.eraseLines = (count) => {
+      let clear = "";
+      for (let i2 = 0; i2 < count; i2++) {
+        clear += ansiEscapes2.eraseLine + (i2 < count - 1 ? ansiEscapes2.cursorUp() : "");
+      }
+      if (count) {
+        clear += ansiEscapes2.cursorLeft;
+      }
+      return clear;
+    };
+    ansiEscapes2.eraseEndLine = ESC + "K";
+    ansiEscapes2.eraseStartLine = ESC + "1K";
+    ansiEscapes2.eraseLine = ESC + "2K";
+    ansiEscapes2.eraseDown = ESC + "J";
+    ansiEscapes2.eraseUp = ESC + "1J";
+    ansiEscapes2.eraseScreen = ESC + "2J";
+    ansiEscapes2.scrollUp = ESC + "S";
+    ansiEscapes2.scrollDown = ESC + "T";
+    ansiEscapes2.clearScreen = "\x1Bc";
+    ansiEscapes2.clearTerminal = process.platform === "win32" ? `${ansiEscapes2.eraseScreen}${ESC}0f` : `${ansiEscapes2.eraseScreen}${ESC}3J${ESC}H`;
+    ansiEscapes2.beep = BEL;
+    ansiEscapes2.link = (text, url) => {
+      return [
+        OSC,
+        "8",
+        SEP,
+        SEP,
+        url,
+        BEL,
+        text,
+        OSC,
+        "8",
+        SEP,
+        SEP,
+        BEL
+      ].join("");
+    };
+    ansiEscapes2.image = (buffer, options = {}) => {
+      let ret = `${OSC}1337;File=inline=1`;
+      if (options.width) {
+        ret += `;width=${options.width}`;
+      }
+      if (options.height) {
+        ret += `;height=${options.height}`;
+      }
+      if (options.preserveAspectRatio === false) {
+        ret += ";preserveAspectRatio=0";
+      }
+      return ret + ":" + buffer.toString("base64") + BEL;
+    };
+    ansiEscapes2.iTerm = {
+      setCwd: (cwd = process.cwd()) => `${OSC}50;CurrentDir=${cwd}${BEL}`,
+      annotation: (message, options = {}) => {
+        let ret = `${OSC}1337;`;
+        const hasX = typeof options.x !== "undefined";
+        const hasY = typeof options.y !== "undefined";
+        if ((hasX || hasY) && !(hasX && hasY && typeof options.length !== "undefined")) {
+          throw new Error("`x`, `y` and `length` must be defined when `x` or `y` is defined");
+        }
+        message = message.replace(/\|/g, "");
+        ret += options.isHidden ? "AddHiddenAnnotation=" : "AddAnnotation=";
+        if (options.length > 0) {
+          ret += (hasX ? [message, options.length, options.x, options.y] : [options.length, message]).join("|");
+        } else {
+          ret += message;
+        }
+        return ret + BEL;
+      }
     };
   }
 });
@@ -65318,13 +65318,120 @@ var figures_default = figures;
 // 
 var import_cli_cursor = __toESM(require_cli_cursor(), 1);
 var import_run_async2 = __toESM(require_run_async(), 1);
-var import_rxjs4 = __toESM(require_cjs(), 1);
+var import_rxjs3 = __toESM(require_cjs(), 1);
+
+// 
+var import_rxjs = __toESM(require_cjs(), 1);
+function normalizeKeypressEvents(value, key) {
+  return { value, key: key || {} };
+}
+function events_default(rl) {
+  const keypress = (0, import_rxjs.fromEvent)(rl.input, "keypress", normalizeKeypressEvents).pipe((0, import_rxjs.takeUntil)((0, import_rxjs.fromEvent)(rl, "close"))).pipe((0, import_rxjs.filter)(({ key }) => key.name !== "enter" && key.name !== "return"));
+  return {
+    line: (0, import_rxjs.fromEvent)(rl, "line"),
+    keypress,
+    normalizedUpKey: keypress.pipe(
+      (0, import_rxjs.filter)(
+        ({ key }) => key.name === "up" || key.name === "k" || key.name === "p" && key.ctrl
+      ),
+      (0, import_rxjs.share)()
+    ),
+    normalizedDownKey: keypress.pipe(
+      (0, import_rxjs.filter)(
+        ({ key }) => key.name === "down" || key.name === "j" || key.name === "n" && key.ctrl
+      ),
+      (0, import_rxjs.share)()
+    ),
+    numberKey: keypress.pipe(
+      (0, import_rxjs.filter)((e2) => e2.value && "123456789".indexOf(e2.value) >= 0),
+      (0, import_rxjs.map)((e2) => Number(e2.value)),
+      (0, import_rxjs.share)()
+    ),
+    spaceKey: keypress.pipe(
+      (0, import_rxjs.filter)(({ key }) => key && key.name === "space"),
+      (0, import_rxjs.share)()
+    ),
+    aKey: keypress.pipe(
+      (0, import_rxjs.filter)(({ key }) => key && key.name === "a"),
+      (0, import_rxjs.share)()
+    ),
+    iKey: keypress.pipe(
+      (0, import_rxjs.filter)(({ key }) => key && key.name === "i"),
+      (0, import_rxjs.share)()
+    )
+  };
+}
+
+// 
+var Paginator = class {
+  constructor(screen, options = {}) {
+    const { isInfinite = true } = options;
+    this.lastIndex = 0;
+    this.screen = screen;
+    this.isInfinite = isInfinite;
+  }
+  paginate(output, active, pageSize) {
+    pageSize = pageSize || 7;
+    let lines = output.split("\n");
+    if (this.screen) {
+      lines = this.screen.breakLines(lines);
+      active = lines.map((lineParts) => lineParts.length).splice(0, active).reduce((a, b) => a + b, 0);
+      lines = lines.flat();
+    }
+    if (lines.length <= pageSize) {
+      return output;
+    }
+    const visibleLines = this.isInfinite ? this.getInfiniteLines(lines, active, pageSize) : this.getFiniteLines(lines, active, pageSize);
+    this.lastIndex = active;
+    return visibleLines.join("\n") + "\n" + source_default.dim("(Move up and down to reveal more choices)");
+  }
+  getInfiniteLines(lines, active, pageSize) {
+    if (this.pointer === void 0) {
+      this.pointer = 0;
+    }
+    const middleOfList = Math.floor(pageSize / 2);
+    if (this.pointer < middleOfList && this.lastIndex < active && active - this.lastIndex < pageSize) {
+      this.pointer = Math.min(middleOfList, this.pointer + active - this.lastIndex);
+    }
+    const infinite = [lines, lines, lines].flat();
+    const topIndex = Math.max(0, active + lines.length - this.pointer);
+    return infinite.splice(topIndex, pageSize);
+  }
+  getFiniteLines(lines, active, pageSize) {
+    let topIndex = active - pageSize / 2;
+    if (topIndex < 0) {
+      topIndex = 0;
+    } else if (topIndex + pageSize > lines.length) {
+      topIndex = lines.length - pageSize;
+    }
+    return lines.splice(topIndex, pageSize);
+  }
+};
+
+// 
+function incrementListIndex(current, dir, opt) {
+  const len = opt.choices.realLength;
+  const shouldLoop = "loop" in opt ? Boolean(opt.loop) : true;
+  if (dir === "up") {
+    if (current > 0) {
+      return current - 1;
+    }
+    return shouldLoop ? len - 1 : current;
+  }
+  if (dir === "down") {
+    if (current < len - 1) {
+      return current + 1;
+    }
+    return shouldLoop ? 0 : current;
+  }
+  throw new Error("dir must be up or down");
+}
 
 // 
 var import_defaults = __toESM(require_defaults(), 1);
 var import_clone = __toESM(require_clone(), 1);
 var import_run_async = __toESM(require_run_async(), 1);
-var import_rxjs = __toESM(require_cjs(), 1);
+var import_rxjs2 = __toESM(require_cjs(), 1);
 
 // 
 var import_filter = __toESM(require_filter2(), 1);
@@ -65438,6 +65545,13 @@ var Choices = class {
 };
 
 // 
+var import_cli_width = __toESM(require_cli_width(), 1);
+var import_wrap_ansi = __toESM(require_wrap_ansi(), 1);
+var import_strip_ansi = __toESM(require_strip_ansi(), 1);
+var import_string_width = __toESM(require_string_width(), 1);
+var import_ora = __toESM(require_ora(), 1);
+
+// 
 var import_ansi_escapes = __toESM(require_ansi_escapes(), 1);
 var left = function(rl, x2) {
   rl.output.write(import_ansi_escapes.default.cursorBackward(x2));
@@ -65456,11 +65570,6 @@ var clearLine = function(rl, len) {
 };
 
 // 
-var import_cli_width = __toESM(require_cli_width(), 1);
-var import_wrap_ansi = __toESM(require_wrap_ansi(), 1);
-var import_strip_ansi = __toESM(require_strip_ansi(), 1);
-var import_string_width = __toESM(require_string_width(), 1);
-var import_ora = __toESM(require_ora(), 1);
 function height(content) {
   return content.split("\n").length;
 }
@@ -65619,7 +65728,7 @@ var Prompt = class {
     const validate = (0, import_run_async.default)(this.opt.validate);
     const asyncFilter = (0, import_run_async.default)(this.opt.filter);
     const validation = submit.pipe(
-      (0, import_rxjs.flatMap)((value) => {
+      (0, import_rxjs2.flatMap)((value) => {
         this.startSpinner(value, this.opt.filteringText);
         return asyncFilter(value, self2.answers).then(
           (filteredValue) => {
@@ -65632,15 +65741,15 @@ var Prompt = class {
           (err) => ({ isValid: err })
         );
       }),
-      (0, import_rxjs.share)()
+      (0, import_rxjs2.share)()
     );
     const success = validation.pipe(
-      (0, import_rxjs.filter)((state) => state.isValid === true),
-      (0, import_rxjs.take)(1)
+      (0, import_rxjs2.filter)((state) => state.isValid === true),
+      (0, import_rxjs2.take)(1)
     );
     const error2 = validation.pipe(
-      (0, import_rxjs.filter)((state) => state.isValid !== true),
-      (0, import_rxjs.takeUntil)(success)
+      (0, import_rxjs2.filter)((state) => state.isValid !== true),
+      (0, import_rxjs2.takeUntil)(success)
     );
     return {
       success,
@@ -65669,114 +65778,6 @@ var Prompt = class {
 };
 
 // 
-var import_rxjs2 = __toESM(require_cjs(), 1);
-var import_rxjs3 = __toESM(require_cjs(), 1);
-function normalizeKeypressEvents(value, key) {
-  return { value, key: key || {} };
-}
-function events_default(rl) {
-  const keypress = (0, import_rxjs2.fromEvent)(rl.input, "keypress", normalizeKeypressEvents).pipe((0, import_rxjs3.takeUntil)((0, import_rxjs2.fromEvent)(rl, "close"))).pipe((0, import_rxjs3.filter)(({ key }) => key.name !== "enter" && key.name !== "return"));
-  return {
-    line: (0, import_rxjs2.fromEvent)(rl, "line"),
-    keypress,
-    normalizedUpKey: keypress.pipe(
-      (0, import_rxjs3.filter)(
-        ({ key }) => key.name === "up" || key.name === "k" || key.name === "p" && key.ctrl
-      ),
-      (0, import_rxjs3.share)()
-    ),
-    normalizedDownKey: keypress.pipe(
-      (0, import_rxjs3.filter)(
-        ({ key }) => key.name === "down" || key.name === "j" || key.name === "n" && key.ctrl
-      ),
-      (0, import_rxjs3.share)()
-    ),
-    numberKey: keypress.pipe(
-      (0, import_rxjs3.filter)((e2) => e2.value && "123456789".indexOf(e2.value) >= 0),
-      (0, import_rxjs3.map)((e2) => Number(e2.value)),
-      (0, import_rxjs3.share)()
-    ),
-    spaceKey: keypress.pipe(
-      (0, import_rxjs3.filter)(({ key }) => key && key.name === "space"),
-      (0, import_rxjs3.share)()
-    ),
-    aKey: keypress.pipe(
-      (0, import_rxjs3.filter)(({ key }) => key && key.name === "a"),
-      (0, import_rxjs3.share)()
-    ),
-    iKey: keypress.pipe(
-      (0, import_rxjs3.filter)(({ key }) => key && key.name === "i"),
-      (0, import_rxjs3.share)()
-    )
-  };
-}
-
-// 
-var Paginator = class {
-  constructor(screen, options = {}) {
-    const { isInfinite = true } = options;
-    this.lastIndex = 0;
-    this.screen = screen;
-    this.isInfinite = isInfinite;
-  }
-  paginate(output, active, pageSize) {
-    pageSize = pageSize || 7;
-    let lines = output.split("\n");
-    if (this.screen) {
-      lines = this.screen.breakLines(lines);
-      active = lines.map((lineParts) => lineParts.length).splice(0, active).reduce((a, b) => a + b, 0);
-      lines = lines.flat();
-    }
-    if (lines.length <= pageSize) {
-      return output;
-    }
-    const visibleLines = this.isInfinite ? this.getInfiniteLines(lines, active, pageSize) : this.getFiniteLines(lines, active, pageSize);
-    this.lastIndex = active;
-    return visibleLines.join("\n") + "\n" + source_default.dim("(Move up and down to reveal more choices)");
-  }
-  getInfiniteLines(lines, active, pageSize) {
-    if (this.pointer === void 0) {
-      this.pointer = 0;
-    }
-    const middleOfList = Math.floor(pageSize / 2);
-    if (this.pointer < middleOfList && this.lastIndex < active && active - this.lastIndex < pageSize) {
-      this.pointer = Math.min(middleOfList, this.pointer + active - this.lastIndex);
-    }
-    const infinite = [lines, lines, lines].flat();
-    const topIndex = Math.max(0, active + lines.length - this.pointer);
-    return infinite.splice(topIndex, pageSize);
-  }
-  getFiniteLines(lines, active, pageSize) {
-    let topIndex = active - pageSize / 2;
-    if (topIndex < 0) {
-      topIndex = 0;
-    } else if (topIndex + pageSize > lines.length) {
-      topIndex = lines.length - pageSize;
-    }
-    return lines.splice(topIndex, pageSize);
-  }
-};
-
-// 
-function incrementListIndex(current, dir, opt) {
-  const len = opt.choices.realLength;
-  const shouldLoop = "loop" in opt ? Boolean(opt.loop) : true;
-  if (dir === "up") {
-    if (current > 0) {
-      return current - 1;
-    }
-    return shouldLoop ? len - 1 : current;
-  }
-  if (dir === "down") {
-    if (current < len - 1) {
-      return current + 1;
-    }
-    return shouldLoop ? 0 : current;
-  }
-  throw new Error("dir must be up or down");
-}
-
-// 
 var ListPrompt = class extends Prompt {
   constructor(questions, rl, answers) {
     super(questions, rl, answers);
@@ -65800,13 +65801,13 @@ var ListPrompt = class extends Prompt {
     this.done = cb;
     const self2 = this;
     const events = events_default(this.rl);
-    events.normalizedUpKey.pipe((0, import_rxjs4.takeUntil)(events.line)).forEach(this.onUpKey.bind(this));
-    events.normalizedDownKey.pipe((0, import_rxjs4.takeUntil)(events.line)).forEach(this.onDownKey.bind(this));
-    events.numberKey.pipe((0, import_rxjs4.takeUntil)(events.line)).forEach(this.onNumberKey.bind(this));
+    events.normalizedUpKey.pipe((0, import_rxjs3.takeUntil)(events.line)).forEach(this.onUpKey.bind(this));
+    events.normalizedDownKey.pipe((0, import_rxjs3.takeUntil)(events.line)).forEach(this.onDownKey.bind(this));
+    events.numberKey.pipe((0, import_rxjs3.takeUntil)(events.line)).forEach(this.onNumberKey.bind(this));
     events.line.pipe(
-      (0, import_rxjs4.take)(1),
-      (0, import_rxjs4.map)(this.getCurrentValue.bind(this)),
-      (0, import_rxjs4.flatMap)(
+      (0, import_rxjs3.take)(1),
+      (0, import_rxjs3.map)(this.getCurrentValue.bind(this)),
+      (0, import_rxjs3.flatMap)(
         (value) => (0, import_run_async2.default)(self2.opt.filter)(value, self2.answers).catch((err) => err)
       )
     ).forEach(this.onSubmit.bind(this));
@@ -65897,16 +65898,16 @@ function listRender(choices, pointer) {
 }
 
 // 
-var import_rxjs5 = __toESM(require_cjs(), 1);
+var import_rxjs4 = __toESM(require_cjs(), 1);
 var InputPrompt = class extends Prompt {
   _run(cb) {
     this.done = cb;
     const events = events_default(this.rl);
-    const submit = events.line.pipe((0, import_rxjs5.map)(this.filterInput.bind(this)));
+    const submit = events.line.pipe((0, import_rxjs4.map)(this.filterInput.bind(this)));
     const validation = this.handleSubmitEvents(submit);
     validation.success.forEach(this.onEnd.bind(this));
     validation.error.forEach(this.onError.bind(this));
-    events.keypress.pipe((0, import_rxjs5.takeUntil)(validation.success)).forEach(this.onKeypress.bind(this));
+    events.keypress.pipe((0, import_rxjs4.takeUntil)(validation.success)).forEach(this.onKeypress.bind(this));
     this.render();
     return this;
   }
@@ -65970,7 +65971,7 @@ var NumberPrompt = class extends InputPrompt {
 };
 
 // 
-var import_rxjs6 = __toESM(require_cjs(), 1);
+var import_rxjs5 = __toESM(require_cjs(), 1);
 var ConfirmPrompt = class extends Prompt {
   constructor(questions, rl, answers) {
     super(questions, rl, answers);
@@ -65994,8 +65995,8 @@ var ConfirmPrompt = class extends Prompt {
   _run(cb) {
     this.done = cb;
     const events = events_default(this.rl);
-    events.keypress.pipe((0, import_rxjs6.takeUntil)(events.line)).forEach(this.onKeypress.bind(this));
-    events.line.pipe((0, import_rxjs6.take)(1)).forEach(this.onEnd.bind(this));
+    events.keypress.pipe((0, import_rxjs5.takeUntil)(events.line)).forEach(this.onKeypress.bind(this));
+    events.line.pipe((0, import_rxjs5.take)(1)).forEach(this.onEnd.bind(this));
     this.render();
     return this;
   }
@@ -66027,7 +66028,7 @@ var ConfirmPrompt = class extends Prompt {
 };
 
 // 
-var import_rxjs7 = __toESM(require_cjs(), 1);
+var import_rxjs6 = __toESM(require_cjs(), 1);
 var RawListPrompt = class extends Prompt {
   constructor(questions, rl, answers) {
     super(questions, rl, answers);
@@ -66061,13 +66062,13 @@ var RawListPrompt = class extends Prompt {
   _run(cb) {
     this.done = cb;
     const events = events_default(this.rl);
-    const submit = events.line.pipe((0, import_rxjs7.map)(this.getCurrentValue.bind(this)));
+    const submit = events.line.pipe((0, import_rxjs6.map)(this.getCurrentValue.bind(this)));
     const validation = this.handleSubmitEvents(submit);
     validation.success.forEach(this.onEnd.bind(this));
     validation.error.forEach(this.onError.bind(this));
-    events.normalizedUpKey.pipe((0, import_rxjs7.takeUntil)(validation.success)).forEach(this.onUpKey.bind(this));
-    events.normalizedDownKey.pipe((0, import_rxjs7.takeUntil)(validation.success)).forEach(this.onDownKey.bind(this));
-    events.keypress.pipe((0, import_rxjs7.takeUntil)(validation.success)).forEach(this.onKeypress.bind(this));
+    events.normalizedUpKey.pipe((0, import_rxjs6.takeUntil)(validation.success)).forEach(this.onUpKey.bind(this));
+    events.normalizedDownKey.pipe((0, import_rxjs6.takeUntil)(validation.success)).forEach(this.onDownKey.bind(this));
+    events.keypress.pipe((0, import_rxjs6.takeUntil)(validation.success)).forEach(this.onKeypress.bind(this));
     this.render();
     return this;
   }
@@ -66158,7 +66159,7 @@ function renderChoices(choices, pointer) {
 }
 
 // 
-var import_rxjs8 = __toESM(require_cjs(), 1);
+var import_rxjs7 = __toESM(require_cjs(), 1);
 var ExpandPrompt = class extends Prompt {
   constructor(questions, rl, answers) {
     super(questions, rl, answers);
@@ -66184,11 +66185,11 @@ var ExpandPrompt = class extends Prompt {
     this.done = cb;
     const events = events_default(this.rl);
     const validation = this.handleSubmitEvents(
-      events.line.pipe((0, import_rxjs8.map)(this.getCurrentValue.bind(this)))
+      events.line.pipe((0, import_rxjs7.map)(this.getCurrentValue.bind(this)))
     );
     validation.success.forEach(this.onSubmit.bind(this));
     validation.error.forEach(this.onError.bind(this));
-    this.keypressObs = events.keypress.pipe((0, import_rxjs8.takeUntil)(validation.success)).forEach(this.onKeypress.bind(this));
+    this.keypressObs = events.keypress.pipe((0, import_rxjs7.takeUntil)(validation.success)).forEach(this.onKeypress.bind(this));
     this.render();
     return this;
   }
@@ -66326,7 +66327,7 @@ function renderChoices2(choices, pointer) {
 
 // 
 var import_cli_cursor2 = __toESM(require_cli_cursor(), 1);
-var import_rxjs9 = __toESM(require_cjs(), 1);
+var import_rxjs8 = __toESM(require_cjs(), 1);
 var CheckboxPrompt = class extends Prompt {
   constructor(questions, rl, answers) {
     super(questions, rl, answers);
@@ -66349,16 +66350,16 @@ var CheckboxPrompt = class extends Prompt {
     this.done = cb;
     const events = events_default(this.rl);
     const validation = this.handleSubmitEvents(
-      events.line.pipe((0, import_rxjs9.map)(this.getCurrentValue.bind(this)))
+      events.line.pipe((0, import_rxjs8.map)(this.getCurrentValue.bind(this)))
     );
     validation.success.forEach(this.onEnd.bind(this));
     validation.error.forEach(this.onError.bind(this));
-    events.normalizedUpKey.pipe((0, import_rxjs9.takeUntil)(validation.success)).forEach(this.onUpKey.bind(this));
-    events.normalizedDownKey.pipe((0, import_rxjs9.takeUntil)(validation.success)).forEach(this.onDownKey.bind(this));
-    events.numberKey.pipe((0, import_rxjs9.takeUntil)(validation.success)).forEach(this.onNumberKey.bind(this));
-    events.spaceKey.pipe((0, import_rxjs9.takeUntil)(validation.success)).forEach(this.onSpaceKey.bind(this));
-    events.aKey.pipe((0, import_rxjs9.takeUntil)(validation.success)).forEach(this.onAllKey.bind(this));
-    events.iKey.pipe((0, import_rxjs9.takeUntil)(validation.success)).forEach(this.onInverseKey.bind(this));
+    events.normalizedUpKey.pipe((0, import_rxjs8.takeUntil)(validation.success)).forEach(this.onUpKey.bind(this));
+    events.normalizedDownKey.pipe((0, import_rxjs8.takeUntil)(validation.success)).forEach(this.onDownKey.bind(this));
+    events.numberKey.pipe((0, import_rxjs8.takeUntil)(validation.success)).forEach(this.onNumberKey.bind(this));
+    events.spaceKey.pipe((0, import_rxjs8.takeUntil)(validation.success)).forEach(this.onSpaceKey.bind(this));
+    events.aKey.pipe((0, import_rxjs8.takeUntil)(validation.success)).forEach(this.onAllKey.bind(this));
+    events.iKey.pipe((0, import_rxjs8.takeUntil)(validation.success)).forEach(this.onInverseKey.bind(this));
     import_cli_cursor2.default.hide();
     this.render();
     this.firstRender = false;
@@ -66491,7 +66492,7 @@ function getCheckbox(checked) {
 }
 
 // 
-var import_rxjs10 = __toESM(require_cjs(), 1);
+var import_rxjs9 = __toESM(require_cjs(), 1);
 function mask(input, maskChar) {
   input = String(input);
   maskChar = typeof maskChar === "string" ? maskChar : "*";
@@ -66504,11 +66505,11 @@ var PasswordPrompt = class extends Prompt {
   _run(cb) {
     this.done = cb;
     const events = events_default(this.rl);
-    const submit = events.line.pipe((0, import_rxjs10.map)(this.filterInput.bind(this)));
+    const submit = events.line.pipe((0, import_rxjs9.map)(this.filterInput.bind(this)));
     const validation = this.handleSubmitEvents(submit);
     validation.success.forEach(this.onEnd.bind(this));
     validation.error.forEach(this.onError.bind(this));
-    events.keypress.pipe((0, import_rxjs10.takeUntil)(validation.success)).forEach(this.onKeypress.bind(this));
+    events.keypress.pipe((0, import_rxjs9.takeUntil)(validation.success)).forEach(this.onKeypress.bind(this));
     this.render();
     return this;
   }
@@ -66560,11 +66561,11 @@ var PasswordPrompt = class extends Prompt {
 
 // 
 var import_external_editor = __toESM(require_main(), 1);
-var import_rxjs11 = __toESM(require_cjs(), 1);
+var import_rxjs10 = __toESM(require_cjs(), 1);
 var EditorPrompt = class extends Prompt {
   _run(cb) {
     this.done = cb;
-    this.editorResult = new import_rxjs11.Subject();
+    this.editorResult = new import_rxjs10.Subject();
     const events = events_default(this.rl);
     this.lineSubscription = events.line.subscribe(this.startExternalEditor.bind(this));
     const waitUserInput = this.opt.waitUserInput === void 0 ? true : this.opt.waitUserInput;
@@ -66725,18 +66726,17 @@ var BottomBar = class extends UI {
 var import_isPlainObject = __toESM(require_isPlainObject(), 1);
 var import_get = __toESM(require_get(), 1);
 var import_set = __toESM(require_set(), 1);
-var import_rxjs13 = __toESM(require_cjs(), 1);
-var import_rxjs14 = __toESM(require_cjs(), 1);
+var import_rxjs12 = __toESM(require_cjs(), 1);
 var import_run_async4 = __toESM(require_run_async(), 1);
 
 // 
-var import_rxjs12 = __toESM(require_cjs(), 1);
+var import_rxjs11 = __toESM(require_cjs(), 1);
 var import_run_async3 = __toESM(require_run_async(), 1);
 var fetchAsyncQuestionProperty = function(question, prop, answers) {
   if (typeof question[prop] !== "function") {
-    return (0, import_rxjs12.of)(question);
+    return (0, import_rxjs11.of)(question);
   }
-  return (0, import_rxjs12.from)(
+  return (0, import_rxjs11.from)(
     (0, import_run_async3.default)(question[prop])(answers).then((value) => {
       question[prop] = value;
       return question;
@@ -66766,16 +66766,16 @@ var PromptUI = class extends UI {
         (v) => _2.isPlainObject(v) && v.name === void 0
       ) ? Object.entries(questions).map(([name, question]) => ({ name, ...question })) : [questions];
     }
-    const obs = Array.isArray(questions) ? (0, import_rxjs13.from)(questions) : questions;
+    const obs = Array.isArray(questions) ? (0, import_rxjs12.from)(questions) : questions;
     this.process = obs.pipe(
-      (0, import_rxjs14.concatMap)(this.processQuestion.bind(this)),
-      (0, import_rxjs14.publish)()
+      (0, import_rxjs12.concatMap)(this.processQuestion.bind(this)),
+      (0, import_rxjs12.publish)()
     );
     this.process.connect();
     return this.process.pipe(
-      (0, import_rxjs14.reduce)((answers2, answer) => {
-        _2.set(answers2, answer.name, answer.answer);
-        return answers2;
+      (0, import_rxjs12.reduce)((answersObj, answer) => {
+        _2.set(answersObj, answer.name, answer.answer);
+        return answersObj;
       }, this.answers)
     ).toPromise(Promise).then(this.onCompletion.bind(this), this.onError.bind(this));
   }
@@ -66789,56 +66789,56 @@ var PromptUI = class extends UI {
   }
   processQuestion(question) {
     question = { ...question };
-    return (0, import_rxjs13.defer)(() => {
-      const obs = (0, import_rxjs13.of)(question);
+    return (0, import_rxjs12.defer)(() => {
+      const obs = (0, import_rxjs12.of)(question);
       return obs.pipe(
-        (0, import_rxjs14.concatMap)(this.setDefaultType.bind(this)),
-        (0, import_rxjs14.concatMap)(this.filterIfRunnable.bind(this)),
-        (0, import_rxjs14.concatMap)(
+        (0, import_rxjs12.concatMap)(this.setDefaultType.bind(this)),
+        (0, import_rxjs12.concatMap)(this.filterIfRunnable.bind(this)),
+        (0, import_rxjs12.concatMap)(
           () => fetchAsyncQuestionProperty(question, "message", this.answers)
         ),
-        (0, import_rxjs14.concatMap)(
+        (0, import_rxjs12.concatMap)(
           () => fetchAsyncQuestionProperty(question, "default", this.answers)
         ),
-        (0, import_rxjs14.concatMap)(
+        (0, import_rxjs12.concatMap)(
           () => fetchAsyncQuestionProperty(question, "choices", this.answers)
         ),
-        (0, import_rxjs14.concatMap)(this.fetchAnswer.bind(this))
+        (0, import_rxjs12.concatMap)(this.fetchAnswer.bind(this))
       );
     });
   }
   fetchAnswer(question) {
     const Prompt3 = this.prompts[question.type];
     this.activePrompt = new Prompt3(question, this.rl, this.answers);
-    return (0, import_rxjs13.defer)(
-      () => (0, import_rxjs13.from)(this.activePrompt.run().then((answer) => ({ name: question.name, answer })))
+    return (0, import_rxjs12.defer)(
+      () => (0, import_rxjs12.from)(this.activePrompt.run().then((answer) => ({ name: question.name, answer })))
     );
   }
   setDefaultType(question) {
     if (!this.prompts[question.type]) {
       question.type = "input";
     }
-    return (0, import_rxjs13.defer)(() => (0, import_rxjs13.of)(question));
+    return (0, import_rxjs12.defer)(() => (0, import_rxjs12.of)(question));
   }
   filterIfRunnable(question) {
     if (question.askAnswered !== true && _2.get(this.answers, question.name) !== void 0) {
-      return (0, import_rxjs13.empty)();
+      return (0, import_rxjs12.empty)();
     }
     if (question.when === false) {
-      return (0, import_rxjs13.empty)();
+      return (0, import_rxjs12.empty)();
     }
     if (typeof question.when !== "function") {
-      return (0, import_rxjs13.of)(question);
+      return (0, import_rxjs12.of)(question);
     }
     const { answers } = this;
-    return (0, import_rxjs13.defer)(
-      () => (0, import_rxjs13.from)(
+    return (0, import_rxjs12.defer)(
+      () => (0, import_rxjs12.from)(
         (0, import_run_async4.default)(question.when)(answers).then((shouldRun) => {
           if (shouldRun) {
             return question;
           }
         })
-      ).pipe((0, import_rxjs14.filter)((val) => val != null))
+      ).pipe((0, import_rxjs12.filter)((val) => val != null))
     );
   }
 };
