@@ -1,19 +1,16 @@
-import nunjucks from 'nunjucks';
-import {DOC_ENTRY_TEMPLATES} from './entities/entry_template_map';
-import {NunjucksRunfilesLoader} from './nunjucks_loader';
-import {DocEntryRenderable} from './entities/renderables';
+import {render} from 'preact-render-to-string';
+import {DocEntry} from './entities';
+import {isClassEntry} from './entities/categorization';
+import {ClassReference} from './templates/class-reference';
+import {getClassRenderable} from './transforms/class-transforms';
 
-/** Configure a nunjucks environment with our custom loader. */
-const nunjucksEnvironment = new nunjucks.Environment(new NunjucksRunfilesLoader());
-
-/** Renders a processed entry to an HTML string. */
-export function renderEntry(entry: DocEntryRenderable): string {
-  const template = DOC_ENTRY_TEMPLATES.get(entry.entryType);
-
-  if (!template) {
-    throw new Error(`No template for entry type "${entry.entryType}"`);
+/** Given a doc entry, get the transformed version of the entry for rendering. */
+export function transformAndRenderEntry(entry: DocEntry): string {
+  if (isClassEntry(entry)) {
+    const renderable = getClassRenderable(entry);
+    return render(ClassReference(renderable));
   }
 
-  // Unfortunately at this point we lose all of our beautiful type safety.
-  return nunjucksEnvironment.render(template, entry);
+  // Fall back rendering nothing while in development.
+  return '';
 }
