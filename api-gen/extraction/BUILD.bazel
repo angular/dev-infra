@@ -1,7 +1,24 @@
 load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("//bazel/esbuild:index.bzl", "esbuild")
 
 package(default_visibility = ["//api-gen:__subpackages__"])
+
+esbuild(
+    name = "bin",
+    entry_point = ":index.ts",
+    external = [
+        "@angular/compiler-cli",
+    ],
+    format = "esm",
+    output = "bin.mjs",
+    platform = "node",
+    target = "es2022",
+    deps = [
+        ":extract_api_to_json_lib",
+        "@npm//@angular/compiler-cli",
+    ],
+)
 
 ts_library(
     name = "extract_api_to_json_lib",
@@ -19,9 +36,11 @@ ts_library(
 nodejs_binary(
     name = "extract_api_to_json",
     data = [
-        ":extract_api_to_json_lib",
+        ":bin",
+        "@npm//@angular/compiler",
+        "@npm//@angular/compiler-cli",
     ],
-    entry_point = "//api-gen/extraction:index.ts",
+    entry_point = "bin.mjs",
     # Do not use the NodeJS linker because:
     #  - it's brittle and causes race conditions on Windows.
     #  - it requires additional work to setup the runtime linker.

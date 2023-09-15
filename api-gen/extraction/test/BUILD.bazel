@@ -5,3 +5,8 @@ extract_api_to_json(
     srcs = ["fake-source.ts"],
     output_name = "api.json",
 )
+
+filegroup(
+    name = "source_files",
+    srcs = ["fake-source.ts"],
+)
