@@ -1,8 +1,7 @@
 import {readFileSync, writeFileSync} from 'fs';
 import path from 'path';
 import {DocEntry} from './entities';
-import {processEntryForRender} from './processing';
-import {renderEntry} from './rendering';
+import {transformAndRenderEntry} from './rendering';
 
 /** The JSON data file format for extracted API reference info. */
 interface EntryList {
@@ -29,16 +28,12 @@ function main() {
   // so we aggregate the entries of all input data files.
   const entries = aggregateEntries(srcs.split(','));
 
-  // Transform the data from its raw extracted form to its renderable form.
-  // This includes any content processors such as markdown → html.
-  const renderEntries = entries.map(processEntryForRender);
-
-  // Render the processed data into the final HTML documents.
-  const htmlOutputs = renderEntries.map(renderEntry);
+  // Transform and render all entries.
+  const htmlOutputs = entries.map(transformAndRenderEntry);
 
   for (let i = 0; i < htmlOutputs.length; i++) {
     // TODO: de-duplicate identifiers by incorporating package entry point.
-    const filename = `${renderEntries[i].name}.html`;
+    const filename = `${entries[i].name}.html`;
     writeFileSync(path.join(outputFilenameExecRootRelativePath, filename), htmlOutputs[i], {
       encoding: 'utf8',
     });

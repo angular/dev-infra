@@ -10,7 +10,10 @@
     "noImplicitOverride": true,
     // TODO(ESM): Remove this when Bazel also uses the Node resolution.
     "esModuleInterop": true,
-    "noImplicitReturns": true
+    "noImplicitReturns": true,
+    "jsx": "react",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment"
   },
   "exclude": [
     "node_modules/**",

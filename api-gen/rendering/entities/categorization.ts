@@ -1,4 +1,13 @@
-import {ClassEntry, DocEntry, EntryType, FunctionEntry} from '../entities';
+import {
+  ClassEntry,
+  DocEntry,
+  EntryType,
+  FunctionEntry,
+  MemberEntry,
+  MemberType,
+  MethodEntry,
+} from '../entities';
+import {MemberEntryRenderable, MethodEntryRenderable} from './renderables';
 
 /** Gets whether the given entry represents a class */
 export function isClassEntry(entry: DocEntry): entry is ClassEntry {
@@ -11,6 +20,12 @@ export function isClassEntry(entry: DocEntry): entry is ClassEntry {
     entry.entryType === EntryType.Pipe ||
     entry.entryType === EntryType.NgModule
   );
+}
+
+/** Gets whether the given member entry is a method entry. */
+export function isClassMethodEntry(entry: MemberEntryRenderable): entry is MethodEntryRenderable;
+export function isClassMethodEntry(entry: MemberEntry): entry is MethodEntry {
+  return entry.memberType === MemberType.Method;
 }
 
 /** Gets whether the given entry represents a function */
