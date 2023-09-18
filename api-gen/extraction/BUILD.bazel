@@ -44,5 +44,8 @@ nodejs_binary(
     # Do not use the NodeJS linker because:
     #  - it's brittle and causes race conditions on Windows.
     #  - it requires additional work to setup the runtime linker.
-    templated_args = ["--bazel_patch_module_resolver"],
+    templated_args = [
+        "--bazel_patch_module_resolver",
+        "--node_options=--preserve-symlinks-main",
+    ],
 )
