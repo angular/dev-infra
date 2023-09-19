@@ -47,3 +47,9 @@ nodejs_binary(
     #   - bundle the Angular compiler into a CommonJS bundle
     #   - use the patched resolution- but also patch the ESM imports (similar to how FW does it).
 )
+
+# Expose the sources in the dev-infra NPM package.
+filegroup(
+    name = "files",
+    srcs = glob(["**/*"]),
+)

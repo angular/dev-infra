@@ -1,0 +1,10 @@
+package(default_visibility = ["//visibility:public"])
+
+# Expose the sources in the dev-infra NPM package.
+filegroup(
+    name = "files",
+    srcs = glob(["*"]) + [
+        "//api-gen/extraction:files",
+        "//api-gen/rendering:files",
+    ],
+)
