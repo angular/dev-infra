@@ -36,3 +36,9 @@ nodejs_binary(
         "--node_options=--preserve-symlinks-main",
     ],
 )
+
+# Expose the sources in the dev-infra NPM package.
+filegroup(
+    name = "files",
+    srcs = glob(["**/*"]),
+)
