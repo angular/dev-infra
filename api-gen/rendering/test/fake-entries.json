@@ -1,4 +1,5 @@
 {
+  "moduleName": "@angular/core",
   "entries": [
     {
       "name": "NgTemplateOutlet",

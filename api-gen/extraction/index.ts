@@ -3,7 +3,7 @@ import {writeFileSync} from 'fs';
 import {NgtscProgram, CompilerOptions, createCompilerHost} from '@angular/compiler-cli';
 
 function main() {
-  const [srcs, outputFilenameExecRootRelativePath] = process.argv.slice(2);
+  const [moduleName, srcs, outputFilenameExecRootRelativePath] = process.argv.slice(2);
 
   const compilerOptions: CompilerOptions = {};
   const compilerHost = createCompilerHost({options: compilerOptions});
@@ -13,7 +13,7 @@ function main() {
   // TODO: call the real API when it is published to npm.
   //     When tested with a locally built @angular/compiler-cli, it works!
   // const output = JSON.stringify(program.getApiDocumentation());
-  const output = JSON.stringify({entries: []});
+  const output = JSON.stringify({moduleName: moduleName, entries: []});
 
   writeFileSync(outputFilenameExecRootRelativePath, output, {encoding: 'utf8'});
 }

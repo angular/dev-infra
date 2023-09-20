@@ -1,19 +1,29 @@
 import {readFileSync, writeFileSync} from 'fs';
 import path from 'path';
 import {DocEntry} from './entities';
-import {transformAndRenderEntry} from './rendering';
+import {getRenderable} from './processing';
+import {renderEntry} from './rendering';
 
 /** The JSON data file format for extracted API reference info. */
-interface EntryList {
+interface EntryCollection {
+  moduleName: string;
   entries: DocEntry[];
 }
 
-/** Aggregate all JSON data source files into an array of docs entries. */
-function aggregateEntries(srcs: string[]): DocEntry[] {
-  return srcs.reduce((entries: DocEntry[], jsonDataFilePath: string) => {
+/** Parse all JSON data source files into an array of collections. */
+function parseEntryData(srcs: string[]): EntryCollection[] {
+  return srcs.map((jsonDataFilePath) => {
     const fileContent = readFileSync(jsonDataFilePath, {encoding: 'utf8'});
-    return entries.concat((JSON.parse(fileContent) as EntryList).entries) as DocEntry[];
-  }, []);
+    return JSON.parse(fileContent) as EntryCollection;
+  });
+}
+
+/** Gets a normalized filename for a doc entry. */
+function getNormalizedFilename(moduleName: string, entryName: string): string {
+  // Angular entry points all contain an "@" character, which we want to remove
+  // from the filename. We also swap `/` with an underscore.
+  const normalizedModuleName = moduleName.replace('@', '').replace('/', '_');
+  return `${moduleName}_${entryName}.html`;
 }
 
 function main() {
@@ -24,19 +34,28 @@ function main() {
   // 2) Transform the raw data to a renderable state.
   // 3) Render to HTML.
 
-  // Each data file contains an array of entries,
-  // so we aggregate the entries of all input data files.
-  const entries = aggregateEntries(srcs.split(','));
+  // Parse all the extracted data from the source JSON files.
+  // Each file represents one "collection" of docs entries corresponding to
+  // a particular JS module name.
+  const entryCollections: EntryCollection[] = parseEntryData(srcs.split(','));
 
-  // Transform and render all entries.
-  const htmlOutputs = entries.map(transformAndRenderEntry);
+  for (const collection of entryCollections) {
+    const extractedEntries = collection.entries;
+    const renderableEntries = extractedEntries.map((entry) =>
+      getRenderable(entry, collection.moduleName),
+    );
 
-  for (let i = 0; i < htmlOutputs.length; i++) {
-    // TODO: de-duplicate identifiers by incorporating package entry point.
-    const filename = `${entries[i].name}.html`;
-    writeFileSync(path.join(outputFilenameExecRootRelativePath, filename), htmlOutputs[i], {
-      encoding: 'utf8',
-    });
+    const htmlOutputs = renderableEntries.map(renderEntry);
+
+    for (let i = 0; i < htmlOutputs.length; i++) {
+      const moduleName = collection.moduleName.replace(/@/g, '').replace(/\//g, '_');
+      const entryName = collection.entries[i].name;
+
+      const filename = `${moduleName}_${entryName}.html`;
+      writeFileSync(path.join(outputFilenameExecRootRelativePath, filename), htmlOutputs[i], {
+        encoding: 'utf8',
+      });
+    }
   }
 }
 

@@ -5,6 +5,7 @@ package(default_visibility = ["//api-gen:__subpackages__"])
 extract_api_to_json(
     name = "test",
     srcs = ["fake-source.ts"],
+    module_name = "@angular/core",
     output_name = "api.json",
 )
 

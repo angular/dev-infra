@@ -30,3 +30,8 @@ export interface HasMembers {
 export interface HasRenderableMembers {
   members: MemberEntryRenderable[];
 }
+
+/** A doc entry that has an associated JS module name. */
+export interface HasModuleName {
+  moduleName: string;
+}
