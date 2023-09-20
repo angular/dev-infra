@@ -6,6 +6,9 @@ def _extract_api_to_json(ctx):
     # Define arguments that will be passed to the underlying nodejs program.
     args = ctx.actions.args()
 
+    # Pass the module_name for the extracted APIs. This will be something like "@angular/core".
+    args.add(ctx.attr.module_name)
+
     # Pass the set of source files from which API reference data will be extracted.
     args.add_joined(ctx.files.srcs, join_with = ",")
 
@@ -43,6 +46,10 @@ extract_api_to_json = rule(
         ),
         "output_name": attr.output(
             doc = """Name of the JSON output file.""",
+        ),
+        "module_name": attr.string(
+            doc = """JS Module name to be used for the extracted symbols""",
+            mandatory = True,
         ),
 
         # The executable for this rule (private).

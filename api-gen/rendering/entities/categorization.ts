@@ -7,9 +7,16 @@ import {
   MemberType,
   MethodEntry,
 } from '../entities';
-import {MemberEntryRenderable, MethodEntryRenderable} from './renderables';
+import {
+  ClassEntryRenderable,
+  DocEntryRenderable,
+  MemberEntryRenderable,
+  MethodEntryRenderable,
+} from './renderables';
 
 /** Gets whether the given entry represents a class */
+export function isClassEntry(entry: DocEntryRenderable): entry is ClassEntryRenderable;
+export function isClassEntry(entry: DocEntry): entry is ClassEntry;
 export function isClassEntry(entry: DocEntry): entry is ClassEntry {
   // TODO: add something like `statementType` to extraction so we don't have to check so many
   //     entry types here.
@@ -24,6 +31,7 @@ export function isClassEntry(entry: DocEntry): entry is ClassEntry {
 
 /** Gets whether the given member entry is a method entry. */
 export function isClassMethodEntry(entry: MemberEntryRenderable): entry is MethodEntryRenderable;
+export function isClassMethodEntry(entry: MemberEntry): entry is MethodEntry;
 export function isClassMethodEntry(entry: MemberEntry): entry is MethodEntry {
   return entry.memberType === MemberType.Method;
 }

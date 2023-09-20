@@ -19,6 +19,7 @@ export interface JsDocTagRenderable extends JsDocTagEntry {
 
 /** A documentation entry augmented with transformed content for rendering. */
 export interface DocEntryRenderable extends DocEntry {
+  moduleName: string;
   htmlDescription: string;
   jsdocTags: JsDocTagRenderable[];
 }

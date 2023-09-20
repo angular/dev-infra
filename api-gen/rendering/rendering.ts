@@ -1,13 +1,11 @@
 import {render} from 'preact-render-to-string';
-import {DocEntry} from './entities';
 import {isClassEntry} from './entities/categorization';
+import {DocEntryRenderable} from './entities/renderables';
 import {ClassReference} from './templates/class-reference';
-import {getClassRenderable} from './transforms/class-transforms';
 
 /** Given a doc entry, get the transformed version of the entry for rendering. */
-export function transformAndRenderEntry(entry: DocEntry): string {
-  if (isClassEntry(entry)) {
-    const renderable = getClassRenderable(entry);
+export function renderEntry(renderable: DocEntryRenderable): string {
+  if (isClassEntry(renderable)) {
     return render(ClassReference(renderable));
   }
 
