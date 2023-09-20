@@ -358,7 +358,7 @@ __metadata:
     "@bazel/typescript": 5.8.1
     "@google-cloud/firestore": ^6.0.0
     "@google-cloud/storage": ^7.0.0
-    "@microsoft/api-extractor": 7.36.4
+    "@microsoft/api-extractor": 7.37.0
     "@octokit/auth-app": 6.0.0
     "@octokit/core": 5.0.0
     "@octokit/graphql": 7.0.1
@@ -407,7 +407,7 @@ __metadata:
     cli-progress: ^3.7.0
     conventional-commits-parser: ^5.0.0
     ejs: ^3.1.6
-    firebase: 10.3.1
+    firebase: 10.4.0
     firebase-admin: ^11.0.0
     firebase-functions: ^4.0.0
     firebase-tools: ^12.0.0
@@ -451,7 +451,7 @@ __metadata:
     spdx-satisfies: ^5.0.1
     stylelint: ^15.1.0
     supports-color: 9.4.0
-    terser: 5.19.4
+    terser: 5.20.0
     tmp: ^0.2.1
     true-case-path: ^2.2.1
     ts-node: ^10.8.1
@@ -465,7 +465,7 @@ __metadata:
     ws: ^8.8.0
     yaml: ^2.0.0
     yargs: ^17.0.0
-    zone.js: ^0.13.0
+    zone.js: ^0.14.0
   dependenciesMeta:
     re2:
       built: false
@@ -3059,16 +3059,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/app-compat@npm:0.2.18":
-  version: 0.2.18
-  resolution: "@firebase/app-compat@npm:0.2.18"
+"@firebase/app-compat@npm:0.2.19":
+  version: 0.2.19
+  resolution: "@firebase/app-compat@npm:0.2.19"
   dependencies:
-    "@firebase/app": 0.9.18
+    "@firebase/app": 0.9.19
     "@firebase/component": 0.6.4
     "@firebase/logger": 0.4.0
     "@firebase/util": 1.9.3
     tslib: ^2.1.0
-  checksum: abfbd3d396235251003d262e040131aa49db7cb157bb3386f48797be6e2d30775b2ce26b553b4cdc385aff92b1aba4820a2ed3dcf5af91e44d12233c19113921
+  checksum: ff303e9582252e193476a9ed977609f253b93782f41139b463f02c34accdfa75ac8310d3d8a2390ffc65a108044cfdf7bd73fee643586eecf9478e6e3d3f7eff
   languageName: node
   linkType: hard
 
@@ -3092,16 +3092,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/app@npm:0.9.18":
-  version: 0.9.18
-  resolution: "@firebase/app@npm:0.9.18"
+"@firebase/app@npm:0.9.19":
+  version: 0.9.19
+  resolution: "@firebase/app@npm:0.9.19"
   dependencies:
     "@firebase/component": 0.6.4
     "@firebase/logger": 0.4.0
     "@firebase/util": 1.9.3
     idb: 7.1.1
     tslib: ^2.1.0
-  checksum: c491a3c2ff25dfed03f22ec6b66b47a6cd3792c692879dd9764a7b7d8de29ecfa6b943b751213123e4568eac2cec61b72ebf6ca778ad2925367769ff3f356c13
+  checksum: a0e4a75b4f428f57afd3feae6841632e1d1773785cf457b38d2610b5e184d6f980c16feeb3c84ec8d47d261c6cfb71006adf403d5829e670184503b171459162
   languageName: node
   linkType: hard
 
@@ -3289,18 +3289,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/firestore-compat@npm:0.3.17":
-  version: 0.3.17
-  resolution: "@firebase/firestore-compat@npm:0.3.17"
+"@firebase/firestore-compat@npm:0.3.18":
+  version: 0.3.18
+  resolution: "@firebase/firestore-compat@npm:0.3.18"
   dependencies:
     "@firebase/component": 0.6.4
-    "@firebase/firestore": 4.1.3
+    "@firebase/firestore": 4.2.0
     "@firebase/firestore-types": 3.0.0
     "@firebase/util": 1.9.3
     tslib: ^2.1.0
   peerDependencies:
     "@firebase/app-compat": 0.x
-  checksum: 4aa2993abaf926c273ef96dbd004479ee8accafafe6f00d28220e3eed57ef47f0bd7f6a4d348402cbe0515a2bc499177b9d5d8fd0aeff23d3cdc4f7fe17decbd
+  checksum: a8d6251b95fabd7b970e4a0d08420014bd4bf65b47f710e1f78f46a0065ab5c3fa7132da32b1eabf4c4629fc30d68ff27192a3456c54c846a8722c0330339c2a
   languageName: node
   linkType: hard
 
@@ -3342,21 +3342,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/firestore@npm:4.1.3":
-  version: 4.1.3
-  resolution: "@firebase/firestore@npm:4.1.3"
+"@firebase/firestore@npm:4.2.0":
+  version: 4.2.0
+  resolution: "@firebase/firestore@npm:4.2.0"
   dependencies:
     "@firebase/component": 0.6.4
     "@firebase/logger": 0.4.0
     "@firebase/util": 1.9.3
-    "@firebase/webchannel-wrapper": 0.10.2
-    "@grpc/grpc-js": ~1.8.17
+    "@firebase/webchannel-wrapper": 0.10.3
+    "@grpc/grpc-js": ~1.9.0
     "@grpc/proto-loader": ^0.7.8
     node-fetch: 2.6.7
     tslib: ^2.1.0
   peerDependencies:
     "@firebase/app": 0.x
-  checksum: 6b191861932a74c4bdd8bd284d15203d205e053709254eaf59f4bad32f0fd1110f2b746d32d3a15bd6d550e4fff5ce31da29ea387aa035b5df47fc2fbc95ca57
+  checksum: b7722563185656dda5982df19a15cd73120c3d2314a26897fb29ae01b4cd63052e1360a46333f156de38fb4356cf961e2fba2a03e4fdf9be8319eb5ce875f29b
   languageName: node
   linkType: hard
 
@@ -3614,10 +3614,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/webchannel-wrapper@npm:0.10.2":
-  version: 0.10.2
-  resolution: "@firebase/webchannel-wrapper@npm:0.10.2"
-  checksum: ca4cb3c1e35be7d6dd10585ab04ba827532f0de97c62fef88e4df9324b1c8fa282c9f3702f31237de02e01715180bc275243423983b5f69211d800e07c74ac7d
+"@firebase/webchannel-wrapper@npm:0.10.3":
+  version: 0.10.3
+  resolution: "@firebase/webchannel-wrapper@npm:0.10.3"
+  checksum: 75cca5a9681914d6b9d18e2f2e3bf10df13846ca517c35fe153d84ff94139561c43db40a889745bfdabcb6889c791c0110047b4900b1bcef590f4a6d8a351887
   languageName: node
   linkType: hard
 
@@ -3800,13 +3800,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@grpc/grpc-js@npm:~1.8.17":
-  version: 1.8.18
-  resolution: "@grpc/grpc-js@npm:1.8.18"
+"@grpc/grpc-js@npm:~1.9.0":
+  version: 1.9.3
+  resolution: "@grpc/grpc-js@npm:1.9.3"
   dependencies:
-    "@grpc/proto-loader": ^0.7.0
+    "@grpc/proto-loader": ^0.7.8
     "@types/node": ">=12.12.47"
-  checksum: 90260dec594f2704d6ac6800d88a8fbbda872cc347d692a8bb88f73ed12035c60dd98c98569c5cfab508f1cdbf380ecc107e32a24f412952a7796148993dfc3a
+  checksum: 09634de9f871a17c95db95338fe472522d5dca0f77b622e3a497ef806262813445ba1a1f3261f03461d84ac985e420317d5638b3314fcb524ee2e47e512ffa64
   languageName: node
   linkType: hard
 
@@ -4823,27 +4823,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor-model@npm:7.27.6":
-  version: 7.27.6
-  resolution: "@microsoft/api-extractor-model@npm:7.27.6"
+"@microsoft/api-extractor-model@npm:7.28.0":
+  version: 7.28.0
+  resolution: "@microsoft/api-extractor-model@npm:7.28.0"
   dependencies:
     "@microsoft/tsdoc": 0.14.2
     "@microsoft/tsdoc-config": ~0.16.1
-    "@rushstack/node-core-library": 3.59.7
-  checksum: 7867feaf3a0e5accfcce3a77681248a319952a266cffc644e4f8f7df1c9e1d55adb5124df901e8cca594bb3e12d361d1fcb2bffbdbb4b20fe3113928f6535975
+    "@rushstack/node-core-library": 3.60.0
+  checksum: b5bce8b480d7f650541fa8d0d6693e4d8ec53b3ca189546032e4fb6dcc687153303dcd3f4edffd7e83ce0e133e34c5cb39d8f16993b14fe7c3f12add01237385
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor@npm:7.36.4":
-  version: 7.36.4
-  resolution: "@microsoft/api-extractor@npm:7.36.4"
+"@microsoft/api-extractor@npm:7.37.0":
+  version: 7.37.0
+  resolution: "@microsoft/api-extractor@npm:7.37.0"
   dependencies:
-    "@microsoft/api-extractor-model": 7.27.6
+    "@microsoft/api-extractor-model": 7.28.0
     "@microsoft/tsdoc": 0.14.2
     "@microsoft/tsdoc-config": ~0.16.1
-    "@rushstack/node-core-library": 3.59.7
-    "@rushstack/rig-package": 0.4.1
-    "@rushstack/ts-command-line": 4.15.2
+    "@rushstack/node-core-library": 3.60.0
+    "@rushstack/rig-package": 0.5.0
+    "@rushstack/ts-command-line": 4.16.0
     colors: ~1.2.1
     lodash: ~4.17.15
     resolve: ~1.22.1
@@ -4852,7 +4852,7 @@ __metadata:
     typescript: ~5.0.4
   bin:
     api-extractor: bin/api-extractor
-  checksum: 92559325cf2407fa27cb9675772956511fa35005f295cdb4dc47abd7ef9c77ba61b0f684c2e952301a76dd2cfa9e398840c8f3d9117d621300e12b0ecfbf8147
+  checksum: 1c66682f2d9031b3ad442612bbab610db47fbb9b0ee032dcff64f9434deeeb9591eef959ad9ac1f067bc00d32d47ac0d982b3611bdc9baf2d8ca2b73a0905606
   languageName: node
   linkType: hard
 
@@ -5529,9 +5529,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rushstack/node-core-library@npm:3.59.7":
-  version: 3.59.7
-  resolution: "@rushstack/node-core-library@npm:3.59.7"
+"@rushstack/node-core-library@npm:3.60.0":
+  version: 3.60.0
+  resolution: "@rushstack/node-core-library@npm:3.60.0"
   dependencies:
     colors: ~1.2.1
     fs-extra: ~7.0.1
@@ -5545,7 +5545,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/node":
       optional: true
-  checksum: 57819d62fd662a6cf3306bf7d39c11204e094a2d5c2210639c2ac5baee58c183c02023203963cd0484a5623fd9f5dea7a223df843fb52b46a18508e6118cdc19
+  checksum: 3c96f9e4bee829240646dec78fb63b3ba317da81b778227d06aaf03ba1da6afc15643b82cee2b6695a359b8f90227d377e51093109ba25262bb752260aa9b4c9
   languageName: node
   linkType: hard
 
@@ -5559,13 +5559,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rushstack/rig-package@npm:0.4.1":
-  version: 0.4.1
-  resolution: "@rushstack/rig-package@npm:0.4.1"
+"@rushstack/rig-package@npm:0.5.0":
+  version: 0.5.0
+  resolution: "@rushstack/rig-package@npm:0.5.0"
   dependencies:
     resolve: ~1.22.1
     strip-json-comments: ~3.1.1
-  checksum: 68c5ec6c446c35939fca0444fa48e5beda736e3a5816e8b44d83df6ba8b9a2caf0ceddbdc866cd8ad3b523e42877cf6ecd467bc7839e3d618a9bb1c4b3e0b5a5
+  checksum: 6f86bcf260972770395c42c5eee1326caaf32bf90c306b6212a35c30a2e51465cf25625716097577d4b9593478ac88eb7ba0af622ad5f2cfb5a68b01e3d163f0
   languageName: node
   linkType: hard
 
@@ -5581,15 +5581,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rushstack/ts-command-line@npm:4.15.2":
-  version: 4.15.2
-  resolution: "@rushstack/ts-command-line@npm:4.15.2"
+"@rushstack/ts-command-line@npm:4.16.0":
+  version: 4.16.0
+  resolution: "@rushstack/ts-command-line@npm:4.16.0"
   dependencies:
     "@types/argparse": 1.0.38
     argparse: ~1.0.9
     colors: ~1.2.1
     string-argv: ~0.3.1
-  checksum: c80dcfc99630ee51c6654c58ff41f69a3bd89c38e41d9871692bc73ee3c938ced79f8b75e182e492cafb2f6ddeb0628606856af494a0259ff6fac5b248996bed
+  checksum: 1541e862d099d013b5d94f7486a50cf3426630fc75979543ee971f8ed5f5f7fe574e0dbd18b9fa981f0828a67642d18da2c103323040a252402b43283ad0873b
   languageName: node
   linkType: hard
 
@@ -5987,11 +5987,11 @@ __metadata:
   linkType: hard
 
 "@types/git-raw-commits@npm:^2.0.0":
-  version: 2.0.1
-  resolution: "@types/git-raw-commits@npm:2.0.1"
+  version: 2.0.2
+  resolution: "@types/git-raw-commits@npm:2.0.2"
   dependencies:
     "@types/node": "*"
-  checksum: b5d41433a5201b8fbd475d29d08df77d60a402acfdba9703125eab96449a7040721d698e8bad8debbb3377338e08c3d75faab409e2e2b47b6f0a66f535d1594f
+  checksum: 0061313d6d9a33129077f72e78e476215efe3f7a88a50b91e31e9cd18d7132ee54f38bb72b8c5fee51640ad603bb534072bf6a622fddc7831ad3d6a5ac184bfe
   languageName: node
   linkType: hard
 
@@ -10278,23 +10278,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"firebase@npm:10.3.1":
-  version: 10.3.1
-  resolution: "firebase@npm:10.3.1"
+"firebase@npm:10.4.0":
+  version: 10.4.0
+  resolution: "firebase@npm:10.4.0"
   dependencies:
     "@firebase/analytics": 0.10.0
     "@firebase/analytics-compat": 0.2.6
-    "@firebase/app": 0.9.18
+    "@firebase/app": 0.9.19
     "@firebase/app-check": 0.8.0
     "@firebase/app-check-compat": 0.3.7
-    "@firebase/app-compat": 0.2.18
+    "@firebase/app-compat": 0.2.19
     "@firebase/app-types": 0.9.0
     "@firebase/auth": 1.3.0
     "@firebase/auth-compat": 0.4.6
     "@firebase/database": 1.0.1
     "@firebase/database-compat": 1.0.1
-    "@firebase/firestore": 4.1.3
-    "@firebase/firestore-compat": 0.3.17
+    "@firebase/firestore": 4.2.0
+    "@firebase/firestore-compat": 0.3.18
     "@firebase/functions": 0.10.0
     "@firebase/functions-compat": 0.3.5
     "@firebase/installations": 0.6.4
@@ -10308,7 +10308,7 @@ __metadata:
     "@firebase/storage": 0.11.2
     "@firebase/storage-compat": 0.3.2
     "@firebase/util": 1.9.3
-  checksum: 23d62769e675ad84c9168cefcbb6f2d731a2e4896cb0b8caacbe03a5add63c8e182cca8fb5ee28538cddc0db81a89e2c57f62e9d24b1799a9c57aa907cdcf32a
+  checksum: 58e9f33b3f9409eb7fda58cb80d4af37f0c587b4df0e2893f6c6ced0298d0968820c26c0e2cf33a569b63d11f75b223df83c0be412cd4fc844674a7865c88e63
   languageName: node
   linkType: hard
 
@@ -17585,6 +17585,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"terser@npm:5.20.0":
+  version: 5.20.0
+  resolution: "terser@npm:5.20.0"
+  dependencies:
+    "@jridgewell/source-map": ^0.3.3
+    acorn: ^8.8.2
+    commander: ^2.20.0
+    source-map-support: ~0.5.20
+  bin:
+    terser: bin/terser
+  checksum: 251d1b62d7c651ace29f997cf336ff5d5f8e30c65c8698ab7b831764d9e012ab0640895cb609906fb939a5bdf5143d73b5781c5c8c67b9216c77ce92dafdc0bc
+  languageName: node
+  linkType: hard
+
 "terser@npm:^5.16.8":
   version: 5.18.0
   resolution: "terser@npm:5.18.0"
@@ -18970,8 +18984,8 @@ __metadata:
   linkType: hard
 
 "ws@npm:>=8.13.0, ws@npm:^8.13.0, ws@npm:^8.8.0":
-  version: 8.14.1
-  resolution: "ws@npm:8.14.1"
+  version: 8.14.2
+  resolution: "ws@npm:8.14.2"
   peerDependencies:
     bufferutil: ^4.0.1
     utf-8-validate: ">=5.0.2"
@@ -18980,7 +18994,7 @@ __metadata:
       optional: true
     utf-8-validate:
       optional: true
-  checksum: 9e310be2b0ff69e1f87d8c6d093ecd17a1ed4c37f281d17c35e8c30e2bd116401775b3d503249651374e6e0e1e9905db62fff096b694371c77561aee06bc3466
+  checksum: 3ca0dad26e8cc6515ff392b622a1467430814c463b3368b0258e33696b1d4bed7510bc7030f7b72838b9fdeb8dbd8839cbf808367d6aae2e1d668ce741d4308b
   languageName: node
   linkType: hard
 
@@ -19252,11 +19266,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zone.js@npm:^0.13.0":
-  version: 0.13.3
-  resolution: "zone.js@npm:0.13.3"
+"zone.js@npm:^0.14.0":
+  version: 0.14.0
+  resolution: "zone.js@npm:0.14.0"
   dependencies:
     tslib: ^2.3.0
-  checksum: 73888a51b0299b4b56c56b97c71fe4a3548a9bdb9e4b4c49dd0e110a4487fbe7f141c08d3e3acff875a6fbb6d581750209ac767ae5d82dca0636ede41aebd436
+  checksum: 8a1c055ff1f3da6e80f27bdc1b3a69cdb0098194ddfd9d9cee19414d5e00f09863f53a5746835ab711ef94bb828f44e4fe9f6c1491a0981dbcd13d3b88f5d997
   languageName: node
   linkType: hard
