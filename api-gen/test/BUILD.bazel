@@ -1,8 +1,0 @@
-load("//api-gen:generate_api_docs.bzl", "generate_api_docs")
-
-generate_api_docs(
-    name = "test",
-    srcs = ["//api-gen/extraction/test:source_files"],
-    entry_point = "//api-gen/extraction/test:fake-source.ts",
-    module_name = "@angular/core",
-)
