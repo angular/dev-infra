@@ -1,0 +1,7 @@
+load("//bazel/api-gen:generate_api_docs.bzl", "generate_api_docs")
+
+generate_api_docs(
+    name = "test",
+    srcs = ["//bazel/api-gen/extraction/test:source_files"],
+    module_name = "@angular/core",
+)

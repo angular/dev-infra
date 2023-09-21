@@ -1,0 +1,6 @@
+load("//bazel/api-gen/rendering:render_api_to_html.bzl", "render_api_to_html")
+
+render_api_to_html(
+    name = "test",
+    srcs = ["fake-entries.json"],
+)

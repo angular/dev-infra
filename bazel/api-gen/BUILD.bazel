@@ -4,7 +4,7 @@ package(default_visibility = ["//visibility:public"])
 filegroup(
     name = "files",
     srcs = glob(["*"]) + [
-        "//api-gen/extraction:files",
-        "//api-gen/rendering:files",
+        "//bazel/api-gen/extraction:files",
+        "//bazel/api-gen/rendering:files",
     ],
 )

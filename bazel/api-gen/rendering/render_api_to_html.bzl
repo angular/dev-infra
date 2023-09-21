@@ -40,7 +40,7 @@ render_api_to_html = rule(
 
         # The executable for this rule (private).
         "_render_api_to_html": attr.label(
-            default = Label("//api-gen/rendering:render_api_to_html"),
+            default = Label("//bazel/api-gen/rendering:render_api_to_html"),
             executable = True,
             cfg = "exec",
         ),
