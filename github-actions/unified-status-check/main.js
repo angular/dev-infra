@@ -3110,6 +3110,94 @@ var require_dist_node5 = __commonJS({
 var require_dist_node6 = __commonJS({
   ""(exports, module) {
     "use strict";
+    var __create2 = Object.create;
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __getProtoOf2 = Object.getPrototypeOf;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export2 = (target, all) => {
+      for (var name in all)
+        __defProp2(target, name, { get: all[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if (from && typeof from === "object" || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toESM2 = (mod, isNodeMode, target) => (target = mod != null ? __create2(__getProtoOf2(mod)) : {}, __copyProps2(
+      isNodeMode || !mod || !mod.__esModule ? __defProp2(target, "default", { value: mod, enumerable: true }) : target,
+      mod
+    ));
+    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export2(dist_src_exports, {
+      RequestError: () => RequestError
+    });
+    module.exports = __toCommonJS(dist_src_exports);
+    var import_deprecation = require_dist_node3();
+    var import_once = __toESM2(require_once());
+    var logOnceCode = (0, import_once.default)((deprecation) => console.warn(deprecation));
+    var logOnceHeaders = (0, import_once.default)((deprecation) => console.warn(deprecation));
+    var RequestError = class extends Error {
+      constructor(message, statusCode, options) {
+        super(message);
+        if (Error.captureStackTrace) {
+          Error.captureStackTrace(this, this.constructor);
+        }
+        this.name = "HttpError";
+        this.status = statusCode;
+        let headers;
+        if ("headers" in options && typeof options.headers !== "undefined") {
+          headers = options.headers;
+        }
+        if ("response" in options) {
+          this.response = options.response;
+          headers = options.response.headers;
+        }
+        const requestCopy = Object.assign({}, options.request);
+        if (options.request.headers.authorization) {
+          requestCopy.headers = Object.assign({}, options.request.headers, {
+            authorization: options.request.headers.authorization.replace(
+              / .*$/,
+              " [REDACTED]"
+            )
+          });
+        }
+        requestCopy.url = requestCopy.url.replace(/\bclient_secret=\w+/g, "client_secret=[REDACTED]").replace(/\baccess_token=\w+/g, "access_token=[REDACTED]");
+        this.request = requestCopy;
+        Object.defineProperty(this, "code", {
+          get() {
+            logOnceCode(
+              new import_deprecation.Deprecation(
+                "[@octokit/request-error] `error.code` is deprecated, use `error.status`."
+              )
+            );
+            return statusCode;
+          }
+        });
+        Object.defineProperty(this, "headers", {
+          get() {
+            logOnceHeaders(
+              new import_deprecation.Deprecation(
+                "[@octokit/request-error] `error.headers` is deprecated, use `error.response.headers`."
+              )
+            );
+            return headers || {};
+          }
+        });
+      }
+    };
+  }
+});
+
+// 
+var require_dist_node7 = __commonJS({
+  ""(exports, module) {
+    "use strict";
     var __defProp2 = Object.defineProperty;
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
@@ -3136,7 +3224,7 @@ var require_dist_node6 = __commonJS({
     var import_universal_user_agent = require_dist_node();
     var VERSION = "8.0.4";
     var import_is_plain_object = require_is_plain_object();
-    var import_request_error = require_dist_node4();
+    var import_request_error = require_dist_node6();
     function getBufferResponse(response) {
       return response.arrayBuffer();
     }
@@ -3289,7 +3377,7 @@ var require_dist_node6 = __commonJS({
 });
 
 // 
-var require_dist_node7 = __commonJS({
+var require_dist_node8 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -3316,11 +3404,11 @@ var require_dist_node7 = __commonJS({
       withCustomRequest: () => withCustomRequest
     });
     module.exports = __toCommonJS(dist_src_exports);
-    var import_request3 = require_dist_node6();
+    var import_request3 = require_dist_node7();
     var import_universal_user_agent = require_dist_node();
     var VERSION = "7.0.1";
-    var import_request2 = require_dist_node6();
-    var import_request4 = require_dist_node6();
+    var import_request2 = require_dist_node7();
+    var import_request4 = require_dist_node7();
     function _buildMessageForResponseErrors(data) {
       return `Request failed due to following response errors:
 ` + data.errors.map((e2) => ` - ${e2.message}`).join("\n");
@@ -3427,7 +3515,7 @@ var require_dist_node7 = __commonJS({
 });
 
 // 
-var require_dist_node8 = __commonJS({
+var require_dist_node9 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -3498,7 +3586,7 @@ var require_dist_node8 = __commonJS({
 });
 
 // 
-var require_dist_node9 = __commonJS({
+var require_dist_node10 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -3526,9 +3614,9 @@ var require_dist_node9 = __commonJS({
     var import_universal_user_agent = require_dist_node();
     var import_before_after_hook = require_before_after_hook();
     var import_request2 = require_dist_node5();
-    var import_graphql = require_dist_node7();
-    var import_auth_token = require_dist_node8();
-    var VERSION = "5.0.0";
+    var import_graphql = require_dist_node8();
+    var import_auth_token = require_dist_node9();
+    var VERSION = "5.0.1";
     var _a;
     var Octokit3 = (_a = class {
       static defaults(defaults) {
@@ -3644,7 +3732,7 @@ var require_dist_node9 = __commonJS({
 });
 
 // 
-var require_dist_node10 = __commonJS({
+var require_dist_node11 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -3694,7 +3782,7 @@ var require_dist_node10 = __commonJS({
 });
 
 // 
-var require_dist_node11 = __commonJS({
+var require_dist_node12 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -4064,7 +4152,7 @@ var require_dist_node11 = __commonJS({
 });
 
 // 
-var require_dist_node12 = __commonJS({
+var require_dist_node13 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -6068,7 +6156,7 @@ var require_dist_node12 = __commonJS({
 });
 
 // 
-var require_dist_node13 = __commonJS({
+var require_dist_node14 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -6093,10 +6181,10 @@ var require_dist_node13 = __commonJS({
       Octokit: () => Octokit3
     });
     module.exports = __toCommonJS(dist_src_exports);
-    var import_core2 = require_dist_node9();
-    var import_plugin_request_log = require_dist_node10();
-    var import_plugin_paginate_rest = require_dist_node11();
-    var import_plugin_rest_endpoint_methods = require_dist_node12();
+    var import_core2 = require_dist_node10();
+    var import_plugin_request_log = require_dist_node11();
+    var import_plugin_paginate_rest = require_dist_node12();
+    var import_plugin_rest_endpoint_methods = require_dist_node13();
     var VERSION = "20.0.1";
     var Octokit3 = import_core2.Octokit.plugin(
       import_plugin_request_log.requestLog,
@@ -6118,7 +6206,7 @@ var require_btoa_node = __commonJS({
 });
 
 // 
-var require_dist_node14 = __commonJS({
+var require_dist_node15 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -6188,7 +6276,95 @@ var require_dist_node14 = __commonJS({
 });
 
 // 
-var require_dist_node15 = __commonJS({
+var require_dist_node16 = __commonJS({
+  ""(exports, module) {
+    "use strict";
+    var __create2 = Object.create;
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __getProtoOf2 = Object.getPrototypeOf;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export2 = (target, all) => {
+      for (var name in all)
+        __defProp2(target, name, { get: all[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if (from && typeof from === "object" || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toESM2 = (mod, isNodeMode, target) => (target = mod != null ? __create2(__getProtoOf2(mod)) : {}, __copyProps2(
+      isNodeMode || !mod || !mod.__esModule ? __defProp2(target, "default", { value: mod, enumerable: true }) : target,
+      mod
+    ));
+    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export2(dist_src_exports, {
+      RequestError: () => RequestError
+    });
+    module.exports = __toCommonJS(dist_src_exports);
+    var import_deprecation = require_dist_node3();
+    var import_once = __toESM2(require_once());
+    var logOnceCode = (0, import_once.default)((deprecation) => console.warn(deprecation));
+    var logOnceHeaders = (0, import_once.default)((deprecation) => console.warn(deprecation));
+    var RequestError = class extends Error {
+      constructor(message, statusCode, options) {
+        super(message);
+        if (Error.captureStackTrace) {
+          Error.captureStackTrace(this, this.constructor);
+        }
+        this.name = "HttpError";
+        this.status = statusCode;
+        let headers;
+        if ("headers" in options && typeof options.headers !== "undefined") {
+          headers = options.headers;
+        }
+        if ("response" in options) {
+          this.response = options.response;
+          headers = options.response.headers;
+        }
+        const requestCopy = Object.assign({}, options.request);
+        if (options.request.headers.authorization) {
+          requestCopy.headers = Object.assign({}, options.request.headers, {
+            authorization: options.request.headers.authorization.replace(
+              / .*$/,
+              " [REDACTED]"
+            )
+          });
+        }
+        requestCopy.url = requestCopy.url.replace(/\bclient_secret=\w+/g, "client_secret=[REDACTED]").replace(/\baccess_token=\w+/g, "access_token=[REDACTED]");
+        this.request = requestCopy;
+        Object.defineProperty(this, "code", {
+          get() {
+            logOnceCode(
+              new import_deprecation.Deprecation(
+                "[@octokit/request-error] `error.code` is deprecated, use `error.status`."
+              )
+            );
+            return statusCode;
+          }
+        });
+        Object.defineProperty(this, "headers", {
+          get() {
+            logOnceHeaders(
+              new import_deprecation.Deprecation(
+                "[@octokit/request-error] `error.headers` is deprecated, use `error.response.headers`."
+              )
+            );
+            return headers || {};
+          }
+        });
+      }
+    };
+  }
+});
+
+// 
+var require_dist_node17 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __create2 = Object.create;
@@ -6230,9 +6406,9 @@ var require_dist_node15 = __commonJS({
     });
     module.exports = __toCommonJS(dist_src_exports);
     var VERSION = "4.0.0";
-    var import_oauth_authorization_url = require_dist_node14();
+    var import_oauth_authorization_url = require_dist_node15();
     var import_request2 = require_dist_node5();
-    var import_request_error = require_dist_node4();
+    var import_request_error = require_dist_node16();
     function requestToOAuthBaseUrl(request) {
       const endpointDefaults = request.endpoint.DEFAULTS;
       return /^https:\/\/(api\.)?github\.com$/.test(endpointDefaults.baseUrl) ? "https://github.com" : endpointDefaults.baseUrl.replace("/api/v3", "");
@@ -6518,7 +6694,7 @@ var require_dist_node15 = __commonJS({
 });
 
 // 
-var require_dist_node16 = __commonJS({
+var require_dist_node18 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -6545,7 +6721,7 @@ var require_dist_node16 = __commonJS({
     module.exports = __toCommonJS(dist_src_exports);
     var import_universal_user_agent = require_dist_node();
     var import_request2 = require_dist_node5();
-    var import_oauth_methods = require_dist_node15();
+    var import_oauth_methods = require_dist_node17();
     async function getOAuthAccessToken(state, options) {
       const cachedAuthentication = getCachedAuthentication(state, options.auth);
       if (cachedAuthentication)
@@ -6674,7 +6850,7 @@ var require_dist_node16 = __commonJS({
 });
 
 // 
-var require_dist_node17 = __commonJS({
+var require_dist_node19 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __create2 = Object.create;
@@ -6709,8 +6885,8 @@ var require_dist_node17 = __commonJS({
     var import_universal_user_agent = require_dist_node();
     var import_request2 = require_dist_node5();
     var VERSION = "4.0.0";
-    var import_auth_oauth_device = require_dist_node16();
-    var import_oauth_methods = require_dist_node15();
+    var import_auth_oauth_device = require_dist_node18();
+    var import_oauth_methods = require_dist_node17();
     async function getAuthentication(state) {
       if ("code" in state.strategyOptions) {
         const { authentication } = await (0, import_oauth_methods.exchangeWebFlowCode)({
@@ -6756,7 +6932,7 @@ var require_dist_node17 = __commonJS({
       }
       throw new Error("[@octokit/auth-oauth-user] Invalid strategy options");
     }
-    var import_oauth_methods2 = require_dist_node15();
+    var import_oauth_methods2 = require_dist_node17();
     async function auth(state, options = {}) {
       var _a, _b;
       if (!state.authentication) {
@@ -6894,7 +7070,7 @@ var require_dist_node17 = __commonJS({
 });
 
 // 
-var require_dist_node18 = __commonJS({
+var require_dist_node20 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __create2 = Object.create;
@@ -6929,7 +7105,7 @@ var require_dist_node18 = __commonJS({
     var import_universal_user_agent = require_dist_node();
     var import_request2 = require_dist_node5();
     var import_btoa_lite = __toESM2(require_btoa_node());
-    var import_auth_oauth_user = require_dist_node17();
+    var import_auth_oauth_user = require_dist_node19();
     async function auth(state, authOptions) {
       if (authOptions.type === "oauth-app") {
         return {
@@ -6967,7 +7143,7 @@ var require_dist_node18 = __commonJS({
       return userAuth();
     }
     var import_btoa_lite2 = __toESM2(require_btoa_node());
-    var import_auth_oauth_user2 = require_dist_node17();
+    var import_auth_oauth_user2 = require_dist_node19();
     async function hook(state, request2, route, parameters) {
       let endpoint = request2.endpoint.merge(
         route,
@@ -6993,7 +7169,7 @@ var require_dist_node18 = __commonJS({
       }
     }
     var VERSION = "7.0.0";
-    var import_auth_oauth_user3 = require_dist_node17();
+    var import_auth_oauth_user3 = require_dist_node19();
     function createOAuthAppAuth(options) {
       const state = Object.assign(
         {
@@ -16370,7 +16546,7 @@ var require_jsonwebtoken = __commonJS({
 });
 
 // 
-var require_dist_node19 = __commonJS({
+var require_dist_node21 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -17468,7 +17644,95 @@ var require_cjs = __commonJS({
 });
 
 // 
-var require_dist_node20 = __commonJS({
+var require_dist_node22 = __commonJS({
+  ""(exports, module) {
+    "use strict";
+    var __create2 = Object.create;
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __getProtoOf2 = Object.getPrototypeOf;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export2 = (target, all) => {
+      for (var name in all)
+        __defProp2(target, name, { get: all[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if (from && typeof from === "object" || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toESM2 = (mod, isNodeMode, target) => (target = mod != null ? __create2(__getProtoOf2(mod)) : {}, __copyProps2(
+      isNodeMode || !mod || !mod.__esModule ? __defProp2(target, "default", { value: mod, enumerable: true }) : target,
+      mod
+    ));
+    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export2(dist_src_exports, {
+      RequestError: () => RequestError
+    });
+    module.exports = __toCommonJS(dist_src_exports);
+    var import_deprecation = require_dist_node3();
+    var import_once = __toESM2(require_once());
+    var logOnceCode = (0, import_once.default)((deprecation) => console.warn(deprecation));
+    var logOnceHeaders = (0, import_once.default)((deprecation) => console.warn(deprecation));
+    var RequestError = class extends Error {
+      constructor(message, statusCode, options) {
+        super(message);
+        if (Error.captureStackTrace) {
+          Error.captureStackTrace(this, this.constructor);
+        }
+        this.name = "HttpError";
+        this.status = statusCode;
+        let headers;
+        if ("headers" in options && typeof options.headers !== "undefined") {
+          headers = options.headers;
+        }
+        if ("response" in options) {
+          this.response = options.response;
+          headers = options.response.headers;
+        }
+        const requestCopy = Object.assign({}, options.request);
+        if (options.request.headers.authorization) {
+          requestCopy.headers = Object.assign({}, options.request.headers, {
+            authorization: options.request.headers.authorization.replace(
+              / .*$/,
+              " [REDACTED]"
+            )
+          });
+        }
+        requestCopy.url = requestCopy.url.replace(/\bclient_secret=\w+/g, "client_secret=[REDACTED]").replace(/\baccess_token=\w+/g, "access_token=[REDACTED]");
+        this.request = requestCopy;
+        Object.defineProperty(this, "code", {
+          get() {
+            logOnceCode(
+              new import_deprecation.Deprecation(
+                "[@octokit/request-error] `error.code` is deprecated, use `error.status`."
+              )
+            );
+            return statusCode;
+          }
+        });
+        Object.defineProperty(this, "headers", {
+          get() {
+            logOnceHeaders(
+              new import_deprecation.Deprecation(
+                "[@octokit/request-error] `error.headers` is deprecated, use `error.response.headers`."
+              )
+            );
+            return headers || {};
+          }
+        });
+      }
+    };
+  }
+});
+
+// 
+var require_dist_node23 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __create2 = Object.create;
@@ -17502,10 +17766,10 @@ var require_dist_node20 = __commonJS({
     module.exports = __toCommonJS(dist_src_exports);
     var import_universal_user_agent = require_dist_node();
     var import_request2 = require_dist_node5();
-    var import_auth_oauth_app = require_dist_node18();
+    var import_auth_oauth_app = require_dist_node20();
     var import_deprecation = require_dist_node3();
-    var OAuthAppAuth = __toESM2(require_dist_node18());
-    var import_universal_github_app_jwt = require_dist_node19();
+    var OAuthAppAuth = __toESM2(require_dist_node20());
+    var import_universal_github_app_jwt = require_dist_node21();
     async function getAppAuthentication({
       appId,
       privateKey,
@@ -17752,8 +18016,8 @@ var require_dist_node20 = __commonJS({
           throw new Error(`Invalid auth type: ${authOptions.type}`);
       }
     }
-    var import_auth_oauth_user = require_dist_node17();
-    var import_request_error = require_dist_node4();
+    var import_auth_oauth_user = require_dist_node19();
+    var import_request_error = require_dist_node22();
     var PATHS = [
       "/app",
       "/app/hook/config",
@@ -17871,8 +18135,8 @@ var require_dist_node20 = __commonJS({
         return sendRequestWithRetries(state, request, options, createdAt, retries);
       }
     }
-    var VERSION = "6.0.0";
-    var import_auth_oauth_user2 = require_dist_node17();
+    var VERSION = "6.0.1";
+    var import_auth_oauth_user2 = require_dist_node19();
     function createAppAuth2(options) {
       if (!options.appId) {
         throw new Error("[@octokit/auth-app] appId option is required");
@@ -18037,7 +18301,7 @@ var require_utils2 = __commonJS({
 });
 
 // 
-var require_dist_node21 = __commonJS({
+var require_dist_node24 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -24876,7 +25140,7 @@ var require_lib4 = __commonJS({
 });
 
 // 
-var require_dist_node22 = __commonJS({
+var require_dist_node25 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -24930,18 +25194,18 @@ var require_dist_node22 = __commonJS({
 });
 
 // 
-var require_dist_node23 = __commonJS({
+var require_dist_node26 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     function _interopDefault(ex) {
       return ex && typeof ex === "object" && "default" in ex ? ex["default"] : ex;
     }
-    var endpoint = require_dist_node21();
+    var endpoint = require_dist_node24();
     var universalUserAgent = require_dist_node();
     var isPlainObject = require_is_plain_object();
     var nodeFetch = _interopDefault(require_lib4());
-    var requestError = require_dist_node22();
+    var requestError = require_dist_node25();
     var VERSION = "5.6.3";
     function getBufferResponse(response) {
       return response.arrayBuffer();
@@ -25083,11 +25347,11 @@ var require_dist_node23 = __commonJS({
 });
 
 // 
-var require_dist_node24 = __commonJS({
+var require_dist_node27 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    var request = require_dist_node23();
+    var request = require_dist_node26();
     var universalUserAgent = require_dist_node();
     var VERSION = "4.8.0";
     function _buildMessageForResponseErrors(data) {
@@ -25181,7 +25445,7 @@ var require_dist_node24 = __commonJS({
 });
 
 // 
-var require_dist_node25 = __commonJS({
+var require_dist_node28 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -25227,15 +25491,15 @@ var require_dist_node25 = __commonJS({
 });
 
 // 
-var require_dist_node26 = __commonJS({
+var require_dist_node29 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     var universalUserAgent = require_dist_node();
     var beforeAfterHook = require_before_after_hook();
-    var request = require_dist_node23();
-    var graphql = require_dist_node24();
-    var authToken = require_dist_node25();
+    var request = require_dist_node26();
+    var graphql = require_dist_node27();
+    var authToken = require_dist_node28();
     function _objectWithoutPropertiesLoose(source, excluded) {
       if (source == null)
         return {};
@@ -25363,7 +25627,7 @@ var require_dist_node26 = __commonJS({
 });
 
 // 
-var require_dist_node27 = __commonJS({
+var require_dist_node30 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -26437,7 +26701,7 @@ var require_dist_node27 = __commonJS({
 });
 
 // 
-var require_dist_node28 = __commonJS({
+var require_dist_node31 = __commonJS({
   ""(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -26628,9 +26892,9 @@ var require_utils4 = __commonJS({
     exports.getOctokitOptions = exports.GitHub = exports.defaults = exports.context = void 0;
     var Context = __importStar(require_context());
     var Utils = __importStar(require_utils2());
-    var core_1 = require_dist_node26();
-    var plugin_rest_endpoint_methods_1 = require_dist_node27();
-    var plugin_paginate_rest_1 = require_dist_node28();
+    var core_1 = require_dist_node29();
+    var plugin_rest_endpoint_methods_1 = require_dist_node30();
+    var plugin_paginate_rest_1 = require_dist_node31();
     exports.context = new Context.Context();
     var baseUrl = Utils.getApiBaseUrl();
     exports.defaults = {
@@ -31336,12 +31600,12 @@ var require_dist2 = __commonJS({
 
 // 
 var core3 = __toESM(require_core());
-var import_rest2 = __toESM(require_dist_node13());
+var import_rest2 = __toESM(require_dist_node14());
 
 // 
 var import_core = __toESM(require_core());
-var import_rest = __toESM(require_dist_node13());
-var import_auth_app = __toESM(require_dist_node20());
+var import_rest = __toESM(require_dist_node14());
+var import_auth_app = __toESM(require_dist_node23());
 var import_github = __toESM(require_github());
 
 // 
@@ -32656,7 +32920,7 @@ var PullRequest = class {
     });
   }
   async setCheckResult({ state, title, summary }) {
-    const parameters = {
+    const createParameters = {
       ...import_github2.context.repo,
       name: PullRequest.checkName,
       head_sha: this.sha,
@@ -32668,9 +32932,13 @@ var PullRequest = class {
       }
     };
     if (this.previousRunId) {
-      await this.github.checks.update({ check_run_id: this.previousRunId, ...parameters });
+      const updateParameters = {
+        check_run_id: this.previousRunId,
+        ...createParameters
+      };
+      await this.github.checks.update(updateParameters);
     } else {
-      await this.github.checks.create(parameters);
+      await this.github.checks.create(createParameters);
     }
   }
 };
