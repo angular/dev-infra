@@ -19,7 +19,7 @@ jobs:
       # Because the checkout and setup node action is contained in the dev-infra repo, we must
       # checkout the repo to be able to run the action we have created.  Other repos will skip
       # this step.
-      - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
         with:
           fetch-depth: 1
       - uses: ./github-actions/npm/checkout-and-setup-node
