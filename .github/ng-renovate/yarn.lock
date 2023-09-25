@@ -1755,17 +1755,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@renovatebot/pep440@npm:3.0.7":
-  version: 3.0.7
-  resolution: "@renovatebot/pep440@npm:3.0.7"
-  checksum: d1abbcc19d5afa42f28fab765b87ede75a906401071a2b29459b32526fa8060d85793c078319e17b298f8817ffdf3aefaef3c645bd2b8e17d868e25daaf6f62f
+"@renovatebot/pep440@npm:3.0.8":
+  version: 3.0.8
+  resolution: "@renovatebot/pep440@npm:3.0.8"
+  checksum: 87f778e682ba31e9c9dd31400e4ba23d47e914f82e079210cda2d455dcdb98fb13a4afc8734d2f2f2e9b19333f8e0b27f52fe9f7901546aa227a481bfd76b5e6
   languageName: node
   linkType: hard
 
-"@renovatebot/ruby-semver@npm:3.0.14":
-  version: 3.0.14
-  resolution: "@renovatebot/ruby-semver@npm:3.0.14"
-  checksum: 4a0eda54ec5e43d7bf5ed4a11bb349f75b9799b6722e9b4ec153bd39f8f62dd597979c7e7a7a8626089d97207a295e0132acfc0c6ea666f2089f510078b612a8
+"@renovatebot/ruby-semver@npm:3.0.15":
+  version: 3.0.15
+  resolution: "@renovatebot/ruby-semver@npm:3.0.15"
+  checksum: 0f0d407bd88a4a040f0b12254255be65c5e527a6f60034fdc6b59de2094c4b0fa2fbc2ecc1999ed446f7bb8e1425855a233af76e42084ff5ae72b0dad906a9a9
   languageName: node
   linkType: hard
 
@@ -5455,7 +5455,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: 36.102.0
+    renovate: 36.107.1
   languageName: unknown
   linkType: soft
 
@@ -6146,9 +6146,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:36.102.0":
-  version: 36.102.0
-  resolution: "renovate@npm:36.102.0"
+"renovate@npm:36.107.1":
+  version: 36.107.1
+  resolution: "renovate@npm:36.107.1"
   dependencies:
     "@aws-sdk/client-codecommit": 3.363.0
     "@aws-sdk/client-ec2": 3.363.0
@@ -6171,8 +6171,8 @@ __metadata:
     "@opentelemetry/semantic-conventions": 1.17.0
     "@qnighy/marshal": 0.1.3
     "@renovatebot/osv-offline": 1.3.7
-    "@renovatebot/pep440": 3.0.7
-    "@renovatebot/ruby-semver": 3.0.14
+    "@renovatebot/pep440": 3.0.8
+    "@renovatebot/ruby-semver": 3.0.15
     "@sindresorhus/is": 4.6.0
     "@types/ms": 0.7.31
     "@types/tmp": 0.2.4
@@ -6264,7 +6264,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 975231586b87e6b1d6f517ef1353c61c6bfe4a39a75d51fb3b047d08ba0e3ba0832e57e9dea5434610c6e9ffc4b2caf7552897b6b7c26a5f8d8420ac180a5900
+  checksum: a2031816a0d508dfd2ae8e89f249b4a1bfb8ad41923cef29e562c96f38208b00e72650a4dc8c364808a79489833fb8c8203fb48fb3bb2e22c7b100930ef8a860
   languageName: node
   linkType: hard
 

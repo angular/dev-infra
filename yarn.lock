@@ -414,7 +414,7 @@ __metadata:
     font-color-contrast: ^11.1.0
     gcip-cloud-functions: 0.2.0
     git-raw-commits: ^4.0.0
-    glob: 10.3.5
+    glob: 10.3.7
     husky: ^8.0.0
     inquirer: 9.2.11
     jasmine: ~4.6.0
@@ -6446,11 +6446,11 @@ __metadata:
   linkType: hard
 
 "@types/wait-on@npm:^5.3.1":
-  version: 5.3.1
-  resolution: "@types/wait-on@npm:5.3.1"
+  version: 5.3.2
+  resolution: "@types/wait-on@npm:5.3.2"
   dependencies:
     "@types/node": "*"
-  checksum: 2a6e88a107930963ceea016dc733dc259dc52faf864933cd4d6f7fc6db7165254c10f8bfcb3b803237b2869674d988319ea4f958c0b6fd3763c5fcb9e489565a
+  checksum: 410914741d0b098446185d5b72ec7ca38b877835346aa35a101c646a41b36e485350956093c76c328f5783592abce68284cae0c94b2f400dcad7d0ac1539c2ff
   languageName: node
   linkType: hard
 
@@ -10801,9 +10801,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:10.3.5":
-  version: 10.3.5
-  resolution: "glob@npm:10.3.5"
+"glob@npm:10.3.7":
+  version: 10.3.7
+  resolution: "glob@npm:10.3.7"
   dependencies:
     foreground-child: ^3.1.0
     jackspeak: ^2.0.3
@@ -10811,8 +10811,8 @@ __metadata:
     minipass: ^5.0.0 || ^6.0.2 || ^7.0.0
     path-scurry: ^1.10.1
   bin:
-    glob: dist/cjs/src/bin.js
-  checksum: 564f4799cae48c0bcc841c88a20b539b5701c27ed5596f8623f588b3c523262d3fc20eb1ea89cab9c75b0912faf40ca5501fc835f982225d0d0599282b09e97a
+    glob: dist/esm/bin.mjs
+  checksum: 9a27f1fa8774c3a8ab8f05c26a77276edaf5418aac29aff70c5d847ef75dabf536554cb113e945193323fb769fbe32edde12559d2d52266f38662595cbc7a031
   languageName: node
   linkType: hard
 
