@@ -2,12 +2,6 @@ name: 'Checkout and Setup Node'
 description: 'Checks out the repository and sets up node environment.'
 author: 'Angular'
 inputs:
-  fetch-depth:
-    default: 0
-    description: |
-      The number of commits to include in the fetch, defaulting to all commits in the history
-      of the repository
-
   ref:
     description: |
       The branch, tag or SHA to checkout. Defaults to allowing actions/checkout to determine the ref.
@@ -40,9 +34,9 @@ runs:
   steps:
     - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
       with:
-        ref: ${{ inputs.ref }}
-        fetch-depth: ${{ inputs.fetch-depth }}
+        filter: blob:none
         persist-credentials: false
+        ref: ${{ inputs.ref }}
 
     - uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d # v3.8.1
       with:
