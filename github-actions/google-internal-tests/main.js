@@ -11891,6 +11891,94 @@ var require_dist_node13 = __commonJS({
 var require_dist_node14 = __commonJS({
   ""(exports, module) {
     "use strict";
+    var __create2 = Object.create;
+    var __defProp2 = Object.defineProperty;
+    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
+    var __getOwnPropNames2 = Object.getOwnPropertyNames;
+    var __getProtoOf2 = Object.getPrototypeOf;
+    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+    var __export2 = (target, all) => {
+      for (var name in all)
+        __defProp2(target, name, { get: all[name], enumerable: true });
+    };
+    var __copyProps2 = (to, from, except, desc) => {
+      if (from && typeof from === "object" || typeof from === "function") {
+        for (let key of __getOwnPropNames2(from))
+          if (!__hasOwnProp2.call(to, key) && key !== except)
+            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
+      }
+      return to;
+    };
+    var __toESM2 = (mod, isNodeMode, target) => (target = mod != null ? __create2(__getProtoOf2(mod)) : {}, __copyProps2(
+      isNodeMode || !mod || !mod.__esModule ? __defProp2(target, "default", { value: mod, enumerable: true }) : target,
+      mod
+    ));
+    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var dist_src_exports = {};
+    __export2(dist_src_exports, {
+      RequestError: () => RequestError
+    });
+    module.exports = __toCommonJS(dist_src_exports);
+    var import_deprecation = require_dist_node3();
+    var import_once = __toESM2(require_once());
+    var logOnceCode = (0, import_once.default)((deprecation) => console.warn(deprecation));
+    var logOnceHeaders = (0, import_once.default)((deprecation) => console.warn(deprecation));
+    var RequestError = class extends Error {
+      constructor(message, statusCode, options) {
+        super(message);
+        if (Error.captureStackTrace) {
+          Error.captureStackTrace(this, this.constructor);
+        }
+        this.name = "HttpError";
+        this.status = statusCode;
+        let headers;
+        if ("headers" in options && typeof options.headers !== "undefined") {
+          headers = options.headers;
+        }
+        if ("response" in options) {
+          this.response = options.response;
+          headers = options.response.headers;
+        }
+        const requestCopy = Object.assign({}, options.request);
+        if (options.request.headers.authorization) {
+          requestCopy.headers = Object.assign({}, options.request.headers, {
+            authorization: options.request.headers.authorization.replace(
+              / .*$/,
+              " [REDACTED]"
+            )
+          });
+        }
+        requestCopy.url = requestCopy.url.replace(/\bclient_secret=\w+/g, "client_secret=[REDACTED]").replace(/\baccess_token=\w+/g, "access_token=[REDACTED]");
+        this.request = requestCopy;
+        Object.defineProperty(this, "code", {
+          get() {
+            logOnceCode(
+              new import_deprecation.Deprecation(
+                "[@octokit/request-error] `error.code` is deprecated, use `error.status`."
+              )
+            );
+            return statusCode;
+          }
+        });
+        Object.defineProperty(this, "headers", {
+          get() {
+            logOnceHeaders(
+              new import_deprecation.Deprecation(
+                "[@octokit/request-error] `error.headers` is deprecated, use `error.response.headers`."
+              )
+            );
+            return headers || {};
+          }
+        });
+      }
+    };
+  }
+});
+
+// 
+var require_dist_node15 = __commonJS({
+  ""(exports, module) {
+    "use strict";
     var __defProp2 = Object.defineProperty;
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
@@ -11917,7 +12005,7 @@ var require_dist_node14 = __commonJS({
     var import_universal_user_agent = require_dist_node();
     var VERSION = "8.0.4";
     var import_is_plain_object = require_is_plain_object();
-    var import_request_error = require_dist_node12();
+    var import_request_error = require_dist_node14();
     function getBufferResponse(response) {
       return response.arrayBuffer();
     }
@@ -12070,7 +12158,7 @@ var require_dist_node14 = __commonJS({
 });
 
 // 
-var require_dist_node15 = __commonJS({
+var require_dist_node16 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -12097,11 +12185,11 @@ var require_dist_node15 = __commonJS({
       withCustomRequest: () => withCustomRequest
     });
     module.exports = __toCommonJS(dist_src_exports);
-    var import_request3 = require_dist_node14();
+    var import_request3 = require_dist_node15();
     var import_universal_user_agent = require_dist_node();
     var VERSION = "7.0.1";
-    var import_request2 = require_dist_node14();
-    var import_request4 = require_dist_node14();
+    var import_request2 = require_dist_node15();
+    var import_request4 = require_dist_node15();
     function _buildMessageForResponseErrors(data) {
       return `Request failed due to following response errors:
 ` + data.errors.map((e2) => ` - ${e2.message}`).join("\n");
@@ -12208,7 +12296,7 @@ var require_dist_node15 = __commonJS({
 });
 
 // 
-var require_dist_node16 = __commonJS({
+var require_dist_node17 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -12279,7 +12367,7 @@ var require_dist_node16 = __commonJS({
 });
 
 // 
-var require_dist_node17 = __commonJS({
+var require_dist_node18 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -12307,9 +12395,9 @@ var require_dist_node17 = __commonJS({
     var import_universal_user_agent = require_dist_node();
     var import_before_after_hook = require_before_after_hook();
     var import_request2 = require_dist_node13();
-    var import_graphql = require_dist_node15();
-    var import_auth_token = require_dist_node16();
-    var VERSION = "5.0.0";
+    var import_graphql = require_dist_node16();
+    var import_auth_token = require_dist_node17();
+    var VERSION = "5.0.1";
     var _a;
     var Octokit2 = (_a = class {
       static defaults(defaults2) {
@@ -12425,7 +12513,7 @@ var require_dist_node17 = __commonJS({
 });
 
 // 
-var require_dist_node18 = __commonJS({
+var require_dist_node19 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -12475,7 +12563,7 @@ var require_dist_node18 = __commonJS({
 });
 
 // 
-var require_dist_node19 = __commonJS({
+var require_dist_node20 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -12845,7 +12933,7 @@ var require_dist_node19 = __commonJS({
 });
 
 // 
-var require_dist_node20 = __commonJS({
+var require_dist_node21 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -14849,7 +14937,7 @@ var require_dist_node20 = __commonJS({
 });
 
 // 
-var require_dist_node21 = __commonJS({
+var require_dist_node22 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -14874,10 +14962,10 @@ var require_dist_node21 = __commonJS({
       Octokit: () => Octokit2
     });
     module.exports = __toCommonJS(dist_src_exports);
-    var import_core = require_dist_node17();
-    var import_plugin_request_log = require_dist_node18();
-    var import_plugin_paginate_rest = require_dist_node19();
-    var import_plugin_rest_endpoint_methods = require_dist_node20();
+    var import_core = require_dist_node18();
+    var import_plugin_request_log = require_dist_node19();
+    var import_plugin_paginate_rest = require_dist_node20();
+    var import_plugin_rest_endpoint_methods = require_dist_node21();
     var VERSION = "20.0.1";
     var Octokit2 = import_core.Octokit.plugin(
       import_plugin_request_log.requestLog,
@@ -20977,7 +21065,7 @@ var init_multipart_parser = __esm({
 // 
 var core = __toESM(require_core());
 var import_github = __toESM(require_github());
-var import_rest = __toESM(require_dist_node21());
+var import_rest = __toESM(require_dist_node22());
 
 // 
 var import_brace_expansion = __toESM(require_brace_expansion(), 1);

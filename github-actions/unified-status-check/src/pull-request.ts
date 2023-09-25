@@ -2,7 +2,7 @@ import {types as graphqlTypes, params, optional, onUnion, query} from 'typed-gra
 import * as core from '@actions/core';
 import {CheckConclusionState, PullRequestState, StatusState} from '@octokit/graphql-schema';
 
-import {Octokit} from '@octokit/rest';
+import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
 import {context} from '@actions/github';
 
 /** All of the statuses to be ignored by the unified status check. */
@@ -62,7 +62,10 @@ export class PullRequest {
     return new PullRequest(github, pullRequest.repository.pullRequest);
   }
 
-  private constructor(private github: Octokit, private pullRequest: PullRequestFromGithub) {
+  private constructor(
+    private github: Octokit,
+    private pullRequest: PullRequestFromGithub,
+  ) {
     /** The list of all checks and statuses on the pull request, if any exist. */
     const checksAndStatuses = pullRequest.commits.nodes[0].commit.statusCheckRollup?.contexts.nodes;
     if (checksAndStatuses) {
@@ -134,7 +137,7 @@ export class PullRequest {
     summary: string;
   }) {
     /** The parameters for the check run update or creation. */
-    const parameters = {
+    const createParameters: RestEndpointMethodTypes['checks']['create']['parameters'] = {
       ...context.repo,
       name: PullRequest.checkName,
       head_sha: this.sha,
@@ -147,9 +150,13 @@ export class PullRequest {
     };
 
     if (this.previousRunId) {
-      await this.github.checks.update({check_run_id: this.previousRunId, ...parameters});
+      const updateParameters: RestEndpointMethodTypes['checks']['update']['parameters'] = {
+        check_run_id: this.previousRunId,
+        ...createParameters,
+      };
+      await this.github.checks.update(updateParameters);
     } else {
-      await this.github.checks.create(parameters);
+      await this.github.checks.create(createParameters);
     }
   }
 }
