@@ -414,7 +414,7 @@ __metadata:
     font-color-contrast: ^11.1.0
     gcip-cloud-functions: 0.2.0
     git-raw-commits: ^4.0.0
-    glob: 10.3.7
+    glob: 10.3.6
     husky: ^8.0.0
     inquirer: 9.2.11
     jasmine: ~4.6.0
@@ -10801,9 +10801,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:10.3.7":
-  version: 10.3.7
-  resolution: "glob@npm:10.3.7"
+"glob@npm:10.3.6":
+  version: 10.3.6
+  resolution: "glob@npm:10.3.6"
   dependencies:
     foreground-child: ^3.1.0
     jackspeak: ^2.0.3
@@ -10811,8 +10811,8 @@ __metadata:
     minipass: ^5.0.0 || ^6.0.2 || ^7.0.0
     path-scurry: ^1.10.1
   bin:
-    glob: dist/esm/bin.mjs
-  checksum: 9a27f1fa8774c3a8ab8f05c26a77276edaf5418aac29aff70c5d847ef75dabf536554cb113e945193323fb769fbe32edde12559d2d52266f38662595cbc7a031
+    glob: dist/cjs/src/bin.js
+  checksum: ebc5eb3d5c13bee1070f0833e649d83320a5a9ebfcdd570bfb63b9af5906b76002fcd792091fa3f327e9acc62deeb9566cd678170a44f0f2eb0b4d41074158ab
   languageName: node
   linkType: hard
 
