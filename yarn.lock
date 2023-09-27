@@ -6180,9 +6180,9 @@ __metadata:
   linkType: hard
 
 "@types/marked@npm:^5.0.1":
-  version: 5.0.1
-  resolution: "@types/marked@npm:5.0.1"
-  checksum: 84323058e0a5127aeb67d709e1dcb0cc0024b190c337ca68813fcd1f271e7c7351ed14ea83e5e21a7a264fb87ba8767c0a98fb26d05a06181a7edd49299ef437
+  version: 5.0.2
+  resolution: "@types/marked@npm:5.0.2"
+  checksum: 2875618970bd5aaba472e313c799bbe241fe9e31d1e79782841a0cc04e08ab2a98653166f1fb99bf8bcf140d3878c3ab960a12aa8f0fb949d8277e8a01d3411b
   languageName: node
   linkType: hard
 
@@ -10184,8 +10184,8 @@ __metadata:
   linkType: hard
 
 "firebase-tools@npm:^12.0.0":
-  version: 12.5.4
-  resolution: "firebase-tools@npm:12.5.4"
+  version: 12.6.0
+  resolution: "firebase-tools@npm:12.6.0"
   dependencies:
     "@google-cloud/pubsub": ^3.0.1
     abort-controller: ^3.0.0
@@ -10249,7 +10249,7 @@ __metadata:
     ws: ^7.2.3
   bin:
     firebase: lib/bin/firebase.js
-  checksum: fe4a8d620f3e02e7db0358ff779d8846c14cc9ad6fe29b3e374651fe0a49c4fab4d9ea1ec0aaaa226c0a97c14b2b239ebf8e51e1e5ce72f700be3154a53ceac9
+  checksum: e782f87c9dff234cea693a0258e3c3d0528b5d98cf28f9f3ae46cec1a1ad3172417d3564f6d47f6cf8e01551761749e9e48494f17a9b9793e1272a47fadc2ad6
   languageName: node
   linkType: hard
 
