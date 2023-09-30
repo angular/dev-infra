@@ -10,7 +10,6 @@ def generate_api_docs(name, module_name, srcs):
         module_name = module_name,
         srcs = srcs,
         output_name = json_outfile,
-        visibility = ["//visibility:private"],
     )
 
     render_api_to_html(
