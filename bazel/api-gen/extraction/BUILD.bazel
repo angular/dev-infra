@@ -24,6 +24,7 @@ ts_library(
     name = "extract_api_to_json_lib",
     srcs = glob(["**/*.ts"]),
     devmode_module = "commonjs",
+    tsconfig = "//:tsconfig.json",
     deps = [
         "@npm//@angular/compiler",
         "@npm//@angular/compiler-cli",
@@ -46,6 +47,7 @@ nodejs_binary(
     # actions using the linker. An alternative would be to:
     #   - bundle the Angular compiler into a CommonJS bundle
     #   - use the patched resolution- but also patch the ESM imports (similar to how FW does it).
+    visibility = ["//visibility:public"],
 )
 
 # Expose the sources in the dev-infra NPM package.

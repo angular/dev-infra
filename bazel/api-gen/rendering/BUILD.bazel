@@ -10,7 +10,7 @@ ts_library(
         "**/*.tsx",
     ]),
     devmode_module = "commonjs",
-    tsconfig = "//:tsconfig",
+    tsconfig = "//:tsconfig.json",
     deps = [
         "@npm//@bazel/runfiles",
         "@npm//@types/marked",
@@ -35,6 +35,7 @@ nodejs_binary(
         "--bazel_patch_module_resolver",
         "--node_options=--preserve-symlinks-main",
     ],
+    visibility = ["//visibility:public"],
 )
 
 # Expose the sources in the dev-infra NPM package.

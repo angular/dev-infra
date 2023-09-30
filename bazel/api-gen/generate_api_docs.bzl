@@ -11,7 +11,6 @@ def generate_api_docs(name, module_name, entry_point, srcs):
         entry_point = entry_point,
         srcs = srcs,
         output_name = json_outfile,
-        visibility = ["//visibility:private"],
     )
 
     render_api_to_html(
