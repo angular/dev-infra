@@ -450,7 +450,7 @@ __metadata:
     spdx-satisfies: ^5.0.1
     stylelint: ^15.1.0
     supports-color: 9.4.0
-    terser: 5.20.0
+    terser: 5.21.0
     tmp: ^0.2.1
     true-case-path: ^2.2.1
     ts-node: ^10.8.1
@@ -15097,13 +15097,13 @@ __metadata:
   linkType: hard
 
 "preact-render-to-string@npm:^6.2.1":
-  version: 6.2.1
-  resolution: "preact-render-to-string@npm:6.2.1"
+  version: 6.2.2
+  resolution: "preact-render-to-string@npm:6.2.2"
   dependencies:
     pretty-format: ^3.8.0
   peerDependencies:
     preact: ">=10"
-  checksum: 61411172d338dc3d254c4421f9536198c6c7a093d7d72636490eb89288a3052975f7b04dde1bd146130d4e34c5db728565eef2ee69f2536310f870c0aad4afe2
+  checksum: 0121d1fc21811f75dce55f789822e92b9d28e6f3d26c43ad5545c8ca000ce3e50bbe34ee79dbd07529027fc290bd24780037cb10e6e9b4b234ec128c53e8cc1f
   languageName: node
   linkType: hard
 
@@ -17499,9 +17499,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"terser@npm:5.20.0":
-  version: 5.20.0
-  resolution: "terser@npm:5.20.0"
+"terser@npm:5.21.0":
+  version: 5.21.0
+  resolution: "terser@npm:5.21.0"
   dependencies:
     "@jridgewell/source-map": ^0.3.3
     acorn: ^8.8.2
@@ -17509,7 +17509,7 @@ __metadata:
     source-map-support: ~0.5.20
   bin:
     terser: bin/terser
-  checksum: 251d1b62d7c651ace29f997cf336ff5d5f8e30c65c8698ab7b831764d9e012ab0640895cb609906fb939a5bdf5143d73b5781c5c8c67b9216c77ce92dafdc0bc
+  checksum: 130f1567af1ffa4ddb067651bb284a01b45b5c83e82b3a072a5ff94b0b00ac35090f89c8714631a4a45972f65187bc149fc7144380611f437e1e3d9e174b136b
   languageName: node
   linkType: hard
 
