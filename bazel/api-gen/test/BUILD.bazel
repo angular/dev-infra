@@ -3,5 +3,6 @@ load("//bazel/api-gen:generate_api_docs.bzl", "generate_api_docs")
 generate_api_docs(
     name = "test",
     srcs = ["//bazel/api-gen/extraction/test:source_files"],
+    entry_point = "//bazel/api-gen/extraction/test:fake-source.ts",
     module_name = "@angular/core",
 )
