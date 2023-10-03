@@ -50,7 +50,7 @@ yarn_install(
     # Yarn Berry/v2+ expects `--immutable` instead of `--frozen-lockfile`.
     args = ["--immutable"],
     data = [
-        "//:.yarn/releases/yarn-3.6.3.cjs",
+        "//:.yarn/releases/yarn-3.6.4.cjs",
         "//:.yarnrc.yml",
     ],
     # Currently disabled due to:
@@ -61,7 +61,7 @@ yarn_install(
     # We prefer to symlink the `node_modules` to only maintain a single install.
     # See https://github.com/angular/dev-infra/pull/446#issuecomment-1059820287 for details.
     symlink_node_modules = True,
-    yarn = "//:.yarn/releases/yarn-3.6.3.cjs",
+    yarn = "//:.yarn/releases/yarn-3.6.4.cjs",
     yarn_lock = "//:yarn.lock",
 )
 
@@ -69,12 +69,12 @@ yarn_install(
     name = "ts_proto_npm",
     args = ["--immutable"],
     data = [
-        "//:.yarn/releases/yarn-3.6.3.cjs",
+        "//:.yarn/releases/yarn-3.6.4.cjs",
         "//tools/ts_proto:.yarnrc.yml",
     ],
     exports_directories_only = False,
     package_json = "//tools/ts_proto:package.json",
-    yarn = "//:.yarn/releases/yarn-3.6.3.cjs",
+    yarn = "//:.yarn/releases/yarn-3.6.4.cjs",
     yarn_lock = "//tools/ts_proto:yarn.lock",
 )
 
