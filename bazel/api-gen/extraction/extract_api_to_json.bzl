@@ -19,6 +19,18 @@ def _extract_api_to_json(ctx):
     json_output = ctx.outputs.output_name
     args.add(json_output.path)
 
+    # Pass the import path map
+    # TODO: consider module_mappings_aspect to deal with path mappings instead of manually
+    # specifying them
+    # https://github.com/bazelbuild/rules_nodejs/blob/5.x/internal/linker/link_node_modules.bzl#L236
+    path_map = {}
+    for target, path in ctx.attr.import_map.items():
+        files = target.files.to_list()
+        if len(files) != 1:
+            fail("Expected a single file in import_map target %s" % target.label)
+        path_map[path] = files[0].path
+    args.add(json.encode(path_map))
+
     # Define an action that runs the nodejs_binary executable. This is
     # the main thing that this rule does.
     run_node(
@@ -54,6 +66,10 @@ extract_api_to_json = rule(
             doc = """Source file entry-point from which to extract public symbols""",
             mandatory = True,
             allow_single_file = True,
+        ),
+        "import_map": attr.label_keyed_string_dict(
+            doc = """Map of import path to the index.ts file for that import""",
+            allow_files = True,
         ),
         "module_name": attr.string(
             doc = """JS Module name to be used for the extracted symbols""",

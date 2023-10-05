@@ -4,8 +4,14 @@ package(default_visibility = ["//bazel/api-gen:__subpackages__"])
 
 extract_api_to_json(
     name = "test",
-    srcs = ["fake-source.ts"],
+    srcs = [
+        "fake-source.ts",
+        "//bazel/api-gen/extraction/test/dummy-entry-point:dummy_package",
+    ],
     entry_point = "fake-source.ts",
+    import_map = {
+        "//bazel/api-gen/extraction/test/dummy-entry-point:index.ts": "@angular/dummy-package",
+    },
     module_name = "@angular/core",
     output_name = "api.json",
 )
