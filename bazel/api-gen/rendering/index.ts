@@ -1,4 +1,4 @@
-import {readFileSync, writeFileSync} from 'fs';
+import {mkdirSync, readFileSync, writeFileSync} from 'fs';
 import path from 'path';
 import {DocEntry} from './entities';
 import {getRenderable} from './processing';
@@ -28,6 +28,12 @@ function getNormalizedFilename(moduleName: string, entryName: string): string {
 
 function main() {
   const [srcs, outputFilenameExecRootRelativePath] = process.argv.slice(2);
+
+  // TODO: Remove when we are using Bazel v6+
+  // On RBE, the output directory is not created properly due to a bug.
+  // https://github.com/bazelbuild/bazel/commit/4310aeb36c134e5fc61ed5cdfdf683f3e95f19b7.
+  mkdirSync(outputFilenameExecRootRelativePath, {recursive: true})
+
 
   // Docs rendering happens in three phases that occur here:
   // 1) Aggregate all the raw extracted doc info.
