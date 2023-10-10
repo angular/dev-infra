@@ -22,19 +22,19 @@ export function findEntryPointsWithinNpmPackage(
   dirPath: string,
   packageJson: PackageJson,
 ): PackageEntryPoint[] {
-  const entryPoints: PackageEntryPoint[] = [];
-
   // Legacy behavior to support Angular packages without the `exports` field.
   // TODO: Remove when https://github.com/angular/angular-cli/issues/22889 is resolved.
   if (packageJson.exports === undefined) {
     return findEntryPointsThroughNestedPackageFiles(dirPath);
   }
 
-  for (const [subpath, conditions] of Object.entries(packageJson.exports)) {
-    if (conditions.types !== undefined) {
+  const entryPoints: PackageEntryPoint[] = [];
+  for (const [subpath, {types}] of Object.entries(packageJson.exports)) {
+    // Wildcard types mappings are supported.
+    if (types !== undefined && !types.includes('*')) {
       entryPoints.push({
         subpath,
-        typesEntryPointPath: join(dirPath, conditions.types),
+        typesEntryPointPath: join(dirPath, types),
       });
     }
   }
