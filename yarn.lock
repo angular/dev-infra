@@ -361,7 +361,7 @@ __metadata:
     "@octokit/auth-app": 6.0.1
     "@octokit/core": 5.0.1
     "@octokit/graphql": 7.0.2
-    "@octokit/graphql-schema": 14.37.0
+    "@octokit/graphql-schema": 14.38.0
     "@octokit/openapi-types": 19.0.0
     "@octokit/plugin-paginate-rest": 9.0.0
     "@octokit/plugin-rest-endpoint-methods": 10.0.1
@@ -5153,13 +5153,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/graphql-schema@npm:14.37.0":
-  version: 14.37.0
-  resolution: "@octokit/graphql-schema@npm:14.37.0"
+"@octokit/graphql-schema@npm:14.38.0":
+  version: 14.38.0
+  resolution: "@octokit/graphql-schema@npm:14.38.0"
   dependencies:
     graphql: ^16.0.0
     graphql-tag: ^2.10.3
-  checksum: 172ccca8c009154c59165ad0ed9f39afc55e627de4fe7302173445581ad598b3eb85cad645000e4e8030f53d107ded5139e0aa38ed047e39da9b9c03962361b8
+  checksum: 1d94fe705a0b7cdbe788fc9d7578489d310e25d27b7bee8d81825c0f84d65bb0fc834edac63c301305b3eac207a7ad9539ed8209b1e0536b00a097c670f10320
   languageName: node
   linkType: hard
 
