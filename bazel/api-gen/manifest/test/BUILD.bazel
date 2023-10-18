@@ -1,0 +1,18 @@
+load("//bazel/api-gen/manifest:generate_api_manifest.bzl", "generate_api_manifest")
+load("//bazel/api-gen/extraction:extract_api_to_json.bzl", "extract_api_to_json")
+
+generate_api_manifest(
+    name = "test",
+    srcs = [
+        ":another_extraction",
+        "//bazel/api-gen/extraction/test",
+    ],
+)
+
+extract_api_to_json(
+    name = "another_extraction",
+    srcs = ["another-fake-source.ts"],
+    entry_point = "another-fake-source.ts",
+    module_name = "@angular/router",
+    output_name = "api.json",
+)
