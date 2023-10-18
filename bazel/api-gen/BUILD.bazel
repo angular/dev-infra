@@ -5,6 +5,7 @@ filegroup(
     name = "files",
     srcs = glob(["*"]) + [
         "//bazel/api-gen/extraction:files",
+        "//bazel/api-gen/manifest:files",
         "//bazel/api-gen/rendering:files",
     ],
 )
