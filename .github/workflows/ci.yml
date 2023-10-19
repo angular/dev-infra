@@ -24,7 +24,7 @@ jobs:
       # Because the checkout and setup node action is contained in the dev-infra repo, we must
       # checkout the repo to be able to run the action we have created.  Other repos will skip
       # this step.
-      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - uses: ./github-actions/npm/checkout-and-setup-node
       - uses: ./github-actions/bazel/setup
       - uses: ./github-actions/bazel/configure-remote
@@ -46,7 +46,7 @@ jobs:
       # Because the checkout and setup node action is contained in the dev-infra repo, we must
       # checkout the repo to be able to run the action we have created.  Other repos will skip
       # this step.
-      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - uses: ./github-actions/npm/checkout-and-setup-node
       - uses: ./github-actions/bazel/setup
       - uses: ./github-actions/bazel/configure-remote
@@ -59,7 +59,7 @@ jobs:
       # Because the checkout and setup node action is contained in the dev-infra repo, we must
       # checkout the repo to be able to run the action we have created.  Other repos will skip
       # this step.
-      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - uses: ./github-actions/npm/checkout-and-setup-node
       - uses: ./github-actions/bazel/setup
       - uses: ./github-actions/bazel/configure-remote
@@ -72,7 +72,7 @@ jobs:
       # Because the checkout and setup node action is contained in the dev-infra repo, we must
       # checkout the repo to be able to run the action we have created.  Other repos will skip
       # this step.
-      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - uses: ./github-actions/npm/checkout-and-setup-node
       - uses: ./github-actions/bazel/setup
       - uses: ./github-actions/bazel/configure-remote
