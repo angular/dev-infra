@@ -7,12 +7,16 @@ package(default_visibility = ["//bazel/api-gen:__subpackages__"])
 esbuild(
     name = "bin",
     entry_point = ":index.ts",
+    external = [
+        "@angular/compiler-cli",
+    ],
     format = "esm",
     output = "bin.mjs",
     platform = "node",
     target = "es2022",
     deps = [
         ":generate_api_manifest_lib",
+        "@npm//@angular/compiler-cli",
     ],
 )
 
@@ -22,6 +26,7 @@ ts_library(
     devmode_module = "commonjs",
     tsconfig = "//:tsconfig.json",
     deps = [
+        "@npm//@angular/compiler-cli",
         "@npm//@bazel/runfiles",
         "@npm//@types/node",
     ],
