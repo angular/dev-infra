@@ -3260,7 +3260,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:11.0.0, commander@npm:^11.0.0":
+"commander@npm:11.1.0":
+  version: 11.1.0
+  resolution: "commander@npm:11.1.0"
+  checksum: fd1a8557c6b5b622c89ecdfde703242ab7db3b628ea5d1755784c79b8e7cb0d74d65b4a262289b533359cd58e1bfc0bf50245dfbcd2954682a6f367c828b79ef
+  languageName: node
+  linkType: hard
+
+"commander@npm:^11.0.0":
   version: 11.0.0
   resolution: "commander@npm:11.0.0"
   checksum: 6621954e1e1d078b4991c1f5bbd9439ad37aa7768d6ab4842de1dbd4d222c8a27e1b8e62108b3a92988614af45031d5bb2a2aaa92951f4d0c934d1a1ac564bb4
@@ -4262,16 +4269,6 @@ __metadata:
   dependencies:
     function-bind: ^1.1.1
   checksum: b9ad53d53be4af90ce5d1c38331e712522417d017d5ef1ebd0507e07c2fbad8686fffb8e12ddecd4c39ca9b9b47431afbb975b8abf7f3c3b82c98e9aad052792
-  languageName: node
-  linkType: hard
-
-"hasha@npm:5.2.2":
-  version: 5.2.2
-  resolution: "hasha@npm:5.2.2"
-  dependencies:
-    is-stream: ^2.0.0
-    type-fest: ^0.8.0
-  checksum: 06cc474bed246761ff61c19d629977eb5f53fa817be4313a255a64ae0f433e831a29e83acb6555e3f4592b348497596f1d1653751008dda4f21c9c21ca60ac5a
   languageName: node
   linkType: hard
 
@@ -5453,7 +5450,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: 37.28.0
+    renovate: 37.31.3
   languageName: unknown
   linkType: soft
 
@@ -6144,9 +6141,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:37.28.0":
-  version: 37.28.0
-  resolution: "renovate@npm:37.28.0"
+"renovate@npm:37.31.3":
+  version: 37.31.3
+  resolution: "renovate@npm:37.31.3"
   dependencies:
     "@aws-sdk/client-codecommit": 3.363.0
     "@aws-sdk/client-ec2": 3.363.0
@@ -6187,7 +6184,7 @@ __metadata:
     chalk: 4.1.2
     changelog-filename-regex: 2.0.1
     clean-git-ref: 2.0.1
-    commander: 11.0.0
+    commander: 11.1.0
     conventional-commits-detector: 1.0.3
     cron-parser: 4.9.0
     deepmerge: 4.3.1
@@ -6211,7 +6208,6 @@ __metadata:
     got: 11.8.6
     graph-data-structure: 3.3.0
     handlebars: 4.7.8
-    hasha: 5.2.2
     ignore: 5.2.4
     ini: 4.1.1
     js-yaml: 4.1.0
@@ -6262,7 +6258,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 3e7fcb2f696eb86454ecd7faa860995ceefca81b0ef2351de5813a9ad8f8761aa0317745c802190fea6d568e837c428bef45dd532af885c8d7f5c9428eb31c4a
+  checksum: c8ccdd78aff00a72e8e9b9ca0a3b3815bf1d442a0970273da1fbfdb48073b51302349f47846ec1e407e4e085b923a9b77b8f0304289ea19b3df50e4f4a094da0
   languageName: node
   linkType: hard
 
@@ -7008,7 +7004,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"type-fest@npm:^0.8.0, type-fest@npm:^0.8.1":
+"type-fest@npm:^0.8.1":
   version: 0.8.1
   resolution: "type-fest@npm:0.8.1"
   checksum: d61c4b2eba24009033ae4500d7d818a94fd6d1b481a8111612ee141400d5f1db46f199c014766b9fa9b31a6a7374d96fc748c6d688a78a3ce5a33123839becb7
