@@ -1,7 +1,7 @@
 {
   "name": "functions",
   "engines": {
-    "node": "18"
+    "node": "20"
   },
   "main": "functions_compiled/index.cjs",
   "type": "module",
