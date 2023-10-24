@@ -27,7 +27,7 @@ jobs:
             .github/ng-renovate/.yarn/cache
             /tmp/renovate
           key: v2-renovate-${{hashFiles('.github/ng-renovate/yarn.lock')}}-${{ steps.date.outputs.date }}
-      - run: yarn install --immutable --cwd .github/ng-renovate
+      - run: yarn --cwd .github/ng-renovate install --immutable
         shell: bash
 
       # Note: Run Renovate outside of Yarn as otherwise we would end up breaking Yarn path
