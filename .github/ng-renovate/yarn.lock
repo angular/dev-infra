@@ -1085,12 +1085,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cdktf/hcl2json@npm:0.18.2":
-  version: 0.18.2
-  resolution: "@cdktf/hcl2json@npm:0.18.2"
+"@cdktf/hcl2json@npm:0.19.0":
+  version: 0.19.0
+  resolution: "@cdktf/hcl2json@npm:0.19.0"
   dependencies:
     fs-extra: "npm:^11.1.1"
-  checksum: 1af58cf0061c1c0dee905201e82fa038068f5ad3241994eddc6534dcbc85fcceb0946c5b4b37bef91141e3a132d275bd23b5eb1c2e4a9a3dc3b5cbdef12d0e17
+  checksum: dab19ffbdf64c2168ac4dac59a69f0197fbb50682c841772a31fef25020b546cda895e2e7108384393ca5a9a157647331154270df1fb63b95f14949672c644db
   languageName: node
   linkType: hard
 
@@ -1740,17 +1740,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@renovatebot/pep440@npm:3.0.8":
-  version: 3.0.8
-  resolution: "@renovatebot/pep440@npm:3.0.8"
-  checksum: 91eb4f94c109a1abdb4a1aceb162af20709b8d6deeace71bc788e5aba0363bee20319795f49796e16ee3538791ee4166ba76a0eae520d7416206c983c42678b5
+"@renovatebot/pep440@npm:3.0.9":
+  version: 3.0.9
+  resolution: "@renovatebot/pep440@npm:3.0.9"
+  checksum: 9b634d127f3d97426d3d3bc30651dc97202dfbada40fff0a0c200912a6616148685dac1b002bbe7e7623b592f6f28b6497ba484f52c44c66d45197089f17a9cc
   languageName: node
   linkType: hard
 
-"@renovatebot/ruby-semver@npm:3.0.15":
-  version: 3.0.15
-  resolution: "@renovatebot/ruby-semver@npm:3.0.15"
-  checksum: 793da0d9a6aea04eaa12aedcbab357df4e1251121e8669c419712b84cf41b4d2e1af0addf86f1a8a69fa22fcfeacfbf962ad87edc0a0dbe1730c0799e4e3f782
+"@renovatebot/ruby-semver@npm:3.0.16":
+  version: 3.0.16
+  resolution: "@renovatebot/ruby-semver@npm:3.0.16"
+  checksum: 7fa3be5caa85d31746a3d7cd6c0fdadfcfa5af6f28294b40c7821aaef2bae6cececa01bc79c204fd0a6e061bc23a63fa8e680e6cf2345afdd746c423bf5cb844
   languageName: node
   linkType: hard
 
@@ -3568,10 +3568,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"emoji-regex@npm:10.2.1":
-  version: 10.2.1
-  resolution: "emoji-regex@npm:10.2.1"
-  checksum: 88f70a75a2889d968925b283e120f111c8ebb92c7961068d8897b16087820c358d22d72755b811906513762bb2b58255a5fca4f47ef8464a7f34c1e54523ccdf
+"emoji-regex@npm:10.3.0":
+  version: 10.3.0
+  resolution: "emoji-regex@npm:10.3.0"
+  checksum: b4838e8dcdceb44cf47f59abe352c25ff4fe7857acaf5fb51097c427f6f75b44d052eb907a7a3b86f86bc4eae3a93f5c2b7460abe79c407307e6212d65c91163
   languageName: node
   linkType: hard
 
@@ -5450,7 +5450,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: "npm:37.31.3"
+    renovate: "npm:37.31.7"
   languageName: unknown
   linkType: soft
 
@@ -6141,9 +6141,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:37.31.3":
-  version: 37.31.3
-  resolution: "renovate@npm:37.31.3"
+"renovate@npm:37.31.7":
+  version: 37.31.7
+  resolution: "renovate@npm:37.31.7"
   dependencies:
     "@aws-sdk/client-codecommit": "npm:3.363.0"
     "@aws-sdk/client-ec2": "npm:3.363.0"
@@ -6152,7 +6152,7 @@ __metadata:
     "@aws-sdk/client-s3": "npm:3.363.0"
     "@aws-sdk/credential-providers": "npm:3.363.0"
     "@breejs/later": "npm:4.1.0"
-    "@cdktf/hcl2json": "npm:0.18.2"
+    "@cdktf/hcl2json": "npm:0.19.0"
     "@iarna/toml": "npm:3.0.0"
     "@opentelemetry/api": "npm:1.6.0"
     "@opentelemetry/context-async-hooks": "npm:1.17.1"
@@ -6166,8 +6166,8 @@ __metadata:
     "@opentelemetry/semantic-conventions": "npm:1.17.1"
     "@qnighy/marshal": "npm:0.1.3"
     "@renovatebot/osv-offline": "npm:1.3.7"
-    "@renovatebot/pep440": "npm:3.0.8"
-    "@renovatebot/ruby-semver": "npm:3.0.15"
+    "@renovatebot/pep440": "npm:3.0.9"
+    "@renovatebot/ruby-semver": "npm:3.0.16"
     "@sindresorhus/is": "npm:4.6.0"
     "@types/ms": "npm:0.7.32"
     "@types/tmp": "npm:0.2.4"
@@ -6192,7 +6192,7 @@ __metadata:
     detect-indent: "npm:6.1.0"
     editorconfig: "npm:2.0.0"
     email-addresses: "npm:5.0.0"
-    emoji-regex: "npm:10.2.1"
+    emoji-regex: "npm:10.3.0"
     emojibase: "npm:15.2.0"
     emojibase-regex: "npm:15.2.0"
     extract-zip: "npm:2.0.1"
@@ -6258,7 +6258,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: fa8c6c8577cc9829a9b9bd286fe3edb2137a7cba913b711045de601338095f185b5f9bf208d73f7c1e7177ed773acffe87f73275da6f7c802475212150b9be5c
+  checksum: d02fbb78e2bb9039f017f67baef39c9edb77744f964cd6f175a6f64fd5994e16b579954f660792c587b3a6fb640776b4cb4997cf5a3988fa99bd6c5494f1bf13
   languageName: node
   linkType: hard
 
