@@ -23,7 +23,6 @@ export function isClassEntry(entry: DocEntry): entry is ClassEntry {
   return (
     entry.entryType === EntryType.UndecoratedClass ||
     entry.entryType === EntryType.Component ||
-    entry.entryType === EntryType.Decorator ||
     entry.entryType === EntryType.Pipe ||
     entry.entryType === EntryType.NgModule
   );
