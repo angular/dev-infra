@@ -2433,10 +2433,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ms@npm:0.7.32":
-  version: 0.7.32
-  resolution: "@types/ms@npm:0.7.32"
-  checksum: 16f60d0a2485edfa459e9570aec9135d9ef08dd855630754063f3baf1d1df7a5edd0f249ff9b460a33842181250f51b27b35078b83cf6ec1dccabb4485de19d6
+"@types/ms@npm:0.7.33":
+  version: 0.7.33
+  resolution: "@types/ms@npm:0.7.33"
+  checksum: ef610d94ebee838243af37800cb5d1a52b2ae0fb6880675fbb9276c0c4afcefda755f16889fa597ee4e5b377998a7e67b453614aae68d3225e5f7219984284df
   languageName: node
   linkType: hard
 
@@ -5450,7 +5450,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: "npm:37.31.7"
+    renovate: "npm:37.33.1"
   languageName: unknown
   linkType: soft
 
@@ -6141,9 +6141,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:37.31.7":
-  version: 37.31.7
-  resolution: "renovate@npm:37.31.7"
+"renovate@npm:37.33.1":
+  version: 37.33.1
+  resolution: "renovate@npm:37.33.1"
   dependencies:
     "@aws-sdk/client-codecommit": "npm:3.363.0"
     "@aws-sdk/client-ec2": "npm:3.363.0"
@@ -6169,7 +6169,7 @@ __metadata:
     "@renovatebot/pep440": "npm:3.0.9"
     "@renovatebot/ruby-semver": "npm:3.0.16"
     "@sindresorhus/is": "npm:4.6.0"
-    "@types/ms": "npm:0.7.32"
+    "@types/ms": "npm:0.7.33"
     "@types/tmp": "npm:0.2.4"
     "@yarnpkg/core": "npm:3.5.4"
     "@yarnpkg/parsers": "npm:2.5.1"
@@ -6258,7 +6258,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: d02fbb78e2bb9039f017f67baef39c9edb77744f964cd6f175a6f64fd5994e16b579954f660792c587b3a6fb640776b4cb4997cf5a3988fa99bd6c5494f1bf13
+  checksum: 323c0b6e1bda126cfa56271fe226af2202a3f7911634a19e511a664e0a402281799ac53b7412b59f9d9ea748385d26d49d01d89ff08b6029d56750f624a1cb3c
   languageName: node
   linkType: hard
 
