@@ -140,7 +140,7 @@
     "karma-sourcemap-loader": "^0.4.0",
     "license-checker": "^25.0.1",
     "minimatch": "^9.0.0",
-    "multimatch": "^6.0.0",
+    "multimatch": "^7.0.0",
     "nock": "^13.0.3",
     "node-fetch": "^3.2.5",
     "opener": "^1.5.2",
