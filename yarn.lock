@@ -443,7 +443,7 @@ __metadata:
     license-checker: "npm:^25.0.1"
     marked: "npm:^9.0.0"
     minimatch: "npm:^9.0.0"
-    multimatch: "npm:^6.0.0"
+    multimatch: "npm:^7.0.0"
     nock: "npm:^13.0.3"
     node-fetch: "npm:^3.2.5"
     opener: "npm:^1.5.2"
@@ -5966,13 +5966,6 @@ __metadata:
   version: 1.3.2
   resolution: "@types/mime@npm:1.3.2"
   checksum: 61d144e5170c6cdf6de334ec0ee4bb499b1a0fb0233834a9e8cec6d289b0e3042bedf35cbc1c995d71a247635770dae3f13a9ddae69098bb54b933429bc08d35
-  languageName: node
-  linkType: hard
-
-"@types/minimatch@npm:^3.0.5":
-  version: 3.0.5
-  resolution: "@types/minimatch@npm:3.0.5"
-  checksum: a1a19ba342d6f39b569510f621ae4bbe972dc9378d15e9a5e47904c440ee60744f5b09225bc73be1c6490e3a9c938eee69eb53debf55ce1f15761201aa965f97
   languageName: node
   linkType: hard
 
@@ -13773,15 +13766,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"multimatch@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "multimatch@npm:6.0.0"
+"multimatch@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "multimatch@npm:7.0.0"
   dependencies:
-    "@types/minimatch": "npm:^3.0.5"
     array-differ: "npm:^4.0.0"
     array-union: "npm:^3.0.1"
-    minimatch: "npm:^3.0.4"
-  checksum: e303c3d83a66bdffbe6bb50b7be000dd299f1928a602323adc92daef3c1028ef1ee4cabf7d2ac458e32096c5dac2a263209835464348faf8a8332d076b58c35a
+    minimatch: "npm:^9.0.3"
+  checksum: ce5b6e8a8d114830dd621b128a4a5364792bab281d861e68c7d719d2c04e8f9a4a0a566b37cbbc0a3cbaa0a62eb50e869c9d43ab439a314186b113a34c91a9c7
   languageName: node
   linkType: hard
 
