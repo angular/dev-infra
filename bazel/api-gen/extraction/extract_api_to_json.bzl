@@ -6,6 +6,10 @@ def _extract_api_to_json(ctx):
     # Define arguments that will be passed to the underlying nodejs program.
     args = ctx.actions.args()
 
+    # Use a param file because we may have a large number of inputs.
+    args.set_param_file_format("multiline")
+    args.use_param_file("%s", use_always = True)
+
     # Pass the module_name for the extracted APIs. This will be something like "@angular/core".
     args.add(ctx.attr.module_name)
 

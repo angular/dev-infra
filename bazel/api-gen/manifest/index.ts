@@ -2,7 +2,9 @@ import {readFileSync, writeFileSync} from 'fs';
 import {EntryCollection, generateManifest} from './generate_manifest';
 
 function main() {
-  const [srcs, outputFilenameExecRootRelativePath] = process.argv.slice(2);
+  const [paramFilePath] = process.argv.slice(2);
+  const rawParamLines = readFileSync(paramFilePath, {encoding: 'utf8'}).split('\n');
+  const [srcs, outputFilenameExecRootRelativePath] = rawParamLines;
 
   const sourceContents = srcs
     .split(',')
