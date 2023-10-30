@@ -1,16 +1,15 @@
 load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
-load("//bazel/esbuild:index.bzl", "esbuild")
+load("//bazel/esbuild:index.bzl", "esbuild_esm_bundle")
 
 package(default_visibility = ["//bazel/api-gen:__subpackages__"])
 
-esbuild(
+esbuild_esm_bundle(
     name = "bin",
     entry_point = ":index.ts",
     external = [
         "@angular/compiler-cli",
     ],
-    format = "esm",
     output = "bin.mjs",
     platform = "node",
     target = "es2022",
