@@ -67,7 +67,7 @@
     "@angular/compiler": "17.0.0-rc.1",
     "@angular/compiler-cli": "17.0.0-rc.1",
     "@angular/core": "17.0.0-rc.1",
-    "@angular/fire": "^16.0.0-rc",
+    "@angular/fire": "^17.0.0-next",
     "@angular/forms": "17.0.0-rc.1",
     "@angular/material": "17.0.0-rc.1",
     "@angular/platform-browser": "17.0.0-rc.1",
