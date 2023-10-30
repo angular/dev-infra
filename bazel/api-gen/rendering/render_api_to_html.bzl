@@ -4,6 +4,10 @@ def _render_api_to_html(ctx):
     # Define arguments that will be passed to the underlying nodejs program.
     args = ctx.actions.args()
 
+    # Use a param file because we may have a large number of json inputs
+    args.set_param_file_format("multiline")
+    args.use_param_file("%s", use_always = True)
+
     # Pass the list of json data files from which documents will be generated.
     args.add_joined(ctx.files.srcs, join_with = ",")
 

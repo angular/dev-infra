@@ -6,6 +6,10 @@ def _generate_api_manifest(ctx):
     # Define arguments that will be passed to the underlying nodejs program.
     args = ctx.actions.args()
 
+    # Use a param file because we may have a large number of json inputs.
+    args.set_param_file_format("multiline")
+    args.use_param_file("%s", use_always = True)
+
     # Pass the set of JSON data files from which the API manifest will be generated.
     args.add_joined(ctx.files.srcs, join_with = ",")
 
