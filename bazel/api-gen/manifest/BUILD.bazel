@@ -37,6 +37,7 @@ nodejs_binary(
     name = "generate_api_manifest",
     data = [
         ":bin",
+        "@npm//@angular/compiler-cli",
     ],
     entry_point = "bin.mjs",
     # Note: Using the linker here as we need it for ESM. The linker is not
