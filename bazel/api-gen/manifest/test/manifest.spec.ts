@@ -39,6 +39,26 @@ describe('api manifest generation', () => {
     });
   });
 
+  it('should union collections for the same module into one manifest', () => {
+    const manifest = generateManifest([
+      {
+        moduleName: '@angular/core',
+        entries: [entry({name: 'PI', entryType: EntryType.Constant})],
+      },
+      {
+        moduleName: '@angular/core',
+        entries: [entry({name: 'TAO', entryType: EntryType.Constant})],
+      },
+    ]);
+
+    expect(manifest).toEqual({
+      '@angular/core': [
+        {name: 'PI', type: EntryType.Constant, isDeprecated: false},
+        {name: 'TAO', type: EntryType.Constant, isDeprecated: false},
+      ],
+    });
+  });
+
   it('should mark a manifest entry as deprecated', () => {
     const manifest = generateManifest([
       {

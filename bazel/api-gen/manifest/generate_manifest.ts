@@ -62,14 +62,20 @@ export function generateManifest(apiCollections: EntryCollection[]): Manifest {
     });
   }
 
-  return apiCollections.reduce((result, collection) => {
-    return {
-      ...result,
-      [collection.moduleName]: collection.entries.map((entry) => ({
+  const manifest: Manifest = {};
+  for (const collection of apiCollections) {
+    if (!manifest[collection.moduleName]) {
+      manifest[collection.moduleName] = [];
+    }
+
+    manifest[collection.moduleName].push(
+      ...collection.entries.map((entry) => ({
         name: entry.name,
         type: entry.entryType,
         isDeprecated: isDeprecated(entryLookup, collection.moduleName, entry),
       })),
-    };
-  }, {});
+    );
+  }
+
+  return manifest;
 }
