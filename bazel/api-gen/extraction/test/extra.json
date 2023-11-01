@@ -1,0 +1,9 @@
+[
+  {
+    "name": "@extra",
+    "entryType": "block",
+    "description": "## This is the content of the file\n",
+    "rawComment": "## This is the content of the file\n",
+    "jsdocTags": []
+  }
+]

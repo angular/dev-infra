@@ -1,7 +1,7 @@
 load("//bazel/api-gen/extraction:extract_api_to_json.bzl", "extract_api_to_json")
 load("//bazel/api-gen/rendering:render_api_to_html.bzl", "render_api_to_html")
 
-def generate_api_docs(name, module_name, entry_point, srcs, import_map = {}):
+def generate_api_docs(name, module_name, entry_point, srcs, import_map = {}, extra_entries = []):
     """Generates API documentation reference pages for the given sources."""
     json_outfile = name + "_api.json"
 
@@ -12,6 +12,7 @@ def generate_api_docs(name, module_name, entry_point, srcs, import_map = {}):
         srcs = srcs,
         output_name = json_outfile,
         import_map = import_map,
+        extra_entries = extra_entries,
     )
 
     render_api_to_html(

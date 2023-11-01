@@ -35,11 +35,14 @@ def _extract_api_to_json(ctx):
         path_map[path] = files[0].path
     args.add(json.encode(path_map))
 
+    # Pass the set of (optional) extra entries
+    args.add_joined(ctx.files.extra_entries, join_with = ",")
+
     # Define an action that runs the nodejs_binary executable. This is
     # the main thing that this rule does.
     run_node(
         ctx = ctx,
-        inputs = depset(ctx.files.srcs),
+        inputs = depset(ctx.files.srcs + ctx.files.extra_entries),
         executable = "_extract_api_to_json",
         outputs = [json_output],
         arguments = [args],
@@ -78,6 +81,10 @@ extract_api_to_json = rule(
         "module_name": attr.string(
             doc = """JS Module name to be used for the extracted symbols""",
             mandatory = True,
+        ),
+        "extra_entries": attr.label_list(
+            doc = """JSON files that contain extra entries to append to the final collection.""",
+            allow_files = True,
         ),
 
         # The executable for this rule (private).

@@ -9,3 +9,14 @@ generate_api_docs(
     },
     module_name = "@angular/core",
 )
+
+generate_api_docs(
+    name = "test_with_extra_entries",
+    srcs = ["//bazel/api-gen/extraction/test:source_files"],
+    entry_point = "//bazel/api-gen/extraction/test:fake-source.ts",
+    extra_entries = ["//bazel/api-gen/extraction/test:extra.json"],
+    import_map = {
+        "//bazel/api-gen/extraction/test/dummy-entry-point:index.ts": "@angular/dummy-package",
+    },
+    module_name = "@angular/core",
+)
