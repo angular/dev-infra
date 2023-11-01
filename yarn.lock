@@ -10050,8 +10050,8 @@ __metadata:
   linkType: hard
 
 "firebase-tools@npm:^12.0.0":
-  version: 12.7.0
-  resolution: "firebase-tools@npm:12.7.0"
+  version: 12.8.0
+  resolution: "firebase-tools@npm:12.8.0"
   dependencies:
     "@google-cloud/pubsub": "npm:^3.0.1"
     abort-controller: "npm:^3.0.0"
@@ -10115,7 +10115,7 @@ __metadata:
     ws: "npm:^7.2.3"
   bin:
     firebase: lib/bin/firebase.js
-  checksum: 982d77fffc5ce3a9626e9ef98e0b28e1e1b5085029061d98c33dab9d2d28dba97a73ec13fa1d7718360707d9c1192d5d5b215821ee5c23b074df2610d7b51081
+  checksum: f5a2382cd30ac1c534ea1361e95aa124a902e315459310017d06fca9f9e67ae00b277dcd833a5b0fa605f2c802ccfc9034f2f6fa1696c9a769a956b1adbfaf0d
   languageName: node
   linkType: hard
 
