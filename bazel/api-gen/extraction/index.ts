@@ -1,7 +1,7 @@
 import {readFileSync, writeFileSync} from 'fs';
 import path from 'path';
 // @ts-ignore This compiles fine, but Webstorm doesn't like the ESM import in a CJS context.
-import {NgtscProgram, CompilerOptions, createCompilerHost} from '@angular/compiler-cli';
+import {NgtscProgram, CompilerOptions, createCompilerHost, DocEntry} from '@angular/compiler-cli';
 
 function main() {
   const [paramFilePath] = process.argv.slice(2);
@@ -13,6 +13,7 @@ function main() {
     srcs,
     outputFilenameExecRootRelativePath,
     serializedPathMapWithExecRootRelativePaths,
+    extraEntriesSrcs,
   ] = rawParamLines;
 
   // The path map is a serialized JSON map of import path to index.ts file.
@@ -31,9 +32,19 @@ function main() {
   const compilerHost = createCompilerHost({options: compilerOptions});
   const program: NgtscProgram = new NgtscProgram(srcs.split(','), compilerOptions, compilerHost);
 
+  const extraEntries: DocEntry[] = (extraEntriesSrcs ?? '')
+    .split(',')
+    .filter((path) => !!path)
+    .reduce((result: DocEntry[], path) => {
+      return result.concat(JSON.parse(readFileSync(path, {encoding: 'utf8'})) as DocEntry[]);
+    }, []);
+
+  const extractedEntries = program.getApiDocumentation(entryPointExecRootRelativePath);
+  const combinedEntries = extractedEntries.concat(extraEntries);
+
   const output = JSON.stringify({
     moduleName: moduleName,
-    entries: program.getApiDocumentation(entryPointExecRootRelativePath),
+    entries: combinedEntries,
   });
 
   writeFileSync(outputFilenameExecRootRelativePath, output, {encoding: 'utf8'});

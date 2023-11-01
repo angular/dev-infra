@@ -16,6 +16,23 @@ extract_api_to_json(
     output_name = "api.json",
 )
 
+extract_api_to_json(
+    name = "test_with_extra_entries",
+    srcs = [
+        "fake-source.ts",
+        "//bazel/api-gen/extraction/test/dummy-entry-point:dummy_package",
+    ],
+    entry_point = "fake-source.ts",
+    extra_entries = [
+        "extra.json",
+    ],
+    import_map = {
+        "//bazel/api-gen/extraction/test/dummy-entry-point:index.ts": "@angular/dummy-package",
+    },
+    module_name = "@angular/core",
+    output_name = "extra_api.json",
+)
+
 filegroup(
     name = "source_files",
     srcs = ["fake-source.ts"],
