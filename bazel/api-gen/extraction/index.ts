@@ -2,6 +2,7 @@ import {readFileSync, writeFileSync} from 'fs';
 import path from 'path';
 // @ts-ignore This compiles fine, but Webstorm doesn't like the ESM import in a CJS context.
 import {NgtscProgram, CompilerOptions, createCompilerHost, DocEntry} from '@angular/compiler-cli';
+import ts from 'typescript';
 
 function main() {
   const [paramFilePath] = process.argv.slice(2);
@@ -24,11 +25,25 @@ function main() {
   // We also resolve the exec root relative paths to absolute paths to disambiguate.
   const resolvedPathMap: {[key: string]: string[]} = {};
   for (const [importPath, filePath] of Object.entries(pathMap)) {
+    resolvedPathMap[importPath] = [path.resolve(filePath)];
+
+    // In addition to the exact import path,
+    // also add wildcard mappings for subdirectories.
     const importPathWithWildcard = path.join(importPath, '*');
-    resolvedPathMap[importPathWithWildcard] = [path.resolve(path.dirname(filePath))];
+    resolvedPathMap[importPathWithWildcard] = [
+      path.join(path.resolve(path.dirname(filePath)), '*'),
+    ];
   }
 
-  const compilerOptions: CompilerOptions = {paths: resolvedPathMap};
+  const compilerOptions: CompilerOptions = {
+    paths: resolvedPathMap,
+    rootDir: '.',
+    skipLibCheck: true,
+    target: ts.ScriptTarget.ES2022,
+    moduleResolution: ts.ModuleResolutionKind.NodeNext,
+    experimentalDecorators: true,
+  };
+
   const compilerHost = createCompilerHost({options: compilerOptions});
   const program: NgtscProgram = new NgtscProgram(srcs.split(','), compilerOptions, compilerHost);
 

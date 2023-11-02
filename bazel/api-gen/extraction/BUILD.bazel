@@ -9,6 +9,7 @@ esbuild(
     entry_point = ":index.ts",
     external = [
         "@angular/compiler-cli",
+        "typescript",
     ],
     format = "esm",
     output = "bin.mjs",
@@ -17,6 +18,7 @@ esbuild(
     deps = [
         ":extract_api_to_json_lib",
         "@npm//@angular/compiler-cli",
+        "@npm//typescript",
     ],
 )
 
@@ -30,6 +32,7 @@ ts_library(
         "@npm//@angular/compiler-cli",
         "@npm//@bazel/runfiles",
         "@npm//@types/node",
+        "@npm//typescript",
     ],
 )
 
@@ -40,6 +43,7 @@ nodejs_binary(
         ":bin",
         "@npm//@angular/compiler",
         "@npm//@angular/compiler-cli",
+        "@npm//typescript",
     ],
     entry_point = "bin.mjs",
     # Note: Using the linker here as we need it for ESM. The linker is not
