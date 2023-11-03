@@ -44,8 +44,9 @@ export const commitMessage: CommitMessageConfig = {
     ]),
     ...buildScopesFor('api-gen', []),
     ...buildScopesFor('apps', []),
-    ...buildScopesFor('lint-rules', ['tslint', 'stylelint']),
-    ...buildScopesFor('shared-scripts', []),
     ...buildScopesFor('circleci-orb', []),
+    ...buildScopesFor('lint-rules', ['tslint', 'stylelint']),
+    ...buildScopesFor('markdown-to-html', []),
+    ...buildScopesFor('shared-scripts', []),
   ],
 };

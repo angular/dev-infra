@@ -18,6 +18,7 @@ filegroup(
         "//bazel/integration:files",
         "//bazel/karma:files",
         "//bazel/map-size-tracking:files",
+        "//bazel/markdown_to_html:files",
         "//bazel/private:files",
         "//bazel/remote-execution:files",
         "//bazel/spec-bundling:files",
