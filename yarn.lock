@@ -369,7 +369,7 @@ __metadata:
     "@bazel/typescript": "npm:5.8.1"
     "@google-cloud/firestore": "npm:^7.0.0"
     "@google-cloud/storage": "npm:^7.0.0"
-    "@microsoft/api-extractor": "npm:7.38.1"
+    "@microsoft/api-extractor": "npm:7.38.2"
     "@octokit/auth-app": "npm:6.0.1"
     "@octokit/core": "npm:5.0.1"
     "@octokit/graphql": "npm:7.0.2"
@@ -455,7 +455,7 @@ __metadata:
     protractor: "npm:^7.0.0"
     requirejs: "npm:^2.3.6"
     rxjs: "npm:^7.4.0"
-    selenium-webdriver: "npm:4.14.0"
+    selenium-webdriver: "npm:4.15.0"
     semver: "npm:^7.5.4"
     send: "npm:^0.18.0"
     source-map: "npm:^0.7.4"
@@ -4792,16 +4792,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor@npm:7.38.1":
-  version: 7.38.1
-  resolution: "@microsoft/api-extractor@npm:7.38.1"
+"@microsoft/api-extractor@npm:7.38.2":
+  version: 7.38.2
+  resolution: "@microsoft/api-extractor@npm:7.38.2"
   dependencies:
     "@microsoft/api-extractor-model": "npm:7.28.2"
     "@microsoft/tsdoc": "npm:0.14.2"
     "@microsoft/tsdoc-config": "npm:~0.16.1"
     "@rushstack/node-core-library": "npm:3.61.0"
     "@rushstack/rig-package": "npm:0.5.1"
-    "@rushstack/ts-command-line": "npm:4.17.0"
+    "@rushstack/ts-command-line": "npm:4.17.1"
     colors: "npm:~1.2.1"
     lodash: "npm:~4.17.15"
     resolve: "npm:~1.22.1"
@@ -4810,7 +4810,7 @@ __metadata:
     typescript: "npm:~5.0.4"
   bin:
     api-extractor: bin/api-extractor
-  checksum: e4ad3236d4ba3a95084cdc62a3cbc68d18287dca7c24aa19396508f07a900ae17c597d051867f6f2e326f1939514efcd9c4f27be4d62749b9abc1c362f677c30
+  checksum: 3536cfbd9b497fbc93c5c9e29c9cce8344f8f4f13e19c8a338a4c013ef386336671abc728a2e1ceca9f660c62bf81bd115b475194d7125fd98fef18d02bff7c5
   languageName: node
   linkType: hard
 
@@ -5496,15 +5496,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rushstack/ts-command-line@npm:4.17.0":
-  version: 4.17.0
-  resolution: "@rushstack/ts-command-line@npm:4.17.0"
+"@rushstack/ts-command-line@npm:4.17.1":
+  version: 4.17.1
+  resolution: "@rushstack/ts-command-line@npm:4.17.1"
   dependencies:
     "@types/argparse": "npm:1.0.38"
     argparse: "npm:~1.0.9"
     colors: "npm:~1.2.1"
     string-argv: "npm:~0.3.1"
-  checksum: 57c28a58121e6b0834df74cc7372173ce20698de38d50ebe234abd9c9c11aef37ab7798512ed83b2c2a84743f2d18b4ca773646c717a8a205e5e9e99194fd04d
+  checksum: 4fd27d2450a6e71139e67b33d5ecba7abbf3497e7479ab3a96666cf79f207c5a7d4ad4f8de17f43e09bed65a0f28115160a4c5486c8e64f8b472c7145a31c2d2
   languageName: node
   linkType: hard
 
@@ -10076,8 +10076,8 @@ __metadata:
   linkType: hard
 
 "firebase-functions@npm:^4.0.0":
-  version: 4.4.1
-  resolution: "firebase-functions@npm:4.4.1"
+  version: 4.5.0
+  resolution: "firebase-functions@npm:4.5.0"
   dependencies:
     "@types/cors": "npm:^2.8.5"
     "@types/express": "npm:4.17.3"
@@ -10089,7 +10089,7 @@ __metadata:
     firebase-admin: ^10.0.0 || ^11.0.0
   bin:
     firebase-functions: lib/bin/firebase-functions.js
-  checksum: 9b0dced28c60ce3875fb57519b74b1152f560bdddfc879718e49c3e71de980277c97cad7c2d1402f0859656784a3d9c8d5cf0d1ba36ad5db29ac0206b02f09b0
+  checksum: f28c654532293c6d247240c3af460b3f25641368e920bd19f3fc1abac79bfe45c0b8a753ef3d381112de8e0abea0028752b7aacdee30f5a7674ff2466b39ef50
   languageName: node
   linkType: hard
 
@@ -12278,16 +12278,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"joi@npm:^17.7.0":
-  version: 17.9.2
-  resolution: "joi@npm:17.9.2"
+"joi@npm:^17.11.0":
+  version: 17.11.0
+  resolution: "joi@npm:17.11.0"
   dependencies:
     "@hapi/hoek": "npm:^9.0.0"
     "@hapi/topo": "npm:^5.0.0"
     "@sideway/address": "npm:^4.1.3"
     "@sideway/formula": "npm:^3.0.1"
     "@sideway/pinpoint": "npm:^2.0.0"
-  checksum: 284bc34d5070c7b064a9fa68e02703961ad08229dd95dfe0baf2aa5d278c7a99543ecb979b8a6e6f72035539bfdaf1269ac7fa7684a503b6de18b173f72dcc89
+  checksum: c41c86fe772828b88fbdbcaef2e41235ccbb107c22523a377f9a2fd39829f203213f37a352589f49d9a9b38bf1c645846defede8b81d8c1f3123117c1a600010
   languageName: node
   linkType: hard
 
@@ -13668,7 +13668,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimist@npm:^1.2.0, minimist@npm:^1.2.6, minimist@npm:^1.2.7":
+"minimist@npm:^1.2.0, minimist@npm:^1.2.6, minimist@npm:^1.2.8":
   version: 1.2.8
   resolution: "minimist@npm:1.2.8"
   checksum: 19d3fcdca050087b84c2029841a093691a91259a47def2f18222f41e7645a0b7c44ef4b40e88a1e58a40c84d2ef0ee6047c55594d298146d0eb3f6b737c20ce6
@@ -13959,13 +13959,13 @@ __metadata:
   linkType: hard
 
 "nock@npm:^13.0.3":
-  version: 13.3.7
-  resolution: "nock@npm:13.3.7"
+  version: 13.3.8
+  resolution: "nock@npm:13.3.8"
   dependencies:
     debug: "npm:^4.1.0"
     json-stringify-safe: "npm:^5.0.1"
     propagate: "npm:^2.0.0"
-  checksum: ec5b0b67eb46d4a9871927b9cf3ba43a3e9b4a3a8763a9db371e3103d6f5b532f40087170e9189a86320c0113e16de7e41999fb5beb85539d32e99e0d1f80164
+  checksum: cf3a7b59495373651a92715c4f31a7d4050a70648e7c111a84805842ab47dd36a5648b4c9440fd2a9b44fa90c245da1641b90e15bbea018f895c45210dfe41f1
   languageName: node
   linkType: hard
 
@@ -15016,9 +15016,9 @@ __metadata:
   linkType: hard
 
 "preact@npm:^10.17.1":
-  version: 10.18.1
-  resolution: "preact@npm:10.18.1"
-  checksum: b157c46d5dbece48cf0f31b0e24d27c989ea019e77730427b4c7549953da7de015b34f13f93d0034966f033738ec582829da918c28d084bbb31d59f320f56aa0
+  version: 10.18.2
+  resolution: "preact@npm:10.18.2"
+  checksum: a92890a13c5d19fccc163e3d84c88a9da3c3996d0d9df6ca311c8018320a07e3ec4ecce0836cde46d940a031141d35fbe456123a794b8160bd8fa2d96c7d32a3
   languageName: node
   linkType: hard
 
@@ -16068,7 +16068,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rxjs@npm:7.8.1, rxjs@npm:^7.2.0, rxjs@npm:^7.4.0, rxjs@npm:^7.5.5, rxjs@npm:^7.8.0, rxjs@npm:^7.8.1":
+"rxjs@npm:7.8.1, rxjs@npm:^7.2.0, rxjs@npm:^7.4.0, rxjs@npm:^7.5.5, rxjs@npm:^7.8.1":
   version: 7.8.1
   resolution: "rxjs@npm:7.8.1"
   dependencies:
@@ -16236,14 +16236,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"selenium-webdriver@npm:4.14.0":
-  version: 4.14.0
-  resolution: "selenium-webdriver@npm:4.14.0"
+"selenium-webdriver@npm:4.15.0":
+  version: 4.15.0
+  resolution: "selenium-webdriver@npm:4.15.0"
   dependencies:
     jszip: "npm:^3.10.1"
     tmp: "npm:^0.2.1"
     ws: "npm:>=8.14.2"
-  checksum: 7073728678d1861ceb88861bf5c4183a2de79b8158578adba37023ee4b7bee1b505a0b6965e77415bf14624ccfcde55f878e5f3f4548b694d34fac06ddc5a3cd
+  checksum: 06e079aad80b260176d9a2fc18d07f9dd3336d8e025b4e92217f17781a42c56f56da306343c7741054baa850d2e4f06992b205d8779e03ba77881a391fce97ef
   languageName: node
   linkType: hard
 
@@ -18275,17 +18275,17 @@ __metadata:
   linkType: hard
 
 "wait-on@npm:^7.0.0":
-  version: 7.0.1
-  resolution: "wait-on@npm:7.0.1"
+  version: 7.1.0
+  resolution: "wait-on@npm:7.1.0"
   dependencies:
     axios: "npm:^0.27.2"
-    joi: "npm:^17.7.0"
+    joi: "npm:^17.11.0"
     lodash: "npm:^4.17.21"
-    minimist: "npm:^1.2.7"
-    rxjs: "npm:^7.8.0"
+    minimist: "npm:^1.2.8"
+    rxjs: "npm:^7.8.1"
   bin:
     wait-on: bin/wait-on
-  checksum: 2a9c56d26dac573e6bfd36e85d99f072021c23dc2c0faab900a411460b58e16982b96b018d9168c366040f56196314fa46f3d79ef19e3dc38f55824d5035f2ec
+  checksum: 1d3977fa23edd2ab81daebfb7874cb770dee568d6ba0247b01ce67a5906962dcb060bcc1a85a80989d504ee0ab1925106c33093bea39ddf9f0d7443647b59ce3
   languageName: node
   linkType: hard
 
@@ -18877,9 +18877,9 @@ __metadata:
   linkType: hard
 
 "yaml@npm:^2.0.0, yaml@npm:^2.2.1":
-  version: 2.3.3
-  resolution: "yaml@npm:2.3.3"
-  checksum: a0c56bf682159b0567e9cbbddf23efc2f6806f6450716d9be6ec5eb1af1b941e95c8d3dc9c47da20d1b6883a9d6c61e31cf98bb4b77ebca4396bf772657f2f00
+  version: 2.3.4
+  resolution: "yaml@npm:2.3.4"
+  checksum: cf03b68f8fef5e8516b0f0b54edaf2459f1648317fc6210391cf606d247e678b449382f4bd01f77392538429e306c7cba8ff46ff6b37cac4de9a76aff33bd9e1
   languageName: node
   linkType: hard
 
@@ -19021,10 +19021,10 @@ __metadata:
   linkType: hard
 
 "zone.js@npm:^0.14.0":
-  version: 0.14.1
-  resolution: "zone.js@npm:0.14.1"
+  version: 0.14.2
+  resolution: "zone.js@npm:0.14.2"
   dependencies:
     tslib: "npm:^2.3.0"
-  checksum: c44153f9ee0bc02cc4c693cf31f36253713a383233695fc6d627bc1255b46204ab241fd8da5fa6ce8182d8484e2cf140c28dfcf603f5456ea89b2ad74e7b7a2c
+  checksum: b3d6ea9e46fd0ffec27fd3e9c67cecb197ee31b83906e324884f446fe7dc36c384392312045b6db162053bdb082bce253836c49a47333fed244e4b73117fc323
   languageName: node
   linkType: hard

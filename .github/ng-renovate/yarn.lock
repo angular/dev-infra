@@ -1115,13 +1115,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@iarna/toml@npm:3.0.0":
-  version: 3.0.0
-  resolution: "@iarna/toml@npm:3.0.0"
-  checksum: 419506f8d8183eb34e3d8d632dacbaf40790d20d56290acf3ad90765e20111140335e682b02e9fe76713fbf35dc652b2b482dbfd752c0aa890e6ef39b8f1c421
-  languageName: node
-  linkType: hard
-
 "@isaacs/cliui@npm:^8.0.2":
   version: 8.0.2
   resolution: "@isaacs/cliui@npm:8.0.2"
@@ -3703,6 +3696,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-visitor-keys@npm:^3.0.0":
+  version: 3.4.3
+  resolution: "eslint-visitor-keys@npm:3.4.3"
+  checksum: 92708e882c0a5ffd88c23c0b404ac1628cf20104a108c745f240a13c332a11aac54f49a22d5762efbffc18ecbc9a580d1b7ad034bf5f3cc3307e5cbff2ec9820
+  languageName: node
+  linkType: hard
+
 "esprima@npm:^4.0.0":
   version: 4.0.1
   resolution: "esprima@npm:4.0.1"
@@ -4126,9 +4126,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"google-auth-library@npm:9.1.0":
-  version: 9.1.0
-  resolution: "google-auth-library@npm:9.1.0"
+"google-auth-library@npm:9.2.0":
+  version: 9.2.0
+  resolution: "google-auth-library@npm:9.2.0"
   dependencies:
     base64-js: "npm:^1.3.0"
     ecdsa-sig-formatter: "npm:^1.0.11"
@@ -4136,8 +4136,7 @@ __metadata:
     gcp-metadata: "npm:^6.0.0"
     gtoken: "npm:^7.0.0"
     jws: "npm:^4.0.0"
-    lru-cache: "npm:^6.0.0"
-  checksum: 6314d2a5d26ebebc48ec721066433153bf3bd001dca83366240dd4f4483739d6a06aa64284efd2f60d1bba757157bc84db51facb4752be0c98d5febd12916305
+  checksum: 045dc01161b0f0d95a8ee6c991003fb13bccd9f89793ffa7b02e9866f086b97cb5c8f81af32f8831b1eeaf48da1f7ad9402e131dd24356e8bdcd46e113aabc0d
   languageName: node
   linkType: hard
 
@@ -5474,7 +5473,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: "npm:37.40.0"
+    renovate: "npm:37.49.0"
   languageName: unknown
   linkType: soft
 
@@ -6165,9 +6164,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:37.40.0":
-  version: 37.40.0
-  resolution: "renovate@npm:37.40.0"
+"renovate@npm:37.49.0":
+  version: 37.49.0
+  resolution: "renovate@npm:37.49.0"
   dependencies:
     "@aws-sdk/client-codecommit": "npm:3.363.0"
     "@aws-sdk/client-ec2": "npm:3.363.0"
@@ -6177,7 +6176,6 @@ __metadata:
     "@aws-sdk/credential-providers": "npm:3.363.0"
     "@breejs/later": "npm:4.1.0"
     "@cdktf/hcl2json": "npm:0.19.0"
-    "@iarna/toml": "npm:3.0.0"
     "@opentelemetry/api": "npm:1.6.0"
     "@opentelemetry/context-async-hooks": "npm:1.17.0"
     "@opentelemetry/exporter-trace-otlp-http": "npm:0.43.0"
@@ -6228,7 +6226,7 @@ __metadata:
     glob: "npm:10.3.10"
     global-agent: "npm:3.0.0"
     good-enough-parser: "npm:1.1.23"
-    google-auth-library: "npm:9.1.0"
+    google-auth-library: "npm:9.2.0"
     got: "npm:11.8.6"
     graph-data-structure: "npm:3.3.0"
     handlebars: "npm:4.7.8"
@@ -6268,6 +6266,7 @@ __metadata:
     simple-git: "npm:3.20.0"
     slugify: "npm:1.6.6"
     source-map-support: "npm:0.5.21"
+    toml-eslint-parser: "npm:0.6.0"
     traverse: "npm:0.6.7"
     tslib: "npm:2.6.2"
     upath: "npm:2.0.1"
@@ -6282,7 +6281,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: d6e21c3ece7966cf2bbd68c525cd89c9c8e2783480b41d6534bee1d5074e2d6cf5a571196949aa0b1a8ffdb3505f13257fc87913c5e98b44e50c4d1afb266778
+  checksum: de7280a341617fbdeab5b61aba25e373e116b45ce16b2a4cdf0e5a41d6e0b028882d2d83d5ad7f799666e1619caa80dd46bf3a222110ecee89dfae6d5e2223d1
   languageName: node
   linkType: hard
 
@@ -6934,6 +6933,15 @@ __metadata:
   dependencies:
     is-number: "npm:^7.0.0"
   checksum: 487988b0a19c654ff3e1961b87f471702e708fa8a8dd02a298ef16da7206692e8552a0250e8b3e8759270f62e9d8314616f6da274734d3b558b1fc7b7724e892
+  languageName: node
+  linkType: hard
+
+"toml-eslint-parser@npm:0.6.0":
+  version: 0.6.0
+  resolution: "toml-eslint-parser@npm:0.6.0"
+  dependencies:
+    eslint-visitor-keys: "npm:^3.0.0"
+  checksum: 77b28a6b65137758249023ff9070cf26bc9bfaa4811841167b1c6468c4db5232e85362d6507d0b7f00b912e55823ae7e2dbbc6a86954806c8a470842119d8ba0
   languageName: node
   linkType: hard
 
