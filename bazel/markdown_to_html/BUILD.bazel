@@ -1,22 +1,7 @@
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
-load("//bazel/esbuild:index.bzl", "esbuild_esm_bundle")
+load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 
 package(default_visibility = ["//bazel/markdown_to_html:__subpackages__"])
-
-esbuild_esm_bundle(
-    name = "bin",
-    entry_point = ":index.ts",
-    external = [
-        "marked",
-    ],
-    output = "bin.mjs",
-    platform = "node",
-    target = "es2022",
-    deps = [
-        ":markdown_to_html_lib",
-    ],
-)
 
 ts_library(
     name = "markdown_to_html_lib",
@@ -33,16 +18,11 @@ ts_library(
 # Action binary for the api_gen bazel rule.
 nodejs_binary(
     name = "markdown_to_html",
-    data = [
-        ":bin",
-        "@npm//marked",
+    data = [":markdown_to_html_lib"],
+    entry_point = ":index.ts",
+    templated_args = [
+        "--bazel_patch_module_resolver",
     ],
-    entry_point = "bin.mjs",
-    # Note: Using the linker here as we need it for ESM. The linker is not
-    # super reliably when running concurrently on Windows- but we have existing
-    # actions using the linker. An alternative would be to:
-    #   - bundle the Angular compiler into a CommonJS bundle
-    #   - use the patched resolution- but also patch the ESM imports (similar to how FW does it).
     visibility = ["//visibility:public"],
 )
 

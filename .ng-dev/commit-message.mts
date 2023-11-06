@@ -20,6 +20,7 @@ export const commitMessage: CommitMessageConfig = {
       'integration',
       'karma',
       'map-size-tracking',
+      'markdown-to-html',
       'protos',
       'remote-execution',
       'spec-bundling',
@@ -46,7 +47,6 @@ export const commitMessage: CommitMessageConfig = {
     ...buildScopesFor('apps', []),
     ...buildScopesFor('circleci-orb', []),
     ...buildScopesFor('lint-rules', ['tslint', 'stylelint']),
-    ...buildScopesFor('markdown-to-html', []),
     ...buildScopesFor('shared-scripts', []),
   ],
 };
