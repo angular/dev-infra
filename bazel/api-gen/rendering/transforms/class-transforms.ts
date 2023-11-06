@@ -1,4 +1,4 @@
-import {ClassEntry} from '../entities';
+import {ClassEntry} from '@angular/compiler-cli';
 import {ClassEntryRenderable} from '../entities/renderables';
 import {addHtmlDescription, addHtmlJsDocTagComments} from './jsdoc-transforms';
 import {addRenderableMembers} from './member-transforms';

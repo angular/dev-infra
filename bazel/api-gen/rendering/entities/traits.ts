@@ -1,4 +1,4 @@
-import {JsDocTagEntry, MemberEntry} from '../entities';
+import {JsDocTagEntry, MemberEntry} from '@angular/compiler-cli';
 import {JsDocTagRenderable, MemberEntryRenderable} from './renderables';
 
 /** A doc entry that has jsdoc tags. */

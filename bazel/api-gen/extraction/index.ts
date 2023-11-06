@@ -1,6 +1,5 @@
 import {readFileSync, writeFileSync} from 'fs';
 import path from 'path';
-// @ts-ignore This compiles fine, but Webstorm doesn't like the ESM import in a CJS context.
 import {NgtscProgram, CompilerOptions, createCompilerHost, DocEntry} from '@angular/compiler-cli';
 import ts from 'typescript';
 

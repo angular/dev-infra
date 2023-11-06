@@ -6,7 +6,7 @@ import {
   MemberEntry,
   MemberType,
   MethodEntry,
-} from '../entities';
+} from '@angular/compiler-cli';
 import {
   ClassEntryRenderable,
   DocEntryRenderable,

@@ -1,6 +1,6 @@
 import {mkdirSync, readFileSync, writeFileSync} from 'fs';
 import path from 'path';
-import {DocEntry} from './entities';
+import {DocEntry} from '@angular/compiler-cli';
 import {getRenderable} from './processing';
 import {renderEntry} from './rendering';
 

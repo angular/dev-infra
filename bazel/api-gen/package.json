@@ -1,0 +1,6 @@
+{
+  "//": "This package.json is purely for making IDEs happy",
+  "name": "api-gen-ide-dev-only",
+  "version": "0.0.1",
+  "type": "module"
+}

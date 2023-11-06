@@ -1,4 +1,4 @@
-import {DocEntry} from './entities';
+import {DocEntry} from '@angular/compiler-cli';
 import {isClassEntry} from './entities/categorization';
 import {DocEntryRenderable} from './entities/renderables';
 import {getClassRenderable} from './transforms/class-transforms';

@@ -1,4 +1,3 @@
-// @ts-ignore This compiles fine, but Webstorm doesn't like the ESM import in a CJS context.
 import {DocEntry, EntryType, JsDocTagEntry} from '@angular/compiler-cli';
 import {generateManifest} from '../generate_manifest';
 

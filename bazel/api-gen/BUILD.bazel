@@ -3,7 +3,11 @@ package(default_visibility = ["//visibility:public"])
 # Expose the sources in the dev-infra NPM package.
 filegroup(
     name = "files",
-    srcs = glob(["*"]) + [
+    # Exclude the `tsconfig.json` and `package.json` used for making IDEs happy.
+    srcs = glob(
+        ["*"],
+        exclude = ["*.json"],
+    ) + [
         "//bazel/api-gen/extraction:files",
         "//bazel/api-gen/manifest:files",
         "//bazel/api-gen/rendering:files",
