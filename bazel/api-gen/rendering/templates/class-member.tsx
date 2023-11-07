@@ -1,23 +1,83 @@
-import {h} from 'preact';
+/*!
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.dev/license
+ */
+
+import {h, Fragment} from 'preact';
 import {MemberEntryRenderable} from '../entities/renderables';
 import {ClassMethodInfo} from './class-method-info';
 import {RawHtml} from './raw-html';
+import {
+  isClassMethodEntry,
+  isGetterEntry,
+  isPropertyEntry,
+  isSetterEntry,
+} from '../entities/categorization';
+import {DeprecatedLabel} from './deprecated-label';
+import {
+  REFERENCE_MEMBER_CARD,
+  REFERENCE_MEMBER_CARD_BODY,
+  REFERENCE_MEMBER_CARD_ITEM,
+  REFERENCE_HEADER,
+} from '../constants/html-classes';
 
-export function ClassMember(props: {member: MemberEntryRenderable}) {
-  const member = props.member;
+export function ClassMember(props: {members: MemberEntryRenderable[]}) {
+  const memberName = props.members[0].name;
+  const returnType = getMemberType(props.members[0]);
 
-  return (
-    <div id={member.name} class="adev-reference-member-card">
-      <header>
-        <h3>{member.name}</h3>
-      </header>
-      <div className="adev-reference-card-body">
-        <RawHtml value={member.htmlDescription} />
-
-        {/*TODO: deprecated marker*/}
-
-        <ClassMethodInfo member={member} />
-      </div>
+  // Do not create body element when there is no description
+  const body = props.members.every(
+    (member) => !member.htmlDescription && !isClassMethodEntry(member),
+  ) ? (
+    <></>
+  ) : (
+    <div className={REFERENCE_MEMBER_CARD_BODY}>
+      {props.members.map((member) => {
+        return isClassMethodEntry(member) ? (
+          <ClassMethodInfo entry={member} isOverloaded={props.members.length > 1} />
+        ) : (
+          <div className={REFERENCE_MEMBER_CARD_ITEM}>
+            <RawHtml value={member.htmlDescription} />
+          </div>
+        );
+      })}
     </div>
   );
+
+  return (
+    <div id={memberName} className={REFERENCE_MEMBER_CARD} tabIndex={-1}>
+      <header>
+        <div className={REFERENCE_HEADER}>
+          <h3>{memberName}</h3>
+          <div>
+            {props.members.length > 1 ? (
+              <span>{props.members.length} overloads</span>
+            ) : returnType ? (
+              <code>{returnType}</code>
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+        {props.members.every((member) => member.isDeprecated) ? (
+          <DeprecatedLabel entry={props.members[0]} />
+        ) : (
+          <></>
+        )}
+      </header>
+      {body}
+    </div>
+  );
+}
+
+function getMemberType(entry: MemberEntryRenderable): string | null {
+  if (isClassMethodEntry(entry)) {
+    return entry.returnType;
+  } else if (isPropertyEntry(entry) || isGetterEntry(entry) || isSetterEntry(entry)) {
+    return entry.type;
+  }
+  return null;
 }

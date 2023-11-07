@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "Node16",
     "target": "es2020",
-    "lib": ["es2020", "dom"],
+    "lib": ["es2021", "dom"],
     "experimentalDecorators": true,
     "strict": true,
     "outDir": "./dist/tsc-non-bazel-out",

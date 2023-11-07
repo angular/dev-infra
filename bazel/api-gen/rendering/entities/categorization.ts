@@ -1,17 +1,27 @@
 import {
   ClassEntry,
+  ConstantEntry,
   DocEntry,
   EntryType,
+  EnumEntry,
   FunctionEntry,
+  InterfaceEntry,
   MemberEntry,
   MemberType,
   MethodEntry,
+  PropertyEntry,
+  TypeAliasEntry,
 } from '../entities';
 import {
   ClassEntryRenderable,
+  ConstantEntryRenderable,
   DocEntryRenderable,
+  EnumEntryRenderable,
+  InterfaceEntryRenderable,
+  FunctionEntryRenderable,
   MemberEntryRenderable,
   MethodEntryRenderable,
+  TypeAliasEntryRenderable,
 } from './renderables';
 
 /** Gets whether the given entry represents a class */
@@ -24,8 +34,38 @@ export function isClassEntry(entry: DocEntry): entry is ClassEntry {
     entry.entryType === EntryType.UndecoratedClass ||
     entry.entryType === EntryType.Component ||
     entry.entryType === EntryType.Pipe ||
-    entry.entryType === EntryType.NgModule
+    entry.entryType === EntryType.NgModule ||
+    entry.entryType === EntryType.Directive ||
+    entry.entryType === EntryType.Decorator
   );
+}
+
+/** Gets whether the given entry represents a constant */
+export function isConstantEntry(entry: DocEntryRenderable): entry is ConstantEntryRenderable;
+export function isConstantEntry(entry: DocEntry): entry is ConstantEntry;
+export function isConstantEntry(entry: DocEntry): entry is ConstantEntry {
+  return entry.entryType === EntryType.Constant;
+}
+
+/** Gets whether the given entry represents a type alias */
+export function isTypeAliasEntry(entry: DocEntryRenderable): entry is TypeAliasEntryRenderable;
+export function isTypeAliasEntry(entry: DocEntry): entry is TypeAliasEntry;
+export function isTypeAliasEntry(entry: DocEntry): entry is TypeAliasEntry {
+  return entry.entryType === EntryType.TypeAlias;
+}
+
+/** Gets whether the given entry represents an enum */
+export function isEnumEntry(entry: DocEntryRenderable): entry is EnumEntryRenderable;
+export function isEnumEntry(entry: DocEntry): entry is EnumEntry;
+export function isEnumEntry(entry: DocEntry): entry is EnumEntry {
+  return entry.entryType === EntryType.Enum;
+}
+
+/** Gets whether the given entry represents an interface. */
+export function isInterfaceEntry(entry: DocEntryRenderable): entry is InterfaceEntryRenderable;
+export function isInterfaceEntry(entry: DocEntry): entry is InterfaceEntry;
+export function isInterfaceEntry(entry: DocEntry): entry is InterfaceEntry {
+  return entry.entryType === EntryType.Interface;
 }
 
 /** Gets whether the given member entry is a method entry. */
@@ -36,6 +76,23 @@ export function isClassMethodEntry(entry: MemberEntry): entry is MethodEntry {
 }
 
 /** Gets whether the given entry represents a function */
+export function isFunctionEntry(entry: DocEntryRenderable): entry is FunctionEntryRenderable;
+export function isFunctionEntry(entry: DocEntry): entry is FunctionEntry;
 export function isFunctionEntry(entry: DocEntry): entry is FunctionEntry {
   return entry.entryType === EntryType.Function;
+}
+
+/** Gets whether the given entry represents a property */
+export function isPropertyEntry(entry: MemberEntry): entry is PropertyEntry {
+  return entry.memberType === MemberType.Property;
+}
+
+/** Gets whether the given entry represents a getter */
+export function isGetterEntry(entry: MemberEntry): entry is PropertyEntry {
+  return entry.memberType === MemberType.Getter;
+}
+
+/** Gets whether the given entry represents a setter */
+export function isSetterEntry(entry: MemberEntry): entry is PropertyEntry {
+  return entry.memberType === MemberType.Setter;
 }
