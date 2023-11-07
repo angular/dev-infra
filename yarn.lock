@@ -427,6 +427,8 @@ __metadata:
     gcip-cloud-functions: "npm:0.2.0"
     git-raw-commits: "npm:^4.0.0"
     glob: "npm:10.3.10"
+    highlight.js: "npm:^11.8.0"
+    html-entities: "npm:^2.4.0"
     husky: "npm:^8.0.0"
     inquirer: "npm:9.2.11"
     jasmine: "npm:~5.1.0"
@@ -442,7 +444,8 @@ __metadata:
     karma-requirejs: "npm:^1.1.0"
     karma-sourcemap-loader: "npm:^0.4.0"
     license-checker: "npm:^25.0.1"
-    marked: "npm:^9.0.0"
+    marked: "npm:^5.1.1"
+    marked-mangle: "npm:^1.1.4"
     minimatch: "npm:^9.0.0"
     multimatch: "npm:^7.0.0"
     nock: "npm:^13.0.3"
@@ -11183,6 +11186,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"highlight.js@npm:^11.8.0":
+  version: 11.9.0
+  resolution: "highlight.js@npm:11.9.0"
+  checksum: 27cfa8717dc9d200aecbdb383eb122d5f45ce715d2f468583785d36fbfe5076ce033abb02486dc13b407171721cda6f474ed3f3a5a8e8c3d91367fa5f51ee374
+  languageName: node
+  linkType: hard
+
 "hosted-git-info@npm:^2.1.4":
   version: 2.8.9
   resolution: "hosted-git-info@npm:2.8.9"
@@ -11233,6 +11243,13 @@ __metadata:
   version: 2.3.6
   resolution: "html-entities@npm:2.3.6"
   checksum: b058864e1f92ccdf5855e6951ebcd4e4dd2f3ee342c615842390159af4972b81c4dd36ed70144dfa8d6c72ee4c1ced9cdaba314668312178db687b0b6102ecd8
+  languageName: node
+  linkType: hard
+
+"html-entities@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "html-entities@npm:2.4.0"
+  checksum: 42bbd5d91f451625d7e35aaed41c8cd110054c0d0970764cb58df467b3f27f20199e8cf7b4aebc8d4eeaf17a27c0d1fb165f2852db85de200995d0f009c9011d
   languageName: node
   linkType: hard
 
@@ -13401,6 +13418,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"marked-mangle@npm:^1.1.4":
+  version: 1.1.4
+  resolution: "marked-mangle@npm:1.1.4"
+  peerDependencies:
+    marked: ">=4 <10"
+  checksum: aabbe20b8b4247cb4d51d585e6272cdcd9fd3acbc004e84900a75d41c0e80ac5f7e9092cdae62d826431b13bcdd26260c892ad5fac74b0e6838cb393494e2fdf
+  languageName: node
+  linkType: hard
+
 "marked-terminal@npm:^5.1.1":
   version: 5.2.0
   resolution: "marked-terminal@npm:5.2.0"
@@ -13426,12 +13452,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"marked@npm:^9.0.0":
-  version: 9.1.5
-  resolution: "marked@npm:9.1.5"
+"marked@npm:^5.1.1":
+  version: 5.1.2
+  resolution: "marked@npm:5.1.2"
   bin:
     marked: bin/marked.js
-  checksum: 46bee189bb0819379249601df6ba880660ead9bc7676b4a1844f2be9d6948e7283ed4d13900ffcbf1137c4e7eb651728f6313858dfd7619ba8ee466432c95a38
+  checksum: 46db65d331ee59be7c78c28ae9c3167a49e5bf4c441140aa3e7be3397ad574cd67937d8361c8a2e301015c4f0727be117cde697e45b9f093578328bb8e3254c1
   languageName: node
   linkType: hard
 

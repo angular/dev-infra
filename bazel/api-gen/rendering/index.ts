@@ -1,6 +1,7 @@
-import {mkdirSync, readFileSync, writeFileSync} from 'fs';
+import {existsSync, mkdirSync, readFileSync, writeFileSync} from 'fs';
 import path from 'path';
 import {DocEntry} from './entities';
+import {configureMarkedGlobally} from './marked/configuration';
 import {getRenderable} from './processing';
 import {renderEntry} from './rendering';
 
@@ -19,14 +20,19 @@ function parseEntryData(srcs: string[]): EntryCollection[] {
 }
 
 /** Gets a normalized filename for a doc entry. */
-function getNormalizedFilename(moduleName: string, entryName: string): string {
+function getNormalizedFilename(moduleName: string, entry: DocEntry): string {
   // Angular entry points all contain an "@" character, which we want to remove
   // from the filename. We also swap `/` with an underscore.
-  const normalizedModuleName = moduleName.replace('@', '').replace('/', '_');
-  return `${moduleName}_${entryName}.html`;
+  const normalizedModuleName = moduleName.replace('@', '').replaceAll('/', '_');
+
+  // Append entry type as suffix to prevent writing to file that only differs in casing or query string from already written file.
+  // This will lead to a race-condition and corrupted files on case-insensitive file systems.
+  return `${normalizedModuleName}_${entry.name}_${entry.entryType.toLowerCase()}.html`;
 }
 
 function main() {
+  configureMarkedGlobally();
+
   const [paramFilePath] = process.argv.slice(2);
   const rawParamLines = readFileSync(paramFilePath, {encoding: 'utf8'}).split('\n');
 
@@ -35,7 +41,9 @@ function main() {
   // TODO: Remove when we are using Bazel v6+
   // On RBE, the output directory is not created properly due to a bug.
   // https://github.com/bazelbuild/bazel/commit/4310aeb36c134e5fc61ed5cdfdf683f3e95f19b7.
-  mkdirSync(outputFilenameExecRootRelativePath, {recursive: true});
+  if (!existsSync(outputFilenameExecRootRelativePath)) {
+    mkdirSync(outputFilenameExecRootRelativePath, {recursive: true});
+  }
 
   // Docs rendering happens in three phases that occur here:
   // 1) Aggregate all the raw extracted doc info.
@@ -56,13 +64,9 @@ function main() {
     const htmlOutputs = renderableEntries.map(renderEntry);
 
     for (let i = 0; i < htmlOutputs.length; i++) {
-      const moduleName = collection.moduleName.replace(/@/g, '').replace(/\//g, '_');
-      const entryName = collection.entries[i].name;
-
-      const filename = `${moduleName}_${entryName}.html`;
-      writeFileSync(path.join(outputFilenameExecRootRelativePath, filename), htmlOutputs[i], {
-        encoding: 'utf8',
-      });
+      const filename = getNormalizedFilename(collection.moduleName, collection.entries[i]);
+      const outputPath = path.join(outputFilenameExecRootRelativePath, filename);
+      writeFileSync(outputPath, htmlOutputs[i], {encoding: 'utf8'});
     }
   }
 }
