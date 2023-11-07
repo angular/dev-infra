@@ -1,6 +1,9 @@
 // @ts-ignore Intentionally nonexistent path for testing purposes.
 import {Version} from '@angular/dummy-package';
 
+/**
+ * I have a description with some `Code`.
+ */
 export class UserProfile {
   /** The user's name */
   name: string = 'Morgan';

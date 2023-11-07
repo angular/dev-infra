@@ -11,7 +11,6 @@ import {Renderer as MarkedRenderer} from 'marked';
 import {AIO_URL} from '../constants/domains';
 import {getLines} from '../helpers/code';
 import {rewriteLinks} from '../helpers/links-mapper';
-import {handleCode} from './code';
 
 /**
  * Custom renderer for marked that will be used to transform markdown files to HTML
@@ -79,8 +78,5 @@ export const renderer: Partial<MarkedRenderer> = {
         </table>
       </div>
     `;
-  },
-  codespan(code: string): string {
-    return handleCode(code);
   },
 };
