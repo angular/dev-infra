@@ -7,4 +7,3 @@
  */
 
 export const AIO_URL = 'https://angular.io';
-export const ADEV_URL = 'https://angular.dev';
