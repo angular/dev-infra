@@ -11,7 +11,7 @@ import * as html from './region-matchers/html';
 import * as inlineC from './region-matchers/inline-c';
 import * as inlineCOnly from './region-matchers/inline-c-only';
 import * as inlineHash from './region-matchers/inline-hash';
-import {FileType, removeEslintComments} from './removeEslintComments';
+import {FileType, removeEslintComments} from './remove-eslint-comments';
 
 const WHOLE_FILE_REGION_NAME = '';
 const DEFAULT_PLASTER = '. . .';
