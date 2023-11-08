@@ -9,8 +9,8 @@
 import hljs, {HighlightResult} from 'highlight.js';
 import {Renderer as MarkedRenderer} from 'marked';
 import {AIO_URL} from '../constants/domains';
-import {getLines} from '../helpers/code';
 import {rewriteLinks} from '../helpers/links-mapper';
+import {splitLines} from '../transforms/code-transforms';
 
 /**
  * Custom renderer for marked that will be used to transform markdown files to HTML
@@ -29,7 +29,7 @@ export const renderer: Partial<MarkedRenderer> = {
       highlightResult = hljs.highlightAuto(code);
     }
 
-    const lines = getLines(highlightResult.value);
+    const lines = splitLines(highlightResult.value);
 
     return `
       <div class="docs-code" role="group">

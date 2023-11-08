@@ -7,6 +7,9 @@
  */
 
 import {marked} from 'marked';
+import {JsDocTagEntry} from '../entities';
+import {isDeprecatedEntry} from '../entities/categorization';
+import {LinkEntryRenderable} from '../entities/renderables';
 import {
   HasAdditionalLinks,
   HasDeprecatedFlag,
@@ -17,12 +20,8 @@ import {
   HasModuleName,
   HasRenderableJsDocTags,
 } from '../entities/traits';
-import {getLinkToModule} from '../helpers/url';
-import {LinkEntryRenderable} from '../entities/renderables';
-import {isDeprecatedEntry} from '../entities/categorization';
-import {JsDocTagEntry} from '../entities';
 import {rewriteLinks} from '../helpers/links-mapper';
-import {mapJsDocExampleToHtmlExample} from '../helpers/code';
+import {getLinkToModule} from '../helpers/url';
 
 export const JS_DOC_USAGE_NOTES_TAG = 'usageNotes';
 export const JS_DOC_SEE_TAG = 'see';
@@ -81,7 +80,7 @@ export function addHtmlUsageNotes<T extends HasJsDocTags>(entry: T): T & HasHtml
   const usageNotesTag = entry.jsdocTags.find((tag) => tag.name === JS_DOC_USAGE_NOTES_TAG);
   const htmlUsageNotes = usageNotesTag
     ? marked.parse(
-        mapJsDocExampleToHtmlExample(wrapExampleHtmlElementsWithCode(usageNotesTag.comment)),
+        convertJsDocExampleToHtmlExample(wrapExampleHtmlElementsWithCode(usageNotesTag.comment)),
       )
     : '';
 
@@ -150,4 +149,12 @@ function wrapExampleHtmlElementsWithCode(text: string) {
   return text
     .replaceAll(`'<input>'`, `<code><input></code>`)
     .replaceAll(`'<img>'`, `<code><img></code>`);
+}
+
+function convertJsDocExampleToHtmlExample(text: string): string {
+  const codeExampleAtRule = /{@example (\S+) region=(['"])([^'"]+)\2\s*}/g;
+
+  return text.replaceAll(codeExampleAtRule, (_, path, separator, region) => {
+    return `<code-example path="${path}" region="${region}" />`;
+  });
 }

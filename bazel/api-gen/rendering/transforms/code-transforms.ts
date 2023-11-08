@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import hljs from 'highlight.js';
 import {
   DocEntry,
   FunctionEntry,
@@ -18,18 +19,16 @@ import {
   isClassEntry,
   isClassMethodEntry,
   isConstantEntry,
+  isDeprecatedEntry,
   isEnumEntry,
   isFunctionEntry,
   isGetterEntry,
   isInterfaceEntry,
   isSetterEntry,
   isTypeAliasEntry,
-  isDeprecatedEntry,
 } from '../entities/categorization';
-import hljs from 'highlight.js';
-import {HasModuleName, HasRenderableToc} from '../entities/traits';
-import {getLines} from '../helpers/code';
 import {CodeLineRenderable} from '../entities/renderables';
+import {HasModuleName, HasRenderableToc} from '../entities/traits';
 import {filterLifecycleMethods, mergeGettersAndSetters} from './member-transforms';
 
 // Allows to generate links for code lines.
@@ -47,6 +46,14 @@ const ANGULAR_PROPERTY_DECORATORS: Record<string, string> = {
   'optional': '',
 };
 
+/** Split generated code with syntax highlighting into single lines */
+export function splitLines(text: string): string[] {
+  if (text.length === 0) {
+    return [];
+  }
+  return text.split(/\r\n|\r|\n/g);
+}
+
 /**
  * Based on provided docEntry:
  * 1. Build metadata
@@ -60,7 +67,7 @@ export function addRenderableCodeToc<T extends DocEntry & HasModuleName>(
   appendPrefixAndSuffix(entry, metadata);
 
   const codeWithSyntaxHighlighting = hljs.highlight(metadata.contents, {language: 'typescript'});
-  const lines = getLines(codeWithSyntaxHighlighting.value);
+  const lines = splitLines(codeWithSyntaxHighlighting.value);
   const groups = groupCodeLines(lines, metadata);
 
   return {
