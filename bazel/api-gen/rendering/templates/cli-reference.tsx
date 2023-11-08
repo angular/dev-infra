@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {h, Fragment} from 'preact';
+import {Fragment, h} from 'preact';
+import {REFERENCE_MEMBERS, REFERENCE_MEMBERS_CONTAINER} from '../constants/html-classes';
 import {CliCommandRenderable} from '../entities/renderables';
-import {HeaderCli} from './header-cli';
-import {CODE_LINE_CLASS_NAME, REFERENCE_MEMBERS, REFERENCE_MEMBERS_CONTAINER} from '../constants/html-classes';
-import {RawHtml} from './raw-html';
 import {CliCard} from './cli-card';
+import {HeaderCli} from './header-cli';
+import {RawHtml} from './raw-html';
 
 /** Component to render a CLI command reference document. */
 export function CliCommandReference(entry: CliCommandRenderable) {
@@ -22,7 +22,7 @@ export function CliCommandReference(entry: CliCommandRenderable) {
         <div class="docs-code adev-reference-cli-toc">
           <pre class="adev-mini-scroll-track">
             <code>
-              <div className={CODE_LINE_CLASS_NAME}>
+              <div className={'hljs-ln-line'}>
                 ng {entry.name}
                 {entry.argumentsLabel ? <button member-id={'Arguments'} className="hljs-ln-line-argument">{entry.argumentsLabel}</button> : <></>}
                 {entry.hasOptions ? <button member-id={'Options'} className="hljs-ln-line-option">[options]</button> : <></>}
