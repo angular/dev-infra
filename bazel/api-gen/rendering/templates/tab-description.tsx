@@ -8,7 +8,7 @@
 
 import {Fragment, h} from 'preact';
 import {DocEntryRenderable} from '../entities/renderables';
-import {normalizeTabUrl} from '../helpers/url';
+import {normalizeTabUrl} from '../transforms/url-transforms';
 import {RawHtml} from './raw-html';
 
 const DESCRIPTION_TAB_NAME = 'Description';

@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {AIO_URL} from '../constants/domains';
-import {normalizePath} from './url';
+import {AIO_URL} from './domains';
+import {normalizePath} from '../transforms/url-transforms';
 
 // TODO(jelbourn): remove this mapping because it is site-specific.
 const linksMap = new Map<string, string>([
