@@ -6,18 +6,63 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {MemberEntry} from '../entities';
+import {MemberEntry, MemberTags, MemberType} from '../entities';
 import {isClassMethodEntry} from '../entities/categorization';
 import {MemberEntryRenderable} from '../entities/renderables';
 import {HasMembers, HasRenderableMembers, HasRenderableMembersGroups} from '../entities/traits';
-import {skipLifecycleHooks} from '../helpers/code';
 import {addHtmlDescription, addHtmlJsDocTagComments, setIsDeprecated} from './jsdoc-transforms';
+
+const lifecycleMethods = [
+  'ngAfterContentChecked',
+  'ngAfterContentChecked',
+  'ngAfterContentInit',
+  'ngAfterViewChecked',
+  'ngAfterViewChecked',
+  'ngAfterViewInit',
+  'ngDoCheck',
+  'ngDoCheck',
+  'ngOnChanges',
+  'ngOnDestroy',
+  'ngOnInit',
+];
+
+/** Gets a list of members with Angular lifecycle methods removed. */
+export function filterLifecycleMethods(members: MemberEntry[]): MemberEntry[] {
+  return members.filter((m) => lifecycleMethods.includes(m.name));
+}
+
+/** Merges getter and setter entries with the same name into a single entry. */
+export function mergeGettersAndSetters(members: MemberEntry[]): MemberEntry[] {
+  const getters = new Set<string>();
+  const setters = new Set<string>();
+
+  // Note all getter and setter names for the class.
+  for (const member of members) {
+    if (member.memberType === MemberType.Getter) getters.add(member.name);
+    if (member.memberType === MemberType.Setter) setters.add(member.name);
+  }
+
+  // Mark getter-only members as `readonly`.
+  for (const member of members) {
+    if (member.memberType === MemberType.Getter && !setters.has(member.name)) {
+      member.memberType = MemberType.Property;
+      member.memberTags.push(MemberTags.Readonly);
+    }
+  }
+
+  // Filter out setters that have a corresponding getter.
+  return members.filter(
+    (member) => member.memberType !== MemberType.Setter || !getters.has(member.name),
+  );
+}
 
 /** Given an entity with members, gets the entity augmented with renderable members. */
 export function addRenderableGroupMembers<T extends HasMembers>(
   entry: T,
 ): T & HasRenderableMembersGroups {
-  const membersGroups = skipLifecycleHooks(entry.members).reduce((groups, item) => {
+  const members = filterLifecycleMethods(entry.members);
+
+  const membersGroups = members.reduce((groups, item) => {
     const member = setIsDeprecated(
       addMethodParamsDescription(addHtmlDescription(addHtmlJsDocTagComments(item))),
     );
