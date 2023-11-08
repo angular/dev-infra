@@ -6180,35 +6180,35 @@ __metadata:
   linkType: hard
 
 "@types/selenium-webdriver@npm:^3.0.0":
-  version: 3.0.25
-  resolution: "@types/selenium-webdriver@npm:3.0.25"
-  checksum: 675ed65f43dfcb0ad9adf95030e41d61c627ae0189a321e02936737b6f98963cc355d629d3ff5ca9815c7f39d7af7052e9f014ba50fb0f58b5d2f4adee52cb34
+  version: 3.0.26
+  resolution: "@types/selenium-webdriver@npm:3.0.26"
+  checksum: 872ed705958dccfc35d7e5d31d8fdeac033a3993ec513a9eff0072b0de102cb7dc66abb8ca614adf8ccd7963d83d4740d0c004a9e50709d8d4ad954eb5b4110c
   languageName: node
   linkType: hard
 
 "@types/selenium-webdriver@npm:^4.0.18":
-  version: 4.1.19
-  resolution: "@types/selenium-webdriver@npm:4.1.19"
+  version: 4.1.20
+  resolution: "@types/selenium-webdriver@npm:4.1.20"
   dependencies:
     "@types/ws": "npm:*"
-  checksum: f58dcf7e2ba66854fe92e5c2ca093da73d8f022fd5a24590fab9a4f00253e3b4467c3e926db7de2fb25797297e53cf9dcf1fa661a440a73f4a946237a8012da2
+  checksum: 144c81598d0aca1229c59aa980a93cfb9292357fbb882b2c04f335d1b249acd76efe7bb72504e16e3ea86e84dd40b73c52827848de308150f61131897298a1a0
   languageName: node
   linkType: hard
 
 "@types/semver@npm:^7.3.6":
-  version: 7.5.4
-  resolution: "@types/semver@npm:7.5.4"
-  checksum: dee66a71d9f089c118be74b5937d4fef42864d68d9472a3f4f5399b9e3ad74d56a8e155020c846667b9ecf9de78fdb9ea55a53fff5067af28e06779b282b6c40
+  version: 7.5.5
+  resolution: "@types/semver@npm:7.5.5"
+  checksum: bb1b525221d93c9e7b45914af5ed1729a5bfdfa80927d6b02bcb4550ff7015f8c713152c32cb679ffcc79e77c0dda66d1f972ff5ee8d2205336729c51198bb18
   languageName: node
   linkType: hard
 
 "@types/send@npm:*, @types/send@npm:^0.17.1":
-  version: 0.17.3
-  resolution: "@types/send@npm:0.17.3"
+  version: 0.17.4
+  resolution: "@types/send@npm:0.17.4"
   dependencies:
     "@types/mime": "npm:^1"
     "@types/node": "npm:*"
-  checksum: 773a0cb55ea03eefbe9a0e6d42114e0f84968db30954a131aae9ba7e9ab984a4776915447ebdeab4412d7f11750126614b0b75e99413f75810045bdb3196554a
+  checksum: 7f17fa696cb83be0a104b04b424fdedc7eaba1c9a34b06027239aba513b398a0e2b7279778af521f516a397ced417c96960e5f50fcfce40c4bc4509fb1a5883c
   languageName: node
   linkType: hard
 
@@ -6248,16 +6248,16 @@ __metadata:
   linkType: hard
 
 "@types/spdx-satisfies@npm:^0.1.0":
-  version: 0.1.1
-  resolution: "@types/spdx-satisfies@npm:0.1.1"
-  checksum: b630de378ba8c736c0622b03659e6c943527cc60209b817c0d397abb547a657437ef4d693e9aad76aefc61b03fe820f639ab6ebcd5132ddec157f125ea9d5222
+  version: 0.1.2
+  resolution: "@types/spdx-satisfies@npm:0.1.2"
+  checksum: 5dc5700c8baab7e89b5d5a6ebd535a82b338477e4502e70e5a3e2ab50ecf8b7dbc588a2d1c65c2c92f40c2926cf116aa84bafdea1f3c189891208b3ee7aaeced
   languageName: node
   linkType: hard
 
 "@types/supports-color@npm:^8.1.1":
-  version: 8.1.2
-  resolution: "@types/supports-color@npm:8.1.2"
-  checksum: 3a9aa20c3fd75e062e380b45a3d835bba915cfc78a2ab3c85efd125480c870bf4d890616d0c1b0cf1977ebf0f6ff15fd19c88e689b9bb74d4d5e5d7a37864a98
+  version: 8.1.3
+  resolution: "@types/supports-color@npm:8.1.3"
+  checksum: 03aa3616b403f3deaeb774df6d3a3969845b0c9f449814a83c2c53eb6818f5f9b571ba205330b0ebe8e46f41fd550f581a34b4310b13f0e0448694cfff37ddbf
   languageName: node
   linkType: hard
 
@@ -6271,9 +6271,9 @@ __metadata:
   linkType: hard
 
 "@types/tmp@npm:^0.2.1":
-  version: 0.2.5
-  resolution: "@types/tmp@npm:0.2.5"
-  checksum: 7e14edd4238d5e34fc38cf1da017faf415a655e41e47404466dcb6eed10ca27062deb52b01358e4cc336cb2517d245271e2f03a51f2751063298d324cf0f056e
+  version: 0.2.6
+  resolution: "@types/tmp@npm:0.2.6"
+  checksum: a11bfa2cd8eaa6c5d62f62a3569192d7a2c28efdc5c17af0b0551db85816b2afc8156f3ca15ac76f0b142ae1403f04f44279871424233a1f3390b2e5fc828cd0
   languageName: node
   linkType: hard
 
@@ -6292,25 +6292,25 @@ __metadata:
   linkType: hard
 
 "@types/uuid@npm:^9.0.0":
-  version: 9.0.6
-  resolution: "@types/uuid@npm:9.0.6"
-  checksum: 8fb6b3a583a035b8e917192eeadaadadfbfd29315094aafd3478e11f11a986cb118ee0f388b15035fda063d9f1a32fa62e7a791215b762fe1e2c177929ca7146
+  version: 9.0.7
+  resolution: "@types/uuid@npm:9.0.7"
+  checksum: b329ebd4f9d1d8e08d4f2cc211be4922d70d1149f73d5772630e4a3acfb5170c6d37b3d7a39a0412f1a56e86e8a844c7f297c798b082f90380608bf766688787
   languageName: node
   linkType: hard
 
 "@types/wait-on@npm:^5.3.1":
-  version: 5.3.3
-  resolution: "@types/wait-on@npm:5.3.3"
+  version: 5.3.4
+  resolution: "@types/wait-on@npm:5.3.4"
   dependencies:
     "@types/node": "npm:*"
-  checksum: 3f8415cec018f324d6124ebd66a800f1aa4fb42f3fe94a4bea901860f3f914274d5a539fd7ddcf48a0d492cb0d6094a7a68f34c6f6c2bc925b68e4d30883501a
+  checksum: e366fbfa78fbed4a033aa03072291ba869328dc1a1b715109540af3a328f8f023ec868219f6d2148d5a2ea21f1ce0f12d29e42411f3255ba155da2af978319ee
   languageName: node
   linkType: hard
 
 "@types/which@npm:^3.0.0":
-  version: 3.0.1
-  resolution: "@types/which@npm:3.0.1"
-  checksum: 02e57843b841a85a1044b5a6afb287799b849e93a50d5db9e4ff07324a21f340550d421f152712174273c333f369c1103d3bfec8a6ea7079a47fc10f1e5119ba
+  version: 3.0.2
+  resolution: "@types/which@npm:3.0.2"
+  checksum: d3045495ea0594e269bf72f53099874924cc244cb8d2223b6082a74e54a1e2f394195e6dbfee8747e69ad7923aa2e2e480a5ee851ec32f477676ff5596f0c96f
   languageName: node
   linkType: hard
 
@@ -6340,11 +6340,11 @@ __metadata:
   linkType: hard
 
 "@types/yargs@npm:^17.0.0":
-  version: 17.0.30
-  resolution: "@types/yargs@npm:17.0.30"
+  version: 17.0.31
+  resolution: "@types/yargs@npm:17.0.31"
   dependencies:
     "@types/yargs-parser": "npm:*"
-  checksum: 7e3b4de5aa406a408d93e8a282314c7b28160185322044eea6373c5a7625a47743dc17044fff1a6cde7d0c022ecfd8e78a4f9df9c01afc07b1df6b0e0e6275af
+  checksum: 1e04df99bd0ad8ac8b3748b6ac0e99a9a4efe20b9cd8eab69ac9503fe87ab9bec312ad56982e969cdb0e2c0679431434ad571f6934049adb15fa35b22810c867
   languageName: node
   linkType: hard
 
@@ -10094,8 +10094,8 @@ __metadata:
   linkType: hard
 
 "firebase-tools@npm:^12.0.0":
-  version: 12.8.0
-  resolution: "firebase-tools@npm:12.8.0"
+  version: 12.8.1
+  resolution: "firebase-tools@npm:12.8.1"
   dependencies:
     "@google-cloud/pubsub": "npm:^3.0.1"
     abort-controller: "npm:^3.0.0"
@@ -10159,7 +10159,7 @@ __metadata:
     ws: "npm:^7.2.3"
   bin:
     firebase: lib/bin/firebase.js
-  checksum: f5a2382cd30ac1c534ea1361e95aa124a902e315459310017d06fca9f9e67ae00b277dcd833a5b0fa605f2c802ccfc9034f2f6fa1696c9a769a956b1adbfaf0d
+  checksum: c3c945ea5aea05c3b06decbb1e119794071deaede315d01d1c007c5bf3b409661cfa43b50a2a25dadaaf3acc86b6f29e084fb1c81b573a5f0b92c052cc1e0036
   languageName: node
   linkType: hard
 
