@@ -8,7 +8,7 @@
 
 import {h} from 'preact';
 import {CliCommandRenderable} from '../entities/renderables';
-import {HEADER_CLASS_NAME, HEADER_ENTRY_CATEGORY, HEADER_ENTRY_LABEL, HEADER_ENTRY_TITLE} from '../constants/html-classes';
+import {HEADER_CLASS_NAME, HEADER_ENTRY_CATEGORY, HEADER_ENTRY_LABEL, HEADER_ENTRY_TITLE} from '../styling/css-classes';
 
 /** Component to render a header of the CLI page. */
 export function HeaderCli(props: {command: CliCommandRenderable}) {
