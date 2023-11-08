@@ -27,9 +27,10 @@ import {
 } from '../entities/categorization';
 import hljs from 'highlight.js';
 import {HasModuleName, HasRenderableToc} from '../entities/traits';
-import {getLines, mergeGettersAndSetters, skipLifecycleHooks} from '../helpers/code';
+import {getLines} from '../helpers/code';
 import {CodeLineRenderable} from '../entities/renderables';
 import {isDeprecatedEntry} from '../helpers/js-doc-tags';
+import {filterLifecycleMethods, mergeGettersAndSetters} from './member-transforms';
 
 // Allows to generate links for code lines.
 interface CodeTableOfContentsData {
@@ -90,7 +91,7 @@ function groupCodeLines(lines: string[], metadata: CodeTableOfContentsData) {
 
 export function mapDocEntryToCode(entry: DocEntry): CodeTableOfContentsData {
   if (isClassEntry(entry)) {
-    const members = skipLifecycleHooks(mergeGettersAndSetters(entry.members));
+    const members = filterLifecycleMethods(mergeGettersAndSetters(entry.members));
     return getCodeTocData(members, true);
   }
 
