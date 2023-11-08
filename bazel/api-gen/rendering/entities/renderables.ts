@@ -10,15 +10,12 @@ import {CliCommand, CliOption} from '../cli-entities';
 import {
   ClassEntry,
   ConstantEntry,
-  DirectiveEntry,
   DocEntry,
   EnumEntry,
-  EnumMemberEntry,
   FunctionEntry,
   JsDocTagEntry,
   MemberEntry,
   ParameterEntry,
-  PipeEntry,
   TypeAliasEntry,
 } from '../entities';
 
@@ -66,15 +63,6 @@ export type EnumEntryRenderable = EnumEntry &
 /** Documentation entity for a TypeScript interface augmented transformed content for rendering. */
 export type InterfaceEntryRenderable = ClassEntryRenderable;
 
-/**
- * Documentation entity for an Angular directives and components augmented transformed
- * content for rendering.
- */
-export type DirectiveEntryRenderable = DirectiveEntry & DocEntryRenderable;
-
-/** Documentation entity for a pipe augmented transformed content for rendering. */
-export type PipeEntryRenderable = PipeEntry & DocEntryRenderable;
-
 export type FunctionEntryRenderable = FunctionEntry &
   DocEntryRenderable & {
     codeLinesGroups: Map<string, CodeLineRenderable[]>;
@@ -88,12 +76,6 @@ export interface MemberEntryRenderable extends MemberEntry {
   jsdocTags: JsDocTagRenderable[];
   isDeprecated: boolean;
 }
-
-/** Sub-entry for an enum member augmented transformed content for rendering. */
-export type EnumMemberEntryRenderable = EnumMemberEntry & MemberEntryRenderable;
-
-/** Sub-entry for a class property augmented transformed content for rendering. */
-export type PropertyEntryRenderable = MemberEntryRenderable;
 
 /** Sub-entry for a class method augmented transformed content for rendering. */
 export type MethodEntryRenderable = MemberEntryRenderable &
