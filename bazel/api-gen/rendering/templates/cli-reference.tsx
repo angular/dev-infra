@@ -7,7 +7,7 @@
  */
 
 import {Fragment, h} from 'preact';
-import {REFERENCE_MEMBERS, REFERENCE_MEMBERS_CONTAINER} from '../constants/html-classes';
+import {REFERENCE_MEMBERS, REFERENCE_MEMBERS_CONTAINER} from '../styling/css-classes';
 import {CliCommandRenderable} from '../entities/renderables';
 import {CliCard} from './cli-card';
 import {HeaderCli} from './header-cli';

@@ -18,7 +18,7 @@ import {
   REFERENCE_MEMBERS_CONTAINER,
   REFERENCE_MEMBER_CARD,
   REFERENCE_MEMBER_CARD_BODY,
-} from '../constants/html-classes';
+} from '../styling/css-classes';
 import {ClassMethodInfo} from './class-method-info';
 
 /** Component to render a function API reference document. */

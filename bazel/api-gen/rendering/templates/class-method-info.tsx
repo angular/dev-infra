@@ -7,7 +7,7 @@
  */
 
 import {Fragment, h} from 'preact';
-import {PARAM_KEYWORD_CLASS_NAME, REFERENCE_MEMBER_CARD_ITEM} from '../constants/html-classes';
+import {PARAM_KEYWORD_CLASS_NAME, REFERENCE_MEMBER_CARD_ITEM} from '../styling/css-classes';
 import {
   FunctionEntryRenderable,
   MethodEntryRenderable,

@@ -22,7 +22,7 @@ import {
   REFERENCE_MEMBER_CARD_BODY,
   REFERENCE_MEMBER_CARD_ITEM,
   REFERENCE_HEADER,
-} from '../constants/html-classes';
+} from '../styling/css-classes';
 
 export function ClassMember(props: {members: MemberEntryRenderable[]}) {
   const memberName = props.members[0].name;

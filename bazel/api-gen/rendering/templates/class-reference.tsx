@@ -10,7 +10,7 @@ import {Fragment, h} from 'preact';
 import {ClassEntryRenderable} from '../entities/renderables';
 import {ClassMemberList} from './class-member-list';
 import {HeaderApi} from './header-api';
-import {REFERENCE_MEMBERS_CONTAINER} from '../constants/html-classes';
+import {REFERENCE_MEMBERS_CONTAINER} from '../styling/css-classes';
 import {TabDescription} from './tab-description';
 import {TabUsageNotes} from './tab-usage-notes';
 import {TabApi} from './tab-api';

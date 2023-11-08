@@ -11,7 +11,7 @@ import {EnumEntryRenderable} from '../entities/renderables';
 import {HeaderApi} from './header-api';
 import {TabDescription} from './tab-description';
 import {TabApi} from './tab-api';
-import {REFERENCE_MEMBERS, REFERENCE_MEMBERS_CONTAINER} from '../constants/html-classes';
+import {REFERENCE_MEMBERS, REFERENCE_MEMBERS_CONTAINER} from '../styling/css-classes';
 import {ClassMember} from './class-member';
 
 /** Component to render a enum API reference document. */

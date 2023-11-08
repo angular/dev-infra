@@ -12,7 +12,7 @@ import {
   HEADER_ENTRY_CATEGORY,
   HEADER_ENTRY_LABEL,
   HEADER_ENTRY_TITLE
-} from '../constants/html-classes';
+} from '../styling/css-classes';
 import {DocEntryRenderable} from '../entities/renderables';
 import {getEntryTypeDisplayName} from '../helpers/entry-type';
 import {DocsPillRow} from './docs-pill-row';
