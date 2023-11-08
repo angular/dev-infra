@@ -19,7 +19,7 @@ import {
 } from '../entities/traits';
 import {getLinkToModule} from '../helpers/url';
 import {LinkEntryRenderable} from '../entities/renderables';
-import {isDeprecatedEntry} from '../helpers/js-doc-tags';
+import {isDeprecatedEntry} from '../entities/categorization';
 import {JsDocTagEntry} from '../entities';
 import {rewriteLinks} from '../helpers/links-mapper';
 import {mapJsDocExampleToHtmlExample} from '../helpers/code';
