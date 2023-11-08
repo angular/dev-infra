@@ -8,8 +8,8 @@
 
 import highlightJs, {HighlightResult} from 'highlight.js';
 import {Renderer as MarkedRenderer} from 'marked';
-import {AIO_URL} from '../constants/domains';
-import {rewriteLinks} from '../helpers/links-mapper';
+import {AIO_URL} from '../backwards-compatibility/domains';
+import {rewriteLinks} from '../backwards-compatibility/links-mapper';
 import {splitLines} from '../transforms/code-transforms';
 
 /**

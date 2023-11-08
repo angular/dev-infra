@@ -20,8 +20,8 @@ import {
   HasModuleName,
   HasRenderableJsDocTags,
 } from '../entities/traits';
-import {rewriteLinks} from '../helpers/links-mapper';
-import {getLinkToModule} from '../helpers/url';
+import {rewriteLinks} from '../backwards-compatibility/links-mapper';
+import {getLinkToModule} from './url-transforms';
 
 export const JS_DOC_USAGE_NOTES_TAG = 'usageNotes';
 export const JS_DOC_SEE_TAG = 'see';

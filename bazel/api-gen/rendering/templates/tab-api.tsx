@@ -9,7 +9,7 @@
 import {h} from 'preact';
 import {DocEntryRenderable} from '../entities/renderables';
 import {HasRenderableToc} from '../entities/traits';
-import {normalizeTabUrl} from '../helpers/url';
+import {normalizeTabUrl} from '../transforms/url-transforms';
 import {CodeTableOfContents} from './code-table-of-contents';
 
 const API_TAB_NAME = 'API';
