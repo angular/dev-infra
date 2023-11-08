@@ -24,12 +24,12 @@ import {
   isInterfaceEntry,
   isSetterEntry,
   isTypeAliasEntry,
+  isDeprecatedEntry,
 } from '../entities/categorization';
 import hljs from 'highlight.js';
 import {HasModuleName, HasRenderableToc} from '../entities/traits';
 import {getLines} from '../helpers/code';
 import {CodeLineRenderable} from '../entities/renderables';
-import {isDeprecatedEntry} from '../helpers/js-doc-tags';
 import {filterLifecycleMethods, mergeGettersAndSetters} from './member-transforms';
 
 // Allows to generate links for code lines.

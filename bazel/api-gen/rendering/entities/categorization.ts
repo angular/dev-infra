@@ -23,6 +23,7 @@ import {
   MethodEntryRenderable,
   TypeAliasEntryRenderable,
 } from './renderables';
+import {HasJsDocTags} from './traits';
 
 /** Gets whether the given entry represents a class */
 export function isClassEntry(entry: DocEntryRenderable): entry is ClassEntryRenderable;
@@ -95,4 +96,9 @@ export function isGetterEntry(entry: MemberEntry): entry is PropertyEntry {
 /** Gets whether the given entry represents a setter */
 export function isSetterEntry(entry: MemberEntry): entry is PropertyEntry {
   return entry.memberType === MemberType.Setter;
+}
+
+/** Gets whether the given entry is deprecated. */
+export function isDeprecatedEntry<T extends HasJsDocTags>(entry: T) {
+  return entry.jsdocTags.some((tag) => tag.name === 'deprecated');
 }
