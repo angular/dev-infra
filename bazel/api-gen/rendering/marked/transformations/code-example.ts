@@ -7,7 +7,7 @@
  */
 
 import {marked} from 'marked';
-import hljs from 'highlight.js';
+import highlightJs from 'highlight.js';
 import {join} from 'path';
 import {readFileSync} from 'fs';
 import {decode} from 'html-entities';
@@ -135,8 +135,8 @@ function getHighlightedCode(code: string, language?: string): string {
   const decodedCode = decode(code);
   return appendModifierClassesToCodeLinesElements(
     language
-      ? hljs.highlight(decodedCode, {language}).value
-      : hljs.highlightAuto(decodedCode).value,
+      ? highlightJs.highlight(decodedCode, {language}).value
+      : highlightJs.highlightAuto(decodedCode).value,
   );
 }
 

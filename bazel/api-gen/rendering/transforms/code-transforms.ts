@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import hljs from 'highlight.js';
+import highlightJs from 'highlight.js';
 import {
   DocEntry,
   FunctionEntry,
@@ -66,7 +66,9 @@ export function addRenderableCodeToc<T extends DocEntry & HasModuleName>(
   const metadata = mapDocEntryToCode(entry);
   appendPrefixAndSuffix(entry, metadata);
 
-  const codeWithSyntaxHighlighting = hljs.highlight(metadata.contents, {language: 'typescript'});
+  const codeWithSyntaxHighlighting = highlightJs.highlight(metadata.contents, {
+    language: 'typescript',
+  });
   const lines = splitLines(codeWithSyntaxHighlighting.value);
   const groups = groupCodeLines(lines, metadata);
 
