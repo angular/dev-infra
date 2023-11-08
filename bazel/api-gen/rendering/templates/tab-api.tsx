@@ -7,12 +7,12 @@
  */
 
 import {h} from 'preact';
-import {API_TAB_NAME} from '../constants/tab-names';
 import {DocEntryRenderable} from '../entities/renderables';
 import {HasRenderableToc} from '../entities/traits';
 import {normalizeTabUrl} from '../helpers/url';
 import {CodeTableOfContents} from './code-table-of-contents';
 
+const API_TAB_NAME = 'API';
 
 /** Component to render the API tab. */
 export function TabApi(props: {entry: DocEntryRenderable & HasRenderableToc}) {
