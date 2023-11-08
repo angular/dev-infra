@@ -8,9 +8,10 @@
 
 import {Fragment, h} from 'preact';
 import {DocEntryRenderable} from '../entities/renderables';
-import {RawHtml} from './raw-html';
-import {USAGE_NOTES_TAB_NAME} from '../constants/tab-names';
 import {normalizeTabUrl} from '../helpers/url';
+import {RawHtml} from './raw-html';
+
+const USAGE_NOTES_TAB_NAME = 'Usage Notes';
 
 /** Component to render the usage notes tab. */
 export function TabUsageNotes(props: {entry: DocEntryRenderable}) {

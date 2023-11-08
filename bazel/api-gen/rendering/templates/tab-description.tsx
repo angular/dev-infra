@@ -8,10 +8,10 @@
 
 import {Fragment, h} from 'preact';
 import {DocEntryRenderable} from '../entities/renderables';
-import {RawHtml} from './raw-html';
-import {DESCRIPTION_TAB_NAME} from '../constants/tab-names';
 import {normalizeTabUrl} from '../helpers/url';
+import {RawHtml} from './raw-html';
 
+const DESCRIPTION_TAB_NAME = 'Description';
 
 /** Component to render the description tab. */
 export function TabDescription(props: {entry: DocEntryRenderable}) {
