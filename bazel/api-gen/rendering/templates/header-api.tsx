@@ -7,6 +7,7 @@
  */
 
 import {h} from 'preact';
+import {EntryType} from '../entities';
 import {
   HEADER_CLASS_NAME,
   HEADER_ENTRY_CATEGORY,
@@ -14,7 +15,6 @@ import {
   HEADER_ENTRY_TITLE
 } from '../styling/css-classes';
 import {DocEntryRenderable} from '../entities/renderables';
-import {getEntryTypeDisplayName} from '../helpers/entry-type';
 import {DocsPillRow} from './docs-pill-row';
 
 /** Component to render a header of the API page. */
@@ -37,4 +37,16 @@ export function HeaderApi(props: {entry: DocEntryRenderable}) {
       <DocsPillRow links={entry.additionalLinks}/>
     </header>
   );
+}
+
+function getEntryTypeDisplayName(entryType: EntryType | string): string {
+  switch (entryType) {
+    case EntryType.NgModule:
+      return 'NgModule';
+    case EntryType.TypeAlias:
+      return 'Type Alias';
+    case EntryType.UndecoratedClass:
+      return 'Class';
+  }
+  return entryType;
 }
