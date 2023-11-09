@@ -4,6 +4,7 @@ import {tableRender} from './tranformations/table';
 import {listRender} from './tranformations/list';
 import {imageRender} from './tranformations/image';
 import {textRender} from './tranformations/text';
+import {headingRender} from './tranformations/heading';
 
 /**
  * Custom renderer for marked that will be used to transform markdown files to HTML
@@ -15,4 +16,5 @@ export const renderer: RendererObject = {
   list: listRender,
   image: imageRender,
   text: textRender,
+  heading: headingRender,
 };

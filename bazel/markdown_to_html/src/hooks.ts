@@ -7,13 +7,14 @@
  */
 
 import {MarkedExtension} from 'marked';
+import {resetHeaderIdsOfCurrentDocument} from './state';
 
 /**
  * Custom hooks for marked that will be used to post-transform markdown files with parent styles for docs.
  */
 export const hooks: MarkedExtension['hooks'] = {
   preprocess(html: string): string {
-    // TODO(josephperrott): reset the header ids.
+    resetHeaderIdsOfCurrentDocument();
     return html;
   },
   postprocess(html: string): string {
