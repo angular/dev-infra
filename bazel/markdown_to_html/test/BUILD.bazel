@@ -10,12 +10,18 @@ ts_library(
         "//bazel/markdown_to_html/src",
         "@npm//@bazel/runfiles",
         "@npm//@types/jasmine",
+        "@npm//@types/jsdom",
         "@npm//@types/node",
+        "@npm//jsdom",
     ],
 )
 
 jasmine_node_test(
     name = "unit_tests",
-    data = glob(["**/*.md"]),
+    data = [
+        "@npm//jsdom",
+    ] + glob(["**/*.md"]),
+    # JSDOM should not be bundled because it has workers and dynamic imports.
+    external = ["jsdom"],
     specs = [":unit_test_lib"],
 )
