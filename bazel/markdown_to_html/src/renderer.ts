@@ -1,5 +1,6 @@
 import {RendererObject} from 'marked';
 import {linkRender} from './tranformations/link';
+import {tableRender} from './tranformations/table';
 
 /**
  * Custom renderer for marked that will be used to transform markdown files to HTML
@@ -7,4 +8,5 @@ import {linkRender} from './tranformations/link';
  */
 export const renderer: RendererObject = {
   link: linkRender,
+  table: tableRender,
 };
