@@ -4,8 +4,6 @@ import {renderer} from './renderer';
 /** Globally configures marked for rendering JsDoc content to HTML. */
 export function configureMarkedGlobally() {
   marked.use({
-    mangle: false,
-    headerIds: false,
     renderer,
   });
 }
