@@ -1,0 +1,15 @@
+load("@npm//@bazel/concatjs:index.bzl", "ts_library")
+
+ts_library(
+    name = "src",
+    srcs = glob(["**/*.ts"]),
+    visibility = [
+        "//bazel/markdown_to_html:__pkg__",
+        "//bazel/markdown_to_html/test:__subpackages__",
+    ],
+    deps = [
+        "@npm//@types/marked",
+        "@npm//@types/node",
+        "@npm//marked",
+    ],
+)
