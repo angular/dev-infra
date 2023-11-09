@@ -10,6 +10,7 @@ ts_library(
     deps = [
         "@npm//@types/marked",
         "@npm//@types/node",
+        "@npm//emoji-regex",
         "@npm//marked",
     ],
 )
