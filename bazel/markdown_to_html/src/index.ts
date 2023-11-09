@@ -9,10 +9,12 @@
 import {marked} from 'marked';
 import {hooks} from './hooks';
 import {readFile} from 'fs/promises';
+import {renderer} from './renderer';
 
 export async function parseMarkdown(filepath: string): Promise<string> {
   marked.use({
     hooks,
+    renderer,
     // The async option causes marked to await walkTokens functions before parsing the tokens and returning an HTML string.
     // We leverage this to allow us to use async libraries like mermaid and building stackblitz examples.
     async: true,
