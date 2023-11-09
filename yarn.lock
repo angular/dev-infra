@@ -396,7 +396,6 @@ __metadata:
     "@types/jasmine": "npm:5.1.1"
     "@types/jsdom": "npm:^21.0.0"
     "@types/license-checker": "npm:^25.0.3"
-    "@types/marked": "npm:^6.0.0"
     "@types/node": "npm:16.10.9"
     "@types/opener": "npm:^1.4.0"
     "@types/selenium-webdriver": "npm:^4.0.18"
@@ -6028,15 +6027,6 @@ __metadata:
     "@types/linkify-it": "npm:*"
     "@types/mdurl": "npm:*"
   checksum: f72e08f69d76be2e30cd367fd6e5302c6878aa44e5b1a952fe7e41280044502bcb9bac8459ad94f6bb5e4f9c4cb52803950609ad66786f0fddc3a8bd533f777d
-  languageName: node
-  linkType: hard
-
-"@types/marked@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "@types/marked@npm:6.0.0"
-  dependencies:
-    marked: "npm:*"
-  checksum: 1a831af52413b1a208c91539d3bdda9be83d5451dc094c3cbc07e3e07186970673b9ec3ad5edd6c136b1249875c41e22c39eacb3c00ea7c59d0873c35c273035
   languageName: node
   linkType: hard
 
@@ -13453,21 +13443,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"marked@npm:*, marked@npm:^9.1.5":
-  version: 9.1.5
-  resolution: "marked@npm:9.1.5"
-  bin:
-    marked: bin/marked.js
-  checksum: 46bee189bb0819379249601df6ba880660ead9bc7676b4a1844f2be9d6948e7283ed4d13900ffcbf1137c4e7eb651728f6313858dfd7619ba8ee466432c95a38
-  languageName: node
-  linkType: hard
-
 "marked@npm:^4.0.10, marked@npm:^4.0.14":
   version: 4.3.0
   resolution: "marked@npm:4.3.0"
   bin:
     marked: bin/marked.js
   checksum: 0013463855e31b9c88d8bb2891a611d10ef1dc79f2e3cbff1bf71ba389e04c5971298c886af0be799d7fa9aa4593b086a136062d59f1210b0480b026a8c5dc47
+  languageName: node
+  linkType: hard
+
+"marked@npm:^9.1.5":
+  version: 9.1.5
+  resolution: "marked@npm:9.1.5"
+  bin:
+    marked: bin/marked.js
+  checksum: 46bee189bb0819379249601df6ba880660ead9bc7676b4a1844f2be9d6948e7283ed4d13900ffcbf1137c4e7eb651728f6313858dfd7619ba8ee466432c95a38
   languageName: node
   linkType: hard
 
