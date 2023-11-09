@@ -13,7 +13,6 @@ ts_library(
     tsconfig = "//:tsconfig.json",
     deps = [
         "@npm//@bazel/runfiles",
-        "@npm//@types/marked",
         "@npm//@types/node",
         "@npm//highlight.js",
         "@npm//html-entities",
