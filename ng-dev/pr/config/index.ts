@@ -30,8 +30,13 @@ export interface PullRequestConfig {
    * defaults are provided by the common dev-infra github configuration.
    */
   remote?: GithubConfig;
+
   /** Required base commits for given branches. */
   requiredBaseCommits?: {[branchName: string]: string};
+
+  /** List of statuses that are required before a pull request can be merged. */
+  requiredStatuses?: {type: 'check' | 'status'; name: string}[];
+
   /**
    * Whether pull requests should be merged using the Github API. This can be enabled
    * if projects want to have their pull requests show up as `Merged` in the Github UI.
@@ -39,6 +44,7 @@ export interface PullRequestConfig {
    * not support this.
    */
   githubApiMerge: false | GithubApiMergeStrategyConfig;
+
   /**
    * List of commit scopes which are exempted from target label content requirements. i.e. no `feat`
    * scopes in patch branches, no breaking changes in minor or patch changes.
