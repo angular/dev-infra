@@ -7,7 +7,7 @@
  */
 
 import {Token, Tokens, RendererThis, TokenizerThis} from 'marked';
-import {anchorTarget, isExternalLink} from '../helpers';
+import {anchorTarget, isExternalLink} from '../../helpers';
 
 interface DocsPillToken extends Tokens.Generic {
   type: 'docs-pill';
