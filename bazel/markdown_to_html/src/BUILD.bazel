@@ -8,6 +8,7 @@ ts_library(
         "//bazel/markdown_to_html/test:__subpackages__",
     ],
     deps = [
+        "//bazel/api-gen/rendering:entities",
         "@npm//@bazel/runfiles",
         "@npm//@types/node",
         "@npm//emoji-regex",
