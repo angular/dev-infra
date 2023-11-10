@@ -20,7 +20,10 @@ jasmine_node_test(
     name = "unit_tests",
     data = [
         "@npm//jsdom",
-    ] + glob(["**/*.md"]),
+    ] + glob([
+        "**/*.md",
+        "**/*.svg",
+    ]),
     # JSDOM should not be bundled because it has workers and dynamic imports.
     external = ["jsdom"],
     specs = [":unit_test_lib"],
