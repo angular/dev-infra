@@ -19,6 +19,7 @@ export class PullRequestValidationConfig {
   assertChangesAllowForTargetLabel = true;
   assertPassingCi = true;
   assertCompletedReviews = true;
+  assertEnforcedStatuses = true;
 
   static create(config: Partial<PullRequestValidationConfig>) {
     return Object.assign(new PullRequestValidationConfig(), config);
