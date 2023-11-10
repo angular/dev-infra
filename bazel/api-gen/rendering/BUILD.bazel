@@ -5,13 +5,19 @@ package(default_visibility = ["//bazel/api-gen:__subpackages__"])
 
 ts_library(
     name = "render_api_to_html_lib",
-    srcs = glob([
-        "**/*.ts",
-        "**/*.tsx",
-    ]),
+    srcs = glob(
+        [
+            "**/*.ts",
+            "**/*.tsx",
+        ],
+        exclude = [
+            "entities.ts",
+        ],
+    ),
     devmode_module = "commonjs",
     tsconfig = "//:tsconfig.json",
     deps = [
+        ":entities",
         "@npm//@bazel/runfiles",
         "@npm//@types/node",
         "@npm//highlight.js",
@@ -19,6 +25,17 @@ ts_library(
         "@npm//marked",
         "@npm//preact",
         "@npm//preact-render-to-string",
+    ],
+)
+
+ts_library(
+    name = "entities",
+    srcs = [
+        "entities.ts",
+    ],
+    visibility = [
+        "//bazel/api-gen/rendering:__pkg__",
+        "//bazel/markdown_to_html/src:__pkg__",
     ],
 )
 
