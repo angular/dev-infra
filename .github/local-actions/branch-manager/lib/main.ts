@@ -68,6 +68,10 @@ async function main(repo: {owner: string; repo: string}, token: string, pr: numb
   /** The git client used to perform actions. */
   const git = await AuthenticatedGitClient.get();
 
+  // Needed for testing the merge-ability via `git cherry-pick` in the merge strategy.
+  git.run(['config', 'user.email', 'angular-robot@google.com']);
+  git.run(['config', 'user.name', 'Angular Robot']);
+
   /** The pull request after being retrieved and validated. */
   const pullRequest = await loadAndValidatePullRequest(
     {git, config},
