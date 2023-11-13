@@ -4,3 +4,7 @@ this is code
 
 <docs-code path="bazel/markdown_to_html/test/docs-code/example-with-eslint-comment.ts" />
 <docs-code path="bazel/markdown_to_html/test/docs-code/example-with-region.ts" />
+
+
+<docs-code path="bazel/markdown_to_html/test/docs-code/new-code.ts"
+           diff="bazel/markdown_to_html/test/docs-code/old-code.ts" />

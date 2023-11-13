@@ -7,7 +7,7 @@
  */
 
 import {Tokens, Token, TokenizerThis, RendererThis} from 'marked';
-import {buildAttr} from './format-code';
+import {buildAttr} from './format/styling';
 
 /** Marked token for a multifile custom docs element. */
 export interface DocsCodeMultifileToken extends Tokens.Generic {

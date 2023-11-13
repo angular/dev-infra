@@ -7,7 +7,7 @@
  */
 
 import {TokenizerThis, RendererThis} from 'marked';
-import {CodeToken} from './format-code';
+import {CodeToken, formatCode} from './format';
 
 export interface DocsCodeBlock extends CodeToken {
   type: 'docs-code-block';
@@ -45,7 +45,6 @@ export const docsCodeBlockExtension = {
     return undefined;
   },
   renderer(this: RendererThis, token: DocsCodeBlock) {
-    // TODO(josephperrott): format the code included in the code block.
-    return `<pre><code>${token.code}</code></pre>`;
+    return formatCode(token);
   },
 };

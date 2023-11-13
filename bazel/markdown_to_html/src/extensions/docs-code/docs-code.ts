@@ -7,7 +7,7 @@
  */
 
 import {TokenizerThis, RendererThis} from 'marked';
-import {CodeToken} from './format-code';
+import {CodeToken, formatCode} from './format';
 import {runfiles} from '@bazel/runfiles';
 import {readFileSync} from 'fs';
 import {FileType, removeEslintComments} from './sanitizers/eslint';
@@ -16,26 +16,6 @@ import {regionParser} from './regions/region-parser';
 /** Marked token for a custom docs element. */
 export interface DocsCodeToken extends CodeToken {
   type: 'docs-code';
-  /* Nested code OR the code from the optional file path */
-  code: string;
-  /* The example file path */
-  path: string | undefined;
-  /* The example display header */
-  header: string | undefined;
-  /* Code language */
-  language: string | undefined;
-  /* Whether stling should include line numbers */
-  linenums: boolean | undefined;
-  /* The lines to display highlighting on */
-  highlight: string | undefined;
-  /* The example path to determine diff (lines added/removed) */
-  diff: string | undefined;
-  /* The lines viewable in collapsed view */
-  visibleLines: string | undefined;
-  /* The name of the viewable region in the collapsed view */
-  visibleRegion: string | undefined;
-  /* Whether we should display preview */
-  preview: boolean;
 }
 
 // Capture group 1: all attributes on the opening tag
@@ -107,7 +87,6 @@ export const docsCodeExtension = {
     return undefined;
   },
   renderer(this: RendererThis, token: DocsCodeToken) {
-    // TODO(josephperrott): format the code.
-    return `<pre><code>${token.code}</code></pre>`;
+    return formatCode(token);
   },
 };
