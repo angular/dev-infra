@@ -1,13 +1,17 @@
 import {parseMarkdown} from '../../src/index';
 import {runfiles} from '@bazel/runfiles';
+import {readFile} from 'fs/promises';
 import {JSDOM} from 'jsdom';
 
 describe('markdown to html', () => {
   let markdownDocument: DocumentFragment;
 
   beforeAll(async () => {
-    const cardFilePath = runfiles.resolvePackageRelative('docs-card/docs-card.md');
-    markdownDocument = JSDOM.fragment(await parseMarkdown(cardFilePath));
+    const markdownContent = await readFile(
+      runfiles.resolvePackageRelative('docs-card/docs-card.md'),
+      {encoding: 'utf-8'},
+    );
+    markdownDocument = JSDOM.fragment(await parseMarkdown(markdownContent));
   });
 
   it('creates cards with no links', () => {

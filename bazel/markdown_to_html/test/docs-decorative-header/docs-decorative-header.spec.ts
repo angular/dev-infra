@@ -1,15 +1,17 @@
 import {parseMarkdown} from '../../src/index';
 import {runfiles} from '@bazel/runfiles';
+import {readFile} from 'fs/promises';
 import {JSDOM} from 'jsdom';
 
 describe('markdown to html', () => {
   let markdownDocument: DocumentFragment;
 
   beforeAll(async () => {
-    const headerFilePath = runfiles.resolvePackageRelative(
-      'docs-decorative-header/docs-decorative-header.md',
+    const markdownContent = await readFile(
+      runfiles.resolvePackageRelative('docs-decorative-header/docs-decorative-header.md'),
+      {encoding: 'utf-8'},
     );
-    markdownDocument = JSDOM.fragment(await parseMarkdown(headerFilePath));
+    markdownDocument = JSDOM.fragment(await parseMarkdown(markdownContent));
   });
 
   it('sets the custom title in the header', () => {

@@ -1,13 +1,16 @@
 import {parseMarkdown} from '../../src/index';
 import {runfiles} from '@bazel/runfiles';
+import {readFile} from 'fs/promises';
 import {JSDOM} from 'jsdom';
 
 describe('markdown to html', () => {
   let markdownDocument: DocumentFragment;
 
   beforeAll(async () => {
-    const kitchenSyncFilePath = runfiles.resolvePackageRelative('list/list.md');
-    markdownDocument = JSDOM.fragment(await parseMarkdown(kitchenSyncFilePath));
+    const markdownContent = await readFile(runfiles.resolvePackageRelative('list/list.md'), {
+      encoding: 'utf-8',
+    });
+    markdownDocument = JSDOM.fragment(await parseMarkdown(markdownContent));
   });
 
   it('should wrap lists in custom classes', () => {

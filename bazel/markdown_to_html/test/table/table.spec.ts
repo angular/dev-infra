@@ -1,11 +1,14 @@
+import {readFile} from 'fs/promises';
 import {parseMarkdown} from '../../src/index';
 import {runfiles} from '@bazel/runfiles';
 
 describe('markdown to html', () => {
   let parsedMarkdown: string;
   beforeAll(async () => {
-    const kitchenSyncFilePath = runfiles.resolvePackageRelative('table/table.md');
-    parsedMarkdown = await parseMarkdown(kitchenSyncFilePath);
+    const markdownContent = await readFile(runfiles.resolvePackageRelative('table/table.md'), {
+      encoding: 'utf-8',
+    });
+    parsedMarkdown = await parseMarkdown(markdownContent);
   });
 
   it('should wrap the table in custom div', () => {
