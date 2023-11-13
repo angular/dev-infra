@@ -387,6 +387,7 @@ __metadata:
     "@types/browser-sync": "npm:^2.26.3"
     "@types/cli-progress": "npm:^3.9.1"
     "@types/conventional-commits-parser": "npm:^3.0.1"
+    "@types/diff": "npm:^5.0.8"
     "@types/ejs": "npm:^3.0.6"
     "@types/events": "npm:^3.0.0"
     "@types/folder-hash": "npm:^4.0.1"
@@ -416,6 +417,7 @@ __metadata:
     clang-format: "npm:1.8.0"
     cli-progress: "npm:^3.7.0"
     conventional-commits-parser: "npm:^5.0.0"
+    diff: "npm:^5.1.0"
     ejs: "npm:^3.1.6"
     emoji-regex: "npm:^10.3.0"
     firebase: "npm:10.5.2"
@@ -5812,6 +5814,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/diff@npm:^5.0.8":
+  version: 5.0.8
+  resolution: "@types/diff@npm:5.0.8"
+  checksum: 8b3a186ca9b21d06b553168a9ff77ea95eca315606d72de5e3ece7d004ff2fb9999f714b0942d2af15509b07d4f04d20ed282e3f0640e828e8fec69592edf049
+  languageName: node
+  linkType: hard
+
 "@types/duplexify@npm:^3.6.0":
   version: 3.6.1
   resolution: "@types/duplexify@npm:3.6.1"
@@ -8918,6 +8927,13 @@ __metadata:
   version: 4.0.2
   resolution: "diff@npm:4.0.2"
   checksum: 81b91f9d39c4eaca068eb0c1eb0e4afbdc5bb2941d197f513dd596b820b956fef43485876226d65d497bebc15666aa2aa82c679e84f65d5f2bfbf14ee46e32c1
+  languageName: node
+  linkType: hard
+
+"diff@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "diff@npm:5.1.0"
+  checksum: 77a0d9beb9ed54796154ac2511872288432124ac90a1cabb1878783c9b4d81f1847f3b746a0630b1e836181461d2c76e1e6b95559bef86ed16294d114862e364
   languageName: node
   linkType: hard
 

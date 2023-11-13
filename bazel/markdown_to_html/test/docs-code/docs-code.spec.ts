@@ -15,7 +15,7 @@ describe('markdown to html', () => {
   });
 
   it('converts docs-code elements into a code block', () => {
-    const codeBlock = markdownDocument.querySelector('code');
+    const codeBlock = markdownDocument.querySelectorAll('code')[0];
     expect(codeBlock).toBeTruthy();
     expect(codeBlock?.textContent?.trim()).toBe('this is code');
   });
