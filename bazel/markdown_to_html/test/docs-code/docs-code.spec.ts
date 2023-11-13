@@ -21,4 +21,11 @@ describe('markdown to html', () => {
     expect(codeBlock).toBeTruthy();
     expect(codeBlock?.textContent?.trim()).not.toContain('// eslint');
   });
+
+  it('extract regions from the code', () => {
+    const codeBlock = markdownDocument.querySelectorAll('code')[2];
+    expect(codeBlock).toBeTruthy();
+    expect(codeBlock?.textContent?.trim()).toContain(`const x = 'within the region';`);
+    expect(codeBlock?.textContent?.trim()).not.toContain('docregion');
+  });
 });
