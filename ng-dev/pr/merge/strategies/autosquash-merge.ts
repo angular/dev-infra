@@ -10,6 +10,7 @@ import {dirname, join} from 'path';
 import {fileURLToPath} from 'url';
 import {PullRequest} from '../pull-request.js';
 import {MergeStrategy, TEMP_PR_HEAD_BRANCH} from './strategy.js';
+import {MergeConflictsFatalError} from '../failures.js';
 
 /**
  * Merge strategy that does not use the Github API for merging. Instead, it fetches
@@ -65,11 +66,20 @@ export class AutosquashMergeStrategy extends MergeStrategy {
       '-f',
       '--msg-filter',
       `${getCommitMessageFilterScriptPath()} ${prNumber}`,
-      revisionRange,
+      revisionRange, // Range still captures the squashed commits (`base..PR_HEAD`).
     ]);
 
     // Perform the actual cherry picking into target branches.
-    this.cherryPickIntoTargetBranches(revisionRange, targetBranches);
+    // Note: Range still captures the squashed commits (`base..PR_HEAD`).
+    const failedBranches = this.cherryPickIntoTargetBranches(revisionRange, targetBranches);
+
+    // We already checked whether the PR can be cherry-picked into the target branches,
+    // but in case the cherry-pick somehow fails, we still handle the conflicts here. The
+    // commits created through the Github API could be different (i.e. through squash).
+    if (failedBranches.length) {
+      throw new MergeConflictsFatalError(failedBranches);
+    }
+
     // Push the cherry picked branches upstream.
     this.pushTargetBranchesUpstream(targetBranches);
 
