@@ -10,6 +10,7 @@ import {TokenizerThis, RendererThis} from 'marked';
 import {CodeToken} from './format-code';
 import {runfiles} from '@bazel/runfiles';
 import {readFileSync} from 'fs';
+import {FileType, removeEslintComments} from './sanitizers/eslint';
 
 /** Marked token for a custom docs element. */
 export interface DocsCodeToken extends CodeToken {
@@ -78,6 +79,8 @@ export const docsCodeExtension = {
       let code = match[2].trim();
       if (path && path[1]) {
         code = readFileSync(runfiles.resolveWorkspaceRelative(path[1]), {encoding: 'utf-8'});
+        const fileType: FileType | undefined = path[1]?.split('.').pop() as FileType;
+        code = removeEslintComments(code, fileType);
       }
 
       const token: DocsCodeToken = {
