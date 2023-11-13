@@ -78343,6 +78343,8 @@ async function main(repo2, token2, pr2) {
   const config = await getConfig([assertValidGithubConfig, assertValidPullRequestConfig]);
   AuthenticatedGitClient.configure(token2);
   const git = await AuthenticatedGitClient.get();
+  git.run(["config", "user.email", "angular-robot@google.com"]);
+  git.run(["config", "user.name", "Angular Robot"]);
   const pullRequest = await loadAndValidatePullRequest({ git, config }, pr2, PullRequestValidationConfig.create({
     assertPending: false,
     assertCompletedReviews: false
