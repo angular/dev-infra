@@ -1,13 +1,17 @@
 import {parseMarkdown} from '../../src/index';
 import {runfiles} from '@bazel/runfiles';
+import {readFile} from 'fs/promises';
 import {JSDOM} from 'jsdom';
 
 describe('markdown to html', () => {
   let markdownDocument: DocumentFragment;
 
   beforeAll(async () => {
-    const kitchenSyncFilePath = runfiles.resolvePackageRelative('docs-code/docs-code.md');
-    markdownDocument = JSDOM.fragment(await parseMarkdown(kitchenSyncFilePath));
+    const markdownContent = await readFile(
+      runfiles.resolvePackageRelative('docs-code/docs-code.md'),
+      {encoding: 'utf-8'},
+    );
+    markdownDocument = JSDOM.fragment(await parseMarkdown(markdownContent));
   });
 
   it('converts docs-code elements into a code block', () => {

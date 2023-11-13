@@ -24,7 +24,7 @@ import {docsCodeBlockExtension} from './extensions/docs-code/docs-code-block';
 import {docsCodeExtension} from './extensions/docs-code/docs-code';
 import {docsCodeMultifileExtension} from './extensions/docs-code/docs-code-multifile';
 
-export async function parseMarkdown(filepath: string): Promise<string> {
+export async function parseMarkdown(markdownContent: string): Promise<string> {
   marked.use({
     hooks,
     renderer,
@@ -48,6 +48,5 @@ export async function parseMarkdown(filepath: string): Promise<string> {
     async: true,
   });
 
-  const markdownContent = await readFile(filepath, {encoding: 'utf-8'});
   return marked.parse(markdownContent);
 }

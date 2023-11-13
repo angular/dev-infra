@@ -1,13 +1,17 @@
 import {parseMarkdown} from '../../src/index';
 import {runfiles} from '@bazel/runfiles';
+import {readFile} from 'fs/promises';
 import {JSDOM} from 'jsdom';
 
 describe('markdown to html', () => {
   let markdownDocument: DocumentFragment;
 
   beforeAll(async () => {
-    const docsVideoFilePath = runfiles.resolvePackageRelative('docs-video/docs-video.md');
-    markdownDocument = JSDOM.fragment(await parseMarkdown(docsVideoFilePath));
+    const markdownContent = await readFile(
+      runfiles.resolvePackageRelative('docs-video/docs-video.md'),
+      {encoding: 'utf-8'},
+    );
+    markdownDocument = JSDOM.fragment(await parseMarkdown(markdownContent));
   });
 
   it('should create an iframe in a container', () => {

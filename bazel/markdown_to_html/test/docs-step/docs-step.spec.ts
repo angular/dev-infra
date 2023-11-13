@@ -1,13 +1,17 @@
 import {parseMarkdown} from '../../src/index';
 import {runfiles} from '@bazel/runfiles';
+import {readFile} from 'fs/promises';
 import {JSDOM} from 'jsdom';
 
 describe('markdown to html', () => {
   let markdownDocument: DocumentFragment;
 
   beforeAll(async () => {
-    const docsStepFilePath = runfiles.resolvePackageRelative('docs-step/docs-step.md');
-    markdownDocument = JSDOM.fragment(await parseMarkdown(docsStepFilePath));
+    const markdownContent = await readFile(
+      runfiles.resolvePackageRelative('docs-step/docs-step.md'),
+      {encoding: 'utf-8'},
+    );
+    markdownDocument = JSDOM.fragment(await parseMarkdown(markdownContent));
   });
 
   it('should create a list item for each step', () => {

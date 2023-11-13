@@ -2,13 +2,17 @@ import {parseMarkdown} from '../../src/index';
 import {runfiles} from '@bazel/runfiles';
 import {JSDOM} from 'jsdom';
 import {AlertSeverityLevel} from '../../src/extensions/docs-alert';
+import {readFile} from 'fs/promises';
 
 describe('markdown to html', () => {
   let markdownDocument: DocumentFragment;
 
   beforeAll(async () => {
-    const kitchenSyncFilePath = runfiles.resolvePackageRelative('docs-alert/docs-alert.md');
-    markdownDocument = JSDOM.fragment(await parseMarkdown(kitchenSyncFilePath));
+    const markdownContent = await readFile(
+      runfiles.resolvePackageRelative('docs-alert/docs-alert.md'),
+      {encoding: 'utf-8'},
+    );
+    markdownDocument = JSDOM.fragment(await parseMarkdown(markdownContent));
   });
 
   for (let level in AlertSeverityLevel) {
