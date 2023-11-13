@@ -20,6 +20,7 @@ import {docsStepExtension} from './extensions/docs-workflow/docs-step';
 import {docsCardExtension} from './extensions/docs-card/docs-card';
 import {docsCardContainerExtension} from './extensions/docs-card/docs-card-container';
 import {docsDecorativeHeaderExtension} from './extensions/docs-decorative-header';
+import {docsCodeBlockExtension} from './extensions/docs-code/docs-code-block';
 
 export async function parseMarkdown(filepath: string): Promise<string> {
   marked.use({
@@ -36,6 +37,7 @@ export async function parseMarkdown(filepath: string): Promise<string> {
       docsCardExtension,
       docsCardContainerExtension,
       docsDecorativeHeaderExtension,
+      docsCodeBlockExtension,
     ],
     // The async option causes marked to await walkTokens functions before parsing the tokens and returning an HTML string.
     // We leverage this to allow us to use async libraries like mermaid and building stackblitz examples.
