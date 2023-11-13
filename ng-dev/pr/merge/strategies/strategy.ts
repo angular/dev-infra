@@ -8,6 +8,7 @@
 
 import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client.js';
 import {
+  FatalMergeToolError,
   MergeConflictsFatalError,
   MismatchedTargetBranchFatalError,
   UnsatisfiedBaseShaFatalError,
@@ -115,12 +116,12 @@ export abstract class MergeStrategy {
     const cherryPickArgs = [revisionRange];
     const failedBranches: string[] = [];
 
-    if (options.dryRun) {
-      // https://git-scm.com/docs/git-cherry-pick#Documentation/git-cherry-pick.txt---no-commit
-      // This causes `git cherry-pick` to not generate any commits. Instead, the changes are
-      // applied directly in the working tree. This allow us to easily discard the changes
-      // for dry-run purposes.
-      cherryPickArgs.push('--no-commit');
+    const revisionCountOutput = this.git.run(['rev-list', '--count', revisionRange]);
+    const revisionCount = Number(revisionCountOutput.stdout.trim());
+    if (isNaN(revisionCount)) {
+      throw new FatalMergeToolError(
+        'Unexpected revision range for cherry-picking. No commit count could be determined.',
+      );
     }
 
     if (options.linkToOriginalCommits) {
@@ -137,7 +138,8 @@ export abstract class MergeStrategy {
       // Checkout the local target branch.
       this.git.run(['checkout', localTargetBranch]);
       // Cherry-pick the refspec into the target branch.
-      if (this.git.runGraceful(['cherry-pick', ...cherryPickArgs]).status !== 0) {
+      const cherryPickResult = this.git.runGraceful(['cherry-pick', ...cherryPickArgs]);
+      if (cherryPickResult.status !== 0) {
         // Abort the failed cherry-pick. We do this because Git persists the failed
         // cherry-pick state globally in the repository. This could prevent future
         // pull request merges as a Git thinks a cherry-pick is still in progress.
@@ -147,7 +149,7 @@ export abstract class MergeStrategy {
       // If we run with dry run mode, we reset the local target branch so that all dry-run
       // cherry-pick changes are discard. Changes are applied to the working tree and index.
       if (options.dryRun) {
-        this.git.run(['reset', '--hard', 'HEAD']);
+        this.git.run(['reset', '--hard', `HEAD~${revisionCount}`]);
       }
     }
     return failedBranches;
