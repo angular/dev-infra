@@ -9,9 +9,8 @@ ts_library(
     devmode_module = "commonjs",
     tsconfig = "//:tsconfig.json",
     deps = [
-        "@npm//@bazel/runfiles",
+        "//bazel/markdown_to_html/src",
         "@npm//@types/node",
-        "@npm//marked",
     ],
 )
 
