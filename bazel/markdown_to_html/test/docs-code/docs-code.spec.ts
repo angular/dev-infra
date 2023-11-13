@@ -10,9 +10,15 @@ describe('markdown to html', () => {
     markdownDocument = JSDOM.fragment(await parseMarkdown(kitchenSyncFilePath));
   });
 
-  it('converts triple ticks into a code block', () => {
+  it('converts docs-code elements into a code block', () => {
     const codeBlock = markdownDocument.querySelector('code');
     expect(codeBlock).toBeTruthy();
     expect(codeBlock?.textContent?.trim()).toBe('this is code');
+  });
+
+  it('removes eslint comments from the code', () => {
+    const codeBlock = markdownDocument.querySelectorAll('code')[1];
+    expect(codeBlock).toBeTruthy();
+    expect(codeBlock?.textContent?.trim()).not.toContain('// eslint');
   });
 });

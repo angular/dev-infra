@@ -23,6 +23,7 @@ jasmine_node_test(
     ] + glob([
         "**/*.md",
         "**/*.svg",
+        "**/*.ts",
     ]),
     # JSDOM should not be bundled because it has workers and dynamic imports.
     external = ["jsdom"],
