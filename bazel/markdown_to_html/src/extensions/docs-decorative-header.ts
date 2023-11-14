@@ -46,8 +46,7 @@ export const docsDecorativeHeaderExtension = {
         type: 'docs-decorative-header',
         raw: match[0],
         title: title ? title[1] : '',
-        // TODO(josephperrott): Determine if we are going to have a default.
-        imgSrc: imgSrc ? imgSrc[1] : '../assets/images/globe.svg',
+        imgSrc: imgSrc ? imgSrc[1] : '',
         body: body ?? '',
       };
       return token;
@@ -58,7 +57,7 @@ export const docsDecorativeHeaderExtension = {
     // We can assume that all illustrations are svg files
     // We need to read svg content, instead of renering svg with `img`,
     // cause we would like to use CSS variables to support dark and light mode.
-    const illustration = getSvgIllustration(token.imgSrc);
+    const illustration = token.imgSrc ? getSvgIllustration(token.imgSrc) : '';
 
     return `
     <div class="docs-decorative-header-container">
