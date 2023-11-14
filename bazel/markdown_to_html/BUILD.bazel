@@ -1,12 +1,12 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("@npm//@bazel/concatjs:index.bzl", "ts_library")
+load("//bazel/esbuild:index.bzl", "esbuild_esm_bundle")
 
 package(default_visibility = ["//bazel/markdown_to_html:__subpackages__"])
 
 ts_library(
     name = "markdown_to_html_lib",
-    srcs = glob(["**/*.ts"]),
-    devmode_module = "commonjs",
+    srcs = glob(["*.ts"]),
     tsconfig = "//:tsconfig.json",
     deps = [
         "//bazel/markdown_to_html/src",
@@ -14,20 +14,30 @@ ts_library(
     ],
 )
 
+esbuild_esm_bundle(
+    name = "markdown_to_html_bundle",
+    entry_point = ":index.ts",
+    output = "bin.mjs",
+    platform = "node",
+    target = "es2022",
+    deps = [
+        ":markdown_to_html_lib",
+    ],
+)
+
 # Action binary for the api_gen bazel rule.
 nodejs_binary(
     name = "markdown_to_html",
-    data = [":markdown_to_html_lib"],
-    entry_point = ":index.ts",
-    templated_args = [
-        "--bazel_patch_module_resolver",
-    ],
+    data = [":markdown_to_html_bundle"],
+    entry_point = "bin.mjs",
     visibility = ["//visibility:public"],
 )
 
 # Expose the sources in the dev-infra NPM package.
 filegroup(
     name = "files",
-    srcs = glob(["**/*"]),
+    srcs = glob(["**/*"]) + [
+        "//bazel/markdown_to_html/src:files",
+    ],
     visibility = ["//visibility:public"],
 )

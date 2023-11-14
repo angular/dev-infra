@@ -7,9 +7,7 @@
  */
 
 import {TokenizerThis, Tokens, RendererThis} from 'marked';
-import {readFileSync} from 'fs';
-import {getPageTitle} from '../utils';
-import {runfiles} from '@bazel/runfiles';
+import {getPageTitle, loadWorkspaceRelativeFile} from '../utils';
 
 interface DocsDecorativeHeaderToken extends Tokens.Generic {
   type: 'docs-decorative-header';
@@ -57,7 +55,7 @@ export const docsDecorativeHeaderExtension = {
     // We can assume that all illustrations are svg files
     // We need to read svg content, instead of renering svg with `img`,
     // cause we would like to use CSS variables to support dark and light mode.
-    const illustration = token.imgSrc ? getSvgIllustration(token.imgSrc) : '';
+    const illustration = token.imgSrc ? loadWorkspaceRelativeFile(token.imgSrc) : '';
 
     return `
     <div class="docs-decorative-header-container">
@@ -77,7 +75,3 @@ export const docsDecorativeHeaderExtension = {
     `;
   },
 };
-
-function getSvgIllustration(path: string): string {
-  return readFileSync(runfiles.resolveWorkspaceRelative(path), {encoding: 'utf-8'});
-}

@@ -3,6 +3,7 @@ load("@npm//@bazel/concatjs:index.bzl", "ts_library")
 ts_library(
     name = "src",
     srcs = glob(["**/*.ts"]),
+    tsconfig = "//:tsconfig.json",
     visibility = [
         "//bazel/markdown_to_html:__pkg__",
         "//bazel/markdown_to_html/test:__subpackages__",
@@ -18,4 +19,11 @@ ts_library(
         "@npm//html-entities",
         "@npm//marked",
     ],
+)
+
+# Expose the sources in the dev-infra NPM package.
+filegroup(
+    name = "files",
+    srcs = glob(["**/*"]),
+    visibility = ["//visibility:public"],
 )
