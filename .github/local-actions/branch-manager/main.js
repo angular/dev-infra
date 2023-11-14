@@ -77733,7 +77733,7 @@ var Validation4 = class extends PullRequestValidation {
     const { statuses } = getStatusesForPullRequest(pullRequest);
     const missing = [];
     for (const enforced of config.requiredStatuses) {
-      if (!statuses.some((s2) => s2.name === enforced.name && s2.type === enforced.name)) {
+      if (!statuses.some((s2) => s2.name === enforced.name && s2.type === enforced.type)) {
         missing.push(enforced.name);
       }
     }

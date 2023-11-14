@@ -27,7 +27,7 @@ class Validation extends PullRequestValidation {
     const missing: string[] = [];
 
     for (const enforced of config.requiredStatuses) {
-      if (!statuses.some((s) => s.name === enforced.name && s.type === enforced.name)) {
+      if (!statuses.some((s) => s.name === enforced.name && s.type === enforced.type)) {
         missing.push(enforced.name);
       }
     }
