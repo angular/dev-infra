@@ -7,9 +7,8 @@
  */
 
 import {Tokens, Token, RendererThis, TokenizerThis} from 'marked';
-import {runfiles} from '@bazel/runfiles';
-import {readFileSync} from 'fs';
 import {anchorTarget} from '../../helpers';
+import {loadWorkspaceRelativeFile} from '../../utils';
 
 interface DocsCardToken extends Tokens.Generic {
   type: 'docs-card';
@@ -95,7 +94,7 @@ function getCardWithSvgIllustration(renderer: RendererThis, token: DocsCardToken
   // We can assume that all illustrations are svg files
   // We need to read svg content, instead of renering svg with `img`,
   // cause we would like to use CSS variables to support dark and light mode.
-  const illustration = getSvgIllustration(token.imgSrc!);
+  const illustration = loadWorkspaceRelativeFile(token.imgSrc!);
 
   if (token.href) {
     return `
@@ -120,8 +119,4 @@ function getCardWithSvgIllustration(renderer: RendererThis, token: DocsCardToken
       </div>
     </div>
     `;
-}
-
-function getSvgIllustration(path: string): string {
-  return readFileSync(runfiles.resolveWorkspaceRelative(path), {encoding: 'utf-8'});
 }

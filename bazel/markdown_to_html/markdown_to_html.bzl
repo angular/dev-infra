@@ -34,7 +34,7 @@ def _markdown_to_html(ctx):
     # the main thing that this rule does.
     run_node(
         ctx = ctx,
-        inputs = depset(ctx.files.srcs),
+        inputs = depset(ctx.files.srcs + ctx.files.data),
         executable = "_markdown_to_html",
         outputs = html_outputs,
         arguments = [args],
@@ -54,6 +54,10 @@ markdown_to_html = rule(
         "srcs": attr.label_list(
             doc = """Markdown sources to render to html.""",
             allow_empty = False,
+            allow_files = True,
+        ),
+        "data": attr.label_list(
+            doc = """Source referenced from within the markdown.""",
             allow_files = True,
         ),
 
