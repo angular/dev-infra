@@ -15,10 +15,8 @@ export const headingRender: RendererApi['heading'] = (text, level, raw) => {
   if (level === 1) {
     return `
     <header class="docs-header">
-    ${
-      // TODO(josephperrott): Figure out how we determine whether breadcrumbs should be shown.
-      false ? '<docs-breadcrumb></docs-breadcrumb>' : ''
-    }
+      <docs-breadcrumb></docs-breadcrumb>
+      
       ${getPageTitle(text)}
     </header>
     `;
