@@ -1,25 +1,29 @@
 import {decode} from 'html-entities';
 import highlightJs from 'highlight.js';
 import {DiffMetadata} from './diff';
-
-export function highlightCode(code: string, language?: string) {
-  // TODO(josephperrott): Handle mermaid usages i.e. language == mermaidClassName
-  if (language == 'none' || language == 'file') {
-    return code;
-  }
-  // Decode the code content to replace HTML entities to characters
-  const decodedCode = decode(code);
-  const {value} = language
-    ? highlightJs.highlight(decodedCode, {language})
-    : highlightJs.highlightAuto(decodedCode);
-  return value;
-}
+import {CodeToken} from '.';
 
 const lineNumberClassName: string = 'hljs-ln-number';
 const lineMultifileClassName: string = 'hljs-ln-line';
 const lineAddedClassName: string = 'add';
 const lineRemovedClassName: string = 'remove';
 const lineHighlightedClassName: string = 'highlighted';
+
+/**
+ * Updates the provided token's code value to include syntax highlighting.
+ */
+export function highlightCode(token: CodeToken) {
+  // TODO(josephperrott): Handle mermaid usages i.e. language == mermaidClassName
+  if (token.language == 'none' || token.language == 'file') {
+    return;
+  }
+  // Decode the code content to replace HTML entities to characters
+  const decodedCode = decode(token.code);
+  const {value} = token.language
+    ? highlightJs.highlight(decodedCode, {language: token.language})
+    : highlightJs.highlightAuto(decodedCode);
+  token.code = value;
+}
 
 export function finalizeCodeHighlighting(
   htmlString: string,

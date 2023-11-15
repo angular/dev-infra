@@ -48,10 +48,10 @@ export function formatCode(token: CodeToken) {
 
   const {code, linesAdded, linesRemoved} = calculateDiff(originalCode, token.code);
 
-  const hightlightedCode = highlightCode(code, token.language);
+  highlightCode(token);
 
   const finalizedCode = finalizeCodeHighlighting(
-    hightlightedCode,
+    token.code,
     {code, linesAdded, linesRemoved},
     highlightedLineRanges,
     !!token.linenums,
