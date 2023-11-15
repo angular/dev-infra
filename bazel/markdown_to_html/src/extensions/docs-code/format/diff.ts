@@ -6,8 +6,16 @@ export interface DiffMetadata {
   linesRemoved: number[];
 }
 
-export function calculateDiff(beforeCode: string, afterCode: string): DiffMetadata {
-  const change = diffLines(afterCode, beforeCode);
+export function calculateDiff(beforeCode: string, code: string): DiffMetadata {
+  if (!beforeCode) {
+    return {
+      code,
+      linesAdded: [],
+      linesRemoved: [],
+    };
+  }
+
+  const change = diffLines(code, beforeCode);
 
   const getLinesRange = (start: number, count: number): number[] =>
     Array.from(Array(count).keys()).map((i) => i + start);
