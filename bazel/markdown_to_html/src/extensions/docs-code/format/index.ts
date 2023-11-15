@@ -28,6 +28,7 @@ export interface CodeToken extends Tokens.Generic {
   /* The lines to display highlighting on */
   highlight?: string;
 
+  /** The generated diff metadata if created in the code formating process. */
   diffMetadata?: DiffMetadata;
 }
 
