@@ -2,6 +2,7 @@ import {decode} from 'html-entities';
 import highlightJs from 'highlight.js';
 import {DiffMetadata} from './diff';
 import {CodeToken} from '.';
+import {parseRangeString} from './range';
 
 const lineNumberClassName: string = 'hljs-ln-number';
 const lineMultifileClassName: string = 'hljs-ln-line';
@@ -14,43 +15,36 @@ const lineHighlightedClassName: string = 'highlighted';
  */
 export function highlightCode(token: CodeToken) {
   // TODO(josephperrott): Handle mermaid usages i.e. language == mermaidClassName
-  if (token.language == 'none' || token.language == 'file') {
+  if (token.language !== 'none' && token.language !== 'file') {
+    // Decode the code content to replace HTML entities to characters
+    const decodedCode = decode(token.code);
+    const {value} = token.language
+      ? highlightJs.highlight(decodedCode, {language: token.language})
+      : highlightJs.highlightAuto(decodedCode);
+    token.code = value;
+  }
+
+  const lines = token.code.split(/\r\n|\r|\n/g);
+  const linesCount = lines.length;
+  if (linesCount === 0) {
     return;
   }
-  // Decode the code content to replace HTML entities to characters
-  const decodedCode = decode(token.code);
-  const {value} = token.language
-    ? highlightJs.highlight(decodedCode, {language: token.language})
-    : highlightJs.highlightAuto(decodedCode);
-  token.code = value;
-}
 
-export function finalizeCodeHighlighting(
-  htmlString: string,
-  diffData: DiffMetadata,
-  highlightedLines: number[],
-  displayLineNums: boolean,
-): string {
-  const lines = htmlString.split(/\r\n|\r|\n/g);
   let finalHtml = '';
-
   let lineIndex = 0;
   let resultFileLineIndex = 1;
-  const linesCount = lines.length;
 
-  if (linesCount === 0) {
-    return htmlString;
-  }
+  const highlightedLineRanges = token.highlight ? parseRangeString(token.highlight) : [];
 
   do {
-    const isRemovedLine = diffData?.linesRemoved.includes(lineIndex);
-    const isAddedLine = diffData?.linesAdded.includes(lineIndex);
-    const isHighlighted = highlightedLines.includes(lineIndex);
+    const isRemovedLine = token.diffMetadata?.linesRemoved.includes(lineIndex);
+    const isAddedLine = token.diffMetadata?.linesAdded.includes(lineIndex);
+    const isHighlighted = highlightedLineRanges.includes(lineIndex);
     const statusClasses = `${isAddedLine ? lineAddedClassName : ''} ${
       isRemovedLine ? lineRemovedClassName : ''
     } ${isHighlighted ? lineHighlightedClassName : ''}`;
 
-    if (displayLineNums) {
+    if (!!token.linenums) {
       if (isRemovedLine) {
         finalHtml += `<span role="presentation" class="${lineNumberClassName} ${statusClasses}">-</span>`;
       } else {
