@@ -2,10 +2,15 @@ import {CodeToken} from '.';
 import {regionParser} from '../regions/region-parser';
 import {FileType} from '../sanitizers/eslint';
 
+/**
+ * Updates the provided token to include the extracted region as the visible lines for the token.
+ */
 export function extractRegions(token: CodeToken) {
   const fileType: FileType | undefined = token.path?.split('.').pop() as FileType;
   const parsedRegions = regionParser(token.code, fileType);
+  // The code in the token is always replaced with the version of the code with region markers removed.
   token.code = parsedRegions.contents;
+
   if (token.visibleRegion) {
     const region = parsedRegions.regionMap[token.visibleRegion];
     if (!region) {
