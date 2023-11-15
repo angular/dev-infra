@@ -1,8 +1,8 @@
 import {Tokens} from 'marked';
 import {DiffMetadata, calculateDiff} from './diff';
-import {parseRangeString} from './range';
 import {highlightCode} from './highlight';
 import {extractRegions} from './region';
+import {JSDOM} from 'jsdom';
 
 /** Marked token for a custom docs element. */
 export interface CodeToken extends Tokens.Generic {
@@ -33,8 +33,6 @@ export interface CodeToken extends Tokens.Generic {
 }
 
 export function formatCode(token: CodeToken) {
-  const visibleLinesRanges = token.visibleLines ? parseRangeString(token.visibleLines) : [];
-
   if (token.visibleLines !== undefined && token.visibleRegion !== undefined) {
     throw Error('Cannot define visible lines and visible region at the same time');
   }
@@ -43,17 +41,51 @@ export function formatCode(token: CodeToken) {
   calculateDiff(token);
   highlightCode(token);
 
-  return `
+  const containerEl = JSDOM.fragment(`
   <div class="docs-code">
     ${buildHeaderElement(token)}
     <pre class="adev-mini-scroll-track">
       <code>${token.code}</code>
     </pre>
   </div>
-  `;
+  `).firstElementChild!;
+
+  applyContainerAttributesAndClasses(containerEl, token);
+
+  return containerEl.outerHTML;
 }
 
 /** Build the header element if a header is provided in the token. */
 function buildHeaderElement(token: CodeToken) {
   return token.header ? `<div class="docs-code-header"><h3>${token.header}</h3></div>` : '';
+}
+
+function applyContainerAttributesAndClasses(el: Element, token: CodeToken) {
+  // Attributes
+  // String value attributes
+  if (token.diff) {
+    el.setAttribute('path', token.diff);
+  }
+  if (token.path) {
+    el.setAttribute('path', token.path);
+  }
+  if (token.visibleLines) {
+    el.setAttribute('visibleLines', token.visibleLines);
+  }
+  if (token.header) {
+    el.setAttribute('header', token.header);
+  }
+
+  // Boolean value attributes
+  if (token.preview) {
+    el.setAttribute('preview', 'true');
+  }
+  if (token.language === 'mermaid') {
+    el.setAttribute('mermaid', 'true');
+  }
+
+  // Classes
+  if (token.language === 'shell') {
+    el.classList.add('shell');
+  }
 }
