@@ -44,10 +44,16 @@ export function formatCode(token: CodeToken) {
   highlightCode(token);
 
   return `
-  <div>
+  <div class="docs-code">
+    ${buildHeaderElement(token)}
     <pre class="adev-mini-scroll-track">
       <code>${token.code}</code>
     </pre>
   </div>
   `;
+}
+
+/** Build the header element if a header is provided in the token. */
+function buildHeaderElement(token: CodeToken) {
+  return token.header ? `<div class="docs-code-header"><h3>${token.header}</h3></div>` : '';
 }
