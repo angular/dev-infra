@@ -32,7 +32,11 @@ export interface CodeToken extends Tokens.Generic {
 
 export function formatCode(token: CodeToken) {
   const highlightedLineRanges = token.highlight ? parseRangeString(token.highlight) : [];
-  const visibleLinesRanges = token.highlight ? parseRangeString(token.visibleLines) : [];
+  const visibleLinesRanges = token.visibleLines ? parseRangeString(token.visibleLines) : [];
+
+  if (token.visibleLines !== undefined && token.visibleRegion !== undefined) {
+    throw Error('Cannot define visible lines and visible region at the same time');
+  }
 
   let originalCode = '';
   if (token.diff !== undefined) {
