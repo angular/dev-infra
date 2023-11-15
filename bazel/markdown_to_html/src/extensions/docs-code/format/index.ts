@@ -4,6 +4,7 @@ import {runfiles} from '@bazel/runfiles';
 import {calculateDiff} from './diff';
 import {parseRangeString} from './range';
 import {finalizeCodeHighlighting, highlightCode} from './highlight';
+import {extractRegions} from './region';
 
 /** Marked token for a custom docs element. */
 export interface CodeToken extends Tokens.Generic {
@@ -37,6 +38,8 @@ export function formatCode(token: CodeToken) {
   if (token.visibleLines !== undefined && token.visibleRegion !== undefined) {
     throw Error('Cannot define visible lines and visible region at the same time');
   }
+
+  extractRegions(token);
 
   let originalCode = '';
   if (token.diff !== undefined) {
