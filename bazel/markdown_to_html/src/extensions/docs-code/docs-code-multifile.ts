@@ -7,7 +7,7 @@
  */
 
 import {Tokens, Token, TokenizerThis, RendererThis} from 'marked';
-import {buildAttr} from './format/styling';
+import {JSDOM} from 'jsdom';
 
 /** Marked token for a multifile custom docs element. */
 export interface DocsCodeMultifileToken extends Tokens.Generic {
@@ -57,12 +57,19 @@ export const docsCodeMultifileExtension = {
     return undefined;
   },
   renderer(this: RendererThis, token: DocsCodeMultifileToken) {
-    const attributes = buildAttr('path', token.path) + buildAttr('preview', token.preview);
-
-    return `
-    <div class="docs-code-multifile"${attributes}>
+    const el = JSDOM.fragment(`
+    <div class="docs-code-multifile">
     ${this.parser.parse(token.paneTokens)}
     </div>
-    `;
+    `).firstElementChild!;
+
+    if (token.path) {
+      el.setAttribute('path', token.path);
+    }
+    if (token.preview) {
+      el.setAttribute('preview', `${token.preview}`);
+    }
+
+    return el.outerHTML;
   },
 };
