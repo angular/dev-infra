@@ -1,7 +1,7 @@
 import {readFileSync} from 'fs';
 import {Tokens} from 'marked';
 import {runfiles} from '@bazel/runfiles';
-import {calculateDiff} from './diff';
+import {DiffMetadata, calculateDiff} from './diff';
 import {parseRangeString} from './range';
 import {finalizeCodeHighlighting, highlightCode} from './highlight';
 import {extractRegions} from './region';
@@ -29,6 +29,8 @@ export interface CodeToken extends Tokens.Generic {
   preview?: boolean;
   /* The lines to display highlighting on */
   highlight?: string;
+
+  diffMetadata?: DiffMetadata;
 }
 
 export function formatCode(token: CodeToken) {
@@ -40,19 +42,12 @@ export function formatCode(token: CodeToken) {
   }
 
   extractRegions(token);
-
-  let originalCode = '';
-  if (token.diff !== undefined) {
-    originalCode = readFileSync(runfiles.resolveWorkspaceRelative(token.diff), {encoding: 'utf-8'});
-  }
-
-  const {code, linesAdded, linesRemoved} = calculateDiff(originalCode, token.code);
-
+  calculateDiff(token);
   highlightCode(token);
 
   const finalizedCode = finalizeCodeHighlighting(
     token.code,
-    {code, linesAdded, linesRemoved},
+    token.diffMetadata,
     highlightedLineRanges,
     !!token.linenums,
   );
