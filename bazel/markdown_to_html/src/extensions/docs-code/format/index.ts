@@ -1,9 +1,7 @@
-import {readFileSync} from 'fs';
 import {Tokens} from 'marked';
-import {runfiles} from '@bazel/runfiles';
 import {DiffMetadata, calculateDiff} from './diff';
 import {parseRangeString} from './range';
-import {finalizeCodeHighlighting, highlightCode} from './highlight';
+import {highlightCode} from './highlight';
 import {extractRegions} from './region';
 
 /** Marked token for a custom docs element. */
@@ -35,7 +33,6 @@ export interface CodeToken extends Tokens.Generic {
 }
 
 export function formatCode(token: CodeToken) {
-  const highlightedLineRanges = token.highlight ? parseRangeString(token.highlight) : [];
   const visibleLinesRanges = token.visibleLines ? parseRangeString(token.visibleLines) : [];
 
   if (token.visibleLines !== undefined && token.visibleRegion !== undefined) {
@@ -46,17 +43,10 @@ export function formatCode(token: CodeToken) {
   calculateDiff(token);
   highlightCode(token);
 
-  const finalizedCode = finalizeCodeHighlighting(
-    token.code,
-    token.diffMetadata,
-    highlightedLineRanges,
-    !!token.linenums,
-  );
-
   return `
   <div>
     <pre class="adev-mini-scroll-track">
-      <code>${finalizedCode}</code>
+      <code>${token.code}</code>
     </pre>
   </div>
   `;
