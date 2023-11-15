@@ -9,7 +9,6 @@
 import {TokenizerThis, RendererThis} from 'marked';
 import {CodeToken, formatCode} from './format';
 import {FileType, removeEslintComments} from './sanitizers/eslint';
-import {regionParser} from './regions/region-parser';
 import {loadWorkspaceRelativeFile} from '../../utils';
 
 /** Marked token for a custom docs element. */
@@ -62,8 +61,6 @@ export const docsCodeExtension = {
         // Remove ESLint Comments
         const fileType: FileType | undefined = path[1]?.split('.').pop() as FileType;
         code = removeEslintComments(code, fileType);
-        // Filter to regions
-        code = regionParser(code, fileType).contents;
       }
 
       const token: DocsCodeToken = {
