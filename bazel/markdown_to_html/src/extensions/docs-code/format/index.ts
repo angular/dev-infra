@@ -51,7 +51,7 @@ export function formatCode(token: CodeToken) {
     hightlightedCode,
     {code, linesAdded, linesRemoved},
     highlightedLineRanges,
-    !!token.highlight,
+    !!token.linenums,
   );
 
   return `
