@@ -3,6 +3,7 @@ import {DiffMetadata, calculateDiff} from './diff';
 import {highlightCode} from './highlight';
 import {extractRegions} from './region';
 import {JSDOM} from 'jsdom';
+import {expandRangeStringValues} from './range';
 
 /** Marked token for a custom docs element. */
 export interface CodeToken extends Tokens.Generic {
@@ -70,7 +71,7 @@ function applyContainerAttributesAndClasses(el: Element, token: CodeToken) {
     el.setAttribute('path', token.path);
   }
   if (token.visibleLines) {
-    el.setAttribute('visibleLines', token.visibleLines);
+    el.setAttribute('visibleLines', expandRangeStringValues(token.visibleLines).toString());
   }
   if (token.header) {
     el.setAttribute('header', token.header);

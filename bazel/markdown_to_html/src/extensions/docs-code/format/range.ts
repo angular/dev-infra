@@ -1,7 +1,7 @@
 /**
  * The function used to generate ranges of highlighted or visible lines in code blocks
  */
-export function parseRangeString(rangeString: string | undefined): number[] {
+export function expandRangeStringValues(rangeString: string | undefined): number[] {
   if (rangeString === undefined) {
     return [];
   }
