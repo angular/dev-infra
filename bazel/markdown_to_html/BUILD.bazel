@@ -17,6 +17,8 @@ ts_library(
 esbuild_esm_bundle(
     name = "markdown_to_html_bundle",
     entry_point = ":index.ts",
+    # JSDOM should not be bundled because it has workers and dynamic imports.
+    external = ["jsdom"],
     output = "bin.mjs",
     platform = "node",
     target = "es2022",
