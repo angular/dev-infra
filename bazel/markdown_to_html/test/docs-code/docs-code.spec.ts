@@ -32,4 +32,19 @@ describe('markdown to html', () => {
     expect(codeBlock?.textContent?.trim()).toContain(`const x = 'within the region';`);
     expect(codeBlock?.textContent?.trim()).not.toContain('docregion');
   });
+
+  it('properly shows the diff of two provided file paths', () => {
+    const codeBlock = markdownDocument.querySelectorAll('code')[3];
+    expect(codeBlock).toBeTruthy();
+
+    const codeLines = codeBlock.querySelectorAll('.hljs-ln-line');
+    expect(codeLines[0].textContent).toContain('oldFuncName');
+    expect(codeLines[0].classList.contains('remove')).toBeTrue();
+
+    expect(codeLines[1].textContent).toContain('newName');
+    expect(codeLines[1].classList.contains('add')).toBeTrue();
+
+    expect(codeLines[2].classList.contains('add')).toBeFalse();
+    expect(codeLines[2].classList.contains('remove')).toBeFalse();
+  });
 });

@@ -1,8 +1,8 @@
 import {decode} from 'html-entities';
 import highlightJs from 'highlight.js';
-import {DiffMetadata} from './diff';
 import {CodeToken} from '.';
 import {parseRangeString} from './range';
+import {JSDOM} from 'jsdom';
 
 const lineNumberClassName: string = 'hljs-ln-number';
 const lineMultifileClassName: string = 'hljs-ln-line';
@@ -30,33 +30,47 @@ export function highlightCode(token: CodeToken) {
     return;
   }
 
-  let finalHtml = '';
   let lineIndex = 0;
   let resultFileLineIndex = 1;
 
   const highlightedLineRanges = token.highlight ? parseRangeString(token.highlight) : [];
 
+  const containerEl = new JSDOM().window.document.body;
+
   do {
     const isRemovedLine = token.diffMetadata?.linesRemoved.includes(lineIndex);
     const isAddedLine = token.diffMetadata?.linesAdded.includes(lineIndex);
     const isHighlighted = highlightedLineRanges.includes(lineIndex);
-    const statusClasses = `${isAddedLine ? lineAddedClassName : ''} ${
-      isRemovedLine ? lineRemovedClassName : ''
-    } ${isHighlighted ? lineHighlightedClassName : ''}`;
+    const addClasses = (el: Element) => {
+      if (isRemovedLine) {
+        el.classList.add(lineRemovedClassName);
+      }
+      if (isAddedLine) {
+        el.classList.add(lineAddedClassName);
+      }
+      if (isHighlighted) {
+        el.classList.add(lineHighlightedClassName);
+      }
+    };
 
     if (!!token.linenums) {
-      if (isRemovedLine) {
-        finalHtml += `<span role="presentation" class="${lineNumberClassName} ${statusClasses}">-</span>`;
-      } else {
-        finalHtml += `<span role="presentation" class="${lineNumberClassName} ${statusClasses}">${
-          isAddedLine ? '+' : resultFileLineIndex
-        }</span>`;
-        resultFileLineIndex++;
-      }
+      const lineNumberEl = JSDOM.fragment(
+        `<span role="presentation" class="${lineNumberClassName}"></span>`,
+      ).firstElementChild!;
+      addClasses(lineNumberEl);
+      lineNumberEl.textContent = isRemovedLine ? '-' : isAddedLine ? '+' : `${resultFileLineIndex}`;
+      containerEl.appendChild(lineNumberEl);
+      resultFileLineIndex++;
     }
-    finalHtml += `<div class="${lineMultifileClassName} ${statusClasses}">${lines[lineIndex]}</div>`;
+
+    const lineEl = JSDOM.fragment(
+      `<div class="${lineMultifileClassName}">${lines[lineIndex]}</div>`,
+    ).firstElementChild!;
+    addClasses(lineEl);
+    containerEl.appendChild(lineEl);
+
     lineIndex++;
   } while (lineIndex < linesCount);
 
-  return finalHtml;
+  token.code = containerEl.innerHTML;
 }
