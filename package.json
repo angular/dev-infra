@@ -83,7 +83,7 @@
     "@octokit/auth-app": "6.0.1",
     "@octokit/core": "5.0.1",
     "@octokit/graphql": "7.0.2",
-    "@octokit/graphql-schema": "14.41.0",
+    "@octokit/graphql-schema": "14.42.0",
     "@octokit/openapi-types": "19.0.2",
     "@octokit/plugin-paginate-rest": "9.1.4",
     "@octokit/plugin-rest-endpoint-methods": "10.1.5",
