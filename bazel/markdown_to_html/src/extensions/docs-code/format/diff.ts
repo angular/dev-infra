@@ -17,7 +17,7 @@ export function calculateDiff(token: CodeToken) {
   }
 
   const diffCode = loadWorkspaceRelativeFile(token.diff);
-  const change = diffLines(token.code, diffCode);
+  const change = diffLines(diffCode, token.code);
 
   const getLinesRange = (start: number, count: number): number[] =>
     Array.from(Array(count).keys()).map((i) => i + start);
@@ -44,4 +44,5 @@ export function calculateDiff(token: CodeToken) {
       linesRemoved: [],
     },
   );
+  token.code = token.diffMetadata.code;
 }
