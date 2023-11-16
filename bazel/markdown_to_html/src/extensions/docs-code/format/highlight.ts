@@ -1,7 +1,7 @@
 import {decode} from 'html-entities';
 import highlightJs from 'highlight.js';
 import {CodeToken} from '.';
-import {parseRangeString} from './range';
+import {expandRangeStringValues} from './range';
 import {JSDOM} from 'jsdom';
 
 const lineNumberClassName: string = 'hljs-ln-number';
@@ -33,7 +33,7 @@ export function highlightCode(token: CodeToken) {
   let lineIndex = 0;
   let resultFileLineIndex = 1;
 
-  const highlightedLineRanges = token.highlight ? parseRangeString(token.highlight) : [];
+  const highlightedLineRanges = token.highlight ? expandRangeStringValues(token.highlight) : [];
 
   const containerEl = new JSDOM().window.document.body;
 
