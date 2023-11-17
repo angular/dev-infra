@@ -1,5 +1,7 @@
 /**
- * The function used to generate ranges of highlighted or visible lines in code blocks
+ * Expand a provided set of range values into a singel array of all values in the range.
+ *
+ * For example,  [[1,3], [12-13]] is expanded to [1,2,3,12,13].
  */
 export function expandRangeStringValues(rangeString: string | undefined): number[] {
   if (rangeString === undefined) {
