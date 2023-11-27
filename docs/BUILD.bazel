@@ -1,0 +1,33 @@
+load("//tools:defaults.bzl", "ng_module", "pkg_npm")
+load("//:package.bzl", "NPM_PACKAGE_SUBSTITUTIONS")
+
+ng_module(
+    name = "docs-shared",
+    srcs = [
+        "public-api.ts",
+    ],
+    deps = [
+        "//docs/components",
+        "//docs/constants",
+        "//docs/directives",
+        "//docs/interfaces",
+        "//docs/pipes",
+        "//docs/providers",
+        "//docs/services",
+        "//docs/utils",
+    ],
+)
+
+pkg_npm(
+    name = "npm_package",
+    package_name = "@angular/docs",
+    srcs = [
+        "package.json",
+        "//docs/icons",
+        "//docs/styles",
+    ],
+    substitutions = NPM_PACKAGE_SUBSTITUTIONS,
+    deps = [
+        ":docs-shared",
+    ],
+)

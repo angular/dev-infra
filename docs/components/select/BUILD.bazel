@@ -1,0 +1,44 @@
+load("//tools:defaults.bzl", "karma_web_test", "ng_module", "ts_library")
+load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
+
+ng_module(
+    name = "select",
+    srcs = [
+        "select.component.ts",
+    ],
+    assets = [
+        ":select.component.css",
+        "select.component.html",
+    ],
+    visibility = [
+        "//docs/components:__pkg__",
+    ],
+    deps = [
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/forms",
+    ],
+)
+
+sass_binary(
+    name = "style",
+    src = "select.component.scss",
+)
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob(
+        ["*.spec.ts"],
+    ),
+    deps = [
+        ":select",
+        "@npm//@angular/core",
+        "@npm//@types/jasmine",
+    ],
+)
+
+karma_web_test(
+    name = "test",
+    specs = [":test_lib"],
+)

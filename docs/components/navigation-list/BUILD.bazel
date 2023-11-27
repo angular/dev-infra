@@ -1,0 +1,55 @@
+load("//tools:defaults.bzl", "karma_web_test", "ng_module", "ts_library")
+load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
+
+ng_module(
+    name = "navigation-list",
+    srcs = [
+        "navigation-list.component.ts",
+    ],
+    assets = [
+        ":navigation-list.component.css",
+        "navigation-list.component.html",
+    ],
+    visibility = [
+        "//docs/components:__pkg__",
+    ],
+    deps = [
+        "//docs/components/icon",
+        "//docs/interfaces",
+        "//docs/pipes",
+        "//docs/services",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/router",
+    ],
+)
+
+sass_binary(
+    name = "style",
+    src = "navigation-list.component.scss",
+    deps = [
+        "//docs/styles",
+    ],
+)
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob(
+        ["*.spec.ts"],
+    ),
+    deps = [
+        ":navigation-list",
+        "//docs/interfaces",
+        "//docs/services",
+        "@npm//@angular/core",
+        "@npm//@angular/platform-browser",
+        "@npm//@angular/router",
+        "@npm//@types/jasmine",
+    ],
+)
+
+karma_web_test(
+    name = "test",
+    specs = [":test_lib"],
+)

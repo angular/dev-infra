@@ -28,10 +28,11 @@ jobs:
         with:
           bazelrc: .bazelrc
       - run: yarn install --immutable
-      - run: yarn bazel build //:npm_package //ng-dev:npm_package --config=release
+      - run: yarn bazel build //:npm_package //ng-dev:npm_package //docs:npm_package --config=release
       - name: Publish Snapshots
         env:
           SNAPSHOT_BUILDS_GITHUB_TOKEN: ${{ secrets.SNAPSHOT_BUILDS_GITHUB_TOKEN }}
         run: |
           ./tools/publish_to_github.sh "@angular/build-tooling" "dev-infra-private-build-tooling-builds" "dist/bin/npm_package"
           ./tools/publish_to_github.sh "@angular/ng-dev" "dev-infra-private-ng-dev-builds" "dist/bin/ng-dev/npm_package"
+          ./tools/publish_to_github.sh "@angular/docs" "dev-infra-private-docs-builds" "dist/bin/docs/npm_package"

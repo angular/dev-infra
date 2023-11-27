@@ -1,0 +1,15 @@
+load("//tools:defaults.bzl", "ng_module")
+
+ng_module(
+    name = "click-outside",
+    srcs = [
+        "click-outside.directive.ts",
+    ],
+    visibility = [
+        "//docs/directives:__pkg__",
+    ],
+    deps = [
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+    ],
+)

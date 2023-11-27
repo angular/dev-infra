@@ -1,0 +1,16 @@
+load("//tools:defaults.bzl", "ts_library")
+
+ts_library(
+    name = "directives",
+    srcs = [
+        "index.ts",
+    ],
+    visibility = [
+        "//docs:__subpackages__",
+    ],
+    deps = [
+        "//docs/directives/click-outside",
+        "//docs/directives/external-link",
+        "//docs/directives/search-item",
+    ],
+)

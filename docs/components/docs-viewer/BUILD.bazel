@@ -1,0 +1,57 @@
+load("//tools:defaults.bzl", "karma_web_test", "ng_module", "ts_library")
+load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
+
+ng_module(
+    name = "docs-viewer",
+    srcs = [
+        "docs-viewer.component.ts",
+    ],
+    assets = [
+        ":docs-viewer.component.css",
+    ],
+    visibility = [
+        "//docs/components:__pkg__",
+    ],
+    deps = [
+        "//docs/components/breadcrumb",
+        "//docs/components/copy-source-code-button",
+        "//docs/components/example-viewer",
+        "//docs/components/table-of-contents",
+        "//docs/providers",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/router",
+        "@npm//@types/dom-view-transitions",
+    ],
+)
+
+sass_binary(
+    name = "style",
+    src = "docs-viewer.component.scss",
+    deps = [
+        "//docs/styles",
+    ],
+)
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob(
+        ["*.spec.ts"],
+    ),
+    deps = [
+        ":docs-viewer",
+        "//docs/components/example-viewer",
+        "//docs/interfaces",
+        "//docs/providers",
+        "@npm//@angular/core",
+        "@npm//@angular/platform-browser",
+        "@npm//@angular/router",
+        "@npm//@types/jasmine",
+    ],
+)
+
+karma_web_test(
+    name = "test",
+    specs = [":test_lib"],
+)

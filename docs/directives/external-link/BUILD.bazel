@@ -1,0 +1,17 @@
+load("//tools:defaults.bzl", "ng_module")
+
+ng_module(
+    name = "external-link",
+    srcs = [
+        "external-link.directive.ts",
+    ],
+    visibility = [
+        "//docs/directives:__pkg__",
+    ],
+    deps = [
+        "//docs/providers",
+        "//docs/utils",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+    ],
+)

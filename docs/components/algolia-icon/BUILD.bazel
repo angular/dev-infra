@@ -1,0 +1,18 @@
+load("//tools:defaults.bzl", "ng_module")
+
+ng_module(
+    name = "algolia-icon",
+    srcs = [
+        "algolia-icon.component.ts",
+    ],
+    assets = [
+        "algolia-icon.component.html",
+    ],
+    visibility = [
+        "//docs/components:__pkg__",
+        "//docs/components/search-dialog:__pkg__",
+    ],
+    deps = [
+        "@npm//@angular/core",
+    ],
+)
