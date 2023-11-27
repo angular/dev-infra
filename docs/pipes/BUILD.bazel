@@ -1,0 +1,30 @@
+load("//tools:defaults.bzl", "ng_module", "ts_library")
+
+ts_library(
+    name = "pipes",
+    srcs = [
+        "index.ts",
+    ],
+    visibility = ["//docs:__subpackages__"],
+    deps = [
+        ":lib",
+    ],
+)
+
+ng_module(
+    name = "lib",
+    srcs = glob(
+        [
+            "**/*.ts",
+        ],
+        exclude = [
+            "index.ts",
+            "**/*.spec.ts",
+        ],
+    ),
+    deps = [
+        "//docs/interfaces",
+        "//docs/utils",
+        "@npm//@angular/core",
+    ],
+)

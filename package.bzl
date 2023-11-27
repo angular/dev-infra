@@ -40,4 +40,5 @@ BZL_DEFAULTS_ALLOW_PACKAGES = [
     "tools",
     "lint-rules/tslint",
     "lint-rules/stylelint",
+    "docs",
 ]
