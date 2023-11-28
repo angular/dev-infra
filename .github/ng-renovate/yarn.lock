@@ -1643,23 +1643,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@redis/client@npm:1.5.11":
-  version: 1.5.11
-  resolution: "@redis/client@npm:1.5.11"
+"@redis/client@npm:1.5.12":
+  version: 1.5.12
+  resolution: "@redis/client@npm:1.5.12"
   dependencies:
     cluster-key-slot: "npm:1.1.2"
     generic-pool: "npm:3.9.0"
     yallist: "npm:4.0.0"
-  checksum: de6bbcede87418e8afd661f7f00f8a2168b1aa57cd0e374f08d549ef7fec1b56bd1175dcf3544e4a2a682ebc91a0f8aa679705b8abee9fbe90d13939d5491fe3
+  checksum: f9046cf4c18df31ed55aa6007324276aa9fb4b91a5bd626374d1e2a4bff8ed18e949ae5a2c29daf113bea97c9b2cb2a8c05179f4ce1972aa27eabf7f6819cb68
   languageName: node
   linkType: hard
 
-"@redis/graph@npm:1.1.0":
-  version: 1.1.0
-  resolution: "@redis/graph@npm:1.1.0"
+"@redis/graph@npm:1.1.1":
+  version: 1.1.1
+  resolution: "@redis/graph@npm:1.1.1"
   peerDependencies:
     "@redis/client": ^1.0.0
-  checksum: 2b30ea2a67a07b312f42b5fe1dce770c0559c153faaca64d53ef8a479438108b32260e9701d12addb50ccc4ea1df8a949ea5e802c13ead689c635d65bad1bc3a
+  checksum: 64199db2cb3669c4911af8aba3b7116c4c2c1df37ca74b2a65555e62c863935a0cea74bc41bd92acf2e551074eb2a30c75f54a9f439b40e0f9bb67fc5fb66614
   languageName: node
   linkType: hard
 
@@ -1672,12 +1672,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@redis/search@npm:1.1.5":
-  version: 1.1.5
-  resolution: "@redis/search@npm:1.1.5"
+"@redis/search@npm:1.1.6":
+  version: 1.1.6
+  resolution: "@redis/search@npm:1.1.6"
   peerDependencies:
     "@redis/client": ^1.0.0
-  checksum: c38e6c505472e6e7ef2ff00011513f9d17a7fb6faa4612c8d48543dce8195a130266ee9c4ea14cb705dfddb1f3e7b66cb4aaa34594b9c2534f7c89342a3626a9
+  checksum: 690b30dc914f013c10c03899ddc5585194e891323c14f4d974d51d912944e50b5f21208e0fc5eed958dde87b730254846e9ffe5caf0b54ff1ff2c64a051df057
   languageName: node
   linkType: hard
 
@@ -5387,7 +5387,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: "npm:37.71.0"
+    renovate: "npm:37.74.1"
   languageName: unknown
   linkType: soft
 
@@ -5954,17 +5954,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redis@npm:4.6.10":
-  version: 4.6.10
-  resolution: "redis@npm:4.6.10"
+"redis@npm:4.6.11":
+  version: 4.6.11
+  resolution: "redis@npm:4.6.11"
   dependencies:
     "@redis/bloom": "npm:1.2.0"
-    "@redis/client": "npm:1.5.11"
-    "@redis/graph": "npm:1.1.0"
+    "@redis/client": "npm:1.5.12"
+    "@redis/graph": "npm:1.1.1"
     "@redis/json": "npm:1.0.6"
-    "@redis/search": "npm:1.1.5"
+    "@redis/search": "npm:1.1.6"
     "@redis/time-series": "npm:1.0.5"
-  checksum: 309202b1402904388cb6c60dc40d09584c6565f50ea961df7d14da2aa9740026cbd83409c533e309e387aefad0beb8d3b39afdd50e8bd6d2b9174e41935bab84
+  checksum: e95ab63c661fb2cdd77fb8df0d4f07d9281ae623da491a8aff5abd9b11c3c02ef5f2f9fbabaacb4f2478b4ac66e70a44aa42d1b0fbf5e622ca344c6263932840
   languageName: node
   linkType: hard
 
@@ -6015,9 +6015,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:37.71.0":
-  version: 37.71.0
-  resolution: "renovate@npm:37.71.0"
+"renovate@npm:37.74.1":
+  version: 37.74.1
+  resolution: "renovate@npm:37.74.1"
   dependencies:
     "@aws-sdk/client-codecommit": "npm:3.363.0"
     "@aws-sdk/client-ec2": "npm:3.363.0"
@@ -6106,7 +6106,7 @@ __metadata:
     parse-link-header: "npm:2.0.0"
     prettier: "npm:3.1.0"
     re2: "npm:1.20.8"
-    redis: "npm:4.6.10"
+    redis: "npm:4.6.11"
     remark: "npm:13.0.0"
     remark-github: "npm:10.1.0"
     safe-stable-stringify: "npm:2.4.3"
@@ -6132,7 +6132,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 912132bc00900e872e73108ccd5c1fbc0fb5b4b4be1604e74fa730f91fd986d145e39f1fb3fa52d6b2a0fa40ecaa1ff19de6f4b1cc803fef9d85a3e1e8619176
+  checksum: 12c5a4f851ab2a4a33d7b8436a1a4297d3171b4770fd6dd5925ec5b5a7020f1660ac81c9864acd5f255c301dfac075472f59ba8ae9f5f5158011f2a669edc83c
   languageName: node
   linkType: hard
 
