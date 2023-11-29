@@ -71,7 +71,6 @@ export function getCommitsForRangeWithDeduping(
 
     commits.push(commit);
   }
-
   return commits;
 }
 
@@ -90,5 +89,16 @@ export function fetchCommitsForRevisionRange(
   return output.stdout
     .split(splitDelimiter)
     .filter((entry) => !!entry.trim())
+    .map(santizeCommitMessage)
     .map((entry) => parseCommitFromGitLog(Buffer.from(entry, 'utf-8')));
+}
+
+/**
+ * Santized a raw Github message to avoid unintended results in github rendered contexts.
+ *
+ * Currently sanitization does:
+ *  - Removes unexpected references to users
+ */
+function santizeCommitMessage(content: string): string {
+  return content.replace(/ (@[A-z0-9]+) /g, ' `$1` ');
 }
