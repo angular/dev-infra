@@ -14,7 +14,7 @@ import {CliCardRenderable, CliCommandRenderable} from '../entities/renderables';
 export function getCliRenderable(command: CliCommand): CliCommandRenderable {
   return {
     ...command,
-    htmlDescription: marked.parse(command.longDescription ?? command.shortDescription),
+    htmlDescription: marked.parse(command.longDescription ?? command.shortDescription) as string,
     cards: getCliCardsRenderable(command),
     argumentsLabel: getArgumentsLabel(command),
     hasOptions: getOptions(command).length > 0,
@@ -46,7 +46,7 @@ export function getCliCardsRenderable(command: CliCommand): CliCardRenderable[] 
 function getRenderableOptions(items: CliOption[]) {
   return items.map((option) => ({
     ...option,
-    description: marked.parse(option.description),
+    description: marked.parse(option.description) as string,
   }));
 }
 

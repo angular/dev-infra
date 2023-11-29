@@ -79,9 +79,9 @@ export function addHtmlAdditionalLinks<T extends HasJsDocTags & HasModuleName>(
 export function addHtmlUsageNotes<T extends HasJsDocTags>(entry: T): T & HasHtmlUsageNotes {
   const usageNotesTag = entry.jsdocTags.find((tag) => tag.name === JS_DOC_USAGE_NOTES_TAG);
   const htmlUsageNotes = usageNotesTag
-    ? marked.parse(
+    ? (marked.parse(
         convertJsDocExampleToHtmlExample(wrapExampleHtmlElementsWithCode(usageNotesTag.comment)),
-      )
+      ) as string)
     : '';
 
   return {
@@ -92,7 +92,7 @@ export function addHtmlUsageNotes<T extends HasJsDocTags>(entry: T): T & HasHtml
 
 /** Given a markdown JsDoc text, gets the rendered HTML. */
 export function getHtmlForJsDocText(text: string): string {
-  return marked.parse(wrapExampleHtmlElementsWithCode(text));
+  return marked.parse(wrapExampleHtmlElementsWithCode(text)) as string;
 }
 
 export function setIsDeprecated<T extends HasJsDocTags>(entry: T): T & HasDeprecatedFlag {
