@@ -81593,7 +81593,10 @@ function fetchCommitsForRevisionRange(client, revisionRange) {
     `--format=${gitLogFormatForParsing}${splitDelimiter}`,
     revisionRange
   ]);
-  return output.stdout.split(splitDelimiter).filter((entry) => !!entry.trim()).map((entry) => parseCommitFromGitLog(Buffer.from(entry, "utf-8")));
+  return output.stdout.split(splitDelimiter).filter((entry) => !!entry.trim()).map(santizeCommitMessage).map((entry) => parseCommitFromGitLog(Buffer.from(entry, "utf-8")));
+}
+function santizeCommitMessage(content) {
+  return content.replace(/ (@[A-z0-9]+) /g, " `$1` ");
 }
 
 // 
