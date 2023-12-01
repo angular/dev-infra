@@ -1,0 +1,37 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+
+# BEGIN-DEV-ONLY
+# This section is only used here in the dev-infra repo as the resulting bundle is published in
+# the package.
+load("//tools:defaults.bzl", "esbuild_esm_bundle")
+
+package(default_visibility = ["//docs/markdown:__subpackages__"])
+
+nodejs_binary(
+    name = "markdown",
+    data = [
+        "@npm//jsdom",
+    ],
+    entry_point = "//docs/markdown:guides.mjs",
+    visibility = ["//visibility:public"],
+)
+
+exports_files([
+    "_guides.bzl",
+    "BUILD.bazel",
+])
+
+esbuild_esm_bundle(
+    name = "guides",
+    entry_point = "//docs/markdown/guides:index.ts",
+    # JSDOM should not be bundled because it has workers and dynamic imports.
+    external = ["jsdom"],
+    output = "guides.mjs",
+    platform = "node",
+    target = "es2022",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//docs/markdown/guides:index",
+    ],
+)
+# END-DEV-ONLY

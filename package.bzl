@@ -7,6 +7,7 @@ stampSubstitutions = {
 noStampSubstitutions = dict(stampSubstitutions, **{})
 
 basePackageSubstitutions = {
+    "(#|//)\\s+BEGIN-DEV-ONLY[\\w\\W]+?(#|//)\\s+END-DEV-ONLY": "",
     "    \"prepare\": \"husky install\",\n": "",
     "@dev-infra//bazel/": "@npm//@angular/build-tooling/bazel/",
     "rlocation \"dev-infra/": "rlocation \"npm/@angular/build-tooling/",
@@ -19,6 +20,7 @@ basePackageSubstitutions = {
     "//shared-scripts/": "@npm//@angular/build-tooling/shared-scripts/",
     "//shared-scripts:": "@npm//@angular/build-tooling/shared-scripts:",
     "//:tsconfig.json": "@npm//@angular/build-tooling:tsconfig.json",
+    "//docs": "@npm//@angular/docs",
 }
 
 NPM_PACKAGE_SUBSTITUTIONS = select({
