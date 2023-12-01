@@ -22,12 +22,16 @@ pkg_npm(
     name = "npm_package",
     package_name = "@angular/docs",
     srcs = [
+        "index.bzl",
         "package.json",
         "//docs/icons",
+        "//docs/markdown:BUILD.bazel",
+        "//docs/markdown:_guides.bzl",
         "//docs/styles",
     ],
     substitutions = NPM_PACKAGE_SUBSTITUTIONS,
     deps = [
         ":docs-shared",
+        "//docs/markdown:guides.mjs",
     ],
 )

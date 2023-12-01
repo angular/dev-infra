@@ -1,0 +1,31 @@
+load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
+
+ts_library(
+    name = "unit_test_lib",
+    testonly = True,
+    srcs = glob([
+        "**/*.spec.ts",
+    ]),
+    deps = [
+        "//docs/markdown/guides",
+        "@npm//@bazel/runfiles",
+        "@npm//@types/jasmine",
+        "@npm//@types/jsdom",
+        "@npm//@types/node",
+        "@npm//jsdom",
+    ],
+)
+
+jasmine_node_test(
+    name = "unit_tests",
+    data = [
+        "@npm//jsdom",
+    ] + glob([
+        "**/*.md",
+        "**/*.svg",
+        "**/*.ts",
+    ]),
+    # JSDOM should not be bundled because it has workers and dynamic imports.
+    external = ["jsdom"],
+    specs = [":unit_test_lib"],
+)
