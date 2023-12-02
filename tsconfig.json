@@ -16,14 +16,15 @@
     "jsxFragmentFactory": "Fragment"
   },
   "exclude": [
-    "node_modules/**",
-    "bazel-out/**",
-    "dist/**",
+    ".yarn/**",
+    ".angular/**",
+    "apps/**",
     "bazel/benchmark/component_benchmark/**",
     "bazel/benchmark/driver-utilities/**",
     "bazel/integration/tests/**",
-    "apps/**",
-    ".yarn/**",
-    ".angular/**"
+    "bazel-out/**",
+    "dist/**",
+    "docs/markdown/examples/template/**",
+    "node_modules/**"
   ]
 }

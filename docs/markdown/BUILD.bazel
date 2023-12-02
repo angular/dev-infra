@@ -7,20 +7,6 @@ load("//tools:defaults.bzl", "esbuild_esm_bundle")
 
 package(default_visibility = ["//docs/markdown:__subpackages__"])
 
-nodejs_binary(
-    name = "markdown",
-    data = [
-        "@npm//jsdom",
-    ],
-    entry_point = "//docs/markdown:guides.mjs",
-    visibility = ["//visibility:public"],
-)
-
-exports_files([
-    "_guides.bzl",
-    "BUILD.bazel",
-])
-
 esbuild_esm_bundle(
     name = "guides",
     entry_point = "//docs/markdown/guides:index.ts",
@@ -34,4 +20,43 @@ esbuild_esm_bundle(
         "//docs/markdown/guides:index",
     ],
 )
+
+esbuild_esm_bundle(
+    name = "stackblitz-bundle",
+    entry_point = "//docs/markdown/examples/stackblitz:index.ts",
+    # JSDOM should not be bundled because it has workers and dynamic imports.
+    external = ["jsdom"],
+    output = "stackblitz.mjs",
+    platform = "node",
+    target = "es2022",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//docs/markdown/examples/stackblitz:index",
+    ],
+)
+
+exports_files([
+    "_guides.bzl",
+    "_stackblitz.bzl",
+    "BUILD.bazel",
+])
+
 # END-DEV-ONLY
+
+nodejs_binary(
+    name = "stackblitz",
+    data = [
+        "@npm//jsdom",
+    ],
+    entry_point = "//docs/markdown:stackblitz.mjs",
+    visibility = ["//visibility:public"],
+)
+
+nodejs_binary(
+    name = "markdown",
+    data = [
+        "@npm//jsdom",
+    ],
+    entry_point = "//docs/markdown:guides.mjs",
+    visibility = ["//visibility:public"],
+)
