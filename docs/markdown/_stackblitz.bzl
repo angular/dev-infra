@@ -1,14 +1,16 @@
 load("@build_bazel_rules_nodejs//:providers.bzl", "run_node")
 
 def _generate_stackblitz(ctx):
-    """Implementation of the markdown rule"""
+    """Implementation of the stackblitz generator rule"""
 
     # Determine the stackblitz template base directory
-    stackblitz_template = " " * 1000
-    for file in ctx.files.stackblitz_template:
+    # Create an initial string of length greater than the length the stackblitz template path will
+    # be. This is used so that the first file path we encounter is used as the initial value.
+    template_srcs = " " * 10000
+    for file in ctx.files.template_srcs:
         file_path = file.dirname
-        if (len(file_path) < len(stackblitz_template)):
-            stackblitz_template = file_path
+        if (len(file_path) < len(template_srcs)):
+            template_srcs = file_path
 
     # File declaration of the generated html file
     html_output = ctx.actions.declare_file("%s.html" % ctx.attr.name)
@@ -20,22 +22,22 @@ def _generate_stackblitz(ctx):
     args = ctx.actions.args()
 
     # Path to the example being generated.
-    args.add(ctx.attr.example.label.package)
+    args.add(ctx.attr.example_srcs.label.package)
 
     # Path to the actions temporary directory.
     args.add(tmp_directory.short_path)
 
     # Path to the stackblitz template
-    args.add(stackblitz_template)
+    args.add(template_srcs)
 
     # Path to the html output file to write to.
     args.add(html_output.path)
 
-    ctx.runfiles(files = ctx.files.stackblitz_template)
+    ctx.runfiles(files = ctx.files.template_srcs)
 
     run_node(
         ctx = ctx,
-        inputs = depset(ctx.files.example + ctx.files.stackblitz_template),
+        inputs = depset(ctx.files.example_srcs + ctx.files.template_srcs),
         executable = "_generate_stackblitz",
         outputs = [html_output, tmp_directory],
         arguments = [args],
@@ -48,14 +50,14 @@ def _generate_stackblitz(ctx):
 generate_stackblitz = rule(
     # Point to the starlark function that will execute for this rule.
     implementation = _generate_stackblitz,
-    doc = """Rule that renders markdown sources to html""",
+    doc = """Rule that generates stackblitz post API html opener""",
 
     # The attributes that can be set to this rule.
     attrs = {
-        "example": attr.label(
+        "example_srcs": attr.label(
             doc = """Files used for the stackblitz generation.""",
         ),
-        "stackblitz_template": attr.label(
+        "template_srcs": attr.label(
             doc = """The stackblitz template directory to base generated stackblitz on.""",
             default = Label("//docs/markdown/examples/template:files"),
         ),

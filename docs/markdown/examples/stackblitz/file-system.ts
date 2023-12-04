@@ -10,8 +10,10 @@ import {existsSync} from 'fs';
 import {copyFile, mkdir, readdir, rm, stat} from 'fs/promises';
 import {join} from 'path';
 
+// TODO(josephperrott): Determine if we can use the fs default version of copying directories.
+
 /**
- * Recurusivelt copy folder and contents to the destigation, creating the destination folder
+ * Recursively copy folder and contents to the destigation, creating the destination folder
  * if necessary.
  **/
 export async function copyFolder(source: string, destination: string) {

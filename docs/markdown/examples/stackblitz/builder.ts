@@ -141,8 +141,7 @@ function createStackblitzHtml(postData: Record<string, string>, primaryFile: str
 }
 
 function createBaseStackblitzHtml(primaryFile: string) {
-  const file = `?file=${primaryFile}`;
-  const action = `https://stackblitz.com/run${file}`;
+  const action = `https://stackblitz.com/run?file=${primaryFile}`;
 
   return `
     <!DOCTYPE html><html lang="en"><body>
