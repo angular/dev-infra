@@ -1,0 +1,30 @@
+load("//tools:defaults.bzl", "ts_library")
+
+ts_library(
+    name = "constants",
+    srcs = glob(
+        [
+            "*.ts",
+        ],
+    ),
+    visibility = [
+        "//docs/editor:__subpackages__",
+    ],
+    deps = [
+        "@npm//@codemirror/autocomplete",
+        "@npm//@codemirror/commands",
+        "@npm//@codemirror/lang-angular",
+        "@npm//@codemirror/lang-css",
+        "@npm//@codemirror/lang-html",
+        "@npm//@codemirror/lang-javascript",
+        "@npm//@codemirror/lang-sass",
+        "@npm//@codemirror/language",
+        "@npm//@codemirror/lint",
+        "@npm//@codemirror/search",
+        "@npm//@codemirror/state",
+        "@npm//@codemirror/view",
+        "@npm//@lezer/common",
+        "@npm//@lezer/highlight",
+        "@npm//@lezer/javascript",
+    ],
+)

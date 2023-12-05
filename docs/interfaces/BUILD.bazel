@@ -24,5 +24,7 @@ ts_library(
     ),
     deps = [
         "@npm//@angular/core",
+        "@npm//@types/node",
+        "@npm//@webcontainer/api",
     ],
 )

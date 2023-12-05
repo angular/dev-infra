@@ -14,3 +14,4 @@ export * from './environment.js';
 export * from './navigation-item.js';
 export * from './table-of-contents-item.js';
 export * from './search-results.js';
+export * from './tutorial.js';

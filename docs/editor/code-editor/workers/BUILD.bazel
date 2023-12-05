@@ -1,0 +1,37 @@
+load("//tools:defaults.bzl", "esbuild_esm_bundle", "ts_library")
+
+ts_library(
+    name = "workers",
+    srcs = glob(
+        [
+            "*.ts",
+        ],
+        exclude = [
+            "*.spec.ts",
+        ],
+    ),
+    visibility = [
+        "//docs/editor:__subpackages__",
+    ],
+    deps = [
+        "//docs/editor/code-editor/workers/enums",
+        "//docs/editor/code-editor/workers/interfaces",
+        "//docs/editor/code-editor/workers/utils",
+        "@npm//@typescript/vfs",
+        "@npm//rxjs",
+        "@npm//typescript",
+    ],
+)
+
+esbuild_esm_bundle(
+    name = "bundle",
+    entry_point = "typescript-vfs.worker.ts",
+    target = "es2020",
+    visibility = [
+        "//docs:__pkg__",
+        "//docs:__subpackages__",
+    ],
+    deps = [
+        ":workers",
+    ],
+)
