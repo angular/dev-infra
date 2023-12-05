@@ -10,6 +10,7 @@ ng_module(
         "//docs/components",
         "//docs/constants",
         "//docs/directives",
+        "//docs/editor",
         "//docs/interfaces",
         "//docs/pipes",
         "//docs/providers",
@@ -34,6 +35,7 @@ pkg_npm(
     substitutions = NPM_PACKAGE_SUBSTITUTIONS,
     deps = [
         ":docs",
+        "//docs/editor/code-editor/workers:bundle.js",
         "//docs/markdown:guides.mjs",
         "//docs/markdown:stackblitz.mjs",
     ],

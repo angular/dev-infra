@@ -1,0 +1,55 @@
+load("//tools:defaults.bzl", "karma_web_test", "ng_module", "ts_library")
+load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
+
+ng_module(
+    name = "code-editor",
+    srcs = [
+        "code-editor.component.ts",
+    ],
+    assets = [
+        ":code-editor.component.css",
+        "code-editor.component.html",
+    ],
+    visibility = [
+        "//docs/editor:__subpackages__",
+    ],
+    deps = [
+        "//docs/components/icon",
+        "//docs/editor/code-editor/services:code-mirror-editor",
+        "//docs/editor/services",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/material",
+    ],
+)
+
+sass_binary(
+    name = "style",
+    src = "code-editor.component.scss",
+)
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob(
+        ["*.spec.ts"],
+    ),
+    deps = [
+        ":code-editor",
+        "//docs/editor/code-editor/services:code-mirror-editor",
+        "//docs/editor/services",
+        "//docs/interfaces",
+        "//docs/utils:testing-helper",
+        "@npm//@angular/cdk",
+        "@npm//@angular/core",
+        "@npm//@angular/material",
+        "@npm//@angular/platform-browser",
+        "@npm//@types/jasmine",
+        "@npm//rxjs",
+    ],
+)
+
+karma_web_test(
+    name = "test",
+    specs = [":test_lib"],
+)

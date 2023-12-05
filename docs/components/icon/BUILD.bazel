@@ -16,6 +16,8 @@ ng_module(
         "//docs/components/navigation-list:__pkg__",
         "//docs/components/table-of-contents:__pkg__",
         "//docs/components/text-field:__pkg__",
+        "//docs/editor:__pkg__",
+        "//docs/editor/code-editor:__pkg__",
     ],
     deps = [
         "@npm//@angular/common",

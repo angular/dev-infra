@@ -1,0 +1,28 @@
+load("//tools:defaults.bzl", "ts_library")
+
+ts_library(
+    name = "extensions",
+    srcs = glob(
+        [
+            "*.ts",
+        ],
+    ),
+    visibility = [
+        "//docs/editor:__subpackages__",
+    ],
+    deps = [
+        "//docs/editor/code-editor/interfaces",
+        "//docs/editor/code-editor/services:diagnostics-state",
+        "//docs/editor/code-editor/workers/enums",
+        "//docs/editor/code-editor/workers/interfaces",
+        "//docs/editor/services",
+        "@npm//@angular/core",
+        "@npm//@codemirror/autocomplete",
+        "@npm//@codemirror/lint",
+        "@npm//@codemirror/state",
+        "@npm//@codemirror/view",
+        "@npm//marked",
+        "@npm//rxjs",
+        "@npm//typescript",
+    ],
+)

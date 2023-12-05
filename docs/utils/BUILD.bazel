@@ -18,6 +18,10 @@ ts_library(
         "testing-helper.ts",
     ],
     visibility = ["//docs:__subpackages__"],
+    deps = [
+        "@npm//@angular/core",
+        "@npm//@webcontainer/api",
+    ],
 )
 
 ts_library(
