@@ -577,7 +577,7 @@ __metadata:
     firebase: "npm:10.7.0"
     firebase-admin: "npm:^11.0.0"
     firebase-functions: "npm:^4.0.0"
-    firebase-tools: "npm:^12.0.0"
+    firebase-tools: "npm:^13.0.0"
     folder-hash: "npm:^4.0.2"
     font-color-contrast: "npm:^11.1.0"
     gcip-cloud-functions: "npm:0.2.0"
@@ -10938,9 +10938,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"firebase-tools@npm:^12.0.0":
-  version: 12.9.1
-  resolution: "firebase-tools@npm:12.9.1"
+"firebase-tools@npm:^13.0.0":
+  version: 13.0.0
+  resolution: "firebase-tools@npm:13.0.0"
   dependencies:
     "@google-cloud/pubsub": "npm:^3.0.1"
     abort-controller: "npm:^3.0.0"
@@ -10984,7 +10984,6 @@ __metadata:
     portfinder: "npm:^1.0.32"
     progress: "npm:^2.0.3"
     proxy-agent: "npm:^6.3.0"
-    request: "npm:^2.87.0"
     retry: "npm:^0.13.1"
     rimraf: "npm:^3.0.0"
     semver: "npm:^7.5.2"
@@ -11004,7 +11003,7 @@ __metadata:
     ws: "npm:^7.2.3"
   bin:
     firebase: lib/bin/firebase.js
-  checksum: 769311e352417bb315eb693556cdba6d402ddd8bd858b66ae064a7dd26cbce4e4641857273ca942e3f884466b106f80f253c97ece4c431f822757a5b4e34e9b4
+  checksum: a1a096593964097c37b3b3718ac70a7f33bc17edbf91ff0284a1ce2d03ee764eba72790fbe90797c39c7e34707e085449075ae8b2f1dd7ecd63eea92154b71a3
   languageName: node
   linkType: hard
 
