@@ -8,13 +8,13 @@
 import {TestBed} from '@angular/core/testing';
 import type {FileSystemTree} from '@webcontainer/api';
 
-import {TutorialType, TutorialConfig, TutorialMetadata} from '../../interfaces/index.js';
+import {TutorialType, TutorialConfig, TutorialMetadata} from '../../interfaces/index';
 import {
   TUTORIALS_COMMON_DIRECTORY,
   TUTORIALS_METADATA_WEB_PATH,
   TUTORIALS_SOURCE_CODE_WEB_PATH,
-} from './embedded-tutorial-manager.service.js';
-import {EmbeddedTutorialManager} from './embedded-tutorial-manager.service.js';
+} from './embedded-tutorial-manager.service';
+import {EmbeddedTutorialManager} from './embedded-tutorial-manager.service';
 
 describe('EmbeddedTutorialManager', () => {
   let service: EmbeddedTutorialManager;

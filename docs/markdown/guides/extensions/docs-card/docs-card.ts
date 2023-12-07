@@ -7,8 +7,8 @@
  */
 
 import {Tokens, Token, RendererThis, TokenizerThis} from 'marked';
-import {anchorTarget} from '../../helpers.js';
-import {loadWorkspaceRelativeFile} from '../../utils.js';
+import {anchorTarget} from '../../helpers';
+import {loadWorkspaceRelativeFile} from '../../utils';
 
 interface DocsCardToken extends Tokens.Generic {
   type: 'docs-card';

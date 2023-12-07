@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export * from './code-example.js';
-export * from './doc-content.js';
-export * from './docs-content-loader.js';
-export * from './example-viewer-content-loader.js';
-export * from './environment.js';
-export * from './navigation-item.js';
-export * from './table-of-contents-item.js';
-export * from './search-results.js';
-export * from './tutorial.js';
+export * from './code-example';
+export * from './doc-content';
+export * from './docs-content-loader';
+export * from './example-viewer-content-loader';
+export * from './environment';
+export * from './navigation-item';
+export * from './table-of-contents-item';
+export * from './search-results';
+export * from './tutorial';

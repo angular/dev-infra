@@ -1,7 +1,7 @@
-import {parseMarkdown} from '../../../guides/parse.js';
+import {parseMarkdown} from '../../../guides/parse';
 import {runfiles} from '@bazel/runfiles';
 import {JSDOM} from 'jsdom';
-import {AlertSeverityLevel} from '../../../guides/extensions/docs-alert.js';
+import {AlertSeverityLevel} from '../../../guides/extensions/docs-alert';
 import {readFile} from 'fs/promises';
 
 describe('markdown to html', () => {

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {AlgoliaConfig} from './algolia-config.js';
+import {AlgoliaConfig} from './algolia-config';
 
 export interface Environment {
   production: boolean;

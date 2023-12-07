@@ -8,7 +8,7 @@
 
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {Breadcrumb} from './breadcrumb.component.js';
+import {Breadcrumb} from './breadcrumb.component';
 
 describe('Breadcrumb', () => {
   let component: Breadcrumb;

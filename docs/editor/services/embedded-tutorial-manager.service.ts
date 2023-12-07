@@ -10,7 +10,7 @@ import {Injectable, signal} from '@angular/core';
 import {FileSystemTree} from '@webcontainer/api';
 import {BehaviorSubject} from 'rxjs';
 
-import {TutorialMetadata} from '../../interfaces/index.js';
+import {TutorialMetadata} from '../../interfaces/index';
 
 export const TUTORIALS_COMMON_DIRECTORY = 'common';
 export const TUTORIALS_METADATA_WEB_PATH = 'web_path';

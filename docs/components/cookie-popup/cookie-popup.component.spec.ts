@@ -8,9 +8,9 @@
 
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {CookiePopup, STORAGE_KEY} from './cookie-popup.component.js';
-import {LOCAL_STORAGE} from '../../providers/index.js';
-import {MockLocalStorage} from '../../utils/testing-helper.js';
+import {CookiePopup, STORAGE_KEY} from './cookie-popup.component';
+import {LOCAL_STORAGE} from '../../providers/index';
+import {MockLocalStorage} from '../../utils/testing-helper';
 
 describe('CookiePopup', () => {
   let fixture: ComponentFixture<CookiePopup>;

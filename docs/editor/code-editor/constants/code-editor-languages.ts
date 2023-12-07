@@ -11,7 +11,7 @@ import {angular} from '@codemirror/lang-angular';
 import {css} from '@codemirror/lang-css';
 import {sass} from '@codemirror/lang-sass';
 import {javascript} from '@codemirror/lang-javascript';
-import {angularComponent} from './component-ts-syntax.js';
+import {angularComponent} from './component-ts-syntax';
 import {LRLanguage, LanguageSupport} from '@codemirror/language';
 
 export const LANGUAGES: Record<string, LanguageSupport | LRLanguage> = {

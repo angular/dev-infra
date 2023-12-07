@@ -9,7 +9,7 @@
 import {Injectable, signal} from '@angular/core';
 import {toObservable} from '@angular/core/rxjs-interop';
 import {WebContainer} from '@webcontainer/api';
-import {Typing} from '../code-editor/workers/interfaces/define-types-request.js';
+import {Typing} from '../code-editor/workers/interfaces/define-types-request';
 
 /**
  * This service is responsible for retrieving the types definitions for the

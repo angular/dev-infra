@@ -16,12 +16,12 @@ import {
   signal,
   NgZone,
 } from '@angular/core';
-import {RESIZE_EVENT_DELAY} from '../constants/index.js';
+import {RESIZE_EVENT_DELAY} from '../constants/index';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {auditTime, debounceTime, fromEvent, startWith} from 'rxjs';
-import {WINDOW} from '../providers/index.js';
-import {shouldReduceMotion} from '../utils/index.js';
-import {TableOfContentsLoader} from './table-of-contents-loader.service.js';
+import {WINDOW} from '../providers/index';
+import {shouldReduceMotion} from '../utils/index';
+import {TableOfContentsLoader} from './table-of-contents-loader.service';
 
 export const SCROLL_EVENT_DELAY = 20;
 export const SCROLL_FINISH_DELAY = SCROLL_EVENT_DELAY * 2;

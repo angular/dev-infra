@@ -7,19 +7,19 @@
  */
 
 import {DestroyRef, inject, Injectable, signal} from '@angular/core';
-import {checkFilesInDirectory} from '../../utils/index.js';
+import {checkFilesInDirectory} from '../../utils/index';
 import {FileSystemTree, WebContainer, WebContainerProcess} from '@webcontainer/api';
 import {BehaviorSubject, filter, map, Subject} from 'rxjs';
 
-import {FileAndContent} from '../../interfaces/index.js';
-import {TutorialType} from '../../interfaces/index.js';
+import {FileAndContent} from '../../interfaces/index';
+import {TutorialType} from '../../interfaces/index';
 
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {AlertManager} from './alert-manager.service.js';
-import {EmbeddedTutorialManager} from './embedded-tutorial-manager.service.js';
-import {ErrorType, NodeRuntimeState} from './node-runtime-state.service.js';
-import {TerminalHandler} from './terminal-handler.service.js';
-import {TypingsLoader} from './typings-loader.service.js';
+import {AlertManager} from './alert-manager.service';
+import {EmbeddedTutorialManager} from './embedded-tutorial-manager.service';
+import {ErrorType, NodeRuntimeState} from './node-runtime-state.service';
+import {TerminalHandler} from './terminal-handler.service';
+import {TypingsLoader} from './typings-loader.service';
 
 export const DEV_SERVER_READY_MSG = 'Watch mode enabled. Watching for file changes...';
 export const OUT_OF_MEMORY_MSG = 'Out of memory';

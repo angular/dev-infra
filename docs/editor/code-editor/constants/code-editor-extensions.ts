@@ -40,8 +40,8 @@ import {
   startCompletion,
 } from '@codemirror/autocomplete';
 import {lintKeymap} from '@codemirror/lint';
-import {SYNTAX_STYLES} from './syntax-styles.js';
-import {CODE_EDITOR_THEME_STYLES} from './theme-styles.js';
+import {SYNTAX_STYLES} from './syntax-styles';
+import {CODE_EDITOR_THEME_STYLES} from './theme-styles';
 
 export const CODE_EDITOR_EXTENSIONS: Extension[] = [
   lineNumbers(),

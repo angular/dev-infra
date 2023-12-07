@@ -1,2 +1,2 @@
-export * from './is-active-navigation-item.pipe.js';
-export * from './relative-link.pipe.js';
+export * from './is-active-navigation-item.pipe';
+export * from './relative-link.pipe';

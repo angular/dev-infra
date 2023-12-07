@@ -10,10 +10,10 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterTestingModule} from '@angular/router/testing';
-import {DocContent, ExampleViewerContentLoader} from '../../interfaces/index.js';
-import {EXAMPLE_VIEWER_CONTENT_LOADER} from '../../providers/index.js';
-import {CodeExampleViewMode, ExampleViewer} from '../example-viewer/example-viewer.component.js';
-import {DocViewer} from './docs-viewer.component.js';
+import {DocContent, ExampleViewerContentLoader} from '../../interfaces/index';
+import {EXAMPLE_VIEWER_CONTENT_LOADER} from '../../providers/index';
+import {CodeExampleViewMode, ExampleViewer} from '../example-viewer/example-viewer.component';
+import {DocViewer} from './docs-viewer.component';
 
 describe('DocViewer', () => {
   let fixture: ComponentFixture<DocViewer>;

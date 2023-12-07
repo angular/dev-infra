@@ -10,9 +10,9 @@ import {inject} from '@angular/core';
 import {Subject} from 'rxjs';
 import {Terminal} from 'xterm';
 
-import {WINDOW} from '../../providers/index.js';
+import {WINDOW} from '../../providers/index';
 
-import {CommandValidator} from './command-validator.service.js';
+import {CommandValidator} from './command-validator.service';
 
 export const NOT_VALID_COMMAND_MSG = 'Angular Documentation - Not allowed command!';
 export const ALLOWED_KEYS: Array<KeyboardEvent['key']> = [

@@ -9,7 +9,7 @@
 import {TestBed} from '@angular/core/testing';
 import type {WebContainer} from '@webcontainer/api';
 
-import {TypingsLoader} from './typings-loader.service.js';
+import {TypingsLoader} from './typings-loader.service';
 
 describe('TypingsLoader', () => {
   let service: TypingsLoader;

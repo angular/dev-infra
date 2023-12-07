@@ -7,7 +7,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {NavigationItem} from '../interfaces/index.js';
+import {NavigationItem} from '../interfaces/index';
 
 @Pipe({
   name: 'isActiveNavigationItem',

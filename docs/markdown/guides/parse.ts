@@ -7,21 +7,21 @@
  */
 
 import {marked} from 'marked';
-import {hooks} from './hooks.js';
-import {renderer} from './renderer.js';
-import {docsAlertExtension} from './extensions/docs-alert.js';
-import {docsCalloutExtension} from './extensions/docs-callout.js';
-import {docsPillExtension} from './extensions/docs-pill/docs-pill.js';
-import {docsPillRowExtension} from './extensions/docs-pill/docs-pill-row.js';
-import {docsVideoExtension} from './extensions/docs-video.js';
-import {docsWorkflowExtension} from './extensions/docs-workflow/docs-workflow.js';
-import {docsStepExtension} from './extensions/docs-workflow/docs-step.js';
-import {docsCardExtension} from './extensions/docs-card/docs-card.js';
-import {docsCardContainerExtension} from './extensions/docs-card/docs-card-container.js';
-import {docsDecorativeHeaderExtension} from './extensions/docs-decorative-header.js';
-import {docsCodeBlockExtension} from './extensions/docs-code/docs-code-block.js';
-import {docsCodeExtension} from './extensions/docs-code/docs-code.js';
-import {docsCodeMultifileExtension} from './extensions/docs-code/docs-code-multifile.js';
+import {hooks} from './hooks';
+import {renderer} from './renderer';
+import {docsAlertExtension} from './extensions/docs-alert';
+import {docsCalloutExtension} from './extensions/docs-callout';
+import {docsPillExtension} from './extensions/docs-pill/docs-pill';
+import {docsPillRowExtension} from './extensions/docs-pill/docs-pill-row';
+import {docsVideoExtension} from './extensions/docs-video';
+import {docsWorkflowExtension} from './extensions/docs-workflow/docs-workflow';
+import {docsStepExtension} from './extensions/docs-workflow/docs-step';
+import {docsCardExtension} from './extensions/docs-card/docs-card';
+import {docsCardContainerExtension} from './extensions/docs-card/docs-card-container';
+import {docsDecorativeHeaderExtension} from './extensions/docs-decorative-header';
+import {docsCodeBlockExtension} from './extensions/docs-code/docs-code-block';
+import {docsCodeExtension} from './extensions/docs-code/docs-code';
+import {docsCodeMultifileExtension} from './extensions/docs-code/docs-code-multifile';
 
 export async function parseMarkdown(markdownContent: string): Promise<string> {
   marked.use({

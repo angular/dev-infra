@@ -9,10 +9,10 @@
 import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
-import {Terminal} from './terminal.component.js';
-import {TerminalHandler, TerminalType} from '../services/terminal-handler.service.js';
-import {WINDOW} from '../../providers/index.js';
-import {FakeEventTarget} from '../../utils/testing-helper.js';
+import {Terminal} from './terminal.component';
+import {TerminalHandler, TerminalType} from '../services/terminal-handler.service';
+import {WINDOW} from '../../providers/index';
+import {FakeEventTarget} from '../../utils/testing-helper';
 
 describe('Terminal', () => {
   let component: Terminal;

@@ -7,9 +7,9 @@
  */
 
 import {TokenizerThis, RendererThis} from 'marked';
-import {CodeToken, formatCode} from './format/index.js';
-import {FileType, removeEslintComments} from './sanitizers/eslint.js';
-import {loadWorkspaceRelativeFile} from '../../utils.js';
+import {CodeToken, formatCode} from './format/index';
+import {FileType, removeEslintComments} from './sanitizers/eslint';
+import {loadWorkspaceRelativeFile} from '../../utils';
 
 /** Marked token for a custom docs element. */
 export interface DocsCodeToken extends CodeToken {

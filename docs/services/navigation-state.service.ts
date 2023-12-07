@@ -7,7 +7,7 @@
  */
 
 import {Injectable, inject, signal} from '@angular/core';
-import {NavigationItem} from '../interfaces/index.js';
+import {NavigationItem} from '../interfaces/index';
 import {Router} from '@angular/router';
 
 @Injectable({

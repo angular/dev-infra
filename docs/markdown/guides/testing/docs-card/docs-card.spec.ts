@@ -1,4 +1,4 @@
-import {parseMarkdown} from '../../../guides/parse.js';
+import {parseMarkdown} from '../../../guides/parse';
 import {runfiles} from '@bazel/runfiles';
 import {readFile} from 'fs/promises';
 import {JSDOM} from 'jsdom';

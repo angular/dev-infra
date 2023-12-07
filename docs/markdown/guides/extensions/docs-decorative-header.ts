@@ -7,7 +7,7 @@
  */
 
 import {TokenizerThis, Tokens, RendererThis} from 'marked';
-import {getPageTitle, loadWorkspaceRelativeFile} from '../utils.js';
+import {getPageTitle, loadWorkspaceRelativeFile} from '../utils';
 
 interface DocsDecorativeHeaderToken extends Tokens.Generic {
   type: 'docs-decorative-header';

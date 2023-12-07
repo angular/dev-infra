@@ -22,13 +22,13 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatTabGroup, MatTabsModule} from '@angular/material/tabs';
 import {debounceTime, map} from 'rxjs';
 
-import {TerminalType} from '../services/terminal-handler.service.js';
-import {EmbeddedTutorialManager} from '../services/embedded-tutorial-manager.service.js';
+import {TerminalType} from '../services/terminal-handler.service';
+import {EmbeddedTutorialManager} from '../services/embedded-tutorial-manager.service';
 
-import {CodeMirrorEditor} from './services/code-mirror-editor.service.js';
-import {DiagnosticWithLocation, DiagnosticsState} from './services/diagnostics-state.service.js';
-import {DownloadManager} from '../services/download-manager.service.js';
-import {IconComponent} from '../../components/icon/icon.component.js';
+import {CodeMirrorEditor} from './services/code-mirror-editor.service';
+import {DiagnosticWithLocation, DiagnosticsState} from './services/diagnostics-state.service';
+import {DownloadManager} from '../services/download-manager.service';
+import {IconComponent} from '../../components/icon/icon.component';
 
 export const REQUIRED_FILES = new Set(['src/main.ts', 'src/index.html']);
 

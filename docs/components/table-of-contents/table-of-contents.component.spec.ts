@@ -7,11 +7,11 @@
  */
 
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {TableOfContents} from './table-of-contents.component.js';
+import {TableOfContents} from './table-of-contents.component';
 import {RouterTestingModule} from '@angular/router/testing';
-import {TableOfContentsItem, TableOfContentsLevel} from '../../interfaces/index.js';
-import {TableOfContentsScrollSpy, TableOfContentsLoader} from '../../services/index.js';
-import {WINDOW} from '../../providers/index.js';
+import {TableOfContentsItem, TableOfContentsLevel} from '../../interfaces/index';
+import {TableOfContentsScrollSpy, TableOfContentsLoader} from '../../services/index';
+import {WINDOW} from '../../providers/index';
 
 describe('TableOfContents', () => {
   let component: TableOfContents;

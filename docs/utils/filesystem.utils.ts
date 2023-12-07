@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {normalizePath} from './navigation.utils.js';
+import {normalizePath} from './navigation.utils';
 type FileAndContent = any;
 
 interface DirEnt<T> {

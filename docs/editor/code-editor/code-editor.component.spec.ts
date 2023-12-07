@@ -15,12 +15,12 @@ import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {BehaviorSubject} from 'rxjs';
 
-import {EmbeddedTutorialManager} from '../services/embedded-tutorial-manager.service.js';
+import {EmbeddedTutorialManager} from '../services/embedded-tutorial-manager.service';
 
-import {CodeEditor, REQUIRED_FILES} from './code-editor.component.js';
-import {CodeMirrorEditor} from './services/code-mirror-editor.service.js';
-import {FakeChangeDetectorRef} from '../../utils/testing-helper.js';
-import {TutorialType} from '../../interfaces/index.js';
+import {CodeEditor, REQUIRED_FILES} from './code-editor.component';
+import {CodeMirrorEditor} from './services/code-mirror-editor.service';
+import {FakeChangeDetectorRef} from '../../utils/testing-helper';
+import {TutorialType} from '../../interfaces/index';
 
 const files = [
   {filename: 'a', content: '', language: {} as any},

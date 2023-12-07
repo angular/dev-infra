@@ -7,8 +7,8 @@
  */
 
 import {ChangeDetectionStrategy, Component, OnInit, inject, signal} from '@angular/core';
-import {NavigationState} from '../../services/index.js';
-import {NavigationItem} from '../../interfaces/index.js';
+import {NavigationState} from '../../services/index';
+import {NavigationItem} from '../../interfaces/index';
 import {NgFor, NgIf} from '@angular/common';
 import {RouterLink} from '@angular/router';
 

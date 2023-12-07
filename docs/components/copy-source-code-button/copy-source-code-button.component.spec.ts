@@ -11,7 +11,7 @@ import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing'
 import {
   CONFIRMATION_DISPLAY_TIME_MS,
   CopySourceCodeButton,
-} from './copy-source-code-button.component.js';
+} from './copy-source-code-button.component';
 import {Component, Input} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {Clipboard} from '@angular/cdk/clipboard';

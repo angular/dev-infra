@@ -8,7 +8,7 @@
 
 import {TestBed} from '@angular/core/testing';
 
-import {TableOfContentsLoader} from './table-of-contents-loader.service.js';
+import {TableOfContentsLoader} from './table-of-contents-loader.service';
 
 describe('TableOfContentsLoader', () => {
   let service: TableOfContentsLoader;

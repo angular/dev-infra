@@ -12,11 +12,11 @@ import {marked} from 'marked';
 import {Subject, filter, take} from 'rxjs';
 import typescript from 'typescript';
 
-import {EditorFile} from '../interfaces/editor-file.js';
-import {TsVfsWorkerActions} from '../workers/enums/actions.js';
-import {DisplayTooltipRequest} from '../workers/interfaces/display-tooltip-request.js';
-import {DisplayTooltipResponse} from '../workers/interfaces/display-tooltip-response.js';
-import {ActionMessage} from '../workers/interfaces/message.js';
+import {EditorFile} from '../interfaces/editor-file';
+import {TsVfsWorkerActions} from '../workers/enums/actions';
+import {DisplayTooltipRequest} from '../workers/interfaces/display-tooltip-request';
+import {DisplayTooltipResponse} from '../workers/interfaces/display-tooltip-response';
+import {ActionMessage} from '../workers/interfaces/message';
 
 export const getTooltipExtension = (
   emitter: Subject<ActionMessage<DisplayTooltipResponse>>,

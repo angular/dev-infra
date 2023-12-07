@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults.bzl", "ng_module", "ts_library")
 
 ts_library(
     name = "providers",
@@ -11,7 +11,7 @@ ts_library(
     ],
 )
 
-ts_library(
+ng_module(
     name = "lib",
     srcs = glob(
         [

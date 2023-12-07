@@ -7,7 +7,7 @@
  */
 
 import {writeFileSync} from 'fs';
-import {generateStackblitzExample} from './builder.js';
+import {generateStackblitzExample} from './builder';
 
 const [exampleDir, tmpDir, templateDir, outputFilePath] = process.argv.slice(2);
 const htmlOutputContent = await generateStackblitzExample(exampleDir, tmpDir, templateDir);

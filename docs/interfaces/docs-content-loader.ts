@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {DocContent} from './doc-content.js';
+import {DocContent} from './doc-content';
 
 /** The service responsible for fetching static content for docs pages */
 export interface DocsContentLoader {

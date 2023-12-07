@@ -8,7 +8,7 @@
 
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {Select} from './select.component.js';
+import {Select} from './select.component';
 
 describe('Select', () => {
   let component: Select;

@@ -1,6 +1,6 @@
 import {diffLines, Change as DiffChange} from 'diff';
-import {CodeToken} from './index.js';
-import {loadWorkspaceRelativeFile} from '../../../utils.js';
+import {CodeToken} from './index';
+import {loadWorkspaceRelativeFile} from '../../../utils';
 
 export interface DiffMetadata {
   code: string;

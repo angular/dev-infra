@@ -8,9 +8,10 @@
 
 type FileAndContent = any;
 
-export async function generateZip(files: FileAndContent[]): Promise<Blob> {
-  const {default: JSZip} = await import('jszip');
+// TODO(josephperrott): Determine how we can load the jszip package dynamically again.
+import JSZip from 'jszip';
 
+export async function generateZip(files: FileAndContent[]): Promise<Blob> {
   const zip = new JSZip();
 
   for (const file of files) {

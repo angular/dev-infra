@@ -6,5 +6,5 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export * from './click-outside/click-outside.directive.js';
-export * from './external-link/external-link.directive.js';
+export * from './click-outside/click-outside.directive';
+export * from './external-link/external-link.directive';

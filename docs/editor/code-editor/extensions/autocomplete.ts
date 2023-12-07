@@ -19,14 +19,11 @@ import {
 import {EditorView} from '@codemirror/view';
 import {Subject, filter, take} from 'rxjs';
 
-import {EditorFile} from '../interfaces/editor-file.js';
-import {TsVfsWorkerActions} from '../workers/enums/actions.js';
-import {AutocompleteRequest} from '../workers/interfaces/autocomplete-request.js';
-import {
-  AutocompleteItem,
-  AutocompleteResponse,
-} from '../workers/interfaces/autocomplete-response.js';
-import {ActionMessage} from '../workers/interfaces/message.js';
+import {EditorFile} from '../interfaces/editor-file';
+import {TsVfsWorkerActions} from '../workers/enums/actions';
+import {AutocompleteRequest} from '../workers/interfaces/autocomplete-request';
+import {AutocompleteItem, AutocompleteResponse} from '../workers/interfaces/autocomplete-response';
+import {ActionMessage} from '../workers/interfaces/message';
 import {TransactionSpec} from '@codemirror/state';
 
 // Factory method for autocomplete extension.

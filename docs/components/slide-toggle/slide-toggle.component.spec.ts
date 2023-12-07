@@ -8,7 +8,7 @@
 
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {SlideToggle} from './slide-toggle.component.js';
+import {SlideToggle} from './slide-toggle.component';
 
 describe('SlideToggle', () => {
   let component: SlideToggle;

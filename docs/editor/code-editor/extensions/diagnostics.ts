@@ -7,13 +7,13 @@
  */
 
 import {Diagnostic, linter} from '@codemirror/lint';
-import {TsVfsWorkerActions} from '../workers/enums/actions.js';
+import {TsVfsWorkerActions} from '../workers/enums/actions';
 import {Signal} from '@angular/core';
-import {EditorFile} from '../interfaces/editor-file.js';
-import {ActionMessage} from '../workers/interfaces/message.js';
-import {DiagnosticsRequest} from '../workers/interfaces/diagnostics-request.js';
+import {EditorFile} from '../interfaces/editor-file';
+import {ActionMessage} from '../workers/interfaces/message';
+import {DiagnosticsRequest} from '../workers/interfaces/diagnostics-request';
 import {Subject, filter, take} from 'rxjs';
-import {DiagnosticWithLocation, DiagnosticsState} from '../services/diagnostics-state.service.js';
+import {DiagnosticWithLocation, DiagnosticsState} from '../services/diagnostics-state.service';
 
 // Factory method for diagnostics extension.
 export const getDiagnosticsExtension = (

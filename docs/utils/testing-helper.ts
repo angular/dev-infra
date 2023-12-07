@@ -184,11 +184,7 @@ class FakeFileSystemAPI implements FileSystemAPI {
     listener?: FSWatchCallback | undefined,
   ): IFSWatcher;
   watch(filename: string, listener?: FSWatchCallback | undefined): IFSWatcher;
-  watch(
-    filename: unknown,
-    options?: unknown,
-    listener?: unknown,
-  ): import('@webcontainer/api').IFSWatcher {
+  watch(filename: unknown, options?: unknown, listener?: unknown): IFSWatcher {
     throw Error('Not implemented');
   }
 }

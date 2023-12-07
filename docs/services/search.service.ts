@@ -7,11 +7,11 @@
  */
 
 import {Injectable, afterNextRender, inject, signal} from '@angular/core';
-import {ENVIRONMENT} from '../providers/index.js';
-import {SearchResult} from '../interfaces/index.js';
+import {ENVIRONMENT} from '../providers/index';
+import {SearchResult} from '../interfaces/index';
 import {toObservable} from '@angular/core/rxjs-interop';
 import {debounceTime, filter, from, of, switchMap} from 'rxjs';
-import algoliasearch, {SearchClient} from 'algoliasearch/lite.js';
+import algoliasearch, {SearchClient} from 'algoliasearch/lite';
 import {NavigationEnd, Router} from '@angular/router';
 
 export const SEARCH_DELAY = 200;

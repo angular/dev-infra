@@ -8,7 +8,7 @@
 
 import {TestBed} from '@angular/core/testing';
 
-import {DiagnosticsState} from './diagnostics-state.service.js';
+import {DiagnosticsState} from './diagnostics-state.service';
 
 describe('DiagnosticsState', () => {
   let service: DiagnosticsState;

@@ -8,9 +8,9 @@
 
 import {NgIf, NgSwitch, NgSwitchCase} from '@angular/common';
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
-import {isFirefox, isIos} from '../../utils/index.js';
+import {isFirefox, isIos} from '../../utils/index';
 
-import {ErrorType, NodeRuntimeState} from '../services/node-runtime-state.service.js';
+import {ErrorType, NodeRuntimeState} from '../services/node-runtime-state.service';
 
 @Component({
   standalone: true,

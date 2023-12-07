@@ -11,20 +11,20 @@ import {BehaviorSubject, of as observableOf} from 'rxjs';
 
 import {signal} from '@angular/core';
 import {WebContainer} from '@webcontainer/api';
-import {TutorialType} from '../../interfaces/index.js';
-import {FakeWebContainer, FakeWebContainerProcess} from '../../utils/testing-helper.js';
-import {AlertManager} from './alert-manager.service.js';
-import {EmbeddedTutorialManager} from './embedded-tutorial-manager.service.js';
-import {LoadingStep} from './node-runtime-sandbox.service.js';
+import {TutorialType} from '../../interfaces/index';
+import {FakeWebContainer, FakeWebContainerProcess} from '../../utils/testing-helper';
+import {AlertManager} from './alert-manager.service';
+import {EmbeddedTutorialManager} from './embedded-tutorial-manager.service';
+import {LoadingStep} from './node-runtime-sandbox.service';
 import {
   DEV_SERVER_READY_MSG,
   NodeRuntimeSandbox,
   OUT_OF_MEMORY_MSG,
   PACKAGE_MANAGER,
-} from './node-runtime-sandbox.service.js';
-import {NodeRuntimeState} from './node-runtime-state.service.js';
-import {TerminalHandler} from './terminal-handler.service.js';
-import {TypingsLoader} from './typings-loader.service.js';
+} from './node-runtime-sandbox.service';
+import {NodeRuntimeState} from './node-runtime-state.service';
+import {TerminalHandler} from './terminal-handler.service';
+import {TypingsLoader} from './typings-loader.service';
 
 describe('NodeRuntimeSandbox', () => {
   let testBed: TestBed;
