@@ -8,7 +8,7 @@
 
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {TextField} from './text-field.component.js';
+import {TextField} from './text-field.component';
 
 describe('TextField', () => {
   let component: TextField;

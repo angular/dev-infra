@@ -19,9 +19,9 @@ import {
 } from '@angular/core';
 
 import {debounceTime} from 'rxjs/operators';
-import {TerminalHandler, TerminalType} from '../services/terminal-handler.service.js';
+import {TerminalHandler, TerminalType} from '../services/terminal-handler.service';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {WINDOW} from '../../providers/index.js';
+import {WINDOW} from '../../providers/index';
 import {NgIf} from '@angular/common';
 import {fromEvent} from 'rxjs';
 

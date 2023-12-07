@@ -12,14 +12,11 @@ import {BehaviorSubject, Subject} from 'rxjs';
 import {EditorState} from '@codemirror/state';
 import type {FileSystemTree} from '@webcontainer/api';
 
-import {NodeRuntimeSandbox} from '../../services/node-runtime-sandbox.service.js';
-import {EmbeddedTutorialManager} from '../../services/embedded-tutorial-manager.service.js';
+import {NodeRuntimeSandbox} from '../../services/node-runtime-sandbox.service';
+import {EmbeddedTutorialManager} from '../../services/embedded-tutorial-manager.service';
 
-import {
-  CodeMirrorEditor,
-  EDITOR_CONTENT_CHANGE_DELAY_MILLIES,
-} from './code-mirror-editor.service.js';
-import {TutorialConfig, TutorialMetadata} from '../../../interfaces/index.js';
+import {CodeMirrorEditor, EDITOR_CONTENT_CHANGE_DELAY_MILLIES} from './code-mirror-editor.service';
+import {TutorialConfig, TutorialMetadata} from '../../../interfaces/index';
 
 class FakeNodeRuntimeSandbox {
   async writeFile(path: string, content: string) {}

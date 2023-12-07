@@ -9,10 +9,10 @@
 import {NgFor, NgIf} from '@angular/common';
 import {Component, Input, computed, inject} from '@angular/core';
 import {RouterLink} from '@angular/router';
-import {TableOfContentsLevel} from '../../interfaces/index.js';
-import {TableOfContentsLoader} from '../../services/table-of-contents-loader.service.js';
-import {TableOfContentsScrollSpy} from '../../services/table-of-contents-scroll-spy.service.js';
-import {IconComponent} from '../icon/icon.component.js';
+import {TableOfContentsLevel} from '../../interfaces/index';
+import {TableOfContentsLoader} from '../../services/table-of-contents-loader.service';
+import {TableOfContentsScrollSpy} from '../../services/table-of-contents-scroll-spy.service';
+import {IconComponent} from '../icon/icon.component';
 
 @Component({
   selector: 'docs-table-of-contents',

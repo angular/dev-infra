@@ -8,7 +8,7 @@
 
 import {TestBed} from '@angular/core/testing';
 
-import {EditorUiState} from './editor-ui-state.service.js';
+import {EditorUiState} from './editor-ui-state.service';
 
 describe('EditorUiState', () => {
   let service: EditorUiState;

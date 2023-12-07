@@ -1,18 +1,23 @@
 {
   "name": "@angular/docs",
   "version": "0.0.0-{SCM_HEAD_SHA}",
-  "main": "./public-api.mjs",
-  "typings": "./public-api.d.ts",
-  "type": "module",
   "dependencies": {
-    "@angular/core": "17.0.0-rc.3",
-    "@angular/common": "17.0.0-rc.3",
-    "@angular/cdk": "17.0.0-rc.3",
-    "@angular/router": "17.0.0-rc.3",
-    "@angular/material": "17.0.0-rc.3",
+    "@angular/core": "^17.0.6",
+    "@angular/common": "^17.0.6",
+    "@angular/cdk": "^17.0.2",
+    "@angular/router": "^17.0.6",
+    "@angular/material": "^17.0.2",
     "zone.js": "^0.14.2",
     "jszip": "^3.10.1",
     "algoliasearch": "^4.20.0",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "xterm": "^5.3.0",
+    "xterm-addon-fit": "^0.8.0",
+    "@webcontainer/api": "^1.1.8"
+  },
+  "exports": {
+    "./styles/*": {
+      "sass": "./styles/*"
+    }
   }
 }

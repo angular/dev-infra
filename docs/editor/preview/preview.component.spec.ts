@@ -11,11 +11,11 @@ import {DebugElement, signal} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {of} from 'rxjs';
 
-import {NodeRuntimeSandbox} from '../services/node-runtime-sandbox.service.js';
-import {Preview} from './preview.component.js';
-import {LoadingStep} from '../services/node-runtime-sandbox.service.js';
-import {NodeRuntimeError, NodeRuntimeState} from '../services/node-runtime-state.service.js';
-import {PreviewError} from './preview-error.component.js';
+import {NodeRuntimeSandbox} from '../services/node-runtime-sandbox.service';
+import {Preview} from './preview.component';
+import {LoadingStep} from '../services/node-runtime-sandbox.service';
+import {NodeRuntimeError, NodeRuntimeState} from '../services/node-runtime-state.service';
+import {PreviewError} from './preview-error.component';
 
 describe('Preview', () => {
   // Before each is used as a callable function to prevent conflicts between tests

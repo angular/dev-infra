@@ -7,8 +7,8 @@
  */
 
 import {TestBed} from '@angular/core/testing';
-import {TerminalHandler} from './terminal-handler.service.js';
-import {WINDOW} from '../../providers/index.js';
+import {TerminalHandler} from './terminal-handler.service';
+import {WINDOW} from '../../providers/index';
 
 describe('TerminalHandler', () => {
   let service: TerminalHandler;

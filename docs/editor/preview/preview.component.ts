@@ -21,11 +21,12 @@ import {
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {delay, filter, map} from 'rxjs';
 
-import {LoadingStep} from '../services/node-runtime-sandbox.service.js';
-import {NodeRuntimeSandbox} from '../services/node-runtime-sandbox.service.js';
-import {NodeRuntimeState} from '../services/node-runtime-state.service.js';
+import {LoadingStep} from '../services/node-runtime-sandbox.service';
+import {NodeRuntimeSandbox} from '../services/node-runtime-sandbox.service';
+import {NodeRuntimeState} from '../services/node-runtime-state.service';
 
-import type {PreviewError} from './preview-error.component.js';
+// TODO(josephperrott): Determine how we can load the preview error component dynamically again.
+import {PreviewError} from './preview-error.component';
 
 type PreviewUrlEmittedValue = {
   url: string | null;
@@ -56,8 +57,6 @@ export class Preview implements AfterViewInit {
   constructor() {
     effect(async () => {
       if (this.nodeRuntimeState.loadingStep() === LoadingStep.ERROR) {
-        const {PreviewError} = await import('./preview-error.component.js');
-
         this.previewErrorComponent = PreviewError;
 
         this.changeDetectorRef.markForCheck();

@@ -7,10 +7,10 @@
  */
 
 import {Injectable, signal} from '@angular/core';
-import {isFirefox, isIos} from '../../utils/index.js';
+import {isFirefox, isIos} from '../../utils/index';
 
-import {LoadingStep} from './node-runtime-sandbox.service.js';
-import {OUT_OF_MEMORY_MSG} from './node-runtime-sandbox.service.js';
+import {LoadingStep} from './node-runtime-sandbox.service';
+import {OUT_OF_MEMORY_MSG} from './node-runtime-sandbox.service';
 
 export const MAX_RECOMMENDED_WEBCONTAINERS_INSTANCES = 3;
 export const WEBCONTAINERS_COUNTER_KEY = 'numberOfWebcontainers';

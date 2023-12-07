@@ -8,8 +8,8 @@
 
 import {inject} from '@angular/core';
 import {ActivatedRouteSnapshot, Route, Router} from '@angular/router';
-import {NavigationItem} from '../interfaces/index.js';
-import {DOCS_CONTENT_LOADER} from '../providers/index.js';
+import {NavigationItem} from '../interfaces/index';
+import {DOCS_CONTENT_LOADER} from '../providers/index';
 
 export const flatNavigationData = (tree: NavigationItem[]) => {
   const result: NavigationItem[] = [];

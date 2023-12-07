@@ -7,7 +7,7 @@
  */
 
 import {MarkedExtension} from 'marked';
-import {resetHeaderIdsOfCurrentDocument} from './state.js';
+import {resetHeaderIdsOfCurrentDocument} from './state';
 
 /**
  * Custom hooks for marked that will be used to post-transform markdown files with parent styles for docs.

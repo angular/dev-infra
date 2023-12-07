@@ -1,7 +1,7 @@
 import {decode} from 'html-entities';
 import highlightJs from 'highlight.js';
-import {CodeToken} from './index.js';
-import {expandRangeStringValues} from './range.js';
+import {CodeToken} from './index';
+import {expandRangeStringValues} from './range';
 import {JSDOM} from 'jsdom';
 
 const lineNumberClassName: string = 'hljs-ln-number';

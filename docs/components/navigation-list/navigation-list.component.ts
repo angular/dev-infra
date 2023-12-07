@@ -14,12 +14,12 @@ import {
   Output,
   inject,
 } from '@angular/core';
-import {NavigationItem} from '../../interfaces/index.js';
-import {NavigationState} from '../../services/index.js';
+import {NavigationItem} from '../../interfaces/index';
+import {NavigationState} from '../../services/index';
 import {RouterLink, RouterLinkActive} from '@angular/router';
 import {CommonModule} from '@angular/common';
-import {IconComponent} from '../icon/icon.component.js';
-import {IsActiveNavigationItem} from '../../pipes/is-active-navigation-item.pipe.js';
+import {IconComponent} from '../icon/icon.component';
+import {IsActiveNavigationItem} from '../../pipes/is-active-navigation-item.pipe';
 
 @Component({
   selector: 'docs-navigation-list',

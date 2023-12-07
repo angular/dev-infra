@@ -13,22 +13,22 @@ import {Subject, Subscription, debounceTime, filter, map} from 'rxjs';
 import {EditorState, Transaction} from '@codemirror/state';
 import {EditorView, placeholder as placeholderExtension} from '@codemirror/view';
 
-import {EmbeddedTutorialManager} from '../../services/embedded-tutorial-manager.service.js';
-import {NodeRuntimeSandbox} from '../../services/node-runtime-sandbox.service.js';
-import {TypingsLoader} from '../../services/typings-loader.service.js';
+import {EmbeddedTutorialManager} from '../../services/embedded-tutorial-manager.service';
+import {NodeRuntimeSandbox} from '../../services/node-runtime-sandbox.service';
+import {TypingsLoader} from '../../services/typings-loader.service';
 
-import {FileAndContentRecord} from '../../../interfaces/index.js';
-import {CODE_EDITOR_EXTENSIONS} from '../constants/code-editor-extensions.js';
-import {LANGUAGES} from '../constants/code-editor-languages.js';
-import {getAutocompleteExtension} from '../extensions/autocomplete.js';
-import {getDiagnosticsExtension} from '../extensions/diagnostics.js';
-import {getTooltipExtension} from '../extensions/tooltip.js';
-import {DiagnosticsState} from './diagnostics-state.service.js';
-import {TsVfsWorkerActions} from '../workers/enums/actions.js';
-import {CodeChangeRequest} from '../workers/interfaces/code-change-request.js';
-import {ActionMessage} from '../workers/interfaces/message.js';
-import {NodeRuntimeState} from '../../services/node-runtime-state.service.js';
-import {EditorFile} from '../interfaces/editor-file.js';
+import {FileAndContentRecord} from '../../../interfaces/index';
+import {CODE_EDITOR_EXTENSIONS} from '../constants/code-editor-extensions';
+import {LANGUAGES} from '../constants/code-editor-languages';
+import {getAutocompleteExtension} from '../extensions/autocomplete';
+import {getDiagnosticsExtension} from '../extensions/diagnostics';
+import {getTooltipExtension} from '../extensions/tooltip';
+import {DiagnosticsState} from './diagnostics-state.service';
+import {TsVfsWorkerActions} from '../workers/enums/actions';
+import {CodeChangeRequest} from '../workers/interfaces/code-change-request';
+import {ActionMessage} from '../workers/interfaces/message';
+import {NodeRuntimeState} from '../../services/node-runtime-state.service';
+import {EditorFile} from '../interfaces/editor-file';
 
 /**
  * The delay between the last typed character and the actual file save.

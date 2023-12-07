@@ -8,7 +8,7 @@
 
 import {readFileSync, writeFileSync} from 'fs';
 import path from 'path';
-import {parseMarkdown} from './parse.js';
+import {parseMarkdown} from './parse';
 
 async function main() {
   const [paramFilePath] = process.argv.slice(2);

@@ -1,8 +1,20 @@
-load("//tools:defaults.bzl", "ng_module")
+load("//tools:defaults.bzl", "ng_module", "ts_library")
 load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
 
-ng_module(
+ts_library(
     name = "editor",
+    srcs = [
+        "index.ts",
+    ],
+    visibility = ["//docs:__subpackages__"],
+    deps = [
+        ":lib",
+        "//docs/editor/services",
+    ],
+)
+
+ng_module(
+    name = "lib",
     srcs = [
         "embedded-editor.component.ts",
     ],

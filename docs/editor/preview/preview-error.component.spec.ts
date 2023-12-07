@@ -8,7 +8,7 @@
 
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {PreviewError} from './preview-error.component.js';
+import {PreviewError} from './preview-error.component';
 
 describe('PreviewError', () => {
   let fixture: ComponentFixture<PreviewError>;

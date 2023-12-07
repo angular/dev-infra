@@ -7,7 +7,7 @@
  */
 
 import {TokenizerThis, RendererThis} from 'marked';
-import {CodeToken, formatCode} from './format/index.js';
+import {CodeToken, formatCode} from './format/index';
 
 export interface DocsCodeBlock extends CodeToken {
   type: 'docs-code-block';

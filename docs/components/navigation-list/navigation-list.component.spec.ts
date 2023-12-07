@@ -8,12 +8,12 @@
 
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {NavigationList} from './navigation-list.component.js';
+import {NavigationList} from './navigation-list.component';
 import {By} from '@angular/platform-browser';
-import {NavigationItem} from '../../interfaces/index.js';
+import {NavigationItem} from '../../interfaces/index';
 import {RouterTestingModule} from '@angular/router/testing';
 import {signal} from '@angular/core';
-import {NavigationState} from '../../services/index.js';
+import {NavigationState} from '../../services/index';
 
 const navigationItems: NavigationItem[] = [
   {

@@ -7,6 +7,6 @@
  */
 
 import {InjectionToken} from '@angular/core';
-import {CodeExamplesMap} from '../interfaces/index.js';
+import {CodeExamplesMap} from '../interfaces/index';
 
 export const PREVIEWS_COMPONENTS = new InjectionToken<CodeExamplesMap>('PREVIEWS_COMPONENTS');

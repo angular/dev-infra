@@ -24,7 +24,7 @@
     "bazel/integration/tests/**",
     "bazel-out/**",
     "dist/**",
-    "docs/markdown/examples/template/**",
+    "docs/**",
     "node_modules/**"
   ]
 }

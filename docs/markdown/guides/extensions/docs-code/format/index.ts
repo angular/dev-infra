@@ -1,9 +1,9 @@
 import {Tokens} from 'marked';
-import {DiffMetadata, calculateDiff} from './diff.js';
-import {highlightCode} from './highlight.js';
-import {extractRegions} from './region.js';
+import {DiffMetadata, calculateDiff} from './diff';
+import {highlightCode} from './highlight';
+import {extractRegions} from './region';
 import {JSDOM} from 'jsdom';
-import {expandRangeStringValues} from './range.js';
+import {expandRangeStringValues} from './range';
 
 /** Marked token for a custom docs element. */
 export interface CodeToken extends Tokens.Generic {

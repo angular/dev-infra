@@ -8,8 +8,8 @@
 
 import {isPlatformBrowser} from '@angular/common';
 import {Directive, ElementRef, OnInit, PLATFORM_ID, inject} from '@angular/core';
-import {isExternalLink} from '../../utils/index.js';
-import {WINDOW} from '../../providers/index.js';
+import {isExternalLink} from '../../utils/index';
+import {WINDOW} from '../../providers/index';
 
 /**
  * The directive will set target of anchor elements to '_blank' for the external links.

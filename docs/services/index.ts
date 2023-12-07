@@ -6,11 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-export * from './navigation-state.service.js';
-export {
-  TOC_SKIP_CONTENT_MARKER,
-  TableOfContentsLoader,
-} from './table-of-contents-loader.service.js';
-export {TableOfContentsScrollSpy} from './table-of-contents-scroll-spy.service.js';
-export * from './search.service.js';
-export * from './inject-async.service.js';
+export * from './navigation-state.service';
+export {TOC_SKIP_CONTENT_MARKER, TableOfContentsLoader} from './table-of-contents-loader.service';
+export {TableOfContentsScrollSpy} from './table-of-contents-scroll-spy.service';
+export * from './search.service';
+export * from './inject-async.service';

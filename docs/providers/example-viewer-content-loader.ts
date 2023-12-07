@@ -7,7 +7,7 @@
  */
 
 import {InjectionToken} from '@angular/core';
-import {ExampleViewerContentLoader} from '../interfaces/index.js';
+import {ExampleViewerContentLoader} from '../interfaces/index';
 
 export const EXAMPLE_VIEWER_CONTENT_LOADER = new InjectionToken<ExampleViewerContentLoader>(
   'EXAMPLE_VIEWER_CONTENT_LOADER',

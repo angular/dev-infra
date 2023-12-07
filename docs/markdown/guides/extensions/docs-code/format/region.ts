@@ -1,6 +1,6 @@
-import {CodeToken} from './index.js';
-import {regionParser} from '../regions/region-parser.js';
-import {FileType} from '../sanitizers/eslint.js';
+import {CodeToken} from './index';
+import {regionParser} from '../regions/region-parser';
+import {FileType} from '../sanitizers/eslint';
 
 /**
  * Updates the provided token to include the extracted region as the visible lines for the token.

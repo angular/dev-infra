@@ -8,13 +8,13 @@
 
 import {join} from 'path';
 import {readFile} from 'fs/promises';
-import {copyFolder, createFolder, removeFolder} from './file-system.js';
+import {copyFolder, createFolder, removeFolder} from './file-system';
 import jsdom from 'jsdom';
 import {glob} from 'glob';
-import {regionParser} from '../../guides/extensions/docs-code/regions/region-parser.js';
-import {appendCopyrightToFile} from './copyright.js';
-import {FileType} from '../../guides/extensions/docs-code/sanitizers/eslint.js';
-import {EXCLUDE_FILES_FOR_STACKBLITZ, STACKBLITZ_CONFIG_FILENAME} from './defaults.js';
+import {regionParser} from '../../guides/extensions/docs-code/regions/region-parser';
+import {appendCopyrightToFile} from './copyright';
+import {FileType} from '../../guides/extensions/docs-code/sanitizers/eslint';
+import {EXCLUDE_FILES_FOR_STACKBLITZ, STACKBLITZ_CONFIG_FILENAME} from './defaults';
 
 interface StackblitzConfig {
   title: string;

@@ -7,8 +7,8 @@
  */
 
 import {Injectable, inject} from '@angular/core';
-import {isMobile} from '../../utils/index.js';
-import {LOCAL_STORAGE, WINDOW} from '../../providers/index.js';
+import {isMobile} from '../../utils/index';
+import {LOCAL_STORAGE, WINDOW} from '../../providers/index';
 import {MatSnackBar} from '@angular/material/snack-bar';
 //import {ErrorSnackBar, ErrorSnackBarData} from '../core/services/errors-handling/error-snack-bar';
 let ErrorSnackBar: any = {};

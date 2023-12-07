@@ -1,6 +1,6 @@
 // Doc Steps/Ordered Doc section
 // Did somebody order a doc?
-@use '../../../../../shared/src/lib/styles/media-queries' as mq;
+@use '../media-queries' as mq;
 
 @mixin docs-steps() {
   .docs-steps {

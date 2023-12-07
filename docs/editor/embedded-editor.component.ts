@@ -22,22 +22,22 @@ import {
   signal,
 } from '@angular/core';
 import {takeUntilDestroyed, toObservable} from '@angular/core/rxjs-interop';
-import {IconComponent} from '../components/icon/icon.component.js';
+import {IconComponent} from '../components/icon/icon.component';
 import {MatTabGroup, MatTabsModule} from '@angular/material/tabs';
 import {distinctUntilChanged, map} from 'rxjs';
 
-import {MAX_RECOMMENDED_WEBCONTAINERS_INSTANCES} from './services/alert-manager.service.js';
+import {MAX_RECOMMENDED_WEBCONTAINERS_INSTANCES} from './services/alert-manager.service';
 
 import {AngularSplitModule} from 'angular-split';
-import {CodeEditor} from './code-editor/code-editor.component.js';
-import {DiagnosticsState} from './code-editor/services/diagnostics-state.service.js';
-import {EditorUiState} from './services/editor-ui-state.service.js';
-import {LoadingStep} from './services/node-runtime-sandbox.service.js';
-import {NodeRuntimeSandbox} from './services/node-runtime-sandbox.service.js';
-import {NodeRuntimeState} from './services/node-runtime-state.service.js';
-import {Preview} from './preview/preview.component.js';
-import {TerminalType} from './services/terminal-handler.service.js';
-import {Terminal} from './terminal/terminal.component.js';
+import {CodeEditor} from './code-editor/code-editor.component';
+import {DiagnosticsState} from './code-editor/services/diagnostics-state.service';
+import {EditorUiState} from './services/editor-ui-state.service';
+import {LoadingStep} from './services/node-runtime-sandbox.service';
+import {NodeRuntimeSandbox} from './services/node-runtime-sandbox.service';
+import {NodeRuntimeState} from './services/node-runtime-state.service';
+import {Preview} from './preview/preview.component';
+import {TerminalType} from './services/terminal-handler.service';
+import {Terminal} from './terminal/terminal.component';
 
 export const EMBEDDED_EDITOR_SELECTOR = 'embedded-editor';
 export const LARGE_EDITOR_WIDTH_BREAKPOINT = 950;

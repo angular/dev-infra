@@ -8,11 +8,11 @@
 
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {SearchDialog} from './search-dialog.component.js';
-import {WINDOW} from '../../providers/index.js';
-import {Search} from '../../services/index.js';
+import {SearchDialog} from './search-dialog.component';
+import {WINDOW} from '../../providers/index';
+import {Search} from '../../services/index';
 import {signal} from '@angular/core';
-import {FakeEventTarget} from '../../utils/testing-helper.js';
+import {FakeEventTarget} from '../../utils/testing-helper';
 
 describe('SearchDialog', () => {
   let component: SearchDialog;

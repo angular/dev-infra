@@ -49,6 +49,11 @@ def _get_module_name(testonly, user_module_name):
         # have an explicit `module_name` as we cannot rely on this macro in consumer workspaces.
         return "@angular/ng-dev/%s" % current_pkg
 
+    if current_pkg.startswith("docs") and user_module_name == None:
+        # We only auto-generate the `module_name` for targets in `ng-dev`. Other targets should
+        # have an explicit `module_name` as we cannot rely on this macro in consumer workspaces.
+        return "@angular/%s" % current_pkg
+
     return None
 
 def ts_library(name, testonly = False, deps = [], srcs = [], devmode_module = None, module_name = None, **kwargs):
@@ -94,11 +99,12 @@ def pkg_npm(build_package_json_from_template = False, deps = [], **kwargs):
         **kwargs
     )
 
-def ng_module(name, **kwargs):
+def ng_module(name, testonly = False, module_name = None, **kwargs):
     _assert_defaults_allowed_for_caller()
 
     _ng_module(
         name = name,
+        module_name = kwargs.pop("module_name", _get_module_name(testonly, module_name)),
         tsconfig = kwargs.pop("tsconfig", "//:tsconfig"),
         **kwargs
     )

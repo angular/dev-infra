@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Clipboard} from '@angular/cdk/clipboard';
-import {IconComponent} from '../icon/icon.component.js';
+import {IconComponent} from '../icon/icon.component';
 
 export const REMOVED_LINE_CLASS_NAME = '.hljs-ln-line.remove';
 export const CONFIRMATION_DISPLAY_TIME_MS = 2000;

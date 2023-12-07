@@ -8,13 +8,10 @@
 
 import {TestBed, discardPeriodicTasks, fakeAsync, tick} from '@angular/core/testing';
 
-import {WINDOW} from '../providers/index.js';
+import {WINDOW} from '../providers/index';
 
-import {TableOfContentsLoader} from './table-of-contents-loader.service.js';
-import {
-  SCROLL_EVENT_DELAY,
-  TableOfContentsScrollSpy,
-} from './table-of-contents-scroll-spy.service.js';
+import {TableOfContentsLoader} from './table-of-contents-loader.service';
+import {SCROLL_EVENT_DELAY, TableOfContentsScrollSpy} from './table-of-contents-scroll-spy.service';
 import {DOCUMENT} from '@angular/common';
 
 describe('TableOfContentsScrollSpy', () => {

@@ -17,26 +17,26 @@ import {
 } from '@typescript/vfs';
 import {Subject} from 'rxjs';
 
-import {TsVfsWorkerActions} from './enums/actions.js';
+import {TsVfsWorkerActions} from './enums/actions';
 
-import {AutocompleteRequest} from './interfaces/autocomplete-request.js';
-import {AutocompleteResponse} from './interfaces/autocomplete-response.js';
-import {CodeChangeRequest} from './interfaces/code-change-request.js';
-import {DefineTypesRequest, Typing} from './interfaces/define-types-request.js';
-import {DiagnosticsRequest, DiagnosticsResponse} from './interfaces/diagnostics-request.js';
-import {DisplayTooltipRequest} from './interfaces/display-tooltip-request.js';
-import {DisplayTooltipResponse} from './interfaces/display-tooltip-response.js';
-import {ActionMessage} from './interfaces/message.js';
+import {AutocompleteRequest} from './interfaces/autocomplete-request';
+import {AutocompleteResponse} from './interfaces/autocomplete-response';
+import {CodeChangeRequest} from './interfaces/code-change-request';
+import {DefineTypesRequest, Typing} from './interfaces/define-types-request';
+import {DiagnosticsRequest, DiagnosticsResponse} from './interfaces/diagnostics-request';
+import {DisplayTooltipRequest} from './interfaces/display-tooltip-request';
+import {DisplayTooltipResponse} from './interfaces/display-tooltip-response';
+import {ActionMessage} from './interfaces/message';
 
-import {getCompilerOpts} from './utils/compiler-opts.js';
-import {FORMAT_CODE_SETTINGS, USER_PREFERENCES} from './utils/ts-constants.js';
+import {getCompilerOpts} from './utils/compiler-opts';
+import {FORMAT_CODE_SETTINGS, USER_PREFERENCES} from './utils/ts-constants';
 import {
   fileExists,
   normalizeFileContent,
   normalizeFileName,
   updateFile,
   updateOrCreateFile,
-} from './utils/environment.js';
+} from './utils/environment';
 
 /**
  * Web worker uses TypeScript Virtual File System library to enrich code editor functionality i.e. :

@@ -11,6 +11,14 @@ import {copyFile, mkdir, readdir, rm, stat} from 'fs/promises';
 import {join} from 'path';
 
 // TODO(josephperrott): Determine if we can use the fs default version of copying directories.
+// TODO(josephperrott): Find a way to not require blank renaming of certain files during copying.
+
+/** Files which must be renamed to remove the .template suffix.  */
+const knownTemplateFilesForRename = [
+  // package.json.template must be used as ng_package does not allow floating package.json
+  // files within the npm package contents.
+  'package.json.template',
+];
 
 /**
  * Recursively copy folder and contents to the destigation, creating the destination folder
@@ -30,8 +38,14 @@ export async function copyFolder(source: string, destination: string) {
     if (file.startsWith('TMP_')) {
       continue;
     }
+
     const sourcePath = join(source, file);
-    const destPath = join(destination, file);
+    let destPath = join(destination, file);
+
+    // Rename the destination file path if the file needs to be renamed.
+    if (knownTemplateFilesForRename.includes(file)) {
+      destPath = join(destination, file.replace(/.template$/, ''));
+    }
 
     const stats = await stat(sourcePath);
     const isDirectory = await stats.isDirectory();

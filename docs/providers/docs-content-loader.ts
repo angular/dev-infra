@@ -8,7 +8,7 @@
 
 import {InjectionToken, inject} from '@angular/core';
 import {ResolveFn} from '@angular/router';
-import {DocContent, DocsContentLoader} from '../interfaces/index.js';
+import {DocContent, DocsContentLoader} from '../interfaces/index';
 
 export const DOCS_CONTENT_LOADER = new InjectionToken<DocsContentLoader>('DOCS_CONTENT_LOADER');
 

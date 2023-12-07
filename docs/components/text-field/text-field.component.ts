@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {IconComponent} from '../icon/icon.component.js';
+import {IconComponent} from '../icon/icon.component';
 
 @Component({
   selector: 'docs-text-field',

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {TsVfsWorkerActions} from '../enums/actions.js';
+import {TsVfsWorkerActions} from '../enums/actions';
 
 export interface ActionMessage<T = any> {
   action: TsVfsWorkerActions;

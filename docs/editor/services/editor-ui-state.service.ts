@@ -10,9 +10,9 @@ import {DestroyRef, inject, Injectable, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {filter, map, Subject} from 'rxjs';
 
-import {TutorialMetadata, TutorialType} from '../../interfaces/index.js';
+import {TutorialMetadata, TutorialType} from '../../interfaces/index';
 
-import {EmbeddedTutorialManager} from './embedded-tutorial-manager.service.js';
+import {EmbeddedTutorialManager} from './embedded-tutorial-manager.service';
 
 export interface EditorUiStateConfig {
   displayOnlyInteractiveTerminal: boolean;

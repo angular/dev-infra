@@ -8,7 +8,7 @@
 
 import {Directive, ElementRef, Input, inject} from '@angular/core';
 import {Highlightable} from '@angular/cdk/a11y';
-import {SearchResult} from '../../interfaces/search-results.js';
+import {SearchResult} from '../../interfaces/search-results';
 
 @Directive({
   selector: '[docsSearchItem]',

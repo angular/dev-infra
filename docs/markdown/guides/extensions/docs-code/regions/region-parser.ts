@@ -11,11 +11,11 @@
 // This also allows for documentation to be included within the source code more easily
 // in an extractable manner.
 
-import * as blockC from './region-matchers/block-c.js';
-import * as html from './region-matchers/html.js';
-import * as inlineC from './region-matchers/inline-c.js';
-import * as inlineCOnly from './region-matchers/inline-c-only.js';
-import * as inlineHash from './region-matchers/inline-hash.js';
+import * as blockC from './region-matchers/block-c';
+import * as html from './region-matchers/html';
+import * as inlineC from './region-matchers/inline-c';
+import * as inlineCOnly from './region-matchers/inline-c-only';
+import * as inlineHash from './region-matchers/inline-hash';
 
 const WHOLE_FILE_REGION_NAME = '';
 const DEFAULT_PLASTER = '. . .';

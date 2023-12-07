@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {anchorTarget} from '../helpers.js';
+import {anchorTarget} from '../helpers';
 import {RendererApi} from 'marked';
 
 export const linkRender: RendererApi['link'] = (href, title, text) => {

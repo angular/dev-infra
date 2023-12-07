@@ -8,7 +8,7 @@
 
 import {TestBed} from '@angular/core/testing';
 
-import {DownloadManager} from './download-manager.service.js';
+import {DownloadManager} from './download-manager.service';
 
 describe('DownloadManager', () => {
   let service: DownloadManager;

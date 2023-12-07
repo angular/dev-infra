@@ -8,7 +8,7 @@
 
 import {TestBed} from '@angular/core/testing';
 
-import {ALLOWED_COMMAND_PREFIXES, CommandValidator} from './command-validator.service.js';
+import {ALLOWED_COMMAND_PREFIXES, CommandValidator} from './command-validator.service';
 
 describe('CommandValidator', () => {
   let service: CommandValidator;

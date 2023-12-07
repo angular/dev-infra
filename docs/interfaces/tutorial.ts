@@ -7,7 +7,7 @@
  */
 
 import type {FileSystemTree} from '@webcontainer/api';
-import {NavigationItem} from './navigation-item.js';
+import {NavigationItem} from './navigation-item';
 
 /** the step is used only in this function to sort the nav items */
 export type TutorialNavigationItemWithStep = TutorialNavigationItem & {

@@ -7,7 +7,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {normalizePath, removeTrailingSlash} from '../utils/index.js';
+import {normalizePath, removeTrailingSlash} from '../utils/index';
 
 @Pipe({
   name: 'relativeLink',

@@ -8,8 +8,10 @@
 
 import {DOCUMENT, isPlatformBrowser} from '@angular/common';
 import {EnvironmentInjector, Injectable, PLATFORM_ID, inject} from '@angular/core';
-import {generateZip} from '../../utils/index.js';
-import {injectAsync} from '../../services/index.js';
+import {generateZip} from '../../utils/index';
+
+// TODO(josephperrott): Determine how we can load the sandbox dynamically again.
+import {NodeRuntimeSandbox} from './node-runtime-sandbox.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,9 +25,7 @@ export class DownloadManager {
    * Generate ZIP with the current state of the solution in the EmbeddedEditor
    */
   async downloadCurrentStateOfTheSolution(name: string) {
-    const nodeRuntimeSandbox = await injectAsync(this.environmentInjector, () =>
-      import('./node-runtime-sandbox.service.js').then((c) => c.NodeRuntimeSandbox),
-    );
+    const nodeRuntimeSandbox = inject(NodeRuntimeSandbox);
 
     const files = await nodeRuntimeSandbox.getSolutionFiles();
     const content = await generateZip(files);

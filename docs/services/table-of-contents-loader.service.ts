@@ -9,7 +9,7 @@
 import {DOCUMENT, isPlatformBrowser} from '@angular/common';
 import {inject, Injectable, PLATFORM_ID} from '@angular/core';
 
-import {TableOfContentsItem, TableOfContentsLevel} from '../interfaces/index.js';
+import {TableOfContentsItem, TableOfContentsLevel} from '../interfaces/index';
 
 /**
  * Name of an attribute that is set on an element that should be

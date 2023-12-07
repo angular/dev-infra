@@ -8,8 +8,8 @@
 
 import {RendererApi} from 'marked';
 
-import {getPageTitle} from '../utils.js';
-import {getHeaderId} from '../state.js';
+import {getPageTitle} from '../utils';
+import {getHeaderId} from '../state';
 
 export const headingRender: RendererApi['heading'] = (text, level, raw) => {
   if (level === 1) {
