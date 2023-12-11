@@ -25,7 +25,7 @@ def _generate_guides(ctx):
         # because we want to preserve directories for the input files and `declare_file` expects a
         # path that is relative to the current package. We don't use `.replace`
         # here because the extension can be also in upper case.
-        relative_basepath = path_relative_to_label(ctx.label, input_file.short_path)[:-len(".md")]
+        relative_basepath = path_relative_to_label(ctx.label, input_file.short_path)
 
         # For each input file "xxx.md", we want to write an output file "xxx.html"
         html_outputs += [ctx.actions.declare_file("%s.html" % relative_basepath)]
