@@ -24,8 +24,7 @@ async function main() {
     const markdownContent = readFileSync(filePath, {encoding: 'utf8'});
     const htmlOutputContent = await parseMarkdown(markdownContent);
 
-    // The expected file name structure is the [name of the file].md.html.
-    const htmlFileName = filePath + '.html';
+    const htmlFileName = filePath.substring(0, filePath.length - '.md'.length) + '.html';
     const htmlOutputPath = path.join(outputFilenameExecRootRelativePath, htmlFileName);
 
     writeFileSync(htmlOutputPath, htmlOutputContent, {encoding: 'utf8'});
