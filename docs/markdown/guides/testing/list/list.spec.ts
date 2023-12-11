@@ -10,7 +10,7 @@ describe('markdown to html', () => {
     const markdownContent = await readFile(runfiles.resolvePackageRelative('list/list.md'), {
       encoding: 'utf-8',
     });
-    markdownDocument = JSDOM.fragment(await parseMarkdown(markdownContent));
+    markdownDocument = JSDOM.fragment(await parseMarkdown(markdownContent, {}));
   });
 
   it('should wrap lists in custom classes', () => {

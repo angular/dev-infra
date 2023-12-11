@@ -22,8 +22,14 @@ import {docsDecorativeHeaderExtension} from './extensions/docs-decorative-header
 import {docsCodeBlockExtension} from './extensions/docs-code/docs-code-block';
 import {docsCodeExtension} from './extensions/docs-code/docs-code';
 import {docsCodeMultifileExtension} from './extensions/docs-code/docs-code-multifile';
+import {ParserContext, setContext} from './utils';
 
-export async function parseMarkdown(markdownContent: string): Promise<string> {
+export async function parseMarkdown(
+  markdownContent: string,
+  context: ParserContext,
+): Promise<string> {
+  setContext(context);
+
   marked.use({
     hooks,
     renderer,

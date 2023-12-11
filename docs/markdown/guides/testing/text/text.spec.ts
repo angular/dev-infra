@@ -10,7 +10,7 @@ describe('markdown to html', () => {
     const markdownContent = await readFile(runfiles.resolvePackageRelative('text/text.md'), {
       encoding: 'utf-8',
     });
-    markdownDocument = JSDOM.fragment(await parseMarkdown(markdownContent));
+    markdownDocument = JSDOM.fragment(await parseMarkdown(markdownContent, {}));
   });
 
   it('should wrap emoji in custom classes', () => {

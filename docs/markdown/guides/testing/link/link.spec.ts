@@ -8,7 +8,7 @@ describe('markdown to html', () => {
     const markdownContent = await readFile(runfiles.resolvePackageRelative('link/link.md'), {
       encoding: 'utf-8',
     });
-    parsedMarkdown = await parseMarkdown(markdownContent);
+    parsedMarkdown = await parseMarkdown(markdownContent, {});
   });
 
   it('should render external links with _blank target', () => {

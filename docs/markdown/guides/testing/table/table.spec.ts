@@ -8,7 +8,7 @@ describe('markdown to html', () => {
     const markdownContent = await readFile(runfiles.resolvePackageRelative('table/table.md'), {
       encoding: 'utf-8',
     });
-    parsedMarkdown = await parseMarkdown(markdownContent);
+    parsedMarkdown = await parseMarkdown(markdownContent, {});
   });
 
   it('should wrap the table in custom div', () => {
