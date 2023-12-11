@@ -39,10 +39,13 @@ ts_library(
     ),
     deps = [
         ":search-dialog",
+        "//docs/components/algolia-icon",
         "//docs/providers",
         "//docs/services",
         "//docs/utils:testing-helper",
         "@npm//@angular/core",
+        "@npm//@angular/platform-browser",
+        "@npm//@angular/router",
         "@npm//@types/jasmine",
     ],
 )

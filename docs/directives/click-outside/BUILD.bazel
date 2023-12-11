@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "ng_module")
+load("//tools:defaults.bzl", "karma_web_test", "ng_module", "ts_library")
 
 ng_module(
     name = "click-outside",
@@ -12,4 +12,24 @@ ng_module(
         "@npm//@angular/common",
         "@npm//@angular/core",
     ],
+)
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob(
+        ["*.spec.ts"],
+    ),
+    deps = [
+        ":click-outside",
+        "@npm//@angular/core",
+        "@npm//@angular/platform-browser",
+        "@npm//@angular/router",
+        "@npm//@types/jasmine",
+    ],
+)
+
+karma_web_test(
+    name = "test",
+    specs = [":test_lib"],
 )

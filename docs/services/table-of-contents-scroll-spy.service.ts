@@ -66,7 +66,7 @@ export class TableOfContentsScrollSpy {
     }
   }
 
-  offsetToSection(id: string): void {
+  private offsetToSection(id: string): void {
     const section = this.document.getElementById(id);
     section?.scrollIntoView({block: 'start'});
     // Here we need to set the active item manually because scroll events might not be fired

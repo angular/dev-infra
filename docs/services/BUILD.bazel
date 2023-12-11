@@ -43,6 +43,7 @@ ts_library(
     ),
     deps = [
         ":lib",
+        "//docs/interfaces",
         "//docs/providers",
         "@npm//@angular/common",
         "@npm//@angular/core",

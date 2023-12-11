@@ -8,11 +8,12 @@
 
 import {TestBed, discardPeriodicTasks, fakeAsync, tick} from '@angular/core/testing';
 
-import {WINDOW} from '../providers/index';
+import {WINDOW} from '../providers';
 
 import {TableOfContentsLoader} from './table-of-contents-loader.service';
 import {SCROLL_EVENT_DELAY, TableOfContentsScrollSpy} from './table-of-contents-scroll-spy.service';
-import {DOCUMENT} from '@angular/common';
+import {DOCUMENT, ViewportScroller} from '@angular/common';
+import {TableOfContentsLevel} from '../interfaces';
 
 describe('TableOfContentsScrollSpy', () => {
   let service: TableOfContentsScrollSpy;
@@ -20,13 +21,48 @@ describe('TableOfContentsScrollSpy', () => {
   const fakeWindow = {
     addEventListener: () => {},
     removeEventListener: () => {},
+    scrollY: 0,
   };
+  const fakeToCItems = [
+    {
+      id: 'h2',
+      level: TableOfContentsLevel.H2,
+      title: 'h2',
+      top: 100,
+    },
+    {
+      id: 'first',
+      level: TableOfContentsLevel.H3,
+      title: 'first',
+      top: 400,
+    },
+    {
+      id: 'second',
+      level: TableOfContentsLevel.H3,
+      title: 'second',
+      top: 900,
+    },
+    {
+      id: 'third',
+      level: TableOfContentsLevel.H3,
+      title: 'third',
+      top: 1200,
+    },
+    {
+      id: 'fourth',
+      level: TableOfContentsLevel.H3,
+      title: 'fourth',
+      top: 1900,
+    },
+  ];
 
   beforeEach(() => {
     tableOfContentsLoaderSpy = jasmine.createSpyObj<TableOfContentsLoader>(
       'TableOfContentsLoader',
       ['tableOfContentItems', 'updateHeadingsTopValue'],
     );
+    tableOfContentsLoaderSpy.tableOfContentItems = fakeToCItems;
+
     TestBed.configureTestingModule({
       providers: [
         TableOfContentsScrollSpy,
@@ -51,6 +87,17 @@ describe('TableOfContentsScrollSpy', () => {
     expect(service.activeItemId()).toBeNull();
   });
 
+  it('should call scrollToPosition([0, 0]) once scrollToTop was invoked', () => {
+    const scrollToPositionSpy = spyOn<ViewportScroller>(
+      service['viewportScroller'],
+      'scrollToPosition',
+    );
+
+    service.scrollToTop();
+
+    expect(scrollToPositionSpy).toHaveBeenCalledOnceWith([0, 0]);
+  });
+
   it(`should only fire setActiveItemId every ${SCROLL_EVENT_DELAY}ms when scrolling`, fakeAsync(() => {
     const doc = TestBed.inject(DOCUMENT);
     const scrollableContainer = doc;
@@ -72,6 +119,36 @@ describe('TableOfContentsScrollSpy', () => {
     tick(1);
 
     expect(setActiveItemIdSpy).toHaveBeenCalled();
+
+    discardPeriodicTasks();
+  }));
+
+  it(`should set active item when window scrollY is greater than calculated section top value`, fakeAsync(() => {
+    const doc = TestBed.inject(DOCUMENT);
+    const scrollableContainer = doc;
+
+    service.startListeningToScroll(doc.querySelector('fake-selector'));
+
+    fakeWindow.scrollY = 1238;
+    scrollableContainer.dispatchEvent(new Event('scroll'));
+    tick(SCROLL_EVENT_DELAY);
+
+    expect(service.activeItemId()).toEqual('third');
+
+    discardPeriodicTasks();
+  }));
+
+  it(`should set null as active item when window scrollY is lesser than the top value of the first section`, fakeAsync(() => {
+    const doc = TestBed.inject(DOCUMENT);
+    const scrollableContainer = doc;
+
+    service.startListeningToScroll(doc.querySelector('fake-selector'));
+
+    fakeWindow.scrollY = 99;
+    scrollableContainer.dispatchEvent(new Event('scroll'));
+    tick(SCROLL_EVENT_DELAY);
+
+    expect(service.activeItemId()).toEqual(null);
 
     discardPeriodicTasks();
   }));

@@ -36,7 +36,11 @@ ts_library(
     ),
     deps = [
         ":breadcrumb",
+        "//docs/interfaces",
+        "//docs/services",
         "@npm//@angular/core",
+        "@npm//@angular/platform-browser",
+        "@npm//@angular/router",
         "@npm//@types/jasmine",
     ],
 )
