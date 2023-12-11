@@ -11,7 +11,7 @@ describe('markdown to html', () => {
       runfiles.resolvePackageRelative('docs-callout/docs-callout.md'),
       {encoding: 'utf-8'},
     );
-    markdownDocument = JSDOM.fragment(await parseMarkdown(markdownContent));
+    markdownDocument = JSDOM.fragment(await parseMarkdown(markdownContent, {}));
   });
 
   it(`defaults to a helpful callout`, () => {

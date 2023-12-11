@@ -11,7 +11,7 @@ describe('markdown to html', () => {
       runfiles.resolvePackageRelative('docs-card/docs-card.md'),
       {encoding: 'utf-8'},
     );
-    markdownDocument = JSDOM.fragment(await parseMarkdown(markdownContent));
+    markdownDocument = JSDOM.fragment(await parseMarkdown(markdownContent, {}));
   });
 
   it('creates cards with no links', () => {

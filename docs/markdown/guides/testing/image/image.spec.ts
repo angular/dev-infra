@@ -10,7 +10,7 @@ describe('markdown to html', () => {
     const markdownContent = await readFile(runfiles.resolvePackageRelative('image/image.md'), {
       encoding: 'utf-8',
     });
-    markdownDocument = JSDOM.fragment(await parseMarkdown(markdownContent));
+    markdownDocument = JSDOM.fragment(await parseMarkdown(markdownContent, {}));
   });
 
   it('should wrap images in custom classes', () => {

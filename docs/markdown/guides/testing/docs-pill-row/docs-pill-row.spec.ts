@@ -11,7 +11,7 @@ describe('markdown to html', () => {
       runfiles.resolvePackageRelative('docs-pill-row/docs-pill-row.md'),
       {encoding: 'utf-8'},
     );
-    markdownDocument = JSDOM.fragment(await parseMarkdown(markdownContent));
+    markdownDocument = JSDOM.fragment(await parseMarkdown(markdownContent, {}));
   });
 
   it('should create a nav container with all of the docs pills inside', () => {

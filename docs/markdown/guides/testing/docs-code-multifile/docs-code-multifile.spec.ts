@@ -11,7 +11,7 @@ describe('markdown to html', () => {
       runfiles.resolvePackageRelative('docs-code-multifile/docs-code-multifile.md'),
       {encoding: 'utf-8'},
     );
-    markdownDocument = JSDOM.fragment(await parseMarkdown(markdownContent));
+    markdownDocument = JSDOM.fragment(await parseMarkdown(markdownContent, {}));
   });
 
   it('converts triple ticks into a code block', () => {
