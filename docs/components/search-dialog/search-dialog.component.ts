@@ -89,7 +89,9 @@ export class SearchDialog implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.dialog?.nativeElement.showModal?.();
+    if (!this.dialog?.nativeElement.open) {
+      this.dialog?.nativeElement.showModal?.();
+    }
 
     if (!this.items) {
       return;

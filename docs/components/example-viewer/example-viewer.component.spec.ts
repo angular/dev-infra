@@ -8,12 +8,8 @@
 
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {ExampleViewer} from './example-viewer.component';
-import {
-  DocsContentLoader,
-  ExampleMetadata,
-  ExampleViewerContentLoader,
-} from '../../interfaces/index';
-import {DOCS_CONTENT_LOADER, EXAMPLE_VIEWER_CONTENT_LOADER} from '../../providers/index';
+import {DocsContentLoader, ExampleMetadata, ExampleViewerContentLoader} from '../../interfaces';
+import {DOCS_CONTENT_LOADER, EXAMPLE_VIEWER_CONTENT_LOADER} from '../../providers';
 import {Component} from '@angular/core';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {HarnessLoader} from '@angular/cdk/testing';
@@ -176,7 +172,7 @@ describe('ExampleViewer', () => {
     expect(component.expanded()).toBeFalse();
   }));
 
-  //TODO(josephperrott): enable once the docs-viewer/example-viewer circle is sorted out.
+  // TODO(josephperrott): enable once the docs-viewer/example-viewer circle is sorted out.
   xit('should call clipboard service when clicked on copy source code', waitForAsync(async () => {
     const expectedCodeSnippetContent = 'typescript code';
     component.metadata = getMetadata({
@@ -195,7 +191,7 @@ describe('ExampleViewer', () => {
     const button = fixture.debugElement.query(By.directive(CopySourceCodeButton)).nativeElement;
     button.click();
 
-    expect(spy.calls.argsFor(0)[0].trim()).toBe(expectedCodeSnippetContent);
+    expect(spy.calls.argsFor(0)[0]?.trim()).toBe(expectedCodeSnippetContent);
   }));
 
   it('should call clipboard service when clicked on copy example link', waitForAsync(async () => {
@@ -210,7 +206,7 @@ describe('ExampleViewer', () => {
       By.css('button.docs-example-copy-link'),
     ).nativeElement;
     button.click();
-    expect(spy.calls.argsFor(0)[0].trim()).toBe(`http://localhost:9876/context.html#example-1`);
+    expect(spy.calls.argsFor(0)[0].trim()).toBe(`${window.origin}/context.html#example-1`);
   }));
 });
 
