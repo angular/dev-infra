@@ -43,6 +43,7 @@ ts_library(
         "//docs/providers",
         "//docs/utils:testing-helper",
         "@npm//@angular/core",
+        "@npm//@angular/material",
         "@npm//@types/jasmine",
         "@npm//@webcontainer/api",
         "@npm//rxjs",
