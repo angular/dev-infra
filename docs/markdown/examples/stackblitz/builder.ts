@@ -8,11 +8,11 @@
 
 import {join} from 'path';
 import {readFile} from 'fs/promises';
-import {copyFolder, createFolder, removeFolder} from './file-system';
+import {copyFolder, createFolder, removeFolder} from '../shared/file-system';
 import jsdom from 'jsdom';
 import {glob} from 'glob';
 import {regionParser} from '../../guides/extensions/docs-code/regions/region-parser';
-import {appendCopyrightToFile} from './copyright';
+import {appendCopyrightToFile} from '../shared/copyright';
 import {FileType} from '../../guides/extensions/docs-code/sanitizers/eslint';
 import {EXCLUDE_FILES_FOR_STACKBLITZ, STACKBLITZ_CONFIG_FILENAME} from './defaults';
 

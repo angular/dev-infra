@@ -35,6 +35,18 @@ esbuild_esm_bundle(
     ],
 )
 
+esbuild_esm_bundle(
+    name = "zip-bundle",
+    entry_point = "//docs/markdown/examples/zip:index.ts",
+    output = "zip.mjs",
+    platform = "node",
+    target = "es2022",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//docs/markdown/examples/zip:index",
+    ],
+)
+
 exports_files([
     "_guides.bzl",
     "_stackblitz.bzl",
@@ -49,6 +61,12 @@ nodejs_binary(
         "@npm//jsdom",
     ],
     entry_point = "//docs/markdown:stackblitz.mjs",
+    visibility = ["//visibility:public"],
+)
+
+nodejs_binary(
+    name = "zip",
+    entry_point = "//docs/markdown:zip.mjs",
     visibility = ["//visibility:public"],
 )
 
