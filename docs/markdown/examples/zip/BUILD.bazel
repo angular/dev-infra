@@ -3,7 +3,7 @@ load("//tools:defaults.bzl", "ts_library")
 package(default_visibility = ["//visibility:public"])
 
 ts_library(
-    name = "stackblitz",
+    name = "zip",
     srcs = glob(
         [
             "*.ts",
@@ -13,12 +13,12 @@ ts_library(
         ],
     ),
     deps = [
+        "//docs/interfaces",
         "//docs/markdown/examples/shared",
         "//docs/markdown/guides",
-        "@npm//@types/jsdom",
         "@npm//@types/node",
         "@npm//glob",
-        "@npm//jsdom",
+        "@npm//jszip",
     ],
 )
 
@@ -31,7 +31,7 @@ ts_library(
         "//docs:__subpackages__",
     ],
     deps = [
-        ":stackblitz",
+        ":zip",
         "@npm//@types/node",
     ],
 )
