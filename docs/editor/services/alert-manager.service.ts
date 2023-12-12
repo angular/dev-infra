@@ -25,7 +25,10 @@ export enum AlertReason {
 export class AlertManager {
   private readonly localStorage = inject(LOCAL_STORAGE);
   private readonly window = inject(WINDOW);
-  private snackBar = inject(MatSnackBar);
+  private readonly snackBar = inject(MatSnackBar);
+
+  // Note: used as a property to allow changing in tests
+  private readonly isMobile = isMobile;
 
   init(): void {
     this.listenToLocalStorageValuesChange();
@@ -80,7 +83,7 @@ export class AlertManager {
   }
 
   private checkDevice() {
-    if (isMobile) {
+    if (this.isMobile) {
       this.openSnackBar(AlertReason.MOBILE);
     }
   }
