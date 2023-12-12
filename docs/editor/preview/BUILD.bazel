@@ -43,6 +43,7 @@ ng_module(
         "//docs/utils",
         "@npm//@angular/common",
         "@npm//@angular/core",
+        "@npm//@angular/platform-browser",
     ],
 )
 
