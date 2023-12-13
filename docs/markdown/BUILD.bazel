@@ -47,9 +47,35 @@ esbuild_esm_bundle(
     ],
 )
 
+esbuild_esm_bundle(
+    name = "playground-bundle",
+    entry_point = "//docs/markdown/tutorial:playground.ts",
+    output = "playground.mjs",
+    platform = "node",
+    target = "es2022",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//docs/markdown/tutorial:playground",
+    ],
+)
+
+esbuild_esm_bundle(
+    name = "tutorial-bundle",
+    entry_point = "//docs/markdown/tutorial:tutorial.ts",
+    output = "tutorial.mjs",
+    platform = "node",
+    target = "es2022",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//docs/markdown/tutorial",
+    ],
+)
+
 exports_files([
     "_guides.bzl",
     "_stackblitz.bzl",
+    "_playground.bzl",
+    "_tutorial.bzl",
     "BUILD.bazel",
 ])
 
@@ -76,5 +102,17 @@ nodejs_binary(
         "@npm//jsdom",
     ],
     entry_point = "//docs/markdown:guides.mjs",
+    visibility = ["//visibility:public"],
+)
+
+nodejs_binary(
+    name = "playground",
+    entry_point = "//docs/markdown:playground.mjs",
+    visibility = ["//visibility:public"],
+)
+
+nodejs_binary(
+    name = "tutorial",
+    entry_point = "//docs/markdown:tutorial.mjs",
     visibility = ["//visibility:public"],
 )
