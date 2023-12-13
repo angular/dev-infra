@@ -81021,7 +81021,10 @@ var Prettier = class extends Formatter {
       "**/*.json",
       "**/*.{yml,yaml}"
     ];
-    this.configPath = this.config["prettier"] ? ChildProcess.spawnSync(this.binaryFilePath, ["--find-config-path", "."]).stdout.trim() : "";
+    this.configPath = this.config["prettier"] ? ChildProcess.spawnSync(this.binaryFilePath, [
+      "--find-config-path",
+      join4(process.cwd(), "dummy.js")
+    ]).stdout.trim() : "";
     this.actions = {
       check: {
         commandFlags: `--config ${this.configPath} --check`,
