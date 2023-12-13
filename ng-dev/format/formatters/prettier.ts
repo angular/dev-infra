@@ -33,7 +33,10 @@ export class Prettier extends Formatter {
    * to discover it repeatedly for each execution.
    */
   private configPath = this.config['prettier']
-    ? ChildProcess.spawnSync(this.binaryFilePath, ['--find-config-path', '.']).stdout.trim()
+    ? ChildProcess.spawnSync(this.binaryFilePath, [
+        '--find-config-path',
+        join(process.cwd(), 'dummy.js'),
+      ]).stdout.trim()
     : '';
 
   override actions = {
