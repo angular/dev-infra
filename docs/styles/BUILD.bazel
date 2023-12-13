@@ -6,6 +6,5 @@ sass_library(
     visibility = [
         "//docs:__pkg__",
         "//docs/components:__subpackages__",
-        "//docs/editor:__pkg__",
     ],
 )

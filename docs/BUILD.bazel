@@ -11,7 +11,6 @@ ng_module(
         "//docs/components",
         "//docs/constants",
         "//docs/directives",
-        "//docs/editor",
         "//docs/interfaces",
         "//docs/pipes",
         "//docs/providers",
@@ -25,7 +24,6 @@ ng_package(
     srcs = [
         "index.bzl",
         "package.json",
-        "//docs/editor/code-editor/workers:bundle.js",
         "//docs/icons",
         "//docs/markdown:BUILD.bazel",
         "//docs/markdown:_guides.bzl",
