@@ -19,6 +19,7 @@ defaults:
 
 jobs:
   lint:
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
       # Because the checkout and setup node action is contained in the dev-infra repo, we must
@@ -41,6 +42,7 @@ jobs:
         run: yarn tsc -p tsconfig.json
 
   test:
+    timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
       # Because the checkout and setup node action is contained in the dev-infra repo, we must
@@ -54,6 +56,7 @@ jobs:
       - run: yarn bazel test -- //...
 
   test-win:
+    timeout-minutes: 30
     runs-on: windows-latest
     steps:
       # Because the checkout and setup node action is contained in the dev-infra repo, we must
@@ -67,6 +70,7 @@ jobs:
       - run: yarn bazel test --test_tag_filters=windows --build_tests_only -- ... -bazel/remote-execution/...
 
   test-macos:
+    timeout-minutes: 30
     runs-on: macos-latest
     steps:
       # Because the checkout and setup node action is contained in the dev-infra repo, we must
