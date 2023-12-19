@@ -17,7 +17,7 @@ ts_library(
         "//docs/markdown/examples/shared",
         "//docs/markdown/guides",
         "@npm//@types/node",
-        "@npm//glob",
+        "@npm//fast-glob",
         "@npm//jszip",
     ],
 )

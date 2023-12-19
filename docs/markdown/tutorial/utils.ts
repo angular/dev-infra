@@ -1,4 +1,4 @@
-import {glob} from 'glob';
+import {glob} from 'fast-glob';
 import {FileAndContentRecord, TutorialConfig} from '../../interfaces';
 import {dirname, join} from 'path';
 import {existsSync, readFileSync} from 'fs';
@@ -52,7 +52,7 @@ export async function addDirectoryToFilesRecord(
 ): Promise<void> {
   const exampleFilePaths = await glob('**/*', {
     cwd: dir,
-    nodir: true,
+    onlyFiles: true,
   });
 
   for (let path of exampleFilePaths) {
@@ -68,7 +68,7 @@ export async function findAllConfigs(dir: string): Promise<Record<string, Tutori
 
   const paths = await glob('**/config.json', {
     cwd: dir,
-    nodir: true,
+    onlyFiles: true,
   });
 
   for (const path of paths) {

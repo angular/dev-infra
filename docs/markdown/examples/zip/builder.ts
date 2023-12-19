@@ -9,7 +9,7 @@
 import {join} from 'path';
 import {readFile} from 'fs/promises';
 import {copyFolder, createFolder} from '../shared/file-system';
-import {glob} from 'glob';
+import {glob} from 'fast-glob';
 import {regionParser} from '../../guides/extensions/docs-code/regions/region-parser';
 import {appendCopyrightToFile} from '../shared/copyright';
 import {FileType} from '../../guides/extensions/docs-code/sanitizers/eslint';
@@ -61,7 +61,7 @@ async function getIncludedPaths(workingDir: string, config: ZipConfig): Promise<
   ];
   return glob(defaultIncludes, {
     cwd: workingDir,
-    nodir: true,
+    onlyFiles: true,
     dot: true,
     ignore: config.ignore,
   });

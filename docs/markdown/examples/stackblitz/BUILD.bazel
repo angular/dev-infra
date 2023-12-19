@@ -17,7 +17,7 @@ ts_library(
         "//docs/markdown/guides",
         "@npm//@types/jsdom",
         "@npm//@types/node",
-        "@npm//glob",
+        "@npm//fast-glob",
         "@npm//jsdom",
     ],
 )

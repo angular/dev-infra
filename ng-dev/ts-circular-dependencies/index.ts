@@ -11,7 +11,7 @@ import {isAbsolute, relative, resolve} from 'path';
 import {Argv} from 'yargs';
 
 import ts from 'typescript';
-import {globSync} from 'glob';
+import {globSync} from 'fast-glob';
 
 import {green, Log, yellow} from '../utils/logging.js';
 
