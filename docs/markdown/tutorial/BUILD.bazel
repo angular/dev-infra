@@ -17,7 +17,7 @@ ts_library(
         "//docs/interfaces",
         "@npm//@types/node",
         "@npm//@webcontainer/api",
-        "@npm//glob",
+        "@npm//fast-glob",
     ],
 )
 
@@ -33,7 +33,7 @@ ts_library(
         ":editor",
         "//docs/interfaces",
         "@npm//@types/node",
-        "@npm//glob",
+        "@npm//fast-glob",
     ],
 )
 

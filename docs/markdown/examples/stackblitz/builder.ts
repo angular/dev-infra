@@ -10,7 +10,7 @@ import {join} from 'path';
 import {readFile} from 'fs/promises';
 import {copyFolder, createFolder, removeFolder} from '../shared/file-system';
 import jsdom from 'jsdom';
-import {glob} from 'glob';
+import {glob} from 'fast-glob';
 import {regionParser} from '../../guides/extensions/docs-code/regions/region-parser';
 import {appendCopyrightToFile} from '../shared/copyright';
 import {FileType} from '../../guides/extensions/docs-code/sanitizers/eslint';
@@ -59,7 +59,7 @@ async function generateStackblitzHtml(
   ];
   const exampleFilePaths = await glob(defaultIncludes, {
     cwd: temporaryExampleDir,
-    nodir: true,
+    onlyFiles: true,
     dot: true,
     ignore: stackBlitzConfig.ignore,
   });
