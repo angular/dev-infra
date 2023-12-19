@@ -178,7 +178,7 @@
     "rxjs": "^7.4.0",
     "semver": "^7.5.4",
     "spdx-satisfies": "^5.0.1",
-    "stylelint": "^15.1.0",
+    "stylelint": "^16.0.0",
     "supports-color": "9.4.0",
     "terser": "5.24.0",
     "ts-node": "^10.8.1",
