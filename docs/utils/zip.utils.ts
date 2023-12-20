@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-type FileAndContent = any;
+import {FileAndContent} from '../interfaces';
 
 // TODO(josephperrott): Determine how we can load the jszip package dynamically again.
 import JSZip from 'jszip';

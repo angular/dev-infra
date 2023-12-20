@@ -7,7 +7,7 @@
  */
 
 import {normalizePath} from './navigation.utils';
-type FileAndContent = any;
+import {FileAndContent} from '../interfaces';
 
 interface DirEnt<T> {
   name: T;
