@@ -157,6 +157,9 @@ export class MergeTool {
       }
 
       if (
+        // If there is no target labeling then the pull request is always just directly merged, so
+        // the confirmation can be skipped.
+        !this.config.pullRequest.__noTargetLabeling &&
         // In cases where manual branch targeting is used, the user already confirmed.
         !this.flags.forceManualBranches &&
         this.flags.branchPrompt &&
