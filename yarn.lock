@@ -518,7 +518,7 @@ __metadata:
     "@lezer/common": "npm:^1.1.1"
     "@lezer/highlight": "npm:^1.2.0"
     "@lezer/javascript": "npm:^1.4.9"
-    "@microsoft/api-extractor": "npm:7.38.5"
+    "@microsoft/api-extractor": "npm:7.39.0"
     "@octokit/auth-app": "npm:6.0.1"
     "@octokit/core": "npm:5.0.2"
     "@octokit/graphql": "npm:7.0.2"
@@ -5169,9 +5169,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor@npm:7.38.5":
-  version: 7.38.5
-  resolution: "@microsoft/api-extractor@npm:7.38.5"
+"@microsoft/api-extractor@npm:7.39.0":
+  version: 7.39.0
+  resolution: "@microsoft/api-extractor@npm:7.39.0"
   dependencies:
     "@microsoft/api-extractor-model": "npm:7.28.3"
     "@microsoft/tsdoc": "npm:0.14.2"
@@ -5184,10 +5184,10 @@ __metadata:
     resolve: "npm:~1.22.1"
     semver: "npm:~7.5.4"
     source-map: "npm:~0.6.1"
-    typescript: "npm:~5.0.4"
+    typescript: "npm:5.3.3"
   bin:
     api-extractor: bin/api-extractor
-  checksum: 3aa78e60b0688bea4c31c5f6124d344fcb68de82c538301690442570a584a1d56cfa0344bb8253e2d95a8ec80b252cd5760ce2f69c23d7a970fec4700a58fc93
+  checksum: 6f1c0f770f2c26013fb1e4d382a77f923efef45fcde8e8ab951ac487697132c0548693d040fec24e257b6adcf6f607a4fcead0a15a328a7f0b8113debec8c993
   languageName: node
   linkType: hard
 
