@@ -25,7 +25,7 @@ import {
   Type,
   ViewContainerRef,
   ViewEncapsulation,
-  ɵInitialRenderPendingTasks as PendingRenderTasks,
+  ɵPendingTasks as PendingTasks,
   EventEmitter,
   Output,
 } from '@angular/core';
@@ -84,7 +84,7 @@ export class DocViewer implements OnChanges {
 
   // tslint:disable-next-line:no-unused-variable
   private animateContent = false;
-  private readonly pendingRenderTasks = inject(PendingRenderTasks);
+  private readonly pendingRenderTasks = inject(PendingTasks);
 
   private countOfExamples = 0;
 
