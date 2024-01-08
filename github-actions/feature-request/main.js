@@ -37281,7 +37281,7 @@ var require_dist_node29 = __commonJS({
         return sendRequestWithRetries(state, request, options, createdAt, retries);
       }
     }
-    var VERSION = "6.0.1";
+    var VERSION = "6.0.2";
     var import_auth_oauth_user2 = require_dist_node25();
     function createAppAuth2(options) {
       if (!options.appId) {
