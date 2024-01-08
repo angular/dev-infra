@@ -1668,14 +1668,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@redis/client@npm:1.5.12":
-  version: 1.5.12
-  resolution: "@redis/client@npm:1.5.12"
+"@redis/client@npm:1.5.13":
+  version: 1.5.13
+  resolution: "@redis/client@npm:1.5.13"
   dependencies:
     cluster-key-slot: "npm:1.1.2"
     generic-pool: "npm:3.9.0"
     yallist: "npm:4.0.0"
-  checksum: f9046cf4c18df31ed55aa6007324276aa9fb4b91a5bd626374d1e2a4bff8ed18e949ae5a2c29daf113bea97c9b2cb2a8c05179f4ce1972aa27eabf7f6819cb68
+  checksum: f9ddc81abd4117d7d44b76d0620114422eb6dfef17e5bdce993ea79f3b7184cdc3d8ffa81dd30cfe88c683bf1d7e0d7f8ee20f03bf9a5555724bf4586217c65c
   languageName: node
   linkType: hard
 
@@ -5464,7 +5464,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: "npm:37.105.3"
+    renovate: "npm:37.127.0"
   languageName: unknown
   linkType: soft
 
@@ -5523,13 +5523,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-html-parser@npm:6.1.11":
-  version: 6.1.11
-  resolution: "node-html-parser@npm:6.1.11"
+"node-html-parser@npm:6.1.12":
+  version: 6.1.12
+  resolution: "node-html-parser@npm:6.1.12"
   dependencies:
     css-select: "npm:^5.1.0"
     he: "npm:1.2.0"
-  checksum: 6874c4e218b53c2294429953b61bceaf963199cdbe6ccbc77a1045af5f3a03a3904ca385b6356215a3c9acb42b4f5963bae0ec825cc8f4aa57401824284cc92e
+  checksum: dfd75756b55642b37f8df91e79c35f38f2e6a48b01a309998e4b017c5cf3c98ab3c1edc54b707dfa32d36aff9b21076cd87bb1a93f97da4d0f0fe5e4e599daa5
   languageName: node
   linkType: hard
 
@@ -6031,17 +6031,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redis@npm:4.6.11":
-  version: 4.6.11
-  resolution: "redis@npm:4.6.11"
+"redis@npm:4.6.12":
+  version: 4.6.12
+  resolution: "redis@npm:4.6.12"
   dependencies:
     "@redis/bloom": "npm:1.2.0"
-    "@redis/client": "npm:1.5.12"
+    "@redis/client": "npm:1.5.13"
     "@redis/graph": "npm:1.1.1"
     "@redis/json": "npm:1.0.6"
     "@redis/search": "npm:1.1.6"
     "@redis/time-series": "npm:1.0.5"
-  checksum: e95ab63c661fb2cdd77fb8df0d4f07d9281ae623da491a8aff5abd9b11c3c02ef5f2f9fbabaacb4f2478b4ac66e70a44aa42d1b0fbf5e622ca344c6263932840
+  checksum: 5b0e865b3da218c75049ed66418f2c894733de0356c0ad331e2e8bfb55fbb84a5ba151c010dc89e9df668fb7a0e08ede6b3c64ae0b4536c2dc84e2a6da5b5be6
   languageName: node
   linkType: hard
 
@@ -6092,9 +6092,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:37.105.3":
-  version: 37.105.3
-  resolution: "renovate@npm:37.105.3"
+"renovate@npm:37.127.0":
+  version: 37.127.0
+  resolution: "renovate@npm:37.127.0"
   dependencies:
     "@aws-sdk/client-codecommit": "npm:3.363.0"
     "@aws-sdk/client-ec2": "npm:3.363.0"
@@ -6174,7 +6174,7 @@ __metadata:
     moo: "npm:0.5.2"
     ms: "npm:2.1.3"
     nanoid: "npm:3.3.7"
-    node-html-parser: "npm:6.1.11"
+    node-html-parser: "npm:6.1.12"
     openpgp: "npm:5.11.0"
     p-all: "npm:3.0.0"
     p-map: "npm:4.0.0"
@@ -6183,7 +6183,7 @@ __metadata:
     parse-link-header: "npm:2.0.0"
     prettier: "npm:3.1.1"
     re2: "npm:1.20.9"
-    redis: "npm:4.6.11"
+    redis: "npm:4.6.12"
     remark: "npm:13.0.0"
     remark-github: "npm:10.1.0"
     safe-stable-stringify: "npm:2.4.3"
@@ -6191,11 +6191,11 @@ __metadata:
     semver-stable: "npm:3.0.0"
     semver-utils: "npm:1.1.4"
     shlex: "npm:2.1.2"
-    simple-git: "npm:3.21.0"
+    simple-git: "npm:3.22.0"
     slugify: "npm:1.6.6"
     source-map-support: "npm:0.5.21"
     toml-eslint-parser: "npm:0.9.3"
-    traverse: "npm:0.6.7"
+    traverse: "npm:0.6.8"
     tslib: "npm:2.6.2"
     upath: "npm:2.0.1"
     url-join: "npm:4.0.1"
@@ -6209,7 +6209,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: dffe0b0a92847fde9a5d93d7fbc6648c1448c15fe0ff2851fe93f59f10f5422a66e6f93b7d26abb663763fd09959f263cc98d9ce03cb86bc85885a2706d5024c
+  checksum: 173453a9f1fe2bedf1843e9450e16878157f3b32df0d62bb21418ad7b4cb83280e566b57524dc3acf38c5ab2b5a428ef791ac84d309511fc0e0c3338186f3fd8
   languageName: node
   linkType: hard
 
@@ -6519,14 +6519,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"simple-git@npm:3.21.0":
-  version: 3.21.0
-  resolution: "simple-git@npm:3.21.0"
+"simple-git@npm:3.22.0":
+  version: 3.22.0
+  resolution: "simple-git@npm:3.22.0"
   dependencies:
     "@kwsites/file-exists": "npm:^1.1.1"
     "@kwsites/promise-deferred": "npm:^1.1.1"
     debug: "npm:^4.3.4"
-  checksum: b3083da7736f1bac448cfe7d359d257cfe128091041d23c3ed9a35cddab4d454abdac8d9928b33920e4eaf328d350b68d62bac18bf6fbf3f31d8ef05b6d20f02
+  checksum: cc12f7563e4de82a48c1b2517d5471f699b4e12ff25843d230854b6d8d567ca8ee9d6e6b40aa6aae214e956040563902c9a406e798df03b435fe863b829d0cc5
   languageName: node
   linkType: hard
 
@@ -6855,10 +6855,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"traverse@npm:0.6.7":
-  version: 0.6.7
-  resolution: "traverse@npm:0.6.7"
-  checksum: 97312cbcce0fdc640cf871a33c3f8efa85fbc2e21020bcbbf48b50883db4c41cfef580f3deaab67217291b761be4558fff34aab1baff7eb2b65323412458a489
+"traverse@npm:0.6.8":
+  version: 0.6.8
+  resolution: "traverse@npm:0.6.8"
+  checksum: d97a71be2ca895ff6b813840db37f9b5d88e30f7c4c4bd5b22c5c68ebc22d4a10c4599e02c51414523cc7ada3432e118ea62ebd53cf6f3a4f3aa951bd45072a9
   languageName: node
   linkType: hard
 
