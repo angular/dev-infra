@@ -34,7 +34,7 @@ ts_library(
     deps = [
         ":cookie-popup",
         "//docs/providers",
-        "//docs/utils:testing-helper",
+        "//docs/testing",
         "@npm//@angular/core",
         "@npm//@types/jasmine",
     ],

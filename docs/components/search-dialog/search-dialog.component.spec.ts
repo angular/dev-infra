@@ -11,7 +11,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {SearchDialog} from './search-dialog.component';
 import {WINDOW} from '../../providers';
 import {Search} from '../../services';
-import {FakeEventTarget} from '../../utils/testing-helper';
+import {FakeEventTarget} from '../../testing/index';
 import {By} from '@angular/platform-browser';
 import {AlgoliaIcon} from '../algolia-icon/algolia-icon.component';
 import {RouterTestingModule} from '@angular/router/testing';
