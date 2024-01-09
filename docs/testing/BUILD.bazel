@@ -1,7 +1,7 @@
 load("//tools:defaults.bzl", "ts_library")
 
 ts_library(
-    name = "utils",
+    name = "testing",
     srcs = [
         "index.ts",
     ],
@@ -15,20 +15,14 @@ ts_library(
     name = "lib",
     srcs = glob(
         [
-            "**/*.ts",
+            "*.ts",
         ],
         exclude = [
             "index.ts",
-            "**/*.spec.ts",
         ],
     ),
     deps = [
-        "//docs/interfaces",
-        "//docs/providers",
         "@npm//@angular/core",
-        "@npm//@angular/router",
-        "@npm//@types/node",
         "@npm//@webcontainer/api",
-        "@npm//jszip",
     ],
 )

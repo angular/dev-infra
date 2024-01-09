@@ -41,5 +41,6 @@ ng_package(
     substitutions = NPM_PACKAGE_SUBSTITUTIONS,
     deps = [
         ":docs",
+        "//docs/testing",
     ],
 )
