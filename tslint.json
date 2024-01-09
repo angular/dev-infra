@@ -3,7 +3,6 @@
   "rulesDirectory": ["./lint-rules/tslint"],
   "rules": {
     "ts-node-loader": true,
-    "no-shadowed-variable": true,
     "validate-import-for-esm-cjs-interop": [
       true,
       {
