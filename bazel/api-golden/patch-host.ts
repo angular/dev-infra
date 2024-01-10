@@ -52,7 +52,7 @@ export function patchHostToSkipNodeModules() {
         if (
           resolvedFileName !== undefined &&
           resolvedFileName.includes('/node_modules/') &&
-          resolvedFileName.includes('npm/node_modules')
+          !resolvedFileName.includes('npm/node_modules')
         ) {
           return undefined;
         }
