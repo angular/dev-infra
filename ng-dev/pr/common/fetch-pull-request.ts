@@ -12,6 +12,7 @@ import {
   MergeableState,
   PullRequestState,
   StatusState,
+  CommentAuthorAssociation,
 } from '@octokit/graphql-schema';
 import {getPendingPrs, getPr} from '../../utils/github.js';
 import {alias, types as graphqlTypes, onUnion, optional, params} from 'typed-graphqlify';
@@ -81,6 +82,16 @@ export const PR_SCHEMA = {
   reviewRequests: {
     totalCount: graphqlTypes.number,
   },
+  reviews: params(
+    {last: 100, states: 'APPROVED'},
+    {
+      nodes: [
+        {
+          authorAssociation: graphqlTypes.custom<CommentAuthorAssociation>(),
+        },
+      ],
+    },
+  ),
   maintainerCanModify: graphqlTypes.boolean,
   viewerDidAuthor: graphqlTypes.boolean,
   headRefOid: graphqlTypes.string,

@@ -74093,6 +74093,7 @@ var PullRequestValidationConfig = class {
     this.assertPassingCi = true;
     this.assertCompletedReviews = true;
     this.assertEnforcedStatuses = true;
+    this.assertMinimumReviews = true;
   }
   static create(config) {
     return Object.assign(new PullRequestValidationConfig(), config);
@@ -78567,6 +78568,13 @@ var PR_SCHEMA = {
   reviewRequests: {
     totalCount: import_typed_graphqlify2.types.number
   },
+  reviews: (0, import_typed_graphqlify2.params)({ last: 100, states: "APPROVED" }, {
+    nodes: [
+      {
+        authorAssociation: import_typed_graphqlify2.types.custom()
+      }
+    ]
+  }),
   maintainerCanModify: import_typed_graphqlify2.types.boolean,
   viewerDidAuthor: import_typed_graphqlify2.types.boolean,
   headRefOid: import_typed_graphqlify2.types.string,
@@ -78989,8 +78997,19 @@ var Validation5 = class extends PullRequestValidation {
 };
 
 // 
-var passingCiValidation = createPullRequestValidation({ name: "assertPassingCi", canBeForceIgnored: true }, () => Validation6);
+var minimumReviewsValidation = createPullRequestValidation({ name: "assertMinimumReviews", canBeForceIgnored: false }, () => Validation6);
 var Validation6 = class extends PullRequestValidation {
+  assert(pullRequest) {
+    const totalCount = pullRequest.reviews.nodes.filter(({ authorAssociation }) => authorAssociation === "MEMBER").length;
+    if (totalCount === 0) {
+      throw this._createError(`Pull request cannot be merged without at least one review from a team member`);
+    }
+  }
+};
+
+// 
+var passingCiValidation = createPullRequestValidation({ name: "assertPassingCi", canBeForceIgnored: true }, () => Validation7);
+var Validation7 = class extends PullRequestValidation {
   assert(pullRequest) {
     const { combinedStatus } = getStatusesForPullRequest(pullRequest);
     if (combinedStatus === PullRequestStatus.PENDING) {
@@ -79003,8 +79022,8 @@ var Validation6 = class extends PullRequestValidation {
 };
 
 // 
-var pendingStateValidation = createPullRequestValidation({ name: "assertPending", canBeForceIgnored: false }, () => Validation7);
-var Validation7 = class extends PullRequestValidation {
+var pendingStateValidation = createPullRequestValidation({ name: "assertPending", canBeForceIgnored: false }, () => Validation8);
+var Validation8 = class extends PullRequestValidation {
   assert(pullRequest) {
     if (pullRequest.isDraft) {
       throw this._createError("Pull request is still a draft.");
@@ -79021,9 +79040,9 @@ var Validation7 = class extends PullRequestValidation {
 // 
 var signedClaValidation = createPullRequestValidation(
   { name: "assertSignedCla", canBeForceIgnored: true },
-  () => Validation8
+  () => Validation9
 );
-var Validation8 = class extends PullRequestValidation {
+var Validation9 = class extends PullRequestValidation {
   assert(pullRequest) {
     const passing = getStatusesForPullRequest(pullRequest).statuses.some(({ name, status }) => {
       return name === "cla/google" && status === PullRequestStatus.PASSING;
@@ -79041,6 +79060,7 @@ async function assertValidPullRequest(pullRequest, validationConfig, ngDevConfig
     return parseCommitMessage(n.commit.message);
   });
   const validationResults = [
+    minimumReviewsValidation.run(validationConfig, pullRequest),
     completedReviewsValidation.run(validationConfig, pullRequest),
     mergeReadyValidation.run(validationConfig, pullRequest),
     signedClaValidation.run(validationConfig, pullRequest),
