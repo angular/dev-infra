@@ -1,7 +1,4 @@
-import {types} from './namespace-alias';
+import * as babel from '@babel/core';
 
-import aliased = types;
-export import reexposed = aliased;
-
-export declare function acceptVersion(v: aliased.ExistsTypeAnnotation): void;
+export declare function acceptVersion(v: babel.types.ExistsTypeAnnotation): void;
 export declare const nestedFile = true;

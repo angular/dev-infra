@@ -14,6 +14,7 @@ ts_library(
         "index.ts",
         "index_npm_packages.ts",
         "module_mappings.ts",
+        "patch-host.ts",
         "path-normalize.ts",
         "test_api_report.ts",
     ],

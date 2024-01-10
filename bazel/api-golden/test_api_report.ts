@@ -16,13 +16,14 @@ import {
   ExtractorResult,
   IConfigFile,
 } from '@microsoft/api-extractor';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
 
+import {runfiles} from '@bazel/runfiles';
 import {AstModule} from '@microsoft/api-extractor/lib/analyzer/AstModule';
 import {ExportAnalyzer} from '@microsoft/api-extractor/lib/analyzer/ExportAnalyzer';
 import {resolveTypePackages} from './module_mappings';
-import {runfiles} from '@bazel/runfiles';
+import {patchHostToSkipNodeModules} from './patch-host';
 
 /**
  * Original definition of the `ExportAnalyzer#fetchAstModuleExportInfo` method.
@@ -123,6 +124,8 @@ export async function testApiGolden(
     packageJsonFullPath: packageJsonPath,
     configObjectFullPath: undefined,
   });
+
+  patchHostToSkipNodeModules();
 
   // This patches the `ExportAnalyzer` of `api-extractor` so that we can filter out
   // exports that match a specified pattern. Ideally this would not be needed as the
