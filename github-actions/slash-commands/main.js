@@ -78804,6 +78804,13 @@ var PR_SCHEMA = {
   reviewRequests: {
     totalCount: import_typed_graphqlify4.types.number
   },
+  reviews: (0, import_typed_graphqlify4.params)({ last: 100, states: "APPROVED" }, {
+    nodes: [
+      {
+        authorAssociation: import_typed_graphqlify4.types.custom()
+      }
+    ]
+  }),
   maintainerCanModify: import_typed_graphqlify4.types.boolean,
   viewerDidAuthor: import_typed_graphqlify4.types.boolean,
   headRefOid: import_typed_graphqlify4.types.string,

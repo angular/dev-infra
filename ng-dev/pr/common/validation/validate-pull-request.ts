@@ -17,6 +17,7 @@ import {breakingChangeInfoValidation} from './assert-breaking-change-info.js';
 import {completedReviewsValidation} from './assert-completed-reviews.js';
 import {enforcedStatusesValidation} from './assert-enforced-statuses.js';
 import {mergeReadyValidation} from './assert-merge-ready.js';
+import {minimumReviewsValidation} from './assert-minimum-reviews.js';
 import {passingCiValidation} from './assert-passing-ci.js';
 import {pendingStateValidation} from './assert-pending.js';
 import {signedClaValidation} from './assert-signed-cla.js';
@@ -42,6 +43,7 @@ export async function assertValidPullRequest(
   });
 
   const validationResults = [
+    minimumReviewsValidation.run(validationConfig, pullRequest),
     completedReviewsValidation.run(validationConfig, pullRequest),
     mergeReadyValidation.run(validationConfig, pullRequest),
     signedClaValidation.run(validationConfig, pullRequest),
