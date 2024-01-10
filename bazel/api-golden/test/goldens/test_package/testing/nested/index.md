@@ -4,15 +4,13 @@
 
 ```ts
 
-import * as reexposed from '@babel/types';
+import * as babel_2 from '@babel/core';
 
 // @public (undocumented)
-export function acceptVersion(v: reexposed.ExistsTypeAnnotation): void;
+export function acceptVersion(v: babel_2.types.ExistsTypeAnnotation): void;
 
 // @public (undocumented)
 export const nestedFile = true;
-
-export { reexposed }
 
 // (No @packageDocumentation comment for this package)
 
