@@ -522,10 +522,10 @@ __metadata:
     "@lezer/highlight": "npm:^1.2.0"
     "@lezer/javascript": "npm:^1.4.9"
     "@microsoft/api-extractor": "npm:7.39.1"
-    "@octokit/auth-app": "npm:6.0.2"
+    "@octokit/auth-app": "npm:6.0.3"
     "@octokit/core": "npm:5.0.2"
     "@octokit/graphql": "npm:7.0.2"
-    "@octokit/graphql-schema": "npm:14.46.1"
+    "@octokit/graphql-schema": "npm:14.47.1"
     "@octokit/openapi-types": "npm:19.1.0"
     "@octokit/plugin-paginate-rest": "npm:9.1.5"
     "@octokit/plugin-rest-endpoint-methods": "npm:10.2.0"
@@ -5523,9 +5523,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/auth-app@npm:6.0.2":
-  version: 6.0.2
-  resolution: "@octokit/auth-app@npm:6.0.2"
+"@octokit/auth-app@npm:6.0.3":
+  version: 6.0.3
+  resolution: "@octokit/auth-app@npm:6.0.3"
   dependencies:
     "@octokit/auth-oauth-app": "npm:^7.0.0"
     "@octokit/auth-oauth-user": "npm:^4.0.0"
@@ -5534,9 +5534,9 @@ __metadata:
     "@octokit/types": "npm:^12.0.0"
     deprecation: "npm:^2.3.1"
     lru-cache: "npm:^10.0.0"
-    universal-github-app-jwt: "npm:^1.1.1"
+    universal-github-app-jwt: "npm:^1.1.2"
     universal-user-agent: "npm:^6.0.0"
-  checksum: c3425510867e00c2768c569a09b89a7a54a819c729ce0df3fb44461623baf262365e9908ba6250090d3667d211f150af23d09dfc00bc744831359f01ed5d2b5c
+  checksum: fba541abcc35e05cd0adf49b4c0174a2bc8e5b44d702259e074640332578ce7fb03392523e64f64abafc266adbf6dda0a537ce0fa0bd265275793e81d7949244
   languageName: node
   linkType: hard
 
@@ -5629,13 +5629,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/graphql-schema@npm:14.46.1":
-  version: 14.46.1
-  resolution: "@octokit/graphql-schema@npm:14.46.1"
+"@octokit/graphql-schema@npm:14.47.1":
+  version: 14.47.1
+  resolution: "@octokit/graphql-schema@npm:14.47.1"
   dependencies:
     graphql: "npm:^16.0.0"
     graphql-tag: "npm:^2.10.3"
-  checksum: bde743a4a67e28a8677aa7f6c131d6f383e4a50a868fe41d2d09d38daf7fd58482b1aa0cce9eb9e042b9f86e04670cb0b056c842975048483c4f9d7e79457d0b
+  checksum: 1ebb1244a8159e1373c82e579f75353fd557e29dea3b95d8cc3e11c78fe2e96663fd57645e395f3c2a616124a5fafbccc521d31b1da0f92add72fcfd15e472fc
   languageName: node
   linkType: hard
 
@@ -13507,6 +13507,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jsonwebtoken@npm:^9.0.2":
+  version: 9.0.2
+  resolution: "jsonwebtoken@npm:9.0.2"
+  dependencies:
+    jws: "npm:^3.2.2"
+    lodash.includes: "npm:^4.3.0"
+    lodash.isboolean: "npm:^3.0.3"
+    lodash.isinteger: "npm:^4.0.4"
+    lodash.isnumber: "npm:^3.0.3"
+    lodash.isplainobject: "npm:^4.0.6"
+    lodash.isstring: "npm:^4.0.1"
+    lodash.once: "npm:^4.0.0"
+    ms: "npm:^2.1.1"
+    semver: "npm:^7.5.4"
+  checksum: d287a29814895e866db2e5a0209ce730cbc158441a0e5a70d5e940eb0d28ab7498c6bf45029cc8b479639bca94056e9a7f254e2cdb92a2f5750c7f358657a131
+  languageName: node
+  linkType: hard
+
 "jsprim@npm:^1.2.2":
   version: 1.4.2
   resolution: "jsprim@npm:1.4.2"
@@ -14023,6 +14041,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash.includes@npm:^4.3.0":
+  version: 4.3.0
+  resolution: "lodash.includes@npm:4.3.0"
+  checksum: 7ca498b9b75bf602d04e48c0adb842dfc7d90f77bcb2a91a2b2be34a723ad24bc1c8b3683ec6b2552a90f216c723cdea530ddb11a3320e08fa38265703978f4b
+  languageName: node
+  linkType: hard
+
+"lodash.isboolean@npm:^3.0.3":
+  version: 3.0.3
+  resolution: "lodash.isboolean@npm:3.0.3"
+  checksum: 0aac604c1ef7e72f9a6b798e5b676606042401dd58e49f051df3cc1e3adb497b3d7695635a5cbec4ae5f66456b951fdabe7d6b387055f13267cde521f10ec7f7
+  languageName: node
+  linkType: hard
+
 "lodash.isequal@npm:^4.5.0":
   version: 4.5.0
   resolution: "lodash.isequal@npm:4.5.0"
@@ -14034,6 +14066,20 @@ __metadata:
   version: 3.3.2
   resolution: "lodash.isfinite@npm:3.3.2"
   checksum: 997f5f2e96daf3f9f7e27a46cf5b409097d6426e137357f95b1aa357b3abfdf6c61225d451aab40be58941a87df5d5ca85617e85960f6fe50ee09aba41a974de
+  languageName: node
+  linkType: hard
+
+"lodash.isinteger@npm:^4.0.4":
+  version: 4.0.4
+  resolution: "lodash.isinteger@npm:4.0.4"
+  checksum: 4c3e023a2373bf65bf366d3b8605b97ec830bca702a926939bcaa53f8e02789b6a176e7f166b082f9365bfec4121bfeb52e86e9040cb8d450e64c858583f61b7
+  languageName: node
+  linkType: hard
+
+"lodash.isnumber@npm:^3.0.3":
+  version: 3.0.3
+  resolution: "lodash.isnumber@npm:3.0.3"
+  checksum: 2d01530513a1ee4f72dd79528444db4e6360588adcb0e2ff663db2b3f642d4bb3d687051ae1115751ca9082db4fdef675160071226ca6bbf5f0c123dbf0aa12d
   languageName: node
   linkType: hard
 
@@ -14050,6 +14096,20 @@ __metadata:
   version: 4.0.6
   resolution: "lodash.isplainobject@npm:4.0.6"
   checksum: afd70b5c450d1e09f32a737bed06ff85b873ecd3d3d3400458725283e3f2e0bb6bf48e67dbe7a309eb371a822b16a26cca4a63c8c52db3fc7dc9d5f9dd324cbb
+  languageName: node
+  linkType: hard
+
+"lodash.isstring@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "lodash.isstring@npm:4.0.1"
+  checksum: 09eaf980a283f9eef58ef95b30ec7fee61df4d6bf4aba3b5f096869cc58f24c9da17900febc8ffd67819b4e29de29793190e88dc96983db92d84c95fa85d1c92
+  languageName: node
+  linkType: hard
+
+"lodash.once@npm:^4.0.0":
+  version: 4.1.1
+  resolution: "lodash.once@npm:4.1.1"
+  checksum: 46a9a0a66c45dd812fcc016e46605d85ad599fe87d71a02f6736220554b52ffbe82e79a483ad40f52a8a95755b0d1077fba259da8bfb6694a7abbf4a48f1fc04
   languageName: node
   linkType: hard
 
@@ -18899,13 +18959,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"universal-github-app-jwt@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "universal-github-app-jwt@npm:1.1.1"
+"universal-github-app-jwt@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "universal-github-app-jwt@npm:1.1.2"
   dependencies:
     "@types/jsonwebtoken": "npm:^9.0.0"
-    jsonwebtoken: "npm:^9.0.0"
-  checksum: f735a3fa0c9156898d128f45237eefa598edfab2424428ccc12e4b7dd9d217ff91b5a2b7a9a1ed6a16fd7985723f0ae34d5efbd3f81ab203c83184b7675c970a
+    jsonwebtoken: "npm:^9.0.2"
+  checksum: 061d2a52c25f0a09a5ae40167e6006ba89510df9934070996d8ca3019afd34f7f28fbb74a93d1627beb4209faf04ec9173f0dc9ff351ee2ec42ab76cff389a80
   languageName: node
   linkType: hard
 
