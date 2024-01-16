@@ -77,8 +77,15 @@ async function main(repo: {owner: string; repo: string}, token: string, pr: numb
     {git, config},
     pr,
     PullRequestValidationConfig.create({
+      assertSignedCla: true,
+      assertMergeReady: true,
+
       assertPending: false,
+      assertChangesAllowForTargetLabel: false,
+      assertPassingCi: false,
       assertCompletedReviews: false,
+      assertEnforcedStatuses: false,
+      assertMinimumReviews: false,
     }),
   );
   core.info('Validated PR information:');
