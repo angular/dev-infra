@@ -79601,8 +79601,14 @@ async function main(repo2, token2, pr2) {
   git.run(["config", "user.email", "angular-robot@google.com"]);
   git.run(["config", "user.name", "Angular Robot"]);
   const pullRequest = await loadAndValidatePullRequest({ git, config }, pr2, PullRequestValidationConfig.create({
+    assertSignedCla: true,
+    assertMergeReady: true,
     assertPending: false,
-    assertCompletedReviews: false
+    assertChangesAllowForTargetLabel: false,
+    assertPassingCi: false,
+    assertCompletedReviews: false,
+    assertEnforcedStatuses: false,
+    assertMinimumReviews: false
   }));
   core.info("Validated PR information:");
   core.info(JSON.stringify(pullRequest));
