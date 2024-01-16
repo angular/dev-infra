@@ -614,7 +614,7 @@ __metadata:
     opener: "npm:^1.5.2"
     preact: "npm:^10.17.1"
     preact-render-to-string: "npm:^6.2.1"
-    prettier: "npm:3.1.1"
+    prettier: "npm:3.2.2"
     protobufjs: "npm:^7.0.0"
     protractor: "npm:^7.0.0"
     requirejs: "npm:^2.3.6"
@@ -2815,8 +2815,8 @@ __metadata:
   linkType: hard
 
 "@codemirror/autocomplete@npm:^6.0.0, @codemirror/autocomplete@npm:^6.11.1":
-  version: 6.11.1
-  resolution: "@codemirror/autocomplete@npm:6.11.1"
+  version: 6.12.0
+  resolution: "@codemirror/autocomplete@npm:6.12.0"
   dependencies:
     "@codemirror/language": "npm:^6.0.0"
     "@codemirror/state": "npm:^6.0.0"
@@ -2827,7 +2827,7 @@ __metadata:
     "@codemirror/state": ^6.0.0
     "@codemirror/view": ^6.0.0
     "@lezer/common": ^1.0.0
-  checksum: 65676724b4e744ff503de86dddc1aaabf87e9f7f6a001431a4035ccaa99d1f334a4f79f5fd51606aeb66e75134ef23b8bb204cead820703e7441c78188284b14
+  checksum: 9f627f27e25b83816f3b60fe45285d0c976b6bdc0a4b01e7fc1ab90a536113dc5b6a1adfbe403963b97bdb84343a464e58b1614e8d522a4e937949ec81e227f3
   languageName: node
   linkType: hard
 
@@ -4446,9 +4446,9 @@ __metadata:
   linkType: hard
 
 "@lezer/common@npm:^1.0.0, @lezer/common@npm:^1.0.2, @lezer/common@npm:^1.1.0, @lezer/common@npm:^1.1.1, @lezer/common@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "@lezer/common@npm:1.2.0"
-  checksum: 8a027eec496fa022657d1ee663b32f9346022bb71e84d7a6148e5a318df2a772a4c61ecf0c3707837993ce59c7d93e09a4b517dd05a9b21286fe5b808958a199
+  version: 1.2.1
+  resolution: "@lezer/common@npm:1.2.1"
+  checksum: af61436dc026f8deebaded13d8e1beea2ae307cbbfb270116cdedadb8208f0674da9c3b5963128a2b1cd4072b4e90bc8128133f4feaf31b6e801e4568f1a15a6
   languageName: node
   linkType: hard
 
@@ -14861,13 +14861,13 @@ __metadata:
   linkType: hard
 
 "nock@npm:^13.0.3":
-  version: 13.4.0
-  resolution: "nock@npm:13.4.0"
+  version: 13.5.0
+  resolution: "nock@npm:13.5.0"
   dependencies:
     debug: "npm:^4.1.0"
     json-stringify-safe: "npm:^5.0.1"
     propagate: "npm:^2.0.0"
-  checksum: b2e4407e71b6e9c42bc74bf631c008b79fa06b17e885d270b8f3ac7081d029dd966cd09024acb96ae5dd77a4737cc86951340715ffabece6893a62dc71ce5b08
+  checksum: ba98390042a61b8687da9174fa07282d14f8b0cb5ac50c310eba9bb70a0beb5ea8257ba1f2a3e324db5570111689485a1f16746c2527f3050357e6917666bdef
   languageName: node
   linkType: hard
 
@@ -15911,12 +15911,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:3.1.1":
-  version: 3.1.1
-  resolution: "prettier@npm:3.1.1"
+"prettier@npm:3.2.2":
+  version: 3.2.2
+  resolution: "prettier@npm:3.2.2"
   bin:
     prettier: bin/prettier.cjs
-  checksum: facc944ba20e194ff4db765e830ffbcb642803381f0d2033ed397e79904fa4ccc877dc25ad68f42d36985c01d051c990ca1b905fb83d2d7d65fe69e4386fa1a3
+  checksum: e84d0d2a4ce2b88ee1636904effbdf68b59da63d9f887128f2ed5382206454185432e7c0a9578bc4308bc25d099cfef47fd0b9c211066777854e23e65e34044d
   languageName: node
   linkType: hard
 
