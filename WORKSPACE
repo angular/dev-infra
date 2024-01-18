@@ -18,10 +18,10 @@ http_archive(
 
 http_archive(
     name = "io_bazel_rules_sass",
-    sha256 = "ac14ab658179ced61b0af01e7054cd172503224497342d4af45f0007c70a8365",
-    strip_prefix = "rules_sass-327ea031b04566f816bfcbb245518293fac43240",
+    sha256 = "386ef2b97bd4342e45db450ce7eb5acb343d22f7580c0bbae89186dc009fa14e",
+    strip_prefix = "rules_sass-d970cb53ad159e7fd1d3a99a00a530cc2c83eff9",
     urls = [
-        "https://github.com/bazelbuild/rules_sass/archive/327ea031b04566f816bfcbb245518293fac43240.zip",
+        "https://github.com/bazelbuild/rules_sass/archive/d970cb53ad159e7fd1d3a99a00a530cc2c83eff9.zip",
     ],
 )
 
