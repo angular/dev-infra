@@ -28,7 +28,7 @@ const lifecycleMethods = [
 
 /** Gets a list of members with Angular lifecycle methods removed. */
 export function filterLifecycleMethods(members: MemberEntry[]): MemberEntry[] {
-  return members.filter((m) => lifecycleMethods.includes(m.name));
+  return members.filter((m) => !lifecycleMethods.includes(m.name));
 }
 
 /** Merges getter and setter entries with the same name into a single entry. */
