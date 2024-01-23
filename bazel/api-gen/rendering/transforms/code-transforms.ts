@@ -87,7 +87,7 @@ function groupCodeLines(lines: string[], metadata: CodeTableOfContentsData) {
       isDeprecated: metadata.deprecatedLineNumbers.some((lineNumber) => lineNumber === index),
     };
 
-    if (tocItem.id && groups.has(tocItem.id)) {
+    if (tocItem.id !== undefined && groups.has(tocItem.id)) {
       const group = groups.get(tocItem.id);
       group?.push(tocItem);
     } else {
