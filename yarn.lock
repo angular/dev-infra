@@ -479,7 +479,7 @@ __metadata:
     "@angular/animations": "npm:17.2.0-next.0"
     "@angular/bazel": "patch:@angular/bazel@npm:14.1.0-next.2#.yarn/patches/@angular-bazel-npm.patch"
     "@angular/benchpress": "npm:0.3.0"
-    "@angular/cdk": "npm:17.1.0-rc.0"
+    "@angular/cdk": "npm:17.2.0-next.0"
     "@angular/cli": "npm:17.2.0-next.0"
     "@angular/common": "npm:17.2.0-next.0"
     "@angular/compiler": "npm:17.2.0-next.0"
@@ -487,7 +487,7 @@ __metadata:
     "@angular/core": "npm:17.2.0-next.0"
     "@angular/fire": "npm:^17.0.0-next"
     "@angular/forms": "npm:17.2.0-next.0"
-    "@angular/material": "npm:17.1.0-rc.0"
+    "@angular/material": "npm:17.2.0-next.0"
     "@angular/platform-browser": "npm:17.2.0-next.0"
     "@angular/platform-browser-dynamic": "npm:17.2.0-next.0"
     "@angular/router": "npm:17.2.0-next.0"
@@ -650,9 +650,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@angular/cdk@npm:17.1.0-rc.0":
-  version: 17.1.0-rc.0
-  resolution: "@angular/cdk@npm:17.1.0-rc.0"
+"@angular/cdk@npm:17.2.0-next.0":
+  version: 17.2.0-next.0
+  resolution: "@angular/cdk@npm:17.2.0-next.0"
   dependencies:
     parse5: "npm:^7.1.2"
     tslib: "npm:^2.3.0"
@@ -663,7 +663,7 @@ __metadata:
   dependenciesMeta:
     parse5:
       optional: true
-  checksum: 4508df5aa51a0bc70a71d0e549a091d87e51b35e5e4ea895254dd0c57772915334ef5b03f1edfbb4344da8c3efa5038b3667999736ea31452b3b4ac5a078582c
+  checksum: 0a77f66dc85b7ba9afdb6076dd48683d4b490396f773c0a29e600a36535fec5eca05186ec5820a93da639b8e8dcda16e5473fb2b0ffe26e9ee750c19211dd1c1
   languageName: node
   linkType: hard
 
@@ -804,9 +804,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/material@npm:17.1.0-rc.0":
-  version: 17.1.0-rc.0
-  resolution: "@angular/material@npm:17.1.0-rc.0"
+"@angular/material@npm:17.2.0-next.0":
+  version: 17.2.0-next.0
+  resolution: "@angular/material@npm:17.2.0-next.0"
   dependencies:
     "@material/animation": "npm:15.0.0-canary.7f224ddd4.0"
     "@material/auto-init": "npm:15.0.0-canary.7f224ddd4.0"
@@ -858,13 +858,13 @@ __metadata:
     tslib: "npm:^2.3.0"
   peerDependencies:
     "@angular/animations": ^17.0.0-0 || ^17.1.0-0 || ^17.2.0-0 || ^17.3.0-0 || ^18.0.0-0
-    "@angular/cdk": 17.1.0-rc.0
+    "@angular/cdk": 17.2.0-next.0
     "@angular/common": ^17.0.0-0 || ^17.1.0-0 || ^17.2.0-0 || ^17.3.0-0 || ^18.0.0-0
     "@angular/core": ^17.0.0-0 || ^17.1.0-0 || ^17.2.0-0 || ^17.3.0-0 || ^18.0.0-0
     "@angular/forms": ^17.0.0-0 || ^17.1.0-0 || ^17.2.0-0 || ^17.3.0-0 || ^18.0.0-0
     "@angular/platform-browser": ^17.0.0-0 || ^17.1.0-0 || ^17.2.0-0 || ^17.3.0-0 || ^18.0.0-0
     rxjs: ^6.5.3 || ^7.4.0
-  checksum: 46c4825414af37b7e4ae93712d1e94a0c15b157df967ec159498a1c17bc19ab85b5a4a603f699a5ad53fa3240957d6339106d6a745d45d8a2775efa6a77260aa
+  checksum: 3f49101a1ea8ece7dc47f2420ad0e35c361ad822b6cc06b8007915a25c01792a110471f6b74bc961f627e0c6e901e25b672c557a88337b6288978044bcdc9879
   languageName: node
   linkType: hard
 
