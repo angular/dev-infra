@@ -523,9 +523,9 @@ __metadata:
     "@lezer/javascript": "npm:^1.4.9"
     "@microsoft/api-extractor": "npm:7.39.1"
     "@octokit/auth-app": "npm:6.0.3"
-    "@octokit/core": "npm:5.0.2"
+    "@octokit/core": "npm:5.1.0"
     "@octokit/graphql": "npm:7.0.2"
-    "@octokit/graphql-schema": "npm:14.47.1"
+    "@octokit/graphql-schema": "npm:14.52.0"
     "@octokit/openapi-types": "npm:19.1.0"
     "@octokit/plugin-paginate-rest": "npm:9.1.5"
     "@octokit/plugin-rest-endpoint-methods": "npm:10.2.0"
@@ -5570,9 +5570,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/core@npm:5.0.2":
-  version: 5.0.2
-  resolution: "@octokit/core@npm:5.0.2"
+"@octokit/core@npm:5.1.0":
+  version: 5.1.0
+  resolution: "@octokit/core@npm:5.1.0"
   dependencies:
     "@octokit/auth-token": "npm:^4.0.0"
     "@octokit/graphql": "npm:^7.0.0"
@@ -5581,7 +5581,7 @@ __metadata:
     "@octokit/types": "npm:^12.0.0"
     before-after-hook: "npm:^2.2.0"
     universal-user-agent: "npm:^6.0.0"
-  checksum: f3b3cb72f8f374e763e60922eacad56cb08fc05ee0be26f2a7b61937f89a377a8fd1b54f3d621a2b9627a9402c595d4b7e24900602e401b8a8edaffd995fa98f
+  checksum: a1d2882373b4a33cd9f6e56d76bcc82e5589a477829fc3491b1ef471a8a83fa437b339a2c76d97d9e8ea4ca12bf3ebf32e66119ba16977e542d98f1f5dd3c994
   languageName: node
   linkType: hard
 
@@ -5611,13 +5611,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/graphql-schema@npm:14.47.1":
-  version: 14.47.1
-  resolution: "@octokit/graphql-schema@npm:14.47.1"
+"@octokit/graphql-schema@npm:14.52.0":
+  version: 14.52.0
+  resolution: "@octokit/graphql-schema@npm:14.52.0"
   dependencies:
     graphql: "npm:^16.0.0"
     graphql-tag: "npm:^2.10.3"
-  checksum: 1ebb1244a8159e1373c82e579f75353fd557e29dea3b95d8cc3e11c78fe2e96663fd57645e395f3c2a616124a5fafbccc521d31b1da0f92add72fcfd15e472fc
+  checksum: 93f8c25b82542ee2840de8352c86f06639a850598b20570789f537ce5c4a3724d849d40eccdd487662d7317632366b73f7ef1437b0a7e68a1cbc86f9f472368a
   languageName: node
   linkType: hard
 
