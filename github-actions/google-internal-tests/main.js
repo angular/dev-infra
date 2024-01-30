@@ -26015,6 +26015,35 @@ var require_jsonc_parser = __commonJS({
       CharacterCodes2[CharacterCodes2["formFeed"] = 12] = "formFeed";
       CharacterCodes2[CharacterCodes2["tab"] = 9] = "tab";
     })(CharacterCodes || (CharacterCodes = {}));
+    var cachedSpaces = new Array(20).fill(0).map((_, index) => {
+      return " ".repeat(index);
+    });
+    var maxCachedValues = 200;
+    var cachedBreakLinesWithSpaces = {
+      " ": {
+        "\n": new Array(maxCachedValues).fill(0).map((_, index) => {
+          return "\n" + " ".repeat(index);
+        }),
+        "\r": new Array(maxCachedValues).fill(0).map((_, index) => {
+          return "\r" + " ".repeat(index);
+        }),
+        "\r\n": new Array(maxCachedValues).fill(0).map((_, index) => {
+          return "\r\n" + " ".repeat(index);
+        })
+      },
+      "	": {
+        "\n": new Array(maxCachedValues).fill(0).map((_, index) => {
+          return "\n" + "	".repeat(index);
+        }),
+        "\r": new Array(maxCachedValues).fill(0).map((_, index) => {
+          return "\r" + "	".repeat(index);
+        }),
+        "\r\n": new Array(maxCachedValues).fill(0).map((_, index) => {
+          return "\r\n" + "	".repeat(index);
+        })
+      }
+    };
+    var supportedEols = ["\n", "\r", "\r\n"];
     function format(documentText, range, options) {
       let initialIndentLevel;
       let formatText;
@@ -26042,22 +26071,30 @@ var require_jsonc_parser = __commonJS({
         rangeEnd = documentText.length;
       }
       const eol = getEOL(options, documentText);
+      const eolFastPathSupported = supportedEols.includes(eol);
       let numberLineBreaks = 0;
       let indentLevel = 0;
       let indentValue;
       if (options.insertSpaces) {
-        indentValue = repeat(" ", options.tabSize || 4);
+        indentValue = cachedSpaces[options.tabSize || 4] ?? repeat(cachedSpaces[1], options.tabSize || 4);
       } else {
         indentValue = "	";
       }
+      const indentType = indentValue === "	" ? "	" : " ";
       let scanner = createScanner(formatText, false);
       let hasError = false;
       function newLinesAndIndent() {
         if (numberLineBreaks > 1) {
           return repeat(eol, numberLineBreaks) + repeat(indentValue, initialIndentLevel + indentLevel);
-        } else {
+        }
+        const amountOfSpaces = indentValue.length * (initialIndentLevel + indentLevel);
+        if (!eolFastPathSupported || amountOfSpaces > cachedBreakLinesWithSpaces[indentType][eol].length) {
           return eol + repeat(indentValue, initialIndentLevel + indentLevel);
         }
+        if (amountOfSpaces <= 0) {
+          return eol;
+        }
+        return cachedBreakLinesWithSpaces[indentType][eol][amountOfSpaces];
       }
       function scanNext() {
         let token = scanner.scan();
@@ -26085,7 +26122,7 @@ var require_jsonc_parser = __commonJS({
       }
       if (firstToken !== 17) {
         let firstTokenStart = scanner.getTokenOffset() + formatTextStart;
-        let initialIndent = repeat(indentValue, initialIndentLevel);
+        let initialIndent = indentValue.length * initialIndentLevel < 20 && options.insertSpaces ? cachedSpaces[indentValue.length * initialIndentLevel] : repeat(indentValue, initialIndentLevel);
         addEdit(initialIndent, formatTextStart, firstTokenStart);
       }
       while (firstToken !== 17) {
@@ -26095,7 +26132,7 @@ var require_jsonc_parser = __commonJS({
         let needsLineBreak = false;
         while (numberLineBreaks === 0 && (secondToken === 12 || secondToken === 13)) {
           let commentTokenStart = scanner.getTokenOffset() + formatTextStart;
-          addEdit(" ", firstTokenEnd, commentTokenStart);
+          addEdit(cachedSpaces[1], firstTokenEnd, commentTokenStart);
           firstTokenEnd = scanner.getTokenOffset() + scanner.getTokenLength() + formatTextStart;
           needsLineBreak = secondToken === 12;
           replaceContent = needsLineBreak ? newLinesAndIndent() : "";
@@ -26109,7 +26146,7 @@ var require_jsonc_parser = __commonJS({
           if (options.keepLines && numberLineBreaks > 0 || !options.keepLines && firstToken !== 1) {
             replaceContent = newLinesAndIndent();
           } else if (options.keepLines) {
-            replaceContent = " ";
+            replaceContent = cachedSpaces[1];
           }
         } else if (secondToken === 4) {
           if (firstToken !== 3) {
@@ -26119,7 +26156,7 @@ var require_jsonc_parser = __commonJS({
           if (options.keepLines && numberLineBreaks > 0 || !options.keepLines && firstToken !== 3) {
             replaceContent = newLinesAndIndent();
           } else if (options.keepLines) {
-            replaceContent = " ";
+            replaceContent = cachedSpaces[1];
           }
         } else {
           switch (firstToken) {
@@ -26129,14 +26166,14 @@ var require_jsonc_parser = __commonJS({
               if (options.keepLines && numberLineBreaks > 0 || !options.keepLines) {
                 replaceContent = newLinesAndIndent();
               } else {
-                replaceContent = " ";
+                replaceContent = cachedSpaces[1];
               }
               break;
             case 5:
               if (options.keepLines && numberLineBreaks > 0 || !options.keepLines) {
                 replaceContent = newLinesAndIndent();
               } else {
-                replaceContent = " ";
+                replaceContent = cachedSpaces[1];
               }
               break;
             case 12:
@@ -26146,14 +26183,14 @@ var require_jsonc_parser = __commonJS({
               if (numberLineBreaks > 0) {
                 replaceContent = newLinesAndIndent();
               } else if (!needsLineBreak) {
-                replaceContent = " ";
+                replaceContent = cachedSpaces[1];
               }
               break;
             case 6:
               if (options.keepLines && numberLineBreaks > 0) {
                 replaceContent = newLinesAndIndent();
               } else if (!needsLineBreak) {
-                replaceContent = " ";
+                replaceContent = cachedSpaces[1];
               }
               break;
             case 10:
@@ -26173,7 +26210,7 @@ var require_jsonc_parser = __commonJS({
                 replaceContent = newLinesAndIndent();
               } else {
                 if ((secondToken === 12 || secondToken === 13) && !needsLineBreak) {
-                  replaceContent = " ";
+                  replaceContent = cachedSpaces[1];
                 } else if (secondToken !== 5 && secondToken !== 17) {
                   hasError = true;
                 }
@@ -26213,7 +26250,7 @@ var require_jsonc_parser = __commonJS({
       const tabSize = options.tabSize || 4;
       while (i2 < content.length) {
         let ch = content.charAt(i2);
-        if (ch === " ") {
+        if (ch === cachedSpaces[1]) {
           nChars++;
         } else if (ch === "	") {
           nChars += tabSize;
