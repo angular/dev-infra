@@ -1,6 +1,6 @@
 @mixin scroll-track {
   // used on secondary nav
-  .adev-scroll-hide {
+  .docs-scroll-hide {
     &::-webkit-scrollbar-track {
       background: rgba(0, 0, 0, 0);
     }
@@ -10,7 +10,7 @@
   }
 
   // used for main page scroll
-  .adev-scroll-track-transparent-large {
+  .docs-scroll-track-transparent-large {
     &::-webkit-scrollbar-track {
       background: rgba(0, 0, 0, 0);
       cursor: pointer;
@@ -33,7 +33,7 @@
   }
 
   // used on table & secondary navigation
-  .adev-scroll-track-transparent {
+  .docs-scroll-track-transparent {
     &::-webkit-scrollbar-track {
       background: rgba(0, 0, 0, 0);
       cursor: pointer;
@@ -56,7 +56,7 @@
   }
 
   // used on docs-code blocks
-  .adev-mini-scroll-track {
+  .docs-mini-scroll-track {
     &::-webkit-scrollbar-track {
       background: transparent;
     }

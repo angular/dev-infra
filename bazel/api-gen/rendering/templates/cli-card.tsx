@@ -11,20 +11,20 @@ import {CliCardRenderable} from '../entities/renderables';
 
 export function CliCard(props: {card: CliCardRenderable}) {
   return (
-    <div id={props.card.type} class="adev-reference-member-card" tabIndex={-1}>
+    <div id={props.card.type} class="docs-reference-member-card" tabIndex={-1}>
       <header>
-        <div class="adev-card-ref-header">
+        <div class="docs-card-ref-header">
           <h3>{props.card.type}</h3>
         </div>
       </header>
-      <div class="adev-reference-card-body">
+      <div class="docs-reference-card-body">
         {props.card.items.map((item) => (
-          <div class="adev-ref-content">
-            <div class="adev-ref-option-and-description">
+          <div class="docs-ref-content">
+            <div class="docs-ref-option-and-description">
               <code>{item.name}</code>
               <div dangerouslySetInnerHTML={{__html: item.description}}></div>
             </div>
-            <div class="adev-reference-type-and-default">
+            <div class="docs-reference-type-and-default">
               <span>Value Type</span>
               <code>{item.type}</code>
               {/* Default Value */}

@@ -24,12 +24,12 @@ export function ClassMethodInfo(props: { entry: MethodEntryRenderable | Function
   const entry = props.entry;
 
   return (
-      <div className={`${REFERENCE_MEMBER_CARD_ITEM} ${entry.isDeprecated ? 'adev-reference-card-item-deprecated' : ''}`}>
-        <RawHtml value={entry.htmlDescription} className={'adev-function-definition'} />
+      <div className={`${REFERENCE_MEMBER_CARD_ITEM} ${entry.isDeprecated ? 'docs-reference-card-item-deprecated' : ''}`}>
+        <RawHtml value={entry.htmlDescription} className={'docs-function-definition'} />
         {/* In case when method is overloaded we need to indicate which overload is deprecated */}
         {!props.isOverloaded ? <></> : <DeprecatedLabel entry={entry}/>}
         {entry.params.map((param: ParameterEntryRenderable) => <Parameter param={param}/>)}
-        <div className={'adev-return-type'}>
+        <div className={'docs-return-type'}>
           <span className={PARAM_KEYWORD_CLASS_NAME}>@returns</span>
           <code>{entry.returnType}</code>
         </div>

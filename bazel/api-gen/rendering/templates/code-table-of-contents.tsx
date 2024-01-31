@@ -13,7 +13,7 @@ import {CodeLineGroup} from './code-line-group';
 export function CodeTableOfContents(props: {codeLinesGroups: Map<string, CodeLineRenderable[]>}) {
   return (
     <div class="docs-code">
-      <pre class="adev-mini-scroll-track">
+      <pre class="docs-mini-scroll-track">
         <code>
           {Array.from(props.codeLinesGroups).map(([_, group]) => (
             <CodeLineGroup lines={group} />

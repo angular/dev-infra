@@ -3,18 +3,18 @@
     <header>
       <h2 class="docs-title">On this page</h2>
     </header>
-    <ul class="adev-faceted-list">
+    <ul class="docs-faceted-list">
       <!-- TODO: Hide li elements with class docs-toc-item-h3 for laptop, table and phone screen resolutions  -->
       @for (item of tableOfContentItems(); track item.id) {
       <li
-        class="adev-faceted-list-item"
+        class="docs-faceted-list-item"
         [class.docs-toc-item-h2]="item.level === TableOfContentsLevel.H2"
         [class.docs-toc-item-h3]="item.level === TableOfContentsLevel.H3"
       >
         <a
           routerLink="."
           [fragment]="item.id"
-          [class.adev-faceted-list-item-active]="item.id === activeItemId()"
+          [class.docs-faceted-list-item-active]="item.id === activeItemId()"
         >
           {{ item.title }}
         </a>

@@ -116,7 +116,7 @@ describe('TableOfContents', () => {
   it('should append active class when item is active', () => {
     fixture.detectChanges();
 
-    const activeItem = fixture.nativeElement.querySelector('.adev-faceted-list-item-active');
+    const activeItem = fixture.nativeElement.querySelector('.docs-faceted-list-item-active');
 
     expect(activeItem).toBeTruthy();
   });

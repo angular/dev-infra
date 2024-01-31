@@ -258,9 +258,9 @@
   --webgl-page-background: #0f0f11;
   --webgl-gray-unfilled: #413e46;
 
-  .adev-toggle {
+  .docs-toggle {
     input {
-      &:checked + .adev-slider {
+      &:checked + .docs-slider {
         background: var(--pink-to-purple-horizontal-gradient) !important;
       }
     }
@@ -274,23 +274,23 @@
 }
 
 // LIGHT MODE (Explicit)
-.adev-light-mode {
+.docs-light-mode {
   background-color: #ffffff;
   @include root-definitions();
   @include mdc-definitions();
-  .adev-invert-mode {
+  .docs-invert-mode {
     @include dark-mode-definitions();
     @include mdc-definitions();
   }
 }
 
 // DARK MODE (Explicit)
-.adev-dark-mode {
+.docs-dark-mode {
   background-color: oklch(16.93% 0.004 285.95);
   @include root-definitions();
   @include dark-mode-definitions();
   @include mdc-definitions();
-  .adev-invert-mode {
+  .docs-invert-mode {
     @include root-definitions();
     @include mdc-definitions();
   }

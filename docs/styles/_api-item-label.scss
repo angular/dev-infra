@@ -1,5 +1,5 @@
 @mixin api-item-label() {
-  .adev-api-item-label {
+  .docs-api-item-label {
     --label-theme: var(--symbolic-purple);
 
     display: flex;
@@ -26,11 +26,11 @@
       background: color-mix(in srgb, var(--label-theme) 17%, #272727);
     }
 
-    .adev-dark-mode & {
+    .docs-dark-mode & {
       background: color-mix(in srgb, var(--label-theme) 17%, #272727);
     }
 
-    .adev-light-mode & {
+    .docs-light-mode & {
       background: color-mix(in srgb, var(--label-theme) 10%, white);
     }
 

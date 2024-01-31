@@ -49,10 +49,10 @@ describe('SlideToggle', () => {
     component.writeValue(true);
     fixture.detectChanges();
     const buttonElement: HTMLButtonElement = fixture.nativeElement.querySelector('input');
-    expect(buttonElement.classList.contains('adev-toggle-active')).toBeTrue();
+    expect(buttonElement.classList.contains('docs-toggle-active')).toBeTrue();
 
     component.writeValue(false);
     fixture.detectChanges();
-    expect(buttonElement.classList.contains('adev-toggle-active')).toBeFalse();
+    expect(buttonElement.classList.contains('docs-toggle-active')).toBeFalse();
   });
 });

@@ -1,14 +1,14 @@
 @mixin faceted-list() {
-  .adev-faceted-list {
+  .docs-faceted-list {
     --faceted-list-border-width: 2px;
     list-style: none;
     padding: 0;
     margin: 0;
     border-inline-start: calc(var(--faceted-list-border-width) - 1px) solid var(--senary-contrast);
   }
-  .adev-faceted-list-item {
+  .docs-faceted-list-item {
     a,
-    button:not(.adev-expanded-button) {
+    button:not(.docs-expanded-button) {
       position: relative;
       background-color: var(--quaternary-contrast);
       background-clip: text;
@@ -35,7 +35,7 @@
           opacity: 0.3;
         }
       }
-      &.adev-faceted-list-item-active {
+      &.docs-faceted-list-item-active {
         // font gradient
         background-image: var(--pink-to-purple-vertical-gradient);
         &::before {

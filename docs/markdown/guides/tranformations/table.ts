@@ -10,7 +10,7 @@ import {RendererApi} from 'marked';
 
 export const tableRender: RendererApi['table'] = (header, body) => {
   return `
-  <div class="docs-table adev-scroll-track-transparent">
+  <div class="docs-table docs-scroll-track-transparent">
     <table>
       <thead>
         ${header}

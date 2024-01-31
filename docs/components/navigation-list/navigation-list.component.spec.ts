@@ -49,7 +49,7 @@ describe('NavigationList', () => {
     fixture.detectChanges();
 
     const links = fixture.debugElement.queryAll(By.css('a'));
-    const nonClickableItem = fixture.debugElement.queryAll(By.css('.adev-secondary-nav-header'));
+    const nonClickableItem = fixture.debugElement.queryAll(By.css('.docs-secondary-nav-header'));
 
     expect(links.length).toBe(3);
     expect(nonClickableItem.length).toBe(1);
@@ -122,10 +122,10 @@ describe('NavigationList', () => {
     fixture.detectChanges(true);
 
     const visibleItems = fixture.debugElement.queryAll(
-      By.css('li.adev-faceted-list-item:not(.docs-navigation-link-hidden)'),
+      By.css('li.docs-faceted-list-item:not(.docs-navigation-link-hidden)'),
     );
     const hiddenItems = fixture.debugElement.queryAll(
-      By.css('li.adev-faceted-list-item.docs-navigation-link-hidden'),
+      By.css('li.docs-faceted-list-item.docs-navigation-link-hidden'),
     );
 
     expect(visibleItems.length).toBe(2);

@@ -35,7 +35,7 @@ export const renderer: Partial<MarkedRenderer> = {
 
     return `
       <div class="docs-code" role="group">
-        <pre class="adev-mini-scroll-track">
+        <pre class="docs-mini-scroll-track">
           <code>
             ${lines.map((line) => `<span class="hljs-ln-line">${line}</span>`).join('')}
           </code>
@@ -69,7 +69,7 @@ export const renderer: Partial<MarkedRenderer> = {
   },
   table(header: string, body: string): string {
     return `
-      <div class="docs-table adev-scroll-track-transparent">
+      <div class="docs-table docs-scroll-track-transparent">
         <table>
           <thead>
             ${header}
