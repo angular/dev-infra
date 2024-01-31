@@ -5,7 +5,7 @@ label {
   align-items: center;
 }
 
-.adev-label {
+.docs-label {
   font-size: 0.875rem;
   font-style: normal;
   font-weight: 500;
@@ -14,7 +14,7 @@ label {
   color: var(--quaternary-contrast);
 }
 
-.adev-toggle {
+.docs-toggle {
   position: relative;
   display: inline-block;
 
@@ -30,7 +30,7 @@ label {
   }
 }
 
-.adev-slider {
+.docs-slider {
   position: absolute;
   cursor: pointer;
   border-radius: 34px;
@@ -64,7 +64,7 @@ label {
 }
 
 input {
-  &:checked + .adev-slider {
+  &:checked + .docs-slider {
     // background
     &::before {
       opacity: 1;

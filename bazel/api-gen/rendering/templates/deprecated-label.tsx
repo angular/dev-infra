@@ -18,7 +18,7 @@ export function DeprecatedLabel(props: { entry: MethodEntryRenderable | Function
   const entry = props.entry;
 
   if (entry.isDeprecated) {
-    return (<span className={`${PARAM_KEYWORD_CLASS_NAME} adev-deprecated`}>@deprecated</span>);
+    return (<span className={`${PARAM_KEYWORD_CLASS_NAME} docs-deprecated`}>@deprecated</span>);
   }
 
   return (<></>);

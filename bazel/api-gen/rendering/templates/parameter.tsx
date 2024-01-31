@@ -19,10 +19,10 @@ export function Parameter(props: {param: ParameterEntryRenderable}) {
   return (
       <div className={PARAM_GROUP_CLASS_NAME}>
         {/*TODO: isOptional, isRestParam*/}
-        <span class="adev-param-keyword">@param</span>
-        <span class="adev-param-name">{param.name}</span>
+        <span class="docs-param-keyword">@param</span>
+        <span class="docs-param-name">{param.name}</span>
         <code>{param.type}</code>
-        <RawHtml value={param.htmlDescription} className="adev-parameter-description" />
+        <RawHtml value={param.htmlDescription} className="docs-parameter-description" />
       </div>
   );
 }

@@ -30,7 +30,7 @@
       margin-inline-start: 0.25rem;
     }
 
-    .adev-dark-mode & {
+    .docs-dark-mode & {
       // Lighten the text a bit for contrast
       color: color-mix(in srgb, var(--pill-accent) 60%, white 70%);
       background: color-mix(in srgb, var(--pill-accent) 10%, white 2%);

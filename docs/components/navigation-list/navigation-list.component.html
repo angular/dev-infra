@@ -1,16 +1,16 @@
 <ng-template #navigationList let-navigationItems>
   <ul
-    class="docs-navigation-list adev-faceted-list"
+    class="docs-navigation-list docs-faceted-list"
     [class.docs-navigation-list-dropdown]="isDropdownView"
   >
     @for (item of navigationItems; track $index) {
     <li
-      class="adev-faceted-list-item"
+      class="docs-faceted-list-item"
       [class.docs-navigation-link-hidden]="displayItemsToLevel && item.level > displayItemsToLevel"
     >
       @if (item.path) { @if (item.isExternal) {
       <a [href]="item.path" target="_blank">
-        <span [class.adev-external-link]="item.isExternal">{{ item.label }}</span>
+        <span [class.docs-external-link]="item.isExternal">{{ item.label }}</span>
         @if (item.children && item.level! > 1 && !item.isExpanded) {
         <docs-icon>chevron_right</docs-icon>
         }
@@ -25,7 +25,7 @@
           paths: 'exact',
           exact: false
         }"
-        routerLinkActive="adev-faceted-list-item-active"
+        routerLinkActive="docs-faceted-list-item-active"
         (click)="emitClickOnLink()"
       >
         <span>{{ item.label }}</span>
@@ -36,7 +36,7 @@
       } } @else {
       <!-- Nav Section Header -->
       @if (item.level !== collapsableLevel && item.level !== expandableLevel) {
-      <div class="adev-secondary-nav-header">
+      <div class="docs-secondary-nav-header">
         <span>{{ item.label }}</span>
       </div>
       }
@@ -48,11 +48,11 @@
         (click)="toggle(item)"
         attr.aria-label="{{ item.isExpanded ? 'Collapse' : 'Expand' }} {{ item.label }}"
         [attr.aria-expanded]="item.isExpanded"
-        class="adev-secondary-nav-button"
-        [class.adev-faceted-list-item-active]="item | isActiveNavigationItem: activeItem()"
-        [class.adev-expanded-button]="item.children && item.level == collapsableLevel"
-        [class.adev-not-expanded-button]="item.children && item.level === expandableLevel"
-        [class.adev-nav-item-has-icon]="
+        class="docs-secondary-nav-button"
+        [class.docs-faceted-list-item-active]="item | isActiveNavigationItem: activeItem()"
+        [class.docs-expanded-button]="item.children && item.level == collapsableLevel"
+        [class.docs-not-expanded-button]="item.children && item.level === expandableLevel"
+        [class.docs-nav-item-has-icon]="
           item.children && item.level === expandableLevel && !item.isExpanded
         "
       >

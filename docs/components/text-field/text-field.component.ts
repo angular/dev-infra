@@ -33,7 +33,7 @@ import {IconComponent} from '../icon/icon.component';
     },
   ],
   host: {
-    class: 'adev-form-element',
+    class: 'docs-form-element',
   },
 })
 export class TextField implements ControlValueAccessor {

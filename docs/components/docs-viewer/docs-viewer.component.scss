@@ -17,7 +17,7 @@
   }
 
   // If rendered on the docs page, accommodate width for TOC
-  adev-docs & {
+  docs-docs & {
     @media only screen and (min-width: 1430px) and (max-width: 1550px) {
       width: calc(100% - 195px - var(--layout-padding));
       max-width: var(--page-width);

@@ -12,7 +12,7 @@ import {ClassMember} from './class-member';
 
 export function ClassMemberList(props: {membersGroups: Map<string, MemberEntryRenderable[]>}) {
   return (
-    <div class="adev-reference-members">
+    <div class="docs-reference-members">
       {Array.from(props.membersGroups).map(([_, group]) => (
         <ClassMember members={group} />
       ))}

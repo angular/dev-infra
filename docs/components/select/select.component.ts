@@ -31,7 +31,7 @@ export interface SelectOption {
     },
   ],
   host: {
-    class: 'adev-form-element',
+    class: 'docs-form-element',
   },
 })
 export class Select implements ControlValueAccessor {

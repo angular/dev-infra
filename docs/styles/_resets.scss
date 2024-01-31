@@ -79,7 +79,7 @@
   }
 
   // Select & Input
-  .adev-form-element {
+  .docs-form-element {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -180,7 +180,7 @@
   }
 
   // Material tab styling on Reference page
-  .adev-reference-tabs {
+  .docs-reference-tabs {
     .mat-mdc-tab-labels {
       gap: 20px;
       border-bottom: 1px solid var(--senary-contrast);
@@ -197,9 +197,9 @@
   }
 
   // Tabs on Tutorials page, Tutorials Playground
-  .adev-tutorial-editor,
-  .adev-code-editor-tabs,
-  .adev-editor-tabs {
+  .docs-tutorial-editor,
+  .docs-code-editor-tabs,
+  .docs-editor-tabs {
     .mat-mdc-tab-header {
       --mdc-tab-indicator-active-indicator-color: transparent;
       --mat-tab-header-active-focus-indicator-color: transparent;
@@ -228,7 +228,7 @@
           border-image: var(--blue-to-cyan-vertical-gradient) 1;
         }
 
-        &:has(.adev-delete-file) {
+        &:has(.docs-delete-file) {
           padding-inline-start: 18px !important;
           padding-inline-end: 0.5px !important;
         }
@@ -236,21 +236,21 @@
     }
   }
 
-  .adev-editor-tabs {
+  .docs-editor-tabs {
     .mat-mdc-tab-header {
       border-block-end: 1px solid var(--senary-contrast);
     }
   }
 
-  .adev-code-editor-tabs {
+  .docs-code-editor-tabs {
     .mat-mdc-tab-group {
       // adjust width for + (add file) button
       max-width: calc(100% - 40px);
     }
   }
 
-  .adev-editor-tabs,
-  .adev-code-editor-tabs {
+  .docs-editor-tabs,
+  .docs-code-editor-tabs {
     .mat-mdc-tab-header {
       background-color: var(--octonary-contrast);
       transition: background-color 0.3s ease, border-color 0.3s ease;
@@ -314,7 +314,7 @@
 
 // TODO: Find better solution
 // Temporary overrides for mat-tab in API Ref
-.adev-app-main-content {
+.docs-app-main-content {
   .mat-mdc-tab-body-wrapper,
   .mat-mdc-tab-body-content,
   .mat-mdc-tab-body {

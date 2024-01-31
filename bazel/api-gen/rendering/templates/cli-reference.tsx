@@ -17,10 +17,10 @@ import {RawHtml} from './raw-html';
 export function CliCommandReference(entry: CliCommandRenderable) {
   return (
     <div className="cli">
-      <div className="adev-reference-cli-content">
+      <div className="docs-reference-cli-content">
         <HeaderCli command={entry} />
-        <div class="docs-code adev-reference-cli-toc">
-          <pre class="adev-mini-scroll-track">
+        <div class="docs-code docs-reference-cli-toc">
+          <pre class="docs-mini-scroll-track">
             <code>
               <div className={'hljs-ln-line'}>
                 ng {entry.name}

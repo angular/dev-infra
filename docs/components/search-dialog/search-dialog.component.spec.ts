@@ -81,7 +81,7 @@ describe('SearchDialog', () => {
     fixture.detectChanges();
 
     const noResultsContainer = fixture.debugElement.query(
-      By.css('.adev-search-results__no-results'),
+      By.css('.docs-search-results__no-results'),
     );
 
     expect(noResultsContainer).toBeTruthy();
@@ -92,7 +92,7 @@ describe('SearchDialog', () => {
     fixture.detectChanges();
 
     const startTypingContainer = fixture.debugElement.query(
-      By.css('.adev-search-results__start-typing'),
+      By.css('.docs-search-results__start-typing'),
     );
 
     expect(startTypingContainer).toBeTruthy();
@@ -102,8 +102,8 @@ describe('SearchDialog', () => {
     fakeSearch.searchResults.and.returnValue(fakeSearchResults);
     fixture.detectChanges();
 
-    const resultListContainer = fixture.debugElement.query(By.css('ul.adev-search-results'));
-    const resultItems = fixture.debugElement.queryAll(By.css('ul.adev-search-results li a'));
+    const resultListContainer = fixture.debugElement.query(By.css('ul.docs-search-results'));
+    const resultItems = fixture.debugElement.queryAll(By.css('ul.docs-search-results li a'));
 
     expect(resultListContainer).toBeTruthy();
     expect(resultItems.length).toBe(2);
@@ -111,7 +111,7 @@ describe('SearchDialog', () => {
     expect(resultItems[1].nativeElement.href).toBe(`${window.origin}/fakeUrl2#h1`);
   });
 
-  it('should close search dialog when user clicked outside `.adev-search-container`', () => {
+  it('should close search dialog when user clicked outside `.docs-search-container`', () => {
     const dialogContainer = fixture.debugElement.query(By.css('dialog'));
     const closeSearchDialogSpy = spyOn(fixture.componentInstance, 'closeSearchDialog');
 

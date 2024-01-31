@@ -127,16 +127,16 @@
         border: 1px solid transparent;
       }
 
-      .adev-copy {
+      .docs-copy {
         path {
           fill: var(--quinary-contrast);
         }
       }
-      .adev-check {
+      .docs-check {
         color: var(--page-background);
       }
       &:hover {
-        .adev-copy {
+        .docs-copy {
           path {
             fill: var(--octonary-contrast);
           }
@@ -165,14 +165,14 @@
     .docs-icon {
       transition: opacity 0.3s ease-out;
     }
-    .adev-copy {
+    .docs-copy {
       opacity: 1;
       path {
         transition: fill 0.3s ease;
         fill: var(--gray-400);
       }
     }
-    .adev-check {
+    .docs-check {
       opacity: 0;
       color: var(--primary-contrast);
       position: absolute;
@@ -184,16 +184,16 @@
     }
 
     &.docs-copy-source-code-button-success {
-      .adev-copy {
+      .docs-copy {
         opacity: 0;
       }
-      .adev-check {
+      .docs-check {
         opacity: 1;
       }
     }
 
     &:hover {
-      .adev-copy {
+      .docs-copy {
         path {
           fill: var(--primary-contrast);
         }

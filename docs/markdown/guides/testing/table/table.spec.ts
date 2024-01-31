@@ -12,7 +12,7 @@ describe('markdown to html', () => {
   });
 
   it('should wrap the table in custom div', () => {
-    expect(parsedMarkdown).toContain('<div class="docs-table adev-scroll-track-transparent">');
+    expect(parsedMarkdown).toContain('<div class="docs-table docs-scroll-track-transparent">');
   });
 
   it('should place the initial row as table header cells', () => {

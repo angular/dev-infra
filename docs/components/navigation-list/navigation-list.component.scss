@@ -37,11 +37,11 @@
     background-color: var(--quinary-contrast);
   }
 
-  .adev-nav-secondary & {
+  .docs-nav-secondary & {
     padding-block: 2rem;
   }
 
-  > .adev-faceted-list {
+  > .docs-faceted-list {
     border: 0;
   }
 
@@ -49,7 +49,7 @@
     display: none;
   }
 
-  .adev-nav-item-has-icon {
+  .docs-nav-item-has-icon {
     &::after {
       // FIXME: for some reason this disappears when transformed
       content: 'chevron_right';
@@ -59,12 +59,12 @@
   }
 }
 
-.adev-secondary-nav-header {
+.docs-secondary-nav-header {
   padding-block: 1.25rem;
   font-weight: 500;
 }
 
-.adev-secondary-nav-button {
+.docs-secondary-nav-button {
   width: 15rem;
   display: flex;
   justify-content: space-between;
@@ -80,7 +80,7 @@
   transition: color 0.3s ease, background 0.3s ease;
   text-align: left; // forces left alignment of text in button
 
-  &.adev-secondary-nav-button-active {
+  &.docs-secondary-nav-button-active {
     // font gradient
     background-image: var(--pink-to-purple-vertical-gradient);
     &::before {
@@ -97,13 +97,13 @@
   }
 }
 
-.adev-expanded-button {
+.docs-expanded-button {
   justify-content: start;
   gap: 0.5rem;
 }
 
 a,
-.adev-not-expanded-button {
+.docs-not-expanded-button {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -131,7 +131,7 @@ a,
   }
 }
 
-.adev-external-link {
+.docs-external-link {
   display: flex;
   align-items: center;
   justify-content: space-between;

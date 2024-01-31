@@ -45,7 +45,7 @@ export function formatCode(token: CodeToken) {
   const containerEl = JSDOM.fragment(`
   <div class="docs-code">
     ${buildHeaderElement(token)}
-    <pre class="adev-mini-scroll-track">
+    <pre class="docs-mini-scroll-track">
       <code>${token.code}</code>
     </pre>
   </div>

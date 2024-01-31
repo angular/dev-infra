@@ -52,7 +52,7 @@
       }
     }
 
-    .adev-tutorial-content & {
+    .docs-tutorial-content & {
       &::before {
         // calc(1rem + sticky tutorial nav height)
         top: calc(1rem + 120px);
@@ -69,7 +69,7 @@
       }
     }
 
-    .adev-tutorial-content:has(.adev-reveal-answer-button) & {
+    .docs-tutorial-content:has(.docs-reveal-answer-button) & {
       &::before {
         // calc(1rem + sticky tutorial nav height
         // + reveal answer button height when on smaller screens)

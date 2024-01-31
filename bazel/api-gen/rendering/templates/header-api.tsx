@@ -32,7 +32,7 @@ export function HeaderApi(props: {entry: DocEntryRenderable}) {
         </div>
       </div>
 
-      <p className={'adev-reference-description'} dangerouslySetInnerHTML={({__html: entry.shortHtmlDescription})}></p>
+      <p className={'docs-reference-description'} dangerouslySetInnerHTML={({__html: entry.shortHtmlDescription})}></p>
 
       <DocsPillRow links={entry.additionalLinks}/>
     </header>
