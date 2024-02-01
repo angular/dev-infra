@@ -91,7 +91,7 @@ runs:
         entryPoint: '${{inputs.firebase-config-dir}}'
         channelId: pr-${{github.repository}}-${{steps.artifact-info.outputs.unsafe-pull-number}}-${{inputs.workflow-artifact-name}}
 
-    - uses: marocchino/sticky-pull-request-comment@efaaab3fd41a9c3de579aba759d2552635e590fd # v2
+    - uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31 # v2
       with:
         header: ${{inputs.workflow-artifact-name}}
         message: |
