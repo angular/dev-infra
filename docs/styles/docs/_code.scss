@@ -8,6 +8,9 @@
     font-family: var(--code-font);
     border-radius: 0.25rem;
     font-weight: 400;
+    // Create a new stacking context to allow for the psuedo element content to be placed behind the
+    // text so that the text is properly selectable by the user.
+    isolation: isolate;
 
     // Inline code only
     &:not(pre *) {
@@ -29,6 +32,7 @@
         height: 100%;
         background: var(--subtle-purple);
         border-radius: 0.25rem;
+        z-index: -1;
       }
 
       a:not(.docs-anchor) > & {
@@ -50,6 +54,7 @@
           background: var(--subtle-purple);
           border-radius: 0.25rem;
           transition: background 0.3s ease;
+          z-index: -1;
         }
 
         &:hover {
