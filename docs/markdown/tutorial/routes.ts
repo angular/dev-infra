@@ -32,10 +32,10 @@ export async function generateTutorialRoutes(
     )
     .map(([path, config], idx) => {
       // Remove the number prefix from the step directory name for the path.
-      path = path.replace(/^\d+\-/, '');
+      const pathWithoutNumber = path.replace(/^\d+\-/, '');
       return {
         label: config.title,
-        path: `tutorials/${tutorialName}/${path}`,
+        path: `tutorials/${tutorialName}/${pathWithoutNumber}`,
         contentPath: `tutorials/${tutorialName}/steps/${path}/README`,
         tutorialData: {
           title: config.title,
