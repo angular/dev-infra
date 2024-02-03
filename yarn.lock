@@ -604,7 +604,7 @@ __metadata:
     karma-requirejs: "npm:^1.1.0"
     karma-sourcemap-loader: "npm:^0.4.0"
     license-checker: "npm:^25.0.1"
-    marked: "npm:^11.0.0"
+    marked: "npm:^12.0.0"
     marked-mangle: "npm:^1.1.4"
     mermaid: "npm:^10.8.0"
     minimatch: "npm:^9.0.0"
@@ -14991,12 +14991,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"marked@npm:^11.0.0":
-  version: 11.1.1
-  resolution: "marked@npm:11.1.1"
+"marked@npm:^12.0.0":
+  version: 12.0.0
+  resolution: "marked@npm:12.0.0"
   bin:
     marked: bin/marked.js
-  checksum: 10c0/77137491bb9610ceaa42a2f487ea00ec13836f19c3d41cabb80f16b283461a1d14285de42725c09d8a2fb029ae10633b07e76afc76113c8067e68eaedfdf8bf6
+  checksum: 10c0/485c0d2a1b59f7d305435d2d65aac477eee8e47ccd686e06c35145b7186c399fd741543f7c0bb02e67d53b3cc0341f491d967ca40a5c3aa49c6cc466e1f5d872
   languageName: node
   linkType: hard
 
