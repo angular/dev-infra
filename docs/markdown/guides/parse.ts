@@ -24,6 +24,13 @@ import {docsCodeExtension} from './extensions/docs-code/docs-code';
 import {docsCodeMultifileExtension} from './extensions/docs-code/docs-code-multifile';
 import {ParserContext, setContext} from './utils';
 
+/**
+ * Describe a HANDLE_MERMAID value which esbuild will use at build time to determine if the mermaid
+ * related code should be included in the bundle.
+ * THIS VALUE IS NOT AVAILABLE AT RUNTIME.
+ */
+export declare const HANDLE_MERMAID: boolean;
+
 export async function parseMarkdown(
   markdownContent: string,
   context: ParserContext,
@@ -48,6 +55,7 @@ export async function parseMarkdown(
       docsCodeExtension,
       docsCodeMultifileExtension,
     ],
+    walkTokens: (HANDLE_MERMAID && (await import('./handle-tokens')).handleToken) || undefined,
     // The async option causes marked to await walkTokens functions before parsing the tokens and returning an HTML string.
     // We leverage this to allow us to use async libraries like mermaid and building stackblitz examples.
     async: true,

@@ -31,6 +31,7 @@ ng_package(
         "//docs/markdown:_stackblitz.bzl",
         "//docs/markdown:_tutorial.bzl",
         "//docs/markdown:guides.mjs",
+        "//docs/markdown:guides-no-mermaid.mjs",
         "//docs/markdown:playground.mjs",
         "//docs/markdown:stackblitz.mjs",
         "//docs/markdown:tutorial.mjs",

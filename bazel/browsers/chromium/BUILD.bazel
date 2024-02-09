@@ -30,6 +30,13 @@ browser(
     ],
 )
 
+browser(
+    name = "chromium-for-generation",
+    testonly = False,
+    metadata = "chromium.json",
+    deps = PLATFORM_METADATA,
+)
+
 browser_toolchain_alias(
     name = "toolchain_alias",
     deps = PLATFORM_METADATA,

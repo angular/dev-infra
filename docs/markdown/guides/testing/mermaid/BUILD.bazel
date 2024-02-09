@@ -4,7 +4,7 @@ ts_library(
     name = "unit_test_lib",
     testonly = True,
     srcs = glob([
-        "**/*.spec.ts",
+        "*.spec.ts",
     ]),
     deps = [
         "//docs/markdown/guides",
@@ -13,36 +13,32 @@ ts_library(
         "@npm//@types/jsdom",
         "@npm//@types/node",
         "@npm//jsdom",
-    ],
-)
-
-ts_library(
-    name = "bootstrap",
-    testonly = True,
-    srcs = [
-        "bootstrap.init.ts",
-    ],
-    deps = [
-        "@npm//@types/node",
+        "@npm//marked",
     ],
 )
 
 jasmine_node_test(
     name = "unit_tests",
-    bootstrap = [
-        ":bootstrap",
-    ],
     data = [
+        "//bazel/browsers/chromium:chromium-for-generation",
         "@npm//jsdom",
+        "@npm//mermaid",
+        "@npm//playwright-core",
     ] + glob([
         "**/*.md",
         "**/*.svg",
         "**/*.ts",
     ]),
+    env = {
+        "CHROME_BIN": "$(CHROMIUM)",
+    },
     # JSDOM should not be bundled because it has workers and dynamic imports.
-    # playwright-core cannot be bundled because of its cjs usage.
     external = [
         "jsdom",
+        "playwright-core",
     ],
     specs = [":unit_test_lib"],
+    toolchains = [
+        "//bazel/browsers/chromium:toolchain_alias",
+    ],
 )
