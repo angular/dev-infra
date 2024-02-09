@@ -1,7 +1,7 @@
 load("@npm//@bazel/jasmine:index.bzl", _jasmine_node_test = "jasmine_node_test")
 load("//bazel/spec-bundling:index.bzl", "spec_bundle")
 
-def jasmine_node_test(name, specs = [], external = [], **kwargs):
+def jasmine_node_test(name, specs = [], external = [], bootstrap = ["//tools/jasmine:bootstrap"], **kwargs):
     templated_args = kwargs.pop("templated_args", []) + [
         # TODO: Disable the linker fully here. Currently it is needed for ESM.
         "--bazel_patch_module_resolver",
@@ -11,7 +11,7 @@ def jasmine_node_test(name, specs = [], external = [], **kwargs):
         name = "%s_test_bundle" % name,
         platform = "node",
         target = "es2020",
-        bootstrap = ["//tools/jasmine:bootstrap"],
+        bootstrap = bootstrap,
         deps = specs,
         external = external,
     )

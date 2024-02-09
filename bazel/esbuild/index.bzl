@@ -22,7 +22,7 @@ def esbuild(
         **kwargs
     )
 
-def esbuild_esm_bundle(name, **kwargs):
+def esbuild_esm_bundle(name, define = {}, **kwargs):
     """ESBuild macro supports an ESM/CJS interop.
 
     Args:
@@ -40,6 +40,7 @@ import {createRequire as __cjsCompatRequire} from 'module';
 const require = __cjsCompatRequire(import.meta.url);
 """,
         },
+        define = define,
     )
 
     esbuild(

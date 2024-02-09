@@ -30,15 +30,24 @@ def _generate_guides(ctx):
         # For each input file "xxx.md", we want to write an output file "xxx.html"
         html_outputs += [ctx.actions.declare_file("%s.html" % relative_basepath)]
 
-    # Define an action that runs the nodejs_binary executable. This is
-    # the main thing that this rule does.
-    run_node(
-        ctx = ctx,
-        inputs = depset(ctx.files.srcs + ctx.files.data),
-        executable = "_generate_guides",
-        outputs = html_outputs,
-        arguments = [args],
-    )
+    # Define an action that runs the nodejs_binary executable. This is the main thing that this
+    # rule does. If mermaid blocks are enabled then a different executable is used.
+    if (ctx.attr.mermaid_blocks):
+        run_node(
+            ctx = ctx,
+            inputs = depset(ctx.files.srcs + ctx.files.data),
+            executable = "_generate_guides",
+            outputs = html_outputs,
+            arguments = [args],
+        )
+    else:
+        run_node(
+            ctx = ctx,
+            inputs = depset(ctx.files.srcs + ctx.files.data),
+            executable = "_generate_guides_no_mermaid",
+            outputs = html_outputs,
+            arguments = [args],
+        )
 
     # The return value describes what the rule is producing. In this case we need to specify
     # the "DefaultInfo" with the output html files.
@@ -60,10 +69,20 @@ generate_guides = rule(
             doc = """Source referenced from within the markdown.""",
             allow_files = True,
         ),
+        "mermaid_blocks": attr.bool(
+            doc = """Whether to transform mermaid blocks.""",
+            default = False,
+        ),
 
         # The executable for this rule (private).
         "_generate_guides": attr.label(
-            default = Label("//docs/markdown"),
+            default = Label("//docs/markdown:markdown"),
+            executable = True,
+            cfg = "exec",
+        ),
+        # The executable for this rule when no mermaid process is required (private).
+        "_generate_guides_no_mermaid": attr.label(
+            default = Label("//docs/markdown:markdown_no_mermaid"),
             executable = True,
             cfg = "exec",
         ),

@@ -23,6 +23,8 @@ ts_library(
         "@npm//html-entities",
         "@npm//jsdom",
         "@npm//marked",
+        "@npm//mermaid",
+        "@npm//playwright-core",
     ],
 )
 

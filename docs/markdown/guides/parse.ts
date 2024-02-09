@@ -23,6 +23,7 @@ import {docsCodeBlockExtension} from './extensions/docs-code/docs-code-block';
 import {docsCodeExtension} from './extensions/docs-code/docs-code';
 import {docsCodeMultifileExtension} from './extensions/docs-code/docs-code-multifile';
 import {ParserContext, setContext} from './utils';
+import {walkTokens} from './walk-tokens';
 
 export async function parseMarkdown(
   markdownContent: string,
@@ -48,6 +49,7 @@ export async function parseMarkdown(
       docsCodeExtension,
       docsCodeMultifileExtension,
     ],
+    walkTokens,
     // The async option causes marked to await walkTokens functions before parsing the tokens and returning an HTML string.
     // We leverage this to allow us to use async libraries like mermaid and building stackblitz examples.
     async: true,

@@ -9,10 +9,36 @@ package(default_visibility = ["//docs/markdown:__subpackages__"])
 
 esbuild_esm_bundle(
     name = "guides",
+    define = {
+        "HANDLE_MERMAID": "true",
+    },
     entry_point = "//docs/markdown/guides:index.ts",
     # JSDOM should not be bundled because it has workers and dynamic imports.
-    external = ["jsdom"],
+    # playwright-core cannot be bundled because of its cjs usage.
+    external = [
+        "jsdom",
+        "playwright-core",
+    ],
     output = "guides.mjs",
+    platform = "node",
+    target = "es2022",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//docs/markdown/guides:index",
+    ],
+)
+
+esbuild_esm_bundle(
+    name = "guides_no_mermaid",
+    define = {
+        "HANDLE_MERMAID": "false",
+    },
+    entry_point = "//docs/markdown/guides:index.ts",
+    # JSDOM should not be bundled because it has workers and dynamic imports.
+    external = [
+        "jsdom",
+    ],
+    output = "guides-no-mermaid.mjs",
     platform = "node",
     target = "es2022",
     visibility = ["//visibility:public"],
@@ -99,9 +125,27 @@ nodejs_binary(
 nodejs_binary(
     name = "markdown",
     data = [
+        "//bazel/browsers/chromium:chromium-for-generation",
         "@npm//jsdom",
+        "@npm//mermaid",
+        "@npm//playwright-core",
     ],
     entry_point = "//docs/markdown:guides.mjs",
+    env = {
+        "CHROME_BIN": "$(CHROMIUM)",
+    },
+    toolchains = [
+        "//bazel/browsers/chromium:toolchain_alias",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+nodejs_binary(
+    name = "markdown_no_mermaid",
+    data = [
+        "@npm//jsdom",
+    ],
+    entry_point = "//docs/markdown:guides-no-mermaid.mjs",
     visibility = ["//visibility:public"],
 )
 

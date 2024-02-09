@@ -45,6 +45,9 @@ export const docsCodeBlockExtension = {
     return undefined;
   },
   renderer(this: RendererThis, token: DocsCodeBlock) {
+    if (token.language === 'mermaid') {
+      return token.code;
+    }
     return formatCode(token);
   },
 };

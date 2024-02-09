@@ -29,6 +29,7 @@
 @use 'docs/steps';
 @use 'docs/table';
 @use 'docs/video';
+@use 'docs/mermaid';
 
 // Global
 @include resets.resets();
