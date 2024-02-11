@@ -127,7 +127,7 @@ export class ExampleViewer {
 
   copyLink(): void {
     // Reconstruct the URL using `origin + pathname` so we drop any pre-existing hash.
-    const fullUrl = location.origin + location.pathname + '#example-' + this.exampleMetadata()?.id;
+    const fullUrl = location.origin + location.pathname + location.search + '#example-' + this.exampleMetadata()?.id;
     this.clipboard.copy(fullUrl);
   }
 
