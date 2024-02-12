@@ -77,22 +77,20 @@ export class ExampleViewer {
   expanded = signal<boolean>(false);
   exampleMetadata = signal<ExampleMetadata | null>(null);
   snippetCode = signal<Snippet | undefined>(undefined);
-  tabs = computed(
-    () =>
-      this.exampleMetadata()?.files.map((file) => ({
-        name:
-          file.title ??
-          (this.shouldDisplayFullName() ? file.name : this.getFileExtension(file.name)),
-        code: file.content,
-      })),
+  tabs = computed(() =>
+    this.exampleMetadata()?.files.map((file) => ({
+      name:
+        file.title ?? (this.shouldDisplayFullName() ? file.name : this.getFileExtension(file.name)),
+      code: file.content,
+    })),
   );
   view = computed(() =>
     this.exampleMetadata()?.files.length === 1
       ? CodeExampleViewMode.SNIPPET
       : CodeExampleViewMode.MULTI_FILE,
   );
-  expandable = computed(
-    () => this.exampleMetadata()?.files.some((file) => !!file.visibleLinesRange),
+  expandable = computed(() =>
+    this.exampleMetadata()?.files.some((file) => !!file.visibleLinesRange),
   );
 
   async renderExample(): Promise<void> {
@@ -127,7 +125,12 @@ export class ExampleViewer {
 
   copyLink(): void {
     // Reconstruct the URL using `origin + pathname` so we drop any pre-existing hash.
-    const fullUrl = location.origin + location.pathname + location.search + '#example-' + this.exampleMetadata()?.id;
+    const fullUrl =
+      location.origin +
+      location.pathname +
+      location.search +
+      '#example-' +
+      this.exampleMetadata()?.id;
     this.clipboard.copy(fullUrl);
   }
 
