@@ -16,6 +16,10 @@ export const actionLabels = createTypedObject<ActionLabel>()({
     description: 'The PR is in need of a google3 presubmit',
     name: 'action: presubmit',
   },
+  ACTION_GLOBAL_PRESUBMIT: {
+    description: 'The PR is in need of a google3 global presubmit',
+    name: 'action: global presubmit',
+  },
   ACTION_REVIEW: {
     description: 'The PR is still awaiting reviews from at least one requested reviewer',
     name: 'action: review',

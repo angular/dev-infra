@@ -8,7 +8,6 @@
 
 // Exposes config types, helpers for the individual commands.
 export * from './utils/config.js';
-export * from './caretaker/config.js';
 export * from './commit-message/config.js';
 export * from './format/config.js';
 export * from './pr/config/index.js';

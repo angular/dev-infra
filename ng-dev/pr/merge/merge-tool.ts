@@ -20,7 +20,7 @@ import {
 import {loadAndValidatePullRequest, PullRequest} from './pull-request.js';
 import {GithubApiMergeStrategy} from './strategies/api-merge.js';
 import {AutosquashMergeStrategy} from './strategies/autosquash-merge.js';
-import {GithubConfig, NgDevConfig} from '../../utils/config.js';
+import {CaretakerConfig, GithubConfig, GoogleSyncConfig, NgDevConfig} from '../../utils/config.js';
 import {assertValidReleaseConfig} from '../../release/config/index.js';
 import {
   ActiveReleaseTrains,
@@ -34,7 +34,6 @@ import {
   UserAbortedMergeToolError,
 } from './failures.js';
 import {PullRequestValidationConfig} from '../common/validation/validation-config.js';
-import {PullRequestValidationFailure} from '../common/validation/validation-failure.js';
 
 export interface PullRequestMergeFlags {
   branchPrompt: boolean;
@@ -59,9 +58,14 @@ export class MergeTool {
   private flags: PullRequestMergeFlags;
 
   constructor(
-    public config: NgDevConfig<{pullRequest: PullRequestConfig; github: GithubConfig}>,
+    public config: NgDevConfig<{
+      pullRequest: PullRequestConfig;
+      github: GithubConfig;
+      caretaker: CaretakerConfig;
+    }>,
     public git: AuthenticatedGitClient,
     flags: Partial<PullRequestMergeFlags>,
+    public googleSyncConfig: GoogleSyncConfig | null,
   ) {
     // Update flags property with the provided flags values as patches to the default flag values.
     this.flags = {...defaultPullRequestMergeFlags, ...flags};

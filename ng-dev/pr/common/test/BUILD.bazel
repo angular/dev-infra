@@ -1,0 +1,35 @@
+load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob(["**/*.ts"]),
+    visibility = [
+        "//ng-dev/pr:__subpackages__",
+    ],
+    deps = [
+        "//ng-dev/pr/common",
+        "//ng-dev/pr/common/labels",
+        "//ng-dev/pr/config",
+        "//ng-dev/utils",
+        "//ng-dev/utils/testing",
+        "@npm//@octokit/plugin-rest-endpoint-methods",
+        "@npm//@types/folder-hash",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+        "@npm//@types/semver",
+        "@npm//@types/yargs",
+        "@npm//folder-hash",
+        "@npm//nock",
+        "@npm//semver",
+        "@npm//yargs",
+    ],
+)
+
+jasmine_node_test(
+    name = "test",
+    args = ["'$(GIT_BIN_PATH)'"],
+    shard_count = 6,
+    specs = [":test_lib"],
+    toolchains = ["//bazel/git-toolchain:current_git_toolchain"],
+)

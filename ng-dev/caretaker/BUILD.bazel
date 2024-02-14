@@ -1,32 +1,15 @@
 load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
 
 ts_library(
-    name = "g3_sync_config",
-    srcs = ["g3-sync-config.ts"],
-    visibility = [
-        "//github-actions/google-internal-tests:__subpackages__",
-        "//ng-dev:__subpackages__",
-    ],
-    deps = [
-        "//tools/esm-interop:jsonc-parser",
-        "@npm//@types/minimatch",
-        "@npm//@types/node",
-        "@npm//minimatch",
-    ],
-)
-
-ts_library(
     name = "caretaker",
     srcs = glob(
         ["**/*.ts"],
         exclude = [
             "**/*.spec.ts",
-            "g3-sync-config.ts",
         ],
     ),
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
-        ":g3_sync_config",
         "//ng-dev/release/versioning",
         "//ng-dev/utils",
         "@npm//@types/inquirer",
@@ -47,7 +30,6 @@ ts_library(
     srcs = glob(["**/*.spec.ts"]),
     deps = [
         ":caretaker",
-        ":g3_sync_config",
         "//ng-dev/release/versioning",
         "//ng-dev/utils",
         "//ng-dev/utils/testing",

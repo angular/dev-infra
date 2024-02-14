@@ -6,10 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Minimatch} from 'minimatch';
 import {pathToFileURL} from 'url';
 import {join} from 'path';
-import {Assertions, MultipleAssertions} from './config-assertions.js';
+import fs from 'fs';
 
+import {Assertions, MultipleAssertions} from './config-assertions.js';
+import * as jsonc from '../../tools/esm-interop/jsonc-parser.js';
 import {Log} from './logging.js';
 import {getCachedConfig, setCachedConfig} from './config-cache.js';
 import {determineRepoBaseDirFromCwd} from './repo-directory.js';
@@ -41,6 +44,40 @@ export interface GithubConfig {
   private?: boolean;
   /** Whether to default to use NgDevService for authentication. */
   useNgDevAuthService?: boolean;
+}
+
+/** Configuration describing how files are synced into Google. */
+export interface GoogleSyncConfig {
+  /**
+   * Patterns matching files which are synced into Google. Patterns
+   * should be relative to the project directory.
+   */
+  syncedFilePatterns: string[];
+  /**
+   * Patterns matching files which are never synced into Google. Patterns
+   * should be relative to the project directory.
+   */
+  alwaysExternalFilePatterns: string[];
+  /**
+   * Patterns matching files which are part of the shared primitives.
+   * Patterns should be relative to the project directory.
+   */
+  primitivesFilePatterns: string[];
+}
+
+export interface CaretakerConfig {
+  /** Github queries showing a snapshot of pulls/issues caretakers need to monitor. */
+  githubQueries?: {name: string; query: string}[];
+  /**
+   * The Github group used to track current caretakers. A second group is assumed to exist with the
+   * name "<group-name>-roster" containing a list of all users eligible for the caretaker group.
+   * */
+  caretakerGroup?: string;
+  /**
+   * Project-relative path to a config file describing how the project is synced into Google.
+   * The configuration file is expected to be valid JSONC and match {@see GoogleSyncConfig}.
+   */
+  g3SyncConfigPath?: string;
 }
 
 /**
@@ -125,9 +162,68 @@ export async function getUserConfig() {
   return {...userConfig};
 }
 
+/**
+ * Reads the configuration file from the given path.
+ *
+ * @throws {InvalidGoogleSyncConfigError} If the configuration is invalid.
+ */
+export async function getGoogleSyncConfig(absolutePath: string): Promise<{
+  ngMatchFn: SyncFileMatchFn;
+  primitivesMatchFn: SyncFileMatchFn;
+  config: GoogleSyncConfig;
+}> {
+  const content = await fs.promises.readFile(absolutePath, 'utf8');
+  const errors: jsonc.ParseError[] = [];
+  const config = jsonc.parse(content, errors) as GoogleSyncConfig;
+  if (errors.length !== 0) {
+    throw new InvalidGoogleSyncConfigError(
+      `Google Sync Configuration is invalid: ` +
+        errors.map((e) => jsonc.printParseErrorCode(e.error)).join('\n'),
+    );
+  }
+  const matchFns = transformConfigIntoMatcher(config);
+  return {
+    config,
+    ngMatchFn: matchFns.ngSyncMatchFn,
+    primitivesMatchFn: matchFns.primitivesSyncMatchFn,
+  };
+}
+
+/** Error class used when the Google Sync configuration is invalid. */
+export class InvalidGoogleSyncConfigError extends Error {}
+
+/** Describes a function for testing if a file is synced. */
+export type SyncFileMatchFn = (projectRelativePath: string) => boolean;
+
+/** Transforms the given sync configuration into a file match function. */
+export function transformConfigIntoMatcher(config: GoogleSyncConfig): {
+  ngSyncMatchFn: SyncFileMatchFn;
+  primitivesSyncMatchFn: SyncFileMatchFn;
+} {
+  const syncedFilePatterns = config.syncedFilePatterns.map((p) => new Minimatch(p));
+  const alwaysExternalFilePatterns = config.alwaysExternalFilePatterns.map((p) => new Minimatch(p));
+  const primitivesFilePatterns = config.primitivesFilePatterns.map((p) => new Minimatch(p));
+
+  // match everything that needs to be synced except external and primitives
+  const ngSyncMatchFn = (projectRelativePath: string) =>
+    syncedFilePatterns.some((p) => p.match(projectRelativePath)) &&
+    alwaysExternalFilePatterns.every((p) => !p.match(projectRelativePath)) &&
+    primitivesFilePatterns.every((p) => !p.match(projectRelativePath));
+
+  // match only primitives code that needs to be synced
+  const primitivesSyncMatchFn = (projectRelativePath: string) =>
+    primitivesFilePatterns.some((p) => p.match(projectRelativePath)) &&
+    alwaysExternalFilePatterns.every((p) => !p.match(projectRelativePath)) &&
+    syncedFilePatterns.every((p) => !p.match(projectRelativePath));
+  return {ngSyncMatchFn, primitivesSyncMatchFn};
+}
+
 /** A standard error class to thrown during assertions while validating configuration. */
 export class ConfigValidationError extends Error {
-  constructor(message?: string, public readonly errors: string[] = []) {
+  constructor(
+    message?: string,
+    public readonly errors: string[] = [],
+  ) {
     super(message);
   }
 }
@@ -150,6 +246,15 @@ export function assertValidGithubConfig<T extends NgDevConfig>(
   }
   if (errors.length) {
     throw new ConfigValidationError('Invalid `github` configuration', errors);
+  }
+}
+
+/** Retrieve and validate the config as `CaretakerConfig`. */
+export function assertValidCaretakerConfig<T extends NgDevConfig>(
+  config: T & Partial<{caretaker: CaretakerConfig}>,
+): asserts config is T & {caretaker: CaretakerConfig} {
+  if (config.caretaker === undefined) {
+    throw new ConfigValidationError(`No configuration defined for "caretaker"`);
   }
 }
 

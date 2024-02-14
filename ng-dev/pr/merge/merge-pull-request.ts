@@ -6,7 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {assertValidGithubConfig, ConfigValidationError, getConfig} from '../../utils/config.js';
+import {
+  assertValidCaretakerConfig,
+  assertValidGithubConfig,
+  ConfigValidationError,
+  getConfig,
+  getGoogleSyncConfig,
+  GoogleSyncConfig,
+} from '../../utils/config.js';
 import {bold, Log} from '../../utils/logging.js';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {isGithubApiError} from '../../utils/git/github.js';
@@ -114,12 +121,22 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
 async function createPullRequestMergeTool(flags: PullRequestMergeFlags) {
   try {
     const config = await getConfig();
+
     assertValidGithubConfig(config);
     assertValidPullRequestConfig(config);
+    assertValidCaretakerConfig(config);
+
+    let googleSyncConfig: GoogleSyncConfig | null = null;
+    if (config.caretaker.g3SyncConfigPath) {
+      try {
+        const configWithMatchers = await getGoogleSyncConfig(config.caretaker.g3SyncConfigPath);
+        googleSyncConfig = configWithMatchers.config;
+      } catch {}
+    }
+
     /** The singleton instance of the authenticated git client. */
     const git = await AuthenticatedGitClient.get();
-
-    return new MergeTool(config, git, flags);
+    return new MergeTool(config, git, flags, googleSyncConfig);
   } catch (e) {
     if (e instanceof ConfigValidationError) {
       if (e.errors.length) {

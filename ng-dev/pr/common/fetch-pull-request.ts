@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Minimatch} from 'minimatch';
 import {
   CheckConclusionState,
   CheckStatusState,
@@ -14,10 +15,12 @@ import {
   StatusState,
   CommentAuthorAssociation,
 } from '@octokit/graphql-schema';
-import {getPendingPrs, getPr} from '../../utils/github.js';
+import {getPendingPrs, getPr, getPrFiles} from '../../utils/github.js';
 import {alias, types as graphqlTypes, onUnion, optional, params} from 'typed-graphqlify';
 
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
+import {GoogleSyncConfig} from '../../utils/config.js';
+import {requiresLabels} from './labels/index.js';
 
 /** A status for a pull request status or check. */
 export enum PullRequestStatus {
@@ -50,6 +53,8 @@ export const PR_SCHEMA = {
       nodes: [
         {
           commit: {
+            oid: graphqlTypes.string,
+            authoredDate: graphqlTypes.string,
             statusCheckRollup: optional({
               state: graphqlTypes.custom<StatusState>(),
               contexts: params(
@@ -88,6 +93,10 @@ export const PR_SCHEMA = {
       nodes: [
         {
           authorAssociation: graphqlTypes.custom<CommentAuthorAssociation>(),
+          bodyText: graphqlTypes.string,
+          commit: {
+            oid: graphqlTypes.string,
+          },
         },
       ],
     },
@@ -125,6 +134,16 @@ export const PR_SCHEMA = {
 
 export type PullRequestFromGithub = typeof PR_SCHEMA;
 
+export const PR_FILES_SCHEMA = {
+  nodes: [
+    {
+      path: graphqlTypes.string,
+    },
+  ],
+};
+
+export type PullRequestFilesFromGithub = typeof PR_FILES_SCHEMA;
+
 /** Type describing the normalized and combined status of a pull request. */
 export type PullRequestStatusInfo = {
   combinedStatus: PullRequestStatus;
@@ -148,6 +167,14 @@ export async function fetchPendingPullRequestsFromGithub(
   git: AuthenticatedGitClient,
 ): Promise<PullRequestFromGithub[] | null> {
   return await getPendingPrs(PR_SCHEMA, git);
+}
+
+/** Fetches a pull request from Github. Returns null if an error occurred. */
+export async function fetchPullRequestFilesFromGithub(
+  git: AuthenticatedGitClient,
+  prNumber: number,
+): Promise<PullRequestFilesFromGithub[] | null> {
+  return await getPrFiles(PR_FILES_SCHEMA, prNumber, git);
 }
 
 /**
@@ -191,6 +218,46 @@ export function getStatusesForPullRequest(
     combinedStatus: normalizeGithubStatusState(statusCheckRollup.state),
     statuses,
   };
+}
+
+/**
+ * Gets the list of file paths included in a pull request.
+ */
+export function pullRequestHasPrimitivesFiles(
+  pullRequestFiles: string[],
+  config: GoogleSyncConfig,
+): boolean {
+  const primitivesFilePatterns = config.primitivesFilePatterns.map((p) => new Minimatch(p));
+  for (let path of pullRequestFiles) {
+    if (primitivesFilePatterns.some((p) => p.match(path))) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Checks for `TESTED=[reason]` review comment on a current commit sha from a google organization member
+ */
+export function pullRequestHasValidTestedComment(pullRequest: PullRequestFromGithub): boolean {
+  pullRequest.commits.nodes.sort((a,b) => ((a.commit.authoredDate <= b.commit.authoredDate) ? 1 : -1));
+  const sha = pullRequest.commits.nodes[0].commit.oid;
+  // TODO: add check for Google organization membership
+  const comments = pullRequest.reviews.nodes.filter(
+    (c) =>
+      c.authorAssociation === 'MEMBER' &&
+      c.bodyText.startsWith('TESTED=') &&
+      c.commit.oid === sha,
+  );
+  return comments.length > 0;
+}
+
+/**
+ * Checks the list of labels for the `requires: TGP` label
+ */
+export function pullRequestRequiresTGP(pullRequest: PullRequestFromGithub): boolean {
+  const labels = pullRequest.labels.nodes.map((f) => f.name);
+  return labels.includes(requiresLabels.REQUIRES_TGP.name);
 }
 
 /** Retrieve the normalized PullRequestStatus for the provided github status state. */
