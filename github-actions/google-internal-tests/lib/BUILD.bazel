@@ -6,7 +6,7 @@ ts_library(
     name = "lib",
     srcs = glob(["*.ts"]),
     deps = [
-        "//ng-dev/caretaker:g3_sync_config",
+        "//ng-dev/utils",
         "@npm//@actions/core",
         "@npm//@actions/github",
         "@npm//@octokit/rest",

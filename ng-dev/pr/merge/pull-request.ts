@@ -10,7 +10,10 @@ import {
   getTargetBranchesAndLabelForPullRequest,
   PullRequestTarget,
 } from '../common/targeting/target-label.js';
-import {fetchPullRequestFromGithub} from '../common/fetch-pull-request.js';
+import {
+  fetchPullRequestFromGithub,
+  fetchPullRequestFilesFromGithub,
+} from '../common/fetch-pull-request.js';
 import {FatalMergeToolError} from './failures.js';
 import {ActiveReleaseTrains} from '../../release/versioning/active-release-trains.js';
 import {PullRequestValidationConfig} from '../common/validation/validation-config.js';
@@ -19,9 +22,10 @@ import {TEMP_PR_HEAD_BRANCH} from './strategies/strategy.js';
 import {mergeLabels} from '../common/labels/merge.js';
 import {PullRequestValidationFailure} from '../common/validation/validation-failure.js';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
-import {GithubConfig, NgDevConfig} from '../../utils/config.js';
+import {GithubConfig, NgDevConfig, CaretakerConfig, GoogleSyncConfig} from '../../utils/config.js';
 import {PullRequestConfig} from '../config/index.js';
 import {targetLabels} from '../common/labels/target.js';
+import {G3Stats} from '../../utils/g3.js';
 
 /** Interface that describes a pull request. */
 export interface PullRequest {
@@ -33,6 +37,7 @@ export interface PullRequest {
   title: string;
   /** Labels applied to the pull request. */
   labels: string[];
+  /** Files in the pull request. */
   /** List of branches this PR should be merged into. */
   targetBranches: string[];
   /** Branch that the PR targets in the Github UI. */
@@ -53,6 +58,8 @@ export interface PullRequest {
   validationFailures: PullRequestValidationFailure[];
   /** The SHA for the latest commit in the pull request. */
   headSha: string;
+  /** A list of files included in the pull request */
+  files: string[];
 }
 
 /**
@@ -69,9 +76,15 @@ export async function loadAndValidatePullRequest(
   {
     git,
     config,
+    googleSyncConfig,
   }: {
     git: AuthenticatedGitClient;
-    config: NgDevConfig<{pullRequest: PullRequestConfig; github: GithubConfig}>;
+    config: NgDevConfig<{
+      pullRequest: PullRequestConfig;
+      github: GithubConfig;
+      caretaker: CaretakerConfig;
+    }>;
+    googleSyncConfig: GoogleSyncConfig | null;
   },
   prNumber: number,
   validationConfig: PullRequestValidationConfig,
@@ -91,6 +104,8 @@ export async function loadAndValidatePullRequest(
   // and the active release train information is not available/computable.
   let activeReleaseTrains: ActiveReleaseTrains | null = null;
   let target: PullRequestTarget | null = null;
+  let files = await loadPullRequestFiles(git, prNumber);
+  let diffStats = null;
 
   if (config.pullRequest.__noTargetLabeling) {
     // If there is no target labeling, we always target the main branch and treat the PR as
@@ -113,12 +128,26 @@ export async function loadAndValidatePullRequest(
     );
   }
 
+
+  if (googleSyncConfig && googleSyncConfig.primitivesFilePatterns.length > 0) {
+    diffStats = await G3Stats.retrieveDiffStats(git, {
+      caretaker: config.caretaker,
+      github: config.github,
+    });
+    if (diffStats === undefined) {
+      throw new FatalMergeToolError('G3 diff stats could not be retrieved.');
+    }
+  }
+
   const validationFailures = await assertValidPullRequest(
     prData,
+    files,
+    diffStats,
     validationConfig,
     config,
     activeReleaseTrains,
     target,
+    googleSyncConfig,
   );
 
   const requiredBaseSha =
@@ -152,5 +181,27 @@ export async function loadAndValidatePullRequest(
     title: prData.title,
     commitCount: prData.commits.totalCount,
     headSha: prData.headRefOid,
+    files,
   };
+}
+
+/**
+ * Loads and validates the specified pull request against the given configuration.
+ * If the pull requests fails, a pull request failure is returned.
+ *
+ * @throws {FatalMergeToolError} A fatal error might be thrown when e.g. the pull request
+ *   does not exist upstream.
+ * @throws {InvalidTargetLabelError} Error thrown if an invalid target label is applied.
+ * @throws {InvalidTargetBranchError} Error thrown if an invalid GitHub PR destination branch
+ *   is selected.
+ */
+export async function loadPullRequestFiles(
+  git: AuthenticatedGitClient,
+  prNumber: number,
+): Promise<string[]> {
+  const files = await fetchPullRequestFilesFromGithub(git, prNumber);
+  if (files === null) {
+    throw new FatalMergeToolError('Pull request could not be found.');
+  }
+  return files?.flatMap((x) => x.nodes).map((p) => p.path);
 }

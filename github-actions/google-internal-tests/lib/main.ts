@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
-import {readConfigFile} from '../../../ng-dev/caretaker/g3-sync-config.js';
+import {getGoogleSyncConfig} from '../../../ng-dev/utils/config.js';
 import path from 'path';
 import fetch from 'node-fetch';
 
@@ -27,7 +27,7 @@ async function main() {
   const githubToken = core.getInput('github-token', {required: true});
   const runTestGuideURL = core.getInput('run-tests-guide-url', {required: false});
   const syncConfigPath = path.resolve(core.getInput('sync-config', {required: true}));
-  const syncConfig = await readConfigFile(syncConfigPath);
+  const syncConfig = await getGoogleSyncConfig(syncConfigPath);
 
   const prNum = context.payload.pull_request!.number;
   const prHeadSHA = context.payload.pull_request!.head!.sha;
@@ -64,7 +64,7 @@ async function main() {
 
   let affectsGoogle = false;
   for (const f of files) {
-    if (syncConfig.matchFn(f.filename)) {
+    if (syncConfig.ngMatchFn(f.filename) || syncConfig.primitivesMatchFn(f.filename)) {
       affectsGoogle = true;
       break;
     }

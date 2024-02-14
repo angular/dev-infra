@@ -8,9 +8,8 @@
 
 import {info} from 'console';
 import {Argv} from 'yargs';
-import {assertValidGithubConfig, getConfig} from '../utils/config.js';
+import {assertValidCaretakerConfig, assertValidGithubConfig, getConfig} from '../utils/config.js';
 import {CheckModule} from './check/cli.js';
-import {assertValidCaretakerConfig} from './config.js';
 import {HandoffModule} from './handoff/cli.js';
 
 /** Build the parser for the caretaker commands. */

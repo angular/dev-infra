@@ -7,7 +7,9 @@ import {
 import {loadAndValidatePullRequest} from '../../../../ng-dev/pr/merge/pull-request.js';
 import {AutosquashMergeStrategy} from '../../../../ng-dev/pr/merge/strategies/autosquash-merge.js';
 import {
+  assertValidCaretakerConfig,
   assertValidGithubConfig,
+  CaretakerConfig,
   getConfig,
   GithubConfig,
   setConfig,
@@ -51,7 +53,7 @@ async function main(repo: {owner: string; repo: string}, token: string, pr: numb
   // Manually define the configuration for the pull request and github to prevent having to
   // checkout the repository before defining the config.
   // TODO(josephperrott): Load this from the actual repository.
-  setConfig(<{pullRequest: PullRequestConfig; github: GithubConfig}>{
+  setConfig(<{pullRequest: PullRequestConfig; github: GithubConfig; caretaker: CaretakerConfig}>{
     github: {
       mainBranchName,
       owner: repo.owner,
@@ -60,9 +62,14 @@ async function main(repo: {owner: string; repo: string}, token: string, pr: numb
     pullRequest: {
       githubApiMerge: false,
     },
+    caretaker: {},
   });
   /** The configuration used for the ng-dev tooling. */
-  const config = await getConfig([assertValidGithubConfig, assertValidPullRequestConfig]);
+  const config = await getConfig([
+    assertValidGithubConfig,
+    assertValidPullRequestConfig,
+    assertValidCaretakerConfig,
+  ]);
 
   AuthenticatedGitClient.configure(token);
   /** The git client used to perform actions. */
@@ -74,7 +81,7 @@ async function main(repo: {owner: string; repo: string}, token: string, pr: numb
 
   /** The pull request after being retrieved and validated. */
   const pullRequest = await loadAndValidatePullRequest(
-    {git, config},
+    {git, config, googleSyncConfig: null},
     pr,
     PullRequestValidationConfig.create({
       assertSignedCla: true,

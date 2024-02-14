@@ -21,6 +21,8 @@ export class PullRequestValidationConfig {
   assertCompletedReviews = true;
   assertEnforcedStatuses = true;
   assertMinimumReviews = true;
+  assertIsolatePrimitives = true;
+  assertEnforceTested = true;
 
   static create(config: Partial<PullRequestValidationConfig>) {
     return Object.assign(new PullRequestValidationConfig(), config);

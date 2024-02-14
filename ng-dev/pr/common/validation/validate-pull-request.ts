@@ -8,14 +8,16 @@
 
 import {parseCommitMessage} from '../../../commit-message/parse.js';
 import {ActiveReleaseTrains} from '../../../release/versioning/active-release-trains.js';
-import {NgDevConfig, GithubConfig} from '../../../utils/config.js';
+import {NgDevConfig, GithubConfig, GoogleSyncConfig} from '../../../utils/config.js';
 import {PullRequestConfig} from '../../config/index.js';
 import {PullRequestFromGithub} from '../fetch-pull-request.js';
 import {PullRequestTarget} from '../targeting/target-label.js';
 import {changesAllowForTargetLabelValidation} from './assert-allowed-target-label.js';
 import {breakingChangeInfoValidation} from './assert-breaking-change-info.js';
 import {completedReviewsValidation} from './assert-completed-reviews.js';
+import {isolatePrimitivesValidation} from './assert-isolate-primitives.js';
 import {enforcedStatusesValidation} from './assert-enforced-statuses.js';
+import {enforceTestedValidation} from './assert-enforce-tested.js';
 import {mergeReadyValidation} from './assert-merge-ready.js';
 import {minimumReviewsValidation} from './assert-minimum-reviews.js';
 import {passingCiValidation} from './assert-passing-ci.js';
@@ -23,6 +25,7 @@ import {pendingStateValidation} from './assert-pending.js';
 import {signedClaValidation} from './assert-signed-cla.js';
 import {PullRequestValidationConfig} from './validation-config.js';
 import {PullRequestValidationFailure} from './validation-failure.js';
+import {G3StatsData} from '../../../utils/g3.js';
 
 /**
  * Runs all valiations that the given pull request is valid, returning a list of all failing
@@ -32,10 +35,13 @@ import {PullRequestValidationFailure} from './validation-failure.js';
  */
 export async function assertValidPullRequest(
   pullRequest: PullRequestFromGithub,
+  files: string[],
+  diffStats: G3StatsData | null,
   validationConfig: PullRequestValidationConfig,
   ngDevConfig: NgDevConfig<{pullRequest: PullRequestConfig; github: GithubConfig}>,
   activeReleaseTrains: ActiveReleaseTrains | null,
   target: PullRequestTarget,
+  googleSyncConfig: GoogleSyncConfig | null,
 ): Promise<PullRequestValidationFailure[]> {
   const labels = pullRequest.labels.nodes.map((l) => l.name);
   const commitsInPr = pullRequest.commits.nodes.map((n) => {
@@ -51,6 +57,8 @@ export async function assertValidPullRequest(
     breakingChangeInfoValidation.run(validationConfig, commitsInPr, labels),
     passingCiValidation.run(validationConfig, pullRequest),
     enforcedStatusesValidation.run(validationConfig, pullRequest, ngDevConfig.pullRequest),
+    isolatePrimitivesValidation.run(validationConfig, files, diffStats, googleSyncConfig),
+    enforceTestedValidation.run(validationConfig, pullRequest),
   ];
 
   if (activeReleaseTrains !== null) {

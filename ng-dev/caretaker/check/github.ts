@@ -9,7 +9,7 @@
 import {alias, onUnion, params, types} from 'typed-graphqlify';
 
 import {bold, Log} from '../../utils/logging.js';
-import {CaretakerConfig} from '../config.js';
+import {CaretakerConfig} from '../../utils/config.js';
 import {BaseModule} from './base.js';
 
 /** A list of generated results for a github query. */

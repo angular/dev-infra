@@ -106,3 +106,62 @@ export async function getPendingPrs<PrSchema>(prSchema: PrSchema, git: Authentic
   }
   return prs;
 }
+
+/** Get all files in a PR from github  */
+export async function getPrFiles<PrSchema>(
+  fileSchema: PrSchema,
+  prNumber: number,
+  git: AuthenticatedGitClient,
+) {
+  /** The owner and name of the repository */
+  const {owner, name} = git.remoteConfig;
+  /** The Graphql query object to get a page of pending PRs */
+  const PRS_QUERY = params(
+    {
+      $first: 'Int', // How many entries to get with each request
+      $after: 'String', // The cursor to start the page at
+      $owner: 'String!', // The organization to query for
+      $name: 'String!', // The repository to query for
+    },
+    {
+      repository: params(
+        {owner: '$owner', name: '$name'},
+        {
+          pullRequest: params(
+            {
+              number: prNumber,
+            },
+            {
+              files: [fileSchema],
+              pageInfo: {
+                hasNextPage: types.boolean,
+                endCursor: types.string,
+              },
+            },
+          ),
+        },
+      ),
+    },
+  );
+  /** The current cursor */
+  let cursor: string | undefined;
+  /** If an additional page of members is expected */
+  let hasNextPage = true;
+  /** Array of pending PRs */
+  const files: Array<PrSchema> = [];
+
+  // For each page of the response, get the page and add it to the list of PRs
+  while (hasNextPage) {
+    const paramsValue = {
+      after: cursor || null,
+      first: 100,
+      owner,
+      name,
+    };
+    const results = await git.github.graphql(PRS_QUERY, paramsValue);
+    files.push(...results.repository.pullRequest.files);
+    hasNextPage = results.repository.pullRequest.pageInfo.hasNextPage;
+    cursor = results.repository.pullRequest.pageInfo.endCursor;
+  }
+  return files;
+}

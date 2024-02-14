@@ -8,7 +8,7 @@
 
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {assertValidGithubConfig, getConfig} from '../../utils/config.js';
-import {assertValidCaretakerConfig} from '../config.js';
+import {assertValidCaretakerConfig} from '../../utils/config.js';
 
 import {CiModule} from './ci.js';
 import {G3Module} from './g3.js';
