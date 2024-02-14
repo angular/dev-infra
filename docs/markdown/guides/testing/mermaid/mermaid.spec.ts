@@ -3,7 +3,7 @@ import {readFile} from 'fs/promises';
 import {JSDOM} from 'jsdom';
 import {marked} from 'marked';
 import {docsCodeBlockExtension} from '../../extensions/docs-code/docs-code-block';
-import {handleToken} from '../../handle-tokens';
+import {walkTokens} from '../../walk-tokens';
 
 describe('markdown to html', () => {
   let markdownDocument: DocumentFragment;
@@ -16,7 +16,7 @@ describe('markdown to html', () => {
     marked.use({
       async: true,
       extensions: [docsCodeBlockExtension],
-      walkTokens: handleToken,
+      walkTokens,
     });
     markdownDocument = JSDOM.fragment(await marked.parse(markdownContent));
   });
