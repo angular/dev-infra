@@ -138,6 +138,7 @@ dialog {
   border-radius: 0 0 0.25rem 0.25rem;
 
   docs-algolia-icon {
+    display: inline-flex;
     margin-block-start: 0.12rem;
     margin-inline-start: 0.15rem;
     width: 4rem;
