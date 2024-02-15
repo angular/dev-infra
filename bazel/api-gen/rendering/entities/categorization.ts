@@ -1,3 +1,4 @@
+import {CliCommand} from '../cli-entities';
 import {
   ClassEntry,
   ConstantEntry,
@@ -22,6 +23,7 @@ import {
   MemberEntryRenderable,
   MethodEntryRenderable,
   TypeAliasEntryRenderable,
+  CliCommandRenderable,
 } from './renderables';
 import {HasJsDocTags} from './traits';
 
@@ -106,4 +108,10 @@ export function isDeprecatedEntry<T extends HasJsDocTags>(entry: T) {
 /** Gets whether the given entry is developer preview. */
 export function isDeveloperPreview<T extends HasJsDocTags>(entry: T) {
   return entry.jsdocTags.some((tag) => tag.name === 'developerPreview');
+}
+
+/** Gets whether the given entry is a cli entry. */
+export function isCliEntry(entry: unknown): entry is CliCommandRenderable;
+export function isCliEntry(entry: unknown): entry is CliCommand {
+  return (entry as CliCommand).command !== undefined;
 }
