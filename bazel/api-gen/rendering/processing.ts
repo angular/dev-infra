@@ -15,6 +15,7 @@ import {
   isInterfaceEntry,
   isFunctionEntry,
   isTypeAliasEntry,
+  isCliEntry,
 } from './entities/categorization';
 import {CliCommandRenderable, DocEntryRenderable} from './entities/renderables';
 import {getClassRenderable} from './transforms/class-transforms';
@@ -32,7 +33,10 @@ import {addModuleName} from './transforms/module-name';
 import {getCliRenderable} from './transforms/cli-transforms';
 import {getTypeAliasRenderable} from './transforms/type-alias-transforms';
 
-export function getRenderable(entry: DocEntry, moduleName: string): DocEntryRenderable {
+export function getRenderable(
+  entry: DocEntry,
+  moduleName: string,
+): DocEntryRenderable | CliCommandRenderable {
   if (isClassEntry(entry)) {
     return getClassRenderable(entry, moduleName);
   }
@@ -50,6 +54,9 @@ export function getRenderable(entry: DocEntry, moduleName: string): DocEntryRend
   }
   if (isTypeAliasEntry(entry)) {
     return getTypeAliasRenderable(entry, moduleName);
+  }
+  if (isCliEntry(entry)) {
+    return getCliRenderable(entry);
   }
 
   // Fallback to an uncategorized renderable.

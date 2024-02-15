@@ -14,6 +14,7 @@ import {
   isInterfaceEntry,
   isFunctionEntry,
   isTypeAliasEntry,
+  isCliEntry,
 } from './entities/categorization';
 import {CliCommandRenderable, DocEntryRenderable} from './entities/renderables';
 import {ClassReference} from './templates/class-reference';
@@ -25,7 +26,11 @@ import {TypeAliasReference} from './templates/type-alias-reference';
 import {DocsReference} from './templates/docs-reference';
 
 /** Given a doc entry, get the transformed version of the entry for rendering. */
-export function renderEntry(renderable: DocEntryRenderable): string {
+export function renderEntry(renderable: DocEntryRenderable | CliCommandRenderable): string {
+  if (isCliEntry(renderable)) {
+    return render(CliCommandReference(renderable));
+  }
+
   if (isClassEntry(renderable) || isInterfaceEntry(renderable)) {
     return render(ClassReference(renderable));
   }

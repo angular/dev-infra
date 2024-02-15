@@ -1,9 +1,11 @@
 import {existsSync, mkdirSync, readFileSync, writeFileSync} from 'fs';
 import path from 'path';
-import {DocEntry} from './entities';
+import {DocEntry, EntryType} from './entities';
 import {configureMarkedGlobally} from './marked/configuration';
 import {getRenderable} from './processing';
 import {renderEntry} from './rendering';
+import {CliCommand} from './cli-entities';
+import {isCliEntry} from './entities/categorization';
 
 /** The JSON data file format for extracted API reference info. */
 interface EntryCollection {
@@ -15,12 +17,24 @@ interface EntryCollection {
 function parseEntryData(srcs: string[]): EntryCollection[] {
   return srcs.map((jsonDataFilePath) => {
     const fileContent = readFileSync(jsonDataFilePath, {encoding: 'utf8'});
-    return JSON.parse(fileContent) as EntryCollection;
+    const fileContentJson = JSON.parse(fileContent) as unknown;
+    if ((fileContentJson as EntryCollection).entries) {
+      return fileContentJson as EntryCollection;
+    }
+    return {
+      moduleName: 'unknown',
+      entries: [fileContentJson as DocEntry],
+    };
   });
 }
 
 /** Gets a normalized filename for a doc entry. */
-function getNormalizedFilename(moduleName: string, entry: DocEntry): string {
+function getNormalizedFilename(moduleName: string, entry: DocEntry | CliCommand): string {
+  if (isCliEntry(entry)) {
+    return `${entry.name}.html`;
+  }
+
+  entry = entry as DocEntry;
   // Angular entry points all contain an "@" character, which we want to remove
   // from the filename. We also swap `/` with an underscore.
   const normalizedModuleName = moduleName.replace('@', '').replaceAll('/', '_');
