@@ -22,6 +22,7 @@ function getMermaidScriptTagData() {
   if (mermaidScriptTagData) {
     return mermaidScriptTagData;
   }
+
   return (mermaidScriptTagData = {
     path: runfiles.resolveWorkspaceRelative('node_modules/mermaid/dist/mermaid.js'),
   });
@@ -29,6 +30,11 @@ function getMermaidScriptTagData() {
 
 /** Replace the code block content with the mermaid generated SVG element string in place. */
 export async function processMermaidCodeBlock(token: DocsCodeToken) {
+  /**
+   * The diagram source code contents. Marked reuses the token object, causing the need for
+   * extracting the value before async actions occur in the function.
+   */
+  const diagram = token.code;
   // TODO(josephperrott): Determine if we can reuse the browser across token processing.
   /** Browser instance to run mermaid within. */
   const browser = await chromium.launch({
@@ -54,7 +60,7 @@ export async function processMermaidCodeBlock(token: DocsCodeToken) {
 
         return mermaid.render('mermaid-generated-diagram', diagram);
       },
-      {diagram: token.code, config: mermaidConfig},
+      {diagram, config: mermaidConfig},
     );
 
     // Replace the token's code content with the generated SVG.
