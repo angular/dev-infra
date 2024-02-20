@@ -16,8 +16,17 @@ describe('api manifest generation', () => {
     ]);
 
     expect(manifest).toEqual({
-      '@angular/core': [{name: 'PI', type: EntryType.Constant, isDeprecated: false}],
-      '@angular/router': [{name: 'Router', type: EntryType.UndecoratedClass, isDeprecated: false}],
+      '@angular/core': [
+        {name: 'PI', type: EntryType.Constant, isDeprecated: false, isDeveloperPreview: false},
+      ],
+      '@angular/router': [
+        {
+          name: 'Router',
+          type: EntryType.UndecoratedClass,
+          isDeprecated: false,
+          isDeveloperPreview: false,
+        },
+      ],
     });
   });
 
@@ -34,8 +43,12 @@ describe('api manifest generation', () => {
     ]);
 
     expect(manifest).toEqual({
-      '@angular/core': [{name: 'PI', type: EntryType.Constant, isDeprecated: false}],
-      '@angular/router': [{name: 'PI', type: EntryType.Constant, isDeprecated: false}],
+      '@angular/core': [
+        {name: 'PI', type: EntryType.Constant, isDeprecated: false, isDeveloperPreview: false},
+      ],
+      '@angular/router': [
+        {name: 'PI', type: EntryType.Constant, isDeprecated: false, isDeveloperPreview: false},
+      ],
     });
   });
 
@@ -53,8 +66,8 @@ describe('api manifest generation', () => {
 
     expect(manifest).toEqual({
       '@angular/core': [
-        {name: 'PI', type: EntryType.Constant, isDeprecated: false},
-        {name: 'TAO', type: EntryType.Constant, isDeprecated: false},
+        {name: 'PI', type: EntryType.Constant, isDeprecated: false, isDeveloperPreview: false},
+        {name: 'TAO', type: EntryType.Constant, isDeprecated: false, isDeveloperPreview: false},
       ],
     });
   });
@@ -72,8 +85,8 @@ describe('api manifest generation', () => {
 
     expect(manifest).toEqual({
       '@angular/core': [
-        {name: 'PI', type: EntryType.Constant, isDeprecated: true},
-        {name: 'XI', type: EntryType.Constant, isDeprecated: false},
+        {name: 'PI', type: EntryType.Constant, isDeprecated: true, isDeveloperPreview: false},
+        {name: 'XI', type: EntryType.Constant, isDeprecated: false, isDeveloperPreview: false},
       ],
     });
   });
@@ -90,7 +103,9 @@ describe('api manifest generation', () => {
     ]);
 
     expect(manifest).toEqual({
-      '@angular/core': [{name: 'save', type: EntryType.Function, isDeprecated: false}],
+      '@angular/core': [
+        {name: 'save', type: EntryType.Function, isDeprecated: false, isDeveloperPreview: false},
+      ],
     });
   });
 
@@ -106,7 +121,9 @@ describe('api manifest generation', () => {
     ]);
 
     expect(manifest).toEqual({
-      '@angular/core': [{name: 'save', type: EntryType.Function, isDeprecated: false}],
+      '@angular/core': [
+        {name: 'save', type: EntryType.Function, isDeprecated: false, isDeveloperPreview: false},
+      ],
     });
   });
 
@@ -122,7 +139,9 @@ describe('api manifest generation', () => {
     ]);
 
     expect(manifest).toEqual({
-      '@angular/core': [{name: 'save', type: EntryType.Function, isDeprecated: true}],
+      '@angular/core': [
+        {name: 'save', type: EntryType.Function, isDeprecated: true, isDeveloperPreview: false},
+      ],
     });
   });
 
@@ -141,8 +160,35 @@ describe('api manifest generation', () => {
     ]);
 
     expect(manifest).toEqual({
-      '@angular/core': [{name: 'save', type: EntryType.Function, isDeprecated: true}],
-      '@angular/more': [{name: 'save', type: EntryType.Function, isDeprecated: false}],
+      '@angular/core': [
+        {name: 'save', type: EntryType.Function, isDeprecated: true, isDeveloperPreview: false},
+      ],
+      '@angular/more': [
+        {name: 'save', type: EntryType.Function, isDeprecated: false, isDeveloperPreview: false},
+      ],
+    });
+  });
+
+  it('should mark a manifest entry as developerPreview', () => {
+    const manifest = generateManifest([
+      {
+        moduleName: '@angular/core',
+        entries: [
+          entry({
+            name: 'PI',
+            entryType: EntryType.Constant,
+            jsdocTags: jsdocTags('developerPreview'),
+          }),
+          entry({name: 'XI', entryType: EntryType.Constant, jsdocTags: jsdocTags('experimental')}),
+        ],
+      },
+    ]);
+
+    expect(manifest).toEqual({
+      '@angular/core': [
+        {name: 'PI', type: EntryType.Constant, isDeveloperPreview: true, isDeprecated: false},
+        {name: 'XI', type: EntryType.Constant, isDeveloperPreview: false, isDeprecated: false},
+      ],
     });
   });
 });

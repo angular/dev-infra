@@ -9,7 +9,9 @@
     color: var(--label-theme);
     background: color-mix(in srgb, var(--label-theme) 10%, white);
     border-radius: 0.25rem;
-    transition: color 0.3s ease, background-color 0.3s ease;
+    transition:
+      color 0.3s ease,
+      background-color 0.3s ease;
     text-transform: capitalize;
 
     &[data-mode='short'] {
@@ -82,6 +84,11 @@
 
     &[data-type='block'] {
       --label-theme: var(--vivid-pink);
+    }
+
+    &[data-type='developer_preview'],
+    &[data-type='deprecated'] {
+      --label-theme: var(--hot-red);
     }
   }
 }
