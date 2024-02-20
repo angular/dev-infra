@@ -8,8 +8,8 @@
 
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {ExampleViewer} from './example-viewer.component';
-import {DocsContentLoader, ExampleMetadata, ExampleViewerContentLoader} from '../../interfaces';
-import {DOCS_CONTENT_LOADER, EXAMPLE_VIEWER_CONTENT_LOADER} from '../../providers';
+import {DocsContentLoader, ExampleMetadata, ExampleViewerContentLoader} from '../../../interfaces';
+import {DOCS_CONTENT_LOADER, EXAMPLE_VIEWER_CONTENT_LOADER} from '../../../providers';
 import {Component} from '@angular/core';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {HarnessLoader} from '@angular/cdk/testing';
@@ -17,7 +17,7 @@ import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Clipboard} from '@angular/cdk/clipboard';
 import {By} from '@angular/platform-browser';
 import {MatTabGroupHarness} from '@angular/material/tabs/testing';
-import {CopySourceCodeButton} from '../copy-source-code-button/copy-source-code-button.component';
+import {CopySourceCodeButton} from '../../copy-source-code-button/copy-source-code-button.component';
 import {ActivatedRoute} from '@angular/router';
 
 describe('ExampleViewer', () => {

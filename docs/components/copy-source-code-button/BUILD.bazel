@@ -10,8 +10,7 @@ ng_module(
     ],
     visibility = [
         "//docs/components:__pkg__",
-        "//docs/components/docs-viewer:__pkg__",
-        "//docs/components/example-viewer:__pkg__",
+        "//docs/components/viewers:__pkg__",
     ],
     deps = [
         "//docs/components/icon",

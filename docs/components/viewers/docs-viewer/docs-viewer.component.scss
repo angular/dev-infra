@@ -1,4 +1,4 @@
-@use '../../styles/links' as links;
+@use '../../../styles/links' as links;
 
 :host {
   --translate-y: clamp(5px, 0.25em, 7px);
