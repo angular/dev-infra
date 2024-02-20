@@ -13,8 +13,6 @@ ts_library(
         "//docs/components/breadcrumb",
         "//docs/components/cookie-popup",
         "//docs/components/copy-source-code-button",
-        "//docs/components/docs-viewer",
-        "//docs/components/example-viewer",
         "//docs/components/icon",
         "//docs/components/navigation-list",
         "//docs/components/search-dialog",
@@ -22,5 +20,6 @@ ts_library(
         "//docs/components/slide-toggle",
         "//docs/components/table-of-contents",
         "//docs/components/text-field",
+        "//docs/components/viewers",
     ],
 )

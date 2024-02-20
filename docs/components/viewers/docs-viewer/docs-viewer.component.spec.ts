@@ -10,15 +10,15 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterTestingModule} from '@angular/router/testing';
-import {ExampleViewerContentLoader} from '../../interfaces';
-import {EXAMPLE_VIEWER_CONTENT_LOADER} from '../../providers';
+import {ExampleViewerContentLoader} from '../../../interfaces';
+import {EXAMPLE_VIEWER_CONTENT_LOADER} from '../../../providers';
 import {CodeExampleViewMode, ExampleViewer} from '../example-viewer/example-viewer.component';
 import {DocViewer} from './docs-viewer.component';
-import {IconComponent} from '../icon/icon.component';
-import {Breadcrumb} from '../breadcrumb/breadcrumb.component';
-import {NavigationState} from '../../services';
-import {CopySourceCodeButton} from '../copy-source-code-button/copy-source-code-button.component';
-import {TableOfContents} from '../table-of-contents/table-of-contents.component';
+import {IconComponent} from '../../icon/icon.component';
+import {Breadcrumb} from '../../breadcrumb/breadcrumb.component';
+import {NavigationState} from '../../../services';
+import {CopySourceCodeButton} from '../../copy-source-code-button/copy-source-code-button.component';
+import {TableOfContents} from '../../table-of-contents/table-of-contents.component';
 
 describe('DocViewer', () => {
   let fixture: ComponentFixture<DocViewer>;

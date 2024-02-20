@@ -22,9 +22,9 @@ import {
 import {CommonModule, DOCUMENT} from '@angular/common';
 import {MatTabGroup, MatTabsModule} from '@angular/material/tabs';
 import {Clipboard} from '@angular/cdk/clipboard';
-import {CopySourceCodeButton} from '../copy-source-code-button/copy-source-code-button.component';
-import {ExampleMetadata, Snippet} from '../../interfaces/index';
-import {EXAMPLE_VIEWER_CONTENT_LOADER} from '../../providers/index';
+import {CopySourceCodeButton} from '../../copy-source-code-button/copy-source-code-button.component';
+import {ExampleMetadata, Snippet} from '../../../interfaces/index';
+import {EXAMPLE_VIEWER_CONTENT_LOADER} from '../../../providers/index';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 export enum CodeExampleViewMode {

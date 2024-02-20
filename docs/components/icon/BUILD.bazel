@@ -13,10 +13,10 @@ ng_module(
     visibility = [
         "//docs/components:__pkg__",
         "//docs/components/copy-source-code-button:__pkg__",
-        "//docs/components/docs-viewer:__pkg__",
         "//docs/components/navigation-list:__pkg__",
         "//docs/components/table-of-contents:__pkg__",
         "//docs/components/text-field:__pkg__",
+        "//docs/components/viewers:__pkg__",
     ],
     deps = [
         "@npm//@angular/common",

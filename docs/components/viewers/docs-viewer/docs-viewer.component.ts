@@ -30,16 +30,16 @@ import {
   Output,
 } from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {TOC_SKIP_CONTENT_MARKER, NavigationState} from '../../services/index';
-import {TableOfContents} from '../table-of-contents/table-of-contents.component';
-import {IconComponent} from '../icon/icon.component';
-import {handleHrefClickEventWithRouter} from '../../utils/index';
-import {Snippet} from '../../interfaces/index';
+import {TOC_SKIP_CONTENT_MARKER, NavigationState} from '../../../services/index';
+import {TableOfContents} from '../../table-of-contents/table-of-contents.component';
+import {IconComponent} from '../../icon/icon.component';
+import {handleHrefClickEventWithRouter} from '../../../utils/index';
+import {Snippet} from '../../../interfaces/index';
 import {Router} from '@angular/router';
 import {fromEvent} from 'rxjs';
 
-import {Breadcrumb} from '../breadcrumb/breadcrumb.component';
-import {CopySourceCodeButton} from '../copy-source-code-button/copy-source-code-button.component';
+import {Breadcrumb} from '../../breadcrumb/breadcrumb.component';
+import {CopySourceCodeButton} from '../../copy-source-code-button/copy-source-code-button.component';
 import {ExampleViewer} from '../example-viewer/example-viewer.component';
 
 /// <reference types="@types/dom-view-transitions" />
