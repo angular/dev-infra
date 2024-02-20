@@ -79,3 +79,12 @@ $theme: mat.define-light-theme(
 @include video.docs-video();
 
 // Include custom angular.dev styles
+
+// Disable view transitions when reduced motion is requested.
+@media (prefers-reduced-motion) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
