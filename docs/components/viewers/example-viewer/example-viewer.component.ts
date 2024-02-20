@@ -18,6 +18,7 @@ import {
   ViewChild,
   signal,
   ElementRef,
+  forwardRef,
 } from '@angular/core';
 import {CommonModule, DOCUMENT} from '@angular/common';
 import {MatTabGroup, MatTabsModule} from '@angular/material/tabs';
@@ -26,6 +27,7 @@ import {CopySourceCodeButton} from '../../copy-source-code-button/copy-source-co
 import {ExampleMetadata, Snippet} from '../../../interfaces/index';
 import {EXAMPLE_VIEWER_CONTENT_LOADER} from '../../../providers/index';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {DocViewer} from '../docs-viewer/docs-viewer.component';
 
 export enum CodeExampleViewMode {
   SNIPPET = 'snippet',
@@ -40,8 +42,7 @@ export const HIDDEN_CLASS_NAME = 'hidden';
 @Component({
   selector: 'docs-example-viewer',
   standalone: true,
-  // TODO(josephperrott): restore forwardRef of DocViewer in the imports.
-  imports: [CommonModule, CopySourceCodeButton, MatTabsModule],
+  imports: [CommonModule, forwardRef(() => DocViewer), CopySourceCodeButton, MatTabsModule],
   templateUrl: './example-viewer.component.html',
   styleUrls: ['./example-viewer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

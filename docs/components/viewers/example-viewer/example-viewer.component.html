@@ -87,7 +87,7 @@
     [class.docs-example-viewer-multi-file]="view() === CodeExampleViewMode.MULTI_FILE"
   >
     <button docs-copy-source-code></button>
-    <!-- <docs-viewer [docContent]="snippetCode()?.content" /> -->
+    <docs-viewer [docContent]="snippetCode()?.content" />
   </div>
 
   @if (exampleComponent) {
