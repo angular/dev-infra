@@ -11,6 +11,7 @@ export interface ManifestEntry {
   name: string;
   type: string;
   isDeprecated: boolean;
+  isDeveloperPreview: boolean;
 }
 
 /** Manifest that maps each module name to a list of API symbols. */
@@ -24,6 +25,11 @@ function getApiLookupKey(moduleName: string, name: string) {
 /** Gets whether the given entry has the "@deprecated" JsDoc tag. */
 function hasDeprecatedTag(entry: DocEntry) {
   return entry.jsdocTags.some((t: JsDocTagEntry) => t.name === 'deprecated');
+}
+
+/** Gets whether the given entry has the "@developerPreview" JsDoc tag. */
+function hasDeveloperPreviewTag(entry: DocEntry) {
+  return entry.jsdocTags.some((t: JsDocTagEntry) => t.name === 'developerPreview');
 }
 
 /** Gets whether the given entry is deprecated in the manifest. */
@@ -41,6 +47,23 @@ function isDeprecated(
   }
 
   return hasDeprecatedTag(entry);
+}
+
+/** Gets whether the given entry is hasDeveloperPreviewTag in the manifest. */
+function isDeveloperPreview(
+  lookup: Map<string, DocEntry[]>,
+  moduleName: string,
+  entry: DocEntry,
+): boolean {
+  const entriesWithSameName = lookup.get(getApiLookupKey(moduleName, entry.name));
+
+  // If there are multiple entries with the same name in the same module, only mark them as
+  // developer preview if *all* of the entries with the same name are hasDeveloperPreviewTag (e.g. function overloads).
+  if (entriesWithSameName && entriesWithSameName.length > 1) {
+    return entriesWithSameName.every((entry) => hasDeveloperPreviewTag(entry));
+  }
+
+  return hasDeveloperPreviewTag(entry);
 }
 
 /** Generates an API manifest for a set of API collections extracted by extract_api_to_json.  */
@@ -73,6 +96,7 @@ export function generateManifest(apiCollections: EntryCollection[]): Manifest {
         name: entry.name,
         type: entry.entryType,
         isDeprecated: isDeprecated(entryLookup, collection.moduleName, entry),
+        isDeveloperPreview: isDeveloperPreview(entryLookup, collection.moduleName, entry),
       })),
     );
   }
