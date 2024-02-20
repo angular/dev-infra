@@ -71,7 +71,7 @@ function applyContainerAttributesAndClasses(el: Element, token: CodeToken) {
     el.setAttribute('path', token.path);
   }
   if (token.visibleLines) {
-    el.setAttribute('visibleLines', expandRangeStringValues(token.visibleLines).toString());
+    el.setAttribute('visibleLines', JSON.stringify(expandRangeStringValues(token.visibleLines)));
   }
   if (token.header) {
     el.setAttribute('header', token.header);
