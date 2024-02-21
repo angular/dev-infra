@@ -74,6 +74,8 @@ export interface DocEntry {
   description: string;
   rawComment: string;
   jsdocTags: JsDocTagEntry[];
+  isDeprecated: boolean;
+  isDeveloperPreview: boolean;
 }
 
 /** Documentation entity for a constant. */
