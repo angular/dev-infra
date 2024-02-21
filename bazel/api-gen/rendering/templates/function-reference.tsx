@@ -8,11 +8,8 @@
 
 import {h} from 'preact';
 import {FunctionEntryRenderable} from '../entities/renderables';
-import {HeaderApi} from './header-api';
-import {TabDescription} from './tab-description';
-import {TabApi} from './tab-api';
-import {TabUsageNotes} from './tab-usage-notes';
 import {
+  PARAM_KEYWORD_CLASS_NAME,
   REFERENCE_HEADER,
   REFERENCE_MEMBERS,
   REFERENCE_MEMBERS_CONTAINER,
@@ -20,6 +17,10 @@ import {
   REFERENCE_MEMBER_CARD_BODY,
 } from '../styling/css-classes';
 import {ClassMethodInfo} from './class-method-info';
+import {HeaderApi} from './header-api';
+import {TabApi} from './tab-api';
+import {TabDescription} from './tab-description';
+import {TabUsageNotes} from './tab-usage-notes';
 
 /** Component to render a function API reference document. */
 export function FunctionReference(entry: FunctionEntryRenderable) {
@@ -39,7 +40,9 @@ export function FunctionReference(entry: FunctionEntryRenderable) {
                   <code>{entry.returnType}</code>
                 </div>
               </div>
-              <span>{entry.isDeprecated}</span>
+              {entry.isDeprecated && (
+                <span className={`${PARAM_KEYWORD_CLASS_NAME} docs-deprecated`}>@deprecated</span>
+              )}
             </header>
             <div className={REFERENCE_MEMBER_CARD_BODY}>
               <ClassMethodInfo entry={entry} />

@@ -10,7 +10,7 @@ import {MemberEntry, MemberTags, MemberType} from '../entities';
 import {isClassMethodEntry} from '../entities/categorization';
 import {MemberEntryRenderable} from '../entities/renderables';
 import {HasMembers, HasRenderableMembers, HasRenderableMembersGroups} from '../entities/traits';
-import {addHtmlDescription, addHtmlJsDocTagComments, setIsDeprecated} from './jsdoc-transforms';
+import {addHtmlDescription, addHtmlJsDocTagComments, setEntryFlags} from './jsdoc-transforms';
 
 const lifecycleMethods = [
   'ngAfterContentChecked',
@@ -63,7 +63,7 @@ export function addRenderableGroupMembers<T extends HasMembers>(
   const members = filterLifecycleMethods(entry.members);
 
   const membersGroups = members.reduce((groups, item) => {
-    const member = setIsDeprecated(
+    const member = setEntryFlags(
       addMethodParamsDescription(addHtmlDescription(addHtmlJsDocTagComments(item))),
     );
     if (groups.has(member.name)) {
@@ -83,7 +83,7 @@ export function addRenderableGroupMembers<T extends HasMembers>(
 
 export function addRenderableMembers<T extends HasMembers>(entry: T): T & HasRenderableMembers {
   const members = entry.members.map((entry) =>
-    setIsDeprecated(addMethodParamsDescription(addHtmlDescription(addHtmlJsDocTagComments(entry)))),
+    setEntryFlags(addMethodParamsDescription(addHtmlDescription(addHtmlJsDocTagComments(entry)))),
   );
 
   return {
