@@ -11,7 +11,7 @@
     "@angular/router": "17.2.0-rc.1",
     "@webcontainer/api": "^1.1.8",
     "algoliasearch": "^4.20.0",
-    "diff": "5.1.0",
+    "diff": "5.2.0",
     "emoji-regex": "10.3.0",
     "glob": "10.3.10",
     "highlight.js": "11.9.0",

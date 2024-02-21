@@ -55,8 +55,7 @@ async function runTest() {
     const service = new ServiceBuilder(chromedriverPath);
     const options = new ChromeOptions()
       .setChromeBinaryPath(chromiumPath)
-      .headless()
-      .addArguments('--no-sandbox');
+      .addArguments('--no-sandbox', '--headless');
 
     driver = await new Builder()
       .forBrowser('chrome')
