@@ -5,7 +5,6 @@
 @mixin docs-steps() {
   .docs-steps {
     --gutter: 4rem;
-    margin-top: -1.5rem; // even out docs-anchor margin-block-start
     padding-inline-start: var(--gutter);
     counter-reset: code-steps-list;
     list-style-type: none;
