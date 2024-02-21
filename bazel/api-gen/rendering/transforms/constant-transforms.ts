@@ -14,6 +14,7 @@ import {
   addHtmlDescription,
   addHtmlJsDocTagComments,
   addHtmlUsageNotes,
+  setEntryFlags,
 } from './jsdoc-transforms';
 import {addModuleName} from './module-name';
 
@@ -22,10 +23,12 @@ export function getConstantRenderable(
   classEntry: ConstantEntry,
   moduleName: string,
 ): ConstantEntryRenderable {
-  return addRenderableCodeToc(
-    addHtmlAdditionalLinks(
-      addHtmlUsageNotes(
-        addHtmlJsDocTagComments(addHtmlDescription(addModuleName(classEntry, moduleName))),
+  return setEntryFlags(
+    addRenderableCodeToc(
+      addHtmlAdditionalLinks(
+        addHtmlUsageNotes(
+          addHtmlJsDocTagComments(addHtmlDescription(addModuleName(classEntry, moduleName))),
+        ),
       ),
     ),
   );

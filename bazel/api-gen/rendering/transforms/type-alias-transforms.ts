@@ -14,6 +14,7 @@ import {
   addHtmlDescription,
   addHtmlJsDocTagComments,
   addHtmlUsageNotes,
+  setEntryFlags,
 } from './jsdoc-transforms';
 import {addModuleName} from './module-name';
 
@@ -22,10 +23,12 @@ export function getTypeAliasRenderable(
   typeAliasEntry: TypeAliasEntry,
   moduleName: string,
 ): TypeAliasEntryRenderable {
-  return addRenderableCodeToc(
-    addHtmlAdditionalLinks(
-      addHtmlUsageNotes(
-        addHtmlJsDocTagComments(addHtmlDescription(addModuleName(typeAliasEntry, moduleName))),
+  return setEntryFlags(
+    addRenderableCodeToc(
+      addHtmlAdditionalLinks(
+        addHtmlUsageNotes(
+          addHtmlJsDocTagComments(addHtmlDescription(addModuleName(typeAliasEntry, moduleName))),
+        ),
       ),
     ),
   );

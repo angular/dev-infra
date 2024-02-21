@@ -14,6 +14,7 @@ import {
   addHtmlDescription,
   addHtmlJsDocTagComments,
   addHtmlUsageNotes,
+  setEntryFlags,
 } from './jsdoc-transforms';
 import {addRenderableGroupMembers} from './member-transforms';
 import {addModuleName} from './module-name';
@@ -23,11 +24,13 @@ export function getClassRenderable(
   classEntry: ClassEntry,
   moduleName: string,
 ): ClassEntryRenderable {
-  return addRenderableCodeToc(
-    addRenderableGroupMembers(
-      addHtmlAdditionalLinks(
-        addHtmlUsageNotes(
-          addHtmlJsDocTagComments(addHtmlDescription(addModuleName(classEntry, moduleName))),
+  return setEntryFlags(
+    addRenderableCodeToc(
+      addRenderableGroupMembers(
+        addHtmlAdditionalLinks(
+          addHtmlUsageNotes(
+            addHtmlJsDocTagComments(addHtmlDescription(addModuleName(classEntry, moduleName))),
+          ),
         ),
       ),
     ),

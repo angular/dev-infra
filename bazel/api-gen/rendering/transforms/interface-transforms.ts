@@ -11,9 +11,10 @@ import {InterfaceEntryRenderable} from '../entities/renderables';
 import {addRenderableCodeToc} from './code-transforms';
 import {
   addHtmlAdditionalLinks,
-  addHtmlUsageNotes,
-  addHtmlJsDocTagComments,
   addHtmlDescription,
+  addHtmlJsDocTagComments,
+  addHtmlUsageNotes,
+  setEntryFlags,
 } from './jsdoc-transforms';
 import {addRenderableGroupMembers} from './member-transforms';
 import {addModuleName} from './module-name';
@@ -23,11 +24,13 @@ export function getInterfaceRenderable(
   entry: InterfaceEntry,
   moduleName: string,
 ): InterfaceEntryRenderable {
-  return addRenderableCodeToc(
-    addRenderableGroupMembers(
-      addHtmlAdditionalLinks(
-        addHtmlUsageNotes(
-          addHtmlJsDocTagComments(addHtmlDescription(addModuleName(entry, moduleName))),
+  return setEntryFlags(
+    addRenderableCodeToc(
+      addRenderableGroupMembers(
+        addHtmlAdditionalLinks(
+          addHtmlUsageNotes(
+            addHtmlJsDocTagComments(addHtmlDescription(addModuleName(entry, moduleName))),
+          ),
         ),
       ),
     ),

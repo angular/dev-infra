@@ -11,10 +11,10 @@ import {FunctionEntryRenderable} from '../entities/renderables';
 import {addRenderableCodeToc} from './code-transforms';
 import {
   addHtmlAdditionalLinks,
-  addHtmlUsageNotes,
-  addHtmlJsDocTagComments,
   addHtmlDescription,
-  setIsDeprecated,
+  addHtmlJsDocTagComments,
+  addHtmlUsageNotes,
+  setEntryFlags,
 } from './jsdoc-transforms';
 import {addModuleName} from './module-name';
 import {addRenderableFunctionParams} from './params-transforms';
@@ -24,7 +24,7 @@ export function getFunctionRenderable(
   entry: FunctionEntry,
   moduleName: string,
 ): FunctionEntryRenderable {
-  return setIsDeprecated(
+  return setEntryFlags(
     addRenderableCodeToc(
       addRenderableFunctionParams(
         addHtmlAdditionalLinks(

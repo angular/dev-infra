@@ -7,8 +7,9 @@
  */
 
 import {marked} from 'marked';
+import {rewriteLinks} from '../backwards-compatibility/links-mapper';
 import {JsDocTagEntry} from '../entities';
-import {isDeprecatedEntry} from '../entities/categorization';
+import {isDeprecatedEntry, isDeveloperPreview} from '../entities/categorization';
 import {LinkEntryRenderable} from '../entities/renderables';
 import {
   HasAdditionalLinks,
@@ -20,7 +21,6 @@ import {
   HasModuleName,
   HasRenderableJsDocTags,
 } from '../entities/traits';
-import {rewriteLinks} from '../backwards-compatibility/links-mapper';
 import {getLinkToModule} from './url-transforms';
 
 export const JS_DOC_USAGE_NOTES_TAG = 'usageNotes';
@@ -95,10 +95,11 @@ export function getHtmlForJsDocText(text: string): string {
   return marked.parse(wrapExampleHtmlElementsWithCode(text)) as string;
 }
 
-export function setIsDeprecated<T extends HasJsDocTags>(entry: T): T & HasDeprecatedFlag {
+export function setEntryFlags<T extends HasJsDocTags>(entry: T): T & HasDeprecatedFlag {
   return {
     ...entry,
     isDeprecated: isDeprecatedEntry(entry),
+    isDeveloperPreview: isDeveloperPreview(entry),
   };
 }
 
