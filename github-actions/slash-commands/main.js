@@ -25929,15 +25929,15 @@ var require_streams = __commonJS({
     var POOL_SIZE2 = 65536;
     if (!globalThis.ReadableStream) {
       try {
-        const process6 = __require("node:process");
-        const { emitWarning } = process6;
+        const process4 = __require("node:process");
+        const { emitWarning } = process4;
         try {
-          process6.emitWarning = () => {
+          process4.emitWarning = () => {
           };
           Object.assign(globalThis, __require("node:stream/web"));
-          process6.emitWarning = emitWarning;
+          process4.emitWarning = emitWarning;
         } catch (error2) {
-          process6.emitWarning = emitWarning;
+          process4.emitWarning = emitWarning;
           throw error2;
         }
       } catch (error2) {
@@ -30672,6 +30672,166 @@ var require_dist_node20 = __commonJS({
 });
 
 // 
+var require_escape_string_regexp = __commonJS({
+  ""(exports, module) {
+    "use strict";
+    var matchOperatorsRe = /[|\\{}()[\]^$+*?.]/g;
+    module.exports = function(str) {
+      if (typeof str !== "string") {
+        throw new TypeError("Expected a string");
+      }
+      return str.replace(matchOperatorsRe, "\\$&");
+    };
+  }
+});
+
+// 
+var require_figures = __commonJS({
+  ""(exports, module) {
+    "use strict";
+    var escapeStringRegexp = require_escape_string_regexp();
+    var { platform } = process;
+    var main2 = {
+      tick: "\u2714",
+      cross: "\u2716",
+      star: "\u2605",
+      square: "\u2587",
+      squareSmall: "\u25FB",
+      squareSmallFilled: "\u25FC",
+      play: "\u25B6",
+      circle: "\u25EF",
+      circleFilled: "\u25C9",
+      circleDotted: "\u25CC",
+      circleDouble: "\u25CE",
+      circleCircle: "\u24DE",
+      circleCross: "\u24E7",
+      circlePipe: "\u24BE",
+      circleQuestionMark: "?\u20DD",
+      bullet: "\u25CF",
+      dot: "\u2024",
+      line: "\u2500",
+      ellipsis: "\u2026",
+      pointer: "\u276F",
+      pointerSmall: "\u203A",
+      info: "\u2139",
+      warning: "\u26A0",
+      hamburger: "\u2630",
+      smiley: "\u32E1",
+      mustache: "\u0DF4",
+      heart: "\u2665",
+      nodejs: "\u2B22",
+      arrowUp: "\u2191",
+      arrowDown: "\u2193",
+      arrowLeft: "\u2190",
+      arrowRight: "\u2192",
+      radioOn: "\u25C9",
+      radioOff: "\u25EF",
+      checkboxOn: "\u2612",
+      checkboxOff: "\u2610",
+      checkboxCircleOn: "\u24E7",
+      checkboxCircleOff: "\u24BE",
+      questionMarkPrefix: "?\u20DD",
+      oneHalf: "\xBD",
+      oneThird: "\u2153",
+      oneQuarter: "\xBC",
+      oneFifth: "\u2155",
+      oneSixth: "\u2159",
+      oneSeventh: "\u2150",
+      oneEighth: "\u215B",
+      oneNinth: "\u2151",
+      oneTenth: "\u2152",
+      twoThirds: "\u2154",
+      twoFifths: "\u2156",
+      threeQuarters: "\xBE",
+      threeFifths: "\u2157",
+      threeEighths: "\u215C",
+      fourFifths: "\u2158",
+      fiveSixths: "\u215A",
+      fiveEighths: "\u215D",
+      sevenEighths: "\u215E"
+    };
+    var windows = {
+      tick: "\u221A",
+      cross: "\xD7",
+      star: "*",
+      square: "\u2588",
+      squareSmall: "[ ]",
+      squareSmallFilled: "[\u2588]",
+      play: "\u25BA",
+      circle: "( )",
+      circleFilled: "(*)",
+      circleDotted: "( )",
+      circleDouble: "( )",
+      circleCircle: "(\u25CB)",
+      circleCross: "(\xD7)",
+      circlePipe: "(\u2502)",
+      circleQuestionMark: "(?)",
+      bullet: "*",
+      dot: ".",
+      line: "\u2500",
+      ellipsis: "...",
+      pointer: ">",
+      pointerSmall: "\xBB",
+      info: "i",
+      warning: "\u203C",
+      hamburger: "\u2261",
+      smiley: "\u263A",
+      mustache: "\u250C\u2500\u2510",
+      heart: main2.heart,
+      nodejs: "\u2666",
+      arrowUp: main2.arrowUp,
+      arrowDown: main2.arrowDown,
+      arrowLeft: main2.arrowLeft,
+      arrowRight: main2.arrowRight,
+      radioOn: "(*)",
+      radioOff: "( )",
+      checkboxOn: "[\xD7]",
+      checkboxOff: "[ ]",
+      checkboxCircleOn: "(\xD7)",
+      checkboxCircleOff: "( )",
+      questionMarkPrefix: "\uFF1F",
+      oneHalf: "1/2",
+      oneThird: "1/3",
+      oneQuarter: "1/4",
+      oneFifth: "1/5",
+      oneSixth: "1/6",
+      oneSeventh: "1/7",
+      oneEighth: "1/8",
+      oneNinth: "1/9",
+      oneTenth: "1/10",
+      twoThirds: "2/3",
+      twoFifths: "2/5",
+      threeQuarters: "3/4",
+      threeFifths: "3/5",
+      threeEighths: "3/8",
+      fourFifths: "4/5",
+      fiveSixths: "5/6",
+      fiveEighths: "5/8",
+      sevenEighths: "7/8"
+    };
+    if (platform === "linux") {
+      main2.questionMarkPrefix = "?";
+    }
+    var figures4 = platform === "win32" ? windows : main2;
+    var fn = (string) => {
+      if (figures4 === main2) {
+        return string;
+      }
+      for (const [key, value] of Object.entries(main2)) {
+        if (value === figures4[key]) {
+          continue;
+        }
+        string = string.replace(new RegExp(escapeStringRegexp(value), "g"), figures4[key]);
+      }
+      return string;
+    };
+    module.exports = Object.assign(fn, figures4);
+    module.exports.main = main2;
+    module.exports.windows = windows;
+  }
+});
+
+// 
 var require_mimic_fn = __commonJS({
   ""(exports, module) {
     "use strict";
@@ -30761,11 +30921,11 @@ var require_signals = __commonJS({
 // 
 var require_signal_exit = __commonJS({
   ""(exports, module) {
-    var process6 = global.process;
-    var processOk = function(process7) {
-      return process7 && typeof process7 === "object" && typeof process7.removeListener === "function" && typeof process7.emit === "function" && typeof process7.reallyExit === "function" && typeof process7.listeners === "function" && typeof process7.kill === "function" && typeof process7.pid === "number" && typeof process7.on === "function";
+    var process4 = global.process;
+    var processOk = function(process5) {
+      return process5 && typeof process5 === "object" && typeof process5.removeListener === "function" && typeof process5.emit === "function" && typeof process5.reallyExit === "function" && typeof process5.listeners === "function" && typeof process5.kill === "function" && typeof process5.pid === "number" && typeof process5.on === "function";
     };
-    if (!processOk(process6)) {
+    if (!processOk(process4)) {
       module.exports = function() {
         return function() {
         };
@@ -30773,15 +30933,15 @@ var require_signal_exit = __commonJS({
     } else {
       assert2 = __require("assert");
       signals = require_signals();
-      isWin = /^win/i.test(process6.platform);
+      isWin = /^win/i.test(process4.platform);
       EE = __require("events");
       if (typeof EE !== "function") {
         EE = EE.EventEmitter;
       }
-      if (process6.__signal_exit_emitter__) {
-        emitter = process6.__signal_exit_emitter__;
+      if (process4.__signal_exit_emitter__) {
+        emitter = process4.__signal_exit_emitter__;
       } else {
-        emitter = process6.__signal_exit_emitter__ = new EE();
+        emitter = process4.__signal_exit_emitter__ = new EE();
         emitter.count = 0;
         emitter.emitted = {};
       }
@@ -30818,12 +30978,12 @@ var require_signal_exit = __commonJS({
         loaded = false;
         signals.forEach(function(sig) {
           try {
-            process6.removeListener(sig, sigListeners[sig]);
+            process4.removeListener(sig, sigListeners[sig]);
           } catch (er) {
           }
         });
-        process6.emit = originalProcessEmit;
-        process6.reallyExit = originalProcessReallyExit;
+        process4.emit = originalProcessEmit;
+        process4.reallyExit = originalProcessReallyExit;
         emitter.count -= 1;
       };
       module.exports.unload = unload;
@@ -30840,7 +31000,7 @@ var require_signal_exit = __commonJS({
           if (!processOk(global.process)) {
             return;
           }
-          var listeners = process6.listeners(sig);
+          var listeners = process4.listeners(sig);
           if (listeners.length === emitter.count) {
             unload();
             emit("exit", null, sig);
@@ -30848,7 +31008,7 @@ var require_signal_exit = __commonJS({
             if (isWin && sig === "SIGHUP") {
               sig = "SIGINT";
             }
-            process6.kill(process6.pid, sig);
+            process4.kill(process4.pid, sig);
           }
         };
       });
@@ -30864,35 +31024,35 @@ var require_signal_exit = __commonJS({
         emitter.count += 1;
         signals = signals.filter(function(sig) {
           try {
-            process6.on(sig, sigListeners[sig]);
+            process4.on(sig, sigListeners[sig]);
             return true;
           } catch (er) {
             return false;
           }
         });
-        process6.emit = processEmit;
-        process6.reallyExit = processReallyExit;
+        process4.emit = processEmit;
+        process4.reallyExit = processReallyExit;
       };
       module.exports.load = load;
-      originalProcessReallyExit = process6.reallyExit;
+      originalProcessReallyExit = process4.reallyExit;
       processReallyExit = function processReallyExit2(code) {
         if (!processOk(global.process)) {
           return;
         }
-        process6.exitCode = code || 0;
-        emit("exit", process6.exitCode, null);
-        emit("afterexit", process6.exitCode, null);
-        originalProcessReallyExit.call(process6, process6.exitCode);
+        process4.exitCode = code || 0;
+        emit("exit", process4.exitCode, null);
+        emit("afterexit", process4.exitCode, null);
+        originalProcessReallyExit.call(process4, process4.exitCode);
       };
-      originalProcessEmit = process6.emit;
+      originalProcessEmit = process4.emit;
       processEmit = function processEmit2(ev, arg) {
         if (ev === "exit" && processOk(global.process)) {
           if (arg !== void 0) {
-            process6.exitCode = arg;
+            process4.exitCode = arg;
           }
           var ret = originalProcessEmit.apply(this, arguments);
-          emit("exit", process6.exitCode, null);
-          emit("afterexit", process6.exitCode, null);
+          emit("exit", process4.exitCode, null);
+          emit("afterexit", process4.exitCode, null);
           return ret;
         } else {
           return originalProcessEmit.apply(this, arguments);
@@ -34223,7 +34383,7 @@ var require_innerFrom = __commonJS({
     exports.fromIterable = fromIterable;
     function fromAsyncIterable(asyncIterable) {
       return new Observable_1.Observable(function(subscriber) {
-        process6(asyncIterable, subscriber).catch(function(err) {
+        process4(asyncIterable, subscriber).catch(function(err) {
           return subscriber.error(err);
         });
       });
@@ -34233,7 +34393,7 @@ var require_innerFrom = __commonJS({
       return fromAsyncIterable(isReadableStreamLike_1.readableStreamLikeToAsyncGenerator(readableStream));
     }
     exports.fromReadableStreamLike = fromReadableStreamLike;
-    function process6(asyncIterable, subscriber) {
+    function process4(asyncIterable, subscriber) {
       var asyncIterable_1, asyncIterable_1_1;
       var e_2, _a;
       return __awaiter(this, void 0, void 0, function() {
@@ -47491,7 +47651,7 @@ var require_log_symbols = __commonJS({
   ""(exports, module) {
     "use strict";
     var chalk2 = require_source2();
-    var isUnicodeSupported2 = require_is_unicode_supported();
+    var isUnicodeSupported = require_is_unicode_supported();
     var main2 = {
       info: chalk2.blue("\u2139"),
       success: chalk2.green("\u2714"),
@@ -47504,7 +47664,7 @@ var require_log_symbols = __commonJS({
       warning: chalk2.yellow("\u203C"),
       error: chalk2.red("\xD7")
     };
-    module.exports = isUnicodeSupported2() ? main2 : fallback;
+    module.exports = isUnicodeSupported() ? main2 : fallback;
   }
 });
 
@@ -51126,7 +51286,7 @@ var require_ora = __commonJS({
     var stripAnsi2 = require_strip_ansi();
     var wcwidth = require_wcwidth();
     var isInteractive = require_is_interactive();
-    var isUnicodeSupported2 = require_is_unicode_supported();
+    var isUnicodeSupported = require_is_unicode_supported();
     var { BufferListStream } = require_bl();
     var TEXT = Symbol("text");
     var PREFIX_TEXT = Symbol("prefixText");
@@ -51249,7 +51409,7 @@ var require_ora = __commonJS({
             throw new Error("The given spinner must have a `frames` property");
           }
           this._spinner = spinner;
-        } else if (!isUnicodeSupported2()) {
+        } else if (!isUnicodeSupported()) {
           this._spinner = cliSpinners.line;
         } else if (spinner === void 0) {
           this._spinner = cliSpinners.dots;
@@ -61118,6 +61278,62 @@ var require_function_bind = __commonJS({
 });
 
 // 
+var require_es_errors = __commonJS({
+  ""(exports, module) {
+    "use strict";
+    module.exports = Error;
+  }
+});
+
+// 
+var require_eval = __commonJS({
+  ""(exports, module) {
+    "use strict";
+    module.exports = EvalError;
+  }
+});
+
+// 
+var require_range2 = __commonJS({
+  ""(exports, module) {
+    "use strict";
+    module.exports = RangeError;
+  }
+});
+
+// 
+var require_ref = __commonJS({
+  ""(exports, module) {
+    "use strict";
+    module.exports = ReferenceError;
+  }
+});
+
+// 
+var require_syntax = __commonJS({
+  ""(exports, module) {
+    "use strict";
+    module.exports = SyntaxError;
+  }
+});
+
+// 
+var require_type = __commonJS({
+  ""(exports, module) {
+    "use strict";
+    module.exports = TypeError;
+  }
+});
+
+// 
+var require_uri = __commonJS({
+  ""(exports, module) {
+    "use strict";
+    module.exports = URIError;
+  }
+});
+
+// 
 var require_shams = __commonJS({
   ""(exports, module) {
     "use strict";
@@ -61220,6 +61436,336 @@ var require_hasown = __commonJS({
 
 // 
 var require_get_intrinsic = __commonJS({
+  ""(exports, module) {
+    "use strict";
+    var undefined2;
+    var $Error = require_es_errors();
+    var $EvalError = require_eval();
+    var $RangeError = require_range2();
+    var $ReferenceError = require_ref();
+    var $SyntaxError = require_syntax();
+    var $TypeError = require_type();
+    var $URIError = require_uri();
+    var $Function = Function;
+    var getEvalledConstructor = function(expressionSyntax) {
+      try {
+        return $Function('"use strict"; return (' + expressionSyntax + ").constructor;")();
+      } catch (e2) {
+      }
+    };
+    var $gOPD = Object.getOwnPropertyDescriptor;
+    if ($gOPD) {
+      try {
+        $gOPD({}, "");
+      } catch (e2) {
+        $gOPD = null;
+      }
+    }
+    var throwTypeError = function() {
+      throw new $TypeError();
+    };
+    var ThrowTypeError = $gOPD ? function() {
+      try {
+        arguments.callee;
+        return throwTypeError;
+      } catch (calleeThrows) {
+        try {
+          return $gOPD(arguments, "callee").get;
+        } catch (gOPDthrows) {
+          return throwTypeError;
+        }
+      }
+    }() : throwTypeError;
+    var hasSymbols = require_has_symbols()();
+    var hasProto = require_has_proto()();
+    var getProto = Object.getPrototypeOf || (hasProto ? function(x2) {
+      return x2.__proto__;
+    } : null);
+    var needsEval = {};
+    var TypedArray = typeof Uint8Array === "undefined" || !getProto ? undefined2 : getProto(Uint8Array);
+    var INTRINSICS = {
+      __proto__: null,
+      "%AggregateError%": typeof AggregateError === "undefined" ? undefined2 : AggregateError,
+      "%Array%": Array,
+      "%ArrayBuffer%": typeof ArrayBuffer === "undefined" ? undefined2 : ArrayBuffer,
+      "%ArrayIteratorPrototype%": hasSymbols && getProto ? getProto([][Symbol.iterator]()) : undefined2,
+      "%AsyncFromSyncIteratorPrototype%": undefined2,
+      "%AsyncFunction%": needsEval,
+      "%AsyncGenerator%": needsEval,
+      "%AsyncGeneratorFunction%": needsEval,
+      "%AsyncIteratorPrototype%": needsEval,
+      "%Atomics%": typeof Atomics === "undefined" ? undefined2 : Atomics,
+      "%BigInt%": typeof BigInt === "undefined" ? undefined2 : BigInt,
+      "%BigInt64Array%": typeof BigInt64Array === "undefined" ? undefined2 : BigInt64Array,
+      "%BigUint64Array%": typeof BigUint64Array === "undefined" ? undefined2 : BigUint64Array,
+      "%Boolean%": Boolean,
+      "%DataView%": typeof DataView === "undefined" ? undefined2 : DataView,
+      "%Date%": Date,
+      "%decodeURI%": decodeURI,
+      "%decodeURIComponent%": decodeURIComponent,
+      "%encodeURI%": encodeURI,
+      "%encodeURIComponent%": encodeURIComponent,
+      "%Error%": $Error,
+      "%eval%": eval,
+      "%EvalError%": $EvalError,
+      "%Float32Array%": typeof Float32Array === "undefined" ? undefined2 : Float32Array,
+      "%Float64Array%": typeof Float64Array === "undefined" ? undefined2 : Float64Array,
+      "%FinalizationRegistry%": typeof FinalizationRegistry === "undefined" ? undefined2 : FinalizationRegistry,
+      "%Function%": $Function,
+      "%GeneratorFunction%": needsEval,
+      "%Int8Array%": typeof Int8Array === "undefined" ? undefined2 : Int8Array,
+      "%Int16Array%": typeof Int16Array === "undefined" ? undefined2 : Int16Array,
+      "%Int32Array%": typeof Int32Array === "undefined" ? undefined2 : Int32Array,
+      "%isFinite%": isFinite,
+      "%isNaN%": isNaN,
+      "%IteratorPrototype%": hasSymbols && getProto ? getProto(getProto([][Symbol.iterator]())) : undefined2,
+      "%JSON%": typeof JSON === "object" ? JSON : undefined2,
+      "%Map%": typeof Map === "undefined" ? undefined2 : Map,
+      "%MapIteratorPrototype%": typeof Map === "undefined" || !hasSymbols || !getProto ? undefined2 : getProto((/* @__PURE__ */ new Map())[Symbol.iterator]()),
+      "%Math%": Math,
+      "%Number%": Number,
+      "%Object%": Object,
+      "%parseFloat%": parseFloat,
+      "%parseInt%": parseInt,
+      "%Promise%": typeof Promise === "undefined" ? undefined2 : Promise,
+      "%Proxy%": typeof Proxy === "undefined" ? undefined2 : Proxy,
+      "%RangeError%": $RangeError,
+      "%ReferenceError%": $ReferenceError,
+      "%Reflect%": typeof Reflect === "undefined" ? undefined2 : Reflect,
+      "%RegExp%": RegExp,
+      "%Set%": typeof Set === "undefined" ? undefined2 : Set,
+      "%SetIteratorPrototype%": typeof Set === "undefined" || !hasSymbols || !getProto ? undefined2 : getProto((/* @__PURE__ */ new Set())[Symbol.iterator]()),
+      "%SharedArrayBuffer%": typeof SharedArrayBuffer === "undefined" ? undefined2 : SharedArrayBuffer,
+      "%String%": String,
+      "%StringIteratorPrototype%": hasSymbols && getProto ? getProto(""[Symbol.iterator]()) : undefined2,
+      "%Symbol%": hasSymbols ? Symbol : undefined2,
+      "%SyntaxError%": $SyntaxError,
+      "%ThrowTypeError%": ThrowTypeError,
+      "%TypedArray%": TypedArray,
+      "%TypeError%": $TypeError,
+      "%Uint8Array%": typeof Uint8Array === "undefined" ? undefined2 : Uint8Array,
+      "%Uint8ClampedArray%": typeof Uint8ClampedArray === "undefined" ? undefined2 : Uint8ClampedArray,
+      "%Uint16Array%": typeof Uint16Array === "undefined" ? undefined2 : Uint16Array,
+      "%Uint32Array%": typeof Uint32Array === "undefined" ? undefined2 : Uint32Array,
+      "%URIError%": $URIError,
+      "%WeakMap%": typeof WeakMap === "undefined" ? undefined2 : WeakMap,
+      "%WeakRef%": typeof WeakRef === "undefined" ? undefined2 : WeakRef,
+      "%WeakSet%": typeof WeakSet === "undefined" ? undefined2 : WeakSet
+    };
+    if (getProto) {
+      try {
+        null.error;
+      } catch (e2) {
+        errorProto = getProto(getProto(e2));
+        INTRINSICS["%Error.prototype%"] = errorProto;
+      }
+    }
+    var errorProto;
+    var doEval = function doEval2(name) {
+      var value;
+      if (name === "%AsyncFunction%") {
+        value = getEvalledConstructor("async function () {}");
+      } else if (name === "%GeneratorFunction%") {
+        value = getEvalledConstructor("function* () {}");
+      } else if (name === "%AsyncGeneratorFunction%") {
+        value = getEvalledConstructor("async function* () {}");
+      } else if (name === "%AsyncGenerator%") {
+        var fn = doEval2("%AsyncGeneratorFunction%");
+        if (fn) {
+          value = fn.prototype;
+        }
+      } else if (name === "%AsyncIteratorPrototype%") {
+        var gen = doEval2("%AsyncGenerator%");
+        if (gen && getProto) {
+          value = getProto(gen.prototype);
+        }
+      }
+      INTRINSICS[name] = value;
+      return value;
+    };
+    var LEGACY_ALIASES = {
+      __proto__: null,
+      "%ArrayBufferPrototype%": ["ArrayBuffer", "prototype"],
+      "%ArrayPrototype%": ["Array", "prototype"],
+      "%ArrayProto_entries%": ["Array", "prototype", "entries"],
+      "%ArrayProto_forEach%": ["Array", "prototype", "forEach"],
+      "%ArrayProto_keys%": ["Array", "prototype", "keys"],
+      "%ArrayProto_values%": ["Array", "prototype", "values"],
+      "%AsyncFunctionPrototype%": ["AsyncFunction", "prototype"],
+      "%AsyncGenerator%": ["AsyncGeneratorFunction", "prototype"],
+      "%AsyncGeneratorPrototype%": ["AsyncGeneratorFunction", "prototype", "prototype"],
+      "%BooleanPrototype%": ["Boolean", "prototype"],
+      "%DataViewPrototype%": ["DataView", "prototype"],
+      "%DatePrototype%": ["Date", "prototype"],
+      "%ErrorPrototype%": ["Error", "prototype"],
+      "%EvalErrorPrototype%": ["EvalError", "prototype"],
+      "%Float32ArrayPrototype%": ["Float32Array", "prototype"],
+      "%Float64ArrayPrototype%": ["Float64Array", "prototype"],
+      "%FunctionPrototype%": ["Function", "prototype"],
+      "%Generator%": ["GeneratorFunction", "prototype"],
+      "%GeneratorPrototype%": ["GeneratorFunction", "prototype", "prototype"],
+      "%Int8ArrayPrototype%": ["Int8Array", "prototype"],
+      "%Int16ArrayPrototype%": ["Int16Array", "prototype"],
+      "%Int32ArrayPrototype%": ["Int32Array", "prototype"],
+      "%JSONParse%": ["JSON", "parse"],
+      "%JSONStringify%": ["JSON", "stringify"],
+      "%MapPrototype%": ["Map", "prototype"],
+      "%NumberPrototype%": ["Number", "prototype"],
+      "%ObjectPrototype%": ["Object", "prototype"],
+      "%ObjProto_toString%": ["Object", "prototype", "toString"],
+      "%ObjProto_valueOf%": ["Object", "prototype", "valueOf"],
+      "%PromisePrototype%": ["Promise", "prototype"],
+      "%PromiseProto_then%": ["Promise", "prototype", "then"],
+      "%Promise_all%": ["Promise", "all"],
+      "%Promise_reject%": ["Promise", "reject"],
+      "%Promise_resolve%": ["Promise", "resolve"],
+      "%RangeErrorPrototype%": ["RangeError", "prototype"],
+      "%ReferenceErrorPrototype%": ["ReferenceError", "prototype"],
+      "%RegExpPrototype%": ["RegExp", "prototype"],
+      "%SetPrototype%": ["Set", "prototype"],
+      "%SharedArrayBufferPrototype%": ["SharedArrayBuffer", "prototype"],
+      "%StringPrototype%": ["String", "prototype"],
+      "%SymbolPrototype%": ["Symbol", "prototype"],
+      "%SyntaxErrorPrototype%": ["SyntaxError", "prototype"],
+      "%TypedArrayPrototype%": ["TypedArray", "prototype"],
+      "%TypeErrorPrototype%": ["TypeError", "prototype"],
+      "%Uint8ArrayPrototype%": ["Uint8Array", "prototype"],
+      "%Uint8ClampedArrayPrototype%": ["Uint8ClampedArray", "prototype"],
+      "%Uint16ArrayPrototype%": ["Uint16Array", "prototype"],
+      "%Uint32ArrayPrototype%": ["Uint32Array", "prototype"],
+      "%URIErrorPrototype%": ["URIError", "prototype"],
+      "%WeakMapPrototype%": ["WeakMap", "prototype"],
+      "%WeakSetPrototype%": ["WeakSet", "prototype"]
+    };
+    var bind = require_function_bind();
+    var hasOwn = require_hasown();
+    var $concat = bind.call(Function.call, Array.prototype.concat);
+    var $spliceApply = bind.call(Function.apply, Array.prototype.splice);
+    var $replace = bind.call(Function.call, String.prototype.replace);
+    var $strSlice = bind.call(Function.call, String.prototype.slice);
+    var $exec = bind.call(Function.call, RegExp.prototype.exec);
+    var rePropName = /[^%.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|%$))/g;
+    var reEscapeChar = /\\(\\)?/g;
+    var stringToPath = function stringToPath2(string) {
+      var first = $strSlice(string, 0, 1);
+      var last = $strSlice(string, -1);
+      if (first === "%" && last !== "%") {
+        throw new $SyntaxError("invalid intrinsic syntax, expected closing `%`");
+      } else if (last === "%" && first !== "%") {
+        throw new $SyntaxError("invalid intrinsic syntax, expected opening `%`");
+      }
+      var result = [];
+      $replace(string, rePropName, function(match2, number, quote, subString) {
+        result[result.length] = quote ? $replace(subString, reEscapeChar, "$1") : number || match2;
+      });
+      return result;
+    };
+    var getBaseIntrinsic = function getBaseIntrinsic2(name, allowMissing) {
+      var intrinsicName = name;
+      var alias2;
+      if (hasOwn(LEGACY_ALIASES, intrinsicName)) {
+        alias2 = LEGACY_ALIASES[intrinsicName];
+        intrinsicName = "%" + alias2[0] + "%";
+      }
+      if (hasOwn(INTRINSICS, intrinsicName)) {
+        var value = INTRINSICS[intrinsicName];
+        if (value === needsEval) {
+          value = doEval(intrinsicName);
+        }
+        if (typeof value === "undefined" && !allowMissing) {
+          throw new $TypeError("intrinsic " + name + " exists, but is not available. Please file an issue!");
+        }
+        return {
+          alias: alias2,
+          name: intrinsicName,
+          value
+        };
+      }
+      throw new $SyntaxError("intrinsic " + name + " does not exist!");
+    };
+    module.exports = function GetIntrinsic(name, allowMissing) {
+      if (typeof name !== "string" || name.length === 0) {
+        throw new $TypeError("intrinsic name must be a non-empty string");
+      }
+      if (arguments.length > 1 && typeof allowMissing !== "boolean") {
+        throw new $TypeError('"allowMissing" argument must be a boolean');
+      }
+      if ($exec(/^%?[^%]*%?$/, name) === null) {
+        throw new $SyntaxError("`%` may not be present anywhere but at the beginning and end of the intrinsic name");
+      }
+      var parts = stringToPath(name);
+      var intrinsicBaseName = parts.length > 0 ? parts[0] : "";
+      var intrinsic = getBaseIntrinsic("%" + intrinsicBaseName + "%", allowMissing);
+      var intrinsicRealName = intrinsic.name;
+      var value = intrinsic.value;
+      var skipFurtherCaching = false;
+      var alias2 = intrinsic.alias;
+      if (alias2) {
+        intrinsicBaseName = alias2[0];
+        $spliceApply(parts, $concat([0, 1], alias2));
+      }
+      for (var i2 = 1, isOwn = true; i2 < parts.length; i2 += 1) {
+        var part = parts[i2];
+        var first = $strSlice(part, 0, 1);
+        var last = $strSlice(part, -1);
+        if ((first === '"' || first === "'" || first === "`" || (last === '"' || last === "'" || last === "`")) && first !== last) {
+          throw new $SyntaxError("property names with quotes must have matching quotes");
+        }
+        if (part === "constructor" || !isOwn) {
+          skipFurtherCaching = true;
+        }
+        intrinsicBaseName += "." + part;
+        intrinsicRealName = "%" + intrinsicBaseName + "%";
+        if (hasOwn(INTRINSICS, intrinsicRealName)) {
+          value = INTRINSICS[intrinsicRealName];
+        } else if (value != null) {
+          if (!(part in value)) {
+            if (!allowMissing) {
+              throw new $TypeError("base intrinsic for " + name + " exists, but the property is not available.");
+            }
+            return void 0;
+          }
+          if ($gOPD && i2 + 1 >= parts.length) {
+            var desc = $gOPD(value, part);
+            isOwn = !!desc;
+            if (isOwn && "get" in desc && !("originalValue" in desc.get)) {
+              value = desc.get;
+            } else {
+              value = value[part];
+            }
+          } else {
+            isOwn = hasOwn(value, part);
+            value = value[part];
+          }
+          if (isOwn && !skipFurtherCaching) {
+            INTRINSICS[intrinsicRealName] = value;
+          }
+        }
+      }
+      return value;
+    };
+  }
+});
+
+// 
+var require_es_define_property = __commonJS({
+  ""(exports, module) {
+    "use strict";
+    var GetIntrinsic = require_get_intrinsic();
+    var $defineProperty = GetIntrinsic("%Object.defineProperty%", true) || false;
+    if ($defineProperty) {
+      try {
+        $defineProperty({}, "a", { value: 1 });
+      } catch (e2) {
+        $defineProperty = false;
+      }
+    }
+    module.exports = $defineProperty;
+  }
+});
+
+// 
+var require_get_intrinsic2 = __commonJS({
   ""(exports, module) {
     "use strict";
     var undefined2;
@@ -61525,41 +62071,10 @@ var require_get_intrinsic = __commonJS({
 });
 
 // 
-var require_has_property_descriptors = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    var GetIntrinsic = require_get_intrinsic();
-    var $defineProperty = GetIntrinsic("%Object.defineProperty%", true);
-    var hasPropertyDescriptors = function hasPropertyDescriptors2() {
-      if ($defineProperty) {
-        try {
-          $defineProperty({}, "a", { value: 1 });
-          return true;
-        } catch (e2) {
-          return false;
-        }
-      }
-      return false;
-    };
-    hasPropertyDescriptors.hasArrayLengthDefineBug = function hasArrayLengthDefineBug() {
-      if (!hasPropertyDescriptors()) {
-        return null;
-      }
-      try {
-        return $defineProperty([], "length", { value: 1 }).length !== 1;
-      } catch (e2) {
-        return true;
-      }
-    };
-    module.exports = hasPropertyDescriptors;
-  }
-});
-
-// 
 var require_gopd = __commonJS({
   ""(exports, module) {
     "use strict";
-    var GetIntrinsic = require_get_intrinsic();
+    var GetIntrinsic = require_get_intrinsic2();
     var $gOPD = GetIntrinsic("%Object.getOwnPropertyDescriptor%", true);
     if ($gOPD) {
       try {
@@ -61576,18 +62091,9 @@ var require_gopd = __commonJS({
 var require_define_data_property = __commonJS({
   ""(exports, module) {
     "use strict";
-    var hasPropertyDescriptors = require_has_property_descriptors()();
-    var GetIntrinsic = require_get_intrinsic();
-    var $defineProperty = hasPropertyDescriptors && GetIntrinsic("%Object.defineProperty%", true);
-    if ($defineProperty) {
-      try {
-        $defineProperty({}, "a", { value: 1 });
-      } catch (e2) {
-        $defineProperty = false;
-      }
-    }
-    var $SyntaxError = GetIntrinsic("%SyntaxError%");
-    var $TypeError = GetIntrinsic("%TypeError%");
+    var $defineProperty = require_es_define_property();
+    var $SyntaxError = require_syntax();
+    var $TypeError = require_type();
     var gopd = require_gopd();
     module.exports = function defineDataProperty(obj, property, value) {
       if (!obj || typeof obj !== "object" && typeof obj !== "function") {
@@ -61630,6 +62136,28 @@ var require_define_data_property = __commonJS({
 });
 
 // 
+var require_has_property_descriptors = __commonJS({
+  ""(exports, module) {
+    "use strict";
+    var $defineProperty = require_es_define_property();
+    var hasPropertyDescriptors = function hasPropertyDescriptors2() {
+      return !!$defineProperty;
+    };
+    hasPropertyDescriptors.hasArrayLengthDefineBug = function hasArrayLengthDefineBug() {
+      if (!$defineProperty) {
+        return null;
+      }
+      try {
+        return $defineProperty([], "length", { value: 1 }).length !== 1;
+      } catch (e2) {
+        return true;
+      }
+    };
+    module.exports = hasPropertyDescriptors;
+  }
+});
+
+// 
 var require_set_function_length = __commonJS({
   ""(exports, module) {
     "use strict";
@@ -61637,7 +62165,7 @@ var require_set_function_length = __commonJS({
     var define2 = require_define_data_property();
     var hasDescriptors = require_has_property_descriptors()();
     var gOPD = require_gopd();
-    var $TypeError = GetIntrinsic("%TypeError%");
+    var $TypeError = require_type();
     var $floor = GetIntrinsic("%Math.floor%");
     module.exports = function setFunctionLength(fn, length) {
       if (typeof fn !== "function") {
@@ -61677,19 +62205,12 @@ var require_call_bind = __commonJS({
     var bind = require_function_bind();
     var GetIntrinsic = require_get_intrinsic();
     var setFunctionLength = require_set_function_length();
-    var $TypeError = GetIntrinsic("%TypeError%");
+    var $TypeError = require_type();
     var $apply = GetIntrinsic("%Function.prototype.apply%");
     var $call = GetIntrinsic("%Function.prototype.call%");
     var $reflectApply = GetIntrinsic("%Reflect.apply%", true) || bind.call($call, $apply);
-    var $defineProperty = GetIntrinsic("%Object.defineProperty%", true);
+    var $defineProperty = require_es_define_property();
     var $max = GetIntrinsic("%Math.max%");
-    if ($defineProperty) {
-      try {
-        $defineProperty({}, "a", { value: 1 });
-      } catch (e2) {
-        $defineProperty = null;
-      }
-    }
     module.exports = function callBind(originalFunction) {
       if (typeof originalFunction !== "function") {
         throw new $TypeError("a function is required");
@@ -63356,17 +63877,17 @@ var require_dist_node29 = __commonJS({
         };
         return authOptions.factory(options);
       }
-      const common2 = {
+      const common = {
         clientId: state.clientId,
         clientSecret: state.clientSecret,
         request: state.request,
         ...authOptions
       };
       const userAuth = state.clientType === "oauth-app" ? await (0, import_auth_oauth_user.createOAuthUserAuth)({
-        ...common2,
+        ...common,
         clientType: state.clientType
       }) : await (0, import_auth_oauth_user.createOAuthUserAuth)({
-        ...common2,
+        ...common,
         clientType: state.clientType
       });
       return userAuth();
@@ -64419,8 +64940,11 @@ var require_re = __commonJS({
     createToken("XRANGEPLAINLOOSE", `[v=\\s]*(${src[t2.XRANGEIDENTIFIERLOOSE]})(?:\\.(${src[t2.XRANGEIDENTIFIERLOOSE]})(?:\\.(${src[t2.XRANGEIDENTIFIERLOOSE]})(?:${src[t2.PRERELEASELOOSE]})?${src[t2.BUILD]}?)?)?`);
     createToken("XRANGE", `^${src[t2.GTLT]}\\s*${src[t2.XRANGEPLAIN]}$`);
     createToken("XRANGELOOSE", `^${src[t2.GTLT]}\\s*${src[t2.XRANGEPLAINLOOSE]}$`);
-    createToken("COERCE", `${"(^|[^\\d])(\\d{1,"}${MAX_SAFE_COMPONENT_LENGTH}})(?:\\.(\\d{1,${MAX_SAFE_COMPONENT_LENGTH}}))?(?:\\.(\\d{1,${MAX_SAFE_COMPONENT_LENGTH}}))?(?:$|[^\\d])`);
+    createToken("COERCEPLAIN", `${"(^|[^\\d])(\\d{1,"}${MAX_SAFE_COMPONENT_LENGTH}})(?:\\.(\\d{1,${MAX_SAFE_COMPONENT_LENGTH}}))?(?:\\.(\\d{1,${MAX_SAFE_COMPONENT_LENGTH}}))?`);
+    createToken("COERCE", `${src[t2.COERCEPLAIN]}(?:$|[^\\d])`);
+    createToken("COERCEFULL", src[t2.COERCEPLAIN] + `(?:${src[t2.PRERELEASE]})?(?:${src[t2.BUILD]})?(?:$|[^\\d])`);
     createToken("COERCERTL", src[t2.COERCE], true);
+    createToken("COERCERTLFULL", src[t2.COERCEFULL], true);
     createToken("LONETILDE", "(?:~>?)");
     createToken("TILDETRIM", `(\\s*)${src[t2.LONETILDE]}\\s+`, true);
     exports.tildeTrimReplace = "$1~";
@@ -65053,21 +65577,27 @@ var require_coerce = __commonJS({
       options = options || {};
       let match2 = null;
       if (!options.rtl) {
-        match2 = version.match(re[t2.COERCE]);
+        match2 = version.match(options.includePrerelease ? re[t2.COERCEFULL] : re[t2.COERCE]);
       } else {
+        const coerceRtlRegex = options.includePrerelease ? re[t2.COERCERTLFULL] : re[t2.COERCERTL];
         let next;
-        while ((next = re[t2.COERCERTL].exec(version)) && (!match2 || match2.index + match2[0].length !== version.length)) {
+        while ((next = coerceRtlRegex.exec(version)) && (!match2 || match2.index + match2[0].length !== version.length)) {
           if (!match2 || next.index + next[0].length !== match2.index + match2[0].length) {
             match2 = next;
           }
-          re[t2.COERCERTL].lastIndex = next.index + next[1].length + next[2].length;
+          coerceRtlRegex.lastIndex = next.index + next[1].length + next[2].length;
         }
-        re[t2.COERCERTL].lastIndex = -1;
+        coerceRtlRegex.lastIndex = -1;
       }
       if (match2 === null) {
         return null;
       }
-      return parse2(`${match2[2]}.${match2[3] || "0"}.${match2[4] || "0"}`, options);
+      const major = match2[2];
+      const minor = match2[3] || "0";
+      const patch = match2[4] || "0";
+      const prerelease = options.includePrerelease && match2[5] ? `-${match2[5]}` : "";
+      const build = options.includePrerelease && match2[6] ? `+${match2[6]}` : "";
+      return parse2(`${major}.${minor}.${patch}${prerelease}${build}`, options);
     };
     module.exports = coerce;
   }
@@ -65725,7 +66255,7 @@ var require_lru_cache = __commonJS({
 });
 
 // 
-var require_range2 = __commonJS({
+var require_range3 = __commonJS({
   ""(exports, module) {
     var Range = class {
       constructor(range, options) {
@@ -66188,14 +66718,14 @@ var require_comparator = __commonJS({
     var cmp = require_cmp();
     var debug = require_debug();
     var SemVer = require_semver();
-    var Range = require_range2();
+    var Range = require_range3();
   }
 });
 
 // 
 var require_satisfies = __commonJS({
   ""(exports, module) {
-    var Range = require_range2();
+    var Range = require_range3();
     var satisfies = (version, range, options) => {
       try {
         range = new Range(range, options);
@@ -66211,7 +66741,7 @@ var require_satisfies = __commonJS({
 // 
 var require_to_comparators = __commonJS({
   ""(exports, module) {
-    var Range = require_range2();
+    var Range = require_range3();
     var toComparators = (range, options) => new Range(range, options).set.map((comp) => comp.map((c) => c.value).join(" ").trim().split(" "));
     module.exports = toComparators;
   }
@@ -66221,7 +66751,7 @@ var require_to_comparators = __commonJS({
 var require_max_satisfying = __commonJS({
   ""(exports, module) {
     var SemVer = require_semver();
-    var Range = require_range2();
+    var Range = require_range3();
     var maxSatisfying = (versions, range, options) => {
       let max = null;
       let maxSV = null;
@@ -66249,7 +66779,7 @@ var require_max_satisfying = __commonJS({
 var require_min_satisfying = __commonJS({
   ""(exports, module) {
     var SemVer = require_semver();
-    var Range = require_range2();
+    var Range = require_range3();
     var minSatisfying = (versions, range, options) => {
       let min = null;
       let minSV = null;
@@ -66277,7 +66807,7 @@ var require_min_satisfying = __commonJS({
 var require_min_version = __commonJS({
   ""(exports, module) {
     var SemVer = require_semver();
-    var Range = require_range2();
+    var Range = require_range3();
     var gt = require_gt();
     var minVersion = (range, loose) => {
       range = new Range(range, loose);
@@ -66332,7 +66862,7 @@ var require_min_version = __commonJS({
 // 
 var require_valid2 = __commonJS({
   ""(exports, module) {
-    var Range = require_range2();
+    var Range = require_range3();
     var validRange = (range, options) => {
       try {
         return new Range(range, options).range || "*";
@@ -66350,7 +66880,7 @@ var require_outside = __commonJS({
     var SemVer = require_semver();
     var Comparator = require_comparator();
     var { ANY } = Comparator;
-    var Range = require_range2();
+    var Range = require_range3();
     var satisfies = require_satisfies();
     var gt = require_gt();
     var lt = require_lt();
@@ -66433,7 +66963,7 @@ var require_ltr = __commonJS({
 // 
 var require_intersects = __commonJS({
   ""(exports, module) {
-    var Range = require_range2();
+    var Range = require_range3();
     var intersects = (r1, r2, options) => {
       r1 = new Range(r1, options);
       r2 = new Range(r2, options);
@@ -66495,7 +67025,7 @@ var require_simplify = __commonJS({
 // 
 var require_subset = __commonJS({
   ""(exports, module) {
-    var Range = require_range2();
+    var Range = require_range3();
     var Comparator = require_comparator();
     var { ANY } = Comparator;
     var satisfies = require_satisfies();
@@ -66685,7 +67215,7 @@ var require_semver2 = __commonJS({
     var cmp = require_cmp();
     var coerce = require_coerce();
     var Comparator = require_comparator();
-    var Range = require_range2();
+    var Range = require_range3();
     var satisfies = require_satisfies();
     var toComparators = require_to_comparators();
     var maxSatisfying = require_max_satisfying();
@@ -71827,301 +72357,7 @@ AuthenticatedGitClient._token = null;
 AuthenticatedGitClient._authenticatedInstance = null;
 
 // 
-import process5 from "node:process";
-
-// 
-import process4 from "node:process";
-function isUnicodeSupported() {
-  if (process4.platform !== "win32") {
-    return process4.env.TERM !== "linux";
-  }
-  return Boolean(process4.env.CI) || Boolean(process4.env.WT_SESSION) || Boolean(process4.env.TERMINUS_SUBLIME) || process4.env.ConEmuTask === "{cmd::Cmder}" || process4.env.TERM_PROGRAM === "Terminus-Sublime" || process4.env.TERM_PROGRAM === "vscode" || process4.env.TERM === "xterm-256color" || process4.env.TERM === "alacritty" || process4.env.TERMINAL_EMULATOR === "JetBrains-JediTerm";
-}
-
-// 
-var { platform } = process5;
-var common = {
-  square: "\u2588",
-  squareDarkShade: "\u2593",
-  squareMediumShade: "\u2592",
-  squareLightShade: "\u2591",
-  squareTop: "\u2580",
-  squareBottom: "\u2584",
-  squareLeft: "\u258C",
-  squareRight: "\u2590",
-  squareCenter: "\u25A0",
-  bullet: "\u25CF",
-  dot: "\u2024",
-  ellipsis: "\u2026",
-  pointerSmall: "\u203A",
-  triangleUp: "\u25B2",
-  triangleUpSmall: "\u25B4",
-  triangleDown: "\u25BC",
-  triangleDownSmall: "\u25BE",
-  triangleLeftSmall: "\u25C2",
-  triangleRightSmall: "\u25B8",
-  home: "\u2302",
-  heart: "\u2665",
-  musicNote: "\u266A",
-  musicNoteBeamed: "\u266B",
-  arrowUp: "\u2191",
-  arrowDown: "\u2193",
-  arrowLeft: "\u2190",
-  arrowRight: "\u2192",
-  arrowLeftRight: "\u2194",
-  arrowUpDown: "\u2195",
-  almostEqual: "\u2248",
-  notEqual: "\u2260",
-  lessOrEqual: "\u2264",
-  greaterOrEqual: "\u2265",
-  identical: "\u2261",
-  infinity: "\u221E",
-  subscriptZero: "\u2080",
-  subscriptOne: "\u2081",
-  subscriptTwo: "\u2082",
-  subscriptThree: "\u2083",
-  subscriptFour: "\u2084",
-  subscriptFive: "\u2085",
-  subscriptSix: "\u2086",
-  subscriptSeven: "\u2087",
-  subscriptEight: "\u2088",
-  subscriptNine: "\u2089",
-  oneHalf: "\xBD",
-  oneThird: "\u2153",
-  oneQuarter: "\xBC",
-  oneFifth: "\u2155",
-  oneSixth: "\u2159",
-  oneEighth: "\u215B",
-  twoThirds: "\u2154",
-  twoFifths: "\u2156",
-  threeQuarters: "\xBE",
-  threeFifths: "\u2157",
-  threeEighths: "\u215C",
-  fourFifths: "\u2158",
-  fiveSixths: "\u215A",
-  fiveEighths: "\u215D",
-  sevenEighths: "\u215E",
-  line: "\u2500",
-  lineBold: "\u2501",
-  lineDouble: "\u2550",
-  lineDashed0: "\u2504",
-  lineDashed1: "\u2505",
-  lineDashed2: "\u2508",
-  lineDashed3: "\u2509",
-  lineDashed4: "\u254C",
-  lineDashed5: "\u254D",
-  lineDashed6: "\u2574",
-  lineDashed7: "\u2576",
-  lineDashed8: "\u2578",
-  lineDashed9: "\u257A",
-  lineDashed10: "\u257C",
-  lineDashed11: "\u257E",
-  lineDashed12: "\u2212",
-  lineDashed13: "\u2013",
-  lineDashed14: "\u2010",
-  lineDashed15: "\u2043",
-  lineVertical: "\u2502",
-  lineVerticalBold: "\u2503",
-  lineVerticalDouble: "\u2551",
-  lineVerticalDashed0: "\u2506",
-  lineVerticalDashed1: "\u2507",
-  lineVerticalDashed2: "\u250A",
-  lineVerticalDashed3: "\u250B",
-  lineVerticalDashed4: "\u254E",
-  lineVerticalDashed5: "\u254F",
-  lineVerticalDashed6: "\u2575",
-  lineVerticalDashed7: "\u2577",
-  lineVerticalDashed8: "\u2579",
-  lineVerticalDashed9: "\u257B",
-  lineVerticalDashed10: "\u257D",
-  lineVerticalDashed11: "\u257F",
-  lineDownLeft: "\u2510",
-  lineDownLeftArc: "\u256E",
-  lineDownBoldLeftBold: "\u2513",
-  lineDownBoldLeft: "\u2512",
-  lineDownLeftBold: "\u2511",
-  lineDownDoubleLeftDouble: "\u2557",
-  lineDownDoubleLeft: "\u2556",
-  lineDownLeftDouble: "\u2555",
-  lineDownRight: "\u250C",
-  lineDownRightArc: "\u256D",
-  lineDownBoldRightBold: "\u250F",
-  lineDownBoldRight: "\u250E",
-  lineDownRightBold: "\u250D",
-  lineDownDoubleRightDouble: "\u2554",
-  lineDownDoubleRight: "\u2553",
-  lineDownRightDouble: "\u2552",
-  lineUpLeft: "\u2518",
-  lineUpLeftArc: "\u256F",
-  lineUpBoldLeftBold: "\u251B",
-  lineUpBoldLeft: "\u251A",
-  lineUpLeftBold: "\u2519",
-  lineUpDoubleLeftDouble: "\u255D",
-  lineUpDoubleLeft: "\u255C",
-  lineUpLeftDouble: "\u255B",
-  lineUpRight: "\u2514",
-  lineUpRightArc: "\u2570",
-  lineUpBoldRightBold: "\u2517",
-  lineUpBoldRight: "\u2516",
-  lineUpRightBold: "\u2515",
-  lineUpDoubleRightDouble: "\u255A",
-  lineUpDoubleRight: "\u2559",
-  lineUpRightDouble: "\u2558",
-  lineUpDownLeft: "\u2524",
-  lineUpBoldDownBoldLeftBold: "\u252B",
-  lineUpBoldDownBoldLeft: "\u2528",
-  lineUpDownLeftBold: "\u2525",
-  lineUpBoldDownLeftBold: "\u2529",
-  lineUpDownBoldLeftBold: "\u252A",
-  lineUpDownBoldLeft: "\u2527",
-  lineUpBoldDownLeft: "\u2526",
-  lineUpDoubleDownDoubleLeftDouble: "\u2563",
-  lineUpDoubleDownDoubleLeft: "\u2562",
-  lineUpDownLeftDouble: "\u2561",
-  lineUpDownRight: "\u251C",
-  lineUpBoldDownBoldRightBold: "\u2523",
-  lineUpBoldDownBoldRight: "\u2520",
-  lineUpDownRightBold: "\u251D",
-  lineUpBoldDownRightBold: "\u2521",
-  lineUpDownBoldRightBold: "\u2522",
-  lineUpDownBoldRight: "\u251F",
-  lineUpBoldDownRight: "\u251E",
-  lineUpDoubleDownDoubleRightDouble: "\u2560",
-  lineUpDoubleDownDoubleRight: "\u255F",
-  lineUpDownRightDouble: "\u255E",
-  lineDownLeftRight: "\u252C",
-  lineDownBoldLeftBoldRightBold: "\u2533",
-  lineDownLeftBoldRightBold: "\u252F",
-  lineDownBoldLeftRight: "\u2530",
-  lineDownBoldLeftBoldRight: "\u2531",
-  lineDownBoldLeftRightBold: "\u2532",
-  lineDownLeftRightBold: "\u252E",
-  lineDownLeftBoldRight: "\u252D",
-  lineDownDoubleLeftDoubleRightDouble: "\u2566",
-  lineDownDoubleLeftRight: "\u2565",
-  lineDownLeftDoubleRightDouble: "\u2564",
-  lineUpLeftRight: "\u2534",
-  lineUpBoldLeftBoldRightBold: "\u253B",
-  lineUpLeftBoldRightBold: "\u2537",
-  lineUpBoldLeftRight: "\u2538",
-  lineUpBoldLeftBoldRight: "\u2539",
-  lineUpBoldLeftRightBold: "\u253A",
-  lineUpLeftRightBold: "\u2536",
-  lineUpLeftBoldRight: "\u2535",
-  lineUpDoubleLeftDoubleRightDouble: "\u2569",
-  lineUpDoubleLeftRight: "\u2568",
-  lineUpLeftDoubleRightDouble: "\u2567",
-  lineUpDownLeftRight: "\u253C",
-  lineUpBoldDownBoldLeftBoldRightBold: "\u254B",
-  lineUpDownBoldLeftBoldRightBold: "\u2548",
-  lineUpBoldDownLeftBoldRightBold: "\u2547",
-  lineUpBoldDownBoldLeftRightBold: "\u254A",
-  lineUpBoldDownBoldLeftBoldRight: "\u2549",
-  lineUpBoldDownLeftRight: "\u2540",
-  lineUpDownBoldLeftRight: "\u2541",
-  lineUpDownLeftBoldRight: "\u253D",
-  lineUpDownLeftRightBold: "\u253E",
-  lineUpBoldDownBoldLeftRight: "\u2542",
-  lineUpDownLeftBoldRightBold: "\u253F",
-  lineUpBoldDownLeftBoldRight: "\u2543",
-  lineUpBoldDownLeftRightBold: "\u2544",
-  lineUpDownBoldLeftBoldRight: "\u2545",
-  lineUpDownBoldLeftRightBold: "\u2546",
-  lineUpDoubleDownDoubleLeftDoubleRightDouble: "\u256C",
-  lineUpDoubleDownDoubleLeftRight: "\u256B",
-  lineUpDownLeftDoubleRightDouble: "\u256A",
-  lineCross: "\u2573",
-  lineBackslash: "\u2572",
-  lineSlash: "\u2571"
-};
-var mainSymbols = {
-  ...common,
-  ...platform === "linux" ? {
-    circleQuestionMark: "?\u20DD",
-    questionMarkPrefix: "?\u20DD"
-  } : {
-    circleQuestionMark: "?",
-    questionMarkPrefix: "?"
-  },
-  tick: "\u2714",
-  info: "\u2139",
-  warning: "\u26A0",
-  cross: "\u2718",
-  squareSmall: "\u25FB",
-  squareSmallFilled: "\u25FC",
-  circle: "\u25EF",
-  circleFilled: "\u25C9",
-  circleDotted: "\u25CC",
-  circleDouble: "\u25CE",
-  circleCircle: "\u24DE",
-  circleCross: "\u24E7",
-  circlePipe: "\u24BE",
-  radioOn: "\u25C9",
-  radioOff: "\u25EF",
-  checkboxOn: "\u2612",
-  checkboxOff: "\u2610",
-  checkboxCircleOn: "\u24E7",
-  checkboxCircleOff: "\u24BE",
-  pointer: "\u276F",
-  triangleUpOutline: "\u25B3",
-  triangleLeft: "\u25C0",
-  triangleRight: "\u25B6",
-  lozenge: "\u25C6",
-  lozengeOutline: "\u25C7",
-  hamburger: "\u2630",
-  smiley: "\u32E1",
-  mustache: "\u0DF4",
-  star: "\u2605",
-  play: "\u25B6",
-  nodejs: "\u2B22",
-  oneSeventh: "\u2150",
-  oneNinth: "\u2151",
-  oneTenth: "\u2152"
-};
-var fallbackSymbols = {
-  ...common,
-  tick: "\u221A",
-  info: "i",
-  warning: "\u203C",
-  cross: "\xD7",
-  squareSmall: "\u25A1",
-  squareSmallFilled: "\u25A0",
-  circle: "( )",
-  circleFilled: "(*)",
-  circleDotted: "( )",
-  circleDouble: "( )",
-  circleCircle: "(\u25CB)",
-  circleCross: "(\xD7)",
-  circlePipe: "(\u2502)",
-  circleQuestionMark: "(?)",
-  radioOn: "(*)",
-  radioOff: "( )",
-  checkboxOn: "[\xD7]",
-  checkboxOff: "[ ]",
-  checkboxCircleOn: "(\xD7)",
-  checkboxCircleOff: "( )",
-  questionMarkPrefix: "\uFF1F",
-  pointer: ">",
-  triangleUpOutline: "\u2206",
-  triangleLeft: "\u25C4",
-  triangleRight: "\u25BA",
-  lozenge: "\u2666",
-  lozengeOutline: "\u25CA",
-  hamburger: "\u2261",
-  smiley: "\u263A",
-  mustache: "\u250C\u2500\u2510",
-  star: "\u2736",
-  play: "\u25BA",
-  nodejs: "\u2666",
-  oneSeventh: "1/7",
-  oneNinth: "1/9",
-  oneTenth: "1/10"
-};
-var shouldUseMain = isUnicodeSupported();
-var figures = shouldUseMain ? mainSymbols : fallbackSymbols;
-var figures_default = figures;
-
-// 
+var import_figures2 = __toESM(require_figures(), 1);
 var import_cli_cursor = __toESM(require_cli_cursor(), 1);
 var import_run_async2 = __toESM(require_run_async(), 1);
 var import_rxjs3 = __toESM(require_cjs(), 1);
@@ -72177,7 +72413,7 @@ var Paginator = class {
     this.isInfinite = isInfinite;
   }
   paginate(output, active, pageSize) {
-    pageSize = pageSize || 7;
+    pageSize ||= 7;
     let lines = output.split("\n");
     if (this.screen) {
       lines = this.screen.breakLines(lines);
@@ -72245,10 +72481,11 @@ var import_map = __toESM(require_map2(), 1);
 import assert from "node:assert";
 
 // 
+var import_figures = __toESM(require_figures(), 1);
 var Separator = class {
   constructor(line) {
     this.type = "separator";
-    this.line = source_default.dim(line || new Array(15).join(figures_default.line));
+    this.line = source_default.dim(line || new Array(15).join(import_figures.default.line));
   }
   static exclude(obj) {
     return obj.type !== "separator";
@@ -72425,9 +72662,7 @@ var ScreenManager = class {
     const cursorPos = this.rl._getCursorPos();
     const width = this.normalizedCliWidth();
     content = this.forceLineReturn(content, width);
-    if (bottomContent) {
-      bottomContent = this.forceLineReturn(bottomContent, width);
-    }
+    bottomContent &&= this.forceLineReturn(bottomContent, width);
     if (rawPromptLine.length % width === 0) {
       content += "\n";
     }
@@ -72503,9 +72738,7 @@ var Prompt = class {
     if (!this.opt.name) {
       this.throwParamError("name");
     }
-    if (!this.opt.message) {
-      this.opt.message = this.opt.name + ":";
-    }
+    this.opt.message ||= this.opt.name + ":";
     if (Array.isArray(this.opt.choices)) {
       this.opt.choices = new Choices(this.opt.choices, answers);
     }
@@ -72694,7 +72927,7 @@ function listRender(choices, pointer) {
       return;
     }
     const isSelected = i2 - separatorOffset === pointer;
-    let line = (isSelected ? figures_default.pointer + " " : "  ") + choice.name;
+    let line = (isSelected ? import_figures2.default.pointer + " " : "  ") + choice.name;
     if (isSelected) {
       line = source_default.cyan(line);
     }
@@ -73019,9 +73252,7 @@ var ExpandPrompt = class extends Prompt {
     this.screen.render(message, bottomContent);
   }
   getCurrentValue(input) {
-    if (!input) {
-      input = this.rawDefault;
-    }
+    input ||= this.rawDefault;
     const selected = this.opt.choices.where({ key: input.toLowerCase().trim() })[0];
     if (!selected) {
       return null;
@@ -73133,6 +73364,7 @@ function renderChoices2(choices, pointer) {
 
 // 
 var import_cli_cursor2 = __toESM(require_cli_cursor(), 1);
+var import_figures3 = __toESM(require_figures(), 1);
 var import_rxjs8 = __toESM(require_cjs(), 1);
 var CheckboxPrompt = class extends Prompt {
   constructor(questions, rl, answers) {
@@ -73284,7 +73516,7 @@ function renderChoices3(choices, pointer) {
     } else {
       const line = getCheckbox(choice.checked) + " " + choice.name;
       if (i2 - separatorOffset === pointer) {
-        output += source_default.cyan(figures_default.pointer + line);
+        output += source_default.cyan(import_figures3.default.pointer + line);
       } else {
         output += " " + line;
       }
@@ -73294,7 +73526,7 @@ function renderChoices3(choices, pointer) {
   return output.replace(/\n$/, "");
 }
 function getCheckbox(checked) {
-  return checked ? source_default.green(figures_default.radioOn) : figures_default.radioOff;
+  return checked ? source_default.green(import_figures3.default.radioOn) : import_figures3.default.radioOff;
 }
 
 // 
@@ -73358,9 +73590,7 @@ var PasswordPrompt = class extends Prompt {
     this.render(state.isValid);
   }
   onKeypress() {
-    if (this.opt.default) {
-      this.opt.default = void 0;
-    }
+    this.opt.default &&= void 0;
     this.render();
   }
 };
@@ -73435,9 +73665,7 @@ var import_mute_stream = __toESM(require_lib4(), 1);
 import readline from "node:readline";
 var UI = class {
   constructor(opt) {
-    if (!this.rl) {
-      this.rl = readline.createInterface(setupReadlineOptions(opt));
-    }
+    this.rl ||= readline.createInterface(setupReadlineOptions(opt));
     this.rl.resume();
     this.onForceClose = this.onForceClose.bind(this);
     process.on("exit", this.onForceClose);
