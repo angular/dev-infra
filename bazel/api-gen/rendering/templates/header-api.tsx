@@ -6,16 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import { h } from 'preact';
-import { EntryType } from '../entities';
-import { DocEntryRenderable } from '../entities/renderables';
+import {h} from 'preact';
+import {EntryType} from '../entities';
+import {DocEntryRenderable} from '../entities/renderables';
 import {
   HEADER_CLASS_NAME,
   HEADER_ENTRY_CATEGORY,
   HEADER_ENTRY_LABEL,
-  HEADER_ENTRY_TITLE
+  HEADER_ENTRY_TITLE,
 } from '../styling/css-classes';
-import { DocsPillRow } from './docs-pill-row';
+import {DocsPillRow} from './docs-pill-row';
 
 /** Component to render a header of the API page. */
 export function HeaderApi(props: {entry: DocEntryRenderable}) {
@@ -28,19 +28,32 @@ export function HeaderApi(props: {entry: DocEntryRenderable}) {
       <div className={HEADER_ENTRY_TITLE}>
         <div>
           <h1>{entry.name}</h1>
-          <div className={HEADER_ENTRY_LABEL} data-mode={"full"} data-type={entry.entryType.toLowerCase()}>{getEntryTypeDisplayName(entry.entryType)}</div>
-          if(entry.isDeprecated) {
-            <div className={HEADER_ENTRY_LABEL} data-mode={"full"} data-type="deprecated">Deprecated</div>
-          }
-          if(entry.isDeveloperPreview) {
-            <div className={HEADER_ENTRY_LABEL} data-mode={"full"} data-type="developer_preview">Developer preview</div>
-          }
+          <div
+            className={HEADER_ENTRY_LABEL}
+            data-mode={'full'}
+            data-type={entry.entryType.toLowerCase()}
+          >
+            {getEntryTypeDisplayName(entry.entryType)}
+          </div>
+          {entry.isDeprecated && (
+            <div className={HEADER_ENTRY_LABEL} data-mode={'full'} data-type="deprecated">
+              Deprecated
+            </div>
+          )}
+          {entry.isDeveloperPreview && (
+            <div className={HEADER_ENTRY_LABEL} data-mode={'full'} data-type="developer_preview">
+              Developer preview
+            </div>
+          )}
         </div>
       </div>
 
-      <p className={'docs-reference-description'} dangerouslySetInnerHTML={({__html: entry.shortHtmlDescription})}></p>
+      <p
+        className={'docs-reference-description'}
+        dangerouslySetInnerHTML={{__html: entry.shortHtmlDescription}}
+      ></p>
 
-      <DocsPillRow links={entry.additionalLinks}/>
+      <DocsPillRow links={entry.additionalLinks} />
     </header>
   );
 }
