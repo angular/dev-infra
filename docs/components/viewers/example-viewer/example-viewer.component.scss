@@ -91,10 +91,6 @@
 
   button[docs-copy-source-code] {
     top: 0.31rem;
-    @container viewerblock (min-width: 400px) {
-      background-color: transparent;
-      border: 1px solid transparent;
-    }
   }
 }
 
