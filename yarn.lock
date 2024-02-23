@@ -539,7 +539,7 @@ __metadata:
     "@types/babel__core": "npm:^7.1.19"
     "@types/browser-sync": "npm:^2.26.3"
     "@types/cli-progress": "npm:^3.9.1"
-    "@types/conventional-commits-parser": "npm:^3.0.1"
+    "@types/conventional-commits-parser": "npm:^5.0.0"
     "@types/diff": "npm:^5.0.8"
     "@types/dom-view-transitions": "npm:^1.0.4"
     "@types/ejs": "npm:^3.0.6"
@@ -6635,12 +6635,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/conventional-commits-parser@npm:^3.0.1":
-  version: 3.0.6
-  resolution: "@types/conventional-commits-parser@npm:3.0.6"
+"@types/conventional-commits-parser@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "@types/conventional-commits-parser@npm:5.0.0"
   dependencies:
     "@types/node": "npm:*"
-  checksum: 10c0/634cf82141baeaefe0fe2cf104d1956853e51d72b1b400292924bc7c83ab0105c4323f028b8cf03376797ef6cdf7cd8b1718b28795907311e2790f33d0742318
+  checksum: 10c0/16c748ce01cb3b3ea5947950acd695569c0daa8da62cc7e0eb98b15c4d7f812f95c079fe2c853325509f8aa73cfd388390319ae4621c8dfb21eeacb63accdb25
   languageName: node
   linkType: hard
 
