@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {RendererThis, Token, Tokens, TokenizerThis} from 'marked';
+import {RendererThis, Token, TokenizerThis, Tokens} from 'marked';
 
 /** Enum of all available alert severities. */
 export enum AlertSeverityLevel {
@@ -41,7 +41,7 @@ export const docsAlertExtension = {
     let match: DocsAlert | undefined;
     for (let level in AlertSeverityLevel) {
       // Capture group 1: all alert text content after the severity level
-      const rule = new RegExp('^s*' + level + ': (.*?)\n', 's');
+      const rule = new RegExp('^s*' + level + ': (.*?)\n(\n|$)', 's');
       const possibleMatch = rule.exec(src);
 
       if (possibleMatch?.[1]) {
