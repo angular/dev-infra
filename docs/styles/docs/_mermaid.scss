@@ -8,7 +8,7 @@
   --pie4: '#8001c6';
   --pie5: '#00c572';
   --pie6: '#fe3700';
-  
+
   background-color: var(--page-background) !important; // svg background color
   g {
     rect {
@@ -16,7 +16,8 @@
       filter: drop-shadow(5px 5px 0px var(--vivid-pink));
     }
   }
-  .messageText, .pieTitleText {
+  .messageText,
+  .pieTitleText {
     fill: var(--primary-contrast) !important; // pie chart title text and line labels
   }
   .pieOuterCircle {
@@ -34,16 +35,20 @@
       fill: var(--primary-contrast) !important; // legend label text color
     }
   }
-  .slice {  // e.g. text on the pie charts
+  .slice {
+    // e.g. text on the pie charts
     fill: var(--primary-contrast) !important;
   }
-  .flowchart-link, line { // lines
+  .flowchart-link,
+  line {
+    // lines
     stroke: var(--primary-contrast) !important;
   }
   .marker,
   #statediagram-barbEnd,
   .transition,
-  #arrowhead path { // arrows
+  #arrowhead path {
+    // arrows
     stroke: var(--primary-contrast) !important;
     fill: var(--primary-contrast) !important;
   }
@@ -51,5 +56,10 @@
   .nodes rect {
     stroke: var(--primary-contrast) !important;
     fill: var(--page-background) !important;
+  }
+
+  .nodeLabel {
+    fill: var(--primary-contrast) !important;
+    color: var(--primary-contrast) !important;
   }
 }
