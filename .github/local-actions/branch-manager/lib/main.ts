@@ -81,7 +81,7 @@ async function main(repo: {owner: string; repo: string}, token: string, pr: numb
 
   /** The pull request after being retrieved and validated. */
   const pullRequest = await loadAndValidatePullRequest(
-    {git, config, googleSyncConfig: null},
+    {git, config},
     pr,
     PullRequestValidationConfig.create({
       assertSignedCla: true,

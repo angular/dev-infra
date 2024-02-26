@@ -62,7 +62,6 @@ export function createPullRequestValidation<T extends PullRequestValidation>(
           (message) => new PullRequestValidationFailure(message, name, canBeForceIgnored),
         );
         try {
-          debugger;
           await validation.assert(...args);
         } catch (e) {
           if (e instanceof PullRequestValidationFailure) {
