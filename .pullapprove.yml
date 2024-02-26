@@ -30,4 +30,4 @@ groups:
       reviewed_for: ignored # All reviews apply to this group whether noted via Reviewed-for or not
     reviewers:
       teams:
-        - ~dev-infra
+        - team
