@@ -37946,6 +37946,10 @@ var actionLabels = createTypedObject()({
     description: "The PR is in need of a google3 presubmit",
     name: "action: presubmit"
   },
+  ACTION_GLOBAL_PRESUBMIT: {
+    description: "The PR is in need of a google3 global presubmit",
+    name: "action: global presubmit"
+  },
   ACTION_REVIEW: {
     description: "The PR is still awaiting reviews from at least one requested reviewer",
     name: "action: review"
@@ -38055,13 +38059,22 @@ var featureLabels = createTypedObject()({
 });
 
 // 
+var requiresLabels = createTypedObject()({
+  REQUIRES_TGP: {
+    name: "requires: TGP",
+    description: "This PR requires a passing TGP before merging is allowed"
+  }
+});
+
+// 
 var allLabels = {
   ...managedLabels,
   ...actionLabels,
   ...mergeLabels,
   ...targetLabels,
   ...priorityLabels,
-  ...featureLabels
+  ...featureLabels,
+  ...requiresLabels
 };
 
 // 
