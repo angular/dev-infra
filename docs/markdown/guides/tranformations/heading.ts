@@ -8,15 +8,15 @@
 
 import {RendererApi} from 'marked';
 
-import {getPageTitle} from '../utils';
 import {getHeaderId} from '../state';
+import {getPageTitle} from '../utils';
 
 export const headingRender: RendererApi['heading'] = (text, level, raw) => {
   if (level === 1) {
     return `
     <header class="docs-header">
       <docs-breadcrumb></docs-breadcrumb>
-      
+
       ${getPageTitle(text)}
     </header>
     `;
@@ -32,7 +32,8 @@ export const headingRender: RendererApi['heading'] = (text, level, raw) => {
   const label = anchorLessText.replaceAll(/`(.*?)`/g, '<code>$1</code>');
 
   return `
-  <h${level} id="${link}">${label}</h${level}>
-  <a href="#${link}" class="docs-anchor" tabindex="-1" aria-label="Link to ${label}"></a>
+  <h${level} id="${link}">
+    <a href="#${link}" class="docs-anchor" tabindex="-1" aria-label="Link to ${label}">${label}</a>
+  </h${level}>
   `;
 };
