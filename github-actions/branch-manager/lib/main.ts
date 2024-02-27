@@ -49,7 +49,11 @@ async function run() {
     // Invoke sequentially to avoid github secondary rate limits
     // https://docs.github.com/en/rest/guides/best-practices-for-integrators?apiVersion=2022-11-28#dealing-with-secondary-rate-limits
     for (const pr of prs) {
-      await createWorkflowForPullRequest({pr});
+      await createWorkflowForPullRequest({
+        repo: context.issue.repo,
+        owner: context.issue.owner,
+        pr,
+      });
     }
   }
 
@@ -62,45 +66,66 @@ async function run() {
         ({name}) => name === actionLabels.ACTION_MERGE.name,
       );
       if (hasMergeLabel) {
-        await createWorkflowForPullRequest();
+        await createWorkflowForPullRequest({
+          repo: context.issue.repo,
+          owner: context.issue.owner,
+          pr: `${context.issue.number}`,
+          sha: payload.pull_request.head.sha,
+        });
       }
     }
 
     if (context.payload.action === 'labeled') {
-      const event = context.payload as PullRequestLabeledEvent;
-      // If the merge label has been added, or if target labels have changed,
-      // another update of the merge status is needed.
+      const payload = context.payload as PullRequestLabeledEvent;
+      // If the merge label has been added, or if target labels have changed another update of
+      // the merge status is needed.
       if (
-        event.label.name === actionLabels.ACTION_MERGE.name ||
-        targetLabelNames.has(event.label.name)
+        payload.label.name === actionLabels.ACTION_MERGE.name ||
+        targetLabelNames.has(payload.label.name)
       ) {
-        await createWorkflowForPullRequest();
+        await createWorkflowForPullRequest({
+          repo: context.issue.repo,
+          owner: context.issue.owner,
+          pr: `${context.issue.number}`,
+          sha: payload.pull_request.head.sha,
+        });
       }
     }
   }
 }
 
-/** The pull request from the context of the action being run, used as the default pull request. */
-const pullRequestFromContext = {
-  repo: context.issue.repo,
-  owner: context.issue.owner,
-  pr: `${context.issue.number}`,
+type WorkflowInputs = {
+  repo: string;
+  owner: string;
+  pr: string;
+  sha?: string;
 };
-type WorkflowInputs = typeof pullRequestFromContext;
 
 /** Create a workflow dispatch event to trigger the pr to be evaluated for mergeability. */
-function createWorkflowForPullRequest(prInfo?: Partial<WorkflowInputs>) {
-  const inputs = {...pullRequestFromContext, ...prInfo};
+async function createWorkflowForPullRequest(inputs: WorkflowInputs) {
+  /** An instance of the octokit Github client. */
+  const githubClient = await github();
+
+  // When a sha is provided we set the status on sha to note that mergeability check is about to start.
+  if (inputs.sha !== undefined) {
+    await githubClient.repos.createCommitStatus({
+      repo: inputs.repo,
+      owner: inputs.owner,
+      state: 'pending',
+      description: 'Running mergibility check',
+      sha: inputs.sha,
+      context: 'mergeability',
+    });
+  }
+
   console.info(`Requesting workflow run for: ${JSON.stringify(inputs)}`);
-  return github().then((api) =>
-    api.actions.createWorkflowDispatch({
-      owner: 'angular',
-      repo: 'dev-infra',
-      ref: 'main',
-      workflow_id: 'branch-manager.yml',
-      inputs,
-    }),
-  );
+  await githubClient.actions.createWorkflowDispatch({
+    owner: 'angular',
+    repo: 'dev-infra',
+    ref: 'main',
+    workflow_id: 'branch-manager.yml',
+    inputs,
+  });
 }
 
 /** The Octokit instance, if defined to allow token revocation after the action executes. */
