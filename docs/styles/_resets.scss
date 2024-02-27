@@ -28,7 +28,9 @@
     font-size: 16px;
     background-color: var(--page-background);
     color: var(--primary-contrast);
-    transition: color 0.3s ease, background-color 0.3s ease;
+    transition:
+      color 0.3s ease,
+      background-color 0.3s ease;
     scroll-behavior: smooth;
   }
 
@@ -87,7 +89,10 @@
     border-radius: 0.25rem;
     padding: 0.5rem;
     background-color: var(--page-background);
-    transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+    transition:
+      color 0.3s ease,
+      background-color 0.3s ease,
+      border-color 0.3s ease;
 
     docs-icon,
     label {
@@ -111,7 +116,9 @@
       height: 100%;
       background-color: var(--page-background);
       color: var(--tertiary-contrast);
-      transition: color 0.3s ease, background-color 0.3s ease;
+      transition:
+        color 0.3s ease,
+        background-color 0.3s ease;
     }
 
     select {
@@ -253,7 +260,9 @@
   .docs-code-editor-tabs {
     .mat-mdc-tab-header {
       background-color: var(--octonary-contrast);
-      transition: background-color 0.3s ease, border-color 0.3s ease;
+      transition:
+        background-color 0.3s ease,
+        border-color 0.3s ease;
     }
 
     .mdc-tab__text-label {
@@ -309,16 +318,6 @@
         }
       }
     }
-  }
-}
-
-// TODO: Find better solution
-// Temporary overrides for mat-tab in API Ref
-.docs-app-main-content {
-  .mat-mdc-tab-body-wrapper,
-  .mat-mdc-tab-body-content,
-  .mat-mdc-tab-body {
-    display: contents;
   }
 }
 
