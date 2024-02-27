@@ -20,7 +20,7 @@ describe('markdown to html', () => {
 
   it('should create a self referential link for non document headers', () => {
     const h2 = markdownDocument.querySelector('h2');
-    const h2Anchor = h2?.nextElementSibling;
+    const h2Anchor = h2?.firstElementChild;
 
     const h2HeaderId = h2?.getAttribute('id');
     const h2AnchorHref = h2Anchor?.getAttribute('href');
