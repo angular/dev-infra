@@ -25,6 +25,8 @@ ts_library(
     deps = [
         ":config_cache",
         "//tools/esm-interop:jsonc-parser",
+        "@npm//@actions/core",
+        "@npm//@octokit/auth-app",
         "@npm//@octokit/core",
         "@npm//@octokit/graphql",
         "@npm//@octokit/plugin-paginate-rest",

@@ -61,11 +61,9 @@ export class MergeTool {
     public config: NgDevConfig<{
       pullRequest: PullRequestConfig;
       github: GithubConfig;
-      caretaker: CaretakerConfig;
     }>,
     public git: AuthenticatedGitClient,
     flags: Partial<PullRequestMergeFlags>,
-    public googleSyncConfig: GoogleSyncConfig | null,
   ) {
     // Update flags property with the provided flags values as patches to the default flag values.
     this.flags = {...defaultPullRequestMergeFlags, ...flags};

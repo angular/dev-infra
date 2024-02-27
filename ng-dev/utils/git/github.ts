@@ -35,6 +35,7 @@ export class GithubClient {
   protected _octokit = new Octokit({...this._octokitOptions, request: {fetch}});
 
   readonly pulls: Octokit['pulls'] = this._octokit.pulls;
+  readonly orgs: Octokit['orgs'] = this._octokit.orgs;
   readonly repos: Octokit['repos'] = this._octokit.repos;
   readonly issues: Octokit['issues'] = this._octokit.issues;
   readonly git: Octokit['git'] = this._octokit.git;

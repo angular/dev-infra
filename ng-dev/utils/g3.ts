@@ -16,7 +16,7 @@ export interface G3StatsData {
   insertions: number;
   deletions: number;
   files: number;
-  primitivesFiles: number;
+  separateFiles: number;
   commits: number;
 }
 
@@ -31,7 +31,7 @@ export class G3Stats {
     if (
       syncMatchFns === null ||
       syncMatchFns.ngMatchFn === null ||
-      syncMatchFns.primitivesMatchFn === null ||
+      syncMatchFns.separateMatchFn === null ||
       latestSha === null
     ) {
       return;
@@ -48,14 +48,14 @@ export class G3Stats {
     git: AuthenticatedGitClient,
     g3Ref: string,
     mainRef: string,
-    syncMatchFns: {ngMatchFn: SyncFileMatchFn; primitivesMatchFn: SyncFileMatchFn},
+    syncMatchFns: {ngMatchFn: SyncFileMatchFn; separateMatchFn: SyncFileMatchFn},
   ): G3StatsData {
     /** The diff stats to be returned. */
     const stats = {
       insertions: 0,
       deletions: 0,
       files: 0,
-      primitivesFiles: 0,
+      separateFiles: 0,
       commits: 0,
     };
 
@@ -90,10 +90,10 @@ export class G3Stats {
           stats.insertions += insertions;
           stats.deletions += deletions;
           stats.files += 1;
-        } else if (syncMatchFns.primitivesMatchFn(fileName)) {
+        } else if (syncMatchFns.separateMatchFn(fileName)) {
           stats.insertions += insertions;
           stats.deletions += deletions;
-          stats.primitivesFiles += 1;
+          stats.separateFiles += 1;
         }
       });
 
@@ -118,19 +118,20 @@ export class G3Stats {
     configs: {caretaker: CaretakerConfig; github: GithubConfig},
   ): Promise<null | {
     ngMatchFn: SyncFileMatchFn;
-    primitivesMatchFn: SyncFileMatchFn;
+    separateMatchFn: SyncFileMatchFn;
   }> {
+    debugger;
     if (configs.caretaker.g3SyncConfigPath === undefined) {
       Log.debug('No Google Sync configuration specified.');
       return null;
     }
 
     const configPath = path.join(git.baseDir, configs.caretaker.g3SyncConfigPath);
-    const {ngMatchFn, primitivesMatchFn, config} = await getGoogleSyncConfig(configPath);
+    const {ngMatchFn, separateMatchFn, config} = await getGoogleSyncConfig(configPath);
     if (config.syncedFilePatterns.length === 0) {
       Log.warn('Google Sync configuration does not specify any files being synced.');
     }
-    return {ngMatchFn, primitivesMatchFn};
+    return {ngMatchFn, separateMatchFn};
   }
 
   static getLatestShas(git: AuthenticatedGitClient) {

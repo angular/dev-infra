@@ -59,10 +59,10 @@ export interface GoogleSyncConfig {
    */
   alwaysExternalFilePatterns: string[];
   /**
-   * Patterns matching files which are part of the shared primitives.
+   * Patterns matching files which need to be synced separately.
    * Patterns should be relative to the project directory.
    */
-  primitivesFilePatterns: string[];
+  separateFilePatterns: string[];
 }
 
 export interface CaretakerConfig {
@@ -169,10 +169,11 @@ export async function getUserConfig() {
  */
 export async function getGoogleSyncConfig(absolutePath: string): Promise<{
   ngMatchFn: SyncFileMatchFn;
-  primitivesMatchFn: SyncFileMatchFn;
+  separateMatchFn: SyncFileMatchFn;
   config: GoogleSyncConfig;
 }> {
   const content = await fs.promises.readFile(absolutePath, 'utf8');
+  debugger;
   const errors: jsonc.ParseError[] = [];
   const config = jsonc.parse(content, errors) as GoogleSyncConfig;
   if (errors.length !== 0) {
@@ -185,7 +186,7 @@ export async function getGoogleSyncConfig(absolutePath: string): Promise<{
   return {
     config,
     ngMatchFn: matchFns.ngSyncMatchFn,
-    primitivesMatchFn: matchFns.primitivesSyncMatchFn,
+    separateMatchFn: matchFns.separateSyncMatchFn,
   };
 }
 
@@ -198,24 +199,24 @@ export type SyncFileMatchFn = (projectRelativePath: string) => boolean;
 /** Transforms the given sync configuration into a file match function. */
 export function transformConfigIntoMatcher(config: GoogleSyncConfig): {
   ngSyncMatchFn: SyncFileMatchFn;
-  primitivesSyncMatchFn: SyncFileMatchFn;
+  separateSyncMatchFn: SyncFileMatchFn;
 } {
   const syncedFilePatterns = config.syncedFilePatterns.map((p) => new Minimatch(p));
   const alwaysExternalFilePatterns = config.alwaysExternalFilePatterns.map((p) => new Minimatch(p));
-  const primitivesFilePatterns = config.primitivesFilePatterns.map((p) => new Minimatch(p));
+  const separateFilePatterns = config.separateFilePatterns.map((p) => new Minimatch(p));
 
-  // match everything that needs to be synced except external and primitives
+  // match everything that needs to be synced except external and separate sync files
   const ngSyncMatchFn = (projectRelativePath: string) =>
     syncedFilePatterns.some((p) => p.match(projectRelativePath)) &&
     alwaysExternalFilePatterns.every((p) => !p.match(projectRelativePath)) &&
-    primitivesFilePatterns.every((p) => !p.match(projectRelativePath));
+    separateFilePatterns.every((p) => !p.match(projectRelativePath));
 
-  // match only primitives code that needs to be synced
-  const primitivesSyncMatchFn = (projectRelativePath: string) =>
-    primitivesFilePatterns.some((p) => p.match(projectRelativePath)) &&
+  // match only files that need to be synced separately
+  const separateSyncMatchFn = (projectRelativePath: string) =>
+    separateFilePatterns.some((p) => p.match(projectRelativePath)) &&
     alwaysExternalFilePatterns.every((p) => !p.match(projectRelativePath)) &&
     syncedFilePatterns.every((p) => !p.match(projectRelativePath));
-  return {ngSyncMatchFn, primitivesSyncMatchFn};
+  return {ngSyncMatchFn, separateSyncMatchFn};
 }
 
 /** A standard error class to thrown during assertions while validating configuration. */

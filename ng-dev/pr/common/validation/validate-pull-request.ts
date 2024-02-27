@@ -8,7 +8,7 @@
 
 import {parseCommitMessage} from '../../../commit-message/parse.js';
 import {ActiveReleaseTrains} from '../../../release/versioning/active-release-trains.js';
-import {NgDevConfig, GithubConfig, GoogleSyncConfig} from '../../../utils/config.js';
+import {NgDevConfig, GithubConfig, CaretakerConfig} from '../../../utils/config.js';
 import {PullRequestConfig} from '../../config/index.js';
 import {PullRequestFromGithub} from '../fetch-pull-request.js';
 import {PullRequestTarget} from '../targeting/target-label.js';
@@ -25,7 +25,7 @@ import {pendingStateValidation} from './assert-pending.js';
 import {signedClaValidation} from './assert-signed-cla.js';
 import {PullRequestValidationConfig} from './validation-config.js';
 import {PullRequestValidationFailure} from './validation-failure.js';
-import {G3StatsData} from '../../../utils/g3.js';
+import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client.js';
 
 /**
  * Runs all valiations that the given pull request is valid, returning a list of all failing
@@ -35,13 +35,14 @@ import {G3StatsData} from '../../../utils/g3.js';
  */
 export async function assertValidPullRequest(
   pullRequest: PullRequestFromGithub,
-  files: string[],
-  diffStats: G3StatsData | null,
   validationConfig: PullRequestValidationConfig,
-  ngDevConfig: NgDevConfig<{pullRequest: PullRequestConfig; github: GithubConfig}>,
+  ngDevConfig: NgDevConfig<{
+    pullRequest: PullRequestConfig;
+    github: GithubConfig;
+  }>,
   activeReleaseTrains: ActiveReleaseTrains | null,
   target: PullRequestTarget,
-  googleSyncConfig: GoogleSyncConfig | null,
+  gitClient: AuthenticatedGitClient,
 ): Promise<PullRequestValidationFailure[]> {
   const labels = pullRequest.labels.nodes.map((l) => l.name);
   const commitsInPr = pullRequest.commits.nodes.map((n) => {
@@ -57,8 +58,8 @@ export async function assertValidPullRequest(
     breakingChangeInfoValidation.run(validationConfig, commitsInPr, labels),
     passingCiValidation.run(validationConfig, pullRequest),
     enforcedStatusesValidation.run(validationConfig, pullRequest, ngDevConfig.pullRequest),
-    isolatePrimitivesValidation.run(validationConfig, files, diffStats, googleSyncConfig),
-    enforceTestedValidation.run(validationConfig, pullRequest),
+    isolatePrimitivesValidation.run(validationConfig, ngDevConfig, pullRequest.number, gitClient),
+    enforceTestedValidation.run(validationConfig, pullRequest, gitClient.github),
   ];
 
   if (activeReleaseTrains !== null) {
@@ -74,7 +75,7 @@ export async function assertValidPullRequest(
     );
   }
 
-  return Promise.all(validationResults).then((results) => {
+  return await Promise.all(validationResults).then((results) => {
     return results.filter(
       <(result: null | PullRequestValidationFailure) => result is PullRequestValidationFailure>(
         ((result) => result !== null)
