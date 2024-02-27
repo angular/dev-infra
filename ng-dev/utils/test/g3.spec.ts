@@ -14,7 +14,7 @@ import {GitClient} from '../git/git-client.js';
 import {installVirtualGitClientSpies, mockNgDevConfig} from '../testing/index.js';
 import {GoogleSyncConfig} from '../config.js';
 
-import {G3Stats, G3StatsData} from '../g3.js';
+import {G3Stats} from '../g3.js';
 
 describe('G3Stats', () => {
   let getLatestShas: jasmine.Spy;
@@ -48,7 +48,7 @@ describe('G3Stats', () => {
         caretaker: {
           g3SyncConfigPath: setupFakeSyncConfig({
             syncedFilePatterns: ['file1'],
-            primitivesFilePatterns: [],
+            separateFilePatterns: [],
             alwaysExternalFilePatterns: [],
           }),
         },
@@ -76,18 +76,18 @@ describe('G3Stats', () => {
         caretaker: {
           g3SyncConfigPath: setupFakeSyncConfig({
             syncedFilePatterns: ['project1/*'],
-            primitivesFilePatterns: [],
+            separateFilePatterns: [],
             alwaysExternalFilePatterns: [],
           }),
         },
         ...mockNgDevConfig,
       });
-      const {insertions, deletions, files, primitivesFiles, commits} = data!;
+      const {insertions, deletions, files, separateFiles, commits} = data!;
 
       expect(insertions).toBe(12);
       expect(deletions).toBe(7);
       expect(files).toBe(2);
-      expect(primitivesFiles).toBe(0);
+      expect(separateFiles).toBe(0);
       expect(commits).toBe(3);
     });
 
@@ -109,18 +109,18 @@ describe('G3Stats', () => {
         caretaker: {
           g3SyncConfigPath: setupFakeSyncConfig({
             syncedFilePatterns: [''],
-            primitivesFilePatterns: ['project1/*'],
+            separateFilePatterns: ['project1/*'],
             alwaysExternalFilePatterns: [],
           }),
         },
         ...mockNgDevConfig,
       });
-      const {insertions, deletions, files, primitivesFiles, commits} = data!;
+      const {insertions, deletions, files, separateFiles, commits} = data!;
 
       expect(insertions).toBe(12);
       expect(deletions).toBe(7);
       expect(files).toBe(0);
-      expect(primitivesFiles).toBe(2);
+      expect(separateFiles).toBe(2);
       expect(commits).toBe(3);
     });
 
@@ -143,18 +143,18 @@ describe('G3Stats', () => {
         caretaker: {
           g3SyncConfigPath: setupFakeSyncConfig({
             syncedFilePatterns: ['project1/*'],
-            primitivesFilePatterns: [],
+            separateFilePatterns: [],
             alwaysExternalFilePatterns: [],
           }),
         },
         ...mockNgDevConfig,
       });
-      const {insertions, deletions, files, primitivesFiles, commits} = data!;
+      const {insertions, deletions, files, separateFiles, commits} = data!;
 
       expect(insertions).toBe(0);
       expect(deletions).toBe(0);
       expect(files).toBe(0);
-      expect(primitivesFiles).toBe(0);
+      expect(separateFiles).toBe(0);
       expect(commits).toBe(0);
     });
   });

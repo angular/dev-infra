@@ -64,7 +64,7 @@ async function main() {
 
   let affectsGoogle = false;
   for (const f of files) {
-    if (syncConfig.ngMatchFn(f.filename) || syncConfig.primitivesMatchFn(f.filename)) {
+    if (syncConfig.ngMatchFn(f.filename) || syncConfig.separateMatchFn(f.filename)) {
       affectsGoogle = true;
       break;
     }

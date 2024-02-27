@@ -28,7 +28,7 @@ describe('G3Module', () => {
         insertions: 25,
         deletions: 10,
         files: 2,
-        primitivesFiles: 0,
+        separateFiles: 0,
         commits: 2,
       });
 
@@ -37,16 +37,16 @@ describe('G3Module', () => {
       await module.printToTerminal();
 
       expect(infoSpy).toHaveBeenCalledWith(
-        '2 Angular files changed, 0 primitives files changed, 25 insertions(+), 10 deletions(-) from 2 commits will be included in the next sync',
+        '2 files changed, 25 insertions(+), 10 deletions(-) from 2 commits will be included in the next sync',
       );
     });
 
-    it('if primitives files are discovered needing to sync', async () => {
+    it('if separate sync files are discovered needing to sync', async () => {
       const fakeData = Promise.resolve({
         insertions: 25,
         deletions: 10,
         files: 0,
-        primitivesFiles: 2,
+        separateFiles: 2,
         commits: 2,
       });
 
@@ -66,7 +66,7 @@ describe('G3Module', () => {
         insertions: 0,
         deletions: 0,
         files: 0,
-        primitivesFiles: 0,
+        separateFiles: 0,
         commits: 25,
       });
 

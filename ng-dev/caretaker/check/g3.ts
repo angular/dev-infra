@@ -22,12 +22,12 @@ export class G3Module extends BaseModule<G3StatsData | void> {
       return;
     }
     Log.info.group(bold('g3 branch check'));
-    if (stats.files === 0 && stats.primitivesFiles === 0) {
+    if (stats.files === 0 && stats.separateFiles === 0) {
       Log.info(`${stats.commits} commits between g3 and ${this.git.mainBranchName}`);
       Log.info('✅  No sync is needed at this time');
-    } else if (stats.primitivesFiles > 0) {
+    } else if (stats.separateFiles > 0) {
       Log.info(
-        `${stats.primitivesFiles} primitives files changed, ${stats.files} Angular files changed, ` +
+        `${stats.separateFiles} primitives files changed, ${stats.files} Angular files changed, ` +
           `${stats.insertions} insertions(+), ${stats.deletions} deletions(-) from ` +
           `${stats.commits} commits will be included in the next sync\n` +
           `Note: Shared primivites code has been merged. Only more Shared Primitives code can be ` +
@@ -35,9 +35,8 @@ export class G3Module extends BaseModule<G3StatsData | void> {
       );
     } else {
       Log.info(
-        `${stats.files} Angular files changed, ${stats.primitivesFiles} primitives files changed, ` +
-          `${stats.insertions} insertions(+), ${stats.deletions} deletions(-) from ` +
-          `${stats.commits} commits will be included in the next sync`,
+        `${stats.files} files changed, ${stats.insertions} insertions(+), ${stats.deletions} ` +
+          `deletions(-) from ${stats.commits} commits will be included in the next sync`,
       );
     }
     Log.info.groupEnd();

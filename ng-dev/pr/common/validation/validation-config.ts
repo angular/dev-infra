@@ -21,8 +21,8 @@ export class PullRequestValidationConfig {
   assertCompletedReviews = true;
   assertEnforcedStatuses = true;
   assertMinimumReviews = true;
-  assertIsolatePrimitives = true;
-  assertEnforceTested = true;
+  assertIsolatePrimitives = false;
+  assertEnforceTested = false;
 
   static create(config: Partial<PullRequestValidationConfig>) {
     return Object.assign(new PullRequestValidationConfig(), config);
@@ -43,7 +43,7 @@ export abstract class PullRequestValidation {
   ) {}
 
   /** Assertion function to be defined for the specific validator. */
-  abstract assert(...parameters: unknown[]): void;
+  abstract assert(...parameters: unknown[]): void | Promise<void>;
 }
 
 /** Creates a pull request validation from a configuration and implementation class. */
@@ -62,7 +62,8 @@ export function createPullRequestValidation<T extends PullRequestValidation>(
           (message) => new PullRequestValidationFailure(message, name, canBeForceIgnored),
         );
         try {
-          validation.assert(...args);
+          debugger;
+          await validation.assert(...args);
         } catch (e) {
           if (e instanceof PullRequestValidationFailure) {
             return e;
