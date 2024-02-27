@@ -38124,7 +38124,11 @@ async function run() {
     }, (issues) => issues.data.map((i2) => `${i2.number}`)));
     core.info(`Triggering ${prs.length} prs to be evaluated`);
     for (const pr of prs) {
-      await createWorkflowForPullRequest({ pr });
+      await createWorkflowForPullRequest({
+        repo: import_github2.context.issue.repo,
+        owner: import_github2.context.issue.owner,
+        pr
+      });
     }
   }
   if (import_github2.context.eventName === "pull_request_target") {
@@ -38132,32 +38136,47 @@ async function run() {
       const payload = import_github2.context.payload;
       const hasMergeLabel = payload.pull_request.labels.some(({ name }) => name === actionLabels.ACTION_MERGE.name);
       if (hasMergeLabel) {
-        await createWorkflowForPullRequest();
+        await createWorkflowForPullRequest({
+          repo: import_github2.context.issue.repo,
+          owner: import_github2.context.issue.owner,
+          pr: `${import_github2.context.issue.number}`,
+          sha: payload.pull_request.head.sha
+        });
       }
     }
     if (import_github2.context.payload.action === "labeled") {
-      const event = import_github2.context.payload;
-      if (event.label.name === actionLabels.ACTION_MERGE.name || targetLabelNames.has(event.label.name)) {
-        await createWorkflowForPullRequest();
+      const payload = import_github2.context.payload;
+      if (payload.label.name === actionLabels.ACTION_MERGE.name || targetLabelNames.has(payload.label.name)) {
+        await createWorkflowForPullRequest({
+          repo: import_github2.context.issue.repo,
+          owner: import_github2.context.issue.owner,
+          pr: `${import_github2.context.issue.number}`,
+          sha: payload.pull_request.head.sha
+        });
       }
     }
   }
 }
-var pullRequestFromContext = {
-  repo: import_github2.context.issue.repo,
-  owner: import_github2.context.issue.owner,
-  pr: `${import_github2.context.issue.number}`
-};
-function createWorkflowForPullRequest(prInfo) {
-  const inputs = { ...pullRequestFromContext, ...prInfo };
+async function createWorkflowForPullRequest(inputs) {
+  const githubClient = await github();
+  if (inputs.sha !== void 0) {
+    await githubClient.repos.createCommitStatus({
+      repo: inputs.repo,
+      owner: inputs.owner,
+      state: "pending",
+      description: "Running mergibility check",
+      sha: inputs.sha,
+      context: "mergeability"
+    });
+  }
   console.info(`Requesting workflow run for: ${JSON.stringify(inputs)}`);
-  return github().then((api) => api.actions.createWorkflowDispatch({
+  await githubClient.actions.createWorkflowDispatch({
     owner: "angular",
     repo: "dev-infra",
     ref: "main",
     workflow_id: "branch-manager.yml",
     inputs
-  }));
+  });
 }
 var _github = null;
 async function github() {
