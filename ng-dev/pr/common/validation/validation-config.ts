@@ -6,27 +6,30 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {PullRequestValidationConfig} from '../../config/index.js';
 import {PullRequestValidationFailure} from './validation-failure.js';
 
 /**
  * Pull request validation configuration controlling which assertions
  * should run or not. This enables the forcibly non-fatal ignore feature.
  */
-export class PullRequestValidationConfig {
-  assertPending = true;
-  assertMergeReady = true;
-  assertSignedCla = true;
-  assertChangesAllowForTargetLabel = true;
-  assertPassingCi = true;
-  assertCompletedReviews = true;
-  assertEnforcedStatuses = true;
-  assertMinimumReviews = true;
-  assertIsolatePrimitives = false;
-  assertEnforceTested = false;
+const defaultConfig: PullRequestValidationConfig = {
+  assertPending: true,
+  assertMergeReady: true,
+  assertSignedCla: true,
+  assertChangesAllowForTargetLabel: true,
+  assertPassingCi: true,
+  assertCompletedReviews: true,
+  assertEnforcedStatuses: true,
+  assertMinimumReviews: true,
+  assertIsolatePrimitives: false,
+  assertEnforceTested: false,
+};
 
-  static create(config: Partial<PullRequestValidationConfig>) {
-    return Object.assign(new PullRequestValidationConfig(), config);
-  }
+export function createPullRequestValidationConfig(
+  config: PullRequestValidationConfig,
+): PullRequestValidationConfig {
+  return {...defaultConfig, ...config};
 }
 
 /** Type describing a helper function for validations to create a validation failure. */

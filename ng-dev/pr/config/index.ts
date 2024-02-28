@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Commit} from '../../commit-message/parse.js';
 import {ConfigValidationError, GithubConfig, NgDevConfig} from '../../utils/config.js';
 
 /**
@@ -52,6 +51,11 @@ export interface PullRequestConfig {
   targetLabelExemptScopes?: string[];
 
   /**
+   * Optional map of validations to enable/disable, merged with the defaults from ng-dev.
+   */
+  validators?: PullRequestValidationConfig;
+
+  /**
    * Whether target labeling should be disabled. Special option for repositories
    * not working with the canonical versioning and branching of Angular projects.
    *
@@ -79,4 +83,8 @@ export function assertValidPullRequestConfig<T extends NgDevConfig>(
   if (errors.length) {
     throw new ConfigValidationError('Invalid `pullRequest` configuration', errors);
   }
+}
+
+export interface PullRequestValidationConfig {
+  [key: `assert${string}`]: boolean;
 }

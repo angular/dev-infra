@@ -13,14 +13,13 @@ import {
 import {fetchPullRequestFromGithub} from '../common/fetch-pull-request.js';
 import {FatalMergeToolError} from './failures.js';
 import {ActiveReleaseTrains} from '../../release/versioning/active-release-trains.js';
-import {PullRequestValidationConfig} from '../common/validation/validation-config.js';
 import {assertValidPullRequest} from '../common/validation/validate-pull-request.js';
 import {TEMP_PR_HEAD_BRANCH} from './strategies/strategy.js';
 import {mergeLabels} from '../common/labels/merge.js';
 import {PullRequestValidationFailure} from '../common/validation/validation-failure.js';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {GithubConfig, NgDevConfig, CaretakerConfig, GoogleSyncConfig} from '../../utils/config.js';
-import {PullRequestConfig} from '../config/index.js';
+import {PullRequestConfig, PullRequestValidationConfig} from '../config/index.js';
 import {targetLabels} from '../common/labels/target.js';
 
 /** Interface that describes a pull request. */

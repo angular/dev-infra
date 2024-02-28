@@ -19,7 +19,7 @@ import {
   PullRequestValidationError,
   UserAbortedMergeToolError,
 } from './failures.js';
-import {PullRequestValidationConfig} from '../common/validation/validation-config.js';
+import {createPullRequestValidationConfig} from '../common/validation/validation-config.js';
 import {
   InvalidTargetBranchError,
   InvalidTargetLabelError,
@@ -51,9 +51,9 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
 
   /** Performs the merge and returns whether it was successful or not. */
   async function performMerge(
-    validationConfig: PullRequestValidationConfig = PullRequestValidationConfig.create({
+    validationConfig = {
       assertCompletedReviews: !flags.ignorePendingReviews,
-    }),
+    },
   ): Promise<boolean> {
     try {
       await tool.merge(prNumber, validationConfig);

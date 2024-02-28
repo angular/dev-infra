@@ -71374,58 +71374,6 @@ var require_github = __commonJS({
 var core = __toESM(require_core());
 
 // 
-var PullRequestValidationFailure = class {
-  constructor(message, validationName, canBeForceIgnored) {
-    this.message = message;
-    this.validationName = validationName;
-    this.canBeForceIgnored = canBeForceIgnored;
-  }
-};
-
-// 
-var PullRequestValidationConfig = class {
-  constructor() {
-    this.assertPending = true;
-    this.assertMergeReady = true;
-    this.assertSignedCla = true;
-    this.assertChangesAllowForTargetLabel = true;
-    this.assertPassingCi = true;
-    this.assertCompletedReviews = true;
-    this.assertEnforcedStatuses = true;
-    this.assertMinimumReviews = true;
-    this.assertIsolatePrimitives = false;
-    this.assertEnforceTested = false;
-  }
-  static create(config) {
-    return Object.assign(new PullRequestValidationConfig(), config);
-  }
-};
-var PullRequestValidation = class {
-  constructor(name, _createError) {
-    this.name = name;
-    this._createError = _createError;
-  }
-};
-function createPullRequestValidation({ name, canBeForceIgnored }, getValidationCtor) {
-  return {
-    async run(validationConfig, ...args) {
-      if (validationConfig[name]) {
-        const validation = new (getValidationCtor())(name, (message) => new PullRequestValidationFailure(message, name, canBeForceIgnored));
-        try {
-          await validation.assert(...args);
-        } catch (e2) {
-          if (e2 instanceof PullRequestValidationFailure) {
-            return e2;
-          }
-          throw e2;
-        }
-      }
-      return null;
-    }
-  };
-}
-
-// 
 var import_brace_expansion = __toESM(require_brace_expansion(), 1);
 
 // 
@@ -77210,6 +77158,56 @@ var allLabels = {
 };
 
 // 
+var PullRequestValidationFailure = class {
+  constructor(message, validationName, canBeForceIgnored) {
+    this.message = message;
+    this.validationName = validationName;
+    this.canBeForceIgnored = canBeForceIgnored;
+  }
+};
+
+// 
+var defaultConfig = {
+  assertPending: true,
+  assertMergeReady: true,
+  assertSignedCla: true,
+  assertChangesAllowForTargetLabel: true,
+  assertPassingCi: true,
+  assertCompletedReviews: true,
+  assertEnforcedStatuses: true,
+  assertMinimumReviews: true,
+  assertIsolatePrimitives: false,
+  assertEnforceTested: false
+};
+function createPullRequestValidationConfig(config) {
+  return { ...defaultConfig, ...config };
+}
+var PullRequestValidation = class {
+  constructor(name, _createError) {
+    this.name = name;
+    this._createError = _createError;
+  }
+};
+function createPullRequestValidation({ name, canBeForceIgnored }, getValidationCtor) {
+  return {
+    async run(validationConfig, ...args) {
+      if (validationConfig[name]) {
+        const validation = new (getValidationCtor())(name, (message) => new PullRequestValidationFailure(message, name, canBeForceIgnored));
+        try {
+          await validation.assert(...args);
+        } catch (e2) {
+          if (e2 instanceof PullRequestValidationFailure) {
+            return e2;
+          }
+          throw e2;
+        }
+      }
+      return null;
+    }
+  };
+}
+
+// 
 var changesAllowForTargetLabelValidation = createPullRequestValidation({ name: "assertChangesAllowForTargetLabel", canBeForceIgnored: true }, () => Validation);
 var Validation = class extends PullRequestValidation {
   assert(commits, targetLabel, config, releaseTrains, labelsOnPullRequest) {
@@ -78116,7 +78114,7 @@ async function main(repo2, token2, pr2) {
   const git = await AuthenticatedGitClient.get();
   git.run(["config", "user.email", "angular-robot@google.com"]);
   git.run(["config", "user.name", "Angular Robot"]);
-  const pullRequest = await loadAndValidatePullRequest({ git, config }, pr2, PullRequestValidationConfig.create({
+  const pullRequest = await loadAndValidatePullRequest({ git, config }, pr2, createPullRequestValidationConfig({
     assertSignedCla: true,
     assertMergeReady: true,
     assertPending: false,

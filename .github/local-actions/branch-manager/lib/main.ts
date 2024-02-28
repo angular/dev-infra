@@ -1,5 +1,4 @@
 import * as core from '@actions/core';
-import {PullRequestValidationConfig} from '../../../../ng-dev/pr/common/validation/validation-config.js';
 import {
   assertValidPullRequestConfig,
   PullRequestConfig,
@@ -23,6 +22,7 @@ import {
 import {MergeConflictsFatalError} from '../../../../ng-dev/pr/merge/failures.js';
 import {chdir} from 'process';
 import {spawnSync} from 'child_process';
+import {createPullRequestValidationConfig} from '../../../../ng-dev/pr/common/validation/validation-config.js';
 
 interface CommmitStatus {
   state: 'pending' | 'error' | 'failure' | 'success';
@@ -83,7 +83,7 @@ async function main(repo: {owner: string; repo: string}, token: string, pr: numb
   const pullRequest = await loadAndValidatePullRequest(
     {git, config},
     pr,
-    PullRequestValidationConfig.create({
+    createPullRequestValidationConfig({
       assertSignedCla: true,
       assertMergeReady: true,
 

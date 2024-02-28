@@ -11,7 +11,7 @@ import semver from 'semver';
 import inquirer from 'inquirer';
 import {bold, green, Log, red, yellow} from '../../utils/logging.js';
 
-import {PullRequestConfig} from '../config/index.js';
+import {PullRequestConfig, PullRequestValidationConfig} from '../config/index.js';
 import {
   getCaretakerNotePromptMessage,
   getTargetedBranchesConfirmationPromptMessage,
@@ -20,7 +20,7 @@ import {
 import {loadAndValidatePullRequest, PullRequest} from './pull-request.js';
 import {GithubApiMergeStrategy} from './strategies/api-merge.js';
 import {AutosquashMergeStrategy} from './strategies/autosquash-merge.js';
-import {CaretakerConfig, GithubConfig, GoogleSyncConfig, NgDevConfig} from '../../utils/config.js';
+import {GithubConfig, NgDevConfig} from '../../utils/config.js';
 import {assertValidReleaseConfig} from '../../release/config/index.js';
 import {
   ActiveReleaseTrains,
@@ -33,7 +33,7 @@ import {
   PullRequestValidationError,
   UserAbortedMergeToolError,
 } from './failures.js';
-import {PullRequestValidationConfig} from '../common/validation/validation-config.js';
+import {createPullRequestValidationConfig} from '../common/validation/validation-config.js';
 
 export interface PullRequestMergeFlags {
   branchPrompt: boolean;
@@ -72,10 +72,19 @@ export class MergeTool {
   /**
    * Merges the given pull request and pushes it upstream.
    * @param prNumber Pull request that should be merged.
-   * @param validationConfig Pull request validation config. Can be modified to skip
+   * @param partialValidationConfig Pull request validation config. Can be modified to skip
    *   certain non-fatal validations.
    */
-  async merge(prNumber: number, validationConfig: PullRequestValidationConfig): Promise<void> {
+  async merge(
+    prNumber: number,
+    partialValidationConfig: PullRequestValidationConfig,
+  ): Promise<void> {
+    /** The full validation config, using the provided config from flags, config and defaults. */
+    const validationConfig = createPullRequestValidationConfig({
+      ...this.config.pullRequest.validators,
+      ...partialValidationConfig,
+    });
+
     if (this.git.hasUncommittedChanges()) {
       throw new FatalMergeToolError(
         'Local working repository not clean. Please make sure there are ' +
