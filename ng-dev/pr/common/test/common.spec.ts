@@ -22,8 +22,7 @@ import {PullRequestFromGithub} from '../fetch-pull-request.js';
 import {requiresLabels} from '../labels/requires.js';
 
 import {assertValidPullRequest} from '../validation/validate-pull-request.js';
-import {PullRequestValidationConfig} from '../validation/validation-config.js';
-import {PullRequestConfig} from '../../config/index.js';
+import {PullRequestConfig, PullRequestValidationConfig} from '../../config/index.js';
 import {PullRequestTarget} from '../targeting/target-label.js';
 import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client.js';
 import {installVirtualGitClientSpies, mockNgDevConfig} from '../../../utils/testing/index.js';
@@ -239,7 +238,7 @@ function createIsolatedValidationConfig(
     assertEnforceTested: false,
   };
 
-  return PullRequestValidationConfig.create({...config, ...overrides});
+  return {...config, ...overrides};
 }
 
 function createTestPullRequest(): PullRequestFromGithub {

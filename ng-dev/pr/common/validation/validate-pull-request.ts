@@ -8,8 +8,8 @@
 
 import {parseCommitMessage} from '../../../commit-message/parse.js';
 import {ActiveReleaseTrains} from '../../../release/versioning/active-release-trains.js';
-import {NgDevConfig, GithubConfig, CaretakerConfig} from '../../../utils/config.js';
-import {PullRequestConfig} from '../../config/index.js';
+import {NgDevConfig, GithubConfig} from '../../../utils/config.js';
+import {PullRequestConfig, PullRequestValidationConfig} from '../../config/index.js';
 import {PullRequestFromGithub} from '../fetch-pull-request.js';
 import {PullRequestTarget} from '../targeting/target-label.js';
 import {changesAllowForTargetLabelValidation} from './assert-allowed-target-label.js';
@@ -23,7 +23,6 @@ import {minimumReviewsValidation} from './assert-minimum-reviews.js';
 import {passingCiValidation} from './assert-passing-ci.js';
 import {pendingStateValidation} from './assert-pending.js';
 import {signedClaValidation} from './assert-signed-cla.js';
-import {PullRequestValidationConfig} from './validation-config.js';
 import {PullRequestValidationFailure} from './validation-failure.js';
 import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client.js';
 
