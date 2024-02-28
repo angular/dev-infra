@@ -24,8 +24,8 @@ import {fetchPullRequestFilesFromGithub} from '../fetch-pull-request.js';
 
 /** Assert the pull request has passing enforced statuses. */
 // TODO: update typings to make sure portability is properly handled for windows build.
-export const isolatePrimitivesValidation = createPullRequestValidation(
-  {name: 'assertIsolatePrimitives', canBeForceIgnored: true},
+export const isolatedSeparateFilesValidation = createPullRequestValidation(
+  {name: 'assertIsolatedSeparateFiles', canBeForceIgnored: true},
   () => Validation,
 );
 

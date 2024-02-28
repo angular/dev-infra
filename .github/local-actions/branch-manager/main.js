@@ -77176,7 +77176,7 @@ var defaultConfig = {
   assertCompletedReviews: true,
   assertEnforcedStatuses: true,
   assertMinimumReviews: true,
-  assertIsolatePrimitives: false,
+  assertIsolatedSeparateFiles: false,
   assertEnforceTested: false
 };
 function createPullRequestValidationConfig(config) {
@@ -77368,7 +77368,7 @@ var G3Stats = class {
 };
 
 // 
-var isolatePrimitivesValidation = createPullRequestValidation({ name: "assertIsolatePrimitives", canBeForceIgnored: true }, () => Validation4);
+var isolatedSeparateFilesValidation = createPullRequestValidation({ name: "assertIsolatedSeparateFiles", canBeForceIgnored: true }, () => Validation4);
 var Validation4 = class extends PullRequestValidation {
   async assert(config, prNumber, gitClient) {
     try {
@@ -77574,7 +77574,7 @@ async function assertValidPullRequest(pullRequest, validationConfig, ngDevConfig
     breakingChangeInfoValidation.run(validationConfig, commitsInPr, labels),
     passingCiValidation.run(validationConfig, pullRequest),
     enforcedStatusesValidation.run(validationConfig, pullRequest, ngDevConfig.pullRequest),
-    isolatePrimitivesValidation.run(validationConfig, ngDevConfig, pullRequest.number, gitClient),
+    isolatedSeparateFilesValidation.run(validationConfig, ngDevConfig, pullRequest.number, gitClient),
     enforceTestedValidation.run(validationConfig, pullRequest, gitClient.github)
   ];
   if (activeReleaseTrains !== null) {

@@ -26,7 +26,7 @@ import {PullRequestConfig, PullRequestValidationConfig} from '../../config/index
 import {PullRequestTarget} from '../targeting/target-label.js';
 import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client.js';
 import {installVirtualGitClientSpies, mockNgDevConfig} from '../../../utils/testing/index.js';
-import {PullRequestFiles} from '../validation/assert-isolate-primitives.js';
+import {PullRequestFiles} from '../validation/assert-isolated-separate-files.js';
 import {G3Stats} from '../../../utils/g3.js';
 
 const API_ENDPOINT = `https://api.github.com`;
@@ -150,7 +150,7 @@ describe('pull request validation', () => {
 
   describe('assert-isolate-primitives', () => {
     it('should pass when no google sync config present', async () => {
-      const config = createIsolatedValidationConfig({assertIsolatePrimitives: true});
+      const config = createIsolatedValidationConfig({assertIsolatedSeparateFiles: true});
       let pr = createTestPullRequest();
       const files = ['packages/core/primitives/rando.ts'];
       const fileHelper = PullRequestFiles.create(git, pr.number, googleSyncConfig);
@@ -161,7 +161,7 @@ describe('pull request validation', () => {
     });
 
     it('should prevent merging when primitives have been merged already and PR does not include primitives files', async () => {
-      const config = createIsolatedValidationConfig({assertIsolatePrimitives: true});
+      const config = createIsolatedValidationConfig({assertIsolatedSeparateFiles: true});
       let pr = createTestPullRequest();
       const files = ['packages/router/blah.ts'];
       const fileHelper = PullRequestFiles.create(git, pr.number, googleSyncConfig);
@@ -178,7 +178,7 @@ describe('pull request validation', () => {
     });
 
     it('should prevent merging when framework changes have been merged already and PR includes primitives files', async () => {
-      const config = createIsolatedValidationConfig({assertIsolatePrimitives: true});
+      const config = createIsolatedValidationConfig({assertIsolatedSeparateFiles: true});
       let pr = createTestPullRequest();
       const files = ['packages/core/primitives/rando.ts'];
       const fileHelper = PullRequestFiles.create(git, pr.number, googleSyncConfig);
@@ -195,7 +195,7 @@ describe('pull request validation', () => {
     });
 
     it('should allow merging when framework changes have been merged already and PR does not include primitives files', async () => {
-      const config = createIsolatedValidationConfig({assertIsolatePrimitives: true});
+      const config = createIsolatedValidationConfig({assertIsolatedSeparateFiles: true});
       let pr = createTestPullRequest();
       const files = ['packages/router/blah.ts'];
       const fileHelper = PullRequestFiles.create(git, pr.number, googleSyncConfig);
@@ -208,7 +208,7 @@ describe('pull request validation', () => {
     });
 
     it('should allow merging when primitives changes have been merged already and PR includes primitives files', async () => {
-      const config = createIsolatedValidationConfig({assertIsolatePrimitives: true});
+      const config = createIsolatedValidationConfig({assertIsolatedSeparateFiles: true});
       let pr = createTestPullRequest();
       const files = ['packages/core/primitives/rando.ts'];
       const fileHelper = PullRequestFiles.create(git, pr.number, googleSyncConfig);
