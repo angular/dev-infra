@@ -10,12 +10,8 @@ import nock from 'nock';
 import fs from 'fs';
 import path from 'path';
 
-import {
-  CaretakerConfig,
-  GithubConfig,
-  GoogleSyncConfig,
-  NgDevConfig,
-} from '../../../utils/config.js';
+import {CaretakerConfig, GithubConfig, NgDevConfig} from '../../../utils/config.js';
+import {GoogleSyncConfig} from '../../../utils/g3-sync-config.js';
 import {targetLabels} from '../labels/target.js';
 
 import {PullRequestFromGithub} from '../fetch-pull-request.js';

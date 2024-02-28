@@ -13,10 +13,9 @@ import {
   GithubConfig,
   GoogleSyncConfig,
   NgDevConfig,
-  SyncFileMatchFn,
   assertValidCaretakerConfig,
-  getGoogleSyncConfig,
 } from '../../../utils/config.js';
+import {SyncFileMatchFn, getGoogleSyncConfig} from '../../../utils/g3-sync-config.js';
 import {G3StatsData, G3Stats} from '../../../utils/g3.js';
 import {createPullRequestValidation, PullRequestValidation} from './validation-config.js';
 import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client.js';

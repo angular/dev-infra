@@ -1,5 +1,22 @@
 load("//tools:defaults.bzl", "ts_library")
 
+# g3-sync-config needs to be a separate file / target so that google-internal-tests
+# won't need ts-node to parse this file
+ts_library(
+    name = "g3_sync_config",
+    srcs = ["g3-sync-config.ts"],
+    visibility = [
+        "//github-actions/google-internal-tests:__subpackages__",
+        "//ng-dev:__subpackages__",
+    ],
+    deps = [
+        "//tools/esm-interop:jsonc-parser",
+        "@npm//@types/minimatch",
+        "@npm//@types/node",
+        "@npm//minimatch",
+    ],
+)
+
 ts_library(
     name = "utils",
     srcs = glob(
@@ -10,6 +27,7 @@ ts_library(
         exclude = [
             "config-cache.ts",
             "ng-dev-service.ts",
+            "g3-sync-config.ts",
         ],
     ),
     visibility = [
@@ -24,7 +42,7 @@ ts_library(
     ],
     deps = [
         ":config_cache",
-        "//tools/esm-interop:jsonc-parser",
+        ":g3_sync_config",
         "@npm//@actions/core",
         "@npm//@octokit/auth-app",
         "@npm//@octokit/core",
@@ -44,7 +62,6 @@ ts_library(
         "@npm//@yarnpkg/lockfile",
         "@npm//chalk",
         "@npm//inquirer",
-        "@npm//minimatch",
         "@npm//node-fetch",
         "@npm//semver",
         "@npm//supports-color",

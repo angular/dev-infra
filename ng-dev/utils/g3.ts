@@ -8,7 +8,8 @@
 
 import path from 'path';
 import {Log} from './logging.js';
-import {CaretakerConfig, GithubConfig, SyncFileMatchFn, getGoogleSyncConfig} from './config.js';
+import {CaretakerConfig, GithubConfig} from './config.js';
+import {SyncFileMatchFn, getGoogleSyncConfig} from './g3-sync-config.js';
 import {AuthenticatedGitClient} from './git/authenticated-git-client.js';
 
 /** Information expressing the difference between the main and g3 branches */
