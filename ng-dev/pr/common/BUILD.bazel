@@ -22,6 +22,7 @@ ts_library(
         "//ng-dev/release/config",
         "//ng-dev/release/versioning",
         "//ng-dev/utils",
+        "//ng-dev/utils:g3_sync_config",
         "@npm//@octokit/graphql-schema",
         "@npm//@types/minimatch",
         "@npm//@types/node",

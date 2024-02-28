@@ -12,6 +12,7 @@ ts_library(
         "//ng-dev/pr/common/labels",
         "//ng-dev/pr/config",
         "//ng-dev/utils",
+        "//ng-dev/utils:g3_sync_config",
         "//ng-dev/utils/testing",
         "@npm//@octokit/plugin-rest-endpoint-methods",
         "@npm//@types/folder-hash",

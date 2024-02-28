@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
-import {getGoogleSyncConfig} from '../../../ng-dev/utils/config.js';
+import {getGoogleSyncConfig} from '../../../ng-dev/utils/g3-sync-config.js';
 import path from 'path';
 import fetch from 'node-fetch';
 

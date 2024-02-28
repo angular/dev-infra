@@ -12,6 +12,7 @@ ts_library(
     deps = [
         "//ng-dev/release/versioning",
         "//ng-dev/utils",
+        "//ng-dev/utils:g3_sync_config",
         "@npm//@types/inquirer",
         "@npm//@types/node",
         "@npm//@types/yargs",

@@ -6,13 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Minimatch} from 'minimatch';
 import {pathToFileURL} from 'url';
 import {join} from 'path';
-import fs from 'fs';
 
 import {Assertions, MultipleAssertions} from './config-assertions.js';
-import * as jsonc from '../../tools/esm-interop/jsonc-parser.js';
 import {Log} from './logging.js';
 import {getCachedConfig, setCachedConfig} from './config-cache.js';
 import {determineRepoBaseDirFromCwd} from './repo-directory.js';
@@ -160,63 +157,6 @@ export async function getUserConfig() {
   // Return a clone of the user config to ensure that a new instance of the config is returned
   // each time, preventing unexpected effects of modifications to the config object.
   return {...userConfig};
-}
-
-/**
- * Reads the configuration file from the given path.
- *
- * @throws {InvalidGoogleSyncConfigError} If the configuration is invalid.
- */
-export async function getGoogleSyncConfig(absolutePath: string): Promise<{
-  ngMatchFn: SyncFileMatchFn;
-  separateMatchFn: SyncFileMatchFn;
-  config: GoogleSyncConfig;
-}> {
-  const content = await fs.promises.readFile(absolutePath, 'utf8');
-  debugger;
-  const errors: jsonc.ParseError[] = [];
-  const config = jsonc.parse(content, errors) as GoogleSyncConfig;
-  if (errors.length !== 0) {
-    throw new InvalidGoogleSyncConfigError(
-      `Google Sync Configuration is invalid: ` +
-        errors.map((e) => jsonc.printParseErrorCode(e.error)).join('\n'),
-    );
-  }
-  const matchFns = transformConfigIntoMatcher(config);
-  return {
-    config,
-    ngMatchFn: matchFns.ngSyncMatchFn,
-    separateMatchFn: matchFns.separateSyncMatchFn,
-  };
-}
-
-/** Error class used when the Google Sync configuration is invalid. */
-export class InvalidGoogleSyncConfigError extends Error {}
-
-/** Describes a function for testing if a file is synced. */
-export type SyncFileMatchFn = (projectRelativePath: string) => boolean;
-
-/** Transforms the given sync configuration into a file match function. */
-export function transformConfigIntoMatcher(config: GoogleSyncConfig): {
-  ngSyncMatchFn: SyncFileMatchFn;
-  separateSyncMatchFn: SyncFileMatchFn;
-} {
-  const syncedFilePatterns = config.syncedFilePatterns.map((p) => new Minimatch(p));
-  const alwaysExternalFilePatterns = config.alwaysExternalFilePatterns.map((p) => new Minimatch(p));
-  const separateFilePatterns = config.separateFilePatterns.map((p) => new Minimatch(p));
-
-  // match everything that needs to be synced except external and separate sync files
-  const ngSyncMatchFn = (projectRelativePath: string) =>
-    syncedFilePatterns.some((p) => p.match(projectRelativePath)) &&
-    alwaysExternalFilePatterns.every((p) => !p.match(projectRelativePath)) &&
-    separateFilePatterns.every((p) => !p.match(projectRelativePath));
-
-  // match only files that need to be synced separately
-  const separateSyncMatchFn = (projectRelativePath: string) =>
-    separateFilePatterns.some((p) => p.match(projectRelativePath)) &&
-    alwaysExternalFilePatterns.every((p) => !p.match(projectRelativePath)) &&
-    syncedFilePatterns.every((p) => !p.match(projectRelativePath));
-  return {ngSyncMatchFn, separateSyncMatchFn};
 }
 
 /** A standard error class to thrown during assertions while validating configuration. */
