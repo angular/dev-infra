@@ -15,7 +15,7 @@ import {PullRequestTarget} from '../targeting/target-label.js';
 import {changesAllowForTargetLabelValidation} from './assert-allowed-target-label.js';
 import {breakingChangeInfoValidation} from './assert-breaking-change-info.js';
 import {completedReviewsValidation} from './assert-completed-reviews.js';
-import {isolatePrimitivesValidation} from './assert-isolate-primitives.js';
+import {isolatedSeparateFilesValidation} from './assert-isolated-separate-files.js';
 import {enforcedStatusesValidation} from './assert-enforced-statuses.js';
 import {enforceTestedValidation} from './assert-enforce-tested.js';
 import {mergeReadyValidation} from './assert-merge-ready.js';
@@ -57,7 +57,12 @@ export async function assertValidPullRequest(
     breakingChangeInfoValidation.run(validationConfig, commitsInPr, labels),
     passingCiValidation.run(validationConfig, pullRequest),
     enforcedStatusesValidation.run(validationConfig, pullRequest, ngDevConfig.pullRequest),
-    isolatePrimitivesValidation.run(validationConfig, ngDevConfig, pullRequest.number, gitClient),
+    isolatedSeparateFilesValidation.run(
+      validationConfig,
+      ngDevConfig,
+      pullRequest.number,
+      gitClient,
+    ),
     enforceTestedValidation.run(validationConfig, pullRequest, gitClient.github),
   ];
 

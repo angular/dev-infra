@@ -22,7 +22,7 @@ const defaultConfig: PullRequestValidationConfig = {
   assertCompletedReviews: true,
   assertEnforcedStatuses: true,
   assertMinimumReviews: true,
-  assertIsolatePrimitives: false,
+  assertIsolatedSeparateFiles: false,
   assertEnforceTested: false,
 };
 
