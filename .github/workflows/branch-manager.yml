@@ -12,6 +12,10 @@ on:
       pr:
         type: number
         required: true
+      # sha is optional, and unused in this action.
+      sha:
+        type: string
+        required: false
 
 # Declare default permissions as read only.
 permissions: read-all
