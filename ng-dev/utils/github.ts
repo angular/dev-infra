@@ -108,8 +108,8 @@ export async function getPendingPrs<PrSchema>(prSchema: PrSchema, git: Authentic
 }
 
 /** Get all files in a PR from github  */
-export async function getPrFiles<PrSchema>(
-  fileSchema: PrSchema,
+export async function getPrFiles<PrFileSchema>(
+  fileSchema: PrFileSchema,
   prNumber: number,
   git: AuthenticatedGitClient,
 ) {
@@ -132,11 +132,19 @@ export async function getPrFiles<PrSchema>(
               number: prNumber,
             },
             {
-              files: [fileSchema],
-              pageInfo: {
-                hasNextPage: types.boolean,
-                endCursor: types.string,
-              },
+              files: params(
+                {
+                  first: '$first',
+                  after: '$after',
+                },
+                {
+                  nodes: [fileSchema],
+                  pageInfo: {
+                    hasNextPage: types.boolean,
+                    endCursor: types.string,
+                  },
+                },
+              ),
             },
           ),
         },
@@ -148,7 +156,7 @@ export async function getPrFiles<PrSchema>(
   /** If an additional page of members is expected */
   let hasNextPage = true;
   /** Array of pending PRs */
-  const files: Array<PrSchema> = [];
+  const files: Array<PrFileSchema> = [];
 
   // For each page of the response, get the page and add it to the list of PRs
   while (hasNextPage) {
@@ -159,9 +167,9 @@ export async function getPrFiles<PrSchema>(
       name,
     };
     const results = await git.github.graphql(PRS_QUERY, paramsValue);
-    files.push(...results.repository.pullRequest.files);
-    hasNextPage = results.repository.pullRequest.pageInfo.hasNextPage;
-    cursor = results.repository.pullRequest.pageInfo.endCursor;
+    files.push(...results.repository.pullRequest.files.nodes);
+    hasNextPage = results.repository.pullRequest.files.pageInfo.hasNextPage;
+    cursor = results.repository.pullRequest.files.pageInfo.endCursor;
   }
   return files;
 }

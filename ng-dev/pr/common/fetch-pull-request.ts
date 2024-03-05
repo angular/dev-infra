@@ -134,13 +134,12 @@ export const PR_SCHEMA = {
 
 export type PullRequestFromGithub = typeof PR_SCHEMA;
 
-export const PR_FILES_SCHEMA = {
-  nodes: [
-    {
-      path: graphqlTypes.string,
-    },
-  ],
-};
+export const PR_FILES_SCHEMA = params(
+  {first: 100},
+  {
+    path: graphqlTypes.string,
+  },
+);
 
 export type PullRequestFilesFromGithub = typeof PR_FILES_SCHEMA;
 

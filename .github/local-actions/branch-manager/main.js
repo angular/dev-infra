@@ -75482,11 +75482,16 @@ async function getPrFiles(fileSchema, prNumber, git) {
       pullRequest: (0, import_typed_graphqlify.params)({
         number: prNumber
       }, {
-        files: [fileSchema],
-        pageInfo: {
-          hasNextPage: import_typed_graphqlify.types.boolean,
-          endCursor: import_typed_graphqlify.types.string
-        }
+        files: (0, import_typed_graphqlify.params)({
+          first: "$first",
+          after: "$after"
+        }, {
+          nodes: [fileSchema],
+          pageInfo: {
+            hasNextPage: import_typed_graphqlify.types.boolean,
+            endCursor: import_typed_graphqlify.types.string
+          }
+        })
       })
     })
   });
@@ -75501,9 +75506,9 @@ async function getPrFiles(fileSchema, prNumber, git) {
       name
     };
     const results = await git.github.graphql(PRS_QUERY, paramsValue);
-    files.push(...results.repository.pullRequest.files);
-    hasNextPage = results.repository.pullRequest.pageInfo.hasNextPage;
-    cursor = results.repository.pullRequest.pageInfo.endCursor;
+    files.push(...results.repository.pullRequest.files.nodes);
+    hasNextPage = results.repository.pullRequest.files.pageInfo.hasNextPage;
+    cursor = results.repository.pullRequest.files.pageInfo.endCursor;
   }
   return files;
 }
@@ -75600,13 +75605,9 @@ var PR_SCHEMA = {
     ]
   })
 };
-var PR_FILES_SCHEMA = {
-  nodes: [
-    {
-      path: import_typed_graphqlify2.types.string
-    }
-  ]
-};
+var PR_FILES_SCHEMA = (0, import_typed_graphqlify2.params)({ first: 100 }, {
+  path: import_typed_graphqlify2.types.string
+});
 async function fetchPullRequestFromGithub(git, prNumber) {
   return await getPr(PR_SCHEMA, prNumber, git);
 }
@@ -77413,7 +77414,7 @@ var PullRequestFiles = class {
   }
   async loadPullRequestFiles() {
     const files = await fetchPullRequestFilesFromGithub(this.git, this.prNumber);
-    return (files == null ? void 0 : files.flatMap((x2) => x2.nodes).map((p) => p.path)) ?? [];
+    return (files == null ? void 0 : files.map((x2) => x2.path)) ?? [];
   }
   async pullRequestHasSeparateFiles() {
     const pullRequestFiles = await this.loadPullRequestFiles();
