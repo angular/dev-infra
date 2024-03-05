@@ -74063,13 +74063,9 @@ var PR_SCHEMA = {
     ]
   })
 };
-var PR_FILES_SCHEMA = {
-  nodes: [
-    {
-      path: import_typed_graphqlify4.types.string
-    }
-  ]
-};
+var PR_FILES_SCHEMA = (0, import_typed_graphqlify4.params)({ first: 100 }, {
+  path: import_typed_graphqlify4.types.string
+});
 async function fetchPullRequestFromGithub(git, prNumber) {
   return await getPr(PR_SCHEMA, prNumber, git);
 }

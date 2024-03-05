@@ -102,7 +102,7 @@ export class PullRequestFiles {
    */
   async loadPullRequestFiles(): Promise<string[]> {
     const files = await fetchPullRequestFilesFromGithub(this.git, this.prNumber);
-    return files?.flatMap((x) => x.nodes).map((p) => p.path) ?? [];
+    return files?.map((x) => x.path) ?? [];
   }
 
   /**
