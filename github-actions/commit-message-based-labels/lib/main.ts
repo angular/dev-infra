@@ -4,14 +4,13 @@ import {Octokit} from '@octokit/rest';
 import {Commit, parseCommitMessage} from '../../../ng-dev/commit-message/parse.js';
 import {managedLabels} from '../../../ng-dev/pr/common/labels/index.js';
 import {ANGULAR_ROBOT, getAuthTokenFor, revokeActiveInstallationToken} from '../../utils.js';
-import fetch from 'node-fetch';
 
 class CommitMessageBasedLabelManager {
   /** Run the commit message based labelling process. */
   static run = async () => {
     const token = await getAuthTokenFor(ANGULAR_ROBOT);
     // TODO: remove once GHA supports node18 as a target runner for Javascript action
-    const git = new Octokit({auth: token, request: {fetch}});
+    const git = new Octokit({auth: token});
     try {
       const inst = new this(git);
       await inst.run();

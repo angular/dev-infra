@@ -18,5 +18,5 @@ inputs:
       URL to post into the GitHub commit status when Google Internal
       tests need to be run. This is useful for helping other Googlers.
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'main.js'

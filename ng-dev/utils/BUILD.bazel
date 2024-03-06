@@ -62,7 +62,6 @@ ts_library(
         "@npm//@yarnpkg/lockfile",
         "@npm//chalk",
         "@npm//inquirer",
-        "@npm//node-fetch",
         "@npm//semver",
         "@npm//supports-color",
         "@npm//typed-graphqlify",

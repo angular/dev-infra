@@ -26,7 +26,6 @@
  */
 
 import {createHash} from 'crypto';
-import fetch from 'node-fetch';
 import {Spinner} from '../../../ng-dev/utils/spinner.js';
 import {ArtifactType} from './browser-artifact.js';
 import {Chromium} from './chromium.js';

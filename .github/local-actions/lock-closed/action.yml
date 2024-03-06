@@ -9,5 +9,5 @@ inputs:
     description: 'The repositories to check for lockable issues'
     required: true
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'main.js'

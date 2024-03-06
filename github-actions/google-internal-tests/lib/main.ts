@@ -3,7 +3,6 @@ import {context} from '@actions/github';
 import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
 import {getGoogleSyncConfig} from '../../../ng-dev/utils/g3-sync-config.js';
 import path from 'path';
-import fetch from 'node-fetch';
 
 const syncBranch = 'main';
 const statusContext = 'google-internal-tests';
@@ -32,8 +31,7 @@ async function main() {
   const prNum = context.payload.pull_request!.number;
   const prHeadSHA = context.payload.pull_request!.head!.sha;
   const prBaseRef = context.payload.pull_request!.base!.ref;
-  // TODO: remove once GHA supports node18 as a target runner for Javascript action
-  const github = new Octokit({auth: githubToken, request: {fetch}});
+  const github = new Octokit({auth: githubToken});
   const existingGoogleStatus = await findExistingTestStatus(github, prHeadSHA);
 
   // If there is an existing status already pointing to an internal CL, we do not override

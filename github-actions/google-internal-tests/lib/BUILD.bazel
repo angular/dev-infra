@@ -11,6 +11,5 @@ ts_library(
         "@npm//@actions/github",
         "@npm//@octokit/rest",
         "@npm//@types/node",
-        "@npm//node-fetch",
     ],
 )

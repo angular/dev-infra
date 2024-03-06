@@ -15,5 +15,5 @@ inputs:
     description: 'The owner of the repo for the pull request'
     required: true
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'main.js'

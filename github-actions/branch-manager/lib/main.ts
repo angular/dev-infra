@@ -8,7 +8,6 @@ import {
   PullRequestEvent,
   PushEvent,
 } from '@octokit/webhooks-definitions/schema.js';
-import fetch from 'node-fetch';
 
 /** Set of target label names. */
 const targetLabelNames = new Set(Object.values(targetLabels).map((t) => t.name));
@@ -134,8 +133,7 @@ let _github: Octokit | null = null;
 async function github() {
   if (_github === null) {
     const token = await getAuthTokenFor(ANGULAR_ROBOT);
-    // TODO: remove once GHA supports node18 as a target runner for Javascript action
-    _github = new Octokit({auth: token, request: {fetch}});
+    _github = new Octokit({auth: token});
   }
   return _github;
 }

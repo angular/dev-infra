@@ -75,5 +75,5 @@ inputs:
 
       Find more details about Angular's feature request process in our [documentation](https://github.com/angular/angular/blob/e29eb8abfbfdfb793e08ac88e14b7ba6d2ff2136/docs/GITHUB_PROCESS.md#feature-request-process).
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'main.js'
