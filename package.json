@@ -169,7 +169,7 @@
     "mermaid": "^10.8.0",
     "minimatch": "^9.0.0",
     "multimatch": "^7.0.0",
-    "nock": "^13.0.3",
+    "nock": "beta",
     "opener": "^1.5.2",
     "playwright-core": "^1.41.2",
     "protobufjs": "^7.0.0",
