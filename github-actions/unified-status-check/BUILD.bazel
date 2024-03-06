@@ -16,7 +16,6 @@ ts_library(
         "@npm//@octokit/rest",
         "@npm//@octokit/types",
         "@npm//@types/node",
-        "@npm//node-fetch",
         "@npm//typed-graphqlify",
     ],
 )

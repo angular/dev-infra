@@ -7,7 +7,6 @@ import {
   revokeActiveInstallationToken,
 } from '../../../../github-actions/utils.js';
 import {setTimeout as setTimeoutPromise} from 'timers/promises';
-import fetch from 'node-fetch';
 
 async function lockIssue(
   client: Octokit,
@@ -39,7 +38,7 @@ async function main() {
 
   try {
     // TODO: remove once GHA supports node18 as a target runner for Javascript action
-    const github = new Octokit({auth: token, request: {fetch}});
+    const github = new Octokit({auth: token});
     for (let repo of reposToBeChecked) {
       await runLockClosedAction(github, repo);
     }

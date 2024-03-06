@@ -8,7 +8,8 @@
 
 import * as fs from 'fs';
 import * as tmp from 'tmp';
-import fetch from 'node-fetch';
+import {Readable} from 'stream';
+import {ReadableStream} from 'stream/web';
 
 /** Creates a temporary directory with the given options. */
 export function createTmpDir(options: tmp.DirOptions): Promise<string> {
@@ -28,13 +29,14 @@ export async function downloadFileThroughStreaming(
   destinationPath: string,
 ): Promise<void> {
   return new Promise(async (resolve, reject) => {
-    const stream = (await fetch(sourceUrl)).body;
+    const webStream = (await fetch(sourceUrl)).body;
 
-    if (stream === null) {
+    if (webStream === null) {
       reject();
       return;
     }
 
+    const stream = Readable.fromWeb(webStream as ReadableStream<Uint8Array>);
     const outStream = fs.createWriteStream(destinationPath);
 
     stream.on('error', (err) => reject(err));

@@ -18,7 +18,6 @@ ts_library(
         "@npm//@types/yargs",
         "@npm//inquirer",
         "@npm//multimatch",
-        "@npm//node-fetch",
         "@npm//typed-graphqlify",
         "@npm//yaml",
         "@npm//yargs",

@@ -9,7 +9,6 @@ ts_library(
         "//github-actions/previews:constants_lib",
         "@npm//@actions/core",
         "@npm//@types/node",
-        "@npm//node-fetch",
     ],
 )
 
@@ -19,6 +18,5 @@ ts_library(
     deps = [
         "@npm//@octokit/rest",
         "@npm//@types/node",
-        "@npm//node-fetch",
     ],
 )

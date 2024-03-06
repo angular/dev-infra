@@ -4,7 +4,6 @@ import {rerunCircleCi} from './commands/rerun-circleci.js';
 import {rebase} from './commands/rebase.js';
 import {getAuthTokenFor, ANGULAR_ROBOT, revokeActiveInstallationToken} from '../../utils.js';
 import {Octokit} from '@octokit/rest';
-import fetch from 'node-fetch';
 
 /** The marker used in comments to note a command is being made in the comments. */
 const commandMarker = '/ng-bot';
@@ -66,8 +65,7 @@ async function assertPermissionsToPerformCommand(): Promise<boolean> {
   }
 
   const token = await getAuthTokenFor(ANGULAR_ROBOT);
-  // TODO: remove once GHA supports node18 as a target runner for Javascript action
-  const github = new Octokit({auth: token, request: {fetch}});
+  const github = new Octokit({auth: token});
 
   await github.issues.createComment({
     ...context.repo,

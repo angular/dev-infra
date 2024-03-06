@@ -15,14 +15,12 @@
  */
 
 import {Octokit} from '@octokit/rest';
-import fetch from 'node-fetch';
 
 async function main() {
   const [owner, repo] = process.env.GITHUB_REPOSITORY!.split('/', 2);
   const [workflowIdRaw, artifactName] = process.argv.slice(2);
   const workflowId = Number(workflowIdRaw);
-  // TODO: remove once GHA supports node18 as a target runner for Javascript action
-  const github = new Octokit({auth: process.env.GITHUB_TOKEN, request: {fetch}});
+  const github = new Octokit({auth: process.env.GITHUB_TOKEN});
   const artifacts = await github.actions.listWorkflowRunArtifacts({
     owner,
     repo,

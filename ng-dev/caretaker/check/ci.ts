@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import fetch from 'node-fetch';
 import {
   ActiveReleaseTrains,
   getNextBranchName,
@@ -36,9 +35,8 @@ export class CiModule extends BaseModule<CiData> {
       ...this.git.remoteConfig,
       nextBranchName,
     };
-    const {latest, next, releaseCandidate, exceptionalMinor} = await ActiveReleaseTrains.fetch(
-      repo,
-    );
+    const {latest, next, releaseCandidate, exceptionalMinor} =
+      await ActiveReleaseTrains.fetch(repo);
     const ciResultPromises = Object.entries({releaseCandidate, exceptionalMinor, latest, next}).map(
       async ([trainName, train]: [string, ReleaseTrain | null]) => {
         if (train === null) {

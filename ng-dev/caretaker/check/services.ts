@@ -6,8 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import fetch from 'node-fetch';
-
 import {bold, Log} from '../../utils/logging.js';
 import {BaseModule} from './base.js';
 

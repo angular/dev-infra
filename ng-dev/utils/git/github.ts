@@ -12,7 +12,6 @@ import {Octokit} from '@octokit/rest';
 import {RequestParameters} from '@octokit/types';
 import {RequestError} from '@octokit/request-error';
 import {query} from 'typed-graphqlify';
-import fetch from 'node-fetch';
 
 /**
  * An object representation of a Graphql Query to be used as a response type and
@@ -30,9 +29,8 @@ export interface GithubRepo {
 
 /** A Github client for interacting with the Github APIs. */
 export class GithubClient {
-  // TODO: Consider remove providing fetch to Octokit once everything has moved to node 18.
   /** The octokit instance actually performing API requests. */
-  protected _octokit = new Octokit({...this._octokitOptions, request: {fetch}});
+  protected _octokit = new Octokit({...this._octokitOptions});
 
   readonly pulls: Octokit['pulls'] = this._octokit.pulls;
   readonly orgs: Octokit['orgs'] = this._octokit.orgs;

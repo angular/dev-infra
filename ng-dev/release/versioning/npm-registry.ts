@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import fetch from 'node-fetch';
 import semver from 'semver';
 
 import {ReleaseConfig} from '../config/index.js';

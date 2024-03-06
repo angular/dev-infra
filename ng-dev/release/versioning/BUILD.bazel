@@ -10,7 +10,6 @@ ts_library(
         "//ng-dev/release/config",
         "//ng-dev/utils",
         "@npm//@types/semver",
-        "@npm//node-fetch",
         "@npm//semver",
     ],
 )
