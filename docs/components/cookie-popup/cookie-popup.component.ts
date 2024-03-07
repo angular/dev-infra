@@ -11,6 +11,35 @@ import {NgIf} from '@angular/common';
 import {LOCAL_STORAGE} from '../../providers/index';
 
 export const STORAGE_KEY = 'docs-accepts-cookies';
+export function setCookieConsent(state: 'denied' | 'granted'): void {
+  try {
+    if (window.gtag) {
+      const consentOptions = {
+        ad_user_data: state,
+        ad_personalization: state,
+        ad_storage: state,
+        analytics_storage: state,
+      };
+
+      if (state === 'denied') {
+        window.gtag('consent', 'default', {
+          ...consentOptions,
+          wait_for_update: 500,
+        });
+      } else if (state === 'granted') {
+        window.gtag('consent', 'update', {
+          ...consentOptions,
+        });
+      }
+    }
+  } catch {
+    if (state === 'denied') {
+      console.error('Unable to set default cookie consent.');
+    } else if (state === 'granted') {
+      console.error('Unable to grant cookie consent.');
+    }
+  }
+}
 
 @Component({
   selector: 'docs-cookie-popup',
@@ -43,5 +72,8 @@ export class CookiePopup {
     } catch {}
 
     this.hasAccepted.set(true);
+
+    // Enable Google Analytics consent properties
+    setCookieConsent('granted');
   }
 }
