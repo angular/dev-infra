@@ -8,7 +8,11 @@
 
 import {marked} from 'marked';
 import {CliCommand, CliOption} from '../cli-entities';
-import {CliCardRenderable, CliCommandRenderable} from '../entities/renderables';
+import {
+  CliCardRenderable,
+  CliCommandRenderable,
+  CliOptionRenderable,
+} from '../entities/renderables';
 
 /** Given an unprocessed CLI entry, get the fully renderable CLI entry. */
 export function getCliRenderable(command: CliCommand): CliCommandRenderable {
@@ -43,9 +47,10 @@ export function getCliCardsRenderable(command: CliCommand): CliCardRenderable[] 
   return cards;
 }
 
-function getRenderableOptions(items: CliOption[]) {
+function getRenderableOptions(items: CliOption[]): CliOptionRenderable[] {
   return items.map((option) => ({
     ...option,
+    isDeprecated: option.deprecated,
     description: marked.parse(option.description) as string,
   }));
 }

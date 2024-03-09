@@ -99,7 +99,11 @@ export interface LinkEntryRenderable {
   url: string;
 }
 
-export type CliCardItemRenderable = CliOption;
+export type CliOptionRenderable = CliOption & {
+  isDeprecated: boolean;
+};
+
+export type CliCardItemRenderable = CliOptionRenderable;
 
 export interface CliCardRenderable {
   type: 'Options' | 'Arguments';

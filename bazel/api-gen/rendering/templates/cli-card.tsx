@@ -8,6 +8,7 @@
 
 import {Fragment, h} from 'preact';
 import {CliCardRenderable} from '../entities/renderables';
+import {DeprecatedLabel} from './deprecated-label';
 
 export function CliCard(props: {card: CliCardRenderable}) {
   return (
@@ -20,6 +21,7 @@ export function CliCard(props: {card: CliCardRenderable}) {
       <div class="docs-reference-card-body">
         {props.card.items.map((item) => (
           <div class="docs-ref-content">
+            {item.deprecated ? <DeprecatedLabel entry={item} /> : <></>}
             <div class="docs-ref-option-and-description">
               <code>{item.name}</code>
               <div dangerouslySetInnerHTML={{__html: item.description}}></div>

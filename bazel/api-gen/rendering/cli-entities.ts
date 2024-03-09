@@ -18,4 +18,5 @@ export interface CliOption {
   description: string;
   positional?: number;
   aliases?: string[];
+  deprecated: boolean;
 }
