@@ -19,17 +19,19 @@ export function CliCommandReference(entry: CliCommandRenderable) {
     <div className="cli">
       <div className="docs-reference-cli-content">
         <HeaderCli command={entry} />
-        <div class="docs-code docs-reference-cli-toc">
-          <pre class="docs-mini-scroll-track">
-            <code>
-              <div className={'hljs-ln-line'}>
-                ng {entry.name}
-                {entry.argumentsLabel ? <button member-id={'Arguments'} className="hljs-ln-line-argument">{entry.argumentsLabel}</button> : <></>}
-                {entry.hasOptions ? <button member-id={'Options'} className="hljs-ln-line-option">[options]</button> : <></>}
-              </div>
-            </code>
-          </pre>
-        </div>
+        {[entry.name, ...entry.aliases].map((command)  => 
+          <div class="docs-code docs-reference-cli-toc">
+            <pre class="docs-mini-scroll-track">
+              <code>
+                <div className={'hljs-ln-line'}>
+                  ng {command}
+                  {entry.argumentsLabel ? <button member-id={'Arguments'} className="hljs-ln-line-argument">{entry.argumentsLabel}</button> : <></>}
+                  {entry.hasOptions ? <button member-id={'Options'} className="hljs-ln-line-option">[options]</button> : <></>}
+                </div>
+              </code>
+            </pre>
+          </div>
+        )}
         <RawHtml value={entry.htmlDescription}/>
       </div>
       <div className={REFERENCE_MEMBERS_CONTAINER}>
