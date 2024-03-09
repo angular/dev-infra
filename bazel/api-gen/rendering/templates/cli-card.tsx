@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {h, Fragment} from 'preact';
+import {Fragment, h} from 'preact';
 import {CliCardRenderable} from '../entities/renderables';
 
 export function CliCard(props: {card: CliCardRenderable}) {
@@ -35,6 +35,12 @@ export function CliCard(props: {card: CliCardRenderable}) {
                 <></>
               )}
             </div>
+            {item.aliases?.map((alias) => (
+              <div class="docs-reference-option-aliases">
+                <span>Alias</span>
+                <code>{alias} </code>
+              </div>
+            ))}
           </div>
         ))}
       </div>

@@ -17,4 +17,5 @@ export interface CliOption {
   default: string;
   description: string;
   positional?: number;
+  aliases?: string[];
 }
