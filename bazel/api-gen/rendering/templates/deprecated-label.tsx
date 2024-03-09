@@ -8,13 +8,8 @@
 
 import {Fragment, h} from 'preact';
 import {PARAM_KEYWORD_CLASS_NAME} from '../styling/css-classes';
-import {
-  FunctionEntryRenderable,
-  MemberEntryRenderable,
-  MethodEntryRenderable
-} from '../entities/renderables';
 
-export function DeprecatedLabel(props: { entry: MethodEntryRenderable | FunctionEntryRenderable | MemberEntryRenderable }) {
+export function DeprecatedLabel(props: {entry: {isDeprecated: boolean}}) {
   const entry = props.entry;
 
   if (entry.isDeprecated) {
