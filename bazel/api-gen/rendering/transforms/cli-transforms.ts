@@ -7,6 +7,7 @@
  */
 
 import {marked} from 'marked';
+
 import {CliCommand, CliOption} from '../cli-entities';
 import {
   CliCardRenderable,
@@ -18,6 +19,7 @@ import {
 export function getCliRenderable(command: CliCommand): CliCommandRenderable {
   return {
     ...command,
+    subcommands: command.subcommands?.map((sub) => getCliRenderable(sub)),
     htmlDescription: marked.parse(command.longDescription ?? command.shortDescription) as string,
     cards: getCliCardsRenderable(command),
     argumentsLabel: getArgumentsLabel(command),
