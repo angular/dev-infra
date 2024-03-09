@@ -116,4 +116,5 @@ export type CliCommandRenderable = CliCommand & {
   cards: CliCardRenderable[];
   argumentsLabel: string;
   hasOptions: boolean;
+  subcommands?: CliCommandRenderable[];
 };
