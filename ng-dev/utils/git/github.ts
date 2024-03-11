@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import type {OctokitOptions} from '@octokit/core/dist-types/types.js';
+import type {OctokitOptions} from '@octokit/core';
 
 import {Octokit} from '@octokit/rest';
 import {RequestParameters} from '@octokit/types';
