@@ -534,7 +534,7 @@ __metadata:
     "@octokit/auth-app": "npm:6.0.4"
     "@octokit/core": "npm:6.0.1"
     "@octokit/graphql": "npm:8.0.1"
-    "@octokit/graphql-schema": "npm:15.3.0"
+    "@octokit/graphql-schema": "patch:@octokit/graphql-schema@npm%3A15.3.0#~/.yarn/patches/@octokit-graphql-schema-npm-15.3.0-4046a59648.patch"
     "@octokit/openapi-types": "npm:20.0.0"
     "@octokit/plugin-paginate-rest": "npm:10.0.0"
     "@octokit/plugin-rest-endpoint-methods": "npm:11.0.1"
@@ -5894,6 +5894,16 @@ __metadata:
     graphql: "npm:^16.0.0"
     graphql-tag: "npm:^2.10.3"
   checksum: 10c0/ebbcfb085a17e0bfb8b8304df82d92046366747146dae6b5e8358301c34e9d5a33bed65c703fa90ce7ad2355068cfda1acd81cd6810590620c75ce316243c988
+  languageName: node
+  linkType: hard
+
+"@octokit/graphql-schema@patch:@octokit/graphql-schema@npm%3A15.3.0#~/.yarn/patches/@octokit-graphql-schema-npm-15.3.0-4046a59648.patch":
+  version: 15.3.0
+  resolution: "@octokit/graphql-schema@patch:@octokit/graphql-schema@npm%3A15.3.0#~/.yarn/patches/@octokit-graphql-schema-npm-15.3.0-4046a59648.patch::version=15.3.0&hash=bf8712"
+  dependencies:
+    graphql: "npm:^16.0.0"
+    graphql-tag: "npm:^2.10.3"
+  checksum: 10c0/1b7b6d022fb72b1468076ccb2d2c628b9423bca43eb4a5170d77b0a0f1c7727cde249c406ac135d8eaa63760e7fb418fe9f1bea5e25a3a6fd5f14b3e3633dab9
   languageName: node
   linkType: hard
 
