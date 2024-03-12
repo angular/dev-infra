@@ -10,7 +10,6 @@
 import {runParserWithCompletedFunctions} from './utils/yargs.js';
 
 import {buildCaretakerParser} from './caretaker/cli.js';
-import {buildCiParser} from './ci/cli.js';
 import {buildCommitMessageParser} from './commit-message/cli.js';
 import {buildFormatParser} from './format/cli.js';
 import {buildMiscParser} from './misc/cli.js';
@@ -39,7 +38,6 @@ runParserWithCompletedFunctions((yargs: Argv) => {
     .command('caretaker <command>', '', buildCaretakerParser)
     .command('misc <command>', '', buildMiscParser)
     .command('ngbot <command>', false, buildNgbotParser)
-    .command('ci <command>', false, buildCiParser)
     .wrap(120)
     .strict();
 });

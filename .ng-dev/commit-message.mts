@@ -33,7 +33,6 @@ export const commitMessage: CommitMessageConfig = {
       'rerun-circleci',
     ]),
     ...buildScopesFor('ng-dev', [
-      'ci',
       'caretaker',
       'commit-message',
       'format',
