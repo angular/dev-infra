@@ -30,7 +30,6 @@ export const commitMessage: CommitMessageConfig = {
       'feature-request',
       'lock-closed',
       'rebase',
-      'rerun-circleci',
     ]),
     ...buildScopesFor('ng-dev', [
       'caretaker',

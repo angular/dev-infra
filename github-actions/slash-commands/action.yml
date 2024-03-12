@@ -5,9 +5,6 @@ inputs:
   angular-robot-key:
     description: 'The private key for the Angular Robot Github app.'
     required: true
-  circleci-token:
-    description: 'The token for interacting with CircleCI.'
-    required: false
 runs:
   using: 'node20'
   main: 'main.js'
