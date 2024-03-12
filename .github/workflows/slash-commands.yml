@@ -16,4 +16,3 @@ jobs:
       - uses: ./github-actions/slash-commands
         with:
           angular-robot-key: ${{ secrets.ANGULAR_ROBOT_PRIVATE_KEY }}
-          circleci-token: ${{ secrets.CIRCLECI_TOKEN }}

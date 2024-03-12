@@ -1,6 +1,5 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
-import {rerunCircleCi} from './commands/rerun-circleci.js';
 import {rebase} from './commands/rebase.js';
 import {getAuthTokenFor, ANGULAR_ROBOT, revokeActiveInstallationToken} from '../../utils.js';
 import {Octokit} from '@octokit/rest';
@@ -104,8 +103,6 @@ async function runSlashCommandsAction(
   const [command] = parseCommandFromContext();
 
   switch (command) {
-    case 'rerun-circleci':
-      return await rerunCircleCi(installationGithub);
     case 'rebase':
       return await rebase(installationGithub, installationToken);
     case undefined:
