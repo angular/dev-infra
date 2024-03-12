@@ -8,7 +8,7 @@
 
 import type {OctokitOptions} from '@octokit/core';
 
-import {Octokit} from '@octokit/rest';
+import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
 import {RequestParameters} from '@octokit/types';
 import {RequestError} from '@octokit/request-error';
 import {query} from 'typed-graphqlify';
@@ -42,6 +42,7 @@ export class GithubClient {
   readonly search: Octokit['search'] = this._octokit.search;
   readonly rest: Octokit['rest'] = this._octokit.rest;
   readonly paginate: Octokit['paginate'] = this._octokit.paginate;
+  readonly checks: Octokit['checks'] = this._octokit.checks;
 
   constructor(private _octokitOptions?: OctokitOptions) {}
 }
@@ -64,6 +65,59 @@ export class AuthenticatedGithubClient extends GithubClient {
   /** Perform a query using Github's Graphql API. */
   async graphql<T extends GraphqlQueryObject>(queryObject: T, params: RequestParameters = {}) {
     return (await this._graphql(query(queryObject).toString(), params)) as T;
+  }
+
+  /**
+   * Retrieve a combined listing of the results for a refs statuses and checks.
+   */
+  async getCombinedChecksAndStatusesForRef(
+    params: RestEndpointMethodTypes['checks']['listForRef']['parameters'] &
+      RestEndpointMethodTypes['repos']['getCombinedStatusForRef']['parameters'],
+  ) {
+    const {data: checkResults} = await this.checks.listForRef(params);
+    const {data: statusResults} = await this.repos.getCombinedStatusForRef(params);
+
+    const results = [
+      ...checkResults.check_runs.map((result) => ({
+        type: 'check',
+        name: result.name,
+        result: result.status === 'completed' ? result.conclusion! : result.status,
+        url: result.details_url,
+        check: result,
+      })),
+      ...statusResults.statuses.map((result) => ({
+        type: 'status',
+        name: result.context,
+        result: result.state,
+        description: result.description,
+        url: result.target_url,
+        status: result,
+      })),
+    ];
+
+    return {
+      result: results.reduce(
+        (currentResult, {result}) => {
+          if (
+            currentResult === 'pending' ||
+            ['queued', 'in_progress', 'pending'].includes(result)
+          ) {
+            return 'pending';
+          }
+
+          if (
+            currentResult === 'failing' ||
+            ['failure', 'error', 'timed_out', 'cancelled'].includes(result)
+          ) {
+            return 'failing';
+          }
+
+          return 'passing';
+        },
+        null as 'pending' | 'failing' | 'passing' | null,
+      ),
+      results,
+    };
   }
 }
 

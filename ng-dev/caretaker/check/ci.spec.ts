@@ -13,18 +13,22 @@ import {Log} from '../../utils/logging.js';
 import {installVirtualGitClientSpies, mockNgDevConfig} from '../../utils/testing/index.js';
 
 import {CiModule} from './ci.js';
+import {AuthenticatedGithubClient} from '../../utils/git/github.js';
 
 describe('CiModule', () => {
   let fetchActiveReleaseTrainsSpy: jasmine.Spy;
-  let getBranchStatusFromCiSpy: jasmine.Spy;
+  let combinedStatusesSpy: jasmine.Spy;
   let infoSpy: jasmine.Spy;
   let debugSpy: jasmine.Spy;
   let git: AuthenticatedGitClient;
 
   beforeEach(async () => {
     installVirtualGitClientSpies();
+    combinedStatusesSpy = spyOn(
+      AuthenticatedGithubClient.prototype,
+      'getCombinedChecksAndStatusesForRef',
+    ).and.resolveTo({result: null, results: []});
     fetchActiveReleaseTrainsSpy = spyOn(ActiveReleaseTrains, 'fetch');
-    getBranchStatusFromCiSpy = spyOn(CiModule.prototype, 'getBranchStatusFromCi' as any);
     infoSpy = spyOn(Log, 'info');
     debugSpy = spyOn(Log, 'debug');
     git = await AuthenticatedGitClient.get();
@@ -37,10 +41,19 @@ describe('CiModule', () => {
       const module = new CiModule(git, {caretaker: {}, ...mockNgDevConfig});
       await module.data;
 
-      expect(getBranchStatusFromCiSpy).toHaveBeenCalledWith(trains.releaseCandidate.branchName);
-      expect(getBranchStatusFromCiSpy).toHaveBeenCalledWith(trains.latest.branchName);
-      expect(getBranchStatusFromCiSpy).toHaveBeenCalledWith(trains.next.branchName);
-      expect(getBranchStatusFromCiSpy).toHaveBeenCalledTimes(3);
+      expect(combinedStatusesSpy).toHaveBeenCalledWith({
+        ...git.remoteParams,
+        ref: trains.releaseCandidate.branchName,
+      });
+      expect(combinedStatusesSpy).toHaveBeenCalledWith({
+        ...git.remoteParams,
+        ref: trains.latest.branchName,
+      });
+      expect(combinedStatusesSpy).toHaveBeenCalledWith({
+        ...git.remoteParams,
+        ref: trains.next.branchName,
+      });
+      expect(combinedStatusesSpy).toHaveBeenCalledTimes(3);
     });
 
     it('handles an inactive rc train', async () => {
@@ -49,15 +62,21 @@ describe('CiModule', () => {
       const module = new CiModule(git, {caretaker: {}, ...mockNgDevConfig});
       await module.data;
 
-      expect(getBranchStatusFromCiSpy).toHaveBeenCalledWith(trains.latest.branchName);
-      expect(getBranchStatusFromCiSpy).toHaveBeenCalledWith(trains.next.branchName);
-      expect(getBranchStatusFromCiSpy).toHaveBeenCalledTimes(2);
+      expect(combinedStatusesSpy).toHaveBeenCalledWith({
+        ...git.remoteParams,
+        ref: trains.latest.branchName,
+      });
+      expect(combinedStatusesSpy).toHaveBeenCalledWith({
+        ...git.remoteParams,
+        ref: trains.next.branchName,
+      });
+      expect(combinedStatusesSpy).toHaveBeenCalledTimes(2);
     });
 
     it('aggregates information into a useful structure', async () => {
       const trains = buildMockActiveReleaseTrains(false);
       fetchActiveReleaseTrainsSpy.and.resolveTo(trains);
-      getBranchStatusFromCiSpy.and.returnValue('success');
+      combinedStatusesSpy.and.resolveTo({result: 'passing', results: []});
       const module = new CiModule(git, {caretaker: {}, ...mockNgDevConfig});
       const data = await module.data;
 
@@ -65,19 +84,19 @@ describe('CiModule', () => {
         active: false,
         name: 'releaseCandidate',
         label: '',
-        status: 'not found',
+        status: null,
       });
       expect(data[1]).toEqual({
         active: false,
         name: 'exceptionalMinor',
         label: '',
-        status: 'not found',
+        status: null,
       });
       expect(data[2]).toEqual({
         active: true,
         name: 'latest-branch',
         label: 'latest (latest-branch)',
-        status: 'success',
+        status: 'passing',
       });
     });
   });
@@ -88,13 +107,13 @@ describe('CiModule', () => {
         active: true,
         name: 'name0',
         label: 'label0',
-        status: 'success',
+        status: 'passing',
       },
       {
         active: false,
         name: 'name1',
         label: 'label1',
-        status: 'failed',
+        status: 'failing',
       },
     ]);
     const trains = buildMockActiveReleaseTrains(true);

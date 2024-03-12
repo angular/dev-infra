@@ -17,7 +17,7 @@ import {bold, Log} from '../../utils/logging.js';
 import {BaseModule} from './base.js';
 
 /** The result of checking a branch on CI. */
-type CiBranchStatus = 'success' | 'failed' | 'not found';
+type CiBranchStatus = 'pending' | 'passing' | 'failing' | null;
 
 /** A list of results for checking CI branches. */
 type CiData = {
@@ -44,7 +44,7 @@ export class CiModule extends BaseModule<CiData> {
             active: false,
             name: trainName,
             label: '',
-            status: 'not found' as const,
+            status: null,
           };
         }
 
@@ -52,7 +52,12 @@ export class CiModule extends BaseModule<CiData> {
           active: true,
           name: train.branchName,
           label: `${trainName} (${train.branchName})`,
-          status: await this.getBranchStatusFromCi(train.branchName),
+          status: (
+            await this.git.github.getCombinedChecksAndStatusesForRef({
+              ...this.git.remoteParams,
+              ref: train.branchName,
+            })
+          ).result,
         };
       },
     );
@@ -70,27 +75,17 @@ export class CiModule extends BaseModule<CiData> {
         return;
       }
       const label = result.label.padEnd(minLabelLength);
-      if (result.status === 'not found') {
-        Log.info(`${result.name} was not found on CircleCI`);
-      } else if (result.status === 'success') {
+      if (result.status === null) {
+        Log.info(`${result.name} branch was not found on CI`);
+      } else if (result.status === 'passing') {
         Log.info(`${label} ✅`);
+      } else if (result.status === 'pending') {
+        Log.info(`${label} 🟡`);
       } else {
         Log.info(`${label} ❌`);
       }
     });
     Log.info.groupEnd();
     Log.info();
-  }
-
-  /** Get the CI status of a given branch from CircleCI. */
-  private async getBranchStatusFromCi(branch: string): Promise<CiBranchStatus> {
-    const {owner, name} = this.git.remoteConfig;
-    const url = `https://circleci.com/gh/${owner}/${name}/tree/${branch}.svg?style=shield`;
-    const result = await fetch(url).then((r) => r.text());
-
-    if (result && !result.includes('no builds')) {
-      return result.includes('passing') ? 'success' : 'failed';
-    }
-    return 'not found';
   }
 }
