@@ -51,11 +51,6 @@ export const services: ServiceConfig[] = [
     name: 'Npm',
   },
   {
-    prettyUrl: 'https://status.circleci.com',
-    url: 'https://status.circleci.com/api/v2/status.json',
-    name: 'CircleCi',
-  },
-  {
     prettyUrl: 'https://www.githubstatus.com',
     url: 'https://www.githubstatus.com/api/v2/status.json',
     name: 'Github',
