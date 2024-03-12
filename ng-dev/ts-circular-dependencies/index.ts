@@ -35,10 +35,10 @@ export function tsCircularDependenciesBuilder(localYargs: Argv) {
       'check',
       'Checks if the circular dependencies have changed.',
       (args) => args,
-      (argv) => {
+      async (argv) => {
         const {config: configArg, warnings} = argv;
         const configPath = isAbsolute(configArg) ? configArg : resolve(configArg);
-        const config = loadTestConfig(configPath);
+        const config = await loadTestConfig(configPath);
         process.exit(main(false, config, !!warnings));
       },
     )
@@ -46,10 +46,10 @@ export function tsCircularDependenciesBuilder(localYargs: Argv) {
       'approve',
       'Approves the current circular dependencies.',
       (args) => args,
-      (argv) => {
+      async (argv) => {
         const {config: configArg, warnings} = argv;
         const configPath = isAbsolute(configArg) ? configArg : resolve(configArg);
-        const config = loadTestConfig(configPath);
+        const config = await loadTestConfig(configPath);
         process.exit(main(true, config, !!warnings));
       },
     );
