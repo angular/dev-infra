@@ -65990,6 +65990,7 @@ var GithubClient = class {
     this.search = this._octokit.search;
     this.rest = this._octokit.rest;
     this.paginate = this._octokit.paginate;
+    this.checks = this._octokit.checks;
   }
 };
 var AuthenticatedGithubClient = class extends GithubClient {

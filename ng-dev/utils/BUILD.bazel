@@ -22,7 +22,7 @@ ts_library(
     srcs = glob(
         [
             "*.ts",
-            "git/*.ts",
+            "git/**/*.ts",
         ],
         exclude = [
             "config-cache.ts",
