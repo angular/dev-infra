@@ -10,6 +10,11 @@ import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core'
 import {NgIf} from '@angular/common';
 import {LOCAL_STORAGE} from '../../providers/index';
 
+/**
+ * Decelare gtag as part of the window in this file as gtag is expected to already be loaded.
+ */
+declare const window: Window & typeof globalThis & {gtag?: Function};
+
 export const STORAGE_KEY = 'docs-accepts-cookies';
 export function setCookieConsent(state: 'denied' | 'granted'): void {
   try {
