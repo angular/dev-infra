@@ -33,7 +33,7 @@ var require_dist_node = __commonJS({
       if (typeof navigator === "object" && "userAgent" in navigator) {
         return navigator.userAgent;
       }
-      if (typeof process === "object" && "version" in process) {
+      if (typeof process === "object" && process.version !== void 0) {
         return `Node.js/${process.version.substr(1)} (${process.platform}; ${process.arch})`;
       }
       return "<environment undetectable>";
@@ -186,33 +186,6 @@ var require_before_after_hook = __commonJS({
 });
 
 // 
-var require_is_plain_object = __commonJS({
-  ""(exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    function isObject(o) {
-      return Object.prototype.toString.call(o) === "[object Object]";
-    }
-    function isPlainObject(o) {
-      var ctor, prot;
-      if (isObject(o) === false)
-        return false;
-      ctor = o.constructor;
-      if (ctor === void 0)
-        return true;
-      prot = ctor.prototype;
-      if (isObject(prot) === false)
-        return false;
-      if (prot.hasOwnProperty("isPrototypeOf") === false) {
-        return false;
-      }
-      return true;
-    }
-    exports.isPlainObject = isPlainObject;
-  }
-});
-
-// 
 var require_dist_node2 = __commonJS({
   ""(exports, module) {
     "use strict";
@@ -239,7 +212,7 @@ var require_dist_node2 = __commonJS({
     });
     module.exports = __toCommonJS(dist_src_exports);
     var import_universal_user_agent = require_dist_node();
-    var VERSION = "9.0.0";
+    var VERSION = "9.0.4";
     var userAgent = `octokit-endpoint.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`;
     var DEFAULTS = {
       method: "GET",
@@ -261,11 +234,21 @@ var require_dist_node2 = __commonJS({
         return newObj;
       }, {});
     }
-    var import_is_plain_object = require_is_plain_object();
+    function isPlainObject(value) {
+      if (typeof value !== "object" || value === null)
+        return false;
+      if (Object.prototype.toString.call(value) !== "[object Object]")
+        return false;
+      const proto = Object.getPrototypeOf(value);
+      if (proto === null)
+        return true;
+      const Ctor = Object.prototype.hasOwnProperty.call(proto, "constructor") && proto.constructor;
+      return typeof Ctor === "function" && Ctor instanceof Ctor && Function.prototype.call(Ctor) === Function.prototype.call(value);
+    }
     function mergeDeep(defaults, options) {
       const result = Object.assign({}, defaults);
       Object.keys(options).forEach((key) => {
-        if ((0, import_is_plain_object.isPlainObject)(options[key])) {
+        if (isPlainObject(options[key])) {
           if (!(key in defaults))
             Object.assign(result, { [key]: options[key] });
           else
@@ -331,10 +314,13 @@ var require_dist_node2 = __commonJS({
       return matches.map(removeNonChars).reduce((a, b) => a.concat(b), []);
     }
     function omit(object, keysToOmit) {
-      return Object.keys(object).filter((option) => !keysToOmit.includes(option)).reduce((obj, key) => {
-        obj[key] = object[key];
-        return obj;
-      }, {});
+      const result = { __proto__: null };
+      for (const key of Object.keys(object)) {
+        if (keysToOmit.indexOf(key) === -1) {
+          result[key] = object[key];
+        }
+      }
+      return result;
     }
     function encodeReserved(str) {
       return str.split(/(%[0-9A-Fa-f]{2})/g).map(function(part) {
@@ -430,7 +416,7 @@ var require_dist_node2 = __commonJS({
     }
     function expand(template, context) {
       var operators = ["+", "#", ".", "/", ";", "?", "&"];
-      return template.replace(
+      template = template.replace(
         /\{([^\{\}]+)\}|([^\{\}]+)/g,
         function(_, expression, literal) {
           if (expression) {
@@ -460,6 +446,11 @@ var require_dist_node2 = __commonJS({
           }
         }
       );
+      if (template === "/") {
+        return template;
+      } else {
+        return template.replace(/\/$/, "");
+      }
     }
     function parse(options) {
       var _a;
@@ -752,35 +743,46 @@ var require_dist_node5 = __commonJS({
     module.exports = __toCommonJS(dist_src_exports);
     var import_endpoint = require_dist_node2();
     var import_universal_user_agent = require_dist_node();
-    var VERSION = "8.0.2";
-    var import_is_plain_object = require_is_plain_object();
+    var VERSION = "8.2.0";
+    function isPlainObject(value) {
+      if (typeof value !== "object" || value === null)
+        return false;
+      if (Object.prototype.toString.call(value) !== "[object Object]")
+        return false;
+      const proto = Object.getPrototypeOf(value);
+      if (proto === null)
+        return true;
+      const Ctor = Object.prototype.hasOwnProperty.call(proto, "constructor") && proto.constructor;
+      return typeof Ctor === "function" && Ctor instanceof Ctor && Function.prototype.call(Ctor) === Function.prototype.call(value);
+    }
     var import_request_error = require_dist_node4();
     function getBufferResponse(response) {
       return response.arrayBuffer();
     }
     function fetchWrapper(requestOptions) {
-      var _a;
+      var _a, _b, _c;
       const log = requestOptions.request && requestOptions.request.log ? requestOptions.request.log : console;
-      if ((0, import_is_plain_object.isPlainObject)(requestOptions.body) || Array.isArray(requestOptions.body)) {
+      const parseSuccessResponseBody = ((_a = requestOptions.request) == null ? void 0 : _a.parseSuccessResponseBody) !== false;
+      if (isPlainObject(requestOptions.body) || Array.isArray(requestOptions.body)) {
         requestOptions.body = JSON.stringify(requestOptions.body);
       }
       let headers = {};
       let status;
       let url;
       let { fetch } = globalThis;
-      if ((_a = requestOptions.request) == null ? void 0 : _a.fetch) {
+      if ((_b = requestOptions.request) == null ? void 0 : _b.fetch) {
         fetch = requestOptions.request.fetch;
       }
       if (!fetch) {
         throw new Error(
-          'Global "fetch" not found. Please provide `options.request.fetch` to octokit or upgrade to node@18 or newer.'
+          "fetch is not set. Please pass a fetch implementation as new Octokit({ request: { fetch }}). Learn more at https://github.com/octokit/octokit.js/#fetch-missing"
         );
       }
       return fetch(requestOptions.url, {
         method: requestOptions.method,
         body: requestOptions.body,
         headers: requestOptions.headers,
-        signal: requestOptions.signal,
+        signal: (_c = requestOptions.request) == null ? void 0 : _c.signal,
         ...requestOptions.body && { duplex: "half" }
       }).then(async (response) => {
         url = response.url;
@@ -836,7 +838,7 @@ var require_dist_node5 = __commonJS({
           });
           throw error;
         }
-        return getResponseData(response);
+        return parseSuccessResponseBody ? await getResponseData(response) : response.body;
       }).then((data) => {
         return {
           status,
@@ -849,7 +851,15 @@ var require_dist_node5 = __commonJS({
           throw error;
         else if (error.name === "AbortError")
           throw error;
-        throw new import_request_error.RequestError(error.message, 500, {
+        let message = error.message;
+        if (error.name === "TypeError" && "cause" in error) {
+          if (error.cause instanceof Error) {
+            message = error.cause.message;
+          } else if (typeof error.cause === "string") {
+            message = error.cause;
+          }
+        }
+        throw new import_request_error.RequestError(message, 500, {
           request: requestOptions
         });
       });
@@ -857,7 +867,7 @@ var require_dist_node5 = __commonJS({
     async function getResponseData(response) {
       const contentType = response.headers.get("content-type");
       if (/application\/json/.test(contentType)) {
-        return response.json();
+        return response.json().catch(() => response.text()).catch(() => "");
       }
       if (!contentType || /^text\/|charset=utf-8$/.test(contentType)) {
         return response.text();
@@ -867,11 +877,17 @@ var require_dist_node5 = __commonJS({
     function toErrorMessage(data) {
       if (typeof data === "string")
         return data;
+      let suffix;
+      if ("documentation_url" in data) {
+        suffix = ` - ${data.documentation_url}`;
+      } else {
+        suffix = "";
+      }
       if ("message" in data) {
         if (Array.isArray(data.errors)) {
-          return `${data.message}: ${data.errors.map(JSON.stringify).join(", ")}`;
+          return `${data.message}: ${data.errors.map(JSON.stringify).join(", ")}${suffix}`;
         }
-        return data.message;
+        return `${data.message}${suffix}`;
       }
       return `Unknown error: ${JSON.stringify(data)}`;
     }
@@ -910,276 +926,6 @@ var require_dist_node5 = __commonJS({
 var require_dist_node6 = __commonJS({
   ""(exports, module) {
     "use strict";
-    var __create2 = Object.create;
-    var __defProp2 = Object.defineProperty;
-    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
-    var __getOwnPropNames2 = Object.getOwnPropertyNames;
-    var __getProtoOf2 = Object.getPrototypeOf;
-    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
-      for (var name in all)
-        __defProp2(target, name, { get: all[name], enumerable: true });
-    };
-    var __copyProps2 = (to, from, except, desc) => {
-      if (from && typeof from === "object" || typeof from === "function") {
-        for (let key of __getOwnPropNames2(from))
-          if (!__hasOwnProp2.call(to, key) && key !== except)
-            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
-      }
-      return to;
-    };
-    var __toESM2 = (mod, isNodeMode, target) => (target = mod != null ? __create2(__getProtoOf2(mod)) : {}, __copyProps2(
-      isNodeMode || !mod || !mod.__esModule ? __defProp2(target, "default", { value: mod, enumerable: true }) : target,
-      mod
-    ));
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
-    var dist_src_exports = {};
-    __export(dist_src_exports, {
-      RequestError: () => RequestError
-    });
-    module.exports = __toCommonJS(dist_src_exports);
-    var import_deprecation = require_dist_node3();
-    var import_once = __toESM2(require_once());
-    var logOnceCode = (0, import_once.default)((deprecation) => console.warn(deprecation));
-    var logOnceHeaders = (0, import_once.default)((deprecation) => console.warn(deprecation));
-    var RequestError = class extends Error {
-      constructor(message, statusCode, options) {
-        super(message);
-        if (Error.captureStackTrace) {
-          Error.captureStackTrace(this, this.constructor);
-        }
-        this.name = "HttpError";
-        this.status = statusCode;
-        let headers;
-        if ("headers" in options && typeof options.headers !== "undefined") {
-          headers = options.headers;
-        }
-        if ("response" in options) {
-          this.response = options.response;
-          headers = options.response.headers;
-        }
-        const requestCopy = Object.assign({}, options.request);
-        if (options.request.headers.authorization) {
-          requestCopy.headers = Object.assign({}, options.request.headers, {
-            authorization: options.request.headers.authorization.replace(
-              / .*$/,
-              " [REDACTED]"
-            )
-          });
-        }
-        requestCopy.url = requestCopy.url.replace(/\bclient_secret=\w+/g, "client_secret=[REDACTED]").replace(/\baccess_token=\w+/g, "access_token=[REDACTED]");
-        this.request = requestCopy;
-        Object.defineProperty(this, "code", {
-          get() {
-            logOnceCode(
-              new import_deprecation.Deprecation(
-                "[@octokit/request-error] `error.code` is deprecated, use `error.status`."
-              )
-            );
-            return statusCode;
-          }
-        });
-        Object.defineProperty(this, "headers", {
-          get() {
-            logOnceHeaders(
-              new import_deprecation.Deprecation(
-                "[@octokit/request-error] `error.headers` is deprecated, use `error.response.headers`."
-              )
-            );
-            return headers || {};
-          }
-        });
-      }
-    };
-  }
-});
-
-// 
-var require_dist_node7 = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    var __defProp2 = Object.defineProperty;
-    var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
-    var __getOwnPropNames2 = Object.getOwnPropertyNames;
-    var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
-      for (var name in all)
-        __defProp2(target, name, { get: all[name], enumerable: true });
-    };
-    var __copyProps2 = (to, from, except, desc) => {
-      if (from && typeof from === "object" || typeof from === "function") {
-        for (let key of __getOwnPropNames2(from))
-          if (!__hasOwnProp2.call(to, key) && key !== except)
-            __defProp2(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc2(from, key)) || desc.enumerable });
-      }
-      return to;
-    };
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
-    var dist_src_exports = {};
-    __export(dist_src_exports, {
-      request: () => request
-    });
-    module.exports = __toCommonJS(dist_src_exports);
-    var import_endpoint = require_dist_node2();
-    var import_universal_user_agent = require_dist_node();
-    var VERSION = "8.0.4";
-    var import_is_plain_object = require_is_plain_object();
-    var import_request_error = require_dist_node6();
-    function getBufferResponse(response) {
-      return response.arrayBuffer();
-    }
-    function fetchWrapper(requestOptions) {
-      var _a, _b;
-      const log = requestOptions.request && requestOptions.request.log ? requestOptions.request.log : console;
-      if ((0, import_is_plain_object.isPlainObject)(requestOptions.body) || Array.isArray(requestOptions.body)) {
-        requestOptions.body = JSON.stringify(requestOptions.body);
-      }
-      let headers = {};
-      let status;
-      let url;
-      let { fetch } = globalThis;
-      if ((_a = requestOptions.request) == null ? void 0 : _a.fetch) {
-        fetch = requestOptions.request.fetch;
-      }
-      if (!fetch) {
-        throw new Error(
-          'Global "fetch" not found. Please provide `options.request.fetch` to octokit or upgrade to node@18 or newer.'
-        );
-      }
-      return fetch(requestOptions.url, {
-        method: requestOptions.method,
-        body: requestOptions.body,
-        headers: requestOptions.headers,
-        signal: (_b = requestOptions.request) == null ? void 0 : _b.signal,
-        ...requestOptions.body && { duplex: "half" }
-      }).then(async (response) => {
-        url = response.url;
-        status = response.status;
-        for (const keyAndValue of response.headers) {
-          headers[keyAndValue[0]] = keyAndValue[1];
-        }
-        if ("deprecation" in headers) {
-          const matches = headers.link && headers.link.match(/<([^>]+)>; rel="deprecation"/);
-          const deprecationLink = matches && matches.pop();
-          log.warn(
-            `[@octokit/request] "${requestOptions.method} ${requestOptions.url}" is deprecated. It is scheduled to be removed on ${headers.sunset}${deprecationLink ? `. See ${deprecationLink}` : ""}`
-          );
-        }
-        if (status === 204 || status === 205) {
-          return;
-        }
-        if (requestOptions.method === "HEAD") {
-          if (status < 400) {
-            return;
-          }
-          throw new import_request_error.RequestError(response.statusText, status, {
-            response: {
-              url,
-              status,
-              headers,
-              data: void 0
-            },
-            request: requestOptions
-          });
-        }
-        if (status === 304) {
-          throw new import_request_error.RequestError("Not modified", status, {
-            response: {
-              url,
-              status,
-              headers,
-              data: await getResponseData(response)
-            },
-            request: requestOptions
-          });
-        }
-        if (status >= 400) {
-          const data = await getResponseData(response);
-          const error = new import_request_error.RequestError(toErrorMessage(data), status, {
-            response: {
-              url,
-              status,
-              headers,
-              data
-            },
-            request: requestOptions
-          });
-          throw error;
-        }
-        return getResponseData(response);
-      }).then((data) => {
-        return {
-          status,
-          url,
-          headers,
-          data
-        };
-      }).catch((error) => {
-        if (error instanceof import_request_error.RequestError)
-          throw error;
-        else if (error.name === "AbortError")
-          throw error;
-        throw new import_request_error.RequestError(error.message, 500, {
-          request: requestOptions
-        });
-      });
-    }
-    async function getResponseData(response) {
-      const contentType = response.headers.get("content-type");
-      if (/application\/json/.test(contentType)) {
-        return response.json();
-      }
-      if (!contentType || /^text\/|charset=utf-8$/.test(contentType)) {
-        return response.text();
-      }
-      return getBufferResponse(response);
-    }
-    function toErrorMessage(data) {
-      if (typeof data === "string")
-        return data;
-      if ("message" in data) {
-        if (Array.isArray(data.errors)) {
-          return `${data.message}: ${data.errors.map(JSON.stringify).join(", ")}`;
-        }
-        return data.message;
-      }
-      return `Unknown error: ${JSON.stringify(data)}`;
-    }
-    function withDefaults(oldEndpoint, newDefaults) {
-      const endpoint2 = oldEndpoint.defaults(newDefaults);
-      const newApi = function(route, parameters) {
-        const endpointOptions = endpoint2.merge(route, parameters);
-        if (!endpointOptions.request || !endpointOptions.request.hook) {
-          return fetchWrapper(endpoint2.parse(endpointOptions));
-        }
-        const request2 = (route2, parameters2) => {
-          return fetchWrapper(
-            endpoint2.parse(endpoint2.merge(route2, parameters2))
-          );
-        };
-        Object.assign(request2, {
-          endpoint: endpoint2,
-          defaults: withDefaults.bind(null, endpoint2)
-        });
-        return endpointOptions.request.hook(request2, endpointOptions);
-      };
-      return Object.assign(newApi, {
-        endpoint: endpoint2,
-        defaults: withDefaults.bind(null, endpoint2)
-      });
-    }
-    var request = withDefaults(import_endpoint.endpoint, {
-      headers: {
-        "user-agent": `octokit-request.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`
-      }
-    });
-  }
-});
-
-// 
-var require_dist_node8 = __commonJS({
-  ""(exports, module) {
-    "use strict";
     var __defProp2 = Object.defineProperty;
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
@@ -1204,11 +950,11 @@ var require_dist_node8 = __commonJS({
       withCustomRequest: () => withCustomRequest
     });
     module.exports = __toCommonJS(dist_src_exports);
-    var import_request3 = require_dist_node7();
+    var import_request3 = require_dist_node5();
     var import_universal_user_agent = require_dist_node();
-    var VERSION = "7.0.1";
-    var import_request2 = require_dist_node7();
-    var import_request = require_dist_node7();
+    var VERSION = "7.0.2";
+    var import_request2 = require_dist_node5();
+    var import_request = require_dist_node5();
     function _buildMessageForResponseErrors(data) {
       return `Request failed due to following response errors:
 ` + data.errors.map((e) => ` - ${e.message}`).join("\n");
@@ -1315,7 +1061,7 @@ var require_dist_node8 = __commonJS({
 });
 
 // 
-var require_dist_node9 = __commonJS({
+var require_dist_node7 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -1386,7 +1132,7 @@ var require_dist_node9 = __commonJS({
 });
 
 // 
-var require_dist_node10 = __commonJS({
+var require_dist_node8 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -1414,9 +1160,14 @@ var require_dist_node10 = __commonJS({
     var import_universal_user_agent = require_dist_node();
     var import_before_after_hook = require_before_after_hook();
     var import_request = require_dist_node5();
-    var import_graphql = require_dist_node8();
-    var import_auth_token = require_dist_node9();
-    var VERSION = "5.0.1";
+    var import_graphql = require_dist_node6();
+    var import_auth_token = require_dist_node7();
+    var VERSION = "5.1.0";
+    var noop = () => {
+    };
+    var consoleWarn = console.warn.bind(console);
+    var consoleError = console.error.bind(console);
+    var userAgentTrail = `octokit-core.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`;
     var _a;
     var Octokit2 = (_a = class {
       static defaults(defaults) {
@@ -1465,10 +1216,7 @@ var require_dist_node10 = __commonJS({
             format: ""
           }
         };
-        requestDefaults.headers["user-agent"] = [
-          options.userAgent,
-          `octokit-core.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`
-        ].filter(Boolean).join(" ");
+        requestDefaults.headers["user-agent"] = options.userAgent ? `${options.userAgent} ${userAgentTrail}` : userAgentTrail;
         if (options.baseUrl) {
           requestDefaults.baseUrl = options.baseUrl;
         }
@@ -1482,12 +1230,10 @@ var require_dist_node10 = __commonJS({
         this.graphql = (0, import_graphql.withCustomRequest)(this.request).defaults(requestDefaults);
         this.log = Object.assign(
           {
-            debug: () => {
-            },
-            info: () => {
-            },
-            warn: console.warn.bind(console),
-            error: console.error.bind(console)
+            debug: noop,
+            info: noop,
+            warn: consoleWarn,
+            error: consoleError
           },
           options.log
         );
@@ -1519,9 +1265,9 @@ var require_dist_node10 = __commonJS({
           this.auth = auth;
         }
         const classConstructor = this.constructor;
-        classConstructor.plugins.forEach((plugin) => {
-          Object.assign(this, plugin(this, options));
-        });
+        for (let i = 0; i < classConstructor.plugins.length; ++i) {
+          Object.assign(this, classConstructor.plugins[i](this, options));
+        }
       }
     }, (() => {
       _a.VERSION = VERSION;
@@ -1532,7 +1278,7 @@ var require_dist_node10 = __commonJS({
 });
 
 // 
-var require_dist_node11 = __commonJS({
+var require_dist_node9 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -1557,7 +1303,7 @@ var require_dist_node11 = __commonJS({
       requestLog: () => requestLog
     });
     module.exports = __toCommonJS(dist_src_exports);
-    var VERSION = "4.0.0";
+    var VERSION = "4.0.1";
     function requestLog(octokit) {
       octokit.hook.wrap("request", (request, options) => {
         octokit.log.debug("request", options);
@@ -1582,7 +1328,7 @@ var require_dist_node11 = __commonJS({
 });
 
 // 
-var require_dist_node12 = __commonJS({
+var require_dist_node10 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -1610,7 +1356,7 @@ var require_dist_node12 = __commonJS({
       paginatingEndpoints: () => paginatingEndpoints
     });
     module.exports = __toCommonJS(dist_src_exports);
-    var VERSION = "9.0.0";
+    var VERSION = "9.2.1";
     function normalizePaginatedListResponse(response) {
       if (!response.data) {
         return {
@@ -1761,6 +1507,8 @@ var require_dist_node12 = __commonJS({
       "GET /orgs/{org}/members/{username}/codespaces",
       "GET /orgs/{org}/migrations",
       "GET /orgs/{org}/migrations/{migration_id}/repositories",
+      "GET /orgs/{org}/organization-roles/{role_id}/teams",
+      "GET /orgs/{org}/organization-roles/{role_id}/users",
       "GET /orgs/{org}/outside_collaborators",
       "GET /orgs/{org}/packages",
       "GET /orgs/{org}/packages/{package_type}/{package_name}/versions",
@@ -1769,9 +1517,11 @@ var require_dist_node12 = __commonJS({
       "GET /orgs/{org}/personal-access-tokens",
       "GET /orgs/{org}/personal-access-tokens/{pat_id}/repositories",
       "GET /orgs/{org}/projects",
+      "GET /orgs/{org}/properties/values",
       "GET /orgs/{org}/public_members",
       "GET /orgs/{org}/repos",
       "GET /orgs/{org}/rulesets",
+      "GET /orgs/{org}/rulesets/rule-suites",
       "GET /orgs/{org}/secret-scanning/alerts",
       "GET /orgs/{org}/security-advisories",
       "GET /orgs/{org}/teams",
@@ -1863,6 +1613,7 @@ var require_dist_node12 = __commonJS({
       "GET /repos/{owner}/{repo}/releases/{release_id}/reactions",
       "GET /repos/{owner}/{repo}/rules/branches/{branch}",
       "GET /repos/{owner}/{repo}/rulesets",
+      "GET /repos/{owner}/{repo}/rulesets/rule-suites",
       "GET /repos/{owner}/{repo}/secret-scanning/alerts",
       "GET /repos/{owner}/{repo}/secret-scanning/alerts/{alert_number}/locations",
       "GET /repos/{owner}/{repo}/security-advisories",
@@ -1956,7 +1707,7 @@ var require_dist_node12 = __commonJS({
 });
 
 // 
-var require_dist_node13 = __commonJS({
+var require_dist_node11 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -1982,7 +1733,7 @@ var require_dist_node13 = __commonJS({
       restEndpointMethods: () => restEndpointMethods
     });
     module.exports = __toCommonJS(dist_src_exports);
-    var VERSION = "10.0.0";
+    var VERSION = "10.4.1";
     var Endpoints = {
       actions: {
         addCustomLabelsToSelfHostedRunnerForOrg: [
@@ -2085,6 +1836,9 @@ var require_dist_node13 = __commonJS({
         enableWorkflow: [
           "PUT /repos/{owner}/{repo}/actions/workflows/{workflow_id}/enable"
         ],
+        forceCancelWorkflowRun: [
+          "POST /repos/{owner}/{repo}/actions/runs/{run_id}/force-cancel"
+        ],
         generateRunnerJitconfigForOrg: [
           "POST /orgs/{org}/actions/runners/generate-jitconfig"
         ],
@@ -2104,6 +1858,9 @@ var require_dist_node13 = __commonJS({
           "GET /repos/{owner}/{repo}/actions/permissions/selected-actions"
         ],
         getArtifact: ["GET /repos/{owner}/{repo}/actions/artifacts/{artifact_id}"],
+        getCustomOidcSubClaimForRepo: [
+          "GET /repos/{owner}/{repo}/actions/oidc/customization/sub"
+        ],
         getEnvironmentPublicKey: [
           "GET /repositories/{repository_id}/environments/{environment_name}/secrets/public-key"
         ],
@@ -2256,6 +2013,9 @@ var require_dist_node13 = __commonJS({
         setCustomLabelsForSelfHostedRunnerForRepo: [
           "PUT /repos/{owner}/{repo}/actions/runners/{runner_id}/labels"
         ],
+        setCustomOidcSubClaimForRepo: [
+          "PUT /repos/{owner}/{repo}/actions/oidc/customization/sub"
+        ],
         setGithubActionsDefaultWorkflowPermissionsOrganization: [
           "PUT /orgs/{org}/actions/permissions/workflow"
         ],
@@ -2325,6 +2085,7 @@ var require_dist_node13 = __commonJS({
         listWatchersForRepo: ["GET /repos/{owner}/{repo}/subscribers"],
         markNotificationsAsRead: ["PUT /notifications"],
         markRepoNotificationsAsRead: ["PUT /repos/{owner}/{repo}/notifications"],
+        markThreadAsDone: ["DELETE /notifications/threads/{thread_id}"],
         markThreadAsRead: ["PATCH /notifications/threads/{thread_id}"],
         setRepoSubscription: ["PUT /repos/{owner}/{repo}/subscription"],
         setThreadSubscription: [
@@ -2494,6 +2255,9 @@ var require_dist_node13 = __commonJS({
         addSelectedRepoToOrgSecret: [
           "PUT /orgs/{org}/codespaces/secrets/{secret_name}/repositories/{repository_id}"
         ],
+        checkPermissionsForDevcontainer: [
+          "GET /repos/{owner}/{repo}/codespaces/permissions_check"
+        ],
         codespaceMachinesForAuthenticatedUser: [
           "GET /user/codespaces/{codespace_name}/machines"
         ],
@@ -2598,10 +2362,10 @@ var require_dist_node13 = __commonJS({
         updateForAuthenticatedUser: ["PATCH /user/codespaces/{codespace_name}"]
       },
       copilot: {
-        addCopilotForBusinessSeatsForTeams: [
+        addCopilotSeatsForTeams: [
           "POST /orgs/{org}/copilot/billing/selected_teams"
         ],
-        addCopilotForBusinessSeatsForUsers: [
+        addCopilotSeatsForUsers: [
           "POST /orgs/{org}/copilot/billing/selected_users"
         ],
         cancelCopilotSeatAssignmentForTeams: [
@@ -2611,7 +2375,7 @@ var require_dist_node13 = __commonJS({
           "DELETE /orgs/{org}/copilot/billing/selected_users"
         ],
         getCopilotOrganizationDetails: ["GET /orgs/{org}/copilot/billing"],
-        getCopilotSeatAssignmentDetailsForUser: [
+        getCopilotSeatDetailsForUser: [
           "GET /orgs/{org}/members/{username}/copilot"
         ],
         listCopilotSeats: ["GET /orgs/{org}/copilot/billing/seats"]
@@ -2824,7 +2588,13 @@ var require_dist_node13 = __commonJS({
         root: ["GET /"]
       },
       migrations: {
-        cancelImport: ["DELETE /repos/{owner}/{repo}/import"],
+        cancelImport: [
+          "DELETE /repos/{owner}/{repo}/import",
+          {},
+          {
+            deprecated: "octokit.rest.migrations.cancelImport() is deprecated, see https://docs.github.com/rest/migrations/source-imports#cancel-an-import"
+          }
+        ],
         deleteArchiveForAuthenticatedUser: [
           "DELETE /user/migrations/{migration_id}/archive"
         ],
@@ -2837,9 +2607,27 @@ var require_dist_node13 = __commonJS({
         getArchiveForAuthenticatedUser: [
           "GET /user/migrations/{migration_id}/archive"
         ],
-        getCommitAuthors: ["GET /repos/{owner}/{repo}/import/authors"],
-        getImportStatus: ["GET /repos/{owner}/{repo}/import"],
-        getLargeFiles: ["GET /repos/{owner}/{repo}/import/large_files"],
+        getCommitAuthors: [
+          "GET /repos/{owner}/{repo}/import/authors",
+          {},
+          {
+            deprecated: "octokit.rest.migrations.getCommitAuthors() is deprecated, see https://docs.github.com/rest/migrations/source-imports#get-commit-authors"
+          }
+        ],
+        getImportStatus: [
+          "GET /repos/{owner}/{repo}/import",
+          {},
+          {
+            deprecated: "octokit.rest.migrations.getImportStatus() is deprecated, see https://docs.github.com/rest/migrations/source-imports#get-an-import-status"
+          }
+        ],
+        getLargeFiles: [
+          "GET /repos/{owner}/{repo}/import/large_files",
+          {},
+          {
+            deprecated: "octokit.rest.migrations.getLargeFiles() is deprecated, see https://docs.github.com/rest/migrations/source-imports#get-large-files"
+          }
+        ],
         getStatusForAuthenticatedUser: ["GET /user/migrations/{migration_id}"],
         getStatusForOrg: ["GET /orgs/{org}/migrations/{migration_id}"],
         listForAuthenticatedUser: ["GET /user/migrations"],
@@ -2853,22 +2641,60 @@ var require_dist_node13 = __commonJS({
           {},
           { renamed: ["migrations", "listReposForAuthenticatedUser"] }
         ],
-        mapCommitAuthor: ["PATCH /repos/{owner}/{repo}/import/authors/{author_id}"],
-        setLfsPreference: ["PATCH /repos/{owner}/{repo}/import/lfs"],
+        mapCommitAuthor: [
+          "PATCH /repos/{owner}/{repo}/import/authors/{author_id}",
+          {},
+          {
+            deprecated: "octokit.rest.migrations.mapCommitAuthor() is deprecated, see https://docs.github.com/rest/migrations/source-imports#map-a-commit-author"
+          }
+        ],
+        setLfsPreference: [
+          "PATCH /repos/{owner}/{repo}/import/lfs",
+          {},
+          {
+            deprecated: "octokit.rest.migrations.setLfsPreference() is deprecated, see https://docs.github.com/rest/migrations/source-imports#update-git-lfs-preference"
+          }
+        ],
         startForAuthenticatedUser: ["POST /user/migrations"],
         startForOrg: ["POST /orgs/{org}/migrations"],
-        startImport: ["PUT /repos/{owner}/{repo}/import"],
+        startImport: [
+          "PUT /repos/{owner}/{repo}/import",
+          {},
+          {
+            deprecated: "octokit.rest.migrations.startImport() is deprecated, see https://docs.github.com/rest/migrations/source-imports#start-an-import"
+          }
+        ],
         unlockRepoForAuthenticatedUser: [
           "DELETE /user/migrations/{migration_id}/repos/{repo_name}/lock"
         ],
         unlockRepoForOrg: [
           "DELETE /orgs/{org}/migrations/{migration_id}/repos/{repo_name}/lock"
         ],
-        updateImport: ["PATCH /repos/{owner}/{repo}/import"]
+        updateImport: [
+          "PATCH /repos/{owner}/{repo}/import",
+          {},
+          {
+            deprecated: "octokit.rest.migrations.updateImport() is deprecated, see https://docs.github.com/rest/migrations/source-imports#update-an-import"
+          }
+        ]
+      },
+      oidc: {
+        getOidcCustomSubTemplateForOrg: [
+          "GET /orgs/{org}/actions/oidc/customization/sub"
+        ],
+        updateOidcCustomSubTemplateForOrg: [
+          "PUT /orgs/{org}/actions/oidc/customization/sub"
+        ]
       },
       orgs: {
         addSecurityManagerTeam: [
           "PUT /orgs/{org}/security-managers/teams/{team_slug}"
+        ],
+        assignTeamToOrgRole: [
+          "PUT /orgs/{org}/organization-roles/teams/{team_slug}/{role_id}"
+        ],
+        assignUserToOrgRole: [
+          "PUT /orgs/{org}/organization-roles/users/{username}/{role_id}"
         ],
         blockUser: ["PUT /orgs/{org}/blocks/{username}"],
         cancelInvitation: ["DELETE /orgs/{org}/invitations/{invitation_id}"],
@@ -2878,16 +2704,32 @@ var require_dist_node13 = __commonJS({
         convertMemberToOutsideCollaborator: [
           "PUT /orgs/{org}/outside_collaborators/{username}"
         ],
+        createCustomOrganizationRole: ["POST /orgs/{org}/organization-roles"],
         createInvitation: ["POST /orgs/{org}/invitations"],
+        createOrUpdateCustomProperties: ["PATCH /orgs/{org}/properties/schema"],
+        createOrUpdateCustomPropertiesValuesForRepos: [
+          "PATCH /orgs/{org}/properties/values"
+        ],
+        createOrUpdateCustomProperty: [
+          "PUT /orgs/{org}/properties/schema/{custom_property_name}"
+        ],
         createWebhook: ["POST /orgs/{org}/hooks"],
         delete: ["DELETE /orgs/{org}"],
+        deleteCustomOrganizationRole: [
+          "DELETE /orgs/{org}/organization-roles/{role_id}"
+        ],
         deleteWebhook: ["DELETE /orgs/{org}/hooks/{hook_id}"],
         enableOrDisableSecurityProductOnAllOrgRepos: [
           "POST /orgs/{org}/{security_product}/{enablement}"
         ],
         get: ["GET /orgs/{org}"],
+        getAllCustomProperties: ["GET /orgs/{org}/properties/schema"],
+        getCustomProperty: [
+          "GET /orgs/{org}/properties/schema/{custom_property_name}"
+        ],
         getMembershipForAuthenticatedUser: ["GET /user/memberships/orgs/{org}"],
         getMembershipForUser: ["GET /orgs/{org}/memberships/{username}"],
+        getOrgRole: ["GET /orgs/{org}/organization-roles/{role_id}"],
         getWebhook: ["GET /orgs/{org}/hooks/{hook_id}"],
         getWebhookConfigForOrg: ["GET /orgs/{org}/hooks/{hook_id}/config"],
         getWebhookDelivery: [
@@ -2896,12 +2738,19 @@ var require_dist_node13 = __commonJS({
         list: ["GET /organizations"],
         listAppInstallations: ["GET /orgs/{org}/installations"],
         listBlockedUsers: ["GET /orgs/{org}/blocks"],
+        listCustomPropertiesValuesForRepos: ["GET /orgs/{org}/properties/values"],
         listFailedInvitations: ["GET /orgs/{org}/failed_invitations"],
         listForAuthenticatedUser: ["GET /user/orgs"],
         listForUser: ["GET /users/{username}/orgs"],
         listInvitationTeams: ["GET /orgs/{org}/invitations/{invitation_id}/teams"],
         listMembers: ["GET /orgs/{org}/members"],
         listMembershipsForAuthenticatedUser: ["GET /user/memberships/orgs"],
+        listOrgRoleTeams: ["GET /orgs/{org}/organization-roles/{role_id}/teams"],
+        listOrgRoleUsers: ["GET /orgs/{org}/organization-roles/{role_id}/users"],
+        listOrgRoles: ["GET /orgs/{org}/organization-roles"],
+        listOrganizationFineGrainedPermissions: [
+          "GET /orgs/{org}/organization-fine-grained-permissions"
+        ],
         listOutsideCollaborators: ["GET /orgs/{org}/outside_collaborators"],
         listPatGrantRepositories: [
           "GET /orgs/{org}/personal-access-tokens/{pat_id}/repositories"
@@ -2916,9 +2765,15 @@ var require_dist_node13 = __commonJS({
         listSecurityManagerTeams: ["GET /orgs/{org}/security-managers"],
         listWebhookDeliveries: ["GET /orgs/{org}/hooks/{hook_id}/deliveries"],
         listWebhooks: ["GET /orgs/{org}/hooks"],
+        patchCustomOrganizationRole: [
+          "PATCH /orgs/{org}/organization-roles/{role_id}"
+        ],
         pingWebhook: ["POST /orgs/{org}/hooks/{hook_id}/pings"],
         redeliverWebhookDelivery: [
           "POST /orgs/{org}/hooks/{hook_id}/deliveries/{delivery_id}/attempts"
+        ],
+        removeCustomProperty: [
+          "DELETE /orgs/{org}/properties/schema/{custom_property_name}"
         ],
         removeMember: ["DELETE /orgs/{org}/members/{username}"],
         removeMembershipForUser: ["DELETE /orgs/{org}/memberships/{username}"],
@@ -2936,6 +2791,18 @@ var require_dist_node13 = __commonJS({
         ],
         reviewPatGrantRequestsInBulk: [
           "POST /orgs/{org}/personal-access-token-requests"
+        ],
+        revokeAllOrgRolesTeam: [
+          "DELETE /orgs/{org}/organization-roles/teams/{team_slug}"
+        ],
+        revokeAllOrgRolesUser: [
+          "DELETE /orgs/{org}/organization-roles/users/{username}"
+        ],
+        revokeOrgRoleTeam: [
+          "DELETE /orgs/{org}/organization-roles/teams/{team_slug}/{role_id}"
+        ],
+        revokeOrgRoleUser: [
+          "DELETE /orgs/{org}/organization-roles/users/{username}/{role_id}"
         ],
         setMembershipForUser: ["PUT /orgs/{org}/memberships/{username}"],
         setPublicMembershipForAuthenticatedUser: [
@@ -3227,6 +3094,9 @@ var require_dist_node13 = __commonJS({
           {},
           { mapToData: "users" }
         ],
+        cancelPagesDeployment: [
+          "POST /repos/{owner}/{repo}/pages/deployments/{pages_deployment_id}/cancel"
+        ],
         checkAutomatedSecurityFixes: [
           "GET /repos/{owner}/{repo}/automated-security-fixes"
         ],
@@ -3262,12 +3132,15 @@ var require_dist_node13 = __commonJS({
         createForAuthenticatedUser: ["POST /user/repos"],
         createFork: ["POST /repos/{owner}/{repo}/forks"],
         createInOrg: ["POST /orgs/{org}/repos"],
+        createOrUpdateCustomPropertiesValues: [
+          "PATCH /repos/{owner}/{repo}/properties/values"
+        ],
         createOrUpdateEnvironment: [
           "PUT /repos/{owner}/{repo}/environments/{environment_name}"
         ],
         createOrUpdateFileContents: ["PUT /repos/{owner}/{repo}/contents/{path}"],
         createOrgRuleset: ["POST /orgs/{org}/rulesets"],
-        createPagesDeployment: ["POST /repos/{owner}/{repo}/pages/deployment"],
+        createPagesDeployment: ["POST /repos/{owner}/{repo}/pages/deployments"],
         createPagesSite: ["POST /repos/{owner}/{repo}/pages"],
         createRelease: ["POST /repos/{owner}/{repo}/releases"],
         createRepoRuleset: ["POST /repos/{owner}/{repo}/rulesets"],
@@ -3400,6 +3273,7 @@ var require_dist_node13 = __commonJS({
         getCustomDeploymentProtectionRule: [
           "GET /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules/{protection_rule_id}"
         ],
+        getCustomPropertiesValues: ["GET /repos/{owner}/{repo}/properties/values"],
         getDeployKey: ["GET /repos/{owner}/{repo}/keys/{key_id}"],
         getDeployment: ["GET /repos/{owner}/{repo}/deployments/{deployment_id}"],
         getDeploymentBranchPolicy: [
@@ -3413,10 +3287,15 @@ var require_dist_node13 = __commonJS({
         ],
         getLatestPagesBuild: ["GET /repos/{owner}/{repo}/pages/builds/latest"],
         getLatestRelease: ["GET /repos/{owner}/{repo}/releases/latest"],
+        getOrgRuleSuite: ["GET /orgs/{org}/rulesets/rule-suites/{rule_suite_id}"],
+        getOrgRuleSuites: ["GET /orgs/{org}/rulesets/rule-suites"],
         getOrgRuleset: ["GET /orgs/{org}/rulesets/{ruleset_id}"],
         getOrgRulesets: ["GET /orgs/{org}/rulesets"],
         getPages: ["GET /repos/{owner}/{repo}/pages"],
         getPagesBuild: ["GET /repos/{owner}/{repo}/pages/builds/{build_id}"],
+        getPagesDeployment: [
+          "GET /repos/{owner}/{repo}/pages/deployments/{pages_deployment_id}"
+        ],
         getPagesHealthCheck: ["GET /repos/{owner}/{repo}/pages/health"],
         getParticipationStats: ["GET /repos/{owner}/{repo}/stats/participation"],
         getPullRequestReviewProtection: [
@@ -3428,6 +3307,10 @@ var require_dist_node13 = __commonJS({
         getRelease: ["GET /repos/{owner}/{repo}/releases/{release_id}"],
         getReleaseAsset: ["GET /repos/{owner}/{repo}/releases/assets/{asset_id}"],
         getReleaseByTag: ["GET /repos/{owner}/{repo}/releases/tags/{tag}"],
+        getRepoRuleSuite: [
+          "GET /repos/{owner}/{repo}/rulesets/rule-suites/{rule_suite_id}"
+        ],
+        getRepoRuleSuites: ["GET /repos/{owner}/{repo}/rulesets/rule-suites"],
         getRepoRuleset: ["GET /repos/{owner}/{repo}/rulesets/{ruleset_id}"],
         getRepoRulesets: ["GET /repos/{owner}/{repo}/rulesets"],
         getStatusChecksProtection: [
@@ -3623,6 +3506,9 @@ var require_dist_node13 = __commonJS({
         ]
       },
       securityAdvisories: {
+        createFork: [
+          "POST /repos/{owner}/{repo}/security-advisories/{ghsa_id}/forks"
+        ],
         createPrivateVulnerabilityReport: [
           "POST /repos/{owner}/{repo}/security-advisories/reports"
         ],
@@ -3861,11 +3747,40 @@ var require_dist_node13 = __commonJS({
       }
     }
     var handler = {
+      has({ scope }, methodName) {
+        return endpointMethodsMap.get(scope).has(methodName);
+      },
+      getOwnPropertyDescriptor(target, methodName) {
+        return {
+          value: this.get(target, methodName),
+          configurable: true,
+          writable: true,
+          enumerable: true
+        };
+      },
+      defineProperty(target, methodName, descriptor) {
+        Object.defineProperty(target.cache, methodName, descriptor);
+        return true;
+      },
+      deleteProperty(target, methodName) {
+        delete target.cache[methodName];
+        return true;
+      },
+      ownKeys({ scope }) {
+        return [...endpointMethodsMap.get(scope).keys()];
+      },
+      set(target, methodName, value) {
+        return target.cache[methodName] = value;
+      },
       get({ octokit, scope, cache }, methodName) {
         if (cache[methodName]) {
           return cache[methodName];
         }
-        const { decorations, endpointDefaults } = endpointMethodsMap.get(scope).get(methodName);
+        const method = endpointMethodsMap.get(scope).get(methodName);
+        if (!method) {
+          return void 0;
+        }
+        const { endpointDefaults, decorations } = method;
         if (decorations) {
           cache[methodName] = decorate(
             octokit,
@@ -3947,7 +3862,7 @@ var require_dist_node13 = __commonJS({
 });
 
 // 
-var require_dist_node14 = __commonJS({
+var require_dist_node12 = __commonJS({
   ""(exports, module) {
     "use strict";
     var __defProp2 = Object.defineProperty;
@@ -3972,10 +3887,10 @@ var require_dist_node14 = __commonJS({
       Octokit: () => Octokit2
     });
     module.exports = __toCommonJS(dist_src_exports);
-    var import_core = require_dist_node10();
-    var import_plugin_request_log = require_dist_node11();
-    var import_plugin_paginate_rest = require_dist_node12();
-    var import_plugin_rest_endpoint_methods = require_dist_node13();
+    var import_core = require_dist_node8();
+    var import_plugin_request_log = require_dist_node9();
+    var import_plugin_paginate_rest = require_dist_node10();
+    var import_plugin_rest_endpoint_methods = require_dist_node11();
     var VERSION = "20.0.2";
     var Octokit2 = import_core.Octokit.plugin(
       import_plugin_request_log.requestLog,
@@ -3988,7 +3903,7 @@ var require_dist_node14 = __commonJS({
 });
 
 // 
-var import_rest = __toESM(require_dist_node14());
+var import_rest = __toESM(require_dist_node12());
 async function main() {
   const [owner, repo] = process.env.GITHUB_REPOSITORY.split("/", 2);
   const [workflowIdRaw, artifactName] = process.argv.slice(2);
@@ -4018,12 +3933,6 @@ try {
   console.error(e);
   process.exit(1);
 }
-/*!
- * is-plain-object <https://github.com/jonschlinkert/is-plain-object>
- *
- * Copyright (c) 2014-2017, Jon Schlinkert.
- * Released under the MIT License.
- */
 /**
  * @license
  * Copyright Google LLC

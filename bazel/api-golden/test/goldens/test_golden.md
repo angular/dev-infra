@@ -4,6 +4,8 @@
 
 ```ts
 
+/// <reference types="node" />
+
 // @public (undocumented)
 export const NodeTypes: NodeJS.ProcessEnv;
 
