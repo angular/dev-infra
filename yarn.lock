@@ -2440,8 +2440,8 @@ __metadata:
   linkType: hard
 
 "@codemirror/autocomplete@npm:^6.0.0, @codemirror/autocomplete@npm:^6.11.1":
-  version: 6.14.0
-  resolution: "@codemirror/autocomplete@npm:6.14.0"
+  version: 6.15.0
+  resolution: "@codemirror/autocomplete@npm:6.15.0"
   dependencies:
     "@codemirror/language": "npm:^6.0.0"
     "@codemirror/state": "npm:^6.0.0"
@@ -2452,7 +2452,7 @@ __metadata:
     "@codemirror/state": ^6.0.0
     "@codemirror/view": ^6.0.0
     "@lezer/common": ^1.0.0
-  checksum: 10c0/1b385f3b9ce397b349a306f3851ecf4d625fade048e4721a9166a8398a39422663a3a2b62781d01972807bc75b55a0788a74b7d167ee685bc7cb6eb420aecb4d
+  checksum: 10c0/bd4005a6a765dcf0132925f8050e088760d69ee1876dcec936e423609610fc35d60de3a9cdab017d330cef991fd0eb1fdb68d958aacc442fa7a191d593eaee35
   languageName: node
   linkType: hard
 
