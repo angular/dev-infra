@@ -7,7 +7,7 @@
  */
 
 import {createCipheriv} from 'crypto';
-import {k, iv, alg} from './constants';
+import {k, iv, alg} from './constants.js';
 import fs from 'fs';
 
 const [inputPath, outputPath] = process.argv.slice(2);

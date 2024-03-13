@@ -37,7 +37,6 @@ BZL_DEFAULTS_ALLOW_PACKAGES = [
     "",
     "apps",
     "bazel/browsers/update-script",
-    "circleci-orb",
     "github-actions",
     "ng-dev",
     "tools",

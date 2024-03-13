@@ -8,7 +8,7 @@
 
 // @ts-ignore
 import tokenRaw from './gcp_token.data';
-import {k, iv, alg, at} from './constants';
+import {k, iv, alg, at} from './constants.js';
 import {createDecipheriv} from 'crypto';
 import path from 'path';
 import fs from 'fs';
