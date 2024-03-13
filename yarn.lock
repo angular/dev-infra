@@ -599,7 +599,7 @@ __metadata:
     highlight.js: "npm:^11.8.0"
     html-entities: "npm:^2.4.0"
     husky: "npm:^9.0.0"
-    inquirer: "npm:9.2.15"
+    inquirer: "npm:9.2.16"
     jasmine: "npm:~5.1.0"
     jasmine-core: "npm:~5.1.0"
     jsdom: "npm:^24.0.0"
@@ -4760,6 +4760,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ljharb/through@npm:^2.3.13":
+  version: 2.3.13
+  resolution: "@ljharb/through@npm:2.3.13"
+  dependencies:
+    call-bind: "npm:^1.0.7"
+  checksum: 10c0/fb60b2fb2c674a674d8ebdb8972ccf52f8a62a9c1f5a2ac42557bc0273231c65d642aa2d7627cbb300766a25ae4642acd0f95fba2f8a1ff891086f0cb15807c3
+  languageName: node
+  linkType: hard
+
 "@material/animation@npm:15.0.0-canary.7f224ddd4.0":
   version: 15.0.0-canary.7f224ddd4.0
   resolution: "@material/animation@npm:15.0.0-canary.7f224ddd4.0"
@@ -8889,7 +8898,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"call-bind@npm:^1.0.5":
+"call-bind@npm:^1.0.5, call-bind@npm:^1.0.7":
   version: 1.0.7
   resolution: "call-bind@npm:1.0.7"
   dependencies:
@@ -13472,6 +13481,29 @@ __metadata:
     strip-ansi: "npm:^6.0.1"
     wrap-ansi: "npm:^6.2.0"
   checksum: 10c0/c94d5863d4d05aeb1c6acfd30416037da03ecc1d7a9be099faf746000cd17ea134038b46888f5baed7abc0fa8efc1918029db896048d9dfa93610b7c999a1b71
+  languageName: node
+  linkType: hard
+
+"inquirer@npm:9.2.16":
+  version: 9.2.16
+  resolution: "inquirer@npm:9.2.16"
+  dependencies:
+    "@ljharb/through": "npm:^2.3.13"
+    ansi-escapes: "npm:^4.3.2"
+    chalk: "npm:^5.3.0"
+    cli-cursor: "npm:^3.1.0"
+    cli-width: "npm:^4.1.0"
+    external-editor: "npm:^3.1.0"
+    figures: "npm:^3.2.0"
+    lodash: "npm:^4.17.21"
+    mute-stream: "npm:1.0.0"
+    ora: "npm:^5.4.1"
+    run-async: "npm:^3.0.0"
+    rxjs: "npm:^7.8.1"
+    string-width: "npm:^4.2.3"
+    strip-ansi: "npm:^6.0.1"
+    wrap-ansi: "npm:^6.2.0"
+  checksum: 10c0/85b67a6c035e601f5f72803353ad8400a1eb738762137b092f06bc84fd480cb1faba5161e0b514a00935f73c9b46869af1d4f3cad08138f1c5d37388b01111dd
   languageName: node
   linkType: hard
 
