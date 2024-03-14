@@ -26,7 +26,10 @@ export class GithubTestingRepo {
   /** Github API url for the given repository. */
   private repoApiUrl = `${this.apiEndpoint}/repos/${this.owner}/${this.name}`;
 
-  constructor(public owner: string, public name: string) {}
+  constructor(
+    public owner: string,
+    public name: string,
+  ) {}
 
   expectPullRequestToBeCreated(
     baseBranch: string,
@@ -63,7 +66,14 @@ export class GithubTestingRepo {
   }
 
   expectCommitStatusCheck(sha: string, state: 'success' | 'pending' | 'failure'): this {
-    nock(this.repoApiUrl).get(`/commits/${sha}/status`).reply(200, {state});
+    nock(this.repoApiUrl)
+      .get(`/commits/${sha}/check-runs`)
+      .reply(200, {
+        check_runs: [{status: state === 'pending' ? state : 'completed', conclusion: state}],
+      });
+    nock(this.repoApiUrl)
+      .get(`/commits/${sha}/status`)
+      .reply(200, {statuses: [{state}]});
     return this;
   }
 
