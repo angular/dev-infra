@@ -2584,13 +2584,13 @@ __metadata:
   linkType: hard
 
 "@codemirror/view@npm:^6.0.0, @codemirror/view@npm:^6.17.0, @codemirror/view@npm:^6.22.1, @codemirror/view@npm:^6.23.0":
-  version: 6.25.1
-  resolution: "@codemirror/view@npm:6.25.1"
+  version: 6.26.0
+  resolution: "@codemirror/view@npm:6.26.0"
   dependencies:
     "@codemirror/state": "npm:^6.4.0"
     style-mod: "npm:^4.1.0"
     w3c-keyname: "npm:^2.2.4"
-  checksum: 10c0/21d41c40a7d44d12fc82efe5ec87d95bc044243d18b12cac04ec40895de34ae0988001b5270a3dc8b4687d0d65054ed848134764ae9bbebcc8e0a6d1a6f09b8a
+  checksum: 10c0/588a2bfea04a3cd36a6af46da29965726e05031b05d41c20094023cf33f3c086a3ca66f86e2269e09c4e30b52b1b284b6c10af3343c3b772b6371171d41448c2
   languageName: node
   linkType: hard
 
@@ -10570,8 +10570,8 @@ __metadata:
   linkType: hard
 
 "firebase-tools@npm:^13.0.0":
-  version: 13.4.1
-  resolution: "firebase-tools@npm:13.4.1"
+  version: 13.5.0
+  resolution: "firebase-tools@npm:13.5.0"
   dependencies:
     "@google-cloud/pubsub": "npm:^3.0.1"
     abort-controller: "npm:^3.0.0"
@@ -10637,7 +10637,7 @@ __metadata:
     ws: "npm:^7.2.3"
   bin:
     firebase: lib/bin/firebase.js
-  checksum: 10c0/59d963d0f5dbc56c214cb2650b932e5fc39c7545ff7c7ad585e1016dcc32eb3db656de233131d0d08b25ec0699168940385754d9753227f03700cdaf7bcd68c7
+  checksum: 10c0/9de4f48f40b4946262ba022ba3ac1892d2cd5c64e61865ab19f39c43c95cf81643c8eefa26572b485c8db76d27f395ac5256e29832773c6d8c66a486da03ea89
   languageName: node
   linkType: hard
 
