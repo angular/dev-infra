@@ -9,7 +9,7 @@
 import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
 import {NgIf} from '@angular/common';
 import {LOCAL_STORAGE} from '../../providers/index';
-import {setCookieConsent} from '../../utils/analytics.utils';
+import {setCookieConsent} from '../../utils';
 
 /**
  * Decelare gtag as part of the window in this file as gtag is expected to already be loaded.
