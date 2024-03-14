@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+export * from './analytics.utils';
 export * from './animations.utils';
 export * from './device.utils';
 export * from './filesystem.utils';
