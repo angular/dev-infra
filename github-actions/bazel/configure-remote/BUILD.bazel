@@ -38,6 +38,7 @@ esbuild(
     deps = [":setup-bazel-remote-exec"],
 )
 
+# TODO: determine if we can use the node script directly in github actions
 nodejs_script_to_sh_script(
     name = "script",
     bundle_file = ":bundle.js",
