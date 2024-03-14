@@ -13,6 +13,7 @@ import semver from 'semver';
 import {workspaceRelativePackageJsonPath} from '../../utils/constants.js';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {isGithubApiError} from '../../utils/git/github.js';
+import githubMacros from '../../utils/git/github-macros.js';
 import {
   getFileContentsUrl,
   getListCommitsInBranchUrl,
@@ -162,15 +163,13 @@ export abstract class ReleaseAction {
    * allowing the caretaker to quickly inspect the GitHub commit status failures.
    */
   protected async assertPassingGithubStatus(commitSha: string, branchNameForError: string) {
-    const {
-      data: {state},
-    } = await this.git.github.repos.getCombinedStatusForRef({
+    const {result} = await githubMacros.getCombinedChecksAndStatusesForRef(this.git.github, {
       ...this.git.remoteParams,
       ref: commitSha,
     });
     const branchCommitsUrl = getListCommitsInBranchUrl(this.git, branchNameForError);
 
-    if (state === 'failure') {
+    if (result === 'failing' || result === null) {
       Log.error(
         `  ✘   Cannot stage release. Commit "${commitSha}" does not pass all github ` +
           'status checks. Please make sure this commit passes all checks before re-running.',
@@ -184,7 +183,7 @@ export abstract class ReleaseAction {
         return;
       }
       throw new UserAbortedReleaseActionError();
-    } else if (state === 'pending') {
+    } else if (result === 'pending') {
       Log.error(
         `  ✘   Commit "${commitSha}" still has pending github statuses that ` +
           'need to succeed before staging a release.',
