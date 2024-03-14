@@ -75,6 +75,9 @@ export async function loadTestConfig(configPath: string): Promise<CircularDepend
         }
     }
 
+    // Clone to config object. This is needed because in ESM the properties are non writeable
+    config = {...config};
+
     if (!isAbsolute(config.baseDir)) {
       config.baseDir = resolveRelativePath(config.baseDir);
     }
