@@ -72053,6 +72053,43 @@ async function isGooglerOrgMember(client, username) {
   }
   return false;
 }
+async function getCombinedChecksAndStatusesForRef(github, params4) {
+  const { data: checkResults } = await github.checks.listForRef(params4);
+  const { data: statusResults } = await github.repos.getCombinedStatusForRef(params4);
+  const results = [
+    ...checkResults.check_runs.map((result) => ({
+      type: "check",
+      name: result.name,
+      result: result.status === "completed" ? result.conclusion : result.status,
+      url: result.details_url ?? "",
+      check: result
+    })),
+    ...statusResults.statuses.map((result) => ({
+      type: "status",
+      name: result.context,
+      result: result.state,
+      description: result.description ?? "",
+      url: result.target_url ?? "",
+      status: result
+    }))
+  ];
+  return {
+    result: results.reduce((currentResult, { result }) => {
+      if (currentResult === "pending" || ["queued", "in_progress", "pending"].includes(result)) {
+        return "pending";
+      }
+      if (currentResult === "failing" || ["failure", "error", "timed_out", "cancelled"].includes(result)) {
+        return "failing";
+      }
+      return "passing";
+    }, null),
+    results
+  };
+}
+var github_macros_default = {
+  getCombinedChecksAndStatusesForRef,
+  isGooglerOrgMember
+};
 
 // 
 var enforceTestedValidation = createPullRequestValidation({ name: "assertEnforceTested", canBeForceIgnored: true }, () => Validation6);
@@ -72072,7 +72109,7 @@ function pullRequestRequiresTGP(pullRequest) {
 }
 async function pullRequestHasValidTestedComment(pullRequest, gitClient) {
   for (const { commit, bodyText, author } of pullRequest.reviews.nodes) {
-    if (commit.oid === pullRequest.headRefOid && bodyText.startsWith(`TESTED=`) && await isGooglerOrgMember(gitClient, author.login)) {
+    if (commit.oid === pullRequest.headRefOid && bodyText.startsWith(`TESTED=`) && await github_macros_default.isGooglerOrgMember(gitClient, author.login)) {
       return true;
     }
   }
@@ -72410,39 +72447,6 @@ var AuthenticatedGithubClient = class extends GithubClient {
   }
   async graphql(queryObject, params4 = {}) {
     return await this._graphql((0, import_typed_graphqlify4.query)(queryObject).toString(), params4);
-  }
-  async getCombinedChecksAndStatusesForRef(params4) {
-    const { data: checkResults } = await this.checks.listForRef(params4);
-    const { data: statusResults } = await this.repos.getCombinedStatusForRef(params4);
-    const results = [
-      ...checkResults.check_runs.map((result) => ({
-        type: "check",
-        name: result.name,
-        result: result.status === "completed" ? result.conclusion : result.status,
-        url: result.details_url,
-        check: result
-      })),
-      ...statusResults.statuses.map((result) => ({
-        type: "status",
-        name: result.context,
-        result: result.state,
-        description: result.description,
-        url: result.target_url,
-        status: result
-      }))
-    ];
-    return {
-      result: results.reduce((currentResult, { result }) => {
-        if (currentResult === "pending" || ["queued", "in_progress", "pending"].includes(result)) {
-          return "pending";
-        }
-        if (currentResult === "failing" || ["failure", "error", "timed_out", "cancelled"].includes(result)) {
-          return "failing";
-        }
-        return "passing";
-      }, null),
-      results
-    };
   }
 };
 

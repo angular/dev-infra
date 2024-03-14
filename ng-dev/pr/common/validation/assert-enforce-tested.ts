@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {GithubClient} from '../../../utils/git/github.js';
-import {isGooglerOrgMember} from '../../../utils/git/github-googlers.js';
+import {AuthenticatedGithubClient} from '../../../utils/git/github.js';
+import githubMacros from '../../../utils/git/github-macros.js';
 import {PullRequestFromGithub} from '../fetch-pull-request.js';
 import {createPullRequestValidation, PullRequestValidation} from './validation-config.js';
 import {requiresLabels} from '../labels/index.js';
@@ -20,7 +20,7 @@ export const enforceTestedValidation = createPullRequestValidation(
 );
 
 class Validation extends PullRequestValidation {
-  async assert(pullRequest: PullRequestFromGithub, gitClient: GithubClient) {
+  async assert(pullRequest: PullRequestFromGithub, gitClient: AuthenticatedGithubClient) {
     if (!pullRequestRequiresTGP(pullRequest)) {
       return;
     }
@@ -49,13 +49,13 @@ function pullRequestRequiresTGP(pullRequest: PullRequestFromGithub): boolean {
  */
 export async function pullRequestHasValidTestedComment(
   pullRequest: PullRequestFromGithub,
-  gitClient: GithubClient,
+  gitClient: AuthenticatedGithubClient,
 ): Promise<boolean> {
   for (const {commit, bodyText, author} of pullRequest.reviews.nodes) {
     if (
       commit.oid === pullRequest.headRefOid &&
       bodyText.startsWith(`TESTED=`) &&
-      (await isGooglerOrgMember(gitClient, author.login))
+      (await githubMacros.isGooglerOrgMember(gitClient, author.login))
     ) {
       return true;
     }

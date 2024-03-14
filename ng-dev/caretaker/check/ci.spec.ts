@@ -13,7 +13,7 @@ import {Log} from '../../utils/logging.js';
 import {installVirtualGitClientSpies, mockNgDevConfig} from '../../utils/testing/index.js';
 
 import {CiModule} from './ci.js';
-import {AuthenticatedGithubClient} from '../../utils/git/github.js';
+import githubMacros from '../../utils/git/github-macros.js';
 
 describe('CiModule', () => {
   let fetchActiveReleaseTrainsSpy: jasmine.Spy;
@@ -24,10 +24,10 @@ describe('CiModule', () => {
 
   beforeEach(async () => {
     installVirtualGitClientSpies();
-    combinedStatusesSpy = spyOn(
-      AuthenticatedGithubClient.prototype,
-      'getCombinedChecksAndStatusesForRef',
-    ).and.resolveTo({result: null, results: []});
+    combinedStatusesSpy = spyOn(githubMacros, 'getCombinedChecksAndStatusesForRef').and.resolveTo({
+      result: null,
+      results: [],
+    } as any);
     fetchActiveReleaseTrainsSpy = spyOn(ActiveReleaseTrains, 'fetch');
     infoSpy = spyOn(Log, 'info');
     debugSpy = spyOn(Log, 'debug');
@@ -41,15 +41,15 @@ describe('CiModule', () => {
       const module = new CiModule(git, {caretaker: {}, ...mockNgDevConfig});
       await module.data;
 
-      expect(combinedStatusesSpy).toHaveBeenCalledWith({
+      expect(combinedStatusesSpy).toHaveBeenCalledWith(jasmine.anything(), {
         ...git.remoteParams,
         ref: trains.releaseCandidate.branchName,
       });
-      expect(combinedStatusesSpy).toHaveBeenCalledWith({
+      expect(combinedStatusesSpy).toHaveBeenCalledWith(jasmine.anything(), {
         ...git.remoteParams,
         ref: trains.latest.branchName,
       });
-      expect(combinedStatusesSpy).toHaveBeenCalledWith({
+      expect(combinedStatusesSpy).toHaveBeenCalledWith(jasmine.anything(), {
         ...git.remoteParams,
         ref: trains.next.branchName,
       });
@@ -62,11 +62,11 @@ describe('CiModule', () => {
       const module = new CiModule(git, {caretaker: {}, ...mockNgDevConfig});
       await module.data;
 
-      expect(combinedStatusesSpy).toHaveBeenCalledWith({
+      expect(combinedStatusesSpy).toHaveBeenCalledWith(jasmine.anything(), {
         ...git.remoteParams,
         ref: trains.latest.branchName,
       });
-      expect(combinedStatusesSpy).toHaveBeenCalledWith({
+      expect(combinedStatusesSpy).toHaveBeenCalledWith(jasmine.anything(), {
         ...git.remoteParams,
         ref: trains.next.branchName,
       });

@@ -26679,39 +26679,6 @@ var AuthenticatedGithubClient = class extends GithubClient {
   async graphql(queryObject, params2 = {}) {
     return await this._graphql((0, import_typed_graphqlify2.query)(queryObject).toString(), params2);
   }
-  async getCombinedChecksAndStatusesForRef(params2) {
-    const { data: checkResults } = await this.checks.listForRef(params2);
-    const { data: statusResults } = await this.repos.getCombinedStatusForRef(params2);
-    const results = [
-      ...checkResults.check_runs.map((result) => ({
-        type: "check",
-        name: result.name,
-        result: result.status === "completed" ? result.conclusion : result.status,
-        url: result.details_url,
-        check: result
-      })),
-      ...statusResults.statuses.map((result) => ({
-        type: "status",
-        name: result.context,
-        result: result.state,
-        description: result.description,
-        url: result.target_url,
-        status: result
-      }))
-    ];
-    return {
-      result: results.reduce((currentResult, { result }) => {
-        if (currentResult === "pending" || ["queued", "in_progress", "pending"].includes(result)) {
-          return "pending";
-        }
-        if (currentResult === "failing" || ["failure", "error", "timed_out", "cancelled"].includes(result)) {
-          return "failing";
-        }
-        return "passing";
-      }, null),
-      results
-    };
-  }
 };
 
 // 

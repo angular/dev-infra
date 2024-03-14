@@ -12,6 +12,7 @@ import {
   ReleaseRepoWithApi,
   ReleaseTrain,
 } from '../../release/versioning/index.js';
+import githubMacros from '../../utils/git/github-macros.js';
 
 import {bold, Log} from '../../utils/logging.js';
 import {BaseModule} from './base.js';
@@ -48,16 +49,18 @@ export class CiModule extends BaseModule<CiData> {
           };
         }
 
+        const status = (
+          await githubMacros.getCombinedChecksAndStatusesForRef(this.git.github, {
+            ...this.git.remoteParams,
+            ref: train.branchName,
+          })
+        ).result;
+
         return {
           active: true,
           name: train.branchName,
           label: `${trainName} (${train.branchName})`,
-          status: (
-            await this.git.github.getCombinedChecksAndStatusesForRef({
-              ...this.git.remoteParams,
-              ref: train.branchName,
-            })
-          ).result,
+          status,
         };
       },
     );
