@@ -81,5 +81,5 @@ outputs:
     description: The number of the created pull request or an empty string (if no pull request was created).
 
 runs:
-  using: node16
+  using: 'node20'
   main: main.js
