@@ -6,21 +6,24 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {marked} from 'marked';
-import {rewriteLinks} from '../backwards-compatibility/links-mapper';
 import {JsDocTagEntry} from '../entities';
+import {marked} from 'marked';
+
+import {rewriteLinks} from '../backwards-compatibility/links-mapper';
 import {isDeprecatedEntry, isDeveloperPreview} from '../entities/categorization';
 import {LinkEntryRenderable} from '../entities/renderables';
 import {
   HasAdditionalLinks,
   HasDeprecatedFlag,
   HasDescription,
+  HasDeveloperPreviewFlag,
   HasHtmlDescription,
   HasHtmlUsageNotes,
   HasJsDocTags,
   HasModuleName,
   HasRenderableJsDocTags,
 } from '../entities/traits';
+
 import {getLinkToModule} from './url-transforms';
 
 export const JS_DOC_USAGE_NOTES_TAG = 'usageNotes';
@@ -95,7 +98,9 @@ export function getHtmlForJsDocText(text: string): string {
   return marked.parse(wrapExampleHtmlElementsWithCode(text)) as string;
 }
 
-export function setEntryFlags<T extends HasJsDocTags>(entry: T): T & HasDeprecatedFlag {
+export function setEntryFlags<T extends HasJsDocTags>(
+  entry: T,
+): T & HasDeprecatedFlag & HasDeveloperPreviewFlag {
   return {
     ...entry,
     isDeprecated: isDeprecatedEntry(entry),
@@ -143,9 +148,11 @@ function getHtmlAdditionalLinks<T extends HasJsDocTags & HasModuleName>(
   return seeAlsoLinks;
 }
 
-/** Some descriptions in the text contain HTML elements like `input` or `img`,
+/**
+ * Some descriptions in the text contain HTML elements like `input` or `img`,
  *  we should wrap such elements using `code`.
- *  Otherwise DocViewer will try to render those elements. */
+ *  Otherwise DocViewer will try to render those elements.
+ */
 function wrapExampleHtmlElementsWithCode(text: string) {
   return text
     .replaceAll(`'<input>'`, `<code><input></code>`)

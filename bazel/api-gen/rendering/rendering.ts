@@ -7,23 +7,26 @@
  */
 
 import {render} from 'preact-render-to-string';
+
 import {
   isClassEntry,
+  isCliEntry,
   isConstantEntry,
   isEnumEntry,
-  isInterfaceEntry,
   isFunctionEntry,
+  isInitializerApiFunctionEntry,
+  isInterfaceEntry,
   isTypeAliasEntry,
-  isCliEntry,
 } from './entities/categorization';
 import {CliCommandRenderable, DocEntryRenderable} from './entities/renderables';
 import {ClassReference} from './templates/class-reference';
+import {CliCommandReference} from './templates/cli-reference';
 import {ConstantReference} from './templates/constant-reference';
+import {DocsReference} from './templates/docs-reference';
 import {EnumReference} from './templates/enum-reference';
 import {FunctionReference} from './templates/function-reference';
-import {CliCommandReference} from './templates/cli-reference';
+import {InitializerApiFunction} from './templates/initializer-api-function';
 import {TypeAliasReference} from './templates/type-alias-reference';
-import {DocsReference} from './templates/docs-reference';
 
 /** Given a doc entry, get the transformed version of the entry for rendering. */
 export function renderEntry(renderable: DocEntryRenderable | CliCommandRenderable): string {
@@ -45,6 +48,9 @@ export function renderEntry(renderable: DocEntryRenderable | CliCommandRenderabl
   }
   if (isTypeAliasEntry(renderable)) {
     return render(TypeAliasReference(renderable));
+  }
+  if (isInitializerApiFunctionEntry(renderable)) {
+    return render(InitializerApiFunction(renderable));
   }
 
   // Fall back rendering nothing while in development.

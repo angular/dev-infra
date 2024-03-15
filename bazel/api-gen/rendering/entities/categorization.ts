@@ -1,4 +1,3 @@
-import {CliCommand} from '../cli-entities';
 import {
   ClassEntry,
   ConstantEntry,
@@ -6,6 +5,7 @@ import {
   EntryType,
   EnumEntry,
   FunctionEntry,
+  InitializerApiFunctionEntry,
   InterfaceEntry,
   MemberEntry,
   MemberType,
@@ -13,17 +13,21 @@ import {
   PropertyEntry,
   TypeAliasEntry,
 } from '../entities';
+
+import {CliCommand} from '../cli-entities';
+
 import {
   ClassEntryRenderable,
+  CliCommandRenderable,
   ConstantEntryRenderable,
   DocEntryRenderable,
   EnumEntryRenderable,
   FunctionEntryRenderable,
+  InitializerApiFunctionRenderable,
   InterfaceEntryRenderable,
   MemberEntryRenderable,
   MethodEntryRenderable,
   TypeAliasEntryRenderable,
-  CliCommandRenderable,
 } from './renderables';
 import {HasJsDocTags} from './traits';
 
@@ -83,6 +87,18 @@ export function isFunctionEntry(entry: DocEntryRenderable): entry is FunctionEnt
 export function isFunctionEntry(entry: DocEntry): entry is FunctionEntry;
 export function isFunctionEntry(entry: DocEntry): entry is FunctionEntry {
   return entry.entryType === EntryType.Function;
+}
+
+export function isInitializerApiFunctionEntry(
+  entry: DocEntryRenderable,
+): entry is InitializerApiFunctionRenderable;
+export function isInitializerApiFunctionEntry(
+  entry: DocEntry,
+): entry is InitializerApiFunctionEntry;
+export function isInitializerApiFunctionEntry(
+  entry: DocEntry,
+): entry is InitializerApiFunctionEntry {
+  return entry.entryType === EntryType.InitializerApiFunction;
 }
 
 /** Gets whether the given entry represents a property */

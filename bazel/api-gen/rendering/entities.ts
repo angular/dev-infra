@@ -20,11 +20,13 @@ export enum EntryType {
   Element = 'element',
   Enum = 'enum',
   Function = 'function',
+  FunctionWithOverloads = 'function_with_overloads',
   Interface = 'interface',
   NgModule = 'ng_module',
   Pipe = 'pipe',
   TypeAlias = 'type_alias',
   UndecoratedClass = 'undecorated_class',
+  InitializerApiFunction = 'initializer_api_function',
 }
 
 /** Types of class members */
@@ -74,8 +76,6 @@ export interface DocEntry {
   description: string;
   rawComment: string;
   jsdocTags: JsDocTagEntry[];
-  isDeprecated: boolean;
-  isDeveloperPreview: boolean;
 }
 
 /** Documentation entity for a constant. */
@@ -126,6 +126,7 @@ export interface FunctionEntry extends DocEntry {
   params: ParameterEntry[];
   returnType: string;
   generics: GenericEntry[];
+  isNewType: boolean;
 }
 
 /** Sub-entry for a single class or enum member. */
@@ -161,4 +162,27 @@ export interface ParameterEntry {
   type: string;
   isOptional: boolean;
   isRestParam: boolean;
+}
+
+export interface FunctionWithOverloads {
+  name: string;
+  signatures: FunctionEntry[];
+  implementation: FunctionEntry | null;
+}
+
+export interface InitializerApiFunctionEntry extends DocEntry {
+  callFunction: FunctionWithOverloads;
+  subFunctions: FunctionWithOverloads[];
+
+  __adevMetadata__?: {
+    /**
+     * Whether types are should be shown in the signature
+     * preview of docs.
+     *
+     * By default, for readability purposes, types are omitted, but
+     * shorter initializer API functions like `output` may decide to
+     * render these types.
+     */
+    showTypesInSignaturePreview?: boolean;
+  };
 }

@@ -1,9 +1,10 @@
 import {JsDocTagEntry, MemberEntry, ParameterEntry} from '../entities';
+
 import {
   CodeLineRenderable,
   JsDocTagRenderable,
-  MemberEntryRenderable,
   LinkEntryRenderable,
+  MemberEntryRenderable,
   ParameterEntryRenderable,
 } from './renderables';
 
@@ -79,4 +80,8 @@ export interface HasRenderableParams {
 
 export interface HasDeprecatedFlag {
   isDeprecated: boolean;
+}
+
+export interface HasDeveloperPreviewFlag {
+  isDeveloperPreview: boolean;
 }
