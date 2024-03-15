@@ -10,11 +10,11 @@ import {RendererThis, Token, TokenizerThis, Tokens} from 'marked';
 
 /** Enum of all available alert severities. */
 export enum AlertSeverityLevel {
-  Note = 'Note',
-  Tip = 'Tip',
+  Note = 'NOTE',
+  Tip = 'TIP',
   TODO = 'TODO',
   QUESTION = 'QUESTION',
-  Summary = 'Summary',
+  Summary = 'SUMMARY',
   TLDR = 'TLDR',
   CRITICAL = 'CRITICAL',
   IMPORTANT = 'IMPORTANT',
