@@ -20,7 +20,6 @@ export enum EntryType {
   Element = 'element',
   Enum = 'enum',
   Function = 'function',
-  FunctionWithOverloads = 'function_with_overloads',
   Interface = 'interface',
   NgModule = 'ng_module',
   Pipe = 'pipe',
