@@ -1,0 +1,45 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin", "generated_file_test", "nodejs_binary")
+load("//tools:defaults.bzl", "esbuild", "ts_library")
+
+copy_to_bin(
+    name = "saucelabs_token",
+    srcs = ["saucelabs_token.data"],
+)
+
+ts_library(
+    name = "saucelabs",
+    srcs = glob(["*.ts"]),
+    # TODO(devversion): Remove this when `ts_library` supports `.mts` extension.
+    devmode_module = "commonjs",
+    deps = [
+        "@npm//@actions/core",
+        "@npm//@types/node",
+    ],
+)
+
+nodejs_binary(
+    name = "encrypt",
+    data = [":saucelabs"],
+    entry_point = ":encrypt.ts",
+)
+
+esbuild(
+    name = "bundle",
+    srcs = [":saucelabs_token"],
+    args = {
+        "loader": {
+            ".data": "binary",
+        },
+    },
+    entry_point = "index.ts",
+    format = "iife",
+    minify = True,
+    sourcemap = "",
+    deps = [":saucelabs"],
+)
+
+generated_file_test(
+    name = "set_saucelabs_env",
+    src = "set-saucelabs-env.cjs",
+    generated = ":bundle.js",
+)
