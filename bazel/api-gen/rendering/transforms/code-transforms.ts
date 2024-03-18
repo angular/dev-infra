@@ -136,7 +136,7 @@ export function mapDocEntryToCode(entry: DocEntry): CodeTableOfContentsData {
 
   if (isInitializerApiFunctionEntry(entry)) {
     const codeLineNumbersWithIdentifiers = new Map<number, string>();
-    const showTypesInSignaturePreview = !!entry.__adevMetadata__?.showTypesInSignaturePreview;
+    const showTypesInSignaturePreview = !!entry.__docsMetadata__?.showTypesInSignaturePreview;
 
     let lines: string[] = [];
     for (const [index, callSignature] of entry.callFunction.signatures.entries()) {

@@ -174,7 +174,7 @@ export interface InitializerApiFunctionEntry extends DocEntry {
   callFunction: FunctionWithOverloads;
   subFunctions: FunctionWithOverloads[];
 
-  __adevMetadata__?: {
+  __docsMetadata__?: {
     /**
      * Whether types are should be shown in the signature
      * preview of docs.

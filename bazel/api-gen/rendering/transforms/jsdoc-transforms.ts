@@ -150,8 +150,8 @@ function getHtmlAdditionalLinks<T extends HasJsDocTags & HasModuleName>(
 
 /**
  * Some descriptions in the text contain HTML elements like `input` or `img`,
- *  we should wrap such elements using `code`.
- *  Otherwise DocViewer will try to render those elements.
+ * we should wrap such elements using `code`.
+ * Otherwise DocViewer will try to render those elements.
  */
 function wrapExampleHtmlElementsWithCode(text: string) {
   return text
