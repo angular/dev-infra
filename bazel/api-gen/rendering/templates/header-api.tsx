@@ -18,7 +18,7 @@ import {
 import {DocsPillRow} from './docs-pill-row';
 
 /** Component to render a header of the API page. */
-export function HeaderApi(props: {entry: DocEntryRenderable}) {
+export function HeaderApi(props: {entry: DocEntryRenderable, showFullDescription?: boolean}) {
   const entry = props.entry;
 
   return (
@@ -50,7 +50,7 @@ export function HeaderApi(props: {entry: DocEntryRenderable}) {
 
       <p
         className={'docs-reference-description'}
-        dangerouslySetInnerHTML={{__html: entry.shortHtmlDescription}}
+        dangerouslySetInnerHTML={{__html: props.showFullDescription ? entry.htmlDescription : entry.shortHtmlDescription}}
       ></p>
 
       <DocsPillRow links={entry.additionalLinks} />
@@ -66,6 +66,8 @@ function getEntryTypeDisplayName(entryType: EntryType | string): string {
       return 'Type Alias';
     case EntryType.UndecoratedClass:
       return 'Class';
+    case EntryType.InitializerApiFunction:
+      return 'Initializer API';
   }
   return entryType;
 }

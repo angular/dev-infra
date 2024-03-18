@@ -7,9 +7,11 @@
  */
 
 import {MemberEntry, MemberTags, MemberType} from '../entities';
+
 import {isClassMethodEntry} from '../entities/categorization';
 import {MemberEntryRenderable} from '../entities/renderables';
 import {HasMembers, HasRenderableMembers, HasRenderableMembersGroups} from '../entities/traits';
+
 import {addHtmlDescription, addHtmlJsDocTagComments, setEntryFlags} from './jsdoc-transforms';
 
 const lifecycleMethods = [

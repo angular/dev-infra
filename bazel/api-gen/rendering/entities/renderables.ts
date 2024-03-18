@@ -6,18 +6,22 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {CliCommand, CliOption} from '../cli-entities';
 import {
   ClassEntry,
   ConstantEntry,
   DocEntry,
   EnumEntry,
   FunctionEntry,
+  InitializerApiFunctionEntry,
   JsDocTagEntry,
   MemberEntry,
   ParameterEntry,
   TypeAliasEntry,
 } from '../entities';
+
+import {CliCommand, CliOption} from '../cli-entities';
+
+import {HasRenderableToc} from './traits';
 
 /** JsDoc tag info augmented with transformed content for rendering. */
 export interface JsDocTagRenderable extends JsDocTagEntry {
@@ -32,6 +36,8 @@ export interface DocEntryRenderable extends DocEntry {
   jsdocTags: JsDocTagRenderable[];
   additionalLinks: LinkEntryRenderable[];
   htmlUsageNotes: string;
+  isDeprecated: boolean;
+  isDeveloperPreview: boolean;
 }
 
 /** Documentation entity for a constant augmented transformed content for rendering. */
@@ -118,3 +124,8 @@ export type CliCommandRenderable = CliCommand & {
   hasOptions: boolean;
   subcommands?: CliCommandRenderable[];
 };
+
+export interface InitializerApiFunctionRenderable
+  extends Omit<InitializerApiFunctionEntry, 'jsdocTags'>,
+    DocEntryRenderable,
+    HasRenderableToc {}

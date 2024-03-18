@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import highlightJs from 'highlight.js';
 import {
   DocEntry,
   FunctionEntry,
@@ -15,6 +14,8 @@ import {
   ParameterEntry,
   PropertyEntry,
 } from '../entities';
+import highlightJs from 'highlight.js';
+
 import {
   isClassEntry,
   isClassMethodEntry,
@@ -23,12 +24,14 @@ import {
   isEnumEntry,
   isFunctionEntry,
   isGetterEntry,
+  isInitializerApiFunctionEntry,
   isInterfaceEntry,
   isSetterEntry,
   isTypeAliasEntry,
 } from '../entities/categorization';
 import {CodeLineRenderable} from '../entities/renderables';
 import {HasModuleName, HasRenderableToc} from '../entities/traits';
+
 import {filterLifecycleMethods, mergeGettersAndSetters} from './member-transforms';
 
 // Allows to generate links for code lines.
@@ -131,6 +134,51 @@ export function mapDocEntryToCode(entry: DocEntry): CodeTableOfContentsData {
     };
   }
 
+  if (isInitializerApiFunctionEntry(entry)) {
+    const codeLineNumbersWithIdentifiers = new Map<number, string>();
+    const showTypesInSignaturePreview = !!entry.__docsMetadata__?.showTypesInSignaturePreview;
+
+    let lines: string[] = [];
+    for (const [index, callSignature] of entry.callFunction.signatures.entries()) {
+      lines.push(
+        printInitializerFunctionSignatureLine(
+          callSignature.name,
+          callSignature,
+          showTypesInSignaturePreview,
+        ),
+      );
+      const id = `${callSignature.name}_${index}`;
+      codeLineNumbersWithIdentifiers.set(lines.length - 1, id);
+    }
+
+    if (Object.keys(entry.subFunctions).length > 0) {
+      lines.push('');
+
+      for (const [i, subFunction] of entry.subFunctions.entries()) {
+        for (const [index, subSignature] of subFunction.signatures.entries()) {
+          lines.push(
+            printInitializerFunctionSignatureLine(
+              `${entry.name}.${subFunction.name}`,
+              subSignature,
+              showTypesInSignaturePreview,
+            ),
+          );
+          const id = `${entry.name}_${subFunction.name}_${index}`;
+          codeLineNumbersWithIdentifiers.set(lines.length - 1, id);
+        }
+        if (i < entry.subFunctions.length - 1) {
+          lines.push('');
+        }
+      }
+    }
+
+    return {
+      contents: lines.join('\n'),
+      codeLineNumbersWithIdentifiers,
+      deprecatedLineNumbers: [],
+    };
+  }
+
   if (isTypeAliasEntry(entry)) {
     const isDeprecated = isDeprecatedEntry(entry);
     const contents = `type ${entry.name} = ${entry.type}`;
@@ -166,7 +214,8 @@ function getCodeTocData(members: MemberEntry[], hasPrefixLine: boolean): CodeTab
     codeLineNumbersWithIdentifiers: new Map<number, string>(),
     deprecatedLineNumbers: [],
   };
-  // In case when hasPrefixLine is true we should take it into account when we're generating `codeLineNumbersWithIdentifiers` below.
+  // In case when hasPrefixLine is true we should take it into account when we're generating
+  // `codeLineNumbersWithIdentifiers` below.
   const skip = !!hasPrefixLine ? 1 : 0;
 
   return members.reduce((acc: CodeTableOfContentsData, curr: MemberEntry, index: number) => {
@@ -211,13 +260,11 @@ function getMethodCodeLine(
     }`;
   };
 
-  return `${memberTags.join(' ')} ${member.name}(${
-    displayParamsInNewLines ? '\n  ' : ''
-  }${member.params
+  return `${memberTags.join(' ')} ${member.name}(${displayParamsInNewLines ? '\n  ' : ''}${member.params
     .map((param) => mapParamEntry(param))
-    .join(`,${displayParamsInNewLines ? '\n  ' : ' '}`)}${displayParamsInNewLines ? '\n' : ''}): ${
-    member.returnType
-  };`.trim();
+    .join(`,${displayParamsInNewLines ? '\n  ' : ' '}`)}${
+    displayParamsInNewLines ? '\n' : ''
+  }): ${member.returnType};`.trim();
 }
 
 function getGetterCodeLine(member: PropertyEntry): string {
@@ -248,6 +295,49 @@ function getTags(member: PropertyEntry): string[] {
 
 function getNumberOfLinesOfCode(contents: string): number {
   return contents.split('\n').length;
+}
+
+/** Prints an initializer function signature into a single line. */
+export function printInitializerFunctionSignatureLine(
+  name: string,
+  signature: FunctionEntry,
+  showTypesInSignaturePreview: boolean,
+): string {
+  let res = name;
+  if (signature.generics.length > 0) {
+    res += '<';
+    for (let i = 0; i < signature.generics.length; i++) {
+      const generic = signature.generics[i];
+      res += generic.name;
+      if (generic.default !== undefined) {
+        res += ` = ${generic.default}`;
+      }
+      if (i < signature.generics.length - 1) {
+        res += ', ';
+      }
+    }
+    res += '>';
+  }
+  res += '(';
+  for (let i = 0; i < signature.params.length; i++) {
+    const param = signature.params[i];
+    if (param.isRestParam) {
+      res += '...';
+    }
+    res += `${param.name}${markOptional(param.isOptional)}`;
+    if (showTypesInSignaturePreview) {
+      res += `: ${param.type}`;
+    }
+    if (i < signature.params.length - 1) {
+      res += ', ';
+    }
+  }
+  res += ')';
+  if (showTypesInSignaturePreview) {
+    res += `: ${signature.returnType}`;
+  }
+  res += ';';
+  return res;
 }
 
 function appendPrefixAndSuffix(entry: DocEntry, codeTocData: CodeTableOfContentsData): void {
