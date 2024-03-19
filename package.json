@@ -29,7 +29,7 @@
     "@bazel/runfiles": "5.8.1",
     "@bazel/terser": "5.8.1",
     "@bazel/typescript": "5.8.1",
-    "@microsoft/api-extractor": "7.42.3",
+    "@microsoft/api-extractor": "7.43.0",
     "@types/browser-sync": "^2.26.3",
     "@types/node": "^18.19.21",
     "@types/selenium-webdriver": "^4.1.21",
