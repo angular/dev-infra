@@ -2,10 +2,6 @@ load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin", "generated_file_tes
 load("//tools:defaults.bzl", "esbuild", "ts_library")
 load("//tools/node-to-shell-script:index.bzl", "nodejs_script_to_sh_script")
 
-copy_to_bin(
-    name = "gcp_token",
-    srcs = ["gcp_token.data"],
-)
 
 ts_library(
     name = "setup-bazel-remote-exec",
@@ -17,32 +13,13 @@ ts_library(
     ],
 )
 
-nodejs_binary(
-    name = "encrypt",
-    data = [":setup-bazel-remote-exec"],
-    entry_point = ":encrypt.ts",
-)
-
 esbuild(
     name = "bundle",
-    srcs = [":gcp_token"],
-    args = {
-        "loader": {
-            ".data": "binary",
-        },
-    },
     entry_point = "index.ts",
     format = "iife",
     minify = True,
     sourcemap = "",
     deps = [":setup-bazel-remote-exec"],
-)
-
-# TODO: determine if we can use the node script directly in github actions
-nodejs_script_to_sh_script(
-    name = "script",
-    bundle_file = ":bundle.js",
-    output_file = "script.sh",
 )
 
 generated_file_test(

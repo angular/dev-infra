@@ -11,7 +11,8 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-permissions: {}
+permissions:
+  id-token: write
 
 defaults:
   run:
