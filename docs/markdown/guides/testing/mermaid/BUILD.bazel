@@ -52,6 +52,9 @@ jasmine_node_test(
         "playwright-core",
     ],
     specs = [":unit_test_lib"],
+    tags = [
+        "no-remote-exec",
+    ],
     toolchains = [
         "//bazel/browsers/chromium:toolchain_alias",
     ],
