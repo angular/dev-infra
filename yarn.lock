@@ -935,6 +935,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/code-frame@npm:^7.24.2":
+  version: 7.24.2
+  resolution: "@babel/code-frame@npm:7.24.2"
+  dependencies:
+    "@babel/highlight": "npm:^7.24.2"
+    picocolors: "npm:^1.0.0"
+  checksum: 10c0/d1d4cba89475ab6aab7a88242e1fd73b15ecb9f30c109b69752956434d10a26a52cbd37727c4eca104b6d45227bd1dfce39a6a6f4a14c9b2f07f871e968cf406
+  languageName: node
+  linkType: hard
+
 "@babel/compat-data@npm:^7.22.6, @babel/compat-data@npm:^7.23.5":
   version: 7.23.5
   resolution: "@babel/compat-data@npm:7.23.5"
@@ -989,11 +999,11 @@ __metadata:
   linkType: hard
 
 "@babel/core@npm:^7.12.3, @babel/core@npm:^7.16.0":
-  version: 7.24.1
-  resolution: "@babel/core@npm:7.24.1"
+  version: 7.24.3
+  resolution: "@babel/core@npm:7.24.3"
   dependencies:
     "@ampproject/remapping": "npm:^2.2.0"
-    "@babel/code-frame": "npm:^7.24.1"
+    "@babel/code-frame": "npm:^7.24.2"
     "@babel/generator": "npm:^7.24.1"
     "@babel/helper-compilation-targets": "npm:^7.23.6"
     "@babel/helper-module-transforms": "npm:^7.23.3"
@@ -1007,7 +1017,7 @@ __metadata:
     gensync: "npm:^1.0.0-beta.2"
     json5: "npm:^2.2.3"
     semver: "npm:^6.3.1"
-  checksum: 10c0/b085b0bc65c225f20b9d5f7b05c8b127c005a73c355d4a7480f099de5d6757abafa7f60786eb95e6d098a6b5c34618e7b0950d60ef55139db04d8767d410e0a9
+  checksum: 10c0/e6e756b6de27d0312514a005688fa1915c521ad4269a388913eff2120a546538078f8488d6d16e86f851872f263cb45a6bbae08738297afb9382600d2ac342a9
   languageName: node
   linkType: hard
 
@@ -1330,6 +1340,18 @@ __metadata:
     js-tokens: "npm:^4.0.0"
     picocolors: "npm:^1.0.0"
   checksum: 10c0/39520f655101245efd44a6e5997e73e2b977f8e2011897022ec81fa5b0366dbfef5313bdebadbd08186f52b7e9c21b38ba265cc78caa0c6a8c894461e7a70430
+  languageName: node
+  linkType: hard
+
+"@babel/highlight@npm:^7.24.2":
+  version: 7.24.2
+  resolution: "@babel/highlight@npm:7.24.2"
+  dependencies:
+    "@babel/helper-validator-identifier": "npm:^7.22.20"
+    chalk: "npm:^2.4.2"
+    js-tokens: "npm:^4.0.0"
+    picocolors: "npm:^1.0.0"
+  checksum: 10c0/98ce00321daedeed33a4ed9362dc089a70375ff1b3b91228b9f05e6591d387a81a8cba68886e207861b8871efa0bc997ceabdd9c90f6cce3ee1b2f7f941b42db
   languageName: node
   linkType: hard
 
@@ -10647,8 +10669,8 @@ __metadata:
   linkType: hard
 
 "firebase-functions@npm:^4.0.0":
-  version: 4.8.0
-  resolution: "firebase-functions@npm:4.8.0"
+  version: 4.8.1
+  resolution: "firebase-functions@npm:4.8.1"
   dependencies:
     "@types/cors": "npm:^2.8.5"
     "@types/express": "npm:4.17.3"
@@ -10660,13 +10682,13 @@ __metadata:
     firebase-admin: ^10.0.0 || ^11.0.0 || ^12.0.0
   bin:
     firebase-functions: lib/bin/firebase-functions.js
-  checksum: 10c0/caef218e0de1bbc6bdbd3d5ddd6fdd91602f4aaf60ab4bd3307a5ec0931bc45a77b36ee8f7c21c279590a4e9cc6873ff8d4e516096f9bd844e382a1164b13af2
+  checksum: 10c0/e1461ac7f96f2328dd46c1ed10b21cea5afaa41af9c161c8c25916d6530327c3bcff02e160134020cb3668115f482d647970201d28e26a7a3b5d98f941f1f4e3
   languageName: node
   linkType: hard
 
 "firebase-tools@npm:^13.0.0":
-  version: 13.5.1
-  resolution: "firebase-tools@npm:13.5.1"
+  version: 13.5.2
+  resolution: "firebase-tools@npm:13.5.2"
   dependencies:
     "@google-cloud/pubsub": "npm:^3.0.1"
     abort-controller: "npm:^3.0.0"
@@ -10732,7 +10754,7 @@ __metadata:
     ws: "npm:^7.2.3"
   bin:
     firebase: lib/bin/firebase.js
-  checksum: 10c0/e8885928b6bfa67ee0f2baa9de13438a2d735a2882aabaa66ddc267abed98f0db92e4648daeb8b2cfad3ab7264b0f0fe1fd234df7d8dc1ad96177ef7b328abac
+  checksum: 10c0/4faa496f2ec1e6acb76d03e2eb3a4c7c3de91f0b1662433c6d79ef93517defcb228290d9d8ef5873ee47926263bbbe664c85ee1b362d8549557b241e9b35d751
   languageName: node
   linkType: hard
 
@@ -15756,20 +15778,20 @@ __metadata:
   linkType: hard
 
 "preact-render-to-string@npm:^6.2.1":
-  version: 6.4.0
-  resolution: "preact-render-to-string@npm:6.4.0"
+  version: 6.4.1
+  resolution: "preact-render-to-string@npm:6.4.1"
   dependencies:
     pretty-format: "npm:^3.8.0"
   peerDependencies:
     preact: ">=10"
-  checksum: 10c0/d15f50963995867bc52248d9acfab38fbd2d2ee694ead5594d203bba790e469f5e5d549466ab6d4966320a521256e403035344d9d886eab97e02b5054a4dae88
+  checksum: 10c0/33c87d2795d314860a6ff38a4617371ab737f40febf4e25e01709d123da2f00bd5bc8fae301220023870a3f979f0ac394cc3d24e2d05cad93b4c28d005310458
   languageName: node
   linkType: hard
 
 "preact@npm:^10.17.1":
-  version: 10.19.7
-  resolution: "preact@npm:10.19.7"
-  checksum: 10c0/27ee3eb40bdc83cc917c29b74526537ff05922dca210818999d7d5b546619fc6dcb7d6460b54198c018ba62c43b59e914676a8cb91548a2dfac3eee8efae334d
+  version: 10.20.0
+  resolution: "preact@npm:10.20.0"
+  checksum: 10c0/c76e91990ebea73e34d0447801892e593b84acb3e0034a01753f3e11c904039801a4766d54a2e29d89b7ef0621a55cfc2417e85d7213ff8cd72739f495d55e80
   languageName: node
   linkType: hard
 
