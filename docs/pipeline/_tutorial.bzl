@@ -53,10 +53,10 @@ generate_tutorial = rule(
         ),
         "common_srcs": attr.label(
             doc = """The directory containing the base files to expand upon.""",
-            default = Label("//docs/markdown/tutorial/common:files"),
+            default = Label("//docs/pipeline/tutorials/common:files"),
         ),
         "_generate_tutorial": attr.label(
-            default = Label("//docs/markdown:tutorial"),
+            default = Label("//docs/pipeline:tutorial"),
             executable = True,
             cfg = "exec",
         ),

@@ -38,7 +38,7 @@ ts_library(
 )
 
 ts_library(
-    name = "tutorial",
+    name = "tutorials",
     srcs = [
         "tutorial.ts",
     ],

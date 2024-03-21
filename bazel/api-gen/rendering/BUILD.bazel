@@ -36,7 +36,7 @@ ts_library(
     tsconfig = "//:tsconfig.json",
     visibility = [
         "//bazel/api-gen/rendering:__pkg__",
-        "//docs/markdown/guides:__pkg__",
+        "//docs/pipeline/guides:__pkg__",
     ],
 )
 

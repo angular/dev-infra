@@ -76,13 +76,13 @@ generate_guides = rule(
 
         # The executable for this rule (private).
         "_generate_guides": attr.label(
-            default = Label("//docs/markdown:markdown"),
+            default = Label("//docs/pipeline:markdown"),
             executable = True,
             cfg = "exec",
         ),
         # The executable for this rule when no mermaid process is required (private).
         "_generate_guides_no_mermaid": attr.label(
-            default = Label("//docs/markdown:markdown_no_mermaid"),
+            default = Label("//docs/pipeline:markdown_no_mermaid"),
             executable = True,
             cfg = "exec",
         ),

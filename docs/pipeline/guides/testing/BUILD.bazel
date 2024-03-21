@@ -7,7 +7,7 @@ ts_library(
         "**/*.spec.ts",
     ]),
     deps = [
-        "//docs/markdown/guides",
+        "//docs/pipeline/guides",
         "@npm//@bazel/runfiles",
         "@npm//@types/jasmine",
         "@npm//@types/jsdom",
