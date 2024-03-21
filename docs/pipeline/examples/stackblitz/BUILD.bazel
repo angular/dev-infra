@@ -13,8 +13,8 @@ ts_library(
         ],
     ),
     deps = [
-        "//docs/markdown/examples/shared",
-        "//docs/markdown/guides",
+        "//docs/pipeline/examples/shared",
+        "//docs/pipeline/guides",
         "@npm//@types/jsdom",
         "@npm//@types/node",
         "@npm//fast-glob",

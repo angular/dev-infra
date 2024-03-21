@@ -14,8 +14,8 @@ ts_library(
     ),
     deps = [
         "//docs/interfaces",
-        "//docs/markdown/examples/shared",
-        "//docs/markdown/guides",
+        "//docs/pipeline/examples/shared",
+        "//docs/pipeline/guides",
         "@npm//@types/node",
         "@npm//fast-glob",
         "@npm//jszip",

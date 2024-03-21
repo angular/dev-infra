@@ -5,14 +5,14 @@ load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 # the package.
 load("//tools:defaults.bzl", "esbuild_esm_bundle")
 
-package(default_visibility = ["//docs/markdown:__subpackages__"])
+package(default_visibility = ["//docs/pipeline:__subpackages__"])
 
 esbuild_esm_bundle(
     name = "guides",
     define = {
         "HANDLE_MERMAID": "true",
     },
-    entry_point = "//docs/markdown/guides:index.ts",
+    entry_point = "//docs/pipeline/guides:index.ts",
     # JSDOM should not be bundled because it has workers and dynamic imports.
     # playwright-core cannot be bundled because of its cjs usage.
     external = [
@@ -24,7 +24,7 @@ esbuild_esm_bundle(
     target = "es2022",
     visibility = ["//visibility:public"],
     deps = [
-        "//docs/markdown/guides:index",
+        "//docs/pipeline/guides:index",
     ],
 )
 
@@ -33,7 +33,7 @@ esbuild_esm_bundle(
     define = {
         "HANDLE_MERMAID": "false",
     },
-    entry_point = "//docs/markdown/guides:index.ts",
+    entry_point = "//docs/pipeline/guides:index.ts",
     # JSDOM should not be bundled because it has workers and dynamic imports.
     external = [
         "jsdom",
@@ -43,13 +43,13 @@ esbuild_esm_bundle(
     target = "es2022",
     visibility = ["//visibility:public"],
     deps = [
-        "//docs/markdown/guides:index",
+        "//docs/pipeline/guides:index",
     ],
 )
 
 esbuild_esm_bundle(
     name = "stackblitz-bundle",
-    entry_point = "//docs/markdown/examples/stackblitz:index.ts",
+    entry_point = "//docs/pipeline/examples/stackblitz:index.ts",
     # JSDOM should not be bundled because it has workers and dynamic imports.
     external = ["jsdom"],
     output = "stackblitz.mjs",
@@ -57,43 +57,43 @@ esbuild_esm_bundle(
     target = "es2022",
     visibility = ["//visibility:public"],
     deps = [
-        "//docs/markdown/examples/stackblitz:index",
+        "//docs/pipeline/examples/stackblitz:index",
     ],
 )
 
 esbuild_esm_bundle(
     name = "zip-bundle",
-    entry_point = "//docs/markdown/examples/zip:index.ts",
+    entry_point = "//docs/pipeline/examples/zip:index.ts",
     output = "zip.mjs",
     platform = "node",
     target = "es2022",
     visibility = ["//visibility:public"],
     deps = [
-        "//docs/markdown/examples/zip:index",
+        "//docs/pipeline/examples/zip:index",
     ],
 )
 
 esbuild_esm_bundle(
     name = "playground-bundle",
-    entry_point = "//docs/markdown/tutorial:playground.ts",
+    entry_point = "//docs/pipeline/tutorials:playground.ts",
     output = "playground.mjs",
     platform = "node",
     target = "es2022",
     visibility = ["//visibility:public"],
     deps = [
-        "//docs/markdown/tutorial:playground",
+        "//docs/pipeline/tutorials:playground",
     ],
 )
 
 esbuild_esm_bundle(
     name = "tutorial-bundle",
-    entry_point = "//docs/markdown/tutorial:tutorial.ts",
+    entry_point = "//docs/pipeline/tutorials:tutorial.ts",
     output = "tutorial.mjs",
     platform = "node",
     target = "es2022",
     visibility = ["//visibility:public"],
     deps = [
-        "//docs/markdown/tutorial",
+        "//docs/pipeline/tutorials",
     ],
 )
 
@@ -112,13 +112,13 @@ nodejs_binary(
     data = [
         "@npm//jsdom",
     ],
-    entry_point = "//docs/markdown:stackblitz.mjs",
+    entry_point = "//docs/pipeline:stackblitz.mjs",
     visibility = ["//visibility:public"],
 )
 
 nodejs_binary(
     name = "zip",
-    entry_point = "//docs/markdown:zip.mjs",
+    entry_point = "//docs/pipeline:zip.mjs",
     visibility = ["//visibility:public"],
 )
 
@@ -130,7 +130,7 @@ nodejs_binary(
         "@npm//mermaid",
         "@npm//playwright-core",
     ],
-    entry_point = "//docs/markdown:guides.mjs",
+    entry_point = "//docs/pipeline:guides.mjs",
     env = {
         "CHROME_BIN": "$(CHROMIUM)",
     },
@@ -145,18 +145,18 @@ nodejs_binary(
     data = [
         "@npm//jsdom",
     ],
-    entry_point = "//docs/markdown:guides-no-mermaid.mjs",
+    entry_point = "//docs/pipeline:guides-no-mermaid.mjs",
     visibility = ["//visibility:public"],
 )
 
 nodejs_binary(
     name = "playground",
-    entry_point = "//docs/markdown:playground.mjs",
+    entry_point = "//docs/pipeline:playground.mjs",
     visibility = ["//visibility:public"],
 )
 
 nodejs_binary(
     name = "tutorial",
-    entry_point = "//docs/markdown:tutorial.mjs",
+    entry_point = "//docs/pipeline:tutorial.mjs",
     visibility = ["//visibility:public"],
 )
