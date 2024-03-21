@@ -54,7 +54,7 @@
     "tmp": "^0.2.1",
     "true-case-path": "^2.2.1",
     "tslib": "^2.5.2",
-    "typescript": "5.4.2",
+    "typescript": "5.4.3",
     "uuid": "^9.0.0",
     "yargs": "^17.0.0"
   },
