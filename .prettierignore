@@ -7,6 +7,7 @@ ng-dev/utils/protos/*.js
 .github/local-actions/lock-closed/main.js
 github-actions/bazel/configure-remote/configure-remote.cjs
 github-actions/branch-manager/main.js
+github-actions/browserstack/set-browserstack-env.cjs
 github-actions/commit-message-based-labels/main.js
 github-actions/create-pr-for-changes/main.js
 github-actions/feature-request/main.js
