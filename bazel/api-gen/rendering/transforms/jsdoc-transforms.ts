@@ -9,7 +9,6 @@
 import {JsDocTagEntry} from '../entities';
 import {marked} from 'marked';
 
-import {rewriteLinks} from '../backwards-compatibility/links-mapper';
 import {isDeprecatedEntry, isDeveloperPreview} from '../entities/categorization';
 import {LinkEntryRenderable} from '../entities/renderables';
 import {
@@ -139,11 +138,7 @@ function getHtmlAdditionalLinks<T extends HasJsDocTags & HasModuleName>(
 
       return undefined;
     })
-    .filter((link): link is LinkEntryRenderable => !!link)
-    .map((link) => {
-      link.url = rewriteLinks(link.url);
-      return link;
-    });
+    .filter((link): link is LinkEntryRenderable => !!link);
 
   return seeAlsoLinks;
 }
