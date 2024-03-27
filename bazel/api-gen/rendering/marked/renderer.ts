@@ -9,7 +9,6 @@
 import highlightJs, {HighlightResult} from 'highlight.js';
 import {Renderer as MarkedRenderer} from 'marked';
 import {AIO_URL} from '../backwards-compatibility/domains';
-import {rewriteLinks} from '../backwards-compatibility/links-mapper';
 import {splitLines} from '../transforms/code-transforms';
 
 /**
@@ -49,9 +48,8 @@ export const renderer: Partial<MarkedRenderer> = {
     `;
   },
   link(href: string, title: string, text: string): string {
-    const link = rewriteLinks(href);
     text = text.startsWith(AIO_URL) ? 'our guides' : text;
-    return `<a href="${link}">${text}</a>`;
+    return `<a href="${href}">${text}</a>`;
   },
   list(body: string, ordered: boolean, start: number) {
     if (ordered) {
