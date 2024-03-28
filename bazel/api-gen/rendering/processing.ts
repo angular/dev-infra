@@ -8,7 +8,6 @@
 
 import {DocEntry} from './entities';
 
-import {CliCommand} from './cli-entities';
 import {
   isClassEntry,
   isCliEntry,
@@ -74,8 +73,4 @@ export function getRenderable(
       ),
     ),
   );
-}
-
-export function getRenderableCommand(command: CliCommand): CliCommandRenderable {
-  return getCliRenderable(command);
 }
