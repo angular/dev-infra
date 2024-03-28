@@ -56,8 +56,3 @@ export function renderEntry(renderable: DocEntryRenderable | CliCommandRenderabl
   // Fall back rendering nothing while in development.
   return render(DocsReference(renderable));
 }
-
-/** Render HTML for CLI based on `CliCommandRenderable` data  */
-export function renderCli(renderable: CliCommandRenderable): string {
-  return render(CliCommandReference(renderable));
-}
