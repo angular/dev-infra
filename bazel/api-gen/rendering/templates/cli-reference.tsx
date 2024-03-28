@@ -24,7 +24,7 @@ export function CliCommandReference(entry: CliCommandRenderable) {
             <pre class="docs-mini-scroll-track">
               <code>
                 <div className={'hljs-ln-line'}>
-                  ng {command}
+                  ng {commandName(entry, command)}
                   {entry.argumentsLabel ? <button member-id={'Arguments'} className="hljs-ln-line-argument">{entry.argumentsLabel}</button> : <></>}
                   {entry.hasOptions ? <button member-id={'Options'} className="hljs-ln-line-option">[options]</button> : <></>}
                 </div>
@@ -39,30 +39,10 @@ export function CliCommandReference(entry: CliCommandRenderable) {
         <ul>
           {entry.subcommands.map((subcommand) => 
             <li>
-              <a href={`#${subcommand.name}`}>{subcommand.name}</a>
+              <a href={`cli/${entry.name}/${subcommand.name}`}>{subcommand.name}</a>
             </li>
           )}  
         </ul>
-        <h2>{entry.name} commands</h2>
-        {entry.subcommands.map((subcommand: CliCommandRenderable) => (
-          <div>
-            <h3>{subcommand.name}</h3>
-            <div class="docs-code docs-reference-cli-toc">
-              <pre class="docs-mini-scroll-track">
-                <code>
-                  <div className={'hljs-ln-line'}>
-                    ng {entry.name} {subcommand.name}
-                    {subcommand.argumentsLabel ? <button member-id={'Arguments'} className="hljs-ln-line-argument">{entry.argumentsLabel}</button> : <></>}
-                    {entry.hasOptions ? <button member-id={'Options'} className="hljs-ln-line-option">[options]</button> : <></>}
-                  </div>
-                </code>
-              </pre>
-            </div>
-            <div>
-              <RawHtml value={subcommand.htmlDescription}/>
-            </div>
-          </div>
-        ))}
         </> : <></>}
       </div>
       <div className={REFERENCE_MEMBERS_CONTAINER}>
@@ -72,4 +52,13 @@ export function CliCommandReference(entry: CliCommandRenderable) {
       </div>
     </div>
   );
+}
+
+
+function commandName(entry: CliCommandRenderable, command: string) {
+  if (entry.parentCommand?.name) {
+    return `${entry.parentCommand?.name} ${command}`;
+  } else {
+    return command;
+  }
 }

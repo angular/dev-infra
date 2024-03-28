@@ -2,6 +2,7 @@
 export interface CliCommand {
   name: string;
   command: string;
+  parentCommand?: CliCommand;
   shortDescription: string;
   longDescription: string;
   deprecated: boolean;

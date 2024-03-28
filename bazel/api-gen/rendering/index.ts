@@ -1,11 +1,11 @@
 import {existsSync, mkdirSync, readFileSync, writeFileSync} from 'fs';
 import path from 'path';
-import {DocEntry, EntryType} from './entities';
+import {CliCommand} from './cli-entities';
+import {DocEntry} from './entities';
+import {isCliEntry} from './entities/categorization';
 import {configureMarkedGlobally} from './marked/configuration';
 import {getRenderable} from './processing';
 import {renderEntry} from './rendering';
-import {CliCommand} from './cli-entities';
-import {isCliEntry} from './entities/categorization';
 
 /** The JSON data file format for extracted API reference info. */
 interface EntryCollection {
@@ -15,15 +15,34 @@ interface EntryCollection {
 
 /** Parse all JSON data source files into an array of collections. */
 function parseEntryData(srcs: string[]): EntryCollection[] {
-  return srcs.map((jsonDataFilePath) => {
+  return srcs.flatMap((jsonDataFilePath) => {
     const fileContent = readFileSync(jsonDataFilePath, {encoding: 'utf8'});
     const fileContentJson = JSON.parse(fileContent) as unknown;
     if ((fileContentJson as EntryCollection).entries) {
       return fileContentJson as EntryCollection;
     }
+
+    // CLI subcommands should generate a separate file for each subcommand.
+    // We are artificially creating a collection for each subcommand here.
+    if ((fileContentJson as CliCommand).subcommands) {
+      const command = fileContentJson as CliCommand;
+      return [
+        {
+          moduleName: 'unknown',
+          entries: [fileContentJson as DocEntry],
+        },
+        ...command.subcommands!.map((subCommand) => {
+          return {
+            moduleName: 'unknown',
+            entries: [{...subCommand, parentCommand: command} as any],
+          };
+        }),
+      ];
+    }
+
     return {
       moduleName: 'unknown',
-      entries: [fileContentJson as DocEntry],
+      entries: [fileContentJson as DocEntry], // TODO: fix the typing cli entries aren't DocEntry
     };
   });
 }
@@ -31,7 +50,9 @@ function parseEntryData(srcs: string[]): EntryCollection[] {
 /** Gets a normalized filename for a doc entry. */
 function getNormalizedFilename(moduleName: string, entry: DocEntry | CliCommand): string {
   if (isCliEntry(entry)) {
-    return `${entry.name}.html`;
+    return entry.parentCommand
+      ? `${entry.parentCommand.name}/${entry.name}.html`
+      : `${entry.name}.html`;
   }
 
   entry = entry as DocEntry;
@@ -80,6 +101,10 @@ function main() {
     for (let i = 0; i < htmlOutputs.length; i++) {
       const filename = getNormalizedFilename(collection.moduleName, collection.entries[i]);
       const outputPath = path.join(outputFilenameExecRootRelativePath, filename);
+
+      // in case the output path is nested, ensure the directory exists
+      mkdirSync(path.parse(outputPath).dir, {recursive: true});
+
       writeFileSync(outputPath, htmlOutputs[i], {encoding: 'utf8'});
     }
   }
