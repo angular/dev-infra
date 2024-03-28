@@ -1087,12 +1087,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cdktf/hcl2json@npm:0.20.4":
-  version: 0.20.4
-  resolution: "@cdktf/hcl2json@npm:0.20.4"
+"@cdktf/hcl2json@npm:0.20.5":
+  version: 0.20.5
+  resolution: "@cdktf/hcl2json@npm:0.20.5"
   dependencies:
     fs-extra: "npm:11.2.0"
-  checksum: 10c0/2803403406056128cc68409fd1340e9da5fae93bf834e5ab09ebdd7cd62d077d812c97db11f08862a95597c19880990ec95bec4d544e6cd14aeb229d3b5c87c9
+  checksum: 10c0/93f015b4fd3a1c2d55c1b62e2dafadae562d83b2b11ac36186e8832f1d78d5015dbe3a89c04a6add1690b6c4aedf83b7a979cf545a43a56d259648cc092d0abd
   languageName: node
   linkType: hard
 
@@ -1694,18 +1694,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@renovatebot/osv-offline@npm:1.5.2":
-  version: 1.5.2
-  resolution: "@renovatebot/osv-offline@npm:1.5.2"
+"@renovatebot/osv-offline@npm:1.5.3":
+  version: 1.5.3
+  resolution: "@renovatebot/osv-offline@npm:1.5.3"
   dependencies:
     "@octokit/rest": "npm:^20.0.2"
     "@renovatebot/osv-offline-db": "npm:1.6.0"
-    adm-zip: "npm:~0.5.11"
+    adm-zip: "npm:~0.5.12"
     fs-extra: "npm:^11.2.0"
     got: "npm:^11.8.6"
     luxon: "npm:^3.4.4"
     node-fetch: "npm:^2.7.0"
-  checksum: 10c0/425f802c5eb43622732d18feb0a2403b15870c0b268fa3b8e2b07b4dc7d114039c2872f7202c840a04626cc0115ac300d7faa16cbaf8b5bda98326a97a6ce85b
+  checksum: 10c0/c207fbb3005900e7c645815f2f88ef38f3a7da453c69099a3cb4f5a1497504c9815cc27311881061b93f46124066d90c74fa4d2af33d66e446b48c18fd154462
   languageName: node
   linkType: hard
 
@@ -2579,7 +2579,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"adm-zip@npm:~0.5.11":
+"adm-zip@npm:~0.5.12":
   version: 0.5.12
   resolution: "adm-zip@npm:0.5.12"
   checksum: 10c0/fca2893b416bfcbee8b371a403f4d2e980a3c1055ce7b9b0b2ac8540c8efe6bbb27cc63ddf64ff6e6ed40c84fcb1ede7e95d230e7a567025e03f1044efbf6be0
@@ -5243,7 +5243,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: "npm:37.263.0"
+    renovate: "npm:37.273.0"
   languageName: unknown
   linkType: soft
 
@@ -5869,9 +5869,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:37.263.0":
-  version: 37.263.0
-  resolution: "renovate@npm:37.263.0"
+"renovate@npm:37.273.0":
+  version: 37.273.0
+  resolution: "renovate@npm:37.273.0"
   dependencies:
     "@aws-sdk/client-codecommit": "npm:3.363.0"
     "@aws-sdk/client-ec2": "npm:3.363.0"
@@ -5880,7 +5880,7 @@ __metadata:
     "@aws-sdk/client-s3": "npm:3.363.0"
     "@aws-sdk/credential-providers": "npm:3.363.0"
     "@breejs/later": "npm:4.2.0"
-    "@cdktf/hcl2json": "npm:0.20.4"
+    "@cdktf/hcl2json": "npm:0.20.5"
     "@opentelemetry/api": "npm:1.8.0"
     "@opentelemetry/context-async-hooks": "npm:1.22.0"
     "@opentelemetry/exporter-trace-otlp-http": "npm:0.49.1"
@@ -5892,7 +5892,7 @@ __metadata:
     "@opentelemetry/sdk-trace-node": "npm:1.22.0"
     "@opentelemetry/semantic-conventions": "npm:1.22.0"
     "@qnighy/marshal": "npm:0.1.3"
-    "@renovatebot/osv-offline": "npm:1.5.2"
+    "@renovatebot/osv-offline": "npm:1.5.3"
     "@renovatebot/pep440": "npm:3.0.19"
     "@renovatebot/ruby-semver": "npm:3.0.23"
     "@sindresorhus/is": "npm:4.6.0"
@@ -5970,7 +5970,7 @@ __metadata:
     semver-stable: "npm:3.0.0"
     semver-utils: "npm:1.1.4"
     shlex: "npm:2.1.2"
-    simple-git: "npm:3.22.0"
+    simple-git: "npm:3.23.0"
     slugify: "npm:1.6.6"
     source-map-support: "npm:0.5.21"
     toml-eslint-parser: "npm:0.9.3"
@@ -5988,7 +5988,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 10c0/4830f3279e29ca58a5543c9885cdb5b0bcdbbc0a63760db20a06399bb1c52e748cab67ae2cddc16a1f33a2bb4c18c10ab8c5e16a78f37ff1a2426e55de4eb5a1
+  checksum: 10c0/a7a3a2aa2e816b616d7b6f8d38f9f580c5b326f50bb9e054b810972601ae6d0249b0fcdbfa70adeccbde4dbb51346c381606e42da71cb11e54b13a81da182f9a
   languageName: node
   linkType: hard
 
@@ -6291,14 +6291,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"simple-git@npm:3.22.0":
-  version: 3.22.0
-  resolution: "simple-git@npm:3.22.0"
+"simple-git@npm:3.23.0":
+  version: 3.23.0
+  resolution: "simple-git@npm:3.23.0"
   dependencies:
     "@kwsites/file-exists": "npm:^1.1.1"
     "@kwsites/promise-deferred": "npm:^1.1.1"
     debug: "npm:^4.3.4"
-  checksum: 10c0/cc12f7563e4de82a48c1b2517d5471f699b4e12ff25843d230854b6d8d567ca8ee9d6e6b40aa6aae214e956040563902c9a406e798df03b435fe863b829d0cc5
+  checksum: 10c0/f23ff9a6761b27debb8234f103b11c5b66d51e27cb3c3ab7dd53c7c8585809276b82925319538407851717875b64e2e03518369c7b958b75748ab84015ad0879
   languageName: node
   linkType: hard
 
