@@ -20,7 +20,7 @@ export function HeaderCli(props: {command: CliCommandRenderable}) {
 
       <div className={HEADER_ENTRY_TITLE}>
         <div>
-          <h1>{command.name}</h1>
+          <h1>{command.parentCommand?.name} {command.name}</h1>
           <div className={HEADER_ENTRY_LABEL} data-mode={"full"} data-type={'command'}>{'Command'}</div>
         </div>
       </div>
