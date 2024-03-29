@@ -50,6 +50,6 @@ export class Buildifier extends Formatter {
 const BAZEL_WARNING_FLAG =
   `--warnings=attr-cfg,attr-license,attr-non-empty,attr-output-default,` +
   `attr-single-file,constant-glob,ctx-args,depset-iteration,depset-union,dict-concatenation,` +
-  `duplicated-name,filetype,git-repository,http-archive,integer-division,load,load-on-top,` +
+  `duplicated-name,filetype,git-repository,http-archive,integer-division,load,` +
   `native-build,native-package,output-group,package-name,package-on-top,positional-args,` +
   `redefined-variable,repository-name,same-origin-load,string-iteration,unused-variable`;
