@@ -53,8 +53,8 @@ export function transformConfigIntoMatcher(config: GoogleSyncConfig): {
   // match only files that need to be synced separately
   const separateSyncMatchFn = (projectRelativePath: string) =>
     separateFilePatterns.some((p) => p.match(projectRelativePath)) &&
-    alwaysExternalFilePatterns.every((p) => !p.match(projectRelativePath)) &&
-    syncedFilePatterns.every((p) => !p.match(projectRelativePath));
+    alwaysExternalFilePatterns.every((p) => !p.match(projectRelativePath));
+
   return {ngSyncMatchFn, separateSyncMatchFn};
 }
 

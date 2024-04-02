@@ -28539,7 +28539,7 @@ function transformConfigIntoMatcher(config) {
   const alwaysExternalFilePatterns = config.alwaysExternalFilePatterns.map((p) => new Minimatch(p));
   const separateFilePatterns = config.separateFilePatterns.map((p) => new Minimatch(p));
   const ngSyncMatchFn = (projectRelativePath) => syncedFilePatterns.some((p) => p.match(projectRelativePath)) && alwaysExternalFilePatterns.every((p) => !p.match(projectRelativePath)) && separateFilePatterns.every((p) => !p.match(projectRelativePath));
-  const separateSyncMatchFn = (projectRelativePath) => separateFilePatterns.some((p) => p.match(projectRelativePath)) && alwaysExternalFilePatterns.every((p) => !p.match(projectRelativePath)) && syncedFilePatterns.every((p) => !p.match(projectRelativePath));
+  const separateSyncMatchFn = (projectRelativePath) => separateFilePatterns.some((p) => p.match(projectRelativePath)) && alwaysExternalFilePatterns.every((p) => !p.match(projectRelativePath));
   return { ngSyncMatchFn, separateSyncMatchFn };
 }
 async function getGoogleSyncConfig(absolutePath) {
