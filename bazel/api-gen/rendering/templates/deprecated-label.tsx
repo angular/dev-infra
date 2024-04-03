@@ -9,12 +9,21 @@
 import {Fragment, h} from 'preact';
 import {PARAM_KEYWORD_CLASS_NAME} from '../styling/css-classes';
 
-export function DeprecatedLabel(props: {entry: {isDeprecated: boolean}}) {
+export function DeprecatedLabel(props: {
+  entry: {isDeprecated: boolean} | {deprecationMessage: string | null};
+}) {
   const entry = props.entry;
 
-  if (entry.isDeprecated) {
-    return (<span className={`${PARAM_KEYWORD_CLASS_NAME} docs-deprecated`}>@deprecated</span>);
+  if ('isDeprecated' in entry) {
+    return <span className={`${PARAM_KEYWORD_CLASS_NAME} docs-deprecated`}>@deprecated</span>;
+  } else if ('deprecationMessage' in entry && entry.deprecationMessage !== null) {
+    return (
+      <div>
+        <span className={`${PARAM_KEYWORD_CLASS_NAME} docs-deprecated`}>@deprecated</span>
+        <span>{entry.deprecationMessage}</span>
+      </div>
+    );
   }
 
-  return (<></>);
+  return <></>;
 }

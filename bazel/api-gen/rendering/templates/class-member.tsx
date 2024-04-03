@@ -6,23 +6,23 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {h, Fragment} from 'preact';
-import {MemberEntryRenderable} from '../entities/renderables';
-import {ClassMethodInfo} from './class-method-info';
-import {RawHtml} from './raw-html';
+import {Fragment, h} from 'preact';
 import {
   isClassMethodEntry,
   isGetterEntry,
   isPropertyEntry,
   isSetterEntry,
 } from '../entities/categorization';
-import {DeprecatedLabel} from './deprecated-label';
+import {MemberEntryRenderable} from '../entities/renderables';
 import {
+  REFERENCE_HEADER,
   REFERENCE_MEMBER_CARD,
   REFERENCE_MEMBER_CARD_BODY,
   REFERENCE_MEMBER_CARD_ITEM,
-  REFERENCE_HEADER,
 } from '../styling/css-classes';
+import {ClassMethodInfo} from './class-method-info';
+import {DeprecatedLabel} from './deprecated-label';
+import {RawHtml} from './raw-html';
 
 export function ClassMember(props: {members: MemberEntryRenderable[]}) {
   const memberName = props.members[0].name;
@@ -62,7 +62,7 @@ export function ClassMember(props: {members: MemberEntryRenderable[]}) {
             )}
           </div>
         </div>
-        {props.members.every((member) => member.isDeprecated) ? (
+        {props.members.every((member) => member.deprecationMessage !== null) ? (
           <DeprecatedLabel entry={props.members[0]} />
         ) : (
           <></>

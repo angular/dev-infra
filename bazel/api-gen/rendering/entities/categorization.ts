@@ -121,6 +121,10 @@ export function isDeprecatedEntry<T extends HasJsDocTags>(entry: T) {
   return entry.jsdocTags.some((tag) => tag.name === 'deprecated');
 }
 
+export function getDeprecatedEntry<T extends HasJsDocTags>(entry: T) {
+  return entry.jsdocTags.find((tag) => tag.name === 'deprecated')?.comment ?? null;
+}
+
 /** Gets whether the given entry is developer preview. */
 export function isDeveloperPreview<T extends HasJsDocTags>(entry: T) {
   return entry.jsdocTags.some((tag) => tag.name === 'developerPreview');
