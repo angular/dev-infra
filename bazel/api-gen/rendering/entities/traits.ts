@@ -80,6 +80,7 @@ export interface HasRenderableParams {
 
 export interface HasDeprecatedFlag {
   isDeprecated: boolean;
+  deprecationMessage: string | null;
 }
 
 export interface HasDeveloperPreviewFlag {

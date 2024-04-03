@@ -6,11 +6,15 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {JsDocTagEntry} from '../entities';
 import {marked} from 'marked';
+import {JsDocTagEntry} from '../entities';
 
 import {rewriteLinks} from '../backwards-compatibility/links-mapper';
-import {isDeprecatedEntry, isDeveloperPreview} from '../entities/categorization';
+import {
+  getDeprecatedEntry,
+  isDeprecatedEntry,
+  isDeveloperPreview,
+} from '../entities/categorization';
 import {LinkEntryRenderable} from '../entities/renderables';
 import {
   HasAdditionalLinks,
@@ -104,6 +108,7 @@ export function setEntryFlags<T extends HasJsDocTags>(
   return {
     ...entry,
     isDeprecated: isDeprecatedEntry(entry),
+    deprecationMessage: getDeprecatedEntry(entry),
     isDeveloperPreview: isDeveloperPreview(entry),
   };
 }

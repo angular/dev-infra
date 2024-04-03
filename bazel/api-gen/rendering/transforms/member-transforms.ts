@@ -12,7 +12,12 @@ import {isClassMethodEntry} from '../entities/categorization';
 import {MemberEntryRenderable} from '../entities/renderables';
 import {HasMembers, HasRenderableMembers, HasRenderableMembersGroups} from '../entities/traits';
 
-import {addHtmlDescription, addHtmlJsDocTagComments, setEntryFlags} from './jsdoc-transforms';
+import {
+  addHtmlDescription,
+  addHtmlJsDocTagComments,
+  addHtmlUsageNotes,
+  setEntryFlags,
+} from './jsdoc-transforms';
 
 const lifecycleMethods = [
   'ngAfterContentChecked',
@@ -66,7 +71,9 @@ export function addRenderableGroupMembers<T extends HasMembers>(
 
   const membersGroups = members.reduce((groups, item) => {
     const member = setEntryFlags(
-      addMethodParamsDescription(addHtmlDescription(addHtmlJsDocTagComments(item))),
+      addMethodParamsDescription(
+        addHtmlDescription(addHtmlUsageNotes(addHtmlJsDocTagComments(item))),
+      ),
     );
     if (groups.has(member.name)) {
       const group = groups.get(member.name);
@@ -85,7 +92,11 @@ export function addRenderableGroupMembers<T extends HasMembers>(
 
 export function addRenderableMembers<T extends HasMembers>(entry: T): T & HasRenderableMembers {
   const members = entry.members.map((entry) =>
-    setEntryFlags(addMethodParamsDescription(addHtmlDescription(addHtmlJsDocTagComments(entry)))),
+    setEntryFlags(
+      addMethodParamsDescription(
+        addHtmlDescription(addHtmlUsageNotes(addHtmlJsDocTagComments(entry))),
+      ),
+    ),
   );
 
   return {
