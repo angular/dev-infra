@@ -7,7 +7,12 @@
       "entryType": "directive",
       "members": [],
       "jsdocTags": [],
-      "rawComment": ""
+      "rawComment": "",
+      "source": {
+        "fileName": "/packages/core/src/ng_template_outlet.ts",
+        "line": 7,
+        "character": 7
+      }
     },
     {
       "name": "UserProfile",
@@ -68,7 +73,12 @@
       ],
       "description": "",
       "jsdocTags": [],
-      "rawComment": ""
+      "rawComment": "",
+      "source": {
+        "fileName": "/packages/core/src/user-profile.ts",
+        "line": 3,
+        "character": 7
+      }
     }
   ]
 }
