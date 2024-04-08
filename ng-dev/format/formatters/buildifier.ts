@@ -52,4 +52,4 @@ const BAZEL_WARNING_FLAG =
   `attr-single-file,constant-glob,ctx-args,depset-iteration,depset-union,dict-concatenation,` +
   `duplicated-name,filetype,git-repository,http-archive,integer-division,load,` +
   `native-build,native-package,output-group,package-name,package-on-top,positional-args,` +
-  `redefined-variable,repository-name,same-origin-load,string-iteration,unused-variable`;
+  `redefined-variable,repository-name,string-iteration,unused-variable`;
