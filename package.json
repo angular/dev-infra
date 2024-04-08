@@ -17,7 +17,7 @@
   },
   "packageManager": "yarn@4.1.1",
   "dependencies": {
-    "@angular-devkit/build-angular": "18.0.0-next.1",
+    "@angular-devkit/build-angular": "17.3.3",
     "@angular/benchpress": "0.3.0",
     "@babel/core": "^7.16.0",
     "@babel/helper-annotate-as-pure": "^7.18.6",

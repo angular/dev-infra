@@ -12,7 +12,7 @@
     "enabled": true
   },
   "ignorePaths": ["bazel/integration/tests/**"],
-  "ignoreDeps": ["rules_pkg"],
+  "ignoreDeps": ["rules_pkg", "@angular-devkit/build-angular"],
   "enabledManagers": ["npm", "bazel", "github-actions"],
   "baseBranches": ["main"],
   "packageRules": [
