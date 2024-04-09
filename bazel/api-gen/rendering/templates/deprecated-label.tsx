@@ -14,7 +14,7 @@ export function DeprecatedLabel(props: {
 }) {
   const entry = props.entry;
 
-  if ('isDeprecated' in entry) {
+  if ('isDeprecated' in entry && !('deprecationMessage' in entry)) {
     return <span className={`${PARAM_KEYWORD_CLASS_NAME} docs-deprecated`}>@deprecated</span>;
   } else if ('deprecationMessage' in entry && entry.deprecationMessage !== null) {
     return (
