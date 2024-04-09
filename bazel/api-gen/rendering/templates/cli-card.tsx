@@ -23,7 +23,15 @@ export function CliCard(props: {card: CliCardRenderable}) {
           <div class="docs-ref-content">
             {item.deprecated ? <DeprecatedLabel entry={item} /> : <></>}
             <div class="docs-ref-option-and-description">
-              <code>{item.name}</code>
+              <div class="docs-reference-option">
+                <code>{item.name}</code>
+                {item.aliases?.map((alias) => (
+                  <div class="docs-reference-option-aliases">
+                    <span>Alias</span>
+                    <code>{alias} </code>
+                  </div>
+                ))}
+              </div>
               <div dangerouslySetInnerHTML={{__html: item.description}}></div>
             </div>
             <div class="docs-reference-type-and-default">
@@ -37,12 +45,6 @@ export function CliCard(props: {card: CliCardRenderable}) {
                 <></>
               )}
             </div>
-            {item.aliases?.map((alias) => (
-              <div class="docs-reference-option-aliases">
-                <span>Alias</span>
-                <code>{alias} </code>
-              </div>
-            ))}
           </div>
         ))}
       </div>
