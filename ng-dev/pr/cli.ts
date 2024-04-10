@@ -13,6 +13,7 @@ import {CheckoutCommandModule} from './checkout/cli.js';
 import {DiscoverNewConflictsCommandModule} from './discover-new-conflicts/cli.js';
 import {MergeCommandModule} from './merge/cli.js';
 import {RebaseCommandModule} from './rebase/cli.js';
+import {TakeoverPrCommandModule} from './takeover-pr/cli.js';
 
 /** Build the parser for pull request commands. */
 export function buildPrParser(localYargs: Argv) {
@@ -24,5 +25,6 @@ export function buildPrParser(localYargs: Argv) {
     .command(RebaseCommandModule)
     .command(MergeCommandModule)
     .command(CheckoutCommandModule)
+    .command(TakeoverPrCommandModule)
     .command(CheckTargetBranchesModule);
 }
