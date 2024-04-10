@@ -8,13 +8,15 @@
 
 import {types as graphqlTypes} from 'typed-graphqlify';
 
-import {Log} from '../../utils/logging.js';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {addTokenToGitHttpsUrl} from '../../utils/git/github-urls.js';
 import {getPr} from '../../utils/github.js';
 
 /* Graphql schema for the response body for a pending PR. */
 const PR_SCHEMA = {
+  author: {
+    login: graphqlTypes.string,
+  },
   state: graphqlTypes.string,
   maintainerCanModify: graphqlTypes.boolean,
   viewerDidAuthor: graphqlTypes.boolean,
@@ -26,6 +28,7 @@ const PR_SCHEMA = {
       nameWithOwner: graphqlTypes.string,
     },
   },
+  baseRefOid: graphqlTypes.string,
   baseRef: {
     name: graphqlTypes.string,
     repository: {
@@ -107,7 +110,6 @@ export async function checkOutPullRequestLocally(
 
   try {
     // Fetch the branch at the commit of the PR, and check it out in a detached state.
-    Log.info(`Checking out PR #${prNumber} from ${fullHeadRef}`);
     git.run(['fetch', '-q', headRefUrl, headRefName]);
     git.run(['checkout', '--detach', 'FETCH_HEAD']);
   } catch (e) {
@@ -132,5 +134,6 @@ export async function checkOutPullRequestLocally(
     },
     pushToUpstreamCommand: `git push ${pr.headRef.repository.url} HEAD:${headRefName} ${forceWithLeaseFlag}`,
     resetGitStateCommand: `git rebase --abort && git reset --hard && git checkout ${previousBranchOrRevision}`,
+    pullRequest: pr,
   };
 }

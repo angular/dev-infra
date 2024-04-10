@@ -7,31 +7,32 @@
  */
 
 import {Argv, Arguments, CommandModule} from 'yargs';
-import {Log} from '../../utils/logging.js';
 
 import {addGithubTokenOption} from '../../utils/git/github-yargs.js';
-import {checkOutPullRequestLocally} from '../common/checkout-pr.js';
-
-export interface CheckoutOptions {
-  pr: number;
-}
+import {checkoutPullRequest, CheckoutPullRequestParams} from './checkout.js';
 
 /** Builds the checkout pull request command. */
 function builder(yargs: Argv) {
-  return addGithubTokenOption(yargs).positional('pr', {type: 'number', demandOption: true});
+  return addGithubTokenOption(yargs)
+    .positional('pr', {
+      type: 'number',
+      demandOption: true,
+      describe: 'The pull request number for the pull request to checkout',
+    })
+    .option('takeover', {
+      type: 'boolean',
+      demandOption: false,
+      describe: 'Check out the pull request to perform a takeover',
+    });
 }
 
 /** Handles the checkout pull request command. */
-async function handler({pr}: Arguments<CheckoutOptions>) {
-  const options = {allowIfMaintainerCannotModify: true, branchName: `pr-${pr}`};
-  const {pushToUpstreamCommand} = await checkOutPullRequestLocally(pr, options);
-  Log.info(`Checked out the remote branch for pull request #${pr}\n`);
-  Log.info('To push the checked out branch back to its PR, run the following command:');
-  Log.info(`  $ ${pushToUpstreamCommand}`);
+async function handler({pr, takeover}: Arguments<CheckoutPullRequestParams>) {
+  await checkoutPullRequest({pr, takeover});
 }
 
 /** yargs command module for checking out a PR  */
-export const CheckoutCommandModule: CommandModule<{}, CheckoutOptions> = {
+export const CheckoutCommandModule: CommandModule<{}, CheckoutPullRequestParams> = {
   handler,
   builder,
   command: 'checkout <pr>',
