@@ -13,7 +13,7 @@
     "algoliasearch": "^4.20.0",
     "diff": "5.2.0",
     "emoji-regex": "10.3.0",
-    "glob": "10.3.10",
+    "glob": "10.3.12",
     "highlight.js": "11.9.0",
     "html-entities": "2.5.2",
     "jsdom": "24.0.0",
