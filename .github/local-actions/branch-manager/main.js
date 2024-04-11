@@ -71540,6 +71540,9 @@ var _AST = class {
       _glob: glob
     });
   }
+  get options() {
+    return __privateGet(this, _options);
+  }
   toRegExpSource(allowDot) {
     var _a;
     const dot = allowDot ?? !!__privateGet(this, _options).dot;
@@ -72383,7 +72386,10 @@ var Minimatch = class {
       fastTest = dotStarTest;
     }
     const re = AST.fromGlob(pattern, this.options).toMMPattern();
-    return fastTest ? Object.assign(re, { test: fastTest }) : re;
+    if (fastTest && typeof re === "object") {
+      Reflect.defineProperty(re, "test", { value: fastTest });
+    }
+    return re;
   }
   makeRe() {
     if (this.regexp || this.regexp === false)
