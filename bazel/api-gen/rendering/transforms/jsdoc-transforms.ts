@@ -135,6 +135,18 @@ function getHtmlAdditionalLinks<T extends HasJsDocTags & HasModuleName>(
       const linkMatch = comment.match(apiLinkRule);
 
       if (linkMatch) {
+        const link = linkMatch[1];
+
+        // handling links like {@link Route Some route with description}
+        const [symbol, description] = link.split(/\s(.+)/);
+        if (entry && description) {
+          return {
+            label: description.trim(),
+            url: `${getLinkToModule(entry.moduleName)}/${symbol}`,
+          };
+        }
+
+        // handling links like {@link Route}
         return {
           label: linkMatch[1].trim(),
           url: `${getLinkToModule(entry.moduleName)}/${linkMatch[1].trim()}`,
