@@ -130,6 +130,11 @@ export function isDeveloperPreview<T extends HasJsDocTags>(entry: T) {
   return entry.jsdocTags.some((tag) => tag.name === 'developerPreview');
 }
 
+/** Gets whether the given entry is is experimental. */
+export function isExperimental<T extends HasJsDocTags>(entry: T) {
+  return entry.jsdocTags.some((tag) => tag.name === 'experimental');
+}
+
 /** Gets whether the given entry is a cli entry. */
 export function isCliEntry(entry: unknown): entry is CliCommandRenderable;
 export function isCliEntry(entry: unknown): entry is CliCommand {

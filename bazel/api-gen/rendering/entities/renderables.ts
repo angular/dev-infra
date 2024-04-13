@@ -38,6 +38,7 @@ export interface DocEntryRenderable extends DocEntry {
   htmlUsageNotes: string;
   isDeprecated: boolean;
   isDeveloperPreview: boolean;
+  isExperimental: boolean;
 }
 
 /** Documentation entity for a constant augmented transformed content for rendering. */

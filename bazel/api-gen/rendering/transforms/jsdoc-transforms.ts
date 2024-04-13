@@ -13,6 +13,7 @@ import {
   getDeprecatedEntry,
   isDeprecatedEntry,
   isDeveloperPreview,
+  isExperimental,
 } from '../entities/categorization';
 import {LinkEntryRenderable} from '../entities/renderables';
 import {
@@ -25,6 +26,7 @@ import {
   HasJsDocTags,
   HasModuleName,
   HasRenderableJsDocTags,
+  hasExperimentalFlag,
 } from '../entities/traits';
 
 import {getLinkToModule} from './url-transforms';
@@ -103,7 +105,7 @@ export function getHtmlForJsDocText(text: string): string {
 
 export function setEntryFlags<T extends HasJsDocTags>(
   entry: T,
-): T & HasDeprecatedFlag & HasDeveloperPreviewFlag {
+): T & HasDeprecatedFlag & HasDeveloperPreviewFlag & hasExperimentalFlag {
   const deprecationMessage = getDeprecatedEntry(entry);
   return {
     ...entry,
@@ -112,6 +114,7 @@ export function setEntryFlags<T extends HasJsDocTags>(
       ? getHtmlForJsDocText(deprecationMessage)
       : deprecationMessage,
     isDeveloperPreview: isDeveloperPreview(entry),
+    isExperimental: isExperimental(entry),
   };
 }
 
