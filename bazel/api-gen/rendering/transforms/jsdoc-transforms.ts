@@ -104,10 +104,13 @@ export function getHtmlForJsDocText(text: string): string {
 export function setEntryFlags<T extends HasJsDocTags>(
   entry: T,
 ): T & HasDeprecatedFlag & HasDeveloperPreviewFlag {
+  const deprecationMessage = getDeprecatedEntry(entry);
   return {
     ...entry,
     isDeprecated: isDeprecatedEntry(entry),
-    deprecationMessage: getDeprecatedEntry(entry),
+    deprecationMessage: deprecationMessage
+      ? getHtmlForJsDocText(deprecationMessage)
+      : deprecationMessage,
     isDeveloperPreview: isDeveloperPreview(entry),
   };
 }

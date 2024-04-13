@@ -37,7 +37,6 @@ export function ClassMethodInfo(props: {
       ) : (
         <div>
           <DeprecatedLabel entry={entry} />
-          <span>{entry.deprecationMessage}</span>
         </div>
       )}
       {entry.params.map((param: ParameterEntryRenderable) => (

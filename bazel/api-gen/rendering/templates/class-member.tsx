@@ -40,6 +40,11 @@ export function ClassMember(props: {members: MemberEntryRenderable[]}) {
           <ClassMethodInfo entry={member} isOverloaded={props.members.length > 1} />
         ) : (
           <div className={REFERENCE_MEMBER_CARD_ITEM}>
+            {props.members.every((member) => member.deprecationMessage !== null) ? (
+              <DeprecatedLabel entry={props.members[0]} />
+            ) : (
+              <></>
+            )}
             <RawHtml value={member.htmlDescription} />
           </div>
         );
@@ -62,11 +67,6 @@ export function ClassMember(props: {members: MemberEntryRenderable[]}) {
             )}
           </div>
         </div>
-        {props.members.every((member) => member.deprecationMessage !== null) ? (
-          <DeprecatedLabel entry={props.members[0]} />
-        ) : (
-          <></>
-        )}
       </header>
       {body}
     </div>
