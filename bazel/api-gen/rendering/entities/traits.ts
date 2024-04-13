@@ -86,3 +86,7 @@ export interface HasDeprecatedFlag {
 export interface HasDeveloperPreviewFlag {
   isDeveloperPreview: boolean;
 }
+
+export interface hasExperimentalFlag {
+  isExperimental: boolean;
+}

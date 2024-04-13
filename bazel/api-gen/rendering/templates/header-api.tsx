@@ -18,7 +18,7 @@ import {
 import {DocsPillRow} from './docs-pill-row';
 
 /** Component to render a header of the API page. */
-export function HeaderApi(props: {entry: DocEntryRenderable, showFullDescription?: boolean}) {
+export function HeaderApi(props: {entry: DocEntryRenderable; showFullDescription?: boolean}) {
   const entry = props.entry;
 
   return (
@@ -45,12 +45,19 @@ export function HeaderApi(props: {entry: DocEntryRenderable, showFullDescription
               Developer preview
             </div>
           )}
+          {entry.isExperimental && (
+            <div className={HEADER_ENTRY_LABEL} data-mode={'full'} data-type="experimental">
+              Experimental
+            </div>
+          )}
         </div>
       </div>
 
       <p
         className={'docs-reference-description'}
-        dangerouslySetInnerHTML={{__html: props.showFullDescription ? entry.htmlDescription : entry.shortHtmlDescription}}
+        dangerouslySetInnerHTML={{
+          __html: props.showFullDescription ? entry.htmlDescription : entry.shortHtmlDescription,
+        }}
       ></p>
 
       <DocsPillRow links={entry.additionalLinks} />
