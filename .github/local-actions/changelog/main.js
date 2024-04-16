@@ -25811,6 +25811,15 @@ function encode_char(c) {
         return {};
       };
     }();
+    exports.hasOwnOnlyObject = function(obj) {
+      var o = exports.createNullProtoObjWherePossible();
+      for (var p in obj) {
+        if (hasOwn(obj, p)) {
+          o[p] = obj[p];
+        }
+      }
+      return o;
+    };
   }
 });
 
@@ -25825,7 +25834,7 @@ var require_package = __commonJS({
         "engine",
         "ejs"
       ],
-      version: "3.1.9",
+      version: "3.1.10",
       author: "Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",
       license: "Apache-2.0",
       bin: {
@@ -25856,7 +25865,7 @@ var require_package = __commonJS({
         node: ">=0.10.0"
       },
       scripts: {
-        test: "mocha -u tdd"
+        test: "npx jake test"
       }
     };
   }
@@ -26093,8 +26102,8 @@ var require_ejs = __commonJS({
     exports.clearCache = function() {
       exports.cache.reset();
     };
-    function Template(text, opts) {
-      opts = opts || utils.createNullProtoObjWherePossible();
+    function Template(text, optsParam) {
+      var opts = utils.hasOwnOnlyObject(optsParam);
       var options = utils.createNullProtoObjWherePossible();
       this.templateText = text;
       this.mode = null;
