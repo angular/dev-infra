@@ -14,15 +14,15 @@ export function DeprecatedLabel(props: {
 }) {
   const entry = props.entry;
 
-  if ('isDeprecated' in entry && !('deprecationMessage' in entry)) {
-    return <span className={`${PARAM_KEYWORD_CLASS_NAME} docs-deprecated`}>@deprecated</span>;
-  } else if ('deprecationMessage' in entry && entry.deprecationMessage !== null) {
+  if ('deprecationMessage' in entry && entry.deprecationMessage !== null) {
     return (
       <div className={'docs-deprecation-message'}>
         <span className={`${PARAM_KEYWORD_CLASS_NAME} docs-deprecated`}>@deprecated</span>
-        <span>{entry.deprecationMessage}</span>
+        <span dangerouslySetInnerHTML={{__html: entry.deprecationMessage}}></span>
       </div>
     );
+  } else if ('isDeprecated' in entry) {
+    return <span className={`${PARAM_KEYWORD_CLASS_NAME} docs-deprecated`}>@deprecated</span>;
   }
 
   return <></>;
