@@ -1,5 +1,9 @@
 load("//tools:defaults.bzl", "ts_library")
 
+exports_files([
+    "commit-message-filter.ts",
+])
+
 ts_library(
     name = "checkout",
     srcs = glob(["*.ts"]),
@@ -7,6 +11,7 @@ ts_library(
     deps = [
         "//ng-dev/pr/common",
         "//ng-dev/utils",
+        "@npm//@types/node",
         "@npm//@types/yargs",
     ],
 )

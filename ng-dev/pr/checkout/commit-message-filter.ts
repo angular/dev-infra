@@ -39,6 +39,6 @@ function main() {
 
 function rewriteCommitMessage(message: string, prNumber: string) {
   const lines = message.split(/\n/);
-  lines.push(`Closes #${prNumber} as this was created using the \`ng-dev pr takeover\` tooling`);
+  lines.push(`Closes #${prNumber} as a pr takeover`);
   return lines.join('\n');
 }

@@ -58,7 +58,7 @@ esbuild_esm_bundle(
         # to launch these files/scripts dynamically (through e.g. `spawn` or `fork`).
         "//ng-dev/release/build:build-worker.ts",
         "//ng-dev/pr/merge:strategies/commit-message-filter.ts",
-        "//ng-dev/pr/takeover-pr:commit-message-filter.ts",
+        "//ng-dev/pr/checkout:commit-message-filter.ts",
     ],
     external = NG_DEV_EXTERNALS,
     splitting = True,

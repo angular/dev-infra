@@ -10,7 +10,6 @@ ts_library(
         "//ng-dev/pr/discover-new-conflicts",
         "//ng-dev/pr/merge",
         "//ng-dev/pr/rebase",
-        "//ng-dev/pr/takeover-pr",
         "@npm//@types/yargs",
     ],
 )
