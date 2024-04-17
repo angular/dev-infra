@@ -2643,14 +2643,14 @@ __metadata:
   linkType: hard
 
 "@codemirror/commands@npm:^6.3.2":
-  version: 6.3.3
-  resolution: "@codemirror/commands@npm:6.3.3"
+  version: 6.4.0
+  resolution: "@codemirror/commands@npm:6.4.0"
   dependencies:
     "@codemirror/language": "npm:^6.0.0"
     "@codemirror/state": "npm:^6.4.0"
     "@codemirror/view": "npm:^6.0.0"
     "@lezer/common": "npm:^1.1.0"
-  checksum: 10c0/0b8384e54232c4046a6a1a4fd56081b2040eb072f678b4f6918f0f792c2c66b52540938b7c7cc766e1f9d5173ab0c57707ff486fa351ed60540471ad7ce7dfdd
+  checksum: 10c0/2ed9de865e1d9241d9dcce2de9ea68bbf80e634f488723963e03ec04c953241e35cfe177f52d55290928cd60a676f760c7a2457714bfb24a96958f6973ecc9a4
   languageName: node
   linkType: hard
 
