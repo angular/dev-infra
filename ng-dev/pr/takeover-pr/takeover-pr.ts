@@ -1,5 +1,6 @@
 import {dirname, join} from 'path';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
+import {Prompt} from '../../utils/prompt.js';
 import {Log, bold, green} from '../../utils/logging.js';
 import {checkOutPullRequestLocally} from '../common/checkout-pr.js';
 import {fileURLToPath} from 'url';
@@ -17,7 +18,7 @@ export async function takeoverPullRequest({
   /** An authenticated git client. */
   const git = await AuthenticatedGitClient.get();
   /** The branch name used for the takeover change. */
-  const branchName = branch ?? `pr-${pr}`;
+  const branchName = branch ?? `pr-takeover-${pr}`;
 
   // Make sure the local repository is clean.
   if (git.hasUncommittedChanges()) {
@@ -38,9 +39,14 @@ export async function takeoverPullRequest({
 
   // Confirm that the takeover request is being done on a valid pull request.
   if (!takeoverAccounts.includes(pullRequest.user.login)) {
-    Log.error(` ✘ Unable to takeover pull request from: ${bold(pullRequest.user.login)}`);
-    Log.error(`   Supported accounts: ${bold(takeoverAccounts.join(', '))}`);
-    return;
+    Log.warn(` ⚠ ${bold(pullRequest.user.login)} is not an account fully supported for takeover.`);
+    Log.warn(`   Supported accounts: ${bold(takeoverAccounts.join(', '))}`);
+    if (await Prompt.confirm(`Continue with pull request takeover anyway?`, true)) {
+      Log.debug('Continuing per user confirmation in prompt');
+    } else {
+      Log.info('Aborting takeover..');
+      return;
+    }
   }
 
   Log.info(`Checking out \`${pullRequest.head.label}\` locally`);
