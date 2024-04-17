@@ -743,7 +743,7 @@ var require_dist_node5 = __commonJS({
     module.exports = __toCommonJS(dist_src_exports);
     var import_endpoint = require_dist_node2();
     var import_universal_user_agent = require_dist_node();
-    var VERSION = "8.3.1";
+    var VERSION = "8.4.0";
     function isPlainObject(value) {
       if (typeof value !== "object" || value === null)
         return false;
@@ -760,7 +760,7 @@ var require_dist_node5 = __commonJS({
       return response.arrayBuffer();
     }
     function fetchWrapper(requestOptions) {
-      var _a, _b, _c;
+      var _a, _b, _c, _d;
       const log = requestOptions.request && requestOptions.request.log ? requestOptions.request.log : console;
       const parseSuccessResponseBody = ((_a = requestOptions.request) == null ? void 0 : _a.parseSuccessResponseBody) !== false;
       if (isPlainObject(requestOptions.body) || Array.isArray(requestOptions.body)) {
@@ -781,8 +781,9 @@ var require_dist_node5 = __commonJS({
       return fetch(requestOptions.url, {
         method: requestOptions.method,
         body: requestOptions.body,
+        redirect: (_c = requestOptions.request) == null ? void 0 : _c.redirect,
         headers: requestOptions.headers,
-        signal: (_c = requestOptions.request) == null ? void 0 : _c.signal,
+        signal: (_d = requestOptions.request) == null ? void 0 : _d.signal,
         ...requestOptions.body && { duplex: "half" }
       }).then(async (response) => {
         url = response.url;

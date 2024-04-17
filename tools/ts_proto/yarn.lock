@@ -40,11 +40,11 @@ __metadata:
   linkType: hard
 
 "@jsdoc/salty@npm:^0.2.1":
-  version: 0.2.7
-  resolution: "@jsdoc/salty@npm:0.2.7"
+  version: 0.2.8
+  resolution: "@jsdoc/salty@npm:0.2.8"
   dependencies:
     lodash: "npm:^4.17.21"
-  checksum: 10c0/12af140143ff4b3fdd9451f9d89cb5f4cb254e9ca91ac9dbd7ece1b338c490e602819965059e7fe2d9337d4cb44c9fe4fb27b88e65ac3821fed23ab88219f546
+  checksum: 10c0/ace2a0ef346e49e9573623544939e1b07906c2775d1027113e10666997c9a50397059b3212e233a053f9d8a118818b847f1690177017b1126408d9bcc7054938
   languageName: node
   linkType: hard
 
@@ -146,11 +146,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:>=13.7.0":
-  version: 20.12.5
-  resolution: "@types/node@npm:20.12.5"
+  version: 20.12.7
+  resolution: "@types/node@npm:20.12.7"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 10c0/2da65516fba98f0417620e42bddbe53e144d4782d69cd37f99df2537c6850b9cfbdb8a017f02c61e9a074bcac84f9f3f221b250474ac8c6b95d507a47e8d53f9
+  checksum: 10c0/dce80d63a3b91892b321af823d624995c61e39c6a223cc0ac481a44d337640cc46931d33efb3beeed75f5c85c3bda1d97cef4c5cd4ec333caf5dee59cff6eca0
   languageName: node
   linkType: hard
 
