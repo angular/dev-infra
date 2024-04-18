@@ -12,6 +12,7 @@ ts_library(
         "@npm//@types/node",
         "@npm//@types/yargs",
         "@npm//cli-progress",
+        "@npm//fast-glob",
         "@npm//multimatch",
         "@npm//yargs",
     ],
