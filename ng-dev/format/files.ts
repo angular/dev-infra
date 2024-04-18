@@ -9,6 +9,7 @@
 import {Argv, Arguments, CommandModule} from 'yargs';
 
 import {checkFiles, formatFiles} from './format.js';
+import glob from 'fast-glob';
 
 /** Command line options. */
 export interface Options {
@@ -29,8 +30,12 @@ function builder(argv: Argv): Argv<Options> {
 
 /** Yargs command handler for the command. */
 async function handler({files, check}: Arguments<Options>) {
+  const expandedFiles = glob.sync(
+    files.map((file) => file.replace(/\/...$/, '/**/*')),
+    {onlyFiles: true},
+  );
   const executionCmd = check ? checkFiles : formatFiles;
-  process.exitCode = await executionCmd(files);
+  process.exitCode = await executionCmd(expandedFiles);
 }
 
 /** CLI command module. */
