@@ -55,7 +55,7 @@ def define_firefox_repositories():
     browser_archive(
         name = "org_mozilla_geckodriver_macos_x64",
         licenses = ["reciprocal"],  # MPL 2.0
-        sha256 = "d33232d29d764018d83e7e4e0c25ac274b5548658c605421c4373e64ba81d904",
+        sha256 = "9cec1546585b532959782c8220599aa97c1f99265bb2d75ad00cd56ef98f650c",
         # Geckodriver v0.34.0
         urls = [
             "https://github.com/mozilla/geckodriver/releases/download/v0.34.0/geckodriver-v0.34.0-macos.tar.gz",
@@ -69,7 +69,7 @@ def define_firefox_repositories():
     browser_archive(
         name = "org_mozilla_geckodriver_macos_arm64",
         licenses = ["reciprocal"],  # MPL 2.0
-        sha256 = "9cec1546585b532959782c8220599aa97c1f99265bb2d75ad00cd56ef98f650c",
+        sha256 = "d33232d29d764018d83e7e4e0c25ac274b5548658c605421c4373e64ba81d904",
         # Geckodriver v0.34.0
         urls = [
             "https://github.com/mozilla/geckodriver/releases/download/v0.34.0/geckodriver-v0.34.0-macos-aarch64.tar.gz",
