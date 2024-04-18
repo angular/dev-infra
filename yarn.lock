@@ -11136,8 +11136,8 @@ __metadata:
   linkType: hard
 
 "firebase-tools@npm:^13.0.0":
-  version: 13.7.2
-  resolution: "firebase-tools@npm:13.7.2"
+  version: 13.7.3
+  resolution: "firebase-tools@npm:13.7.3"
   dependencies:
     "@google-cloud/pubsub": "npm:^3.0.1"
     abort-controller: "npm:^3.0.0"
@@ -11167,7 +11167,6 @@ __metadata:
     google-auth-library: "npm:^7.11.0"
     inquirer: "npm:^8.2.6"
     inquirer-autocomplete-prompt: "npm:^2.0.1"
-    js-yaml: "npm:^3.13.1"
     jsonwebtoken: "npm:^9.0.0"
     leven: "npm:^3.1.0"
     libsodium-wrappers: "npm:^0.7.10"
@@ -11201,9 +11200,10 @@ __metadata:
     winston: "npm:^3.0.0"
     winston-transport: "npm:^4.4.0"
     ws: "npm:^7.2.3"
+    yaml: "npm:^2.4.1"
   bin:
     firebase: lib/bin/firebase.js
-  checksum: 10c0/b36dc122c6c4e444749e1a8ef51f743c1dde914cdd3cb7e206865a0ce0266899e022662eb3014a7fc3777c71dde7b9f15d14f210c75a48e7be4d941b9f61fc58
+  checksum: 10c0/bdb1eeae0179a9a8c810fa665c1fec2f218f5e6e963b22833f215d230549f1d466df9044db3cf3d0f86316dd85bbf7bb3188356c9bd6f84d0e4302ccb9e157b0
   languageName: node
   linkType: hard
 
@@ -20266,7 +20266,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yaml@npm:^2.0.0, yaml@npm:^2.2.1":
+"yaml@npm:^2.0.0, yaml@npm:^2.2.1, yaml@npm:^2.4.1":
   version: 2.4.1
   resolution: "yaml@npm:2.4.1"
   bin:
