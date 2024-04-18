@@ -7,7 +7,9 @@
   "automerge": false,
   "separateMajorMinor": false,
   "timezone": "America/Tijuana",
-  "labels": ["comp: build", "dependencies", "action: merge"],
+  "labels": ["comp: build", "renovate managed", "action: merge"],
+  "keepUpdatedLabel": "renovate managed",
+  "rebaseWhen": "conflicted",
   "lockFileMaintenance": {
     "enabled": true
   },

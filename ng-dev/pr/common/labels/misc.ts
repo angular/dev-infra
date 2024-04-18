@@ -16,4 +16,9 @@ export const miscLabels = createTypedObject<MiscLabel>()({
     description:
       'Label noting an issue which the team is looking for contribution from the community to fix',
   },
+  RENOVATE_MANAGED: {
+    name: 'renovate managed',
+    description:
+      'Label noting that a pull request will automatically be managed and rebased by renovate',
+  },
 });
