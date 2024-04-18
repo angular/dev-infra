@@ -61,7 +61,7 @@ runs:
         tar -czvf "$pkg" -C '${{steps.copy.outputs.deploy-dir}}' .
         echo "artifact-path=$pkg" >> $GITHUB_OUTPUT
 
-    - uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4
+    - uses: actions/upload-artifact@1746f4ab65b179e0ea60a494b83293b640dd5bba # v4
       with:
         name: '${{inputs.workflow-artifact-name}}'
         path: '${{steps.pack.outputs.artifact-path}}'
