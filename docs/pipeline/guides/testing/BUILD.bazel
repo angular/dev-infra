@@ -40,7 +40,6 @@ jasmine_node_test(
         "**/*.ts",
     ]),
     # JSDOM should not be bundled because it has workers and dynamic imports.
-    # playwright-core cannot be bundled because of its cjs usage.
     external = [
         "jsdom",
     ],
