@@ -1,5 +1,5 @@
 import {DocsCodeToken} from '../extensions/docs-code/docs-code';
-import {chromium} from 'playwright-core';
+import {launch} from 'puppeteer-core';
 import {Mermaid, MermaidConfig} from 'mermaid';
 import {runfiles} from '@bazel/runfiles';
 
@@ -35,9 +35,8 @@ export async function processMermaidCodeBlock(token: DocsCodeToken) {
    * extracting the value before async actions occur in the function.
    */
   const diagram = token.code;
-  // TODO(josephperrott): Determine if we can reuse the browser across token processing.
   /** Browser instance to run mermaid within. */
-  const browser = await chromium.launch({
+  const browser = await launch({
     headless: true,
     // The browser binary needs to be discoverable in a build and test environment, which seems to only
     // work when provided at the execroot path. We choose to resolve it using the runfiles helper due

@@ -37,7 +37,7 @@ jasmine_node_test(
         "//bazel/browsers/chromium:chromium-for-generation",
         "@npm//jsdom",
         "@npm//mermaid",
-        "@npm//playwright-core",
+        "@npm//puppeteer-core",
     ] + glob([
         "**/*.md",
         "**/*.svg",
@@ -47,9 +47,10 @@ jasmine_node_test(
         "CHROME_BIN": "$(CHROMIUM)",
     },
     # JSDOM should not be bundled because it has workers and dynamic imports.
+    # puppeteer-core cannot be bundled because of its cjs usage.
     external = [
         "jsdom",
-        "playwright-core",
+        "puppeteer-core",
     ],
     specs = [":unit_test_lib"],
     tags = [
