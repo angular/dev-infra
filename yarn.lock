@@ -571,7 +571,7 @@ __metadata:
     "@octokit/rest": "npm:20.1.0"
     "@octokit/types": "npm:13.4.1"
     "@octokit/webhooks-definitions": "npm:3.67.3"
-    "@octokit/webhooks-types": "npm:7.5.0"
+    "@octokit/webhooks-types": "npm:7.5.1"
     "@openid/appauth": "npm:^1.3.1"
     "@rollup/plugin-commonjs": "npm:^25.0.0"
     "@rollup/plugin-node-resolve": "npm:^13.1.3"
@@ -5325,10 +5325,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/webhooks-types@npm:7.5.0":
-  version: 7.5.0
-  resolution: "@octokit/webhooks-types@npm:7.5.0"
-  checksum: 10c0/4b723e6559364aed69d23fe02ca41654481078c5c5e1029da0e278144f24fc2867a59a568e9bf792c7217bd2f5cdc8b128fe5eb9c3c59319f1fb12880dba5943
+"@octokit/webhooks-types@npm:7.5.1":
+  version: 7.5.1
+  resolution: "@octokit/webhooks-types@npm:7.5.1"
+  checksum: 10c0/42744c0df0890b2189678c11c52890bcf9f2feb91fb0084d710efddc78fe7c1962b7dcb9d3a102e27134ca11c64429e0f7efef9dc5aba1ba7ba9ebc326dbd81f
   languageName: node
   linkType: hard
 
