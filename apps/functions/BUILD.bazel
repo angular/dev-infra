@@ -29,6 +29,10 @@ esbuild_cjs_bundle(
     entry_points = [
         "index.ts",
     ],
+    external = [
+        # Mark farmhash as external as it loads .node files directly, which are unused in our usage
+        "farmhash",
+    ],
     visibility = ["//apps:__pkg__"],
     deps = [
         ":functions",
