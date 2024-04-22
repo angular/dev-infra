@@ -25947,166 +25947,6 @@ var require_ejs = __commonJS({
 });
 
 // 
-var require_escape_string_regexp = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    var matchOperatorsRe = /[|\\{}()[\]^$+*?.]/g;
-    module.exports = function(str) {
-      if (typeof str !== "string") {
-        throw new TypeError("Expected a string");
-      }
-      return str.replace(matchOperatorsRe, "\\$&");
-    };
-  }
-});
-
-// 
-var require_figures = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    var escapeStringRegexp = require_escape_string_regexp();
-    var { platform } = process;
-    var main2 = {
-      tick: "\u2714",
-      cross: "\u2716",
-      star: "\u2605",
-      square: "\u2587",
-      squareSmall: "\u25FB",
-      squareSmallFilled: "\u25FC",
-      play: "\u25B6",
-      circle: "\u25EF",
-      circleFilled: "\u25C9",
-      circleDotted: "\u25CC",
-      circleDouble: "\u25CE",
-      circleCircle: "\u24DE",
-      circleCross: "\u24E7",
-      circlePipe: "\u24BE",
-      circleQuestionMark: "?\u20DD",
-      bullet: "\u25CF",
-      dot: "\u2024",
-      line: "\u2500",
-      ellipsis: "\u2026",
-      pointer: "\u276F",
-      pointerSmall: "\u203A",
-      info: "\u2139",
-      warning: "\u26A0",
-      hamburger: "\u2630",
-      smiley: "\u32E1",
-      mustache: "\u0DF4",
-      heart: "\u2665",
-      nodejs: "\u2B22",
-      arrowUp: "\u2191",
-      arrowDown: "\u2193",
-      arrowLeft: "\u2190",
-      arrowRight: "\u2192",
-      radioOn: "\u25C9",
-      radioOff: "\u25EF",
-      checkboxOn: "\u2612",
-      checkboxOff: "\u2610",
-      checkboxCircleOn: "\u24E7",
-      checkboxCircleOff: "\u24BE",
-      questionMarkPrefix: "?\u20DD",
-      oneHalf: "\xBD",
-      oneThird: "\u2153",
-      oneQuarter: "\xBC",
-      oneFifth: "\u2155",
-      oneSixth: "\u2159",
-      oneSeventh: "\u2150",
-      oneEighth: "\u215B",
-      oneNinth: "\u2151",
-      oneTenth: "\u2152",
-      twoThirds: "\u2154",
-      twoFifths: "\u2156",
-      threeQuarters: "\xBE",
-      threeFifths: "\u2157",
-      threeEighths: "\u215C",
-      fourFifths: "\u2158",
-      fiveSixths: "\u215A",
-      fiveEighths: "\u215D",
-      sevenEighths: "\u215E"
-    };
-    var windows = {
-      tick: "\u221A",
-      cross: "\xD7",
-      star: "*",
-      square: "\u2588",
-      squareSmall: "[ ]",
-      squareSmallFilled: "[\u2588]",
-      play: "\u25BA",
-      circle: "( )",
-      circleFilled: "(*)",
-      circleDotted: "( )",
-      circleDouble: "( )",
-      circleCircle: "(\u25CB)",
-      circleCross: "(\xD7)",
-      circlePipe: "(\u2502)",
-      circleQuestionMark: "(?)",
-      bullet: "*",
-      dot: ".",
-      line: "\u2500",
-      ellipsis: "...",
-      pointer: ">",
-      pointerSmall: "\xBB",
-      info: "i",
-      warning: "\u203C",
-      hamburger: "\u2261",
-      smiley: "\u263A",
-      mustache: "\u250C\u2500\u2510",
-      heart: main2.heart,
-      nodejs: "\u2666",
-      arrowUp: main2.arrowUp,
-      arrowDown: main2.arrowDown,
-      arrowLeft: main2.arrowLeft,
-      arrowRight: main2.arrowRight,
-      radioOn: "(*)",
-      radioOff: "( )",
-      checkboxOn: "[\xD7]",
-      checkboxOff: "[ ]",
-      checkboxCircleOn: "(\xD7)",
-      checkboxCircleOff: "( )",
-      questionMarkPrefix: "\uFF1F",
-      oneHalf: "1/2",
-      oneThird: "1/3",
-      oneQuarter: "1/4",
-      oneFifth: "1/5",
-      oneSixth: "1/6",
-      oneSeventh: "1/7",
-      oneEighth: "1/8",
-      oneNinth: "1/9",
-      oneTenth: "1/10",
-      twoThirds: "2/3",
-      twoFifths: "2/5",
-      threeQuarters: "3/4",
-      threeFifths: "3/5",
-      threeEighths: "3/8",
-      fourFifths: "4/5",
-      fiveSixths: "5/6",
-      fiveEighths: "5/8",
-      sevenEighths: "7/8"
-    };
-    if (platform === "linux") {
-      main2.questionMarkPrefix = "?";
-    }
-    var figures4 = platform === "win32" ? windows : main2;
-    var fn = (string) => {
-      if (figures4 === main2) {
-        return string;
-      }
-      for (const [key, value] of Object.entries(main2)) {
-        if (value === figures4[key]) {
-          continue;
-        }
-        string = string.replace(new RegExp(escapeStringRegexp(value), "g"), figures4[key]);
-      }
-      return string;
-    };
-    module.exports = Object.assign(fn, figures4);
-    module.exports.main = main2;
-    module.exports.windows = windows;
-  }
-});
-
-// 
 var require_mimic_fn = __commonJS({
   ""(exports, module) {
     "use strict";
@@ -26196,11 +26036,11 @@ var require_signals = __commonJS({
 // 
 var require_signal_exit = __commonJS({
   ""(exports, module) {
-    var process4 = global.process;
-    var processOk = function(process5) {
-      return process5 && typeof process5 === "object" && typeof process5.removeListener === "function" && typeof process5.emit === "function" && typeof process5.reallyExit === "function" && typeof process5.listeners === "function" && typeof process5.kill === "function" && typeof process5.pid === "number" && typeof process5.on === "function";
+    var process5 = global.process;
+    var processOk = function(process6) {
+      return process6 && typeof process6 === "object" && typeof process6.removeListener === "function" && typeof process6.emit === "function" && typeof process6.reallyExit === "function" && typeof process6.listeners === "function" && typeof process6.kill === "function" && typeof process6.pid === "number" && typeof process6.on === "function";
     };
-    if (!processOk(process4)) {
+    if (!processOk(process5)) {
       module.exports = function() {
         return function() {
         };
@@ -26208,15 +26048,15 @@ var require_signal_exit = __commonJS({
     } else {
       assert2 = __require("assert");
       signals = require_signals();
-      isWin = /^win/i.test(process4.platform);
+      isWin = /^win/i.test(process5.platform);
       EE = __require("events");
       if (typeof EE !== "function") {
         EE = EE.EventEmitter;
       }
-      if (process4.__signal_exit_emitter__) {
-        emitter = process4.__signal_exit_emitter__;
+      if (process5.__signal_exit_emitter__) {
+        emitter = process5.__signal_exit_emitter__;
       } else {
-        emitter = process4.__signal_exit_emitter__ = new EE();
+        emitter = process5.__signal_exit_emitter__ = new EE();
         emitter.count = 0;
         emitter.emitted = {};
       }
@@ -26253,12 +26093,12 @@ var require_signal_exit = __commonJS({
         loaded = false;
         signals.forEach(function(sig) {
           try {
-            process4.removeListener(sig, sigListeners[sig]);
+            process5.removeListener(sig, sigListeners[sig]);
           } catch (er) {
           }
         });
-        process4.emit = originalProcessEmit;
-        process4.reallyExit = originalProcessReallyExit;
+        process5.emit = originalProcessEmit;
+        process5.reallyExit = originalProcessReallyExit;
         emitter.count -= 1;
       };
       module.exports.unload = unload;
@@ -26275,7 +26115,7 @@ var require_signal_exit = __commonJS({
           if (!processOk(global.process)) {
             return;
           }
-          var listeners = process4.listeners(sig);
+          var listeners = process5.listeners(sig);
           if (listeners.length === emitter.count) {
             unload();
             emit("exit", null, sig);
@@ -26283,7 +26123,7 @@ var require_signal_exit = __commonJS({
             if (isWin && sig === "SIGHUP") {
               sig = "SIGINT";
             }
-            process4.kill(process4.pid, sig);
+            process5.kill(process5.pid, sig);
           }
         };
       });
@@ -26299,35 +26139,35 @@ var require_signal_exit = __commonJS({
         emitter.count += 1;
         signals = signals.filter(function(sig) {
           try {
-            process4.on(sig, sigListeners[sig]);
+            process5.on(sig, sigListeners[sig]);
             return true;
           } catch (er) {
             return false;
           }
         });
-        process4.emit = processEmit;
-        process4.reallyExit = processReallyExit;
+        process5.emit = processEmit;
+        process5.reallyExit = processReallyExit;
       };
       module.exports.load = load;
-      originalProcessReallyExit = process4.reallyExit;
+      originalProcessReallyExit = process5.reallyExit;
       processReallyExit = function processReallyExit2(code) {
         if (!processOk(global.process)) {
           return;
         }
-        process4.exitCode = code || 0;
-        emit("exit", process4.exitCode, null);
-        emit("afterexit", process4.exitCode, null);
-        originalProcessReallyExit.call(process4, process4.exitCode);
+        process5.exitCode = code || 0;
+        emit("exit", process5.exitCode, null);
+        emit("afterexit", process5.exitCode, null);
+        originalProcessReallyExit.call(process5, process5.exitCode);
       };
-      originalProcessEmit = process4.emit;
+      originalProcessEmit = process5.emit;
       processEmit = function processEmit2(ev, arg) {
         if (ev === "exit" && processOk(global.process)) {
           if (arg !== void 0) {
-            process4.exitCode = arg;
+            process5.exitCode = arg;
           }
           var ret = originalProcessEmit.apply(this, arguments);
-          emit("exit", process4.exitCode, null);
-          emit("afterexit", process4.exitCode, null);
+          emit("exit", process5.exitCode, null);
+          emit("afterexit", process5.exitCode, null);
           return ret;
         } else {
           return originalProcessEmit.apply(this, arguments);
@@ -29658,7 +29498,7 @@ var require_innerFrom = __commonJS({
     exports.fromIterable = fromIterable;
     function fromAsyncIterable(asyncIterable) {
       return new Observable_1.Observable(function(subscriber) {
-        process4(asyncIterable, subscriber).catch(function(err) {
+        process5(asyncIterable, subscriber).catch(function(err) {
           return subscriber.error(err);
         });
       });
@@ -29668,7 +29508,7 @@ var require_innerFrom = __commonJS({
       return fromAsyncIterable(isReadableStreamLike_1.readableStreamLikeToAsyncGenerator(readableStream));
     }
     exports.fromReadableStreamLike = fromReadableStreamLike;
-    function process4(asyncIterable, subscriber) {
+    function process5(asyncIterable, subscriber) {
       var asyncIterable_1, asyncIterable_1_1;
       var e_2, _a;
       return __awaiter(this, void 0, void 0, function() {
@@ -42927,7 +42767,7 @@ var require_log_symbols = __commonJS({
   ""(exports, module) {
     "use strict";
     var chalk2 = require_source2();
-    var isUnicodeSupported = require_is_unicode_supported();
+    var isUnicodeSupported2 = require_is_unicode_supported();
     var main2 = {
       info: chalk2.blue("\u2139"),
       success: chalk2.green("\u2714"),
@@ -42940,7 +42780,7 @@ var require_log_symbols = __commonJS({
       warning: chalk2.yellow("\u203C"),
       error: chalk2.red("\xD7")
     };
-    module.exports = isUnicodeSupported() ? main2 : fallback;
+    module.exports = isUnicodeSupported2() ? main2 : fallback;
   }
 });
 
@@ -46562,7 +46402,7 @@ var require_ora = __commonJS({
     var stripAnsi2 = require_strip_ansi();
     var wcwidth = require_wcwidth();
     var isInteractive = require_is_interactive();
-    var isUnicodeSupported = require_is_unicode_supported();
+    var isUnicodeSupported2 = require_is_unicode_supported();
     var { BufferListStream } = require_bl();
     var TEXT = Symbol("text");
     var PREFIX_TEXT = Symbol("prefixText");
@@ -46685,7 +46525,7 @@ var require_ora = __commonJS({
             throw new Error("The given spinner must have a `frames` property");
           }
           this._spinner = spinner;
-        } else if (!isUnicodeSupported()) {
+        } else if (!isUnicodeSupported2()) {
           this._spinner = cliSpinners.line;
         } else if (spinner === void 0) {
           this._spinner = cliSpinners.dots;
@@ -62974,17 +62814,17 @@ var require_dist_node22 = __commonJS({
         };
         return authOptions.factory(options);
       }
-      const common = {
+      const common2 = {
         clientId: state.clientId,
         clientSecret: state.clientSecret,
         request: state.request,
         ...authOptions
       };
       const userAuth = state.clientType === "oauth-app" ? await (0, import_auth_oauth_user.createOAuthUserAuth)({
-        ...common,
+        ...common2,
         clientType: state.clientType
       }) : await (0, import_auth_oauth_user.createOAuthUserAuth)({
-        ...common,
+        ...common2,
         clientType: state.clientType
       });
       return userAuth();
@@ -67072,7 +66912,292 @@ var chalkStderr = createChalk({ level: stderrColor ? stderrColor.level : 0 });
 var source_default = chalk;
 
 // 
-var import_figures2 = __toESM(require_figures(), 1);
+import process3 from "node:process";
+function isUnicodeSupported() {
+  if (process3.platform !== "win32") {
+    return process3.env["TERM"] !== "linux";
+  }
+  return Boolean(process3.env["WT_SESSION"]) || Boolean(process3.env["TERMINUS_SUBLIME"]) || process3.env["ConEmuTask"] === "{cmd::Cmder}" || process3.env["TERM_PROGRAM"] === "Terminus-Sublime" || process3.env["TERM_PROGRAM"] === "vscode" || process3.env["TERM"] === "xterm-256color" || process3.env["TERM"] === "alacritty" || process3.env["TERMINAL_EMULATOR"] === "JetBrains-JediTerm";
+}
+var common = {
+  circleQuestionMark: "(?)",
+  questionMarkPrefix: "(?)",
+  square: "\u2588",
+  squareDarkShade: "\u2593",
+  squareMediumShade: "\u2592",
+  squareLightShade: "\u2591",
+  squareTop: "\u2580",
+  squareBottom: "\u2584",
+  squareLeft: "\u258C",
+  squareRight: "\u2590",
+  squareCenter: "\u25A0",
+  bullet: "\u25CF",
+  dot: "\u2024",
+  ellipsis: "\u2026",
+  pointerSmall: "\u203A",
+  triangleUp: "\u25B2",
+  triangleUpSmall: "\u25B4",
+  triangleDown: "\u25BC",
+  triangleDownSmall: "\u25BE",
+  triangleLeftSmall: "\u25C2",
+  triangleRightSmall: "\u25B8",
+  home: "\u2302",
+  heart: "\u2665",
+  musicNote: "\u266A",
+  musicNoteBeamed: "\u266B",
+  arrowUp: "\u2191",
+  arrowDown: "\u2193",
+  arrowLeft: "\u2190",
+  arrowRight: "\u2192",
+  arrowLeftRight: "\u2194",
+  arrowUpDown: "\u2195",
+  almostEqual: "\u2248",
+  notEqual: "\u2260",
+  lessOrEqual: "\u2264",
+  greaterOrEqual: "\u2265",
+  identical: "\u2261",
+  infinity: "\u221E",
+  subscriptZero: "\u2080",
+  subscriptOne: "\u2081",
+  subscriptTwo: "\u2082",
+  subscriptThree: "\u2083",
+  subscriptFour: "\u2084",
+  subscriptFive: "\u2085",
+  subscriptSix: "\u2086",
+  subscriptSeven: "\u2087",
+  subscriptEight: "\u2088",
+  subscriptNine: "\u2089",
+  oneHalf: "\xBD",
+  oneThird: "\u2153",
+  oneQuarter: "\xBC",
+  oneFifth: "\u2155",
+  oneSixth: "\u2159",
+  oneEighth: "\u215B",
+  twoThirds: "\u2154",
+  twoFifths: "\u2156",
+  threeQuarters: "\xBE",
+  threeFifths: "\u2157",
+  threeEighths: "\u215C",
+  fourFifths: "\u2158",
+  fiveSixths: "\u215A",
+  fiveEighths: "\u215D",
+  sevenEighths: "\u215E",
+  line: "\u2500",
+  lineBold: "\u2501",
+  lineDouble: "\u2550",
+  lineDashed0: "\u2504",
+  lineDashed1: "\u2505",
+  lineDashed2: "\u2508",
+  lineDashed3: "\u2509",
+  lineDashed4: "\u254C",
+  lineDashed5: "\u254D",
+  lineDashed6: "\u2574",
+  lineDashed7: "\u2576",
+  lineDashed8: "\u2578",
+  lineDashed9: "\u257A",
+  lineDashed10: "\u257C",
+  lineDashed11: "\u257E",
+  lineDashed12: "\u2212",
+  lineDashed13: "\u2013",
+  lineDashed14: "\u2010",
+  lineDashed15: "\u2043",
+  lineVertical: "\u2502",
+  lineVerticalBold: "\u2503",
+  lineVerticalDouble: "\u2551",
+  lineVerticalDashed0: "\u2506",
+  lineVerticalDashed1: "\u2507",
+  lineVerticalDashed2: "\u250A",
+  lineVerticalDashed3: "\u250B",
+  lineVerticalDashed4: "\u254E",
+  lineVerticalDashed5: "\u254F",
+  lineVerticalDashed6: "\u2575",
+  lineVerticalDashed7: "\u2577",
+  lineVerticalDashed8: "\u2579",
+  lineVerticalDashed9: "\u257B",
+  lineVerticalDashed10: "\u257D",
+  lineVerticalDashed11: "\u257F",
+  lineDownLeft: "\u2510",
+  lineDownLeftArc: "\u256E",
+  lineDownBoldLeftBold: "\u2513",
+  lineDownBoldLeft: "\u2512",
+  lineDownLeftBold: "\u2511",
+  lineDownDoubleLeftDouble: "\u2557",
+  lineDownDoubleLeft: "\u2556",
+  lineDownLeftDouble: "\u2555",
+  lineDownRight: "\u250C",
+  lineDownRightArc: "\u256D",
+  lineDownBoldRightBold: "\u250F",
+  lineDownBoldRight: "\u250E",
+  lineDownRightBold: "\u250D",
+  lineDownDoubleRightDouble: "\u2554",
+  lineDownDoubleRight: "\u2553",
+  lineDownRightDouble: "\u2552",
+  lineUpLeft: "\u2518",
+  lineUpLeftArc: "\u256F",
+  lineUpBoldLeftBold: "\u251B",
+  lineUpBoldLeft: "\u251A",
+  lineUpLeftBold: "\u2519",
+  lineUpDoubleLeftDouble: "\u255D",
+  lineUpDoubleLeft: "\u255C",
+  lineUpLeftDouble: "\u255B",
+  lineUpRight: "\u2514",
+  lineUpRightArc: "\u2570",
+  lineUpBoldRightBold: "\u2517",
+  lineUpBoldRight: "\u2516",
+  lineUpRightBold: "\u2515",
+  lineUpDoubleRightDouble: "\u255A",
+  lineUpDoubleRight: "\u2559",
+  lineUpRightDouble: "\u2558",
+  lineUpDownLeft: "\u2524",
+  lineUpBoldDownBoldLeftBold: "\u252B",
+  lineUpBoldDownBoldLeft: "\u2528",
+  lineUpDownLeftBold: "\u2525",
+  lineUpBoldDownLeftBold: "\u2529",
+  lineUpDownBoldLeftBold: "\u252A",
+  lineUpDownBoldLeft: "\u2527",
+  lineUpBoldDownLeft: "\u2526",
+  lineUpDoubleDownDoubleLeftDouble: "\u2563",
+  lineUpDoubleDownDoubleLeft: "\u2562",
+  lineUpDownLeftDouble: "\u2561",
+  lineUpDownRight: "\u251C",
+  lineUpBoldDownBoldRightBold: "\u2523",
+  lineUpBoldDownBoldRight: "\u2520",
+  lineUpDownRightBold: "\u251D",
+  lineUpBoldDownRightBold: "\u2521",
+  lineUpDownBoldRightBold: "\u2522",
+  lineUpDownBoldRight: "\u251F",
+  lineUpBoldDownRight: "\u251E",
+  lineUpDoubleDownDoubleRightDouble: "\u2560",
+  lineUpDoubleDownDoubleRight: "\u255F",
+  lineUpDownRightDouble: "\u255E",
+  lineDownLeftRight: "\u252C",
+  lineDownBoldLeftBoldRightBold: "\u2533",
+  lineDownLeftBoldRightBold: "\u252F",
+  lineDownBoldLeftRight: "\u2530",
+  lineDownBoldLeftBoldRight: "\u2531",
+  lineDownBoldLeftRightBold: "\u2532",
+  lineDownLeftRightBold: "\u252E",
+  lineDownLeftBoldRight: "\u252D",
+  lineDownDoubleLeftDoubleRightDouble: "\u2566",
+  lineDownDoubleLeftRight: "\u2565",
+  lineDownLeftDoubleRightDouble: "\u2564",
+  lineUpLeftRight: "\u2534",
+  lineUpBoldLeftBoldRightBold: "\u253B",
+  lineUpLeftBoldRightBold: "\u2537",
+  lineUpBoldLeftRight: "\u2538",
+  lineUpBoldLeftBoldRight: "\u2539",
+  lineUpBoldLeftRightBold: "\u253A",
+  lineUpLeftRightBold: "\u2536",
+  lineUpLeftBoldRight: "\u2535",
+  lineUpDoubleLeftDoubleRightDouble: "\u2569",
+  lineUpDoubleLeftRight: "\u2568",
+  lineUpLeftDoubleRightDouble: "\u2567",
+  lineUpDownLeftRight: "\u253C",
+  lineUpBoldDownBoldLeftBoldRightBold: "\u254B",
+  lineUpDownBoldLeftBoldRightBold: "\u2548",
+  lineUpBoldDownLeftBoldRightBold: "\u2547",
+  lineUpBoldDownBoldLeftRightBold: "\u254A",
+  lineUpBoldDownBoldLeftBoldRight: "\u2549",
+  lineUpBoldDownLeftRight: "\u2540",
+  lineUpDownBoldLeftRight: "\u2541",
+  lineUpDownLeftBoldRight: "\u253D",
+  lineUpDownLeftRightBold: "\u253E",
+  lineUpBoldDownBoldLeftRight: "\u2542",
+  lineUpDownLeftBoldRightBold: "\u253F",
+  lineUpBoldDownLeftBoldRight: "\u2543",
+  lineUpBoldDownLeftRightBold: "\u2544",
+  lineUpDownBoldLeftBoldRight: "\u2545",
+  lineUpDownBoldLeftRightBold: "\u2546",
+  lineUpDoubleDownDoubleLeftDoubleRightDouble: "\u256C",
+  lineUpDoubleDownDoubleLeftRight: "\u256B",
+  lineUpDownLeftDoubleRightDouble: "\u256A",
+  lineCross: "\u2573",
+  lineBackslash: "\u2572",
+  lineSlash: "\u2571"
+};
+var specialMainSymbols = {
+  tick: "\u2714",
+  info: "\u2139",
+  warning: "\u26A0",
+  cross: "\u2718",
+  squareSmall: "\u25FB",
+  squareSmallFilled: "\u25FC",
+  circle: "\u25EF",
+  circleFilled: "\u25C9",
+  circleDotted: "\u25CC",
+  circleDouble: "\u25CE",
+  circleCircle: "\u24DE",
+  circleCross: "\u24E7",
+  circlePipe: "\u24BE",
+  radioOn: "\u25C9",
+  radioOff: "\u25EF",
+  checkboxOn: "\u2612",
+  checkboxOff: "\u2610",
+  checkboxCircleOn: "\u24E7",
+  checkboxCircleOff: "\u24BE",
+  pointer: "\u276F",
+  triangleUpOutline: "\u25B3",
+  triangleLeft: "\u25C0",
+  triangleRight: "\u25B6",
+  lozenge: "\u25C6",
+  lozengeOutline: "\u25C7",
+  hamburger: "\u2630",
+  smiley: "\u32E1",
+  mustache: "\u0DF4",
+  star: "\u2605",
+  play: "\u25B6",
+  nodejs: "\u2B22",
+  oneSeventh: "\u2150",
+  oneNinth: "\u2151",
+  oneTenth: "\u2152"
+};
+var specialFallbackSymbols = {
+  tick: "\u221A",
+  info: "i",
+  warning: "\u203C",
+  cross: "\xD7",
+  squareSmall: "\u25A1",
+  squareSmallFilled: "\u25A0",
+  circle: "( )",
+  circleFilled: "(*)",
+  circleDotted: "( )",
+  circleDouble: "( )",
+  circleCircle: "(\u25CB)",
+  circleCross: "(\xD7)",
+  circlePipe: "(\u2502)",
+  radioOn: "(*)",
+  radioOff: "( )",
+  checkboxOn: "[\xD7]",
+  checkboxOff: "[ ]",
+  checkboxCircleOn: "(\xD7)",
+  checkboxCircleOff: "( )",
+  pointer: ">",
+  triangleUpOutline: "\u2206",
+  triangleLeft: "\u25C4",
+  triangleRight: "\u25BA",
+  lozenge: "\u2666",
+  lozengeOutline: "\u25CA",
+  hamburger: "\u2261",
+  smiley: "\u263A",
+  mustache: "\u250C\u2500\u2510",
+  star: "\u2736",
+  play: "\u25BA",
+  nodejs: "\u2666",
+  oneSeventh: "1/7",
+  oneNinth: "1/9",
+  oneTenth: "1/10"
+};
+var mainSymbols = { ...common, ...specialMainSymbols };
+var fallbackSymbols = {
+  ...common,
+  ...specialFallbackSymbols
+};
+var shouldUseMain = isUnicodeSupported();
+var figures = shouldUseMain ? mainSymbols : fallbackSymbols;
+var esm_default = figures;
+var replacements = Object.entries(specialMainSymbols);
+
+// 
 var import_cli_cursor = __toESM(require_cli_cursor(), 1);
 var import_run_async2 = __toESM(require_run_async(), 1);
 var import_rxjs3 = __toESM(require_cjs(), 1);
@@ -67196,11 +67321,10 @@ var import_map = __toESM(require_map2(), 1);
 import assert from "node:assert";
 
 // 
-var import_figures = __toESM(require_figures(), 1);
 var Separator = class {
   constructor(line) {
     this.type = "separator";
-    this.line = source_default.dim(line || new Array(15).join(import_figures.default.line));
+    this.line = source_default.dim(line || new Array(15).join(esm_default.line));
   }
   static exclude(obj) {
     return obj.type !== "separator";
@@ -67642,7 +67766,7 @@ function listRender(choices, pointer) {
       return;
     }
     const isSelected = i - separatorOffset === pointer;
-    let line = (isSelected ? import_figures2.default.pointer + " " : "  ") + choice.name;
+    let line = (isSelected ? esm_default.pointer + " " : "  ") + choice.name;
     if (isSelected) {
       line = source_default.cyan(line);
     }
@@ -68079,7 +68203,6 @@ function renderChoices2(choices, pointer) {
 
 // 
 var import_cli_cursor2 = __toESM(require_cli_cursor(), 1);
-var import_figures3 = __toESM(require_figures(), 1);
 var import_rxjs8 = __toESM(require_cjs(), 1);
 var CheckboxPrompt = class extends Prompt {
   constructor(questions, rl, answers) {
@@ -68231,7 +68354,7 @@ function renderChoices3(choices, pointer) {
     } else {
       const line = getCheckbox(choice.checked) + " " + choice.name;
       if (i - separatorOffset === pointer) {
-        output += source_default.cyan(import_figures3.default.pointer + line);
+        output += source_default.cyan(esm_default.pointer + line);
       } else {
         output += " " + line;
       }
@@ -68241,7 +68364,7 @@ function renderChoices3(choices, pointer) {
   return output.replace(/\n$/, "");
 }
 function getCheckbox(checked) {
-  return checked ? source_default.green(import_figures3.default.radioOn) : import_figures3.default.radioOff;
+  return checked ? source_default.green(esm_default.radioOn) : esm_default.radioOff;
 }
 
 // 
@@ -68660,16 +68783,16 @@ var Prompt2 = class {
 };
 
 // 
-import process3 from "node:process";
+import process4 from "node:process";
 import os2 from "node:os";
 import tty2 from "node:tty";
-function hasFlag2(flag, argv = globalThis.Deno ? globalThis.Deno.args : process3.argv) {
+function hasFlag2(flag, argv = globalThis.Deno ? globalThis.Deno.args : process4.argv) {
   const prefix = flag.startsWith("-") ? "" : flag.length === 1 ? "-" : "--";
   const position = argv.indexOf(prefix + flag);
   const terminatorPosition = argv.indexOf("--");
   return position !== -1 && (terminatorPosition === -1 || position < terminatorPosition);
 }
-var { env: env2 } = process3;
+var { env: env2 } = process4;
 var flagForceColor2;
 if (hasFlag2("no-color") || hasFlag2("no-colors") || hasFlag2("color=false") || hasFlag2("color=never")) {
   flagForceColor2 = 0;
@@ -68725,7 +68848,7 @@ function _supportsColor2(haveStream, { streamIsTTY, sniffFlags = true } = {}) {
   if (env2.TERM === "dumb") {
     return min;
   }
-  if (process3.platform === "win32") {
+  if (process4.platform === "win32") {
     const osRelease = os2.release().split(".");
     if (Number(osRelease[0]) >= 10 && Number(osRelease[2]) >= 10586) {
       return Number(osRelease[2]) >= 14931 ? 3 : 2;
@@ -70194,12 +70317,12 @@ function multimatch(list, patterns, options = {}) {
   let result = [];
   for (const item of list) {
     for (let pattern of patterns) {
-      let process4 = array_union_default;
+      let process5 = array_union_default;
       if (pattern[0] === "!") {
         pattern = pattern.slice(1);
-        process4 = arrayDiffer;
+        process5 = arrayDiffer;
       }
-      result = process4(result, minimatch.match([item], pattern, options));
+      result = process5(result, minimatch.match([item], pattern, options));
     }
   }
   return result;

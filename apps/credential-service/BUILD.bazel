@@ -20,6 +20,10 @@ copy_to_bin(
 esbuild_esm_bundle(
     name = "credential-service",
     entry_point = "//apps/credential-service/lib:server.ts",
+    external = [
+        # Mark farmhash as external as it loads .node files directly, which are unused in our usage
+        "farmhash",
+    ],
     target = "node16",
     visibility = [
         "//apps/credential-service:__subpackages__",
