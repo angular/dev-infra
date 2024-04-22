@@ -565,8 +565,8 @@ __metadata:
     "@octokit/graphql": "npm:8.1.1"
     "@octokit/graphql-schema": "patch:@octokit/graphql-schema@npm%3A15.3.0#~/.yarn/patches/@octokit-graphql-schema-npm-15.3.0-4046a59648.patch"
     "@octokit/openapi-types": "npm:22.1.0"
-    "@octokit/plugin-paginate-rest": "npm:11.1.1"
-    "@octokit/plugin-rest-endpoint-methods": "npm:13.0.1"
+    "@octokit/plugin-paginate-rest": "npm:11.2.0"
+    "@octokit/plugin-rest-endpoint-methods": "npm:13.1.0"
     "@octokit/request-error": "npm:6.1.1"
     "@octokit/rest": "npm:20.1.0"
     "@octokit/types": "npm:13.4.1"
@@ -5191,14 +5191,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/plugin-paginate-rest@npm:11.1.1":
-  version: 11.1.1
-  resolution: "@octokit/plugin-paginate-rest@npm:11.1.1"
+"@octokit/plugin-paginate-rest@npm:11.2.0":
+  version: 11.2.0
+  resolution: "@octokit/plugin-paginate-rest@npm:11.2.0"
   dependencies:
-    "@octokit/types": "npm:^13.4.0"
+    "@octokit/types": "npm:^13.4.1"
   peerDependencies:
     "@octokit/core": ">=6"
-  checksum: 10c0/ea95fe8c732ffc39bb3ac2e0a87f949b526c5ab8afc3d9f1b37feeca5c47148c5feb116beb139c7850e8e18106da5298225f3f1ecf782a09b210a8bf3f73f1df
+  checksum: 10c0/1e03db8942e0a0560c8e66c94620a242c2aa21e1c8154677fd94f1864c59fc7c591551aa3ffb07d5fe1b49b54b886f831b3fd4c5169d9e32a6fbc5720dd4ef46
   languageName: node
   linkType: hard
 
@@ -5222,14 +5222,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/plugin-rest-endpoint-methods@npm:13.0.1":
-  version: 13.0.1
-  resolution: "@octokit/plugin-rest-endpoint-methods@npm:13.0.1"
+"@octokit/plugin-rest-endpoint-methods@npm:13.1.0":
+  version: 13.1.0
+  resolution: "@octokit/plugin-rest-endpoint-methods@npm:13.1.0"
   dependencies:
-    "@octokit/types": "npm:^13.4.0"
+    "@octokit/types": "npm:^13.4.1"
   peerDependencies:
     "@octokit/core": ">=6"
-  checksum: 10c0/0fe3b4ba8717f99f394f36bff26fcf64cdec08586c3c3cf93de8c7b815db1a8eda78f6383b5defc0b9badda092abb7ce987db46f1ee9a5fd926a322838bcc01c
+  checksum: 10c0/0c5029f33391b5fdec175e6ecbf6812ea14afd598d2e8401efd2a533c86741191c18146af77f3b3f506d18dc8cb53f7d914cab98411b5db838be00c9da2715da
   languageName: node
   linkType: hard
 
@@ -5300,7 +5300,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/types@npm:13.4.1, @octokit/types@npm:^13.0.0, @octokit/types@npm:^13.1.0, @octokit/types@npm:^13.4.0":
+"@octokit/types@npm:13.4.1, @octokit/types@npm:^13.0.0, @octokit/types@npm:^13.1.0, @octokit/types@npm:^13.4.1":
   version: 13.4.1
   resolution: "@octokit/types@npm:13.4.1"
   dependencies:
