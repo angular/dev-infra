@@ -70394,6 +70394,48 @@ async function getPrFiles(fileSchema, prNumber, git) {
   }
   return files;
 }
+async function getPrComments(commentsSchema, prNumber, git) {
+  const { owner: owner2, name } = git.remoteConfig;
+  const PRS_QUERY = (0, import_typed_graphqlify.params)({
+    $first: "Int",
+    $after: "String",
+    $owner: "String!",
+    $name: "String!"
+  }, {
+    repository: (0, import_typed_graphqlify.params)({ owner: "$owner", name: "$name" }, {
+      pullRequest: (0, import_typed_graphqlify.params)({
+        number: prNumber
+      }, {
+        comments: (0, import_typed_graphqlify.params)({
+          first: "$first",
+          after: "$after"
+        }, {
+          nodes: [commentsSchema],
+          pageInfo: {
+            hasNextPage: import_typed_graphqlify.types.boolean,
+            endCursor: import_typed_graphqlify.types.string
+          }
+        })
+      })
+    })
+  });
+  let cursor;
+  let hasNextPage = true;
+  const comments = [];
+  while (hasNextPage) {
+    const paramsValue = {
+      after: cursor || null,
+      first: 100,
+      owner: owner2,
+      name
+    };
+    const results = await git.github.graphql(PRS_QUERY, paramsValue);
+    comments.push(...results.repository.pullRequest.comments.nodes);
+    hasNextPage = results.repository.pullRequest.comments.pageInfo.hasNextPage;
+    cursor = results.repository.pullRequest.comments.pageInfo.endCursor;
+  }
+  return comments;
+}
 
 // 
 var import_typed_graphqlify2 = __toESM(require_dist2());
@@ -70490,11 +70532,21 @@ var PR_SCHEMA = {
 var PR_FILES_SCHEMA = (0, import_typed_graphqlify2.params)({ first: 100 }, {
   path: import_typed_graphqlify2.types.string
 });
+var PR_COMMENTS_SCHEMA = (0, import_typed_graphqlify2.params)({ first: 100 }, {
+  author: {
+    login: import_typed_graphqlify2.types.string
+  },
+  authorAssociation: import_typed_graphqlify2.types.custom(),
+  bodyText: import_typed_graphqlify2.types.string
+});
 async function fetchPullRequestFromGithub(git, prNumber) {
   return await getPr(PR_SCHEMA, prNumber, git);
 }
 async function fetchPullRequestFilesFromGithub(git, prNumber) {
   return await getPrFiles(PR_FILES_SCHEMA, prNumber, git);
+}
+async function fetchPullRequestCommentsFromGithub(git, prNumber) {
+  return await getPrComments(PR_COMMENTS_SCHEMA, prNumber, git);
 }
 function getStatusesForPullRequest(pullRequest) {
   const nodes = pullRequest.commits.nodes;
@@ -72401,7 +72453,8 @@ var Validation6 = class extends PullRequestValidation {
     if (!pullRequestRequiresTGP(pullRequest)) {
       return;
     }
-    if (await pullRequestHasValidTestedComment(pullRequest, gitClient)) {
+    const comments = await PullRequestComments.create(gitClient, pullRequest.number).loadPullRequestComments();
+    if (await pullRequestHasValidTestedComment(comments, gitClient)) {
       return;
     }
     throw this._createError(`Pull Request requires a TGP and does not have one. Either run a TGP or specify the PR is fully tested by adding a comment with "TESTED=[reason]".`);
@@ -72410,9 +72463,21 @@ var Validation6 = class extends PullRequestValidation {
 function pullRequestRequiresTGP(pullRequest) {
   return pullRequest.labels.nodes.some(({ name }) => name === requiresLabels.REQUIRES_TGP.name);
 }
-async function pullRequestHasValidTestedComment(pullRequest, gitClient) {
-  for (const { commit, bodyText, author } of pullRequest.reviews.nodes) {
-    if (commit.oid === pullRequest.headRefOid && bodyText.startsWith(`TESTED=`) && await github_macros_default.isGooglerOrgMember(gitClient, author.login)) {
+var PullRequestComments = class {
+  constructor(git, prNumber) {
+    this.git = git;
+    this.prNumber = prNumber;
+  }
+  async loadPullRequestComments() {
+    return await fetchPullRequestCommentsFromGithub(this.git, this.prNumber) ?? [];
+  }
+  static create(git, prNumber) {
+    return new PullRequestComments(git, prNumber);
+  }
+};
+async function pullRequestHasValidTestedComment(comments, gitClient) {
+  for (const { bodyText, author } of comments) {
+    if (bodyText.startsWith(`TESTED=`) && await github_macros_default.isGooglerOrgMember(gitClient.github, author.login)) {
       return true;
     }
   }
@@ -72502,7 +72567,7 @@ async function assertValidPullRequest(pullRequest, validationConfig, ngDevConfig
     passingCiValidation.run(validationConfig, pullRequest),
     enforcedStatusesValidation.run(validationConfig, pullRequest, ngDevConfig.pullRequest),
     isolatedSeparateFilesValidation.run(validationConfig, ngDevConfig, pullRequest.number, gitClient),
-    enforceTestedValidation.run(validationConfig, pullRequest, gitClient.github)
+    enforceTestedValidation.run(validationConfig, pullRequest, gitClient)
   ];
   if (activeReleaseTrains !== null) {
     validationResults.push(changesAllowForTargetLabelValidation.run(validationConfig, commitsInPr, target.label, ngDevConfig.pullRequest, activeReleaseTrains, labels));

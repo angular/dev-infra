@@ -14,7 +14,7 @@ import {
   StatusState,
   CommentAuthorAssociation,
 } from '@octokit/graphql-schema';
-import {getPendingPrs, getPr, getPrFiles} from '../../utils/github.js';
+import {getPendingPrs, getPr, getPrFiles, getPrComments} from '../../utils/github.js';
 import {alias, types as graphqlTypes, onUnion, optional, params} from 'typed-graphqlify';
 
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
@@ -143,6 +143,19 @@ export const PR_FILES_SCHEMA = params(
 
 export type PullRequestFilesFromGithub = typeof PR_FILES_SCHEMA;
 
+export const PR_COMMENTS_SCHEMA = params(
+  {first: 100},
+  {
+    author: {
+      login: graphqlTypes.string,
+    },
+    authorAssociation: graphqlTypes.custom<CommentAuthorAssociation>(),
+    bodyText: graphqlTypes.string,
+  },
+);
+
+export type PullRequestCommentsFromGithub = typeof PR_COMMENTS_SCHEMA;
+
 /** Type describing the normalized and combined status of a pull request. */
 export type PullRequestStatusInfo = {
   combinedStatus: PullRequestStatus;
@@ -174,6 +187,14 @@ export async function fetchPullRequestFilesFromGithub(
   prNumber: number,
 ): Promise<PullRequestFilesFromGithub[] | null> {
   return await getPrFiles(PR_FILES_SCHEMA, prNumber, git);
+}
+
+/** Fetches a pull request from Github. Returns null if an error occurred. */
+export async function fetchPullRequestCommentsFromGithub(
+  git: AuthenticatedGitClient,
+  prNumber: number,
+): Promise<PullRequestCommentsFromGithub[] | null> {
+  return await getPrComments(PR_COMMENTS_SCHEMA, prNumber, git);
 }
 
 /**
