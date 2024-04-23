@@ -24,6 +24,8 @@ import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-clien
 import {installVirtualGitClientSpies, mockNgDevConfig} from '../../../utils/testing/index.js';
 import {PullRequestFiles} from '../validation/assert-isolated-separate-files.js';
 import {G3Stats} from '../../../utils/g3.js';
+import {PullRequestComments} from '../validation/assert-enforce-tested.js';
+import {CommentAuthorAssociation} from '@octokit/graphql-schema';
 
 const API_ENDPOINT = `https://api.github.com`;
 
@@ -84,6 +86,9 @@ describe('pull request validation', () => {
     it('should require a TGP when label is present', async () => {
       const config = createIsolatedValidationConfig({assertEnforceTested: true});
       let pr = createTestPullRequest();
+      const commentHelper = PullRequestComments.create(git, pr.number);
+      spyOn(PullRequestComments, 'create').and.returnValue(commentHelper);
+      spyOn(commentHelper, 'loadPullRequestComments').and.returnValue(Promise.resolve([]));
       pr.labels.nodes.push({name: requiresLabels.REQUIRES_TGP.name});
       const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
       expect(results.length).toBe(1);
@@ -95,14 +100,19 @@ describe('pull request validation', () => {
     it('should pass when label is present and TESTED comment exists', async () => {
       const config = createIsolatedValidationConfig({assertEnforceTested: true});
       let pr = createTestPullRequest();
-      pr.reviews.nodes.push({
-        commit: {oid: '4321'},
-        authorAssociation: 'MEMBER',
-        author: {
-          login: 'fakelogin',
+      const comments = [
+        {
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          author: {
+            login: 'fakelogin',
+          },
+          bodyText: 'TESTED="blah"',
         },
-        bodyText: 'TESTED="blah"',
-      });
+      ];
+      const commentHelper = PullRequestComments.create(git, pr.number);
+      spyOn(PullRequestComments, 'create').and.returnValue(commentHelper);
+      spyOn(commentHelper, 'loadPullRequestComments').and.returnValue(Promise.resolve(comments));
+
       pr.labels.nodes.push({name: requiresLabels.REQUIRES_TGP.name});
       interceptOrgsMembershipRequest('fakelogin', true);
       const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
@@ -112,33 +122,20 @@ describe('pull request validation', () => {
     it('should not pass when label is present and TESTED comment exists from non-googler', async () => {
       const config = createIsolatedValidationConfig({assertEnforceTested: true});
       let pr = createTestPullRequest();
-      pr.reviews.nodes.push({
-        commit: {oid: '4321'},
-        authorAssociation: 'MEMBER',
-        author: {
-          login: 'fakelogin',
+      const comments = [
+        {
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          author: {
+            login: 'fakelogin',
+          },
+          bodyText: 'TESTED="blah"',
         },
-        bodyText: 'TESTED="blah"',
-      });
+      ];
+      const commentHelper = PullRequestComments.create(git, pr.number);
+      spyOn(PullRequestComments, 'create').and.returnValue(commentHelper);
+      spyOn(commentHelper, 'loadPullRequestComments').and.returnValue(Promise.resolve(comments));
       pr.labels.nodes.push({name: requiresLabels.REQUIRES_TGP.name});
       interceptOrgsMembershipRequest('fakelogin', false);
-      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
-      expect(results.length).toBe(1);
-    });
-
-    it('should not pass when label is present and TESTED comment exists on old commit sha', async () => {
-      const config = createIsolatedValidationConfig({assertEnforceTested: true});
-      let pr = createTestPullRequest();
-      pr.reviews.nodes.push({
-        commit: {oid: '1234'},
-        authorAssociation: 'MEMBER',
-        author: {
-          login: 'fakelogin',
-        },
-        bodyText: 'TESTED="blah"',
-      });
-      interceptOrgsMembershipRequest('fakelogin', true);
-      pr.labels.nodes.push({name: requiresLabels.REQUIRES_TGP.name});
       const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
       expect(results.length).toBe(1);
     });

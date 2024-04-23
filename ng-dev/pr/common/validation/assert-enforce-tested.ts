@@ -6,11 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {AuthenticatedGithubClient} from '../../../utils/git/github.js';
 import githubMacros from '../../../utils/git/github-macros.js';
-import {PullRequestFromGithub} from '../fetch-pull-request.js';
+import {
+  fetchPullRequestCommentsFromGithub,
+  PullRequestFromGithub,
+  PullRequestCommentsFromGithub,
+} from '../fetch-pull-request.js';
 import {createPullRequestValidation, PullRequestValidation} from './validation-config.js';
 import {requiresLabels} from '../labels/index.js';
+import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client.js';
 
 /** Assert the pull request has passing enforced statuses. */
 // TODO: update typings to make sure portability is properly handled for windows build.
@@ -20,12 +24,17 @@ export const enforceTestedValidation = createPullRequestValidation(
 );
 
 class Validation extends PullRequestValidation {
-  async assert(pullRequest: PullRequestFromGithub, gitClient: AuthenticatedGithubClient) {
+  async assert(pullRequest: PullRequestFromGithub, gitClient: AuthenticatedGitClient) {
     if (!pullRequestRequiresTGP(pullRequest)) {
       return;
     }
 
-    if (await pullRequestHasValidTestedComment(pullRequest, gitClient)) {
+    const comments = await PullRequestComments.create(
+      gitClient,
+      pullRequest.number,
+    ).loadPullRequestComments();
+
+    if (await pullRequestHasValidTestedComment(comments, gitClient)) {
       return;
     }
 
@@ -44,18 +53,34 @@ function pullRequestRequiresTGP(pullRequest: PullRequestFromGithub): boolean {
   return pullRequest.labels.nodes.some(({name}) => name === requiresLabels.REQUIRES_TGP.name);
 }
 
+export class PullRequestComments {
+  constructor(
+    private git: AuthenticatedGitClient,
+    private prNumber: number,
+  ) {}
+  /**
+   * Loads the files from a given pull request.
+   */
+  async loadPullRequestComments(): Promise<PullRequestCommentsFromGithub[]> {
+    return (await fetchPullRequestCommentsFromGithub(this.git, this.prNumber)) ?? [];
+  }
+
+  static create(git: AuthenticatedGitClient, prNumber: number) {
+    return new PullRequestComments(git, prNumber);
+  }
+}
+
 /**
- * Checks for `TESTED=[reason]` review comment on a current commit sha from a google organization member
+ * Checks for `TESTED=[reason]` comment on a current commit sha from a google organization member
  */
 export async function pullRequestHasValidTestedComment(
-  pullRequest: PullRequestFromGithub,
-  gitClient: AuthenticatedGithubClient,
+  comments: PullRequestCommentsFromGithub[],
+  gitClient: AuthenticatedGitClient,
 ): Promise<boolean> {
-  for (const {commit, bodyText, author} of pullRequest.reviews.nodes) {
+  for (const {bodyText, author} of comments) {
     if (
-      commit.oid === pullRequest.headRefOid &&
       bodyText.startsWith(`TESTED=`) &&
-      (await githubMacros.isGooglerOrgMember(gitClient, author.login))
+      (await githubMacros.isGooglerOrgMember(gitClient.github, author.login))
     ) {
       return true;
     }

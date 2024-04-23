@@ -63,7 +63,7 @@ export async function assertValidPullRequest(
       pullRequest.number,
       gitClient,
     ),
-    enforceTestedValidation.run(validationConfig, pullRequest, gitClient.github),
+    enforceTestedValidation.run(validationConfig, pullRequest, gitClient),
   ];
 
   if (activeReleaseTrains !== null) {

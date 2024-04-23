@@ -14,6 +14,7 @@ ts_library(
         "//ng-dev/utils",
         "//ng-dev/utils:g3_sync_config",
         "//ng-dev/utils/testing",
+        "@npm//@octokit/graphql-schema",
         "@npm//@octokit/plugin-rest-endpoint-methods",
         "@npm//@types/folder-hash",
         "@npm//@types/jasmine",
