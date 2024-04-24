@@ -26,7 +26,7 @@ export function HeaderApi(props: {entry: DocEntryRenderable; showFullDescription
   // We should update it to point to the tag of the released version which ADEV runs on.
 
   const sourceUrl = isDocEntryWithSourceInfo(entry)
-    ? `https://github.com/angular/angular/blob/main${entry.source.filePath}#L${entry.source.startLine}-${entry.source.endLine}`
+    ? `https://github.com/angular/angular/blob/main${entry.source.filePath}#L${entry.source.startLine}-L${entry.source.endLine}`
     : null;
 
   return (
