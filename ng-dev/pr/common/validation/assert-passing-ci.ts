@@ -22,7 +22,17 @@ export const passingCiValidation = createPullRequestValidation(
 
 class Validation extends PullRequestValidation {
   assert(pullRequest: PullRequestFromGithub) {
-    const {combinedStatus} = getStatusesForPullRequest(pullRequest);
+    const {combinedStatus, statuses} = getStatusesForPullRequest(pullRequest);
+
+    // TODO(josephperrott): Find a way to not need to do this kind of detection.
+    // Because its not possible to determine if workflow is pending approval or if all checks and
+    // statuses have run, we use the `CI / lint (pull_request)` as a marker for if the expected
+    // checks have run already.  If they have not yet run, we mark the combined status as missing.
+    if (statuses.find((status) => status.name === 'lint') === undefined) {
+      throw this._createError(
+        'Pull request is missing expected status checks. Check the pull request for pending workflows',
+      );
+    }
     if (combinedStatus === PullRequestStatus.PENDING) {
       throw this._createError('Pull request has pending status checks.');
     }

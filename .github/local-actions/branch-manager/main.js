@@ -72321,7 +72321,10 @@ var Validation8 = class extends PullRequestValidation {
 var passingCiValidation = createPullRequestValidation({ name: "assertPassingCi", canBeForceIgnored: true }, () => Validation9);
 var Validation9 = class extends PullRequestValidation {
   assert(pullRequest) {
-    const { combinedStatus } = getStatusesForPullRequest(pullRequest);
+    const { combinedStatus, statuses } = getStatusesForPullRequest(pullRequest);
+    if (statuses.find((status) => status.name === "lint") === void 0) {
+      throw this._createError("Pull request is missing expected status checks. Check the pull request for pending workflows");
+    }
     if (combinedStatus === PullRequestStatus.PENDING) {
       throw this._createError("Pull request has pending status checks.");
     }
