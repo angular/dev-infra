@@ -1702,6 +1702,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@renovatebot/kbpgp@npm:3.0.1":
+  version: 3.0.1
+  resolution: "@renovatebot/kbpgp@npm:3.0.1"
+  dependencies:
+    bn: "npm:^1.0.5"
+    bzip-deflate: "npm:^1.0.0"
+    deep-equal: "npm:^2.2.3"
+    iced-error: "npm:0.0.13"
+    iced-lock: "npm:^2.0.1"
+    iced-runtime-3: "npm:^3.0.5"
+    keybase-ecurve: "npm:^1.0.1"
+    keybase-nacl: "npm:^1.1.4"
+    minimist: "npm:^1.2.8"
+    pgp-utils: "npm:0.0.35"
+    purepack: "npm:^1.0.6"
+    triplesec: "npm:^4.0.3"
+    tweetnacl: "npm:^1.0.3"
+  checksum: 10c0/ae0f8a8073136c8e3e0569f9e314ec591b005cb2c845fbe045859ac279b18258df2ff855a3f2e5174baf4b471e91a31a8fe966a123b5a126d22bd43a58c95bfd
+  languageName: node
+  linkType: hard
+
 "@renovatebot/osv-offline-db@npm:1.6.0":
   version: 1.6.0
   resolution: "@renovatebot/osv-offline-db@npm:1.6.0"
@@ -2686,7 +2707,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"array-buffer-byte-length@npm:^1.0.1":
+"array-buffer-byte-length@npm:^1.0.0, array-buffer-byte-length@npm:^1.0.1":
   version: 1.0.1
   resolution: "array-buffer-byte-length@npm:1.0.1"
   dependencies:
@@ -3370,17 +3391,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"deep-equal@npm:^1.1.0":
-  version: 1.1.2
-  resolution: "deep-equal@npm:1.1.2"
+"deep-equal@npm:^2.2.3":
+  version: 2.2.3
+  resolution: "deep-equal@npm:2.2.3"
   dependencies:
+    array-buffer-byte-length: "npm:^1.0.0"
+    call-bind: "npm:^1.0.5"
+    es-get-iterator: "npm:^1.1.3"
+    get-intrinsic: "npm:^1.2.2"
     is-arguments: "npm:^1.1.1"
+    is-array-buffer: "npm:^3.0.2"
     is-date-object: "npm:^1.0.5"
     is-regex: "npm:^1.1.4"
+    is-shared-array-buffer: "npm:^1.0.2"
+    isarray: "npm:^2.0.5"
     object-is: "npm:^1.1.5"
     object-keys: "npm:^1.1.1"
+    object.assign: "npm:^4.1.4"
     regexp.prototype.flags: "npm:^1.5.1"
-  checksum: 10c0/cd85d822d18e9b3e1532d0f6ba412d229aa9d22881d70da161674428ae96e47925191296f7cda29306bac252889007da40ed8449363bd1c96c708acb82068a00
+    side-channel: "npm:^1.0.4"
+    which-boxed-primitive: "npm:^1.0.2"
+    which-collection: "npm:^1.0.1"
+    which-typed-array: "npm:^1.1.13"
+  checksum: 10c0/a48244f90fa989f63ff5ef0cc6de1e4916b48ea0220a9c89a378561960814794a5800c600254482a2c8fd2e49d6c2e196131dc983976adb024c94a42dfe4949f
   languageName: node
   linkType: hard
 
@@ -3721,6 +3754,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"es-get-iterator@npm:^1.1.3":
+  version: 1.1.3
+  resolution: "es-get-iterator@npm:1.1.3"
+  dependencies:
+    call-bind: "npm:^1.0.2"
+    get-intrinsic: "npm:^1.1.3"
+    has-symbols: "npm:^1.0.3"
+    is-arguments: "npm:^1.1.1"
+    is-map: "npm:^2.0.2"
+    is-set: "npm:^2.0.2"
+    is-string: "npm:^1.0.7"
+    isarray: "npm:^2.0.5"
+    stop-iteration-iterator: "npm:^1.0.0"
+  checksum: 10c0/ebd11effa79851ea75d7f079405f9d0dc185559fd65d986c6afea59a0ff2d46c2ed8675f19f03dce7429d7f6c14ff9aede8d121fbab78d75cfda6a263030bac0
+  languageName: node
+  linkType: hard
+
 "es-object-atoms@npm:^1.0.0":
   version: 1.0.0
   resolution: "es-object-atoms@npm:1.0.0"
@@ -4044,7 +4094,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"get-intrinsic@npm:^1.1.3, get-intrinsic@npm:^1.2.1, get-intrinsic@npm:^1.2.3, get-intrinsic@npm:^1.2.4":
+"get-intrinsic@npm:^1.1.3, get-intrinsic@npm:^1.2.1, get-intrinsic@npm:^1.2.2, get-intrinsic@npm:^1.2.3, get-intrinsic@npm:^1.2.4":
   version: 1.2.4
   resolution: "get-intrinsic@npm:1.2.4"
   dependencies:
@@ -4435,7 +4485,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"iced-lock@npm:^1.0.1, iced-lock@npm:^1.0.2":
+"iced-lock@npm:^1.0.1":
   version: 1.1.0
   resolution: "iced-lock@npm:1.1.0"
   dependencies:
@@ -4444,7 +4494,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"iced-runtime@npm:>=0.0.1, iced-runtime@npm:^1.0.0, iced-runtime@npm:^1.0.2, iced-runtime@npm:^1.0.4":
+"iced-lock@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "iced-lock@npm:2.0.1"
+  dependencies:
+    iced-runtime: "npm:^1.0.0"
+  checksum: 10c0/ea21f7d15b61969000cbba7d846fb2483c9f2176e40cd05ff46b66562651e7215b7abc5dd4ae69b820d4bee101460e086b7f81fecec6c2d1978e53e2b3f2204e
+  languageName: node
+  linkType: hard
+
+"iced-runtime-3@npm:^3.0.5":
+  version: 3.0.5
+  resolution: "iced-runtime-3@npm:3.0.5"
+  checksum: 10c0/3bce5d4b089c0eda5640086d5a5da511c0149dc925a2e34d0860e95f77909c0cd827076268b0c9b587920b059f3e6f0a9f0bd705c7cd67964ca75d00e128d4bd
+  languageName: node
+  linkType: hard
+
+"iced-runtime@npm:>=0.0.1, iced-runtime@npm:^1.0.0, iced-runtime@npm:^1.0.2":
   version: 1.0.4
   resolution: "iced-runtime@npm:1.0.4"
   checksum: 10c0/d528b0f5d1687ab49cd3e0a6acb8fabf8714e02da45a8ac90c445a20606d79fabe2a3819bf74324b80724646c0ffe607aabb192118440364635f0426461e1bc6
@@ -4548,7 +4614,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"internal-slot@npm:^1.0.7":
+"internal-slot@npm:^1.0.4, internal-slot@npm:^1.0.7":
   version: 1.0.7
   resolution: "internal-slot@npm:1.0.7"
   dependencies:
@@ -4596,7 +4662,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-array-buffer@npm:^3.0.4":
+"is-array-buffer@npm:^3.0.2, is-array-buffer@npm:^3.0.4":
   version: 3.0.4
   resolution: "is-array-buffer@npm:3.0.4"
   dependencies:
@@ -4726,6 +4792,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-map@npm:^2.0.2, is-map@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "is-map@npm:2.0.3"
+  checksum: 10c0/2c4d431b74e00fdda7162cd8e4b763d6f6f217edf97d4f8538b94b8702b150610e2c64961340015fe8df5b1fcee33ccd2e9b62619c4a8a3a155f8de6d6d355fc
+  languageName: node
+  linkType: hard
+
 "is-negative-zero@npm:^2.0.3":
   version: 2.0.3
   resolution: "is-negative-zero@npm:2.0.3"
@@ -4770,6 +4843,13 @@ __metadata:
     call-bind: "npm:^1.0.2"
     has-tostringtag: "npm:^1.0.0"
   checksum: 10c0/bb72aae604a69eafd4a82a93002058c416ace8cde95873589a97fc5dac96a6c6c78a9977d487b7b95426a8f5073969124dd228f043f9f604f041f32fcc465fc1
+  languageName: node
+  linkType: hard
+
+"is-set@npm:^2.0.2, is-set@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "is-set@npm:2.0.3"
+  checksum: 10c0/f73732e13f099b2dc879c2a12341cfc22ccaca8dd504e6edae26484bd5707a35d503fba5b4daad530a9b088ced1ae6c9d8200fd92e09b428fe14ea79ce8080b7
   languageName: node
   linkType: hard
 
@@ -4832,12 +4912,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-weakmap@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "is-weakmap@npm:2.0.2"
+  checksum: 10c0/443c35bb86d5e6cc5929cd9c75a4024bb0fff9586ed50b092f94e700b89c43a33b186b76dbc6d54f3d3d09ece689ab38dcdc1af6a482cbe79c0f2da0a17f1299
+  languageName: node
+  linkType: hard
+
 "is-weakref@npm:^1.0.2":
   version: 1.0.2
   resolution: "is-weakref@npm:1.0.2"
   dependencies:
     call-bind: "npm:^1.0.2"
   checksum: 10c0/1545c5d172cb690c392f2136c23eec07d8d78a7f57d0e41f10078aa4f5daf5d7f57b6513a67514ab4f073275ad00c9822fc8935e00229d0a2089e1c02685d4b1
+  languageName: node
+  linkType: hard
+
+"is-weakset@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "is-weakset@npm:2.0.3"
+  dependencies:
+    call-bind: "npm:^1.0.7"
+    get-intrinsic: "npm:^1.2.4"
+  checksum: 10c0/8ad6141b6a400e7ce7c7442a13928c676d07b1f315ab77d9912920bf5f4170622f43126f111615788f26c3b1871158a6797c862233124507db0bcc33a9537d1a
   languageName: node
   linkType: hard
 
@@ -5022,27 +5119,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kbpgp@npm:2.1.15":
-  version: 2.1.15
-  resolution: "kbpgp@npm:2.1.15"
-  dependencies:
-    bn: "npm:^1.0.5"
-    bzip-deflate: "npm:^1.0.0"
-    deep-equal: "npm:^1.1.0"
-    iced-error: "npm:0.0.13"
-    iced-lock: "npm:^1.0.2"
-    iced-runtime: "npm:^1.0.4"
-    keybase-ecurve: "npm:^1.0.1"
-    keybase-nacl: "npm:^1.1.2"
-    minimist: "npm:^1.2.0"
-    pgp-utils: "npm:0.0.35"
-    purepack: "npm:^1.0.5"
-    triplesec: "npm:^4.0.3"
-    tweetnacl: "npm:^0.13.1"
-  checksum: 10c0/2aa6bb6f761df7782f999cb80e48d6955da54b42b8dd679882a7e26fbaa87f9c01598000c08873525f8080a2931b6de941ceaa0363ec1ec15a712c50b435b797
-  languageName: node
-  linkType: hard
-
 "keybase-ecurve@npm:^1.0.1":
   version: 1.0.1
   resolution: "keybase-ecurve@npm:1.0.1"
@@ -5052,7 +5128,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"keybase-nacl@npm:^1.1.2":
+"keybase-nacl@npm:^1.1.4":
   version: 1.1.4
   resolution: "keybase-nacl@npm:1.1.4"
   dependencies:
@@ -5445,7 +5521,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimist@npm:^1.2.0, minimist@npm:^1.2.3, minimist@npm:^1.2.5, minimist@npm:^1.2.6":
+"minimist@npm:^1.2.0, minimist@npm:^1.2.3, minimist@npm:^1.2.5, minimist@npm:^1.2.6, minimist@npm:^1.2.8":
   version: 1.2.8
   resolution: "minimist@npm:1.2.8"
   checksum: 10c0/19d3fcdca050087b84c2029841a093691a91259a47def2f18222f41e7645a0b7c44ef4b40e88a1e58a40c84d2ef0ee6047c55594d298146d0eb3f6b737c20ce6
@@ -5670,7 +5746,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: "npm:37.319.0"
+    renovate: "npm:37.320.1"
   languageName: unknown
   linkType: soft
 
@@ -5802,7 +5878,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"object.assign@npm:^4.1.5":
+"object.assign@npm:^4.1.4, object.assign@npm:^4.1.5":
   version: 4.1.5
   resolution: "object.assign@npm:4.1.5"
   dependencies:
@@ -6157,7 +6233,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"purepack@npm:^1.0.5":
+"purepack@npm:^1.0.6":
   version: 1.0.6
   resolution: "purepack@npm:1.0.6"
   checksum: 10c0/59858954040b06cae7e491eeec08b99dfe58fdd42c963050d807f44be21bd57e7c5cc3eca2fdfc046ac8243b4aab6c1f5dbc51d464d50c42d9ce57754406c2d5
@@ -6361,9 +6437,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:37.319.0":
-  version: 37.319.0
-  resolution: "renovate@npm:37.319.0"
+"renovate@npm:37.320.1":
+  version: 37.320.1
+  resolution: "renovate@npm:37.320.1"
   dependencies:
     "@aws-sdk/client-codecommit": "npm:3.363.0"
     "@aws-sdk/client-ec2": "npm:3.363.0"
@@ -6384,6 +6460,7 @@ __metadata:
     "@opentelemetry/sdk-trace-node": "npm:1.23.0"
     "@opentelemetry/semantic-conventions": "npm:1.23.0"
     "@qnighy/marshal": "npm:0.1.3"
+    "@renovatebot/kbpgp": "npm:3.0.1"
     "@renovatebot/osv-offline": "npm:1.5.4"
     "@renovatebot/pep440": "npm:3.0.20"
     "@renovatebot/ruby-semver": "npm:3.0.23"
@@ -6436,7 +6513,6 @@ __metadata:
     json-stringify-pretty-compact: "npm:3.0.0"
     json5: "npm:2.2.3"
     jsonata: "npm:2.0.4"
-    kbpgp: "npm:2.1.15"
     klona: "npm:2.0.6"
     lru-cache: "npm:10.2.0"
     luxon: "npm:3.4.4"
@@ -6483,7 +6559,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 10c0/965300fca844ac150bd18731be404c60ad724b4fb7de2c691f7878e65de2aab5e78bb2a2147d04e8b60871e660c09463948495e2aed98b1a567552d67be5afe6
+  checksum: 10c0/0a40c486d65f8bfe43a1626491fd4b571be761293fe81c2d7d8bef694d6f2da1e10ad9bdafbcbaeb810e2bcd727685b73751fa749e65e22fe5ea8133c5f445e1
   languageName: node
   linkType: hard
 
@@ -6959,6 +7035,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"stop-iteration-iterator@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "stop-iteration-iterator@npm:1.0.0"
+  dependencies:
+    internal-slot: "npm:^1.0.4"
+  checksum: 10c0/c4158d6188aac510d9e92925b58709207bd94699e9c31186a040c80932a687f84a51356b5895e6dc72710aad83addb9411c22171832c9ae0e6e11b7d61b0dfb9
+  languageName: node
+  linkType: hard
+
 "string-width-cjs@npm:string-width@^4.2.0, string-width@npm:^4.1.0":
   version: 4.2.3
   resolution: "string-width@npm:4.2.3"
@@ -7292,6 +7377,13 @@ __metadata:
   version: 0.13.3
   resolution: "tweetnacl@npm:0.13.3"
   checksum: 10c0/dac38d970c5e99dc8a7654cc79d361739946a20bb193fc79d24037151631e45dcbc7589b1ceae414abfc057cdf6d11b820c65524ec280280c0af71a6f533b1ba
+  languageName: node
+  linkType: hard
+
+"tweetnacl@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "tweetnacl@npm:1.0.3"
+  checksum: 10c0/069d9df51e8ad4a89fbe6f9806c68e06c65be3c7d42f0701cc43dba5f0d6064686b238bbff206c5addef8854e3ce00c643bff59432ea2f2c639feab0ee1a93f9
   languageName: node
   linkType: hard
 
@@ -7678,7 +7770,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"which-typed-array@npm:^1.1.14, which-typed-array@npm:^1.1.15, which-typed-array@npm:^1.1.2":
+"which-collection@npm:^1.0.1":
+  version: 1.0.2
+  resolution: "which-collection@npm:1.0.2"
+  dependencies:
+    is-map: "npm:^2.0.3"
+    is-set: "npm:^2.0.3"
+    is-weakmap: "npm:^2.0.2"
+    is-weakset: "npm:^2.0.3"
+  checksum: 10c0/3345fde20964525a04cdf7c4a96821f85f0cc198f1b2ecb4576e08096746d129eb133571998fe121c77782ac8f21cbd67745a3d35ce100d26d4e684c142ea1f2
+  languageName: node
+  linkType: hard
+
+"which-typed-array@npm:^1.1.13, which-typed-array@npm:^1.1.14, which-typed-array@npm:^1.1.15, which-typed-array@npm:^1.1.2":
   version: 1.1.15
   resolution: "which-typed-array@npm:1.1.15"
   dependencies:
