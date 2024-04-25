@@ -139,17 +139,19 @@ export function main(
         `\n   Total: ${newCircularDeps.length} new cycle(s), ${fixedCircularDeps.length} fixed cycle(s). \n`,
       ),
     );
-    if (approveCommand) {
-      Log.info(yellow(`   Please approve the new golden with: ${approveCommand}`));
-    } else {
-      Log.info(
-        yellow(
-          `   Please update the golden. The following command can be ` +
-            `run: yarn ts-circular-deps approve ${getRelativePath(process.cwd(), goldenFile)}.`,
-        ),
-      );
-    }
   }
+
+  if (approveCommand) {
+    Log.info(yellow(`   Please approve the new golden with: ${approveCommand}`));
+  } else {
+    Log.info(
+      yellow(
+        `   Please update the golden. The following command can be ` +
+          `run: yarn ng-dev ts-circular-deps approve ${getRelativePath(process.cwd(), goldenFile)}.`,
+      ),
+    );
+  }
+
   return 1;
 }
 
