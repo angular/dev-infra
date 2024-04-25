@@ -142,7 +142,7 @@
     "ejs": "^3.1.6",
     "emoji-regex": "^10.3.0",
     "fast-glob": "^3.3.2",
-    "firebase": "10.11.0",
+    "firebase": "10.11.1",
     "firebase-admin": "12.1.0",
     "firebase-functions": "^4.0.0",
     "firebase-tools": "^13.0.0",
