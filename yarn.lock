@@ -5467,9 +5467,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@puppeteer/browsers@npm:2.2.2":
-  version: 2.2.2
-  resolution: "@puppeteer/browsers@npm:2.2.2"
+"@puppeteer/browsers@npm:2.2.3":
+  version: 2.2.3
+  resolution: "@puppeteer/browsers@npm:2.2.3"
   dependencies:
     debug: "npm:4.3.4"
     extract-zip: "npm:2.0.1"
@@ -5481,7 +5481,7 @@ __metadata:
     yargs: "npm:17.7.2"
   bin:
     browsers: lib/cjs/main-cli.js
-  checksum: 10c0/4c49b53da60b4c7e0b08a6cc4c12debc5f750e7cbedecf6ae2966b7cfde4bee4d11c798f5c536340f9e351d209eeccef986e1e86881ae8f69daef54bffe78d03
+  checksum: 10c0/0d3442b44daf7469dba4ab641bae1450c7616818f1da465f5bbd96de14afd78e86b5015d3f28a2f06401f4b5bc09a72a7fd2ad77f1b51e4b54a3de4a0bcc82ea
   languageName: node
   linkType: hard
 
@@ -8205,16 +8205,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chromium-bidi@npm:0.5.17":
-  version: 0.5.17
-  resolution: "chromium-bidi@npm:0.5.17"
+"chromium-bidi@npm:0.5.19":
+  version: 0.5.19
+  resolution: "chromium-bidi@npm:0.5.19"
   dependencies:
     mitt: "npm:3.0.1"
     urlpattern-polyfill: "npm:10.0.0"
     zod: "npm:3.22.4"
   peerDependencies:
     devtools-protocol: "*"
-  checksum: 10c0/1d503c3af43f1e9e2b9d0a61a88ab67d90cc72ec823ec40a62c25777532d887e51f672046ea41d853754b52a3aa933f024bd69abfd85586396e06460b11481a0
+  checksum: 10c0/b48b1eb0a6ea029abf72d0e474b99d421d2e234eb92f743d592804b0130909f942b0dbd86147ba22d7d2d84e4345f4a9994030fcdac83ebee7a8892f575b7539
   languageName: node
   linkType: hard
 
@@ -10879,8 +10879,8 @@ __metadata:
   linkType: hard
 
 "firebase-tools@npm:^13.0.0":
-  version: 13.7.4
-  resolution: "firebase-tools@npm:13.7.4"
+  version: 13.7.5
+  resolution: "firebase-tools@npm:13.7.5"
   dependencies:
     "@google-cloud/pubsub": "npm:^3.0.1"
     abort-controller: "npm:^3.0.0"
@@ -10946,7 +10946,7 @@ __metadata:
     yaml: "npm:^2.4.1"
   bin:
     firebase: lib/bin/firebase.js
-  checksum: 10c0/6e9913eb02439a95bc0f36d58bc32b1da85c0198e4ae230c1078c5febb3bee165457cad43e2a76718adfd9d4359e12f09d61d358b1d8a3af57ad4f9e3113959b
+  checksum: 10c0/bee312c09449619c6f015f840b652833fb6bcce2fd687ab71aa5c7c9ad373cb87a85a057dac043123bb853d40f7a4f79eb9daf73af3d6b2894b668df7ca99c43
   languageName: node
   linkType: hard
 
@@ -16427,15 +16427,15 @@ __metadata:
   linkType: hard
 
 "puppeteer-core@npm:^22.6.5":
-  version: 22.7.0
-  resolution: "puppeteer-core@npm:22.7.0"
+  version: 22.7.1
+  resolution: "puppeteer-core@npm:22.7.1"
   dependencies:
-    "@puppeteer/browsers": "npm:2.2.2"
-    chromium-bidi: "npm:0.5.17"
+    "@puppeteer/browsers": "npm:2.2.3"
+    chromium-bidi: "npm:0.5.19"
     debug: "npm:4.3.4"
     devtools-protocol: "npm:0.0.1273771"
     ws: "npm:8.16.0"
-  checksum: 10c0/69f6588e0f1a37f8ba8bb90ae4c766491881ea9a12cd72805acfbcf4b38e4f6a847228429d6e32f6ebc6250cd8e2b45d0108f7aab7ff09cb922c779d43683f87
+  checksum: 10c0/3e7b7f2acff17f4501edd721abbfbaa826c229a25fab280f907d5812bb8d2409fdbd4d9e4846f260579f41790170daa15cfa1ec67ff365ea9bf655ace2bbda4c
   languageName: node
   linkType: hard
 
@@ -17344,13 +17344,13 @@ __metadata:
   linkType: hard
 
 "selenium-webdriver@npm:^4.18.1":
-  version: 4.19.0
-  resolution: "selenium-webdriver@npm:4.19.0"
+  version: 4.20.0
+  resolution: "selenium-webdriver@npm:4.20.0"
   dependencies:
     jszip: "npm:^3.10.1"
     tmp: "npm:^0.2.3"
     ws: "npm:>=8.16.0"
-  checksum: 10c0/431f634d8762e810718221b697058599758236373df478b591eb48c8917cbb746c60b2f7afcff48c7ca378700e987f3c06226577970c01213df6ebd43f3c18ee
+  checksum: 10c0/9c06d69607a463f5ee02441dd6c52c7af369dc147ff217d08e10382491ed7a5f79a29169c60d1e722c94a46073a73ae64056ebee92fdcfda234056867462b7b2
   languageName: node
   linkType: hard
 
