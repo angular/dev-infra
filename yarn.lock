@@ -566,7 +566,7 @@ __metadata:
     "@octokit/graphql-schema": "patch:@octokit/graphql-schema@npm%3A15.3.0#~/.yarn/patches/@octokit-graphql-schema-npm-15.3.0-4046a59648.patch"
     "@octokit/openapi-types": "npm:22.1.0"
     "@octokit/plugin-paginate-rest": "npm:11.2.0"
-    "@octokit/plugin-rest-endpoint-methods": "npm:13.1.0"
+    "@octokit/plugin-rest-endpoint-methods": "npm:13.1.1"
     "@octokit/request-error": "npm:6.1.1"
     "@octokit/rest": "npm:20.1.0"
     "@octokit/types": "npm:13.4.1"
@@ -5222,14 +5222,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/plugin-rest-endpoint-methods@npm:13.1.0":
-  version: 13.1.0
-  resolution: "@octokit/plugin-rest-endpoint-methods@npm:13.1.0"
+"@octokit/plugin-rest-endpoint-methods@npm:13.1.1":
+  version: 13.1.1
+  resolution: "@octokit/plugin-rest-endpoint-methods@npm:13.1.1"
   dependencies:
     "@octokit/types": "npm:^13.4.1"
   peerDependencies:
     "@octokit/core": ">=6"
-  checksum: 10c0/0c5029f33391b5fdec175e6ecbf6812ea14afd598d2e8401efd2a533c86741191c18146af77f3b3f506d18dc8cb53f7d914cab98411b5db838be00c9da2715da
+  checksum: 10c0/4966c5de1d350de659880cebb9e77c07d187335fccfbd12b625c1341b152f75c34f7ae60fc355229dc72c444045260bd96c1352f24c7b91994dfa964ee196fb5
   languageName: node
   linkType: hard
 
