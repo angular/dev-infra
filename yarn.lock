@@ -426,14 +426,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/animations@npm:18.0.0-next.5":
-  version: 18.0.0-next.5
-  resolution: "@angular/animations@npm:18.0.0-next.5"
+"@angular/animations@npm:18.0.0-next.6":
+  version: 18.0.0-next.6
+  resolution: "@angular/animations@npm:18.0.0-next.6"
   dependencies:
     tslib: "npm:^2.3.0"
   peerDependencies:
-    "@angular/core": 18.0.0-next.5
-  checksum: 10c0/a871dccc86d2603d78752eccabbace21840764191404a11d53b0a18b6c8c5d7f99e99ee517513613c532c66c196e30b4f45615b8b26f11e2169d5d6c17ed676d
+    "@angular/core": 18.0.0-next.6
+  checksum: 10c0/8481b8aa0c271e25913e29212e0c98872927ccbee9f2b0c7daeb7cd4751bb1210b52ff9d5253ed303f16df0221350d403f7b4f835662319cb4803f1643750aea
   languageName: node
   linkType: hard
 
@@ -514,21 +514,21 @@ __metadata:
     "@actions/core": "npm:^1.4.0"
     "@actions/github": "npm:^6.0.0"
     "@angular-devkit/build-angular": "npm:17.3.3"
-    "@angular/animations": "npm:18.0.0-next.5"
+    "@angular/animations": "npm:18.0.0-next.6"
     "@angular/bazel": "patch:@angular/bazel@npm:14.1.0-next.2#.yarn/patches/@angular-bazel-npm.patch"
     "@angular/benchpress": "npm:0.3.0"
-    "@angular/cdk": "npm:18.0.0-next.5"
+    "@angular/cdk": "npm:18.0.0-next.6"
     "@angular/cli": "npm:18.0.0-next.3"
-    "@angular/common": "npm:18.0.0-next.5"
-    "@angular/compiler": "npm:18.0.0-next.5"
-    "@angular/compiler-cli": "npm:18.0.0-next.5"
-    "@angular/core": "npm:18.0.0-next.5"
+    "@angular/common": "npm:18.0.0-next.6"
+    "@angular/compiler": "npm:18.0.0-next.6"
+    "@angular/compiler-cli": "npm:18.0.0-next.6"
+    "@angular/core": "npm:18.0.0-next.6"
     "@angular/fire": "npm:^17.0.0-next"
-    "@angular/forms": "npm:18.0.0-next.5"
-    "@angular/material": "npm:18.0.0-next.5"
-    "@angular/platform-browser": "npm:18.0.0-next.5"
-    "@angular/platform-browser-dynamic": "npm:18.0.0-next.5"
-    "@angular/router": "npm:18.0.0-next.5"
+    "@angular/forms": "npm:18.0.0-next.6"
+    "@angular/material": "npm:18.0.0-next.6"
+    "@angular/platform-browser": "npm:18.0.0-next.6"
+    "@angular/platform-browser-dynamic": "npm:18.0.0-next.6"
+    "@angular/router": "npm:18.0.0-next.6"
     "@babel/core": "npm:^7.16.0"
     "@babel/helper-annotate-as-pure": "npm:^7.18.6"
     "@babel/plugin-proposal-async-generator-functions": "npm:^7.20.1"
@@ -689,9 +689,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@angular/cdk@npm:18.0.0-next.5":
-  version: 18.0.0-next.5
-  resolution: "@angular/cdk@npm:18.0.0-next.5"
+"@angular/cdk@npm:18.0.0-next.6":
+  version: 18.0.0-next.6
+  resolution: "@angular/cdk@npm:18.0.0-next.6"
   dependencies:
     parse5: "npm:^7.1.2"
     tslib: "npm:^2.3.0"
@@ -702,7 +702,7 @@ __metadata:
   dependenciesMeta:
     parse5:
       optional: true
-  checksum: 10c0/af910eaaa1cd734b5fe01ca27dd60411fe33c27741de67dd15a4b71f6fc6e9a66d866e4df0dda0de02c784c509a63eb8b68773f2cce9ab6b0a3f91f52d9078ec
+  checksum: 10c0/eb1529effb8b695fffcdec16b642824b5c0c2dbd79b4a58424e1022ac1b7e649c048c9194c03d70c8d07e59d5d1d57a6339c211e7d487a7826e2434be5c30cdf
   languageName: node
   linkType: hard
 
@@ -733,21 +733,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/common@npm:18.0.0-next.5":
-  version: 18.0.0-next.5
-  resolution: "@angular/common@npm:18.0.0-next.5"
+"@angular/common@npm:18.0.0-next.6":
+  version: 18.0.0-next.6
+  resolution: "@angular/common@npm:18.0.0-next.6"
   dependencies:
     tslib: "npm:^2.3.0"
   peerDependencies:
-    "@angular/core": 18.0.0-next.5
+    "@angular/core": 18.0.0-next.6
     rxjs: ^6.5.3 || ^7.4.0
-  checksum: 10c0/2c569d44e3a28238fa7bcf0d7d13e40e517ba273ca1156364a140dd9ddf9d8ae8eb4c93cec3aa976335b7499da058150be931eaa8fdb4894a7b43fead8ef919a
+  checksum: 10c0/053e7de7ab180cd2ac5c2a6c95c316ed7c9677ab868b0f09044fd7cd6c17ca4752e3367af19bfc7456000b1eeb2826b88fcf87f1abc94224f3b19e938022adeb
   languageName: node
   linkType: hard
 
-"@angular/compiler-cli@npm:18.0.0-next.5":
-  version: 18.0.0-next.5
-  resolution: "@angular/compiler-cli@npm:18.0.0-next.5"
+"@angular/compiler-cli@npm:18.0.0-next.6":
+  version: 18.0.0-next.6
+  resolution: "@angular/compiler-cli@npm:18.0.0-next.6"
   dependencies:
     "@babel/core": "npm:7.24.4"
     "@jridgewell/sourcemap-codec": "npm:^1.4.14"
@@ -758,39 +758,39 @@ __metadata:
     tslib: "npm:^2.3.0"
     yargs: "npm:^17.2.1"
   peerDependencies:
-    "@angular/compiler": 18.0.0-next.5
+    "@angular/compiler": 18.0.0-next.6
     typescript: ">=5.4 <5.5"
   bin:
     ng-xi18n: bundles/src/bin/ng_xi18n.js
     ngc: bundles/src/bin/ngc.js
     ngcc: bundles/ngcc/index.js
-  checksum: 10c0/4a4c498d4c1c9ad3cc26f6872c04bbe70213eaa849e1c6969cbb01320b7b2afb9f2a16ef61e9c4d63392ceb3f8113ad745b368925f98c27bc62adfebe50bcba3
+  checksum: 10c0/fc51532c3f4352cc582fe36d5957ddecc8befa58e5c355ef72f2ee4e91179527110043d1eb8eae701bcf063a258d2a2f2a941175a086753b7c49215276b2b36d
   languageName: node
   linkType: hard
 
-"@angular/compiler@npm:18.0.0-next.5":
-  version: 18.0.0-next.5
-  resolution: "@angular/compiler@npm:18.0.0-next.5"
+"@angular/compiler@npm:18.0.0-next.6":
+  version: 18.0.0-next.6
+  resolution: "@angular/compiler@npm:18.0.0-next.6"
   dependencies:
     tslib: "npm:^2.3.0"
   peerDependencies:
-    "@angular/core": 18.0.0-next.5
+    "@angular/core": 18.0.0-next.6
   peerDependenciesMeta:
     "@angular/core":
       optional: true
-  checksum: 10c0/a47022bdc5d39c28427dd49d21eadf40680771966413d70d41c6c0161d1ca6616cd97f4682fa2621f1c4eb7d8e22afdf6f38799d334cc36d5b9c497714a32f76
+  checksum: 10c0/ff544aacc8936ec529e185e81a269345fc96a5e10a3b17490ddecaeb068f5a54f47f1c2f0dd3d5e3edbe58821d8766888c5f3950fec709514b7a45e4398df974
   languageName: node
   linkType: hard
 
-"@angular/core@npm:18.0.0-next.5":
-  version: 18.0.0-next.5
-  resolution: "@angular/core@npm:18.0.0-next.5"
+"@angular/core@npm:18.0.0-next.6":
+  version: 18.0.0-next.6
+  resolution: "@angular/core@npm:18.0.0-next.6"
   dependencies:
     tslib: "npm:^2.3.0"
   peerDependencies:
     rxjs: ^6.5.3 || ^7.4.0
     zone.js: ~0.14.0
-  checksum: 10c0/e408ea10ed493eb33743cb7991c1e364911bf0e7562255fb39428c0e5560816e9106665a5a0a064075559f3c01bbff85b3b0302447e9e3c57e8610edf45ec35a
+  checksum: 10c0/4da3b7fd280d0bba87a598cd974cb80e59d4f1ee9bfdbe4a07a565e7a801e5268a9290bb03a30ea5dd9778ccf0ed287b0a16739d918546b069488829bd6cf7d4
   languageName: node
   linkType: hard
 
@@ -828,23 +828,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/forms@npm:18.0.0-next.5":
-  version: 18.0.0-next.5
-  resolution: "@angular/forms@npm:18.0.0-next.5"
+"@angular/forms@npm:18.0.0-next.6":
+  version: 18.0.0-next.6
+  resolution: "@angular/forms@npm:18.0.0-next.6"
   dependencies:
     tslib: "npm:^2.3.0"
   peerDependencies:
-    "@angular/common": 18.0.0-next.5
-    "@angular/core": 18.0.0-next.5
-    "@angular/platform-browser": 18.0.0-next.5
+    "@angular/common": 18.0.0-next.6
+    "@angular/core": 18.0.0-next.6
+    "@angular/platform-browser": 18.0.0-next.6
     rxjs: ^6.5.3 || ^7.4.0
-  checksum: 10c0/f2d5ca138f6f4cba54daa81bfdd0e5494dbcc6b49bf297e6acaed4664414ba7d8a4293f9949d177f5a578e84c89ecf0b502d536e00209a920a1f73efea0ec6bb
+  checksum: 10c0/4b7a65aa14be8a11920471dfcc5c6807a9129907c8b6fb78b90c1c390fe8e1def63c2b9bbc7bf3e2c26010c455066748b13da8ab8b2f7a3f97eebe97aac4edaf
   languageName: node
   linkType: hard
 
-"@angular/material@npm:18.0.0-next.5":
-  version: 18.0.0-next.5
-  resolution: "@angular/material@npm:18.0.0-next.5"
+"@angular/material@npm:18.0.0-next.6":
+  version: 18.0.0-next.6
+  resolution: "@angular/material@npm:18.0.0-next.6"
   dependencies:
     "@material/animation": "npm:15.0.0-canary.7f224ddd4.0"
     "@material/auto-init": "npm:15.0.0-canary.7f224ddd4.0"
@@ -889,6 +889,7 @@ __metadata:
     "@material/tab-scroller": "npm:15.0.0-canary.7f224ddd4.0"
     "@material/textfield": "npm:15.0.0-canary.7f224ddd4.0"
     "@material/theme": "npm:15.0.0-canary.7f224ddd4.0"
+    "@material/tokens": "npm:15.0.0-canary.7f224ddd4.0"
     "@material/tooltip": "npm:15.0.0-canary.7f224ddd4.0"
     "@material/top-app-bar": "npm:15.0.0-canary.7f224ddd4.0"
     "@material/touch-target": "npm:15.0.0-canary.7f224ddd4.0"
@@ -896,57 +897,57 @@ __metadata:
     tslib: "npm:^2.3.0"
   peerDependencies:
     "@angular/animations": ^18.0.0-0 || ^18.1.0-0 || ^18.2.0-0 || ^18.3.0-0 || ^19.0.0-0
-    "@angular/cdk": 18.0.0-next.5
+    "@angular/cdk": 18.0.0-next.6
     "@angular/common": ^18.0.0-0 || ^18.1.0-0 || ^18.2.0-0 || ^18.3.0-0 || ^19.0.0-0
     "@angular/core": ^18.0.0-0 || ^18.1.0-0 || ^18.2.0-0 || ^18.3.0-0 || ^19.0.0-0
     "@angular/forms": ^18.0.0-0 || ^18.1.0-0 || ^18.2.0-0 || ^18.3.0-0 || ^19.0.0-0
     "@angular/platform-browser": ^18.0.0-0 || ^18.1.0-0 || ^18.2.0-0 || ^18.3.0-0 || ^19.0.0-0
     rxjs: ^6.5.3 || ^7.4.0
-  checksum: 10c0/4f85b471c6123a897de2829e05d019b0e7e95986e5eff7374a20fec1f00027707cb06f6b90e593f87ced2d10cb67ce4964a36c7df6fa826e27ae043da1312f4c
+  checksum: 10c0/990d42b79aa5d78245c49506008f7fabf962494f20996eaa610470d7b65f9b9ac739c37883eea29bf991c9d9fbf54a5418ee4a9ab562c42d603e645d9e0a8f95
   languageName: node
   linkType: hard
 
-"@angular/platform-browser-dynamic@npm:18.0.0-next.5":
-  version: 18.0.0-next.5
-  resolution: "@angular/platform-browser-dynamic@npm:18.0.0-next.5"
+"@angular/platform-browser-dynamic@npm:18.0.0-next.6":
+  version: 18.0.0-next.6
+  resolution: "@angular/platform-browser-dynamic@npm:18.0.0-next.6"
   dependencies:
     tslib: "npm:^2.3.0"
   peerDependencies:
-    "@angular/common": 18.0.0-next.5
-    "@angular/compiler": 18.0.0-next.5
-    "@angular/core": 18.0.0-next.5
-    "@angular/platform-browser": 18.0.0-next.5
-  checksum: 10c0/718a1729572144243d6db40d1b1d8320b7b11962d3e87c211722663822435c58e84afd07db9702de4e6c2d34d1ad7a44fc8213839546b0f65c9fc028e42fa8d6
+    "@angular/common": 18.0.0-next.6
+    "@angular/compiler": 18.0.0-next.6
+    "@angular/core": 18.0.0-next.6
+    "@angular/platform-browser": 18.0.0-next.6
+  checksum: 10c0/a4c2a0017b81682cce1de8dc456c303d8c618a90e00c0d46b19342103f9a2de31e5c0efcbbd21ae80cc9218741200a02451b31b285bac8d6b12b436e0b0f4a25
   languageName: node
   linkType: hard
 
-"@angular/platform-browser@npm:18.0.0-next.5":
-  version: 18.0.0-next.5
-  resolution: "@angular/platform-browser@npm:18.0.0-next.5"
+"@angular/platform-browser@npm:18.0.0-next.6":
+  version: 18.0.0-next.6
+  resolution: "@angular/platform-browser@npm:18.0.0-next.6"
   dependencies:
     tslib: "npm:^2.3.0"
   peerDependencies:
-    "@angular/animations": 18.0.0-next.5
-    "@angular/common": 18.0.0-next.5
-    "@angular/core": 18.0.0-next.5
+    "@angular/animations": 18.0.0-next.6
+    "@angular/common": 18.0.0-next.6
+    "@angular/core": 18.0.0-next.6
   peerDependenciesMeta:
     "@angular/animations":
       optional: true
-  checksum: 10c0/aa2f244c7d31efa71cf52905f099c02e15130caf528f1b95d12a73d5d3a94b8afe77ec46982c1158cd7c2553c7306561b14d87c9cb3ccf5020b5b641ef0a5409
+  checksum: 10c0/eb11d0996a37f8f55a03364880b343dd31196a6b804e3c59bd4f96015bd00c8071b6f732beb4b46231a364af0bb6588f09ba594c6993f91da8f92f01c6f922b7
   languageName: node
   linkType: hard
 
-"@angular/router@npm:18.0.0-next.5":
-  version: 18.0.0-next.5
-  resolution: "@angular/router@npm:18.0.0-next.5"
+"@angular/router@npm:18.0.0-next.6":
+  version: 18.0.0-next.6
+  resolution: "@angular/router@npm:18.0.0-next.6"
   dependencies:
     tslib: "npm:^2.3.0"
   peerDependencies:
-    "@angular/common": 18.0.0-next.5
-    "@angular/core": 18.0.0-next.5
-    "@angular/platform-browser": 18.0.0-next.5
+    "@angular/common": 18.0.0-next.6
+    "@angular/core": 18.0.0-next.6
+    "@angular/platform-browser": 18.0.0-next.6
     rxjs: ^6.5.3 || ^7.4.0
-  checksum: 10c0/227dc349a926a02d1c9b00cac38d7029d109a739560813820c81f90a8c2d49074dca5ede9f05ffc101d3e4f7bf9017ec4bcc725bbea2aa71239b604fafbdb824
+  checksum: 10c0/3a7c66ec0939f0ec5311d2113118979fc37c3a04b2245a6d495acdabd34afeaa3adf64f40f0bfe1b27ca2e9ee9ec0f6266afa3a555168dc06f4e6e44d0660da4
   languageName: node
   linkType: hard
 
