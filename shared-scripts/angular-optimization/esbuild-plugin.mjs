@@ -21,42 +21,11 @@ import {assertNoPartialDeclaration} from './ensure-no-linker-decl.mjs';
  *   load plugins needed (as they can impact performance significantly).
  */
 export async function createEsbuildAngularOptimizePlugin(opts, additionalBabelPlugins = []) {
-  let devkitOptimizePlugins = {
-    adjustStaticClassMembersPlugin: null,
-    elideAngularMetadataPlugin: null,
-    adjustTypeScriptEnumsPlugin: null,
-    pureToplevelFunctionsPlugin: null,
-  };
   let linkerCreator = {
     compiler: null,
     babel: null,
   };
   let downlevelAsyncGeneratorPlugin = null;
-
-  if (opts.optimize) {
-    devkitOptimizePlugins = {
-      adjustStaticClassMembersPlugin: (
-        await import(
-          '@angular-devkit/build-angular/src/tools/babel/plugins/adjust-static-class-members.js'
-        )
-      ).default,
-      elideAngularMetadataPlugin: (
-        await import(
-          '@angular-devkit/build-angular/src/tools/babel/plugins/elide-angular-metadata.js'
-        )
-      ).default,
-      adjustTypeScriptEnumsPlugin: (
-        await import(
-          '@angular-devkit/build-angular/src/tools/babel/plugins/adjust-typescript-enums.js'
-        )
-      ).default,
-      pureToplevelFunctionsPlugin: (
-        await import(
-          '@angular-devkit/build-angular/src/tools/babel/plugins/pure-toplevel-functions.js'
-        )
-      ).default,
-    };
-  }
 
   if (opts.enableLinker) {
     linkerCreator = {
@@ -71,6 +40,10 @@ export async function createEsbuildAngularOptimizePlugin(opts, additionalBabelPl
     ).default.default;
   }
 
+  const {adjustStaticMembers, adjustTypeScriptEnums, elideAngularMetadata, markTopLevelPure} = (
+    await import('@angular/build/private')
+  ).default;
+
   return {
     name: 'ng-babel-optimize-esbuild',
     setup: (build) => {
@@ -80,16 +53,12 @@ export async function createEsbuildAngularOptimizePlugin(opts, additionalBabelPl
         const plugins = [...additionalBabelPlugins];
 
         if (opts.optimize) {
-          plugins.push(
-            devkitOptimizePlugins.adjustStaticClassMembersPlugin,
-            devkitOptimizePlugins.elideAngularMetadataPlugin,
-            devkitOptimizePlugins.adjustTypeScriptEnumsPlugin,
-          );
+          plugins.push(adjustStaticMembers, adjustTypeScriptEnums, elideAngularMetadata);
 
           // If the current file is denoted as explicit side effect free, add the pure
           // top-level functions optimization plugin for this file.
           if (opts.optimize.isSideEffectFree && opts.optimize.isSideEffectFree(args.path)) {
-            plugins.push(devkitOptimizePlugins.pureToplevelFunctionsPlugin);
+            plugins.push(markTopLevelPure);
           }
         }
 
