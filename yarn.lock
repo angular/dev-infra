@@ -198,16 +198,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular-devkit/architect@github:angular/angular-devkit-architect-builds#921fa7c":
-  version: 0.1800.0-next.4+sha-921fa7c
-  resolution: "@angular-devkit/architect@https://github.com/angular/angular-devkit-architect-builds.git#commit=fb418a8dff59ffc834ca8f26d2545802e788a3c8"
-  dependencies:
-    "@angular-devkit/core": "github:angular/angular-devkit-core-builds#921fa7c"
-    rxjs: "npm:7.8.1"
-  checksum: 10c0/96be0dec391073aae8a35f00d6921677539535afe37dae77bf33d0a1a3351b90fd90df69760cfdb8f55a65fe504471266e9d03023f3d3960b96b33083a0decdb
-  languageName: node
-  linkType: hard
-
 "@angular-devkit/architect@npm:0.1800.0-next.3":
   version: 0.1800.0-next.3
   resolution: "@angular-devkit/architect@npm:0.1800.0-next.3"
@@ -218,22 +208,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular-devkit/core@github:angular/angular-devkit-core-builds#921fa7c":
-  version: 18.0.0-next.4+sha-921fa7c
-  resolution: "@angular-devkit/core@https://github.com/angular/angular-devkit-core-builds.git#commit=55d6cc45712c89500ad5e9647a50f71650768fa1"
+"@angular-devkit/architect@npm:0.1800.0-next.5":
+  version: 0.1800.0-next.5
+  resolution: "@angular-devkit/architect@npm:0.1800.0-next.5"
   dependencies:
-    ajv: "npm:8.12.0"
-    ajv-formats: "npm:3.0.1"
-    jsonc-parser: "npm:3.2.1"
-    picomatch: "npm:4.0.2"
+    "@angular-devkit/core": "npm:18.0.0-next.5"
     rxjs: "npm:7.8.1"
-    source-map: "npm:0.7.4"
-  peerDependencies:
-    chokidar: ^3.5.2
-  peerDependenciesMeta:
-    chokidar:
-      optional: true
-  checksum: 10c0/5ec1c0dda81ed5bc0cbd8e40d903409fc51479c7b3dbe7927265357c178b73ce5cda40f22452e4f02bb3035145884608654fd53db257a4f4232b99336a0f3d4c
+  checksum: 10c0/fc32b9fbf3bf49412738ff28613c10f08661cef9bce2886e14996ea2e49028b4e22f722dba11435f4d98fd2b89824cc4a0dd37b362388c1c669f352fb0a7bab4
   languageName: node
   linkType: hard
 
@@ -272,6 +253,25 @@ __metadata:
     chokidar:
       optional: true
   checksum: 10c0/be160ae5d656549934e109d4064ebba7903ba2611ad70c3815017f2efdbe3d2c232920c4fc1d9501d845124f86ed5a38b863de268919557f55f5f98201c43be7
+  languageName: node
+  linkType: hard
+
+"@angular-devkit/core@npm:18.0.0-next.5":
+  version: 18.0.0-next.5
+  resolution: "@angular-devkit/core@npm:18.0.0-next.5"
+  dependencies:
+    ajv: "npm:8.12.0"
+    ajv-formats: "npm:3.0.1"
+    jsonc-parser: "npm:3.2.1"
+    picomatch: "npm:4.0.2"
+    rxjs: "npm:7.8.1"
+    source-map: "npm:0.7.4"
+  peerDependencies:
+    chokidar: ^3.5.2
+  peerDependenciesMeta:
+    chokidar:
+      optional: true
+  checksum: 10c0/8e3514d251ca3241efa253440ac4d069fdad92d5df901036f23f6c56cb69d78bbdde8afd5996dde07fb025b6e3b275b831888aca8ecdace2c1a86b545060dc9a
   languageName: node
   linkType: hard
 
@@ -391,7 +391,7 @@ __metadata:
     "@angular/animations": "npm:18.0.0-next.6"
     "@angular/bazel": "patch:@angular/bazel@npm:14.1.0-next.2#.yarn/patches/@angular-bazel-npm.patch"
     "@angular/benchpress": "npm:0.3.0"
-    "@angular/build": "github:angular/angular-build-builds#aeeba93a1ae7bc034d8d59f7d137a3fbabcba329"
+    "@angular/build": "npm:18.0.0-next.5"
     "@angular/cdk": "npm:18.0.0-next.6"
     "@angular/cli": "npm:18.0.0-next.3"
     "@angular/common": "npm:18.0.0-next.6"
@@ -564,12 +564,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@angular/build@github:angular/angular-build-builds#aeeba93a1ae7bc034d8d59f7d137a3fbabcba329":
-  version: 18.0.0-next.4+sha-921fa7c
-  resolution: "@angular/build@https://github.com/angular/angular-build-builds.git#commit=aeeba93a1ae7bc034d8d59f7d137a3fbabcba329"
+"@angular/build@npm:18.0.0-next.5":
+  version: 18.0.0-next.5
+  resolution: "@angular/build@npm:18.0.0-next.5"
   dependencies:
     "@ampproject/remapping": "npm:2.3.0"
-    "@angular-devkit/architect": "github:angular/angular-devkit-architect-builds#921fa7c"
+    "@angular-devkit/architect": "npm:0.1800.0-next.5"
     "@babel/core": "npm:7.24.4"
     "@babel/helper-annotate-as-pure": "npm:7.22.5"
     "@babel/helper-split-export-declaration": "npm:7.22.6"
@@ -612,7 +612,7 @@ __metadata:
       optional: true
     tailwindcss:
       optional: true
-  checksum: 10c0/5d7d1aa8f104b55c59ae724c4e0652b92dc512aa59b89d729748dcc83e19bbcbfe99726c393b5bd49166e7c03720b81e234d56188b086e2595bb628c613a01f5
+  checksum: 10c0/16a33a42839205a70dc5e6c089afdd71dd1f87703f97da4ac8de6e8cea7a5bc56938f01e733d6a5467881a1ac02000401bdf4eb771e08d6d779dd45c3d21a718
   languageName: node
   linkType: hard
 

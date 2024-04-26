@@ -18,7 +18,7 @@
   "packageManager": "yarn@4.1.1",
   "dependencies": {
     "@angular/benchpress": "0.3.0",
-    "@angular/build": "github:angular/angular-build-builds#aeeba93a1ae7bc034d8d59f7d137a3fbabcba329",
+    "@angular/build": "18.0.0-next.5",
     "@babel/core": "^7.16.0",
     "@babel/helper-annotate-as-pure": "^7.18.6",
     "@babel/plugin-proposal-async-generator-functions": "^7.20.1",
