@@ -45,7 +45,11 @@ export function FunctionReference(entry: FunctionEntryRenderable) {
               )}
             </header>
             <div className={REFERENCE_MEMBER_CARD_BODY}>
-              <ClassMethodInfo entry={entry} />
+              {entry.overloads ? (
+                entry.overloads.map((overload) => <ClassMethodInfo entry={overload} />)
+              ) : (
+                <ClassMethodInfo entry={entry} isOverloaded={true} />
+              )}
             </div>
           </div>
         </div>

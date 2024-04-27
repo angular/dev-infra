@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {FunctionEntry} from '../entities';
+import {FunctionEntry, isFunctionEntryWithOverloads} from '../entities';
 import {FunctionEntryRenderable} from '../entities/renderables';
+import {HasRenderableOverloads} from '../entities/traits';
 import {addRenderableCodeToc} from './code-transforms';
 import {
   addHtmlAdditionalLinks,
@@ -27,12 +28,30 @@ export function getFunctionRenderable(
   return setEntryFlags(
     addRenderableCodeToc(
       addRenderableFunctionParams(
-        addHtmlAdditionalLinks(
-          addHtmlUsageNotes(
-            addHtmlJsDocTagComments(addHtmlDescription(addModuleName(entry, moduleName))),
+        addOverloads(
+          moduleName,
+          addHtmlAdditionalLinks(
+            addHtmlUsageNotes(
+              setEntryFlags(
+                addHtmlJsDocTagComments(addHtmlDescription(addModuleName(entry, moduleName))),
+              ),
+            ),
           ),
         ),
       ),
     ),
   );
+}
+
+function addOverloads<T extends FunctionEntry>(
+  moduleName: string,
+  entry: T,
+): T & HasRenderableOverloads {
+  return {
+    ...entry,
+    overloads:
+      isFunctionEntryWithOverloads(entry) && entry.overloads
+        ? entry.overloads.map((overload) => getFunctionRenderable(overload, moduleName))
+        : null,
+  };
 }

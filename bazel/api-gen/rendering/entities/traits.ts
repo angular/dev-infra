@@ -1,7 +1,8 @@
-import {JsDocTagEntry, MemberEntry, ParameterEntry} from '../entities';
+import {FunctionEntry, JsDocTagEntry, MemberEntry, ParameterEntry} from '../entities';
 
 import {
   CodeLineRenderable,
+  FunctionEntryRenderable,
   JsDocTagRenderable,
   LinkEntryRenderable,
   MemberEntryRenderable,
@@ -76,6 +77,14 @@ export interface HasParams {
 /** A doc entry that has params for rendering. */
 export interface HasRenderableParams {
   params: ParameterEntryRenderable[];
+}
+
+export interface HasOverloads {
+  overloads: FunctionEntry[] | null;
+}
+
+export interface HasRenderableOverloads {
+  overloads: FunctionEntryRenderable[] | null;
 }
 
 export interface HasDeprecatedFlag {
