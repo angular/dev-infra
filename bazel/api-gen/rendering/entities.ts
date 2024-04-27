@@ -139,6 +139,10 @@ export interface FunctionEntry extends DocEntry {
   isNewType: boolean;
 }
 
+export interface FunctionWithOverloadsEntry extends FunctionEntry {
+  overloads: FunctionEntry[] | null;
+}
+
 /** Sub-entry for a single class or enum member. */
 export interface MemberEntry {
   name: string;
@@ -199,4 +203,8 @@ export interface InitializerApiFunctionEntry extends DocEntry {
 
 export function isDocEntryWithSourceInfo(entry: DocEntry): entry is DocEntryWithSourceInfo {
   return 'source' in entry;
+}
+
+export function isFunctionEntryWithOverloads(entry: DocEntry): entry is FunctionWithOverloadsEntry {
+  return 'overloads' in entry;
 }

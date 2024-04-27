@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import highlightJs from 'highlight.js';
 import {
   DocEntry,
   FunctionEntry,
@@ -13,8 +14,8 @@ import {
   MemberTags,
   ParameterEntry,
   PropertyEntry,
+  isFunctionEntryWithOverloads,
 } from '../entities';
-import highlightJs from 'highlight.js';
 
 import {
   isClassEntry,
@@ -126,10 +127,33 @@ export function mapDocEntryToCode(entry: DocEntry): CodeTableOfContentsData {
 
   if (isFunctionEntry(entry)) {
     const isDeprecated = isDeprecatedEntry(entry);
+    const codeLineNumbersWithIdentifiers = new Map<number, string>();
 
+    if (isFunctionEntryWithOverloads(entry) && entry.overloads) {
+      const initialMetadata: CodeTableOfContentsData = {
+        contents: '',
+        codeLineNumbersWithIdentifiers: new Map<number, string>(),
+        deprecatedLineNumbers: [],
+      };
+
+      return entry.overloads.reduce(
+        (acc: CodeTableOfContentsData, curr: FunctionEntry, index: number) => {
+          const lineNumber = index;
+          acc.codeLineNumbersWithIdentifiers.set(lineNumber, curr.name);
+          acc.contents += `${curr.name}.${curr.params
+            .map((param) => mapParamEntry(param))
+            .join(`, `)}: ${curr.returnType}\n`;
+          if (isDeprecatedEntry(curr)) {
+            acc.deprecatedLineNumbers.push(lineNumber);
+          }
+          return acc;
+        },
+        initialMetadata,
+      );
+    }
     return {
       contents: getMethodCodeLine(entry, [], true),
-      codeLineNumbersWithIdentifiers: new Map(),
+      codeLineNumbersWithIdentifiers,
       deprecatedLineNumbers: isDeprecated ? [0] : [],
     };
   }
@@ -254,17 +278,17 @@ function getMethodCodeLine(
   memberTags: MemberTags[] = [],
   displayParamsInNewLines: boolean = false,
 ): string {
-  const mapParamEntry = (entry: ParameterEntry): string => {
-    return `${entry.isRestParam ? '...' : ''}${entry.name}${markOptional(entry.isOptional)}: ${
-      entry.type
-    }`;
-  };
-
   return `${memberTags.join(' ')} ${member.name}(${displayParamsInNewLines ? '\n  ' : ''}${member.params
     .map((param) => mapParamEntry(param))
     .join(`,${displayParamsInNewLines ? '\n  ' : ' '}`)}${
     displayParamsInNewLines ? '\n' : ''
   }): ${member.returnType};`.trim();
+}
+
+function mapParamEntry(entry: ParameterEntry) {
+  return `${entry.isRestParam ? '...' : ''}${entry.name}${markOptional(entry.isOptional)}: ${
+    entry.type
+  }`;
 }
 
 function getGetterCodeLine(member: PropertyEntry): string {

@@ -75,6 +75,7 @@ export type FunctionEntryRenderable = FunctionEntry &
     codeLinesGroups: Map<string, CodeLineRenderable[]>;
     params: ParameterEntryRenderable[];
     deprecationMessage: string | null;
+    overloads: FunctionEntryRenderable[] | null;
   };
 
 /** Sub-entry for a single class or enum member augmented with transformed content for rendering. */

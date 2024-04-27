@@ -21,7 +21,7 @@ export function DeprecatedLabel(props: {
         <span dangerouslySetInnerHTML={{__html: entry.deprecationMessage}}></span>
       </div>
     );
-  } else if ('isDeprecated' in entry) {
+  } else if ('isDeprecated' in entry && entry.isDeprecated) {
     return <span className={`${PARAM_KEYWORD_CLASS_NAME} docs-deprecated`}>@deprecated</span>;
   }
 
