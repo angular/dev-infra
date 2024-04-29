@@ -14,10 +14,10 @@ esbuild_esm_bundle(
     },
     entry_point = "//docs/pipeline/guides:index.ts",
     # JSDOM should not be bundled because it has workers and dynamic imports.
-    # puppeteer-core cannot be bundled because of its cjs usage.
+    # playwright-core cannot be bundled because of its cjs usage.
     external = [
         "jsdom",
-        "puppeteer-core",
+        "playwright-core",
     ],
     output = "guides.mjs",
     platform = "node",
@@ -128,7 +128,7 @@ nodejs_binary(
         "//bazel/browsers/chromium:chromium-for-generation",
         "@npm//jsdom",
         "@npm//mermaid",
-        "@npm//puppeteer-core",
+        "@npm//playwright-core",
     ],
     entry_point = "//docs/pipeline:guides.mjs",
     env = {
