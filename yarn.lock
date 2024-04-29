@@ -198,16 +198,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular-devkit/architect@npm:0.1800.0-next.3":
-  version: 0.1800.0-next.3
-  resolution: "@angular-devkit/architect@npm:0.1800.0-next.3"
-  dependencies:
-    "@angular-devkit/core": "npm:18.0.0-next.3"
-    rxjs: "npm:7.8.1"
-  checksum: 10c0/f428e22754387b2a9bedf836a708bf8a867cb55c2cbd7145932411b25b630f5eefd702146bc0198529cc1504231f5417b9717f5fe2d7c32bd67dfa3f39448ebb
-  languageName: node
-  linkType: hard
-
 "@angular-devkit/architect@npm:0.1800.0-next.5":
   version: 0.1800.0-next.5
   resolution: "@angular-devkit/architect@npm:0.1800.0-next.5"
@@ -234,25 +224,6 @@ __metadata:
     chokidar:
       optional: true
   checksum: 10c0/5e1c433b171ec5be198b30def1a75c0f7c3746ded858d5038835c7efd5e538b908703167847e9b6a3a38db32e535c47605631dd14a116b5633205157bd25c17b
-  languageName: node
-  linkType: hard
-
-"@angular-devkit/core@npm:18.0.0-next.3":
-  version: 18.0.0-next.3
-  resolution: "@angular-devkit/core@npm:18.0.0-next.3"
-  dependencies:
-    ajv: "npm:8.12.0"
-    ajv-formats: "npm:3.0.1"
-    jsonc-parser: "npm:3.2.1"
-    picomatch: "npm:4.0.2"
-    rxjs: "npm:7.8.1"
-    source-map: "npm:0.7.4"
-  peerDependencies:
-    chokidar: ^3.5.2
-  peerDependenciesMeta:
-    chokidar:
-      optional: true
-  checksum: 10c0/be160ae5d656549934e109d4064ebba7903ba2611ad70c3815017f2efdbe3d2c232920c4fc1d9501d845124f86ed5a38b863de268919557f55f5f98201c43be7
   languageName: node
   linkType: hard
 
@@ -288,16 +259,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular-devkit/schematics@npm:18.0.0-next.3":
-  version: 18.0.0-next.3
-  resolution: "@angular-devkit/schematics@npm:18.0.0-next.3"
+"@angular-devkit/schematics@npm:18.0.0-next.5":
+  version: 18.0.0-next.5
+  resolution: "@angular-devkit/schematics@npm:18.0.0-next.5"
   dependencies:
-    "@angular-devkit/core": "npm:18.0.0-next.3"
+    "@angular-devkit/core": "npm:18.0.0-next.5"
     jsonc-parser: "npm:3.2.1"
-    magic-string: "npm:0.30.9"
+    magic-string: "npm:0.30.10"
     ora: "npm:5.4.1"
     rxjs: "npm:7.8.1"
-  checksum: 10c0/5bf334e11ced3630e7a42e82063ac3abb56045568aca646d56fc8b49a13bd0f9ebe3c56365157306d501e4ec41fa66b5fd5c65e21c0a2d54797ae261bf4b9c40
+  checksum: 10c0/6d87fd8bf0d61cf29bec894bf5e8ea4da7595d2ba2497d82947258907767ec5c2942c9bfdf88a7dcea1edf801c5a2015e0b7883dc1f0694145815941b58949a4
   languageName: node
   linkType: hard
 
@@ -393,7 +364,7 @@ __metadata:
     "@angular/benchpress": "npm:0.3.0"
     "@angular/build": "npm:18.0.0-next.5"
     "@angular/cdk": "npm:18.0.0-next.6"
-    "@angular/cli": "npm:18.0.0-next.3"
+    "@angular/cli": "npm:18.0.0-next.5"
     "@angular/common": "npm:18.0.0-next.6"
     "@angular/compiler": "npm:18.0.0-next.6"
     "@angular/compiler-cli": "npm:18.0.0-next.6"
@@ -633,30 +604,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/cli@npm:18.0.0-next.3":
-  version: 18.0.0-next.3
-  resolution: "@angular/cli@npm:18.0.0-next.3"
+"@angular/cli@npm:18.0.0-next.5":
+  version: 18.0.0-next.5
+  resolution: "@angular/cli@npm:18.0.0-next.5"
   dependencies:
-    "@angular-devkit/architect": "npm:0.1800.0-next.3"
-    "@angular-devkit/core": "npm:18.0.0-next.3"
-    "@angular-devkit/schematics": "npm:18.0.0-next.3"
-    "@schematics/angular": "npm:18.0.0-next.3"
+    "@angular-devkit/architect": "npm:0.1800.0-next.5"
+    "@angular-devkit/core": "npm:18.0.0-next.5"
+    "@angular-devkit/schematics": "npm:18.0.0-next.5"
+    "@schematics/angular": "npm:18.0.0-next.5"
     "@yarnpkg/lockfile": "npm:1.1.0"
     ansi-colors: "npm:4.1.3"
     ini: "npm:4.1.2"
-    inquirer: "npm:9.2.18"
+    inquirer: "npm:9.2.19"
     jsonc-parser: "npm:3.2.1"
     npm-package-arg: "npm:11.0.2"
     npm-pick-manifest: "npm:9.0.0"
     ora: "npm:5.4.1"
-    pacote: "npm:18.0.0"
+    pacote: "npm:18.0.2"
     resolve: "npm:1.22.8"
     semver: "npm:7.6.0"
     symbol-observable: "npm:4.0.0"
     yargs: "npm:17.7.2"
   bin:
     ng: bin/ng.js
-  checksum: 10c0/ac57c54d9fd4ef4387270fb1334ddf4bb746ae717f653ca82487d7cc0654b6c26d73e30a4dad9cedf1f47634d1d4954a58f3dcc60d271e7d24a1d8cd46e19402
+  checksum: 10c0/424f892f4727569e943e1a11161ecc6d4f23a4f12a54f60f7c0ff3d5a8bf6bfd44ac2e75c6e677c48f2fd4dc37312ad03f391e10a5a1e16617e412a5d3478594
   languageName: node
   linkType: hard
 
@@ -2636,7 +2607,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@inquirer/figures@npm:^1.0.0, @inquirer/figures@npm:^1.0.1":
+"@inquirer/figures@npm:^1.0.1":
   version: 1.0.1
   resolution: "@inquirer/figures@npm:1.0.1"
   checksum: 10c0/a1e9d3852e0d33c416eb39d7ee0e898971681a0a5a0d2fad5ebbb63047dd7e8b7bd32872cf2ef09578ce632bd9cc339f7e851dbd4640a9af11224481bf811e14
@@ -3781,6 +3752,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@npmcli/package-json@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "@npmcli/package-json@npm:5.1.0"
+  dependencies:
+    "@npmcli/git": "npm:^5.0.0"
+    glob: "npm:^10.2.2"
+    hosted-git-info: "npm:^7.0.0"
+    json-parse-even-better-errors: "npm:^3.0.0"
+    normalize-package-data: "npm:^6.0.0"
+    proc-log: "npm:^4.0.0"
+    semver: "npm:^7.5.3"
+  checksum: 10c0/81bcac33276da86aae5ae62bfc70bfa6da1c1e1a7b0b9ecf3586279186f7c5d2e056ea7323b658f08999fe474e1ae0334df00cbdf48521e2489115f74e28f6af
+  languageName: node
+  linkType: hard
+
 "@npmcli/promise-spawn@npm:^7.0.0":
   version: 7.0.1
   resolution: "@npmcli/promise-spawn@npm:7.0.1"
@@ -4517,14 +4503,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@schematics/angular@npm:18.0.0-next.3":
-  version: 18.0.0-next.3
-  resolution: "@schematics/angular@npm:18.0.0-next.3"
+"@schematics/angular@npm:18.0.0-next.5":
+  version: 18.0.0-next.5
+  resolution: "@schematics/angular@npm:18.0.0-next.5"
   dependencies:
-    "@angular-devkit/core": "npm:18.0.0-next.3"
-    "@angular-devkit/schematics": "npm:18.0.0-next.3"
+    "@angular-devkit/core": "npm:18.0.0-next.5"
+    "@angular-devkit/schematics": "npm:18.0.0-next.5"
     jsonc-parser: "npm:3.2.1"
-  checksum: 10c0/aa326b2212607178a5c8d062c74b6e7dc76eadfb4bf527e71279767de995f41bc2d0502efd6dba7100c9c282e6cad038766b327c732460a9573e528c84d09ef5
+  checksum: 10c0/d486b18397e1b8787de97ec9c145696094ba2dc5c313c5fad138e4f10855bb2e8d32aa776e7be75b398a9b1be3f45d304ed93a354e44cedcf8c3dbcd26aefb98
   languageName: node
   linkType: hard
 
@@ -10233,29 +10219,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inquirer@npm:9.2.18":
-  version: 9.2.18
-  resolution: "inquirer@npm:9.2.18"
-  dependencies:
-    "@inquirer/figures": "npm:^1.0.0"
-    "@ljharb/through": "npm:^2.3.13"
-    ansi-escapes: "npm:^4.3.2"
-    chalk: "npm:^5.3.0"
-    cli-cursor: "npm:^3.1.0"
-    cli-width: "npm:^4.1.0"
-    external-editor: "npm:^3.1.0"
-    lodash: "npm:^4.17.21"
-    mute-stream: "npm:1.0.0"
-    ora: "npm:^5.4.1"
-    run-async: "npm:^3.0.0"
-    rxjs: "npm:^7.8.1"
-    string-width: "npm:^4.2.3"
-    strip-ansi: "npm:^6.0.1"
-    wrap-ansi: "npm:^6.2.0"
-  checksum: 10c0/2e82bc10c66dc5551bc19c403d9fd971856051580c19be0ef4dae98d5ab99b591e603e297e49817ba7c3346993a032de11b97d9feb1dfd3f567d0bff72dbab33
-  languageName: node
-  linkType: hard
-
 "inquirer@npm:9.2.19":
   version: 9.2.19
   resolution: "inquirer@npm:9.2.19"
@@ -11837,15 +11800,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"magic-string@npm:0.30.9":
-  version: 0.30.9
-  resolution: "magic-string@npm:0.30.9"
-  dependencies:
-    "@jridgewell/sourcemap-codec": "npm:^1.4.15"
-  checksum: 10c0/edbeea35b4f90b58815d8b13899fa412b5bc1e81cae14fe6d24d5c383c5f04331fce2c5a75bfb7926203ab6fc8c71290cdab56703a5b82432d8a1e144d6042e1
-  languageName: node
-  linkType: hard
-
 "make-dir@npm:^3.0.0":
   version: 3.1.0
   resolution: "make-dir@npm:3.1.0"
@@ -13230,12 +13184,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pacote@npm:18.0.0":
-  version: 18.0.0
-  resolution: "pacote@npm:18.0.0"
+"pacote@npm:18.0.2":
+  version: 18.0.2
+  resolution: "pacote@npm:18.0.2"
   dependencies:
     "@npmcli/git": "npm:^5.0.0"
     "@npmcli/installed-package-contents": "npm:^2.0.1"
+    "@npmcli/package-json": "npm:^5.1.0"
     "@npmcli/promise-spawn": "npm:^7.0.0"
     "@npmcli/run-script": "npm:^8.0.0"
     cacache: "npm:^18.0.0"
@@ -13247,14 +13202,12 @@ __metadata:
     npm-registry-fetch: "npm:^16.0.0"
     proc-log: "npm:^4.0.0"
     promise-retry: "npm:^2.0.1"
-    read-package-json: "npm:^7.0.0"
-    read-package-json-fast: "npm:^3.0.0"
     sigstore: "npm:^2.2.0"
     ssri: "npm:^10.0.0"
     tar: "npm:^6.1.11"
   bin:
     pacote: lib/bin.js
-  checksum: 10c0/e8a4024321c50637446778796934bba62654d32c86f9d2fb2adec14363760b6ee4ca953e7dc3d71b010a488effdd76c7ef6e1c37d51657596318f7c9964d1e44
+  checksum: 10c0/7aea55895894a4cb1f2d86804bda24dede171c1536f72fa860624ec981de2791164d09e71cf77ce289407961a52e9d833734ed53db052e9c8807fcd4d777b706
   languageName: node
   linkType: hard
 
@@ -14010,16 +13963,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"read-package-json-fast@npm:^3.0.0":
-  version: 3.0.2
-  resolution: "read-package-json-fast@npm:3.0.2"
-  dependencies:
-    json-parse-even-better-errors: "npm:^3.0.0"
-    npm-normalize-package-bin: "npm:^3.0.0"
-  checksum: 10c0/37787e075f0260a92be0428687d9020eecad7ece3bda37461c2219e50d1ec183ab6ba1d9ada193691435dfe119a42c8a5b5b5463f08c8ddbc3d330800b265318
-  languageName: node
-  linkType: hard
-
 "read-package-json@npm:^2.0.0":
   version: 2.1.2
   resolution: "read-package-json@npm:2.1.2"
@@ -14029,18 +13972,6 @@ __metadata:
     normalize-package-data: "npm:^2.0.0"
     npm-normalize-package-bin: "npm:^1.0.0"
   checksum: 10c0/2ff44e00a2e71bd87209021e3dd2b21d94f72dad2f5230c9ec3afb66acaf6d8c3ee4b6d09aa5c1ec660207d5c8d0b92b4b932459038ab448e74f35dbd8f2aa6a
-  languageName: node
-  linkType: hard
-
-"read-package-json@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "read-package-json@npm:7.0.0"
-  dependencies:
-    glob: "npm:^10.2.2"
-    json-parse-even-better-errors: "npm:^3.0.0"
-    normalize-package-data: "npm:^6.0.0"
-    npm-normalize-package-bin: "npm:^3.0.0"
-  checksum: 10c0/a2d373d0f87613fe86ec49c7e4bcdaf2a14967c258c6ccfd9585dec8b21e3d5bfe422c460648fb30e8c93fc13579da0d9c9c65adc5ec4e95ec888d99e4bccc79
   languageName: node
   linkType: hard
 
