@@ -67207,7 +67207,7 @@ var import_rxjs = __toESM(require_cjs(), 1);
 function normalizeKeypressEvents(value, key) {
   return { value, key: key || {} };
 }
-function events_default(rl) {
+function observe(rl) {
   const keypress = (0, import_rxjs.fromEvent)(rl.input, "keypress", normalizeKeypressEvents).pipe((0, import_rxjs.takeUntil)((0, import_rxjs.fromEvent)(rl, "close"))).pipe((0, import_rxjs.filter)(({ key }) => key.name !== "enter" && key.name !== "return"));
   return {
     line: (0, import_rxjs.fromEvent)(rl, "line"),
@@ -67225,7 +67225,7 @@ function events_default(rl) {
       (0, import_rxjs.share)()
     ),
     numberKey: keypress.pipe(
-      (0, import_rxjs.filter)((e) => e.value && "123456789".indexOf(e.value) >= 0),
+      (0, import_rxjs.filter)((e) => e.value && "123456789".includes(e.value)),
       (0, import_rxjs.map)((e) => Number(e.value)),
       (0, import_rxjs.share)()
     ),
@@ -67324,7 +67324,7 @@ import assert from "node:assert";
 var Separator = class {
   constructor(line) {
     this.type = "separator";
-    this.line = source_default.dim(line || new Array(15).join(esm_default.line));
+    this.line = source_default.dim(line || Array.from({ length: 15 }).join(esm_default.line));
   }
   static exclude(obj) {
     return obj.type !== "separator";
@@ -67351,11 +67351,7 @@ var Choice = class {
         short: val.short || val.name || val.value
       });
     }
-    if (typeof val.disabled === "function") {
-      this.disabled = val.disabled(answers);
-    } else {
-      this.disabled = val.disabled;
-    }
+    this.disabled = typeof val.disabled === "function" ? val.disabled(answers) : val.disabled;
   }
 };
 
@@ -67389,6 +67385,13 @@ var Choices = class {
       }
     });
   }
+  [Symbol.iterator]() {
+    const data = this.choices;
+    let index = -1;
+    return {
+      next: () => ({ value: data[++index], done: !(index in data) })
+    };
+  }
   getChoice(selector) {
     assert(typeof selector === "number");
     return this.realChoices[selector];
@@ -67417,6 +67420,9 @@ var Choices = class {
   }
   find(func) {
     return this.choices.find(func);
+  }
+  some(func) {
+    return this.choices.some(func);
   }
   push(...args) {
     const objs = args.map((val) => new Choice(val));
@@ -67494,7 +67500,7 @@ var ScreenManager = class {
     const promptLine = lastLine(content);
     const rawPromptLine = (0, import_strip_ansi.default)(promptLine);
     let prompt2 = rawPromptLine;
-    if (this.rl.line.length) {
+    if (this.rl.line.length > 0) {
       prompt2 = prompt2.slice(0, -this.rl.line.length);
     }
     this.rl.setPrompt(prompt2);
@@ -67602,21 +67608,20 @@ var Prompt = class {
     this.screen.releaseCursor();
   }
   handleSubmitEvents(submit) {
-    const self2 = this;
     const validate = (0, import_run_async.default)(this.opt.validate);
     const asyncFilter = (0, import_run_async.default)(this.opt.filter);
     const validation = submit.pipe(
       (0, import_rxjs2.flatMap)((value) => {
         this.startSpinner(value, this.opt.filteringText);
-        return asyncFilter(value, self2.answers).then(
+        return asyncFilter(value, this.answers).then(
           (filteredValue) => {
             this.startSpinner(filteredValue, this.opt.validatingText);
-            return validate(filteredValue, self2.answers).then(
+            return validate(filteredValue, this.answers).then(
               (isValid) => ({ isValid, value: filteredValue }),
-              (err) => ({ isValid: err, value: filteredValue })
+              (error_) => ({ isValid: error_, value: filteredValue })
             );
           },
-          (err) => ({ isValid: err })
+          (error_) => ({ isValid: error_ })
         );
       }),
       (0, import_rxjs2.share)()
@@ -67645,11 +67650,7 @@ var Prompt = class {
   getQuestion() {
     let message = (this.opt.prefix ? this.opt.prefix + " " : "") + source_default.bold(this.opt.message) + this.opt.suffix + source_default.reset(" ");
     if (this.opt.default != null && this.status !== "touched" && this.status !== "answered") {
-      if (this.opt.type === "password") {
-        message += source_default.italic.dim("[hidden] ");
-      } else {
-        message += source_default.dim("(" + this.opt.default + ") ");
-      }
+      message += this.opt.type === "password" ? source_default.italic.dim("[hidden] ") : source_default.dim("(" + this.opt.default + ") ");
     }
     return message;
   }
@@ -67677,8 +67678,7 @@ var ListPrompt = class extends Prompt {
   }
   _run(cb) {
     this.done = cb;
-    const self2 = this;
-    const events = events_default(this.rl);
+    const events = observe(this.rl);
     events.normalizedUpKey.pipe((0, import_rxjs3.takeUntil)(events.line)).forEach(this.onUpKey.bind(this));
     events.normalizedDownKey.pipe((0, import_rxjs3.takeUntil)(events.line)).forEach(this.onDownKey.bind(this));
     events.numberKey.pipe((0, import_rxjs3.takeUntil)(events.line)).forEach(this.onNumberKey.bind(this));
@@ -67686,7 +67686,7 @@ var ListPrompt = class extends Prompt {
       (0, import_rxjs3.take)(1),
       (0, import_rxjs3.map)(this.getCurrentValue.bind(this)),
       (0, import_rxjs3.flatMap)(
-        (value) => (0, import_run_async2.default)(self2.opt.filter)(value, self2.answers).catch((err) => err)
+        (value) => (0, import_run_async2.default)(this.opt.filter)(value, this.answers).catch((error2) => error2)
       )
     ).forEach(this.onSubmit.bind(this));
     import_cli_cursor.default.hide();
@@ -67772,7 +67772,7 @@ function listRender(choices, pointer) {
     }
     output += line + " \n";
   });
-  return output.replace(/\n$/, "");
+  return output.replaceAll(/\n$/g, "");
 }
 
 // 
@@ -67780,7 +67780,7 @@ var import_rxjs4 = __toESM(require_cjs(), 1);
 var InputPrompt = class extends Prompt {
   _run(cb) {
     this.done = cb;
-    const events = events_default(this.rl);
+    const events = observe(this.rl);
     const submit = events.line.pipe((0, import_rxjs4.map)(this.filterInput.bind(this)));
     const validation = this.handleSubmitEvents(submit);
     validation.success.forEach(this.onEnd.bind(this));
@@ -67795,11 +67795,7 @@ var InputPrompt = class extends Prompt {
     let message = this.getQuestion();
     const { transformer } = this.opt;
     const isFinal = this.status === "answered";
-    if (isFinal) {
-      appendContent = this.answer;
-    } else {
-      appendContent = this.rl.line;
-    }
+    appendContent = isFinal ? this.answer : this.rl.line;
     if (transformer) {
       message += transformer(appendContent, this.answers, { isFinal });
     } else {
@@ -67844,7 +67840,7 @@ var NumberPrompt = class extends InputPrompt {
         return Number(numberMatch[0]);
       }
     }
-    return this.opt.default == null ? NaN : this.opt.default;
+    return this.opt.default == null ? Number.NaN : this.opt.default;
   }
 };
 
@@ -67872,7 +67868,7 @@ var ConfirmPrompt = class extends Prompt {
   }
   _run(cb) {
     this.done = cb;
-    const events = events_default(this.rl);
+    const events = observe(this.rl);
     events.keypress.pipe((0, import_rxjs5.takeUntil)(events.line)).forEach(this.onKeypress.bind(this));
     events.line.pipe((0, import_rxjs5.take)(1)).forEach(this.onEnd.bind(this));
     this.render();
@@ -67939,7 +67935,7 @@ var RawListPrompt = class extends Prompt {
   }
   _run(cb) {
     this.done = cb;
-    const events = events_default(this.rl);
+    const events = observe(this.rl);
     const submit = events.line.pipe((0, import_rxjs6.map)(this.getCurrentValue.bind(this)));
     const validation = this.handleSubmitEvents(submit);
     validation.success.forEach(this.onEnd.bind(this));
@@ -67991,16 +67987,12 @@ var RawListPrompt = class extends Prompt {
   onKeypress() {
     let index;
     if (this.lastKey === "arrow") {
-      index = this.hiddenLine.length ? Number(this.hiddenLine) - 1 : 0;
+      index = this.hiddenLine.length > 0 ? Number(this.hiddenLine) - 1 : 0;
     } else {
-      index = this.rl.line.length ? Number(this.rl.line) - 1 : 0;
+      index = this.rl.line.length > 0 ? Number(this.rl.line) - 1 : 0;
     }
     this.lastKey = "";
-    if (this.opt.choices.getChoice(index)) {
-      this.selected = index;
-    } else {
-      this.selected = void 0;
-    }
+    this.selected = this.opt.choices.getChoice(index) ? index : void 0;
     this.render();
   }
   onUpKey() {
@@ -68061,7 +68053,7 @@ var ExpandPrompt = class extends Prompt {
   }
   _run(cb) {
     this.done = cb;
-    const events = events_default(this.rl);
+    const events = observe(this.rl);
     const validation = this.handleSubmitEvents(
       events.line.pipe((0, import_rxjs7.map)(this.getCurrentValue.bind(this)))
     );
@@ -68164,7 +68156,7 @@ var ExpandPrompt = class extends Prompt {
         "Reserved key error: `key` param cannot be `h` - this value is reserved."
       );
     }
-    if (errors.length) {
+    if (errors.length > 0) {
       throw new Error(
         "Duplicate key error: `key` param must be unique. Duplicates: " + [...new Set(errors)].join(",")
       );
@@ -68211,11 +68203,11 @@ var CheckboxPrompt = class extends Prompt {
       this.throwParamError("choices");
     }
     if (Array.isArray(this.opt.default)) {
-      this.opt.choices.forEach(function(choice) {
-        if (this.opt.default.indexOf(choice.value) >= 0) {
+      for (const choice of this.opt.choices) {
+        if (this.opt.default.includes(choice.value)) {
           choice.checked = true;
         }
-      }, this);
+      }
     }
     this.pointer = 0;
     this.opt.default = null;
@@ -68224,7 +68216,7 @@ var CheckboxPrompt = class extends Prompt {
   }
   _run(cb) {
     this.done = cb;
-    const events = events_default(this.rl);
+    const events = observe(this.rl);
     const validation = this.handleSubmitEvents(
       events.line.pipe((0, import_rxjs8.map)(this.getCurrentValue.bind(this)))
     );
@@ -68313,8 +68305,8 @@ var CheckboxPrompt = class extends Prompt {
     this.render();
   }
   onAllKey() {
-    const shouldBeChecked = Boolean(
-      this.opt.choices.find((choice) => choice.type !== "separator" && !choice.checked)
+    const shouldBeChecked = this.opt.choices.some(
+      (choice) => choice.type !== "separator" && !choice.checked
     );
     this.opt.choices.forEach((choice) => {
       if (choice.type !== "separator") {
@@ -68353,15 +68345,11 @@ function renderChoices3(choices, pointer) {
       output += ` (${typeof choice.disabled === "string" ? choice.disabled : "Disabled"})`;
     } else {
       const line = getCheckbox(choice.checked) + " " + choice.name;
-      if (i - separatorOffset === pointer) {
-        output += source_default.cyan(esm_default.pointer + line);
-      } else {
-        output += " " + line;
-      }
+      output += i - separatorOffset === pointer ? source_default.cyan(esm_default.pointer + line) : " " + line;
     }
     output += "\n";
   });
-  return output.replace(/\n$/, "");
+  return output.replaceAll(/\n$/g, "");
 }
 function getCheckbox(checked) {
   return checked ? source_default.green(esm_default.radioOn) : esm_default.radioOff;
@@ -68375,12 +68363,12 @@ function mask(input, maskChar) {
   if (input.length === 0) {
     return "";
   }
-  return new Array(input.length + 1).join(maskChar);
+  return Array.from({ length: input.length + 1 }).join(maskChar);
 }
 var PasswordPrompt = class extends Prompt {
   _run(cb) {
     this.done = cb;
-    const events = events_default(this.rl);
+    const events = observe(this.rl);
     const submit = events.line.pipe((0, import_rxjs9.map)(this.filterInput.bind(this)));
     const validation = this.handleSubmitEvents(submit);
     validation.success.forEach(this.onEnd.bind(this));
@@ -68392,11 +68380,7 @@ var PasswordPrompt = class extends Prompt {
   render(error2) {
     let message = this.getQuestion();
     let bottomContent = "";
-    if (this.status === "answered") {
-      message += this.getMaskedValue(this.answer);
-    } else {
-      message += this.getMaskedValue(this.rl.line || "");
-    }
+    message += this.status === "answered" ? this.getMaskedValue(this.answer) : this.getMaskedValue(this.rl.line || "");
     if (error2) {
       bottomContent = "\n" + source_default.red(">> ") + error2;
     }
@@ -68440,7 +68424,7 @@ var EditorPrompt = class extends Prompt {
   _run(cb) {
     this.done = cb;
     this.editorResult = new import_rxjs10.Subject();
-    const events = events_default(this.rl);
+    const events = observe(this.rl);
     this.lineSubscription = events.line.subscribe(this.startExternalEditor.bind(this));
     const waitUserInput = this.opt.waitUserInput === void 0 ? true : this.opt.waitUserInput;
     if (!waitUserInput) {
@@ -68457,11 +68441,7 @@ var EditorPrompt = class extends Prompt {
   render(error2) {
     let bottomContent = "";
     let message = this.getQuestion();
-    if (this.status === "answered") {
-      message += source_default.dim("Received");
-    } else {
-      message += source_default.dim("Press <enter> to launch your preferred editor.");
-    }
+    message += this.status === "answered" ? source_default.dim("Received") : source_default.dim("Press <enter> to launch your preferred editor.");
     if (error2) {
       bottomContent = source_default.red(">> ") + error2;
     }
@@ -68581,12 +68561,12 @@ var BottomBar = class extends UI {
     return this;
   }
   enforceLF(str) {
-    return str.match(/[\r\n]$/) ? str : str + "\n";
+    return /[\n\r]$/.test(str) ? str : str + "\n";
   }
   write(message) {
     const msgLines = message.split(/\n/);
     this.height = msgLines.length;
-    this.rl.setPrompt(msgLines[msgLines.length - 1]);
+    this.rl.setPrompt(msgLines.at(-1));
     if (this.rl.output.rows === 0 && this.rl.output.columns === 0) {
       left(this.rl, message.length + this.rl.line.length);
     }
@@ -68628,11 +68608,7 @@ var PromptUI = class extends UI {
     this.prompts = prompts;
   }
   run(questions, answers) {
-    if (_2.isPlainObject(answers)) {
-      this.answers = { ...answers };
-    } else {
-      this.answers = {};
-    }
+    this.answers = _2.isPlainObject(answers) ? { ...answers } : {};
     if (_2.isPlainObject(questions)) {
       questions = Object.values(questions).every(
         (v) => _2.isPlainObject(v) && v.name === void 0
