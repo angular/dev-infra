@@ -64,7 +64,7 @@
     "@angular/animations": "18.0.0-next.6",
     "@angular/bazel": "patch:@angular/bazel@npm:14.1.0-next.2#.yarn/patches/@angular-bazel-npm.patch",
     "@angular/cdk": "18.0.0-next.6",
-    "@angular/cli": "18.0.0-next.3",
+    "@angular/cli": "18.0.0-next.5",
     "@angular/common": "18.0.0-next.6",
     "@angular/compiler": "18.0.0-next.6",
     "@angular/compiler-cli": "18.0.0-next.6",
