@@ -16,6 +16,7 @@ import {By} from '@angular/platform-browser';
 import {AlgoliaIcon} from '../algolia-icon/algolia-icon.component';
 import {RouterTestingModule} from '@angular/router/testing';
 import {Router} from '@angular/router';
+import {provideExperimentalZonelessChangeDetection} from '@angular/core';
 
 describe('SearchDialog', () => {
   let fixture: ComponentFixture<SearchDialog>;
@@ -33,6 +34,7 @@ describe('SearchDialog', () => {
     await TestBed.configureTestingModule({
       imports: [SearchDialog, RouterTestingModule],
       providers: [
+        provideExperimentalZonelessChangeDetection(),
         {
           provide: Search,
           useValue: fakeSearch,

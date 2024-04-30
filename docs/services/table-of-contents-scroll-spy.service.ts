@@ -26,7 +26,7 @@ import {TableOfContentsLoader} from './table-of-contents-loader.service';
 export const SCROLL_EVENT_DELAY = 20;
 export const SCROLL_FINISH_DELAY = SCROLL_EVENT_DELAY * 2;
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 // The service is responsible for listening for scrolling and resizing,
 // thanks to which it sets the active item in the Table of contents
 export class TableOfContentsScrollSpy {
@@ -78,7 +78,7 @@ export class TableOfContentsScrollSpy {
     fromEvent(this.window, 'resize')
       .pipe(debounceTime(RESIZE_EVENT_DELAY), takeUntilDestroyed(this.destroyRef), startWith())
       .subscribe(() => {
-        this.ngZone.run(() => this.updateHeadingsTopAfterResize());
+        this.updateHeadingsTopAfterResize();
       });
 
     // We need to observe the height of the docs-viewer because it may change after the
@@ -118,7 +118,7 @@ export class TableOfContentsScrollSpy {
   }
 
   private setActiveItemId(): void {
-    const tableOfContentItems = this.tableOfContentsLoader.tableOfContentItems;
+    const tableOfContentItems = this.tableOfContentsLoader.tableOfContentItems();
 
     if (tableOfContentItems.length === 0) return;
 
@@ -140,19 +140,19 @@ export class TableOfContentsScrollSpy {
 
       // When active item was changed then trigger change detection
       if (isActive && this.activeItemId() !== currentLink.id) {
-        this.ngZone.run(() => this.activeItemId.set(currentLink.id));
+        this.activeItemId.set(currentLink.id);
         return;
       }
     }
 
     if (scrollOffset < tableOfContentItems[0].top && this.activeItemId() !== null) {
-      this.ngZone.run(() => this.activeItemId.set(null));
+      this.activeItemId.set(null);
     }
 
     const scrollOffsetZero = scrollOffset === 0;
     if (scrollOffsetZero !== this.scrollbarThumbOnTop()) {
       // we want to trigger change detection only when the value changes
-      this.ngZone.run(() => this.scrollbarThumbOnTop.set(scrollOffsetZero));
+      this.scrollbarThumbOnTop.set(scrollOffsetZero);
     }
   }
 

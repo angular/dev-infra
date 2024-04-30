@@ -9,10 +9,11 @@
 import {DOCUMENT} from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   afterNextRender,
+  computed,
   inject,
+  signal,
 } from '@angular/core';
 
 @Component({
@@ -22,26 +23,24 @@ import {
   styleUrl: './icon.component.scss',
   host: {
     '[class]': 'MATERIAL_SYMBOLS_OUTLINED',
-    '[style.font-size.px]': 'fontSize',
+    '[style.font-size.px]': 'fontSize()',
     'aria-hidden': 'true',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IconComponent {
-  private readonly cdRef = inject(ChangeDetectorRef);
-
-  get fontSize(): number | null {
-    return IconComponent.isFontLoaded ? null : 0;
-  }
+  fontSize = computed(() => {
+    return IconComponent.isFontLoaded() ? null : 0;
+  });
 
   protected readonly MATERIAL_SYMBOLS_OUTLINED = 'material-symbols-outlined';
 
-  private static isFontLoaded: boolean = false;
+  private static isFontLoaded = signal(false);
   /** Share the same promise across different instances of the component */
   private static whenFontLoad?: Promise<FontFace[]> | undefined;
 
   constructor() {
-    if (IconComponent.isFontLoaded) {
+    if (IconComponent.isFontLoaded()) {
       return;
     }
 
@@ -49,10 +48,7 @@ export class IconComponent {
     afterNextRender(async () => {
       IconComponent.whenFontLoad ??= document.fonts.load('normal 1px "Material Symbols Outlined"');
       await IconComponent.whenFontLoad;
-      IconComponent.isFontLoaded = true;
-
-      // We need to ensure CD is triggered on the component when the font is loaded
-      this.cdRef.markForCheck();
+      IconComponent.isFontLoaded.set(true);
     });
   }
 }

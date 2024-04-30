@@ -17,7 +17,6 @@ import {TableOfContentsLevel} from '../interfaces';
 
 describe('TableOfContentsScrollSpy', () => {
   let service: TableOfContentsScrollSpy;
-  let tableOfContentsLoaderSpy: jasmine.SpyObj<TableOfContentsLoader>;
   const fakeWindow = {
     addEventListener: () => {},
     removeEventListener: () => {},
@@ -57,12 +56,6 @@ describe('TableOfContentsScrollSpy', () => {
   ];
 
   beforeEach(() => {
-    tableOfContentsLoaderSpy = jasmine.createSpyObj<TableOfContentsLoader>(
-      'TableOfContentsLoader',
-      ['tableOfContentItems', 'updateHeadingsTopValue'],
-    );
-    tableOfContentsLoaderSpy.tableOfContentItems = fakeToCItems;
-
     TestBed.configureTestingModule({
       providers: [
         TableOfContentsScrollSpy,
@@ -70,12 +63,10 @@ describe('TableOfContentsScrollSpy', () => {
           provide: WINDOW,
           useValue: fakeWindow,
         },
-        {
-          provide: TableOfContentsLoader,
-          useValue: tableOfContentsLoaderSpy,
-        },
       ],
     });
+    const tableOfContentsLoaderSpy = TestBed.inject(TableOfContentsLoader);
+    tableOfContentsLoaderSpy.tableOfContentItems.set(fakeToCItems);
     service = TestBed.inject(TableOfContentsScrollSpy);
   });
 

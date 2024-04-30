@@ -7,7 +7,7 @@
  */
 
 import {NgFor, NgIf} from '@angular/common';
-import {Component, Input, computed, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, computed, inject} from '@angular/core';
 import {RouterLink} from '@angular/router';
 import {TableOfContentsLevel} from '../../interfaces/index';
 import {TableOfContentsLoader} from '../../services/table-of-contents-loader.service';
@@ -17,7 +17,7 @@ import {IconComponent} from '../icon/icon.component';
 @Component({
   selector: 'docs-table-of-contents',
   standalone: true,
-  providers: [TableOfContentsLoader, TableOfContentsScrollSpy],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './table-of-contents.component.html',
   styleUrls: ['./table-of-contents.component.scss'],
   imports: [NgIf, NgFor, RouterLink, IconComponent],
@@ -28,14 +28,11 @@ export class TableOfContents {
 
   private readonly scrollSpy = inject(TableOfContentsScrollSpy);
   private readonly tableOfContentsLoader = inject(TableOfContentsLoader);
+  tableOfContentItems = this.tableOfContentsLoader.tableOfContentItems;
 
   activeItemId = this.scrollSpy.activeItemId;
   shouldDisplayScrollToTop = computed(() => !this.scrollSpy.scrollbarThumbOnTop());
   TableOfContentsLevel = TableOfContentsLevel;
-
-  tableOfContentItems() {
-    return this.tableOfContentsLoader.tableOfContentItems;
-  }
 
   ngAfterViewInit() {
     this.tableOfContentsLoader.buildTableOfContent(this.contentSourceElement);

@@ -8,6 +8,7 @@
 
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   DestroyRef,
   ElementRef,
@@ -39,6 +40,7 @@ import {RelativeLink} from '../../pipes/relative-link.pipe';
 @Component({
   selector: 'docs-search-dialog',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ClickOutside,
     TextField,

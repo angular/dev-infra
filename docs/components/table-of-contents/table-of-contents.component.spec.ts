@@ -12,11 +12,11 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {TableOfContentsItem, TableOfContentsLevel} from '../../interfaces/index';
 import {TableOfContentsScrollSpy, TableOfContentsLoader} from '../../services/index';
 import {WINDOW} from '../../providers/index';
+import {provideExperimentalZonelessChangeDetection, signal} from '@angular/core';
 
 describe('TableOfContents', () => {
   let component: TableOfContents;
   let fixture: ComponentFixture<TableOfContents>;
-  let tableOfContentsLoaderSpy: jasmine.SpyObj<TableOfContentsLoader>;
   let scrollSpy: jasmine.SpyObj<TableOfContentsScrollSpy>;
   const items: TableOfContentsItem[] = [
     {
@@ -52,28 +52,24 @@ describe('TableOfContents', () => {
     scrollSpy.startListeningToScroll.and.returnValue();
     scrollSpy.activeItemId.and.returnValue(items[0].id);
     scrollSpy.scrollbarThumbOnTop.and.returnValue(false);
-    tableOfContentsLoaderSpy = jasmine.createSpyObj<TableOfContentsLoader>(
-      'TableOfContentsLoader',
-      ['buildTableOfContent'],
-    );
-    tableOfContentsLoaderSpy.buildTableOfContent.and.returnValue();
-    tableOfContentsLoaderSpy.tableOfContentItems = items;
 
     await TestBed.configureTestingModule({
       imports: [TableOfContents, RouterTestingModule],
       providers: [
+        provideExperimentalZonelessChangeDetection(),
         {
           provide: WINDOW,
           useValue: fakeWindow,
         },
       ],
     }).compileComponents();
-    TestBed.overrideProvider(TableOfContentsLoader, {
-      useValue: tableOfContentsLoaderSpy,
-    });
     TestBed.overrideProvider(TableOfContentsScrollSpy, {
       useValue: scrollSpy,
     });
+
+    const tableOfContentsLoaderSpy = TestBed.inject(TableOfContentsLoader);
+    spyOn(tableOfContentsLoaderSpy, 'buildTableOfContent').and.returnValue();
+    tableOfContentsLoaderSpy.tableOfContentItems.set(items);
     fixture = TestBed.createComponent(TableOfContents);
     component = fixture.componentInstance;
     fixture.detectChanges();
