@@ -11,7 +11,6 @@ import {getConfig} from '../../utils/config.js';
 import {assertValidFormatConfig} from '../config.js';
 
 import {Buildifier} from './buildifier.js';
-import {ClangFormat} from './clang-format.js';
 import {Prettier} from './prettier.js';
 
 /**
@@ -22,11 +21,9 @@ export async function getActiveFormatters() {
   assertValidFormatConfig(config);
   const gitClient = await GitClient.get();
 
-  return [
-    new Prettier(gitClient, config.format),
-    new Buildifier(gitClient, config.format),
-    new ClangFormat(gitClient, config.format),
-  ].filter((formatter) => formatter.isEnabled());
+  return [new Prettier(gitClient, config.format), new Buildifier(gitClient, config.format)].filter(
+    (formatter) => formatter.isEnabled(),
+  );
 }
 
 // Rexport symbols used for types elsewhere.
