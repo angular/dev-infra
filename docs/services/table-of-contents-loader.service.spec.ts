@@ -29,7 +29,7 @@ describe('TableOfContentsLoader', () => {
 
     service.buildTableOfContent(element);
 
-    expect(service.tableOfContentItems).toEqual([]);
+    expect(service.tableOfContentItems()).toEqual([]);
   });
 
   it('should create empty table of content list when there is only h1 elements', () => {
@@ -37,7 +37,7 @@ describe('TableOfContentsLoader', () => {
 
     service.buildTableOfContent(element);
 
-    expect(service.tableOfContentItems).toEqual([]);
+    expect(service.tableOfContentItems()).toEqual([]);
   });
 
   it('should create table of content list with h2 and h3 when h2 and h3 headings exists', () => {
@@ -45,24 +45,24 @@ describe('TableOfContentsLoader', () => {
 
     service.buildTableOfContent(element);
 
-    expect(service.tableOfContentItems.length).toEqual(5);
-    expect(service.tableOfContentItems[0].id).toBe('item-2');
-    expect(service.tableOfContentItems[1].id).toBe('item-3');
-    expect(service.tableOfContentItems[2].id).toBe('item-5');
-    expect(service.tableOfContentItems[3].id).toBe('item-6');
-    expect(service.tableOfContentItems[4].id).toBe('item-7');
+    expect(service.tableOfContentItems().length).toEqual(5);
+    expect(service.tableOfContentItems()[0].id).toBe('item-2');
+    expect(service.tableOfContentItems()[1].id).toBe('item-3');
+    expect(service.tableOfContentItems()[2].id).toBe('item-5');
+    expect(service.tableOfContentItems()[3].id).toBe('item-6');
+    expect(service.tableOfContentItems()[4].id).toBe('item-7');
 
-    expect(service.tableOfContentItems[0].level).toBe('h2');
-    expect(service.tableOfContentItems[1].level).toBe('h3');
-    expect(service.tableOfContentItems[2].level).toBe('h3');
-    expect(service.tableOfContentItems[3].level).toBe('h2');
-    expect(service.tableOfContentItems[4].level).toBe('h3');
+    expect(service.tableOfContentItems()[0].level).toBe('h2');
+    expect(service.tableOfContentItems()[1].level).toBe('h3');
+    expect(service.tableOfContentItems()[2].level).toBe('h3');
+    expect(service.tableOfContentItems()[3].level).toBe('h2');
+    expect(service.tableOfContentItems()[4].level).toBe('h3');
 
-    expect(service.tableOfContentItems[0].title).toBe('H2 - first');
-    expect(service.tableOfContentItems[1].title).toBe('H3 - first');
-    expect(service.tableOfContentItems[2].title).toBe('H3 - second');
-    expect(service.tableOfContentItems[3].title).toBe('H2 - second');
-    expect(service.tableOfContentItems[4].title).toBe('H3 - third');
+    expect(service.tableOfContentItems()[0].title).toBe('H2 - first');
+    expect(service.tableOfContentItems()[1].title).toBe('H3 - first');
+    expect(service.tableOfContentItems()[2].title).toBe('H3 - second');
+    expect(service.tableOfContentItems()[3].title).toBe('H2 - second');
+    expect(service.tableOfContentItems()[4].title).toBe('H3 - third');
   });
 
   it('should not display in ToC h2,h3 without ids', () => {
@@ -70,7 +70,7 @@ describe('TableOfContentsLoader', () => {
 
     service.buildTableOfContent(element);
 
-    expect(service.tableOfContentItems.length).toBe(0);
+    expect(service.tableOfContentItems().length).toBe(0);
   });
 
   it('should not display in ToC h2,h3 which are childrens of docs-example-viewer', () => {
@@ -78,7 +78,7 @@ describe('TableOfContentsLoader', () => {
 
     service.buildTableOfContent(element);
 
-    expect(service.tableOfContentItems.length).toBe(0);
+    expect(service.tableOfContentItems().length).toBe(0);
   });
 
   it(`should not display in ToC heading with ${TOC_SKIP_CONTENT_MARKER} attr`, () => {
@@ -86,8 +86,8 @@ describe('TableOfContentsLoader', () => {
 
     service.buildTableOfContent(element);
 
-    expect(service.tableOfContentItems.length).toBe(1);
-    expect(service.tableOfContentItems[0].id).toBe('item-1');
+    expect(service.tableOfContentItems().length).toBe(1);
+    expect(service.tableOfContentItems()[0].id).toBe('item-1');
   });
 });
 

@@ -7,7 +7,7 @@
  */
 
 import {ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule} from '@angular/forms';
-import {Component, Input, forwardRef, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, forwardRef, signal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 type SelectOptionValue = string | number | boolean;
@@ -20,6 +20,7 @@ export interface SelectOption {
 @Component({
   selector: 'docs-select',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule],
   templateUrl: './select.component.html',
   styleUrls: ['./select.component.scss'],

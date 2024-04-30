@@ -11,6 +11,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {CookiePopup, STORAGE_KEY} from './cookie-popup.component';
 import {LOCAL_STORAGE} from '../../providers/index';
 import {MockLocalStorage} from '../../testing/index';
+import {provideExperimentalZonelessChangeDetection} from '@angular/core';
 
 describe('CookiePopup', () => {
   let fixture: ComponentFixture<CookiePopup>;
@@ -20,6 +21,7 @@ describe('CookiePopup', () => {
     TestBed.configureTestingModule({
       imports: [CookiePopup],
       providers: [
+        provideExperimentalZonelessChangeDetection(),
         {
           provide: LOCAL_STORAGE,
           useValue: mockLocalStorage,

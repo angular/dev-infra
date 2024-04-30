@@ -7,6 +7,7 @@
  */
 
 import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   Input,
@@ -22,6 +23,7 @@ import {IconComponent} from '../icon/icon.component';
 @Component({
   selector: 'docs-text-field',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, IconComponent],
   templateUrl: './text-field.component.html',
   styleUrls: ['./text-field.component.scss'],

@@ -19,6 +19,7 @@ import {Breadcrumb} from '../../breadcrumb/breadcrumb.component';
 import {NavigationState} from '../../../services';
 import {CopySourceCodeButton} from '../../copy-source-code-button/copy-source-code-button.component';
 import {TableOfContents} from '../../table-of-contents/table-of-contents.component';
+import {provideExperimentalZonelessChangeDetection} from '@angular/core';
 
 describe('DocViewer', () => {
   let fixture: ComponentFixture<DocViewer>;
@@ -81,6 +82,7 @@ describe('DocViewer', () => {
     await TestBed.configureTestingModule({
       imports: [DocViewer, NoopAnimationsModule, RouterTestingModule],
       providers: [
+        provideExperimentalZonelessChangeDetection(),
         {provide: EXAMPLE_VIEWER_CONTENT_LOADER, useValue: exampleContentSpy},
         {provide: NavigationState, useValue: navigationStateSpy},
       ],

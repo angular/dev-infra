@@ -7,7 +7,7 @@
  */
 
 import {DOCUMENT, isPlatformBrowser} from '@angular/common';
-import {inject, Injectable, PLATFORM_ID} from '@angular/core';
+import {inject, signal, Injectable, PLATFORM_ID} from '@angular/core';
 
 import {TableOfContentsItem, TableOfContentsLevel} from '../interfaces/index';
 
@@ -19,14 +19,14 @@ import {TableOfContentsItem, TableOfContentsLevel} from '../interfaces/index';
  */
 export const TOC_SKIP_CONTENT_MARKER = 'toc-skip-content';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class TableOfContentsLoader {
   // There are some cases when default browser anchor scrolls a little above the
   // heading In that cases wrong item was selected. The value found by trial and
   // error.
   readonly toleranceThreshold = 40;
 
-  tableOfContentItems: TableOfContentsItem[] = [];
+  readonly tableOfContentItems = signal([] as TableOfContentsItem[]);
 
   private readonly document = inject(DOCUMENT);
   private readonly platformId = inject(PLATFORM_ID);
@@ -40,7 +40,7 @@ export class TableOfContentsLoader {
       top: this.calculateTop(heading),
     }));
 
-    this.tableOfContentItems = tocList;
+    this.tableOfContentItems.set(tocList);
   }
 
   // Update top value of heading, it should be executed after window resize
@@ -54,8 +54,12 @@ export class TableOfContentsLoader {
       updatedTopValues.set(heading.id, top);
     }
 
-    this.tableOfContentItems.forEach((item) => {
-      item.top = updatedTopValues.get(item.id) ?? 0;
+    this.tableOfContentItems.update((oldItems) => {
+      let newItems = [...oldItems];
+      for (const item of newItems) {
+        item.top = updatedTopValues.get(item.id) ?? 0;
+      }
+      return newItems;
     });
   }
 

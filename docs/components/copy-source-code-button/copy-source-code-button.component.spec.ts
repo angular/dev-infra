@@ -12,7 +12,12 @@ import {
   CONFIRMATION_DISPLAY_TIME_MS,
   CopySourceCodeButton,
 } from './copy-source-code-button.component';
-import {Component, Input} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  provideExperimentalZonelessChangeDetection,
+  signal,
+} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {Clipboard} from '@angular/cdk/clipboard';
 
@@ -24,13 +29,14 @@ describe('CopySourceCodeButton', () => {
   let fixture: ComponentFixture<CodeSnippetWrapper>;
   let copySpy: jasmine.Spy<(text: string) => boolean>;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [CodeSnippetWrapper],
+      providers: [provideExperimentalZonelessChangeDetection()],
     });
     fixture = TestBed.createComponent(CodeSnippetWrapper);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    await fixture.whenStable();
   });
 
   beforeEach(() => {
@@ -38,11 +44,11 @@ describe('CopySourceCodeButton', () => {
     copySpy = spyOn(clipboardService, 'copy');
   });
 
-  it('should call clipboard service when clicked on copy source code', () => {
+  it('should call clipboard service when clicked on copy source code', async () => {
     const expectedCodeToBeCopied = 'npm install -g @angular/cli';
-    component.code = expectedCodeToBeCopied;
+    component.code.set(expectedCodeToBeCopied);
 
-    fixture.detectChanges();
+    await fixture.whenStable();
 
     const button = fixture.debugElement.query(By.directive(CopySourceCodeButton)).nativeElement;
     button.click();
@@ -50,7 +56,7 @@ describe('CopySourceCodeButton', () => {
     expect(copySpy.calls.argsFor(0)[0].trim()).toBe(expectedCodeToBeCopied);
   });
 
-  it('should not copy lines marked as deleted when code snippet contains diff', () => {
+  it('should not copy lines marked as deleted when code snippet contains diff', async () => {
     const codeInHtmlFormat = `
     <code>
       <div class="hljs-ln-line remove"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let product of products"</span>&gt;</span></div>
@@ -58,9 +64,9 @@ describe('CopySourceCodeButton', () => {
     </code>
     `;
     const expectedCodeToBeCopied = `<div *ngFor="let product of products()">`;
-    component.code = codeInHtmlFormat;
+    component.code.set(codeInHtmlFormat);
 
-    fixture.detectChanges();
+    await fixture.whenStable();
 
     const button = fixture.debugElement.query(By.directive(CopySourceCodeButton)).nativeElement;
     button.click();
@@ -69,7 +75,7 @@ describe('CopySourceCodeButton', () => {
   });
 
   it(`should set ${SUCCESSFULLY_COPY_CLASS_NAME} for ${CONFIRMATION_DISPLAY_TIME_MS} ms when copy was executed properly`, fakeAsync(() => {
-    component.code = 'example';
+    component.code.set('example');
 
     fixture.detectChanges();
 
@@ -86,7 +92,7 @@ describe('CopySourceCodeButton', () => {
   }));
 
   it(`should set ${FAILED_COPY_CLASS_NAME} for ${CONFIRMATION_DISPLAY_TIME_MS} ms when copy failed`, fakeAsync(() => {
-    component.code = 'example';
+    component.code.set('example');
     copySpy.and.throwError('Fake copy error');
 
     fixture.detectChanges();
@@ -108,13 +114,14 @@ describe('CopySourceCodeButton', () => {
 @Component({
   template: `
     <pre>
-      <code [innerHtml]="code"></code>
+      <code [innerHtml]="code()"></code>
     </pre>
     <button docs-copy-source-code></button>
   `,
   imports: [CopySourceCodeButton],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
 })
 class CodeSnippetWrapper {
-  @Input({required: true}) code!: string;
+  code = signal('');
 }
