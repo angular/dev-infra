@@ -1452,13 +1452,13 @@ __metadata:
   linkType: hard
 
 "@codemirror/lint@npm:^6.0.0, @codemirror/lint@npm:^6.4.2":
-  version: 6.6.0
-  resolution: "@codemirror/lint@npm:6.6.0"
+  version: 6.7.0
+  resolution: "@codemirror/lint@npm:6.7.0"
   dependencies:
     "@codemirror/state": "npm:^6.0.0"
     "@codemirror/view": "npm:^6.0.0"
     crelt: "npm:^1.0.5"
-  checksum: 10c0/2ae2f6ad769818866cb98aa7d9421c45b0aa1048f8af6d3593de069d4be9238cbecfc7f8cb0c7540c3431f4ea0c2f9ab01546002b920d10412b84f845b499b09
+  checksum: 10c0/07e45047285b13d066786e44be8638fafef60c6a577c2a2f57c55827a97990b7600648649a0a464c74856f0d2c6eddd980036348abee7bdea0cd5ce3c4886b4f
   languageName: node
   linkType: hard
 
@@ -13294,9 +13294,9 @@ __metadata:
   linkType: hard
 
 "preact@npm:^10.17.1":
-  version: 10.20.2
-  resolution: "preact@npm:10.20.2"
-  checksum: 10c0/e79c1e3ab0bab6a08dce157fc33a537487365a9093bcdc1a60612be8073a354e84648df9ee1eef5306b640461c99c9ef024720405e3e8219c03ed17e95de981e
+  version: 10.21.0
+  resolution: "preact@npm:10.21.0"
+  checksum: 10c0/1f3cfcb5ca83b780b53593bcb917ae2e8d10a37405c32fb6774be1b5f1f3167d2156bd22c058627388330acc54da35fe8d4bbe7d38ae567a10e5d8fd943a1a06
   languageName: node
   linkType: hard
 
