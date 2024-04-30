@@ -456,7 +456,6 @@ __metadata:
     angular-split: "npm:^17.1.1"
     browser-sync: "npm:^3.0.0"
     chalk: "npm:^5.0.1"
-    clang-format: "npm:1.8.0"
     cli-progress: "npm:^3.7.0"
     conventional-commits-parser: "npm:^5.0.0"
     diff: "npm:^5.1.0"
@@ -6370,21 +6369,6 @@ __metadata:
   dependencies:
     json-parse-helpfulerror: "npm:^1.0.3"
   checksum: 10c0/a753f1ace13feecbf685f05d461d202c900dbe027993987f8bd28f4fce1b65d414fad6f9d2e2c88107c4743dc5ac0a8c608c32d06ceee2bf9f59869942f2b0c3
-  languageName: node
-  linkType: hard
-
-"clang-format@npm:1.8.0":
-  version: 1.8.0
-  resolution: "clang-format@npm:1.8.0"
-  dependencies:
-    async: "npm:^3.2.3"
-    glob: "npm:^7.0.0"
-    resolve: "npm:^1.1.6"
-  bin:
-    check-clang-format: bin/check-clang-format.js
-    clang-format: index.js
-    git-clang-format: bin/git-clang-format
-  checksum: 10c0/2bd1b9bc503695e8bf9571902c94759215b72f3d0fd8379e327181dd35df8775f82e8bbc38655554d294c83fcb55c081fe3736d057606bb0d535a87d8f29860e
   languageName: node
   linkType: hard
 

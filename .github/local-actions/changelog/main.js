@@ -43289,7 +43289,7 @@ var require_buffer_list = __commonJS({
         }
       }, {
         key: "join",
-        value: function join7(s) {
+        value: function join6(s) {
           if (this.length === 0)
             return "";
           var p = this.head;
@@ -61743,7 +61743,7 @@ var require_regex2 = __commonJS({
   ""(exports, module) {
     "use strict";
     var reNomatch = /(?!.*)/;
-    function join7(array, joiner) {
+    function join6(array, joiner) {
       return array.map(function(val) {
         return val.trim();
       }).filter(function(val) {
@@ -61754,7 +61754,7 @@ var require_regex2 = __commonJS({
       if (!noteKeywords) {
         return reNomatch;
       }
-      const noteKeywordsSelection = join7(noteKeywords, "|");
+      const noteKeywordsSelection = join6(noteKeywords, "|");
       if (!notesPattern) {
         return new RegExp("^[\\s|*]*(" + noteKeywordsSelection + ")[:\\s]+(.*)", "i");
       }
@@ -61765,13 +61765,13 @@ var require_regex2 = __commonJS({
         return reNomatch;
       }
       const flags = issuePrefixesCaseSensitive ? "g" : "gi";
-      return new RegExp("(?:.*?)??\\s*([\\w-\\.\\/]*?)??(" + join7(issuePrefixes, "|") + ")([\\w-]*\\d+)", flags);
+      return new RegExp("(?:.*?)??\\s*([\\w-\\.\\/]*?)??(" + join6(issuePrefixes, "|") + ")([\\w-]*\\d+)", flags);
     }
     function getReferencesRegex(referenceActions) {
       if (!referenceActions) {
         return /()(.+)/gi;
       }
-      const joinedKeywords = join7(referenceActions, "|");
+      const joinedKeywords = join6(referenceActions, "|");
       return new RegExp("(" + joinedKeywords + ")(?:\\s+(.*?))(?=(?:" + joinedKeywords + ")|$)", "gi");
     }
     module.exports = function(options) {
@@ -66425,7 +66425,7 @@ var core = __toESM(require_core());
 var import_github4 = __toESM(require_github());
 var import_semver3 = __toESM(require_semver2());
 import { existsSync as existsSync2, readFileSync as readFileSync2, writeFileSync as writeFileSync2 } from "fs";
-import { join as join6 } from "path";
+import { join as join5 } from "path";
 
 // 
 var import_ejs = __toESM(require_ejs());
@@ -70659,42 +70659,11 @@ var BAZEL_WARNING_FLAG = `--warnings=attr-cfg,attr-license,attr-non-empty,attr-o
 
 // 
 import { join as join3 } from "path";
-var ClangFormat = class extends Formatter {
-  constructor() {
-    super(...arguments);
-    this.name = "clang-format";
-    this.binaryFilePath = join3(this.git.baseDir, "");
-    this.defaultFileMatcher = ["**/*.{t,j,cj,mj}s"];
-    this.actions = {
-      check: {
-        commandFlags: `--Werror -n -style=file`,
-        callback: (_3, code) => {
-          return code !== 0;
-        }
-      },
-      format: {
-        commandFlags: `-i -style=file`,
-        callback: (file, code, _3, stderr) => {
-          if (code !== 0) {
-            Log.error(`Error running clang-format on: ${file}`);
-            Log.error(stderr);
-            Log.error();
-            return true;
-          }
-          return false;
-        }
-      }
-    };
-  }
-};
-
-// 
-import { join as join4 } from "path";
 var Prettier = class extends Formatter {
   constructor() {
     super(...arguments);
     this.name = "prettier";
-    this.binaryFilePath = join4(this.git.baseDir, "");
+    this.binaryFilePath = join3(this.git.baseDir, "");
     this.defaultFileMatcher = [
       "**/*.{js,cjs,mjs}",
       "**/*.{ts,cts,mts}",
@@ -70703,7 +70672,7 @@ var Prettier = class extends Formatter {
     ];
     this.configPath = this.config["prettier"] ? ChildProcess.spawnSync(this.binaryFilePath, [
       "--find-config-path",
-      join4(process.cwd(), "dummy.js")
+      join3(process.cwd(), "dummy.js")
     ]).stdout.trim() : "";
     this.actions = {
       check: {
@@ -70733,11 +70702,7 @@ async function getActiveFormatters() {
   const config2 = await getConfig();
   assertValidFormatConfig(config2);
   const gitClient = await GitClient.get();
-  return [
-    new Prettier(gitClient, config2.format),
-    new Buildifier(gitClient, config2.format),
-    new ClangFormat(gitClient, config2.format)
-  ].filter((formatter) => formatter.isEnabled());
+  return [new Prettier(gitClient, config2.format), new Buildifier(gitClient, config2.format)].filter((formatter) => formatter.isEnabled());
 }
 
 // 
@@ -71285,7 +71250,7 @@ function santizeCommitMessage(content) {
 // 
 var import_semver = __toESM(require_semver2());
 import { existsSync, readFileSync, writeFileSync } from "fs";
-import { join as join5 } from "path";
+import { join as join4 } from "path";
 var changelogPath = "CHANGELOG.md";
 var changelogArchivePath = "CHANGELOG_ARCHIVE.md";
 var splitMarker = "<!-- CHANGELOG SPLIT MARKER -->";
@@ -71325,8 +71290,8 @@ var Changelog = class {
   }
   constructor(git) {
     this.git = git;
-    this.filePath = join5(this.git.baseDir, changelogPath);
-    this.archiveFilePath = join5(this.git.baseDir, changelogArchivePath);
+    this.filePath = join4(this.git.baseDir, changelogPath);
+    this.archiveFilePath = join4(this.git.baseDir, changelogArchivePath);
     this._entries = void 0;
     this._archiveEntries = void 0;
   }
@@ -71643,8 +71608,8 @@ async function runChangelogAction(installationToken) {
   const git = await AuthenticatedGitClient.get();
   git.run(["config", "user.email", "angular-robot@google.com"]);
   git.run(["config", "user.name", "Angular Robot"]);
-  const changelogFile = join6(git.baseDir, "CHANGELOG.md");
-  const changelogArchiveFile = join6(git.baseDir, "CHANGELOG_ARCHIVE.md");
+  const changelogFile = join5(git.baseDir, "CHANGELOG.md");
+  const changelogArchiveFile = join5(git.baseDir, "CHANGELOG_ARCHIVE.md");
   const lastChangelogRef = getLatestRefFromUpstream(git, lastChangelogTag);
   const latestRef = getLatestRefFromUpstream(git, git.mainBranchName);
   const releaseNotes = await ReleaseNotes.forRange(git, getTodayAsSemver(), lastChangelogRef, latestRef);
