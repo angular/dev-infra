@@ -68178,9 +68178,12 @@ var Validation5 = class extends PullRequestValidation {
 
 // 
 async function isGooglerOrgMember(client, username) {
-  const response = await client.orgs.checkMembershipForUser({ org: "googlers", username });
-  if (response.status === 204) {
-    return true;
+  try {
+    const response = await client.orgs.checkMembershipForUser({ org: "googlers", username });
+    if (response.status === 204) {
+      return true;
+    }
+  } catch {
   }
   return false;
 }

@@ -14,10 +14,12 @@ async function isGooglerOrgMember(
   client: AuthenticatedGithubClient,
   username: string,
 ): Promise<boolean> {
-  const response = await client.orgs.checkMembershipForUser({org: 'googlers', username});
-  if ((response.status as number) === 204) {
-    return true;
-  }
+  try {
+    const response = await client.orgs.checkMembershipForUser({org: 'googlers', username});
+    if ((response.status as number) === 204) {
+      return true;
+    }
+  } catch {}
   return false;
 }
 
