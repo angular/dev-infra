@@ -16775,10 +16775,10 @@ __metadata:
   linkType: hard
 
 "zone.js@npm:^0.14.0":
-  version: 0.14.4
-  resolution: "zone.js@npm:0.14.4"
+  version: 0.14.5
+  resolution: "zone.js@npm:0.14.5"
   dependencies:
     tslib: "npm:^2.3.0"
-  checksum: 10c0/141a30b43e70a76123e4b71fc7a7cd3b449e1550099e401d875f43b21fc4d178b219cff2c515dd0f2da739ff4baa837f369b285f1128dc2686ca2b480a90c594
+  checksum: 10c0/04f5801ebcd9c959b3123c37a8448b04ee5ffc0ffb0fdf9f9be95c6fbc1066a34a4a005468835884240fe4d7307750df61de491b89fb5e96d53d04565bdd2a16
   languageName: node
   linkType: hard
