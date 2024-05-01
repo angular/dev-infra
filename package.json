@@ -143,7 +143,7 @@
     "fast-glob": "^3.3.2",
     "firebase": "10.11.1",
     "firebase-admin": "12.1.0",
-    "firebase-functions": "^4.0.0",
+    "firebase-functions": "^5.0.0",
     "firebase-tools": "^13.0.0",
     "folder-hash": "^4.0.2",
     "font-color-contrast": "^11.1.0",
