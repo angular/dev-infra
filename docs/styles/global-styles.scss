@@ -63,6 +63,7 @@ $theme: mat.m2-define-light-theme(
 // Include material core styles.
 @include mat.core();
 @include mat.tabs-theme($theme);
+@include mat.button-toggle-theme($theme);
 
 // Include custom docs styles
 @include alert.docs-alert();
