@@ -140,9 +140,9 @@ export function mapDocEntryToCode(entry: DocEntry): CodeTableOfContentsData {
         (acc: CodeTableOfContentsData, curr: FunctionEntry, index: number) => {
           const lineNumber = index;
           acc.codeLineNumbersWithIdentifiers.set(lineNumber, curr.name);
-          acc.contents += `${curr.name}.${curr.params
+          acc.contents += `${curr.name}(${curr.params
             .map((param) => mapParamEntry(param))
-            .join(`, `)}: ${curr.returnType}\n`;
+            .join(`, `)}): ${curr.returnType}\n`;
           if (isDeprecatedEntry(curr)) {
             acc.deprecatedLineNumbers.push(lineNumber);
           }
