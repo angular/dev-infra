@@ -67445,7 +67445,7 @@ var Validation4 = class extends PullRequestValidation {
     if (diffStats.separateFiles > 0 && !hasSeparateSyncFiles) {
       throw this._createError(`This PR cannot be merged as Shared Primitives code has already been merged. Primitives and Framework code must be merged and synced separately. Try again after a g3sync has finished.`);
     }
-    if (diffStats.files > 0 && hasSeparateSyncFiles) {
+    if (diffStats.files > 0 && diffStats.separateFiles === 0 && hasSeparateSyncFiles) {
       throw this._createError(`This PR cannot be merged as Angular framework code has already been merged. Primitives and Framework code must be merged and synced separately. Try again after a g3sync has finished.`);
     }
   }
