@@ -46,6 +46,8 @@ class Validation extends PullRequestValidation {
     if (g3SyncConfigWithMatchers === null) {
       return;
     }
+
+    // diffStats tells you what's already been merged in github, but hasn't yet been synced to G3
     const diffStats = await getDiffStats(config, g3SyncConfigWithMatchers.config, gitClient);
     if (diffStats === undefined) {
       return;
@@ -57,14 +59,24 @@ class Validation extends PullRequestValidation {
       g3SyncConfigWithMatchers.config,
     ).pullRequestHasSeparateFiles();
 
-    // if has merged stuff already and hasSeparateSyncFiles, it's safe to merge more separate sync files
+    // This validation applies to PRs that get merged when changes have not yet been synced into G3.
+    // The rules are as follows:
+    //   1. if pure framework changes have been merged, separate file changes should not be merged.
+    //   2. if separate file changes have been merged, pure framework changes should not be merged.
+    //   3. if separate file changes have been merged, any change merged MUST have separate file changes in it.
+    //   4. framework changes can be merged with separate file changes as long as that change ALSO
+    //       has separate file changes also.
+
+    // covers 2 & 3
     if (diffStats.separateFiles > 0 && !hasSeparateSyncFiles) {
       throw this._createError(
         `This PR cannot be merged as Shared Primitives code has already been merged. ` +
           `Primitives and Framework code must be merged and synced separately. Try again after a g3sync has finished.`,
       );
     }
-    if (diffStats.files > 0 && hasSeparateSyncFiles) {
+
+    // covers 1 & 4
+    if (diffStats.files > 0 && diffStats.separateFiles === 0 && hasSeparateSyncFiles) {
       throw this._createError(
         `This PR cannot be merged as Angular framework code has already been merged. ` +
           `Primitives and Framework code must be merged and synced separately. Try again after a g3sync has finished.`,

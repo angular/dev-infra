@@ -212,6 +212,19 @@ describe('pull request validation', () => {
       const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
       expect(results.length).toBe(0);
     });
+
+    it('should allow merging when primitives changes have been merged already and PR has primitives and fw code', async () => {
+      const config = createIsolatedValidationConfig({assertIsolatedSeparateFiles: true});
+      let pr = createTestPullRequest();
+      const files = ['packages/core/primitives/rando.ts', 'packages/router/blah.ts'];
+      const fileHelper = PullRequestFiles.create(git, pr.number, googleSyncConfig);
+      const diffStats = {insertions: 0, deletions: 0, files: 1, separateFiles: 1, commits: 3};
+      spyOn(PullRequestFiles, 'create').and.returnValue(fileHelper);
+      spyOn(G3Stats, 'getDiffStats').and.returnValue(diffStats);
+      spyOn(fileHelper, 'loadPullRequestFiles').and.returnValue(Promise.resolve(files));
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(0);
+    });
   });
 });
 
