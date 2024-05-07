@@ -141,6 +141,7 @@ export class ExampleViewer {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((index) => {
         this.snippetCode.set(this.exampleMetadata()?.files[index]);
+        this.changeDetector.detectChanges();
         this.setCodeLinesVisibility();
       });
   }
