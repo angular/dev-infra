@@ -15,8 +15,14 @@ import {
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import { NgModule, provideExperimentalZonelessChangeDetection } from '@angular/core';
+
+@NgModule({
+  providers: [provideExperimentalZonelessChangeDetection()]
+})
+export class TestModule {}
 
 TestBed.initTestEnvironment(
-  [BrowserDynamicTestingModule, NoopAnimationsModule],
+  [BrowserDynamicTestingModule, NoopAnimationsModule, TestModule],
   platformBrowserDynamicTesting(),
 );

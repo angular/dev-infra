@@ -12,7 +12,7 @@ import {NavigationList} from './navigation-list.component';
 import {By} from '@angular/platform-browser';
 import {NavigationItem} from '../../interfaces';
 import {RouterTestingModule} from '@angular/router/testing';
-import {provideExperimentalZonelessChangeDetection, signal} from '@angular/core';
+import {signal} from '@angular/core';
 import {NavigationState} from '../../services';
 
 const navigationItems: NavigationItem[] = [
@@ -40,7 +40,6 @@ describe('NavigationList', () => {
       imports: [NavigationList, RouterTestingModule],
       providers: [
         {provide: NavigationState, useClass: FakeNavigationListState},
-        provideExperimentalZonelessChangeDetection(),
       ],
     }).compileComponents();
     fixture = TestBed.createComponent(NavigationList);

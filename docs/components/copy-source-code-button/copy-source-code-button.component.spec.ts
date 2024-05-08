@@ -15,7 +15,6 @@ import {
 import {
   ChangeDetectionStrategy,
   Component,
-  provideExperimentalZonelessChangeDetection,
   signal,
 } from '@angular/core';
 import {By} from '@angular/platform-browser';
@@ -32,7 +31,6 @@ describe('CopySourceCodeButton', () => {
   beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [CodeSnippetWrapper],
-      providers: [provideExperimentalZonelessChangeDetection()],
     });
     fixture = TestBed.createComponent(CodeSnippetWrapper);
     component = fixture.componentInstance;
