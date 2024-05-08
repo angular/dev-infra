@@ -9,7 +9,6 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {TextField} from './text-field.component';
-import {provideExperimentalZonelessChangeDetection} from '@angular/core';
 
 describe('TextField', () => {
   let component: TextField;
@@ -18,7 +17,6 @@ describe('TextField', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [TextField],
-      providers: [provideExperimentalZonelessChangeDetection()],
     });
     fixture = TestBed.createComponent(TextField);
     component = fixture.componentInstance;

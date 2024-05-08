@@ -10,7 +10,7 @@ import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {ExampleViewer} from './example-viewer.component';
 import {DocsContentLoader, ExampleMetadata, ExampleViewerContentLoader} from '../../../interfaces';
 import {DOCS_CONTENT_LOADER, EXAMPLE_VIEWER_CONTENT_LOADER} from '../../../providers';
-import {Component, provideExperimentalZonelessChangeDetection} from '@angular/core';
+import {Component} from '@angular/core';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -37,7 +37,6 @@ describe('ExampleViewer', () => {
     await TestBed.configureTestingModule({
       imports: [ExampleViewer, NoopAnimationsModule],
       providers: [
-        provideExperimentalZonelessChangeDetection(),
         {provide: EXAMPLE_VIEWER_CONTENT_LOADER, useValue: exampleContentSpy},
         {provide: DOCS_CONTENT_LOADER, useValue: contentServiceSpy},
         {provide: ActivatedRoute, useValue: {snapshot: {fragment: 'fragment'}}},
