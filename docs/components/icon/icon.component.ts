@@ -25,6 +25,7 @@ import {
     '[class]': 'MATERIAL_SYMBOLS_OUTLINED',
     '[style.font-size.px]': 'fontSize()',
     'aria-hidden': 'true',
+    'translate': 'no',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
