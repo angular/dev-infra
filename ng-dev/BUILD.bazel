@@ -82,6 +82,7 @@ pkg_npm(
     substitutions = NPM_PACKAGE_SUBSTITUTIONS,
     deps = [
         ":bundles",
+        ":ng-dev",
         ":types",
     ],
 )
