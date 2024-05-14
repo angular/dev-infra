@@ -20072,7 +20072,7 @@ var require_dist_node11 = __commonJS({
       paginatingEndpoints: () => paginatingEndpoints
     });
     module.exports = __toCommonJS(dist_src_exports);
-    var VERSION7 = "9.2.1";
+    var VERSION7 = "11.3.1";
     function normalizePaginatedListResponse(response) {
       if (!response.data) {
         return {
@@ -20176,6 +20176,7 @@ var require_dist_node11 = __commonJS({
       "GET /assignments/{assignment_id}/accepted_assignments",
       "GET /classrooms",
       "GET /classrooms/{classroom_id}/assignments",
+      "GET /enterprises/{enterprise}/copilot/usage",
       "GET /enterprises/{enterprise}/dependabot/alerts",
       "GET /enterprises/{enterprise}/secret-scanning/alerts",
       "GET /events",
@@ -20208,6 +20209,7 @@ var require_dist_node11 = __commonJS({
       "GET /orgs/{org}/codespaces/secrets",
       "GET /orgs/{org}/codespaces/secrets/{secret_name}/repositories",
       "GET /orgs/{org}/copilot/billing/seats",
+      "GET /orgs/{org}/copilot/usage",
       "GET /orgs/{org}/dependabot/alerts",
       "GET /orgs/{org}/dependabot/secrets",
       "GET /orgs/{org}/dependabot/secrets/{secret_name}/repositories",
@@ -20240,6 +20242,7 @@ var require_dist_node11 = __commonJS({
       "GET /orgs/{org}/rulesets/rule-suites",
       "GET /orgs/{org}/secret-scanning/alerts",
       "GET /orgs/{org}/security-advisories",
+      "GET /orgs/{org}/team/{team_slug}/copilot/usage",
       "GET /orgs/{org}/teams",
       "GET /orgs/{org}/teams/{team_slug}/discussions",
       "GET /orgs/{org}/teams/{team_slug}/discussions/{discussion_number}/comments",
@@ -20295,6 +20298,8 @@ var require_dist_node11 = __commonJS({
       "GET /repos/{owner}/{repo}/environments",
       "GET /repos/{owner}/{repo}/environments/{environment_name}/deployment-branch-policies",
       "GET /repos/{owner}/{repo}/environments/{environment_name}/deployment_protection_rules/apps",
+      "GET /repos/{owner}/{repo}/environments/{environment_name}/secrets",
+      "GET /repos/{owner}/{repo}/environments/{environment_name}/variables",
       "GET /repos/{owner}/{repo}/events",
       "GET /repos/{owner}/{repo}/forks",
       "GET /repos/{owner}/{repo}/hooks",
@@ -20339,8 +20344,6 @@ var require_dist_node11 = __commonJS({
       "GET /repos/{owner}/{repo}/teams",
       "GET /repos/{owner}/{repo}/topics",
       "GET /repositories",
-      "GET /repositories/{repository_id}/environments/{environment_name}/secrets",
-      "GET /repositories/{repository_id}/environments/{environment_name}/variables",
       "GET /search/code",
       "GET /search/commits",
       "GET /search/issues",
@@ -20449,7 +20452,7 @@ var require_dist_node12 = __commonJS({
       restEndpointMethods: () => restEndpointMethods
     });
     module.exports = __toCommonJS(dist_src_exports);
-    var VERSION7 = "10.4.1";
+    var VERSION7 = "13.2.2";
     var Endpoints = {
       actions: {
         addCustomLabelsToSelfHostedRunnerForOrg: [
@@ -20471,10 +20474,10 @@ var require_dist_node12 = __commonJS({
           "POST /repos/{owner}/{repo}/actions/runs/{run_id}/cancel"
         ],
         createEnvironmentVariable: [
-          "POST /repositories/{repository_id}/environments/{environment_name}/variables"
+          "POST /repos/{owner}/{repo}/environments/{environment_name}/variables"
         ],
         createOrUpdateEnvironmentSecret: [
-          "PUT /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}"
+          "PUT /repos/{owner}/{repo}/environments/{environment_name}/secrets/{secret_name}"
         ],
         createOrUpdateOrgSecret: ["PUT /orgs/{org}/actions/secrets/{secret_name}"],
         createOrUpdateRepoSecret: [
@@ -20505,10 +20508,10 @@ var require_dist_node12 = __commonJS({
           "DELETE /repos/{owner}/{repo}/actions/artifacts/{artifact_id}"
         ],
         deleteEnvironmentSecret: [
-          "DELETE /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}"
+          "DELETE /repos/{owner}/{repo}/environments/{environment_name}/secrets/{secret_name}"
         ],
         deleteEnvironmentVariable: [
-          "DELETE /repositories/{repository_id}/environments/{environment_name}/variables/{name}"
+          "DELETE /repos/{owner}/{repo}/environments/{environment_name}/variables/{name}"
         ],
         deleteOrgSecret: ["DELETE /orgs/{org}/actions/secrets/{secret_name}"],
         deleteOrgVariable: ["DELETE /orgs/{org}/actions/variables/{name}"],
@@ -20578,13 +20581,13 @@ var require_dist_node12 = __commonJS({
           "GET /repos/{owner}/{repo}/actions/oidc/customization/sub"
         ],
         getEnvironmentPublicKey: [
-          "GET /repositories/{repository_id}/environments/{environment_name}/secrets/public-key"
+          "GET /repos/{owner}/{repo}/environments/{environment_name}/secrets/public-key"
         ],
         getEnvironmentSecret: [
-          "GET /repositories/{repository_id}/environments/{environment_name}/secrets/{secret_name}"
+          "GET /repos/{owner}/{repo}/environments/{environment_name}/secrets/{secret_name}"
         ],
         getEnvironmentVariable: [
-          "GET /repositories/{repository_id}/environments/{environment_name}/variables/{name}"
+          "GET /repos/{owner}/{repo}/environments/{environment_name}/variables/{name}"
         ],
         getGithubActionsDefaultWorkflowPermissionsOrganization: [
           "GET /orgs/{org}/actions/permissions/workflow"
@@ -20636,10 +20639,10 @@ var require_dist_node12 = __commonJS({
         ],
         listArtifactsForRepo: ["GET /repos/{owner}/{repo}/actions/artifacts"],
         listEnvironmentSecrets: [
-          "GET /repositories/{repository_id}/environments/{environment_name}/secrets"
+          "GET /repos/{owner}/{repo}/environments/{environment_name}/secrets"
         ],
         listEnvironmentVariables: [
-          "GET /repositories/{repository_id}/environments/{environment_name}/variables"
+          "GET /repos/{owner}/{repo}/environments/{environment_name}/variables"
         ],
         listJobsForWorkflowRun: [
           "GET /repos/{owner}/{repo}/actions/runs/{run_id}/jobs"
@@ -20757,7 +20760,7 @@ var require_dist_node12 = __commonJS({
           "PUT /repos/{owner}/{repo}/actions/permissions/access"
         ],
         updateEnvironmentVariable: [
-          "PATCH /repositories/{repository_id}/environments/{environment_name}/variables/{name}"
+          "PATCH /repos/{owner}/{repo}/environments/{environment_name}/variables/{name}"
         ],
         updateOrgVariable: ["PATCH /orgs/{org}/actions/variables/{name}"],
         updateRepoVariable: [
@@ -21094,7 +21097,10 @@ var require_dist_node12 = __commonJS({
         getCopilotSeatDetailsForUser: [
           "GET /orgs/{org}/members/{username}/copilot"
         ],
-        listCopilotSeats: ["GET /orgs/{org}/copilot/billing/seats"]
+        listCopilotSeats: ["GET /orgs/{org}/copilot/billing/seats"],
+        usageMetricsForEnterprise: ["GET /enterprises/{enterprise}/copilot/usage"],
+        usageMetricsForOrg: ["GET /orgs/{org}/copilot/usage"],
+        usageMetricsForTeam: ["GET /orgs/{org}/team/{team_slug}/copilot/usage"]
       },
       dependabot: {
         addSelectedRepoToOrgSecret: [
@@ -21304,13 +21310,6 @@ var require_dist_node12 = __commonJS({
         root: ["GET /"]
       },
       migrations: {
-        cancelImport: [
-          "DELETE /repos/{owner}/{repo}/import",
-          {},
-          {
-            deprecated: "octokit.rest.migrations.cancelImport() is deprecated, see https://docs.github.com/rest/migrations/source-imports#cancel-an-import"
-          }
-        ],
         deleteArchiveForAuthenticatedUser: [
           "DELETE /user/migrations/{migration_id}/archive"
         ],
@@ -21322,27 +21321,6 @@ var require_dist_node12 = __commonJS({
         ],
         getArchiveForAuthenticatedUser: [
           "GET /user/migrations/{migration_id}/archive"
-        ],
-        getCommitAuthors: [
-          "GET /repos/{owner}/{repo}/import/authors",
-          {},
-          {
-            deprecated: "octokit.rest.migrations.getCommitAuthors() is deprecated, see https://docs.github.com/rest/migrations/source-imports#get-commit-authors"
-          }
-        ],
-        getImportStatus: [
-          "GET /repos/{owner}/{repo}/import",
-          {},
-          {
-            deprecated: "octokit.rest.migrations.getImportStatus() is deprecated, see https://docs.github.com/rest/migrations/source-imports#get-an-import-status"
-          }
-        ],
-        getLargeFiles: [
-          "GET /repos/{owner}/{repo}/import/large_files",
-          {},
-          {
-            deprecated: "octokit.rest.migrations.getLargeFiles() is deprecated, see https://docs.github.com/rest/migrations/source-imports#get-large-files"
-          }
         ],
         getStatusForAuthenticatedUser: ["GET /user/migrations/{migration_id}"],
         getStatusForOrg: ["GET /orgs/{org}/migrations/{migration_id}"],
@@ -21357,41 +21335,13 @@ var require_dist_node12 = __commonJS({
           {},
           { renamed: ["migrations", "listReposForAuthenticatedUser"] }
         ],
-        mapCommitAuthor: [
-          "PATCH /repos/{owner}/{repo}/import/authors/{author_id}",
-          {},
-          {
-            deprecated: "octokit.rest.migrations.mapCommitAuthor() is deprecated, see https://docs.github.com/rest/migrations/source-imports#map-a-commit-author"
-          }
-        ],
-        setLfsPreference: [
-          "PATCH /repos/{owner}/{repo}/import/lfs",
-          {},
-          {
-            deprecated: "octokit.rest.migrations.setLfsPreference() is deprecated, see https://docs.github.com/rest/migrations/source-imports#update-git-lfs-preference"
-          }
-        ],
         startForAuthenticatedUser: ["POST /user/migrations"],
         startForOrg: ["POST /orgs/{org}/migrations"],
-        startImport: [
-          "PUT /repos/{owner}/{repo}/import",
-          {},
-          {
-            deprecated: "octokit.rest.migrations.startImport() is deprecated, see https://docs.github.com/rest/migrations/source-imports#start-an-import"
-          }
-        ],
         unlockRepoForAuthenticatedUser: [
           "DELETE /user/migrations/{migration_id}/repos/{repo_name}/lock"
         ],
         unlockRepoForOrg: [
           "DELETE /orgs/{org}/migrations/{migration_id}/repos/{repo_name}/lock"
-        ],
-        updateImport: [
-          "PATCH /repos/{owner}/{repo}/import",
-          {},
-          {
-            deprecated: "octokit.rest.migrations.updateImport() is deprecated, see https://docs.github.com/rest/migrations/source-imports#update-an-import"
-          }
         ]
       },
       oidc: {
@@ -21817,6 +21767,9 @@ var require_dist_node12 = __commonJS({
           "GET /repos/{owner}/{repo}/automated-security-fixes"
         ],
         checkCollaborator: ["GET /repos/{owner}/{repo}/collaborators/{username}"],
+        checkPrivateVulnerabilityReporting: [
+          "GET /repos/{owner}/{repo}/private-vulnerability-reporting"
+        ],
         checkVulnerabilityAlerts: [
           "GET /repos/{owner}/{repo}/vulnerability-alerts"
         ],
@@ -22607,7 +22560,7 @@ var require_dist_node13 = __commonJS({
     var import_plugin_request_log = require_dist_node10();
     var import_plugin_paginate_rest = require_dist_node11();
     var import_plugin_rest_endpoint_methods = require_dist_node12();
-    var VERSION7 = "20.1.0";
+    var VERSION7 = "20.1.1";
     var Octokit3 = import_core2.Octokit.plugin(
       import_plugin_request_log.requestLog,
       import_plugin_rest_endpoint_methods.legacyRestEndpointMethods,
@@ -28684,7 +28637,7 @@ async function getAppAuthentication({
 }) {
   try {
     const appAuthentication = await githubAppJwt({
-      id: +appId,
+      id: appId,
       privateKey,
       now: timeDifference && Math.floor(Date.now() / 1e3) + timeDifference
     });
@@ -29034,15 +28987,10 @@ async function sendRequestWithRetries(state, request2, options, createdAt, retri
     return sendRequestWithRetries(state, request2, options, createdAt, retries);
   }
 }
-var VERSION6 = "7.0.0";
+var VERSION6 = "7.1.0";
 function createAppAuth(options) {
   if (!options.appId) {
     throw new Error("[@octokit/auth-app] appId option is required");
-  }
-  if (!Number.isFinite(+options.appId)) {
-    throw new Error(
-      "[@octokit/auth-app] appId option must be a number or numeric string"
-    );
   }
   if (!options.privateKey) {
     throw new Error("[@octokit/auth-app] privateKey option is required");
