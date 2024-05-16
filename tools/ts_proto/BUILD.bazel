@@ -1,0 +1,18 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(
+    [
+        "package.json",
+        "yarn.lock",
+        ".yarnrc.yml",
+    ],
+)
+
+js_library(
+    name = "esm-wrapper",
+    srcs = [
+        "esm-wrapper.js.template",
+    ],
+)

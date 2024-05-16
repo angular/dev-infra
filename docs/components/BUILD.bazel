@@ -1,0 +1,25 @@
+load("//tools:defaults.bzl", "ts_library")
+
+ts_library(
+    name = "components",
+    srcs = [
+        "index.ts",
+    ],
+    visibility = [
+        "//docs:__pkg__",
+    ],
+    deps = [
+        "//docs/components/algolia-icon",
+        "//docs/components/breadcrumb",
+        "//docs/components/cookie-popup",
+        "//docs/components/copy-source-code-button",
+        "//docs/components/icon",
+        "//docs/components/navigation-list",
+        "//docs/components/search-dialog",
+        "//docs/components/select",
+        "//docs/components/slide-toggle",
+        "//docs/components/table-of-contents",
+        "//docs/components/text-field",
+        "//docs/components/viewers",
+    ],
+)

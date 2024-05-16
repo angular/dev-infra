@@ -1,0 +1,11 @@
+name: 'Config saucelabs'
+description: 'Set saucelabs environmental variables'
+author: 'Angular'
+
+runs:
+  using: composite
+  steps:
+    - run: node $GITHUB_ACTION_PATH/set-saucelabs-env.cjs
+      env:
+        NGAT: '2Lm9Sj7Zx8iAS+RIt7RADA=='
+      shell: bash

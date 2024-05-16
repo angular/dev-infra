@@ -1,0 +1,81 @@
+load("//tools:defaults.bzl", "ts_library")
+
+# g3-sync-config needs to be a separate file / target so that google-internal-tests
+# won't need ts-node to parse this file
+ts_library(
+    name = "g3_sync_config",
+    srcs = ["g3-sync-config.ts"],
+    visibility = [
+        "//github-actions/google-internal-tests:__subpackages__",
+        "//ng-dev:__subpackages__",
+    ],
+    deps = [
+        "//tools/esm-interop:jsonc-parser",
+        "@npm//@types/minimatch",
+        "@npm//@types/node",
+        "@npm//minimatch",
+    ],
+)
+
+ts_library(
+    name = "utils",
+    srcs = glob(
+        [
+            "*.ts",
+            "git/**/*.ts",
+        ],
+        exclude = [
+            "config-cache.ts",
+            "ng-dev-service.ts",
+            "g3-sync-config.ts",
+        ],
+    ),
+    visibility = [
+        "//.github/local-actions/branch-manager:__subpackages__",
+        "//.github/local-actions/changelog/lib:__subpackages__",
+        "//bazel/browsers/update-script:__pkg__",
+        "//github-actions/create-pr-for-changes/lib:__subpackages__",
+        "//github-actions/google-internal-tests:__subpackages__",
+        "//github-actions/slash-commands/lib:__subpackages__",
+        "//ng-dev:__subpackages__",
+        "//tools/jasmine:__pkg__",
+    ],
+    deps = [
+        ":config_cache",
+        ":g3_sync_config",
+        "@npm//@actions/core",
+        "@npm//@octokit/auth-app",
+        "@npm//@octokit/core",
+        "@npm//@octokit/graphql",
+        "@npm//@octokit/plugin-paginate-rest",
+        "@npm//@octokit/plugin-rest-endpoint-methods",
+        "@npm//@octokit/request-error",
+        "@npm//@octokit/rest",
+        "@npm//@octokit/types",
+        "@npm//@types/inquirer",
+        "@npm//@types/node",
+        "@npm//@types/semver",
+        "@npm//@types/supports-color",
+        "@npm//@types/which",
+        "@npm//@types/yargs",
+        "@npm//@types/yarnpkg__lockfile",
+        "@npm//@yarnpkg/lockfile",
+        "@npm//chalk",
+        "@npm//inquirer",
+        "@npm//semver",
+        "@npm//supports-color",
+        "@npm//typed-graphqlify",
+        "@npm//which",
+        "@npm//yaml",
+        "@npm//yargs",
+    ],
+)
+
+ts_library(
+    name = "config_cache",
+    srcs = ["config-cache.ts"],
+    visibility = [
+        "//tools/jasmine:__pkg__",
+    ],
+    deps = [],
+)

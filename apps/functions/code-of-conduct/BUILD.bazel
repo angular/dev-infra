@@ -1,0 +1,36 @@
+load("//tools:defaults.bzl", "ts_library")
+
+package(default_visibility = ["//visibility:private"])
+
+ts_library(
+    name = "code-of-conduct",
+    srcs = [
+        "index.ts",
+    ],
+    visibility = [
+        "//apps/functions:__pkg__",
+    ],
+    deps = [
+        ":lib",
+        "@npm//firebase-admin",
+    ],
+)
+
+ts_library(
+    name = "lib",
+    srcs = [
+        "blockUser.ts",
+        "shared.ts",
+        "syncUsers.ts",
+        "unblockUser.ts",
+    ],
+    deps = [
+        "@npm//@octokit/auth-app",
+        "@npm//@octokit/request-error",
+        "@npm//@octokit/rest",
+        "@npm//@octokit/webhooks-types",
+        "@npm//@types/node",
+        "@npm//firebase-admin",
+        "@npm//firebase-functions",
+    ],
+)

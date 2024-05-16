@@ -1,0 +1,44 @@
+load("//tools:defaults.bzl", "karma_web_test", "ng_module", "ts_library")
+load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
+
+ng_module(
+    name = "slide-toggle",
+    srcs = [
+        "slide-toggle.component.ts",
+    ],
+    assets = [
+        ":slide-toggle.component.css",
+        "slide-toggle.component.html",
+    ],
+    visibility = [
+        "//docs/components:__pkg__",
+    ],
+    deps = [
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/forms",
+    ],
+)
+
+sass_binary(
+    name = "style",
+    src = "slide-toggle.component.scss",
+)
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob(
+        ["*.spec.ts"],
+    ),
+    deps = [
+        ":slide-toggle",
+        "@npm//@angular/core",
+        "@npm//@types/jasmine",
+    ],
+)
+
+karma_web_test(
+    name = "test",
+    specs = [":test_lib"],
+)

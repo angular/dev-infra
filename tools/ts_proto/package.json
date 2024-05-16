@@ -1,0 +1,9 @@
+{
+  "name": "ts_proto",
+  "private": true,
+  "packageManager": "yarn@4.2.2",
+  "dependencies": {
+    "protobufjs": "7.2.6",
+    "protobufjs-cli": "1.1.2"
+  }
+}

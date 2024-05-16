@@ -1,0 +1,51 @@
+:host {
+  border: 1px solid lightgray;
+  border-radius: 8px;
+  display: block;
+  max-width: 650px;
+  min-width: 500px;
+  padding: 12px;
+}
+
+.form-item {
+  margin: 8px 0;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.two-column-row {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  justify-content: space-evenly;
+
+  > span {
+    flex: 1;
+  }
+}
+
+.comments {
+  mat-form-field {
+    width: 100%;
+  }
+
+  textarea {
+    height: 3.7em; // Allows three lines of text.
+    resize: none;
+  }
+}
+
+.block-user-button mat-spinner {
+  display: inline-block;
+  line-height: 1em;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+
+
+.block-until-indefinite {
+  color: rgba(0, 0, 0, 0.87);
+  pointer-events: none;
+}

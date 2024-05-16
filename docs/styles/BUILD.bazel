@@ -1,0 +1,10 @@
+load("@io_bazel_rules_sass//:defs.bzl", "sass_library")
+
+sass_library(
+    name = "styles",
+    srcs = glob(["**/*.scss"]),
+    visibility = [
+        "//docs:__pkg__",
+        "//docs/components:__subpackages__",
+    ],
+)

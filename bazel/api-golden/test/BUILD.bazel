@@ -1,0 +1,54 @@
+load("//bazel/api-golden:index.bzl", "api_golden_test", "api_golden_test_npm_package")
+load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
+
+package(default_visibility = ["//bazel/api-golden/test:__pkg__"])
+
+copy_to_bin(
+    name = "test_package_golden_dir",
+    srcs = glob(["goldens/test_package/**"]),
+)
+
+copy_to_bin(
+    name = "pkg_no_exports_field_golden_dir",
+    srcs = glob(["goldens/pkg_no_exports_field/**"]),
+)
+
+api_golden_test(
+    name = "test_explicit_files",
+    data = [
+        "goldens/test_golden.md",
+        "//bazel/api-golden/test/fixtures:test_lib",
+    ],
+    entry_point = "dev-infra/bazel/api-golden/test/fixtures/test_fixture.d.ts",
+    golden = "dev-infra/bazel/api-golden/test/goldens/test_golden.md",
+    # API extractor type resolution is prone to non-sandbox errors, so we test Windows.
+    tags = ["windows"],
+    types = ["@npm//@types/node"],
+)
+
+api_golden_test_npm_package(
+    name = "test_npm_package",
+    data = [
+        ":test_package_golden_dir",
+        "//bazel/api-golden/test/fixtures:test_package_fixture",
+    ],
+    golden_dir = "dev-infra/bazel/api-golden/test/goldens/test_package",
+    npm_package = "dev-infra/bazel/api-golden/test/fixtures/test_package",
+    # API extractor type resolution is prone to non-sandbox errors, so we test Windows.
+    tags = ["windows"],
+    # API extractor needs to be able to resolve `@babel/core` due to an aliased namespace
+    # we expose as part of the `nested.d.ts` fake entry-point.
+    types = ["@npm//@types/babel__core"],
+)
+
+api_golden_test_npm_package(
+    name = "test_npm_package_no_exports_field",
+    data = [
+        ":pkg_no_exports_field_golden_dir",
+        "//bazel/api-golden/test/fixtures:pkg_no_exports_field_fixture",
+    ],
+    golden_dir = "dev-infra/bazel/api-golden/test/goldens/pkg_no_exports_field",
+    npm_package = "dev-infra/bazel/api-golden/test/fixtures/pkg_no_exports_field",
+    # API extractor type resolution is prone to non-sandbox errors, so we test Windows.
+    tags = ["windows"],
+)

@@ -1,0 +1,29 @@
+load("//tools:defaults.bzl", "ng_module")
+load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
+
+ng_module(
+    name = "account",
+    srcs = glob(["*.ts"]),
+    assets = [
+        ":account.component.css",
+        "account.component.html",
+    ],
+    visibility = [
+        "//apps:__subpackages__",
+    ],
+    deps = [
+        "@npm//@angular/cdk",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/fire",
+        "@npm//@angular/material",
+        "@npm//@angular/router",
+        "@npm//@octokit/rest",
+        "@npm//rxjs",
+    ],
+)
+
+sass_binary(
+    name = "account-style",
+    src = "account.component.scss",
+)

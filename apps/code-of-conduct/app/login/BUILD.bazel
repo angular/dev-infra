@@ -1,0 +1,24 @@
+load("//tools:defaults.bzl", "ng_module")
+load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
+
+package(default_visibility = ["//apps/code-of-conduct:__subpackages__"])
+
+ng_module(
+    name = "login",
+    srcs = glob(["*.ts"]),
+    assets = [
+        ":login.component.css",
+        "login.component.html",
+    ],
+    deps = [
+        "//apps/shared/account",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/material",
+    ],
+)
+
+sass_binary(
+    name = "login-style",
+    src = "login.component.scss",
+)

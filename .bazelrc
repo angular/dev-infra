@@ -1,0 +1,121 @@
+# Enable debugging tests with --config=debug
+test:debug --test_arg=--node_options=--inspect-brk --test_output=streamed --test_strategy=exclusive --test_timeout=9999 --nocache_test_results
+
+# By default, network access should be disabled unless explicitly granted for certain targets
+# using the `requires-network` tag. https://docs.bazel.build/versions/main/be/common-definitions.html
+build --sandbox_default_allow_network=false
+test --sandbox_default_allow_network=false
+
+# Turn off legacy external runfiles
+build --nolegacy_external_runfiles
+run --nolegacy_external_runfiles
+test --nolegacy_external_runfiles
+
+# The nested Bazel integration test workspace should not be analysed as part of
+# Skyframe, but should also not be ignored in order to be able to glob for its files.
+# TODO: Simplify this once https://github.com/bazelbuild/bazel/issues/12034 is fixed
+build --deleted_packages=bazel/integration/tests/nested_bazel_workspaces/basic
+query --deleted_packages=bazel/integration/tests/nested_bazel_workspaces/basic
+
+###############################
+# Filesystem interactions     #
+###############################
+
+# Create symlinks in the project:
+# - dist/bin for outputs
+# - dist/testlogs, dist/genfiles
+# - bazel-out
+build --symlink_prefix=dist/
+
+# Write testing errors to log on test failure
+test --test_output=errors
+
+
+# Turn on --incompatible_strict_action_env which was on by default
+# in Bazel 0.21.0 but turned off again in 0.22.0. Follow
+# https://github.com/bazelbuild/bazel/issues/7026 for more details.
+# This flag is needed to so that the bazel cache is not invalidated
+# when running bazel via `yarn bazel`.
+# See https://github.com/angular/angular/issues/27514.
+build --incompatible_strict_action_env
+run --incompatible_strict_action_env
+test --incompatible_strict_action_env
+
+# Do not build runfile forests by default. If an execution strategy relies on runfile
+# forests, the forest is created on-demand. See: https://github.com/bazelbuild/bazel/issues/6627
+# and https://github.com/bazelbuild/bazel/commit/03246077f948f2790a83520e7dccc2625650e6df. This
+# also helps with: https://github.com/bazelbuild/bazel/issues/4327#issuecomment-922106293.
+build --nobuild_runfile_links
+
+################################
+# Remote Execution Setup       #
+################################
+
+# Use the Angular team internal GCP instance for remote execution.
+build:remote --remote_instance_name=projects/internal-200822/instances/primary_instance
+build:remote --bes_instance_name=internal-200822
+
+# Needed due to: https://github.com/bazelbuild/bazel/issues/7254
+build:remote --define=EXECUTOR=remote
+
+# Since remote builds run within Google Cloud `k8`-based containers, we set the
+# host and target CPU accordingly.
+build:remote --cpu=k8
+build:remote --host_cpu=k8
+
+# Bazel detects maximum number of jobs based on host resources.
+# Since we run remotely, we can increase this number significantly.
+common:remote --jobs=100
+
+# Setup the remote build execution servers.
+build:remote --remote_cache=remotebuildexecution.googleapis.com
+build:remote --remote_executor=remotebuildexecution.googleapis.com
+build:remote --google_default_credentials
+
+# Setup the toolchain and platform for the remote build execution. The platform
+# is provided by the shared dev-infra package and targets k8 remote containers.
+build:remote --crosstool_top=//bazel/remote-execution/cpp:cc_toolchain_suite
+build:remote --extra_toolchains=//bazel/remote-execution/cpp:cc_toolchain
+build:remote --extra_execution_platforms=//bazel/remote-execution:platform_with_network
+build:remote --host_platform=//bazel/remote-execution:platform_with_network
+build:remote --platforms=//bazel/remote-execution:platform_with_network
+
+# Set remote caching settings
+build:remote --remote_accept_cached=true
+
+# Enable Build Event Service
+build:remote --bes_backend=buildeventservice.googleapis.com
+build:remote --project_id=internal-200822
+build:remote --bes_header=X-Goog-User-Project=internal-200822
+build:remote --bes_results_url=https://source.cloud.google.com/results/invocations
+build:remote --bes_upload_mode=fully_async
+
+# Use HTTP remote cache
+build:remote-cache --remote_cache=https://storage.googleapis.com/angular-team-cache
+build:remote-cache --remote_accept_cached=true
+build:remote-cache --remote_upload_local_results=true
+build:remote-cache --google_default_credentials
+
+################################
+#     Release setup            #
+################################
+
+# Releases should always be stamped with version control info. The dev-infra project
+# does not have actual versions so we need to skip version stamping. Our NPM package
+# will have a version composed with the current SHA from the SCM stamping info.
+# Note: We usually would use the `ng-dev` tool directly, but that one would need to be
+# built with Bazel and building with Bazel inside the Bazel-invoked workspace status
+# script does not work. To workaround this, we have a `ts-node`-based stamping script.
+# TODO: Consider using `ng-dev` directly if this is possible.
+build:release --workspace_status_command="yarn build-env-stamp --mode=release --include-version=false"
+build:release --stamp
+
+####################################################
+# User bazel configuration
+# NOTE: This needs to be the *last* entry in the config to allow for it to override other
+#   configuration in this file.
+####################################################
+
+# Load any settings which are specific to the current user. Needs to be *last* statement
+# in this config, as the user configuration should be able to overwrite flags from this file.
+try-import .bazelrc.user

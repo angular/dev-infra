@@ -1,0 +1,57 @@
+load("//tools:defaults.bzl", "karma_web_test", "ng_module", "ts_library")
+
+ts_library(
+    name = "services",
+    srcs = [
+        "index.ts",
+    ],
+    visibility = ["//docs:__subpackages__"],
+    deps = [
+        ":lib",
+    ],
+)
+
+ng_module(
+    name = "lib",
+    srcs = glob(
+        [
+            "**/*.ts",
+        ],
+        exclude = [
+            "index.ts",
+            "**/*.spec.ts",
+        ],
+    ),
+    deps = [
+        "//docs/constants",
+        "//docs/interfaces",
+        "//docs/providers",
+        "//docs/utils",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/router",
+        "@npm//algoliasearch",
+        "@npm//rxjs",
+    ],
+)
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob(
+        ["*.spec.ts"],
+    ),
+    deps = [
+        ":lib",
+        "//docs/interfaces",
+        "//docs/providers",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@types/jasmine",
+    ],
+)
+
+karma_web_test(
+    name = "test",
+    specs = [":test_lib"],
+)

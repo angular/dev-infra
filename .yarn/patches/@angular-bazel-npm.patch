@@ -1,0 +1,14 @@
+diff --git a/src/ng_module/ng_module.bzl b/src/ng_module/ng_module.bzl
+index d74fd7417bb44c834326fe357e3e504cf8b79551..e8b48c10e9f5810c53628182cba9089dc51418ea 100755
+--- a/src/ng_module/ng_module.bzl
++++ b/src/ng_module/ng_module.bzl
+@@ -251,7 +251,8 @@ def _ngc_tsconfig(ctx, files, srcs, **kwargs):
+     else:
+         # For devmode output, we use ES2015 to match with what `ts_library` produces by default.
+         # https://github.com/bazelbuild/rules_nodejs/blob/9b36274dba34204625579463e3da054a9f42cb47/packages/typescript/internal/build_defs.bzl#L83.
+-        tsconfig["compilerOptions"]["target"] = "es2015"
++        tsconfig["compilerOptions"]["target"] = "es2020"
++        tsconfig["compilerOptions"]["module"] = "esnext"
+ 
+     return tsconfig
+ 

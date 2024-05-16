@@ -1,0 +1,4 @@
+<mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+<mat-cell *matCellDef="let pr">
+  <mat-icon class="{{pr.status}}">{{getStatusIconForStatus(pr.status)}}</mat-icon>
+</mat-cell>

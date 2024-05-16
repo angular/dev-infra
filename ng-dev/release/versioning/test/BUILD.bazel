@@ -1,0 +1,20 @@
+load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
+
+ts_library(
+    name = "test_lib",
+    srcs = glob([
+        "**/*.ts",
+    ]),
+    deps = [
+        "//ng-dev/release/versioning",
+        "//ng-dev/utils",
+        "//ng-dev/utils/testing",
+        "@npm//@types/jasmine",
+        "@npm//nock",
+    ],
+)
+
+jasmine_node_test(
+    name = "test",
+    specs = [":test_lib"],
+)

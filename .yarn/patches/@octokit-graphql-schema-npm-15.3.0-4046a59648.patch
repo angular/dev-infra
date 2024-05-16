@@ -1,0 +1,10 @@
+diff --git a/index.d.ts b/index.d.ts
+index 3ad8ba15760f7a5e31201896679f8952f258a848..cebf873d6020e49014576375f073dada6d19b883 100644
+--- a/index.d.ts
++++ b/index.d.ts
+@@ -14,4 +14,4 @@ type Validate = (query: ReadonlyArray<string> | Readonly<string>) => ReadonlyArr
+ export const schema: Schema
+ export const validate: Validate
+ 
+-export * from './schema'
++export * from './schema.js'

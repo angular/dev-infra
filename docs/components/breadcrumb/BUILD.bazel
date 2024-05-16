@@ -1,0 +1,51 @@
+load("//tools:defaults.bzl", "karma_web_test", "ng_module", "ts_library")
+load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
+
+ng_module(
+    name = "breadcrumb",
+    srcs = [
+        "breadcrumb.component.ts",
+    ],
+    assets = [
+        ":breadcrumb.component.css",
+        "breadcrumb.component.html",
+    ],
+    visibility = [
+        "//docs/components:__pkg__",
+        "//docs/components/viewers:__pkg__",
+    ],
+    deps = [
+        "//docs/interfaces",
+        "//docs/services",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/router",
+    ],
+)
+
+sass_binary(
+    name = "style",
+    src = "breadcrumb.component.scss",
+)
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob(
+        ["*.spec.ts"],
+    ),
+    deps = [
+        ":breadcrumb",
+        "//docs/interfaces",
+        "//docs/services",
+        "@npm//@angular/core",
+        "@npm//@angular/platform-browser",
+        "@npm//@angular/router",
+        "@npm//@types/jasmine",
+    ],
+)
+
+karma_web_test(
+    name = "test",
+    specs = [":test_lib"],
+)

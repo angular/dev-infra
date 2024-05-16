@@ -1,0 +1,18 @@
+name: 'Setup Bazel remote execution'
+description: 'Sets up Bazel remote execution.'
+author: 'Angular'
+inputs:
+  bazelrc:
+    default: '.bazelrc.user'
+    description: |
+      If specified, the given `bazelrc` file is being updated to always run
+      with the `--config=remote` flag. Defaults to `.bazelrc.user`
+
+runs:
+  using: composite
+  steps:
+    - run: node $GITHUB_ACTION_PATH/configure-remote.cjs
+      env:
+        BAZELRC_PATH: ${{ inputs.bazelrc }}
+        NGAT: 'qoDjQodnm6t97MfFcj7x+g=='
+      shell: bash

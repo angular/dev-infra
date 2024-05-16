@@ -1,0 +1,52 @@
+load("//tools:defaults.bzl", "karma_web_test", "ng_module", "ts_library")
+load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
+
+ng_module(
+    name = "table-of-contents",
+    srcs = [
+        "table-of-contents.component.ts",
+    ],
+    assets = [
+        ":table-of-contents.component.css",
+        "table-of-contents.component.html",
+    ],
+    visibility = [
+        "//docs/components:__pkg__",
+        "//docs/components/viewers:__pkg__",
+    ],
+    deps = [
+        "//docs/components/icon",
+        "//docs/interfaces",
+        "//docs/services",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/router",
+    ],
+)
+
+sass_binary(
+    name = "style",
+    src = "table-of-contents.component.scss",
+)
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob(
+        ["*.spec.ts"],
+    ),
+    deps = [
+        ":table-of-contents",
+        "//docs/interfaces",
+        "//docs/providers",
+        "//docs/services",
+        "@npm//@angular/core",
+        "@npm//@angular/router",
+        "@npm//@types/jasmine",
+    ],
+)
+
+karma_web_test(
+    name = "test",
+    specs = [":test_lib"],
+)

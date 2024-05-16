@@ -1,0 +1,47 @@
+load("//tools:defaults.bzl", "karma_web_test", "ng_module", "ts_library")
+load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
+
+ng_module(
+    name = "cookie-popup",
+    srcs = [
+        "cookie-popup.component.ts",
+    ],
+    assets = [
+        ":cookie-popup.component.css",
+        "cookie-popup.component.html",
+    ],
+    visibility = [
+        "//docs/components:__pkg__",
+    ],
+    deps = [
+        "//docs/providers",
+        "//docs/utils",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+    ],
+)
+
+sass_binary(
+    name = "style",
+    src = "cookie-popup.component.scss",
+)
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob(
+        ["*.spec.ts"],
+    ),
+    deps = [
+        ":cookie-popup",
+        "//docs/providers",
+        "//docs/testing",
+        "@npm//@angular/core",
+        "@npm//@types/jasmine",
+    ],
+)
+
+karma_web_test(
+    name = "test",
+    specs = [":test_lib"],
+)

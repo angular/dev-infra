@@ -1,0 +1,56 @@
+load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
+
+exports_files([
+    "strategies/commit-message-filter.ts",
+])
+
+ts_library(
+    name = "merge",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    visibility = [
+        "//.github/local-actions/branch-manager:__subpackages__",
+        "//ng-dev:__subpackages__",
+    ],
+    deps = [
+        "//ng-dev/commit-message",
+        "//ng-dev/pr/common",
+        "//ng-dev/pr/common/labels",
+        "//ng-dev/pr/config",
+        "//ng-dev/release/config",
+        "//ng-dev/release/versioning",
+        "//ng-dev/utils",
+        "@npm//@octokit/plugin-rest-endpoint-methods",
+        "@npm//@octokit/rest",
+        "@npm//@types/inquirer",
+        "@npm//@types/node",
+        "@npm//@types/semver",
+        "@npm//@types/yargs",
+        "@npm//chalk",
+        "@npm//typed-graphqlify",
+    ],
+)
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob(["**/*.spec.ts"]),
+    deps = [
+        ":merge",
+        "//ng-dev/pr/common",
+        "//ng-dev/release/config",
+        "//ng-dev/release/versioning",
+        "//ng-dev/utils",
+        "//ng-dev/utils/testing",
+        "@npm//nock",
+    ],
+)
+
+jasmine_node_test(
+    name = "test",
+    specs = [
+        ":test_lib",
+    ],
+)

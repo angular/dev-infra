@@ -1,0 +1,12 @@
+{
+  "name": "basic",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "bazelisk test ..."
+  },
+  "devDependencies": {
+    "@bazel/bazelisk": "^1.11.0"
+  }
+}

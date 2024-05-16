@@ -1,0 +1,25 @@
+load("//tools:defaults.bzl", "ng_module")
+load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
+
+package(default_visibility = ["//apps/code-of-conduct:__subpackages__"])
+
+ng_module(
+    name = "user-table",
+    srcs = glob(["*.ts"]),
+    assets = [
+        ":user-table.component.css",
+        "user-table.component.html",
+    ],
+    deps = [
+        "//apps/code-of-conduct/app:block_service",
+        "//apps/code-of-conduct/app/block-user",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/material",
+    ],
+)
+
+sass_binary(
+    name = "user-table-style",
+    src = "user-table.component.scss",
+)

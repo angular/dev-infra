@@ -1,0 +1,13 @@
+name: 'Lock Closed Issues'
+description: 'Locks issues that are both closed and inactive'
+author: 'Angular'
+inputs:
+  lock-bot-key:
+    description: 'A private key for the Lock Bot GitHub app'
+    required: true
+  repos:
+    description: 'The repositories to check for lockable issues'
+    required: true
+runs:
+  using: 'node20'
+  main: 'main.js'

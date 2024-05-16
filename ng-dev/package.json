@@ -1,0 +1,28 @@
+{
+  "name": "@angular/ng-dev",
+  "version": "0.0.0-{SCM_HEAD_SHA}",
+  "type": "module",
+  "private": true,
+  "bin": "./bundles/cli.mjs",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./*": {
+      "types": "./*.d.ts",
+      "default": "./bundles/*.mjs"
+    }
+  },
+  "dependencies": {
+    "@octokit/rest": "20.1.0",
+    "@types/semver": "^7.3.6",
+    "@types/supports-color": "^8.1.1",
+    "@yarnpkg/lockfile": "^1.1.0",
+    "chalk": "^5.0.1",
+    "semver": "^7.5.4",
+    "supports-color": "9.4.0",
+    "typed-graphqlify": "^3.1.1",
+    "typescript": "~4.9.0"
+  }
+}

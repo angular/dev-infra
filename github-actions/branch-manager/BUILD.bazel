@@ -1,0 +1,10 @@
+load("//tools:defaults.bzl", "esbuild_checked_in")
+
+esbuild_checked_in(
+    name = "main",
+    entry_point = "//github-actions/branch-manager/lib:main.ts",
+    target = "node16",
+    deps = [
+        "//github-actions/branch-manager/lib",
+    ],
+)

@@ -1,0 +1,45 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin", "generated_file_test", "nodejs_binary")
+load("//tools:defaults.bzl", "esbuild", "ts_library")
+
+copy_to_bin(
+    name = "browserstack_token",
+    srcs = ["browserstack_token.data"],
+)
+
+ts_library(
+    name = "browserstack",
+    srcs = glob(["*.ts"]),
+    # TODO(devversion): Remove this when `ts_library` supports `.mts` extension.
+    devmode_module = "commonjs",
+    deps = [
+        "@npm//@actions/core",
+        "@npm//@types/node",
+    ],
+)
+
+nodejs_binary(
+    name = "encrypt",
+    data = [":browserstack"],
+    entry_point = ":encrypt.ts",
+)
+
+esbuild(
+    name = "bundle",
+    srcs = [":browserstack_token"],
+    args = {
+        "loader": {
+            ".data": "binary",
+        },
+    },
+    entry_point = "index.ts",
+    format = "iife",
+    minify = True,
+    sourcemap = "",
+    deps = [":browserstack"],
+)
+
+generated_file_test(
+    name = "set_browserstack_env",
+    src = "set-browserstack-env.cjs",
+    generated = ":bundle.js",
+)

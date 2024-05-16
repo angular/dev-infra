@@ -1,0 +1,15 @@
+load("//bazel/integration:index.bzl", "integration_test")
+
+sh_binary(
+    name = "external_script",
+    srcs = ["external_script.sh"],
+)
+
+integration_test(
+    name = "test",
+    srcs = [],
+    commands = [
+        "$(rootpath :external_script) First Second",
+    ],
+    data = [":external_script"],
+)

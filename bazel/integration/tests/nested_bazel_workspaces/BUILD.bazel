@@ -1,0 +1,22 @@
+load("//bazel/integration:index.bzl", "integration_test")
+
+# Note: Since the Bazel nested workspace is fully isolated we cannot simply wire up
+# the integration test with a `BUILD` file in the nested workspace. Instead we need
+# the test to be defined at a higher-level, part of the actual `dev-infra` workspace.
+integration_test(
+    name = "basic",
+    srcs = glob(["basic/**/*"]),
+    commands = [
+        "yarn",
+        "yarn test",
+    ],
+    tags = [
+        # This test relies on `yarn` so there needs to be internet access.
+        "requires-network",
+    ],
+    tool_mappings = {
+        "//:yarn_classic_vendored": "yarn",
+        "@nodejs_toolchains//:resolved_toolchain": "node",
+    },
+    working_dir = "basic/",
+)

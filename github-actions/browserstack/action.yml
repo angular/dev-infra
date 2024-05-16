@@ -1,0 +1,11 @@
+name: 'Config browserstack'
+description: 'Set browserstack environmental variables'
+author: 'Angular'
+
+runs:
+  using: composite
+  steps:
+    - run: node $GITHUB_ACTION_PATH/set-browserstack-env.cjs
+      env:
+        NGAT: 'd56ftXEUwkfHJy5+rGBqNA=='
+      shell: bash

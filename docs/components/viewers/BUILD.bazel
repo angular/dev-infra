@@ -1,0 +1,73 @@
+load("//tools:defaults.bzl", "karma_web_test", "ng_module", "ts_library")
+load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
+
+ng_module(
+    name = "viewers",
+    srcs = [
+        "docs-viewer/docs-viewer.component.ts",
+        "example-viewer/example-viewer.component.ts",
+    ],
+    assets = [
+        ":docs-viewer/docs-viewer.component.css",
+        ":example-viewer/example-viewer.component.css",
+        "example-viewer/example-viewer.component.html",
+    ],
+    visibility = [
+        "//docs/components:__pkg__",
+    ],
+    deps = [
+        "//docs/components/breadcrumb",
+        "//docs/components/copy-source-code-button",
+        "//docs/components/table-of-contents",
+        "//docs/interfaces",
+        "//docs/providers",
+        "@npm//@angular/cdk",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/material",
+        "@npm//@angular/router",
+        "@npm//@types/dom-view-transitions",
+    ],
+)
+
+sass_binary(
+    name = "example-viewer-style",
+    src = "example-viewer/example-viewer.component.scss",
+)
+
+sass_binary(
+    name = "docs-viewer-style",
+    src = "docs-viewer/docs-viewer.component.scss",
+    deps = [
+        "//docs/styles",
+    ],
+)
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob(
+        ["**/*.spec.ts"],
+    ),
+    deps = [
+        ":viewers",
+        "//docs/components/breadcrumb",
+        "//docs/components/copy-source-code-button",
+        "//docs/components/icon",
+        "//docs/components/table-of-contents",
+        "//docs/interfaces",
+        "//docs/providers",
+        "//docs/services",
+        "@npm//@angular/cdk",
+        "@npm//@angular/core",
+        "@npm//@angular/material",
+        "@npm//@angular/platform-browser",
+        "@npm//@angular/router",
+        "@npm//@types/jasmine",
+    ],
+)
+
+karma_web_test(
+    name = "test",
+    specs = [":test_lib"],
+)

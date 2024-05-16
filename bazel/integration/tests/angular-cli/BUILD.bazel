@@ -1,0 +1,30 @@
+load("//bazel/integration:index.bzl", "integration_test")
+
+integration_test(
+    name = "test",
+    srcs = glob(["**/*"]),
+    commands = [
+        "yarn",
+        "yarn ng build",
+        "yarn ng test --no-watch",
+        "yarn ng e2e",
+    ],
+    data = [
+        # Makes the chromium binaries available for the `ng test` command.
+        "//bazel/browsers/chromium",
+    ],
+    environment = {
+        "CHROMEDRIVER_SKIP_DOWNLOAD": "true",
+        "CHROMEDRIVER_PATH": "$(CHROMEDRIVER)",
+        "CHROME_BIN": "$(CHROMIUM)",
+    },
+    tags = [
+        # This test relies on `yarn` so there needs to be internet access.
+        "requires-network",
+    ],
+    tool_mappings = {
+        "//:yarn_classic_vendored": "yarn",
+        "@nodejs_toolchains//:resolved_toolchain": "node",
+    },
+    toolchains = ["//bazel/browsers/chromium:toolchain_alias"],
+)

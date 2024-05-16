@@ -1,0 +1,16 @@
+load("//tools:defaults.bzl", "ng_module")
+
+ng_module(
+    name = "search-item",
+    srcs = [
+        "search-item.directive.ts",
+    ],
+    visibility = [
+        "//docs/directives:__pkg__",
+    ],
+    deps = [
+        "//docs/interfaces",
+        "@npm//@angular/cdk",
+        "@npm//@angular/core",
+    ],
+)

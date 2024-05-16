@@ -1,0 +1,49 @@
+load("@io_bazel_rules_webtesting//web:web.bzl", "browser")
+load("//bazel/browsers:browser_toolchain_alias.bzl", "browser_toolchain_alias")
+
+package(default_visibility = ["//visibility:public"])
+
+PLATFORM_METADATA = select({
+    "//bazel/constraints:linux_x64": [
+        "@org_mozilla_firefox_linux_x64//:metadata",
+        "@org_mozilla_geckodriver_linux_x64//:metadata",
+    ],
+    "//bazel/constraints:macos_x64": [
+        # Firefox has a launcher that conditionally starts x64/arm64
+        "@org_mozilla_firefox_macos//:metadata",
+        "@org_mozilla_geckodriver_macos_x64//:metadata",
+    ],
+    "//bazel/constraints:macos_arm64": [
+        # Firefox has a launcher that conditionally starts x64/arm64
+        "@org_mozilla_firefox_macos//:metadata",
+        "@org_mozilla_geckodriver_macos_arm64//:metadata",
+    ],
+    "//conditions:default": [],
+})
+
+browser(
+    name = "firefox",
+    disabled = select({
+        # TODO: Consider adding support for Windows. Requires a portable version of
+        # Firefox. Official distribution only ships with installers.
+        "//bazel/constraints:windows_x64": "Firefox is not disabled on Windows but always passing",
+        # Note: We keep always keep others enabled. This will result in proper errors if e.g. a
+        # linux arm64 machine intends to run tests with Firefox but we miss binaries for the platform.
+        "//conditions:default": None,
+    }),
+    metadata = "firefox.json",
+    deps = PLATFORM_METADATA + [
+        "@io_bazel_rules_webtesting//go/wsl",
+    ],
+)
+
+browser_toolchain_alias(
+    name = "toolchain_alias",
+    deps = PLATFORM_METADATA,
+)
+
+# Make source files available for distribution via pkg_npm
+filegroup(
+    name = "files",
+    srcs = glob(["*"]),
+)

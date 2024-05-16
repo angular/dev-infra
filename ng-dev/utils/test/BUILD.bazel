@@ -1,0 +1,23 @@
+load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob([
+        "**/*.ts",
+    ]),
+    deps = [
+        "//ng-dev/utils",
+        "//ng-dev/utils/testing",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+    ],
+)
+
+jasmine_node_test(
+    name = "test",
+    data = ["@npm//@yarnpkg/lockfile"],
+    # Same reasoning as in "ng-dev/BUILD.bazel". This package cannot be bundled.
+    external = ["@yarnpkg/lockfile"],
+    specs = [":test_lib"],
+)

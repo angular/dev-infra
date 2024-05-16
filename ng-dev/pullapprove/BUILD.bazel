@@ -1,0 +1,43 @@
+load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
+
+ts_library(
+    name = "pullapprove",
+    srcs = [
+        "cli.ts",
+        "condition_errors.ts",
+        "condition_evaluator.ts",
+        "group.ts",
+        "logging.ts",
+        "parse-yaml.ts",
+        "pullapprove_arrays.ts",
+        "utils.ts",
+        "verify.ts",
+    ],
+    visibility = ["//ng-dev:__subpackages__"],
+    deps = [
+        "//ng-dev/utils",
+        "@npm//@types/minimatch",
+        "@npm//@types/node",
+        "@npm//@types/yargs",
+        "@npm//minimatch",
+        "@npm//yaml",
+        "@npm//yargs",
+    ],
+)
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob(
+        ["*.spec.ts"],
+    ),
+    deps = [
+        ":pullapprove",
+        "@npm//@types/jasmine",
+    ],
+)
+
+jasmine_node_test(
+    name = "test",
+    specs = [":test_lib"],
+)

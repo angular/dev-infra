@@ -1,0 +1,4 @@
+// IDE config. Compile options should be changed in the top-level project config.
+{
+  "extends": "../tsconfig.json"
+}

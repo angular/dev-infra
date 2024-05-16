@@ -1,0 +1,38 @@
+name: Publish Snapshot Builds
+
+on:
+  push:
+    branches:
+      - main
+      - snapshot-test
+
+permissions: {}
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      # Because the checkout and setup node action is contained in the dev-infra repo, we must
+      # checkout the repo to be able to run the action we have created.  Other repos will skip
+      # this step.
+      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+        with:
+          fetch-depth: 1
+      - uses: ./github-actions/npm/checkout-and-setup-node
+      - uses: ./github-actions/bazel/setup
+      - uses: ./github-actions/bazel/configure-remote
+        with:
+          bazelrc: .bazelrc
+      - run: yarn install --immutable
+      - run: yarn bazel build //:npm_package //ng-dev:npm_package //docs:npm_package --config=release
+      - name: Publish Snapshots
+        env:
+          SNAPSHOT_BUILDS_GITHUB_TOKEN: ${{ secrets.SNAPSHOT_BUILDS_GITHUB_TOKEN }}
+        run: |
+          ./tools/publish_to_github.sh "@angular/build-tooling" "dev-infra-private-build-tooling-builds" "dist/bin/npm_package"
+          ./tools/publish_to_github.sh "@angular/ng-dev" "dev-infra-private-ng-dev-builds" "dist/bin/ng-dev/npm_package"
+          ./tools/publish_to_github.sh "@angular/docs" "dev-infra-private-docs-builds" "dist/bin/docs/npm_package"

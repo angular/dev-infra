@@ -1,0 +1,41 @@
+load("//tools:defaults.bzl", "karma_web_test", "ng_module", "ts_library")
+
+ng_module(
+    name = "copy-source-code-button",
+    srcs = [
+        "copy-source-code-button.component.ts",
+    ],
+    assets = [
+        "copy-source-code-button.component.html",
+    ],
+    visibility = [
+        "//docs/components:__pkg__",
+        "//docs/components/viewers:__pkg__",
+    ],
+    deps = [
+        "//docs/components/icon",
+        "@npm//@angular/cdk",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+    ],
+)
+
+ts_library(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob(
+        ["*.spec.ts"],
+    ),
+    deps = [
+        ":copy-source-code-button",
+        "@npm//@angular/cdk",
+        "@npm//@angular/core",
+        "@npm//@angular/platform-browser",
+        "@npm//@types/jasmine",
+    ],
+)
+
+karma_web_test(
+    name = "test",
+    specs = [":test_lib"],
+)

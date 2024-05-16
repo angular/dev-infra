@@ -1,0 +1,34 @@
+load("//tools:defaults.bzl", "ts_library")
+
+ts_library(
+    name = "utils",
+    srcs = [
+        "index.ts",
+    ],
+    visibility = ["//docs:__subpackages__"],
+    deps = [
+        ":lib",
+    ],
+)
+
+ts_library(
+    name = "lib",
+    srcs = glob(
+        [
+            "**/*.ts",
+        ],
+        exclude = [
+            "index.ts",
+            "**/*.spec.ts",
+        ],
+    ),
+    deps = [
+        "//docs/interfaces",
+        "//docs/providers",
+        "@npm//@angular/core",
+        "@npm//@angular/router",
+        "@npm//@types/node",
+        "@npm//@webcontainer/api",
+        "@npm//jszip",
+    ],
+)

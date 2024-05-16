@@ -1,0 +1,67 @@
+name: Pack and upload Artifacts to Workflow
+author: 'Angular'
+description: |
+  Action that takes a built artifact, injects metadata, zips it up, uploads
+  it to the current GitHub action workflow.
+
+  Following best-practices from:
+  https://securitylab.github.com/research/github-actions-preventing-pwn-requests
+
+# NOTE: All inputs here are considered unsafe since this action is expected
+# to run in workflows from forked builds (allowing for arbitrary changes).
+inputs:
+  workflow-artifact-name:
+    required: true
+    description: |
+      Name of the artifact that should be deployed. A workflow may contain
+      multiple artifacts but only a single one can be picked for deployment.
+
+  pull-number:
+    required: true
+    description: Pull request for which the artifact is built for.
+
+  artifact-build-revision:
+    required: true
+    description: |
+      A unique identifier describing the revision of the artifact. This is
+      usually the Git SHA for which the artifact has been built.
+
+  deploy-directory:
+    required: true
+    description: |
+      Project-relative path to the directory contents that should be deployed.
+      This is usually the distribution directory, like `dist/my-app/`.
+
+runs:
+  using: composite
+  steps:
+    - name: Copying artifact to temp directory to allow for metadata injection.
+      id: copy
+      shell: bash
+      run: |
+        dir="$RUNNER_TEMP/pack-and-upload-tmp-dir/"
+        cp -R "${{inputs.deploy-directory}}" "$dir"
+        chmod -R u+w "$dir"
+        echo "deploy-dir=$dir" >> $GITHUB_OUTPUT
+
+    - name: Injecting artifact metadata
+      shell: bash
+      run: |
+        node ${{github.action_path}}/inject-artifact-metadata.js \
+          '${{steps.copy.outputs.deploy-dir}}' \
+          '${{inputs.pull-number}}' \
+          '${{inputs.artifact-build-revision}}'
+
+    - name: Creating compressed tarball of artifact
+      id: pack
+      shell: bash
+      run: |
+        pkg="$RUNNER_TEMP/deploy-artifact.tar.gz"
+
+        tar -czvf "$pkg" -C '${{steps.copy.outputs.deploy-dir}}' .
+        echo "artifact-path=$pkg" >> $GITHUB_OUTPUT
+
+    - uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4
+      with:
+        name: '${{inputs.workflow-artifact-name}}'
+        path: '${{steps.pack.outputs.artifact-path}}'

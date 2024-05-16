@@ -1,0 +1,6 @@
+package(default_visibility = ["//bazel/api-gen:__subpackages__"])
+
+filegroup(
+    name = "dummy_package",
+    srcs = ["index.ts"],
+)

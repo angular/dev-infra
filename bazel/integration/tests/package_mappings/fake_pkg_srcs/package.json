@@ -1,0 +1,7 @@
+{
+  "name": "fake_pkg",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": "./index.mjs",
+  "license": "MIT"
+}

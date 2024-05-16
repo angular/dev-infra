@@ -1,0 +1,11 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+
+package(default_visibility = ["//visibility:public"])
+
+nodejs_binary(
+    name = "node-to-shell-script",
+    entry_point = "node-to-shell-script.mjs",
+    templated_args = [
+        "--nobazel_run_linker",
+    ],
+)
