@@ -136,7 +136,7 @@
     "angular-split": "^17.1.1",
     "chalk": "^5.0.1",
     "cli-progress": "^3.7.0",
-    "conventional-commits-parser": "^5.0.0",
+    "conventional-commits-parser": "^6.0.0",
     "diff": "^5.1.0",
     "ejs": "^3.1.6",
     "emoji-regex": "^10.3.0",
