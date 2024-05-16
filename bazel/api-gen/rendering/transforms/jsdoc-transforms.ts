@@ -35,8 +35,13 @@ export const JS_DOC_USAGE_NOTES_TAG = 'usageNotes';
 export const JS_DOC_SEE_TAG = 'see';
 export const JS_DOC_DESCRIPTION_TAG = 'description';
 
+// Some links are written in the following format: {@link Route}
+const jsDoclinkRegex = /\{\s*@link\s+([^}]+)\s*\}/;
+
 /** Given an entity with a description, gets the entity augmented with an `htmlDescription`. */
-export function addHtmlDescription<T extends HasDescription>(entry: T): T & HasHtmlDescription {
+export function addHtmlDescription<T extends HasDescription & HasModuleName>(
+  entry: T,
+): T & HasHtmlDescription {
   const firstParagraphRule = /(.*?)(?:\n\n|$)/s;
 
   let jsDocDescription = '';
@@ -49,8 +54,11 @@ export function addHtmlDescription<T extends HasDescription>(entry: T): T & HasH
 
   const description = !!entry.description ? entry.description : jsDocDescription;
   const shortTextMatch = description.match(firstParagraphRule);
-  const htmlDescription = getHtmlForJsDocText(description).trim();
-  const shortHtmlDescription = getHtmlForJsDocText(shortTextMatch ? shortTextMatch[0] : '').trim();
+  const htmlDescription = getHtmlForJsDocText(description, entry).trim();
+  const shortHtmlDescription = getHtmlForJsDocText(
+    shortTextMatch ? shortTextMatch[0] : '',
+    entry,
+  ).trim();
   return {
     ...entry,
     htmlDescription,
@@ -62,14 +70,14 @@ export function addHtmlDescription<T extends HasDescription>(entry: T): T & HasH
  * Given an entity with JsDoc tags, gets the entity with JsDocTagRenderable entries that
  * have been augmented with an `htmlComment`.
  */
-export function addHtmlJsDocTagComments<T extends HasJsDocTags>(
+export function addHtmlJsDocTagComments<T extends HasJsDocTags & HasModuleName>(
   entry: T,
 ): T & HasRenderableJsDocTags {
   return {
     ...entry,
     jsdocTags: entry.jsdocTags.map((tag) => ({
       ...tag,
-      htmlComment: getHtmlForJsDocText(tag.comment),
+      htmlComment: getHtmlForJsDocText(tag.comment, entry),
     })),
   };
 }
@@ -99,11 +107,11 @@ export function addHtmlUsageNotes<T extends HasJsDocTags>(entry: T): T & HasHtml
 }
 
 /** Given a markdown JsDoc text, gets the rendered HTML. */
-export function getHtmlForJsDocText(text: string): string {
-  return marked.parse(wrapExampleHtmlElementsWithCode(text)) as string;
+function getHtmlForJsDocText<T extends HasModuleName>(text: string, entry: T): string {
+  return marked.parse(convertLinks(wrapExampleHtmlElementsWithCode(text), entry)) as string;
 }
 
-export function setEntryFlags<T extends HasJsDocTags>(
+export function setEntryFlags<T extends HasJsDocTags & HasModuleName>(
   entry: T,
 ): T & HasDeprecatedFlag & HasDeveloperPreviewFlag & hasExperimentalFlag {
   const deprecationMessage = getDeprecatedEntry(entry);
@@ -111,7 +119,7 @@ export function setEntryFlags<T extends HasJsDocTags>(
     ...entry,
     isDeprecated: isDeprecatedEntry(entry),
     deprecationMessage: deprecationMessage
-      ? getHtmlForJsDocText(deprecationMessage)
+      ? getHtmlForJsDocText(deprecationMessage, entry)
       : deprecationMessage,
     isDeveloperPreview: isDeveloperPreview(entry),
     isExperimental: isExperimental(entry),
@@ -122,8 +130,6 @@ function getHtmlAdditionalLinks<T extends HasJsDocTags & HasModuleName>(
   entry: T,
 ): LinkEntryRenderable[] {
   const markdownLinkRule = /\[([^\]]+)\]\(([^)]+)\)/;
-  // Some links are written in the following format: {@link Route }
-  const apiLinkRule = /\{\s*@link\s+([^}]+)\s*\}/;
 
   const seeAlsoLinks = entry.jsdocTags
     .filter((tag) => tag.name === JS_DOC_SEE_TAG)
@@ -138,7 +144,7 @@ function getHtmlAdditionalLinks<T extends HasJsDocTags & HasModuleName>(
         };
       }
 
-      const linkMatch = comment.match(apiLinkRule);
+      const linkMatch = comment.match(jsDoclinkRegex);
 
       if (linkMatch) {
         const link = linkMatch[1];
@@ -182,5 +188,11 @@ function convertJsDocExampleToHtmlExample(text: string): string {
 
   return text.replaceAll(codeExampleAtRule, (_, path, separator, region) => {
     return `<code-example path="${path}" region="${region}" />`;
+  });
+}
+
+function convertLinks(text: string, entry: HasModuleName) {
+  return text.replace(jsDoclinkRegex, (_, symbol) => {
+    return `<a href="${getLinkToModule(entry.moduleName)}/${symbol}"><code>${symbol}</code></a>`;
   });
 }
