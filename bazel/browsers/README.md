@@ -16,7 +16,7 @@ The process of updating the Chrome or Firefox version is not straightforward, bu
 
 1. Run `bazel run bazel/browsers/update-script find-latest-chromium-revision`
 
-2. Inspect the console output which looks like the followed:
+2. Inspect the console output which looks like the following:
 
 ```
 Release Info: https://storage.googleapis.com/chromium-find-releases-static/index.html#r885453
