@@ -227,6 +227,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@angular-devkit/core@npm:17.3.7":
+  version: 17.3.7
+  resolution: "@angular-devkit/core@npm:17.3.7"
+  dependencies:
+    ajv: "npm:8.12.0"
+    ajv-formats: "npm:2.1.1"
+    jsonc-parser: "npm:3.2.1"
+    picomatch: "npm:4.0.1"
+    rxjs: "npm:7.8.1"
+    source-map: "npm:0.7.4"
+  peerDependencies:
+    chokidar: ^3.5.2
+  peerDependenciesMeta:
+    chokidar:
+      optional: true
+  checksum: 10c0/74a253bf3933f87df0d8110b7fa68e72f2bb52121ed16c52c3a2e80babea9c4a96c2ad33daa40aa01d2da602908fd09da8a2b92acf4b90970d214ddc533c2088
+  languageName: node
+  linkType: hard
+
 "@angular-devkit/core@npm:18.0.0-rc.2":
   version: 18.0.0-rc.2
   resolution: "@angular-devkit/core@npm:18.0.0-rc.2"
@@ -246,7 +265,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular-devkit/schematics@npm:17.3.6, @angular-devkit/schematics@npm:^17.0.0":
+"@angular-devkit/schematics@npm:17.3.6":
   version: 17.3.6
   resolution: "@angular-devkit/schematics@npm:17.3.6"
   dependencies:
@@ -269,6 +288,19 @@ __metadata:
     ora: "npm:5.4.1"
     rxjs: "npm:7.8.1"
   checksum: 10c0/05848e82934b26eec9f55de14a60c0282f54e83e8bd1dc0e034aa8dfea65a73df56c57f73bb6a71208e349f9dcd377b858bac252e93fd035dc6a659c9e9a02e5
+  languageName: node
+  linkType: hard
+
+"@angular-devkit/schematics@npm:^17.0.0":
+  version: 17.3.7
+  resolution: "@angular-devkit/schematics@npm:17.3.7"
+  dependencies:
+    "@angular-devkit/core": "npm:17.3.7"
+    jsonc-parser: "npm:3.2.1"
+    magic-string: "npm:0.30.8"
+    ora: "npm:5.4.1"
+    rxjs: "npm:7.8.1"
+  checksum: 10c0/3b0a48991f8c1e95cec7f36cd8279820e1e466b2bb0285518399395d2258ecc509a860da575031d5137c84933317123b8fdeff39408053992c79475d158c0075
   languageName: node
   linkType: hard
 
@@ -2239,7 +2271,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/database-compat@npm:1.0.4, @firebase/database-compat@npm:^1.0.2":
+"@firebase/database-compat@npm:1.0.4":
   version: 1.0.4
   resolution: "@firebase/database-compat@npm:1.0.4"
   dependencies:
@@ -2253,7 +2285,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/database-compat@npm:1.0.5":
+"@firebase/database-compat@npm:1.0.5, @firebase/database-compat@npm:^1.0.2":
   version: 1.0.5
   resolution: "@firebase/database-compat@npm:1.0.5"
   dependencies:
@@ -2267,7 +2299,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/database-types@npm:1.0.2, @firebase/database-types@npm:^1.0.0":
+"@firebase/database-types@npm:1.0.2":
   version: 1.0.2
   resolution: "@firebase/database-types@npm:1.0.2"
   dependencies:
@@ -2277,7 +2309,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@firebase/database-types@npm:1.0.3":
+"@firebase/database-types@npm:1.0.3, @firebase/database-types@npm:^1.0.0":
   version: 1.0.3
   resolution: "@firebase/database-types@npm:1.0.3"
   dependencies:
@@ -6157,7 +6189,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ajv@npm:8.12.0, ajv@npm:^8.0.0, ajv@npm:^8.0.1, ajv@npm:^8.3.0":
+"ajv@npm:8.12.0":
   version: 8.12.0
   resolution: "ajv@npm:8.12.0"
   dependencies:
@@ -6169,7 +6201,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ajv@npm:8.13.0":
+"ajv@npm:8.13.0, ajv@npm:^8.0.0, ajv@npm:^8.0.1, ajv@npm:^8.3.0":
   version: 8.13.0
   resolution: "ajv@npm:8.13.0"
   dependencies:
@@ -12487,8 +12519,8 @@ __metadata:
   linkType: hard
 
 "make-fetch-happen@npm:^13.0.0":
-  version: 13.0.0
-  resolution: "make-fetch-happen@npm:13.0.0"
+  version: 13.0.1
+  resolution: "make-fetch-happen@npm:13.0.1"
   dependencies:
     "@npmcli/agent": "npm:^2.0.0"
     cacache: "npm:^18.0.0"
@@ -12499,9 +12531,10 @@ __metadata:
     minipass-flush: "npm:^1.0.5"
     minipass-pipeline: "npm:^1.2.4"
     negotiator: "npm:^0.6.3"
+    proc-log: "npm:^4.2.0"
     promise-retry: "npm:^2.0.1"
     ssri: "npm:^10.0.0"
-  checksum: 10c0/43b9f6dcbc6fe8b8604cb6396957c3698857a15ba4dbc38284f7f0e61f248300585ef1eb8cc62df54e9c724af977e45b5cdfd88320ef7f53e45070ed3488da55
+  checksum: 10c0/df5f4dbb6d98153b751bccf4dc4cc500de85a96a9331db9805596c46aa9f99d9555983954e6c1266d9f981ae37a9e4647f42b9a4bb5466f867f4012e582c9e7e
   languageName: node
   linkType: hard
 
@@ -14143,9 +14176,9 @@ __metadata:
   linkType: hard
 
 "picocolors@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "picocolors@npm:1.0.0"
-  checksum: 10c0/20a5b249e331c14479d94ec6817a182fd7a5680debae82705747b2db7ec50009a5f6648d0621c561b0572703f84dbef0858abcbd5856d3c5511426afcb1961f7
+  version: 1.0.1
+  resolution: "picocolors@npm:1.0.1"
+  checksum: 10c0/c63cdad2bf812ef0d66c8db29583802355d4ca67b9285d846f390cc15c2f6ccb94e8cb7eb6a6e97fc5990a6d3ad4ae42d86c84d3146e667c739a4234ed50d400
   languageName: node
   linkType: hard
 
@@ -14386,7 +14419,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"proc-log@npm:^4.0.0":
+"proc-log@npm:^4.0.0, proc-log@npm:^4.2.0":
   version: 4.2.0
   resolution: "proc-log@npm:4.2.0"
   checksum: 10c0/17db4757c2a5c44c1e545170e6c70a26f7de58feb985091fb1763f5081cab3d01b181fb2dd240c9f4a4255a1d9227d163d5771b7e69c9e49a561692db865efb9
