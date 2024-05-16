@@ -10,7 +10,12 @@ import {MemberEntry, MemberTags, MemberType} from '../entities';
 
 import {isClassMethodEntry} from '../entities/categorization';
 import {MemberEntryRenderable} from '../entities/renderables';
-import {HasMembers, HasRenderableMembers, HasRenderableMembersGroups} from '../entities/traits';
+import {
+  HasMembers,
+  HasModuleName,
+  HasRenderableMembers,
+  HasRenderableMembersGroups,
+} from '../entities/traits';
 
 import {
   addHtmlDescription,
@@ -18,6 +23,7 @@ import {
   addHtmlUsageNotes,
   setEntryFlags,
 } from './jsdoc-transforms';
+import {addModuleName} from './module-name';
 
 const lifecycleMethods = [
   'ngAfterContentChecked',
@@ -64,7 +70,7 @@ export function mergeGettersAndSetters(members: MemberEntry[]): MemberEntry[] {
 }
 
 /** Given an entity with members, gets the entity augmented with renderable members. */
-export function addRenderableGroupMembers<T extends HasMembers>(
+export function addRenderableGroupMembers<T extends HasMembers & HasModuleName>(
   entry: T,
 ): T & HasRenderableMembersGroups {
   const members = filterLifecycleMethods(entry.members);
@@ -72,7 +78,9 @@ export function addRenderableGroupMembers<T extends HasMembers>(
   const membersGroups = members.reduce((groups, item) => {
     const member = setEntryFlags(
       addMethodParamsDescription(
-        addHtmlDescription(addHtmlUsageNotes(addHtmlJsDocTagComments(item))),
+        addHtmlDescription(
+          addHtmlUsageNotes(addHtmlJsDocTagComments(addModuleName(item, entry.moduleName))),
+        ),
       ),
     );
     if (groups.has(member.name)) {
@@ -90,11 +98,15 @@ export function addRenderableGroupMembers<T extends HasMembers>(
   };
 }
 
-export function addRenderableMembers<T extends HasMembers>(entry: T): T & HasRenderableMembers {
-  const members = entry.members.map((entry) =>
+export function addRenderableMembers<T extends HasMembers & HasModuleName>(
+  entry: T,
+): T & HasRenderableMembers {
+  const members = entry.members.map((member) =>
     setEntryFlags(
       addMethodParamsDescription(
-        addHtmlDescription(addHtmlUsageNotes(addHtmlJsDocTagComments(entry))),
+        addHtmlDescription(
+          addHtmlUsageNotes(addHtmlJsDocTagComments(addModuleName(member, entry.moduleName))),
+        ),
       ),
     ),
   );
@@ -105,11 +117,13 @@ export function addRenderableMembers<T extends HasMembers>(entry: T): T & HasRen
   };
 }
 
-function addMethodParamsDescription<T extends MemberEntry>(entry: T): T {
+function addMethodParamsDescription<T extends MemberEntry & HasModuleName>(entry: T): T {
   if (isClassMethodEntry(entry)) {
     return {
       ...entry,
-      params: entry.params.map((param) => addHtmlDescription(param)),
+      params: entry.params.map((param) =>
+        addHtmlDescription(addModuleName(param, entry.moduleName)),
+      ),
     };
   }
   return entry;
