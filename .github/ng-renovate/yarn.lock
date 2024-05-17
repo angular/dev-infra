@@ -4199,22 +4199,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:10.3.12":
-  version: 10.3.12
-  resolution: "glob@npm:10.3.12"
-  dependencies:
-    foreground-child: "npm:^3.1.0"
-    jackspeak: "npm:^2.3.6"
-    minimatch: "npm:^9.0.1"
-    minipass: "npm:^7.0.4"
-    path-scurry: "npm:^1.10.2"
-  bin:
-    glob: dist/esm/bin.mjs
-  checksum: 10c0/f60cefdc1cf3f958b2bb5823e1b233727f04916d489dc4641d76914f016e6704421e06a83cbb68b0cb1cb9382298b7a88075b844ad2127fc9727ea22b18b0711
-  languageName: node
-  linkType: hard
-
-"glob@npm:^10.2.2, glob@npm:^10.3.10":
+"glob@npm:10.3.15, glob@npm:^10.2.2, glob@npm:^10.3.10":
   version: 10.3.15
   resolution: "glob@npm:10.3.15"
   dependencies:
@@ -5784,7 +5769,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: "npm:37.367.0"
+    renovate: "npm:37.368.3"
   languageName: unknown
   linkType: soft
 
@@ -6144,7 +6129,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"path-scurry@npm:^1.10.2, path-scurry@npm:^1.11.0":
+"path-scurry@npm:^1.11.0":
   version: 1.11.1
   resolution: "path-scurry@npm:1.11.1"
   dependencies:
@@ -6482,9 +6467,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:37.367.0":
-  version: 37.367.0
-  resolution: "renovate@npm:37.367.0"
+"renovate@npm:37.368.3":
+  version: 37.368.3
+  resolution: "renovate@npm:37.368.3"
   dependencies:
     "@aws-sdk/client-codecommit": "npm:3.565.0"
     "@aws-sdk/client-ec2": "npm:3.565.0"
@@ -6541,7 +6526,7 @@ __metadata:
     fs-extra: "npm:11.2.0"
     git-url-parse: "npm:14.0.0"
     github-url-from-git: "npm:1.5.0"
-    glob: "npm:10.3.12"
+    glob: "npm:10.3.15"
     global-agent: "npm:3.0.0"
     good-enough-parser: "npm:1.1.23"
     google-auth-library: "npm:9.9.0"
@@ -6604,7 +6589,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 10c0/46ce5768e39000f5437e22e73663ab676684a823e9b2b7259fd26548d95f7e26bae0f21e76e1acbac0faa094cc8b20dab4a2355944f1c51e1b3d1bdafe358bee
+  checksum: 10c0/e12cf0e458b672a85a45ed42bb3c9d4809e53dcd08c2f7244e23a1d663e70b5d65ef854313e3ca7c84383d4af64df20b507ed0bb6e91a1b9780f90cdd584d230
   languageName: node
   linkType: hard
 

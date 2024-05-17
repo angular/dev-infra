@@ -437,7 +437,7 @@ __metadata:
     "@lezer/common": "npm:^1.1.1"
     "@lezer/highlight": "npm:^1.2.0"
     "@lezer/javascript": "npm:^1.4.9"
-    "@microsoft/api-extractor": "npm:7.43.6"
+    "@microsoft/api-extractor": "npm:7.43.7"
     "@octokit/auth-app": "npm:7.1.0"
     "@octokit/core": "npm:6.1.2"
     "@octokit/graphql": "npm:8.1.1"
@@ -4183,9 +4183,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor@npm:7.43.6":
-  version: 7.43.6
-  resolution: "@microsoft/api-extractor@npm:7.43.6"
+"@microsoft/api-extractor@npm:7.43.7":
+  version: 7.43.7
+  resolution: "@microsoft/api-extractor@npm:7.43.7"
   dependencies:
     "@microsoft/api-extractor-model": "npm:7.28.17"
     "@microsoft/tsdoc": "npm:0.14.2"
@@ -4193,7 +4193,7 @@ __metadata:
     "@rushstack/node-core-library": "npm:4.3.0"
     "@rushstack/rig-package": "npm:0.5.2"
     "@rushstack/terminal": "npm:0.11.0"
-    "@rushstack/ts-command-line": "npm:4.20.1"
+    "@rushstack/ts-command-line": "npm:4.21.0"
     lodash: "npm:~4.17.15"
     minimatch: "npm:~3.0.3"
     resolve: "npm:~1.22.1"
@@ -4202,7 +4202,7 @@ __metadata:
     typescript: "npm:5.4.2"
   bin:
     api-extractor: bin/api-extractor
-  checksum: 10c0/30098ecf76e50cda11f515e917df1a4edfc2d6dea27cfd11024fa3378ddbe295a5717d15b6e7dba795cdf522ecd9a275131239cbae1f617b7aa40a6a23f74e41
+  checksum: 10c0/2a59353f023abe306c3f6beb6e1bd77d825a0d82b0f6abf9d62779a5d84b51ab00147fbfa398ff0a59f7960a801929bed1816a5c416c73be1bbeda4f11463e99
   languageName: node
   linkType: hard
 
@@ -5150,15 +5150,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rushstack/ts-command-line@npm:4.20.1":
-  version: 4.20.1
-  resolution: "@rushstack/ts-command-line@npm:4.20.1"
+"@rushstack/ts-command-line@npm:4.21.0":
+  version: 4.21.0
+  resolution: "@rushstack/ts-command-line@npm:4.21.0"
   dependencies:
     "@rushstack/terminal": "npm:0.11.0"
     "@types/argparse": "npm:1.0.38"
     argparse: "npm:~1.0.9"
     string-argv: "npm:~0.3.1"
-  checksum: 10c0/72bb25c2f0ddca295c3695b6c9543b9d21cdf494bf064b22c45365fa67ada6cf89112d03b7bde68e584b0604a6ffe6e66821b6a5da94a55417ab7298d34ef122
+  checksum: 10c0/53b11d8c62d48d912f063e59f8594ea6f5f28cb55d57dd96211479f61523a80170f2d06b9f320d1a823a1fa0af9163a5d23cce65d3878d7512560fe44a3ccb76
   languageName: node
   linkType: hard
 
@@ -17939,10 +17939,8 @@ __metadata:
   linkType: hard
 
 "zone.js@npm:^0.14.0":
-  version: 0.14.5
-  resolution: "zone.js@npm:0.14.5"
-  dependencies:
-    tslib: "npm:^2.3.0"
-  checksum: 10c0/04f5801ebcd9c959b3123c37a8448b04ee5ffc0ffb0fdf9f9be95c6fbc1066a34a4a005468835884240fe4d7307750df61de491b89fb5e96d53d04565bdd2a16
+  version: 0.14.6
+  resolution: "zone.js@npm:0.14.6"
+  checksum: 10c0/dc138197428b7d5c5bc6119dc94748f700426a340c41fc6ebf5fe3fa7ff302fa970350c44719f644020a82caabf9fc761003af285c7707192c77bcc312bfd264
   languageName: node
   linkType: hard
