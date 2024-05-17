@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directive, ElementRef, Input, inject} from '@angular/core';
+import {Directive, ElementRef, Input, inject, signal} from '@angular/core';
 import {Highlightable} from '@angular/cdk/a11y';
 import {SearchResult} from '../../interfaces/search-results';
 
@@ -23,18 +23,18 @@ export class SearchItem implements Highlightable {
 
   private readonly elementRef = inject(ElementRef<HTMLLIElement>);
 
-  private _isActive = false;
+  private _isActive = signal(false);
 
   protected get isActive() {
-    return this._isActive;
+    return this._isActive();
   }
 
   setActiveStyles(): void {
-    this._isActive = true;
+    this._isActive.set(true);
   }
 
   setInactiveStyles(): void {
-    this._isActive = false;
+    this._isActive.set(false);
   }
 
   getLabel(): string {
