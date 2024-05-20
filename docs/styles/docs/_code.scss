@@ -16,6 +16,8 @@
     &:not(pre *) {
       position: relative;
       padding: 0 0.3rem;
+      // Fallback for older browsers
+      background: #e62600;
       background: var(--red-to-orange-horizontal-gradient);
       background-clip: text;
       -webkit-background-clip: text;
