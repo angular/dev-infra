@@ -1,9 +1,8 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -28,6 +27,12 @@ jobs:
       - uses: ./github-actions/bazel/setup
       - uses: ./github-actions/bazel/configure-remote
       - run: yarn install --immutable
+      - name: Check code format
+        run: yarn ng-dev format changed --check ${{ github.event.pull_request.base.sha }}
+      - name: Check commit message
+        run: yarn ng-dev commit-message validate-range ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}
+      - name: Check code lint
+        run: yarn lint
       - name: Confirm code builds with typescript as expected
         run: yarn tsc -p tsconfig.json
 
