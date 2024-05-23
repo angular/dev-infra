@@ -19,9 +19,9 @@ bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
     importProvidersFrom([BrowserAnimationsModule]),
-    importProvidersFrom(provideFirebaseApp(() => initializeApp(environment.firebase))),
-    importProvidersFrom(provideAuth(() => getAuth())),
-    importProvidersFrom(provideFunctions(() => getFunctions())),
-    importProvidersFrom(provideFirestore(() => getFirestore())),
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAuth(() => getAuth()),
+    provideFunctions(() => getFunctions()),
+    provideFirestore(() => getFirestore()),
   ],
 });
