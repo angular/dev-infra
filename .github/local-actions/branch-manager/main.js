@@ -70492,7 +70492,8 @@ async function main(repo2, token2, pr2) {
       let description;
       if (e instanceof MergeConflictsFatalError) {
         core.info("Merge conflict found");
-        description = `Unable to merge into: ${e.failedBranches.join(", ")}`;
+        const passingBranches = pullRequest.targetBranches.filter((branch) => !e.failedBranches.includes(branch));
+        description = `Unable to merge into: ${e.failedBranches.join(", ")} | Can merge into: ${passingBranches.join(",")}`;
       } else {
         core.info("Unknown error found when checking merge:");
         core.error(e);
