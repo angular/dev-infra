@@ -95,11 +95,13 @@ export class AutosquashMergeStrategy extends MergeStrategy {
     // Github automatically closes PRs whose commits are merged into the main branch on Github.
     // However, it does not note them as merged using the purple merge badge as occurs when done via
     // the UI. To inform users that the PR was in fact merged, add a comment expressing the fact
-    // that the PR is merged
+    // that the PR is merged and what branches the changes were merged into.
     await this.git.github.issues.createComment({
       ...this.git.remoteParams,
       issue_number: pullRequest.prNumber,
-      body: `This PR was merged into the repository by commit ${sha}.`,
+      body:
+        `This PR was merged into the repository by commit ${sha}.\n\n` +
+        `The changes were merged into the following branches: ${targetBranches.join(', ')}`,
     });
 
     // For PRs which do not target the `main` branch on Github, Github does not automatically

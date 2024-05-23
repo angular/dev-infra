@@ -67857,7 +67857,9 @@ var AutosquashMergeStrategy = class extends MergeStrategy {
     await this.git.github.issues.createComment({
       ...this.git.remoteParams,
       issue_number: pullRequest.prNumber,
-      body: `This PR was merged into the repository by commit ${sha}.`
+      body: `This PR was merged into the repository by commit ${sha}.
+
+The changes were merged into the following branches: ${targetBranches.join(", ")}`
     });
     if (githubTargetBranch !== this.git.mainBranchName) {
       await this.git.github.pulls.update({

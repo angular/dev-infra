@@ -142,6 +142,14 @@ export class GithubApiMergeStrategy extends MergeStrategy {
     }
 
     this.pushTargetBranchesUpstream(cherryPickTargetBranches);
+
+    // Because our process brings changes into multiple branchces, we include a comment which
+    // expresses all of the branches the changes were merged into.
+    await this.git.github.issues.createComment({
+      ...this.git.remoteParams,
+      issue_number: pullRequest.prNumber,
+      body: `The changes were merged into the following branches: ${targetBranches.join(', ')}`,
+    });
   }
 
   /**
