@@ -1,5 +1,5 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_test")
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
+load("//bazel:defaults.bzl", "ts_library")
 load("//bazel:extract_types.bzl", "extract_types")
 load("//bazel:extract_js_module_output.bzl", "extract_js_module_output")
 

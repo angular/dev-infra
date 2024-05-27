@@ -1,4 +1,4 @@
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
+load("//bazel:defaults.bzl", "ts_library")
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 
 package(default_visibility = ["//bazel/api-gen:__subpackages__"])
