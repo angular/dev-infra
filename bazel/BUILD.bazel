@@ -2,6 +2,7 @@ filegroup(
     name = "static_files",
     srcs = [
         "BUILD.bazel",
+        "defaults.bzl",
         "expand_template.bzl",
         "extract_js_module_output.bzl",
         "extract_types.bzl",
