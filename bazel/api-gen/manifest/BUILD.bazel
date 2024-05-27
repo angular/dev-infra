@@ -1,4 +1,4 @@
-load("@npm//@bazel/concatjs:index.bzl", "ts_library")
+load("//bazel:defaults.bzl", "ts_library")
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("//bazel/esbuild:index.bzl", "esbuild_esm_bundle")
 
