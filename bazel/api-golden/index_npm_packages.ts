@@ -49,7 +49,7 @@ async function main(
     // entry-point we maintain a separate golden file. These golden files are
     // based on the name of the defining NodeJS exports subpath in the NPM package,
     // See: https://api-extractor.com/pages/overview/demo_api_report/.
-    const goldenName = join(subpath, 'index.md');
+    const goldenName = join(subpath, 'index.api.md');
     const goldenFilePath = join(goldenDir, goldenName);
     const moduleName = normalizePathToPosix(join(packageJson.name, subpath));
 

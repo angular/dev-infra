@@ -16,11 +16,11 @@ copy_to_bin(
 api_golden_test(
     name = "test_explicit_files",
     data = [
-        "goldens/test_golden.md",
+        "goldens/test_golden.api.md",
         "//bazel/api-golden/test/fixtures:test_lib",
     ],
     entry_point = "dev-infra/bazel/api-golden/test/fixtures/test_fixture.d.ts",
-    golden = "dev-infra/bazel/api-golden/test/goldens/test_golden.md",
+    golden = "dev-infra/bazel/api-golden/test/goldens/test_golden.api.md",
     # API extractor type resolution is prone to non-sandbox errors, so we test Windows.
     tags = ["windows"],
     types = ["@npm//@types/node"],
