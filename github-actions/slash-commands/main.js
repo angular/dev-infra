@@ -61065,15 +61065,16 @@ var EditorPrompt = class extends Prompt {
     const events = observe(this.rl);
     this.lineSubscription = events.line.subscribe(this.startExternalEditor.bind(this));
     const waitUserInput = this.opt.waitUserInput === void 0 ? true : this.opt.waitUserInput;
-    if (!waitUserInput) {
-      this.startExternalEditor();
-    }
     const validation = this.handleSubmitEvents(this.editorResult);
     validation.success.forEach(this.onEnd.bind(this));
     validation.error.forEach(this.onError.bind(this));
     this.currentText = this.opt.default;
     this.opt.default = null;
-    this.render();
+    if (waitUserInput) {
+      this.render();
+    } else {
+      this.startExternalEditor();
+    }
     return this;
   }
   render(error) {
