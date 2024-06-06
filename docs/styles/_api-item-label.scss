@@ -24,6 +24,14 @@
       padding: 0.25rem 0.5rem;
     }
 
+    a {
+      color: var(--label-theme);
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
     @media screen and (prefers-color-scheme: dark) {
       background: color-mix(in srgb, var(--label-theme) 17%, #272727);
     }

@@ -50,12 +50,12 @@ export function HeaderApi(props: {entry: DocEntryRenderable; showFullDescription
           )}
           {entry.isDeveloperPreview && (
             <div className={HEADER_ENTRY_LABEL} data-mode={'full'} data-type="developer_preview">
-              Developer preview
+              <a href="/reference/releases#developer-preview">Developer preview</a>
             </div>
           )}
           {entry.isExperimental && (
             <div className={HEADER_ENTRY_LABEL} data-mode={'full'} data-type="experimental">
-              Experimental
+              <a href="/reference/releases#experimental">Experimental</a>
             </div>
           )}
         </div>
