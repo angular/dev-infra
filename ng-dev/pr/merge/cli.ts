@@ -9,9 +9,8 @@
 import {Argv, Arguments, CommandModule} from 'yargs';
 import {addDryRunFlag} from '../../utils/dry-run.js';
 
-import {mergePullRequest} from './merge-pull-request.js';
+import {mergePullRequest, parsePrNumber} from './merge-pull-request.js';
 import {addGithubTokenOption} from '../../utils/git/github-yargs.js';
-
 /** The options available to the merge command via CLI. */
 export interface MergeCommandOptions {
   pr: number;
@@ -28,7 +27,8 @@ async function builder(argv: Argv) {
     .strict()
     .positional('pr', {
       demandOption: true,
-      type: 'number',
+      coerce: (prUrlOrNumber: string) => parsePrNumber(prUrlOrNumber),
+      type: 'string',
       description: 'The PR to be merged.',
     })
     .option('branch-prompt' as 'branchPrompt', {

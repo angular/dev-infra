@@ -19,7 +19,6 @@ import {
   PullRequestValidationError,
   UserAbortedMergeToolError,
 } from './failures.js';
-import {createPullRequestValidationConfig} from '../common/validation/validation-config.js';
 import {
   InvalidTargetBranchError,
   InvalidTargetLabelError,
@@ -133,4 +132,18 @@ async function createPullRequestMergeTool(flags: PullRequestMergeFlags) {
     }
     throw e;
   }
+}
+
+/**
+ * Parses the pull request number from either the number or url string
+ */
+export function parsePrNumber(prUrlOrNumber: string): number {
+  // There is no url validation here other than presence of `/`.
+  // So whatever is the last segment of that string, url or not, will be
+  // parsed as a PR number.
+  const prNumber = parseInt(prUrlOrNumber.split('/').pop()!);
+  if (isNaN(prNumber)) {
+    throw new Error('Pull Request was unable to be parsed from the parameters');
+  }
+  return prNumber;
 }
