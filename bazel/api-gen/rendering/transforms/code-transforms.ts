@@ -44,12 +44,6 @@ interface CodeTableOfContentsData {
   deprecatedLineNumbers: number[];
 }
 
-const ANGULAR_PROPERTY_DECORATORS: Record<string, string> = {
-  'input': '@Input()',
-  'output': '@Output()',
-  'optional': '',
-};
-
 /** Split generated code with syntax highlighting into single lines */
 export function splitLines(text: string): string[] {
   if (text.length === 0) {
@@ -313,7 +307,20 @@ function isOptionalMember(member: PropertyEntry): boolean {
 
 function getTags(member: PropertyEntry): string[] {
   return member.memberTags
-    .map((tag) => ANGULAR_PROPERTY_DECORATORS[tag] ?? tag)
+    .map((tag) => {
+      if (tag === 'input') {
+        return !member.inputAlias || member.name === member.inputAlias
+          ? '@Input()'
+          : `@Input('${member.inputAlias}')`;
+      } else if (tag === 'output') {
+        return !member.outputAlias || member.name === member.outputAlias
+          ? '@Output()'
+          : `@Output('${member.outputAlias}')`;
+      } else if (tag === 'optional') {
+        return '';
+      }
+      return tag;
+    })
     .filter((tag) => !!tag);
 }
 
