@@ -25,7 +25,7 @@ import {
   PackageJson,
 } from '../../release/versioning/index.js';
 import {Prompt} from '../../utils/prompt.js';
-
+import {parsePrNumber} from './merge-pull-request.js';
 const API_ENDPOINT = `https://api.github.com`;
 
 describe('default target labels', () => {
@@ -620,5 +620,29 @@ describe('default target labels', () => {
 
       expect(await getBranchesForLabel('target: minor', '12.2.x')).toEqual(['12.2.x']);
     });
+  });
+});
+
+describe('pr number validation', () => {
+  it('should succeed with a PR number', () => {
+    expect(parsePrNumber('12345')).toBe(12345);
+  });
+
+  it('should succeed with a full github url', () => {
+    expect(parsePrNumber('https://github.com/angular/angular/pull/12345')).toBe(12345);
+  });
+
+  it('should fail with a random string', () => {
+    try {
+      expect(parsePrNumber('baldfey')).toThrow(
+        'Pull Request was unable to be parsed from the parameters',
+      );
+    } catch {}
+  });
+
+  it('should fail with an empty string', () => {
+    try {
+      expect(parsePrNumber('')).toThrow('Pull Request was unable to be parsed from the parameters');
+    } catch {}
   });
 });
