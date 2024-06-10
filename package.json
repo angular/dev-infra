@@ -55,7 +55,7 @@
     "true-case-path": "^2.2.1",
     "tslib": "^2.5.2",
     "typescript": "5.4.5",
-    "uuid": "^9.0.0",
+    "uuid": "^10.0.0",
     "yargs": "^17.0.0"
   },
   "devDependencies": {
