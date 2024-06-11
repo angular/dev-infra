@@ -1518,13 +1518,13 @@ __metadata:
   linkType: hard
 
 "@codemirror/view@npm:^6.0.0, @codemirror/view@npm:^6.17.0, @codemirror/view@npm:^6.22.1, @codemirror/view@npm:^6.23.0, @codemirror/view@npm:^6.27.0":
-  version: 6.27.0
-  resolution: "@codemirror/view@npm:6.27.0"
+  version: 6.28.0
+  resolution: "@codemirror/view@npm:6.28.0"
   dependencies:
     "@codemirror/state": "npm:^6.4.0"
     style-mod: "npm:^4.1.0"
     w3c-keyname: "npm:^2.2.4"
-  checksum: 10c0/0c7fc829afe9ca4186a1b1211c67f2c7625c4cb1afbadd616d1823a2ee312caf8681524c976f2a16c66017ac3146d8165ef24cc9a8b1091844a8d770e53852b3
+  checksum: 10c0/8930d42c5732359549aa4bf4f0d24c559a203df387487779e5e4ee7dd9723ee7398170e3bfffd5d72fd86ef0bff3bd3ae525ef2f75ae4888aa5a88149c11e7d4
   languageName: node
   linkType: hard
 
@@ -2539,8 +2539,8 @@ __metadata:
   linkType: hard
 
 "@google-cloud/storage@npm:^7.0.0, @google-cloud/storage@npm:^7.7.0":
-  version: 7.11.1
-  resolution: "@google-cloud/storage@npm:7.11.1"
+  version: 7.11.2
+  resolution: "@google-cloud/storage@npm:7.11.2"
   dependencies:
     "@google-cloud/paginator": "npm:^5.0.0"
     "@google-cloud/projectify": "npm:^4.0.0"
@@ -2557,7 +2557,7 @@ __metadata:
     retry-request: "npm:^7.0.0"
     teeny-request: "npm:^9.0.0"
     uuid: "npm:^8.0.0"
-  checksum: 10c0/3118edeb0cef302699dac9d67606cdfc04cbd5de4a091d1ba91751290940390d605d13a72233ec303492643fa1f2f67a22fd4e6c43b2b9b6edf660c96111d0d1
+  checksum: 10c0/a54593c803d63fc2ca64799bc8cfe6e99af074ccf9507e3c34fa66b1e46c62fbb68e7f9f950c7d52cdc12c9e29b0aa2fc9bda66c24fc71817e1f685a6c1cf44e
   languageName: node
   linkType: hard
 
@@ -5392,11 +5392,13 @@ __metadata:
   linkType: hard
 
 "@typescript/vfs@npm:^1.5.0":
-  version: 1.5.2
-  resolution: "@typescript/vfs@npm:1.5.2"
+  version: 1.5.3
+  resolution: "@typescript/vfs@npm:1.5.3"
   dependencies:
     debug: "npm:^4.1.1"
-  checksum: 10c0/ba3a945e17afc46214603c7f7d362b6fbe07b610f48bcec7f41f30ae13c59ee4f6adec6ef7c6d052e22a4ef7d6cf231a83bbcf31b4b1a4631164b60241dd8d72
+  peerDependencies:
+    typescript: "*"
+  checksum: 10c0/266b1c045feddadf36f420ee53a5bc7d8a6ddea13c1851422ec7c43a321c7ab00b6099ebae040a6b1239bbac69bf354b86254829328e19305979716167a6c052
   languageName: node
   linkType: hard
 
@@ -8903,8 +8905,8 @@ __metadata:
   linkType: hard
 
 "firebase-tools@npm:^13.0.0":
-  version: 13.10.2
-  resolution: "firebase-tools@npm:13.10.2"
+  version: 13.11.2
+  resolution: "firebase-tools@npm:13.11.2"
   dependencies:
     "@google-cloud/cloud-sql-connector": "npm:^1.2.3"
     "@google-cloud/pubsub": "npm:^4.4.0"
@@ -8974,7 +8976,7 @@ __metadata:
     yaml: "npm:^2.4.1"
   bin:
     firebase: lib/bin/firebase.js
-  checksum: 10c0/8497480d4e1215dd6660d05d4898544b589bba598344e102107f013cf6340e4777653eb3d67cec4cfd17002943679757fb9f3346411d2bd83f7b12b7c67d8372
+  checksum: 10c0/eaeb67d1714fecc878f9188610410c29bf4cb6aa220ba9e7cc90cfbe4ec7f28ed97597705bca16cd3bd76260f8b16a873c93119e0af24ba56b61d5d6307dee9e
   languageName: node
   linkType: hard
 
@@ -16754,11 +16756,11 @@ __metadata:
   linkType: hard
 
 "yaml@npm:^2.0.0, yaml@npm:^2.2.1, yaml@npm:^2.4.1":
-  version: 2.4.3
-  resolution: "yaml@npm:2.4.3"
+  version: 2.4.5
+  resolution: "yaml@npm:2.4.5"
   bin:
     yaml: bin.mjs
-  checksum: 10c0/b4a9dea34265f000402c909144ac310be42c4526dfd16dff1aee2b04a0d94051713651c0cd2b0a3d8109266997422120f16a7934629d12f22dc215839ebbeccf
+  checksum: 10c0/e1ee78b381e5c710f715cc4082fd10fc82f7f5c92bd6f075771d20559e175616f56abf1c411f545ea0e9e16e4f84a83a50b42764af5f16ec006328ba9476bb31
   languageName: node
   linkType: hard
 
@@ -16861,8 +16863,8 @@ __metadata:
   linkType: hard
 
 "zone.js@npm:^0.14.0":
-  version: 0.14.6
-  resolution: "zone.js@npm:0.14.6"
-  checksum: 10c0/dc138197428b7d5c5bc6119dc94748f700426a340c41fc6ebf5fe3fa7ff302fa970350c44719f644020a82caabf9fc761003af285c7707192c77bcc312bfd264
+  version: 0.14.7
+  resolution: "zone.js@npm:0.14.7"
+  checksum: 10c0/5a5fccb78ea4653ccf3ad5c11448ffa4e005b50a0fd43da713fcc19584746000ea889ca45163d2e6e18e3a4ed7be42cdbc0dbb4dcb28449f02d23408696668cc
   languageName: node
   linkType: hard
