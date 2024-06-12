@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {marked} from 'marked';
+import {RendererObject, marked} from 'marked';
 import {hooks} from './hooks';
-import {renderer} from './renderer';
+import {Renderer} from './renderer';
 import {docsAlertExtension} from './extensions/docs-alert';
 import {docsCalloutExtension} from './extensions/docs-callout';
 import {docsPillExtension} from './extensions/docs-pill/docs-pill';
@@ -32,8 +32,10 @@ export async function parseMarkdown(
   setContext(context);
 
   marked.use({
+    useNewRenderer: true,
+    // TODO: Remove unnecessary casting once `useNewRenderer` is the only renderer in marked v14.
+    renderer: new Renderer() as unknown as RendererObject,
     hooks,
-    renderer,
     extensions: [
       docsAlertExtension,
       docsCalloutExtension,
