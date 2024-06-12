@@ -32,6 +32,7 @@ export async function parseMarkdown(
   setContext(context);
 
   marked.use({
+    useNewRenderer: true,
     hooks,
     renderer,
     extensions: [

@@ -12,7 +12,7 @@ import {RendererApi} from 'marked';
 // TODO(josephperrott): Determine how we can define/know the image content base path.
 const imageContentBasePath = 'unknown';
 
-export const imageRender: RendererApi['image'] = (href, title, text) => {
+export const imageRender: RendererApi['image'] = ({href, title, text}) => {
   const isRelativeSrc = href?.startsWith('./');
   const src = isRelativeSrc ? `${imageContentBasePath}/${normalize(href)}` : href;
   return `

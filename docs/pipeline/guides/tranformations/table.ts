@@ -8,17 +8,34 @@
 
 import {RendererApi} from 'marked';
 
-export const tableRender: RendererApi['table'] = (header, body) => {
+export const tableRender: RendererApi['table'] = ({header, raw, rows}) => {
   return `
   <div class="docs-table docs-scroll-track-transparent">
     <table>
       <thead>
-        ${header}
+        ${tablerow({
+          text: header.map((cell) => tablecell(cell)).join(''),
+        })}
       </thead>
       <tbody>
-        ${body}
+        ${rows
+          .map((row) =>
+            tablerow({
+              text: row.map((cell) => tablecell(cell)).join(''),
+            }),
+          )
+          .join('')}
       </tbody>
     </table>
   </div>
   `;
+};
+
+const tablerow: RendererApi['tablerow'] = ({text}) => {
+  return `<tr>${text}</tr>`;
+};
+
+const tablecell: RendererApi['tablecell'] = ({header, text}) => {
+  const type = header ? 'th' : 'td';
+  return `<${type}>${text}</${type}>`;
 };

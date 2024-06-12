@@ -15,7 +15,7 @@ const UNICODE_EMOJI_REGEX = /&#x[\dA-Fa-f]+;/g;
 /** Regex to find emojis. */
 const regex = emojiRegex();
 
-export const textRender: RendererApi['text'] = (text) => {
+export const textRender: RendererApi['text'] = ({text}) => {
   return regex.test(text) || UNICODE_EMOJI_REGEX.test(text)
     ? `<span class="docs-emoji">${text}</span>`
     : text;

@@ -8,17 +8,21 @@
 
 import {RendererApi} from 'marked';
 
-export const listRender: RendererApi['list'] = (body, ordered, start) => {
+export const listRender: RendererApi['list'] = ({items, ordered}) => {
   if (ordered) {
     return `
     <ol class="docs-ordered-list">
-      ${body}
+      ${items.map(listitem).join('')}
     </ol>
     `;
   }
   return `
   <ul class="docs-list">
-    ${body}
+  ${items.map(listitem).join('')}
   </ul>
   `;
+};
+
+const listitem: RendererApi['listitem'] = ({text}) => {
+  return `<li>${text}</li>\n`;
 };
