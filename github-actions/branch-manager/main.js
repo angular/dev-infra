@@ -26014,6 +26014,11 @@ var managedLabels = createTypedObject()({
     description: "Related the build and CI infrastructure of the project",
     name: "area: build & ci",
     commitCheck: (c) => c.type === "build" || c.type === "ci"
+  },
+  DETECTED_PERF_CHANGE: {
+    description: "Issues related to performance",
+    name: "area: performance",
+    commitCheck: (c) => c.type === "perf"
   }
 });
 

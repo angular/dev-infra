@@ -26479,6 +26479,11 @@ var managedLabels = createTypedObject()({
     description: "Related the build and CI infrastructure of the project",
     name: "area: build & ci",
     commitCheck: (c) => c.type === "build" || c.type === "ci"
+  },
+  DETECTED_PERF_CHANGE: {
+    description: "Issues related to performance",
+    name: "area: performance",
+    commitCheck: (c) => c.type === "perf"
   }
 });
 
@@ -29434,6 +29439,7 @@ var _a2;
 var CommitMessageBasedLabelManager = class {
   constructor(git) {
     this.git = git;
+    this.repoAreaLabels = /* @__PURE__ */ new Set();
     this.labels = /* @__PURE__ */ new Set();
     this.commits = [];
   }
@@ -29449,6 +29455,12 @@ var CommitMessageBasedLabelManager = class {
       }
       if (!hasCommit && hasLabel) {
         await this.removeLabel(name);
+      }
+    }
+    for (const commit of this.commits) {
+      const label = "area: " + commit.scope;
+      if (this.repoAreaLabels.has(label) && !this.labels.has(label)) {
+        await this.addLabel(label);
       }
     }
   }
@@ -29476,6 +29488,7 @@ var CommitMessageBasedLabelManager = class {
   }
   async initialize() {
     const { number, owner, repo } = import_github2.context.issue;
+    await this.git.paginate(this.git.issues.listLabelsForRepo, { owner, repo }).then((labels) => labels.filter((l) => l.name.startsWith("area: ")).forEach((l) => this.repoAreaLabels.add(l.name)));
     await this.git.paginate(this.git.pulls.listCommits, { owner, pull_number: number, repo }).then((commits) => this.commits = commits.map(({ commit }) => parseCommitMessage(commit.message)));
     await this.git.issues.listLabelsOnIssue({ issue_number: number, owner, repo }).then((resp) => resp.data.forEach(({ name }) => this.labels.add(name)));
   }
