@@ -19,6 +19,8 @@ class CommitMessageBasedLabelManager {
     }
   };
 
+  /** Area labels in the current repository */
+  repoAreaLabels = new Set<string>();
   /** Labels currently applied to the PR. */
   labels = new Set<string>();
   /** All commits in the PR */
@@ -44,6 +46,16 @@ class CommitMessageBasedLabelManager {
       }
       if (!hasCommit && hasLabel) {
         await this.removeLabel(name);
+      }
+    }
+
+    for (const commit of this.commits) {
+      const label = 'area: ' + commit.scope;
+      // This validates that the commit header scope actually exists as a valid label
+      // otherwise when people make mistakes with scopes in their commit headers,
+      // those would be automatically turned into an area label, which would be bad.
+      if (this.repoAreaLabels.has(label) && !this.labels.has(label)) {
+        await this.addLabel(label);
       }
     }
   }
@@ -77,6 +89,15 @@ class CommitMessageBasedLabelManager {
   /** Initialize the current labels and commits for the PR. */
   async initialize() {
     const {number, owner, repo} = context.issue;
+
+    // retrieve full list of area labels for the repository
+    await this.git
+      .paginate(this.git.issues.listLabelsForRepo, {owner, repo})
+      .then((labels) =>
+        labels
+          .filter((l) => l.name.startsWith('area: '))
+          .forEach((l) => this.repoAreaLabels.add(l.name)),
+      );
 
     await this.git
       .paginate(this.git.pulls.listCommits, {owner, pull_number: number, repo})

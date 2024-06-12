@@ -32,4 +32,9 @@ export const managedLabels = createTypedObject<ManagedLabel>()({
     name: 'area: build & ci',
     commitCheck: (c: Commit) => c.type === 'build' || c.type === 'ci',
   },
+  DETECTED_PERF_CHANGE: {
+    description: 'Issues related to performance',
+    name: 'area: performance',
+    commitCheck: (c: Commit) => c.type === 'perf',
+  },
 });
