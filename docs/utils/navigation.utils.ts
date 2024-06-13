@@ -131,7 +131,7 @@ export const getBaseUrlAfterRedirects = (url: string, router: Router): string =>
   return normalizePath(route.toString());
 };
 
-export function handleHrefClickEventWithRouter(e: Event, router: Router) {
+export function handleHrefClickEventWithRouter(e: Event, router: Router, relativeUrl: string) {
   const pointerEvent = e as PointerEvent;
   if (
     pointerEvent.ctrlKey ||
@@ -142,16 +142,8 @@ export function handleHrefClickEventWithRouter(e: Event, router: Router) {
     return;
   }
 
-  const closestAnchor = (e.target as Element).closest('a');
-  if (closestAnchor?.target && closestAnchor.target !== 'self') {
-    return;
-  }
-
-  const relativeUrl = closestAnchor?.getAttribute?.('href');
-  if (relativeUrl) {
-    e.preventDefault();
-    router.navigateByUrl(relativeUrl);
-  }
+  e.preventDefault();
+  router.navigateByUrl(relativeUrl);
 }
 
 export function getActivatedRouteSnapshotFromRouter(router: Router): ActivatedRouteSnapshot {
