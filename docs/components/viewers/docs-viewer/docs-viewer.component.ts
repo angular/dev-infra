@@ -312,10 +312,30 @@ export class DocViewer implements OnChanges {
       if (isExternalLink) {
         return;
       }
+
       fromEvent(anchor, 'click')
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe((e) => {
-          handleHrefClickEventWithRouter(e, this.router);
+          const closestAnchor = (e.target as Element).closest('a');
+          if (closestAnchor?.target && closestAnchor.target !== 'self') {
+            return;
+          }
+
+          const hrefAttr = closestAnchor?.getAttribute?.('href');
+          if (!hrefAttr) {
+            return;
+          }
+
+          let relativeUrl: string;
+          if (hrefAttr.startsWith('http')) {
+            // Url is absolute but we're targeting the same domain
+            const url = new URL(hrefAttr);
+            relativeUrl = `${url.pathname}${url.hash}${url.search}`;
+          } else {
+            relativeUrl = hrefAttr;
+          }
+
+          handleHrefClickEventWithRouter(e, this.router, relativeUrl);
         });
     });
   }
