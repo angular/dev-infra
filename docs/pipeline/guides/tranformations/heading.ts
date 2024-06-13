@@ -6,12 +6,13 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {RendererApi} from 'marked';
+import {Renderer, Tokens} from 'marked';
 
 import {getHeaderId} from '../state';
 import {getPageTitle} from '../utils';
 
-export const headingRender: RendererApi['heading'] = ({text, depth}) => {
+export function headingRender({text, depth}: Tokens.Heading): string;
+export function headingRender(this: Renderer, {text, depth}: Tokens.Heading): string {
   if (depth === 1) {
     return `
     <header class="docs-header">
@@ -36,4 +37,4 @@ export const headingRender: RendererApi['heading'] = ({text, depth}) => {
     <a href="#${link}" class="docs-anchor" tabindex="-1" aria-label="Link to ${label}">${label}</a>
   </h${depth}>
   `;
-};
+}
