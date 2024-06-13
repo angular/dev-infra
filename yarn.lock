@@ -499,7 +499,7 @@ __metadata:
     playwright-core: "npm:^1.41.2"
     preact: "npm:^10.17.1"
     preact-render-to-string: "npm:^6.2.1"
-    prettier: "npm:3.3.1"
+    prettier: "npm:3.3.2"
     protobufjs: "npm:^7.0.0"
     protractor: "npm:^7.0.0"
     requirejs: "npm:^2.3.6"
@@ -512,7 +512,7 @@ __metadata:
     spdx-satisfies: "npm:^5.0.1"
     stylelint: "npm:^16.0.0"
     supports-color: "npm:9.4.0"
-    terser: "npm:5.31.0"
+    terser: "npm:5.31.1"
     tmp: "npm:^0.2.1"
     true-case-path: "npm:^2.2.1"
     ts-node: "npm:^10.8.1"
@@ -1454,13 +1454,13 @@ __metadata:
   linkType: hard
 
 "@codemirror/view@npm:^6.0.0, @codemirror/view@npm:^6.17.0, @codemirror/view@npm:^6.22.1, @codemirror/view@npm:^6.23.0, @codemirror/view@npm:^6.27.0":
-  version: 6.28.0
-  resolution: "@codemirror/view@npm:6.28.0"
+  version: 6.28.1
+  resolution: "@codemirror/view@npm:6.28.1"
   dependencies:
     "@codemirror/state": "npm:^6.4.0"
     style-mod: "npm:^4.1.0"
     w3c-keyname: "npm:^2.2.4"
-  checksum: 10c0/8930d42c5732359549aa4bf4f0d24c559a203df387487779e5e4ee7dd9723ee7398170e3bfffd5d72fd86ef0bff3bd3ae525ef2f75ae4888aa5a88149c11e7d4
+  checksum: 10c0/8246617a88127d0aa4c24657c5b5c20a06bbea930dbebbe23ce2b9a792a6cf35c9211d9662010da33d80798bdbb156ce5019b3350dae403c4c767eab4cc73a07
   languageName: node
   linkType: hard
 
@@ -2699,13 +2699,13 @@ __metadata:
   linkType: hard
 
 "@lezer/javascript@npm:^1.0.0, @lezer/javascript@npm:^1.4.9":
-  version: 1.4.16
-  resolution: "@lezer/javascript@npm:1.4.16"
+  version: 1.4.17
+  resolution: "@lezer/javascript@npm:1.4.17"
   dependencies:
     "@lezer/common": "npm:^1.2.0"
     "@lezer/highlight": "npm:^1.1.3"
     "@lezer/lr": "npm:^1.3.0"
-  checksum: 10c0/07c59cb0927a1524026f5b916546da1a520064271025ffe4a9110cdf719a38390f3f16fcabf7741da0c193f3a69fe0ee1603b80aa6566482109f4f16be5a501c
+  checksum: 10c0/5e69eabd7b6ea58ff828073324282a38567488bd6da1541023f1a66268a0ac9d01cde924f4fad183fcbf630ac33680e6b859a18f6fbec14ffb76073cdccf7b2b
   languageName: node
   linkType: hard
 
@@ -5348,9 +5348,9 @@ __metadata:
   linkType: hard
 
 "@webcontainer/api@npm:^1.1.8":
-  version: 1.1.9
-  resolution: "@webcontainer/api@npm:1.1.9"
-  checksum: 10c0/8e0423502f4a5b2293280c8c146da4271c80109499f74e7c3852e96137889910fbc9c54d91f05834c0dfb6a3d72d65739da00a8896bcb35117ad4e3bdf561319
+  version: 1.2.0
+  resolution: "@webcontainer/api@npm:1.2.0"
+  checksum: 10c0/1ebdce178f1b96728942f31adc0b5d0dd9c207c736fbe62bc152cd84d3097568a62e131610f795b267961acbb67eb231d8eea1510f64e2fe16a94f44f34a9a7e
   languageName: node
   linkType: hard
 
@@ -11554,11 +11554,11 @@ __metadata:
   linkType: hard
 
 "marked-mangle@npm:^1.1.4":
-  version: 1.1.7
-  resolution: "marked-mangle@npm:1.1.7"
+  version: 1.1.8
+  resolution: "marked-mangle@npm:1.1.8"
   peerDependencies:
-    marked: ">=4 <13"
-  checksum: 10c0/5d0eaa28c7c9c8791c2341a0fadd08b7f7298273c46c92f3f4cfe98c0adacca9f0e8fdc9bbc69b1b177d3119b6cd4604a5bbff5be205b6ba89a547c5b7266801
+    marked: ">=4 <14"
+  checksum: 10c0/67aabc990cbd2c6b91b8354b02776cd091f4dcf2ec9ad7f5060468e347b4a21ad8fa6ee0e6d7844202e45495e8f2dc61f24589564922b40e48ebc99f7a19030b
   languageName: node
   linkType: hard
 
@@ -13385,11 +13385,11 @@ __metadata:
   linkType: hard
 
 "preact-render-to-string@npm:^6.2.1":
-  version: 6.5.4
-  resolution: "preact-render-to-string@npm:6.5.4"
+  version: 6.5.5
+  resolution: "preact-render-to-string@npm:6.5.5"
   peerDependencies:
     preact: ">=10"
-  checksum: 10c0/e09ba2a2deb07b0f999ba65280a8e85957bc0113ee7de9a62ba7aea0009ab4ac08c8d3ce6ec31ca051817971b89e8802cde84a8393e08e4832f53d4ed59e4e80
+  checksum: 10c0/563bf0c45c4a6b91cfb81a3f35546ee4dbd4bca7f301f0824f41c37a4a05e71f69ca6bb4735302ef2b31d412bea55bc88ebca49ea4955485c1776b5f7c17e700
   languageName: node
   linkType: hard
 
@@ -13422,12 +13422,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:3.3.1":
-  version: 3.3.1
-  resolution: "prettier@npm:3.3.1"
+"prettier@npm:3.3.2":
+  version: 3.3.2
+  resolution: "prettier@npm:3.3.2"
   bin:
     prettier: bin/prettier.cjs
-  checksum: 10c0/c25a709c9f0be670dc6bcb190b622347e1dbeb6c3e7df8b0711724cb64d8647c60b839937a4df4df18e9cfb556c2b08ca9d24d9645eb5488a7fc032a2c4d5cb3
+  checksum: 10c0/39ed27d17f0238da6dd6571d63026566bd790d3d0edac57c285fbab525982060c8f1e01955fe38134ab10f0951a6076da37f015db8173c02f14bc7f0803a384c
   languageName: node
   linkType: hard
 
@@ -13530,7 +13530,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"protobufjs@npm:7.3.0, protobufjs@npm:^7.0.0, protobufjs@npm:^7.2.2, protobufjs@npm:^7.2.5, protobufjs@npm:^7.2.6":
+"protobufjs@npm:7.3.0":
   version: 7.3.0
   resolution: "protobufjs@npm:7.3.0"
   dependencies:
@@ -13547,6 +13547,26 @@ __metadata:
     "@types/node": "npm:>=13.7.0"
     long: "npm:^5.0.0"
   checksum: 10c0/fdcd17a783a4d71dd46463419cdfb5a5e3ad07cf4d9460abb5bdeb2547b0fa77c55955ac26c38e5557f5169dc3909456c675a08c56268c0e79b34d348c05dcab
+  languageName: node
+  linkType: hard
+
+"protobufjs@npm:^7.0.0, protobufjs@npm:^7.2.2, protobufjs@npm:^7.2.5, protobufjs@npm:^7.2.6":
+  version: 7.3.2
+  resolution: "protobufjs@npm:7.3.2"
+  dependencies:
+    "@protobufjs/aspromise": "npm:^1.1.2"
+    "@protobufjs/base64": "npm:^1.1.2"
+    "@protobufjs/codegen": "npm:^2.0.4"
+    "@protobufjs/eventemitter": "npm:^1.1.0"
+    "@protobufjs/fetch": "npm:^1.1.0"
+    "@protobufjs/float": "npm:^1.0.2"
+    "@protobufjs/inquire": "npm:^1.1.0"
+    "@protobufjs/path": "npm:^1.1.2"
+    "@protobufjs/pool": "npm:^1.1.0"
+    "@protobufjs/utf8": "npm:^1.1.0"
+    "@types/node": "npm:>=13.7.0"
+    long: "npm:^5.0.0"
+  checksum: 10c0/b87e38fffc989793099010439a7ff45a0a57ef5b8f44b5209f06bfa5085ac96a365aa37eb3c79bd6954d6ef1b50fc69da37dae8ea2a31d90b7bc8fb2fa0e3955
   languageName: node
   linkType: hard
 
@@ -15448,9 +15468,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"terser@npm:5.31.0":
-  version: 5.31.0
-  resolution: "terser@npm:5.31.0"
+"terser@npm:5.31.1":
+  version: 5.31.1
+  resolution: "terser@npm:5.31.1"
   dependencies:
     "@jridgewell/source-map": "npm:^0.3.3"
     acorn: "npm:^8.8.2"
@@ -15458,7 +15478,7 @@ __metadata:
     source-map-support: "npm:~0.5.20"
   bin:
     terser: bin/terser
-  checksum: 10c0/cb127a579b03fb9dcee0d293ff24814deedcd430f447933b618e8593b7454f615b5c8493c68e86a4b0188769d5ea2af5251b5d507edb208114f7e8aebdc7c850
+  checksum: 10c0/4d49a58f64c11f3742e779a0a03aff69972ca5739decb361d909d22c8f3f7d8e2ec982a928d987d56737ad50229e8ab3f62d8ba993e4b5f360a53ed487d3c06c
   languageName: node
   linkType: hard
 
