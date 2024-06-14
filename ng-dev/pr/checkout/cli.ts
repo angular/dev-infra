@@ -8,6 +8,7 @@
 
 import {Argv, Arguments, CommandModule} from 'yargs';
 
+import {assertValidGithubConfig, getConfig, GithubConfig, NgDevConfig} from '../../utils/config.js';
 import {addGithubTokenOption} from '../../utils/git/github-yargs.js';
 import {checkoutPullRequest, CheckoutPullRequestParams} from './checkout.js';
 
@@ -23,12 +24,20 @@ function builder(yargs: Argv) {
       type: 'boolean',
       demandOption: false,
       describe: 'Check out the pull request to perform a takeover',
+    })
+    .option('target', {
+      type: 'string',
+      demandOption: false,
+      describe: 'Check out the pull request targeting the specified base branch',
     });
 }
 
 /** Handles the checkout pull request command. */
-async function handler({pr, takeover}: Arguments<CheckoutPullRequestParams>) {
-  await checkoutPullRequest({pr, takeover});
+async function handler({pr, takeover, target}: Arguments<CheckoutPullRequestParams>) {
+  const config = await getConfig();
+  assertValidGithubConfig(config);
+
+  await checkoutPullRequest({pr, takeover, target}, config);
 }
 
 /** yargs command module for checking out a PR  */
