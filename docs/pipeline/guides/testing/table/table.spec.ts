@@ -16,8 +16,8 @@ describe('markdown to html', () => {
   });
 
   it('should place the initial row as table header cells', () => {
-    expect(parsedMarkdown).toContain('<th><strong>Sports</strong></th>');
-    expect(parsedMarkdown).toContain('<th><em>Season</em></th>');
+    expect(parsedMarkdown).toContain('<th>Sports</th>');
+    expect(parsedMarkdown).toContain('<th>Season</th>');
   });
 
   it('should place the subsequent rows as regular table cells', () => {

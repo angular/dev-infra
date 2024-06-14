@@ -6,27 +6,19 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Tokens, Renderer} from 'marked';
+import {RendererApi} from 'marked';
 
-export function tableRender(this: Renderer, {header, rows}: Tokens.Table) {
+export const tableRender: RendererApi['table'] = (header, body) => {
   return `
   <div class="docs-table docs-scroll-track-transparent">
     <table>
       <thead>
-        ${this.tablerow({
-          text: header.map((cell) => this.tablecell(cell)).join(''),
-        })}
+        ${header}
       </thead>
       <tbody>
-        ${rows
-          .map((row) =>
-            this.tablerow({
-              text: row.map((cell) => this.tablecell(cell)).join(''),
-            }),
-          )
-          .join('')}
+        ${body}
       </tbody>
     </table>
   </div>
   `;
-}
+};

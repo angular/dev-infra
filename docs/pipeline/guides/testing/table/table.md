@@ -1,4 +1,4 @@
-| **Sports**           | *Season* |
+| Sports           | Season |
 | ---------------- | ------ |
 | Skiing           | Winter |
 | Baseball | Summer |
