@@ -1,0 +1,21 @@
+name: 'Check Package Licenses'
+description: 'Check all dependencies to confirm licenses are allowed'
+author: 'Angular'
+
+inputs:
+  allow-dependencies-licenses:
+    description: 'Any package(s) in purl format'
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - name: Check Package Licenses
+      uses: actions/dependency-review-action@72eb03d02c7872a771aacd928f3123ac62ad6d3a # v4.3.3
+      env:
+        # The action ref here allows us to import the config file from the same sha we rely on in the downstream usage
+        ACTION_REF: ${{ github.action_ref }}
+        ACTION_REPO: ${{ github.action_repository }}
+      with:
+        config-file: '${{ env.ACTION_REPO }}/github-actions/linting/licenses/dependency-review-config.yml@${{ env.ACTION_REF }}'
+        allow-dependencies-licenses: '${{inputs.allow-dependencies-licenses}}'
