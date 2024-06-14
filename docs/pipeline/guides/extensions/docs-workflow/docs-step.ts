@@ -51,13 +51,7 @@ export const docsStepExtension = {
     return `
     <li>
       <span class="docs-step-number" aria-hidden="true"></span>
-      ${headingRender({
-        depth: 3,
-        raw: token.title,
-        text: token.title,
-        tokens: [token],
-        type: 'heading',
-      })}
+      ${headingRender(token.title, 3, token.title)}
       ${this.parser.parse(token.tokens)}
     </li>
     `;

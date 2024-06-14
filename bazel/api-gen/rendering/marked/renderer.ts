@@ -7,7 +7,7 @@
  */
 
 import highlightJs, {HighlightResult} from 'highlight.js';
-import {Renderer as MarkedRenderer, Tokens} from 'marked';
+import {Renderer as MarkedRenderer} from 'marked';
 import {AIO_URL} from '../backwards-compatibility/domains';
 import {splitLines} from '../transforms/code-transforms';
 
@@ -16,18 +16,18 @@ import {splitLines} from '../transforms/code-transforms';
  * files that can be used in the Angular docs.
  */
 export const renderer: Partial<MarkedRenderer> = {
-  code({text, lang, escaped}): string {
+  code(code: string, language: string, isEscaped: boolean): string {
     let highlightResult: HighlightResult;
     // Use try catch because there are existing content issues when there is provided nonexistent
     // language, like `typescript=` etc. In that case when there will be an error thrown `Could not
     // find the language 'typescript=', did you forget to load/include a language module?`
     // Let's try to use `highlightAuto`.
     try {
-      highlightResult = lang
-        ? highlightJs.highlight(text, {language: lang})
-        : highlightJs.highlightAuto(text);
+      highlightResult = language
+        ? highlightJs.highlight(code, {language})
+        : highlightJs.highlightAuto(code);
     } catch {
-      highlightResult = highlightJs.highlightAuto(text);
+      highlightResult = highlightJs.highlightAuto(code);
     }
 
     const lines = splitLines(highlightResult.value);
@@ -42,16 +42,16 @@ export const renderer: Partial<MarkedRenderer> = {
       </div>
     `;
   },
-  image({href, title, text}): string {
+  image(href: string | null, title: string | null, text: string): string {
     return `
     <img src="${href}" alt="${text}" title="${title}" class="docs-image">
     `;
   },
-  link({href, title}): string {
-    title = title?.startsWith(AIO_URL) ? 'our guides' : title;
-    return `<a href="${href}">${title}</a>`;
+  link(href: string, title: string, text: string): string {
+    text = text.startsWith(AIO_URL) ? 'our guides' : text;
+    return `<a href="${href}">${text}</a>`;
   },
-  list({raw: body, ordered}: Tokens.List) {
+  list(body: string, ordered: boolean, start: number) {
     if (ordered) {
       return `
       <ol class="docs-ordered-list">
@@ -65,7 +65,7 @@ export const renderer: Partial<MarkedRenderer> = {
     </ul>
     `;
   },
-  table({header, raw: body}): string {
+  table(header: string, body: string): string {
     return `
       <div class="docs-table docs-scroll-track-transparent">
         <table>
