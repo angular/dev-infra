@@ -35,6 +35,10 @@ jobs:
         run: yarn lint
       - name: Confirm code builds with typescript as expected
         run: yarn tsc -p tsconfig.json
+      - name: Check Package Licenses
+        # We use this action pinned at main because we need to have an actual version for the config to load.
+        # Since using the local version would end up nearly using `main` anyway, this is essentially equivalent.
+        uses: angular/dev-infra/github-actions/linting/licenses@main
 
   test:
     timeout-minutes: 15
