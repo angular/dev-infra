@@ -3473,7 +3473,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:4, debug@npm:^4.0.0, debug@npm:^4.1.1, debug@npm:^4.3.4":
+"debug@npm:4, debug@npm:^4.0.0, debug@npm:^4.1.1, debug@npm:^4.3.4, debug@npm:^4.3.5":
   version: 4.3.5
   resolution: "debug@npm:4.3.5"
   dependencies:
@@ -3735,10 +3735,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"emojibase-regex@npm:15.3.1":
-  version: 15.3.1
-  resolution: "emojibase-regex@npm:15.3.1"
-  checksum: 10c0/d252844e6791b6f9ac058a2e2f1ce09edb2d974b86af336221e5c6e76658e9d58e61002eb40a741cac384a61e773eb49325e4c7a850a7ea11c59fc8afd51e3dd
+"emojibase-regex@npm:15.3.2":
+  version: 15.3.2
+  resolution: "emojibase-regex@npm:15.3.2"
+  checksum: 10c0/9500690ef4df9b6bee6039579d2bd324cca347ba55d34ffd9d1a3fc55a1dc78fe261f2282d803a0c945fd90943e32f05d6a7822e5bdeebb48b8432c370947daa
   languageName: node
   linkType: hard
 
@@ -5876,7 +5876,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: "npm:37.408.0"
+    renovate: "npm:37.410.1"
   languageName: unknown
   linkType: soft
 
@@ -6601,9 +6601,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:37.408.0":
-  version: 37.408.0
-  resolution: "renovate@npm:37.408.0"
+"renovate@npm:37.410.1":
+  version: 37.410.1
+  resolution: "renovate@npm:37.410.1"
   dependencies:
     "@aws-sdk/client-codecommit": "npm:3.588.0"
     "@aws-sdk/client-ec2": "npm:3.588.0"
@@ -6654,7 +6654,7 @@ __metadata:
     email-addresses: "npm:5.0.0"
     emoji-regex: "npm:10.3.0"
     emojibase: "npm:15.3.1"
-    emojibase-regex: "npm:15.3.1"
+    emojibase-regex: "npm:15.3.2"
     extract-zip: "npm:2.0.1"
     find-packages: "npm:10.0.4"
     find-up: "npm:5.0.0"
@@ -6702,7 +6702,7 @@ __metadata:
     semver-stable: "npm:3.0.0"
     semver-utils: "npm:1.1.4"
     shlex: "npm:2.1.2"
-    simple-git: "npm:3.24.0"
+    simple-git: "npm:3.25.0"
     slugify: "npm:1.6.6"
     source-map-support: "npm:0.5.21"
     toml-eslint-parser: "npm:0.9.3"
@@ -6724,7 +6724,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 10c0/c621763481c1502f804dc1929eac277e52444c323ac65db7dd1cebc3fbdb3f60d40e66c84a662ea62068ca31fdaf97e7f2142f10bc4ee3d9e9b0059d3cc2e103
+  checksum: 10c0/e4e0f844034a1454980928af32dbf9c074ef254a6ec34af2f0bfb8d0fea2e995b565d9687e36809d5c4d6f0a8b63e0984495b6fa5ce4d93421555e344847ec9e
   languageName: node
   linkType: hard
 
@@ -7060,14 +7060,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"simple-git@npm:3.24.0":
-  version: 3.24.0
-  resolution: "simple-git@npm:3.24.0"
+"simple-git@npm:3.25.0":
+  version: 3.25.0
+  resolution: "simple-git@npm:3.25.0"
   dependencies:
     "@kwsites/file-exists": "npm:^1.1.1"
     "@kwsites/promise-deferred": "npm:^1.1.1"
-    debug: "npm:^4.3.4"
-  checksum: 10c0/4329e5be1a7af1ebb476354ed6edf6d2828dc221e15d22ce3e5e8028f537d5e9ac059d813911516f78e22dfa2ee4db4c8cf30bf912bd284e530b733bd6b5c3a0
+    debug: "npm:^4.3.5"
+  checksum: 10c0/2087dddac041eac6330cbb7fafea21f3e45786ea54e50ae07a49ba6a7134298e12727e5e4b6580310b679c7cb4f2a83804c04e7eab247eeabcd48d33b7885e16
   languageName: node
   linkType: hard
 
