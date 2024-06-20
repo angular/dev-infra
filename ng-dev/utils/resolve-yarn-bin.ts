@@ -29,6 +29,7 @@ export type ConfigWithParser = {fileName: string; parse: (c: string) => YarnConf
 export interface YarnCommandInfo {
   binary: string;
   args: string[];
+  legacy?: boolean;
 }
 
 /** List of Yarn configuration files and their parsing mechanisms. */
@@ -47,17 +48,29 @@ export const yarnConfigFiles: ConfigWithParser[] = [
  * become unavailable.
  */
 export async function resolveYarnScriptForProject(projectDir: string): Promise<YarnCommandInfo> {
+  let info: YarnCommandInfo | undefined;
+
   const yarnPathFromConfig = await getYarnPathFromConfigurationIfPresent(projectDir);
   if (yarnPathFromConfig !== null) {
-    return {binary: 'node', args: [yarnPathFromConfig]};
+    info = {binary: 'node', args: [yarnPathFromConfig]};
   }
 
-  const yarnPathFromNpmBin = await getYarnPathFromNpmGlobalBinaries();
-  if (yarnPathFromNpmBin !== null) {
-    return {binary: yarnPathFromNpmBin, args: []};
+  if (!info) {
+    const yarnPathFromNpmBin = await getYarnPathFromNpmGlobalBinaries();
+    if (yarnPathFromNpmBin !== null) {
+      info = {binary: yarnPathFromNpmBin, args: []};
+    }
   }
 
-  return {binary: 'yarn', args: []};
+  info ??= {binary: 'yarn', args: []};
+
+  const yarnVersion = await getYarnVersion(info);
+  if (yarnVersion && Number(yarnVersion.split('.')[0]) < 2) {
+    info.args.push('--silent');
+    info.legacy = true;
+  }
+
+  return info;
 }
 
 /** Gets the path to the Yarn binary from the NPM global binary directory. */
@@ -97,6 +110,17 @@ async function getYarnPathFromConfigurationIfPresent(projectDir: string): Promis
   }
 
   return path.resolve(projectDir, yarnPath);
+}
+
+async function getYarnVersion(info: YarnCommandInfo): Promise<string | null> {
+  try {
+    return (
+      await ChildProcess.spawn(info.binary, [...info.args, '--version'], {mode: 'silent'})
+    ).stdout.trim();
+  } catch (e) {
+    Log.debug('Could not determine Yarn version. Error:', e);
+    return null;
+  }
 }
 
 /** Finds and parses the Yarn configuration file for the given project. */
