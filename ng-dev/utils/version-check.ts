@@ -9,6 +9,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import lockfile from '@yarnpkg/lockfile';
+import {parse as parseYaml} from 'yaml';
 import {
   ngDevNpmPackageName,
   workspaceRelativePackageJsonPath,
@@ -32,20 +33,26 @@ export async function verifyNgDevToolIsUpToDate(workspacePath: string): Promise<
   const workspaceDirLockFile = path.join(workspacePath, workspaceRelativeYarnLockFilePath);
 
   try {
-    const lockFileContent = fs.readFileSync(workspaceDirLockFile, 'utf8');
     const packageJson = JSON.parse(fs.readFileSync(workspacePackageJsonFile, 'utf8')) as any;
-    const lockFile = lockfile.parse(lockFileContent);
-
-    if (lockFile.type !== 'success') {
-      throw Error('Unable to parse workspace lock file. Please ensure the file is valid.');
-    }
-
     // If we are operating in the actual dev-infra repo, always return `true`.
     if (packageJson.name === ngDevNpmPackageName) {
       return true;
     }
 
-    const lockFileObject = lockFile.object as lockfile.LockFileObject;
+    const lockFileContent = fs.readFileSync(workspaceDirLockFile, 'utf8');
+
+    let lockFileObject: Record<string, {version: string}>;
+    try {
+      const lockFile = lockfile.parse(lockFileContent);
+
+      if (lockFile.type !== 'success') {
+        throw Error('Unable to parse workspace lock file. Please ensure the file is valid.');
+      }
+      lockFileObject = lockFile.object as lockfile.LockFileObject;
+    } catch {
+      lockFileObject = parseYaml(lockFileContent);
+    }
+
     const devInfraPkgVersion =
       packageJson?.dependencies?.[ngDevNpmPackageName] ??
       packageJson?.devDependencies?.[ngDevNpmPackageName] ??
