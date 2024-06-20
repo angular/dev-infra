@@ -40,6 +40,7 @@ ts_library(
         "//ng-dev/ts-circular-dependencies",
         "//ng-dev/utils",
         "@npm//@types/yargs",
+        "@npm//yaml",
         "@npm//yargs",
     ],
 )
