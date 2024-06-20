@@ -429,7 +429,7 @@ __metadata:
     "@octokit/plugin-paginate-rest": "npm:11.3.0"
     "@octokit/plugin-rest-endpoint-methods": "npm:13.2.1"
     "@octokit/request-error": "npm:6.1.1"
-    "@octokit/rest": "npm:20.1.1"
+    "@octokit/rest": "npm:21.0.0"
     "@octokit/types": "npm:13.5.0"
     "@octokit/webhooks-definitions": "npm:3.67.3"
     "@octokit/webhooks-types": "npm:7.5.1"
@@ -4043,7 +4043,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/core@npm:6.1.2":
+"@octokit/core@npm:6.1.2, @octokit/core@npm:^6.1.2":
   version: 6.1.2
   resolution: "@octokit/core@npm:6.1.2"
   dependencies:
@@ -4058,7 +4058,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/core@npm:^5.0.1, @octokit/core@npm:^5.0.2":
+"@octokit/core@npm:^5.0.1":
   version: 5.2.0
   resolution: "@octokit/core@npm:5.2.0"
   dependencies:
@@ -4179,7 +4179,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/plugin-paginate-rest@npm:11.3.1":
+"@octokit/plugin-paginate-rest@npm:^11.0.0":
   version: 11.3.1
   resolution: "@octokit/plugin-paginate-rest@npm:11.3.1"
   dependencies:
@@ -4201,12 +4201,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/plugin-request-log@npm:^4.0.0":
-  version: 4.0.1
-  resolution: "@octokit/plugin-request-log@npm:4.0.1"
+"@octokit/plugin-request-log@npm:^5.1.0":
+  version: 5.3.0
+  resolution: "@octokit/plugin-request-log@npm:5.3.0"
   peerDependencies:
-    "@octokit/core": 5
-  checksum: 10c0/6f556f86258c5fbff9b1821075dc91137b7499f2ad0fd12391f0876064a6daa88abe1748336b2d483516505771d358aa15cb4bcdabc348a79e3d951fe9726798
+    "@octokit/core": ">=6"
+  checksum: 10c0/a20876ea9f58f2e5a58a0c0f95492d8021599c843de44f5754e8006212a97cdf502712ffd6c38d165a74e2eeb4b1f6361d4a0171faed34ed445d63b48830038c
   languageName: node
   linkType: hard
 
@@ -4221,17 +4221,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/plugin-rest-endpoint-methods@npm:13.2.2":
-  version: 13.2.2
-  resolution: "@octokit/plugin-rest-endpoint-methods@npm:13.2.2"
-  dependencies:
-    "@octokit/types": "npm:^13.5.0"
-  peerDependencies:
-    "@octokit/core": ^5
-  checksum: 10c0/0f2b14b7a185b49908bcc01bcae9849aae2da46c88f500c143d230caa3cd35540839b916e88a4642c60a5499d33e7a37faf1aa42c5bab270cefc10f5d6202893
-  languageName: node
-  linkType: hard
-
 "@octokit/plugin-rest-endpoint-methods@npm:^10.0.0":
   version: 10.4.1
   resolution: "@octokit/plugin-rest-endpoint-methods@npm:10.4.1"
@@ -4240,6 +4229,17 @@ __metadata:
   peerDependencies:
     "@octokit/core": 5
   checksum: 10c0/4b8f64c0f7fa12464546ad312a5289c2a799967e01e90e2c4923ec6e9604cf212dcb50d9795c9a688867f973c9c529c5950368564c560406c652bcd298f090af
+  languageName: node
+  linkType: hard
+
+"@octokit/plugin-rest-endpoint-methods@npm:^13.0.0":
+  version: 13.2.2
+  resolution: "@octokit/plugin-rest-endpoint-methods@npm:13.2.2"
+  dependencies:
+    "@octokit/types": "npm:^13.5.0"
+  peerDependencies:
+    "@octokit/core": ^5
+  checksum: 10c0/0f2b14b7a185b49908bcc01bcae9849aae2da46c88f500c143d230caa3cd35540839b916e88a4642c60a5499d33e7a37faf1aa42c5bab270cefc10f5d6202893
   languageName: node
   linkType: hard
 
@@ -4287,15 +4287,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/rest@npm:20.1.1":
-  version: 20.1.1
-  resolution: "@octokit/rest@npm:20.1.1"
+"@octokit/rest@npm:21.0.0":
+  version: 21.0.0
+  resolution: "@octokit/rest@npm:21.0.0"
   dependencies:
-    "@octokit/core": "npm:^5.0.2"
-    "@octokit/plugin-paginate-rest": "npm:11.3.1"
-    "@octokit/plugin-request-log": "npm:^4.0.0"
-    "@octokit/plugin-rest-endpoint-methods": "npm:13.2.2"
-  checksum: 10c0/9b62e0372381b548806edbd9e32059ebaec315ddf90e9c3df7e0f2bfab2fc938ca5c3b939035e082e245315b2359947f52f853027a8ca2510fddb79ff5cc9e8a
+    "@octokit/core": "npm:^6.1.2"
+    "@octokit/plugin-paginate-rest": "npm:^11.0.0"
+    "@octokit/plugin-request-log": "npm:^5.1.0"
+    "@octokit/plugin-rest-endpoint-methods": "npm:^13.0.0"
+  checksum: 10c0/05f32338479abaae26c5e5418b2667710830e664edafb0c735740ad1ae5dc25e7c0ea9ef9b7f96d00b81c70c78bbf6e86b9048617a8e9c8f02b4f890dc4bc51a
   languageName: node
   linkType: hard
 

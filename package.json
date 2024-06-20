@@ -103,7 +103,7 @@
     "@octokit/plugin-paginate-rest": "11.3.0",
     "@octokit/plugin-rest-endpoint-methods": "13.2.1",
     "@octokit/request-error": "6.1.1",
-    "@octokit/rest": "20.1.1",
+    "@octokit/rest": "21.0.0",
     "@octokit/types": "13.5.0",
     "@octokit/webhooks-definitions": "3.67.3",
     "@octokit/webhooks-types": "7.5.1",
