@@ -64,7 +64,6 @@ export abstract class ExternalCommands {
         yarnCommand.binary,
         [
           ...yarnCommand.args,
-          '--silent',
           'ng-dev',
           'release',
           'set-dist-tag',
@@ -97,15 +96,7 @@ export abstract class ExternalCommands {
       // TODO: detect yarn berry and handle flag differences properly.
       await ChildProcess.spawn(
         yarnCommand.binary,
-        [
-          ...yarnCommand.args,
-          '--silent',
-          'ng-dev',
-          'release',
-          'npm-dist-tag',
-          'delete',
-          npmDistTag,
-        ],
+        [...yarnCommand.args, 'ng-dev', 'release', 'npm-dist-tag', 'delete', npmDistTag],
         {cwd: projectDir},
       );
       Log.info(green(`  ✓   Deleted "${npmDistTag}" NPM dist tag for all packages.`));
@@ -135,7 +126,7 @@ export abstract class ExternalCommands {
       // TODO: detect yarn berry and handle flag differences properly.
       const {stdout} = await ChildProcess.spawn(
         yarnCommand.binary,
-        [...yarnCommand.args, '--silent', 'ng-dev', 'release', 'build', '--json'],
+        [...yarnCommand.args, 'ng-dev', 'release', 'build', '--json'],
         {
           cwd: projectDir,
           mode: 'silent',
@@ -172,7 +163,7 @@ export abstract class ExternalCommands {
       // TODO: detect yarn berry and handle flag differences properly.
       const {stdout} = await ChildProcess.spawn(
         yarnCommand.binary,
-        [...yarnCommand.args, '--silent', 'ng-dev', 'release', 'info', '--json'],
+        [...yarnCommand.args, 'ng-dev', 'release', 'info', '--json'],
         {
           cwd: projectDir,
           mode: 'silent',
@@ -218,7 +209,7 @@ export abstract class ExternalCommands {
       // TODO: detect yarn berry and handle flag differences properly.
       await ChildProcess.spawn(
         yarnCommand.binary,
-        [...yarnCommand.args, '--silent', 'ng-dev', 'release', 'precheck'],
+        [...yarnCommand.args, 'ng-dev', 'release', 'precheck'],
         {
           cwd: projectDir,
           // Note: We pass the precheck information to the command through `stdin`
@@ -251,8 +242,11 @@ export abstract class ExternalCommands {
       // TODO: Consider using an Ora spinner instead to ensure minimal console output.
       await ChildProcess.spawn(
         yarnCommand.binary,
-        // TODO: detect yarn berry and handle flag differences properly.
-        [...yarnCommand.args, 'install', '--frozen-lockfile', '--non-interactive'],
+        [
+          ...yarnCommand.args,
+          'install',
+          ...(yarnCommand.legacy ? ['--frozen-lockfile', '--non-interactive'] : ['--immutable']),
+        ],
         {cwd: projectDir},
       );
       Log.info(green('  ✓   Installed project dependencies.'));
