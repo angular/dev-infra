@@ -6,8 +6,8 @@
     "prepare": "husky install",
     "ng-dev": "bash ./tools/local-dev.sh",
     "lint": "yarn tslint -c tslint.json --project tsconfig.json",
-    "build-env-stamp": "ts-node --transpile-only --esm --project tsconfig.json ./ng-dev/release/stamping/_private_main.ts build-env-stamp",
-    "update-generated-files": "ts-node --transpile-only --esm --project tsconfig.json ./tools/update-generated-files.ts",
+    "build-env-stamp": "tsx --tsconfig tsconfig.json ./ng-dev/release/stamping/_private_main.ts build-env-stamp",
+    "update-generated-files": "tsx --tsconfig tsconfig.json ./tools/update-generated-files.ts",
     "pack": "bazel run //:npm_package.pack --config=release"
   },
   "exports": {
@@ -54,6 +54,7 @@
     "tmp": "^0.2.1",
     "true-case-path": "^2.2.1",
     "tslib": "^2.5.2",
+    "tsx": "^4.15.7",
     "typescript": "5.4.5",
     "uuid": "^10.0.0",
     "yargs": "^17.0.0"
@@ -181,7 +182,7 @@
     "stylelint": "^16.0.0",
     "supports-color": "9.4.0",
     "terser": "5.31.1",
-    "ts-node": "^10.8.1",
+    "ts-node": "^10.9.2",
     "tslint": "^6.1.3",
     "typed-graphqlify": "^3.1.1",
     "wait-on": "^7.0.0",
