@@ -55,7 +55,7 @@
     "true-case-path": "^2.2.1",
     "tslib": "^2.5.2",
     "tsx": "^4.15.7",
-    "typescript": "5.4.5",
+    "typescript": "5.5.2",
     "uuid": "^10.0.0",
     "yargs": "^17.0.0"
   },
@@ -144,7 +144,7 @@
     "emoji-regex": "^10.3.0",
     "fast-glob": "^3.3.2",
     "firebase": "10.12.2",
-    "firebase-admin": "12.1.1",
+    "firebase-admin": "12.2.0",
     "firebase-functions": "^5.0.0",
     "firebase-tools": "^13.0.0",
     "folder-hash": "^4.0.2",

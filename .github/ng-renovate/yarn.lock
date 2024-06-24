@@ -2723,15 +2723,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/core@npm:4.0.5":
-  version: 4.0.5
-  resolution: "@yarnpkg/core@npm:4.0.5"
+"@yarnpkg/core@npm:4.1.0":
+  version: 4.1.0
+  resolution: "@yarnpkg/core@npm:4.1.0"
   dependencies:
     "@arcanis/slice-ansi": "npm:^1.1.1"
     "@types/semver": "npm:^7.1.0"
     "@types/treeify": "npm:^1.0.0"
-    "@yarnpkg/fslib": "npm:^3.0.2"
-    "@yarnpkg/libzip": "npm:^3.0.1"
+    "@yarnpkg/fslib": "npm:^3.1.0"
+    "@yarnpkg/libzip": "npm:^3.1.0"
     "@yarnpkg/parsers": "npm:^3.0.2"
     "@yarnpkg/shell": "npm:^4.0.2"
     camelcase: "npm:^5.3.1"
@@ -2753,7 +2753,7 @@ __metadata:
     treeify: "npm:^1.1.0"
     tslib: "npm:^2.4.0"
     tunnel: "npm:^0.0.6"
-  checksum: 10c0/c72836619f59a4ab1c6da4fd1ab793d2f491b6815c88a6019fa6c1c9c4391e7bbd112f3a2474ae8ae5da2a7cb895173abff37dc6fdfb5799bb2fbedc445adb58
+  checksum: 10c0/0c56484c162a33e98db67528864917d8b03529af8a3abc70b33e21841573e8747dd0c779517b0bc09b7f049857daaaabe3e5fece197554fdf1d4c21c60828f3d
   languageName: node
   linkType: hard
 
@@ -2766,7 +2766,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/libzip@npm:^3.0.1":
+"@yarnpkg/libzip@npm:^3.1.0":
   version: 3.1.0
   resolution: "@yarnpkg/libzip@npm:3.1.0"
   dependencies:
@@ -4463,9 +4463,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"google-auth-library@npm:9.10.0":
-  version: 9.10.0
-  resolution: "google-auth-library@npm:9.10.0"
+"google-auth-library@npm:9.11.0":
+  version: 9.11.0
+  resolution: "google-auth-library@npm:9.11.0"
   dependencies:
     base64-js: "npm:^1.3.0"
     ecdsa-sig-formatter: "npm:^1.0.11"
@@ -4473,7 +4473,7 @@ __metadata:
     gcp-metadata: "npm:^6.1.0"
     gtoken: "npm:^7.0.0"
     jws: "npm:^4.0.0"
-  checksum: 10c0/21acad6dc712a0a935c3608b92d9aab80b05f1d4e0be5fb7efe5b2069a6453f2cee12867b5fb0a724c01a167ed3f5e4280e30740d2c1bff86f153b187205d4ed
+  checksum: 10c0/0cbaf72d6f4acc891e0fee26864c625b770d6a375a391d147fee0f9fc9e7df331b6915a78260a17ea12da8a72662203e2e4609077fe90ad50a531fc60684cd11
   languageName: node
   linkType: hard
 
@@ -5938,7 +5938,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nan@npm:^2.14.0, nan@npm:^2.19.0":
+"nan@npm:^2.14.0, nan@npm:^2.20.0":
   version: 2.20.0
   resolution: "nan@npm:2.20.0"
   dependencies:
@@ -5990,7 +5990,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: "npm:37.410.1"
+    renovate: "npm:37.415.0"
   languageName: unknown
   linkType: soft
 
@@ -6427,12 +6427,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:3.3.1":
-  version: 3.3.1
-  resolution: "prettier@npm:3.3.1"
+"prettier@npm:3.3.2":
+  version: 3.3.2
+  resolution: "prettier@npm:3.3.2"
   bin:
     prettier: bin/prettier.cjs
-  checksum: 10c0/c25a709c9f0be670dc6bcb190b622347e1dbeb6c3e7df8b0711724cb64d8647c60b839937a4df4df18e9cfb556c2b08ca9d24d9645eb5488a7fc032a2c4d5cb3
+  checksum: 10c0/39ed27d17f0238da6dd6571d63026566bd790d3d0edac57c285fbab525982060c8f1e01955fe38134ab10f0951a6076da37f015db8173c02f14bc7f0803a384c
   languageName: node
   linkType: hard
 
@@ -6569,14 +6569,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"re2@npm:1.20.12":
-  version: 1.20.12
-  resolution: "re2@npm:1.20.12"
+"re2@npm:1.21.3":
+  version: 1.21.3
+  resolution: "re2@npm:1.21.3"
   dependencies:
     install-artifact-from-github: "npm:^1.3.5"
-    nan: "npm:^2.19.0"
+    nan: "npm:^2.20.0"
     node-gyp: "npm:^10.1.0"
-  checksum: 10c0/6f5394eb4282a8b143708d8c49a2d4e7aad4d49e906b6b3c40aef9571dd6f6c5df71dcabe7f53839ef35ad0428aed4f985e2066b8b2a1e735bfd9db5e5a6093f
+  checksum: 10c0/e3c6c51524de93aac07bd24d7b8fa77663b02474f686cb5c035327d3126a7c4cf2214f792399270d1761f1b53f3aac84b7d3289fe49adfc32643c4f5d67234d6
   languageName: node
   linkType: hard
 
@@ -6722,9 +6722,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:37.410.1":
-  version: 37.410.1
-  resolution: "renovate@npm:37.410.1"
+"renovate@npm:37.415.0":
+  version: 37.415.0
+  resolution: "renovate@npm:37.415.0"
   dependencies:
     "@aws-sdk/client-codecommit": "npm:3.588.0"
     "@aws-sdk/client-ec2": "npm:3.588.0"
@@ -6750,7 +6750,7 @@ __metadata:
     "@renovatebot/pep440": "npm:3.0.20"
     "@renovatebot/ruby-semver": "npm:3.0.23"
     "@sindresorhus/is": "npm:4.6.0"
-    "@yarnpkg/core": "npm:4.0.5"
+    "@yarnpkg/core": "npm:4.1.0"
     "@yarnpkg/parsers": "npm:3.0.2"
     agentkeepalive: "npm:4.5.0"
     aggregate-error: "npm:3.1.0"
@@ -6785,7 +6785,7 @@ __metadata:
     glob: "npm:10.4.1"
     global-agent: "npm:3.0.0"
     good-enough-parser: "npm:1.1.23"
-    google-auth-library: "npm:9.10.0"
+    google-auth-library: "npm:9.11.0"
     got: "npm:11.8.6"
     graph-data-structure: "npm:3.5.0"
     handlebars: "npm:4.7.8"
@@ -6813,8 +6813,8 @@ __metadata:
     p-queue: "npm:6.6.2"
     p-throttle: "npm:4.1.1"
     parse-link-header: "npm:2.0.0"
-    prettier: "npm:3.3.1"
-    re2: "npm:1.20.12"
+    prettier: "npm:3.3.2"
+    re2: "npm:1.21.3"
     redis: "npm:4.6.14"
     remark: "npm:13.0.0"
     remark-github: "npm:10.1.0"
@@ -6845,7 +6845,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 10c0/e4e0f844034a1454980928af32dbf9c074ef254a6ec34af2f0bfb8d0fea2e995b565d9687e36809d5c4d6f0a8b63e0984495b6fa5ce4d93421555e344847ec9e
+  checksum: 10c0/377b699ee9de58dd96f86991ef528e31115836afcc5a5ce04c1432f667ac5e5716c9eae30a8974d25e978c7fd201ca1971a13eaeded5ec228b6ececb8736aa33
   languageName: node
   linkType: hard
 
