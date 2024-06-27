@@ -25,8 +25,10 @@ async function generateTutorialFiles(tutorialDir: string, commonDir: string, out
   const files: FileAndContentRecord = {};
   /** List of configs for each step in the tutorial. */
   const stepConfigs = await findAllConfigs(join(tutorialDir, 'steps'));
+  /** Directory of the intro. */
+  const introDir = join(tutorialDir, 'intro');
   /** The configuration for the intro (landing page) of the tutorial. */
-  const introConfig = await findConfig(join(tutorialDir, 'intro'));
+  const introConfig = await findConfig(introDir);
   /** The name of the tutorial, as determined by the tutorial directory name. */
   const tutorialName = basename(tutorialDir);
 
@@ -41,14 +43,14 @@ async function generateTutorialFiles(tutorialDir: string, commonDir: string, out
 
   /** Duplication of the common shared files to add the tutorial intro files in. */
   const introFiles = {...files};
-  await addDirectoryToFilesRecord(introFiles, join(tutorialDir, 'intro'));
+  await addDirectoryToFilesRecord(introFiles, introDir);
 
   // Ensure the directory for the tutorial exists, then write the metadata and source-code
   // files for the intro.
   mkdirSync(join(outputDir), {recursive: true});
   writeFileSync(
     join(outputDir, 'metadata.json'),
-    JSON.stringify(await generateMetadata(introConfig, introFiles)),
+    JSON.stringify(await generateMetadata(introDir, introConfig, introFiles)),
   );
   writeFileSync(
     join(outputDir, 'source-code.json'),
@@ -59,15 +61,17 @@ async function generateTutorialFiles(tutorialDir: string, commonDir: string, out
   for (const [path, config] of Object.entries(stepConfigs)) {
     /** Duplication of the common shared files to add the tutorial step files in. */
     const itemFiles = {...files};
+    /** Directory of the current step. */
+    const stepDir = join(tutorialDir, 'steps', path);
 
-    await addDirectoryToFilesRecord(itemFiles, join(tutorialDir, 'steps', path));
+    await addDirectoryToFilesRecord(itemFiles, stepDir);
 
     // Ensure the directory for the tutorial step exists, then write the metadata
     // and source-code files.
     mkdirSync(join(outputDir, path), {recursive: true});
     writeFileSync(
       join(outputDir, path, 'metadata.json'),
-      JSON.stringify(await generateMetadata(config, itemFiles)),
+      JSON.stringify(await generateMetadata(stepDir, config, itemFiles)),
     );
     writeFileSync(
       join(outputDir, path, 'source-code.json'),
