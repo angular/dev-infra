@@ -18,8 +18,8 @@ const SIGNATURES = [jpgSignature, gifSignature, pngSignature];
 /**
  * Get the contents for the provided file, returning a string or Buffer as appropriate.
  */
-export function getFileContents<T extends string | Buffer>(path: string): T;
-export function getFileContents(path: string): string | Buffer {
+export function getFileContents<T extends string | Uint8Array>(path: string): T;
+export function getFileContents(path: string): string | Uint8Array {
   const fileBuffer = readFileSync(path);
 
   if (checkBufferMatchForSignatures(fileBuffer)) {
@@ -32,7 +32,7 @@ export function getFileContents(path: string): string | Buffer {
 /**
  * Determine if the initial bytes of a buffer matches the expected bytes.
  */
-function checkBufferMatchForSignatures(buffer: Buffer): boolean {
+function checkBufferMatchForSignatures(buffer: Uint8Array): boolean {
   for (const initialByes of SIGNATURES) {
     for (const [index, byte] of initialByes.entries()) {
       if (buffer[index] !== byte) return false;
