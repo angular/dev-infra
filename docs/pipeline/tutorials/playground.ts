@@ -43,15 +43,17 @@ async function generatePlaygroundFiles(
   for (const [path, config] of Object.entries(configs)) {
     /** Duplication of the common shared files to add the playground entry files in. */
     const itemFiles = {...files};
+    /** Directory of the current config. */
+    const configDir = join(playgroundDir, path);
 
-    await addDirectoryToFilesRecord(itemFiles, join(playgroundDir, path));
+    await addDirectoryToFilesRecord(itemFiles, configDir);
 
     // Ensure the directory for the playground entry exists, then write the metadata
     // and source-code files.
     mkdirSync(join(outputDir, path), {recursive: true});
     writeFileSync(
       join(outputDir, path, 'metadata.json'),
-      JSON.stringify(await generateMetadata(config, itemFiles)),
+      JSON.stringify(await generateMetadata(configDir, config, itemFiles)),
     );
     writeFileSync(
       join(outputDir, path, 'source-code.json'),
