@@ -22,7 +22,7 @@ export type TutorialNavigationItemWithStep = TutorialNavigationItem & {
 export type TutorialFiles = {
   sourceCode?: FileSystemTree;
   metadata?: TutorialMetadata;
-  sourceCodeZip?: Buffer;
+  sourceCodeZip?: Uint8Array;
   route?: Omit<TutorialNavigationItemWithStep, 'path'>;
 };
 
@@ -119,7 +119,7 @@ export type EditorOnlyTutorialConfig = Omit<EditorTutorialConfig, 'type'> & {
 
 export type FileAndContent = {
   path: string;
-  content: string | Buffer;
+  content: string | Uint8Array;
 };
 
 export type FileAndContentRecord = Record<FileAndContent['path'], FileAndContent['content']>;
