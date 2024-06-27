@@ -25,7 +25,9 @@ export async function generateMetadata(
     allFiles: Object.keys(files),
     tutorialFiles,
     answerFiles: await getAnswerFiles(path, config, files),
-    hiddenFiles: [],
+    hiddenFiles: config.openFiles
+      ? Object.keys(tutorialFiles).filter((filename) => !config.openFiles!.includes(filename))
+      : [],
     dependencies: {
       ...dependencies,
       ...devDependencies,
