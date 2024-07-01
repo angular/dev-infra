@@ -27728,6 +27728,7 @@ var LRUCache = class {
   #dispose;
   #disposeAfter;
   #fetchMethod;
+  #memoMethod;
   ttl;
   ttlResolution;
   ttlAutopurge;
@@ -27800,6 +27801,9 @@ var LRUCache = class {
   get fetchMethod() {
     return this.#fetchMethod;
   }
+  get memoMethod() {
+    return this.#memoMethod;
+  }
   get dispose() {
     return this.#dispose;
   }
@@ -27807,7 +27811,7 @@ var LRUCache = class {
     return this.#disposeAfter;
   }
   constructor(options) {
-    const { max = 0, ttl, ttlResolution = 1, ttlAutopurge, updateAgeOnGet, updateAgeOnHas, allowStale, dispose, disposeAfter, noDisposeOnSet, noUpdateTTL, maxSize = 0, maxEntrySize = 0, sizeCalculation, fetchMethod, noDeleteOnFetchRejection, noDeleteOnStaleGet, allowStaleOnFetchRejection, allowStaleOnFetchAbort, ignoreFetchAbort } = options;
+    const { max = 0, ttl, ttlResolution = 1, ttlAutopurge, updateAgeOnGet, updateAgeOnHas, allowStale, dispose, disposeAfter, noDisposeOnSet, noUpdateTTL, maxSize = 0, maxEntrySize = 0, sizeCalculation, fetchMethod, memoMethod, noDeleteOnFetchRejection, noDeleteOnStaleGet, allowStaleOnFetchRejection, allowStaleOnFetchAbort, ignoreFetchAbort } = options;
     if (max !== 0 && !isPosInt(max)) {
       throw new TypeError("max option must be a nonnegative integer");
     }
@@ -27827,6 +27831,10 @@ var LRUCache = class {
         throw new TypeError("sizeCalculation set to non-function");
       }
     }
+    if (memoMethod !== void 0 && typeof memoMethod !== "function") {
+      throw new TypeError("memoMethod must be a function if defined");
+    }
+    this.#memoMethod = memoMethod;
     if (fetchMethod !== void 0 && typeof fetchMethod !== "function") {
       throw new TypeError("fetchMethod must be a function if specified");
     }
@@ -27910,7 +27918,7 @@ var LRUCache = class {
       if (ttl !== 0 && this.ttlAutopurge) {
         const t = setTimeout(() => {
           if (this.#isStale(index)) {
-            this.delete(this.#keyList[index]);
+            this.#delete(this.#keyList[index], "expire");
           }
         }, ttl + 1);
         if (t.unref) {
@@ -28144,7 +28152,7 @@ var LRUCache = class {
     let deleted = false;
     for (const i of this.#rindexes({ allowStale: true })) {
       if (this.#isStale(i)) {
-        this.delete(this.#keyList[i]);
+        this.#delete(this.#keyList[i], "expire");
         deleted = true;
       }
     }
@@ -28218,7 +28226,7 @@ var LRUCache = class {
         status.set = "miss";
         status.maxEntrySizeExceeded = true;
       }
-      this.delete(k);
+      this.#delete(k, "set");
       return this;
     }
     let index = this.#size === 0 ? void 0 : this.#keyMap.get(k);
@@ -28417,7 +28425,7 @@ var LRUCache = class {
           if (bf2.__staleWhileFetching) {
             this.#valList[index] = bf2.__staleWhileFetching;
           } else {
-            this.delete(k);
+            this.#delete(k, "fetch");
           }
         } else {
           if (options.status)
@@ -28443,7 +28451,7 @@ var LRUCache = class {
       if (this.#valList[index] === p) {
         const del = !noDelete || bf2.__staleWhileFetching === void 0;
         if (del) {
-          this.delete(k);
+          this.#delete(k, "fetch");
         } else if (!allowStaleAborted) {
           this.#valList[index] = bf2.__staleWhileFetching;
         }
@@ -28579,6 +28587,28 @@ var LRUCache = class {
       return staleVal ? p.__staleWhileFetching : p.__returned = p;
     }
   }
+  async forceFetch(k, fetchOptions = {}) {
+    const v = await this.fetch(k, fetchOptions);
+    if (v === void 0)
+      throw new Error("fetch() returned undefined");
+    return v;
+  }
+  memo(k, memoOptions = {}) {
+    const memoMethod = this.#memoMethod;
+    if (!memoMethod) {
+      throw new Error("no memoMethod provided to constructor");
+    }
+    const { context: context3, forceRefresh, ...options } = memoOptions;
+    const v = this.get(k, options);
+    if (!forceRefresh && v !== void 0)
+      return v;
+    const vv = memoMethod(k, v, {
+      options,
+      context: context3
+    });
+    this.set(k, vv, options);
+    return vv;
+  }
   get(k, getOptions = {}) {
     const { allowStale = this.allowStale, updateAgeOnGet = this.updateAgeOnGet, noDeleteOnStaleGet = this.noDeleteOnStaleGet, status } = getOptions;
     const index = this.#keyMap.get(k);
@@ -28592,7 +28622,7 @@ var LRUCache = class {
           status.get = "stale";
         if (!fetching) {
           if (!noDeleteOnStaleGet) {
-            this.delete(k);
+            this.#delete(k, "expire");
           }
           if (status && allowStale)
             status.returnedStale = true;
@@ -28635,6 +28665,9 @@ var LRUCache = class {
     }
   }
   delete(k) {
+    return this.#delete(k, "delete");
+  }
+  #delete(k, reason) {
     var _a3, _b, _c, _d;
     let deleted = false;
     if (this.#size !== 0) {
@@ -28642,7 +28675,7 @@ var LRUCache = class {
       if (index !== void 0) {
         deleted = true;
         if (this.#size === 1) {
-          this.clear();
+          this.#clear(reason);
         } else {
           this.#removeItemSize(index);
           const v = this.#valList[index];
@@ -28650,10 +28683,10 @@ var LRUCache = class {
             v.__abortController.abort(new Error("deleted"));
           } else if (this.#hasDispose || this.#hasDisposeAfter) {
             if (this.#hasDispose) {
-              (_a3 = this.#dispose) == null ? void 0 : _a3.call(this, v, k, "delete");
+              (_a3 = this.#dispose) == null ? void 0 : _a3.call(this, v, k, reason);
             }
             if (this.#hasDisposeAfter) {
-              (_b = this.#disposed) == null ? void 0 : _b.push([v, k, "delete"]);
+              (_b = this.#disposed) == null ? void 0 : _b.push([v, k, reason]);
             }
           }
           this.#keyMap.delete(k);
@@ -28684,6 +28717,9 @@ var LRUCache = class {
     return deleted;
   }
   clear() {
+    return this.#clear("delete");
+  }
+  #clear(reason) {
     var _a3, _b, _c;
     for (const index of this.#rindexes({ allowStale: true })) {
       const v = this.#valList[index];
@@ -28692,10 +28728,10 @@ var LRUCache = class {
       } else {
         const k = this.#keyList[index];
         if (this.#hasDispose) {
-          (_a3 = this.#dispose) == null ? void 0 : _a3.call(this, v, k, "delete");
+          (_a3 = this.#dispose) == null ? void 0 : _a3.call(this, v, k, reason);
         }
         if (this.#hasDisposeAfter) {
-          (_b = this.#disposed) == null ? void 0 : _b.push([v, k, "delete"]);
+          (_b = this.#disposed) == null ? void 0 : _b.push([v, k, reason]);
         }
       }
     }
