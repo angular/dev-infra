@@ -55,7 +55,7 @@
     "true-case-path": "^2.2.1",
     "tslib": "^2.5.2",
     "tsx": "^4.15.7",
-    "typescript": "5.5.2",
+    "typescript": "5.5.3",
     "uuid": "^10.0.0",
     "yargs": "^17.0.0"
   },
@@ -152,7 +152,7 @@
     "gcip-cloud-functions": "0.2.0",
     "git-raw-commits": "^4.0.0",
     "husky": "^9.0.0",
-    "inquirer": "9.2.23",
+    "inquirer": "9.3.2",
     "jasmine": "~5.1.0",
     "jasmine-core": "~5.1.0",
     "jsdom": "^24.0.0",
