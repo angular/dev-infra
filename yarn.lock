@@ -426,8 +426,8 @@ __metadata:
     "@octokit/graphql": "npm:8.1.1"
     "@octokit/graphql-schema": "patch:@octokit/graphql-schema@npm%3A15.3.0#~/.yarn/patches/@octokit-graphql-schema-npm-15.3.0-4046a59648.patch"
     "@octokit/openapi-types": "npm:22.2.0"
-    "@octokit/plugin-paginate-rest": "npm:11.3.0"
-    "@octokit/plugin-rest-endpoint-methods": "npm:13.2.1"
+    "@octokit/plugin-paginate-rest": "npm:11.3.3"
+    "@octokit/plugin-rest-endpoint-methods": "npm:13.2.4"
     "@octokit/request-error": "npm:6.1.1"
     "@octokit/rest": "npm:21.0.0"
     "@octokit/types": "npm:13.5.0"
@@ -4009,14 +4009,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/plugin-paginate-rest@npm:11.3.0":
-  version: 11.3.0
-  resolution: "@octokit/plugin-paginate-rest@npm:11.3.0"
+"@octokit/plugin-paginate-rest@npm:11.3.3":
+  version: 11.3.3
+  resolution: "@octokit/plugin-paginate-rest@npm:11.3.3"
   dependencies:
     "@octokit/types": "npm:^13.5.0"
   peerDependencies:
     "@octokit/core": ">=6"
-  checksum: 10c0/fbaf656c0cb0eebacad7e0312b9262a669f1f4fac9b034b53b11d7111c16fd451814fe55bae7fa4a9151cf6cbb35854ea5a0b75f31bfb8af5fe12ff0ed8d9ba8
+  checksum: 10c0/f1fd41e0ae47d6813d283e0e4ab89f4a9d55dbc8ec1a44b5bb00355007e5260db124a10f94b34a86b0305a1adda61c35cd57c0914c7c093c05f93199be87459e
   languageName: node
   linkType: hard
 
@@ -4051,14 +4051,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/plugin-rest-endpoint-methods@npm:13.2.1":
-  version: 13.2.1
-  resolution: "@octokit/plugin-rest-endpoint-methods@npm:13.2.1"
+"@octokit/plugin-rest-endpoint-methods@npm:13.2.4":
+  version: 13.2.4
+  resolution: "@octokit/plugin-rest-endpoint-methods@npm:13.2.4"
   dependencies:
     "@octokit/types": "npm:^13.5.0"
   peerDependencies:
     "@octokit/core": ">=6"
-  checksum: 10c0/95148cb7512c9c59fcffbf31f9b89852d946abb7c1c5499023f3c52fb2a071a97ab04c2140701957ab6ce39360cf0c4d2d8a3aded6869b0e686d9ce0ac031534
+  checksum: 10c0/7a63b37bb1eb9972e3cc2cf6e6b53ad5c14152767420a7f9ec4ccf2557b411fd0df442cf98866fa09ebbd39f1e69b688730feaf3cfd4056713e73a33c40ed04f
   languageName: node
   linkType: hard
 
