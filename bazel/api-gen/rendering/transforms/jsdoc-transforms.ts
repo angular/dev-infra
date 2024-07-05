@@ -192,7 +192,14 @@ function convertJsDocExampleToHtmlExample(text: string): string {
 }
 
 function convertLinks(text: string, entry: HasModuleName) {
-  return text.replace(jsDoclinkRegex, (_, symbol) => {
-    return `<a href="${getLinkToModule(entry.moduleName)}/${symbol}"><code>${symbol}</code></a>`;
+  return text.replace(jsDoclinkRegex, (_, link) => {
+    const [symbol, description] = link.split(/\s(.+)/);
+    if (symbol && description) {
+      // {@link Route Some route with description}
+      return `<a href="${getLinkToModule(entry.moduleName)}/${symbol}"><code>${description}</code></a>`;
+    } else {
+      // {@link Route}
+      return `<a href="${getLinkToModule(entry.moduleName)}/${symbol}"><code>${symbol}</code></a>`;
+    }
   });
 }
