@@ -15,11 +15,11 @@ export function DocsPillRow(props: {links: LinkEntryRenderable[]}) {
 
   return (
     <nav class="docs-pill-row">
-      {
-        props.links.map((link) => (<a class="docs-pill" href={link.url}>
+      {props.links.map((link) => (
+        <a class="docs-pill" href={link.url} title={link.title}>
           {link.label}
-        </a>))
-      }
+        </a>
+      ))}
     </nav>
   );
 }

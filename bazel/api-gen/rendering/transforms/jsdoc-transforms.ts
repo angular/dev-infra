@@ -129,7 +129,7 @@ export function setEntryFlags<T extends HasJsDocTags & HasModuleName>(
 function getHtmlAdditionalLinks<T extends HasJsDocTags & HasModuleName>(
   entry: T,
 ): LinkEntryRenderable[] {
-  const markdownLinkRule = /\[([^\]]+)\]\(([^)]+)\)/;
+  const markdownLinkRule = /\[(.*?)\]\((.*?)(?: "(.*?)")?\)/;
 
   const seeAlsoLinks = entry.jsdocTags
     .filter((tag) => tag.name === JS_DOC_SEE_TAG)
@@ -141,6 +141,7 @@ function getHtmlAdditionalLinks<T extends HasJsDocTags & HasModuleName>(
         return {
           label: markdownLinkMatch[1],
           url: markdownLinkMatch[2],
+          title: markdownLinkMatch[3],
         };
       }
 
