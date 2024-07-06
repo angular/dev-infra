@@ -106,6 +106,7 @@ export interface CodeLineRenderable {
 export interface LinkEntryRenderable {
   label: string;
   url: string;
+  title?: string;
 }
 
 export type CliOptionRenderable = CliOption & {
