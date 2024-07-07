@@ -235,10 +235,12 @@ export class MergeTool {
       activeBranches.splice(1, 0, releaseCandidate);
     }
 
-    const {selectedBranches, confirm} = await inquirer.prompt([
+    const {selectedBranches, confirm} = await inquirer.prompt<{
+      selectedBranches: string[];
+      confirm: boolean;
+    }>([
       {
         type: 'checkbox',
-        default: pullRequest.targetBranches,
         choices: activeBranches.map(({branchName, version}) => {
           return {
             checked: pullRequest.targetBranches.includes(branchName),

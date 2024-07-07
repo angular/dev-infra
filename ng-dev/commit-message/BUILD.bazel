@@ -14,7 +14,6 @@ ts_library(
         "//ng-dev/utils",
         "@npm//@types/conventional-commits-parser",
         "@npm//@types/git-raw-commits",
-        "@npm//@types/inquirer",
         "@npm//@types/node",
         "@npm//@types/yargs",
         "@npm//conventional-commits-parser",

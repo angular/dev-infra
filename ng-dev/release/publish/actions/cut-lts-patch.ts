@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import inquirer, {ListChoiceOptions} from 'inquirer';
+import inquirer from 'inquirer';
 
 import {semverInc} from '../../../utils/semver.js';
 import {ActiveReleaseTrains} from '../../versioning/active-release-trains.js';
@@ -88,7 +88,7 @@ export class CutLongTermSupportPatchAction extends ReleaseAction {
   }
 
   /** Gets an inquirer choice for the given LTS branch. */
-  private _getChoiceForLtsBranch(branch: LtsBranch): ListChoiceOptions {
+  private _getChoiceForLtsBranch(branch: LtsBranch): {name: string; value: LtsBranch | null} {
     return {name: `v${branch.version.major} (from ${branch.name})`, value: branch};
   }
 

@@ -24,11 +24,11 @@ ts_library(
         "//ng-dev/utils",
         "@npm//@octokit/plugin-rest-endpoint-methods",
         "@npm//@octokit/rest",
-        "@npm//@types/inquirer",
         "@npm//@types/node",
         "@npm//@types/semver",
         "@npm//@types/yargs",
         "@npm//chalk",
+        "@npm//inquirer",
         "@npm//typed-graphqlify",
     ],
 )
