@@ -15,7 +15,6 @@ ts_library(
         "//ng-dev/pr/common",
         "//ng-dev/utils",
         "@npm//@types/conventional-commits-parser",
-        "@npm//@types/inquirer",
         "@npm//@types/node",
         "@npm//@types/yargs",
         "@npm//conventional-commits-parser",

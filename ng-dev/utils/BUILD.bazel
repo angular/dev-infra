@@ -52,7 +52,6 @@ ts_library(
         "@npm//@octokit/request-error",
         "@npm//@octokit/rest",
         "@npm//@octokit/types",
-        "@npm//@types/inquirer",
         "@npm//@types/node",
         "@npm//@types/semver",
         "@npm//@types/supports-color",

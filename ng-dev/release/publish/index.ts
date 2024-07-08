@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import inquirer, {ListChoiceOptions} from 'inquirer';
+import inquirer from 'inquirer';
 
 import {GithubConfig} from '../../utils/config.js';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
@@ -109,7 +109,7 @@ export class ReleaseTool {
 
   /** Prompts the caretaker for a release action that should be performed. */
   private async _promptForReleaseAction(activeTrains: ActiveReleaseTrains) {
-    const choices: ListChoiceOptions[] = [];
+    const choices: {name: string; value: ReleaseAction}[] = [];
 
     // Find and instantiate all release actions which are currently valid.
     for (let actionType of actions) {

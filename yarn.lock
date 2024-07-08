@@ -446,7 +446,6 @@ __metadata:
     "@types/events": "npm:^3.0.0"
     "@types/folder-hash": "npm:^4.0.1"
     "@types/git-raw-commits": "npm:^2.0.0"
-    "@types/inquirer": "npm:9.0.7"
     "@types/jasmine": "npm:5.1.4"
     "@types/jsdom": "npm:^21.0.0"
     "@types/license-checker": "npm:^25.0.3"
@@ -5136,16 +5135,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/inquirer@npm:9.0.7":
-  version: 9.0.7
-  resolution: "@types/inquirer@npm:9.0.7"
-  dependencies:
-    "@types/through": "npm:*"
-    rxjs: "npm:^7.2.0"
-  checksum: 10c0/b7138af41226c0457b99ff9b179da4a82078bc1674762e812d3cc3e3276936d7326b9fa6b98212b8eb055b2b6aaebe3c20359eebe176a6ca71061f4e08ce3a0f
-  languageName: node
-  linkType: hard
-
 "@types/is-windows@npm:^1.0.0":
   version: 1.0.2
   resolution: "@types/is-windows@npm:1.0.2"
@@ -5418,15 +5407,6 @@ __metadata:
   version: 8.1.3
   resolution: "@types/supports-color@npm:8.1.3"
   checksum: 10c0/03aa3616b403f3deaeb774df6d3a3969845b0c9f449814a83c2c53eb6818f5f9b571ba205330b0ebe8e46f41fd550f581a34b4310b13f0e0448694cfff37ddbf
-  languageName: node
-  linkType: hard
-
-"@types/through@npm:*":
-  version: 0.0.33
-  resolution: "@types/through@npm:0.0.33"
-  dependencies:
-    "@types/node": "npm:*"
-  checksum: 10c0/6a8edd7f40cd7e197318e86310a40e568cddd380609dde59b30d5cc6c5f8276ddc698905eac4b3b429eb39f2e8ee326bc20dc6e95a2cdc41c4d3fc9a1ebd4929
   languageName: node
   linkType: hard
 
@@ -14400,7 +14380,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rxjs@npm:7.8.1, rxjs@npm:^7.2.0, rxjs@npm:^7.4.0, rxjs@npm:^7.5.4, rxjs@npm:^7.5.5, rxjs@npm:^7.8.1":
+"rxjs@npm:7.8.1, rxjs@npm:^7.4.0, rxjs@npm:^7.5.4, rxjs@npm:^7.5.5, rxjs@npm:^7.8.1":
   version: 7.8.1
   resolution: "rxjs@npm:7.8.1"
   dependencies:

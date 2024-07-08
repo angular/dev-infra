@@ -13,7 +13,6 @@ ts_library(
         "//ng-dev/release/versioning",
         "//ng-dev/utils",
         "//ng-dev/utils:g3_sync_config",
-        "@npm//@types/inquirer",
         "@npm//@types/node",
         "@npm//@types/yargs",
         "@npm//inquirer",

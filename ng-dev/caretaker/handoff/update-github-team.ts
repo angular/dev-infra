@@ -23,23 +23,25 @@ export async function updateCaretakerTeamViaPrompt() {
   }
 
   /** The list of current members in the group. */
-  const current = await getGroupMembers(caretakerGroup);
+  const current = new Set(await getGroupMembers(caretakerGroup));
   /** The list of members able to be added to the group as defined by a separate roster group. */
-  const roster = await getGroupMembers(`${caretakerGroup}-roster`);
+  const roster = (await getGroupMembers(`${caretakerGroup}-roster`)).map((member) => ({
+    value: member,
+    checked: current.has(member),
+  }));
   const {
     /** The list of users selected to be members of the caretaker group. */
     selected,
     /** Whether the user positively confirmed the selected made. */
     confirm,
-  } = await inquirer.prompt([
+  } = await inquirer.prompt<{selected: string[]; confirm: boolean}>([
     {
       type: 'checkbox',
       choices: roster,
       message: 'Select 2 caretakers for the upcoming rotation:',
-      default: current,
       name: 'selected',
       prefix: '',
-      validate: (value: string[]) => {
+      validate: (value) => {
         if (value.length !== 2) {
           return 'Please select exactly 2 caretakers for the upcoming rotation.';
         }
@@ -49,7 +51,6 @@ export async function updateCaretakerTeamViaPrompt() {
     {
       type: 'confirm',
       default: true,
-      prefix: '',
       message: 'Are you sure?',
       name: 'confirm',
     },

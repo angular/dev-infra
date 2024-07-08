@@ -19,7 +19,6 @@ ts_library(
         "@npm//@octokit/rest",
         "@npm//@types/ejs",
         "@npm//@types/folder-hash",
-        "@npm//@types/inquirer",
         "@npm//@types/node",
         "@npm//@types/semver",
         "@npm//@types/yargs",
