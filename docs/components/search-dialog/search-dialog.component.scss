@@ -9,7 +9,7 @@ dialog {
 }
 
 .docs-search-container {
-  width: 500px;
+  width: 750px;
   max-width: 90vw;
   background-color: var(--page-background);
   border: 1px solid var(--senary-contrast);
@@ -34,12 +34,13 @@ dialog {
   }
 
   ul {
-    max-height: 260px;
+    max-height: 50vh;
     overflow-y: auto;
     list-style-type: none;
     padding-inline: 0;
     padding-block-start: 1rem;
     margin: 0;
+    border-block-end: 1px solid var(--senary-contrast);
 
     li {
       border-inline-start: 2px solid var(--senary-contrast);
