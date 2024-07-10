@@ -65,7 +65,17 @@ function getNormalizedFilename(moduleName: string, entry: DocEntry | CliCommand)
   return `${normalizedModuleName}_${entry.name}_${entry.entryType.toLowerCase()}.html`;
 }
 
-function main() {
+async function main() {
+  const {createHighlighter} = await import('shiki');
+  const {darkTheme} = await import('jetbrains-ide-themes');
+
+  const something = createHighlighter({
+    themes: [darkTheme],
+    langs: ['javascript', 'typescript', 'angular-html', 'angular-ts'],
+  });
+
+  console.log({something});
+
   configureMarkedGlobally();
 
   const [paramFilePath] = process.argv.slice(2);

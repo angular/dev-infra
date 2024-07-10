@@ -22,9 +22,11 @@ ts_library(
         "@npm//@types/node",
         "@npm//highlight.js",
         "@npm//html-entities",
+        "@npm//jetbrains-ide-themes",
         "@npm//marked",
         "@npm//preact",
         "@npm//preact-render-to-string",
+        "@npm//shiki",
     ],
 )
 
