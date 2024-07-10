@@ -8,15 +8,22 @@
 
 import {FileAndContent} from '../interfaces';
 
-// TODO(josephperrott): Determine how we can load the jszip package dynamically again.
-import JSZip from 'jszip';
+// TODO(josephperrott): Determine how we can load the fflate package dynamically again.
+import {zip, strToU8} from 'fflate';
 
-export async function generateZip(files: FileAndContent[]): Promise<Blob> {
-  const zip = new JSZip();
+export async function generateZip(files: FileAndContent[]): Promise<Uint8Array> {
+  const filesObj: Record<string, Uint8Array> = {};
+  files.forEach(({path, content}) => {
+    filesObj[path] = typeof content === 'string' ? strToU8(content) : content;
+  });
 
-  for (const file of files) {
-    zip.file(file.path, file.content, {binary: true});
-  }
-
-  return await zip.generateAsync({type: 'blob'});
+  return new Promise((resolve, reject) => {
+    zip(filesObj, (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
 }
