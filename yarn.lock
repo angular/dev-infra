@@ -506,7 +506,7 @@ __metadata:
     marked: "npm:^12.0.0"
     marked-mangle: "npm:^1.1.4"
     mermaid: "npm:^10.8.0"
-    minimatch: "npm:^9.0.0"
+    minimatch: "npm:^10.0.0"
     multimatch: "npm:^7.0.0"
     nock: "npm:beta"
     opener: "npm:^1.5.2"
@@ -12478,6 +12478,15 @@ __metadata:
   version: 2.1.0
   resolution: "mimic-fn@npm:2.1.0"
   checksum: 10c0/b26f5479d7ec6cc2bce275a08f146cf78f5e7b661b18114e2506dd91ec7ec47e7a25bf4360e5438094db0560bcc868079fb3b1fb3892b833c1ecbf63f80c95a4
+  languageName: node
+  linkType: hard
+
+"minimatch@npm:^10.0.0":
+  version: 10.0.1
+  resolution: "minimatch@npm:10.0.1"
+  dependencies:
+    brace-expansion: "npm:^2.0.1"
+  checksum: 10c0/e6c29a81fe83e1877ad51348306be2e8aeca18c88fdee7a99df44322314279e15799e41d7cb274e4e8bb0b451a3bc622d6182e157dfa1717d6cda75e9cd8cd5d
   languageName: node
   linkType: hard
 

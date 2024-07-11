@@ -167,7 +167,7 @@
     "karma-sourcemap-loader": "^0.4.0",
     "license-checker": "^25.0.1",
     "mermaid": "^10.8.0",
-    "minimatch": "^9.0.0",
+    "minimatch": "^10.0.0",
     "multimatch": "^7.0.0",
     "nock": "beta",
     "opener": "^1.5.2",
