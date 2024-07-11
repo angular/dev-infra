@@ -477,6 +477,7 @@ __metadata:
     ejs: "npm:^3.1.6"
     emoji-regex: "npm:^10.3.0"
     fast-glob: "npm:^3.3.2"
+    fflate: "npm:^0.8.2"
     firebase: "npm:10.12.2"
     firebase-admin: "npm:12.2.0"
     firebase-functions: "npm:^5.0.0"
@@ -493,7 +494,6 @@ __metadata:
     jasmine-core: "npm:~5.1.0"
     jsdom: "npm:^24.0.0"
     jsonc-parser: "npm:^3.2.0"
-    jszip: "npm:^3.10.1"
     karma: "npm:^6.3.15"
     karma-chrome-launcher: "npm:^3.1.0"
     karma-coverage: "npm:~2.2.0"
@@ -9073,6 +9073,13 @@ __metadata:
   version: 4.2.3
   resolution: "fecha@npm:4.2.3"
   checksum: 10c0/0e895965959cf6a22bb7b00f0bf546f2783836310f510ddf63f463e1518d4c96dec61ab33fdfd8e79a71b4856a7c865478ce2ee8498d560fe125947703c9b1cf
+  languageName: node
+  linkType: hard
+
+"fflate@npm:^0.8.2":
+  version: 0.8.2
+  resolution: "fflate@npm:0.8.2"
+  checksum: 10c0/03448d630c0a583abea594835a9fdb2aaf7d67787055a761515bf4ed862913cfd693b4c4ffd5c3f3b355a70cf1e19033e9ae5aedcca103188aaff91b8bd6e293
   languageName: node
   linkType: hard
 

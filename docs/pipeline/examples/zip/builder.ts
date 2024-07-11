@@ -14,7 +14,7 @@ import {regionParser} from '../../guides/extensions/docs-code/regions/region-par
 import {appendCopyrightToFile} from '../shared/copyright';
 import {FileType} from '../../guides/extensions/docs-code/sanitizers/eslint';
 import {EXCLUDE_FILES, CONFIG_FILENAME} from './defaults';
-import JSZip from 'jszip';
+import {zip, strToU8} from 'fflate';
 
 import {FileAndContent} from '../../../interfaces';
 
@@ -40,13 +40,21 @@ export async function generateZipExample(
   await copyFolder(exampleDir, workingDir);
   const includedPaths = await getIncludedPaths(workingDir, stackblitzConfig);
 
-  const zip = new JSZip();
+  const filesObj: Record<string, Uint8Array> = {};
   for (const path of includedPaths) {
     const file = await getFileAndContent(workingDir, path);
-    zip.file(file.path, file.content, {binary: true});
+    filesObj[file.path] = typeof file.content === 'string' ? strToU8(file.content) : file.content;
   }
 
-  return zip.generateAsync({type: 'nodebuffer'});
+  return new Promise<Uint8Array>((resolve, reject) => {
+    zip(filesObj, (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
 }
 
 async function getIncludedPaths(workingDir: string, config: ZipConfig): Promise<string[]> {

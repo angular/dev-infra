@@ -29,6 +29,6 @@ ts_library(
         "@npm//@angular/router",
         "@npm//@types/node",
         "@npm//@webcontainer/api",
-        "@npm//jszip",
+        "@npm//fflate",
     ],
 )
