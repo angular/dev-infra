@@ -5,6 +5,15 @@
   },
   "hosting": [
     {
+      "target": "dns-redirecting",
+      "rewrites": [
+        {
+          "source": "**",
+          "function": "dnsRedirecting"
+        }
+      ]
+    },
+    {
       "target": "code-of-conduct",
       "public": "./code-of-conduct",
       "ignore": ["**/.*"],
