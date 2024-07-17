@@ -55,7 +55,5 @@ nodejs_binary(
         # TODO: Find a way to do this without relying on the copy_to_bin that works cross platform.
         "$$(rlocation dev-infra/apps/firebase.json)",
         "deploy",
-        "--only",
-        "hosting",
     ],
 )

@@ -18,6 +18,7 @@ ts_library(
     ],
     deps = [
         "//apps/functions/code-of-conduct",
+        "//apps/functions/dns-redirecting",
         "//apps/functions/githubWebhook",
         "//apps/functions/ng-dev",
         "@npm//firebase-admin",
