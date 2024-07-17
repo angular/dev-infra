@@ -27,11 +27,10 @@ def define_firefox_repositories():
         # Firefox has a launcher that conditionally starts x64/arm64
         name = "org_mozilla_firefox_macos",
         licenses = ["reciprocal"],  # MPL 2.0
-        sha256 = "3f431079d423e5397987a4120a63948217252426219f23348cb6b6bbded3acf3",
+        sha256 = "af516f0222361a311e83de8ca9a27a99653b2c0a00a6653e25ab59046a44d128",
         # Firefox v125.0.1
         urls = [
-            "https://ftp.mozilla.org/pub/firefox/releases/125.0.1/mac/en-US/Firefox%20125.0.1.dmg",
-            "https://storage.googleapis.com/dev-infra-mirror/firefox/125.0.1/mac_x64/browser-bin.dmg",
+            "https://ftp.mozilla.org/pub/firefox/releases/127.0.2/mac/en-US/Firefox%20127.0.2.dmg",
         ],
         named_files = {
             "FIREFOX": "Firefox.app/Contents/MacOS/firefox",
