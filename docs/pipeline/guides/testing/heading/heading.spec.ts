@@ -45,4 +45,42 @@ describe('markdown to html', () => {
       knownRefs.add(href!);
     }
   });
+
+  it('should remove code block markups', () => {
+    const h2List = markdownDocument.querySelectorAll('h2');
+    const h2 = h2List[3];
+    const h2Anchor = h2?.firstElementChild;
+
+    const h2HeaderId = h2?.getAttribute('id');
+    const h2AnchorHref = h2Anchor?.getAttribute('href');
+
+    expect(h2HeaderId).toContain('myclassmymethod-is-the-best');
+    expect(h2AnchorHref).toBe(`#${h2HeaderId}`);
+  });
+
+  it('should be able to extract non-ascii ids', () => {
+    const h2List = markdownDocument.querySelectorAll('h2');
+    const h2 = h2List[4];
+    const h2Anchor = h2?.firstElementChild;
+
+    const h2HeaderId = h2?.getAttribute('id');
+    const h2AnchorHref = h2Anchor?.getAttribute('href');
+
+    expect(h2HeaderId).toContain(
+      'ステップ-2---アプリケーションのレイアウトに新しいコンポーネントを追加',
+    );
+    expect(h2AnchorHref).toBe(`#${h2HeaderId}`);
+  });
+
+  it('should be able to extract custom ids', () => {
+    const h2List = markdownDocument.querySelectorAll('h2');
+    const h2 = h2List[5];
+    const h2Anchor = h2?.firstElementChild;
+
+    const h2HeaderId = h2?.getAttribute('id');
+    const h2AnchorHref = h2Anchor?.getAttribute('href');
+
+    expect(h2HeaderId).toContain('my-custom-id');
+    expect(h2AnchorHref).toBe(`#${h2HeaderId}`);
+  });
 });

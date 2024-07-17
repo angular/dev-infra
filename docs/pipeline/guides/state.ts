@@ -8,23 +8,32 @@
 
 const headerIds = new Map<string, number>();
 
-export const getHeaderId = (id: string): string => {
-  const numberOfHeaderOccurrencesInTheDocument = headerIds.get(id) ?? 0;
-  headerIds.set(id, numberOfHeaderOccurrencesInTheDocument + 1);
+export const getHeaderId = (heading: string): string => {
+  const numberOfHeaderOccurrencesInTheDocument = headerIds.get(heading) ?? 0;
+  headerIds.set(heading, numberOfHeaderOccurrencesInTheDocument + 1);
 
-  const cleanedUpId = id
-    .toLowerCase()
-    .replaceAll(/<code>(.*?)<\/code>/g, '$1') // remove <code>
-    .replaceAll(/<strong>(.*?)<\/strong>/g, '$1') // remove <strong>
-    .replaceAll(/<em>(.*?)<\/em>/g, '$1') // remove <em>
-    .replace(/\s|\//g, '-') // remove spaces and slashes
-    .replace(/gt;|lt;/g, '') // remove escaped < and >
-    .replace(/&#\d+;/g, '') // remove HTML entities
-    .replace(/[^0-9a-zA-Z\-]/g, ''); // only keep letters, digits & dashes
+  // extract the extended markdown heading id
+  // ex:  ## MyHeading {# myId}
+  const match = heading.match(/{#([\w-]+)}/);
+
+  let extractedId: string;
+  if (match) {
+    extractedId = match[1];
+  } else {
+    extractedId = heading
+      .toLowerCase()
+      .replaceAll(/<code>(.*?)<\/code>/g, '$1') // remove <code>
+      .replaceAll(/<strong>(.*?)<\/strong>/g, '$1') // remove <strong>
+      .replaceAll(/<em>(.*?)<\/em>/g, '$1') // remove <em>
+      .replace(/\s|\//g, '-') // remove spaces and slashes
+      .replace(/gt;|lt;/g, '') // remove escaped < and >
+      .replace(/&#\d+;/g, '') // remove HTML entities
+      .replace(/[^\p{L}\d\-]/gu, ''); // only keep letters, digits & dashes
+  }
 
   const headerId = numberOfHeaderOccurrencesInTheDocument
-    ? `${cleanedUpId}-${numberOfHeaderOccurrencesInTheDocument}`
-    : cleanedUpId;
+    ? `${extractedId}-${numberOfHeaderOccurrencesInTheDocument}`
+    : extractedId;
 
   return headerId;
 };
