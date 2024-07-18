@@ -20,6 +20,9 @@ export const dnsRedirecting = functions
     if (request.hostname === 'cli.angular.dev') {
       response.redirect(301, 'https://angular.dev/cli');
     }
+    if (request.hostname === 'blog.angular.io') {
+      response.redirect(301, 'https://blog.angular.dev');
+    }
 
     // If no redirect is matched, we return a failure message
     response.status(404);
