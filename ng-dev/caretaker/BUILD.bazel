@@ -15,7 +15,6 @@ ts_library(
         "//ng-dev/utils:g3_sync_config",
         "@npm//@types/node",
         "@npm//@types/yargs",
-        "@npm//inquirer",
         "@npm//multimatch",
         "@npm//typed-graphqlify",
         "@npm//yaml",

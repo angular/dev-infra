@@ -16,11 +16,11 @@ import {
   getVersionInfoForBranch,
   ReleaseRepoWithApi,
 } from '../../../release/versioning/index.js';
-import {Prompt} from '../../../utils/prompt.js';
 
 import {Log, red, yellow} from '../../../utils/logging.js';
 import {InvalidTargetBranchError} from './target-label.js';
 import {defaultLocale} from '../../../utils/locale.js';
+import {Prompt} from '../../../utils/prompt.js';
 
 /**
  * Asserts that the given branch corresponds to an active LTS version-branch that can receive
@@ -74,7 +74,7 @@ export async function assertActiveLtsBranch(
           `desired, but can be forcibly ignored.`,
       ),
     );
-    if (await Prompt.confirm('Do you want to forcibly proceed with merging?')) {
+    if (await Prompt.confirm({message: 'Do you want to forcibly proceed with merging?'})) {
       return;
     }
     throw new InvalidTargetBranchError(

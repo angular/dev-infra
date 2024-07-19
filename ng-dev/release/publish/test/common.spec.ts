@@ -9,6 +9,7 @@
 import {readFileSync, writeFileSync} from 'fs';
 import {join} from 'path';
 import semver from 'semver';
+import {CancelablePromise} from '@inquirer/type';
 
 import {CommitFromGitLog, parseCommitFromGitLog} from '../../../commit-message/parse.js';
 import {GitClient} from '../../../utils/git/git-client.js';
@@ -273,7 +274,9 @@ describe('common release action logic', () => {
       spyOn(Log, 'error');
 
       let promptResolveFn: ((value: boolean) => void) | null = null;
-      const promptPromise = new Promise<boolean>((resolve) => (promptResolveFn = resolve));
+      const promptPromise = new Promise<boolean>(
+        (resolve) => (promptResolveFn = resolve),
+      ) as unknown as CancelablePromise<boolean>;
       promptConfirmSpy.and.returnValue(promptPromise);
 
       const testFile = join(testTmpDir, 'some-file.txt');

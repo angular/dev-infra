@@ -15,6 +15,7 @@ ts_library(
         "//ng-dev/release/versioning",
         "//ng-dev/utils",
         "//ng-dev/utils/testing",
+        "@npm//@inquirer/type",
         "@npm//@octokit/plugin-rest-endpoint-methods",
         "@npm//@types/folder-hash",
         "@npm//@types/jasmine",

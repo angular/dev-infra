@@ -86,10 +86,10 @@ export async function rebasePr(prNumber: number): Promise<number> {
       process.env['CI'] !== undefined ||
       commits.filter((commit: Commit) => commit.isFixup).length === 0
         ? false
-        : await Prompt.confirm(
-            `PR #${prNumber} contains fixup commits, would you like to squash them during rebase?`,
-            true,
-          );
+        : await Prompt.confirm({
+            message: `PR #${prNumber} contains fixup commits, would you like to squash them during rebase?`,
+            default: true,
+          });
 
     Log.info(`Attempting to rebase PR #${prNumber} on ${fullBaseRef}`);
 
@@ -125,7 +125,8 @@ export async function rebasePr(prNumber: number): Promise<number> {
   // If the command is run in a non-CI environment, prompt to allow for the user to
   // manually complete the rebase.
   const continueRebase =
-    process.env['CI'] === undefined && (await Prompt.confirm('Manually complete rebase?'));
+    process.env['CI'] === undefined &&
+    (await Prompt.confirm({message: 'Manually complete rebase?'}));
 
   if (continueRebase) {
     Log.info(

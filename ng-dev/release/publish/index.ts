@@ -6,8 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import inquirer from 'inquirer';
-
 import {GithubConfig} from '../../utils/config.js';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {ReleaseConfig} from '../config/index.js';
@@ -126,10 +124,8 @@ export class ReleaseTool {
 
     Log.info('Please select the type of release you want to perform.');
 
-    const {releaseAction} = await inquirer.prompt<{releaseAction: ReleaseAction}>({
-      name: 'releaseAction',
+    const releaseAction = await Prompt.select<ReleaseAction>({
       message: 'Please select an action:',
-      type: 'list',
       choices,
     });
 
@@ -203,7 +199,7 @@ export class ReleaseTool {
       return true;
     }
     Log.warn(`  ✘   Not currently logged into ${registry}.`);
-    const shouldLogin = await Prompt.confirm('Would you like to log into NPM now?');
+    const shouldLogin = await Prompt.confirm({message: 'Would you like to log into NPM now?'});
     if (shouldLogin) {
       Log.debug('Starting NPM login.');
       try {

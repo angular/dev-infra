@@ -6,24 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import inquirer from 'inquirer';
+import {confirm, input, checkbox, select, editor} from '@inquirer/prompts';
 
+/**
+ * A set of prompts from inquirer to be used throughout our tooling.  We access them via static metonds on this
+ * class to allow easier mocking management in test environments.
+ */
 export abstract class Prompt {
-  /** Prompts the user with a confirmation question and a specified message. */
-  static async confirm(message: string, defaultValue = false): Promise<boolean> {
-    return (
-      await inquirer.prompt<{result: boolean}>({
-        type: 'confirm',
-        name: 'result',
-        message: message,
-        default: defaultValue,
-      })
-    ).result;
-  }
-
-  /** Prompts the user for one line of input. */
-  static async input(message: string): Promise<string> {
-    return (await inquirer.prompt<{result: string}>({type: 'input', name: 'result', message}))
-      .result;
-  }
+  static confirm = confirm;
+  static input = input;
+  static checkbox = checkbox;
+  static select = select;
+  static editor = editor;
 }

@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import inquirer from 'inquirer';
+import {Prompt} from '../../utils/prompt.js';
 import {getConfig, assertValidCaretakerConfig} from '../../utils/config.js';
 
-import {green, Log, yellow} from '../../utils/logging.js';
+import {green, Log} from '../../utils/logging.js';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 
 /** Update the Github caretaker group, using a prompt to obtain the new caretaker group members.  */
@@ -29,34 +29,26 @@ export async function updateCaretakerTeamViaPrompt() {
     value: member,
     checked: current.has(member),
   }));
-  const {
-    /** The list of users selected to be members of the caretaker group. */
-    selected,
-    /** Whether the user positively confirmed the selected made. */
-    confirm,
-  } = await inquirer.prompt<{selected: string[]; confirm: boolean}>([
-    {
-      type: 'checkbox',
-      choices: roster,
-      message: 'Select 2 caretakers for the upcoming rotation:',
-      name: 'selected',
-      prefix: '',
-      validate: (value) => {
-        if (value.length !== 2) {
-          return 'Please select exactly 2 caretakers for the upcoming rotation.';
-        }
-        return true;
-      },
-    },
-    {
-      type: 'confirm',
-      default: true,
-      message: 'Are you sure?',
-      name: 'confirm',
-    },
-  ]);
 
-  if (confirm === false) {
+  /** The list of users selected to be members of the caretaker group. */
+  const selected = await Prompt.checkbox({
+    choices: roster,
+    message: 'Select 2 caretakers for the upcoming rotation:',
+    validate: (value) => {
+      if (value.length !== 2) {
+        return 'Please select exactly 2 caretakers for the upcoming rotation.';
+      }
+      return true;
+    },
+  });
+
+  /** Whether the user positively confirmed the selected made. */
+  const confirmation = await Prompt.confirm({
+    default: true,
+    message: 'Are you sure?',
+  });
+
+  if (confirmation === false) {
     Log.warn('  ⚠  Skipping caretaker group update.');
     return;
   }

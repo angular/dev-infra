@@ -64,7 +64,7 @@ export async function checkFiles(files: string[]) {
     // If the command is run in a non-CI environment, prompt to format the files immediately.
     let runFormatter = false;
     if (!process.env['CI']) {
-      runFormatter = await Prompt.confirm('Format the files now?', true);
+      runFormatter = await Prompt.confirm({message: 'Format the files now?', default: true});
     }
 
     if (runFormatter) {

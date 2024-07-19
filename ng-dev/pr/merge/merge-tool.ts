@@ -8,7 +8,6 @@
 
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import semver from 'semver';
-import inquirer from 'inquirer';
 import {bold, green, Log, red, yellow} from '../../utils/logging.js';
 
 import {PullRequestConfig, PullRequestValidationConfig} from '../config/index.js';
@@ -27,13 +26,13 @@ import {
   fetchLongTermSupportBranchesFromNpm,
   getNextBranchName,
 } from '../../release/versioning/index.js';
-import {Prompt} from '../../utils/prompt.js';
 import {
   FatalMergeToolError,
   PullRequestValidationError,
   UserAbortedMergeToolError,
 } from './failures.js';
 import {createPullRequestValidationConfig} from '../common/validation/validation-config.js';
+import {Prompt} from '../../utils/prompt.js';
 
 export interface PullRequestMergeFlags {
   branchPrompt: boolean;
@@ -118,7 +117,11 @@ export class MergeTool {
       }
 
       Log.info(yellow(`All discovered validations are non-fatal and can be forcibly ignored.`));
-      if (!(await Prompt.confirm('Do you want to forcibly ignore these validation failures?'))) {
+      if (
+        !(await Prompt.confirm({
+          message: 'Do you want to forcibly ignore these validation failures?',
+        }))
+      ) {
         throw new PullRequestValidationError();
       }
     }
@@ -131,7 +134,7 @@ export class MergeTool {
     // the caretaker. The caretaker can then decide to proceed or abort the merge.
     if (
       pullRequest.hasCaretakerNote &&
-      !(await Prompt.confirm(getCaretakerNotePromptMessage(pullRequest)))
+      !(await Prompt.confirm({message: getCaretakerNotePromptMessage(pullRequest)}))
     ) {
       throw new UserAbortedMergeToolError();
     }
@@ -174,7 +177,7 @@ export class MergeTool {
         // In cases where manual branch targeting is used, the user already confirmed.
         !this.flags.forceManualBranches &&
         this.flags.branchPrompt &&
-        !(await Prompt.confirm(getTargetedBranchesConfirmationPromptMessage()))
+        !(await Prompt.confirm({message: getTargetedBranchesConfirmationPromptMessage()}))
       ) {
         throw new UserAbortedMergeToolError();
       }
@@ -235,41 +238,32 @@ export class MergeTool {
       activeBranches.splice(1, 0, releaseCandidate);
     }
 
-    const {selectedBranches, confirm} = await inquirer.prompt<{
-      selectedBranches: string[];
-      confirm: boolean;
-    }>([
-      {
-        type: 'checkbox',
-        choices: activeBranches.map(({branchName, version}) => {
-          return {
-            checked: pullRequest.targetBranches.includes(branchName),
-            value: branchName,
-            short: branchName,
-            name: `${branchName} (${version})${
-              branchName === pullRequest.githubTargetBranch ? ' [Targeted via Github UI]' : ''
-            }`,
-          };
-        }),
-        message: 'Select branches to merge pull request into:',
-        name: 'selectedBranches',
-      },
-      {
-        type: 'confirm',
-        default: false,
-        message:
-          red('!!!!!! WARNING !!!!!!!\n') +
-          yellow(
-            'Using manual branch selection disables protective checks provided by the merge ' +
-              'tooling. This means that the merge tooling will not prevent changes which are not ' +
-              'allowed for the targeted branches. Please proceed with caution.\n',
-          ) +
-          'Are you sure you would like to proceed with the selected branches?',
-        name: 'confirm',
-      },
-    ]);
+    const selectedBranches = await Prompt.checkbox({
+      choices: activeBranches.map(({branchName, version}) => {
+        return {
+          checked: pullRequest.targetBranches.includes(branchName),
+          value: branchName,
+          short: branchName,
+          name: `${branchName} (${version})${
+            branchName === pullRequest.githubTargetBranch ? ' [Targeted via Github UI]' : ''
+          }`,
+        };
+      }),
+      message: 'Select branches to merge pull request into:',
+    });
+    const confirmation = await Prompt.confirm({
+      default: false,
+      message:
+        red('!!!!!! WARNING !!!!!!!\n') +
+        yellow(
+          'Using manual branch selection disables protective checks provided by the merge ' +
+            'tooling. This means that the merge tooling will not prevent changes which are not ' +
+            'allowed for the targeted branches. Please proceed with caution.\n',
+        ) +
+        'Are you sure you would like to proceed with the selected branches?',
+    });
 
-    if (confirm === false) {
+    if (confirmation === false) {
       throw new UserAbortedMergeToolError();
     }
 

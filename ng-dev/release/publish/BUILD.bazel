@@ -24,7 +24,6 @@ ts_library(
         "@npm//@types/yargs",
         "@npm//ejs",
         "@npm//folder-hash",
-        "@npm//inquirer",
         "@npm//semver",
         "@npm//typed-graphqlify",
     ],

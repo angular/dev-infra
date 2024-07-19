@@ -8,11 +8,11 @@
 
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {bold, green, Log} from '../../utils/logging.js';
-import {Prompt} from '../../utils/prompt.js';
 import {isGithubApiError} from '../../utils/git/github.js';
 
 import {PullRequest} from './actions.js';
 import {isPullRequestMerged} from './pull-request-state.js';
+import {Prompt} from '../../utils/prompt.js';
 
 /**
  * Prints the pull request to the console and informs the user about
@@ -41,7 +41,7 @@ export async function promptToInitiatePullRequestMerge(
   // We will loop forever until the PR has been merged. If a user wants to abort,
   // the script needs to be aborted e.g. using CTRL + C.
   while (true) {
-    if (!(await Prompt.confirm(`Do you want to continue with merging PR #${id}?`))) {
+    if (!(await Prompt.confirm({message: `Do you want to continue with merging PR #${id}?`}))) {
       continue;
     }
 
