@@ -9,11 +9,16 @@
 import {readFileSync, writeFileSync} from 'fs';
 import path from 'path';
 import {parseMarkdown} from './parse';
+import {initHighlighter} from './extensions/docs-code/format/highlight';
 
 async function main() {
   const [paramFilePath] = process.argv.slice(2);
   const rawParamLines = readFileSync(paramFilePath, {encoding: 'utf8'}).split('\n');
   const [srcs, outputFilenameExecRootRelativePath] = rawParamLines;
+
+  // The highlighter needs to be setup asynchronously
+  // so we're doing it at the start of the pipeline
+  await initHighlighter();
 
   for (const filePath of srcs.split(',')) {
     if (!filePath.endsWith('.md')) {
