@@ -1,14 +1,46 @@
 import {decode} from 'html-entities';
-import highlightJs from 'highlight.js';
 import {CodeToken} from './index';
 import {expandRangeStringValues} from './range';
 import {JSDOM} from 'jsdom';
+import {createCssVariablesTheme, createHighlighter, HighlighterGeneric} from 'shiki';
 
 const lineNumberClassName: string = 'hljs-ln-number';
 const lineMultifileClassName: string = 'hljs-ln-line';
 const lineAddedClassName: string = 'add';
 const lineRemovedClassName: string = 'remove';
 const lineHighlightedClassName: string = 'highlighted';
+
+let highlighter: HighlighterGeneric<any, any>;
+
+const cssVarTheme = createCssVariablesTheme({
+  name: 'css-variables',
+  variablePrefix: '--shiki-docs-',
+  variableDefaults: {},
+  fontStyle: true,
+});
+
+/**
+ * Highlighter needs to setup asynchronously
+ *
+ * This is intended to be invoked at the start of the pipeline
+ */
+export async function initHighlighter() {
+  highlighter = await createHighlighter({
+    themes: [cssVarTheme],
+    langs: [
+      'javascript',
+      'typescript',
+      'angular-html',
+      'angular-ts',
+      'shell',
+      'html',
+      'json',
+      'nginx',
+      'markdown',
+      'apache',
+    ],
+  });
+}
 
 /**
  * Updates the provided token's code value to include syntax highlighting.
@@ -18,9 +50,10 @@ export function highlightCode(token: CodeToken) {
   if (token.language !== 'none' && token.language !== 'file') {
     // Decode the code content to replace HTML entities to characters
     const decodedCode = decode(token.code);
-    const {value} = token.language
-      ? highlightJs.highlight(decodedCode, {language: token.language})
-      : highlightJs.highlightAuto(decodedCode);
+    const value = highlighter.codeToHtml(decodedCode, {
+      lang: token.language ?? 'text',
+      theme: cssVarTheme,
+    });
     token.code = value;
   }
 

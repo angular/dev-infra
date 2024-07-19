@@ -2,11 +2,13 @@ import {parseMarkdown} from '../../../guides/parse';
 import {runfiles} from '@bazel/runfiles';
 import {readFile} from 'fs/promises';
 import {JSDOM} from 'jsdom';
+import {initHighlighter} from '../../extensions/docs-code/format/highlight';
 
 describe('markdown to html', () => {
   let markdownDocument: DocumentFragment;
 
   beforeAll(async () => {
+    await initHighlighter();
     const markdownContent = await readFile(
       runfiles.resolvePackageRelative('docs-code-block/docs-code-block.md'),
       {encoding: 'utf-8'},

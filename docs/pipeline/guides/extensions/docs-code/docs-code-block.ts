@@ -23,7 +23,7 @@ export interface DocsCodeBlock extends CodeToken {
  * standard discovery of this as it only allows for exactly 3 ticks rather
  * than three or more.
  */
-const tripleTickCodeRule = /^\s*`{3}(\w+)[\r\n]+(.*?)[\r\n]+`{3}/s;
+const tripleTickCodeRule = /^\s*`{3}(\S+)[\r\n]+(.*?)[\r\n]+`{3}/s;
 
 export const docsCodeBlockExtension = {
   name: 'docs-code-block',
