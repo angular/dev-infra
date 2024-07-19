@@ -19,8 +19,7 @@ import {
   getListCommitsInBranchUrl,
   getRepositoryGitUrl,
 } from '../../utils/git/github-urls.js';
-import {green, Log, yellow} from '../../utils/logging.js';
-import {Prompt} from '../../utils/prompt.js';
+import {green, Log} from '../../utils/logging.js';
 import {Spinner} from '../../utils/spinner.js';
 import {BuiltPackage, BuiltPackageWithInfo, ReleaseConfig} from '../config/index.js';
 import {ReleaseNotes, workspaceRelativeChangelogPath} from '../notes/release-notes.js';
@@ -41,6 +40,7 @@ import {
 import {githubReleaseBodyLimit} from './constants.js';
 import {ExternalCommands} from './external-commands.js';
 import {promptToInitiatePullRequestMerge} from './prompt-merge.js';
+import {Prompt} from '../../utils/prompt.js';
 
 /** Interface describing a Github repository. */
 export interface GithubRepo {
@@ -176,7 +176,7 @@ export abstract class ReleaseAction {
       );
       Log.error(`      Please have a look at: ${branchCommitsUrl}`);
 
-      if (await Prompt.confirm('Do you want to ignore the Github status and proceed?')) {
+      if (await Prompt.confirm({message: 'Do you want to ignore the Github status and proceed?'})) {
         Log.warn(
           '  ⚠   Upstream commit is failing CI checks, but status has been forcibly ignored.',
         );
@@ -189,7 +189,7 @@ export abstract class ReleaseAction {
           'need to succeed before staging a release.',
       );
       Log.error(`      Please have a look at: ${branchCommitsUrl}`);
-      if (await Prompt.confirm('Do you want to ignore the Github status and proceed?')) {
+      if (await Prompt.confirm({message: 'Do you want to ignore the Github status and proceed?'})) {
         Log.warn('  ⚠   Upstream commit is pending CI, but status has been forcibly ignored.');
         return;
       }
@@ -210,7 +210,7 @@ export abstract class ReleaseAction {
     );
     Log.warn('      Manual changes can be made. When done, please proceed with the prompt below.');
 
-    if (!(await Prompt.confirm('Do you want to proceed and commit the changes?'))) {
+    if (!(await Prompt.confirm({message: 'Do you want to proceed and commit the changes?'}))) {
       throw new UserAbortedReleaseActionError();
     }
 

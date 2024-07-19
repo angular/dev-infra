@@ -8,8 +8,6 @@
 
 import semver from 'semver';
 import {Log} from '../../../../utils/logging.js';
-import {Prompt} from '../../../../utils/prompt.js';
-
 import {ActiveReleaseTrains} from '../../../versioning/active-release-trains.js';
 import {getLtsNpmDistTagOfMajor} from '../../../versioning/long-term-support.js';
 import {
@@ -18,6 +16,7 @@ import {
 } from '../../../versioning/version-branches.js';
 import {FatalReleaseActionError} from '../../actions-error.js';
 import {ReleaseAction} from '../../actions.js';
+import {Prompt} from '../../../../utils/prompt.js';
 
 /**
  * SPECIAL: Action should only be used by dev-infra members.
@@ -33,7 +32,7 @@ export class SpecialCutLongTermSupportMinorAction extends ReleaseAction {
   override async perform() {
     const ltsBranch = await this._askForVersionBranch('Please specify the target LTS branch:');
     const compareVersionForReleaseNotes = semver.parse(
-      await Prompt.input('Compare version for release'),
+      await Prompt.input({message: 'Compare version for release'}),
     )!;
 
     const newVersion = semver.parse(
@@ -63,7 +62,7 @@ export class SpecialCutLongTermSupportMinorAction extends ReleaseAction {
     branch: string;
     branchVersion: semver.SemVer;
   }> {
-    const branch = await Prompt.input(message);
+    const branch = await Prompt.input({message});
     if (!isVersionBranch(branch)) {
       Log.error('Invalid release branch specified.');
       throw new FatalReleaseActionError();

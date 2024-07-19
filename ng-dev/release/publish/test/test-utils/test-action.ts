@@ -74,7 +74,7 @@ export interface TestReleaseAction<
   projectDir: string;
   githubConfig: GithubConfig;
   releaseConfig: ReleaseConfig;
-  promptConfirmSpy: jasmine.Spy<(typeof Prompt)['confirm']>;
+  promptConfirmSpy: jasmine.Spy<typeof Prompt.confirm>;
   builtPackagesWithInfo: BuiltPackageWithInfo[];
   gitClient: O['useSandboxGitClient'] extends true ? SandboxGitClient : VirtualGitClient;
 }

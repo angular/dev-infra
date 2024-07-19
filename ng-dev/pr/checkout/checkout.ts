@@ -1,14 +1,13 @@
 import {GithubConfig, NgDevConfig} from '../../utils/config.js';
 import {dirname, join} from 'path';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
-import {Prompt} from '../../utils/prompt.js';
 import {Log, bold, green} from '../../utils/logging.js';
 import {checkOutPullRequestLocally} from '../common/checkout-pr.js';
 import {fileURLToPath} from 'url';
 import {ActiveReleaseTrains} from '../../release/versioning/active-release-trains.js';
 import {getNextBranchName} from '../../release/versioning/version-branches.js';
-import {fetchPullRequestFromGithub} from '../common/fetch-pull-request.js';
 import {addTokenToGitHttpsUrl} from '../../utils/git/github-urls.js';
+import {Prompt} from '../../utils/prompt.js';
 
 /** List of accounts that are supported for takeover. */
 const takeoverAccounts = ['angular-robot'];
@@ -58,7 +57,12 @@ export async function checkoutPullRequest(
         Log.info('request will be checked out, the commits are modified to close the original on');
         Log.info('merge of the newly created branch.\n');
 
-        if (!(await Prompt.confirm(`Would you like to create a takeover pull request?`, true))) {
+        if (
+          !(await Prompt.confirm({
+            message: `Would you like to create a takeover pull request?`,
+            default: true,
+          }))
+        ) {
           Log.info('Aborting takeover..');
           await resetGitState();
           return;
@@ -76,7 +80,12 @@ export async function checkoutPullRequest(
           ` ⚠ ${bold(pullRequest.author.login)} is not an account fully supported for takeover.`,
         );
         Log.warn(`   Supported accounts: ${bold(takeoverAccounts.join(', '))}`);
-        if (await Prompt.confirm(`Continue with pull request takeover anyway?`, true)) {
+        if (
+          await Prompt.confirm({
+            message: `Continue with pull request takeover anyway?`,
+            default: true,
+          })
+        ) {
           Log.debug('Continuing per user confirmation in prompt');
         } else {
           Log.info('Aborting takeover..');

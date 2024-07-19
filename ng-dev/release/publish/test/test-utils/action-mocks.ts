@@ -9,8 +9,6 @@
 import {existsSync, mkdirSync, rmSync, writeFileSync} from 'fs';
 import {join} from 'path';
 import {GithubConfig, setConfig} from '../../../../utils/config.js';
-import {Prompt} from '../../../../utils/prompt.js';
-
 import {
   getMockGitClient,
   installSandboxGitClient,
@@ -28,6 +26,7 @@ import {NpmCommand} from '../../../versioning/npm-command.js';
 import {ReleaseAction} from '../../actions.js';
 import {DirectoryHash} from '../../directory-hash.js';
 import {ExternalCommands} from '../../external-commands.js';
+import {Prompt} from '../../../../utils/prompt.js';
 
 /** Default representative NPM package used in tests. */
 export const testRepresentativePackage = '@angular/pkg1';

@@ -9,7 +9,6 @@ import {render} from 'ejs';
 import semver from 'semver';
 import {CommitFromGitLog} from '../../commit-message/parse.js';
 
-import {Prompt} from '../../utils/prompt.js';
 import {formatFiles} from '../../format/format.js';
 import {GitClient} from '../../utils/git/git-client.js';
 import {assertValidReleaseConfig, ReleaseConfig} from '../config/index.js';
@@ -21,6 +20,7 @@ import {getCommitsForRangeWithDeduping} from './commits/get-commits-in-range.js'
 import {getConfig, NgDevConfig} from '../../utils/config.js';
 import {assertValidFormatConfig} from '../../format/config.js';
 import {Changelog} from './changelog.js';
+import {Prompt} from '../../utils/prompt.js';
 
 /** Workspace-relative path for the changelog file. */
 export const workspaceRelativeChangelogPath = 'CHANGELOG.md';
@@ -105,7 +105,7 @@ export class ReleaseNotes {
 
     if (this.title === undefined) {
       if (notesConfig.useReleaseTitle) {
-        this.title = await Prompt.input('Please provide a title for the release:');
+        this.title = await Prompt.input({message: 'Please provide a title for the release:'});
       } else {
         this.title = false;
       }

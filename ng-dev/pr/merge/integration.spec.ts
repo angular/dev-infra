@@ -24,8 +24,8 @@ import {
   exceptionalMinorPackageIndicator,
   PackageJson,
 } from '../../release/versioning/index.js';
-import {Prompt} from '../../utils/prompt.js';
 import {parsePrNumber} from './merge-pull-request.js';
+import {Prompt} from '../../utils/prompt.js';
 const API_ENDPOINT = `https://api.github.com`;
 
 describe('default target labels', () => {
