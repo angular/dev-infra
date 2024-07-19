@@ -907,7 +907,7 @@ __publicField(Octokit, "VERSION", VERSION4);
 __publicField(Octokit, "plugins", []);
 
 // 
-var VERSION5 = "5.3.0";
+var VERSION5 = "5.3.1";
 
 // 
 function requestLog(octokit) {
@@ -923,7 +923,8 @@ function requestLog(octokit) {
       );
       return response;
     }).catch((error) => {
-      const requestId = error.response.headers["x-github-request-id"] || "UNKNOWN";
+      var _a;
+      const requestId = ((_a = error.response) == null ? void 0 : _a.headers["x-github-request-id"]) || "UNKNOWN";
       octokit.log.error(
         `${requestOptions.method} ${path} - ${error.status} with id ${requestId} in ${Date.now() - start}ms`
       );

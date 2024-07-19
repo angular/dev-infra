@@ -48123,7 +48123,7 @@ __publicField(Octokit, "VERSION", VERSION4);
 __publicField(Octokit, "plugins", []);
 
 // 
-var VERSION5 = "5.3.0";
+var VERSION5 = "5.3.1";
 
 // 
 function requestLog(octokit) {
@@ -48139,7 +48139,8 @@ function requestLog(octokit) {
       );
       return response;
     }).catch((error) => {
-      const requestId = error.response.headers["x-github-request-id"] || "UNKNOWN";
+      var _a2;
+      const requestId = ((_a2 = error.response) == null ? void 0 : _a2.headers["x-github-request-id"]) || "UNKNOWN";
       octokit.log.error(
         `${requestOptions.method} ${path} - ${error.status} with id ${requestId} in ${Date.now() - start}ms`
       );
@@ -51647,7 +51648,7 @@ var checkboxTheme = {
   },
   style: {
     disabledChoice: (text) => import_yoctocolors_cjs3.default.dim(`- ${text}`),
-    renderSelectedChoices: (selectedChoices) => selectedChoices.map((choice) => choice.name || choice.value).join(", ")
+    renderSelectedChoices: (selectedChoices) => selectedChoices.map((choice) => choice.short ?? choice.name ?? choice.value).join(", ")
   },
   helpMode: "auto"
 };
@@ -52316,7 +52317,7 @@ ${theme.style.help("(Use arrow keys to reveal more choices)")}`;
     loop
   });
   if (status === "done") {
-    const answer = selectedChoice.name || String(selectedChoice.value);
+    const answer = selectedChoice.short ?? selectedChoice.name ?? String(selectedChoice.value);
     return `${prefix} ${message} ${theme.style.answer(answer)}`;
   }
   const choiceDescription = selectedChoice.description ? `
