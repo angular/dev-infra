@@ -19530,6 +19530,7 @@ var require_lrucache = __commonJS({
 // 
 var require_range = __commonJS({
   ""(exports, module) {
+    var SPACE_CHARACTERS = /\s+/g;
     var Range = class {
       constructor(range, options) {
         options = parseOptions2(options);
@@ -19543,13 +19544,13 @@ var require_range = __commonJS({
         if (range instanceof Comparator) {
           this.raw = range.value;
           this.set = [[range]];
-          this.format();
+          this.formatted = void 0;
           return this;
         }
         this.options = options;
         this.loose = !!options.loose;
         this.includePrerelease = !!options.includePrerelease;
-        this.raw = range.trim().split(/\s+/).join(" ");
+        this.raw = range.trim().replace(SPACE_CHARACTERS, " ");
         this.set = this.raw.split("||").map((r) => this.parseRange(r.trim())).filter((c) => c.length);
         if (!this.set.length) {
           throw new TypeError(`Invalid SemVer Range: ${this.raw}`);
@@ -19568,10 +19569,27 @@ var require_range = __commonJS({
             }
           }
         }
-        this.format();
+        this.formatted = void 0;
+      }
+      get range() {
+        if (this.formatted === void 0) {
+          this.formatted = "";
+          for (let i = 0; i < this.set.length; i++) {
+            if (i > 0) {
+              this.formatted += "||";
+            }
+            const comps = this.set[i];
+            for (let k = 0; k < comps.length; k++) {
+              if (k > 0) {
+                this.formatted += " ";
+              }
+              this.formatted += comps[k].toString().trim();
+            }
+          }
+        }
+        return this.formatted;
       }
       format() {
-        this.range = this.set.map((comps) => comps.join(" ").trim()).join("||").trim();
         return this.range;
       }
       toString() {
@@ -51730,7 +51748,7 @@ var checkboxTheme = {
   },
   style: {
     disabledChoice: (text) => import_yoctocolors_cjs3.default.dim(`- ${text}`),
-    renderSelectedChoices: (selectedChoices) => selectedChoices.map((choice) => choice.name || choice.value).join(", ")
+    renderSelectedChoices: (selectedChoices) => selectedChoices.map((choice) => choice.short ?? choice.name ?? choice.value).join(", ")
   },
   helpMode: "auto"
 };
@@ -52399,7 +52417,7 @@ ${theme.style.help("(Use arrow keys to reveal more choices)")}`;
     loop
   });
   if (status === "done") {
-    const answer = selectedChoice.name || String(selectedChoice.value);
+    const answer = selectedChoice.short ?? selectedChoice.name ?? String(selectedChoice.value);
     return `${prefix} ${message} ${theme.style.answer(answer)}`;
   }
   const choiceDescription = selectedChoice.description ? `
@@ -56264,7 +56282,7 @@ __publicField(Octokit, "VERSION", VERSION4);
 __publicField(Octokit, "plugins", []);
 
 // 
-var VERSION5 = "5.3.0";
+var VERSION5 = "5.3.1";
 
 // 
 function requestLog(octokit) {
@@ -56280,7 +56298,8 @@ function requestLog(octokit) {
       );
       return response;
     }).catch((error2) => {
-      const requestId = error2.response.headers["x-github-request-id"] || "UNKNOWN";
+      var _a2;
+      const requestId = ((_a2 = error2.response) == null ? void 0 : _a2.headers["x-github-request-id"]) || "UNKNOWN";
       octokit.log.error(
         `${requestOptions.method} ${path4} - ${error2.status} with id ${requestId} in ${Date.now() - start}ms`
       );
