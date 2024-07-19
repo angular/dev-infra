@@ -19530,7 +19530,6 @@ var require_lrucache = __commonJS({
 // 
 var require_range = __commonJS({
   ""(exports, module) {
-    var SPACE_CHARACTERS = /\s+/g;
     var Range = class {
       constructor(range, options) {
         options = parseOptions2(options);
@@ -19544,13 +19543,13 @@ var require_range = __commonJS({
         if (range instanceof Comparator) {
           this.raw = range.value;
           this.set = [[range]];
-          this.formatted = void 0;
+          this.format();
           return this;
         }
         this.options = options;
         this.loose = !!options.loose;
         this.includePrerelease = !!options.includePrerelease;
-        this.raw = range.trim().replace(SPACE_CHARACTERS, " ");
+        this.raw = range.trim().split(/\s+/).join(" ");
         this.set = this.raw.split("||").map((r) => this.parseRange(r.trim())).filter((c) => c.length);
         if (!this.set.length) {
           throw new TypeError(`Invalid SemVer Range: ${this.raw}`);
@@ -19569,27 +19568,10 @@ var require_range = __commonJS({
             }
           }
         }
-        this.formatted = void 0;
-      }
-      get range() {
-        if (this.formatted === void 0) {
-          this.formatted = "";
-          for (let i = 0; i < this.set.length; i++) {
-            if (i > 0) {
-              this.formatted += "||";
-            }
-            const comps = this.set[i];
-            for (let k = 0; k < comps.length; k++) {
-              if (k > 0) {
-                this.formatted += " ";
-              }
-              this.formatted += comps[k].toString().trim();
-            }
-          }
-        }
-        return this.formatted;
+        this.format();
       }
       format() {
+        this.range = this.set.map((comps) => comps.join(" ").trim()).join("||").trim();
         return this.range;
       }
       toString() {
@@ -58499,7 +58481,7 @@ function legacyRestEndpointMethods(octokit) {
 legacyRestEndpointMethods.VERSION = VERSION7;
 
 // 
-var VERSION8 = "21.0.0";
+var VERSION8 = "21.0.1";
 
 // 
 var Octokit2 = Octokit.plugin(requestLog, legacyRestEndpointMethods, paginateRest).defaults(
