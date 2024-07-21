@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import highlightJs from 'highlight.js';
 import {
   DocEntry,
   FunctionEntry,
@@ -32,6 +31,7 @@ import {
 } from '../entities/categorization';
 import {CodeLineRenderable} from '../entities/renderables';
 import {HasModuleName, HasRenderableToc} from '../entities/traits';
+import {codeToHtml} from '../shiki/shiki';
 
 import {filterLifecycleMethods, mergeGettersAndSetters} from './member-transforms';
 
@@ -64,15 +64,27 @@ export function addRenderableCodeToc<T extends DocEntry & HasModuleName>(
   const metadata = mapDocEntryToCode(entry);
   appendPrefixAndSuffix(entry, metadata);
 
-  const codeWithSyntaxHighlighting = highlightJs.highlight(metadata.contents, {
-    language: 'typescript',
-  });
-  const lines = splitLines(codeWithSyntaxHighlighting.value);
+  const codeWithSyntaxHighlighting = codeToHtml(metadata.contents, 'typescript');
+
+  // shiki returns the lines wrapped by 2 node : 1 pre node, 1 code node.
+  // As leveraging jsdom isn't trivial here, we rely on a regex to extract the line nodes
+  const pattern = /(.*?)<code.*?>(.*?)<\/code>(.*)/s;
+  const match = codeWithSyntaxHighlighting.match(pattern);
+  if (!match) {
+    return {...entry, codeLinesGroups: new Map(), afterCodeGroups: '', beforeCodeGroups: ''};
+  }
+  const beforeCode = match[1];
+  const insideCode = match[2];
+  const afterCode = match[3];
+
+  const lines = splitLines(insideCode);
   const groups = groupCodeLines(lines, metadata);
 
   return {
     ...entry,
     codeLinesGroups: groups,
+    beforeCodeGroups: beforeCode,
+    afterCodeGroups: afterCode,
   };
 }
 
@@ -146,7 +158,8 @@ export function mapDocEntryToCode(entry: DocEntry): CodeTableOfContentsData {
       );
     }
     return {
-      contents: getMethodCodeLine(entry, [], true),
+      // It is important to add the function keyword as shiki will only highlight valid ts
+      contents: `function ${getMethodCodeLine(entry, [], true)}`,
       codeLineNumbersWithIdentifiers,
       deprecatedLineNumbers: isDeprecated ? [0] : [],
     };

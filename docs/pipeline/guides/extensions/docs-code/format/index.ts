@@ -46,7 +46,7 @@ export function formatCode(token: CodeToken) {
   <div class="docs-code">
     ${buildHeaderElement(token)}
     <pre class="docs-mini-scroll-track">
-      <code>${token.code}</code>
+      ${token.code}
     </pre>
   </div>
   `).firstElementChild!;

@@ -19,7 +19,7 @@ export function TabApi(props: {entry: DocEntryRenderable & HasRenderableToc}) {
   return (
     <div data-tab={API_TAB_NAME} data-tab-url={normalizeTabUrl(API_TAB_NAME)}>
       <div class={'docs-reference-api-tab'}>
-        <CodeTableOfContents codeLinesGroups={props.entry.codeLinesGroups} />
+        <CodeTableOfContents entry={props.entry} />
       </div>
     </div>
   );

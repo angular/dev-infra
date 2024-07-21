@@ -43,27 +43,25 @@ export interface DocEntryRenderable extends DocEntry {
 
 /** Documentation entity for a constant augmented transformed content for rendering. */
 export type ConstantEntryRenderable = ConstantEntry &
-  DocEntryRenderable & {
+  DocEntryRenderable &
+  HasRenderableToc & {
     codeLinesGroups: Map<string, CodeLineRenderable[]>;
   };
 
 /** Documentation entity for a type alias augmented transformed content for rendering. */
-export type TypeAliasEntryRenderable = TypeAliasEntry &
-  DocEntryRenderable & {
-    codeLinesGroups: Map<string, CodeLineRenderable[]>;
-  };
+export type TypeAliasEntryRenderable = TypeAliasEntry & DocEntryRenderable & HasRenderableToc;
 
 /** Documentation entity for a TypeScript class augmented transformed content for rendering. */
 export type ClassEntryRenderable = ClassEntry &
-  DocEntryRenderable & {
+  DocEntryRenderable &
+  HasRenderableToc & {
     membersGroups: Map<string, MemberEntryRenderable[]>;
-    codeLinesGroups: Map<string, CodeLineRenderable[]>;
   };
 
 /** Documentation entity for a TypeScript enum augmented transformed content for rendering. */
 export type EnumEntryRenderable = EnumEntry &
-  DocEntryRenderable & {
-    codeLinesGroups: Map<string, CodeLineRenderable[]>;
+  DocEntryRenderable &
+  HasRenderableToc & {
     members: MemberEntryRenderable[];
   };
 
@@ -71,8 +69,8 @@ export type EnumEntryRenderable = EnumEntry &
 export type InterfaceEntryRenderable = ClassEntryRenderable;
 
 export type FunctionEntryRenderable = FunctionEntry &
-  DocEntryRenderable & {
-    codeLinesGroups: Map<string, CodeLineRenderable[]>;
+  DocEntryRenderable &
+  HasRenderableToc & {
     params: ParameterEntryRenderable[];
     deprecationMessage: string | null;
     overloads: FunctionEntryRenderable[] | null;

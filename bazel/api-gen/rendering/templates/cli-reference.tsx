@@ -23,10 +23,10 @@ export function CliCommandReference(entry: CliCommandRenderable) {
           <div class="docs-code docs-reference-cli-toc">
             <pre class="docs-mini-scroll-track">
               <code>
-                <div className={'hljs-ln-line'}>
+                <div className={'shiki-ln-line'}>
                   ng {commandName(entry, command)}
-                  {entry.argumentsLabel ? <button member-id={'Arguments'} className="hljs-ln-line-argument">{entry.argumentsLabel}</button> : <></>}
-                  {entry.hasOptions ? <button member-id={'Options'} className="hljs-ln-line-option">[options]</button> : <></>}
+                  {entry.argumentsLabel ? <button member-id={'Arguments'} className="shiki-ln-line-argument">{entry.argumentsLabel}</button> : <></>}
+                  {entry.hasOptions ? <button member-id={'Options'} className="shiki-ln-line-option">[options]</button> : <></>}
                 </div>
               </code>
             </pre>

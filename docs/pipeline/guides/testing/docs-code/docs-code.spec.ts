@@ -29,10 +29,27 @@ describe('markdown to html', () => {
   });
 
   it('extract regions from the code', () => {
-    const codeBlock = markdownDocument.querySelectorAll('code')[4];
+    // This unit test is sensible to additional node, like text nodes between the lines.
+    // The specific index here makes sure there is no space/linebreak between the code lines
+    const codeBlock = markdownDocument.querySelectorAll('code')[2];
     expect(codeBlock).toBeTruthy();
 
     expect(codeBlock?.textContent?.trim()).toContain(`const x = 'within the region';`);
     expect(codeBlock?.textContent?.trim()).not.toContain('docregion');
+  });
+
+  it('properly shows the diff of two provided file paths', () => {
+    const codeBlock = markdownDocument.querySelectorAll('code')[3];
+    expect(codeBlock).toBeTruthy();
+
+    const codeLines = codeBlock.querySelectorAll('.line');
+    expect(codeLines[0].textContent).toContain('oldFuncName');
+    expect(codeLines[0].classList.contains('remove')).toBeTrue();
+
+    expect(codeLines[1].textContent).toContain('newName');
+    expect(codeLines[1].classList.contains('add')).toBeTrue();
+
+    expect(codeLines[2].classList.contains('add')).toBeFalse();
+    expect(codeLines[2].classList.contains('remove')).toBeFalse();
   });
 });

@@ -6,10 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import highlightJs, {HighlightResult} from 'highlight.js';
 import {Renderer as MarkedRenderer} from 'marked';
-import {AIO_URL} from '../backwards-compatibility/domains';
-import {splitLines} from '../transforms/code-transforms';
+import {codeToHtml} from '../shiki/shiki';
 
 /**
  * Custom renderer for marked that will be used to transform markdown files to HTML
@@ -17,27 +15,12 @@ import {splitLines} from '../transforms/code-transforms';
  */
 export const renderer: Partial<MarkedRenderer> = {
   code(code: string, language: string, isEscaped: boolean): string {
-    let highlightResult: HighlightResult;
-    // Use try catch because there are existing content issues when there is provided nonexistent
-    // language, like `typescript=` etc. In that case when there will be an error thrown `Could not
-    // find the language 'typescript=', did you forget to load/include a language module?`
-    // Let's try to use `highlightAuto`.
-    try {
-      highlightResult = language
-        ? highlightJs.highlight(code, {language})
-        : highlightJs.highlightAuto(code);
-    } catch {
-      highlightResult = highlightJs.highlightAuto(code);
-    }
-
-    const lines = splitLines(highlightResult.value);
+    const highlightResult = codeToHtml(code, language).replace(/>\s+</g, '><');
 
     return `
       <div class="docs-code" role="group">
         <pre class="docs-mini-scroll-track">
-          <code>
-            ${lines.map((line) => `<span class="hljs-ln-line">${line}</span>`).join('')}
-          </code>
+          ${highlightResult}
         </pre>
       </div>
     `;
@@ -48,7 +31,6 @@ export const renderer: Partial<MarkedRenderer> = {
     `;
   },
   link(href: string, title: string, text: string): string {
-    text = text.startsWith(AIO_URL) ? 'our guides' : text;
     return `<a href="${href}">${text}</a>`;
   },
   list(body: string, ordered: boolean, start: number) {

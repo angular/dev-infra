@@ -12,7 +12,7 @@ import {CodeLine} from './code-line';
 
 export function CodeLineGroup(props: {lines: CodeLineRenderable[]}) {
   if (props.lines.length > 1) {
-    return (<div class="hljs-ln-group">
+    return (<div class="shiki-ln-group">
         {
           props.lines.map(line =>
             <CodeLine line={line} />

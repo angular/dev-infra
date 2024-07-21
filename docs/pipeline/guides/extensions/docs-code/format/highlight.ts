@@ -2,22 +2,14 @@ import {decode} from 'html-entities';
 import {CodeToken} from './index';
 import {expandRangeStringValues} from './range';
 import {JSDOM} from 'jsdom';
-import {createCssVariablesTheme, createHighlighter, HighlighterGeneric} from 'shiki';
+import {createHighlighter, HighlighterGeneric} from 'shiki';
 
-const lineNumberClassName: string = 'hljs-ln-number';
-const lineMultifileClassName: string = 'hljs-ln-line';
+const lineNumberClassName: string = 'shiki-ln-number';
 const lineAddedClassName: string = 'add';
 const lineRemovedClassName: string = 'remove';
 const lineHighlightedClassName: string = 'highlighted';
 
 let highlighter: HighlighterGeneric<any, any>;
-
-const cssVarTheme = createCssVariablesTheme({
-  name: 'css-variables',
-  variablePrefix: '--shiki-docs-',
-  variableDefaults: {},
-  fontStyle: true,
-});
 
 /**
  * Highlighter needs to setup asynchronously
@@ -26,7 +18,7 @@ const cssVarTheme = createCssVariablesTheme({
  */
 export async function initHighlighter() {
   highlighter = await createHighlighter({
-    themes: [cssVarTheme],
+    themes: ['github-light', 'github-dark'],
     langs: [
       'javascript',
       'typescript',
@@ -34,6 +26,7 @@ export async function initHighlighter() {
       'angular-ts',
       'shell',
       'html',
+      'http',
       'json',
       'nginx',
       'markdown',
@@ -51,13 +44,26 @@ export function highlightCode(token: CodeToken) {
     // Decode the code content to replace HTML entities to characters
     const decodedCode = decode(token.code);
     const value = highlighter.codeToHtml(decodedCode, {
-      lang: token.language ?? 'text',
-      theme: cssVarTheme,
+      // we chose ts a fallback language as most example are ts.
+      // Idealy all examples should have a specified language
+      lang: token.language ?? 'angular-ts',
+      themes: {
+        light: 'github-light',
+        dark: 'github-dark',
+      },
+      cssVariablePrefix: '--shiki-',
+      defaultColor: false,
     });
     token.code = value;
   }
 
-  const lines = token.code.split(/\r\n|\r|\n/g);
+  const dom = new JSDOM(token.code);
+  const document = dom.window.document;
+  const lines = document.body.querySelectorAll('.line');
+
+  // removing whitespaces text nodes so we don't have spaces between codelines
+  removeWhitespaceNodes(document.body.querySelector('.shiki > code'));
+
   const linesCount = lines.length;
   if (linesCount === 0) {
     return;
@@ -67,8 +73,6 @@ export function highlightCode(token: CodeToken) {
   let resultFileLineIndex = 1;
 
   const highlightedLineRanges = token.highlight ? expandRangeStringValues(token.highlight) : [];
-
-  const containerEl = new JSDOM().window.document.body;
 
   do {
     const isRemovedLine = token.diffMetadata?.linesRemoved.includes(lineIndex);
@@ -86,24 +90,40 @@ export function highlightCode(token: CodeToken) {
       }
     };
 
+    const currentline = lines[lineIndex];
+    addClasses(currentline);
+
     if (!!token.linenums) {
       const lineNumberEl = JSDOM.fragment(
         `<span role="presentation" class="${lineNumberClassName}"></span>`,
       ).firstElementChild!;
       addClasses(lineNumberEl);
       lineNumberEl.textContent = isRemovedLine ? '-' : isAddedLine ? '+' : `${resultFileLineIndex}`;
-      containerEl.appendChild(lineNumberEl);
+
+      currentline.parentElement!.insertBefore(lineNumberEl, currentline);
       resultFileLineIndex++;
     }
-
-    const lineEl = JSDOM.fragment(
-      `<div class="${lineMultifileClassName}">${lines[lineIndex]}</div>`,
-    ).firstElementChild!;
-    addClasses(lineEl);
-    containerEl.appendChild(lineEl);
 
     lineIndex++;
   } while (lineIndex < linesCount);
 
-  token.code = containerEl.innerHTML;
+  token.code = document.body.innerHTML;
+}
+
+/**
+ *
+ * Removed whitespaces between 1st level children
+ */
+function removeWhitespaceNodes(parent: Element | null) {
+  if (!parent) {
+    return;
+  }
+
+  const childNodes = parent.childNodes;
+  for (let i = childNodes.length - 1; i >= 0; i--) {
+    const node = childNodes[i];
+    if (node.nodeType === 3 && !/\S/.test(node.nodeValue!)) {
+      parent.removeChild(node);
+    }
+  }
 }

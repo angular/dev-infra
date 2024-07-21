@@ -34,8 +34,8 @@ export enum CodeExampleViewMode {
   MULTI_FILE = 'multi',
 }
 
-export const CODE_LINE_NUMBER_CLASS_NAME = 'hljs-ln-number';
-export const CODE_LINE_CLASS_NAME = 'hljs-ln-line';
+export const CODE_LINE_NUMBER_CLASS_NAME = 'shiki-ln-number';
+export const CODE_LINE_CLASS_NAME = 'shiki-ln-line';
 export const GAP_CODE_LINE_CLASS_NAME = 'gap';
 export const HIDDEN_CLASS_NAME = 'hidden';
 

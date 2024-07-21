@@ -19,7 +19,7 @@ import {CommonModule} from '@angular/common';
 import {Clipboard} from '@angular/cdk/clipboard';
 import {IconComponent} from '../icon/icon.component';
 
-export const REMOVED_LINE_CLASS_NAME = '.hljs-ln-line.remove';
+export const REMOVED_LINE_CLASS_NAME = '.line.remove';
 export const CONFIRMATION_DISPLAY_TIME_MS = 2000;
 
 @Component({
@@ -66,7 +66,7 @@ export class CopySourceCodeButton {
 
     if (removedLines.length) {
       // Get only those lines which are not marked as removed
-      const formattedText = Array.from(codeElement.querySelectorAll('.hljs-ln-line:not(.remove)'))
+      const formattedText = Array.from(codeElement.querySelectorAll('.line:not(.remove)'))
         .map((line) => (line as HTMLDivElement).innerText)
         .join('\n');
 
