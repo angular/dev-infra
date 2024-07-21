@@ -6,6 +6,7 @@ import {isCliEntry} from './entities/categorization';
 import {configureMarkedGlobally} from './marked/configuration';
 import {getRenderable} from './processing';
 import {renderEntry} from './rendering';
+import {initHighlighter} from './shiki/shiki';
 
 /** The JSON data file format for extracted API reference info. */
 interface EntryCollection {
@@ -65,8 +66,11 @@ function getNormalizedFilename(moduleName: string, entry: DocEntry | CliCommand)
   return `${normalizedModuleName}_${entry.name}_${entry.entryType.toLowerCase()}.html`;
 }
 
-function main() {
+async function main() {
   configureMarkedGlobally();
+
+  // Shiki highlighter needs to be setup in an async context
+  await initHighlighter();
 
   const [paramFilePath] = process.argv.slice(2);
   const rawParamLines = readFileSync(paramFilePath, {encoding: 'utf8'}).split('\n');

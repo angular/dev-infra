@@ -66,7 +66,9 @@ export interface HasModuleName {
 
 /** A doc entry that has ToC transformed for rendering. */
 export interface HasRenderableToc {
+  beforeCodeGroups: string;
   codeLinesGroups: Map<string, CodeLineRenderable[]>;
+  afterCodeGroups: string;
 }
 
 /** A doc entry that has params transformed for rendering. */

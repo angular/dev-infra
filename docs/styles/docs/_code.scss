@@ -94,7 +94,9 @@
     border: 1px solid var(--senary-contrast);
     border-radius: 0.25rem;
     background: var(--octonary-contrast);
-    transition: background 0.3s ease, border-color 0.3s ease;
+    transition:
+      background 0.3s ease,
+      border-color 0.3s ease;
     container: codeblock / inline-size;
 
     pre {
@@ -111,18 +113,21 @@
 
   // shell doesn't have a header, for commands only
   .shell {
-    background-color: var(--quaternary-contrast);
     border: 1px solid var(--quinary-contrast);
 
     pre {
       white-space: nowrap;
     }
 
-    .hljs-ln-line {
-      color: var(--page-background);
+    .shiki .line {
       &::before {
         content: '$';
         padding-inline-end: 0.5rem;
+      }
+      display: block;
+
+      &.hidden {
+        display: none;
       }
     }
 
@@ -163,7 +168,9 @@
     z-index: var(--z-index-icon);
     background-color: var(--octonary-contrast);
     border: 1px solid var(--senary-contrast);
-    transition: background-color 0.3s ease, border-color 0.3s ease;
+    transition:
+      background-color 0.3s ease,
+      border-color 0.3s ease;
 
     @container codeblock (min-width: 400px) {
       border: 1px solid transparent;
@@ -259,7 +266,7 @@
   // Line numbers styling: Add a grid, if there are line numbers
   .docs-code:not([mermaid]),
   .docs-example-viewer-code-wrapper {
-    code:has(.hljs-ln-number) {
+    code:has(.shiki-ln-number) {
       display: grid;
       grid-template-columns: min-content 1fr;
       height: 100%;
@@ -278,7 +285,7 @@
     }
   }
 
-  .hljs-ln-number {
+  .shiki-ln-number {
     border-inline-end: 1px solid var(--senary-contrast);
     padding-inline-start: 0.75rem;
     padding-inline-end: 0.5rem;
@@ -305,109 +312,29 @@
 }
 
 @mixin docs-syntax-highlighting {
-  .hljs-ln-line {
+  .shiki .line {
     min-height: 1.375em;
     padding-inline: 1rem;
     color: var(--tertiary-contrast);
+
+    display: block;
+    &.hidden {
+      display: none;
+    }
+
+    span:last-child {
+      margin-inline-end: 4rem;
+    }
   }
 
-  .hljs-ln-group {
+  .shiki-ln-group {
     display: flex;
     flex-direction: column;
     margin: 1rem 0;
   }
 
-  .hljs-ln-line-deprecated {
+  .shiki-ln-line-deprecated {
     text-decoration: line-through;
-  }
-
-  .hljs-comment {
-    color: var(--quaternary-contrast);
-  }
-  .hljs-tag {
-    color: var(--bright-blue);
-  }
-  .hljs-operator {
-    color: var(--senary-contrast);
-  }
-
-  .hljs-punctuation,
-  .hljs-subst {
-    color: var(--hot-red);
-  }
-
-  .hljs-operator {
-    opacity: 0.7;
-  }
-  .hljs-bullet,
-  .hljs-deletion,
-  .hljs-name,
-  .hljs-selector-tag,
-  .hljs-template-variable,
-  .hljs-variable {
-    color: var(--bright-blue);
-  }
-  .hljs-attr,
-  .hljs-link,
-  .hljs-literal,
-  .hljs-number,
-  .hljs-symbol,
-  .hljs-variable.constant_ {
-    color: color-mix(in srgb, var(--vivid-pink) 80%, var(--full-contrast));
-  }
-  .hljs-class .hljs-title,
-  .hljs-title,
-  .hljs-title.class_ {
-    color: color-mix(in srgb, var(--vivid-pink) 80%, var(--full-contrast));
-  }
-  .hljs-strong {
-    font-weight: 700;
-    color: #ffcb6b;
-  }
-  .hljs-addition,
-  .hljs-code,
-  .hljs-string,
-  .hljs-title .class_ .inherited__ {
-    color: color-mix(in srgb, var(--orange-red) 80%, var(--full-contrast));
-  }
-
-  .hljs-doctag,
-  .hljs-keyword.hljs-atrule,
-  .hljs-quote,
-  .hljs-regexp {
-    color: var(--quinary-contrast);
-  }
-
-  .hljs-built_in {
-    color: var(--bright-blue);
-  }
-
-  .hljs-attribute,
-  .hljs-function .hljs-title,
-  .hljs-section,
-  .hljs-title.function_,
-  .ruby,
-  .hljs-property {
-    color: var(--hot-pink);
-  }
-  .diff .hljs-meta,
-  .hljs-keyword,
-  .hljs-template-tag,
-  .hljs-type {
-    color: var(--bright-blue);
-  }
-  .hljs-emphasis {
-    color: #c792ea;
-    font-style: italic;
-  }
-  .hljs-meta,
-  .hljs-meta .hljs-keyword,
-  .hljs-meta .hljs-string {
-    color: var(--bright-blue);
-  }
-  .hljs-meta .hljs-keyword,
-  .hljs-meta-keyword {
-    font-weight: 700;
   }
 
   .gap {

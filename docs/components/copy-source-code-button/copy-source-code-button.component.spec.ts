@@ -59,8 +59,8 @@ describe('CopySourceCodeButton', () => {
   it('should not copy lines marked as deleted when code snippet contains diff', async () => {
     const codeInHtmlFormat = `
     <code>
-      <div class="hljs-ln-line remove"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let product of products"</span>&gt;</span></div>
-      <div class="hljs-ln-line add"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let product of products()"</span>&gt;</span></div>
+      <div class="line remove"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let product of products"</span>&gt;</span></div>
+      <div class="line add"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let product of products()"</span>&gt;</span></div>
     </code>
     `;
     const expectedCodeToBeCopied = `<div *ngFor="let product of products()">`;

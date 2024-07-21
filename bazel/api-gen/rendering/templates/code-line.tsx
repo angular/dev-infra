@@ -11,11 +11,27 @@ import {CodeLineRenderable} from '../entities/renderables';
 
 export function CodeLine(props: {line: CodeLineRenderable}) {
   const line = props.line;
-  const className = `hljs-ln-line ${line.isDeprecated ? `hljs-ln-line-deprecated` : ''}`;
+  const className = `line ${line.isDeprecated ? `shiki-ln-line-deprecated` : ''}`;
+
+  // extracting the line that is wrapped by shiki's <span class="line">
+  // The captured group is greedy to include all nested elements
+  const pattern = /<span[^>]*\bclass=["']line["'][^>]*>(.*)<\/span>/s;
+  const match = line.contents.match(pattern);
+
+  // 
+  let highlightedContent = match ? match[1] : line.contents;
 
   if (line.id) {
-    return (<button aria-describedby="jump-msg" type="button" className={className} member-id={line.id} dangerouslySetInnerHTML={({__html: line.contents})}></button>);
+    return (
+      <button
+        aria-describedby="jump-msg"
+        type="button"
+        className={className}
+        member-id={line.id}
+        dangerouslySetInnerHTML={{__html: highlightedContent}}
+      ></button>
+    );
   } else {
-    return (<div class={className} dangerouslySetInnerHTML={({__html: line.contents})}></div>);
+    return <span class={className} dangerouslySetInnerHTML={{__html: highlightedContent}}></span>;
   }
 }
