@@ -8,15 +8,24 @@ export const dnsRedirecting = functions
     maxInstances: 2,
   })
   .https.onRequest(async (request, response) => {
+    /** The type of redirect to use, defaulting to a 301 permanent redirect. */
     let redirectType = 301;
     /** The hostname that was used for the request. */
     let hostname = request.hostname;
 
-    // If a hostname is provided as a query param, use it instead. This allows us to verify redirects prior to the
-    // DNS records being setup. We use a 302 redirect for this as its a temporary check.
-    if (request.hostname === 'dns.angular.dev' && request.query['hostname']) {
-      hostname = request.query['hostname'] as string;
-      redirectType = 302;
+    if (request.hostname === 'dns.angular.dev') {
+      // If a hostname is provided as a query param, use it instead. This allows us to verify redirects prior to the
+      // DNS records being setup. We use a 302 redirect for this as its a temporary check.
+      if (request.query['hostname']) {
+        hostname = request.query['hostname'] as string;
+        redirectType = 302;
+      } else {
+        response.status(200);
+        response.send(
+          'No content available at this page, redirects will be made for requests at the registered subdomain.',
+        );
+        return;
+      }
     }
 
     if (hostname === 'update.angular.dev') {
