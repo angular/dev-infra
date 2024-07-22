@@ -14,7 +14,7 @@ export const dnsRedirecting = functions
 
     // If a hostname is provided as a query param, use it instead. This allows us to verify redirects prior to the
     // DNS records being setup. We use a 302 redirect for this as its a temporary check.
-    if (request.query['hostname']) {
+    if (request.hostname === 'dns.angular.dev' && request.query['hostname']) {
       hostname = request.query['hostname'] as string;
       redirectType = 302;
     }
@@ -37,5 +37,7 @@ export const dnsRedirecting = functions
 
     // If no redirect is matched, we return a failure message
     response.status(404);
-    response.send(`No redirect defined for ${request.originalUrl}`);
+    response.send(
+      `No redirect defined for ${request.protocol}://${request.hostname}${request.originalUrl}`,
+    );
   });
