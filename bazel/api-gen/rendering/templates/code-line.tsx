@@ -11,7 +11,7 @@ import {CodeLineRenderable} from '../entities/renderables';
 
 export function CodeLine(props: {line: CodeLineRenderable}) {
   const line = props.line;
-  const className = `line ${line.isDeprecated ? `shiki-ln-line-deprecated` : ''}`;
+  const className = `line ${line.isDeprecated ? `shiki-deprecated` : ''}`;
 
   // extracting the line that is wrapped by shiki's <span class="line">
   // The captured group is greedy to include all nested elements

@@ -35,7 +35,7 @@ export enum CodeExampleViewMode {
 }
 
 export const CODE_LINE_NUMBER_CLASS_NAME = 'shiki-ln-number';
-export const CODE_LINE_CLASS_NAME = 'shiki-ln-line';
+export const CODE_LINE_CLASS_NAME = 'line';
 export const GAP_CODE_LINE_CLASS_NAME = 'gap';
 export const HIDDEN_CLASS_NAME = 'hidden';
 
