@@ -43,10 +43,11 @@ export function highlightCode(token: CodeToken) {
   if (token.language !== 'none' && token.language !== 'file') {
     // Decode the code content to replace HTML entities to characters
     const decodedCode = decode(token.code);
+    const fallbackLanguage = token.path?.endsWith('html') ? 'angular-html' : 'angular-ts';
     const value = highlighter.codeToHtml(decodedCode, {
       // we chose ts a fallback language as most example are ts.
       // Idealy all examples should have a specified language
-      lang: token.language ?? 'angular-ts',
+      lang: token.language ?? fallbackLanguage,
       themes: {
         light: 'github-light',
         dark: 'github-dark',
