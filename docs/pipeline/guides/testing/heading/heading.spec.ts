@@ -79,8 +79,10 @@ describe('markdown to html', () => {
 
     const h2HeaderId = h2?.getAttribute('id');
     const h2AnchorHref = h2Anchor?.getAttribute('href');
+    const h2AnchorContent = h2Anchor?.textContent?.trim();
 
     expect(h2HeaderId).toContain('my-custom-id');
     expect(h2AnchorHref).toBe(`#${h2HeaderId}`);
+    expect(h2AnchorContent).toBe('My heading');
   });
 });
