@@ -41280,7 +41280,7 @@ if (process.platform === "linux") {
 }
 
 // 
-var processOk = (process7) => !!process7 && typeof process7 === "object" && typeof process7.removeListener === "function" && typeof process7.emit === "function" && typeof process7.reallyExit === "function" && typeof process7.listeners === "function" && typeof process7.kill === "function" && typeof process7.pid === "number" && typeof process7.on === "function";
+var processOk = (process6) => !!process6 && typeof process6 === "object" && typeof process6.removeListener === "function" && typeof process6.emit === "function" && typeof process6.reallyExit === "function" && typeof process6.listeners === "function" && typeof process6.kill === "function" && typeof process6.pid === "number" && typeof process6.on === "function";
 var kExitEmitter = Symbol.for("signal-exit emitter");
 var global2 = globalThis;
 var ObjectDefineProperty = Object.defineProperty.bind(Object);
@@ -41369,15 +41369,15 @@ var SignalExit = class extends SignalExitBase {
   #originalProcessReallyExit;
   #sigListeners = {};
   #loaded = false;
-  constructor(process7) {
+  constructor(process6) {
     super();
-    this.#process = process7;
+    this.#process = process6;
     this.#sigListeners = {};
     for (const sig of signals) {
       this.#sigListeners[sig] = () => {
         const listeners = this.#process.listeners(sig);
         let { count } = this.#emitter;
-        const p = process7;
+        const p = process6;
         if (typeof p.__signal_exit_emitter__ === "object" && typeof p.__signal_exit_emitter__.count === "number") {
           count += p.__signal_exit_emitter__.count;
         }
@@ -41386,12 +41386,12 @@ var SignalExit = class extends SignalExitBase {
           const ret = this.#emitter.emit("exit", null, sig);
           const s = sig === "SIGHUP" ? this.#hupSig : sig;
           if (!ret)
-            process7.kill(process7.pid, s);
+            process6.kill(process6.pid, s);
         }
       };
     }
-    this.#originalProcessReallyExit = process7.reallyExit;
-    this.#originalProcessEmit = process7.emit;
+    this.#originalProcessReallyExit = process6.reallyExit;
+    this.#originalProcessEmit = process6.emit;
   }
   onExit(cb, opts) {
     if (!processOk(this.#process)) {
@@ -41935,300 +41935,12 @@ var Separator = class {
 
 // 
 var import_yoctocolors_cjs3 = __toESM(require_yoctocolors_cjs(), 1);
-
-// 
-import process6 from "node:process";
-function isUnicodeSupported2() {
-  if (process6.platform !== "win32") {
-    return process6.env["TERM"] !== "linux";
-  }
-  return Boolean(process6.env["WT_SESSION"]) || Boolean(process6.env["TERMINUS_SUBLIME"]) || process6.env["ConEmuTask"] === "{cmd::Cmder}" || process6.env["TERM_PROGRAM"] === "Terminus-Sublime" || process6.env["TERM_PROGRAM"] === "vscode" || process6.env["TERM"] === "xterm-256color" || process6.env["TERM"] === "alacritty" || process6.env["TERMINAL_EMULATOR"] === "JetBrains-JediTerm";
-}
-var common2 = {
-  circleQuestionMark: "(?)",
-  questionMarkPrefix: "(?)",
-  square: "\u2588",
-  squareDarkShade: "\u2593",
-  squareMediumShade: "\u2592",
-  squareLightShade: "\u2591",
-  squareTop: "\u2580",
-  squareBottom: "\u2584",
-  squareLeft: "\u258C",
-  squareRight: "\u2590",
-  squareCenter: "\u25A0",
-  bullet: "\u25CF",
-  dot: "\u2024",
-  ellipsis: "\u2026",
-  pointerSmall: "\u203A",
-  triangleUp: "\u25B2",
-  triangleUpSmall: "\u25B4",
-  triangleDown: "\u25BC",
-  triangleDownSmall: "\u25BE",
-  triangleLeftSmall: "\u25C2",
-  triangleRightSmall: "\u25B8",
-  home: "\u2302",
-  heart: "\u2665",
-  musicNote: "\u266A",
-  musicNoteBeamed: "\u266B",
-  arrowUp: "\u2191",
-  arrowDown: "\u2193",
-  arrowLeft: "\u2190",
-  arrowRight: "\u2192",
-  arrowLeftRight: "\u2194",
-  arrowUpDown: "\u2195",
-  almostEqual: "\u2248",
-  notEqual: "\u2260",
-  lessOrEqual: "\u2264",
-  greaterOrEqual: "\u2265",
-  identical: "\u2261",
-  infinity: "\u221E",
-  subscriptZero: "\u2080",
-  subscriptOne: "\u2081",
-  subscriptTwo: "\u2082",
-  subscriptThree: "\u2083",
-  subscriptFour: "\u2084",
-  subscriptFive: "\u2085",
-  subscriptSix: "\u2086",
-  subscriptSeven: "\u2087",
-  subscriptEight: "\u2088",
-  subscriptNine: "\u2089",
-  oneHalf: "\xBD",
-  oneThird: "\u2153",
-  oneQuarter: "\xBC",
-  oneFifth: "\u2155",
-  oneSixth: "\u2159",
-  oneEighth: "\u215B",
-  twoThirds: "\u2154",
-  twoFifths: "\u2156",
-  threeQuarters: "\xBE",
-  threeFifths: "\u2157",
-  threeEighths: "\u215C",
-  fourFifths: "\u2158",
-  fiveSixths: "\u215A",
-  fiveEighths: "\u215D",
-  sevenEighths: "\u215E",
-  line: "\u2500",
-  lineBold: "\u2501",
-  lineDouble: "\u2550",
-  lineDashed0: "\u2504",
-  lineDashed1: "\u2505",
-  lineDashed2: "\u2508",
-  lineDashed3: "\u2509",
-  lineDashed4: "\u254C",
-  lineDashed5: "\u254D",
-  lineDashed6: "\u2574",
-  lineDashed7: "\u2576",
-  lineDashed8: "\u2578",
-  lineDashed9: "\u257A",
-  lineDashed10: "\u257C",
-  lineDashed11: "\u257E",
-  lineDashed12: "\u2212",
-  lineDashed13: "\u2013",
-  lineDashed14: "\u2010",
-  lineDashed15: "\u2043",
-  lineVertical: "\u2502",
-  lineVerticalBold: "\u2503",
-  lineVerticalDouble: "\u2551",
-  lineVerticalDashed0: "\u2506",
-  lineVerticalDashed1: "\u2507",
-  lineVerticalDashed2: "\u250A",
-  lineVerticalDashed3: "\u250B",
-  lineVerticalDashed4: "\u254E",
-  lineVerticalDashed5: "\u254F",
-  lineVerticalDashed6: "\u2575",
-  lineVerticalDashed7: "\u2577",
-  lineVerticalDashed8: "\u2579",
-  lineVerticalDashed9: "\u257B",
-  lineVerticalDashed10: "\u257D",
-  lineVerticalDashed11: "\u257F",
-  lineDownLeft: "\u2510",
-  lineDownLeftArc: "\u256E",
-  lineDownBoldLeftBold: "\u2513",
-  lineDownBoldLeft: "\u2512",
-  lineDownLeftBold: "\u2511",
-  lineDownDoubleLeftDouble: "\u2557",
-  lineDownDoubleLeft: "\u2556",
-  lineDownLeftDouble: "\u2555",
-  lineDownRight: "\u250C",
-  lineDownRightArc: "\u256D",
-  lineDownBoldRightBold: "\u250F",
-  lineDownBoldRight: "\u250E",
-  lineDownRightBold: "\u250D",
-  lineDownDoubleRightDouble: "\u2554",
-  lineDownDoubleRight: "\u2553",
-  lineDownRightDouble: "\u2552",
-  lineUpLeft: "\u2518",
-  lineUpLeftArc: "\u256F",
-  lineUpBoldLeftBold: "\u251B",
-  lineUpBoldLeft: "\u251A",
-  lineUpLeftBold: "\u2519",
-  lineUpDoubleLeftDouble: "\u255D",
-  lineUpDoubleLeft: "\u255C",
-  lineUpLeftDouble: "\u255B",
-  lineUpRight: "\u2514",
-  lineUpRightArc: "\u2570",
-  lineUpBoldRightBold: "\u2517",
-  lineUpBoldRight: "\u2516",
-  lineUpRightBold: "\u2515",
-  lineUpDoubleRightDouble: "\u255A",
-  lineUpDoubleRight: "\u2559",
-  lineUpRightDouble: "\u2558",
-  lineUpDownLeft: "\u2524",
-  lineUpBoldDownBoldLeftBold: "\u252B",
-  lineUpBoldDownBoldLeft: "\u2528",
-  lineUpDownLeftBold: "\u2525",
-  lineUpBoldDownLeftBold: "\u2529",
-  lineUpDownBoldLeftBold: "\u252A",
-  lineUpDownBoldLeft: "\u2527",
-  lineUpBoldDownLeft: "\u2526",
-  lineUpDoubleDownDoubleLeftDouble: "\u2563",
-  lineUpDoubleDownDoubleLeft: "\u2562",
-  lineUpDownLeftDouble: "\u2561",
-  lineUpDownRight: "\u251C",
-  lineUpBoldDownBoldRightBold: "\u2523",
-  lineUpBoldDownBoldRight: "\u2520",
-  lineUpDownRightBold: "\u251D",
-  lineUpBoldDownRightBold: "\u2521",
-  lineUpDownBoldRightBold: "\u2522",
-  lineUpDownBoldRight: "\u251F",
-  lineUpBoldDownRight: "\u251E",
-  lineUpDoubleDownDoubleRightDouble: "\u2560",
-  lineUpDoubleDownDoubleRight: "\u255F",
-  lineUpDownRightDouble: "\u255E",
-  lineDownLeftRight: "\u252C",
-  lineDownBoldLeftBoldRightBold: "\u2533",
-  lineDownLeftBoldRightBold: "\u252F",
-  lineDownBoldLeftRight: "\u2530",
-  lineDownBoldLeftBoldRight: "\u2531",
-  lineDownBoldLeftRightBold: "\u2532",
-  lineDownLeftRightBold: "\u252E",
-  lineDownLeftBoldRight: "\u252D",
-  lineDownDoubleLeftDoubleRightDouble: "\u2566",
-  lineDownDoubleLeftRight: "\u2565",
-  lineDownLeftDoubleRightDouble: "\u2564",
-  lineUpLeftRight: "\u2534",
-  lineUpBoldLeftBoldRightBold: "\u253B",
-  lineUpLeftBoldRightBold: "\u2537",
-  lineUpBoldLeftRight: "\u2538",
-  lineUpBoldLeftBoldRight: "\u2539",
-  lineUpBoldLeftRightBold: "\u253A",
-  lineUpLeftRightBold: "\u2536",
-  lineUpLeftBoldRight: "\u2535",
-  lineUpDoubleLeftDoubleRightDouble: "\u2569",
-  lineUpDoubleLeftRight: "\u2568",
-  lineUpLeftDoubleRightDouble: "\u2567",
-  lineUpDownLeftRight: "\u253C",
-  lineUpBoldDownBoldLeftBoldRightBold: "\u254B",
-  lineUpDownBoldLeftBoldRightBold: "\u2548",
-  lineUpBoldDownLeftBoldRightBold: "\u2547",
-  lineUpBoldDownBoldLeftRightBold: "\u254A",
-  lineUpBoldDownBoldLeftBoldRight: "\u2549",
-  lineUpBoldDownLeftRight: "\u2540",
-  lineUpDownBoldLeftRight: "\u2541",
-  lineUpDownLeftBoldRight: "\u253D",
-  lineUpDownLeftRightBold: "\u253E",
-  lineUpBoldDownBoldLeftRight: "\u2542",
-  lineUpDownLeftBoldRightBold: "\u253F",
-  lineUpBoldDownLeftBoldRight: "\u2543",
-  lineUpBoldDownLeftRightBold: "\u2544",
-  lineUpDownBoldLeftBoldRight: "\u2545",
-  lineUpDownBoldLeftRightBold: "\u2546",
-  lineUpDoubleDownDoubleLeftDoubleRightDouble: "\u256C",
-  lineUpDoubleDownDoubleLeftRight: "\u256B",
-  lineUpDownLeftDoubleRightDouble: "\u256A",
-  lineCross: "\u2573",
-  lineBackslash: "\u2572",
-  lineSlash: "\u2571"
-};
-var specialMainSymbols2 = {
-  tick: "\u2714",
-  info: "\u2139",
-  warning: "\u26A0",
-  cross: "\u2718",
-  squareSmall: "\u25FB",
-  squareSmallFilled: "\u25FC",
-  circle: "\u25EF",
-  circleFilled: "\u25C9",
-  circleDotted: "\u25CC",
-  circleDouble: "\u25CE",
-  circleCircle: "\u24DE",
-  circleCross: "\u24E7",
-  circlePipe: "\u24BE",
-  radioOn: "\u25C9",
-  radioOff: "\u25EF",
-  checkboxOn: "\u2612",
-  checkboxOff: "\u2610",
-  checkboxCircleOn: "\u24E7",
-  checkboxCircleOff: "\u24BE",
-  pointer: "\u276F",
-  triangleUpOutline: "\u25B3",
-  triangleLeft: "\u25C0",
-  triangleRight: "\u25B6",
-  lozenge: "\u25C6",
-  lozengeOutline: "\u25C7",
-  hamburger: "\u2630",
-  smiley: "\u32E1",
-  mustache: "\u0DF4",
-  star: "\u2605",
-  play: "\u25B6",
-  nodejs: "\u2B22",
-  oneSeventh: "\u2150",
-  oneNinth: "\u2151",
-  oneTenth: "\u2152"
-};
-var specialFallbackSymbols2 = {
-  tick: "\u221A",
-  info: "i",
-  warning: "\u203C",
-  cross: "\xD7",
-  squareSmall: "\u25A1",
-  squareSmallFilled: "\u25A0",
-  circle: "( )",
-  circleFilled: "(*)",
-  circleDotted: "( )",
-  circleDouble: "( )",
-  circleCircle: "(\u25CB)",
-  circleCross: "(\xD7)",
-  circlePipe: "(\u2502)",
-  radioOn: "(*)",
-  radioOff: "( )",
-  checkboxOn: "[\xD7]",
-  checkboxOff: "[ ]",
-  checkboxCircleOn: "(\xD7)",
-  checkboxCircleOff: "( )",
-  pointer: ">",
-  triangleUpOutline: "\u2206",
-  triangleLeft: "\u25C4",
-  triangleRight: "\u25BA",
-  lozenge: "\u2666",
-  lozengeOutline: "\u25CA",
-  hamburger: "\u2261",
-  smiley: "\u263A",
-  mustache: "\u250C\u2500\u2510",
-  star: "\u2736",
-  play: "\u25BA",
-  nodejs: "\u2666",
-  oneSeventh: "1/7",
-  oneNinth: "1/9",
-  oneTenth: "1/10"
-};
-var mainSymbols2 = { ...common2, ...specialMainSymbols2 };
-var fallbackSymbols2 = {
-  ...common2,
-  ...specialFallbackSymbols2
-};
-var shouldUseMain2 = isUnicodeSupported2();
-var figures2 = shouldUseMain2 ? mainSymbols2 : fallbackSymbols2;
-var esm_default2 = figures2;
-var replacements2 = Object.entries(specialMainSymbols2);
-
-// 
 var import_ansi_escapes2 = __toESM(require_ansi_escapes(), 1);
 var checkboxTheme = {
   icon: {
-    checked: import_yoctocolors_cjs3.default.green(esm_default2.circleFilled),
-    unchecked: esm_default2.circle,
-    cursor: esm_default2.pointer
+    checked: import_yoctocolors_cjs3.default.green(esm_default.circleFilled),
+    unchecked: esm_default.circle,
+    cursor: esm_default.pointer
   },
   style: {
     disabledChoice: (text) => import_yoctocolors_cjs3.default.dim(`- ${text}`),
@@ -42250,7 +41962,7 @@ function check(checked) {
     return isSelectable(item) ? { ...item, checked } : item;
   };
 }
-var esm_default3 = createPrompt((config, done) => {
+var esm_default2 = createPrompt((config, done) => {
   const { instructions, pageSize = 7, loop = true, choices, required, validate = () => true } = config;
   const theme = makeTheme(checkboxTheme, config.theme);
   const prefix = usePrefix({ theme });
@@ -42365,7 +42077,7 @@ ${page}${helpTipBottom}${error}${import_ansi_escapes2.default.cursorHide}`;
 // 
 var import_external_editor = __toESM(require_main2(), 1);
 import { AsyncResource as AsyncResource3 } from "node:async_hooks";
-var esm_default4 = createPrompt((config, done) => {
+var esm_default3 = createPrompt((config, done) => {
   const { waitForUseInput = true, validate = () => true } = config;
   const theme = makeTheme(config.theme);
   const [status, setStatus] = useState("pending");
@@ -42429,7 +42141,7 @@ var esm_default4 = createPrompt((config, done) => {
 });
 
 // 
-var esm_default5 = createPrompt((config, done) => {
+var esm_default4 = createPrompt((config, done) => {
   const { transformer = (answer) => answer ? "yes" : "no" } = config;
   const [status, setStatus] = useState("pending");
   const [value, setValue] = useState("");
@@ -42461,7 +42173,7 @@ var esm_default5 = createPrompt((config, done) => {
 });
 
 // 
-var esm_default6 = createPrompt((config, done) => {
+var esm_default5 = createPrompt((config, done) => {
   const { required, validate = () => true } = config;
   const theme = makeTheme(config.theme);
   const [status, setStatus] = useState("pending");
@@ -42524,14 +42236,17 @@ var esm_default6 = createPrompt((config, done) => {
 var import_yoctocolors_cjs4 = __toESM(require_yoctocolors_cjs(), 1);
 var import_ansi_escapes3 = __toESM(require_ansi_escapes(), 1);
 var selectTheme = {
-  icon: { cursor: esm_default2.pointer },
-  style: { disabled: (text) => import_yoctocolors_cjs4.default.dim(`- ${text}`) },
+  icon: { cursor: esm_default.pointer },
+  style: {
+    disabled: (text) => import_yoctocolors_cjs4.default.dim(`- ${text}`),
+    description: (text) => import_yoctocolors_cjs4.default.cyan(text)
+  },
   helpMode: "auto"
 };
 function isSelectable2(item) {
   return !Separator.isSeparator(item) && !item.disabled;
 }
-var esm_default7 = createPrompt((config, done) => {
+var esm_default6 = createPrompt((config, done) => {
   const { choices: items, loop = true, pageSize = 7 } = config;
   const firstRender = useRef(true);
   const theme = makeTheme(selectTheme, config.theme);
@@ -42628,19 +42343,19 @@ ${theme.style.help("(Use arrow keys to reveal more choices)")}`;
     return `${prefix} ${message} ${theme.style.answer(answer)}`;
   }
   const choiceDescription = selectedChoice.description ? `
-${selectedChoice.description}` : ``;
+${theme.style.description(selectedChoice.description)}` : ``;
   return `${[prefix, message, helpTipTop].filter(Boolean).join(" ")}
-${page}${choiceDescription}${helpTipBottom}${import_ansi_escapes3.default.cursorHide}`;
+${page}${helpTipBottom}${choiceDescription}${import_ansi_escapes3.default.cursorHide}`;
 });
 
 // 
 var Prompt = class {
 };
-Prompt.confirm = esm_default5;
-Prompt.input = esm_default6;
-Prompt.checkbox = esm_default3;
-Prompt.select = esm_default7;
-Prompt.editor = esm_default4;
+Prompt.confirm = esm_default4;
+Prompt.input = esm_default5;
+Prompt.checkbox = esm_default2;
+Prompt.select = esm_default6;
+Prompt.editor = esm_default3;
 
 // 
 var import_typed_graphqlify3 = __toESM(require_dist2());
@@ -43419,17 +43134,17 @@ async function auth4(state, authOptions) {
     };
     return authOptions.factory(options);
   }
-  const common3 = {
+  const common2 = {
     clientId: state.clientId,
     clientSecret: state.clientSecret,
     request: state.request,
     ...authOptions
   };
   const userAuth = state.clientType === "oauth-app" ? await createOAuthUserAuth({
-    ...common3,
+    ...common2,
     clientType: state.clientType
   }) : await createOAuthUserAuth({
-    ...common3,
+    ...common2,
     clientType: state.clientType
   });
   return userAuth();
