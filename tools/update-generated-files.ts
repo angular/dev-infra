@@ -31,6 +31,9 @@ if (queryProcess.status !== 0) {
 
 const updateTargets = queryProcess.stdout.trim().split(/\r?\n/);
 
+// Build all of the targets in parallel.
+spawnSync(bazelPath, ['build', updateTargets.join(' ')], {...spawnOptions, stdio: 'inherit'});
+
 for (const targetName of updateTargets) {
   const proc = spawnSync(bazelPath, ['run', targetName], {...spawnOptions, stdio: 'inherit'});
   if (proc.status !== 0) {
