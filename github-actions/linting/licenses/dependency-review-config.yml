@@ -1,7 +1,6 @@
 vulnerability_check: false
 allow_licenses:
   - '0BSD'
-  - 'Apache-2.0 AND BSD-3-Clause' # Needed for google-protobuf
   - 'Apache-2.0'
   - 'Artistic-2.0'
   - 'BlueOak-1.0.0'
