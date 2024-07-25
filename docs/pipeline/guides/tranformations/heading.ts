@@ -31,7 +31,7 @@ export const headingRender: RendererApi['heading'] = (text, level, raw) => {
   // extract the extended markdown heading id
   // ex:  ## MyHeading {# myId}
   const customIdRegex = /{#\s*([\w-]+)\s*}/g;
-  const customId = anchorLessText.match(customIdRegex)?.[1];
+  const customId = customIdRegex.exec(anchorLessText)?.[1];
   const link = customId ?? getHeaderId(anchorLessText);
   const label = anchorLessText
     .replaceAll(/`(.*?)`/g, '<code>$1</code>')
