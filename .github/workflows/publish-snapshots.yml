@@ -28,7 +28,7 @@ jobs:
         with:
           bazelrc: .bazelrc
       - run: yarn install --immutable
-      - run: yarn bazel build //:npm_package //ng-dev:npm_package //docs:npm_package --config=release
+      - run: yarn bazel build //:npm_package //ng-dev:npm_package --config=release
       - name: Publish Snapshots
         env:
           SNAPSHOT_BUILDS_GITHUB_TOKEN: ${{ secrets.SNAPSHOT_BUILDS_GITHUB_TOKEN }}
