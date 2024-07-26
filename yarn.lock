@@ -491,7 +491,7 @@ __metadata:
     fast-glob: "npm:^3.3.2"
     fflate: "npm:^0.8.2"
     firebase: "npm:10.12.4"
-    firebase-admin: "npm:12.2.0"
+    firebase-admin: "npm:12.3.0"
     firebase-functions: "npm:^5.0.0"
     firebase-tools: "npm:^13.0.0"
     folder-hash: "npm:^4.0.2"
@@ -1553,13 +1553,13 @@ __metadata:
   linkType: hard
 
 "@codemirror/view@npm:^6.0.0, @codemirror/view@npm:^6.17.0, @codemirror/view@npm:^6.22.1, @codemirror/view@npm:^6.23.0, @codemirror/view@npm:^6.27.0":
-  version: 6.28.6
-  resolution: "@codemirror/view@npm:6.28.6"
+  version: 6.29.0
+  resolution: "@codemirror/view@npm:6.29.0"
   dependencies:
     "@codemirror/state": "npm:^6.4.0"
     style-mod: "npm:^4.1.0"
     w3c-keyname: "npm:^2.2.4"
-  checksum: 10c0/aaf0cd3959d846bb70cb760832c6dd2b74531d7d45d79b7bc10360ab8b0543234db3c04f6e56cee2d99b33057fc229f977e0f0f0c52be4cbd855b779d86e5a68
+  checksum: 10c0/155b58bfe7de5c91a4dd3877cc2b23e1e2f796de0bf59d01c46c0797126e70052f819465b2467e1558b2cfaac25c9569b53eef09fcc5a1ae1a432ab8019e364f
   languageName: node
   linkType: hard
 
@@ -1968,10 +1968,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/busboy@npm:^2.0.0, @fastify/busboy@npm:^2.1.0":
+"@fastify/busboy@npm:^2.0.0":
   version: 2.1.1
   resolution: "@fastify/busboy@npm:2.1.1"
   checksum: 10c0/6f8027a8cba7f8f7b736718b013f5a38c0476eea67034c94a0d3c375e2b114366ad4419e6a6fa7ffc2ef9c6d3e0435d76dd584a7a1cbac23962fda7650b579e3
+  languageName: node
+  linkType: hard
+
+"@fastify/busboy@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@fastify/busboy@npm:3.0.0"
+  checksum: 10c0/ecc23afc7ca5c2c1d82fa7baf88c0847dc238d3020d11462e5c8e49fd380a4c90f5b7744b9efe013fb866f1eb34972d472e54fcc83b480f99bf7ee498daa6617
   languageName: node
   linkType: hard
 
@@ -5045,12 +5052,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@shikijs/core@npm:1.11.1":
-  version: 1.11.1
-  resolution: "@shikijs/core@npm:1.11.1"
+"@shikijs/core@npm:1.12.0":
+  version: 1.12.0
+  resolution: "@shikijs/core@npm:1.12.0"
   dependencies:
     "@types/hast": "npm:^3.0.4"
-  checksum: 10c0/3d2ccb322ed50617053c73a09b38ce1f3074c04d8a88b223c223bdd20a50e5a7774654e3862d0568d407ac507ee5f43efc1c99469502d685081f5ab000fc85d2
+  checksum: 10c0/5db2b0f3c9e2429f7da77bfe9ae6ea4206293797c7f7e51e0b1a9ee89bcfd6940b68896a3564ad462640c4931387c82baa43434439d4ed1915e49657588d2d85
   languageName: node
   linkType: hard
 
@@ -9343,11 +9350,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"firebase-admin@npm:12.2.0":
-  version: 12.2.0
-  resolution: "firebase-admin@npm:12.2.0"
+"firebase-admin@npm:12.3.0":
+  version: 12.3.0
+  resolution: "firebase-admin@npm:12.3.0"
   dependencies:
-    "@fastify/busboy": "npm:^2.1.0"
+    "@fastify/busboy": "npm:^3.0.0"
     "@firebase/database-compat": "npm:^1.0.2"
     "@firebase/database-types": "npm:^1.0.0"
     "@google-cloud/firestore": "npm:^7.7.0"
@@ -9356,7 +9363,6 @@ __metadata:
     farmhash-modern: "npm:^1.1.0"
     jsonwebtoken: "npm:^9.0.0"
     jwks-rsa: "npm:^3.1.0"
-    long: "npm:^5.2.3"
     node-forge: "npm:^1.3.1"
     uuid: "npm:^10.0.0"
   dependenciesMeta:
@@ -9364,7 +9370,7 @@ __metadata:
       optional: true
     "@google-cloud/storage":
       optional: true
-  checksum: 10c0/1f011e556c055da6d0e2822deee1c8d3b00566d1c4ef3525a5bc6604fad62d49114be18d12a39d039a415b71b2b4404c5eab93e4f9811965f2c663f52391c346
+  checksum: 10c0/f7dd1dac01781f0db53cba2e4d7f2400fed22966c87d12ae5ea17e84cedf779c44038b641370acd982e8bfac96ccd51eab27471d927ea9cf4def1e8f62541f95
   languageName: node
   linkType: hard
 
@@ -9386,8 +9392,8 @@ __metadata:
   linkType: hard
 
 "firebase-tools@npm:^13.0.0":
-  version: 13.14.0
-  resolution: "firebase-tools@npm:13.14.0"
+  version: 13.14.1
+  resolution: "firebase-tools@npm:13.14.1"
   dependencies:
     "@google-cloud/cloud-sql-connector": "npm:^1.3.3"
     "@google-cloud/pubsub": "npm:^4.5.0"
@@ -9457,7 +9463,7 @@ __metadata:
     yaml: "npm:^2.4.1"
   bin:
     firebase: lib/bin/firebase.js
-  checksum: 10c0/178d50872162a29dffa04d517dca9c651c6fb39861b225202c527bb912d4a99129cac70a05741ba0a9e0615864c2a18e383b339242b04072eb6e629c2c2c9019
+  checksum: 10c0/7acb5f4ce373f4689ecc933fdaf8aea563089c3bf1df4fd8ab21a93faf5d6b8a638a76c6defcc4acb004325f30899b699d5e52bed01bf50b765ef195ad0310da
   languageName: node
   linkType: hard
 
@@ -10373,11 +10379,11 @@ __metadata:
   linkType: hard
 
 "husky@npm:^9.0.0":
-  version: 9.1.1
-  resolution: "husky@npm:9.1.1"
+  version: 9.1.2
+  resolution: "husky@npm:9.1.2"
   bin:
     husky: bin.js
-  checksum: 10c0/56394f5a08201badece23a8599bd76fe8c41e4510a956022fe54897645900c5c5a96a740ffb0604e99e808dffc3714bae982f1cbda4a069082cc713414f17ad3
+  checksum: 10c0/7e25c31ef98ac35d357147005d6e5d87db2abca7297e7c5aac931de3699acd32a3f1a9f8e53f101daeab818f0cfe9d18fa7e34f7cf5c9c4437c3665123456dea
   languageName: node
   linkType: hard
 
@@ -12002,7 +12008,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"long@npm:^5.0.0, long@npm:^5.2.3":
+"long@npm:^5.0.0":
   version: 5.2.3
   resolution: "long@npm:5.2.3"
   checksum: 10c0/6a0da658f5ef683b90330b1af76f06790c623e148222da9d75b60e266bbf88f803232dd21464575681638894a84091616e7f89557aa087fd14116c0f4e0e43d9
@@ -13914,9 +13920,9 @@ __metadata:
   linkType: hard
 
 "preact@npm:^10.17.1":
-  version: 10.23.0
-  resolution: "preact@npm:10.23.0"
-  checksum: 10c0/00bcf490ce13c0fd70e3d2e2418466419b31f201b28d35f173d7ddcb66b421a3f6ca569541de581cbbf4ec7b2adef3f391d631dca7a4fd86708d81ca08259c1c
+  version: 10.23.1
+  resolution: "preact@npm:10.23.1"
+  checksum: 10c0/f0eb37999bfa9cbc725e57e189387c77919fa05d17cdc3c4ff41660298805159867689f1d974eb8e6496288c0212760490d0e6f1c12022e0f5a74d06cc618e85
   languageName: node
   linkType: hard
 
@@ -15227,12 +15233,12 @@ __metadata:
   linkType: hard
 
 "shiki@npm:^1.11.0":
-  version: 1.11.1
-  resolution: "shiki@npm:1.11.1"
+  version: 1.12.0
+  resolution: "shiki@npm:1.12.0"
   dependencies:
-    "@shikijs/core": "npm:1.11.1"
+    "@shikijs/core": "npm:1.12.0"
     "@types/hast": "npm:^3.0.4"
-  checksum: 10c0/ef97035d4cc3ffcee2e4f60080ea72cf5b3b895e662eae762cf4e0fa36b03210335e4403157f77c86f2d0c7a74881f4cb2e37c151f433d1b1c1a305cf979cf09
+  checksum: 10c0/266331be32e5dc2258cf701cc0260204e401dfdd5c2ee76ddabcbb35179cfa833eab52c2a3dc91a853489aa22ed1136797f00d0d605fd5744b1c826fb0981d1b
   languageName: node
   linkType: hard
 
