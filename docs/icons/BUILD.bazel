@@ -1,9 +1,0 @@
-filegroup(
-    name = "icons",
-    srcs = glob([
-        "*.svg",
-    ]),
-    visibility = [
-        "//docs:__pkg__",
-    ],
-)

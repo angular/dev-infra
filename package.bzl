@@ -20,8 +20,6 @@ basePackageSubstitutions = {
     "//shared-scripts/": "@npm//@angular/build-tooling/shared-scripts/",
     "//shared-scripts:": "@npm//@angular/build-tooling/shared-scripts:",
     "//:tsconfig.json": "@npm//@angular/build-tooling:tsconfig.json",
-    "//docs/": "@npm//@angular/docs/",
-    "//docs:": "@npm//@angular/docs:",
 }
 
 NPM_PACKAGE_SUBSTITUTIONS = select({

@@ -7,7 +7,6 @@ filegroup(
         "extract_js_module_output.bzl",
         "extract_types.bzl",
         "filter_outputs.bzl",
-        "//bazel/api-gen:files",
         "//bazel/api-golden:files",
         "//bazel/app-bundling:files",
         "//bazel/benchmark:files",
