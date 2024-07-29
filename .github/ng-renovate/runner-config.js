@@ -3,7 +3,6 @@ module.exports = {
   gitAuthor: 'Angular Robot <angular-robot@google.com>',
   platform: 'github',
   branchNameStrict: true,
-  forkMode: true,
   // Renovate fork PRs should never be editable as Renovate would otherwise
   // not be able to delete the branches and future updates would be missed.
   forkModeDisallowMaintainerEdits: true,
