@@ -40569,13 +40569,17 @@ var isEnterKey = (key) => key.name === "enter" || key.name === "return";
 
 // 
 var CancelPromptError = class extends Error {
+  name = "CancelPromptError";
   message = "Prompt was canceled";
 };
 var ExitPromptError = class extends Error {
+  name = "ExitPromptError";
 };
 var HookError = class extends Error {
+  name = "HookError";
 };
 var ValidationError = class extends Error {
+  name = "ValidationError";
 };
 
 // 
