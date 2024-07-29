@@ -18,7 +18,7 @@
   "enabledManagers": ["npm", "bazel", "github-actions"],
   "baseBranches": ["main"],
   "postUpgradeTasks": {
-    "commands": ["yarn update-generated-files"],
+    "commands": ["yarn install", "yarn update-generated-files"],
     "executionMode": "update"
   },
   "packageRules": [
