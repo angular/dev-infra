@@ -9,7 +9,7 @@ module.exports = {
   forkModeDisallowMaintainerEdits: true,
   onboarding: false,
   persistRepoData: true,
-  allowedPostUpgradeCommands: ['.', '^yarn update-generated-files$'],
+  allowedPostUpgradeCommands: ['.', '^yarn install$', '^yarn update-generated-files$'],
   repositories: [
     'angular/angular',
     'angular/dev-infra',
