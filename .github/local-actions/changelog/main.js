@@ -10013,9 +10013,9 @@ var require_api_request = __commonJS({
     } = require_errors();
     var util = require_util();
     var { getResolveErrorBodyCallback } = require_util3();
-    var { AsyncResource: AsyncResource4 } = __require("async_hooks");
+    var { AsyncResource: AsyncResource5 } = __require("async_hooks");
     var { addSignal, removeSignal } = require_abort_signal();
-    var RequestHandler = class extends AsyncResource4 {
+    var RequestHandler = class extends AsyncResource5 {
       constructor(opts, callback) {
         if (!opts || typeof opts !== "object") {
           throw new InvalidArgumentError("invalid opts");
@@ -10168,9 +10168,9 @@ var require_api_stream = __commonJS({
     } = require_errors();
     var util = require_util();
     var { getResolveErrorBodyCallback } = require_util3();
-    var { AsyncResource: AsyncResource4 } = __require("async_hooks");
+    var { AsyncResource: AsyncResource5 } = __require("async_hooks");
     var { addSignal, removeSignal } = require_abort_signal();
-    var StreamHandler = class extends AsyncResource4 {
+    var StreamHandler = class extends AsyncResource5 {
       constructor(opts, factory, callback) {
         if (!opts || typeof opts !== "object") {
           throw new InvalidArgumentError("invalid opts");
@@ -10345,7 +10345,7 @@ var require_api_pipeline = __commonJS({
       RequestAbortedError
     } = require_errors();
     var util = require_util();
-    var { AsyncResource: AsyncResource4 } = __require("async_hooks");
+    var { AsyncResource: AsyncResource5 } = __require("async_hooks");
     var { addSignal, removeSignal } = require_abort_signal();
     var assert = __require("assert");
     var kResume = Symbol("resume");
@@ -10381,7 +10381,7 @@ var require_api_pipeline = __commonJS({
         callback(err);
       }
     };
-    var PipelineHandler = class extends AsyncResource4 {
+    var PipelineHandler = class extends AsyncResource5 {
       constructor(opts, handler2) {
         if (!opts || typeof opts !== "object") {
           throw new InvalidArgumentError("invalid opts");
@@ -10533,11 +10533,11 @@ var require_api_upgrade = __commonJS({
   ""(exports, module) {
     "use strict";
     var { InvalidArgumentError, RequestAbortedError, SocketError } = require_errors();
-    var { AsyncResource: AsyncResource4 } = __require("async_hooks");
+    var { AsyncResource: AsyncResource5 } = __require("async_hooks");
     var util = require_util();
     var { addSignal, removeSignal } = require_abort_signal();
     var assert = __require("assert");
-    var UpgradeHandler = class extends AsyncResource4 {
+    var UpgradeHandler = class extends AsyncResource5 {
       constructor(opts, callback) {
         if (!opts || typeof opts !== "object") {
           throw new InvalidArgumentError("invalid opts");
@@ -10622,11 +10622,11 @@ var require_api_upgrade = __commonJS({
 var require_api_connect = __commonJS({
   ""(exports, module) {
     "use strict";
-    var { AsyncResource: AsyncResource4 } = __require("async_hooks");
+    var { AsyncResource: AsyncResource5 } = __require("async_hooks");
     var { InvalidArgumentError, RequestAbortedError, SocketError } = require_errors();
     var util = require_util();
     var { addSignal, removeSignal } = require_abort_signal();
-    var ConnectHandler = class extends AsyncResource4 {
+    var ConnectHandler = class extends AsyncResource5 {
       constructor(opts, callback) {
         if (!opts || typeof opts !== "object") {
           throw new InvalidArgumentError("invalid opts");
@@ -40603,7 +40603,14 @@ function createStore(rl) {
 function withHooks(rl, cb) {
   const store = createStore(rl);
   return hookStorage.run(store, () => {
-    cb(store);
+    function cycle(render2) {
+      store.handleChange = () => {
+        store.index = 0;
+        render2();
+      };
+      store.handleChange();
+    }
+    cb(cycle);
   });
 }
 function getStore() {
@@ -40674,6 +40681,14 @@ var effectScheduler = {
       });
       store.hooksEffect.length = 0;
     })();
+  },
+  clearAll() {
+    const store = getStore();
+    store.hooksCleanup.forEach((cleanFn) => {
+      cleanFn == null ? void 0 : cleanFn();
+    });
+    store.hooksEffect.length = 0;
+    store.hooksCleanup.length = 0;
   }
 };
 
@@ -40918,6 +40933,7 @@ function usePagination({ items, active, renderItem, pageSize, loop = true }) {
 
 // 
 import * as readline2 from "node:readline";
+import { AsyncResource as AsyncResource3 } from "node:async_hooks";
 
 // 
 var CancelablePromise = class extends Promise {
@@ -41242,7 +41258,7 @@ function createPrompt(view) {
     let cancel = () => {
     };
     const answer = new CancelablePromise((resolve, reject) => {
-      withHooks(rl, (store) => {
+      withHooks(rl, (cycle) => {
         function checkCursorPos() {
           screen.checkCursorPos();
         }
@@ -41250,11 +41266,9 @@ function createPrompt(view) {
           onExit2();
           reject(new ExitPromptError(`User force closed the prompt with ${code} ${signal}`));
         });
-        function onExit2() {
+        const onExit2 = AsyncResource3.bind(() => {
           try {
-            store.hooksCleanup.forEach((cleanFn) => {
-              cleanFn == null ? void 0 : cleanFn();
-            });
+            effectScheduler.clearAll();
           } catch (error2) {
             reject(error2);
           }
@@ -41265,8 +41279,8 @@ function createPrompt(view) {
           }
           screen.done();
           removeExitListener();
-          store.rl.input.removeListener("keypress", checkCursorPos);
-        }
+          rl.input.removeListener("keypress", checkCursorPos);
+        });
         cancel = () => {
           onExit2();
           reject(new CancelPromptError());
@@ -41277,8 +41291,7 @@ function createPrompt(view) {
             resolve(value);
           });
         }
-        function workLoop() {
-          store.index = 0;
+        cycle(() => {
           try {
             const nextView = view(config2, done);
             const [content, bottomContent] = typeof nextView === "string" ? [nextView] : nextView;
@@ -41288,10 +41301,8 @@ function createPrompt(view) {
             onExit2();
             reject(error2);
           }
-        }
-        store.handleChange = () => workLoop();
-        workLoop();
-        store.rl.input.on("keypress", checkCursorPos);
+        });
+        rl.input.on("keypress", checkCursorPos);
       });
     });
     answer.cancel = cancel;
@@ -41746,7 +41757,7 @@ ${page}${helpTipBottom}${error2}${import_ansi_escapes2.default.cursorHide}`;
 
 // 
 var import_external_editor = __toESM(require_main2(), 1);
-import { AsyncResource as AsyncResource3 } from "node:async_hooks";
+import { AsyncResource as AsyncResource4 } from "node:async_hooks";
 var esm_default3 = createPrompt((config2, done) => {
   const { waitForUseInput = true, validate = () => true } = config2;
   const theme = makeTheme(config2.theme);
@@ -41759,7 +41770,7 @@ var esm_default3 = createPrompt((config2, done) => {
     rl.pause();
     (0, import_external_editor.editAsync)(
       value,
-      AsyncResource3.bind(async (error3, answer) => {
+      AsyncResource4.bind(async (error3, answer) => {
         rl.resume();
         if (error3) {
           setError(error3.toString());
