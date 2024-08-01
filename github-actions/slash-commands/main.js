@@ -41157,11 +41157,15 @@ function useKeypress(userHandler) {
   const signal = useRef(userHandler);
   signal.current = userHandler;
   useEffect((rl) => {
+    let ignore = false;
     const handler2 = withUpdates((_input, event) => {
+      if (ignore)
+        return;
       signal.current(event, rl);
     });
     rl.input.on("keypress", handler2);
     return () => {
+      ignore = true;
       rl.input.removeListener("keypress", handler2);
     };
   }, []);
@@ -41600,12 +41604,15 @@ function createPrompt(view) {
           onExit2();
           reject(new ExitPromptError(`User force closed the prompt with ${code} ${signal}`));
         });
-        const onExit2 = AsyncResource3.bind(() => {
+        const hooksCleanup = AsyncResource3.bind(() => {
           try {
             effectScheduler.clearAll();
           } catch (error) {
             reject(error);
           }
+        });
+        function onExit2() {
+          hooksCleanup();
           if (context4 == null ? void 0 : context4.clearPromptOnDone) {
             screen.clean();
           } else {
@@ -41614,7 +41621,8 @@ function createPrompt(view) {
           screen.done();
           removeExitListener();
           rl.input.removeListener("keypress", checkCursorPos);
-        });
+          rl.removeListener("close", hooksCleanup);
+        }
         cancel = () => {
           onExit2();
           reject(new CancelPromptError());
@@ -41637,6 +41645,7 @@ function createPrompt(view) {
           }
         });
         rl.input.on("keypress", checkCursorPos);
+        rl.on("close", hooksCleanup);
       });
     });
     answer.cancel = cancel;
@@ -42322,6 +42331,9 @@ var esm_default6 = createPrompt((config, done) => {
       }, 700);
     }
   });
+  useEffect(() => () => {
+    clearTimeout(searchTimeoutRef.current);
+  }, []);
   const message = theme.style.message(config.message);
   let helpTipTop = "";
   let helpTipBottom = "";
