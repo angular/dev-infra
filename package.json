@@ -145,7 +145,7 @@
     "emoji-regex": "^10.3.0",
     "fast-glob": "^3.3.2",
     "fflate": "^0.8.2",
-    "firebase": "10.12.4",
+    "firebase": "10.12.5",
     "firebase-admin": "12.3.0",
     "firebase-functions": "^5.0.0",
     "firebase-tools": "^13.0.0",
