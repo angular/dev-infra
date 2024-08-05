@@ -41161,7 +41161,7 @@ function useKeypress(userHandler) {
     const handler2 = withUpdates((_input, event) => {
       if (ignore)
         return;
-      signal.current(event, rl);
+      void signal.current(event, rl);
     });
     rl.input.on("keypress", handler2);
     return () => {
@@ -41508,6 +41508,9 @@ var import_strip_ansi = __toESM(require_strip_ansi(), 1);
 var import_ansi_escapes = __toESM(require_ansi_escapes(), 1);
 var height = (content) => content.split("\n").length;
 var lastLine = (content) => content.split("\n").pop() ?? "";
+function cursorDown(n) {
+  return n > 0 ? import_ansi_escapes.default.cursorDown(n) : "";
+}
 var ScreenManager = class {
   rl;
   height = 0;
@@ -41517,6 +41520,11 @@ var ScreenManager = class {
     this.rl = rl;
     this.rl = rl;
     this.cursorPos = rl.getCursorPos();
+  }
+  write(content) {
+    this.rl.output.unmute();
+    this.rl.output.write(content);
+    this.rl.output.mute();
   }
   render(content, bottomContent = "") {
     const promptLine = lastLine(content);
@@ -41539,44 +41547,23 @@ var ScreenManager = class {
     if (bottomContentHeight > 0)
       output += import_ansi_escapes.default.cursorUp(bottomContentHeight);
     output += import_ansi_escapes.default.cursorTo(this.cursorPos.cols);
-    this.clean();
-    this.rl.output.unmute();
+    this.write(cursorDown(this.extraLinesUnderPrompt) + import_ansi_escapes.default.eraseLines(this.height) + output);
     this.extraLinesUnderPrompt = bottomContentHeight;
     this.height = height(output);
-    this.rl.output.write(output);
-    this.rl.output.mute();
   }
   checkCursorPos() {
     const cursorPos = this.rl.getCursorPos();
     if (cursorPos.cols !== this.cursorPos.cols) {
-      this.rl.output.unmute();
-      this.rl.output.write(import_ansi_escapes.default.cursorTo(cursorPos.cols));
-      this.rl.output.mute();
+      this.write(import_ansi_escapes.default.cursorTo(cursorPos.cols));
       this.cursorPos = cursorPos;
     }
   }
-  clean() {
-    this.rl.output.unmute();
-    this.rl.output.write([
-      this.extraLinesUnderPrompt > 0 ? import_ansi_escapes.default.cursorDown(this.extraLinesUnderPrompt) : "",
-      import_ansi_escapes.default.eraseLines(this.height)
-    ].join(""));
-    this.extraLinesUnderPrompt = 0;
-    this.rl.output.mute();
-  }
-  clearContent() {
-    this.rl.output.unmute();
-    this.rl.output.write([
-      this.extraLinesUnderPrompt > 0 ? import_ansi_escapes.default.cursorDown(this.extraLinesUnderPrompt) : "",
-      "\n"
-    ].join(""));
-    this.rl.output.mute();
-  }
-  done() {
+  done({ clearContent }) {
     this.rl.setPrompt("");
-    this.rl.output.unmute();
-    this.rl.output.write(import_ansi_escapes.default.cursorShow);
-    this.rl.output.end();
+    let output = cursorDown(this.extraLinesUnderPrompt);
+    output += clearContent ? import_ansi_escapes.default.eraseLines(this.height) : "\n";
+    output += import_ansi_escapes.default.cursorShow;
+    this.write(output);
     this.rl.close();
   }
 };
@@ -41613,12 +41600,7 @@ function createPrompt(view) {
         });
         function onExit2() {
           hooksCleanup();
-          if (context4 == null ? void 0 : context4.clearPromptOnDone) {
-            screen.clean();
-          } else {
-            screen.clearContent();
-          }
-          screen.done();
+          screen.done({ clearContent: Boolean(context4 == null ? void 0 : context4.clearPromptOnDone) });
           removeExitListener();
           rl.input.removeListener("keypress", checkCursorPos);
           rl.removeListener("close", hooksCleanup);
@@ -42051,7 +42033,7 @@ var esm_default2 = createPrompt((config, done) => {
       if (Separator.isSeparator(item)) {
         return ` ${item.separator}`;
       }
-      const line = item.name || item.value;
+      const line = String(item.name || item.value);
       if (item.disabled) {
         const disabledLabel = typeof item.disabled === "string" ? item.disabled : "(disabled)";
         return theme.style.disabledChoice(`${line} ${disabledLabel}`);
@@ -42102,7 +42084,7 @@ ${page}${helpTipBottom}${error}${import_ansi_escapes2.default.cursorHide}`;
 var import_external_editor = __toESM(require_main2(), 1);
 import { AsyncResource as AsyncResource4 } from "node:async_hooks";
 var esm_default3 = createPrompt((config, done) => {
-  const { waitForUseInput = true, validate = () => true } = config;
+  const { waitForUseInput = true, postfix = ".txt", validate = () => true } = config;
   const theme = makeTheme(config.theme);
   const [status, setStatus] = useState("pending");
   const [value, setValue] = useState(config.default || "");
@@ -42111,30 +42093,25 @@ var esm_default3 = createPrompt((config, done) => {
   const prefix = usePrefix({ isLoading, theme });
   function startEditor(rl) {
     rl.pause();
-    (0, import_external_editor.editAsync)(
-      value,
-      AsyncResource4.bind(async (error2, answer) => {
-        rl.resume();
-        if (error2) {
-          setError(error2.toString());
+    const editCallback = AsyncResource4.bind(async (error2, answer) => {
+      rl.resume();
+      if (error2) {
+        setError(error2.toString());
+      } else {
+        setStatus("loading");
+        const isValid = await validate(answer);
+        if (isValid === true) {
+          setError(void 0);
+          setStatus("done");
+          done(answer);
         } else {
-          setStatus("loading");
-          const isValid = await validate(answer);
-          if (isValid === true) {
-            setError(void 0);
-            setStatus("done");
-            done(answer);
-          } else {
-            setValue(answer);
-            setError(isValid || "You must provide a valid value");
-            setStatus("pending");
-          }
+          setValue(answer);
+          setError(isValid || "You must provide a valid value");
+          setStatus("pending");
         }
-      }),
-      {
-        postfix: config.postfix || ".txt"
       }
-    );
+    });
+    (0, import_external_editor.editAsync)(value, (error2, answer) => void editCallback(error2, answer), { postfix });
   }
   useEffect((rl) => {
     if (!waitForUseInput) {
@@ -42353,7 +42330,7 @@ ${theme.style.help("(Use arrow keys to reveal more choices)")}`;
       if (Separator.isSeparator(item)) {
         return ` ${item.separator}`;
       }
-      const line = item.name || item.value;
+      const line = String(item.name || item.value);
       if (item.disabled) {
         const disabledLabel = typeof item.disabled === "string" ? item.disabled : "(disabled)";
         return theme.style.disabled(`${line} ${disabledLabel}`);
