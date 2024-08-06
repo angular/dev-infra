@@ -41707,6 +41707,7 @@ function createPrompt(view) {
           removeExitListener();
           rl.input.removeListener("keypress", checkCursorPos);
           rl.removeListener("close", hooksCleanup);
+          output.end();
         }
         cancel = () => {
           onExit2();
