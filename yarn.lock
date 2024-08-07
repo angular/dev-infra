@@ -513,7 +513,7 @@ __metadata:
     karma-requirejs: "npm:^1.1.0"
     karma-sourcemap-loader: "npm:^0.4.0"
     license-checker: "npm:^25.0.1"
-    marked: "npm:^12.0.0"
+    marked: "npm:^14.0.0"
     marked-mangle: "npm:^1.1.4"
     mermaid: "npm:^10.8.0"
     minimatch: "npm:^10.0.0"
@@ -11370,21 +11370,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"marked@npm:^12.0.0":
-  version: 12.0.2
-  resolution: "marked@npm:12.0.2"
-  bin:
-    marked: bin/marked.js
-  checksum: 10c0/45ae2e1e3f06b30a5b5f64efc6cde9830c81d1d024fd7668772a3217f1bc0f326e66a6b8970482d9783edf1f581fecac7023a7fa160f2c14dbcc16e064b4eafb
-  languageName: node
-  linkType: hard
-
 "marked@npm:^13.0.2":
   version: 13.0.3
   resolution: "marked@npm:13.0.3"
   bin:
     marked: bin/marked.js
   checksum: 10c0/b1121f420f815206ae5ae109b9b0eb6c21f84d8d459cbe38ffa00543652e091f36a55c2c96ff1414821d8752682af8c0de3f44f0a2a5bd9c8612a4ef520e9b3d
+  languageName: node
+  linkType: hard
+
+"marked@npm:^14.0.0":
+  version: 14.0.0
+  resolution: "marked@npm:14.0.0"
+  bin:
+    marked: bin/marked.js
+  checksum: 10c0/57a47cb110f7b1a10f398b0a7236f9183aad2dcd5345ee73f2732b6387e585d04cef472bc655d2f84c542296be9728e179aebe3ed7f2f8666b8a0a9dae592876
   languageName: node
   linkType: hard
 
