@@ -6,13 +6,37 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {createEsbuildAngularOptimizePlugin} from '@angular/build-tooling/shared-scripts/angular-optimization/esbuild-plugin.mjs';
+const downlevelAsyncAwait = TMPL_DOWNLEVEL_ASYNC_AWAIT;
+const enableLinker = TMPL_RUN_LINKER;
+
+// List of esbuild plugins.
+const plugins = [];
+if (enableLinker || downlevelAsyncAwait) {
+  const {createEsbuildAngularOptimizePlugin} = await import(
+    '@angular/build-tooling/shared-scripts/angular-optimization/esbuild-plugin.mjs'
+  );
+
+  plugins.push(
+    await createEsbuildAngularOptimizePlugin({
+      optimize: undefined,
+      downlevelAsyncGeneratorsIfPresent: downlevelAsyncAwait,
+      enableLinker: enableLinker
+        ? {
+            ensureNoPartialDeclaration: true,
+            linkerOptions: {
+              // JIT mode is needed for tests overriding components/modules etc.
+              linkerJitMode: true,
+              unknownDeclarationVersionHandling: TMPL_LINKER_UNKNOWN_DECLARATION_HANDLING,
+            },
+          }
+        : undefined,
+    }),
+  );
+}
 
 // List of supported features as per ESBuild. See:
 // https://esbuild.github.io/api/#supported.
 const supported = {};
-
-const downlevelAsyncAwait = TMPL_DOWNLEVEL_ASYNC_AWAIT;
 
 // Async/Await can be downleveled so that ZoneJS can intercept. See:
 // https://github.com/angular/angular-cli/blob/afe9feaa45913/packages/angular_devkit/build_angular/src/builders/browser-esbuild/index.ts#L313-L318.
@@ -35,20 +59,5 @@ export default {
   // https://esbuild.github.io/api/#keep-names.
   keepNames: true,
   supported,
-  plugins: [
-    await createEsbuildAngularOptimizePlugin({
-      optimize: undefined,
-      downlevelAsyncGeneratorsIfPresent: downlevelAsyncAwait,
-      enableLinker: TMPL_RUN_LINKER
-        ? {
-            ensureNoPartialDeclaration: true,
-            linkerOptions: {
-              // JIT mode is needed for tests overriding components/modules etc.
-              linkerJitMode: true,
-              unknownDeclarationVersionHandling: TMPL_LINKER_UNKNOWN_DECLARATION_HANDLING,
-            },
-          }
-        : undefined,
-    }),
-  ],
+  plugins,
 };

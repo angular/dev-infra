@@ -60,11 +60,15 @@ def spec_bundle(
         linker_unknown_declaration_handling = linker_unknown_declaration_handling,
     )
 
+    esbuild_config_deps = []
+    if run_angular_linker or downlevel_async_await:
+        esbuild_config_deps = ["//shared-scripts/angular-optimization:js_lib"]
+
     esbuild_config(
         name = "%s_config" % name,
         config_file = ":%s_config_file" % name,
         testonly = True,
-        deps = ["//shared-scripts/angular-optimization:js_lib"],
+        deps = esbuild_config_deps,
     )
 
     if is_browser_test and not workspace_name:
