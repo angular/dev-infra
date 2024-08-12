@@ -1784,18 +1784,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@renovatebot/osv-offline@npm:1.5.7":
-  version: 1.5.7
-  resolution: "@renovatebot/osv-offline@npm:1.5.7"
+"@renovatebot/osv-offline@npm:1.5.8":
+  version: 1.5.8
+  resolution: "@renovatebot/osv-offline@npm:1.5.8"
   dependencies:
     "@octokit/rest": "npm:^20.1.1"
     "@renovatebot/osv-offline-db": "npm:1.6.0"
     adm-zip: "npm:~0.5.14"
     fs-extra: "npm:^11.2.0"
     got: "npm:^11.8.6"
-    luxon: "npm:^3.4.4"
+    luxon: "npm:^3.5.0"
     node-fetch: "npm:^2.7.0"
-  checksum: 10c0/98585588fd516b689384da288225773bfeb52814c15d2c78606cc71fad53c61b4002360c0094c47382c8f5d857cbd24ea1414f9955bb9e1e45a431a6842644cd
+  checksum: 10c0/c84fe60700042a2da6b13cdbd1ec10a811c9fa6de34a0846b19bb035dd5766aef57c192931d77229d86691fbb07da8247bfdd486f92b81908fb8cb14a34c540b
   languageName: node
   linkType: hard
 
@@ -2652,9 +2652,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/core@npm:4.1.1":
-  version: 4.1.1
-  resolution: "@yarnpkg/core@npm:4.1.1"
+"@yarnpkg/core@npm:4.1.2":
+  version: 4.1.2
+  resolution: "@yarnpkg/core@npm:4.1.2"
   dependencies:
     "@arcanis/slice-ansi": "npm:^1.1.1"
     "@types/semver": "npm:^7.1.0"
@@ -2665,7 +2665,7 @@ __metadata:
     "@yarnpkg/shell": "npm:^4.0.2"
     camelcase: "npm:^5.3.1"
     chalk: "npm:^3.0.0"
-    ci-info: "npm:^3.2.0"
+    ci-info: "npm:^4.0.0"
     clipanion: "npm:^4.0.0-rc.2"
     cross-spawn: "npm:7.0.3"
     diff: "npm:^5.1.0"
@@ -2682,7 +2682,7 @@ __metadata:
     treeify: "npm:^1.1.0"
     tslib: "npm:^2.4.0"
     tunnel: "npm:^0.0.6"
-  checksum: 10c0/7db63b4144b397a18ea92a468aed3338b3feabd8b812541a37de9d6ff380b65fdfcff926aa5a697430280ba31937c794fadd662f5523437e6098230516a27fdd
+  checksum: 10c0/c92941a58fa492b169ba6c4f20f49212306b0233d1d721533e40c78f7056b8738f00fd7142807e7418388d2c91f15b0f463ab033f48dacecaab75b7993c743c7
   languageName: node
   linkType: hard
 
@@ -3256,10 +3256,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ci-info@npm:^3.2.0":
-  version: 3.9.0
-  resolution: "ci-info@npm:3.9.0"
-  checksum: 10c0/6f0109e36e111684291d46123d491bc4e7b7a1934c3a20dea28cba89f1d4a03acd892f5f6a81ed3855c38647e285a150e3c9ba062e38943bef57fee6c1554c3a
+"ci-info@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "ci-info@npm:4.0.0"
+  checksum: 10c0/ecc003e5b60580bd081d83dd61d398ddb8607537f916313e40af4667f9c92a1243bd8e8a591a5aa78e418afec245dbe8e90a0e26e39ca0825129a99b978dd3f9
   languageName: node
   linkType: hard
 
@@ -5282,14 +5282,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"luxon@npm:3.4.4":
-  version: 3.4.4
-  resolution: "luxon@npm:3.4.4"
-  checksum: 10c0/02e26a0b039c11fd5b75e1d734c8f0332c95510f6a514a9a0991023e43fb233884da02d7f966823ffb230632a733fc86d4a4b1e63c3fbe00058b8ee0f8c728af
-  languageName: node
-  linkType: hard
-
-"luxon@npm:^3.2.1, luxon@npm:^3.4.4":
+"luxon@npm:3.5.0, luxon@npm:^3.2.1, luxon@npm:^3.5.0":
   version: 3.5.0
   resolution: "luxon@npm:3.5.0"
   checksum: 10c0/335789bba95077db831ef99894edadeb23023b3eb2137a1b56acd0d290082b691cf793143d69e30bc069ec95f0b49f36419f48e951c68014f19ffe12045e3494
@@ -5795,7 +5788,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: "npm:38.23.2"
+    renovate: "npm:38.25.1"
   languageName: unknown
   linkType: soft
 
@@ -6530,9 +6523,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:38.23.2":
-  version: 38.23.2
-  resolution: "renovate@npm:38.23.2"
+"renovate@npm:38.25.1":
+  version: 38.25.1
+  resolution: "renovate@npm:38.25.1"
   dependencies:
     "@aws-sdk/client-codecommit": "npm:3.621.0"
     "@aws-sdk/client-ec2": "npm:3.621.0"
@@ -6554,11 +6547,11 @@ __metadata:
     "@opentelemetry/semantic-conventions": "npm:1.25.1"
     "@qnighy/marshal": "npm:0.1.3"
     "@renovatebot/kbpgp": "npm:3.0.1"
-    "@renovatebot/osv-offline": "npm:1.5.7"
+    "@renovatebot/osv-offline": "npm:1.5.8"
     "@renovatebot/pep440": "npm:3.0.20"
     "@renovatebot/ruby-semver": "npm:3.0.23"
     "@sindresorhus/is": "npm:4.6.0"
-    "@yarnpkg/core": "npm:4.1.1"
+    "@yarnpkg/core": "npm:4.1.2"
     "@yarnpkg/parsers": "npm:3.0.2"
     agentkeepalive: "npm:4.5.0"
     aggregate-error: "npm:3.1.0"
@@ -6606,7 +6599,7 @@ __metadata:
     jsonata: "npm:2.0.5"
     jsonc-parser: "npm:3.3.1"
     klona: "npm:2.0.6"
-    luxon: "npm:3.4.4"
+    luxon: "npm:3.5.0"
     markdown-it: "npm:14.1.0"
     markdown-table: "npm:2.0.0"
     minimatch: "npm:10.0.1"
@@ -6652,7 +6645,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 10c0/ba1e5635b87c900e04999c180e51497bf4823594fab6b59d35a1f268f956071e492945cbc96c9270f85b8838f2fa5379da60b508af3b250f03d60ae184c5d321
+  checksum: 10c0/6b2370b1fa2121ab758d43042dc5468d67e5e2f99ebfe4cb395b68a5949697a2ce4e9b840653d21a4c3ccb775dced744010cc37dbfd61d1366dd3b591539655a
   languageName: node
   linkType: hard
 

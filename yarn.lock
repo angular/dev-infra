@@ -4166,12 +4166,12 @@ __metadata:
   linkType: hard
 
 "@types/selenium-webdriver@npm:^4.1.21":
-  version: 4.1.24
-  resolution: "@types/selenium-webdriver@npm:4.1.24"
+  version: 4.1.25
+  resolution: "@types/selenium-webdriver@npm:4.1.25"
   dependencies:
     "@types/node": "npm:*"
     "@types/ws": "npm:*"
-  checksum: 10c0/7019cb6c9e6ecfb870a54f146b31be6d1d29b01ed597c988be85c79876105e0573c78b5b4ed5678fb51c11cd25a327c4482c77098e904def2ac3ef2a377f9863
+  checksum: 10c0/8c942a69f8a18f6ba17f33a21a3ba81b8b01ea34b7d7fc05c3cfa417a2bb89bdc2288147ea88258a0a10b513901d1e3de4019489bc9062b6c3f59bf4d5d922ee
   languageName: node
   linkType: hard
 
@@ -7360,8 +7360,8 @@ __metadata:
   linkType: hard
 
 "firebase-tools@npm:^13.0.0":
-  version: 13.15.0
-  resolution: "firebase-tools@npm:13.15.0"
+  version: 13.15.1
+  resolution: "firebase-tools@npm:13.15.1"
   dependencies:
     "@google-cloud/cloud-sql-connector": "npm:^1.3.3"
     "@google-cloud/pubsub": "npm:^4.5.0"
@@ -7431,7 +7431,7 @@ __metadata:
     yaml: "npm:^2.4.1"
   bin:
     firebase: lib/bin/firebase.js
-  checksum: 10c0/f3ea056489ce2fdb3336a0e4b0b1269abb903373c1c41f290e8633f6dec6d2765467292f7f8c5589649cc1745ff0bc0af8a10cf17e68eb44ec95deb9373e4ee8
+  checksum: 10c0/f117bd255b69470cc8b877c708a5cd277bc701fbb2c97b53e8fe894cb8ba6a54d26120f3943cffb50571c08a045a2721803f565863e8bf66b4a13990359d3829
   languageName: node
   linkType: hard
 
