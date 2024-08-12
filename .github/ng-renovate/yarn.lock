@@ -1922,13 +1922,13 @@ __metadata:
   linkType: hard
 
 "@smithy/eventstream-serde-browser@npm:^3.0.5":
-  version: 3.0.5
-  resolution: "@smithy/eventstream-serde-browser@npm:3.0.5"
+  version: 3.0.6
+  resolution: "@smithy/eventstream-serde-browser@npm:3.0.6"
   dependencies:
-    "@smithy/eventstream-serde-universal": "npm:^3.0.4"
+    "@smithy/eventstream-serde-universal": "npm:^3.0.5"
     "@smithy/types": "npm:^3.3.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/de7255f22fef702cb24d92be7eaea6f1c1faeeac21e1c6d6865df77c5018045033bb66e4658cf74856d1c7f7d4ad2fbb52d3e341705a5907eeee15c0449c0fa0
+  checksum: 10c0/0b70151fe310687b38bf6619992a0e1d687bd4fd3c52278581147e0962bd1fa2f4bd5bfef13711d7d03d68a73484e81e5da7f7755c0141e61b045b9c1a387d10
   languageName: node
   linkType: hard
 
@@ -1943,24 +1943,24 @@ __metadata:
   linkType: hard
 
 "@smithy/eventstream-serde-node@npm:^3.0.4":
-  version: 3.0.4
-  resolution: "@smithy/eventstream-serde-node@npm:3.0.4"
+  version: 3.0.5
+  resolution: "@smithy/eventstream-serde-node@npm:3.0.5"
   dependencies:
-    "@smithy/eventstream-serde-universal": "npm:^3.0.4"
+    "@smithy/eventstream-serde-universal": "npm:^3.0.5"
     "@smithy/types": "npm:^3.3.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/11ff38048b1176625d4beb9ca245118aacaf867c90a94747e8cf0bb99e48c68aeedeab56c48a0238a27e35920c7074f3b6f71f8a8246a0d115962d728063a1f5
+  checksum: 10c0/7f1dc63838f68b99a49051ce64f81f624d881e1ccbe363e2dcfa33709d9913fec3939e9e48f75e2e11cd7a21bcfc7b7d430d10ea1c867720e0d934b2c065b16a
   languageName: node
   linkType: hard
 
-"@smithy/eventstream-serde-universal@npm:^3.0.4":
-  version: 3.0.4
-  resolution: "@smithy/eventstream-serde-universal@npm:3.0.4"
+"@smithy/eventstream-serde-universal@npm:^3.0.5":
+  version: 3.0.5
+  resolution: "@smithy/eventstream-serde-universal@npm:3.0.5"
   dependencies:
     "@smithy/eventstream-codec": "npm:^3.1.2"
     "@smithy/types": "npm:^3.3.0"
     tslib: "npm:^2.6.2"
-  checksum: 10c0/99ab5f708fa4ebccea96b373395efc76b49c34ae8eb97aa33622ba82e93441a72010bb03693ec18d1517d9bb0a4a7e5c254179c22f38f411a6fecf8b3291c77f
+  checksum: 10c0/9d065a0fcb2de7b5d7a0ad7631949d5d972fc92e7edb66a695c61f98ab659b59e39d6375527e2a85af4a97ba4f8d998e99bd84a62ded2758c925f9fe3e4b2ab1
   languageName: node
   linkType: hard
 
@@ -2591,11 +2591,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*, @types/node@npm:>=13.7.0":
-  version: 22.1.0
-  resolution: "@types/node@npm:22.1.0"
+  version: 22.2.0
+  resolution: "@types/node@npm:22.2.0"
   dependencies:
     undici-types: "npm:~6.13.0"
-  checksum: 10c0/553dafcb842b889c036d43b390d464e8ffcf3ca455ddd5b1a1ef98396381eafbeb0c112a15cc6bf9662b72bc25fc45efc4b6f604760e1e84c410f1b7936c488b
+  checksum: 10c0/c17900b34faecfec204f72970bd658d0c217aaf739c1bf7690c969465b6b26b77a8be1cd9ba735aadbd1dd20b5c3e4f406ec33528bf7c6eec90744886c5d5608
   languageName: node
   linkType: hard
 
@@ -2762,9 +2762,9 @@ __metadata:
   linkType: hard
 
 "adm-zip@npm:~0.5.14":
-  version: 0.5.14
-  resolution: "adm-zip@npm:0.5.14"
-  checksum: 10c0/1bdef41afb6a6fe35878906e5a8a9037899afeffd2907a0fae7e4b5b67ec722c74b9d23e7633570c26f06e824d3f9406f7271d91dde6a6ca5a49798c8a401c31
+  version: 0.5.15
+  resolution: "adm-zip@npm:0.5.15"
+  checksum: 10c0/40ad504176c4b7f41983d11f7ff28acd3ce5b9bd51a09356be2447cb1799de4a4d93f8b0f65f75814add17687445cc807bbcb5ec8f73f44af1aefe4509894a8c
   languageName: node
   linkType: hard
 
@@ -4006,12 +4006,12 @@ __metadata:
   linkType: hard
 
 "foreground-child@npm:^3.1.0":
-  version: 3.2.1
-  resolution: "foreground-child@npm:3.2.1"
+  version: 3.3.0
+  resolution: "foreground-child@npm:3.3.0"
   dependencies:
     cross-spawn: "npm:^7.0.0"
     signal-exit: "npm:^4.0.1"
-  checksum: 10c0/9a53a33dbd87090e9576bef65fb4a71de60f6863a8062a7b11bc1cbe3cc86d428677d7c0b9ef61cdac11007ac580006f78bd5638618d564cfd5e6fd713d6878f
+  checksum: 10c0/028f1d41000553fcfa6c4bb5c372963bf3d9bf0b1f25a87d1a6253014343fb69dfb1b42d9625d7cf44c8ba429940f3d0ff718b62105d4d4a4f6ef8ca0a53faa2
   languageName: node
   linkType: hard
 
@@ -7468,11 +7468,11 @@ __metadata:
   linkType: hard
 
 "uglify-js@npm:^3.1.4, uglify-js@npm:^3.1.9":
-  version: 3.19.1
-  resolution: "uglify-js@npm:3.19.1"
+  version: 3.19.2
+  resolution: "uglify-js@npm:3.19.2"
   bin:
     uglifyjs: bin/uglifyjs
-  checksum: 10c0/7609ab3f10d54de5ef014770f845c747266a969e9092d2284ca0ba18f10a4488208c1491bd8b52bd4c40cf6687b47a77c495f08e4a625babcdd57f58e34a3976
+  checksum: 10c0/51dbe1304a91cac5daa01f6a2d4ecd545fab7b7d0625e11590b923e95a6d2263b3481dcea974abfc0282b33d2c76f74f1196a992df07eae0847175bc39ea45bb
   languageName: node
   linkType: hard
 
