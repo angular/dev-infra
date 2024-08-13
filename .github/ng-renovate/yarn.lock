@@ -1784,18 +1784,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@renovatebot/osv-offline@npm:1.5.8":
-  version: 1.5.8
-  resolution: "@renovatebot/osv-offline@npm:1.5.8"
+"@renovatebot/osv-offline@npm:1.5.9":
+  version: 1.5.9
+  resolution: "@renovatebot/osv-offline@npm:1.5.9"
   dependencies:
     "@octokit/rest": "npm:^20.1.1"
     "@renovatebot/osv-offline-db": "npm:1.6.0"
-    adm-zip: "npm:~0.5.14"
+    adm-zip: "npm:~0.5.15"
     fs-extra: "npm:^11.2.0"
     got: "npm:^11.8.6"
     luxon: "npm:^3.5.0"
     node-fetch: "npm:^2.7.0"
-  checksum: 10c0/c84fe60700042a2da6b13cdbd1ec10a811c9fa6de34a0846b19bb035dd5766aef57c192931d77229d86691fbb07da8247bfdd486f92b81908fb8cb14a34c540b
+  checksum: 10c0/3d548af39544bc69098e75bab3eaf4c8461005f698234361a781c850d6f1a7ce6bb894d2d59fbe52210382433952083855e62a5bb8f0426c3c4eb6abbd3891f6
   languageName: node
   linkType: hard
 
@@ -2761,7 +2761,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"adm-zip@npm:~0.5.14":
+"adm-zip@npm:~0.5.15":
   version: 0.5.15
   resolution: "adm-zip@npm:0.5.15"
   checksum: 10c0/40ad504176c4b7f41983d11f7ff28acd3ce5b9bd51a09356be2447cb1799de4a4d93f8b0f65f75814add17687445cc807bbcb5ec8f73f44af1aefe4509894a8c
@@ -2896,10 +2896,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws4@npm:1.13.0":
-  version: 1.13.0
-  resolution: "aws4@npm:1.13.0"
-  checksum: 10c0/4c71398543e432631a226cabafaa138f8070482f99790233840d84847291ec744e739cb18684a68f52125d0e73f82f16f0246d93524ec85167fadb3cf60dfa4f
+"aws4@npm:1.13.1":
+  version: 1.13.1
+  resolution: "aws4@npm:1.13.1"
+  checksum: 10c0/c40a90b998853b92f9d0198e9992f4a94c81f29b02ca02b75952efaef07ff0660e756c7ebd04ff674edfa36c29406abaa8aad84f23dbc8b362d31979a631d3fe
   languageName: node
   linkType: hard
 
@@ -5788,7 +5788,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: "npm:38.25.1"
+    renovate: "npm:38.26.1"
   languageName: unknown
   linkType: soft
 
@@ -6523,9 +6523,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:38.25.1":
-  version: 38.25.1
-  resolution: "renovate@npm:38.25.1"
+"renovate@npm:38.26.1":
+  version: 38.26.1
+  resolution: "renovate@npm:38.26.1"
   dependencies:
     "@aws-sdk/client-codecommit": "npm:3.621.0"
     "@aws-sdk/client-ec2": "npm:3.621.0"
@@ -6547,7 +6547,7 @@ __metadata:
     "@opentelemetry/semantic-conventions": "npm:1.25.1"
     "@qnighy/marshal": "npm:0.1.3"
     "@renovatebot/kbpgp": "npm:3.0.1"
-    "@renovatebot/osv-offline": "npm:1.5.8"
+    "@renovatebot/osv-offline": "npm:1.5.9"
     "@renovatebot/pep440": "npm:3.0.20"
     "@renovatebot/ruby-semver": "npm:3.0.23"
     "@sindresorhus/is": "npm:4.6.0"
@@ -6556,7 +6556,7 @@ __metadata:
     agentkeepalive: "npm:4.5.0"
     aggregate-error: "npm:3.1.0"
     auth-header: "npm:1.0.0"
-    aws4: "npm:1.13.0"
+    aws4: "npm:1.13.1"
     azure-devops-node-api: "npm:14.0.1"
     better-sqlite3: "npm:11.1.2"
     bunyan: "npm:1.8.15"
@@ -6645,7 +6645,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 10c0/6b2370b1fa2121ab758d43042dc5468d67e5e2f99ebfe4cb395b68a5949697a2ce4e9b840653d21a4c3ccb775dced744010cc37dbfd61d1366dd3b591539655a
+  checksum: 10c0/4189f0b97db30ace75d93d3561476b731a587a3ed54e49f653d5601e9b0599cf15daaa3e0b9a0a7e309e0f1f6a678b5da224a12e265960cf8553a138aa52e150
   languageName: node
   linkType: hard
 
