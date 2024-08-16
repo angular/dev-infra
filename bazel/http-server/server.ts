@@ -136,7 +136,11 @@ export class HttpServer {
   /** Gets the raw content of the index.html. */
   private _getIndexHtmlContent(): string {
     if (!this._index) {
-      const indexPath = this._resolveUrlFromRunfiles('/index.html');
+      // Check all of the known index file names.
+      const indexPath =
+        this._resolveUrlFromRunfiles('/index.html') ||
+        this._resolveUrlFromRunfiles('/index.csr.html') ||
+        this._resolveUrlFromRunfiles('/index.server.html');
 
       if (!indexPath) {
         throw Error('Could not resolve http server index.html');
