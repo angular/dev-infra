@@ -7545,8 +7545,8 @@ __metadata:
   linkType: hard
 
 "firebase-tools@npm:^13.0.0":
-  version: 13.15.1
-  resolution: "firebase-tools@npm:13.15.1"
+  version: 13.15.2
+  resolution: "firebase-tools@npm:13.15.2"
   dependencies:
     "@google-cloud/cloud-sql-connector": "npm:^1.3.3"
     "@google-cloud/pubsub": "npm:^4.5.0"
@@ -7616,7 +7616,7 @@ __metadata:
     yaml: "npm:^2.4.1"
   bin:
     firebase: lib/bin/firebase.js
-  checksum: 10c0/f117bd255b69470cc8b877c708a5cd277bc701fbb2c97b53e8fe894cb8ba6a54d26120f3943cffb50571c08a045a2721803f565863e8bf66b4a13990359d3829
+  checksum: 10c0/b525523057027667083d07e811a6a5e9f32cbca36e9ae291959802c2cccc7f7e0976ec9e88e26f8bab425b71e6de93b5acfe3915465c9c33b6b35e1053011eb5
   languageName: node
   linkType: hard
 
