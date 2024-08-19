@@ -40,7 +40,7 @@ jobs:
         # Since using the local version would end up nearly using `main` anyway, this is essentially equivalent.
         uses: angular/dev-infra/github-actions/linting/licenses@main
         with:
-          allow-dependencies-licenses: 'pkg:npm/renovate'
+          allow-dependencies-licenses: 'pkg:npm/renovate, pkg:npm/@renovatebot/detect-tools'
 
   test:
     timeout-minutes: 15
