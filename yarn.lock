@@ -372,7 +372,7 @@ __metadata:
     typed-graphqlify: "npm:^3.1.1"
     typescript: "npm:5.5.4"
     uuid: "npm:^10.0.0"
-    wait-on: "npm:^7.0.0"
+    wait-on: "npm:^8.0.0"
     which: "npm:^4.0.0"
     ws: "npm:^8.8.0"
     yaml: "npm:^2.0.0"
@@ -5129,7 +5129,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.6.1":
+"axios@npm:^1.7.4":
   version: 1.7.4
   resolution: "axios@npm:1.7.4"
   dependencies:
@@ -9448,7 +9448,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"joi@npm:^17.11.0":
+"joi@npm:^17.13.3":
   version: 17.13.3
   resolution: "joi@npm:17.13.3"
   dependencies:
@@ -14784,18 +14784,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"wait-on@npm:^7.0.0":
-  version: 7.2.0
-  resolution: "wait-on@npm:7.2.0"
+"wait-on@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "wait-on@npm:8.0.0"
   dependencies:
-    axios: "npm:^1.6.1"
-    joi: "npm:^17.11.0"
+    axios: "npm:^1.7.4"
+    joi: "npm:^17.13.3"
     lodash: "npm:^4.17.21"
     minimist: "npm:^1.2.8"
     rxjs: "npm:^7.8.1"
   bin:
     wait-on: bin/wait-on
-  checksum: 10c0/1eff2189b3e4b0975889f3e480c75ca2a0d4275072779a6329e7cae8b729620594aa044509ddd89967de6ab2162169501b67b8d9562c16cac517837ffce17337
+  checksum: 10c0/f649106ecdb74d8f18f7db3840c17c55269ac6d4672c30be06835fe66e735107d74576600310b1139161a2ddb7f4aa1453011d9f141b0aa5f1c365fbe7b532ec
   languageName: node
   linkType: hard
 
