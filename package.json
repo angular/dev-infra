@@ -29,7 +29,7 @@
     "@bazel/runfiles": "5.8.1",
     "@bazel/terser": "5.8.1",
     "@bazel/typescript": "5.8.1",
-    "@microsoft/api-extractor": "7.47.6",
+    "@microsoft/api-extractor": "7.47.7",
     "@types/browser-sync": "^2.26.3",
     "@types/minimatch": "^5.1.2",
     "@types/node": "^18.19.21",
@@ -123,7 +123,7 @@
     "ejs": "^3.1.6",
     "fast-glob": "^3.3.2",
     "firebase": "10.13.0",
-    "firebase-admin": "12.3.1",
+    "firebase-admin": "12.4.0",
     "firebase-functions": "^5.0.0",
     "firebase-tools": "^13.0.0",
     "folder-hash": "^4.0.2",
@@ -165,7 +165,7 @@
     "which": "^4.0.0",
     "ws": "^8.8.0",
     "yaml": "^2.0.0",
-    "zone.js": "^0.14.0"
+    "zone.js": "^0.15.0"
   },
   "dependenciesMeta": {
     "re2": {
