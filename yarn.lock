@@ -4146,12 +4146,12 @@ __metadata:
   linkType: hard
 
 "@types/selenium-webdriver@npm:^4.1.21":
-  version: 4.1.25
-  resolution: "@types/selenium-webdriver@npm:4.1.25"
+  version: 4.1.26
+  resolution: "@types/selenium-webdriver@npm:4.1.26"
   dependencies:
     "@types/node": "npm:*"
     "@types/ws": "npm:*"
-  checksum: 10c0/8c942a69f8a18f6ba17f33a21a3ba81b8b01ea34b7d7fc05c3cfa417a2bb89bdc2288147ea88258a0a10b513901d1e3de4019489bc9062b6c3f59bf4d5d922ee
+  checksum: 10c0/d7acb40244b13527ca3b691e71d377aae1526f96fee512a5c8edb5f14bae7094700d9f64339e200042a3ea8e9d952180eb8b592138b26ce2080c405c00ad60fa
   languageName: node
   linkType: hard
 
@@ -13798,9 +13798,9 @@ __metadata:
   linkType: hard
 
 "tslib@npm:^2.0.1, tslib@npm:^2.1.0, tslib@npm:^2.3.0, tslib@npm:^2.5.2":
-  version: 2.6.3
-  resolution: "tslib@npm:2.6.3"
-  checksum: 10c0/2598aef53d9dbe711af75522464b2104724d6467b26a60f2bdac8297d2b5f1f6b86a71f61717384aa8fd897240467aaa7bcc36a0700a0faf751293d1331db39a
+  version: 2.7.0
+  resolution: "tslib@npm:2.7.0"
+  checksum: 10c0/469e1d5bf1af585742128827000711efa61010b699cb040ab1800bcd3ccdd37f63ec30642c9e07c4439c1db6e46345582614275daca3e0f4abae29b0083f04a6
   languageName: node
   linkType: hard
 
@@ -13852,8 +13852,8 @@ __metadata:
   linkType: hard
 
 "tsx@npm:^4.15.7":
-  version: 4.17.0
-  resolution: "tsx@npm:4.17.0"
+  version: 4.18.0
+  resolution: "tsx@npm:4.18.0"
   dependencies:
     esbuild: "npm:~0.23.0"
     fsevents: "npm:~2.3.3"
@@ -13863,7 +13863,7 @@ __metadata:
       optional: true
   bin:
     tsx: dist/cli.mjs
-  checksum: 10c0/ad720b81d6447c7695d24c27947fa1a2b6db9d2ef03216389edd6fa0006aa479bc0d8348a1ac9975a08edef4ce791ff5629a24d8dccbb0987f42e5407785cfa4
+  checksum: 10c0/887b43cc3eed0706955b535ecfe13f76be5753ed888064d103aafdae728952355d1ecabdf9824385d852939c85f16ee0262660cf0ccf6824f7aac658e4abfcdb
   languageName: node
   linkType: hard
 
