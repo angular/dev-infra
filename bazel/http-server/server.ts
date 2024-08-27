@@ -49,6 +49,7 @@ export class HttpServer {
     enableUi: boolean,
     private _historyApiFallback: boolean = false,
     private _environmentVariables: string[] = [],
+    private _relaxCors: boolean = false,
   ) {
     if (enableUi === false) {
       this.options.ui = false;
@@ -174,9 +175,11 @@ export class HttpServer {
   }
 
   private _corsMiddleware(req: http.IncomingMessage, res: http.ServerResponse) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
-    res.setHeader('cross-origin-opener-policy', 'same-origin');
+    if (this._relaxCors) {
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Cross-Origin-Embedder-Policy', 'credentialless');
+      res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+    }
   }
 }
 
