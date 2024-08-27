@@ -34,7 +34,12 @@ export class HttpServer {
     ghostMode: false,
     server: {
       directory: false,
-      middleware: [(req, res) => this._bazelMiddleware(req, res)],
+      middleware: [
+        (req, res) => {
+          this._corsMiddleware(req, res);
+          this._bazelMiddleware(req, res);
+        },
+      ],
     },
   };
 
@@ -166,6 +171,12 @@ export class HttpServer {
     }
 
     return this._index;
+  }
+
+  private _corsMiddleware(req: http.IncomingMessage, res: http.ServerResponse) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+    res.setHeader('cross-origin-opener-policy', 'same-origin');
   }
 }
 
