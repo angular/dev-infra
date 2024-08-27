@@ -48,6 +48,9 @@ def _http_server_rule_impl(ctx):
     if ctx.attr.enable_dev_ui:
         args += "--enable-dev-ui=true "
 
+    if ctx.attr.relax_cors:
+        args += "--relax-cors=true "
+
     for variable_name in ctx.attr.environment_variables:
         args += "--environment-variables '%s' " % variable_name
 
@@ -100,6 +103,10 @@ http_server_rule = rule(
               The development UI can be helpful for throttling network and more. This
               is a feature from the underlying browsersync implementation.
             """,
+        ),
+        "relax_cors": attr.bool(
+            default = False,
+            doc = """Whether to relax the CORS settings on requests.""",
         ),
         "history_api_fallback": attr.bool(
             default = True,

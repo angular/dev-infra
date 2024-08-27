@@ -11,7 +11,7 @@ import yargs from 'yargs';
 import {HttpServer} from './server';
 import {setupBazelWatcherSupport} from './ibazel';
 
-const {rootPaths, historyApiFallback, enableDevUi, environmentVariables, port} = yargs(
+const {rootPaths, historyApiFallback, enableDevUi, environmentVariables, port, relaxCors} = yargs(
   process.argv.slice(2),
 )
   .strict()
@@ -20,11 +20,19 @@ const {rootPaths, historyApiFallback, enableDevUi, environmentVariables, port} =
   .option('rootPaths', {type: 'array', string: true, default: ['']})
   .option('environmentVariables', {type: 'array', string: true, default: []})
   .option('enableDevUi', {type: 'boolean', default: false})
+  .option('relaxCors', {type: 'boolean', default: false})
   .parseSync();
 
 // In non-test executions, we will never allow for the browser-sync dev UI.
 const enableUi = process.env.TEST_TARGET === undefined && enableDevUi;
-const server = new HttpServer(port, rootPaths, enableUi, historyApiFallback, environmentVariables);
+const server = new HttpServer(
+  port,
+  rootPaths,
+  enableUi,
+  historyApiFallback,
+  environmentVariables,
+  relaxCors,
+);
 
 // Setup ibazel support.
 setupBazelWatcherSupport(server);
