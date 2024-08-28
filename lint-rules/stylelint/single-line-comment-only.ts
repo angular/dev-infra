@@ -13,7 +13,7 @@ const messages = utils.ruleMessages(ruleName, {
  * Stylelint plugin that doesn't allow multi-line comments to
  * be used, because they'll show up in the user's output.
  */
-const ruleFn: Rule<boolean, string> = (isEnabled, options) => {
+const ruleFn: Rule<boolean, {filePattern: string}> = (isEnabled, options) => {
   return (root, result) => {
     if (!isEnabled) {
       return;

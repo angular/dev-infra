@@ -14,7 +14,7 @@ const messages = utils.ruleMessages(ruleName, {
  * Stylelint plugin that will log a warning for all top-level CSS rules.
  * Can be used in theme files to ensure that everything is inside a mixin.
  */
-const ruleFn: Rule<boolean, string> = (isEnabled, options) => {
+const ruleFn: Rule<boolean, {filePattern: string}> = (isEnabled, options) => {
   return (root, result) => {
     if (!isEnabled) {
       return;
