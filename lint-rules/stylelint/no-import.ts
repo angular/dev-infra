@@ -9,7 +9,7 @@ const messages = utils.ruleMessages(ruleName, {
 });
 
 /** Stylelint plugin that doesn't allow `@import` to be used. */
-const ruleFn: Rule<boolean, string> = (isEnabled, options) => {
+const ruleFn: Rule<boolean, {exclude: string}> = (isEnabled, options) => {
   return (root, result) => {
     if (!isEnabled) {
       return;
