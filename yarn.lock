@@ -1130,7 +1130,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@csstools/css-parser-algorithms@npm:^3.0.0":
+"@csstools/css-parser-algorithms@npm:^3.0.1":
   version: 3.0.1
   resolution: "@csstools/css-parser-algorithms@npm:3.0.1"
   peerDependencies:
@@ -1139,14 +1139,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@csstools/css-tokenizer@npm:^3.0.0":
+"@csstools/css-tokenizer@npm:^3.0.1":
   version: 3.0.1
   resolution: "@csstools/css-tokenizer@npm:3.0.1"
   checksum: 10c0/c9ed4373e5731b5375ea9791590081019c04e95f08b46b272977e5e7b8c3d560affc62e82263cb8def1df1e57f0673140e7e16a14a5e7be04e6a234be088d1d3
   languageName: node
   linkType: hard
 
-"@csstools/media-query-list-parser@npm:^3.0.0":
+"@csstools/media-query-list-parser@npm:^3.0.1":
   version: 3.0.1
   resolution: "@csstools/media-query-list-parser@npm:3.0.1"
   peerDependencies:
@@ -4297,9 +4297,9 @@ __metadata:
   linkType: hard
 
 "@webcontainer/api@npm:^1.1.8":
-  version: 1.2.1
-  resolution: "@webcontainer/api@npm:1.2.1"
-  checksum: 10c0/ba1a24a5e83c222a5051c8e4fbb388f02572e156c8a4ef90b037ed315059438fc6429ae3d85c3b76ac3d64d8e2e31b5cb4e0d81c0db98faa32d167186d2a6e89
+  version: 1.2.2
+  resolution: "@webcontainer/api@npm:1.2.2"
+  checksum: 10c0/90c6b2b2b25ed5b94af34406362b650c59b79f6c51afdea1cc1dc32e05fb5cc6622405d4d3348801d6cc5f467f2227b8bbb362acb821989a7fa74a4cd2fb7a0f
   languageName: node
   linkType: hard
 
@@ -7328,8 +7328,8 @@ __metadata:
   linkType: hard
 
 "firebase-tools@npm:^13.0.0":
-  version: 13.15.4
-  resolution: "firebase-tools@npm:13.15.4"
+  version: 13.16.0
+  resolution: "firebase-tools@npm:13.16.0"
   dependencies:
     "@google-cloud/cloud-sql-connector": "npm:^1.3.3"
     "@google-cloud/pubsub": "npm:^4.5.0"
@@ -7399,7 +7399,7 @@ __metadata:
     yaml: "npm:^2.4.1"
   bin:
     firebase: lib/bin/firebase.js
-  checksum: 10c0/c401eff2fd8bd7eed7aa09230b7e16aa6c59c8c36346fa6d8700d06047e74648cb616f29afa69805e4a0280bea36d6ded3237b78c4091457f7d06fb83faccb27
+  checksum: 10c0/4bf61119099630f6eefbb0b24fa5a456ceff0ba6814aa7c95b5b81a02fda4d2b366882487c7e225bbfb626df8450f4fdafa5a47f44badf3b773f5f4db6c0e793
   languageName: node
   linkType: hard
 
@@ -10082,7 +10082,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"micromatch@npm:^4.0.2, micromatch@npm:^4.0.4, micromatch@npm:^4.0.7":
+"micromatch@npm:^4.0.2, micromatch@npm:^4.0.4, micromatch@npm:^4.0.8":
   version: 4.0.8
   resolution: "micromatch@npm:4.0.8"
   dependencies:
@@ -12474,14 +12474,14 @@ __metadata:
   linkType: hard
 
 "selenium-webdriver@npm:^4.18.1":
-  version: 4.23.0
-  resolution: "selenium-webdriver@npm:4.23.0"
+  version: 4.24.0
+  resolution: "selenium-webdriver@npm:4.24.0"
   dependencies:
     "@bazel/runfiles": "npm:^5.8.1"
     jszip: "npm:^3.10.1"
     tmp: "npm:^0.2.3"
-    ws: "npm:^8.17.1"
-  checksum: 10c0/afd18faab7aaf946dd39eb3035d012efb73410c17f58a19894697d61613e5b6eb9145204ea239e88ed4ff6dddbce5afa8f1f6333fb317fd7f904cc790bfadb1a
+    ws: "npm:^8.18.0"
+  checksum: 10c0/a03f35969dfdc0835ffb75564425f230fc84abb157226ae3b3d207019cade15298a8bb0133ed3955f2f191ed1c526bf2ce6bfe5749c93d7ec159348ff566ab82
   languageName: node
   linkType: hard
 
@@ -13334,12 +13334,12 @@ __metadata:
   linkType: hard
 
 "stylelint@npm:^16.0.0":
-  version: 16.8.2
-  resolution: "stylelint@npm:16.8.2"
+  version: 16.9.0
+  resolution: "stylelint@npm:16.9.0"
   dependencies:
-    "@csstools/css-parser-algorithms": "npm:^3.0.0"
-    "@csstools/css-tokenizer": "npm:^3.0.0"
-    "@csstools/media-query-list-parser": "npm:^3.0.0"
+    "@csstools/css-parser-algorithms": "npm:^3.0.1"
+    "@csstools/css-tokenizer": "npm:^3.0.1"
+    "@csstools/media-query-list-parser": "npm:^3.0.1"
     "@csstools/selector-specificity": "npm:^4.0.0"
     "@dual-bundle/import-meta-resolve": "npm:^4.1.0"
     balanced-match: "npm:^2.0.0"
@@ -13361,7 +13361,7 @@ __metadata:
     known-css-properties: "npm:^0.34.0"
     mathml-tag-names: "npm:^2.1.3"
     meow: "npm:^13.2.0"
-    micromatch: "npm:^4.0.7"
+    micromatch: "npm:^4.0.8"
     normalize-path: "npm:^3.0.0"
     picocolors: "npm:^1.0.1"
     postcss: "npm:^8.4.41"
@@ -13372,13 +13372,13 @@ __metadata:
     resolve-from: "npm:^5.0.0"
     string-width: "npm:^4.2.3"
     strip-ansi: "npm:^7.1.0"
-    supports-hyperlinks: "npm:^3.0.0"
+    supports-hyperlinks: "npm:^3.1.0"
     svg-tags: "npm:^1.0.0"
     table: "npm:^6.8.2"
     write-file-atomic: "npm:^5.0.1"
   bin:
     stylelint: bin/stylelint.mjs
-  checksum: 10c0/898cde9b5d981f249133df709458eebf2af0a525e72410ddfafd76a7308f7da493578b6a909c593cc70061556b9eda1fed4f477385ee615435f0996d9e18d8df
+  checksum: 10c0/d3ff9c8945c56b04a2fa16ec33d163325496d5db94b6fcb5adf74c76f7f794ac992888273f9a3317652ba8b6195168b2ffff382ca2a667a241e2ace8c9505ae2
   languageName: node
   linkType: hard
 
@@ -13455,7 +13455,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"supports-hyperlinks@npm:^3.0.0":
+"supports-hyperlinks@npm:^3.0.0, supports-hyperlinks@npm:^3.1.0":
   version: 3.1.0
   resolution: "supports-hyperlinks@npm:3.1.0"
   dependencies:
@@ -14683,7 +14683,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^8.17.1, ws@npm:^8.18.0, ws@npm:^8.8.0":
+"ws@npm:^8.18.0, ws@npm:^8.8.0":
   version: 8.18.0
   resolution: "ws@npm:8.18.0"
   peerDependencies:
