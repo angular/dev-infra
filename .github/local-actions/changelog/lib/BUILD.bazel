@@ -24,5 +24,6 @@ ts_library(
         "@npm//@types/node",
         "@npm//@types/semver",
         "@npm//semver",
+        "@npm//undici",
     ],
 )

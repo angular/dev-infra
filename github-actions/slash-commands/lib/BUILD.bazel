@@ -18,5 +18,6 @@ ts_library(
         "@npm//@octokit/plugin-rest-endpoint-methods",
         "@npm//@octokit/rest",
         "@npm//@types/node",
+        "@npm//undici",
     ],
 )
