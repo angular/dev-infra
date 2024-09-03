@@ -270,7 +270,7 @@ __metadata:
     "@lezer/highlight": "npm:^1.2.0"
     "@lezer/javascript": "npm:^1.4.9"
     "@microsoft/api-extractor": "npm:7.47.7"
-    "@octokit/auth-app": "npm:7.1.0"
+    "@octokit/auth-app": "npm:7.1.1"
     "@octokit/core": "npm:6.1.2"
     "@octokit/graphql": "npm:8.1.1"
     "@octokit/graphql-schema": "patch:@octokit/graphql-schema@npm%3A15.3.0#~/.yarn/patches/@octokit-graphql-schema-npm-15.3.0-4046a59648.patch"
@@ -2960,9 +2960,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/auth-app@npm:7.1.0":
-  version: 7.1.0
-  resolution: "@octokit/auth-app@npm:7.1.0"
+"@octokit/auth-app@npm:7.1.1":
+  version: 7.1.1
+  resolution: "@octokit/auth-app@npm:7.1.1"
   dependencies:
     "@octokit/auth-oauth-app": "npm:^8.1.0"
     "@octokit/auth-oauth-user": "npm:^5.1.0"
@@ -2972,7 +2972,7 @@ __metadata:
     lru-cache: "npm:^10.0.0"
     universal-github-app-jwt: "npm:^2.2.0"
     universal-user-agent: "npm:^7.0.0"
-  checksum: 10c0/f5a2675518f31410790b80a44fc95bdcc2fb4bcefe9497adb7167b4949a24015f7effdc7da0ef07bdd0ce97a1fbd2885bd6385a2cc2163752ffa6aec5907cad9
+  checksum: 10c0/2430e90b3c6505b0d29cf5b0c63f5998e9c9524844f3c7a38dc435b42953740da8e333abb22666cb6563ae8a81f92043f1df29af17ec7a7a132f37c9f69e597f
   languageName: node
   linkType: hard
 
