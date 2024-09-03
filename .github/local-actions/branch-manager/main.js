@@ -50710,7 +50710,7 @@ async function hook5(state, request2, route, parameters) {
   const { token: token2, createdAt } = await getInstallationAuthentication(
     state,
     {},
-    request2
+    request2.defaults({ baseUrl: endpoint2.baseUrl })
   );
   endpoint2.headers.authorization = `token ${token2}`;
   return sendRequestWithRetries(
@@ -50743,7 +50743,7 @@ async function sendRequestWithRetries(state, request2, options, createdAt, retri
     return sendRequestWithRetries(state, request2, options, createdAt, retries);
   }
 }
-var VERSION12 = "7.1.0";
+var VERSION12 = "7.1.1";
 function createAppAuth(options) {
   if (!options.appId) {
     throw new Error("[@octokit/auth-app] appId option is required");
