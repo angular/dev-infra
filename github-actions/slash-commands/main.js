@@ -40915,6 +40915,14 @@ var isNumberKey = (key) => "123456789".includes(key.name);
 var isEnterKey = (key) => key.name === "enter" || key.name === "return";
 
 // 
+var AbortPromptError = class extends Error {
+  name = "AbortPromptError";
+  message = "Prompt was aborted";
+  constructor(options) {
+    super();
+    this.cause = options == null ? void 0 : options.cause;
+  }
+};
 var CancelPromptError = class extends Error {
   name = "CancelPromptError";
   message = "Prompt was canceled";
@@ -41283,17 +41291,9 @@ function usePagination({ items, active, renderItem, pageSize, loop = true }) {
 }
 
 // 
+var import_mute_stream = __toESM(require_lib2(), 1);
 import * as readline2 from "node:readline";
 import { AsyncResource as AsyncResource3 } from "node:async_hooks";
-
-// 
-var CancelablePromise = class extends Promise {
-  cancel = () => {
-  };
-};
-
-// 
-var import_mute_stream = __toESM(require_lib2(), 1);
 
 // 
 var signals = [];
@@ -41582,70 +41582,90 @@ var ScreenManager = class {
 };
 
 // 
+var CancelablePromise = class extends Promise {
+  cancel = () => {
+  };
+  static withResolver() {
+    let resolve;
+    let reject;
+    const promise = new CancelablePromise((res, rej) => {
+      resolve = res;
+      reject = rej;
+    });
+    return { promise, resolve, reject };
+  }
+};
+
+// 
 function createPrompt(view) {
-  const prompt = (config, context4) => {
-    const input = (context4 == null ? void 0 : context4.input) ?? process.stdin;
+  const prompt = (config, context4 = {}) => {
+    const { input = process.stdin, signal } = context4;
     const output = new import_mute_stream.default();
-    output.pipe((context4 == null ? void 0 : context4.output) ?? process.stdout);
+    output.pipe(context4.output ?? process.stdout);
     const rl = readline2.createInterface({
       terminal: true,
       input,
       output
     });
     const screen = new ScreenManager(rl);
-    let cancel = () => {
-    };
-    const answer = new CancelablePromise((resolve, reject) => {
-      withHooks(rl, (cycle) => {
-        function checkCursorPos() {
-          screen.checkCursorPos();
+    const cleanups = /* @__PURE__ */ new Set();
+    const { promise, resolve, reject } = CancelablePromise.withResolver();
+    function onExit2() {
+      cleanups.forEach((cleanup) => cleanup());
+      screen.done({ clearContent: Boolean(context4 == null ? void 0 : context4.clearPromptOnDone) });
+      output.end();
+    }
+    function fail(error) {
+      onExit2();
+      reject(error);
+    }
+    if (signal) {
+      const abort = () => fail(new AbortPromptError({ cause: signal.reason }));
+      if (signal.aborted) {
+        abort();
+        return promise;
+      }
+      signal.addEventListener("abort", abort);
+      cleanups.add(() => signal.removeEventListener("abort", abort));
+    }
+    withHooks(rl, (cycle) => {
+      cleanups.add(onExit((code, signal2) => {
+        fail(new ExitPromptError(`User force closed the prompt with ${code} ${signal2}`));
+      }));
+      const hooksCleanup = AsyncResource3.bind(() => {
+        try {
+          effectScheduler.clearAll();
+        } catch (error) {
+          reject(error);
         }
-        const removeExitListener = onExit((code, signal) => {
+      });
+      cleanups.add(hooksCleanup);
+      const checkCursorPos = () => screen.checkCursorPos();
+      rl.input.on("keypress", checkCursorPos);
+      cleanups.add(() => rl.input.removeListener("keypress", checkCursorPos));
+      rl.on("close", hooksCleanup);
+      cleanups.add(() => rl.removeListener("close", hooksCleanup));
+      function done(value) {
+        setImmediate(() => {
           onExit2();
-          reject(new ExitPromptError(`User force closed the prompt with ${code} ${signal}`));
+          resolve(value);
         });
-        const hooksCleanup = AsyncResource3.bind(() => {
-          try {
-            effectScheduler.clearAll();
-          } catch (error) {
-            reject(error);
-          }
-        });
-        function onExit2() {
-          hooksCleanup();
-          screen.done({ clearContent: Boolean(context4 == null ? void 0 : context4.clearPromptOnDone) });
-          removeExitListener();
-          rl.input.removeListener("keypress", checkCursorPos);
-          rl.removeListener("close", hooksCleanup);
-          output.end();
+      }
+      cycle(() => {
+        try {
+          const nextView = view(config, done);
+          const [content, bottomContent] = typeof nextView === "string" ? [nextView] : nextView;
+          screen.render(content, bottomContent);
+          effectScheduler.run();
+        } catch (error) {
+          fail(error);
         }
-        cancel = () => {
-          onExit2();
-          reject(new CancelPromptError());
-        };
-        function done(value) {
-          setImmediate(() => {
-            onExit2();
-            resolve(value);
-          });
-        }
-        cycle(() => {
-          try {
-            const nextView = view(config, done);
-            const [content, bottomContent] = typeof nextView === "string" ? [nextView] : nextView;
-            screen.render(content, bottomContent);
-            effectScheduler.run();
-          } catch (error) {
-            onExit2();
-            reject(error);
-          }
-        });
-        rl.input.on("keypress", checkCursorPos);
-        rl.on("close", hooksCleanup);
       });
     });
-    answer.cancel = cancel;
-    return answer;
+    promise.cancel = () => {
+      fail(new CancelPromptError());
+    };
+    return promise;
   };
   return prompt;
 }
@@ -41949,7 +41969,7 @@ var Separator = class {
     }
   }
   static isSeparator(choice) {
-    return Boolean(choice && choice.type === "separator");
+    return Boolean(choice && typeof choice === "object" && "type" in choice && choice.type === "separator");
   }
 };
 
@@ -41964,7 +41984,8 @@ var checkboxTheme = {
   },
   style: {
     disabledChoice: (text) => import_yoctocolors_cjs3.default.dim(`- ${text}`),
-    renderSelectedChoices: (selectedChoices) => selectedChoices.map((choice) => choice.short ?? choice.name ?? choice.value).join(", ")
+    renderSelectedChoices: (selectedChoices) => selectedChoices.map((choice) => choice.short).join(", "),
+    description: (text) => import_yoctocolors_cjs3.default.cyan(text)
   },
   helpMode: "auto"
 };
@@ -41982,13 +42003,37 @@ function check(checked) {
     return isSelectable(item) ? { ...item, checked } : item;
   };
 }
+function normalizeChoices(choices) {
+  return choices.map((choice) => {
+    if (Separator.isSeparator(choice))
+      return choice;
+    if (typeof choice === "string") {
+      return {
+        value: choice,
+        name: choice,
+        short: choice,
+        disabled: false,
+        checked: false
+      };
+    }
+    const name = choice.name ?? String(choice.value);
+    return {
+      value: choice.value,
+      name,
+      short: choice.short ?? name,
+      description: choice.description,
+      disabled: choice.disabled ?? false,
+      checked: choice.checked ?? false
+    };
+  });
+}
 var esm_default2 = createPrompt((config, done) => {
-  const { instructions, pageSize = 7, loop = true, choices, required, validate = () => true } = config;
+  const { instructions, pageSize = 7, loop = true, required, validate = () => true } = config;
   const theme = makeTheme(checkboxTheme, config.theme);
   const prefix = usePrefix({ theme });
   const firstRender = useRef(true);
   const [status, setStatus] = useState("pending");
-  const [items, setItems] = useState(choices.map((choice) => ({ ...choice })));
+  const [items, setItems] = useState(normalizeChoices(config.choices));
   const bounds = useMemo(() => {
     const first = items.findIndex(isSelectable);
     const last = items.findLastIndex(isSelectable);
@@ -42040,6 +42085,7 @@ var esm_default2 = createPrompt((config, done) => {
     }
   });
   const message = theme.style.message(config.message);
+  let description;
   const page = usePagination({
     items,
     active,
@@ -42047,15 +42093,17 @@ var esm_default2 = createPrompt((config, done) => {
       if (Separator.isSeparator(item)) {
         return ` ${item.separator}`;
       }
-      const line = String(item.name || item.value);
       if (item.disabled) {
         const disabledLabel = typeof item.disabled === "string" ? item.disabled : "(disabled)";
-        return theme.style.disabledChoice(`${line} ${disabledLabel}`);
+        return theme.style.disabledChoice(`${item.name} ${disabledLabel}`);
+      }
+      if (isActive) {
+        description = item.description;
       }
       const checkbox = item.checked ? theme.icon.checked : theme.icon.unchecked;
       const color = isActive ? theme.style.highlight : (x) => x;
       const cursor = isActive ? theme.icon.cursor : " ";
-      return color(`${cursor}${checkbox} ${line}`);
+      return color(`${cursor}${checkbox} ${item.name}`);
     },
     pageSize,
     loop
@@ -42085,13 +42133,15 @@ ${theme.style.help("(Use arrow keys to reveal more choices)")}`;
       firstRender.current = false;
     }
   }
+  const choiceDescription = description ? `
+${theme.style.description(description)}` : ``;
   let error = "";
   if (errorMsg) {
     error = `
 ${theme.style.error(errorMsg)}`;
   }
   return `${prefix} ${message}${helpTipTop}
-${page}${helpTipBottom}${error}${import_ansi_escapes2.default.cursorHide}`;
+${page}${helpTipBottom}${choiceDescription}${error}${import_ansi_escapes2.default.cursorHide}`;
 });
 
 // 
@@ -42261,13 +42311,36 @@ var selectTheme = {
 function isSelectable2(item) {
   return !Separator.isSeparator(item) && !item.disabled;
 }
+function normalizeChoices2(choices) {
+  return choices.map((choice) => {
+    if (Separator.isSeparator(choice))
+      return choice;
+    if (typeof choice === "string") {
+      return {
+        value: choice,
+        name: choice,
+        short: choice,
+        disabled: false
+      };
+    }
+    const name = choice.name ?? String(choice.value);
+    return {
+      value: choice.value,
+      name,
+      description: choice.description,
+      short: choice.short ?? name,
+      disabled: choice.disabled ?? false
+    };
+  });
+}
 var esm_default6 = createPrompt((config, done) => {
-  const { choices: items, loop = true, pageSize = 7 } = config;
+  const { loop = true, pageSize = 7 } = config;
   const firstRender = useRef(true);
   const theme = makeTheme(selectTheme, config.theme);
   const prefix = usePrefix({ theme });
   const [status, setStatus] = useState("pending");
   const searchTimeoutRef = useRef();
+  const items = useMemo(() => normalizeChoices2(config.choices), [config.choices]);
   const bounds = useMemo(() => {
     const first = items.findIndex(isSelectable2);
     const last = items.findLastIndex(isSelectable2);
@@ -42312,7 +42385,7 @@ var esm_default6 = createPrompt((config, done) => {
       const matchIndex = items.findIndex((item) => {
         if (Separator.isSeparator(item) || !isSelectable2(item))
           return false;
-        return String(item.name || item.value).toLowerCase().startsWith(searchTerm);
+        return item.name.toLowerCase().startsWith(searchTerm);
       });
       if (matchIndex >= 0) {
         setActive(matchIndex);
@@ -42344,21 +42417,19 @@ ${theme.style.help("(Use arrow keys to reveal more choices)")}`;
       if (Separator.isSeparator(item)) {
         return ` ${item.separator}`;
       }
-      const line = String(item.name || item.value);
       if (item.disabled) {
         const disabledLabel = typeof item.disabled === "string" ? item.disabled : "(disabled)";
-        return theme.style.disabled(`${line} ${disabledLabel}`);
+        return theme.style.disabled(`${item.name} ${disabledLabel}`);
       }
       const color = isActive ? theme.style.highlight : (x) => x;
       const cursor = isActive ? theme.icon.cursor : ` `;
-      return color(`${cursor} ${line}`);
+      return color(`${cursor} ${item.name}`);
     },
     pageSize,
     loop
   });
   if (status === "done") {
-    const answer = selectedChoice.short ?? selectedChoice.name ?? String(selectedChoice.value);
-    return `${prefix} ${message} ${theme.style.answer(answer)}`;
+    return `${prefix} ${message} ${theme.style.answer(selectedChoice.short)}`;
   }
   const choiceDescription = selectedChoice.description ? `
 ${theme.style.description(selectedChoice.description)}` : ``;
