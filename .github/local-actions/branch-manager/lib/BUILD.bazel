@@ -24,5 +24,6 @@ ts_library(
         "@npm//@octokit/rest",
         "@npm//@types/node",
         "@npm//typed-graphqlify",
+        "@npm//undici",
     ],
 )

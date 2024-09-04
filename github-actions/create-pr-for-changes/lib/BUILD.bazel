@@ -17,5 +17,6 @@ ts_library(
         "@npm//@actions/core",
         "@npm//@actions/github",
         "@npm//@types/node",
+        "@npm//undici",
     ],
 )
