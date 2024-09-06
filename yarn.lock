@@ -2068,14 +2068,15 @@ __metadata:
   linkType: hard
 
 "@google-cloud/firestore@npm:^7.0.0, @google-cloud/firestore@npm:^7.7.0":
-  version: 7.9.0
-  resolution: "@google-cloud/firestore@npm:7.9.0"
+  version: 7.10.0
+  resolution: "@google-cloud/firestore@npm:7.10.0"
   dependencies:
+    "@opentelemetry/api": "npm:^1.3.0"
     fast-deep-equal: "npm:^3.1.1"
     functional-red-black-tree: "npm:^1.0.1"
     google-gax: "npm:^4.3.3"
     protobufjs: "npm:^7.2.6"
-  checksum: 10c0/99575c486f5681d05e91eaf74f29cca96c33733e37f9e71db8c484765f2596fc701904a13afe563320f5389ff7105ac75fb2ccd828af056eaffc785fa673c31d
+  checksum: 10c0/0b6c11914c7563e073c5c3b1d535ec12e1f7cf9db92cdf68b75fc17604da303f39dfb9372f45185de8f54eb238f556228111590705f15accd3f85c88b1828a49
   languageName: node
   linkType: hard
 
@@ -3178,7 +3179,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/api@npm:~1.9.0":
+"@opentelemetry/api@npm:^1.3.0, @opentelemetry/api@npm:~1.9.0":
   version: 1.9.0
   resolution: "@opentelemetry/api@npm:1.9.0"
   checksum: 10c0/9aae2fe6e8a3a3eeb6c1fdef78e1939cf05a0f37f8a4fae4d6bf2e09eb1e06f966ece85805626e01ba5fab48072b94f19b835449e58b6d26720ee19a58298add
