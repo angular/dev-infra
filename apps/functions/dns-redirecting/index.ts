@@ -41,7 +41,7 @@ export const dnsRedirecting = functions
       response.redirect(redirectType, 'https://angular.dev/cli');
     }
     if (hostname === 'blog.angular.io') {
-      response.redirect(redirectType, 'https://blog.angular.dev');
+      response.redirect(redirectType, `https://blog.angular.dev${request.originalUrl}`);
     }
 
     // If no redirect is matched, we return a failure message
