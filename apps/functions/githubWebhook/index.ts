@@ -9,9 +9,9 @@ import {handleLabelEvent} from './label.js';
  * webhook to ensure it is a valid request from Github, and then delegates processing of a payload
  * to one of the other githubWebhook functions.
  */
-export const githubWebhook = functions
-  .runWith({invoker: 'public', timeoutSeconds: 30, minInstances: 1})
-  .https.onRequest(async (request, response) => {
+export const githubWebhook = functions.https.onRequest(
+  {invoker: 'public', timeoutSeconds: 30, minInstances: 1},
+  async (request, response) => {
     if (request.method !== 'POST') {
       response.status(405);
       response.send('Requests must be made using the POST method.');
@@ -51,4 +51,5 @@ export const githubWebhook = functions
     }
 
     response.end();
-  });
+  },
+);

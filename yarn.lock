@@ -324,7 +324,7 @@ __metadata:
     fast-glob: "npm:^3.3.2"
     firebase: "npm:10.13.1"
     firebase-admin: "npm:12.4.0"
-    firebase-functions: "npm:^5.0.0"
+    firebase-functions: "npm:^6.0.0"
     firebase-tools: "npm:^13.0.0"
     folder-hash: "npm:^4.0.2"
     font-color-contrast: "npm:^11.1.0"
@@ -7330,9 +7330,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"firebase-functions@npm:^5.0.0":
-  version: 5.1.1
-  resolution: "firebase-functions@npm:5.1.1"
+"firebase-functions@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "firebase-functions@npm:6.0.0"
   dependencies:
     "@types/cors": "npm:^2.8.5"
     "@types/express": "npm:4.17.3"
@@ -7343,7 +7343,7 @@ __metadata:
     firebase-admin: ^11.10.0 || ^12.0.0
   bin:
     firebase-functions: lib/bin/firebase-functions.js
-  checksum: 10c0/7b2f9622ea034d5034311a4c5c142db9dd43526a21b6bc3947728bbc081c1378ad505c06e0954fb065bf419973ed513868888471eb63b1fa59c473e893075e44
+  checksum: 10c0/80e76db5c626fe60f7bd8f80177312785b38c24346dbec6021e7fec9277105a28e9817a4b5cfa34456f481a9b30426a7d71308e5e85bbc5d9eef4051a391b61a
   languageName: node
   linkType: hard
 

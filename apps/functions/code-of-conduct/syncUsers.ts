@@ -6,23 +6,25 @@ import {
 import * as functions from 'firebase-functions';
 
 /** Runs the synchronization of blocked users from Github to the blocked users once per day. */
-export const dailySync = functions
-  .runWith({
+export const dailySync = functions.scheduler.onSchedule(
+  {
     secrets: ['ANGULAR_ROBOT_APP_PRIVATE_KEY', 'ANGULAR_ROBOT_APP_ID'],
-  })
-  .pubsub.schedule('every day 08:00')
-  .timeZone('America/Los_Angeles')
-  .onRun(syncUsers);
+    schedule: 'every day 08:00',
+    timeZone: 'America/Los_Angeles',
+  },
+  syncUsers,
+);
 
 /** Runs the synchronization of blocked users from Github to the blocked users list on demand. */
-export const syncUsersFromGithub = functions
-  .runWith({
+export const syncUsersFromGithub = functions.https.onCall(
+  {
     secrets: ['ANGULAR_ROBOT_APP_PRIVATE_KEY', 'ANGULAR_ROBOT_APP_ID'],
-  })
-  .https.onCall(async (_: void, context) => {
-    await checkAuthenticationAndAccess(context);
+  },
+  async (request) => {
+    await checkAuthenticationAndAccess(request);
     await syncUsers();
-  });
+  },
+);
 
 async function syncUsers() {
   /** The authenticated Github client for performing actions. */

@@ -1,13 +1,13 @@
 import * as functions from 'firebase-functions';
 
-export const dnsRedirecting = functions
-  .runWith({
+export const dnsRedirecting = functions.https.onRequest(
+  {
     invoker: 'public',
     timeoutSeconds: 5,
     minInstances: 1,
     maxInstances: 2,
-  })
-  .https.onRequest(async (request, response) => {
+  },
+  async (request, response) => {
     /** The type of redirect to use, defaulting to a 301 permanent redirect. */
     let redirectType = 301;
     /** The hostname that was used for the request. */
@@ -49,4 +49,5 @@ export const dnsRedirecting = functions
     response.send(
       `No redirect defined for ${request.protocol}://${request.hostname}${request.originalUrl}`,
     );
-  });
+  },
+);

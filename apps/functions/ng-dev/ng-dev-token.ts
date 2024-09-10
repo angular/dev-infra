@@ -4,9 +4,10 @@ import * as admin from 'firebase-admin';
  * Request a short lived ng-dev token. If granted, we rely on session cookies as this token. The token
  * is to be used for all requests to the ng-dev service.
  */
-export const ngDevTokenRequest = functions.https.onCall(
-  async ({idToken}: {idToken: string}, context: functions.https.CallableContext) => {
-    if (!context.auth) {
+export const ngDevTokenRequest = functions.https.onCall<{idToken: string}>(
+  async (request: functions.https.CallableRequest) => {
+    const {idToken} = request.data;
+    if (!request.auth) {
       // Throwing an HttpsError so that the client gets the error details.
       throw new functions.https.HttpsError(
         'unauthenticated',
@@ -31,12 +32,15 @@ export const ngDevTokenRequest = functions.https.onCall(
 /**
  * Validate the provided token is still valid.
  */
-export const ngDevTokenValidate = functions.https.onCall(validateToken);
+export const ngDevTokenValidate = functions.https.onCall<{token: string}>(async (request) => {
+  return await validateToken(request.data);
+});
 
 /**
  * Revokes the all tokens for the user of the provided token.
  */
-export const ngDevRevokeToken = functions.https.onCall(async ({token}: {token: string}) => {
+export const ngDevRevokeToken = functions.https.onCall<{token: string}>(async (request) => {
+  const {token} = request.data;
   await admin
     .auth()
     .verifySessionCookie(token)
