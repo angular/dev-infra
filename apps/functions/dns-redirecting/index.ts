@@ -28,6 +28,9 @@ export const dnsRedirecting = functions.https.onRequest(
       }
     }
 
+    if (hostname === 'code-of-conduct.angular.io') {
+      response.redirect(redirectType, 'https://code-of-conduct.angular.dev');
+    }
     if (hostname === 'update.angular.dev') {
       response.redirect(redirectType, 'https://angular.dev/update-guide');
     }
