@@ -4869,7 +4869,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.7.4":
+"axios@npm:^1.7.7":
   version: 1.7.7
   resolution: "axios@npm:1.7.7"
   dependencies:
@@ -14407,17 +14407,17 @@ __metadata:
   linkType: hard
 
 "wait-on@npm:^8.0.0":
-  version: 8.0.0
-  resolution: "wait-on@npm:8.0.0"
+  version: 8.0.1
+  resolution: "wait-on@npm:8.0.1"
   dependencies:
-    axios: "npm:^1.7.4"
+    axios: "npm:^1.7.7"
     joi: "npm:^17.13.3"
     lodash: "npm:^4.17.21"
     minimist: "npm:^1.2.8"
     rxjs: "npm:^7.8.1"
   bin:
     wait-on: bin/wait-on
-  checksum: 10c0/f649106ecdb74d8f18f7db3840c17c55269ac6d4672c30be06835fe66e735107d74576600310b1139161a2ddb7f4aa1453011d9f141b0aa5f1c365fbe7b532ec
+  checksum: 10c0/e8fe78084465a5fa95b17095136dcb3942480c7d9e47a0cfb72363238e2411883630dc9ced02fb372f4cc7ec0ec2484c92c67060ea2f81d0e97e41ef21df8006
   languageName: node
   linkType: hard
 
