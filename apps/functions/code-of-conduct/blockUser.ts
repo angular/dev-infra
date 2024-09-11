@@ -9,11 +9,12 @@ import {
 import {RequestError} from '@octokit/request-error';
 
 /** Blocks the requested user from Github for the prescribed amount of time. */
-export const blockUser = functions
-  .runWith({
+export const blockUser = functions.https.onCall<BlockUserParams>(
+  {
     secrets: ['ANGULAR_ROBOT_APP_PRIVATE_KEY', 'ANGULAR_ROBOT_APP_ID'],
-  })
-  .https.onCall(async ({comments, blockUntil, context, username}: BlockUserParams, request) => {
+  },
+  async (request) => {
+    const {comments, blockUntil, context, username} = request.data;
     // Ensure that the request was authenticated.
     checkAuthenticationAndAccess(request);
 
@@ -46,4 +47,5 @@ export const blockUser = functions
       blockedOn: new Date(),
       blockUntil: new Date(blockUntil),
     });
-  });
+  },
+);

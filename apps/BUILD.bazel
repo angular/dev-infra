@@ -46,6 +46,9 @@ nodejs_binary(
         # Firebase function files
         "//apps/functions:functions_compiled",
         "//apps/functions:functions_files",
+
+        # Firebase hosted application files
+        "//apps/code-of-conduct:application_files",
     ],
     entry_point = "@npm//:node_modules/firebase-tools/lib/bin/firebase.js",
     templated_args = [

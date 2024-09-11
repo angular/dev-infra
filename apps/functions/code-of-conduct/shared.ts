@@ -50,13 +50,13 @@ export interface BlockedUser extends admin.firestore.DocumentData {
 }
 
 /** A CallableContext which is confirmed to already have an authorized user. */
-interface AuthenticatedCallableContext extends functions.https.CallableContext {
-  auth: NonNullable<functions.https.CallableContext['auth']>;
+interface AuthenticatedCallableContext extends functions.https.CallableRequest {
+  auth: NonNullable<functions.https.CallableRequest['auth']>;
 }
 
 /** Verify that the incoming request is authenticated and authorized for access. */
 export function checkAuthenticationAndAccess(
-  context: functions.https.CallableContext,
+  context: functions.https.CallableRequest,
 ): asserts context is AuthenticatedCallableContext {
   // Authentication is managed by firebase as this occurs within the Firebase functions context.
   // If the user is unauthenticted, the authorization object will be undefined.
