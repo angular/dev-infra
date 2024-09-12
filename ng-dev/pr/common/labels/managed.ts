@@ -27,6 +27,16 @@ export const managedLabels = createTypedObject<ManagedLabel>()({
     name: 'area: docs',
     commitCheck: (c: Commit) => c.type === 'docs',
   },
+  DETECTED_COMPILER_CHANGE: {
+    description: "Issues related to `ngc`, Angular's template compiler",
+    name: 'area: compiler',
+    commitCheck: (c: Commit) => c.type === 'compiler' || c.type === 'compiler-cli',
+  },
+  DETECTED_PLATFORM_BROWSER_CHANGE: {
+    description: 'Issues related to the framework runtime',
+    name: 'area: core',
+    commitCheck: (c: Commit) => c.type === 'platform-browser' || c.type === 'core',
+  },
   DETECTED_INFRA_CHANGE: {
     description: 'Related the build and CI infrastructure of the project',
     name: 'area: build & ci',
