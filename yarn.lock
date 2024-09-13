@@ -269,7 +269,7 @@ __metadata:
     "@lezer/common": "npm:^1.1.1"
     "@lezer/highlight": "npm:^1.2.0"
     "@lezer/javascript": "npm:^1.4.9"
-    "@microsoft/api-extractor": "npm:7.47.8"
+    "@microsoft/api-extractor": "npm:7.47.9"
     "@octokit/auth-app": "npm:7.1.1"
     "@octokit/core": "npm:6.1.2"
     "@octokit/graphql": "npm:8.1.1"
@@ -323,7 +323,7 @@ __metadata:
     ejs: "npm:^3.1.6"
     fast-glob: "npm:^3.3.2"
     firebase: "npm:10.13.1"
-    firebase-admin: "npm:12.4.0"
+    firebase-admin: "npm:12.5.0"
     firebase-functions: "npm:^6.0.0"
     firebase-tools: "npm:^13.0.0"
     folder-hash: "npm:^4.0.2"
@@ -2597,28 +2597,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor-model@npm:7.29.7":
-  version: 7.29.7
-  resolution: "@microsoft/api-extractor-model@npm:7.29.7"
+"@microsoft/api-extractor-model@npm:7.29.8":
+  version: 7.29.8
+  resolution: "@microsoft/api-extractor-model@npm:7.29.8"
   dependencies:
     "@microsoft/tsdoc": "npm:~0.15.0"
     "@microsoft/tsdoc-config": "npm:~0.17.0"
-    "@rushstack/node-core-library": "npm:5.8.0"
-  checksum: 10c0/3ea542dbda0b18854db5570e6160730269c4a03662a73a48402fdd70d7510f56afeb344efa6727137320ed10ac06603ae4985b3ba6cb229984acee9cd132842a
+    "@rushstack/node-core-library": "npm:5.9.0"
+  checksum: 10c0/ede1e2267e5b555cf4dd049a9c19d06bf3527f7c4b517afeb112af1a984a7e7bae8e7f5103a7228477f9399907229e2f51d7597df762aaeb71a02bb64cd091d7
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor@npm:7.47.8":
-  version: 7.47.8
-  resolution: "@microsoft/api-extractor@npm:7.47.8"
+"@microsoft/api-extractor@npm:7.47.9":
+  version: 7.47.9
+  resolution: "@microsoft/api-extractor@npm:7.47.9"
   dependencies:
-    "@microsoft/api-extractor-model": "npm:7.29.7"
+    "@microsoft/api-extractor-model": "npm:7.29.8"
     "@microsoft/tsdoc": "npm:~0.15.0"
     "@microsoft/tsdoc-config": "npm:~0.17.0"
-    "@rushstack/node-core-library": "npm:5.8.0"
+    "@rushstack/node-core-library": "npm:5.9.0"
     "@rushstack/rig-package": "npm:0.5.3"
-    "@rushstack/terminal": "npm:0.14.1"
-    "@rushstack/ts-command-line": "npm:4.22.7"
+    "@rushstack/terminal": "npm:0.14.2"
+    "@rushstack/ts-command-line": "npm:4.22.8"
     lodash: "npm:~4.17.15"
     minimatch: "npm:~3.0.3"
     resolve: "npm:~1.22.1"
@@ -2627,7 +2627,7 @@ __metadata:
     typescript: "npm:5.4.2"
   bin:
     api-extractor: bin/api-extractor
-  checksum: 10c0/e64bb9583f7109fbd39291544ccc685fc805121a15e08089dae75bf3bccc4a9744a153ec77c0dee61fe0d3a082ffa0cabf2c96761968ddb78018f94d4e01616b
+  checksum: 10c0/7543f2b1683d2eaa42bd8f97d40d53034556f425f27e33aa5f358bace270effcbe37715a691899794d56157b8900c5ab43cd725c0fe95cee60beef7ef29c49b3
   languageName: node
   linkType: hard
 
@@ -3549,9 +3549,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rushstack/node-core-library@npm:5.8.0":
-  version: 5.8.0
-  resolution: "@rushstack/node-core-library@npm:5.8.0"
+"@rushstack/node-core-library@npm:5.9.0":
+  version: 5.9.0
+  resolution: "@rushstack/node-core-library@npm:5.9.0"
   dependencies:
     ajv: "npm:~8.13.0"
     ajv-draft-04: "npm:~1.0.0"
@@ -3566,7 +3566,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/node":
       optional: true
-  checksum: 10c0/a8b8e5c04ec160a8036435d70441c9caa2698af80f0f39b14e927e29a6bb67d682a892bc74e8133f7bf5821ed482b3139209acd650103bea078f7f69c5a8994a
+  checksum: 10c0/1322a05f504da2aaa869821aa53f5d2867e02f19ed2ef2692e6fc04507b6419b2c7b0a2f756bed09477b1a6b5edc8f8f86471b24d0c81ff51653da87ae1cb8af
   languageName: node
   linkType: hard
 
@@ -3595,18 +3595,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rushstack/terminal@npm:0.14.1":
-  version: 0.14.1
-  resolution: "@rushstack/terminal@npm:0.14.1"
+"@rushstack/terminal@npm:0.14.2":
+  version: 0.14.2
+  resolution: "@rushstack/terminal@npm:0.14.2"
   dependencies:
-    "@rushstack/node-core-library": "npm:5.8.0"
+    "@rushstack/node-core-library": "npm:5.9.0"
     supports-color: "npm:~8.1.1"
   peerDependencies:
     "@types/node": "*"
   peerDependenciesMeta:
     "@types/node":
       optional: true
-  checksum: 10c0/7cd86c3d9e826101951ec8553a95cd654acf79e7bc66095717cc3cb2e5508194aecec68a12bfa4616b08db6ea5e2102fde6321b1a6d3bd95dd9457156feadd78
+  checksum: 10c0/3329c407e4a23ae6b1e0e35eeeaf27e9ea190454bca58473e745b9eb5c15d1ca43f99c42aa34f673ce5421bbec90052ebd037c0d080973b3e878688cf02d5b37
   languageName: node
   linkType: hard
 
@@ -3622,15 +3622,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rushstack/ts-command-line@npm:4.22.7":
-  version: 4.22.7
-  resolution: "@rushstack/ts-command-line@npm:4.22.7"
+"@rushstack/ts-command-line@npm:4.22.8":
+  version: 4.22.8
+  resolution: "@rushstack/ts-command-line@npm:4.22.8"
   dependencies:
-    "@rushstack/terminal": "npm:0.14.1"
+    "@rushstack/terminal": "npm:0.14.2"
     "@types/argparse": "npm:1.0.38"
     argparse: "npm:~1.0.9"
     string-argv: "npm:~0.3.1"
-  checksum: 10c0/6142db8ccf2f40ab87f763751726ae517b9a89eee6b3889f70f059ea2dd55d0d1892f899860099cf7777b2253f55c9652d4a9e9d0c82028b5fa13bce1b10de4c
+  checksum: 10c0/c2bf9983427f7f85b8773c4fbf1ac1817b930131ea175cd29e8b84c3b98df49b26223e6e7363d9bdcf694d9996714e63c2a5877d916bc24be70b74c076e77ee9
   languageName: node
   linkType: hard
 
@@ -7388,9 +7388,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"firebase-admin@npm:12.4.0":
-  version: 12.4.0
-  resolution: "firebase-admin@npm:12.4.0"
+"firebase-admin@npm:12.5.0":
+  version: 12.5.0
+  resolution: "firebase-admin@npm:12.5.0"
   dependencies:
     "@fastify/busboy": "npm:^3.0.0"
     "@firebase/database-compat": "npm:^1.0.2"
@@ -7408,7 +7408,7 @@ __metadata:
       optional: true
     "@google-cloud/storage":
       optional: true
-  checksum: 10c0/d6378201f60b2ab79c44b43bbe6441c88365860f14ed15d9e60e0867a8851fb5aebf3677f435cfdcfc3cbc26088431d86b6c9c3bc464a5c3ee04dbf1b586dcfe
+  checksum: 10c0/da961e3a44bac301926950b359859a2af50bcc4c0adaa8cc924a900abfe9861347ac6effa6b383f600ed1be0e56aa270ba5efd28a8d2de5ea8396e6e0666871d
   languageName: node
   linkType: hard
 
@@ -7430,8 +7430,8 @@ __metadata:
   linkType: hard
 
 "firebase-tools@npm:^13.0.0":
-  version: 13.16.0
-  resolution: "firebase-tools@npm:13.16.0"
+  version: 13.17.0
+  resolution: "firebase-tools@npm:13.17.0"
   dependencies:
     "@google-cloud/cloud-sql-connector": "npm:^1.3.3"
     "@google-cloud/pubsub": "npm:^4.5.0"
@@ -7501,7 +7501,7 @@ __metadata:
     yaml: "npm:^2.4.1"
   bin:
     firebase: lib/bin/firebase.js
-  checksum: 10c0/4bf61119099630f6eefbb0b24fa5a456ceff0ba6814aa7c95b5b81a02fda4d2b366882487c7e225bbfb626df8450f4fdafa5a47f44badf3b773f5f4db6c0e793
+  checksum: 10c0/e603951af1a31c5bdd36d037800ce8f43a89212150ae58e3161daa3242e64dda48c700435c99d47e55859a708bf52da75b5513e8a0eb2151b2c279637fb6c68c
   languageName: node
   linkType: hard
 
@@ -8424,11 +8424,11 @@ __metadata:
   linkType: hard
 
 "husky@npm:^9.0.0":
-  version: 9.1.5
-  resolution: "husky@npm:9.1.5"
+  version: 9.1.6
+  resolution: "husky@npm:9.1.6"
   bin:
     husky: bin.js
-  checksum: 10c0/f42efb95a026303eb880898760f802d88409780dd72f17781d2dfc302177d4f80b641cf1f1694f53f6d97c536c7397684133d8c8fe4a4426f7460186a7d1c6b8
+  checksum: 10c0/705673db4a247c1febd9c5df5f6a3519106cf0335845027bb50a15fba9b1f542cb2610932ede96fd08008f6d9f49db0f15560509861808b0031cdc0e7c798bac
   languageName: node
   linkType: hard
 
@@ -13968,8 +13968,8 @@ __metadata:
   linkType: hard
 
 "tsx@npm:^4.15.7":
-  version: 4.19.0
-  resolution: "tsx@npm:4.19.0"
+  version: 4.19.1
+  resolution: "tsx@npm:4.19.1"
   dependencies:
     esbuild: "npm:~0.23.0"
     fsevents: "npm:~2.3.3"
@@ -13979,7 +13979,7 @@ __metadata:
       optional: true
   bin:
     tsx: dist/cli.mjs
-  checksum: 10c0/d14463a78067c6db84c677b79b14861de6d7f6fb0ffa5727cc500c4552459e936395a3854ad0112af0fd7b263bcedd62ce3929b036188eb10cd9902a607ffe34
+  checksum: 10c0/cbea9baf57e7406fa0ecc2c03b9bb2501ee740dc28c938f949180a646a28e5d65e7cccbfba340508923bfd45e90320ef9eef7f815cae4515b6ef2ee429edc7ee
   languageName: node
   linkType: hard
 
