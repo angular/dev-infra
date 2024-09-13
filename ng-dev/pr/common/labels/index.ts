@@ -5,7 +5,7 @@ import {targetLabels} from './target.js';
 import {priorityLabels} from './priority.js';
 import {featureLabels} from './feature.js';
 import {requiresLabels} from './requires.js';
-import {Label} from './base.js';
+import {Label, LabelParams} from './base.js';
 
 export const allLabels = {
   ...managedLabels,
@@ -18,7 +18,7 @@ export const allLabels = {
 };
 
 // Ensures that all labels in `allLabels` properly implement `Label`.
-const _typeCheckEnforceAllLabels: Record<PropertyKey, Label> = allLabels;
+const _typeCheckEnforceAllLabels: Record<PropertyKey, Label<LabelParams>> = allLabels;
 
 export {managedLabels, actionLabels, mergeLabels, targetLabels, priorityLabels, requiresLabels};
 export {Label};

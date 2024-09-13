@@ -7,6 +7,7 @@ import {
   ANGULAR_ROBOT,
   revokeActiveInstallationToken,
 } from '../../../../github-actions/utils.js';
+import {ManagedRepositories} from '../../../../ng-dev/pr/common/labels/base.js';
 
 /** The type for a Github label returned from the Github API.  */
 type GithubLabel =
@@ -26,7 +27,11 @@ async function syncLabelsInRepo(github: Octokit, repoName: string, managedLabels
   // For each label in the list of managed labels, ensure that it exists and is in sync.
   // NOTE: Not all labels in repositories are managed. Labels which are not included or managed in
   // our tooling definitions and configurations are ignored entirely by tooling.
-  for (const {description, name, color} of managedLabels) {
+  for (const {description, name, color, repositories} of managedLabels) {
+    // Only apply the logic for the repositories the Label is registered for.
+    if (!repositories.includes(repoName as ManagedRepositories)) {
+      continue;
+    }
     /** The label from Github if a match is found. */
     const matchedLabel = repoLabels.find((label: GithubLabel) => label.name === name);
 

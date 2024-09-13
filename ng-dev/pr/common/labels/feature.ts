@@ -1,8 +1,8 @@
 import {createTypedObject, Label} from './base.js';
 
-interface FeatureLabel extends Label {}
+class FeatureLabel extends Label {}
 
-export const featureLabels = createTypedObject<FeatureLabel>()({
+export const featureLabels = createTypedObject(FeatureLabel)({
   FEATURE_IN_BACKLOG: {
     name: 'feature: in backlog',
     description: 'Feature request for which voting has completed and is now in the backlog',

@@ -57887,14 +57887,35 @@ async function assertActiveLtsBranch(repo2, releaseConfig, branchName) {
 }
 
 // 
-var createTypedObject = () => (v) => v;
+var createTypedObject = (LabelConstructor) => {
+  return (val) => {
+    for (const key in val) {
+      val[key] = new LabelConstructor(val[key]);
+    }
+    return val;
+  };
+};
 var Label = class {
-  constructor({ name, description, color }) {
-    this.name = name;
-    this.description = description;
-    this.color = color;
+  constructor(params4) {
+    this.params = params4;
+    this.repositories = this.params.repositories || [
+      ManagedRepositories.ANGULAR,
+      ManagedRepositories.ANGULAR_CLI,
+      ManagedRepositories.COMPONENTS,
+      ManagedRepositories.DEV_INFRA
+    ];
+    this.name = this.params.name;
+    this.description = this.params.description;
+    this.color = this.params.color;
   }
 };
+var ManagedRepositories;
+(function(ManagedRepositories2) {
+  ManagedRepositories2["COMPONENTS"] = "components";
+  ManagedRepositories2["ANGULAR"] = "angular";
+  ManagedRepositories2["ANGULAR_CLI"] = "angular-cli";
+  ManagedRepositories2["DEV_INFRA"] = "dev-infra";
+})(ManagedRepositories || (ManagedRepositories = {}));
 
 // 
 var TargetLabel = class extends Label {
@@ -57903,31 +57924,31 @@ var TargetLabel = class extends Label {
     this.__hasTargetLabelMarker__ = true;
   }
 };
-var targetLabels = createTypedObject()({
-  TARGET_FEATURE: new TargetLabel({
+var targetLabels = createTypedObject(TargetLabel)({
+  TARGET_FEATURE: {
     description: "This PR is targeted for a feature branch (outside of main and semver branches)",
     name: "target: feature"
-  }),
-  TARGET_LTS: new TargetLabel({
+  },
+  TARGET_LTS: {
     description: "This PR is targeting a version currently in long-term support",
     name: "target: lts"
-  }),
-  TARGET_MAJOR: new TargetLabel({
+  },
+  TARGET_MAJOR: {
     description: "This PR is targeted for the next major release",
     name: "target: major"
-  }),
-  TARGET_MINOR: new TargetLabel({
+  },
+  TARGET_MINOR: {
     description: "This PR is targeted for the next minor release",
     name: "target: minor"
-  }),
-  TARGET_PATCH: new TargetLabel({
+  },
+  TARGET_PATCH: {
     description: "This PR is targeted for the next patch release",
     name: "target: patch"
-  }),
-  TARGET_RC: new TargetLabel({
+  },
+  TARGET_RC: {
     description: "This PR is targeted for the next release-candidate",
     name: "target: rc"
-  })
+  }
 });
 
 // 
@@ -59067,7 +59088,13 @@ function parseInternal(fullText) {
 }
 
 // 
-var managedLabels = createTypedObject()({
+var ManagedLabel = class extends Label {
+  constructor() {
+    super(...arguments);
+    this.commitCheck = this.params.commitCheck;
+  }
+};
+var managedLabels = createTypedObject(ManagedLabel)({
   DETECTED_BREAKING_CHANGE: {
     description: "PR contains a commit with a breaking change",
     name: "detected: breaking change",
@@ -59088,16 +59115,6 @@ var managedLabels = createTypedObject()({
     name: "area: docs",
     commitCheck: (c) => c.type === "docs"
   },
-  DETECTED_COMPILER_CHANGE: {
-    description: "Issues related to `ngc`, Angular's template compiler",
-    name: "area: compiler",
-    commitCheck: (c) => c.type === "compiler" || c.type === "compiler-cli"
-  },
-  DETECTED_PLATFORM_BROWSER_CHANGE: {
-    description: "Issues related to the framework runtime",
-    name: "area: core",
-    commitCheck: (c) => c.type === "platform-browser" || c.type === "core"
-  },
   DETECTED_INFRA_CHANGE: {
     description: "Related the build and CI infrastructure of the project",
     name: "area: build & ci",
@@ -59109,14 +59126,29 @@ var managedLabels = createTypedObject()({
     commitCheck: (c) => c.type === "perf"
   },
   DETECTED_HTTP_CHANGE: {
-    description: "",
+    description: "Issues related to HTTP and HTTP Client",
     name: "area: common/http",
-    commitCheck: (c) => c.type === "common/http" || c.type === "http"
+    commitCheck: (c) => c.type === "common/http" || c.type === "http",
+    repositories: [ManagedRepositories.ANGULAR]
+  },
+  DETECTED_COMPILER_CHANGE: {
+    description: "Issues related to `ngc`, Angular's template compiler",
+    name: "area: compiler",
+    commitCheck: (c) => c.type === "compiler" || c.type === "compiler-cli",
+    repositories: [ManagedRepositories.ANGULAR]
+  },
+  DETECTED_PLATFORM_BROWSER_CHANGE: {
+    description: "Issues related to the framework runtime",
+    name: "area: core",
+    commitCheck: (c) => c.type === "platform-browser" || c.type === "core",
+    repositories: [ManagedRepositories.ANGULAR]
   }
 });
 
 // 
-var actionLabels = createTypedObject()({
+var ActionLabel = class extends Label {
+};
+var actionLabels = createTypedObject(ActionLabel)({
   ACTION_MERGE: {
     description: "The PR is ready for merge by the caretaker",
     name: "action: merge"
@@ -59140,7 +59172,9 @@ var actionLabels = createTypedObject()({
 });
 
 // 
-var mergeLabels = createTypedObject()({
+var MergeLabel = class extends Label {
+};
+var mergeLabels = createTypedObject(MergeLabel)({
   MERGE_PRESERVE_COMMITS: {
     description: "When the PR is merged, a rebase and merge should be performed",
     name: "merge: preserve commits"
@@ -59160,7 +59194,9 @@ var mergeLabels = createTypedObject()({
 });
 
 // 
-var priorityLabels = createTypedObject()({
+var PriorityLabel = class extends Label {
+};
+var priorityLabels = createTypedObject(PriorityLabel)({
   P0: {
     name: "P0",
     description: "Issue that causes an outage, breakage, or major function to be unusable, with no known workarounds"
@@ -59188,7 +59224,9 @@ var priorityLabels = createTypedObject()({
 });
 
 // 
-var featureLabels = createTypedObject()({
+var FeatureLabel = class extends Label {
+};
+var featureLabels = createTypedObject(FeatureLabel)({
   FEATURE_IN_BACKLOG: {
     name: "feature: in backlog",
     description: "Feature request for which voting has completed and is now in the backlog"
@@ -59208,7 +59246,9 @@ var featureLabels = createTypedObject()({
 });
 
 // 
-var requiresLabels = createTypedObject()({
+var RequiresLabel = class extends Label {
+};
+var requiresLabels = createTypedObject(RequiresLabel)({
   REQUIRES_TGP: {
     name: "requires: TGP",
     description: "This PR requires a passing TGP before merging is allowed"

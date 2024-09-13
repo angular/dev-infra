@@ -1,8 +1,8 @@
 import {createTypedObject, Label} from './base.js';
 
-interface ActionLabel extends Label {}
+class ActionLabel extends Label {}
 
-export const actionLabels = createTypedObject<ActionLabel>()({
+export const actionLabels = createTypedObject(ActionLabel)({
   ACTION_MERGE: {
     description: 'The PR is ready for merge by the caretaker',
     name: 'action: merge',

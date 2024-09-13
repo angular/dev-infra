@@ -1,8 +1,8 @@
 import {createTypedObject, Label} from './base.js';
 
-interface MiscLabel extends Label {}
+class MiscLabel extends Label {}
 
-export const miscLabels = createTypedObject<MiscLabel>()({
+export const miscLabels = createTypedObject(MiscLabel)({
   FEATURE: {
     name: 'feature',
     description: 'Label used to distinguish feature request from other issues',

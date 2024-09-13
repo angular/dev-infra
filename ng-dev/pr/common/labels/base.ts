@@ -1,7 +1,11 @@
-export const createTypedObject =
-  <T>() =>
-  <O extends Record<PropertyKey, T>>(v: O) =>
-    v;
+export const createTypedObject = <T extends new (...args: any) => any>(LabelConstructor: T) => {
+  return (val: Record<PropertyKey, ConstructorParameters<T>[0]>) => {
+    for (const key in val) {
+      val[key] = new LabelConstructor(val[key]);
+    }
+    return val as unknown as Record<PropertyKey, InstanceType<T>>;
+  };
+};
 
 export interface LabelParams {
   /* The label string. */
@@ -10,19 +14,31 @@ export interface LabelParams {
   description: string;
   /* The hexadecimal color code for the label, without the leading */
   color?: string;
+  /** The repositories the label is to be used in. */
+  repositories?: ManagedRepositories[];
 }
 
-export class Label {
+export class Label<T extends LabelParams = LabelParams> {
+  /** The repositories the label is to be used in. */
+  repositories = this.params.repositories || [
+    ManagedRepositories.ANGULAR,
+    ManagedRepositories.ANGULAR_CLI,
+    ManagedRepositories.COMPONENTS,
+    ManagedRepositories.DEV_INFRA,
+  ];
   /* The label string. */
-  name: string;
+  name = this.params.name;
   /* The label description. */
-  description: string;
+  description = this.params.description;
   /* The hexadecimal color code for the label, without the leading */
-  color?: string;
+  color = this.params.color;
 
-  constructor({name, description, color}: LabelParams) {
-    this.name = name;
-    this.description = description;
-    this.color = color;
-  }
+  constructor(public readonly params: T) {}
+}
+
+export enum ManagedRepositories {
+  COMPONENTS = 'components',
+  ANGULAR = 'angular',
+  ANGULAR_CLI = 'angular-cli',
+  DEV_INFRA = 'dev-infra',
 }
