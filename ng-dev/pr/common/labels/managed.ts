@@ -47,4 +47,9 @@ export const managedLabels = createTypedObject<ManagedLabel>()({
     name: 'area: performance',
     commitCheck: (c: Commit) => c.type === 'perf',
   },
+  DETECTED_HTTP_CHANGE: {
+    description: '',
+    name: 'area: common/http',
+    commitCheck: (c: Commit) => c.type === 'common/http' || c.type === 'http',
+  },
 });

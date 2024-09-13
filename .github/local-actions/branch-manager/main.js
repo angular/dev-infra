@@ -60763,6 +60763,11 @@ var managedLabels = createTypedObject()({
     description: "Issues related to performance",
     name: "area: performance",
     commitCheck: (c) => c.type === "perf"
+  },
+  DETECTED_HTTP_CHANGE: {
+    description: "",
+    name: "area: common/http",
+    commitCheck: (c) => c.type === "common/http" || c.type === "http"
   }
 });
 
