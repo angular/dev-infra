@@ -4,6 +4,7 @@ import {Octokit} from '@octokit/rest';
 import {Commit, parseCommitMessage} from '../../../ng-dev/commit-message/parse.js';
 import {managedLabels} from '../../../ng-dev/pr/common/labels/index.js';
 import {ANGULAR_ROBOT, getAuthTokenFor, revokeActiveInstallationToken} from '../../utils.js';
+import {ManagedRepositories} from '../../../ng-dev/pr/common/labels/base.js';
 
 class CommitMessageBasedLabelManager {
   /** Run the commit message based labelling process. */
@@ -36,7 +37,11 @@ class CommitMessageBasedLabelManager {
 
     // Add or Remove label as appropriate for each of the supported label and commit messaage
     // combinations.
-    for (const {commitCheck, name} of Object.values(managedLabels)) {
+    for (const {commitCheck, name, repositories} of Object.values(managedLabels)) {
+      // Only apply the logic for the repositories the Label is registered for.
+      if (!repositories.includes(context.repo.repo as ManagedRepositories)) {
+        continue;
+      }
       const hasCommit = this.commits.some(commitCheck);
       const hasLabel = this.labels.has(name);
       core.info(`${name} | hasLabel: ${hasLabel} | hasCommit: ${hasCommit}`);

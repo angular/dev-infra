@@ -1,8 +1,8 @@
 import {createTypedObject, Label} from './base.js';
 
-interface MergeLabel extends Label {}
+class MergeLabel extends Label {}
 
-export const mergeLabels = createTypedObject<MergeLabel>()({
+export const mergeLabels = createTypedObject(MergeLabel)({
   MERGE_PRESERVE_COMMITS: {
     description: 'When the PR is merged, a rebase and merge should be performed',
     name: 'merge: preserve commits',

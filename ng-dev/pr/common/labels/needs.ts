@@ -1,8 +1,8 @@
 import {createTypedObject, Label} from './base.js';
 
-interface NeedsLabel extends Label {}
+class NeedsLabel extends Label {}
 
-export const needsLabels = createTypedObject<NeedsLabel>()({
+export const needsLabels = createTypedObject(NeedsLabel)({
   NEEDS_CLARIFICATION: {
     name: 'needs: clarification',
     description:

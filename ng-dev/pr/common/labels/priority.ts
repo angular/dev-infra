@@ -1,8 +1,8 @@
 import {createTypedObject, Label} from './base.js';
 
-interface PriorityLabel extends Label {}
+class PriorityLabel extends Label {}
 
-export const priorityLabels = createTypedObject<PriorityLabel>()({
+export const priorityLabels = createTypedObject(PriorityLabel)({
   P0: {
     name: 'P0',
     description:
