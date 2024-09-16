@@ -12,10 +12,10 @@ import {confirm, input, checkbox, select, editor} from '@inquirer/prompts';
  * A set of prompts from inquirer to be used throughout our tooling.  We access them via static metonds on this
  * class to allow easier mocking management in test environments.
  */
-export abstract class Prompt {
-  static confirm = confirm;
-  static input = input;
-  static checkbox = checkbox;
-  static select = select;
-  static editor = editor;
+export class Prompt {
+  static confirm: typeof confirm = confirm;
+  static input: typeof input = input;
+  static checkbox: typeof checkbox = checkbox;
+  static select: typeof select = select;
+  static editor: typeof editor = editor;
 }
