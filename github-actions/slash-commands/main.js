@@ -57341,9 +57341,9 @@ function normalizeChoices(choices) {
 var esm_default2 = createPrompt((config, done) => {
   const { instructions, pageSize = 7, loop = true, required, validate = () => true } = config;
   const theme = makeTheme(checkboxTheme, config.theme);
-  const prefix = usePrefix({ theme });
   const firstRender = useRef(true);
-  const [status, setStatus] = useState("pending");
+  const [status, setStatus] = useState("idle");
+  const prefix = usePrefix({ status, theme });
   const [items, setItems] = useState(normalizeChoices(config.choices));
   const bounds = useMemo(() => {
     const first = items.findIndex(isSelectable);
@@ -57395,7 +57395,7 @@ var esm_default2 = createPrompt((config, done) => {
       }
     }
   });
-  const message = theme.style.message(config.message);
+  const message = theme.style.message(config.message, status);
   let description;
   const page = usePagination({
     items,
@@ -57461,11 +57461,10 @@ import { AsyncResource as AsyncResource4 } from "node:async_hooks";
 var esm_default3 = createPrompt((config, done) => {
   const { waitForUseInput = true, postfix = ".txt", validate = () => true } = config;
   const theme = makeTheme(config.theme);
-  const [status, setStatus] = useState("pending");
+  const [status, setStatus] = useState("idle");
   const [value, setValue] = useState(config.default || "");
   const [errorMsg, setError] = useState();
-  const isLoading = status === "loading";
-  const prefix = usePrefix({ isLoading, theme });
+  const prefix = usePrefix({ status, theme });
   function startEditor(rl) {
     rl.pause();
     const editCallback = AsyncResource4.bind(async (error2, answer) => {
@@ -57482,7 +57481,7 @@ var esm_default3 = createPrompt((config, done) => {
         } else {
           setValue(answer);
           setError(isValid || "You must provide a valid value");
-          setStatus("pending");
+          setStatus("idle");
         }
       }
     });
@@ -57494,18 +57493,18 @@ var esm_default3 = createPrompt((config, done) => {
     }
   }, []);
   useKeypress((key, rl) => {
-    if (status !== "pending") {
+    if (status !== "idle") {
       return;
     }
     if (isEnterKey(key)) {
       startEditor(rl);
     }
   });
-  const message = theme.style.message(config.message);
+  const message = theme.style.message(config.message, status);
   let helpTip = "";
   if (status === "loading") {
     helpTip = theme.style.help("Received");
-  } else if (status === "pending") {
+  } else if (status === "idle") {
     const enterKey = theme.style.key("enter");
     helpTip = theme.style.help(`Press ${enterKey} to launch your preferred editor.`);
   }
@@ -57519,10 +57518,10 @@ var esm_default3 = createPrompt((config, done) => {
 // 
 var esm_default4 = createPrompt((config, done) => {
   const { transformer = (answer) => answer ? "yes" : "no" } = config;
-  const [status, setStatus] = useState("pending");
+  const [status, setStatus] = useState("idle");
   const [value, setValue] = useState("");
   const theme = makeTheme(config.theme);
-  const prefix = usePrefix({ theme });
+  const prefix = usePrefix({ status, theme });
   useKeypress((key, rl) => {
     if (isEnterKey(key)) {
       let answer = config.default !== false;
@@ -57544,7 +57543,7 @@ var esm_default4 = createPrompt((config, done) => {
   } else {
     defaultValue = ` ${theme.style.defaultAnswer(config.default === false ? "y/N" : "Y/n")}`;
   }
-  const message = theme.style.message(config.message);
+  const message = theme.style.message(config.message, status);
   return `${prefix} ${message}${defaultValue} ${formattedValue}`;
 });
 
@@ -57552,14 +57551,13 @@ var esm_default4 = createPrompt((config, done) => {
 var esm_default5 = createPrompt((config, done) => {
   const { required, validate = () => true } = config;
   const theme = makeTheme(config.theme);
-  const [status, setStatus] = useState("pending");
+  const [status, setStatus] = useState("idle");
   const [defaultValue = "", setDefaultValue] = useState(config.default);
   const [errorMsg, setError] = useState();
   const [value, setValue] = useState("");
-  const isLoading = status === "loading";
-  const prefix = usePrefix({ isLoading, theme });
+  const prefix = usePrefix({ status, theme });
   useKeypress(async (key, rl) => {
-    if (status !== "pending") {
+    if (status !== "idle") {
       return;
     }
     if (isEnterKey(key)) {
@@ -57573,7 +57571,7 @@ var esm_default5 = createPrompt((config, done) => {
       } else {
         rl.write(value);
         setError(isValid || "You must provide a valid value");
-        setStatus("pending");
+        setStatus("idle");
       }
     } else if (isBackspaceKey(key) && !value) {
       setDefaultValue(void 0);
@@ -57587,7 +57585,7 @@ var esm_default5 = createPrompt((config, done) => {
       setError(void 0);
     }
   });
-  const message = theme.style.message(config.message);
+  const message = theme.style.message(config.message, status);
   let formattedValue = value;
   if (typeof config.transformer === "function") {
     formattedValue = config.transformer(value, { isFinal: status === "done" });
@@ -57648,8 +57646,8 @@ var esm_default6 = createPrompt((config, done) => {
   const { loop = true, pageSize = 7 } = config;
   const firstRender = useRef(true);
   const theme = makeTheme(selectTheme, config.theme);
-  const prefix = usePrefix({ theme });
-  const [status, setStatus] = useState("pending");
+  const [status, setStatus] = useState("idle");
+  const prefix = usePrefix({ status, theme });
   const searchTimeoutRef = useRef();
   const items = useMemo(() => normalizeChoices2(config.choices), [config.choices]);
   const bounds = useMemo(() => {
@@ -57709,7 +57707,7 @@ var esm_default6 = createPrompt((config, done) => {
   useEffect(() => () => {
     clearTimeout(searchTimeoutRef.current);
   }, []);
-  const message = theme.style.message(config.message);
+  const message = theme.style.message(config.message, status);
   let helpTipTop = "";
   let helpTipBottom = "";
   if (theme.helpMode === "always" || theme.helpMode === "auto" && firstRender.current) {
