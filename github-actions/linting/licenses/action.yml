@@ -19,3 +19,4 @@ runs:
       with:
         config-file: '${{ env.ACTION_REPO }}/github-actions/linting/licenses/dependency-review-config.yml@${{ env.ACTION_REF }}'
         allow-dependencies-licenses: '${{inputs.allow-dependencies-licenses}}'
+        show-openssf-scorecard: false
