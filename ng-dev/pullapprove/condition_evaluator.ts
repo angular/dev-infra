@@ -81,7 +81,7 @@ export function convertConditionToFunction(
  */
 function transformExpressionToJs(expression: string): string {
   return expression
-    .replace(/^(.+)\s+not in\s+(\[.+\])$/, '!$2.some(x => $1.matchesAny || $1 == x)')
+    .replace(/^(.+)\s+not in\s+(\[.+\])$/, '!$2.includes($1)')
     .replace(/^(.+)\s+in\s+(.+)$/, '$2.some(x => $1.matchesAny || $1 == x)')
     .replace(/^(.+)\s+not in\s+(.+)$/, '!$2.includes($1)')
     .replace(/^(.+)\s+in\s+(.+)$/, '$2.includes($1)')
