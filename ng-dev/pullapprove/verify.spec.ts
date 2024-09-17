@@ -79,7 +79,7 @@ describe('group parsing', () => {
     expect(() => fwCore.testFile('any')).not.toThrow();
   });
 
-  it('should never match groups with conditions that rely on author state', () => {
+  describe('automaticall matches for author and', () => {
     const groups = getGroupsFromYaml(`
       groups:
         renovate-notify-group:
@@ -89,8 +89,13 @@ describe('group parsing', () => {
       `);
     const renovateGroup = getGroupByName(groups, 'renovate-notify-group')!;
 
-    expect(renovateGroup.testFile('packages/core/index.ts')).toBe(false);
-    expect(renovateGroup.conditions[0].unverifiable).toBe(true);
+    it('can pass with a file match', () => {
+      expect(renovateGroup.testFile('packages/core/index.ts')).toBe(true);
+    });
+
+    it('can fail without a file match', () => {
+      expect(renovateGroup.testFile('packages/not-core/index.ts')).toBe(false);
+    });
   });
 
   describe('in operator', () => {
