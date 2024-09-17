@@ -33,7 +33,9 @@ const conditionEvaluationContext: object = (() => {
   // We cannot process references to `author` in conditions.
   Object.defineProperty(context, 'author', {
     get: () => {
-      throw new PullApproveAuthorStateDependencyError();
+      const x: any = new String();
+      x.matchesAny = true;
+      return x;
     },
   });
 
@@ -79,6 +81,8 @@ export function convertConditionToFunction(
  */
 function transformExpressionToJs(expression: string): string {
   return expression
+    .replace(/^(.+)\s+not in\s+(\[.+\])$/, '!$2.some(x => $1.matchesAny || $1 == x)')
+    .replace(/^(.+)\s+in\s+(.+)$/, '$2.some(x => $1.matchesAny || $1 == x)')
     .replace(/^(.+)\s+not in\s+(.+)$/, '!$2.includes($1)')
     .replace(/^(.+)\s+in\s+(.+)$/, '$2.includes($1)')
     .replace(/not\s+/g, '!');
