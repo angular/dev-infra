@@ -2969,14 +2969,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"better-sqlite3@npm:11.2.1":
-  version: 11.2.1
-  resolution: "better-sqlite3@npm:11.2.1"
+"better-sqlite3@npm:11.3.0":
+  version: 11.3.0
+  resolution: "better-sqlite3@npm:11.3.0"
   dependencies:
     bindings: "npm:^1.5.0"
     node-gyp: "npm:latest"
     prebuild-install: "npm:^7.1.1"
-  checksum: 10c0/bec7a28cb4053f07791f842cb9f2bd34ac694d33a61d0e1421f17a5b7c16eb6c187c5f05250e4dc1510adc096ac70bd9ce077dcb5a5c6992d424b9629c9394f7
+  checksum: 10c0/9adc99683300699581da5d7288e4a261b7d4381fd99c762fc6a0e9b1e1e226009c1333b46b10c1c453c356b20cb8be037a4616b1e717b3d1a00bd8493bec506e
   languageName: node
   linkType: hard
 
@@ -5017,17 +5017,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"js-yaml@npm:4.1.0, js-yaml@npm:^4.0.0":
-  version: 4.1.0
-  resolution: "js-yaml@npm:4.1.0"
-  dependencies:
-    argparse: "npm:^2.0.1"
-  bin:
-    js-yaml: bin/js-yaml.js
-  checksum: 10c0/184a24b4eaacfce40ad9074c64fd42ac83cf74d8c8cd137718d456ced75051229e5061b8633c3366b8aada17945a7a356b337828c19da92b51ae62126575018f
-  languageName: node
-  linkType: hard
-
 "js-yaml@npm:^3.10.0":
   version: 3.14.1
   resolution: "js-yaml@npm:3.14.1"
@@ -5037,6 +5026,17 @@ __metadata:
   bin:
     js-yaml: bin/js-yaml.js
   checksum: 10c0/6746baaaeac312c4db8e75fa22331d9a04cccb7792d126ed8ce6a0bbcfef0cedaddd0c5098fade53db067c09fe00aa1c957674b4765610a8b06a5a189e46433b
+  languageName: node
+  linkType: hard
+
+"js-yaml@npm:^4.0.0":
+  version: 4.1.0
+  resolution: "js-yaml@npm:4.1.0"
+  dependencies:
+    argparse: "npm:^2.0.1"
+  bin:
+    js-yaml: bin/js-yaml.js
+  checksum: 10c0/184a24b4eaacfce40ad9074c64fd42ac83cf74d8c8cd137718d456ced75051229e5061b8633c3366b8aada17945a7a356b337828c19da92b51ae62126575018f
   languageName: node
   linkType: hard
 
@@ -5795,7 +5795,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: "npm:38.83.0"
+    renovate: "npm:38.88.1"
   languageName: unknown
   linkType: soft
 
@@ -6530,9 +6530,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:38.83.0":
-  version: 38.83.0
-  resolution: "renovate@npm:38.83.0"
+"renovate@npm:38.88.1":
+  version: 38.88.1
+  resolution: "renovate@npm:38.88.1"
   dependencies:
     "@aws-sdk/client-codecommit": "npm:3.637.0"
     "@aws-sdk/client-ec2": "npm:3.641.0"
@@ -6567,7 +6567,7 @@ __metadata:
     auth-header: "npm:1.0.0"
     aws4: "npm:1.13.2"
     azure-devops-node-api: "npm:14.0.2"
-    better-sqlite3: "npm:11.2.1"
+    better-sqlite3: "npm:11.3.0"
     bunyan: "npm:1.8.15"
     cacache: "npm:18.0.4"
     chalk: "npm:4.1.2"
@@ -6601,7 +6601,6 @@ __metadata:
     handlebars: "npm:4.7.8"
     ignore: "npm:5.3.2"
     ini: "npm:4.1.3"
-    js-yaml: "npm:4.1.0"
     json-dup-key-validator: "npm:1.0.3"
     json-stringify-pretty-compact: "npm:3.0.0"
     json5: "npm:2.2.3"
@@ -6643,6 +6642,7 @@ __metadata:
     validate-npm-package-name: "npm:5.0.1"
     vuln-vects: "npm:1.1.0"
     xmldoc: "npm:1.3.0"
+    yaml: "npm:2.5.1"
     zod: "npm:3.23.8"
   dependenciesMeta:
     better-sqlite3:
@@ -6654,7 +6654,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 10c0/00732cc89b8eef0e0de7fe9eea96811ad99a1dee8cb4173ca27d1326d760df021b30795d2682a7736577f6e7c1f96207e111ab18c36224fb7f00049e19b22a40
+  checksum: 10c0/dd0b45646a6dbd63efdb9aaf2569309ab6331c30c5c7220dd88d4bc3c9b0171a31f2743f40fa5c1da4cb6de531db44aae6969dbd4230504a8ea119fa069f9377
   languageName: node
   linkType: hard
 
@@ -7836,6 +7836,15 @@ __metadata:
   version: 4.0.0
   resolution: "yallist@npm:4.0.0"
   checksum: 10c0/2286b5e8dbfe22204ab66e2ef5cc9bbb1e55dfc873bbe0d568aa943eb255d131890dfd5bf243637273d31119b870f49c18fcde2c6ffbb7a7a092b870dc90625a
+  languageName: node
+  linkType: hard
+
+"yaml@npm:2.5.1":
+  version: 2.5.1
+  resolution: "yaml@npm:2.5.1"
+  bin:
+    yaml: bin.mjs
+  checksum: 10c0/40fba5682898dbeeb3319e358a968fe886509fab6f58725732a15f8dda3abac509f91e76817c708c9959a15f786f38ff863c1b88062d7c1162c5334a7d09cb4a
   languageName: node
   linkType: hard
 
