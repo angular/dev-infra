@@ -71,6 +71,8 @@ export class HttpServer {
 
   /** Reloads all browsers that currently visit a page from the server. */
   reload() {
+    // Clear the index file cache as the generated script names may change between builds.
+    this._index = null;
     this.server.reload();
   }
 
