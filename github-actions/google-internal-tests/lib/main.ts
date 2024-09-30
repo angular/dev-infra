@@ -94,14 +94,10 @@ async function findExistingTestStatus(
   github: Octokit,
   prHeadSHA: string,
 ): Promise<GithubStatus | null> {
-  const existingStatuses: GithubStatus[] = await github.paginate(
-    github.repos.getCombinedStatusForRef,
-    {
-      ...context.repo,
-      ref: prHeadSHA,
-    },
-    (r: GetCombinedStatusForRefResponse) => r.data.statuses,
-  );
+  const existingStatuses = await github.paginate(github.repos.getCombinedStatusForRef, {
+    ...context.repo,
+    ref: prHeadSHA,
+  });
 
   return existingStatuses.find((s) => s.context === statusContext) ?? null;
 }
