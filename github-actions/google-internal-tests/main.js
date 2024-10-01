@@ -46037,7 +46037,7 @@ async function findExistingTestStatus(github, prHeadSHA) {
   const existingStatuses = await github.paginate(github.repos.getCombinedStatusForRef, {
     ...import_github.context.repo,
     ref: prHeadSHA
-  }, (r) => r.data.statuses);
+  });
   return existingStatuses.find((s) => s.context === statusContext) ?? null;
 }
 main().catch((e) => {
