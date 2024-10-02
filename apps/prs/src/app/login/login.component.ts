@@ -8,7 +8,10 @@ import {AccountService} from '../../../../shared/account/account.service.js';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
-  constructor(private account: AccountService, private router: Router) {}
+  constructor(
+    private account: AccountService,
+    private router: Router,
+  ) {}
 
   signIn() {
     this.account.signInWithGoogle().then((signedIn) => {

@@ -7,10 +7,12 @@
  */
 
 import chalk, {ChalkInstance} from 'chalk';
-import {writeFileSync} from 'fs';
+import {copyFileSync, writeFileSync} from 'fs';
 import {join} from 'path';
 import {Arguments} from 'yargs';
 import {determineRepoBaseDirFromCwd} from './repo-directory.js';
+import {appendFile} from 'fs/promises';
+import {stripVTControlCharacters} from 'util';
 
 /**
  * Supported levels for logging functions. Levels are mapped to
@@ -98,7 +100,7 @@ function runConsoleCommand(loadCommand: () => Function, logLevel: LogLevel, ...t
   if (getLogLevel() >= logLevel) {
     loadCommand()(...text);
   }
-  printToLogFile(logLevel, ...text);
+  appendToLogFile(logLevel, ...text);
 }
 
 /**
@@ -114,15 +116,16 @@ function getLogLevel(): LogLevel {
   return logLevel;
 }
 
-/** All text to write to the log file. */
-let LOGGED_TEXT = '';
-/** Whether file logging as been enabled. */
-let FILE_LOGGING_ENABLED = false;
 /**
  * The number of columns used in the prepended log level information on each line of the logging
  * output file.
  */
 const LOG_LEVEL_COLUMNS = 7;
+/**
+ * The path to the log file being written to live. Starts as undefined before being trigger for usage by
+ * `captureLogOutputForCommand` which runs from yargs execution.
+ */
+let logFilePath: string | undefined = undefined;
 
 /**
  * Enable writing the logged outputs to the log file on process exit, sets initial lines from the
@@ -135,49 +138,59 @@ const LOG_LEVEL_COLUMNS = 7;
 export async function captureLogOutputForCommand(argv: Arguments) {
   // TODO(josephperrott): remove this guard against running multiple times after
   //   https://github.com/yargs/yargs/issues/2223 is fixed
-  if (FILE_LOGGING_ENABLED) {
+  if (logFilePath !== undefined) {
     return;
   }
-
   const repoDir = determineRepoBaseDirFromCwd();
+  logFilePath = join(repoDir, '.ng-dev.log');
+  writeFileSync(logFilePath, '');
+
   /** The date time used for timestamping when the command was invoked. */
   const now = new Date();
   /** Header line to separate command runs in log files. */
   const headerLine = Array(100).fill('#').join('');
-  LOGGED_TEXT += `${headerLine}\nCommand: ${argv.$0} ${argv._.join(' ')}\nRan at: ${now}\n`;
+  appendToLogFile(
+    undefined,
+    `${headerLine}\nCommand: ${argv.$0} ${argv._.join(' ')}\nRan at: ${now}\n`,
+  );
 
   // On process exit, write the logged output to the appropriate log files
   process.on('exit', (code: number) => {
-    LOGGED_TEXT += `${headerLine}\n`;
-    LOGGED_TEXT += `Command ran in ${new Date().getTime() - now.getTime()}ms\n`;
-    LOGGED_TEXT += `Exit Code: ${code}\n`;
-    /** Path to the log file location. */
-    const logFilePath = join(repoDir, '.ng-dev.log');
-
-    // Strip ANSI escape codes from log outputs.
-    LOGGED_TEXT = LOGGED_TEXT.replace(/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]/g, '');
-
-    writeFileSync(logFilePath, LOGGED_TEXT);
+    appendToLogFile(
+      undefined,
+      `\n\nCommand ran in ${new Date().getTime() - now.getTime()}ms\nExit Code: ${code}\n`,
+    );
 
     // For failure codes greater than 1, the new logged lines should be written to a specific log
     // file for the command run failure.
-    if (code > 1) {
-      const logFileName = `.ng-dev.err-${now.getTime()}.log`;
-      console.error(`Exit code: ${code}. Writing full log to ${logFileName}`);
-      writeFileSync(join(repoDir, logFileName), LOGGED_TEXT);
+    if (code > 1 && logFilePath) {
+      const errorLogFileName = `.ng-dev.err-${now.getTime()}.log`;
+      console.error(`Exit code: ${code}. Writing full log to ${errorLogFileName}`);
+      copyFileSync(logFilePath, join(repoDir, errorLogFileName));
     }
   });
-
-  // Mark file logging as enabled to prevent the function from executing multiple times.
-  FILE_LOGGING_ENABLED = true;
 }
 
 /** Write the provided text to the log file, prepending each line with the log level.  */
-function printToLogFile(logLevel: LogLevel, ...text: unknown[]) {
+function appendToLogFile(logLevel: LogLevel | undefined, ...text: unknown[]) {
+  if (logFilePath === undefined) {
+    return;
+  }
+  if (logLevel === undefined) {
+    appendFile(logFilePath, text.join(' '));
+    return;
+  }
+
   const logLevelText = `${LogLevel[logLevel]}:`.padEnd(LOG_LEVEL_COLUMNS);
-  LOGGED_TEXT += text
-    .join(' ')
-    .split('\n')
-    .map((l) => `${logLevelText} ${l}\n`)
-    .join('');
+  appendFile(
+    logFilePath,
+    // Strip ANSI escape codes from log outputs.
+    stripVTControlCharacters(
+      text
+        .join(' ')
+        .split('\n')
+        .map((l) => `${logLevelText} ${l}\n`)
+        .join(''),
+    ),
+  );
 }

@@ -27,9 +27,8 @@ export async function resolveTypePackages(typePackageNames: string[]): Promise<{
 
   for (const typePackageName of typePackageNames) {
     const moduleNames = getModuleNamesForTypePackage(typePackageName);
-    const {entryPointTypeFile, resolvedPackageDir} = await resolveTypeDeclarationOfPackage(
-      typePackageName,
-    );
+    const {entryPointTypeFile, resolvedPackageDir} =
+      await resolveTypeDeclarationOfPackage(typePackageName);
 
     typeFiles.push(entryPointTypeFile);
 

@@ -30,7 +30,10 @@ export class PrTableComponent implements AfterViewInit {
   /** The header row definition. */
   @ViewChild(MatHeaderRowDef, {static: true}) tableHeaderRow!: MatHeaderRowDef;
 
-  constructor(private injector: Injector, private vcr: ViewContainerRef) {}
+  constructor(
+    private injector: Injector,
+    private vcr: ViewContainerRef,
+  ) {}
 
   ngAfterViewInit(): void {
     const columns = this.columns.map((column) => {

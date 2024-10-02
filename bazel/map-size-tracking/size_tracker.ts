@@ -17,7 +17,10 @@ import {
 } from './file_size_data.js';
 
 export class SizeTracker {
-  constructor(private filePath: string, private sourceMapPath: string) {}
+  constructor(
+    private filePath: string,
+    private sourceMapPath: string,
+  ) {}
 
   /**
    * Computes the file size data by analyzing the input file through
