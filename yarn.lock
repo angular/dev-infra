@@ -2780,9 +2780,9 @@ __metadata:
   linkType: hard
 
 "@lezer/common@npm:^1.0.0, @lezer/common@npm:^1.1.1, @lezer/common@npm:^1.2.0":
-  version: 1.2.1
-  resolution: "@lezer/common@npm:1.2.1"
-  checksum: 10c0/af61436dc026f8deebaded13d8e1beea2ae307cbbfb270116cdedadb8208f0674da9c3b5963128a2b1cd4072b4e90bc8128133f4feaf31b6e801e4568f1a15a6
+  version: 1.2.2
+  resolution: "@lezer/common@npm:1.2.2"
+  checksum: 10c0/8dac6afded15606a94fadbdbbc3b3115489c4fc0580ac103efdbe6b3dae7f3ef4d82250a45e80c7530240b9c9b09f1389975bf288651eb6d3236ee962c060e35
   languageName: node
   linkType: hard
 
