@@ -50,7 +50,10 @@ export abstract class Formatter {
   /** The default matchers for the formatter for filtering files to be formatted. */
   abstract defaultFileMatcher: string[];
 
-  constructor(protected git: GitClient, protected config: FormatConfig) {}
+  constructor(
+    protected git: GitClient,
+    protected config: FormatConfig,
+  ) {}
 
   /**
    * Retrieve the command to execute the provided action, including both the binary

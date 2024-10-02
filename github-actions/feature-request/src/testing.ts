@@ -1,7 +1,10 @@
 import {GitHubAPI, GitHubIssueAPI, Issue, Comment, Query, User} from './api.js';
 
 export class APIMock implements GitHubAPI {
-  constructor(public issues: IssueAPIMock[], public orgMembers: OrgMembers) {}
+  constructor(
+    public issues: IssueAPIMock[],
+    public orgMembers: OrgMembers,
+  ) {}
 
   query(_: Query) {
     const self = this;
