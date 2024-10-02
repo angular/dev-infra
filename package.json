@@ -7,7 +7,7 @@
     "ng-dev": "bash ./tools/local-dev.sh",
     "lint": "yarn tslint -c tslint.json --project tsconfig.json",
     "build-env-stamp": "tsx --tsconfig tsconfig.json ./ng-dev/release/stamping/_private_main.ts build-env-stamp",
-    "update-generated-files": "tsx --tsconfig tsconfig.json ./tools/update-generated-files.ts",
+    "update-generated-files": "yarn ng-dev misc update-generated-files",
     "pack": "bazel run //:npm_package.pack --config=release"
   },
   "exports": {
