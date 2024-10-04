@@ -6,12 +6,12 @@ __metadata:
   cacheKey: 10c0
 
 "@actions/core@npm:^1.4.0":
-  version: 1.11.0
-  resolution: "@actions/core@npm:1.11.0"
+  version: 1.11.1
+  resolution: "@actions/core@npm:1.11.1"
   dependencies:
     "@actions/exec": "npm:^1.1.1"
     "@actions/http-client": "npm:^2.0.1"
-  checksum: 10c0/54763ea46ce7a2a390c56819c94426fc24305547f56e80c5ef39f3a2b6ef1fcff3774635c73f792b17b88deb3bb71f79cc6deafe9fc2820602ed166ceb48221b
+  checksum: 10c0/9aa30b397d8d0dbc74e69fe46b23fb105cab989beb420c57eacbfc51c6804abe8da0f46973ca9f639d532ea4c096d0f4d37da0223fbe94f304fa3c5f53537c30
   languageName: node
   linkType: hard
 
