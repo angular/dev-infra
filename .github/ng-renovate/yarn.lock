@@ -3142,13 +3142,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"azure-devops-node-api@npm:14.0.2":
-  version: 14.0.2
-  resolution: "azure-devops-node-api@npm:14.0.2"
+"azure-devops-node-api@npm:14.1.0":
+  version: 14.1.0
+  resolution: "azure-devops-node-api@npm:14.1.0"
   dependencies:
     tunnel: "npm:0.0.6"
-    typed-rest-client: "npm:^2.0.1"
-  checksum: 10c0/1b48bc74a5d195b1f6bf261129efaefbcf48af262c13cb7f719f5eca8a8626be3102ed525ba704626499f4b421e8396982ac74d4d227921147f44db161724485
+    typed-rest-client: "npm:2.1.0"
+  checksum: 10c0/7cfb4d9e5359e568dbcaaa5f6e0e1518994802ef840594d515652981ead99e6eeeeb05846b38fb264f05c24f06db360139f7eca0a614c69903b5fb8875243d16
   languageName: node
   linkType: hard
 
@@ -6013,7 +6013,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: "npm:38.107.0"
+    renovate: "npm:38.109.1"
   languageName: unknown
   linkType: soft
 
@@ -6748,9 +6748,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:38.107.0":
-  version: 38.107.0
-  resolution: "renovate@npm:38.107.0"
+"renovate@npm:38.109.1":
+  version: 38.109.1
+  resolution: "renovate@npm:38.109.1"
   dependencies:
     "@aws-sdk/client-codecommit": "npm:3.658.1"
     "@aws-sdk/client-ec2": "npm:3.658.1"
@@ -6784,7 +6784,7 @@ __metadata:
     async-mutex: "npm:0.5.0"
     auth-header: "npm:1.0.0"
     aws4: "npm:1.13.2"
-    azure-devops-node-api: "npm:14.0.2"
+    azure-devops-node-api: "npm:14.1.0"
     better-sqlite3: "npm:11.3.0"
     bunyan: "npm:1.8.15"
     cacache: "npm:18.0.4"
@@ -6872,7 +6872,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 10c0/64adfd4270bca6c87a0004c0ec8e968be834d921b66b490a9d5c8a3722aebb08b5e5aacce122cb2fa4b8f6ec2135fee8182d8a5c96c5b2c7708aaf6947455d25
+  checksum: 10c0/925aba5ab791e3cce4902bf4fc58b4e011d27ad2a10cc768ba0d8b51c9011eb0cd5711ce30fa8adcdae88098a5d846cf03e1aa6339130000f47c07be8ffa39d7
   languageName: node
   linkType: hard
 
@@ -7658,7 +7658,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typed-rest-client@npm:^2.0.1":
+"typed-rest-client@npm:2.1.0":
   version: 2.1.0
   resolution: "typed-rest-client@npm:2.1.0"
   dependencies:
