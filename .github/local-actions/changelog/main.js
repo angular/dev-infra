@@ -43054,49 +43054,49 @@ var require_yoctocolors_cjs = __commonJS({
         return result;
       };
     };
-    var colors5 = {};
-    colors5.reset = format(0, 0);
-    colors5.bold = format(1, 22);
-    colors5.dim = format(2, 22);
-    colors5.italic = format(3, 23);
-    colors5.underline = format(4, 24);
-    colors5.overline = format(53, 55);
-    colors5.inverse = format(7, 27);
-    colors5.hidden = format(8, 28);
-    colors5.strikethrough = format(9, 29);
-    colors5.black = format(30, 39);
-    colors5.red = format(31, 39);
-    colors5.green = format(32, 39);
-    colors5.yellow = format(33, 39);
-    colors5.blue = format(34, 39);
-    colors5.magenta = format(35, 39);
-    colors5.cyan = format(36, 39);
-    colors5.white = format(37, 39);
-    colors5.gray = format(90, 39);
-    colors5.bgBlack = format(40, 49);
-    colors5.bgRed = format(41, 49);
-    colors5.bgGreen = format(42, 49);
-    colors5.bgYellow = format(43, 49);
-    colors5.bgBlue = format(44, 49);
-    colors5.bgMagenta = format(45, 49);
-    colors5.bgCyan = format(46, 49);
-    colors5.bgWhite = format(47, 49);
-    colors5.bgGray = format(100, 49);
-    colors5.redBright = format(91, 39);
-    colors5.greenBright = format(92, 39);
-    colors5.yellowBright = format(93, 39);
-    colors5.blueBright = format(94, 39);
-    colors5.magentaBright = format(95, 39);
-    colors5.cyanBright = format(96, 39);
-    colors5.whiteBright = format(97, 39);
-    colors5.bgRedBright = format(101, 49);
-    colors5.bgGreenBright = format(102, 49);
-    colors5.bgYellowBright = format(103, 49);
-    colors5.bgBlueBright = format(104, 49);
-    colors5.bgMagentaBright = format(105, 49);
-    colors5.bgCyanBright = format(106, 49);
-    colors5.bgWhiteBright = format(107, 49);
-    module.exports = colors5;
+    var colors8 = {};
+    colors8.reset = format(0, 0);
+    colors8.bold = format(1, 22);
+    colors8.dim = format(2, 22);
+    colors8.italic = format(3, 23);
+    colors8.underline = format(4, 24);
+    colors8.overline = format(53, 55);
+    colors8.inverse = format(7, 27);
+    colors8.hidden = format(8, 28);
+    colors8.strikethrough = format(9, 29);
+    colors8.black = format(30, 39);
+    colors8.red = format(31, 39);
+    colors8.green = format(32, 39);
+    colors8.yellow = format(33, 39);
+    colors8.blue = format(34, 39);
+    colors8.magenta = format(35, 39);
+    colors8.cyan = format(36, 39);
+    colors8.white = format(37, 39);
+    colors8.gray = format(90, 39);
+    colors8.bgBlack = format(40, 49);
+    colors8.bgRed = format(41, 49);
+    colors8.bgGreen = format(42, 49);
+    colors8.bgYellow = format(43, 49);
+    colors8.bgBlue = format(44, 49);
+    colors8.bgMagenta = format(45, 49);
+    colors8.bgCyan = format(46, 49);
+    colors8.bgWhite = format(47, 49);
+    colors8.bgGray = format(100, 49);
+    colors8.redBright = format(91, 39);
+    colors8.greenBright = format(92, 39);
+    colors8.yellowBright = format(93, 39);
+    colors8.blueBright = format(94, 39);
+    colors8.magentaBright = format(95, 39);
+    colors8.cyanBright = format(96, 39);
+    colors8.whiteBright = format(97, 39);
+    colors8.bgRedBright = format(101, 49);
+    colors8.bgGreenBright = format(102, 49);
+    colors8.bgYellowBright = format(103, 49);
+    colors8.bgBlueBright = format(104, 49);
+    colors8.bgMagentaBright = format(105, 49);
+    colors8.bgCyanBright = format(106, 49);
+    colors8.bgWhiteBright = format(107, 49);
+    module.exports = colors8;
   }
 });
 
@@ -44586,14 +44586,14 @@ var require_lib2 = __commonJS({
 var require_ansi_escapes = __commonJS({
   ""(exports, module) {
     "use strict";
-    var ansiEscapes4 = module.exports;
-    module.exports.default = ansiEscapes4;
+    var ansiEscapes5 = module.exports;
+    module.exports.default = ansiEscapes5;
     var ESC = "\x1B[";
     var OSC = "\x1B]";
     var BEL = "\x07";
     var SEP = ";";
     var isTerminalApp = process.env.TERM_PROGRAM === "Apple_Terminal";
-    ansiEscapes4.cursorTo = (x, y) => {
+    ansiEscapes5.cursorTo = (x, y) => {
       if (typeof x !== "number") {
         throw new TypeError("The `x` argument is required");
       }
@@ -44602,7 +44602,7 @@ var require_ansi_escapes = __commonJS({
       }
       return ESC + (y + 1) + ";" + (x + 1) + "H";
     };
-    ansiEscapes4.cursorMove = (x, y) => {
+    ansiEscapes5.cursorMove = (x, y) => {
       if (typeof x !== "number") {
         throw new TypeError("The `x` argument is required");
       }
@@ -44619,40 +44619,40 @@ var require_ansi_escapes = __commonJS({
       }
       return ret;
     };
-    ansiEscapes4.cursorUp = (count = 1) => ESC + count + "A";
-    ansiEscapes4.cursorDown = (count = 1) => ESC + count + "B";
-    ansiEscapes4.cursorForward = (count = 1) => ESC + count + "C";
-    ansiEscapes4.cursorBackward = (count = 1) => ESC + count + "D";
-    ansiEscapes4.cursorLeft = ESC + "G";
-    ansiEscapes4.cursorSavePosition = isTerminalApp ? "\x1B7" : ESC + "s";
-    ansiEscapes4.cursorRestorePosition = isTerminalApp ? "\x1B8" : ESC + "u";
-    ansiEscapes4.cursorGetPosition = ESC + "6n";
-    ansiEscapes4.cursorNextLine = ESC + "E";
-    ansiEscapes4.cursorPrevLine = ESC + "F";
-    ansiEscapes4.cursorHide = ESC + "?25l";
-    ansiEscapes4.cursorShow = ESC + "?25h";
-    ansiEscapes4.eraseLines = (count) => {
+    ansiEscapes5.cursorUp = (count = 1) => ESC + count + "A";
+    ansiEscapes5.cursorDown = (count = 1) => ESC + count + "B";
+    ansiEscapes5.cursorForward = (count = 1) => ESC + count + "C";
+    ansiEscapes5.cursorBackward = (count = 1) => ESC + count + "D";
+    ansiEscapes5.cursorLeft = ESC + "G";
+    ansiEscapes5.cursorSavePosition = isTerminalApp ? "\x1B7" : ESC + "s";
+    ansiEscapes5.cursorRestorePosition = isTerminalApp ? "\x1B8" : ESC + "u";
+    ansiEscapes5.cursorGetPosition = ESC + "6n";
+    ansiEscapes5.cursorNextLine = ESC + "E";
+    ansiEscapes5.cursorPrevLine = ESC + "F";
+    ansiEscapes5.cursorHide = ESC + "?25l";
+    ansiEscapes5.cursorShow = ESC + "?25h";
+    ansiEscapes5.eraseLines = (count) => {
       let clear = "";
       for (let i = 0; i < count; i++) {
-        clear += ansiEscapes4.eraseLine + (i < count - 1 ? ansiEscapes4.cursorUp() : "");
+        clear += ansiEscapes5.eraseLine + (i < count - 1 ? ansiEscapes5.cursorUp() : "");
       }
       if (count) {
-        clear += ansiEscapes4.cursorLeft;
+        clear += ansiEscapes5.cursorLeft;
       }
       return clear;
     };
-    ansiEscapes4.eraseEndLine = ESC + "K";
-    ansiEscapes4.eraseStartLine = ESC + "1K";
-    ansiEscapes4.eraseLine = ESC + "2K";
-    ansiEscapes4.eraseDown = ESC + "J";
-    ansiEscapes4.eraseUp = ESC + "1J";
-    ansiEscapes4.eraseScreen = ESC + "2J";
-    ansiEscapes4.scrollUp = ESC + "S";
-    ansiEscapes4.scrollDown = ESC + "T";
-    ansiEscapes4.clearScreen = "\x1Bc";
-    ansiEscapes4.clearTerminal = process.platform === "win32" ? `${ansiEscapes4.eraseScreen}${ESC}0f` : `${ansiEscapes4.eraseScreen}${ESC}3J${ESC}H`;
-    ansiEscapes4.beep = BEL;
-    ansiEscapes4.link = (text, url) => {
+    ansiEscapes5.eraseEndLine = ESC + "K";
+    ansiEscapes5.eraseStartLine = ESC + "1K";
+    ansiEscapes5.eraseLine = ESC + "2K";
+    ansiEscapes5.eraseDown = ESC + "J";
+    ansiEscapes5.eraseUp = ESC + "1J";
+    ansiEscapes5.eraseScreen = ESC + "2J";
+    ansiEscapes5.scrollUp = ESC + "S";
+    ansiEscapes5.scrollDown = ESC + "T";
+    ansiEscapes5.clearScreen = "\x1Bc";
+    ansiEscapes5.clearTerminal = process.platform === "win32" ? `${ansiEscapes5.eraseScreen}${ESC}0f` : `${ansiEscapes5.eraseScreen}${ESC}3J${ESC}H`;
+    ansiEscapes5.beep = BEL;
+    ansiEscapes5.link = (text, url) => {
       return [
         OSC,
         "8",
@@ -44668,7 +44668,7 @@ var require_ansi_escapes = __commonJS({
         BEL
       ].join("");
     };
-    ansiEscapes4.image = (buffer, options = {}) => {
+    ansiEscapes5.image = (buffer, options = {}) => {
       let ret = `${OSC}1337;File=inline=1`;
       if (options.width) {
         ret += `;width=${options.width}`;
@@ -44681,7 +44681,7 @@ var require_ansi_escapes = __commonJS({
       }
       return ret + ":" + buffer.toString("base64") + BEL;
     };
-    ansiEscapes4.iTerm = {
+    ansiEscapes5.iTerm = {
       setCwd: (cwd = process.cwd()) => `${OSC}50;CurrentDir=${cwd}${BEL}`,
       annotation: (message, options = {}) => {
         let ret = `${OSC}1337;`;
@@ -57698,7 +57698,7 @@ var esm_default2 = createPrompt((config2, done) => {
   const bounds = useMemo(() => {
     const first = items.findIndex(isSelectable);
     const last = items.findLastIndex(isSelectable);
-    if (first < 0) {
+    if (first === -1) {
       throw new ValidationError("[checkbox prompt] No selectable choices. All choices are disabled.");
     }
     return { first, last };
@@ -57957,20 +57957,331 @@ var esm_default5 = createPrompt((config2, done) => {
 });
 
 // 
+function isStepOf(value, step, min) {
+  const valuePow = value * Math.pow(10, 6);
+  const stepPow = step * Math.pow(10, 6);
+  const minPow = min * Math.pow(10, 6);
+  return (valuePow - (Number.isFinite(min) ? minPow : 0)) % stepPow === 0;
+}
+function validateNumber(value, { min, max, step }) {
+  if (value == null || Number.isNaN(value)) {
+    return false;
+  } else if (value < min || value > max) {
+    return `Value must be between ${min} and ${max}`;
+  } else if (step !== "any" && !isStepOf(value, step, min)) {
+    return `Value must be a multiple of ${step}${Number.isFinite(min) ? ` starting from ${min}` : ""}`;
+  }
+  return true;
+}
+var esm_default6 = createPrompt((config2, done) => {
+  var _a2;
+  const { validate = () => true, min = -Infinity, max = Infinity, step = 1, required = false } = config2;
+  const theme = makeTheme(config2.theme);
+  const [status, setStatus] = useState("idle");
+  const [value, setValue] = useState("");
+  const validDefault = validateNumber(config2.default, { min, max, step }) === true ? (_a2 = config2.default) == null ? void 0 : _a2.toString() : void 0;
+  const [defaultValue = "", setDefaultValue] = useState(validDefault);
+  const [errorMsg, setError] = useState();
+  const prefix = usePrefix({ status, theme });
+  useKeypress(async (key, rl) => {
+    if (status !== "idle") {
+      return;
+    }
+    if (isEnterKey(key)) {
+      const input = value || defaultValue;
+      const answer = input === "" ? void 0 : Number(input);
+      setStatus("loading");
+      let isValid = true;
+      if (required || answer != null) {
+        isValid = validateNumber(answer, { min, max, step });
+      }
+      if (isValid === true) {
+        isValid = await validate(answer);
+      }
+      if (isValid === true) {
+        setValue(String(answer ?? ""));
+        setStatus("done");
+        done(answer);
+      } else {
+        rl.write(value);
+        setError(isValid || "You must provide a valid numeric value");
+        setStatus("idle");
+      }
+    } else if (isBackspaceKey(key) && !value) {
+      setDefaultValue(void 0);
+    } else if (key.name === "tab" && !value) {
+      setDefaultValue(void 0);
+      rl.clearLine(0);
+      rl.write(defaultValue);
+      setValue(defaultValue);
+    } else {
+      setValue(rl.line);
+      setError(void 0);
+    }
+  });
+  const message = theme.style.message(config2.message, status);
+  let formattedValue = value;
+  if (status === "done") {
+    formattedValue = theme.style.answer(value);
+  }
+  let defaultStr;
+  if (defaultValue && status !== "done" && !value) {
+    defaultStr = theme.style.defaultAnswer(defaultValue);
+  }
+  let error2 = "";
+  if (errorMsg) {
+    error2 = theme.style.error(errorMsg);
+  }
+  return [
+    [prefix, message, defaultStr, formattedValue].filter((v) => v !== void 0).join(" "),
+    error2
+  ];
+});
+
+// 
 var import_yoctocolors_cjs4 = __toESM(require_yoctocolors_cjs(), 1);
+function normalizeChoices2(choices) {
+  return choices.map((choice) => {
+    if (Separator.isSeparator(choice)) {
+      return choice;
+    }
+    const name = "name" in choice ? choice.name : String(choice.value);
+    const value = "value" in choice ? choice.value : name;
+    return {
+      value,
+      name,
+      key: choice.key.toLowerCase()
+    };
+  });
+}
+var helpChoice = {
+  key: "h",
+  name: "Help, list all options",
+  value: void 0
+};
+var esm_default7 = createPrompt((config2, done) => {
+  const { default: defaultKey = "h" } = config2;
+  const choices = useMemo(() => normalizeChoices2(config2.choices), [config2.choices]);
+  const [status, setStatus] = useState("idle");
+  const [value, setValue] = useState("");
+  const [expanded, setExpanded] = useState(config2.expanded ?? false);
+  const [errorMsg, setError] = useState();
+  const theme = makeTheme(config2.theme);
+  const prefix = usePrefix({ theme, status });
+  useKeypress((event, rl) => {
+    if (isEnterKey(event)) {
+      const answer = (value || defaultKey).toLowerCase();
+      if (answer === "h" && !expanded) {
+        setExpanded(true);
+      } else {
+        const selectedChoice = choices.find((choice) => !Separator.isSeparator(choice) && choice.key === answer);
+        if (selectedChoice) {
+          setStatus("done");
+          setValue(answer);
+          done(selectedChoice.value);
+        } else if (value === "") {
+          setError("Please input a value");
+        } else {
+          setError(`"${import_yoctocolors_cjs4.default.red(value)}" isn't an available option`);
+        }
+      }
+    } else {
+      setValue(rl.line);
+      setError(void 0);
+    }
+  });
+  const message = theme.style.message(config2.message, status);
+  if (status === "done") {
+    const selectedChoice = choices.find((choice) => !Separator.isSeparator(choice) && choice.key === value.toLowerCase());
+    return `${prefix} ${message} ${theme.style.answer(selectedChoice.name)}`;
+  }
+  const allChoices = expanded ? choices : [...choices, helpChoice];
+  let longChoices = "";
+  let shortChoices = allChoices.map((choice) => {
+    if (Separator.isSeparator(choice))
+      return "";
+    if (choice.key === defaultKey) {
+      return choice.key.toUpperCase();
+    }
+    return choice.key;
+  }).join("");
+  shortChoices = ` ${theme.style.defaultAnswer(shortChoices)}`;
+  if (expanded) {
+    shortChoices = "";
+    longChoices = allChoices.map((choice) => {
+      if (Separator.isSeparator(choice)) {
+        return ` ${choice.separator}`;
+      }
+      const line = `  ${choice.key}) ${choice.name}`;
+      if (choice.key === value.toLowerCase()) {
+        return theme.style.highlight(line);
+      }
+      return line;
+    }).join("\n");
+  }
+  let helpTip = "";
+  const currentOption = choices.find((choice) => !Separator.isSeparator(choice) && choice.key === value.toLowerCase());
+  if (currentOption) {
+    helpTip = `${import_yoctocolors_cjs4.default.cyan(">>")} ${currentOption.name}`;
+  }
+  let error2 = "";
+  if (errorMsg) {
+    error2 = theme.style.error(errorMsg);
+  }
+  return [
+    `${prefix} ${message}${shortChoices} ${value}`,
+    [longChoices, helpTip, error2].filter(Boolean).join("\n")
+  ];
+});
+
+// 
+var import_yoctocolors_cjs5 = __toESM(require_yoctocolors_cjs(), 1);
+var numberRegex = /\d+/;
+function isSelectableChoice(choice) {
+  return choice != null && !Separator.isSeparator(choice);
+}
+function normalizeChoices3(choices) {
+  let index = 0;
+  return choices.map((choice) => {
+    if (Separator.isSeparator(choice))
+      return choice;
+    index += 1;
+    if (typeof choice === "string") {
+      return {
+        value: choice,
+        name: choice,
+        short: choice,
+        key: String(index)
+      };
+    }
+    const name = choice.name ?? String(choice.value);
+    return {
+      value: choice.value,
+      name,
+      short: choice.short ?? name,
+      key: choice.key ?? String(index)
+    };
+  });
+}
+var esm_default8 = createPrompt((config2, done) => {
+  const choices = useMemo(() => normalizeChoices3(config2.choices), [config2.choices]);
+  const [status, setStatus] = useState("idle");
+  const [value, setValue] = useState("");
+  const [errorMsg, setError] = useState();
+  const theme = makeTheme(config2.theme);
+  const prefix = usePrefix({ status, theme });
+  useKeypress((key, rl) => {
+    if (isEnterKey(key)) {
+      let selectedChoice;
+      if (numberRegex.test(value)) {
+        const answer = Number.parseInt(value, 10) - 1;
+        selectedChoice = choices.filter(isSelectableChoice)[answer];
+      } else {
+        selectedChoice = choices.find((choice) => isSelectableChoice(choice) && choice.key === value);
+      }
+      if (isSelectableChoice(selectedChoice)) {
+        setValue(selectedChoice.short ?? selectedChoice.name ?? String(selectedChoice.value));
+        setStatus("done");
+        done(selectedChoice.value);
+      } else if (value === "") {
+        setError("Please input a value");
+      } else {
+        setError(`"${import_yoctocolors_cjs5.default.red(value)}" isn't an available option`);
+      }
+    } else {
+      setValue(rl.line);
+      setError(void 0);
+    }
+  });
+  const message = theme.style.message(config2.message, status);
+  if (status === "done") {
+    return `${prefix} ${message} ${theme.style.answer(value)}`;
+  }
+  const choicesStr = choices.map((choice) => {
+    if (Separator.isSeparator(choice)) {
+      return ` ${choice.separator}`;
+    }
+    const line = `  ${choice.key}) ${choice.name}`;
+    if (choice.key === value.toLowerCase()) {
+      return theme.style.highlight(line);
+    }
+    return line;
+  }).join("\n");
+  let error2 = "";
+  if (errorMsg) {
+    error2 = theme.style.error(errorMsg);
+  }
+  return [
+    `${prefix} ${message} ${value}`,
+    [choicesStr, error2].filter(Boolean).join("\n")
+  ];
+});
+
+// 
 var import_ansi_escapes3 = __toESM(require_ansi_escapes(), 1);
-var selectTheme = {
+var esm_default9 = createPrompt((config2, done) => {
+  const { validate = () => true } = config2;
+  const theme = makeTheme(config2.theme);
+  const [status, setStatus] = useState("idle");
+  const [errorMsg, setError] = useState();
+  const [value, setValue] = useState("");
+  const prefix = usePrefix({ status, theme });
+  useKeypress(async (key, rl) => {
+    if (status !== "idle") {
+      return;
+    }
+    if (isEnterKey(key)) {
+      const answer = value;
+      setStatus("loading");
+      const isValid = await validate(answer);
+      if (isValid === true) {
+        setValue(answer);
+        setStatus("done");
+        done(answer);
+      } else {
+        rl.write(value);
+        setError(isValid || "You must provide a valid value");
+        setStatus("idle");
+      }
+    } else {
+      setValue(rl.line);
+      setError(void 0);
+    }
+  });
+  const message = theme.style.message(config2.message, status);
+  let formattedValue = "";
+  let helpTip;
+  if (config2.mask) {
+    const maskChar = typeof config2.mask === "string" ? config2.mask : "*";
+    formattedValue = maskChar.repeat(value.length);
+  } else if (status !== "done") {
+    helpTip = `${theme.style.help("[input is masked]")}${import_ansi_escapes3.default.cursorHide}`;
+  }
+  if (status === "done") {
+    formattedValue = theme.style.answer(formattedValue);
+  }
+  let error2 = "";
+  if (errorMsg) {
+    error2 = theme.style.error(errorMsg);
+  }
+  return [[prefix, message, config2.mask ? formattedValue : helpTip].join(" "), error2];
+});
+
+// 
+var import_yoctocolors_cjs6 = __toESM(require_yoctocolors_cjs(), 1);
+var searchTheme = {
   icon: { cursor: esm_default.pointer },
   style: {
-    disabled: (text) => import_yoctocolors_cjs4.default.dim(`- ${text}`),
-    description: (text) => import_yoctocolors_cjs4.default.cyan(text)
+    disabled: (text) => import_yoctocolors_cjs6.default.dim(`- ${text}`),
+    searchTerm: (text) => import_yoctocolors_cjs6.default.cyan(text),
+    description: (text) => import_yoctocolors_cjs6.default.cyan(text)
   },
   helpMode: "auto"
 };
 function isSelectable2(item) {
   return !Separator.isSeparator(item) && !item.disabled;
 }
-function normalizeChoices2(choices) {
+function normalizeChoices4(choices) {
   return choices.map((choice) => {
     if (Separator.isSeparator(choice))
       return choice;
@@ -57992,18 +58303,181 @@ function normalizeChoices2(choices) {
     };
   });
 }
-var esm_default6 = createPrompt((config2, done) => {
+var esm_default10 = createPrompt((config2, done) => {
+  const { pageSize = 7, validate = () => true } = config2;
+  const theme = makeTheme(searchTheme, config2.theme);
+  const firstRender = useRef(true);
+  const [status, setStatus] = useState("loading");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchError, setSearchError] = useState();
+  const prefix = usePrefix({ status, theme });
+  const bounds = useMemo(() => {
+    const first = searchResults.findIndex(isSelectable2);
+    const last = searchResults.findLastIndex(isSelectable2);
+    return { first, last };
+  }, [searchResults]);
+  const [active = bounds.first, setActive] = useState();
+  useEffect(() => {
+    const controller = new AbortController();
+    setStatus("loading");
+    setSearchError(void 0);
+    const fetchResults = async () => {
+      try {
+        const results = await config2.source(searchTerm || void 0, {
+          signal: controller.signal
+        });
+        if (!controller.signal.aborted) {
+          setActive(void 0);
+          setSearchError(void 0);
+          setSearchResults(normalizeChoices4(results));
+          setStatus("idle");
+        }
+      } catch (error3) {
+        if (!controller.signal.aborted && error3 instanceof Error) {
+          setSearchError(error3.message);
+        }
+      }
+    };
+    void fetchResults();
+    return () => {
+      controller.abort();
+    };
+  }, [searchTerm]);
+  const selectedChoice = searchResults[active];
+  useKeypress(async (key, rl) => {
+    if (isEnterKey(key)) {
+      if (selectedChoice) {
+        setStatus("loading");
+        const isValid = await validate(selectedChoice.value);
+        setStatus("idle");
+        if (isValid === true) {
+          setStatus("done");
+          done(selectedChoice.value);
+        } else if (selectedChoice.name === searchTerm) {
+          setSearchError(isValid || "You must provide a valid value");
+        } else {
+          rl.write(selectedChoice.name);
+          setSearchTerm(selectedChoice.name);
+        }
+      } else {
+        rl.write(searchTerm);
+      }
+    } else if (key.name === "tab" && selectedChoice) {
+      rl.clearLine(0);
+      rl.write(selectedChoice.name);
+      setSearchTerm(selectedChoice.name);
+    } else if (status !== "loading" && (key.name === "up" || key.name === "down")) {
+      rl.clearLine(0);
+      if (key.name === "up" && active !== bounds.first || key.name === "down" && active !== bounds.last) {
+        const offset = key.name === "up" ? -1 : 1;
+        let next = active;
+        do {
+          next = (next + offset + searchResults.length) % searchResults.length;
+        } while (!isSelectable2(searchResults[next]));
+        setActive(next);
+      }
+    } else {
+      setSearchTerm(rl.line);
+    }
+  });
+  const message = theme.style.message(config2.message, status);
+  if (active > 0) {
+    firstRender.current = false;
+  }
+  let helpTip = "";
+  if (searchResults.length > 1 && (theme.helpMode === "always" || theme.helpMode === "auto" && firstRender.current)) {
+    helpTip = searchResults.length > pageSize ? `
+${theme.style.help("(Use arrow keys to reveal more choices)")}` : `
+${theme.style.help("(Use arrow keys)")}`;
+  }
+  const page = usePagination({
+    items: searchResults,
+    active,
+    renderItem({ item, isActive }) {
+      if (Separator.isSeparator(item)) {
+        return ` ${item.separator}`;
+      }
+      if (item.disabled) {
+        const disabledLabel = typeof item.disabled === "string" ? item.disabled : "(disabled)";
+        return theme.style.disabled(`${item.name} ${disabledLabel}`);
+      }
+      const color = isActive ? theme.style.highlight : (x) => x;
+      const cursor = isActive ? theme.icon.cursor : ` `;
+      return color(`${cursor} ${item.name}`);
+    },
+    pageSize,
+    loop: false
+  });
+  let error2;
+  if (searchError) {
+    error2 = theme.style.error(searchError);
+  } else if (searchResults.length === 0 && searchTerm !== "" && status === "idle") {
+    error2 = theme.style.error("No results found");
+  }
+  let searchStr;
+  if (status === "done" && selectedChoice) {
+    const answer = selectedChoice.short ?? selectedChoice.name;
+    return `${prefix} ${message} ${theme.style.answer(answer)}`;
+  } else {
+    searchStr = theme.style.searchTerm(searchTerm);
+  }
+  const choiceDescription = (selectedChoice == null ? void 0 : selectedChoice.description) ? `
+${theme.style.description(selectedChoice.description)}` : ``;
+  return [
+    [prefix, message, searchStr].filter(Boolean).join(" "),
+    `${error2 ?? page}${helpTip}${choiceDescription}`
+  ];
+});
+
+// 
+var import_yoctocolors_cjs7 = __toESM(require_yoctocolors_cjs(), 1);
+var import_ansi_escapes4 = __toESM(require_ansi_escapes(), 1);
+var selectTheme = {
+  icon: { cursor: esm_default.pointer },
+  style: {
+    disabled: (text) => import_yoctocolors_cjs7.default.dim(`- ${text}`),
+    description: (text) => import_yoctocolors_cjs7.default.cyan(text)
+  },
+  helpMode: "auto"
+};
+function isSelectable3(item) {
+  return !Separator.isSeparator(item) && !item.disabled;
+}
+function normalizeChoices5(choices) {
+  return choices.map((choice) => {
+    if (Separator.isSeparator(choice))
+      return choice;
+    if (typeof choice === "string") {
+      return {
+        value: choice,
+        name: choice,
+        short: choice,
+        disabled: false
+      };
+    }
+    const name = choice.name ?? String(choice.value);
+    return {
+      value: choice.value,
+      name,
+      description: choice.description,
+      short: choice.short ?? name,
+      disabled: choice.disabled ?? false
+    };
+  });
+}
+var esm_default11 = createPrompt((config2, done) => {
   const { loop = true, pageSize = 7 } = config2;
   const firstRender = useRef(true);
   const theme = makeTheme(selectTheme, config2.theme);
   const [status, setStatus] = useState("idle");
   const prefix = usePrefix({ status, theme });
   const searchTimeoutRef = useRef();
-  const items = useMemo(() => normalizeChoices2(config2.choices), [config2.choices]);
+  const items = useMemo(() => normalizeChoices5(config2.choices), [config2.choices]);
   const bounds = useMemo(() => {
-    const first = items.findIndex(isSelectable2);
-    const last = items.findLastIndex(isSelectable2);
-    if (first < 0) {
+    const first = items.findIndex(isSelectable3);
+    const last = items.findLastIndex(isSelectable3);
+    if (first === -1) {
       throw new ValidationError("[select prompt] No selectable choices. All choices are disabled.");
     }
     return { first, last };
@@ -58011,7 +58485,7 @@ var esm_default6 = createPrompt((config2, done) => {
   const defaultItemIndex = useMemo(() => {
     if (!("default" in config2))
       return -1;
-    return items.findIndex((item) => isSelectable2(item) && item.value === config2.default);
+    return items.findIndex((item) => isSelectable3(item) && item.value === config2.default);
   }, [config2.default, items]);
   const [active, setActive] = useState(defaultItemIndex === -1 ? bounds.first : defaultItemIndex);
   const selectedChoice = items[active];
@@ -58027,14 +58501,14 @@ var esm_default6 = createPrompt((config2, done) => {
         let next = active;
         do {
           next = (next + offset + items.length) % items.length;
-        } while (!isSelectable2(items[next]));
+        } while (!isSelectable3(items[next]));
         setActive(next);
       }
     } else if (isNumberKey(key)) {
       rl.clearLine(0);
       const position = Number(key.name) - 1;
       const item = items[position];
-      if (item != null && isSelectable2(item)) {
+      if (item != null && isSelectable3(item)) {
         setActive(position);
       }
     } else if (isBackspaceKey(key)) {
@@ -58042,11 +58516,11 @@ var esm_default6 = createPrompt((config2, done) => {
     } else {
       const searchTerm = rl.line.toLowerCase();
       const matchIndex = items.findIndex((item) => {
-        if (Separator.isSeparator(item) || !isSelectable2(item))
+        if (Separator.isSeparator(item) || !isSelectable3(item))
           return false;
         return item.name.toLowerCase().startsWith(searchTerm);
       });
-      if (matchIndex >= 0) {
+      if (matchIndex !== -1) {
         setActive(matchIndex);
       }
       searchTimeoutRef.current = setTimeout(() => {
@@ -58093,7 +58567,7 @@ ${theme.style.help("(Use arrow keys to reveal more choices)")}`;
   const choiceDescription = selectedChoice.description ? `
 ${theme.style.description(selectedChoice.description)}` : ``;
   return `${[prefix, message, helpTipTop].filter(Boolean).join(" ")}
-${page}${helpTipBottom}${choiceDescription}${import_ansi_escapes3.default.cursorHide}`;
+${page}${helpTipBottom}${choiceDescription}${import_ansi_escapes4.default.cursorHide}`;
 });
 
 // 
@@ -58102,7 +58576,7 @@ var Prompt = class {
 Prompt.confirm = esm_default4;
 Prompt.input = esm_default5;
 Prompt.checkbox = esm_default2;
-Prompt.select = esm_default6;
+Prompt.select = esm_default11;
 Prompt.editor = esm_default3;
 
 // 
@@ -63725,7 +64199,7 @@ AuthenticatedGitClient._token = null;
 AuthenticatedGitClient._authenticatedInstance = null;
 
 // 
-var import_core7 = __toESM(require_core());
+var import_core17 = __toESM(require_core());
 
 // 
 var RequestError2 = class extends Error {
@@ -66017,7 +66491,7 @@ function createAppAuth(options) {
 var import_github3 = __toESM(require_github());
 var ANGULAR_ROBOT = [43341, "angular-robot-key"];
 async function getJwtAuthedAppClient([appId, inputKey]) {
-  const privateKey = (0, import_core7.getInput)(inputKey, { required: true });
+  const privateKey = (0, import_core17.getInput)(inputKey, { required: true });
   return new Octokit2({
     authStrategy: createAppAuth,
     auth: { appId, privateKey }
@@ -66044,7 +66518,7 @@ async function revokeActiveInstallationToken(githubOrToken) {
   } else {
     await githubOrToken.apps.revokeInstallationAccessToken();
   }
-  (0, import_core7.info)("Revoked installation token used for Angular Robot.");
+  (0, import_core17.info)("Revoked installation token used for Angular Robot.");
 }
 
 // 
