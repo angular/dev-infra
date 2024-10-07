@@ -17,7 +17,12 @@ export async function updateGeneratedFileTargets(): Promise<void> {
   // Query for all of the generated file targets
   const result = await ChildProcess.spawn(
     getBazelBin(),
-    ['query', `"kind(nodejs_binary, //...) intersect attr(name, '.update$', //...)"`],
+    [
+      'query',
+      `"kind(nodejs_binary, //...) intersect attr(name, '.update$', //...)"`,
+      '--output',
+      'label',
+    ],
     {mode: 'silent'},
   );
 
@@ -27,6 +32,11 @@ export async function updateGeneratedFileTargets(): Promise<void> {
   }
 
   const targets = result.stdout.trim().split(/\r?\n/);
+
+  Log.debug.group('Discovered Targets');
+  targets.forEach((target) => Log.debug(target));
+  Log.debug.groupEnd();
+
   spinner.update(`Found ${targets.length} generated file targets to update`);
 
   // Build all of the generated file targets in parallel.
