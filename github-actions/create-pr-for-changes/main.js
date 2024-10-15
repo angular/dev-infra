@@ -25114,7 +25114,7 @@ var require_client_h1 = __commonJS({
     function writeH1(client, request2) {
       const { method, path, host, upgrade, blocking, reset: reset2 } = request2;
       let { body, headers, contentLength } = request2;
-      const expectsPayload = method === "PUT" || method === "POST" || method === "PATCH";
+      const expectsPayload = method === "PUT" || method === "POST" || method === "PATCH" || method === "QUERY" || method === "PROPFIND" || method === "PROPPATCH";
       if (util.isFormDataLike(body)) {
         if (!extractBody) {
           extractBody = require_body2().extractBody;
@@ -25322,7 +25322,7 @@ upgrade: ${upgrade}\r
           socket.write(body);
           socket.uncork();
           request2.onBodySent(body);
-          if (!expectsPayload) {
+          if (!expectsPayload && request2.reset !== false) {
             socket[kReset] = true;
           }
         }
@@ -25347,7 +25347,7 @@ upgrade: ${upgrade}\r
         socket.uncork();
         request2.onBodySent(buffer);
         request2.onRequestSent();
-        if (!expectsPayload) {
+        if (!expectsPayload && request2.reset !== false) {
           socket[kReset] = true;
         }
         client[kResume]();
@@ -25423,7 +25423,7 @@ upgrade: ${upgrade}\r
         }
         socket.cork();
         if (bytesWritten === 0) {
-          if (!expectsPayload) {
+          if (!expectsPayload && request2.reset !== false) {
             socket[kReset] = true;
           }
           if (contentLength === null) {
@@ -25530,7 +25530,9 @@ var require_client_h2 = __commonJS({
       kOnError,
       kMaxConcurrentStreams,
       kHTTP2Session,
-      kResume
+      kResume,
+      kSize,
+      kHTTPContext
     } = require_symbols6();
     var kOpenStreams = Symbol("open streams");
     var h2ExperimentalWarned = false;
@@ -25627,9 +25629,10 @@ var require_client_h2 = __commonJS({
         version: "h2",
         defaultPipelining: Infinity,
         write(...args) {
-          writeH2(client, ...args);
+          return writeH2(client, ...args);
         },
         resume() {
+          resumeH2(client);
         },
         destroy(err, callback) {
           if (closed) {
@@ -25645,6 +25648,18 @@ var require_client_h2 = __commonJS({
           return false;
         }
       };
+    }
+    function resumeH2(client) {
+      const socket = client[kSocket];
+      if ((socket == null ? void 0 : socket.destroyed) === false) {
+        if (client[kSize] === 0 && client[kMaxConcurrentStreams] === 0) {
+          socket.unref();
+          client[kHTTP2Session].unref();
+        } else {
+          socket.ref();
+          client[kHTTP2Session].ref();
+        }
+      }
     }
     function onHttp2SessionError(err) {
       assert(err.code !== "ERR_TLS_CERT_ALTNAME_INVALID");
@@ -25664,11 +25679,22 @@ var require_client_h2 = __commonJS({
       util.destroy(this[kSocket], err);
     }
     function onHTTP2GoAway(code) {
-      const err = new RequestAbortedError(`HTTP/2: "GOAWAY" frame received with code ${code}`);
-      this[kSocket][kError] = err;
-      this[kClient][kOnError](err);
-      this.unref();
+      const err = this[kError] || new SocketError(`HTTP/2: "GOAWAY" frame received with code ${code}`, util.getSocketInfo(this));
+      const client = this[kClient];
+      client[kSocket] = null;
+      client[kHTTPContext] = null;
+      if (this[kHTTP2Session] != null) {
+        this[kHTTP2Session].destroy(err);
+        this[kHTTP2Session] = null;
+      }
       util.destroy(this[kSocket], err);
+      const request2 = client[kQueue][client[kRunningIdx]];
+      client[kQueue][client[kRunningIdx]++] = null;
+      util.errorRequest(client, request2, err);
+      client[kPendingIdx] = client[kRunningIdx];
+      assert(client[kRunning] === 0);
+      client.emit("disconnect", client[kUrl], [client], err);
+      client[kResume]();
     }
     function shouldSendContentLength(method) {
       return method !== "GET" && method !== "HEAD" && method !== "OPTIONS" && method !== "TRACE" && method !== "CONNECT";
@@ -25678,9 +25704,6 @@ var require_client_h2 = __commonJS({
       const { body, method, path, host, upgrade, expectContinue, signal, headers: reqHeaders } = request2;
       if (upgrade) {
         util.errorRequest(client, request2, new Error("Upgrade not supported for H2"));
-        return false;
-      }
-      if (request2.aborted) {
         return false;
       }
       const headers = {};
@@ -25713,11 +25736,16 @@ var require_client_h2 = __commonJS({
           util.destroy(stream, err);
         }
         util.destroy(body, err);
+        client[kQueue][client[kRunningIdx]++] = null;
+        client[kResume]();
       };
       try {
         request2.onConnect(abort);
       } catch (err) {
         util.errorRequest(client, request2, err);
+      }
+      if (request2.aborted) {
+        return false;
       }
       if (method === "CONNECT") {
         session.ref();
@@ -25725,10 +25753,12 @@ var require_client_h2 = __commonJS({
         if (stream.id && !stream.pending) {
           request2.onUpgrade(null, null, stream);
           ++session[kOpenStreams];
+          client[kQueue][client[kRunningIdx]++] = null;
         } else {
           stream.once("ready", () => {
             request2.onUpgrade(null, null, stream);
             ++session[kOpenStreams];
+            client[kQueue][client[kRunningIdx]++] = null;
           });
         }
         stream.once("close", () => {
@@ -25798,12 +25828,14 @@ var require_client_h2 = __commonJS({
         var _a;
         if (((_a = stream.state) == null ? void 0 : _a.state) == null || stream.state.state < 6) {
           request2.onComplete([]);
-          return;
         }
         if (session[kOpenStreams] === 0) {
           session.unref();
         }
         abort(new InformationalError("HTTP/2: stream half-closed (remote)"));
+        client[kQueue][client[kRunningIdx]++] = null;
+        client[kPendingIdx] = client[kRunningIdx];
+        client[kResume]();
       });
       stream.once("close", () => {
         session[kOpenStreams] -= 1;
@@ -26246,6 +26278,8 @@ var require_client2 = __commonJS({
     var connectH2 = require_client_h2();
     var deprecatedInterceptorWarned = false;
     var kClosedResolve = Symbol("kClosedResolve");
+    var noop2 = () => {
+    };
     function getPipelining(client) {
       var _a;
       return client[kPipelining] ?? ((_a = client[kHTTPContext]) == null ? void 0 : _a.defaultPipelining) ?? 1;
@@ -26530,16 +26564,14 @@ var require_client2 = __commonJS({
           });
         });
         if (client.destroyed) {
-          util.destroy(socket.on("error", () => {
-          }), new ClientDestroyedError());
+          util.destroy(socket.on("error", noop2), new ClientDestroyedError());
           return;
         }
         assert(socket);
         try {
           client[kHTTPContext] = socket.alpnProtocol === "h2" ? await connectH2(client, socket) : await connectH1(client, socket);
         } catch (err) {
-          socket.destroy().on("error", () => {
-          });
+          socket.destroy().on("error", noop2);
           throw err;
         }
         client[kConnecting] = false;
@@ -26862,9 +26894,9 @@ var require_pool_base2 = __commonJS({
       }
       async [kClose]() {
         if (this[kQueue].isEmpty()) {
-          return Promise.all(this[kClients].map((c) => c.close()));
+          await Promise.all(this[kClients].map((c) => c.close()));
         } else {
-          return new Promise((resolve) => {
+          await new Promise((resolve) => {
             this[kClosedResolve] = resolve;
           });
         }
@@ -26877,7 +26909,7 @@ var require_pool_base2 = __commonJS({
           }
           item.handler.onError(err);
         }
-        return Promise.all(this[kClients].map((c) => c.destroy(err)));
+        await Promise.all(this[kClients].map((c) => c.destroy(err)));
       }
       [kDispatch](opts, handler2) {
         const dispatcher = this[kGetDispatcher]();
@@ -27275,6 +27307,8 @@ var require_proxy_agent2 = __commonJS({
     function defaultFactory(origin, opts) {
       return new Pool(origin, opts);
     }
+    var noop2 = () => {
+    };
     var ProxyAgent = class extends DispatcherBase {
       constructor(opts) {
         var _a;
@@ -27326,8 +27360,7 @@ var require_proxy_agent2 = __commonJS({
                 servername: ((_a2 = this[kProxyTls]) == null ? void 0 : _a2.servername) || proxyHostname
               });
               if (statusCode !== 200) {
-                socket.on("error", () => {
-                }).destroy();
+                socket.on("error", noop2).destroy();
                 callback(new RequestAbortedError(`Proxy response (${statusCode}) !== 200 when HTTP Tunneling`));
               }
               if (opts2.protocol !== "https:") {
@@ -27958,6 +27991,9 @@ var require_readable2 = __commonJS({
       async blob() {
         return consume(this, "blob");
       }
+      async bytes() {
+        return consume(this, "bytes");
+      }
       async arrayBuffer() {
         return consume(this, "arrayBuffer");
       }
@@ -28089,6 +28125,22 @@ var require_readable2 = __commonJS({
       const start = bufferLength > 2 && buffer[0] === 239 && buffer[1] === 187 && buffer[2] === 191 ? 3 : 0;
       return buffer.utf8Slice(start, bufferLength);
     }
+    function chunksConcat(chunks, length) {
+      if (chunks.length === 0 || length === 0) {
+        return new Uint8Array(0);
+      }
+      if (chunks.length === 1) {
+        return new Uint8Array(chunks[0]);
+      }
+      const buffer = new Uint8Array(Buffer.allocUnsafeSlow(length).buffer);
+      let offset = 0;
+      for (let i = 0; i < chunks.length; ++i) {
+        const chunk = chunks[i];
+        buffer.set(chunk, offset);
+        offset += chunk.length;
+      }
+      return buffer;
+    }
     function consumeEnd(consume2) {
       const { type, body, resolve, stream, length } = consume2;
       try {
@@ -28097,15 +28149,11 @@ var require_readable2 = __commonJS({
         } else if (type === "json") {
           resolve(JSON.parse(chunksDecode(body, length)));
         } else if (type === "arrayBuffer") {
-          const dst = new Uint8Array(length);
-          let pos = 0;
-          for (const buf of body) {
-            dst.set(buf, pos);
-            pos += buf.byteLength;
-          }
-          resolve(dst.buffer);
+          resolve(chunksConcat(body, length).buffer);
         } else if (type === "blob") {
           resolve(new Blob(body, { type: stream[kContentType] }));
+        } else if (type === "bytes") {
+          resolve(chunksConcat(body, length));
         }
         consumeFinish(consume2);
       } catch (err) {
