@@ -61,8 +61,7 @@ jobs:
 
   test-macos:
     timeout-minutes: 30
-    # Use macos-13 runner to use intel chip.
-    runs-on: macos-13
+    runs-on: macos-latest
     steps:
       # Because the checkout and setup node action is contained in the dev-infra repo, we must
       # checkout the repo to be able to run the action we have created.  Other repos will skip
@@ -71,4 +70,4 @@ jobs:
       - uses: ./github-actions/npm/checkout-and-setup-node
       - uses: ./github-actions/bazel/setup
       - run: yarn install --immutable
-      - run: yarn bazel test --test_tag_filters=macos --build_tests_only -- //... -//bazel/remote-execution/...
+      - run: yarn bazel test --sandbox_writable_path="$HOME/Library/Application Support" --test_tag_filters=macos --build_tests_only -- //...
