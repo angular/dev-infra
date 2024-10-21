@@ -148,11 +148,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:>=13.7.0":
-  version: 22.7.5
-  resolution: "@types/node@npm:22.7.5"
+  version: 22.7.7
+  resolution: "@types/node@npm:22.7.7"
   dependencies:
     undici-types: "npm:~6.19.2"
-  checksum: 10c0/cf11f74f1a26053ec58066616e3a8685b6bcd7259bc569738b8f752009f9f0f7f85a1b2d24908e5b0f752482d1e8b6babdf1fbb25758711ec7bb9500bfcd6e60
+  checksum: 10c0/07268a1e990ad9d9b1865092881317ea679a46eb6706d83a8874eec75fdddae6cfd6452e4e68b651561183e2a8f8548276f3155744bc402c2545978c19b70d65
   languageName: node
   linkType: hard
 
@@ -166,11 +166,11 @@ __metadata:
   linkType: hard
 
 "acorn@npm:^8.9.0":
-  version: 8.12.1
-  resolution: "acorn@npm:8.12.1"
+  version: 8.13.0
+  resolution: "acorn@npm:8.13.0"
   bin:
     acorn: bin/acorn
-  checksum: 10c0/51fb26cd678f914e13287e886da2d7021f8c2bc0ccc95e03d3e0447ee278dd3b40b9c57dc222acd5881adcf26f3edc40901a4953403232129e3876793cd17386
+  checksum: 10c0/f35dd53d68177c90699f4c37d0bb205b8abe036d955d0eb011ddb7f14a81e6fd0f18893731c457c1b5bd96754683f4c3d80d9a5585ddecaa53cdf84e0b3d68f7
   languageName: node
   linkType: hard
 
@@ -405,8 +405,8 @@ __metadata:
   linkType: hard
 
 "jsdoc@npm:^4.0.0":
-  version: 4.0.3
-  resolution: "jsdoc@npm:4.0.3"
+  version: 4.0.4
+  resolution: "jsdoc@npm:4.0.4"
   dependencies:
     "@babel/parser": "npm:^7.20.15"
     "@jsdoc/salty": "npm:^0.2.1"
@@ -425,7 +425,7 @@ __metadata:
     underscore: "npm:~1.13.2"
   bin:
     jsdoc: ./jsdoc.js
-  checksum: 10c0/0ad7b1fad0c55627809080e3195649c215c5f711d4b718c4cf907d2ac390c571b524077a02d928a2f56fd73dbe439ca2c09fdea6d8af9ca325e0e6c5801fd7cb
+  checksum: 10c0/437a21ad67629dd9ae63d99b3d8f7c87e2a54559a15744cbdafe55ad6abd19678845e79dc88119035a31eef13a2ecaf1d623989a8b9631060780dcdfdf87c7a3
   languageName: node
   linkType: hard
 
