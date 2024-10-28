@@ -47,6 +47,7 @@ describe('native async/await downleveled', () => {
   host: {
     '(click)': 'click()',
   },
+  standalone: false,
 })
 class AppComponent {
   triggered = false;

@@ -4,6 +4,7 @@ import {BrowserModule, platformBrowser} from '@angular/platform-browser';
 @Component({
   selector: 'app-root',
   template: '<span>Hello</span>',
+  standalone: false,
 })
 class AppComponent {}
 
