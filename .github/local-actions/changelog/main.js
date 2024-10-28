@@ -57758,7 +57758,7 @@ function createPrompt(view) {
         throw error2;
       }).finally(() => {
         cleanups.forEach((cleanup) => cleanup());
-        screen.done({ clearContent: Boolean(context3 == null ? void 0 : context3.clearPromptOnDone) });
+        screen.done({ clearContent: Boolean(context3.clearPromptOnDone) });
         output.end();
       }).then(() => promise), { cancel });
     });
@@ -58327,7 +58327,7 @@ var esm_default8 = createPrompt((config2, done) => {
         selectedChoice = choices.find((choice) => isSelectableChoice(choice) && choice.key === value);
       }
       if (isSelectableChoice(selectedChoice)) {
-        setValue(selectedChoice.short ?? selectedChoice.name ?? String(selectedChoice.value));
+        setValue(selectedChoice.short);
         setStatus("done");
         done(selectedChoice.value);
       } else if (value === "") {
@@ -58564,7 +58564,7 @@ ${theme.style.help("(Use arrow keys)")}`;
   }
   let searchStr;
   if (status === "done" && selectedChoice) {
-    const answer = selectedChoice.short ?? selectedChoice.name;
+    const answer = selectedChoice.short;
     return `${prefix} ${message} ${theme.style.answer(answer)}`;
   } else {
     searchStr = theme.style.searchTerm(searchTerm);
