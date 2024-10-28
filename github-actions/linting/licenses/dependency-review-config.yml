@@ -6,6 +6,7 @@ allow_licenses:
   - 'BlueOak-1.0.0'
   - 'BSD-2-Clause'
   - 'BSD-3-Clause'
+  - 'CC-BY-3.0'
   - 'CC-BY-4.0'
   - 'CC0-1.0'
   - 'ISC'
