@@ -12,6 +12,7 @@ import {BrowserModule} from '@angular/platform-browser';
 @Component({
   selector: 'app-root',
   template: `<button (click)="updateText()">{{ text }}</button>`,
+  standalone: false,
 })
 class AppComponent {
   text = 'Hello';
