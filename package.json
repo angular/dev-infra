@@ -98,7 +98,7 @@
     "@types/babel__core": "^7.1.19",
     "@types/cli-progress": "^3.9.1",
     "@types/conventional-commits-parser": "^5.0.0",
-    "@types/diff": "^5.0.8",
+    "@types/diff": "^6.0.0",
     "@types/dom-view-transitions": "^1.0.4",
     "@types/ejs": "^3.0.6",
     "@types/events": "^3.0.0",
