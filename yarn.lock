@@ -1111,10 +1111,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@bazel/runfiles@npm:5.8.1, @bazel/runfiles@npm:^5.8.1":
+"@bazel/runfiles@npm:5.8.1":
   version: 5.8.1
   resolution: "@bazel/runfiles@npm:5.8.1"
   checksum: 10c0/c148ea89839240d918ea615c485fcd0e5c009215ddfa718cc7dd1c3f0e2e278eb8d291b6cd990cd8fc2ade161f98f2defbac8b9c2968e5c5bc4edb98e6ed6bc6
+  languageName: node
+  linkType: hard
+
+"@bazel/runfiles@npm:^6.3.1":
+  version: 6.3.1
+  resolution: "@bazel/runfiles@npm:6.3.1"
+  checksum: 10c0/7b542dcff9e917cc521520db137bd4f4a478796693700e2ec2c27f4beede800c9f4987e20c6b965d81000638f63549160780aea51eca2f0d0275be76fdc5e49f
   languageName: node
   linkType: hard
 
@@ -5189,12 +5196,12 @@ __metadata:
   linkType: hard
 
 "@types/selenium-webdriver@npm:^4.1.21":
-  version: 4.1.26
-  resolution: "@types/selenium-webdriver@npm:4.1.26"
+  version: 4.1.27
+  resolution: "@types/selenium-webdriver@npm:4.1.27"
   dependencies:
     "@types/node": "npm:*"
     "@types/ws": "npm:*"
-  checksum: 10c0/d7acb40244b13527ca3b691e71d377aae1526f96fee512a5c8edb5f14bae7094700d9f64339e200042a3ea8e9d952180eb8b592138b26ce2080c405c00ad60fa
+  checksum: 10c0/bd79653f777fb5d16f0e87f90b412bbc489d09919cb83554fe4bbe2e1cc0b2fe39f19be542dd2861ad3a59043f9ec8d1d158b5752db2c7cc432031dd020fb913
   languageName: node
   linkType: hard
 
@@ -13854,14 +13861,14 @@ __metadata:
   linkType: hard
 
 "selenium-webdriver@npm:^4.18.1":
-  version: 4.25.0
-  resolution: "selenium-webdriver@npm:4.25.0"
+  version: 4.26.0
+  resolution: "selenium-webdriver@npm:4.26.0"
   dependencies:
-    "@bazel/runfiles": "npm:^5.8.1"
+    "@bazel/runfiles": "npm:^6.3.1"
     jszip: "npm:^3.10.1"
     tmp: "npm:^0.2.3"
     ws: "npm:^8.18.0"
-  checksum: 10c0/4d085a702aff85bf8779e7111b33c8186b36d71f7ffd3e7105ec9468930e74756b5890c6ba8e0958b0ebcbff90aa42042b3adf05f75cdbd0b50501756d899b36
+  checksum: 10c0/af34a108fe2f9e717aab0ee3130ad101bbfc84be988729bce7eb7cd101403cd0ac2bdc5fe134e3e2b6c21bd4f00d9e9790062317877ff43ad370c2274fa57b7b
   languageName: node
   linkType: hard
 
