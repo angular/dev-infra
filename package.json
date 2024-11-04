@@ -36,7 +36,7 @@
     "@types/selenium-webdriver": "^4.1.21",
     "@types/send": "^0.17.1",
     "@types/tmp": "^0.2.1",
-    "@types/ws": "8.5.12",
+    "@types/ws": "8.5.13",
     "@types/yargs": "^17.0.0",
     "browser-sync": "^3.0.0",
     "html-entities": "^2.4.0",
