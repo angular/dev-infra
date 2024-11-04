@@ -23,27 +23,27 @@
   },
   "packageRules": [
     {
-      "matchPackagePatterns": ["*"],
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "all non-major dependencies",
-      "schedule": ["at any time"]
+      "schedule": ["at any time"],
+      "matchPackageNames": ["*"]
     },
     {
-      "matchPackagePatterns": ["^@bazel/.*", "^build_bazel.*"],
-      "groupName": "bazel setup"
+      "groupName": "bazel setup",
+      "matchPackageNames": ["/^@bazel/.*/", "/^build_bazel.*/"]
     },
     {
-      "matchPackagePatterns": ["yarn.*"],
-      "groupName": "yarn"
+      "groupName": "yarn",
+      "matchPackageNames": ["/yarn.*/"]
     },
     {
-      "matchPackagePrefixes": ["@octokit/"],
-      "groupName": "octokit dependencies"
+      "groupName": "octokit dependencies",
+      "matchPackageNames": ["@octokit/{/,}**"]
     },
     {
-      "matchPackagePrefixes": ["@angular/", "@angular-devkit", "@schematics/"],
       "followTag": "next",
-      "groupName": "angular dependencies"
+      "groupName": "angular dependencies",
+      "matchPackageNames": ["@angular/{/,}**", "@angular-devkit{/,}**", "@schematics/{/,}**"]
     },
     {
       "matchPackageNames": "renovate",
@@ -51,19 +51,19 @@
     },
     {
       "matchPackageNames": ["typescript"],
-      "updateTypes": ["major"],
+      "matchUpdateTypes": ["major"],
       "enabled": false
     },
     {
       "matchPackageNames": ["@types/node"],
-      "updateTypes": ["major"],
+      "matchUpdateTypes": ["major"],
       "enabled": false
     },
     {
-      "matchPaths": [".github/workflows/scorecard.yml"],
-      "matchPackagePatterns": ["*"],
+      "matchFileNames": [".github/workflows/scorecard.yml"],
       "groupName": "scorecard action dependencies",
-      "groupSlug": "scorecard-action"
+      "groupSlug": "scorecard-action",
+      "matchPackageNames": ["*"]
     }
   ]
 }
