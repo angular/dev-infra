@@ -20,6 +20,7 @@ import {buildReleaseParser} from './release/cli.js';
 import {tsCircularDependenciesBuilder} from './ts-circular-dependencies/index.js';
 import {captureLogOutputForCommand} from './utils/logging.js';
 import {buildAuthParser} from './auth/cli.js';
+import {buildPerfParser} from './perf/cli.js';
 import {Argv} from 'yargs';
 
 runParserWithCompletedFunctions((yargs: Argv) => {
@@ -38,6 +39,7 @@ runParserWithCompletedFunctions((yargs: Argv) => {
     .command('caretaker <command>', '', buildCaretakerParser)
     .command('misc <command>', '', buildMiscParser)
     .command('ngbot <command>', false, buildNgbotParser)
+    .command('perf <command>', '', buildPerfParser)
     .wrap(120)
     .strict();
 });
