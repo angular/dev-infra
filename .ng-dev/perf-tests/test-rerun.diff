@@ -1,0 +1,17 @@
+diff --git a/ng-dev/utils/test/g3.spec.ts b/ng-dev/utils/test/g3.spec.ts
+index a82c1b7a..8e0b24f8 100644
+--- a/ng-dev/utils/test/g3.spec.ts
++++ b/ng-dev/utils/test/g3.spec.ts
+@@ -29,9 +29,9 @@ describe('G3Stats', () => {
+   });
+ 
+   function setupFakeSyncConfig(config: GoogleSyncConfig): string {
+-    const configFileName = 'sync-test-conf.json';
+-    fs.writeFileSync(path.join(git.baseDir, configFileName), JSON.stringify(config));
+-    return configFileName;
++    const somethingelse = 'sync-test-conf.json';
++    fs.writeFileSync(path.join(git.baseDir, somethingelse), JSON.stringify(config));
++    return somethingelse;
+   }
+ 
+   describe('gathering stats', () => {

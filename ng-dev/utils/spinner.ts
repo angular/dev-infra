@@ -14,15 +14,20 @@ const hideCursor = '\x1b[?25l';
 const showCursor = '\x1b[?25h';
 
 export class Spinner {
+  /** Whether the spinner is currently running. */
+  private isRunning = true;
   /** The id of the interval being used to trigger frame printing. */
   private intervalId = setInterval(() => this.printFrame(), 125);
   /** The characters to iterate through to create the appearance of spinning in the spinner. */
   private spinnerCharacters = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
   /** The index of the spinner character used in the frame. */
   private currentSpinnerCharacterIndex = 0;
+  /** The current text of the spinner. */
+  private text: string = '';
 
-  constructor(private text: string) {
+  constructor(text: string) {
     process.stdout.write(hideCursor);
+    this.update(text);
   }
 
   /** Get the next spinner character. */
@@ -44,12 +49,24 @@ export class Spinner {
   /** Updates the spinner text with the provided text. */
   update(text: string) {
     this.text = text;
+    this.printFrame(this.spinnerCharacters[this.currentSpinnerCharacterIndex]);
   }
 
   /** Completes the spinner. */
-  complete() {
+  complete(): void;
+  complete(text: string): void;
+  complete(text?: string) {
+    if (!this.isRunning) {
+      return;
+    }
     clearInterval(this.intervalId);
-    process.stdout.write('\n');
+    clearLine(process.stdout, 1);
+    cursorTo(process.stdout, 0);
+    if (text) {
+      process.stdout.write(text);
+      process.stdout.write('\n');
+    }
     process.stdout.write(showCursor);
+    this.isRunning = false;
   }
 }
