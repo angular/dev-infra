@@ -41501,7 +41501,7 @@ var supportsColor2 = {
 var supports_color_default2 = supportsColor2;
 
 // 
-import { spawn as _spawn, spawnSync as _spawnSync } from "child_process";
+import { spawn as _spawn, spawnSync as _spawnSync, exec as _exec } from "child_process";
 var ChildProcess = class {
   static spawnInteractive(command, args, options = {}) {
     return new Promise((resolve, reject) => {
@@ -41515,7 +41515,7 @@ var ChildProcess = class {
     return new Promise((resolve, reject) => {
       const commandText = `${command} ${args.join(" ")}`;
       const outputMode = options.mode;
-      const env3 = getEnvironmentForNonInteractiveSpawn(options.env);
+      const env3 = getEnvironmentForNonInteractiveCommand(options.env);
       Log.debug(`Executing command: ${commandText}`);
       const childProcess = _spawn(command, args, { ...options, env: env3, shell: true, stdio: "pipe" });
       let logOutput = "";
@@ -41556,7 +41556,7 @@ ${logOutput}`);
   }
   static spawnSync(command, args, options = {}) {
     const commandText = `${command} ${args.join(" ")}`;
-    const env3 = getEnvironmentForNonInteractiveSpawn(options.env);
+    const env3 = getEnvironmentForNonInteractiveCommand(options.env);
     Log.debug(`Executing command: ${commandText}`);
     const { status: exitCode, signal, stdout, stderr } = _spawnSync(command, args, { ...options, env: env3, encoding: "utf8", shell: true, stdio: "pipe" });
     const status = statusFromExitCodeAndSignal(exitCode, signal);
@@ -41565,11 +41565,50 @@ ${logOutput}`);
     }
     throw new Error(stderr);
   }
+  static exec(command, options = {}) {
+    return new Promise((resolve, reject) => {
+      var _a, _b;
+      const outputMode = options.mode;
+      const env3 = getEnvironmentForNonInteractiveCommand(options.env);
+      Log.debug(`Executing command: ${command}`);
+      const childProcess = _exec(command, { ...options, env: env3 });
+      let logOutput = "";
+      let stdout = "";
+      let stderr = "";
+      (_a = childProcess.stderr) == null ? void 0 : _a.on("data", (message) => {
+        stderr += message;
+        logOutput += message;
+        if (outputMode === void 0 || outputMode === "enabled") {
+          process.stderr.write(message);
+        }
+      });
+      (_b = childProcess.stdout) == null ? void 0 : _b.on("data", (message) => {
+        stdout += message;
+        logOutput += message;
+        if (outputMode === void 0 || outputMode === "enabled") {
+          process.stderr.write(message);
+        }
+      });
+      childProcess.on("close", (exitCode, signal) => {
+        const exitDescription = exitCode !== null ? `exit code "${exitCode}"` : `signal "${signal}"`;
+        const printFn = outputMode === "on-error" ? Log.error : Log.debug;
+        const status = statusFromExitCodeAndSignal(exitCode, signal);
+        printFn(`Command "${command}" completed with ${exitDescription}.`);
+        printFn(`Process output: 
+${logOutput}`);
+        if (status === 0 || options.suppressErrorOnFailingExitCode) {
+          resolve({ stdout, stderr, status });
+        } else {
+          reject(outputMode === "silent" ? logOutput : void 0);
+        }
+      });
+    });
+  }
 };
 function statusFromExitCodeAndSignal(exitCode, signal) {
   return exitCode ?? signal ?? -1;
 }
-function getEnvironmentForNonInteractiveSpawn(userProvidedEnv) {
+function getEnvironmentForNonInteractiveCommand(userProvidedEnv) {
   const forceColorValue = supports_color_default2.stdout !== false ? supports_color_default2.stdout.level.toString() : void 0;
   return { FORCE_COLOR: forceColorValue, ...userProvidedEnv ?? process.env };
 }

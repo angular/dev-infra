@@ -21,14 +21,14 @@ interface WorkflowsParams {
 function builder(yargs: Argv) {
   return yargs
     .option('config-file' as 'configFile', {
-      default: '.ng-dev/workflows.yml',
+      default: '.ng-dev/dx-perf-workflows.yml',
       type: 'string',
       description: 'The path to the workflow definitions in a yml file',
     })
     .option('json', {
       default: false,
       type: 'boolean',
-      description: 'Whether to ouput the results as a json object',
+      description: 'Whether to output the results as a json object',
     });
 }
 
@@ -46,7 +46,7 @@ async function handler({configFile, json}: WorkflowsParams) {
   }
 }
 
-/** yargs command module for checking out a PR  */
+/** yargs command module for checking out a PR. */
 export const WorkflowsModule: CommandModule<{}, WorkflowsParams> = {
   handler,
   builder,

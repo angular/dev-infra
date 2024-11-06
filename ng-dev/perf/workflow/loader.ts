@@ -3,9 +3,9 @@ import {parse} from 'yaml';
 
 export interface Workflow {
   name: string;
-  workflow: string;
-  prepare?: string;
-  cleanup?: string;
+  workflow: string[];
+  prepare?: string[];
+  cleanup?: string[];
 }
 
 export async function loadWorkflows(src: string) {

@@ -44,17 +44,11 @@ export async function measureWorkflow({name, workflow, prepare, cleanup}: Workfl
  * Run a set of commands provided as a multiline text block. Commands are assumed to always be
  * provided on a single line.
  */
-async function runCommands(cmds?: string) {
-  cmds = cmds?.trim();
-  if (!cmds) {
+async function runCommands(commands?: string[]) {
+  if (!commands || commands.length === 0) {
     return;
   }
-  let commands = cmds
-    .split('\n')
-    .filter((_) => !!_)
-    .map((cmdStr: string) => cmdStr.trim().split(' '));
-
-  for (let [cmd, ...args] of commands) {
-    await ChildProcess.spawn(cmd, args, {mode: 'silent'});
+  for (let cmd of commands) {
+    await ChildProcess.exec(cmd, {mode: 'silent'});
   }
 }
