@@ -17,33 +17,30 @@ import {
 } from 'child_process';
 import {Log} from './logging.js';
 
-/** Interface describing the options for spawning a process synchronously. */
-export interface SpawnSyncOptions extends Omit<_SpawnSyncOptions, 'shell' | 'stdio'> {
-  /** Whether to prevent exit codes being treated as failures. */
-  suppressErrorOnFailingExitCode?: boolean;
-}
-
-/** Interface describing the options for spawning a process. */
-export interface SpawnOptions extends Omit<_SpawnOptions, 'shell' | 'stdio'> {
+export interface CommonCmdOpts {
   /** Console output mode. Defaults to "enabled". */
   mode?: 'enabled' | 'silent' | 'on-error';
   /** Whether to prevent exit codes being treated as failures. */
   suppressErrorOnFailingExitCode?: boolean;
+}
+
+/** Interface describing the options for spawning a process synchronously. */
+export interface SpawnSyncOptions
+  extends CommonCmdOpts,
+    Omit<_SpawnSyncOptions, 'shell' | 'stdio'> {}
+
+/** Interface describing the options for spawning a process. */
+export interface SpawnOptions extends CommonCmdOpts, Omit<_SpawnOptions, 'shell' | 'stdio'> {
   // Stdin text to provide to the process. The raw text will be written to `stdin` and then
   // the stream is closed. This is equivalent to the `input` option from `SpawnSyncOption`.
   input?: string;
 }
 
 /** Interface describing the options for exec-ing a process. */
-export interface ExecOptions extends Omit<_ExecOptions, 'shell' | 'stdio'> {
-  /** Console output mode. Defaults to "enabled". */
-  mode?: 'enabled' | 'silent' | 'on-error';
-  /** Whether to prevent exit codes being treated as failures. */
-  suppressErrorOnFailingExitCode?: boolean;
-}
+export interface ExecOptions extends CommonCmdOpts, Omit<_ExecOptions, 'shell' | 'stdio'> {}
 
 /** Interface describing the options for spawning an interactive process. */
-export type SpawnInteractiveCommandOptions = Omit<_SpawnOptions, 'shell' | 'stdio'>;
+export interface SpawnInteractiveCommandOptions extends Omit<_SpawnOptions, 'shell' | 'stdio'> {}
 
 /** Interface describing the result of a spawned process. */
 export interface SpawnResult {
@@ -54,6 +51,9 @@ export interface SpawnResult {
   /** The exit code or signal of the process. */
   status: number | NodeJS.Signals;
 }
+
+/** Interface describing the result of an exec process. */
+export type ExecResult = SpawnResult;
 
 /** Class holding utilities for spawning child processes. */
 export abstract class ChildProcess {
@@ -76,78 +76,6 @@ export abstract class ChildProcess {
       // stdout and stderr, using the `exit` event can cause inconsistent information in stdout and
       // stderr due to a race condition around exiting.
       childProcess.on('close', (status) => (status === 0 ? resolve() : reject(status)));
-    });
-  }
-
-  /**
-   * Spawns a given command with the specified arguments inside a shell. All process stdout
-   * output is captured and returned as resolution on completion. Depending on the chosen
-   * output mode, stdout/stderr output is also printed to the console, or only on error.
-   *
-   * @returns a Promise resolving with captured stdout and stderr on success. The promise
-   *   rejects on command failure.
-   */
-  static spawn(command: string, args: string[], options: SpawnOptions = {}): Promise<SpawnResult> {
-    return new Promise((resolve, reject) => {
-      const commandText = `${command} ${args.join(' ')}`;
-      const outputMode = options.mode;
-      const env = getEnvironmentForNonInteractiveCommand(options.env);
-
-      Log.debug(`Executing command: ${commandText}`);
-
-      const childProcess = _spawn(command, args, {...options, env, shell: true, stdio: 'pipe'});
-      let logOutput = '';
-      let stdout = '';
-      let stderr = '';
-
-      // If provided, write `input` text to the process `stdin`.
-      if (options.input !== undefined) {
-        childProcess.stdin.write(options.input);
-        childProcess.stdin.end();
-      }
-
-      // Capture the stdout separately so that it can be passed as resolve value.
-      // This is useful if commands return parsable stdout.
-      childProcess.stderr.on('data', (message) => {
-        stderr += message;
-        logOutput += message;
-        // If console output is enabled, print the message directly to the stderr. Note that
-        // we intentionally print all output to stderr as stdout should not be polluted.
-        if (outputMode === undefined || outputMode === 'enabled') {
-          process.stderr.write(message);
-        }
-      });
-
-      childProcess.stdout.on('data', (message) => {
-        stdout += message;
-        logOutput += message;
-        // If console output is enabled, print the message directly to the stderr. Note that
-        // we intentionally print all output to stderr as stdout should not be polluted.
-        if (outputMode === undefined || outputMode === 'enabled') {
-          process.stderr.write(message);
-        }
-      });
-
-      // The `close` event is used because the process is guaranteed to have completed writing to
-      // stdout and stderr, using the `exit` event can cause inconsistent information in stdout and
-      // stderr due to a race condition around exiting.
-      childProcess.on('close', (exitCode, signal) => {
-        const exitDescription =
-          exitCode !== null ? `exit code "${exitCode}"` : `signal "${signal}"`;
-        const printFn = outputMode === 'on-error' ? Log.error : Log.debug;
-        const status = statusFromExitCodeAndSignal(exitCode, signal);
-
-        printFn(`Command "${commandText}" completed with ${exitDescription}.`);
-        printFn(`Process output: \n${logOutput}`);
-
-        // On success, resolve the promise. Otherwise reject with the captured stderr
-        // and stdout log output if the output mode was set to `silent`.
-        if (status === 0 || options.suppressErrorOnFailingExitCode) {
-          resolve({stdout, stderr, status});
-        } else {
-          reject(outputMode === 'silent' ? logOutput : undefined);
-        }
-      });
     });
   }
 
@@ -179,63 +107,39 @@ export abstract class ChildProcess {
     throw new Error(stderr);
   }
 
-  static exec(command: string, options: ExecOptions = {}) {
-    return new Promise((resolve, reject) => {
-      const outputMode = options.mode;
-      const env = getEnvironmentForNonInteractiveCommand(options.env);
+  /**
+   * Spawns a given command with the specified arguments inside a shell. All process stdout
+   * output is captured and returned as resolution on completion. Depending on the chosen
+   * output mode, stdout/stderr output is also printed to the console, or only on error.
+   *
+   * @returns a Promise resolving with captured stdout and stderr on success. The promise
+   *   rejects on command failure.
+   */
+  static spawn(command: string, args: string[], options: SpawnOptions = {}): Promise<SpawnResult> {
+    const commandText = `${command} ${args.join(' ')}`;
+    const env = getEnvironmentForNonInteractiveCommand(options.env);
 
-      Log.debug(`Executing command: ${command}`);
+    return processAsyncCmd(
+      commandText,
+      options,
+      _spawn(command, args, {...options, env, shell: true, stdio: 'pipe'}),
+    );
+  }
 
-      const childProcess = _exec(command, {...options, env});
-      let logOutput = '';
-      let stdout = '';
-      let stderr = '';
-
-      // Capture the stdout separately so that it can be passed as resolve value.
-      // This is useful if commands return parsable stdout.
-      childProcess.stderr?.on('data', (message) => {
-        stderr += message;
-        logOutput += message;
-        // If console output is enabled, print the message directly to the stderr. Note that
-        // we intentionally print all output to stderr as stdout should not be polluted.
-        if (outputMode === undefined || outputMode === 'enabled') {
-          process.stderr.write(message);
-        }
-      });
-
-      childProcess.stdout?.on('data', (message) => {
-        stdout += message;
-        logOutput += message;
-        // If console output is enabled, print the message directly to the stderr. Note that
-        // we intentionally print all output to stderr as stdout should not be polluted.
-        if (outputMode === undefined || outputMode === 'enabled') {
-          process.stderr.write(message);
-        }
-      });
-
-      // The `close` event is used because the process is guaranteed to have completed writing to
-      // stdout and stderr, using the `exit` event can cause inconsistent information in stdout and
-      // stderr due to a race condition around exiting.
-      childProcess.on('close', (exitCode, signal) => {
-        const exitDescription =
-          exitCode !== null ? `exit code "${exitCode}"` : `signal "${signal}"`;
-        const printFn = outputMode === 'on-error' ? Log.error : Log.debug;
-        const status = statusFromExitCodeAndSignal(exitCode, signal);
-
-        printFn(`Command "${command}" completed with ${exitDescription}.`);
-        printFn(`Process output: \n${logOutput}`);
-
-        // On success, resolve the promise. Otherwise reject with the captured stderr
-        // and stdout log output if the output mode was set to `silent`.
-        if (status === 0 || options.suppressErrorOnFailingExitCode) {
-          resolve({stdout, stderr, status});
-        } else {
-          reject(outputMode === 'silent' ? logOutput : undefined);
-        }
-      });
-    });
+  /**
+   * Execs a given command with the specified arguments inside a shell. All process stdout
+   * output is captured and returned as resolution on completion. Depending on the chosen
+   * output mode, stdout/stderr output is also printed to the console, or only on error.
+   *
+   * @returns a Promise resolving with captured stdout and stderr on success. The promise
+   *   rejects on command failure.
+   */
+  static exec(command: string, options: ExecOptions = {}): Promise<SpawnResult> {
+    const env = getEnvironmentForNonInteractiveCommand(options.env);
+    return processAsyncCmd(command, options, _exec(command, {...options, env}));
   }
 }
+
 /**
  * Convert the provided exitCode and signal to a single status code.
  *
@@ -263,4 +167,73 @@ function getEnvironmentForNonInteractiveCommand(
     supportsColor.stdout !== false ? supportsColor.stdout.level.toString() : undefined;
 
   return {FORCE_COLOR: forceColorValue, ...(userProvidedEnv ?? process.env)};
+}
+
+/**
+ * Process the ChildProcess object created by an async command.
+ */
+function processAsyncCmd(
+  cmd: string,
+  opts: CommonCmdOpts,
+  childProcess: ReturnType<typeof _exec>,
+): Promise<ExecResult>;
+function processAsyncCmd(
+  cmd: string,
+  opts: CommonCmdOpts,
+  childProcess: ReturnType<typeof _spawn>,
+): Promise<SpawnResult>;
+function processAsyncCmd(
+  command: string,
+  options: CommonCmdOpts,
+  childProcess: ReturnType<typeof _exec | typeof _spawn>,
+) {
+  return new Promise((resolve, reject) => {
+    let logOutput = '';
+    let stdout = '';
+    let stderr = '';
+
+    Log.debug(`Executing command: ${command}`);
+
+    // Capture the stdout separately so that it can be passed as resolve value.
+    // This is useful if commands return parsable stdout.
+    childProcess.stderr?.on('data', (message) => {
+      stderr += message;
+      logOutput += message;
+      // If console output is enabled, print the message directly to the stderr. Note that
+      // we intentionally print all output to stderr as stdout should not be polluted.
+      if (options.mode === undefined || options.mode === 'enabled') {
+        process.stderr.write(message);
+      }
+    });
+
+    childProcess.stdout?.on('data', (message) => {
+      stdout += message;
+      logOutput += message;
+      // If console output is enabled, print the message directly to the stderr. Note that
+      // we intentionally print all output to stderr as stdout should not be polluted.
+      if (options.mode === undefined || options.mode === 'enabled') {
+        process.stderr.write(message);
+      }
+    });
+
+    // The `close` event is used because the process is guaranteed to have completed writing to
+    // stdout and stderr, using the `exit` event can cause inconsistent information in stdout and
+    // stderr due to a race condition around exiting.
+    childProcess.on('close', (exitCode, signal) => {
+      const exitDescription = exitCode !== null ? `exit code "${exitCode}"` : `signal "${signal}"`;
+      const printFn = options.mode === 'on-error' ? Log.error : Log.debug;
+      const status = statusFromExitCodeAndSignal(exitCode, signal);
+
+      printFn(`Command "${command}" completed with ${exitDescription}.`);
+      printFn(`Process output: \n${logOutput}`);
+
+      // On success, resolve the promise. Otherwise reject with the captured stderr
+      // and stdout log output if the output mode was set to `silent`.
+      if (status === 0 || options.suppressErrorOnFailingExitCode) {
+        resolve({stdout, stderr, status});
+      } else {
+        reject(options.mode === 'silent' ? logOutput : undefined);
+      }
+    });
+  });
 }
