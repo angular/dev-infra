@@ -66207,11 +66207,16 @@ async function getAppAuthentication({
   timeDifference
 }) {
   try {
-    const appAuthentication = await githubAppJwt({
+    const authOptions = {
       id: appId,
-      privateKey,
-      now: timeDifference && Math.floor(Date.now() / 1e3) + timeDifference
-    });
+      privateKey
+    };
+    if (timeDifference) {
+      Object.assign(authOptions, {
+        now: Math.floor(Date.now() / 1e3) + timeDifference
+      });
+    }
+    const appAuthentication = await githubAppJwt(authOptions);
     return {
       type: "app",
       token: appAuthentication.token,
@@ -66374,6 +66379,26 @@ async function getInstallationAuthentication(state, options, customRequest) {
   }
   const appAuthentication = await getAppAuthentication(state);
   const request2 = customRequest || state.request;
+  const payload = {
+    installation_id: installationId,
+    mediaType: {
+      previews: ["machine-man"]
+    },
+    headers: {
+      authorization: `bearer ${appAuthentication.token}`
+    }
+  };
+  if (options.repositoryIds) {
+    Object.assign(payload, { repository_ids: options.repositoryIds });
+  }
+  if (options.repositoryNames) {
+    Object.assign(payload, {
+      repositories: options.repositoryNames
+    });
+  }
+  if (options.permissions) {
+    Object.assign(payload, { permissions: options.permissions });
+  }
   const {
     data: {
       token,
@@ -66383,34 +66408,29 @@ async function getInstallationAuthentication(state, options, customRequest) {
       repository_selection: repositorySelectionOptional,
       single_file: singleFileName
     }
-  } = await request2("POST /app/installations/{installation_id}/access_tokens", {
-    installation_id: installationId,
-    repository_ids: options.repositoryIds,
-    repositories: options.repositoryNames,
-    permissions: options.permissions,
-    mediaType: {
-      previews: ["machine-man"]
-    },
-    headers: {
-      authorization: `bearer ${appAuthentication.token}`
-    }
-  });
+  } = await request2(
+    "POST /app/installations/{installation_id}/access_tokens",
+    payload
+  );
   const permissions = permissionsOptional || {};
   const repositorySelection = repositorySelectionOptional || "all";
   const repositoryIds = repositories ? repositories.map((r) => r.id) : void 0;
   const repositoryNames = repositories ? repositories.map((repo) => repo.name) : void 0;
   const createdAt = (/* @__PURE__ */ new Date()).toISOString();
-  await set(state.cache, optionsWithInstallationTokenFromState, {
+  const cacheOptions = {
     token,
     createdAt,
     expiresAt,
     repositorySelection,
     permissions,
     repositoryIds,
-    repositoryNames,
-    singleFileName
-  });
-  return toTokenAuthentication({
+    repositoryNames
+  };
+  if (singleFileName) {
+    Object.assign(payload, { singleFileName });
+  }
+  await set(state.cache, optionsWithInstallationTokenFromState, cacheOptions);
+  const cacheData = {
     installationId,
     token,
     createdAt,
@@ -66418,9 +66438,12 @@ async function getInstallationAuthentication(state, options, customRequest) {
     repositorySelection,
     permissions,
     repositoryIds,
-    repositoryNames,
-    singleFileName
-  });
+    repositoryNames
+  };
+  if (singleFileName) {
+    Object.assign(cacheData, { singleFileName });
+  }
+  return toTokenAuthentication(cacheData);
 }
 async function auth5(state, authOptions) {
   switch (authOptions.type) {
@@ -66558,7 +66581,7 @@ async function sendRequestWithRetries(state, request2, options, createdAt, retri
     return sendRequestWithRetries(state, request2, options, createdAt, retries);
   }
 }
-var VERSION12 = "7.1.1";
+var VERSION12 = "7.1.2";
 function createAppAuth(options) {
   if (!options.appId) {
     throw new Error("[@octokit/auth-app] appId option is required");
