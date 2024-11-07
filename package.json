@@ -3,7 +3,7 @@
   "version": "0.0.0-{SCM_HEAD_SHA}",
   "private": true,
   "scripts": {
-    "prepare": "husky install",
+    "prepare": "husky",
     "ng-dev": "bash ./tools/local-dev.sh",
     "lint": "yarn tslint -c tslint.json --project tsconfig.json",
     "build-env-stamp": "tsx --tsconfig tsconfig.json ./ng-dev/release/stamping/_private_main.ts build-env-stamp",
