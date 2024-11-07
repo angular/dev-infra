@@ -1,10 +1,9 @@
 import {ChildProcess} from '../../utils/child-process.js';
-import {green} from '../../utils/logging.js';
 import {Spinner} from '../../utils/spinner.js';
 import {Workflow} from './loader.js';
 
 export async function measureWorkflow({name, workflow, prepare, cleanup}: Workflow) {
-  const spinner = new Spinner('');
+  const spinner = new Spinner();
   try {
     if (prepare) {
       spinner.update('Preparing environment for workflow execution');
@@ -32,7 +31,7 @@ export async function measureWorkflow({name, workflow, prepare, cleanup}: Workfl
 
     const results = performance.measure(name, 'start', 'end');
 
-    spinner.complete(` ${green('✓')} ${name}: ${results.duration.toFixed(2)}ms`);
+    spinner.success(`${name}: ${results.duration.toFixed(2)}ms`);
 
     return results.toJSON();
   } finally {
