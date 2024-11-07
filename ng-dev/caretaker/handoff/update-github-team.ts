@@ -54,7 +54,7 @@ export async function updateCaretakerTeamViaPrompt() {
   }
 
   if (JSON.stringify(selected) === JSON.stringify(current)) {
-    Log.info(green('  √  Caretaker group already up to date.'));
+    Log.info(green('  ✔  Caretaker group already up to date.'));
     return;
   }
 
@@ -64,7 +64,7 @@ export async function updateCaretakerTeamViaPrompt() {
     Log.error('  ✘  Failed to update caretaker group.');
     return;
   }
-  Log.info(green('  √  Successfully updated caretaker group'));
+  Log.info(green('  ✔  Successfully updated caretaker group'));
 }
 
 /** Retrieve the current list of members for the provided group. */

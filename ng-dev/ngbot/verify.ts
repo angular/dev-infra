@@ -23,7 +23,7 @@ export async function verify() {
   try {
     // Try parsing the config file to verify that the syntax is correct.
     parseYaml(ngBotYaml);
-    Log.info(green('√  Valid NgBot YAML config'));
+    Log.info(green('✔  Valid NgBot YAML config'));
   } catch (e) {
     Log.error(`! Invalid NgBot YAML config`);
     Log.error(e);

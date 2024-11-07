@@ -63600,7 +63600,7 @@ async function formatFiles(files) {
     Log.error(`Formatting failed, see errors above for more information.`);
     return 1;
   }
-  Log.info(green(`\u221A  Formatting complete.`));
+  Log.info(green(`\u2714  Formatting complete.`));
   return 0;
 }
 

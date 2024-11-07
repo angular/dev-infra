@@ -34,7 +34,7 @@ export async function formatFiles(files: string[]): Promise<1 | 0> {
     Log.error(`Formatting failed, see errors above for more information.`);
     return 1;
   }
-  Log.info(green(`√  Formatting complete.`));
+  Log.info(green(`✔  Formatting complete.`));
   return 0;
 }
 
@@ -78,7 +78,7 @@ export async function checkFiles(files: string[]) {
       return 1;
     }
   } else {
-    Log.info(green('√  All files correctly formatted.'));
+    Log.info(green('✔  All files correctly formatted.'));
     return 0;
   }
 }

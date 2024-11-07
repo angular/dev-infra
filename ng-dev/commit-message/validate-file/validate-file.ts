@@ -23,7 +23,7 @@ export async function validateFile(filePath: string, isErrorMode: boolean) {
   const commitMessage = readFileSync(resolve(git.baseDir, filePath), 'utf8');
   const {valid, errors} = await validateCommitMessage(commitMessage);
   if (valid) {
-    Log.info(`${green('√')}  Valid commit message`);
+    Log.info(`${green('✔')}  Valid commit message`);
     deleteCommitMessageDraft(filePath);
     process.exitCode = 0;
     return;

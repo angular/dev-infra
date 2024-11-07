@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {bold, Log} from '../../utils/logging.js';
+import {bold, green, Log, red} from '../../utils/logging.js';
 import {BaseModule} from './base.js';
 
 interface ServiceConfig {
@@ -69,9 +69,9 @@ export class ServicesModule extends BaseModule<StatusCheckResult[]> {
     for (const status of statuses) {
       const name = status.name.padEnd(serviceNameMinLength);
       if (status.status === 'passing') {
-        Log.info(`${name} ✅`);
+        Log.info(`${name} ${green('✔')}`);
       } else {
-        Log.info.group(`${name} ❌ (Updated: ${status.lastUpdated.toLocaleString()})`);
+        Log.info.group(`${name} ${red('✘')} (Updated: ${status.lastUpdated.toLocaleString()})`);
         Log.info(`  Details: ${status.description}`);
         Log.info(`  Status URL: ${status.statusUrl}`);
         Log.info.groupEnd();

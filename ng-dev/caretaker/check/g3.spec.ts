@@ -7,7 +7,7 @@
  */
 
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
-import {Log} from '../../utils/logging.js';
+import {green, Log} from '../../utils/logging.js';
 import {installVirtualGitClientSpies, mockNgDevConfig} from '../../utils/testing/index.js';
 
 import {G3Module} from './g3.js';
@@ -75,7 +75,7 @@ describe('G3Module', () => {
       await module.printToTerminal();
 
       expect(infoSpy).toHaveBeenCalledWith('25 commits between g3 and master');
-      expect(infoSpy).toHaveBeenCalledWith('✅  No sync is needed at this time');
+      expect(infoSpy).toHaveBeenCalledWith(` ${green('✔')} No sync is needed at this time`);
     });
   });
 });

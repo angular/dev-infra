@@ -90,10 +90,10 @@ export function main(
 
   if (approve) {
     writeFileSync(goldenFile, JSON.stringify(actual, null, 2));
-    Log.info(green('✅  Updated golden file.'));
+    Log.info(green('✔  Updated golden file.'));
     return 0;
   } else if (!existsSync(goldenFile)) {
-    Log.error(`❌  Could not find golden file: ${goldenFile}`);
+    Log.error(`x  Could not find golden file: ${goldenFile}`);
     return 1;
   }
 
@@ -121,11 +121,11 @@ export function main(
   const isMatching = fixedCircularDeps.length === 0 && newCircularDeps.length === 0;
 
   if (isMatching) {
-    Log.info(green('✅  Golden matches current circular dependencies.'));
+    Log.info(green('✔  Golden matches current circular dependencies.'));
     return 0;
   }
 
-  Log.error('❌  Golden does not match current circular dependencies.');
+  Log.error('✘  Golden does not match current circular dependencies.');
   if (newCircularDeps.length !== 0) {
     Log.error(`   New circular dependencies which are not allowed:`);
     newCircularDeps.forEach((c) => Log.error(`     • ${convertReferenceChainToString(c)}`));

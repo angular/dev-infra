@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {bold, Log} from '../../utils/logging.js';
+import {bold, green, Log} from '../../utils/logging.js';
 import {G3StatsData, G3Stats} from '../../utils/g3.js';
 
 import {BaseModule} from './base.js';
@@ -24,7 +24,7 @@ export class G3Module extends BaseModule<G3StatsData | void> {
     Log.info.group(bold('g3 branch check'));
     if (stats.files === 0 && stats.separateFiles === 0) {
       Log.info(`${stats.commits} commits between g3 and ${this.git.mainBranchName}`);
-      Log.info('✅  No sync is needed at this time');
+      Log.info(` ${green('✔')} No sync is needed at this time`);
     } else if (stats.separateFiles > 0) {
       Log.info(
         `${stats.separateFiles} primitives files changed, ${stats.files} Angular files changed, ` +
