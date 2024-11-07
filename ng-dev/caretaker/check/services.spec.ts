@@ -7,7 +7,7 @@
  */
 
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
-import {Log} from '../../utils/logging.js';
+import {green, Log, red} from '../../utils/logging.js';
 import {installVirtualGitClientSpies, mockNgDevConfig} from '../../utils/testing/index.js';
 
 import {services, ServicesModule} from './services.js';
@@ -68,9 +68,9 @@ describe('ServicesModule', () => {
       await module.printToTerminal();
 
       expect(infoGroupSpy).toHaveBeenCalledWith('Service Statuses');
-      expect(infoSpy).toHaveBeenCalledWith('Service 1 ✅');
+      expect(infoSpy).toHaveBeenCalledWith(`Service 1 ${green('✔')}`);
       expect(infoGroupSpy).toHaveBeenCalledWith(
-        `Service 2 ❌ (Updated: ${new Date(0).toLocaleString()})`,
+        `Service 2 ${red('✘')} (Updated: ${new Date(0).toLocaleString()})`,
       );
       expect(infoSpy).toHaveBeenCalledWith('  Details: Literally everything is broken');
       expect(infoSpy).toHaveBeenCalledWith('  Status URL: http://notgoogle.com');

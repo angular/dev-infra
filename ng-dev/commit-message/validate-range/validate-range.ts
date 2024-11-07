@@ -56,7 +56,7 @@ export async function validateCommitRange(from: string, to: string): Promise<voi
   }
 
   if (allCommitsInRangeValid) {
-    Log.info(green('√  All commit messages in range valid.'));
+    Log.info(green('✔  All commit messages in range valid.'));
   } else {
     Log.error('✘  Invalid commit message');
     errors.forEach(([header, validationErrors]) => {

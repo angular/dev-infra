@@ -9,7 +9,7 @@ import semver from 'semver';
 
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {ActiveReleaseTrains, ReleaseTrain} from '../../release/versioning/index.js';
-import {Log} from '../../utils/logging.js';
+import {green, Log} from '../../utils/logging.js';
 import {installVirtualGitClientSpies, mockNgDevConfig} from '../../utils/testing/index.js';
 
 import {CiModule} from './ci.js';
@@ -125,7 +125,7 @@ describe('CiModule', () => {
     await module.printToTerminal();
 
     expect(debugSpy).toHaveBeenCalledWith('No active release train for name1');
-    expect(infoSpy).toHaveBeenCalledWith('label0 ✅');
+    expect(infoSpy).toHaveBeenCalledWith(`label0 ${green('✔')}`);
   });
 });
 

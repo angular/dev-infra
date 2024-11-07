@@ -14,7 +14,7 @@ import {
 } from '../../release/versioning/index.js';
 import githubMacros from '../../utils/git/github-macros.js';
 
-import {bold, Log} from '../../utils/logging.js';
+import {bold, green, Log, red, yellow} from '../../utils/logging.js';
 import {BaseModule} from './base.js';
 
 /** The result of checking a branch on CI. */
@@ -81,11 +81,11 @@ export class CiModule extends BaseModule<CiData> {
       if (result.status === null) {
         Log.info(`${result.name} branch was not found on CI`);
       } else if (result.status === 'passing') {
-        Log.info(`${label} ✅`);
+        Log.info(`${label} ${green('✔')}`);
       } else if (result.status === 'pending') {
-        Log.info(`${label} 🟡`);
+        Log.info(`${label} ${yellow('⏺')}`);
       } else {
-        Log.info(`${label} ❌`);
+        Log.info(`${label} ${red('✘')}`);
       }
     });
     Log.info.groupEnd();
