@@ -5304,9 +5304,9 @@ __metadata:
   linkType: hard
 
 "@webcontainer/api@npm:^1.1.8":
-  version: 1.4.0
-  resolution: "@webcontainer/api@npm:1.4.0"
-  checksum: 10c0/c75ff4adc565a78cca7481a69a1753cf4e671a456419718b80d71df110e8d0c71471822b883c62620e50d05cb54f9e9ad3d46000167ab48058c6651f780f3b51
+  version: 1.5.0
+  resolution: "@webcontainer/api@npm:1.5.0"
+  checksum: 10c0/45eead995102cf65f6b62994235ba77bb91a8049f285414d65e4730f79302a67682873bfc2f43e028f97fdb1c772d9a53742e097ce4d2309a4b6e3774d3324c2
   languageName: node
   linkType: hard
 
