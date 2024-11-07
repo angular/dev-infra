@@ -1,4 +1,2 @@
 #!/bin/sh
-. "$(dirname $0)/_/husky.sh"
-
 yarn ng-dev commit-message pre-commit-validate --file $1 2>/dev/null
