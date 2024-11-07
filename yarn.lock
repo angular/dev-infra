@@ -266,7 +266,6 @@ __metadata:
     "@angular/platform-browser-dynamic": "npm:19.0.0-rc.0"
     "@angular/router": "npm:19.0.0-rc.0"
     "@babel/core": "npm:^7.16.0"
-    "@babel/helper-annotate-as-pure": "npm:^7.18.6"
     "@babel/plugin-proposal-async-generator-functions": "npm:^7.20.1"
     "@bazel/bazelisk": "npm:^1.11.0"
     "@bazel/buildifier": "npm:6.3.3"
@@ -282,9 +281,6 @@ __metadata:
     "@google-cloud/storage": "npm:^7.0.0"
     "@inquirer/prompts": "npm:^7.0.0"
     "@inquirer/type": "npm:^3.0.0"
-    "@lezer/common": "npm:^1.1.1"
-    "@lezer/highlight": "npm:^1.2.0"
-    "@lezer/javascript": "npm:^1.4.9"
     "@microsoft/api-extractor": "npm:7.47.11"
     "@octokit/auth-app": "npm:7.1.2"
     "@octokit/core": "npm:6.1.2"
@@ -328,7 +324,6 @@ __metadata:
     "@types/ws": "npm:8.5.13"
     "@types/yargs": "npm:^17.0.0"
     "@types/yarnpkg__lockfile": "npm:^1.1.5"
-    "@webcontainer/api": "npm:^1.1.8"
     "@yarnpkg/lockfile": "npm:^1.1.0"
     browser-sync: "npm:^3.0.0"
     chalk: "npm:^5.0.1"
@@ -345,7 +340,6 @@ __metadata:
     font-color-contrast: "npm:^11.1.0"
     gcip-cloud-functions: "npm:0.2.0"
     git-raw-commits: "npm:^4.0.0"
-    html-entities: "npm:^2.4.0"
     husky: "npm:^9.0.0"
     jasmine: "npm:~5.4.0"
     jasmine-core: "npm:~5.4.0"
@@ -368,7 +362,6 @@ __metadata:
     protobufjs: "npm:^7.0.0"
     protractor: "npm:^7.0.0"
     requirejs: "npm:^2.3.6"
-    rollup-plugin-sourcemaps: "npm:^0.6.3"
     rxjs: "npm:^7.4.0"
     selenium-webdriver: "npm:^4.18.1"
     semver: "npm:^7.5.4"
@@ -775,7 +768,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/helper-annotate-as-pure@npm:7.25.9, @babel/helper-annotate-as-pure@npm:^7.18.6, @babel/helper-annotate-as-pure@npm:^7.25.9":
+"@babel/helper-annotate-as-pure@npm:7.25.9, @babel/helper-annotate-as-pure@npm:^7.25.9":
   version: 7.25.9
   resolution: "@babel/helper-annotate-as-pure@npm:7.25.9"
   dependencies:
@@ -3168,42 +3161,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lezer/common@npm:^1.0.0, @lezer/common@npm:^1.1.1, @lezer/common@npm:^1.2.0":
-  version: 1.2.3
-  resolution: "@lezer/common@npm:1.2.3"
-  checksum: 10c0/fe9f8e111080ef94037a34ca2af1221c8d01c1763ba5ecf708a286185c76119509a5d19d924c8842172716716ddce22d7834394670c4a9432f0ba9f3b7c0f50d
-  languageName: node
-  linkType: hard
-
-"@lezer/highlight@npm:^1.1.3, @lezer/highlight@npm:^1.2.0":
-  version: 1.2.1
-  resolution: "@lezer/highlight@npm:1.2.1"
-  dependencies:
-    "@lezer/common": "npm:^1.0.0"
-  checksum: 10c0/51b4c08596a0dfeec6a7b7ed90a7f2743ab42e7e8ff8b89707fd042860e4e133dbd8243639fcaf077305ae6c303aa74e69794015eb16cb34741f5ac6721f283c
-  languageName: node
-  linkType: hard
-
-"@lezer/javascript@npm:^1.4.9":
-  version: 1.4.19
-  resolution: "@lezer/javascript@npm:1.4.19"
-  dependencies:
-    "@lezer/common": "npm:^1.2.0"
-    "@lezer/highlight": "npm:^1.1.3"
-    "@lezer/lr": "npm:^1.3.0"
-  checksum: 10c0/04cb49e028dd03b07009e3bef8f1e99ead84ee5ee1f3210371a07b2d8af1e8f5fabf6316115d10f8f44b5db6efa0af713d9fe20ab2c99c83d9abe778a3eb3369
-  languageName: node
-  linkType: hard
-
-"@lezer/lr@npm:^1.3.0":
-  version: 1.4.2
-  resolution: "@lezer/lr@npm:1.4.2"
-  dependencies:
-    "@lezer/common": "npm:^1.0.0"
-  checksum: 10c0/22bb5d0d4b33d0de5eb0706b7e5b5f2d20f570e112d9110009bd35b62ff10f2eb4eff8da4cf373dd4ddf5e06a304120b8f039add7ed9997c981c13945d5329cd
-  languageName: node
-  linkType: hard
-
 "@listr2/prompt-adapter-inquirer@npm:2.0.17":
   version: 2.0.17
   resolution: "@listr2/prompt-adapter-inquirer@npm:2.0.17"
@@ -4360,7 +4317,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rollup/pluginutils@npm:^3.0.9, @rollup/pluginutils@npm:^3.1.0":
+"@rollup/pluginutils@npm:^3.1.0":
   version: 3.1.0
   resolution: "@rollup/pluginutils@npm:3.1.0"
   dependencies:
@@ -5303,13 +5260,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@webcontainer/api@npm:^1.1.8":
-  version: 1.5.0
-  resolution: "@webcontainer/api@npm:1.5.0"
-  checksum: 10c0/45eead995102cf65f6b62994235ba77bb91a8049f285414d65e4730f79302a67682873bfc2f43e028f97fdb1c772d9a53742e097ce4d2309a4b6e3774d3324c2
-  languageName: node
-  linkType: hard
-
 "@xmldom/xmldom@npm:^0.8.5":
   version: 0.8.10
   resolution: "@xmldom/xmldom@npm:0.8.10"
@@ -5830,15 +5780,6 @@ __metadata:
   version: 0.4.0
   resolution: "asynckit@npm:0.4.0"
   checksum: 10c0/d73e2ddf20c4eb9337e1b3df1a0f6159481050a5de457c55b14ea2e5cb6d90bb69e004c9af54737a5ee0917fcf2c9e25de67777bbe58261847846066ba75bc9d
-  languageName: node
-  linkType: hard
-
-"atob@npm:^2.1.2":
-  version: 2.1.2
-  resolution: "atob@npm:2.1.2"
-  bin:
-    atob: bin/atob.js
-  checksum: 10c0/ada635b519dc0c576bb0b3ca63a73b50eefacf390abb3f062558342a8d68f2db91d0c8db54ce81b0d89de3b0f000de71f3ae7d761fd7d8cc624278fe443d6c7e
   languageName: node
   linkType: hard
 
@@ -7187,13 +7128,6 @@ __metadata:
   version: 10.4.3
   resolution: "decimal.js@npm:10.4.3"
   checksum: 10c0/6d60206689ff0911f0ce968d40f163304a6c1bc739927758e6efc7921cfa630130388966f16bf6ef6b838cb33679fbe8e7a78a2f3c478afce841fd55ac8fb8ee
-  languageName: node
-  linkType: hard
-
-"decode-uri-component@npm:^0.2.0":
-  version: 0.2.2
-  resolution: "decode-uri-component@npm:0.2.2"
-  checksum: 10c0/1f4fa54eb740414a816b3f6c24818fbfcabd74ac478391e9f4e2282c994127db02010ce804f3d08e38255493cfe68608b3f5c8e09fd6efc4ae46c807691f7a31
   languageName: node
   linkType: hard
 
@@ -9357,7 +9291,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"html-entities@npm:^2.4.0, html-entities@npm:^2.5.2":
+"html-entities@npm:^2.5.2":
   version: 2.5.2
   resolution: "html-entities@npm:2.5.2"
   checksum: 10c0/f20ffb4326606245c439c231de40a7c560607f639bf40ffbfb36b4c70729fd95d7964209045f1a4e62fe17f2364cef3d6e49b02ea09016f207fde51c2211e481
@@ -13544,22 +13478,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup-plugin-sourcemaps@npm:^0.6.3":
-  version: 0.6.3
-  resolution: "rollup-plugin-sourcemaps@npm:0.6.3"
-  dependencies:
-    "@rollup/pluginutils": "npm:^3.0.9"
-    source-map-resolve: "npm:^0.6.0"
-  peerDependencies:
-    "@types/node": ">=10.0.0"
-    rollup: ">=0.31.2"
-  peerDependenciesMeta:
-    "@types/node":
-      optional: true
-  checksum: 10c0/c2d4f1b76d40fa4fb78bd8403c24e4e8539f9097e1a9fb7eb7162f47fbf313f31293442ca1a01a0dab8ff52ded9aa4ea7bbbeae47aaadb765d270f15325ba4c9
-  languageName: node
-  linkType: hard
-
 "rollup@npm:4.24.4, rollup@npm:^4.20.0":
   version: 4.24.4
   resolution: "rollup@npm:4.24.4"
@@ -14226,16 +14144,6 @@ __metadata:
   version: 1.2.1
   resolution: "source-map-js@npm:1.2.1"
   checksum: 10c0/7bda1fc4c197e3c6ff17de1b8b2c20e60af81b63a52cb32ec5a5d67a20a7d42651e2cb34ebe93833c5a2a084377e17455854fee3e21e7925c64a51b6a52b0faf
-  languageName: node
-  linkType: hard
-
-"source-map-resolve@npm:^0.6.0":
-  version: 0.6.0
-  resolution: "source-map-resolve@npm:0.6.0"
-  dependencies:
-    atob: "npm:^2.1.2"
-    decode-uri-component: "npm:^0.2.0"
-  checksum: 10c0/bc2a94af3d2417196195eecf0130925b3558726726504a7c7bd1b9e383c4a789fa3f4616c4c673cf8bd7930ddd2e80481f203422282aeae342dbd56b91995188
   languageName: node
   linkType: hard
 
