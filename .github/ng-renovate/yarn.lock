@@ -5753,7 +5753,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: "npm:39.7.3"
+    renovate: "npm:39.8.0"
   languageName: unknown
   linkType: soft
 
@@ -6488,9 +6488,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:39.7.3":
-  version: 39.7.3
-  resolution: "renovate@npm:39.7.3"
+"renovate@npm:39.8.0":
+  version: 39.8.0
+  resolution: "renovate@npm:39.8.0"
   dependencies:
     "@aws-sdk/client-codecommit": "npm:3.658.1"
     "@aws-sdk/client-ec2": "npm:3.658.1"
@@ -6595,7 +6595,7 @@ __metadata:
     slugify: "npm:1.6.6"
     source-map-support: "npm:0.5.21"
     toml-eslint-parser: "npm:0.10.0"
-    tslib: "npm:2.8.0"
+    tslib: "npm:2.8.1"
     upath: "npm:2.0.1"
     url-join: "npm:4.0.1"
     validate-npm-package-name: "npm:6.0.0"
@@ -6613,7 +6613,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 10c0/ab55a25b344f2cc856f38401a4accd41e5479ae1ed94d2a253870034dd2f0657d64e04a0dee12df212534c3a573bda187d30e6284f1d9603d0523529acd17c98
+  checksum: 10c0/0774323a699f6758b1de4f20cc2427925f415b072b8c8cbce76e86aea3cd84481a420ea2d5d828719dcdb497fc779de00794dc3f0dd3ba9c663a08ed49f6f5de
   languageName: node
   linkType: hard
 
@@ -7318,14 +7318,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:2.8.0":
-  version: 2.8.0
-  resolution: "tslib@npm:2.8.0"
-  checksum: 10c0/31e4d14dc1355e9b89e4d3c893a18abb7f90b6886b089c2da91224d0a7752c79f3ddc41bc1aa0a588ac895bd97bb99c5bc2bfdb2f86de849f31caeb3ba79bbe5
-  languageName: node
-  linkType: hard
-
-"tslib@npm:^2.3.1, tslib@npm:^2.4.0, tslib@npm:^2.6.2":
+"tslib@npm:2.8.1, tslib@npm:^2.3.1, tslib@npm:^2.4.0, tslib@npm:^2.6.2":
   version: 2.8.1
   resolution: "tslib@npm:2.8.1"
   checksum: 10c0/9c4759110a19c53f992d9aae23aac5ced636e99887b51b9e61def52611732872ff7668757d4e4c61f19691e36f4da981cd9485e869b4a7408d689f6bf1f14e62
