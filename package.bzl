@@ -7,6 +7,11 @@ stampSubstitutions = {
 noStampSubstitutions = dict(stampSubstitutions, **{})
 
 basePackageSubstitutions = {
+    # Remove devDependencies for shipped built packages.
+    # For some odd reason, yarn is tring to resolve the patches when this is installed in angular/angular
+    # Couldn't find any versions for "@angular/bazel" that matches "patch:@angular/bazel@npm:14.1.0-next.2#.yarn/patches/@angular-bazel-npm.patch"
+    # ? Please choose a version of "@angular/bazel" from this list: (Use arrow keys)
+    "\"devDependencies\":[\\w\\W\\s]+?\\s+},\\s+": "",
     "(#|//)\\s+BEGIN-DEV-ONLY[\\w\\W]+?(#|//)\\s+END-DEV-ONLY": "",
     "    \"prepare\": \"husky install\",\n": "",
     "@dev-infra//bazel/": "@npm//@angular/build-tooling/bazel/",
