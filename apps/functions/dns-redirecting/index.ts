@@ -38,10 +38,10 @@ export const dnsRedirecting = functions.https.onRequest(
       response.redirect(redirectType, 'https://angular.dev/update-guide');
     }
     if (hostname === 'cli.angular.io') {
-      response.redirect(redirectType, 'https://angular.dev/cli');
+      response.redirect(redirectType, 'https://angular.dev/tools/cli');
     }
     if (hostname === 'cli.angular.dev') {
-      response.redirect(redirectType, 'https://angular.dev/cli');
+      response.redirect(redirectType, 'https://angular.dev/tools/cli');
     }
     if (hostname === 'blog.angular.io') {
       response.redirect(redirectType, `https://blog.angular.dev${request.originalUrl}`);
