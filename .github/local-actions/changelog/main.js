@@ -58722,7 +58722,13 @@ ${page}${helpTipBottom}${choiceDescription}${import_ansi_escapes4.default.cursor
 // 
 var Prompt = class {
 };
-Prompt.confirm = esm_default4;
+Prompt.confirm = (_config, _context) => {
+  const config2 = {
+    default: false,
+    ..._config
+  };
+  return esm_default4(config2, _context);
+};
 Prompt.input = esm_default5;
 Prompt.checkbox = esm_default2;
 Prompt.select = esm_default11;
