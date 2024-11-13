@@ -21507,6 +21507,9 @@ var require_connect2 = __commonJS({
       };
     };
     function onConnectTimeout(socket, opts) {
+      if (socket == null) {
+        return;
+      }
       let message = "Connect Timeout Error";
       if (Array.isArray(socket.autoSelectFamilyAttemptedAddresses)) {
         message += ` (attempted addresses: ${socket.autoSelectFamilyAttemptedAddresses.join(", ")},`;
@@ -22438,6 +22441,7 @@ var require_webidl2 = __commonJS({
   ""(exports, module) {
     "use strict";
     var { types, inspect } = __require("node:util");
+    var { markAsUncloneable } = __require("node:worker_threads");
     var { toUSVString } = require_util8();
     var webidl = {};
     webidl.converters = {};
@@ -22512,6 +22516,8 @@ var require_webidl2 = __commonJS({
         }
       }
     };
+    webidl.util.markAsUncloneable = markAsUncloneable || (() => {
+    });
     webidl.util.ConvertToInt = function(V, bitLength, signedness, opts) {
       let upperBound;
       let lowerBound;
@@ -23795,6 +23801,7 @@ var require_formdata2 = __commonJS({
     var File = globalThis.File ?? NativeFile;
     var FormData = class {
       constructor(form) {
+        webidl.util.markAsUncloneable(this);
         if (form !== void 0) {
           throw webidl.errors.conversionFailed({
             prefix: "FormData constructor",
@@ -27761,7 +27768,7 @@ var require_retry_handler = __commonJS({
             );
             return false;
           }
-          const { start, size, end = size } = contentRange;
+          const { start, size, end = size - 1 } = contentRange;
           assert(this.start === start, "content-range mismatch");
           assert(this.end == null || this.end === end, "content-range mismatch");
           this.resume = resume;
@@ -27778,7 +27785,7 @@ var require_retry_handler = __commonJS({
                 statusMessage
               );
             }
-            const { start, size, end = size } = range;
+            const { start, size, end = size - 1 } = range;
             assert(
               start != null && Number.isFinite(start),
               "content-range mismatch"
@@ -27789,7 +27796,7 @@ var require_retry_handler = __commonJS({
           }
           if (this.end == null) {
             const contentLength = headers["content-length"];
-            this.end = contentLength != null ? Number(contentLength) : null;
+            this.end = contentLength != null ? Number(contentLength) - 1 : null;
           }
           assert(Number.isFinite(this.start));
           assert(
@@ -30283,6 +30290,7 @@ var require_headers2 = __commonJS({
       #guard;
       #headersList;
       constructor(init = void 0) {
+        webidl.util.markAsUncloneable(this);
         if (init === kConstruct) {
           return;
         }
@@ -30544,6 +30552,7 @@ var require_response2 = __commonJS({
         return responseObject;
       }
       constructor(body = null, init = {}) {
+        webidl.util.markAsUncloneable(this);
         if (body === kConstruct) {
           return;
         }
@@ -30961,6 +30970,7 @@ var require_request4 = __commonJS({
     var Request = class {
       constructor(input, init = {}) {
         var _a3, _b;
+        webidl.util.markAsUncloneable(this);
         if (input === kConstruct) {
           return;
         }
@@ -32485,7 +32495,7 @@ var require_fetch2 = __commonJS({
               const decoders = [];
               const willFollow = location && request2.redirect === "follow" && redirectStatusSet.has(status);
               if (codings.length !== 0 && request2.method !== "HEAD" && request2.method !== "CONNECT" && !nullBodyStatus.includes(status) && !willFollow) {
-                for (let i = 0; i < codings.length; ++i) {
+                for (let i = codings.length - 1; i >= 0; --i) {
                   const coding = codings[i];
                   if (coding === "x-gzip" || coding === "gzip") {
                     decoders.push(zlib.createGunzip({
@@ -33421,6 +33431,7 @@ var require_cache2 = __commonJS({
         if (arguments[0] !== kConstruct) {
           webidl.illegalConstructor();
         }
+        webidl.util.markAsUncloneable(this);
         this.#relevantRequestResponseList = arguments[1];
       }
       async match(request2, options = {}) {
@@ -33925,6 +33936,7 @@ var require_cachestorage2 = __commonJS({
         if (arguments[0] !== kConstruct) {
           webidl.illegalConstructor();
         }
+        webidl.util.markAsUncloneable(this);
       }
       async match(request2, options = {}) {
         webidl.brandCheck(this, CacheStorage);
@@ -34437,6 +34449,7 @@ var require_events2 = __commonJS({
       constructor(type, eventInitDict = {}) {
         if (type === kConstruct) {
           super(arguments[1], arguments[2]);
+          webidl.util.markAsUncloneable(this);
           return;
         }
         const prefix = "MessageEvent constructor";
@@ -34445,6 +34458,7 @@ var require_events2 = __commonJS({
         eventInitDict = webidl.converters.MessageEventInit(eventInitDict, prefix, "eventInitDict");
         super(type, eventInitDict);
         this.#eventInit = eventInitDict;
+        webidl.util.markAsUncloneable(this);
       }
       get data() {
         webidl.brandCheck(this, MessageEvent);
@@ -34504,6 +34518,7 @@ var require_events2 = __commonJS({
         eventInitDict = webidl.converters.CloseEventInit(eventInitDict);
         super(type, eventInitDict);
         this.#eventInit = eventInitDict;
+        webidl.util.markAsUncloneable(this);
       }
       get wasClean() {
         webidl.brandCheck(this, CloseEvent);
@@ -34524,6 +34539,7 @@ var require_events2 = __commonJS({
         const prefix = "ErrorEvent constructor";
         webidl.argumentLengthCheck(arguments, 1, prefix);
         super(type, eventInitDict);
+        webidl.util.markAsUncloneable(this);
         type = webidl.converters.DOMString(type, prefix, "type");
         eventInitDict = webidl.converters.ErrorEventInit(eventInitDict ?? {});
         this.#eventInit = eventInitDict;
@@ -35626,6 +35642,7 @@ var require_websocket2 = __commonJS({
       #sendQueue;
       constructor(url, protocols = []) {
         super();
+        webidl.util.markAsUncloneable(this);
         const prefix = "WebSocket constructor";
         webidl.argumentLengthCheck(arguments, 1, prefix);
         const options = webidl.converters["DOMString or sequence<DOMString> or WebSocketInit"](protocols, prefix, "options");
@@ -36210,6 +36227,7 @@ var require_eventsource = __commonJS({
       #state;
       constructor(url, eventSourceInitDict = {}) {
         super();
+        webidl.util.markAsUncloneable(this);
         const prefix = "EventSource constructor";
         webidl.argumentLengthCheck(arguments, 1, prefix);
         if (!experimentalWarned) {
