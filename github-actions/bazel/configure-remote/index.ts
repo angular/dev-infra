@@ -33,7 +33,7 @@ async function main(bazelRcPath: string | undefined) {
       // Set the config to remote-cache as we do not have support for RBE on windows at this time
       content += '\nbuild --config=remote-cache';
     } else {
-      content += '\nbuild --config=remote';
+      content += '\nbuild --config=remote-cache';
     }
     await fs.promises.writeFile(bazelRcPath, content, 'utf8');
   }

@@ -80,5 +80,6 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: ./github-actions/npm/checkout-and-setup-node
       - uses: ./github-actions/bazel/setup
+      - uses: ./github-actions/bazel/configure-remote
       - run: yarn install --immutable
       - run: yarn bazel test --sandbox_writable_path="$HOME/Library/Application Support" --test_tag_filters=macos --build_tests_only -- //...

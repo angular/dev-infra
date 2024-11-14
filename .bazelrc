@@ -53,7 +53,6 @@ build --nobuild_runfile_links
 
 # Use the Angular team internal GCP instance for remote execution.
 build:remote --remote_instance_name=projects/internal-200822/instances/primary_instance
-build:remote --bes_instance_name=internal-200822
 
 # Needed due to: https://github.com/bazelbuild/bazel/issues/7254
 build:remote --define=EXECUTOR=remote
@@ -70,7 +69,6 @@ common:remote --jobs=100
 # Setup the remote build execution servers.
 build:remote --remote_cache=remotebuildexecution.googleapis.com
 build:remote --remote_executor=remotebuildexecution.googleapis.com
-build:remote --google_default_credentials
 
 # Setup the toolchain and platform for the remote build execution. The platform
 # is provided by the shared dev-infra package and targets k8 remote containers.
@@ -84,11 +82,17 @@ build:remote --platforms=//bazel/remote-execution:platform_with_network
 build:remote --remote_accept_cached=true
 
 # Enable Build Event Service
-build:remote --bes_backend=buildeventservice.googleapis.com
-build:remote --project_id=internal-200822
-build:remote --bes_header=X-Goog-User-Project=internal-200822
-build:remote --bes_results_url=https://source.cloud.google.com/results/invocations
-build:remote --bes_upload_mode=fully_async
+build:remote --bes_backend=buildeventservice-pa.googleapis.com
+build:remote --google_auth_scopes=https://www.googleapis.com/auth/cloud-platform
+build:remote --google_default_credentials
+build:remote --bes_instance_name=internal-200822
+build:remote --bes_results_url=https://sponge2.corp.google.com/
+
+build:remote-cache --bes_backend=buildeventservice-pa.googleapis.com
+build:remote-cache --google_auth_scopes=https://www.googleapis.com/auth/cloud-platform
+build:remote-cache --google_default_credentials
+build:remote-cache --bes_instance_name=internal-200822
+build:remote-cache --bes_results_url=https://sponge2.corp.google.com/
 
 # Use HTTP remote cache
 build:remote-cache --remote_cache=https://storage.googleapis.com/angular-team-cache
