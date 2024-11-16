@@ -282,7 +282,7 @@ __metadata:
     "@inquirer/prompts": "npm:^7.0.0"
     "@inquirer/type": "npm:^3.0.0"
     "@microsoft/api-extractor": "npm:7.47.11"
-    "@octokit/auth-app": "npm:7.1.2"
+    "@octokit/auth-app": "npm:7.1.3"
     "@octokit/core": "npm:6.1.2"
     "@octokit/graphql": "npm:8.1.1"
     "@octokit/graphql-schema": "patch:@octokit/graphql-schema@npm%3A15.3.0#~/.yarn/patches/@octokit-graphql-schema-npm-15.3.0-4046a59648.patch"
@@ -3723,19 +3723,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/auth-app@npm:7.1.2":
-  version: 7.1.2
-  resolution: "@octokit/auth-app@npm:7.1.2"
+"@octokit/auth-app@npm:7.1.3":
+  version: 7.1.3
+  resolution: "@octokit/auth-app@npm:7.1.3"
   dependencies:
     "@octokit/auth-oauth-app": "npm:^8.1.0"
     "@octokit/auth-oauth-user": "npm:^5.1.0"
     "@octokit/request": "npm:^9.1.1"
     "@octokit/request-error": "npm:^6.1.1"
     "@octokit/types": "npm:^13.4.1"
-    lru-cache: "npm:@wolfy1339/lru-cache@^11.0.2-patch.1"
+    toad-cache: "npm:^3.7.0"
     universal-github-app-jwt: "npm:^2.2.0"
     universal-user-agent: "npm:^7.0.0"
-  checksum: 10c0/e2ca3e0d05ef519af6d9a698e5d38a633b72f8e71be4b57e293f7ecad92a5633cf7dceebcb8324f5b2230b9c123733354bcc4b8aa8157ce7a1ceaf370fef5a9b
+  checksum: 10c0/2fb1658c70c47ddaa955f83bc2cc2d1c594e4546f02b220f6c47b6d4fef58d2a00d99ecd001cef0b5ba8fa7b439538d9988a67d7407467bc11547f8edbd20510
   languageName: node
   linkType: hard
 
@@ -11287,13 +11287,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lru-cache@npm:@wolfy1339/lru-cache@^11.0.2-patch.1":
-  version: 11.0.2-patch.1
-  resolution: "@wolfy1339/lru-cache@npm:11.0.2-patch.1"
-  checksum: 10c0/0279b18e46bec0ff00eb18cb19ab3d42dd49bc5c7d1f30f7b0d2deb50c13a99c9ad6a8e4e8cf8a5df614e79e0e62a80df2870c8092c13bfe32f8ecb9a40352b9
-  languageName: node
-  linkType: hard
-
 "lru-cache@npm:^10.0.1, lru-cache@npm:^10.2.0":
   version: 10.4.3
   resolution: "lru-cache@npm:10.4.3"
@@ -15219,6 +15212,13 @@ __metadata:
   dependencies:
     is-number: "npm:^7.0.0"
   checksum: 10c0/487988b0a19c654ff3e1961b87f471702e708fa8a8dd02a298ef16da7206692e8552a0250e8b3e8759270f62e9d8314616f6da274734d3b558b1fc7b7724e892
+  languageName: node
+  linkType: hard
+
+"toad-cache@npm:^3.7.0":
+  version: 3.7.0
+  resolution: "toad-cache@npm:3.7.0"
+  checksum: 10c0/7dae2782ee20b22c9798bb8b71dec7ec6a0091021d2ea9dd6e8afccab6b65b358fdba49a02209fac574499702e2c000660721516c87c2538d1b2c0ba03e8c0c3
   languageName: node
   linkType: hard
 
