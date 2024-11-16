@@ -74,7 +74,7 @@
     "@google-cloud/storage": "^7.0.0",
     "@inquirer/prompts": "^7.0.0",
     "@inquirer/type": "^3.0.0",
-    "@octokit/auth-app": "7.1.2",
+    "@octokit/auth-app": "7.1.3",
     "@octokit/core": "6.1.2",
     "@octokit/graphql": "8.1.1",
     "@octokit/graphql-schema": "patch:@octokit/graphql-schema@npm%3A15.3.0#~/.yarn/patches/@octokit-graphql-schema-npm-15.3.0-4046a59648.patch",

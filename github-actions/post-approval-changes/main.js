@@ -278,7 +278,7 @@ var require_proxy = __commonJS({
       if (proxyVar) {
         try {
           return new DecodedURL(proxyVar);
-        } catch (_a2) {
+        } catch (_a) {
           if (!proxyVar.startsWith("http://") && !proxyVar.startsWith("https://"))
             return new DecodedURL(`http://${proxyVar}`);
         }
@@ -3392,10 +3392,10 @@ var require_main = __commonJS({
     }
     inherits(Busboy, WritableStream);
     Busboy.prototype.emit = function(ev) {
-      var _a2;
+      var _a;
       if (ev === "finish") {
         if (!this._done) {
-          (_a2 = this._parser) == null ? void 0 : _a2.end();
+          (_a = this._parser) == null ? void 0 : _a.end();
           return;
         } else if (this._finished) {
           return;
@@ -3710,8 +3710,8 @@ var require_util2 = __commonJS({
       return "allowed";
     }
     function isErrorLike(object) {
-      var _a2, _b;
-      return object instanceof Error || (((_a2 = object == null ? void 0 : object.constructor) == null ? void 0 : _a2.name) === "Error" || ((_b = object == null ? void 0 : object.constructor) == null ? void 0 : _b.name) === "DOMException");
+      var _a, _b;
+      return object instanceof Error || (((_a = object == null ? void 0 : object.constructor) == null ? void 0 : _a.name) === "Error" || ((_b = object == null ? void 0 : object.constructor) == null ? void 0 : _b.name) === "DOMException");
     }
     function isValidReasonPhrase(statusText) {
       for (let i = 0; i < statusText.length; ++i) {
@@ -4415,14 +4415,14 @@ var require_webidl = __commonJS({
     };
     webidl.sequenceConverter = function(converter) {
       return (V) => {
-        var _a2;
+        var _a;
         if (webidl.util.Type(V) !== "Object") {
           throw webidl.errors.exception({
             header: "Sequence",
             message: `Value of type ${webidl.util.Type(V)} is not an Object.`
           });
         }
-        const method = (_a2 = V == null ? void 0 : V[Symbol.iterator]) == null ? void 0 : _a2.call(V);
+        const method = (_a = V == null ? void 0 : V[Symbol.iterator]) == null ? void 0 : _a.call(V);
         const seq = [];
         if (method === void 0 || typeof method.next !== "function") {
           throw webidl.errors.exception({
@@ -6412,12 +6412,12 @@ var require_constants3 = __commonJS({
       ERROR2[ERROR2["PAUSED_H2_UPGRADE"] = 23] = "PAUSED_H2_UPGRADE";
       ERROR2[ERROR2["USER"] = 24] = "USER";
     })(ERROR = exports.ERROR || (exports.ERROR = {}));
-    var TYPE2;
-    (function(TYPE3) {
-      TYPE3[TYPE3["BOTH"] = 0] = "BOTH";
-      TYPE3[TYPE3["REQUEST"] = 1] = "REQUEST";
-      TYPE3[TYPE3["RESPONSE"] = 2] = "RESPONSE";
-    })(TYPE2 = exports.TYPE || (exports.TYPE = {}));
+    var TYPE;
+    (function(TYPE2) {
+      TYPE2[TYPE2["BOTH"] = 0] = "BOTH";
+      TYPE2[TYPE2["REQUEST"] = 1] = "REQUEST";
+      TYPE2[TYPE2["RESPONSE"] = 2] = "RESPONSE";
+    })(TYPE = exports.TYPE || (exports.TYPE = {}));
     var FLAGS;
     (function(FLAGS2) {
       FLAGS2[FLAGS2["CONNECTION_KEEP_ALIVE"] = 1] = "CONNECTION_KEEP_ALIVE";
@@ -12275,7 +12275,7 @@ var require_request2 = __commonJS({
     });
     var Request = class {
       constructor(input, init = {}) {
-        var _a2, _b;
+        var _a, _b;
         if (input === kConstruct) {
           return;
         }
@@ -12286,8 +12286,8 @@ var require_request2 = __commonJS({
           settingsObject: {
             baseUrl: getGlobalOrigin(),
             get origin() {
-              var _a3;
-              return (_a3 = this.baseUrl) == null ? void 0 : _a3.origin;
+              var _a2;
+              return (_a2 = this.baseUrl) == null ? void 0 : _a2.origin;
             },
             policyContainer: makePolicyContainer()
           }
@@ -12317,7 +12317,7 @@ var require_request2 = __commonJS({
         }
         const origin = this[kRealm].settingsObject.origin;
         let window = "client";
-        if (((_b = (_a2 = request2.window) == null ? void 0 : _a2.constructor) == null ? void 0 : _b.name) === "EnvironmentSettingsObject" && sameOrigin(request2.window, origin)) {
+        if (((_b = (_a = request2.window) == null ? void 0 : _a.constructor) == null ? void 0 : _b.name) === "EnvironmentSettingsObject" && sameOrigin(request2.window, origin)) {
           window = request2.window;
         }
         if (init.window != null) {
@@ -12612,9 +12612,9 @@ var require_request2 = __commonJS({
         return "half";
       }
       clone() {
-        var _a2;
+        var _a;
         webidl.brandCheck(this, Request);
-        if (this.bodyUsed || ((_a2 = this.body) == null ? void 0 : _a2.locked)) {
+        if (this.bodyUsed || ((_a = this.body) == null ? void 0 : _a.locked)) {
           throw new TypeError("unusable");
         }
         const clonedRequest = cloneRequest(this[kState]);
@@ -12884,16 +12884,16 @@ var require_fetch = __commonJS({
         this.setMaxListeners(21);
       }
       terminate(reason) {
-        var _a2;
+        var _a;
         if (this.state !== "ongoing") {
           return;
         }
         this.state = "terminated";
-        (_a2 = this.connection) == null ? void 0 : _a2.destroy(reason);
+        (_a = this.connection) == null ? void 0 : _a.destroy(reason);
         this.emit("terminated", reason);
       }
       abort(error) {
-        var _a2;
+        var _a;
         if (this.state !== "ongoing") {
           return;
         }
@@ -12902,12 +12902,12 @@ var require_fetch = __commonJS({
           error = new DOMException2("The operation was aborted.", "AbortError");
         }
         this.serializedAbortReason = error;
-        (_a2 = this.connection) == null ? void 0 : _a2.destroy(error);
+        (_a = this.connection) == null ? void 0 : _a.destroy(error);
         this.emit("terminated", error);
       }
     };
     function fetch2(input, init = {}) {
-      var _a2;
+      var _a;
       webidl.argumentLengthCheck(arguments, 1, { header: "globalThis.fetch" });
       const p = createDeferredPromise();
       let requestObject;
@@ -12923,7 +12923,7 @@ var require_fetch = __commonJS({
         return p.promise;
       }
       const globalObject = request2.client.globalObject;
-      if (((_a2 = globalObject == null ? void 0 : globalObject.constructor) == null ? void 0 : _a2.name) === "ServiceWorkerGlobalScope") {
+      if (((_a = globalObject == null ? void 0 : globalObject.constructor) == null ? void 0 : _a.name) === "ServiceWorkerGlobalScope") {
         request2.serviceWorkers = "none";
       }
       let responseObject = null;
@@ -12971,11 +12971,11 @@ var require_fetch = __commonJS({
       return p.promise;
     }
     function finalizeAndReportTiming(response, initiatorType = "other") {
-      var _a2;
+      var _a;
       if (response.type === "error" && response.aborted) {
         return;
       }
-      if (!((_a2 = response.urlList) == null ? void 0 : _a2.length)) {
+      if (!((_a = response.urlList) == null ? void 0 : _a.length)) {
         return;
       }
       const originalURL = response.urlList[0];
@@ -13009,12 +13009,12 @@ var require_fetch = __commonJS({
       }
     }
     function abortFetch(p, request2, responseObject, error) {
-      var _a2, _b;
+      var _a, _b;
       if (!error) {
         error = new DOMException2("The operation was aborted.", "AbortError");
       }
       p.reject(error);
-      if (request2.body != null && isReadable((_a2 = request2.body) == null ? void 0 : _a2.stream)) {
+      if (request2.body != null && isReadable((_a = request2.body) == null ? void 0 : _a.stream)) {
         request2.body.stream.cancel(error).catch((err) => {
           if (err.code === "ERR_INVALID_STATE") {
             return;
@@ -13045,7 +13045,7 @@ var require_fetch = __commonJS({
       useParallelQueue = false,
       dispatcher
     }) {
-      var _a2, _b, _c, _d;
+      var _a, _b, _c, _d;
       let taskDestination = null;
       let crossOriginIsolatedCapability = false;
       if (request2.client != null) {
@@ -13070,7 +13070,7 @@ var require_fetch = __commonJS({
       };
       assert(!request2.body || request2.body.stream);
       if (request2.window === "client") {
-        request2.window = ((_c = (_b = (_a2 = request2.client) == null ? void 0 : _a2.globalObject) == null ? void 0 : _b.constructor) == null ? void 0 : _c.name) === "Window" ? request2.client : "no-window";
+        request2.window = ((_c = (_b = (_a = request2.client) == null ? void 0 : _a.globalObject) == null ? void 0 : _b.constructor) == null ? void 0 : _c.name) === "Window" ? request2.client : "no-window";
       }
       if (request2.origin === "client") {
         request2.origin = (_d = request2.client) == null ? void 0 : _d.origin;
@@ -13533,10 +13533,10 @@ var require_fetch = __commonJS({
         abort: null,
         destroyed: false,
         destroy(err) {
-          var _a2;
+          var _a;
           if (!this.destroyed) {
             this.destroyed = true;
-            (_a2 = this.abort) == null ? void 0 : _a2.call(this, err ?? new DOMException2("The operation was aborted.", "AbortError"));
+            (_a = this.abort) == null ? void 0 : _a.call(this, err ?? new DOMException2("The operation was aborted.", "AbortError"));
           }
         }
       };
@@ -13556,12 +13556,12 @@ var require_fetch = __commonJS({
         queueMicrotask(() => fetchParams.processRequestEndOfBody());
       } else if (request2.body != null) {
         const processBodyChunk = async function* (bytes) {
-          var _a2;
+          var _a;
           if (isCancelled(fetchParams)) {
             return;
           }
           yield bytes;
-          (_a2 = fetchParams.processRequestBodyChunkLength) == null ? void 0 : _a2.call(fetchParams, bytes.byteLength);
+          (_a = fetchParams.processRequestBodyChunkLength) == null ? void 0 : _a.call(fetchParams, bytes.byteLength);
         };
         const processEndOfBody = () => {
           if (isCancelled(fetchParams)) {
@@ -13795,11 +13795,11 @@ var require_fetch = __commonJS({
               this.body.push(null);
             },
             onError(error) {
-              var _a2;
+              var _a;
               if (this.abort) {
                 fetchParams.controller.off("terminated", this.abort);
               }
-              (_a2 = this.body) == null ? void 0 : _a2.destroy(error);
+              (_a = this.body) == null ? void 0 : _a.destroy(error);
               fetchParams.controller.terminate(error);
               reject(error);
             },
@@ -14698,7 +14698,7 @@ var require_cache = __commonJS({
         return p[0];
       }
       async matchAll(request2 = void 0, options = {}) {
-        var _a2;
+        var _a;
         webidl.brandCheck(this, Cache);
         if (request2 !== void 0)
           request2 = webidl.converters.RequestInfo(request2);
@@ -14727,7 +14727,7 @@ var require_cache = __commonJS({
         }
         const responseList = [];
         for (const response of responses) {
-          const responseObject = new Response(((_a2 = response.body) == null ? void 0 : _a2.source) ?? null);
+          const responseObject = new Response(((_a = response.body) == null ? void 0 : _a.source) ?? null);
           const body = responseObject[kState].body;
           responseObject[kState] = response;
           responseObject[kState].body = body;
@@ -16128,7 +16128,7 @@ var require_connection = __commonJS({
         useParallelQueue: true,
         dispatcher: options.dispatcher ?? getGlobalDispatcher(),
         processResponse(response) {
-          var _a2, _b;
+          var _a, _b;
           if (response.type === "error" || response.status !== 101) {
             failWebsocketConnection(ws, "Received network error or non-101 status code.");
             return;
@@ -16137,7 +16137,7 @@ var require_connection = __commonJS({
             failWebsocketConnection(ws, "Server did not respond with sent protocols.");
             return;
           }
-          if (((_a2 = response.headersList.get("Upgrade")) == null ? void 0 : _a2.toLowerCase()) !== "websocket") {
+          if (((_a = response.headersList.get("Upgrade")) == null ? void 0 : _a.toLowerCase()) !== "websocket") {
             failWebsocketConnection(ws, 'Server did not set Upgrade header to "websocket".');
             return;
           }
@@ -16237,8 +16237,8 @@ var require_frame = __commonJS({
         this.maskKey = crypto.randomBytes(4);
       }
       createFrame(opcode) {
-        var _a2;
-        const bodyLength = ((_a2 = this.frameData) == null ? void 0 : _a2.byteLength) ?? 0;
+        var _a;
+        const bodyLength = ((_a = this.frameData) == null ? void 0 : _a.byteLength) ?? 0;
         let payloadLength = bodyLength;
         let offset = 6;
         if (bodyLength > maxUnsigned16Bit) {
@@ -17778,7 +17778,7 @@ var require_oidc_utils = __commonJS({
         return runtimeUrl;
       }
       static getCall(id_token_url) {
-        var _a2;
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
           const httpclient = OidcClient.createHttpClient();
           const res = yield httpclient.getJson(id_token_url).catch((error) => {
@@ -17788,7 +17788,7 @@ var require_oidc_utils = __commonJS({
  
         Error Message: ${error.message}`);
           });
-          const id_token = (_a2 = res.result) === null || _a2 === void 0 ? void 0 : _a2.value;
+          const id_token = (_a = res.result) === null || _a === void 0 ? void 0 : _a.value;
           if (!id_token) {
             throw new Error("Response json body do not have ID Token field");
           }
@@ -17870,7 +17870,7 @@ var require_summary = __commonJS({
           }
           try {
             yield access(pathFromEnv, fs_1.constants.R_OK | fs_1.constants.W_OK);
-          } catch (_a2) {
+          } catch (_a) {
             throw new Error(`Unable to access summary file: '${pathFromEnv}'. Check if the file has correct read/write permissions.`);
           }
           this._filePath = pathFromEnv;
@@ -18095,12 +18095,12 @@ var require_io_util = __commonJS({
         step((generator = generator.apply(thisArg, _arguments || [])).next());
       });
     };
-    var _a2;
+    var _a;
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.getCmdPath = exports.tryGetExecutablePath = exports.isRooted = exports.isDirectory = exports.exists = exports.READONLY = exports.UV_FS_O_EXLOCK = exports.IS_WINDOWS = exports.unlink = exports.symlink = exports.stat = exports.rmdir = exports.rm = exports.rename = exports.readlink = exports.readdir = exports.open = exports.mkdir = exports.lstat = exports.copyFile = exports.chmod = void 0;
     var fs = __importStar(__require("fs"));
     var path = __importStar(__require("path"));
-    _a2 = fs.promises, exports.chmod = _a2.chmod, exports.copyFile = _a2.copyFile, exports.lstat = _a2.lstat, exports.mkdir = _a2.mkdir, exports.open = _a2.open, exports.readdir = _a2.readdir, exports.readlink = _a2.readlink, exports.rename = _a2.rename, exports.rm = _a2.rm, exports.rmdir = _a2.rmdir, exports.stat = _a2.stat, exports.symlink = _a2.symlink, exports.unlink = _a2.unlink;
+    _a = fs.promises, exports.chmod = _a.chmod, exports.copyFile = _a.copyFile, exports.lstat = _a.lstat, exports.mkdir = _a.mkdir, exports.open = _a.open, exports.readdir = _a.readdir, exports.readlink = _a.readlink, exports.rename = _a.rename, exports.rm = _a.rm, exports.rmdir = _a.rmdir, exports.stat = _a.stat, exports.symlink = _a.symlink, exports.unlink = _a.unlink;
     exports.IS_WINDOWS = process.platform === "win32";
     exports.UV_FS_O_EXLOCK = 268435456;
     exports.READONLY = fs.constants.O_RDONLY;
@@ -18207,8 +18207,8 @@ var require_io_util = __commonJS({
       return (stats.mode & 1) > 0 || (stats.mode & 8) > 0 && stats.gid === process.getgid() || (stats.mode & 64) > 0 && stats.uid === process.getuid();
     }
     function getCmdPath() {
-      var _a3;
-      return (_a3 = process.env["COMSPEC"]) !== null && _a3 !== void 0 ? _a3 : `cmd.exe`;
+      var _a2;
+      return (_a2 = process.env["COMSPEC"]) !== null && _a2 !== void 0 ? _a2 : `cmd.exe`;
     }
     exports.getCmdPath = getCmdPath;
   }
@@ -19024,13 +19024,13 @@ var require_exec = __commonJS({
     }
     exports.exec = exec;
     function getExecOutput(commandLine, args, options) {
-      var _a2, _b;
+      var _a, _b;
       return __awaiter(this, void 0, void 0, function* () {
         let stdout = "";
         let stderr = "";
         const stdoutDecoder = new string_decoder_1.StringDecoder("utf8");
         const stderrDecoder = new string_decoder_1.StringDecoder("utf8");
-        const originalStdoutListener = (_a2 = options === null || options === void 0 ? void 0 : options.listeners) === null || _a2 === void 0 ? void 0 : _a2.stdout;
+        const originalStdoutListener = (_a = options === null || options === void 0 ? void 0 : options.listeners) === null || _a === void 0 ? void 0 : _a.stdout;
         const originalStdErrListener = (_b = options === null || options === void 0 ? void 0 : options.listeners) === null || _b === void 0 ? void 0 : _b.stderr;
         const stdErrListener = (data) => {
           stderr += stderrDecoder.write(data);
@@ -19142,11 +19142,11 @@ var require_platform = __commonJS({
       };
     });
     var getMacOsInfo = () => __awaiter(void 0, void 0, void 0, function* () {
-      var _a2, _b, _c, _d;
+      var _a, _b, _c, _d;
       const { stdout } = yield exec.getExecOutput("sw_vers", void 0, {
         silent: true
       });
-      const version = (_b = (_a2 = stdout.match(/ProductVersion:\s*(.+)/)) === null || _a2 === void 0 ? void 0 : _a2[1]) !== null && _b !== void 0 ? _b : "";
+      const version = (_b = (_a = stdout.match(/ProductVersion:\s*(.+)/)) === null || _a === void 0 ? void 0 : _a[1]) !== null && _b !== void 0 ? _b : "";
       const name = (_d = (_c = stdout.match(/ProductName:\s*(.+)/)) === null || _c === void 0 ? void 0 : _c[1]) !== null && _d !== void 0 ? _d : "";
       return {
         name,
@@ -19427,7 +19427,7 @@ var require_context = __commonJS({
     var os_1 = __require("os");
     var Context = class {
       constructor() {
-        var _a2, _b, _c;
+        var _a, _b, _c;
         this.payload = {};
         if (process.env.GITHUB_EVENT_PATH) {
           if ((0, fs_1.existsSync)(process.env.GITHUB_EVENT_PATH)) {
@@ -19446,7 +19446,7 @@ var require_context = __commonJS({
         this.job = process.env.GITHUB_JOB;
         this.runNumber = parseInt(process.env.GITHUB_RUN_NUMBER, 10);
         this.runId = parseInt(process.env.GITHUB_RUN_ID, 10);
-        this.apiUrl = (_a2 = process.env.GITHUB_API_URL) !== null && _a2 !== void 0 ? _a2 : `https://api.github.com`;
+        this.apiUrl = (_a = process.env.GITHUB_API_URL) !== null && _a !== void 0 ? _a : `https://api.github.com`;
         this.serverUrl = (_b = process.env.GITHUB_SERVER_URL) !== null && _b !== void 0 ? _b : `https://github.com`;
         this.graphqlUrl = (_c = process.env.GITHUB_GRAPHQL_URL) !== null && _c !== void 0 ? _c : `https://api.github.com/graphql`;
       }
@@ -19984,8 +19984,8 @@ var require_tree = __commonJS({
         }
       }
       lookup(key) {
-        var _a2, _b;
-        return ((_b = (_a2 = this.node) == null ? void 0 : _a2.search(key)) == null ? void 0 : _b.value) ?? null;
+        var _a, _b;
+        return ((_b = (_a = this.node) == null ? void 0 : _a.search(key)) == null ? void 0 : _b.value) ?? null;
       }
     };
     var tree = new TernarySearchTree();
@@ -20182,8 +20182,8 @@ var require_util8 = __commonJS({
       return null;
     }
     function isDestroyed(body) {
-      var _a2;
-      return body && !!(body.destroyed || body[kDestroyed] || ((_a2 = stream.isDestroyed) == null ? void 0 : _a2.call(stream, body)));
+      var _a;
+      return body && !!(body.destroyed || body[kDestroyed] || ((_a = stream.isDestroyed) == null ? void 0 : _a.call(stream, body)));
     }
     function destroy(stream2, err) {
       if (stream2 == null || !isStream(stream2) || isDestroyed(stream2)) {
@@ -20331,9 +20331,9 @@ var require_util8 = __commonJS({
             const { done, value } = await iterator2.next();
             if (done) {
               queueMicrotask(() => {
-                var _a2;
+                var _a;
                 controller.close();
-                (_a2 = controller.byobRequest) == null ? void 0 : _a2.respond(0);
+                (_a = controller.byobRequest) == null ? void 0 : _a.respond(0);
               });
             } else {
               const buf = Buffer.isBuffer(value) ? value : Buffer.from(value);
@@ -20877,8 +20877,8 @@ var require_request3 = __commonJS({
         }
       }
       onResponseStarted() {
-        var _a2, _b;
-        return (_b = (_a2 = this[kHandler]).onResponseStarted) == null ? void 0 : _b.call(_a2);
+        var _a, _b;
+        return (_b = (_a = this[kHandler]).onResponseStarted) == null ? void 0 : _b.call(_a);
       }
       onHeaders(statusCode, headers, resume, statusText) {
         assert(!this.aborted);
@@ -21578,12 +21578,12 @@ var require_constants7 = __commonJS({
       ERROR2[ERROR2["PAUSED_H2_UPGRADE"] = 23] = "PAUSED_H2_UPGRADE";
       ERROR2[ERROR2["USER"] = 24] = "USER";
     })(ERROR = exports.ERROR || (exports.ERROR = {}));
-    var TYPE2;
-    (function(TYPE3) {
-      TYPE3[TYPE3["BOTH"] = 0] = "BOTH";
-      TYPE3[TYPE3["REQUEST"] = 1] = "REQUEST";
-      TYPE3[TYPE3["RESPONSE"] = 2] = "RESPONSE";
-    })(TYPE2 = exports.TYPE || (exports.TYPE = {}));
+    var TYPE;
+    (function(TYPE2) {
+      TYPE2[TYPE2["BOTH"] = 0] = "BOTH";
+      TYPE2[TYPE2["REQUEST"] = 1] = "REQUEST";
+      TYPE2[TYPE2["RESPONSE"] = 2] = "RESPONSE";
+    })(TYPE = exports.TYPE || (exports.TYPE = {}));
     var FLAGS;
     (function(FLAGS2) {
       FLAGS2[FLAGS2["CONNECTION_KEEP_ALIVE"] = 1] = "CONNECTION_KEEP_ALIVE";
@@ -22596,14 +22596,14 @@ var require_webidl2 = __commonJS({
     };
     webidl.sequenceConverter = function(converter) {
       return (V, prefix, argument, Iterable) => {
-        var _a2;
+        var _a;
         if (webidl.util.Type(V) !== "Object") {
           throw webidl.errors.exception({
             header: prefix,
             message: `${argument} (${webidl.util.Stringify(V)}) is not iterable.`
           });
         }
-        const method = typeof Iterable === "function" ? Iterable() : (_a2 = V == null ? void 0 : V[Symbol.iterator]) == null ? void 0 : _a2.call(V);
+        const method = typeof Iterable === "function" ? Iterable() : (_a = V == null ? void 0 : V[Symbol.iterator]) == null ? void 0 : _a.call(V);
         const seq = [];
         let index = 0;
         if (method === void 0 || typeof method.next !== "function") {
@@ -22922,8 +22922,8 @@ var require_util9 = __commonJS({
       return "allowed";
     }
     function isErrorLike(object) {
-      var _a2, _b;
-      return object instanceof Error || (((_a2 = object == null ? void 0 : object.constructor) == null ? void 0 : _a2.name) === "Error" || ((_b = object == null ? void 0 : object.constructor) == null ? void 0 : _b.name) === "DOMException");
+      var _a, _b;
+      return object instanceof Error || (((_a = object == null ? void 0 : object.constructor) == null ? void 0 : _a.name) === "Error" || ((_b = object == null ? void 0 : object.constructor) == null ? void 0 : _b.name) === "DOMException");
     }
     function isValidReasonPhrase(statusText) {
       for (let i = 0; i < statusText.length; ++i) {
@@ -23409,10 +23409,10 @@ var require_util9 = __commonJS({
       return stream instanceof ReadableStream || stream[Symbol.toStringTag] === "ReadableStream" && typeof stream.tee === "function";
     }
     function readableStreamClose(controller) {
-      var _a2;
+      var _a;
       try {
         controller.close();
-        (_a2 = controller.byobRequest) == null ? void 0 : _a2.respond(0);
+        (_a = controller.byobRequest) == null ? void 0 : _a.respond(0);
       } catch (err) {
         if (!err.message.includes("Controller is already closed") && !err.message.includes("ReadableStream is already closed")) {
           throw err;
@@ -23645,8 +23645,8 @@ var require_util9 = __commonJS({
         return getGlobalOrigin();
       }
       get origin() {
-        var _a2;
-        return (_a2 = this.baseUrl) == null ? void 0 : _a2.origin;
+        var _a;
+        return (_a = this.baseUrl) == null ? void 0 : _a.origin;
       }
       policyContainer = makePolicyContainer();
     };
@@ -24337,9 +24337,9 @@ Content-Type: ${value.type || "application/octet-stream"}\r
             const { value, done } = await iterator2.next();
             if (done) {
               queueMicrotask(() => {
-                var _a2;
+                var _a;
                 controller.close();
-                (_a2 = controller.byobRequest) == null ? void 0 : _a2.respond(0);
+                (_a = controller.byobRequest) == null ? void 0 : _a.respond(0);
               });
             } else {
               if (!isErrored(stream)) {
@@ -25837,8 +25837,8 @@ var require_client_h2 = __commonJS({
         });
       });
       stream.once("end", () => {
-        var _a2;
-        if (((_a2 = stream.state) == null ? void 0 : _a2.state) == null || stream.state.state < 6) {
+        var _a;
+        if (((_a = stream.state) == null ? void 0 : _a.state) == null || stream.state.state < 6) {
           request2.onComplete([]);
         }
         if (session[kOpenStreams] === 0) {
@@ -26293,8 +26293,8 @@ var require_client2 = __commonJS({
     var noop2 = () => {
     };
     function getPipelining(client) {
-      var _a2;
-      return client[kPipelining] ?? ((_a2 = client[kHTTPContext]) == null ? void 0 : _a2.defaultPipelining) ?? 1;
+      var _a;
+      return client[kPipelining] ?? ((_a = client[kHTTPContext]) == null ? void 0 : _a.defaultPipelining) ?? 1;
     }
     var Client = class extends DispatcherBase {
       constructor(url, {
@@ -26461,9 +26461,9 @@ var require_client2 = __commonJS({
         return !!this[kHTTPContext] && !this[kConnecting] && !this[kHTTPContext].destroyed;
       }
       get [kBusy]() {
-        var _a2;
+        var _a;
         return Boolean(
-          ((_a2 = this[kHTTPContext]) == null ? void 0 : _a2.busy(null)) || this[kSize] >= (getPipelining(this) || 1) || this[kPending] > 0
+          ((_a = this[kHTTPContext]) == null ? void 0 : _a.busy(null)) || this[kSize] >= (getPipelining(this) || 1) || this[kPending] > 0
         );
       }
       [kConnect](cb) {
@@ -26532,7 +26532,7 @@ var require_client2 = __commonJS({
       }
     }
     async function connect(client) {
-      var _a2, _b, _c;
+      var _a, _b, _c;
       assert(!client[kConnecting]);
       assert(!client[kHTTPContext]);
       let { host, hostname, protocol, port } = client[kUrl];
@@ -26551,7 +26551,7 @@ var require_client2 = __commonJS({
             hostname,
             protocol,
             port,
-            version: (_a2 = client[kHTTPContext]) == null ? void 0 : _a2.version,
+            version: (_a = client[kHTTPContext]) == null ? void 0 : _a.version,
             servername: client[kServerName],
             localAddress: client[kLocalAddress]
           },
@@ -26658,7 +26658,7 @@ var require_client2 = __commonJS({
       }
     }
     function _resume(client, sync) {
-      var _a2;
+      var _a;
       while (true) {
         if (client.destroyed) {
           assert(client[kPending] === 0);
@@ -26695,7 +26695,7 @@ var require_client2 = __commonJS({
             return;
           }
           client[kServerName] = request2.servername;
-          (_a2 = client[kHTTPContext]) == null ? void 0 : _a2.destroy(new InformationalError("servername changed"), () => {
+          (_a = client[kHTTPContext]) == null ? void 0 : _a.destroy(new InformationalError("servername changed"), () => {
             client[kHTTPContext] = null;
             resume(client);
           });
@@ -27006,7 +27006,7 @@ var require_pool2 = __commonJS({
         allowH2,
         ...options
       } = {}) {
-        var _a2;
+        var _a;
         super();
         if (connections != null && (!Number.isFinite(connections) || connections < 0)) {
           throw new InvalidArgumentError("invalid connections");
@@ -27028,7 +27028,7 @@ var require_pool2 = __commonJS({
             ...connect
           });
         }
-        this[kInterceptors] = ((_a2 = options.interceptors) == null ? void 0 : _a2.Pool) && Array.isArray(options.interceptors.Pool) ? options.interceptors.Pool : [];
+        this[kInterceptors] = ((_a = options.interceptors) == null ? void 0 : _a.Pool) && Array.isArray(options.interceptors.Pool) ? options.interceptors.Pool : [];
         this[kConnections] = connections || null;
         this[kUrl] = util.parseOrigin(origin);
         this[kOptions] = { ...util.deepClone(options), connect, allowH2 };
@@ -27094,7 +27094,7 @@ var require_balanced_pool2 = __commonJS({
     }
     var BalancedPool = class extends PoolBase {
       constructor(upstreams = [], { factory = defaultFactory, ...opts } = {}) {
-        var _a2;
+        var _a;
         super();
         this[kOptions] = opts;
         this[kIndex] = -1;
@@ -27107,7 +27107,7 @@ var require_balanced_pool2 = __commonJS({
         if (typeof factory !== "function") {
           throw new InvalidArgumentError("factory must be a function.");
         }
-        this[kInterceptors] = ((_a2 = opts.interceptors) == null ? void 0 : _a2.BalancedPool) && Array.isArray(opts.interceptors.BalancedPool) ? opts.interceptors.BalancedPool : [];
+        this[kInterceptors] = ((_a = opts.interceptors) == null ? void 0 : _a.BalancedPool) && Array.isArray(opts.interceptors.BalancedPool) ? opts.interceptors.BalancedPool : [];
         this[kFactory] = factory;
         for (const upstream of upstreams) {
           this.addUpstream(upstream);
@@ -27221,7 +27221,7 @@ var require_agent2 = __commonJS({
     }
     var Agent = class extends DispatcherBase {
       constructor({ factory = defaultFactory, maxRedirections = 0, connect, ...options } = {}) {
-        var _a2;
+        var _a;
         super();
         if (typeof factory !== "function") {
           throw new InvalidArgumentError("factory must be a function.");
@@ -27235,7 +27235,7 @@ var require_agent2 = __commonJS({
         if (connect && typeof connect !== "function") {
           connect = { ...connect };
         }
-        this[kInterceptors] = ((_a2 = options.interceptors) == null ? void 0 : _a2.Agent) && Array.isArray(options.interceptors.Agent) ? options.interceptors.Agent : [createRedirectInterceptor({ maxRedirections })];
+        this[kInterceptors] = ((_a = options.interceptors) == null ? void 0 : _a.Agent) && Array.isArray(options.interceptors.Agent) ? options.interceptors.Agent : [createRedirectInterceptor({ maxRedirections })];
         this[kOptions] = { ...util.deepClone(options), connect };
         this[kOptions].interceptors = options.interceptors ? { ...options.interceptors } : void 0;
         this[kMaxRedirections] = maxRedirections;
@@ -27323,7 +27323,7 @@ var require_proxy_agent2 = __commonJS({
     };
     var ProxyAgent = class extends DispatcherBase {
       constructor(opts) {
-        var _a2;
+        var _a;
         super();
         if (!opts || typeof opts === "object" && !(opts instanceof URL2) && !opts.uri) {
           throw new InvalidArgumentError("Proxy uri is mandatory");
@@ -27335,7 +27335,7 @@ var require_proxy_agent2 = __commonJS({
         const url = this.#getUrl(opts);
         const { href, origin, port, protocol, username, password, hostname: proxyHostname } = url;
         this[kProxy] = { uri: href, protocol };
-        this[kInterceptors] = ((_a2 = opts.interceptors) == null ? void 0 : _a2.ProxyAgent) && Array.isArray(opts.interceptors.ProxyAgent) ? opts.interceptors.ProxyAgent : [];
+        this[kInterceptors] = ((_a = opts.interceptors) == null ? void 0 : _a.ProxyAgent) && Array.isArray(opts.interceptors.ProxyAgent) ? opts.interceptors.ProxyAgent : [];
         this[kRequestTls] = opts.requestTls;
         this[kProxyTls] = opts.proxyTls;
         this[kProxyHeaders] = opts.headers || {};
@@ -27354,7 +27354,7 @@ var require_proxy_agent2 = __commonJS({
         this[kAgent] = new Agent({
           ...opts,
           connect: async (opts2, callback) => {
-            var _a3;
+            var _a2;
             let requestedPath = opts2.host;
             if (!opts2.port) {
               requestedPath += `:${defaultProtocolPort(opts2.protocol)}`;
@@ -27369,7 +27369,7 @@ var require_proxy_agent2 = __commonJS({
                   ...this[kProxyHeaders],
                   host: opts2.host
                 },
-                servername: ((_a3 = this[kProxyTls]) == null ? void 0 : _a3.servername) || proxyHostname
+                servername: ((_a2 = this[kProxyTls]) == null ? void 0 : _a2.servername) || proxyHostname
               });
               if (statusCode !== 200) {
                 socket.on("error", noop2).destroy();
@@ -28321,7 +28321,7 @@ var require_api_request2 = __commonJS({
             this.reason = this.signal.reason ?? new RequestAbortedError();
           } else {
             this.removeAbortListener = util.addAbortListener(this.signal, () => {
-              var _a2;
+              var _a;
               this.reason = this.signal.reason ?? new RequestAbortedError();
               if (this.res) {
                 util.destroy(this.res, this.reason);
@@ -28329,7 +28329,7 @@ var require_api_request2 = __commonJS({
                 this.abort(this.reason);
               }
               if (this.removeAbortListener) {
-                (_a2 = this.res) == null ? void 0 : _a2.off("close", this.removeAbortListener);
+                (_a = this.res) == null ? void 0 : _a.off("close", this.removeAbortListener);
                 this.removeAbortListener();
                 this.removeAbortListener = null;
               }
@@ -28452,9 +28452,9 @@ var require_abort_signal2 = __commonJS({
     var kListener = Symbol("kListener");
     var kSignal = Symbol("kSignal");
     function abort(self) {
-      var _a2, _b;
+      var _a, _b;
       if (self.abort) {
-        self.abort((_a2 = self[kSignal]) == null ? void 0 : _a2.reason);
+        self.abort((_a = self[kSignal]) == null ? void 0 : _a.reason);
       } else {
         self.reason = ((_b = self[kSignal]) == null ? void 0 : _b.reason) ?? new RequestAbortedError();
       }
@@ -28564,7 +28564,7 @@ var require_api_stream2 = __commonJS({
         this.context = context3;
       }
       onHeaders(statusCode, rawHeaders, resume, statusMessage) {
-        var _a2;
+        var _a;
         const { factory, opaque, context: context3, callback, responseHeaders } = this;
         const headers = responseHeaders === "raw" ? util.parseRawHeaders(rawHeaders) : util.parseHeaders(rawHeaders);
         if (statusCode < 200) {
@@ -28613,7 +28613,7 @@ var require_api_stream2 = __commonJS({
         }
         res.on("drain", resume);
         this.res = res;
-        const needDrain = res.writableNeedDrain !== void 0 ? res.writableNeedDrain : (_a2 = res._writableState) == null ? void 0 : _a2.needDrain;
+        const needDrain = res.writableNeedDrain !== void 0 ? res.writableNeedDrain : (_a = res._writableState) == null ? void 0 : _a.needDrain;
         return needDrain !== true;
       }
       onData(chunk) {
@@ -29326,7 +29326,7 @@ var require_mock_utils2 = __commonJS({
         handleReply(this[kDispatches]);
       }
       function handleReply(mockDispatches, _data = data) {
-        var _a2, _b, _c, _d;
+        var _a, _b, _c, _d;
         const optsHeaders = Array.isArray(opts.headers) ? buildHeadersFromArray(opts.headers) : opts.headers;
         const body = typeof _data === "function" ? _data({ ...opts, headers: optsHeaders }) : _data;
         if (isPromise(body)) {
@@ -29336,7 +29336,7 @@ var require_mock_utils2 = __commonJS({
         const responseData = getResponseData2(body);
         const responseHeaders = generateKeyValues(headers);
         const responseTrailers = generateKeyValues(trailers);
-        (_a2 = handler2.onConnect) == null ? void 0 : _a2.call(handler2, (err) => handler2.onError(err), null);
+        (_a = handler2.onConnect) == null ? void 0 : _a.call(handler2, (err) => handler2.onError(err), null);
         (_b = handler2.onHeaders) == null ? void 0 : _b.call(handler2, statusCode, responseHeaders, resume, getStatusText(statusCode));
         (_c = handler2.onData) == null ? void 0 : _c.call(handler2, Buffer.from(responseData));
         (_d = handler2.onComplete) == null ? void 0 : _d.call(handler2, responseTrailers);
@@ -29891,36 +29891,36 @@ var require_decorator_handler = __commonJS({
         this.#handler = handler2;
       }
       onConnect(...args) {
-        var _a2, _b;
-        return (_b = (_a2 = this.#handler).onConnect) == null ? void 0 : _b.call(_a2, ...args);
+        var _a, _b;
+        return (_b = (_a = this.#handler).onConnect) == null ? void 0 : _b.call(_a, ...args);
       }
       onError(...args) {
-        var _a2, _b;
-        return (_b = (_a2 = this.#handler).onError) == null ? void 0 : _b.call(_a2, ...args);
+        var _a, _b;
+        return (_b = (_a = this.#handler).onError) == null ? void 0 : _b.call(_a, ...args);
       }
       onUpgrade(...args) {
-        var _a2, _b;
-        return (_b = (_a2 = this.#handler).onUpgrade) == null ? void 0 : _b.call(_a2, ...args);
+        var _a, _b;
+        return (_b = (_a = this.#handler).onUpgrade) == null ? void 0 : _b.call(_a, ...args);
       }
       onResponseStarted(...args) {
-        var _a2, _b;
-        return (_b = (_a2 = this.#handler).onResponseStarted) == null ? void 0 : _b.call(_a2, ...args);
+        var _a, _b;
+        return (_b = (_a = this.#handler).onResponseStarted) == null ? void 0 : _b.call(_a, ...args);
       }
       onHeaders(...args) {
-        var _a2, _b;
-        return (_b = (_a2 = this.#handler).onHeaders) == null ? void 0 : _b.call(_a2, ...args);
+        var _a, _b;
+        return (_b = (_a = this.#handler).onHeaders) == null ? void 0 : _b.call(_a, ...args);
       }
       onData(...args) {
-        var _a2, _b;
-        return (_b = (_a2 = this.#handler).onData) == null ? void 0 : _b.call(_a2, ...args);
+        var _a, _b;
+        return (_b = (_a = this.#handler).onData) == null ? void 0 : _b.call(_a, ...args);
       }
       onComplete(...args) {
-        var _a2, _b;
-        return (_b = (_a2 = this.#handler).onComplete) == null ? void 0 : _b.call(_a2, ...args);
+        var _a, _b;
+        return (_b = (_a = this.#handler).onComplete) == null ? void 0 : _b.call(_a, ...args);
       }
       onBodySent(...args) {
-        var _a2, _b;
-        return (_b = (_a2 = this.#handler).onBodySent) == null ? void 0 : _b.call(_a2, ...args);
+        var _a, _b;
+        return (_b = (_a = this.#handler).onBodySent) == null ? void 0 : _b.call(_a, ...args);
       }
     };
   }
@@ -30204,8 +30204,8 @@ var require_headers2 = __commonJS({
         this[kHeadersMap].delete(name);
       }
       get(name, isLowerCase) {
-        var _a2;
-        return ((_a2 = this[kHeadersMap].get(isLowerCase ? name : name.toLowerCase())) == null ? void 0 : _a2.value) ?? null;
+        var _a;
+        return ((_a = this[kHeadersMap].get(isLowerCase ? name : name.toLowerCase())) == null ? void 0 : _a.value) ?? null;
       }
       *[Symbol.iterator]() {
         for (const { 0: name, 1: { value } } of this[kHeadersMap]) {
@@ -30788,13 +30788,13 @@ var require_response2 = __commonJS({
       }
     }
     function fromInnerResponse(innerResponse, guard) {
-      var _a2;
+      var _a;
       const response = new Response(kConstruct);
       response[kState] = innerResponse;
       response[kHeaders] = new Headers(kConstruct);
       setHeadersList(response[kHeaders], innerResponse.headersList);
       setHeadersGuard(response[kHeaders], guard);
-      if (hasFinalizationRegistry && ((_a2 = innerResponse.body) == null ? void 0 : _a2.stream)) {
+      if (hasFinalizationRegistry && ((_a = innerResponse.body) == null ? void 0 : _a.stream)) {
         streamRegistry.register(response, new WeakRef(innerResponse.body.stream));
       }
       return response;
@@ -30969,7 +30969,7 @@ var require_request4 = __commonJS({
     var patchMethodWarning = false;
     var Request = class {
       constructor(input, init = {}) {
-        var _a2, _b;
+        var _a, _b;
         webidl.util.markAsUncloneable(this);
         if (input === kConstruct) {
           return;
@@ -31005,7 +31005,7 @@ var require_request4 = __commonJS({
         }
         const origin = environmentSettingsObject.settingsObject.origin;
         let window = "client";
-        if (((_b = (_a2 = request2.window) == null ? void 0 : _a2.constructor) == null ? void 0 : _b.name) === "EnvironmentSettingsObject" && sameOrigin(request2.window, origin)) {
+        if (((_b = (_a = request2.window) == null ? void 0 : _a.constructor) == null ? void 0 : _b.name) === "EnvironmentSettingsObject" && sameOrigin(request2.window, origin)) {
           window = request2.window;
         }
         if (init.window != null) {
@@ -31609,16 +31609,16 @@ var require_fetch2 = __commonJS({
         this.state = "ongoing";
       }
       terminate(reason) {
-        var _a2;
+        var _a;
         if (this.state !== "ongoing") {
           return;
         }
         this.state = "terminated";
-        (_a2 = this.connection) == null ? void 0 : _a2.destroy(reason);
+        (_a = this.connection) == null ? void 0 : _a.destroy(reason);
         this.emit("terminated", reason);
       }
       abort(error) {
-        var _a2;
+        var _a;
         if (this.state !== "ongoing") {
           return;
         }
@@ -31627,7 +31627,7 @@ var require_fetch2 = __commonJS({
           error = new DOMException("The operation was aborted.", "AbortError");
         }
         this.serializedAbortReason = error;
-        (_a2 = this.connection) == null ? void 0 : _a2.destroy(error);
+        (_a = this.connection) == null ? void 0 : _a.destroy(error);
         this.emit("terminated", error);
       }
     };
@@ -31635,7 +31635,7 @@ var require_fetch2 = __commonJS({
       finalizeAndReportTiming(response, "fetch");
     }
     function fetch2(input, init = void 0) {
-      var _a2;
+      var _a;
       webidl.argumentLengthCheck(arguments, 1, "globalThis.fetch");
       let p = createDeferredPromise();
       let requestObject;
@@ -31651,7 +31651,7 @@ var require_fetch2 = __commonJS({
         return p.promise;
       }
       const globalObject = request2.client.globalObject;
-      if (((_a2 = globalObject == null ? void 0 : globalObject.constructor) == null ? void 0 : _a2.name) === "ServiceWorkerGlobalScope") {
+      if (((_a = globalObject == null ? void 0 : globalObject.constructor) == null ? void 0 : _a.name) === "ServiceWorkerGlobalScope") {
         request2.serviceWorkers = "none";
       }
       let responseObject = null;
@@ -31692,11 +31692,11 @@ var require_fetch2 = __commonJS({
       return p.promise;
     }
     function finalizeAndReportTiming(response, initiatorType = "other") {
-      var _a2;
+      var _a;
       if (response.type === "error" && response.aborted) {
         return;
       }
-      if (!((_a2 = response.urlList) == null ? void 0 : _a2.length)) {
+      if (!((_a = response.urlList) == null ? void 0 : _a.length)) {
         return;
       }
       const originalURL = response.urlList[0];
@@ -31726,11 +31726,11 @@ var require_fetch2 = __commonJS({
     }
     var markResourceTiming = performance.markResourceTiming;
     function abortFetch(p, request2, responseObject, error) {
-      var _a2, _b;
+      var _a, _b;
       if (p) {
         p.reject(error);
       }
-      if (request2.body != null && isReadable((_a2 = request2.body) == null ? void 0 : _a2.stream)) {
+      if (request2.body != null && isReadable((_a = request2.body) == null ? void 0 : _a.stream)) {
         request2.body.stream.cancel(error).catch((err) => {
           if (err.code === "ERR_INVALID_STATE") {
             return;
@@ -31761,7 +31761,7 @@ var require_fetch2 = __commonJS({
       useParallelQueue = false,
       dispatcher = getGlobalDispatcher()
     }) {
-      var _a2, _b, _c;
+      var _a, _b, _c;
       assert(dispatcher);
       let taskDestination = null;
       let crossOriginIsolatedCapability = false;
@@ -31787,7 +31787,7 @@ var require_fetch2 = __commonJS({
       };
       assert(!request2.body || request2.body.stream);
       if (request2.window === "client") {
-        request2.window = ((_c = (_b = (_a2 = request2.client) == null ? void 0 : _a2.globalObject) == null ? void 0 : _b.constructor) == null ? void 0 : _c.name) === "Window" ? request2.client : "no-window";
+        request2.window = ((_c = (_b = (_a = request2.client) == null ? void 0 : _a.globalObject) == null ? void 0 : _b.constructor) == null ? void 0 : _c.name) === "Window" ? request2.client : "no-window";
       }
       if (request2.origin === "client") {
         request2.origin = request2.client.origin;
@@ -32285,11 +32285,11 @@ var require_fetch2 = __commonJS({
         abort: null,
         destroyed: false,
         destroy(err, abort = true) {
-          var _a2;
+          var _a;
           if (!this.destroyed) {
             this.destroyed = true;
             if (abort) {
-              (_a2 = this.abort) == null ? void 0 : _a2.call(this, err ?? new DOMException("The operation was aborted.", "AbortError"));
+              (_a = this.abort) == null ? void 0 : _a.call(this, err ?? new DOMException("The operation was aborted.", "AbortError"));
             }
           }
         }
@@ -32310,12 +32310,12 @@ var require_fetch2 = __commonJS({
         queueMicrotask(() => fetchParams.processRequestEndOfBody());
       } else if (request2.body != null) {
         const processBodyChunk = async function* (bytes) {
-          var _a2;
+          var _a;
           if (isCancelled(fetchParams)) {
             return;
           }
           yield bytes;
-          (_a2 = fetchParams.processRequestBodyChunkLength) == null ? void 0 : _a2.call(fetchParams, bytes.byteLength);
+          (_a = fetchParams.processRequestBodyChunkLength) == null ? void 0 : _a.call(fetchParams, bytes.byteLength);
         };
         const processEndOfBody = () => {
           if (isCancelled(fetchParams)) {
@@ -32550,11 +32550,11 @@ var require_fetch2 = __commonJS({
               this.body.push(null);
             },
             onError(error) {
-              var _a2;
+              var _a;
               if (this.abort) {
                 fetchParams.controller.off("terminated", this.abort);
               }
-              (_a2 = this.body) == null ? void 0 : _a2.destroy(error);
+              (_a = this.body) == null ? void 0 : _a.destroy(error);
               fetchParams.controller.terminate(error);
               reject(error);
             },
@@ -35052,7 +35052,7 @@ var require_connection2 = __commonJS({
         useParallelQueue: true,
         dispatcher: options.dispatcher,
         processResponse(response) {
-          var _a2, _b;
+          var _a, _b;
           if (response.type === "error" || response.status !== 101) {
             failWebsocketConnection(ws, "Received network error or non-101 status code.");
             return;
@@ -35061,7 +35061,7 @@ var require_connection2 = __commonJS({
             failWebsocketConnection(ws, "Server did not respond with sent protocols.");
             return;
           }
-          if (((_a2 = response.headersList.get("Upgrade")) == null ? void 0 : _a2.toLowerCase()) !== "websocket") {
+          if (((_a = response.headersList.get("Upgrade")) == null ? void 0 : _a.toLowerCase()) !== "websocket") {
             failWebsocketConnection(ws, 'Server did not set Upgrade header to "websocket".');
             return;
           }
@@ -36961,7 +36961,7 @@ var require_dist_node3 = __commonJS({
       return obj;
     }
     function merge2(defaults, route, options) {
-      var _a2;
+      var _a;
       if (typeof route === "string") {
         let [method, url] = route.split(" ");
         options = Object.assign(url ? { method, url } : { url: method }, options);
@@ -36973,7 +36973,7 @@ var require_dist_node3 = __commonJS({
       removeUndefinedProperties2(options.headers);
       const mergedOptions = mergeDeep2(defaults || {}, options);
       if (options.url === "/graphql") {
-        if (defaults && ((_a2 = defaults.mediaType.previews) == null ? void 0 : _a2.length)) {
+        if (defaults && ((_a = defaults.mediaType.previews) == null ? void 0 : _a.length)) {
           mergedOptions.mediaType.previews = defaults.mediaType.previews.filter(
             (preview) => !mergedOptions.mediaType.previews.includes(preview)
           ).concat(mergedOptions.mediaType.previews);
@@ -37146,7 +37146,7 @@ var require_dist_node3 = __commonJS({
       }
     }
     function parse2(options) {
-      var _a2;
+      var _a;
       let method = options.method.toUpperCase();
       let url = (options.url || "/").replace(/:([a-z]\w+)/g, "{$1}");
       let headers = Object.assign({}, options.headers);
@@ -37177,7 +37177,7 @@ var require_dist_node3 = __commonJS({
           ).join(",");
         }
         if (url.endsWith("/graphql")) {
-          if ((_a2 = options.mediaType.previews) == null ? void 0 : _a2.length) {
+          if ((_a = options.mediaType.previews) == null ? void 0 : _a.length) {
             const previewsFromAcceptHeader = headers.accept.match(/[\w-]+(?=-preview)/g) || [];
             headers.accept = previewsFromAcceptHeader.concat(options.mediaType.previews).map((preview) => {
               const format = options.mediaType.format ? `.${options.mediaType.format}` : "+json";
@@ -37453,9 +37453,9 @@ var require_dist_node6 = __commonJS({
       return response.arrayBuffer();
     }
     function fetchWrapper2(requestOptions) {
-      var _a2, _b, _c, _d;
+      var _a, _b, _c, _d;
       const log = requestOptions.request && requestOptions.request.log ? requestOptions.request.log : console;
-      const parseSuccessResponseBody = ((_a2 = requestOptions.request) == null ? void 0 : _a2.parseSuccessResponseBody) !== false;
+      const parseSuccessResponseBody = ((_a = requestOptions.request) == null ? void 0 : _a.parseSuccessResponseBody) !== false;
       if (isPlainObject3(requestOptions.body) || Array.isArray(requestOptions.body)) {
         requestOptions.body = JSON.stringify(requestOptions.body);
       }
@@ -37862,8 +37862,8 @@ var require_dist_node9 = __commonJS({
     var consoleWarn2 = console.warn.bind(console);
     var consoleError2 = console.error.bind(console);
     var userAgentTrail2 = `octokit-core.js/${VERSION13} ${(0, import_universal_user_agent9.getUserAgent)()}`;
-    var _a2;
-    var Octokit3 = (_a2 = class {
+    var _a;
+    var Octokit3 = (_a = class {
       static defaults(defaults) {
         const OctokitWithDefaults = class extends this {
           constructor(...args) {
@@ -37887,14 +37887,14 @@ var require_dist_node9 = __commonJS({
         return OctokitWithDefaults;
       }
       static plugin(...newPlugins) {
-        var _a3;
+        var _a2;
         const currentPlugins = this.plugins;
-        const NewOctokit = (_a3 = class extends this {
+        const NewOctokit = (_a2 = class extends this {
         }, (() => {
-          _a3.plugins = currentPlugins.concat(
+          _a2.plugins = currentPlugins.concat(
             newPlugins.filter((plugin) => !currentPlugins.includes(plugin))
           );
-        })(), _a3);
+        })(), _a2);
         return NewOctokit;
       }
       constructor(options = {}) {
@@ -37964,10 +37964,10 @@ var require_dist_node9 = __commonJS({
         }
       }
     }, (() => {
-      _a2.VERSION = VERSION13;
+      _a.VERSION = VERSION13;
     })(), (() => {
-      _a2.plugins = [];
-    })(), _a2);
+      _a.plugins = [];
+    })(), _a);
   }
 });
 
@@ -40797,7 +40797,7 @@ function removeUndefinedProperties(obj) {
   return obj;
 }
 function merge(defaults, route, options) {
-  var _a2;
+  var _a;
   if (typeof route === "string") {
     let [method, url] = route.split(" ");
     options = Object.assign(url ? { method, url } : { url: method }, options);
@@ -40809,7 +40809,7 @@ function merge(defaults, route, options) {
   removeUndefinedProperties(options.headers);
   const mergedOptions = mergeDeep(defaults || {}, options);
   if (options.url === "/graphql") {
-    if (defaults && ((_a2 = defaults.mediaType.previews) == null ? void 0 : _a2.length)) {
+    if (defaults && ((_a = defaults.mediaType.previews) == null ? void 0 : _a.length)) {
       mergedOptions.mediaType.previews = defaults.mediaType.previews.filter(
         (preview) => !mergedOptions.mediaType.previews.includes(preview)
       ).concat(mergedOptions.mediaType.previews);
@@ -40982,7 +40982,7 @@ function expand(template, context3) {
   }
 }
 function parse(options) {
-  var _a2;
+  var _a;
   let method = options.method.toUpperCase();
   let url = (options.url || "/").replace(/:([a-z]\w+)/g, "{$1}");
   let headers = Object.assign({}, options.headers);
@@ -41013,7 +41013,7 @@ function parse(options) {
       ).join(",");
     }
     if (url.endsWith("/graphql")) {
-      if ((_a2 = options.mediaType.previews) == null ? void 0 : _a2.length) {
+      if ((_a = options.mediaType.previews) == null ? void 0 : _a.length) {
         const previewsFromAcceptHeader = headers.accept.match(/[\w-]+(?=-preview)/g) || [];
         headers.accept = previewsFromAcceptHeader.concat(options.mediaType.previews).map((preview) => {
           const format = options.mediaType.format ? `.${options.mediaType.format}` : "+json";
@@ -41109,8 +41109,8 @@ function isPlainObject2(value) {
   return typeof Ctor === "function" && Ctor instanceof Ctor && Function.prototype.call(Ctor) === Function.prototype.call(value);
 }
 async function fetchWrapper(requestOptions) {
-  var _a2, _b, _c, _d, _e;
-  const fetch2 = ((_a2 = requestOptions.request) == null ? void 0 : _a2.fetch) || globalThis.fetch;
+  var _a, _b, _c, _d, _e;
+  const fetch2 = ((_a = requestOptions.request) == null ? void 0 : _a.fetch) || globalThis.fetch;
   if (!fetch2) {
     throw new Error(
       "fetch is not set. Please pass a fetch implementation as new Octokit({ request: { fetch }}). Learn more at https://github.com/octokit/octokit.js/#fetch-missing"
@@ -41537,8 +41537,8 @@ function requestLog(octokit) {
       );
       return response;
     }).catch((error) => {
-      var _a2;
-      const requestId = ((_a2 = error.response) == null ? void 0 : _a2.headers["x-github-request-id"]) || "UNKNOWN";
+      var _a;
+      const requestId = ((_a = error.response) == null ? void 0 : _a.headers["x-github-request-id"]) || "UNKNOWN";
       octokit.log.error(
         `${requestOptions.method} ${path} - ${error.status} with id ${requestId} in ${Date.now() - start}ms`
       );
@@ -44150,7 +44150,7 @@ async function getAuthentication(state) {
   throw new Error("[@octokit/auth-oauth-user] Invalid strategy options");
 }
 async function auth3(state, options = {}) {
-  var _a2, _b;
+  var _a, _b;
   if (!state.authentication) {
     state.authentication = state.clientType === "oauth-app" ? await getAuthentication(state) : await getAuthentication(state);
   }
@@ -44183,7 +44183,7 @@ async function auth3(state, options = {}) {
     if (!currentAuthentication.hasOwnProperty("expiresAt")) {
       throw new Error("[@octokit/auth-oauth-user] Refresh token missing");
     }
-    await ((_a2 = state.onTokenCreated) == null ? void 0 : _a2.call(state, state.authentication, {
+    await ((_a = state.onTokenCreated) == null ? void 0 : _a.call(state, state.authentication, {
       type: options.type
     }));
   }
@@ -44480,1125 +44480,138 @@ async function githubAppJwt({
 }
 
 // 
-var perf = typeof performance === "object" && performance && typeof performance.now === "function" ? performance : Date;
-var warned = /* @__PURE__ */ new Set();
-var PROCESS = typeof process === "object" && !!process ? process : {};
-var emitWarning = (msg, type, code, fn) => {
-  typeof PROCESS.emitWarning === "function" ? PROCESS.emitWarning(msg, type, code, fn) : console.error(`[${code}] ${type}: ${msg}`);
-};
-var AC = globalThis.AbortController;
-var AS = globalThis.AbortSignal;
-var _a;
-if (typeof AC === "undefined") {
-  AS = class AbortSignal {
-    onabort;
-    _onabort = [];
-    reason;
-    aborted = false;
-    addEventListener(_, fn) {
-      this._onabort.push(fn);
+var LruObject = class {
+  constructor(max = 1e3, ttlInMsecs = 0) {
+    if (isNaN(max) || max < 0) {
+      throw new Error("Invalid max value");
     }
-  };
-  AC = class AbortController {
-    constructor() {
-      warnACPolyfill();
+    if (isNaN(ttlInMsecs) || ttlInMsecs < 0) {
+      throw new Error("Invalid ttl value");
     }
-    signal = new AS();
-    abort(reason) {
-      var _a2, _b;
-      if (this.signal.aborted)
-        return;
-      this.signal.reason = reason;
-      this.signal.aborted = true;
-      for (const fn of this.signal._onabort) {
-        fn(reason);
-      }
-      (_b = (_a2 = this.signal).onabort) == null ? void 0 : _b.call(_a2, reason);
-    }
-  };
-  let printACPolyfillWarning = ((_a = PROCESS.env) == null ? void 0 : _a.LRU_CACHE_IGNORE_AC_WARNING) !== "1";
-  const warnACPolyfill = () => {
-    if (!printACPolyfillWarning)
-      return;
-    printACPolyfillWarning = false;
-    emitWarning("AbortController is not defined. If using lru-cache in node 14, load an AbortController polyfill from the `node-abort-controller` package. A minimal polyfill is provided for use by LRUCache.fetch(), but it should not be relied upon in other contexts (eg, passing it to other APIs that use AbortController/AbortSignal might have undesirable effects). You may disable this with LRU_CACHE_IGNORE_AC_WARNING=1 in the env.", "NO_ABORT_CONTROLLER", "ENOTSUP", warnACPolyfill);
-  };
-}
-var shouldWarn = (code) => !warned.has(code);
-var TYPE = Symbol("type");
-var isPosInt = (n) => n && n === Math.floor(n) && n > 0 && isFinite(n);
-var getUintArray = (max) => !isPosInt(max) ? null : max <= Math.pow(2, 8) ? Uint8Array : max <= Math.pow(2, 16) ? Uint16Array : max <= Math.pow(2, 32) ? Uint32Array : max <= Number.MAX_SAFE_INTEGER ? ZeroArray : null;
-var ZeroArray = class extends Array {
-  constructor(size) {
-    super(size);
-    this.fill(0);
+    this.first = null;
+    this.items = /* @__PURE__ */ Object.create(null);
+    this.last = null;
+    this.size = 0;
+    this.max = max;
+    this.ttl = ttlInMsecs;
   }
-};
-var _constructing;
-var _Stack = class {
-  heap;
-  length;
-  static create(max) {
-    const HeapCls = getUintArray(max);
-    if (!HeapCls)
-      return [];
-    __privateSet(_Stack, _constructing, true);
-    const s = new _Stack(max, HeapCls);
-    __privateSet(_Stack, _constructing, false);
-    return s;
-  }
-  constructor(max, HeapCls) {
-    if (!__privateGet(_Stack, _constructing)) {
-      throw new TypeError("instantiate Stack using Stack.create(n)");
-    }
-    this.heap = new HeapCls(max);
-    this.length = 0;
-  }
-  push(n) {
-    this.heap[this.length++] = n;
-  }
-  pop() {
-    return this.heap[--this.length];
-  }
-};
-var Stack = _Stack;
-_constructing = new WeakMap();
-__privateAdd(Stack, _constructing, false);
-var LRUCache = class {
-  #max;
-  #maxSize;
-  #dispose;
-  #disposeAfter;
-  #fetchMethod;
-  #memoMethod;
-  ttl;
-  ttlResolution;
-  ttlAutopurge;
-  updateAgeOnGet;
-  updateAgeOnHas;
-  allowStale;
-  noDisposeOnSet;
-  noUpdateTTL;
-  maxEntrySize;
-  sizeCalculation;
-  noDeleteOnFetchRejection;
-  noDeleteOnStaleGet;
-  allowStaleOnFetchAbort;
-  allowStaleOnFetchRejection;
-  ignoreFetchAbort;
-  #size;
-  #calculatedSize;
-  #keyMap;
-  #keyList;
-  #valList;
-  #next;
-  #prev;
-  #head;
-  #tail;
-  #free;
-  #disposed;
-  #sizes;
-  #starts;
-  #ttls;
-  #hasDispose;
-  #hasFetchMethod;
-  #hasDisposeAfter;
-  static unsafeExposeInternals(c) {
-    return {
-      starts: c.#starts,
-      ttls: c.#ttls,
-      sizes: c.#sizes,
-      keyMap: c.#keyMap,
-      keyList: c.#keyList,
-      valList: c.#valList,
-      next: c.#next,
-      prev: c.#prev,
-      get head() {
-        return c.#head;
-      },
-      get tail() {
-        return c.#tail;
-      },
-      free: c.#free,
-      isBackgroundFetch: (p) => c.#isBackgroundFetch(p),
-      backgroundFetch: (k, index, options, context3) => c.#backgroundFetch(k, index, options, context3),
-      moveToTail: (index) => c.#moveToTail(index),
-      indexes: (options) => c.#indexes(options),
-      rindexes: (options) => c.#rindexes(options),
-      isStale: (index) => c.#isStale(index)
-    };
-  }
-  get max() {
-    return this.#max;
-  }
-  get maxSize() {
-    return this.#maxSize;
-  }
-  get calculatedSize() {
-    return this.#calculatedSize;
-  }
-  get size() {
-    return this.#size;
-  }
-  get fetchMethod() {
-    return this.#fetchMethod;
-  }
-  get memoMethod() {
-    return this.#memoMethod;
-  }
-  get dispose() {
-    return this.#dispose;
-  }
-  get disposeAfter() {
-    return this.#disposeAfter;
-  }
-  constructor(options) {
-    const { max = 0, ttl, ttlResolution = 1, ttlAutopurge, updateAgeOnGet, updateAgeOnHas, allowStale, dispose, disposeAfter, noDisposeOnSet, noUpdateTTL, maxSize = 0, maxEntrySize = 0, sizeCalculation, fetchMethod, memoMethod, noDeleteOnFetchRejection, noDeleteOnStaleGet, allowStaleOnFetchRejection, allowStaleOnFetchAbort, ignoreFetchAbort } = options;
-    if (max !== 0 && !isPosInt(max)) {
-      throw new TypeError("max option must be a nonnegative integer");
-    }
-    const UintArray = max ? getUintArray(max) : Array;
-    if (!UintArray) {
-      throw new Error("invalid max value: " + max);
-    }
-    this.#max = max;
-    this.#maxSize = maxSize;
-    this.maxEntrySize = maxEntrySize || this.#maxSize;
-    this.sizeCalculation = sizeCalculation;
-    if (this.sizeCalculation) {
-      if (!this.#maxSize && !this.maxEntrySize) {
-        throw new TypeError("cannot set sizeCalculation without setting maxSize or maxEntrySize");
-      }
-      if (typeof this.sizeCalculation !== "function") {
-        throw new TypeError("sizeCalculation set to non-function");
-      }
-    }
-    if (memoMethod !== void 0 && typeof memoMethod !== "function") {
-      throw new TypeError("memoMethod must be a function if defined");
-    }
-    this.#memoMethod = memoMethod;
-    if (fetchMethod !== void 0 && typeof fetchMethod !== "function") {
-      throw new TypeError("fetchMethod must be a function if specified");
-    }
-    this.#fetchMethod = fetchMethod;
-    this.#hasFetchMethod = !!fetchMethod;
-    this.#keyMap = /* @__PURE__ */ new Map();
-    this.#keyList = new Array(max).fill(void 0);
-    this.#valList = new Array(max).fill(void 0);
-    this.#next = new UintArray(max);
-    this.#prev = new UintArray(max);
-    this.#head = 0;
-    this.#tail = 0;
-    this.#free = Stack.create(max);
-    this.#size = 0;
-    this.#calculatedSize = 0;
-    if (typeof dispose === "function") {
-      this.#dispose = dispose;
-    }
-    if (typeof disposeAfter === "function") {
-      this.#disposeAfter = disposeAfter;
-      this.#disposed = [];
-    } else {
-      this.#disposeAfter = void 0;
-      this.#disposed = void 0;
-    }
-    this.#hasDispose = !!this.#dispose;
-    this.#hasDisposeAfter = !!this.#disposeAfter;
-    this.noDisposeOnSet = !!noDisposeOnSet;
-    this.noUpdateTTL = !!noUpdateTTL;
-    this.noDeleteOnFetchRejection = !!noDeleteOnFetchRejection;
-    this.allowStaleOnFetchRejection = !!allowStaleOnFetchRejection;
-    this.allowStaleOnFetchAbort = !!allowStaleOnFetchAbort;
-    this.ignoreFetchAbort = !!ignoreFetchAbort;
-    if (this.maxEntrySize !== 0) {
-      if (this.#maxSize !== 0) {
-        if (!isPosInt(this.#maxSize)) {
-          throw new TypeError("maxSize must be a positive integer if specified");
-        }
-      }
-      if (!isPosInt(this.maxEntrySize)) {
-        throw new TypeError("maxEntrySize must be a positive integer if specified");
-      }
-      this.#initializeSizeTracking();
-    }
-    this.allowStale = !!allowStale;
-    this.noDeleteOnStaleGet = !!noDeleteOnStaleGet;
-    this.updateAgeOnGet = !!updateAgeOnGet;
-    this.updateAgeOnHas = !!updateAgeOnHas;
-    this.ttlResolution = isPosInt(ttlResolution) || ttlResolution === 0 ? ttlResolution : 1;
-    this.ttlAutopurge = !!ttlAutopurge;
-    this.ttl = ttl || 0;
-    if (this.ttl) {
-      if (!isPosInt(this.ttl)) {
-        throw new TypeError("ttl must be a positive integer if specified");
-      }
-      this.#initializeTTLTracking();
-    }
-    if (this.#max === 0 && this.ttl === 0 && this.#maxSize === 0) {
-      throw new TypeError("At least one of max, maxSize, or ttl is required");
-    }
-    if (!this.ttlAutopurge && !this.#max && !this.#maxSize) {
-      const code = "LRU_CACHE_UNBOUNDED";
-      if (shouldWarn(code)) {
-        warned.add(code);
-        const msg = "TTL caching without ttlAutopurge, max, or maxSize can result in unbounded memory consumption.";
-        emitWarning(msg, "UnboundedCacheWarning", code, LRUCache);
-      }
-    }
-  }
-  getRemainingTTL(key) {
-    return this.#keyMap.has(key) ? Infinity : 0;
-  }
-  #initializeTTLTracking() {
-    const ttls = new ZeroArray(this.#max);
-    const starts = new ZeroArray(this.#max);
-    this.#ttls = ttls;
-    this.#starts = starts;
-    this.#setItemTTL = (index, ttl, start = perf.now()) => {
-      starts[index] = ttl !== 0 ? start : 0;
-      ttls[index] = ttl;
-      if (ttl !== 0 && this.ttlAutopurge) {
-        const t = setTimeout(() => {
-          if (this.#isStale(index)) {
-            this.#delete(this.#keyList[index], "expire");
-          }
-        }, ttl + 1);
-        if (t.unref) {
-          t.unref();
-        }
-      }
-    };
-    this.#updateItemAge = (index) => {
-      starts[index] = ttls[index] !== 0 ? perf.now() : 0;
-    };
-    this.#statusTTL = (status, index) => {
-      if (ttls[index]) {
-        const ttl = ttls[index];
-        const start = starts[index];
-        if (!ttl || !start)
-          return;
-        status.ttl = ttl;
-        status.start = start;
-        status.now = cachedNow || getNow();
-        const age = status.now - start;
-        status.remainingTTL = ttl - age;
-      }
-    };
-    let cachedNow = 0;
-    const getNow = () => {
-      const n = perf.now();
-      if (this.ttlResolution > 0) {
-        cachedNow = n;
-        const t = setTimeout(() => cachedNow = 0, this.ttlResolution);
-        if (t.unref) {
-          t.unref();
-        }
-      }
-      return n;
-    };
-    this.getRemainingTTL = (key) => {
-      const index = this.#keyMap.get(key);
-      if (index === void 0) {
-        return 0;
-      }
-      const ttl = ttls[index];
-      const start = starts[index];
-      if (!ttl || !start) {
-        return Infinity;
-      }
-      const age = (cachedNow || getNow()) - start;
-      return ttl - age;
-    };
-    this.#isStale = (index) => {
-      const s = starts[index];
-      const t = ttls[index];
-      return !!t && !!s && (cachedNow || getNow()) - s > t;
-    };
-  }
-  #updateItemAge = () => {
-  };
-  #statusTTL = () => {
-  };
-  #setItemTTL = () => {
-  };
-  #isStale = () => false;
-  #initializeSizeTracking() {
-    const sizes = new ZeroArray(this.#max);
-    this.#calculatedSize = 0;
-    this.#sizes = sizes;
-    this.#removeItemSize = (index) => {
-      this.#calculatedSize -= sizes[index];
-      sizes[index] = 0;
-    };
-    this.#requireSize = (k, v, size, sizeCalculation) => {
-      if (this.#isBackgroundFetch(v)) {
-        return 0;
-      }
-      if (!isPosInt(size)) {
-        if (sizeCalculation) {
-          if (typeof sizeCalculation !== "function") {
-            throw new TypeError("sizeCalculation must be a function");
-          }
-          size = sizeCalculation(v, k);
-          if (!isPosInt(size)) {
-            throw new TypeError("sizeCalculation return invalid (expect positive integer)");
-          }
-        } else {
-          throw new TypeError("invalid size value (must be positive integer). When maxSize or maxEntrySize is used, sizeCalculation or size must be set.");
-        }
-      }
-      return size;
-    };
-    this.#addItemSize = (index, size, status) => {
-      sizes[index] = size;
-      if (this.#maxSize) {
-        const maxSize = this.#maxSize - sizes[index];
-        while (this.#calculatedSize > maxSize) {
-          this.#evict(true);
-        }
-      }
-      this.#calculatedSize += sizes[index];
-      if (status) {
-        status.entrySize = size;
-        status.totalCalculatedSize = this.#calculatedSize;
-      }
-    };
-  }
-  #removeItemSize = (_i) => {
-  };
-  #addItemSize = (_i, _s, _st) => {
-  };
-  #requireSize = (_k, _v, size, sizeCalculation) => {
-    if (size || sizeCalculation) {
-      throw new TypeError("cannot set size without setting maxSize or maxEntrySize on cache");
-    }
-    return 0;
-  };
-  *#indexes({ allowStale = this.allowStale } = {}) {
-    if (this.#size) {
-      for (let i = this.#tail; true; ) {
-        if (!this.#isValidIndex(i)) {
-          break;
-        }
-        if (allowStale || !this.#isStale(i)) {
-          yield i;
-        }
-        if (i === this.#head) {
-          break;
-        } else {
-          i = this.#prev[i];
-        }
-      }
-    }
-  }
-  *#rindexes({ allowStale = this.allowStale } = {}) {
-    if (this.#size) {
-      for (let i = this.#head; true; ) {
-        if (!this.#isValidIndex(i)) {
-          break;
-        }
-        if (allowStale || !this.#isStale(i)) {
-          yield i;
-        }
-        if (i === this.#tail) {
-          break;
-        } else {
-          i = this.#next[i];
-        }
-      }
-    }
-  }
-  #isValidIndex(index) {
-    return index !== void 0 && this.#keyMap.get(this.#keyList[index]) === index;
-  }
-  *entries() {
-    for (const i of this.#indexes()) {
-      if (this.#valList[i] !== void 0 && this.#keyList[i] !== void 0 && !this.#isBackgroundFetch(this.#valList[i])) {
-        yield [this.#keyList[i], this.#valList[i]];
-      }
-    }
-  }
-  *rentries() {
-    for (const i of this.#rindexes()) {
-      if (this.#valList[i] !== void 0 && this.#keyList[i] !== void 0 && !this.#isBackgroundFetch(this.#valList[i])) {
-        yield [this.#keyList[i], this.#valList[i]];
-      }
-    }
-  }
-  *keys() {
-    for (const i of this.#indexes()) {
-      const k = this.#keyList[i];
-      if (k !== void 0 && !this.#isBackgroundFetch(this.#valList[i])) {
-        yield k;
-      }
-    }
-  }
-  *rkeys() {
-    for (const i of this.#rindexes()) {
-      const k = this.#keyList[i];
-      if (k !== void 0 && !this.#isBackgroundFetch(this.#valList[i])) {
-        yield k;
-      }
-    }
-  }
-  *values() {
-    for (const i of this.#indexes()) {
-      const v = this.#valList[i];
-      if (v !== void 0 && !this.#isBackgroundFetch(this.#valList[i])) {
-        yield this.#valList[i];
-      }
-    }
-  }
-  *rvalues() {
-    for (const i of this.#rindexes()) {
-      const v = this.#valList[i];
-      if (v !== void 0 && !this.#isBackgroundFetch(this.#valList[i])) {
-        yield this.#valList[i];
-      }
-    }
-  }
-  [Symbol.iterator]() {
-    return this.entries();
-  }
-  [Symbol.toStringTag] = "LRUCache";
-  find(fn, getOptions = {}) {
-    for (const i of this.#indexes()) {
-      const v = this.#valList[i];
-      const value = this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
-      if (value === void 0)
-        continue;
-      if (fn(value, this.#keyList[i], this)) {
-        return this.get(this.#keyList[i], getOptions);
-      }
-    }
-  }
-  forEach(fn, thisp = this) {
-    for (const i of this.#indexes()) {
-      const v = this.#valList[i];
-      const value = this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
-      if (value === void 0)
-        continue;
-      fn.call(thisp, value, this.#keyList[i], this);
-    }
-  }
-  rforEach(fn, thisp = this) {
-    for (const i of this.#rindexes()) {
-      const v = this.#valList[i];
-      const value = this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
-      if (value === void 0)
-        continue;
-      fn.call(thisp, value, this.#keyList[i], this);
-    }
-  }
-  purgeStale() {
-    let deleted = false;
-    for (const i of this.#rindexes({ allowStale: true })) {
-      if (this.#isStale(i)) {
-        this.#delete(this.#keyList[i], "expire");
-        deleted = true;
-      }
-    }
-    return deleted;
-  }
-  info(key) {
-    const i = this.#keyMap.get(key);
-    if (i === void 0)
-      return void 0;
-    const v = this.#valList[i];
-    const value = this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
-    if (value === void 0)
-      return void 0;
-    const entry = { value };
-    if (this.#ttls && this.#starts) {
-      const ttl = this.#ttls[i];
-      const start = this.#starts[i];
-      if (ttl && start) {
-        const remain = ttl - (perf.now() - start);
-        entry.ttl = remain;
-        entry.start = Date.now();
-      }
-    }
-    if (this.#sizes) {
-      entry.size = this.#sizes[i];
-    }
-    return entry;
-  }
-  dump() {
-    const arr = [];
-    for (const i of this.#indexes({ allowStale: true })) {
-      const key = this.#keyList[i];
-      const v = this.#valList[i];
-      const value = this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
-      if (value === void 0 || key === void 0)
-        continue;
-      const entry = { value };
-      if (this.#ttls && this.#starts) {
-        entry.ttl = this.#ttls[i];
-        const age = perf.now() - this.#starts[i];
-        entry.start = Math.floor(Date.now() - age);
-      }
-      if (this.#sizes) {
-        entry.size = this.#sizes[i];
-      }
-      arr.unshift([key, entry]);
-    }
-    return arr;
-  }
-  load(arr) {
-    this.clear();
-    for (const [key, entry] of arr) {
-      if (entry.start) {
-        const age = Date.now() - entry.start;
-        entry.start = perf.now() - age;
-      }
-      this.set(key, entry.value, entry);
-    }
-  }
-  set(k, v, setOptions = {}) {
-    var _a2, _b, _c, _d, _e;
-    if (v === void 0) {
-      this.delete(k);
-      return this;
-    }
-    const { ttl = this.ttl, start, noDisposeOnSet = this.noDisposeOnSet, sizeCalculation = this.sizeCalculation, status } = setOptions;
-    let { noUpdateTTL = this.noUpdateTTL } = setOptions;
-    const size = this.#requireSize(k, v, setOptions.size || 0, sizeCalculation);
-    if (this.maxEntrySize && size > this.maxEntrySize) {
-      if (status) {
-        status.set = "miss";
-        status.maxEntrySizeExceeded = true;
-      }
-      this.#delete(k, "set");
-      return this;
-    }
-    let index = this.#size === 0 ? void 0 : this.#keyMap.get(k);
-    if (index === void 0) {
-      index = this.#size === 0 ? this.#tail : this.#free.length !== 0 ? this.#free.pop() : this.#size === this.#max ? this.#evict(false) : this.#size;
-      this.#keyList[index] = k;
-      this.#valList[index] = v;
-      this.#keyMap.set(k, index);
-      this.#next[this.#tail] = index;
-      this.#prev[index] = this.#tail;
-      this.#tail = index;
-      this.#size++;
-      this.#addItemSize(index, size, status);
-      if (status)
-        status.set = "add";
-      noUpdateTTL = false;
-    } else {
-      this.#moveToTail(index);
-      const oldVal = this.#valList[index];
-      if (v !== oldVal) {
-        if (this.#hasFetchMethod && this.#isBackgroundFetch(oldVal)) {
-          oldVal.__abortController.abort(new Error("replaced"));
-          const { __staleWhileFetching: s } = oldVal;
-          if (s !== void 0 && !noDisposeOnSet) {
-            if (this.#hasDispose) {
-              (_a2 = this.#dispose) == null ? void 0 : _a2.call(this, s, k, "set");
-            }
-            if (this.#hasDisposeAfter) {
-              (_b = this.#disposed) == null ? void 0 : _b.push([s, k, "set"]);
-            }
-          }
-        } else if (!noDisposeOnSet) {
-          if (this.#hasDispose) {
-            (_c = this.#dispose) == null ? void 0 : _c.call(this, oldVal, k, "set");
-          }
-          if (this.#hasDisposeAfter) {
-            (_d = this.#disposed) == null ? void 0 : _d.push([oldVal, k, "set"]);
-          }
-        }
-        this.#removeItemSize(index);
-        this.#addItemSize(index, size, status);
-        this.#valList[index] = v;
-        if (status) {
-          status.set = "replace";
-          const oldValue = oldVal && this.#isBackgroundFetch(oldVal) ? oldVal.__staleWhileFetching : oldVal;
-          if (oldValue !== void 0)
-            status.oldValue = oldValue;
-        }
-      } else if (status) {
-        status.set = "update";
-      }
-    }
-    if (ttl !== 0 && !this.#ttls) {
-      this.#initializeTTLTracking();
-    }
-    if (this.#ttls) {
-      if (!noUpdateTTL) {
-        this.#setItemTTL(index, ttl, start);
-      }
-      if (status)
-        this.#statusTTL(status, index);
-    }
-    if (!noDisposeOnSet && this.#hasDisposeAfter && this.#disposed) {
-      const dt = this.#disposed;
-      let task;
-      while (task = dt == null ? void 0 : dt.shift()) {
-        (_e = this.#disposeAfter) == null ? void 0 : _e.call(this, ...task);
-      }
-    }
-    return this;
-  }
-  pop() {
-    var _a2;
-    try {
-      while (this.#size) {
-        const val = this.#valList[this.#head];
-        this.#evict(true);
-        if (this.#isBackgroundFetch(val)) {
-          if (val.__staleWhileFetching) {
-            return val.__staleWhileFetching;
-          }
-        } else if (val !== void 0) {
-          return val;
-        }
-      }
-    } finally {
-      if (this.#hasDisposeAfter && this.#disposed) {
-        const dt = this.#disposed;
-        let task;
-        while (task = dt == null ? void 0 : dt.shift()) {
-          (_a2 = this.#disposeAfter) == null ? void 0 : _a2.call(this, ...task);
-        }
-      }
-    }
-  }
-  #evict(free) {
-    var _a2, _b;
-    const head = this.#head;
-    const k = this.#keyList[head];
-    const v = this.#valList[head];
-    if (this.#hasFetchMethod && this.#isBackgroundFetch(v)) {
-      v.__abortController.abort(new Error("evicted"));
-    } else if (this.#hasDispose || this.#hasDisposeAfter) {
-      if (this.#hasDispose) {
-        (_a2 = this.#dispose) == null ? void 0 : _a2.call(this, v, k, "evict");
-      }
-      if (this.#hasDisposeAfter) {
-        (_b = this.#disposed) == null ? void 0 : _b.push([v, k, "evict"]);
-      }
-    }
-    this.#removeItemSize(head);
-    if (free) {
-      this.#keyList[head] = void 0;
-      this.#valList[head] = void 0;
-      this.#free.push(head);
-    }
-    if (this.#size === 1) {
-      this.#head = this.#tail = 0;
-      this.#free.length = 0;
-    } else {
-      this.#head = this.#next[head];
-    }
-    this.#keyMap.delete(k);
-    this.#size--;
-    return head;
-  }
-  has(k, hasOptions = {}) {
-    const { updateAgeOnHas = this.updateAgeOnHas, status } = hasOptions;
-    const index = this.#keyMap.get(k);
-    if (index !== void 0) {
-      const v = this.#valList[index];
-      if (this.#isBackgroundFetch(v) && v.__staleWhileFetching === void 0) {
-        return false;
-      }
-      if (!this.#isStale(index)) {
-        if (updateAgeOnHas) {
-          this.#updateItemAge(index);
-        }
-        if (status) {
-          status.has = "hit";
-          this.#statusTTL(status, index);
-        }
-        return true;
-      } else if (status) {
-        status.has = "stale";
-        this.#statusTTL(status, index);
-      }
-    } else if (status) {
-      status.has = "miss";
-    }
-    return false;
-  }
-  peek(k, peekOptions = {}) {
-    const { allowStale = this.allowStale } = peekOptions;
-    const index = this.#keyMap.get(k);
-    if (index === void 0 || !allowStale && this.#isStale(index)) {
+  bumpLru(item) {
+    if (this.last === item) {
       return;
     }
-    const v = this.#valList[index];
-    return this.#isBackgroundFetch(v) ? v.__staleWhileFetching : v;
-  }
-  #backgroundFetch(k, index, options, context3) {
-    const v = index === void 0 ? void 0 : this.#valList[index];
-    if (this.#isBackgroundFetch(v)) {
-      return v;
+    const last = this.last;
+    const next = item.next;
+    const prev = item.prev;
+    if (this.first === item) {
+      this.first = next;
     }
-    const ac = new AC();
-    const { signal } = options;
-    signal == null ? void 0 : signal.addEventListener("abort", () => ac.abort(signal.reason), {
-      signal: ac.signal
-    });
-    const fetchOpts = {
-      signal: ac.signal,
-      options,
-      context: context3
-    };
-    const cb = (v2, updateCache = false) => {
-      const { aborted } = ac.signal;
-      const ignoreAbort = options.ignoreFetchAbort && v2 !== void 0;
-      if (options.status) {
-        if (aborted && !updateCache) {
-          options.status.fetchAborted = true;
-          options.status.fetchError = ac.signal.reason;
-          if (ignoreAbort)
-            options.status.fetchAbortIgnored = true;
-        } else {
-          options.status.fetchResolved = true;
-        }
-      }
-      if (aborted && !ignoreAbort && !updateCache) {
-        return fetchFail(ac.signal.reason);
-      }
-      const bf2 = p;
-      if (this.#valList[index] === p) {
-        if (v2 === void 0) {
-          if (bf2.__staleWhileFetching) {
-            this.#valList[index] = bf2.__staleWhileFetching;
-          } else {
-            this.#delete(k, "fetch");
-          }
-        } else {
-          if (options.status)
-            options.status.fetchUpdated = true;
-          this.set(k, v2, fetchOpts.options);
-        }
-      }
-      return v2;
-    };
-    const eb = (er) => {
-      if (options.status) {
-        options.status.fetchRejected = true;
-        options.status.fetchError = er;
-      }
-      return fetchFail(er);
-    };
-    const fetchFail = (er) => {
-      const { aborted } = ac.signal;
-      const allowStaleAborted = aborted && options.allowStaleOnFetchAbort;
-      const allowStale = allowStaleAborted || options.allowStaleOnFetchRejection;
-      const noDelete = allowStale || options.noDeleteOnFetchRejection;
-      const bf2 = p;
-      if (this.#valList[index] === p) {
-        const del = !noDelete || bf2.__staleWhileFetching === void 0;
-        if (del) {
-          this.#delete(k, "fetch");
-        } else if (!allowStaleAborted) {
-          this.#valList[index] = bf2.__staleWhileFetching;
-        }
-      }
-      if (allowStale) {
-        if (options.status && bf2.__staleWhileFetching !== void 0) {
-          options.status.returnedStale = true;
-        }
-        return bf2.__staleWhileFetching;
-      } else if (bf2.__returned === bf2) {
-        throw er;
-      }
-    };
-    const pcall = (res, rej) => {
-      var _a2;
-      const fmp = (_a2 = this.#fetchMethod) == null ? void 0 : _a2.call(this, k, v, fetchOpts);
-      if (fmp && fmp instanceof Promise) {
-        fmp.then((v2) => res(v2 === void 0 ? void 0 : v2), rej);
-      }
-      ac.signal.addEventListener("abort", () => {
-        if (!options.ignoreFetchAbort || options.allowStaleOnFetchAbort) {
-          res(void 0);
-          if (options.allowStaleOnFetchAbort) {
-            res = (v2) => cb(v2, true);
-          }
-        }
-      });
-    };
-    if (options.status)
-      options.status.fetchDispatched = true;
-    const p = new Promise(pcall).then(cb, eb);
-    const bf = Object.assign(p, {
-      __abortController: ac,
-      __staleWhileFetching: v,
-      __returned: void 0
-    });
-    if (index === void 0) {
-      this.set(k, bf, { ...fetchOpts.options, status: void 0 });
-      index = this.#keyMap.get(k);
-    } else {
-      this.#valList[index] = bf;
+    item.next = null;
+    item.prev = last;
+    last.next = item;
+    if (prev !== null) {
+      prev.next = next;
     }
-    return bf;
-  }
-  #isBackgroundFetch(p) {
-    if (!this.#hasFetchMethod)
-      return false;
-    const b = p;
-    return !!b && b instanceof Promise && b.hasOwnProperty("__staleWhileFetching") && b.__abortController instanceof AC;
-  }
-  async fetch(k, fetchOptions = {}) {
-    const {
-      allowStale = this.allowStale,
-      updateAgeOnGet = this.updateAgeOnGet,
-      noDeleteOnStaleGet = this.noDeleteOnStaleGet,
-      ttl = this.ttl,
-      noDisposeOnSet = this.noDisposeOnSet,
-      size = 0,
-      sizeCalculation = this.sizeCalculation,
-      noUpdateTTL = this.noUpdateTTL,
-      noDeleteOnFetchRejection = this.noDeleteOnFetchRejection,
-      allowStaleOnFetchRejection = this.allowStaleOnFetchRejection,
-      ignoreFetchAbort = this.ignoreFetchAbort,
-      allowStaleOnFetchAbort = this.allowStaleOnFetchAbort,
-      context: context3,
-      forceRefresh = false,
-      status,
-      signal
-    } = fetchOptions;
-    if (!this.#hasFetchMethod) {
-      if (status)
-        status.fetch = "get";
-      return this.get(k, {
-        allowStale,
-        updateAgeOnGet,
-        noDeleteOnStaleGet,
-        status
-      });
+    if (next !== null) {
+      next.prev = prev;
     }
-    const options = {
-      allowStale,
-      updateAgeOnGet,
-      noDeleteOnStaleGet,
-      ttl,
-      noDisposeOnSet,
-      size,
-      sizeCalculation,
-      noUpdateTTL,
-      noDeleteOnFetchRejection,
-      allowStaleOnFetchRejection,
-      allowStaleOnFetchAbort,
-      ignoreFetchAbort,
-      status,
-      signal
-    };
-    let index = this.#keyMap.get(k);
-    if (index === void 0) {
-      if (status)
-        status.fetch = "miss";
-      const p = this.#backgroundFetch(k, index, options, context3);
-      return p.__returned = p;
-    } else {
-      const v = this.#valList[index];
-      if (this.#isBackgroundFetch(v)) {
-        const stale = allowStale && v.__staleWhileFetching !== void 0;
-        if (status) {
-          status.fetch = "inflight";
-          if (stale)
-            status.returnedStale = true;
-        }
-        return stale ? v.__staleWhileFetching : v.__returned = v;
-      }
-      const isStale = this.#isStale(index);
-      if (!forceRefresh && !isStale) {
-        if (status)
-          status.fetch = "hit";
-        this.#moveToTail(index);
-        if (updateAgeOnGet) {
-          this.#updateItemAge(index);
-        }
-        if (status)
-          this.#statusTTL(status, index);
-        return v;
-      }
-      const p = this.#backgroundFetch(k, index, options, context3);
-      const hasStale = p.__staleWhileFetching !== void 0;
-      const staleVal = hasStale && allowStale;
-      if (status) {
-        status.fetch = isStale ? "stale" : "refresh";
-        if (staleVal && isStale)
-          status.returnedStale = true;
-      }
-      return staleVal ? p.__staleWhileFetching : p.__returned = p;
-    }
-  }
-  async forceFetch(k, fetchOptions = {}) {
-    const v = await this.fetch(k, fetchOptions);
-    if (v === void 0)
-      throw new Error("fetch() returned undefined");
-    return v;
-  }
-  memo(k, memoOptions = {}) {
-    const memoMethod = this.#memoMethod;
-    if (!memoMethod) {
-      throw new Error("no memoMethod provided to constructor");
-    }
-    const { context: context3, forceRefresh, ...options } = memoOptions;
-    const v = this.get(k, options);
-    if (!forceRefresh && v !== void 0)
-      return v;
-    const vv = memoMethod(k, v, {
-      options,
-      context: context3
-    });
-    this.set(k, vv, options);
-    return vv;
-  }
-  get(k, getOptions = {}) {
-    const { allowStale = this.allowStale, updateAgeOnGet = this.updateAgeOnGet, noDeleteOnStaleGet = this.noDeleteOnStaleGet, status } = getOptions;
-    const index = this.#keyMap.get(k);
-    if (index !== void 0) {
-      const value = this.#valList[index];
-      const fetching = this.#isBackgroundFetch(value);
-      if (status)
-        this.#statusTTL(status, index);
-      if (this.#isStale(index)) {
-        if (status)
-          status.get = "stale";
-        if (!fetching) {
-          if (!noDeleteOnStaleGet) {
-            this.#delete(k, "expire");
-          }
-          if (status && allowStale)
-            status.returnedStale = true;
-          return allowStale ? value : void 0;
-        } else {
-          if (status && allowStale && value.__staleWhileFetching !== void 0) {
-            status.returnedStale = true;
-          }
-          return allowStale ? value.__staleWhileFetching : void 0;
-        }
-      } else {
-        if (status)
-          status.get = "hit";
-        if (fetching) {
-          return value.__staleWhileFetching;
-        }
-        this.#moveToTail(index);
-        if (updateAgeOnGet) {
-          this.#updateItemAge(index);
-        }
-        return value;
-      }
-    } else if (status) {
-      status.get = "miss";
-    }
-  }
-  #connect(p, n) {
-    this.#prev[n] = p;
-    this.#next[p] = n;
-  }
-  #moveToTail(index) {
-    if (index !== this.#tail) {
-      if (index === this.#head) {
-        this.#head = this.#next[index];
-      } else {
-        this.#connect(this.#prev[index], this.#next[index]);
-      }
-      this.#connect(this.#tail, index);
-      this.#tail = index;
-    }
-  }
-  delete(k) {
-    return this.#delete(k, "delete");
-  }
-  #delete(k, reason) {
-    var _a2, _b, _c, _d;
-    let deleted = false;
-    if (this.#size !== 0) {
-      const index = this.#keyMap.get(k);
-      if (index !== void 0) {
-        deleted = true;
-        if (this.#size === 1) {
-          this.#clear(reason);
-        } else {
-          this.#removeItemSize(index);
-          const v = this.#valList[index];
-          if (this.#isBackgroundFetch(v)) {
-            v.__abortController.abort(new Error("deleted"));
-          } else if (this.#hasDispose || this.#hasDisposeAfter) {
-            if (this.#hasDispose) {
-              (_a2 = this.#dispose) == null ? void 0 : _a2.call(this, v, k, reason);
-            }
-            if (this.#hasDisposeAfter) {
-              (_b = this.#disposed) == null ? void 0 : _b.push([v, k, reason]);
-            }
-          }
-          this.#keyMap.delete(k);
-          this.#keyList[index] = void 0;
-          this.#valList[index] = void 0;
-          if (index === this.#tail) {
-            this.#tail = this.#prev[index];
-          } else if (index === this.#head) {
-            this.#head = this.#next[index];
-          } else {
-            const pi = this.#prev[index];
-            this.#next[pi] = this.#next[index];
-            const ni = this.#next[index];
-            this.#prev[ni] = this.#prev[index];
-          }
-          this.#size--;
-          this.#free.push(index);
-        }
-      }
-    }
-    if (this.#hasDisposeAfter && ((_c = this.#disposed) == null ? void 0 : _c.length)) {
-      const dt = this.#disposed;
-      let task;
-      while (task = dt == null ? void 0 : dt.shift()) {
-        (_d = this.#disposeAfter) == null ? void 0 : _d.call(this, ...task);
-      }
-    }
-    return deleted;
+    this.last = item;
   }
   clear() {
-    return this.#clear("delete");
+    this.items = /* @__PURE__ */ Object.create(null);
+    this.first = null;
+    this.last = null;
+    this.size = 0;
   }
-  #clear(reason) {
-    var _a2, _b, _c;
-    for (const index of this.#rindexes({ allowStale: true })) {
-      const v = this.#valList[index];
-      if (this.#isBackgroundFetch(v)) {
-        v.__abortController.abort(new Error("deleted"));
+  delete(key) {
+    if (Object.prototype.hasOwnProperty.call(this.items, key)) {
+      const item = this.items[key];
+      delete this.items[key];
+      this.size--;
+      if (item.prev !== null) {
+        item.prev.next = item.next;
+      }
+      if (item.next !== null) {
+        item.next.prev = item.prev;
+      }
+      if (this.first === item) {
+        this.first = item.next;
+      }
+      if (this.last === item) {
+        this.last = item.prev;
+      }
+    }
+  }
+  deleteMany(keys) {
+    for (var i = 0; i < keys.length; i++) {
+      this.delete(keys[i]);
+    }
+  }
+  evict() {
+    if (this.size > 0) {
+      const item = this.first;
+      delete this.items[item.key];
+      if (--this.size === 0) {
+        this.first = null;
+        this.last = null;
       } else {
-        const k = this.#keyList[index];
-        if (this.#hasDispose) {
-          (_a2 = this.#dispose) == null ? void 0 : _a2.call(this, v, k, reason);
-        }
-        if (this.#hasDisposeAfter) {
-          (_b = this.#disposed) == null ? void 0 : _b.push([v, k, reason]);
-        }
+        this.first = item.next;
+        this.first.prev = null;
       }
     }
-    this.#keyMap.clear();
-    this.#valList.fill(void 0);
-    this.#keyList.fill(void 0);
-    if (this.#ttls && this.#starts) {
-      this.#ttls.fill(0);
-      this.#starts.fill(0);
+  }
+  expiresAt(key) {
+    if (Object.prototype.hasOwnProperty.call(this.items, key)) {
+      return this.items[key].expiry;
     }
-    if (this.#sizes) {
-      this.#sizes.fill(0);
-    }
-    this.#head = 0;
-    this.#tail = 0;
-    this.#free.length = 0;
-    this.#calculatedSize = 0;
-    this.#size = 0;
-    if (this.#hasDisposeAfter && this.#disposed) {
-      const dt = this.#disposed;
-      let task;
-      while (task = dt == null ? void 0 : dt.shift()) {
-        (_c = this.#disposeAfter) == null ? void 0 : _c.call(this, ...task);
+  }
+  get(key) {
+    if (Object.prototype.hasOwnProperty.call(this.items, key)) {
+      const item = this.items[key];
+      if (this.ttl > 0 && item.expiry <= Date.now()) {
+        this.delete(key);
+        return;
       }
+      this.bumpLru(item);
+      return item.value;
     }
+  }
+  getMany(keys) {
+    const result = [];
+    for (var i = 0; i < keys.length; i++) {
+      result.push(this.get(keys[i]));
+    }
+    return result;
+  }
+  keys() {
+    return Object.keys(this.items);
+  }
+  set(key, value) {
+    if (Object.prototype.hasOwnProperty.call(this.items, key)) {
+      const item2 = this.items[key];
+      item2.value = value;
+      item2.expiry = this.ttl > 0 ? Date.now() + this.ttl : this.ttl;
+      if (this.last !== item2) {
+        this.bumpLru(item2);
+      }
+      return;
+    }
+    if (this.max > 0 && this.size === this.max) {
+      this.evict();
+    }
+    const item = {
+      expiry: this.ttl > 0 ? Date.now() + this.ttl : this.ttl,
+      key,
+      prev: this.last,
+      next: null,
+      value
+    };
+    this.items[key] = item;
+    if (++this.size === 1) {
+      this.first = item;
+    } else {
+      this.last.next = item;
+    }
+    this.last = item;
   }
 };
 
@@ -45636,10 +44649,10 @@ async function getAppAuthentication({
   }
 }
 function getCache() {
-  return new LRUCache({
-    max: 15e3,
-    ttl: 1e3 * 60 * 59
-  });
+  return new LruObject(
+    15e3,
+    1e3 * 60 * 59
+  );
 }
 async function get(cache, options) {
   const cacheKey = optionsToCacheKey(options);
@@ -45983,7 +44996,7 @@ async function sendRequestWithRetries(state, request2, options, createdAt, retri
     return sendRequestWithRetries(state, request2, options, createdAt, retries);
   }
 }
-var VERSION12 = "7.1.2";
+var VERSION12 = "7.1.3";
 function createAppAuth(options) {
   if (!options.appId) {
     throw new Error("[@octokit/auth-app] appId option is required");
@@ -46087,7 +45100,7 @@ async function main() {
   }
 }
 async function runPostApprovalChangesAction(googlersOrgClient, repoClient) {
-  var _a2;
+  var _a;
   if (import_github2.context.eventName !== "pull_request_target") {
     throw Error("This action can only run for with pull_request_target events");
   }
@@ -46129,7 +45142,7 @@ async function runPostApprovalChangesAction(googlersOrgClient, repoClient) {
   }
   console.group("Latest Reviews by Reviewer:");
   for (let review of reviews) {
-    console.log(`${(_a2 = review.user) == null ? void 0 : _a2.login} - ${review.state}`);
+    console.log(`${(_a = review.user) == null ? void 0 : _a.login} - ${review.state}`);
   }
   console.groupEnd();
   if (reviews.length === 0) {
@@ -46173,3 +45186,10 @@ if (import_github2.context.repo.owner === "angular") {
 }
 /*! formdata-polyfill. MIT License. Jimmy Wärting <https://jimmy.warting.se/opensource> */
 /*! ws. MIT License. Einar Otto Stangvik <einaros@gmail.com> */
+/**
+ * toad-cache
+ *
+ * @copyright 2024 Igor Savin <kibertoad@gmail.com>
+ * @license MIT
+ * @version 3.7.0
+ */
