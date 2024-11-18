@@ -10,5 +10,5 @@ export interface Workflow {
 
 export async function loadWorkflows(src: string) {
   const rawWorkflows = await readFile(src, {encoding: 'utf-8'});
-  return parse(rawWorkflows).workflows as Workflow[];
+  return parse(rawWorkflows).workflows as {[key: string]: Workflow};
 }
