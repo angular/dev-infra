@@ -23,7 +23,19 @@ async function main() {
   const [artifactDirPath] = process.argv.slice(2);
 
   for (const [key, name] of Object.entries(artifactMetadata)) {
-    const content = await fs.promises.readFile(path.join(artifactDirPath, name), 'utf8');
+    /** The expected path of the artifact */
+    const expectedPath = path.join(artifactDirPath, name);
+
+    // We confirm that the provided artifact path is actually in the expected location instead of pointing somewhere
+    // else to exfiltrate information.
+    const realPath = await fs.promises.realpath(expectedPath);
+    if (expectedPath !== realPath) {
+      throw Error(
+        `Value for unsafe-${key} not stored directly in file as expected, instead stored in ${realPath}`,
+      );
+    }
+
+    const content = await fs.promises.readFile(expectedPath, 'utf8');
     const outputName = `unsafe-${key}`;
 
     console.info(`Setting output: ${outputName} = ${content}`);
