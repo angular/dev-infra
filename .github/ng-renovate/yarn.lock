@@ -4235,10 +4235,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graph-data-structure@npm:3.5.0":
-  version: 3.5.0
-  resolution: "graph-data-structure@npm:3.5.0"
-  checksum: 10c0/3a86e3881e260a6a955e3f4110bce795d87d4a2e1f9ae0e193f4e867538681f2d4bfc554169bdd003fa390c968467cbe86e90d47f5c9f0767d810a627475eec0
+"graph-data-structure@npm:4.2.0":
+  version: 4.2.0
+  resolution: "graph-data-structure@npm:4.2.0"
+  checksum: 10c0/fa8f4e8ce4dbecdf5b6ffc73bab88381bfc7223bca96b220c2eb77cc20819a75dad91c8e7bb2efd7e9b4c3b14375f785e3094446438ee449c419a4525023a17c
   languageName: node
   linkType: hard
 
@@ -5554,7 +5554,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: "npm:39.20.5"
+    renovate: "npm:39.21.1"
   languageName: unknown
   linkType: soft
 
@@ -6260,9 +6260,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:39.20.5":
-  version: 39.20.5
-  resolution: "renovate@npm:39.20.5"
+"renovate@npm:39.21.1":
+  version: 39.21.1
+  resolution: "renovate@npm:39.21.1"
   dependencies:
     "@aws-sdk/client-codecommit": "npm:3.687.0"
     "@aws-sdk/client-ec2": "npm:3.687.0"
@@ -6327,7 +6327,7 @@ __metadata:
     good-enough-parser: "npm:1.1.23"
     google-auth-library: "npm:9.14.2"
     got: "npm:11.8.6"
-    graph-data-structure: "npm:3.5.0"
+    graph-data-structure: "npm:4.2.0"
     handlebars: "npm:4.7.8"
     ignore: "npm:6.0.2"
     ini: "npm:5.0.0"
@@ -6386,7 +6386,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 10c0/fff940d531e22a531dca87f1da51a5dcbdfc7f656ec9f0f041489bb7b4d0f54382e859a639d32a58514f6ef7e67ed3528c749e9e9357f35ff1d3e4ec983c3990
+  checksum: 10c0/a0f0e69c3c4609c35642920fa8f170722f75940fe1702f6ae77f8442e31e320e860349693352a99248aeee10d6da77edb9de91f0f3d0c6744a651dafc524509f
   languageName: node
   linkType: hard
 
