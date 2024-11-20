@@ -61,7 +61,7 @@
     "@angular/compiler": "19.0.0",
     "@angular/compiler-cli": "19.0.0",
     "@angular/core": "19.0.0",
-    "@angular/fire": "^18.0.0-rc",
+    "@angular/fire": "^19.0.0-rc",
     "@angular/forms": "19.0.0",
     "@angular/material": "19.0.0",
     "@angular/platform-browser": "19.0.0",
