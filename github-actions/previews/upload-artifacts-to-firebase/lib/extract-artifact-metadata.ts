@@ -21,17 +21,19 @@ import {artifactMetadata} from '../../constants.js';
 
 async function main() {
   const [artifactDirPath] = process.argv.slice(2);
+  /** The full path to the artifact directory. */
+  const fullArtifactDirPath = await fs.promises.realpath(artifactDirPath);
 
   for (const [key, name] of Object.entries(artifactMetadata)) {
     /** The expected path of the artifact */
-    const expectedPath = path.join(artifactDirPath, name);
+    const expectedPath = path.normalize(path.join(fullArtifactDirPath, name));
 
     // We confirm that the provided artifact path is actually in the expected location instead of pointing somewhere
     // else to exfiltrate information.
     const realPath = await fs.promises.realpath(expectedPath);
     if (expectedPath !== realPath) {
       throw Error(
-        `Value for unsafe-${key} not stored directly in file as expected, instead stored in ${realPath}`,
+        `Value for unsafe-${key} not stored directly in file as expected,\n  expected: ${expectedPath}\n  got: ${realPath}`,
       );
     }
 
