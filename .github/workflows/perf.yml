@@ -45,6 +45,10 @@ jobs:
       - uses: ./github-actions/npm/checkout-and-setup-node
       - uses: ./github-actions/bazel/setup
       - run: yarn install --immutable
+      # We utilize the google-github-actions/auth action to allow us to get an active credential using workflow
+      # identity federation. This allows us to request short lived credentials on demand, rather than storing
+      # credentials in secrets long term. More information can be found at:
+      # https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-google-cloud-platform
       - uses: 'google-github-actions/auth@v2'
         with:
           project_id: 'internal-200822'
