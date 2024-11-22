@@ -1,15 +1,8 @@
 workflows:
   rerun:
     name: Rerun a test
-    prepare:
-      - bazel clean;
-      - bazel build //ng-dev/utils/test;
     workflow:
       - bazel test //ng-dev/utils/test;
-      - git apply .ng-dev/perf-tests/test-rerun.diff;
-      - bazel test //ng-dev/utils/test;
-    cleanup:
-      - git apply -R .ng-dev/perf-tests/test-rerun.diff;
 
   build-everything:
     name: Build Everything

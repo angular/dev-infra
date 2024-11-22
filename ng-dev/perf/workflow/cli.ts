@@ -11,11 +11,14 @@ import {measureWorkflow} from './workflow.js';
 import {loadWorkflows} from './loader.js';
 import {join} from 'path';
 import {determineRepoBaseDirFromCwd} from '../../utils/repo-directory.js';
+import {addWorkflowPerformanceResult} from './database.js';
+import {Spinner} from '../../utils/spinner.js';
 
 interface WorkflowsParams {
   configFile: string;
   list: boolean;
   name?: string;
+  commitSha?: string;
 }
 
 /** Builds the checkout pull request command. */
@@ -34,11 +37,15 @@ function builder(yargs: Argv) {
     .option('name', {
       type: 'string',
       description: 'A specific workflow to run by name',
+    })
+    .option('commit-sha' as 'commitSha', {
+      type: 'string',
+      description: 'The commit sha to associate the measurement with, uploading it to our database',
     });
 }
 
 /** Handles the checkout pull request command. */
-async function handler({configFile, list, name}: WorkflowsParams) {
+async function handler({configFile, list, name, commitSha}: WorkflowsParams) {
   const workflows = await loadWorkflows(join(determineRepoBaseDirFromCwd(), configFile));
 
   if (list) {
@@ -46,18 +53,32 @@ async function handler({configFile, list, name}: WorkflowsParams) {
     return;
   }
 
+  const results: {name: string; value: number}[] = [];
+
   if (name) {
-    const {duration} = await measureWorkflow(workflows[name]);
-    process.stdout.write(JSON.stringify({[name]: duration}));
-    return;
+    const {value} = await measureWorkflow(workflows[name]);
+    results.push({value, name});
+  } else {
+    for (const workflow of Object.values(workflows)) {
+      const {name, value} = await measureWorkflow(workflow);
+      results.push({value, name});
+    }
   }
 
-  const results: {[key: string]: number} = {};
-  for (const workflow of Object.values(workflows)) {
-    const {name, duration} = await measureWorkflow(workflow);
-    results[name] = duration;
+  if (commitSha) {
+    const spinner = new Spinner('Uploading performance results to database');
+    try {
+      for (let {value, name} of results) {
+        await addWorkflowPerformanceResult({
+          name,
+          value,
+          commit_sha: commitSha,
+        });
+      }
+    } finally {
+      spinner.success('Upload complete');
+    }
   }
-  process.stdout.write(JSON.stringify(results));
 }
 
 /** yargs command module for checking out a PR. */
