@@ -5,7 +5,9 @@ on:
     branches:
       - main
 
-permissions: {}
+permissions:
+  contents: 'read'
+  id-token: 'write'
 
 defaults:
   run:
@@ -13,7 +15,7 @@ defaults:
 
 jobs:
   list:
-    timeout-minutes: 30
+    timeout-minutes: 5
     runs-on: ubuntu-latest
     outputs:
       workflows: ${{ steps.workflows.outputs.workflows }}
@@ -43,4 +45,9 @@ jobs:
       - uses: ./github-actions/npm/checkout-and-setup-node
       - uses: ./github-actions/bazel/setup
       - run: yarn install --immutable
-      - run: yarn ng-dev perf workflows --name ${{ matrix.workflow }}
+      - uses: 'google-github-actions/auth@v2'
+        with:
+          project_id: 'internal-200822'
+          workload_identity_provider: 'projects/823469418460/locations/global/workloadIdentityPools/measurables-tracking/providers/angular'
+          service_account: 'measures-uploader@internal-200822.iam.gserviceaccount.com'
+      - run: yarn ng-dev perf workflows --name ${{ matrix.workflow }} --commit-sha ${{github.sha}}

@@ -33,7 +33,10 @@ export async function measureWorkflow({name, workflow, prepare, cleanup}: Workfl
 
     spinner.success(`${name}: ${results.duration.toFixed(2)}ms`);
 
-    return results.toJSON();
+    return {
+      name,
+      value: results.duration,
+    };
   } finally {
     spinner.complete();
   }
