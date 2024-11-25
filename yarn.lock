@@ -282,7 +282,7 @@ __metadata:
     "@google-cloud/storage": "npm:^7.0.0"
     "@inquirer/prompts": "npm:^7.0.0"
     "@inquirer/type": "npm:^3.0.0"
-    "@microsoft/api-extractor": "npm:7.47.11"
+    "@microsoft/api-extractor": "npm:7.48.0"
     "@octokit/auth-app": "npm:7.1.3"
     "@octokit/core": "npm:6.1.2"
     "@octokit/graphql": "npm:8.1.1"
@@ -334,7 +334,7 @@ __metadata:
     ejs: "npm:^3.1.6"
     fast-glob: "npm:^3.3.2"
     firebase: "npm:11.0.2"
-    firebase-admin: "npm:13.0.0"
+    firebase-admin: "npm:13.0.1"
     firebase-functions: "npm:^6.0.0"
     firebase-tools: "npm:^13.0.0"
     folder-hash: "npm:^4.0.2"
@@ -379,7 +379,7 @@ __metadata:
     tslint: "npm:^6.1.3"
     tsx: "npm:^4.15.7"
     typed-graphqlify: "npm:^3.1.1"
-    typescript: "npm:5.6.3"
+    typescript: "npm:5.7.2"
     undici: "npm:^6.19.8"
     uuid: "npm:^11.0.0"
     wait-on: "npm:^8.0.0"
@@ -2798,17 +2798,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor-model@npm:7.29.8":
-  version: 7.29.8
-  resolution: "@microsoft/api-extractor-model@npm:7.29.8"
-  dependencies:
-    "@microsoft/tsdoc": "npm:~0.15.0"
-    "@microsoft/tsdoc-config": "npm:~0.17.0"
-    "@rushstack/node-core-library": "npm:5.9.0"
-  checksum: 10c0/ede1e2267e5b555cf4dd049a9c19d06bf3527f7c4b517afeb112af1a984a7e7bae8e7f5103a7228477f9399907229e2f51d7597df762aaeb71a02bb64cd091d7
-  languageName: node
-  linkType: hard
-
 "@microsoft/api-extractor-model@npm:7.30.0":
   version: 7.30.0
   resolution: "@microsoft/api-extractor-model@npm:7.30.0"
@@ -2820,30 +2809,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor@npm:7.47.11":
-  version: 7.47.11
-  resolution: "@microsoft/api-extractor@npm:7.47.11"
-  dependencies:
-    "@microsoft/api-extractor-model": "npm:7.29.8"
-    "@microsoft/tsdoc": "npm:~0.15.0"
-    "@microsoft/tsdoc-config": "npm:~0.17.0"
-    "@rushstack/node-core-library": "npm:5.9.0"
-    "@rushstack/rig-package": "npm:0.5.3"
-    "@rushstack/terminal": "npm:0.14.2"
-    "@rushstack/ts-command-line": "npm:4.23.0"
-    lodash: "npm:~4.17.15"
-    minimatch: "npm:~3.0.3"
-    resolve: "npm:~1.22.1"
-    semver: "npm:~7.5.4"
-    source-map: "npm:~0.6.1"
-    typescript: "npm:5.4.2"
-  bin:
-    api-extractor: bin/api-extractor
-  checksum: 10c0/76aba3020a17b9324c540d584c6c699bf9a0a96efb0bfe50c858fe396dbe37e64360c0caecedd8e3328c80306cb0471ee12925af9ef0beac5f5195ed632a953c
-  languageName: node
-  linkType: hard
-
-"@microsoft/api-extractor@npm:^7.24.2":
+"@microsoft/api-extractor@npm:7.48.0, @microsoft/api-extractor@npm:^7.24.2":
   version: 7.48.0
   resolution: "@microsoft/api-extractor@npm:7.48.0"
   dependencies:
@@ -2866,7 +2832,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/tsdoc-config@npm:~0.17.0, @microsoft/tsdoc-config@npm:~0.17.1":
+"@microsoft/tsdoc-config@npm:~0.17.1":
   version: 0.17.1
   resolution: "@microsoft/tsdoc-config@npm:0.17.1"
   dependencies:
@@ -2878,7 +2844,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/tsdoc@npm:0.15.1, @microsoft/tsdoc@npm:~0.15.0, @microsoft/tsdoc@npm:~0.15.1":
+"@microsoft/tsdoc@npm:0.15.1, @microsoft/tsdoc@npm:~0.15.1":
   version: 0.15.1
   resolution: "@microsoft/tsdoc@npm:0.15.1"
   checksum: 10c0/09948691fac56c45a0d1920de478d66a30371a325bd81addc92eea5654d95106ce173c440fea1a1bd5bb95b3a544b6d4def7bb0b5a846c05d043575d8369a20c
@@ -4253,27 +4219,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rushstack/node-core-library@npm:5.9.0":
-  version: 5.9.0
-  resolution: "@rushstack/node-core-library@npm:5.9.0"
-  dependencies:
-    ajv: "npm:~8.13.0"
-    ajv-draft-04: "npm:~1.0.0"
-    ajv-formats: "npm:~3.0.1"
-    fs-extra: "npm:~7.0.1"
-    import-lazy: "npm:~4.0.0"
-    jju: "npm:~1.4.0"
-    resolve: "npm:~1.22.1"
-    semver: "npm:~7.5.4"
-  peerDependencies:
-    "@types/node": "*"
-  peerDependenciesMeta:
-    "@types/node":
-      optional: true
-  checksum: 10c0/1322a05f504da2aaa869821aa53f5d2867e02f19ed2ef2692e6fc04507b6419b2c7b0a2f756bed09477b1a6b5edc8f8f86471b24d0c81ff51653da87ae1cb8af
-  languageName: node
-  linkType: hard
-
 "@rushstack/rig-package@npm:0.5.3":
   version: 0.5.3
   resolution: "@rushstack/rig-package@npm:0.5.3"
@@ -4281,21 +4226,6 @@ __metadata:
     resolve: "npm:~1.22.1"
     strip-json-comments: "npm:~3.1.1"
   checksum: 10c0/ef0b0115b60007f965b875f671019ac7fc26592f6bf7d7b40fa8c68e8dc37e9f7dcda3b5533b489ebf04d28a182dc60987bfd365a8d4173c73d482b270647741
-  languageName: node
-  linkType: hard
-
-"@rushstack/terminal@npm:0.14.2":
-  version: 0.14.2
-  resolution: "@rushstack/terminal@npm:0.14.2"
-  dependencies:
-    "@rushstack/node-core-library": "npm:5.9.0"
-    supports-color: "npm:~8.1.1"
-  peerDependencies:
-    "@types/node": "*"
-  peerDependenciesMeta:
-    "@types/node":
-      optional: true
-  checksum: 10c0/3329c407e4a23ae6b1e0e35eeeaf27e9ea190454bca58473e745b9eb5c15d1ca43f99c42aa34f673ce5421bbec90052ebd037c0d080973b3e878688cf02d5b37
   languageName: node
   linkType: hard
 
@@ -4311,18 +4241,6 @@ __metadata:
     "@types/node":
       optional: true
   checksum: 10c0/0eba093d22c6a4d43b3ed9088ee8c354b63f5f28c059f5872251009231bf521ef1a415d33fed0a6572f52a450264de7d73313b0a41c65ab3b5e8c7baf5a82c1e
-  languageName: node
-  linkType: hard
-
-"@rushstack/ts-command-line@npm:4.23.0":
-  version: 4.23.0
-  resolution: "@rushstack/ts-command-line@npm:4.23.0"
-  dependencies:
-    "@rushstack/terminal": "npm:0.14.2"
-    "@types/argparse": "npm:1.0.38"
-    argparse: "npm:~1.0.9"
-    string-argv: "npm:~0.3.1"
-  checksum: 10c0/4bf5e384368024977d76024702c35f7204b030008dc6a2705aa85d58909eb7a29152793068a7388412945da20ebdc80ab487d428fe3e2329eb824c647175c80d
   languageName: node
   linkType: hard
 
@@ -8236,9 +8154,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"firebase-admin@npm:13.0.0":
-  version: 13.0.0
-  resolution: "firebase-admin@npm:13.0.0"
+"firebase-admin@npm:13.0.1":
+  version: 13.0.1
+  resolution: "firebase-admin@npm:13.0.1"
   dependencies:
     "@fastify/busboy": "npm:^3.0.0"
     "@firebase/database-compat": "npm:^2.0.0"
@@ -8257,7 +8175,7 @@ __metadata:
       optional: true
     "@google-cloud/storage":
       optional: true
-  checksum: 10c0/e6fb9fbb7f93d034ed90ccb316202c172da565c1dddb4768890ff281ee34b38cde2fdd685e2ddd05c28881d27789de342af1806718ee4e41341bcf613b893f09
+  checksum: 10c0/0ecf6201141bdd765b0c47800f94bb2ece53d70db9e613127649cc370c4e6054305cde1b5eb573df41d13656eeccb3137392b23041e13e690626b7d37619c41d
   languageName: node
   linkType: hard
 
@@ -13656,14 +13574,14 @@ __metadata:
   linkType: hard
 
 "selenium-webdriver@npm:^4.18.1":
-  version: 4.26.0
-  resolution: "selenium-webdriver@npm:4.26.0"
+  version: 4.27.0
+  resolution: "selenium-webdriver@npm:4.27.0"
   dependencies:
     "@bazel/runfiles": "npm:^6.3.1"
     jszip: "npm:^3.10.1"
     tmp: "npm:^0.2.3"
     ws: "npm:^8.18.0"
-  checksum: 10c0/af34a108fe2f9e717aab0ee3130ad101bbfc84be988729bce7eb7cd101403cd0ac2bdc5fe134e3e2b6c21bd4f00d9e9790062317877ff43ad370c2274fa57b7b
+  checksum: 10c0/fe6aedae92e9d6675326b72ee00c9f9c3022f14746672cacbf7ca285816cc512ce3e0f23a77a2976995192099e6bfdf0011d2cc19efd974cd5683d9709f90d3e
   languageName: node
   linkType: hard
 
@@ -15204,13 +15122,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:5.6.3":
-  version: 5.6.3
-  resolution: "typescript@npm:5.6.3"
+"typescript@npm:5.7.2":
+  version: 5.7.2
+  resolution: "typescript@npm:5.7.2"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/44f61d3fb15c35359bc60399cb8127c30bae554cd555b8e2b46d68fa79d680354b83320ad419ff1b81a0bdf324197b29affe6cc28988cd6a74d4ac60c94f9799
+  checksum: 10c0/a873118b5201b2ef332127ef5c63fb9d9c155e6fdbe211cbd9d8e65877283797cca76546bad742eea36ed7efbe3424a30376818f79c7318512064e8625d61622
   languageName: node
   linkType: hard
 
@@ -15224,13 +15142,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>":
-  version: 5.6.3
-  resolution: "typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40"
+"typescript@patch:typescript@npm%3A5.7.2#optional!builtin<compat/typescript>":
+  version: 5.7.2
+  resolution: "typescript@patch:typescript@npm%3A5.7.2#optional!builtin<compat/typescript>::version=5.7.2&hash=cef18b"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/7c9d2e07c81226d60435939618c91ec2ff0b75fbfa106eec3430f0fcf93a584bc6c73176676f532d78c3594fe28a54b36eb40b3d75593071a7ec91301533ace7
+  checksum: 10c0/c891ccf04008bc1305ba34053db951f8a4584b4a1bf2f68fd972c4a354df3dc5e62c8bfed4f6ac2d12e5b3b1c49af312c83a651048f818cd5b4949d17baacd79
   languageName: node
   linkType: hard
 
