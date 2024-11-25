@@ -7978,8 +7978,8 @@ __metadata:
   linkType: hard
 
 "firebase-functions@npm:^6.0.0":
-  version: 6.1.0
-  resolution: "firebase-functions@npm:6.1.0"
+  version: 6.1.1
+  resolution: "firebase-functions@npm:6.1.1"
   dependencies:
     "@types/cors": "npm:^2.8.5"
     "@types/express": "npm:^4.17.21"
@@ -7987,16 +7987,16 @@ __metadata:
     express: "npm:^4.21.0"
     protobufjs: "npm:^7.2.2"
   peerDependencies:
-    firebase-admin: ^11.10.0 || ^12.0.0
+    firebase-admin: ^11.10.0 || ^12.0.0 || ^13.0.0
   bin:
     firebase-functions: lib/bin/firebase-functions.js
-  checksum: 10c0/df6b876b5a79091b4a7bceb444e68d9fa9482719357ac84f1048c290679a12eca697e8056975ca68bca29f48cccb9e3b18ab7397097ebb0d0aef91d38295971d
+  checksum: 10c0/0d6184358cd7aff3208fe1c0457e46231d9767b98862a54f35f46b2c7eb7d4020c67fd2a1c10f5a4a9027aa53c08b519653a645491eadecb872c875e6b53bdc9
   languageName: node
   linkType: hard
 
 "firebase-tools@npm:^13.0.0":
-  version: 13.26.0
-  resolution: "firebase-tools@npm:13.26.0"
+  version: 13.27.0
+  resolution: "firebase-tools@npm:13.27.0"
   dependencies:
     "@electric-sql/pglite": "npm:^0.2.0"
     "@google-cloud/cloud-sql-connector": "npm:^1.3.3"
@@ -8066,7 +8066,7 @@ __metadata:
     yaml: "npm:^2.4.1"
   bin:
     firebase: lib/bin/firebase.js
-  checksum: 10c0/14090e085328d559e9dd29f1796e44d294f870898d83b5abb439aa5823c6ada20f8749a411c929d1d94cbec48b5e3bfbbcc9a6dac8c3524e94f482c16996c088
+  checksum: 10c0/9eaeaf34c8e09c32a3efc6897e761a7dc546aa0310322ed812a389e77823be1f3ea458898ff728a9e296b05f0fcfae7293738a8f07ce1bba0bc5b833dc7996c4
   languageName: node
   linkType: hard
 
