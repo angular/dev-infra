@@ -342,8 +342,8 @@ __metadata:
     gcip-cloud-functions: "npm:0.2.0"
     git-raw-commits: "npm:^4.0.0"
     husky: "npm:^9.0.0"
-    jasmine: "npm:~5.4.0"
-    jasmine-core: "npm:~5.4.0"
+    jasmine: "npm:~5.5.0"
+    jasmine-core: "npm:~5.5.0"
     jsdom: "npm:^25.0.0"
     jsonc-parser: "npm:^3.2.0"
     karma: "npm:^6.3.15"
@@ -359,7 +359,7 @@ __metadata:
     multimatch: "npm:^7.0.0"
     nock: "npm:beta"
     opener: "npm:^1.5.2"
-    prettier: "npm:3.4.1"
+    prettier: "npm:3.4.2"
     protobufjs: "npm:^7.0.0"
     protractor: "npm:^7.0.0"
     requirejs: "npm:^2.3.6"
@@ -9946,10 +9946,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jasmine-core@npm:~5.4.0":
-  version: 5.4.0
-  resolution: "jasmine-core@npm:5.4.0"
-  checksum: 10c0/d936de0df50a69bb269c734d5efc73d124c3051037d55609c30fcc146736ae281b1c2d658e7da583eee96a4eb2c240a3b672b70375e51d6c28c5626639eda292
+"jasmine-core@npm:~5.5.0":
+  version: 5.5.0
+  resolution: "jasmine-core@npm:5.5.0"
+  checksum: 10c0/9914f45ce6bcc016d61ee591a8a71dd0d88902ddf5fa887b11966040ce0916379bc4d5f446c07c58226b16f8a0f9719fa201cd92a3f07b02e8c8aa4169448600
   languageName: node
   linkType: hard
 
@@ -9976,15 +9976,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jasmine@npm:~5.4.0":
-  version: 5.4.0
-  resolution: "jasmine@npm:5.4.0"
+"jasmine@npm:~5.5.0":
+  version: 5.5.0
+  resolution: "jasmine@npm:5.5.0"
   dependencies:
     glob: "npm:^10.2.2"
-    jasmine-core: "npm:~5.4.0"
+    jasmine-core: "npm:~5.5.0"
   bin:
     jasmine: bin/jasmine.js
-  checksum: 10c0/8169c6ee448e39769946e43cf04647826c17be0a999465441bed525063e0208ac51615d2ce4e185c35aece0224b51dd7cfa4530f13a83a7deeb1aa019d655b75
+  checksum: 10c0/3b86e6f19987c9d49092dac783ac84a0429ba3786580573d57ffdca6bc21468476613ca94748cfc282f0adbcc2810c20420bee78ef8f37a897f34dd4cd83107e
   languageName: node
   linkType: hard
 
@@ -12544,12 +12544,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:3.4.1":
-  version: 3.4.1
-  resolution: "prettier@npm:3.4.1"
+"prettier@npm:3.4.2":
+  version: 3.4.2
+  resolution: "prettier@npm:3.4.2"
   bin:
     prettier: bin/prettier.cjs
-  checksum: 10c0/2d6cc3101ad9de72b49c59339480b0983e6ff6742143da0c43f476bf3b5ef88ede42ebd9956d7a0a8fa59f7a5990e8ef03c9ad4c37f7e4c9e5db43ee0853156c
+  checksum: 10c0/99e076a26ed0aba4ebc043880d0f08bbb8c59a4c6641cdee6cdadf2205bdd87aa1d7823f50c3aea41e015e99878d37c58d7b5f0e663bba0ef047f94e36b96446
   languageName: node
   linkType: hard
 
@@ -15196,9 +15196,9 @@ __metadata:
   linkType: hard
 
 "undici@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "undici@npm:7.0.0"
-  checksum: 10c0/6d91d5ea5f858ac9ea8b8e28722167dcb4606dc8f3886b6768de94de96fb0817a7fec974ecbc51c1fec03131e2cc44df49a2ab966f5d2d191f32163776f36d91
+  version: 7.1.0
+  resolution: "undici@npm:7.1.0"
+  checksum: 10c0/6fd0a63ca5e585128d67324e29cc49c903bf1752fd3b6f318627bb3765326df6f80c02f9c6fb2636ce3934706920c0b7fe4fe8ae19afe0a698f9ffbd7ef57548
   languageName: node
   linkType: hard
 

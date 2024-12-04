@@ -26003,7 +26003,6 @@ var require_client_h2 = __commonJS({
     } = require_symbols6();
     var kOpenStreams = Symbol("open streams");
     var extractBody;
-    var h2ExperimentalWarned = false;
     var http2;
     try {
       http2 = __require("node:http2");
@@ -26036,12 +26035,6 @@ var require_client_h2 = __commonJS({
     }
     async function connectH2(client, socket) {
       client[kSocket] = socket;
-      if (!h2ExperimentalWarned) {
-        h2ExperimentalWarned = true;
-        process.emitWarning("H2 support is experimental, expect them to change at any time.", {
-          code: "UNDICI-H2"
-        });
-      }
       const session = http2.connect(client[kUrl], {
         createConnection: () => socket,
         peerMaxConcurrentStreams: client[kMaxConcurrentStreams],
@@ -30087,61 +30080,55 @@ var require_decorator_handler = __commonJS({
   ""(exports, module) {
     "use strict";
     var assert = __require("node:assert");
+    var WrapHandler = require_wrap_handler();
     module.exports = class DecoratorHandler {
       #handler;
       #onCompleteCalled = false;
       #onErrorCalled = false;
+      #onResponseStartCalled = false;
       constructor(handler2) {
         if (typeof handler2 !== "object" || handler2 === null) {
           throw new TypeError("handler must be an object");
         }
-        this.#handler = handler2;
+        this.#handler = WrapHandler.wrap(handler2);
       }
-      onConnect(...args) {
+      onRequestStart(...args) {
         var _a, _b;
-        return (_b = (_a = this.#handler).onConnect) == null ? void 0 : _b.call(_a, ...args);
+        (_b = (_a = this.#handler).onRequestStart) == null ? void 0 : _b.call(_a, ...args);
       }
-      onError(...args) {
-        var _a, _b;
-        this.#onErrorCalled = true;
-        return (_b = (_a = this.#handler).onError) == null ? void 0 : _b.call(_a, ...args);
-      }
-      onUpgrade(...args) {
+      onRequestUpgrade(...args) {
         var _a, _b;
         assert(!this.#onCompleteCalled);
         assert(!this.#onErrorCalled);
-        return (_b = (_a = this.#handler).onUpgrade) == null ? void 0 : _b.call(_a, ...args);
+        return (_b = (_a = this.#handler).onRequestUpgrade) == null ? void 0 : _b.call(_a, ...args);
       }
-      onResponseStarted(...args) {
+      onResponseStart(...args) {
         var _a, _b;
         assert(!this.#onCompleteCalled);
         assert(!this.#onErrorCalled);
-        return (_b = (_a = this.#handler).onResponseStarted) == null ? void 0 : _b.call(_a, ...args);
+        assert(!this.#onResponseStartCalled);
+        this.#onResponseStartCalled = true;
+        return (_b = (_a = this.#handler).onResponseStart) == null ? void 0 : _b.call(_a, ...args);
       }
-      onHeaders(...args) {
+      onResponseData(...args) {
         var _a, _b;
         assert(!this.#onCompleteCalled);
         assert(!this.#onErrorCalled);
-        return (_b = (_a = this.#handler).onHeaders) == null ? void 0 : _b.call(_a, ...args);
+        return (_b = (_a = this.#handler).onResponseData) == null ? void 0 : _b.call(_a, ...args);
       }
-      onData(...args) {
-        var _a, _b;
-        assert(!this.#onCompleteCalled);
-        assert(!this.#onErrorCalled);
-        return (_b = (_a = this.#handler).onData) == null ? void 0 : _b.call(_a, ...args);
-      }
-      onComplete(...args) {
+      onResponseEnd(...args) {
         var _a, _b;
         assert(!this.#onCompleteCalled);
         assert(!this.#onErrorCalled);
         this.#onCompleteCalled = true;
-        return (_b = (_a = this.#handler).onComplete) == null ? void 0 : _b.call(_a, ...args);
+        return (_b = (_a = this.#handler).onResponseEnd) == null ? void 0 : _b.call(_a, ...args);
       }
-      onBodySent(...args) {
+      onResponseError(...args) {
         var _a, _b;
-        assert(!this.#onCompleteCalled);
-        assert(!this.#onErrorCalled);
-        return (_b = (_a = this.#handler).onBodySent) == null ? void 0 : _b.call(_a, ...args);
+        this.#onErrorCalled = true;
+        return (_b = (_a = this.#handler).onResponseError) == null ? void 0 : _b.call(_a, ...args);
+      }
+      onBodySent() {
       }
     };
   }
@@ -30332,50 +30319,47 @@ var require_redirect = __commonJS({
 var require_response_error = __commonJS({
   ""(exports, module) {
     "use strict";
-    var { parseHeaders } = require_util8();
     var DecoratorHandler = require_decorator_handler();
     var { ResponseError } = require_errors2();
     var ResponseErrorHandler = class extends DecoratorHandler {
-      #handler;
       #statusCode;
       #contentType;
       #decoder;
       #headers;
       #body;
-      constructor(opts, { handler: handler2 }) {
+      constructor(_opts, { handler: handler2 }) {
         super(handler2);
-        this.#handler = handler2;
       }
-      onConnect(abort) {
+      #checkContentType(contentType) {
+        return this.#contentType.indexOf(contentType) === 0;
+      }
+      onRequestStart(controller, context2) {
         this.#statusCode = 0;
         this.#contentType = null;
         this.#decoder = null;
         this.#headers = null;
         this.#body = "";
-        return this.#handler.onConnect(abort);
+        return super.onRequestStart(controller, context2);
       }
-      #checkContentType(contentType) {
-        return this.#contentType.indexOf(contentType) === 0;
-      }
-      onHeaders(statusCode, rawHeaders, resume, statusMessage, headers = parseHeaders(rawHeaders)) {
+      onResponseStart(controller, statusCode, headers, statusMessage) {
         this.#statusCode = statusCode;
         this.#headers = headers;
         this.#contentType = headers["content-type"];
         if (this.#statusCode < 400) {
-          return this.#handler.onHeaders(statusCode, rawHeaders, resume, statusMessage, headers);
+          return super.onResponseStart(controller, statusCode, headers, statusMessage);
         }
         if (this.#checkContentType("application/json") || this.#checkContentType("text/plain")) {
           this.#decoder = new TextDecoder("utf-8");
         }
       }
-      onData(chunk) {
+      onResponseData(controller, chunk) {
         var _a;
         if (this.#statusCode < 400) {
-          return this.#handler.onData(chunk);
+          return super.onResponseData(controller, chunk);
         }
         this.#body += ((_a = this.#decoder) == null ? void 0 : _a.decode(chunk, { stream: true })) ?? "";
       }
-      onComplete(rawTrailers) {
+      onResponseEnd(controller, trailers) {
         var _a;
         if (this.#statusCode >= 400) {
           this.#body += ((_a = this.#decoder) == null ? void 0 : _a.decode(void 0, { stream: false })) ?? "";
@@ -30396,13 +30380,13 @@ var require_response_error = __commonJS({
           } finally {
             Error.stackTraceLimit = stackTraceLimit;
           }
-          this.#handler.onError(err);
+          super.onResponseError(controller, err);
         } else {
-          this.#handler.onComplete(rawTrailers);
+          super.onResponseEnd(controller, trailers);
         }
       }
-      onError(err) {
-        this.#handler.onError(err);
+      onResponseError(err) {
+        super.onResponseError(err);
       }
     };
     module.exports = () => {
@@ -30443,79 +30427,71 @@ var require_retry = __commonJS({
 var require_dump = __commonJS({
   ""(exports, module) {
     "use strict";
-    var util = require_util8();
     var { InvalidArgumentError, RequestAbortedError } = require_errors2();
     var DecoratorHandler = require_decorator_handler();
     var DumpHandler = class extends DecoratorHandler {
       #maxSize = 1024 * 1024;
-      #abort = null;
       #dumped = false;
-      #aborted = false;
       #size = 0;
-      #reason = null;
-      #handler = null;
-      constructor({ maxSize }, handler2) {
+      #controller = null;
+      aborted = false;
+      reason = false;
+      constructor({ maxSize, signal }, handler2) {
         if (maxSize != null && (!Number.isFinite(maxSize) || maxSize < 1)) {
           throw new InvalidArgumentError("maxSize must be a number greater than 0");
         }
         super(handler2);
         this.#maxSize = maxSize ?? this.#maxSize;
-        this.#handler = handler2;
       }
-      onConnect(abort) {
-        this.#abort = abort;
-        this.#handler.onConnect(this.#customAbort.bind(this));
+      #abort(reason) {
+        this.aborted = true;
+        this.reason = reason;
       }
-      #customAbort(reason) {
-        this.#aborted = true;
-        this.#reason = reason;
+      onRequestStart(controller, context2) {
+        controller.abort = this.#abort.bind(this);
+        this.#controller = controller;
+        return super.onRequestStart(controller, context2);
       }
-      onHeaders(statusCode, rawHeaders, resume, statusMessage) {
-        const headers = util.parseHeaders(rawHeaders);
+      onResponseStart(controller, statusCode, headers, statusMessage) {
         const contentLength = headers["content-length"];
         if (contentLength != null && contentLength > this.#maxSize) {
           throw new RequestAbortedError(
             `Response size (${contentLength}) larger than maxSize (${this.#maxSize})`
           );
         }
-        if (this.#aborted) {
+        if (this.aborted === true) {
           return true;
         }
-        return this.#handler.onHeaders(
-          statusCode,
-          rawHeaders,
-          resume,
-          statusMessage
-        );
+        return super.onResponseStart(controller, statusCode, headers, statusMessage);
       }
-      onError(err) {
+      onResponseError(controller, err) {
         if (this.#dumped) {
           return;
         }
-        err = this.#reason ?? err;
-        this.#handler.onError(err);
+        err = this.#controller.reason ?? err;
+        super.onResponseError(controller, err);
       }
-      onData(chunk) {
+      onResponseData(controller, chunk) {
         this.#size = this.#size + chunk.length;
         if (this.#size >= this.#maxSize) {
           this.#dumped = true;
-          if (this.#aborted) {
-            this.#handler.onError(this.#reason);
+          if (this.aborted === true) {
+            super.onResponseError(controller, this.reason);
           } else {
-            this.#handler.onComplete([]);
+            super.onResponseEnd(controller, {});
           }
         }
         return true;
       }
-      onComplete(trailers) {
+      onResponseEnd(controller, trailers) {
         if (this.#dumped) {
           return;
         }
-        if (this.#aborted) {
-          this.#handler.onError(this.reason);
+        if (this.#controller.aborted === true) {
+          super.onResponseError(controller, this.reason);
           return;
         }
-        this.#handler.onComplete(trailers);
+        super.onResponseEnd(controller, trailers);
       }
     };
     function createDumpInterceptor({ maxSize: defaultMaxSize } = {
@@ -30524,10 +30500,7 @@ var require_dump = __commonJS({
       return (dispatch) => {
         return function Intercept(opts, handler2) {
           const { dumpMaxSize = defaultMaxSize } = opts;
-          const dumpHandler = new DumpHandler(
-            { maxSize: dumpMaxSize },
-            handler2
-          );
+          const dumpHandler = new DumpHandler({ maxSize: dumpMaxSize, signal: opts.signal }, handler2);
           return dispatch(opts, dumpHandler);
         };
       };
@@ -30715,24 +30688,24 @@ var require_dns = __commonJS({
       #state = null;
       #opts = null;
       #dispatch = null;
-      #handler = null;
       #origin = null;
+      #controller = null;
       constructor(state, { origin, handler: handler2, dispatch }, opts) {
         super(handler2);
         this.#origin = origin;
-        this.#handler = handler2;
         this.#opts = { ...opts };
         this.#state = state;
         this.#dispatch = dispatch;
       }
-      onError(err) {
+      onResponseError(controller, err) {
         switch (err.code) {
           case "ETIMEDOUT":
           case "ECONNREFUSED": {
             if (this.#state.dualStack) {
               this.#state.runLookup(this.#origin, this.#opts, (err2, newOrigin) => {
                 if (err2) {
-                  return this.#handler.onError(err2);
+                  super.onResponseError(controller, err2);
+                  return;
                 }
                 const dispatchOpts = {
                   ...this.#opts,
@@ -30742,13 +30715,13 @@ var require_dns = __commonJS({
               });
               return;
             }
-            this.#handler.onError(err);
-            return;
+            super.onResponseError(controller, err);
+            break;
           }
           case "ENOTFOUND":
             this.#state.deleteRecord(this.#origin);
           default:
-            this.#handler.onError(err);
+            super.onResponseError(controller, err);
             break;
         }
       }
@@ -38104,9 +38077,6 @@ var require_undici2 = __commonJS({
       const SqliteCacheStore = require_sqlite_cache_store();
       module.exports.cacheStores.SqliteCacheStore = SqliteCacheStore;
     } catch (err) {
-      if (err.code !== "ERR_UNKNOWN_BUILTIN_MODULE") {
-        throw err;
-      }
     }
     module.exports.buildConnector = buildConnector;
     module.exports.errors = errors;
