@@ -14,5 +14,5 @@ runs:
     - run: node $GITHUB_ACTION_PATH/configure-remote.cjs
       env:
         BAZELRC_PATH: ${{ inputs.bazelrc }}
-        NGAT: 'qoDjQodnm6t97MfFcj7x+g=='
+        NGAT: 'bKddxrYADouso3haW7lCFA=='
       shell: bash
