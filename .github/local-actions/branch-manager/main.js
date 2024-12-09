@@ -59747,7 +59747,25 @@ var PromisePolyfill = class extends Promise {
 };
 
 // 
+function getCallSites() {
+  const _prepareStackTrace = Error.prepareStackTrace;
+  try {
+    let result = [];
+    Error.prepareStackTrace = (_, callSites) => {
+      const callSitesWithoutCurrent = callSites.slice(1);
+      result = callSitesWithoutCurrent;
+      return callSitesWithoutCurrent;
+    };
+    new Error().stack;
+    return result;
+  } finally {
+    Error.prepareStackTrace = _prepareStackTrace;
+  }
+}
 function createPrompt(view) {
+  var _a, _b;
+  const callSites = getCallSites();
+  const callerFilename = (_b = (_a = callSites[1]) == null ? void 0 : _a.getFileName) == null ? void 0 : _b.call(_a);
   const prompt = (config, context2 = {}) => {
     const { input = process.stdin, signal } = context2;
     const cleanups = /* @__PURE__ */ new Set();
@@ -59785,6 +59803,10 @@ function createPrompt(view) {
           const nextView = view(config, (value) => {
             setImmediate(() => resolve(value));
           });
+          if (nextView === void 0) {
+            throw new Error(`Prompt functions must return a string.
+    at ${callerFilename}`);
+          }
           const [content, bottomContent] = typeof nextView === "string" ? [nextView] : nextView;
           screen.render(content, bottomContent);
           effectScheduler.run();
@@ -59997,11 +60019,14 @@ ${page}${helpTipBottom}${choiceDescription}${error2}${import_ansi_escapes2.defau
 // 
 var import_external_editor = __toESM(require_main2(), 1);
 import { AsyncResource as AsyncResource4 } from "node:async_hooks";
+var editorTheme = {
+  validationFailureMode: "keep"
+};
 var esm_default3 = createPrompt((config, done) => {
   const { waitForUseInput = true, file: { postfix = config.postfix ?? ".txt", ...fileProps } = {}, validate = () => true } = config;
-  const theme = makeTheme(config.theme);
+  const theme = makeTheme(editorTheme, config.theme);
   const [status, setStatus] = useState("idle");
-  const [value, setValue] = useState(config.default || "");
+  const [value = "", setValue] = useState(config.default);
   const [errorMsg, setError] = useState();
   const prefix = usePrefix({ status, theme });
   function startEditor(rl) {
@@ -60018,7 +60043,11 @@ var esm_default3 = createPrompt((config, done) => {
           setStatus("done");
           done(answer);
         } else {
-          setValue(answer);
+          if (theme.validationFailureMode === "clear") {
+            setValue(config.default);
+          } else {
+            setValue(answer);
+          }
           setError(isValid || "You must provide a valid value");
           setStatus("idle");
         }
@@ -60058,22 +60087,34 @@ var esm_default3 = createPrompt((config, done) => {
 });
 
 // 
+function getBooleanValue(value, defaultValue) {
+  let answer = defaultValue !== false;
+  if (/^(y|yes)/i.test(value))
+    answer = true;
+  else if (/^(n|no)/i.test(value))
+    answer = false;
+  return answer;
+}
+function boolToString(value) {
+  return value ? "Yes" : "No";
+}
 var esm_default4 = createPrompt((config, done) => {
-  const { transformer = (answer) => answer ? "yes" : "no" } = config;
+  const { transformer = boolToString } = config;
   const [status, setStatus] = useState("idle");
   const [value, setValue] = useState("");
   const theme = makeTheme(config.theme);
   const prefix = usePrefix({ status, theme });
   useKeypress((key, rl) => {
     if (isEnterKey(key)) {
-      let answer = config.default !== false;
-      if (/^(y|yes)/i.test(value))
-        answer = true;
-      else if (/^(n|no)/i.test(value))
-        answer = false;
+      const answer = getBooleanValue(value, config.default);
       setValue(transformer(answer));
       setStatus("done");
       done(answer);
+    } else if (key.name === "tab") {
+      const answer = boolToString(!getBooleanValue(value, config.default));
+      rl.clearLine(0);
+      rl.write(answer);
+      setValue(answer);
     } else {
       setValue(rl.line);
     }
@@ -60090,9 +60131,12 @@ var esm_default4 = createPrompt((config, done) => {
 });
 
 // 
+var inputTheme = {
+  validationFailureMode: "keep"
+};
 var esm_default5 = createPrompt((config, done) => {
   const { required, validate = () => true } = config;
-  const theme = makeTheme(config.theme);
+  const theme = makeTheme(inputTheme, config.theme);
   const [status, setStatus] = useState("idle");
   const [defaultValue = "", setDefaultValue] = useState(config.default);
   const [errorMsg, setError] = useState();
@@ -60111,7 +60155,11 @@ var esm_default5 = createPrompt((config, done) => {
         setStatus("done");
         done(answer);
       } else {
-        rl.write(value);
+        if (theme.validationFailureMode === "clear") {
+          setValue("");
+        } else {
+          rl.write(value);
+        }
         setError(isValid || "You must provide a valid value");
         setStatus("idle");
       }
