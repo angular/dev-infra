@@ -27,20 +27,28 @@ jobs:
       - uses: ./github-actions/bazel/setup
       - uses: ./github-actions/bazel/configure-remote
       - run: yarn install --immutable
-      - name: Check code format
+      - if: always()
+        name: Check code format
         run: yarn ng-dev format changed --check ${{ github.event.pull_request.base.sha }}
-      - name: Check commit message
+      - if: always()
+        name: Check commit message
         run: yarn ng-dev commit-message validate-range ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}
-      - name: Check code lint
+      - if: always()
+        name: Check code lint
         run: yarn lint
-      - name: Confirm code builds with typescript as expected
+      - if: always()
+        name: Confirm code builds with typescript as expected
         run: yarn tsc -p tsconfig.json
-      - name: Check Package Licenses
+      - if: always()
+        name: Check Package Licenses
         # We use this action pinned at main because we need to have an actual version for the config to load.
         # Since using the local version would end up nearly using `main` anyway, this is essentially equivalent.
         uses: angular/dev-infra/github-actions/linting/licenses@main
         with:
           allow-dependencies-licenses: 'pkg:npm/renovate, pkg:npm/@renovatebot/detect-tools'
+      - name: The job has failed
+        if: ${{ failure() }}
+        run: exit 1
 
   test:
     timeout-minutes: 15
