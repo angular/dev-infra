@@ -4278,10 +4278,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graph-data-structure@npm:4.2.0":
-  version: 4.2.0
-  resolution: "graph-data-structure@npm:4.2.0"
-  checksum: 10c0/fa8f4e8ce4dbecdf5b6ffc73bab88381bfc7223bca96b220c2eb77cc20819a75dad91c8e7bb2efd7e9b4c3b14375f785e3094446438ee449c419a4525023a17c
+"graph-data-structure@npm:4.3.0":
+  version: 4.3.0
+  resolution: "graph-data-structure@npm:4.3.0"
+  checksum: 10c0/464dde1ac964cf6ea47b15277e52f6386c6eccc7e2e692669bed2b448b53457b6fae754fa8574f2a968c10bc2bd38b03b8d1aad5835f41493dd00531a31f82e8
   languageName: node
   linkType: hard
 
@@ -4906,10 +4906,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsonata@npm:2.0.5":
-  version: 2.0.5
-  resolution: "jsonata@npm:2.0.5"
-  checksum: 10c0/ecf3f0a0ec6af59b7ebab303f417f00ca06309e7fe0aaad25b103447e53edfe3e6e2cb228195cbceafcf0d3a77b7944c3b8bda44e0b4cb4faa2fb140e22e2513
+"jsonata@npm:2.0.6":
+  version: 2.0.6
+  resolution: "jsonata@npm:2.0.6"
+  checksum: 10c0/6bc5ae471352e305b45c39933ccb6ade8d0770483d2eb7862fc1d213832ea0db2697041c2316ec973f8ddc830939cc5d0e34296ba1584f33b0685de24110b6f9
   languageName: node
   linkType: hard
 
@@ -5618,7 +5618,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: "npm:39.49.1"
+    renovate: "npm:39.62.6"
   languageName: unknown
   linkType: soft
 
@@ -6049,12 +6049,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:3.4.1":
-  version: 3.4.1
-  resolution: "prettier@npm:3.4.1"
+"prettier@npm:3.4.2":
+  version: 3.4.2
+  resolution: "prettier@npm:3.4.2"
   bin:
     prettier: bin/prettier.cjs
-  checksum: 10c0/2d6cc3101ad9de72b49c59339480b0983e6ff6742143da0c43f476bf3b5ef88ede42ebd9956d7a0a8fa59f7a5990e8ef03c9ad4c37f7e4c9e5db43ee0853156c
+  checksum: 10c0/99e076a26ed0aba4ebc043880d0f08bbb8c59a4c6641cdee6cdadf2205bdd87aa1d7823f50c3aea41e015e99878d37c58d7b5f0e663bba0ef047f94e36b96446
   languageName: node
   linkType: hard
 
@@ -6332,9 +6332,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:39.49.1":
-  version: 39.49.1
-  resolution: "renovate@npm:39.49.1"
+"renovate@npm:39.62.6":
+  version: 39.62.6
+  resolution: "renovate@npm:39.62.6"
   dependencies:
     "@aws-sdk/client-codecommit": "npm:3.699.0"
     "@aws-sdk/client-ec2": "npm:3.701.0"
@@ -6399,14 +6399,14 @@ __metadata:
     good-enough-parser: "npm:1.1.23"
     google-auth-library: "npm:9.15.0"
     got: "npm:11.8.6"
-    graph-data-structure: "npm:4.2.0"
+    graph-data-structure: "npm:4.3.0"
     handlebars: "npm:4.7.8"
     ignore: "npm:6.0.2"
     ini: "npm:5.0.0"
     json-dup-key-validator: "npm:1.0.3"
     json-stringify-pretty-compact: "npm:3.0.0"
     json5: "npm:2.2.3"
-    jsonata: "npm:2.0.5"
+    jsonata: "npm:2.0.6"
     jsonc-parser: "npm:3.3.1"
     klona: "npm:2.0.6"
     luxon: "npm:3.5.0"
@@ -6424,7 +6424,7 @@ __metadata:
     p-queue: "npm:6.6.2"
     p-throttle: "npm:4.1.1"
     parse-link-header: "npm:2.0.0"
-    prettier: "npm:3.4.1"
+    prettier: "npm:3.4.2"
     protobufjs: "npm:7.4.0"
     punycode: "npm:2.3.1"
     re2: "npm:1.21.4"
@@ -6458,7 +6458,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 10c0/72fa8163b74b7730f8bfaf8bcf8a610d18a9e03e678bce80f75ad0d70047ebad9cd5f93975b6716b2c727ae2efeb225a44b5b732cefddc86d701d11d5b589a47
+  checksum: 10c0/26312d489bf330cd144cf23e3f696fe7c2350d7a26559e524da13394823a21d6ab519172ff7ba94c997a7791547cede53346ae34f61dc540eb3e7d440a041002
   languageName: node
   linkType: hard
 
