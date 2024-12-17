@@ -16,6 +16,10 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      # Note: keep this version in sync with what's being used in Bazel
+      # https://github.com/aspect-build/rules_js/blob/cd48714c7fe445a6bce6e2bcc1db36c4eefcffdf/npm/private/pnpm_repository.bzl#L11
+      - run: npm i -g pnpm@8
+        shell: bash
       - run: yarn --cwd .github/ng-renovate install --immutable
         shell: bash
 
