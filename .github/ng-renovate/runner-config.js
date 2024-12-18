@@ -9,14 +9,6 @@ module.exports = {
   onboarding: false,
   persistRepoData: true,
   allowedPostUpgradeCommands: ['.', '^yarn install$', '^yarn update-generated-files$'],
-  repositories: [
-    'angular/angular',
-    'angular/dev-infra',
-    'angular/components',
-    'angular/angular-cli',
-    'angular/vscode-ng-language-service',
-    'angular/.github',
-  ],
   hostRules: [
     {
       matchHost: 'api.github.com',
