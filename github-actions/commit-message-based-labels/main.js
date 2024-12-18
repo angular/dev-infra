@@ -21102,7 +21102,7 @@ var require_wrap_handler = __commonJS({
         var _a2, _b;
         const rawHeaders = [];
         for (const [key, val] of Object.entries(headers)) {
-          rawHeaders.push(Buffer.from(key), Buffer.from(val));
+          rawHeaders.push(Buffer.from(key), Array.isArray(val) ? val.map((v) => Buffer.from(v)) : Buffer.from(val));
         }
         (_b = (_a2 = this.#handler).onUpgrade) == null ? void 0 : _b.call(_a2, statusCode, rawHeaders, socket);
       }
@@ -21110,7 +21110,7 @@ var require_wrap_handler = __commonJS({
         var _a2, _b;
         const rawHeaders = [];
         for (const [key, val] of Object.entries(headers)) {
-          rawHeaders.push(Buffer.from(key), Buffer.from(val));
+          rawHeaders.push(Buffer.from(key), Array.isArray(val) ? val.map((v) => Buffer.from(v)) : Buffer.from(val));
         }
         if (((_b = (_a2 = this.#handler).onHeaders) == null ? void 0 : _b.call(_a2, statusCode, rawHeaders, () => controller.resume(), statusMessage)) === false) {
           controller.pause();
@@ -21126,7 +21126,7 @@ var require_wrap_handler = __commonJS({
         var _a2, _b;
         const rawTrailers = [];
         for (const [key, val] of Object.entries(trailers)) {
-          rawTrailers.push(Buffer.from(key), Buffer.from(val));
+          rawTrailers.push(Buffer.from(key), Array.isArray(val) ? val.map((v) => Buffer.from(v)) : Buffer.from(val));
         }
         (_b = (_a2 = this.#handler).onComplete) == null ? void 0 : _b.call(_a2, rawTrailers);
       }
@@ -22606,7 +22606,7 @@ var require_data_url = __commonJS({
       if (type.length === 0 || !HTTP_TOKEN_CODEPOINTS.test(type)) {
         return "failure";
       }
-      if (position.position > input.length) {
+      if (position.position >= input.length) {
         return "failure";
       }
       position.position++;
@@ -22646,7 +22646,7 @@ var require_data_url = __commonJS({
           }
           position.position++;
         }
-        if (position.position > input.length) {
+        if (position.position >= input.length) {
           break;
         }
         let parameterValue = null;
@@ -26002,6 +26002,7 @@ var require_client_h2 = __commonJS({
       kClosed,
       kBodyTimeout
     } = require_symbols6();
+    var { channels } = require_diagnostics();
     var kOpenStreams = Symbol("open streams");
     var extractBody;
     var http2;
@@ -26278,6 +26279,14 @@ var require_client_h2 = __commonJS({
         headers[HTTP2_HEADER_CONTENT_LENGTH] = `${contentLength}`;
       }
       session.ref();
+      if (channels.sendHeaders.hasSubscribers) {
+        let header = "";
+        for (const key in headers) {
+          header += `${key}: ${headers[key]}\r
+`;
+        }
+        channels.sendHeaders.publish({ request: request2, headers: header, socket: session[kSocket] });
+      }
       const shouldEndStream = method === "GET" || method === "HEAD" || body === null;
       if (expectContinue) {
         headers[HTTP2_HEADER_EXPECT] = "100-continue";
@@ -30332,7 +30341,7 @@ var require_response_error = __commonJS({
         super(handler2);
       }
       #checkContentType(contentType) {
-        return this.#contentType.indexOf(contentType) === 0;
+        return (this.#contentType ?? "").indexOf(contentType) === 0;
       }
       onRequestStart(controller, context3) {
         this.#statusCode = 0;
@@ -30386,8 +30395,8 @@ var require_response_error = __commonJS({
           super.onResponseEnd(controller, trailers);
         }
       }
-      onResponseError(err) {
-        super.onResponseError(err);
+      onResponseError(controller, err) {
+        super.onResponseError(controller, err);
       }
     };
     module.exports = () => {
@@ -30780,7 +30789,7 @@ var require_dns = __commonJS({
               servername: origin.hostname,
               origin: newOrigin,
               headers: {
-                host: origin.hostname,
+                host: origin.host,
                 ...origDispatchOpts.headers
               }
             };
@@ -31622,9 +31631,11 @@ var require_cache3 = __commonJS({
         }
         let headers = {
           ...opts.headers,
-          "if-modified-since": new Date(result.cachedAt).toUTCString(),
-          "if-none-match": result.etag
+          "if-modified-since": new Date(result.cachedAt).toUTCString()
         };
+        if (result.etag) {
+          headers["if-none-match"] = result.etag;
+        }
         if (result.vary) {
           headers = {
             ...headers,
@@ -31727,9 +31738,9 @@ var require_cache3 = __commonJS({
 var require_sqlite_cache_store = __commonJS({
   ""(exports, module) {
     "use strict";
-    var { DatabaseSync } = __require("node:sqlite");
     var { Writable } = __require("stream");
     var { assertCacheKey, assertCacheValue } = require_cache2();
+    var DatabaseSync;
     var VERSION13 = 3;
     var MAX_ENTRY_SIZE = 2 * 1e3 * 1e3 * 1e3;
     module.exports = class SqliteCacheStore {
@@ -31763,6 +31774,9 @@ var require_sqlite_cache_store = __commonJS({
             }
             this.#maxCount = opts.maxCount;
           }
+        }
+        if (!DatabaseSync) {
+          DatabaseSync = __require("node:sqlite").DatabaseSync;
         }
         this.#db = new DatabaseSync((opts == null ? void 0 : opts.location) ?? ":memory:");
         this.#db.exec(`
@@ -38074,11 +38088,8 @@ var require_undici2 = __commonJS({
     module.exports.cacheStores = {
       MemoryCacheStore: require_memory_cache_store()
     };
-    try {
-      const SqliteCacheStore = require_sqlite_cache_store();
-      module.exports.cacheStores.SqliteCacheStore = SqliteCacheStore;
-    } catch (err) {
-    }
+    var SqliteCacheStore = require_sqlite_cache_store();
+    module.exports.cacheStores.SqliteCacheStore = SqliteCacheStore;
     module.exports.buildConnector = buildConnector;
     module.exports.errors = errors;
     module.exports.util = {
