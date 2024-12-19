@@ -23,6 +23,7 @@ ts_library(
         "@npm//@types/semver",
         "@npm//@types/yargs",
         "@npm//ejs",
+        "@npm//fast-glob",
         "@npm//folder-hash",
         "@npm//semver",
         "@npm//typed-graphqlify",

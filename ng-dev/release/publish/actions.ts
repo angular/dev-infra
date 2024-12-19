@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {promises as fs} from 'fs';
-import {join} from 'path';
+import {promises as fs, existsSync} from 'fs';
+import path, {join} from 'path';
 import semver from 'semver';
 
 import {workspaceRelativePackageJsonPath} from '../../utils/constants.js';
@@ -41,6 +41,7 @@ import {githubReleaseBodyLimit} from './constants.js';
 import {ExternalCommands} from './external-commands.js';
 import {promptToInitiatePullRequestMerge} from './prompt-merge.js';
 import {Prompt} from '../../utils/prompt.js';
+import {glob} from 'fast-glob';
 
 /** Interface describing a Github repository. */
 export interface GithubRepo {
@@ -129,6 +130,10 @@ export abstract class ReleaseAction {
     // to avoid unnecessary diff. IDEs usually add a trailing new line.
     await fs.writeFile(pkgJsonPath, `${JSON.stringify(pkgJson, null, 2)}\n`);
     Log.info(green(`  ✓   Updated project version to ${pkgJson.version}`));
+
+    if (this.config.rulesJsInteropMode && existsSync(path.join(this.projectDir, '.aspect'))) {
+      await ExternalCommands.invokeBazelUpdateAspectLockFiles(this.projectDir);
+    }
   }
 
   /** Gets the most recent commit of a specified branch. */
@@ -221,6 +226,8 @@ export abstract class ReleaseAction {
     await this.createCommit(commitMessage, [
       workspaceRelativePackageJsonPath,
       workspaceRelativeChangelogPath,
+      // Ensure modified Aspect lock files are included in the release commit.
+      ...(this.config.rulesJsInteropMode ? glob.sync('.aspect/**', {cwd: this.projectDir}) : []),
     ]);
 
     // The caretaker may have attempted to make additional changes. These changes would

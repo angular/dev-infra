@@ -256,4 +256,30 @@ export abstract class ExternalCommands {
       throw new FatalReleaseActionError();
     }
   }
+
+  /**
+   * Invokes the `yarn bazel run @npm2//:sync` command in order
+   * to refresh Aspect lock files.
+   */
+  static async invokeBazelUpdateAspectLockFiles(projectDir: string): Promise<void> {
+    // Note: We cannot use `yarn` directly as command because we might operate in
+    // a different publish branch and the current `PATH` will point to the Yarn version
+    // that invoked the release tool. More details in the function description.
+    const yarnCommand = await resolveYarnScriptForProject(projectDir);
+
+    try {
+      // Note: No progress indicator needed as that is the responsibility of the command.
+      // TODO: Consider using an Ora spinner instead to ensure minimal console output.
+      await ChildProcess.spawn(
+        yarnCommand.binary,
+        [...yarnCommand.args, 'bazelisk', 'run', '@npm2//:sync'],
+        {cwd: projectDir},
+      );
+    } catch (e) {
+      // Note: Gracefully handling these errors because `sync` command
+      // alway exits with a non-zero exit code.
+    }
+
+    Log.info(green('  ✓   Updated Aspect `rules_js` lock files.'));
+  }
 }
