@@ -222,13 +222,16 @@ export abstract class ReleaseAction {
     // Commit message for the release point.
     const commitMessage = getCommitMessageForRelease(newVersion);
 
+    const filesToCommit = [workspaceRelativePackageJsonPath, workspaceRelativeChangelogPath];
+
+    // Ensure modified Aspect lock files are included in the release commit.
+    // TODO: Remove after `rules_js` migration is complete.
+    if (this.config.rulesJsInteropMode) {
+      filesToCommit.push(...glob.sync(['.aspect/**', 'pnpm-lock.yaml'], {cwd: this.projectDir}));
+    }
+
     // Create a release staging commit including changelog and version bump.
-    await this.createCommit(commitMessage, [
-      workspaceRelativePackageJsonPath,
-      workspaceRelativeChangelogPath,
-      // Ensure modified Aspect lock files are included in the release commit.
-      ...(this.config.rulesJsInteropMode ? glob.sync('.aspect/**', {cwd: this.projectDir}) : []),
-    ]);
+    await this.createCommit(commitMessage, filesToCommit);
 
     // The caretaker may have attempted to make additional changes. These changes would
     // not be captured into the release commit. The working directory should remain clean,
