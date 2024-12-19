@@ -43218,15 +43218,23 @@ if (hasFlag2("no-color") || hasFlag2("no-colors") || hasFlag2("color=false") || 
   flagForceColor2 = 1;
 }
 function envForceColor2() {
-  if ("FORCE_COLOR" in env2) {
-    if (env2.FORCE_COLOR === "true") {
-      return 1;
-    }
-    if (env2.FORCE_COLOR === "false") {
-      return 0;
-    }
-    return env2.FORCE_COLOR.length === 0 ? 1 : Math.min(Number.parseInt(env2.FORCE_COLOR, 10), 3);
+  if (!("FORCE_COLOR" in env2)) {
+    return;
   }
+  if (env2.FORCE_COLOR === "true") {
+    return 1;
+  }
+  if (env2.FORCE_COLOR === "false") {
+    return 0;
+  }
+  if (env2.FORCE_COLOR.length === 0) {
+    return 1;
+  }
+  const level = Math.min(Number.parseInt(env2.FORCE_COLOR, 10), 3);
+  if (![0, 1, 2, 3].includes(level)) {
+    return;
+  }
+  return level;
 }
 function translateLevel2(level) {
   if (level === 0) {
@@ -43274,10 +43282,10 @@ function _supportsColor2(haveStream, { streamIsTTY, sniffFlags = true } = {}) {
     return 1;
   }
   if ("CI" in env2) {
-    if ("GITHUB_ACTIONS" in env2 || "GITEA_ACTIONS" in env2) {
+    if (["GITHUB_ACTIONS", "GITEA_ACTIONS", "CIRCLECI"].some((key) => key in env2)) {
       return 3;
     }
-    if (["TRAVIS", "CIRCLECI", "APPVEYOR", "GITLAB_CI", "BUILDKITE", "DRONE"].some((sign) => sign in env2) || env2.CI_NAME === "codeship") {
+    if (["TRAVIS", "APPVEYOR", "GITLAB_CI", "BUILDKITE", "DRONE"].some((sign) => sign in env2) || env2.CI_NAME === "codeship") {
       return 1;
     }
     return min;

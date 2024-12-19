@@ -22,7 +22,7 @@
     "@yarnpkg/lockfile": "^1.1.0",
     "chalk": "^5.0.1",
     "semver": "^7.5.4",
-    "supports-color": "9.4.0",
+    "supports-color": "10.0.0",
     "typed-graphqlify": "^3.1.1",
     "typescript": "~4.9.0",
     "yaml": "2.6.1"
