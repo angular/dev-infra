@@ -30690,6 +30690,9 @@ var require_dns = __commonJS({
         }
         this.#records.set(origin.hostname, records);
       }
+      deleteRecords(origin) {
+        this.#records.delete(origin.hostname);
+      }
       getHandler(meta, opts) {
         return new DNSDispatchHandler(this, meta, opts);
       }
@@ -30729,7 +30732,7 @@ var require_dns = __commonJS({
             break;
           }
           case "ENOTFOUND":
-            this.#state.deleteRecord(this.#origin);
+            this.#state.deleteRecords(this.#origin);
           default:
             super.onResponseError(controller, err);
             break;
@@ -31046,6 +31049,186 @@ var require_cache2 = __commonJS({
 });
 
 // 
+var require_date = __commonJS({
+  ""(exports, module) {
+    "use strict";
+    var IMF_DAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+    var IMF_SPACES = [4, 7, 11, 16, 25];
+    var IMF_MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+    var IMF_COLONS = [19, 22];
+    var ASCTIME_SPACES = [3, 7, 10, 19];
+    var RFC850_DAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+    function parseHttpDate(date, now) {
+      date = date.toLowerCase();
+      switch (date[3]) {
+        case ",":
+          return parseImfDate(date);
+        case " ":
+          return parseAscTimeDate(date);
+        default:
+          return parseRfc850Date(date, now);
+      }
+    }
+    function parseImfDate(date) {
+      if (date.length !== 29) {
+        return void 0;
+      }
+      if (!date.endsWith("gmt")) {
+        return void 0;
+      }
+      for (const spaceInx of IMF_SPACES) {
+        if (date[spaceInx] !== " ") {
+          return void 0;
+        }
+      }
+      for (const colonIdx of IMF_COLONS) {
+        if (date[colonIdx] !== ":") {
+          return void 0;
+        }
+      }
+      const dayName = date.substring(0, 3);
+      if (!IMF_DAYS.includes(dayName)) {
+        return void 0;
+      }
+      const dayString = date.substring(5, 7);
+      const day = Number.parseInt(dayString);
+      if (isNaN(day) || day < 10 && dayString[0] !== "0") {
+        return void 0;
+      }
+      const month = date.substring(8, 11);
+      const monthIdx = IMF_MONTHS.indexOf(month);
+      if (monthIdx === -1) {
+        return void 0;
+      }
+      const year = Number.parseInt(date.substring(12, 16));
+      if (isNaN(year)) {
+        return void 0;
+      }
+      const hourString = date.substring(17, 19);
+      const hour = Number.parseInt(hourString);
+      if (isNaN(hour) || hour < 10 && hourString[0] !== "0") {
+        return void 0;
+      }
+      const minuteString = date.substring(20, 22);
+      const minute = Number.parseInt(minuteString);
+      if (isNaN(minute) || minute < 10 && minuteString[0] !== "0") {
+        return void 0;
+      }
+      const secondString = date.substring(23, 25);
+      const second = Number.parseInt(secondString);
+      if (isNaN(second) || second < 10 && secondString[0] !== "0") {
+        return void 0;
+      }
+      return new Date(Date.UTC(year, monthIdx, day, hour, minute, second));
+    }
+    function parseAscTimeDate(date) {
+      if (date.length !== 24) {
+        return void 0;
+      }
+      for (const spaceIdx of ASCTIME_SPACES) {
+        if (date[spaceIdx] !== " ") {
+          return void 0;
+        }
+      }
+      const dayName = date.substring(0, 3);
+      if (!IMF_DAYS.includes(dayName)) {
+        return void 0;
+      }
+      const month = date.substring(4, 7);
+      const monthIdx = IMF_MONTHS.indexOf(month);
+      if (monthIdx === -1) {
+        return void 0;
+      }
+      const dayString = date.substring(8, 10);
+      const day = Number.parseInt(dayString);
+      if (isNaN(day) || day < 10 && dayString[0] !== " ") {
+        return void 0;
+      }
+      const hourString = date.substring(11, 13);
+      const hour = Number.parseInt(hourString);
+      if (isNaN(hour) || hour < 10 && hourString[0] !== "0") {
+        return void 0;
+      }
+      const minuteString = date.substring(14, 16);
+      const minute = Number.parseInt(minuteString);
+      if (isNaN(minute) || minute < 10 && minuteString[0] !== "0") {
+        return void 0;
+      }
+      const secondString = date.substring(17, 19);
+      const second = Number.parseInt(secondString);
+      if (isNaN(second) || second < 10 && secondString[0] !== "0") {
+        return void 0;
+      }
+      const year = Number.parseInt(date.substring(20, 24));
+      if (isNaN(year)) {
+        return void 0;
+      }
+      return new Date(Date.UTC(year, monthIdx, day, hour, minute, second));
+    }
+    function parseRfc850Date(date, now = new Date()) {
+      if (!date.endsWith("gmt")) {
+        return void 0;
+      }
+      const commaIndex = date.indexOf(",");
+      if (commaIndex === -1) {
+        return void 0;
+      }
+      if (date.length - commaIndex - 1 !== 23) {
+        return void 0;
+      }
+      const dayName = date.substring(0, commaIndex);
+      if (!RFC850_DAYS.includes(dayName)) {
+        return void 0;
+      }
+      if (date[commaIndex + 1] !== " " || date[commaIndex + 4] !== "-" || date[commaIndex + 8] !== "-" || date[commaIndex + 11] !== " " || date[commaIndex + 14] !== ":" || date[commaIndex + 17] !== ":" || date[commaIndex + 20] !== " ") {
+        return void 0;
+      }
+      const dayString = date.substring(commaIndex + 2, commaIndex + 4);
+      const day = Number.parseInt(dayString);
+      if (isNaN(day) || day < 10 && dayString[0] !== "0") {
+        return void 0;
+      }
+      const month = date.substring(commaIndex + 5, commaIndex + 8);
+      const monthIdx = IMF_MONTHS.indexOf(month);
+      if (monthIdx === -1) {
+        return void 0;
+      }
+      let year = Number.parseInt(date.substring(commaIndex + 9, commaIndex + 11));
+      if (isNaN(year)) {
+        return void 0;
+      }
+      const currentYear = now.getUTCFullYear();
+      const currentDecade = currentYear % 100;
+      const currentCentury = Math.floor(currentYear / 100);
+      if (year > currentDecade && year - currentDecade >= 50) {
+        year += (currentCentury - 1) * 100;
+      } else {
+        year += currentCentury * 100;
+      }
+      const hourString = date.substring(commaIndex + 12, commaIndex + 14);
+      const hour = Number.parseInt(hourString);
+      if (isNaN(hour) || hour < 10 && hourString[0] !== "0") {
+        return void 0;
+      }
+      const minuteString = date.substring(commaIndex + 15, commaIndex + 17);
+      const minute = Number.parseInt(minuteString);
+      if (isNaN(minute) || minute < 10 && minuteString[0] !== "0") {
+        return void 0;
+      }
+      const secondString = date.substring(commaIndex + 18, commaIndex + 20);
+      const second = Number.parseInt(secondString);
+      if (isNaN(second) || second < 10 && secondString[0] !== "0") {
+        return void 0;
+      }
+      return new Date(Date.UTC(year, monthIdx, day, hour, minute, second));
+    }
+    module.exports = {
+      parseHttpDate
+    };
+  }
+});
+
+// 
 var require_cache_handler = __commonJS({
   ""(exports, module) {
     "use strict";
@@ -31055,8 +31238,24 @@ var require_cache_handler = __commonJS({
       parseVaryHeader,
       isEtagUsable
     } = require_cache2();
+    var { parseHttpDate } = require_date();
     function noop2() {
     }
+    var HEURISTICALLY_CACHEABLE_STATUS_CODES = [
+      200,
+      203,
+      204,
+      206,
+      300,
+      301,
+      308,
+      404,
+      405,
+      410,
+      414,
+      501
+    ];
+    var MAX_RESPONSE_AGE = 2147483647e3;
     var CacheHandler = class {
       #cacheKey;
       #cacheType;
@@ -31081,7 +31280,7 @@ var require_cache_handler = __commonJS({
         var _a, _b;
         (_b = (_a = this.#handler).onRequestUpgrade) == null ? void 0 : _b.call(_a, controller, statusCode, headers, socket);
       }
-      onResponseStart(controller, statusCode, headers, statusMessage) {
+      onResponseStart(controller, statusCode, resHeaders, statusMessage) {
         var _a, _b;
         const downstreamOnHeaders = () => {
           var _a2, _b2;
@@ -31089,76 +31288,77 @@ var require_cache_handler = __commonJS({
             _a2,
             controller,
             statusCode,
-            headers,
+            resHeaders,
             statusMessage
           );
         };
         if (!util.safeHTTPMethods.includes(this.#cacheKey.method) && statusCode >= 200 && statusCode <= 399) {
           try {
-            (_b = (_a = this.#store.delete(this.#cacheKey)).catch) == null ? void 0 : _b.call(_a, noop2);
+            (_b = (_a = this.#store.delete(this.#cacheKey)) == null ? void 0 : _a.catch) == null ? void 0 : _b.call(_a, noop2);
           } catch {
           }
           return downstreamOnHeaders();
         }
-        const cacheControlHeader = headers["cache-control"];
-        if (!cacheControlHeader && !headers["expires"] && !this.#cacheByDefault) {
+        const cacheControlHeader = resHeaders["cache-control"];
+        const heuristicallyCacheable = resHeaders["last-modified"] && HEURISTICALLY_CACHEABLE_STATUS_CODES.includes(statusCode);
+        if (!cacheControlHeader && !resHeaders["expires"] && !heuristicallyCacheable && !this.#cacheByDefault) {
           return downstreamOnHeaders();
         }
         const cacheControlDirectives = cacheControlHeader ? parseCacheControlHeader(cacheControlHeader) : {};
-        if (!canCacheResponse(this.#cacheType, statusCode, headers, cacheControlDirectives)) {
+        if (!canCacheResponse(this.#cacheType, statusCode, resHeaders, cacheControlDirectives)) {
           return downstreamOnHeaders();
         }
-        const age = getAge(headers);
         const now = Date.now();
-        const staleAt = determineStaleAt(this.#cacheType, now, headers, cacheControlDirectives) ?? this.#cacheByDefault;
-        if (staleAt) {
-          let baseTime = now;
-          if (headers["date"]) {
-            const parsedDate = parseInt(headers["date"]);
-            const date = new Date(isNaN(parsedDate) ? headers["date"] : parsedDate);
-            if (date instanceof Date && !isNaN(date)) {
-              baseTime = date.getTime();
-            }
-          }
-          const absoluteStaleAt = staleAt + baseTime;
-          if (now >= absoluteStaleAt || age && age >= staleAt) {
+        const resAge = resHeaders.age ? getAge(resHeaders.age) : void 0;
+        if (resAge && resAge >= MAX_RESPONSE_AGE) {
+          return downstreamOnHeaders();
+        }
+        const resDate = typeof resHeaders.date === "string" ? parseHttpDate(resHeaders.date) : void 0;
+        const staleAt = determineStaleAt(this.#cacheType, now, resAge, resHeaders, resDate, cacheControlDirectives) ?? this.#cacheByDefault;
+        if (staleAt === void 0 || resAge && resAge > staleAt) {
+          return downstreamOnHeaders();
+        }
+        const baseTime = resDate ? resDate.getTime() : now;
+        const absoluteStaleAt = staleAt + baseTime;
+        if (now >= absoluteStaleAt) {
+          return downstreamOnHeaders();
+        }
+        let varyDirectives;
+        if (this.#cacheKey.headers && resHeaders.vary) {
+          varyDirectives = parseVaryHeader(resHeaders.vary, this.#cacheKey.headers);
+          if (!varyDirectives) {
             return downstreamOnHeaders();
           }
-          let varyDirectives;
-          if (this.#cacheKey.headers && headers.vary) {
-            varyDirectives = parseVaryHeader(headers.vary, this.#cacheKey.headers);
-            if (!varyDirectives) {
-              return downstreamOnHeaders();
-            }
-          }
-          const deleteAt = determineDeleteAt(cacheControlDirectives, absoluteStaleAt);
-          const strippedHeaders = stripNecessaryHeaders(headers, cacheControlDirectives);
-          const value = {
-            statusCode,
-            statusMessage,
-            headers: strippedHeaders,
-            vary: varyDirectives,
-            cacheControlDirectives,
-            cachedAt: age ? now - age * 1e3 : now,
-            staleAt: absoluteStaleAt,
-            deleteAt
-          };
-          if (typeof headers.etag === "string" && isEtagUsable(headers.etag)) {
-            value.etag = headers.etag;
-          }
-          this.#writeStream = this.#store.createWriteStream(this.#cacheKey, value);
-          if (this.#writeStream) {
-            const handler2 = this;
-            this.#writeStream.on("drain", () => controller.resume()).on("error", function() {
-              handler2.#writeStream = void 0;
-            }).on("close", function() {
-              if (handler2.#writeStream === this) {
-                handler2.#writeStream = void 0;
-              }
-              controller.resume();
-            });
-          }
         }
+        const deleteAt = determineDeleteAt(baseTime, cacheControlDirectives, absoluteStaleAt);
+        const strippedHeaders = stripNecessaryHeaders(resHeaders, cacheControlDirectives);
+        const value = {
+          statusCode,
+          statusMessage,
+          headers: strippedHeaders,
+          vary: varyDirectives,
+          cacheControlDirectives,
+          cachedAt: resAge ? now - resAge : now,
+          staleAt: absoluteStaleAt,
+          deleteAt
+        };
+        if (typeof resHeaders.etag === "string" && isEtagUsable(resHeaders.etag)) {
+          value.etag = resHeaders.etag;
+        }
+        this.#writeStream = this.#store.createWriteStream(this.#cacheKey, value);
+        if (!this.#writeStream) {
+          return downstreamOnHeaders();
+        }
+        const handler2 = this;
+        this.#writeStream.on("drain", () => controller.resume()).on("error", function() {
+          handler2.#writeStream = void 0;
+          handler2.#store.delete(handler2.#cacheKey);
+        }).on("close", function() {
+          if (handler2.#writeStream === this) {
+            handler2.#writeStream = void 0;
+          }
+          controller.resume();
+        });
         return downstreamOnHeaders();
       }
       onResponseData(controller, chunk) {
@@ -31180,22 +31380,22 @@ var require_cache_handler = __commonJS({
         (_c = (_b = this.#handler).onResponseError) == null ? void 0 : _c.call(_b, controller, err);
       }
     };
-    function canCacheResponse(cacheType, statusCode, headers, cacheControlDirectives) {
+    function canCacheResponse(cacheType, statusCode, resHeaders, cacheControlDirectives) {
       var _a;
       if (statusCode !== 200 && statusCode !== 307) {
         return false;
       }
-      if (cacheControlDirectives["no-cache"] === true || cacheControlDirectives["no-store"]) {
+      if (cacheControlDirectives["no-store"]) {
         return false;
       }
       if (cacheType === "shared" && cacheControlDirectives.private === true) {
         return false;
       }
-      if ((_a = headers.vary) == null ? void 0 : _a.includes("*")) {
+      if ((_a = resHeaders.vary) == null ? void 0 : _a.includes("*")) {
         return false;
       }
-      if (headers.authorization) {
-        if (!cacheControlDirectives.public || typeof headers.authorization !== "string") {
+      if (resHeaders.authorization) {
+        if (!cacheControlDirectives.public || typeof resHeaders.authorization !== "string") {
           return false;
         }
         if (Array.isArray(cacheControlDirectives["no-cache"]) && cacheControlDirectives["no-cache"].includes("authorization")) {
@@ -31207,34 +31407,46 @@ var require_cache_handler = __commonJS({
       }
       return true;
     }
-    function getAge(headers) {
-      if (!headers.age) {
-        return void 0;
-      }
-      const age = parseInt(Array.isArray(headers.age) ? headers.age[0] : headers.age);
-      if (isNaN(age) || age >= 2147483647) {
-        return void 0;
-      }
-      return age;
+    function getAge(ageHeader) {
+      const age = parseInt(Array.isArray(ageHeader) ? ageHeader[0] : ageHeader);
+      return isNaN(age) ? void 0 : age * 1e3;
     }
-    function determineStaleAt(cacheType, now, headers, cacheControlDirectives) {
+    function determineStaleAt(cacheType, now, age, resHeaders, responseDate, cacheControlDirectives) {
       if (cacheType === "shared") {
         const sMaxAge = cacheControlDirectives["s-maxage"];
-        if (sMaxAge) {
-          return sMaxAge * 1e3;
+        if (sMaxAge !== void 0) {
+          return sMaxAge > 0 ? sMaxAge * 1e3 : void 0;
         }
       }
       const maxAge = cacheControlDirectives["max-age"];
-      if (maxAge) {
-        return maxAge * 1e3;
+      if (maxAge !== void 0) {
+        return maxAge > 0 ? maxAge * 1e3 : void 0;
       }
-      if (headers.expires && typeof headers.expires === "string") {
-        const expiresDate = new Date(headers.expires);
-        if (expiresDate instanceof Date && Number.isFinite(expiresDate.valueOf())) {
+      if (typeof resHeaders.expires === "string") {
+        const expiresDate = parseHttpDate(resHeaders.expires);
+        if (expiresDate) {
           if (now >= expiresDate.getTime()) {
             return void 0;
           }
+          if (responseDate) {
+            if (responseDate >= expiresDate) {
+              return void 0;
+            }
+            if (age !== void 0 && age > expiresDate - responseDate) {
+              return void 0;
+            }
+          }
           return expiresDate.getTime() - now;
+        }
+      }
+      if (typeof resHeaders["last-modified"] === "string") {
+        const lastModified = new Date(resHeaders["last-modified"]);
+        if (isValidDate(lastModified)) {
+          if (lastModified.getTime() >= now) {
+            return void 0;
+          }
+          const responseAge = now - lastModified.getTime();
+          return responseAge * 0.1;
         }
       }
       if (cacheControlDirectives.immutable) {
@@ -31242,7 +31454,7 @@ var require_cache_handler = __commonJS({
       }
       return void 0;
     }
-    function determineDeleteAt(cacheControlDirectives, staleAt) {
+    function determineDeleteAt(now, cacheControlDirectives, staleAt) {
       let staleWhileRevalidate = -Infinity;
       let staleIfError = -Infinity;
       let immutable = -Infinity;
@@ -31253,11 +31465,11 @@ var require_cache_handler = __commonJS({
         staleIfError = staleAt + cacheControlDirectives["stale-if-error"] * 1e3;
       }
       if (staleWhileRevalidate === -Infinity && staleIfError === -Infinity) {
-        immutable = 31536e3;
+        immutable = now + 31536e6;
       }
       return Math.max(staleAt, staleWhileRevalidate, staleIfError, immutable);
     }
-    function stripNecessaryHeaders(headers, cacheControlDirectives) {
+    function stripNecessaryHeaders(resHeaders, cacheControlDirectives) {
       const headersToRemove = [
         "connection",
         "proxy-authenticate",
@@ -31269,11 +31481,11 @@ var require_cache_handler = __commonJS({
         "upgrade",
         "age"
       ];
-      if (headers["connection"]) {
-        if (Array.isArray(headers["connection"])) {
-          headersToRemove.push(...headers["connection"].map((header) => header.trim()));
+      if (resHeaders["connection"]) {
+        if (Array.isArray(resHeaders["connection"])) {
+          headersToRemove.push(...resHeaders["connection"].map((header) => header.trim()));
         } else {
-          headersToRemove.push(...headers["connection"].split(",").map((header) => header.trim()));
+          headersToRemove.push(...resHeaders["connection"].split(",").map((header) => header.trim()));
         }
       }
       if (Array.isArray(cacheControlDirectives["no-cache"])) {
@@ -31284,12 +31496,15 @@ var require_cache_handler = __commonJS({
       }
       let strippedHeaders;
       for (const headerName of headersToRemove) {
-        if (headers[headerName]) {
-          strippedHeaders ??= { ...headers };
+        if (resHeaders[headerName]) {
+          strippedHeaders ??= { ...resHeaders };
           delete strippedHeaders[headerName];
         }
       }
-      return strippedHeaders ?? headers;
+      return strippedHeaders ?? resHeaders;
+    }
+    function isValidDate(date) {
+      return date instanceof Date && Number.isFinite(date.valueOf());
     }
     module.exports = CacheHandler;
   }
@@ -31554,7 +31769,7 @@ var require_cache3 = __commonJS({
       }
       return dispatch(opts, new CacheHandler(globalOpts, cacheKey, handler2));
     }
-    function sendCachedValue(handler2, opts, result, age, context3) {
+    function sendCachedValue(handler2, opts, result, age, context3, isStale) {
       var _a, _b;
       const stream = util.isStream(result.body) ? result.body : Readable.from(result.body ?? []);
       assert(!stream.destroyed, "stream should not be destroyed");
@@ -31597,7 +31812,10 @@ var require_cache3 = __commonJS({
       if (stream.destroyed) {
         return;
       }
-      const headers = age != null ? { ...result.headers, age: String(age) } : result.headers;
+      const headers = { ...result.headers, age: String(age) };
+      if (isStale) {
+        headers.warning = '110 - "response is stale"';
+      }
       (_b = handler2.onResponseStart) == null ? void 0 : _b.call(handler2, controller, result.statusCode, headers, result.statusMessage);
       if (opts.method === "HEAD") {
         stream.destroy();
@@ -31650,7 +31868,7 @@ var require_cache3 = __commonJS({
           new CacheRevalidationHandler(
             (success, context3) => {
               if (success) {
-                sendCachedValue(handler2, opts, result, age, context3);
+                sendCachedValue(handler2, opts, result, age, context3, true);
               } else if (util.isStream(result.body)) {
                 result.body.on("error", () => {
                 }).destroy();
@@ -31665,7 +31883,7 @@ var require_cache3 = __commonJS({
         opts.body.on("error", () => {
         }).destroy();
       }
-      sendCachedValue(handler2, opts, result, age, null);
+      sendCachedValue(handler2, opts, result, age, null, false);
     }
     module.exports = (opts = {}) => {
       const {
