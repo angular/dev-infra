@@ -1345,12 +1345,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/api-logs@npm:0.55.0, @opentelemetry/api-logs@npm:^0.55.0":
+"@opentelemetry/api-logs@npm:0.55.0":
   version: 0.55.0
   resolution: "@opentelemetry/api-logs@npm:0.55.0"
   dependencies:
     "@opentelemetry/api": "npm:^1.3.0"
   checksum: 10c0/9de1601939df121828ed8c48fa2cd923df9d471ef53ca7345a809ff1a940d3541efb64d2adada123b9a7f7feafb1d2acc59fa70e30dc3c3261a17b351c1309c3
+  languageName: node
+  linkType: hard
+
+"@opentelemetry/api-logs@npm:0.56.0, @opentelemetry/api-logs@npm:^0.56.0":
+  version: 0.56.0
+  resolution: "@opentelemetry/api-logs@npm:0.56.0"
+  dependencies:
+    "@opentelemetry/api": "npm:^1.3.0"
+  checksum: 10c0/af78b5534fd8f93edc23811349c88acf9e7cc2c7d94f58a2b58f70016f97aaa80878096c46283fdb53fb7375df83f1a048ac8d5f52b3dc1c98a2184c3a5d50ff
   languageName: node
   linkType: hard
 
@@ -1396,16 +1405,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/instrumentation-bunyan@npm:0.43.0":
-  version: 0.43.0
-  resolution: "@opentelemetry/instrumentation-bunyan@npm:0.43.0"
+"@opentelemetry/instrumentation-bunyan@npm:0.44.0":
+  version: 0.44.0
+  resolution: "@opentelemetry/instrumentation-bunyan@npm:0.44.0"
   dependencies:
-    "@opentelemetry/api-logs": "npm:^0.55.0"
-    "@opentelemetry/instrumentation": "npm:^0.55.0"
+    "@opentelemetry/api-logs": "npm:^0.56.0"
+    "@opentelemetry/instrumentation": "npm:^0.56.0"
     "@types/bunyan": "npm:1.8.9"
   peerDependencies:
     "@opentelemetry/api": ^1.3.0
-  checksum: 10c0/71a14a2bd4a78c6b0ac44efdb4f76f62cc0103982f8e375d179174a15687f494766b6d6b1f15a27e59fbac6bc0e3a69e2563b98a75d0f0c112c5430ff9ac3ae5
+  checksum: 10c0/635788569562403847b4d76b3331661a1f1fcbedc89a03f7a5391a0cc89ba69b750f9803fd0479e2c6277197066499432f1c8ac762766ca26861d6edcd0a8600
   languageName: node
   linkType: hard
 
@@ -1424,7 +1433,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@opentelemetry/instrumentation@npm:0.55.0, @opentelemetry/instrumentation@npm:^0.55.0":
+"@opentelemetry/instrumentation@npm:0.55.0":
   version: 0.55.0
   resolution: "@opentelemetry/instrumentation@npm:0.55.0"
   dependencies:
@@ -1437,6 +1446,22 @@ __metadata:
   peerDependencies:
     "@opentelemetry/api": ^1.3.0
   checksum: 10c0/c1175c63ecd3940a14176f5db89c48bcb64e9a7a366db70d3560913ccf624f6629fc91eb4ff3b6d5208e36df416bb14b5d87dbce5975c23e174c0191f54d06ab
+  languageName: node
+  linkType: hard
+
+"@opentelemetry/instrumentation@npm:^0.56.0":
+  version: 0.56.0
+  resolution: "@opentelemetry/instrumentation@npm:0.56.0"
+  dependencies:
+    "@opentelemetry/api-logs": "npm:0.56.0"
+    "@types/shimmer": "npm:^1.2.0"
+    import-in-the-middle: "npm:^1.8.1"
+    require-in-the-middle: "npm:^7.1.1"
+    semver: "npm:^7.5.2"
+    shimmer: "npm:^1.2.1"
+  peerDependencies:
+    "@opentelemetry/api": ^1.3.0
+  checksum: 10c0/31c79f2cfe832c42dd7892b248d474dc6fac134f3ff58faea746abf1b25a5127c4a8608296792bf8ed9c838a1eb0384bf2f51a5123f6569033e346733476e7c9
   languageName: node
   linkType: hard
 
@@ -2995,14 +3020,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"better-sqlite3@npm:11.6.0":
-  version: 11.6.0
-  resolution: "better-sqlite3@npm:11.6.0"
+"better-sqlite3@npm:11.7.0":
+  version: 11.7.0
+  resolution: "better-sqlite3@npm:11.7.0"
   dependencies:
     bindings: "npm:^1.5.0"
     node-gyp: "npm:latest"
     prebuild-install: "npm:^7.1.1"
-  checksum: 10c0/cafa207b40c42624d767a35f24fb16769d106486371b2e23497e9417505fa1fdedd94313b50508bd67f85713a996a0a9134458987c9b80a0a2b243d4db0d1259
+  checksum: 10c0/66e78fb7e12f55dd78469efec7f6fcf69079e149e974be9ea24befac7c67b8fe0e23a419cae412ac4ea025c73841d8d54bd222eece1c007485e3f6bd56fd1c94
   languageName: node
   linkType: hard
 
@@ -3769,17 +3794,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"emojibase-regex@npm:15.3.2":
-  version: 15.3.2
-  resolution: "emojibase-regex@npm:15.3.2"
-  checksum: 10c0/9500690ef4df9b6bee6039579d2bd324cca347ba55d34ffd9d1a3fc55a1dc78fe261f2282d803a0c945fd90943e32f05d6a7822e5bdeebb48b8432c370947daa
+"emojibase-regex@npm:16.0.0":
+  version: 16.0.0
+  resolution: "emojibase-regex@npm:16.0.0"
+  checksum: 10c0/8ee5ff798e51caa581434b1cb2f9737e50195093c4efa1739df21a50a5496f80517924787d865e8cf7d6a0b4c90dbedc04bdc506dcbcc582e14cdf0bb47af0f0
   languageName: node
   linkType: hard
 
-"emojibase@npm:15.3.1":
-  version: 15.3.1
-  resolution: "emojibase@npm:15.3.1"
-  checksum: 10c0/9ea27ef8f67a1797d1db4e58a5630a288dd13a015ff8d6b88f3d30ce64c95a7132a9e2c9e6b1566815968f05320facb4d023b62645a095c29a846fee6f7a15e9
+"emojibase@npm:16.0.0":
+  version: 16.0.0
+  resolution: "emojibase@npm:16.0.0"
+  checksum: 10c0/ec49ca2e131d349fa1f1dbe6ee8a6bf12da6225ce2de99d488e67a3cb80ac282f27aa480f0a7062c0c069c24508684ba524418be56b475cbd937877663686c47
   languageName: node
   linkType: hard
 
@@ -5718,7 +5743,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: "npm:39.62.6"
+    renovate: "npm:39.75.1"
   languageName: unknown
   linkType: soft
 
@@ -6470,9 +6495,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:39.62.6":
-  version: 39.62.6
-  resolution: "renovate@npm:39.62.6"
+"renovate@npm:39.75.1":
+  version: 39.75.1
+  resolution: "renovate@npm:39.75.1"
   dependencies:
     "@aws-sdk/client-codecommit": "npm:3.699.0"
     "@aws-sdk/client-ec2": "npm:3.701.0"
@@ -6486,7 +6511,7 @@ __metadata:
     "@opentelemetry/context-async-hooks": "npm:1.28.0"
     "@opentelemetry/exporter-trace-otlp-http": "npm:0.55.0"
     "@opentelemetry/instrumentation": "npm:0.55.0"
-    "@opentelemetry/instrumentation-bunyan": "npm:0.43.0"
+    "@opentelemetry/instrumentation-bunyan": "npm:0.44.0"
     "@opentelemetry/instrumentation-http": "npm:0.55.0"
     "@opentelemetry/resources": "npm:1.28.0"
     "@opentelemetry/sdk-trace-base": "npm:1.28.0"
@@ -6507,7 +6532,7 @@ __metadata:
     auth-header: "npm:1.0.0"
     aws4: "npm:1.13.2"
     azure-devops-node-api: "npm:14.1.0"
-    better-sqlite3: "npm:11.6.0"
+    better-sqlite3: "npm:11.7.0"
     bunyan: "npm:1.8.15"
     cacache: "npm:19.0.1"
     chalk: "npm:4.1.2"
@@ -6524,8 +6549,8 @@ __metadata:
     editorconfig: "npm:2.0.0"
     email-addresses: "npm:5.0.0"
     emoji-regex: "npm:10.4.0"
-    emojibase: "npm:15.3.1"
-    emojibase-regex: "npm:15.3.2"
+    emojibase: "npm:16.0.0"
+    emojibase-regex: "npm:16.0.0"
     extract-zip: "npm:2.0.1"
     find-packages: "npm:10.0.4"
     find-up: "npm:5.0.0"
@@ -6585,7 +6610,7 @@ __metadata:
     vuln-vects: "npm:1.1.0"
     xmldoc: "npm:1.3.0"
     yaml: "npm:2.6.1"
-    zod: "npm:3.23.8"
+    zod: "npm:3.24.1"
   dependenciesMeta:
     better-sqlite3:
       optional: true
@@ -6596,7 +6621,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 10c0/26312d489bf330cd144cf23e3f696fe7c2350d7a26559e524da13394823a21d6ab519172ff7ba94c997a7791547cede53346ae34f61dc540eb3e7d440a041002
+  checksum: 10c0/b5215e23fb56b94938a6fec8f4aa807fa288d8f78dfebc2ef540afa4e35aafa3421008b08f480dce627ef82138fcd1fe41f29052f7f693df785a92ec7845b065
   languageName: node
   linkType: hard
 
@@ -7875,14 +7900,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:3.23.8":
-  version: 3.23.8
-  resolution: "zod@npm:3.23.8"
-  checksum: 10c0/8f14c87d6b1b53c944c25ce7a28616896319d95bc46a9660fe441adc0ed0a81253b02b5abdaeffedbeb23bdd25a0bf1c29d2c12dd919aef6447652dd295e3e69
-  languageName: node
-  linkType: hard
-
-"zod@npm:^3.23.0":
+"zod@npm:3.24.1, zod@npm:^3.23.0":
   version: 3.24.1
   resolution: "zod@npm:3.24.1"
   checksum: 10c0/0223d21dbaa15d8928fe0da3b54696391d8e3e1e2d0283a1a070b5980a1dbba945ce631c2d1eccc088fdbad0f2dfa40155590bf83732d3ac4fcca2cc9237591b
