@@ -15,7 +15,7 @@
     }
   },
   "dependencies": {
-    "@google-cloud/spanner": "7.16.0",
+    "@google-cloud/spanner": "7.17.1",
     "@octokit/rest": "21.0.2",
     "@types/semver": "^7.3.6",
     "@types/supports-color": "^8.1.1",
@@ -25,6 +25,6 @@
     "supports-color": "10.0.0",
     "typed-graphqlify": "^3.1.1",
     "typescript": "~4.9.0",
-    "yaml": "2.6.1"
+    "yaml": "2.7.0"
   }
 }
