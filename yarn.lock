@@ -302,7 +302,7 @@ __metadata:
     "@types/browser-sync": "npm:^2.26.3"
     "@types/cli-progress": "npm:^3.9.1"
     "@types/conventional-commits-parser": "npm:^5.0.0"
-    "@types/diff": "npm:^6.0.0"
+    "@types/diff": "npm:^7.0.0"
     "@types/dom-view-transitions": "npm:^1.0.4"
     "@types/ejs": "npm:^3.0.6"
     "@types/events": "npm:^3.0.0"
@@ -4671,10 +4671,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/diff@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "@types/diff@npm:6.0.0"
-  checksum: 10c0/229325cd8039de546dc370d63d62eaf5774122a616eb09cd446d479181e58e941c2983303d23ebcb405109b1b2653ab3bbfcf63a24f827e976e98c8eb83dd34f
+"@types/diff@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "@types/diff@npm:7.0.0"
+  checksum: 10c0/4844e78da6435d8355643cdf5ede9758aa2862408e9fcdeeec12ff3beb3baabf1d2bc75eb6484e358d64c720fcb19fbf18f7b1927d53044e7ca57aac4b1d557f
   languageName: node
   linkType: hard
 
