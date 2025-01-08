@@ -263,15 +263,19 @@ export abstract class ExternalCommands {
    * to refresh Aspect lock files.
    */
   static async invokeBazelUpdateAspectLockFiles(projectDir: string): Promise<void> {
+    const spinner = new Spinner('Updating Aspect lock files');
+
     try {
-      // Note: No progress indicator needed as that is the responsibility of the command.
-      // TODO: Consider using an Ora spinner instead to ensure minimal console output.
-      await ChildProcess.spawn(getBazelBin(), ['run', '@npm2//:sync'], {cwd: projectDir});
+      await ChildProcess.spawn(getBazelBin(), ['run', '@npm2//:sync'], {
+        cwd: projectDir,
+        mode: 'silent',
+      });
     } catch (e) {
       // Note: Gracefully handling these errors because `sync` command
       // alway exits with a non-zero exit code.
+      Log.debug(e);
     }
 
-    Log.info(green('  ✓   Updated Aspect `rules_js` lock files.'));
+    spinner.success(green(' Updated Aspect `rules_js` lock files.'));
   }
 }
