@@ -4962,12 +4962,12 @@ __metadata:
   linkType: hard
 
 "@types/selenium-webdriver@npm:^4.1.21":
-  version: 4.1.27
-  resolution: "@types/selenium-webdriver@npm:4.1.27"
+  version: 4.1.28
+  resolution: "@types/selenium-webdriver@npm:4.1.28"
   dependencies:
     "@types/node": "npm:*"
     "@types/ws": "npm:*"
-  checksum: 10c0/bd79653f777fb5d16f0e87f90b412bbc489d09919cb83554fe4bbe2e1cc0b2fe39f19be542dd2861ad3a59043f9ec8d1d158b5752db2c7cc432031dd020fb913
+  checksum: 10c0/69a0eba9376d676299ee73384a4ff2bb1b35d926ec72e380281fd8cee53777baa01cb8040e3ba2665c547bbe4faf8fc5ca69e07f0b95bd7079bb1ac27fe53de8
   languageName: node
   linkType: hard
 
@@ -8459,14 +8459,14 @@ __metadata:
   linkType: hard
 
 "folder-hash@npm:^4.0.2":
-  version: 4.1.0
-  resolution: "folder-hash@npm:4.1.0"
+  version: 4.1.1
+  resolution: "folder-hash@npm:4.1.1"
   dependencies:
     debug: "npm:4.4.0"
-    minimatch: "npm:10.0.1"
+    minimatch: "npm:7.4.6"
   bin:
     folder-hash: bin/folder-hash
-  checksum: 10c0/973c2c3e19685f5e976f3d867bbd142e1f1673de12a2681b01c8a61c1a9d990c166a3d642f527c6272428552aeffd9b4b29a2c3d31c62707fcc9019724b46737
+  checksum: 10c0/71597548cccda43c3d4bda940fd1277f63839a86322d66dec2aa883dce4f51c4c0a6e274d7cb30cfbf4df9897d7a5649a09257e5ffada2fa50cd3a2b09da5a32
   languageName: node
   linkType: hard
 
@@ -11255,7 +11255,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimatch@npm:10.0.1, minimatch@npm:^10.0.0":
+"minimatch@npm:7.4.6":
+  version: 7.4.6
+  resolution: "minimatch@npm:7.4.6"
+  dependencies:
+    brace-expansion: "npm:^2.0.1"
+  checksum: 10c0/e587bf3d90542555a3d58aca94c549b72d58b0a66545dd00eef808d0d66e5d9a163d3084da7f874e83ca8cc47e91c670e6c6f6593a3e7bb27fcc0e6512e87c67
+  languageName: node
+  linkType: hard
+
+"minimatch@npm:^10.0.0":
   version: 10.0.1
   resolution: "minimatch@npm:10.0.1"
   dependencies:
