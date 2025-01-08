@@ -282,7 +282,7 @@ __metadata:
     "@google-cloud/storage": "npm:^7.0.0"
     "@inquirer/prompts": "npm:^7.0.0"
     "@inquirer/type": "npm:^3.0.0"
-    "@microsoft/api-extractor": "npm:7.48.1"
+    "@microsoft/api-extractor": "npm:7.49.0"
     "@octokit/auth-app": "npm:7.1.4"
     "@octokit/core": "npm:6.1.3"
     "@octokit/graphql": "npm:8.1.2"
@@ -2379,8 +2379,8 @@ __metadata:
   linkType: hard
 
 "@google-cloud/storage@npm:^7.0.0, @google-cloud/storage@npm:^7.14.0":
-  version: 7.14.0
-  resolution: "@google-cloud/storage@npm:7.14.0"
+  version: 7.15.0
+  resolution: "@google-cloud/storage@npm:7.15.0"
   dependencies:
     "@google-cloud/paginator": "npm:^5.0.0"
     "@google-cloud/projectify": "npm:^4.0.0"
@@ -2397,7 +2397,7 @@ __metadata:
     retry-request: "npm:^7.0.0"
     teeny-request: "npm:^9.0.0"
     uuid: "npm:^8.0.0"
-  checksum: 10c0/549340cfd4825710dd82dd15bd59ef27d248bc8bad04982c5c97ee4c50f0c09acd24e1b5488530a35318c513a7d9f14d526fcbb050a744893e7e593135856884
+  checksum: 10c0/10a432d2302a6f47f2b4552b97c897d2472aedc314d054a91dac6f83e8a7710f176ecd5aee728357bec53ec722198f519d8dc662f7c4da6c80eac6abe5dedf67
   languageName: node
   linkType: hard
 
@@ -2856,7 +2856,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor@npm:7.48.1, @microsoft/api-extractor@npm:^7.24.2":
+"@microsoft/api-extractor@npm:7.49.0":
+  version: 7.49.0
+  resolution: "@microsoft/api-extractor@npm:7.49.0"
+  dependencies:
+    "@microsoft/api-extractor-model": "npm:7.30.1"
+    "@microsoft/tsdoc": "npm:~0.15.1"
+    "@microsoft/tsdoc-config": "npm:~0.17.1"
+    "@rushstack/node-core-library": "npm:5.10.1"
+    "@rushstack/rig-package": "npm:0.5.3"
+    "@rushstack/terminal": "npm:0.14.4"
+    "@rushstack/ts-command-line": "npm:4.23.2"
+    lodash: "npm:~4.17.15"
+    minimatch: "npm:~3.0.3"
+    resolve: "npm:~1.22.1"
+    semver: "npm:~7.5.4"
+    source-map: "npm:~0.6.1"
+    typescript: "npm:5.7.2"
+  bin:
+    api-extractor: bin/api-extractor
+  checksum: 10c0/2682251c81e2576de05afcdaeba4a2dc7a43125b7fb547104cb2446c5070566ebf43e0a929f9f04d141984c025ef181870b6bec9255916fd0a5ae3888bbd3311
+  languageName: node
+  linkType: hard
+
+"@microsoft/api-extractor@npm:^7.24.2":
   version: 7.48.1
   resolution: "@microsoft/api-extractor@npm:7.48.1"
   dependencies:

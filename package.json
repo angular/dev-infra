@@ -28,7 +28,7 @@
     "@bazel/runfiles": "5.8.1",
     "@bazel/terser": "5.8.1",
     "@bazel/typescript": "5.8.1",
-    "@microsoft/api-extractor": "7.48.1",
+    "@microsoft/api-extractor": "7.49.0",
     "@types/browser-sync": "^2.26.3",
     "@types/minimatch": "^5.1.2",
     "@types/node": "^18.19.21",
