@@ -357,7 +357,7 @@ __metadata:
     license-checker: "npm:^25.0.1"
     minimatch: "npm:^10.0.0"
     multimatch: "npm:^7.0.0"
-    nock: "npm:beta"
+    nock: "npm:14.0.0-beta.19"
     opener: "npm:^1.5.2"
     prettier: "npm:3.4.2"
     protobufjs: "npm:^7.0.0"
@@ -11674,7 +11674,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nock@npm:beta":
+"nock@npm:14.0.0-beta.19":
   version: 14.0.0-beta.19
   resolution: "nock@npm:14.0.0-beta.19"
   dependencies:

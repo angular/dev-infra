@@ -140,7 +140,7 @@
     "license-checker": "^25.0.1",
     "minimatch": "^10.0.0",
     "multimatch": "^7.0.0",
-    "nock": "beta",
+    "nock": "14.0.0-beta.19",
     "opener": "^1.5.2",
     "protobufjs": "^7.0.0",
     "requirejs": "^2.3.6",
