@@ -146,7 +146,7 @@
     "requirejs": "^2.3.6",
     "rxjs": "^7.4.0",
     "semver": "^7.5.4",
-    "spdx-satisfies": "^5.0.1",
+    "spdx-satisfies": "^6.0.0",
     "stylelint": "^16.0.0",
     "supports-color": "10.0.0",
     "terser": "5.37.0",
