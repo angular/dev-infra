@@ -139,7 +139,10 @@ export abstract class BranchOffNextBranchBaseAction extends CutNpmNextPrerelease
 
     // Create an individual commit for the next version bump. The changelog should go into
     // a separate commit that makes it clear where the changelog is cherry-picked from.
-    await this.createCommit(bumpCommitMessage, [workspaceRelativePackageJsonPath]);
+    await this.createCommit(bumpCommitMessage, [
+      workspaceRelativePackageJsonPath,
+      ...this.getAspectLockFiles(),
+    ]);
 
     await this.prependReleaseNotesToChangelog(releaseNotes);
 

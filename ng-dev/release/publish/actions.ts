@@ -136,6 +136,16 @@ export abstract class ReleaseAction {
     }
   }
 
+  /*
+   * Get the modified Aspect lock files if `rulesJsInteropMode` is enabled.
+   */
+  protected getAspectLockFiles(): string[] {
+    // TODO: Remove after `rules_js` migration is complete.
+    return this.config.rulesJsInteropMode
+      ? glob.sync(['.aspect/**', 'pnpm-lock.yaml'], {cwd: this.projectDir})
+      : [];
+  }
+
   /** Gets the most recent commit of a specified branch. */
   protected async getLatestCommitOfBranch(branchName: string): Promise<string> {
     const {
@@ -221,14 +231,11 @@ export abstract class ReleaseAction {
 
     // Commit message for the release point.
     const commitMessage = getCommitMessageForRelease(newVersion);
-
-    const filesToCommit = [workspaceRelativePackageJsonPath, workspaceRelativeChangelogPath];
-
-    // Ensure modified Aspect lock files are included in the release commit.
-    // TODO: Remove after `rules_js` migration is complete.
-    if (this.config.rulesJsInteropMode) {
-      filesToCommit.push(...glob.sync(['.aspect/**', 'pnpm-lock.yaml'], {cwd: this.projectDir}));
-    }
+    const filesToCommit = [
+      workspaceRelativePackageJsonPath,
+      workspaceRelativeChangelogPath,
+      ...this.getAspectLockFiles(),
+    ];
 
     // Create a release staging commit including changelog and version bump.
     await this.createCommit(commitMessage, filesToCommit);

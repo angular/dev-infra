@@ -38,8 +38,10 @@ export class ConfigureNextAsMajorAction extends ReleaseAction {
     await this.assertPassingGithubStatus(beforeStagingSha, branchName);
     await this.checkoutUpstreamBranch(branchName);
     await this.updateProjectVersion(newVersion);
+
     await this.createCommit(getCommitMessageForNextBranchMajorSwitch(newVersion), [
       workspaceRelativePackageJsonPath,
+      ...this.getAspectLockFiles(),
     ]);
     const pullRequest = await this.pushChangesToForkAndCreatePullRequest(
       branchName,
