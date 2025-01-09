@@ -48,9 +48,12 @@ export class PrepareExceptionalMinorAction extends ReleaseAction {
     await this.updateProjectVersion(this._newVersion, (pkgJson) => {
       pkgJson[exceptionalMinorPackageIndicator] = true;
     });
+
     await this.createCommit(`build: prepare exceptional minor branch: ${this._newBranch}`, [
       workspaceRelativePackageJsonPath,
+      ...this.getAspectLockFiles(),
     ]);
+
     await this.pushHeadToRemoteBranch(this._newBranch);
 
     Log.info(green(`  ✓   Version branch "${this._newBranch}" created.`));
