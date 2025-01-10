@@ -14,6 +14,7 @@ export interface CommitMessageConfig {
   minBodyLength: number;
   minBodyLengthTypeExcludes?: string[];
   scopes: string[];
+  disallowFixup?: boolean;
 }
 
 /** Assert the provided config contains a `CommitMessageConfig`. */

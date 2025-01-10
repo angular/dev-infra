@@ -15,7 +15,6 @@ import {Commit, parseCommitMessage} from './parse.js';
 /** Options for commit message validation. */
 export interface ValidateCommitMessageOptions {
   disallowSquash?: boolean;
-  disallowFixup?: boolean;
   nonFixupCommitHeaders?: string[];
 }
 
@@ -91,7 +90,7 @@ export async function validateCommitMessage(
     // stripping the `fixup! ` prefix), otherwise we assume this verification will happen in another
     // check.
     if (commit.isFixup) {
-      if (options.disallowFixup) {
+      if (config.disallowFixup) {
         errors.push(
           'The commit must be manually fixed-up into the target commit as fixup commits are disallowed',
         );
