@@ -266,6 +266,33 @@ describe('validate-commit-message.js', () => {
           );
         });
       });
+
+      describe('with `disallowFixup`', () => {
+        it('when true should fail', async () => {
+          const msg = 'fixup! foo';
+
+          expectValidationResult(
+            await validateCommitMessage(msg, {
+              disallowFixup: true,
+              nonFixupCommitHeaders: ['foo', 'bar', 'baz'],
+            }),
+            INVALID,
+            ['The commit must be manually fixed-up into the target commit as fixup commits are disallowed'],
+          );
+        });
+
+        it('when false should pass', async () => {
+          const msg = 'fixup! foo';
+
+          expectValidationResult(
+            await validateCommitMessage(msg, {
+              disallowFixup: false,
+              nonFixupCommitHeaders: ['foo', 'bar', 'baz'],
+            }),
+            VALID,
+          );
+        });
+      });
     });
 
     describe('minBodyLength', () => {
