@@ -571,8 +571,8 @@ __metadata:
   linkType: hard
 
 "@angular/fire@npm:^19.0.0-rc":
-  version: 19.0.0-rc.4
-  resolution: "@angular/fire@npm:19.0.0-rc.4"
+  version: 19.0.0-rc.5
+  resolution: "@angular/fire@npm:19.0.0-rc.5"
   dependencies:
     "@angular-devkit/schematics": "npm:^19.0.0"
     "@schematics/angular": "npm:^19.0.0"
@@ -592,7 +592,7 @@ __metadata:
       optional: true
     firebase-tools:
       optional: true
-  checksum: 10c0/076112a5f77a7e67b923ef61bce6430754ed73b5f1c84546a1f86aa29beb0f6b20a0b3241f06a402966c9bbd58573f81f473c30473453818adebf02b44d5e7aa
+  checksum: 10c0/5f1078f7c3cac60b8890ad535fed24546347536b684307c99054777d616a8c1db48087dde9b316c03aa5ca29a87a72fe8454f5c643fe2bf9d6266cfd86e70144
   languageName: node
   linkType: hard
 
