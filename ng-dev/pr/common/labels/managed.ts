@@ -47,19 +47,34 @@ export const managedLabels = createTypedObject(ManagedLabel)({
   DETECTED_HTTP_CHANGE: {
     description: 'Issues related to HTTP and HTTP Client',
     name: 'area: common/http',
-    commitCheck: (c: Commit) => c.type === 'common/http' || c.type === 'http',
+    commitCheck: (c: Commit) => c.scope === 'common/http' || c.scope === 'http',
     repositories: [ManagedRepositories.ANGULAR],
   },
   DETECTED_COMPILER_CHANGE: {
     description: "Issues related to `ngc`, Angular's template compiler",
     name: 'area: compiler',
-    commitCheck: (c: Commit) => c.type === 'compiler' || c.type === 'compiler-cli',
+    commitCheck: (c: Commit) => c.scope === 'compiler' || c.scope === 'compiler-cli',
     repositories: [ManagedRepositories.ANGULAR],
   },
   DETECTED_PLATFORM_BROWSER_CHANGE: {
     description: 'Issues related to the framework runtime',
     name: 'area: core',
-    commitCheck: (c: Commit) => c.type === 'platform-browser' || c.type === 'core',
+    commitCheck: (c: Commit) =>
+      c.scope === 'platform-browser' ||
+      c.scope === 'core' ||
+      c.scope === 'platform-browser-dynamic',
+    repositories: [ManagedRepositories.ANGULAR],
+  },
+  DETECTED_PLATFORM_SERVER_CHANGE: {
+    description: 'Issues related to server-side rendering',
+    name: 'area: server',
+    commitCheck: (c: Commit) => c.scope === 'platform-server',
+    repositories: [ManagedRepositories.ANGULAR],
+  },
+  DETECTED_ZONES_CHANGE: {
+    description: 'Issues related to zone.js',
+    name: 'area: zones',
+    commitCheck: (c: Commit) => c.scope === 'zone.js',
     repositories: [ManagedRepositories.ANGULAR],
   },
 });
