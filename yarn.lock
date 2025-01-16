@@ -253,7 +253,7 @@ __metadata:
     "@angular/bazel": "patch:@angular/bazel@npm:14.1.0-next.2#.yarn/patches/@angular-bazel-npm.patch"
     "@angular/benchpress": "npm:0.3.0"
     "@angular/build": "npm:19.1.0-rc.0"
-    "@angular/cdk": "npm:19.1.0-rc.0"
+    "@angular/cdk": "npm:19.2.0-next.0"
     "@angular/cli": "npm:19.1.0-rc.0"
     "@angular/common": "npm:19.1.0-rc.0"
     "@angular/compiler": "npm:19.1.0-rc.0"
@@ -261,7 +261,7 @@ __metadata:
     "@angular/core": "npm:19.1.0-rc.0"
     "@angular/fire": "npm:^19.0.0-rc"
     "@angular/forms": "npm:19.1.0-rc.0"
-    "@angular/material": "npm:19.1.0-rc.0"
+    "@angular/material": "npm:19.2.0-next.0"
     "@angular/platform-browser": "npm:19.1.0-rc.0"
     "@angular/platform-browser-dynamic": "npm:19.1.0-rc.0"
     "@angular/router": "npm:19.1.0-rc.0"
@@ -460,9 +460,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/cdk@npm:19.1.0-rc.0":
-  version: 19.1.0-rc.0
-  resolution: "@angular/cdk@npm:19.1.0-rc.0"
+"@angular/cdk@npm:19.2.0-next.0":
+  version: 19.2.0-next.0
+  resolution: "@angular/cdk@npm:19.2.0-next.0"
   dependencies:
     parse5: "npm:^7.1.2"
     tslib: "npm:^2.3.0"
@@ -473,7 +473,7 @@ __metadata:
   dependenciesMeta:
     parse5:
       optional: true
-  checksum: 10c0/62bd88e0ce3a2f2e4b77c2d37b7a02b680e309e9365dfcadce48152d1fe3804c1a3efe706e007c42e0508a36ba96373811fdedc5117dd4cc3567d7b08d43a50e
+  checksum: 10c0/daee61f6add5cad5b60d3141efc9ebc270cab275d64d029644a7d1323f66adfa196ee2dfe0b661496da24784e6c7dd4ef36523a5e48b92092da2ea259fe22532
   languageName: node
   linkType: hard
 
@@ -610,20 +610,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/material@npm:19.1.0-rc.0":
-  version: 19.1.0-rc.0
-  resolution: "@angular/material@npm:19.1.0-rc.0"
+"@angular/material@npm:19.2.0-next.0":
+  version: 19.2.0-next.0
+  resolution: "@angular/material@npm:19.2.0-next.0"
   dependencies:
     tslib: "npm:^2.3.0"
   peerDependencies:
     "@angular/animations": ^19.0.0-0 || ^19.1.0-0 || ^19.2.0-0 || ^19.3.0-0 || ^20.0.0-0
-    "@angular/cdk": 19.1.0-rc.0
+    "@angular/cdk": 19.2.0-next.0
     "@angular/common": ^19.0.0-0 || ^19.1.0-0 || ^19.2.0-0 || ^19.3.0-0 || ^20.0.0-0
     "@angular/core": ^19.0.0-0 || ^19.1.0-0 || ^19.2.0-0 || ^19.3.0-0 || ^20.0.0-0
     "@angular/forms": ^19.0.0-0 || ^19.1.0-0 || ^19.2.0-0 || ^19.3.0-0 || ^20.0.0-0
     "@angular/platform-browser": ^19.0.0-0 || ^19.1.0-0 || ^19.2.0-0 || ^19.3.0-0 || ^20.0.0-0
     rxjs: ^6.5.3 || ^7.4.0
-  checksum: 10c0/1c10cd0a3082de2c7b2709596190fad149d144335f10161be68e7a2e074102366da89f12d92c208e5ef964f5997804aeb875e8d5b9b2bad7adffe2446e65fa84
+  checksum: 10c0/e7db7e2ec851cf4fae2961a4b85867692e4df9db8dd6a4363460758cb8bde5ea5f1fbe900f6c6e634afbf9edd11e4d74ce01e8ded6cfa4ab3a66e550be99543d
   languageName: node
   linkType: hard
 
