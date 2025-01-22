@@ -38,3 +38,6 @@ export * from './utils/logging.js';
 export * from './utils/git/authenticated-git-client.js';
 export * from './utils/git/git-client.js';
 export * from './utils/git/github.js';
+
+// Exposes common utils needed for consumer scripts
+export {resolveYarnScriptForProject, YarnCommandInfo} from './utils/resolve-yarn-bin.js';
