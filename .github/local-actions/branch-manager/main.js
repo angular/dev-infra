@@ -34220,15 +34220,15 @@ var require_jsonc_parser = __commonJS({
               throw earlyReturnException;
             }
           },
-          onSeparator: (sep2, offset, length) => {
+          onSeparator: (sep3, offset, length) => {
             if (position <= offset) {
               throw earlyReturnException;
             }
-            if (sep2 === ":" && previousNode && previousNode.type === "property") {
+            if (sep3 === ":" && previousNode && previousNode.type === "property") {
               previousNode.colonOffset = offset;
               isAtPropertyKey = false;
               previousNode = void 0;
-            } else if (sep2 === ",") {
+            } else if (sep3 === ",") {
               const last = segments[segments.length - 1];
               if (typeof last === "number") {
                 segments[segments.length - 1] = last + 1;
@@ -34343,11 +34343,11 @@ var require_jsonc_parser = __commonJS({
           onValue({ type: getNodeType(value), offset, length, parent: currentParent, value });
           ensurePropertyComplete(offset + length);
         },
-        onSeparator: (sep2, offset, length) => {
+        onSeparator: (sep3, offset, length) => {
           if (currentParent.type === "property") {
-            if (sep2 === ":") {
+            if (sep3 === ":") {
               currentParent.colonOffset = offset;
-            } else if (sep2 === ",") {
+            } else if (sep3 === ",") {
               ensurePropertyComplete(offset);
             }
           }
@@ -55258,13 +55258,13 @@ var require_dist_node8 = __commonJS({
       createTokenAuth: () => createTokenAuth3
     });
     module.exports = __toCommonJS(dist_src_exports);
-    var REGEX_IS_INSTALLATION_LEGACY2 = /^v1\./;
-    var REGEX_IS_INSTALLATION2 = /^ghs_/;
-    var REGEX_IS_USER_TO_SERVER2 = /^ghu_/;
+    var REGEX_IS_INSTALLATION_LEGACY = /^v1\./;
+    var REGEX_IS_INSTALLATION = /^ghs_/;
+    var REGEX_IS_USER_TO_SERVER = /^ghu_/;
     async function auth6(token2) {
       const isApp = token2.split(/\./).length === 3;
-      const isInstallation = REGEX_IS_INSTALLATION_LEGACY2.test(token2) || REGEX_IS_INSTALLATION2.test(token2);
-      const isUserToServer = REGEX_IS_USER_TO_SERVER2.test(token2);
+      const isInstallation = REGEX_IS_INSTALLATION_LEGACY.test(token2) || REGEX_IS_INSTALLATION.test(token2);
+      const isUserToServer = REGEX_IS_USER_TO_SERVER.test(token2);
       const tokenType = isApp ? "app" : isInstallation ? "installation" : isUserToServer ? "user-to-server" : "oauth";
       return {
         type: "token",
@@ -61972,7 +61972,7 @@ async function getResponseData(response) {
     return response.text().catch(() => "");
   }
   const mimetype = (0, import_fast_content_type_parse.safeParse)(contentType);
-  if (mimetype.type === "application/json") {
+  if (isJSONResponse(mimetype)) {
     let text = "";
     try {
       text = await response.text();
@@ -61985,6 +61985,9 @@ async function getResponseData(response) {
   } else {
     return response.arrayBuffer().catch(() => new ArrayBuffer(0));
   }
+}
+function isJSONResponse(mimetype) {
+  return mimetype.type === "application/json" || mimetype.type === "application/scim+json";
 }
 function toErrorMessage(data) {
   if (typeof data === "string") {
@@ -64760,13 +64763,14 @@ function Collection() {
 var before_after_hook_default = { Singular, Collection };
 
 // 
-var REGEX_IS_INSTALLATION_LEGACY = /^v1\./;
-var REGEX_IS_INSTALLATION = /^ghs_/;
-var REGEX_IS_USER_TO_SERVER = /^ghu_/;
+var b64url = "(?:[a-zA-Z0-9_-]+)";
+var sep2 = "\\.";
+var jwtRE = new RegExp(`^${b64url}${sep2}${b64url}${sep2}${b64url}$`);
+var isJWT = jwtRE.test.bind(jwtRE);
 async function auth(token2) {
-  const isApp = token2.split(/\./).length === 3;
-  const isInstallation = REGEX_IS_INSTALLATION_LEGACY.test(token2) || REGEX_IS_INSTALLATION.test(token2);
-  const isUserToServer = REGEX_IS_USER_TO_SERVER.test(token2);
+  const isApp = isJWT(token2);
+  const isInstallation = token2.startsWith("v1.") || token2.startsWith("ghs_");
+  const isUserToServer = token2.startsWith("ghu_");
   const tokenType = isApp ? "app" : isInstallation ? "installation" : isUserToServer ? "user-to-server" : "oauth";
   return {
     type: "token",
