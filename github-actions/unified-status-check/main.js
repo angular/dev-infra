@@ -5298,6 +5298,13 @@ var require_body = __commonJS({
     var { isUint8Array, isArrayBuffer } = __require("util/types");
     var { File: UndiciFile } = require_file();
     var { parseMIMEType, serializeAMimeType } = require_dataURL();
+    var random;
+    try {
+      const crypto = __require("node:crypto");
+      random = (max) => crypto.randomInt(0, max);
+    } catch {
+      random = (max) => Math.floor(Math.random(max));
+    }
     var ReadableStream2 = globalThis.ReadableStream;
     var File = NativeFile ?? UndiciFile;
     var textEncoder = new TextEncoder();
@@ -5340,7 +5347,7 @@ var require_body = __commonJS({
       } else if (ArrayBuffer.isView(object)) {
         source = new Uint8Array(object.buffer.slice(object.byteOffset, object.byteOffset + object.byteLength));
       } else if (util.isFormDataLike(object)) {
-        const boundary = `----formdata-undici-0${`${Math.floor(Math.random() * 1e11)}`.padStart(11, "0")}`;
+        const boundary = `----formdata-undici-0${`${random(1e11)}`.padStart(11, "0")}`;
         const prefix = `--${boundary}\r
 Content-Disposition: form-data`;
         const escape = (str) => str.replace(/\n/g, "%0A").replace(/\r/g, "%0D").replace(/"/g, "%22");
@@ -20434,21 +20441,25 @@ var require_util8 = __commonJS({
           async start() {
             iterator2 = iterable[Symbol.asyncIterator]();
           },
-          async pull(controller) {
-            const { done, value } = await iterator2.next();
-            if (done) {
-              queueMicrotask(() => {
-                var _a;
-                controller.close();
-                (_a = controller.byobRequest) == null ? void 0 : _a.respond(0);
-              });
-            } else {
-              const buf = Buffer.isBuffer(value) ? value : Buffer.from(value);
-              if (buf.byteLength) {
-                controller.enqueue(new Uint8Array(buf));
+          pull(controller) {
+            async function pull() {
+              const { done, value } = await iterator2.next();
+              if (done) {
+                queueMicrotask(() => {
+                  var _a;
+                  controller.close();
+                  (_a = controller.byobRequest) == null ? void 0 : _a.respond(0);
+                });
+              } else {
+                const buf = Buffer.isBuffer(value) ? value : Buffer.from(value);
+                if (buf.byteLength) {
+                  controller.enqueue(new Uint8Array(buf));
+                } else {
+                  return await pull();
+                }
               }
             }
-            return controller.desiredSize > 0;
+            return pull();
           },
           async cancel() {
             await iterator2.return();
@@ -24741,6 +24752,13 @@ var require_body2 = __commonJS({
     var { isArrayBuffer } = __require("node:util/types");
     var { serializeAMimeType } = require_data_url();
     var { multipartFormDataParser } = require_formdata_parser();
+    var random;
+    try {
+      const crypto = __require("node:crypto");
+      random = (max) => crypto.randomInt(0, max);
+    } catch {
+      random = (max) => Math.floor(Math.random(max));
+    }
     var textEncoder = new TextEncoder();
     function noop2() {
     }
@@ -24790,7 +24808,7 @@ var require_body2 = __commonJS({
       } else if (ArrayBuffer.isView(object)) {
         source = new Uint8Array(object.buffer.slice(object.byteOffset, object.byteOffset + object.byteLength));
       } else if (webidl.is.FormData(object)) {
-        const boundary = `----formdata-undici-0${`${Math.floor(Math.random() * 1e11)}`.padStart(11, "0")}`;
+        const boundary = `----formdata-undici-0${`${random(1e11)}`.padStart(11, "0")}`;
         const prefix = `--${boundary}\r
 Content-Disposition: form-data`;
         const escape = (str) => str.replace(/\n/g, "%0A").replace(/\r/g, "%0D").replace(/"/g, "%22");
@@ -30646,7 +30664,7 @@ var require_dns = __commonJS({
       runLookup(origin, opts, cb) {
         const ips = this.#records.get(origin.hostname);
         if (ips == null && this.full) {
-          cb(null, origin.origin);
+          cb(null, origin);
           return;
         }
         const newOpts = {
@@ -30681,7 +30699,7 @@ var require_dns = __commonJS({
             }
             cb(
               null,
-              `${origin.protocol}//${ip.family === 6 ? `[${ip.address}]` : ip.address}${port}`
+              new URL(`${origin.protocol}//${ip.family === 6 ? `[${ip.address}]` : ip.address}${port}`)
             );
           });
         } else {
@@ -30705,7 +30723,7 @@ var require_dns = __commonJS({
           }
           cb(
             null,
-            `${origin.protocol}//${ip.family === 6 ? `[${ip.address}]` : ip.address}${port}`
+            new URL(`${origin.protocol}//${ip.family === 6 ? `[${ip.address}]` : ip.address}${port}`)
           );
         }
       }
@@ -30770,6 +30788,31 @@ var require_dns = __commonJS({
         }
         return ip;
       }
+      pickFamily(origin, ipFamily) {
+        var _a;
+        const records = (_a = this.#records.get(origin.hostname)) == null ? void 0 : _a.records;
+        if (!records) {
+          return null;
+        }
+        const family = records[ipFamily];
+        if (!family) {
+          return null;
+        }
+        if (family.offset == null || family.offset === maxInt) {
+          family.offset = 0;
+        } else {
+          family.offset++;
+        }
+        const position = family.offset % family.ips.length;
+        const ip = family.ips[position] ?? null;
+        if (ip == null) {
+          return ip;
+        }
+        if (Date.now() - ip.timestamp > ip.ttl) {
+          family.ips.splice(position, 1);
+        }
+        return ip;
+      }
       setRecords(origin, addresses) {
         const timestamp = Date.now();
         const records = { records: { 4: null, 6: null } };
@@ -30799,9 +30842,12 @@ var require_dns = __commonJS({
       #dispatch = null;
       #origin = null;
       #controller = null;
-      constructor(state, { origin, handler: handler2, dispatch }, opts) {
+      #newOrigin = null;
+      #firstTry = true;
+      constructor(state, { origin, handler: handler2, dispatch, newOrigin }, opts) {
         super(handler2);
         this.#origin = origin;
+        this.#newOrigin = newOrigin;
         this.#opts = { ...opts };
         this.#state = state;
         this.#dispatch = dispatch;
@@ -30811,17 +30857,30 @@ var require_dns = __commonJS({
           case "ETIMEDOUT":
           case "ECONNREFUSED": {
             if (this.#state.dualStack) {
-              this.#state.runLookup(this.#origin, this.#opts, (err2, newOrigin) => {
-                if (err2) {
-                  super.onResponseError(controller, err2);
-                  return;
-                }
-                const dispatchOpts = {
-                  ...this.#opts,
-                  origin: newOrigin
-                };
-                this.#dispatch(dispatchOpts, this);
-              });
+              if (!this.#firstTry) {
+                super.onResponseError(controller, err);
+                return;
+              }
+              this.#firstTry = false;
+              const otherFamily = this.#newOrigin.hostname[0] === "[" ? 4 : 6;
+              const ip = this.#state.pickFamily(this.#origin, otherFamily);
+              if (ip == null) {
+                super.onResponseError(controller, err);
+                return;
+              }
+              let port;
+              if (typeof ip.port === "number") {
+                port = `:${ip.port}`;
+              } else if (this.#origin.port !== "") {
+                port = `:${this.#origin.port}`;
+              } else {
+                port = "";
+              }
+              const dispatchOpts = {
+                ...this.#opts,
+                origin: `${this.#origin.protocol}//${ip.family === 6 ? `[${ip.address}]` : ip.address}${port}`
+              };
+              this.#dispatch(dispatchOpts, this);
               return;
             }
             super.onResponseError(controller, err);
@@ -30829,6 +30888,8 @@ var require_dns = __commonJS({
           }
           case "ENOTFOUND":
             this.#state.deleteRecords(this.#origin);
+            super.onResponseError(controller, err);
+            break;
           default:
             super.onResponseError(controller, err);
             break;
@@ -30882,11 +30943,10 @@ var require_dns = __commonJS({
             if (err) {
               return handler2.onResponseError(null, err);
             }
-            let dispatchOpts = null;
-            dispatchOpts = {
+            const dispatchOpts = {
               ...origDispatchOpts,
               servername: origin.hostname,
-              origin: newOrigin,
+              origin: newOrigin.origin,
               headers: {
                 host: origin.host,
                 ...origDispatchOpts.headers
@@ -30894,7 +30954,10 @@ var require_dns = __commonJS({
             };
             dispatch(
               dispatchOpts,
-              instance.getHandler({ origin, dispatch, handler: handler2 }, origDispatchOpts)
+              instance.getHandler(
+                { origin, dispatch, handler: handler2, newOrigin },
+                origDispatchOpts
+              )
             );
           });
           return true;
@@ -32147,8 +32210,7 @@ var require_sqlite_cache_store = __commonJS({
         etag = ?,
         cacheControlDirectives = ?,
         cachedAt = ?,
-        staleAt = ?,
-        deleteAt = ?
+        staleAt = ?
       WHERE
         id = ?
     `);
@@ -32165,9 +32227,8 @@ var require_sqlite_cache_store = __commonJS({
         cacheControlDirectives,
         vary,
         cachedAt,
-        staleAt,
-        deleteAt
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        staleAt
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
         this.#deleteByUrlQuery = this.#db.prepare(
           `DELETE FROM cacheInterceptorV${VERSION13} WHERE url = ?`
@@ -32195,35 +32256,68 @@ var require_sqlite_cache_store = __commonJS({
       get(key) {
         assertCacheKey(key);
         const value = this.#findValue(key);
-        if (!value) {
-          return void 0;
-        }
-        const result = {
-          body: Buffer.from(value.body),
+        return value ? {
+          body: value.body ? Buffer.from(value.body.buffer) : void 0,
           statusCode: value.statusCode,
           statusMessage: value.statusMessage,
           headers: value.headers ? JSON.parse(value.headers) : void 0,
           etag: value.etag ? value.etag : void 0,
-          vary: value.vary ?? void 0,
+          vary: value.vary ? JSON.parse(value.vary) : void 0,
           cacheControlDirectives: value.cacheControlDirectives ? JSON.parse(value.cacheControlDirectives) : void 0,
           cachedAt: value.cachedAt,
           staleAt: value.staleAt,
           deleteAt: value.deleteAt
-        };
-        return result;
+        } : void 0;
+      }
+      set(key, value) {
+        assertCacheKey(key);
+        const url = this.#makeValueUrl(key);
+        const body = Array.isArray(value.body) ? Buffer.concat(value.body) : value.body;
+        const size = body == null ? void 0 : body.byteLength;
+        if (size && size > this.#maxEntrySize) {
+          return;
+        }
+        const existingValue = this.#findValue(key, true);
+        if (existingValue) {
+          this.#updateValueQuery.run(
+            body,
+            value.deleteAt,
+            value.statusCode,
+            value.statusMessage,
+            value.headers ? JSON.stringify(value.headers) : null,
+            value.etag ? value.etag : null,
+            value.cacheControlDirectives ? JSON.stringify(value.cacheControlDirectives) : null,
+            value.cachedAt,
+            value.staleAt,
+            existingValue.id
+          );
+        } else {
+          this.#prune();
+          this.#insertValueQuery.run(
+            url,
+            key.method,
+            body,
+            value.deleteAt,
+            value.statusCode,
+            value.statusMessage,
+            value.headers ? JSON.stringify(value.headers) : null,
+            value.etag ? value.etag : null,
+            value.cacheControlDirectives ? JSON.stringify(value.cacheControlDirectives) : null,
+            value.vary ? JSON.stringify(value.vary) : null,
+            value.cachedAt,
+            value.staleAt
+          );
+        }
       }
       createWriteStream(key, value) {
         assertCacheKey(key);
         assertCacheValue(value);
-        const url = this.#makeValueUrl(key);
         let size = 0;
         const body = [];
         const store = this;
         return new Writable({
+          decodeStrings: true,
           write(chunk, encoding, callback) {
-            if (typeof chunk === "string") {
-              chunk = Buffer.from(chunk, encoding);
-            }
             size += chunk.byteLength;
             if (size < store.#maxEntrySize) {
               body.push(chunk);
@@ -32233,39 +32327,7 @@ var require_sqlite_cache_store = __commonJS({
             callback();
           },
           final(callback) {
-            const existingValue = store.#findValue(key, true);
-            if (existingValue) {
-              store.#updateValueQuery.run(
-                Buffer.concat(body),
-                value.deleteAt,
-                value.statusCode,
-                value.statusMessage,
-                value.headers ? JSON.stringify(value.headers) : null,
-                value.etag ? value.etag : null,
-                value.cacheControlDirectives ? JSON.stringify(value.cacheControlDirectives) : null,
-                value.cachedAt,
-                value.staleAt,
-                value.deleteAt,
-                existingValue.id
-              );
-            } else {
-              store.#prune();
-              store.#insertValueQuery.run(
-                url,
-                key.method,
-                Buffer.concat(body),
-                value.deleteAt,
-                value.statusCode,
-                value.statusMessage,
-                value.headers ? JSON.stringify(value.headers) : null,
-                value.etag ? value.etag : null,
-                value.cacheControlDirectives ? JSON.stringify(value.cacheControlDirectives) : null,
-                value.vary ? JSON.stringify(value.vary) : null,
-                value.cachedAt,
-                value.staleAt,
-                value.deleteAt
-              );
-            }
+            store.set(key, { ...value, body });
             callback();
           }
         });
@@ -32277,18 +32339,19 @@ var require_sqlite_cache_store = __commonJS({
         this.#deleteByUrlQuery.run(this.#makeValueUrl(key));
       }
       #prune() {
+        var _a;
         if (this.size <= this.#maxCount) {
           return 0;
         }
         {
           const removed = this.#deleteExpiredValuesQuery.run(Date.now()).changes;
-          if (removed > 0) {
+          if (removed) {
             return removed;
           }
         }
         {
-          const removed = this.#deleteOldValuesQuery.run(Math.max(Math.floor(this.#maxCount * 0.1), 1)).changes;
-          if (removed > 0) {
+          const removed = (_a = this.#deleteOldValuesQuery) == null ? void 0 : _a.run(Math.max(Math.floor(this.#maxCount * 0.1), 1)).changes;
+          if (removed) {
             return removed;
           }
         }
@@ -32318,9 +32381,9 @@ var require_sqlite_cache_store = __commonJS({
             if (!headers) {
               return void 0;
             }
-            value.vary = JSON.parse(value.vary);
-            for (const header in value.vary) {
-              if (!headerValueEquals(headers[header], value.vary[header])) {
+            const vary = JSON.parse(value.vary);
+            for (const header in vary) {
+              if (!headerValueEquals(headers[header], vary[header])) {
                 matches = false;
                 break;
               }
@@ -36286,6 +36349,159 @@ var require_constants10 = __commonJS({
 });
 
 // 
+var require_util12 = __commonJS({
+  ""(exports, module) {
+    "use strict";
+    var { states, opcodes } = require_constants10();
+    var { isUtf8 } = __require("node:buffer");
+    var { collectASequenceOfCodePointsFast, removeHTTPWhitespace } = require_data_url();
+    function isConnecting(readyState) {
+      return readyState === states.CONNECTING;
+    }
+    function isEstablished(readyState) {
+      return readyState === states.OPEN;
+    }
+    function isClosing(readyState) {
+      return readyState === states.CLOSING;
+    }
+    function isClosed(readyState) {
+      return readyState === states.CLOSED;
+    }
+    function fireEvent(e, target, eventFactory = (type, init) => new Event(type, init), eventInitDict = {}) {
+      const event = eventFactory(e, eventInitDict);
+      target.dispatchEvent(event);
+    }
+    function websocketMessageReceived(handler2, type, data) {
+      handler2.onMessage(type, data);
+    }
+    function toArrayBuffer(buffer) {
+      if (buffer.byteLength === buffer.buffer.byteLength) {
+        return buffer.buffer;
+      }
+      return new Uint8Array(buffer).buffer;
+    }
+    function isValidSubprotocol(protocol) {
+      if (protocol.length === 0) {
+        return false;
+      }
+      for (let i = 0; i < protocol.length; ++i) {
+        const code = protocol.charCodeAt(i);
+        if (code < 33 || code > 126 || code === 34 || code === 40 || code === 41 || code === 44 || code === 47 || code === 58 || code === 59 || code === 60 || code === 61 || code === 62 || code === 63 || code === 64 || code === 91 || code === 92 || code === 93 || code === 123 || code === 125) {
+          return false;
+        }
+      }
+      return true;
+    }
+    function isValidStatusCode(code) {
+      if (code >= 1e3 && code < 1015) {
+        return code !== 1004 && code !== 1005 && code !== 1006;
+      }
+      return code >= 3e3 && code <= 4999;
+    }
+    function isControlFrame(opcode) {
+      return opcode === opcodes.CLOSE || opcode === opcodes.PING || opcode === opcodes.PONG;
+    }
+    function isContinuationFrame(opcode) {
+      return opcode === opcodes.CONTINUATION;
+    }
+    function isTextBinaryFrame(opcode) {
+      return opcode === opcodes.TEXT || opcode === opcodes.BINARY;
+    }
+    function isValidOpcode(opcode) {
+      return isTextBinaryFrame(opcode) || isContinuationFrame(opcode) || isControlFrame(opcode);
+    }
+    function parseExtensions(extensions) {
+      const position = { position: 0 };
+      const extensionList = /* @__PURE__ */ new Map();
+      while (position.position < extensions.length) {
+        const pair = collectASequenceOfCodePointsFast(";", extensions, position);
+        const [name, value = ""] = pair.split("=");
+        extensionList.set(
+          removeHTTPWhitespace(name, true, false),
+          removeHTTPWhitespace(value, false, true)
+        );
+        position.position++;
+      }
+      return extensionList;
+    }
+    function isValidClientWindowBits(value) {
+      for (let i = 0; i < value.length; i++) {
+        const byte = value.charCodeAt(i);
+        if (byte < 48 || byte > 57) {
+          return false;
+        }
+      }
+      return true;
+    }
+    function getURLRecord(url, baseURL) {
+      let urlRecord;
+      try {
+        urlRecord = new URL(url, baseURL);
+      } catch (e) {
+        throw new DOMException(e, "SyntaxError");
+      }
+      if (urlRecord.protocol === "http:") {
+        urlRecord.protocol = "ws:";
+      } else if (urlRecord.protocol === "https:") {
+        urlRecord.protocol = "wss:";
+      }
+      if (urlRecord.protocol !== "ws:" && urlRecord.protocol !== "wss:") {
+        throw new DOMException("expected a ws: or wss: url", "SyntaxError");
+      }
+      if (urlRecord.hash.length || urlRecord.href.endsWith("#")) {
+        throw new DOMException("hash", "SyntaxError");
+      }
+      return urlRecord;
+    }
+    function validateCloseCodeAndReason(code, reason) {
+      if (code !== null) {
+        if (code !== 1e3 && (code < 3e3 || code > 4999)) {
+          throw new DOMException("invalid code", "InvalidAccessError");
+        }
+      }
+      if (reason !== null) {
+        const reasonBytesLength = Buffer.byteLength(reason);
+        if (reasonBytesLength > 123) {
+          throw new DOMException(`Reason must be less than 123 bytes; received ${reasonBytesLength}`, "SyntaxError");
+        }
+      }
+    }
+    var utf8Decode = (() => {
+      if (typeof process.versions.icu === "string") {
+        const fatalDecoder = new TextDecoder("utf-8", { fatal: true });
+        return fatalDecoder.decode.bind(fatalDecoder);
+      }
+      return function(buffer) {
+        if (isUtf8(buffer)) {
+          return buffer.toString("utf-8");
+        }
+        throw new TypeError("Invalid utf-8 received.");
+      };
+    })();
+    module.exports = {
+      isConnecting,
+      isEstablished,
+      isClosing,
+      isClosed,
+      fireEvent,
+      isValidSubprotocol,
+      isValidStatusCode,
+      websocketMessageReceived,
+      utf8Decode,
+      isControlFrame,
+      isContinuationFrame,
+      isTextBinaryFrame,
+      isValidOpcode,
+      parseExtensions,
+      isValidClientWindowBits,
+      toArrayBuffer,
+      getURLRecord,
+      validateCloseCodeAndReason
+    };
+  }
+});
+
+// 
 var require_frame2 = __commonJS({
   ""(exports, module) {
     "use strict";
@@ -36393,7 +36609,7 @@ var require_connection2 = __commonJS({
   ""(exports, module) {
     "use strict";
     var { uid, states, sentCloseFrameState, emptyBuffer, opcodes } = require_constants10();
-    var { failWebsocketConnection, parseExtensions, isClosed, isClosing, isEstablished, validateCloseCodeAndReason } = require_util12();
+    var { parseExtensions, isClosed, isClosing, isEstablished, validateCloseCodeAndReason } = require_util12();
     var { channels } = require_diagnostics();
     var { makeRequest } = require_request4();
     var { fetching } = require_fetch2();
@@ -36529,67 +36745,9 @@ var require_connection2 = __commonJS({
         object.readyState = states.CLOSING;
       }
     }
-    module.exports = {
-      establishWebSocketConnection,
-      closeWebSocketConnection
-    };
-  }
-});
-
-// 
-var require_util12 = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    var { states, opcodes } = require_constants10();
-    var { isUtf8 } = __require("node:buffer");
-    var { collectASequenceOfCodePointsFast, removeHTTPWhitespace } = require_data_url();
-    function isConnecting(readyState) {
-      return readyState === states.CONNECTING;
-    }
-    function isEstablished(readyState) {
-      return readyState === states.OPEN;
-    }
-    function isClosing(readyState) {
-      return readyState === states.CLOSING;
-    }
-    function isClosed(readyState) {
-      return readyState === states.CLOSED;
-    }
-    function fireEvent(e, target, eventFactory = (type, init) => new Event(type, init), eventInitDict = {}) {
-      const event = eventFactory(e, eventInitDict);
-      target.dispatchEvent(event);
-    }
-    function websocketMessageReceived(handler2, type, data) {
-      handler2.onMessage(type, data);
-    }
-    function toArrayBuffer(buffer) {
-      if (buffer.byteLength === buffer.buffer.byteLength) {
-        return buffer.buffer;
-      }
-      return new Uint8Array(buffer).buffer;
-    }
-    function isValidSubprotocol(protocol) {
-      if (protocol.length === 0) {
-        return false;
-      }
-      for (let i = 0; i < protocol.length; ++i) {
-        const code = protocol.charCodeAt(i);
-        if (code < 33 || code > 126 || code === 34 || code === 40 || code === 41 || code === 44 || code === 47 || code === 58 || code === 59 || code === 60 || code === 61 || code === 62 || code === 63 || code === 64 || code === 91 || code === 92 || code === 93 || code === 123 || code === 125) {
-          return false;
-        }
-      }
-      return true;
-    }
-    function isValidStatusCode(code) {
-      if (code >= 1e3 && code < 1015) {
-        return code !== 1004 && code !== 1005 && code !== 1006;
-      }
-      return code >= 3e3 && code <= 4999;
-    }
     function failWebsocketConnection(handler2, code, reason) {
       var _a;
       if (isEstablished(handler2.readyState)) {
-        const { closeWebSocketConnection } = require_connection2();
         closeWebSocketConnection(handler2, code, reason, false);
       }
       handler2.controller.abort();
@@ -36598,106 +36756,10 @@ var require_util12 = __commonJS({
       }
       handler2.onFail(code, reason);
     }
-    function isControlFrame(opcode) {
-      return opcode === opcodes.CLOSE || opcode === opcodes.PING || opcode === opcodes.PONG;
-    }
-    function isContinuationFrame(opcode) {
-      return opcode === opcodes.CONTINUATION;
-    }
-    function isTextBinaryFrame(opcode) {
-      return opcode === opcodes.TEXT || opcode === opcodes.BINARY;
-    }
-    function isValidOpcode(opcode) {
-      return isTextBinaryFrame(opcode) || isContinuationFrame(opcode) || isControlFrame(opcode);
-    }
-    function parseExtensions(extensions) {
-      const position = { position: 0 };
-      const extensionList = /* @__PURE__ */ new Map();
-      while (position.position < extensions.length) {
-        const pair = collectASequenceOfCodePointsFast(";", extensions, position);
-        const [name, value = ""] = pair.split("=");
-        extensionList.set(
-          removeHTTPWhitespace(name, true, false),
-          removeHTTPWhitespace(value, false, true)
-        );
-        position.position++;
-      }
-      return extensionList;
-    }
-    function isValidClientWindowBits(value) {
-      for (let i = 0; i < value.length; i++) {
-        const byte = value.charCodeAt(i);
-        if (byte < 48 || byte > 57) {
-          return false;
-        }
-      }
-      return true;
-    }
-    function getURLRecord(url, baseURL) {
-      let urlRecord;
-      try {
-        urlRecord = new URL(url, baseURL);
-      } catch (e) {
-        throw new DOMException(e, "SyntaxError");
-      }
-      if (urlRecord.protocol === "http:") {
-        urlRecord.protocol = "ws:";
-      } else if (urlRecord.protocol === "https:") {
-        urlRecord.protocol = "wss:";
-      }
-      if (urlRecord.protocol !== "ws:" && urlRecord.protocol !== "wss:") {
-        throw new DOMException("expected a ws: or wss: url", "SyntaxError");
-      }
-      if (urlRecord.hash.length || urlRecord.href.endsWith("#")) {
-        throw new DOMException("hash", "SyntaxError");
-      }
-      return urlRecord;
-    }
-    function validateCloseCodeAndReason(code, reason) {
-      if (code !== null) {
-        if (code !== 1e3 && (code < 3e3 || code > 4999)) {
-          throw new DOMException("invalid code", "InvalidAccessError");
-        }
-      }
-      if (reason !== null) {
-        const reasonBytesLength = Buffer.byteLength(reason);
-        if (reasonBytesLength > 123) {
-          throw new DOMException(`Reason must be less than 123 bytes; received ${reasonBytesLength}`, "SyntaxError");
-        }
-      }
-    }
-    var utf8Decode = (() => {
-      if (typeof process.versions.icu === "string") {
-        const fatalDecoder = new TextDecoder("utf-8", { fatal: true });
-        return fatalDecoder.decode.bind(fatalDecoder);
-      }
-      return function(buffer) {
-        if (isUtf8(buffer)) {
-          return buffer.toString("utf-8");
-        }
-        throw new TypeError("Invalid utf-8 received.");
-      };
-    })();
     module.exports = {
-      isConnecting,
-      isEstablished,
-      isClosing,
-      isClosed,
-      fireEvent,
-      isValidSubprotocol,
-      isValidStatusCode,
+      establishWebSocketConnection,
       failWebsocketConnection,
-      websocketMessageReceived,
-      utf8Decode,
-      isControlFrame,
-      isContinuationFrame,
-      isTextBinaryFrame,
-      isValidOpcode,
-      parseExtensions,
-      isValidClientWindowBits,
-      toArrayBuffer,
-      getURLRecord,
-      validateCloseCodeAndReason
+      closeWebSocketConnection
     };
   }
 });
@@ -36767,13 +36829,13 @@ var require_receiver2 = __commonJS({
     var {
       isValidStatusCode,
       isValidOpcode,
-      failWebsocketConnection,
       websocketMessageReceived,
       utf8Decode,
       isControlFrame,
       isTextBinaryFrame,
       isContinuationFrame
     } = require_util12();
+    var { failWebsocketConnection } = require_connection2();
     var { WebsocketFrameSend } = require_frame2();
     var { PerMessageDeflate } = require_permessage_deflate();
     var ByteParser = class extends Writable {
@@ -37151,12 +37213,11 @@ var require_websocket2 = __commonJS({
       isClosing,
       isValidSubprotocol,
       fireEvent,
-      failWebsocketConnection,
       utf8Decode,
       toArrayBuffer,
       getURLRecord
     } = require_util12();
-    var { establishWebSocketConnection, closeWebSocketConnection } = require_connection2();
+    var { establishWebSocketConnection, closeWebSocketConnection, failWebsocketConnection } = require_connection2();
     var { ByteParser } = require_receiver2();
     var { kEnumerableProperty } = require_util8();
     var { getGlobalDispatcher } = require_global4();
@@ -37611,8 +37672,8 @@ var require_websocketstream = __commonJS({
     var { createDeferredPromise, environmentSettingsObject } = require_util9();
     var { states, opcodes, sentCloseFrameState } = require_constants10();
     var { webidl } = require_webidl2();
-    var { getURLRecord, isValidSubprotocol, isEstablished, failWebsocketConnection, utf8Decode } = require_util12();
-    var { establishWebSocketConnection, closeWebSocketConnection } = require_connection2();
+    var { getURLRecord, isValidSubprotocol, isEstablished, utf8Decode } = require_util12();
+    var { establishWebSocketConnection, failWebsocketConnection, closeWebSocketConnection } = require_connection2();
     var { types } = __require("node:util");
     var { channels } = require_diagnostics();
     var { WebsocketFrameSend } = require_frame2();
