@@ -89,8 +89,6 @@ export async function checkOutPullRequestLocally(
 
   /** The branch name of the PR from the repository the PR came from. */
   const headRefName = pr.headRef.name;
-  /** The full ref for the repository and branch the PR came from. */
-  const fullHeadRef = `${pr.headRef.repository.nameWithOwner}:${headRefName}`;
   /** The full URL path of the repository the PR came from with github token as authentication. */
   const headRefUrl = addTokenToGitHttpsUrl(pr.headRef.repository.url, git.githubToken);
   // Note: Since we use a detached head for rebasing the PR and therefore do not have
