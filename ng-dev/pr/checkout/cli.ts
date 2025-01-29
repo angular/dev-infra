@@ -8,7 +8,6 @@
 
 import {Argv, Arguments, CommandModule} from 'yargs';
 
-import {assertValidGithubConfig, getConfig, GithubConfig, NgDevConfig} from '../../utils/config.js';
 import {addGithubTokenOption} from '../../utils/git/github-yargs.js';
 import {checkoutPullRequest, CheckoutPullRequestParams} from './checkout.js';
 
@@ -34,10 +33,7 @@ function builder(yargs: Argv) {
 
 /** Handles the checkout pull request command. */
 async function handler({pr, takeover, target}: Arguments<CheckoutPullRequestParams>) {
-  const config = await getConfig();
-  assertValidGithubConfig(config);
-
-  await checkoutPullRequest({pr, takeover, target}, config);
+  await checkoutPullRequest({pr, takeover, target});
 }
 
 /** yargs command module for checking out a PR  */
