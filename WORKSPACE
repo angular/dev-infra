@@ -1,5 +1,5 @@
 workspace(
-    name = "dev-infra",
+    name = "devinfra",
     managed_directories = {"@npm": ["node_modules"]},
 )
 

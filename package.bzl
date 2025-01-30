@@ -9,7 +9,7 @@ noStampSubstitutions = dict(stampSubstitutions, **{})
 basePackageSubstitutions = {
     "(#|//)\\s+BEGIN-DEV-ONLY[\\w\\W]+?(#|//)\\s+END-DEV-ONLY": "",
     "    \"prepare\": \"husky\",\n": "",
-    "@dev-infra//bazel/": "@npm//@angular/build-tooling/bazel/",
+    "@devinfra//bazel/": "@npm//@angular/build-tooling/bazel/",
     "rlocation \"dev-infra/": "rlocation \"npm/@angular/build-tooling/",
     "//bazel/": "@npm//@angular/build-tooling/bazel/",
     "//bazel:": "@npm//@angular/build-tooling/bazel:",

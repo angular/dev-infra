@@ -27,7 +27,7 @@ def _browser_archive_impl(ctx):
     # `BUILD.bazel` file that exposes the archive files, together with the specified
     # named files using the `browser_configure` rule.
     ctx.file("BUILD.bazel", content = """
-load("@dev-infra//bazel/browsers:browser_configure.bzl", "browser_configure")
+load("@devinfra//bazel/browsers:browser_configure.bzl", "browser_configure")
 
 licenses(%s)
 
