@@ -4399,9 +4399,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"google-auth-library@npm:9.15.0":
-  version: 9.15.0
-  resolution: "google-auth-library@npm:9.15.0"
+"google-auth-library@npm:9.15.1":
+  version: 9.15.1
+  resolution: "google-auth-library@npm:9.15.1"
   dependencies:
     base64-js: "npm:^1.3.0"
     ecdsa-sig-formatter: "npm:^1.0.11"
@@ -4409,7 +4409,7 @@ __metadata:
     gcp-metadata: "npm:^6.1.0"
     gtoken: "npm:^7.0.0"
     jws: "npm:^4.0.0"
-  checksum: 10c0/f5a9a46e939147b181bac9b254f11dd8c2d05c15a65c9d3f2180252bef21c12af37d9893bc3caacafd226d6531a960535dbb5222ef869143f393c6a97639cc06
+  checksum: 10c0/6eef36d9a9cb7decd11e920ee892579261c6390104b3b24d3e0f3889096673189fe2ed0ee43fd563710e2560de98e63ad5aa4967b91e7f4e69074a422d5f7b65
   languageName: node
   linkType: hard
 
@@ -5840,7 +5840,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: "npm:39.141.0"
+    renovate: "npm:39.153.1"
   languageName: unknown
   linkType: soft
 
@@ -6592,9 +6592,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:39.141.0":
-  version: 39.141.0
-  resolution: "renovate@npm:39.141.0"
+"renovate@npm:39.153.1":
+  version: 39.153.1
+  resolution: "renovate@npm:39.153.1"
   dependencies:
     "@aws-sdk/client-codecommit": "npm:3.726.1"
     "@aws-sdk/client-ec2": "npm:3.726.1"
@@ -6658,7 +6658,7 @@ __metadata:
     glob: "npm:11.0.1"
     global-agent: "npm:3.0.0"
     good-enough-parser: "npm:1.1.23"
-    google-auth-library: "npm:9.15.0"
+    google-auth-library: "npm:9.15.1"
     got: "npm:11.8.6"
     graph-data-structure: "npm:4.3.1"
     handlebars: "npm:4.7.8"
@@ -6719,7 +6719,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 10c0/6e138f7f9f4ee5fed6e5e810ebb75602d9016b024a593f5814216dc846a402031942a701a2ca79929992292964c2b579ce47960049310162ea0e3594e7a2260a
+  checksum: 10c0/5bd1c96121b306e157ace3f6dcee0e0142095b444c36ef0d72acfa2676138ef8ea641990e3b687160927d46c0ed145df6d8543ed0812fbe9c0bc925f92900363
   languageName: node
   linkType: hard
 
