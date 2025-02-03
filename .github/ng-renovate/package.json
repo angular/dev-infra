@@ -3,6 +3,6 @@
   "packageManager": "yarn@4.6.0",
   "type": "commonjs",
   "dependencies": {
-    "renovate": "39.141.0"
+    "renovate": "39.158.1"
   }
 }
