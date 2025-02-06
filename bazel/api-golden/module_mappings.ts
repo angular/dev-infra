@@ -9,8 +9,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import {runfiles} from '@bazel/runfiles';
-
 /** Regular expression that matches a scoped type package name. */
 const scopedTypesPackageRegex = /^@types\/([^_\/]+)__(.+)/;
 
@@ -45,7 +43,9 @@ async function resolveTypeDeclarationOfPackage(moduleName: string): Promise<{
   entryPointTypeFile: string;
   resolvedPackageDir: string;
 }> {
-  const pkgJsonPath = runfiles.resolve(`npm/node_modules/${moduleName}/package.json`);
+  // We are always executing inside a `.runfiles` directory, inside the workspace directory,
+  // so we can access the repository by walking up one directory.
+  const pkgJsonPath = path.resolve('../npm/node_modules/' + moduleName + '/package.json');
   const pkgJson = JSON.parse(await fs.promises.readFile(pkgJsonPath, 'utf8')) as {
     types?: string;
     typings?: string;
