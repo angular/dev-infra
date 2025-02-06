@@ -25,3 +25,5 @@ github-actions/unified-status-check/main.js
 .github/local-actions/changelog/main.js
 
 bazel/map-size-tracking/test/size-golden.json
+
+bazel/pnpm-lock.yaml

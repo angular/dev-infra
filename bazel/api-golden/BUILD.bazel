@@ -1,4 +1,4 @@
-load("//bazel:defaults.bzl", "ts_library")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -7,25 +7,21 @@ exports_files([
     "index_npm_packages.ts",
 ])
 
-ts_library(
+ts_project(
     name = "api-golden",
     srcs = [
         "find_entry_points.ts",
-        "index.ts",
         "index_npm_packages.ts",
         "module_mappings.ts",
         "patch-host.ts",
         "path-normalize.ts",
         "test_api_report.ts",
     ],
-    # A tsconfig needs to be specified as otherwise `ts_library` will look for the config
-    # in `//:package.json` and this breaks when the BUILD file is copied to `@npm//`.
-    tsconfig = "//:tsconfig.json",
+    tsconfig = "//bazel:tsconfig",
     deps = [
-        "@npm//@bazel/runfiles",
-        "@npm//@microsoft/api-extractor",
-        "@npm//@types/node",
-        "@npm//typescript",
+        "//bazel:node_modules/@microsoft/api-extractor",
+        "//bazel:node_modules/@types/node",
+        "//bazel:node_modules/typescript",
     ],
 )
 
