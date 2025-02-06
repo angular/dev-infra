@@ -1,8 +1,16 @@
+load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("@npm//@bazel/typescript:index.bzl", "ts_config")
+
 # BEGIN-INTERNAL
 load("//:package.bzl", "NPM_PACKAGE_SUBSTITUTIONS")
 load("//tools:defaults.bzl", "pkg_npm")
-load("@npm//@bazel/typescript:index.bzl", "ts_config")
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+
+rules_js_tsconfig(
+    name = "rjs-tsconfig",
+    src = "tsconfig.json",
+    visibility = ["//bazel:__subpackages__"],
+)
 
 exports_files([
     "package.json",

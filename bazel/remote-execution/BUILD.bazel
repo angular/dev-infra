@@ -47,6 +47,5 @@ filegroup(
     srcs = [
         "BUILD.bazel",
         "index.bzl",
-        "//bazel/remote-execution/cpp:files",
     ],
 )
