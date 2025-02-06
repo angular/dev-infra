@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {findEntryPointsWithinNpmPackage} from './find_entry_points';
-import {join} from 'path';
-import {normalizePathToPosix} from './path-normalize';
+import {findEntryPointsWithinNpmPackage} from './find_entry_points.js';
+import * as path from 'path';
+import {normalizePathToPosix} from './path-normalize.js';
 import {readFileSync} from 'fs';
-import {runfiles} from '@bazel/runfiles';
-import {testApiGolden} from './test_api_report';
+import {testApiGolden} from './test_api_report.js';
+import * as fs from 'fs';
 
 /** Interface describing contents of a `package.json`. */
 export interface PackageJson {
@@ -37,7 +37,7 @@ async function main(
   // guaranteed to be ESM-only and supports the `mts` extension.
   const chalk = {red: (v: string) => v, yellow: (v: string) => v};
 
-  const packageJsonPath = join(npmPackageDir, 'package.json');
+  const packageJsonPath = path.join(npmPackageDir, 'package.json');
   const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8')) as PackageJson;
   const entryPoints = findEntryPointsWithinNpmPackage(npmPackageDir, packageJson);
   const outdatedGoldens: string[] = [];
@@ -49,26 +49,34 @@ async function main(
     // entry-point we maintain a separate golden file. These golden files are
     // based on the name of the defining NodeJS exports subpath in the NPM package,
     // See: https://api-extractor.com/pages/overview/demo_api_report/.
-    const goldenName = join(subpath, 'index.api.md');
-    const goldenFilePath = join(goldenDir, goldenName);
-    const moduleName = normalizePathToPosix(join(packageJson.name, subpath));
+    const goldenName = path.join(subpath, 'index.api.md');
+    const goldenFilePath = path.join(goldenDir, goldenName);
+    const moduleName = normalizePathToPosix(path.join(packageJson.name, subpath));
 
-    const {succeeded, apiReportChanged} = await testApiGolden(
-      goldenFilePath,
+    const expected = fs.readFileSync(goldenFilePath, 'utf8');
+    const actual = await testApiGolden(
       typesEntryPointPath,
-      approveGolden,
       stripExportPattern,
       typePackageNames,
       packageJsonPath,
       moduleName,
     );
 
-    // Keep track of outdated goldens.
-    if (!succeeded && apiReportChanged) {
-      outdatedGoldens.push(goldenName);
+    if (actual === null) {
+      console.error(`Could not generate API golden for subpath: "${subpath}". See errors above.`);
+      process.exit(1);
     }
 
-    allTestsSucceeding = allTestsSucceeding && succeeded;
+    // Keep track of outdated goldens.
+    if (actual !== expected) {
+      if (approveGolden) {
+        fs.writeFileSync(goldenFilePath, actual, 'utf8');
+      } else {
+        outdatedGoldens.push(goldenName);
+      }
+    }
+
+    allTestsSucceeding = allTestsSucceeding && actual === expected;
   }
 
   if (outdatedGoldens.length) {
@@ -89,11 +97,16 @@ async function main(
 // Invoke main.
 (() => {
   const args = process.argv.slice(2);
-  const goldenDir = runfiles.resolve(args[0]);
-  const npmPackageDir = runfiles.resolve(args[1]);
+  let goldenDir = path.resolve(args[0]);
+  const npmPackageDir = path.resolve(args[1]);
   const approveGolden = args[2] === 'true';
   const stripExportPattern = new RegExp(args[3]);
   const typePackageNames = args.slice(4);
+
+  // For approving, point to the real directory outside of the bazel-out.
+  if (approveGolden) {
+    goldenDir = path.join(process.env.BUILD_WORKSPACE_DIRECTORY!, args[0]);
+  }
 
   main(goldenDir, npmPackageDir, approveGolden, stripExportPattern, typePackageNames).catch((e) => {
     console.error(e);

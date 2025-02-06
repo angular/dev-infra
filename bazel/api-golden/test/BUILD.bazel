@@ -1,5 +1,5 @@
-load("//bazel/api-golden:index.bzl", "api_golden_test", "api_golden_test_npm_package")
 load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
+load("//bazel/api-golden:index.bzl", "api_golden_test", "api_golden_test_npm_package")
 
 package(default_visibility = ["//bazel/api-golden/test:__pkg__"])
 
@@ -16,11 +16,11 @@ copy_to_bin(
 api_golden_test(
     name = "test_explicit_files",
     data = [
-        "goldens/test_golden.api.md",
+        "goldens/explicit_file/index.api.md",
         "//bazel/api-golden/test/fixtures:test_lib",
     ],
-    entry_point = "dev-infra/bazel/api-golden/test/fixtures/test_fixture.d.ts",
-    golden = "dev-infra/bazel/api-golden/test/goldens/test_golden.api.md",
+    entry_point = "./fixtures/test_fixture.d.ts",
+    golden = "dev-infra/bazel/api-golden/test/goldens/explicit_file",
     # API extractor type resolution is prone to non-sandbox errors, so we test Windows.
     tags = ["windows"],
     types = ["@npm//@types/node"],
