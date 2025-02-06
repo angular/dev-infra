@@ -14,7 +14,7 @@ import {join} from 'path';
  * variable is automatically set by Bazel for tests. Bazel expects tests "not attempt to remove,
  * chmod, or otherwise alter [TEST_TMPDIR]," so a subdirectory path is used to be created/destroyed.
  */
-export const testTmpDir: string = join(process.env['TEST_TMPDIR']!, 'dev-infra');
+export const testTmpDir: string = join(process.env['TEST_TMPDIR']!, 'devinfra');
 
 /**
  * Prepares the temporary test directory, deleting previous contents if present.

@@ -1,9 +1,10 @@
 workspace(
     name = "devinfra",
-    managed_directories = {"@npm": ["node_modules"]},
 )
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
+
+NODE_VERSION = "18.20.0"
 
 # The PKG rules are needed to build tar packages for integration tests. The builtin
 # rule in `@bazel_tools` is not Windows compatible and outdated.
@@ -50,8 +51,23 @@ nodejs_register_toolchains(
         "18.20.0-windows_amd64": ("node-v18.20.0-win-x64.zip", "node-v18.20.0-win-x64", "1c0aab05cc6836a8f5148cca345b92ebc948a4a2013f18d117b7ade6ff05aca6"),
     },
     # We need at least Node 18.17 due to some transitive dependencies.
-    node_version = "18.20.0",
+    node_version = NODE_VERSION,
 )
+
+http_archive(
+    name = "aspect_rules_js",
+    sha256 = "875b8d01af629dbf626eddc5cf239c9f0da20330f4d99ad956afc961096448dd",
+    strip_prefix = "rules_js-2.1.3",
+    url = "https://github.com/aspect-build/rules_js/releases/download/v2.1.3/rules_js-v2.1.3.tar.gz",
+)
+
+load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
+
+rules_js_dependencies()
+
+load("@aspect_rules_js//js:toolchains.bzl", "rules_js_register_toolchains")
+
+rules_js_register_toolchains()
 
 load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
 
@@ -60,6 +76,9 @@ yarn_install(
     # Yarn Berry/v2+ expects `--immutable` instead of `--frozen-lockfile`.
     args = ["--immutable"],
     data = [
+        "//:.yarn/patches/@angular-bazel-npm.patch",
+        "//:.yarn/patches/@bazel-jasmine-npm.patch",
+        "//:.yarn/patches/@octokit-graphql-schema-npm-15.3.0-4046a59648.patch",
         "//:.yarn/releases/yarn-4.6.0.cjs",
         "//:.yarnrc.yml",
     ],
@@ -68,9 +87,6 @@ yarn_install(
     #  2. Incompatibilites with the `ts_library` rule.
     exports_directories_only = False,
     package_json = "//:package.json",
-    # We prefer to symlink the `node_modules` to only maintain a single install.
-    # See https://github.com/angular/dev-infra/pull/446#issuecomment-1059820287 for details.
-    symlink_node_modules = True,
     yarn = "//:.yarn/releases/yarn-4.6.0.cjs",
     yarn_lock = "//:yarn.lock",
 )
@@ -128,3 +144,25 @@ http_file(
     sha256 = "61ce1dc62fdcfd6d68624a403e0f04c5fd5136d933b681467aad1ad2d00dbb03",
     urls = ["https://raw.githubusercontent.com/bazelbuild/bazel/5.0.0/src/main/protobuf/test_status.proto"],
 )
+
+http_archive(
+    name = "aspect_rules_ts",
+    sha256 = "013a10b2b457add73b081780e604778eb50a141709f9194298f97761acdcc169",
+    strip_prefix = "rules_ts-3.4.0",
+    url = "https://github.com/aspect-build/rules_ts/releases/download/v3.4.0/rules_ts-v3.4.0.tar.gz",
+)
+
+load("@aspect_rules_ts//ts:repositories.bzl", "rules_ts_dependencies")
+
+rules_ts_dependencies(
+    ts_integrity = "sha512-84MVSjMEHP+FQRPy3pX9sTVV/INIex71s9TL2Gm5FG/WG1SqXeKyZ0k7/blY/4FdOzI12CBy1vGc4og/eus0fw==",
+    ts_version_from = "//bazel:package.json",
+)
+
+load("//bazel:setup_dependencies_1.bzl", "setup_dependencies_1")
+
+setup_dependencies_1()
+
+load("//bazel:setup_dependencies_2.bzl", "setup_dependencies_2")
+
+setup_dependencies_2()

@@ -1,3 +1,15 @@
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config")
+load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
+
+npm_link_all_packages()
+
+ts_config(
+    name = "tsconfig",
+    src = "tsconfig.json",
+    visibility = ["//bazel:__subpackages__"],
+    deps = ["//:rjs-tsconfig"],
+)
+
 filegroup(
     name = "static_files",
     srcs = [
