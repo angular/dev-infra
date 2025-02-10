@@ -5,7 +5,7 @@ def karma_web_test(name, specs = [], external = [], **kwargs):
     spec_bundle(
         name = "%s_test_bundle" % name,
         platform = "browser",
-        workspace_name = "dev-infra",
+        workspace_name = "devinfra",
         bootstrap = ["//tools/karma:bootstrap"],
         deps = specs,
         external = external,

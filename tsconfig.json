@@ -5,7 +5,6 @@
     "lib": ["es2021", "dom"],
     "experimentalDecorators": true,
     "strict": true,
-    "outDir": "./dist/tsc-non-bazel-out",
     "skipLibCheck": true,
     "noImplicitOverride": true,
     // TODO(ESM): Remove this when Bazel also uses the Node resolution.

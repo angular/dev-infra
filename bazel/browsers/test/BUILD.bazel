@@ -27,6 +27,6 @@ js_library(
 spec_bundle(
     name = "test_bundle",
     platform = "browser",
-    workspace_name = "dev-infra",
+    workspace_name = "devinfra",
     deps = [":test_lib"],
 )

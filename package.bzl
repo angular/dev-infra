@@ -9,8 +9,8 @@ noStampSubstitutions = dict(stampSubstitutions, **{})
 basePackageSubstitutions = {
     "(#|//)\\s+BEGIN-DEV-ONLY[\\w\\W]+?(#|//)\\s+END-DEV-ONLY": "",
     "    \"prepare\": \"husky\",\n": "",
-    "@dev-infra//bazel/": "@npm//@angular/build-tooling/bazel/",
-    "rlocation \"dev-infra/": "rlocation \"npm/@angular/build-tooling/",
+    "@devinfra//bazel/": "@npm//@angular/build-tooling/bazel/",
+    "rlocation \"devinfra/": "rlocation \"npm/@angular/build-tooling/",
     "//bazel/": "@npm//@angular/build-tooling/bazel/",
     "//bazel:": "@npm//@angular/build-tooling/bazel:",
     "//lint-rules/tslint/": "@npm//@angular/build-tooling/tslint/",
@@ -35,6 +35,7 @@ BZL_DEFAULTS_ALLOW_PACKAGES = [
     "",
     "apps",
     "bazel/browsers/update-script",
+    "bazel/api-golden",
     "github-actions",
     "ng-dev",
     "tools",

@@ -1,0 +1,13 @@
+load("@aspect_bazel_lib//lib/private:tar_toolchain.bzl", "tar_toolchain")
+
+tar_toolchain(
+    name = "system_tar_exec",
+    binary = "tar_system.bat",
+)
+
+toolchain(
+    name = "windows_tar_system_toolchain",
+    exec_compatible_with = ["@platforms//os:windows"],
+    toolchain = ":system_tar_exec",
+    toolchain_type = "@aspect_bazel_lib//lib:tar_toolchain_type",
+)

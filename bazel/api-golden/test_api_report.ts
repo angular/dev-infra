@@ -13,17 +13,16 @@ import {
   ExtractorLogLevel,
   ExtractorMessage,
   ExtractorMessageId,
-  ExtractorResult,
   IConfigFile,
 } from '@microsoft/api-extractor';
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 
-import {runfiles} from '@bazel/runfiles';
 import {AstModule} from '@microsoft/api-extractor/lib/analyzer/AstModule';
 import {ExportAnalyzer} from '@microsoft/api-extractor/lib/analyzer/ExportAnalyzer';
-import {resolveTypePackages} from './module_mappings';
-import {patchHostToSkipNodeModules} from './patch-host';
+import {resolveTypePackages} from './module_mappings.js';
+import {patchHostToSkipNodeModules} from './patch-host.js';
 
 /**
  * Original definition of the `ExportAnalyzer#fetchAstModuleExportInfo` method.
@@ -51,17 +50,14 @@ const _origFetchAstModuleExportInfo = ExportAnalyzer.prototype.fetchAstModuleExp
  *   is scoped to a specific subpath/entry-point.
  */
 export async function testApiGolden(
-  goldenFilePath: string,
   indexFilePath: string,
-  approveGolden: boolean,
   stripExportPattern: RegExp,
   typePackageNames: string[] = [],
   packageJsonPath = resolveWorkspacePackageJsonPath(),
-  customPackageName?: string,
-): Promise<ExtractorResult> {
-  // If no `TEST_TMPDIR` is defined, then this script runs using `bazel run`. We use
-  // the runfile directory as temporary directory for API extractor.
-  const tempDir = process.env.TEST_TMPDIR ?? process.cwd();
+  customPackageName: string,
+): Promise<string | null> {
+  const tempDir =
+    process.env.TEST_TMPDIR ?? fs.mkdtempSync(path.join(os.tmpdir(), 'api-golden-rule'));
   const {paths, typeFiles} = await resolveTypePackages(typePackageNames);
 
   const configObject: IConfigFile = {
@@ -87,9 +83,9 @@ export async function testApiGolden(
     docModel: {enabled: false},
     apiReport: {
       enabled: true,
-      reportFolder: path.dirname(goldenFilePath),
+      reportFolder: tempDir,
       reportTempFolder: tempDir,
-      reportFileName: path.basename(goldenFilePath),
+      reportFileName: customPackageName.replace(/\//g, '_'),
     },
     tsdocMetadata: {enabled: false},
     newlineKind: 'lf',
@@ -104,11 +100,7 @@ export async function testApiGolden(
     },
   };
 
-  // We read the specified `package.json` manually and build a package name that is
-  // compatible with the API extractor. This is a workaround for a bug in api-extractor.
-  // TODO remove once https://github.com/microsoft/rushstack/issues/2774 is resolved.
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8')) as {name: string};
-  const packageNameSegments = (customPackageName ?? packageJson.name).split('/');
+  const packageNameSegments = customPackageName.split('/');
   const isScopedPackage = packageNameSegments[0][0] === '@' && packageNameSegments.length > 1;
   // API extractor allows one-slash when the package uses the scoped-package convention.
   const slashConversionStartIndex = isScopedPackage ? 1 : 0;
@@ -145,13 +137,22 @@ export async function testApiGolden(
     return info;
   };
 
-  return Extractor.invoke(extractorConfig, {
+  const reportTmpOutPath = path.join(tempDir, `${configObject.apiReport!.reportFileName!}.api.md`);
+
+  const result = Extractor.invoke(extractorConfig, {
     // If the golden should be approved, then `localBuild: true` instructs
     // API extractor to update the file.
-    localBuild: approveGolden,
+    localBuild: true,
     // Process messages from the API extractor (and modify log levels if needed).
-    messageCallback: (msg) => processExtractorMessage(msg, approveGolden),
+    messageCallback: (msg) => processExtractorMessage(msg),
   });
+
+  if (!result.succeeded) {
+    return null;
+  }
+  const reportOut = fs.readFileSync(reportTmpOutPath, 'utf8');
+  fs.rmSync(reportTmpOutPath);
+  return reportOut;
 }
 
 /**
@@ -159,7 +160,7 @@ export async function testApiGolden(
  * handle messages before API extractor prints them. This allows us to adjust log level
  * for certain messages, or to fully prevent messages from being printed out.
  * */
-async function processExtractorMessage(message: ExtractorMessage, isApprove: boolean) {
+async function processExtractorMessage(message: ExtractorMessage) {
   // If the golden does not match, we hide the error as API extractor prints
   // a warning asking the user to manually copy the new API report. We print
   // a custom warning below asking the developer to run the `.accept` Bazel target.
@@ -168,12 +169,11 @@ async function processExtractorMessage(message: ExtractorMessage, isApprove: boo
     // Mark the message as handled so that API-extractor does not print it. We print
     // a message manually after extraction.
     message.handled = true;
-    message.logLevel = isApprove ? ExtractorLogLevel.None : ExtractorLogLevel.Error;
+    message.logLevel = ExtractorLogLevel.None;
   }
 }
 
 /** Resolves the `package.json` of the workspace executing this action. */
 function resolveWorkspacePackageJsonPath(): string {
-  const workspaceName = process.env.BAZEL_WORKSPACE!;
-  return runfiles.resolve(`${workspaceName}/package.json`);
+  return path.resolve(`./package.json`);
 }
