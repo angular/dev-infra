@@ -4,6 +4,12 @@ workspace(
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
 
+# Workaround for: https://github.com/bazel-contrib/bazel-lib/issues/968.
+# Override toolchain for tar on windows.
+register_toolchains(
+    "//bazel/tar-toolchain:windows_tar_system_toolchain",
+)
+
 NODE_VERSION = "18.20.0"
 
 # The PKG rules are needed to build tar packages for integration tests. The builtin
