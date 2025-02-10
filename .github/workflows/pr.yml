@@ -68,6 +68,10 @@ jobs:
       - uses: ./github-actions/bazel/setup
       - uses: ./github-actions/bazel/configure-remote
       - run: yarn install --immutable
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        with:
+          detached: false
       - run: yarn bazel test --test_tag_filters=windows --build_tests_only -- ... -bazel/remote-execution/...
 
   test-macos:
