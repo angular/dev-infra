@@ -259,23 +259,21 @@ export abstract class ExternalCommands {
   }
 
   /**
-   * Invokes the `yarn bazel run @npm2//:sync` command in order
+   * Invokes the `yarn bazel sync --only=repo` command in order
    * to refresh Aspect lock files.
    */
   static async invokeBazelUpdateAspectLockFiles(projectDir: string): Promise<void> {
     const spinner = new Spinner('Updating Aspect lock files');
-
     try {
-      await ChildProcess.spawn(getBazelBin(), ['run', '@npm2//:sync'], {
+      await ChildProcess.spawn(getBazelBin(), ['sync', '--only=repo'], {
         cwd: projectDir,
         mode: 'silent',
       });
     } catch (e) {
-      // Note: Gracefully handling these errors because `sync` command
-      // alway exits with a non-zero exit code.
-      Log.debug(e);
+      Log.error(e);
+      Log.error('  ✘   An error occurred while updating Aspect lock files.');
+      throw new FatalReleaseActionError();
     }
-
     spinner.success(green(' Updated Aspect `rules_js` lock files.'));
   }
 }
