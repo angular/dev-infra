@@ -1,5 +1,5 @@
-load(":toolchain.bzl", "git_toolchain")
 load(":alias.bzl", "git_toolchain_alias")
+load(":toolchain.bzl", "git_toolchain")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -72,19 +72,5 @@ toolchain(
         "@platforms//cpu:aarch64",
     ],
     toolchain = ":git_macos_arm64",
-    toolchain_type = ":toolchain_type",
-)
-
-toolchain(
-    name = "git_windows_toolchain",
-    exec_compatible_with = [
-        "@platforms//os:windows",
-        "@platforms//cpu:x86_64",
-    ],
-    target_compatible_with = [
-        "@platforms//os:windows",
-        "@platforms//cpu:x86_64",
-    ],
-    toolchain = ":git_windows",
     toolchain_type = ":toolchain_type",
 )
