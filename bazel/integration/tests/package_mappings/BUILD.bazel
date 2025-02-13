@@ -13,11 +13,6 @@ integration_test(
     npm_packages = {
         "//bazel/integration/tests/package_mappings/fake_pkg_srcs:archive": "fake_pkg",
     },
-    tags = [
-        # We want to run a basic integration test on Windows to ensure the integration
-        # test rule works properly for Windows contributors.
-        "windows",
-    ],
     tool_mappings = {
         "//:yarn_classic_vendored": "yarn",
         "@nodejs_toolchains//:resolved_toolchain": "node",

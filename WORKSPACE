@@ -136,7 +136,6 @@ register_toolchains(
     "//bazel/git-toolchain:git_linux_toolchain",
     "//bazel/git-toolchain:git_macos_x86_toolchain",
     "//bazel/git-toolchain:git_macos_arm64_toolchain",
-    "//bazel/git-toolchain:git_windows_toolchain",
 )
 
 http_file(
