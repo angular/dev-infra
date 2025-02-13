@@ -270,9 +270,9 @@ export abstract class ExternalCommands {
         mode: 'silent',
       });
     } catch (e) {
-      Log.error(e);
-      Log.error('  ✘   An error occurred while updating Aspect lock files.');
-      throw new FatalReleaseActionError();
+      // Note: Gracefully handling these errors because `sync` command
+      // exits with a non-zero exit code when pnpm-lock.yaml file is updated.
+      Log.debug(e);
     }
     spinner.success(green(' Updated Aspect `rules_js` lock files.'));
   }
