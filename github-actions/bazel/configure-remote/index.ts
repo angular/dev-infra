@@ -27,14 +27,13 @@ async function main(bazelRcPath: string | undefined) {
   await fs.promises.mkdir(path.dirname(destPath), {recursive: true});
   await fs.promises.writeFile(destPath, dec, 'utf8');
 
+  const onlyCache = process.env['ONLY_CACHE'] === 'true';
+  // Set the config to remote-cache as we do not have support for RBE on windows at this time
+  const configMode = isWindows || onlyCache ? 'remote-cache' : 'remote';
+
   if (bazelRcPath) {
     let content = await readFileGracefully(bazelRcPath);
-    if (isWindows) {
-      // Set the config to remote-cache as we do not have support for RBE on windows at this time
-      content += '\nbuild --config=remote-cache';
-    } else {
-      content += '\nbuild --config=remote';
-    }
+    content += `\nbuild --config=${configMode}`;
     await fs.promises.writeFile(bazelRcPath, content, 'utf8');
   }
 }
