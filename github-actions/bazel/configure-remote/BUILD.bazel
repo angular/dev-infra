@@ -14,6 +14,7 @@ ts_library(
     devmode_module = "commonjs",
     deps = [
         "@npm//@types/node",
+        "@npm//@actions/core",
     ],
 )
 

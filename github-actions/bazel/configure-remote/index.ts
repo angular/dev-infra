@@ -13,6 +13,7 @@ import {createDecipheriv} from 'crypto';
 import path from 'path';
 import fs from 'fs';
 import os from 'os';
+import {exportVariable} from '@actions/core';
 
 async function main(bazelRcPath: string | undefined) {
   const isWindows = os.platform() === 'win32';
@@ -36,6 +37,10 @@ async function main(bazelRcPath: string | undefined) {
     content += `\nbuild --config=${configMode}`;
     await fs.promises.writeFile(bazelRcPath, content, 'utf8');
   }
+
+  // Expose application credentials as variable. This may not be necessary with the default
+  // path being used for credentials, but it's helpful when we cross boundaries with e.g. WSL.
+  exportVariable('GOOGLE_APPLICATION_CREDENTIALS', destPath);
 }
 
 async function readFileGracefully(filePath: string): Promise<string> {
