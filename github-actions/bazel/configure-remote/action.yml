@@ -7,6 +7,15 @@ inputs:
     description: |
       If specified, the given `bazelrc` file is being updated to always run
       with the `--config=remote` flag. Defaults to `.bazelrc.user`
+  only_cache:
+    default: false
+    description: |
+      Whether to only set up remote caching, instead of allowing for full
+      remote execution (on Linux/macOS).
+
+  shell:
+    default: bash
+    description: Shell to use for executing the configure script.
 
 runs:
   using: composite
@@ -14,5 +23,6 @@ runs:
     - run: node $GITHUB_ACTION_PATH/configure-remote.cjs
       env:
         BAZELRC_PATH: ${{ inputs.bazelrc }}
+        ONLY_CACHE: ${{ inputs.only_cache }}
         NGAT: 'bKddxrYADouso3haW7lCFA=='
-      shell: bash
+      shell: ${{ inputs.shell }}
