@@ -19,7 +19,7 @@
   "baseBranches": ["main"],
   "postUpgradeTasks": {
     "commands": [
-      "git restore pnpm-lock.yaml",
+      "git restore bazel/pnpm-lock.yaml",
       "yarn install",
       "yarn bazel sync --only=repo || true",
       "yarn update-generated-files"
