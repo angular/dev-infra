@@ -18,7 +18,12 @@
   "enabledManagers": ["npm", "bazel", "github-actions"],
   "baseBranches": ["main"],
   "postUpgradeTasks": {
-    "commands": ["yarn install", "yarn update-generated-files"],
+    "commands": [
+      "git restore pnpm-lock.yaml",
+      "yarn install",
+      "yarn bazel sync --only=repo || true",
+      "yarn update-generated-files"
+    ],
     "executionMode": "update"
   },
   "packageRules": [
