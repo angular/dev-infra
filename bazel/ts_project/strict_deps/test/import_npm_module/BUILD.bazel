@@ -1,0 +1,10 @@
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+
+ts_project(
+    name = "import_npm_module",
+    srcs = ["index.ts"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//bazel:node_modules/@microsoft/api-extractor",
+    ],
+)

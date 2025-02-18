@@ -1,0 +1,26 @@
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+# Make source files available for distribution
+filegroup(
+    name = "files",
+    srcs = glob(["*"]),
+)
+
+ts_project(
+    name = "lib",
+    srcs = glob(["*.mts"]),
+    deps = [
+        "//bazel:node_modules/@types/node",
+        "//bazel:node_modules/typescript",
+    ],
+)
+
+js_binary(
+    name = "bin",
+    data = [":lib"],
+    entry_point = ":index.mjs",
+    visibility = ["//visibility:public"],
+)

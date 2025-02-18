@@ -33,6 +33,7 @@ filegroup(
         "//bazel/private:files",
         "//bazel/remote-execution:files",
         "//bazel/spec-bundling:files",
+        "//bazel/ts_project:files",
     ],
     visibility = ["//:npm"],
 )

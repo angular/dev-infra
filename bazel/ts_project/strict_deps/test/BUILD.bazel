@@ -1,0 +1,56 @@
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("//bazel/ts_project/strict_deps:index.bzl", "invalid_strict_deps_test", "strict_deps_test")
+
+ts_project(
+    name = "sibling_import_from_depth",
+    srcs = ["sibling_import_from_depth.ts"],
+    deps = [
+        "//bazel/ts_project/strict_deps/test/depth",
+    ],
+)
+
+strict_deps_test(
+    name = "import_node_module",
+    srcs = ["import_node_module.ts"],
+    deps = [
+        "//bazel:node_modules/@types/node",
+    ],
+)
+
+invalid_strict_deps_test(
+    name = "invalid_import_node_module",
+    srcs = ["import_node_module.ts"],
+)
+
+strict_deps_test(
+    name = "import_npm_module",
+    srcs = ["import_npm_module.ts"],
+    deps = ["//bazel:node_modules/@microsoft/api-extractor"],
+)
+
+invalid_strict_deps_test(
+    name = "invalid_import_npm_module_transitively",
+    srcs = ["import_npm_module.ts"],
+    deps = [
+        "//bazel/ts_project/strict_deps/test/import_npm_module",
+    ],
+)
+
+invalid_strict_deps_test(
+    name = "invalid_import_npm_module",
+    srcs = ["import_npm_module.ts"],
+)
+
+strict_deps_test(
+    name = "import_from_depth",
+    srcs = ["import_from_depth.ts"],
+    deps = ["//bazel/ts_project/strict_deps/test/depth"],
+)
+
+invalid_strict_deps_test(
+    name = "invalid_import_from_depth",
+    srcs = ["import_from_depth.ts"],
+    deps = [
+        ":sibling_import_from_depth",
+    ],
+)
