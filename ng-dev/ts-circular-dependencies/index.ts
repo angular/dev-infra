@@ -107,19 +107,7 @@ export function main(
     Log.warn(`   Please rerun with "--warnings" to inspect unresolved imports.`);
   }
 
-  if (goldenFile) {
-    // Golden file exists
-    if (approve) {
-      writeFileSync(goldenFile, JSON.stringify(actual, null, 2));
-      Log.info(green('✔  Updated golden file.'));
-      return 0;
-    }
-    if (!existsSync(goldenFile)) {
-      Log.error(`x  Could not find golden file: ${goldenFile}`);
-      return 1;
-    }
-  } else {
-    // No golden file exists
+  if (goldenFile === undefined) {
     if (approve) {
       Log.error(
         `x  Cannot approve circular depdencies within this repository as no golden file exists.`,
@@ -133,6 +121,17 @@ export function main(
 
     Log.info(green('✔  No circular dependencies found in this repository.'));
     return 0;
+  }
+
+  if (approve) {
+    writeFileSync(goldenFile, JSON.stringify(actual, null, 2));
+    Log.info(green('✔  Updated golden file.'));
+    return 0;
+  }
+
+  if (!existsSync(goldenFile)) {
+    Log.error(`x  Could not find golden file: ${goldenFile}`);
+    return 1;
   }
 
   const expected = goldenFile ? (JSON.parse(readFileSync(goldenFile, 'utf8')) as Golden) : [];
