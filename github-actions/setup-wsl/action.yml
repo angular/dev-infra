@@ -20,7 +20,7 @@ outputs:
     value: C:\wsl_root
   wsl_root_unc_path:
     description: UNC Windows path pointing to the WSL file system root.
-    value: \\wsl.localhost\Debian
+    value: \\\\wsl.localhost\Debian
 
 runs:
   using: composite
