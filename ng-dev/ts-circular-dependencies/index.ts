@@ -10,8 +10,8 @@ import {existsSync, readFileSync, writeFileSync} from 'fs';
 import {isAbsolute, relative, resolve} from 'path';
 import {Argv} from 'yargs';
 
-import ts from 'typescript';
 import {globSync} from 'fast-glob';
+import ts from 'typescript';
 
 import {green, Log, yellow} from '../utils/logging.js';
 
@@ -88,10 +88,13 @@ export function main(
 
   Log.info(green(`   Current number of cycles: ${yellow(cycles.length.toString())}`));
 
-  if (approve) {
+  if (goldenFile && approve) {
     writeFileSync(goldenFile, JSON.stringify(actual, null, 2));
     Log.info(green('✔  Updated golden file.'));
     return 0;
+  } else if (!goldenFile) {
+    Log.error(`x  Circular dependency goldens are not allowed.`);
+    return 1;
   } else if (!existsSync(goldenFile)) {
     Log.error(`x  Could not find golden file: ${goldenFile}`);
     return 1;
@@ -116,7 +119,7 @@ export function main(
     Log.warn(`   Please rerun with "--warnings" to inspect unresolved imports.`);
   }
 
-  const expected = JSON.parse(readFileSync(goldenFile, 'utf8')) as Golden;
+  const expected = goldenFile ? (JSON.parse(readFileSync(goldenFile, 'utf8')) as Golden) : [];
   const {fixedCircularDeps, newCircularDeps} = compareGoldens(actual, expected);
   const isMatching = fixedCircularDeps.length === 0 && newCircularDeps.length === 0;
 
@@ -143,7 +146,7 @@ export function main(
 
   if (approveCommand) {
     Log.info(yellow(`   Please approve the new golden with: ${approveCommand}`));
-  } else {
+  } else if (goldenFile) {
     Log.info(
       yellow(
         `   Please update the golden. The following command can be ` +
