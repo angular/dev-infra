@@ -23,7 +23,7 @@ export interface CircularDependenciesTestConfig extends CircularDependenciesPars
   /** Base directory used for shortening paths in the golden file. */
   baseDir: string;
   /** Path to the golden file that is used for checking and approving. */
-  goldenFile: string;
+  goldenFile?: string;
   /** Glob that resolves source files which should be checked. */
   glob: string;
   /**
@@ -81,7 +81,7 @@ export async function loadTestConfig(configPath: string): Promise<CircularDepend
     if (!isAbsolute(config.baseDir)) {
       config.baseDir = resolveRelativePath(config.baseDir);
     }
-    if (!isAbsolute(config.goldenFile)) {
+    if (config.goldenFile && !isAbsolute(config.goldenFile)) {
       config.goldenFile = resolveRelativePath(config.goldenFile);
     }
     if (!isAbsolute(config.glob)) {
