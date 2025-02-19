@@ -25,12 +25,6 @@ outputs:
 runs:
   using: composite
   steps:
-    # Git checkout converts to CRLF by default. This causes the Aspect lock
-    # files to differ. See: https://github.com/actions/checkout/issues/135.
-    - run: |
-        git config --system core.autocrlf false
-        git config --system core.eol lf
-
     # Configure the WSL VM.
     - uses: Vampire/setup-wsl@v4
       with:
@@ -53,6 +47,8 @@ runs:
 
     - name: Determining paths for common WSL usage (e.g. path to cmd, npm, git)
       id: wsl_paths
+      # Note: This executes outside of WSL.
+      shell: bash
       run: |
         cmd_path=$(which cmd.exe)
         cmd_wsl_path=$(wsl exec wslpath -u $cmd_path)
