@@ -1,0 +1,77 @@
+name: 'Setup WSL'
+description: 'Sets up WSL for the current Windows VM'
+author: 'Angular'
+
+outputs:
+  cmd_path:
+    description: WSL unix path pointing to `cmd.exe` of the host system.
+    value: ${{steps.wsl_paths.outputs.cmd_path}}
+  npm_path:
+    description: WSL unix path pointing to `npm` of the host system.
+    value: ${{steps.wsl_paths.outputs.npm_path}}
+  git_path:
+    description: WSL unix path pointing to `git` of the host system.
+    value: ${{steps.wsl_paths.outputs.git_path}}
+  tmp_dir:
+    description: WSL unix path pointing to the temporary directory in the host system.
+    value: ${{steps.wsl_paths.outputs.tmp_dir}}
+
+runs:
+  using: composite
+  steps:
+    # Git checkout converts to CRLF by default. This causes the Aspect lock
+    # files to differ. See: https://github.com/actions/checkout/issues/135.
+    - run: |
+        git config --system core.autocrlf false
+        git config --system core.eol lf
+
+    # Configure the WSL VM.
+    - uses: Vampire/setup-wsl@v4
+      with:
+        wsl-conf: |
+          [interop]
+            appendWindowsPath=false
+          [wsl2]
+            firewall=false
+            localhostForwarding=false
+        wsl-shell-command: bash --login -euo pipefail
+        additional-packages: |
+          curl
+          ca-certificates
+          g++
+          unzip
+          zip
+          git
+          python3
+          tar
+
+    - name: Determining paths for common WSL usage (e.g. path to cmd, npm, git)
+      id: wsl_paths
+      run: |
+        cmd_path=$(which cmd.exe)
+        cmd_wsl_path=$(wsl exec wslpath -u $cmd_path)
+        npm_path=$(which npm)
+        npm_wls_path=$(wsl exec wslpath -u "$npm_path")
+        tmp_dir_wsl_path=$(wsl exec wslpath -u "/tmp")
+
+        git_bin=$(which git)
+        git_bin_wsl_path=$(wsl exec wslpath -u "$git_bin")
+
+        echo "cmd_path=$cmd_wsl_path" >> $GITHUB_OUTPUT
+        echo "npm_path=$npm_wls_path" >> $GITHUB_OUTPUT
+        echo "tmp_path=$tmp_dir_wsl_path" >> $GITHUB_OUTPUT
+        echo "git_path=$git_bin_wsl_path" >> $GITHUB_OUTPUT
+
+    - name: Disable WSL <> Host virtual network firewall (to allow for testing)
+      shell: powershell
+      run: Set-NetFirewallProfile -Profile Public -DisabledInterfaceAliases "vEthernet (WSL)"
+
+    - name: Setup nvm
+      shell: wsl-bash {0}
+      run: |
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+        export NVM_DIR="$HOME/.nvm"
+        # Note: Specify `--install` due to https://github.com/nvm-sh/nvm/issues/1985.
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --install
+    - run: nvm install
+      shell: wsl-bash {0}
