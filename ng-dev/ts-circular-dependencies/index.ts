@@ -119,13 +119,13 @@ export function main(
       return 1;
     }
   } else {
+    // No golden file exists
     if (approve) {
       Log.error(
         `x  Cannot approve circular depdencies within this repository as no golden file exists.`,
       );
       return 1;
     }
-    // No golden file exists
     if (cycles.length > 0) {
       Log.error(`x  No circular dependencies are allow within this repository.`);
       return 1;
