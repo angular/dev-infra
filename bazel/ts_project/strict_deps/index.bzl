@@ -1,9 +1,18 @@
 load("@aspect_rules_js//js:providers.bzl", "JsInfo")
+load("@build_bazel_rules_nodejs//:providers.bzl", "LinkablePackageInfo")
 
 # A custom provider to pass along the npm package name for linked npm packages
 NpmPackage = provider()
 
 def _npm_package_aspect_impl(target, ctx):
+    # Extract the module_name provided to an interop compatible ts_project to be made
+    # available as an imported module by downstream usages.
+    # TODO: Remove after all interop usage is removed.
+    if ctx.rule.kind == "ts_project_module":
+        package_name = target[LinkablePackageInfo].package_name
+        if package_name != "":
+            return [NpmPackage(name = package_name)]
+
     if (ctx.rule.kind == "npm_link_package_store"):
         package_name = ctx.rule.attr.package
 
