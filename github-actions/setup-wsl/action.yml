@@ -15,6 +15,12 @@ outputs:
   tmp_dir:
     description: WSL unix path pointing to the temporary directory in the host system.
     value: ${{steps.wsl_paths.outputs.tmp_dir}}
+  wsl_root_path:
+    description: Windows path pointing to the WSL file system root (using a symlink).
+    value: C:\wsl_root
+  wsl_root_unc_path:
+    description: UNC Windows path pointing to the WSL file system root.
+    value: \\wsl.localhost\Debian
 
 runs:
   using: composite
@@ -66,6 +72,10 @@ runs:
       shell: powershell
       run: Set-NetFirewallProfile -Profile Public -DisabledInterfaceAliases "vEthernet (WSL)"
 
+    - name: Create link to WSL drive
+      shell: powershell
+      run: New-Item -ItemType SymbolicLink -Path "C:\wsl_root" -Target "\\wsl.localhost\Debian"
+
     - name: Setup nvm
       shell: wsl-bash {0}
       run: |
@@ -73,5 +83,8 @@ runs:
         export NVM_DIR="$HOME/.nvm"
         # Note: Specify `--install` due to https://github.com/nvm-sh/nvm/issues/1985.
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --install
+
     - run: nvm install
+      shell: wsl-bash {0}
+    - run: npm install -g yarn@1
       shell: wsl-bash {0}
