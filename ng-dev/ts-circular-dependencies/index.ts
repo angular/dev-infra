@@ -88,18 +88,6 @@ export function main(
 
   Log.info(green(`   Current number of cycles: ${yellow(cycles.length.toString())}`));
 
-  if (goldenFile && approve) {
-    writeFileSync(goldenFile, JSON.stringify(actual, null, 2));
-    Log.info(green('✔  Updated golden file.'));
-    return 0;
-  } else if (!goldenFile) {
-    Log.error(`x  Circular dependency goldens are not allowed.`);
-    return 1;
-  } else if (!existsSync(goldenFile)) {
-    Log.error(`x  Could not find golden file: ${goldenFile}`);
-    return 1;
-  }
-
   const warningsCount = analyzer.unresolvedFiles.size + analyzer.unresolvedModules.size;
 
   // By default, warnings for unresolved files or modules are not printed. This is because
@@ -117,6 +105,33 @@ export function main(
   } else {
     Log.warn(`⚠  ${warningsCount} imports could not be resolved.`);
     Log.warn(`   Please rerun with "--warnings" to inspect unresolved imports.`);
+  }
+
+  if (goldenFile === undefined) {
+    if (approve) {
+      Log.error(
+        `x  Cannot approve circular depdencies within this repository as no golden file exists.`,
+      );
+      return 1;
+    }
+    if (cycles.length > 0) {
+      Log.error(`x  No circular dependencies are allow within this repository.`);
+      return 1;
+    }
+
+    Log.info(green('✔  No circular dependencies found in this repository.'));
+    return 0;
+  }
+
+  if (approve) {
+    writeFileSync(goldenFile, JSON.stringify(actual, null, 2));
+    Log.info(green('✔  Updated golden file.'));
+    return 0;
+  }
+
+  if (!existsSync(goldenFile)) {
+    Log.error(`x  Could not find golden file: ${goldenFile}`);
+    return 1;
   }
 
   const expected = goldenFile ? (JSON.parse(readFileSync(goldenFile, 'utf8')) as Golden) : [];
