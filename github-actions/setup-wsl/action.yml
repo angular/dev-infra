@@ -12,9 +12,9 @@ outputs:
   git_path:
     description: WSL unix path pointing to `git` of the host system.
     value: ${{steps.wsl_paths.outputs.git_path}}
-  tmp_dir:
+  tmp_path:
     description: WSL unix path pointing to the temporary directory in the host system.
-    value: ${{steps.wsl_paths.outputs.tmp_dir}}
+    value: ${{steps.wsl_paths.outputs.tmp_path}}
   wsl_root_path:
     description: Windows path pointing to the WSL file system root (using a symlink).
     value: C:\wsl_root
