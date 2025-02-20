@@ -26,6 +26,9 @@ runs:
   using: composite
   steps:
     # Configure the WSL VM.
+    # Note: `memory` by default is 50% of the Windows host machine. We want to try
+    # a higher percentage to leverage more of the GitHub Windows machines.
+    # They have 16GB by default. See: https://docs.github.com/en/actions/using-github-hosted-runners/using-github-hosted-runners/about-github-hosted-runners.
     - uses: Vampire/setup-wsl@v4
       with:
         wsl-conf: |
@@ -34,6 +37,7 @@ runs:
           [wsl2]
             firewall=false
             localhostForwarding=false
+            memory=14GB
         wsl-shell-command: bash --login -euo pipefail
         additional-packages: |
           curl
