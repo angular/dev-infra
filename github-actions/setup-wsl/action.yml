@@ -2,6 +2,12 @@ name: 'Setup WSL'
 description: 'Sets up WSL for the current Windows VM'
 author: 'Angular'
 
+inputs:
+  wsl_firewall_interface:
+    description: Interface alias for the WSL firewall.
+    default: 'vEthernet (WSL)'
+    required: false
+
 outputs:
   cmd_path:
     description: WSL unix path pointing to `cmd.exe` of the host system.
@@ -70,7 +76,7 @@ runs:
 
     - name: Disable WSL <> Host virtual network firewall (to allow for testing)
       shell: powershell
-      run: Set-NetFirewallProfile -Profile Public -DisabledInterfaceAliases "vEthernet (WSL)"
+      run: Set-NetFirewallProfile -Profile Public -DisabledInterfaceAliases "${{inputs.wsl_firewall_interface}}"
 
     - name: Create link to WSL drive
       shell: powershell
