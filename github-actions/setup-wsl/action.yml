@@ -11,6 +11,10 @@ inputs:
     description: Networking mode for the WSL config
     default: NAT
     required: false
+  cache_version:
+    description: Version that can be used to invalidate the cache
+    default: 1
+    required: false
 
 outputs:
   cmd_path:
@@ -86,6 +90,16 @@ runs:
     - name: Create link to WSL drive
       shell: powershell
       run: New-Item -ItemType SymbolicLink -Path "C:\wsl_root" -Target "\\wsl.localhost\Debian"
+
+    - name: Cache for nvm, yarn profile caches.
+      uses: actions/cache@v4
+      with:
+        path: |
+          C:\wsl_root\Debian\root\.nvm\versions
+          C:\wsl_root\Debian\root\.yarn\berry\cache
+        key: "${{ runner.os }}-wsl-cache-v${{inputs.cache_version}}-${{hashFiles('**/.nvmrc')}}-${{hashFiles('**/yarn.lock')}}"
+        restore-keys: |
+          ${{ runner.os }}-wsl-cache-v${{inputs.cache_version}}-
 
     - name: Setup nvm
       shell: wsl-bash {0}
