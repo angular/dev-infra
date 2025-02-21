@@ -7,6 +7,10 @@ inputs:
     description: Interface alias for the WSL firewall.
     default: 'vEthernet (WSL)'
     required: false
+  wsl_networking_mode:
+    description: Networking mode for the WSL config
+    default: NAT
+    required: false
 
 outputs:
   cmd_path:
@@ -44,6 +48,7 @@ runs:
             firewall=false
             localhostForwarding=false
             memory=14GB
+            networkingMode=${{inputs.wsl_networking_mode}}
         wsl-shell-command: bash --login -euo pipefail
         additional-packages: |
           curl
