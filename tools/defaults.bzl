@@ -75,24 +75,8 @@ def ts_library(name, testonly = False, deps = [], srcs = [], devmode_module = No
         **kwargs
     )
 
-def pkg_npm(build_package_json_from_template = False, deps = [], **kwargs):
+def pkg_npm(deps = [], **kwargs):
     _assert_defaults_allowed_for_caller()
-
-    if build_package_json_from_template:
-        native.genrule(
-            name = "package-json",
-            srcs = [
-                "package.json.tmpl",
-                "//:package.json",
-            ],
-            outs = ["package.json"],
-            cmd = """
-                $(execpath //tools:inline-package-json-deps) $(execpath package.json.tmpl) \
-                    $(execpath //:package.json) $@
-            """,
-            tools = ["//tools:inline-package-json-deps"],
-        )
-        deps.append("package-json")
 
     _pkg_npm(
         deps = deps,

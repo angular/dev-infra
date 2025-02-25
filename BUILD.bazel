@@ -1,10 +1,10 @@
 load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("@npm//@bazel/typescript:index.bzl", "ts_config")
+load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm")
 
 # BEGIN-INTERNAL
 load("//:package.bzl", "NPM_PACKAGE_SUBSTITUTIONS")
-load("//tools:defaults.bzl", "pkg_npm")
 
 rules_js_tsconfig(
     name = "rjs-tsconfig",
