@@ -80,7 +80,7 @@
     "@octokit/graphql": "8.2.1",
     "@octokit/graphql-schema": "patch:@octokit/graphql-schema@npm%3A15.3.0#~/.yarn/patches/@octokit-graphql-schema-npm-15.3.0-4046a59648.patch",
     "@octokit/openapi-types": "24.0.0",
-    "@octokit/plugin-paginate-rest": "11.4.2",
+    "@octokit/plugin-paginate-rest": "11.4.3",
     "@octokit/plugin-rest-endpoint-methods": "13.3.1",
     "@octokit/request-error": "6.1.7",
     "@octokit/rest": "21.1.1",
