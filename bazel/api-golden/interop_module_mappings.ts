@@ -16,10 +16,11 @@ const scopedTypesPackageRegex = /^@types\/([^_\/]+)__(.+)/;
  * Resolves type modules and returns corresponding path mappings and a
  * list of referenced files.
  */
-export async function resolveTypePackages(typePackageNames: string[]): Promise<{
+export async function resolveTypePackages(typeNames: string[]): Promise<{
   paths: Record<string, string[]>;
   typeFiles: string[];
 }> {
+  const typePackageNames = typeNames.map((t) => `@types/${t}`);
   const typeFiles = [];
   const paths: Record<string, string[]> = {};
 

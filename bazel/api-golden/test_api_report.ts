@@ -21,8 +21,7 @@ import os from 'os';
 
 import {AstModule} from '@microsoft/api-extractor/lib/analyzer/AstModule';
 import {ExportAnalyzer} from '@microsoft/api-extractor/lib/analyzer/ExportAnalyzer';
-import {resolveTypePackages} from './module_mappings.js';
-import {patchHostToSkipNodeModules} from './patch-host.js';
+import {resolveTypePackages} from './interop_module_mappings.js';
 
 /**
  * Original definition of the `ExportAnalyzer#fetchAstModuleExportInfo` method.
@@ -51,30 +50,31 @@ const _origFetchAstModuleExportInfo = ExportAnalyzer.prototype.fetchAstModuleExp
 export async function testApiGolden(
   indexFilePath: string,
   stripExportPattern: RegExp,
-  typePackageNames: string[],
+  typeNames: string[],
   packageJsonPath: string,
   customPackageName: string,
 ): Promise<string | null> {
   const tempDir =
     process.env.TEST_TMPDIR ?? fs.mkdtempSync(path.join(os.tmpdir(), 'api-golden-rule'));
-  const {paths, typeFiles} = await resolveTypePackages(typePackageNames);
+  const rjsMode = process.env['RJS_MODE'] === 'true';
+
+  let resolvedTypePackages: Awaited<ReturnType<typeof resolveTypePackages>> | null = null;
+  if (!rjsMode) {
+    resolvedTypePackages = await resolveTypePackages(typeNames);
+  }
 
   const configObject: IConfigFile = {
     compiler: {
-      overrideTsconfig:
-        // We disable automatic `@types` resolution as this throws-off API reports when the API
-        // test is run outside sandbox. Instead we expect a list of  hard-coded types that should
-        // be added.This works in non-sandbox and Windows. Note that we include the type files
-        // directly in the compilation, and additionally set up path mappings. This allows
-        // for global type definitions and module-scoped types to work.
-        {
-          files: [indexFilePath, ...typeFiles],
-          compilerOptions: {
-            paths,
-            types: [],
-            lib: ['esnext', 'dom'],
-          },
+      overrideTsconfig: {
+        // In interop/compat mode, the linker is not available and there is no `node_modules`
+        // directory, so we need to manually wire up global types.
+        files: [indexFilePath, ...(resolvedTypePackages?.typeFiles ?? [])],
+        compilerOptions: {
+          paths: resolvedTypePackages?.paths ?? {},
+          types: rjsMode ? typeNames : [],
+          lib: ['esnext', 'dom'],
         },
+      },
     },
     projectFolder: path.dirname(packageJsonPath),
     mainEntryPointFilePath: indexFilePath,
@@ -115,8 +115,6 @@ export async function testApiGolden(
     packageJsonFullPath: packageJsonPath,
     configObjectFullPath: undefined,
   });
-
-  patchHostToSkipNodeModules();
 
   // This patches the `ExportAnalyzer` of `api-extractor` so that we can filter out
   // exports that match a specified pattern. Ideally this would not be needed as the

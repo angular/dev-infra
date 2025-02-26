@@ -13,6 +13,7 @@ def api_golden_test_npm_package(
         data = [],
         strip_export_pattern = default_strip_export_pattern,
         types = {},
+        interop_mode = False,
         **kwargs):
     """Builds an API report for all entry-points within the given NPM package and compares it.
 
@@ -23,6 +24,7 @@ def api_golden_test_npm_package(
       data: Runtime dependenices needed for the rule (e.g. the tree artifact of the NPM package)
       strip_export_pattern: An optional regular expression to filter out exports from the golden.
       types: Optional list of type targets to make available in the API report generation.
+      interop_mode: Whether we are compiling in `rules_nodejs` interop mode.
       **kwargs: Other arguments passed to `js_binary`/`js_test` (depending on approval mode)
     """
 
@@ -42,6 +44,7 @@ def api_golden_test_npm_package(
         data = data,
         entry_point = "@devinfra//bazel/api-golden:index_npm_packages.js",
         args = [golden_dir, npm_package, "false", quoted_export_pattern] + type_names,
+        env = {"RJS_MODE": "true" if not interop_mode else "false"},
         **kwargs
     )
 
@@ -51,5 +54,6 @@ def api_golden_test_npm_package(
         data = data,
         entry_point = "@devinfra//bazel/api-golden:index_npm_packages.js",
         args = [golden_dir, npm_package, "true", quoted_export_pattern] + type_names,
+        env = {"RJS_MODE": "true" if not interop_mode else "false"},
         **kwargs
     )
