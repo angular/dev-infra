@@ -2,27 +2,20 @@ load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm")
 load("//bazel/api-golden:index_rjs.bzl", _rjs_api_golden_test_npm_package = "api_golden_test_npm_package")
 
-nodejs_test_args = [
-    # Needed so that node doesn't walk back to the source directory.
-    # From there, the relative imports would point to .ts files.
-    "--node_options=--preserve-symlinks",
-    "--nobazel_run_linker",
-]
-
 default_strip_export_pattern = "^ɵ(?!ɵdefineInjectable|ɵinject|ɵInjectableDef)"
 
-def extract_module_names_from_npm_targets(type_targets):
+def extract_names_from_npm_targets(type_targets):
     types = {}
 
     for type_target in type_targets:
         type_label = Label(type_target)
         type_package = type_label.package
 
-        if type_label.workspace_name != "npm":
+        if type_label.workspace_name != "npm" or not type_package.startswith("@types/"):
             fail("Expected type targets to be part of the `@npm` workspace." +
                  "e.g. `@npm//@types/nodes`.")
 
-        types[type_target] = type_package
+        types[type_target] = type_package[len("@types/"):]
 
     return types
 
@@ -60,7 +53,8 @@ def api_golden_test(
         data = [":%s_synthetic_package" % name] + data,
         npm_package = "%s/%s_synthetic_package" % (native.package_name(), name),
         strip_export_pattern = strip_export_pattern,
-        types = extract_module_names_from_npm_targets(types),
+        types = extract_names_from_npm_targets(types),
+        interop_mode = True,
         **kwargs
     )
 
@@ -79,7 +73,8 @@ def api_golden_test_npm_package(
         npm_package = fixup_path_for_rules_js(npm_package),
         data = data,
         strip_export_pattern = strip_export_pattern,
-        types = extract_module_names_from_npm_targets(types),
+        types = extract_names_from_npm_targets(types),
+        interop_mode = True,
         **kwargs
     )
 

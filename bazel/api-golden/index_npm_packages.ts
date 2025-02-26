@@ -31,7 +31,7 @@ async function main(
   npmPackageDir: string,
   approveGolden: boolean,
   stripExportPattern: RegExp,
-  typePackageNames: string[],
+  typeNames: string[],
 ) {
   // TODO(ESM) This can be replaced with an actual ESM import when `ts_library` is
   // guaranteed to be ESM-only and supports the `mts` extension.
@@ -57,7 +57,7 @@ async function main(
     const actual = await testApiGolden(
       typesEntryPointPath,
       stripExportPattern,
-      typePackageNames,
+      typeNames,
       packageJsonPath,
       moduleName,
     );
@@ -101,14 +101,14 @@ async function main(
   const npmPackageDir = path.resolve(args[1]);
   const approveGolden = args[2] === 'true';
   const stripExportPattern = new RegExp(args[3]);
-  const typePackageNames = args.slice(4);
+  const typeNames = args.slice(4);
 
   // For approving, point to the real directory outside of the bazel-out.
   if (approveGolden) {
     goldenDir = path.join(process.env.BUILD_WORKSPACE_DIRECTORY!, args[0]);
   }
 
-  main(goldenDir, npmPackageDir, approveGolden, stripExportPattern, typePackageNames).catch((e) => {
+  main(goldenDir, npmPackageDir, approveGolden, stripExportPattern, typeNames).catch((e) => {
     console.error(e);
     process.exit(1);
   });
