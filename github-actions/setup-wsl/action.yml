@@ -35,6 +35,9 @@ outputs:
   wsl_root_unc_path:
     description: UNC Windows path pointing to the WSL file system root.
     value: \\\\wsl.localhost\Debian
+  repo_path:
+    description: Path to the copied repository directory
+    value: ${{steps.disk_path.outputs.repo}}
 
 runs:
   using: composite
@@ -91,17 +94,28 @@ runs:
       shell: powershell
       run: New-Item -ItemType SymbolicLink -Path "C:\wsl_root" -Target "\\wsl.localhost\Debian"
 
+    - name: Linking workspace into WSL for fast disk access
+      shell: wsl-bash {0}
+      id: disk_path
+      env:
+        WSLENV: 'GITHUB_OUTPUT/p'
+      run: |
+        mkdir $HOME/repo
+        cp -R ./* $HOME/repo/
+        echo "repo=$(wslpath -w $HOME/repo)" >> $GITHUB_OUTPUT
+
     - name: Cache for nvm, yarn profile caches.
       uses: actions/cache@v4
       with:
         path: |
-          C:\wsl_root\Debian\root\.nvm\versions
-          C:\wsl_root\Debian\root\.yarn\berry\cache
+          C:\\wsl_root\\Debian\\root\\.nvm\\versions
+          C:\\wsl_root\\Debian\\root\\.yarn\\berry\cache
         key: "${{ runner.os }}-wsl-cache-v${{inputs.cache_version}}-${{hashFiles('**/.nvmrc')}}-${{hashFiles('**/yarn.lock')}}"
         restore-keys: |
           ${{ runner.os }}-wsl-cache-v${{inputs.cache_version}}-
 
     - name: Setup nvm
+      working-directory: ${{steps.paths.outputs.repo}}
       shell: wsl-bash {0}
       run: |
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
@@ -110,6 +124,8 @@ runs:
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --install
 
     - run: nvm install
+      working-directory: ${{steps.paths.outputs.repo}}
       shell: wsl-bash {0}
     - run: npm install -g yarn@1
+      working-directory: ${{steps.paths.outputs.repo}}
       shell: wsl-bash {0}
