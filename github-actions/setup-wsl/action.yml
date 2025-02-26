@@ -36,7 +36,7 @@ outputs:
     description: UNC Windows path pointing to the WSL file system root.
     value: \\\\wsl.localhost\Debian
   repo_path:
-    description: Path to the copied repository directory
+    description: Path to the copied repository directory (as Unix wsl path)
     value: ${{steps.disk_path.outputs.repo}}
 
 runs:
@@ -46,7 +46,7 @@ runs:
     # Note: `memory` by default is 50% of the Windows host machine. We want to try
     # a higher percentage to leverage more of the GitHub Windows machines.
     # They have 16GB by default. See: https://docs.github.com/en/actions/using-github-hosted-runners/using-github-hosted-runners/about-github-hosted-runners.
-    - uses: Vampire/setup-wsl@v4
+    - uses: Vampire/setup-wsl@v5
       with:
         wsl-conf: |
           [interop]
@@ -100,9 +100,11 @@ runs:
       env:
         WSLENV: 'GITHUB_OUTPUT/p'
       run: |
-        mkdir $HOME/repo
-        cp -R ./* $HOME/repo/
-        echo "repo=$(wslpath -w $HOME/repo)" >> $GITHUB_OUTPUT
+        repo_path="$HOME/repo"
+        cp -R . $repo_path
+
+        echo "repo=$repo_path" >> $GITHUB_OUTPUT
+        echo "Repo path is: $repo_path"
 
     - name: Cache for nvm, yarn profile caches.
       uses: actions/cache@v4
@@ -115,7 +117,6 @@ runs:
           ${{ runner.os }}-wsl-cache-v${{inputs.cache_version}}-
 
     - name: Setup nvm
-      working-directory: ${{steps.paths.outputs.repo}}
       shell: wsl-bash {0}
       run: |
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
@@ -123,9 +124,11 @@ runs:
         # Note: Specify `--install` due to https://github.com/nvm-sh/nvm/issues/1985.
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --install
 
-    - run: nvm install
-      working-directory: ${{steps.paths.outputs.repo}}
+    - name: Installing Node and npm (in WSL)
+      run: |
+        cd ${{steps.disk_path.outputs.repo}}
+        nvm install
       shell: wsl-bash {0}
-    - run: npm install -g yarn@1
-      working-directory: ${{steps.paths.outputs.repo}}
+    - name: Installing Yarn (in WSL)
+      run: npm install -g yarn@1
       shell: wsl-bash {0}
