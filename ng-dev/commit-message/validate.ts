@@ -220,5 +220,9 @@ export function printValidationErrors(errors: string[], print = Log.error) {
   print();
   print(`<breaking change description>`);
   print();
+  print(`DEPRECATED: <deprecation summary>`);
+  print();
+  print(`<deprecation description>`);
+  print();
   print();
 }
