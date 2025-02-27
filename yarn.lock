@@ -257,7 +257,7 @@ __metadata:
     "@google-cloud/storage": "npm:^7.0.0"
     "@inquirer/prompts": "npm:^7.0.0"
     "@inquirer/type": "npm:^3.0.0"
-    "@microsoft/api-extractor": "npm:7.50.1"
+    "@microsoft/api-extractor": "npm:7.51.0"
     "@octokit/auth-app": "npm:7.1.5"
     "@octokit/core": "npm:6.1.4"
     "@octokit/graphql": "npm:8.2.1"
@@ -2805,7 +2805,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor@npm:7.50.1, @microsoft/api-extractor@npm:^7.24.2":
+"@microsoft/api-extractor@npm:7.51.0":
+  version: 7.51.0
+  resolution: "@microsoft/api-extractor@npm:7.51.0"
+  dependencies:
+    "@microsoft/api-extractor-model": "npm:7.30.3"
+    "@microsoft/tsdoc": "npm:~0.15.1"
+    "@microsoft/tsdoc-config": "npm:~0.17.1"
+    "@rushstack/node-core-library": "npm:5.11.0"
+    "@rushstack/rig-package": "npm:0.5.3"
+    "@rushstack/terminal": "npm:0.15.0"
+    "@rushstack/ts-command-line": "npm:4.23.5"
+    lodash: "npm:~4.17.15"
+    minimatch: "npm:~3.0.3"
+    resolve: "npm:~1.22.1"
+    semver: "npm:~7.5.4"
+    source-map: "npm:~0.6.1"
+    typescript: "npm:5.7.3"
+  bin:
+    api-extractor: bin/api-extractor
+  checksum: 10c0/3dfdb39ef8d31b5c5483f6e39930acb8d468a063085233f1e968f859081acd35ef37a5ab57e08bbf2094ae04b84bf66bd933d34d58f69295878b81fd8f91d748
+  languageName: node
+  linkType: hard
+
+"@microsoft/api-extractor@npm:^7.24.2":
   version: 7.50.1
   resolution: "@microsoft/api-extractor@npm:7.50.1"
   dependencies:
