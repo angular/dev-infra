@@ -13,8 +13,8 @@ ts_library(
     # TODO(devversion): Remove this when `ts_library` supports `.mts` extension.
     devmode_module = "commonjs",
     deps = [
-        "@npm//@types/node",
         "@npm//@actions/core",
+        "@npm//@types/node",
     ],
 )
 
