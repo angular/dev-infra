@@ -40250,7 +40250,7 @@ var require_body2 = __commonJS({
       const crypto = __require("node:crypto");
       random = (max) => crypto.randomInt(0, max);
     } catch {
-      random = (max) => Math.floor(Math.random(max));
+      random = (max) => Math.floor(Math.random() * max);
     }
     var textEncoder = new TextEncoder();
     function noop2() {
@@ -43370,7 +43370,6 @@ var require_env_http_proxy_agent = __commonJS({
       "http:": 80,
       "https:": 443
     };
-    var experimentalWarned = false;
     var EnvHttpProxyAgent = class extends DispatcherBase {
       #noProxyValue = null;
       #noProxyEntries = null;
@@ -43378,12 +43377,6 @@ var require_env_http_proxy_agent = __commonJS({
       constructor(opts = {}) {
         super();
         this.#opts = opts;
-        if (!experimentalWarned) {
-          experimentalWarned = true;
-          process.emitWarning("EnvHttpProxyAgent is experimental, expect them to change at any time.", {
-            code: "UNDICI-EHPA"
-          });
-        }
         const { httpProxy, httpsProxy, noProxy, ...agentOpts } = opts;
         this[kNoProxyAgent] = new Agent(agentOpts);
         const HTTP_PROXY = httpProxy ?? process.env.http_proxy ?? process.env.HTTP_PROXY;
@@ -45042,8 +45035,10 @@ var require_mock_utils2 = __commonJS({
         return data;
       } else if (typeof data === "object") {
         return JSON.stringify(data);
-      } else {
+      } else if (data) {
         return data.toString();
+      } else {
+        return "";
       }
     }
     function getMockDispatch(mockDispatches, key) {
@@ -46484,10 +46479,13 @@ var require_cache2 = __commonJS({
           if (typeof key !== "string" || typeof val !== "string") {
             throw new Error("opts.headers is not a valid header map");
           }
-          headers[key] = val;
+          headers[key.toLowerCase()] = val;
         }
       } else if (typeof opts.headers === "object") {
-        headers = opts.headers;
+        headers = {};
+        for (const key of Object.keys(opts.headers)) {
+          headers[key.toLowerCase()] = opts.headers[key];
+        }
       } else {
         throw new Error("opts.headers is not an object");
       }
@@ -46644,11 +46642,7 @@ var require_cache2 = __commonJS({
       const varyingHeaders = typeof varyHeader === "string" ? varyHeader.split(",") : varyHeader;
       for (const header of varyingHeaders) {
         const trimmedHeader = header.trim().toLowerCase();
-        if (headers[trimmedHeader]) {
-          output[trimmedHeader] = headers[trimmedHeader];
-        } else {
-          return void 0;
-        }
+        output[trimmedHeader] = headers[trimmedHeader] ?? null;
       }
       return output;
     }
@@ -47206,8 +47200,10 @@ var require_memory_cache_store = __commonJS({
         const topLevelKey = `${key.origin}:${key.path}`;
         const now = Date.now();
         const entry = (_a = this.#entries.get(topLevelKey)) == null ? void 0 : _a.find((entry2) => entry2.deleteAt > now && entry2.method === key.method && (entry2.vary == null || Object.keys(entry2.vary).every((headerName) => {
-          var _a2;
-          return entry2.vary[headerName] === ((_a2 = key.headers) == null ? void 0 : _a2[headerName]);
+          if (entry2.vary[headerName] === null) {
+            return key.headers[headerName] === void 0;
+          }
+          return entry2.vary[headerName] === key.headers[headerName];
         })));
         return entry == null ? void 0 : {
           statusMessage: entry.statusMessage,
@@ -47750,7 +47746,7 @@ var require_sqlite_cache_store = __commonJS({
         assertCacheKey(key);
         const value = this.#findValue(key);
         return value ? {
-          body: value.body ? Buffer.from(value.body.buffer) : void 0,
+          body: value.body ? Buffer.from(value.body.buffer, value.body.byteOffset, value.body.byteLength) : void 0,
           statusCode: value.statusCode,
           statusMessage: value.statusMessage,
           headers: value.headers ? JSON.parse(value.headers) : void 0,
@@ -47871,9 +47867,6 @@ var require_sqlite_cache_store = __commonJS({
           }
           let matches = true;
           if (value.vary) {
-            if (!headers) {
-              return void 0;
-            }
             const vary = JSON.parse(value.vary);
             for (const header in vary) {
               if (!headerValueEquals(headers[header], vary[header])) {
@@ -47890,16 +47883,17 @@ var require_sqlite_cache_store = __commonJS({
       }
     };
     function headerValueEquals(lhs, rhs) {
+      if (lhs == null && rhs == null) {
+        return true;
+      }
+      if (lhs == null && rhs != null || lhs != null && rhs == null) {
+        return false;
+      }
       if (Array.isArray(lhs) && Array.isArray(rhs)) {
         if (lhs.length !== rhs.length) {
           return false;
         }
-        for (let i = 0; i < lhs.length; i++) {
-          if (rhs.includes(lhs[i])) {
-            return false;
-          }
-        }
-        return true;
+        return lhs.every((x, i) => x === rhs[i]);
       }
       return lhs === rhs;
     }
@@ -48788,6 +48782,12 @@ var require_request4 = __commonJS({
       signal.removeEventListener("abort", abort);
     });
     var dependentControllerMap = /* @__PURE__ */ new WeakMap();
+    var abortSignalHasEventHandlerLeakWarning;
+    try {
+      abortSignalHasEventHandlerLeakWarning = getMaxListeners(new AbortController().signal) > 0;
+    } catch {
+      abortSignalHasEventHandlerLeakWarning = false;
+    }
     function buildAbort(acRef) {
       return abort;
       function abort() {
@@ -48989,11 +48989,8 @@ var require_request4 = __commonJS({
             this[kAbortController] = ac;
             const acRef = new WeakRef(ac);
             const abort = buildAbort(acRef);
-            try {
-              if (typeof getMaxListeners === "function" && getMaxListeners(signal) === defaultMaxListeners) {
-                setMaxListeners(1500, signal);
-              }
-            } catch {
+            if (abortSignalHasEventHandlerLeakWarning && getMaxListeners(signal) === defaultMaxListeners) {
+              setMaxListeners(1500, signal);
             }
             util.addAbortListener(signal, abort);
             requestFinalizer.register(ac, { signal, abort }, abort);
