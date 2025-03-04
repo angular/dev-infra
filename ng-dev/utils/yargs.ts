@@ -23,7 +23,7 @@ export async function runParserWithCompletedFunctions(applyConfiguration: (argv:
       .parse();
   } catch (e) {
     err = e as Error;
-    if ([undefined, 0].includes(process.exitCode)) {
+    if ([undefined, 0].includes(process.exitCode as any)) {
       process.exitCode = 1;
     }
   } finally {
