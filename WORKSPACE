@@ -78,7 +78,7 @@ yarn_install(
         "//:.yarn/patches/@angular-bazel-npm.patch",
         "//:.yarn/patches/@bazel-jasmine-npm.patch",
         "//:.yarn/patches/@octokit-graphql-schema-npm-15.3.0-4046a59648.patch",
-        "//:.yarn/releases/yarn-4.6.0.cjs",
+        "//:.yarn/releases/yarn-4.7.0.cjs",
         "//:.yarnrc.yml",
     ],
     # Currently disabled due to:
@@ -86,7 +86,7 @@ yarn_install(
     #  2. Incompatibilites with the `ts_library` rule.
     exports_directories_only = False,
     package_json = "//:package.json",
-    yarn = "//:.yarn/releases/yarn-4.6.0.cjs",
+    yarn = "//:.yarn/releases/yarn-4.7.0.cjs",
     yarn_lock = "//:yarn.lock",
 )
 
@@ -94,12 +94,12 @@ yarn_install(
     name = "ts_proto_npm",
     args = ["--immutable"],
     data = [
-        "//:.yarn/releases/yarn-4.6.0.cjs",
+        "//:.yarn/releases/yarn-4.7.0.cjs",
         "//tools/ts_proto:.yarnrc.yml",
     ],
     exports_directories_only = False,
     package_json = "//tools/ts_proto:package.json",
-    yarn = "//:.yarn/releases/yarn-4.6.0.cjs",
+    yarn = "//:.yarn/releases/yarn-4.7.0.cjs",
     yarn_lock = "//tools/ts_proto:yarn.lock",
 )
 
