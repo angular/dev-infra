@@ -162,6 +162,7 @@ describe('cut stable action', () => {
       action.projectDir,
       'v10-lts',
       matchesVersion('10.0.3'),
+      null,
       // Experimental packages are expected to be not tagged as LTS.
       {skipExperimentalPackages: true},
     );

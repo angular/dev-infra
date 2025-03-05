@@ -148,6 +148,7 @@ describe('tag recent major as latest action', () => {
       projectDir,
       'latest',
       matchesVersion('10.0.0'),
+      null,
     );
   });
 });
