@@ -26,6 +26,7 @@ import {
 } from '../../versioning/index.js';
 import {ReleaseNotes} from '../../notes/release-notes.js';
 import {workspaceRelativePackageJsonPath} from '../../../utils/constants.js';
+import {PnpmVersioning} from '../pnpm-versioning.js';
 
 describe('cut stable action', () => {
   it('should not activate if a feature-freeze release-train is active', async () => {
@@ -162,7 +163,7 @@ describe('cut stable action', () => {
       action.projectDir,
       'v10-lts',
       matchesVersion('10.0.3'),
-      null,
+      new PnpmVersioning(),
       // Experimental packages are expected to be not tagged as LTS.
       {skipExperimentalPackages: true},
     );

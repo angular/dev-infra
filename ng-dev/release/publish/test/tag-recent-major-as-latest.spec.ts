@@ -11,6 +11,7 @@ import {ActiveReleaseTrains} from '../../versioning/index.js';
 import {ReleaseTrain} from '../../versioning/release-trains.js';
 import {TagRecentMajorAsLatest} from '../actions/tag-recent-major-as-latest.js';
 import {ExternalCommands} from '../external-commands.js';
+import {PnpmVersioning} from '../pnpm-versioning.js';
 import {getTestConfigurationsForAction} from './test-utils/action-mocks.js';
 import {
   fakeNpmPackageQueryRequest,
@@ -148,7 +149,7 @@ describe('tag recent major as latest action', () => {
       projectDir,
       'latest',
       matchesVersion('10.0.0'),
-      null,
+      new PnpmVersioning(),
     );
   });
 });
