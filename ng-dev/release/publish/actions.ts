@@ -42,6 +42,7 @@ import {ExternalCommands} from './external-commands.js';
 import {promptToInitiatePullRequestMerge} from './prompt-merge.js';
 import {Prompt} from '../../utils/prompt.js';
 import {glob} from 'fast-glob';
+import {PnpmVersioning} from './pnpm-versioning.js';
 
 /** Interface describing a Github repository. */
 export interface GithubRepo {
@@ -98,6 +99,8 @@ export abstract class ReleaseAction {
    * @throws {FatalReleaseActionError} When the action has been aborted due to a fatal error.
    */
   abstract perform(): Promise<void>;
+
+  protected pnpmVersioning = new PnpmVersioning();
 
   constructor(
     protected active: ActiveReleaseTrains,
@@ -399,6 +402,11 @@ export abstract class ReleaseAction {
 
   /** Installs all Yarn dependencies in the current branch. */
   protected async installDependenciesForCurrentBranch() {
+    if (await this.pnpmVersioning.isUsingPnpm(this.projectDir)) {
+      await ExternalCommands.invokePnpmInstall(this.projectDir, this.pnpmVersioning);
+      return;
+    }
+
     const nodeModulesDir = join(this.projectDir, 'node_modules');
     // Note: We delete all contents of the `node_modules` first. This is necessary
     // because Yarn could preserve extraneous/outdated nested modules that will cause
@@ -437,8 +445,14 @@ export abstract class ReleaseAction {
     // publish branch. e.g. consider we publish patch version and a new package has been
     // created in the `next` branch. The new package would not be part of the patch branch,
     // so we cannot build and publish it.
-    const builtPackages = await ExternalCommands.invokeReleaseBuild(this.projectDir);
-    const releaseInfo = await ExternalCommands.invokeReleaseInfo(this.projectDir);
+    const builtPackages = await ExternalCommands.invokeReleaseBuild(
+      this.projectDir,
+      this.pnpmVersioning,
+    );
+    const releaseInfo = await ExternalCommands.invokeReleaseInfo(
+      this.projectDir,
+      this.pnpmVersioning,
+    );
 
     // Extend the built packages with their disk hash and NPM package information. This is
     // helpful later for verifying integrity and filtering out e.g. experimental packages.
@@ -503,6 +517,7 @@ export abstract class ReleaseAction {
       this.projectDir,
       newVersion,
       builtPackagesWithInfo,
+      this.pnpmVersioning,
     );
 
     // Verify the packages built are the correct version.
