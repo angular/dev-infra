@@ -3328,12 +3328,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cronstrue@npm:2.54.0":
-  version: 2.54.0
-  resolution: "cronstrue@npm:2.54.0"
+"cronstrue@npm:2.55.0":
+  version: 2.55.0
+  resolution: "cronstrue@npm:2.55.0"
   bin:
     cronstrue: bin/cli.js
-  checksum: 10c0/1317b64003c368098c779493d6213804794da012b97c4e82b4b932560103d4b4168994bbc8dbef8deb956b4894dae8c4508ccdbe2a4a8e8ded0d680e9c63e54a
+  checksum: 10c0/0f91ceb3b8e191e2a168bdd0610671cab041bd6123a65ddca2c210b0c98e029825a09903814f8b7f2519303048f38d87b273f526378e66bb6d02c6e2d53a8fdd
   languageName: node
   linkType: hard
 
@@ -4231,10 +4231,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graph-data-structure@npm:4.3.1":
-  version: 4.3.1
-  resolution: "graph-data-structure@npm:4.3.1"
-  checksum: 10c0/1230dbacdc4014a6c6c1200d6e4aedac93b2e65a4a43c579d03542c08384155f9247c29acea04be48e7b3ebefaf941509c43cd6ff658030f4f8a11064024b561
+"graph-data-structure@npm:4.4.0":
+  version: 4.4.0
+  resolution: "graph-data-structure@npm:4.4.0"
+  checksum: 10c0/88c3d021ee6a5a1f3d2060fdc14fa6d48a5dd1b2e4d97d61df7001ebd7b3a9698f214b5b08be47e7e58132e632fa27aca0e24b5ac430add6bf0a0f0b30ec8619
   languageName: node
   linkType: hard
 
@@ -5616,7 +5616,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: "npm:39.182.3"
+    renovate: "npm:39.188.0"
   languageName: unknown
   linkType: soft
 
@@ -6078,12 +6078,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:3.5.1":
-  version: 3.5.1
-  resolution: "prettier@npm:3.5.1"
+"prettier@npm:3.5.2":
+  version: 3.5.2
+  resolution: "prettier@npm:3.5.2"
   bin:
     prettier: bin/prettier.cjs
-  checksum: 10c0/9f6f810eae455d6e4213845151a484a2338f2e0d6a8b84ee8e13a83af8a2421ef6c1e31e61e4b135671fb57b9541f6624648880cc2061ac803e243ac898c0123
+  checksum: 10c0/d7b597ed33f39c32ace675896ad187f06a3e48dc8a1e80051b5c5f0dae3586d53981704b8fda5ac3b080e6c2e0e197d239131b953702674f044351621ca5e1ac
   languageName: node
   linkType: hard
 
@@ -6368,9 +6368,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:39.182.3":
-  version: 39.182.3
-  resolution: "renovate@npm:39.182.3"
+"renovate@npm:39.188.0":
+  version: 39.188.0
+  resolution: "renovate@npm:39.188.0"
   dependencies:
     "@aws-sdk/client-codecommit": "npm:3.738.0"
     "@aws-sdk/client-ec2": "npm:3.738.0"
@@ -6415,7 +6415,7 @@ __metadata:
     commander: "npm:13.1.0"
     conventional-commits-detector: "npm:1.0.3"
     croner: "npm:9.0.0"
-    cronstrue: "npm:2.54.0"
+    cronstrue: "npm:2.55.0"
     deepmerge: "npm:4.3.1"
     dequal: "npm:2.0.3"
     detect-indent: "npm:6.1.0"
@@ -6436,7 +6436,7 @@ __metadata:
     good-enough-parser: "npm:1.1.23"
     google-auth-library: "npm:9.15.1"
     got: "npm:11.8.6"
-    graph-data-structure: "npm:4.3.1"
+    graph-data-structure: "npm:4.4.0"
     handlebars: "npm:4.7.8"
     ignore: "npm:7.0.3"
     ini: "npm:5.0.0"
@@ -6461,7 +6461,7 @@ __metadata:
     p-queue: "npm:6.6.2"
     p-throttle: "npm:4.1.1"
     parse-link-header: "npm:2.0.0"
-    prettier: "npm:3.5.1"
+    prettier: "npm:3.5.2"
     protobufjs: "npm:7.4.0"
     punycode: "npm:2.3.1"
     re2: "npm:1.21.4"
@@ -6495,7 +6495,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 10c0/05dbec16c8022605b09a20b79a5e81f8e47f9a53e4de519c61d8c26145a1df383fc9dc395fac8dae3a363eabbe8892a8b251abd16fe3f04aacdd0664ab209d09
+  checksum: 10c0/31214d06b9301f8b0e0e89fe8d4b9b4eaf6aca4140f42a972b7628ab4b690d55f5b1aed81d6a55b7ffb2bd4eecaabcddd5ca870360df39265ce89c8b26c2527d
   languageName: node
   linkType: hard
 
