@@ -51,6 +51,15 @@ runs:
         node-version-file: ${{ inputs.node-version-file-path }}
         node-version: ${{ inputs.node-version }}
 
+    - id: packageManager
+      shell: bash
+      run: |
+        echo "PACKAGE_MANAGER=$(cat package.json | jq ".packageManager" | sed -E 's/.*(npm|pnpm|yarn).*/\1/g')" > "$GITHUB_OUTPUT"
+
+    - if: steps.packageManager.outputs.PACKAGE_MANAGER == 'pnpm'
+      uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+
+
     # TODO(josephperrott): Determine if its safe to use this caching step.
     # - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
     #   if: ${{ inputs.cache-node-modules == 'true' }}
