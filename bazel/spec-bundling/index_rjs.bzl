@@ -11,7 +11,9 @@ def spec_bundle(name, deps, bootstrap = [], testonly = True, **kwargs):
 
     esbuild.esbuild(
         name = name,
-        srcs = [
+        # Note: `deps` are added here to automatically collect transitive NPM
+        # sources etc. and make them available for bundling.
+        srcs = deps + [
             ":%s_entrypoint" % name,
         ],
         testonly = testonly,
