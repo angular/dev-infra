@@ -60107,12 +60107,11 @@ function cursorDown(n) {
   return n > 0 ? import_ansi_escapes.default.cursorDown(n) : "";
 }
 var ScreenManager = class {
-  rl;
   height = 0;
   extraLinesUnderPrompt = 0;
   cursorPos;
+  rl;
   constructor(rl) {
-    this.rl = rl;
     this.rl = rl;
     this.cursorPos = rl.getCursorPos();
   }
@@ -60179,23 +60178,22 @@ var PromisePolyfill = class extends Promise {
 // 
 function getCallSites() {
   const _prepareStackTrace = Error.prepareStackTrace;
+  let result = [];
   try {
-    let result = [];
     Error.prepareStackTrace = (_, callSites) => {
       const callSitesWithoutCurrent = callSites.slice(1);
       result = callSitesWithoutCurrent;
       return callSitesWithoutCurrent;
     };
     new Error().stack;
+  } catch {
     return result;
-  } finally {
-    Error.prepareStackTrace = _prepareStackTrace;
   }
+  Error.prepareStackTrace = _prepareStackTrace;
+  return result;
 }
 function createPrompt(view) {
-  var _a, _b;
   const callSites = getCallSites();
-  const callerFilename = (_b = (_a = callSites[1]) == null ? void 0 : _a.getFileName) == null ? void 0 : _b.call(_a);
   const prompt = (config, context2 = {}) => {
     const { input = process.stdin, signal } = context2;
     const cleanups = /* @__PURE__ */ new Set();
@@ -60229,11 +60227,13 @@ function createPrompt(view) {
       rl.on("close", hooksCleanup);
       cleanups.add(() => rl.removeListener("close", hooksCleanup));
       cycle(() => {
+        var _a, _b;
         try {
           const nextView = view(config, (value) => {
             setImmediate(() => resolve(value));
           });
           if (nextView === void 0) {
+            const callerFilename = (_b = (_a = callSites[1]) == null ? void 0 : _a.getFileName) == null ? void 0 : _b.call(_a);
             throw new Error(`Prompt functions must return a string.
     at ${callerFilename}`);
           }
