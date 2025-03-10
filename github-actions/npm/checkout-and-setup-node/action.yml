@@ -54,7 +54,7 @@ runs:
     - id: packageManager
       shell: bash
       run: |
-        echo "PACKAGE_MANAGER=$(cat package.json | jq ".packageManager" | sed -E 's/.*(npm|pnpm|yarn).*/\1/g')" > "$GITHUB_OUTPUT"
+        echo "PACKAGE_MANAGER=$(cat package.json | jq ".packageManager" | sed -E 's/"(npm|pnpm|yarn)@.*/\1/g')" > "$GITHUB_OUTPUT"
 
     - if: steps.packageManager.outputs.PACKAGE_MANAGER == 'pnpm'
       uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
