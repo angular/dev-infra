@@ -129,6 +129,3 @@ runs:
         cd ${{steps.disk_path.outputs.repo}}
         nvm install
       shell: wsl-bash {0}
-    - name: Installing Yarn (in WSL)
-      run: npm install -g yarn@1
-      shell: wsl-bash {0}
