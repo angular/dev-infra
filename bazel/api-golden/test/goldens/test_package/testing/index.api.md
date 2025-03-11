@@ -10,6 +10,9 @@ export const anotherVariable = fromTopLevel;
 // @public (undocumented)
 export function rawStringFn(input: string): string;
 
+// @public (undocumented)
+export const sharedChunk = true;
+
 // (No @packageDocumentation comment for this package)
 
 ```
