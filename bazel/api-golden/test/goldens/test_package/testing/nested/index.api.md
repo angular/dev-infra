@@ -12,6 +12,9 @@ export function acceptVersion(v: babel_2.types.ExistsTypeAnnotation): void;
 // @public (undocumented)
 export const nestedFile = true;
 
+// @public (undocumented)
+export const sharedChunk = true;
+
 // (No @packageDocumentation comment for this package)
 
 ```
