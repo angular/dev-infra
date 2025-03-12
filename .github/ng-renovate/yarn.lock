@@ -2581,17 +2581,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/core@npm:4.2.0":
-  version: 4.2.0
-  resolution: "@yarnpkg/core@npm:4.2.0"
+"@yarnpkg/core@npm:4.2.1":
+  version: 4.2.1
+  resolution: "@yarnpkg/core@npm:4.2.1"
   dependencies:
     "@arcanis/slice-ansi": "npm:^1.1.1"
     "@types/semver": "npm:^7.1.0"
     "@types/treeify": "npm:^1.0.0"
-    "@yarnpkg/fslib": "npm:^3.1.1"
-    "@yarnpkg/libzip": "npm:^3.1.0"
-    "@yarnpkg/parsers": "npm:^3.0.2"
-    "@yarnpkg/shell": "npm:^4.1.1"
+    "@yarnpkg/fslib": "npm:^3.1.2"
+    "@yarnpkg/libzip": "npm:^3.1.1"
+    "@yarnpkg/parsers": "npm:^3.0.3"
+    "@yarnpkg/shell": "npm:^4.1.2"
     camelcase: "npm:^5.3.1"
     chalk: "npm:^3.0.0"
     ci-info: "npm:^4.0.0"
@@ -2611,11 +2611,11 @@ __metadata:
     treeify: "npm:^1.1.0"
     tslib: "npm:^2.4.0"
     tunnel: "npm:^0.0.6"
-  checksum: 10c0/9b87c982180201ed3d65d26eee017d645ee2841e336579057ee1fb84ab07837397eee05cdd08c9d2b174e451a72947eff9123e401ddbd28410b8ff37ffc7ee9e
+  checksum: 10c0/6943450ea0955cffb71e64c0154ecb81721ce8e9a6b4575d357d26732e1c632b805b52d305fd09e55607d38fba169cc680ad84ff3ca48d23a146ccda0a0e1b5e
   languageName: node
   linkType: hard
 
-"@yarnpkg/fslib@npm:^3.1.1, @yarnpkg/fslib@npm:^3.1.2":
+"@yarnpkg/fslib@npm:^3.1.2":
   version: 3.1.2
   resolution: "@yarnpkg/fslib@npm:3.1.2"
   dependencies:
@@ -2624,7 +2624,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/libzip@npm:^3.1.0":
+"@yarnpkg/libzip@npm:^3.1.1":
   version: 3.1.1
   resolution: "@yarnpkg/libzip@npm:3.1.1"
   dependencies:
@@ -2637,17 +2637,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/parsers@npm:3.0.2":
-  version: 3.0.2
-  resolution: "@yarnpkg/parsers@npm:3.0.2"
-  dependencies:
-    js-yaml: "npm:^3.10.0"
-    tslib: "npm:^2.4.0"
-  checksum: 10c0/a0c340e13129643162423d7e666061c0b39b143bfad3fc5a74c7d92a30fd740f6665d41cd4e61832c20375889d793eea1d1d103cacb39ed68f7acd168add8c53
-  languageName: node
-  linkType: hard
-
-"@yarnpkg/parsers@npm:^3.0.2, @yarnpkg/parsers@npm:^3.0.3":
+"@yarnpkg/parsers@npm:3.0.3, @yarnpkg/parsers@npm:^3.0.3":
   version: 3.0.3
   resolution: "@yarnpkg/parsers@npm:3.0.3"
   dependencies:
@@ -2657,7 +2647,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/shell@npm:^4.1.1":
+"@yarnpkg/shell@npm:^4.1.2":
   version: 4.1.2
   resolution: "@yarnpkg/shell@npm:4.1.2"
   dependencies:
@@ -3328,12 +3318,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cronstrue@npm:2.55.0":
-  version: 2.55.0
-  resolution: "cronstrue@npm:2.55.0"
+"cronstrue@npm:2.56.0":
+  version: 2.56.0
+  resolution: "cronstrue@npm:2.56.0"
   bin:
     cronstrue: bin/cli.js
-  checksum: 10c0/0f91ceb3b8e191e2a168bdd0610671cab041bd6123a65ddca2c210b0c98e029825a09903814f8b7f2519303048f38d87b273f526378e66bb6d02c6e2d53a8fdd
+  checksum: 10c0/383a3fb3a307aa78182f31ac71523bb01fb0af8092f2014b1671821da82e2a675aa17af570b07b2cd5a8e59cb06f7db157df1aeef9a9693efc6e45966046b565
   languageName: node
   linkType: hard
 
@@ -5616,7 +5606,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: "npm:39.191.0"
+    renovate: "npm:39.198.1"
   languageName: unknown
   linkType: soft
 
@@ -6078,12 +6068,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:3.5.2":
-  version: 3.5.2
-  resolution: "prettier@npm:3.5.2"
+"prettier@npm:3.5.3":
+  version: 3.5.3
+  resolution: "prettier@npm:3.5.3"
   bin:
     prettier: bin/prettier.cjs
-  checksum: 10c0/d7b597ed33f39c32ace675896ad187f06a3e48dc8a1e80051b5c5f0dae3586d53981704b8fda5ac3b080e6c2e0e197d239131b953702674f044351621ca5e1ac
+  checksum: 10c0/3880cb90b9dc0635819ab52ff571518c35bd7f15a6e80a2054c05dbc8a3aa6e74f135519e91197de63705bcb38388ded7e7230e2178432a1468005406238b877
   languageName: node
   linkType: hard
 
@@ -6368,9 +6358,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:39.191.0":
-  version: 39.191.0
-  resolution: "renovate@npm:39.191.0"
+"renovate@npm:39.198.1":
+  version: 39.198.1
+  resolution: "renovate@npm:39.198.1"
   dependencies:
     "@aws-sdk/client-codecommit": "npm:3.738.0"
     "@aws-sdk/client-ec2": "npm:3.738.0"
@@ -6398,8 +6388,8 @@ __metadata:
     "@renovatebot/pep440": "npm:4.1.0"
     "@renovatebot/ruby-semver": "npm:4.0.0"
     "@sindresorhus/is": "npm:4.6.0"
-    "@yarnpkg/core": "npm:4.2.0"
-    "@yarnpkg/parsers": "npm:3.0.2"
+    "@yarnpkg/core": "npm:4.2.1"
+    "@yarnpkg/parsers": "npm:3.0.3"
     agentkeepalive: "npm:4.6.0"
     aggregate-error: "npm:3.1.0"
     async-mutex: "npm:0.5.0"
@@ -6415,7 +6405,7 @@ __metadata:
     commander: "npm:13.1.0"
     conventional-commits-detector: "npm:1.0.3"
     croner: "npm:9.0.0"
-    cronstrue: "npm:2.55.0"
+    cronstrue: "npm:2.56.0"
     deepmerge: "npm:4.3.1"
     dequal: "npm:2.0.3"
     detect-indent: "npm:6.1.0"
@@ -6461,7 +6451,7 @@ __metadata:
     p-queue: "npm:6.6.2"
     p-throttle: "npm:4.1.1"
     parse-link-header: "npm:2.0.0"
-    prettier: "npm:3.5.2"
+    prettier: "npm:3.5.3"
     protobufjs: "npm:7.4.0"
     punycode: "npm:2.3.1"
     re2: "npm:1.21.4"
@@ -6495,7 +6485,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 10c0/f307bdf8ca2832cb3ffd522c664d21575e94b4ab23932aaab9f1d81621bc959e533087a47f1b806e7191297023f052f05f80c5a062c76c774be9ed8a706daffc
+  checksum: 10c0/52125828e4d8dc458803da8585ea0ee087bb5c8d540957f8debd30b0dcf35dedddd9c46662e4238a08aa129e4e9f7dd1ade66ddba5f488c3e755c5a17b8811b7
   languageName: node
   linkType: hard
 
