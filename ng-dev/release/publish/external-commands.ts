@@ -284,7 +284,7 @@ export abstract class ExternalCommands {
   ): Promise<SpawnResult> {
     if (await pnpmVersioning.isUsingPnpm(projectDir)) {
       const pnpmSpec = await pnpmVersioning.getPackageSpec(projectDir);
-      return ChildProcess.spawn('npx', ['--yes', pnpmSpec, 'run', ...args], {
+      return ChildProcess.spawn('npx', ['--yes', pnpmSpec, '-s', 'run', ...args], {
         ...spawnOptions,
         cwd: projectDir,
       });
