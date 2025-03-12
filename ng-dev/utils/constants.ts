@@ -11,6 +11,3 @@ export const ngDevNpmPackageName = '@angular/ng-dev';
 
 /** Workspace-relative path for the "package.json" file. */
 export const workspaceRelativePackageJsonPath = 'package.json';
-
-/** Workspace-relative path for the "yarn.lock" file. */
-export const workspaceRelativeYarnLockFilePath = 'yarn.lock';

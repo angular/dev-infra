@@ -22,4 +22,4 @@ export TS_NODE_PROJECT=${PWD}/.ng-dev/tsconfig.json
 
 # Execute the built ng-dev command in the current working directory
 # and pass-through arguments unmodified.
-node node_modules/.bin/tsx ${ngDevBinFile} ${@}
+node ${devInfraProjectDir}/node_modules/.bin/tsx ${ngDevBinFile} ${@}
