@@ -53,6 +53,7 @@ ts_library(
         "@npm//@octokit/request-error",
         "@npm//@octokit/rest",
         "@npm//@octokit/types",
+        "@npm//@pnpm/dependency-path",
         "@npm//@types/node",
         "@npm//@types/semver",
         "@npm//@types/supports-color",

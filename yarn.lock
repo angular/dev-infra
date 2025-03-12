@@ -271,6 +271,7 @@ __metadata:
     "@octokit/webhooks-definitions": "npm:3.67.3"
     "@octokit/webhooks-types": "npm:7.6.1"
     "@openid/appauth": "npm:^1.3.1"
+    "@pnpm/dependency-path": "npm:^1000.0.5"
     "@rollup/plugin-commonjs": "npm:^28.0.0"
     "@rollup/plugin-node-resolve": "npm:^16.0.0"
     "@types/babel__core": "npm:^7.1.19"
@@ -3878,6 +3879,44 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@pnpm/crypto.hash@npm:1000.1.1":
+  version: 1000.1.1
+  resolution: "@pnpm/crypto.hash@npm:1000.1.1"
+  dependencies:
+    "@pnpm/crypto.polyfill": "npm:1000.1.0"
+    "@pnpm/graceful-fs": "npm:1000.0.0"
+    ssri: "npm:10.0.5"
+  checksum: 10c0/1ff392d1434abf81c9dcefa21d3ef844c1d371cd971b037f2425c67990b71302b390117cb353b4ea9ce2158fd31eb1c78de9b385647e9b795129854ed35da7e1
+  languageName: node
+  linkType: hard
+
+"@pnpm/crypto.polyfill@npm:1000.1.0":
+  version: 1000.1.0
+  resolution: "@pnpm/crypto.polyfill@npm:1000.1.0"
+  checksum: 10c0/894d7e7579c0c26d3e55ff4d52db9a65c01742728c8e341f04d676803d44e37c22b8d075517100268e513fc44d97d5250d4c5b9fdf57df96c046710fd4cd25ad
+  languageName: node
+  linkType: hard
+
+"@pnpm/dependency-path@npm:^1000.0.5":
+  version: 1000.0.5
+  resolution: "@pnpm/dependency-path@npm:1000.0.5"
+  dependencies:
+    "@pnpm/crypto.hash": "npm:1000.1.1"
+    "@pnpm/types": "npm:1000.2.1"
+    semver: "npm:^7.7.1"
+  checksum: 10c0/a2605fd321284e5f81b355843fe6eb48983cab3d94364a3f2547b0cb6f6ef19cb7efba6df0851420fbb78242cf42c1b8117ec5a527778f98da76cde65d27d0d2
+  languageName: node
+  linkType: hard
+
+"@pnpm/graceful-fs@npm:1000.0.0":
+  version: 1000.0.0
+  resolution: "@pnpm/graceful-fs@npm:1000.0.0"
+  dependencies:
+    graceful-fs: "npm:^4.2.11"
+  checksum: 10c0/544e00660c901260417b0b5086c5589491b8c33fc79bb3206173e8e4572c9e800dc80153e07f7f22ee28fda267b112d97e6e390edaa22428bbde275568438698
+  languageName: node
+  linkType: hard
+
 "@pnpm/network.ca-file@npm:^1.0.1":
   version: 1.0.2
   resolution: "@pnpm/network.ca-file@npm:1.0.2"
@@ -3895,6 +3934,13 @@ __metadata:
     "@pnpm/network.ca-file": "npm:^1.0.1"
     config-chain: "npm:^1.1.11"
   checksum: 10c0/778a3a34ff7d6000a2594d2a9821f873f737bc56367865718b2cf0ba5d366e49689efe7975148316d7afd8e6f1dcef7d736fbb6ea7ef55caadd1dc93a36bb302
+  languageName: node
+  linkType: hard
+
+"@pnpm/types@npm:1000.2.1":
+  version: 1000.2.1
+  resolution: "@pnpm/types@npm:1000.2.1"
+  checksum: 10c0/e5df4dd9c63f242b478e26957d4603d6c0aaa460441afc7461d4ca4aa3ae05bdb572f65873dbe24e1f8257776d413be88cea63f3bf1377aa600f181231a2ee01
   languageName: node
   linkType: hard
 
@@ -8691,7 +8737,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graceful-fs@npm:^4.1.2, graceful-fs@npm:^4.1.6, graceful-fs@npm:^4.2.0, graceful-fs@npm:^4.2.10, graceful-fs@npm:^4.2.6":
+"graceful-fs@npm:^4.1.2, graceful-fs@npm:^4.1.6, graceful-fs@npm:^4.2.0, graceful-fs@npm:^4.2.10, graceful-fs@npm:^4.2.11, graceful-fs@npm:^4.2.6":
   version: 4.2.11
   resolution: "graceful-fs@npm:4.2.11"
   checksum: 10c0/386d011a553e02bc594ac2ca0bd6d9e4c22d7fa8cfbfc448a6d148c59ea881b092db9dbe3547ae4b88e55f1b01f7c4a2ecc53b310c042793e63aa44cf6c257f2
@@ -13218,7 +13264,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:7.7.1, semver@npm:^7.0.0, semver@npm:^7.1.1, semver@npm:^7.3.5, semver@npm:^7.3.7, semver@npm:^7.3.8, semver@npm:^7.5.2, semver@npm:^7.5.3, semver@npm:^7.5.4":
+"semver@npm:7.7.1, semver@npm:^7.0.0, semver@npm:^7.1.1, semver@npm:^7.3.5, semver@npm:^7.3.7, semver@npm:^7.3.8, semver@npm:^7.5.2, semver@npm:^7.5.3, semver@npm:^7.5.4, semver@npm:^7.7.1":
   version: 7.7.1
   resolution: "semver@npm:7.7.1"
   bin:
@@ -13787,6 +13833,15 @@ __metadata:
     sshpk-sign: bin/sshpk-sign
     sshpk-verify: bin/sshpk-verify
   checksum: 10c0/e516e34fa981cfceef45fd2e947772cc70dbd57523e5c608e2cd73752ba7f8a99a04df7c3ed751588e8d91956b6f16531590b35d3489980d1c54c38bebcd41b1
+  languageName: node
+  linkType: hard
+
+"ssri@npm:10.0.5":
+  version: 10.0.5
+  resolution: "ssri@npm:10.0.5"
+  dependencies:
+    minipass: "npm:^7.0.3"
+  checksum: 10c0/b091f2ae92474183c7ac5ed3f9811457e1df23df7a7e70c9476eaa9a0c4a0c8fc190fb45acefbf023ca9ee864dd6754237a697dc52a0fb182afe65d8e77443d8
   languageName: node
   linkType: hard
 
