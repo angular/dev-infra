@@ -17,15 +17,6 @@ const typesToIncludeInReleaseNotes = Object.values(COMMIT_TYPES)
   .filter((type) => type.releaseNotesLevel === ReleaseNotesLevel.Visible)
   .map((type) => type.name);
 
-/** List of commit authors which are bots. */
-const botsAuthorNames = [
-  'dependabot[bot]',
-  'Renovate Bot',
-  'angular-robot',
-  'angular-robot[bot]',
-  'Angular Robot',
-];
-
 /** Data used for context during rendering. */
 export interface RenderContextData {
   title: string | false;

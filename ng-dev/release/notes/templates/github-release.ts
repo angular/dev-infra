@@ -7,9 +7,6 @@
  */
 
 export default `
-<a name="<%- urlFragmentForRelease %>"></a>
-# <%- version %><% if (title) { %> "<%- title %>"<% } %> (<%- dateStamp %>)
-
 <%_
 const commitsInChangelog = commits.filter(includeInReleaseNotes());
 for (const group of asCommitGroups(commitsInChangelog)) {

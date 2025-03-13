@@ -666,7 +666,7 @@ export abstract class ReleaseAction {
 
     await this.git.github.repos.createRelease({
       ...this.git.remoteParams,
-      name: `v${releaseNotes.version}`,
+      name: releaseNotes.version.toString(),
       tag_name: tagName,
       prerelease: isPrerelease,
       make_latest: showAsLatestOnGitHub ? 'true' : 'false',
