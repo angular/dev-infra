@@ -53,7 +53,7 @@ async function expectGithubApiRequestsForBranchOff(
     })
     .expectTagToBeCreated(expectedTagName, 'STAGING_COMMIT_SHA')
     .expectReleaseToBeCreated(
-      `v${expectedVersion}`,
+      expectedVersion,
       expectedTagName,
       // Note: Currently when we branch off, we never release a "latest" stable version.
       false,

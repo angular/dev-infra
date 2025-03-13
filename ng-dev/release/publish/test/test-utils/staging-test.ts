@@ -85,11 +85,7 @@ export async function expectGithubApiRequests(
       ahead_by: 1,
     })
     .expectTagToBeCreated(expectedTagName, 'STAGING_COMMIT_SHA')
-    .expectReleaseToBeCreated(
-      `v${expectedVersion}`,
-      expectedTagName,
-      opts.willShowAsLatestOnGitHub,
-    );
+    .expectReleaseToBeCreated(expectedVersion, expectedTagName, opts.willShowAsLatestOnGitHub);
 }
 
 function expectNpmPublishToBeInvoked(packages: NpmPackage[], expectedNpmDistTag: NpmDistTag) {

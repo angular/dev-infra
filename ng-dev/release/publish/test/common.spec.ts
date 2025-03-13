@@ -192,7 +192,7 @@ describe('common release action logic', () => {
           ahead_by: 1,
         })
         .expectTagToBeCreated(tagName, 'STAGING_SHA')
-        .expectReleaseToBeCreated(`v${version}`, tagName, true);
+        .expectReleaseToBeCreated(version.toString(), tagName, true);
 
       // Set up a custom NPM registry.
       releaseConfig.publishRegistry = customRegistryUrl;
@@ -239,11 +239,10 @@ describe('common release action logic', () => {
         })
         .expectTagToBeCreated(tagName, 'STAGING_SHA')
         .expectReleaseToBeCreated(
-          `v${version}`,
+          version.toString(),
           tagName,
           true,
           changelogPattern`
-            # 10.1.0-next.0 <..>
             ### test
             | Commit | Description |
             | -- | -- |
@@ -343,7 +342,7 @@ describe('common release action logic', () => {
         })
         .expectTagToBeCreated(tagName, 'STAGING_SHA')
         .expectReleaseToBeCreated(
-          `v${version}`,
+          version.toString(),
           tagName,
           true,
           changelogPattern`

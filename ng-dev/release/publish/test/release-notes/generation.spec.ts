@@ -255,7 +255,6 @@ describe('release notes generation', () => {
       );
 
       expect(await releaseNotes.getChangelogEntry()).toMatch(changelogPattern`
-        # 13.0.0 <..>
         ## Breaking Changes
         ### cdk/a11y
         - Description of breaking change.
@@ -289,7 +288,6 @@ describe('release notes generation', () => {
       );
 
       expect(await releaseNotes.getChangelogEntry()).toMatch(changelogPattern`
-        # 13.0.0 <..>
         ## Breaking Changes
         ### cdk/a11y
         - Description of breaking change.
@@ -320,7 +318,6 @@ describe('release notes generation', () => {
       );
 
       expect(await releaseNotes.getChangelogEntry()).toMatch(changelogPattern`
-        # 13.0.0 <..>
         ## Deprecations
         ### cdk/a11y
         - Description of deprecation.
@@ -351,7 +348,6 @@ describe('release notes generation', () => {
       );
 
       expect(await releaseNotes.getChangelogEntry()).toMatch(changelogPattern`
-        # 13.0.0 <..>
         ## Deprecations
         ### cdk/a11y
         - Description of deprecation.
@@ -383,7 +379,6 @@ describe('release notes generation', () => {
         );
 
         expect(await releaseNotes.getGithubReleaseEntry()).toMatch(changelogPattern`
-          # 13.0.0 <..>
           ### @angular-devkit/core
           | Commit | Description |
           | -- | -- |
@@ -418,7 +413,6 @@ describe('release notes generation', () => {
         );
 
         expect(await releaseNotes.getGithubReleaseEntry()).toMatch(changelogPattern`
-          # 13.0.0 <..>
           ### cdk
           | Commit | Description |
           | -- | -- |
@@ -457,7 +451,6 @@ describe('release notes generation', () => {
         );
 
         expect(await releaseNotes.getGithubReleaseEntry()).toMatch(changelogPattern`
-          # 13.0.0 <..>
           ### cdk/a11y
           | Commit | Description |
           | -- | -- |
@@ -499,7 +492,6 @@ describe('release notes generation', () => {
         );
 
         expect(await releaseNotes.getGithubReleaseEntry()).toMatch(changelogPattern`
-          # 13.0.0 <..>
           ### cdk
           | Commit | Description |
           | -- | -- |
@@ -531,7 +523,6 @@ describe('release notes generation', () => {
       );
 
       expect(await releaseNotes.getGithubReleaseEntry()).toMatch(changelogPattern`
-        # 13.0.0 <..>
         ### cdk/a11y
         | Commit | Description |
         | -- | -- |
@@ -562,7 +553,6 @@ describe('release notes generation', () => {
       );
 
       expect(await releaseNotes.getGithubReleaseEntry()).toMatch(changelogPattern`
-        # 13.0.0 <..>
         ### cdk/a11y
         | Commit | Description |
         | -- | -- |
@@ -592,7 +582,6 @@ describe('release notes generation', () => {
       );
 
       expect(await releaseNotes.getGithubReleaseEntry()).toMatch(changelogPattern`
-        # 13.0.0 <..>
         ### cdk/a11y
         | Commit | Description |
         | -- | -- |
@@ -624,7 +613,6 @@ describe('release notes generation', () => {
     );
 
     expect(await releaseNotes.getGithubReleaseEntry()).toMatch(changelogPattern`
-      # 13.0.0 <..>
       ### cdk/a11y
       | Commit | Description |
       | -- | -- |
