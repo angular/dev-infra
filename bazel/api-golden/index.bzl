@@ -1,3 +1,4 @@
+load("@aspect_bazel_lib//lib:copy_to_directory.bzl", "copy_to_directory")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_npm")
 load("//bazel/api-golden:index_rjs.bzl", _rjs_api_golden_test_npm_package = "api_golden_test_npm_package")
@@ -27,9 +28,11 @@ def api_golden_test(
         strip_export_pattern = default_strip_export_pattern,
         types = [],
         **kwargs):
+    # We can't directly write `package.json` as this could cause conflicts
+    # if there are multiple individual file tests in the same Bazel package.
     write_file(
         name = "%s_synthetic_package_json" % name,
-        out = "package.json",
+        out = "%s_package.json" % name,
         content = [json.encode({
             "name": name,
             "exports": {
@@ -41,9 +44,19 @@ def api_golden_test(
     )
 
     pkg_npm(
-        name = "%s_synthetic_package" % name,
-        deps = data + ["%s_synthetic_package_json" % name],
+        name = "%s_js_package" % name,
+        deps = data,
         testonly = True,
+    )
+
+    copy_to_directory(
+        name = "%s_synthetic_package" % name,
+        srcs = ["%s_synthetic_package_json" % name, "%s_js_package" % name],
+        testonly = True,
+        replace_prefixes = {
+            "%s_" % name: "",
+            "%s_js_package/" % name: "",
+        },
     )
 
     _rjs_api_golden_test_npm_package(
