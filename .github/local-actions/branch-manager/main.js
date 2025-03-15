@@ -42331,7 +42331,7 @@ var require_client2 = __commonJS({
             allowH2,
             socketPath,
             timeout: connectTimeout,
-            ...autoSelectFamily ? { autoSelectFamily, autoSelectFamilyAttemptTimeout } : void 0,
+            ...typeof autoSelectFamily === "boolean" ? { autoSelectFamily, autoSelectFamilyAttemptTimeout } : void 0,
             ...connect2
           });
         }
@@ -42947,7 +42947,7 @@ var require_pool2 = __commonJS({
             allowH2,
             socketPath,
             timeout: connectTimeout,
-            ...autoSelectFamily ? { autoSelectFamily, autoSelectFamilyAttemptTimeout } : void 0,
+            ...typeof autoSelectFamily === "boolean" ? { autoSelectFamily, autoSelectFamilyAttemptTimeout } : void 0,
             ...connect
           });
         }
@@ -42956,6 +42956,14 @@ var require_pool2 = __commonJS({
         this[kOptions] = { ...util.deepClone(options), connect, allowH2 };
         this[kOptions].interceptors = options.interceptors ? { ...options.interceptors } : void 0;
         this[kFactory] = factory;
+        this.on("connectionError", (origin2, targets, error2) => {
+          for (const target of targets) {
+            const idx = this[kClients].indexOf(target);
+            if (idx !== -1) {
+              this[kClients].splice(idx, 1);
+            }
+          }
+        });
       }
       [kGetDispatcher]() {
         for (const client of this[kClients]) {
@@ -43501,8 +43509,8 @@ var require_retry_handler = __commonJS({
       wrapRequestBody
     } = require_util8();
     function calculateRetryAfterHeader(retryAfter) {
-      const current = Date.now();
-      return new Date(retryAfter).getTime() - current;
+      const retryTime = new Date(retryAfter).getTime();
+      return isNaN(retryTime) ? 0 : retryTime - Date.now();
     }
     var RetryHandler = class {
       constructor(opts, { dispatch, handler: handler2 }) {
@@ -43591,7 +43599,7 @@ var require_retry_handler = __commonJS({
         let retryAfterHeader = headers == null ? void 0 : headers["retry-after"];
         if (retryAfterHeader) {
           retryAfterHeader = Number(retryAfterHeader);
-          retryAfterHeader = Number.isNaN(retryAfterHeader) ? calculateRetryAfterHeader(retryAfterHeader) : retryAfterHeader * 1e3;
+          retryAfterHeader = Number.isNaN(retryAfterHeader) ? calculateRetryAfterHeader(headers["retry-after"]) : retryAfterHeader * 1e3;
         }
         const retryTimeout = retryAfterHeader > 0 ? Math.min(retryAfterHeader, maxTimeout) : Math.min(minTimeout * timeoutFactor ** (counter - 1), maxTimeout);
         setTimeout(() => cb(null), retryTimeout);
@@ -44921,7 +44929,12 @@ var require_mock_symbols2 = __commonJS({
       kNetConnect: Symbol("net connect"),
       kGetNetConnect: Symbol("get net connect"),
       kConnected: Symbol("connected"),
-      kIgnoreTrailingSlash: Symbol("ignore trailing slash")
+      kIgnoreTrailingSlash: Symbol("ignore trailing slash"),
+      kMockAgentMockCallHistoryInstance: Symbol("mock agent mock call history name"),
+      kMockAgentRegisterCallHistory: Symbol("mock agent register mock call history"),
+      kMockAgentAddCallHistoryLog: Symbol("mock agent add call history log"),
+      kMockAgentIsCallHistoryEnabled: Symbol("mock agent is call history enabled"),
+      kMockCallHistoryAddLog: Symbol("mock call history add log")
     };
   }
 });
@@ -44945,6 +44958,7 @@ var require_mock_utils2 = __commonJS({
         isPromise
       }
     } = __require("node:util");
+    var { InvalidArgumentError } = require_errors2();
     function matchValue(match2, value) {
       if (typeof match2 === "string") {
         return match2 === value;
@@ -45211,9 +45225,12 @@ var require_mock_utils2 = __commonJS({
       }
       return false;
     }
-    function buildMockOptions(opts) {
+    function buildAndValidateMockOptions(opts) {
       if (opts) {
         const { agent, ...mockOptions } = opts;
+        if ("enableCallHistory" in mockOptions && typeof mockOptions.enableCallHistory !== "boolean") {
+          throw new InvalidArgumentError("options.enableCallHistory must to be a boolean");
+        }
         return mockOptions;
       }
     }
@@ -45230,7 +45247,7 @@ var require_mock_utils2 = __commonJS({
       mockDispatch,
       buildMockDispatch,
       checkNetConnect,
-      buildMockOptions,
+      buildAndValidateMockOptions,
       getHeaderByName,
       buildHeadersFromArray
     };
@@ -45433,6 +45450,206 @@ var require_mock_client2 = __commonJS({
 });
 
 // 
+var require_mock_call_history = __commonJS({
+  ""(exports, module) {
+    "use strict";
+    var { kMockCallHistoryAddLog } = require_mock_symbols2();
+    var { InvalidArgumentError } = require_errors2();
+    function handleFilterCallsWithOptions(criteria, options, handler2, store) {
+      switch (options.operator) {
+        case "OR":
+          store.push(...handler2(criteria));
+          return store;
+        case "AND":
+          return handler2.call({ logs: store }, criteria);
+        default:
+          throw new InvalidArgumentError("options.operator must to be a case insensitive string equal to 'OR' or 'AND'");
+      }
+    }
+    function buildAndValidateFilterCallsOptions(options = {}) {
+      const finalOptions = {};
+      if ("operator" in options) {
+        if (typeof options.operator !== "string" || options.operator.toUpperCase() !== "OR" && options.operator.toUpperCase() !== "AND") {
+          throw new InvalidArgumentError("options.operator must to be a case insensitive string equal to 'OR' or 'AND'");
+        }
+        return {
+          ...finalOptions,
+          operator: options.operator.toUpperCase()
+        };
+      }
+      return finalOptions;
+    }
+    function makeFilterCalls(parameterName) {
+      return (parameterValue) => {
+        if (typeof parameterValue === "string" || parameterValue == null) {
+          return this.logs.filter((log) => {
+            return log[parameterName] === parameterValue;
+          });
+        }
+        if (parameterValue instanceof RegExp) {
+          return this.logs.filter((log) => {
+            return parameterValue.test(log[parameterName]);
+          });
+        }
+        throw new InvalidArgumentError(`${parameterName} parameter should be one of string, regexp, undefined or null`);
+      };
+    }
+    function computeUrlWithMaybeSearchParameters(requestInit) {
+      try {
+        const url = new URL(requestInit.path, requestInit.origin);
+        if (url.search.length !== 0) {
+          return url;
+        }
+        url.search = new URLSearchParams(requestInit.query).toString();
+        return url;
+      } catch (error2) {
+        throw new InvalidArgumentError("An error occurred when computing MockCallHistoryLog.url", { cause: error2 });
+      }
+    }
+    var MockCallHistoryLog = class {
+      constructor(requestInit = {}) {
+        this.body = requestInit.body;
+        this.headers = requestInit.headers;
+        this.method = requestInit.method;
+        const url = computeUrlWithMaybeSearchParameters(requestInit);
+        this.fullUrl = url.toString();
+        this.origin = url.origin;
+        this.path = url.pathname;
+        this.searchParams = Object.fromEntries(url.searchParams);
+        this.protocol = url.protocol;
+        this.host = url.host;
+        this.port = url.port;
+        this.hash = url.hash;
+      }
+      toMap() {
+        return /* @__PURE__ */ new Map(
+          [
+            ["protocol", this.protocol],
+            ["host", this.host],
+            ["port", this.port],
+            ["origin", this.origin],
+            ["path", this.path],
+            ["hash", this.hash],
+            ["searchParams", this.searchParams],
+            ["fullUrl", this.fullUrl],
+            ["method", this.method],
+            ["body", this.body],
+            ["headers", this.headers]
+          ]
+        );
+      }
+      toString() {
+        const options = { betweenKeyValueSeparator: "->", betweenPairSeparator: "|" };
+        let result = "";
+        this.toMap().forEach((value, key) => {
+          if (typeof value === "string" || value === void 0 || value === null) {
+            result = `${result}${key}${options.betweenKeyValueSeparator}${value}${options.betweenPairSeparator}`;
+          }
+          if (typeof value === "object" && value !== null || Array.isArray(value)) {
+            result = `${result}${key}${options.betweenKeyValueSeparator}${JSON.stringify(value)}${options.betweenPairSeparator}`;
+          }
+        });
+        return result.slice(0, -1);
+      }
+    };
+    var MockCallHistory = class {
+      logs = [];
+      calls() {
+        return this.logs;
+      }
+      firstCall() {
+        return this.logs.at(0);
+      }
+      lastCall() {
+        return this.logs.at(-1);
+      }
+      nthCall(number) {
+        if (typeof number !== "number") {
+          throw new InvalidArgumentError("nthCall must be called with a number");
+        }
+        if (!Number.isInteger(number)) {
+          throw new InvalidArgumentError("nthCall must be called with an integer");
+        }
+        if (Math.sign(number) !== 1) {
+          throw new InvalidArgumentError("nthCall must be called with a positive value. use firstCall or lastCall instead");
+        }
+        return this.logs.at(number - 1);
+      }
+      filterCalls(criteria, options) {
+        if (this.logs.length === 0) {
+          return this.logs;
+        }
+        if (typeof criteria === "function") {
+          return this.logs.filter(criteria);
+        }
+        if (criteria instanceof RegExp) {
+          return this.logs.filter((log) => {
+            return criteria.test(log.toString());
+          });
+        }
+        if (typeof criteria === "object" && criteria !== null) {
+          if (Object.keys(criteria).length === 0) {
+            return this.logs;
+          }
+          const finalOptions = { operator: "OR", ...buildAndValidateFilterCallsOptions(options) };
+          let maybeDuplicatedLogsFiltered = [];
+          if ("protocol" in criteria) {
+            maybeDuplicatedLogsFiltered = handleFilterCallsWithOptions(criteria.protocol, finalOptions, this.filterCallsByProtocol, maybeDuplicatedLogsFiltered);
+          }
+          if ("host" in criteria) {
+            maybeDuplicatedLogsFiltered = handleFilterCallsWithOptions(criteria.host, finalOptions, this.filterCallsByHost, maybeDuplicatedLogsFiltered);
+          }
+          if ("port" in criteria) {
+            maybeDuplicatedLogsFiltered = handleFilterCallsWithOptions(criteria.port, finalOptions, this.filterCallsByPort, maybeDuplicatedLogsFiltered);
+          }
+          if ("origin" in criteria) {
+            maybeDuplicatedLogsFiltered = handleFilterCallsWithOptions(criteria.origin, finalOptions, this.filterCallsByOrigin, maybeDuplicatedLogsFiltered);
+          }
+          if ("path" in criteria) {
+            maybeDuplicatedLogsFiltered = handleFilterCallsWithOptions(criteria.path, finalOptions, this.filterCallsByPath, maybeDuplicatedLogsFiltered);
+          }
+          if ("hash" in criteria) {
+            maybeDuplicatedLogsFiltered = handleFilterCallsWithOptions(criteria.hash, finalOptions, this.filterCallsByHash, maybeDuplicatedLogsFiltered);
+          }
+          if ("fullUrl" in criteria) {
+            maybeDuplicatedLogsFiltered = handleFilterCallsWithOptions(criteria.fullUrl, finalOptions, this.filterCallsByFullUrl, maybeDuplicatedLogsFiltered);
+          }
+          if ("method" in criteria) {
+            maybeDuplicatedLogsFiltered = handleFilterCallsWithOptions(criteria.method, finalOptions, this.filterCallsByMethod, maybeDuplicatedLogsFiltered);
+          }
+          const uniqLogsFiltered = [...new Set(maybeDuplicatedLogsFiltered)];
+          return uniqLogsFiltered;
+        }
+        throw new InvalidArgumentError("criteria parameter should be one of function, regexp, or object");
+      }
+      filterCallsByProtocol = makeFilterCalls.call(this, "protocol");
+      filterCallsByHost = makeFilterCalls.call(this, "host");
+      filterCallsByPort = makeFilterCalls.call(this, "port");
+      filterCallsByOrigin = makeFilterCalls.call(this, "origin");
+      filterCallsByPath = makeFilterCalls.call(this, "path");
+      filterCallsByHash = makeFilterCalls.call(this, "hash");
+      filterCallsByFullUrl = makeFilterCalls.call(this, "fullUrl");
+      filterCallsByMethod = makeFilterCalls.call(this, "method");
+      clear() {
+        this.logs = [];
+      }
+      [kMockCallHistoryAddLog](requestInit) {
+        const log = new MockCallHistoryLog(requestInit);
+        this.logs.push(log);
+        return log;
+      }
+      *[Symbol.iterator]() {
+        for (const log of this.calls()) {
+          yield log;
+        }
+      }
+    };
+    module.exports.MockCallHistory = MockCallHistory;
+    module.exports.MockCallHistoryLog = MockCallHistoryLog;
+  }
+});
+
+// 
 var require_mock_pool2 = __commonJS({
   ""(exports, module) {
     "use strict";
@@ -45543,26 +45760,37 @@ var require_mock_agent2 = __commonJS({
       kNetConnect,
       kGetNetConnect,
       kOptions,
-      kFactory
+      kFactory,
+      kMockAgentRegisterCallHistory,
+      kMockAgentIsCallHistoryEnabled,
+      kMockAgentAddCallHistoryLog,
+      kMockAgentMockCallHistoryInstance,
+      kMockCallHistoryAddLog
     } = require_mock_symbols2();
     var MockClient = require_mock_client2();
     var MockPool = require_mock_pool2();
-    var { matchValue, buildMockOptions } = require_mock_utils2();
+    var { matchValue, buildAndValidateMockOptions } = require_mock_utils2();
     var { InvalidArgumentError, UndiciError } = require_errors2();
     var Dispatcher = require_dispatcher2();
     var PendingInterceptorsFormatter = require_pending_interceptors_formatter2();
+    var { MockCallHistory } = require_mock_call_history();
     var MockAgent = class extends Dispatcher {
       constructor(opts) {
         super(opts);
+        const mockOptions = buildAndValidateMockOptions(opts);
         this[kNetConnect] = true;
         this[kIsMockActive] = true;
+        this[kMockAgentIsCallHistoryEnabled] = (mockOptions == null ? void 0 : mockOptions.enableCallHistory) ?? false;
         if ((opts == null ? void 0 : opts.agent) && typeof opts.agent.dispatch !== "function") {
           throw new InvalidArgumentError("Argument opts.agent must implement Agent");
         }
         const agent = (opts == null ? void 0 : opts.agent) ? opts.agent : new Agent(opts);
         this[kAgent] = agent;
         this[kClients] = agent[kClients];
-        this[kOptions] = buildMockOptions(opts);
+        this[kOptions] = mockOptions;
+        if (this[kMockAgentIsCallHistoryEnabled]) {
+          this[kMockAgentRegisterCallHistory]();
+        }
       }
       get(origin) {
         let dispatcher = this[kMockAgentGet](origin);
@@ -45574,9 +45802,11 @@ var require_mock_agent2 = __commonJS({
       }
       dispatch(opts, handler2) {
         this.get(opts.origin);
+        this[kMockAgentAddCallHistoryLog](opts);
         return this[kAgent].dispatch(opts, handler2);
       }
       async close() {
+        this.clearCallHistory();
         await this[kAgent].close();
         this[kClients].clear();
       }
@@ -45602,8 +45832,35 @@ var require_mock_agent2 = __commonJS({
       disableNetConnect() {
         this[kNetConnect] = false;
       }
+      enableCallHistory() {
+        this[kMockAgentIsCallHistoryEnabled] = true;
+        return this;
+      }
+      disableCallHistory() {
+        this[kMockAgentIsCallHistoryEnabled] = false;
+        return this;
+      }
+      getCallHistory() {
+        return this[kMockAgentMockCallHistoryInstance];
+      }
+      clearCallHistory() {
+        if (this[kMockAgentMockCallHistoryInstance] !== void 0) {
+          this[kMockAgentMockCallHistoryInstance].clear();
+        }
+      }
       get isMockActive() {
         return this[kIsMockActive];
+      }
+      [kMockAgentRegisterCallHistory]() {
+        if (this[kMockAgentMockCallHistoryInstance] === void 0) {
+          this[kMockAgentMockCallHistoryInstance] = new MockCallHistory();
+        }
+      }
+      [kMockAgentAddCallHistoryLog](opts) {
+        if (this[kMockAgentIsCallHistoryEnabled]) {
+          this[kMockAgentRegisterCallHistory]();
+          this[kMockAgentMockCallHistoryInstance][kMockCallHistoryAddLog](opts);
+        }
       }
       [kMockAgentSet](origin, dispatcher) {
         this[kClients].set(origin, dispatcher);
@@ -53946,6 +54203,7 @@ var require_undici2 = __commonJS({
     var api = require_api2();
     var buildConnector = require_connect2();
     var MockClient = require_mock_client2();
+    var { MockCallHistory, MockCallHistoryLog } = require_mock_call_history();
     var MockAgent = require_mock_agent2();
     var MockPool = require_mock_pool2();
     var mockErrors = require_mock_errors2();
@@ -54068,6 +54326,8 @@ var require_undici2 = __commonJS({
     module.exports.connect = makeDispatcher(api.connect);
     module.exports.upgrade = makeDispatcher(api.upgrade);
     module.exports.MockClient = MockClient;
+    module.exports.MockCallHistory = MockCallHistory;
+    module.exports.MockCallHistoryLog = MockCallHistoryLog;
     module.exports.MockPool = MockPool;
     module.exports.MockAgent = MockAgent;
     module.exports.mockErrors = mockErrors;
@@ -59202,7 +59462,7 @@ var isUpKey = (key) => key.name === "up" || key.name === "k" || key.ctrl && key.
 var isDownKey = (key) => key.name === "down" || key.name === "j" || key.ctrl && key.name === "n";
 var isSpaceKey = (key) => key.name === "space";
 var isBackspaceKey = (key) => key.name === "backspace";
-var isNumberKey = (key) => "123456789".includes(key.name);
+var isNumberKey = (key) => "1234567890".includes(key.name);
 var isEnterKey = (key) => key.name === "enter" || key.name === "return";
 
 // 
@@ -61110,7 +61370,8 @@ var selectTheme = {
     disabled: (text) => import_yoctocolors_cjs7.default.dim(`- ${text}`),
     description: (text) => import_yoctocolors_cjs7.default.cyan(text)
   },
-  helpMode: "auto"
+  helpMode: "auto",
+  indexMode: "hidden"
 };
 function isSelectable3(item) {
   return !Separator.isSeparator(item) && !item.disabled;
@@ -61175,13 +61436,15 @@ var esm_default11 = createPrompt((config, done) => {
         } while (!isSelectable3(items[next]));
         setActive(next);
       }
-    } else if (isNumberKey(key)) {
-      rl.clearLine(0);
-      const position = Number(key.name) - 1;
+    } else if (isNumberKey(key) && !Number.isNaN(Number(rl.line))) {
+      const position = Number(rl.line) - 1;
       const item = items[position];
       if (item != null && isSelectable3(item)) {
         setActive(position);
       }
+      searchTimeoutRef.current = setTimeout(() => {
+        rl.clearLine(0);
+      }, 700);
     } else if (isBackspaceKey(key)) {
       rl.clearLine(0);
     } else {
@@ -61217,17 +61480,18 @@ ${theme.style.help("(Use arrow keys to reveal more choices)")}`;
   const page = usePagination({
     items,
     active,
-    renderItem({ item, isActive }) {
+    renderItem({ item, isActive, index }) {
       if (Separator.isSeparator(item)) {
         return ` ${item.separator}`;
       }
+      const indexLabel = theme.indexMode === "number" ? `${index + 1}. ` : "";
       if (item.disabled) {
         const disabledLabel = typeof item.disabled === "string" ? item.disabled : "(disabled)";
-        return theme.style.disabled(`${item.name} ${disabledLabel}`);
+        return theme.style.disabled(`${indexLabel}${item.name} ${disabledLabel}`);
       }
       const color = isActive ? theme.style.highlight : (x) => x;
       const cursor = isActive ? theme.icon.cursor : ` `;
-      return color(`${cursor} ${item.name}`);
+      return color(`${cursor} ${indexLabel}${item.name}`);
     },
     pageSize,
     loop
