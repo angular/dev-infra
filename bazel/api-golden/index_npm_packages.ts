@@ -70,6 +70,7 @@ async function main(
     // Keep track of outdated goldens.
     if (actual !== expected) {
       if (approveGolden) {
+        fs.mkdirSync(path.dirname(goldenFilePath), {recursive: true});
         fs.writeFileSync(goldenFilePath, actual, 'utf8');
       } else {
         outdatedGoldens.push(goldenName);
