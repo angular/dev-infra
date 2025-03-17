@@ -53,7 +53,6 @@ async function main(
     const goldenFilePath = path.join(goldenDir, goldenName);
     const moduleName = normalizePathToPosix(path.join(packageJson.name, subpath));
 
-    const expected = fs.readFileSync(goldenFilePath, 'utf8');
     const actual = await testApiGolden(
       typesEntryPointPath,
       stripExportPattern,
@@ -67,17 +66,17 @@ async function main(
       process.exit(1);
     }
 
-    // Keep track of outdated goldens.
-    if (actual !== expected) {
-      if (approveGolden) {
-        fs.mkdirSync(path.dirname(goldenFilePath), {recursive: true});
-        fs.writeFileSync(goldenFilePath, actual, 'utf8');
-      } else {
+    if (approveGolden) {
+      fs.mkdirSync(path.dirname(goldenFilePath), {recursive: true});
+      fs.writeFileSync(goldenFilePath, actual, 'utf8');
+    } else {
+      const expected = fs.readFileSync(goldenFilePath, 'utf8');
+      if (actual !== expected) {
+        // Keep track of outdated goldens for error message.
         outdatedGoldens.push(goldenName);
+        allTestsSucceeding = false;
       }
     }
-
-    allTestsSucceeding = allTestsSucceeding && actual === expected;
   }
 
   if (outdatedGoldens.length) {
