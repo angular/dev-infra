@@ -24,22 +24,37 @@ export async function updateCaretakerTeamViaPrompt() {
 
   /** The list of current members in the group. */
   const current = new Set(await getGroupMembers(caretakerGroup));
-  /** The list of members able to be added to the group as defined by a separate roster group. */
-  const roster = (await getGroupMembers(`${caretakerGroup}-roster`)).map((member) => ({
-    value: member,
-    checked: current.has(member),
-  }));
+  const [roster, emeaRoster] = await Promise.all([
+    getGroupMembers(`${caretakerGroup}-roster`),
+    getGroupMembers(`${caretakerGroup}-roster-emea`),
+  ]);
 
   /** The list of users selected to be members of the caretaker group. */
-  const selected = await Prompt.checkbox({
-    choices: roster,
-    message: 'Select 2 caretakers for the upcoming rotation:',
+  const selectedPrimaryAndSecondary = await Prompt.checkbox<string>({
+    choices: roster.map((member) => ({
+      value: member,
+      checked: current.has(member),
+    })),
+    message: 'Select 2 caretakers for the upcoming rotation (primary and secondary):',
     validate: (value) => {
       if (value.length !== 2) {
         return 'Please select exactly 2 caretakers for the upcoming rotation.';
       }
       return true;
     },
+  });
+
+  const emeaOptions = emeaRoster
+    // Do not show members that are already selected as primary/secondary.
+    .filter((m) => !selectedPrimaryAndSecondary.includes(m))
+    .map((member) => ({
+      value: member,
+      name: `${member} (EMEA)`,
+      checked: current.has(member),
+    }));
+  const selectedEmea = await Prompt.select<string>({
+    choices: emeaOptions,
+    message: 'Select EMEA caretaker',
   });
 
   /** Whether the user positively confirmed the selected made. */
@@ -53,13 +68,16 @@ export async function updateCaretakerTeamViaPrompt() {
     return;
   }
 
-  if (JSON.stringify(selected) === JSON.stringify(current)) {
+  const selectedSorted = [...selectedPrimaryAndSecondary, selectedEmea].sort();
+  const currentSorted = Array.from(current).sort();
+
+  if (JSON.stringify(selectedSorted) === JSON.stringify(currentSorted)) {
     Log.info(green('  ✔  Caretaker group already up to date.'));
     return;
   }
 
   try {
-    await setCaretakerGroup(caretakerGroup, selected);
+    await setCaretakerGroup(caretakerGroup, selectedSorted);
   } catch {
     Log.error('  ✘  Failed to update caretaker group.');
     return;
