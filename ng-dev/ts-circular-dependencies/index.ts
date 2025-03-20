@@ -115,7 +115,10 @@ export function main(
       return 1;
     }
     if (cycles.length > 0) {
-      Log.error(`x  No circular dependencies are allow within this repository.`);
+      Log.error(
+        `x  No circular dependencies are allow within this repository, but circular dependencies were found:`,
+      );
+      actual.forEach((c) => Log.error(`     • ${convertReferenceChainToString(c)}`));
       return 1;
     }
 
