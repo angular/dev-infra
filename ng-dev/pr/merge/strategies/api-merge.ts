@@ -196,13 +196,10 @@ export class GithubApiMergeStrategy extends MergeStrategy {
 
   /** Gets all commit messages of commits in the pull request. */
   private async _getPullRequestCommitMessages({prNumber}: PullRequest) {
-    const allCommits: OctokitPullRequestCommitsList = await this.git.github.paginate(
-      this.git.github.pulls.listCommits,
-      {
-        ...this.git.remoteParams,
-        pull_number: prNumber,
-      },
-    );
+    const allCommits = await this.git.github.paginate(this.git.github.pulls.listCommits, {
+      ...this.git.remoteParams,
+      pull_number: prNumber,
+    });
     return allCommits.map(({commit}) => commit.message);
   }
 
