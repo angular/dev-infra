@@ -26,6 +26,6 @@ js_library(
         "@npm//@angular/build",
         "@npm//@angular/compiler-cli",
         "@npm//@babel/core",
-        "@npm//@babel/plugin-proposal-async-generator-functions",
+        "@npm//@babel/plugin-transform-async-generator-functions",
     ],
 )

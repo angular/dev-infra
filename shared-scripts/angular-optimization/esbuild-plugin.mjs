@@ -36,7 +36,7 @@ export async function createEsbuildAngularOptimizePlugin(opts, additionalBabelPl
 
   if (opts.downlevelAsyncGeneratorsIfPresent) {
     downlevelAsyncGeneratorPlugin = (
-      await import('@babel/plugin-proposal-async-generator-functions')
+      await import('@babel/plugin-transform-async-generator-functions')
     ).default.default;
   }
 
