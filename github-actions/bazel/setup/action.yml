@@ -13,7 +13,7 @@ runs:
   using: composite
   steps:
     - name: Configure action caching for bazel version downloaded by bazelisk
-      uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
+      uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
       with:
         path: |
           ~/.cache/bazelisk
@@ -27,7 +27,7 @@ runs:
       shell: bash
 
     - name: Configure action caching for bazel repository cache
-      uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
+      uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
       with:
         # Note: Bazel repository cache is located in system locations and cannot use
         # a shared cache between different runner operating systems.
