@@ -2077,13 +2077,13 @@ __metadata:
   linkType: hard
 
 "@seald-io/nedb@npm:^4.0.4":
-  version: 4.0.4
-  resolution: "@seald-io/nedb@npm:4.0.4"
+  version: 4.1.1
+  resolution: "@seald-io/nedb@npm:4.1.1"
   dependencies:
     "@seald-io/binary-search-tree": "npm:^1.0.3"
     localforage: "npm:^1.9.0"
     util: "npm:^0.12.4"
-  checksum: 10c0/1136c924401390f3f108c6a337b685f341e094549bdcfb9be1e40a10e7886996663418fdd847a3e0925417d4ff85c42cfc7e30dac8fafbc6b1686d9a7fd34272
+  checksum: 10c0/048baeccbcf01f235c1f17d495a26fcb26b94ee3e9b5126cc0d278b39d5cda7e4499a66181d0b6b6473fecc0a3e8e3c2cd31a49d9f84dce05c232b045dffc477
   languageName: node
   linkType: hard
 
@@ -2849,11 +2849,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*, @types/node@npm:>=13.7.0":
-  version: 22.13.10
-  resolution: "@types/node@npm:22.13.10"
+  version: 22.13.12
+  resolution: "@types/node@npm:22.13.12"
   dependencies:
     undici-types: "npm:~6.20.0"
-  checksum: 10c0/a3865f9503d6f718002374f7b87efaadfae62faa499c1a33b12c527cfb9fd86f733e1a1b026b80c5a0e4a965701174bc3305595a7d36078aa1abcf09daa5dee9
+  checksum: 10c0/c360ee830faf6e5de0a77459c06f5320d166d8d981547bb0e2d921057e3b71ce44bc8c0ede25ee69c7575445d424121c158bc2a059da3c80f0275a1ca4ab4a00
   languageName: node
   linkType: hard
 
