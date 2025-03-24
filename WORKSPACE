@@ -55,9 +55,9 @@ nodejs_register_toolchains(
 
 http_archive(
     name = "aspect_rules_js",
-    sha256 = "bea8e9a120b14ff2cdf2410c5872cfc896b29dc361ac8c554d0c9f800154a0b7",
-    strip_prefix = "rules_js-2.3.0",
-    url = "https://github.com/aspect-build/rules_js/releases/download/v2.3.0/rules_js-v2.3.0.tar.gz",
+    sha256 = "7ee67690ed4d6b5c8cbf6d47bb68b639192a29397a9fe3d513981fecc25a5653",
+    strip_prefix = "rules_js-2.3.2",
+    url = "https://github.com/aspect-build/rules_js/releases/download/v2.3.2/rules_js-v2.3.2.tar.gz",
 )
 
 load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
