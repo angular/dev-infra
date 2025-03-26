@@ -84,6 +84,7 @@ build:remote --platforms=//bazel/remote-execution:platform_with_network
 
 # Set remote caching settings
 build:remote --remote_accept_cached=true
+build:remote --remote_upload_local_results=false
 
 # Enable Build Event Service
 build:remote --bes_backend=buildeventservice.googleapis.com
@@ -95,7 +96,7 @@ build:remote --bes_upload_mode=fully_async
 # Use HTTP remote cache
 build:remote-cache --remote_cache=https://storage.googleapis.com/angular-team-cache
 build:remote-cache --remote_accept_cached=true
-build:remote-cache --remote_upload_local_results=true
+build:remote-cache --remote_upload_local_results=false
 build:remote-cache --google_default_credentials
 
 ################################
