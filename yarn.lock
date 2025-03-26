@@ -3582,13 +3582,13 @@ __metadata:
   linkType: hard
 
 "@pnpm/dependency-path@npm:^1000.0.5":
-  version: 1000.0.5
-  resolution: "@pnpm/dependency-path@npm:1000.0.5"
+  version: 1000.0.6
+  resolution: "@pnpm/dependency-path@npm:1000.0.6"
   dependencies:
     "@pnpm/crypto.hash": "npm:1000.1.1"
-    "@pnpm/types": "npm:1000.2.1"
+    "@pnpm/types": "npm:1000.3.0"
     semver: "npm:^7.7.1"
-  checksum: 10c0/a2605fd321284e5f81b355843fe6eb48983cab3d94364a3f2547b0cb6f6ef19cb7efba6df0851420fbb78242cf42c1b8117ec5a527778f98da76cde65d27d0d2
+  checksum: 10c0/89f95fe24e28f25d5e2b4d32210891a045ff430c1022c03f8996c0da1b6a1973821dd01e49a96548baa347230cd08094f1b4f1c424041b29154c93d5fd0b2bf7
   languageName: node
   linkType: hard
 
@@ -3621,10 +3621,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pnpm/types@npm:1000.2.1":
-  version: 1000.2.1
-  resolution: "@pnpm/types@npm:1000.2.1"
-  checksum: 10c0/e5df4dd9c63f242b478e26957d4603d6c0aaa460441afc7461d4ca4aa3ae05bdb572f65873dbe24e1f8257776d413be88cea63f3bf1377aa600f181231a2ee01
+"@pnpm/types@npm:1000.3.0":
+  version: 1000.3.0
+  resolution: "@pnpm/types@npm:1000.3.0"
+  checksum: 10c0/9fe08b2363fdcef82342cde488283d56e7160e0908ce094c28d121f08be5044c82f64d378ce9d03519c173209c582f6d811acb92b3869818b402bb9b73b02249
   languageName: node
   linkType: hard
 
@@ -13923,8 +13923,8 @@ __metadata:
   linkType: hard
 
 "stylelint@npm:^16.0.0":
-  version: 16.16.0
-  resolution: "stylelint@npm:16.16.0"
+  version: 16.17.0
+  resolution: "stylelint@npm:16.17.0"
   dependencies:
     "@csstools/css-parser-algorithms": "npm:^3.0.4"
     "@csstools/css-tokenizer": "npm:^3.0.3"
@@ -13966,7 +13966,7 @@ __metadata:
     write-file-atomic: "npm:^5.0.1"
   bin:
     stylelint: bin/stylelint.mjs
-  checksum: 10c0/7884a347fbaf04215f205bb9630bce91c72a3d08ddd5aec1d1ad7ccfdff50854bb6ad995945d5d6a6a4052a1c5fadb3fd4929e8e7db4cde5a6ce0f7dbe537800
+  checksum: 10c0/0b1bb4e362babe799afc42086fdc3a5621c230a0d4ad4a947a44d14311b758bf5a0fab0dea4fef31223dde97617f43510a37480d25f9eed23e2ff71e97c33e07
   languageName: node
   linkType: hard
 
