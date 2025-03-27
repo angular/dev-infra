@@ -27,6 +27,8 @@ jobs:
       - uses: ./github-actions/npm/checkout-and-setup-node
       - uses: ./github-actions/bazel/setup
       - uses: ./github-actions/bazel/configure-remote
+        with:
+          trusted_build: true
       - run: yarn install --immutable
       - name: Confirm code builds with typescript as expected
         run: yarn tsc -p tsconfig.json
@@ -42,6 +44,8 @@ jobs:
       - uses: ./github-actions/npm/checkout-and-setup-node
       - uses: ./github-actions/bazel/setup
       - uses: ./github-actions/bazel/configure-remote
+        with:
+          trusted_build: true
       - run: yarn install --immutable
       - run: yarn bazel test -- //...
 
