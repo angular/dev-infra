@@ -88,7 +88,7 @@ build:remote --remote_upload_local_results=false
 
 # Enable Build Event Service
 build:remote --bes_backend=buildeventservice.googleapis.com
-build:remote --project_id=internal-200822
+build:remote --bes_instance_name=internal-200822
 build:remote --bes_header=X-Goog-User-Project=internal-200822
 build:remote --bes_results_url=https://source.cloud.google.com/results/invocations
 build:remote --bes_upload_mode=fully_async
