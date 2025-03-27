@@ -35615,7 +35615,7 @@ var require_util8 = __commonJS({
     var { InvalidArgumentError } = require_errors2();
     var { headerNameLowerCasedRecord } = require_constants7();
     var { tree } = require_tree();
-    var [nodeMajor, nodeMinor] = process.versions.node.split(".").map((v) => Number(v));
+    var [nodeMajor, nodeMinor] = process.versions.node.split(".", 2).map((v) => Number(v));
     var BodyAsyncIterable = class {
       constructor(body) {
         this[kBody] = body;
@@ -45018,7 +45018,7 @@ var require_mock_utils2 = __commonJS({
       if (typeof path4 !== "string") {
         return path4;
       }
-      const pathSegments = path4.split("?");
+      const pathSegments = path4.split("?", 3);
       if (pathSegments.length !== 2) {
         return path4;
       }
@@ -46716,6 +46716,15 @@ var require_cache2 = __commonJS({
       if (!opts.origin) {
         throw new Error("opts.origin is undefined");
       }
+      const headers = normaliseHeaders(opts);
+      return {
+        origin: opts.origin.toString(),
+        method: opts.method,
+        path: opts.path,
+        headers
+      };
+    }
+    function normaliseHeaders(opts) {
       let headers;
       if (opts.headers == null) {
         headers = {};
@@ -46739,12 +46748,7 @@ var require_cache2 = __commonJS({
       } else {
         throw new Error("opts.headers is not an object");
       }
-      return {
-        origin: opts.origin.toString(),
-        method: opts.method,
-        path: opts.path,
-        headers
-      };
+      return headers;
     }
     function assertCacheKey(key) {
       if (typeof key !== "object") {
@@ -46933,6 +46937,7 @@ var require_cache2 = __commonJS({
     }
     module.exports = {
       makeCacheKey,
+      normaliseHeaders,
       assertCacheKey,
       assertCacheValue,
       parseCacheControlHeader,
@@ -47615,7 +47620,7 @@ var require_cache3 = __commonJS({
     var CacheHandler = require_cache_handler();
     var MemoryCacheStore = require_memory_cache_store();
     var CacheRevalidationHandler = require_cache_revalidation_handler();
-    var { assertCacheStore, assertCacheMethods, makeCacheKey, parseCacheControlHeader } = require_cache2();
+    var { assertCacheStore, assertCacheMethods, makeCacheKey, normaliseHeaders, parseCacheControlHeader } = require_cache2();
     var { AbortError } = require_errors2();
     function needsRevalidation(result, cacheControlDirectives) {
       if (cacheControlDirectives == null ? void 0 : cacheControlDirectives["no-cache"]) {
@@ -47746,7 +47751,7 @@ var require_cache3 = __commonJS({
           withinStaleIfErrorThreshold = now < result.staleAt + staleIfErrorExpiry * 1e3;
         }
         let headers = {
-          ...opts.headers,
+          ...normaliseHeaders(opts),
           "if-modified-since": new Date(result.cachedAt).toUTCString()
         };
         if (result.etag) {
@@ -49840,7 +49845,9 @@ var require_fetch2 = __commonJS({
         originalURL.href,
         initiatorType,
         globalThis,
-        cacheState
+        cacheState,
+        "",
+        response.status
       );
     }
     var markResourceTiming = performance.markResourceTiming;
@@ -50129,7 +50136,7 @@ var require_fetch2 = __commonJS({
           fetchParams.controller.fullTimingInfo = timingInfo;
         }
         fetchParams.controller.reportTimingSteps = () => {
-          if (fetchParams.request.url.protocol !== "https:") {
+          if (!urlIsHttpHttpsScheme(fetchParams.request.url)) {
             return;
           }
           timingInfo.endTime = unsafeEndTime;
@@ -52155,7 +52162,7 @@ var require_util12 = __commonJS({
       const extensionList = /* @__PURE__ */ new Map();
       while (position.position < extensions.length) {
         const pair = collectASequenceOfCodePointsFast(";", extensions, position);
-        const [name, value = ""] = pair.split("=");
+        const [name, value = ""] = pair.split("=", 2);
         extensionList.set(
           removeHTTPWhitespace(name, true, false),
           removeHTTPWhitespace(value, false, true)
