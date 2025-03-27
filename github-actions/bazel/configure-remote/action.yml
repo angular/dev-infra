@@ -12,17 +12,11 @@ inputs:
     description: |
       Whether to allow remote execution to be configured for Windows. By default,
       Windows is only configured to leverage remote caching.
-
-  shell:
-    default: bash
-    description: Shell to use for executing the configure script.
+  google_credential:
+    description: |
+      A Google credential to be used as authentication for RBE API usages, implies
+      the RBE interaction should be done as part of a trusted build.
 
 runs:
-  using: composite
-  steps:
-    - run: node $GITHUB_ACTION_PATH/configure-remote.cjs
-      env:
-        BAZELRC_PATH: ${{ inputs.bazelrc }}
-        ALLOW_WINDOWS_RBE: ${{ inputs.allow_windows_rbe }}
-        NGAT: 'bKddxrYADouso3haW7lCFA=='
-      shell: ${{ inputs.shell }}
+  using: 'node20'
+  main: 'configure-remote.cjs'
