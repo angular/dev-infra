@@ -29,6 +29,7 @@ jobs:
       - uses: ./github-actions/bazel/configure-remote
         with:
           trusted_build: true
+          google_credential: ${{ secrets.RBE_TRUSTED_BUILDS_USER }}
       - run: yarn install --immutable
       - name: Confirm code builds with typescript as expected
         run: yarn tsc -p tsconfig.json
@@ -46,6 +47,7 @@ jobs:
       - uses: ./github-actions/bazel/configure-remote
         with:
           trusted_build: true
+          google_credential: ${{ secrets.RBE_TRUSTED_BUILDS_USER }}
       - run: yarn install --immutable
       - run: yarn bazel test -- //...
 
