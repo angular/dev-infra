@@ -1,4 +1,4 @@
-import {createTypedObject, Label} from './base.js';
+import {createTypedObject, Label, ManagedRepositories} from './base.js';
 
 class MergeLabel extends Label {}
 
@@ -14,6 +14,7 @@ export const mergeLabels = createTypedObject(MergeLabel)({
   MERGE_FIX_COMMIT_MESSAGE: {
     description: 'When the PR is merged, rewrites/fixups of the commit messages are needed',
     name: 'merge: fix commit message',
+    repositories: [ManagedRepositories.COMPONENTS, ManagedRepositories.ANGULAR_CLI],
   },
   MERGE_CARETAKER_NOTE: {
     description:
