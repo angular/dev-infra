@@ -19,14 +19,10 @@ async function main() {
   const isWindows = os.platform() === 'win32';
   const bazelRcPath = getInput('bazelrc', {required: false, trimWhitespace: true});
   const allowWindowsRbe = getBooleanInput('allow_windows_rbe', {required: true});
-  // If no credential is provided as an input, `getInput` will return an empty string
-  let credential = getInput('google_credential', {required: false, trimWhitespace: true}) || null;
-  // We treat any non-embedded credential as indication that this is a trusted build.
-  const trustedBuild = credential !== null;
-
-  if (credential === null) {
-    credential = getEmbeddedCredential();
-  }
+  const trustedBuild = getBooleanInput('trusted_build', {required: false});
+  const credential =
+    getInput('google_credential', {required: false, trimWhitespace: true}) ||
+    getEmbeddedCredential();
 
   const destPath = isWindows
     ? path.join(process.env.APPDATA!, 'gcloud/application_default_credentials.json')

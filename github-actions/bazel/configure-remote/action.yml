@@ -14,8 +14,11 @@ inputs:
       Windows is only configured to leverage remote caching.
   google_credential:
     description: |
-      A Google credential to be used as authentication for RBE API usages, implies
-      the RBE interaction should be done as part of a trusted build.
+      A Google credential to be used as authentication for RBE API usages
+  trusted_build:
+    default: false
+    description: |
+      Whether the environment should be considerd a trusted build.
 
 runs:
   using: 'node20'
