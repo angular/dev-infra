@@ -1,5 +1,5 @@
+load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
 load("@devinfra//bazel/spec-bundling:spec-entrypoint.bzl", "spec_entrypoint")
-load("@devinfra_npm//bazel:esbuild/package_json.bzl", esbuild = "bin")
 
 def spec_bundle(name, deps, bootstrap = [], testonly = True, **kwargs):
     spec_entrypoint(
@@ -9,7 +9,7 @@ def spec_bundle(name, deps, bootstrap = [], testonly = True, **kwargs):
         testonly = testonly,
     )
 
-    esbuild.esbuild(
+    esbuild(
         name = name,
         # Note: `deps` are added here to automatically collect transitive NPM
         # sources etc. and make them available for bundling.
@@ -17,21 +17,25 @@ def spec_bundle(name, deps, bootstrap = [], testonly = True, **kwargs):
             ":%s_entrypoint" % name,
         ],
         testonly = testonly,
-        outs = [
-            "%s_spec_bundle.spec.js" % name,
-            "%s_spec_bundle.spec.js.map" % name,
-        ],
-        args = [
-            "--format=iife",
-            "--bundle",
-            "--resolve-extensions=.mjs,.js",
-            "--minify",
-            "--sourcemap=external",
-            "--platform=node",
-            "--outfile=%s/%s_spec_bundle.spec.js " % (native.package_name(), name),
-            "%s/%s_entrypoint.mjs" % (native.package_name(), name),
-        ],
-        progress_message = "Creating spec-bundle",
-        silent_on_success = True,
+        bundle = True,
+        format = "iife",
+        minify = True,
+        sourcemap = "external",
+        platform = "node",
+        entry_point = ":%s_entrypoint" % name,
+        output = "%s.spec.js" % name,
+        **kwargs
+    )
+
+def spec_bundle_amd(name, workspace_name, **kwargs):
+    amd_name = "%s/%s/%s" % (workspace_name, native.package_name(), name + ".spec")
+
+    spec_bundle(
+        name,
+        config = {
+            "globalName": "__exports",
+            "banner": {"js": "define(\"%s\", [], function() {" % amd_name},
+            "footer": {"js": "return __exports;})"},
+        },
         **kwargs
     )

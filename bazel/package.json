@@ -3,8 +3,7 @@
   "dependencies": {
     "@microsoft/api-extractor": "7.52.2",
     "typescript": "5.8.2",
-    "@types/node": "22.13.14",
-    "esbuild": "0.25.2"
+    "@types/node": "22.13.14"
   },
   "pnpm": {
     "onlyBuiltDependencies": []
