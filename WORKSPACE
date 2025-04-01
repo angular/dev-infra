@@ -164,3 +164,23 @@ setup_dependencies_1()
 load("//bazel:setup_dependencies_2.bzl", "setup_dependencies_2")
 
 setup_dependencies_2()
+
+# TODO: Move this to the setup scripts. E.g. following proposals like:
+# go/ng:sharing-infra-code.
+http_archive(
+    name = "aspect_rules_esbuild",
+    sha256 = "550e33ddeb86a564b22b2c5d3f84748c6639b1b2b71fae66bf362c33392cbed8",
+    strip_prefix = "rules_esbuild-0.21.0",
+    url = "https://github.com/aspect-build/rules_esbuild/releases/download/v0.21.0/rules_esbuild-v0.21.0.tar.gz",
+)
+
+load("@aspect_rules_esbuild//esbuild:dependencies.bzl", "rules_esbuild_dependencies")
+
+rules_esbuild_dependencies()
+
+load("@aspect_rules_esbuild//esbuild:repositories.bzl", "LATEST_ESBUILD_VERSION", "esbuild_register_toolchains")
+
+esbuild_register_toolchains(
+    name = "esbuild",
+    esbuild_version = LATEST_ESBUILD_VERSION,
+)

@@ -15,7 +15,7 @@ def _karma_debug_browsers_target(name, **web_test_args):
     # that is manually connected to.
     _karma_web_test(
         name = "%s_bin" % name,
-        config_file = "//bazel/karma:karma-debug-config.js",
+        config_file = "@devinfra//bazel/karma:karma-debug-config.cjs",
         tags = ["manual"],
         **web_test_args
     )
@@ -24,7 +24,7 @@ def _karma_debug_browsers_target(name, **web_test_args):
     native.sh_test(
         name = name,
         srcs = ["%s_bin" % name],
-        tags = ["manual", "local", "ibazel_notify_changes"],
+        tags = ["manual", "requires-network", "ibazel_notify_changes"],
         testonly = True,
     )
 
