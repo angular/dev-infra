@@ -69159,15 +69159,30 @@ async function getInstallationAuthentication(state, options, customRequest) {
     };
     return factory(factoryAuthOptions);
   }
-  const optionsWithInstallationTokenFromState = Object.assign(
-    { installationId },
-    options
+  const request2 = customRequest || state.request;
+  return getInstallationAuthenticationConcurrently(
+    state,
+    { ...options, installationId },
+    request2
   );
+}
+var pendingPromises = /* @__PURE__ */ new Map();
+function getInstallationAuthenticationConcurrently(state, options, request2) {
+  const cacheKey = optionsToCacheKey(options);
+  if (pendingPromises.has(cacheKey)) {
+    return pendingPromises.get(cacheKey);
+  }
+  const promise = getInstallationAuthenticationImpl(
+    state,
+    options,
+    request2
+  ).finally(() => pendingPromises.delete(cacheKey));
+  pendingPromises.set(cacheKey, promise);
+  return promise;
+}
+async function getInstallationAuthenticationImpl(state, options, request2) {
   if (!options.refresh) {
-    const result = await get(
-      state.cache,
-      optionsWithInstallationTokenFromState
-    );
+    const result = await get(state.cache, options);
     if (result) {
       const {
         token: token22,
@@ -69180,7 +69195,7 @@ async function getInstallationAuthentication(state, options, customRequest) {
         repositorySelection: repositorySelection2
       } = result;
       return toTokenAuthentication({
-        installationId,
+        installationId: options.installationId,
         token: token22,
         createdAt: createdAt2,
         expiresAt: expiresAt2,
@@ -69193,9 +69208,8 @@ async function getInstallationAuthentication(state, options, customRequest) {
     }
   }
   const appAuthentication = await getAppAuthentication(state);
-  const request2 = customRequest || state.request;
   const payload = {
-    installation_id: installationId,
+    installation_id: options.installationId,
     mediaType: {
       previews: ["machine-man"]
     },
@@ -69244,9 +69258,9 @@ async function getInstallationAuthentication(state, options, customRequest) {
   if (singleFileName) {
     Object.assign(payload, { singleFileName });
   }
-  await set(state.cache, optionsWithInstallationTokenFromState, cacheOptions);
+  await set(state.cache, options, cacheOptions);
   const cacheData = {
-    installationId,
+    installationId: options.installationId,
     token: token2,
     createdAt,
     expiresAt,
@@ -69396,7 +69410,7 @@ async function sendRequestWithRetries(state, request2, options, createdAt, retri
     return sendRequestWithRetries(state, request2, options, createdAt, retries);
   }
 }
-var VERSION12 = "7.1.5";
+var VERSION12 = "7.2.0";
 function createAppAuth(options) {
   if (!options.appId) {
     throw new Error("[@octokit/auth-app] appId option is required");
