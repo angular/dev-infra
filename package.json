@@ -140,7 +140,6 @@
     "multimatch": "^7.0.0",
     "nock": "14.0.2",
     "opener": "^1.5.2",
-    "protobufjs": "^7.0.0",
     "requirejs": "^2.3.6",
     "rxjs": "^7.4.0",
     "semver": "^7.5.4",

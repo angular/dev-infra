@@ -333,7 +333,6 @@ __metadata:
     nock: "npm:14.0.2"
     opener: "npm:^1.5.2"
     prettier: "npm:3.5.3"
-    protobufjs: "npm:^7.0.0"
     protractor: "npm:^7.0.0"
     requirejs: "npm:^2.3.6"
     rxjs: "npm:^7.4.0"
