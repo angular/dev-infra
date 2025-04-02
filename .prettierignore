@@ -1,8 +1,5 @@
 .yarn/releases/*.cjs
 
-ng-dev/utils/protos/*.d.ts
-ng-dev/utils/protos/*.js
-
 .github/local-actions/labels-sync/main.js
 .github/local-actions/lock-closed/main.js
 github-actions/bazel/configure-remote/configure-remote.cjs

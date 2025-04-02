@@ -2,7 +2,7 @@ workspace(
     name = "devinfra",
 )
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 NODE_VERSION = "20.11.1"
 
@@ -90,19 +90,6 @@ yarn_install(
     yarn_lock = "//:yarn.lock",
 )
 
-yarn_install(
-    name = "ts_proto_npm",
-    args = ["--immutable"],
-    data = [
-        "//:.yarn/releases/yarn-4.7.0.cjs",
-        "//tools/ts_proto:.yarnrc.yml",
-    ],
-    exports_directories_only = False,
-    package_json = "//tools/ts_proto:package.json",
-    yarn = "//:.yarn/releases/yarn-4.7.0.cjs",
-    yarn_lock = "//tools/ts_proto:yarn.lock",
-)
-
 load("@npm//@bazel/protractor:package.bzl", "npm_bazel_protractor_dependencies")
 
 npm_bazel_protractor_dependencies()
@@ -135,12 +122,6 @@ register_toolchains(
     "//bazel/git-toolchain:git_linux_toolchain",
     "//bazel/git-toolchain:git_macos_x86_toolchain",
     "//bazel/git-toolchain:git_macos_arm64_toolchain",
-)
-
-http_file(
-    name = "bazel_test_status_proto",
-    sha256 = "61ce1dc62fdcfd6d68624a403e0f04c5fd5136d933b681467aad1ad2d00dbb03",
-    urls = ["https://raw.githubusercontent.com/bazelbuild/bazel/5.0.0/src/main/protobuf/test_status.proto"],
 )
 
 http_archive(
