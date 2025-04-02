@@ -19642,6 +19642,122 @@ var require_symbols6 = __commonJS({
 });
 
 // 
+var require_timers2 = __commonJS({
+  ""(exports, module) {
+    "use strict";
+    var fastNow = 0;
+    var RESOLUTION_MS = 1e3;
+    var TICK_MS = (RESOLUTION_MS >> 1) - 1;
+    var fastNowTimeout;
+    var kFastTimer = Symbol("kFastTimer");
+    var fastTimers = [];
+    var NOT_IN_LIST = -2;
+    var TO_BE_CLEARED = -1;
+    var PENDING = 0;
+    var ACTIVE = 1;
+    function onTick() {
+      fastNow += TICK_MS;
+      let idx = 0;
+      let len = fastTimers.length;
+      while (idx < len) {
+        const timer = fastTimers[idx];
+        if (timer._state === PENDING) {
+          timer._idleStart = fastNow - TICK_MS;
+          timer._state = ACTIVE;
+        } else if (timer._state === ACTIVE && fastNow >= timer._idleStart + timer._idleTimeout) {
+          timer._state = TO_BE_CLEARED;
+          timer._idleStart = -1;
+          timer._onTimeout(timer._timerArg);
+        }
+        if (timer._state === TO_BE_CLEARED) {
+          timer._state = NOT_IN_LIST;
+          if (--len !== 0) {
+            fastTimers[idx] = fastTimers[len];
+          }
+        } else {
+          ++idx;
+        }
+      }
+      fastTimers.length = len;
+      if (fastTimers.length !== 0) {
+        refreshTimeout();
+      }
+    }
+    function refreshTimeout() {
+      if (fastNowTimeout) {
+        fastNowTimeout.refresh();
+      } else {
+        clearTimeout(fastNowTimeout);
+        fastNowTimeout = setTimeout(onTick, TICK_MS);
+        if (fastNowTimeout.unref) {
+          fastNowTimeout.unref();
+        }
+      }
+    }
+    var FastTimer = class {
+      [kFastTimer] = true;
+      _state = NOT_IN_LIST;
+      _idleTimeout = -1;
+      _idleStart = -1;
+      _onTimeout;
+      _timerArg;
+      constructor(callback, delay, arg) {
+        this._onTimeout = callback;
+        this._idleTimeout = delay;
+        this._timerArg = arg;
+        this.refresh();
+      }
+      refresh() {
+        if (this._state === NOT_IN_LIST) {
+          fastTimers.push(this);
+        }
+        if (!fastNowTimeout || fastTimers.length === 1) {
+          refreshTimeout();
+        }
+        this._state = PENDING;
+      }
+      clear() {
+        this._state = TO_BE_CLEARED;
+        this._idleStart = -1;
+      }
+    };
+    module.exports = {
+      setTimeout(callback, delay, arg) {
+        return delay <= RESOLUTION_MS ? setTimeout(callback, delay, arg) : new FastTimer(callback, delay, arg);
+      },
+      clearTimeout(timeout) {
+        if (timeout[kFastTimer]) {
+          timeout.clear();
+        } else {
+          clearTimeout(timeout);
+        }
+      },
+      setFastTimeout(callback, delay, arg) {
+        return new FastTimer(callback, delay, arg);
+      },
+      clearFastTimeout(timeout) {
+        timeout.clear();
+      },
+      now() {
+        return fastNow;
+      },
+      tick(delay = 0) {
+        fastNow += delay - RESOLUTION_MS + 1;
+        onTick();
+        onTick();
+      },
+      reset() {
+        fastNow = 0;
+        fastTimers.length = 0;
+        clearTimeout(fastNowTimeout);
+        fastNowTimeout = null;
+      },
+      kFastTimer
+    };
+  }
+});
+
+// 
 var require_errors2 = __commonJS({
   ""(exports, module) {
     "use strict";
@@ -20119,7 +20235,8 @@ var require_util8 = __commonJS({
     var nodeUtil = __require("node:util");
     var { stringify } = __require("node:querystring");
     var { EventEmitter: EE } = __require("node:events");
-    var { InvalidArgumentError } = require_errors2();
+    var timers = require_timers2();
+    var { InvalidArgumentError, ConnectTimeoutError } = require_errors2();
     var { headerNameLowerCasedRecord } = require_constants6();
     var { tree } = require_tree();
     var [nodeMajor, nodeMinor] = process.versions.node.split(".", 2).map((v) => Number(v));
@@ -20134,6 +20251,8 @@ var require_util8 = __commonJS({
         yield* this[kBody];
       }
     };
+    function noop2() {
+    }
     function wrapRequestBody(body) {
       if (isStream(body)) {
         if (bodyLength(body) === 0) {
@@ -20559,6 +20678,50 @@ var require_util8 = __commonJS({
         client.emit("error", err2);
       }
     }
+    var setupConnectTimeout = process.platform === "win32" ? (socketWeakRef, opts) => {
+      if (!opts.timeout) {
+        return noop2;
+      }
+      let s1 = null;
+      let s2 = null;
+      const fastTimer = timers.setFastTimeout(() => {
+        s1 = setImmediate(() => {
+          s2 = setImmediate(() => onConnectTimeout(socketWeakRef.deref(), opts));
+        });
+      }, opts.timeout);
+      return () => {
+        timers.clearFastTimeout(fastTimer);
+        clearImmediate(s1);
+        clearImmediate(s2);
+      };
+    } : (socketWeakRef, opts) => {
+      if (!opts.timeout) {
+        return noop2;
+      }
+      let s1 = null;
+      const fastTimer = timers.setFastTimeout(() => {
+        s1 = setImmediate(() => {
+          onConnectTimeout(socketWeakRef.deref(), opts);
+        });
+      }, opts.timeout);
+      return () => {
+        timers.clearFastTimeout(fastTimer);
+        clearImmediate(s1);
+      };
+    };
+    function onConnectTimeout(socket, opts) {
+      if (socket == null) {
+        return;
+      }
+      let message = "Connect Timeout Error";
+      if (Array.isArray(socket.autoSelectFamilyAttemptedAddresses)) {
+        message += ` (attempted addresses: ${socket.autoSelectFamilyAttemptedAddresses.join(", ")},`;
+      } else {
+        message += ` (attempted address: ${opts.hostname}:${opts.port},`;
+      }
+      message += ` timeout: ${opts.timeout}ms)`;
+      destroy(socket, new ConnectTimeoutError(message));
+    }
     var kEnumerableProperty = /* @__PURE__ */ Object.create(null);
     kEnumerableProperty.enumerable = true;
     var normalizedMethodRecordsBase = {
@@ -20625,7 +20788,8 @@ var require_util8 = __commonJS({
       nodeMajor,
       nodeMinor,
       safeHTTPMethods: Object.freeze(["GET", "HEAD", "OPTIONS", "TRACE"]),
-      wrapRequestBody
+      wrapRequestBody,
+      setupConnectTimeout
     };
   }
 });
@@ -21504,132 +21668,13 @@ var require_dispatcher_base2 = __commonJS({
 });
 
 // 
-var require_timers2 = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    var fastNow = 0;
-    var RESOLUTION_MS = 1e3;
-    var TICK_MS = (RESOLUTION_MS >> 1) - 1;
-    var fastNowTimeout;
-    var kFastTimer = Symbol("kFastTimer");
-    var fastTimers = [];
-    var NOT_IN_LIST = -2;
-    var TO_BE_CLEARED = -1;
-    var PENDING = 0;
-    var ACTIVE = 1;
-    function onTick() {
-      fastNow += TICK_MS;
-      let idx = 0;
-      let len = fastTimers.length;
-      while (idx < len) {
-        const timer = fastTimers[idx];
-        if (timer._state === PENDING) {
-          timer._idleStart = fastNow - TICK_MS;
-          timer._state = ACTIVE;
-        } else if (timer._state === ACTIVE && fastNow >= timer._idleStart + timer._idleTimeout) {
-          timer._state = TO_BE_CLEARED;
-          timer._idleStart = -1;
-          timer._onTimeout(timer._timerArg);
-        }
-        if (timer._state === TO_BE_CLEARED) {
-          timer._state = NOT_IN_LIST;
-          if (--len !== 0) {
-            fastTimers[idx] = fastTimers[len];
-          }
-        } else {
-          ++idx;
-        }
-      }
-      fastTimers.length = len;
-      if (fastTimers.length !== 0) {
-        refreshTimeout();
-      }
-    }
-    function refreshTimeout() {
-      if (fastNowTimeout) {
-        fastNowTimeout.refresh();
-      } else {
-        clearTimeout(fastNowTimeout);
-        fastNowTimeout = setTimeout(onTick, TICK_MS);
-        if (fastNowTimeout.unref) {
-          fastNowTimeout.unref();
-        }
-      }
-    }
-    var FastTimer = class {
-      [kFastTimer] = true;
-      _state = NOT_IN_LIST;
-      _idleTimeout = -1;
-      _idleStart = -1;
-      _onTimeout;
-      _timerArg;
-      constructor(callback, delay, arg) {
-        this._onTimeout = callback;
-        this._idleTimeout = delay;
-        this._timerArg = arg;
-        this.refresh();
-      }
-      refresh() {
-        if (this._state === NOT_IN_LIST) {
-          fastTimers.push(this);
-        }
-        if (!fastNowTimeout || fastTimers.length === 1) {
-          refreshTimeout();
-        }
-        this._state = PENDING;
-      }
-      clear() {
-        this._state = TO_BE_CLEARED;
-        this._idleStart = -1;
-      }
-    };
-    module.exports = {
-      setTimeout(callback, delay, arg) {
-        return delay <= RESOLUTION_MS ? setTimeout(callback, delay, arg) : new FastTimer(callback, delay, arg);
-      },
-      clearTimeout(timeout) {
-        if (timeout[kFastTimer]) {
-          timeout.clear();
-        } else {
-          clearTimeout(timeout);
-        }
-      },
-      setFastTimeout(callback, delay, arg) {
-        return new FastTimer(callback, delay, arg);
-      },
-      clearFastTimeout(timeout) {
-        timeout.clear();
-      },
-      now() {
-        return fastNow;
-      },
-      tick(delay = 0) {
-        fastNow += delay - RESOLUTION_MS + 1;
-        onTick();
-        onTick();
-      },
-      reset() {
-        fastNow = 0;
-        fastTimers.length = 0;
-        clearTimeout(fastNowTimeout);
-        fastNowTimeout = null;
-      },
-      kFastTimer
-    };
-  }
-});
-
-// 
 var require_connect2 = __commonJS({
   ""(exports, module) {
     "use strict";
     var net = __require("node:net");
     var assert = __require("node:assert");
     var util = require_util8();
-    var { InvalidArgumentError, ConnectTimeoutError } = require_errors2();
-    var timers = require_timers2();
-    function noop2() {
-    }
+    var { InvalidArgumentError } = require_errors2();
     var tls;
     var SessionCache;
     if (global.FinalizationRegistry && !(process.env.NODE_V8_COVERAGE || process.env.UNDICI_NO_FG)) {
@@ -21728,7 +21773,7 @@ var require_connect2 = __commonJS({
           const keepAliveInitialDelay = options.keepAliveInitialDelay === void 0 ? 6e4 : options.keepAliveInitialDelay;
           socket.setKeepAlive(true, keepAliveInitialDelay);
         }
-        const clearConnectTimeout = setupConnectTimeout(new WeakRef(socket), { timeout, hostname, port });
+        const clearConnectTimeout = util.setupConnectTimeout(new WeakRef(socket), { timeout, hostname, port });
         socket.setNoDelay(true).once(protocol === "https:" ? "secureConnect" : "connect", function() {
           queueMicrotask(clearConnectTimeout);
           if (callback) {
@@ -21746,50 +21791,6 @@ var require_connect2 = __commonJS({
         });
         return socket;
       };
-    }
-    var setupConnectTimeout = process.platform === "win32" ? (socketWeakRef, opts) => {
-      if (!opts.timeout) {
-        return noop2;
-      }
-      let s1 = null;
-      let s2 = null;
-      const fastTimer = timers.setFastTimeout(() => {
-        s1 = setImmediate(() => {
-          s2 = setImmediate(() => onConnectTimeout(socketWeakRef.deref(), opts));
-        });
-      }, opts.timeout);
-      return () => {
-        timers.clearFastTimeout(fastTimer);
-        clearImmediate(s1);
-        clearImmediate(s2);
-      };
-    } : (socketWeakRef, opts) => {
-      if (!opts.timeout) {
-        return noop2;
-      }
-      let s1 = null;
-      const fastTimer = timers.setFastTimeout(() => {
-        s1 = setImmediate(() => {
-          onConnectTimeout(socketWeakRef.deref(), opts);
-        });
-      }, opts.timeout);
-      return () => {
-        timers.clearFastTimeout(fastTimer);
-        clearImmediate(s1);
-      };
-    };
-    function onConnectTimeout(socket, opts) {
-      if (socket == null) {
-        return;
-      }
-      let message = "Connect Timeout Error";
-      if (Array.isArray(socket.autoSelectFamilyAttemptedAddresses)) {
-        message += ` (attempted addresses: ${socket.autoSelectFamilyAttemptedAddresses.join(", ")},`;
-      } else {
-        message += ` (attempted address: ${opts.hostname}:${opts.port},`;
-      }
-      message += ` timeout: ${opts.timeout}ms)`;
-      util.destroy(socket, new ConnectTimeoutError(message));
     }
     module.exports = buildConnector;
   }
@@ -26237,6 +26238,7 @@ var require_client_h2 = __commonJS({
       }
       assert(client[kRunning] === 0);
       client.emit("disconnect", client[kUrl], [client], err);
+      client.emit("connectionError", client[kUrl], [client], err);
       client[kResume]();
     }
     function onHttp2SessionClose() {
@@ -28296,6 +28298,101 @@ var require_retry_agent = __commonJS({
       }
     };
     module.exports = RetryAgent;
+  }
+});
+
+// 
+var require_h2c_client = __commonJS({
+  ""(exports, module) {
+    "use strict";
+    var { connect } = __require("node:net");
+    var { kClose, kDestroy } = require_symbols6();
+    var { InvalidArgumentError } = require_errors2();
+    var util = require_util8();
+    var Client = require_client2();
+    var DispatcherBase = require_dispatcher_base2();
+    var H2CClient = class extends DispatcherBase {
+      #client = null;
+      constructor(origin, clientOpts) {
+        super();
+        if (typeof origin === "string") {
+          origin = new URL(origin);
+        }
+        if (origin.protocol !== "http:") {
+          throw new InvalidArgumentError(
+            "h2c-client: Only h2c protocol is supported"
+          );
+        }
+        const { connect: connect2, maxConcurrentStreams, pipelining, ...opts } = clientOpts ?? {};
+        let defaultMaxConcurrentStreams = 100;
+        let defaultPipelining = 100;
+        if (maxConcurrentStreams != null && Number.isInteger(maxConcurrentStreams) && maxConcurrentStreams > 0) {
+          defaultMaxConcurrentStreams = maxConcurrentStreams;
+        }
+        if (pipelining != null && Number.isInteger(pipelining) && pipelining > 0) {
+          defaultPipelining = pipelining;
+        }
+        if (defaultPipelining > defaultMaxConcurrentStreams) {
+          throw new InvalidArgumentError(
+            "h2c-client: pipelining cannot be greater than maxConcurrentStreams"
+          );
+        }
+        this.#client = new Client(origin, {
+          ...opts,
+          connect: this.#buildConnector(connect2),
+          maxConcurrentStreams: defaultMaxConcurrentStreams,
+          pipelining: defaultPipelining,
+          allowH2: true
+        });
+      }
+      #buildConnector(connectOpts) {
+        return (opts, callback) => {
+          const timeout = (connectOpts == null ? void 0 : connectOpts.connectOpts) ?? 1e4;
+          const { hostname, port, pathname } = opts;
+          const socket = connect({
+            ...opts,
+            host: hostname,
+            port,
+            pathname
+          });
+          if (opts.keepAlive == null || opts.keepAlive) {
+            const keepAliveInitialDelay = opts.keepAliveInitialDelay == null ? 6e4 : opts.keepAliveInitialDelay;
+            socket.setKeepAlive(true, keepAliveInitialDelay);
+          }
+          socket.alpnProtocol = "h2";
+          const clearConnectTimeout = util.setupConnectTimeout(
+            new WeakRef(socket),
+            { timeout, hostname, port }
+          );
+          socket.setNoDelay(true).once("connect", function() {
+            queueMicrotask(clearConnectTimeout);
+            if (callback) {
+              const cb = callback;
+              callback = null;
+              cb(null, this);
+            }
+          }).on("error", function(err) {
+            queueMicrotask(clearConnectTimeout);
+            if (callback) {
+              const cb = callback;
+              callback = null;
+              cb(err);
+            }
+          });
+          return socket;
+        };
+      }
+      dispatch(opts, handler2) {
+        return this.#client.dispatch(opts, handler2);
+      }
+      async [kClose]() {
+        await this.#client.close();
+      }
+      async [kDestroy]() {
+        await this.#client.destroy();
+      }
+    };
+    module.exports = H2CClient;
   }
 });
 
@@ -38704,6 +38801,7 @@ var require_undici2 = __commonJS({
     var ProxyAgent = require_proxy_agent2();
     var EnvHttpProxyAgent = require_env_http_proxy_agent();
     var RetryAgent = require_retry_agent();
+    var H2CClient = require_h2c_client();
     var errors = require_errors2();
     var util = require_util8();
     var { InvalidArgumentError } = errors;
@@ -38727,6 +38825,7 @@ var require_undici2 = __commonJS({
     module.exports.ProxyAgent = ProxyAgent;
     module.exports.EnvHttpProxyAgent = EnvHttpProxyAgent;
     module.exports.RetryAgent = RetryAgent;
+    module.exports.H2CClient = H2CClient;
     module.exports.RetryHandler = RetryHandler;
     module.exports.DecoratorHandler = DecoratorHandler;
     module.exports.RedirectHandler = RedirectHandler;
