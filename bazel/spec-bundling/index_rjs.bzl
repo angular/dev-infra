@@ -1,7 +1,7 @@
 load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
 load("@devinfra//bazel/spec-bundling:spec-entrypoint.bzl", "spec_entrypoint")
 
-def spec_bundle(name, deps, bootstrap = [], testonly = True, config = {}, **kwargs):
+def spec_bundle(name, deps, srcs = [], bootstrap = [], testonly = True, config = {}, **kwargs):
     spec_entrypoint(
         name = "%s_entrypoint" % name,
         deps = deps,
@@ -13,7 +13,7 @@ def spec_bundle(name, deps, bootstrap = [], testonly = True, config = {}, **kwar
         name = name,
         # Note: `deps` are added here to automatically collect transitive NPM
         # sources etc. and make them available for bundling.
-        srcs = deps + [
+        srcs = srcs + deps + [
             ":%s_entrypoint" % name,
         ],
         config = dict({
@@ -38,15 +38,15 @@ def spec_bundle(name, deps, bootstrap = [], testonly = True, config = {}, **kwar
         **kwargs
     )
 
-def spec_bundle_amd(name, workspace_name, **kwargs):
+def spec_bundle_amd(name, workspace_name, config = {}, **kwargs):
     amd_name = "%s/%s/%s" % (workspace_name, native.package_name(), name + ".spec")
 
     spec_bundle(
         name,
-        config = {
+        config = dict({
             "globalName": "__exports",
             "banner": {"js": "define(\"%s\", [], function() {" % amd_name},
             "footer": {"js": "return __exports;})"},
-        },
+        }, **config),
         **kwargs
     )
