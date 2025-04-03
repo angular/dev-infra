@@ -9,6 +9,8 @@ test --sandbox_default_allow_network=false
 # Required by `rules_ts`.
 common --@aspect_rules_ts//ts:skipLibCheck=always
 common --@aspect_rules_ts//ts:default_to_tsc_transpiler
+# TODO(josephperrott): remove this flag once we get to bazel version >7.
+common --incompatible_merge_fixed_and_default_shell_env
 
 # Turn off legacy external runfiles
 build --nolegacy_external_runfiles
