@@ -60573,13 +60573,13 @@ function createPrompt(view) {
       rl.on("close", hooksCleanup);
       cleanups.add(() => rl.removeListener("close", hooksCleanup));
       cycle(() => {
-        var _a, _b;
+        var _a;
         try {
           const nextView = view(config2, (value) => {
             setImmediate(() => resolve(value));
           });
           if (nextView === void 0) {
-            const callerFilename = (_b = (_a = callSites[1]) == null ? void 0 : _a.getFileName) == null ? void 0 : _b.call(_a);
+            const callerFilename = (_a = callSites[1]) == null ? void 0 : _a.getFileName();
             throw new Error(`Prompt functions must return a string.
     at ${callerFilename}`);
           }
@@ -60665,14 +60665,17 @@ function normalizeChoices(choices) {
       };
     }
     const name = choice.name ?? String(choice.value);
-    return {
+    const normalizedChoice = {
       value: choice.value,
       name,
       short: choice.short ?? name,
-      description: choice.description,
       disabled: choice.disabled ?? false,
       checked: choice.checked ?? false
     };
+    if (choice.description) {
+      normalizedChoice.description = choice.description;
+    }
+    return normalizedChoice;
   });
 }
 var esm_default2 = createPrompt((config2, done) => {
@@ -61311,13 +61314,16 @@ function normalizeChoices4(choices) {
       };
     }
     const name = choice.name ?? String(choice.value);
-    return {
+    const normalizedChoice = {
       value: choice.value,
       name,
-      description: choice.description,
       short: choice.short ?? name,
       disabled: choice.disabled ?? false
     };
+    if (choice.description) {
+      normalizedChoice.description = choice.description;
+    }
+    return normalizedChoice;
   });
 }
 var esm_default10 = createPrompt((config2, done) => {
@@ -61475,13 +61481,16 @@ function normalizeChoices5(choices) {
       };
     }
     const name = choice.name ?? String(choice.value);
-    return {
+    const normalizedChoice = {
       value: choice.value,
       name,
-      description: choice.description,
       short: choice.short ?? name,
       disabled: choice.disabled ?? false
     };
+    if (choice.description) {
+      normalizedChoice.description = choice.description;
+    }
+    return normalizedChoice;
   });
 }
 var esm_default11 = createPrompt((config2, done) => {
