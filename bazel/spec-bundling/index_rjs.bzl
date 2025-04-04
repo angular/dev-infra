@@ -31,7 +31,7 @@ def spec_bundle(name, deps, srcs = [], bootstrap = [], testonly = True, config =
         bundle = True,
         format = "iife",
         minify = True,
-        sourcemap = "external",
+        sourcemap = "linked",
         platform = "node",
         entry_point = ":%s_entrypoint" % name,
         output = "%s.spec.js" % name,
