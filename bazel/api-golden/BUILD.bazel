@@ -20,6 +20,7 @@ ts_project(
     deps = [
         "//bazel:node_modules/@microsoft/api-extractor",
         "//bazel:node_modules/@types/node",
+        "//bazel:node_modules/piscina",
         "//bazel:node_modules/typescript",
     ],
 )

@@ -12,6 +12,7 @@ import {normalizePathToPosix} from './path-normalize.js';
 import {readFileSync} from 'fs';
 import {testApiGolden} from './test_api_report.js';
 import * as fs from 'fs';
+import {Piscina} from 'piscina';
 
 /** Interface describing contents of a `package.json`. */
 export interface PackageJson {
@@ -40,11 +41,11 @@ async function main(
   const packageJsonPath = path.join(npmPackageDir, 'package.json');
   const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8')) as PackageJson;
   const entryPoints = findEntryPointsWithinNpmPackage(npmPackageDir, packageJson);
-  const outdatedGoldens: string[] = [];
+  const worker = new Piscina<Parameters<typeof testApiGolden>, string>({
+    filename: path.resolve(__dirname, './test_api_report.js'),
+  });
 
-  let allTestsSucceeding = true;
-
-  for (const {subpath, typesEntryPointPath} of entryPoints) {
+  const processEntryPoint = async (subpath: string, typesEntryPointPath: string) => {
     // API extractor generates API reports as markdown files. For each types
     // entry-point we maintain a separate golden file. These golden files are
     // based on the name of the defining NodeJS exports subpath in the NPM package,
@@ -53,13 +54,15 @@ async function main(
     const goldenFilePath = path.join(goldenDir, goldenName);
     const moduleName = normalizePathToPosix(path.join(packageJson.name, subpath));
 
-    const actual = await testApiGolden(
+    // Run API extractor in child processes. This is because API extractor is very
+    // synchronous. This allows us to significantly speed up golden testing.
+    const actual = await worker.run([
       typesEntryPointPath,
       stripExportPattern,
       typeNames,
       packageJsonPath,
       moduleName,
-    );
+    ]);
 
     if (actual === null) {
       console.error(`Could not generate API golden for subpath: "${subpath}". See errors above.`);
@@ -67,17 +70,39 @@ async function main(
     }
 
     if (approveGolden) {
-      fs.mkdirSync(path.dirname(goldenFilePath), {recursive: true});
-      fs.writeFileSync(goldenFilePath, actual, 'utf8');
+      await fs.promises.mkdir(path.dirname(goldenFilePath), {recursive: true});
+      await fs.promises.writeFile(goldenFilePath, actual, 'utf8');
     } else {
-      const expected = fs.readFileSync(goldenFilePath, 'utf8');
+      const expected = await fs.promises.readFile(goldenFilePath, 'utf8');
       if (actual !== expected) {
         // Keep track of outdated goldens for error message.
         outdatedGoldens.push(goldenName);
-        allTestsSucceeding = false;
+        return false;
       }
     }
+
+    return true;
+  };
+
+  const outdatedGoldens: string[] = [];
+  const tasks: Promise<boolean>[] = [];
+  // Process in batches. Otherwise we risk out of memory errors.
+  const batchSize = 10;
+
+  for (let i = 0; i < entryPoints.length; i += batchSize) {
+    const batchEntryPoints = entryPoints.slice(i, i + batchSize);
+
+    for (const {subpath, typesEntryPointPath} of batchEntryPoints) {
+      tasks.push(processEntryPoint(subpath, typesEntryPointPath));
+    }
+
+    // Wait for new batch.
+    await Promise.all(tasks);
   }
+
+  // Wait for final batch/retrieve all results.
+  const results = await Promise.all(tasks);
+  const allTestsSucceeding = results.every((r) => r === true);
 
   if (outdatedGoldens.length) {
     console.error(chalk.red(`The following goldens are outdated:`));

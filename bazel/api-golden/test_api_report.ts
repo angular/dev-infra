@@ -55,7 +55,8 @@ export async function testApiGolden(
   customPackageName: string,
 ): Promise<string | null> {
   const tempDir =
-    process.env.TEST_TMPDIR ?? fs.mkdtempSync(path.join(os.tmpdir(), 'api-golden-rule'));
+    process.env.TEST_TMPDIR ??
+    (await fs.promises.mkdtemp(path.join(os.tmpdir(), 'api-golden-rule')));
   const rjsMode = process.env['RJS_MODE'] === 'true';
 
   let resolvedTypePackages: Awaited<ReturnType<typeof resolveTypePackages>> | null = null;
@@ -144,8 +145,8 @@ export async function testApiGolden(
   if (!result.succeeded) {
     return null;
   }
-  const reportOut = fs.readFileSync(reportTmpOutPath, 'utf8');
-  fs.rmSync(reportTmpOutPath);
+  const reportOut = await fs.promises.readFile(reportTmpOutPath, 'utf8');
+  await fs.promises.rm(reportTmpOutPath);
   return reportOut;
 }
 
@@ -167,7 +168,6 @@ async function processExtractorMessage(message: ExtractorMessage) {
   }
 }
 
-/** Resolves the `package.json` of the workspace executing this action. */
-function resolveWorkspacePackageJsonPath(): string {
-  return path.resolve(`./package.json`);
+export default function (args: Parameters<typeof testApiGolden>) {
+  return testApiGolden(...args);
 }
