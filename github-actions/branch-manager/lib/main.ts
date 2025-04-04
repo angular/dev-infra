@@ -111,7 +111,7 @@ async function createWorkflowForPullRequest(inputs: WorkflowInputs) {
       repo: inputs.repo,
       owner: inputs.owner,
       state: 'pending',
-      description: 'Running mergibility check',
+      description: 'Mergibility check requested',
       sha: inputs.sha,
       context: 'mergeability',
     });

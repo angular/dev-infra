@@ -11,6 +11,7 @@ import {
 } from '../../../../github-actions/utils.js';
 import {MergeConflictsFatalError} from '../../../../ng-dev/pr/merge/failures.js';
 import {createPullRequestValidationConfig} from '../../../../ng-dev/pr/common/validation/validation-config.js';
+import {InvalidTargetLabelError} from '../../../../ng-dev/pr/common/targeting/target-label.js';
 
 interface CommmitStatus {
   state: 'pending' | 'error' | 'failure' | 'success';
@@ -155,19 +156,22 @@ async function main() {
 
     await setMergeabilityStatusOnPullRequest(statusInfo);
   } catch (e: Error | unknown) {
+    let state: CommmitStatus['state'] = 'error';
     let description: string;
     const {runId, repo, serverUrl} = actionContext;
     const targetUrl = `${serverUrl}/${repo.owner}/${repo.repo}/actions/runs/${runId}`;
-    if (e instanceof Error) {
+
+    if (e instanceof InvalidTargetLabelError) {
+      // For this action, an invalid target label represents that we aren't ready to check the
+      // mergeability yet, rather than an actual failure.
+      state = 'pending';
+      description = e.failureMessage;
+    } else if (e instanceof Error) {
       description = e.message;
     } else {
       description = 'Internal Error, see link for action log';
     }
-    await setMergeabilityStatusOnPullRequest({
-      state: 'error',
-      description,
-      targetUrl,
-    });
+    await setMergeabilityStatusOnPullRequest({state, description, targetUrl});
     // Re-throw the error so that the action run is set as failing.
     throw e;
   }

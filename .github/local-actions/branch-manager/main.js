@@ -69642,19 +69642,19 @@ async function main() {
     })();
     await setMergeabilityStatusOnPullRequest(statusInfo);
   } catch (e) {
+    let state = "error";
     let description;
     const { runId, repo: repo2, serverUrl } = import_github5.context;
     const targetUrl = `${serverUrl}/${repo2.owner}/${repo2.repo}/actions/runs/${runId}`;
-    if (e instanceof Error) {
+    if (e instanceof InvalidTargetLabelError) {
+      state = "pending";
+      description = e.failureMessage;
+    } else if (e instanceof Error) {
       description = e.message;
     } else {
       description = "Internal Error, see link for action log";
     }
-    await setMergeabilityStatusOnPullRequest({
-      state: "error",
-      description,
-      targetUrl
-    });
+    await setMergeabilityStatusOnPullRequest({ state, description, targetUrl });
     throw e;
   }
 }
