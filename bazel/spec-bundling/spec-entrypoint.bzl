@@ -45,6 +45,7 @@ def _spec_entrypoint_impl(ctx):
     for dep in ctx.attr.deps:
         if JsInfo in dep:
             spec_all_deps.append(dep[JsInfo].transitive_sources)
+            spec_all_deps.append(dep[JsInfo].npm_sources)
         elif JSModuleInfo in dep:
             spec_all_deps.append(dep[JSModuleInfo].sources)
         else:
@@ -53,6 +54,7 @@ def _spec_entrypoint_impl(ctx):
     for dep in ctx.attr.bootstrap:
         if JsInfo in dep:
             bootstrap_all_deps.append(dep[JsInfo].transitive_sources)
+            bootstrap_all_deps.append(dep[JsInfo].npm_sources)
             bootstrap_direct_deps.append(dep[JsInfo].sources)
         elif JSModuleInfo in dep:
             bootstrap_all_deps.append(dep[JSModuleInfo].sources)
