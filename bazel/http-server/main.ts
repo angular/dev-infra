@@ -15,7 +15,11 @@ const {rootPaths, historyApiFallback, enableDevUi, environmentVariables, port, r
   process.argv.slice(2),
 )
   .strict()
-  .option('port', {type: 'number', default: 4200})
+  .option('port', {
+    type: 'number',
+    default: process.env['PORT'] !== undefined ? Number(process.env['PORT']) : 4200,
+    defaultDescription: '${PORT}, or 4200 if unset',
+  })
   .option('historyApiFallback', {type: 'boolean', default: false})
   .option('rootPaths', {type: 'array', string: true, default: ['']})
   .option('environmentVariables', {type: 'array', string: true, default: []})
