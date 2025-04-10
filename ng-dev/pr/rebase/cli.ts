@@ -15,16 +15,24 @@ import {rebasePr} from './index.js';
 /** The options available to the rebase command via CLI. */
 export interface RebaseOptions {
   pr: number;
+  i?: boolean;
 }
 
 /** Builds the rebase pull request command. */
 function builder(argv: Argv): Argv<RebaseOptions> {
-  return addGithubTokenOption(argv).positional('pr', {type: 'number', demandOption: true});
+  return addGithubTokenOption(argv)
+    .positional('pr', {type: 'number', demandOption: true})
+    .option('interactive', {
+      type: 'boolean',
+      alias: ['i'],
+      demandOption: false,
+      describe: 'Do the rebase interactively so that things can be squashed and amended',
+    });
 }
 
 /** Handles the rebase pull request command. */
-async function handler({pr}: Arguments<RebaseOptions>) {
-  process.exitCode = await rebasePr(pr);
+async function handler({pr, i}: Arguments<RebaseOptions>) {
+  process.exitCode = await rebasePr(pr, i);
 }
 
 /** yargs command module for rebasing a PR  */
