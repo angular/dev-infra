@@ -19,7 +19,7 @@ import {fetchPullRequestFromGithub} from '../common/fetch-pull-request.js';
  *
  * @returns a status code indicating whether the rebase was successful.
  */
-export async function rebasePr(prNumber: number): Promise<number> {
+export async function rebasePr(prNumber: number, interactive: boolean = false): Promise<number> {
   /** The singleton instance of the authenticated git client. */
   const git = await AuthenticatedGitClient.get();
 
@@ -99,9 +99,18 @@ export async function rebasePr(prNumber: number): Promise<number> {
      * Additional flags to perform the autosquashing are added when the user confirm squashing of
      * fixup commits should occur.
      */
-    const [flags, env] = squashFixups
-      ? [['--interactive', '--autosquash'], {...process.env, GIT_SEQUENCE_EDITOR: 'true'}]
-      : [[], undefined];
+
+    let flags: string[] = [];
+    let env = undefined;
+
+    if (squashFixups || interactive) {
+      env = {...process.env, GIT_SEQUENCE_EDITOR: 'true'};
+      flags.push('--interactive');
+    }
+    if (squashFixups) {
+      flags.push('--autosquash');
+    }
+
     const rebaseResult = git.runGraceful(['rebase', ...flags, 'FETCH_HEAD'], {env: env});
 
     // If the rebase was clean, push the rebased PR up to the authors fork.
