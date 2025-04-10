@@ -100,11 +100,13 @@ export async function rebasePr(prNumber: number, interactive: boolean = false): 
      * fixup commits should occur.
      */
 
+    // the env variable prevents the editor from showing in the case of fixup commits and not
+    // interactively rebasing
+    const env =
+      squashFixups && !interactive ? {...process.env, GIT_SEQUENCE_EDITOR: 'true'} : undefined;
     let flags: string[] = [];
-    let env = undefined;
 
     if (squashFixups || interactive) {
-      env = {...process.env, GIT_SEQUENCE_EDITOR: 'true'};
       flags.push('--interactive');
     }
     if (squashFixups) {
