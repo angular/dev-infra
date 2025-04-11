@@ -1,25 +1,13 @@
-load("//bazel:defaults.bzl", "ts_library")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ts_library(
+ts_project(
     name = "test_runner",
-    srcs = glob(["*.ts"]),
-    module_name = "@angular/build-tooling/bazel/integration/test_runner",
-    # A tsconfig needs to be specified as otherwise `ts_library` will look for the config
-    # in `//:package.json` and this breaks when the BUILD file is copied to `@npm//`.
-    tsconfig = "//:tsconfig.json",
+    srcs = glob(["*.mts"]),
+    tsconfig = "//bazel:tsconfig",
     deps = [
-        "@npm//@bazel/runfiles",
-        "@npm//@types/node",
-        "@npm//@types/tmp",
-        "@npm//tmp",
-        "@npm//true-case-path",
+        "//bazel:node_modules/@types/node",
+        "//bazel:node_modules/true-case-path",
     ],
-)
-
-# Make source files available for distribution via pkg_npm
-filegroup(
-    name = "files",
-    srcs = glob(["*"]),
 )

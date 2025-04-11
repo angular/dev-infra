@@ -27,7 +27,6 @@ filegroup(
         "//bazel/esbuild:files",
         "//bazel/git-toolchain:files",
         "//bazel/http-server:files",
-        "//bazel/integration:files",
         "//bazel/karma:files",
         "//bazel/map-size-tracking:files",
         "//bazel/private:files",

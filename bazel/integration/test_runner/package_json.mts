@@ -7,7 +7,7 @@
  */
 
 import * as fs from 'fs';
-import {debug} from './debug';
+import {debug} from './debug.mjs';
 
 /** Record capturing dependencies in a `package.json`. */
 export type DependencyRecord = Record<string, string>;

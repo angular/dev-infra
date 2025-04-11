@@ -6,11 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {debug} from './debug';
-import {runfiles} from '@bazel/runfiles';
-
-// Exposing the runfiles to keep the Bazel-specific code local to this file.
-export {runfiles};
+import path from 'node:path';
+import assert from 'node:assert';
+import {debug} from './debug.mjs';
 
 /**
  * Interface describing a file captured in the Bazel action.
@@ -38,8 +36,9 @@ export interface BazelExpandedValue {
 }
 
 /** Resolves the specified Bazel file to an absolute disk path. */
-export function resolveBazelFile(file: BazelFileInfo): string {
-  return runfiles.resolveWorkspaceRelative(file.shortPath);
+export function resolveBazelFile(file: Pick<BazelFileInfo, 'shortPath'>): string {
+  // CWD is runfiles root inside workspace. All short paths naturally work.
+  return path.join(process.cwd(), file.shortPath);
 }
 
 /**
@@ -53,7 +52,8 @@ export function resolveBazelFile(file: BazelFileInfo): string {
  */
 export async function resolveBinaryWithRunfilesGracefully(binary: string): Promise<string> {
   try {
-    const resolved = runfiles.resolveWorkspaceRelative(binary);
+    // CWD is runfiles root inside workspace. All short paths naturally work.
+    const resolved = path.join(process.cwd(), binary);
     debug(`Resolved ${binary} to ${resolved} using runfile resolution.`);
     return resolved;
   } catch {

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as fs from 'fs';
+import fs from 'node:fs';
 import {trueCasePath} from 'true-case-path';
 
 /** Gets whether the file is executable or not. */
