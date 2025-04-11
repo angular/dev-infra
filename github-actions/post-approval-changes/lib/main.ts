@@ -12,21 +12,17 @@ async function main() {
   let googlersOrgClient: Octokit | null = null;
 
   try {
-    // Use the `.github` repo from googlers to get an installation that has access to the googlers
-    // user membership.
-    const googlersOrgToken = await getAuthTokenFor(ANGULAR_ROBOT, {
-      owner: 'googlers',
-      repo: '.github',
-    });
-    googlersOrgClient = new Octokit({auth: googlersOrgToken});
-
-    // Use the `.github` repo from googlers to get an installation that has access to the googlers
-    // user membership.
     const repoToken = await getAuthTokenFor(ANGULAR_ROBOT, context.repo);
+    const googlersOrgToken = await getGooglersOrgInstallationToken();
+
     // TODO: remove once GHA supports node18 as a target runner for Javascript action
     repoClient = new Octokit({auth: repoToken, request: {fetch}});
 
-    await runPostApprovalChangesAction(googlersOrgClient, repoClient);
+    if (googlersOrgToken !== null) {
+      googlersOrgClient = new Octokit({auth: googlersOrgToken, request: {fetch}});
+    }
+
+    await runPostApprovalChangesAction(googlersOrgClient ?? repoClient, repoClient);
   } finally {
     if (googlersOrgClient !== null) {
       await revokeActiveInstallationToken(googlersOrgClient);
@@ -37,8 +33,23 @@ async function main() {
   }
 }
 
+async function getGooglersOrgInstallationToken(): Promise<string | null> {
+  try {
+    // Use the `.github` repo from googlers to get an installation that has access to the googlers
+    // user membership.
+    return await getAuthTokenFor(ANGULAR_ROBOT, {
+      org: 'googlers',
+    });
+  } catch (e) {
+    console.error('Could not retrieve installation token for `googlers` org.');
+    console.error(e);
+  }
+
+  return null;
+}
+
 async function runPostApprovalChangesAction(
-  googlersOrgClient: Octokit,
+  membershipCheckClient: Octokit,
   repoClient: Octokit,
 ): Promise<void> {
   if (context.eventName !== 'pull_request_target') {
@@ -48,7 +59,7 @@ async function runPostApprovalChangesAction(
 
   const actionUser = context.actor;
 
-  if (await isGooglerOrgMember(googlersOrgClient, actionUser)) {
+  if (await isGooglerOrgMember(membershipCheckClient, actionUser)) {
     core.info(
       'Action performed by an account in the Googler Github Org, skipping as post approval changes are allowed.',
     );
@@ -94,7 +105,7 @@ async function runPostApprovalChangesAction(
       continue;
     }
     // Only consider reviews by Googlers for this check.
-    if (!(await isGooglerOrgMember(googlersOrgClient, user))) {
+    if (!(await isGooglerOrgMember(membershipCheckClient, user))) {
       continue;
     }
     knownReviewers.add(user);
@@ -157,6 +168,7 @@ async function isGooglerOrgMember(client: Octokit, username: string): Promise<bo
 if (context.repo.owner === 'angular') {
   main().catch((e: Error) => {
     console.error(e);
+    console.error(e.stack);
     core.setFailed(e.message);
   });
 } else {
