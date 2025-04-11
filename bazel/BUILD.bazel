@@ -7,7 +7,6 @@ ts_config(
     name = "tsconfig",
     src = "tsconfig.json",
     visibility = ["//bazel:__subpackages__"],
-    deps = ["//:rjs-tsconfig"],
 )
 
 filegroup(
