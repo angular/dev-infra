@@ -1724,16 +1724,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@renovatebot/osv-offline@npm:1.6.4":
-  version: 1.6.4
-  resolution: "@renovatebot/osv-offline@npm:1.6.4"
+"@renovatebot/osv-offline@npm:1.6.5":
+  version: 1.6.5
+  resolution: "@renovatebot/osv-offline@npm:1.6.5"
   dependencies:
     "@renovatebot/osv-offline-db": "npm:1.7.3"
     adm-zip: "npm:~0.5.16"
     fs-extra: "npm:^11.3.0"
     got: "npm:^11.8.6"
-    luxon: "npm:^3.6.0"
-  checksum: 10c0/21a0e825fab2d986fdb69e05d07c8d72d88f10ecaedc3a367b1c652685db02f15e832abf0b580fdec91513452354638bff1d61fbed6217028c78209e05b2c851
+    luxon: "npm:^3.6.1"
+  checksum: 10c0/aaa30adc4fdf8d1bba2716c50f17e7e3c56c57b79123d4580b2a67ff3d5416ac75298300aa4b832ba01f83aec533a402e1c779f555e09ee7f9e01753d10c38f7
   languageName: node
   linkType: hard
 
@@ -2606,9 +2606,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@yarnpkg/core@npm:4.3.0":
-  version: 4.3.0
-  resolution: "@yarnpkg/core@npm:4.3.0"
+"@yarnpkg/core@npm:4.3.1":
+  version: 4.3.1
+  resolution: "@yarnpkg/core@npm:4.3.1"
   dependencies:
     "@arcanis/slice-ansi": "npm:^1.1.1"
     "@types/semver": "npm:^7.1.0"
@@ -2636,7 +2636,7 @@ __metadata:
     treeify: "npm:^1.1.0"
     tslib: "npm:^2.4.0"
     tunnel: "npm:^0.0.6"
-  checksum: 10c0/db5fec40cdbdcd71866e2fd39d5540197f278a15077ba886867201c9f707f0e3ae314043d12da6ed690c5440939fa2c6ddb74fc3b3b2f24a02df350f3227b0ae
+  checksum: 10c0/2c926b096e7daa331e1acc92dc3dda11d945e89baebc6cbe2d969289a4b3f0b93d0ef420c5e64908586e8c1174aa2e0f1464ba4f6dccf47ea61169b025722952
   languageName: node
   linkType: hard
 
@@ -5086,14 +5086,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"luxon@npm:3.6.0":
-  version: 3.6.0
-  resolution: "luxon@npm:3.6.0"
-  checksum: 10c0/60cc3fe8f7dce51f0e406529b80eec815b335a7202d5c41e210a8acc8e698d8be797f3c77ed60efe581af07f2a88defbe7a77e506121e2f460a667690e71c0d1
-  languageName: node
-  linkType: hard
-
-"luxon@npm:^3.6.0":
+"luxon@npm:3.6.1, luxon@npm:^3.6.1":
   version: 3.6.1
   resolution: "luxon@npm:3.6.1"
   checksum: 10c0/906d57a9dc4d1de9383f2e9223e378c298607c1b4d17b6657b836a3cd120feb1c1de3b5d06d846a3417e1ca764de8476e8c23b3cd4083b5cdb870adcb06a99d5
@@ -5649,7 +5642,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: "npm:39.233.3"
+    renovate: "npm:39.239.0"
   languageName: unknown
   linkType: soft
 
@@ -6408,9 +6401,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:39.233.3":
-  version: 39.233.3
-  resolution: "renovate@npm:39.233.3"
+"renovate@npm:39.239.0":
+  version: 39.239.0
+  resolution: "renovate@npm:39.239.0"
   dependencies:
     "@aws-sdk/client-codecommit": "npm:3.777.0"
     "@aws-sdk/client-ec2": "npm:3.779.0"
@@ -6436,11 +6429,11 @@ __metadata:
     "@qnighy/marshal": "npm:0.1.3"
     "@renovatebot/detect-tools": "npm:1.1.0"
     "@renovatebot/kbpgp": "npm:4.0.1"
-    "@renovatebot/osv-offline": "npm:1.6.4"
+    "@renovatebot/osv-offline": "npm:1.6.5"
     "@renovatebot/pep440": "npm:4.1.0"
     "@renovatebot/ruby-semver": "npm:4.0.0"
     "@sindresorhus/is": "npm:4.6.0"
-    "@yarnpkg/core": "npm:4.3.0"
+    "@yarnpkg/core": "npm:4.3.1"
     "@yarnpkg/parsers": "npm:3.0.3"
     agentkeepalive: "npm:4.6.0"
     aggregate-error: "npm:3.1.0"
@@ -6488,7 +6481,7 @@ __metadata:
     jsonata: "npm:2.0.6"
     jsonc-parser: "npm:3.3.1"
     klona: "npm:2.0.6"
-    luxon: "npm:3.6.0"
+    luxon: "npm:3.6.1"
     markdown-it: "npm:14.1.0"
     markdown-table: "npm:2.0.0"
     minimatch: "npm:10.0.1"
@@ -6525,7 +6518,7 @@ __metadata:
     validate-npm-package-name: "npm:6.0.0"
     vuln-vects: "npm:1.1.0"
     xmldoc: "npm:1.3.0"
-    yaml: "npm:2.7.0"
+    yaml: "npm:2.7.1"
     zod: "npm:3.24.2"
   dependenciesMeta:
     better-sqlite3:
@@ -6537,7 +6530,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 10c0/c831e8f67061679688e1706c7f2ad53340740f10bd7cb8eea599bc39e27b7dcdb54a9255906c31c45b764bc3d2941867df956e2aa6da6dba00fa67802fdb7c5c
+  checksum: 10c0/b954a2533bf8c3aa0d7a53f75e751a919a8d8ef2dba22fdcb2a13b7c1ee874fa04c5d90965c13bb965690d0d3399bbcf92f12e159c4c6dbce6ffc5a487d84a8f
   languageName: node
   linkType: hard
 
@@ -7787,12 +7780,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yaml@npm:2.7.0":
-  version: 2.7.0
-  resolution: "yaml@npm:2.7.0"
+"yaml@npm:2.7.1":
+  version: 2.7.1
+  resolution: "yaml@npm:2.7.1"
   bin:
     yaml: bin.mjs
-  checksum: 10c0/886a7d2abbd70704b79f1d2d05fe9fb0aa63aefb86e1cb9991837dced65193d300f5554747a872b4b10ae9a12bc5d5327e4d04205f70336e863e35e89d8f4ea9
+  checksum: 10c0/ee2126398ab7d1fdde566b4013b68e36930b9e6d8e68b6db356875c99614c10d678b6f45597a145ff6d63814961221fc305bf9242af8bf7450177f8a68537590
   languageName: node
   linkType: hard
 

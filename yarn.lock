@@ -331,7 +331,7 @@ __metadata:
     karma-sourcemap-loader: "npm:^0.4.0"
     minimatch: "npm:^10.0.0"
     multimatch: "npm:^7.0.0"
-    nock: "npm:14.0.2"
+    nock: "npm:14.0.3"
     opener: "npm:^1.5.2"
     prettier: "npm:3.5.3"
     protractor: "npm:^7.0.0"
@@ -351,7 +351,7 @@ __metadata:
     tslint: "npm:^6.1.3"
     tsx: "npm:^4.15.7"
     typed-graphqlify: "npm:^3.1.1"
-    typescript: "npm:5.8.2"
+    typescript: "npm:5.8.3"
     undici: "npm:^7.0.0"
     uuid: "npm:^11.0.0"
     wait-on: "npm:^8.0.0"
@@ -2644,9 +2644,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mswjs/interceptors@npm:^0.38.0":
-  version: 0.38.1
-  resolution: "@mswjs/interceptors@npm:0.38.1"
+"@mswjs/interceptors@npm:^0.38.1":
+  version: 0.38.2
+  resolution: "@mswjs/interceptors@npm:0.38.2"
   dependencies:
     "@open-draft/deferred-promise": "npm:^2.2.0"
     "@open-draft/logger": "npm:^0.3.0"
@@ -2655,7 +2655,7 @@ __metadata:
     jsdom: "npm:^26.0.0"
     outvariant: "npm:^1.4.3"
     strict-event-emitter: "npm:^0.5.1"
-  checksum: 10c0/03258a8b15bca334dcdf70dde8941a390c50afa30dae2675767eddb5cea98414643f6cb5099945b9c272526e06411e0975642ce4deb6d97a178ca6f3ad12882b
+  checksum: 10c0/75f1691dc49b1ef0bc4c00b88125874d3f41bc8ee9355e96019b884e0fce5a535d203b7d0c49c07a845e95582ebe9faae560ddc084f5cc8d7b0dcbd5b48f28ce
   languageName: node
   linkType: hard
 
@@ -3570,13 +3570,13 @@ __metadata:
   linkType: hard
 
 "@pnpm/dependency-path@npm:^1000.0.5":
-  version: 1000.0.6
-  resolution: "@pnpm/dependency-path@npm:1000.0.6"
+  version: 1000.0.7
+  resolution: "@pnpm/dependency-path@npm:1000.0.7"
   dependencies:
     "@pnpm/crypto.hash": "npm:1000.1.1"
-    "@pnpm/types": "npm:1000.3.0"
+    "@pnpm/types": "npm:1000.4.0"
     semver: "npm:^7.7.1"
-  checksum: 10c0/89f95fe24e28f25d5e2b4d32210891a045ff430c1022c03f8996c0da1b6a1973821dd01e49a96548baa347230cd08094f1b4f1c424041b29154c93d5fd0b2bf7
+  checksum: 10c0/024cfe6e1221927836ec63cd7270f7abf0396f1cea1261a32bdf7951810043fa9c8303fb16dbdb9214ee7cd2c2fda2b6eb92b0d5c5c5aa607d882e54cb422148
   languageName: node
   linkType: hard
 
@@ -3609,10 +3609,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pnpm/types@npm:1000.3.0":
-  version: 1000.3.0
-  resolution: "@pnpm/types@npm:1000.3.0"
-  checksum: 10c0/9fe08b2363fdcef82342cde488283d56e7160e0908ce094c28d121f08be5044c82f64d378ce9d03519c173209c582f6d811acb92b3869818b402bb9b73b02249
+"@pnpm/types@npm:1000.4.0":
+  version: 1000.4.0
+  resolution: "@pnpm/types@npm:1000.4.0"
+  checksum: 10c0/25c73a277aa0fa57bd3e8b13ec68c6aa9346dd698855fe4269a9736fa15c9e929bf8c4e52cbdc49540571cab1be2e7e2253312d5216cd73fef64a0b4acf5779d
   languageName: node
   linkType: hard
 
@@ -10987,14 +10987,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nock@npm:14.0.2":
-  version: 14.0.2
-  resolution: "nock@npm:14.0.2"
+"nock@npm:14.0.3":
+  version: 14.0.3
+  resolution: "nock@npm:14.0.3"
   dependencies:
-    "@mswjs/interceptors": "npm:^0.38.0"
+    "@mswjs/interceptors": "npm:^0.38.1"
     json-stringify-safe: "npm:^5.0.1"
     propagate: "npm:^2.0.0"
-  checksum: 10c0/b593749257ff290db1ffedb0b2187a4b2508776c4f819a35055d34e68074b85d8df8b2821c2babfb0dbb0917679891d1017bde28624823d2a07135a3d4bbf9ff
+  checksum: 10c0/ce8196bc66827da8c368f00c88cbf0f1e5cccde4cc6c5a6629540b3a45cd629cd510d916d799b386cff27fe90cf80269e4c83a86ecae72bda40f55f9595c2ae2
   languageName: node
   linkType: hard
 
@@ -14377,6 +14377,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typescript@npm:5.8.3":
+  version: 5.8.3
+  resolution: "typescript@npm:5.8.3"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 10c0/5f8bb01196e542e64d44db3d16ee0e4063ce4f3e3966df6005f2588e86d91c03e1fb131c2581baf0fb65ee79669eea6e161cd448178986587e9f6844446dbb48
+  languageName: node
+  linkType: hard
+
 "typescript@patch:typescript@npm%3A5.8.2#optional!builtin<compat/typescript>":
   version: 5.8.2
   resolution: "typescript@patch:typescript@npm%3A5.8.2#optional!builtin<compat/typescript>::version=5.8.2&hash=5786d5"
@@ -14384,6 +14394,16 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 10c0/5448a08e595cc558ab321e49d4cac64fb43d1fa106584f6ff9a8d8e592111b373a995a1d5c7f3046211c8a37201eb6d0f1566f15cdb7a62a5e3be01d087848e2
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>":
+  version: 5.8.3
+  resolution: "typescript@patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>::version=5.8.3&hash=5786d5"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 10c0/39117e346ff8ebd87ae1510b3a77d5d92dae5a89bde588c747d25da5c146603a99c8ee588c7ef80faaf123d89ed46f6dbd918d534d641083177d5fac38b8a1cb
   languageName: node
   linkType: hard
 
@@ -14429,9 +14449,9 @@ __metadata:
   linkType: hard
 
 "undici@npm:^7.0.0":
-  version: 7.7.0
-  resolution: "undici@npm:7.7.0"
-  checksum: 10c0/2e535e56b5d462337e0dc57012659dab016a2596bc23dd44637c2b81b6947eb236c3390ccc9293f399032d363474f66cf836bc5ee14889fbcf820fa42181c629
+  version: 7.8.0
+  resolution: "undici@npm:7.8.0"
+  checksum: 10c0/7141f63ea405208a88120d211d83d77bf21327b16b451d3149fb266c28884fbcf78ec370ac2d3412a0e68ba6132ab85265ba85a2f4fde24cb47dc77f5c5a158c
   languageName: node
   linkType: hard
 

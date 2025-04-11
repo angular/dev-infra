@@ -2,9 +2,9 @@
   "name": "@devinfra/bazel",
   "dependencies": {
     "@microsoft/api-extractor": "7.52.3",
-    "@types/node": "22.14.0",
+    "@types/node": "22.14.1",
     "piscina": "^4.9.2",
-    "typescript": "5.8.2",
+    "typescript": "5.8.3",
     "true-case-path": "2.2.1"
   },
   "pnpm": {
