@@ -1,4 +1,9 @@
-// IDE config. Compile options should be changed in the top-level project config.
 {
-  "extends": "../tsconfig.json"
+  "compilerOptions": {
+    "strict": true,
+    "module": "Node16",
+    "moduleResolution": "node16",
+    "skipLibCheck": true,
+    "types": ["node"]
+  }
 }
