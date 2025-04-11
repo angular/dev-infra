@@ -47842,14 +47842,13 @@ async function main() {
   let repoClient = null;
   let googlersOrgClient = null;
   try {
-    const googlersOrgToken = await getAuthTokenFor(ANGULAR_ROBOT, {
-      owner: "googlers",
-      repo: ".github"
-    });
-    googlersOrgClient = new Octokit2({ auth: googlersOrgToken });
     const repoToken = await getAuthTokenFor(ANGULAR_ROBOT, import_github2.context.repo);
+    const googlersOrgToken = await getGooglersOrgInstallationToken();
     repoClient = new Octokit2({ auth: repoToken, request: { fetch } });
-    await runPostApprovalChangesAction(googlersOrgClient, repoClient);
+    if (googlersOrgToken !== null) {
+      googlersOrgClient = new Octokit2({ auth: googlersOrgToken, request: { fetch } });
+    }
+    await runPostApprovalChangesAction(googlersOrgClient ?? repoClient, repoClient);
   } finally {
     if (googlersOrgClient !== null) {
       await revokeActiveInstallationToken(googlersOrgClient);
@@ -47859,14 +47858,25 @@ async function main() {
     }
   }
 }
-async function runPostApprovalChangesAction(googlersOrgClient, repoClient) {
+async function getGooglersOrgInstallationToken() {
+  try {
+    return await getAuthTokenFor(ANGULAR_ROBOT, {
+      org: "googlers"
+    });
+  } catch (e) {
+    console.error("Could not retrieve installation token for `googlers` org.");
+    console.error(e);
+  }
+  return null;
+}
+async function runPostApprovalChangesAction(membershipCheckClient, repoClient) {
   var _a;
   if (import_github2.context.eventName !== "pull_request_target") {
     throw Error("This action can only run for with pull_request_target events");
   }
   const { pull_request: pr } = import_github2.context.payload;
   const actionUser = import_github2.context.actor;
-  if (await isGooglerOrgMember(googlersOrgClient, actionUser)) {
+  if (await isGooglerOrgMember(membershipCheckClient, actionUser)) {
     core.info("Action performed by an account in the Googler Github Org, skipping as post approval changes are allowed.");
     return;
   }
@@ -47894,7 +47904,7 @@ async function runPostApprovalChangesAction(googlersOrgClient, repoClient) {
     if (knownReviewers.has(user)) {
       continue;
     }
-    if (!await isGooglerOrgMember(googlersOrgClient, user)) {
+    if (!await isGooglerOrgMember(membershipCheckClient, user)) {
       continue;
     }
     knownReviewers.add(user);
@@ -47939,6 +47949,7 @@ async function isGooglerOrgMember(client, username) {
 if (import_github2.context.repo.owner === "angular") {
   main().catch((e) => {
     console.error(e);
+    console.error(e.stack);
     core.setFailed(e.message);
   });
 } else {
