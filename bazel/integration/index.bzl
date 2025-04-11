@@ -1,4 +1,4 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_test")
+load("@aspect_rules_js//js:defs.bzl", "js_test")
 
 def _serialize_file(file):
     """Serializes a file into a struct that matches the `BazelFileInfo` type in the
@@ -259,11 +259,11 @@ def integration_test(
         toolchains = toolchains,
     )
 
-    nodejs_test(
+    js_test(
         name = name,
-        data = ["//bazel/integration/test_runner", ":" + config_target],
-        templated_args = ["--nobazel_run_linker", "$(rootpath :%s)" % config_target],
-        entry_point = "//bazel/integration/test_runner:main.ts",
+        data = ["@devinfra//bazel/integration/test_runner", ":%s" % config_target],
+        fixed_args = ["$(rootpath :%s)" % config_target],
+        entry_point = "@devinfra//bazel/integration/test_runner:main.mjs",
         tags = tags,
         **kwargs
     )

@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as childProcess from 'child_process';
-import * as path from 'path';
-import {debug} from './debug';
-import {getCaseExactRealpath} from './file_system_utils';
+import childProcess from 'node:child_process';
+import path from 'node:path';
+import {debug} from './debug.mjs';
+import {getCaseExactRealpath} from './file_system_utils.mjs';
 
 /**
  * Regular expression matching environment variable substitutions
@@ -81,7 +81,6 @@ export function prependToPathVariable(pathToAdd: string, existingPathVar: string
  */
 export function getBinaryPassThroughScript(binaryFilePath: string) {
   return {
-    cmd: `@echo off\nCALL "${path.win32.normalize(binaryFilePath)}" %*`,
-    bash: `${path.posix.normalize(binaryFilePath)} $@`,
+    bash: `${path.posix.normalize(binaryFilePath)} "$@"`,
   };
 }

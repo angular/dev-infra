@@ -17,6 +17,9 @@ importers:
       piscina:
         specifier: ^4.9.2
         version: 4.9.2
+      true-case-path:
+        specifier: 2.2.1
+        version: 2.2.1
       typescript:
         specifier: 5.8.2
         version: 5.8.2
@@ -293,6 +296,9 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
+  true-case-path@2.2.1:
+    resolution: {integrity: sha512-0z3j8R7MCjy10kc/g+qg7Ln3alJTodw9aDuVWZa3uiWqfuBMKeAeP2ocWcxoyM3D73yz3Jt/Pu4qPr4wHSdB/Q==}
+
   typescript@5.8.2:
     resolution: {integrity: sha512-aJn6wq13/afZp/jT9QZmwEjDqqvSGp1VT5GVg+f/t6/oVyrgXM6BY1h9BRh/O5p3PlUPAe+WuiEZOmb/49RqoQ==}
     engines: {node: '>=14.17'}
@@ -568,6 +574,8 @@ snapshots:
       has-flag: 4.0.0
 
   supports-preserve-symlinks-flag@1.0.0: {}
+
+  true-case-path@2.2.1: {}
 
   typescript@5.8.2: {}
 

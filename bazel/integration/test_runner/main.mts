@@ -6,10 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {TestRunner} from './runner';
-import {BazelExpandedValue, BazelFileInfo, runfiles} from './bazel';
-import * as fs from 'fs';
-import {debug} from './debug';
+import {TestRunner} from './runner.mjs';
+import {BazelExpandedValue, BazelFileInfo} from './bazel.mjs';
+import fs from 'node:fs';
+import path from 'node:path';
+import {debug} from './debug.mjs';
 
 /**
  * Test config that is passed as JSON from the Bazel action.
@@ -30,7 +31,8 @@ async function main(): Promise<void> {
   debug(`Running test with arguments: ${process.argv.join(' ')}`);
   debug(`Current working directory: ${process.cwd()}`);
 
-  const configPath = runfiles.resolveWorkspaceRelative(process.argv[2]);
+  // Config is passed as short path, relative to current working dir.
+  const configPath = path.resolve(process.argv[2]);
   const configContent = await fs.promises.readFile(configPath, 'utf8');
   const config = JSON.parse(configContent) as TestConfig;
 

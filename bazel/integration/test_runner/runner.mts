@@ -6,32 +6,30 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
-import * as tmp from 'tmp';
-import * as os from 'os';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import os from 'node:os';
 
 import {
   BazelExpandedValue,
   BazelFileInfo,
   resolveBazelFile,
   resolveBinaryWithRunfilesGracefully,
-} from './bazel';
+} from './bazel.mjs';
 import {
   PackageMappings,
   readPackageJsonContents,
   updateMappingsForPackageJson,
-} from './package_json';
-import {addWritePermissionFlag, writeExecutableFile} from './file_system_utils';
+} from './package_json.mjs';
+import {addWritePermissionFlag, writeExecutableFile} from './file_system_utils.mjs';
 import {
   expandEnvironmentVariableSubstitutions,
   getBinaryPassThroughScript,
   prependToPathVariable,
   runCommandInChildProcess,
-} from './process_utils';
-
-import {ENVIRONMENT_TMP_PLACEHOLDER} from './constants';
-import {debug} from './debug';
+} from './process_utils.mjs';
+import {ENVIRONMENT_TMP_PLACEHOLDER} from './constants.mjs';
+import {debug} from './debug.mjs';
 
 /** Error class that is used when an integration command fails.  */
 class IntegrationTestCommandError extends Error {}
@@ -55,7 +53,7 @@ export class TestRunner {
     private readonly testFiles: BazelFileInfo[],
     private readonly testPackage: string,
     private readonly testPackageRelativeWorkingDir: string,
-    private readonly toolMappings: Record<string, BazelFileInfo>,
+    private readonly toolMappings: Record<string, Pick<BazelFileInfo, 'shortPath'>>,
     private readonly npmPackageMappings: Record<string, BazelFileInfo>,
     private readonly commands: [[binary: BazelExpandedValue, ...args: string[]]],
     environment: EnvironmentConfig,
@@ -70,13 +68,13 @@ export class TestRunner {
 
     // Create the test sandbox directory. The working directory does not need to
     // be explicitly created here as the test file copying should create the folder.
-    await fs.promises.mkdir(testSandboxDir);
+    await fs.mkdir(testSandboxDir);
 
     const toolMappings = await this._setupToolMappingsForTest(testTmpDir);
     const testEnv = await this._buildTestProcessEnvironment(testTmpDir, toolMappings.binDir);
 
     debug(`Temporary directory for integration test: ${path.normalize(testTmpDir)}`);
-    debug(`Test files are copied into: ${path.normalize(testSandboxDir)}`);
+    debug(`Test files are copied into: ${path.normalize(testWorkingDir)}`);
     console.info(`Running test in directory: ${path.normalize(testWorkingDir)}`);
 
     await this._copyTestFilesToDirectory(testSandboxDir);
@@ -90,7 +88,7 @@ export class TestRunner {
       // We keep the temporary directory on disk if the users wants to debug the test.
       if (!this.isTestDebugMode) {
         debug('Deleting the integration test temporary directory..');
-        await fs.promises.rm(testTmpDir, {force: true, recursive: true, maxRetries: 3});
+        await fs.rm(testTmpDir, {force: true, recursive: true, maxRetries: 3});
       }
     }
   }
@@ -111,17 +109,7 @@ export class TestRunner {
     // system directories are always writable. See:
     // Linux: https://github.com/bazelbuild/bazel/blob/d35f923b098e4dc9c90b1ab66b413c216bdee638/src/main/java/com/google/devtools/build/lib/sandbox/LinuxSandboxedSpawnRunner.java#L280.
     // Darwin: https://github.com/bazelbuild/bazel/blob/d35f923b098e4dc9c90b1ab66b413c216bdee638/src/main/java/com/google/devtools/build/lib/sandbox/DarwinSandboxedSpawnRunner.java#L170.
-    return new Promise((resolve, reject) => {
-      tmp.dir(
-        {
-          template: 'ng-integration-test-XXXXXX',
-          // Always keep the directory for debugging. We will handle the deletion
-          // manually and need full control over the directory persistence.
-          keep: true,
-        },
-        (err, tmpPath) => (err ? reject(err) : resolve(path.resolve(tmpPath))),
-      );
-    });
+    return fs.mkdtemp(path.join(os.tmpdir(), 'ng-integration-test'));
   }
 
   /**
@@ -149,8 +137,8 @@ export class TestRunner {
     const outAbsolutePath = path.join(tmpDir, outRelativePath);
     const resolvedFilePath = resolveBazelFile(file);
 
-    await fs.promises.mkdir(path.dirname(outAbsolutePath), {recursive: true});
-    await fs.promises.copyFile(resolvedFilePath, outAbsolutePath);
+    await fs.mkdir(path.dirname(outAbsolutePath), {recursive: true});
+    await fs.copyFile(resolvedFilePath, outAbsolutePath);
 
     // Bazel removes the write permission from all generated files. Since we copied
     // the test files over to a directory, we want to re-add the write permission in
@@ -164,17 +152,16 @@ export class TestRunner {
    * directory can be added to the `$PATH` later when commands are executed.
    */
   private async _setupToolMappingsForTest(testDir: string) {
-    const toolBinDir = path.join(testDir, '.integration-bazel-tool-bin');
+    const toolBinDir = path.join(testDir, 'integration-bazel-tool-bin');
 
     // Create the bin directory for the tool mappings.
-    await fs.promises.mkdir(toolBinDir, {recursive: true});
+    await fs.mkdir(toolBinDir, {recursive: true});
 
     for (const [toolName, toolFile] of Object.entries(this.toolMappings)) {
       const toolAbsolutePath = resolveBazelFile(toolFile);
       const passThroughScripts = getBinaryPassThroughScript(toolAbsolutePath);
       const toolDelegateBasePath = path.join(toolBinDir, toolName);
 
-      await writeExecutableFile(`${toolDelegateBasePath}.cmd`, passThroughScripts.cmd);
       await writeExecutableFile(`${toolDelegateBasePath}.sh`, passThroughScripts.bash);
       await writeExecutableFile(toolDelegateBasePath, passThroughScripts.bash);
     }
@@ -207,7 +194,7 @@ export class TestRunner {
 
     // Write the new `package.json` file to the test directory, overwriting
     // the `package.json` file initially copied as a test input/file.
-    await fs.promises.writeFile(pkgJsonPath, JSON.stringify(newPkgJson, null, 2));
+    await fs.writeFile(pkgJsonPath, JSON.stringify(newPkgJson, null, 2));
   }
 
   /**
@@ -230,15 +217,21 @@ export class TestRunner {
       if (value.containsExpansion) {
         envValue = await resolveBinaryWithRunfilesGracefully(envValue);
       } else if (envValue === ENVIRONMENT_TMP_PLACEHOLDER) {
-        envValue = path.join(testTmpDir, `.tmp-env-${i++}`);
-        await fs.promises.mkdir(envValue);
+        envValue = path.join(testTmpDir, `tmp-env-${i++}`);
+        await fs.mkdir(envValue);
       }
 
       testEnv[variableName] = envValue;
     }
 
     const commandPath = prependToPathVariable(toolsBinDir, testEnv.PATH ?? '');
-    return {...testEnv, PATH: commandPath};
+    return {
+      ...testEnv,
+      PATH: commandPath,
+      // `rules_js` binaries are never build actions, so can be set to `.`.
+      // See: https://github.com/aspect-build/rules_js/blob/674f689ff56b962c3cb0509a4b97e99af049a6eb/js/private/js_binary.sh.tpl#L200-L207
+      BAZEL_BINDIR: '.',
+    };
   }
 
   /**
@@ -301,15 +294,8 @@ export class TestRunner {
   private _assignDefaultEnvironmentVariables(baseEnv: EnvironmentConfig): EnvironmentConfig {
     const defaults: EnvironmentConfig = {
       'HOME': {value: ENVIRONMENT_TMP_PLACEHOLDER, containsExpansion: false},
+      'PROFILE': {value: ENVIRONMENT_TMP_PLACEHOLDER, containsExpansion: false},
     };
-
-    // Support windows-specific system variables. We don't want to always assign these as
-    // it would result in unnecessary directories being created all the time.
-    if (os.platform() === 'win32') {
-      defaults.USERPROFILE = {value: ENVIRONMENT_TMP_PLACEHOLDER, containsExpansion: false};
-      defaults.APPDATA = {value: ENVIRONMENT_TMP_PLACEHOLDER, containsExpansion: false};
-      defaults.LOCALAPPDATA = {value: ENVIRONMENT_TMP_PLACEHOLDER, containsExpansion: false};
-    }
 
     return {...defaults, ...baseEnv};
   }
