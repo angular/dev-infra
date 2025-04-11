@@ -32413,6 +32413,11 @@ var require_sqlite_cache_store = __commonJS({
         }
         this.#db = new DatabaseSync((opts == null ? void 0 : opts.location) ?? ":memory:");
         this.#db.exec(`
+      PRAGMA journal_mode = WAL;
+      PRAGMA synchronous = NORMAL;
+      PRAGMA temp_store = memory;
+      PRAGMA optimize;
+
       CREATE TABLE IF NOT EXISTS cacheInterceptorV${VERSION9} (
         -- Data specific to us
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -32432,9 +32437,8 @@ var require_sqlite_cache_store = __commonJS({
         staleAt INTEGER NOT NULL
       );
 
-      CREATE INDEX IF NOT EXISTS idx_cacheInterceptorV${VERSION9}_url ON cacheInterceptorV${VERSION9}(url);
-      CREATE INDEX IF NOT EXISTS idx_cacheInterceptorV${VERSION9}_method ON cacheInterceptorV${VERSION9}(method);
-      CREATE INDEX IF NOT EXISTS idx_cacheInterceptorV${VERSION9}_deleteAt ON cacheInterceptorV${VERSION9}(deleteAt);
+      CREATE INDEX IF NOT EXISTS idx_cacheInterceptorV${VERSION9}_getValuesQuery ON cacheInterceptorV${VERSION9}(url, method, deleteAt);
+      CREATE INDEX IF NOT EXISTS idx_cacheInterceptorV${VERSION9}_deleteByUrlQuery ON cacheInterceptorV${VERSION9}(deleteAt);
     `);
         this.#getValuesQuery = this.#db.prepare(`
       SELECT
@@ -32596,7 +32600,7 @@ var require_sqlite_cache_store = __commonJS({
       }
       #prune() {
         var _a;
-        if (this.size <= this.#maxCount) {
+        if (Number.isFinite(this.#maxCount) && this.size <= this.#maxCount) {
           return 0;
         }
         {
