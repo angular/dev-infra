@@ -9,8 +9,8 @@
 import yargs from 'yargs';
 import assert from 'node:assert';
 
-import {HttpServer} from './server';
-import {setupBazelWatcherSupport} from './ibazel';
+import {HttpServer} from './server.mjs';
+import {setupBazelWatcherSupport} from './ibazel.mjs';
 
 const {
   rootPaths,
