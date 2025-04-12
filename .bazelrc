@@ -36,6 +36,11 @@ build --symlink_prefix=dist/
 # Write testing errors to log on test failure
 test --test_output=errors
 
+# Do not build runfile forests by default. If an execution strategy relies on runfile
+# forests, the forest is created on-demand. See: https://github.com/bazelbuild/bazel/issues/6627
+# and https://github.com/bazelbuild/bazel/commit/03246077f948f2790a83520e7dccc2625650e6df. This
+# also helps with: https://github.com/bazelbuild/bazel/issues/4327#issuecomment-922106293.
+build --nobuild_runfile_links
 
 # Turn on --incompatible_strict_action_env which was on by default
 # in Bazel 0.21.0 but turned off again in 0.22.0. Follow
@@ -46,12 +51,6 @@ test --test_output=errors
 build --incompatible_strict_action_env
 run --incompatible_strict_action_env
 test --incompatible_strict_action_env
-
-# Do not build runfile forests by default. If an execution strategy relies on runfile
-# forests, the forest is created on-demand. See: https://github.com/bazelbuild/bazel/issues/6627
-# and https://github.com/bazelbuild/bazel/commit/03246077f948f2790a83520e7dccc2625650e6df. This
-# also helps with: https://github.com/bazelbuild/bazel/issues/4327#issuecomment-922106293.
-build --nobuild_runfile_links
 
 ################################
 # Remote Execution Setup       #

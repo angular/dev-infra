@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {runfiles} from '@bazel/runfiles';
 import {Builder, By, WebDriver} from 'selenium-webdriver';
 import {Options as ChromeOptions, ServiceBuilder} from 'selenium-webdriver/chrome';
 
 import waitOn from 'wait-on';
-import * as childProcess from 'child_process';
+import childProcess from 'node:child_process';
+import path from 'node:path';
 
 /**
  * Test script that will start the test http server binary in a background process.
@@ -23,9 +23,9 @@ async function runTest() {
   const [chromiumRootpath, chromedriverRootpath] = process.argv.slice(2);
 
   // Resolve chromium, chromedriver and the server binary to disk paths.
-  const chromiumPath = runfiles.resolveWorkspaceRelative(chromiumRootpath);
-  const chromedriverPath = runfiles.resolveWorkspaceRelative(chromedriverRootpath);
-  const serverBinPath = runfiles.resolveWorkspaceRelative('bazel/http-server/test/server');
+  const chromiumPath = path.resolve(chromiumRootpath);
+  const chromedriverPath = path.resolve(chromedriverRootpath);
+  const serverBinPath = path.resolve('bazel/http-server/test/server');
 
   const serverPort = 1234;
   const serverHost = `127.0.0.1:${serverPort}`;
@@ -34,6 +34,12 @@ async function runTest() {
   const serverProcess = childProcess.spawn(serverBinPath, ['--port', `${serverPort}`], {
     env: {...process.env, GOOGLE_MAPS_API_KEY: 'myPersonalSecret'},
     stdio: 'inherit',
+  });
+
+  console.error('Spawning');
+
+  serverProcess.on('error', (err) => {
+    console.error(err);
   });
 
   // Ensure the process gets killed, if the test terminates early.

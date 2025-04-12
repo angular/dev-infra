@@ -1,5 +1,5 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
-load("//bazel:defaults.bzl", "ts_library")
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -11,33 +11,27 @@ filegroup(
     srcs = glob(["*"]),
 )
 
-ts_library(
+ts_project(
     name = "server_lib",
     srcs = [
-        "ibazel.ts",
-        "main.ts",
-        "server.ts",
+        "ibazel.mts",
+        "main.mts",
+        "server.mts",
     ],
-    # A tsconfig needs to be specified as otherwise `ts_library` will look for the config
-    # in `//:package.json` and this breaks when the BUILD file is copied to `@npm//`.
-    tsconfig = "//:tsconfig.json",
+    tsconfig = "//bazel:tsconfig",
     deps = [
-        "@npm//@bazel/runfiles",
-        "@npm//@types/browser-sync",
-        "@npm//@types/node",
-        "@npm//@types/send",
-        "@npm//@types/yargs",
-        "@npm//browser-sync",
-        "@npm//send",
-        "@npm//yargs",
+        "//bazel:node_modules/@types/browser-sync",
+        "//bazel:node_modules/@types/node",
+        "//bazel:node_modules/@types/send",
+        "//bazel:node_modules/@types/yargs",
+        "//bazel:node_modules/browser-sync",
+        "//bazel:node_modules/send",
+        "//bazel:node_modules/yargs",
     ],
 )
 
-nodejs_binary(
+js_binary(
     name = "server_bin",
-    data = [
-        ":server_lib",
-    ],
-    entry_point = ":main.ts",
-    templated_args = ["--nobazel_run_linker"],
+    data = [":server_lib"],
+    entry_point = ":main.mjs",
 )

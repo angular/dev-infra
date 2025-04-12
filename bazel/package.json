@@ -2,10 +2,20 @@
   "name": "@devinfra/bazel",
   "dependencies": {
     "@microsoft/api-extractor": "7.52.3",
+    "@types/browser-sync": "2.29.0",
     "@types/node": "22.14.0",
+    "@types/selenium-webdriver": "^4.1.28",
+    "@types/send": "0.17.4",
+    "@types/wait-on": "^5.3.4",
+    "@types/yargs": "17.0.33",
+    "browser-sync": "3.0.4",
     "piscina": "^4.9.2",
+    "selenium-webdriver": "^4.31.0",
+    "send": "1.2.0",
+    "true-case-path": "2.2.1",
     "typescript": "5.8.2",
-    "true-case-path": "2.2.1"
+    "wait-on": "^8.0.3",
+    "yargs": "17.7.2"
   },
   "pnpm": {
     "onlyBuiltDependencies": []
