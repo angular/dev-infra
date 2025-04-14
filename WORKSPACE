@@ -78,7 +78,7 @@ yarn_install(
         "//:.yarn/patches/@angular-bazel-npm.patch",
         "//:.yarn/patches/@bazel-jasmine-npm.patch",
         "//:.yarn/patches/@octokit-graphql-schema-npm-15.3.0-4046a59648.patch",
-        "//:.yarn/releases/yarn-4.8.1.cjs",
+        "//:.yarn/releases/yarn-4.9.1.cjs",
         "//:.yarnrc.yml",
     ],
     # Currently disabled due to:
@@ -86,7 +86,7 @@ yarn_install(
     #  2. Incompatibilites with the `ts_library` rule.
     exports_directories_only = False,
     package_json = "//:package.json",
-    yarn = "//:.yarn/releases/yarn-4.8.1.cjs",
+    yarn = "//:.yarn/releases/yarn-4.9.1.cjs",
     yarn_lock = "//:yarn.lock",
 )
 
