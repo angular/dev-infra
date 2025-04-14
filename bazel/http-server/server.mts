@@ -14,8 +14,8 @@ import send from 'send';
 import assert from 'node:assert';
 
 // The current working directory is the runfiles root.
-const runfilesRoot = process.env['RUNFILES_DIR']!;
-assert(runfilesRoot, 'Expected `RUNFILES_DIR` to be set.');
+const runfilesRoot = process.env['RUNFILES']!;
+assert(runfilesRoot, 'Expected `RUNFILES` to be set.');
 
 /**
  * Http Server implementation that uses browser-sync internally. This server
