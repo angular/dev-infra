@@ -32409,6 +32409,11 @@ var require_sqlite_cache_store = __commonJS({
         }
         this.#db = new DatabaseSync((opts == null ? void 0 : opts.location) ?? ":memory:");
         this.#db.exec(`
+      PRAGMA journal_mode = WAL;
+      PRAGMA synchronous = NORMAL;
+      PRAGMA temp_store = memory;
+      PRAGMA optimize;
+
       CREATE TABLE IF NOT EXISTS cacheInterceptorV${VERSION13} (
         -- Data specific to us
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -32428,9 +32433,8 @@ var require_sqlite_cache_store = __commonJS({
         staleAt INTEGER NOT NULL
       );
 
-      CREATE INDEX IF NOT EXISTS idx_cacheInterceptorV${VERSION13}_url ON cacheInterceptorV${VERSION13}(url);
-      CREATE INDEX IF NOT EXISTS idx_cacheInterceptorV${VERSION13}_method ON cacheInterceptorV${VERSION13}(method);
-      CREATE INDEX IF NOT EXISTS idx_cacheInterceptorV${VERSION13}_deleteAt ON cacheInterceptorV${VERSION13}(deleteAt);
+      CREATE INDEX IF NOT EXISTS idx_cacheInterceptorV${VERSION13}_getValuesQuery ON cacheInterceptorV${VERSION13}(url, method, deleteAt);
+      CREATE INDEX IF NOT EXISTS idx_cacheInterceptorV${VERSION13}_deleteByUrlQuery ON cacheInterceptorV${VERSION13}(deleteAt);
     `);
         this.#getValuesQuery = this.#db.prepare(`
       SELECT
@@ -32592,7 +32596,7 @@ var require_sqlite_cache_store = __commonJS({
       }
       #prune() {
         var _a;
-        if (this.size <= this.#maxCount) {
+        if (Number.isFinite(this.#maxCount) && this.size <= this.#maxCount) {
           return 0;
         }
         {
@@ -39597,14 +39601,14 @@ var require_dist_node5 = __commonJS({
     var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var dist_src_exports = {};
     __export(dist_src_exports, {
-      RequestError: () => RequestError2
+      RequestError: () => RequestError3
     });
     module.exports = __toCommonJS(dist_src_exports);
     var import_deprecation = require_dist_node4();
     var import_once = __toESM2(require_once());
     var logOnceCode = (0, import_once.default)((deprecation) => console.warn(deprecation));
     var logOnceHeaders = (0, import_once.default)((deprecation) => console.warn(deprecation));
-    var RequestError2 = class extends Error {
+    var RequestError3 = class extends Error {
       constructor(message, statusCode, options) {
         super(message);
         if (Error.captureStackTrace) {
@@ -43768,7 +43772,7 @@ var createTokenAuth = function createTokenAuth2(token) {
 };
 
 // 
-var VERSION4 = "6.1.4";
+var VERSION4 = "6.1.5";
 
 // 
 var noop = () => {
@@ -46502,6 +46506,36 @@ var Octokit2 = Octokit.plugin(requestLog, legacyRestEndpointMethods, paginateRes
 var import_core2 = __toESM(require_core());
 
 // 
+var RequestError2 = class extends Error {
+  name;
+  status;
+  request;
+  response;
+  constructor(message, statusCode, options) {
+    super(message);
+    this.name = "HttpError";
+    this.status = Number.parseInt(statusCode);
+    if (Number.isNaN(this.status)) {
+      this.status = 0;
+    }
+    if ("response" in options) {
+      this.response = options.response;
+    }
+    const requestCopy = Object.assign({}, options.request);
+    if (options.request.headers.authorization) {
+      requestCopy.headers = Object.assign({}, options.request.headers, {
+        authorization: options.request.headers.authorization.replace(
+          /(?<! ) .*$/,
+          " [REDACTED]"
+        )
+      });
+    }
+    requestCopy.url = requestCopy.url.replace(/\bclient_secret=\w+/g, "client_secret=[REDACTED]").replace(/\baccess_token=\w+/g, "access_token=[REDACTED]");
+    this.request = requestCopy;
+  }
+};
+
+// 
 function requestToOAuthBaseUrl(request2) {
   const endpointDefaults = request2.endpoint.DEFAULTS;
   return /^https:\/\/(api\.)?github\.com$/.test(endpointDefaults.baseUrl) ? "https://github.com" : endpointDefaults.baseUrl.replace("/api/v3", "");
@@ -46516,7 +46550,7 @@ async function oauthRequest(request2, route, parameters) {
   };
   const response = await request2(route, withOAuthParameters);
   if ("error" in response.data) {
-    const error = new RequestError(
+    const error = new RequestError2(
       `${response.data.error_description} (${response.data.error}, ${response.data.error_uri})`,
       400,
       {

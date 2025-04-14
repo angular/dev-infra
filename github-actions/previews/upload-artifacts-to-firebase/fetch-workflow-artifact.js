@@ -926,7 +926,7 @@ var createTokenAuth = function createTokenAuth2(token) {
 };
 
 // 
-var VERSION4 = "6.1.4";
+var VERSION4 = "6.1.5";
 
 // 
 var noop = () => {
