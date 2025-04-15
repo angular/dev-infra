@@ -54,6 +54,9 @@ def api_golden_test_npm_package(
         data = data,
         entry_point = "@devinfra//bazel/api-golden:index_npm_packages.js",
         args = [golden_dir, npm_package, "true", quoted_export_pattern] + type_names,
+        # TODO: Determine why this is needed but only for this `.accept` action
+        #       https://github.com/angular/dev-infra/issues/2742
+        patch_node_fs = False,
         env = {"RJS_MODE": "true" if not interop_mode else "false"},
         **kwargs
     )
