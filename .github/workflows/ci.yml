@@ -27,7 +27,7 @@ jobs:
       - uses: ./github-actions/npm/checkout-and-setup-node
       - run: yarn install --immutable
       - name: Confirm code builds with typescript as expected
-        run: yarn tsc -p tsconfig.json
+        run: yarn tsc -p tsconfig.json --noEmit
 
   test:
     timeout-minutes: 15
