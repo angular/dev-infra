@@ -1,0 +1,18 @@
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("//bazel/ts_project/strict_deps:index.bzl", "strict_deps_test")
+
+strict_deps_test(
+    name = "import_from_mts_cts_extensions",
+    srcs = ["index.ts"],
+    deps = [":mts_cts_extensions"],
+)
+
+ts_project(
+    name = "mts_cts_extensions",
+    srcs = [
+        "common_extension.cts",
+        "module_extension.mts",
+    ],
+    declaration = True,
+    deps = ["//bazel:node_modules/@types/node"],
+)

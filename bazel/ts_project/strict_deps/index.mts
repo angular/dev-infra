@@ -14,7 +14,7 @@ const manifest: StrictDepsManifest = JSON.parse(await fs.readFile(manifestExecPa
  * Regex matcher to extract a npm package name, potentially with scope from a subpackage import path.
  */
 const moduleSpeciferMatcher = /^(@[\w\d-_]+\/)?([\w\d-_]+)/;
-const extensionRemoveRegex = /\.[mc]?(js|(d\.)?ts)$/;
+const extensionRemoveRegex = /\.[mc]?(js|(d\.)?[mc]?ts)$/;
 const allowedModuleNames = new Set<string>(manifest.allowedModuleNames);
 const allowedSources = new Set<string>(
   manifest.allowedSources.map((s) => s.replace(extensionRemoveRegex, '')),
