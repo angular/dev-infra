@@ -15,7 +15,7 @@
       "default": "./*"
     }
   },
-  "packageManager": "yarn@4.8.1",
+  "packageManager": "yarn@4.9.1",
   "dependencies": {
     "@angular/benchpress": "0.3.0",
     "@angular/build": "20.0.0-next.4",
