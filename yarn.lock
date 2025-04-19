@@ -7675,8 +7675,8 @@ __metadata:
   linkType: hard
 
 "firebase-tools@npm:^14.0.0":
-  version: 14.1.0
-  resolution: "firebase-tools@npm:14.1.0"
+  version: 14.2.0
+  resolution: "firebase-tools@npm:14.2.0"
   dependencies:
     "@electric-sql/pglite": "npm:^0.2.16"
     "@google-cloud/cloud-sql-connector": "npm:^1.3.3"
@@ -7748,7 +7748,7 @@ __metadata:
     yaml: "npm:^2.4.1"
   bin:
     firebase: lib/bin/firebase.js
-  checksum: 10c0/89be949bec842baad0653a10b5992d43e8bd8b0877c7f1a5615fcf2a58be5d8e60a858b36710d4be8466c1d8d5cb632f93e27c0eb984cbc80023bd8d02a4af40
+  checksum: 10c0/f1e408c886bac3e9a628e7e046b380ecd8ea42437dada950dd3ebfea10c5242d797bee81a6cb040531ed4dc9fe9aee37d13274656bab3976ddb3af25ad2cf16e
   languageName: node
   linkType: hard
 
