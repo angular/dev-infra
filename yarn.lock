@@ -3581,13 +3581,13 @@ __metadata:
   linkType: hard
 
 "@pnpm/dependency-path@npm:^1000.0.5":
-  version: 1000.0.7
-  resolution: "@pnpm/dependency-path@npm:1000.0.7"
+  version: 1000.0.8
+  resolution: "@pnpm/dependency-path@npm:1000.0.8"
   dependencies:
     "@pnpm/crypto.hash": "npm:1000.1.1"
-    "@pnpm/types": "npm:1000.4.0"
+    "@pnpm/types": "npm:1000.5.0"
     semver: "npm:^7.7.1"
-  checksum: 10c0/024cfe6e1221927836ec63cd7270f7abf0396f1cea1261a32bdf7951810043fa9c8303fb16dbdb9214ee7cd2c2fda2b6eb92b0d5c5c5aa607d882e54cb422148
+  checksum: 10c0/b42b5f98d443beefda4293f7c14be7c9ef93196a1f48f0de2b06d9c3239ac9cc5b93ba076a3525b8fd5b625d0a646b6440fbd7ba173cf6445883adfc18f96a32
   languageName: node
   linkType: hard
 
@@ -3620,10 +3620,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pnpm/types@npm:1000.4.0":
-  version: 1000.4.0
-  resolution: "@pnpm/types@npm:1000.4.0"
-  checksum: 10c0/25c73a277aa0fa57bd3e8b13ec68c6aa9346dd698855fe4269a9736fa15c9e929bf8c4e52cbdc49540571cab1be2e7e2253312d5216cd73fef64a0b4acf5779d
+"@pnpm/types@npm:1000.5.0":
+  version: 1000.5.0
+  resolution: "@pnpm/types@npm:1000.5.0"
+  checksum: 10c0/40e8c7b13977e9eec472a4050aa6589598533a0035b5f885f691acd6b1965662ae679a987c425b29a4af896dad5c70344d911cec039396d814e5462b0643bf87
   languageName: node
   linkType: hard
 
@@ -7675,8 +7675,8 @@ __metadata:
   linkType: hard
 
 "firebase-tools@npm:^14.0.0":
-  version: 14.1.0
-  resolution: "firebase-tools@npm:14.1.0"
+  version: 14.2.0
+  resolution: "firebase-tools@npm:14.2.0"
   dependencies:
     "@electric-sql/pglite": "npm:^0.2.16"
     "@google-cloud/cloud-sql-connector": "npm:^1.3.3"
@@ -7748,7 +7748,7 @@ __metadata:
     yaml: "npm:^2.4.1"
   bin:
     firebase: lib/bin/firebase.js
-  checksum: 10c0/89be949bec842baad0653a10b5992d43e8bd8b0877c7f1a5615fcf2a58be5d8e60a858b36710d4be8466c1d8d5cb632f93e27c0eb984cbc80023bd8d02a4af40
+  checksum: 10c0/f1e408c886bac3e9a628e7e046b380ecd8ea42437dada950dd3ebfea10c5242d797bee81a6cb040531ed4dc9fe9aee37d13274656bab3976ddb3af25ad2cf16e
   languageName: node
   linkType: hard
 
