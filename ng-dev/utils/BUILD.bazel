@@ -48,6 +48,7 @@ ts_library(
         "@npm//@octokit/auth-app",
         "@npm//@octokit/core",
         "@npm//@octokit/graphql",
+        "@npm//@octokit/openapi-types",
         "@npm//@octokit/plugin-paginate-rest",
         "@npm//@octokit/plugin-rest-endpoint-methods",
         "@npm//@octokit/request-error",

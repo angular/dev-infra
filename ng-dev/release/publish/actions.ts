@@ -43,6 +43,7 @@ import {promptToInitiatePullRequestMerge} from './prompt-merge.js';
 import {Prompt} from '../../utils/prompt.js';
 import {glob} from 'fast-glob';
 import {PnpmVersioning} from './pnpm-versioning.js';
+import {Commit} from '../../utils/git/octokit-types.js';
 
 /** Interface describing a Github repository. */
 export interface GithubRepo {
@@ -150,11 +151,11 @@ export abstract class ReleaseAction {
   }
 
   /** Gets the most recent commit of a specified branch. */
-  protected async getLatestCommitOfBranch(branchName: string): Promise<string> {
+  protected async getLatestCommitOfBranch(branchName: string): Promise<Commit> {
     const {
       data: {commit},
     } = await this.git.github.repos.getBranch({...this.git.remoteParams, branch: branchName});
-    return commit.sha;
+    return commit;
   }
 
   /** Checks whether the given revision is ahead to the base by the specified amount. */
@@ -560,7 +561,7 @@ export abstract class ReleaseAction {
     // Keep track of the commit where we started the staging process on. This will be used
     // later to ensure that no changes, except for the version bump have landed as part
     // of the staging time window (where the caretaker could accidentally land other stuff).
-    const beforeStagingSha = await this.getLatestCommitOfBranch(stagingBranch);
+    const {sha: beforeStagingSha} = await this.getLatestCommitOfBranch(stagingBranch);
 
     await this.assertPassingGithubStatus(beforeStagingSha, stagingBranch);
     await this.checkoutUpstreamBranch(stagingBranch);
@@ -703,7 +704,7 @@ export abstract class ReleaseAction {
     npmDistTag: NpmDistTag,
     additionalOptions: {showAsLatestOnGitHub: boolean},
   ) {
-    const versionBumpCommitSha = await this.getLatestCommitOfBranch(publishBranch);
+    const {sha: versionBumpCommitSha} = await this.getLatestCommitOfBranch(publishBranch);
 
     // Ensure the latest commit in the publish branch is the bump commit.
     if (!(await this._isCommitForVersionStaging(releaseNotes.version, versionBumpCommitSha))) {

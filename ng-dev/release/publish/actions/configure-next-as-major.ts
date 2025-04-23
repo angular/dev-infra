@@ -33,7 +33,7 @@ export class ConfigureNextAsMajorAction extends ReleaseAction {
   override async perform() {
     const {branchName} = this.active.next;
     const newVersion = this._newVersion;
-    const beforeStagingSha = await this.getLatestCommitOfBranch(branchName);
+    const {sha: beforeStagingSha} = await this.getLatestCommitOfBranch(branchName);
 
     await this.assertPassingGithubStatus(beforeStagingSha, branchName);
     await this.checkoutUpstreamBranch(branchName);

@@ -39,7 +39,7 @@ export class PrepareExceptionalMinorAction extends ReleaseAction {
   }
 
   async perform(): Promise<void> {
-    const latestBaseBranchSha = await this.getLatestCommitOfBranch(this._baseBranch);
+    const {sha: latestBaseBranchSha} = await this.getLatestCommitOfBranch(this._baseBranch);
 
     await this.assertPassingGithubStatus(latestBaseBranchSha, this._baseBranch);
 
