@@ -59,7 +59,7 @@ export abstract class BranchOffNextBranchBaseAction extends CutNpmNextPrerelease
     const compareVersionForReleaseNotes = await this._computeReleaseNoteCompareVersion();
     const newVersion = await this._computeNewVersion();
     const newBranch = `${newVersion.major}.${newVersion.minor}.x`;
-    const beforeStagingSha = await this.getLatestCommitOfBranch(nextBranchName);
+    const {sha: beforeStagingSha} = await this.getLatestCommitOfBranch(nextBranchName);
 
     // Verify the current next branch has a passing status, before we branch off.
     await this.assertPassingGithubStatus(beforeStagingSha, nextBranchName);
