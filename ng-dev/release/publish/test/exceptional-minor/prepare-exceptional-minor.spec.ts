@@ -86,7 +86,7 @@ describe('cut exceptional minor next release candidate action', () => {
       );
 
       repo
-        .expectBranchRequest('14.2.x', 'PATCH_LATEST_SHA')
+        .expectBranchRequest('14.2.x', {sha: 'PATCH_LATEST_SHA'})
         .expectCommitStatusCheck('PATCH_LATEST_SHA', 'success');
 
       await instance.perform();
@@ -119,7 +119,7 @@ describe('cut exceptional minor next release candidate action', () => {
       );
 
       repo
-        .expectBranchRequest('14.2.x', 'PATCH_LATEST_SHA')
+        .expectBranchRequest('14.2.x', {sha: 'PATCH_LATEST_SHA'})
         .expectCommitStatusCheck('PATCH_LATEST_SHA', 'success');
 
       await instance.perform();
@@ -152,7 +152,7 @@ describe('cut exceptional minor next release candidate action', () => {
       );
 
       repo
-        .expectBranchRequest('14.2.x', 'PATCH_LATEST_SHA')
+        .expectBranchRequest('14.2.x', {sha: 'PATCH_LATEST_SHA'})
         .expectCommitStatusCheck('PATCH_LATEST_SHA', 'success');
 
       await instance.perform();
@@ -185,7 +185,7 @@ describe('cut exceptional minor next release candidate action', () => {
       );
 
       repo
-        .expectBranchRequest('14.2.x', 'PATCH_LATEST_SHA')
+        .expectBranchRequest('14.2.x', {sha: 'PATCH_LATEST_SHA'})
         .expectCommitStatusCheck('PATCH_LATEST_SHA', 'success');
 
       await instance.perform();

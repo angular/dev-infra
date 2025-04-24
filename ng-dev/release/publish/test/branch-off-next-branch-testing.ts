@@ -36,20 +36,16 @@ async function expectGithubApiRequestsForBranchOff(
   // We first mock the commit status check for the next branch, then expect two pull
   // requests from a fork that are targeting next and the new feature-freeze branch.
   repo
-    .expectBranchRequest('master', 'PRE_STAGING_SHA')
+    .expectBranchRequest('master', {sha: 'PRE_STAGING_SHA'})
     .expectCommitStatusCheck('PRE_STAGING_SHA', 'success')
     .expectFindForkRequest(fork)
     .expectPullRequestToBeCreated(expectedNewBranch, fork, expectedStagingForkBranch, 200)
     .expectPullRequestMergeCheck(200, false)
     .expectPullRequestMerge(200)
-    .expectBranchRequest(expectedNewBranch, 'STAGING_COMMIT_SHA')
-    .expectCommitRequest(
-      'STAGING_COMMIT_SHA',
-      `release: cut the v${expectedVersion} release\n\nPR Close #200.`,
-    )
-    .expectCommitCompareRequest('PRE_STAGING_SHA', 'STAGING_COMMIT_SHA', {
-      status: 'ahead',
-      ahead_by: 1,
+    .expectBranchRequest(expectedNewBranch, {
+      sha: 'STAGING_COMMIT_SHA',
+      parents: [{sha: 'PRE_STAGING_SHA'}],
+      commit: {message: `release: cut the v${expectedVersion} release\n\nPR Close #200.`},
     })
     .expectTagToBeCreated(expectedTagName, 'STAGING_COMMIT_SHA')
     .expectReleaseToBeCreated(
@@ -64,9 +60,7 @@ async function expectGithubApiRequestsForBranchOff(
 
   // In the fork, we make the following branches appear as non-existent,
   // so that the PRs can be created properly without collisions.
-  fork
-    .expectBranchRequest(expectedStagingForkBranch, null)
-    .expectBranchRequest(expectedNextUpdateBranch, null);
+  fork.expectBranchRequest(expectedStagingForkBranch).expectBranchRequest(expectedNextUpdateBranch);
 
   return {expectedNextUpdateBranch, expectedStagingForkBranch, expectedTagName};
 }

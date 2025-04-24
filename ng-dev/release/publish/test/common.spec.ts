@@ -185,11 +185,10 @@ describe('common release action logic', () => {
       const customRegistryUrl = 'https://custom-npm-registry.google.com';
 
       repo
-        .expectBranchRequest(branchName, 'STAGING_SHA')
-        .expectCommitRequest('STAGING_SHA', `release: cut the v${version} release`)
-        .expectCommitCompareRequest('BEFORE_STAGING_SHA', 'STAGING_SHA', {
-          status: 'ahead',
-          ahead_by: 1,
+        .expectBranchRequest(branchName, {
+          sha: 'STAGING_SHA',
+          parents: [{sha: 'BEFORE_STAGING_SHA'}],
+          commit: {message: `release: cut the v${version} release`},
         })
         .expectTagToBeCreated(tagName, 'STAGING_SHA')
         .expectReleaseToBeCreated(version.toString(), tagName, true);
@@ -231,11 +230,10 @@ describe('common release action logic', () => {
         .commit('feat(test): second commit');
 
       repo
-        .expectBranchRequest(branchName, 'STAGING_SHA')
-        .expectCommitRequest('STAGING_SHA', `release: cut the v${version} release`)
-        .expectCommitCompareRequest('BEFORE_STAGING_SHA', 'STAGING_SHA', {
-          status: 'ahead',
-          ahead_by: 1,
+        .expectBranchRequest(branchName, {
+          sha: 'STAGING_SHA',
+          parents: [{sha: 'BEFORE_STAGING_SHA'}],
+          commit: {message: `release: cut the v${version} release`},
         })
         .expectTagToBeCreated(tagName, 'STAGING_SHA')
         .expectReleaseToBeCreated(
@@ -285,13 +283,15 @@ describe('common release action logic', () => {
       git.commit('feat(test): first commit');
 
       repo
-        .expectBranchRequest(branchName, 'STAGING_SHA')
-        .expectCommitRequest('STAGING_SHA', `release: cut the v${version} release`)
+        .expectBranchRequest(branchName, {
+          sha: 'STAGING_SHA',
+          commit: {message: `release: cut the v${version} release`},
+        })
         .expectCommitStatusCheck('STAGING_SHA', 'success')
         .expectFindForkRequest(fork)
         .expectPullRequestToBeCreated(branchName, fork, 'release-stage-10.1.0-next.0', 10);
 
-      fork.expectBranchRequest('release-stage-10.1.0-next.0', null);
+      fork.expectBranchRequest('release-stage-10.1.0-next.0');
 
       const stagingPromise = instance.testStagingWithBuild(
         version,
@@ -334,11 +334,10 @@ describe('common release action logic', () => {
       );
 
       repo
-        .expectBranchRequest(branchName, 'STAGING_SHA')
-        .expectCommitRequest('STAGING_SHA', `release: cut the v${version} release`)
-        .expectCommitCompareRequest('BEFORE_STAGING_SHA', 'STAGING_SHA', {
-          status: 'ahead',
-          ahead_by: 1,
+        .expectBranchRequest(branchName, {
+          sha: 'STAGING_SHA',
+          parents: [{sha: 'BEFORE_STAGING_SHA'}],
+          commit: {message: `release: cut the v${version} release`},
         })
         .expectTagToBeCreated(tagName, 'STAGING_SHA')
         .expectReleaseToBeCreated(
@@ -366,13 +365,11 @@ describe('common release action logic', () => {
       );
       const {version, branchName} = baseReleaseTrains.latest;
 
-      repo
-        .expectBranchRequest(branchName, 'STAGING_SHA')
-        .expectCommitRequest('STAGING_SHA', `release: cut the v${version} release`)
-        .expectCommitCompareRequest('BEFORE_STAGING_SHA', 'STAGING_SHA', {
-          status: 'ahead',
-          ahead_by: 2, // this implies that another unknown/new commit is in between.
-        });
+      repo.expectBranchRequest(branchName, {
+        sha: 'STAGING_SHA',
+        parents: [{sha: 'THE_ONE_BEFORE_STAGING_SHA'}],
+        commit: {message: `release: cut the v${version} release`},
+      });
 
       spyOn(Log, 'error');
 
@@ -458,7 +455,7 @@ describe('common release action logic', () => {
         .expectPullRequestMerge(200);
 
       // Simulate that the fork branch name is available.
-      fork.expectBranchRequest(forkBranchName, null);
+      fork.expectBranchRequest(forkBranchName);
 
       await instance.testCherryPickWithPullRequest(version, branchName);
 
@@ -488,7 +485,7 @@ describe('common release action logic', () => {
         .expectPullRequestMergeCheck(200, true);
 
       // Simulate that the fork branch name is available.
-      fork.expectBranchRequest(forkBranchName, null);
+      fork.expectBranchRequest(forkBranchName);
 
       await instance.testCherryPickWithPullRequest(version, branchName);
 
@@ -510,7 +507,7 @@ describe('common release action logic', () => {
         .expectPullRequestMerge(200);
 
       // Simulate that the fork branch name is available.
-      fork.expectBranchRequest(forkBranchName, null);
+      fork.expectBranchRequest(forkBranchName);
 
       await instance.testCherryPickWithPullRequest(version, branchName);
 

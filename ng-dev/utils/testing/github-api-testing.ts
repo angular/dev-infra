@@ -8,6 +8,7 @@
 
 import {RestEndpointMethodTypes} from '@octokit/plugin-rest-endpoint-methods';
 import nock from 'nock';
+import {PartialCommit} from '../git/octokit-types.js';
 
 /** Type describing the parameters for a Github release update API request. */
 type ReleaseUpdateParameters = RestEndpointMethodTypes['repos']['updateRelease']['parameters'];
@@ -44,10 +45,10 @@ export class GithubTestingRepo {
     return this;
   }
 
-  expectBranchRequest(branchName: string, sha: string | null): this {
+  expectBranchRequest(branchName: string, commit?: PartialCommit): this {
     nock(this.repoApiUrl)
       .get(`/branches/${branchName}`)
-      .reply(sha ? 200 : 404, sha ? {commit: {sha}} : undefined);
+      .reply(commit ? 200 : 404, {commit: commit});
     return this;
   }
 
@@ -98,11 +99,6 @@ export class GithubTestingRepo {
 
   expectPullRequestMerge(prNumber: number): this {
     nock(this.repoApiUrl).put(`/pulls/${prNumber}/merge`).reply(200, {merged: true});
-    return this;
-  }
-
-  expectCommitRequest(sha: string, message: string): this {
-    nock(this.repoApiUrl).get(`/commits/${sha}`).reply(200, {commit: {message}});
     return this;
   }
 
