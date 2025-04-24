@@ -158,23 +158,6 @@ export abstract class ReleaseAction {
     return commit;
   }
 
-  /** Checks whether the given revision is ahead to the base by the specified amount. */
-  private async _isRevisionAheadOfBase(
-    baseRevision: string,
-    targetRevision: string,
-    expectedAheadCount: number,
-  ) {
-    const {
-      data: {ahead_by, status},
-    } = await this.git.github.repos.compareCommits({
-      ...this.git.remoteParams,
-      base: baseRevision,
-      head: targetRevision,
-    });
-
-    return status === 'ahead' && ahead_by === expectedAheadCount;
-  }
-
   /**
    * Verifies that the given commit has passing all statuses.
    *
@@ -704,24 +687,11 @@ export abstract class ReleaseAction {
     npmDistTag: NpmDistTag,
     additionalOptions: {showAsLatestOnGitHub: boolean},
   ) {
-    const {sha: versionBumpCommitSha} = await this.getLatestCommitOfBranch(publishBranch);
-
-    // Ensure the latest commit in the publish branch is the bump commit.
-    if (!(await this._isCommitForVersionStaging(releaseNotes.version, versionBumpCommitSha))) {
-      Log.error(`  ✘   Latest commit in "${publishBranch}" branch is not a staging commit.`);
-      Log.error('      Please make sure the staging pull request has been merged.');
-      throw new FatalReleaseActionError();
-    }
-
-    // Ensure no commits have landed since we started the staging process. This would signify
-    // that the locally-built release packages are not matching with the release commit on GitHub.
-    // Note: We expect the version bump commit to be ahead by **one** commit. This means it's
-    // the direct parent of the commit that was latest when we started the staging.
-    if (!(await this._isRevisionAheadOfBase(beforeStagingSha, versionBumpCommitSha, 1))) {
-      Log.error(`  ✘   Unexpected additional commits have landed while staging the release.`);
-      Log.error('      Please revert the bump commit and retry, or cut a new version on top.');
-      throw new FatalReleaseActionError();
-    }
+    const releaseSha = await this._getAndValidateLatestCommitForPublishing(
+      publishBranch,
+      releaseNotes.version,
+      beforeStagingSha,
+    );
 
     // Before publishing, we want to ensure that the locally-built packages we
     // built in the staging phase have not been modified accidentally.
@@ -730,7 +700,7 @@ export abstract class ReleaseAction {
     // Create a Github release for the new version.
     await this._createGithubReleaseForVersion(
       releaseNotes,
-      versionBumpCommitSha,
+      releaseSha,
       npmDistTag === 'next',
       additionalOptions.showAsLatestOnGitHub,
     );
@@ -760,13 +730,45 @@ export abstract class ReleaseAction {
     }
   }
 
-  /** Checks whether the given commit represents a staging commit for the specified version. */
-  private async _isCommitForVersionStaging(version: semver.SemVer, commitSha: string) {
-    const {data} = await this.git.github.repos.getCommit({
-      ...this.git.remoteParams,
-      ref: commitSha,
-    });
-    return data.commit.message.startsWith(getCommitMessageForRelease(version));
+  /**
+   * Retreive the latest commit from the provided branch, and verify that it is the expected
+   * release commit and is the direct child of the previous sha provided.
+   *
+   * The method will make one recursive attempt to check again before throwing an error if
+   * any error occurs during this validation.
+   */
+  private async _getAndValidateLatestCommitForPublishing(
+    branch: string,
+    version: semver.SemVer,
+    previousSha: string,
+    isRetry = false,
+  ): Promise<string> {
+    try {
+      const commit = await this.getLatestCommitOfBranch(branch);
+      // Ensure the latest commit in the publish branch is the bump commit.
+      if (!commit.commit.message.startsWith(getCommitMessageForRelease(version))) {
+        /** The shortened sha of the commit for usage in the error message. */
+        const sha = commit.sha.slice(0, 8);
+        Log.error(`  ✘   Latest commit (${sha}) in "${branch}" branch is not a staging commit.`);
+        Log.error('      Please make sure the staging pull request has been merged.');
+        throw new FatalReleaseActionError();
+      }
+
+      // We only inspect the first parent as we enforce that no merge commits are used in our
+      // repos, so all commits have exactly one parent.
+      if (commit.parents[0].sha !== previousSha) {
+        Log.error(`  ✘   Unexpected additional commits have landed while staging the release.`);
+        Log.error('      Please revert the bump commit and retry, or cut a new version on top.');
+        throw new FatalReleaseActionError();
+      }
+
+      return commit.sha;
+    } catch (e: unknown) {
+      if (isRetry) {
+        throw e;
+      }
+      return this._getAndValidateLatestCommitForPublishing(branch, version, previousSha, true);
+    }
   }
 
   // TODO: Remove this check and run it as part of common release validation.

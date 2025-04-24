@@ -97,7 +97,7 @@ describe('configure next as major action', () => {
     // We first mock the commit status check for the next branch, then expect two pull
     // requests from a fork that are targeting next and the new feature-freeze branch.
     repo
-      .expectBranchRequest('master', 'MASTER_COMMIT_SHA')
+      .expectBranchRequest('master', {sha: 'MASTER_COMMIT_SHA'})
       .expectCommitStatusCheck('MASTER_COMMIT_SHA', 'success')
       .expectFindForkRequest(fork)
       .expectPullRequestToBeCreated('master', fork, expectedForkBranch, 200)
@@ -106,7 +106,7 @@ describe('configure next as major action', () => {
 
     // In the fork, we make the staging branch appear as non-existent,
     // so that the PR can be created properly without collisions.
-    fork.expectBranchRequest(expectedForkBranch, null);
+    fork.expectBranchRequest(expectedForkBranch);
 
     await action.instance.perform();
 

@@ -33,7 +33,7 @@ export async function expectGithubApiRequestsForStaging(
   // We first mock the commit status check for the next branch, then expect two pull
   // requests from a fork that are targeting next and the new feature-freeze branch.
   repo
-    .expectBranchRequest(expectedBranch, 'PRE_STAGING_SHA')
+    .expectBranchRequest(expectedBranch, {sha: 'PRE_STAGING_SHA'})
     .expectCommitStatusCheck('PRE_STAGING_SHA', 'success')
     .expectFindForkRequest(fork)
     .expectPullRequestToBeCreated(expectedBranch, fork, expectedStagingForkBranch, 200)
@@ -42,7 +42,7 @@ export async function expectGithubApiRequestsForStaging(
 
   // In the fork, we make the staging branch appear as non-existent,
   // so that the PR can be created properly without collisions.
-  fork.expectBranchRequest(expectedStagingForkBranch, null);
+  fork.expectBranchRequest(expectedStagingForkBranch);
 
   if (opts.withCherryPicking) {
     const expectedCherryPickForkBranch = `changelog-cherry-pick-${expectedVersion}`;
@@ -54,7 +54,7 @@ export async function expectGithubApiRequestsForStaging(
 
     // In the fork, make the cherry-pick branch appear as non-existent, so that the
     // cherry-pick PR can be created properly without collisions.
-    fork.expectBranchRequest(expectedCherryPickForkBranch, null);
+    fork.expectBranchRequest(expectedCherryPickForkBranch);
   }
 }
 
@@ -75,14 +75,10 @@ export async function expectGithubApiRequests(
   await expectGithubApiRequestsForStaging(action, expectedBranch, expectedVersion, opts);
 
   repo
-    .expectBranchRequest(expectedBranch, 'STAGING_COMMIT_SHA')
-    .expectCommitRequest(
-      'STAGING_COMMIT_SHA',
-      `release: cut the v${expectedVersion} release\n\nPR Close #200.`,
-    )
-    .expectCommitCompareRequest('PRE_STAGING_SHA', 'STAGING_COMMIT_SHA', {
-      status: 'ahead',
-      ahead_by: 1,
+    .expectBranchRequest(expectedBranch, {
+      sha: 'STAGING_COMMIT_SHA',
+      parents: [{sha: 'PRE_STAGING_SHA'}],
+      commit: {message: `release: cut the v${expectedVersion} release\n\nPR Close #200.`},
     })
     .expectTagToBeCreated(expectedTagName, 'STAGING_COMMIT_SHA')
     .expectReleaseToBeCreated(expectedVersion, expectedTagName, opts.willShowAsLatestOnGitHub);
