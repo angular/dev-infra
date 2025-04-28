@@ -61187,22 +61187,36 @@ function normalizeChoices3(choices) {
     };
   });
 }
+function getSelectedChoice(input, choices) {
+  let selectedChoice;
+  const selectableChoices = choices.filter(isSelectableChoice);
+  if (numberRegex.test(input)) {
+    const answer = Number.parseInt(input, 10) - 1;
+    selectedChoice = selectableChoices[answer];
+  } else {
+    selectedChoice = selectableChoices.find((choice) => choice.key === input);
+  }
+  return selectedChoice ? [selectedChoice, choices.indexOf(selectedChoice)] : [void 0, void 0];
+}
 var esm_default8 = createPrompt((config2, done) => {
+  const { loop = true } = config2;
   const choices = useMemo(() => normalizeChoices3(config2.choices), [config2.choices]);
   const [status, setStatus] = useState("idle");
   const [value, setValue] = useState("");
   const [errorMsg, setError] = useState();
   const theme = makeTheme(config2.theme);
   const prefix = usePrefix({ status, theme });
+  const bounds = useMemo(() => {
+    const first = choices.findIndex(isSelectableChoice);
+    const last = choices.findLastIndex(isSelectableChoice);
+    if (first === -1) {
+      throw new ValidationError("[select prompt] No selectable choices. All choices are disabled.");
+    }
+    return { first, last };
+  }, [choices]);
   useKeypress((key, rl) => {
     if (isEnterKey(key)) {
-      let selectedChoice;
-      if (numberRegex.test(value)) {
-        const answer = Number.parseInt(value, 10) - 1;
-        selectedChoice = choices.filter(isSelectableChoice)[answer];
-      } else {
-        selectedChoice = choices.find((choice) => isSelectableChoice(choice) && choice.key === value);
-      }
+      const [selectedChoice] = getSelectedChoice(value, choices);
       if (isSelectableChoice(selectedChoice)) {
         setValue(selectedChoice.short);
         setStatus("done");
@@ -61211,6 +61225,20 @@ var esm_default8 = createPrompt((config2, done) => {
         setError("Please input a value");
       } else {
         setError(`"${import_yoctocolors_cjs5.default.red(value)}" isn't an available option`);
+      }
+    } else if (key.name === "up" || key.name === "down") {
+      rl.clearLine(0);
+      const [selectedChoice, active] = getSelectedChoice(value, choices);
+      if (!selectedChoice) {
+        const firstChoice = key.name === "down" ? choices.find(isSelectableChoice) : choices.findLast(isSelectableChoice);
+        setValue(firstChoice.key);
+      } else if (loop || key.name === "up" && active !== bounds.first || key.name === "down" && active !== bounds.last) {
+        const offset = key.name === "up" ? -1 : 1;
+        let next = active;
+        do {
+          next = (next + offset + choices.length) % choices.length;
+        } while (!isSelectableChoice(choices[next]));
+        setValue(choices[next].key);
       }
     } else {
       setValue(rl.line);
@@ -61498,6 +61526,7 @@ function normalizeChoices5(choices) {
   });
 }
 var esm_default11 = createPrompt((config2, done) => {
+  var _a, _b;
   const { loop = true, pageSize = 7 } = config2;
   const firstRender = useRef(true);
   const theme = makeTheme(selectTheme, config2.theme);
@@ -61571,9 +61600,9 @@ var esm_default11 = createPrompt((config2, done) => {
     firstRender.current = false;
     if (items.length > pageSize) {
       helpTipBottom = `
-${theme.style.help("(Use arrow keys to reveal more choices)")}`;
+${theme.style.help(`(${((_a = config2.instructions) == null ? void 0 : _a.pager) ?? "Use arrow keys to reveal more choices"})`)}`;
     } else {
-      helpTipTop = theme.style.help("(Use arrow keys)");
+      helpTipTop = theme.style.help(`(${((_b = config2.instructions) == null ? void 0 : _b.navigation) ?? "Use arrow keys"})`);
     }
   }
   const page = usePagination({
