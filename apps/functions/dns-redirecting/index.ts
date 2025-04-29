@@ -46,6 +46,15 @@ export const dnsRedirecting = functions.https.onRequest(
     if (hostname === 'blog.angular.io') {
       response.redirect(redirectType, `https://blog.angular.dev${request.originalUrl}`);
     }
+    if (hostname === 'material.angular.io') {
+      response.redirect(redirectType, `https://material.angular.dev${request.originalUrl}`);
+    }
+    if (hostname.endsWith('material.angular.io')) {
+      response.redirect(
+        redirectType,
+        `https://${request.subdomains[0]}.material.angular.dev${request.originalUrl}`,
+      );
+    }
 
     // If no redirect is matched, we return a failure message
     response.status(404);
