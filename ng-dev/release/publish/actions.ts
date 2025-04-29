@@ -735,7 +735,10 @@ export abstract class ReleaseAction {
    * release commit and is the direct child of the previous sha provided.
    *
    * The method will make one recursive attempt to check again before throwing an error if
-   * any error occurs during this validation.
+   * any error occurs during this validation. This exists as an attempt to handle transient
+   * timeouts from Github along with cases, where the Github API response does not keep up
+   * with the timing from when we perform a merge to when we verify that the merged commit is
+   * present in the upstream branch.
    */
   private async _getAndValidateLatestCommitForPublishing(
     branch: string,
