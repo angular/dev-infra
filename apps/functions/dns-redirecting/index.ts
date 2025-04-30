@@ -8,6 +8,7 @@ export const dnsRedirecting = functions.https.onRequest(
     maxInstances: 2,
   },
   async (request, response) => {
+    console.log(`Request made at: ${request.protocol}://${request.hostname}${request.originalUrl}`);
     /** The type of redirect to use, defaulting to a 301 permanent redirect. */
     let redirectType = 301;
     /** The hostname that was used for the request. */
@@ -45,7 +46,7 @@ export const dnsRedirecting = functions.https.onRequest(
     } else if (hostname.endsWith('.material.angular.io')) {
       response.redirect(
         redirectType,
-        `https://${request.subdomains[0]}.material.angular.dev${request.originalUrl}`,
+        `https://${request.subdomains.reverse().join('.')}.angular.dev${request.originalUrl}`,
       );
     } else {
       // If no redirect is matched, we return a failure message
