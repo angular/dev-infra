@@ -30,36 +30,29 @@ export const dnsRedirecting = functions.https.onRequest(
 
     if (hostname === 'code-of-conduct.angular.io') {
       response.redirect(redirectType, 'https://code-of-conduct.angular.dev');
-    }
-    if (hostname === 'update.angular.dev') {
+    } else if (hostname === 'update.angular.dev') {
       response.redirect(redirectType, 'https://angular.dev/update-guide');
-    }
-    if (hostname === 'update.angular.io') {
+    } else if (hostname === 'update.angular.io') {
       response.redirect(redirectType, 'https://angular.dev/update-guide');
-    }
-    if (hostname === 'cli.angular.io') {
+    } else if (hostname === 'cli.angular.io') {
       response.redirect(redirectType, 'https://angular.dev/tools/cli');
-    }
-    if (hostname === 'cli.angular.dev') {
+    } else if (hostname === 'cli.angular.dev') {
       response.redirect(redirectType, 'https://angular.dev/tools/cli');
-    }
-    if (hostname === 'blog.angular.io') {
+    } else if (hostname === 'blog.angular.io') {
       response.redirect(redirectType, `https://blog.angular.dev${request.originalUrl}`);
-    }
-    if (hostname === 'material.angular.io') {
+    } else if (hostname === 'material.angular.io') {
       response.redirect(redirectType, `https://material.angular.dev${request.originalUrl}`);
-    }
-    if (hostname.endsWith('.material.angular.io')) {
+    } else if (hostname.endsWith('.material.angular.io')) {
       response.redirect(
         redirectType,
         `https://${request.subdomains[0]}.material.angular.dev${request.originalUrl}`,
       );
+    } else {
+      // If no redirect is matched, we return a failure message
+      response.status(404);
+      response.send(
+        `No redirect defined for ${request.protocol}://${request.hostname}${request.originalUrl}`,
+      );
     }
-
-    // If no redirect is matched, we return a failure message
-    response.status(404);
-    response.send(
-      `No redirect defined for ${request.protocol}://${request.hostname}${request.originalUrl}`,
-    );
   },
 );
