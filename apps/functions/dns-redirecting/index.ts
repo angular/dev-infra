@@ -49,7 +49,7 @@ export const dnsRedirecting = functions.https.onRequest(
     if (hostname === 'material.angular.io') {
       response.redirect(redirectType, `https://material.angular.dev${request.originalUrl}`);
     }
-    if (hostname.endsWith('material.angular.io')) {
+    if (hostname.endsWith('.material.angular.io')) {
       response.redirect(
         redirectType,
         `https://${request.subdomains[0]}.material.angular.dev${request.originalUrl}`,
