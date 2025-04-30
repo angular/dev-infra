@@ -244,13 +244,13 @@ __metadata:
     "@babel/core": "npm:^7.16.0"
     "@babel/plugin-transform-async-generator-functions": "npm:^7.26.8"
     "@bazel/bazelisk": "npm:^1.11.0"
-    "@bazel/buildifier": "npm:6.3.3"
+    "@bazel/buildifier": "npm:8.2.0"
     "@bazel/concatjs": "npm:5.8.1"
     "@bazel/esbuild": "npm:5.8.1"
-    "@bazel/ibazel": "npm:^0.23.0"
+    "@bazel/ibazel": "npm:^0.25.0"
     "@bazel/jasmine": "patch:@bazel/jasmine@npm:5.8.1#.yarn/patches/@bazel-jasmine-npm.patch"
     "@bazel/protractor": "npm:5.8.1"
-    "@bazel/runfiles": "npm:5.8.1"
+    "@bazel/runfiles": "npm:6.3.1"
     "@bazel/terser": "npm:5.8.1"
     "@bazel/typescript": "npm:5.8.1"
     "@google-cloud/firestore": "npm:^7.0.0"
@@ -910,12 +910,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@bazel/buildifier@npm:6.3.3":
-  version: 6.3.3
-  resolution: "@bazel/buildifier@npm:6.3.3"
+"@bazel/buildifier@npm:8.2.0":
+  version: 8.2.0
+  resolution: "@bazel/buildifier@npm:8.2.0"
   bin:
     buildifier: buildifier.js
-  checksum: 10c0/899639d028c7070105603c5a6d7f969649049b39c7c90fc03d6025176a80a029ecbd56250eb27b06cd786073df7ee17d32fff97f4cb4dc3eceed7ff0cc113f85
+  checksum: 10c0/5f7fae76e850126f019dac3f9164daee66716a63c806993849bb9edb97efb128c5848dd72e4dca2bdaa07159300a78644855dc291a5e6f3f7c2e384be163eb7f
   languageName: node
   linkType: hard
 
@@ -947,12 +947,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@bazel/ibazel@npm:^0.23.0":
-  version: 0.23.7
-  resolution: "@bazel/ibazel@npm:0.23.7"
+"@bazel/ibazel@npm:^0.25.0":
+  version: 0.25.0
+  resolution: "@bazel/ibazel@npm:0.25.0"
   bin:
     ibazel: index.js
-  checksum: 10c0/e115bd0851b8e9240fa4d06513f2c475962160d79dc6e2228b39f2504cf0d9cf99d210c154cde3be093593da24e372bdb6b7a2dbefb48e60ef51bd4e80f6aaa8
+  checksum: 10c0/8654fcb6dec25f5d503b5442ae24c93982b7b7e7f9f7d0caa2ca77e34325d645f86745f412922324e83596dae0f6e59e5269075119dc347f42d777905a2010ae
   languageName: node
   linkType: hard
 
@@ -995,14 +995,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@bazel/runfiles@npm:5.8.1":
-  version: 5.8.1
-  resolution: "@bazel/runfiles@npm:5.8.1"
-  checksum: 10c0/c148ea89839240d918ea615c485fcd0e5c009215ddfa718cc7dd1c3f0e2e278eb8d291b6cd990cd8fc2ade161f98f2defbac8b9c2968e5c5bc4edb98e6ed6bc6
-  languageName: node
-  linkType: hard
-
-"@bazel/runfiles@npm:^6.3.1":
+"@bazel/runfiles@npm:6.3.1, @bazel/runfiles@npm:^6.3.1":
   version: 6.3.1
   resolution: "@bazel/runfiles@npm:6.3.1"
   checksum: 10c0/7b542dcff9e917cc521520db137bd4f4a478796693700e2ec2c27f4beede800c9f4987e20c6b965d81000638f63549160780aea51eca2f0d0275be76fdc5e49f
