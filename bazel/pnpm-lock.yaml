@@ -33,8 +33,8 @@ importers:
         specifier: 3.0.4
         version: 3.0.4
       piscina:
-        specifier: ^4.9.2
-        version: 4.9.2
+        specifier: ^5.0.0
+        version: 5.0.0
       selenium-webdriver:
         specifier: ^4.31.0
         version: 4.31.0
@@ -789,8 +789,9 @@ packages:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
 
-  piscina@4.9.2:
-    resolution: {integrity: sha512-Fq0FERJWFEUpB4eSY59wSNwXD4RYqR+nR/WiEVcZW8IWfVBxJJafcgTEZDQo8k3w0sUarJ8RyVbbUF4GQ2LGbQ==}
+  piscina@5.0.0:
+    resolution: {integrity: sha512-R+arufwL7sZvGjAhSMK3TfH55YdGOqhpKXkcwQJr432AAnJX/xxX19PA4QisrmJ+BTTfZVggaz6HexbkQq1l1Q==}
+    engines: {node: '>=18.x'}
 
   portscanner@2.2.0:
     resolution: {integrity: sha512-IFroCz/59Lqa2uBvzK3bKDbDDIEaAY8XJ1jFxcLWTqosrsc32//P4VuSB2vZXoHiHqOmx8B5L5hnKOxL/7FlPw==}
@@ -1837,7 +1838,7 @@ snapshots:
 
   picomatch@2.3.1: {}
 
-  piscina@4.9.2:
+  piscina@5.0.0:
     optionalDependencies:
       '@napi-rs/nice': 1.0.1
 
