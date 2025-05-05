@@ -15,7 +15,6 @@
   },
   "ignorePaths": ["bazel/integration/tests/**"],
   "ignoreDeps": ["rules_pkg", "@angular-devkit/build-angular"],
-  "enabledManagers": ["npm", "bazel", "github-actions"],
   "baseBranches": ["main"],
   "postUpgradeTasks": {
     "commands": [
@@ -27,6 +26,15 @@
     "executionMode": "update"
   },
   "packageRules": [
+    {
+      "matchDepNames": ["node"],
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "enabled": false,
+      "matchDepNames": ["node"],
+      "matchUpdateTypes": ["major"]
+    },
     {
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "all non-major dependencies",
