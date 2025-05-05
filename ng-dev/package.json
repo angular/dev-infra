@@ -15,7 +15,7 @@
     }
   },
   "dependencies": {
-    "@google-cloud/spanner": "7.19.1",
+    "@google-cloud/spanner": "7.21.0",
     "@octokit/rest": "21.1.1",
     "@types/semver": "^7.3.6",
     "@types/supports-color": "^10.0.0",
