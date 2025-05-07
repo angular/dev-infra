@@ -10,6 +10,7 @@ import {Argv} from 'yargs';
 import {BuildAndLinkCommandModule} from './build-and-link/cli.js';
 import {UpdateYarnCommandModule} from './update-yarn/cli.js';
 import {GeneratedFilesModule} from './generated-files/cli.js';
+import {GeneratedNodeJsToolchainModule} from './generate-nodejs-toolchain/cli.js';
 
 /** Build the parser for the misc commands. */
 export function buildMiscParser(localYargs: Argv) {
@@ -18,5 +19,6 @@ export function buildMiscParser(localYargs: Argv) {
     .strict()
     .command(BuildAndLinkCommandModule)
     .command(UpdateYarnCommandModule)
-    .command(GeneratedFilesModule);
+    .command(GeneratedFilesModule)
+    .command(GeneratedNodeJsToolchainModule);
 }
