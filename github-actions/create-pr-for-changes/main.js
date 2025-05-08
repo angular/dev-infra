@@ -47972,7 +47972,24 @@ async function main() {
       state: "open"
     });
     if (matchingPrs.length > 0) {
-      core.info(`Skipping PR creation, because there is already a PR: #${matchingPrs[0].number} (${matchingPrs[0].html_url})`);
+      for (const matchingPr of matchingPrs) {
+        const { data: { mergeable } } = await git.github.pulls.get({
+          owner: repo.owner,
+          repo: repo.name,
+          pull_number: matchingPr.number
+        });
+        core.info(`Skipping PR creation, because there is already a PR: #${matchingPr.number} (${matchingPr.html_url})`);
+        if (!mergeable) {
+          core.info(`PR is not mergable, rebasing branch: #${branchName}`);
+          git.run(["checkout", "-b", branchName]);
+          git.run([
+            "push",
+            "--force-with-lease",
+            getRepositoryGitUrl(forkRepo, git.githubToken),
+            `HEAD:refs/heads/${branchName}`
+          ]);
+        }
+      }
       return;
     } else {
       core.info(`No pre-existing PR found for branch '${branchName}'.`);
