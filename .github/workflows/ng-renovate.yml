@@ -11,6 +11,9 @@ on:
 permissions:
   contents: read
 
+env:
+  COREPACK_ENABLE_DOWNLOAD_PROMPT: 0 # Disable corepack prompt
+
 jobs:
   renovate:
     strategy:
