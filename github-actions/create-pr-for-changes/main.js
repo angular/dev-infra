@@ -47995,6 +47995,7 @@ async function main() {
       core.info(`No pre-existing PR found for branch '${branchName}'.`);
     }
     const { data: { items: supersededPrs } } = await git.github.search.issuesAndPullRequests({
+      advanced_search: "true",
       q: toGithubSearchQuery({
         repo: `${repo.owner}/${repo.name}`,
         type: "pull-request",
@@ -48073,6 +48074,7 @@ ${prBody}`;
 }
 async function cleanUpObsoleteBranches(git, repo, forkRepo, branchPrefix) {
   const { data: { items: obsoletePrs } } = await git.github.search.issuesAndPullRequests({
+    advanced_search: "true",
     q: toGithubSearchQuery({
       repo: `${repo.owner}/${repo.name}`,
       type: "pull-request",
