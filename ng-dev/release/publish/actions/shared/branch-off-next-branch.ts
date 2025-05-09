@@ -19,6 +19,7 @@ import {
 import {CutNpmNextPrereleaseAction} from '../cut-npm-next-prerelease.js';
 import {CutNpmNextReleaseCandidateAction} from '../cut-npm-next-release-candidate.js';
 import {ActiveReleaseTrains} from '../../../versioning/active-release-trains.js';
+import {updateRenovateConfig} from '../renovate-config-updates.js';
 
 /**
  * Base action that can be used to move the next release-train into the dedicated FF/RC
@@ -139,11 +140,17 @@ export abstract class BranchOffNextBranchBaseAction extends CutNpmNextPrerelease
 
     // Create an individual commit for the next version bump. The changelog should go into
     // a separate commit that makes it clear where the changelog is cherry-picked from.
-    await this.createCommit(bumpCommitMessage, [
+    const filesToCommit: string[] = [
       workspaceRelativePackageJsonPath,
       ...this.getAspectLockFiles(),
-    ]);
+    ];
 
+    const renovateConfigPath = await updateRenovateConfig(this.projectDir, nextBranch);
+    if (renovateConfigPath) {
+      filesToCommit.push(renovateConfigPath);
+    }
+
+    await this.createCommit(bumpCommitMessage, filesToCommit);
     await this.prependReleaseNotesToChangelog(releaseNotes);
 
     const commitMessage = getReleaseNoteCherryPickCommitMessage(releaseNotes.version);
