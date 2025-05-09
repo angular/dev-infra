@@ -129,6 +129,7 @@ async function main(): Promise<void> {
     const {
       data: {items: supersededPrs},
     } = await git.github.search.issuesAndPullRequests({
+      advanced_search: 'true',
       q: toGithubSearchQuery({
         repo: `${repo.owner}/${repo.name}`,
         type: 'pull-request',
@@ -276,6 +277,7 @@ async function cleanUpObsoleteBranches(
   const {
     data: {items: obsoletePrs},
   } = await git.github.search.issuesAndPullRequests({
+    advanced_search: 'true',
     q: toGithubSearchQuery({
       repo: `${repo.owner}/${repo.name}`,
       type: 'pull-request',
