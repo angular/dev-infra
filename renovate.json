@@ -1,82 +1,23 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "semanticCommits": "enabled",
-  "semanticCommitType": "build",
-  "semanticCommitScope": "",
-  "dependencyDashboard": true,
-  "automerge": false,
-  "separateMajorMinor": false,
-  "timezone": "America/Tijuana",
-  "labels": ["comp: build", "renovate managed", "action: merge"],
-  "keepUpdatedLabel": "renovate managed",
-  "rebaseWhen": "conflicted",
-  "lockFileMaintenance": {
-    "enabled": true
-  },
-  "ignorePaths": ["bazel/integration/tests/**"],
-  "ignoreDeps": ["rules_pkg", "@angular-devkit/build-angular"],
-  "baseBranches": ["main"],
+  "extends": ["github>angular/dev-infra//renovate-presets/default.json5"],
+
   "postUpgradeTasks": {
     "commands": [
-      "git restore bazel/pnpm-lock.yaml",
-      "yarn install",
+      "git restore bazel/pnpm-lock.yaml .npmrc",
+      "yarn install --immutable",
       "yarn bazel sync --only=repo || true",
       "yarn update-generated-files"
     ],
-    "executionMode": "update"
+    "executionMode": "branch"
   },
+
+  "ignorePaths": ["bazel/integration/tests/**"],
   "packageRules": [
     {
-      "matchDepNames": ["node"],
-      "matchUpdateTypes": ["minor", "patch"]
-    },
-    {
-      "enabled": false,
-      "matchDepNames": ["node"],
-      "matchUpdateTypes": ["major"]
-    },
-    {
-      "matchUpdateTypes": ["minor", "patch"],
-      "groupName": "all non-major dependencies",
-      "schedule": ["at any time"],
-      "matchPackageNames": ["*"]
-    },
-    {
-      "groupName": "bazel setup",
-      "matchPackageNames": ["/^@bazel/.*/", "/^build_bazel.*/"]
-    },
-    {
-      "groupName": "yarn",
-      "matchPackageNames": ["/yarn.*/"]
-    },
-    {
-      "groupName": "octokit dependencies",
-      "matchPackageNames": ["@octokit/{/,}**"]
-    },
-    {
-      "followTag": "next",
-      "groupName": "angular dependencies",
-      "matchPackageNames": ["@angular/{/,}**", "@angular-devkit{/,}**", "@schematics/{/,}**"]
-    },
-    {
-      "matchPackageNames": "renovate",
-      "schedule": ["after 10:00pm", "before 5:00am"]
-    },
-    {
+      "enabled": true,
       "matchPackageNames": ["typescript"],
-      "matchUpdateTypes": ["major"],
-      "enabled": false
-    },
-    {
-      "matchPackageNames": ["@types/node"],
-      "matchUpdateTypes": ["major"],
-      "enabled": false
-    },
-    {
-      "matchFileNames": [".github/workflows/scorecard.yml"],
-      "groupName": "scorecard action dependencies",
-      "groupSlug": "scorecard-action",
-      "matchPackageNames": ["*"]
+      "matchUpdateTypes": ["minor"]
     }
   ]
 }

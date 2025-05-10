@@ -1,0 +1,142 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["group:monorepos"],
+  "dependencyDashboard": true,
+  "rangeStrategy": "replace",
+
+  // Schedule Renovate to run during off-peak hours
+  "schedule": [
+    "after 10:00pm every weekday",
+    "before 5:00am every weekday",
+    "every weekend"
+  ],
+  "prConcurrentLimit": 8,
+  "prHourlyLimit": 4,
+  "timezone": "America/Tijuana",
+
+  // Commit and PR customization
+  "commitBody": "See associated pull request for more information.",
+  "semanticCommits": "enabled",
+  "semanticCommitScope": "",
+  "semanticCommitType": "build",
+  "labels": ["area: build & ci", "action: review"],
+
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+
+  "packageRules": [
+    // ============================================================================
+    // GENERAL GROUPING & UPDATE BEHAVIOR
+    // ============================================================================
+
+    // Group all non-major updates (minor and patch) together
+    {
+      "groupName": "all non-major dependencies",
+      "matchPackageNames": [
+        "*",
+        "!node",
+        "!pnpm",
+        "!npm",
+        "!yarn"
+      ],
+      "matchUpdateTypes": ["digest", "patch", "minor"]
+    },
+
+    // ============================================================================
+    // ECOSYSTEM-SPECIFIC GROUPING
+    // ============================================================================
+
+    // Group Bazel updates
+    {
+      "groupName": "bazel dependencies",
+      "matchManagers": ["bazel"]
+    },
+
+    // ============================================================================
+    // DEPENDENCY-SPECIFIC UPDATE CONTROLS
+    // ============================================================================
+
+    // Group updates related to Angular ecosystem across repositories
+    {
+      "groupName": "cross-repo angular dependencies",
+      "followTag": "next",
+      "separateMajorMinor": false,
+      "schedule": ["at any time"],
+      "matchPackageNames": [
+        "@angular-devkit/**",
+        "@angular/**",
+        "@schematics/**",
+        "angular/**",
+        "ng-packagr"
+      ]
+    },
+
+    // Disable 'next' tag tracking on non-main branches
+    {
+      "matchBaseBranches": ["!main"],
+      "followTag": null
+    },
+
+    // Keep minor and patch updates separate for TypeScript
+    {
+      "matchPackageNames": ["typescript"],
+      "separateMinorPatch": true
+    },
+
+    // Group TypeScript-related packages
+    {
+      "groupName": "typescript dependencies",
+      "matchPackageNames": ["typescript", "tslib"]
+    },
+
+    // Limit how many times these packages get updated (They deploy each merged PR)
+    {
+      "matchPackageNames": ["renovate", "quicktype-core"],
+      "schedule": ["on sunday and wednesday"]
+    },
+
+    // ============================================================================
+    // WORKFLOW-SPECIFIC UPDATE RULES
+    // ============================================================================
+
+    // Group dependencies in the scorecard GitHub Actions workflow
+    {
+      "groupName": "scorecard action dependencies",
+      "matchFileNames": [".github/workflows/scorecard.yml"],
+      "matchPackageNames": ["*"]
+    },
+
+    // ============================================================================
+    // EXCLUSION RULES
+    // ============================================================================
+
+    // Disable updates for placeholder or 0.0.0-style versions
+    {
+      "enabled": false,
+      "matchCurrentVersion": "/^[~^]?0\\.0\\.0-/"
+    },
+
+    // Disable major updates for specified dependencies
+    {
+      "enabled": false,
+      "matchPackageNames": [
+        "@types/node",
+        "node",
+        "npm",
+        "pnpm",
+        "rxjs",
+        "tslib",
+        "yarn"
+      ],
+      "matchUpdateTypes": ["major"]
+    },
+
+    // Disable TypeScript major and minor updates
+    {
+      "enabled": false,
+      "matchPackageNames": ["typescript"],
+      "matchUpdateTypes": ["major", "minor"]
+    }
+  ]
+}
