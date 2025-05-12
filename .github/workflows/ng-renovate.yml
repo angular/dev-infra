@@ -28,7 +28,7 @@ jobs:
       # this step.
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: ./github-actions/npm/checkout-and-setup-node
-      - run: npm install --global pnpm@9.15.6
+      - run: npm install --global pnpm@9.15.9
         shell: bash
 
       # TODO: Use pnpm/action-setup for pnpm install once pnpm is the packageManager for this repo
