@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {randomUUID} from 'node:crypto';
 export {verifyNoBrowserErrors} from './e2e_util';
 
 import type * as benchpress from '@angular/benchpress';
-import {v1 as uuidv1} from 'uuid';
 import {openBrowser} from './e2e_util';
 
 // Note: Keep the `modules/benchmarks/README.md` file in sync with the supported options.
@@ -82,7 +82,7 @@ async function _prepareBenchpressSetup(): Promise<BenchpressSetup> {
     Runner,
   } = module;
 
-  let runId = uuidv1();
+  let runId = randomUUID();
   if (process.env.GIT_SHA) {
     runId = process.env.GIT_SHA + ' ' + runId;
   }
