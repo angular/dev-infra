@@ -247,7 +247,7 @@ __metadata:
     "@babel/core": "npm:^7.16.0"
     "@babel/plugin-transform-async-generator-functions": "npm:^7.26.8"
     "@bazel/bazelisk": "npm:^1.11.0"
-    "@bazel/buildifier": "npm:6.4.0"
+    "@bazel/buildifier": "npm:8.2.0"
     "@bazel/concatjs": "npm:5.8.1"
     "@bazel/esbuild": "npm:5.8.1"
     "@bazel/ibazel": "npm:^0.25.0"
@@ -932,12 +932,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@bazel/buildifier@npm:6.4.0":
-  version: 6.4.0
-  resolution: "@bazel/buildifier@npm:6.4.0"
+"@bazel/buildifier@npm:8.2.0":
+  version: 8.2.0
+  resolution: "@bazel/buildifier@npm:8.2.0"
   bin:
     buildifier: buildifier.js
-  checksum: 10c0/1a0c0771745daea10386989bc5d8b315f1290470dcd4f04554984afaa88c776e1d2dbe3dc26276f0d8f4c0a27a901c3e99cb0f54c48f4367cdddbc23df5cb98a
+  checksum: 10c0/5f7fae76e850126f019dac3f9164daee66716a63c806993849bb9edb97efb128c5848dd72e4dca2bdaa07159300a78644855dc291a5e6f3f7c2e384be163eb7f
   languageName: node
   linkType: hard
 
