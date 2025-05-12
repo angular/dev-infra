@@ -250,7 +250,7 @@ __metadata:
     "@bazel/ibazel": "npm:^0.23.0"
     "@bazel/jasmine": "patch:@bazel/jasmine@npm:5.8.1#.yarn/patches/@bazel-jasmine-npm.patch"
     "@bazel/protractor": "npm:5.8.1"
-    "@bazel/runfiles": "npm:5.8.1"
+    "@bazel/runfiles": "npm:6.3.1"
     "@bazel/terser": "npm:5.8.1"
     "@bazel/typescript": "npm:5.8.1"
     "@google-cloud/firestore": "npm:^7.0.0"
@@ -1163,14 +1163,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@bazel/runfiles@npm:5.8.1":
-  version: 5.8.1
-  resolution: "@bazel/runfiles@npm:5.8.1"
-  checksum: 10c0/c148ea89839240d918ea615c485fcd0e5c009215ddfa718cc7dd1c3f0e2e278eb8d291b6cd990cd8fc2ade161f98f2defbac8b9c2968e5c5bc4edb98e6ed6bc6
-  languageName: node
-  linkType: hard
-
-"@bazel/runfiles@npm:^6.3.1":
+"@bazel/runfiles@npm:6.3.1, @bazel/runfiles@npm:^6.3.1":
   version: 6.3.1
   resolution: "@bazel/runfiles@npm:6.3.1"
   checksum: 10c0/7b542dcff9e917cc521520db137bd4f4a478796693700e2ec2c27f4beede800c9f4987e20c6b965d81000638f63549160780aea51eca2f0d0275be76fdc5e49f
