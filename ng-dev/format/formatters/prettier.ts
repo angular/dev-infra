@@ -24,7 +24,7 @@ export class Prettier extends Formatter {
   override defaultFileMatcher = [
     '**/*.{js,cjs,mjs}',
     '**/*.{ts,cts,mts}',
-    '**/*.json',
+    '**/*.{json,json5}',
     '**/*.{yml,yaml}',
   ];
 

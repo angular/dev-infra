@@ -1,53 +1,43 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["group:monorepos"],
-  "dependencyDashboard": true,
-  "rangeStrategy": "replace",
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  extends: ['group:monorepos'],
+  dependencyDashboard: true,
+  rangeStrategy: 'replace',
 
   // Schedule Renovate to run during off-peak hours
-  "schedule": [
-    "after 10:00pm every weekday",
-    "before 5:00am every weekday",
-    "every weekend"
-  ],
-  "prConcurrentLimit": 8,
-  "prHourlyLimit": 4,
-  "timezone": "America/Tijuana",
+  schedule: ['after 10:00pm every weekday', 'before 5:00am every weekday', 'every weekend'],
+  prConcurrentLimit: 8,
+  prHourlyLimit: 4,
+  timezone: 'America/Tijuana',
 
   // Commit and PR customization
-  "commitBody": "See associated pull request for more information.",
-  "semanticCommits": "enabled",
-  "semanticCommitScope": "",
-  "semanticCommitType": "build",
-  "labels": ["area: build & ci", "action: review"],
+  commitBody: 'See associated pull request for more information.',
+  semanticCommits: 'enabled',
+  semanticCommitScope: '',
+  semanticCommitType: 'build',
+  labels: ['area: build & ci', 'action: review'],
 
-  "lockFileMaintenance": {
-    "enabled": true
+  lockFileMaintenance: {
+    enabled: true,
   },
 
   // Ignored dependencies in all repositories
-  "ignoreDeps": [
-    "build_bazel_rules_nodejs",
-    "rules_pkg",
-    "yarn" // Yarn is copied locally in all repositories where needed.
+  ignoreDeps: [
+    'build_bazel_rules_nodejs',
+    'rules_pkg',
+    'yarn', // Yarn is copied locally in all repositories where needed.
   ],
 
-  "packageRules": [
+  packageRules: [
     // ============================================================================
     // GENERAL GROUPING & UPDATE BEHAVIOR
     // ============================================================================
 
     // Group all non-major updates (minor and patch) together
     {
-      "groupName": "all non-major dependencies",
-      "matchDepNames": [
-        "*",
-        "!node",
-        "!pnpm",
-        "!npm",
-        "!yarn"
-      ],
-      "matchUpdateTypes": ["digest", "patch", "minor"]
+      groupName: 'all non-major dependencies',
+      matchDepNames: ['*', '!node', '!pnpm', '!npm', '!yarn'],
+      matchUpdateTypes: ['digest', 'patch', 'minor'],
     },
 
     // ============================================================================
@@ -56,8 +46,8 @@
 
     // Group Bazel updates
     {
-      "groupName": "bazel dependencies",
-      "matchManagers": ["bazel"]
+      groupName: 'bazel dependencies',
+      matchManagers: ['bazel'],
     },
 
     // ============================================================================
@@ -66,41 +56,41 @@
 
     // Group updates related to Angular ecosystem across repositories
     {
-      "groupName": "cross-repo angular dependencies",
-      "followTag": "next",
-      "separateMajorMinor": false,
-      "schedule": ["at any time"],
-      "matchDepNames": [
-        "@angular-devkit/**",
-        "@angular/**",
-        "@schematics/**",
-        "angular/**",
-        "ng-packagr"
-      ]
+      groupName: 'cross-repo angular dependencies',
+      followTag: 'next',
+      separateMajorMinor: false,
+      schedule: ['at any time'],
+      matchDepNames: [
+        '@angular-devkit/**',
+        '@angular/**',
+        '@schematics/**',
+        'angular/**',
+        'ng-packagr',
+      ],
     },
 
     // Disable 'next' tag tracking on non-main branches
     {
-      "matchBaseBranches": ["!main"],
-      "followTag": null
+      matchBaseBranches: ['!main'],
+      followTag: null,
     },
 
     // Keep minor and patch updates separate for TypeScript
     {
-      "matchDepNames": ["typescript"],
-      "separateMinorPatch": true
+      matchDepNames: ['typescript'],
+      separateMinorPatch: true,
     },
 
     // Group TypeScript-related packages
     {
-      "groupName": "typescript dependencies",
-      "matchDepNames": ["typescript", "tslib"]
+      groupName: 'typescript dependencies',
+      matchDepNames: ['typescript', 'tslib'],
     },
 
     // Limit how many times these packages get updated (They deploy each merged PR)
     {
-      "matchDepNames": ["renovate", "quicktype-core"],
-      "schedule": ["on sunday and wednesday"]
+      matchDepNames: ['renovate', 'quicktype-core'],
+      schedule: ['on sunday and wednesday'],
     },
 
     // ============================================================================
@@ -109,9 +99,9 @@
 
     // Group dependencies in the scorecard GitHub Actions workflow
     {
-      "groupName": "scorecard action dependencies",
-      "matchFileNames": [".github/workflows/scorecard.yml"],
-      "matchDepNames": ["*"]
+      groupName: 'scorecard action dependencies',
+      matchFileNames: ['.github/workflows/scorecard.yml'],
+      matchDepNames: ['*'],
     },
 
     // ============================================================================
@@ -120,31 +110,31 @@
 
     // Disable updates for placeholder or 0.0.0-style versions
     {
-      "enabled": false,
-      "matchCurrentVersion": "/^[~^]?0\\.0\\.0-/"
+      enabled: false,
+      matchCurrentVersion: '/^[~^]?0\\.0\\.0-/',
     },
 
     // Disable major updates for specified dependencies
     {
-      "enabled": false,
-      "matchDepNames": [
-        "@types/node",
-        "bazel",
-        "node",
-        "npm",
-        "pnpm",
-        "rxjs",
-        "tslib",
-        "yarn"
+      enabled: false,
+      matchDepNames: [
+        '@types/node',
+        'node',
+        'bazel', // bazelisk bazel verison
+        'npm',
+        'pnpm',
+        'rxjs',
+        'tslib',
+        'yarn',
       ],
-      "matchUpdateTypes": ["major"]
+      matchUpdateTypes: ['major'],
     },
 
     // Disable TypeScript major and minor updates
     {
-      "enabled": false,
-      "matchDepNames": ["typescript"],
-      "matchUpdateTypes": ["major", "minor"]
-    }
-  ]
+      enabled: false,
+      matchDepNames: ['typescript'],
+      matchUpdateTypes: ['major', 'minor'],
+    },
+  ],
 }
