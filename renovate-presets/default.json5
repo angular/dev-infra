@@ -3,6 +3,7 @@
   extends: ['group:monorepos'],
   dependencyDashboard: true,
   rangeStrategy: 'replace',
+  automerge: false,
 
   // Schedule Renovate to run during off-peak hours
   schedule: ['after 10:00pm every weekday', 'before 5:00am every weekday', 'every weekend'],
@@ -19,6 +20,11 @@
 
   lockFileMaintenance: {
     enabled: true,
+  },
+
+  // Feature disabled: permission to enable vulnerability alerts is not granted
+  'vulnerabilityAlerts': {
+    'enabled': false,
   },
 
   // Ignored dependencies in all repositories
