@@ -20,3 +20,6 @@ allow-dependencies-licenses:
   # Renovate uses the AGPL-3.0 license, which we have determined is okay for our
   # usage. We do not however, want to depend on this license in general
   - 'pkg:npm/renovate'
+  # This is valid MIT but the parser is failing with an error
+  # `License: LicenseRef-scancode-unknown-license-reference AND MIT`
+  - 'pkg:npm/cookie-signature@1.2.2'
