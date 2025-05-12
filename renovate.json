@@ -4,9 +4,7 @@
 
   "postUpgradeTasks": {
     "commands": [
-      "git restore bazel/pnpm-lock.yaml .npmrc",
       "yarn install --immutable",
-      "yarn bazel sync --only=repo || true",
       "yarn update-generated-files"
     ],
     "executionMode": "branch"
