@@ -28,7 +28,8 @@
   // Ignored dependencies in all repositories
   "ignoreDeps": [
     "build_bazel_rules_nodejs",
-    "rules_pkg"
+    "rules_pkg",
+    "yarn" // Yarn is copied locally in all repositories where needed.
   ],
 
   "packageRules": [
@@ -128,6 +129,7 @@
       "enabled": false,
       "matchPackageNames": [
         "@types/node",
+        "bazel",
         "node",
         "npm",
         "pnpm",
