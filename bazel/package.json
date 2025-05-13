@@ -1,7 +1,7 @@
 {
   "name": "@devinfra/bazel",
   "dependencies": {
-    "@microsoft/api-extractor": "7.52.7",
+    "@microsoft/api-extractor": "7.52.8",
     "@types/browser-sync": "2.29.0",
     "@types/node": "22.15.17",
     "@types/selenium-webdriver": "^4.1.28",
