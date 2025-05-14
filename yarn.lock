@@ -2589,30 +2589,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/api-extractor@npm:7.52.8":
-  version: 7.52.8
-  resolution: "@microsoft/api-extractor@npm:7.52.8"
-  dependencies:
-    "@microsoft/api-extractor-model": "npm:7.30.6"
-    "@microsoft/tsdoc": "npm:~0.15.1"
-    "@microsoft/tsdoc-config": "npm:~0.17.1"
-    "@rushstack/node-core-library": "npm:5.13.1"
-    "@rushstack/rig-package": "npm:0.5.3"
-    "@rushstack/terminal": "npm:0.15.3"
-    "@rushstack/ts-command-line": "npm:5.0.1"
-    lodash: "npm:~4.17.15"
-    minimatch: "npm:~3.0.3"
-    resolve: "npm:~1.22.1"
-    semver: "npm:~7.5.4"
-    source-map: "npm:~0.6.1"
-    typescript: "npm:5.8.2"
-  bin:
-    api-extractor: bin/api-extractor
-  checksum: 10c0/42f4335ebf27c7fa819a858378062d774e130dda109f001825d49fd284430c62ea9eb703a8c49a9dd8e3a607bbf19ba4457548353282673e7429e0e6d01b325b
-  languageName: node
-  linkType: hard
-
-"@microsoft/api-extractor@npm:^7.24.2":
+"@microsoft/api-extractor@npm:7.52.8, @microsoft/api-extractor@npm:^7.24.2":
   version: 7.52.8
   resolution: "@microsoft/api-extractor@npm:7.52.8"
   dependencies:

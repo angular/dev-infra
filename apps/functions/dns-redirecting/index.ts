@@ -2,6 +2,7 @@ import * as functions from 'firebase-functions';
 
 export const dnsRedirecting = functions.https.onRequest(
   {
+    cors: true,
     invoker: 'public',
     timeoutSeconds: 5,
     minInstances: 1,
@@ -42,6 +43,13 @@ export const dnsRedirecting = functions.https.onRequest(
     } else if (hostname === 'blog.angular.io') {
       response.redirect(redirectType, `https://blog.angular.dev${request.originalUrl}`);
     } else if (hostname === 'material.angular.io') {
+      if (request.originalUrl === '/assets/versions.json') {
+        const versionsData = await fetch('https://material.angular.dev/assets/versions.json').then(
+          (r) => r.json(),
+        );
+        response.set('Content-Type', 'application/json').send(JSON.stringify(versionsData));
+        return;
+      }
       response.redirect(redirectType, `https://material.angular.dev${request.originalUrl}`);
     } else if (hostname.endsWith('.material.angular.io')) {
       response.redirect(
