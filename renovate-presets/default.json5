@@ -16,15 +16,15 @@
   semanticCommits: 'enabled',
   semanticCommitScope: '',
   semanticCommitType: 'build',
-  labels: ['area: build & ci', 'action: review'],
+  labels: ['area: build & ci', 'action: merge'],
 
   lockFileMaintenance: {
     enabled: true,
   },
 
   // Feature disabled: permission to enable vulnerability alerts is not granted
-  'vulnerabilityAlerts': {
-    'enabled': false,
+  vulnerabilityAlerts: {
+    enabled: false,
   },
 
   // Ignored dependencies in all repositories
