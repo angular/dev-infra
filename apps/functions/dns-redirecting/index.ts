@@ -47,7 +47,12 @@ export const dnsRedirecting = functions.https.onRequest(
         const versionsData = await fetch('https://material.angular.dev/assets/versions.json').then(
           (r) => r.json(),
         );
-        response.set('Content-Type', 'application/json').send(JSON.stringify(versionsData));
+        // 4 Days in seconds
+        const cacheDuration = 60 * 60 * 24 * 4;
+        response
+          .set('Cache-Control', `public, max-age=${cacheDuration}, s-maxage=${cacheDuration}`)
+          .set('Content-Type', 'application/json')
+          .send(JSON.stringify(versionsData));
         return;
       }
       response.redirect(redirectType, `https://material.angular.dev${request.originalUrl}`);
