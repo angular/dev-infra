@@ -17,9 +17,6 @@ platform(
         # it needs to be updated. e.g. for a more recent Bash version, or new system settings that are
         # required for launching browsers.
         "container-image": "docker://us-west2-docker.pkg.dev/internal-200822/remote-execution-images/angular-devinfra-rbe-image@sha256:3389d808edbcdf8999338fd617dda68cdbaa259b431f19e41e58941cdac900a3",
-        # The `SYS_ADMIN` capability is added so that browsers can be launched with sandbox mode enabled. Related
-        # # information: https://developers.google.com/web/tools/puppeteer/troubleshooting#running_puppeteer_in_docker
-        "dockerAddCapabilities": "SYS_ADMIN",
         # By default in Google Cloud Remote build execution, network access is disabled. We explicitly set the
         # property in the platform again in case the default ever changes. Network access is not desirable in
         # Bazel builds as it is potential source of flaky tests and therefore also breaks hermeticity.
