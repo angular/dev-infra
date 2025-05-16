@@ -8,6 +8,7 @@
   // Schedule Renovate to run during off-peak hours
   schedule: ['after 10:00pm every weekday', 'before 5:00am every weekday', 'every weekend'],
   prConcurrentLimit: 8,
+  branchConcurrentLimit: 2,
   prHourlyLimit: 4,
   timezone: 'America/Tijuana',
 
