@@ -12,7 +12,7 @@ module.exports = {
   hostRules: [
     {
       matchHost: 'api.github.com',
-      concurrentRequestLimit: 1,
+      concurrentRequestLimit: 4,
     },
   ],
   productLinks: {
