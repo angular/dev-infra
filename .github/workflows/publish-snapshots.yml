@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - snapshot-test
+      - framework-tmp-branch-off
 
 permissions: {}
 
