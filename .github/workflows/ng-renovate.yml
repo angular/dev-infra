@@ -15,13 +15,18 @@ jobs:
   renovate:
     strategy:
       matrix:
-        REPOSITORY:
-          - angular/angular
-          - angular/dev-infra
-          - angular/components
-          - angular/angular-cli
-          - angular/vscode-ng-language-service
-    runs-on: ubuntu-latest
+        repositories:
+          - name: angular/angular
+            run_os: ubuntu-latest-4core
+          - name: angular/dev-infra
+            run_os: ubuntu-latest
+          - name: angular/components
+            run_os: ubuntu-latest
+          - name: angular/angular-cli
+            run_os: ubuntu-latest
+          - name: angular/vscode-ng-language-service
+            run_os: ubuntu-latest
+    runs-on: ${{ matrix.repositories.run_os }}
     steps:
       # Because the checkout and setup node action is contained in the dev-infra repo, we must
       # checkout the repo to be able to run the action we have created.  Other repos will skip
@@ -45,4 +50,4 @@ jobs:
           RENOVATE_FORK_TOKEN: ${{ secrets.NG_RENOVATE_USER_ACCESS_TOKEN }}
           GITHUB_COM_TOKEN: ${{ secrets.NG_RENOVATE_USER_ACCESS_TOKEN }}
           RENOVATE_CONFIG_FILE: .github/ng-renovate/runner-config.js
-          RENOVATE_REPOSITORIES: ${{ matrix.REPOSITORY }}
+          RENOVATE_REPOSITORIES: ${{ matrix.repositories.name }}
