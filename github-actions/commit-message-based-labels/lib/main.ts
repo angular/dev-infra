@@ -49,9 +49,6 @@ class CommitMessageBasedLabelManager {
       if (hasCommit && !hasLabel) {
         await this.addLabel(name);
       }
-      if (!hasCommit && hasLabel) {
-        await this.removeLabel(name);
-      }
     }
 
     for (const commit of this.commits) {
@@ -74,19 +71,6 @@ class CommitMessageBasedLabelManager {
       this.labels.add(label);
     } catch (err) {
       core.error(`Failed to add ${label} label to PR #${issue_number}`);
-      core.debug(err as string);
-    }
-  }
-
-  /** Remove the provided label from the pull request. */
-  async removeLabel(name: string) {
-    const {number: issue_number, owner, repo} = context.issue;
-    try {
-      await this.git.issues.removeLabel({repo, owner, issue_number, name});
-      core.info(`Added ${name} label to PR #${issue_number}`);
-      this.labels.delete(name);
-    } catch (err) {
-      core.error(`Failed to add ${name} label to PR #${issue_number}`);
       core.debug(err as string);
     }
   }

@@ -43655,9 +43655,6 @@ var CommitMessageBasedLabelManager = class {
       if (hasCommit && !hasLabel) {
         await this.addLabel(name);
       }
-      if (!hasCommit && hasLabel) {
-        await this.removeLabel(name);
-      }
     }
     for (const commit of this.commits) {
       const label = "area: " + commit.scope;
@@ -43674,17 +43671,6 @@ var CommitMessageBasedLabelManager = class {
       this.labels.add(label);
     } catch (err) {
       core.error(`Failed to add ${label} label to PR #${issue_number}`);
-      core.debug(err);
-    }
-  }
-  async removeLabel(name) {
-    const { number: issue_number, owner, repo } = import_github2.context.issue;
-    try {
-      await this.git.issues.removeLabel({ repo, owner, issue_number, name });
-      core.info(`Added ${name} label to PR #${issue_number}`);
-      this.labels.delete(name);
-    } catch (err) {
-      core.error(`Failed to add ${name} label to PR #${issue_number}`);
       core.debug(err);
     }
   }
