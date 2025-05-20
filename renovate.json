@@ -3,10 +3,7 @@
   "extends": ["github>angular/dev-infra//renovate-presets/default.json5"],
 
   "postUpgradeTasks": {
-    "commands": [
-      "yarn install --immutable",
-      "yarn update-generated-files"
-    ],
+    "commands": ["git clean -f", "yarn install --immutable", "yarn update-generated-files"],
     "executionMode": "branch"
   },
 
