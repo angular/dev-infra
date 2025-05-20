@@ -101,7 +101,7 @@
 
     // Limit how many times these packages get updated (They deploy each merged PR)
     {
-      matchDepNames: ['renovate', 'quicktype-core'],
+      matchDepNames: ['renovate', 'quicktype-core', 'google-closure-compiler'],
       schedule: ['on sunday and wednesday'],
     },
 
