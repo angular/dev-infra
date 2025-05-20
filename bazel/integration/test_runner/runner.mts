@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import fs from 'node:fs/promises';
+import {rmSync, promises as fs} from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 
@@ -88,7 +88,11 @@ export class TestRunner {
       // We keep the temporary directory on disk if the users wants to debug the test.
       if (!this.isTestDebugMode) {
         debug('Deleting the integration test temporary directory..');
-        await fs.rm(testTmpDir, {force: true, recursive: true, maxRetries: 3});
+        try {
+          rmSync(testTmpDir, {force: true, recursive: true, maxRetries: 3});
+        } catch (e) {
+          console.error(`Failed to delete temporary directory: ${testTmpDir}`);
+        }
       }
     }
   }
