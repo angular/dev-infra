@@ -18,7 +18,7 @@
   "packageManager": "yarn@4.9.1",
   "dependencies": {
     "@angular/benchpress": "0.3.0",
-    "@angular/build": "20.0.0-rc.2",
+    "@angular/build": "20.0.0-rc.3",
     "@babel/core": "^7.16.0",
     "@babel/plugin-transform-async-generator-functions": "^7.26.8",
     "@bazel/buildifier": "8.2.0",
@@ -55,7 +55,7 @@
     "@angular/animations": "20.0.0-rc.1",
     "@angular/bazel": "patch:@angular/bazel@npm:14.1.0-next.2#.yarn/patches/@angular-bazel-npm.patch",
     "@angular/cdk": "20.0.0-rc.1",
-    "@angular/cli": "20.0.0-rc.2",
+    "@angular/cli": "20.0.0-rc.3",
     "@angular/common": "20.0.0-rc.1",
     "@angular/compiler": "20.0.0-rc.1",
     "@angular/compiler-cli": "20.0.0-rc.1",
