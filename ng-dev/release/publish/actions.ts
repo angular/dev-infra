@@ -744,16 +744,24 @@ export abstract class ReleaseAction {
     branch: string,
     version: semver.SemVer,
     previousSha: string,
-    isRetry = false,
   ): Promise<string> {
-    try {
+    let latestSha: string | null = null;
+
+    // Support re-checking as many times as needed. Often times the GitHub API
+    // is not up-to-date and we don't want to exit the release script then.
+    while (latestSha === null) {
       const commit = await this.getLatestCommitOfBranch(branch);
+
       // Ensure the latest commit in the publish branch is the bump commit.
       if (!commit.commit.message.startsWith(getCommitMessageForRelease(version))) {
         /** The shortened sha of the commit for usage in the error message. */
         const sha = commit.sha.slice(0, 8);
         Log.error(`  ✘   Latest commit (${sha}) in "${branch}" branch is not a staging commit.`);
         Log.error('      Please make sure the staging pull request has been merged.');
+
+        if (await Prompt.confirm({message: `Do you want to re-try?`, default: true})) {
+          continue;
+        }
         throw new FatalReleaseActionError();
       }
 
@@ -762,16 +770,17 @@ export abstract class ReleaseAction {
       if (commit.parents[0].sha !== previousSha) {
         Log.error(`  ✘   Unexpected additional commits have landed while staging the release.`);
         Log.error('      Please revert the bump commit and retry, or cut a new version on top.');
+
+        if (await Prompt.confirm({message: `Do you want to re-try?`, default: true})) {
+          continue;
+        }
         throw new FatalReleaseActionError();
       }
 
-      return commit.sha;
-    } catch (e: unknown) {
-      if (isRetry) {
-        throw e;
-      }
-      return this._getAndValidateLatestCommitForPublishing(branch, version, previousSha, true);
+      latestSha = commit.sha;
     }
+
+    return latestSha;
   }
 
   // TODO: Remove this check and run it as part of common release validation.

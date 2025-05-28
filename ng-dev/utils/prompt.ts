@@ -13,11 +13,11 @@ import {confirm, input, checkbox, select, editor} from '@inquirer/prompts';
  * class to allow easier mocking management in test environments.
  */
 export class Prompt {
-  static confirm: typeof confirm = (
+  static confirm = (
     // These are extractions of the PromptConfig from the inquirer types.
     _config: Parameters<typeof confirm>[0],
-    _context: Parameters<typeof confirm>[1],
-  ) => {
+    _context?: Parameters<typeof confirm>[1],
+  ): Promise<boolean> => {
     /** Config to use when creating a confirm prompt, changes the default to `false` instead of `true`. */
     const config = {
       default: false,
