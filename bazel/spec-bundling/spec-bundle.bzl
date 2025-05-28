@@ -1,7 +1,7 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
 load("//bazel/esbuild:index.bzl", "esbuild", "esbuild_amd", "esbuild_config", "esbuild_esm_bundle")
-load("//bazel/spec-bundling:spec-entrypoint.bzl", "spec_entrypoint")
 load("//bazel/spec-bundling:bundle-config.bzl", "spec_bundle_config_file")
+load("//bazel/spec-bundling:spec-entrypoint.bzl", "spec_entrypoint")
 
 def spec_bundle(
         name,
@@ -10,7 +10,7 @@ def spec_bundle(
         bootstrap = [],
         run_angular_linker = False,
         linker_unknown_declaration_handling = None,
-        target = "es2020",
+        target = "es2022",
         # For ZoneJS compatibility, async/await is downleveled.
         downlevel_async_await = True,
         external = [],

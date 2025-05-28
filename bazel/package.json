@@ -15,7 +15,7 @@
     "true-case-path": "2.2.1",
     "typescript": "5.8.3",
     "wait-on": "^8.0.3",
-    "yargs": "17.7.2"
+    "yargs": "18.0.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": []

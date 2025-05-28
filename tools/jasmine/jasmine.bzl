@@ -10,7 +10,7 @@ def jasmine_node_test(name, specs = [], external = [], bootstrap = ["//tools/jas
     spec_bundle(
         name = "%s_test_bundle" % name,
         platform = "node",
-        target = "es2020",
+        target = "es2022",
         bootstrap = bootstrap,
         deps = specs,
         external = external,
