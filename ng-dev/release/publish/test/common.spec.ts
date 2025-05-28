@@ -358,6 +358,61 @@ describe('common release action logic', () => {
       );
     });
 
+    it('should allow for re-trying when GitHub API is not reflecting latest commit', async () => {
+      const {repo, instance, builtPackagesWithInfo, promptConfirmSpy} =
+        setupReleaseActionForTesting(DelegateTestAction, baseReleaseTrains);
+      const {version, branchName} = baseReleaseTrains.latest;
+      const tagName = version.format();
+
+      repo
+        .expectBranchRequest(branchName, {
+          sha: 'THE_ONE_BEFORE_STAGING_SHA',
+          parents: [{sha: 'bla'}],
+          commit: {message: `build: some other change`},
+        })
+        .expectTagToBeCreated(tagName, 'STAGING_SHA')
+        .expectReleaseToBeCreated(version.toString(), tagName, true);
+
+      spyOn(Log, 'error');
+
+      const promptPending = withResolverPromise<void>();
+      const promptResolveFns: Array<(val: boolean) => void> = [];
+      promptConfirmSpy.and.callFake(() => {
+        promptPending.resolve();
+        return new Promise<boolean>((resolve) => promptResolveFns.push(resolve));
+      });
+
+      const publishProcess = instance.testPublish(
+        builtPackagesWithInfo,
+        version,
+        branchName,
+        'BEFORE_STAGING_SHA',
+        'latest',
+      );
+
+      // Wait for re-try prompt.
+      await promptPending.promise;
+
+      // Re-mock the branch request, with the correct info now.
+      repo.expectBranchRequest(branchName, {
+        sha: 'STAGING_SHA',
+        parents: [{sha: 'BEFORE_STAGING_SHA'}],
+        commit: {message: `release: cut the v${version} release`},
+      });
+
+      // Reset logs to see if we pass gracefully then.
+      (Log.error as unknown as jasmine.Spy).calls.reset();
+
+      // Kick off the re-try.
+      promptResolveFns.shift()!(true);
+
+      // See if it completes now, without errors.
+      expect(Log.error).toHaveBeenCalledTimes(0);
+
+      // Ensure publish finishes completely and gracefully.
+      await publishProcess;
+    });
+
     it('should ensure that no new changes have landed after release staging has started', async () => {
       const {repo, instance, builtPackagesWithInfo} = setupReleaseActionForTesting(
         DelegateTestAction,
@@ -545,4 +600,20 @@ class MockReleaseNotes extends ReleaseNotes {
 
     super(ngDevConfig, version, commits, git);
   }
+}
+
+// Polyfill for `Promise.withResolvers`.
+function withResolverPromise<T>(): {
+  promise: Promise<T>;
+  resolve: (v: T) => void;
+  reject: (v: unknown) => void;
+} {
+  let resolve!: (v: T) => void;
+  let reject!: (v: unknown) => void;
+
+  const promise = new Promise<T>((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+  return {promise, resolve, reject};
 }
