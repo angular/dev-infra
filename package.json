@@ -47,7 +47,7 @@
     "true-case-path": "^2.2.1",
     "tslib": "^2.5.2",
     "typescript": "5.8.3",
-    "yargs": "^17.0.0"
+    "yargs": "18.0.0"
   },
   "devDependencies": {
     "@actions/core": "^1.4.0",

@@ -1,3 +1,5 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "generated_file_test")
+load("//bazel:extract_js_module_output.bzl", "extract_js_module_output")
 load(
     "//bazel/esbuild:index.bzl",
     _esbuild = "esbuild",
@@ -5,8 +7,6 @@ load(
     _esbuild_config = "esbuild_config",
     _esbuild_esm_bundle = "esbuild_esm_bundle",
 )
-load("//bazel:extract_js_module_output.bzl", "extract_js_module_output")
-load("@build_bazel_rules_nodejs//:index.bzl", "generated_file_test")
 
 esbuild_config = _esbuild_config
 
@@ -15,7 +15,7 @@ def _esbuild_devmode_prioritize(
         name,
         testonly = False,
         platform = "node",
-        target = "node14",
+        target = "node20",
         deps = [],
         **kwargs):
     # TODO: Rename once devmode and prodmode have been combined.

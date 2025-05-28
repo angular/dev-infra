@@ -6,9 +6,9 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "npm_package_bin")
 load("@npm//@bazel/terser:index.bzl", "terser_minified")
 load("@npm//prettier:index.bzl", "prettier")
-load("//bazel/esbuild:index.bzl", "esbuild", "esbuild_config")
 load("//bazel:expand_template.bzl", "expand_template")
 load("//bazel:filter_outputs.bzl", "filter_outputs")
+load("//bazel/esbuild:index.bzl", "esbuild", "esbuild_config")
 
 def _create_esbuild_minify_options(debug = False):
     # The minify options match with the configuration used by the CLI. The whitespace
@@ -26,7 +26,7 @@ def app_bundle(
         visibility = None,
         testonly = False,
         platform = "browser",
-        target = "es2020",
+        target = "es2022",
         format = "iife",
         **kwargs):
     """
