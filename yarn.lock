@@ -76,25 +76,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular-devkit/core@npm:19.2.14":
-  version: 19.2.14
-  resolution: "@angular-devkit/core@npm:19.2.14"
-  dependencies:
-    ajv: "npm:8.17.1"
-    ajv-formats: "npm:3.0.1"
-    jsonc-parser: "npm:3.3.1"
-    picomatch: "npm:4.0.2"
-    rxjs: "npm:7.8.1"
-    source-map: "npm:0.7.4"
-  peerDependencies:
-    chokidar: ^4.0.0
-  peerDependenciesMeta:
-    chokidar:
-      optional: true
-  checksum: 10c0/aafd31e1339a506c8293d0c8b6d3310610e4a1f3ffd7b635e149988e06647693d8da01204bab2fa12a28b55189a59e2f57d079d7a2bcf0677e0f1e60dd1232ac
-  languageName: node
-  linkType: hard
-
 "@angular-devkit/core@npm:20.0.0":
   version: 20.0.0
   resolution: "@angular-devkit/core@npm:20.0.0"
@@ -114,20 +95,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular-devkit/schematics@npm:19.2.14, @angular-devkit/schematics@npm:^19.0.0":
-  version: 19.2.14
-  resolution: "@angular-devkit/schematics@npm:19.2.14"
-  dependencies:
-    "@angular-devkit/core": "npm:19.2.14"
-    jsonc-parser: "npm:3.3.1"
-    magic-string: "npm:0.30.17"
-    ora: "npm:5.4.1"
-    rxjs: "npm:7.8.1"
-  checksum: 10c0/fb4c0b4d892025a024835790763a2abc522e55bcf5f259e7de1f97dbb5d3a79962afec98be40b5b3217dffa443b5ecb4bda76db8a07f7ece45583c7eea63b86f
-  languageName: node
-  linkType: hard
-
-"@angular-devkit/schematics@npm:20.0.0":
+"@angular-devkit/schematics@npm:20.0.0, @angular-devkit/schematics@npm:^20.0.0":
   version: 20.0.0
   resolution: "@angular-devkit/schematics@npm:20.0.0"
   dependencies:
@@ -238,7 +206,7 @@ __metadata:
     "@angular/compiler": "npm:20.0.0"
     "@angular/compiler-cli": "npm:20.0.0"
     "@angular/core": "npm:20.0.0"
-    "@angular/fire": "npm:^19.0.0-rc"
+    "@angular/fire": "npm:^20.0.0-rc"
     "@angular/forms": "npm:20.0.0"
     "@angular/material": "npm:20.0.0"
     "@angular/platform-browser": "npm:20.0.0"
@@ -549,29 +517,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/fire@npm:^19.0.0-rc":
-  version: 19.2.0
-  resolution: "@angular/fire@npm:19.2.0"
+"@angular/fire@npm:^20.0.0-rc":
+  version: 20.0.0-rc.0
+  resolution: "@angular/fire@npm:20.0.0-rc.0"
   dependencies:
-    "@angular-devkit/schematics": "npm:^19.0.0"
-    "@schematics/angular": "npm:^19.0.0"
+    "@angular-devkit/schematics": "npm:^20.0.0"
+    "@schematics/angular": "npm:^20.0.0"
     firebase: "npm:^11.8.0"
     rxfire: "npm:^6.1.0"
     tslib: "npm:^2.3.0"
   peerDependencies:
-    "@angular/common": ^19.0.0
-    "@angular/core": ^19.0.0
-    "@angular/platform-browser": ^19.0.0
-    "@angular/platform-browser-dynamic": ^19.0.0
-    "@angular/platform-server": ^19.0.0
-    firebase-tools: ^13.0.0
+    "@angular/common": ^20.0.0
+    "@angular/core": ^20.0.0
+    "@angular/platform-browser": ^20.0.0
+    "@angular/platform-browser-dynamic": ^20.0.0
+    "@angular/platform-server": ^20.0.0
+    firebase-tools: ^14.0.0
     rxjs: ~7.8.0
   peerDependenciesMeta:
     "@angular/platform-server":
       optional: true
     firebase-tools:
       optional: true
-  checksum: 10c0/b9355617a2c3b4cf4507536122a7436f9965f529600ca449f26de0e09cc750ea2cda134f8e0164f694d5e8801fb1dc3b6b9fda984265fd00325e582ce23615e3
+  checksum: 10c0/07c9dcd93dc6dd8e6902c1a3d64b827234d7941bf2f56b2e74e034b6ece5f7d206fb7876fdd192f0008830604824e1a03f03abb19f75d1f7b3b7e2faa3f2fab8
   languageName: node
   linkType: hard
 
@@ -4165,7 +4133,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@schematics/angular@npm:20.0.0":
+"@schematics/angular@npm:20.0.0, @schematics/angular@npm:^20.0.0":
   version: 20.0.0
   resolution: "@schematics/angular@npm:20.0.0"
   dependencies:
@@ -4173,17 +4141,6 @@ __metadata:
     "@angular-devkit/schematics": "npm:20.0.0"
     jsonc-parser: "npm:3.3.1"
   checksum: 10c0/75a0af730a3449515b61a66f743f07070961e2a5b5b69272e36d63a01e487261b3fc26362704e3809c621847f198575695ed34f8b3462ae2138ee8d9c5471436
-  languageName: node
-  linkType: hard
-
-"@schematics/angular@npm:^19.0.0":
-  version: 19.2.14
-  resolution: "@schematics/angular@npm:19.2.14"
-  dependencies:
-    "@angular-devkit/core": "npm:19.2.14"
-    "@angular-devkit/schematics": "npm:19.2.14"
-    jsonc-parser: "npm:3.3.1"
-  checksum: 10c0/8fb6b36ef5936813d7ce20bf4ad1a9126ad071b1329c7273518d69e90ed934fce29790f0e2d94b588a6dec3b1efb28463f0a47ef217b3af0b6109f9f4e739185
   languageName: node
   linkType: hard
 
@@ -11588,23 +11545,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ora@npm:5.4.1, ora@npm:^5.4.1":
-  version: 5.4.1
-  resolution: "ora@npm:5.4.1"
-  dependencies:
-    bl: "npm:^4.1.0"
-    chalk: "npm:^4.1.0"
-    cli-cursor: "npm:^3.1.0"
-    cli-spinners: "npm:^2.5.0"
-    is-interactive: "npm:^1.0.0"
-    is-unicode-supported: "npm:^0.1.0"
-    log-symbols: "npm:^4.1.0"
-    strip-ansi: "npm:^6.0.0"
-    wcwidth: "npm:^1.0.1"
-  checksum: 10c0/10ff14aace236d0e2f044193362b22edce4784add08b779eccc8f8ef97195cae1248db8ec1ec5f5ff076f91acbe573f5f42a98c19b78dba8c54eefff983cae85
-  languageName: node
-  linkType: hard
-
 "ora@npm:8.2.0":
   version: 8.2.0
   resolution: "ora@npm:8.2.0"
@@ -11619,6 +11559,23 @@ __metadata:
     string-width: "npm:^7.2.0"
     strip-ansi: "npm:^7.1.0"
   checksum: 10c0/7d9291255db22e293ea164f520b6042a3e906576ab06c9cf408bf9ef5664ba0a9f3bd258baa4ada058cfcc2163ef9b6696d51237a866682ce33295349ba02c3a
+  languageName: node
+  linkType: hard
+
+"ora@npm:^5.4.1":
+  version: 5.4.1
+  resolution: "ora@npm:5.4.1"
+  dependencies:
+    bl: "npm:^4.1.0"
+    chalk: "npm:^4.1.0"
+    cli-cursor: "npm:^3.1.0"
+    cli-spinners: "npm:^2.5.0"
+    is-interactive: "npm:^1.0.0"
+    is-unicode-supported: "npm:^0.1.0"
+    log-symbols: "npm:^4.1.0"
+    strip-ansi: "npm:^6.0.0"
+    wcwidth: "npm:^1.0.1"
+  checksum: 10c0/10ff14aace236d0e2f044193362b22edce4784add08b779eccc8f8ef97195cae1248db8ec1ec5f5ff076f91acbe573f5f42a98c19b78dba8c54eefff983cae85
   languageName: node
   linkType: hard
 
@@ -13075,15 +13032,6 @@ __metadata:
     firebase: ^9.0.0 || ^10.0.0 || ^11.0.0
     rxjs: ^6.0.0 || ^7.0.0
   checksum: 10c0/f0b96dfb643c153cc43a3abbaa39af41a95cb2479beb3a057e9c465bf22402e84a61dcf1e0fb58a2395378ec6b749a7317cae6dead0598530f364d3b8bbbfc0e
-  languageName: node
-  linkType: hard
-
-"rxjs@npm:7.8.1":
-  version: 7.8.1
-  resolution: "rxjs@npm:7.8.1"
-  dependencies:
-    tslib: "npm:^2.1.0"
-  checksum: 10c0/3c49c1ecd66170b175c9cacf5cef67f8914dcbc7cd0162855538d365c83fea631167cacb644b3ce533b2ea0e9a4d0b12175186985f89d75abe73dbd8f7f06f68
   languageName: node
   linkType: hard
 
