@@ -37,7 +37,7 @@ importers:
         version: 5.0.0
       selenium-webdriver:
         specifier: ^4.31.0
-        version: 4.32.0
+        version: 4.33.0
       send:
         specifier: 1.2.0
         version: 1.2.0
@@ -873,8 +873,8 @@ packages:
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  selenium-webdriver@4.32.0:
-    resolution: {integrity: sha512-dG48JJnB96Aea1iVaZOKGmd6yT6aemeI1heWI/i8DtfD3pDX7uIlwpDBoGauNhtXAaFaamP+U4hIab8zZkg3Ag==}
+  selenium-webdriver@4.33.0:
+    resolution: {integrity: sha512-5vRhk4iI0B9nYbEitfnCjPDXBfG6o9DNhj5DG2355eQo8idETknhj1tigqqlkHsGephSZwLZqEm/d+3e1stGUA==}
     engines: {node: '>= 18.20.5'}
 
   semver@7.5.4:
@@ -1963,7 +1963,7 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
-  selenium-webdriver@4.32.0:
+  selenium-webdriver@4.33.0:
     dependencies:
       '@bazel/runfiles': 6.3.1
       jszip: 3.10.1
