@@ -60,7 +60,7 @@
     "@angular/compiler": "20.0.0",
     "@angular/compiler-cli": "20.0.0",
     "@angular/core": "20.0.0",
-    "@angular/fire": "^19.0.0-rc",
+    "@angular/fire": "^20.0.0-rc",
     "@angular/forms": "20.0.0",
     "@angular/material": "20.0.0",
     "@angular/platform-browser": "20.0.0",
