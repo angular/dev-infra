@@ -331,7 +331,7 @@ __metadata:
     karma-sourcemap-loader: "npm:^0.4.0"
     minimatch: "npm:^10.0.0"
     multimatch: "npm:^7.0.0"
-    nock: "npm:14.0.4"
+    nock: "npm:14.0.5"
     opener: "npm:^1.5.2"
     prettier: "npm:3.5.3"
     protractor: "npm:^7.0.0"
@@ -2706,7 +2706,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mswjs/interceptors@npm:^0.38.5":
+"@mswjs/interceptors@npm:^0.38.7":
   version: 0.38.7
   resolution: "@mswjs/interceptors@npm:0.38.7"
   dependencies:
@@ -11253,14 +11253,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nock@npm:14.0.4":
-  version: 14.0.4
-  resolution: "nock@npm:14.0.4"
+"nock@npm:14.0.5":
+  version: 14.0.5
+  resolution: "nock@npm:14.0.5"
   dependencies:
-    "@mswjs/interceptors": "npm:^0.38.5"
+    "@mswjs/interceptors": "npm:^0.38.7"
     json-stringify-safe: "npm:^5.0.1"
     propagate: "npm:^2.0.0"
-  checksum: 10c0/54e958aa0a734b45207936602616ce9009b32291d22a93f94e2058f3ee20f317b6f974814efc52f32ebb92c6c30e6e15d8a53c17744a95fa2df4e0c267da1af1
+  checksum: 10c0/3221abf0bbd84243b4d151abecdecffb22eba896e3a9c7e711b9bd1adc32f2273eb1c3c36f340e53d1c229ea99362364f418dd23017e11416c54e09b1babf219
   languageName: node
   linkType: hard
 
