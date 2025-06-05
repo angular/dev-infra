@@ -44,6 +44,8 @@ import {Prompt} from '../../utils/prompt.js';
 import {glob} from 'fast-glob';
 import {PnpmVersioning} from './pnpm-versioning.js';
 import {Commit} from '../../utils/git/octokit-types.js';
+import {updateRenovateConfigTargetLabels} from './actions/renovate-config-updates.js';
+import {targetLabels} from '../../pr/common/labels/target.js';
 
 /** Interface describing a Github repository. */
 export interface GithubRepo {
@@ -217,12 +219,26 @@ export abstract class ReleaseAction {
     }
 
     // Commit message for the release point.
-    const commitMessage = getCommitMessageForRelease(newVersion);
     const filesToCommit = [
       workspaceRelativePackageJsonPath,
       workspaceRelativeChangelogPath,
       ...this.getAspectLockFiles(),
     ];
+
+    if (newVersion.patch === 0 && !newVersion.prerelease) {
+      // Switch the renovate labels for `target: rc` to `target: patch`
+      const renovateConfigPath = await updateRenovateConfigTargetLabels(
+        this.projectDir,
+        targetLabels['TARGET_RC'].name,
+        targetLabels['TARGET_PATCH'].name,
+      );
+
+      if (renovateConfigPath) {
+        filesToCommit.push(renovateConfigPath);
+      }
+    }
+
+    const commitMessage = getCommitMessageForRelease(newVersion);
 
     // Create a release staging commit including changelog and version bump.
     await this.createCommit(commitMessage, filesToCommit);
