@@ -1,10 +1,15 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
-import {Octokit} from '@octokit/rest';
+import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
 import {Commit, parseCommitMessage} from '../../../ng-dev/commit-message/parse.js';
-import {managedLabels} from '../../../ng-dev/pr/common/labels/index.js';
+import {managedLabels, targetLabels} from '../../../ng-dev/pr/common/labels/index.js';
 import {ANGULAR_ROBOT, getAuthTokenFor, revokeActiveInstallationToken} from '../../utils.js';
 import {ManagedRepositories} from '../../../ng-dev/pr/common/labels/base.js';
+
+/** The type of the response data for a the pull request get method on from octokit. */
+type PullRequestGetData = RestEndpointMethodTypes['pulls']['get']['response']['data'];
+/** A Regex matcher to match releasable branch patterns. */
+const releasableBranchMatcher = /(main|\d+\.\d+\.x)/;
 
 class PullRequestLabeling {
   /** Run the commit message based labelling process. */
@@ -26,6 +31,8 @@ class PullRequestLabeling {
   labels = new Set<string>();
   /** All commits in the PR */
   commits: Commit[] = [];
+  /** The pull request information from the github API. */
+  pullRequestMetadata?: PullRequestGetData;
 
   private constructor(private git: Octokit) {}
 
@@ -35,6 +42,14 @@ class PullRequestLabeling {
     await this.initialize();
     core.info(`PR #${context.issue.number}`);
 
+    await this.commitMessageBasedLabeling();
+    await this.pullRequestMetadataLabeling();
+  }
+
+  /**
+   * Perform labeling based on the commit messages for the pull request.
+   */
+  async commitMessageBasedLabeling() {
     // Add or Remove label as appropriate for each of the supported label and commit messaage
     // combinations.
     for (const {commitCheck, name, repositories} of Object.values(managedLabels)) {
@@ -58,6 +73,31 @@ class PullRequestLabeling {
       // those would be automatically turned into an area label, which would be bad.
       if (this.repoAreaLabels.has(label) && !this.labels.has(label)) {
         await this.addLabel(label);
+      }
+    }
+  }
+
+  /**
+   * Perform labeling based on the metadata for the pull request from the Github API.
+   */
+  async pullRequestMetadataLabeling() {
+    // If we are unable to get pull request metadata, we can shortcut and exit early.
+    if (this.pullRequestMetadata === undefined) {
+      return;
+    }
+    /** The base reference string, or target branch of the pull request. */
+    const baseRef = this.pullRequestMetadata.base.ref;
+
+    if (!releasableBranchMatcher.test(baseRef)) {
+      if (this.labels.has(targetLabels.TARGET_FEATURE.name)) {
+        core.info(
+          `The target branch (${baseRef}) is not a releasable branch, already has "target: feature" label`,
+        );
+      } else {
+        core.info(
+          `The target branch (${baseRef}) is not a releasable branch, adding "target: feature" label`,
+        );
+        await this.addLabel(targetLabels.TARGET_FEATURE.name);
       }
     }
   }
@@ -97,6 +137,10 @@ class PullRequestLabeling {
     await this.git.issues
       .listLabelsOnIssue({issue_number: number, owner, repo})
       .then((resp) => resp.data.forEach(({name}) => this.labels.add(name)));
+
+    await this.git.pulls.get({owner, repo, pull_number: number}).then(({data}) => {
+      this.pullRequestMetadata = data;
+    });
   }
 }
 
