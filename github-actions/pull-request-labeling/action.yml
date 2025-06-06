@@ -1,5 +1,5 @@
-name: 'Breaking Changes Labeling'
-description: 'Automatically label pull requests with a breaking change with a breaking change label'
+name: 'Pull Request Labeling'
+description: 'Automatically label pull requests based on pull request metadata'
 author: 'Angular'
 inputs:
   angular-robot-key:

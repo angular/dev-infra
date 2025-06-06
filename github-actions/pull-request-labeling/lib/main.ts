@@ -6,7 +6,7 @@ import {managedLabels} from '../../../ng-dev/pr/common/labels/index.js';
 import {ANGULAR_ROBOT, getAuthTokenFor, revokeActiveInstallationToken} from '../../utils.js';
 import {ManagedRepositories} from '../../../ng-dev/pr/common/labels/base.js';
 
-class CommitMessageBasedLabelManager {
+class PullRequestLabeling {
   /** Run the commit message based labelling process. */
   static run = async () => {
     const token = await getAuthTokenFor(ANGULAR_ROBOT);
@@ -103,7 +103,7 @@ class CommitMessageBasedLabelManager {
 // Only run if the action is executed in a repository within the Angular org. This is in place
 // to prevent the action from actually running in a fork of a repository with this action set up.
 if (context.repo.owner === 'angular') {
-  CommitMessageBasedLabelManager.run().catch((e: Error) => {
+  PullRequestLabeling.run().catch((e: Error) => {
     console.error(e);
     core.setFailed(e.message);
   });

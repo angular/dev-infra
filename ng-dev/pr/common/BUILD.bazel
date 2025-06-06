@@ -12,7 +12,7 @@ ts_library(
     ),
     visibility = [
         "//.github/local-actions/branch-manager:__subpackages__",
-        "//github-actions/commit-message-based-labels:__subpackages__",
+        "//github-actions/pull-request-labeling:__subpackages__",
         "//ng-dev:__subpackages__",
     ],
     deps = [

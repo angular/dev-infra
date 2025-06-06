@@ -1,6 +1,6 @@
 load("//tools:defaults.bzl", "ts_library")
 
-package(default_visibility = ["//github-actions/commit-message-based-labels:__subpackages__"])
+package(default_visibility = ["//github-actions/pull-request-labeling:__subpackages__"])
 
 exports_files([
     "main.ts",
