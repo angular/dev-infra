@@ -43411,7 +43411,7 @@ async function revokeActiveInstallationToken(githubOrToken) {
 
 // 
 var _a;
-var CommitMessageBasedLabelManager = class {
+var PullRequestLabeling = class {
   constructor(git) {
     this.git = git;
     this.repoAreaLabels = /* @__PURE__ */ new Set();
@@ -43457,8 +43457,8 @@ var CommitMessageBasedLabelManager = class {
     await this.git.issues.listLabelsOnIssue({ issue_number: number, owner, repo }).then((resp) => resp.data.forEach(({ name }) => this.labels.add(name)));
   }
 };
-_a = CommitMessageBasedLabelManager;
-CommitMessageBasedLabelManager.run = async () => {
+_a = PullRequestLabeling;
+PullRequestLabeling.run = async () => {
   const token = await getAuthTokenFor(ANGULAR_ROBOT);
   const git = new Octokit2({ auth: token });
   try {
@@ -43469,7 +43469,7 @@ CommitMessageBasedLabelManager.run = async () => {
   }
 };
 if (import_github2.context.repo.owner === "angular") {
-  CommitMessageBasedLabelManager.run().catch((e) => {
+  PullRequestLabeling.run().catch((e) => {
     console.error(e);
     core.setFailed(e.message);
   });

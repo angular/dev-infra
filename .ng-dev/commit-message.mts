@@ -26,7 +26,7 @@ export const commitMessage: CommitMessageConfig = {
       'spec-bundling',
     ]),
     ...buildScopesFor('github-actions', [
-      'commit-message-based-labels',
+      'pull-request-labeling',
       'feature-request',
       'lock-closed',
       'rebase',
