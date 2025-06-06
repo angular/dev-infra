@@ -43411,6 +43411,7 @@ async function revokeActiveInstallationToken(githubOrToken) {
 
 // 
 var _a;
+var releasableBranchMatcher = /(main|\d+\.\d+\.x)/;
 var PullRequestLabeling = class {
   constructor(git) {
     this.git = git;
@@ -43421,6 +43422,10 @@ var PullRequestLabeling = class {
   async run() {
     await this.initialize();
     core.info(`PR #${import_github2.context.issue.number}`);
+    await this.commitMessageBasedLabeling();
+    await this.pullRequestMetadataLabeling();
+  }
+  async commitMessageBasedLabeling() {
     for (const { commitCheck, name, repositories } of Object.values(managedLabels)) {
       if (!repositories.includes(import_github2.context.repo.repo)) {
         continue;
@@ -43436,6 +43441,20 @@ var PullRequestLabeling = class {
       const label = "area: " + commit.scope;
       if (this.repoAreaLabels.has(label) && !this.labels.has(label)) {
         await this.addLabel(label);
+      }
+    }
+  }
+  async pullRequestMetadataLabeling() {
+    if (this.pullRequestMetadata === void 0) {
+      return;
+    }
+    const baseRef = this.pullRequestMetadata.base.ref;
+    if (!releasableBranchMatcher.test(baseRef)) {
+      if (this.labels.has(targetLabels.TARGET_FEATURE.name)) {
+        core.info(`The target branch (${baseRef}) is not a releasable branch, already has "target: feature" label`);
+      } else {
+        core.info(`The target branch (${baseRef}) is not a releasable branch, adding "target: feature" label`);
+        await this.addLabel(targetLabels.TARGET_FEATURE.name);
       }
     }
   }
@@ -43455,6 +43474,9 @@ var PullRequestLabeling = class {
     await this.git.paginate(this.git.issues.listLabelsForRepo, { owner, repo }).then((labels) => labels.filter((l) => l.name.startsWith("area: ")).forEach((l) => this.repoAreaLabels.add(l.name)));
     await this.git.paginate(this.git.pulls.listCommits, { owner, pull_number: number, repo }).then((commits) => this.commits = commits.map(({ commit }) => parseCommitMessage(commit.message)));
     await this.git.issues.listLabelsOnIssue({ issue_number: number, owner, repo }).then((resp) => resp.data.forEach(({ name }) => this.labels.add(name)));
+    await this.git.pulls.get({ owner, repo, pull_number: number }).then(({ data }) => {
+      this.pullRequestMetadata = data;
+    });
   }
 };
 _a = PullRequestLabeling;
