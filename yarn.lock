@@ -285,8 +285,8 @@ __metadata:
     gcip-cloud-functions: "npm:0.2.0"
     git-raw-commits: "npm:^4.0.0"
     husky: "npm:^9.0.0"
-    jasmine: "npm:~5.7.0"
-    jasmine-core: "npm:~5.7.0"
+    jasmine: "npm:~5.8.0"
+    jasmine-core: "npm:~5.8.0"
     jsdom: "npm:^26.0.0"
     jsonc-parser: "npm:^3.2.0"
     karma: "npm:^6.3.15"
@@ -311,7 +311,7 @@ __metadata:
     source-map: "npm:^0.7.4"
     stylelint: "npm:^16.0.0"
     supports-color: "npm:10.0.0"
-    terser: "npm:5.41.0"
+    terser: "npm:5.42.0"
     tmp: "npm:^0.2.1"
     true-case-path: "npm:^2.2.1"
     ts-node: "npm:^10.9.2"
@@ -9843,10 +9843,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jasmine-core@npm:~5.7.0":
-  version: 5.7.1
-  resolution: "jasmine-core@npm:5.7.1"
-  checksum: 10c0/eeb2cb030fc294f152e37dfeeb1cb137fefe6de186d470fd3fa6d1fd5279408c1226e90a488015ad079d5686aa1736ca67b2ced491d9a43720d9cb1170f1791f
+"jasmine-core@npm:~5.8.0":
+  version: 5.8.0
+  resolution: "jasmine-core@npm:5.8.0"
+  checksum: 10c0/9b1b7937b97ccc01468ba90953658e990d813d7cb275ea15c229b02ac2a42ca6b6469fc2342e0673917859f715213dc05a50419f56a0f603e31904b8b5aa83aa
   languageName: node
   linkType: hard
 
@@ -9873,15 +9873,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jasmine@npm:~5.7.0":
-  version: 5.7.1
-  resolution: "jasmine@npm:5.7.1"
+"jasmine@npm:~5.8.0":
+  version: 5.8.0
+  resolution: "jasmine@npm:5.8.0"
   dependencies:
     glob: "npm:^10.2.2"
-    jasmine-core: "npm:~5.7.0"
+    jasmine-core: "npm:~5.8.0"
   bin:
     jasmine: bin/jasmine.js
-  checksum: 10c0/0fb56eac857da622ab689add60cf5ba6c18c6a2bf0996d912933f01b619b76902afe95b1426627b19898431077bfb75be2110f22c9e2595f6fd64b3fff285169
+  checksum: 10c0/86b2ab56bef0960bbe798df885ec88f5adcc9366bb11372c8de04425784260087050961a01ced9db224f2fd0a2ed7e70bc908d736d02e039cd4094b9e14de158
   languageName: node
   linkType: hard
 
@@ -14457,9 +14457,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"terser@npm:5.41.0":
-  version: 5.41.0
-  resolution: "terser@npm:5.41.0"
+"terser@npm:5.42.0":
+  version: 5.42.0
+  resolution: "terser@npm:5.42.0"
   dependencies:
     "@jridgewell/source-map": "npm:^0.3.3"
     acorn: "npm:^8.14.0"
@@ -14467,7 +14467,7 @@ __metadata:
     source-map-support: "npm:~0.5.20"
   bin:
     terser: bin/terser
-  checksum: 10c0/39bb99c68a16b4c8ab52e9077affcdf99716df12dcaf3f9b13fde6ff10a67bb9f5e4e47bb89d56878919af8d0c13a7de1de0b806aba556390b1b691dd5f69f4b
+  checksum: 10c0/f89d5f8c9ccfcd4f6e9a0ecd9569677e2784a876b5cd916e4bc3d19e057ddae3416391df8e40746b29285bdafd48bb3a4230df1453ad8ec8caa7dd67f48f6dc0
   languageName: node
   linkType: hard
 
