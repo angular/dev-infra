@@ -7,22 +7,23 @@
  */
 
 // @ts-ignore-next-line
-import tokenRaw from './gcp_token.data';
-import {k, iv, alg, at} from './constants.js';
-import {createDecipheriv} from 'crypto';
 import path from 'path';
 import fs from 'fs';
 import os from 'os';
-import {exportVariable, getBooleanInput, getInput} from '@actions/core';
+import {exportVariable, getBooleanInput, getInput, notice} from '@actions/core';
 
 async function main() {
   const isWindows = os.platform() === 'win32';
   const bazelRcPath = getInput('bazelrc', {required: false, trimWhitespace: true});
   const allowWindowsRbe = getBooleanInput('allow_windows_rbe', {required: true});
   const trustedBuild = getBooleanInput('trusted_build', {required: false});
-  const credential =
-    getInput('google_credential', {required: false, trimWhitespace: true}) ||
-    getEmbeddedCredential();
+  const credential = getInput('google_credential', {required: false, trimWhitespace: true});
+
+  // If no credential is provided, gracefully exit.
+  if (credential === '') {
+    notice('No credential was provided.', {title: 'Skipped setting up Bazel RBE'});
+    return;
+  }
 
   const destPath = isWindows
     ? path.join(process.env.APPDATA!, 'gcloud/application_default_credentials.json')
@@ -53,13 +54,6 @@ async function readFileGracefully(filePath: string): Promise<string> {
   } catch {
     return '';
   }
-}
-
-/** Extract the embeeded credential from the action. */
-function getEmbeddedCredential(): string {
-  const t: Uint8Array = tokenRaw;
-  const dcip = createDecipheriv(alg, k, iv).setAuthTag(Buffer.from(at, 'base64'));
-  return dcip.update(t, undefined, 'utf8') + dcip.final('utf8');
 }
 
 main().catch((e) => {
