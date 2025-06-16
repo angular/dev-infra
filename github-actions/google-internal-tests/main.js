@@ -1304,10 +1304,10 @@ var require_util = __commonJS({
       }
       return `${val}`;
     }
-    function parseRangeHeader(range) {
-      if (range == null || range === "")
+    function parseRangeHeader(range2) {
+      if (range2 == null || range2 === "")
         return { start: 0, end: null, size: null };
-      const m = range ? range.match(/^bytes (\d+)-(\d+)\/(\d+)?$/) : null;
+      const m = range2 ? range2.match(/^bytes (\d+)-(\d+)\/(\d+)?$/) : null;
       return m ? {
         start: parseInt(m[1]),
         end: m[2] ? parseInt(m[2]) : null,
@@ -11350,8 +11350,8 @@ var require_RetryHandler = __commonJS({
         }
         if (this.end == null) {
           if (statusCode === 206) {
-            const range = parseRangeHeader(headers["content-range"]);
-            if (range == null) {
+            const range2 = parseRangeHeader(headers["content-range"]);
+            if (range2 == null) {
               return this.handler.onHeaders(
                 statusCode,
                 rawHeaders,
@@ -11359,7 +11359,7 @@ var require_RetryHandler = __commonJS({
                 statusMessage
               );
             }
-            const { start, size, end = size } = range;
+            const { start, size, end = size } = range2;
             assert(
               start != null && Number.isFinite(start) && this.start !== start,
               "content-range mismatch"
@@ -20206,10 +20206,10 @@ var require_util8 = __commonJS({
       }
       return `${val}`;
     }
-    function parseRangeHeader(range) {
-      if (range == null || range === "")
+    function parseRangeHeader(range2) {
+      if (range2 == null || range2 === "")
         return { start: 0, end: null, size: null };
-      const m = range ? range.match(/^bytes (\d+)-(\d+)\/(\d+)?$/) : null;
+      const m = range2 ? range2.match(/^bytes (\d+)-(\d+)\/(\d+)?$/) : null;
       return m ? {
         start: parseInt(m[1]),
         end: m[2] ? parseInt(m[2]) : null,
@@ -28262,8 +28262,8 @@ var require_RetryHandler2 = __commonJS({
         }
         if (this.end == null) {
           if (statusCode === 206) {
-            const range = parseRangeHeader(headers["content-range"]);
-            if (range == null) {
+            const range2 = parseRangeHeader(headers["content-range"]);
+            if (range2 == null) {
               return this.handler.onHeaders(
                 statusCode,
                 rawHeaders,
@@ -28271,7 +28271,7 @@ var require_RetryHandler2 = __commonJS({
                 statusMessage
               );
             }
-            const { start, size, end = size } = range;
+            const { start, size, end = size } = range2;
             assert(
               start != null && Number.isFinite(start) && this.start !== start,
               "content-range mismatch"
@@ -38055,217 +38055,6 @@ var require_fast_content_type_parse = __commonJS({
 });
 
 // 
-var require_balanced_match = __commonJS({
-  ""(exports, module) {
-    "use strict";
-    module.exports = balanced;
-    function balanced(a, b, str) {
-      if (a instanceof RegExp)
-        a = maybeMatch(a, str);
-      if (b instanceof RegExp)
-        b = maybeMatch(b, str);
-      var r = range(a, b, str);
-      return r && {
-        start: r[0],
-        end: r[1],
-        pre: str.slice(0, r[0]),
-        body: str.slice(r[0] + a.length, r[1]),
-        post: str.slice(r[1] + b.length)
-      };
-    }
-    function maybeMatch(reg, str) {
-      var m = str.match(reg);
-      return m ? m[0] : null;
-    }
-    balanced.range = range;
-    function range(a, b, str) {
-      var begs, beg, left, right, result;
-      var ai = str.indexOf(a);
-      var bi = str.indexOf(b, ai + 1);
-      var i = ai;
-      if (ai >= 0 && bi > 0) {
-        if (a === b) {
-          return [ai, bi];
-        }
-        begs = [];
-        left = str.length;
-        while (i >= 0 && !result) {
-          if (i == ai) {
-            begs.push(i);
-            ai = str.indexOf(a, i + 1);
-          } else if (begs.length == 1) {
-            result = [begs.pop(), bi];
-          } else {
-            beg = begs.pop();
-            if (beg < left) {
-              left = beg;
-              right = bi;
-            }
-            bi = str.indexOf(b, i + 1);
-          }
-          i = ai < bi && ai >= 0 ? ai : bi;
-        }
-        if (begs.length) {
-          result = [left, right];
-        }
-      }
-      return result;
-    }
-  }
-});
-
-// 
-var require_brace_expansion = __commonJS({
-  ""(exports, module) {
-    var balanced = require_balanced_match();
-    module.exports = expandTop;
-    var escSlash = "\0SLASH" + Math.random() + "\0";
-    var escOpen = "\0OPEN" + Math.random() + "\0";
-    var escClose = "\0CLOSE" + Math.random() + "\0";
-    var escComma = "\0COMMA" + Math.random() + "\0";
-    var escPeriod = "\0PERIOD" + Math.random() + "\0";
-    function numeric(str) {
-      return parseInt(str, 10) == str ? parseInt(str, 10) : str.charCodeAt(0);
-    }
-    function escapeBraces(str) {
-      return str.split("\\\\").join(escSlash).split("\\{").join(escOpen).split("\\}").join(escClose).split("\\,").join(escComma).split("\\.").join(escPeriod);
-    }
-    function unescapeBraces(str) {
-      return str.split(escSlash).join("\\").split(escOpen).join("{").split(escClose).join("}").split(escComma).join(",").split(escPeriod).join(".");
-    }
-    function parseCommaParts(str) {
-      if (!str)
-        return [""];
-      var parts = [];
-      var m = balanced("{", "}", str);
-      if (!m)
-        return str.split(",");
-      var pre = m.pre;
-      var body = m.body;
-      var post = m.post;
-      var p = pre.split(",");
-      p[p.length - 1] += "{" + body + "}";
-      var postParts = parseCommaParts(post);
-      if (post.length) {
-        p[p.length - 1] += postParts.shift();
-        p.push.apply(p, postParts);
-      }
-      parts.push.apply(parts, p);
-      return parts;
-    }
-    function expandTop(str) {
-      if (!str)
-        return [];
-      if (str.substr(0, 2) === "{}") {
-        str = "\\{\\}" + str.substr(2);
-      }
-      return expand3(escapeBraces(str), true).map(unescapeBraces);
-    }
-    function embrace(str) {
-      return "{" + str + "}";
-    }
-    function isPadded(el) {
-      return /^-?0\d/.test(el);
-    }
-    function lte(i, y) {
-      return i <= y;
-    }
-    function gte(i, y) {
-      return i >= y;
-    }
-    function expand3(str, isTop) {
-      var expansions = [];
-      var m = balanced("{", "}", str);
-      if (!m)
-        return [str];
-      var pre = m.pre;
-      var post = m.post.length ? expand3(m.post, false) : [""];
-      if (/\$$/.test(m.pre)) {
-        for (var k = 0; k < post.length; k++) {
-          var expansion = pre + "{" + m.body + "}" + post[k];
-          expansions.push(expansion);
-        }
-      } else {
-        var isNumericSequence = /^-?\d+\.\.-?\d+(?:\.\.-?\d+)?$/.test(m.body);
-        var isAlphaSequence = /^[a-zA-Z]\.\.[a-zA-Z](?:\.\.-?\d+)?$/.test(m.body);
-        var isSequence = isNumericSequence || isAlphaSequence;
-        var isOptions = m.body.indexOf(",") >= 0;
-        if (!isSequence && !isOptions) {
-          if (m.post.match(/,.*\}/)) {
-            str = m.pre + "{" + m.body + escClose + m.post;
-            return expand3(str);
-          }
-          return [str];
-        }
-        var n;
-        if (isSequence) {
-          n = m.body.split(/\.\./);
-        } else {
-          n = parseCommaParts(m.body);
-          if (n.length === 1) {
-            n = expand3(n[0], false).map(embrace);
-            if (n.length === 1) {
-              return post.map(function(p) {
-                return m.pre + n[0] + p;
-              });
-            }
-          }
-        }
-        var N;
-        if (isSequence) {
-          var x = numeric(n[0]);
-          var y = numeric(n[1]);
-          var width = Math.max(n[0].length, n[1].length);
-          var incr = n.length == 3 ? Math.abs(numeric(n[2])) : 1;
-          var test = lte;
-          var reverse = y < x;
-          if (reverse) {
-            incr *= -1;
-            test = gte;
-          }
-          var pad = n.some(isPadded);
-          N = [];
-          for (var i = x; test(i, y); i += incr) {
-            var c;
-            if (isAlphaSequence) {
-              c = String.fromCharCode(i);
-              if (c === "\\")
-                c = "";
-            } else {
-              c = String(i);
-              if (pad) {
-                var need = width - c.length;
-                if (need > 0) {
-                  var z = new Array(need + 1).join("0");
-                  if (i < 0)
-                    c = "-" + z + c.slice(1);
-                  else
-                    c = z + c;
-                }
-              }
-            }
-            N.push(c);
-          }
-        } else {
-          N = [];
-          for (var j = 0; j < n.length; j++) {
-            N.push.apply(N, expand3(n[j], false));
-          }
-        }
-        for (var j = 0; j < N.length; j++) {
-          for (var k = 0; k < post.length; k++) {
-            var expansion = pre + N[j] + post[k];
-            if (!isTop || isSequence || expansion)
-              expansions.push(expansion);
-          }
-        }
-      }
-      return expansions;
-    }
-  }
-});
-
-// 
 var require_jsonc_parser = __commonJS({
   ""(exports, module) {
     "use strict";
@@ -38747,15 +38536,15 @@ var require_jsonc_parser = __commonJS({
       }
     };
     var supportedEols = ["\n", "\r", "\r\n"];
-    function format(documentText, range, options) {
+    function format(documentText, range2, options) {
       let initialIndentLevel;
       let formatText;
       let formatTextStart;
       let rangeStart;
       let rangeEnd;
-      if (range) {
-        rangeStart = range.offset;
-        rangeEnd = rangeStart + range.length;
+      if (range2) {
+        rangeStart = range2.offset;
+        rangeEnd = rangeStart + range2.length;
         formatTextStart = rangeStart;
         while (formatTextStart > 0 && !isEOL(documentText, formatTextStart - 1)) {
           formatTextStart--;
@@ -38815,7 +38604,7 @@ var require_jsonc_parser = __commonJS({
       }
       const editOperations = [];
       function addEdit(text, startOffset, endOffset) {
-        if (!hasError && (!range || startOffset < rangeEnd && endOffset > rangeStart) && documentText.substring(startOffset, endOffset) !== text) {
+        if (!hasError && (!range2 || startOffset < rangeEnd && endOffset > rangeStart) && documentText.substring(startOffset, endOffset) !== text) {
           editOperations.push({ offset: startOffset, length: endOffset - startOffset, content: text });
         }
       }
@@ -39818,8 +39607,8 @@ var require_jsonc_parser = __commonJS({
       }
       return "<unknown ParseErrorCode>";
     }
-    function format2(documentText, range, options) {
-      return format(documentText, range, options);
+    function format2(documentText, range2, options) {
+      return format(documentText, range2, options);
     }
     function modify(text, path3, value, options) {
       return setProperty(text, path3, value, options);
@@ -43159,7 +42948,215 @@ var Octokit2 = Octokit.plugin(requestLog, legacyRestEndpointMethods, paginateRes
 );
 
 // 
-var import_brace_expansion = __toESM(require_brace_expansion(), 1);
+var balanced = (a, b, str) => {
+  const ma = a instanceof RegExp ? maybeMatch(a, str) : a;
+  const mb = b instanceof RegExp ? maybeMatch(b, str) : b;
+  const r = ma !== null && mb != null && range(ma, mb, str);
+  return r && {
+    start: r[0],
+    end: r[1],
+    pre: str.slice(0, r[0]),
+    body: str.slice(r[0] + ma.length, r[1]),
+    post: str.slice(r[1] + mb.length)
+  };
+};
+var maybeMatch = (reg, str) => {
+  const m = str.match(reg);
+  return m ? m[0] : null;
+};
+var range = (a, b, str) => {
+  let begs, beg, left, right = void 0, result;
+  let ai = str.indexOf(a);
+  let bi = str.indexOf(b, ai + 1);
+  let i = ai;
+  if (ai >= 0 && bi > 0) {
+    if (a === b) {
+      return [ai, bi];
+    }
+    begs = [];
+    left = str.length;
+    while (i >= 0 && !result) {
+      if (i === ai) {
+        begs.push(i);
+        ai = str.indexOf(a, i + 1);
+      } else if (begs.length === 1) {
+        const r = begs.pop();
+        if (r !== void 0)
+          result = [r, bi];
+      } else {
+        beg = begs.pop();
+        if (beg !== void 0 && beg < left) {
+          left = beg;
+          right = bi;
+        }
+        bi = str.indexOf(b, i + 1);
+      }
+      i = ai < bi && ai >= 0 ? ai : bi;
+    }
+    if (begs.length && right !== void 0) {
+      result = [left, right];
+    }
+  }
+  return result;
+};
+
+// 
+var escSlash = "\0SLASH" + Math.random() + "\0";
+var escOpen = "\0OPEN" + Math.random() + "\0";
+var escClose = "\0CLOSE" + Math.random() + "\0";
+var escComma = "\0COMMA" + Math.random() + "\0";
+var escPeriod = "\0PERIOD" + Math.random() + "\0";
+var escSlashPattern = new RegExp(escSlash, "g");
+var escOpenPattern = new RegExp(escOpen, "g");
+var escClosePattern = new RegExp(escClose, "g");
+var escCommaPattern = new RegExp(escComma, "g");
+var escPeriodPattern = new RegExp(escPeriod, "g");
+var slashPattern = /\\\\/g;
+var openPattern = /\\{/g;
+var closePattern = /\\}/g;
+var commaPattern = /\\,/g;
+var periodPattern = /\\./g;
+function numeric(str) {
+  return !isNaN(str) ? parseInt(str, 10) : str.charCodeAt(0);
+}
+function escapeBraces(str) {
+  return str.replace(slashPattern, escSlash).replace(openPattern, escOpen).replace(closePattern, escClose).replace(commaPattern, escComma).replace(periodPattern, escPeriod);
+}
+function unescapeBraces(str) {
+  return str.replace(escSlashPattern, "\\").replace(escOpenPattern, "{").replace(escClosePattern, "}").replace(escCommaPattern, ",").replace(escPeriodPattern, ".");
+}
+function parseCommaParts(str) {
+  if (!str) {
+    return [""];
+  }
+  const parts = [];
+  const m = balanced("{", "}", str);
+  if (!m) {
+    return str.split(",");
+  }
+  const { pre, body, post } = m;
+  const p = pre.split(",");
+  p[p.length - 1] += "{" + body + "}";
+  const postParts = parseCommaParts(post);
+  if (post.length) {
+    ;
+    p[p.length - 1] += postParts.shift();
+    p.push.apply(p, postParts);
+  }
+  parts.push.apply(parts, p);
+  return parts;
+}
+function expand2(str) {
+  if (!str) {
+    return [];
+  }
+  if (str.slice(0, 2) === "{}") {
+    str = "\\{\\}" + str.slice(2);
+  }
+  return expand_(escapeBraces(str), true).map(unescapeBraces);
+}
+function embrace(str) {
+  return "{" + str + "}";
+}
+function isPadded(el) {
+  return /^-?0\d/.test(el);
+}
+function lte(i, y) {
+  return i <= y;
+}
+function gte(i, y) {
+  return i >= y;
+}
+function expand_(str, isTop) {
+  const expansions = [];
+  const m = balanced("{", "}", str);
+  if (!m)
+    return [str];
+  const pre = m.pre;
+  const post = m.post.length ? expand_(m.post, false) : [""];
+  if (/\$$/.test(m.pre)) {
+    for (let k = 0; k < post.length; k++) {
+      const expansion = pre + "{" + m.body + "}" + post[k];
+      expansions.push(expansion);
+    }
+  } else {
+    const isNumericSequence = /^-?\d+\.\.-?\d+(?:\.\.-?\d+)?$/.test(m.body);
+    const isAlphaSequence = /^[a-zA-Z]\.\.[a-zA-Z](?:\.\.-?\d+)?$/.test(m.body);
+    const isSequence = isNumericSequence || isAlphaSequence;
+    const isOptions = m.body.indexOf(",") >= 0;
+    if (!isSequence && !isOptions) {
+      if (m.post.match(/,(?!,).*\}/)) {
+        str = m.pre + "{" + m.body + escClose + m.post;
+        return expand_(str);
+      }
+      return [str];
+    }
+    let n;
+    if (isSequence) {
+      n = m.body.split(/\.\./);
+    } else {
+      n = parseCommaParts(m.body);
+      if (n.length === 1 && n[0] !== void 0) {
+        n = expand_(n[0], false).map(embrace);
+        if (n.length === 1) {
+          return post.map((p) => m.pre + n[0] + p);
+        }
+      }
+    }
+    let N;
+    if (isSequence && n[0] !== void 0 && n[1] !== void 0) {
+      const x = numeric(n[0]);
+      const y = numeric(n[1]);
+      const width = Math.max(n[0].length, n[1].length);
+      let incr = n.length === 3 && n[2] !== void 0 ? Math.abs(numeric(n[2])) : 1;
+      let test = lte;
+      const reverse = y < x;
+      if (reverse) {
+        incr *= -1;
+        test = gte;
+      }
+      const pad = n.some(isPadded);
+      N = [];
+      for (let i = x; test(i, y); i += incr) {
+        let c;
+        if (isAlphaSequence) {
+          c = String.fromCharCode(i);
+          if (c === "\\") {
+            c = "";
+          }
+        } else {
+          c = String(i);
+          if (pad) {
+            const need = width - c.length;
+            if (need > 0) {
+              const z = new Array(need + 1).join("0");
+              if (i < 0) {
+                c = "-" + z + c.slice(1);
+              } else {
+                c = z + c;
+              }
+            }
+          }
+        }
+        N.push(c);
+      }
+    } else {
+      N = [];
+      for (let j = 0; j < n.length; j++) {
+        N.push.apply(N, expand_(n[j], false));
+      }
+    }
+    for (let j = 0; j < N.length; j++) {
+      for (let k = 0; k < post.length; k++) {
+        const expansion = pre + N[j] + post[k];
+        if (!isTop || isSequence || expansion) {
+          expansions.push(expansion);
+        }
+      }
+    }
+  }
+  return expansions;
+}
 
 // 
 var MAX_PATTERN_LENGTH = 1024 * 64;
@@ -43831,7 +43828,7 @@ var braceExpand = (pattern, options = {}) => {
   if (options.nobrace || !/\{(?:(?!\{).)*\}/.test(pattern)) {
     return [pattern];
   }
-  return (0, import_brace_expansion.default)(pattern);
+  return expand2(pattern);
 };
 minimatch.braceExpand = braceExpand;
 var makeRe = (pattern, options = {}) => new Minimatch(pattern, options).makeRe();
