@@ -343,7 +343,7 @@ __metadata:
     source-map: "npm:^0.7.4"
     stylelint: "npm:^16.0.0"
     supports-color: "npm:10.0.0"
-    terser: "npm:5.42.0"
+    terser: "npm:5.43.1"
     tmp: "npm:^0.2.1"
     true-case-path: "npm:^2.2.1"
     ts-node: "npm:^10.9.2"
@@ -14449,9 +14449,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"terser@npm:5.42.0":
-  version: 5.42.0
-  resolution: "terser@npm:5.42.0"
+"terser@npm:5.43.1":
+  version: 5.43.1
+  resolution: "terser@npm:5.43.1"
   dependencies:
     "@jridgewell/source-map": "npm:^0.3.3"
     acorn: "npm:^8.14.0"
@@ -14459,7 +14459,7 @@ __metadata:
     source-map-support: "npm:~0.5.20"
   bin:
     terser: bin/terser
-  checksum: 10c0/f89d5f8c9ccfcd4f6e9a0ecd9569677e2784a876b5cd916e4bc3d19e057ddae3416391df8e40746b29285bdafd48bb3a4230df1453ad8ec8caa7dd67f48f6dc0
+  checksum: 10c0/9cd3fa09ea6bcb79eb71995216b8bef0651b18c5c3877535fc699a77e1ab43b140a4da5811ac9baeb654fa9ec939b17324092f0f0bdb19c402e101e3db946986
   languageName: node
   linkType: hard
 
