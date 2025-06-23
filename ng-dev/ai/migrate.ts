@@ -72,15 +72,16 @@ function builder(argv: Argv): Argv<Options> {
     .option('apiKey', {
       type: 'string',
       alias: 'a',
-      default: DEFAULT_API_KEY,
       description: 'API key used when making calls to the Gemini API',
     });
 }
 
 /** Yargs command handler for the command. */
 async function handler(options: Arguments<Options>) {
+  const apiKey = options.apiKey || DEFAULT_API_KEY;
+
   assert(
-    options.apiKey,
+    apiKey,
     [
       'No API key configured. A Gemini API key must be set as the `GEMINI_API_KEY` environment ' +
         'variable, or passed in using the `--api-key` flag.',
@@ -98,7 +99,7 @@ async function handler(options: Arguments<Options>) {
     process.exit(1);
   }
 
-  const ai = new GoogleGenAI({apiKey: options.apiKey});
+  const ai = new GoogleGenAI({apiKey});
   const progressBar = new SingleBar({}, Presets.shades_grey);
   const failures: {name: string; error: string}[] = [];
   const running = new Set<Promise<void>>();
