@@ -259,6 +259,7 @@ __metadata:
     "@google-cloud/firestore": "npm:^7.0.0"
     "@google-cloud/spanner": "npm:8.0.0"
     "@google-cloud/storage": "npm:^7.0.0"
+    "@google/genai": "npm:^1.4.0"
     "@inquirer/prompts": "npm:^7.0.0"
     "@inquirer/type": "npm:^3.0.0"
     "@microsoft/api-extractor": "npm:7.52.8"
@@ -2112,6 +2113,23 @@ __metadata:
     teeny-request: "npm:^9.0.0"
     uuid: "npm:^8.0.0"
   checksum: 10c0/a2a3f341232415d702c8fb054ec2eecbb6908a613848d7279f0b36db9b556ad93444a77a2f2a4c4c6b3f8901b3e7b2350120408c89b17c0ee17b31867a261462
+  languageName: node
+  linkType: hard
+
+"@google/genai@npm:^1.4.0":
+  version: 1.5.1
+  resolution: "@google/genai@npm:1.5.1"
+  dependencies:
+    google-auth-library: "npm:^9.14.2"
+    ws: "npm:^8.18.0"
+    zod: "npm:^3.22.4"
+    zod-to-json-schema: "npm:^3.22.4"
+  peerDependencies:
+    "@modelcontextprotocol/sdk": ^1.11.0
+  peerDependenciesMeta:
+    "@modelcontextprotocol/sdk":
+      optional: true
+  checksum: 10c0/74fdf85db4999a866c2a5bf38bcfb072e67d09128ce729871a0dc991aa81864e03dc4cfbda8d94aa45ceb70ad2c44c8d68c26aec0ced2b83ad30fe7cd4cf1357
   languageName: node
   linkType: hard
 
@@ -15915,12 +15933,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod-to-json-schema@npm:^3.24.1, zod-to-json-schema@npm:^3.24.5":
+"zod-to-json-schema@npm:^3.22.4, zod-to-json-schema@npm:^3.24.1, zod-to-json-schema@npm:^3.24.5":
   version: 3.24.5
   resolution: "zod-to-json-schema@npm:3.24.5"
   peerDependencies:
     zod: ^3.24.1
   checksum: 10c0/0745b94ba53e652d39f262641cdeb2f75d24339fb6076a38ce55bcf53d82dfaea63adf524ebc5f658681005401687f8e9551c4feca7c4c882e123e66091dfb90
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.22.4":
+  version: 3.25.67
+  resolution: "zod@npm:3.25.67"
+  checksum: 10c0/80a0cab3033272c4ab9312198081f0c4ea88e9673c059aa36dc32024906363729db54bdb78f3dc9d5529bd1601f74974d5a56c0a23e40c6f04a9270c9ff22336
   languageName: node
   linkType: hard
 

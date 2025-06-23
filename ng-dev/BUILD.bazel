@@ -1,6 +1,6 @@
 load("//:package.bzl", "NPM_PACKAGE_SUBSTITUTIONS")
-load("//tools:defaults.bzl", "esbuild_esm_bundle", "pkg_npm", "ts_library")
 load("//bazel:extract_types.bzl", "extract_types")
+load("//tools:defaults.bzl", "esbuild_esm_bundle", "pkg_npm", "ts_library")
 
 NG_DEV_EXTERNALS = [
     # `typescript` is external because we want the project to provide a TypeScript version.
@@ -22,6 +22,7 @@ ts_library(
         "//ng-dev:__subpackages__",
     ],
     deps = [
+        "//ng-dev/ai",
         "//ng-dev/auth",
         "//ng-dev/caretaker",
         "//ng-dev/commit-message",
