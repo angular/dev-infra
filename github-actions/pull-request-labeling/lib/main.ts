@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
 import {Commit, parseCommitMessage} from '../../../ng-dev/commit-message/parse.js';
-import {managedLabels, targetLabels} from '../../../ng-dev/pr/common/labels/index.js';
+import {actionLabels, managedLabels, targetLabels} from '../../../ng-dev/pr/common/labels/index.js';
 import {ANGULAR_ROBOT, getAuthTokenFor, revokeActiveInstallationToken} from '../../utils.js';
 import {ManagedRepositories} from '../../../ng-dev/pr/common/labels/base.js';
 
@@ -85,6 +85,7 @@ class PullRequestLabeling {
     if (this.pullRequestMetadata === undefined) {
       return;
     }
+
     /** The base reference string, or target branch of the pull request. */
     const baseRef = this.pullRequestMetadata.base.ref;
 
@@ -99,6 +100,24 @@ class PullRequestLabeling {
         );
         await this.addLabel(targetLabels.TARGET_FEATURE.name);
       }
+    }
+
+    if (this.pullRequestMetadata.draft && this.labels.has(actionLabels.ACTION_MERGE.name)) {
+      core.info(`This pull request is still in draft mode, removing "action: merge" label`);
+      await this.removeLabel(actionLabels.ACTION_MERGE.name);
+    }
+  }
+
+  /** Remove the provided label to the pull request. */
+  async removeLabel(label: string) {
+    const {number: issue_number, owner, repo} = context.issue;
+    try {
+      await this.git.issues.removeLabel({repo, owner, issue_number, name: label});
+      core.info(`Removed ${label} label from PR #${issue_number}`);
+      this.labels.delete(label);
+    } catch (err) {
+      core.error(`Failed to remove ${label} label from PR #${issue_number}`);
+      core.debug(err as string);
     }
   }
 
