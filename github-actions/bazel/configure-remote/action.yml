@@ -7,12 +7,19 @@ inputs:
     description: |
       If specified, the given `bazelrc` file is being updated to always run
       with the `--config=remote` flag. Defaults to `.bazelrc.user`
+  allow_windows_rbe:
+    default: false
+    description: |
+      Whether to allow remote execution to be configured for Windows. By default,
+      Windows is only configured to leverage remote caching.
+  google_credential:
+    description: |
+      A Google credential to be used as authentication for RBE API usages
+  trusted_build:
+    default: false
+    description: |
+      Whether the environment should be considerd a trusted build.
 
 runs:
-  using: composite
-  steps:
-    - run: node $GITHUB_ACTION_PATH/configure-remote.cjs
-      env:
-        BAZELRC_PATH: ${{ inputs.bazelrc }}
-        NGAT: 'bKddxrYADouso3haW7lCFA=='
-      shell: bash
+  using: 'node20'
+  main: 'configure-remote.cjs'
