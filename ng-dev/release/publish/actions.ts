@@ -225,19 +225,6 @@ export abstract class ReleaseAction {
       ...this.getAspectLockFiles(),
     ];
 
-    if (newVersion.patch === 0 && !newVersion.prerelease) {
-      // Switch the renovate labels for `target: rc` to `target: patch`
-      const renovateConfigPath = await updateRenovateConfigTargetLabels(
-        this.projectDir,
-        targetLabels['TARGET_RC'].name,
-        targetLabels['TARGET_PATCH'].name,
-      );
-
-      if (renovateConfigPath) {
-        filesToCommit.push(renovateConfigPath);
-      }
-    }
-
     const commitMessage = getCommitMessageForRelease(newVersion);
 
     // Create a release staging commit including changelog and version bump.
@@ -595,8 +582,21 @@ export abstract class ReleaseAction {
 
     await this.prependReleaseNotesToChangelog(releaseNotes);
 
-    // Create a changelog cherry-pick commit.
-    await this.createCommit(commitMessage, [workspaceRelativeChangelogPath]);
+    const filesToCommit: string[] = [workspaceRelativeChangelogPath];
+    if (releaseNotes.version.patch === 0 && !releaseNotes.version.prerelease) {
+      // Switch the renovate labels for `target: rc` to `target: patch`
+      const renovateConfigPath = await updateRenovateConfigTargetLabels(
+        this.projectDir,
+        targetLabels['TARGET_RC'].name,
+        targetLabels['TARGET_PATCH'].name,
+      );
+
+      if (renovateConfigPath) {
+        filesToCommit.push(renovateConfigPath);
+      }
+    }
+
+    await this.createCommit(commitMessage, filesToCommit);
     Log.info(green(`  ✓   Created changelog cherry-pick commit for: "${releaseNotes.version}".`));
 
     // Create a cherry-pick pull request that should be merged by the caretaker.
