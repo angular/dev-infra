@@ -10,12 +10,13 @@
     "@types/yargs": "17.0.33",
     "browser-sync": "3.0.4",
     "piscina": "^5.0.0",
-    "selenium-webdriver": "^4.31.0",
     "send": "1.2.0",
     "true-case-path": "2.2.1",
     "typescript": "5.8.3",
     "wait-on": "^8.0.3",
-    "yargs": "18.0.0"
+    "yargs": "18.0.0",
+    "protractor": "7.0.0",
+    "selenium-webdriver": "4.33.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": []
