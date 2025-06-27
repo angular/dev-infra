@@ -257,7 +257,7 @@ __metadata:
     "@octokit/graphql": "npm:9.0.1"
     "@octokit/graphql-schema": "patch:@octokit/graphql-schema@npm%3A15.3.0#~/.yarn/patches/@octokit-graphql-schema-npm-15.3.0-4046a59648.patch"
     "@octokit/openapi-types": "npm:25.1.0"
-    "@octokit/plugin-paginate-rest": "npm:13.1.0"
+    "@octokit/plugin-paginate-rest": "npm:13.1.1"
     "@octokit/plugin-rest-endpoint-methods": "npm:16.0.0"
     "@octokit/request-error": "npm:7.0.0"
     "@octokit/rest": "npm:22.0.0"
@@ -323,7 +323,7 @@ __metadata:
     multimatch: "npm:^7.0.0"
     nock: "npm:14.0.5"
     opener: "npm:^1.5.2"
-    prettier: "npm:3.6.1"
+    prettier: "npm:3.6.2"
     protractor: "npm:^7.0.0"
     requirejs: "npm:^2.3.6"
     rxjs: "npm:^7.4.0"
@@ -3270,7 +3270,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@octokit/plugin-paginate-rest@npm:13.1.0, @octokit/plugin-paginate-rest@npm:^13.0.1":
+"@octokit/plugin-paginate-rest@npm:13.1.1":
+  version: 13.1.1
+  resolution: "@octokit/plugin-paginate-rest@npm:13.1.1"
+  dependencies:
+    "@octokit/types": "npm:^14.1.0"
+  peerDependencies:
+    "@octokit/core": ">=6"
+  checksum: 10c0/88d80608881df88f8e832856e9279ac1c1af30ced9adb7c847f4d120b4bb308c2ab9d791ffd4c9585759e57a938798b4c3f2f988a389f2d78a61aaaebc36ffa7
+  languageName: node
+  linkType: hard
+
+"@octokit/plugin-paginate-rest@npm:^13.0.1":
   version: 13.1.0
   resolution: "@octokit/plugin-paginate-rest@npm:13.1.0"
   dependencies:
@@ -12371,12 +12382,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:3.6.1":
-  version: 3.6.1
-  resolution: "prettier@npm:3.6.1"
+"prettier@npm:3.6.2":
+  version: 3.6.2
+  resolution: "prettier@npm:3.6.2"
   bin:
     prettier: bin/prettier.cjs
-  checksum: 10c0/cf54254b9ddf1a8dff12f84bf0089e6aef3eeb9d0ce9d0344e39549ddc4f5c290fc5060d7d5a597848b9617e53e05b33a4118e37cd560f9e132ecc19c211300a
+  checksum: 10c0/488cb2f2b99ec13da1e50074912870217c11edaddedeadc649b1244c749d15ba94e846423d062e2c4c9ae683e2d65f754de28889ba06e697ac4f988d44f45812
   languageName: node
   linkType: hard
 
