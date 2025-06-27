@@ -20,7 +20,6 @@ filegroup(
         "filter_outputs.bzl",
         "//bazel/api-golden:files",
         "//bazel/app-bundling:files",
-        "//bazel/benchmark:files",
         "//bazel/browsers:files",
         "//bazel/constraints:files",
         "//bazel/esbuild:files",

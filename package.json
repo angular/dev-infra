@@ -17,7 +17,6 @@
   },
   "packageManager": "yarn@4.9.1",
   "dependencies": {
-    "@angular/benchpress": "0.3.0",
     "@angular/build": "20.0.0",
     "@babel/core": "^7.16.0",
     "@babel/plugin-transform-async-generator-functions": "^7.26.8",
@@ -158,8 +157,5 @@
     "re2": {
       "built": false
     }
-  },
-  "resolutions": {
-    "@angular/benchpress/@angular/core": "20.0.0"
   }
 }

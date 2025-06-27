@@ -212,16 +212,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/benchpress@npm:0.3.0":
-  version: 0.3.0
-  resolution: "@angular/benchpress@npm:0.3.0"
-  dependencies:
-    "@angular/core": "npm:^13.0.0 || ^14.0.0-0"
-    reflect-metadata: "npm:^0.1.13"
-  checksum: 10c0/a18dc93aa79a776a691b66127f961b65e268e443844c48eaf4c0f71fc2407779881459a893fb5a0a6a22bda5ec432ebf711817ca6eed5d67f343ae5509a9438a
-  languageName: node
-  linkType: hard
-
 "@angular/build-tooling@workspace:.":
   version: 0.0.0-use.local
   resolution: "@angular/build-tooling@workspace:."
@@ -230,7 +220,6 @@ __metadata:
     "@actions/github": "npm:^6.0.0"
     "@angular/animations": "npm:20.0.0"
     "@angular/bazel": "patch:@angular/bazel@npm:14.1.0-next.2#.yarn/patches/@angular-bazel-npm.patch"
-    "@angular/benchpress": "npm:0.3.0"
     "@angular/build": "npm:20.0.0"
     "@angular/cdk": "npm:20.0.0"
     "@angular/cli": "npm:20.0.0"
@@ -12820,13 +12809,6 @@ __metadata:
   dependencies:
     resolve: "npm:^1.1.6"
   checksum: 10c0/22c4bb32f4934a9468468b608417194f7e3ceba9a508512125b16082c64f161915a28467562368eeb15dc16058eb5b7c13a20b9eb29ff9927d1ebb3b5aa83e84
-  languageName: node
-  linkType: hard
-
-"reflect-metadata@npm:^0.1.13":
-  version: 0.1.14
-  resolution: "reflect-metadata@npm:0.1.14"
-  checksum: 10c0/3a6190c7f6cb224f26a012d11f9e329360c01c1945e2cbefea23976a8bacf9db6b794aeb5bf18adcb673c448a234fbc06fc41853c00a6c206b30f0777ecf019e
   languageName: node
   linkType: hard
 
