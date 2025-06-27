@@ -1,19 +1,26 @@
-load("//bazel:defaults.bzl", "ts_library")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-ts_library(
+ts_project(
     name = "driver-utilities",
-    package_name = "@angular/build-tooling/bazel/benchmark/driver-utilities",
     srcs = glob(["*.ts"]),
-    module_name = "@angular/build-tooling/bazel/benchmark/driver-utilities",
-    tsconfig = "//bazel/benchmark/component_benchmark:tsconfig-e2e.json",
+    declaration = True,
+    tsconfig = {
+        "compilerOptions": {
+            "lib": [
+                "es2020",
+                "dom",
+            ],
+            "types": ["node"],
+        },
+    },
     deps = [
-        "@npm//@angular/benchpress",
-        "@npm//@types/node",
-        "@npm//@types/selenium-webdriver",
-        "@npm//protractor",
-        "@npm//selenium-webdriver",
+        "//bazel:node_modules/@angular/benchpress",
+        "//bazel:node_modules/@types/node",
+        "//bazel:node_modules/@types/selenium-webdriver",
+        "//bazel:node_modules/protractor",
+        "//bazel:node_modules/selenium-webdriver",
     ],
 )
 
