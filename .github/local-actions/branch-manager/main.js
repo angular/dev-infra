@@ -1687,24 +1687,24 @@ var require_HeaderParser = __commonJS({
       if (this.npairs === this.maxHeaderPairs) {
         return;
       }
-      const lines2 = this.buffer.split(RE_CRLF);
-      const len = lines2.length;
+      const lines = this.buffer.split(RE_CRLF);
+      const len = lines.length;
       let m, h;
       for (var i = 0; i < len; ++i) {
-        if (lines2[i].length === 0) {
+        if (lines[i].length === 0) {
           continue;
         }
-        if (lines2[i][0] === "	" || lines2[i][0] === " ") {
+        if (lines[i][0] === "	" || lines[i][0] === " ") {
           if (h) {
-            this.header[h][this.header[h].length - 1] += lines2[i];
+            this.header[h][this.header[h].length - 1] += lines[i];
             continue;
           }
         }
-        const posColon = lines2[i].indexOf(":");
+        const posColon = lines[i].indexOf(":");
         if (posColon === -1 || posColon === 0) {
           return;
         }
-        m = RE_HDR.exec(lines2[i]);
+        m = RE_HDR.exec(lines[i]);
         h = m[1].toLowerCase();
         this.header[h] = this.header[h] || [];
         this.header[h].push(m[2] || "");
@@ -5302,6 +5302,13 @@ var require_body = __commonJS({
     var { isUint8Array, isArrayBuffer } = __require("util/types");
     var { File: UndiciFile } = require_file();
     var { parseMIMEType, serializeAMimeType } = require_dataURL();
+    var random;
+    try {
+      const crypto = __require("node:crypto");
+      random = (max) => crypto.randomInt(0, max);
+    } catch {
+      random = (max) => Math.floor(Math.random(max));
+    }
     var ReadableStream2 = globalThis.ReadableStream;
     var File = NativeFile ?? UndiciFile;
     var textEncoder = new TextEncoder();
@@ -5344,7 +5351,7 @@ var require_body = __commonJS({
       } else if (ArrayBuffer.isView(object)) {
         source = new Uint8Array(object.buffer.slice(object.byteOffset, object.byteOffset + object.byteLength));
       } else if (util.isFormDataLike(object)) {
-        const boundary = `----formdata-undici-0${`${Math.floor(Math.random() * 1e11)}`.padStart(11, "0")}`;
+        const boundary = `----formdata-undici-0${`${random(1e11)}`.padStart(11, "0")}`;
         const prefix = `--${boundary}\r
 Content-Disposition: form-data`;
         const escape2 = (str) => str.replace(/\n/g, "%0A").replace(/\r/g, "%0D").replace(/"/g, "%22");
@@ -8891,6 +8898,14 @@ var require_pool = __commonJS({
         this[kOptions] = { ...util.deepClone(options), connect, allowH2 };
         this[kOptions].interceptors = options.interceptors ? { ...options.interceptors } : void 0;
         this[kFactory] = factory;
+        this.on("connectionError", (origin2, targets, error2) => {
+          for (const target of targets) {
+            const idx = this[kClients].indexOf(target);
+            if (idx !== -1) {
+              this[kClients].splice(idx, 1);
+            }
+          }
+        });
       }
       [kGetDispatcher]() {
         let dispatcher = this[kClients].find((dispatcher2) => !dispatcher2[kNeedDrain]);
@@ -9548,9 +9563,9 @@ var require_api_request = __commonJS({
     } = require_errors();
     var util = require_util();
     var { getResolveErrorBodyCallback } = require_util3();
-    var { AsyncResource: AsyncResource5 } = __require("async_hooks");
+    var { AsyncResource: AsyncResource4 } = __require("async_hooks");
     var { addSignal, removeSignal } = require_abort_signal();
-    var RequestHandler = class extends AsyncResource5 {
+    var RequestHandler = class extends AsyncResource4 {
       constructor(opts, callback) {
         if (!opts || typeof opts !== "object") {
           throw new InvalidArgumentError("invalid opts");
@@ -9703,9 +9718,9 @@ var require_api_stream = __commonJS({
     } = require_errors();
     var util = require_util();
     var { getResolveErrorBodyCallback } = require_util3();
-    var { AsyncResource: AsyncResource5 } = __require("async_hooks");
+    var { AsyncResource: AsyncResource4 } = __require("async_hooks");
     var { addSignal, removeSignal } = require_abort_signal();
-    var StreamHandler = class extends AsyncResource5 {
+    var StreamHandler = class extends AsyncResource4 {
       constructor(opts, factory, callback) {
         if (!opts || typeof opts !== "object") {
           throw new InvalidArgumentError("invalid opts");
@@ -9880,7 +9895,7 @@ var require_api_pipeline = __commonJS({
       RequestAbortedError
     } = require_errors();
     var util = require_util();
-    var { AsyncResource: AsyncResource5 } = __require("async_hooks");
+    var { AsyncResource: AsyncResource4 } = __require("async_hooks");
     var { addSignal, removeSignal } = require_abort_signal();
     var assert2 = __require("assert");
     var kResume = Symbol("resume");
@@ -9916,7 +9931,7 @@ var require_api_pipeline = __commonJS({
         callback(err);
       }
     };
-    var PipelineHandler = class extends AsyncResource5 {
+    var PipelineHandler = class extends AsyncResource4 {
       constructor(opts, handler2) {
         if (!opts || typeof opts !== "object") {
           throw new InvalidArgumentError("invalid opts");
@@ -10068,11 +10083,11 @@ var require_api_upgrade = __commonJS({
   ""(exports, module) {
     "use strict";
     var { InvalidArgumentError, RequestAbortedError, SocketError } = require_errors();
-    var { AsyncResource: AsyncResource5 } = __require("async_hooks");
+    var { AsyncResource: AsyncResource4 } = __require("async_hooks");
     var util = require_util();
     var { addSignal, removeSignal } = require_abort_signal();
     var assert2 = __require("assert");
-    var UpgradeHandler = class extends AsyncResource5 {
+    var UpgradeHandler = class extends AsyncResource4 {
       constructor(opts, callback) {
         if (!opts || typeof opts !== "object") {
           throw new InvalidArgumentError("invalid opts");
@@ -10157,11 +10172,11 @@ var require_api_upgrade = __commonJS({
 var require_api_connect = __commonJS({
   ""(exports, module) {
     "use strict";
-    var { AsyncResource: AsyncResource5 } = __require("async_hooks");
+    var { AsyncResource: AsyncResource4 } = __require("async_hooks");
     var { InvalidArgumentError, RequestAbortedError, SocketError } = require_errors();
     var util = require_util();
     var { addSignal, removeSignal } = require_abort_signal();
-    var ConnectHandler = class extends AsyncResource5 {
+    var ConnectHandler = class extends AsyncResource4 {
       constructor(opts, callback) {
         if (!opts || typeof opts !== "object") {
           throw new InvalidArgumentError("invalid opts");
@@ -11513,6 +11528,7 @@ var require_headers = __commonJS({
       isValidHeaderName,
       isValidHeaderValue
     } = require_util2();
+    var util = __require("util");
     var { webidl } = require_webidl();
     var assert2 = __require("assert");
     var kHeadersMap = Symbol("headers map");
@@ -11849,6 +11865,9 @@ var require_headers = __commonJS({
       [Symbol.toStringTag]: {
         value: "Headers",
         configurable: true
+      },
+      [util.inspect.custom]: {
+        enumerable: false
       }
     });
     webidl.converters.HeadersInit = function(V) {
@@ -15265,8 +15284,6 @@ var require_constants4 = __commonJS({
 var require_util6 = __commonJS({
   ""(exports, module) {
     "use strict";
-    var assert2 = __require("assert");
-    var { kHeadersList } = require_symbols();
     function isCTLExcludingHtab(value) {
       if (value.length === 0) {
         return false;
@@ -15396,25 +15413,13 @@ var require_util6 = __commonJS({
       }
       return out.join("; ");
     }
-    var kHeadersListNode;
-    function getHeadersList(headers) {
-      if (headers[kHeadersList]) {
-        return headers[kHeadersList];
-      }
-      if (!kHeadersListNode) {
-        kHeadersListNode = Object.getOwnPropertySymbols(headers).find(
-          (symbol) => symbol.description === "headers list"
-        );
-        assert2(kHeadersListNode, "Headers cannot be parsed");
-      }
-      const headersList = headers[kHeadersListNode];
-      assert2(headersList);
-      return headersList;
-    }
     module.exports = {
       isCTLExcludingHtab,
-      stringify,
-      getHeadersList
+      validateCookieName,
+      validateCookiePath,
+      validateCookieValue,
+      toIMFDate,
+      stringify
     };
   }
 });
@@ -15564,7 +15569,7 @@ var require_cookies = __commonJS({
   ""(exports, module) {
     "use strict";
     var { parseSetCookie } = require_parse();
-    var { stringify, getHeadersList } = require_util6();
+    var { stringify } = require_util6();
     var { webidl } = require_webidl();
     var { Headers } = require_headers();
     function getCookies(headers) {
@@ -15596,11 +15601,11 @@ var require_cookies = __commonJS({
     function getSetCookies(headers) {
       webidl.argumentLengthCheck(arguments, 1, { header: "getSetCookies" });
       webidl.brandCheck(headers, Headers, { strict: false });
-      const cookies = getHeadersList(headers).cookies;
+      const cookies = headers.getSetCookie();
       if (!cookies) {
         return [];
       }
-      return cookies.map((pair) => parseSetCookie(Array.isArray(pair) ? pair[1] : pair));
+      return cookies.map((pair) => parseSetCookie(pair));
     }
     function setCookie(headers, cookie) {
       webidl.argumentLengthCheck(arguments, 2, { header: "setCookie" });
@@ -19424,6 +19429,7 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
 // 
 var require_constants6 = __commonJS({
   ""(exports, module) {
+    "use strict";
     var SEMVER_SPEC_VERSION = "2.0.0";
     var MAX_LENGTH = 256;
     var MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER || 9007199254740991;
@@ -19454,6 +19460,7 @@ var require_constants6 = __commonJS({
 // 
 var require_debug = __commonJS({
   ""(exports, module) {
+    "use strict";
     var debug = typeof process === "object" && process.env && process.env.NODE_DEBUG && /\bsemver\b/i.test(process.env.NODE_DEBUG) ? (...args) => console.error("SEMVER", ...args) : () => {
     };
     module.exports = debug;
@@ -19463,6 +19470,7 @@ var require_debug = __commonJS({
 // 
 var require_re = __commonJS({
   ""(exports, module) {
+    "use strict";
     var {
       MAX_SAFE_COMPONENT_LENGTH,
       MAX_SAFE_BUILD_LENGTH,
@@ -19473,6 +19481,7 @@ var require_re = __commonJS({
     var re = exports.re = [];
     var safeRe = exports.safeRe = [];
     var src = exports.src = [];
+    var safeSrc = exports.safeSrc = [];
     var t = exports.t = {};
     var R = 0;
     var LETTERDASHNUMBER = "[a-zA-Z0-9-]";
@@ -19493,6 +19502,7 @@ var require_re = __commonJS({
       debug(name, index, value);
       t[name] = index;
       src[index] = value;
+      safeSrc[index] = safe;
       re[index] = new RegExp(value, isGlobal ? "g" : void 0);
       safeRe[index] = new RegExp(safe, isGlobal ? "g" : void 0);
     };
@@ -19501,8 +19511,8 @@ var require_re = __commonJS({
     createToken("NONNUMERICIDENTIFIER", `\\d*[a-zA-Z-]${LETTERDASHNUMBER}*`);
     createToken("MAINVERSION", `(${src[t.NUMERICIDENTIFIER]})\\.(${src[t.NUMERICIDENTIFIER]})\\.(${src[t.NUMERICIDENTIFIER]})`);
     createToken("MAINVERSIONLOOSE", `(${src[t.NUMERICIDENTIFIERLOOSE]})\\.(${src[t.NUMERICIDENTIFIERLOOSE]})\\.(${src[t.NUMERICIDENTIFIERLOOSE]})`);
-    createToken("PRERELEASEIDENTIFIER", `(?:${src[t.NUMERICIDENTIFIER]}|${src[t.NONNUMERICIDENTIFIER]})`);
-    createToken("PRERELEASEIDENTIFIERLOOSE", `(?:${src[t.NUMERICIDENTIFIERLOOSE]}|${src[t.NONNUMERICIDENTIFIER]})`);
+    createToken("PRERELEASEIDENTIFIER", `(?:${src[t.NONNUMERICIDENTIFIER]}|${src[t.NUMERICIDENTIFIER]})`);
+    createToken("PRERELEASEIDENTIFIERLOOSE", `(?:${src[t.NONNUMERICIDENTIFIER]}|${src[t.NUMERICIDENTIFIERLOOSE]})`);
     createToken("PRERELEASE", `(?:-(${src[t.PRERELEASEIDENTIFIER]}(?:\\.${src[t.PRERELEASEIDENTIFIER]})*))`);
     createToken("PRERELEASELOOSE", `(?:-?(${src[t.PRERELEASEIDENTIFIERLOOSE]}(?:\\.${src[t.PRERELEASEIDENTIFIERLOOSE]})*))`);
     createToken("BUILDIDENTIFIER", `${LETTERDASHNUMBER}+`);
@@ -19548,6 +19558,7 @@ var require_re = __commonJS({
 // 
 var require_parse_options = __commonJS({
   ""(exports, module) {
+    "use strict";
     var looseOption = Object.freeze({ loose: true });
     var emptyOpts = Object.freeze({});
     var parseOptions2 = (options) => {
@@ -19566,6 +19577,7 @@ var require_parse_options = __commonJS({
 // 
 var require_identifiers = __commonJS({
   ""(exports, module) {
+    "use strict";
     var numeric = /^[0-9]+$/;
     var compareIdentifiers = (a, b) => {
       const anum = numeric.test(a);
@@ -19587,6 +19599,7 @@ var require_identifiers = __commonJS({
 // 
 var require_semver = __commonJS({
   ""(exports, module) {
+    "use strict";
     var debug = require_debug();
     var { MAX_LENGTH, MAX_SAFE_INTEGER } = require_constants6();
     var { safeRe: re, t } = require_re();
@@ -19727,6 +19740,17 @@ var require_semver = __commonJS({
         } while (++i);
       }
       inc(release, identifier, identifierBase) {
+        if (release.startsWith("pre")) {
+          if (!identifier && identifierBase === false) {
+            throw new Error("invalid increment argument: identifier is empty");
+          }
+          if (identifier) {
+            const match2 = `-${identifier}`.match(this.options.loose ? re[t.PRERELEASELOOSE] : re[t.PRERELEASE]);
+            if (!match2 || match2[1] !== identifier) {
+              throw new Error(`invalid identifier: ${identifier}`);
+            }
+          }
+        }
         switch (release) {
           case "premajor":
             this.prerelease.length = 0;
@@ -19752,6 +19776,12 @@ var require_semver = __commonJS({
             }
             this.inc("pre", identifier, identifierBase);
             break;
+          case "release":
+            if (this.prerelease.length === 0) {
+              throw new Error(`version ${this.raw} is not a prerelease`);
+            }
+            this.prerelease.length = 0;
+            break;
           case "major":
             if (this.minor !== 0 || this.patch !== 0 || this.prerelease.length === 0) {
               this.major++;
@@ -19775,9 +19805,6 @@ var require_semver = __commonJS({
             break;
           case "pre": {
             const base = Number(identifierBase) ? 1 : 0;
-            if (!identifier && identifierBase === false) {
-              throw new Error("invalid increment argument: identifier is empty");
-            }
             if (this.prerelease.length === 0) {
               this.prerelease = [base];
             } else {
@@ -19827,6 +19854,7 @@ var require_semver = __commonJS({
 // 
 var require_parse2 = __commonJS({
   ""(exports, module) {
+    "use strict";
     var SemVer = require_semver();
     var parse4 = (version, options, throwErrors = false) => {
       if (version instanceof SemVer) {
@@ -19848,6 +19876,7 @@ var require_parse2 = __commonJS({
 // 
 var require_valid = __commonJS({
   ""(exports, module) {
+    "use strict";
     var parse4 = require_parse2();
     var valid = (version, options) => {
       const v = parse4(version, options);
@@ -19860,6 +19889,7 @@ var require_valid = __commonJS({
 // 
 var require_clean = __commonJS({
   ""(exports, module) {
+    "use strict";
     var parse4 = require_parse2();
     var clean = (version, options) => {
       const s = parse4(version.trim().replace(/^[=v]+/, ""), options);
@@ -19872,6 +19902,7 @@ var require_clean = __commonJS({
 // 
 var require_inc = __commonJS({
   ""(exports, module) {
+    "use strict";
     var SemVer = require_semver();
     var inc = (version, release, options, identifier, identifierBase) => {
       if (typeof options === "string") {
@@ -19895,6 +19926,7 @@ var require_inc = __commonJS({
 // 
 var require_diff = __commonJS({
   ""(exports, module) {
+    "use strict";
     var parse4 = require_parse2();
     var diff = (version1, version2) => {
       const v1 = parse4(version1, null, true);
@@ -19912,13 +19944,12 @@ var require_diff = __commonJS({
         if (!lowVersion.patch && !lowVersion.minor) {
           return "major";
         }
-        if (highVersion.patch) {
+        if (lowVersion.compareMain(highVersion) === 0) {
+          if (lowVersion.minor && !lowVersion.patch) {
+            return "minor";
+          }
           return "patch";
         }
-        if (highVersion.minor) {
-          return "minor";
-        }
-        return "major";
       }
       const prefix = highHasPre ? "pre" : "";
       if (v1.major !== v2.major) {
@@ -19939,6 +19970,7 @@ var require_diff = __commonJS({
 // 
 var require_major = __commonJS({
   ""(exports, module) {
+    "use strict";
     var SemVer = require_semver();
     var major = (a, loose) => new SemVer(a, loose).major;
     module.exports = major;
@@ -19948,6 +19980,7 @@ var require_major = __commonJS({
 // 
 var require_minor = __commonJS({
   ""(exports, module) {
+    "use strict";
     var SemVer = require_semver();
     var minor = (a, loose) => new SemVer(a, loose).minor;
     module.exports = minor;
@@ -19957,6 +19990,7 @@ var require_minor = __commonJS({
 // 
 var require_patch = __commonJS({
   ""(exports, module) {
+    "use strict";
     var SemVer = require_semver();
     var patch = (a, loose) => new SemVer(a, loose).patch;
     module.exports = patch;
@@ -19966,6 +20000,7 @@ var require_patch = __commonJS({
 // 
 var require_prerelease = __commonJS({
   ""(exports, module) {
+    "use strict";
     var parse4 = require_parse2();
     var prerelease = (version, options) => {
       const parsed = parse4(version, options);
@@ -19978,6 +20013,7 @@ var require_prerelease = __commonJS({
 // 
 var require_compare = __commonJS({
   ""(exports, module) {
+    "use strict";
     var SemVer = require_semver();
     var compare = (a, b, loose) => new SemVer(a, loose).compare(new SemVer(b, loose));
     module.exports = compare;
@@ -19987,6 +20023,7 @@ var require_compare = __commonJS({
 // 
 var require_rcompare = __commonJS({
   ""(exports, module) {
+    "use strict";
     var compare = require_compare();
     var rcompare = (a, b, loose) => compare(b, a, loose);
     module.exports = rcompare;
@@ -19996,6 +20033,7 @@ var require_rcompare = __commonJS({
 // 
 var require_compare_loose = __commonJS({
   ""(exports, module) {
+    "use strict";
     var compare = require_compare();
     var compareLoose = (a, b) => compare(a, b, true);
     module.exports = compareLoose;
@@ -20005,6 +20043,7 @@ var require_compare_loose = __commonJS({
 // 
 var require_compare_build = __commonJS({
   ""(exports, module) {
+    "use strict";
     var SemVer = require_semver();
     var compareBuild = (a, b, loose) => {
       const versionA = new SemVer(a, loose);
@@ -20018,6 +20057,7 @@ var require_compare_build = __commonJS({
 // 
 var require_sort = __commonJS({
   ""(exports, module) {
+    "use strict";
     var compareBuild = require_compare_build();
     var sort = (list, loose) => list.sort((a, b) => compareBuild(a, b, loose));
     module.exports = sort;
@@ -20027,6 +20067,7 @@ var require_sort = __commonJS({
 // 
 var require_rsort = __commonJS({
   ""(exports, module) {
+    "use strict";
     var compareBuild = require_compare_build();
     var rsort = (list, loose) => list.sort((a, b) => compareBuild(b, a, loose));
     module.exports = rsort;
@@ -20036,6 +20077,7 @@ var require_rsort = __commonJS({
 // 
 var require_gt = __commonJS({
   ""(exports, module) {
+    "use strict";
     var compare = require_compare();
     var gt = (a, b, loose) => compare(a, b, loose) > 0;
     module.exports = gt;
@@ -20045,6 +20087,7 @@ var require_gt = __commonJS({
 // 
 var require_lt = __commonJS({
   ""(exports, module) {
+    "use strict";
     var compare = require_compare();
     var lt = (a, b, loose) => compare(a, b, loose) < 0;
     module.exports = lt;
@@ -20054,6 +20097,7 @@ var require_lt = __commonJS({
 // 
 var require_eq = __commonJS({
   ""(exports, module) {
+    "use strict";
     var compare = require_compare();
     var eq = (a, b, loose) => compare(a, b, loose) === 0;
     module.exports = eq;
@@ -20063,6 +20107,7 @@ var require_eq = __commonJS({
 // 
 var require_neq = __commonJS({
   ""(exports, module) {
+    "use strict";
     var compare = require_compare();
     var neq = (a, b, loose) => compare(a, b, loose) !== 0;
     module.exports = neq;
@@ -20072,6 +20117,7 @@ var require_neq = __commonJS({
 // 
 var require_gte = __commonJS({
   ""(exports, module) {
+    "use strict";
     var compare = require_compare();
     var gte = (a, b, loose) => compare(a, b, loose) >= 0;
     module.exports = gte;
@@ -20081,6 +20127,7 @@ var require_gte = __commonJS({
 // 
 var require_lte = __commonJS({
   ""(exports, module) {
+    "use strict";
     var compare = require_compare();
     var lte = (a, b, loose) => compare(a, b, loose) <= 0;
     module.exports = lte;
@@ -20090,6 +20137,7 @@ var require_lte = __commonJS({
 // 
 var require_cmp = __commonJS({
   ""(exports, module) {
+    "use strict";
     var eq = require_eq();
     var neq = require_neq();
     var gt = require_gt();
@@ -20139,6 +20187,7 @@ var require_cmp = __commonJS({
 // 
 var require_coerce = __commonJS({
   ""(exports, module) {
+    "use strict";
     var SemVer = require_semver();
     var parse4 = require_parse2();
     var { safeRe: re, t } = require_re();
@@ -20184,6 +20233,7 @@ var require_coerce = __commonJS({
 // 
 var require_lrucache = __commonJS({
   ""(exports, module) {
+    "use strict";
     var LRUCache = class {
       constructor() {
         this.max = 1e3;
@@ -20221,6 +20271,7 @@ var require_lrucache = __commonJS({
 // 
 var require_range = __commonJS({
   ""(exports, module) {
+    "use strict";
     var SPACE_CHARACTERS = /\s+/g;
     var Range = class {
       constructor(range, options) {
@@ -20595,6 +20646,7 @@ var require_range = __commonJS({
 // 
 var require_comparator = __commonJS({
   ""(exports, module) {
+    "use strict";
     var ANY = Symbol("SemVer ANY");
     var Comparator = class {
       static get ANY() {
@@ -20707,6 +20759,7 @@ var require_comparator = __commonJS({
 // 
 var require_satisfies = __commonJS({
   ""(exports, module) {
+    "use strict";
     var Range = require_range();
     var satisfies = (version, range, options) => {
       try {
@@ -20723,6 +20776,7 @@ var require_satisfies = __commonJS({
 // 
 var require_to_comparators = __commonJS({
   ""(exports, module) {
+    "use strict";
     var Range = require_range();
     var toComparators = (range, options) => new Range(range, options).set.map((comp) => comp.map((c) => c.value).join(" ").trim().split(" "));
     module.exports = toComparators;
@@ -20732,6 +20786,7 @@ var require_to_comparators = __commonJS({
 // 
 var require_max_satisfying = __commonJS({
   ""(exports, module) {
+    "use strict";
     var SemVer = require_semver();
     var Range = require_range();
     var maxSatisfying = (versions, range, options) => {
@@ -20760,6 +20815,7 @@ var require_max_satisfying = __commonJS({
 // 
 var require_min_satisfying = __commonJS({
   ""(exports, module) {
+    "use strict";
     var SemVer = require_semver();
     var Range = require_range();
     var minSatisfying = (versions, range, options) => {
@@ -20788,6 +20844,7 @@ var require_min_satisfying = __commonJS({
 // 
 var require_min_version = __commonJS({
   ""(exports, module) {
+    "use strict";
     var SemVer = require_semver();
     var Range = require_range();
     var gt = require_gt();
@@ -20844,6 +20901,7 @@ var require_min_version = __commonJS({
 // 
 var require_valid2 = __commonJS({
   ""(exports, module) {
+    "use strict";
     var Range = require_range();
     var validRange = (range, options) => {
       try {
@@ -20859,6 +20917,7 @@ var require_valid2 = __commonJS({
 // 
 var require_outside = __commonJS({
   ""(exports, module) {
+    "use strict";
     var SemVer = require_semver();
     var Comparator = require_comparator();
     var { ANY } = Comparator;
@@ -20927,6 +20986,7 @@ var require_outside = __commonJS({
 // 
 var require_gtr = __commonJS({
   ""(exports, module) {
+    "use strict";
     var outside = require_outside();
     var gtr = (version, range, options) => outside(version, range, ">", options);
     module.exports = gtr;
@@ -20936,6 +20996,7 @@ var require_gtr = __commonJS({
 // 
 var require_ltr = __commonJS({
   ""(exports, module) {
+    "use strict";
     var outside = require_outside();
     var ltr = (version, range, options) => outside(version, range, "<", options);
     module.exports = ltr;
@@ -20945,6 +21006,7 @@ var require_ltr = __commonJS({
 // 
 var require_intersects = __commonJS({
   ""(exports, module) {
+    "use strict";
     var Range = require_range();
     var intersects = (r1, r2, options) => {
       r1 = new Range(r1, options);
@@ -20958,6 +21020,7 @@ var require_intersects = __commonJS({
 // 
 var require_simplify = __commonJS({
   ""(exports, module) {
+    "use strict";
     var satisfies = require_satisfies();
     var compare = require_compare();
     module.exports = (versions, range, options) => {
@@ -21007,6 +21070,7 @@ var require_simplify = __commonJS({
 // 
 var require_subset = __commonJS({
   ""(exports, module) {
+    "use strict";
     var Range = require_range();
     var Comparator = require_comparator();
     var { ANY } = Comparator;
@@ -21169,6 +21233,7 @@ var require_subset = __commonJS({
 // 
 var require_semver2 = __commonJS({
   ""(exports, module) {
+    "use strict";
     var internalRe = require_re();
     var constants = require_constants6();
     var SemVer = require_semver();
@@ -21433,14 +21498,14 @@ var require_emoji_regex = __commonJS({
 var require_string_width = __commonJS({
   ""(exports, module) {
     "use strict";
-    var stripAnsi2 = require_strip_ansi();
+    var stripAnsi = require_strip_ansi();
     var isFullwidthCodePoint = require_is_fullwidth_code_point();
     var emojiRegex = require_emoji_regex();
     var stringWidth = (string) => {
       if (typeof string !== "string" || string.length === 0) {
         return 0;
       }
-      string = stripAnsi2(string);
+      string = stripAnsi(string);
       if (string.length === 0) {
         return 0;
       }
@@ -22567,7 +22632,7 @@ var require_wrap_ansi = __commonJS({
   ""(exports, module) {
     "use strict";
     var stringWidth = require_string_width();
-    var stripAnsi2 = require_strip_ansi();
+    var stripAnsi = require_strip_ansi();
     var ansiStyles2 = require_ansi_styles();
     var ESCAPES = /* @__PURE__ */ new Set([
       "\x1B",
@@ -22579,7 +22644,7 @@ var require_wrap_ansi = __commonJS({
     var wrapWord = (rows, word, columns) => {
       const characters = [...word];
       let isInsideEscape = false;
-      let visible = stringWidth(stripAnsi2(rows[rows.length - 1]));
+      let visible = stringWidth(stripAnsi(rows[rows.length - 1]));
       for (const [index, character] of characters.entries()) {
         const characterLength = stringWidth(character);
         if (visible + characterLength <= columns) {
@@ -32825,12 +32890,12 @@ var require_parser = __commonJS({
         return line.charAt(0) !== char;
       };
     }
-    function truncateToScissor(lines2) {
-      const scissorIndex = lines2.indexOf(SCISSOR);
+    function truncateToScissor(lines) {
+      const scissorIndex = lines.indexOf(SCISSOR);
       if (scissorIndex === -1) {
-        return lines2;
+        return lines;
       }
-      return lines2.slice(0, scissorIndex);
+      return lines.slice(0, scissorIndex);
     }
     function getReferences(input, regex) {
       const references = [];
@@ -32881,7 +32946,7 @@ var require_parser = __commonJS({
       const commentFilter = typeof options.commentChar === "string" ? getCommentFilter(options.commentChar) : passTrough;
       const gpgFilter = (line) => !line.match(/^\s*gpg:/);
       const rawLines = trimOffNewlines(raw).split(/\r?\n/);
-      const lines2 = truncateToScissor(rawLines).filter(commentFilter).filter(gpgFilter);
+      const lines = truncateToScissor(rawLines).filter(commentFilter).filter(gpgFilter);
       let continueNote = false;
       let isBody = true;
       const headerCorrespondence2 = ((_a = options.headerCorrespondence) == null ? void 0 : _a.map(function(part) {
@@ -32901,7 +32966,7 @@ var require_parser = __commonJS({
       const notes = [];
       const references = [];
       let revert = null;
-      if (lines2.length === 0) {
+      if (lines.length === 0) {
         return {
           body,
           footer,
@@ -32916,7 +32981,7 @@ var require_parser = __commonJS({
           type: null
         };
       }
-      merge2 = lines2.shift();
+      merge2 = lines.shift();
       const mergeParts = {};
       const headerParts = {};
       body = "";
@@ -32924,9 +32989,9 @@ var require_parser = __commonJS({
       const mergeMatch = merge2.match(options.mergePattern);
       if (mergeMatch && options.mergePattern) {
         merge2 = mergeMatch[0];
-        header = lines2.shift();
+        header = lines.shift();
         while (header !== void 0 && !header.trim()) {
-          header = lines2.shift();
+          header = lines.shift();
         }
         if (!header) {
           header = "";
@@ -32957,7 +33022,7 @@ var require_parser = __commonJS({
         references: regex.references,
         referenceParts: regex.referenceParts
       }));
-      lines2.forEach(function(line) {
+      lines.forEach(function(line) {
         if (options.fieldPattern) {
           const fieldMatch = options.fieldPattern.exec(line);
           if (fieldMatch) {
@@ -44074,13 +44139,13 @@ var require_api_request2 = __commonJS({
   ""(exports, module) {
     "use strict";
     var assert2 = __require("node:assert");
-    var { AsyncResource: AsyncResource5 } = __require("node:async_hooks");
+    var { AsyncResource: AsyncResource4 } = __require("node:async_hooks");
     var { Readable } = require_readable2();
     var { InvalidArgumentError, RequestAbortedError } = require_errors2();
     var util = require_util8();
     function noop2() {
     }
-    var RequestHandler = class extends AsyncResource5 {
+    var RequestHandler = class extends AsyncResource4 {
       constructor(opts, callback) {
         if (!opts || typeof opts !== "object") {
           throw new InvalidArgumentError("invalid opts");
@@ -44297,13 +44362,13 @@ var require_api_stream2 = __commonJS({
     "use strict";
     var assert2 = __require("node:assert");
     var { finished } = __require("node:stream");
-    var { AsyncResource: AsyncResource5 } = __require("node:async_hooks");
+    var { AsyncResource: AsyncResource4 } = __require("node:async_hooks");
     var { InvalidArgumentError, InvalidReturnValueError } = require_errors2();
     var util = require_util8();
     var { addSignal, removeSignal } = require_abort_signal2();
     function noop2() {
     }
-    var StreamHandler = class extends AsyncResource5 {
+    var StreamHandler = class extends AsyncResource4 {
       constructor(opts, factory, callback) {
         if (!opts || typeof opts !== "object") {
           throw new InvalidArgumentError("invalid opts");
@@ -44463,7 +44528,7 @@ var require_api_pipeline2 = __commonJS({
       PassThrough
     } = __require("node:stream");
     var assert2 = __require("node:assert");
-    var { AsyncResource: AsyncResource5 } = __require("node:async_hooks");
+    var { AsyncResource: AsyncResource4 } = __require("node:async_hooks");
     var {
       InvalidArgumentError,
       InvalidReturnValueError,
@@ -44506,7 +44571,7 @@ var require_api_pipeline2 = __commonJS({
         callback(err);
       }
     };
-    var PipelineHandler = class extends AsyncResource5 {
+    var PipelineHandler = class extends AsyncResource4 {
       constructor(opts, handler2) {
         if (!opts || typeof opts !== "object") {
           throw new InvalidArgumentError("invalid opts");
@@ -44659,11 +44724,11 @@ var require_api_upgrade2 = __commonJS({
   ""(exports, module) {
     "use strict";
     var { InvalidArgumentError, SocketError } = require_errors2();
-    var { AsyncResource: AsyncResource5 } = __require("node:async_hooks");
+    var { AsyncResource: AsyncResource4 } = __require("node:async_hooks");
     var assert2 = __require("node:assert");
     var util = require_util8();
     var { addSignal, removeSignal } = require_abort_signal2();
-    var UpgradeHandler = class extends AsyncResource5 {
+    var UpgradeHandler = class extends AsyncResource4 {
       constructor(opts, callback) {
         if (!opts || typeof opts !== "object") {
           throw new InvalidArgumentError("invalid opts");
@@ -44752,11 +44817,11 @@ var require_api_connect2 = __commonJS({
   ""(exports, module) {
     "use strict";
     var assert2 = __require("node:assert");
-    var { AsyncResource: AsyncResource5 } = __require("node:async_hooks");
+    var { AsyncResource: AsyncResource4 } = __require("node:async_hooks");
     var { InvalidArgumentError, SocketError } = require_errors2();
     var util = require_util8();
     var { addSignal, removeSignal } = require_abort_signal2();
-    var ConnectHandler = class extends AsyncResource5 {
+    var ConnectHandler = class extends AsyncResource4 {
       constructor(opts, callback) {
         if (!opts || typeof opts !== "object") {
           throw new InvalidArgumentError("invalid opts");
@@ -59128,7 +59193,7 @@ var isUpKey = (key) => key.name === "up" || key.name === "k" || key.ctrl && key.
 var isDownKey = (key) => key.name === "down" || key.name === "j" || key.ctrl && key.name === "n";
 var isSpaceKey = (key) => key.name === "space";
 var isBackspaceKey = (key) => key.name === "backspace";
-var isNumberKey = (key) => "123456789".includes(key.name);
+var isNumberKey = (key) => "1234567890".includes(key.name);
 var isEnterKey = (key) => key.name === "enter" || key.name === "return";
 
 // 
@@ -59267,18 +59332,18 @@ var effectScheduler = {
 // 
 function useState(defaultValue) {
   return withPointer((pointer) => {
-    const setFn = (newValue) => {
+    const setState = AsyncResource2.bind(function setState2(newValue) {
       if (pointer.get() !== newValue) {
         pointer.set(newValue);
         handleChange();
       }
-    };
+    });
     if (pointer.initialized) {
-      return [pointer.get(), setFn];
+      return [pointer.get(), setState];
     }
     const value = typeof defaultValue === "function" ? defaultValue() : defaultValue;
     pointer.set(value);
-    return [value, setFn];
+    return [value, setState];
   });
 }
 
@@ -59641,13 +59706,13 @@ function usePrefix({ status = "idle", theme }) {
     if (status === "loading") {
       let tickInterval;
       let inc = -1;
-      const delayTimeout = setTimeout(AsyncResource2.bind(() => {
+      const delayTimeout = setTimeout(() => {
         setShowLoader(true);
-        tickInterval = setInterval(AsyncResource2.bind(() => {
+        tickInterval = setInterval(() => {
           inc = inc + 1;
           setTick(inc % spinner.frames.length);
-        }), spinner.interval);
-      }), 300);
+        }, spinner.interval);
+      }, 300);
       return () => {
         clearTimeout(delayTimeout);
         clearInterval(tickInterval);
@@ -59711,91 +59776,75 @@ function readlineWidth() {
 }
 
 // 
-function split(content, width) {
-  return breakLines(content, width).split("\n");
-}
-function rotate(count, items) {
-  const max = items.length;
-  const offset = (count % max + max) % max;
-  return [...items.slice(offset), ...items.slice(0, offset)];
-}
-function lines({ items, width, renderItem, active, position: requested, pageSize }) {
-  const layouts = items.map((item, index) => ({
-    item,
-    index,
-    isActive: index === active
-  }));
-  const layoutsInPage = rotate(active - requested, layouts).slice(0, pageSize);
-  const renderItemAt = (index) => layoutsInPage[index] == null ? [] : split(renderItem(layoutsInPage[index]), width);
-  const pageBuffer = Array.from({ length: pageSize });
-  const activeItem = renderItemAt(requested).slice(0, pageSize);
-  const position = requested + activeItem.length <= pageSize ? requested : pageSize - activeItem.length;
-  pageBuffer.splice(position, activeItem.length, ...activeItem);
-  let bufferPointer = position + activeItem.length;
-  let layoutPointer = requested + 1;
-  while (bufferPointer < pageSize && layoutPointer < layoutsInPage.length) {
-    for (const line of renderItemAt(layoutPointer)) {
-      pageBuffer[bufferPointer++] = line;
-      if (bufferPointer >= pageSize)
-        break;
-    }
-    layoutPointer++;
-  }
-  bufferPointer = position - 1;
-  layoutPointer = requested - 1;
-  while (bufferPointer >= 0 && layoutPointer >= 0) {
-    for (const line of renderItemAt(layoutPointer).reverse()) {
-      pageBuffer[bufferPointer--] = line;
-      if (bufferPointer < 0)
-        break;
-    }
-    layoutPointer--;
-  }
-  return pageBuffer.filter((line) => typeof line === "string");
-}
-
-// 
-function finite({ active, pageSize, total }) {
+function usePointerPosition({ active, renderedItems, pageSize, loop }) {
+  var _a;
+  const state = useRef({
+    lastPointer: active,
+    lastActive: void 0
+  });
+  const { lastPointer, lastActive } = state.current;
   const middle = Math.floor(pageSize / 2);
-  if (total <= pageSize || active < middle)
-    return active;
-  if (active >= total - middle)
-    return active + pageSize - total;
-  return middle;
-}
-function infinite({ active, lastActive, total, pageSize, pointer }) {
-  if (total <= pageSize)
-    return active;
-  if (lastActive < active && active - lastActive < pageSize) {
-    return Math.min(Math.floor(pageSize / 2), pointer + active - lastActive);
+  const renderedLength = renderedItems.reduce((acc, item) => acc + item.length, 0);
+  const defaultPointerPosition = renderedItems.slice(0, active).reduce((acc, item) => acc + item.length, 0);
+  let pointer = defaultPointerPosition;
+  if (renderedLength > pageSize) {
+    if (loop) {
+      pointer = lastPointer;
+      if (lastActive != null && lastActive < active && active - lastActive < pageSize) {
+        pointer = Math.min(
+          middle,
+          Math.abs(active - lastActive) === 1 ? Math.min(
+            lastPointer + (((_a = renderedItems[lastActive]) == null ? void 0 : _a.length) ?? 0),
+            Math.max(defaultPointerPosition, lastPointer)
+          ) : lastPointer + active - lastActive
+        );
+      }
+    } else {
+      const spaceUnderActive = renderedItems.slice(active).reduce((acc, item) => acc + item.length, 0);
+      pointer = spaceUnderActive < pageSize - middle ? pageSize - spaceUnderActive : Math.min(defaultPointerPosition, middle);
+    }
   }
+  state.current.lastPointer = pointer;
+  state.current.lastActive = active;
   return pointer;
 }
-
-// 
 function usePagination({ items, active, renderItem, pageSize, loop = true }) {
-  const state = useRef({ position: 0, lastActive: 0 });
-  const position = loop ? infinite({
-    active,
-    lastActive: state.current.lastActive,
-    total: items.length,
-    pageSize,
-    pointer: state.current.position
-  }) : finite({
-    active,
-    total: items.length,
-    pageSize
+  const width = readlineWidth();
+  const bound = (num) => (num % items.length + items.length) % items.length;
+  const renderedItems = items.map((item, index) => {
+    if (item == null)
+      return [];
+    return breakLines(renderItem({ item, index, isActive: index === active }), width).split("\n");
   });
-  state.current.position = position;
-  state.current.lastActive = active;
-  return lines({
-    items,
-    width: readlineWidth(),
-    renderItem,
-    active,
-    position,
-    pageSize
-  }).join("\n");
+  const renderedLength = renderedItems.reduce((acc, item) => acc + item.length, 0);
+  const renderItemAtIndex = (index) => renderedItems[index] ?? [];
+  const pointer = usePointerPosition({ active, renderedItems, pageSize, loop });
+  const activeItem = renderItemAtIndex(active).slice(0, pageSize);
+  const activeItemPosition = pointer + activeItem.length <= pageSize ? pointer : pageSize - activeItem.length;
+  const pageBuffer = Array.from({ length: pageSize });
+  pageBuffer.splice(activeItemPosition, activeItem.length, ...activeItem);
+  const itemVisited = /* @__PURE__ */ new Set([active]);
+  let bufferPointer = activeItemPosition + activeItem.length;
+  let itemPointer = bound(active + 1);
+  while (bufferPointer < pageSize && !itemVisited.has(itemPointer) && (loop && renderedLength > pageSize ? itemPointer !== active : itemPointer > active)) {
+    const lines = renderItemAtIndex(itemPointer);
+    const linesToAdd = lines.slice(0, pageSize - bufferPointer);
+    pageBuffer.splice(bufferPointer, linesToAdd.length, ...linesToAdd);
+    itemVisited.add(itemPointer);
+    bufferPointer += linesToAdd.length;
+    itemPointer = bound(itemPointer + 1);
+  }
+  bufferPointer = activeItemPosition - 1;
+  itemPointer = bound(active - 1);
+  while (bufferPointer >= 0 && !itemVisited.has(itemPointer) && (loop && renderedLength > pageSize ? itemPointer !== active : itemPointer < active)) {
+    const lines = renderItemAtIndex(itemPointer);
+    const linesToAdd = lines.slice(Math.max(0, lines.length - bufferPointer - 1));
+    pageBuffer.splice(bufferPointer - linesToAdd.length + 1, linesToAdd.length, ...linesToAdd);
+    itemVisited.add(itemPointer);
+    bufferPointer -= linesToAdd.length;
+    itemPointer = bound(itemPointer - 1);
+  }
+  return pageBuffer.filter((line) => typeof line === "string").join("\n");
 }
 
 // 
@@ -60025,20 +60074,19 @@ var {
 } = signalExitWrap(processOk(process5) ? new SignalExit(process5) : new SignalExitFallback());
 
 // 
-var import_strip_ansi = __toESM(require_strip_ansi(), 1);
 var import_ansi_escapes = __toESM(require_ansi_escapes(), 1);
+import { stripVTControlCharacters as stripVTControlCharacters2 } from "node:util";
 var height = (content) => content.split("\n").length;
 var lastLine = (content) => content.split("\n").pop() ?? "";
 function cursorDown(n) {
   return n > 0 ? import_ansi_escapes.default.cursorDown(n) : "";
 }
 var ScreenManager = class {
-  rl;
   height = 0;
   extraLinesUnderPrompt = 0;
   cursorPos;
+  rl;
   constructor(rl) {
-    this.rl = rl;
     this.rl = rl;
     this.cursorPos = rl.getCursorPos();
   }
@@ -60049,7 +60097,7 @@ var ScreenManager = class {
   }
   render(content, bottomContent = "") {
     const promptLine = lastLine(content);
-    const rawPromptLine = (0, import_strip_ansi.default)(promptLine);
+    const rawPromptLine = stripVTControlCharacters2(promptLine);
     let prompt = rawPromptLine;
     if (this.rl.line.length > 0) {
       prompt = prompt.slice(0, -this.rl.line.length);
@@ -60105,23 +60153,22 @@ var PromisePolyfill = class extends Promise {
 // 
 function getCallSites() {
   const _prepareStackTrace = Error.prepareStackTrace;
+  let result = [];
   try {
-    let result = [];
     Error.prepareStackTrace = (_, callSites) => {
       const callSitesWithoutCurrent = callSites.slice(1);
       result = callSitesWithoutCurrent;
       return callSitesWithoutCurrent;
     };
     new Error().stack;
+  } catch {
     return result;
-  } finally {
-    Error.prepareStackTrace = _prepareStackTrace;
   }
+  Error.prepareStackTrace = _prepareStackTrace;
+  return result;
 }
 function createPrompt(view) {
-  var _a, _b;
   const callSites = getCallSites();
-  const callerFilename = (_b = (_a = callSites[1]) == null ? void 0 : _a.getFileName) == null ? void 0 : _b.call(_a);
   const prompt = (config, context2 = {}) => {
     const { input = process.stdin, signal } = context2;
     const cleanups = /* @__PURE__ */ new Set();
@@ -60147,6 +60194,9 @@ function createPrompt(view) {
     cleanups.add(onExit((code, signal2) => {
       reject(new ExitPromptError(`User force closed the prompt with ${code} ${signal2}`));
     }));
+    const sigint = () => reject(new ExitPromptError(`User force closed the prompt with SIGINT`));
+    rl.on("SIGINT", sigint);
+    cleanups.add(() => rl.removeListener("SIGINT", sigint));
     const checkCursorPos = () => screen.checkCursorPos();
     rl.input.on("keypress", checkCursorPos);
     cleanups.add(() => rl.input.removeListener("keypress", checkCursorPos));
@@ -60155,11 +60205,13 @@ function createPrompt(view) {
       rl.on("close", hooksCleanup);
       cleanups.add(() => rl.removeListener("close", hooksCleanup));
       cycle(() => {
+        var _a;
         try {
           const nextView = view(config, (value) => {
             setImmediate(() => resolve(value));
           });
           if (nextView === void 0) {
+            const callerFilename = (_a = callSites[1]) == null ? void 0 : _a.getFileName();
             throw new Error(`Prompt functions must return a string.
     at ${callerFilename}`);
           }
@@ -60245,18 +60297,22 @@ function normalizeChoices(choices) {
       };
     }
     const name = choice.name ?? String(choice.value);
-    return {
+    const normalizedChoice = {
       value: choice.value,
       name,
       short: choice.short ?? name,
-      description: choice.description,
       disabled: choice.disabled ?? false,
       checked: choice.checked ?? false
     };
+    if (choice.description) {
+      normalizedChoice.description = choice.description;
+    }
+    return normalizedChoice;
   });
 }
 var esm_default2 = createPrompt((config, done) => {
   const { instructions, pageSize = 7, loop = true, required, validate = () => true } = config;
+  const shortcuts = { all: "a", invert: "i", ...config.shortcuts };
   const theme = makeTheme(checkboxTheme, config.theme);
   const firstRender = useRef(true);
   const [status, setStatus] = useState("idle");
@@ -60298,10 +60354,10 @@ var esm_default2 = createPrompt((config, done) => {
       setError(void 0);
       setShowHelpTip(false);
       setItems(items.map((choice, i) => i === active ? toggle(choice) : choice));
-    } else if (key.name === "a") {
+    } else if (key.name === shortcuts.all) {
       const selectAll = items.some((choice) => isSelectable(choice) && !choice.checked);
       setItems(items.map(check(selectAll)));
-    } else if (key.name === "i") {
+    } else if (key.name === shortcuts.invert) {
       setItems(items.map(toggle));
     } else if (isNumberKey(key)) {
       const position = Number(key.name) - 1;
@@ -60349,11 +60405,11 @@ var esm_default2 = createPrompt((config, done) => {
     } else {
       const keys = [
         `${theme.style.key("space")} to select`,
-        `${theme.style.key("a")} to toggle all`,
-        `${theme.style.key("i")} to invert selection`,
+        shortcuts.all ? `${theme.style.key(shortcuts.all)} to toggle all` : "",
+        shortcuts.invert ? `${theme.style.key(shortcuts.invert)} to invert selection` : "",
         `and ${theme.style.key("enter")} to proceed`
       ];
-      helpTipTop = ` (Press ${keys.join(", ")})`;
+      helpTipTop = ` (Press ${keys.filter((key) => key !== "").join(", ")})`;
     }
     if (items.length > pageSize && (theme.helpMode === "always" || theme.helpMode === "auto" && firstRender.current)) {
       helpTipBottom = `
@@ -60374,7 +60430,6 @@ ${page}${helpTipBottom}${choiceDescription}${error2}${import_ansi_escapes2.defau
 
 // 
 var import_external_editor = __toESM(require_main2(), 1);
-import { AsyncResource as AsyncResource4 } from "node:async_hooks";
 var editorTheme = {
   validationFailureMode: "keep"
 };
@@ -60387,7 +60442,7 @@ var esm_default3 = createPrompt((config, done) => {
   const prefix = usePrefix({ status, theme });
   function startEditor(rl) {
     rl.pause();
-    const editCallback = AsyncResource4.bind(async (error3, answer) => {
+    const editCallback = async (error3, answer) => {
       rl.resume();
       if (error3) {
         setError(error3.toString());
@@ -60408,7 +60463,7 @@ var esm_default3 = createPrompt((config, done) => {
           setStatus("idle");
         }
       }
-    });
+    };
     (0, import_external_editor.editAsync)(value, (error3, answer) => void editCallback(error3, answer), {
       postfix,
       ...fileProps
@@ -60759,22 +60814,36 @@ function normalizeChoices3(choices) {
     };
   });
 }
+function getSelectedChoice(input, choices) {
+  let selectedChoice;
+  const selectableChoices = choices.filter(isSelectableChoice);
+  if (numberRegex.test(input)) {
+    const answer = Number.parseInt(input, 10) - 1;
+    selectedChoice = selectableChoices[answer];
+  } else {
+    selectedChoice = selectableChoices.find((choice) => choice.key === input);
+  }
+  return selectedChoice ? [selectedChoice, choices.indexOf(selectedChoice)] : [void 0, void 0];
+}
 var esm_default8 = createPrompt((config, done) => {
+  const { loop = true } = config;
   const choices = useMemo(() => normalizeChoices3(config.choices), [config.choices]);
   const [status, setStatus] = useState("idle");
   const [value, setValue] = useState("");
   const [errorMsg, setError] = useState();
   const theme = makeTheme(config.theme);
   const prefix = usePrefix({ status, theme });
+  const bounds = useMemo(() => {
+    const first = choices.findIndex(isSelectableChoice);
+    const last = choices.findLastIndex(isSelectableChoice);
+    if (first === -1) {
+      throw new ValidationError("[select prompt] No selectable choices. All choices are disabled.");
+    }
+    return { first, last };
+  }, [choices]);
   useKeypress((key, rl) => {
     if (isEnterKey(key)) {
-      let selectedChoice;
-      if (numberRegex.test(value)) {
-        const answer = Number.parseInt(value, 10) - 1;
-        selectedChoice = choices.filter(isSelectableChoice)[answer];
-      } else {
-        selectedChoice = choices.find((choice) => isSelectableChoice(choice) && choice.key === value);
-      }
+      const [selectedChoice] = getSelectedChoice(value, choices);
       if (isSelectableChoice(selectedChoice)) {
         setValue(selectedChoice.short);
         setStatus("done");
@@ -60783,6 +60852,20 @@ var esm_default8 = createPrompt((config, done) => {
         setError("Please input a value");
       } else {
         setError(`"${import_yoctocolors_cjs5.default.red(value)}" isn't an available option`);
+      }
+    } else if (key.name === "up" || key.name === "down") {
+      rl.clearLine(0);
+      const [selectedChoice, active] = getSelectedChoice(value, choices);
+      if (!selectedChoice) {
+        const firstChoice = key.name === "down" ? choices.find(isSelectableChoice) : choices.findLast(isSelectableChoice);
+        setValue(firstChoice.key);
+      } else if (loop || key.name === "up" && active !== bounds.first || key.name === "down" && active !== bounds.last) {
+        const offset = key.name === "up" ? -1 : 1;
+        let next = active;
+        do {
+          next = (next + offset + choices.length) % choices.length;
+        } while (!isSelectableChoice(choices[next]));
+        setValue(choices[next].key);
       }
     } else {
       setValue(rl.line);
@@ -60890,13 +60973,16 @@ function normalizeChoices4(choices) {
       };
     }
     const name = choice.name ?? String(choice.value);
-    return {
+    const normalizedChoice = {
       value: choice.value,
       name,
-      description: choice.description,
       short: choice.short ?? name,
       disabled: choice.disabled ?? false
     };
+    if (choice.description) {
+      normalizedChoice.description = choice.description;
+    }
+    return normalizedChoice;
   });
 }
 var esm_default10 = createPrompt((config, done) => {
@@ -61035,7 +61121,8 @@ var selectTheme = {
     disabled: (text) => import_yoctocolors_cjs7.default.dim(`- ${text}`),
     description: (text) => import_yoctocolors_cjs7.default.cyan(text)
   },
-  helpMode: "auto"
+  helpMode: "auto",
+  indexMode: "hidden"
 };
 function isSelectable3(item) {
   return !Separator.isSeparator(item) && !item.disabled;
@@ -61053,16 +61140,20 @@ function normalizeChoices5(choices) {
       };
     }
     const name = choice.name ?? String(choice.value);
-    return {
+    const normalizedChoice = {
       value: choice.value,
       name,
-      description: choice.description,
       short: choice.short ?? name,
       disabled: choice.disabled ?? false
     };
+    if (choice.description) {
+      normalizedChoice.description = choice.description;
+    }
+    return normalizedChoice;
   });
 }
 var esm_default11 = createPrompt((config, done) => {
+  var _a, _b;
   const { loop = true, pageSize = 7 } = config;
   const firstRender = useRef(true);
   const theme = makeTheme(selectTheme, config.theme);
@@ -61100,13 +61191,15 @@ var esm_default11 = createPrompt((config, done) => {
         } while (!isSelectable3(items[next]));
         setActive(next);
       }
-    } else if (isNumberKey(key)) {
-      rl.clearLine(0);
-      const position = Number(key.name) - 1;
+    } else if (isNumberKey(key) && !Number.isNaN(Number(rl.line))) {
+      const position = Number(rl.line) - 1;
       const item = items[position];
       if (item != null && isSelectable3(item)) {
         setActive(position);
       }
+      searchTimeoutRef.current = setTimeout(() => {
+        rl.clearLine(0);
+      }, 700);
     } else if (isBackspaceKey(key)) {
       rl.clearLine(0);
     } else {
@@ -61134,25 +61227,26 @@ var esm_default11 = createPrompt((config, done) => {
     firstRender.current = false;
     if (items.length > pageSize) {
       helpTipBottom = `
-${theme.style.help("(Use arrow keys to reveal more choices)")}`;
+${theme.style.help(`(${((_a = config.instructions) == null ? void 0 : _a.pager) ?? "Use arrow keys to reveal more choices"})`)}`;
     } else {
-      helpTipTop = theme.style.help("(Use arrow keys)");
+      helpTipTop = theme.style.help(`(${((_b = config.instructions) == null ? void 0 : _b.navigation) ?? "Use arrow keys"})`);
     }
   }
   const page = usePagination({
     items,
     active,
-    renderItem({ item, isActive }) {
+    renderItem({ item, isActive, index }) {
       if (Separator.isSeparator(item)) {
         return ` ${item.separator}`;
       }
+      const indexLabel = theme.indexMode === "number" ? `${index + 1}. ` : "";
       if (item.disabled) {
         const disabledLabel = typeof item.disabled === "string" ? item.disabled : "(disabled)";
-        return theme.style.disabled(`${item.name} ${disabledLabel}`);
+        return theme.style.disabled(`${indexLabel}${item.name} ${disabledLabel}`);
       }
       const color = isActive ? theme.style.highlight : (x) => x;
       const cursor = isActive ? theme.icon.cursor : ` `;
-      return color(`${cursor} ${item.name}`);
+      return color(`${cursor} ${indexLabel}${item.name}`);
     },
     pageSize,
     loop
