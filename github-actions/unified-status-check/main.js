@@ -39276,7 +39276,7 @@ function normalizePaginatedListResponse(response) {
       data: []
     };
   }
-  const responseNeedsNormalization = "total_count" in response.data && !("url" in response.data) || "total_commits" in response.data;
+  const responseNeedsNormalization = ("total_count" in response.data || "total_commits" in response.data) && !("url" in response.data);
   if (!responseNeedsNormalization)
     return response;
   const incompleteResults = response.data.incomplete_results;
