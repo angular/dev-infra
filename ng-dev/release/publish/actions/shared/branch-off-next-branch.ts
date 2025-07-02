@@ -145,7 +145,11 @@ export abstract class BranchOffNextBranchBaseAction extends CutNpmNextPrerelease
       ...this.getAspectLockFiles(),
     ];
 
-    const renovateConfigPath = await updateRenovateConfig(this.projectDir, nextBranch);
+    const renovateConfigPath = await updateRenovateConfig(
+      this.projectDir,
+      `${version.major}.${version.minor}.x`,
+    );
+
     if (renovateConfigPath) {
       filesToCommit.push(renovateConfigPath);
     }
