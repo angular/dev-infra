@@ -3,7 +3,7 @@
   "dependencies": {
     "@microsoft/api-extractor": "7.52.8",
     "@types/browser-sync": "2.29.0",
-    "@types/node": "22.15.33",
+    "@types/node": "22.16.2",
     "@types/selenium-webdriver": "^4.1.28",
     "@types/send": "0.17.5",
     "@types/wait-on": "^5.3.4",
@@ -16,7 +16,7 @@
     "wait-on": "^8.0.3",
     "yargs": "18.0.0",
     "protractor": "7.0.0",
-    "selenium-webdriver": "4.33.0"
+    "selenium-webdriver": "4.34.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": []
