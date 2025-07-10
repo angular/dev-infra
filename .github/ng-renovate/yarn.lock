@@ -5905,7 +5905,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: "npm:41.28.0"
+    renovate: "npm:41.30.3"
   languageName: unknown
   linkType: soft
 
@@ -6628,9 +6628,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:41.28.0":
-  version: 41.28.0
-  resolution: "renovate@npm:41.28.0"
+"renovate@npm:41.30.3":
+  version: 41.30.3
+  resolution: "renovate@npm:41.30.3"
   dependencies:
     "@aws-sdk/client-codecommit": "npm:3.840.0"
     "@aws-sdk/client-ec2": "npm:3.840.0"
@@ -6751,7 +6751,7 @@ __metadata:
     vuln-vects: "npm:1.1.0"
     xmldoc: "npm:2.0.2"
     yaml: "npm:2.8.0"
-    zod: "npm:3.25.67"
+    zod: "npm:3.25.71"
   dependenciesMeta:
     better-sqlite3:
       optional: true
@@ -6762,7 +6762,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 10c0/1503d0772c357ff9f1b06ec75e1cc5c2f799346ab06fd65b799116ec2b9efe537ae3858080ee8fdb1228c52ae3898b6dbf92b162c07324ddfcddb56da8ad3f80
+  checksum: 10c0/22662abc1d7763daa0f791ba14b1635b789d64893f1754325b10918d0e459c5fb26734ca3880331747d3979eaa89100ab6d497aec4460374f5290f863e0931b8
   languageName: node
   linkType: hard
 
@@ -8034,7 +8034,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:3.25.67, zod@npm:^3.23.0":
+"zod@npm:3.25.71":
+  version: 3.25.71
+  resolution: "zod@npm:3.25.71"
+  checksum: 10c0/ccb251859609e6eed04b83f96ad7b2b7a189ca78b47176cde2c368102a5416b9c472e91b3fd96ceaa5043b2e513b3aec39fd99c36686ad2ad84f6c440afca53a
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.23.0":
   version: 3.25.67
   resolution: "zod@npm:3.25.67"
   checksum: 10c0/80a0cab3033272c4ab9312198081f0c4ea88e9673c059aa36dc32024906363729db54bdb78f3dc9d5529bd1601f74974d5a56c0a23e40c6f04a9270c9ff22336
