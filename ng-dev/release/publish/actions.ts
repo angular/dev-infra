@@ -575,7 +575,8 @@ export abstract class ReleaseAction {
     stagingBranch: string,
   ): Promise<boolean> {
     const nextBranch = this.active.next.branchName;
-    const commitMessage = getReleaseNoteCherryPickCommitMessage(releaseNotes.version);
+    const {version} = releaseNotes;
+    const commitMessage = getReleaseNoteCherryPickCommitMessage(version);
 
     // Checkout the next branch.
     await this.checkoutUpstreamBranch(nextBranch);
@@ -583,7 +584,8 @@ export abstract class ReleaseAction {
     await this.prependReleaseNotesToChangelog(releaseNotes);
 
     const filesToCommit: string[] = [workspaceRelativeChangelogPath];
-    if (releaseNotes.version.patch === 0 && !releaseNotes.version.prerelease) {
+
+    if (version.patch === 0 && version.prerelease.length === 0) {
       // Switch the renovate labels for `target: rc` to `target: patch`
       const renovateConfigPath = await updateRenovateConfigTargetLabels(
         this.projectDir,
@@ -597,12 +599,12 @@ export abstract class ReleaseAction {
     }
 
     await this.createCommit(commitMessage, filesToCommit);
-    Log.info(green(`  ✓   Created changelog cherry-pick commit for: "${releaseNotes.version}".`));
+    Log.info(green(`  ✓   Created changelog cherry-pick commit for: "${version}".`));
 
     // Create a cherry-pick pull request that should be merged by the caretaker.
     const pullRequest = await this.pushChangesToForkAndCreatePullRequest(
       nextBranch,
-      `changelog-cherry-pick-${releaseNotes.version}`,
+      `changelog-cherry-pick-${version}`,
       commitMessage,
       `Cherry-picks the changelog from the "${stagingBranch}" branch to the next ` +
         `branch (${nextBranch}).`,
