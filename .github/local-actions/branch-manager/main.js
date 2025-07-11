@@ -64396,7 +64396,7 @@ async function sendRequestWithRetries(state, request2, options, createdAt, retri
     return sendRequestWithRetries(state, request2, options, createdAt, retries);
   }
 }
-var VERSION12 = "8.0.1";
+var VERSION12 = "8.0.2";
 function createAppAuth(options) {
   if (!options.appId) {
     throw new Error("[@octokit/auth-app] appId option is required");
@@ -64409,12 +64409,10 @@ function createAppAuth(options) {
       "[@octokit/auth-app] installationId is set to a falsy value"
     );
   }
-  const log = Object.assign(
-    {
-      warn: console.warn.bind(console)
-    },
-    options.log
-  );
+  const log = options.log || {};
+  if (typeof log.warn !== "function") {
+    log.warn = console.warn.bind(console);
+  }
   const request2 = options.request || request.defaults({
     headers: {
       "user-agent": `octokit-auth-app.js/${VERSION12} ${getUserAgent()}`
