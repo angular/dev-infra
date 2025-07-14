@@ -30,6 +30,7 @@ import {
 } from './process_utils.mjs';
 import {ENVIRONMENT_TMP_PLACEHOLDER} from './constants.mjs';
 import {debug} from './debug.mjs';
+import {SizeTracker} from './size-tracking.mjs';
 
 /** Error class that is used when an integration command fails.  */
 class IntegrationTestCommandError extends Error {}
@@ -47,6 +48,7 @@ type EnvironmentConfig = Record<string, BazelExpandedValue>;
  */
 export class TestRunner {
   private readonly environment: EnvironmentConfig;
+  private readonly sizeTracker: SizeTracker;
 
   constructor(
     private readonly isTestDebugMode: boolean,
@@ -59,6 +61,7 @@ export class TestRunner {
     environment: EnvironmentConfig,
   ) {
     this.environment = this._assignDefaultEnvironmentVariables(environment);
+    this.sizeTracker = new SizeTracker(this.testPackage);
   }
 
   async run() {
@@ -82,6 +85,7 @@ export class TestRunner {
 
     try {
       await this._runTestCommands(testWorkingDir, testEnv);
+      await this.sizeTracker.run(testWorkingDir, testEnv);
     } finally {
       debug('Finished running integration test commands.');
 
