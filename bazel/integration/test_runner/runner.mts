@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {existsSync} from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
@@ -31,14 +30,7 @@ import {
 } from './process_utils.mjs';
 import {ENVIRONMENT_TMP_PLACEHOLDER} from './constants.mjs';
 import {debug} from './debug.mjs';
-import chalk from 'chalk';
-
-// Convience access to chalk colors.
-const {red, green} = chalk;
-/** The size discrepancy we allow in bytes. */
-const THRESHOLD_BYTES = 5000;
-/** The size discrepancy as a percentage. */
-const THRESHOLD_PERCENT = 5;
+import {SizeTracker} from './size-tracking.mjs';
 
 /** Error class that is used when an integration command fails.  */
 class IntegrationTestCommandError extends Error {}
@@ -56,6 +48,7 @@ type EnvironmentConfig = Record<string, BazelExpandedValue>;
  */
 export class TestRunner {
   private readonly environment: EnvironmentConfig;
+  private readonly sizeTracker: SizeTracker;
 
   constructor(
     private readonly isTestDebugMode: boolean,
@@ -68,6 +61,7 @@ export class TestRunner {
     environment: EnvironmentConfig,
   ) {
     this.environment = this._assignDefaultEnvironmentVariables(environment);
+    this.sizeTracker = new SizeTracker(this.testPackage);
   }
 
   async run() {
@@ -91,6 +85,7 @@ export class TestRunner {
 
     try {
       await this._runTestCommands(testWorkingDir, testEnv);
+      await this.sizeTracker.run(testWorkingDir, testEnv);
     } finally {
       debug('Finished running integration test commands.');
 
@@ -279,11 +274,6 @@ export class TestRunner {
     console.info(
       `Successfully ran all commands in test directory: ${path.normalize(testWorkingDir)}`,
     );
-
-    // If the integration test provides a size.json file we use it as a size tracking marker.
-    if (existsSync(path.join(testWorkingDir, 'size.json'))) {
-      await this._runSizeTracking(testWorkingDir, commandEnv);
-    }
   }
 
   /**
@@ -313,98 +303,4 @@ export class TestRunner {
 
     return {...defaults, ...baseEnv};
   }
-
-  /**
-   * Runs the size tracking scripting.
-   *
-   * Builds the integration test application and then checks if the size of the generated files varies too
-   * far from our known file sizes.
-   */
-  private async _runSizeTracking(
-    testWorkingDir: string,
-    commandEnv: NodeJS.ProcessEnv,
-  ): Promise<void> {
-    const success = await runCommandInChildProcess('yarn', ['build'], testWorkingDir, commandEnv);
-    if (!success) {
-      throw Error('Failed to build for size tracking.');
-    }
-
-    const sizes: {[key: string]: SizeCheckResult} = {};
-
-    const expectedSizes = JSON.parse(
-      await fs.readFile(path.join(testWorkingDir, 'size.json'), 'utf-8'),
-    ) as {[key: string]: number};
-
-    for (let [filename, expectedSize] of Object.entries(expectedSizes)) {
-      const generedFilePath = path.join(testWorkingDir, 'dist', filename);
-      if (!existsSync(generedFilePath)) {
-        sizes[filename] = {
-          actual: undefined,
-          failing: false,
-          expected: expectedSize,
-          details: 'missing',
-        };
-      } else {
-        const {size: actualSize} = await fs.stat(path.join(testWorkingDir, 'dist', filename));
-        const absoluteSizeDiff = Math.abs(actualSize - expectedSize);
-        const percentSizeDiff = (absoluteSizeDiff / expectedSize) * 100;
-        const direction = actualSize === expectedSize ? '' : actualSize > expectedSize ? '+' : '-';
-        sizes[filename] = {
-          actual: actualSize,
-          expected: expectedSize,
-          failing: absoluteSizeDiff > THRESHOLD_BYTES || percentSizeDiff > THRESHOLD_PERCENT,
-          details: {
-            raw: `${direction}${absoluteSizeDiff.toFixed(0)}`,
-            percent: `${direction}${percentSizeDiff.toFixed(3)}`,
-          },
-        };
-      }
-    }
-
-    console.info(Array(80).fill('=').join(''));
-    console.info(
-      `${Array(28).fill('=').join('')} SIZE TRACKING RESULTS ${Array(29).fill('=').join('')}`,
-    );
-    console.info(Array(80).fill('=').join(''));
-    let failed = false;
-    for (let [filename, {actual, expected, failing, details}] of Object.entries(sizes)) {
-      failed = failed || failing;
-      const bullet = failing ? green('✔') : red('✘');
-      console.info(`  ${bullet} ${filename}`);
-      if (details === 'missing') {
-        console.info(
-          `      File not found in generated integration test application, either ensure the file is created or remove it from the size tracking json file.`,
-        );
-      } else {
-        console.info(
-          `      Actual Size: ${actual} | Expected Size: ${expected} | ${details.raw} bytes (${details.raw}%)`,
-        );
-      }
-    }
-    console.info();
-    if (failed) {
-      const sizeFileLocation = path.join(this.testPackage, 'size.json');
-      console.info(
-        `If this is a desired change, please update the size limits in: ${sizeFileLocation}`,
-      );
-      process.exitCode = 1;
-    } else {
-      console.info(
-        `Payload size check passed. All diffs are less than ${THRESHOLD_PERCENT}% or ${THRESHOLD_BYTES} bytes.`,
-      );
-    }
-    console.info(Array(80).fill('=').join(''));
-  }
-}
-
-interface SizeCheckResult {
-  expected: number;
-  actual: number | undefined;
-  failing: boolean;
-  details:
-    | 'missing'
-    | {
-        raw: string;
-        percent: string;
-      };
 }
