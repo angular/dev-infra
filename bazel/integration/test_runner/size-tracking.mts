@@ -12,6 +12,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import chalk from 'chalk';
 import {debug} from './debug.mjs';
+import {globSync} from 'tinyglobby';
 
 // Convience access to chalk colors.
 const {red, green} = chalk;
@@ -60,8 +61,8 @@ export class SizeTracker {
     };
 
     for (let [filename, expectedSize] of Object.entries(expectedSizes)) {
-      const generedFilePath = path.join(testWorkingDir, filename);
-      if (!existsSync(generedFilePath)) {
+      const generedFilePath = this.findFile(path.join(testWorkingDir, filename));
+      if (generedFilePath === null) {
         sizes[filename] = {
           actual: undefined,
           failing: true,
@@ -120,5 +121,21 @@ export class SizeTracker {
     }
     console.info(Array(80).fill('=').join(''));
     console.info();
+  }
+
+  /**
+   * Find the provided file, replacing hash indicator if necessary for discovery, returns null if
+   * the file cannot be found.
+   */
+  private findFile(filePath: string): string | null {
+    if (existsSync(filePath)) {
+      return filePath;
+    }
+    const filePathPattern = filePath.replace('[hash]', '*');
+    const matchedFiles = globSync(filePathPattern, {onlyFiles: true});
+    if (matchedFiles.length === 1) {
+      return matchedFiles[0];
+    }
+    return null;
   }
 }
