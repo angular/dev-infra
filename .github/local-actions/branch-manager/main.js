@@ -35195,11 +35195,26 @@ var require_dist_node9 = __commonJS({
     var import_request15 = require_dist_node6();
     var import_graphql3 = require_dist_node7();
     var import_auth_token2 = require_dist_node8();
-    var VERSION13 = "5.2.1";
+    var VERSION13 = "5.2.2";
     var noop2 = () => {
     };
     var consoleWarn2 = console.warn.bind(console);
     var consoleError2 = console.error.bind(console);
+    function createLogger2(logger = {}) {
+      if (typeof logger.debug !== "function") {
+        logger.debug = noop2;
+      }
+      if (typeof logger.info !== "function") {
+        logger.info = noop2;
+      }
+      if (typeof logger.warn !== "function") {
+        logger.warn = consoleWarn2;
+      }
+      if (typeof logger.error !== "function") {
+        logger.error = consoleError2;
+      }
+      return logger;
+    }
     var userAgentTrail2 = `octokit-core.js/${VERSION13} ${(0, import_universal_user_agent9.getUserAgent)()}`;
     var _a;
     var Octokit3 = (_a = class {
@@ -35261,15 +35276,7 @@ var require_dist_node9 = __commonJS({
         }
         this.request = import_request15.request.defaults(requestDefaults);
         this.graphql = (0, import_graphql3.withCustomRequest)(this.request).defaults(requestDefaults);
-        this.log = Object.assign(
-          {
-            debug: noop2,
-            info: noop2,
-            warn: consoleWarn2,
-            error: consoleError2
-          },
-          options.log
-        );
+        this.log = createLogger2(options.log);
         this.hook = hook6;
         if (!options.authStrategy) {
           if (!options.auth) {
@@ -55821,7 +55828,7 @@ var inputTheme = {
   validationFailureMode: "keep"
 };
 var esm_default5 = createPrompt((config2, done) => {
-  const { required, validate = () => true } = config2;
+  const { required, validate = () => true, prefill = "tab" } = config2;
   const theme = makeTheme(inputTheme, config2.theme);
   const [status, setStatus] = useState("idle");
   const [defaultValue = "", setDefaultValue] = useState(config2.default);
@@ -55861,6 +55868,12 @@ var esm_default5 = createPrompt((config2, done) => {
       setError(void 0);
     }
   });
+  useEffect((rl) => {
+    if (prefill === "editable" && defaultValue) {
+      rl.write(defaultValue);
+      setValue(defaultValue);
+    }
+  }, []);
   const message = theme.style.message(config2.message, status);
   let formattedValue = value;
   if (typeof config2.transformer === "function") {
@@ -60327,13 +60340,28 @@ var createTokenAuth = function createTokenAuth2(token2) {
 };
 
 // 
-var VERSION4 = "7.0.2";
+var VERSION4 = "7.0.3";
 
 // 
 var noop = () => {
 };
 var consoleWarn = console.warn.bind(console);
 var consoleError = console.error.bind(console);
+function createLogger(logger = {}) {
+  if (typeof logger.debug !== "function") {
+    logger.debug = noop;
+  }
+  if (typeof logger.info !== "function") {
+    logger.info = noop;
+  }
+  if (typeof logger.warn !== "function") {
+    logger.warn = consoleWarn;
+  }
+  if (typeof logger.error !== "function") {
+    logger.error = consoleError;
+  }
+  return logger;
+}
 var userAgentTrail = `octokit-core.js/${VERSION4} ${getUserAgent()}`;
 var Octokit = class {
   static defaults(defaults2) {
@@ -60392,15 +60420,7 @@ var Octokit = class {
     }
     this.request = request.defaults(requestDefaults);
     this.graphql = withCustomRequest(this.request).defaults(requestDefaults);
-    this.log = Object.assign(
-      {
-        debug: noop,
-        info: noop,
-        warn: consoleWarn,
-        error: consoleError
-      },
-      options.log
-    );
+    this.log = createLogger(options.log);
     this.hook = hook6;
     if (!options.authStrategy) {
       if (!options.auth) {
