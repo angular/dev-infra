@@ -124,14 +124,14 @@ export class SizeTracker {
   }
 
   /**
-   * File the provided file, replacing has indicator if necessary for discovery, returns null if
+   * Find the provided file, replacing hash indicator if necessary for discovery, returns null if
    * the file cannot be found.
    */
   private findFile(filePath: string): string | null {
     if (existsSync(filePath)) {
       return filePath;
     }
-    const filePathPattern = filePath.replace(/\[[hH][aA][sS][hH]\]/, '*');
+    const filePathPattern = filePath.replace('[hash]', '*');
     const matchedFiles = globSync(filePathPattern, {onlyFiles: true});
     if (matchedFiles.length === 1) {
       return matchedFiles[0];
