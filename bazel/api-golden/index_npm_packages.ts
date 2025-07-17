@@ -34,6 +34,8 @@ async function main(
   stripExportPattern: RegExp,
   typeNames: string[],
 ) {
+  /** Whether the goldenDir provided is actually pointing to a single file. */
+  const singleFileMode = fs.existsSync(goldenDir) && fs.statSync(goldenDir).isFile();
   // TODO(ESM) This can be replaced with an actual ESM import when `ts_library` is
   // guaranteed to be ESM-only and supports the `mts` extension.
   const chalk = {red: (v: string) => v, yellow: (v: string) => v};
@@ -41,6 +43,13 @@ async function main(
   const packageJsonPath = path.join(npmPackageDir, 'package.json');
   const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8')) as PackageJson;
   const entryPoints = findEntryPointsWithinNpmPackage(npmPackageDir, packageJson);
+  if (entryPoints.length === 0) {
+    console.error(
+      'No entry points were found in the provided package for determining the API surface.',
+    );
+    process.exitCode = 3;
+    return;
+  }
   const worker = new Piscina<Parameters<typeof testApiGolden>, string>({
     filename: path.resolve(__dirname, './test_api_report.js'),
   });
@@ -50,7 +59,11 @@ async function main(
     // entry-point we maintain a separate golden file. These golden files are
     // based on the name of the defining NodeJS exports subpath in the NPM package,
     // See: https://api-extractor.com/pages/overview/demo_api_report/.
-    const goldenName = path.join(subpath, 'index.api.md');
+    let goldenName = path.join(subpath, 'index.api.md');
+    // In single file mode, the subpath is the golden file.
+    if (singleFileMode) {
+      goldenName = subpath;
+    }
     const goldenFilePath = path.join(goldenDir, goldenName);
     const moduleName = normalizePathToPosix(path.join(packageJson.name, subpath));
 
@@ -105,14 +118,28 @@ async function main(
   const allTestsSucceeding = results.every((r) => r === true);
 
   if (outdatedGoldens.length) {
-    console.error(chalk.red(`The following goldens are outdated:`));
-    outdatedGoldens.forEach((name) => console.info(`-  ${name}`));
-    console.info();
-    console.info(
-      chalk.yellow(
-        `The goldens can be updated by running: yarn bazel run ${process.env.TEST_TARGET}.accept`,
-      ),
-    );
+    console.error();
+    console.error(Array(80).fill('=').join(''));
+    console.error(`${Array(35).fill('=').join('')} RESULTS ${Array(36).fill('=').join('')}`);
+    console.error(Array(80).fill('=').join(''));
+    if (singleFileMode) {
+      console.error(
+        chalk.red(
+          `The golden is out of date and can be updated by running:\n  - yarn bazel run ${process.env.TEST_TARGET}.accept`,
+        ),
+      );
+    } else {
+      console.error(chalk.red(`The following goldens are outdated:`));
+      outdatedGoldens.forEach((name) => console.info(`-  ${name}`));
+      console.info();
+      console.info(
+        chalk.yellow(
+          `The goldens can be updated by running:\n  - yarn bazel run ${process.env.TEST_TARGET}.accept`,
+        ),
+      );
+    }
+    console.error(Array(80).fill('=').join(''));
+    console.error();
   }
 
   // Bazel expects `3` as exit code for failing tests.
