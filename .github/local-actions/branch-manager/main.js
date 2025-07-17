@@ -64535,7 +64535,7 @@ async function main() {
     await cloneRepoIntoTmpLocation({ owner, repo });
     const pullRequest = await loadAndValidatePullRequest({ git, config }, pr, createPullRequestValidationConfig({
       assertSignedCla: true,
-      assertMergeReady: true,
+      assertMergeReady: false,
       assertPending: false,
       assertChangesAllowForTargetLabel: false,
       assertPassingCi: false,
