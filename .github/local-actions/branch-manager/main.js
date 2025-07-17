@@ -59886,6 +59886,9 @@ async function pullRequestHasValidTestedComment(comments, gitClient) {
 var mergeReadyValidation = createPullRequestValidation({ name: "assertMergeReady", canBeForceIgnored: false }, () => Validation7);
 var Validation7 = class extends PullRequestValidation {
   assert(pullRequest) {
+    if (pullRequest.isDraft) {
+      throw this._createError("Pull request is still a draft.");
+    }
     if (!pullRequest.labels.nodes.some(({ name }) => name === actionLabels.ACTION_MERGE.name)) {
       throw this._createError("Pull request is not marked as merge ready.");
     }
@@ -59924,9 +59927,6 @@ var Validation9 = class extends PullRequestValidation {
 var pendingStateValidation = createPullRequestValidation({ name: "assertPending", canBeForceIgnored: false }, () => Validation10);
 var Validation10 = class extends PullRequestValidation {
   assert(pullRequest) {
-    if (pullRequest.isDraft) {
-      throw this._createError("Pull request is still a draft.");
-    }
     switch (pullRequest.state) {
       case "CLOSED":
         throw this._createError("Pull request is already closed.");

@@ -18,9 +18,6 @@ export const pendingStateValidation = createPullRequestValidation(
 
 class Validation extends PullRequestValidation {
   assert(pullRequest: PullRequestFromGithub) {
-    if (pullRequest.isDraft) {
-      throw this._createError('Pull request is still a draft.');
-    }
     switch (pullRequest.state) {
       case 'CLOSED':
         throw this._createError('Pull request is already closed.');
