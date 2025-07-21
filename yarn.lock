@@ -307,8 +307,8 @@ __metadata:
     gcip-cloud-functions: "npm:0.2.0"
     git-raw-commits: "npm:^4.0.0"
     husky: "npm:^9.0.0"
-    jasmine: "npm:~5.8.0"
-    jasmine-core: "npm:~5.8.0"
+    jasmine: "npm:~5.9.0"
+    jasmine-core: "npm:~5.9.0"
     jsdom: "npm:^26.0.0"
     jsonc-parser: "npm:^3.2.0"
     karma: "npm:^6.3.15"
@@ -321,7 +321,7 @@ __metadata:
     karma-sourcemap-loader: "npm:^0.4.0"
     minimatch: "npm:^10.0.0"
     multimatch: "npm:^7.0.0"
-    nock: "npm:14.0.5"
+    nock: "npm:14.0.6"
     opener: "npm:^1.5.2"
     prettier: "npm:3.6.2"
     protractor: "npm:^7.0.0"
@@ -3375,9 +3375,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mswjs/interceptors@npm:^0.38.7":
-  version: 0.38.7
-  resolution: "@mswjs/interceptors@npm:0.38.7"
+"@mswjs/interceptors@npm:^0.39.3":
+  version: 0.39.3
+  resolution: "@mswjs/interceptors@npm:0.39.3"
   dependencies:
     "@open-draft/deferred-promise": "npm:^2.2.0"
     "@open-draft/logger": "npm:^0.3.0"
@@ -3385,7 +3385,7 @@ __metadata:
     is-node-process: "npm:^1.2.0"
     outvariant: "npm:^1.4.3"
     strict-event-emitter: "npm:^0.5.1"
-  checksum: 10c0/89b0065921ce5c68656ef472e3beca8e9dee473c556facc5ff2a8c2da1f45f901a66ae5ff2a1e7c32d6fc8e677f75d2cd793d22ca4451a17d256e8771a77b589
+  checksum: 10c0/1caa88a6bfee22d717472a44327b42dfeef939b237905239100263fedd10bd16d514dc5c26407fc6941fcd160027d47201b106a1ed26de53880aa2d676e0665f
   languageName: node
   linkType: hard
 
@@ -10552,10 +10552,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jasmine-core@npm:~5.8.0":
-  version: 5.8.0
-  resolution: "jasmine-core@npm:5.8.0"
-  checksum: 10c0/9b1b7937b97ccc01468ba90953658e990d813d7cb275ea15c229b02ac2a42ca6b6469fc2342e0673917859f715213dc05a50419f56a0f603e31904b8b5aa83aa
+"jasmine-core@npm:~5.9.0":
+  version: 5.9.0
+  resolution: "jasmine-core@npm:5.9.0"
+  checksum: 10c0/124bd0d063b20eb4a5a1ec67ff8657ee68c78dd9e93cf834b0d1221aa1e0e5d03ca1421c43bf3fe69721a1e03cc401cf4883bf7e7557daed40c652d304a00951
   languageName: node
   linkType: hard
 
@@ -10582,15 +10582,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jasmine@npm:~5.8.0":
-  version: 5.8.0
-  resolution: "jasmine@npm:5.8.0"
+"jasmine@npm:~5.9.0":
+  version: 5.9.0
+  resolution: "jasmine@npm:5.9.0"
   dependencies:
     glob: "npm:^10.2.2"
-    jasmine-core: "npm:~5.8.0"
+    jasmine-core: "npm:~5.9.0"
   bin:
     jasmine: bin/jasmine.js
-  checksum: 10c0/86b2ab56bef0960bbe798df885ec88f5adcc9366bb11372c8de04425784260087050961a01ced9db224f2fd0a2ed7e70bc908d736d02e039cd4094b9e14de158
+  checksum: 10c0/f2067bce5a6bb9b46969ad4d1e9abee47d9e7bba4663eefe54eac0b99acbbc60cf7c166d6f9d09a3b7196901d3c805667a1c7896b88b137685b9351b8251e338
   languageName: node
   linkType: hard
 
@@ -12109,14 +12109,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nock@npm:14.0.5":
-  version: 14.0.5
-  resolution: "nock@npm:14.0.5"
+"nock@npm:14.0.6":
+  version: 14.0.6
+  resolution: "nock@npm:14.0.6"
   dependencies:
-    "@mswjs/interceptors": "npm:^0.38.7"
+    "@mswjs/interceptors": "npm:^0.39.3"
     json-stringify-safe: "npm:^5.0.1"
     propagate: "npm:^2.0.0"
-  checksum: 10c0/3221abf0bbd84243b4d151abecdecffb22eba896e3a9c7e711b9bd1adc32f2273eb1c3c36f340e53d1c229ea99362364f418dd23017e11416c54e09b1babf219
+  checksum: 10c0/3a8cf3ebe4639c1f6d4bf5d7fbee1f32268931cad4f3f04cdab9a4521a6c2f9c4062c0e638a619b6870cbf8a06e42b9470d63371b157c53e1328702838971bdf
   languageName: node
   linkType: hard
 
