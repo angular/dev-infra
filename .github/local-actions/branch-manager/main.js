@@ -55642,9 +55642,16 @@ var esm_default2 = createPrompt((config2, done) => {
     } else if (key.name === shortcuts.invert) {
       setItems(items.map(toggle));
     } else if (isNumberKey(key)) {
-      const position = Number(key.name) - 1;
-      const item = items[position];
-      if (item != null && isSelectable(item)) {
+      const selectedIndex = Number(key.name) - 1;
+      let selectableIndex = -1;
+      const position = items.findIndex((item) => {
+        if (Separator.isSeparator(item))
+          return false;
+        selectableIndex++;
+        return selectableIndex === selectedIndex;
+      });
+      const selectedItem = items[position];
+      if (selectedItem && isSelectable(selectedItem)) {
         setActive(position);
         setItems(items.map((choice, i) => i === position ? toggle(choice) : choice));
       }
@@ -56480,7 +56487,14 @@ var esm_default11 = createPrompt((config2, done) => {
         setActive(next);
       }
     } else if (isNumberKey(key) && !Number.isNaN(Number(rl.line))) {
-      const position = Number(rl.line) - 1;
+      const selectedIndex = Number(rl.line) - 1;
+      let selectableIndex = -1;
+      const position = items.findIndex((item2) => {
+        if (Separator.isSeparator(item2))
+          return false;
+        selectableIndex++;
+        return selectableIndex === selectedIndex;
+      });
       const item = items[position];
       if (item != null && isSelectable3(item)) {
         setActive(position);
