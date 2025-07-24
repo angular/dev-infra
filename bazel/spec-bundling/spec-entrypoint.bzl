@@ -71,7 +71,10 @@ def _spec_entrypoint_impl(ctx):
     # Note: `to_list()` is an expensive operation but we need to do this for every
     # dependency here in order to be able to filter out spec files from depsets.
     direct_bootstrap_files = depset(transitive = bootstrap_direct_deps).to_list()
-    bootstrap_files = _filter_files(direct_bootstrap_files, ["init"])
+
+    # Filter to only js and mjs files, we can't always define what the name of the files
+    # needed for bootstrapping are so we rely on the user to provide the exact list.
+    bootstrap_files = _filter_files(direct_bootstrap_files, [""])
 
     ctx.actions.write(
         output = output,
