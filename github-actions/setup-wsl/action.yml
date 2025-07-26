@@ -46,7 +46,7 @@ runs:
     # Note: `memory` by default is 50% of the Windows host machine. We want to try
     # a higher percentage to leverage more of the GitHub Windows machines.
     # They have 16GB by default. See: https://docs.github.com/en/actions/using-github-hosted-runners/using-github-hosted-runners/about-github-hosted-runners.
-    - uses: Vampire/setup-wsl@6a8db447be7ed35f2f499c02c6e60ff77ef11278
+    - uses: Vampire/setup-wsl@6819906081f7afebe0cfc34e838b6f8405045672
       with:
         wsl-conf: |
           [interop]
