@@ -4,14 +4,14 @@ package(default_visibility = ["//visibility:public"])
 
 exports_files([
     "index.ts",
-    "index_npm_packages.ts",
+    "index_npm_packages.cts",
 ])
 
 ts_project(
     name = "api-golden",
     srcs = [
         "find_entry_points.ts",
-        "index_npm_packages.ts",
+        "index_npm_packages.cts",
         "interop_module_mappings.ts",
         "path-normalize.ts",
         "test_api_report.ts",

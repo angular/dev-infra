@@ -9,7 +9,7 @@
 import {dirname, join, relative} from 'path';
 import {lstatSync, readFileSync, readdirSync} from 'fs';
 
-import {PackageJson} from './index_npm_packages.js';
+import {PackageJson} from './index_npm_packages.cjs';
 
 /** Interface describing a resolved NPM package entry point. */
 export interface PackageEntryPoint {
