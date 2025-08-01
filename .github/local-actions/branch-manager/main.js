@@ -56281,6 +56281,7 @@ function normalizeChoices4(choices) {
   });
 }
 var esm_default10 = createPrompt((config2, done) => {
+  var _a, _b;
   const { pageSize = 7, validate = () => true } = config2;
   const theme = makeTheme(searchTheme, config2.theme);
   const firstRender = useRef(true);
@@ -56365,8 +56366,8 @@ var esm_default10 = createPrompt((config2, done) => {
   let helpTip = "";
   if (searchResults.length > 1 && (theme.helpMode === "always" || theme.helpMode === "auto" && firstRender.current)) {
     helpTip = searchResults.length > pageSize ? `
-${theme.style.help("(Use arrow keys to reveal more choices)")}` : `
-${theme.style.help("(Use arrow keys)")}`;
+${theme.style.help(`(${((_a = config2.instructions) == null ? void 0 : _a.pager) ?? "Use arrow keys to reveal more choices"})`)}` : `
+${theme.style.help(`(${((_b = config2.instructions) == null ? void 0 : _b.navigation) ?? "Use arrow keys"})`)}`;
   }
   const page = usePagination({
     items: searchResults,
@@ -56534,14 +56535,16 @@ ${theme.style.help(`(${((_a = config2.instructions) == null ? void 0 : _a.pager)
       helpTipTop = theme.style.help(`(${((_b = config2.instructions) == null ? void 0 : _b.navigation) ?? "Use arrow keys"})`);
     }
   }
+  let separatorCount = 0;
   const page = usePagination({
     items,
     active,
     renderItem({ item, isActive, index }) {
       if (Separator.isSeparator(item)) {
+        separatorCount++;
         return ` ${item.separator}`;
       }
-      const indexLabel = theme.indexMode === "number" ? `${index + 1}. ` : "";
+      const indexLabel = theme.indexMode === "number" ? `${index + 1 - separatorCount}. ` : "";
       if (item.disabled) {
         const disabledLabel = typeof item.disabled === "string" ? item.disabled : "(disabled)";
         return theme.style.disabled(`${indexLabel}${item.name} ${disabledLabel}`);
