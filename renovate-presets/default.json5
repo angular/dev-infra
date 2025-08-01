@@ -134,7 +134,6 @@
         'node',
         'bazel', // bazelisk bazel verison
         'npm',
-        'pnpm',
         'rxjs',
         'tslib',
         'yarn',
