@@ -13,7 +13,7 @@
     "piscina": "^5.0.0",
     "send": "1.2.0",
     "true-case-path": "2.2.1",
-    "typescript": "5.8.3",
+    "typescript": "5.9.2",
     "wait-on": "^8.0.3",
     "yargs": "18.0.0",
     "protractor": "7.0.0",
