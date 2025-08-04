@@ -55,8 +55,8 @@ async function handler({projectRoot}: Arguments<BuildAndLinkOptions>) {
   Log.info(green(` ✓  Built release output.`));
 
   for (const {outputPath, name} of builtPackages) {
-    await ChildProcess.spawn('yarn', ['link', '--cwd', outputPath]);
-    await ChildProcess.spawn('yarn', ['link', '--cwd', projectRoot, name]);
+    await ChildProcess.spawn('pnpm', ['--dir', outputPath, 'link', '--global']);
+    await ChildProcess.spawn('pnpm', ['--dir', projectRoot, 'link', '--global', name]);
   }
 
   Log.info(green(` ✓  Linked release packages in provided project.`));
@@ -68,5 +68,5 @@ export const BuildAndLinkCommandModule: CommandModule<{}, BuildAndLinkOptions> =
   handler,
   command: 'build-and-link <projectRoot>',
   describe:
-    'Builds the release output, registers the outputs as linked, and links via yarn to the provided project',
+    'Builds the release output, registers the outputs as linked, and links via pnpm to the provided project',
 };
