@@ -49,7 +49,7 @@ export class SizeTracker {
       debug(`Skipping size tracking as no size.json file was found at ${sizeJsonFilePath}`);
       return;
     }
-    const success = await runCommandInChildProcess('yarn', ['build'], testWorkingDir, commandEnv);
+    const success = await runCommandInChildProcess('pnpm', ['build'], testWorkingDir, commandEnv);
     if (!success) {
       throw Error('Failed to build for size tracking.');
     }
