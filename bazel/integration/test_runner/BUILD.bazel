@@ -5,6 +5,7 @@ package(default_visibility = ["//visibility:public"])
 ts_project(
     name = "test_runner",
     srcs = glob(["*.mts"]),
+    declaration = True,
     tsconfig = "//bazel:tsconfig",
     deps = [
         "//bazel:node_modules/@types/node",

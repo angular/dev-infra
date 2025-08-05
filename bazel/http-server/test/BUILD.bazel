@@ -21,6 +21,7 @@ ts_project(
     name = "test_lib",
     testonly = True,
     srcs = ["server-test.ts"],
+    declaration = True,
     tsconfig = "//bazel:tsconfig",
     deps = [
         "//bazel:node_modules/@types/node",

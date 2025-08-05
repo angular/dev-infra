@@ -18,6 +18,7 @@ ts_project(
         "main.mts",
         "server.mts",
     ],
+    declaration = True,
     tsconfig = "//bazel:tsconfig",
     deps = [
         "//bazel:node_modules/@types/browser-sync",

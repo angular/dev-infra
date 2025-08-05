@@ -125,7 +125,7 @@ async function main(
     if (singleFileMode) {
       console.error(
         chalk.red(
-          `The golden is out of date and can be updated by running:\n  - yarn bazel run ${process.env.TEST_TARGET}.accept`,
+          `The golden is out of date and can be updated by running:\n  - bazel run ${process.env.TEST_TARGET}.accept`,
         ),
       );
     } else {
@@ -134,7 +134,7 @@ async function main(
       console.info();
       console.info(
         chalk.yellow(
-          `The goldens can be updated by running:\n  - yarn bazel run ${process.env.TEST_TARGET}.accept`,
+          `The goldens can be updated by running:\n  - bazel run ${process.env.TEST_TARGET}.accept`,
         ),
       );
     }

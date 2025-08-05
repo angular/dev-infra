@@ -1,8 +1,10 @@
 import {rawStringFn, testValue} from './transitive_target';
 
+import * as babel from '@babel/core';
+
 export {testValue, rawStringFn};
 
-export const NodeTypes: NodeJS.ProcessEnv = {};
+export type MyBabelExport = babel.BabelFile;
 
 export class SomeOtherExport {}
 export class ɵShouldBeIgnored {}

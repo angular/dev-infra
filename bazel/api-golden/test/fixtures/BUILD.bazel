@@ -1,5 +1,5 @@
-load("//tools:defaults.bzl", "ts_library")
-load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
+load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 
 package(default_visibility = ["//bazel/api-golden/test:__pkg__"])
 
@@ -13,12 +13,15 @@ copy_to_bin(
     srcs = glob(["pkg_no_exports_field/**"]),
 )
 
-ts_library(
+ts_project(
     name = "test_lib",
     testonly = True,
     srcs = ["test_fixture.ts"],
+    declaration = True,
+    tsconfig = "//bazel:tsconfig",
     deps = [
+        "//bazel:node_modules/@types/babel__core",
+        "//bazel:node_modules/@types/node",
         "//bazel/api-golden/test/fixtures/transitive_target",
-        "@npm//@types/node",
     ],
 )

@@ -4,8 +4,10 @@
 
 ```ts
 
+import * as babel_2 from '@babel/core';
+
 // @public (undocumented)
-export const NodeTypes: NodeJS.ProcessEnv;
+export type MyBabelExport = babel_2.BabelFile;
 
 // @public (undocumented)
 export function rawStringFn(input: string): string;
