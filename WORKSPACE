@@ -2,6 +2,7 @@ workspace(
     name = "devinfra",
 )
 
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 # The PKG rules are needed to build tar packages for integration tests. The builtin
@@ -99,10 +100,6 @@ load("@io_bazel_rules_webtesting//web:repositories.bzl", "web_test_repositories"
 
 web_test_repositories()
 
-load("//bazel/browsers:browser_repositories.bzl", "browser_repositories")
-
-browser_repositories()
-
 load("@build_bazel_rules_nodejs//toolchains/esbuild:esbuild_repositories.bzl", "esbuild_repositories")
 
 esbuild_repositories(
@@ -166,3 +163,17 @@ esbuild_register_toolchains(
     name = "esbuild",
     esbuild_version = LATEST_ESBUILD_VERSION,
 )
+
+git_repository(
+    name = "rules_browsers",
+    commit = "56ef8007ea07cd1916429bca8bb523433b0e9cdc",
+    remote = "https://github.com/devversion/rules_browsers.git",
+)
+
+load("@rules_browsers//setup:step_1.bzl", "rules_browsers_setup_1")
+
+rules_browsers_setup_1()
+
+load("@rules_browsers//setup:step_2.bzl", "rules_browsers_setup_2")
+
+rules_browsers_setup_2()

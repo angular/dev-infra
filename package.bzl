@@ -34,7 +34,6 @@ BZL_DEFAULTS_ALLOW_PACKAGES = [
     ".github/local-actions",
     "",
     "apps",
-    "bazel/browsers/update-script",
     "bazel/api-golden",
     "github-actions",
     "ng-dev",
