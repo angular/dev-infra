@@ -9,7 +9,7 @@ def api_golden_test(
         entry_point,
         data = [],
         strip_export_pattern = default_strip_export_pattern,
-        types = [],
+        types = {},
         **kwargs):
     # We can't directly write `package.json` as this could cause conflicts
     # if there are multiple individual file tests in the same Bazel package.

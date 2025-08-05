@@ -37,8 +37,10 @@ const _origFetchAstModuleExportInfo = ExportAnalyzer.prototype.fetchAstModuleExp
  * @param indexFilePath Entry point file that is analyzed to build the API report.
  * @param stripExportPattern Regular Expression that can be used to filter out exports
  *   from the API report.
- * @param typePackageNames Package names for which types should be included in the analysis of the
- *   API-report entry-point. Packages are expected to exist within the external `npm` workspace.
+ * @param typeNamesAndLocations Package names and their relative filepath location with a |
+ *   character as a separator in the string. Describes which types should be included in the
+ *   analysis of the API-report entry-point. Packages are expected to exist within the
+ *   external `npm` workspace.
  * @param packageJsonPath Optional path to a `package.json` file that contains the entry
  *   point. Note that the `package.json` is currently only used by `api-extractor` to determine
  *   the package name displayed within the API golden.
@@ -49,17 +51,26 @@ const _origFetchAstModuleExportInfo = ExportAnalyzer.prototype.fetchAstModuleExp
 export async function testApiGolden(
   indexFilePath: string,
   stripExportPattern: RegExp,
-  typeNames: string[],
+  typeNamesAndLocations: string[],
   packageJsonPath: string,
   customPackageName: string,
 ): Promise<string | null> {
   const tempDir =
     process.env.TEST_TMPDIR ??
     (await fs.promises.mkdtemp(path.join(os.tmpdir(), 'api-golden-rule')));
+  const typeNames: string[] = [];
+  const typeLocations: string[] = [];
+
+  typeNamesAndLocations.forEach((nameAndLocation) => {
+    const [name, location] = nameAndLocation.split('|');
+    typeNames.push(name);
+    typeLocations.push(`./${location}`);
+  });
+
   const configObject: IConfigFile = {
     compiler: {
       overrideTsconfig: {
-        files: [indexFilePath],
+        files: [indexFilePath, ...typeLocations],
         compilerOptions: {
           paths: {},
           types: typeNames,

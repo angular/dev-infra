@@ -33,7 +33,9 @@ api_golden_test_npm_package(
     npm_package = "bazel/api-golden/test/fixtures/test_package",
     # API extractor needs to be able to resolve `@babel/core` due to an aliased namespace
     # we expose as part of the `nested.d.ts` fake entry-point.
-    types = ["//bazel:node_modules/@types/babel__core"],
+    types = {
+        "//bazel:node_modules/@types/babel__core": "babel",
+    },
 )
 
 api_golden_test_npm_package(

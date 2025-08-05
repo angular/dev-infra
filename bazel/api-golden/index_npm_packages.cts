@@ -32,7 +32,7 @@ async function main(
   npmPackageDir: string,
   approveGolden: boolean,
   stripExportPattern: RegExp,
-  typeNames: string[],
+  typeNamesAndLocations: string[],
 ) {
   /** Whether the goldenDir provided is actually pointing to a single file. */
   const singleFileMode = fs.existsSync(goldenDir) && fs.statSync(goldenDir).isFile();
@@ -72,7 +72,7 @@ async function main(
     const actual = await worker.run([
       typesEntryPointPath,
       stripExportPattern,
-      typeNames,
+      typeNamesAndLocations,
       packageJsonPath,
       moduleName,
     ]);
