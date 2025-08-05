@@ -1,8 +1,7 @@
-load("@npm//@bazel/concatjs:index.bzl", _ts_library = "ts_library")
-load("@npm//@angular/bazel:index.bzl", _ng_module = "ng_module")
 load("@build_bazel_rules_nodejs//:index.bzl", _pkg_npm = "pkg_npm")
-load("//tools/jasmine:jasmine.bzl", _jasmine_node_test = "jasmine_node_test")
-load("//tools/karma:karma.bzl", _karma_web_test = "karma_web_test")
+load("@npm//@angular/bazel:index.bzl", _ng_module = "ng_module")
+load("@npm//@bazel/concatjs:index.bzl", _ts_library = "ts_library")
+load("//:package.bzl", "BZL_DEFAULTS_ALLOW_PACKAGES")
 load(
     "//tools:esbuild.bzl",
     _esbuild = "esbuild",
@@ -11,7 +10,7 @@ load(
     _esbuild_config = "esbuild_config",
     _esbuild_esm_bundle = "esbuild_esm_bundle",
 )
-load("//:package.bzl", "BZL_DEFAULTS_ALLOW_PACKAGES")
+load("//tools/jasmine:jasmine.bzl", _jasmine_node_test = "jasmine_node_test")
 
 esbuild = _esbuild
 esbuild_config = _esbuild_config
@@ -20,7 +19,6 @@ esbuild_checked_in = _esbuild_checked_in
 esbuild_cjs_bundle = _esbuild_cjs_bundle
 
 jasmine_node_test = _jasmine_node_test
-karma_web_test = _karma_web_test
 
 def _assert_defaults_allowed_for_caller():
     current_pkg = native.package_name()

@@ -11,12 +11,12 @@ integration_test(
     ],
     data = [
         # Makes the chromium binaries available for the `ng test` command.
-        "//bazel/browsers/chromium",
+        "@rules_browsers//src/browsers/chromium",
     ],
     environment = {
         "CHROMEDRIVER_SKIP_DOWNLOAD": "true",
         "CHROMEDRIVER_PATH": "$(CHROMEDRIVER)",
-        "CHROME_BIN": "$(CHROMIUM)",
+        "CHROME_BIN": "$(CHROME-HEADLESS-SHELL)",
     },
     tags = [
         # This test relies on `yarn` so there needs to be internet access.
@@ -26,5 +26,5 @@ integration_test(
         "//:yarn_classic_vendored": "yarn",
         "@nodejs_toolchains//:resolved_toolchain": "node",
     },
-    toolchains = ["//bazel/browsers/chromium:toolchain_alias"],
+    toolchains = ["@rules_browsers//src/browsers/chromium:toolchain_alias"],
 )
