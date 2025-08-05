@@ -12,7 +12,7 @@ def api_golden_test_npm_package(
         npm_package,
         data = [],
         strip_export_pattern = default_strip_export_pattern,
-        types = [],
+        types = {},
         **kwargs):
     """Builds an API report for all entry-points within the given NPM package and compares it.
 
@@ -31,13 +31,22 @@ def api_golden_test_npm_package(
     kwargs["tags"] = kwargs.get("tags", []) + ["api_guard"]
 
     data.append("@devinfra//bazel/api-golden")
-    data.extend(types)
+
+    types_name_and_path = []
+    for label, n in types.items():
+        data.append(label)
+        type_label = Label(label)
+
+        # The path for the package is determined by the package location and name and found relative
+        # to the exec root during our js_test and js_binary runs.
+        path = "{package}/{name}".format(package = type_label.package, name = type_label.name)
+        types_name_and_path.append("{name}|{path}".format(name = n, path = path))
 
     js_test(
         name = name,
         data = data,
         entry_point = "@devinfra//bazel/api-golden:index_npm_packages.cjs",
-        args = [golden_dir, npm_package, "false", quoted_export_pattern],
+        args = [golden_dir, npm_package, "false", quoted_export_pattern] + types_name_and_path,
         **kwargs
     )
 
@@ -46,6 +55,6 @@ def api_golden_test_npm_package(
         testonly = True,
         data = data,
         entry_point = "@devinfra//bazel/api-golden:index_npm_packages.cjs",
-        args = [golden_dir, npm_package, "true", quoted_export_pattern],
+        args = [golden_dir, npm_package, "true", quoted_export_pattern] + types_name_and_path,
         **kwargs
     )
