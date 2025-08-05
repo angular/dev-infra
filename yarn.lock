@@ -332,7 +332,7 @@ __metadata:
     send: "npm:^1.0.0"
     source-map: "npm:^0.7.4"
     stylelint: "npm:^16.0.0"
-    supports-color: "npm:10.0.0"
+    supports-color: "npm:10.1.0"
     terser: "npm:5.43.1"
     tmp: "npm:^0.2.1"
     true-case-path: "npm:^2.2.1"
@@ -15172,10 +15172,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"supports-color@npm:*, supports-color@npm:10.0.0":
+"supports-color@npm:*":
   version: 10.0.0
   resolution: "supports-color@npm:10.0.0"
   checksum: 10c0/0e7884dfd02a07b3c6e0b235346f58c19f0201f1e44f7807583581761b354688c8577378785b5a4e3b03110809786c4c808e0e086cd91911f7b8bc59132703a8
+  languageName: node
+  linkType: hard
+
+"supports-color@npm:10.1.0":
+  version: 10.1.0
+  resolution: "supports-color@npm:10.1.0"
+  checksum: 10c0/59db622e372e209c7bc5d1a9641b9767a562796d719b7a5d3c8d5358356897acabd34c2f8c84d27c9e43f0b81f1a20d6e8c2f1a70d8fad99094a86ec4b8c26c8
   languageName: node
   linkType: hard
 

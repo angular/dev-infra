@@ -53970,6 +53970,9 @@ function _supportsColor2(haveStream, { streamIsTTY, sniffFlags = true } = {}) {
   if (env2.TERM === "xterm-kitty") {
     return 3;
   }
+  if (env2.TERM === "xterm-ghostty") {
+    return 3;
+  }
   if ("TERM_PROGRAM" in env2) {
     const version = Number.parseInt((env2.TERM_PROGRAM_VERSION || "").split(".")[0], 10);
     switch (env2.TERM_PROGRAM) {
