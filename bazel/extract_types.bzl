@@ -1,14 +1,15 @@
-load("@build_bazel_rules_nodejs//:providers.bzl", "DeclarationInfo")
+load("@aspect_rules_js//js:providers.bzl", "JsInfo")
 
 def _extract_types_impl(ctx):
     """Implementation of the `extract_types` rule."""
-    depsets = []
+    types_files = []
 
     for dep in ctx.attr.deps:
-        if DeclarationInfo in dep:
-            depsets.append(dep[DeclarationInfo].transitive_declarations)
+        if JsInfo in dep:
+            types_files.extend(dep[JsInfo].transitive_types.to_list())
+            types_files.extend(dep[JsInfo].types.to_list())
 
-    types = depset(transitive = depsets)
+    types = depset([file for file in types_files if file.short_path.startswith(ctx.label.package)])
 
     return [
         DefaultInfo(files = types),
