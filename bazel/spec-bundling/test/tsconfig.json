@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "strict": true,
+    "types": ["node", "jasmine"]
+  }
+}

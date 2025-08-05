@@ -1,78 +1,89 @@
-# NOTE: We need to test with the raw jasmine rule here because our default
-# repo rule uses spec-bundling as well, with some additional defaults.
-load("@npm//@bazel/jasmine:index.bzl", "jasmine_node_test")
-load("//bazel/spec-bundling:index.bzl", "spec_bundle", "spec_entrypoint")
-load("//tools:defaults.bzl", "ts_library")
+load("@aspect_rules_jasmine//jasmine:defs.bzl", "jasmine_test")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config", "ts_project")
+load("//bazel/spec-bundling:index.bzl", "spec_bundle")
 
-ts_library(
-    name = "transitive_should_be_loaded",
-    srcs = ["should_be_picked_up.spec.ts"],
+ts_config(
+    name = "tsconfig",
+    src = "tsconfig.json",
     deps = [
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
+        "//bazel/spec-bundling:node_modules/@types/jasmine",
+        "//bazel/spec-bundling:node_modules/@types/node",
     ],
 )
 
-ts_library(
+ts_project(
+    name = "transitive_should_be_loaded",
+    srcs = ["should_be_picked_up.spec.ts"],
+    declaration = True,
+    tsconfig = ":tsconfig",
+    deps = [
+        "//bazel/spec-bundling:node_modules/@types/jasmine",
+        "//bazel/spec-bundling:node_modules/@types/node",
+    ],
+)
+
+ts_project(
     name = "test_async_await_lib",
     testonly = True,
     srcs = ["async-await.spec.ts"],
+    declaration = True,
+    tsconfig = ":tsconfig",
     deps = [
-        "@npm//@angular/core",
-        "@npm//@angular/platform-browser-dynamic",
-        "@npm//@types/jasmine",
-        "@npm//@types/jsdom",
-        "@npm//@types/node",
-        "@npm//jsdom",
-        "@npm//zone.js",
+        "//bazel/spec-bundling:node_modules/@angular/core",
+        "//bazel/spec-bundling:node_modules/@angular/platform-browser-dynamic",
+        "//bazel/spec-bundling:node_modules/@types/jasmine",
+        "//bazel/spec-bundling:node_modules/@types/jsdom",
+        "//bazel/spec-bundling:node_modules/@types/node",
+        "//bazel/spec-bundling:node_modules/jsdom",
+        "//bazel/spec-bundling:node_modules/zone.js",
     ],
 )
 
-ts_library(
+ts_project(
     name = "ensure_transitive_loaded_lib",
     testonly = True,
     srcs = ["ensure-transitive-loaded.spec.ts"],
+    declaration = True,
+    tsconfig = ":tsconfig",
     deps = [
         ":transitive_should_be_loaded",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
+        "//bazel/spec-bundling:node_modules/@types/jasmine",
+        "//bazel/spec-bundling:node_modules/@types/node",
     ],
 )
 
-ts_library(
+ts_project(
     name = "test_lib_apf",
     testonly = True,
     srcs = ["core_apf_esm_test.ts"],
+    declaration = True,
+    tsconfig = ":tsconfig",
     deps = [
-        "@npm//@angular/core",
-        "@npm//@types/jasmine",
+        "//bazel/spec-bundling:node_modules/@angular/compiler",
+        "//bazel/spec-bundling:node_modules/@angular/core",
+        "//bazel/spec-bundling:node_modules/@types/jasmine",
     ],
 )
 
-ts_library(
+ts_project(
     name = "test_lib_invalid_linker_declaration",
     testonly = True,
     srcs = ["core_invalid_linker_decl.spec.ts"],
+    declaration = True,
+    tsconfig = ":tsconfig",
     deps = [
-        "@npm//@angular/core",
-        "@npm//@types/jasmine",
-    ],
-)
-
-spec_entrypoint(
-    name = "explicit_file_entrypoint",
-    testonly = True,
-    bootstrap = [],
-    deps = [
-        "some_spec.js",
-        ":test_lib_apf",
+        "//bazel/spec-bundling:node_modules/@angular/compiler",
+        "//bazel/spec-bundling:node_modules/@angular/core",
+        "//bazel/spec-bundling:node_modules/@types/jasmine",
     ],
 )
 
 spec_bundle(
     name = "test_bundle",
-    platform = "node",
-    run_angular_linker = True,
+    bootstrap = [
+        # Ensure that the transitive loaded spec is the first in the order loaded
+        "ensure-transitive-loaded.spec.js",
+    ],
     deps = [
         ":ensure_transitive_loaded_lib",
         ":test_lib_apf",
@@ -81,52 +92,61 @@ spec_bundle(
 
 spec_bundle(
     name = "test_bundle_legacy_cjs",
-    platform = "cjs-legacy",
-    run_angular_linker = True,
     deps = [":test_lib_apf"],
 )
 
 spec_bundle(
     name = "test_bundle_invalid_declaration_linker",
-    linker_unknown_declaration_handling = "ignore",
-    platform = "node",
-    run_angular_linker = True,
     deps = [":test_lib_invalid_linker_declaration"],
 )
 
 spec_bundle(
     name = "test_bundle_async_await",
     external = ["jsdom"],
-    platform = "node",
-    run_angular_linker = True,
     deps = [":test_async_await_lib"],
 )
 
-jasmine_node_test(
+jasmine_test(
     name = "test",
-    deps = [
+    data = [
         ":test_bundle",
     ],
+    fixed_args = [
+        "'**/*+(.|_)spec.js'",
+    ],
+    node_modules = "//bazel/spec-bundling:node_modules",
 )
 
-jasmine_node_test(
+jasmine_test(
     name = "test_legacy_cjs",
-    deps = [
+    data = [
         ":test_bundle_legacy_cjs",
     ],
+    fixed_args = [
+        "'**/*+(.|_)spec.js'",
+    ],
+    node_modules = "//bazel/spec-bundling:node_modules",
 )
 
-jasmine_node_test(
+jasmine_test(
     name = "test_invalid_declaration_linker",
-    deps = [
+    data = [
         ":test_bundle_invalid_declaration_linker",
     ],
+    fixed_args = [
+        "'**/*+(.|_)spec.js'",
+    ],
+    node_modules = "//bazel/spec-bundling:node_modules",
 )
 
-jasmine_node_test(
+jasmine_test(
     name = "test_async_await",
-    deps = [
+    data = [
         ":test_bundle_async_await",
-        "@npm//jsdom",
+        "//bazel/spec-bundling:node_modules/jsdom",
     ],
+    fixed_args = [
+        "'**/*+(.|_)spec.js'",
+    ],
+    node_modules = "//bazel/spec-bundling:node_modules",
 )

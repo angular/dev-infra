@@ -6,6 +6,7 @@ def setup_dependencies_1():
         data = [
             "@devinfra//bazel:package.json",
             "@devinfra//bazel:pnpm-workspace.yaml",
+            "@devinfra//bazel/spec-bundling:package.json",
         ],
         pnpm_lock = "@devinfra//bazel:pnpm-lock.yaml",
     )

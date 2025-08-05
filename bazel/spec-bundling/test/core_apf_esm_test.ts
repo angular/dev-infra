@@ -2,6 +2,7 @@
 // consumes devmode CommonJS sources and `rules_nodejs` does not support ESM well yet.
 import {VERSION} from '@angular/core';
 import * as core from '@angular/core';
+import '@angular/compiler';
 
 describe('@angular/core ESM import', () => {
   it('should work', () => {

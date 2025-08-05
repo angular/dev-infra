@@ -1,4 +1,5 @@
 load("@aspect_rules_js//js:providers.bzl", "JsInfo", "js_info")
+load("@rules_nodejs//nodejs:providers.bzl", "JSModuleInfo")
 
 def _is_non_external_file_with_suffix(file, suffix):
     """Gets whether the given file is a non-external file with the given suffix."""
@@ -45,6 +46,8 @@ def _spec_entrypoint_impl(ctx):
         if JsInfo in dep:
             spec_all_deps.append(dep[JsInfo].transitive_sources)
             spec_all_deps.append(dep[JsInfo].npm_sources)
+        elif JSModuleInfo in dep:
+            spec_all_deps.append(dep[JSModuleInfo].sources)
         else:
             spec_all_deps.append(dep[DefaultInfo].files)
 
@@ -53,6 +56,9 @@ def _spec_entrypoint_impl(ctx):
             bootstrap_all_deps.append(dep[JsInfo].transitive_sources)
             bootstrap_all_deps.append(dep[JsInfo].npm_sources)
             bootstrap_direct_deps.append(dep[JsInfo].sources)
+        elif JSModuleInfo in dep:
+            bootstrap_all_deps.append(dep[JSModuleInfo].sources)
+            bootstrap_direct_deps.append(dep[JSModuleInfo].direct_sources)
         else:
             bootstrap_all_deps.append(dep[DefaultInfo].files)
             bootstrap_direct_deps.append(dep[DefaultInfo].files)
@@ -84,6 +90,10 @@ def _spec_entrypoint_impl(ctx):
             target = ctx.label,
             sources = out_depset,
             transitive_sources = transitive_deps,
+        ),
+        JSModuleInfo(
+            direct_sources = out_depset,
+            sources = transitive_deps,
         ),
     ]
 
