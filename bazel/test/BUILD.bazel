@@ -1,18 +1,21 @@
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_test")
-load("//bazel:defaults.bzl", "ts_library")
 load("//bazel:extract_types.bzl", "extract_types")
-load("//bazel:extract_js_module_output.bzl", "extract_js_module_output")
 
-ts_library(
+ts_project(
     name = "transitive_lib",
     testonly = True,
     srcs = ["transitive_file.ts"],
+    declaration = True,
+    tsconfig = "//bazel:tsconfig",
 )
 
-ts_library(
+ts_project(
     name = "test_lib",
     testonly = True,
     srcs = ["fixture.ts"],
+    declaration = True,
+    tsconfig = "//bazel:tsconfig",
     deps = [":transitive_lib"],
 )
 
@@ -28,30 +31,9 @@ extract_types(
     deps = [":test_lib"],
 )
 
-extract_js_module_output(
-    name = "extract_js_module_output_target",
-    testonly = True,
-    forward_linker_mappings = True,
-    include_declarations = True,
-    include_default_files = True,
-    include_external_npm_packages = True,
-    provider = "JSModuleInfo",
-    deps = [
-        ":test_lib",
-        ":text_fixture",
-    ],
-)
-
 nodejs_test(
     name = "extract_types_test",
     data = [":extract_types_target"],
     entry_point = "extract_types_test.js",
     templated_args = ["$(rootpaths :extract_types_target)"],
-)
-
-nodejs_test(
-    name = "extract_js_module_test",
-    data = [":extract_js_module_output_target"],
-    entry_point = "extract_js_module_test.js",
-    templated_args = ["$(rootpaths :extract_js_module_output_target)"],
 )
