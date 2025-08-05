@@ -21,7 +21,6 @@ import os from 'os';
 
 import {AstModule} from '@microsoft/api-extractor/lib/analyzer/AstModule';
 import {ExportAnalyzer} from '@microsoft/api-extractor/lib/analyzer/ExportAnalyzer';
-import {resolveTypePackages} from './interop_module_mappings.js';
 
 /**
  * Original definition of the `ExportAnalyzer#fetchAstModuleExportInfo` method.
@@ -57,22 +56,13 @@ export async function testApiGolden(
   const tempDir =
     process.env.TEST_TMPDIR ??
     (await fs.promises.mkdtemp(path.join(os.tmpdir(), 'api-golden-rule')));
-  const rjsMode = process.env['RJS_MODE'] === 'true';
-
-  let resolvedTypePackages: Awaited<ReturnType<typeof resolveTypePackages>> | null = null;
-  if (!rjsMode) {
-    resolvedTypePackages = await resolveTypePackages(typeNames);
-  }
-
   const configObject: IConfigFile = {
     compiler: {
       overrideTsconfig: {
-        // In interop/compat mode, the linker is not available and there is no `node_modules`
-        // directory, so we need to manually wire up global types.
-        files: [indexFilePath, ...(resolvedTypePackages?.typeFiles ?? [])],
+        files: [indexFilePath],
         compilerOptions: {
-          paths: resolvedTypePackages?.paths ?? {},
-          types: rjsMode ? typeNames : [],
+          paths: {},
+          types: typeNames,
           lib: ['esnext', 'dom'],
         },
       },

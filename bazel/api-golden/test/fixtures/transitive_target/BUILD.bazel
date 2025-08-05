@@ -1,9 +1,11 @@
-load("//tools:defaults.bzl", "ts_library")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 
 package(default_visibility = ["//bazel/api-golden/test/fixtures:__pkg__"])
 
-ts_library(
+ts_project(
     name = "transitive_target",
     testonly = True,
     srcs = ["index.ts"],
+    declaration = True,
+    tsconfig = "//bazel:tsconfig",
 )

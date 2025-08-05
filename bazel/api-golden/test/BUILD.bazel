@@ -1,4 +1,4 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
+load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
 load("//bazel/api-golden:index.bzl", "api_golden_test", "api_golden_test_npm_package")
 
 package(default_visibility = ["//bazel/api-golden/test:__pkg__"])
@@ -20,8 +20,7 @@ api_golden_test(
         "//bazel/api-golden/test/fixtures:test_lib",
     ],
     entry_point = "./fixtures/test_fixture.d.ts",
-    golden = "dev-infra/bazel/api-golden/test/goldens/explicit_file",
-    types = ["@npm//@types/node"],
+    golden = "bazel/api-golden/test/goldens/explicit_file",
 )
 
 api_golden_test_npm_package(
@@ -30,11 +29,11 @@ api_golden_test_npm_package(
         ":test_package_golden_dir",
         "//bazel/api-golden/test/fixtures:test_package_fixture",
     ],
-    golden_dir = "dev-infra/bazel/api-golden/test/goldens/test_package",
-    npm_package = "dev-infra/bazel/api-golden/test/fixtures/test_package",
+    golden_dir = "bazel/api-golden/test/goldens/test_package",
+    npm_package = "bazel/api-golden/test/fixtures/test_package",
     # API extractor needs to be able to resolve `@babel/core` due to an aliased namespace
     # we expose as part of the `nested.d.ts` fake entry-point.
-    types = ["@npm//@types/babel__core"],
+    types = ["//bazel:node_modules/@types/babel__core"],
 )
 
 api_golden_test_npm_package(
@@ -43,6 +42,6 @@ api_golden_test_npm_package(
         ":pkg_no_exports_field_golden_dir",
         "//bazel/api-golden/test/fixtures:pkg_no_exports_field_fixture",
     ],
-    golden_dir = "dev-infra/bazel/api-golden/test/goldens/pkg_no_exports_field",
-    npm_package = "dev-infra/bazel/api-golden/test/fixtures/pkg_no_exports_field",
+    golden_dir = "bazel/api-golden/test/goldens/pkg_no_exports_field",
+    npm_package = "bazel/api-golden/test/fixtures/pkg_no_exports_field",
 )
