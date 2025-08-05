@@ -1,5 +1,5 @@
 load("@npm//@bazel/jasmine:index.bzl", _jasmine_node_test = "jasmine_node_test")
-load("//bazel/spec-bundling:index.bzl", "spec_bundle")
+load("//tools/jasmine/old-spec-bundling:spec_bundle.bzl", "spec_bundle")
 
 def jasmine_node_test(name, specs = [], external = [], bootstrap = ["//tools/jasmine:bootstrap"], **kwargs):
     templated_args = kwargs.pop("templated_args", []) + [
