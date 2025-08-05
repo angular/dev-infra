@@ -140,7 +140,7 @@
     "rxjs": "^7.4.0",
     "semver": "^7.5.4",
     "stylelint": "^16.0.0",
-    "supports-color": "10.0.0",
+    "supports-color": "10.1.0",
     "terser": "5.43.1",
     "ts-node": "^10.9.2",
     "tslint": "^6.1.3",
