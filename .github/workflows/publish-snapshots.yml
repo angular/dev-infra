@@ -5,7 +5,6 @@ on:
     branches:
       - main
       - snapshot-test
-      - framework-tmp-branch-off
 
 permissions: {}
 
@@ -34,5 +33,4 @@ jobs:
         env:
           SNAPSHOT_BUILDS_GITHUB_TOKEN: ${{ secrets.SNAPSHOT_BUILDS_GITHUB_TOKEN }}
         run: |
-          ./tools/publish_to_github.sh "@angular/build-tooling" "dev-infra-private-build-tooling-builds" "dist/bin/npm_package"
           ./tools/publish_to_github.sh "@angular/ng-dev" "dev-infra-private-ng-dev-builds" "dist/bin/ng-dev/npm_package"
