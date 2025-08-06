@@ -15,7 +15,7 @@ if (require(process.env.RESOLVED_BIN).name !== 'semver') {
   process.exit(1);
 }
 
-if (process.env.MANUAL_ROOT_PATH !== '../npm/node_modules/semver/package.json') {
+if (process.env.MANUAL_ROOT_PATH !== '../bazel/node_modules/semver/package.json') {
   console.error('Expected `MANUAL_ROOT_PATH` to be unmodified as it is not an expanded value.');
   process.exit(1);
 }

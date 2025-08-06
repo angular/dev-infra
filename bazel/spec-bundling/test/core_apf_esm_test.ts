@@ -1,12 +1,9 @@
-// This is an ESM import that would usually break within `jasmine_node_test` because it
-// consumes devmode CommonJS sources and `rules_nodejs` does not support ESM well yet.
-import {VERSION} from '@angular/core';
 import * as core from '@angular/core';
 import '@angular/compiler';
 
 describe('@angular/core ESM import', () => {
   it('should work', () => {
-    expect(VERSION.major).toBeGreaterThanOrEqual(13);
+    expect(core.VERSION.major).toBeGreaterThanOrEqual(13);
   });
 
   it('should have run the linker', () => {

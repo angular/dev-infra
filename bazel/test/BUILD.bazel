@@ -1,5 +1,5 @@
+load("@aspect_rules_js//js:defs.bzl", "js_test")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_test")
 load("//bazel:extract_types.bzl", "extract_types")
 
 ts_project(
@@ -31,9 +31,9 @@ extract_types(
     deps = [":test_lib"],
 )
 
-nodejs_test(
+js_test(
     name = "extract_types_test",
     data = [":extract_types_target"],
     entry_point = "extract_types_test.js",
-    templated_args = ["$(rootpaths :extract_types_target)"],
+    fixed_args = ["$(rootpaths :extract_types_target)"],
 )

@@ -8,11 +8,11 @@ integration_test(
     commands = [
         "node ./test.js",
     ],
-    data = ["@npm//:node_modules/semver/package.json"],
+    data = ["@devinfra//bazel:node_modules/semver/dir"],
     environment = {
         "CUSTOM_VAR": "yes!",
-        "RESOLVED_BIN": "$(rootpath @npm//:node_modules/semver/package.json)",
-        "MANUAL_ROOT_PATH": "../npm/node_modules/semver/package.json",
+        "RESOLVED_BIN": "$(rootpath @devinfra//bazel:node_modules/semver/dir)/package.json",
+        "MANUAL_ROOT_PATH": "../bazel/node_modules/semver/package.json",
         "BAZELISK_HOME": "<TMP>",
         "BAZELISK_HOME_2": "<TMP>",
     },
