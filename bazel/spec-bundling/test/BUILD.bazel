@@ -33,7 +33,7 @@ ts_project(
     tsconfig = ":tsconfig",
     deps = [
         ":node_modules/@angular/core",
-        ":node_modules/@angular/platform-browser-dynamic",
+        ":node_modules/@angular/platform-browser",
         ":node_modules/@types/jasmine",
         ":node_modules/@types/jsdom",
         ":node_modules/@types/node",

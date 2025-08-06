@@ -1,0 +1,4 @@
+packages:
+  - .
+  - bazel/
+  - bazel/spec-bundling/test

@@ -1,4 +1,13 @@
 // IDE config. Compile options should be changed in the top-level project config.
 {
-  "extends": "../tsconfig.json"
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "strict": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "module": "esnext",
+    "target": "es2020",
+    "lib": ["es2021", "dom"]
+  }
 }

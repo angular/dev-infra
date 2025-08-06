@@ -1,6 +1,23 @@
 load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults2.bzl", "ts_config")
 
 package(default_visibility = ["//github-actions:__subpackages__"])
+
+ts_config(
+    name = "tsconfig",
+    src = "tsconfig.json",
+    deps = [
+        "//:rjs-tsconfig",
+    ],
+)
+
+ts_config(
+    name = "tsconfig_test",
+    src = "tsconfig-test.json",
+    deps = [
+        ":tsconfig",
+    ],
+)
 
 ts_library(
     name = "utils",

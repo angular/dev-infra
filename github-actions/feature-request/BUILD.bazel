@@ -1,39 +1,49 @@
-load("//tools:defaults.bzl", "esbuild_checked_in", "jasmine_node_test", "ts_library")
+load("@aspect_rules_jasmine//jasmine:defs.bzl", "jasmine_test")
+load("//tools:defaults.bzl", "esbuild_checked_in")
+load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//github-actions/feature-request:__subpackages__"])
 
-ts_library(
+ts_project(
     name = "feature-request",
     srcs = glob(
         ["src/*.ts"],
         exclude = ["src/*.spec.ts"],
     ),
-    deps = [
+    interop_deps = [
         "//github-actions:utils",
-        "@npm//@actions/core",
-        "@npm//@actions/github",
-        "@npm//@octokit/request-error",
-        "@npm//@octokit/rest",
-        "@npm//@types/node",
-        "@npm//undici",
+    ],
+    tsconfig = "//github-actions:tsconfig",
+    deps = [
+        "//:node_modules/@actions/core",
+        "//:node_modules/@actions/github",
+        "//:node_modules/@octokit/request-error",
+        "//:node_modules/@octokit/rest",
+        "//:node_modules/@types/node",
+        "//:node_modules/undici",
     ],
 )
 
-ts_library(
+ts_project(
     name = "test_lib",
     testonly = True,
     srcs = glob(["src/*.spec.ts"]),
+    tsconfig = "//github-actions:tsconfig_test",
     deps = [
-        ":feature-request",
-        "@npm//@types/jasmine",
+        ":feature-request_rjs",
+        "//:node_modules/@types/jasmine",
     ],
 )
 
-jasmine_node_test(
+jasmine_test(
     name = "test",
-    specs = [
-        ":test_lib",
+    data = [
+        ":test_lib_rjs",
     ],
+    fixed_args = [
+        "'**/*+(.|_)spec.js'",
+    ],
+    node_modules = "//:node_modules",
 )
 
 esbuild_checked_in(

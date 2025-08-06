@@ -182,36 +182,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/bazel@patch:@angular/bazel@npm:14.1.0-next.2#.yarn/patches/@angular-bazel-npm.patch::locator=%40angular%2Fbuild-tooling%40workspace%3A.":
-  version: 14.1.0-next.2
-  resolution: "@angular/bazel@patch:@angular/bazel@npm%3A14.1.0-next.2#.yarn/patches/@angular-bazel-npm.patch::version=14.1.0-next.2&hash=97738b&locator=%40angular%2Fbuild-tooling%40workspace%3A."
-  dependencies:
-    "@microsoft/api-extractor": "npm:^7.24.2"
-    shelljs: "npm:^0.8.5"
-    tsickle: "npm:^0.38.0"
-    tslib: "npm:^2.3.0"
-  peerDependencies:
-    "@angular/compiler-cli": 14.1.0-next.2
-    "@bazel/concatjs": ^5.3.0
-    "@bazel/worker": ^5.3.0
-    "@rollup/plugin-commonjs": ^21.0.0
-    "@rollup/plugin-node-resolve": ^13.0.4
-    rollup: ^2.56.3
-    rollup-plugin-sourcemaps: ^0.6.3
-    terser: ^5.9.0
-    typescript: ">=4.6.2 <4.8"
-  peerDependenciesMeta:
-    terser:
-      optional: true
-  bin:
-    ngc-wrapped: src/ngc-wrapped/index.js
-    packager: src/ng_package/packager.js
-    types_bundler: src/types_bundle/index.js
-    xi18n: src/ngc-wrapped/extract_i18n.js
-  checksum: 10c0/853ca8e98dc456b565120bf02f80b83d4e9c1bc5ab82afbaa8543f737931cc05b2d67133b3beddd8a9a42203c78c7a00cf1ab45a2e9fb86a48921a76eb84db82
-  languageName: node
-  linkType: hard
-
 "@angular/build-tooling@workspace:.":
   version: 0.0.0-use.local
   resolution: "@angular/build-tooling@workspace:."
@@ -219,7 +189,7 @@ __metadata:
     "@actions/core": "npm:^1.4.0"
     "@actions/github": "npm:^6.0.0"
     "@angular/animations": "npm:20.0.0"
-    "@angular/bazel": "patch:@angular/bazel@npm:14.1.0-next.2#.yarn/patches/@angular-bazel-npm.patch"
+    "@angular/bazel": "npm:14.1.0-next.2"
     "@angular/build": "npm:20.0.0"
     "@angular/cdk": "npm:20.0.0"
     "@angular/cli": "npm:20.0.0"
@@ -240,7 +210,7 @@ __metadata:
     "@bazel/concatjs": "npm:5.8.1"
     "@bazel/esbuild": "npm:5.8.1"
     "@bazel/ibazel": "npm:^0.25.0"
-    "@bazel/jasmine": "patch:@bazel/jasmine@npm:5.8.1#.yarn/patches/@bazel-jasmine-npm.patch"
+    "@bazel/jasmine": "npm:5.8.1"
     "@bazel/protractor": "npm:5.8.1"
     "@bazel/runfiles": "npm:6.3.1"
     "@bazel/terser": "npm:5.8.1"
@@ -248,14 +218,14 @@ __metadata:
     "@google-cloud/firestore": "npm:^7.0.0"
     "@google-cloud/spanner": "npm:8.1.0"
     "@google-cloud/storage": "npm:^7.0.0"
-    "@google/genai": "npm:^1.4.0"
+    "@google/genai": "npm:1.12.0"
     "@inquirer/prompts": "npm:^7.0.0"
     "@inquirer/type": "npm:^3.0.0"
     "@microsoft/api-extractor": "npm:7.52.10"
     "@octokit/auth-app": "npm:8.0.2"
     "@octokit/core": "npm:7.0.3"
     "@octokit/graphql": "npm:9.0.1"
-    "@octokit/graphql-schema": "patch:@octokit/graphql-schema@npm%3A15.3.0#~/.yarn/patches/@octokit-graphql-schema-npm-15.3.0-4046a59648.patch"
+    "@octokit/graphql-schema": "npm:15.3.0"
     "@octokit/openapi-types": "npm:25.1.0"
     "@octokit/plugin-paginate-rest": "npm:13.1.1"
     "@octokit/plugin-rest-endpoint-methods": "npm:16.0.0"
@@ -309,6 +279,7 @@ __metadata:
     husky: "npm:^9.0.0"
     jasmine: "npm:~5.9.0"
     jasmine-core: "npm:~5.9.0"
+    jasmine-reporters: "npm:2.5.2"
     jsdom: "npm:^26.0.0"
     jsonc-parser: "npm:^3.2.0"
     karma: "npm:^6.3.15"
@@ -1049,21 +1020,6 @@ __metadata:
   bin:
     bazel-jasmine-runner: jasmine_runner.js
   checksum: 10c0/24220ee9336a511f5ba9787bb1da021e3f92d9e0cdde0581cb13db06d05d4716e6a408eca671f10242aa139a9b3ef04a02e3f3d2cf96266c4c1dc36dc262a999
-  languageName: node
-  linkType: hard
-
-"@bazel/jasmine@patch:@bazel/jasmine@npm:5.8.1#.yarn/patches/@bazel-jasmine-npm.patch::locator=%40angular%2Fbuild-tooling%40workspace%3A.":
-  version: 5.8.1
-  resolution: "@bazel/jasmine@patch:@bazel/jasmine@npm%3A5.8.1#.yarn/patches/@bazel-jasmine-npm.patch::version=5.8.1&hash=fa387d&locator=%40angular%2Fbuild-tooling%40workspace%3A."
-  dependencies:
-    c8: "npm:~7.5.0"
-    jasmine-reporters: "npm:~2.5.0"
-  peerDependencies:
-    jasmine: ">=2.99.0"
-    jasmine-core: ">=2.99.0"
-  bin:
-    bazel-jasmine-runner: jasmine_runner.js
-  checksum: 10c0/208ed06f01431d8d60e192519ef6b70232c43c4f0df8ab5b72212be9766cce3760db988679963c3860881e4a5baad8a99ce8c693b1f4101b6b7b8dc6ffa47e60
   languageName: node
   linkType: hard
 
@@ -2807,7 +2763,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@google/genai@npm:^1.4.0":
+"@google/genai@npm:1.12.0":
   version: 1.12.0
   resolution: "@google/genai@npm:1.12.0"
   dependencies:
@@ -3886,16 +3842,6 @@ __metadata:
     graphql: "npm:^16.0.0"
     graphql-tag: "npm:^2.10.3"
   checksum: 10c0/ebbcfb085a17e0bfb8b8304df82d92046366747146dae6b5e8358301c34e9d5a33bed65c703fa90ce7ad2355068cfda1acd81cd6810590620c75ce316243c988
-  languageName: node
-  linkType: hard
-
-"@octokit/graphql-schema@patch:@octokit/graphql-schema@npm%3A15.3.0#~/.yarn/patches/@octokit-graphql-schema-npm-15.3.0-4046a59648.patch":
-  version: 15.3.0
-  resolution: "@octokit/graphql-schema@patch:@octokit/graphql-schema@npm%3A15.3.0#~/.yarn/patches/@octokit-graphql-schema-npm-15.3.0-4046a59648.patch::version=15.3.0&hash=bf8712"
-  dependencies:
-    graphql: "npm:^16.0.0"
-    graphql-tag: "npm:^2.10.3"
-  checksum: 10c0/1b7b6d022fb72b1468076ccb2d2c628b9423bca43eb4a5170d77b0a0f1c7727cde249c406ac135d8eaa63760e7fb418fe9f1bea5e25a3a6fd5f14b3e3633dab9
   languageName: node
   linkType: hard
 
@@ -10705,7 +10651,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jasmine-reporters@npm:~2.5.0":
+"jasmine-reporters@npm:2.5.2, jasmine-reporters@npm:~2.5.0":
   version: 2.5.2
   resolution: "jasmine-reporters@npm:2.5.2"
   dependencies:

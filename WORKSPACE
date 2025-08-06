@@ -188,3 +188,24 @@ http_archive(
 load("@aspect_rules_jasmine//jasmine:dependencies.bzl", "rules_jasmine_dependencies")
 
 rules_jasmine_dependencies()
+
+git_repository(
+    name = "rules_angular",
+    commit = "c8af5c0d27c66387e9e7df3c4dd3155ce7582609",
+    remote = "https://github.com/devversion/rules_angular.git",
+)
+
+load("@rules_angular//setup:step_1.bzl", "rules_angular_step1")
+
+rules_angular_step1()
+
+load("@rules_angular//setup:step_2.bzl", "rules_angular_step2")
+
+rules_angular_step2()
+
+load("@rules_angular//setup:step_3.bzl", "rules_angular_step3")
+
+rules_angular_step3(
+    angular_compiler_cli = "@devinfra//:node_modules/@angular/compiler-cli",
+    typescript = "@devinfra//:node_modules/typescript",
+)
