@@ -2,7 +2,7 @@
   "dependencies": {
     "@angular/compiler": "20.1.4",
     "@angular/core": "20.1.4",
-    "@angular/platform-browser-dynamic": "20.1.4",
+    "@angular/platform-browser": "20.1.4",
     "@types/jasmine": "5.1.8",
     "@types/jsdom": "21.1.7",
     "@types/node": "24.2.0",

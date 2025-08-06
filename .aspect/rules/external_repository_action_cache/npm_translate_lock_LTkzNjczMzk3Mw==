@@ -1,0 +1,10 @@
+# @generated
+# Input hashes for repository rule npm_translate_lock(name = "devinfra_npm", pnpm_lock = "@//:pnpm-lock.yaml").
+# This file should be checked into version control along with the pnpm-lock.yaml file.
+.npmrc=-1406867100
+bazel/package.json=1905073619
+bazel/spec-bundling/test/package.json=-1269314228
+package.json=-2034275404
+pnpm-lock.yaml=1798193673
+pnpm-workspace.yaml=1403084380
+yarn.lock=1126032185

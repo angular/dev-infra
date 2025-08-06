@@ -4,10 +4,7 @@ import 'zone.js/testing';
 import {JSDOM} from 'jsdom';
 import {Component} from '@angular/core';
 import {fakeAsync, flush, TestBed, waitForAsync} from '@angular/core/testing';
-import {
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
+import {BrowserTestingModule, platformBrowserTesting} from '@angular/platform-browser/testing';
 
 describe('native async/await downleveled', () => {
   beforeAll(() => {
@@ -18,7 +15,7 @@ describe('native async/await downleveled', () => {
     (global as any).Node = window.Node;
     (global as any).MouseEvent = window.MouseEvent;
 
-    TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
+    TestBed.initTestEnvironment(BrowserTestingModule, platformBrowserTesting());
   });
 
   it('should properly detect changes', fakeAsync(() => {
