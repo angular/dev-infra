@@ -3,7 +3,7 @@ import {Component, inject, NgZone} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {Router} from '@angular/router';
-import {AccountService} from '../../../shared/account/account.service.js';
+import {AccountService} from '../account/account.service.js';
 
 @Component({
   standalone: true,

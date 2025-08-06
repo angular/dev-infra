@@ -31,13 +31,15 @@ export const blockUser = functions.https.onCall<BlockUserParams>(
       throw Error();
     }
 
-    await github.orgs.blockUser({org: 'angular', username: username}).catch((err: RequestError) => {
-      // If a user is already blocked, we can continue silently failing as action still "succeeded".
-      if (err.message === 'Blocked user has already been blocked' && err.status === 422) {
-        return;
-      }
-      throw err;
-    });
+    await github
+      .request('PUT /orgs/{org}/blocks/{username}', {org: 'angular', username: username})
+      .catch((err: RequestError) => {
+        // If a user is already blocked, we can continue silently failing as action still "succeeded".
+        if (err.message === 'Blocked user has already been blocked' && err.status === 422) {
+          return;
+        }
+        throw err;
+      });
 
     await userDoc.ref.create({
       comments: comments,

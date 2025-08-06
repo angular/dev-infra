@@ -1,5 +1,5 @@
 import {Routes} from '@angular/router';
-import {isLoggedInGuard} from '../../shared/account/account.guard.js';
+import {isLoggedInGuard} from './account/account.guard.js';
 
 export const routes: Routes = [
   {

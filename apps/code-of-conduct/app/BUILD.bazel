@@ -1,5 +1,5 @@
-load("//tools:defaults.bzl", "ng_module")
 load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
+load("//tools:defaults.bzl", "ng_module")
 
 package(default_visibility = ["//apps/code-of-conduct:__subpackages__"])
 
@@ -13,9 +13,9 @@ ng_module(
         "app.component.html",
     ],
     deps = [
+        "//apps/code-of-conduct/app/account",
         "//apps/code-of-conduct/app/block-user",
         "//apps/code-of-conduct/app/user-table",
-        "//apps/shared/account",
         "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/router",
@@ -47,9 +47,9 @@ ng_module(
         "app.routes.ts",
     ],
     deps = [
+        "//apps/code-of-conduct/app/account",
         "//apps/code-of-conduct/app/login",
         "//apps/code-of-conduct/app/main",
-        "//apps/shared/account",
         "@npm//@angular/router",
     ],
 )

@@ -1,5 +1,5 @@
-load("//tools:defaults.bzl", "esbuild_cjs_bundle", "ts_library")
 load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
+load("//tools:defaults.bzl", "esbuild_cjs_bundle", "ts_library")
 
 package(default_visibility = ["//visibility:private"])
 
@@ -19,8 +19,6 @@ ts_library(
     deps = [
         "//apps/functions/code-of-conduct",
         "//apps/functions/dns-redirecting",
-        "//apps/functions/githubWebhook",
-        "//apps/functions/ng-dev",
         "@npm//firebase-admin",
     ],
 )
@@ -29,10 +27,6 @@ esbuild_cjs_bundle(
     name = "functions_compiled",
     entry_points = [
         "index.ts",
-    ],
-    external = [
-        # Mark farmhash as external as it loads .node files directly, which are unused in our usage
-        "farmhash",
     ],
     visibility = ["//apps:__pkg__"],
     deps = [
