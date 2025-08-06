@@ -1,13 +1,16 @@
 load("@aspect_rules_jasmine//jasmine:defs.bzl", "jasmine_test")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_config", "ts_project")
+load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
 load("//bazel/spec-bundling:index.bzl", "spec_bundle")
+
+npm_link_all_packages()
 
 ts_config(
     name = "tsconfig",
     src = "tsconfig.json",
     deps = [
-        "//bazel/spec-bundling:node_modules/@types/jasmine",
-        "//bazel/spec-bundling:node_modules/@types/node",
+        ":node_modules/@types/jasmine",
+        ":node_modules/@types/node",
     ],
 )
 
@@ -17,8 +20,8 @@ ts_project(
     declaration = True,
     tsconfig = ":tsconfig",
     deps = [
-        "//bazel/spec-bundling:node_modules/@types/jasmine",
-        "//bazel/spec-bundling:node_modules/@types/node",
+        ":node_modules/@types/jasmine",
+        ":node_modules/@types/node",
     ],
 )
 
@@ -29,13 +32,13 @@ ts_project(
     declaration = True,
     tsconfig = ":tsconfig",
     deps = [
-        "//bazel/spec-bundling:node_modules/@angular/core",
-        "//bazel/spec-bundling:node_modules/@angular/platform-browser-dynamic",
-        "//bazel/spec-bundling:node_modules/@types/jasmine",
-        "//bazel/spec-bundling:node_modules/@types/jsdom",
-        "//bazel/spec-bundling:node_modules/@types/node",
-        "//bazel/spec-bundling:node_modules/jsdom",
-        "//bazel/spec-bundling:node_modules/zone.js",
+        ":node_modules/@angular/core",
+        ":node_modules/@angular/platform-browser-dynamic",
+        ":node_modules/@types/jasmine",
+        ":node_modules/@types/jsdom",
+        ":node_modules/@types/node",
+        ":node_modules/jsdom",
+        ":node_modules/zone.js",
     ],
 )
 
@@ -46,9 +49,9 @@ ts_project(
     declaration = True,
     tsconfig = ":tsconfig",
     deps = [
+        ":node_modules/@types/jasmine",
+        ":node_modules/@types/node",
         ":transitive_should_be_loaded",
-        "//bazel/spec-bundling:node_modules/@types/jasmine",
-        "//bazel/spec-bundling:node_modules/@types/node",
     ],
 )
 
@@ -59,9 +62,9 @@ ts_project(
     declaration = True,
     tsconfig = ":tsconfig",
     deps = [
-        "//bazel/spec-bundling:node_modules/@angular/compiler",
-        "//bazel/spec-bundling:node_modules/@angular/core",
-        "//bazel/spec-bundling:node_modules/@types/jasmine",
+        ":node_modules/@angular/compiler",
+        ":node_modules/@angular/core",
+        ":node_modules/@types/jasmine",
     ],
 )
 
@@ -72,9 +75,9 @@ ts_project(
     declaration = True,
     tsconfig = ":tsconfig",
     deps = [
-        "//bazel/spec-bundling:node_modules/@angular/compiler",
-        "//bazel/spec-bundling:node_modules/@angular/core",
-        "//bazel/spec-bundling:node_modules/@types/jasmine",
+        ":node_modules/@angular/compiler",
+        ":node_modules/@angular/core",
+        ":node_modules/@types/jasmine",
     ],
 )
 
@@ -114,7 +117,7 @@ jasmine_test(
     fixed_args = [
         "'**/*+(.|_)spec.js'",
     ],
-    node_modules = "//bazel/spec-bundling:node_modules",
+    node_modules = ":node_modules",
 )
 
 jasmine_test(
@@ -125,7 +128,7 @@ jasmine_test(
     fixed_args = [
         "'**/*+(.|_)spec.js'",
     ],
-    node_modules = "//bazel/spec-bundling:node_modules",
+    node_modules = ":node_modules",
 )
 
 jasmine_test(
@@ -136,17 +139,17 @@ jasmine_test(
     fixed_args = [
         "'**/*+(.|_)spec.js'",
     ],
-    node_modules = "//bazel/spec-bundling:node_modules",
+    node_modules = ":node_modules",
 )
 
 jasmine_test(
     name = "test_async_await",
     data = [
+        ":node_modules/jsdom",
         ":test_bundle_async_await",
-        "//bazel/spec-bundling:node_modules/jsdom",
     ],
     fixed_args = [
         "'**/*+(.|_)spec.js'",
     ],
-    node_modules = "//bazel/spec-bundling:node_modules",
+    node_modules = ":node_modules",
 )

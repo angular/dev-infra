@@ -66,7 +66,7 @@ importers:
         specifier: 18.0.0
         version: 18.0.0
 
-  spec-bundling:
+  spec-bundling/test:
     dependencies:
       '@angular/compiler':
         specifier: 20.1.4
