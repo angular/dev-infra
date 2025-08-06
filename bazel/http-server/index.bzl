@@ -1,5 +1,4 @@
 load("@aspect_rules_js//js:providers.bzl", "JsInfo")
-load("@build_bazel_rules_nodejs//:providers.bzl", "JSNamedModuleInfo")
 
 def _get_workspace_name(ctx):
     if ctx.label.workspace_root:
@@ -28,8 +27,6 @@ def _http_server_rule_impl(ctx):
     # unwrapped in case there are built using TypeScript-specific rules.
     transitive_depsets = []
     for dep in ctx.attr.deps:
-        if JSNamedModuleInfo in dep:
-            transitive_depsets.append(dep[JSNamedModuleInfo].sources)
         if JsInfo in dep:
             transitive_depsets.append(dep[JsInfo].transitive_sources)
         elif DefaultInfo in dep:
