@@ -1,5 +1,5 @@
 load("@build_bazel_rules_nodejs//:index.bzl", "js_library")
-load("//bazel/esbuild:index.bzl", "esbuild", "esbuild_amd", "esbuild_config", "esbuild_esm_bundle")
+load("//tools/esbuild/old-esbuild:index.bzl", "esbuild", "esbuild_amd", "esbuild_config", "esbuild_esm_bundle")
 load("//tools/jasmine/old-spec-bundling:spec-entrypoint.bzl", "spec_entrypoint")
 
 def spec_bundle(

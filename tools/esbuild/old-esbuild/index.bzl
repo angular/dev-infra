@@ -75,7 +75,7 @@ def esbuild_amd(name, entry_point, module_name, testonly = False, config = None,
     expand_template(
         name = "%s_config" % name,
         testonly = testonly,
-        template = "//bazel/esbuild:esbuild-amd-config.mjs",
+        template = "//tools/esbuild/old-esbuild:esbuild-amd-config.mjs",
         output_name = "%s_config.mjs" % name,
         substitutions = {
             "TMPL_MODULE_NAME": module_name,

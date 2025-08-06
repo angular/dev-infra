@@ -18,6 +18,7 @@
     "wait-on": "^8.0.3",
     "yargs": "18.0.0",
     "protractor": "7.0.0",
+    "semver": "7.7.2",
     "selenium-webdriver": "4.34.0",
     "tinyglobby": "0.2.14"
   },
