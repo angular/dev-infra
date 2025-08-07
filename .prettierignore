@@ -2,9 +2,9 @@
 
 .github/local-actions/labels-sync/main.js
 .github/local-actions/lock-closed/main.js
-github-actions/bazel/configure-remote/configure-remote.cjs
+github-actions/bazel/configure-remote/configure-remote.js
 github-actions/branch-manager/main.js
-github-actions/browserstack/set-browserstack-env.cjs
+github-actions/browserstack/set-browserstack-env.js
 github-actions/pull-request-labeling/main.js
 github-actions/feature-request/main.js
 github-actions/google-internal-tests/main.js
@@ -13,7 +13,7 @@ github-actions/post-approval-changes/main.js
 github-actions/previews/pack-and-upload-artifact/inject-artifact-metadata.js
 github-actions/previews/upload-artifacts-to-firebase/extract-artifact-metadata.js
 github-actions/previews/upload-artifacts-to-firebase/fetch-workflow-artifact.js
-github-actions/saucelabs/set-saucelabs-env.cjs
+github-actions/saucelabs/set-saucelabs-env.js
 github-actions/slash-commands/main.js
 github-actions/unified-status-check/main.js
 

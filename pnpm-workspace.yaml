@@ -6,3 +6,15 @@ packages:
   - .github/local-actions/branch-manager
   - .github/local-actions/labels-sync
   - .github/local-actions/lock-closed
+  - github-actions/google-internal-tests
+  - github-actions/pull-request-labeling
+  - github-actions/unified-status-check
+  - github-actions/previews/pack-and-upload-artifact
+  - github-actions/previews/upload-artifacts-to-firebase
+  - github-actions/post-approval-changes
+  - github-actions/org-file-sync
+  - github-actions/feature-request
+  - github-actions/branch-manager
+  - github-actions/saucelabs
+  - github-actions/browserstack
+  - github-actions/bazel/configure-remote

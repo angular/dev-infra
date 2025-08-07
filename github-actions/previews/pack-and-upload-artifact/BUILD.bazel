@@ -1,10 +1,27 @@
-load("//tools:defaults.bzl", "esbuild_checked_in")
+load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
+load("//tools:defaults2.bzl", "esbuild_checked_in", "ts_project")
+
+package(default_visibility = ["//github-actions/previews/pack-and-upload-artifact:__subpackages__"])
+
+npm_link_all_packages()
+
+ts_project(
+    name = "lib",
+    srcs = glob(["lib/*.ts"]),
+    tsconfig = "//github-actions:tsconfig",
+    deps = [
+        ":node_modules/@types/node",
+        "//github-actions/previews:constants_lib_rjs",
+    ],
+)
 
 esbuild_checked_in(
     name = "inject-artifact-metadata",
-    entry_point = "//github-actions/previews/pack-and-upload-artifact/lib:inject-artifact-metadata.ts",
-    target = "node16",
-    deps = [
-        "//github-actions/previews/pack-and-upload-artifact/lib:inject_artifact_metadata_lib",
+    srcs = [
+        ":lib_rjs",
     ],
+    entry_point = "lib/inject-artifact-metadata.ts",
+    format = "esm",
+    platform = "node",
+    target = "node22",
 )

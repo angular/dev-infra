@@ -1,28 +1,32 @@
-load("//tools:defaults.bzl", "esbuild_checked_in", "ts_library")
+load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
+load("//tools:defaults2.bzl", "esbuild_checked_in", "ts_project")
 
 package(default_visibility = ["//github-actions/org-file-sync:__subpackages__"])
 
-ts_library(
-    name = "org-file-sync",
-    srcs = glob(
-        ["src/*.ts"],
-    ),
+npm_link_all_packages()
+
+ts_project(
+    name = "lib",
+    srcs = glob(["lib/*.ts"]),
+    tsconfig = "//github-actions:tsconfig",
     deps = [
-        "//github-actions:utils",
-        "@npm//@actions/core",
-        "@npm//@actions/github",
-        "@npm//@octokit/rest",
-        "@npm//@octokit/types",
-        "@npm//@types/node",
-        "@npm//undici",
+        ":node_modules/@actions/core",
+        ":node_modules/@actions/github",
+        ":node_modules/@octokit/rest",
+        ":node_modules/@octokit/types",
+        ":node_modules/@types/node",
+        ":node_modules/undici",
+        "//github-actions:utils_rjs",
     ],
 )
 
 esbuild_checked_in(
     name = "main",
-    entry_point = ":src/main.ts",
-    target = "node16",
-    deps = [
-        ":org-file-sync",
+    srcs = [
+        ":lib_rjs",
     ],
+    entry_point = "lib/main.ts",
+    format = "esm",
+    platform = "node",
+    target = "node22",
 )

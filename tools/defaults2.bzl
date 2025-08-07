@@ -2,6 +2,7 @@ load("@aspect_bazel_lib//lib:copy_to_bin.bzl", _copy_to_bin = "copy_to_bin")
 load("@aspect_bazel_lib//lib:write_source_files.bzl", _write_source_file = "write_source_file")
 load("@aspect_rules_esbuild//esbuild:defs.bzl", _esbuild = "esbuild")
 load("@aspect_rules_jasmine//jasmine:defs.bzl", _jasmine_test = "jasmine_test")
+load("@aspect_rules_js//js:defs.bzl", _js_binary = "js_binary")
 load("@aspect_rules_js//npm:defs.bzl", _npm_package = "npm_package")
 load("@aspect_rules_ts//ts:defs.bzl", _ts_config = "ts_config")
 load("@rules_angular//src/ng_package/text_replace:index.bzl", _text_replace = "text_replace")
@@ -11,6 +12,7 @@ load("//tools:ts_project_interop.bzl", _ts_project = "ts_project")
 
 copy_to_bin = _copy_to_bin
 ts_config = _ts_config
+js_binary = _js_binary
 esbuild = _esbuild
 extract_types = _extract_types
 
