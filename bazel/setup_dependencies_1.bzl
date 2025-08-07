@@ -6,6 +6,9 @@ def setup_dependencies_1():
         data = [
             "@devinfra//:package.json",
             "@devinfra//bazel:package.json",
+            "@devinfra//.github/local-actions/branch-manager:package.json",
+            "@devinfra//.github/local-actions/labels-sync:package.json",
+            "@devinfra//.github/local-actions/lock-closed:package.json",
             "@devinfra//ng-dev:package.json",
             "@devinfra//bazel/spec-bundling/test:package.json",
             "@devinfra//:pnpm-workspace.yaml",

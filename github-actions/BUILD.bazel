@@ -1,5 +1,4 @@
-load("//tools:defaults.bzl", "ts_library")
-load("//tools:defaults2.bzl", "ts_config")
+load("//tools:defaults2.bzl", "ts_config", "ts_project")
 
 package(default_visibility = ["//github-actions:__subpackages__"])
 
@@ -19,20 +18,21 @@ ts_config(
     ],
 )
 
-ts_library(
+ts_project(
     name = "utils",
     srcs = [
         "utils.ts",
     ],
+    tsconfig = ":tsconfig",
     visibility = [
         "//.github/local-actions:__subpackages__",
         "//github-actions:__subpackages__",
     ],
     deps = [
-        "@npm//@actions/core",
-        "@npm//@actions/github",
-        "@npm//@octokit/auth-app",
-        "@npm//@octokit/rest",
-        "@npm//@types/node",
+        "//:node_modules/@actions/core",
+        "//:node_modules/@actions/github",
+        "//:node_modules/@octokit/auth-app",
+        "//:node_modules/@octokit/rest",
+        "//:node_modules/@types/node",
     ],
 )

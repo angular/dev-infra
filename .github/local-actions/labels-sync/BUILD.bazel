@@ -1,29 +1,33 @@
-load("//tools:defaults.bzl", "esbuild_checked_in", "ts_library")
+load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
+load("//tools:defaults2.bzl", "esbuild_checked_in", "ts_project")
 
 package(default_visibility = ["//.github/local-actions/labels-sync:__subpackages__"])
 
-ts_library(
-    name = "labels-sync",
-    srcs = glob(
-        ["src/*.ts"],
-    ),
+npm_link_all_packages()
+
+ts_project(
+    name = "lib",
+    srcs = glob(["lib/*.ts"]),
+    tsconfig = "//.github/local-actions:tsconfig",
     deps = [
-        "//github-actions:utils",
-        "//ng-dev/pr/common/labels",
-        "@npm//@actions/core",
-        "@npm//@actions/github",
-        "@npm//@octokit/rest",
-        "@npm//@octokit/types",
-        "@npm//@types/node",
-        "@npm//undici",
+        "//.github/local-actions/labels-sync:node_modules/@actions/core",
+        "//.github/local-actions/labels-sync:node_modules/@actions/github",
+        "//.github/local-actions/labels-sync:node_modules/@octokit/rest",
+        "//.github/local-actions/labels-sync:node_modules/@octokit/types",
+        "//.github/local-actions/labels-sync:node_modules/@types/node",
+        "//.github/local-actions/labels-sync:node_modules/undici",
+        "//github-actions:utils_rjs",
+        "//ng-dev/pr/common/labels:labels_rjs",
     ],
 )
 
 esbuild_checked_in(
     name = "main",
-    entry_point = ":src/main.ts",
-    target = "node16",
-    deps = [
-        ":labels-sync",
+    srcs = [
+        ":lib_rjs",
     ],
+    entry_point = "lib/main.ts",
+    format = "esm",
+    platform = "node",
+    target = "node22",
 )
