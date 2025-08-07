@@ -1,6 +1,6 @@
-load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
+load("//tools:defaults2.bzl", "jasmine_test", "ts_project")
 
-ts_library(
+ts_project(
     name = "caretaker",
     srcs = glob(
         ["**/*.ts"],
@@ -10,37 +10,37 @@ ts_library(
     ),
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
-        "//ng-dev/release/versioning",
-        "//ng-dev/utils",
-        "//ng-dev/utils:g3_sync_config",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
-        "@npm//multimatch",
-        "@npm//typed-graphqlify",
-        "@npm//yaml",
-        "@npm//yargs",
+        "//ng-dev:node_modules/@types/node",
+        "//ng-dev:node_modules/@types/yargs",
+        "//ng-dev:node_modules/multimatch",
+        "//ng-dev:node_modules/typed-graphqlify",
+        "//ng-dev:node_modules/yaml",
+        "//ng-dev:node_modules/yargs",
+        "//ng-dev/release/versioning:versioning_rjs",
+        "//ng-dev/utils:g3_sync_config_rjs",
+        "//ng-dev/utils:utils_rjs",
     ],
 )
 
-ts_library(
+ts_project(
     name = "test_lib",
     testonly = True,
     srcs = glob(["**/*.spec.ts"]),
     deps = [
-        ":caretaker",
-        "//ng-dev/release/versioning",
-        "//ng-dev/utils",
-        "//ng-dev/utils/testing",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
-        "@npm//@types/semver",
-        "@npm//semver",
+        ":caretaker_rjs",
+        "//ng-dev:node_modules/@types/jasmine",
+        "//ng-dev:node_modules/@types/node",
+        "//ng-dev:node_modules/@types/semver",
+        "//ng-dev:node_modules/semver",
+        "//ng-dev/release/versioning:versioning_rjs",
+        "//ng-dev/utils:utils_rjs",
+        "//ng-dev/utils/testing:testing_rjs",
     ],
 )
 
-jasmine_node_test(
+jasmine_test(
     name = "test",
-    specs = [
-        ":test_lib",
+    data = [
+        ":test_lib_rjs",
     ],
 )

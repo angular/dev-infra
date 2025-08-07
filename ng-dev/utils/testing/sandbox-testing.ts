@@ -12,7 +12,7 @@ import {testTmpDir} from './bazel-env.js';
 
 /** Runs a Git command in the temporary repo directory. */
 export function runGitInTmpDir(args: string[]): string {
-  const result = spawnSync(process.argv[2], args, {cwd: testTmpDir, encoding: 'utf8'});
+  const result = spawnSync(process.env['GIT_BIN']!, args, {cwd: testTmpDir, encoding: 'utf8'});
   if (result.status !== 0) {
     throw Error(`Error for Git command: ${result.stdout} ${result.stderr}`);
   }

@@ -1,4 +1,4 @@
-import yargs, {Arguments, Argv} from 'yargs';
+import yargs, {Argv} from 'yargs';
 
 // A function to be called when the command completes.
 type CompletedFn = (err: Error | null) => Promise<void> | void;

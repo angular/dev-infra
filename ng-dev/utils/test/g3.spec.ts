@@ -11,7 +11,7 @@ import path from 'path';
 
 import {AuthenticatedGitClient} from '../git/authenticated-git-client.js';
 import {GitClient} from '../git/git-client.js';
-import {installVirtualGitClientSpies, mockNgDevConfig} from '../testing/index.js';
+import {cleanTestTmpDir, installVirtualGitClientSpies, mockNgDevConfig} from '../testing/index.js';
 import {GoogleSyncConfig} from '../config.js';
 
 import {G3Stats} from '../g3.js';
@@ -22,6 +22,7 @@ describe('G3Stats', () => {
   let git: AuthenticatedGitClient;
 
   beforeEach(async () => {
+    cleanTestTmpDir();
     installVirtualGitClientSpies();
     getLatestShas = spyOn(G3Stats, 'getLatestShas' as any).and.returnValue(null);
     getDiffStats = spyOn(G3Stats, 'getDiffStats' as any).and.returnValue(null);

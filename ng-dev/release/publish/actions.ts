@@ -41,7 +41,7 @@ import {githubReleaseBodyLimit} from './constants.js';
 import {ExternalCommands} from './external-commands.js';
 import {promptToInitiatePullRequestMerge} from './prompt-merge.js';
 import {Prompt} from '../../utils/prompt.js';
-import {glob} from 'fast-glob';
+import glob from 'fast-glob';
 import {PnpmVersioning} from './pnpm-versioning.js';
 import {Commit} from '../../utils/git/octokit-types.js';
 import {updateRenovateConfigTargetLabels} from './actions/renovate-config-updates.js';

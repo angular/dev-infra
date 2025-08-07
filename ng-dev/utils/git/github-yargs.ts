@@ -42,7 +42,7 @@ export function addGithubTokenOption<T>(argv: Argv<T>) {
  * that the token should only be accessed from the AuthenticatedGitClient itself.
  */
 export function configureGitClientWithTokenOrFromEnvironment(token: string | undefined): void {
-  const githubToken = token || (process.env.GITHUB_TOKEN ?? process.env.TOKEN);
+  const githubToken = token || (process.env['GITHUB_TOKEN'] ?? process.env['TOKEN']);
   if (!githubToken) {
     Log.error('No Github token set. Please set the `GITHUB_TOKEN` environment variable.');
     Log.error('Alternatively, pass the `--github-token` command line flag.');

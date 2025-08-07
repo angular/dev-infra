@@ -163,7 +163,7 @@ export class Changelog {
   /** Update the changelog file with the known changelog entries. */
   private writeToChangelogFile(): void {
     const changelog = this.entries.map((entry) => entry.content).join(joinMarker);
-    writeFileSync(this.filePath, changelog);
+    writeFileSync(this.filePath, changelog, {});
   }
 
   /**

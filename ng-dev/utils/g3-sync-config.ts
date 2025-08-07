@@ -8,7 +8,7 @@
 
 import {Minimatch} from 'minimatch';
 import fs from 'fs';
-import * as jsonc from '../../tools/esm-interop/jsonc-parser.js';
+import * as jsonc from 'jsonc-parser';
 
 /** Configuration describing how files are synced into Google. */
 export interface GoogleSyncConfig {

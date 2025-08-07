@@ -1,6 +1,6 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults2.bzl", "ts_project")
 
-ts_library(
+ts_project(
     name = "ngbot",
     srcs = [
         "cli.ts",
@@ -8,10 +8,10 @@ ts_library(
     ],
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
-        "//ng-dev/utils",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
-        "@npm//yaml",
-        "@npm//yargs",
+        "//ng-dev:node_modules/@types/node",
+        "//ng-dev:node_modules/@types/yargs",
+        "//ng-dev:node_modules/yaml",
+        "//ng-dev:node_modules/yargs",
+        "//ng-dev/utils:utils_rjs",
     ],
 )

@@ -160,8 +160,8 @@ function parseInternal(fullText: string | Buffer): CommitFromGitLog | Commit {
     isFixup: FIXUP_PREFIX_RE.test(fullText),
     isSquash: SQUASH_PREFIX_RE.test(fullText),
     isRevert: REVERT_PREFIX_RE.test(fullText),
-    author: commit.author || undefined,
-    hash: commit.hash || undefined,
-    shortHash: commit.shortHash || undefined,
+    author: commit['author'] || undefined,
+    hash: commit['hash'] || undefined,
+    shortHash: commit['shortHash'] || undefined,
   };
 }

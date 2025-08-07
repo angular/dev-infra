@@ -25,7 +25,7 @@ export async function updateRenovateConfig(
 
   const config = await readFile(renovateConfigPath, 'utf-8');
   const configJson = JSON.parse(config) as Record<string, unknown>;
-  const baseBranches = configJson.baseBranches;
+  const baseBranches = configJson['baseBranches'];
 
   if (!Array.isArray(baseBranches) || baseBranches.length !== 2) {
     Log.warn(
@@ -35,7 +35,7 @@ export async function updateRenovateConfig(
     return null;
   }
 
-  configJson.baseBranches = ['main', newBranchName];
+  configJson['baseBranches'] = ['main', newBranchName];
 
   updateRenovateTargetLabel(
     configJson,
@@ -74,7 +74,7 @@ export async function updateRenovateConfigTargetLabels(
   const configJson = JSON.parse(config) as Record<string, unknown>;
 
   // Check baseBranches just in case, though this function's primary focus is labels
-  const baseBranches = configJson.baseBranches;
+  const baseBranches = configJson['baseBranches'];
   if (!Array.isArray(baseBranches) || baseBranches.length !== 2) {
     Log.warn(
       `  ✘   Skipped updating Renovate config: "baseBranches" must contain exactly 2 branches.`,
@@ -107,12 +107,12 @@ function updateRenovateTargetLabel(
   fromLabel: string,
   toLabel: string,
 ): boolean {
-  if (!Array.isArray(configJson.packageRules)) {
+  if (!Array.isArray(configJson['packageRules'])) {
     return false;
   }
 
   let updated = false;
-  for (const rule of configJson.packageRules) {
+  for (const rule of configJson['packageRules']) {
     if (!Array.isArray(rule.addLabels)) {
       continue;
     }

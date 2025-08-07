@@ -59,7 +59,7 @@ async function handler({error, file, fileEnvVariable}: Arguments<ValidateFileOpt
 }
 
 async function getIsErrorModeDefault(): Promise<boolean> {
-  return !!process.env['CI'] || !!(await getUserConfig()).commitMessage?.errorOnInvalidMessage;
+  return !!process.env['CI'] || !!(await getUserConfig())['commitMessage']?.errorOnInvalidMessage;
 }
 
 /** yargs command module describing the command. */

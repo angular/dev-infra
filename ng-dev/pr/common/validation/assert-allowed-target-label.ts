@@ -29,7 +29,7 @@ class Validation extends PullRequestValidation {
     releaseTrains: ActiveReleaseTrains,
     labelsOnPullRequest: string[],
   ) {
-    if (labelsOnPullRequest.includes(mergeLabels.MERGE_FIX_COMMIT_MESSAGE.name)) {
+    if (labelsOnPullRequest.includes(mergeLabels['MERGE_FIX_COMMIT_MESSAGE'].name)) {
       Log.debug(
         'Skipping commit message target label validation because the commit message fixup label is ' +
           'applied.',
@@ -46,16 +46,16 @@ class Validation extends PullRequestValidation {
     const hasDeprecations = commits.some((commit) => commit.deprecations.length !== 0);
     const hasFeatureCommits = commits.some((commit) => commit.type === 'feat');
     switch (targetLabel) {
-      case targetLabels.TARGET_MAJOR:
+      case targetLabels['TARGET_MAJOR']:
         break;
-      case targetLabels.TARGET_MINOR:
+      case targetLabels['TARGET_MINOR']:
         if (hasBreakingChanges) {
           throw this._createHasBreakingChangesError(targetLabel);
         }
         break;
-      case targetLabels.TARGET_RC:
-      case targetLabels.TARGET_LTS:
-      case targetLabels.TARGET_PATCH:
+      case targetLabels['TARGET_RC']:
+      case targetLabels['TARGET_LTS']:
+      case targetLabels['TARGET_PATCH']:
         if (hasBreakingChanges) {
           throw this._createHasBreakingChangesError(targetLabel);
         }

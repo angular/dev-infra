@@ -1,6 +1,6 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults2.bzl", "ts_project")
 
-ts_library(
+ts_project(
     name = "rebase",
     srcs = [
         "cli.ts",
@@ -11,14 +11,14 @@ ts_library(
         "//ng-dev:__subpackages__",
     ],
     deps = [
-        "//ng-dev/commit-message",
-        "//ng-dev/pr/common",
-        "//ng-dev/utils",
-        "@npm//@types/conventional-commits-parser",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
-        "@npm//conventional-commits-parser",
-        "@npm//typed-graphqlify",
-        "@npm//yargs",
+        "//ng-dev:node_modules/@types/conventional-commits-parser",
+        "//ng-dev:node_modules/@types/node",
+        "//ng-dev:node_modules/@types/yargs",
+        "//ng-dev:node_modules/conventional-commits-parser",
+        "//ng-dev:node_modules/typed-graphqlify",
+        "//ng-dev:node_modules/yargs",
+        "//ng-dev/commit-message:commit-message_rjs",
+        "//ng-dev/pr/common:common_rjs",
+        "//ng-dev/utils:utils_rjs",
     ],
 )

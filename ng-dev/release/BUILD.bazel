@@ -1,23 +1,23 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults2.bzl", "ts_project")
 
-ts_library(
+ts_project(
     name = "release",
     srcs = glob([
         "**/*.ts",
     ]),
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
-        "//ng-dev/release/build",
-        "//ng-dev/release/info",
-        "//ng-dev/release/notes",
-        "//ng-dev/release/npm-dist-tag",
-        "//ng-dev/release/precheck",
-        "//ng-dev/release/publish",
-        "//ng-dev/release/set-dist-tag",
-        "//ng-dev/release/stamping",
-        "//ng-dev/utils",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
-        "@npm//yargs",
+        "//ng-dev:node_modules/@types/node",
+        "//ng-dev:node_modules/@types/yargs",
+        "//ng-dev:node_modules/yargs",
+        "//ng-dev/release/build:build_rjs",
+        "//ng-dev/release/info:info_rjs",
+        "//ng-dev/release/notes:notes_rjs",
+        "//ng-dev/release/npm-dist-tag:npm-dist-tag_rjs",
+        "//ng-dev/release/precheck:precheck_rjs",
+        "//ng-dev/release/publish:publish_rjs",
+        "//ng-dev/release/set-dist-tag:set-dist-tag_rjs",
+        "//ng-dev/release/stamping:stamping_rjs",
+        "//ng-dev/utils:utils_rjs",
     ],
 )

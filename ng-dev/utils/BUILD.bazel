@@ -1,8 +1,8 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults2.bzl", "ts_project")
 
 # g3-sync-config needs to be a separate file / target so that google-internal-tests
 # won't need ts-node to parse this file
-ts_library(
+ts_project(
     name = "g3_sync_config",
     srcs = ["g3-sync-config.ts"],
     visibility = [
@@ -10,14 +10,14 @@ ts_library(
         "//ng-dev:__subpackages__",
     ],
     deps = [
-        "//tools/esm-interop:jsonc-parser",
-        "@npm//@types/minimatch",
-        "@npm//@types/node",
-        "@npm//minimatch",
+        "//ng-dev:node_modules/@types/minimatch",
+        "//ng-dev:node_modules/@types/node",
+        "//ng-dev:node_modules/jsonc-parser",
+        "//ng-dev:node_modules/minimatch",
     ],
 )
 
-ts_library(
+ts_project(
     name = "utils",
     srcs = glob(
         [
@@ -39,42 +39,41 @@ ts_library(
         "//tools/jasmine:__pkg__",
     ],
     deps = [
-        ":config_cache",
-        ":g3_sync_config",
-        "@npm//@actions/core",
-        "@npm//@inquirer/prompts",
-        "@npm//@octokit/auth-app",
-        "@npm//@octokit/core",
-        "@npm//@octokit/graphql",
-        "@npm//@octokit/openapi-types",
-        "@npm//@octokit/plugin-paginate-rest",
-        "@npm//@octokit/plugin-rest-endpoint-methods",
-        "@npm//@octokit/request-error",
-        "@npm//@octokit/rest",
-        "@npm//@octokit/types",
-        "@npm//@pnpm/dependency-path",
-        "@npm//@types/node",
-        "@npm//@types/semver",
-        "@npm//@types/supports-color",
-        "@npm//@types/which",
-        "@npm//@types/yargs",
-        "@npm//@types/yarnpkg__lockfile",
-        "@npm//@yarnpkg/lockfile",
-        "@npm//chalk",
-        "@npm//semver",
-        "@npm//supports-color",
-        "@npm//typed-graphqlify",
-        "@npm//which",
-        "@npm//yaml",
-        "@npm//yargs",
+        ":config_cache_rjs",
+        ":g3_sync_config_rjs",
+        "//ng-dev:node_modules/@actions/core",
+        "//ng-dev:node_modules/@inquirer/prompts",
+        "//ng-dev:node_modules/@octokit/auth-app",
+        "//ng-dev:node_modules/@octokit/core",
+        "//ng-dev:node_modules/@octokit/graphql",
+        "//ng-dev:node_modules/@octokit/openapi-types",
+        "//ng-dev:node_modules/@octokit/plugin-paginate-rest",
+        "//ng-dev:node_modules/@octokit/plugin-rest-endpoint-methods",
+        "//ng-dev:node_modules/@octokit/request-error",
+        "//ng-dev:node_modules/@octokit/rest",
+        "//ng-dev:node_modules/@octokit/types",
+        "//ng-dev:node_modules/@pnpm/dependency-path",
+        "//ng-dev:node_modules/@types/node",
+        "//ng-dev:node_modules/@types/semver",
+        "//ng-dev:node_modules/@types/supports-color",
+        "//ng-dev:node_modules/@types/which",
+        "//ng-dev:node_modules/@types/yargs",
+        "//ng-dev:node_modules/@types/yarnpkg__lockfile",
+        "//ng-dev:node_modules/@yarnpkg/lockfile",
+        "//ng-dev:node_modules/chalk",
+        "//ng-dev:node_modules/semver",
+        "//ng-dev:node_modules/supports-color",
+        "//ng-dev:node_modules/typed-graphqlify",
+        "//ng-dev:node_modules/which",
+        "//ng-dev:node_modules/yaml",
+        "//ng-dev:node_modules/yargs",
     ],
 )
 
-ts_library(
+ts_project(
     name = "config_cache",
     srcs = ["config-cache.ts"],
     visibility = [
         "//tools/jasmine:__pkg__",
     ],
-    deps = [],
 )

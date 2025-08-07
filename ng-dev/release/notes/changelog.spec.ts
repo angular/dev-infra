@@ -1,7 +1,7 @@
 import {existsSync, readFileSync} from 'fs';
 import {GitClient} from '../../utils/git/git-client.js';
 import semver from 'semver';
-import {dedent} from '../../utils/testing/index.js';
+import {cleanTestTmpDir, dedent} from '../../utils/testing/index.js';
 import {Changelog, splitMarker} from './changelog.js';
 import {getMockGitClient} from '../../utils/testing/index.js';
 
@@ -10,6 +10,7 @@ describe('Changelog', () => {
   let gitClient: GitClient;
 
   beforeEach(() => {
+    cleanTestTmpDir();
     gitClient = getMockGitClient(
       {owner: 'angular', name: 'dev-infra-test', mainBranchName: 'main'},
       /* useSandboxGitClient */ false,

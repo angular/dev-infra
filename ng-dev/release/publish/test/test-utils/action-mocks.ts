@@ -13,6 +13,7 @@ import {
   getMockGitClient,
   installSandboxGitClient,
   installVirtualGitClientSpies,
+  SandboxGitClient,
   testTmpDir,
   VirtualGitClient,
 } from '../../../../utils/testing/index.js';
@@ -75,7 +76,11 @@ export function setupMocksForReleaseAction<T extends boolean>(
   releaseConfig: ReleaseConfig,
   stubBuiltPackageOutputChecks: boolean,
   useSandboxGitClient: T,
-) {
+): {
+  gitClient: SandboxGitClient | VirtualGitClient;
+  builtPackagesWithInfo: BuiltPackageWithInfo[];
+  promptConfirmSpy: jasmine.Spy;
+} {
   // Clear the temporary directory. We do not want the repo state
   // to persist between tests if the sandbox git client is used.
   prepareTempDirectory();
@@ -122,7 +127,10 @@ export function setupMocksForReleaseAction<T extends boolean>(
   writeFileSync(join(testTmpDir, 'package.json'), JSON.stringify({version: '0.0.0'}));
 
   // Get a mocked `GitClient` for testing release actions.
-  const gitClient = getMockGitClient(githubConfig, useSandboxGitClient);
+  const gitClient: SandboxGitClient | VirtualGitClient = getMockGitClient(
+    githubConfig,
+    useSandboxGitClient,
+  );
 
   if (gitClient instanceof VirtualGitClient) {
     installVirtualGitClientSpies(gitClient);

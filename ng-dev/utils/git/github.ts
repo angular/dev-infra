@@ -30,7 +30,7 @@ export interface GithubRepo {
 /** A Github client for interacting with the Github APIs. */
 export class GithubClient {
   /** The octokit instance actually performing API requests. */
-  protected _octokit = new Octokit({...this._octokitOptions});
+  protected _octokit: Octokit = new Octokit({...this._octokitOptions});
 
   readonly pulls: Octokit['pulls'] = this._octokit.pulls;
   readonly orgs: Octokit['orgs'] = this._octokit.orgs;

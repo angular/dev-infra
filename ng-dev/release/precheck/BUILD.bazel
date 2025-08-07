@@ -1,6 +1,6 @@
-load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
+load("//tools:defaults2.bzl", "jasmine_test", "ts_project")
 
-ts_library(
+ts_project(
     name = "precheck",
     srcs = glob(
         [
@@ -10,33 +10,35 @@ ts_library(
     ),
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
-        "//ng-dev/release/config",
-        "//ng-dev/utils",
-        "@npm//@types/node",
-        "@npm//@types/semver",
-        "@npm//@types/yargs",
-        "@npm//semver",
+        "//ng-dev:node_modules/@types/node",
+        "//ng-dev:node_modules/@types/semver",
+        "//ng-dev:node_modules/@types/yargs",
+        "//ng-dev:node_modules/semver",
+        "//ng-dev/release/config:config_rjs",
+        "//ng-dev/utils:utils_rjs",
     ],
 )
 
-ts_library(
+ts_project(
     name = "test_lib",
     testonly = True,
     srcs = glob([
         "*.spec.ts",
     ]),
     deps = [
-        ":precheck",
-        "//ng-dev/release/config",
-        "//ng-dev/utils",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
-        "@npm//@types/semver",
-        "@npm//semver",
+        ":precheck_rjs",
+        "//ng-dev:node_modules/@types/jasmine",
+        "//ng-dev:node_modules/@types/node",
+        "//ng-dev:node_modules/@types/semver",
+        "//ng-dev:node_modules/semver",
+        "//ng-dev/release/config:config_rjs",
+        "//ng-dev/utils:utils_rjs",
     ],
 )
 
-jasmine_node_test(
+jasmine_test(
     name = "test",
-    specs = [":test_lib"],
+    data = [
+        ":test_lib_rjs",
+    ],
 )

@@ -1,15 +1,15 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults2.bzl", "ts_project")
 
-ts_library(
+ts_project(
     name = "auth",
     srcs = [
         "cli.ts",
     ],
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
-        "//ng-dev/auth/login",
-        "//ng-dev/auth/logout",
-        "@npm//@types/yargs",
-        "@npm//firebase",
+        "//ng-dev:node_modules/@types/yargs",
+        "//ng-dev:node_modules/firebase",
+        "//ng-dev/auth/login:login_rjs",
+        "//ng-dev/auth/logout:logout_rjs",
     ],
 )

@@ -13,4 +13,4 @@ export const DEFAULT_MODEL = 'gemini-2.5-pro';
 export const DEFAULT_TEMPERATURE = 0.1;
 
 /** Default API key to use when running AI-based scripts. */
-export const DEFAULT_API_KEY = process.env.GEMINI_API_KEY;
+export const DEFAULT_API_KEY = process.env['GEMINI_API_KEY']!;

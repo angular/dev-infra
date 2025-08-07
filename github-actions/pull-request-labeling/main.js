@@ -41829,9 +41829,9 @@ function parseInternal(fullText) {
     isFixup: FIXUP_PREFIX_RE.test(fullText),
     isSquash: SQUASH_PREFIX_RE.test(fullText),
     isRevert: REVERT_PREFIX_RE.test(fullText),
-    author: commit.author || void 0,
-    hash: commit.hash || void 0,
-    shortHash: commit.shortHash || void 0
+    author: commit["author"] || void 0,
+    hash: commit["hash"] || void 0,
+    shortHash: commit["shortHash"] || void 0
   };
 }
 
@@ -43540,13 +43540,6 @@ if (import_github2.context.repo.owner === "angular") {
 }
 /*! formdata-polyfill. MIT License. Jimmy Wärting <https://jimmy.warting.se/opensource> */
 /*! ws. MIT License. Einar Otto Stangvik <einaros@gmail.com> */
-/**
- * @license
- * Copyright Google LLC
- *
- * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
- */
 /**
  * toad-cache
  *
