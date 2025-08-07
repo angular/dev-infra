@@ -50,7 +50,7 @@ class Validation extends PullRequestValidation {
  * Checks the list of labels for the `requires: TGP` label
  */
 function pullRequestRequiresTGP(pullRequest: PullRequestFromGithub): boolean {
-  return pullRequest.labels.nodes.some(({name}) => name === requiresLabels.REQUIRES_TGP.name);
+  return pullRequest.labels.nodes.some(({name}) => name === requiresLabels['REQUIRES_TGP'].name);
 }
 
 export class PullRequestComments {

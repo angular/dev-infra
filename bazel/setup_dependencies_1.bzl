@@ -6,6 +6,7 @@ def setup_dependencies_1():
         data = [
             "@devinfra//:package.json",
             "@devinfra//bazel:package.json",
+            "@devinfra//ng-dev:package.json",
             "@devinfra//bazel/spec-bundling/test:package.json",
             "@devinfra//:pnpm-workspace.yaml",
         ],

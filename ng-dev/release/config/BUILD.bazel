@@ -1,6 +1,6 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults2.bzl", "ts_project")
 
-ts_library(
+ts_project(
     name = "config",
     srcs = glob([
         "**/*.ts",
@@ -10,9 +10,9 @@ ts_library(
         "//ng-dev:__subpackages__",
     ],
     deps = [
-        "//ng-dev/commit-message",
-        "//ng-dev/utils",
-        "@npm//@types/semver",
-        "@npm//semver",
+        "//ng-dev:node_modules/@types/semver",
+        "//ng-dev:node_modules/semver",
+        "//ng-dev/commit-message:commit-message_rjs",
+        "//ng-dev/utils:utils_rjs",
     ],
 )

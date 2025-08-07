@@ -97,7 +97,7 @@ export async function loadAndValidatePullRequest(
   if (config.pullRequest.__noTargetLabeling) {
     // If there is no target labeling, we always target the main branch and treat the PR as
     // if it has been labeled with the `target: major` label (allowing for all types of changes).
-    target = {branches: [config.github.mainBranchName], label: targetLabels.TARGET_MAJOR};
+    target = {branches: [config.github.mainBranchName], label: targetLabels['TARGET_MAJOR']};
   } else {
     activeReleaseTrains = await ActiveReleaseTrains.fetch({
       name,
@@ -127,8 +127,8 @@ export async function loadAndValidatePullRequest(
   const requiredBaseSha =
     config.pullRequest.requiredBaseCommits &&
     config.pullRequest.requiredBaseCommits[githubTargetBranch];
-  const needsCommitMessageFixup = labels.includes(mergeLabels.MERGE_FIX_COMMIT_MESSAGE.name);
-  const hasCaretakerNote = labels.includes(mergeLabels.MERGE_CARETAKER_NOTE.name);
+  const needsCommitMessageFixup = labels.includes(mergeLabels['MERGE_FIX_COMMIT_MESSAGE'].name);
+  const hasCaretakerNote = labels.includes(mergeLabels['MERGE_CARETAKER_NOTE'].name);
 
   // The parent of the first commit in a PR is the base SHA.
   const baseSha = prData.baseCommitInfo.nodes[0].commit.parents.nodes[0].oid;

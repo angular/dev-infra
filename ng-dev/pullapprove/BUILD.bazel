@@ -1,6 +1,6 @@
-load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
+load("//tools:defaults2.bzl", "jasmine_test", "ts_project")
 
-ts_library(
+ts_project(
     name = "pullapprove",
     srcs = [
         "cli.ts",
@@ -15,29 +15,31 @@ ts_library(
     ],
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
-        "//ng-dev/utils",
-        "@npm//@types/minimatch",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
-        "@npm//minimatch",
-        "@npm//yaml",
-        "@npm//yargs",
+        "//ng-dev:node_modules/@types/minimatch",
+        "//ng-dev:node_modules/@types/node",
+        "//ng-dev:node_modules/@types/yargs",
+        "//ng-dev:node_modules/minimatch",
+        "//ng-dev:node_modules/yaml",
+        "//ng-dev:node_modules/yargs",
+        "//ng-dev/utils:utils_rjs",
     ],
 )
 
-ts_library(
+ts_project(
     name = "test_lib",
     testonly = True,
     srcs = glob(
         ["*.spec.ts"],
     ),
     deps = [
-        ":pullapprove",
-        "@npm//@types/jasmine",
+        ":pullapprove_rjs",
+        "//ng-dev:node_modules/@types/jasmine",
     ],
 )
 
-jasmine_node_test(
+jasmine_test(
     name = "test",
-    specs = [":test_lib"],
+    data = [
+        ":test_lib_rjs",
+    ],
 )

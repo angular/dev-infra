@@ -1,10 +1,14 @@
-load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
+load("//tools:defaults2.bzl", "copy_to_bin", "jasmine_test", "ts_project")
 
-exports_files([
-    "build-worker.ts",
-])
+copy_to_bin(
+    name = "build-worker",
+    srcs = [
+        "build-worker.ts",
+    ],
+    visibility = ["//ng-dev:__pkg__"],
+)
 
-ts_library(
+ts_project(
     name = "build",
     srcs = glob(
         [
@@ -14,29 +18,31 @@ ts_library(
     ),
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
-        "//ng-dev/release/config",
-        "//ng-dev/utils",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
+        "//ng-dev:node_modules/@types/node",
+        "//ng-dev:node_modules/@types/yargs",
+        "//ng-dev/release/config:config_rjs",
+        "//ng-dev/utils:utils_rjs",
     ],
 )
 
-ts_library(
+ts_project(
     name = "test_lib",
     testonly = True,
     srcs = glob([
         "*.spec.ts",
     ]),
     deps = [
-        ":build",
-        "//ng-dev/release/config",
-        "//ng-dev/utils",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
+        ":build_rjs",
+        "//ng-dev:node_modules/@types/jasmine",
+        "//ng-dev:node_modules/@types/node",
+        "//ng-dev/release/config:config_rjs",
+        "//ng-dev/utils:utils_rjs",
     ],
 )
 
-jasmine_node_test(
+jasmine_test(
     name = "test",
-    specs = [":test_lib"],
+    data = [
+        ":test_lib_rjs",
+    ],
 )

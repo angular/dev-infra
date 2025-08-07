@@ -1,15 +1,15 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults2.bzl", "ts_project")
 
-ts_library(
+ts_project(
     name = "pr",
     srcs = ["cli.ts"],
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
-        "//ng-dev/pr/check-target-branches",
-        "//ng-dev/pr/checkout",
-        "//ng-dev/pr/discover-new-conflicts",
-        "//ng-dev/pr/merge",
-        "//ng-dev/pr/rebase",
-        "@npm//@types/yargs",
+        "//ng-dev:node_modules/@types/yargs",
+        "//ng-dev/pr/check-target-branches:check-target-branches_rjs",
+        "//ng-dev/pr/checkout:checkout_rjs",
+        "//ng-dev/pr/discover-new-conflicts:discover-new-conflicts_rjs",
+        "//ng-dev/pr/merge:merge_rjs",
+        "//ng-dev/pr/rebase:rebase_rjs",
     ],
 )

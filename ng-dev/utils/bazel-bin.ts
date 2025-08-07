@@ -13,7 +13,8 @@ let BAZEL_BIN: undefined | string = undefined;
 
 export function getBazelBin() {
   if (BAZEL_BIN === undefined) {
-    BAZEL_BIN = process.env.BAZEL || join(determineRepoBaseDirFromCwd(), 'node_modules/.bin/bazel');
+    BAZEL_BIN =
+      process.env['BAZEL'] || join(determineRepoBaseDirFromCwd(), 'node_modules/.bin/bazel');
   }
 
   return BAZEL_BIN;

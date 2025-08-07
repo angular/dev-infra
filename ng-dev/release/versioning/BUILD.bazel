@@ -1,15 +1,15 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults2.bzl", "ts_project")
 
-ts_library(
+ts_project(
     name = "versioning",
     srcs = glob([
         "**/*.ts",
     ]),
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
-        "//ng-dev/release/config",
-        "//ng-dev/utils",
-        "@npm//@types/semver",
-        "@npm//semver",
+        "//ng-dev:node_modules/@types/semver",
+        "//ng-dev:node_modules/semver",
+        "//ng-dev/release/config:config_rjs",
+        "//ng-dev/utils:utils_rjs",
     ],
 )

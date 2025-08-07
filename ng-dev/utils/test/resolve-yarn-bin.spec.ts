@@ -11,9 +11,13 @@ import * as path from 'path';
 
 import {ChildProcess} from '../child-process.js';
 import {resolveYarnScriptForProject} from '../resolve-yarn-bin.js';
-import {testTmpDir} from '../testing/index.js';
+import {cleanTestTmpDir, testTmpDir} from '../testing/index.js';
 
 describe('resolve yarn bin', () => {
+  beforeEach(() => {
+    cleanTestTmpDir();
+  });
+
   it('should respect yarn 1.x configuration files', async () => {
     fs.writeFileSync(path.join(testTmpDir, '.yarnrc'), `yarn-path "./a/b/c"`);
 

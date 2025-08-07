@@ -21,7 +21,11 @@ import {assertValidPullRequest} from '../validation/validate-pull-request.js';
 import {PullRequestConfig, PullRequestValidationConfig} from '../../config/index.js';
 import {PullRequestTarget} from '../targeting/target-label.js';
 import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client.js';
-import {installVirtualGitClientSpies, mockNgDevConfig} from '../../../utils/testing/index.js';
+import {
+  cleanTestTmpDir,
+  installVirtualGitClientSpies,
+  mockNgDevConfig,
+} from '../../../utils/testing/index.js';
 import {PullRequestFiles} from '../validation/assert-isolated-separate-files.js';
 import {G3Stats} from '../../../utils/g3.js';
 import {PullRequestComments} from '../validation/assert-enforce-tested.js';
@@ -40,6 +44,7 @@ describe('pull request validation', () => {
   let git: AuthenticatedGitClient;
 
   beforeEach(async () => {
+    cleanTestTmpDir();
     installVirtualGitClientSpies();
     git = await AuthenticatedGitClient.get();
     googleSyncConfig = {
@@ -57,7 +62,7 @@ describe('pull request validation', () => {
       },
       ...mockNgDevConfig,
     };
-    prTarget = {branches: ['main'], label: targetLabels.TARGET_PATCH};
+    prTarget = {branches: ['main'], label: targetLabels['TARGET_PATCH']};
   });
 
   afterEach(() => nock.cleanAll());
@@ -89,7 +94,7 @@ describe('pull request validation', () => {
       const commentHelper = PullRequestComments.create(git, pr.number);
       spyOn(PullRequestComments, 'create').and.returnValue(commentHelper);
       spyOn(commentHelper, 'loadPullRequestComments').and.returnValue(Promise.resolve([]));
-      pr.labels.nodes.push({name: requiresLabels.REQUIRES_TGP.name});
+      pr.labels.nodes.push({name: requiresLabels['REQUIRES_TGP'].name});
       const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
       expect(results.length).toBe(1);
       expect(results[0].message).toBe(
@@ -113,7 +118,7 @@ describe('pull request validation', () => {
       spyOn(PullRequestComments, 'create').and.returnValue(commentHelper);
       spyOn(commentHelper, 'loadPullRequestComments').and.returnValue(Promise.resolve(comments));
 
-      pr.labels.nodes.push({name: requiresLabels.REQUIRES_TGP.name});
+      pr.labels.nodes.push({name: requiresLabels['REQUIRES_TGP'].name});
       interceptOrgsMembershipRequest('fakelogin', true);
       const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
       expect(results.length).toBe(0);
@@ -134,7 +139,7 @@ describe('pull request validation', () => {
       const commentHelper = PullRequestComments.create(git, pr.number);
       spyOn(PullRequestComments, 'create').and.returnValue(commentHelper);
       spyOn(commentHelper, 'loadPullRequestComments').and.returnValue(Promise.resolve(comments));
-      pr.labels.nodes.push({name: requiresLabels.REQUIRES_TGP.name});
+      pr.labels.nodes.push({name: requiresLabels['REQUIRES_TGP'].name});
       interceptOrgsMembershipRequest('fakelogin', false);
       const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
       expect(results.length).toBe(1);

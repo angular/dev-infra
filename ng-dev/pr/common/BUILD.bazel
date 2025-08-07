@@ -1,6 +1,6 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults2.bzl", "ts_project")
 
-ts_library(
+ts_project(
     name = "common",
     srcs = glob(
         [
@@ -16,19 +16,19 @@ ts_library(
         "//ng-dev:__subpackages__",
     ],
     deps = [
-        "//ng-dev/commit-message",
-        "//ng-dev/pr/common/labels",
-        "//ng-dev/pr/config",
-        "//ng-dev/release/config",
-        "//ng-dev/release/versioning",
-        "//ng-dev/utils",
-        "//ng-dev/utils:g3_sync_config",
-        "@npm//@octokit/graphql-schema",
-        "@npm//@types/minimatch",
-        "@npm//@types/node",
-        "@npm//@types/semver",
-        "@npm//minimatch",
-        "@npm//semver",
-        "@npm//typed-graphqlify",
+        "//ng-dev:node_modules/@octokit/graphql-schema",
+        "//ng-dev:node_modules/@types/minimatch",
+        "//ng-dev:node_modules/@types/node",
+        "//ng-dev:node_modules/@types/semver",
+        "//ng-dev:node_modules/minimatch",
+        "//ng-dev:node_modules/semver",
+        "//ng-dev:node_modules/typed-graphqlify",
+        "//ng-dev/commit-message:commit-message_rjs",
+        "//ng-dev/pr/common/labels:labels_rjs",
+        "//ng-dev/pr/config:config_rjs",
+        "//ng-dev/release/config:config_rjs",
+        "//ng-dev/release/versioning:versioning_rjs",
+        "//ng-dev/utils:g3_sync_config_rjs",
+        "//ng-dev/utils:utils_rjs",
     ],
 )

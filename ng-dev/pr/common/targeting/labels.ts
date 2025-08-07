@@ -66,7 +66,7 @@ export async function getTargetLabelConfigsForActiveReleaseTrains(
 
   const labelConfigs: TargetLabelConfig[] = [
     {
-      label: targetLabels.TARGET_MAJOR,
+      label: targetLabels['TARGET_MAJOR'],
       branches: () => {
         // If `next` is currently not designated to be a major version, we do not
         // allow merging of PRs with `target: major`.
@@ -80,7 +80,7 @@ export async function getTargetLabelConfigsForActiveReleaseTrains(
       },
     },
     {
-      label: targetLabels.TARGET_MINOR,
+      label: targetLabels['TARGET_MINOR'],
       branches: (githubTargetBranch) => {
         // If there is an exceptional minor in-progress, and a PR specifically sets
         // its destination to it, along with `target: minor`, then we merge into it.
@@ -94,7 +94,7 @@ export async function getTargetLabelConfigsForActiveReleaseTrains(
       },
     },
     {
-      label: targetLabels.TARGET_PATCH,
+      label: targetLabels['TARGET_PATCH'],
       branches: (githubTargetBranch) => {
         // If a PR is targeting the latest active version-branch through the Github UI,
         // and is also labeled with `target: patch`, then we merge it directly into the
@@ -121,7 +121,7 @@ export async function getTargetLabelConfigsForActiveReleaseTrains(
       },
     },
     {
-      label: targetLabels.TARGET_RC,
+      label: targetLabels['TARGET_RC'],
       branches: (githubTargetBranch) => {
         // The `target: rc` label cannot be applied if there is no active feature-freeze
         // or release-candidate release train.
@@ -143,7 +143,7 @@ export async function getTargetLabelConfigsForActiveReleaseTrains(
       },
     },
     {
-      label: targetLabels.TARGET_FEATURE,
+      label: targetLabels['TARGET_FEATURE'],
       branches: (githubTargetBranch) => {
         if (isVersionBranch(githubTargetBranch) || githubTargetBranch === nextBranchName) {
           throw new InvalidTargetBranchError(
@@ -164,7 +164,7 @@ export async function getTargetLabelConfigsForActiveReleaseTrains(
       // active LTS branches for PRs created against any other branch. Instead, PR authors need
       // to manually create separate PRs for desired LTS branches. Additionally, active LT branches
       // commonly diverge quickly. This makes cherry-picking not an option for LTS changes.
-      label: targetLabels.TARGET_LTS,
+      label: targetLabels['TARGET_LTS'],
       branches: async (githubTargetBranch) => {
         if (!isVersionBranch(githubTargetBranch)) {
           throw new InvalidTargetBranchError(

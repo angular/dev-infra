@@ -10,7 +10,7 @@ import {existsSync, readFileSync, writeFileSync} from 'fs';
 import {isAbsolute, relative, resolve} from 'path';
 import {Argv} from 'yargs';
 
-import {globSync} from 'fast-glob';
+import glob from 'fast-glob';
 import ts from 'typescript';
 
 import {green, Log, yellow} from '../utils/logging.js';
@@ -79,10 +79,12 @@ export function main(
   const cycles: ReferenceChain[] = [];
   const checkedNodes = new WeakSet<ts.SourceFile>();
 
-  globSync(globPattern, {absolute: true, ignore: ['**/node_modules/**']}).forEach((filePath) => {
-    const sourceFile = analyzer.getSourceFile(filePath);
-    cycles.push(...analyzer.findCycles(sourceFile, checkedNodes));
-  });
+  glob
+    .globSync(globPattern, {absolute: true, ignore: ['**/node_modules/**']})
+    .forEach((filePath) => {
+      const sourceFile = analyzer.getSourceFile(filePath);
+      cycles.push(...analyzer.findCycles(sourceFile, checkedNodes));
+    });
 
   const actual = convertReferenceChainToGolden(cycles, baseDir);
 

@@ -22,7 +22,7 @@ class Validation extends PullRequestValidation {
     if (pullRequest.isDraft) {
       throw this._createError('Pull request is still a draft.');
     }
-    if (!pullRequest.labels.nodes.some(({name}) => name === actionLabels.ACTION_MERGE.name)) {
+    if (!pullRequest.labels.nodes.some(({name}) => name === actionLabels['ACTION_MERGE'].name)) {
       throw this._createError('Pull request is not marked as merge ready.');
     }
   }

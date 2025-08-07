@@ -11,7 +11,13 @@ import nock from 'nock';
 import * as path from 'path';
 import semver from 'semver';
 
-import {dedent, GithubTestingRepo, testTmpDir} from '../../../../utils/testing/index.js';
+import {
+  dedent,
+  GithubTestingRepo,
+  SandboxGitClient,
+  testTmpDir,
+  VirtualGitClient,
+} from '../../../../utils/testing/index.js';
 import {
   _npmPackageInfoCache,
   ActiveReleaseTrains,
@@ -86,7 +92,9 @@ export function setupReleaseActionForTesting<
     projectDir,
     githubConfig,
     releaseConfig,
-    gitClient,
+    gitClient: gitClient as OptionsWithDefaults['useSandboxGitClient'] extends true
+      ? SandboxGitClient
+      : VirtualGitClient,
     promptConfirmSpy,
     builtPackagesWithInfo,
   };

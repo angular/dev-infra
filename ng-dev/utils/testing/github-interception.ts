@@ -28,7 +28,7 @@ export function fakeGithubPaginationResponse(url: string, data: unknown[]) {
     // For the first page, either `?page=1` needs to be set, or no `page` should be specified.
     const queryMatch =
       pageNum === 1
-        ? (params: ParsedUrlQuery) => params.page === '1' || params.page === undefined
+        ? (params: ParsedUrlQuery) => params['page'] === '1' || params['page'] === undefined
         : {page: pageNum};
 
     nock(url).get('').query(queryMatch).reply(200, [entry], {

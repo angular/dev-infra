@@ -325,7 +325,7 @@ describe('active release train determination', () => {
 
     nock(getRepoApiRequestUrl())
       .get('/contents/%2Fpackage.json')
-      .query((params) => params.ref === branchName)
+      .query((params) => params['ref'] === branchName)
       .reply(200, {
         content: Buffer.from(JSON.stringify(pkgJson)).toString('base64'),
       });

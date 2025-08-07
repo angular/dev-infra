@@ -1,18 +1,24 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults2.bzl", "copy_to_bin", "ts_project")
 
-exports_files([
-    "commit-message-filter.ts",
-])
+copy_to_bin(
+    name = "commit-message-filter",
+    srcs = [
+        "commit-message-filter.ts",
+    ],
+    visibility = [
+        "//ng-dev:__pkg__",
+    ],
+)
 
-ts_library(
+ts_project(
     name = "checkout",
     srcs = glob(["*.ts"]),
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
-        "//ng-dev/pr/common",
-        "//ng-dev/release/versioning",
-        "//ng-dev/utils",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
+        "//ng-dev:node_modules/@types/node",
+        "//ng-dev:node_modules/@types/yargs",
+        "//ng-dev/pr/common:common_rjs",
+        "//ng-dev/release/versioning:versioning_rjs",
+        "//ng-dev/utils:utils_rjs",
     ],
 )

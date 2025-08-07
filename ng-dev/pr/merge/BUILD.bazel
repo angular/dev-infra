@@ -1,10 +1,16 @@
-load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
+load("//tools:defaults2.bzl", "copy_to_bin", "jasmine_test", "ts_project")
 
-exports_files([
-    "strategies/commit-message-filter.ts",
-])
+copy_to_bin(
+    name = "commit-message-filter",
+    srcs = [
+        "strategies/commit-message-filter.ts",
+    ],
+    visibility = [
+        "//ng-dev:__pkg__",
+    ],
+)
 
-ts_library(
+ts_project(
     name = "merge",
     srcs = glob(
         ["**/*.ts"],
@@ -15,41 +21,41 @@ ts_library(
         "//ng-dev:__subpackages__",
     ],
     deps = [
-        "//ng-dev/commit-message",
-        "//ng-dev/pr/common",
-        "//ng-dev/pr/common/labels",
-        "//ng-dev/pr/config",
-        "//ng-dev/release/config",
-        "//ng-dev/release/versioning",
-        "//ng-dev/utils",
-        "@npm//@octokit/plugin-rest-endpoint-methods",
-        "@npm//@octokit/rest",
-        "@npm//@types/node",
-        "@npm//@types/semver",
-        "@npm//@types/yargs",
-        "@npm//chalk",
-        "@npm//typed-graphqlify",
+        "//ng-dev:node_modules/@octokit/plugin-rest-endpoint-methods",
+        "//ng-dev:node_modules/@octokit/rest",
+        "//ng-dev:node_modules/@types/node",
+        "//ng-dev:node_modules/@types/semver",
+        "//ng-dev:node_modules/@types/yargs",
+        "//ng-dev:node_modules/chalk",
+        "//ng-dev:node_modules/typed-graphqlify",
+        "//ng-dev/commit-message:commit-message_rjs",
+        "//ng-dev/pr/common:common_rjs",
+        "//ng-dev/pr/common/labels:labels_rjs",
+        "//ng-dev/pr/config:config_rjs",
+        "//ng-dev/release/config:config_rjs",
+        "//ng-dev/release/versioning:versioning_rjs",
+        "//ng-dev/utils:utils_rjs",
     ],
 )
 
-ts_library(
+ts_project(
     name = "test_lib",
     testonly = True,
     srcs = glob(["**/*.spec.ts"]),
     deps = [
-        ":merge",
-        "//ng-dev/pr/common",
-        "//ng-dev/release/config",
-        "//ng-dev/release/versioning",
-        "//ng-dev/utils",
-        "//ng-dev/utils/testing",
-        "@npm//nock",
+        ":merge_rjs",
+        "//ng-dev:node_modules/nock",
+        "//ng-dev/pr/common:common_rjs",
+        "//ng-dev/release/config:config_rjs",
+        "//ng-dev/release/versioning:versioning_rjs",
+        "//ng-dev/utils:utils_rjs",
+        "//ng-dev/utils/testing:testing_rjs",
     ],
 )
 
-jasmine_node_test(
+jasmine_test(
     name = "test",
-    specs = [
-        ":test_lib",
+    data = [
+        ":test_lib_rjs",
     ],
 )

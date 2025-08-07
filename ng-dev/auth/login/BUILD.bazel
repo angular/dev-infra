@@ -1,15 +1,17 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults2.bzl", "ts_project")
 
-ts_library(
+ts_project(
     name = "login",
     srcs = [
         "cli.ts",
     ],
+    interop_deps = [
+        "//ng-dev/utils",
+    ],
     visibility = ["//ng-dev/auth:__pkg__"],
     deps = [
-        "//ng-dev/utils",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
-        "@npm//yargs",
+        "//ng-dev:node_modules/@types/node",
+        "//ng-dev:node_modules/@types/yargs",
+        "//ng-dev:node_modules/yargs",
     ],
 )

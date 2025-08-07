@@ -1,19 +1,21 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults2.bzl", "ts_project")
 
-ts_library(
+ts_project(
     name = "ai",
     srcs = glob([
         "**/*.ts",
     ]),
+    interop_deps = [
+        "//ng-dev/utils",
+    ],
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
-        "//ng-dev/utils",
-        "@npm//@google/genai",
-        "@npm//@types/cli-progress",
-        "@npm//@types/node",
-        "@npm//@types/yargs",
-        "@npm//cli-progress",
-        "@npm//fast-glob",
-        "@npm//yargs",
+        "//ng-dev:node_modules/@google/genai",
+        "//ng-dev:node_modules/@types/cli-progress",
+        "//ng-dev:node_modules/@types/node",
+        "//ng-dev:node_modules/@types/yargs",
+        "//ng-dev:node_modules/cli-progress",
+        "//ng-dev:node_modules/fast-glob",
+        "//ng-dev:node_modules/yargs",
     ],
 )

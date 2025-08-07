@@ -1,6 +1,6 @@
-load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
+load("//tools:defaults2.bzl", "jasmine_test", "ts_project")
 
-ts_library(
+ts_project(
     name = "test_lib",
     testonly = True,
     srcs = glob(["**/*.ts"]),
@@ -8,31 +8,35 @@ ts_library(
         "//ng-dev/release/notes:__subpackages__",
     ],
     deps = [
-        "//ng-dev/commit-message",
-        "//ng-dev/release/config",
-        "//ng-dev/release/notes",
-        "//ng-dev/release/publish",
-        "//ng-dev/release/versioning",
-        "//ng-dev/utils",
-        "//ng-dev/utils/testing",
-        "@npm//@inquirer/type",
-        "@npm//@octokit/plugin-rest-endpoint-methods",
-        "@npm//@types/folder-hash",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
-        "@npm//@types/semver",
-        "@npm//@types/yargs",
-        "@npm//folder-hash",
-        "@npm//nock",
-        "@npm//semver",
-        "@npm//yargs",
+        "//ng-dev:node_modules/@inquirer/type",
+        "//ng-dev:node_modules/@octokit/plugin-rest-endpoint-methods",
+        "//ng-dev:node_modules/@types/folder-hash",
+        "//ng-dev:node_modules/@types/jasmine",
+        "//ng-dev:node_modules/@types/node",
+        "//ng-dev:node_modules/@types/semver",
+        "//ng-dev:node_modules/@types/yargs",
+        "//ng-dev:node_modules/folder-hash",
+        "//ng-dev:node_modules/nock",
+        "//ng-dev:node_modules/semver",
+        "//ng-dev:node_modules/yargs",
+        "//ng-dev/commit-message:commit-message_rjs",
+        "//ng-dev/release/config:config_rjs",
+        "//ng-dev/release/notes:notes_rjs",
+        "//ng-dev/release/publish:publish_rjs",
+        "//ng-dev/release/versioning:versioning_rjs",
+        "//ng-dev/utils:utils_rjs",
+        "//ng-dev/utils/testing:testing_rjs",
     ],
 )
 
-jasmine_node_test(
+jasmine_test(
     name = "test",
-    args = ["'$(GIT_BIN_PATH)'"],
+    data = [
+        ":test_lib_rjs",
+    ],
+    env = {
+        "GIT_BIN": "$(GIT_BIN_PATH)",
+    },
     shard_count = 6,
-    specs = [":test_lib"],
-    toolchains = ["//bazel/git-toolchain:current_git_toolchain"],
+    toolchains = ["@devinfra//bazel/git-toolchain:current_git_toolchain"],
 )

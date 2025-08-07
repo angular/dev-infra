@@ -22,7 +22,7 @@ export function getMockGitClient<T extends boolean>(
     // The Git binary path will be passed to this test process as command line argument.
     // See `ng-dev/release/publish/test/BUILD.bazel` and the `GIT_BIN_PATH` variable
     // that is exposed from the Git bazel toolchain.
-    return SandboxGitClient.createInstance(process.argv[2], {github}, testTmpDir) as any;
+    return SandboxGitClient.createInstance(process.env['GIT_BIN']!, {github}, testTmpDir) as any;
   } else {
     return VirtualGitClient.createInstance({github});
   }

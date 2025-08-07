@@ -1,4 +1,5 @@
 packages:
   - .
+  - ng-dev/
   - bazel/
   - bazel/spec-bundling/test

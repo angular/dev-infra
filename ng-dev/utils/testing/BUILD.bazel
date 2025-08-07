@@ -1,29 +1,30 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults2.bzl", "ts_project")
 
-ts_library(
+ts_project(
     name = "testing",
     srcs = glob(
         ["*.ts"],
         exclude = ["bazel-env.ts"],
     ),
+    tsconfig = "//ng-dev:tsconfig_test",
     visibility = [
         "//ng-dev:__subpackages__",
     ],
     deps = [
-        ":bazel-env",
-        "//ng-dev/utils",
-        "@npm//@octokit/plugin-rest-endpoint-methods",
-        "@npm//@types/jasmine",
-        "@npm//@types/node",
-        "@npm//@types/semver",
-        "@npm//@types/yargs",
-        "@npm//nock",
-        "@npm//semver",
-        "@npm//yargs",
+        ":bazel-env_rjs",
+        "//ng-dev:node_modules/@octokit/plugin-rest-endpoint-methods",
+        "//ng-dev:node_modules/@types/jasmine",
+        "//ng-dev:node_modules/@types/node",
+        "//ng-dev:node_modules/@types/semver",
+        "//ng-dev:node_modules/@types/yargs",
+        "//ng-dev:node_modules/nock",
+        "//ng-dev:node_modules/semver",
+        "//ng-dev:node_modules/yargs",
+        "//ng-dev/utils:utils_rjs",
     ],
 )
 
-ts_library(
+ts_project(
     name = "bazel-env",
     srcs = [
         "bazel-env.ts",
@@ -33,6 +34,6 @@ ts_library(
         "//tools/jasmine:__subpackages__",
     ],
     deps = [
-        "@npm//@types/node",
+        "//ng-dev:node_modules/@types/node",
     ],
 )
