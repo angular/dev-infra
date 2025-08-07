@@ -1459,13 +1459,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pnpm/catalogs.resolver@npm:1000.0.4":
-  version: 1000.0.4
-  resolution: "@pnpm/catalogs.resolver@npm:1000.0.4"
+"@pnpm/catalogs.resolver@npm:1000.0.5":
+  version: 1000.0.5
+  resolution: "@pnpm/catalogs.resolver@npm:1000.0.5"
   dependencies:
     "@pnpm/catalogs.protocol-parser": "npm:^1001.0.0"
-    "@pnpm/error": "npm:^1000.0.3"
-  checksum: 10c0/15e3e4c773617e82bcbd229634dc70107e18b820314ee9af914d1f5577a300be20535ab35e9aed561ddc4f4bfb7071fe306e3ab13d784803228d2b51e6b43949
+    "@pnpm/error": "npm:^1000.0.4"
+  checksum: 10c0/a3c3dd15d6aeae262b302e7da1b5d95099db29c9a7ae898b0bc055d1d46b3140b84681922b1b9c14d7aaf2910c1150f95c741d0bdb4078f59a4c15614da54687
   languageName: node
   linkType: hard
 
@@ -1473,13 +1473,6 @@ __metadata:
   version: 1000.0.0
   resolution: "@pnpm/catalogs.types@npm:1000.0.0"
   checksum: 10c0/6f50fc077a5b0375d76f46fcb7c16d05ab867805dddda4069a991912de5b85e063dc1bafba6212ec87efbc2269a34b082bff60fd851606a6f31467d38541298e
-  languageName: node
-  linkType: hard
-
-"@pnpm/constants@npm:1001.2.0":
-  version: 1001.2.0
-  resolution: "@pnpm/constants@npm:1001.2.0"
-  checksum: 10c0/d733018761bc1bb91dd5bcc18fd1e094e270e69250497f3e7891ccb4372953d056a594111d9295dbca7ead822ce895b436cfc31cc42efb1de7dccc67f503d219
   languageName: node
   linkType: hard
 
@@ -1497,12 +1490,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pnpm/error@npm:1000.0.3":
-  version: 1000.0.3
-  resolution: "@pnpm/error@npm:1000.0.3"
+"@pnpm/error@npm:1000.0.4, @pnpm/error@npm:^1000.0.4":
+  version: 1000.0.4
+  resolution: "@pnpm/error@npm:1000.0.4"
   dependencies:
-    "@pnpm/constants": "npm:1001.2.0"
-  checksum: 10c0/969c99841aa6fcd058fdd2105064d2a0d8e000cf778ba17ee6149c593a47b524f0951711c349034ac0f338502bb9d9553d9e2e333b1fc89b288518cf84a52d22
+    "@pnpm/constants": "npm:1001.3.0"
+  checksum: 10c0/0ae1eb5bdc350cd9f50a49bb4fecb05b7c2c61ac9168f2bdd8a1d76dfef7b628acd6cdce5ef28955bcbaef18c8135747b4bc08653d625fc806b8c5f0b75ed03b
   languageName: node
   linkType: hard
 
@@ -1515,15 +1508,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pnpm/error@npm:^1000.0.3":
-  version: 1000.0.4
-  resolution: "@pnpm/error@npm:1000.0.4"
-  dependencies:
-    "@pnpm/constants": "npm:1001.3.0"
-  checksum: 10c0/0ae1eb5bdc350cd9f50a49bb4fecb05b7c2c61ac9168f2bdd8a1d76dfef7b628acd6cdce5ef28955bcbaef18c8135747b4bc08653d625fc806b8c5f0b75ed03b
-  languageName: node
-  linkType: hard
-
 "@pnpm/graceful-fs@npm:2.0.0":
   version: 2.0.0
   resolution: "@pnpm/graceful-fs@npm:2.0.0"
@@ -1533,15 +1517,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pnpm/parse-overrides@npm:1001.0.1":
-  version: 1001.0.1
-  resolution: "@pnpm/parse-overrides@npm:1001.0.1"
+"@pnpm/parse-overrides@npm:1001.0.2":
+  version: 1001.0.2
+  resolution: "@pnpm/parse-overrides@npm:1001.0.2"
   dependencies:
-    "@pnpm/catalogs.resolver": "npm:1000.0.4"
+    "@pnpm/catalogs.resolver": "npm:1000.0.5"
     "@pnpm/catalogs.types": "npm:1000.0.0"
-    "@pnpm/error": "npm:1000.0.3"
+    "@pnpm/error": "npm:1000.0.4"
     "@pnpm/parse-wanted-dependency": "npm:1001.0.0"
-  checksum: 10c0/e455330652e8168d3e191ea6512a2874e8ea08a5e5cf5a872afd9e93bbe5a8c571c8709aaea333590f016eade8def3c45482dcd91eebe64da137adcaefcfbe78
+  checksum: 10c0/2076e8fe896c4603c1b9fd5da3199e39128b22b79867c285f43ed0c924341ad1de2dbd99182535c2e581555818664ec527bed87a97059773b95a41c2d5d18c48
   languageName: node
   linkType: hard
 
@@ -4975,10 +4959,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsonata@npm:2.0.6":
-  version: 2.0.6
-  resolution: "jsonata@npm:2.0.6"
-  checksum: 10c0/6bc5ae471352e305b45c39933ccb6ade8d0770483d2eb7862fc1d213832ea0db2697041c2316ec973f8ddc830939cc5d0e34296ba1584f33b0685de24110b6f9
+"jsonata@npm:2.1.0":
+  version: 2.1.0
+  resolution: "jsonata@npm:2.1.0"
+  checksum: 10c0/3f7e56960dc7870969aede56262d500e444b55576d5d49b793d75f405cfc4729764a92189ed14d77912d1b2906bc9cd95fed4ebf63eb6b732af2878409d5a0de
   languageName: node
   linkType: hard
 
@@ -5932,7 +5916,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: "npm:41.55.1"
+    renovate: "npm:41.58.1"
   languageName: unknown
   linkType: soft
 
@@ -6655,9 +6639,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:41.55.1":
-  version: 41.55.1
-  resolution: "renovate@npm:41.55.1"
+"renovate@npm:41.58.1":
+  version: 41.58.1
+  resolution: "renovate@npm:41.58.1"
   dependencies:
     "@aws-sdk/client-codecommit": "npm:3.858.0"
     "@aws-sdk/client-ec2": "npm:3.858.0"
@@ -6683,7 +6667,7 @@ __metadata:
     "@opentelemetry/sdk-trace-base": "npm:2.0.1"
     "@opentelemetry/sdk-trace-node": "npm:2.0.1"
     "@opentelemetry/semantic-conventions": "npm:1.36.0"
-    "@pnpm/parse-overrides": "npm:1001.0.1"
+    "@pnpm/parse-overrides": "npm:1001.0.2"
     "@qnighy/marshal": "npm:0.1.3"
     "@renovatebot/detect-tools": "npm:1.1.0"
     "@renovatebot/kbpgp": "npm:4.0.1"
@@ -6735,7 +6719,7 @@ __metadata:
     json-dup-key-validator: "npm:1.0.3"
     json-stringify-pretty-compact: "npm:4.0.0"
     json5: "npm:2.2.3"
-    jsonata: "npm:2.0.6"
+    jsonata: "npm:2.1.0"
     jsonc-parser: "npm:3.3.1"
     klona: "npm:2.0.6"
     luxon: "npm:3.7.1"
@@ -6789,7 +6773,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 10c0/3efa66373a6a91ed51a58576c19170fe391fbc7ce9986b9c6012bacfd083a01d8b76ed2d21fa44a5ebda8642d4365e174c53855ff0f8c0369870f7697736f686
+  checksum: 10c0/0860ef6f40e96bf0faf2f679699884b6eaddae6a8b16381835dbc183add80e06db530be7c034694c8559070a6e4b863f7e088b9d4a8c42cf11a40a889177b057
   languageName: node
   linkType: hard
 
