@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "stripInternal": true,
+    "removeComments": true,
+    "noImplicitAny": true,
+    "noImplicitOverride": true,
+    "strictNullChecks": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node",
+    "module": "esnext",
+    "target": "es2020",
+    "lib": ["es2021", "dom"],
+    "skipLibCheck": true,
+    "types": ["node", "jasmine"],
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "inlineSources": true,
+    "importHelpers": true
+  }
+}

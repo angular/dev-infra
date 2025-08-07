@@ -1,4 +1,5 @@
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", _copy_to_bin = "copy_to_bin")
+load("@aspect_bazel_lib//lib:write_source_files.bzl", _write_source_file = "write_source_file")
 load("@aspect_rules_esbuild//esbuild:defs.bzl", _esbuild = "esbuild")
 load("@aspect_rules_jasmine//jasmine:defs.bzl", _jasmine_test = "jasmine_test")
 load("@aspect_rules_js//npm:defs.bzl", _npm_package = "npm_package")
@@ -79,4 +80,29 @@ def jasmine_test(name, **kwargs):
             "'**/*+(.|_)spec.js'",
         ],
         **kwargs
+    )
+
+def esbuild_checked_in(name, **kwargs):
+    _esbuild(
+        name = "%s_generated" % name,
+        sourcemap = "inline",
+        **kwargs
+    )
+
+    # ESBuild adds comments and function identifiers with the name of their module
+    # location. e.g. `"bazel-out/x64_windows-fastbuild/bin/node_modules/a"function(exports)`.
+    # We strip all of these paths as that would break approval of the he checked-in files within
+    # different platforms (e.g. RBE running with K8). Additionally these paths depend
+    # on the non-deterministic hoisting of the package manager across all platforms.
+    native.genrule(
+        name = "%s_sanitized" % name,
+        srcs = ["%s_generated" % name],
+        outs = ["%s_sanitized.js" % name],
+        cmd = """cat $< | sed -E "s#(bazel-out|node_modules)/[^\\"']+##g" > $@""",
+    )
+
+    _write_source_file(
+        name = name,
+        out_file = "%s.js" % name,
+        in_file = ":%s_sanitized" % name,
     )
