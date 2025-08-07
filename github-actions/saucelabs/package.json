@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@actions/core": "1.11.1",
+    "@types/node": "24.2.0"
+  }
+}

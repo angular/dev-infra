@@ -1,19 +1,47 @@
-load("//tools:defaults.bzl", "esbuild_checked_in")
+load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
+load("//tools:defaults2.bzl", "esbuild_checked_in", "ts_project")
 
-esbuild_checked_in(
-    name = "fetch-workflow-artifact",
-    entry_point = "//github-actions/previews/upload-artifacts-to-firebase/lib:fetch-workflow-artifact.ts",
-    target = "node16",
+npm_link_all_packages()
+
+ts_project(
+    name = "extract_artifact_metadata_lib",
+    srcs = ["lib/extract-artifact-metadata.ts"],
+    tsconfig = "//github-actions:tsconfig",
     deps = [
-        "//github-actions/previews/upload-artifacts-to-firebase/lib:fetch_workflow_artifact_lib",
+        ":node_modules/@actions/core",
+        ":node_modules/@types/node",
+        "//github-actions/previews:constants_lib_rjs",
+    ],
+)
+
+ts_project(
+    name = "fetch_workflow_artifact_lib",
+    srcs = ["lib/fetch-workflow-artifact.ts"],
+    tsconfig = "//github-actions:tsconfig",
+    deps = [
+        ":node_modules/@octokit/rest",
+        ":node_modules/@types/node",
     ],
 )
 
 esbuild_checked_in(
-    name = "extract-artifact-metadata",
-    entry_point = "//github-actions/previews/upload-artifacts-to-firebase/lib:extract-artifact-metadata.ts",
-    target = "node16",
-    deps = [
-        "//github-actions/previews/upload-artifacts-to-firebase/lib:extract_artifact_metadata_lib",
+    name = "fetch-workflow-artifact",
+    srcs = [
+        ":fetch_workflow_artifact_lib_rjs",
     ],
+    entry_point = "lib/fetch-workflow-artifact.ts",
+    format = "esm",
+    platform = "node",
+    target = "node22",
+)
+
+esbuild_checked_in(
+    name = "extract-artifact-metadata",
+    srcs = [
+        ":extract_artifact_metadata_lib_rjs",
+    ],
+    entry_point = "lib/extract-artifact-metadata.ts",
+    format = "esm",
+    platform = "node",
+    target = "node22",
 )

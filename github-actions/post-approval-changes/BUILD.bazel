@@ -1,12 +1,32 @@
-load("//tools:defaults.bzl", "esbuild_checked_in")
+load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
+load("//tools:defaults2.bzl", "esbuild_checked_in", "ts_project")
 
 package(default_visibility = ["//github-actions/post-approval-changes:__subpackages__"])
 
+npm_link_all_packages()
+
+ts_project(
+    name = "lib",
+    srcs = glob(["lib/*.ts"]),
+    tsconfig = "//github-actions:tsconfig",
+    deps = [
+        ":node_modules/@actions/core",
+        ":node_modules/@actions/github",
+        ":node_modules/@octokit/rest",
+        ":node_modules/@octokit/webhooks-types",
+        ":node_modules/@types/node",
+        ":node_modules/undici",
+        "//github-actions:utils_rjs",
+    ],
+)
+
 esbuild_checked_in(
     name = "main",
-    entry_point = "//github-actions/post-approval-changes/lib:main.ts",
-    target = "node16",
-    deps = [
-        "//github-actions/post-approval-changes/lib",
+    srcs = [
+        ":lib_rjs",
     ],
+    entry_point = "lib/main.ts",
+    format = "esm",
+    platform = "node",
+    target = "node22",
 )

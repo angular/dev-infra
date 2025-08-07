@@ -5,7 +5,7 @@ author: 'Angular'
 runs:
   using: composite
   steps:
-    - run: node $GITHUB_ACTION_PATH/set-saucelabs-env.cjs
+    - run: node $GITHUB_ACTION_PATH/set-saucelabs-env.js
       env:
         NGAT: '2Lm9Sj7Zx8iAS+RIt7RADA=='
       shell: bash

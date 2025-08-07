@@ -1,9 +1,9 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//github-actions/previews:__subpackages__"])
 
-ts_library(
+ts_project(
     name = "constants_lib",
     srcs = ["constants.ts"],
-    deps = [],
+    tsconfig = "//github-actions:tsconfig",
 )

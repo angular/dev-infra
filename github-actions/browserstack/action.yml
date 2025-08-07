@@ -5,7 +5,7 @@ author: 'Angular'
 runs:
   using: composite
   steps:
-    - run: node $GITHUB_ACTION_PATH/set-browserstack-env.cjs
+    - run: node $GITHUB_ACTION_PATH/set-browserstack-env.js
       env:
         NGAT: 'd56ftXEUwkfHJy5+rGBqNA=='
       shell: bash

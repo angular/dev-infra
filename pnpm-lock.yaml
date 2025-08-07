@@ -577,6 +577,225 @@ importers:
         specifier: 0.15.1
         version: 0.15.1
 
+  github-actions/bazel/configure-remote:
+    dependencies:
+      '@actions/core':
+        specifier: 1.11.1
+        version: 1.11.1
+      '@types/node':
+        specifier: 24.2.0
+        version: 24.2.0
+
+  github-actions/branch-manager:
+    dependencies:
+      '@actions/core':
+        specifier: 1.11.1
+        version: 1.11.1
+      '@actions/github':
+        specifier: 6.0.1
+        version: 6.0.1
+      '@octokit/rest':
+        specifier: 22.0.0
+        version: 22.0.0
+      '@octokit/webhooks-definitions':
+        specifier: 3.67.3
+        version: 3.67.3
+      '@types/node':
+        specifier: 24.2.0
+        version: 24.2.0
+      typed-graphqlify:
+        specifier: 3.1.6
+        version: 3.1.6
+      undici:
+        specifier: 7.13.0
+        version: 7.13.0
+
+  github-actions/browserstack:
+    dependencies:
+      '@actions/core':
+        specifier: 1.11.1
+        version: 1.11.1
+      '@types/node':
+        specifier: 24.2.0
+        version: 24.2.0
+
+  github-actions/feature-request:
+    dependencies:
+      '@actions/core':
+        specifier: 1.11.1
+        version: 1.11.1
+      '@actions/github':
+        specifier: 6.0.1
+        version: 6.0.1
+      '@octokit/request-error':
+        specifier: 7.0.0
+        version: 7.0.0
+      '@octokit/rest':
+        specifier: 22.0.0
+        version: 22.0.0
+      '@types/jasmine':
+        specifier: 5.1.8
+        version: 5.1.8
+      '@types/node':
+        specifier: 24.2.0
+        version: 24.2.0
+      jasmine:
+        specifier: 5.9.0
+        version: 5.9.0
+      jasmine-reporters:
+        specifier: 2.5.2
+        version: 2.5.2
+      typed-graphqlify:
+        specifier: 3.1.6
+        version: 3.1.6
+      undici:
+        specifier: 7.13.0
+        version: 7.13.0
+
+  github-actions/google-internal-tests:
+    dependencies:
+      '@actions/core':
+        specifier: 1.11.1
+        version: 1.11.1
+      '@actions/github':
+        specifier: 6.0.1
+        version: 6.0.1
+      '@octokit/rest':
+        specifier: 22.0.0
+        version: 22.0.0
+      '@types/node':
+        specifier: 24.2.0
+        version: 24.2.0
+      typed-graphqlify:
+        specifier: 3.1.6
+        version: 3.1.6
+      undici:
+        specifier: 7.13.0
+        version: 7.13.0
+
+  github-actions/org-file-sync:
+    dependencies:
+      '@actions/core':
+        specifier: 1.11.1
+        version: 1.11.1
+      '@actions/github':
+        specifier: 6.0.1
+        version: 6.0.1
+      '@octokit/rest':
+        specifier: 22.0.0
+        version: 22.0.0
+      '@octokit/types':
+        specifier: 14.1.0
+        version: 14.1.0
+      '@types/node':
+        specifier: 24.2.0
+        version: 24.2.0
+      typed-graphqlify:
+        specifier: 3.1.6
+        version: 3.1.6
+      undici:
+        specifier: 7.13.0
+        version: 7.13.0
+
+  github-actions/post-approval-changes:
+    dependencies:
+      '@actions/core':
+        specifier: 1.11.1
+        version: 1.11.1
+      '@actions/github':
+        specifier: 6.0.1
+        version: 6.0.1
+      '@octokit/rest':
+        specifier: 22.0.0
+        version: 22.0.0
+      '@octokit/webhooks-types':
+        specifier: 7.6.1
+        version: 7.6.1
+      '@types/node':
+        specifier: 24.2.0
+        version: 24.2.0
+      typed-graphqlify:
+        specifier: 3.1.6
+        version: 3.1.6
+      undici:
+        specifier: 7.13.0
+        version: 7.13.0
+
+  github-actions/previews/pack-and-upload-artifact:
+    dependencies:
+      '@types/node':
+        specifier: 24.2.0
+        version: 24.2.0
+
+  github-actions/previews/upload-artifacts-to-firebase:
+    dependencies:
+      '@actions/core':
+        specifier: 1.11.1
+        version: 1.11.1
+      '@octokit/rest':
+        specifier: 22.0.0
+        version: 22.0.0
+      '@types/node':
+        specifier: 24.2.0
+        version: 24.2.0
+
+  github-actions/pull-request-labeling:
+    dependencies:
+      '@actions/core':
+        specifier: 1.11.1
+        version: 1.11.1
+      '@actions/github':
+        specifier: 6.0.1
+        version: 6.0.1
+      '@octokit/rest':
+        specifier: 22.0.0
+        version: 22.0.0
+      '@types/node':
+        specifier: 24.2.0
+        version: 24.2.0
+      typed-graphqlify:
+        specifier: 3.1.6
+        version: 3.1.6
+      undici:
+        specifier: 7.13.0
+        version: 7.13.0
+
+  github-actions/saucelabs:
+    dependencies:
+      '@actions/core':
+        specifier: 1.11.1
+        version: 1.11.1
+      '@types/node':
+        specifier: 24.2.0
+        version: 24.2.0
+
+  github-actions/unified-status-check:
+    dependencies:
+      '@actions/core':
+        specifier: 1.11.1
+        version: 1.11.1
+      '@actions/github':
+        specifier: 6.0.1
+        version: 6.0.1
+      '@octokit/graphql-schema':
+        specifier: 15.26.0
+        version: 15.26.0
+      '@octokit/rest':
+        specifier: 22.0.0
+        version: 22.0.0
+      '@octokit/types':
+        specifier: 14.1.0
+        version: 14.1.0
+      '@types/node':
+        specifier: 24.2.0
+        version: 24.2.0
+      typed-graphqlify:
+        specifier: 3.1.6
+        version: 3.1.6
+      undici:
+        specifier: 7.13.0
+        version: 7.13.0
+
   ng-dev:
     dependencies:
       '@actions/core':
@@ -4627,11 +4846,9 @@ packages:
   /@octokit/webhooks-definitions@3.67.3:
     resolution: {integrity: sha512-do4Z1r2OVhuI0ihJhQ8Hg+yPWnBYEBNuFNCrvtPKoYT1w81jD7pBXgGe86lYuuNirkDHb0Nxt+zt4O5GiFJfgA==}
     deprecated: Use @octokit/webhooks-types, @octokit/webhooks-schemas, or @octokit/webhooks-examples instead. See https://github.com/octokit/webhooks/issues/447
-    dev: true
 
   /@octokit/webhooks-types@7.6.1:
     resolution: {integrity: sha512-S8u2cJzklBC0FgTwWVLaM8tMrDuDMVE4xiTK4EYXM9GntyvrdbSoxqDQa+Fh57CCNApyIpyeqPhhFEmHPfrXgw==}
-    dev: true
 
   /@open-draft/deferred-promise@2.2.0:
     resolution: {integrity: sha512-CecwLWx3rhxVQF6V4bAgPS5t+So2sTbPgAzafKkVizyi7tlwpcFpdFqq+wqF2OwNBmqFuu6tOyouTuxgpMfzmA==}
@@ -5795,7 +6012,7 @@ packages:
     resolution: {integrity: sha512-FGJ6udDNUCjd19pp0Q3iTiDkwhYup7J8hpMW9c4k53NrccQFFWKRho6hvtPPEhnXWKvukfwAlB6DbDz4yhH5Gg==}
     dependencies:
       '@types/caseless': 0.12.5
-      '@types/node': 24.2.0
+      '@types/node': 24.1.0
       '@types/tough-cookie': 4.0.5
       form-data: 2.5.5
 

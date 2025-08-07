@@ -33,8 +33,9 @@ jobs:
         run: yarn ng-dev commit-message validate-range ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}
       - name: Check code lint
         run: yarn lint
-      - name: Confirm code builds with typescript as expected
-        run: yarn tsc -p tsconfig.json
+      # TODO: Enable again after the tsconfigs are reworked as part of migration
+      # - name: Confirm code builds with typescript as expected
+      #   run: yarn tsc -p tsconfig.json
       - name: Check Package Licenses
         # We use this action pinned at main because we need to have an actual version for the config to load.
         # Since using the local version would end up nearly using `main` anyway, this is essentially equivalent.

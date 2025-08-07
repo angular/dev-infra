@@ -2,7 +2,7 @@ import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
 import {getGoogleSyncConfig} from '../../../ng-dev/utils/g3-sync-config.js';
-import path from 'path';
+import path from 'node:path';
 
 const syncBranch = 'main';
 const statusContext = 'google-internal-tests';

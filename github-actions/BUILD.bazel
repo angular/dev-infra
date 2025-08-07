@@ -6,6 +6,7 @@ ts_config(
     name = "tsconfig",
     src = "tsconfig.json",
     deps = [
+        "//:node_modules/@types/node",
         "//:rjs-tsconfig",
     ],
 )
@@ -15,6 +16,7 @@ ts_config(
     src = "tsconfig-test.json",
     deps = [
         ":tsconfig",
+        "//:node_modules/@types/jasmine",
     ],
 )
 
