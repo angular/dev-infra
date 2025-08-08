@@ -1,7 +1,7 @@
 load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
 load("@npm//@bazel/typescript:index.bzl", "ts_config")
+load("//tools:defaults2.bzl", "js_binary")
 
 npm_link_all_packages()
 
@@ -22,14 +22,14 @@ ts_config(
     visibility = ["//visibility:public"],
 )
 
-nodejs_binary(
+js_binary(
     name = "yarn_berry_vendored",
     data = [".yarn/releases/yarn-4.9.1.cjs"],
     entry_point = ".yarn/releases/yarn-4.9.1.cjs",
     visibility = ["//bazel/integration/tests:__subpackages__"],
 )
 
-nodejs_binary(
+js_binary(
     name = "yarn_classic_vendored",
     data = [".yarn/releases/yarn-1.22.17.cjs"],
     entry_point = ".yarn/releases/yarn-1.22.17.cjs",
