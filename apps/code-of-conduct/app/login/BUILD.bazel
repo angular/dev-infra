@@ -1,9 +1,8 @@
-load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
-load("//tools:defaults.bzl", "ng_module")
+load("//tools:defaults2.bzl", "ng_project", "sass_binary")
 
 package(default_visibility = ["//apps/code-of-conduct:__subpackages__"])
 
-ng_module(
+ng_project(
     name = "login",
     srcs = glob(["*.ts"]),
     assets = [
@@ -11,10 +10,10 @@ ng_module(
         "login.component.html",
     ],
     deps = [
-        "//apps/code-of-conduct/app/account",
-        "@npm//@angular/common",
-        "@npm//@angular/core",
-        "@npm//@angular/material",
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/material",
+        "//apps/code-of-conduct/app/account:account_rjs",
     ],
 )
 

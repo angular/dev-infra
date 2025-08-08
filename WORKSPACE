@@ -209,3 +209,13 @@ rules_angular_step3(
     angular_compiler_cli = "@devinfra//:node_modules/@angular/compiler-cli",
     typescript = "@devinfra//:node_modules/typescript",
 )
+
+git_repository(
+    name = "rules_sass",
+    commit = "cc1e845339fc45d3c8390445014d5824b85a0948",
+    remote = "https://github.com/devversion/rules_sass.git",
+)
+
+load("@rules_sass//src/toolchain:repositories.bzl", "setup_rules_sass")
+
+setup_rules_sass()

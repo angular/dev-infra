@@ -1,4 +1,13 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin", "nodejs_binary")
+load("@devinfra_npm//:firebase-tools/package_json.bzl", firebase = "bin")
+load("//tools:defaults2.bzl", "copy_to_bin", "ts_config")
+
+ts_config(
+    name = "tsconfig",
+    src = "tsconfig.json",
+    visibility = [
+        "//apps:__subpackages__",
+    ],
+)
 
 copy_to_bin(
     name = "static_runfiles",
@@ -10,7 +19,7 @@ copy_to_bin(
     ],
 )
 
-nodejs_binary(
+firebase.firebase_binary(
     name = "serve",
     chdir = package_name(),
     data = [
@@ -18,24 +27,22 @@ nodejs_binary(
         ":static_runfiles",
 
         # Firebase function files
-        "//apps/functions:functions_compiled",
         "//apps/functions:functions_files",
 
         # Firebase hosted application files
         "//apps/code-of-conduct:application_files",
     ],
-    entry_point = "@npm//:node_modules/firebase-tools/lib/bin/firebase.js",
-    tags = ["ibazel_notify_changes"],
-    templated_args = [
+    fixed_args = [
         "--project",
         "internal-200822",
         "--config",
         "firebase.json",
         "emulators:start",
     ],
+    tags = ["ibazel_notify_changes"],
 )
 
-nodejs_binary(
+firebase.firebase_binary(
     name = "deploy",
     chdir = package_name(),
     data = [
@@ -43,14 +50,13 @@ nodejs_binary(
         ":static_runfiles",
 
         # Firebase function files
-        "//apps/functions:functions_compiled",
         "//apps/functions:functions_files",
 
         # Firebase hosted application files
         "//apps/code-of-conduct:application_files",
+        "//:node_modules/firebase-functions",
     ],
-    entry_point = "@npm//:node_modules/firebase-tools/lib/bin/firebase.js",
-    templated_args = [
+    fixed_args = [
         "--project",
         "internal-200822",
         "--config",

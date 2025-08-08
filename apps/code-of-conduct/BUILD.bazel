@@ -1,79 +1,59 @@
-load("//tools:defaults.bzl", "esbuild", "esbuild_config", "ng_module")
-load("@io_bazel_rules_sass//:defs.bzl", "npm_sass_library", "sass_binary")
-load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
+load("//tools:defaults2.bzl", "copy_to_bin", "esbuild", "ng_project", "npm_sass_library", "sass_binary")
 
 package(default_visibility = ["//apps/code-of-conduct:__subpackages__"])
 
-ng_module(
+ng_project(
     name = "main",
     srcs = [
         "environment.ts",
         "main.ts",
     ],
     deps = [
-        "//apps/code-of-conduct/app",
-        "//apps/code-of-conduct/app:app_routes",
-        "@npm//@angular/common",
-        "@npm//@angular/compiler",
-        "@npm//@angular/fire",
-        "@npm//@angular/platform-browser",
-        "@npm//@angular/router",
-        "@npm//zone.js",
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/compiler",
+        "//:node_modules/@angular/fire",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/@angular/router",
+        "//:node_modules/zone.js",
+        "//apps/code-of-conduct/app:app_rjs",
+        "//apps/code-of-conduct/app:app_routes_rjs",
     ],
 )
 
 npm_sass_library(
     name = "angular_material_sass_deps",
-    deps = ["@npm//@angular/material"],
+    deps = [
+        "//:node_modules/@angular/cdk",
+        "//:node_modules/@angular/material",
+    ],
 )
 
 sass_binary(
     name = "styles",
     src = "styles.scss",
-    include_paths = [
-        "external/npm/node_modules",
-    ],
     deps = [
         ":angular_material_sass_deps",
     ],
 )
 
-esbuild_config(
-    name = "esbuild_config",
-    config_file = "esbuild.config.mjs",
-    deps = [
-        "//shared-scripts/angular-optimization:js_lib",
-        "@npm//@angular/compiler-cli",
-    ],
-)
-
 esbuild(
-    name = "bundles",
-    config = ":esbuild_config",
-    entry_points = [":main.ts"],
-    platform = "browser",
-    target = "es2016",
-    deps = [
-        ":main",
+    name = "bundle",
+    srcs = [
+        ":main_rjs",
     ],
+    entry_points = [":main.js"],
+    platform = "browser",
+    target = "es2022",
 )
 
 copy_to_bin(
-    name = "application_files_in_bin",
+    name = "application_files",
     srcs = [
         "favicon.ico",
         "index.html",
         "robots.txt",
-    ],
-)
-
-filegroup(
-    name = "application_files",
-    srcs = [
-        ":application_files_in_bin",
-        ":bundles",
+        ":bundle",
         ":styles",
-        "@npm//:node_modules/zone.js/bundles/zone.umd.min.js",
     ],
     visibility = ["//apps:__pkg__"],
 )

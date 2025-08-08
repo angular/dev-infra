@@ -18,6 +18,8 @@
   "packageManager": "yarn@4.9.1",
   "dependencies": {
     "@angular/build": "20.0.0",
+    "@angular/cdk": "20.0.0",
+    "@angular/material": "20.0.0",
     "@babel/core": "^7.16.0",
     "@babel/plugin-transform-async-generator-functions": "^7.26.8",
     "@bazel/buildifier": "8.2.1",
@@ -54,7 +56,6 @@
     "@actions/github": "^6.0.0",
     "@angular/animations": "20.0.0",
     "@angular/bazel": "14.1.0-next.2",
-    "@angular/cdk": "20.0.0",
     "@angular/cli": "20.0.0",
     "@angular/common": "20.0.0",
     "@angular/compiler": "20.0.0",
@@ -62,7 +63,6 @@
     "@angular/core": "20.0.0",
     "@angular/fire": "^20.0.0-rc",
     "@angular/forms": "20.0.0",
-    "@angular/material": "20.0.0",
     "@angular/platform-browser": "20.0.0",
     "@angular/platform-browser-dynamic": "20.0.0",
     "@angular/router": "20.0.0",
@@ -158,5 +158,10 @@
     "re2": {
       "built": false
     }
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "firebase-functions"
+    ]
   }
 }

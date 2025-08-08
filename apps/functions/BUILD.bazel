@@ -1,5 +1,4 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "copy_to_bin")
-load("//tools:defaults.bzl", "esbuild_cjs_bundle", "ts_library")
+load("//tools:defaults2.bzl", "copy_to_bin", "esbuild", "ts_project")
 
 package(default_visibility = ["//visibility:private"])
 
@@ -7,30 +6,32 @@ copy_to_bin(
     name = "functions_files",
     srcs = [
         "package.json",
+        ":bundle",
+        "//:node_modules/firebase-tools",
     ],
     visibility = ["//apps:__pkg__"],
 )
 
-ts_library(
+ts_project(
     name = "functions",
     srcs = [
         "index.ts",
     ],
     deps = [
-        "//apps/functions/code-of-conduct",
-        "//apps/functions/dns-redirecting",
-        "@npm//firebase-admin",
+        "//:node_modules/firebase-admin",
+        "//apps/functions/code-of-conduct:code-of-conduct_rjs",
+        "//apps/functions/dns-redirecting:dns-redirecting_rjs",
     ],
 )
 
-esbuild_cjs_bundle(
-    name = "functions_compiled",
-    entry_points = [
-        "index.ts",
+esbuild(
+    name = "bundle",
+    srcs = [
+        ":functions_rjs",
+        "//:node_modules/firebase-functions",
     ],
+    entry_point = "index.ts",
+    format = "cjs",
+    platform = "node",
     visibility = ["//apps:__pkg__"],
-    deps = [
-        ":functions",
-        "@npm//firebase-functions",
-    ],
 )
