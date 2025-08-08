@@ -3,12 +3,6 @@ load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
-# Make source files available for distribution
-filegroup(
-    name = "files",
-    srcs = glob(["*"]),
-)
-
 ts_project(
     name = "lib",
     srcs = glob(["*.mts"]),
