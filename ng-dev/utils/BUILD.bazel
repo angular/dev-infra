@@ -36,7 +36,6 @@ ts_project(
         "//github-actions/google-internal-tests:__subpackages__",
         "//github-actions/slash-commands/lib:__subpackages__",
         "//ng-dev:__subpackages__",
-        "//tools/jasmine:__pkg__",
     ],
     deps = [
         ":config_cache_rjs",
@@ -73,7 +72,4 @@ ts_project(
 ts_project(
     name = "config_cache",
     srcs = ["config-cache.ts"],
-    visibility = [
-        "//tools/jasmine:__pkg__",
-    ],
 )
