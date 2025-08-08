@@ -9,7 +9,7 @@ ts_project(
     deps = [
         "//ng-dev:node_modules/@types/yargs",
         "//ng-dev:node_modules/firebase",
-        "//ng-dev/auth/login:login_rjs",
-        "//ng-dev/auth/logout:logout_rjs",
+        "//ng-dev/auth/login",
+        "//ng-dev/auth/logout",
     ],
 )

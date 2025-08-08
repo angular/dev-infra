@@ -1,4 +1,28 @@
-// IDE config. Compile options should be changed in the top-level project config.
 {
-  "extends": "../tsconfig.json"
+  "compilerOptions": {
+    "declaration": true,
+    "stripInternal": true,
+    "removeComments": true,
+    "noImplicitAny": true,
+    "noImplicitOverride": true,
+    "strictNullChecks": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node",
+    "module": "esnext",
+    "target": "es2020",
+    "lib": ["es2021", "dom"],
+    "skipLibCheck": true,
+    "types": ["node", "jasmine"],
+    "experimentalDecorators": true,
+    // This is needed due to https://github.com/Microsoft/TypeScript/issues/17516.
+    // As tsickle will lower decorators before TS, this is not a problem for our build.
+    "emitDecoratorMetadata": true,
+    "sourceMap": true,
+    "inlineSources": true,
+    "importHelpers": true
+  }
 }

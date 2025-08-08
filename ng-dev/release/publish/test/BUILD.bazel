@@ -19,20 +19,20 @@ ts_project(
         "//ng-dev:node_modules/nock",
         "//ng-dev:node_modules/semver",
         "//ng-dev:node_modules/yargs",
-        "//ng-dev/commit-message:commit-message_rjs",
-        "//ng-dev/release/config:config_rjs",
-        "//ng-dev/release/notes:notes_rjs",
-        "//ng-dev/release/publish:publish_rjs",
-        "//ng-dev/release/versioning:versioning_rjs",
-        "//ng-dev/utils:utils_rjs",
-        "//ng-dev/utils/testing:testing_rjs",
+        "//ng-dev/commit-message",
+        "//ng-dev/release/config",
+        "//ng-dev/release/notes",
+        "//ng-dev/release/publish",
+        "//ng-dev/release/versioning",
+        "//ng-dev/utils",
+        "//ng-dev/utils/testing",
     ],
 )
 
 jasmine_test(
     name = "test",
     data = [
-        ":test_lib_rjs",
+        ":test_lib",
     ],
     env = {
         "GIT_BIN": "$(GIT_BIN_PATH)",

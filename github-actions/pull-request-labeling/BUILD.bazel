@@ -15,16 +15,16 @@ ts_project(
         ":node_modules/@octokit/rest",
         ":node_modules/@types/node",
         ":node_modules/undici",
-        "//github-actions:utils_rjs",
-        "//ng-dev/commit-message:commit-message_rjs",
-        "//ng-dev/pr/common/labels:labels_rjs",
+        "//github-actions:utils",
+        "//ng-dev/commit-message",
+        "//ng-dev/pr/common/labels",
     ],
 )
 
 esbuild_checked_in(
     name = "main",
     srcs = [
-        ":lib_rjs",
+        ":lib",
     ],
     entry_point = "lib/main.ts",
     format = "esm",

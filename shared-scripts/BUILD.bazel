@@ -1,8 +1,0 @@
-package(default_visibility = ["//visibility:public"])
-
-filegroup(
-    name = "static_files",
-    srcs = glob(["*"]) + [
-        "//shared-scripts/angular-optimization:static_files",
-    ],
-)

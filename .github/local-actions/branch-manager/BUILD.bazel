@@ -16,19 +16,19 @@ ts_project(
         "//.github/local-actions/branch-manager:node_modules/@types/node",
         "//.github/local-actions/branch-manager:node_modules/typed-graphqlify",
         "//.github/local-actions/branch-manager:node_modules/undici",
-        "//github-actions:utils_rjs",
-        "//ng-dev/pr/common:common_rjs",
-        "//ng-dev/pr/common/labels:labels_rjs",
-        "//ng-dev/pr/config:config_rjs",
-        "//ng-dev/pr/merge:merge_rjs",
-        "//ng-dev/utils:utils_rjs",
+        "//github-actions:utils",
+        "//ng-dev/pr/common",
+        "//ng-dev/pr/common/labels",
+        "//ng-dev/pr/config",
+        "//ng-dev/pr/merge",
+        "//ng-dev/utils",
     ],
 )
 
 esbuild_checked_in(
     name = "main",
     srcs = [
-        ":lib_rjs",
+        ":lib",
     ],
     entry_point = "lib/main.ts",
     format = "esm",

@@ -5,9 +5,6 @@ ts_project(
     srcs = glob([
         "**/*.ts",
     ]),
-    interop_deps = [
-        "//ng-dev/utils",
-    ],
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
         "//ng-dev:node_modules/@google/genai",
@@ -17,5 +14,6 @@ ts_project(
         "//ng-dev:node_modules/cli-progress",
         "//ng-dev:node_modules/fast-glob",
         "//ng-dev:node_modules/yargs",
+        "//ng-dev/utils",
     ],
 )

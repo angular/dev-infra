@@ -5,6 +5,6 @@ ts_project(
     srcs = glob(["**/*.ts"]),
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
-        "//ng-dev/release/npm-dist-tag/set:set_rjs",
+        "//ng-dev/release/npm-dist-tag/set",
     ],
 )

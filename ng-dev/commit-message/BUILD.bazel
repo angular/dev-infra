@@ -18,7 +18,7 @@ ts_project(
         "//ng-dev:node_modules/conventional-commits-parser",
         "//ng-dev:node_modules/git-raw-commits",
         "//ng-dev:node_modules/yargs",
-        "//ng-dev/utils:utils_rjs",
+        "//ng-dev/utils",
     ],
 )
 
@@ -27,16 +27,16 @@ ts_project(
     testonly = True,
     srcs = glob(["**/*.spec.ts"]),
     deps = [
-        ":commit-message_rjs",
+        ":commit-message",
         "//ng-dev:node_modules/@types/events",
         "//ng-dev:node_modules/@types/jasmine",
-        "//ng-dev/utils:utils_rjs",
+        "//ng-dev/utils",
     ],
 )
 
 jasmine_test(
     name = "test",
     data = [
-        ":test_lib_rjs",
+        ":test_lib",
     ],
 )
