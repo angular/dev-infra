@@ -1,12 +1,10 @@
-load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
 load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
-load("@npm//@bazel/typescript:index.bzl", "ts_config")
-load("//tools:defaults2.bzl", "js_binary")
+load("//tools:defaults2.bzl", "js_binary", "ts_config")
 
 npm_link_all_packages()
 
-rules_js_tsconfig(
-    name = "rjs-tsconfig",
+ts_config(
+    name = "tsconfig",
     src = "tsconfig.json",
     visibility = ["//visibility:public"],
 )
@@ -15,12 +13,6 @@ exports_files([
     "package.json",
     ".yarnrc.yml",
 ])
-
-ts_config(
-    name = "tsconfig",
-    src = "tsconfig.json",
-    visibility = ["//visibility:public"],
-)
 
 js_binary(
     name = "yarn_berry_vendored",
