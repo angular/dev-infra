@@ -1,9 +1,1 @@
 package(default_visibility = ["//visibility:public"])
-
-# Make source files available for distribution
-filegroup(
-    name = "files",
-    srcs = glob(["*"]) + [
-        "//bazel/ts_project/strict_deps:files",
-    ],
-)

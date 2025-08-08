@@ -1,10 +1,7 @@
 load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary", "pkg_npm")
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
 load("@npm//@bazel/typescript:index.bzl", "ts_config")
-
-# BEGIN-INTERNAL
-load("//:package.bzl", "NPM_PACKAGE_SUBSTITUTIONS")
 
 npm_link_all_packages()
 
@@ -38,33 +35,3 @@ nodejs_binary(
     entry_point = ".yarn/releases/yarn-1.22.17.cjs",
     visibility = ["//bazel/integration/tests:__subpackages__"],
 )
-
-package_group(
-    name = "npm",
-    packages = [
-        "//",
-    ],
-)
-
-pkg_npm(
-    name = "npm_package",
-    package_name = "@angular/build-tooling",
-    srcs = [
-        "BUILD.bazel",
-        "package.json",
-        "tsconfig.json",
-        ":index.bzl",
-        "//bazel:static_files",
-        "//lint-rules/stylelint:static_files",
-        "//lint-rules/tslint:static_files",
-        "//shared-scripts:static_files",
-    ],
-    substitutions = NPM_PACKAGE_SUBSTITUTIONS,
-    deps = [
-        "//lint-rules/stylelint:lib",
-        "//lint-rules/tslint:lib",
-    ],
-)
-# END-INTERNAL
-
-exports_files(["tsconfig.json"])

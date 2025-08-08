@@ -117,11 +117,6 @@ const require = __cjsCompatRequire(import.meta.url);
     ],
 )
 
-filegroup(
-    name = "static_files",
-    srcs = ["package.json"],
-)
-
 npm_package(
     name = "npm_package",
     srcs = [

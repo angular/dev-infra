@@ -24,9 +24,3 @@ ts_project(
         "//bazel:node_modules/typescript",
     ],
 )
-
-# Expose the sources in the dev-infra NPM package.
-filegroup(
-    name = "files",
-    srcs = glob(["*"]),
-)
