@@ -7,7 +7,7 @@ ts_config(
     src = "tsconfig.json",
     deps = [
         "//:node_modules/@types/node",
-        "//:rjs-tsconfig",
+        "//:tsconfig",
     ],
 )
 
