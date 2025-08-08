@@ -20,7 +20,7 @@ ts_project(
 
 js_binary(
     name = "encrypt",
-    data = [":setup-bazel-remote-exec_rjs"],
+    data = [":setup-bazel-remote-exec"],
     entry_point = ":encrypt.js",
 )
 
@@ -28,7 +28,7 @@ esbuild_checked_in(
     name = "configure-remote",
     srcs = [
         ":gcp_token",
-        ":setup-bazel-remote-exec_rjs",
+        ":setup-bazel-remote-exec",
     ],
     config = {
         "loader": {

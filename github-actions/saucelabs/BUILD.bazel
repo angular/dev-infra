@@ -27,7 +27,7 @@ js_binary(
 esbuild_checked_in(
     name = "set-saucelabs-env",
     srcs = [
-        ":saucelabs_rjs",
+        ":saucelabs",
         ":saucelabs_token",
     ],
     config = {

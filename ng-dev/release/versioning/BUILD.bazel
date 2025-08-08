@@ -9,7 +9,7 @@ ts_project(
     deps = [
         "//ng-dev:node_modules/@types/semver",
         "//ng-dev:node_modules/semver",
-        "//ng-dev/release/config:config_rjs",
-        "//ng-dev/utils:utils_rjs",
+        "//ng-dev/release/config",
+        "//ng-dev/utils",
     ],
 )

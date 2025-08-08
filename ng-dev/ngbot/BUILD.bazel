@@ -12,6 +12,6 @@ ts_project(
         "//ng-dev:node_modules/@types/yargs",
         "//ng-dev:node_modules/yaml",
         "//ng-dev:node_modules/yargs",
-        "//ng-dev/utils:utils_rjs",
+        "//ng-dev/utils",
     ],
 )

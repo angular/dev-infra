@@ -12,7 +12,7 @@ ts_project(
     deps = [
         "//ng-dev:node_modules/@types/semver",
         "//ng-dev:node_modules/semver",
-        "//ng-dev/commit-message:commit-message_rjs",
-        "//ng-dev/utils:utils_rjs",
+        "//ng-dev/commit-message",
+        "//ng-dev/utils",
     ],
 )

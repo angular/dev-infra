@@ -12,7 +12,7 @@ ts_project(
         "//ng-dev:node_modules/@types/semver",
         "//ng-dev:node_modules/@types/yargs",
         "//ng-dev:node_modules/semver",
-        "//ng-dev/release/versioning:versioning_rjs",
-        "//ng-dev/utils:utils_rjs",
+        "//ng-dev/release/versioning",
+        "//ng-dev/utils",
     ],
 )

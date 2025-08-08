@@ -16,9 +16,9 @@ ts_project(
         "//ng-dev:node_modules/typed-graphqlify",
         "//ng-dev:node_modules/yaml",
         "//ng-dev:node_modules/yargs",
-        "//ng-dev/release/versioning:versioning_rjs",
-        "//ng-dev/utils:g3_sync_config_rjs",
-        "//ng-dev/utils:utils_rjs",
+        "//ng-dev/release/versioning",
+        "//ng-dev/utils",
+        "//ng-dev/utils:g3_sync_config",
     ],
 )
 
@@ -27,20 +27,20 @@ ts_project(
     testonly = True,
     srcs = glob(["**/*.spec.ts"]),
     deps = [
-        ":caretaker_rjs",
+        ":caretaker",
         "//ng-dev:node_modules/@types/jasmine",
         "//ng-dev:node_modules/@types/node",
         "//ng-dev:node_modules/@types/semver",
         "//ng-dev:node_modules/semver",
-        "//ng-dev/release/versioning:versioning_rjs",
-        "//ng-dev/utils:utils_rjs",
-        "//ng-dev/utils/testing:testing_rjs",
+        "//ng-dev/release/versioning",
+        "//ng-dev/utils",
+        "//ng-dev/utils/testing",
     ],
 )
 
 jasmine_test(
     name = "test",
     data = [
-        ":test_lib_rjs",
+        ":test_lib",
     ],
 )

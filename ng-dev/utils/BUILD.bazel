@@ -38,8 +38,8 @@ ts_project(
         "//ng-dev:__subpackages__",
     ],
     deps = [
-        ":config_cache_rjs",
-        ":g3_sync_config_rjs",
+        ":config_cache",
+        ":g3_sync_config",
         "//ng-dev:node_modules/@actions/core",
         "//ng-dev:node_modules/@inquirer/prompts",
         "//ng-dev:node_modules/@octokit/auth-app",

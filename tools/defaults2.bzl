@@ -7,9 +7,9 @@ load("@aspect_rules_js//npm:defs.bzl", _npm_package = "npm_package")
 load("@aspect_rules_ts//ts:defs.bzl", _ts_config = "ts_config")
 load("@rules_angular//src/ng_package/text_replace:index.bzl", _text_replace = "text_replace")
 load("@rules_angular//src/ng_project:index.bzl", _ng_project = "ng_project")
+load("@rules_angular//src/ts_project:index.bzl", _ts_project = "ts_project")
 load("@rules_sass//src:index.bzl", _npm_sass_library = "npm_sass_library", _sass_binary = "sass_binary")
 load("//bazel:extract_types.bzl", _extract_types = "extract_types")
-load("//tools:ts_project_interop.bzl", _ts_project = "ts_project")
 
 copy_to_bin = _copy_to_bin
 ts_config = _ts_config
@@ -31,6 +31,7 @@ def ts_project(
         source_map = True,
         testonly = False,
         tsconfig = None,
+        declaration = True,
         **kwargs):
     if tsconfig == None:
         tsconfig = _determine_tsconfig(testonly)
@@ -40,6 +41,7 @@ def ts_project(
         source_map = source_map,
         testonly = testonly,
         tsconfig = tsconfig,
+        declaration = declaration,
         **kwargs
     )
 
@@ -48,16 +50,17 @@ def ng_project(
         source_map = True,
         testonly = False,
         tsconfig = None,
+        declaration = True,
         deps = [],
         **kwargs):
     if tsconfig == None:
         tsconfig = _determine_tsconfig(testonly)
 
     deps = deps + ["//:node_modules/tslib"]
-    _ts_project(
+    _ng_project(
         name,
         source_map = source_map,
-        rule_impl = _ng_project,
+        declaration = declaration,
         testonly = testonly,
         tsconfig = tsconfig,
         deps = deps,

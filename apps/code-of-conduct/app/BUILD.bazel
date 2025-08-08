@@ -15,9 +15,9 @@ ng_project(
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/router",
-        "//apps/code-of-conduct/app/account:account_rjs",
-        "//apps/code-of-conduct/app/block-user:block-user_rjs",
-        "//apps/code-of-conduct/app/user-table:user-table_rjs",
+        "//apps/code-of-conduct/app/account",
+        "//apps/code-of-conduct/app/block-user",
+        "//apps/code-of-conduct/app/user-table",
     ],
 )
 
@@ -47,8 +47,8 @@ ng_project(
     ],
     deps = [
         "//:node_modules/@angular/router",
-        "//apps/code-of-conduct/app/account:account_rjs",
-        "//apps/code-of-conduct/app/login:login_rjs",
-        "//apps/code-of-conduct/app/main:main_rjs",
+        "//apps/code-of-conduct/app/account",
+        "//apps/code-of-conduct/app/login",
+        "//apps/code-of-conduct/app/main",
     ],
 )

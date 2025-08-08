@@ -11,7 +11,7 @@ ts_project(
         "//ng-dev:node_modules/@types/cli-progress",
         "//ng-dev:node_modules/@types/node",
         "//ng-dev:node_modules/@types/yargs",
-        "//ng-dev/pr/common:common_rjs",
-        "//ng-dev/utils:utils_rjs",
+        "//ng-dev/pr/common",
+        "//ng-dev/utils",
     ],
 )
