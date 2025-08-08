@@ -37,11 +37,3 @@ platform(
     exec_properties = ENABLE_NETWORK,
     parents = [":platform"],
 )
-
-filegroup(
-    name = "files",
-    srcs = [
-        "BUILD.bazel",
-        "index.bzl",
-    ],
-)
