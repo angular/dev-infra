@@ -9,15 +9,15 @@ ts_project(
     deps = [
         "//ng-dev:node_modules/@types/jasmine",
         "//ng-dev:node_modules/nock",
-        "//ng-dev/release/versioning:versioning_rjs",
-        "//ng-dev/utils:utils_rjs",
-        "//ng-dev/utils/testing:testing_rjs",
+        "//ng-dev/release/versioning",
+        "//ng-dev/utils",
+        "//ng-dev/utils/testing",
     ],
 )
 
 jasmine_test(
     name = "test",
     data = [
-        ":test_lib_rjs",
+        ":test_lib",
     ],
 )

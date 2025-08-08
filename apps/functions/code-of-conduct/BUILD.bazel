@@ -11,7 +11,7 @@ ts_project(
         "//apps/functions:__pkg__",
     ],
     deps = [
-        ":lib_rjs",
+        ":lib",
         "//:node_modules/firebase-admin",
     ],
 )

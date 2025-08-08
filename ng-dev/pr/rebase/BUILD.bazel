@@ -17,8 +17,8 @@ ts_project(
         "//ng-dev:node_modules/conventional-commits-parser",
         "//ng-dev:node_modules/typed-graphqlify",
         "//ng-dev:node_modules/yargs",
-        "//ng-dev/commit-message:commit-message_rjs",
-        "//ng-dev/pr/common:common_rjs",
-        "//ng-dev/utils:utils_rjs",
+        "//ng-dev/commit-message",
+        "//ng-dev/pr/common",
+        "//ng-dev/utils",
     ],
 )

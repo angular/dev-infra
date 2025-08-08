@@ -5,13 +5,11 @@ ts_project(
     srcs = [
         "cli.ts",
     ],
-    interop_deps = [
-        "//ng-dev/utils",
-    ],
     visibility = ["//ng-dev/auth:__pkg__"],
     deps = [
         "//ng-dev:node_modules/@types/node",
         "//ng-dev:node_modules/@types/yargs",
         "//ng-dev:node_modules/yargs",
+        "//ng-dev/utils",
     ],
 )

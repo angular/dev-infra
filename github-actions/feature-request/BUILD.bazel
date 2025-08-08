@@ -19,7 +19,7 @@ ts_project(
         ":node_modules/@octokit/rest",
         ":node_modules/@types/node",
         ":node_modules/undici",
-        "//github-actions:utils_rjs",
+        "//github-actions:utils",
     ],
 )
 
@@ -29,7 +29,7 @@ ts_project(
     srcs = glob(["lib/*.spec.ts"]),
     tsconfig = "//github-actions:tsconfig_test",
     deps = [
-        ":lib_rjs",
+        ":lib",
         ":node_modules/@types/jasmine",
     ],
 )
@@ -37,14 +37,14 @@ ts_project(
 jasmine_test(
     name = "test",
     data = [
-        ":test_lib_rjs",
+        ":test_lib",
     ],
 )
 
 esbuild_checked_in(
     name = "main",
     srcs = [
-        ":lib_rjs",
+        ":lib",
     ],
     entry_point = "lib/main.ts",
     format = "esm",

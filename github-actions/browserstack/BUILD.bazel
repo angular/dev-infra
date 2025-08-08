@@ -27,7 +27,7 @@ js_binary(
 esbuild_checked_in(
     name = "set-browserstack-env",
     srcs = [
-        ":browserstack_rjs",
+        ":browserstack",
         ":browserstack_token",
     ],
     config = {

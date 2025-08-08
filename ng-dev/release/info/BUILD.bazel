@@ -7,8 +7,8 @@ ts_project(
     deps = [
         "//ng-dev:node_modules/@types/node",
         "//ng-dev:node_modules/@types/yargs",
-        "//ng-dev/release/config:config_rjs",
-        "//ng-dev/release/versioning:versioning_rjs",
-        "//ng-dev/utils:utils_rjs",
+        "//ng-dev/release/config",
+        "//ng-dev/release/versioning",
+        "//ng-dev/utils",
     ],
 )

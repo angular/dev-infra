@@ -14,6 +14,6 @@ ts_project(
         "//ng-dev:node_modules/fast-glob",
         "//ng-dev:node_modules/multimatch",
         "//ng-dev:node_modules/yargs",
-        "//ng-dev/utils:utils_rjs",
+        "//ng-dev/utils",
     ],
 )

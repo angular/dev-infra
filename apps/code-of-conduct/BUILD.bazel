@@ -15,8 +15,8 @@ ng_project(
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/@angular/router",
         "//:node_modules/zone.js",
-        "//apps/code-of-conduct/app:app_rjs",
-        "//apps/code-of-conduct/app:app_routes_rjs",
+        "//apps/code-of-conduct/app",
+        "//apps/code-of-conduct/app:app_routes",
     ],
 )
 
@@ -39,7 +39,7 @@ sass_binary(
 esbuild(
     name = "bundle",
     srcs = [
-        ":main_rjs",
+        ":main",
     ],
     entry_points = [":main.js"],
     platform = "browser",

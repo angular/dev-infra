@@ -12,7 +12,7 @@ ts_project(
         "//ng-dev:__subpackages__",
     ],
     deps = [
-        "//ng-dev/commit-message:commit-message_rjs",
+        "//ng-dev/commit-message",
     ],
 )
 
@@ -21,7 +21,7 @@ ts_project(
     testonly = True,
     srcs = glob(["*.spec.ts"]),
     deps = [
-        ":labels_rjs",
+        ":labels",
         "//ng-dev:node_modules/@types/jasmine",
     ],
 )
@@ -29,6 +29,6 @@ ts_project(
 jasmine_test(
     name = "test",
     data = [
-        ":test_lib_rjs",
+        ":test_lib",
     ],
 )
