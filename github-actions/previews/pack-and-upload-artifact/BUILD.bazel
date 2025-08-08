@@ -11,14 +11,14 @@ ts_project(
     tsconfig = "//github-actions:tsconfig",
     deps = [
         ":node_modules/@types/node",
-        "//github-actions/previews:constants_lib_rjs",
+        "//github-actions/previews:constants_lib",
     ],
 )
 
 esbuild_checked_in(
     name = "inject-artifact-metadata",
     srcs = [
-        ":lib_rjs",
+        ":lib",
     ],
     entry_point = "lib/inject-artifact-metadata.ts",
     format = "esm",

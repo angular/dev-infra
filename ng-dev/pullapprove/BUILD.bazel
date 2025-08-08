@@ -21,7 +21,7 @@ ts_project(
         "//ng-dev:node_modules/minimatch",
         "//ng-dev:node_modules/yaml",
         "//ng-dev:node_modules/yargs",
-        "//ng-dev/utils:utils_rjs",
+        "//ng-dev/utils",
     ],
 )
 
@@ -32,7 +32,7 @@ ts_project(
         ["*.spec.ts"],
     ),
     deps = [
-        ":pullapprove_rjs",
+        ":pullapprove",
         "//ng-dev:node_modules/@types/jasmine",
     ],
 )
@@ -40,6 +40,6 @@ ts_project(
 jasmine_test(
     name = "test",
     data = [
-        ":test_lib_rjs",
+        ":test_lib",
     ],
 )

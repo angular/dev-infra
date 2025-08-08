@@ -19,15 +19,15 @@ ts_project(
     ],
     deps = [
         "//:node_modules/firebase-admin",
-        "//apps/functions/code-of-conduct:code-of-conduct_rjs",
-        "//apps/functions/dns-redirecting:dns-redirecting_rjs",
+        "//apps/functions/code-of-conduct",
+        "//apps/functions/dns-redirecting",
     ],
 )
 
 esbuild(
     name = "bundle",
     srcs = [
-        ":functions_rjs",
+        ":functions",
         "//:node_modules/firebase-functions",
     ],
     entry_point = "index.ts",

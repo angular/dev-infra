@@ -15,14 +15,14 @@ ts_project(
         ":node_modules/@octokit/rest",
         ":node_modules/@types/node",
         ":node_modules/undici",
-        "//ng-dev/utils:g3_sync_config_rjs",
+        "//ng-dev/utils:g3_sync_config",
     ],
 )
 
 esbuild_checked_in(
     name = "main",
     srcs = [
-        ":lib_rjs",
+        ":lib",
     ],
     entry_point = "lib/main.ts",
     format = "esm",

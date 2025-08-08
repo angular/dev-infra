@@ -10,7 +10,7 @@ ts_project(
         "//ng-dev:node_modules/@types/node",
         "//ng-dev:node_modules/@types/yargs",
         "//ng-dev:node_modules/yargs",
-        "//ng-dev/release/npm-dist-tag/delete:delete_rjs",
-        "//ng-dev/release/npm-dist-tag/set:set_rjs",
+        "//ng-dev/release/npm-dist-tag/delete",
+        "//ng-dev/release/npm-dist-tag/set",
     ],
 )

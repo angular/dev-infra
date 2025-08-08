@@ -10,7 +10,7 @@ ts_project(
     deps = [
         ":node_modules/@actions/core",
         ":node_modules/@types/node",
-        "//github-actions/previews:constants_lib_rjs",
+        "//github-actions/previews:constants_lib",
     ],
 )
 
@@ -27,7 +27,7 @@ ts_project(
 esbuild_checked_in(
     name = "fetch-workflow-artifact",
     srcs = [
-        ":fetch_workflow_artifact_lib_rjs",
+        ":fetch_workflow_artifact_lib",
     ],
     entry_point = "lib/fetch-workflow-artifact.ts",
     format = "esm",
@@ -38,7 +38,7 @@ esbuild_checked_in(
 esbuild_checked_in(
     name = "extract-artifact-metadata",
     srcs = [
-        ":extract_artifact_metadata_lib_rjs",
+        ":extract_artifact_metadata_lib",
     ],
     entry_point = "lib/extract-artifact-metadata.ts",
     format = "esm",
