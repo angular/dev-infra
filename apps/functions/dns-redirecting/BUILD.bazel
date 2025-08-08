@@ -1,8 +1,8 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:private"])
 
-ts_library(
+ts_project(
     name = "dns-redirecting",
     srcs = [
         "index.ts",
@@ -11,6 +11,6 @@ ts_library(
         "//apps/functions:__pkg__",
     ],
     deps = [
-        "@npm//firebase-functions",
+        "//:node_modules/firebase-functions",
     ],
 )
