@@ -1,8 +1,8 @@
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults2.bzl", "ts_project")
 
 package(default_visibility = ["//visibility:private"])
 
-ts_library(
+ts_project(
     name = "code-of-conduct",
     srcs = [
         "index.ts",
@@ -11,12 +11,12 @@ ts_library(
         "//apps/functions:__pkg__",
     ],
     deps = [
-        ":lib",
-        "@npm//firebase-admin",
+        ":lib_rjs",
+        "//:node_modules/firebase-admin",
     ],
 )
 
-ts_library(
+ts_project(
     name = "lib",
     srcs = [
         "blockUser.ts",
@@ -25,12 +25,12 @@ ts_library(
         "unblockUser.ts",
     ],
     deps = [
-        "@npm//@octokit/auth-app",
-        "@npm//@octokit/request-error",
-        "@npm//@octokit/rest",
-        "@npm//@octokit/webhooks-types",
-        "@npm//@types/node",
-        "@npm//firebase-admin",
-        "@npm//firebase-functions",
+        "//:node_modules/@octokit/auth-app",
+        "//:node_modules/@octokit/request-error",
+        "//:node_modules/@octokit/rest",
+        "//:node_modules/@octokit/webhooks-types",
+        "//:node_modules/@types/node",
+        "//:node_modules/firebase-admin",
+        "//:node_modules/firebase-functions",
     ],
 )

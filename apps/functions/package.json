@@ -3,7 +3,7 @@
   "engines": {
     "node": "20"
   },
-  "main": "functions_compiled/index.cjs",
+  "main": "bundle.js",
   "type": "module",
   "private": true
 }
