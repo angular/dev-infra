@@ -26,19 +26,3 @@ NPM_PACKAGE_SUBSTITUTIONS = select({
     "//tools:stamp": dict(basePackageSubstitutions, **stampSubstitutions),
     "//conditions:default": dict(basePackageSubstitutions, **noStampSubstitutions),
 })
-
-# These packages are allowed to use macros from `defaults.bzl`. This is a
-# little safety improvement to avoid accidentally relying on the defaults
-# which are not available when the dev-infra tooling is consumed.
-BZL_DEFAULTS_ALLOW_PACKAGES = [
-    ".github/local-actions",
-    "",
-    "apps",
-    "bazel/api-golden",
-    "github-actions",
-    "ng-dev",
-    "tools",
-    "lint-rules/tslint",
-    "lint-rules/stylelint",
-    "docs",
-]

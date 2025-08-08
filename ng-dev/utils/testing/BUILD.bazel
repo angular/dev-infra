@@ -31,7 +31,6 @@ ts_project(
     ],
     visibility = [
         "//ng-dev/utils/testing:__subpackages__",
-        "//tools/jasmine:__subpackages__",
     ],
     deps = [
         "//ng-dev:node_modules/@types/node",
