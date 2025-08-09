@@ -2891,13 +2891,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"azure-devops-node-api@npm:15.1.0":
-  version: 15.1.0
-  resolution: "azure-devops-node-api@npm:15.1.0"
+"azure-devops-node-api@npm:15.1.1":
+  version: 15.1.1
+  resolution: "azure-devops-node-api@npm:15.1.1"
   dependencies:
     tunnel: "npm:0.0.6"
     typed-rest-client: "npm:2.1.0"
-  checksum: 10c0/8f744938ac9175ee104a043c42e9eaeab55599b16bb67a72af82af17fe46e6d40e2c66698121e2b3e95ab384432db017458e570449437ab4c5c368a29c23608d
+  checksum: 10c0/e57de52745b322523c2f0220770fcbcb692032610d240644c96914ba0f08613416b701e56dc996b52c9bf6761270148a931f694630ed171b238555e237ee002c
   languageName: node
   linkType: hard
 
@@ -5916,7 +5916,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-renovate@workspace:."
   dependencies:
-    renovate: "npm:41.58.1"
+    renovate: "npm:41.60.3"
   languageName: unknown
   linkType: soft
 
@@ -6639,9 +6639,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"renovate@npm:41.58.1":
-  version: 41.58.1
-  resolution: "renovate@npm:41.58.1"
+"renovate@npm:41.60.3":
+  version: 41.60.3
+  resolution: "renovate@npm:41.60.3"
   dependencies:
     "@aws-sdk/client-codecommit": "npm:3.858.0"
     "@aws-sdk/client-ec2": "npm:3.858.0"
@@ -6681,7 +6681,7 @@ __metadata:
     async-mutex: "npm:0.5.0"
     auth-header: "npm:1.0.0"
     aws4: "npm:1.13.2"
-    azure-devops-node-api: "npm:15.1.0"
+    azure-devops-node-api: "npm:15.1.1"
     better-sqlite3: "npm:12.2.0"
     bunyan: "npm:1.8.15"
     cacache: "npm:20.0.0"
@@ -6773,7 +6773,7 @@ __metadata:
   bin:
     renovate: dist/renovate.js
     renovate-config-validator: dist/config-validator.js
-  checksum: 10c0/0860ef6f40e96bf0faf2f679699884b6eaddae6a8b16381835dbc183add80e06db530be7c034694c8559070a6e4b863f7e088b9d4a8c42cf11a40a889177b057
+  checksum: 10c0/4285cb758f20097df77cd839830b158d8fb29d33571e577f53cef32ff6872b4f23d0b0d22343f89a3d379dd897edcaff8a6a497f2a9838eb28897011a28cdf51
   languageName: node
   linkType: hard
 
