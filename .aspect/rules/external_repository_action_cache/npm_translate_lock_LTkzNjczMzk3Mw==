@@ -1,26 +1,26 @@
 # @generated
 # Input hashes for repository rule npm_translate_lock(name = "devinfra_npm", pnpm_lock = "@//:pnpm-lock.yaml").
 # This file should be checked into version control along with the pnpm-lock.yaml file.
-.github/local-actions/branch-manager/package.json=-197755049
-.github/local-actions/labels-sync/package.json=-805297510
-.github/local-actions/lock-closed/package.json=-805297510
+.github/local-actions/branch-manager/package.json=1583744886
+.github/local-actions/labels-sync/package.json=1305992859
+.github/local-actions/lock-closed/package.json=1305992859
 .npmrc=-1406867100
-bazel/package.json=1905073619
-bazel/spec-bundling/test/package.json=-1269314228
-github-actions/bazel/configure-remote/package.json=855472374
-github-actions/branch-manager/package.json=556340955
-github-actions/browserstack/package.json=855472374
-github-actions/feature-request/package.json=432234341
-github-actions/google-internal-tests/package.json=-197755049
-github-actions/org-file-sync/package.json=-768792564
-github-actions/post-approval-changes/package.json=-358252879
-github-actions/previews/pack-and-upload-artifact/package.json=974988309
-github-actions/previews/upload-artifacts-to-firebase/package.json=-2021238010
-github-actions/pull-request-labeling/package.json=-197755049
-github-actions/saucelabs/package.json=855472374
-github-actions/unified-status-check/package.json=-337882335
-ng-dev/package.json=1323489217
-package.json=-1202209611
-pnpm-lock.yaml=-1602715196
+bazel/package.json=516614676
+bazel/spec-bundling/test/package.json=-1020035827
+github-actions/bazel/configure-remote/package.json=-951982089
+github-actions/branch-manager/package.json=-1957126406
+github-actions/browserstack/package.json=-951982089
+github-actions/feature-request/package.json=905753284
+github-actions/google-internal-tests/package.json=1583744886
+github-actions/org-file-sync/package.json=1012707371
+github-actions/post-approval-changes/package.json=1423247056
+github-actions/previews/pack-and-upload-artifact/package.json=-832466154
+github-actions/previews/upload-artifacts-to-firebase/package.json=466274823
+github-actions/pull-request-labeling/package.json=1583744886
+github-actions/saucelabs/package.json=-951982089
+github-actions/unified-status-check/package.json=1443617600
+ng-dev/package.json=1011728479
+package.json=1304706718
+pnpm-lock.yaml=-567493623
 pnpm-workspace.yaml=1110472849
-yarn.lock=-598328143
+yarn.lock=1479896222
