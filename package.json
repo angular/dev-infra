@@ -70,7 +70,7 @@
     "@bazel/ibazel": "^0.25.0",
     "@bazel/jasmine": "5.8.1",
     "@google-cloud/firestore": "^7.0.0",
-    "@google-cloud/spanner": "8.1.0",
+    "@google-cloud/spanner": "8.0.0",
     "@google-cloud/storage": "^7.0.0",
     "@inquirer/prompts": "^7.0.0",
     "@inquirer/type": "^3.0.0",
