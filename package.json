@@ -52,7 +52,7 @@
     "tmp": "^0.2.1",
     "true-case-path": "^2.2.1",
     "tslib": "^2.5.2",
-    "typescript": "5.8.3",
+    "typescript": "5.9.2",
     "yargs": "18.0.0"
   },
   "devDependencies": {
