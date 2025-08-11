@@ -103,11 +103,16 @@ def esbuild_checked_in(name, platform = None, config = {}, **kwargs):
     """
 
     # Define a default configuration for the Node.js platform.
-    # This adds a 'require' shim needed by esbuild for ES Modules.
+    # This adds a 'require' shim needed by esbuild for ES Modules and updates the main Fields to
+    # properly bundle jsonc-parser.
     node_defaults = {
         "banner": {
             "js": "import { createRequire } from 'node:module';globalThis['require'] ??= createRequire(import.meta.url);",
         },
+        "mainFields": [
+            "module",
+            "main",
+        ],
     }
 
     # If the platform is "node", merge the user's config on top of the defaults.
