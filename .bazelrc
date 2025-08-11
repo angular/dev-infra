@@ -115,7 +115,7 @@ build:trusted-build --remote_upload_local_results=true
 # built with Bazel and building with Bazel inside the Bazel-invoked workspace status
 # script does not work. To workaround this, we have a `tsx`-based stamping script.
 # TODO: Consider using `ng-dev` directly if this is possible.
-build:release --workspace_status_command="yarn build-env-stamp --mode=release --include-version=false"
+build:release --workspace_status_command="pnpm --silent build-env-stamp --mode=release --include-version=false"
 build:release --stamp
 
 ####################################################
