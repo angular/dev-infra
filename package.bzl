@@ -1,7 +1,7 @@
 stampSubstitutions = {
     # The variables are special statuses generated within the Bazel workspace
     # status command stamping script.
-    "{SCM_HEAD_SHA}": "{BUILD_SCM_COMMIT_SHA}",
+    "{SCM_HEAD_SHA}": "{{BUILD_SCM_COMMIT_SHA}}",
 }
 
 noStampSubstitutions = dict(stampSubstitutions, **{})
