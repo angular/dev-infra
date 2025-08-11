@@ -98,8 +98,8 @@ const require = __cjsCompatRequire(import.meta.url);
         ],
     },
     entry_points = [
-        "cli.ts",
-        "index.ts",
+        "cli.js",
+        "index.js",
         # These additional entry-points need to be generated since the `ng-dev` tool tries
         # to launch these files/scripts dynamically (through e.g. `spawn` or `fork`).
         "//ng-dev/release/build:build-worker",
@@ -111,6 +111,11 @@ const require = __cjsCompatRequire(import.meta.url);
     platform = "node",
     sourcemap = "external",
     splitting = True,
+    tags = [
+        # We prevent this from executing remotely so that the `EXTERNAL` packages are still present in
+        # node_modules when running `ng-dev` locally.
+        "no-remote",
+    ],
     target = "node22",
     deps = [
         ":ng-dev",
