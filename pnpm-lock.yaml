@@ -166,8 +166,8 @@ importers:
         specifier: ^7.0.0
         version: 7.11.3(supports-color@10.1.0)
       '@google-cloud/spanner':
-        specifier: 8.1.0
-        version: 8.1.0(encoding@0.1.13)(supports-color@10.1.0)
+        specifier: 8.0.0
+        version: 8.0.0(supports-color@10.1.0)
       '@google-cloud/storage':
         specifier: ^7.0.0
         version: 7.16.0(supports-color@10.1.0)
@@ -1546,6 +1546,7 @@ packages:
       semver: 6.3.1
     transitivePeerDependencies:
       - supports-color
+    dev: false
 
   /@babel/core@7.28.0(supports-color@10.1.0):
     resolution: {integrity: sha512-UlLAnTPrFdNGoFtbSXwcGFQBtQZJCNjaN6hQNP3UPvuNXT1i82N26KL3dZeIpNalWywr9IuQuncaAfUaS1g6sQ==}
@@ -1641,6 +1642,7 @@ packages:
       '@babel/traverse': 7.28.0(supports-color@10.1.0)
     transitivePeerDependencies:
       - supports-color
+    dev: false
 
   /@babel/helper-module-transforms@7.27.3(@babel/core@7.28.0)(supports-color@10.1.0):
     resolution: {integrity: sha512-dSOvYwvyLsWBeIRyOeHXp5vPj5l1I011r52FM1+r1jCERv+aFXYk4whgQccYEGYxK2H3ZAIA8nuPkQ0HaUo3qg==}
@@ -1710,6 +1712,7 @@ packages:
     dependencies:
       '@babel/template': 7.27.2
       '@babel/types': 7.28.2
+    dev: false
 
   /@babel/helpers@7.28.2:
     resolution: {integrity: sha512-/V9771t+EgXz62aCcyofnQhGM8DQACbRhvzKFsXKC9QM+5MadF8ZmIm0crDMaz3+o0h0zXfJnd4EhbYbxsrcFw==}
@@ -1760,6 +1763,7 @@ packages:
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
+    dev: false
 
   /@babel/traverse@7.28.0(supports-color@10.1.0):
     resolution: {integrity: sha512-mGe7UK5wWyh0bKRfupsUchrQGqvDbZDbKJw+kcRGSmdHVYrv+ltd0pnpDTVpiTqnaBru9iEvA8pz8W46v0Amwg==}
@@ -1861,6 +1865,7 @@ packages:
 
   /@bazel/typescript@5.8.1(typescript@5.8.3):
     resolution: {integrity: sha512-NAJ8WQHZL1WE1YmRoCrq/1hhG15Mvy/viWh6TkvFnBeEhNUiQUsA5GYyhU1ztnBIYW03nATO3vwhAEfO7Q0U5g==}
+    deprecated: No longer maintained, https://github.com/aspect-build/rules_ts is the recommended replacement
     hasBin: true
     peerDependencies:
       typescript: '>=3.0.0'
@@ -3300,9 +3305,10 @@ packages:
     resolution: {integrity: sha512-jAx0ASRcRqr+TZIgMTS3gFQR/FqkYzd4usCD0Y/QOkWt4vTT0SgYMaXn62gtuuEmY66VNBVROhpzOMeasgHuKw==}
     engines: {node: '>=18'}
     dependencies:
-      google-gax: 5.0.1(supports-color@10.1.0)
+      google-gax: 5.0.3(supports-color@10.1.0)
     transitivePeerDependencies:
       - supports-color
+    dev: false
 
   /@google-cloud/opentelemetry-resource-util@2.4.0(@opentelemetry/resources@1.30.1)(encoding@0.1.13)(supports-color@10.1.0):
     resolution: {integrity: sha512-/7ujlMoKtDtrbQlJihCjQnm31n2s2RTlvJqcSbt2jV3OkCzPAdo3u31Q13HNugqtIRUSk7bUoLx6AzhURkhW4w==}
@@ -3316,6 +3322,7 @@ packages:
     transitivePeerDependencies:
       - encoding
       - supports-color
+    dev: false
 
   /@google-cloud/paginator@5.0.2:
     resolution: {integrity: sha512-DJS3s0OVH4zFDB1PzjxAsHqJT6sKVbRwwML0ZBP9PbU7Yebtu/7SWMRzvO2J3nUi9pRNITCfu4LJeooM2w4pjg==}
@@ -3378,6 +3385,44 @@ packages:
       - supports-color
     dev: true
 
+  /@google-cloud/spanner@8.0.0(supports-color@10.1.0):
+    resolution: {integrity: sha512-IJn+8A3QZJfe7FUtWqHVNo3xJs7KFpurCWGWCiCz3oEh+BkRymKZ1QxfAbU2yGMDzTytLGQ2IV6T2r3cuo75/w==}
+    engines: {node: '>=18'}
+    dependencies:
+      '@google-cloud/common': 6.0.0(supports-color@10.1.0)
+      '@google-cloud/precise-date': 5.0.0
+      '@google-cloud/projectify': 5.0.0
+      '@google-cloud/promisify': 5.0.0
+      '@grpc/proto-loader': 0.7.15
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/context-async-hooks': 2.0.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/core': 2.0.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/semantic-conventions': 1.36.0
+      '@types/big.js': 6.2.2
+      '@types/stack-trace': 0.0.33
+      big.js: 7.0.1
+      checkpoint-stream: 0.1.2
+      duplexify: 4.1.3
+      events-intercept: 2.0.0
+      extend: 3.0.2
+      google-auth-library: 10.2.0(supports-color@10.1.0)
+      google-gax: 5.0.3(supports-color@10.1.0)
+      grpc-gcp: 1.0.1
+      is: 3.3.2
+      lodash.snakecase: 4.1.1
+      merge-stream: 2.0.0
+      p-queue: 6.6.2
+      protobufjs: 7.5.3
+      retry-request: 8.0.0(supports-color@10.1.0)
+      split-array-stream: 2.0.0
+      stack-trace: 0.0.10
+      stream-events: 1.0.5
+      teeny-request: 10.1.0(supports-color@10.1.0)
+      through2: 4.0.2
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
   /@google-cloud/spanner@8.1.0(encoding@0.1.13)(supports-color@10.1.0):
     resolution: {integrity: sha512-Sw+CXNh3xFSZWD4uGy4I5gIePnATZtfg9tP/QXFilXNc1cDwU5uuV0x4yZa5eyIczToilqxpUsQPEN4VxmjJLw==}
     engines: {node: '>=18'}
@@ -3422,6 +3467,7 @@ packages:
     transitivePeerDependencies:
       - encoding
       - supports-color
+    dev: false
 
   /@google-cloud/storage@7.16.0(supports-color@10.1.0):
     resolution: {integrity: sha512-7/5LRgykyOfQENcm6hDKP8SX/u9XxE5YOiWOkgkwcoO+cG8xT/cyOvp9wwN3IxfdYgpHs8CE7Nq2PKX2lNaEXw==}
@@ -3508,6 +3554,16 @@ packages:
 
   /@grpc/proto-loader@0.7.15:
     resolution: {integrity: sha512-tMXdRCfYVixjuFK+Hk0Q1s38gV9zDiDJfWL3h1rv4Qc39oILCu1TRTDt7+fGUI8K4G1Fj125Hx/ru3azECWTyQ==}
+    engines: {node: '>=6'}
+    hasBin: true
+    dependencies:
+      lodash.camelcase: 4.3.0
+      long: 5.3.2
+      protobufjs: 7.5.3
+      yargs: 17.7.2
+
+  /@grpc/proto-loader@0.8.0:
+    resolution: {integrity: sha512-rc1hOQtjIWGxcxpb9aHAfLpIctjEnsDehj0DAiVfBlmT84uvR0uUtN2hEi/ecvWVjXUGf5qPF4qEgiLOx1YIMQ==}
     engines: {node: '>=6'}
     hasBin: true
     dependencies:
@@ -4808,6 +4864,7 @@ packages:
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/semantic-conventions': 1.28.0
+    dev: false
 
   /@opentelemetry/core@2.0.1(@opentelemetry/api@1.9.0):
     resolution: {integrity: sha512-MaZk9SJIDgo1peKevlbhP6+IwIiNPNmswNL4AF0WaQJLbHXjr9SrZMgS12+iqr9ToV4ZVosCcc0f8Rg67LXjxw==}
@@ -4827,6 +4884,7 @@ packages:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/semantic-conventions': 1.28.0
+    dev: false
 
   /@opentelemetry/sdk-metrics@1.30.1(@opentelemetry/api@1.9.0):
     resolution: {integrity: sha512-q9zcZ0Okl8jRgmy7eNW3Ku1XSgg3sDLa5evHZpCwjspw7E8Is4K/haRPDJrBcX3YSn/Y7gUvFnByNYEKQNbNog==}
@@ -4837,10 +4895,12 @@ packages:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/resources': 1.30.1(@opentelemetry/api@1.9.0)
+    dev: false
 
   /@opentelemetry/semantic-conventions@1.28.0:
     resolution: {integrity: sha512-lp4qAiMTD4sNWW4DbKLBkfiMZ4jbAboJIGOQr5DvciMRI494OapieI9qiODpOt0XBr1LjIDy1xAGAnVs5supTA==}
     engines: {node: '>=14'}
+    dev: false
 
   /@opentelemetry/semantic-conventions@1.30.0:
     resolution: {integrity: sha512-4VlGgo32k2EQ2wcCY3vEU28A0O13aOtHz3Xt2/2U5FAh9EfhD6t6DqL5Z6yAnRCntbTFDU4YfbpyzSlHNWycPw==}
@@ -5786,6 +5846,7 @@ packages:
     deprecated: This is a stub types definition. long provides its own type definitions, so you do not need this installed.
     dependencies:
       long: 5.3.2
+    dev: false
 
   /@types/micromatch@2.3.35:
     resolution: {integrity: sha512-J749bHo/Zu56w0G0NI/IGHLQPiSsjx//0zJhfEVAN95K/xM5C8ZDmhkXtU3qns0sBOao7HuQzr8XV1/2o5LbXA==}
@@ -8715,6 +8776,7 @@ packages:
   /globals@11.12.0:
     resolution: {integrity: sha512-WOBp/EEGUiIsJSp7wcv/y6MO+lV9UoncWqxuFfm8eBwzWNgyfBd6Gz+IeKQ9jCmyhoH99g15M3T+QaVHFjizVA==}
     engines: {node: '>=4'}
+    dev: false
 
   /globby@11.1.0:
     resolution: {integrity: sha512-jhIXaOzy1sb8IyocaruWSn1TjmnBVs8Ayhcy83rmxNJ8q2uWKCAj3CnJY+KpGSXCueAPc0i05kVvVKtP1t9S3g==}
@@ -8811,13 +8873,14 @@ packages:
       retry-request: 8.0.0(supports-color@10.1.0)
     transitivePeerDependencies:
       - supports-color
+    dev: false
 
-  /google-gax@5.0.1(supports-color@10.1.0):
-    resolution: {integrity: sha512-I8fTFXvIG8tYpiDxDXwCXoFsTVsvHJ2GA7DToH+eaRccU8r3nqPMFghVb2GdHSVcu4pq9ScRyB2S1BjO+vsa1Q==}
+  /google-gax@5.0.3(supports-color@10.1.0):
+    resolution: {integrity: sha512-DkWybwgkV8HA9aIizNEHEUHd8ho1BzGGQ/YMGDsTt167dQ8pk/oMiwxpUFvh6Ta93m8ZN7KwdWmP3o46HWjV+A==}
     engines: {node: '>=18'}
     dependencies:
       '@grpc/grpc-js': 1.13.4
-      '@grpc/proto-loader': 0.7.15
+      '@grpc/proto-loader': 0.8.0
       abort-controller: 3.0.0
       duplexify: 4.1.3
       google-auth-library: 10.2.0(supports-color@10.1.0)
@@ -9452,6 +9515,11 @@ packages:
       deep-is: 0.1.4
       ip-regex: 4.3.0
       is-url: 1.2.4
+    dev: true
+
+  /is@3.3.2:
+    resolution: {integrity: sha512-a2xr4E3s1PjDS8ORcGgXpWx6V+liNs+O3JRD2mb9aeugD7rtkkZ0zgLdYgw0tWsKhsdiezGYptSiMlVazCBTuQ==}
+    engines: {node: '>= 0.4'}
     dev: true
 
   /isarray@0.0.1:
