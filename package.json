@@ -168,8 +168,7 @@
     },
     "onlyBuiltDependencies": [
       "firebase-functions",
-      "tsx",
-      "renovate"
+      "tsx"
     ]
   }
 }
