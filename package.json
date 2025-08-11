@@ -2,19 +2,24 @@
   "name": "@angular/build-tooling",
   "version": "0.0.0-{SCM_HEAD_SHA}",
   "private": true,
+  "packageManager": "pnpm@10.13.1",
+  "engines": {
+    "npm": "Please use pnpm instead of NPM to install dependencies",
+    "yarn": "Please use pnpm instead of Yarn to install dependencies",
+    "pnpm": "10.13.1"
+  },
   "scripts": {
     "prepare": "husky",
     "ng-dev": "bash ./tools/local-dev.sh",
-    "lint": "yarn tslint -c tslint.json --project tsconfig.json",
+    "lint": "tslint -c tslint.json --project tsconfig.json",
     "build-env-stamp": "tsx --tsconfig tsconfig.json ./ng-dev/release/stamping/_private_main.ts build-env-stamp",
-    "update-generated-files": "yarn ng-dev misc update-generated-files"
+    "update-generated-files": "ng-dev misc update-generated-files"
   },
   "exports": {
     "./*": {
       "default": "./*"
     }
   },
-  "packageManager": "yarn@4.9.1",
   "dependencies": {
     "@angular/build": "20.0.0",
     "@angular/cdk": "20.0.0",
@@ -153,14 +158,18 @@
     "yaml": "^2.0.0",
     "zone.js": "^0.15.0"
   },
-  "dependenciesMeta": {
-    "re2": {
-      "built": false
-    }
-  },
   "pnpm": {
+    "packageExtensions": {
+      "grpc-gcp": {
+        "peerDependencies": {
+          "protobufjs": "*"
+        }
+      }
+    },
     "onlyBuiltDependencies": [
-      "firebase-functions"
+      "firebase-functions",
+      "tsx",
+      "renovate"
     ]
   }
 }

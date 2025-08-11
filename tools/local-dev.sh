@@ -7,7 +7,7 @@ set -e
 
 devInfraProjectDir="$(dirname ${0})/.."
 ngDevBinFile="${devInfraProjectDir}/dist/bin/ng-dev/npm_package/bundles/cli.mjs"
-bazelCommand=${BAZEL:-"yarn bazel"}
+bazelCommand=${BAZEL:-"pnpm bazel"}
 
 # Build the `ng-dev` binary into the `dev-infra/dist` directory.
 # We need to build in a subshell as Bazel requires the working
@@ -22,4 +22,4 @@ export TS_NODE_PROJECT=${PWD}/.ng-dev/tsconfig.json
 
 # Execute the built ng-dev command in the current working directory
 # and pass-through arguments unmodified.
-node ${devInfraProjectDir}/node_modules/.bin/tsx ${ngDevBinFile} ${@}
+${devInfraProjectDir}/node_modules/.bin/tsx ${ngDevBinFile} ${@}

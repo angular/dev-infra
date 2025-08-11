@@ -1,2 +1,2 @@
 #!/bin/sh
-yarn ng-dev commit-message pre-commit-validate --file $1 2>/dev/null
+pnpm --silent ng-dev commit-message pre-commit-validate --file $1 2>/dev/null
