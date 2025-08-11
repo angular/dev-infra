@@ -20,7 +20,7 @@ export async function updateGeneratedFileTargets(): Promise<void> {
       getBazelBin(),
       [
         'query',
-        `"kind(nodejs_binary, //...) intersect attr(name, '.update$', //...)"`,
+        `"kind(esbuild, //...) intersect attr(name, '_generated$', //...)"`,
         '--output',
         'label',
       ],
@@ -31,7 +31,10 @@ export async function updateGeneratedFileTargets(): Promise<void> {
       throw new Error(`Unexpected error: ${result.stderr}`);
     }
 
-    const targets = result.stdout.trim().split(/\r?\n/);
+    const targets = result.stdout
+      .trim()
+      .split(/\r?\n/)
+      .map((x) => x.replace(/_generated$/, ''));
 
     Log.debug.group('Discovered Targets');
     targets.forEach((target) => Log.debug(target));
