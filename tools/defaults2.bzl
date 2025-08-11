@@ -84,9 +84,30 @@ def jasmine_test(name, **kwargs):
         **kwargs
     )
 
-def esbuild_checked_in(name, **kwargs):
+def esbuild_checked_in(name, platform = None, config = {}, **kwargs):
+    """
+    Runs esbuild with a default Node.js banner configuration if needed.
+    The user's provided 'config' settings will always take precedence.
+    """
+
+    # Define a default configuration for the Node.js platform.
+    # This adds a 'require' shim needed by esbuild for ES Modules.
+    node_defaults = {
+        "banner": {
+            "js": "import { createRequire } from 'node:module';globalThis['require'] ??= createRequire(import.meta.url);",
+        },
+    }
+
+    # If the platform is "node", merge the user's config on top of the defaults.
+    # Otherwise, just use the user's config.
+    effective_config = (
+        {k: v for k, v in node_defaults.items() + config.items()} if platform == "node" else config
+    )
+
     _esbuild(
         name = "%s_generated" % name,
+        platform = platform,
+        config = effective_config,
         sourcemap = "inline",
         **kwargs
     )
