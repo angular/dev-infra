@@ -26,16 +26,16 @@ jobs:
       - uses: ./github-actions/npm/checkout-and-setup-node
       - uses: ./github-actions/bazel/setup
       - uses: ./github-actions/bazel/configure-remote
-      - run: yarn install --immutable
+      - run: pnpm install --frozen-lockfile
       - name: Check code format
-        run: yarn ng-dev format changed --check ${{ github.event.pull_request.base.sha }}
+        run: pnpm ng-dev format changed --check ${{ github.event.pull_request.base.sha }}
       - name: Check commit message
-        run: yarn ng-dev commit-message validate-range ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}
+        run: pnpm ng-dev commit-message validate-range ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }}
       - name: Check code lint
-        run: yarn lint
+        run: pnpm lint
       # TODO: Enable again after the tsconfigs are reworked as part of migration
       # - name: Confirm code builds with typescript as expected
-      #   run: yarn tsc -p tsconfig.json
+      #   run: pnpm tsc -p tsconfig.json
       - name: Check Package Licenses
         # We use this action pinned at main because we need to have an actual version for the config to load.
         # Since using the local version would end up nearly using `main` anyway, this is essentially equivalent.
@@ -54,8 +54,8 @@ jobs:
       - uses: ./github-actions/npm/checkout-and-setup-node
       - uses: ./github-actions/bazel/setup
       - uses: ./github-actions/bazel/configure-remote
-      - run: yarn install --immutable
-      - run: yarn bazel test -- //...
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm bazel test -- //...
 
   # macos testing is disabled as we do not have any targets we currently test.
   #test-macos:
@@ -68,5 +68,5 @@ jobs:
   #    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
   #    - uses: ./github-actions/npm/checkout-and-setup-node
   #    - uses: ./github-actions/bazel/setup
-  #    - run: yarn install --immutable
-  #    - run: yarn bazel test --sandbox_writable_path="$HOME/Library/Application Support" --test_tag_filters=macos --build_tests_only -- //...
+  #    - run: pnpm install --frozen-lockfile
+  #    - run: pnpm bazel test --sandbox_writable_path="$HOME/Library/Application Support" --test_tag_filters=macos --build_tests_only -- //...

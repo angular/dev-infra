@@ -74,7 +74,7 @@ export async function checkFiles(files: string[]) {
       // Inform user how to format files in the future.
       Log.info();
       Log.info(`To format the failing file run the following command:`);
-      Log.info(`  yarn ng-dev format files ${failures.map((f) => f.filePath).join(' ')}`);
+      Log.info(`  pnpm ng-dev format files ${failures.map((f) => f.filePath).join(' ')}`);
       return 1;
     }
   } else {

@@ -1,2 +1,2 @@
 #!/bin/sh
-yarn ng-dev format staged;
+pnpm --silent ng-dev format staged;

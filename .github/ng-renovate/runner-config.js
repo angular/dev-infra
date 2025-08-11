@@ -8,7 +8,7 @@ module.exports = {
   forkModeDisallowMaintainerEdits: true,
   onboarding: false,
   persistRepoData: true,
-  allowedPostUpgradeCommands: ['.', '^yarn install$', '^yarn update-generated-files$'],
+  allowedPostUpgradeCommands: ['.', '^pnpm install$', '^pnpm update-generated-files$'],
   hostRules: [
     {
       matchHost: 'api.github.com',

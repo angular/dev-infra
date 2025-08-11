@@ -26,7 +26,5 @@ def setup_dependencies_1():
             "@devinfra//:pnpm-workspace.yaml",
         ],
         pnpm_lock = "@devinfra//:pnpm-lock.yaml",
-        update_pnpm_lock = True,
         npmrc = "@devinfra//:.npmrc",
-        yarn_lock = "@devinfra//:yarn.lock",
     )

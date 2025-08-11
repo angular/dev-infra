@@ -31,17 +31,8 @@ jobs:
       # this step.
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: ./github-actions/npm/checkout-and-setup-node
-      - run: npm install --global pnpm@10.14.0
-        shell: bash
-
-      # TODO: Use pnpm/action-setup for pnpm install once pnpm is the packageManager for this repo
-      - run: yarn --cwd .github/ng-renovate install --immutable
-        shell: bash
-
-      # Note: Run Renovate outside of Yarn as otherwise we would end up breaking Yarn path
-      # resolution due to Yarn setting `YARN_IGNORE_PATH`. This would cause vendored Yarn
-      # installations to be ignored and lock file generation for repositories to break.
-      - run: .github/ng-renovate/node_modules/.bin/renovate
+      - uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+      - run: pnpm run renovate
         env:
           LOG_LEVEL: debug
           RENOVATE_TOKEN: ${{ secrets.NG_RENOVATE_USER_ACCESS_TOKEN }}

@@ -27,8 +27,8 @@ jobs:
       - uses: ./github-actions/bazel/configure-remote
         with:
           bazelrc: .bazelrc
-      - run: yarn install --immutable
-      - run: yarn bazel build //ng-dev:npm_package --config=release
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm bazel build //ng-dev:npm_package --config=release
       - name: Publish Snapshots
         env:
           SNAPSHOT_BUILDS_GITHUB_TOKEN: ${{ secrets.SNAPSHOT_BUILDS_GITHUB_TOKEN }}
