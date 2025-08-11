@@ -3,5 +3,10 @@
   "type": "commonjs",
   "dependencies": {
     "renovate": "41.58.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "re2"
+    ]
   }
 }

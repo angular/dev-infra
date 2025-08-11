@@ -6,7 +6,6 @@ packages:
   - .github/local-actions/branch-manager
   - .github/local-actions/labels-sync
   - .github/local-actions/lock-closed
-  - .github/ng-renovate
   - github-actions/google-internal-tests
   - github-actions/pull-request-labeling
   - github-actions/unified-status-check

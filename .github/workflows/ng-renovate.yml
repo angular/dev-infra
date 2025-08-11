@@ -32,11 +32,14 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: ./github-actions/npm/checkout-and-setup-node
       - uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
-      - run: pnpm run renovate
+      - run: pnpm install --frozen-lockfile
+        working-directory: ./.github/ng-renovate
+      - run: pnpm exec renovate
+        working-directory: ./.github/ng-renovate
         env:
           LOG_LEVEL: debug
           RENOVATE_TOKEN: ${{ secrets.NG_RENOVATE_USER_ACCESS_TOKEN }}
           RENOVATE_FORK_TOKEN: ${{ secrets.NG_RENOVATE_USER_ACCESS_TOKEN }}
           GITHUB_COM_TOKEN: ${{ secrets.NG_RENOVATE_USER_ACCESS_TOKEN }}
-          RENOVATE_CONFIG_FILE: .github/ng-renovate/runner-config.js
+          RENOVATE_CONFIG_FILE: ./runner-config.js
           RENOVATE_REPOSITORIES: ${{ matrix.REPOSITORY }}
