@@ -5,6 +5,9 @@
   rangeStrategy: 'replace',
   automerge: false,
 
+  // Temporary workaround for https://github.com/renovatebot/renovate/discussions/30812
+  ignoreScripts: false,
+
   // Schedule Renovate to run during off-peak hours
   schedule: ['after 10:00pm every weekday', 'before 5:00am every weekday', 'every weekend'],
   prConcurrentLimit: 8,
