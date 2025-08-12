@@ -9,7 +9,7 @@ integration_test(
     ],
     data = [
         # Makes the chromium binaries available for the `ng test` command.
-        "@rules_browsers//src/browsers/chromium",
+        "@rules_browsers//browsers/chromium",
     ],
     environment = {
         "CHROME_BIN": "$(CHROME-HEADLESS-SHELL)",
@@ -22,5 +22,5 @@ integration_test(
         "//:yarn_classic_vendored": "yarn",
         "@nodejs_toolchains//:resolved_toolchain": "node",
     },
-    toolchains = ["@rules_browsers//src/browsers/chromium:toolchain_alias"],
+    toolchains = ["@rules_browsers//browsers/chromium:toolchain_alias"],
 )
