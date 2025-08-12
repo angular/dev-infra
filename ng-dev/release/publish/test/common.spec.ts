@@ -613,7 +613,7 @@ describe('common release action logic', () => {
       writeFileSync(
         renovateConfigPath,
         JSON.stringify({
-          'baseBranches': ['main', '20.1.x'],
+          'baseBranchPatterns': ['main', '20.1.x'],
           'packageRules': [
             {
               'matchBaseBranches': ['main'],

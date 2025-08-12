@@ -11,7 +11,7 @@ import {targetLabels} from '../../../pr/common/labels/target.js';
  * @param projectDir - The path to the project directory.
  * @param newBranchName - The name of the new branch to add to the base branches list.
  * @returns A promise that resolves to the path of the modified `renovate.json` file if updated,
- * or `null` if the file was not found or the `baseBranches` array has an unexpected format.
+ * or `null` if the file was not found or the `baseBranchPatterns` array has an unexpected format.
  */
 export async function updateRenovateConfig(
   projectDir: string,
@@ -25,17 +25,17 @@ export async function updateRenovateConfig(
 
   const config = await readFile(renovateConfigPath, 'utf-8');
   const configJson = JSON.parse(config) as Record<string, unknown>;
-  const baseBranches = configJson['baseBranches'];
+  const baseBranchPatterns = configJson['baseBranchPatterns'];
 
-  if (!Array.isArray(baseBranches) || baseBranches.length !== 2) {
+  if (!Array.isArray(baseBranchPatterns) || baseBranchPatterns.length !== 2) {
     Log.warn(
-      `  ✘   Skipped updating Renovate config: "baseBranches" must contain exactly 2 branches.`,
+      `  ✘   Skipped updating Renovate config: "baseBranchPatterns" must contain exactly 2 branches.`,
     );
 
     return null;
   }
 
-  configJson['baseBranches'] = ['main', newBranchName];
+  configJson['baseBranchPatterns'] = ['main', newBranchName];
 
   updateRenovateTargetLabel(
     configJson,
@@ -56,7 +56,7 @@ export async function updateRenovateConfig(
  * @param fromLabel - The label name to be replaced.
  * @param toLabel - The new label name to replace `fromLabel` with.
  * @returns A promise that resolves to the path of the modified `renovate.json` file if updated,
- * or `null` if the file was not found or the `baseBranches` array has an unexpected format.
+ * or `null` if the file was not found or the `baseBranchPatterns` array has an unexpected format.
  */
 export async function updateRenovateConfigTargetLabels(
   projectDir: string,
@@ -73,11 +73,11 @@ export async function updateRenovateConfigTargetLabels(
   const config = await readFile(renovateConfigPath, 'utf-8');
   const configJson = JSON.parse(config) as Record<string, unknown>;
 
-  // Check baseBranches just in case, though this function's primary focus is labels
-  const baseBranches = configJson['baseBranches'];
-  if (!Array.isArray(baseBranches) || baseBranches.length !== 2) {
+  // Check baseBranchPatterns just in case, though this function's primary focus is labels
+  const baseBranchPatterns = configJson['baseBranchPatterns'];
+  if (!Array.isArray(baseBranchPatterns) || baseBranchPatterns.length !== 2) {
     Log.warn(
-      `  ✘   Skipped updating Renovate config: "baseBranches" must contain exactly 2 branches.`,
+      `  ✘   Skipped updating Renovate config: "baseBranchPatterns" must contain exactly 2 branches.`,
     );
 
     return null;
