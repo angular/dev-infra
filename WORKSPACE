@@ -5,21 +5,6 @@ workspace(
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-# The PKG rules are needed to build tar packages for integration tests. The builtin
-# rule in `@bazel_tools` is not Windows compatible and outdated.
-http_archive(
-    name = "rules_pkg",
-    sha256 = "8c20f74bca25d2d442b327ae26768c02cf3c99e93fad0381f32be9aab1967675",
-    urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/rules_pkg/releases/download/0.8.1/rules_pkg-0.8.1.tar.gz",
-        "https://github.com/bazelbuild/rules_pkg/releases/download/0.8.1/rules_pkg-0.8.1.tar.gz",
-    ],
-)
-
-load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
-
-rules_pkg_dependencies()
-
 http_archive(
     name = "aspect_rules_js",
     sha256 = "b71565da7a811964e30cccb405544d551561e4b56c65f0c0aeabe85638920bd6",
@@ -95,31 +80,6 @@ esbuild_register_toolchains(
     name = "esbuild",
     esbuild_version = LATEST_ESBUILD_VERSION,
 )
-
-git_repository(
-    name = "rules_browsers",
-    commit = "56ef8007ea07cd1916429bca8bb523433b0e9cdc",
-    remote = "https://github.com/devversion/rules_browsers.git",
-)
-
-load("@rules_browsers//setup:step_1.bzl", "rules_browsers_setup_1")
-
-rules_browsers_setup_1()
-
-load("@rules_browsers//setup:step_2.bzl", "rules_browsers_setup_2")
-
-rules_browsers_setup_2()
-
-http_archive(
-    name = "aspect_rules_jasmine",
-    sha256 = "0d2f9c977842685895020cac721d8cc4f1b37aae15af46128cf619741dc61529",
-    strip_prefix = "rules_jasmine-2.0.0",
-    url = "https://github.com/aspect-build/rules_jasmine/releases/download/v2.0.0/rules_jasmine-v2.0.0.tar.gz",
-)
-
-load("@aspect_rules_jasmine//jasmine:dependencies.bzl", "rules_jasmine_dependencies")
-
-rules_jasmine_dependencies()
 
 git_repository(
     name = "rules_angular",

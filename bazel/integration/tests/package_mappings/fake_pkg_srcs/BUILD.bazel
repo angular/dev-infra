@@ -13,6 +13,7 @@ pkg_tar(
     name = "archive",
     srcs = [":npm_package"],
     extension = "tar.gz",
+    package_dir = "package/",
     strip_prefix = "./npm_package",
     visibility = ["//bazel/integration/tests/package_mappings:__pkg__"],
 )

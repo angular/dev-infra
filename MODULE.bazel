@@ -1,5 +1,21 @@
-# TODO: Investigate bzlmod and use it where possible.
-
+"""Rules/toolchains for devinfra with Bazel."""
 module(
     name = "devinfra",
 )
+
+register_toolchains(
+    "//bazel/git-toolchain:git_linux_toolchain",
+    "//bazel/git-toolchain:git_macos_x86_toolchain",
+    "//bazel/git-toolchain:git_macos_arm64_toolchain",
+)
+
+bazel_dep(name = "rules_pkg", version = "1.1.0")
+bazel_dep(name = "aspect_rules_jasmine", version = "2.0.0")
+bazel_dep(name = "rules_browsers", version = "1.0.0")
+
+git_override(
+    module_name = "rules_browsers",
+    commit = "c3f7358828a6e9c2b08c23bc33b8982f8daea9e5",
+    remote = "https://github.com/devversion/rules_browsers.git",
+)
+
