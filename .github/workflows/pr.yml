@@ -22,7 +22,7 @@ jobs:
       # Because the checkout and setup node action is contained in the dev-infra repo, we must
       # checkout the repo to be able to run the action we have created.  Other repos will skip
       # this step.
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - uses: ./github-actions/npm/checkout-and-setup-node
       - uses: ./github-actions/bazel/setup
       - uses: ./github-actions/bazel/configure-remote
@@ -50,7 +50,7 @@ jobs:
       # Because the checkout and setup node action is contained in the dev-infra repo, we must
       # checkout the repo to be able to run the action we have created.  Other repos will skip
       # this step.
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - uses: ./github-actions/npm/checkout-and-setup-node
       - uses: ./github-actions/bazel/setup
       - uses: ./github-actions/bazel/configure-remote
