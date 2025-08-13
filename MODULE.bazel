@@ -9,13 +9,101 @@ register_toolchains(
     "//bazel/git-toolchain:git_macos_arm64_toolchain",
 )
 
+bazel_dep(name = "yq.bzl", version = "0.2.0")
+bazel_dep(name = "tar.bzl", version = "0.5.1")
+bazel_dep(name = "aspect_bazel_lib", version = "2.19.3")
+bazel_dep(name = "bazel_skylib", version = "1.8.1")
+bazel_dep(name = "aspect_rules_js", version = "2.4.2")
 bazel_dep(name = "rules_pkg", version = "1.1.0")
 bazel_dep(name = "aspect_rules_jasmine", version = "2.0.0")
-bazel_dep(name = "rules_browsers", version = "1.0.0")
-
+bazel_dep(name = "platforms", version = "1.0.0")
+bazel_dep(name = "aspect_rules_esbuild", version = "0.22.1")
+bazel_dep(name = "aspect_rules_ts", version = "3.6.3")
+bazel_dep(name = "rules_nodejs", version = "6.5.0")
+bazel_dep(name = "rules_browsers")
 git_override(
     module_name = "rules_browsers",
-    commit = "c3f7358828a6e9c2b08c23bc33b8982f8daea9e5",
+    commit = "155c3367c0140dc3c8ff0d0ee050f5cc6aa0a643",
     remote = "https://github.com/devversion/rules_browsers.git",
 )
+bazel_dep(name = "rules_sass")
+git_override(
+    module_name = "rules_sass",
+    commit = "76078d5e9776a0080dcee496e90b88d8a6179c19",
+    remote = "https://github.com/devversion/rules_sass.git",
+)
 
+bazel_dep(name = "rules_angular")
+git_override(
+    module_name = "rules_angular",
+    commit = "a957283cdef0ade1fc6d1d7404f14577cebd3642",
+    remote = "https://github.com/devversion/rules_angular.git",
+)
+
+yq = use_extension("@yq.bzl//yq:extensions.bzl", "yq")
+use_repo(yq, "yq_toolchains")
+
+
+rules_ts_ext = use_extension("@aspect_rules_ts//ts:extensions.bzl", "ext")
+rules_ts_ext.deps(
+    # Obtained by: curl --silent https://registry.npmjs.org/typescript/5.9.2 | jq -r '.dist.integrity'
+    ts_integrity = "sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==",
+    ts_version_from = "//bazel:package.json",
+)
+use_repo(rules_ts_ext, "npm_typescript")
+
+node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
+node.toolchain(
+    node_repositories = {
+        "20.19.0-darwin_arm64": ("node-v20.19.0-darwin-arm64.tar.gz", "node-v20.19.0-darwin-arm64", "c016cd1975a264a29dc1b07c6fbe60d5df0a0c2beb4113c0450e3d998d1a0d9c"),
+        "20.19.0-darwin_amd64": ("node-v20.19.0-darwin-x64.tar.gz", "node-v20.19.0-darwin-x64", "a8554af97d6491fdbdabe63d3a1cfb9571228d25a3ad9aed2df856facb131b20"),
+        "20.19.0-linux_arm64": ("node-v20.19.0-linux-arm64.tar.xz", "node-v20.19.0-linux-arm64", "dbe339e55eb393955a213e6b872066880bb9feceaa494f4d44c7aac205ec2ab9"),
+        "20.19.0-linux_ppc64le": ("node-v20.19.0-linux-ppc64le.tar.xz", "node-v20.19.0-linux-ppc64le", "84937108f005679e60b486ed8e801cebfe923f02b76d8e710463d32f82181f65"),
+        "20.19.0-linux_s390x": ("node-v20.19.0-linux-s390x.tar.xz", "node-v20.19.0-linux-s390x", "11f8ee99d792a83bba7b29911e0229dd6cd5e88987d7416346067db1cc76d89a"),
+        "20.19.0-linux_amd64": ("node-v20.19.0-linux-x64.tar.xz", "node-v20.19.0-linux-x64", "b4e336584d62abefad31baecff7af167268be9bb7dd11f1297112e6eed3ca0d5"),
+        "20.19.0-windows_amd64": ("node-v20.19.0-win-x64.zip", "node-v20.19.0-win-x64", "be72284c7bc62de07d5a9fd0ae196879842c085f11f7f2b60bf8864c0c9d6a4f"),
+    },
+    node_version = "20.19.0",
+)
+use_repo(node, "nodejs_toolchains")
+
+
+rules_angular = use_extension("@rules_angular//setup:extensions.bzl", "rules_angular")
+rules_angular.setup(
+    name = "dev_infra_rules_angular_configurable_deps",
+    angular_compiler_cli = "//:node_modules/@angular/compiler-cli",
+    typescript = "//:node_modules/typescript-local",
+)
+use_repo(rules_angular, **{"rules_angular_configurable_deps":"dev_infra_rules_angular_configurable_deps"})
+
+
+npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm")
+
+npm.npm_translate_lock(
+     name = "devinfra_npm",
+        data = [
+            "@devinfra//:package.json",
+            "@devinfra//bazel:package.json",
+            "@devinfra//.github/local-actions/branch-manager:package.json",
+            "@devinfra//.github/local-actions/labels-sync:package.json",
+            "@devinfra//.github/local-actions/lock-closed:package.json",
+            "@devinfra//github-actions/google-internal-tests:package.json",
+            "@devinfra//github-actions/pull-request-labeling:package.json",
+            "@devinfra//github-actions/unified-status-check:package.json",
+            "@devinfra//github-actions/previews/pack-and-upload-artifact:package.json",
+            "@devinfra//github-actions/previews/upload-artifacts-to-firebase:package.json",
+            "@devinfra//github-actions/post-approval-changes:package.json",
+            "@devinfra//github-actions/branch-manager:package.json",
+            "@devinfra//github-actions/saucelabs:package.json",
+            "@devinfra//github-actions/browserstack:package.json",
+            "@devinfra//github-actions/bazel/configure-remote:package.json",
+            "@devinfra//github-actions/org-file-sync:package.json",
+            "@devinfra//github-actions/feature-request:package.json",
+            "@devinfra//ng-dev:package.json",
+            "@devinfra//bazel/spec-bundling/test:package.json",
+            "@devinfra//:pnpm-workspace.yaml",
+        ],
+        pnpm_lock = "@devinfra//:pnpm-lock.yaml",
+        npmrc = "@devinfra//:.npmrc",
+)
+use_repo(npm, "devinfra_npm")
