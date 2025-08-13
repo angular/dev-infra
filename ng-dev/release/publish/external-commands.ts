@@ -239,15 +239,21 @@ export abstract class ExternalCommands {
    * Invokes the `pnpm install` command in order to install dependencies for
    * the configured project with the currently checked out revision.
    */
-  static async invokePnpmInstall(
-    projectDir: string,
-    pnpmVersioning: PnpmVersioning,
-  ): Promise<void> {
+  static async invokePnpmInstall(projectDir: string): Promise<void> {
     try {
-      const pnpmSpec = await pnpmVersioning.getPackageSpec(projectDir);
-      await ChildProcess.spawn('npx', ['--yes', pnpmSpec, 'install', '--frozen-lockfile'], {
-        cwd: projectDir,
-      });
+      await ChildProcess.spawn(
+        'pnpm',
+        [
+          'install',
+          '--frozen-lockfile',
+          // PNPM does not have no interactive,
+          // See: https://github.com/pnpm/pnpm/issues/6778
+          '--config.confirmModulesPurge=false',
+        ],
+        {
+          cwd: projectDir,
+        },
+      );
 
       Log.info(green('  ✓   Installed project dependencies.'));
     } catch (e) {
