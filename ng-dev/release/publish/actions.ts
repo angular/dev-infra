@@ -390,7 +390,7 @@ export abstract class ReleaseAction {
   /** Installs all Yarn dependencies in the current branch. */
   protected async installDependenciesForCurrentBranch() {
     if (await this.pnpmVersioning.isUsingPnpm(this.projectDir)) {
-      await ExternalCommands.invokePnpmInstall(this.projectDir, this.pnpmVersioning);
+      await ExternalCommands.invokePnpmInstall(this.projectDir);
       return;
     }
 
