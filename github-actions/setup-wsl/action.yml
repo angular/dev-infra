@@ -108,15 +108,25 @@ runs:
         echo "repo=$repo_path" >> $GITHUB_OUTPUT
         echo "Repo path is: $repo_path"
 
-    - name: Cache for nvm, pnpm profile caches.
-      uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
-      with:
-        path: |
-          C:\\wsl_root\\root\\.nvm\\versions
-          C:\\wsl_root\\root\\.local\\share\\pnpm\\store\\
-        key: "${{ runner.os }}-wsl-cache-v${{inputs.cache_version}}-${{hashFiles('**/.nvmrc')}}-${{hashFiles('**/pnpm-lock.yaml')}}"
-        restore-keys: |
-          ${{ runner.os }}-wsl-cache-v${{inputs.cache_version}}-
+    # Temporary disable the cache action because the post step takes up to 10mins in the CLI and also there are several errors:
+    # "C:\Program Files\Git\usr\bin\tar.exe" --posix -cf cache.tzst --exclude cache.tzst -P -C C:/a/angular-cli/angular-cli --files-from manifest.txt --force-local --use-compress-program "zstd -T0"
+    # /usr/bin/tar: ../../../wsl_root/root/.nvm/versions/node/v22.18.0/bin/corepack: Cannot stat: Input/output error
+    # /usr/bin/tar: ../../../wsl_root/root/.nvm/versions/node/v22.18.0/bin/pnpx: Cannot stat: Input/output error
+    # /usr/bin/tar: ../../../wsl_root/root/.nvm/versions/node/v22.18.0/bin/npm: Cannot stat: Input/output error
+    # /usr/bin/tar: ../../../wsl_root/root/.nvm/versions/node/v22.18.0/bin/npx: Cannot stat: Input/output error
+    # /usr/bin/tar: ../../../wsl_root/root/.nvm/versions/node/v22.18.0/bin/pnpm: Cannot stat: Input/output error
+    # /usr/bin/tar: Exiting with failure status due to previous errors
+    # Warning: Failed to save: "C:\Program failed with error: The process 'C:\Program Files\Git\usr\bin\tar.exe' failed with exit code 2
+
+    # - name: Cache for nvm, pnpm profile caches.
+    #   uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+    #   with:
+    #     path: |
+    #       C:\\wsl_root\\root\\.nvm\\versions
+    #       C:\\wsl_root\\root\\.local\\share\\pnpm\\store\\
+    #     key: "${{ runner.os }}-wsl-cache-v${{inputs.cache_version}}-${{hashFiles('**/.nvmrc')}}-${{hashFiles('**/pnpm-lock.yaml')}}"
+    #     restore-keys: |
+    #       ${{ runner.os }}-wsl-cache-v${{inputs.cache_version}}-
     - name: Setup nvm
       shell: wsl-bash {0}
       run: |
