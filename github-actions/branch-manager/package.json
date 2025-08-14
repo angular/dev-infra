@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "dependencies": {
     "@actions/core": "1.11.1",
     "@actions/github": "6.0.1",
