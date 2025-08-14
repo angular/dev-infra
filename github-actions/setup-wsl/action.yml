@@ -34,7 +34,7 @@ outputs:
     value: C:\wsl_root
   wsl_root_unc_path:
     description: UNC Windows path pointing to the WSL file system root.
-    value: \\\\wsl.localhost\Debian
+    value: \\\\wsl.localhost\Ubuntu-24.04
   repo_path:
     description: Path to the copied repository directory (as Unix wsl path)
     value: ${{steps.disk_path.outputs.repo}}
@@ -46,8 +46,10 @@ runs:
     # Note: `memory` by default is 50% of the Windows host machine. We want to try
     # a higher percentage to leverage more of the GitHub Windows machines.
     # They have 16GB by default. See: https://docs.github.com/en/actions/using-github-hosted-runners/using-github-hosted-runners/about-github-hosted-runners.
-    - uses: Vampire/setup-wsl@6819906081f7afebe0cfc34e838b6f8405045672
+    - uses: Vampire/setup-wsl@6a8db447be7ed35f2f499c02c6e60ff77ef11278 # v6.0.0
       with:
+        # Workaround for https://github.com/Vampire/setup-wsl/issues/76
+        distribution: Ubuntu-24.04
         wsl-conf: |
           [interop]
             appendWindowsPath=false
@@ -56,7 +58,7 @@ runs:
             localhostForwarding=false
             memory=14GB
             networkingMode=${{inputs.wsl_networking_mode}}
-        wsl-shell-command: bash --login -euo pipefail
+        wsl-shell-command: bash --login -eo pipefail
         additional-packages: |
           curl
           ca-certificates
@@ -92,7 +94,7 @@ runs:
 
     - name: Create link to WSL drive
       shell: powershell
-      run: New-Item -ItemType SymbolicLink -Path "C:\wsl_root" -Target "\\wsl.localhost\Debian"
+      run: New-Item -ItemType SymbolicLink -Path "C:\wsl_root" -Target "\\wsl.localhost\Ubuntu-24.04"
 
     - name: Linking workspace into WSL for fast disk access
       shell: wsl-bash {0}
@@ -106,16 +108,15 @@ runs:
         echo "repo=$repo_path" >> $GITHUB_OUTPUT
         echo "Repo path is: $repo_path"
 
-    - name: Cache for nvm, yarn profile caches.
+    - name: Cache for nvm, pnpm profile caches.
       uses: actions/cache@v4
       with:
         path: |
-          C:\\wsl_root\\Debian\\root\\.nvm\\versions
-          C:\\wsl_root\\Debian\\root\\.yarn\\berry\cache
-        key: "${{ runner.os }}-wsl-cache-v${{inputs.cache_version}}-${{hashFiles('**/.nvmrc')}}-${{hashFiles('**/yarn.lock')}}"
+          C:\\wsl_root\\root\\.nvm\\versions
+          C:\\wsl_root\\root\\.pnpm-store\\v3
+        key: "${{ runner.os }}-wsl-cache-v${{inputs.cache_version}}-${{hashFiles('**/.nvmrc')}}-${{hashFiles('**/pnpm-lock.yaml')}}"
         restore-keys: |
           ${{ runner.os }}-wsl-cache-v${{inputs.cache_version}}-
-
     - name: Setup nvm
       shell: wsl-bash {0}
       run: |
@@ -123,9 +124,14 @@ runs:
         export NVM_DIR="$HOME/.nvm"
         # Note: Specify `--install` due to https://github.com/nvm-sh/nvm/issues/1985.
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --install
-
-    - name: Installing Node and npm (in WSL)
+    - name: Installing Node and pnpm (in WSL)
       run: |
+        # Note: this is needed to load NVM in this step otherwise nvm will not be found.
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
         cd ${{steps.disk_path.outputs.repo}}
+
         nvm install
+        npm i -g pnpm@10
       shell: wsl-bash {0}
