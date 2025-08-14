@@ -117,8 +117,9 @@ def _unwrap_label_keyed_mappings(ctx, dict, description):
         # The nodejs toolchain now provides node and npm binaries, as long as node is the first file
         # provided in the DefaultInfo files list, we continue as expected.
         if name == "node":
-            if (len(files) != 2 or not files[0].short_path.endswith("bin/node")):
-                fail("Expected %s target %s to be an provide two files, of which the first is `node`")
+            # TODO: replace `> 2` with `!= 2` when migration from the old nodejs_toolchain
+            if (len(files) > 2 or not files[0].short_path.endswith("bin/node")):
+                fail("Expected %s target %s to be an provide up to two files, of which the first is `node`." % (description, target))
 
             # For all non-node, we expect a single file or an executable which will only have one file.
         elif len(files) != 1:
