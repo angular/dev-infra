@@ -20,7 +20,7 @@ export class Buildifier extends Formatter {
 
   override binaryFilePath = join(this.git.baseDir, 'node_modules/.bin/buildifier');
 
-  override defaultFileMatcher = ['**/*.bzl', '**/BUILD.bazel', '**/WORKSPACE', '**/BUILD'];
+  override defaultFileMatcher = ['**/*.bzl', '**/*.bazel', '**/WORKSPACE', '**/BUILD'];
 
   override actions = {
     check: {
