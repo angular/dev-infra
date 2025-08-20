@@ -477,6 +477,72 @@ importers:
         specifier: 7.13.0
         version: 7.13.0
 
+  apps/code-of-conduct:
+    dependencies:
+      '@angular/cdk':
+        specifier: 21.0.0-next.0
+        version: 21.0.0-next.0(@angular/common@21.0.0-next.0(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
+      '@angular/common':
+        specifier: 21.0.0-next.0
+        version: 21.0.0-next.0(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
+      '@angular/compiler':
+        specifier: 21.0.0-next.0
+        version: 21.0.0-next.0
+      '@angular/core':
+        specifier: 21.0.0-next.0
+        version: 21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1)
+      '@angular/fire':
+        specifier: 20.0.1
+        version: 20.0.1(853387a06f7e863e943ede3947af26bd)
+      '@angular/forms':
+        specifier: 21.0.0-next.0
+        version: 21.0.0-next.0(@angular/common@21.0.0-next.0(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.0.0-next.0(@angular/animations@21.0.0-next.0(@angular/common@21.0.0-next.0(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@21.0.0-next.0(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
+      '@angular/material':
+        specifier: 21.0.0-next.0
+        version: 21.0.0-next.0(90dac3354d42f26db01ba1c2b56252d8)
+      '@angular/platform-browser':
+        specifier: 21.0.0-next.0
+        version: 21.0.0-next.0(@angular/animations@21.0.0-next.0(@angular/common@21.0.0-next.0(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@21.0.0-next.0(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))
+      '@angular/router':
+        specifier: 21.0.0-next.0
+        version: 21.0.0-next.0(@angular/common@21.0.0-next.0(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.0.0-next.0(@angular/animations@21.0.0-next.0(@angular/common@21.0.0-next.0(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@21.0.0-next.0(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
+      '@octokit/rest':
+        specifier: ''
+        version: 22.0.0
+      rxjs:
+        specifier: 7.8.2
+        version: 7.8.2
+      zone.js:
+        specifier: 0.15.1
+        version: 0.15.1
+
+  apps/functions:
+    dependencies:
+      '@octokit/auth-app':
+        specifier: 8.0.2
+        version: 8.0.2
+      '@octokit/request-error':
+        specifier: 7.0.0
+        version: 7.0.0
+      '@octokit/rest':
+        specifier: 22.0.0
+        version: 22.0.0
+      '@octokit/webhooks-types':
+        specifier: 7.6.1
+        version: 7.6.1
+      '@types/node':
+        specifier: 24.3.0
+        version: 24.3.0
+      firebase-admin:
+        specifier: 13.4.0
+        version: 13.4.0(encoding@0.1.13)(supports-color@10.1.0)
+      firebase-functions:
+        specifier: 6.4.0
+        version: 6.4.0(firebase-admin@13.4.0(encoding@0.1.13)(supports-color@10.1.0))(supports-color@10.1.0)
+      firebase-tools:
+        specifier: 14.12.1
+        version: 14.12.1(@types/node@24.3.0)(bufferutil@4.0.9)(encoding@0.1.13)(supports-color@10.1.0)
+
   bazel:
     dependencies:
       '@microsoft/api-extractor':
@@ -8100,6 +8166,24 @@ snapshots:
       - '@react-native-async-storage/async-storage'
       - chokidar
 
+  '@angular/fire@20.0.1(853387a06f7e863e943ede3947af26bd)':
+    dependencies:
+      '@angular-devkit/schematics': 20.1.6(chokidar@4.0.3)
+      '@angular/common': 21.0.0-next.0(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
+      '@angular/core': 21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1)
+      '@angular/platform-browser': 21.0.0-next.0(@angular/animations@21.0.0-next.0(@angular/common@21.0.0-next.0(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@21.0.0-next.0(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))
+      '@angular/platform-browser-dynamic': 21.0.0-next.0(@angular/common@21.0.0-next.0(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/compiler@21.0.0-next.0)(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.0.0-next.0(@angular/animations@21.0.0-next.0(@angular/common@21.0.0-next.0(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@21.0.0-next.0(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1)))
+      '@schematics/angular': 20.1.6(chokidar@4.0.3)
+      firebase: 11.10.0
+      rxfire: 6.1.0(firebase@11.10.0)(rxjs@7.8.2)
+      rxjs: 7.8.2
+      tslib: 2.8.1
+    optionalDependencies:
+      firebase-tools: 14.12.1(@types/node@24.3.0)(bufferutil@4.0.9)(encoding@0.1.13)(supports-color@10.1.0)
+    transitivePeerDependencies:
+      - '@react-native-async-storage/async-storage'
+      - chokidar
+
   '@angular/forms@21.0.0-next.0(@angular/common@21.0.0-next.0(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.0.0-next.0(@angular/animations@21.0.0-next.0(@angular/common@21.0.0-next.0(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@21.0.0-next.0(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)':
     dependencies:
       '@angular/common': 21.0.0-next.0(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
@@ -9320,6 +9404,16 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.2.0
 
+  '@inquirer/checkbox@4.2.1(@types/node@24.3.0)':
+    dependencies:
+      '@inquirer/core': 10.1.15(@types/node@24.3.0)
+      '@inquirer/figures': 1.0.13
+      '@inquirer/type': 3.0.8(@types/node@24.3.0)
+      ansi-escapes: 4.3.2
+      yoctocolors-cjs: 2.1.2
+    optionalDependencies:
+      '@types/node': 24.3.0
+
   '@inquirer/confirm@5.1.15(@types/node@20.19.11)':
     dependencies:
       '@inquirer/core': 10.1.15(@types/node@20.19.11)
@@ -9333,6 +9427,13 @@ snapshots:
       '@inquirer/type': 3.0.8(@types/node@24.2.0)
     optionalDependencies:
       '@types/node': 24.2.0
+
+  '@inquirer/confirm@5.1.15(@types/node@24.3.0)':
+    dependencies:
+      '@inquirer/core': 10.1.15(@types/node@24.3.0)
+      '@inquirer/type': 3.0.8(@types/node@24.3.0)
+    optionalDependencies:
+      '@types/node': 24.3.0
 
   '@inquirer/core@10.1.15(@types/node@20.19.11)':
     dependencies:
@@ -9360,6 +9461,19 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.2.0
 
+  '@inquirer/core@10.1.15(@types/node@24.3.0)':
+    dependencies:
+      '@inquirer/figures': 1.0.13
+      '@inquirer/type': 3.0.8(@types/node@24.3.0)
+      ansi-escapes: 4.3.2
+      cli-width: 4.1.0
+      mute-stream: 2.0.0
+      signal-exit: 4.1.0
+      wrap-ansi: 6.2.0
+      yoctocolors-cjs: 2.1.2
+    optionalDependencies:
+      '@types/node': 24.3.0
+
   '@inquirer/editor@4.2.17(@types/node@20.19.11)':
     dependencies:
       '@inquirer/core': 10.1.15(@types/node@20.19.11)
@@ -9375,6 +9489,14 @@ snapshots:
       '@inquirer/type': 3.0.8(@types/node@24.2.0)
     optionalDependencies:
       '@types/node': 24.2.0
+
+  '@inquirer/editor@4.2.17(@types/node@24.3.0)':
+    dependencies:
+      '@inquirer/core': 10.1.15(@types/node@24.3.0)
+      '@inquirer/external-editor': 1.0.1(@types/node@24.3.0)
+      '@inquirer/type': 3.0.8(@types/node@24.3.0)
+    optionalDependencies:
+      '@types/node': 24.3.0
 
   '@inquirer/expand@4.0.17(@types/node@20.19.11)':
     dependencies:
@@ -9392,6 +9514,14 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.2.0
 
+  '@inquirer/expand@4.0.17(@types/node@24.3.0)':
+    dependencies:
+      '@inquirer/core': 10.1.15(@types/node@24.3.0)
+      '@inquirer/type': 3.0.8(@types/node@24.3.0)
+      yoctocolors-cjs: 2.1.2
+    optionalDependencies:
+      '@types/node': 24.3.0
+
   '@inquirer/external-editor@1.0.1(@types/node@20.19.11)':
     dependencies:
       chardet: 2.1.0
@@ -9405,6 +9535,13 @@ snapshots:
       iconv-lite: 0.6.3
     optionalDependencies:
       '@types/node': 24.2.0
+
+  '@inquirer/external-editor@1.0.1(@types/node@24.3.0)':
+    dependencies:
+      chardet: 2.1.0
+      iconv-lite: 0.6.3
+    optionalDependencies:
+      '@types/node': 24.3.0
 
   '@inquirer/figures@1.0.13': {}
 
@@ -9422,6 +9559,13 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.2.0
 
+  '@inquirer/input@4.2.1(@types/node@24.3.0)':
+    dependencies:
+      '@inquirer/core': 10.1.15(@types/node@24.3.0)
+      '@inquirer/type': 3.0.8(@types/node@24.3.0)
+    optionalDependencies:
+      '@types/node': 24.3.0
+
   '@inquirer/number@3.0.17(@types/node@20.19.11)':
     dependencies:
       '@inquirer/core': 10.1.15(@types/node@20.19.11)
@@ -9435,6 +9579,13 @@ snapshots:
       '@inquirer/type': 3.0.8(@types/node@24.2.0)
     optionalDependencies:
       '@types/node': 24.2.0
+
+  '@inquirer/number@3.0.17(@types/node@24.3.0)':
+    dependencies:
+      '@inquirer/core': 10.1.15(@types/node@24.3.0)
+      '@inquirer/type': 3.0.8(@types/node@24.3.0)
+    optionalDependencies:
+      '@types/node': 24.3.0
 
   '@inquirer/password@4.0.17(@types/node@20.19.11)':
     dependencies:
@@ -9451,6 +9602,14 @@ snapshots:
       ansi-escapes: 4.3.2
     optionalDependencies:
       '@types/node': 24.2.0
+
+  '@inquirer/password@4.0.17(@types/node@24.3.0)':
+    dependencies:
+      '@inquirer/core': 10.1.15(@types/node@24.3.0)
+      '@inquirer/type': 3.0.8(@types/node@24.3.0)
+      ansi-escapes: 4.3.2
+    optionalDependencies:
+      '@types/node': 24.3.0
 
   '@inquirer/prompts@7.8.0(@types/node@20.19.11)':
     dependencies:
@@ -9481,6 +9640,21 @@ snapshots:
       '@inquirer/select': 4.3.1(@types/node@24.2.0)
     optionalDependencies:
       '@types/node': 24.2.0
+
+  '@inquirer/prompts@7.8.0(@types/node@24.3.0)':
+    dependencies:
+      '@inquirer/checkbox': 4.2.1(@types/node@24.3.0)
+      '@inquirer/confirm': 5.1.15(@types/node@24.3.0)
+      '@inquirer/editor': 4.2.17(@types/node@24.3.0)
+      '@inquirer/expand': 4.0.17(@types/node@24.3.0)
+      '@inquirer/input': 4.2.1(@types/node@24.3.0)
+      '@inquirer/number': 3.0.17(@types/node@24.3.0)
+      '@inquirer/password': 4.0.17(@types/node@24.3.0)
+      '@inquirer/rawlist': 4.1.5(@types/node@24.3.0)
+      '@inquirer/search': 3.1.0(@types/node@24.3.0)
+      '@inquirer/select': 4.3.1(@types/node@24.3.0)
+    optionalDependencies:
+      '@types/node': 24.3.0
 
   '@inquirer/prompts@7.8.3(@types/node@20.19.11)':
     dependencies:
@@ -9513,6 +9687,14 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.2.0
 
+  '@inquirer/rawlist@4.1.5(@types/node@24.3.0)':
+    dependencies:
+      '@inquirer/core': 10.1.15(@types/node@24.3.0)
+      '@inquirer/type': 3.0.8(@types/node@24.3.0)
+      yoctocolors-cjs: 2.1.2
+    optionalDependencies:
+      '@types/node': 24.3.0
+
   '@inquirer/search@3.1.0(@types/node@20.19.11)':
     dependencies:
       '@inquirer/core': 10.1.15(@types/node@20.19.11)
@@ -9530,6 +9712,15 @@ snapshots:
       yoctocolors-cjs: 2.1.2
     optionalDependencies:
       '@types/node': 24.2.0
+
+  '@inquirer/search@3.1.0(@types/node@24.3.0)':
+    dependencies:
+      '@inquirer/core': 10.1.15(@types/node@24.3.0)
+      '@inquirer/figures': 1.0.13
+      '@inquirer/type': 3.0.8(@types/node@24.3.0)
+      yoctocolors-cjs: 2.1.2
+    optionalDependencies:
+      '@types/node': 24.3.0
 
   '@inquirer/select@4.3.1(@types/node@20.19.11)':
     dependencies:
@@ -9551,6 +9742,16 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.2.0
 
+  '@inquirer/select@4.3.1(@types/node@24.3.0)':
+    dependencies:
+      '@inquirer/core': 10.1.15(@types/node@24.3.0)
+      '@inquirer/figures': 1.0.13
+      '@inquirer/type': 3.0.8(@types/node@24.3.0)
+      ansi-escapes: 4.3.2
+      yoctocolors-cjs: 2.1.2
+    optionalDependencies:
+      '@types/node': 24.3.0
+
   '@inquirer/type@3.0.8(@types/node@20.19.11)':
     optionalDependencies:
       '@types/node': 20.19.11
@@ -9558,6 +9759,10 @@ snapshots:
   '@inquirer/type@3.0.8(@types/node@24.2.0)':
     optionalDependencies:
       '@types/node': 24.2.0
+
+  '@inquirer/type@3.0.8(@types/node@24.3.0)':
+    optionalDependencies:
+      '@types/node': 24.3.0
 
   '@isaacs/balanced-match@4.0.1': {}
 
@@ -10549,7 +10754,7 @@ snapshots:
   '@types/browser-sync@2.29.0':
     dependencies:
       '@types/micromatch': 2.3.35
-      '@types/node': 24.2.0
+      '@types/node': 20.19.11
       '@types/serve-static': 1.15.8
       chokidar: 3.6.0
 
@@ -10617,7 +10822,7 @@ snapshots:
 
   '@types/jsdom@21.1.7':
     dependencies:
-      '@types/node': 24.2.0
+      '@types/node': 20.19.11
       '@types/tough-cookie': 4.0.5
       parse5: 7.3.0
 
@@ -10696,7 +10901,7 @@ snapshots:
 
   '@types/selenium-webdriver@4.1.28':
     dependencies:
-      '@types/node': 24.2.0
+      '@types/node': 20.19.11
       '@types/ws': 8.18.1
 
   '@types/semver@7.7.0': {}
@@ -10704,7 +10909,7 @@ snapshots:
   '@types/send@0.17.5':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 24.2.0
+      '@types/node': 20.19.11
 
   '@types/serve-static@1.15.8':
     dependencies:
@@ -10728,7 +10933,7 @@ snapshots:
 
   '@types/wait-on@5.3.4':
     dependencies:
-      '@types/node': 24.2.0
+      '@types/node': 20.19.11
 
   '@types/which@3.0.4': {}
 
@@ -12190,6 +12395,90 @@ snapshots:
       '@google-cloud/cloud-sql-connector': 1.8.3(supports-color@10.1.0)
       '@google-cloud/pubsub': 4.11.0(encoding@0.1.13)(supports-color@10.1.0)
       '@inquirer/prompts': 7.8.0(@types/node@20.19.11)
+      '@modelcontextprotocol/sdk': 1.17.3(supports-color@10.1.0)
+      abort-controller: 3.0.0
+      ajv: 8.17.1
+      ajv-formats: 3.0.1
+      archiver: 7.0.1
+      async-lock: 1.4.1
+      body-parser: 1.20.3(supports-color@10.1.0)
+      chokidar: 3.6.0
+      cjson: 0.3.3
+      cli-table3: 0.6.5
+      colorette: 2.0.20
+      commander: 5.1.0
+      configstore: 5.0.1
+      cors: 2.8.5
+      cross-env: 7.0.3
+      cross-spawn: 7.0.6
+      csv-parse: 5.6.0
+      deep-equal-in-any-order: 2.0.6
+      exegesis: 4.3.0(supports-color@10.1.0)
+      exegesis-express: 4.0.0(supports-color@10.1.0)
+      express: 4.21.2(supports-color@10.1.0)
+      filesize: 6.4.0
+      form-data: 4.0.4
+      fs-extra: 10.1.0
+      fuzzy: 0.1.3
+      gaxios: 6.7.1(encoding@0.1.13)(supports-color@10.1.0)
+      glob: 10.4.5
+      google-auth-library: 9.15.1(encoding@0.1.13)(supports-color@10.1.0)
+      ignore: 7.0.5
+      js-yaml: 3.14.1
+      jsonwebtoken: 9.0.2
+      leven: 3.1.0
+      libsodium-wrappers: 0.7.15
+      lodash: 4.17.21
+      lsofi: 1.0.0
+      marked: 13.0.3
+      marked-terminal: 7.3.0(marked@13.0.3)
+      mime: 2.6.0
+      minimatch: 3.1.2
+      morgan: 1.10.1(supports-color@10.1.0)
+      node-fetch: 2.7.0(encoding@0.1.13)
+      open: 6.4.0
+      ora: 5.4.1
+      p-limit: 3.1.0
+      pg: 8.16.3
+      pg-gateway: 0.3.0-beta.4
+      pglite-2: '@electric-sql/pglite@0.2.17'
+      portfinder: 1.0.37(supports-color@10.1.0)
+      progress: 2.0.3
+      proxy-agent: 6.5.0(supports-color@10.1.0)
+      retry: 0.13.1
+      semver: 7.7.2
+      sql-formatter: 15.6.6
+      stream-chain: 2.2.5
+      stream-json: 1.9.1
+      superstatic: 9.2.0(encoding@0.1.13)(supports-color@10.1.0)
+      tar: 6.2.1
+      tcp-port-used: 1.0.2(supports-color@10.1.0)
+      tmp: 0.2.5
+      triple-beam: 1.4.1
+      universal-analytics: 0.5.3(supports-color@10.1.0)
+      update-notifier-cjs: 5.1.7(encoding@0.1.13)
+      uuid: 8.3.2
+      winston: 3.17.0
+      winston-transport: 4.9.0
+      ws: 7.5.10(bufferutil@4.0.9)
+      yaml: 2.8.1
+      zod: 3.25.76
+      zod-to-json-schema: 3.24.6(zod@3.25.76)
+    transitivePeerDependencies:
+      - '@types/node'
+      - bufferutil
+      - encoding
+      - pg-native
+      - supports-color
+      - utf-8-validate
+
+  firebase-tools@14.12.1(@types/node@24.3.0)(bufferutil@4.0.9)(encoding@0.1.13)(supports-color@10.1.0):
+    dependencies:
+      '@electric-sql/pglite': 0.3.7
+      '@electric-sql/pglite-tools': 0.2.12(@electric-sql/pglite@0.3.7)
+      '@google-cloud/cloud-sql-connector': 1.8.3(supports-color@10.1.0)
+      '@google-cloud/pubsub': 4.11.0(encoding@0.1.13)(supports-color@10.1.0)
+      '@inquirer/prompts': 7.8.0(@types/node@24.3.0)
       '@modelcontextprotocol/sdk': 1.17.3(supports-color@10.1.0)
       abort-controller: 3.0.0
       ajv: 8.17.1

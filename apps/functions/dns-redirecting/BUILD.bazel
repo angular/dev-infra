@@ -11,6 +11,6 @@ ts_project(
         "//apps/functions:__pkg__",
     ],
     deps = [
-        "//:node_modules/firebase-functions",
+        "//apps/functions:node_modules/firebase-functions",
     ],
 )

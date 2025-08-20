@@ -1,5 +1,7 @@
 packages:
   - .
+  - apps/functions
+  - apps/code-of-conduct
   - ng-dev/
   - bazel/
   - bazel/spec-bundling/test
