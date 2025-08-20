@@ -85,6 +85,8 @@ npm.npm_translate_lock(
         "@devinfra//.github/local-actions/lock-closed:package.json",
         "@devinfra//:package.json",
         "@devinfra//:pnpm-workspace.yaml",
+        "@devinfra//apps/code-of-conduct:package.json",
+        "@devinfra//apps/functions:package.json",
         "@devinfra//bazel:package.json",
         "@devinfra//bazel/spec-bundling/test:package.json",
         "@devinfra//github-actions:package.json",

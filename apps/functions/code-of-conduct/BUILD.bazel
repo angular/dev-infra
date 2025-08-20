@@ -12,7 +12,7 @@ ts_project(
     ],
     deps = [
         ":lib",
-        "//:node_modules/firebase-admin",
+        "//apps/functions:node_modules/firebase-admin",
     ],
 )
 
@@ -25,12 +25,12 @@ ts_project(
         "unblockUser.ts",
     ],
     deps = [
-        "//:node_modules/@octokit/auth-app",
-        "//:node_modules/@octokit/request-error",
-        "//:node_modules/@octokit/rest",
-        "//:node_modules/@octokit/webhooks-types",
-        "//:node_modules/@types/node",
-        "//:node_modules/firebase-admin",
-        "//:node_modules/firebase-functions",
+        "//apps/functions:node_modules/@octokit/auth-app",
+        "//apps/functions:node_modules/@octokit/request-error",
+        "//apps/functions:node_modules/@octokit/rest",
+        "//apps/functions:node_modules/@octokit/webhooks-types",
+        "//apps/functions:node_modules/@types/node",
+        "//apps/functions:node_modules/firebase-admin",
+        "//apps/functions:node_modules/firebase-functions",
     ],
 )

@@ -1,13 +1,16 @@
+load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
 load("//tools:defaults.bzl", "copy_to_bin", "esbuild", "ts_project")
 
 package(default_visibility = ["//visibility:private"])
+
+npm_link_all_packages()
 
 copy_to_bin(
     name = "functions_files",
     srcs = [
         "package.json",
         ":bundle",
-        "//:node_modules/firebase-tools",
+        "//apps/functions:node_modules/firebase-tools",
     ],
     visibility = ["//apps:__pkg__"],
 )
@@ -18,7 +21,7 @@ ts_project(
         "index.ts",
     ],
     deps = [
-        "//:node_modules/firebase-admin",
+        "//apps/functions:node_modules/firebase-admin",
         "//apps/functions/code-of-conduct",
         "//apps/functions/dns-redirecting",
     ],
@@ -28,7 +31,7 @@ esbuild(
     name = "bundle",
     srcs = [
         ":functions",
-        "//:node_modules/firebase-functions",
+        "//apps/functions:node_modules/firebase-functions",
     ],
     entry_point = "index.ts",
     format = "cjs",

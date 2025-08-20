@@ -10,9 +10,9 @@ ng_project(
         "login.component.html",
     ],
     deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/material",
+        "//apps/code-of-conduct:node_modules/@angular/common",
+        "//apps/code-of-conduct:node_modules/@angular/core",
+        "//apps/code-of-conduct:node_modules/@angular/material",
         "//apps/code-of-conduct/app/account",
     ],
 )

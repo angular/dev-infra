@@ -12,9 +12,9 @@ ng_project(
         "app.component.html",
     ],
     deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/router",
+        "//apps/code-of-conduct:node_modules/@angular/common",
+        "//apps/code-of-conduct:node_modules/@angular/core",
+        "//apps/code-of-conduct:node_modules/@angular/router",
         "//apps/code-of-conduct/app/account",
         "//apps/code-of-conduct/app/block-user",
         "//apps/code-of-conduct/app/user-table",
@@ -32,11 +32,11 @@ ng_project(
         "block.service.ts",
     ],
     deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/core",
-        "//:node_modules/@angular/fire",
-        "//:node_modules/@angular/material",
-        "//:node_modules/rxjs",
+        "//apps/code-of-conduct:node_modules/@angular/common",
+        "//apps/code-of-conduct:node_modules/@angular/core",
+        "//apps/code-of-conduct:node_modules/@angular/fire",
+        "//apps/code-of-conduct:node_modules/@angular/material",
+        "//apps/code-of-conduct:node_modules/rxjs",
     ],
 )
 
@@ -46,7 +46,7 @@ ng_project(
         "app.routes.ts",
     ],
     deps = [
-        "//:node_modules/@angular/router",
+        "//apps/code-of-conduct:node_modules/@angular/router",
         "//apps/code-of-conduct/app/account",
         "//apps/code-of-conduct/app/login",
         "//apps/code-of-conduct/app/main",

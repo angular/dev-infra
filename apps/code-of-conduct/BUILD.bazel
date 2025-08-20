@@ -1,6 +1,9 @@
+load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
 load("//tools:defaults.bzl", "copy_to_bin", "esbuild", "ng_project", "npm_sass_library", "sass_binary")
 
 package(default_visibility = ["//apps/code-of-conduct:__subpackages__"])
+
+npm_link_all_packages()
 
 ng_project(
     name = "main",
@@ -9,12 +12,12 @@ ng_project(
         "main.ts",
     ],
     deps = [
-        "//:node_modules/@angular/common",
-        "//:node_modules/@angular/compiler",
-        "//:node_modules/@angular/fire",
-        "//:node_modules/@angular/platform-browser",
-        "//:node_modules/@angular/router",
-        "//:node_modules/zone.js",
+        ":node_modules/@angular/common",
+        ":node_modules/@angular/compiler",
+        ":node_modules/@angular/fire",
+        ":node_modules/@angular/platform-browser",
+        ":node_modules/@angular/router",
+        ":node_modules/zone.js",
         "//apps/code-of-conduct/app",
         "//apps/code-of-conduct/app:app_routes",
     ],
@@ -23,8 +26,8 @@ ng_project(
 npm_sass_library(
     name = "angular_material_sass_deps",
     deps = [
-        "//:node_modules/@angular/cdk",
-        "//:node_modules/@angular/material",
+        ":node_modules/@angular/cdk",
+        ":node_modules/@angular/material",
     ],
 )
 

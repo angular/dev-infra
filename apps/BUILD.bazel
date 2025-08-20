@@ -54,7 +54,6 @@ firebase.firebase_binary(
 
         # Firebase hosted application files
         "//apps/code-of-conduct:application_files",
-        "//:node_modules/firebase-functions",
     ],
     fixed_args = [
         "--project",
