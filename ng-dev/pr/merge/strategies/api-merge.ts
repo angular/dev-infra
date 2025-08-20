@@ -143,12 +143,25 @@ export class GithubApiMergeStrategy extends MergeStrategy {
 
     this.pushTargetBranchesUpstream(cherryPickTargetBranches);
 
+    /** The local branch names of the github targeted branches. */
+    const banchesAndSha: [branchName: string, commitSha: string][] = targetBranches.map(
+      (targetBranch) => {
+        const localBranch = this.getLocalTargetBranchName(targetBranch);
+
+        /** The SHA of the commit pushed to github which represents closing the PR. */
+        const sha = this.git.run(['rev-parse', localBranch]).stdout.trim();
+        return [targetBranch, sha];
+      },
+    );
     // Because our process brings changes into multiple branchces, we include a comment which
     // expresses all of the branches the changes were merged into.
     await this.git.github.issues.createComment({
       ...this.git.remoteParams,
       issue_number: pullRequest.prNumber,
-      body: `The changes were merged into the following branches: ${targetBranches.join(', ')}`,
+      body:
+        'This PR was merged into the repository. ' +
+        'The changes were merged into the following branches:\n\n' +
+        `${banchesAndSha.map(([branch, sha]) => `- ${branch}: ${sha}`).join('\n')}`,
     });
   }
 
