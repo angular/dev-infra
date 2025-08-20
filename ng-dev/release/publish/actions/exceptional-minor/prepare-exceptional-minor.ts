@@ -49,10 +49,20 @@ export class PrepareExceptionalMinorAction extends ReleaseAction {
       pkgJson[exceptionalMinorPackageIndicator] = true;
     });
 
-    await this.createCommit(`build: prepare exceptional minor branch: ${this._newBranch}`, [
+    const filesToCommit: string[] = [
       workspaceRelativePackageJsonPath,
       ...this.getAspectLockFiles(),
-    ]);
+    ];
+
+    const bazelModuleLockFile = this.getModuleBazelLockFile();
+    if (bazelModuleLockFile) {
+      filesToCommit.push(bazelModuleLockFile);
+    }
+
+    await this.createCommit(
+      `build: prepare exceptional minor branch: ${this._newBranch}`,
+      filesToCommit,
+    );
 
     await this.pushHeadToRemoteBranch(this._newBranch);
 
