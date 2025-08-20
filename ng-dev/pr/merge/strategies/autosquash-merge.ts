@@ -83,10 +83,17 @@ export class AutosquashMergeStrategy extends MergeStrategy {
     // Push the cherry picked branches upstream.
     this.pushTargetBranchesUpstream(targetBranches);
 
-    /** The local branch name of the github targeted branch. */
-    const localBranch = this.getLocalTargetBranchName(githubTargetBranch);
-    /** The SHA of the commit pushed to github which represents closing the PR. */
-    const sha = this.git.run(['rev-parse', localBranch]).stdout.trim();
+    /** The local branch names of the github targeted branches. */
+    const banchesAndSha: [branchName: string, commitSha: string][] = targetBranches.map(
+      (targetBranch) => {
+        const localBranch = this.getLocalTargetBranchName(targetBranch);
+
+        /** The SHA of the commit pushed to github which represents closing the PR. */
+        const sha = this.git.run(['rev-parse', localBranch]).stdout.trim();
+        return [targetBranch, sha];
+      },
+    );
+
     // Allow user to set an amount of time to wait to account for rate limiting of the token usage
     // during merge otherwise just waits 0 seconds.
     await new Promise((resolve) =>
@@ -100,8 +107,9 @@ export class AutosquashMergeStrategy extends MergeStrategy {
       ...this.git.remoteParams,
       issue_number: pullRequest.prNumber,
       body:
-        `This PR was merged into the repository by commit ${sha}.\n\n` +
-        `The changes were merged into the following branches: ${targetBranches.join(', ')}`,
+        'This PR was merged into the repository. ' +
+        'The changes were merged into the following branches:\n\n' +
+        `${banchesAndSha.map(([branch, sha]) => `- ${branch}: ${sha}`).join('\n')}`,
     });
 
     // For PRs which do not target the `main` branch on Github, Github does not automatically
