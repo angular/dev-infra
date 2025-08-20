@@ -1,4 +1,4 @@
-load("//tools:defaults2.bzl", "ts_project")
+load("//tools:defaults.bzl", "ts_project")
 
 # g3-sync-config needs to be a separate file / target so that google-internal-tests
 # won't need ts-node to parse this file
