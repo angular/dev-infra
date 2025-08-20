@@ -1,12 +1,15 @@
+load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
 load("//tools:defaults.bzl", "ts_config", "ts_project")
 
 package(default_visibility = ["//github-actions:__subpackages__"])
+
+npm_link_all_packages()
 
 ts_config(
     name = "tsconfig",
     src = "tsconfig.json",
     deps = [
-        "//:node_modules/@types/node",
+        ":node_modules/@types/node",
         "//:tsconfig",
     ],
 )
@@ -15,8 +18,8 @@ ts_config(
     name = "tsconfig_test",
     src = "tsconfig-test.json",
     deps = [
+        ":node_modules/@types/jasmine",
         ":tsconfig",
-        "//:node_modules/@types/jasmine",
     ],
 )
 
@@ -31,10 +34,10 @@ ts_project(
         "//github-actions:__subpackages__",
     ],
     deps = [
-        "//:node_modules/@actions/core",
-        "//:node_modules/@actions/github",
-        "//:node_modules/@octokit/auth-app",
-        "//:node_modules/@octokit/rest",
-        "//:node_modules/@types/node",
+        ":node_modules/@actions/core",
+        ":node_modules/@actions/github",
+        ":node_modules/@octokit/auth-app",
+        ":node_modules/@octokit/rest",
+        ":node_modules/@types/node",
     ],
 )
