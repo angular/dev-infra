@@ -10,7 +10,10 @@ import {promises as fs, existsSync} from 'fs';
 import path, {join} from 'path';
 import semver from 'semver';
 
-import {workspaceRelativePackageJsonPath} from '../../utils/constants.js';
+import {
+  workspaceRelativeBazelModuleLock,
+  workspaceRelativePackageJsonPath,
+} from '../../utils/constants.js';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {isGithubApiError} from '../../utils/git/github.js';
 import githubMacros from '../../utils/git/github-macros.js';
@@ -140,6 +143,10 @@ export abstract class ReleaseAction {
     if (this.config.rulesJsInteropMode && existsSync(path.join(this.projectDir, '.aspect'))) {
       await ExternalCommands.invokeBazelUpdateAspectLockFiles(this.projectDir);
     }
+
+    if (existsSync(join(this.projectDir, workspaceRelativeBazelModuleLock))) {
+      await ExternalCommands.invokeBazelModDepsUpdate(this.projectDir);
+    }
   }
 
   /*
@@ -150,6 +157,15 @@ export abstract class ReleaseAction {
     return this.config.rulesJsInteropMode
       ? glob.sync(['.aspect/**', 'pnpm-lock.yaml'], {cwd: this.projectDir})
       : [];
+  }
+
+  /*
+   * Get the modified "MODULE.bazel.lock" if bazel modules are enabled.
+   */
+  protected getModuleBazelLockFile(): string | undefined {
+    return existsSync(join(this.projectDir, workspaceRelativeBazelModuleLock))
+      ? workspaceRelativeBazelModuleLock
+      : undefined;
   }
 
   /** Gets the most recent commit of a specified branch. */
@@ -224,6 +240,11 @@ export abstract class ReleaseAction {
       workspaceRelativeChangelogPath,
       ...this.getAspectLockFiles(),
     ];
+
+    const bazelModuleLockFile = this.getModuleBazelLockFile();
+    if (bazelModuleLockFile) {
+      filesToCommit.push(bazelModuleLockFile);
+    }
 
     const commitMessage = getCommitMessageForRelease(newVersion);
 

@@ -39,10 +39,18 @@ export class ConfigureNextAsMajorAction extends ReleaseAction {
     await this.checkoutUpstreamBranch(branchName);
     await this.updateProjectVersion(newVersion);
 
-    await this.createCommit(getCommitMessageForNextBranchMajorSwitch(newVersion), [
+    const filesToCommit: string[] = [
       workspaceRelativePackageJsonPath,
       ...this.getAspectLockFiles(),
-    ]);
+    ];
+
+    const bazelModuleLockFile = this.getModuleBazelLockFile();
+    if (bazelModuleLockFile) {
+      filesToCommit.push(bazelModuleLockFile);
+    }
+
+    await this.createCommit(getCommitMessageForNextBranchMajorSwitch(newVersion), filesToCommit);
+
     const pullRequest = await this.pushChangesToForkAndCreatePullRequest(
       branchName,
       `switch-next-to-major-${newVersion}`,

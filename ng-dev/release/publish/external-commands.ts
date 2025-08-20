@@ -7,7 +7,6 @@
  */
 
 import semver from 'semver';
-
 import {ChildProcess, SpawnResult, SpawnOptions} from '../../utils/child-process.js';
 import {Spinner} from '../../utils/spinner.js';
 import {NpmDistTag} from '../versioning/index.js';
@@ -261,6 +260,25 @@ export abstract class ExternalCommands {
       Log.error('  ✘   An error occurred while installing dependencies.');
       throw new FatalReleaseActionError();
     }
+  }
+
+  /**
+   * Invokes the `bazel mod deps --lockfile_mode=update` command in order
+   * to refresh `MODULE.bazel.lock` file.
+   */
+  static async invokeBazelModDepsUpdate(projectDir: string): Promise<void> {
+    const spinner = new Spinner('Updating "MODULE.bazel.lock"');
+    try {
+      await ChildProcess.spawn(getBazelBin(), ['mod', 'deps', '--lockfile_mode=update'], {
+        cwd: projectDir,
+        mode: 'silent',
+      });
+    } catch (e) {
+      Log.error(e);
+      Log.error('  ✘   An error occurred while updating "MODULE.bazel.lock".');
+      throw new FatalReleaseActionError();
+    }
+    spinner.success(green(' Updated "MODULE.bazel.lock" file.'));
   }
 
   /**

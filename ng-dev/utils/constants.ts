@@ -11,3 +11,6 @@ export const ngDevNpmPackageName = '@angular/ng-dev';
 
 /** Workspace-relative path for the "package.json" file. */
 export const workspaceRelativePackageJsonPath = 'package.json';
+
+/** Workspace-relative path for the "MODULE.bazel.lock" file. */
+export const workspaceRelativeBazelModuleLock = 'MODULE.bazel.lock';
