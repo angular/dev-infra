@@ -1,8 +1,14 @@
+load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
 load("//tools:defaults.bzl", "ts_config")
 
 package(default_visibility = ["//.github/local-actions:__subpackages__"])
 
+npm_link_all_packages()
+
 ts_config(
     name = "tsconfig",
     src = "tsconfig.json",
+    deps = [
+        ":node_modules/@types/node",
+    ],
 )

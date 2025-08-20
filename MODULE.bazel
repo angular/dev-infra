@@ -72,7 +72,7 @@ rules_angular = use_extension("@rules_angular//setup:extensions.bzl", "rules_ang
 rules_angular.setup(
     name = "dev_infra_rules_angular_configurable_deps",
     angular_compiler_cli = "//:node_modules/@angular/compiler-cli",
-    typescript = "//:node_modules/typescript-local",
+    typescript = "//:node_modules/typescript",
 )
 use_repo(rules_angular, **{"rules_angular_configurable_deps": "dev_infra_rules_angular_configurable_deps"})
 
@@ -80,6 +80,7 @@ npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm")
 npm.npm_translate_lock(
     name = "devinfra_npm",
     data = [
+        "@devinfra//.github/local-actions:package.json",
         "@devinfra//.github/local-actions/branch-manager:package.json",
         "@devinfra//.github/local-actions/labels-sync:package.json",
         "@devinfra//.github/local-actions/lock-closed:package.json",

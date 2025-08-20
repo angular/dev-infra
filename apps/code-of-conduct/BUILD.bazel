@@ -12,6 +12,7 @@ ng_project(
         "main.ts",
     ],
     deps = [
+        ":node_modules/@angular/animations",
         ":node_modules/@angular/common",
         ":node_modules/@angular/compiler",
         ":node_modules/@angular/fire",

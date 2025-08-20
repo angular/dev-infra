@@ -5,6 +5,7 @@ packages:
   - ng-dev/
   - bazel/
   - bazel/spec-bundling/test
+  - .github/local-actions
   - .github/local-actions/branch-manager
   - .github/local-actions/labels-sync
   - .github/local-actions/lock-closed
