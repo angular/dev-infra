@@ -1,6 +1,6 @@
 load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
 load("//:package.bzl", "NPM_PACKAGE_SUBSTITUTIONS")
-load("//tools:defaults2.bzl", "esbuild", "extract_types", "npm_package", "ts_config", "ts_project")
+load("//tools:defaults.bzl", "esbuild", "extract_types", "npm_package", "ts_config", "ts_project")
 
 npm_link_all_packages()
 

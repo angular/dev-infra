@@ -1,5 +1,5 @@
 load("@devinfra_npm//:firebase-tools/package_json.bzl", firebase = "bin")
-load("//tools:defaults2.bzl", "copy_to_bin", "ts_config")
+load("//tools:defaults.bzl", "copy_to_bin", "ts_config")
 
 ts_config(
     name = "tsconfig",

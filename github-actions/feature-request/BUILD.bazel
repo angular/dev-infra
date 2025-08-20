@@ -1,5 +1,5 @@
 load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
-load("//tools:defaults2.bzl", "esbuild_checked_in", "jasmine_test", "ts_project")
+load("//tools:defaults.bzl", "esbuild_checked_in", "jasmine_test", "ts_project")
 
 package(default_visibility = ["//github-actions/feature-request:__subpackages__"])
 

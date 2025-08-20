@@ -1,4 +1,4 @@
-load("//tools:defaults2.bzl", "copy_to_bin", "esbuild", "ng_project", "npm_sass_library", "sass_binary")
+load("//tools:defaults.bzl", "copy_to_bin", "esbuild", "ng_project", "npm_sass_library", "sass_binary")
 
 package(default_visibility = ["//apps/code-of-conduct:__subpackages__"])
 

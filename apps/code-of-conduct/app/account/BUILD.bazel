@@ -1,4 +1,4 @@
-load("//tools:defaults2.bzl", "ng_project", "sass_binary")
+load("//tools:defaults.bzl", "ng_project", "sass_binary")
 
 ng_project(
     name = "account",
