@@ -53,6 +53,8 @@ def _strict_deps_impl(ctx):
             "testFiles": test_files,
             "allowedModuleNames": allowed_module_names,
             "allowedSources": allowed_sources,
+            # The tsconfig from rules_ts has a single src so we know it will be the first file.
+            "tsconfigPath": ctx.files.tsconfig[0].short_path,
         }),
     )
 
@@ -85,14 +87,21 @@ def _strict_deps_impl(ctx):
         ),
     )
 
-    bin_runfiles = ctx.attr._bin[DefaultInfo].default_runfiles
+    runfiles = ctx.runfiles(
+        files = [
+                    manifest,
+                ] + ctx.files.srcs +
+                ctx.files._runfiles_lib +
+                ctx.files.tsconfig,
+    ).merge_all([
+        ctx.attr._bin[DefaultInfo].default_runfiles,
+        ctx.attr.tsconfig[DefaultInfo].default_runfiles,
+    ])
 
     return [
         DefaultInfo(
             executable = launcher,
-            runfiles = ctx.runfiles(
-                files = ctx.files._runfiles_lib + ctx.files.srcs + [manifest],
-            ).merge(bin_runfiles),
+            runfiles = runfiles,
         ),
     ]
 
@@ -108,8 +117,13 @@ _strict_deps_test = rule(
         ),
         "srcs": attr.label_list(
             doc = "TS files to be checked",
-            allow_files = True,
             mandatory = True,
+            allow_files = True,
+        ),
+        "tsconfig": attr.label(
+            doc = "The tsconfig of the ts_project being checked",
+            mandatory = True,
+            allow_files = True,
         ),
         "will_fail": attr.bool(
             doc = "Whether the test is expected to fail",

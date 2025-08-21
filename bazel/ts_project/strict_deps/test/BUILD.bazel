@@ -12,6 +12,7 @@ ts_project(
 strict_deps_test(
     name = "import_node_module",
     srcs = ["import_node_module.ts"],
+    tsconfig = "//bazel:tsconfig",
     deps = [
         "//bazel:node_modules/@types/node",
     ],
@@ -20,17 +21,20 @@ strict_deps_test(
 invalid_strict_deps_test(
     name = "invalid_import_node_module",
     srcs = ["import_node_module.ts"],
+    tsconfig = "//bazel:tsconfig",
 )
 
 strict_deps_test(
     name = "import_npm_module",
     srcs = ["import_npm_module.ts"],
+    tsconfig = "//bazel:tsconfig",
     deps = ["//bazel:node_modules/@microsoft/api-extractor"],
 )
 
 invalid_strict_deps_test(
     name = "invalid_import_npm_module_transitively",
     srcs = ["import_npm_module.ts"],
+    tsconfig = "//bazel:tsconfig",
     deps = [
         "//bazel/ts_project/strict_deps/test/import_npm_module",
     ],
@@ -39,17 +43,20 @@ invalid_strict_deps_test(
 invalid_strict_deps_test(
     name = "invalid_import_npm_module",
     srcs = ["import_npm_module.ts"],
+    tsconfig = "//bazel:tsconfig",
 )
 
 strict_deps_test(
     name = "import_from_depth",
     srcs = ["import_from_depth.ts"],
+    tsconfig = "//bazel:tsconfig",
     deps = ["//bazel/ts_project/strict_deps/test/depth"],
 )
 
 invalid_strict_deps_test(
     name = "invalid_import_from_depth",
     srcs = ["import_from_depth.ts"],
+    tsconfig = "//bazel:tsconfig",
     deps = [
         ":sibling_import_from_depth",
     ],
