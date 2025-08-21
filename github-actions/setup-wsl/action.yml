@@ -31,7 +31,7 @@ outputs:
     value: ${{steps.wsl_paths.outputs.tmp_path}}
   wsl_root_path:
     description: Windows path pointing to the WSL file system root (using a symlink).
-    value: C:\wsl_root
+    value: D:\wsl_root
   wsl_root_unc_path:
     description: UNC Windows path pointing to the WSL file system root.
     value: \\\\wsl.localhost\Ubuntu-24.04
@@ -94,7 +94,7 @@ runs:
 
     - name: Create link to WSL drive
       shell: powershell
-      run: New-Item -ItemType SymbolicLink -Path "C:\wsl_root" -Target "\\wsl.localhost\Ubuntu-24.04"
+      run: New-Item -ItemType SymbolicLink -Path "D:\wsl_root" -Target "\\wsl.localhost\Ubuntu-24.04"
 
     - name: Linking workspace into WSL for fast disk access
       shell: wsl-bash {0}
