@@ -4,6 +4,7 @@ load("//bazel/ts_project/strict_deps:index.bzl", "strict_deps_test")
 strict_deps_test(
     name = "import_from_mts_cts_extensions",
     srcs = ["index.ts"],
+    tsconfig = "//bazel:tsconfig",
     deps = [":mts_cts_extensions"],
 )
 
