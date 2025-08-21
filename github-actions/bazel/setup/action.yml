@@ -17,8 +17,8 @@ runs:
       with:
         path: |
           ~/.cache/bazelisk
-          \%LocalAppData\%/bazelisk
-        key: bazel-version-${{ hashFiles('**/.bazelversion') }}
+          ~/AppData/Local/bazelisk
+        key: bazel-version-${{ runner.os }}-${{ hashFiles('**/.bazelversion') }}
 
     - name: Setup CI bazelrc config
       run: node $GITHUB_ACTION_PATH/setup-ci-bazelrc.mjs
@@ -32,6 +32,6 @@ runs:
         # Note: Bazel repository cache is located in system locations and cannot use
         # a shared cache between different runner operating systems.
         path: '~/.cache/bazel_repo_cache'
-        key: bazel-cache-${{ runner.os }}-${{ hashFiles('**/WORKSPACE') }}
+        key: bazel-cache-${{ runner.os }}-${{ hashFiles('**/WORKSPACE') }}-${{ hashFiles('**/MODULE.bazel.lock') }}
         restore-keys: |
           bazel-cache-${{ runner.os }}-
