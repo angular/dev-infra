@@ -3,7 +3,11 @@
   "extends": ["github>angular/dev-infra//renovate-presets/default.json5"],
 
   "postUpgradeTasks": {
-    "commands": ["pnpm install --frozen-lockfile", "pnpm update-generated-files"],
+    "commands": [
+      "pnpm install --frozen-lockfile",
+      "pnpm bazel mod deps --lockfile_mode=update",
+      "pnpm update-generated-files"
+    ],
     "executionMode": "branch"
   },
 
