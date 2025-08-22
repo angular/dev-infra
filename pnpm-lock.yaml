@@ -13,6 +13,9 @@ importers:
       '@angular/compiler-cli':
         specifier: 21.0.0-next.0
         version: 21.0.0-next.0(@angular/compiler@21.0.0-next.0)(typescript@5.9.2)
+      '@bazel/bazelisk':
+        specifier: 1.26.0
+        version: 1.26.0
       '@bazel/buildifier':
         specifier: 8.2.1
         version: 8.2.1
@@ -920,6 +923,10 @@ packages:
   '@babel/types@7.28.2':
     resolution: {integrity: sha512-ruv7Ae4J5dUYULmeXw1gmb7rYRz57OWCPM57pHojnLq/3Z1CK2lNSLTCVjxVk1F/TZHwOZZrOWi0ur95BbLxNQ==}
     engines: {node: '>=6.9.0'}
+
+  '@bazel/bazelisk@1.26.0':
+    resolution: {integrity: sha512-bTNcHdGyEQ9r7SczEYUa0gkEQhJo1ld2BjXI8fWBvsUeoHi03QpUs2HZgDbjjrpQFQqG2ZbO7ihZvH8MjhUTHw==}
+    hasBin: true
 
   '@bazel/buildifier@8.2.1':
     resolution: {integrity: sha512-eZ/Aq+2r4PcJa6LbPCT6ffgIJfTU/gYilqIzoX2OLM4nNkbQC6tTMPZNn7aHHjhGPxbNLv41zm4Xqt1olCLgXw==}
@@ -6242,6 +6249,8 @@ snapshots:
     dependencies:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.27.1
+
+  '@bazel/bazelisk@1.26.0': {}
 
   '@bazel/buildifier@8.2.1': {}
 
