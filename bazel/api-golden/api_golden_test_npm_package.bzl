@@ -30,7 +30,10 @@ def api_golden_test_npm_package(
 
     kwargs["tags"] = kwargs.get("tags", []) + ["api_guard"]
 
-    data.append("@devinfra//bazel/api-golden")
+    data.extend([
+        "@devinfra//bazel/api-golden",
+        "@devinfra//bazel/api-golden:package.json",
+    ])
 
     types_name_and_path = []
     for label, n in types.items():
@@ -46,6 +49,9 @@ def api_golden_test_npm_package(
         name = name,
         data = data,
         entry_point = "@devinfra//bazel/api-golden:index_npm_packages.cjs",
+        no_copy_to_bin = [
+            "@devinfra//bazel/api-golden:package.json",
+        ],
         args = [golden_dir, npm_package, "false", quoted_export_pattern] + types_name_and_path,
         **kwargs
     )
@@ -54,6 +60,9 @@ def api_golden_test_npm_package(
         name = name + ".accept",
         testonly = True,
         data = data,
+        no_copy_to_bin = [
+            "@devinfra//bazel/api-golden:package.json",
+        ],
         entry_point = "@devinfra//bazel/api-golden:index_npm_packages.cjs",
         args = [golden_dir, npm_package, "true", quoted_export_pattern] + types_name_and_path,
         **kwargs
