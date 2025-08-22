@@ -11,10 +11,6 @@ inputs:
     description: Networking mode for the WSL config
     default: NAT
     required: false
-  cache_version:
-    description: Version that can be used to invalidate the cache
-    default: 2
-    required: false
 
 outputs:
   cmd_path:
@@ -71,7 +67,6 @@ runs:
 
     - name: Determining paths for common WSL usage (e.g. path to cmd, npm, git)
       id: wsl_paths
-      # Note: This executes outside of WSL.
       shell: bash
       run: |
         cmd_path=$(which cmd.exe)
@@ -83,6 +78,7 @@ runs:
         git_bin=$(which git)
         git_bin_wsl_path=$(wsl exec wslpath -u "$git_bin")
 
+        echo "wsl_home=$(wsl exec wslpath -u "$HOME")" >> $GITHUB_OUTPUT
         echo "cmd_path=$cmd_wsl_path" >> $GITHUB_OUTPUT
         echo "npm_path=$npm_wls_path" >> $GITHUB_OUTPUT
         echo "tmp_path=$tmp_dir_wsl_path" >> $GITHUB_OUTPUT
@@ -108,33 +104,32 @@ runs:
         echo "repo=$repo_path" >> $GITHUB_OUTPUT
         echo "Repo path is: $repo_path"
 
-    # Temporary disable the cache action because the post step takes up to 10mins in the CLI and also there are several errors:
-    # "C:\Program Files\Git\usr\bin\tar.exe" --posix -cf cache.tzst --exclude cache.tzst -P -C C:/a/angular-cli/angular-cli --files-from manifest.txt --force-local --use-compress-program "zstd -T0"
-    # /usr/bin/tar: ../../../wsl_root/root/.nvm/versions/node/v22.18.0/bin/corepack: Cannot stat: Input/output error
-    # /usr/bin/tar: ../../../wsl_root/root/.nvm/versions/node/v22.18.0/bin/pnpx: Cannot stat: Input/output error
-    # /usr/bin/tar: ../../../wsl_root/root/.nvm/versions/node/v22.18.0/bin/npm: Cannot stat: Input/output error
-    # /usr/bin/tar: ../../../wsl_root/root/.nvm/versions/node/v22.18.0/bin/npx: Cannot stat: Input/output error
-    # /usr/bin/tar: ../../../wsl_root/root/.nvm/versions/node/v22.18.0/bin/pnpm: Cannot stat: Input/output error
-    # /usr/bin/tar: Exiting with failure status due to previous errors
-    # Warning: Failed to save: "C:\Program failed with error: The process 'C:\Program Files\Git\usr\bin\tar.exe' failed with exit code 2
+    - name: Restore WSL NVM cache
+      id: cache-nvm
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/wsl_nvm_cache.tar.gz
+        key: wsl-nvm-cache-v1-${{hashFiles('**/.nvmrc')}}
 
-    # - name: Cache for nvm, pnpm profile caches.
-    #   uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
-    #   with:
-    #     path: |
-    #       C:\\wsl_root\\root\\.nvm\\versions
-    #       C:\\wsl_root\\root\\.local\\share\\pnpm\\store\\
-    #     key: "${{ runner.os }}-wsl-cache-v${{inputs.cache_version}}-${{hashFiles('**/.nvmrc')}}-${{hashFiles('**/pnpm-lock.yaml')}}"
-    #     restore-keys: |
-    #       ${{ runner.os }}-wsl-cache-v${{inputs.cache_version}}-
-    - name: Setup nvm
+    - name: Extract NVM inside WSL
+      if: steps.cache-nvm.outputs.cache-hit == 'true'
       shell: wsl-bash {0}
+      run: |
+        cache_archive="${{steps.wsl_paths.outputs.wsl_home}}/.cache/wsl_nvm_cache.tar.gz"
+        mkdir -p ~/.nvm
+        tar -xzf "$cache_archive" -C ~/.nvm
+
+    - name: Download NVM inside WSL
+      shell: wsl-bash {0}
+      if: steps.cache-nvm.outputs.cache-hit != 'true'
       run: |
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
         export NVM_DIR="$HOME/.nvm"
         # Note: Specify `--install` due to https://github.com/nvm-sh/nvm/issues/1985.
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --install
-    - name: Installing Node and pnpm (in WSL)
+
+    - name: Setup NVM inside WSL
+      shell: wsl-bash {0}
       run: |
         # Note: this is needed to load NVM in this step otherwise nvm will not be found.
         export NVM_DIR="$HOME/.nvm"
@@ -144,4 +139,12 @@ runs:
 
         nvm install
         npm i -g pnpm@10
+
+    - name: Archive NVM inside WSL
       shell: wsl-bash {0}
+      if: steps.cache-nvm.outputs.cache-hit != 'true'
+      run: |
+        wsl_home="${{steps.wsl_paths.outputs.wsl_home}}"
+        mkdir -p "${wsl_home}/.cache"
+        cache_archive="${wsl_home}/.cache/wsl_nvm_cache.tar.gz"
+        tar -czf "$cache_archive" -C ~/.nvm .
