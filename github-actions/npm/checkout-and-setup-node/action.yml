@@ -17,18 +17,6 @@ inputs:
       Relative path to the nvm version file to set node version, exclusive with
       node-version-file-path input. Defaults to .nvmrc
 
-  cache-node-modules:
-    default: false
-    type: boolean
-    description: |
-      Whether to cache the node_modules directory, this is helpful when postinstalls are performed
-      and modify the resulting node_modules directory. Defaults to False.
-
-  node-module-directories:
-    default: ./node_modules
-    description: |
-      Space delimited list of node_modules directories to cache. Defaults to `./node_modules`
-
 runs:
   using: composite
   steps:
@@ -46,23 +34,22 @@ runs:
         persist-credentials: false
         ref: ${{ inputs.ref }}
 
+    - id: packageManager
+      shell: bash
+      run: |
+        PM=$(jq -r '.packageManager | match("^(npm|pnpm|yarn)@").captures[0].string' package.json || echo "")
+        echo "PACKAGE_MANAGER=$PM" >> "$GITHUB_OUTPUT"
+        if [ "$PM" == "pnpm" ]; then
+          echo "CACHE=pnpm" >> "$GITHUB_OUTPUT"
+        fi
+
+    - if: steps.packageManager.outputs.PACKAGE_MANAGER == 'pnpm'
+      uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+      with:
+        run_install: false
+
     - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
       with:
         node-version-file: ${{ inputs.node-version-file-path }}
         node-version: ${{ inputs.node-version }}
-
-    - id: packageManager
-      shell: bash
-      run: |
-        echo "PACKAGE_MANAGER=$(cat package.json | jq ".packageManager" | sed -E 's/"(npm|pnpm|yarn)@.*/\1/g')" > "$GITHUB_OUTPUT"
-
-    - if: steps.packageManager.outputs.PACKAGE_MANAGER == 'pnpm'
-      uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
-
-
-    # TODO(josephperrott): Determine if its safe to use this caching step.
-    # - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
-    #   if: ${{ inputs.cache-node-modules == 'true' }}
-    #   with:
-    #     path: ${{ inputs.node-module-directories }}
-    #     key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/*.patch') }}
+        cache: ${{ steps.packageManager.outputs.CACHE }}
