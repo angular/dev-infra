@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-// @ts-ignore-next-line
+// @ts-ignore-next-line strict-deps
 import tokenRaw from './gcp_token.data';
 import {k, iv, alg, at} from './constants.js';
 import {createDecipheriv} from 'crypto';

@@ -10,6 +10,7 @@ load("@rules_angular//src/ng_project:index.bzl", _ng_project = "ng_project")
 load("@rules_angular//src/ts_project:index.bzl", _ts_project = "ts_project")
 load("@rules_sass//src:index.bzl", _npm_sass_library = "npm_sass_library", _sass_binary = "sass_binary")
 load("//bazel:extract_types.bzl", _extract_types = "extract_types")
+load("//bazel/ts_project:index.bzl", _strict_deps_test = "strict_deps_test")
 
 copy_to_bin = _copy_to_bin
 ts_config = _ts_config
@@ -28,6 +29,8 @@ def _determine_tsconfig(testonly):
 
 def ts_project(
         name,
+        srcs = [],
+        deps = [],
         source_map = True,
         testonly = False,
         tsconfig = None,
@@ -38,6 +41,8 @@ def ts_project(
 
     _ts_project(
         name,
+        deps = deps,
+        srcs = srcs,
         source_map = source_map,
         testonly = testonly,
         tsconfig = tsconfig,
@@ -45,13 +50,21 @@ def ts_project(
         **kwargs
     )
 
+    _strict_deps_test(
+        name = "%s_strict_deps_test" % name,
+        tsconfig = tsconfig,
+        deps = deps,
+        srcs = srcs,
+    )
+
 def ng_project(
         name,
+        srcs = [],
+        deps = [],
         source_map = True,
         testonly = False,
         tsconfig = None,
         declaration = True,
-        deps = [],
         **kwargs):
     if tsconfig == None:
         tsconfig = _determine_tsconfig(testonly)
@@ -59,12 +72,20 @@ def ng_project(
     deps = deps + ["//:node_modules/tslib"]
     _ng_project(
         name,
+        deps = deps,
+        srcs = srcs,
         source_map = source_map,
         declaration = declaration,
         testonly = testonly,
         tsconfig = tsconfig,
-        deps = deps,
         **kwargs
+    )
+
+    _strict_deps_test(
+        name = "%s_strict_deps_test" % name,
+        tsconfig = tsconfig,
+        deps = deps,
+        srcs = srcs,
     )
 
 def npm_package(name, srcs = [], substitutions = {}, **kwargs):
