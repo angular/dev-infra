@@ -52,16 +52,18 @@ function checkPathsForMatch(moduleSpecifier: string, paths?: ts.MapLike<string[]
   return false;
 }
 
+/** The list of known package names that end with extensions and need to be special cased. */
+const knownModuleSpecifiersWithExtensions = new Set(['highlight.js', 'zone.js']);
+
 for (const fileExecPath of manifest.testFiles) {
   const content = await fs.readFile(fileExecPath, 'utf8');
   const sf = ts.createSourceFile(fileExecPath, content, ts.ScriptTarget.ESNext, true);
   const imports = getImportsInSourceFile(sf);
 
   for (const i of imports) {
-    const moduleSpecifier =
-      i.moduleSpecifier === 'zone.js'
-        ? 'zone.js'
-        : i.moduleSpecifier.replace(extensionRemoveRegex, '');
+    const moduleSpecifier = knownModuleSpecifiersWithExtensions.has(i.moduleSpecifier)
+      ? i.moduleSpecifier
+      : i.moduleSpecifier.replace(extensionRemoveRegex, '');
     // When the module specified is the file itself this is always a valid dep.
     if (i.moduleSpecifier === '') {
       continue;
