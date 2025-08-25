@@ -56,9 +56,7 @@ function checkPathsForMatch(moduleSpecifier: string, paths?: ts.MapLike<string[]
 const knownModuleSpecifiersWithExtensions = new Set(['highlight.js', 'zone.js']);
 
 for (const fileExecPath of manifest.testFiles) {
-  const content = await fs.readFile(fileExecPath, 'utf8');
-  const sf = ts.createSourceFile(fileExecPath, content, ts.ScriptTarget.ESNext, true);
-  const imports = getImportsInSourceFile(sf);
+  const imports = getImportsInSourceFile(fileExecPath);
 
   for (const i of imports) {
     const moduleSpecifier = knownModuleSpecifiersWithExtensions.has(i.moduleSpecifier)
