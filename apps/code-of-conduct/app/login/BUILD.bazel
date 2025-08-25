@@ -13,6 +13,7 @@ ng_project(
         "//apps/code-of-conduct:node_modules/@angular/common",
         "//apps/code-of-conduct:node_modules/@angular/core",
         "//apps/code-of-conduct:node_modules/@angular/material",
+        "//apps/code-of-conduct:node_modules/@angular/router",
         "//apps/code-of-conduct/app/account",
     ],
 )
