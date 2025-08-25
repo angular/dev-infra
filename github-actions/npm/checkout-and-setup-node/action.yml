@@ -17,6 +17,10 @@ inputs:
       Relative path to the nvm version file to set node version, exclusive with
       node-version-file-path input. Defaults to .nvmrc
 
+  disable-package-manager-cache:
+    description: 'When set to true, disables the package manager cache.'
+    default: false
+
 runs:
   using: composite
   steps:
@@ -40,7 +44,7 @@ runs:
         PM=$(jq -r '.packageManager | match("^(npm|pnpm|yarn)@").captures[0].string' package.json || echo "")
         echo "PACKAGE_MANAGER=$PM" >> "$GITHUB_OUTPUT"
         if [ "$PM" == "pnpm" ]; then
-          echo "CACHE=pnpm" >> "$GITHUB_OUTPUT"
+          echo "CACHE_MANAGER_VALUE=pnpm" >> "$GITHUB_OUTPUT"
         fi
 
     - if: steps.packageManager.outputs.PACKAGE_MANAGER == 'pnpm'
@@ -52,4 +56,4 @@ runs:
       with:
         node-version-file: ${{ inputs.node-version-file-path }}
         node-version: ${{ inputs.node-version }}
-        cache: ${{ steps.packageManager.outputs.CACHE }}
+        cache: ${{ inputs.disable-package-manager-cache != 'true' && steps.packageManager.outputs.CACHE_MANAGER_VALUE || '' }}
