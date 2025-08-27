@@ -15,7 +15,6 @@ class PullRequestLabeling {
   /** Run the commit message based labelling process. */
   static run = async () => {
     const token = await getAuthTokenFor(ANGULAR_ROBOT);
-    // TODO: remove once GHA supports node18 as a target runner for Javascript action
     const git = new Octokit({auth: token});
     try {
       const inst = new this(git);
