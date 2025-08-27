@@ -14,8 +14,8 @@ runs:
       uses: actions/dependency-review-action@bc41886e18ea39df68b1b1245f4184881938e050 # v4.7.2
       env:
         # The action ref here allows us to import the config file from the same sha we rely on in the downstream usage
-        ACTION_REF: ${{ github.action_ref }}
-        ACTION_REPO: ${{ github.action_repository }}
+        ACTION_REF: ${{ github.action_ref || 'main' }}
+        ACTION_REPO: ${{ github.action_repository || 'angular/dev-infra' }}
       with:
         config-file: '${{ env.ACTION_REPO }}/github-actions/linting/licenses/dependency-review-config.yml@${{ env.ACTION_REF }}'
         allow-dependencies-licenses: '${{inputs.allow-dependencies-licenses}}'
