@@ -15,11 +15,10 @@ async function main() {
     const repoToken = await getAuthTokenFor(ANGULAR_ROBOT, context.repo);
     const googlersOrgToken = await getGooglersOrgInstallationToken();
 
-    // TODO: remove once GHA supports node18 as a target runner for Javascript action
-    repoClient = new Octokit({auth: repoToken, request: {fetch}});
+    repoClient = new Octokit({auth: repoToken});
 
     if (googlersOrgToken !== null) {
-      googlersOrgClient = new Octokit({auth: googlersOrgToken, request: {fetch}});
+      googlersOrgClient = new Octokit({auth: googlersOrgToken});
     }
 
     await runPostApprovalChangesAction(googlersOrgClient ?? repoClient, repoClient);

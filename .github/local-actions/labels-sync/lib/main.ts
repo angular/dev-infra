@@ -70,7 +70,6 @@ async function syncLabelsInRepo(github: Octokit, repoName: string, managedLabels
 
 async function main() {
   /** The Github API instance to use for requests. */
-  // TODO: remove once GHA supports node18 as a target runner for Javascript action
   const github = new Octokit({auth: await getAuthTokenFor(ANGULAR_ROBOT)});
 
   try {

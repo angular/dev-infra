@@ -37,7 +37,6 @@ async function main() {
   const token = await getAuthTokenFor(ANGULAR_LOCK_BOT, {org: 'angular'});
 
   try {
-    // TODO: remove once GHA supports node18 as a target runner for Javascript action
     const github = new Octokit({auth: token});
     for (let repo of reposToBeChecked) {
       await runLockClosedAction(github, repo);
