@@ -7,7 +7,7 @@
   "type": "module",
   "private": true,
   "dependencies": {
-    "@octokit/auth-app": "8.0.2",
+    "@octokit/auth-app": "8.1.0",
     "@octokit/request-error": "7.0.0",
     "@octokit/rest": "22.0.0",
     "@octokit/webhooks-types": "7.6.1",
