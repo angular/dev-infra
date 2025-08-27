@@ -24,6 +24,7 @@ jobs:
           - angular/components
           - angular/angular-cli
           - angular/vscode-ng-language-service
+          - angular/ai-tutor
     runs-on: ubuntu-latest
     steps:
       # Because the checkout and setup node action is contained in the dev-infra repo, we must
