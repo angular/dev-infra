@@ -1,6 +1,7 @@
 load("@aspect_rules_js//js:defs.bzl", "js_binary")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_config")
 load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
+load("//bazel/validation:defs.bzl", "validate_ts_version_matching")
 
 npm_link_all_packages()
 
@@ -12,7 +13,6 @@ ts_config(
 
 exports_files([
     "package.json",
-    ".yarnrc.yml",
 ])
 
 js_binary(
@@ -27,4 +27,9 @@ js_binary(
     data = [".yarn/releases/yarn-1.22.17.cjs"],
     entry_point = ".yarn/releases/yarn-1.22.17.cjs",
     visibility = ["//bazel/integration/tests:__subpackages__"],
+)
+
+validate_ts_version_matching(
+    module_lock_file = "MODULE.bazel.lock",
+    package_json = "package.json",
 )
