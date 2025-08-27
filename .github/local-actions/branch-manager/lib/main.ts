@@ -12,6 +12,7 @@ import {
 import {MergeConflictsFatalError} from '../../../../ng-dev/pr/merge/failures.js';
 import {createPullRequestValidationConfig} from '../../../../ng-dev/pr/common/validation/validation-config.js';
 import {InvalidTargetLabelError} from '../../../../ng-dev/pr/common/targeting/target-label.js';
+import {resolve} from 'path';
 
 interface CommmitStatus {
   state: 'pending' | 'error' | 'failure' | 'success';
@@ -50,27 +51,40 @@ const sha = await (async () => {
 })();
 
 /** Set the mergability status on the pull request provided in the environment. */
-async function setMergeabilityStatusOnPullRequest({state, description, targetUrl}: CommmitStatus) {
-  await git.github.repos.createCommitStatus({
-    owner,
-    repo,
-    sha,
-    context: statusContextName,
-    state,
-    // Status descriptions are limited to 140 characters.
-    description: description.substring(0, 139),
-    target_url: targetUrl,
-  });
+async function setMergeabilityStatusOnPullRequest(
+  {state, description, targetUrl}: CommmitStatus,
+  canRetry = true,
+) {
+  try {
+    await git.github.repos.createCommitStatus({
+      owner,
+      repo,
+      sha,
+      context: statusContextName,
+      state,
+      // Status descriptions are limited to 140 characters.
+      description: description.substring(0, 139),
+      target_url: targetUrl,
+    });
+  } catch {
+    if (canRetry) {
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+      await setMergeabilityStatusOnPullRequest({state, description, targetUrl}, false);
+    }
+  }
 }
 
 async function main() {
   try {
     // This is intentionally not awaited because we are just setting the status to pending, and wanting
     // to continue working.
-    let _unawaitedPromise = setMergeabilityStatusOnPullRequest({
-      state: 'pending',
-      description: 'Mergability check in progress',
-    });
+    let _unawaitedPromise = setMergeabilityStatusOnPullRequest(
+      {
+        state: 'pending',
+        description: 'Mergability check in progress',
+      },
+      false,
+    );
 
     // Create a tmp directory to perform checks in and change working to directory to it.
     await cloneRepoIntoTmpLocation({owner, repo});
