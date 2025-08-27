@@ -72,14 +72,14 @@ importers:
   spec-bundling/test:
     dependencies:
       '@angular/compiler':
-        specifier: 21.0.0-next.0
-        version: 21.0.0-next.0
+        specifier: 21.0.0-next.1
+        version: 21.0.0-next.1
       '@angular/core':
-        specifier: 21.0.0-next.0
-        version: 21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1)
+        specifier: 21.0.0-next.1
+        version: 21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1)
       '@angular/platform-browser':
-        specifier: 21.0.0-next.0
-        version: 21.0.0-next.0(@angular/common@21.0.0-next.0(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))
+        specifier: 21.0.0-next.1
+        version: 21.0.0-next.1(@angular/common@21.0.0-next.0(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1))
       '@types/jasmine':
         specifier: 5.1.9
         version: 5.1.9
@@ -114,15 +114,15 @@ packages:
       '@angular/core': 21.0.0-next.0
       rxjs: ^6.5.3 || ^7.4.0
 
-  '@angular/compiler@21.0.0-next.0':
-    resolution: {integrity: sha512-KelVzb9KEpCF0l+fUuuGZM5OOnZ+u+CIskXP0frjAnV/hG+gNvoDXhzhBdUVjQK6bKbAEaU4sW9mTd6t5twi/w==}
+  '@angular/compiler@21.0.0-next.1':
+    resolution: {integrity: sha512-yK/b0nGQTUtneWjcfkGE0CVM3sJYG5jadzwJGGJSfSqFCD63IcdFnuhCr5hsFlLJvnRIZHo3xxjxIlYnG6DNwA==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
 
-  '@angular/core@21.0.0-next.0':
-    resolution: {integrity: sha512-vmF76Lko0ckhNlkjDmOfQbprHSHVGKyqXh+nb0ghDbvfwufbFpnyUPNNYUzEpB3DajwzNo8tgya/SCkyIuEZYg==}
+  '@angular/core@21.0.0-next.1':
+    resolution: {integrity: sha512-Usn/sgyzSLk0cw4Xozfb5HV7Sjp/nLA3XDeTL4idMxRFEJO23HFFR7Usl8Jh6K/adcvqskP4QSxuFeaY5R7y5A==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
     peerDependencies:
-      '@angular/compiler': 21.0.0-next.0
+      '@angular/compiler': 21.0.0-next.1
       rxjs: ^6.5.3 || ^7.4.0
       zone.js: ~0.15.0
     peerDependenciesMeta:
@@ -131,13 +131,13 @@ packages:
       zone.js:
         optional: true
 
-  '@angular/platform-browser@21.0.0-next.0':
-    resolution: {integrity: sha512-ILf2hJzGVGKetnOrEIU153X4f09hSnNfCGvKb5GSzz1Ldri/uiqu3uHX/eaBTS+62Tt4X5QrD/rhmAUiOvcfNg==}
+  '@angular/platform-browser@21.0.0-next.1':
+    resolution: {integrity: sha512-ow4fT2m4oGJsF/Q4dKpDZ3yfS8BDTsNxbuQ9HoM1dtDvGZBGcz4w1Qa4A+N+3vd9grMuIEYTqcxs+ks1ylaT8A==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
     peerDependencies:
-      '@angular/animations': 21.0.0-next.0
-      '@angular/common': 21.0.0-next.0
-      '@angular/core': 21.0.0-next.0
+      '@angular/animations': 21.0.0-next.1
+      '@angular/common': 21.0.0-next.1
+      '@angular/core': 21.0.0-next.1
     peerDependenciesMeta:
       '@angular/animations':
         optional: true
@@ -1944,28 +1944,28 @@ packages:
 
 snapshots:
 
-  '@angular/common@21.0.0-next.0(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)':
+  '@angular/common@21.0.0-next.0(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)':
     dependencies:
-      '@angular/core': 21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1)
+      '@angular/core': 21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1)
       rxjs: 7.8.2
       tslib: 2.8.1
 
-  '@angular/compiler@21.0.0-next.0':
+  '@angular/compiler@21.0.0-next.1':
     dependencies:
       tslib: 2.8.1
 
-  '@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1)':
+  '@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1)':
     dependencies:
       rxjs: 7.8.2
       tslib: 2.8.1
     optionalDependencies:
-      '@angular/compiler': 21.0.0-next.0
+      '@angular/compiler': 21.0.0-next.1
       zone.js: 0.15.1
 
-  '@angular/platform-browser@21.0.0-next.0(@angular/common@21.0.0-next.0(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))':
+  '@angular/platform-browser@21.0.0-next.1(@angular/common@21.0.0-next.0(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1))':
     dependencies:
-      '@angular/common': 21.0.0-next.0(@angular/core@21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
-      '@angular/core': 21.0.0-next.0(@angular/compiler@21.0.0-next.0)(rxjs@7.8.2)(zone.js@0.15.1)
+      '@angular/common': 21.0.0-next.0(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
+      '@angular/core': 21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1)
       tslib: 2.8.1
 
   '@asamuzakjp/css-color@3.2.0':
