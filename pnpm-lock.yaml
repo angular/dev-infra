@@ -20,8 +20,8 @@ importers:
         specifier: 8.2.1
         version: 8.2.1
       firebase-tools:
-        specifier: 14.14.0
-        version: 14.14.0(@types/node@24.3.0)(bufferutil@4.0.9)(encoding@0.1.13)
+        specifier: 14.15.0
+        version: 14.15.0(@types/node@24.3.0)(bufferutil@4.0.9)(encoding@0.1.13)
       husky:
         specifier: 9.1.7
         version: 9.1.7
@@ -141,7 +141,7 @@ importers:
         version: 21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1)
       '@angular/fire':
         specifier: 20.0.1
-        version: 20.0.1(1ea6e6e38781bc8ce419a10f0bd01d46)
+        version: 20.0.1(cc4f9c51dfdf92e7184e92440f2b5894)
       '@angular/forms':
         specifier: 21.0.0-next.1
         version: 21.0.0-next.1(@angular/common@21.0.0-next.1(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.0.0-next.1(@angular/animations@21.0.0-next.1(@angular/common@21.0.0-next.1(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@21.0.0-next.1(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
@@ -185,14 +185,14 @@ importers:
         specifier: 24.3.0
         version: 24.3.0
       firebase-admin:
-        specifier: 13.4.0
-        version: 13.4.0(encoding@0.1.13)
+        specifier: 13.5.0
+        version: 13.5.0(encoding@0.1.13)
       firebase-functions:
         specifier: 6.4.0
-        version: 6.4.0(firebase-admin@13.4.0(encoding@0.1.13))
+        version: 6.4.0(firebase-admin@13.5.0(encoding@0.1.13))
       firebase-tools:
-        specifier: 14.14.0
-        version: 14.14.0(@types/node@24.3.0)(bufferutil@4.0.9)(encoding@0.1.13)
+        specifier: 14.15.0
+        version: 14.15.0(@types/node@24.3.0)(bufferutil@4.0.9)(encoding@0.1.13)
 
   bazel:
     dependencies:
@@ -542,8 +542,8 @@ importers:
         specifier: 8.0.0
         version: 8.0.0(supports-color@10.2.0)
       '@google/genai':
-        specifier: 1.15.0
-        version: 1.15.0(@modelcontextprotocol/sdk@1.17.4(supports-color@10.2.0))(bufferutil@4.0.9)(encoding@0.1.13)(supports-color@10.2.0)(utf-8-validate@6.0.5)
+        specifier: 1.16.0
+        version: 1.16.0(@modelcontextprotocol/sdk@1.17.4(supports-color@10.2.0))(bufferutil@4.0.9)(encoding@0.1.13)(supports-color@10.2.0)(utf-8-validate@6.0.5)
       '@inquirer/prompts':
         specifier: 7.8.4
         version: 7.8.4(@types/node@24.3.0)
@@ -1578,11 +1578,11 @@ packages:
     resolution: {integrity: sha512-5m9GoZqKh52a1UqkxDBu/+WVFDALNtHg5up5gNmNbXQWBcV813tzJKsyDtKjOPrlR1em1TxtD7NSPCrObH7koQ==}
     engines: {node: '>=14'}
 
-  '@google/genai@1.15.0':
-    resolution: {integrity: sha512-4CSW+hRTESWl3xVtde7pkQ3E+dDFhDq+m4ztmccRctZfx1gKy3v0M9STIMGk6Nq0s6O2uKMXupOZQ1JGorXVwQ==}
+  '@google/genai@1.16.0':
+    resolution: {integrity: sha512-hdTYu39QgDFxv+FB6BK2zi4UIJGWhx2iPc0pHQ0C5Q/RCi+m+4gsryIzTGO+riqWcUA8/WGYp6hpqckdOBNysw==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
-      '@modelcontextprotocol/sdk': ^1.11.0
+      '@modelcontextprotocol/sdk': ^1.11.4
     peerDependenciesMeta:
       '@modelcontextprotocol/sdk':
         optional: true
@@ -3447,8 +3447,8 @@ packages:
     resolution: {integrity: sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw==}
     engines: {node: '>=8'}
 
-  firebase-admin@13.4.0:
-    resolution: {integrity: sha512-Y8DcyKK+4pl4B93ooiy1G8qvdyRMkcNFfBSh+8rbVcw4cW8dgG0VXCCTp5NUwub8sn9vSPsOwpb9tE2OuFmcfQ==}
+  firebase-admin@13.5.0:
+    resolution: {integrity: sha512-QZOpv1DJRJpH8NcWiL1xXE10tw3L/bdPFlgjcWrqU3ufyOJDYfxB1MMtxiVTwxK16NlybQbEM6ciSich2uWEIQ==}
     engines: {node: '>=18'}
 
   firebase-functions@6.4.0:
@@ -3458,8 +3458,8 @@ packages:
     peerDependencies:
       firebase-admin: ^11.10.0 || ^12.0.0 || ^13.0.0
 
-  firebase-tools@14.14.0:
-    resolution: {integrity: sha512-QDc/PL8wMGm6ZD9DDHIcQpK/8SmoVL6Hec3GohJjCumYpHCQsQK/8ncZmY21lW//rN29Q/CLYhhU9SN9u3xoEg==}
+  firebase-tools@14.15.0:
+    resolution: {integrity: sha512-/l8TWi1YtELYUrRoZg2WA5bIIqKkYO9R+5YtGw8v4IbkcNZXfRTMCKDfg1mOEETcOVS6QXLDO1VKcHdzcf2mvw==}
     engines: {node: '>=20.0.0 || >=22.0.0'}
     hasBin: true
 
@@ -6065,7 +6065,7 @@ snapshots:
       '@angular/compiler': 21.0.0-next.1
       zone.js: 0.15.1
 
-  '@angular/fire@20.0.1(1ea6e6e38781bc8ce419a10f0bd01d46)':
+  '@angular/fire@20.0.1(cc4f9c51dfdf92e7184e92440f2b5894)':
     dependencies:
       '@angular-devkit/schematics': 20.2.0(chokidar@4.0.3)
       '@angular/common': 21.0.0-next.1(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
@@ -6078,7 +6078,7 @@ snapshots:
       rxjs: 7.8.2
       tslib: 2.8.1
     optionalDependencies:
-      firebase-tools: 14.14.0(@types/node@24.3.0)(bufferutil@4.0.9)(encoding@0.1.13)
+      firebase-tools: 14.15.0(@types/node@24.3.0)(bufferutil@4.0.9)(encoding@0.1.13)
     transitivePeerDependencies:
       - '@react-native-async-storage/async-storage'
       - chokidar
@@ -7116,7 +7116,7 @@ snapshots:
       - supports-color
     optional: true
 
-  '@google/genai@1.15.0(@modelcontextprotocol/sdk@1.17.4(supports-color@10.2.0))(bufferutil@4.0.9)(encoding@0.1.13)(supports-color@10.2.0)(utf-8-validate@6.0.5)':
+  '@google/genai@1.16.0(@modelcontextprotocol/sdk@1.17.4(supports-color@10.2.0))(bufferutil@4.0.9)(encoding@0.1.13)(supports-color@10.2.0)(utf-8-validate@6.0.5)':
     dependencies:
       google-auth-library: 9.15.1(encoding@0.1.13)(supports-color@10.2.0)
       ws: 8.18.3(bufferutil@4.0.9)(utf-8-validate@6.0.5)
@@ -9235,13 +9235,14 @@ snapshots:
       locate-path: 5.0.0
       path-exists: 4.0.0
 
-  firebase-admin@13.4.0(encoding@0.1.13):
+  firebase-admin@13.5.0(encoding@0.1.13):
     dependencies:
       '@fastify/busboy': 3.2.0
       '@firebase/database-compat': 2.1.0
       '@firebase/database-types': 1.0.16
       '@types/node': 22.18.0
       farmhash-modern: 1.1.0
+      fast-deep-equal: 3.1.3
       google-auth-library: 9.15.1(encoding@0.1.13)(supports-color@10.2.0)
       jsonwebtoken: 9.0.2
       jwks-rsa: 3.2.0
@@ -9254,18 +9255,18 @@ snapshots:
       - encoding
       - supports-color
 
-  firebase-functions@6.4.0(firebase-admin@13.4.0(encoding@0.1.13)):
+  firebase-functions@6.4.0(firebase-admin@13.5.0(encoding@0.1.13)):
     dependencies:
       '@types/cors': 2.8.19
       '@types/express': 4.17.23
       cors: 2.8.5
       express: 4.21.2
-      firebase-admin: 13.4.0(encoding@0.1.13)
+      firebase-admin: 13.5.0(encoding@0.1.13)
       protobufjs: 7.5.4
     transitivePeerDependencies:
       - supports-color
 
-  firebase-tools@14.14.0(@types/node@24.3.0)(bufferutil@4.0.9)(encoding@0.1.13):
+  firebase-tools@14.15.0(@types/node@24.3.0)(bufferutil@4.0.9)(encoding@0.1.13):
     dependencies:
       '@electric-sql/pglite': 0.3.7
       '@electric-sql/pglite-tools': 0.2.12(@electric-sql/pglite@0.3.7)
