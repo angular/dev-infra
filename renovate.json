@@ -1,14 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>angular/dev-infra//renovate-presets/default.json5"],
-  "postUpgradeTasks": {
-    "commands": [
-      "pnpm install --frozen-lockfile",
-      "pnpm bazel mod deps --lockfile_mode=update",
-      "pnpm update-generated-files"
-    ],
-    "executionMode": "branch"
-  },
   "ignoreDeps": ["@google-cloud/spanner"],
   "ignorePaths": ["bazel/integration/tests/**"],
   "packageRules": [
@@ -16,6 +8,17 @@
       "enabled": true,
       "matchPackageNames": ["typescript"],
       "matchUpdateTypes": ["minor"]
+    },
+    {
+      "postUpgradeTasks": {
+        "commands": [
+          "pnpm install --frozen-lockfile",
+          "pnpm bazel mod deps --lockfile_mode=update",
+          "pnpm update-generated-files"
+        ],
+        "executionMode": "branch"
+      },
+      "matchManagers": ["bazel", "bazel-module", "bazelisk", "npm"]
     }
   ]
 }
