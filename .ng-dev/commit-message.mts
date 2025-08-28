@@ -7,6 +7,7 @@ function buildScopesFor(pkg: string, subpkgs: string[]) {
 
 export const commitMessage: CommitMessageConfig = {
   maxLineLength: Infinity,
+  disallowFixup: true,
   minBodyLength: 0,
   scopes: [
     ...buildScopesFor('bazel', [
