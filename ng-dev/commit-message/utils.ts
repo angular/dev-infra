@@ -5,8 +5,8 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import gitCommits from 'git-raw-commits';
 
+import {getRawCommitsStream} from 'git-raw-commits';
 import {CommitFromGitLog, gitLogFormatForParsing, parseCommitFromGitLog} from './parse.js';
 
 /**
@@ -17,7 +17,7 @@ export function getCommitsInRange(from: string, to: string = 'HEAD'): Promise<Co
     /** List of parsed commit objects. */
     const commits: CommitFromGitLog[] = [];
     /** Stream of raw git commit strings in the range provided. */
-    const commitStream = gitCommits({from, to, format: gitLogFormatForParsing});
+    const commitStream = getRawCommitsStream({from, to, format: gitLogFormatForParsing});
 
     // Accumulate the parsed commits for each commit from the Readable stream into an array, then
     // resolve the promise with the array when the Readable stream ends.
