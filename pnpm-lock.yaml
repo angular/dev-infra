@@ -637,6 +637,9 @@ importers:
       cli-progress:
         specifier: 3.12.0
         version: 3.12.0
+      conventional-commits-filter:
+        specifier: 5.0.0
+        version: 5.0.0
       conventional-commits-parser:
         specifier: 5.0.0
         version: 5.0.0
@@ -657,7 +660,7 @@ importers:
         version: 4.1.1(supports-color@10.2.0)
       git-raw-commits:
         specifier: 5.0.0
-        version: 5.0.0(conventional-commits-parser@5.0.0)
+        version: 5.0.0(conventional-commits-filter@5.0.0)(conventional-commits-parser@5.0.0)
       jasmine:
         specifier: 5.9.0
         version: 5.9.0
@@ -2953,6 +2956,10 @@ packages:
   content-type@1.0.5:
     resolution: {integrity: sha512-nTjqfcBFEipKdXCv4YDQWCfmcLZKm81ldF0pAopTvyrFGVbcR6P/VAAd5G7N+0tTr8QqiU0tFadD6FK4NtJwOA==}
     engines: {node: '>= 0.6'}
+
+  conventional-commits-filter@5.0.0:
+    resolution: {integrity: sha512-tQMagCOC59EVgNZcC5zl7XqO30Wki9i9J3acbUvkaosCT6JX3EeFwJD7Qqp4MCikRnzS18WXV3BLIQ66ytu6+Q==}
+    engines: {node: '>=18'}
 
   conventional-commits-parser@5.0.0:
     resolution: {integrity: sha512-ZPMl0ZJbw74iS9LuX9YIAiW8pfM5p3yh2o/NbXHbkFuZzY5jvdi5jFycEOkmBW5H5I7nA+D6f3UcsCLP2vvSEA==}
@@ -6263,11 +6270,12 @@ snapshots:
 
   '@colors/colors@1.6.0': {}
 
-  '@conventional-changelog/git-client@1.0.1(conventional-commits-parser@5.0.0)':
+  '@conventional-changelog/git-client@1.0.1(conventional-commits-filter@5.0.0)(conventional-commits-parser@5.0.0)':
     dependencies:
       '@types/semver': 7.7.0
       semver: 7.7.2
     optionalDependencies:
+      conventional-commits-filter: 5.0.0
       conventional-commits-parser: 5.0.0
 
   '@cspotcode/source-map-support@0.8.1':
@@ -8687,6 +8695,8 @@ snapshots:
 
   content-type@1.0.5: {}
 
+  conventional-commits-filter@5.0.0: {}
+
   conventional-commits-parser@5.0.0:
     dependencies:
       JSONStream: 1.3.5
@@ -9599,9 +9609,9 @@ snapshots:
     dependencies:
       assert-plus: 1.0.0
 
-  git-raw-commits@5.0.0(conventional-commits-parser@5.0.0):
+  git-raw-commits@5.0.0(conventional-commits-filter@5.0.0)(conventional-commits-parser@5.0.0):
     dependencies:
-      '@conventional-changelog/git-client': 1.0.1(conventional-commits-parser@5.0.0)
+      '@conventional-changelog/git-client': 1.0.1(conventional-commits-filter@5.0.0)(conventional-commits-parser@5.0.0)
       meow: 13.2.0
     transitivePeerDependencies:
       - conventional-commits-filter
