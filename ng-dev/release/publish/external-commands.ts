@@ -18,7 +18,6 @@ import {ReleaseInfoJsonStdout} from '../info/cli.js';
 import {ReleasePrecheckJsonStdin} from '../precheck/cli.js';
 import {BuiltPackageWithInfo} from '../config/index.js';
 import {green, Log} from '../../utils/logging.js';
-import {getBazelBin} from '../../utils/bazel-bin.js';
 import {PnpmVersioning} from './pnpm-versioning.js';
 
 /*
@@ -260,44 +259,6 @@ export abstract class ExternalCommands {
       Log.error('  ✘   An error occurred while installing dependencies.');
       throw new FatalReleaseActionError();
     }
-  }
-
-  /**
-   * Invokes the `bazel mod deps --lockfile_mode=update` command in order
-   * to refresh `MODULE.bazel.lock` file.
-   */
-  static async invokeBazelModDepsUpdate(projectDir: string): Promise<void> {
-    const spinner = new Spinner('Updating "MODULE.bazel.lock"');
-    try {
-      await ChildProcess.spawn(getBazelBin(), ['mod', 'deps', '--lockfile_mode=update'], {
-        cwd: projectDir,
-        mode: 'silent',
-      });
-    } catch (e) {
-      Log.error(e);
-      Log.error('  ✘   An error occurred while updating "MODULE.bazel.lock".');
-      throw new FatalReleaseActionError();
-    }
-    spinner.success(green(' Updated "MODULE.bazel.lock" file.'));
-  }
-
-  /**
-   * Invokes the `yarn bazel sync --only=repo` command in order
-   * to refresh Aspect lock files.
-   */
-  static async invokeBazelUpdateAspectLockFiles(projectDir: string): Promise<void> {
-    const spinner = new Spinner('Updating Aspect lock files');
-    try {
-      await ChildProcess.spawn(getBazelBin(), ['sync', '--only=repo'], {
-        cwd: projectDir,
-        mode: 'silent',
-      });
-    } catch (e) {
-      // Note: Gracefully handling these errors because `sync` command
-      // exits with a non-zero exit code when pnpm-lock.yaml file is updated.
-      Log.debug(e);
-    }
-    spinner.success(green(' Updated Aspect `rules_js` lock files.'));
   }
 
   private static async _spawnNpmScript(
