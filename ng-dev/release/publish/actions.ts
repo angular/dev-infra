@@ -6,14 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {promises as fs, existsSync} from 'fs';
-import path, {join} from 'path';
+import {promises as fs} from 'fs';
+import {join} from 'path';
 import semver from 'semver';
 
-import {
-  workspaceRelativeBazelModuleLock,
-  workspaceRelativePackageJsonPath,
-} from '../../utils/constants.js';
+import {workspaceRelativePackageJsonPath} from '../../utils/constants.js';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {isGithubApiError} from '../../utils/git/github.js';
 import githubMacros from '../../utils/git/github-macros.js';
@@ -44,7 +41,6 @@ import {githubReleaseBodyLimit} from './constants.js';
 import {ExternalCommands} from './external-commands.js';
 import {promptToInitiatePullRequestMerge} from './prompt-merge.js';
 import {Prompt} from '../../utils/prompt.js';
-import glob from 'fast-glob';
 import {PnpmVersioning} from './pnpm-versioning.js';
 import {Commit} from '../../utils/git/octokit-types.js';
 import {updateRenovateConfigTargetLabels} from './actions/renovate-config-updates.js';
@@ -139,33 +135,6 @@ export abstract class ReleaseAction {
     // to avoid unnecessary diff. IDEs usually add a trailing new line.
     await fs.writeFile(pkgJsonPath, `${JSON.stringify(pkgJson, null, 2)}\n`);
     Log.info(green(`  ✓   Updated project version to ${pkgJson.version}`));
-
-    if (this.config.rulesJsInteropMode && existsSync(path.join(this.projectDir, '.aspect'))) {
-      await ExternalCommands.invokeBazelUpdateAspectLockFiles(this.projectDir);
-    }
-
-    if (existsSync(join(this.projectDir, workspaceRelativeBazelModuleLock))) {
-      await ExternalCommands.invokeBazelModDepsUpdate(this.projectDir);
-    }
-  }
-
-  /*
-   * Get the modified Aspect lock files if `rulesJsInteropMode` is enabled.
-   */
-  protected getAspectLockFiles(): string[] {
-    // TODO: Remove after `rules_js` migration is complete.
-    return this.config.rulesJsInteropMode
-      ? glob.sync(['.aspect/**', 'pnpm-lock.yaml'], {cwd: this.projectDir})
-      : [];
-  }
-
-  /*
-   * Get the modified "MODULE.bazel.lock" if bazel modules are enabled.
-   */
-  protected getModuleBazelLockFile(): string | undefined {
-    return existsSync(join(this.projectDir, workspaceRelativeBazelModuleLock))
-      ? workspaceRelativeBazelModuleLock
-      : undefined;
   }
 
   /** Gets the most recent commit of a specified branch. */
@@ -235,16 +204,7 @@ export abstract class ReleaseAction {
     }
 
     // Commit message for the release point.
-    const filesToCommit = [
-      workspaceRelativePackageJsonPath,
-      workspaceRelativeChangelogPath,
-      ...this.getAspectLockFiles(),
-    ];
-
-    const bazelModuleLockFile = this.getModuleBazelLockFile();
-    if (bazelModuleLockFile) {
-      filesToCommit.push(bazelModuleLockFile);
-    }
+    const filesToCommit = [workspaceRelativePackageJsonPath, workspaceRelativeChangelogPath];
 
     const commitMessage = getCommitMessageForRelease(newVersion);
 

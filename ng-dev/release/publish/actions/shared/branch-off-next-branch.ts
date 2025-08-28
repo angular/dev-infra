@@ -140,15 +140,7 @@ export abstract class BranchOffNextBranchBaseAction extends CutNpmNextPrerelease
 
     // Create an individual commit for the next version bump. The changelog should go into
     // a separate commit that makes it clear where the changelog is cherry-picked from.
-    const filesToCommit: string[] = [
-      workspaceRelativePackageJsonPath,
-      ...this.getAspectLockFiles(),
-    ];
-
-    const bazelModuleLockFile = this.getModuleBazelLockFile();
-    if (bazelModuleLockFile) {
-      filesToCommit.push(bazelModuleLockFile);
-    }
+    const filesToCommit: string[] = [workspaceRelativePackageJsonPath];
 
     const renovateConfigPath = await updateRenovateConfig(
       this.projectDir,

@@ -61,13 +61,6 @@ export interface ReleaseConfig {
     newVersion: string,
     builtPackagesWithInfo: BuiltPackageWithInfo[],
   ) => Promise<void>;
-
-  /**
-   * Whether the repository is in rules_js interop mode, relying on
-   * integrity files to be automatically updated.
-   */
-  // TODO(devversion): Remove after completing `rules_js` migration.
-  rulesJsInteropMode?: boolean;
 }
 
 /**
