@@ -3,7 +3,8 @@ module.exports = {
   gitAuthor: 'Angular Robot <angular-robot@google.com>',
   platform: 'github',
   branchNameStrict: true,
-  // Temporary workaround for https://github.com/renovatebot/renovate/discussions/30812
+  // This is needed as otherwise Renovate will add `--ignore-pnpmfile`.
+  // See: https://github.com/renovatebot/renovate/blob/93fa41b26fdef8584be4d0c2582fa12397ae4360/lib/modules/manager/npm/post-update/pnpm.ts#L111-L118
   allowScripts: true,
   // Renovate fork PRs should never be editable as Renovate would otherwise
   // not be able to delete the branches and future updates would be missed.
