@@ -1,0 +1,14 @@
+load("@aspect_rules_js//js:defs.bzl", "js_library")
+
+js_library(
+    name = "stack-traces",
+    srcs = [
+        "stack-traces.mjs",
+    ],
+    visibility = [
+        "//visibility:public",
+    ],
+    deps = [
+        "//bazel:node_modules/source-map-support",
+    ],
+)
