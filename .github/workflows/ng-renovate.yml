@@ -32,6 +32,8 @@ jobs:
       # this step.
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - uses: ./github-actions/npm/checkout-and-setup-node
+        with:
+          cache-dependency-path: './.github/ng-renovate/pnpm-lock.yaml'
       - run: pnpm install --frozen-lockfile
         working-directory: ./.github/ng-renovate
       - run: pnpm exec renovate

@@ -21,6 +21,12 @@ inputs:
     description: 'When set to true, disables the package manager cache.'
     default: false
 
+  cache-dependency-path:
+    description: |
+      Used to specify the path to a dependency file: package-lock.json, yarn.lock, etc.
+      Supports wildcards or a list of file names for caching multiple dependencies.
+    default: ''
+
 runs:
   using: composite
   steps:
@@ -56,4 +62,5 @@ runs:
       with:
         node-version-file: ${{ inputs.node-version-file-path }}
         node-version: ${{ inputs.node-version }}
+        cache-dependency-path: ${{ inputs.cache-dependency-path }}
         cache: ${{ inputs.disable-package-manager-cache != 'true' && steps.packageManager.outputs.CACHE_MANAGER_VALUE || '' }}
