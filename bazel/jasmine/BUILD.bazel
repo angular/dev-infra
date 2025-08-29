@@ -1,0 +1,17 @@
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+
+ts_project(
+    name = "stack-traces",
+    srcs = [
+        "stack-traces.mts",
+    ],
+    declaration = True,
+    tsconfig = "//bazel:tsconfig",
+    visibility = [
+        "//visibility:public",
+    ],
+    deps = [
+        "//bazel:node_modules/@types/source-map-support",
+        "//bazel:node_modules/source-map-support",
+    ],
+)

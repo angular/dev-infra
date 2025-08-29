@@ -1,7 +1,6 @@
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", _copy_to_bin = "copy_to_bin")
 load("@aspect_bazel_lib//lib:write_source_files.bzl", _write_source_file = "write_source_file")
 load("@aspect_rules_esbuild//esbuild:defs.bzl", _esbuild = "esbuild")
-load("@aspect_rules_jasmine//jasmine:defs.bzl", _jasmine_test = "jasmine_test")
 load("@aspect_rules_js//js:defs.bzl", _js_binary = "js_binary")
 load("@aspect_rules_js//npm:defs.bzl", _npm_package = "npm_package")
 load("@aspect_rules_ts//ts:defs.bzl", _ts_config = "ts_config")
@@ -10,6 +9,7 @@ load("@rules_angular//src/ng_project:index.bzl", _ng_project = "ng_project")
 load("@rules_angular//src/ts_project:index.bzl", _ts_project = "ts_project")
 load("@rules_sass//src:index.bzl", _npm_sass_library = "npm_sass_library", _sass_binary = "sass_binary")
 load("//bazel:extract_types.bzl", _extract_types = "extract_types")
+load("//bazel/jasmine:jasmine.bzl", _jasmine_test = "jasmine_test")
 load("//bazel/ts_project:index.bzl", _strict_deps_test = "strict_deps_test")
 
 copy_to_bin = _copy_to_bin
@@ -110,7 +110,6 @@ def jasmine_test(name, **kwargs):
     _jasmine_test(
         name = name,
         node_modules = "//:node_modules",
-        chdir = native.package_name(),
         fixed_args = [
             "'**/*+(.|_)spec.js'",
         ],
