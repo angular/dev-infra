@@ -49,9 +49,6 @@ runs:
       run: |
         PM=$(jq -r '.packageManager | match("^(npm|pnpm|yarn)@").captures[0].string' package.json || echo "")
         echo "PACKAGE_MANAGER=$PM" >> "$GITHUB_OUTPUT"
-        if [ "$PM" == "pnpm" ]; then
-          echo "CACHE_MANAGER_VALUE=pnpm" >> "$GITHUB_OUTPUT"
-        fi
 
     - if: steps.packageManager.outputs.PACKAGE_MANAGER == 'pnpm'
       uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
@@ -63,4 +60,4 @@ runs:
         node-version-file: ${{ inputs.node-version-file-path }}
         node-version: ${{ inputs.node-version }}
         cache-dependency-path: ${{ inputs.cache-dependency-path }}
-        cache: ${{ inputs.disable-package-manager-cache != 'true' && steps.packageManager.outputs.CACHE_MANAGER_VALUE || '' }}
+        package-manager-cache: ${{ inputs.disable-package-manager-cache != 'true' }}
