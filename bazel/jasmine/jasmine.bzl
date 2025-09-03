@@ -1,17 +1,20 @@
 load("@aspect_rules_jasmine//jasmine:defs.bzl", _jasmine_test = "jasmine_test")
 
 def jasmine_test(name, data = [], tsconfig = None, node_options = [], env = {}, **kwargs):
+    data = data + [
+        "@devinfra//bazel/jasmine:stack-traces",
+        "@devinfra//bazel/private/node_loader:node_loader",
+    ]
+
     if tsconfig:
         env = dict(env, **{
             "NODE_OPTIONS_TSCONFIG_PATH": "$(rlocationpath %s)" % tsconfig,
         })
+        data = data + [tsconfig]
 
     _jasmine_test(
         name = name,
-        data = data + [
-            "@devinfra//bazel/jasmine:stack-traces",
-            "@devinfra//bazel/private/node_loader:node_loader",
-        ],
+        data = data,
         env = env,
         size = kwargs.pop("size", "medium"),
         node_options = [
