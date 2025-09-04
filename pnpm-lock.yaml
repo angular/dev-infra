@@ -20,8 +20,8 @@ importers:
         specifier: 8.2.1
         version: 8.2.1
       firebase-tools:
-        specifier: 14.15.1
-        version: 14.15.1(@types/node@24.3.0)(bufferutil@4.0.9)(encoding@0.1.13)
+        specifier: 14.15.2
+        version: 14.15.2(@types/node@24.3.0)(bufferutil@4.0.9)(encoding@0.1.13)
       husky:
         specifier: 9.1.7
         version: 9.1.7
@@ -141,7 +141,7 @@ importers:
         version: 21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1)
       '@angular/fire':
         specifier: 20.0.1
-        version: 20.0.1(0330f5bf7006d8ff11eaf959008e415f)
+        version: 20.0.1(4bbbfbf9cecdf0ee419d191c61bbd91e)
       '@angular/forms':
         specifier: 21.0.0-next.1
         version: 21.0.0-next.1(@angular/common@21.0.0-next.1(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.0.0-next.1(@angular/animations@21.0.0-next.1(@angular/common@21.0.0-next.1(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@21.0.0-next.1(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
@@ -191,8 +191,8 @@ importers:
         specifier: 6.4.0
         version: 6.4.0(firebase-admin@13.5.0(encoding@0.1.13))
       firebase-tools:
-        specifier: 14.15.1
-        version: 14.15.1(@types/node@24.3.0)(bufferutil@4.0.9)(encoding@0.1.13)
+        specifier: 14.15.2
+        version: 14.15.2(@types/node@24.3.0)(bufferutil@4.0.9)(encoding@0.1.13)
 
   bazel:
     dependencies:
@@ -551,8 +551,8 @@ importers:
         specifier: 8.0.0
         version: 8.0.0(supports-color@10.2.0)
       '@google/genai':
-        specifier: 1.16.0
-        version: 1.16.0(@modelcontextprotocol/sdk@1.17.4(supports-color@10.2.0))(bufferutil@4.0.9)(encoding@0.1.13)(supports-color@10.2.0)(utf-8-validate@6.0.5)
+        specifier: 1.17.0
+        version: 1.17.0(@modelcontextprotocol/sdk@1.17.4(supports-color@10.2.0))(bufferutil@4.0.9)(encoding@0.1.13)(supports-color@10.2.0)(utf-8-validate@6.0.5)
       '@inquirer/prompts':
         specifier: 7.8.4
         version: 7.8.4(@types/node@24.3.0)
@@ -620,8 +620,8 @@ importers:
         specifier: 24.3.0
         version: 24.3.0
       '@types/semver':
-        specifier: 7.7.0
-        version: 7.7.0
+        specifier: 7.7.1
+        version: 7.7.1
       '@types/supports-color':
         specifier: 10.0.0
         version: 10.0.0
@@ -1602,8 +1602,8 @@ packages:
     resolution: {integrity: sha512-5m9GoZqKh52a1UqkxDBu/+WVFDALNtHg5up5gNmNbXQWBcV813tzJKsyDtKjOPrlR1em1TxtD7NSPCrObH7koQ==}
     engines: {node: '>=14'}
 
-  '@google/genai@1.16.0':
-    resolution: {integrity: sha512-hdTYu39QgDFxv+FB6BK2zi4UIJGWhx2iPc0pHQ0C5Q/RCi+m+4gsryIzTGO+riqWcUA8/WGYp6hpqckdOBNysw==}
+  '@google/genai@1.17.0':
+    resolution: {integrity: sha512-r/OZWN9D8WvYrte3bcKPoLODrZ+2TjfxHm5OOyVHUbdFYIp1C4yJaXX4+sCS8I/+CbN9PxLjU5zm1cgmS7qz+A==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       '@modelcontextprotocol/sdk': ^1.11.4
@@ -2369,8 +2369,8 @@ packages:
   '@types/selenium-webdriver@4.1.28':
     resolution: {integrity: sha512-Au7CXegiS7oapbB16zxPToY4Cjzi9UQQMf3W2ZZM8PigMLTGR3iUAHjPUTddyE5g1SBjT/qpmvlsAQLBfNAdKg==}
 
-  '@types/semver@7.7.0':
-    resolution: {integrity: sha512-k107IF4+Xr7UHjwDc7Cfd6PRQfbdkiRabXGRjo07b4WyPahFBZCZ1sE+BNxYIJPPg73UkfOsVOLwqVc/6ETrIA==}
+  '@types/semver@7.7.1':
+    resolution: {integrity: sha512-FmgJfu+MOcQ370SD0ev7EI8TlCAfKYU+B4m5T3yXc1CiRN94g/SZPtsCkk506aUDtlMnFZvasDwHHUcZUEaYuA==}
 
   '@types/send@0.17.5':
     resolution: {integrity: sha512-z6F2D3cOStZvuk2SaP6YrwkNO65iTZcwA2ZkSABegdkAh/lf+Aa/YQndZVfmEXT5vgAp6zv06VQ3ejSVjAny4w==}
@@ -3488,8 +3488,8 @@ packages:
     peerDependencies:
       firebase-admin: ^11.10.0 || ^12.0.0 || ^13.0.0
 
-  firebase-tools@14.15.1:
-    resolution: {integrity: sha512-GoBOnmo3+lXvIob4XuezFVCn6sKT3ZDvlYnmfSPFax4VuqrK6CXzbIjFdpjM4D1MD4rqpYm/VlcvlBtEiP0Z1w==}
+  firebase-tools@14.15.2:
+    resolution: {integrity: sha512-6wyA9F3tXToAKJR8IkDyHOlOwAOL6j9qoA1inF6psiC8lzMwJ9/t+Lc7HmvIgOb1KDdj82vxL3llX28wcHwonw==}
     engines: {node: '>=20.0.0 || >=22.0.0'}
     hasBin: true
 
@@ -6102,7 +6102,7 @@ snapshots:
       '@angular/compiler': 21.0.0-next.1
       zone.js: 0.15.1
 
-  '@angular/fire@20.0.1(0330f5bf7006d8ff11eaf959008e415f)':
+  '@angular/fire@20.0.1(4bbbfbf9cecdf0ee419d191c61bbd91e)':
     dependencies:
       '@angular-devkit/schematics': 20.2.1(chokidar@4.0.3)
       '@angular/common': 21.0.0-next.1(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
@@ -6115,7 +6115,7 @@ snapshots:
       rxjs: 7.8.2
       tslib: 2.8.1
     optionalDependencies:
-      firebase-tools: 14.15.1(@types/node@24.3.0)(bufferutil@4.0.9)(encoding@0.1.13)
+      firebase-tools: 14.15.2(@types/node@24.3.0)(bufferutil@4.0.9)(encoding@0.1.13)
     transitivePeerDependencies:
       - '@react-native-async-storage/async-storage'
       - chokidar
@@ -6290,7 +6290,7 @@ snapshots:
 
   '@conventional-changelog/git-client@1.0.1(conventional-commits-filter@5.0.0)(conventional-commits-parser@5.0.0)':
     dependencies:
-      '@types/semver': 7.7.0
+      '@types/semver': 7.7.1
       semver: 7.7.2
     optionalDependencies:
       conventional-commits-filter: 5.0.0
@@ -7161,7 +7161,7 @@ snapshots:
       - supports-color
     optional: true
 
-  '@google/genai@1.16.0(@modelcontextprotocol/sdk@1.17.4(supports-color@10.2.0))(bufferutil@4.0.9)(encoding@0.1.13)(supports-color@10.2.0)(utf-8-validate@6.0.5)':
+  '@google/genai@1.17.0(@modelcontextprotocol/sdk@1.17.4(supports-color@10.2.0))(bufferutil@4.0.9)(encoding@0.1.13)(supports-color@10.2.0)(utf-8-validate@6.0.5)':
     dependencies:
       google-auth-library: 9.15.1(encoding@0.1.13)(supports-color@10.2.0)
       ws: 8.18.3(bufferutil@4.0.9)(utf-8-validate@6.0.5)
@@ -8005,7 +8005,7 @@ snapshots:
       '@types/node': 24.3.0
       '@types/ws': 8.18.1
 
-  '@types/semver@7.7.0': {}
+  '@types/semver@7.7.1': {}
 
   '@types/send@0.17.5':
     dependencies:
@@ -9317,7 +9317,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  firebase-tools@14.15.1(@types/node@24.3.0)(bufferutil@4.0.9)(encoding@0.1.13):
+  firebase-tools@14.15.2(@types/node@24.3.0)(bufferutil@4.0.9)(encoding@0.1.13):
     dependencies:
       '@electric-sql/pglite': 0.3.7
       '@electric-sql/pglite-tools': 0.2.12(@electric-sql/pglite@0.3.7)
