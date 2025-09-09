@@ -11,7 +11,6 @@ ts_project(
         "//ng-dev:__subpackages__",
     ],
     deps = [
-        "//ng-dev:node_modules/@types/conventional-commits-parser",
         "//ng-dev:node_modules/@types/git-raw-commits",
         "//ng-dev:node_modules/@types/node",
         "//ng-dev:node_modules/@types/yargs",

@@ -6,7 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Commit as ParsedCommit, Options, sync as parse} from 'conventional-commits-parser';
+import {
+  CommitReference,
+  CommitNote,
+  ParserOptions,
+  CommitParser,
+} from 'conventional-commits-parser';
 
 /** A parsed commit, containing the information needed to validate the commit. */
 export interface Commit {
@@ -19,7 +24,7 @@ export interface Commit {
   /** The footer of the commit, containing issue references and note sections. */
   footer: string;
   /** A list of the references to other issues made throughout the commit message. */
-  references: ParsedCommit.Reference[];
+  references: CommitReference[];
   /** The type of the commit message. */
   type: string;
   /** The scope of the commit message. */
@@ -27,9 +32,9 @@ export interface Commit {
   /** The subject of the commit message. */
   subject: string;
   /** A list of breaking change notes in the commit message. */
-  breakingChanges: ParsedCommit.Note[];
+  breakingChanges: CommitNote[];
   /** A list of deprecation notes in the commit message. */
-  deprecations: ParsedCommit.Note[];
+  deprecations: CommitNote[];
   /** Whether the commit is a fixup commit. */
   isFixup: boolean;
   /** Whether the commit is a squash commit. */
@@ -101,17 +106,16 @@ const headerPattern = /^(\w+)(?:\(([^)]+)\))?: (.*)$/;
 const headerCorrespondence = ['type', 'scope', 'subject'];
 /**
  * Configuration options for the commit parser.
- *
- * NOTE: An extended type from `Options` must be used because the current
- * @types/conventional-commits-parser version does not include the `notesPattern` field.
  */
-const parseOptions: Options & {notesPattern: (keywords: string) => RegExp} = {
+const parseOptions: ParserOptions = {
   commentChar: '#',
   headerPattern,
   headerCorrespondence,
   noteKeywords: [NoteSections.BREAKING_CHANGE, NoteSections.DEPRECATED],
   notesPattern: (keywords: string) => new RegExp(`^\\s*(${keywords}): ?(.*)`),
 };
+
+let commitParser: CommitParser | undefined;
 
 /** Parse a commit message into its composite parts. */
 export const parseCommitMessage: (fullText: string) => Commit = parseInternal;
@@ -130,21 +134,27 @@ function parseInternal(fullText: string | Buffer): CommitFromGitLog | Commit {
     .replace(FIXUP_PREFIX_RE, '')
     .replace(SQUASH_PREFIX_RE, '')
     .replace(REVERT_PREFIX_RE, '');
+
+  commitParser ??= new CommitParser(parseOptions);
+
   /** The initially parsed commit. */
-  const commit = parse(strippedCommitMsg, parseOptions);
+  const commit = commitParser.parse(strippedCommitMsg);
   /** A list of breaking change notes from the commit. */
-  const breakingChanges: ParsedCommit.Note[] = [];
+  const breakingChanges: CommitNote[] = [];
   /** A list of deprecation notes from the commit. */
-  const deprecations: ParsedCommit.Note[] = [];
+  const deprecations: CommitNote[] = [];
 
   // Extract the commit message notes by marked types into their respective lists.
-  commit.notes.forEach((note: ParsedCommit.Note) => {
-    if (note.title === NoteSections.BREAKING_CHANGE) {
-      breakingChanges.push(note);
-    } else if (note.title === NoteSections.DEPRECATED) {
-      deprecations.push(note);
+  for (const note of commit.notes) {
+    switch (note.title) {
+      case NoteSections.BREAKING_CHANGE:
+        breakingChanges.push(note);
+        break;
+      case NoteSections.DEPRECATED:
+        deprecations.push(note);
+        break;
     }
-  });
+  }
 
   return {
     fullText,
@@ -154,9 +164,9 @@ function parseInternal(fullText: string | Buffer): CommitFromGitLog | Commit {
     footer: commit.footer || '',
     header: commit.header || '',
     references: commit.references,
-    scope: commit.scope || '',
-    subject: commit.subject || '',
-    type: commit.type || '',
+    scope: commit['scope'] || '',
+    subject: commit['subject'] || '',
+    type: commit['type'] || '',
     isFixup: FIXUP_PREFIX_RE.test(fullText),
     isSquash: SQUASH_PREFIX_RE.test(fullText),
     isRevert: REVERT_PREFIX_RE.test(fullText),
