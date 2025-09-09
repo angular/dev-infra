@@ -6,7 +6,7 @@
     "@octokit/request-error": "7.0.0",
     "@octokit/rest": "22.0.0",
     "@types/jasmine": "5.1.9",
-    "@types/node": "24.3.0",
+    "@types/node": "24.3.1",
     "jasmine-reporters": "2.5.2",
     "jasmine": "5.10.0",
     "typed-graphqlify": "3.1.6",

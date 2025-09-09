@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       renovate:
-        specifier: 41.96.0
-        version: 41.96.0(encoding@0.1.13)(typanion@3.14.0)
+        specifier: 41.98.4
+        version: 41.98.4(encoding@0.1.13)(typanion@3.14.0)
 
 packages:
 
@@ -1280,8 +1280,8 @@ packages:
   email-addresses@5.0.0:
     resolution: {integrity: sha512-4OIPYlA6JXqtVn8zpHpGiI7vE6EQOAg16aGnDMIAlZVinnoZ8208tW1hAbjWydgN/4PLTT9q+O1K6AH/vALJGw==}
 
-  emoji-regex@10.4.0:
-    resolution: {integrity: sha512-EC+0oUMY1Rqm4O6LLrgjtYDvcVYTy7chDnM4Q7030tP4Kwj3u/pR6gP9ygnp2CJMK5Gq+9Q2oqmrFJAz01DXjw==}
+  emoji-regex@10.5.0:
+    resolution: {integrity: sha512-lb49vf1Xzfx080OKA0o6l8DQQpV+6Vg95zyCJX9VB/BqKYlhG7N4wgROUUHRA+ZPUefLnteQOad7z1kT2bV7bg==}
 
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
@@ -2258,6 +2258,7 @@ packages:
   openpgp@6.2.1:
     resolution: {integrity: sha512-5vkqxQWgyrfY0shygqJTaCoa4SbPdjrpmtfREyXBBDrXjoRT25edEMQbdKH5/WxDXlLVn9TxPsVrKP72Jjuz2A==}
     engines: {node: '>= 18.0.0'}
+    deprecated: This version has a bug affecting zlib compression if manually enabled as part of encryption or signing (see https://github.com/openpgpjs/openpgpjs/pull/1894). Please update to v6.2.2 or later.
 
   p-all@5.0.0:
     resolution: {integrity: sha512-pofqu/1FhCVa+78xNAptCGc9V45exFz2pvBRyIvgXkNM0Rh18Py7j8pQuSjA+zpabI46v9hRjNWmL9EAFcEbpw==}
@@ -2490,8 +2491,8 @@ packages:
   remark@15.0.1:
     resolution: {integrity: sha512-Eht5w30ruCXgFmxVUSlNWQ9iiimq07URKeFS3hNc8cUWy1llX4KDWfyEDZRycMc+znsN9Ux5/tJ/BFdgdOwA3A==}
 
-  renovate@41.96.0:
-    resolution: {integrity: sha512-OxwvRru1wCvn9v9T8mjwZUJiEu4YxywX8+Lc0UQBd28NWDDzGic+kaEvneleDpn7JTQD+S62YhbcD+EL+wuLKQ==}
+  renovate@41.98.4:
+    resolution: {integrity: sha512-P/DTA3YXdSUPDfPRl9NOm5v1szPKhMP+FkLh0dsYER/lzAtTMRGUZd0dhRMN3Hn7AMiCQElucBfr+xLaT1jjKg==}
     engines: {node: ^22.13.0, pnpm: ^10.0.0}
     hasBin: true
 
@@ -5089,7 +5090,7 @@ snapshots:
 
   email-addresses@5.0.0: {}
 
-  emoji-regex@10.4.0: {}
+  emoji-regex@10.5.0: {}
 
   emoji-regex@8.0.0: {}
 
@@ -6597,7 +6598,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  renovate@41.96.0(encoding@0.1.13)(typanion@3.14.0):
+  renovate@41.98.4(encoding@0.1.13)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.879.0
       '@aws-sdk/client-ec2': 3.879.0
@@ -6653,7 +6654,7 @@ snapshots:
       diff: 8.0.2
       editorconfig: 3.0.1
       email-addresses: 5.0.0
-      emoji-regex: 10.4.0
+      emoji-regex: 10.5.0
       emojibase: 16.0.0
       emojibase-regex: 16.0.0
       extract-zip: 2.0.1
