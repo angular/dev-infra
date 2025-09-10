@@ -366,7 +366,10 @@ export abstract class ReleaseAction {
   protected async checkoutUpstreamBranch(branchName: string) {
     this.git.run(['fetch', '-q', this.git.getRepoGitUrl(), branchName]);
     this.git.run(['checkout', '-q', 'FETCH_HEAD', '--detach']);
-    this.git.run(['clean', '-dfq']);
+    try {
+      // Remove node_modules even if they are ignored. (We do not want to run -dxf to avoid deleting other files suchs as .ng-dev-lock)
+      this.git.run(['clean', 'git clean -dfX **/node_modules']);
+    } catch {}
   }
 
   /** Installs all Yarn dependencies in the current branch. */
