@@ -375,7 +375,6 @@ export abstract class ReleaseAction {
       return;
     }
 
-    const nodeModulesDir = join(this.projectDir, 'node_modules');
     // Note: We delete all contents of the `node_modules` first. This is necessary
     // because Yarn could preserve extraneous/outdated nested modules that will cause
     // unexpected build failures with the NodeJS Bazel `@npm` workspace generation.
