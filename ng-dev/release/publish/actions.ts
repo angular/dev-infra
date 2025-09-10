@@ -366,6 +366,7 @@ export abstract class ReleaseAction {
   protected async checkoutUpstreamBranch(branchName: string) {
     this.git.run(['fetch', '-q', this.git.getRepoGitUrl(), branchName]);
     this.git.run(['checkout', '-q', 'FETCH_HEAD', '--detach']);
+    this.git.run(['clean', '-dfq']);
   }
 
   /** Installs all Yarn dependencies in the current branch. */
