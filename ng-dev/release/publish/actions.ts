@@ -368,7 +368,7 @@ export abstract class ReleaseAction {
     this.git.run(['checkout', '-q', 'FETCH_HEAD', '--detach']);
     try {
       // Remove node_modules even if they are ignored. (We do not want to run -dxf to avoid deleting other files suchs as .ng-dev-lock)
-      this.git.run(['clean', 'git clean -dfX **/node_modules']);
+      this.git.run(['clean', '-qdfX **/node_modules']);
     } catch {}
   }
 
