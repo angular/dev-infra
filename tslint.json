@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/SchemaStore/schemastore/6049f681741399cf73aea088680f58375c12592a/src/schemas/json/tslint.json",
   "rulesDirectory": ["./lint-rules/tslint"],
   "rules": {
-    "ts-node-loader": true,
+    "tsx-loader": true,
     "validate-import-for-esm-cjs-interop": [
       true,
       {
