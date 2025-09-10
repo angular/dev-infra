@@ -31,6 +31,9 @@ esbuild_checked_in(
         ":lib",
     ],
     entry_point = "lib/main.ts",
+    external = [
+        "pnpapi",
+    ],
     format = "esm",
     platform = "node",
     target = "node22",

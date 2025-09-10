@@ -17,9 +17,6 @@ bazelCommand=${BAZEL:-"pnpm bazel"}
   ${bazelCommand} build ng-dev:npm_package
 )
 
-export TS_NODE_TRANSPILE_ONLY=1
-export TS_NODE_PROJECT=${PWD}/.ng-dev/tsconfig.json
-
 # Execute the built ng-dev command in the current working directory
 # and pass-through arguments unmodified.
-${devInfraProjectDir}/node_modules/.bin/tsx ${ngDevBinFile} ${@}
+${ngDevBinFile} ${@}
