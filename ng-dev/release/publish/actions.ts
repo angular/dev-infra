@@ -366,10 +366,6 @@ export abstract class ReleaseAction {
   protected async checkoutUpstreamBranch(branchName: string) {
     this.git.run(['fetch', '-q', this.git.getRepoGitUrl(), branchName]);
     this.git.run(['checkout', '-q', 'FETCH_HEAD', '--detach']);
-    try {
-      // Remove node_modules even if they are ignored. (We do not want to run -dxf to avoid deleting other files suchs as .ng-dev-lock)
-      this.git.run(['clean', '-qdfX **/node_modules']);
-    } catch {}
   }
 
   /** Installs all Yarn dependencies in the current branch. */
@@ -386,7 +382,9 @@ export abstract class ReleaseAction {
     // This is a workaround for: https://github.com/yarnpkg/yarn/issues/8146. Even though
     // we might be able to fix this with Yarn 2+, it is reasonable ensuring clean node modules.
     // TODO: Remove this when we use Yarn 2+ in all Angular repositories.
-    await fs.rm(nodeModulesDir, {force: true, recursive: true, maxRetries: 3});
+    try {
+      this.git.run(['clean', '-qdfX', '**/node_modules']);
+    } catch {}
     await ExternalCommands.invokeYarnInstall(this.projectDir);
   }
 
