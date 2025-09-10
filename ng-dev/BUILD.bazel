@@ -34,6 +34,7 @@ NG_DEV_EXTERNALS = [
     # intend to provide interop globals for this as it could hide other significant issues.
     "@yarnpkg/lockfile",
     "@google-cloud/spanner",
+    "tsx",
 ]
 
 ts_project(

@@ -6,13 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {pathToFileURL} from 'url';
 import {join} from 'path';
-
+import glob from 'fast-glob';
+import {register} from 'tsx/esm/api';
 import {Assertions, MultipleAssertions} from './config-assertions.js';
 import {Log} from './logging.js';
 import {getCachedConfig, setCachedConfig} from './config-cache.js';
 import {determineRepoBaseDirFromCwd} from './repo-directory.js';
+import {pathToFileURL} from 'url';
 
 /**
  * Type describing a ng-dev configuration.
@@ -81,7 +82,7 @@ export interface CaretakerConfig {
  * The filename expected for creating the ng-dev config, without the file
  * extension to allow either a typescript or javascript file to be used.
  */
-const CONFIG_FILE_PATH = '.ng-dev/config.mjs';
+const CONFIG_FILE_PATH_MATCHER = '.ng-dev/config.{mjs,mts}';
 
 /**
  * The filename expected for local user config, without the file extension to allow a typescript,
@@ -118,9 +119,12 @@ export async function getConfig(baseDirOrAssertions?: unknown) {
       baseDir = determineRepoBaseDirFromCwd();
     }
 
+    /** The configuration file discovered based on a glob match. */
+    const [matchedFile] = await glob(CONFIG_FILE_PATH_MATCHER, {cwd: baseDir});
+
     // If the global config is not defined, load it from the file system.
     // The full path to the configuration file.
-    const configPath = join(baseDir, CONFIG_FILE_PATH);
+    const configPath = join(baseDir, matchedFile);
     // Read the configuration and validate it before caching it for the future.
     cachedConfig = await readConfigFile(configPath);
 
@@ -204,6 +208,7 @@ export function assertValidCaretakerConfig<T extends NgDevConfig>(
  * if the configuration file cannot be read.
  */
 async function readConfigFile(configPath: string, returnEmptyObjectOnError = false): Promise<{}> {
+  const unregister = register({tsconfig: false});
   try {
     // ESM imports expect a valid URL. On Windows, the disk name causes errors like:
     // `ERR_UNSUPPORTED_ESM_URL_SCHEME: <..> Received protocol 'c:'`
@@ -219,5 +224,7 @@ async function readConfigFile(configPath: string, returnEmptyObjectOnError = fal
     Log.error(`Could not read configuration file at ${configPath}.`);
     Log.error(e);
     process.exit(1);
+  } finally {
+    unregister();
   }
 }
