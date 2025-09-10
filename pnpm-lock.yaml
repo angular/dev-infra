@@ -77,8 +77,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.15.0
-        version: 7.15.0
+        specifier: 7.16.0
+        version: 7.16.0
 
   .github/local-actions/labels-sync:
     dependencies:
@@ -98,8 +98,8 @@ importers:
         specifier: 24.3.1
         version: 24.3.1
       undici:
-        specifier: 7.15.0
-        version: 7.15.0
+        specifier: 7.16.0
+        version: 7.16.0
 
   .github/local-actions/lock-closed:
     dependencies:
@@ -119,8 +119,8 @@ importers:
         specifier: 24.3.1
         version: 24.3.1
       undici:
-        specifier: 7.15.0
-        version: 7.15.0
+        specifier: 7.16.0
+        version: 7.16.0
 
   apps/code-of-conduct:
     dependencies:
@@ -353,8 +353,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.15.0
-        version: 7.15.0
+        specifier: 7.16.0
+        version: 7.16.0
 
   github-actions/browserstack:
     dependencies:
@@ -395,8 +395,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.15.0
-        version: 7.15.0
+        specifier: 7.16.0
+        version: 7.16.0
 
   github-actions/google-internal-tests:
     dependencies:
@@ -416,8 +416,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.15.0
-        version: 7.15.0
+        specifier: 7.16.0
+        version: 7.16.0
 
   github-actions/org-file-sync:
     dependencies:
@@ -440,8 +440,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.15.0
-        version: 7.15.0
+        specifier: 7.16.0
+        version: 7.16.0
 
   github-actions/post-approval-changes:
     dependencies:
@@ -464,8 +464,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.15.0
-        version: 7.15.0
+        specifier: 7.16.0
+        version: 7.16.0
 
   github-actions/previews/pack-and-upload-artifact:
     dependencies:
@@ -503,8 +503,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.15.0
-        version: 7.15.0
+        specifier: 7.16.0
+        version: 7.16.0
 
   github-actions/saucelabs:
     dependencies:
@@ -539,8 +539,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.15.0
-        version: 7.15.0
+        specifier: 7.16.0
+        version: 7.16.0
 
   ng-dev:
     dependencies:
@@ -551,8 +551,8 @@ importers:
         specifier: 8.0.0
         version: 8.0.0(supports-color@10.2.2)
       '@google/genai':
-        specifier: 1.18.0
-        version: 1.18.0(@modelcontextprotocol/sdk@1.17.4(supports-color@10.2.2))(bufferutil@4.0.9)(encoding@0.1.13)(supports-color@10.2.2)(utf-8-validate@6.0.5)
+        specifier: 1.19.0
+        version: 1.19.0(@modelcontextprotocol/sdk@1.17.4(supports-color@10.2.2))(bufferutil@4.0.9)(encoding@0.1.13)(supports-color@10.2.2)(utf-8-validate@6.0.5)
       '@inquirer/prompts':
         specifier: 7.8.4
         version: 7.8.4(@types/node@24.3.1)
@@ -1599,8 +1599,8 @@ packages:
     resolution: {integrity: sha512-5m9GoZqKh52a1UqkxDBu/+WVFDALNtHg5up5gNmNbXQWBcV813tzJKsyDtKjOPrlR1em1TxtD7NSPCrObH7koQ==}
     engines: {node: '>=14'}
 
-  '@google/genai@1.18.0':
-    resolution: {integrity: sha512-G1RTmr2nUud9zPfPgNOGGALgvncSMwtH90wgZdaKHULq+p4TY8E85krPbTfLrx7LgythCzWneH9/+bODM/PAZg==}
+  '@google/genai@1.19.0':
+    resolution: {integrity: sha512-mIMV3M/KfzzFA//0fziK472wKBJ1TdJLhozIUJKTPLyTDN1NotU+hyoHW/N0cfrcEWUK20YA0GxCeHC4z0SbMA==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       '@modelcontextprotocol/sdk': ^1.11.4
@@ -4913,6 +4913,7 @@ packages:
     engines: {node: '>=0.6.0', teleport: '>=0.2.0'}
     deprecated: |-
       You or someone you depend on is using Q, the JavaScript Promise library that gave JavaScript developers strong feelings about promises. They can almost certainly migrate to the native JavaScript promise now. Thank you literally everyone for joining me in this bet against the odds. Be excellent to each other.
+
       (For a CapTP with native promises, see @endo/eventual-send and @endo/captp)
 
   qs@6.13.0:
@@ -5612,8 +5613,8 @@ packages:
     resolution: {integrity: sha512-raqeBD6NQK4SkWhQzeYKd1KmIG6dllBOTt55Rmkt4HtI9mwdWtJljnrXjAFUBLTSN67HWrOIZ3EPF4kjUw80Bg==}
     engines: {node: '>=14.0'}
 
-  undici@7.15.0:
-    resolution: {integrity: sha512-7oZJCPvvMvTd0OlqWsIxTuItTpJBpU1tcbVl24FMn3xt3+VSunwUasmfPJRE57oNO1KsZ4PgA1xTdAX4hq8NyQ==}
+  undici@7.16.0:
+    resolution: {integrity: sha512-QEg3HPMll0o3t2ourKwOeUAZ159Kn9mx5pnzHRQO8+Wixmh88YdZRiIwat0iNzNNXn0yoEtXJqFpyW7eM8BV7g==}
     engines: {node: '>=20.18.1'}
 
   unicode-emoji-modifier-base@1.0.0:
@@ -7131,7 +7132,7 @@ snapshots:
       - supports-color
     optional: true
 
-  '@google/genai@1.18.0(@modelcontextprotocol/sdk@1.17.4(supports-color@10.2.2))(bufferutil@4.0.9)(encoding@0.1.13)(supports-color@10.2.2)(utf-8-validate@6.0.5)':
+  '@google/genai@1.19.0(@modelcontextprotocol/sdk@1.17.4(supports-color@10.2.2))(bufferutil@4.0.9)(encoding@0.1.13)(supports-color@10.2.2)(utf-8-validate@6.0.5)':
     dependencies:
       google-auth-library: 9.15.1(encoding@0.1.13)(supports-color@10.2.2)
       ws: 8.18.3(bufferutil@4.0.9)(utf-8-validate@6.0.5)
@@ -11802,7 +11803,7 @@ snapshots:
     dependencies:
       '@fastify/busboy': 2.1.1
 
-  undici@7.15.0: {}
+  undici@7.16.0: {}
 
   unicode-emoji-modifier-base@1.0.0: {}
 

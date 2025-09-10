@@ -5,6 +5,6 @@
     "@octokit/rest": "22.0.0",
     "@types/node": "24.3.1",
     "typed-graphqlify": "3.1.6",
-    "undici": "7.15.0"
+    "undici": "7.16.0"
   }
 }
