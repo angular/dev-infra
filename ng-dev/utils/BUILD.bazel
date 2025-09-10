@@ -1,7 +1,7 @@
 load("//tools:defaults.bzl", "ts_project")
 
 # g3-sync-config needs to be a separate file / target so that google-internal-tests
-# won't need ts-node to parse this file
+# won't need tsx to parse this file
 ts_project(
     name = "g3_sync_config",
     srcs = ["g3-sync-config.ts"],
