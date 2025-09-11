@@ -75,6 +75,7 @@ export async function assertValidPullRequest(
         ngDevConfig.pullRequest,
         activeReleaseTrains,
         labels,
+        pullRequest,
       ),
     );
   }

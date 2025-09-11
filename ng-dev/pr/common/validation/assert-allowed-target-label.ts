@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {PullRequestFromGithub} from '../fetch-pull-request.js';
 import {Commit} from '../../../commit-message/parse.js';
 import {ActiveReleaseTrains} from '../../../release/versioning/active-release-trains.js';
 import {Log, red} from '../../../utils/logging.js';
@@ -13,6 +14,9 @@ import {PullRequestConfig} from '../../config/index.js';
 import {mergeLabels} from '../labels/index.js';
 import {TargetLabel, targetLabels} from '../labels/target.js';
 import {createPullRequestValidation, PullRequestValidation} from './validation-config.js';
+
+/** List of automation robot accounts. */
+const automationBots = ['angular-robot'];
 
 /** Assert the commits provided are allowed to merge to the provided target label. */
 // TODO: update typings to make sure portability is properly handled for windows build.
@@ -28,6 +32,7 @@ class Validation extends PullRequestValidation {
     config: PullRequestConfig,
     releaseTrains: ActiveReleaseTrains,
     labelsOnPullRequest: string[],
+    pullRequest: PullRequestFromGithub,
   ) {
     if (labelsOnPullRequest.includes(mergeLabels['MERGE_FIX_COMMIT_MESSAGE'].name)) {
       Log.debug(
@@ -68,6 +73,10 @@ class Validation extends PullRequestValidation {
         if (hasDeprecations && !releaseTrains.isFeatureFreeze()) {
           throw this._createHasDeprecationsError(targetLabel);
         }
+      case targetLabels['TARGET_AUTOMATION']:
+        if (!automationBots.includes(pullRequest.author.login)) {
+          throw this._createUserUsingAutomationLabelError(targetLabel, pullRequest.author.login);
+        }
         break;
       default:
         Log.warn(red('WARNING: Unable to confirm all commits in the pull request are'));
@@ -96,6 +105,13 @@ class Validation extends PullRequestValidation {
       `Cannot merge into branch for "${label.name}" as the pull request has ` +
       'commits with the "feat" type. New features can only be merged with the "target: minor" ' +
       'or "target: major" label.';
+    return this._createError(message);
+  }
+
+  private _createUserUsingAutomationLabelError(label: TargetLabel, author: string) {
+    const message =
+      `Cannot merge into branch for "${label.name}" as the pull request is authored by "${author}" ` +
+      `but only known automation bot accounts (${automationBots.join(', ')}) can use this label.`;
     return this._createError(message);
   }
 }

@@ -130,6 +130,9 @@ export const PR_SCHEMA = {
       ],
     },
   ),
+  author: {
+    login: graphqlTypes.string,
+  },
 };
 
 export type PullRequestFromGithub = typeof PR_SCHEMA;

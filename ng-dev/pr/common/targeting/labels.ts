@@ -153,6 +153,17 @@ export async function getTargetLabelConfigsForActiveReleaseTrains(
         return [githubTargetBranch];
       },
     },
+    {
+      label: targetLabels['TARGET_AUTOMATION'],
+      branches: (githubTargetBranch) => {
+        if (!isVersionBranch(githubTargetBranch)) {
+          throw new InvalidTargetBranchError(
+            '"target: automation" pull requests can only target a release branch',
+          );
+        }
+        return [githubTargetBranch];
+      },
+    },
   ];
 
   // LTS branches can only be determined if the release configuration is defined, and must be added
