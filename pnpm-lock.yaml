@@ -20,8 +20,8 @@ importers:
         specifier: 8.2.1
         version: 8.2.1
       firebase-tools:
-        specifier: 14.15.2
-        version: 14.15.2(@types/node@24.3.1)(bufferutil@4.0.9)(encoding@0.1.13)
+        specifier: 14.16.0
+        version: 14.16.0(@types/node@24.3.1)(bufferutil@4.0.9)(encoding@0.1.13)
       husky:
         specifier: 9.1.7
         version: 9.1.7
@@ -138,7 +138,7 @@ importers:
         version: 21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1)
       '@angular/fire':
         specifier: 20.0.1
-        version: 20.0.1(f0dd09ec0d40a707e5fd32cc07386baf)
+        version: 20.0.1(2efefe66ee3588ad40709bdf7f0f33a8)
       '@angular/forms':
         specifier: 21.0.0-next.1
         version: 21.0.0-next.1(@angular/common@21.0.0-next.1(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.0.0-next.1(@angular/animations@21.0.0-next.1(@angular/common@21.0.0-next.1(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@21.0.0-next.1(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
@@ -188,14 +188,14 @@ importers:
         specifier: 6.4.0
         version: 6.4.0(firebase-admin@13.5.0(encoding@0.1.13))
       firebase-tools:
-        specifier: 14.15.2
-        version: 14.15.2(@types/node@24.3.1)(bufferutil@4.0.9)(encoding@0.1.13)
+        specifier: 14.16.0
+        version: 14.16.0(@types/node@24.3.1)(bufferutil@4.0.9)(encoding@0.1.13)
 
   bazel:
     dependencies:
       '@microsoft/api-extractor':
-        specifier: 7.52.11
-        version: 7.52.11(@types/node@22.18.1)
+        specifier: 7.52.12
+        version: 7.52.12(@types/node@22.18.1)
       '@types/babel__core':
         specifier: 7.20.5
         version: 7.20.5
@@ -1800,8 +1800,8 @@ packages:
   '@microsoft/api-extractor-model@7.30.7':
     resolution: {integrity: sha512-TBbmSI2/BHpfR9YhQA7nH0nqVmGgJ0xH0Ex4D99/qBDAUpnhA2oikGmdXanbw9AWWY/ExBYIpkmY8dBHdla3YQ==}
 
-  '@microsoft/api-extractor@7.52.11':
-    resolution: {integrity: sha512-IKQ7bHg6f/Io3dQds6r9QPYk4q0OlR9A4nFDtNhUt3UUIhyitbxAqRN1CLjUVtk6IBk3xzyCMOdwwtIXQ7AlGg==}
+  '@microsoft/api-extractor@7.52.12':
+    resolution: {integrity: sha512-f1UNgOLCMydwCJ+eZvH0dMxMq3lEEvXsLqlvDOdx136cRITK6xPES2xxgN/0NPCFpQad2HtMHxtPM9oGuqQx6g==}
     hasBin: true
 
   '@microsoft/tsdoc-config@0.17.1':
@@ -2188,16 +2188,16 @@ packages:
   '@rushstack/rig-package@0.5.3':
     resolution: {integrity: sha512-olzSSjYrvCNxUFZowevC3uz8gvKr3WTpHQ7BkpjtRpA3wK+T0ybep/SRUMfr195gBzJm5gaXw0ZMgjIyHqJUow==}
 
-  '@rushstack/terminal@0.15.4':
-    resolution: {integrity: sha512-OQSThV0itlwVNHV6thoXiAYZlQh4Fgvie2CzxFABsbO2MWQsI4zOh3LRNigYSTrmS+ba2j0B3EObakPzf/x6Zg==}
+  '@rushstack/terminal@0.16.0':
+    resolution: {integrity: sha512-WEvNuKkoR1PXorr9SxO0dqFdSp1BA+xzDrIm/Bwlc5YHg2FFg6oS+uCTYjerOhFuqCW+A3vKBm6EmKWSHfgx/A==}
     peerDependencies:
       '@types/node': '*'
     peerDependenciesMeta:
       '@types/node':
         optional: true
 
-  '@rushstack/ts-command-line@5.0.2':
-    resolution: {integrity: sha512-+AkJDbu1GFMPIU8Sb7TLVXDv/Q7Mkvx+wAjEl8XiXVVq+p1FmWW6M3LYpJMmoHNckSofeMecgWg5lfMwNAAsEQ==}
+  '@rushstack/ts-command-line@5.0.3':
+    resolution: {integrity: sha512-bgPhQEqLVv/2hwKLYv/XvsTWNZ9B/+X1zJ7WgQE9rO5oiLzrOZvkIW4pk13yOQBhHyjcND5qMOa6p83t+Z66iQ==}
 
   '@schematics/angular@20.2.1':
     resolution: {integrity: sha512-7Vx11KWooiqxP206JEVgz3cp0rRv31PYnocNoPM6UqLhGtlvL9GdgaZHzDhGFEm0hv6DUFrbTGIzB89gXc54Xg==}
@@ -3444,8 +3444,8 @@ packages:
     peerDependencies:
       firebase-admin: ^11.10.0 || ^12.0.0 || ^13.0.0
 
-  firebase-tools@14.15.2:
-    resolution: {integrity: sha512-6wyA9F3tXToAKJR8IkDyHOlOwAOL6j9qoA1inF6psiC8lzMwJ9/t+Lc7HmvIgOb1KDdj82vxL3llX28wcHwonw==}
+  firebase-tools@14.16.0:
+    resolution: {integrity: sha512-HuToUqzpYO0f4bGV8UL69yZMXpjpkCH/MfhqOgIUE2R7TlSUTjncSfl5VtH9ZbK6txJzw61VDlIrdJUmct0ySA==}
     engines: {node: '>=20.0.0 || >=22.0.0'}
     hasBin: true
 
@@ -6015,7 +6015,7 @@ snapshots:
       '@angular/compiler': 21.0.0-next.1
       zone.js: 0.15.1
 
-  '@angular/fire@20.0.1(f0dd09ec0d40a707e5fd32cc07386baf)':
+  '@angular/fire@20.0.1(2efefe66ee3588ad40709bdf7f0f33a8)':
     dependencies:
       '@angular-devkit/schematics': 20.2.1(chokidar@4.0.3)
       '@angular/common': 21.0.0-next.1(@angular/core@21.0.0-next.1(@angular/compiler@21.0.0-next.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
@@ -6028,7 +6028,7 @@ snapshots:
       rxjs: 7.8.2
       tslib: 2.8.1
     optionalDependencies:
-      firebase-tools: 14.15.2(@types/node@24.3.1)(bufferutil@4.0.9)(encoding@0.1.13)
+      firebase-tools: 14.16.0(@types/node@24.3.1)(bufferutil@4.0.9)(encoding@0.1.13)
     transitivePeerDependencies:
       - '@react-native-async-storage/async-storage'
       - chokidar
@@ -7287,15 +7287,15 @@ snapshots:
     transitivePeerDependencies:
       - '@types/node'
 
-  '@microsoft/api-extractor@7.52.11(@types/node@22.18.1)':
+  '@microsoft/api-extractor@7.52.12(@types/node@22.18.1)':
     dependencies:
       '@microsoft/api-extractor-model': 7.30.7(@types/node@22.18.1)
       '@microsoft/tsdoc': 0.15.1
       '@microsoft/tsdoc-config': 0.17.1
       '@rushstack/node-core-library': 5.14.0(@types/node@22.18.1)
       '@rushstack/rig-package': 0.5.3
-      '@rushstack/terminal': 0.15.4(@types/node@22.18.1)
-      '@rushstack/ts-command-line': 5.0.2(@types/node@22.18.1)
+      '@rushstack/terminal': 0.16.0(@types/node@22.18.1)
+      '@rushstack/ts-command-line': 5.0.3(@types/node@22.18.1)
       lodash: 4.17.21
       minimatch: 10.0.3
       resolve: 1.22.10
@@ -7712,16 +7712,16 @@ snapshots:
       resolve: 1.22.10
       strip-json-comments: 3.1.1
 
-  '@rushstack/terminal@0.15.4(@types/node@22.18.1)':
+  '@rushstack/terminal@0.16.0(@types/node@22.18.1)':
     dependencies:
       '@rushstack/node-core-library': 5.14.0(@types/node@22.18.1)
       supports-color: 8.1.1
     optionalDependencies:
       '@types/node': 22.18.1
 
-  '@rushstack/ts-command-line@5.0.2(@types/node@22.18.1)':
+  '@rushstack/ts-command-line@5.0.3(@types/node@22.18.1)':
     dependencies:
-      '@rushstack/terminal': 0.15.4(@types/node@22.18.1)
+      '@rushstack/terminal': 0.16.0(@types/node@22.18.1)
       '@types/argparse': 1.0.38
       argparse: 1.0.10
       string-argv: 0.3.2
@@ -9191,7 +9191,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  firebase-tools@14.15.2(@types/node@24.3.1)(bufferutil@4.0.9)(encoding@0.1.13):
+  firebase-tools@14.16.0(@types/node@24.3.1)(bufferutil@4.0.9)(encoding@0.1.13):
     dependencies:
       '@electric-sql/pglite': 0.3.7
       '@electric-sql/pglite-tools': 0.2.12(@electric-sql/pglite@0.3.7)
