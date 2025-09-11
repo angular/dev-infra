@@ -10,7 +10,7 @@
     "noPropertyAccessFromIndexSignature": true,
     "esModuleInterop": true,
     "strict": true,
-    "noFallthroughCasesInSwitch": true,
+    "noFallthroughCasesInSwitch": false,
     "moduleResolution": "bundler",
     "module": "esnext",
     "target": "es2020",

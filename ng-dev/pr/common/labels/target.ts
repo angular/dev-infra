@@ -13,6 +13,11 @@ export class TargetLabel extends Label {
  * https://docs.google.com/document/d/197kVillDwx-RZtSVOBtPb4BBIAw0E9RT3q3v6DZkykU#heading=h.lkuypj38h15d
  */
 export const targetLabels = createTypedObject(TargetLabel)({
+  TARGET_AUTOMATION: {
+    description:
+      'This PR is targeted to only merge into the branch defined in Github [bot use only]',
+    name: 'target: automation',
+  },
   TARGET_FEATURE: {
     description: 'This PR is targeted for a feature branch (outside of main and semver branches)',
     name: 'target: feature',
