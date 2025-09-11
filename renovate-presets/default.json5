@@ -133,7 +133,12 @@
 
     // Limit how many times these packages get updated (They deploy each merged PR)
     {
-      matchDepNames: ['renovate', 'quicktype-core', 'google-closure-compiler'],
+      matchDepNames: [
+        'github/codeql-action',
+        'google-closure-compiler',
+        'quicktype-core',
+        'renovate',
+      ],
       schedule: ['on sunday and wednesday'],
     },
 
