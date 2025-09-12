@@ -74,7 +74,7 @@ class Validation extends PullRequestValidation {
           throw this._createHasDeprecationsError(targetLabel);
         }
       case targetLabels['TARGET_AUTOMATION']:
-        if (!automationBots.includes(pullRequest.author.login)) {
+        if (automationBots.includes(pullRequest.author.login)) {
           throw this._createUserUsingAutomationLabelError(targetLabel, pullRequest.author.login);
         }
         break;
