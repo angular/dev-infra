@@ -156,9 +156,9 @@ export async function getTargetLabelConfigsForActiveReleaseTrains(
     {
       label: targetLabels['TARGET_AUTOMATION'],
       branches: (githubTargetBranch) => {
-        if (!isVersionBranch(githubTargetBranch)) {
+        if (githubTargetBranch !== nextBranchName && !isVersionBranch(githubTargetBranch)) {
           throw new InvalidTargetBranchError(
-            '"target: automation" pull requests can only target a release branch',
+            '"target: automation" pull requests can only target a releasable branch',
           );
         }
         return [githubTargetBranch];
