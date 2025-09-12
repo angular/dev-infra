@@ -18,7 +18,6 @@ ts_project(
         "//ng-dev:node_modules/semver",
         "//ng-dev:node_modules/typed-graphqlify",
         "//ng-dev/commit-message",
-        "//ng-dev/pr/common/labels",
         "//ng-dev/pr/merge",
         "//ng-dev/release/build",
         "//ng-dev/release/config",
