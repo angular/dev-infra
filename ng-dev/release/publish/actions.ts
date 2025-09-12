@@ -43,8 +43,6 @@ import {promptToInitiatePullRequestMerge} from './prompt-merge.js';
 import {Prompt} from '../../utils/prompt.js';
 import {PnpmVersioning} from './pnpm-versioning.js';
 import {Commit} from '../../utils/git/octokit-types.js';
-import {updateRenovateConfigTargetLabels} from './actions/renovate-config-updates.js';
-import {targetLabels} from '../../pr/common/labels/target.js';
 
 /** Interface describing a Github repository. */
 export interface GithubRepo {
@@ -566,19 +564,6 @@ export abstract class ReleaseAction {
     await this.prependReleaseNotesToChangelog(releaseNotes);
 
     const filesToCommit: string[] = [workspaceRelativeChangelogPath];
-
-    if (version.patch === 0 && version.prerelease.length === 0) {
-      // Switch the renovate labels for `target: rc` to `target: patch`
-      const renovateConfigPath = await updateRenovateConfigTargetLabels(
-        this.projectDir,
-        targetLabels['TARGET_RC'].name,
-        targetLabels['TARGET_PATCH'].name,
-      );
-
-      if (renovateConfigPath) {
-        filesToCommit.push(renovateConfigPath);
-      }
-    }
 
     await this.createCommit(commitMessage, filesToCommit);
     Log.info(green(`  ✓   Created changelog cherry-pick commit for: "${version}".`));

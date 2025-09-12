@@ -16,7 +16,7 @@
   semanticCommits: 'enabled',
   semanticCommitScope: '',
   semanticCommitType: 'build',
-  labels: ['area: build & ci', 'action: merge'],
+  labels: ['area: build & ci', 'action: merge', 'target: automation'],
 
   lockFileMaintenance: {
     enabled: true,
@@ -44,7 +44,6 @@
     {
       postUpgradeTasks: {
         commands: [
-          'var',
           'git restore .npmrc || true', // In case `.npmrc` avoid a hard error.
           'pnpm install --frozen-lockfile',
           'pnpm bazel mod deps --lockfile_mode=update',
