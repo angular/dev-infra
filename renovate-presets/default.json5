@@ -73,6 +73,12 @@
     // ============================================================================
     // ECOSYSTEM-SPECIFIC GROUPING
     // ============================================================================
+    // Delay NPM updates to mitigate dependency chain attacks by malicious actors.
+    // This rule only affects direct dependencies.
+    {
+      minimumReleaseAge: '1 day',
+      matchManagers: ['npm'],
+    },
 
     // Group Bazel updates
     {
@@ -95,6 +101,7 @@
       enabled: true, // Enable NPM updates of cross-repo dependencies on all branches.
       groupName: 'cross-repo angular dependencies',
       followTag: 'next',
+      minimumReleaseAge: null,
       separateMajorMinor: false,
       schedule: ['at any time'],
       matchPackageNames: [
