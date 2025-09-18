@@ -340,9 +340,9 @@ importers:
       '@octokit/rest':
         specifier: 22.0.0
         version: 22.0.0
-      '@octokit/webhooks-definitions':
-        specifier: 3.67.3
-        version: 3.67.3
+      '@octokit/webhooks-types':
+        specifier: 7.6.1
+        version: 7.6.1
       '@types/node':
         specifier: 24.5.0
         version: 24.5.0
@@ -607,18 +607,12 @@ importers:
       '@types/jasmine':
         specifier: 5.1.9
         version: 5.1.9
-      '@types/minimatch':
-        specifier: 6.0.0
-        version: 6.0.0
       '@types/node':
         specifier: 24.5.0
         version: 24.5.0
       '@types/semver':
         specifier: 7.7.1
         version: 7.7.1
-      '@types/supports-color':
-        specifier: 10.0.0
-        version: 10.0.0
       '@types/which':
         specifier: 3.0.4
         version: 3.0.4
@@ -2240,10 +2234,6 @@ packages:
   '@octokit/types@15.0.0':
     resolution: {integrity: sha512-8o6yDfmoGJUIeR9OfYU0/TUJTnMPG2r68+1yEdUeG2Fdqpj8Qetg0ziKIgcBm0RW/j29H41WP37CYCEhp6GoHQ==}
 
-  '@octokit/webhooks-definitions@3.67.3':
-    resolution: {integrity: sha512-do4Z1r2OVhuI0ihJhQ8Hg+yPWnBYEBNuFNCrvtPKoYT1w81jD7pBXgGe86lYuuNirkDHb0Nxt+zt4O5GiFJfgA==}
-    deprecated: Use @octokit/webhooks-types, @octokit/webhooks-schemas, or @octokit/webhooks-examples instead. See https://github.com/octokit/webhooks/issues/447
-
   '@octokit/webhooks-types@7.6.1':
     resolution: {integrity: sha512-S8u2cJzklBC0FgTwWVLaM8tMrDuDMVE4xiTK4EYXM9GntyvrdbSoxqDQa+Fh57CCNApyIpyeqPhhFEmHPfrXgw==}
 
@@ -2470,10 +2460,6 @@ packages:
   '@types/mime@1.3.5':
     resolution: {integrity: sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==}
 
-  '@types/minimatch@6.0.0':
-    resolution: {integrity: sha512-zmPitbQ8+6zNutpwgcQuLcsEpn/Cj54Kbn7L5pX0Os5kdWplB7xPgEh/g+SWOB/qmows2gpuCaPyduq8ZZRnxA==}
-    deprecated: This is a stub types definition. minimatch provides its own type definitions, so you do not need this installed.
-
   '@types/ms@2.1.0':
     resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
 
@@ -2521,10 +2507,6 @@ packages:
 
   '@types/stack-trace@0.0.33':
     resolution: {integrity: sha512-O7in6531Bbvlb2KEsJ0dq0CHZvc3iWSR5ZYMtvGgnHA56VgriAN/AU2LorfmcvAl2xc9N5fbCTRyMRRl8nd74g==}
-
-  '@types/supports-color@10.0.0':
-    resolution: {integrity: sha512-Kpp/hhA8/pcxqBBKmOCIgvwCOJAI5y6TWTHhhqnB6KmuYlKtixKgN/Z7VzhShdgONe2jYREnTQbsrb3E0nt/OQ==}
-    deprecated: This is a stub types definition. supports-color provides its own type definitions, so you do not need this installed.
 
   '@types/tough-cookie@4.0.5':
     resolution: {integrity: sha512-/Ad8+nIOV7Rl++6f1BdKxFSMgmoqEoYbHRpPcx3JEfv8VRsQe9Z4mCXeJBzxs7mbHY/XOZZuXlRNfhpVPbs6ZA==}
@@ -7965,8 +7947,6 @@ snapshots:
     dependencies:
       '@octokit/openapi-types': 26.0.0
 
-  '@octokit/webhooks-definitions@3.67.3': {}
-
   '@octokit/webhooks-types@7.6.1': {}
 
   '@open-draft/deferred-promise@2.2.0': {}
@@ -8207,10 +8187,6 @@ snapshots:
 
   '@types/mime@1.3.5': {}
 
-  '@types/minimatch@6.0.0':
-    dependencies:
-      minimatch: 10.0.3
-
   '@types/ms@2.1.0': {}
 
   '@types/node@22.18.4':
@@ -8266,10 +8242,6 @@ snapshots:
       source-map: 0.6.1
 
   '@types/stack-trace@0.0.33': {}
-
-  '@types/supports-color@10.0.0':
-    dependencies:
-      supports-color: 10.2.2
 
   '@types/tough-cookie@4.0.5': {}
 

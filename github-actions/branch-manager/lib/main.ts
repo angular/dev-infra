@@ -3,11 +3,7 @@ import {context} from '@actions/github';
 import {Octokit} from '@octokit/rest';
 import {actionLabels, targetLabels} from '../../../ng-dev/pr/common/labels/index.js';
 import {revokeActiveInstallationToken, getAuthTokenFor, ANGULAR_ROBOT} from '../../utils.js';
-import {
-  PullRequestLabeledEvent,
-  PullRequestEvent,
-  PushEvent,
-} from '@octokit/webhooks-definitions/schema.js';
+import {PullRequestLabeledEvent, PullRequestEvent, PushEvent} from '@octokit/webhooks-types';
 
 /** Set of target label names. */
 const targetLabelNames = new Set(Object.values(targetLabels).map((t) => t.name));
