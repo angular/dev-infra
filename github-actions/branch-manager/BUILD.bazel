@@ -13,7 +13,7 @@ ts_project(
         ":node_modules/@actions/core",
         ":node_modules/@actions/github",
         ":node_modules/@octokit/rest",
-        ":node_modules/@octokit/webhooks-definitions",
+        ":node_modules/@octokit/webhooks-types",
         ":node_modules/@types/node",
         ":node_modules/typed-graphqlify",
         ":node_modules/undici",
