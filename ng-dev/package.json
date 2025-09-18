@@ -17,7 +17,7 @@
   "dependencies": {
     "@actions/core": "1.11.1",
     "@google-cloud/spanner": "8.0.0",
-    "@google/genai": "1.19.0",
+    "@google/genai": "1.20.0",
     "@inquirer/prompts": "7.8.6",
     "@inquirer/type": "3.0.8",
     "@octokit/auth-app": "8.1.0",
@@ -37,7 +37,7 @@
     "@types/folder-hash": "4.0.4",
     "@types/git-raw-commits": "5.0.0",
     "@types/jasmine": "5.1.9",
-    "@types/node": "24.5.0",
+    "@types/node": "24.5.1",
     "@types/semver": "7.7.1",
     "@types/which": "3.0.4",
     "@types/yargs": "17.0.33",
