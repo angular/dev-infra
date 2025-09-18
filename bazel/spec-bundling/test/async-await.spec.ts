@@ -2,8 +2,8 @@ import 'zone.js';
 import 'zone.js/testing';
 
 import {JSDOM} from 'jsdom';
-import {Component} from '@angular/core';
-import {fakeAsync, flush, TestBed, waitForAsync} from '@angular/core/testing';
+import {Component, provideZoneChangeDetection} from '@angular/core';
+import {fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {BrowserTestingModule, platformBrowserTesting} from '@angular/platform-browser/testing';
 
 describe('native async/await downleveled', () => {
@@ -20,6 +20,7 @@ describe('native async/await downleveled', () => {
 
   it('should properly detect changes', fakeAsync(() => {
     TestBed.configureTestingModule({
+      providers: [provideZoneChangeDetection()],
       declarations: [AppComponent],
     });
     const fixture = TestBed.createComponent(AppComponent);
