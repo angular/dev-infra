@@ -45,10 +45,11 @@
       postUpgradeTasks: {
         commands: [
           'git restore .npmrc || true', // In case `.npmrc` avoid a hard error.
-          'pnpm install --frozen-lockfile',
-          'pnpm bazel mod deps --lockfile_mode=update',
+          'bazel mod deps --lockfile_mode=update',
         ],
-        executionMode: 'branch',
+        // This is theory should be `branch` but in some cases this is causing the command not to
+        // run when in the same branch there are mixtures of update types by different managers.
+        executionMode: 'update',
       },
       matchManagers: ['bazel', 'bazel-module', 'bazelisk'],
     },
@@ -103,7 +104,7 @@
       followTag: 'next',
       minimumReleaseAge: null,
       separateMajorMinor: false,
-      schedule: ['at any time'],
+      schedule: ['0 */2 * * *'], // Every two hours.
       matchPackageNames: [
         '@angular-devkit/**',
         '@angular/**',
