@@ -51,7 +51,7 @@
     "ejs": "3.1.10",
     "encoding": "0.1.13",
     "fast-glob": "3.3.3",
-    "firebase": "12.2.1",
+    "firebase": "12.3.0",
     "folder-hash": "4.1.1",
     "git-raw-commits": "5.0.0",
     "jasmine-core": "5.10.0",
