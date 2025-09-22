@@ -49,18 +49,23 @@ export class CiModule extends BaseModule<CiData> {
           };
         }
 
-        const status = (
-          await githubMacros.getCombinedChecksAndStatusesForRef(this.git.github, {
+        const {result, results} = await githubMacros.getCombinedChecksAndStatusesForRef(
+          this.git.github,
+          {
             ...this.git.remoteParams,
             ref: train.branchName,
-          })
-        ).result;
+          },
+        );
+
+        Log.debug(`Individual Status Results for branch (${train.branchName})`);
+        results.forEach((r) => Log.debug(` - ${r.name}:`.padEnd(80), r.result));
+        Log.debug();
 
         return {
           active: true,
           name: train.branchName,
           label: `${trainName} (${train.branchName})`,
-          status,
+          status: result,
         };
       },
     );
