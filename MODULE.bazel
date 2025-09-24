@@ -38,7 +38,7 @@ git_override(
 bazel_dep(name = "rules_angular")
 git_override(
     module_name = "rules_angular",
-    commit = "4010ef96de0c46db7764adc2f262258c9de3d718",
+    commit = "a84c27281b18b3fe347e8739d2156478aad6dbe4",
     remote = "https://github.com/devversion/rules_angular.git",
 )
 
@@ -74,7 +74,7 @@ rules_angular.setup(
     angular_compiler_cli = "//:node_modules/@angular/compiler-cli",
     typescript = "//:node_modules/typescript",
 )
-use_repo(rules_angular, **{"rules_angular_configurable_deps": "dev_infra_rules_angular_configurable_deps"})
+use_repo(rules_angular, rules_angular_configurable_deps = "dev_infra_rules_angular_configurable_deps")
 
 npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm")
 npm.npm_translate_lock(

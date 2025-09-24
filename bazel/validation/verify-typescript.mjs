@@ -38,7 +38,12 @@ async function main([packageJsonPath, moduleLockFilePath]) {
         'generatedRepoSpecs'
       ];
     lockfileVersion =
-      Object.values(generatedRepoSpecs || {})[0]?.['attributes']?.['version'] || 'unknown';
+      // TODO: Remove pre bazel v8 lockfile attribute path.
+      Object.values(generatedRepoSpecs || {})[0]?.['attributes']?.['version'] ||
+      moduleLock['moduleExtensions']['@@aspect_rules_ts+//ts:extensions.bzl%ext']['general'][
+        'generatedRepoSpecs'
+      ]['npm_typescript']?.['attributes']?.['version'] ||
+      'unknown';
   } catch {
     console.error('Unable to find the typescript version within the MODULE.bazel.lock file.');
   }
