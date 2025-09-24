@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       renovate:
-        specifier: 41.124.1
-        version: 41.124.1(encoding@0.1.13)(typanion@3.14.0)
+        specifier: 41.125.3
+        version: 41.125.3(encoding@0.1.13)(typanion@3.14.0)
 
 packages:
 
@@ -530,12 +530,12 @@ packages:
     resolution: {integrity: sha512-RMj9zekThsU/rCZxY0DeXl4hXU0rJOJm9wrFfLoFJnNsLQO1v2nfkK7sdYiMe/9+i99W/JWCtGDfySxIhC8CmA==}
     engines: {node: ^20.9.0 || ^22.11.0, pnpm: ^10.0.0}
 
-  '@renovatebot/osv-offline-db@1.7.5':
-    resolution: {integrity: sha512-LrwPAPecRLL/lYb9mDyeM6ndRLXCvUPHpMJ7dhOZFRiIXMLIo6Lu+1fAEPDxtBwYh21aFgtWVOoltGoTKuwzXQ==}
+  '@renovatebot/osv-offline-db@1.7.6':
+    resolution: {integrity: sha512-1M17R6wzUvvRLKZegmAGDXTV/HhRCDMqipaqQn/bZ+8JMDeY0WQfl07EZKI/x5hyin1v2tMcmCTvJZYFCm6Y7Q==}
     engines: {node: '>=18.12.0'}
 
-  '@renovatebot/osv-offline@1.6.10':
-    resolution: {integrity: sha512-17hbS9EYv+3DgoWrV+x3jk3dz/8ovipBY36HRgYZlHRTYtm0s6Qmw8q/O1x8O3MGSNWKWw9lw2VGTP/X0CvVsw==}
+  '@renovatebot/osv-offline@1.6.11':
+    resolution: {integrity: sha512-eWy9aKrsUIJctnghdwUHt+DIweVNC0ppdsfmyf3jYocs9c/W9SFUOswBUnZAgvTPQ3qvQ3yWNIzjADFFRjD2SQ==}
     engines: {node: '>=18.12.0'}
 
   '@renovatebot/pep440@4.2.1':
@@ -1216,8 +1216,8 @@ packages:
   des.js@1.1.0:
     resolution: {integrity: sha512-r17GxjhUCjSRy8aiJpr8/UadFIzMzJGexI3Nmz4ADi9LYSFx4gTBp80+NaX/YsXWWLhpZ7v/v/ubEc/bCNfKwg==}
 
-  detect-indent@7.0.1:
-    resolution: {integrity: sha512-Mc7QhQ8s+cLrnUfU/Ji94vG/r8M26m8f++vyres4ZoojaRDpZ1eSIh/EpzLNwlWuvzSZ3UbDFspjFvTDXe6e/g==}
+  detect-indent@7.0.2:
+    resolution: {integrity: sha512-y+8xyqdGLL+6sh0tVeHcfP/QDd8gUgbasolJJpY7NgeQGSZ739bDtSiaiDgtoicy+mtYB81dKLxO9xRhCyIB3A==}
     engines: {node: '>=12.20'}
 
   detect-libc@2.1.0:
@@ -2487,8 +2487,8 @@ packages:
   remark@15.0.1:
     resolution: {integrity: sha512-Eht5w30ruCXgFmxVUSlNWQ9iiimq07URKeFS3hNc8cUWy1llX4KDWfyEDZRycMc+znsN9Ux5/tJ/BFdgdOwA3A==}
 
-  renovate@41.124.1:
-    resolution: {integrity: sha512-DqvHNaEs32yE+PtWkWdMvnXkKFAu7pYZ+KrR89PjzOJ3uuly7yePpuw/gQ/nmx1wcot3mFEErb8872rXJ/c9xg==}
+  renovate@41.125.3:
+    resolution: {integrity: sha512-uYPfm2htBV/xo6cNjlU2pupe4mZG9cmQeVtukZziCwT79pMKF2VeuuY3UBs46QrNhK/yo0wzgnnOVXlymGoYwQ==}
     engines: {node: ^22.13.0, pnpm: ^10.0.0}
     hasBin: true
 
@@ -4171,13 +4171,13 @@ snapshots:
       triplesec: 4.0.3
       tweetnacl: 1.0.3
 
-  '@renovatebot/osv-offline-db@1.7.5':
+  '@renovatebot/osv-offline-db@1.7.6':
     dependencies:
       '@seald-io/nedb': 4.1.2
 
-  '@renovatebot/osv-offline@1.6.10':
+  '@renovatebot/osv-offline@1.6.11':
     dependencies:
-      '@renovatebot/osv-offline-db': 1.7.5
+      '@renovatebot/osv-offline-db': 1.7.6
       adm-zip: 0.5.16
       fs-extra: 11.3.2
       got: 11.8.6
@@ -5019,7 +5019,7 @@ snapshots:
       inherits: 2.0.4
       minimalistic-assert: 1.0.1
 
-  detect-indent@7.0.1: {}
+  detect-indent@7.0.2: {}
 
   detect-libc@2.1.0:
     optional: true
@@ -6588,7 +6588,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  renovate@41.124.1(encoding@0.1.13)(typanion@3.14.0):
+  renovate@41.125.3(encoding@0.1.13)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.879.0
       '@aws-sdk/client-ec2': 3.879.0
@@ -6618,7 +6618,7 @@ snapshots:
       '@qnighy/marshal': 0.1.3
       '@renovatebot/detect-tools': 1.1.0
       '@renovatebot/kbpgp': 4.0.3
-      '@renovatebot/osv-offline': 1.6.10
+      '@renovatebot/osv-offline': 1.6.11
       '@renovatebot/pep440': 4.2.1
       '@renovatebot/ruby-semver': 4.1.2
       '@sindresorhus/is': 7.0.2
@@ -6641,7 +6641,7 @@ snapshots:
       cronstrue: 3.3.0
       deepmerge: 4.3.1
       dequal: 2.0.3
-      detect-indent: 7.0.1
+      detect-indent: 7.0.2
       diff: 8.0.2
       editorconfig: 3.0.1
       email-addresses: 5.0.0
