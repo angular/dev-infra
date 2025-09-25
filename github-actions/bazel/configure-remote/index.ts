@@ -35,7 +35,7 @@ async function main() {
 
   if (bazelRcPath) {
     let content = await readFileGracefully(bazelRcPath);
-    content += `\nbuild --config=${configMode}`;
+    content += ['', `build --config=${configMode}`, 'test --flaky_test_attempts=3'].join('\n');
     if (trustedBuild) {
       content += `\nbuild --config=trusted-build`;
     }
