@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       renovate:
-        specifier: 41.125.3
-        version: 41.125.3(encoding@0.1.13)(typanion@3.14.0)
+        specifier: 41.130.1
+        version: 41.130.1(encoding@0.1.13)(typanion@3.14.0)
 
 packages:
 
@@ -2256,8 +2256,8 @@ packages:
     resolution: {integrity: sha512-P/dyEqQ3gfwOCo+xsqffzXjmUhGn4AZTOJ1LCcN21S23vAk+EAvMJOQTsb/C8krL6GjOSBxqGYckhik7+hneNw==}
     engines: {node: '>= 18.0.0'}
 
-  p-all@5.0.0:
-    resolution: {integrity: sha512-pofqu/1FhCVa+78xNAptCGc9V45exFz2pvBRyIvgXkNM0Rh18Py7j8pQuSjA+zpabI46v9hRjNWmL9EAFcEbpw==}
+  p-all@5.0.1:
+    resolution: {integrity: sha512-LMT7WX9ZSaq3J1zjloApkIVmtz0ZdMFSIqbuiEa3txGYPLjUPOvgOPOx3nFjo+f37ZYL+1aY666I2SG7GVwLOA==}
     engines: {node: '>=16'}
 
   p-cancelable@2.1.1:
@@ -2487,8 +2487,8 @@ packages:
   remark@15.0.1:
     resolution: {integrity: sha512-Eht5w30ruCXgFmxVUSlNWQ9iiimq07URKeFS3hNc8cUWy1llX4KDWfyEDZRycMc+znsN9Ux5/tJ/BFdgdOwA3A==}
 
-  renovate@41.125.3:
-    resolution: {integrity: sha512-uYPfm2htBV/xo6cNjlU2pupe4mZG9cmQeVtukZziCwT79pMKF2VeuuY3UBs46QrNhK/yo0wzgnnOVXlymGoYwQ==}
+  renovate@41.130.1:
+    resolution: {integrity: sha512-yXsUppr5Nx4it2RoRHd1jZBs91M9qXiCfuBggqmXDSUcR6oUubqryCB3z4NvRcf5ITAZSWt2ObX+mlUSHBh4cA==}
     engines: {node: ^22.13.0, pnpm: ^10.0.0}
     hasBin: true
 
@@ -6307,7 +6307,7 @@ snapshots:
   openpgp@6.2.2:
     optional: true
 
-  p-all@5.0.0:
+  p-all@5.0.1:
     dependencies:
       p-map: 6.0.0
 
@@ -6588,7 +6588,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  renovate@41.125.3(encoding@0.1.13)(typanion@3.14.0):
+  renovate@41.130.1(encoding@0.1.13)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.879.0
       '@aws-sdk/client-ec2': 3.879.0
@@ -6678,7 +6678,7 @@ snapshots:
       nanoid: 5.1.5
       neotraverse: 0.6.18
       node-html-parser: 7.0.1
-      p-all: 5.0.0
+      p-all: 5.0.1
       p-map: 7.0.3
       p-queue: 8.1.1
       p-throttle: 8.0.0
