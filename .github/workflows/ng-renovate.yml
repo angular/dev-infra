@@ -23,7 +23,6 @@ jobs:
           - angular/dev-infra
           - angular/components
           - angular/angular-cli
-          - angular/vscode-ng-language-service
           - angular/ai-tutor
           - angular/web-codegen-scorer
     runs-on: ubuntu-latest
