@@ -187,5 +187,14 @@
       matchBaseBranches: ['!main'],
       matchUpdateTypes: ['major'],
     },
+
+    // TODO(alanagius): delete the below rule once RC branch is `21.0.x`
+    // Temporary disable updates of `rules_angular` on non main branches due to the APF breaking change
+    // See: https://github.com/devversion/rules_angular/pull/63
+    {
+      enabled: false,
+      matchBaseBranches: ['!main'],
+      matchDepNames: ['rules_angular'],
+    },
   ],
 }
