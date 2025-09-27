@@ -548,8 +548,8 @@ importers:
         specifier: 8.0.0
         version: 8.0.0(supports-color@10.2.2)
       '@google/genai':
-        specifier: 1.20.0
-        version: 1.20.0(@modelcontextprotocol/sdk@1.18.0(supports-color@10.2.2))(bufferutil@4.0.9)(encoding@0.1.13)(supports-color@10.2.2)(utf-8-validate@6.0.5)
+        specifier: 1.21.0
+        version: 1.21.0(@modelcontextprotocol/sdk@1.18.0(supports-color@10.2.2))(bufferutil@4.0.9)(encoding@0.1.13)(supports-color@10.2.2)(utf-8-validate@6.0.5)
       '@inquirer/prompts':
         specifier: 7.8.6
         version: 7.8.6(@types/node@24.5.2)
@@ -686,8 +686,8 @@ importers:
         specifier: 10.2.2
         version: 10.2.2
       tsx:
-        specifier: 4.20.5
-        version: 4.20.5
+        specifier: 4.20.6
+        version: 4.20.6
       typed-graphqlify:
         specifier: 3.1.6
         version: 3.1.6
@@ -1600,8 +1600,8 @@ packages:
     resolution: {integrity: sha512-2FMQbpU7qK+OtBPaegC6n+XevgZksobUGo6mGKnXNmeZpvLiAo1gTAE3oTKsrMGDV4VtL8Zzpono0YsK/Q7Iqg==}
     engines: {node: '>=14'}
 
-  '@google/genai@1.20.0':
-    resolution: {integrity: sha512-QdShxO9LX35jFogy3iKprQNqgKKveux4H2QjOnyIvyHRuGi6PHiz3fjNf8Y0VPY8o5V2fHqR2XqiSVoz7yZs0w==}
+  '@google/genai@1.21.0':
+    resolution: {integrity: sha512-k47DECR8BF9z7IJxQd3reKuH2eUnOH5NlJWSe+CKM6nbXx+wH3hmtWQxUQR9M8gzWW1EvFuRVgjQssEIreNZsw==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       '@modelcontextprotocol/sdk': ^1.11.4
@@ -5551,6 +5551,11 @@ packages:
     engines: {node: '>=18.0.0'}
     hasBin: true
 
+  tsx@4.20.6:
+    resolution: {integrity: sha512-ytQKuwgmrrkDTFP4LjR0ToE2nqgy886GpvRSpU0JAnrdBYppuY5rLkRUYPU1yCryb24SsKBTL/hlDQAEFVwtZg==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
+
   tunnel-agent@0.6.0:
     resolution: {integrity: sha512-McnNiV1l8RYeY8tBgEpuodCC1mLUdbSN+CYBL7kJsJNInOP8UjDDEwdk6Mw60vdLLrr5NHKZhMAOSrR2NZuQ+w==}
 
@@ -7119,7 +7124,7 @@ snapshots:
       - supports-color
     optional: true
 
-  '@google/genai@1.20.0(@modelcontextprotocol/sdk@1.18.0(supports-color@10.2.2))(bufferutil@4.0.9)(encoding@0.1.13)(supports-color@10.2.2)(utf-8-validate@6.0.5)':
+  '@google/genai@1.21.0(@modelcontextprotocol/sdk@1.18.0(supports-color@10.2.2))(bufferutil@4.0.9)(encoding@0.1.13)(supports-color@10.2.2)(utf-8-validate@6.0.5)':
     dependencies:
       google-auth-library: 9.15.1(encoding@0.1.13)(supports-color@10.2.2)
       ws: 8.18.3(bufferutil@4.0.9)(utf-8-validate@6.0.5)
@@ -11736,6 +11741,13 @@ snapshots:
       typescript: 5.9.2
 
   tsx@4.20.5:
+    dependencies:
+      esbuild: 0.25.9
+      get-tsconfig: 4.10.1
+    optionalDependencies:
+      fsevents: 2.3.3
+
+  tsx@4.20.6:
     dependencies:
       esbuild: 0.25.9
       get-tsconfig: 4.10.1
