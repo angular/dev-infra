@@ -2,7 +2,7 @@
   "name": "ng-renovate",
   "type": "commonjs",
   "dependencies": {
-    "renovate": "41.116.10"
+    "renovate": "41.131.9"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
