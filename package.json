@@ -21,7 +21,7 @@
     }
   },
   "devDependencies": {
-    "@angular/compiler-cli": "21.0.0-next.5",
+    "@angular/compiler-cli": "21.0.0-next.6",
     "@bazel/bazelisk": "1.26.0",
     "@bazel/buildifier": "8.2.1",
     "firebase-tools": "14.17.0",
