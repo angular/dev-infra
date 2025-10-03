@@ -76,6 +76,13 @@ rules_angular.setup(
 )
 use_repo(rules_angular, rules_angular_configurable_deps = "dev_infra_rules_angular_configurable_deps")
 
+pnpm = use_extension("@aspect_rules_js//npm:extensions.bzl", "pnpm")
+pnpm.pnpm(
+    name = "pnpm",
+    pnpm_version = "10.16.1",
+)
+use_repo(pnpm, "pnpm")
+
 npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm")
 npm.npm_translate_lock(
     name = "devinfra_npm",

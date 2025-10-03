@@ -7,14 +7,14 @@ integration_test(
         "test.mjs",
     ],
     commands = [
-        "yarn",
+        "pnpm install",
         "node ./test.mjs",
     ],
     npm_packages = {
-        "//bazel/integration/tests/package_mappings/fake_pkg_srcs:archive": "fake_pkg",
+        "//bazel/integration/tests/package_mappings/fake_pkg_srcs:npm_package": "fake_pkg",
     },
     tool_mappings = {
-        "//:yarn_classic_vendored": "yarn",
+        "@pnpm//:pnpm": "pnpm",
         "@nodejs_toolchains//:resolved_toolchain": "node",
     },
 )

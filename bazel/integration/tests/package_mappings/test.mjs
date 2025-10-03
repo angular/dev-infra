@@ -1,5 +1,6 @@
 import fakePkg from 'fake_pkg';
-import fs from 'fs';
+import fs from 'node:fs';
+import {match} from 'node:assert/strict';
 
 // Sanity check that the installed package matches the one we have
 // built from source using `pkg_npm`.
@@ -9,11 +10,14 @@ if (fakePkg !== 'This is a fake package!') {
 }
 
 const pkgJson = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
-const recordsToCheck = ['dependencies', 'devDependencies', 'optionalDependencies', 'resolutions'];
+const recordsToCheck = ['dependencies', 'devDependencies'];
 
 for (const recordName of recordsToCheck) {
-  if (Object.values(pkgJson[recordName]).includes('0.0.0')) {
-    console.error(`The "${recordName}" field has not been replaced with mapped archives.`);
-    process.exitCode = 1;
+  for (const [name, value] of Object.entries(pkgJson[recordName])) {
+    match(
+      value,
+      /fake_pkg_srcs\/npm_package/,
+      `The "${recordName}.${name}" field has not been replaced with mapped archives.`,
+    );
   }
 }

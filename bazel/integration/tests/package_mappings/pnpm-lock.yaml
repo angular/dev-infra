@@ -1,0 +1,15 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      fake_pkg:
+        specifier: link:./in-existing-linked-by-bazel
+        version: link:in-existing-linked-by-bazel
+
+  fake_pkg_srcs: {}
