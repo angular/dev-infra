@@ -3,18 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "packageManager": "pnpm@10.17.1",
   "dependencies": {
-    "fake_pkg": "0.0.0"
+    "fake_pkg": "link:./in-existing-linked-by-bazel"
   },
   "devDependencies": {
-    "fake_pkg": "0.0.0"
-  },
-  "optionalDependencies": {
-    "fake_pkg": "0.0.0"
-  },
-  "resolutions": {
-    "**/fake_pkg": "0.0.0",
-    "some_pkg/**/fake_pkg": "0.0.0",
-    "fake_pkg": "0.0.0"
+    "fake_pkg": "link:./in-existing-linked-by-bazel"
   }
 }

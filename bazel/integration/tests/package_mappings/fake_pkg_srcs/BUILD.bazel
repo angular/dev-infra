@@ -1,5 +1,4 @@
 load("@aspect_rules_js//npm:defs.bzl", "npm_package")
-load("@rules_pkg//:pkg.bzl", "pkg_tar")
 
 npm_package(
     name = "npm_package",
@@ -7,13 +6,6 @@ npm_package(
         "index.mjs",
         "package.json",
     ],
-)
-
-pkg_tar(
-    name = "archive",
-    srcs = [":npm_package"],
-    extension = "tar.gz",
-    package_dir = "package/",
-    strip_prefix = "./npm_package",
+    package = "fake_pkg",
     visibility = ["//bazel/integration/tests/package_mappings:__pkg__"],
 )

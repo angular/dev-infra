@@ -4,8 +4,8 @@ integration_test(
     name = "test",
     srcs = glob(["**/*"]),
     commands = [
-        "yarn",
-        "yarn test",
+        "pnpm i ",
+        "pnpm run test",
     ],
     data = [
         # Makes the chromium binaries available for the `ng test` command.
@@ -19,7 +19,7 @@ integration_test(
         "requires-network",
     ],
     tool_mappings = {
-        "//:yarn_classic_vendored": "yarn",
+        "@pnpm//:pnpm": "pnpm",
         "@nodejs_toolchains//:resolved_toolchain": "node",
     },
     toolchains = ["@rules_browsers//browsers/chromium:toolchain_alias"],

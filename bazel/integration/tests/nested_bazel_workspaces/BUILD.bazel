@@ -7,15 +7,15 @@ integration_test(
     name = "basic",
     srcs = glob(["basic/**/*"]),
     commands = [
-        "yarn",
-        "yarn test",
+        "pnpm install --frozen-lockfile",
+        "pnpm test",
     ],
     tags = [
-        # This test relies on `yarn` so there needs to be internet access.
+        # This test relies on `pnpm` so there needs to be internet access.
         "requires-network",
     ],
     tool_mappings = {
-        "//:yarn_classic_vendored": "yarn",
+        "@pnpm//:pnpm": "pnpm",
         "@nodejs_toolchains//:resolved_toolchain": "node",
     },
     working_dir = "basic/",
