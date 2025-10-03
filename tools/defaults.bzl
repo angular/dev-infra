@@ -27,6 +27,8 @@ def _determine_tsconfig(testonly):
     if native.package_name().startswith("apps"):
         return "//apps:tsconfig"
 
+    fail("Failing... a tsconfig value must be provided.")
+
 def ts_project(
         name,
         srcs = [],

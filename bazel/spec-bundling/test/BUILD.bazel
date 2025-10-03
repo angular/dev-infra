@@ -11,6 +11,7 @@ ts_config(
     deps = [
         ":node_modules/@types/jasmine",
         ":node_modules/@types/node",
+        ":package.json",  # Needed due to the { "type": "module" } field.
     ],
 )
 

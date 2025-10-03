@@ -1,5 +1,5 @@
 import {CdkAccordionModule} from '@angular/cdk/accordion';
-import {Overlay, OverlayModule} from '@angular/cdk/overlay';
+import {Overlay, OverlayModule, OverlayRef} from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {CommonModule} from '@angular/common';
 import {Component, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
@@ -28,7 +28,7 @@ import {AccountService} from './account.service.js';
 })
 export class AccountComponent {
   /** The overlay used to display the account menu. */
-  private overlayRef = this.overlay.create();
+  private overlayRef: OverlayRef;
 
   /** The projected content provided to the template for insertion into the account menu.  */
   @ViewChild('menuContent', {static: true}) private projected!: TemplateRef<any>;
@@ -40,7 +40,9 @@ export class AccountComponent {
     private vcr: ViewContainerRef,
     private overlay: Overlay,
     public account: AccountService,
-  ) {}
+  ) {
+    this.overlayRef = overlay.create();
+  }
 
   ngOnInit() {
     /** Create the template portal using the template from the component template. */
