@@ -3,9 +3,9 @@
   "dependencies": {
     "@actions/core": "1.11.1",
     "@actions/github": "6.0.1",
-    "@octokit/auth-app": "8.1.0",
+    "@octokit/auth-app": "8.1.1",
     "@octokit/rest": "22.0.0",
     "@types/jasmine": "5.1.9",
-    "@types/node": "24.5.2"
+    "@types/node": "24.6.2"
   }
 }
