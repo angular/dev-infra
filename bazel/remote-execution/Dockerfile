@@ -1,5 +1,5 @@
 # https://github.com/puppeteer/puppeteer/blob/866addd132270e56cb1f84885f2897123087215c/docker/Dockerfile
-FROM ghcr.io/puppeteer/puppeteer:24.22.3@sha256:03fd915f7963db26976ed1ce64cbf24efcd15e8b7dee4e48d3041a27d915bafd
+FROM ghcr.io/puppeteer/puppeteer:24.23.0@sha256:d7afe89d44cb5fc2d8a8ed16bf21817a4ebc0cdc6d594b8c7c6370a8015f74a0
 
 # Switch back to `root` because Puppeteer sets up a non-root user in the
 # image- preventing us from preparing Firefox dependencies.
