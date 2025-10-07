@@ -6,7 +6,7 @@
     "@types/browser-sync": "2.29.0",
     "@types/node": "22.18.8",
     "@types/selenium-webdriver": "^4.1.28",
-    "@types/send": "0.17.5",
+    "@types/send": "1.2.0",
     "@types/wait-on": "^5.3.4",
     "@types/source-map-support": "0.5.10",
     "@types/yargs": "17.0.33",
