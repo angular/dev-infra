@@ -21,16 +21,16 @@ importers:
         version: 8.2.1
       firebase-tools:
         specifier: 14.18.0
-        version: 14.18.0(@types/node@24.6.2)(bufferutil@4.0.9)(encoding@0.1.13)
+        version: 14.18.0(@types/node@24.7.0)(bufferutil@4.0.9)(encoding@0.1.13)
       husky:
         specifier: 9.1.7
         version: 9.1.7
       jasmine:
-        specifier: 5.11.0
-        version: 5.11.0
+        specifier: 5.12.0
+        version: 5.12.0
       jasmine-core:
-        specifier: 5.11.0
-        version: 5.11.0
+        specifier: 5.12.0
+        version: 5.12.0
       jasmine-reporters:
         specifier: 2.5.2
         version: 2.5.2
@@ -53,8 +53,8 @@ importers:
   .github/local-actions:
     dependencies:
       '@types/node':
-        specifier: 24.6.2
-        version: 24.6.2
+        specifier: 24.7.0
+        version: 24.7.0
 
   .github/local-actions/branch-manager:
     dependencies:
@@ -68,8 +68,8 @@ importers:
         specifier: 22.0.0
         version: 22.0.0
       '@types/node':
-        specifier: 24.6.2
-        version: 24.6.2
+        specifier: 24.7.0
+        version: 24.7.0
       typed-graphqlify:
         specifier: 3.1.6
         version: 3.1.6
@@ -92,8 +92,8 @@ importers:
         specifier: 15.0.0
         version: 15.0.0
       '@types/node':
-        specifier: 24.6.2
-        version: 24.6.2
+        specifier: 24.7.0
+        version: 24.7.0
       undici:
         specifier: 7.16.0
         version: 7.16.0
@@ -113,8 +113,8 @@ importers:
         specifier: 15.0.0
         version: 15.0.0
       '@types/node':
-        specifier: 24.6.2
-        version: 24.6.2
+        specifier: 24.7.0
+        version: 24.7.0
       undici:
         specifier: 7.16.0
         version: 7.16.0
@@ -138,7 +138,7 @@ importers:
         version: 21.0.0-next.6(@angular/compiler@21.0.0-next.6)(rxjs@7.8.2)(zone.js@0.15.1)
       '@angular/fire':
         specifier: 20.0.1
-        version: 20.0.1(4fc013cf1aec07f1565f00f784c8076e)
+        version: 20.0.1(7dcc482351efedd58ff4bae24f62e0be)
       '@angular/forms':
         specifier: 21.0.0-next.6
         version: 21.0.0-next.6(@angular/common@21.0.0-next.6(@angular/core@21.0.0-next.6(@angular/compiler@21.0.0-next.6)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.6(@angular/compiler@21.0.0-next.6)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.0.0-next.6(@angular/animations@21.0.0-next.6(@angular/core@21.0.0-next.6(@angular/compiler@21.0.0-next.6)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@21.0.0-next.6(@angular/core@21.0.0-next.6(@angular/compiler@21.0.0-next.6)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.6(@angular/compiler@21.0.0-next.6)(rxjs@7.8.2)(zone.js@0.15.1)))(@standard-schema/spec@1.0.0)(rxjs@7.8.2)
@@ -179,8 +179,8 @@ importers:
         specifier: 7.6.1
         version: 7.6.1
       '@types/node':
-        specifier: 24.6.2
-        version: 24.6.2
+        specifier: 24.7.0
+        version: 24.7.0
       firebase-admin:
         specifier: 13.5.0
         version: 13.5.0(encoding@0.1.13)
@@ -189,7 +189,7 @@ importers:
         version: 6.4.0(firebase-admin@13.5.0(encoding@0.1.13))
       firebase-tools:
         specifier: 14.18.0
-        version: 14.18.0(@types/node@24.6.2)(bufferutil@4.0.9)(encoding@0.1.13)
+        version: 14.18.0(@types/node@24.7.0)(bufferutil@4.0.9)(encoding@0.1.13)
 
   bazel:
     dependencies:
@@ -281,11 +281,11 @@ importers:
         specifier: 27.0.0
         version: 27.0.0
       '@types/node':
-        specifier: 24.6.2
-        version: 24.6.2
+        specifier: 24.7.0
+        version: 24.7.0
       jasmine:
-        specifier: 5.11.0
-        version: 5.11.0
+        specifier: 5.12.0
+        version: 5.12.0
       jasmine-reporters:
         specifier: 2.5.2
         version: 2.5.2
@@ -317,8 +317,8 @@ importers:
         specifier: 5.1.9
         version: 5.1.9
       '@types/node':
-        specifier: 24.6.2
-        version: 24.6.2
+        specifier: 24.7.0
+        version: 24.7.0
 
   github-actions/bazel/configure-remote:
     dependencies:
@@ -326,8 +326,8 @@ importers:
         specifier: 1.11.1
         version: 1.11.1
       '@types/node':
-        specifier: 24.6.2
-        version: 24.6.2
+        specifier: 24.7.0
+        version: 24.7.0
 
   github-actions/branch-manager:
     dependencies:
@@ -344,8 +344,8 @@ importers:
         specifier: 7.6.1
         version: 7.6.1
       '@types/node':
-        specifier: 24.6.2
-        version: 24.6.2
+        specifier: 24.7.0
+        version: 24.7.0
       typed-graphqlify:
         specifier: 3.1.6
         version: 3.1.6
@@ -359,8 +359,8 @@ importers:
         specifier: 1.11.1
         version: 1.11.1
       '@types/node':
-        specifier: 24.6.2
-        version: 24.6.2
+        specifier: 24.7.0
+        version: 24.7.0
 
   github-actions/feature-request:
     dependencies:
@@ -380,11 +380,11 @@ importers:
         specifier: 5.1.9
         version: 5.1.9
       '@types/node':
-        specifier: 24.6.2
-        version: 24.6.2
+        specifier: 24.7.0
+        version: 24.7.0
       jasmine:
-        specifier: 5.11.0
-        version: 5.11.0
+        specifier: 5.12.0
+        version: 5.12.0
       jasmine-reporters:
         specifier: 2.5.2
         version: 2.5.2
@@ -407,8 +407,8 @@ importers:
         specifier: 22.0.0
         version: 22.0.0
       '@types/node':
-        specifier: 24.6.2
-        version: 24.6.2
+        specifier: 24.7.0
+        version: 24.7.0
       typed-graphqlify:
         specifier: 3.1.6
         version: 3.1.6
@@ -431,8 +431,8 @@ importers:
         specifier: 15.0.0
         version: 15.0.0
       '@types/node':
-        specifier: 24.6.2
-        version: 24.6.2
+        specifier: 24.7.0
+        version: 24.7.0
       typed-graphqlify:
         specifier: 3.1.6
         version: 3.1.6
@@ -455,8 +455,8 @@ importers:
         specifier: 7.6.1
         version: 7.6.1
       '@types/node':
-        specifier: 24.6.2
-        version: 24.6.2
+        specifier: 24.7.0
+        version: 24.7.0
       typed-graphqlify:
         specifier: 3.1.6
         version: 3.1.6
@@ -467,8 +467,8 @@ importers:
   github-actions/previews/pack-and-upload-artifact:
     dependencies:
       '@types/node':
-        specifier: 24.6.2
-        version: 24.6.2
+        specifier: 24.7.0
+        version: 24.7.0
 
   github-actions/previews/upload-artifacts-to-firebase:
     dependencies:
@@ -479,8 +479,8 @@ importers:
         specifier: 22.0.0
         version: 22.0.0
       '@types/node':
-        specifier: 24.6.2
-        version: 24.6.2
+        specifier: 24.7.0
+        version: 24.7.0
 
   github-actions/pull-request-labeling:
     dependencies:
@@ -494,8 +494,8 @@ importers:
         specifier: 22.0.0
         version: 22.0.0
       '@types/node':
-        specifier: 24.6.2
-        version: 24.6.2
+        specifier: 24.7.0
+        version: 24.7.0
       typed-graphqlify:
         specifier: 3.1.6
         version: 3.1.6
@@ -509,8 +509,8 @@ importers:
         specifier: 1.11.1
         version: 1.11.1
       '@types/node':
-        specifier: 24.6.2
-        version: 24.6.2
+        specifier: 24.7.0
+        version: 24.7.0
 
   github-actions/unified-status-check:
     dependencies:
@@ -530,8 +530,8 @@ importers:
         specifier: 15.0.0
         version: 15.0.0
       '@types/node':
-        specifier: 24.6.2
-        version: 24.6.2
+        specifier: 24.7.0
+        version: 24.7.0
       typed-graphqlify:
         specifier: 3.1.6
         version: 3.1.6
@@ -552,10 +552,10 @@ importers:
         version: 1.22.0(@modelcontextprotocol/sdk@1.18.2(supports-color@10.2.2))(bufferutil@4.0.9)(encoding@0.1.13)(supports-color@10.2.2)(utf-8-validate@6.0.5)
       '@inquirer/prompts':
         specifier: 7.8.6
-        version: 7.8.6(@types/node@24.6.2)
+        version: 7.8.6(@types/node@24.7.0)
       '@inquirer/type':
         specifier: 3.0.8
-        version: 3.0.8(@types/node@24.6.2)
+        version: 3.0.8(@types/node@24.7.0)
       '@octokit/auth-app':
         specifier: 8.1.1
         version: 8.1.1
@@ -608,8 +608,8 @@ importers:
         specifier: 5.1.9
         version: 5.1.9
       '@types/node':
-        specifier: 24.6.2
-        version: 24.6.2
+        specifier: 24.7.0
+        version: 24.7.0
       '@types/semver':
         specifier: 7.7.1
         version: 7.7.1
@@ -659,11 +659,11 @@ importers:
         specifier: 5.0.0
         version: 5.0.0(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.2.0)
       jasmine:
-        specifier: 5.11.0
-        version: 5.11.0
+        specifier: 5.12.0
+        version: 5.12.0
       jasmine-core:
-        specifier: 5.11.0
-        version: 5.11.0
+        specifier: 5.12.0
+        version: 5.12.0
       jasmine-reporters:
         specifier: 2.5.2
         version: 2.5.2
@@ -2365,8 +2365,8 @@ packages:
   '@types/node@22.18.8':
     resolution: {integrity: sha512-pAZSHMiagDR7cARo/cch1f3rXy0AEXwsVsVH09FcyeJVAzCnGgmYis7P3JidtTUjyadhTeSo8TgRPswstghDaw==}
 
-  '@types/node@24.6.2':
-    resolution: {integrity: sha512-d2L25Y4j+W3ZlNAeMKcy7yDsK425ibcAOO2t7aPTz6gNMH0z2GThtwENCDc0d/Pw9wgyRqE5Px1wkV7naz8ang==}
+  '@types/node@24.7.0':
+    resolution: {integrity: sha512-IbKooQVqUBrlzWTi79E8Fw78l8k1RNtlDDNWsFZs7XonuQSJ8oNYfEeclhprUldXISRMLzBpILuKgPlIxm+/Yw==}
 
   '@types/parse-glob@3.0.32':
     resolution: {integrity: sha512-n4xmml2WKR12XeQprN8L/sfiVPa8FHS3k+fxp4kSr/PA2GsGUgFND+bvISJxM0y5QdvzNEGjEVU3eIrcKks/pA==}
@@ -4070,8 +4070,8 @@ packages:
   jasmine-core@2.8.0:
     resolution: {integrity: sha512-SNkOkS+/jMZvLhuSx1fjhcNWUC/KG6oVyFUGkSBEr9n1axSNduWU8GlI7suaHXr4yxjet6KjrUZxUTE5WzzWwQ==}
 
-  jasmine-core@5.11.0:
-    resolution: {integrity: sha512-MPJ8L5yyNul0F2SuEsLASwESXQjJvBXnKu31JWFyRZSvuv2B79K4GDWN3pSqvLheUNh7Fyb6dXwd4rsz95O2Kg==}
+  jasmine-core@5.12.0:
+    resolution: {integrity: sha512-QqO4pX33GEML5JoGQU6BM5NHKPgEsg+TXp3jCIDek9MbfEp2JUYEFBo9EF1+hegWy/bCHS1m5nP0BOp18G6rVA==}
 
   jasmine-reporters@2.5.2:
     resolution: {integrity: sha512-qdewRUuFOSiWhiyWZX8Yx3YNQ9JG51ntBEO4ekLQRpktxFTwUHy24a86zD/Oi2BRTKksEdfWQZcQFqzjqIkPig==}
@@ -4080,8 +4080,8 @@ packages:
     resolution: {integrity: sha512-KbdGQTf5jbZgltoHs31XGiChAPumMSY64OZMWLNYnEnMfG5uwGBhffePwuskexjT+/Jea/gU3qAU8344hNohSw==}
     hasBin: true
 
-  jasmine@5.11.0:
-    resolution: {integrity: sha512-MhIYY2pLfRA5hhIvY72ZLilwKeZEBuTyIUv9JDB+b+pEYehsJDW2obKF2dmMtWaFG6pDiFiAUNphpZ7SW7fFMA==}
+  jasmine@5.12.0:
+    resolution: {integrity: sha512-KmKeTNuH8rgAuPRL5AUsXWSdJVlDu+pgqi2dLXoZUSH/g3kR+7Ho8B7hEhwDu0fu1PLuiXZtfaxmQ/mB5wqihw==}
     hasBin: true
 
   jasminewd2@2.2.0:
@@ -5617,8 +5617,8 @@ packages:
   undici-types@6.21.0:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
 
-  undici-types@7.13.0:
-    resolution: {integrity: sha512-Ov2Rr9Sx+fRgagJ5AX0qvItZG/JKKoBRAVITs1zk7IqZGTJUwgUr7qoYBpWwakpWilTZFM98rG/AFRocu10iIQ==}
+  undici-types@7.14.0:
+    resolution: {integrity: sha512-QQiYxHuyZ9gQUIrmPo3IA+hUl4KYk8uSA7cHrcKd/l3p1OTpZcM0Tbp9x7FAtXdAYhlasd60ncPpgu6ihG6TOA==}
 
   undici@5.29.0:
     resolution: {integrity: sha512-raqeBD6NQK4SkWhQzeYKd1KmIG6dllBOTt55Rmkt4HtI9mwdWtJljnrXjAFUBLTSN67HWrOIZ3EPF4kjUw80Bg==}
@@ -6071,7 +6071,7 @@ snapshots:
       '@angular/compiler': 21.0.0-next.6
       zone.js: 0.15.1
 
-  '@angular/fire@20.0.1(4fc013cf1aec07f1565f00f784c8076e)':
+  '@angular/fire@20.0.1(7dcc482351efedd58ff4bae24f62e0be)':
     dependencies:
       '@angular-devkit/schematics': 20.3.3(chokidar@4.0.3)
       '@angular/common': 21.0.0-next.6(@angular/core@21.0.0-next.6(@angular/compiler@21.0.0-next.6)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
@@ -6084,7 +6084,7 @@ snapshots:
       rxjs: 7.8.2
       tslib: 2.8.1
     optionalDependencies:
-      firebase-tools: 14.18.0(@types/node@24.6.2)(bufferutil@4.0.9)(encoding@0.1.13)
+      firebase-tools: 14.18.0(@types/node@24.7.0)(bufferutil@4.0.9)(encoding@0.1.13)
     transitivePeerDependencies:
       - '@react-native-async-storage/async-storage'
       - chokidar
@@ -7167,7 +7167,7 @@ snapshots:
   '@grpc/grpc-js@1.9.15':
     dependencies:
       '@grpc/proto-loader': 0.7.15
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
 
   '@grpc/proto-loader@0.7.15':
     dependencies:
@@ -7201,128 +7201,128 @@ snapshots:
 
   '@inquirer/ansi@1.0.0': {}
 
-  '@inquirer/checkbox@4.2.4(@types/node@24.6.2)':
+  '@inquirer/checkbox@4.2.4(@types/node@24.7.0)':
     dependencies:
       '@inquirer/ansi': 1.0.0
-      '@inquirer/core': 10.2.2(@types/node@24.6.2)
+      '@inquirer/core': 10.2.2(@types/node@24.7.0)
       '@inquirer/figures': 1.0.13
-      '@inquirer/type': 3.0.8(@types/node@24.6.2)
+      '@inquirer/type': 3.0.8(@types/node@24.7.0)
       yoctocolors-cjs: 2.1.3
     optionalDependencies:
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
 
-  '@inquirer/confirm@5.1.18(@types/node@24.6.2)':
+  '@inquirer/confirm@5.1.18(@types/node@24.7.0)':
     dependencies:
-      '@inquirer/core': 10.2.2(@types/node@24.6.2)
-      '@inquirer/type': 3.0.8(@types/node@24.6.2)
+      '@inquirer/core': 10.2.2(@types/node@24.7.0)
+      '@inquirer/type': 3.0.8(@types/node@24.7.0)
     optionalDependencies:
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
 
-  '@inquirer/core@10.2.2(@types/node@24.6.2)':
+  '@inquirer/core@10.2.2(@types/node@24.7.0)':
     dependencies:
       '@inquirer/ansi': 1.0.0
       '@inquirer/figures': 1.0.13
-      '@inquirer/type': 3.0.8(@types/node@24.6.2)
+      '@inquirer/type': 3.0.8(@types/node@24.7.0)
       cli-width: 4.1.0
       mute-stream: 2.0.0
       signal-exit: 4.1.0
       wrap-ansi: 6.2.0
       yoctocolors-cjs: 2.1.3
     optionalDependencies:
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
 
-  '@inquirer/editor@4.2.20(@types/node@24.6.2)':
+  '@inquirer/editor@4.2.20(@types/node@24.7.0)':
     dependencies:
-      '@inquirer/core': 10.2.2(@types/node@24.6.2)
-      '@inquirer/external-editor': 1.0.2(@types/node@24.6.2)
-      '@inquirer/type': 3.0.8(@types/node@24.6.2)
+      '@inquirer/core': 10.2.2(@types/node@24.7.0)
+      '@inquirer/external-editor': 1.0.2(@types/node@24.7.0)
+      '@inquirer/type': 3.0.8(@types/node@24.7.0)
     optionalDependencies:
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
 
-  '@inquirer/expand@4.0.20(@types/node@24.6.2)':
+  '@inquirer/expand@4.0.20(@types/node@24.7.0)':
     dependencies:
-      '@inquirer/core': 10.2.2(@types/node@24.6.2)
-      '@inquirer/type': 3.0.8(@types/node@24.6.2)
+      '@inquirer/core': 10.2.2(@types/node@24.7.0)
+      '@inquirer/type': 3.0.8(@types/node@24.7.0)
       yoctocolors-cjs: 2.1.3
     optionalDependencies:
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
 
-  '@inquirer/external-editor@1.0.2(@types/node@24.6.2)':
+  '@inquirer/external-editor@1.0.2(@types/node@24.7.0)':
     dependencies:
       chardet: 2.1.0
       iconv-lite: 0.7.0
     optionalDependencies:
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
 
   '@inquirer/figures@1.0.13': {}
 
-  '@inquirer/input@4.2.4(@types/node@24.6.2)':
+  '@inquirer/input@4.2.4(@types/node@24.7.0)':
     dependencies:
-      '@inquirer/core': 10.2.2(@types/node@24.6.2)
-      '@inquirer/type': 3.0.8(@types/node@24.6.2)
+      '@inquirer/core': 10.2.2(@types/node@24.7.0)
+      '@inquirer/type': 3.0.8(@types/node@24.7.0)
     optionalDependencies:
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
 
-  '@inquirer/number@3.0.20(@types/node@24.6.2)':
+  '@inquirer/number@3.0.20(@types/node@24.7.0)':
     dependencies:
-      '@inquirer/core': 10.2.2(@types/node@24.6.2)
-      '@inquirer/type': 3.0.8(@types/node@24.6.2)
+      '@inquirer/core': 10.2.2(@types/node@24.7.0)
+      '@inquirer/type': 3.0.8(@types/node@24.7.0)
     optionalDependencies:
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
 
-  '@inquirer/password@4.0.20(@types/node@24.6.2)':
-    dependencies:
-      '@inquirer/ansi': 1.0.0
-      '@inquirer/core': 10.2.2(@types/node@24.6.2)
-      '@inquirer/type': 3.0.8(@types/node@24.6.2)
-    optionalDependencies:
-      '@types/node': 24.6.2
-
-  '@inquirer/prompts@7.8.6(@types/node@24.6.2)':
-    dependencies:
-      '@inquirer/checkbox': 4.2.4(@types/node@24.6.2)
-      '@inquirer/confirm': 5.1.18(@types/node@24.6.2)
-      '@inquirer/editor': 4.2.20(@types/node@24.6.2)
-      '@inquirer/expand': 4.0.20(@types/node@24.6.2)
-      '@inquirer/input': 4.2.4(@types/node@24.6.2)
-      '@inquirer/number': 3.0.20(@types/node@24.6.2)
-      '@inquirer/password': 4.0.20(@types/node@24.6.2)
-      '@inquirer/rawlist': 4.1.8(@types/node@24.6.2)
-      '@inquirer/search': 3.1.3(@types/node@24.6.2)
-      '@inquirer/select': 4.3.4(@types/node@24.6.2)
-    optionalDependencies:
-      '@types/node': 24.6.2
-
-  '@inquirer/rawlist@4.1.8(@types/node@24.6.2)':
-    dependencies:
-      '@inquirer/core': 10.2.2(@types/node@24.6.2)
-      '@inquirer/type': 3.0.8(@types/node@24.6.2)
-      yoctocolors-cjs: 2.1.3
-    optionalDependencies:
-      '@types/node': 24.6.2
-
-  '@inquirer/search@3.1.3(@types/node@24.6.2)':
-    dependencies:
-      '@inquirer/core': 10.2.2(@types/node@24.6.2)
-      '@inquirer/figures': 1.0.13
-      '@inquirer/type': 3.0.8(@types/node@24.6.2)
-      yoctocolors-cjs: 2.1.3
-    optionalDependencies:
-      '@types/node': 24.6.2
-
-  '@inquirer/select@4.3.4(@types/node@24.6.2)':
+  '@inquirer/password@4.0.20(@types/node@24.7.0)':
     dependencies:
       '@inquirer/ansi': 1.0.0
-      '@inquirer/core': 10.2.2(@types/node@24.6.2)
-      '@inquirer/figures': 1.0.13
-      '@inquirer/type': 3.0.8(@types/node@24.6.2)
+      '@inquirer/core': 10.2.2(@types/node@24.7.0)
+      '@inquirer/type': 3.0.8(@types/node@24.7.0)
+    optionalDependencies:
+      '@types/node': 24.7.0
+
+  '@inquirer/prompts@7.8.6(@types/node@24.7.0)':
+    dependencies:
+      '@inquirer/checkbox': 4.2.4(@types/node@24.7.0)
+      '@inquirer/confirm': 5.1.18(@types/node@24.7.0)
+      '@inquirer/editor': 4.2.20(@types/node@24.7.0)
+      '@inquirer/expand': 4.0.20(@types/node@24.7.0)
+      '@inquirer/input': 4.2.4(@types/node@24.7.0)
+      '@inquirer/number': 3.0.20(@types/node@24.7.0)
+      '@inquirer/password': 4.0.20(@types/node@24.7.0)
+      '@inquirer/rawlist': 4.1.8(@types/node@24.7.0)
+      '@inquirer/search': 3.1.3(@types/node@24.7.0)
+      '@inquirer/select': 4.3.4(@types/node@24.7.0)
+    optionalDependencies:
+      '@types/node': 24.7.0
+
+  '@inquirer/rawlist@4.1.8(@types/node@24.7.0)':
+    dependencies:
+      '@inquirer/core': 10.2.2(@types/node@24.7.0)
+      '@inquirer/type': 3.0.8(@types/node@24.7.0)
       yoctocolors-cjs: 2.1.3
     optionalDependencies:
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
 
-  '@inquirer/type@3.0.8(@types/node@24.6.2)':
+  '@inquirer/search@3.1.3(@types/node@24.7.0)':
+    dependencies:
+      '@inquirer/core': 10.2.2(@types/node@24.7.0)
+      '@inquirer/figures': 1.0.13
+      '@inquirer/type': 3.0.8(@types/node@24.7.0)
+      yoctocolors-cjs: 2.1.3
     optionalDependencies:
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
+
+  '@inquirer/select@4.3.4(@types/node@24.7.0)':
+    dependencies:
+      '@inquirer/ansi': 1.0.0
+      '@inquirer/core': 10.2.2(@types/node@24.7.0)
+      '@inquirer/figures': 1.0.13
+      '@inquirer/type': 3.0.8(@types/node@24.7.0)
+      yoctocolors-cjs: 2.1.3
+    optionalDependencies:
+      '@types/node': 24.7.0
+
+  '@inquirer/type@3.0.8(@types/node@24.7.0)':
+    optionalDependencies:
+      '@types/node': 24.7.0
 
   '@isaacs/balanced-match@4.0.1': {}
 
@@ -7904,12 +7904,12 @@ snapshots:
   '@types/body-parser@1.19.6':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
 
   '@types/browser-sync@2.29.0':
     dependencies:
       '@types/micromatch': 2.3.35
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
       '@types/serve-static': 1.15.8
       chokidar: 3.6.0
 
@@ -7917,19 +7917,19 @@ snapshots:
 
   '@types/cli-progress@3.11.6':
     dependencies:
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
 
   '@types/cors@2.8.19':
     dependencies:
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
 
   '@types/duplexify@3.6.4':
     dependencies:
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
 
   '@types/ejs@3.1.5': {}
 
@@ -7937,7 +7937,7 @@ snapshots:
 
   '@types/express-serve-static-core@4.19.6':
     dependencies:
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
       '@types/qs': 6.14.0
       '@types/range-parser': 1.2.7
       '@types/send': 1.2.0
@@ -7953,7 +7953,7 @@ snapshots:
 
   '@types/git-raw-commits@5.0.0':
     dependencies:
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
 
   '@types/http-errors@2.0.5': {}
 
@@ -7961,7 +7961,7 @@ snapshots:
 
   '@types/jsdom@27.0.0':
     dependencies:
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
       '@types/tough-cookie': 4.0.5
       parse5: 7.3.0
 
@@ -7970,7 +7970,7 @@ snapshots:
   '@types/jsonwebtoken@9.0.10':
     dependencies:
       '@types/ms': 2.1.0
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
 
   '@types/long@4.0.2': {}
 
@@ -7984,16 +7984,16 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
-  '@types/node@24.6.2':
+  '@types/node@24.7.0':
     dependencies:
-      undici-types: 7.13.0
+      undici-types: 7.14.0
 
   '@types/parse-glob@3.0.32': {}
 
   '@types/pumpify@1.4.4':
     dependencies:
       '@types/duplexify': 3.6.4
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
 
   '@types/q@0.0.32': {}
 
@@ -8004,7 +8004,7 @@ snapshots:
   '@types/request@2.48.13':
     dependencies:
       '@types/caseless': 0.12.5
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
       '@types/tough-cookie': 4.0.5
       form-data: 2.5.5
 
@@ -8012,19 +8012,19 @@ snapshots:
 
   '@types/selenium-webdriver@4.1.28':
     dependencies:
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
       '@types/ws': 8.18.1
 
   '@types/semver@7.7.1': {}
 
   '@types/send@1.2.0':
     dependencies:
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
 
   '@types/serve-static@1.15.8':
     dependencies:
       '@types/http-errors': 2.0.5
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
       '@types/send': 1.2.0
 
   '@types/source-map-support@0.5.10':
@@ -8039,13 +8039,13 @@ snapshots:
 
   '@types/wait-on@5.3.4':
     dependencies:
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
 
   '@types/which@3.0.4': {}
 
   '@types/ws@8.18.1':
     dependencies:
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
 
   '@types/yargs-parser@21.0.3': {}
 
@@ -8958,7 +8958,7 @@ snapshots:
   engine.io@6.6.4(bufferutil@4.0.9)(utf-8-validate@6.0.5):
     dependencies:
       '@types/cors': 2.8.19
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
       accepts: 1.3.8
       base64id: 2.0.0
       cookie: 0.7.2
@@ -9320,13 +9320,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  firebase-tools@14.18.0(@types/node@24.6.2)(bufferutil@4.0.9)(encoding@0.1.13):
+  firebase-tools@14.18.0(@types/node@24.7.0)(bufferutil@4.0.9)(encoding@0.1.13):
     dependencies:
       '@electric-sql/pglite': 0.3.10
       '@electric-sql/pglite-tools': 0.2.15(@electric-sql/pglite@0.3.10)
       '@google-cloud/cloud-sql-connector': 1.8.3
       '@google-cloud/pubsub': 4.11.0(encoding@0.1.13)
-      '@inquirer/prompts': 7.8.6(@types/node@24.6.2)
+      '@inquirer/prompts': 7.8.6(@types/node@24.7.0)
       '@modelcontextprotocol/sdk': 1.18.2(supports-color@10.2.2)
       abort-controller: 3.0.0
       ajv: 8.17.1
@@ -10074,7 +10074,7 @@ snapshots:
 
   jasmine-core@2.8.0: {}
 
-  jasmine-core@5.11.0: {}
+  jasmine-core@5.12.0: {}
 
   jasmine-reporters@2.5.2:
     dependencies:
@@ -10087,10 +10087,10 @@ snapshots:
       glob: 7.2.3
       jasmine-core: 2.8.0
 
-  jasmine@5.11.0:
+  jasmine@5.12.0:
     dependencies:
       glob: 10.4.5
-      jasmine-core: 5.11.0
+      jasmine-core: 5.12.0
 
   jasminewd2@2.2.0: {}
 
@@ -10920,7 +10920,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 24.6.2
+      '@types/node': 24.7.0
       long: 5.3.2
 
   protractor@7.0.0:
@@ -11832,7 +11832,7 @@ snapshots:
 
   undici-types@6.21.0: {}
 
-  undici-types@7.13.0: {}
+  undici-types@7.14.0: {}
 
   undici@5.29.0:
     dependencies:
