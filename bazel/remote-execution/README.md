@@ -7,10 +7,10 @@ or from GitHub packages. Only `pkg.dev` or `gcr.io`.
 gcloud auth configure-docker \
     us-west2-docker.pkg.dev
 
-sudo docker build . --network=host -t angular-devinfra-rbe-image:latest
+docker build . --network=host -t angular-devinfra-rbe-image:latest
 
-sudo docker tag angular-devinfra-rbe-image:latest \
-  us-west2-docker.pkg.dev/internal-200822/remote-execution-images/angular-devinfra-rbe-image:202305
+docker tag angular-devinfra-rbe-image:latest \
+  us-west2-docker.pkg.dev/internal-200822/remote-execution-images/angular-devinfra-rbe-image:2025-10
 
-sudo docker push us-west2-docker.pkg.dev/internal-200822/remote-execution-images/angular-devinfra-rbe-image:202305
+docker push us-west2-docker.pkg.dev/internal-200822/remote-execution-images/angular-devinfra-rbe-image:2025-10
 ````

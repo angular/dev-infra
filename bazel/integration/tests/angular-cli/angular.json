@@ -72,6 +72,7 @@
           "options": {
             "tsConfig": "tsconfig.spec.json",
             "assets": ["src/favicon.ico", "src/assets"],
+            "browsers": "ChromeHeadlessNoSandbox",
             "styles": ["src/styles.css"],
             "scripts": []
           }

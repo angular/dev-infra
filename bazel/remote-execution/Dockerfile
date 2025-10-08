@@ -5,8 +5,8 @@ FROM ghcr.io/puppeteer/puppeteer:24.23.0@sha256:d7afe89d44cb5fc2d8a8ed16bf21817a
 # image- preventing us from preparing Firefox dependencies.
 USER root
 
-# Perform update/upgrade with Debian bullseye added. Puppeteer uses
-# `node:18` which does not have the repository added for installing Firefox.
+# Perform update/upgrade with Debian bullseye added.
+# This allows us to install Firefox for its dependencies.
 RUN echo 'deb http://deb.debian.org/debian bullseye main' >> /etc/apt/sources.list
 RUN apt-get -y update && apt-get -y upgrade
 
