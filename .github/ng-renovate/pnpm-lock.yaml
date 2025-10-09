@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       renovate:
-        specifier: 41.138.4
-        version: 41.138.4(encoding@0.1.13)(typanion@3.14.0)
+        specifier: 41.141.0
+        version: 41.141.0(encoding@0.1.13)(typanion@3.14.0)
 
 packages:
 
@@ -1539,8 +1539,8 @@ packages:
     resolution: {integrity: sha512-QUcQZutczESpdo2w9BMG6VpLFoq9ix7ER5HLM1mAdZdri2F3eISkCb8ep84W6YOo0grYWJdyT/8JkYqGjQfSSQ==}
     engines: {node: '>=18.12.0', yarn: ^1.17.0}
 
-  google-auth-library@10.3.1:
-    resolution: {integrity: sha512-w6bmyfvB7Fezdb70admbJlDYY8MdzRZPssCYO1M/zrIx2HWNhsycIoFf/tZ8qdWSg5l4BUTAt2ax8Pv/R6NnSw==}
+  google-auth-library@10.4.0:
+    resolution: {integrity: sha512-CmIrSy1bqMQUsPmA9+hcSbAXL80cFhu40cGMUjCaLpNKVzzvi+0uAHq8GNZxkoGYIsTX4ZQ7e4aInAqWxgn4fg==}
     engines: {node: '>=18'}
 
   google-logging-utils@0.0.2:
@@ -2491,8 +2491,8 @@ packages:
   remark@15.0.1:
     resolution: {integrity: sha512-Eht5w30ruCXgFmxVUSlNWQ9iiimq07URKeFS3hNc8cUWy1llX4KDWfyEDZRycMc+znsN9Ux5/tJ/BFdgdOwA3A==}
 
-  renovate@41.138.4:
-    resolution: {integrity: sha512-3vt0o/8OmGBmAqzfddOTqOLpc8CmCJHxnyeugTT/rzs29oOkfUBZ0dpk9p4ZD0fyYSvwvXSZ7Y/WHXRzr44mUQ==}
+  renovate@41.141.0:
+    resolution: {integrity: sha512-kRZYuRRjeI/JxUCinayYCgbyrQp8NrKk3LlqZcvxv0urZ6Zafl3bmVuwkS77PddkheO0UOvFsp94ZrHDcOJhkA==}
     engines: {node: ^22.13.0, pnpm: ^10.0.0}
     hasBin: true
 
@@ -5388,7 +5388,7 @@ snapshots:
       klona: 2.0.6
       moo: 0.5.2
 
-  google-auth-library@10.3.1:
+  google-auth-library@10.4.0:
     dependencies:
       base64-js: 1.5.1
       ecdsa-sig-formatter: 1.0.11
@@ -6590,7 +6590,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  renovate@41.138.4(encoding@0.1.13)(typanion@3.14.0):
+  renovate@41.141.0(encoding@0.1.13)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.899.0
       '@aws-sdk/client-ec2': 3.899.0
@@ -6659,7 +6659,7 @@ snapshots:
       glob: 11.0.3
       global-agent: 3.0.0
       good-enough-parser: 1.1.23
-      google-auth-library: 10.3.1
+      google-auth-library: 10.4.0
       got: 11.8.6
       graph-data-structure: 4.5.0
       handlebars: 4.7.8
