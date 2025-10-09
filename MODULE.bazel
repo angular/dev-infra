@@ -24,7 +24,7 @@ bazel_dep(name = "rules_nodejs", version = "6.5.2")
 bazel_dep(name = "rules_browsers")
 git_override(
     module_name = "rules_browsers",
-    commit = "508168a93dcbadfd2504f8ce775e2c19ebfe7fad",
+    commit = "0e04a5443e783ef983c84314e311e68410dd82e1",
     remote = "https://github.com/devversion/rules_browsers.git",
 )
 
