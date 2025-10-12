@@ -6,6 +6,6 @@
     "@octokit/auth-app": "8.1.1",
     "@octokit/rest": "22.0.0",
     "@types/jasmine": "5.1.9",
-    "@types/node": "24.7.0"
+    "@types/node": "24.7.2"
   }
 }
