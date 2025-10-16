@@ -3,7 +3,7 @@
     "@angular/compiler": "21.0.0-next.8",
     "@angular/core": "21.0.0-next.8",
     "@angular/platform-browser": "21.0.0-next.8",
-    "@types/jasmine": "5.1.9",
+    "@types/jasmine": "5.1.10",
     "@types/jsdom": "27.0.0",
     "@types/node": "24.7.2",
     "jasmine-reporters": "2.5.2",
