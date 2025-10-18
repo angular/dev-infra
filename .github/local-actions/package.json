@@ -1,6 +1,6 @@
 {
   "type": "module",
   "dependencies": {
-    "@types/node": "24.8.0"
+    "@types/node": "24.8.1"
   }
 }
