@@ -4,7 +4,7 @@
     "@microsoft/api-extractor": "7.53.1",
     "@types/babel__core": "7.20.5",
     "@types/browser-sync": "2.29.0",
-    "@types/node": "22.18.10",
+    "@types/node": "22.18.11",
     "@types/selenium-webdriver": "^4.1.28",
     "@types/send": "1.2.0",
     "@types/wait-on": "^5.3.4",
@@ -21,7 +21,7 @@
     "yargs": "18.0.0",
     "protractor": "7.0.0",
     "semver": "7.7.3",
-    "selenium-webdriver": "4.36.0",
+    "selenium-webdriver": "4.37.0",
     "source-map-support": "0.5.21",
     "tinyglobby": "0.2.15"
   }
