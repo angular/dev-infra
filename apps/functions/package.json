@@ -1,7 +1,7 @@
 {
   "name": "functions",
   "engines": {
-    "node": "20"
+    "node": "22"
   },
   "main": "bundle.js",
   "type": "module",
