@@ -19,6 +19,7 @@ import {
 import {loadAndValidatePullRequest, PullRequest} from './pull-request.js';
 import {GithubApiMergeStrategy} from './strategies/api-merge.js';
 import {AutosquashMergeStrategy} from './strategies/autosquash-merge.js';
+import {ConditionalAutosquashMergeStrategy} from './strategies/conditional-autosquash-merge.js';
 import {GithubConfig, NgDevConfig} from '../../utils/config.js';
 import {assertValidReleaseConfig} from '../../release/config/index.js';
 import {
@@ -139,9 +140,20 @@ export class MergeTool {
       throw new UserAbortedMergeToolError();
     }
 
-    const strategy = this.config.pullRequest.githubApiMerge
-      ? new GithubApiMergeStrategy(this.git, this.config.pullRequest.githubApiMerge)
-      : new AutosquashMergeStrategy(this.git);
+    let strategy:
+      | AutosquashMergeStrategy
+      | ConditionalAutosquashMergeStrategy
+      | GithubApiMergeStrategy;
+
+    const {conditionalAutosquashMerge, githubApiMerge} = this.config.pullRequest;
+
+    if (conditionalAutosquashMerge) {
+      strategy = new ConditionalAutosquashMergeStrategy(this.git, githubApiMerge);
+    } else if (githubApiMerge) {
+      strategy = new GithubApiMergeStrategy(this.git, githubApiMerge);
+    } else {
+      strategy = new AutosquashMergeStrategy(this.git);
+    }
 
     // Branch or revision that is currently checked out so that we can switch back to
     // it once the pull request has been merged.

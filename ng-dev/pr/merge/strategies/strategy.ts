@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Commit, parseCommitMessage} from '../../../commit-message/parse.js';
 import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client.js';
 import {
   FatalMergeToolError,
@@ -199,5 +200,23 @@ export abstract class MergeStrategy {
     if (failedBranches.length) {
       throw new MergeConflictsFatalError(failedBranches);
     }
+  }
+
+  /** Gets all commit messages of commits in the pull request. */
+  protected async getPullRequestCommits({prNumber}: PullRequest): Promise<
+    {
+      message: string;
+      parsed: Commit;
+    }[]
+  > {
+    const allCommits = await this.git.github.paginate(this.git.github.pulls.listCommits, {
+      ...this.git.remoteParams,
+      pull_number: prNumber,
+    });
+
+    return allCommits.map(({commit: {message}}) => ({
+      message,
+      parsed: parseCommitMessage(message),
+    }));
   }
 }
