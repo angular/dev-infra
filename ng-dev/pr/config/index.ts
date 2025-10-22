@@ -23,7 +23,7 @@ export interface GithubApiMergeStrategyConfig {
 }
 
 /** Configuration for the merge script. */
-export type PullRequestConfig = {
+export interface PullRequestConfig {
   /**
    * Configuration for the upstream remote. All of these options are optional as
    * defaults are provided by the common dev-infra github configuration.
@@ -63,25 +63,7 @@ export type PullRequestConfig = {
    * follow the canonical branching/versioning.
    */
   __noTargetLabeling?: boolean;
-} & {
-  /**
-   * Whether pull requests should be merged using a conditional autosquash strategy.
-   * If a pull request contains fixup or squash commits, the autosquash strategy
-   * will be used. Otherwise, the Github API merge strategy will be used.
-   */
-  conditionalAutosquashMerge?: boolean;
-
-  /**
-   * The configuration for merging pull requests using the Github API.
-   *
-   * This strategy is used as a fallback for the `conditionalAutosquashMerge` strategy,
-   * when a pull request does not contain any fixup or squash commits.
-   *
-   * This can be enabled if projects want to have their pull requests show up as
-   * `Merged` in the Github UI.
-   */
-  githubApiMerge: GithubApiMergeStrategyConfig;
-};
+}
 
 /** Loads and validates the merge configuration. */
 export function assertValidPullRequestConfig<T extends NgDevConfig>(
@@ -94,16 +76,8 @@ export function assertValidPullRequestConfig<T extends NgDevConfig>(
     );
   }
 
-  const {conditionalAutosquashMerge, githubApiMerge} = config.pullRequest;
-  if (githubApiMerge === undefined) {
+  if (config.pullRequest.githubApiMerge === undefined) {
     errors.push('No explicit choice of merge strategy. Please set `githubApiMerge`.');
-  }
-
-  if (conditionalAutosquashMerge && !githubApiMerge) {
-    errors.push(
-      '`conditionalAutosquashMerge` requires a GitHub API merge strategy to inspect commit history. ' +
-        'Please configure `githubApiMerge` or disable `conditionalAutosquashMerge`.',
-    );
   }
 
   if (errors.length) {

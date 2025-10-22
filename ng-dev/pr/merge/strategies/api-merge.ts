@@ -8,6 +8,7 @@
 
 import {RestEndpointMethodTypes} from '@octokit/plugin-rest-endpoint-methods';
 
+import {parseCommitMessage} from '../../../commit-message/parse.js';
 import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client.js';
 import {GithubApiMergeMethod, GithubApiMergeStrategyConfig} from '../../config/index.js';
 import {PullRequest} from '../pull-request.js';
@@ -51,7 +52,7 @@ export class GithubApiMergeStrategy extends MergeStrategy {
    */
   override async merge(pullRequest: PullRequest): Promise<void> {
     const {githubTargetBranch, prNumber, needsCommitMessageFixup, targetBranches} = pullRequest;
-    const method = this.getMergeActionFromPullRequest(pullRequest);
+    const method = this._getMergeActionFromPullRequest(pullRequest);
     const cherryPickTargetBranches = targetBranches.filter((b) => b !== githubTargetBranch);
 
     const mergeOptions: OctokitMergeParams = {
@@ -194,7 +195,10 @@ export class GithubApiMergeStrategy extends MergeStrategy {
    * behavior here so that we have a default commit message that can be fixed up.
    */
   private async _getDefaultSquashCommitMessage(pullRequest: PullRequest): Promise<string> {
-    const commits = await this.getPullRequestCommits(pullRequest);
+    const commits = (await this._getPullRequestCommitMessages(pullRequest)).map((message) => ({
+      message,
+      parsed: parseCommitMessage(message),
+    }));
     const messageBase = `${pullRequest.title}${COMMIT_HEADER_SEPARATOR}`;
     if (commits.length <= 1) {
       return `${messageBase}${commits[0].parsed.body}`;
@@ -203,8 +207,17 @@ export class GithubApiMergeStrategy extends MergeStrategy {
     return `${messageBase}${joinedMessages}`;
   }
 
+  /** Gets all commit messages of commits in the pull request. */
+  private async _getPullRequestCommitMessages({prNumber}: PullRequest) {
+    const allCommits = await this.git.github.paginate(this.git.github.pulls.listCommits, {
+      ...this.git.remoteParams,
+      pull_number: prNumber,
+    });
+    return allCommits.map(({commit}) => commit.message);
+  }
+
   /** Determines the merge action from the given pull request. */
-  getMergeActionFromPullRequest({labels}: PullRequest): GithubApiMergeMethod {
+  private _getMergeActionFromPullRequest({labels}: PullRequest): GithubApiMergeMethod {
     if (this._config.labels) {
       const matchingLabel = this._config.labels.find(({pattern}) => labels.includes(pattern));
       if (matchingLabel !== undefined) {
