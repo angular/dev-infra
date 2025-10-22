@@ -8,21 +8,17 @@
 
 import {RestEndpointMethodTypes} from '@octokit/plugin-rest-endpoint-methods';
 
-import {parseCommitMessage} from '../../../commit-message/parse.js';
 import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client.js';
 import {GithubApiMergeMethod, GithubApiMergeStrategyConfig} from '../../config/index.js';
 import {PullRequest} from '../pull-request.js';
 
-import {MergeStrategy} from './strategy.js';
 import {isGithubApiError} from '../../../utils/git/github.js';
 import {FatalMergeToolError, MergeConflictsFatalError} from '../failures.js';
 import {Prompt} from '../../../utils/prompt.js';
+import {AutosquashMergeStrategy} from './autosquash-merge.js';
 
 /** Type describing the parameters for the Octokit `merge` API endpoint. */
 type OctokitMergeParams = RestEndpointMethodTypes['pulls']['merge']['parameters'];
-
-type OctokitPullRequestCommitsList =
-  RestEndpointMethodTypes['pulls']['listCommits']['response']['data'];
 
 /** Separator between commit message header and body. */
 const COMMIT_HEADER_SEPARATOR = '\n\n';
@@ -34,10 +30,10 @@ const COMMIT_HEADER_SEPARATOR = '\n\n';
  * target branches using the local Git instance. The benefit is that the Github merged state
  * is properly set, but a notable downside is that PRs cannot use fixup or squash commits.
  */
-export class GithubApiMergeStrategy extends MergeStrategy {
+export class GithubApiMergeStrategy extends AutosquashMergeStrategy {
   constructor(
     git: AuthenticatedGitClient,
-    private _config: GithubApiMergeStrategyConfig,
+    private config: GithubApiMergeStrategyConfig,
   ) {
     super(git);
   }
@@ -52,12 +48,20 @@ export class GithubApiMergeStrategy extends MergeStrategy {
    */
   override async merge(pullRequest: PullRequest): Promise<void> {
     const {githubTargetBranch, prNumber, needsCommitMessageFixup, targetBranches} = pullRequest;
-    const method = this._getMergeActionFromPullRequest(pullRequest);
+    const method = this.getMergeActionFromPullRequest(pullRequest);
     const cherryPickTargetBranches = targetBranches.filter((b) => b !== githubTargetBranch);
+
+    // Squash and Merge will create a single commit message and thus we can use the API to merge.
+    if (
+      method === 'rebase-with-fixup' &&
+      (pullRequest.needsCommitMessageFixup || (await this.hasFixupOrSquashCommits(pullRequest)))
+    ) {
+      return super.merge(pullRequest);
+    }
 
     const mergeOptions: OctokitMergeParams = {
       pull_number: prNumber,
-      merge_method: method,
+      merge_method: method === 'rebase-with-fixup' ? 'rebase' : method,
       ...this.git.remoteParams,
     };
 
@@ -195,10 +199,7 @@ export class GithubApiMergeStrategy extends MergeStrategy {
    * behavior here so that we have a default commit message that can be fixed up.
    */
   private async _getDefaultSquashCommitMessage(pullRequest: PullRequest): Promise<string> {
-    const commits = (await this._getPullRequestCommitMessages(pullRequest)).map((message) => ({
-      message,
-      parsed: parseCommitMessage(message),
-    }));
+    const commits = await this.getPullRequestCommits(pullRequest);
     const messageBase = `${pullRequest.title}${COMMIT_HEADER_SEPARATOR}`;
     if (commits.length <= 1) {
       return `${messageBase}${commits[0].parsed.body}`;
@@ -207,23 +208,21 @@ export class GithubApiMergeStrategy extends MergeStrategy {
     return `${messageBase}${joinedMessages}`;
   }
 
-  /** Gets all commit messages of commits in the pull request. */
-  private async _getPullRequestCommitMessages({prNumber}: PullRequest) {
-    const allCommits = await this.git.github.paginate(this.git.github.pulls.listCommits, {
-      ...this.git.remoteParams,
-      pull_number: prNumber,
-    });
-    return allCommits.map(({commit}) => commit.message);
-  }
-
   /** Determines the merge action from the given pull request. */
-  private _getMergeActionFromPullRequest({labels}: PullRequest): GithubApiMergeMethod {
-    if (this._config.labels) {
-      const matchingLabel = this._config.labels.find(({pattern}) => labels.includes(pattern));
+  private getMergeActionFromPullRequest({labels}: PullRequest): GithubApiMergeMethod {
+    if (this.config.labels) {
+      const matchingLabel = this.config.labels.find(({pattern}) => labels.includes(pattern));
       if (matchingLabel !== undefined) {
         return matchingLabel.method;
       }
     }
-    return this._config.default;
+    return this.config.default;
+  }
+
+  /** Checks whether the pull request contains fixup or squash commits. */
+  private async hasFixupOrSquashCommits(pullRequest: PullRequest): Promise<boolean> {
+    const commits = await this.getPullRequestCommits(pullRequest);
+
+    return commits.some(({parsed: {isFixup, isSquash}}) => isFixup || isSquash);
   }
 }
