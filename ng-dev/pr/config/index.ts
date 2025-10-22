@@ -79,8 +79,7 @@ export function assertValidPullRequestConfig<T extends NgDevConfig>(
     );
   }
 
-  const {githubApiMerge} = config.pullRequest;
-  if (githubApiMerge === undefined) {
+  if (config.pullRequest.githubApiMerge === undefined) {
     errors.push('No explicit choice of merge strategy. Please set `githubApiMerge`.');
   }
 
