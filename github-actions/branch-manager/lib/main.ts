@@ -16,27 +16,29 @@ async function run() {
       return;
     }
 
-    if (ref !== 'refs/heads/main') {
-      // TODO: support pushes to all releasable branches rather than just main.
-      core.info('Skipping evaluation as the push does not affect the main branch');
-      return;
-    }
-
     core.info(`Evaluating pull requests as a result of a push to '${ref}'`);
-
-    const mergeReadyPrQuery =
-      `repo:${context.repo.owner}/${context.repo.repo} ` +
-      `is:pr ` +
-      `is:open ` +
-      `label:"${actionLabels.ACTION_MERGE.name}"`;
 
     const prs = await github().then((api) =>
       api.paginate(
-        api.search.issuesAndPullRequests,
+        api.pulls.list,
         {
-          q: mergeReadyPrQuery,
+          repo: context.repo.repo,
+          owner: context.repo.owner,
+          state: 'open',
+          per_page: 100,
         },
-        (issues) => issues.data.map((i) => `${i.number}`),
+        (pulls) => {
+          return pulls.data
+            .filter(({labels, base}) => {
+              return (
+                // Whether the pull request is slated to merge into the same branch as the triggering push.
+                base.ref === ref &&
+                // Whether the pull request has the action: merge label.
+                labels.some(({name}) => name === actionLabels.ACTION_MERGE.name)
+              );
+            })
+            .map(({number}) => `${number}`);
+        },
       ),
     );
     core.info(`Triggering ${prs.length} prs to be evaluated`);
