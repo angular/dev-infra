@@ -587,8 +587,8 @@ importers:
         specifier: 15.0.1
         version: 15.0.1
       '@pnpm/dependency-path':
-        specifier: 1001.1.2
-        version: 1001.1.2
+        specifier: 1001.1.3
+        version: 1001.1.3
       '@types/cli-progress':
         specifier: 3.11.6
         version: 3.11.6
@@ -2186,8 +2186,8 @@ packages:
     resolution: {integrity: sha512-tNe7a6U4rCpxLMBaR0SIYTdjxGdL0Vwb3G1zY8++sPtHSvy7qd54u8CIB0Z+Y6t5tc9pNYMYCMwhE/wdSY7ltg==}
     engines: {node: '>=18.12'}
 
-  '@pnpm/dependency-path@1001.1.2':
-    resolution: {integrity: sha512-fih99/lY+HRRak0U0KMKAO7+nacilWMcvFTH6YDKzjCBTOhxDr6Eeap2mF7uf4ED4dnKsQVNUGmFpvaSXSuFCQ==}
+  '@pnpm/dependency-path@1001.1.3':
+    resolution: {integrity: sha512-ScPXDrlpNNrvV+l4Z1Mh7HjejkltQWfSa3PIaB+WJ3h+PoC1w5blbgfq6ENdHdkRU7L14ie/3MqUGMIx2gZldA==}
     engines: {node: '>=18.12'}
 
   '@pnpm/graceful-fs@1000.0.1':
@@ -2202,8 +2202,8 @@ packages:
     resolution: {integrity: sha512-c83qWb22rNRuB0UaVCI0uRPNRr8Z0FWnEIvT47jiHAmOIUHbBOg5XvV7pM5x+rKn9HRpjxquDbXYSXr3fAKFcw==}
     engines: {node: '>=12'}
 
-  '@pnpm/types@1000.8.0':
-    resolution: {integrity: sha512-yx86CGHHquWAI0GgKIuV/RnYewcf5fVFZemC45C/K2cX0uV8GB8TUP541ZrokWola2fZx5sn1vL7xzbceRZfoQ==}
+  '@pnpm/types@1000.9.0':
+    resolution: {integrity: sha512-UvDTCxnbyqkTg2X0dBOuZ4IdFJ8g4UFu0Ybv/5/cZAxCWVhNl1hC/Xc9hR4tZrlBL0NRFePLRhO/iw9LmA1lbw==}
     engines: {node: '>=18.12'}
 
   '@protobufjs/aspromise@1.1.2':
@@ -7881,10 +7881,10 @@ snapshots:
 
   '@pnpm/crypto.polyfill@1000.1.0': {}
 
-  '@pnpm/dependency-path@1001.1.2':
+  '@pnpm/dependency-path@1001.1.3':
     dependencies:
       '@pnpm/crypto.hash': 1000.2.1
-      '@pnpm/types': 1000.8.0
+      '@pnpm/types': 1000.9.0
       semver: 7.7.3
 
   '@pnpm/graceful-fs@1000.0.1':
@@ -7901,7 +7901,7 @@ snapshots:
       '@pnpm/network.ca-file': 1.0.2
       config-chain: 1.1.13
 
-  '@pnpm/types@1000.8.0': {}
+  '@pnpm/types@1000.9.0': {}
 
   '@protobufjs/aspromise@1.1.2': {}
 
