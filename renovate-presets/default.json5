@@ -6,10 +6,11 @@
   automerge: false,
 
   // Schedule Renovate to run during off-peak hours
-  schedule: ['after 10:00pm every weekday', 'before 5:00am every weekday', 'every weekend'],
+  schedule: ['after 6am on Monday, Wednesday, Friday', 'before 10am on Monday, Wednesday, Friday'],
+
   prConcurrentLimit: 8,
   prHourlyLimit: 4,
-  timezone: 'America/Tijuana',
+  timezone: 'Europe/Rome',
 
   // Commit and PR customization
   commitBody: 'See associated pull request for more information.',
@@ -20,6 +21,7 @@
 
   lockFileMaintenance: {
     enabled: true,
+    schedule: ['after 5am on Tuesday', 'before 7am on Tuesday'],
   },
 
   // Feature disabled: permission to enable vulnerability alerts is not granted
@@ -146,7 +148,7 @@
         'quicktype-core',
         'renovate',
       ],
-      schedule: ['on sunday and wednesday'],
+      schedule: ['after 6am on Wednesday', 'before 10am on Wednesday'],
     },
 
     // ============================================================================
