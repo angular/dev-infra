@@ -191,8 +191,8 @@ importers:
   bazel:
     dependencies:
       '@microsoft/api-extractor':
-        specifier: 7.53.1
-        version: 7.53.1(@types/node@22.18.12)
+        specifier: 7.53.2
+        version: 7.53.2(@types/node@22.18.12)
       '@types/babel__core':
         specifier: 7.20.5
         version: 7.20.5
@@ -224,8 +224,8 @@ importers:
         specifier: 5.6.2
         version: 5.6.2
       get-tsconfig:
-        specifier: 4.12.0
-        version: 4.12.0
+        specifier: 4.13.0
+        version: 4.13.0
       piscina:
         specifier: ^5.0.0
         version: 5.1.3
@@ -545,8 +545,8 @@ importers:
         specifier: 8.0.0
         version: 8.0.0(supports-color@10.2.2)
       '@google/genai':
-        specifier: 1.25.0
-        version: 1.25.0(@modelcontextprotocol/sdk@1.20.1(supports-color@10.2.2))(bufferutil@4.0.9)(encoding@0.1.13)(supports-color@10.2.2)(utf-8-validate@6.0.5)
+        specifier: 1.26.0
+        version: 1.26.0(@modelcontextprotocol/sdk@1.20.1(supports-color@10.2.2))(bufferutil@4.0.9)(supports-color@10.2.2)(utf-8-validate@6.0.5)
       '@inquirer/prompts':
         specifier: 7.9.0
         version: 7.9.0(@types/node@24.9.1)
@@ -1599,11 +1599,11 @@ packages:
     resolution: {integrity: sha512-6xN0KNO8L/LIA5zu3CJwHkJiB6n65eykBLOb0E+RooiHYgX8CSao6lvQiKT9TBk2gL5g33LL3fmhDodZnt56rw==}
     engines: {node: '>=14'}
 
-  '@google/genai@1.25.0':
-    resolution: {integrity: sha512-IBNyel/umavam98SQUfvQSvh/Rp6Ql2fysQLqPyWZr5K8d768X9AO+JZU4o+3qvFDUBA0dVYUSkxyYonVcICvA==}
+  '@google/genai@1.26.0':
+    resolution: {integrity: sha512-cy5y9RgN4jBK8zr+ePgZd0To1HDpzpjIgSM6aRCZnvYR+JupGtgc1SkkOCCi1MNZho7/MuKKdnQTLhhP8OQNvg==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
-      '@modelcontextprotocol/sdk': ^1.11.4
+      '@modelcontextprotocol/sdk': ^1.20.1
     peerDependenciesMeta:
       '@modelcontextprotocol/sdk':
         optional: true
@@ -1825,11 +1825,11 @@ packages:
   '@jsdevtools/ono@7.1.3':
     resolution: {integrity: sha512-4JQNk+3mVzK3xh2rqd6RB4J46qUR19azEHBneZyTZM+c456qOrbbM/5xcR8huNCCcbVt7+UmizG6GuUvPvKUYg==}
 
-  '@microsoft/api-extractor-model@7.31.1':
-    resolution: {integrity: sha512-Dhnip5OFKbl85rq/ICHBFGhV4RA5UQSl8AC/P/zoGvs+CBudPkatt5kIhMGiYgVPnUWmfR6fcp38+1AFLYNtUw==}
+  '@microsoft/api-extractor-model@7.31.2':
+    resolution: {integrity: sha512-d0WwxwBLZaHokTrOngqHVkQK59NlveV5RE4wEpjaybhSNmEK9N7KPCcT5n8JcpH6k5o6AhxG47g1km2D7BZw8Q==}
 
-  '@microsoft/api-extractor@7.53.1':
-    resolution: {integrity: sha512-bul5eTNxijLdDBqLye74u9494sRmf+9QULtec9Od0uHnifahGeNt8CC4/xCdn7mVyEBrXIQyQ5+sc4Uc0QfBSA==}
+  '@microsoft/api-extractor@7.53.2':
+    resolution: {integrity: sha512-hG3+wJY6aZlkQhGpUbhq1C5F1uJLsmDjrwVea+WT18RbD1XtIGn/c4uyMF7gdXLjLNwErB47hnRk9QNjpEHUWA==}
     hasBin: true
 
   '@microsoft/tsdoc-config@0.17.1':
@@ -2224,8 +2224,8 @@ packages:
   '@protobufjs/utf8@1.1.0':
     resolution: {integrity: sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==}
 
-  '@rushstack/node-core-library@5.17.0':
-    resolution: {integrity: sha512-24vt1GbHN6kyIglRMTVpyEiNRRRJK8uZHc1XoGAhmnTDKnrWet8OmOpImMswJIe6gM78eV8cMg1HXwuUHkSSgg==}
+  '@rushstack/node-core-library@5.17.1':
+    resolution: {integrity: sha512-Mtcsa0aRJgYJOpeTe4qElLTRBlijNohdliq/xOhqce5rlzMIfLr73j9wUuj6GYPZPbG0S+is/RL2l0m/vnL55A==}
     peerDependencies:
       '@types/node': '*'
     peerDependenciesMeta:
@@ -2243,16 +2243,16 @@ packages:
   '@rushstack/rig-package@0.6.0':
     resolution: {integrity: sha512-ZQmfzsLE2+Y91GF15c65L/slMRVhF6Hycq04D4TwtdGaUAbIXXg9c5pKA5KFU7M4QMaihoobp9JJYpYcaY3zOw==}
 
-  '@rushstack/terminal@0.19.1':
-    resolution: {integrity: sha512-jsBuSad67IDVMO2yp0hDfs0OdE4z3mDIjIL2pclDT3aEJboeZXE85e1HjuD0F6JoW3XgHvDwoX+WOV+AVTDQeA==}
+  '@rushstack/terminal@0.19.2':
+    resolution: {integrity: sha512-SJLC+6oUrJ0OOpuuwXxhktCTE3jeYVIwtvREdNhbcnVQrYGaDJpAoBgNVfw+VH0pTPpFLBqoPHsRRz7mj7WlbA==}
     peerDependencies:
       '@types/node': '*'
     peerDependenciesMeta:
       '@types/node':
         optional: true
 
-  '@rushstack/ts-command-line@5.1.1':
-    resolution: {integrity: sha512-HPzFsUcr+wZ3oQI08Ec/E6cuiAVHKzrXZGHhwiwIGygAFiqN5QzX+ff30n70NU2WyE26CykgMwBZZSSyHCJrzA==}
+  '@rushstack/ts-command-line@5.1.2':
+    resolution: {integrity: sha512-jn0EnSefYrkZDrBGd6KGuecL84LI06DgzL4hVQ46AUijNBt2nRU/ST4HhrfII/w91siCd1J/Okvxq/BS75Me/A==}
 
   '@schematics/angular@20.3.6':
     resolution: {integrity: sha512-YPIEyKPBOyJYlda5fA49kMThzZ4WidomEMDghshux8xidbjDaPWBZdyVPQj3IXyW0teGlUM/TH0TH2weumMZrg==}
@@ -3685,8 +3685,8 @@ packages:
     resolution: {integrity: sha512-sTSfBjoXBp89JvIKIefqw7U2CCebsc74kiY6awiGogKtoSGbgjYE/G/+l9sF3MWFPNc9IcoOC4ODfKHfxFmp0g==}
     engines: {node: '>= 0.4'}
 
-  get-tsconfig@4.12.0:
-    resolution: {integrity: sha512-LScr2aNr2FbjAjZh2C6X6BxRx1/x+aTDExct/xyq2XKbYOiG5c0aK7pMsSuyc0brz3ibr/lbQiHD9jzt4lccJw==}
+  get-tsconfig@4.13.0:
+    resolution: {integrity: sha512-1VKTZJCwBrvbd+Wn3AOgQP/2Av+TfTCOlE4AcRJE72W1ksZXbAx8PPBR9RzgTeSPzlPMHrbANMH3LbltH73wxQ==}
 
   get-uri@6.0.5:
     resolution: {integrity: sha512-b1O07XYq8eRuVzBNgJLstU6FYc1tS6wnMtF1I1D9lE8LxZSOGZ7LhxN54yPP6mGw5f2CkXY2BQUL9Fx41qvcIg==}
@@ -7180,7 +7180,7 @@ snapshots:
       '@opentelemetry/semantic-conventions': 1.30.0
       arrify: 2.0.1
       extend: 3.0.2
-      google-auth-library: 9.15.1(encoding@0.1.13)(supports-color@10.2.2)
+      google-auth-library: 9.15.1(encoding@0.1.13)
       google-gax: 4.6.1(encoding@0.1.13)
       heap-js: 2.7.1
       is-stream-ended: 0.1.4
@@ -7234,8 +7234,8 @@ snapshots:
       async-retry: 1.3.3
       duplexify: 4.1.3
       fast-xml-parser: 4.5.3
-      gaxios: 6.7.1(encoding@0.1.13)(supports-color@10.2.2)
-      google-auth-library: 9.15.1(encoding@0.1.13)(supports-color@10.2.2)
+      gaxios: 6.7.1(encoding@0.1.13)
+      google-auth-library: 9.15.1(encoding@0.1.13)
       html-entities: 2.6.0
       mime: 3.0.0
       p-limit: 3.1.0
@@ -7247,15 +7247,14 @@ snapshots:
       - supports-color
     optional: true
 
-  '@google/genai@1.25.0(@modelcontextprotocol/sdk@1.20.1(supports-color@10.2.2))(bufferutil@4.0.9)(encoding@0.1.13)(supports-color@10.2.2)(utf-8-validate@6.0.5)':
+  '@google/genai@1.26.0(@modelcontextprotocol/sdk@1.20.1(supports-color@10.2.2))(bufferutil@4.0.9)(supports-color@10.2.2)(utf-8-validate@6.0.5)':
     dependencies:
-      google-auth-library: 9.15.1(encoding@0.1.13)(supports-color@10.2.2)
+      google-auth-library: 10.4.1(supports-color@10.2.2)
       ws: 8.18.3(bufferutil@4.0.9)(utf-8-validate@6.0.5)
     optionalDependencies:
       '@modelcontextprotocol/sdk': 1.20.1(supports-color@10.2.2)
     transitivePeerDependencies:
       - bufferutil
-      - encoding
       - supports-color
       - utf-8-validate
 
@@ -7478,23 +7477,23 @@ snapshots:
 
   '@jsdevtools/ono@7.1.3': {}
 
-  '@microsoft/api-extractor-model@7.31.1(@types/node@22.18.12)':
+  '@microsoft/api-extractor-model@7.31.2(@types/node@22.18.12)':
     dependencies:
       '@microsoft/tsdoc': 0.15.1
       '@microsoft/tsdoc-config': 0.17.1
-      '@rushstack/node-core-library': 5.17.0(@types/node@22.18.12)
+      '@rushstack/node-core-library': 5.17.1(@types/node@22.18.12)
     transitivePeerDependencies:
       - '@types/node'
 
-  '@microsoft/api-extractor@7.53.1(@types/node@22.18.12)':
+  '@microsoft/api-extractor@7.53.2(@types/node@22.18.12)':
     dependencies:
-      '@microsoft/api-extractor-model': 7.31.1(@types/node@22.18.12)
+      '@microsoft/api-extractor-model': 7.31.2(@types/node@22.18.12)
       '@microsoft/tsdoc': 0.15.1
       '@microsoft/tsdoc-config': 0.17.1
-      '@rushstack/node-core-library': 5.17.0(@types/node@22.18.12)
+      '@rushstack/node-core-library': 5.17.1(@types/node@22.18.12)
       '@rushstack/rig-package': 0.6.0
-      '@rushstack/terminal': 0.19.1(@types/node@22.18.12)
-      '@rushstack/ts-command-line': 5.1.1(@types/node@22.18.12)
+      '@rushstack/terminal': 0.19.2(@types/node@22.18.12)
+      '@rushstack/ts-command-line': 5.1.2(@types/node@22.18.12)
       lodash: 4.17.21
       minimatch: 10.0.3
       resolve: 1.22.10
@@ -7905,7 +7904,7 @@ snapshots:
 
   '@protobufjs/utf8@1.1.0': {}
 
-  '@rushstack/node-core-library@5.17.0(@types/node@22.18.12)':
+  '@rushstack/node-core-library@5.17.1(@types/node@22.18.12)':
     dependencies:
       ajv: 8.13.0
       ajv-draft-04: 1.0.0(ajv@8.13.0)
@@ -7927,17 +7926,17 @@ snapshots:
       resolve: 1.22.10
       strip-json-comments: 3.1.1
 
-  '@rushstack/terminal@0.19.1(@types/node@22.18.12)':
+  '@rushstack/terminal@0.19.2(@types/node@22.18.12)':
     dependencies:
-      '@rushstack/node-core-library': 5.17.0(@types/node@22.18.12)
+      '@rushstack/node-core-library': 5.17.1(@types/node@22.18.12)
       '@rushstack/problem-matcher': 0.1.1(@types/node@22.18.12)
       supports-color: 8.1.1
     optionalDependencies:
       '@types/node': 22.18.12
 
-  '@rushstack/ts-command-line@5.1.1(@types/node@22.18.12)':
+  '@rushstack/ts-command-line@5.1.2(@types/node@22.18.12)':
     dependencies:
-      '@rushstack/terminal': 0.19.1(@types/node@22.18.12)
+      '@rushstack/terminal': 0.19.2(@types/node@22.18.12)
       '@types/argparse': 1.0.38
       argparse: 1.0.10
       string-argv: 0.3.2
@@ -9418,7 +9417,7 @@ snapshots:
       '@types/node': 22.18.12
       farmhash-modern: 1.1.0
       fast-deep-equal: 3.1.3
-      google-auth-library: 9.15.1(encoding@0.1.13)(supports-color@10.2.2)
+      google-auth-library: 9.15.1(encoding@0.1.13)
       jsonwebtoken: 9.0.2
       jwks-rsa: 3.2.0
       node-forge: 1.3.1
@@ -9475,9 +9474,9 @@ snapshots:
       form-data: 4.0.4
       fs-extra: 10.1.0
       fuzzy: 0.1.3
-      gaxios: 6.7.1(encoding@0.1.13)(supports-color@10.2.2)
+      gaxios: 6.7.1(encoding@0.1.13)
       glob: 10.4.5
-      google-auth-library: 9.15.1(encoding@0.1.13)(supports-color@10.2.2)
+      google-auth-library: 9.15.1(encoding@0.1.13)
       ignore: 7.0.5
       js-yaml: 3.14.1
       jsonwebtoken: 9.0.2
@@ -9688,7 +9687,7 @@ snapshots:
 
   fuzzy@0.1.3: {}
 
-  gaxios@6.7.1(encoding@0.1.13)(supports-color@10.2.2):
+  gaxios@6.7.1(encoding@0.1.13):
     dependencies:
       extend: 3.0.2
       https-proxy-agent: 7.0.6(supports-color@10.2.2)
@@ -9707,9 +9706,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  gcp-metadata@6.1.1(encoding@0.1.13)(supports-color@10.2.2):
+  gcp-metadata@6.1.1(encoding@0.1.13):
     dependencies:
-      gaxios: 6.7.1(encoding@0.1.13)(supports-color@10.2.2)
+      gaxios: 6.7.1(encoding@0.1.13)
       google-logging-utils: 0.0.2
       json-bigint: 1.0.0
     transitivePeerDependencies:
@@ -9748,7 +9747,7 @@ snapshots:
       dunder-proto: 1.0.1
       es-object-atoms: 1.1.1
 
-  get-tsconfig@4.12.0:
+  get-tsconfig@4.13.0:
     dependencies:
       resolve-pkg-maps: 1.0.0
 
@@ -9827,13 +9826,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  google-auth-library@9.15.1(encoding@0.1.13)(supports-color@10.2.2):
+  google-auth-library@9.15.1(encoding@0.1.13):
     dependencies:
       base64-js: 1.5.1
       ecdsa-sig-formatter: 1.0.11
-      gaxios: 6.7.1(encoding@0.1.13)(supports-color@10.2.2)
-      gcp-metadata: 6.1.1(encoding@0.1.13)(supports-color@10.2.2)
-      gtoken: 7.1.0(encoding@0.1.13)(supports-color@10.2.2)
+      gaxios: 6.7.1(encoding@0.1.13)
+      gcp-metadata: 6.1.1(encoding@0.1.13)
+      gtoken: 7.1.0(encoding@0.1.13)
       jws: 4.0.0
     transitivePeerDependencies:
       - encoding
@@ -9846,7 +9845,7 @@ snapshots:
       '@types/long': 4.0.2
       abort-controller: 3.0.0
       duplexify: 4.1.3
-      google-auth-library: 9.15.1(encoding@0.1.13)(supports-color@10.2.2)
+      google-auth-library: 9.15.1(encoding@0.1.13)
       node-fetch: 2.7.0(encoding@0.1.13)
       object-hash: 3.0.0
       proto3-json-serializer: 2.0.2
@@ -9904,9 +9903,9 @@ snapshots:
       '@grpc/grpc-js': 1.14.0
       protobufjs: 7.5.4
 
-  gtoken@7.1.0(encoding@0.1.13)(supports-color@10.2.2):
+  gtoken@7.1.0(encoding@0.1.13):
     dependencies:
-      gaxios: 6.7.1(encoding@0.1.13)(supports-color@10.2.2)
+      gaxios: 6.7.1(encoding@0.1.13)
       jws: 4.0.0
     transitivePeerDependencies:
       - encoding
@@ -11963,7 +11962,7 @@ snapshots:
   tsx@4.20.6:
     dependencies:
       esbuild: 0.25.11
-      get-tsconfig: 4.12.0
+      get-tsconfig: 4.13.0
     optionalDependencies:
       fsevents: 2.3.3
 
