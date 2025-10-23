@@ -17,6 +17,7 @@ import {FatalMergeToolError, MergeConflictsFatalError} from '../failures.js';
 import {Prompt} from '../../../utils/prompt.js';
 import {AutosquashMergeStrategy} from './autosquash-merge.js';
 import {Commit, parseCommitMessage} from '../../../commit-message/parse.js';
+import {TEMP_PR_HEAD_BRANCH} from './strategy.js';
 
 /** Type describing the parameters for the Octokit `merge` API endpoint. */
 type OctokitMergeParams = RestEndpointMethodTypes['pulls']['merge']['parameters'];
@@ -153,6 +154,11 @@ export class GithubApiMergeStrategy extends AutosquashMergeStrategy {
         `Unexpected merge status code: ${mergeStatusCode}: ${mergeResponseMessage}`,
       );
     }
+
+    // Workaround for fatal: refusing to fetch into branch 'refs/heads/merge_pr_target_main' checked out at ...
+    // Cannot find where but `merge_pr_target_main` is being set as the current branch.
+    // TODO: remove after finding the root cause.
+    this.git.run(['checkout', TEMP_PR_HEAD_BRANCH]);
 
     // Refresh the target branch the PR has been merged into through the API. We need
     // to re-fetch as otherwise we cannot cherry-pick the new commits into the remaining
