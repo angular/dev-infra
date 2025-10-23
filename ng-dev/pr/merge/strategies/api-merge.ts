@@ -62,7 +62,7 @@ export class GithubApiMergeStrategy extends AutosquashMergeStrategy {
     const commits = await this.getPullRequestCommits(pullRequest);
     const {squashCount, fixupCount, normalCommitsCount} = await this.getCommitsInfo(pullRequest);
     const method = this.getMergeActionFromPullRequest(pullRequest);
-
+    let pullRequestCommitCount = pullRequest.commitCount;
     const mergeOptions: OctokitMergeParams = {
       pull_number: prNumber,
       merge_method: method === 'auto' ? 'rebase' : method,
@@ -90,14 +90,19 @@ export class GithubApiMergeStrategy extends AutosquashMergeStrategy {
       // The commit message from the single normal commit is used.
       if (hasOnlyFixUpForOneCommit) {
         mergeOptions.merge_method = 'squash';
+        pullRequestCommitCount = 1;
+
         const [title, message = ''] = commits[0].message.split(COMMIT_HEADER_SEPARATOR);
 
         mergeOptions.commit_title = title;
         mergeOptions.commit_message = message;
+
         // If the PR has only one normal commit and more than one squash commit, the PR is
         // squashed and the user is prompted to edit the commit message.
       } else if (hasOnlySquashForOneCommit) {
         mergeOptions.merge_method = 'squash';
+        pullRequestCommitCount = 1;
+
         await this._promptCommitMessageEdit(pullRequest, mergeOptions);
       }
     }
@@ -148,6 +153,11 @@ export class GithubApiMergeStrategy extends AutosquashMergeStrategy {
       );
     }
 
+    // Refresh the target branch the PR has been merged into through the API. We need
+    // to re-fetch as otherwise we cannot cherry-pick the new commits into the remaining
+    // target branches. Also, this is needed fo the merge comment to get the correct commit SHA.
+    this.fetchTargetBranches([githubTargetBranch]);
+
     // If the PR does not need to be merged into any other target branches,
     // we exit here as we already completed the merge.
     if (!cherryPickTargetBranches.length) {
@@ -156,18 +166,11 @@ export class GithubApiMergeStrategy extends AutosquashMergeStrategy {
       return;
     }
 
-    // Refresh the target branch the PR has been merged into through the API. We need
-    // to re-fetch as otherwise we cannot cherry-pick the new commits into the remaining
-    // target branches.
-    this.fetchTargetBranches([githubTargetBranch]);
-
-    // Number of commits that have landed in the target branch. This could vary from
-    // the count of commits in the PR due to squashing.
-    const targetCommitsCount = method === 'squash' ? 1 : pullRequest.commitCount;
-
     // Cherry pick the merged commits into the remaining target branches.
     const failedBranches = await this.cherryPickIntoTargetBranches(
-      `${targetSha}~${targetCommitsCount}..${targetSha}`,
+      // Number of commits that have landed in the target branch. This could vary from
+      // the count of commits in the PR due to squashing.
+      `${targetSha}~${pullRequestCommitCount}..${targetSha}`,
       cherryPickTargetBranches,
       {
         // Commits that have been created by the Github API do not necessarily contain
