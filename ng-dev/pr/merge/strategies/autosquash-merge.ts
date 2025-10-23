@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {dirname, join} from 'path';
-import {fileURLToPath} from 'url';
+import {setTimeout as sleep} from 'node:timers/promises';
+import {dirname, join} from 'node:path';
+import {fileURLToPath} from 'node:url';
 import {PullRequest} from '../pull-request.js';
 import {MergeStrategy, TEMP_PR_HEAD_BRANCH} from './strategy.js';
 import {MergeConflictsFatalError} from '../failures.js';
@@ -17,7 +18,7 @@ import {MergeConflictsFatalError} from '../failures.js';
  * all target branches and the PR locally. The PR is then cherry-picked with autosquash
  * enabled into the target branches. The benefit is the support for fixup and squash commits.
  * A notable downside though is that Github does not show the PR as `Merged` due to non
- * fast-forward merges
+ * fast-forward merges.
  */
 export class AutosquashMergeStrategy extends MergeStrategy {
   /**
@@ -83,34 +84,11 @@ export class AutosquashMergeStrategy extends MergeStrategy {
     // Push the cherry picked branches upstream.
     this.pushTargetBranchesUpstream(targetBranches);
 
-    /** The local branch names of the github targeted branches. */
-    const banchesAndSha: [branchName: string, commitSha: string][] = targetBranches.map(
-      (targetBranch) => {
-        const localBranch = this.getLocalTargetBranchName(targetBranch);
-
-        /** The SHA of the commit pushed to github which represents closing the PR. */
-        const sha = this.git.run(['rev-parse', localBranch]).stdout.trim();
-        return [targetBranch, sha];
-      },
-    );
-
     // Allow user to set an amount of time to wait to account for rate limiting of the token usage
     // during merge otherwise just waits 0 seconds.
-    await new Promise((resolve) =>
-      setTimeout(resolve, parseInt(process.env['AUTOSQUASH_TIMEOUT'] || '0')),
-    );
-    // Github automatically closes PRs whose commits are merged into the main branch on Github.
-    // However, it does not note them as merged using the purple merge badge as occurs when done via
-    // the UI. To inform users that the PR was in fact merged, add a comment expressing the fact
-    // that the PR is merged and what branches the changes were merged into.
-    await this.git.github.issues.createComment({
-      ...this.git.remoteParams,
-      issue_number: pullRequest.prNumber,
-      body:
-        'This PR was merged into the repository. ' +
-        'The changes were merged into the following branches:\n\n' +
-        `${banchesAndSha.map(([branch, sha]) => `- ${branch}: ${sha}`).join('\n')}`,
-    });
+    await sleep(parseInt(process.env['AUTOSQUASH_TIMEOUT'] || '0'));
+
+    await this.createMergeComment(pullRequest, targetBranches);
 
     // For PRs which do not target the `main` branch on Github, Github does not automatically
     // close the PR when its commit is pushed into the repository. To ensure these PRs are
