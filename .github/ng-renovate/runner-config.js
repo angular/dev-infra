@@ -11,7 +11,7 @@ module.exports = {
   forkModeDisallowMaintainerEdits: true,
   onboarding: false,
   persistRepoData: true,
-  allowedPostUpgradeCommands: ['.', '^pnpm install$', '^pnpm update-generated-files$'],
+  allowedCommands: ['.'],
   hostRules: [
     {
       matchHost: 'api.github.com',
