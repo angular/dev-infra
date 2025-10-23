@@ -63,7 +63,6 @@ export class GithubApiMergeStrategy extends AutosquashMergeStrategy {
     const commits = await this.getPullRequestCommits(pullRequest);
     const {squashCount, fixupCount, normalCommitsCount} = await this.getCommitsInfo(pullRequest);
     const method = this.getMergeActionFromPullRequest(pullRequest);
-    let pullRequestCommitCount = pullRequest.commitCount;
     const mergeOptions: OctokitMergeParams = {
       pull_number: prNumber,
       merge_method: method === 'auto' ? 'rebase' : method,
@@ -91,7 +90,6 @@ export class GithubApiMergeStrategy extends AutosquashMergeStrategy {
       // The commit message from the single normal commit is used.
       if (hasOnlyFixUpForOneCommit) {
         mergeOptions.merge_method = 'squash';
-        pullRequestCommitCount = 1;
 
         // The first commit is the correct one, whatever follows are fixups.
         const [title, message = ''] = commits[0].message.split(COMMIT_HEADER_SEPARATOR);
@@ -103,7 +101,6 @@ export class GithubApiMergeStrategy extends AutosquashMergeStrategy {
         // squashed and the user is prompted to edit the commit message.
       } else if (hasOnlySquashForOneCommit) {
         mergeOptions.merge_method = 'squash';
-        pullRequestCommitCount = 1;
 
         await this._promptCommitMessageEdit(pullRequest, mergeOptions);
       }
@@ -172,6 +169,10 @@ export class GithubApiMergeStrategy extends AutosquashMergeStrategy {
 
       return;
     }
+
+    // Merge and Squash will merge the PR with a single commit.
+    const pullRequestCommitCount =
+      mergeOptions.merge_method === 'rebase' ? pullRequest.commitCount : 1;
 
     // Cherry pick the merged commits into the remaining target branches.
     const failedBranches = await this.cherryPickIntoTargetBranches(
