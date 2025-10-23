@@ -1,7 +1,7 @@
 {
   "name": "@devinfra/bazel",
   "dependencies": {
-    "@microsoft/api-extractor": "7.53.1",
+    "@microsoft/api-extractor": "7.53.2",
     "@types/babel__core": "7.20.5",
     "@types/browser-sync": "2.29.0",
     "@types/node": "22.18.12",
@@ -12,7 +12,7 @@
     "@types/yargs": "17.0.33",
     "browser-sync": "3.0.4",
     "chalk": "5.6.2",
-    "get-tsconfig": "4.12.0",
+    "get-tsconfig": "4.13.0",
     "piscina": "^5.0.0",
     "send": "1.2.0",
     "true-case-path": "2.2.1",
