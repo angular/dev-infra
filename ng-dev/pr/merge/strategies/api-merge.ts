@@ -92,6 +92,7 @@ export class GithubApiMergeStrategy extends AutosquashMergeStrategy {
         mergeOptions.merge_method = 'squash';
         pullRequestCommitCount = 1;
 
+        // The first commit is the correct one, whatever follows are fixups.
         const [title, message = ''] = commits[0].message.split(COMMIT_HEADER_SEPARATOR);
 
         mergeOptions.commit_title = title;
