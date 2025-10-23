@@ -90,7 +90,7 @@ export class GithubApiMergeStrategy extends AutosquashMergeStrategy {
       // The commit message from the single normal commit is used.
       if (hasOnlyFixUpForOneCommit) {
         mergeOptions.merge_method = 'squash';
-        const [title, message] = commits[0].message.split(COMMIT_HEADER_SEPARATOR);
+        const [title, message = ''] = commits[0].message.split(COMMIT_HEADER_SEPARATOR);
 
         mergeOptions.commit_title = title;
         mergeOptions.commit_message = message;
