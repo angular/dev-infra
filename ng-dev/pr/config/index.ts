@@ -8,14 +8,14 @@
 
 import {ConfigValidationError, GithubConfig, NgDevConfig} from '../../utils/config.js';
 
-// TODO(alanagius): remove `rebase-with-fixup` and replace it's logic with `rebase`.
-// This is just temporary to allow testing in the dev-infra repo. Without breaking workflows in other repos.
-
 /**
  * Possible merge methods supported by the Github API.
  * https://developer.github.com/v3/pulls/#merge-a-pull-request-merge-button.
+ *
+ * `auto` is a pseudo merge method that is not supported by the Github API. It allows
+ * the merge strategy to automatically determine the merge method based on the pull request.
  */
-export type GithubApiMergeMethod = 'merge' | 'squash' | 'rebase' | 'rebase-with-fixup';
+export type GithubApiMergeMethod = 'merge' | 'squash' | 'rebase' | 'auto';
 
 /** Configuration for the Github API merge strategy. */
 export interface GithubApiMergeStrategyConfig {

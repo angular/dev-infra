@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Commit, parseCommitMessage} from '../../../commit-message/parse.js';
 import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client.js';
 import {
   FatalMergeToolError,
@@ -202,21 +201,29 @@ export abstract class MergeStrategy {
     }
   }
 
-  /** Gets all commit messages of commits in the pull request. */
-  protected async getPullRequestCommits({prNumber}: PullRequest): Promise<
-    {
-      message: string;
-      parsed: Commit;
-    }[]
-  > {
-    const allCommits = await this.git.github.paginate(this.git.github.pulls.listCommits, {
-      ...this.git.remoteParams,
-      pull_number: prNumber,
-    });
+  /** Creates a comment on the pull request to indicate that the PR has been merged. */
+  protected async createMergeComment(
+    pullRequest: PullRequest,
+    targetBranches: string[],
+  ): Promise<void> {
+    /** The local branch names of the github targeted branches. */
+    const banchesAndSha: [branchName: string, commitSha: string][] = targetBranches.map(
+      (targetBranch) => {
+        const localBranch = this.getLocalTargetBranchName(targetBranch);
 
-    return allCommits.map(({commit: {message}}) => ({
-      message,
-      parsed: parseCommitMessage(message),
-    }));
+        /** The SHA of the commit pushed to github which represents closing the PR. */
+        const sha = this.git.run(['rev-parse', localBranch]).stdout.trim();
+        return [targetBranch, sha];
+      },
+    );
+
+    await this.git.github.issues.createComment({
+      ...this.git.remoteParams,
+      issue_number: pullRequest.prNumber,
+      body:
+        'This PR was merged into the repository. ' +
+        'The changes were merged into the following branches:\n\n' +
+        `${banchesAndSha.map(([branch, sha]) => `- ${branch}: ${sha}`).join('\n')}`,
+    });
   }
 }

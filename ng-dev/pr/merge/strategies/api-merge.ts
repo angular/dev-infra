@@ -16,6 +16,8 @@ import {isGithubApiError} from '../../../utils/git/github.js';
 import {FatalMergeToolError, MergeConflictsFatalError} from '../failures.js';
 import {Prompt} from '../../../utils/prompt.js';
 import {AutosquashMergeStrategy} from './autosquash-merge.js';
+import {Commit, parseCommitMessage} from '../../../commit-message/parse.js';
+import {TEMP_PR_HEAD_BRANCH} from './strategy.js';
 
 /** Type describing the parameters for the Octokit `merge` API endpoint. */
 type OctokitMergeParams = RestEndpointMethodTypes['pulls']['merge']['parameters'];
@@ -23,12 +25,21 @@ type OctokitMergeParams = RestEndpointMethodTypes['pulls']['merge']['parameters'
 /** Separator between commit message header and body. */
 const COMMIT_HEADER_SEPARATOR = '\n\n';
 
+/** Interface describing a pull request commit. */
+interface PullRequestCommit {
+  message: string;
+  parsed: Commit;
+}
+
 /**
  * Merge strategy that primarily leverages the Github API. The strategy merges a given
  * pull request into a target branch using the API. This ensures that Github displays
  * the pull request as merged. The merged commits are then cherry-picked into the remaining
  * target branches using the local Git instance. The benefit is that the Github merged state
- * is properly set, but a notable downside is that PRs cannot use fixup or squash commits.
+ * is properly set.
+ *
+ * A notable downside is that fixup or squash commits are not supported when `auto` merge
+ * method is not used, as the Github API does not support this.
  */
 export class GithubApiMergeStrategy extends AutosquashMergeStrategy {
   constructor(
@@ -48,22 +59,55 @@ export class GithubApiMergeStrategy extends AutosquashMergeStrategy {
    */
   override async merge(pullRequest: PullRequest): Promise<void> {
     const {githubTargetBranch, prNumber, needsCommitMessageFixup, targetBranches} = pullRequest;
-    const method = this.getMergeActionFromPullRequest(pullRequest);
     const cherryPickTargetBranches = targetBranches.filter((b) => b !== githubTargetBranch);
-
-    // Squash and Merge will create a single commit message and thus we can use the API to merge.
-    if (
-      method === 'rebase-with-fixup' &&
-      (pullRequest.needsCommitMessageFixup || (await this.hasFixupOrSquashCommits(pullRequest)))
-    ) {
-      return super.merge(pullRequest);
-    }
-
+    const commits = await this.getPullRequestCommits(pullRequest);
+    const {squashCount, fixupCount, normalCommitsCount} = await this.getCommitsInfo(pullRequest);
+    const method = this.getMergeActionFromPullRequest(pullRequest);
+    let pullRequestCommitCount = pullRequest.commitCount;
     const mergeOptions: OctokitMergeParams = {
       pull_number: prNumber,
-      merge_method: method === 'rebase-with-fixup' ? 'rebase' : method,
+      merge_method: method === 'auto' ? 'rebase' : method,
       ...this.git.remoteParams,
     };
+
+    // When the merge method is `auto`, the merge strategy will determine the best merge method
+    // based on the pull request's commits.
+    if (method === 'auto') {
+      const hasFixUpOrSquashAndMultipleCommits =
+        normalCommitsCount > 1 && (fixupCount > 0 || squashCount > 0);
+
+      // If the PR has fixup/squash commits against multiple normal commits, or if the
+      // commit message needs to be fixed up, delegate to the autosquash merge strategy.
+      if (needsCommitMessageFixup || hasFixUpOrSquashAndMultipleCommits) {
+        return super.merge(pullRequest);
+      }
+
+      const hasOnlyFixUpForOneCommit =
+        normalCommitsCount === 1 && fixupCount > 0 && squashCount === 0;
+
+      const hasOnlySquashForOneCommit = normalCommitsCount === 1 && squashCount > 1;
+
+      // If the PR has only one normal commit and some fixup commits, the PR is squashed.
+      // The commit message from the single normal commit is used.
+      if (hasOnlyFixUpForOneCommit) {
+        mergeOptions.merge_method = 'squash';
+        pullRequestCommitCount = 1;
+
+        // The first commit is the correct one, whatever follows are fixups.
+        const [title, message = ''] = commits[0].message.split(COMMIT_HEADER_SEPARATOR);
+
+        mergeOptions.commit_title = title;
+        mergeOptions.commit_message = message;
+
+        // If the PR has only one normal commit and more than one squash commit, the PR is
+        // squashed and the user is prompted to edit the commit message.
+      } else if (hasOnlySquashForOneCommit) {
+        mergeOptions.merge_method = 'squash';
+        pullRequestCommitCount = 1;
+
+        await this._promptCommitMessageEdit(pullRequest, mergeOptions);
+      }
+    }
 
     if (needsCommitMessageFixup) {
       // Commit message fixup does not work with other merge methods as the Github API only
@@ -74,6 +118,7 @@ export class GithubApiMergeStrategy extends AutosquashMergeStrategy {
             `modified if the PR is merged using squash.`,
         );
       }
+
       await this._promptCommitMessageEdit(pullRequest, mergeOptions);
     }
 
@@ -110,24 +155,29 @@ export class GithubApiMergeStrategy extends AutosquashMergeStrategy {
       );
     }
 
-    // If the PR does not need to be merged into any other target branches,
-    // we exit here as we already completed the merge.
-    if (!cherryPickTargetBranches.length) {
-      return;
-    }
+    // Workaround for fatal: refusing to fetch into branch 'refs/heads/merge_pr_target_main' checked out at ...
+    // Cannot find where but `merge_pr_target_main` is being set as the current branch.
+    // TODO: remove after finding the root cause.
+    this.git.run(['checkout', TEMP_PR_HEAD_BRANCH]);
 
     // Refresh the target branch the PR has been merged into through the API. We need
     // to re-fetch as otherwise we cannot cherry-pick the new commits into the remaining
-    // target branches.
+    // target branches. Also, this is needed fo the merge comment to get the correct commit SHA.
     this.fetchTargetBranches([githubTargetBranch]);
 
-    // Number of commits that have landed in the target branch. This could vary from
-    // the count of commits in the PR due to squashing.
-    const targetCommitsCount = method === 'squash' ? 1 : pullRequest.commitCount;
+    // If the PR does not need to be merged into any other target branches,
+    // we exit here as we already completed the merge.
+    if (!cherryPickTargetBranches.length) {
+      await this.createMergeComment(pullRequest, targetBranches);
+
+      return;
+    }
 
     // Cherry pick the merged commits into the remaining target branches.
     const failedBranches = await this.cherryPickIntoTargetBranches(
-      `${targetSha}~${targetCommitsCount}..${targetSha}`,
+      // Number of commits that have landed in the target branch. This could vary from
+      // the count of commits in the PR due to squashing.
+      `${targetSha}~${pullRequestCommitCount}..${targetSha}`,
       cherryPickTargetBranches,
       {
         // Commits that have been created by the Github API do not necessarily contain
@@ -146,27 +196,7 @@ export class GithubApiMergeStrategy extends AutosquashMergeStrategy {
     }
 
     this.pushTargetBranchesUpstream(cherryPickTargetBranches);
-
-    /** The local branch names of the github targeted branches. */
-    const banchesAndSha: [branchName: string, commitSha: string][] = targetBranches.map(
-      (targetBranch) => {
-        const localBranch = this.getLocalTargetBranchName(targetBranch);
-
-        /** The SHA of the commit pushed to github which represents closing the PR. */
-        const sha = this.git.run(['rev-parse', localBranch]).stdout.trim();
-        return [targetBranch, sha];
-      },
-    );
-    // Because our process brings changes into multiple branchces, we include a comment which
-    // expresses all of the branches the changes were merged into.
-    await this.git.github.issues.createComment({
-      ...this.git.remoteParams,
-      issue_number: pullRequest.prNumber,
-      body:
-        'This PR was merged into the repository. ' +
-        'The changes were merged into the following branches:\n\n' +
-        `${banchesAndSha.map(([branch, sha]) => `- ${branch}: ${sha}`).join('\n')}`,
-    });
+    await this.createMergeComment(pullRequest, targetBranches);
   }
 
   /**
@@ -178,7 +208,7 @@ export class GithubApiMergeStrategy extends AutosquashMergeStrategy {
     pullRequest: PullRequest,
     mergeOptions: OctokitMergeParams,
   ) {
-    const commitMessage = await this._getDefaultSquashCommitMessage(pullRequest);
+    const commitMessage = await this.getDefaultSquashCommitMessage(pullRequest);
     const result = await Prompt.editor({
       message: 'Please update the commit message',
       default: commitMessage,
@@ -198,7 +228,7 @@ export class GithubApiMergeStrategy extends AutosquashMergeStrategy {
    * multiple commit messages if a PR is merged in squash mode. We try to replicate this
    * behavior here so that we have a default commit message that can be fixed up.
    */
-  private async _getDefaultSquashCommitMessage(pullRequest: PullRequest): Promise<string> {
+  private async getDefaultSquashCommitMessage(pullRequest: PullRequest): Promise<string> {
     const commits = await this.getPullRequestCommits(pullRequest);
     const messageBase = `${pullRequest.title}${COMMIT_HEADER_SEPARATOR}`;
     if (commits.length <= 1) {
@@ -219,10 +249,60 @@ export class GithubApiMergeStrategy extends AutosquashMergeStrategy {
     return this.config.default;
   }
 
-  /** Checks whether the pull request contains fixup or squash commits. */
-  private async hasFixupOrSquashCommits(pullRequest: PullRequest): Promise<boolean> {
+  /** Returns information about the commits in the pull request. */
+  private async getCommitsInfo(pullRequest: PullRequest): Promise<
+    Readonly<{
+      fixupCount: number;
+      squashCount: number;
+      normalCommitsCount: number;
+    }>
+  > {
     const commits = await this.getPullRequestCommits(pullRequest);
+    const commitsInfo = {
+      fixupCount: 0,
+      squashCount: 0,
+      normalCommitsCount: 1,
+    };
 
-    return commits.some(({parsed: {isFixup, isSquash}}) => isFixup || isSquash);
+    if (commits.length === 1) {
+      return commitsInfo;
+    }
+
+    for (let index = 1; index < commits.length; index++) {
+      const {
+        parsed: {isFixup, isSquash},
+      } = commits[index];
+
+      if (isFixup) {
+        commitsInfo.fixupCount++;
+      } else if (isSquash) {
+        commitsInfo.squashCount++;
+      } else {
+        commitsInfo.normalCommitsCount++;
+      }
+    }
+
+    return commitsInfo;
+  }
+
+  /** Commits of the pull request. */
+  private commits: PullRequestCommit[] | undefined;
+  /** Gets all commit messages of commits in the pull request. */
+  protected async getPullRequestCommits({prNumber}: PullRequest): Promise<PullRequestCommit[]> {
+    if (this.commits) {
+      return this.commits;
+    }
+
+    const allCommits = await this.git.github.paginate(this.git.github.pulls.listCommits, {
+      ...this.git.remoteParams,
+      pull_number: prNumber,
+    });
+
+    this.commits = allCommits.map(({commit: {message}}) => ({
+      message,
+      parsed: parseCommitMessage(message),
+    }));
+
+    return this.commits;
   }
 }

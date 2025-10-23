@@ -3,7 +3,7 @@ import {PullRequestConfig} from '../ng-dev/pr/config/index.js';
 /** Configuration for interacting with pull requests in the repo. */
 export const pullRequest: PullRequestConfig = {
   githubApiMerge: {
-    default: 'rebase-with-fixup',
+    default: 'auto',
     labels: [{pattern: 'merge: squash commits', method: 'squash'}],
   },
   requiredStatuses: [{name: 'test', type: 'check'}],
