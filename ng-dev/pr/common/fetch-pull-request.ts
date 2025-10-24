@@ -13,6 +13,7 @@ import {
   PullRequestState,
   StatusState,
   CommentAuthorAssociation,
+  IssueState,
 } from '@octokit/graphql-schema';
 import {getPendingPrs, getPr, getPrFiles, getPrComments} from '../../utils/github.js';
 import {alias, types as graphqlTypes, onUnion, optional, params} from 'typed-graphqlify';
@@ -133,6 +134,17 @@ export const PR_SCHEMA = {
   author: {
     login: graphqlTypes.string,
   },
+  closingIssuesReferences: params(
+    {first: 100},
+    {
+      nodes: [
+        {
+          number: graphqlTypes.number,
+          state: graphqlTypes.custom<IssueState>(),
+        },
+      ],
+    },
+  ),
 };
 
 export type PullRequestFromGithub = typeof PR_SCHEMA;
