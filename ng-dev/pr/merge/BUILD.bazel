@@ -21,6 +21,7 @@ ts_project(
         "//ng-dev:__subpackages__",
     ],
     deps = [
+        "//ng-dev:node_modules/@octokit/graphql-schema",
         "//ng-dev:node_modules/@octokit/plugin-rest-endpoint-methods",
         "//ng-dev:node_modules/@octokit/rest",
         "//ng-dev:node_modules/@types/node",

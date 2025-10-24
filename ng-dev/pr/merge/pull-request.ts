@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {IssueState} from '@octokit/graphql-schema';
 import {
   getTargetBranchesAndLabelForPullRequest,
   PullRequestTarget,
@@ -21,7 +22,6 @@ import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.j
 import {GithubConfig, NgDevConfig} from '../../utils/config.js';
 import {PullRequestConfig, PullRequestValidationConfig} from '../config/index.js';
 import {targetLabels} from '../common/labels/target.js';
-import {IssueState} from '@octokit/graphql-schema';
 
 /** Interface describing a pull request's closing issue references. */
 export interface PullRequestClosingIssuesReferences {
