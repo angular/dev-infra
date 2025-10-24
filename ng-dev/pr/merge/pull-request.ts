@@ -18,9 +18,16 @@ import {TEMP_PR_HEAD_BRANCH} from './strategies/strategy.js';
 import {mergeLabels} from '../common/labels/merge.js';
 import {PullRequestValidationFailure} from '../common/validation/validation-failure.js';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
-import {GithubConfig, NgDevConfig, CaretakerConfig, GoogleSyncConfig} from '../../utils/config.js';
+import {GithubConfig, NgDevConfig} from '../../utils/config.js';
 import {PullRequestConfig, PullRequestValidationConfig} from '../config/index.js';
 import {targetLabels} from '../common/labels/target.js';
+import {IssueState} from '@octokit/graphql-schema';
+
+/** Interface describing a pull request's closing issue references. */
+export interface PullRequestClosingIssuesReferences {
+  number: number;
+  state: IssueState;
+}
 
 /** Interface that describes a pull request. */
 export interface PullRequest {
@@ -52,6 +59,8 @@ export interface PullRequest {
   validationFailures: PullRequestValidationFailure[];
   /** The SHA for the latest commit in the pull request. */
   headSha: string;
+  /** A list of issues that will be closed by the pull request. */
+  closingIssuesReferences: PullRequestClosingIssuesReferences[];
 }
 
 /**
@@ -155,5 +164,6 @@ export async function loadAndValidatePullRequest(
     title: prData.title,
     commitCount: prData.commits.totalCount,
     headSha: prData.headRefOid,
+    closingIssuesReferences: prData.closingIssuesReferences.nodes,
   };
 }

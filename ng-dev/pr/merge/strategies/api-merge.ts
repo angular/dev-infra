@@ -152,6 +152,13 @@ export class GithubApiMergeStrategy extends AutosquashMergeStrategy {
       );
     }
 
+    // When a pull request is merged, GitHub automatically closes any linked issues.
+    // This is not the case when the pull request is not merged into the main branch.
+    // This is why we need to manually close the linked issues.
+    if (githubTargetBranch !== this.git.mainBranchName) {
+      await this.closeLinkedIssues(pullRequest);
+    }
+
     // Workaround for fatal: refusing to fetch into branch 'refs/heads/merge_pr_target_main' checked out at ...
     // Cannot find where but `merge_pr_target_main` is being set as the current branch.
     // TODO: remove after finding the root cause.
