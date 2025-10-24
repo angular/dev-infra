@@ -6,7 +6,7 @@
   automerge: false,
 
   // Schedule Renovate to run during off-peak hours
-  schedule: ['after 6am on Monday, Wednesday, Friday', 'before 10am on Monday, Wednesday, Friday'],
+  schedule: ['after 6am and before 10am on Monday, Wednesday, Friday'],
 
   prConcurrentLimit: 8,
   prHourlyLimit: 4,
@@ -21,7 +21,7 @@
 
   lockFileMaintenance: {
     enabled: true,
-    schedule: ['after 5am on Tuesday', 'before 7am on Tuesday'],
+    schedule: ['after 5am and before 7am on Tuesday'],
   },
 
   // Feature disabled: permission to enable vulnerability alerts is not granted
@@ -148,7 +148,7 @@
         'quicktype-core',
         'renovate',
       ],
-      schedule: ['after 6am on Wednesday', 'before 10am on Wednesday'],
+      schedule: ['after 6am and before 10am on Wednesday'],
     },
 
     // ============================================================================
