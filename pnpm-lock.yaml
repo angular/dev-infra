@@ -20,8 +20,8 @@ importers:
         specifier: 8.2.1
         version: 8.2.1
       firebase-tools:
-        specifier: 14.21.0
-        version: 14.21.0(@types/node@24.9.1)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3)
+        specifier: 14.22.0
+        version: 14.22.0(@types/node@24.9.1)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3)
       husky:
         specifier: 9.1.7
         version: 9.1.7
@@ -138,7 +138,7 @@ importers:
         version: 21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1)
       '@angular/fire':
         specifier: 20.0.1
-        version: 20.0.1(@angular/common@21.0.0-next.9(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.0.0-next.9(@angular/animations@21.0.0-next.9(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@21.0.0-next.9(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1)))(chokidar@4.0.3)(firebase-tools@14.21.0(@types/node@24.9.1)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3))(rxjs@7.8.2)
+        version: 20.0.1(@angular/common@21.0.0-next.9(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.0.0-next.9(@angular/animations@21.0.0-next.9(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@21.0.0-next.9(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1)))(chokidar@4.0.3)(firebase-tools@14.22.0(@types/node@24.9.1)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3))(rxjs@7.8.2)
       '@angular/forms':
         specifier: 21.0.0-next.9
         version: 21.0.0-next.9(@angular/common@21.0.0-next.9(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.0.0-next.9(@angular/animations@21.0.0-next.9(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@21.0.0-next.9(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1)))(@standard-schema/spec@1.0.0)(rxjs@7.8.2)
@@ -185,20 +185,20 @@ importers:
         specifier: 6.6.0
         version: 6.6.0(firebase-admin@13.5.0(encoding@0.1.13))
       firebase-tools:
-        specifier: 14.21.0
-        version: 14.21.0(@types/node@24.9.1)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3)
+        specifier: 14.22.0
+        version: 14.22.0(@types/node@24.9.1)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3)
 
   bazel:
     dependencies:
       '@microsoft/api-extractor':
-        specifier: 7.53.2
-        version: 7.53.2(@types/node@22.18.12)
+        specifier: 7.53.3
+        version: 7.53.3(@types/node@22.18.12)
       '@types/babel__core':
         specifier: 7.20.5
         version: 7.20.5
       '@types/browser-sync':
-        specifier: 2.29.0
-        version: 2.29.0
+        specifier: 2.29.1
+        version: 2.29.1
       '@types/node':
         specifier: 22.18.12
         version: 22.18.12
@@ -206,8 +206,8 @@ importers:
         specifier: ^4.1.28
         version: 4.35.1
       '@types/send':
-        specifier: 1.2.0
-        version: 1.2.0
+        specifier: 1.2.1
+        version: 1.2.1
       '@types/source-map-support':
         specifier: 0.5.10
         version: 0.5.10
@@ -215,8 +215,8 @@ importers:
         specifier: ^5.3.4
         version: 5.3.4
       '@types/yargs':
-        specifier: 17.0.33
-        version: 17.0.33
+        specifier: 17.0.34
+        version: 17.0.34
       browser-sync:
         specifier: 3.0.4
         version: 3.0.4(bufferutil@4.0.9)(utf-8-validate@6.0.5)
@@ -233,8 +233,8 @@ importers:
         specifier: 7.0.0
         version: 7.0.0
       selenium-webdriver:
-        specifier: 4.37.0
-        version: 4.37.0(bufferutil@4.0.9)(utf-8-validate@6.0.5)
+        specifier: 4.38.0
+        version: 4.38.0(bufferutil@4.0.9)(utf-8-validate@6.0.5)
       semver:
         specifier: 7.7.3
         version: 7.7.3
@@ -545,8 +545,8 @@ importers:
         specifier: 8.0.0
         version: 8.0.0(supports-color@10.2.2)
       '@google/genai':
-        specifier: 1.26.0
-        version: 1.26.0(@modelcontextprotocol/sdk@1.20.1(supports-color@10.2.2))(bufferutil@4.0.9)(supports-color@10.2.2)(utf-8-validate@6.0.5)
+        specifier: 1.27.0
+        version: 1.27.0(@modelcontextprotocol/sdk@1.20.1(supports-color@10.2.2))(bufferutil@4.0.9)(supports-color@10.2.2)(utf-8-validate@6.0.5)
       '@inquirer/prompts':
         specifier: 7.9.0
         version: 7.9.0(@types/node@24.9.1)
@@ -599,8 +599,8 @@ importers:
         specifier: 4.0.4
         version: 4.0.4
       '@types/git-raw-commits':
-        specifier: 5.0.0
-        version: 5.0.0
+        specifier: 5.0.1
+        version: 5.0.1
       '@types/jasmine':
         specifier: 5.1.12
         version: 5.1.12
@@ -614,8 +614,8 @@ importers:
         specifier: 3.0.4
         version: 3.0.4
       '@types/yargs':
-        specifier: 17.0.33
-        version: 17.0.33
+        specifier: 17.0.34
+        version: 17.0.34
       '@types/yarnpkg__lockfile':
         specifier: 1.1.9
         version: 1.1.9
@@ -1599,8 +1599,8 @@ packages:
     resolution: {integrity: sha512-6xN0KNO8L/LIA5zu3CJwHkJiB6n65eykBLOb0E+RooiHYgX8CSao6lvQiKT9TBk2gL5g33LL3fmhDodZnt56rw==}
     engines: {node: '>=14'}
 
-  '@google/genai@1.26.0':
-    resolution: {integrity: sha512-cy5y9RgN4jBK8zr+ePgZd0To1HDpzpjIgSM6aRCZnvYR+JupGtgc1SkkOCCi1MNZho7/MuKKdnQTLhhP8OQNvg==}
+  '@google/genai@1.27.0':
+    resolution: {integrity: sha512-sveeQqwyzO/U5kOjo3EflF1rf7v0ZGprrjPGmeT6V5u22IUTcA4wBFxW+q1n7hOX0M1iWR3944MImoNPOM+zsA==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       '@modelcontextprotocol/sdk': ^1.20.1
@@ -1825,11 +1825,11 @@ packages:
   '@jsdevtools/ono@7.1.3':
     resolution: {integrity: sha512-4JQNk+3mVzK3xh2rqd6RB4J46qUR19azEHBneZyTZM+c456qOrbbM/5xcR8huNCCcbVt7+UmizG6GuUvPvKUYg==}
 
-  '@microsoft/api-extractor-model@7.31.2':
-    resolution: {integrity: sha512-d0WwxwBLZaHokTrOngqHVkQK59NlveV5RE4wEpjaybhSNmEK9N7KPCcT5n8JcpH6k5o6AhxG47g1km2D7BZw8Q==}
+  '@microsoft/api-extractor-model@7.31.3':
+    resolution: {integrity: sha512-dv4quQI46p0U03TCEpasUf6JrJL3qjMN7JUAobsPElxBv4xayYYvWW9aPpfYV+Jx6hqUcVaLVOeV7+5hxsyoFQ==}
 
-  '@microsoft/api-extractor@7.53.2':
-    resolution: {integrity: sha512-hG3+wJY6aZlkQhGpUbhq1C5F1uJLsmDjrwVea+WT18RbD1XtIGn/c4uyMF7gdXLjLNwErB47hnRk9QNjpEHUWA==}
+  '@microsoft/api-extractor@7.53.3':
+    resolution: {integrity: sha512-p2HmQaMSVqMBj3bH3643f8xApKAqrF1jNpPsMCTQOYCYgfwLnvzsve8c+bgBWzCOBBgLK54PB6ZLIWMGLg8CZA==}
     hasBin: true
 
   '@microsoft/tsdoc-config@0.17.1':
@@ -2212,8 +2212,8 @@ packages:
   '@protobufjs/utf8@1.1.0':
     resolution: {integrity: sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==}
 
-  '@rushstack/node-core-library@5.17.1':
-    resolution: {integrity: sha512-Mtcsa0aRJgYJOpeTe4qElLTRBlijNohdliq/xOhqce5rlzMIfLr73j9wUuj6GYPZPbG0S+is/RL2l0m/vnL55A==}
+  '@rushstack/node-core-library@5.18.0':
+    resolution: {integrity: sha512-XDebtBdw5S3SuZIt+Ra2NieT8kQ3D2Ow1HxhDQ/2soinswnOu9e7S69VSwTOLlQnx5mpWbONu+5JJjDxMAb6Fw==}
     peerDependencies:
       '@types/node': '*'
     peerDependenciesMeta:
@@ -2231,16 +2231,16 @@ packages:
   '@rushstack/rig-package@0.6.0':
     resolution: {integrity: sha512-ZQmfzsLE2+Y91GF15c65L/slMRVhF6Hycq04D4TwtdGaUAbIXXg9c5pKA5KFU7M4QMaihoobp9JJYpYcaY3zOw==}
 
-  '@rushstack/terminal@0.19.2':
-    resolution: {integrity: sha512-SJLC+6oUrJ0OOpuuwXxhktCTE3jeYVIwtvREdNhbcnVQrYGaDJpAoBgNVfw+VH0pTPpFLBqoPHsRRz7mj7WlbA==}
+  '@rushstack/terminal@0.19.3':
+    resolution: {integrity: sha512-0P8G18gK9STyO+CNBvkKPnWGMxESxecTYqOcikHOVIHXa9uAuTK+Fw8TJq2Gng1w7W6wTC9uPX6hGNvrMll2wA==}
     peerDependencies:
       '@types/node': '*'
     peerDependenciesMeta:
       '@types/node':
         optional: true
 
-  '@rushstack/ts-command-line@5.1.2':
-    resolution: {integrity: sha512-jn0EnSefYrkZDrBGd6KGuecL84LI06DgzL4hVQ46AUijNBt2nRU/ST4HhrfII/w91siCd1J/Okvxq/BS75Me/A==}
+  '@rushstack/ts-command-line@5.1.3':
+    resolution: {integrity: sha512-Kdv0k/BnnxIYFlMVC1IxrIS0oGQd4T4b7vKfx52Y2+wk2WZSDFIvedr7JrhenzSlm3ou5KwtoTGTGd5nbODRug==}
 
   '@schematics/angular@20.3.7':
     resolution: {integrity: sha512-jR2LPJVGK6yzPTNXkGJZYtdeLGkNdqJhVow2E+ILt3pk/LZuT/iSdr9V4nArU9yysifGuJFTyZapVOYkEYaykg==}
@@ -2299,8 +2299,8 @@ packages:
   '@types/body-parser@1.19.6':
     resolution: {integrity: sha512-HLFeCYgz89uk22N5Qg3dvGvsv46B8GLvKKo1zKG4NybA8U2DiEO3w9lqGg29t/tfLRJpJ6iQxnVw4OnB7MoM9g==}
 
-  '@types/browser-sync@2.29.0':
-    resolution: {integrity: sha512-d2V8FDX/LbDCSm343N2VChzDxvll0h76I8oSigYpdLgPDmcdcR6fywTggKBkUiDM3qAbHOq7NZvepj/HJM5e2g==}
+  '@types/browser-sync@2.29.1':
+    resolution: {integrity: sha512-jAMsEkLpNURfpS4XIN9BX7SY+uCoTkPjLIovwssV/3e/FPwg9hYusbCXmGNfC3T6W/6d3iP3clxy9cvevjFKtQ==}
 
   '@types/caseless@0.12.5':
     resolution: {integrity: sha512-hWtVTC2q7hc7xZ/RLbxapMvDMgUnDvKvMOpKal4DrMyfGBUfB1oKaZlIRr6mJL+If3bAP6sV/QneGzF6tJjZDg==}
@@ -2332,8 +2332,8 @@ packages:
   '@types/folder-hash@4.0.4':
     resolution: {integrity: sha512-c+PwHm51Dw3fXM8SDK+93PO3oXdk4XNouCCvV67lj4aijRkZz5g67myk+9wqWWnyv3go6q96hT6ywcd3XtoZiQ==}
 
-  '@types/git-raw-commits@5.0.0':
-    resolution: {integrity: sha512-MQIzbZxgEnKpN1kCcw9JlQIu3Wdw5c4CCCP2cUli+DYgFjzsjtGLOeUe8oqPjjrKJudOoFnNuIZb/4sYHXEWZg==}
+  '@types/git-raw-commits@5.0.1':
+    resolution: {integrity: sha512-sd4kgxJbuZF0RDy6cX7KlKSGiwqB1mqn8nriUbxt5e1F+MO/N4hJlhaYn0Omw4g2biClFpT5Mre07x7OkGt8tg==}
 
   '@types/http-errors@2.0.5':
     resolution: {integrity: sha512-r8Tayk8HJnX0FztbZN7oVqGccWgw98T/0neJphO91KkmOzug1KkofZURD4UaD5uH8AqcFLfdPErnBod0u71/qg==}
@@ -2398,8 +2398,8 @@ packages:
   '@types/send@0.17.5':
     resolution: {integrity: sha512-z6F2D3cOStZvuk2SaP6YrwkNO65iTZcwA2ZkSABegdkAh/lf+Aa/YQndZVfmEXT5vgAp6zv06VQ3ejSVjAny4w==}
 
-  '@types/send@1.2.0':
-    resolution: {integrity: sha512-zBF6vZJn1IaMpg3xUF25VK3gd3l8zwE0ZLRX7dsQyQi+jp4E8mMDJNGDYnYse+bQhYwWERTxVwHpi3dMOq7RKQ==}
+  '@types/send@1.2.1':
+    resolution: {integrity: sha512-arsCikDvlU99zl1g69TcAB3mzZPpxgw0UQnaHeC1Nwb015xp8bknZv5rIfri9xTOcMuaVgvabfIRA7PSZVuZIQ==}
 
   '@types/serve-static@1.15.9':
     resolution: {integrity: sha512-dOTIuqpWLyl3BBXU3maNQsS4A3zuuoYRNIvYSxxhebPfXg2mzWQEPne/nlJ37yOse6uGgR386uTpdsx4D0QZWA==}
@@ -2428,8 +2428,8 @@ packages:
   '@types/yargs-parser@21.0.3':
     resolution: {integrity: sha512-I4q9QU9MQv4oEOz4tAHJtNz1cwuLxn2F3xcc2iV5WdqLPpUnj30aUuxt1mAxYTG+oe8CZMV/+6rU4S4gRDzqtQ==}
 
-  '@types/yargs@17.0.33':
-    resolution: {integrity: sha512-WpxBCKWPLr4xSsHgz511rFJAM+wS28w2zEO1QDNY5zM/S8ok70NNfztH0xwhqKyaK0OHCbN98LDAZuy1ctxDkA==}
+  '@types/yargs@17.0.34':
+    resolution: {integrity: sha512-KExbHVa92aJpw9WDQvzBaGVE2/Pz+pLZQloT2hjL8IqsZnV62rlPOYvNnLmf/L2dyllfVUOVBj64M0z/46eR2A==}
 
   '@types/yarnpkg__lockfile@1.1.9':
     resolution: {integrity: sha512-GD4Fk15UoP5NLCNor51YdfL9MSdldKCqOC9EssrRw3HVfar9wUZ5y8Lfnp+qVD6hIinLr8ygklDYnmlnlQo12Q==}
@@ -3537,8 +3537,8 @@ packages:
     peerDependencies:
       firebase-admin: ^11.10.0 || ^12.0.0 || ^13.0.0
 
-  firebase-tools@14.21.0:
-    resolution: {integrity: sha512-LIKDdvWiEn48y4xT3flHAdvYgeGaL/nmIcmCOJxd6cEmcxoJv3mKNKDLbCO57SbToVFXp6V5WDcRaQ+O2zEuLw==}
+  firebase-tools@14.22.0:
+    resolution: {integrity: sha512-ZudDdmP0pFR6jztKHoAFcIE19Qo2izfoMvbLxf7pvd5HY/MknVnhL+87mopWZGGv3Cmfc/gsUOcNW60n/my8cw==}
     engines: {node: '>=20.0.0 || >=22.0.0'}
     hasBin: true
 
@@ -5193,8 +5193,8 @@ packages:
     resolution: {integrity: sha512-WH7Aldse+2P5bbFBO4Gle/nuQOdVwpHMTL6raL3uuBj/vPG07k6uzt3aiahu352ONBr5xXh0hDlM3LhtXPOC4Q==}
     engines: {node: '>= 6.9.0'}
 
-  selenium-webdriver@4.37.0:
-    resolution: {integrity: sha512-eHwfYyudXRrMvBocqMwzvYhWWvpYuWcNXwu3IRtMZUci930zMVr6mVDCiMSDWpqBe5B+Rh/IVY7l9xoqNK8usw==}
+  selenium-webdriver@4.38.0:
+    resolution: {integrity: sha512-5/UXXFSQmn7FGQkbcpAqvfhzflUdMWtT7QqpEgkFD6Q6rDucxB5EUfzgjmr6JbUj30QodcW3mDXehzoeS/Vy5w==}
     engines: {node: '>= 20.0.0'}
 
   semver-diff@3.1.1:
@@ -6154,7 +6154,7 @@ snapshots:
       '@angular/compiler': 21.0.0-next.9
       zone.js: 0.15.1
 
-  '@angular/fire@20.0.1(@angular/common@21.0.0-next.9(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.0.0-next.9(@angular/animations@21.0.0-next.9(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@21.0.0-next.9(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1)))(chokidar@4.0.3)(firebase-tools@14.21.0(@types/node@24.9.1)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3))(rxjs@7.8.2)':
+  '@angular/fire@20.0.1(@angular/common@21.0.0-next.9(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.0.0-next.9(@angular/animations@21.0.0-next.9(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@21.0.0-next.9(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1)))(chokidar@4.0.3)(firebase-tools@14.22.0(@types/node@24.9.1)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3))(rxjs@7.8.2)':
     dependencies:
       '@angular-devkit/schematics': 20.3.7(chokidar@4.0.3)
       '@angular/common': 21.0.0-next.9(@angular/core@21.0.0-next.9(@angular/compiler@21.0.0-next.9)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
@@ -6166,7 +6166,7 @@ snapshots:
       rxjs: 7.8.2
       tslib: 2.8.1
     optionalDependencies:
-      firebase-tools: 14.21.0(@types/node@24.9.1)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3)
+      firebase-tools: 14.22.0(@types/node@24.9.1)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3)
     transitivePeerDependencies:
       - '@react-native-async-storage/async-storage'
       - chokidar
@@ -7235,7 +7235,7 @@ snapshots:
       - supports-color
     optional: true
 
-  '@google/genai@1.26.0(@modelcontextprotocol/sdk@1.20.1(supports-color@10.2.2))(bufferutil@4.0.9)(supports-color@10.2.2)(utf-8-validate@6.0.5)':
+  '@google/genai@1.27.0(@modelcontextprotocol/sdk@1.20.1(supports-color@10.2.2))(bufferutil@4.0.9)(supports-color@10.2.2)(utf-8-validate@6.0.5)':
     dependencies:
       google-auth-library: 10.4.1(supports-color@10.2.2)
       ws: 8.18.3(bufferutil@4.0.9)(utf-8-validate@6.0.5)
@@ -7465,23 +7465,23 @@ snapshots:
 
   '@jsdevtools/ono@7.1.3': {}
 
-  '@microsoft/api-extractor-model@7.31.2(@types/node@22.18.12)':
+  '@microsoft/api-extractor-model@7.31.3(@types/node@22.18.12)':
     dependencies:
       '@microsoft/tsdoc': 0.15.1
       '@microsoft/tsdoc-config': 0.17.1
-      '@rushstack/node-core-library': 5.17.1(@types/node@22.18.12)
+      '@rushstack/node-core-library': 5.18.0(@types/node@22.18.12)
     transitivePeerDependencies:
       - '@types/node'
 
-  '@microsoft/api-extractor@7.53.2(@types/node@22.18.12)':
+  '@microsoft/api-extractor@7.53.3(@types/node@22.18.12)':
     dependencies:
-      '@microsoft/api-extractor-model': 7.31.2(@types/node@22.18.12)
+      '@microsoft/api-extractor-model': 7.31.3(@types/node@22.18.12)
       '@microsoft/tsdoc': 0.15.1
       '@microsoft/tsdoc-config': 0.17.1
-      '@rushstack/node-core-library': 5.17.1(@types/node@22.18.12)
+      '@rushstack/node-core-library': 5.18.0(@types/node@22.18.12)
       '@rushstack/rig-package': 0.6.0
-      '@rushstack/terminal': 0.19.2(@types/node@22.18.12)
-      '@rushstack/ts-command-line': 5.1.2(@types/node@22.18.12)
+      '@rushstack/terminal': 0.19.3(@types/node@22.18.12)
+      '@rushstack/ts-command-line': 5.1.3(@types/node@22.18.12)
       lodash: 4.17.21
       minimatch: 10.0.3
       resolve: 1.22.11
@@ -7882,7 +7882,7 @@ snapshots:
 
   '@protobufjs/utf8@1.1.0': {}
 
-  '@rushstack/node-core-library@5.17.1(@types/node@22.18.12)':
+  '@rushstack/node-core-library@5.18.0(@types/node@22.18.12)':
     dependencies:
       ajv: 8.13.0
       ajv-draft-04: 1.0.0(ajv@8.13.0)
@@ -7904,17 +7904,17 @@ snapshots:
       resolve: 1.22.11
       strip-json-comments: 3.1.1
 
-  '@rushstack/terminal@0.19.2(@types/node@22.18.12)':
+  '@rushstack/terminal@0.19.3(@types/node@22.18.12)':
     dependencies:
-      '@rushstack/node-core-library': 5.17.1(@types/node@22.18.12)
+      '@rushstack/node-core-library': 5.18.0(@types/node@22.18.12)
       '@rushstack/problem-matcher': 0.1.1(@types/node@22.18.12)
       supports-color: 8.1.1
     optionalDependencies:
       '@types/node': 22.18.12
 
-  '@rushstack/ts-command-line@5.1.2(@types/node@22.18.12)':
+  '@rushstack/ts-command-line@5.1.3(@types/node@22.18.12)':
     dependencies:
-      '@rushstack/terminal': 0.19.2(@types/node@22.18.12)
+      '@rushstack/terminal': 0.19.3(@types/node@22.18.12)
       '@types/argparse': 1.0.38
       argparse: 1.0.10
       string-argv: 0.3.2
@@ -7982,7 +7982,7 @@ snapshots:
       '@types/connect': 3.4.38
       '@types/node': 24.9.1
 
-  '@types/browser-sync@2.29.0':
+  '@types/browser-sync@2.29.1':
     dependencies:
       '@types/micromatch': 2.3.35
       '@types/node': 24.9.1
@@ -8016,7 +8016,7 @@ snapshots:
       '@types/node': 24.9.1
       '@types/qs': 6.14.0
       '@types/range-parser': 1.2.7
-      '@types/send': 1.2.0
+      '@types/send': 1.2.1
 
   '@types/express@4.17.23':
     dependencies:
@@ -8027,7 +8027,7 @@ snapshots:
 
   '@types/folder-hash@4.0.4': {}
 
-  '@types/git-raw-commits@5.0.0':
+  '@types/git-raw-commits@5.0.1':
     dependencies:
       '@types/node': 24.9.1
 
@@ -8100,7 +8100,7 @@ snapshots:
       '@types/mime': 1.3.5
       '@types/node': 24.9.1
 
-  '@types/send@1.2.0':
+  '@types/send@1.2.1':
     dependencies:
       '@types/node': 24.9.1
 
@@ -8132,7 +8132,7 @@ snapshots:
 
   '@types/yargs-parser@21.0.3': {}
 
-  '@types/yargs@17.0.33':
+  '@types/yargs@17.0.34':
     dependencies:
       '@types/yargs-parser': 21.0.3
 
@@ -9418,7 +9418,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  firebase-tools@14.21.0(@types/node@24.9.1)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3):
+  firebase-tools@14.22.0(@types/node@24.9.1)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3):
     dependencies:
       '@apphosting/build': 0.1.6(@types/node@24.9.1)(typescript@5.9.3)
       '@apphosting/common': 0.0.8
@@ -11351,7 +11351,7 @@ snapshots:
       tmp: 0.0.30
       xml2js: 0.4.23
 
-  selenium-webdriver@4.37.0(bufferutil@4.0.9)(utf-8-validate@6.0.5):
+  selenium-webdriver@4.38.0(bufferutil@4.0.9)(utf-8-validate@6.0.5):
     dependencies:
       '@bazel/runfiles': 6.5.0
       jszip: 3.10.1

@@ -1,15 +1,15 @@
 {
   "name": "@devinfra/bazel",
   "dependencies": {
-    "@microsoft/api-extractor": "7.53.2",
+    "@microsoft/api-extractor": "7.53.3",
     "@types/babel__core": "7.20.5",
-    "@types/browser-sync": "2.29.0",
+    "@types/browser-sync": "2.29.1",
     "@types/node": "22.18.12",
     "@types/selenium-webdriver": "^4.1.28",
-    "@types/send": "1.2.0",
+    "@types/send": "1.2.1",
     "@types/wait-on": "^5.3.4",
     "@types/source-map-support": "0.5.10",
-    "@types/yargs": "17.0.33",
+    "@types/yargs": "17.0.34",
     "browser-sync": "3.0.4",
     "chalk": "5.6.2",
     "get-tsconfig": "4.13.0",
@@ -21,7 +21,7 @@
     "yargs": "18.0.0",
     "protractor": "7.0.0",
     "semver": "7.7.3",
-    "selenium-webdriver": "4.37.0",
+    "selenium-webdriver": "4.38.0",
     "source-map-support": "0.5.21",
     "tinyglobby": "0.2.15"
   }
