@@ -5,6 +5,8 @@
     "@actions/github": "6.0.1",
     "@octokit/rest": "22.0.0",
     "@types/node": "24.9.1",
+    "micromatch": "4.0.8",
+    "@types/micromatch": "^4.0.10",
     "typed-graphqlify": "3.1.6",
     "undici": "7.16.0"
   }
