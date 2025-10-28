@@ -5,6 +5,7 @@ ts_project(
     srcs = ["index.ts"],
     visibility = [
         "//.github/local-actions/branch-manager:__subpackages__",
+        "//github-actions/pull-request-labeling:__subpackages__",
         "//ng-dev:__subpackages__",
     ],
     deps = [

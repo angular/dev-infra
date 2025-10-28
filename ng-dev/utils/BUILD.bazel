@@ -33,6 +33,7 @@ ts_project(
         "//.github/local-actions/branch-manager:__subpackages__",
         "//.github/local-actions/changelog/lib:__subpackages__",
         "//github-actions/google-internal-tests:__subpackages__",
+        "//github-actions/pull-request-labeling:__subpackages__",
         "//github-actions/slash-commands/lib:__subpackages__",
         "//ng-dev:__subpackages__",
     ],
