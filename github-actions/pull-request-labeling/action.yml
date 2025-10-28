@@ -5,6 +5,12 @@ inputs:
   angular-robot-key:
     description: 'The private key for the Angular Robot Github app.'
     required: true
+
 runs:
-  using: 'node20'
-  main: 'main.js'
+  using: composite
+  steps:
+    - name: Initialize environment
+      uses: ./github-actions/npm/checkout-and-setup-node
+    - name: Apply labels to pull requests
+      run: node $GITHUB_ACTION_PATH/main.js
+      shell: bash
