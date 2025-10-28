@@ -29,8 +29,16 @@ jobs:
           bazelrc: .bazelrc
       - run: pnpm install --frozen-lockfile
       - run: pnpm bazel build //ng-dev:npm_package --config=release
+      - name: Generate Snapshots Build token
+        uses: actions/create-github-app-token@67018539274d69449ef7c02e8e71183d1719ab42 # v2.1.4
+        id: snapshot-builds-app
+        with:
+          app-id: ${{ vars.SNAPSHOT_GITHUB_APP_ID }}
+          private-key: ${{ secrets.SNAPSHOT_GITHUB_APP_KEY }}
+          repositories: |
+            dev-infra-private-ng-dev-builds
       - name: Publish Snapshots
         env:
-          SNAPSHOT_BUILDS_GITHUB_TOKEN: ${{ secrets.SNAPSHOT_BUILDS_GITHUB_TOKEN }}
+          SNAPSHOT_BUILDS_GITHUB_TOKEN: ${{ steps.snapshot-builds-app.outputs.token }}
         run: |
           ./tools/publish_to_github.sh "@angular/ng-dev" "dev-infra-private-ng-dev-builds" "dist/bin/ng-dev/npm_package"
