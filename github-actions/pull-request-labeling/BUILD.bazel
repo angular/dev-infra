@@ -13,15 +13,11 @@ ts_project(
         ":node_modules/@actions/core",
         ":node_modules/@actions/github",
         ":node_modules/@octokit/rest",
-        ":node_modules/@types/micromatch",
         ":node_modules/@types/node",
-        ":node_modules/micromatch",
         ":node_modules/undici",
         "//github-actions:utils",
         "//ng-dev/commit-message",
         "//ng-dev/pr/common/labels",
-        "//ng-dev/pr/config",
-        "//ng-dev/utils",
     ],
 )
 
@@ -31,9 +27,6 @@ esbuild_checked_in(
         ":lib",
     ],
     entry_point = "lib/main.ts",
-    external = [
-        "pnpapi",
-    ],
     format = "esm",
     platform = "node",
     target = "node22",
