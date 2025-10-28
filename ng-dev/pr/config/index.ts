@@ -59,11 +59,6 @@ export interface PullRequestConfig {
   validators?: PullRequestValidationConfig;
 
   /**
-   * Optional map of paths that have extra labels to apply when PRs are created.
-   */
-  managedLabelByPath?: {[label: string]: string[]};
-
-  /**
    * Whether target labeling should be disabled. Special option for repositories
    * not working with the canonical versioning and branching of Angular projects.
    *

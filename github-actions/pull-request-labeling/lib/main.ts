@@ -3,11 +3,8 @@ import {context} from '@actions/github';
 import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
 import {Commit, parseCommitMessage} from '../../../ng-dev/commit-message/parse.js';
 import {actionLabels, managedLabels, targetLabels} from '../../../ng-dev/pr/common/labels/index.js';
-import {assertValidPullRequestConfig, PullRequestConfig} from '../../../ng-dev/pr/config/index.js';
 import {ANGULAR_ROBOT, getAuthTokenFor, revokeActiveInstallationToken} from '../../utils.js';
 import {ManagedRepositories} from '../../../ng-dev/pr/common/labels/base.js';
-import {getConfig, NgDevConfig} from '../../../ng-dev/utils/config.js';
-import micromatch from 'micromatch';
 
 /** The type of the response data for a the pull request get method on from octokit. */
 type PullRequestGetData = RestEndpointMethodTypes['pulls']['get']['response']['data'];
@@ -20,8 +17,7 @@ class PullRequestLabeling {
     const token = await getAuthTokenFor(ANGULAR_ROBOT);
     const git = new Octokit({auth: token});
     try {
-      const config = await getConfig([assertValidPullRequestConfig]);
-      const inst = new this(git, config);
+      const inst = new this(git);
       await inst.run();
     } finally {
       await revokeActiveInstallationToken(git);
@@ -36,13 +32,8 @@ class PullRequestLabeling {
   commits: Commit[] = [];
   /** The pull request information from the github API. */
   pullRequestMetadata?: PullRequestGetData;
-  /** The files changed in the pull request */
-  pullRequestFilePaths?: string[];
 
-  private constructor(
-    private git: Octokit,
-    private config: NgDevConfig<{pullRequest: PullRequestConfig}>,
-  ) {}
+  private constructor(private git: Octokit) {}
 
   /** Run the action, and revoke the installation token on completion. */
   async run() {
@@ -52,7 +43,6 @@ class PullRequestLabeling {
 
     await this.commitMessageBasedLabeling();
     await this.pullRequestMetadataLabeling();
-    await this.pathBasedLabeling();
   }
 
   /**
@@ -117,26 +107,6 @@ class PullRequestLabeling {
     }
   }
 
-  /**
-   * Perform labeling based on the paths of the files in the pull request.
-   */
-  async pathBasedLabeling() {
-    const managedLabelByPath = this.config.pullRequest.managedLabelByPath;
-    if (
-      managedLabelByPath === undefined ||
-      this.pullRequestFilePaths === undefined ||
-      Object.keys(managedLabelByPath).length === 0
-    ) {
-      return;
-    }
-
-    for (const [label, paths] of Object.entries(managedLabelByPath)) {
-      if (paths.length > 0 && micromatch.any(this.pullRequestFilePaths, paths)) {
-        await this.addLabel(label);
-      }
-    }
-  }
-
   /** Remove the provided label to the pull request. */
   async removeLabel(label: string) {
     const {number: issue_number, owner, repo} = context.issue;
@@ -189,13 +159,6 @@ class PullRequestLabeling {
     await this.git.pulls.get({owner, repo, pull_number: number}).then(({data}) => {
       this.pullRequestMetadata = data;
     });
-
-    if (this.config.pullRequest.managedLabelByPath) {
-      this.pullRequestFilePaths = [];
-      await this.git
-        .paginate(this.git.pulls.listFiles, {owner, pull_number: number, repo})
-        .then((files) => this.pullRequestFilePaths?.push(...files.map((file) => file.filename)));
-    }
   }
 }
 
