@@ -369,6 +369,13 @@ export abstract class ReleaseAction {
   /** Installs all Yarn dependencies in the current branch. */
   protected async installDependenciesForCurrentBranch() {
     if (await this.pnpmVersioning.isUsingPnpm(this.projectDir)) {
+      // Note: We delate all contents of `node_modules` before installing dependencies. We do
+      // this because if a pnpm workspace package exists at one ref and not another, it can
+      // cause the pnpm install from within Bazel to errantly attempt to install a package that
+      // does not exist.
+      try {
+        this.git.run(['clean', '-qdfX', '**/node_modules']);
+      } catch {}
       await ExternalCommands.invokePnpmInstall(this.projectDir);
       return;
     }

@@ -223,7 +223,10 @@ export abstract class ExternalCommands {
           'install',
           ...(yarnCommand.legacy ? ['--frozen-lockfile', '--non-interactive'] : ['--immutable']),
         ],
-        {cwd: projectDir},
+        {
+          cwd: projectDir,
+          mode: 'on-error',
+        },
       );
       Log.info(green('  ✓   Installed project dependencies.'));
     } catch (e) {
@@ -250,6 +253,7 @@ export abstract class ExternalCommands {
         ],
         {
           cwd: projectDir,
+          mode: 'on-error',
         },
       );
 
