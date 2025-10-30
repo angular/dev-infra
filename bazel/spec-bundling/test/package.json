@@ -5,7 +5,7 @@
     "@angular/platform-browser": "21.0.0-next.9",
     "@types/jasmine": "5.1.12",
     "@types/jsdom": "27.0.0",
-    "@types/node": "24.9.1",
+    "@types/node": "24.9.2",
     "jasmine-reporters": "2.5.2",
     "jasmine": "5.12.0",
     "jsdom": "27.0.1",
