@@ -25,6 +25,7 @@ import {buildAiParser} from './ai/cli.js';
 import {Argv} from 'yargs';
 
 runParserWithCompletedFunctions((yargs: Argv) => {
+  process.exitCode = 0;
   return yargs
     .scriptName('ng-dev')
     .middleware(captureLogOutputForCommand, true)
