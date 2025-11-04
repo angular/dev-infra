@@ -1,4 +1,4 @@
-import { createRequire } from 'node:module';globalThis['require'] ??= createRequire(import.meta.url);
+import { createRequire as _esbuildBannerCreateRequire } from 'node:module';globalThis['require'] ??= _esbuildBannerCreateRequire(import.meta.url);
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
