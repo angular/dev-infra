@@ -2,9 +2,9 @@
   "dependencies": {
     "@actions/core": "1.11.1",
     "@actions/github": "6.0.1",
-    "@octokit/rest": "22.0.0",
+    "@octokit/rest": "22.0.1",
     "@octokit/types": "16.0.0",
-    "@types/node": "24.9.2",
+    "@types/node": "24.10.0",
     "undici": "7.16.0"
   }
 }
