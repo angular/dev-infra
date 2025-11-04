@@ -129,7 +129,7 @@ def esbuild_checked_in(name, platform = None, config = {}, **kwargs):
     # properly bundle jsonc-parser.
     node_defaults = {
         "banner": {
-            "js": "import { createRequire } from 'node:module';globalThis['require'] ??= createRequire(import.meta.url);",
+            "js": "import { createRequire as _esbuildBannerCreateRequire } from 'node:module';globalThis['require'] ??= _esbuildBannerCreateRequire(import.meta.url);",
         },
         "mainFields": [
             "module",
