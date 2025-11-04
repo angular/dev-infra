@@ -3,8 +3,8 @@
   "dependencies": {
     "@actions/core": "1.11.1",
     "@actions/github": "6.0.1",
-    "@octokit/rest": "22.0.0",
-    "@types/node": "24.9.2",
+    "@octokit/rest": "22.0.1",
+    "@types/node": "24.10.0",
     "typed-graphqlify": "3.1.6",
     "undici": "7.16.0"
   }

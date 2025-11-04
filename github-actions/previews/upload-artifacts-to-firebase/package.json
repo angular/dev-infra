@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@actions/core": "1.11.1",
-    "@octokit/rest": "22.0.0",
-    "@types/node": "24.9.2"
+    "@octokit/rest": "22.0.1",
+    "@types/node": "24.10.0"
   }
 }
