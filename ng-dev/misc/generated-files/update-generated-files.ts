@@ -36,9 +36,8 @@ export async function updateGeneratedFileTargets(): Promise<void> {
       .split(/\r?\n/)
       .map((x) => x.replace(/_generated$/, ''));
 
-    Log.debug.group('Discovered Targets');
+    Log.debug('Discovered Targets');
     targets.forEach((target) => Log.debug(target));
-    Log.debug.groupEnd();
 
     spinner.update(`Found ${targets.length} generated file targets to update`);
 

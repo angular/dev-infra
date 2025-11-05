@@ -107,21 +107,19 @@ export class GithubQueriesModule extends BaseModule<GithubQueryResults | void> {
     if (!queryResults) {
       return;
     }
-    Log.info.group(bold('Github Tasks'));
+    Log.info(bold('Github Tasks'));
     const minQueryNameLength = Math.max(...queryResults.map((result) => result.queryName.length));
     for (const queryResult of queryResults) {
       Log.info(`${queryResult.queryName.padEnd(minQueryNameLength)}  ${queryResult.count}`);
 
       if (queryResult.count > 0) {
-        Log.info.group(queryResult.queryUrl);
+        Log.info(queryResult.queryUrl);
         queryResult.matchedUrls.forEach((url) => Log.info(`- ${url}`));
         if (queryResult.count > MAX_RETURNED_ISSUES) {
           Log.info(`... ${queryResult.count - MAX_RETURNED_ISSUES} additional matches`);
         }
-        Log.info.groupEnd();
       }
     }
-    Log.info.groupEnd();
     Log.info();
   }
 }

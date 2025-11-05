@@ -21,7 +21,7 @@ export function logGroup(
   printMessageFn = Log.info,
 ) {
   const conditions = group[conditionsToPrint];
-  printMessageFn.group(`[${group.groupName}]`);
+  printMessageFn(`[${group.groupName}]`);
   if (conditions.length) {
     conditions.forEach((groupCondition) => {
       const count = groupCondition.matchedFiles.size;
@@ -33,7 +33,6 @@ export function logGroup(
         );
       }
     });
-    printMessageFn.groupEnd();
   }
 }
 

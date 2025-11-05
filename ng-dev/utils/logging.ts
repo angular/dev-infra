@@ -64,7 +64,7 @@ function buildLogLevelFunction(
   defaultColor: ChalkInstance | null,
 ) {
   /** Write to stdout for the LOG_LEVEL. */
-  const loggingFunction = (...values: unknown[]) => {
+  return (...values: unknown[]) => {
     runConsoleCommand(
       loadCommand,
       level,
@@ -72,19 +72,6 @@ function buildLogLevelFunction(
       ...values.map((v) => (typeof v === 'string' && defaultColor ? defaultColor(v) : v)),
     );
   };
-
-  /** Start a group at the LOG_LEVEL, optionally starting it as collapsed. */
-  loggingFunction.group = (label: string, collapsed = false) => {
-    const command = collapsed ? console.groupCollapsed : console.group;
-    runConsoleCommand(() => command, level, defaultColor ? defaultColor(label) : label);
-  };
-
-  /** End the group at the LOG_LEVEL. */
-  loggingFunction.groupEnd = () => {
-    runConsoleCommand(() => console.groupEnd, level);
-  };
-
-  return loggingFunction;
 }
 
 /**

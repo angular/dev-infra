@@ -16,7 +16,6 @@ import {GithubQueriesModule} from './github.js';
 describe('GithubQueriesModule', () => {
   let githubApiSpy: jasmine.Spy;
   let infoSpy: jasmine.Spy;
-  let infoGroupSpy: jasmine.Spy;
   let git: AuthenticatedGitClient;
 
   beforeEach(async () => {
@@ -24,7 +23,6 @@ describe('GithubQueriesModule', () => {
       'The graphql query response must always be manually defined in a test.',
     );
     installVirtualGitClientSpies();
-    infoGroupSpy = spyOn(Log.info, 'group');
     infoSpy = spyOn(Log, 'info');
     git = await AuthenticatedGitClient.get();
   });
@@ -108,7 +106,7 @@ describe('GithubQueriesModule', () => {
 
       await module.printToTerminal();
 
-      expect(infoGroupSpy).toHaveBeenCalledWith('Github Tasks');
+      expect(infoSpy).toHaveBeenCalledWith('Github Tasks');
       expect(infoSpy).toHaveBeenCalledWith('query1  0');
       expect(infoSpy).toHaveBeenCalledWith('query2  0');
     });
@@ -134,11 +132,9 @@ describe('GithubQueriesModule', () => {
 
       await module.printToTerminal();
 
-      expect(infoGroupSpy).toHaveBeenCalledWith('Github Tasks');
+      expect(infoSpy).toHaveBeenCalledWith('Github Tasks');
       expect(infoSpy).toHaveBeenCalledWith('query1  1');
-      expect(infoGroupSpy).toHaveBeenCalledWith(
-        'https://github.com/owner/name/issues?q=issue:%20yes',
-      );
+      expect(infoSpy).toHaveBeenCalledWith('https://github.com/owner/name/issues?q=issue:%20yes');
       expect(infoSpy).toHaveBeenCalledWith('- http://github.com/owner/name/issue/1');
       expect(infoSpy).toHaveBeenCalledWith('query2  0');
     });

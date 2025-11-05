@@ -54,11 +54,10 @@ export async function checkFiles(files: string[]) {
 
   if (failures.length) {
     // Provide output expressing which files are failing formatting.
-    Log.warn.group('\nThe following files are out of format:');
+    Log.warn('\nThe following files are out of format:');
     for (const {filePath} of failures) {
       Log.warn(`  • ${filePath}`);
     }
-    Log.warn.groupEnd();
     Log.warn();
 
     // If the command is run in a non-CI environment, prompt to format the files immediately.

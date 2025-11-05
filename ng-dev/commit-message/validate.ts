@@ -215,9 +215,8 @@ export async function validateCommitMessage(
 
 /** Print the error messages from the commit message validation to the console. */
 export function printValidationErrors(errors: string[], print = Log.error) {
-  print.group(`Error${errors.length === 1 ? '' : 's'}:`);
+  print(`Error${errors.length === 1 ? '' : 's'}:`);
   errors.forEach((line) => print(line));
-  print.groupEnd();
   print();
   print('The expected format for a commit is: ');
   print('<type>(<scope>): <summary>');

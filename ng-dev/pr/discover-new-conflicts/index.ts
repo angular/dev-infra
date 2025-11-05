@@ -124,10 +124,9 @@ export async function discoverNewConflictsForPr(newPrNumber: number, updatedAfte
   }
 
   // Inform about discovered conflicts, exit with failure.
-  Log.error.group(`${conflicts.length} PR(s) which conflict(s) after #${newPrNumber} merges:`);
+  Log.error(`${conflicts.length} PR(s) which conflict(s) after #${newPrNumber} merges:`);
   for (const pr of conflicts) {
     Log.error(`  - #${pr.number}: ${pr.title}`);
   }
-  Log.error.groupEnd();
   process.exit(1);
 }
