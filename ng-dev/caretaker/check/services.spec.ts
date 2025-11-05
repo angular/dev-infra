@@ -15,7 +15,6 @@ import {services, ServicesModule} from './services.js';
 describe('ServicesModule', () => {
   let getStatusFromStandardApiSpy: jasmine.Spy;
   let infoSpy: jasmine.Spy;
-  let infoGroupSpy: jasmine.Spy;
   let git: AuthenticatedGitClient;
 
   services.splice(0, Infinity, {
@@ -27,7 +26,6 @@ describe('ServicesModule', () => {
   beforeEach(async () => {
     getStatusFromStandardApiSpy = spyOn(ServicesModule.prototype, 'getStatusFromStandardApi');
     installVirtualGitClientSpies();
-    infoGroupSpy = spyOn(Log.info, 'group');
     infoSpy = spyOn(Log, 'info');
     git = await AuthenticatedGitClient.get();
   });
@@ -67,9 +65,9 @@ describe('ServicesModule', () => {
       Object.defineProperty(module, 'data', {value: fakeData});
       await module.printToTerminal();
 
-      expect(infoGroupSpy).toHaveBeenCalledWith('Service Statuses');
+      expect(infoSpy).toHaveBeenCalledWith('Service Statuses');
       expect(infoSpy).toHaveBeenCalledWith(`Service 1 ${green('✔')}`);
-      expect(infoGroupSpy).toHaveBeenCalledWith(
+      expect(infoSpy).toHaveBeenCalledWith(
         `Service 2 ${red('✘')} (Updated: ${new Date(0).toLocaleString()})`,
       );
       expect(infoSpy).toHaveBeenCalledWith('  Details: Literally everything is broken');

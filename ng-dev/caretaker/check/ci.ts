@@ -76,7 +76,7 @@ export class CiModule extends BaseModule<CiData> {
   override async printToTerminal() {
     const data = await this.data;
     const minLabelLength = Math.max(...data.map((result) => result.label.length));
-    Log.info.group(bold(`CI`));
+    Log.info(bold(`CI`));
     data.forEach((result) => {
       if (result.active === false) {
         Log.debug(`No active release train for ${result.name}`);
@@ -93,7 +93,6 @@ export class CiModule extends BaseModule<CiData> {
         Log.info(`${label} ${red('✘')}`);
       }
     });
-    Log.info.groupEnd();
     Log.info();
   }
 }

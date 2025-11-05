@@ -76,45 +76,34 @@ export async function verify() {
   if (groupsWithoutReviewers.length === 0) {
     Log.info('All group contain at least one reviewer user or team.');
   } else {
-    Log.info.group(
-      `Discovered ${groupsWithoutReviewers.length} group(s) without a reviewer defined`,
-    );
+    Log.info(`Discovered ${groupsWithoutReviewers.length} group(s) without a reviewer defined`);
     groupsWithoutReviewers.forEach((g) => Log.info(g.groupName));
-    Log.info.groupEnd();
   }
   /**
    * File by file Summary
    */
   logHeader('PullApprove results by file');
-  Log.info.group(`Matched Files (${matchedFiles.length} files)`);
+  Log.info(`Matched Files (${matchedFiles.length} files)`);
   matchedFiles.forEach((file) => Log.debug(file));
-  Log.info.groupEnd();
-  Log.info.group(`Unmatched Files (${unmatchedFiles.length} files)`);
+  Log.info(`Unmatched Files (${unmatchedFiles.length} files)`);
   unmatchedFiles.forEach((file) => Log.info(file));
-  Log.info.groupEnd();
   /**
    * Group by group Summary
    */
   logHeader('PullApprove results by group');
-  Log.info.group(`Groups skipped (${groupsSkipped.length} groups)`);
+  Log.info(`Groups skipped (${groupsSkipped.length} groups)`);
   groupsSkipped.forEach((group) => Log.debug(`${group.groupName}`));
-  Log.info.groupEnd();
   const matchedGroups = resultsByGroup.filter((group) => !group.unmatchedCount);
-  Log.info.group(`Matched conditions by Group (${matchedGroups.length} groups)`);
+  Log.info(`Matched conditions by Group (${matchedGroups.length} groups)`);
   matchedGroups.forEach((group) => logGroup(group, 'matchedConditions', Log.debug));
-  Log.info.groupEnd();
   const unmatchedGroups = resultsByGroup.filter((group) => group.unmatchedCount);
-  Log.info.group(`Unmatched conditions by Group (${unmatchedGroups.length} groups)`);
+  Log.info(`Unmatched conditions by Group (${unmatchedGroups.length} groups)`);
   unmatchedGroups.forEach((group) => logGroup(group, 'unmatchedConditions'));
-  Log.info.groupEnd();
   const unverifiableConditionsInGroups = resultsByGroup.filter(
     (group) => group.unverifiableConditions.length > 0,
   );
-  Log.info.group(
-    `Unverifiable conditions by Group (${unverifiableConditionsInGroups.length} groups)`,
-  );
+  Log.info(`Unverifiable conditions by Group (${unverifiableConditionsInGroups.length} groups)`);
   unverifiableConditionsInGroups.forEach((group) => logGroup(group, 'unverifiableConditions'));
-  Log.info.groupEnd();
 
   // Provide correct exit code based on verification success.
   process.exit(overallResult ? 0 : 1);

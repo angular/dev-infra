@@ -60,9 +60,8 @@ export async function validateCommitRange(from: string, to: string): Promise<voi
   } else {
     Log.error('✘  Invalid commit message');
     errors.forEach(([header, validationErrors]) => {
-      Log.error.group(header);
+      Log.error(header);
       printValidationErrors(validationErrors);
-      Log.error.groupEnd();
     });
     // Exit with a non-zero exit code if invalid commit messages have
     // been discovered.

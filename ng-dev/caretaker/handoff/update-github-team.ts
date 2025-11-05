@@ -144,11 +144,10 @@ async function setCaretakerGroup(group: string, members: string[]) {
     });
   };
 
-  Log.debug.group(`Caretaker Group: ${fullSlug}`);
+  Log.debug(`Caretaker Group: ${fullSlug}`);
   Log.debug(`Current Membership: ${current.join(', ')}`);
   Log.debug(`New Membership:     ${members.join(', ')}`);
   Log.debug(`Removed:            ${removed.join(', ')}`);
-  Log.debug.groupEnd();
 
   // Add members before removing to prevent the account performing the action from removing their
   // permissions to change the group membership early.
