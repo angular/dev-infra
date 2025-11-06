@@ -27,6 +27,9 @@ export class Prettier extends Formatter {
     '**/*.{json,json5}',
     '**/*.md',
     '**/*.{yml,yaml}',
+
+    // Ignore goldens MD files
+    '!**/goldens/**/*.api.md',
   ];
 
   /**

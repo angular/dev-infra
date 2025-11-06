@@ -13,4 +13,4 @@ docker tag angular-devinfra-rbe-image:latest \
   us-west2-docker.pkg.dev/internal-200822/remote-execution-images/angular-devinfra-rbe-image:2025-10
 
 docker push us-west2-docker.pkg.dev/internal-200822/remote-execution-images/angular-devinfra-rbe-image:2025-10
-````
+```
