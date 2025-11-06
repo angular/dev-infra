@@ -25,6 +25,7 @@ export class Prettier extends Formatter {
     '**/*.{js,cjs,mjs}',
     '**/*.{ts,cts,mts}',
     '**/*.{json,json5}',
+    '**/*.md',
     '**/*.{yml,yaml}',
   ];
 
