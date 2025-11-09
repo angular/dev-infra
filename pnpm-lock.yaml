@@ -20,8 +20,8 @@ importers:
         specifier: 8.2.1
         version: 8.2.1
       firebase-tools:
-        specifier: 14.23.0
-        version: 14.23.0(@types/node@24.10.0)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3)
+        specifier: 14.24.1
+        version: 14.24.1(@types/node@24.10.0)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3)
       husky:
         specifier: 9.1.7
         version: 9.1.7
@@ -138,7 +138,7 @@ importers:
         version: 21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1)
       '@angular/fire':
         specifier: 20.0.1
-        version: 20.0.1(@angular/common@21.0.0-rc.1(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.0.0-rc.1(@angular/animations@21.0.0-rc.1(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@21.0.0-rc.1(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1)))(chokidar@4.0.3)(firebase-tools@14.23.0(@types/node@24.10.0)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3))(rxjs@7.8.2)
+        version: 20.0.1(@angular/common@21.0.0-rc.1(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.0.0-rc.1(@angular/animations@21.0.0-rc.1(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@21.0.0-rc.1(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1)))(chokidar@4.0.3)(firebase-tools@14.24.1(@types/node@24.10.0)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3))(rxjs@7.8.2)
       '@angular/forms':
         specifier: 21.0.0-rc.1
         version: 21.0.0-rc.1(@angular/common@21.0.0-rc.1(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.0.0-rc.1(@angular/animations@21.0.0-rc.1(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@21.0.0-rc.1(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1)))(@standard-schema/spec@1.0.0)(rxjs@7.8.2)
@@ -179,14 +179,14 @@ importers:
         specifier: 24.10.0
         version: 24.10.0
       firebase-admin:
-        specifier: 13.5.0
-        version: 13.5.0(encoding@0.1.13)
+        specifier: 13.6.0
+        version: 13.6.0(encoding@0.1.13)
       firebase-functions:
         specifier: 6.6.0
-        version: 6.6.0(firebase-admin@13.5.0(encoding@0.1.13))
+        version: 6.6.0(firebase-admin@13.6.0(encoding@0.1.13))
       firebase-tools:
-        specifier: 14.23.0
-        version: 14.23.0(@types/node@24.10.0)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3)
+        specifier: 14.24.1
+        version: 14.24.1(@types/node@24.10.0)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3)
 
   bazel:
     dependencies:
@@ -545,14 +545,14 @@ importers:
         specifier: 8.0.0
         version: 8.0.0(supports-color@10.2.2)
       '@google/genai':
-        specifier: 1.28.0
-        version: 1.28.0(@modelcontextprotocol/sdk@1.21.0(supports-color@10.2.2))(bufferutil@4.0.9)(supports-color@10.2.2)(utf-8-validate@6.0.5)
+        specifier: 1.29.0
+        version: 1.29.0(@modelcontextprotocol/sdk@1.21.0(supports-color@10.2.2))(bufferutil@4.0.9)(supports-color@10.2.2)(utf-8-validate@6.0.5)
       '@inquirer/prompts':
-        specifier: 7.9.0
-        version: 7.9.0(@types/node@24.10.0)
+        specifier: 7.10.0
+        version: 7.10.0(@types/node@24.10.0)
       '@inquirer/type':
-        specifier: 3.0.9
-        version: 3.0.9(@types/node@24.10.0)
+        specifier: 3.0.10
+        version: 3.0.10(@types/node@24.10.0)
       '@octokit/auth-app':
         specifier: 8.1.2
         version: 8.1.2
@@ -1560,9 +1560,9 @@ packages:
     resolution: {integrity: sha512-DJS3s0OVH4zFDB1PzjxAsHqJT6sKVbRwwML0ZBP9PbU7Yebtu/7SWMRzvO2J3nUi9pRNITCfu4LJeooM2w4pjg==}
     engines: {node: '>=14.0.0'}
 
-  '@google-cloud/precise-date@4.0.0':
-    resolution: {integrity: sha512-1TUx3KdaU3cN7nfCdNf+UVqA/PSX29Cjcox3fZZBtINlRrXVTmUkQnCKv2MbBUbCopbK4olAT1IHl76uZyCiVA==}
-    engines: {node: '>=14.0.0'}
+  '@google-cloud/paginator@6.0.0':
+    resolution: {integrity: sha512-g5nmMnzC+94kBxOKkLGpK1ikvolTFCC3s2qtE4F+1EuArcJ7HHC23RDQVt3Ra3CqpUYZ+oXNKZ8n5Cn5yug8DA==}
+    engines: {node: '>=18'}
 
   '@google-cloud/precise-date@5.0.0':
     resolution: {integrity: sha512-9h0Gvw92EvPdE8AK8AgZPbMnH5ftDyPtKm7/KUfcJVaPEPjwGDsJd1QV0H8esBDV4II41R/2lDWH1epBqIoKUw==}
@@ -1588,9 +1588,9 @@ packages:
     resolution: {integrity: sha512-N8qS6dlORGHwk7WjGXKOSsLjIjNINCPicsOX6gyyLiYk7mq3MtII96NZ9N2ahwA2vnkLmZODOIH9rlNniYWvCQ==}
     engines: {node: '>=18'}
 
-  '@google-cloud/pubsub@4.11.0':
-    resolution: {integrity: sha512-xWxJAlyUGd6OPp97u8maMcI3xVXuHjxfwh6Dr7P/P+6NK9o446slJobsbgsmK0xKY4nTK8m5uuJrhEKapfZSmQ==}
-    engines: {node: '>=14.0.0'}
+  '@google-cloud/pubsub@5.2.0':
+    resolution: {integrity: sha512-YNSRBo85mgPQ9QuuzAHjmLwngIwmy2RjAUAoPl2mOL2+bCM0cAVZswPb8ylcsWJP7PgDJlck+ybv0MwJ9AM0sg==}
+    engines: {node: '>=18'}
 
   '@google-cloud/spanner@8.0.0':
     resolution: {integrity: sha512-IJn+8A3QZJfe7FUtWqHVNo3xJs7KFpurCWGWCiCz3oEh+BkRymKZ1QxfAbU2yGMDzTytLGQ2IV6T2r3cuo75/w==}
@@ -1600,8 +1600,8 @@ packages:
     resolution: {integrity: sha512-gOnCAbFgAYKRozywLsxagdevTF7Gm+2Ncz5u5CQAuOv/2VCa0rdGJWvJFDOftPx1tc+q8TXiC2pEJfFKu+yeMQ==}
     engines: {node: '>=14'}
 
-  '@google/genai@1.28.0':
-    resolution: {integrity: sha512-0pfZ1EWQsM9kINsL+mFKJvpzM6NRHS9t360S1MzKq4JtIwTj/RbsPpC/K5wpKiPy9PC+J+bsz/9gvaL51++KrA==}
+  '@google/genai@1.29.0':
+    resolution: {integrity: sha512-cQP7Ssa06W+MSAyVtL/812FBtZDoDehnFObIpK1xo5Uv4XvqBcVZ8OhXgihOIXWn7xvPQGvLclR8+yt3Ysnd9g==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       '@modelcontextprotocol/sdk': ^1.20.1
@@ -1651,21 +1651,12 @@ packages:
   '@hapi/topo@6.0.2':
     resolution: {integrity: sha512-KR3rD5inZbGMrHmgPxsJ9dbi6zEK+C3ZwUwTa+eMwWLz7oijWUTWD2pMSNNYJAU6Qq+65NkxXjqHr/7LM2Xkqg==}
 
-  '@inquirer/ansi@1.0.1':
-    resolution: {integrity: sha512-yqq0aJW/5XPhi5xOAL1xRCpe1eh8UFVgYFpFsjEqmIR8rKLyP+HINvFXwUaxYICflJrVlxnp7lLN6As735kVpw==}
+  '@inquirer/ansi@1.0.2':
+    resolution: {integrity: sha512-S8qNSZiYzFd0wAcyG5AXCvUHC5Sr7xpZ9wZ2py9XR88jUz8wooStVx5M6dRzczbBWjic9NP7+rY0Xi7qqK/aMQ==}
     engines: {node: '>=18'}
 
-  '@inquirer/checkbox@4.3.0':
-    resolution: {integrity: sha512-5+Q3PKH35YsnoPTh75LucALdAxom6xh5D1oeY561x4cqBuH24ZFVyFREPe14xgnrtmGu3EEt1dIi60wRVSnGCw==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      '@types/node': '>=18'
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-
-  '@inquirer/confirm@5.1.19':
-    resolution: {integrity: sha512-wQNz9cfcxrtEnUyG5PndC8g3gZ7lGDBzmWiXZkX8ot3vfZ+/BLjR8EvyGX4YzQLeVqtAlY/YScZpW7CW8qMoDQ==}
+  '@inquirer/checkbox@4.3.1':
+    resolution: {integrity: sha512-rOcLotrptYIy59SGQhKlU0xBg1vvcVl2FdPIEclUvKHh0wo12OfGkId/01PIMJ/V+EimJ77t085YabgnQHBa5A==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/node': '>=18'
@@ -1673,8 +1664,8 @@ packages:
       '@types/node':
         optional: true
 
-  '@inquirer/core@10.3.0':
-    resolution: {integrity: sha512-Uv2aPPPSK5jeCplQmQ9xadnFx2Zhj9b5Dj7bU6ZeCdDNNY11nhYy4btcSdtDguHqCT2h5oNeQTcUNSGGLA7NTA==}
+  '@inquirer/confirm@5.1.20':
+    resolution: {integrity: sha512-HDGiWh2tyRZa0M1ZnEIUCQro25gW/mN8ODByicQrbR1yHx4hT+IOpozCMi5TgBtUdklLwRI2mv14eNpftDluEw==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/node': '>=18'
@@ -1682,8 +1673,8 @@ packages:
       '@types/node':
         optional: true
 
-  '@inquirer/editor@4.2.21':
-    resolution: {integrity: sha512-MjtjOGjr0Kh4BciaFShYpZ1s9400idOdvQ5D7u7lE6VztPFoyLcVNE5dXBmEEIQq5zi4B9h2kU+q7AVBxJMAkQ==}
+  '@inquirer/core@10.3.1':
+    resolution: {integrity: sha512-hzGKIkfomGFPgxKmnKEKeA+uCYBqC+TKtRx5LgyHRCrF6S2MliwRIjp3sUaWwVzMp7ZXVs8elB0Tfe682Rpg4w==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/node': '>=18'
@@ -1691,8 +1682,8 @@ packages:
       '@types/node':
         optional: true
 
-  '@inquirer/expand@4.0.21':
-    resolution: {integrity: sha512-+mScLhIcbPFmuvU3tAGBed78XvYHSvCl6dBiYMlzCLhpr0bzGzd8tfivMMeqND6XZiaZ1tgusbUHJEfc6YzOdA==}
+  '@inquirer/editor@4.2.22':
+    resolution: {integrity: sha512-8yYZ9TCbBKoBkzHtVNMF6PV1RJEUvMlhvmS3GxH4UvXMEHlS45jFyqFy0DU+K42jBs5slOaA78xGqqqWAx3u6A==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/node': '>=18'
@@ -1700,8 +1691,8 @@ packages:
       '@types/node':
         optional: true
 
-  '@inquirer/external-editor@1.0.2':
-    resolution: {integrity: sha512-yy9cOoBnx58TlsPrIxauKIFQTiyH+0MK4e97y4sV9ERbI+zDxw7i2hxHLCIEGIE/8PPvDxGhgzIOTSOWcs6/MQ==}
+  '@inquirer/expand@4.0.22':
+    resolution: {integrity: sha512-9XOjCjvioLjwlq4S4yXzhvBmAXj5tG+jvva0uqedEsQ9VD8kZ+YT7ap23i0bIXOtow+di4+u3i6u26nDqEfY4Q==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/node': '>=18'
@@ -1709,12 +1700,8 @@ packages:
       '@types/node':
         optional: true
 
-  '@inquirer/figures@1.0.14':
-    resolution: {integrity: sha512-DbFgdt+9/OZYFM+19dbpXOSeAstPy884FPy1KjDu4anWwymZeOYhMY1mdFri172htv6mvc/uvIAAi7b7tvjJBQ==}
-    engines: {node: '>=18'}
-
-  '@inquirer/input@4.2.5':
-    resolution: {integrity: sha512-7GoWev7P6s7t0oJbenH0eQ0ThNdDJbEAEtVt9vsrYZ9FulIokvd823yLyhQlWHJPGce1wzP53ttfdCZmonMHyA==}
+  '@inquirer/external-editor@1.0.3':
+    resolution: {integrity: sha512-RWbSrDiYmO4LbejWY7ttpxczuwQyZLBUyygsA9Nsv95hpzUWwnNTVQmAq3xuh7vNwCp07UTmE5i11XAEExx4RA==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/node': '>=18'
@@ -1722,8 +1709,12 @@ packages:
       '@types/node':
         optional: true
 
-  '@inquirer/number@3.0.21':
-    resolution: {integrity: sha512-5QWs0KGaNMlhbdhOSCFfKsW+/dcAVC2g4wT/z2MCiZM47uLgatC5N20kpkDQf7dHx+XFct/MJvvNGy6aYJn4Pw==}
+  '@inquirer/figures@1.0.15':
+    resolution: {integrity: sha512-t2IEY+unGHOzAaVM5Xx6DEWKeXlDDcNPeDyUpsRc6CUhBfU3VQOEl+Vssh7VNp1dR8MdUJBWhuObjXCsVpjN5g==}
+    engines: {node: '>=18'}
+
+  '@inquirer/input@4.3.0':
+    resolution: {integrity: sha512-h4fgse5zeGsBSW3cRQqu9a99OXRdRsNCvHoBqVmz40cjYjYFzcfwD0KA96BHIPlT7rZw0IpiefQIqXrjbzjS4Q==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/node': '>=18'
@@ -1731,8 +1722,8 @@ packages:
       '@types/node':
         optional: true
 
-  '@inquirer/password@4.0.21':
-    resolution: {integrity: sha512-xxeW1V5SbNFNig2pLfetsDb0svWlKuhmr7MPJZMYuDnCTkpVBI+X/doudg4pznc1/U+yYmWFFOi4hNvGgUo7EA==}
+  '@inquirer/number@3.0.22':
+    resolution: {integrity: sha512-oAdMJXz++fX58HsIEYmvuf5EdE8CfBHHXjoi9cTcQzgFoHGZE+8+Y3P38MlaRMeBvAVnkWtAxMUF6urL2zYsbg==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/node': '>=18'
@@ -1740,8 +1731,8 @@ packages:
       '@types/node':
         optional: true
 
-  '@inquirer/prompts@7.9.0':
-    resolution: {integrity: sha512-X7/+dG9SLpSzRkwgG5/xiIzW0oMrV3C0HOa7YHG1WnrLK+vCQHfte4k/T80059YBdei29RBC3s+pSMvPJDU9/A==}
+  '@inquirer/password@4.0.22':
+    resolution: {integrity: sha512-CbdqK1ioIr0Y3akx03k/+Twf+KSlHjn05hBL+rmubMll7PsDTGH0R4vfFkr+XrkB0FOHrjIwVP9crt49dgt+1g==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/node': '>=18'
@@ -1749,8 +1740,8 @@ packages:
       '@types/node':
         optional: true
 
-  '@inquirer/rawlist@4.1.9':
-    resolution: {integrity: sha512-AWpxB7MuJrRiSfTKGJ7Y68imYt8P9N3Gaa7ySdkFj1iWjr6WfbGAhdZvw/UnhFXTHITJzxGUI9k8IX7akAEBCg==}
+  '@inquirer/prompts@7.10.0':
+    resolution: {integrity: sha512-X2HAjY9BClfFkJ2RP3iIiFxlct5JJVdaYYXhA7RKxsbc9KL+VbId79PSoUGH/OLS011NFbHHDMDcBKUj3T89+Q==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/node': '>=18'
@@ -1758,8 +1749,8 @@ packages:
       '@types/node':
         optional: true
 
-  '@inquirer/search@3.2.0':
-    resolution: {integrity: sha512-a5SzB/qrXafDX1Z4AZW3CsVoiNxcIYCzYP7r9RzrfMpaLpB+yWi5U8BWagZyLmwR0pKbbL5umnGRd0RzGVI8bQ==}
+  '@inquirer/rawlist@4.1.10':
+    resolution: {integrity: sha512-Du4uidsgTMkoH5izgpfyauTL/ItVHOLsVdcY+wGeoGaG56BV+/JfmyoQGniyhegrDzXpfn3D+LFHaxMDRygcAw==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/node': '>=18'
@@ -1767,8 +1758,8 @@ packages:
       '@types/node':
         optional: true
 
-  '@inquirer/select@4.4.0':
-    resolution: {integrity: sha512-kaC3FHsJZvVyIjYBs5Ih8y8Bj4P/QItQWrZW22WJax7zTN+ZPXVGuOM55vzbdCP9zKUiBd9iEJVdesujfF+cAA==}
+  '@inquirer/search@3.2.1':
+    resolution: {integrity: sha512-cKiuUvETublmTmaOneEermfG2tI9ABpb7fW/LqzZAnSv4ZaJnbEis05lOkiBuYX5hNdnX0Q9ryOQyrNidb55WA==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/node': '>=18'
@@ -1776,8 +1767,17 @@ packages:
       '@types/node':
         optional: true
 
-  '@inquirer/type@3.0.9':
-    resolution: {integrity: sha512-QPaNt/nmE2bLGQa9b7wwyRJoLZ7pN6rcyXvzU0YCmivmJyq1BVo94G98tStRWkoD1RgDX5C+dPlhhHzNdu/W/w==}
+  '@inquirer/select@4.4.1':
+    resolution: {integrity: sha512-E9hbLU4XsNe2SAOSsFrtYtYQDVi1mfbqJrPDvXKnGlnRiApBdWMJz7r3J2Ff38AqULkPUD3XjQMD4492TymD7Q==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@types/node': '>=18'
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+
+  '@inquirer/type@3.0.10':
+    resolution: {integrity: sha512-BvziSRxfz5Ov8ch0z/n3oijRSEcEsHnhggm4xFZe93DHcUCTlutlq9Ox4SVENAfcRD22UQq7T/atg9Wr3k09eA==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/node': '>=18'
@@ -2138,14 +2138,24 @@ packages:
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.10.0'
 
+  '@opentelemetry/core@1.30.1':
+    resolution: {integrity: sha512-OOCM2C/QIURhJMuKaekP3TRBxBKxG/TWWA0TL2J6nXUtDnuCtccy49LUJF8xPFXMX+0LMcxFpCo8M9cGY1W6rQ==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      '@opentelemetry/api': '>=1.0.0 <1.10.0'
+
   '@opentelemetry/core@2.2.0':
     resolution: {integrity: sha512-FuabnnUm8LflnieVxs6eP7Z383hgQU4W1e3KJS6aOG3RxWxcHyBxH8fDMHNgu/gFx/M2jvTOW/4/PHhLz6bjWw==}
     engines: {node: ^18.19.0 || >=20.6.0}
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.10.0'
 
-  '@opentelemetry/semantic-conventions@1.30.0':
-    resolution: {integrity: sha512-4VlGgo32k2EQ2wcCY3vEU28A0O13aOtHz3Xt2/2U5FAh9EfhD6t6DqL5Z6yAnRCntbTFDU4YfbpyzSlHNWycPw==}
+  '@opentelemetry/semantic-conventions@1.28.0':
+    resolution: {integrity: sha512-lp4qAiMTD4sNWW4DbKLBkfiMZ4jbAboJIGOQr5DvciMRI494OapieI9qiODpOt0XBr1LjIDy1xAGAnVs5supTA==}
+    engines: {node: '>=14'}
+
+  '@opentelemetry/semantic-conventions@1.34.0':
+    resolution: {integrity: sha512-aKcOkyrorBGlajjRdVoJWHTxfxO1vCNHLJVlSDaRHDIdjU+pX8IYQPvPDkYiujKLbRnWU+1TBwEt0QRgSm4SGA==}
     engines: {node: '>=14'}
 
   '@opentelemetry/semantic-conventions@1.37.0':
@@ -3539,8 +3549,8 @@ packages:
     resolution: {integrity: sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw==}
     engines: {node: '>=8'}
 
-  firebase-admin@13.5.0:
-    resolution: {integrity: sha512-QZOpv1DJRJpH8NcWiL1xXE10tw3L/bdPFlgjcWrqU3ufyOJDYfxB1MMtxiVTwxK16NlybQbEM6ciSich2uWEIQ==}
+  firebase-admin@13.6.0:
+    resolution: {integrity: sha512-GdPA/t0+Cq8p1JnjFRBmxRxAGvF/kl2yfdhALl38PrRp325YxyQ5aNaHui0XmaKcKiGRFIJ/EgBNWFoDP0onjw==}
     engines: {node: '>=18'}
 
   firebase-functions@6.6.0:
@@ -3550,8 +3560,8 @@ packages:
     peerDependencies:
       firebase-admin: ^11.10.0 || ^12.0.0 || ^13.0.0
 
-  firebase-tools@14.23.0:
-    resolution: {integrity: sha512-JiW1JUlFCIdhj2pIu1vEXJCg0beuHwUSFYTntDSZCE3Z2bzsVFh3zpX3uWG5pL+BpoOjxmhvDjYVbf5c7Sia8A==}
+  firebase-tools@14.24.1:
+    resolution: {integrity: sha512-jYiD58SEZcVuiJSB6eZSFYObiPA5XHrou7YkNYkTl1JkbKafCZgFnl3R88TD7F8p8U8naT0ES5H1mt04kaFUag==}
     engines: {node: '>=20.0.0 || >=22.0.0'}
     hasBin: true
 
@@ -4564,9 +4574,9 @@ packages:
     resolution: {integrity: sha512-SYU3HBAdF4psHEL/+jXDKHO95/m5P2RvboHT2Y0WtTttvJLP4H/2WS9WlQPFvF6C8d6SpLw8vjCnQOnVIVOSJQ==}
     engines: {node: '>=18'}
 
-  mute-stream@2.0.0:
-    resolution: {integrity: sha512-WWdIxpyjEn+FhQJQQv9aQAYlHoNVdzIzUySNV1gHUPDSdZJ3yZn7pAAbQcV7B56Mvu881q9FZV+0Vx2xC44VWA==}
-    engines: {node: ^18.17.0 || >=20.5.0}
+  mute-stream@3.0.0:
+    resolution: {integrity: sha512-dkEJPVvun4FryqBmZ5KhDo0K9iDXAwn08tMLDinNdRBNPcYEDiWYysLcc6k3mjTMlbP9KyylvRpd4wFtwrT9rw==}
+    engines: {node: ^20.17.0 || >=22.9.0}
 
   mz@2.7.0:
     resolution: {integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==}
@@ -6174,7 +6184,7 @@ snapshots:
       '@angular/compiler': 21.0.0-rc.1
       zone.js: 0.15.1
 
-  '@angular/fire@20.0.1(@angular/common@21.0.0-rc.1(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.0.0-rc.1(@angular/animations@21.0.0-rc.1(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@21.0.0-rc.1(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1)))(chokidar@4.0.3)(firebase-tools@14.23.0(@types/node@24.10.0)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3))(rxjs@7.8.2)':
+  '@angular/fire@20.0.1(@angular/common@21.0.0-rc.1(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@21.0.0-rc.1(@angular/animations@21.0.0-rc.1(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1)))(@angular/common@21.0.0-rc.1(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1)))(chokidar@4.0.3)(firebase-tools@14.24.1(@types/node@24.10.0)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3))(rxjs@7.8.2)':
     dependencies:
       '@angular-devkit/schematics': 20.3.8(chokidar@4.0.3)
       '@angular/common': 21.0.0-rc.1(@angular/core@21.0.0-rc.1(@angular/compiler@21.0.0-rc.1)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
@@ -6186,7 +6196,7 @@ snapshots:
       rxjs: 7.8.2
       tslib: 2.8.1
     optionalDependencies:
-      firebase-tools: 14.23.0(@types/node@24.10.0)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3)
+      firebase-tools: 14.24.1(@types/node@24.10.0)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3)
     transitivePeerDependencies:
       - '@react-native-async-storage/async-storage'
       - chokidar
@@ -7163,8 +7173,11 @@ snapshots:
     dependencies:
       arrify: 2.0.1
       extend: 3.0.2
+    optional: true
 
-  '@google-cloud/precise-date@4.0.0': {}
+  '@google-cloud/paginator@6.0.0':
+    dependencies:
+      extend: 3.0.2
 
   '@google-cloud/precise-date@5.0.0': {}
 
@@ -7172,30 +7185,31 @@ snapshots:
 
   '@google-cloud/projectify@5.0.0': {}
 
-  '@google-cloud/promisify@4.0.0': {}
+  '@google-cloud/promisify@4.0.0':
+    optional: true
 
   '@google-cloud/promisify@4.1.0': {}
 
   '@google-cloud/promisify@5.0.0': {}
 
-  '@google-cloud/pubsub@4.11.0(encoding@0.1.13)':
+  '@google-cloud/pubsub@5.2.0':
     dependencies:
-      '@google-cloud/paginator': 5.0.2
-      '@google-cloud/precise-date': 4.0.0
-      '@google-cloud/projectify': 4.0.0
-      '@google-cloud/promisify': 4.0.0
+      '@google-cloud/paginator': 6.0.0
+      '@google-cloud/precise-date': 5.0.0
+      '@google-cloud/projectify': 5.0.0
+      '@google-cloud/promisify': 5.0.0
       '@opentelemetry/api': 1.9.0
-      '@opentelemetry/semantic-conventions': 1.30.0
+      '@opentelemetry/core': 1.30.1(@opentelemetry/api@1.9.0)
+      '@opentelemetry/semantic-conventions': 1.34.0
       arrify: 2.0.1
       extend: 3.0.2
-      google-auth-library: 9.15.1(encoding@0.1.13)
-      google-gax: 4.6.1(encoding@0.1.13)
+      google-auth-library: 10.5.0(supports-color@10.2.2)
+      google-gax: 5.0.5(supports-color@10.2.2)
       heap-js: 2.7.1
       is-stream-ended: 0.1.4
       lodash.snakecase: 4.1.1
       p-defer: 3.0.0
     transitivePeerDependencies:
-      - encoding
       - supports-color
 
   '@google-cloud/spanner@8.0.0(supports-color@10.2.2)':
@@ -7255,7 +7269,7 @@ snapshots:
       - supports-color
     optional: true
 
-  '@google/genai@1.28.0(@modelcontextprotocol/sdk@1.21.0(supports-color@10.2.2))(bufferutil@4.0.9)(supports-color@10.2.2)(utf-8-validate@6.0.5)':
+  '@google/genai@1.29.0(@modelcontextprotocol/sdk@1.21.0(supports-color@10.2.2))(bufferutil@4.0.9)(supports-color@10.2.2)(utf-8-validate@6.0.5)':
     dependencies:
       google-auth-library: 10.5.0(supports-color@10.2.2)
       ws: 8.18.3(bufferutil@4.0.9)(utf-8-validate@6.0.5)
@@ -7312,128 +7326,128 @@ snapshots:
     dependencies:
       '@hapi/hoek': 11.0.7
 
-  '@inquirer/ansi@1.0.1': {}
+  '@inquirer/ansi@1.0.2': {}
 
-  '@inquirer/checkbox@4.3.0(@types/node@24.10.0)':
+  '@inquirer/checkbox@4.3.1(@types/node@24.10.0)':
     dependencies:
-      '@inquirer/ansi': 1.0.1
-      '@inquirer/core': 10.3.0(@types/node@24.10.0)
-      '@inquirer/figures': 1.0.14
-      '@inquirer/type': 3.0.9(@types/node@24.10.0)
+      '@inquirer/ansi': 1.0.2
+      '@inquirer/core': 10.3.1(@types/node@24.10.0)
+      '@inquirer/figures': 1.0.15
+      '@inquirer/type': 3.0.10(@types/node@24.10.0)
       yoctocolors-cjs: 2.1.3
     optionalDependencies:
       '@types/node': 24.10.0
 
-  '@inquirer/confirm@5.1.19(@types/node@24.10.0)':
+  '@inquirer/confirm@5.1.20(@types/node@24.10.0)':
     dependencies:
-      '@inquirer/core': 10.3.0(@types/node@24.10.0)
-      '@inquirer/type': 3.0.9(@types/node@24.10.0)
+      '@inquirer/core': 10.3.1(@types/node@24.10.0)
+      '@inquirer/type': 3.0.10(@types/node@24.10.0)
     optionalDependencies:
       '@types/node': 24.10.0
 
-  '@inquirer/core@10.3.0(@types/node@24.10.0)':
+  '@inquirer/core@10.3.1(@types/node@24.10.0)':
     dependencies:
-      '@inquirer/ansi': 1.0.1
-      '@inquirer/figures': 1.0.14
-      '@inquirer/type': 3.0.9(@types/node@24.10.0)
+      '@inquirer/ansi': 1.0.2
+      '@inquirer/figures': 1.0.15
+      '@inquirer/type': 3.0.10(@types/node@24.10.0)
       cli-width: 4.1.0
-      mute-stream: 2.0.0
+      mute-stream: 3.0.0
       signal-exit: 4.1.0
       wrap-ansi: 6.2.0
       yoctocolors-cjs: 2.1.3
     optionalDependencies:
       '@types/node': 24.10.0
 
-  '@inquirer/editor@4.2.21(@types/node@24.10.0)':
+  '@inquirer/editor@4.2.22(@types/node@24.10.0)':
     dependencies:
-      '@inquirer/core': 10.3.0(@types/node@24.10.0)
-      '@inquirer/external-editor': 1.0.2(@types/node@24.10.0)
-      '@inquirer/type': 3.0.9(@types/node@24.10.0)
+      '@inquirer/core': 10.3.1(@types/node@24.10.0)
+      '@inquirer/external-editor': 1.0.3(@types/node@24.10.0)
+      '@inquirer/type': 3.0.10(@types/node@24.10.0)
     optionalDependencies:
       '@types/node': 24.10.0
 
-  '@inquirer/expand@4.0.21(@types/node@24.10.0)':
+  '@inquirer/expand@4.0.22(@types/node@24.10.0)':
     dependencies:
-      '@inquirer/core': 10.3.0(@types/node@24.10.0)
-      '@inquirer/type': 3.0.9(@types/node@24.10.0)
+      '@inquirer/core': 10.3.1(@types/node@24.10.0)
+      '@inquirer/type': 3.0.10(@types/node@24.10.0)
       yoctocolors-cjs: 2.1.3
     optionalDependencies:
       '@types/node': 24.10.0
 
-  '@inquirer/external-editor@1.0.2(@types/node@24.10.0)':
+  '@inquirer/external-editor@1.0.3(@types/node@24.10.0)':
     dependencies:
       chardet: 2.1.1
       iconv-lite: 0.7.0
     optionalDependencies:
       '@types/node': 24.10.0
 
-  '@inquirer/figures@1.0.14': {}
+  '@inquirer/figures@1.0.15': {}
 
-  '@inquirer/input@4.2.5(@types/node@24.10.0)':
+  '@inquirer/input@4.3.0(@types/node@24.10.0)':
     dependencies:
-      '@inquirer/core': 10.3.0(@types/node@24.10.0)
-      '@inquirer/type': 3.0.9(@types/node@24.10.0)
+      '@inquirer/core': 10.3.1(@types/node@24.10.0)
+      '@inquirer/type': 3.0.10(@types/node@24.10.0)
     optionalDependencies:
       '@types/node': 24.10.0
 
-  '@inquirer/number@3.0.21(@types/node@24.10.0)':
+  '@inquirer/number@3.0.22(@types/node@24.10.0)':
     dependencies:
-      '@inquirer/core': 10.3.0(@types/node@24.10.0)
-      '@inquirer/type': 3.0.9(@types/node@24.10.0)
+      '@inquirer/core': 10.3.1(@types/node@24.10.0)
+      '@inquirer/type': 3.0.10(@types/node@24.10.0)
     optionalDependencies:
       '@types/node': 24.10.0
 
-  '@inquirer/password@4.0.21(@types/node@24.10.0)':
+  '@inquirer/password@4.0.22(@types/node@24.10.0)':
     dependencies:
-      '@inquirer/ansi': 1.0.1
-      '@inquirer/core': 10.3.0(@types/node@24.10.0)
-      '@inquirer/type': 3.0.9(@types/node@24.10.0)
+      '@inquirer/ansi': 1.0.2
+      '@inquirer/core': 10.3.1(@types/node@24.10.0)
+      '@inquirer/type': 3.0.10(@types/node@24.10.0)
     optionalDependencies:
       '@types/node': 24.10.0
 
-  '@inquirer/prompts@7.9.0(@types/node@24.10.0)':
+  '@inquirer/prompts@7.10.0(@types/node@24.10.0)':
     dependencies:
-      '@inquirer/checkbox': 4.3.0(@types/node@24.10.0)
-      '@inquirer/confirm': 5.1.19(@types/node@24.10.0)
-      '@inquirer/editor': 4.2.21(@types/node@24.10.0)
-      '@inquirer/expand': 4.0.21(@types/node@24.10.0)
-      '@inquirer/input': 4.2.5(@types/node@24.10.0)
-      '@inquirer/number': 3.0.21(@types/node@24.10.0)
-      '@inquirer/password': 4.0.21(@types/node@24.10.0)
-      '@inquirer/rawlist': 4.1.9(@types/node@24.10.0)
-      '@inquirer/search': 3.2.0(@types/node@24.10.0)
-      '@inquirer/select': 4.4.0(@types/node@24.10.0)
+      '@inquirer/checkbox': 4.3.1(@types/node@24.10.0)
+      '@inquirer/confirm': 5.1.20(@types/node@24.10.0)
+      '@inquirer/editor': 4.2.22(@types/node@24.10.0)
+      '@inquirer/expand': 4.0.22(@types/node@24.10.0)
+      '@inquirer/input': 4.3.0(@types/node@24.10.0)
+      '@inquirer/number': 3.0.22(@types/node@24.10.0)
+      '@inquirer/password': 4.0.22(@types/node@24.10.0)
+      '@inquirer/rawlist': 4.1.10(@types/node@24.10.0)
+      '@inquirer/search': 3.2.1(@types/node@24.10.0)
+      '@inquirer/select': 4.4.1(@types/node@24.10.0)
     optionalDependencies:
       '@types/node': 24.10.0
 
-  '@inquirer/rawlist@4.1.9(@types/node@24.10.0)':
+  '@inquirer/rawlist@4.1.10(@types/node@24.10.0)':
     dependencies:
-      '@inquirer/core': 10.3.0(@types/node@24.10.0)
-      '@inquirer/type': 3.0.9(@types/node@24.10.0)
+      '@inquirer/core': 10.3.1(@types/node@24.10.0)
+      '@inquirer/type': 3.0.10(@types/node@24.10.0)
       yoctocolors-cjs: 2.1.3
     optionalDependencies:
       '@types/node': 24.10.0
 
-  '@inquirer/search@3.2.0(@types/node@24.10.0)':
+  '@inquirer/search@3.2.1(@types/node@24.10.0)':
     dependencies:
-      '@inquirer/core': 10.3.0(@types/node@24.10.0)
-      '@inquirer/figures': 1.0.14
-      '@inquirer/type': 3.0.9(@types/node@24.10.0)
+      '@inquirer/core': 10.3.1(@types/node@24.10.0)
+      '@inquirer/figures': 1.0.15
+      '@inquirer/type': 3.0.10(@types/node@24.10.0)
       yoctocolors-cjs: 2.1.3
     optionalDependencies:
       '@types/node': 24.10.0
 
-  '@inquirer/select@4.4.0(@types/node@24.10.0)':
+  '@inquirer/select@4.4.1(@types/node@24.10.0)':
     dependencies:
-      '@inquirer/ansi': 1.0.1
-      '@inquirer/core': 10.3.0(@types/node@24.10.0)
-      '@inquirer/figures': 1.0.14
-      '@inquirer/type': 3.0.9(@types/node@24.10.0)
+      '@inquirer/ansi': 1.0.2
+      '@inquirer/core': 10.3.1(@types/node@24.10.0)
+      '@inquirer/figures': 1.0.15
+      '@inquirer/type': 3.0.10(@types/node@24.10.0)
       yoctocolors-cjs: 2.1.3
     optionalDependencies:
       '@types/node': 24.10.0
 
-  '@inquirer/type@3.0.9(@types/node@24.10.0)':
+  '@inquirer/type@3.0.10(@types/node@24.10.0)':
     optionalDependencies:
       '@types/node': 24.10.0
 
@@ -7837,12 +7851,19 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.0
 
+  '@opentelemetry/core@1.30.1(@opentelemetry/api@1.9.0)':
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/semantic-conventions': 1.28.0
+
   '@opentelemetry/core@2.2.0(@opentelemetry/api@1.9.0)':
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/semantic-conventions': 1.37.0
 
-  '@opentelemetry/semantic-conventions@1.30.0': {}
+  '@opentelemetry/semantic-conventions@1.28.0': {}
+
+  '@opentelemetry/semantic-conventions@1.34.0': {}
 
   '@opentelemetry/semantic-conventions@1.37.0': {}
 
@@ -8011,7 +8032,8 @@ snapshots:
       '@types/serve-static': 2.2.0
       chokidar: 3.6.0
 
-  '@types/caseless@0.12.5': {}
+  '@types/caseless@0.12.5':
+    optional: true
 
   '@types/cli-progress@3.11.6':
     dependencies:
@@ -8070,7 +8092,8 @@ snapshots:
       '@types/ms': 2.1.0
       '@types/node': 24.10.0
 
-  '@types/long@4.0.2': {}
+  '@types/long@4.0.2':
+    optional: true
 
   '@types/micromatch@2.3.35':
     dependencies:
@@ -8107,6 +8130,7 @@ snapshots:
       '@types/node': 24.10.0
       '@types/tough-cookie': 4.0.5
       form-data: 2.5.5
+    optional: true
 
   '@types/selenium-webdriver@3.0.26': {}
 
@@ -9414,7 +9438,7 @@ snapshots:
       locate-path: 5.0.0
       path-exists: 4.0.0
 
-  firebase-admin@13.5.0(encoding@0.1.13):
+  firebase-admin@13.6.0(encoding@0.1.13):
     dependencies:
       '@fastify/busboy': 3.2.0
       '@firebase/database-compat': 2.1.0
@@ -9434,26 +9458,26 @@ snapshots:
       - encoding
       - supports-color
 
-  firebase-functions@6.6.0(firebase-admin@13.5.0(encoding@0.1.13)):
+  firebase-functions@6.6.0(firebase-admin@13.6.0(encoding@0.1.13)):
     dependencies:
       '@types/cors': 2.8.19
       '@types/express': 4.17.25
       cors: 2.8.5
       express: 4.21.2
-      firebase-admin: 13.5.0(encoding@0.1.13)
+      firebase-admin: 13.6.0(encoding@0.1.13)
       protobufjs: 7.5.4
     transitivePeerDependencies:
       - supports-color
 
-  firebase-tools@14.23.0(@types/node@24.10.0)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3):
+  firebase-tools@14.24.1(@types/node@24.10.0)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3):
     dependencies:
       '@apphosting/build': 0.1.6(@types/node@24.10.0)(typescript@5.9.3)
       '@apphosting/common': 0.0.8
       '@electric-sql/pglite': 0.3.12
       '@electric-sql/pglite-tools': 0.2.17(@electric-sql/pglite@0.3.12)
       '@google-cloud/cloud-sql-connector': 1.8.4
-      '@google-cloud/pubsub': 4.11.0(encoding@0.1.13)
-      '@inquirer/prompts': 7.9.0(@types/node@24.10.0)
+      '@google-cloud/pubsub': 5.2.0
+      '@inquirer/prompts': 7.10.0(@types/node@24.10.0)
       '@modelcontextprotocol/sdk': 1.21.0(supports-color@10.2.2)
       abort-controller: 3.0.0
       ajv: 8.17.1
@@ -9635,6 +9659,7 @@ snapshots:
       hasown: 2.0.2
       mime-types: 2.1.35
       safe-buffer: 5.2.1
+    optional: true
 
   form-data@4.0.4:
     dependencies:
@@ -9862,6 +9887,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
       - supports-color
+    optional: true
 
   google-gax@5.0.5(supports-color@10.2.2):
     dependencies:
@@ -10687,7 +10713,7 @@ snapshots:
       array-union: 3.0.1
       minimatch: 9.0.5
 
-  mute-stream@2.0.0: {}
+  mute-stream@3.0.0: {}
 
   mz@2.7.0:
     dependencies:
@@ -11067,6 +11093,7 @@ snapshots:
   proto3-json-serializer@2.0.2:
     dependencies:
       protobufjs: 7.5.4
+    optional: true
 
   proto3-json-serializer@3.0.4:
     dependencies:
@@ -11311,6 +11338,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
       - supports-color
+    optional: true
 
   retry-request@8.0.2(supports-color@10.2.2):
     dependencies:
@@ -11852,6 +11880,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
       - supports-color
+    optional: true
 
   text-decoder@1.2.3:
     dependencies:
