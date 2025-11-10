@@ -109,6 +109,7 @@
       followTag: 'next',
       minimumReleaseAge: null,
       separateMajorMinor: false,
+      dependencyDashboardApproval: false,
       schedule: ['* 0-22/2 * * *'], // Every minute, every 2 hours
       matchPackageNames: [
         '@angular-devkit/**',
