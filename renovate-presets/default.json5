@@ -56,13 +56,15 @@
       matchManagers: ['bazel', 'bazel-module', 'bazelisk'],
     },
 
-    // Rule to disable NPM updates on branches other than 'main'.
-    // But allow updating engines and packageManagers.
+    // Rule to require manual approval for NPM updates on branches other than 'main'.
+    // This is to prevent auto updates to branches that are not the main branch.
+    // But, still allows the updates to be manually selected in case of an important bug fix.
+    // Engines and packageManagers are excluded from this rule.
     {
-      enabled: false,
       matchBaseBranches: ['!main'],
-      matchDepNames: ['!node', '!pnpm', '!npm', '!yarn'],
+      matchDepNames: ['*', '!node', '!pnpm', '!npm', '!yarn'],
       matchManagers: ['npm'],
+      dependencyDashboardApproval: true,
     },
 
     // Group all non-major dependencies together for updates.
@@ -71,6 +73,7 @@
       matchDepNames: ['*', '!node', '!pnpm', '!npm', '!yarn'],
       matchUpdateTypes: ['digest', 'patch', 'minor'],
       matchManagers: ['npm'],
+      matchBaseBranches: ['main'],
     },
 
     // ============================================================================
