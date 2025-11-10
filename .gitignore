@@ -55,3 +55,8 @@ apps/*-debug.log
 
 # Ignore generated package archives
 angular-*.tgz 
+
+# gemini-cli settings
+.gemini/
+# GitHub App credentials
+gha-creds-*.json
