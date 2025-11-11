@@ -19,6 +19,8 @@ export interface Commit {
   fullText: string;
   /** The header line of the commit, will be used in the changelog entries. */
   header: string;
+  /** The original header line of the commit, before stripping away fixup, squash, etc. */
+  originalHeader: string;
   /** The full body of the commit, not including the footer. */
   body: string;
   /** The footer of the commit, containing issue references and note sections. */
@@ -114,8 +116,8 @@ const parseOptions: ParserOptions = {
   noteKeywords: [NoteSections.BREAKING_CHANGE, NoteSections.DEPRECATED],
   notesPattern: (keywords: string) => new RegExp(`^\\s*(${keywords}): ?(.*)`),
 };
-
-let commitParser: CommitParser | undefined;
+/** Instance of the commit parser to parse raw commits. */
+const commitParser = new CommitParser(parseOptions);
 
 /** Parse a commit message into its composite parts. */
 export const parseCommitMessage: (fullText: string) => Commit = parseInternal;
@@ -128,21 +130,18 @@ function parseInternal(fullText: string): Commit;
 function parseInternal(fullText: Buffer): CommitFromGitLog;
 function parseInternal(fullText: string | Buffer): CommitFromGitLog | Commit {
   // Ensure the fullText symbol is a `string`, even if a Buffer was provided.
-  fullText = fullText.toString();
-  /** The commit message text with the fixup and squash markers stripped out. */
-  const strippedCommitMsg = fullText
-    .replace(FIXUP_PREFIX_RE, '')
-    .replace(SQUASH_PREFIX_RE, '')
-    .replace(REVERT_PREFIX_RE, '');
-
-  commitParser ??= new CommitParser(parseOptions);
-
+  fullText = fullText.toString().trim();
   /** The initially parsed commit. */
-  const commit = commitParser.parse(strippedCommitMsg);
+  const commit = commitParser.parse(fullText);
   /** A list of breaking change notes from the commit. */
   const breakingChanges: CommitNote[] = [];
   /** A list of deprecation notes from the commit. */
   const deprecations: CommitNote[] = [];
+  /** The extracted header after stripping away fixup, squash, etc. */
+  const header = (commit.header || '')
+    .replace(FIXUP_PREFIX_RE, '')
+    .replace(SQUASH_PREFIX_RE, '')
+    .replace(REVERT_PREFIX_RE, '');
 
   // Extract the commit message notes by marked types into their respective lists.
   for (const note of commit.notes) {
@@ -160,9 +159,10 @@ function parseInternal(fullText: string | Buffer): CommitFromGitLog | Commit {
     fullText,
     breakingChanges,
     deprecations,
+    header,
     body: commit.body || '',
     footer: commit.footer || '',
-    header: commit.header || '',
+    originalHeader: commit.header || '',
     references: commit.references,
     scope: commit['scope'] || '',
     subject: commit['subject'] || '',

@@ -75,7 +75,7 @@ export function getCommitsForRangeWithDeduping(
 }
 
 /** Fetches commits for the given revision range using `git log`. */
-export function fetchCommitsForRevisionRange(
+function fetchCommitsForRevisionRange(
   client: GitClient,
   revisionRange: string,
 ): CommitFromGitLog[] {
@@ -85,12 +85,28 @@ export function fetchCommitsForRevisionRange(
     `--format=${gitLogFormatForParsing}${splitDelimiter}`,
     revisionRange,
   ]);
+  /** A set of the commits in the provided range. */
+  const commits = new Map<string, CommitFromGitLog>();
 
-  return output.stdout
+  output.stdout
     .split(splitDelimiter)
-    .filter((entry) => !!entry.trim())
-    .map(santizeCommitMessage)
-    .map((entry) => parseCommitFromGitLog(Buffer.from(entry, 'utf-8')));
+    // Reverse the list of commits so that we encounter original commits before revert commits.
+    .reverse()
+    .forEach((entry) => {
+      if (entry.trim() === '') {
+        return;
+      }
+      const commit = parseCommitFromGitLog(Buffer.from(santizeCommitMessage(entry), 'utf-8'));
+      if (commit.isRevert) {
+        commits.delete(commit.originalHeader.match(/^revert:? "(.*)"/i)?.[1] || '');
+      } else {
+        commits.set(commit.header, commit);
+      }
+    });
+
+  // We return an array of the commits, Map preserves the instert order of the values in the Map. The
+  // order is reversed to get back to the expected order.
+  return Array.from(commits.values()).reverse();
 }
 
 /**
