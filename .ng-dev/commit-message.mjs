@@ -1,11 +1,14 @@
-import {CommitMessageConfig} from '../ng-dev/commit-message/config.js';
-
 /** Build a set of scopes for a package. */
-function buildScopesFor(pkg: string, subpkgs: string[]) {
-  return [pkg, ...subpkgs.map((subpkg: string) => `${pkg}/${subpkg}`)];
+function buildScopesFor(pkg, subpkgs) {
+  return [pkg, ...subpkgs.map((subpkg) => `${pkg}/${subpkg}`)];
 }
 
-export const commitMessage: CommitMessageConfig = {
+/**
+ * The configuration for `ng-dev commit-message` commands.
+ *
+ * @type { import("../ng-dev/index.js").CommitMessageConfig }
+ */
+export const commitMessage = {
   maxLineLength: Infinity,
   minBodyLength: 0,
   scopes: [
