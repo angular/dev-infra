@@ -1,0 +1,15 @@
+load("//tools:defaults.bzl", "ts_project")
+
+ts_project(
+    name = "validate",
+    srcs = glob(["*.ts"]),
+    visibility = ["//ng-dev/config:__subpackages__"],
+    deps = [
+        "//ng-dev:node_modules/@types/yargs",
+        "//ng-dev/commit-message",
+        "//ng-dev/format",
+        "//ng-dev/pr/config",
+        "//ng-dev/release/config",
+        "//ng-dev/utils",
+    ],
+)

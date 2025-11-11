@@ -1,0 +1,13 @@
+load("//tools:defaults.bzl", "ts_project")
+
+ts_project(
+    name = "config",
+    srcs = [
+        "cli.ts",
+    ],
+    visibility = ["//ng-dev:__subpackages__"],
+    deps = [
+        "//ng-dev:node_modules/@types/yargs",
+        "//ng-dev/config/validate",
+    ],
+)
