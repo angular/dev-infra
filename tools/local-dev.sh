@@ -19,4 +19,4 @@ bazelCommand=${BAZEL:-"pnpm bazel"}
 
 # Execute the built ng-dev command in the current working directory
 # and pass-through arguments unmodified.
-${ngDevBinFile} ${@}
+LOCAL_NG_DEV_BUILD=1 ${ngDevBinFile} ${@}
