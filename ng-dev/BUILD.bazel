@@ -54,6 +54,7 @@ ts_project(
         "//ng-dev/auth",
         "//ng-dev/caretaker",
         "//ng-dev/commit-message",
+        "//ng-dev/config",
         "//ng-dev/format",
         "//ng-dev/misc",
         "//ng-dev/ngbot",
