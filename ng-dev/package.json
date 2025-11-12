@@ -67,7 +67,7 @@
     "tsx": "4.20.6",
     "typescript": "5.9.3",
     "utf-8-validate": "6.0.5",
-    "which": "5.0.0",
+    "which": "6.0.0",
     "yaml": "2.8.1",
     "yargs": "18.0.0"
   }
