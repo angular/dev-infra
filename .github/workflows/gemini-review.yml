@@ -17,7 +17,7 @@ jobs:
     # 89942104 is the user id for the angular robot account.
     if: |
       (
-        github.event_name == 'pull_request' &&
+        github.event_name == 'pull_request_target' &&
         github.event.pull_request.user.id == '89942104'
       )
     runs-on: 'ubuntu-latest'
