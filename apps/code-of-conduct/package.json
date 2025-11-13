@@ -1,13 +1,13 @@
 {
   "dependencies": {
     "@angular/animations": "21.0.0-rc.2",
-    "@angular/cdk": "21.0.0-rc.1",
+    "@angular/cdk": "21.0.0-rc.2",
     "@angular/common": "21.0.0-rc.2",
     "@angular/compiler": "21.0.0-rc.2",
     "@angular/core": "21.0.0-rc.2",
     "@angular/fire": "20.0.1",
     "@angular/forms": "21.0.0-rc.2",
-    "@angular/material": "21.0.0-rc.1",
+    "@angular/material": "21.0.0-rc.2",
     "@angular/platform-browser": "21.0.0-rc.2",
     "@angular/router": "21.0.0-rc.2",
     "@octokit/rest": "",
