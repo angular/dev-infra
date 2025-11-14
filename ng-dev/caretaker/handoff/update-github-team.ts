@@ -22,6 +22,8 @@ export async function updateCaretakerTeamViaPrompt() {
   const config = await getConfig([assertValidCaretakerConfig, assertValidGithubConfig]);
   /** The github team name for the caretaker group. */
   const caretakerGroup = `${config.github.name}-caretaker`;
+  /** The github team name for the group containing the repository releaser. */
+  const releaserGroup = `${config.github.name}-releaser`;
   /** The github team name for the group containing all possible caretakers. */
   const caretakerGroupRoster = `${config.github.name}-caretaker-roster`;
   /** The github team name for the group containing all possible emea caretakers. */
@@ -74,7 +76,8 @@ export async function updateCaretakerTeamViaPrompt() {
   }
 
   try {
-    await setCaretakerGroup(caretakerGroup, Array.from(selected));
+    await setGithubTeam(caretakerGroup, Array.from(selected));
+    await setGithubTeam(releaserGroup, Array.from(selected));
   } catch {
     return Log.error('  ✘  Failed to update caretaker group.');
   }
@@ -98,7 +101,7 @@ async function getGroupMembers(group: string) {
   }
 }
 
-async function setCaretakerGroup(group: string, members: string[]) {
+async function setGithubTeam(group: string, members: string[]) {
   /** The authenticated GitClient instance. */
   const git = await AuthenticatedGitClient.get();
   /** The full name of the group <org>/<group name>. */
@@ -127,7 +130,7 @@ async function setCaretakerGroup(group: string, members: string[]) {
     });
   };
 
-  Log.debug(`Caretaker Group: ${fullSlug}`);
+  Log.debug(`Github Team: ${fullSlug}`);
   Log.debug(`Current Membership: ${current.join(', ')}`);
   Log.debug(`New Membership:     ${members.join(', ')}`);
   Log.debug(`Removed:            ${removed.join(', ')}`);
