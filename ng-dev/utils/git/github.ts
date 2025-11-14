@@ -43,6 +43,7 @@ export class GithubClient {
   readonly rest: Octokit['rest'] = this._octokit.rest;
   readonly paginate: Octokit['paginate'] = this._octokit.paginate;
   readonly checks: Octokit['checks'] = this._octokit.checks;
+  readonly users: Octokit['users'] = this._octokit.users;
 
   constructor(private _octokitOptions?: OctokitOptions) {}
 }
