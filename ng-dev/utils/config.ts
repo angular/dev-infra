@@ -48,6 +48,13 @@ export interface GithubConfig {
    * merges, or allowing all team members to do so.
    */
   mergeMode: RepositoryMergeModes;
+  /**
+   * Whether the repository requires being set to release for its merge-mode before release.
+   *
+   * This is put in place during the rollout period of merge-modes for releasing and will be
+   * removed in the future when all repositories are required to use release mode during release.
+   */
+  requireReleaseModeForRelease?: true;
 }
 
 /** Configuration describing how files are synced into Google. */
