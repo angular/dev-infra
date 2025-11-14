@@ -45,6 +45,7 @@ export const testReleasePackages: NpmPackage[] = [
 /** Gets test configurations for running testing a publish action. */
 export function getTestConfigurationsForAction() {
   const githubConfig: GithubConfig = {
+    mergeMode: 'caretaker-only',
     owner: 'angular',
     name: 'dev-infra-test',
     mainBranchName: 'master',

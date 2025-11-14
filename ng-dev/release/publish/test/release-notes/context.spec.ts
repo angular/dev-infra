@@ -16,6 +16,7 @@ const defaultContextData: RenderContextData = {
   hiddenScopes: undefined,
   groupOrder: undefined,
   github: {
+    mergeMode: 'caretaker-only',
     name: 'repoName',
     owner: 'repoOwner',
     mainBranchName: 'master',
