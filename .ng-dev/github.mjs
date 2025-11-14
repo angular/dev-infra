@@ -9,4 +9,5 @@ export const github = {
   name: 'dev-infra',
   mainBranchName: 'main',
   useNgDevAuthService: true,
+  mergeMode: 'caretaker-only',
 };
