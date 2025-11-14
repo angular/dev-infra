@@ -12,7 +12,12 @@ describe('Changelog', () => {
   beforeEach(() => {
     cleanTestTmpDir();
     gitClient = getMockGitClient(
-      {owner: 'angular', name: 'dev-infra-test', mainBranchName: 'main'},
+      {
+        mergeMode: 'team-only',
+        owner: 'angular',
+        name: 'dev-infra-test',
+        mainBranchName: 'main',
+      },
       /* useSandboxGitClient */ false,
     );
     spyOn(GitClient, 'get').and.resolveTo(gitClient);

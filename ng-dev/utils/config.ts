@@ -23,6 +23,9 @@ export type NgDevConfig<T = {}> = T & {
   __isNgDevConfigObject: boolean;
 };
 
+/** The merge modes repositories can defined as their normal merge mode. */
+export type RepositoryMergeModes = 'team-only' | 'caretaker-only';
+
 /**
  * Describes the Github configuration for dev-infra. This configuration is
  * used for API requests, determining the upstream remote, etc.
@@ -40,6 +43,11 @@ export interface GithubConfig {
   private?: boolean;
   /** Whether to default to use NgDevService for authentication. */
   useNgDevAuthService?: boolean;
+  /**
+   * The merge mode to use for the repository, either allowing only the caretaker to perform
+   * merges, or allowing all team members to do so.
+   */
+  mergeMode: RepositoryMergeModes;
 }
 
 /** Configuration describing how files are synced into Google. */
@@ -176,6 +184,9 @@ export function assertValidGithubConfig<T extends NgDevConfig>(
     }
     if (config.github.owner === undefined) {
       errors.push(`"github.owner" is not defined`);
+    }
+    if (config.github.mergeMode === undefined) {
+      errors.push(`"github.mergeMode" is not defined`);
     }
   }
   if (errors.length) {

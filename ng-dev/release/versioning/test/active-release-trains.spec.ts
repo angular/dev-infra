@@ -288,7 +288,12 @@ describe('active release train determination', () => {
   let repo: ReleaseRepoWithApi;
 
   beforeEach(() => {
-    setup({owner: 'angular', name: 'dev-infra-test', mainBranchName: 'main'});
+    setup({
+      mergeMode: 'team-only',
+      owner: 'angular',
+      name: 'dev-infra-test',
+      mainBranchName: 'main',
+    });
   });
 
   afterEach(() => nock.cleanAll());
