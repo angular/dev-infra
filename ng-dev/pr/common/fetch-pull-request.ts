@@ -65,11 +65,13 @@ export const PR_SCHEMA = {
                         status: graphqlTypes.custom<CheckStatusState>(),
                         conclusion: graphqlTypes.custom<CheckConclusionState | null>(),
                         name: graphqlTypes.string,
+                        completedAt: graphqlTypes.string,
                       },
                       StatusContext: {
                         __typename: graphqlTypes.constant('StatusContext'),
                         state: graphqlTypes.custom<StatusState>(),
                         context: graphqlTypes.string,
+                        createdAt: graphqlTypes.string,
                       },
                     }),
                   ],
@@ -232,26 +234,35 @@ export function getStatusesForPullRequest(
     };
   }
 
-  const statuses = statusCheckRollup.contexts.nodes.map((context) => {
-    switch (context.__typename) {
-      case 'CheckRun':
-        return {
-          type: 'check' as const,
-          name: context.name,
-          status: normalizeGithubCheckState(context.conclusion, context.status),
-        };
-      case 'StatusContext':
-        return {
-          type: 'status' as const,
-          name: context.context,
-          status: normalizeGithubStatusState(context.state),
-        };
-    }
-  });
+  /** A map of all of the statuses indexed by their names. */
+  const statusMap = new Map<string, PullRequestStatusInfo['statuses'][number]>();
+
+  statusCheckRollup.contexts.nodes
+    .sort((a, b) => {
+      const aTimestamp = Date.parse(a.completedAt || a.createdAt || '0');
+      const bTimestamp = Date.parse(b.completedAt || b.createdAt || '0');
+      return aTimestamp - bTimestamp;
+    })
+    .forEach((context) => {
+      switch (context.__typename) {
+        case 'CheckRun':
+          statusMap.set(context.name, {
+            type: 'check' as const,
+            name: context.name,
+            status: normalizeGithubCheckState(context.conclusion, context.status),
+          });
+        case 'StatusContext':
+          statusMap.set(context.context!, {
+            type: 'status' as const,
+            name: context.context!,
+            status: normalizeGithubStatusState(context.state!),
+          });
+      }
+    });
 
   return {
     combinedStatus: normalizeGithubStatusState(statusCheckRollup.state),
-    statuses,
+    statuses: Array.from(statusMap.values()),
   };
 }
 
