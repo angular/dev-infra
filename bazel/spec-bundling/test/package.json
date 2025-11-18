@@ -1,8 +1,8 @@
 {
   "dependencies": {
-    "@angular/compiler": "21.0.0-rc.2",
-    "@angular/core": "21.0.0-rc.2",
-    "@angular/platform-browser": "21.0.0-rc.2",
+    "@angular/compiler": "21.0.0-rc.3",
+    "@angular/core": "21.0.0-rc.3",
+    "@angular/platform-browser": "21.0.0-rc.3",
     "@types/jasmine": "5.1.13",
     "@types/jsdom": "27.0.0",
     "@types/node": "24.10.1",
