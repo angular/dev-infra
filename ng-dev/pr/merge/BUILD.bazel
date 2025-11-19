@@ -27,7 +27,6 @@ ts_project(
         "//ng-dev:node_modules/@types/node",
         "//ng-dev:node_modules/@types/semver",
         "//ng-dev:node_modules/@types/yargs",
-        "//ng-dev:node_modules/chalk",
         "//ng-dev:node_modules/typed-graphqlify",
         "//ng-dev/commit-message",
         "//ng-dev/pr/common",

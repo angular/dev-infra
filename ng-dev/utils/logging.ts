@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import chalk, {ChalkInstance} from 'chalk';
+import {styleText} from 'util';
 import {createWriteStream, WriteStream, copyFileSync} from 'fs';
 import {join} from 'path';
 import {Arguments} from 'yargs';
@@ -30,14 +30,13 @@ export enum LogLevel {
 /** Default log level for the tool. */
 export const DEFAULT_LOG_LEVEL = LogLevel.INFO;
 
-/** Reexport of chalk colors for convenient access. */
-export const red = chalk.red;
-export const reset = chalk.reset;
-export const green = chalk.green;
-export const yellow = chalk.yellow;
-export const bold = chalk.bold;
-export const blue = chalk.blue;
-export const underline = chalk.underline;
+/** Reexport of colors/styling for convenient access. */
+export const red = styleText.bind(null, 'red');
+export const green = styleText.bind(null, 'green');
+export const yellow = styleText.bind(null, 'yellow');
+export const bold = styleText.bind(null, 'bold');
+export const blue = styleText.bind(null, 'blue');
+export const underline = styleText.bind(null, 'underline');
 
 /** Class used for logging to the console and to a ng-dev log file. */
 export abstract class Log {
@@ -45,7 +44,7 @@ export abstract class Log {
   static info = buildLogLevelFunction(() => console.info, LogLevel.INFO, null);
 
   /** Write to the console for at ERROR logging level */
-  static error = buildLogLevelFunction(() => console.error, LogLevel.ERROR, chalk.red);
+  static error = buildLogLevelFunction(() => console.error, LogLevel.ERROR, red);
 
   /** Write to the console for at DEBUG logging level */
   static debug = buildLogLevelFunction(() => console.debug, LogLevel.DEBUG, null);
@@ -54,14 +53,14 @@ export abstract class Log {
   static log = buildLogLevelFunction(() => console.log, LogLevel.LOG, null);
 
   /** Write to the console for at WARN logging level */
-  static warn = buildLogLevelFunction(() => console.warn, LogLevel.WARN, chalk.yellow);
+  static warn = buildLogLevelFunction(() => console.warn, LogLevel.WARN, yellow);
 }
 
 /** Build an instance of a logging function for the provided level. */
 function buildLogLevelFunction(
   loadCommand: () => Function,
   level: LogLevel,
-  defaultColor: ChalkInstance | null,
+  defaultColor: ((text: string) => string) | null,
 ) {
   /** Write to stdout for the LOG_LEVEL. */
   return (...values: unknown[]) => {

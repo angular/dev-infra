@@ -57,7 +57,6 @@ ts_project(
         "//ng-dev:node_modules/@types/yargs",
         "//ng-dev:node_modules/@types/yarnpkg__lockfile",
         "//ng-dev:node_modules/@yarnpkg/lockfile",
-        "//ng-dev:node_modules/chalk",
         "//ng-dev:node_modules/semver",
         "//ng-dev:node_modules/supports-color",
         "//ng-dev:node_modules/typed-graphqlify",

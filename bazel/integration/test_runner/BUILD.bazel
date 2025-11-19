@@ -9,7 +9,6 @@ ts_project(
     tsconfig = "//bazel:tsconfig",
     deps = [
         "//bazel:node_modules/@types/node",
-        "//bazel:node_modules/chalk",
         "//bazel:node_modules/tinyglobby",
         "//bazel:node_modules/true-case-path",
     ],
