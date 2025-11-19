@@ -7,7 +7,11 @@
  */
 
 import {Prompt} from '../../utils/prompt.js';
-import {getConfig, assertValidCaretakerConfig} from '../../utils/config.js';
+import {
+  getConfig,
+  assertValidCaretakerConfig,
+  assertValidGithubConfig,
+} from '../../utils/config.js';
 
 import {green, Log} from '../../utils/logging.js';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
@@ -15,83 +19,64 @@ import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.j
 /** Update the Github caretaker group, using a prompt to obtain the new caretaker group members.  */
 export async function updateCaretakerTeamViaPrompt() {
   /** Caretaker specific configuration. */
-  const config = await getConfig([assertValidCaretakerConfig]);
-  const {caretakerGroup} = config.caretaker;
+  const config = await getConfig([assertValidCaretakerConfig, assertValidGithubConfig]);
+  /** The github team name for the caretaker group. */
+  const caretakerGroup = `${config.github.name}-caretaker`;
+  /** The github team name for the group containing all possible caretakers. */
+  const caretakerGroupRoster = `${config.github.name}-caretaker-roster`;
+  /** The github team name for the group containing all possible emea caretakers. */
+  const caretakerGroupEmeaRoster = `${config.github.name}-caretaker-roster-emea`;
 
-  if (caretakerGroup === undefined) {
-    throw Error('`caretakerGroup` is not defined in the `caretaker` config');
-  }
-
-  /** The list of current members in the group. */
+  /** A set of the current caretakers in the {@link caretakerGroup}} */
   const current = new Set(await getGroupMembers(caretakerGroup));
-  const [roster, emeaRoster] = await Promise.all([
-    getGroupMembers(`${caretakerGroup}-roster`),
-    getGroupMembers(`${caretakerGroup}-roster-emea`),
-  ]);
-  if (emeaRoster === null) {
-    Log.debug(`  Unable to retrieve members of the group: ${caretakerGroup}-roster-emea`);
-  }
-  if (roster === null) {
-    Log.error(`  ✘  Unable to retrieve members of the group: ${caretakerGroup}-roster`);
-    return;
+  /** A list of the team members in the {@link caretakerGroupRoster}} */
+  const roster = await getGroupMembers(caretakerGroupRoster);
+  /** A list of the team members in the {@link caretakerGroupEmeaRoster}} */
+  const emeaRoster = await getGroupMembers(caretakerGroupEmeaRoster);
+
+  if (roster.length === 0) {
+    return Log.error(`  ✘  Unable to retrieve members of the group: ${caretakerGroupRoster}`);
   }
 
-  /** The list of users selected to be members of the caretaker group. */
-  const selectedPrimaryAndSecondary = await Prompt.checkbox<string>({
-    choices: roster.map((member) => ({
-      value: member,
-      checked: current.has(member),
-    })),
-    message:
-      'Select 2 caretakers for the upcoming rotation (primary and secondary, http://go/ng-caretaker-schedule):',
-    validate: (value) => {
-      if (value.length !== 2) {
-        return 'Please select exactly 2 caretakers for the upcoming rotation.';
-      }
-      return true;
-    },
-  });
-
-  let selectedEmea = '';
-  if (emeaRoster !== null) {
-    const emeaOptions = emeaRoster
-      // Do not show members that are already selected as primary/secondary.
-      .filter((m) => !selectedPrimaryAndSecondary.includes(m))
-      .map((member) => ({
+  /** The set of users selected to be members of the caretaker group. */
+  const selected = new Set(
+    await Prompt.checkbox<string>({
+      choices: roster.map((member) => ({
         value: member,
-        name: `${member} (EMEA)`,
         checked: current.has(member),
-      }));
-    selectedEmea = await Prompt.select<string>({
-      choices: emeaOptions,
-      message: 'Select EMEA caretaker (http://go/ng-caretaker-schedule-emea)',
-    });
+      })),
+      message:
+        'Select 2 caretakers for the upcoming rotation (primary and secondary, http://go/ng-caretakers):',
+      validate: (value) => {
+        if (value.length !== 2) {
+          return 'Please select exactly 2 caretakers for the upcoming rotation.';
+        }
+        return true;
+      },
+    }),
+  );
 
-    /** Whether the user positively confirmed the selected made. */
-    const confirmation = await Prompt.confirm({
-      default: true,
-      message: 'Are you sure?',
-    });
-
-    if (confirmation === false) {
-      Log.warn('  ⚠  Skipping caretaker group update.');
-      return;
-    }
+  if (config.caretaker.hasEmeaCaretaker) {
+    selected.add(
+      await Prompt.select<string>({
+        choices: emeaRoster.map((value) => ({value})),
+        message: 'Select EMEA caretaker (http://go/ng-caretaker-schedule-emea)',
+      }),
+    );
   }
 
-  const selectedSorted = [...selectedPrimaryAndSecondary, selectedEmea].filter((_) => !!_).sort();
-  const currentSorted = Array.from(current).sort();
+  if (!(await Prompt.confirm({default: true, message: 'Are you sure?'}))) {
+    return Log.warn('  ⚠  Skipping caretaker group update.');
+  }
 
-  if (JSON.stringify(selectedSorted) === JSON.stringify(currentSorted)) {
-    Log.info(green('  ✔  Caretaker group already up to date.'));
-    return;
+  if (JSON.stringify(Array.from(selected).sort()) === JSON.stringify(Array.from(current).sort())) {
+    return Log.info(green('  ✔  Caretaker group already up to date.'));
   }
 
   try {
-    await setCaretakerGroup(caretakerGroup, selectedSorted);
+    await setCaretakerGroup(caretakerGroup, Array.from(selected));
   } catch {
-    Log.error('  ✘  Failed to update caretaker group.');
-    return;
+    return Log.error('  ✘  Failed to update caretaker group.');
   }
   Log.info(green('  ✔  Successfully updated caretaker group'));
 }
@@ -101,17 +86,15 @@ async function getGroupMembers(group: string) {
   /** The authenticated GitClient instance. */
   const git = await AuthenticatedGitClient.get();
   try {
-    return (
-      await git.github.teams.listMembersInOrg({
+    return await git.github.teams
+      .listMembersInOrg({
         org: git.remoteConfig.owner,
         team_slug: group,
       })
-    ).data
-      .filter((_) => !!_)
-      .map((member) => member!.login);
+      .then(({data}) => data.map((member) => member.login));
   } catch (e) {
     Log.debug(e);
-    return null;
+    return [];
   }
 }
 
