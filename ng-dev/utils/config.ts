@@ -64,14 +64,11 @@ export interface GoogleSyncConfig {
 export interface CaretakerConfig {
   /** Github queries showing a snapshot of pulls/issues caretakers need to monitor. */
   githubQueries?: {name: string; query: string}[];
-  /**
-   * The Github group used to track current caretakers. A second group is assumed to exist with the
-   * name "<group-name>-roster" containing a list of all users eligible for the caretaker group.
-   * */
-  caretakerGroup?: string;
+  /** Whether the repository uses an additional caretaker from an emea group. */
+  hasEmeaCaretaker?: true;
   /**
    * Project-relative path to a config file describing how the project is synced into Google.
-   * The configuration file is expected to be valid JSONC and match {@see GoogleSyncConfig}.
+   * The configuration file is expected to be valid JSONC and match {@link GoogleSyncConfig}.
    */
   g3SyncConfigPath?: string;
 }
