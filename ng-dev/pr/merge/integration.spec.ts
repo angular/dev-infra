@@ -35,7 +35,12 @@ describe('default target labels', () => {
 
   beforeEach(() => {
     api = new GithubClient();
-    githubConfig = {owner: 'angular', name: 'dev-infra-test', mainBranchName: 'master'};
+    githubConfig = {
+      mergeMode: 'caretaker-only',
+      owner: 'angular',
+      name: 'dev-infra-test',
+      mainBranchName: 'master',
+    };
     releaseConfig = {
       representativeNpmPackage: '@angular/dev-infra-test-pkg',
       npmPackages: [{name: '@angular/dev-infra-test-pkg'}],

@@ -33,7 +33,12 @@ describe('release notes generation', () => {
       representativeNpmPackage: 'test-pkg',
       buildPackages: async () => [],
     };
-    githubConfig = {owner: 'angular', name: 'dev-infra-test', mainBranchName: 'main'};
+    githubConfig = {
+      mergeMode: 'caretaker-only',
+      owner: 'angular',
+      name: 'dev-infra-test',
+      mainBranchName: 'main',
+    };
     setConfig({github: githubConfig, release: releaseConfig});
     client = getMockGitClient(githubConfig, /* useSandboxGitClient */ true);
 

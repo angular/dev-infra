@@ -11,10 +11,15 @@ import {Argv} from 'yargs';
 import {assertValidCaretakerConfig, assertValidGithubConfig, getConfig} from '../utils/config.js';
 import {CheckModule} from './check/cli.js';
 import {HandoffModule} from './handoff/cli.js';
+import {MergeModeModule} from './merge-mode/cli.js';
 
 /** Build the parser for the caretaker commands. */
 export function buildCaretakerParser(argv: Argv) {
-  return argv.middleware(caretakerCommandCanRun, false).command(CheckModule).command(HandoffModule);
+  return argv
+    .middleware(caretakerCommandCanRun, false)
+    .command(MergeModeModule)
+    .command(CheckModule)
+    .command(HandoffModule);
 }
 
 function caretakerCommandCanRun() {

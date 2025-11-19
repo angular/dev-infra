@@ -17,6 +17,7 @@ import {GitClient} from '../git/git-client.js';
 /** A mock instance of a configuration for the ng-dev toolset for default testing. */
 export const mockNgDevConfig: {github: GithubConfig} = {
   github: {
+    mergeMode: 'caretaker-only',
     name: 'name',
     owner: 'owner',
     mainBranchName: 'master',
