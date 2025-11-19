@@ -545,8 +545,8 @@ importers:
         specifier: 8.0.0
         version: 8.0.0(supports-color@10.2.2)
       '@google/genai':
-        specifier: 1.29.1
-        version: 1.29.1(@modelcontextprotocol/sdk@1.21.1(supports-color@10.2.2))(bufferutil@4.0.9)(supports-color@10.2.2)(utf-8-validate@6.0.5)
+        specifier: 1.30.0
+        version: 1.30.0(@modelcontextprotocol/sdk@1.21.1(supports-color@10.2.2))(bufferutil@4.0.9)(supports-color@10.2.2)(utf-8-validate@6.0.5)
       '@inquirer/prompts':
         specifier: 7.10.1
         version: 7.10.1(@types/node@24.10.1)
@@ -1603,8 +1603,8 @@ packages:
     resolution: {integrity: sha512-gOnCAbFgAYKRozywLsxagdevTF7Gm+2Ncz5u5CQAuOv/2VCa0rdGJWvJFDOftPx1tc+q8TXiC2pEJfFKu+yeMQ==}
     engines: {node: '>=14'}
 
-  '@google/genai@1.29.1':
-    resolution: {integrity: sha512-Buywpq0A6xf9cOdhiWCi5KUiDBbZkjCH5xbl+xxNQRItoYQgd31p0OKyn5cUnT0YNzC/pAmszqXoOc7kncqfFQ==}
+  '@google/genai@1.30.0':
+    resolution: {integrity: sha512-3MRcgczBFbUat1wIlZoLJ0vCCfXgm7Qxjh59cZi2X08RgWLtm9hKOspzp7TOg1TV2e26/MLxR2GR5yD5GmBV2w==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       '@modelcontextprotocol/sdk': ^1.20.1
@@ -7288,7 +7288,7 @@ snapshots:
       - supports-color
     optional: true
 
-  '@google/genai@1.29.1(@modelcontextprotocol/sdk@1.21.1(supports-color@10.2.2))(bufferutil@4.0.9)(supports-color@10.2.2)(utf-8-validate@6.0.5)':
+  '@google/genai@1.30.0(@modelcontextprotocol/sdk@1.21.1(supports-color@10.2.2))(bufferutil@4.0.9)(supports-color@10.2.2)(utf-8-validate@6.0.5)':
     dependencies:
       google-auth-library: 10.5.0(supports-color@10.2.2)
       ws: 8.18.3(bufferutil@4.0.9)(utf-8-validate@6.0.5)
