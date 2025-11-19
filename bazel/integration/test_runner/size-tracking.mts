@@ -7,15 +7,16 @@
  */
 
 import {runCommandInChildProcess} from './process_utils.mjs';
+import {styleText} from 'node:util';
 import {existsSync} from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import chalk from 'chalk';
 import {debug} from './debug.mjs';
 import {globSync} from 'tinyglobby';
 
-// Convience access to chalk colors.
-const {red, green} = chalk;
+// Convience access to colors.
+export const red = styleText.bind(null, 'red');
+export const green = styleText.bind(null, 'green');
 /** The size discrepancy we allow in bytes. */
 const THRESHOLD_BYTES = 5000;
 /** The size discrepancy as a percentage. */

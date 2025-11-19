@@ -7,7 +7,6 @@ ts_project(
     deps = [
         "//ng-dev:node_modules/@types/node",
         "//ng-dev:node_modules/@types/yargs",
-        "//ng-dev:node_modules/chalk",
         "//ng-dev:node_modules/fast-glob",
         "//ng-dev:node_modules/typescript",
         "//ng-dev/utils",

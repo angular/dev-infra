@@ -13,6 +13,7 @@ import {readFileSync} from 'fs';
 import {testApiGolden} from './test_api_report.js';
 import * as fs from 'fs';
 import {Piscina} from 'piscina';
+import {styleText} from 'util';
 
 /** Interface describing contents of a `package.json`. */
 export interface PackageJson {
@@ -36,9 +37,8 @@ async function main(
 ) {
   /** Whether the goldenDir provided is actually pointing to a single file. */
   const singleFileMode = fs.existsSync(goldenDir) && fs.statSync(goldenDir).isFile();
-  // TODO(ESM) This can be replaced with an actual ESM import when `ts_library` is
-  // guaranteed to be ESM-only and supports the `mts` extension.
-  const chalk = {red: (v: string) => v, yellow: (v: string) => v};
+  const red = styleText.bind(null, 'red');
+  const yellow = styleText.bind(null, 'yellow');
 
   const packageJsonPath = path.join(npmPackageDir, 'package.json');
   const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8')) as PackageJson;
@@ -124,16 +124,16 @@ async function main(
     console.error(Array(80).fill('=').join(''));
     if (singleFileMode) {
       console.error(
-        chalk.red(
+        red(
           `The golden is out of date and can be updated by running:\n  - bazel run ${process.env.TEST_TARGET}.accept`,
         ),
       );
     } else {
-      console.error(chalk.red(`The following goldens are outdated:`));
+      console.error(red(`The following goldens are outdated:`));
       outdatedGoldens.forEach((name) => console.info(`-  ${name}`));
       console.info();
       console.info(
-        chalk.yellow(
+        yellow(
           `The goldens can be updated by running:\n  - bazel run ${process.env.TEST_TARGET}.accept`,
         ),
       );
