@@ -6,9 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {promises as fs} from 'fs';
+import {existsSync, promises as fs} from 'fs';
 import {join} from 'path';
 import semver from 'semver';
+import glob from 'fast-glob';
 
 import {workspaceRelativePackageJsonPath} from '../../utils/constants.js';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
@@ -133,6 +134,21 @@ export abstract class ReleaseAction {
     // to avoid unnecessary diff. IDEs usually add a trailing new line.
     await fs.writeFile(pkgJsonPath, `${JSON.stringify(pkgJson, null, 2)}\n`);
     Log.info(green(`  ✓   Updated project version to ${pkgJson.version}`));
+
+    // TODO: remove when Angular version 19 is no longer in LTS.
+    if (existsSync(join(this.projectDir, '.aspect'))) {
+      await ExternalCommands.invokeBazelUpdateAspectLockFiles(this.projectDir);
+    }
+  }
+
+  /*
+   * Get the modified Aspect lock files if `rulesJsInteropMode` is enabled.
+   */
+  protected getAspectLockFiles(): string[] {
+    // TODO: remove when Angular version 19 is no longer in LTS.
+    return existsSync(join(this.projectDir, '.aspect'))
+      ? [...glob.sync('.aspect/**', {cwd: this.projectDir}), 'pnpm-lock.yaml']
+      : [];
   }
 
   /** Gets the most recent commit of a specified branch. */
@@ -202,7 +218,11 @@ export abstract class ReleaseAction {
     }
 
     // Commit message for the release point.
-    const filesToCommit = [workspaceRelativePackageJsonPath, workspaceRelativeChangelogPath];
+    const filesToCommit = [
+      workspaceRelativePackageJsonPath,
+      workspaceRelativeChangelogPath,
+      ...this.getAspectLockFiles(),
+    ];
 
     const commitMessage = getCommitMessageForRelease(newVersion);
 
