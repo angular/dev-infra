@@ -19,6 +19,7 @@ import {ReleasePrecheckJsonStdin} from '../precheck/cli.js';
 import {BuiltPackageWithInfo} from '../config/index.js';
 import {green, Log} from '../../utils/logging.js';
 import {PnpmVersioning} from './pnpm-versioning.js';
+import {getBazelBin} from '../../utils/bazel-bin.js';
 
 /*
  * ###############################################################
@@ -287,5 +288,25 @@ export abstract class ExternalCommands {
         cwd: projectDir,
       });
     }
+  }
+
+  /**
+   * Invokes the `yarn bazel sync --only=repo` command in order
+   * to refresh Aspect lock files.
+   */
+  static async invokeBazelUpdateAspectLockFiles(projectDir: string): Promise<void> {
+    // TODO: remove when Angular version 19 is no longer in LTS.
+    const spinner = new Spinner('Updating Aspect lock files');
+    try {
+      await ChildProcess.spawn(getBazelBin(), ['sync', '--only=repo'], {
+        cwd: projectDir,
+        mode: 'silent',
+      });
+    } catch (e) {
+      // Note: Gracefully handling these errors because `sync` command
+      // exits with a non-zero exit code when pnpm-lock.yaml file is updated.
+      Log.debug(e);
+    }
+    spinner.success(green(' Updated Aspect `rules_js` lock files.'));
   }
 }
