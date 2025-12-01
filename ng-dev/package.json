@@ -30,7 +30,7 @@
     "@octokit/request-error": "7.1.0",
     "@octokit/rest": "22.0.1",
     "@octokit/types": "16.0.0",
-    "@pnpm/dependency-path": "1001.1.5",
+    "@pnpm/dependency-path": "1001.1.6",
     "@types/cli-progress": "3.11.6",
     "@types/ejs": "3.1.5",
     "@types/events": "3.0.3",
@@ -63,11 +63,11 @@
     "semver": "7.7.3",
     "supports-color": "10.2.2",
     "typed-graphqlify": "3.1.6",
-    "tsx": "4.20.6",
+    "tsx": "4.21.0",
     "typescript": "5.9.3",
     "utf-8-validate": "6.0.5",
     "which": "6.0.0",
-    "yaml": "2.8.1",
+    "yaml": "2.8.2",
     "yargs": "18.0.0"
   }
 }
