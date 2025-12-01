@@ -16,7 +16,6 @@ ts_project(
         "//ng-dev/release/npm-dist-tag",
         "//ng-dev/release/precheck",
         "//ng-dev/release/publish",
-        "//ng-dev/release/set-dist-tag",
         "//ng-dev/release/stamping",
         "//ng-dev/utils",
     ],
