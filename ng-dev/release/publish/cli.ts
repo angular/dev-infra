@@ -55,6 +55,6 @@ async function handler(flags: Arguments<ReleasePublishOptions>) {
 export const ReleasePublishCommandModule: CommandModule<{}, ReleasePublishOptions> = {
   builder,
   handler,
-  command: 'publish',
+  command: '$0',
   describe: 'Publish new releases and configure version branches.',
 };

@@ -80,5 +80,6 @@ export const ReleaseNotesCommandModule: CommandModule<{}, Options> = {
   builder,
   handler,
   command: 'notes',
-  describe: 'Generate release notes',
+  // Hidden from help as this is for use by the release tooling itself.
+  describe: false,
 };

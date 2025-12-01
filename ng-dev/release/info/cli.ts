@@ -68,5 +68,6 @@ export const ReleaseInfoCommandModule: CommandModule<{}, ReleaseInfoOptions> = {
   builder,
   handler,
   command: 'info',
-  describe: 'Prints information for the current release state.',
+  // Hidden from help as this is for use by the release tooling itself.
+  describe: false,
 };
