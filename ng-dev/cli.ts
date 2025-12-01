@@ -38,7 +38,7 @@ runParserWithCompletedFunctions((yargs: Argv) => {
     .command('format <command>', '', buildFormatParser)
     .command('pr <command>', '', buildPrParser)
     .command('pullapprove <command>', '', buildPullapproveParser)
-    .command('release <command>', '', buildReleaseParser)
+    .command('release', '', buildReleaseParser)
     .command('ts-circular-deps <command>', '', tsCircularDependenciesBuilder)
     .command('caretaker <command>', '', buildCaretakerParser)
     .command('misc <command>', '', buildMiscParser)

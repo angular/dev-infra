@@ -71,5 +71,6 @@ async function handler() {
 export const ReleasePrecheckCommandModule: CommandModule<{}, {}> = {
   handler,
   command: 'precheck',
+  // Hidden from help as this is for use by the release tooling itself.
   describe: false,
 };
