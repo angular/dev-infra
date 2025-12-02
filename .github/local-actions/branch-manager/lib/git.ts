@@ -25,6 +25,7 @@ export async function setupConfigAndGitClient(token: string, repo: {owner: strin
       mainBranchName,
       owner: repo.owner,
       name: repo.repo,
+      mergeMode: 'caretaker-only',
     },
     pullRequest: {
       githubApiMerge: false,
