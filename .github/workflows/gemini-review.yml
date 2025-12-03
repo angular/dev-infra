@@ -40,10 +40,10 @@ jobs:
             --repo "${REPOSITORY}"
 
       - name: 'Checkout repository'
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: 'Run Gemini security analysis review'
-        uses: 'google-github-actions/run-gemini-cli@6f116f01b6bfaf784e5dd71abd1f322f20e03e38' # v0.1.15
+        uses: 'google-github-actions/run-gemini-cli@635ea06c806bdd9d252334d92222e72674a653e8' # v0.1.16
         id: 'gemini_security_analysis'
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
