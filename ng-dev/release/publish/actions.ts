@@ -42,7 +42,6 @@ import {githubReleaseBodyLimit} from './constants.js';
 import {ExternalCommands} from './external-commands.js';
 import {promptToInitiatePullRequestMerge} from './prompt-merge.js';
 import {Prompt} from '../../utils/prompt.js';
-import {PnpmVersioning} from './pnpm-versioning.js';
 import {Commit} from '../../utils/git/octokit-types.js';
 
 /** Interface describing a Github repository. */
@@ -100,8 +99,6 @@ export abstract class ReleaseAction {
    * @throws {FatalReleaseActionError} When the action has been aborted due to a fatal error.
    */
   abstract perform(): Promise<void>;
-
-  protected pnpmVersioning = new PnpmVersioning();
 
   constructor(
     protected active: ActiveReleaseTrains,
@@ -386,30 +383,16 @@ export abstract class ReleaseAction {
     this.git.run(['checkout', '-q', 'FETCH_HEAD', '--detach']);
   }
 
-  /** Installs all Yarn dependencies in the current branch. */
+  /** Installs all node dependencies in the current branch. */
   protected async installDependenciesForCurrentBranch() {
-    if (await this.pnpmVersioning.isUsingPnpm(this.projectDir)) {
-      // Note: We delate all contents of `node_modules` before installing dependencies. We do
-      // this because if a pnpm workspace package exists at one ref and not another, it can
-      // cause the pnpm install from within Bazel to errantly attempt to install a package that
-      // does not exist.
-      try {
-        this.git.run(['clean', '-qdfX', '**/node_modules']);
-      } catch {}
-      await ExternalCommands.invokePnpmInstall(this.projectDir);
-      return;
-    }
-
-    // Note: We delete all contents of the `node_modules` first. This is necessary
-    // because Yarn could preserve extraneous/outdated nested modules that will cause
-    // unexpected build failures with the NodeJS Bazel `@npm` workspace generation.
-    // This is a workaround for: https://github.com/yarnpkg/yarn/issues/8146. Even though
-    // we might be able to fix this with Yarn 2+, it is reasonable ensuring clean node modules.
-    // TODO: Remove this when we use Yarn 2+ in all Angular repositories.
+    // Note: We delate all contents of `node_modules` before installing dependencies. We do
+    // this because if a pnpm workspace package exists at one ref and not another, it can
+    // cause the pnpm install from within Bazel to errantly attempt to install a package that
+    // does not exist.
     try {
       this.git.run(['clean', '-qdfX', '**/node_modules']);
     } catch {}
-    await ExternalCommands.invokeYarnInstall(this.projectDir);
+    await ExternalCommands.invokePnpmInstall(this.projectDir);
   }
 
   /**
@@ -439,14 +422,8 @@ export abstract class ReleaseAction {
     // publish branch. e.g. consider we publish patch version and a new package has been
     // created in the `next` branch. The new package would not be part of the patch branch,
     // so we cannot build and publish it.
-    const builtPackages = await ExternalCommands.invokeReleaseBuild(
-      this.projectDir,
-      this.pnpmVersioning,
-    );
-    const releaseInfo = await ExternalCommands.invokeReleaseInfo(
-      this.projectDir,
-      this.pnpmVersioning,
-    );
+    const builtPackages = await ExternalCommands.invokeReleaseBuild(this.projectDir);
+    const releaseInfo = await ExternalCommands.invokeReleaseInfo(this.projectDir);
 
     // Extend the built packages with their disk hash and NPM package information. This is
     // helpful later for verifying integrity and filtering out e.g. experimental packages.
@@ -511,7 +488,6 @@ export abstract class ReleaseAction {
       this.projectDir,
       newVersion,
       builtPackagesWithInfo,
-      this.pnpmVersioning,
     );
 
     // Verify the packages built are the correct version.

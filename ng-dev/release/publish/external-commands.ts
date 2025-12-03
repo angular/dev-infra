@@ -18,7 +18,6 @@ import {ReleaseInfoJsonStdout} from '../info/cli.js';
 import {ReleasePrecheckJsonStdin} from '../precheck/cli.js';
 import {BuiltPackageWithInfo} from '../config/index.js';
 import {green, Log} from '../../utils/logging.js';
-import {PnpmVersioning} from './pnpm-versioning.js';
 import {getBazelBin} from '../../utils/bazel-bin.js';
 
 /*
@@ -51,7 +50,6 @@ export abstract class ExternalCommands {
     projectDir: string,
     npmDistTag: NpmDistTag,
     version: semver.SemVer,
-    pnpmVersioning: PnpmVersioning,
     options: {skipExperimentalPackages: boolean} = {skipExperimentalPackages: false},
   ) {
     try {
@@ -66,7 +64,6 @@ export abstract class ExternalCommands {
           `--skip-experimental-packages=${options.skipExperimentalPackages}`,
         ],
         projectDir,
-        pnpmVersioning,
       );
 
       Log.info(green(`  ✓   Set "${npmDistTag}" NPM dist tag for all packages to v${version}.`));
@@ -81,17 +78,12 @@ export abstract class ExternalCommands {
    * Invokes the `ng-dev release npm-dist-tag delete` command in order to delete the
    * NPM dist tag for all packages in the checked-out version branch.
    */
-  static async invokeDeleteNpmDistTag(
-    projectDir: string,
-    npmDistTag: NpmDistTag,
-    pnpmVersioning: PnpmVersioning,
-  ) {
+  static async invokeDeleteNpmDistTag(projectDir: string, npmDistTag: NpmDistTag) {
     try {
       // Note: No progress indicator needed as that is the responsibility of the command.
       await this._spawnNpmScript(
         ['ng-dev', 'release', 'npm-dist-tag', 'delete', npmDistTag],
         projectDir,
-        pnpmVersioning,
       );
 
       Log.info(green(`  ✓   Deleted "${npmDistTag}" NPM dist tag for all packages.`));
@@ -106,10 +98,7 @@ export abstract class ExternalCommands {
    * Invokes the `ng-dev release build` command in order to build the release
    * packages for the currently checked out branch.
    */
-  static async invokeReleaseBuild(
-    projectDir: string,
-    pnpmVersioning: PnpmVersioning,
-  ): Promise<ReleaseBuildJsonStdout> {
+  static async invokeReleaseBuild(projectDir: string): Promise<ReleaseBuildJsonStdout> {
     // Note: We explicitly mention that this can take a few minutes, so that it's obvious
     // to caretakers that it can take longer than just a few seconds.
     const spinner = new Spinner('Building release output. This can take a few minutes.');
@@ -118,7 +107,6 @@ export abstract class ExternalCommands {
       const {stdout} = await this._spawnNpmScript(
         ['ng-dev', 'release', 'build', '--json'],
         projectDir,
-        pnpmVersioning,
         {
           mode: 'silent',
         },
@@ -144,15 +132,11 @@ export abstract class ExternalCommands {
    * This is useful to e.g. determine whether a built package is currently
    * denoted as experimental or not.
    */
-  static async invokeReleaseInfo(
-    projectDir: string,
-    pnpmVersioning: PnpmVersioning,
-  ): Promise<ReleaseInfoJsonStdout> {
+  static async invokeReleaseInfo(projectDir: string): Promise<ReleaseInfoJsonStdout> {
     try {
       const {stdout} = await this._spawnNpmScript(
         ['ng-dev', 'release', 'info', '--json'],
         projectDir,
-        pnpmVersioning,
         {mode: 'silent'},
       );
 
@@ -180,7 +164,6 @@ export abstract class ExternalCommands {
     projectDir: string,
     newVersion: semver.SemVer,
     builtPackagesWithInfo: BuiltPackageWithInfo[],
-    pnpmVersioning: PnpmVersioning,
   ): Promise<void> {
     const precheckStdin: ReleasePrecheckJsonStdin = {
       builtPackagesWithInfo,
@@ -188,7 +171,7 @@ export abstract class ExternalCommands {
     };
 
     try {
-      await this._spawnNpmScript(['ng-dev', 'release', 'precheck'], projectDir, pnpmVersioning, {
+      await this._spawnNpmScript(['ng-dev', 'release', 'precheck'], projectDir, {
         // Note: We pass the precheck information to the command through `stdin`
         // because command line arguments are less reliable and have length limits.
         input: JSON.stringify(precheckStdin),
@@ -200,39 +183,6 @@ export abstract class ExternalCommands {
       // To ease debugging in case of runtime exceptions, we still print the error to `debug`.
       Log.debug(e);
       Log.error(`  ✘   An error occurred while running release pre-checks.`);
-      throw new FatalReleaseActionError();
-    }
-  }
-
-  /**
-   * Invokes the `yarn install` command in order to install dependencies for
-   * the configured project with the currently checked out revision.
-   */
-  static async invokeYarnInstall(projectDir: string): Promise<void> {
-    // Note: We cannot use `yarn` directly as command because we might operate in
-    // a different publish branch and the current `PATH` will point to the Yarn version
-    // that invoked the release tool. More details in the function description.
-    const yarnCommand = await resolveYarnScriptForProject(projectDir);
-
-    try {
-      // Note: No progress indicator needed as that is the responsibility of the command.
-      // TODO: Consider using an Ora spinner instead to ensure minimal console output.
-      await ChildProcess.spawn(
-        yarnCommand.binary,
-        [
-          ...yarnCommand.args,
-          'install',
-          ...(yarnCommand.legacy ? ['--frozen-lockfile', '--non-interactive'] : ['--immutable']),
-        ],
-        {
-          cwd: projectDir,
-          mode: 'on-error',
-        },
-      );
-      Log.info(green('  ✓   Installed project dependencies.'));
-    } catch (e) {
-      Log.error(e);
-      Log.error('  ✘   An error occurred while installing dependencies.');
       throw new FatalReleaseActionError();
     }
   }
@@ -269,25 +219,12 @@ export abstract class ExternalCommands {
   private static async _spawnNpmScript(
     args: string[],
     projectDir: string,
-    pnpmVersioning: PnpmVersioning,
     spawnOptions: SpawnOptions = {},
   ): Promise<SpawnResult> {
-    if (await pnpmVersioning.isUsingPnpm(projectDir)) {
-      const pnpmSpec = await pnpmVersioning.getPackageSpec(projectDir);
-      return ChildProcess.spawn('npx', ['--yes', pnpmSpec, '-s', 'run', ...args], {
-        ...spawnOptions,
-        cwd: projectDir,
-      });
-    } else {
-      // Note: We cannot use `yarn` directly as command because we might operate in
-      // a different publish branch and the current `PATH` will point to the Yarn version
-      // that invoked the release tool. More details in the function description.
-      const yarnCommand = await resolveYarnScriptForProject(projectDir);
-      return ChildProcess.spawn(yarnCommand.binary, [...yarnCommand.args, ...args], {
-        ...spawnOptions,
-        cwd: projectDir,
-      });
-    }
+    return ChildProcess.spawn('npx', ['--yes', 'pnpm', '-s', 'run', ...args], {
+      ...spawnOptions,
+      cwd: projectDir,
+    });
   }
 
   /**

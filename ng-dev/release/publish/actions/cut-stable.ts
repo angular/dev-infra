@@ -86,7 +86,6 @@ export class CutStableAction extends ReleaseAction {
       await ExternalCommands.invokeDeleteNpmDistTag(
         this.projectDir,
         'do-not-use-exceptional-minor',
-        this.pnpmVersioning,
       );
     }
 
@@ -109,7 +108,6 @@ export class CutStableAction extends ReleaseAction {
         this.projectDir,
         ltsTagForPatch,
         previousPatch.version,
-        this.pnpmVersioning,
         {
           // We do not intend to tag experimental NPM packages as LTS.
           skipExperimentalPackages: true,
