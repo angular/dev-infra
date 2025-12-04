@@ -1,5 +1,6 @@
-.yarn/releases/*.cjs
 
+.github/local-actions/branch-manager/main.js
+.github/local-actions/changelog/main.js
 .github/local-actions/labels-sync/main.js
 .github/local-actions/lock-closed/main.js
 github-actions/bazel/configure-remote/configure-remote.js
@@ -17,9 +18,7 @@ github-actions/saucelabs/set-saucelabs-env.js
 github-actions/slash-commands/main.js
 github-actions/unified-status-check/main.js
 
-.github/local-actions/branch-manager/main.js
-.github/local-actions/changelog/main.js
-
 bazel/map-size-tracking/test/size-golden.json
 
+**/test/goldens/**/*.md
 **/pnpm-lock.yaml
