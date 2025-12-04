@@ -16,11 +16,11 @@ import {Formatter} from './base-formatter.js';
  * Formatter for running buildifier against bazel related files.
  */
 export class Buildifier extends Formatter {
-  override name = 'buildifier';
+  override readonly name = 'buildifier';
 
   override binaryFilePath = join(this.git.baseDir, 'node_modules/.bin/buildifier');
 
-  override defaultFileMatcher = ['**/*.bzl', '**/*.bazel', '**/WORKSPACE', '**/BUILD'];
+  override matchers = ['**/*.bzl', '**/*.bazel', '**/WORKSPACE', '**/BUILD'];
 
   override actions = {
     check: {

@@ -8,12 +8,9 @@
 
 import {ConfigValidationError, NgDevConfig} from '../utils/config.js';
 
-interface Formatter {
-  matchers: string[];
-}
-
 export interface FormatConfig {
-  [key: string]: boolean | Formatter;
+  prettier: boolean;
+  buildifier: boolean;
 }
 
 /** Retrieve and validate the config as `FormatConfig`. */
@@ -27,24 +24,11 @@ export function assertValidFormatConfig<T extends NgDevConfig>(
   }
 
   for (const [key, value] of Object.entries(config.format!)) {
-    switch (typeof value) {
-      case 'boolean':
-        break;
-      case 'object':
-        checkFormatterConfig(key, value, errors);
-        break;
-      default:
-        errors.push(`"format.${key}" is not a boolean or Formatter object`);
+    if (typeof value !== 'boolean') {
+      errors.push(`"format.${key}" is not a boolean`);
     }
   }
   if (errors.length) {
     throw new ConfigValidationError('Invalid "format" configuration', errors);
-  }
-}
-
-/** Validate an individual Formatter config. */
-function checkFormatterConfig(key: string, config: Partial<Formatter>, errors: string[]) {
-  if (config.matchers === undefined) {
-    errors.push(`Missing "format.${key}.matchers" value`);
   }
 }

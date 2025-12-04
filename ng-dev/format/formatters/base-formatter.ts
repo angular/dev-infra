@@ -34,7 +34,7 @@ export abstract class Formatter {
    * The name of the formatter, this is used for identification in logging and for enabling and
    * configuring the formatter in the config.
    */
-  abstract name: string;
+  abstract name: keyof FormatConfig;
 
   /** The full path file location of the formatter binary. */
   abstract binaryFilePath: string;
@@ -48,7 +48,7 @@ export abstract class Formatter {
   };
 
   /** The default matchers for the formatter for filtering files to be formatted. */
-  abstract defaultFileMatcher: string[];
+  abstract matchers: string[];
 
   constructor(
     protected git: GitClient,
@@ -92,17 +92,6 @@ export abstract class Formatter {
 
   /** Retrieve the active file matcher for the formatter. */
   getFileMatcher() {
-    return this.getFileMatcherFromConfig() || this.defaultFileMatcher;
-  }
-
-  /**
-   * Retrieves the file matcher from the config provided to the constructor if provided.
-   */
-  private getFileMatcherFromConfig(): string[] | undefined {
-    const formatterConfig = this.config[this.name];
-    if (typeof formatterConfig === 'boolean') {
-      return undefined;
-    }
-    return formatterConfig.matchers;
+    return this.config[this.name] ? this.matchers : [];
   }
 }

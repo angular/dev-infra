@@ -17,19 +17,19 @@ import {Formatter} from './base-formatter.js';
  * Formatter for running prettier against Typescript and Javascript files.
  */
 export class Prettier extends Formatter {
-  override name = 'prettier';
+  override readonly name = 'prettier';
 
   override binaryFilePath = join(this.git.baseDir, 'node_modules/.bin/prettier');
 
-  override defaultFileMatcher = [
+  override matchers = [
     '**/*.{js,cjs,mjs}',
     '**/*.{ts,cts,mts}',
+    '**/*.{jsx,tsx}',
+    '**/*.{css,scss}',
     '**/*.{json,json5}',
-    '**/*.md',
     '**/*.{yml,yaml}',
-
-    // Ignore goldens MD files
-    '!**/goldens/**/*.api.md',
+    '**/*.md',
+    '**/*.html',
   ];
 
   /**
