@@ -101,8 +101,6 @@ export abstract class ReleaseAction {
    */
   abstract perform(): Promise<void>;
 
-  protected pnpmVersioning = new PnpmVersioning();
-
   constructor(
     protected active: ActiveReleaseTrains,
     protected git: AuthenticatedGitClient,
@@ -388,7 +386,7 @@ export abstract class ReleaseAction {
 
   /** Installs all Yarn dependencies in the current branch. */
   protected async installDependenciesForCurrentBranch() {
-    if (await this.pnpmVersioning.isUsingPnpm(this.projectDir)) {
+    if (PnpmVersioning.isUsingPnpm(this.projectDir)) {
       // Note: We delate all contents of `node_modules` before installing dependencies. We do
       // this because if a pnpm workspace package exists at one ref and not another, it can
       // cause the pnpm install from within Bazel to errantly attempt to install a package that
@@ -439,14 +437,8 @@ export abstract class ReleaseAction {
     // publish branch. e.g. consider we publish patch version and a new package has been
     // created in the `next` branch. The new package would not be part of the patch branch,
     // so we cannot build and publish it.
-    const builtPackages = await ExternalCommands.invokeReleaseBuild(
-      this.projectDir,
-      this.pnpmVersioning,
-    );
-    const releaseInfo = await ExternalCommands.invokeReleaseInfo(
-      this.projectDir,
-      this.pnpmVersioning,
-    );
+    const builtPackages = await ExternalCommands.invokeReleaseBuild(this.projectDir);
+    const releaseInfo = await ExternalCommands.invokeReleaseInfo(this.projectDir);
 
     // Extend the built packages with their disk hash and NPM package information. This is
     // helpful later for verifying integrity and filtering out e.g. experimental packages.
@@ -511,7 +503,6 @@ export abstract class ReleaseAction {
       this.projectDir,
       newVersion,
       builtPackagesWithInfo,
-      this.pnpmVersioning,
     );
 
     // Verify the packages built are the correct version.
