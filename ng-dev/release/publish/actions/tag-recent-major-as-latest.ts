@@ -34,12 +34,7 @@ export class TagRecentMajorAsLatest extends ReleaseAction {
     await this.updateGithubReleaseEntryToStable(this.active.latest.version);
     await this.checkoutUpstreamBranch(this.active.latest.branchName);
     await this.installDependenciesForCurrentBranch();
-    await ExternalCommands.invokeSetNpmDist(
-      this.projectDir,
-      'latest',
-      this.active.latest.version,
-      this.pnpmVersioning,
-    );
+    await ExternalCommands.invokeSetNpmDist(this.projectDir, 'latest', this.active.latest.version);
   }
 
   /**
