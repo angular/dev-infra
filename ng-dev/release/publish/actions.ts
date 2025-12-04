@@ -469,7 +469,7 @@ export abstract class ReleaseAction {
     pullRequest: PullRequest;
     builtPackagesWithInfo: BuiltPackageWithInfo[];
   }> {
-    const releaseNotesCompareTag = getReleaseTagForVersion(compareVersionForReleaseNotes);
+    const releaseNotesCompareTag = this._getReleaseNotesCompareTag(compareVersionForReleaseNotes);
 
     // Fetch the compare tag so that commits for the release notes can be determined.
     // We forcibly override existing local tags that are named similar as we will fetch
@@ -670,6 +670,33 @@ export abstract class ReleaseAction {
   }
 
   /**
+   * Determine the previous tag to be used for used for comparison in generating release
+   * notes. Finding the tag whether or not it is `v` prefixed.
+   */
+  private _getReleaseNotesCompareTag(version: semver.SemVer): string {
+    /** The expected comparison version prefixed with `v`. */
+    const prefixedTag = getReleaseTagForVersion(version);
+    /** The expected comparison version. */
+    const unprefixedTag = version.version;
+
+    /** Check if the tag exists on the upstream repo. */
+    const verifyTagExists = (tag: string) => {
+      const args = ['ls-remote', '--exit-code', this.git.getRepoGitUrl(), `refs/tags/${tag}`];
+      return this.git.runGraceful(args).status === 0;
+    };
+
+    if (verifyTagExists(prefixedTag)) {
+      return prefixedTag;
+    }
+    if (verifyTagExists(unprefixedTag)) {
+      return unprefixedTag;
+    }
+
+    Log.error(`  ✘   Unable to find previous tag (${prefixedTag}) for building release notes.`);
+    throw new FatalReleaseActionError();
+  }
+
+  /**
    * Publishes the given packages to the registry and makes the releases
    * available on GitHub.
    *
@@ -699,6 +726,10 @@ export abstract class ReleaseAction {
     // Before publishing, we want to ensure that the locally-built packages we
     // built in the staging phase have not been modified accidentally.
     await assertIntegrityOfBuiltPackages(builtPackagesWithInfo);
+
+    // NOTE:
+    // The Github Release must be created prior to publishing to npm as the version of the package
+    // being published is verified by wombot proxy to already match the existing Github relase.
 
     // Create a Github release for the new version.
     await this._createGithubReleaseForVersion(

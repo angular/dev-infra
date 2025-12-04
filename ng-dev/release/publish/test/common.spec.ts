@@ -345,7 +345,7 @@ describe('common release action logic', () => {
           tagName,
           true,
           changelogPattern`
-            Release notes are too large to be captured here. [View all changes here](https://github.com/angular/dev-infra-test/blob/10.0.1/CHANGELOG.md#10.0.1).
+            Release notes are too large to be captured here. [View all changes here](https://github.com/angular/dev-infra-test/blob/v10.0.1/CHANGELOG.md#10.0.1).
           `,
         );
 
