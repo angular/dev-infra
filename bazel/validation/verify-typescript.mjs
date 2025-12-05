@@ -34,16 +34,15 @@ async function main([packageJsonPath, moduleLockFilePath]) {
     // the first value/item from the `generaredRepoSpecs` property and get the version from the
     // attributes there.
     const generatedRepoSpecs =
+      // TODO: Remove pre bazel v8 lockfile attribute path.
       moduleLock['moduleExtensions']?.['@@aspect_rules_ts~//ts:extensions.bzl%ext']?.['general']?.[
+        'generatedRepoSpecs'
+      ] ||
+      moduleLock['moduleExtensions']?.['@@aspect_rules_ts+//ts:extensions.bzl%ext']?.['general']?.[
         'generatedRepoSpecs'
       ];
     lockfileVersion =
-      // TODO: Remove pre bazel v8 lockfile attribute path.
-      Object.values(generatedRepoSpecs || {})[0]?.['attributes']?.['version'] ||
-      moduleLock['moduleExtensions']['@@aspect_rules_ts+//ts:extensions.bzl%ext']['general'][
-        'generatedRepoSpecs'
-      ]['npm_typescript']?.['attributes']?.['version'] ||
-      'unknown';
+      Object.values(generatedRepoSpecs || {})[0]?.['attributes']?.['version'] || 'unknown';
   } catch {
     console.error('Unable to find the typescript version within the MODULE.bazel.lock file.');
   }
