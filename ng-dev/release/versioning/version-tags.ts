@@ -10,5 +10,5 @@ import semver from 'semver';
 
 /** Gets the release tag name for the specified version. */
 export function getReleaseTagForVersion(version: semver.SemVer): string {
-  return version.format();
+  return `v${version.format()}`;
 }

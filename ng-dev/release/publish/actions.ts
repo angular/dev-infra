@@ -469,7 +469,38 @@ export abstract class ReleaseAction {
     pullRequest: PullRequest;
     builtPackagesWithInfo: BuiltPackageWithInfo[];
   }> {
-    const releaseNotesCompareTag = getReleaseTagForVersion(compareVersionForReleaseNotes);
+    /** Tag name for the version being used for the base of comparison generating release notes. */
+    let releaseNotesCompareTag: string;
+    // Determine whether the previous version used for comparison in generating release notes used a v prefix.
+    /** The expected comparison version prefixed with `v`. */
+    const prefixedTag = getReleaseTagForVersion(compareVersionForReleaseNotes);
+    /** The expected comparison version. */
+    const unprefixedTag = compareVersionForReleaseNotes.version;
+
+    if (
+      this.git.runGraceful([
+        'ls-remote',
+        '-q',
+        '--exit-code',
+        this.git.getRepoGitUrl(),
+        `refs/tags/${prefixedTag}`,
+      ]).status === 0
+    ) {
+      releaseNotesCompareTag = prefixedTag;
+    } else if (
+      this.git.runGraceful([
+        'ls-remote',
+        '-q',
+        '--exit-code',
+        this.git.getRepoGitUrl(),
+        `refs/tags/${unprefixedTag}`,
+      ]).status === 0
+    ) {
+      releaseNotesCompareTag = unprefixedTag;
+    } else {
+      Log.error(`  ✘   Unable to find previous tag (${prefixedTag}) for building release notes.`);
+      throw new FatalReleaseActionError();
+    }
 
     // Fetch the compare tag so that commits for the release notes can be determined.
     // We forcibly override existing local tags that are named similar as we will fetch
@@ -699,6 +730,10 @@ export abstract class ReleaseAction {
     // Before publishing, we want to ensure that the locally-built packages we
     // built in the staging phase have not been modified accidentally.
     await assertIntegrityOfBuiltPackages(builtPackagesWithInfo);
+
+    // NOTE:
+    // The Github Release must be created prior to publishing to npm as the version of the package
+    // being published is verified by wombot proxy to already match the existing Github relase.
 
     // Create a Github release for the new version.
     await this._createGithubReleaseForVersion(

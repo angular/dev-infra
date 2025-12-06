@@ -79,7 +79,9 @@ export class GithubTestingRepo {
   }
 
   expectReleaseByTagRequest(tagName: string, id: number): this {
-    nock(this.repoApiUrl).get(`/releases/tags/${tagName}`).reply(200, {id});
+    nock(this.repoApiUrl)
+      .get(new RegExp(`/releases/tags/v?${tagName}`))
+      .reply(200, {id});
     return this;
   }
 
@@ -113,7 +115,11 @@ export class GithubTestingRepo {
 
   expectTagToBeCreated(tagName: string, sha: string): this {
     nock(this.repoApiUrl)
-      .post(`/git/refs`, (b) => b.ref === `refs/tags/${tagName}` && b.sha === sha)
+      .post(
+        `/git/refs`,
+        (b: {ref: string; sha: string}) =>
+          new RegExp(`refs/tags/v?${tagName}`).test(b.ref) && b.sha === sha,
+      )
       .reply(200, {});
     return this;
   }
@@ -135,7 +141,7 @@ export class GithubTestingRepo {
         if (bodyRegex && !bodyRegex.test(requestBody.body)) {
           return false;
         }
-        return requestBody['tag_name'] === tagName;
+        return new RegExp(`v?${tagName}`).test(requestBody['tag_name']);
       })
       .reply(200, {});
     return this;

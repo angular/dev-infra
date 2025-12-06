@@ -55,6 +55,17 @@ export class SandboxGitClient extends AuthenticatedGitClient {
       return noopSpawnSyncReturns;
     }
 
+    // When ls-remote is run in our testing environment we are always
+    // checking for an already defined ref which "should exist upstream"
+    // Since no upstream exists in testing, we just check to make sure
+    // the ref has already been defined locally by changing the git remote
+    // provided to '.' which points to the local git repo.
+    if (command === 'ls-remote') {
+      const gitRemoteMatcher =
+        /((git|ssh|http(s)?)|(git@[\w\.]+))(:(\/\/)?)([\w\.@\:/\-~]+)(\.git)(\/)?/;
+      args = args.map((arg) => (gitRemoteMatcher.test(arg) ? '.' : arg));
+    }
+
     return super.runGraceful(args, options);
   }
 }
