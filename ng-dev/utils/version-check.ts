@@ -8,12 +8,18 @@
 
 import * as path from 'path';
 import * as fs from 'fs';
-import lockfile from '@yarnpkg/lockfile';
 import {parse as parseYaml} from 'yaml';
-import {ngDevNpmPackageName, workspaceRelativePackageJsonPath} from './constants.js';
+import {workspaceRelativePackageJsonPath} from './constants.js';
 import {Log} from './logging.js';
 import {tryGetPackageId} from '@pnpm/dependency-path';
 import {determineRepoBaseDirFromCwd} from './repo-directory.js';
+import {GitClient} from './git/git-client.js';
+
+/**
+ * The currently executing version of ng-dev
+ * Note: The placeholder will be replaced by the `pkg_npm` substitutions.
+ */
+const localVersion = `0.0.0-{SCM_HEAD_SHA}`;
 
 /** Whether ngDevVersionMiddleware verification has already occured. */
 let verified = false;
@@ -38,21 +44,14 @@ export async function ngDevVersionMiddleware() {
  * @returns a boolean indicating success or failure.
  */
 export async function verifyNgDevToolIsUpToDate(workspacePath: string): Promise<boolean> {
-  // The placeholder will be replaced by the `pkg_npm` substitutions.
-  const localVersion = `0.0.0-{SCM_HEAD_SHA}`;
-  if (!!process.env['LOCAL_NG_DEV_BUILD']) {
+  const packageJsonPath = path.join(workspacePath, workspaceRelativePackageJsonPath);
+  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
+  // If we are operating in the actual dev-infra repo, always return `true`.
+  if (packageJson.name === '@angular/build-tooling') {
     Log.debug('Skipping ng-dev version check as this is a locally generated version.');
     return true;
   }
-  const workspacePackageJsonFile = path.join(workspacePath, workspaceRelativePackageJsonPath);
-  const pnpmLockFile = path.join(workspacePath, 'pnpm-lock.yaml');
-  const yarnLockFile = path.join(workspacePath, 'yarn.lock');
-
-  // TODO: Clean up this logic when fully dropping Yarn
-  const isPnpmMigrated = fs.existsSync(pnpmLockFile) && !fs.existsSync(yarnLockFile);
-  const expectedVersion = isPnpmMigrated
-    ? getExpectedVersionFromPnpmLock(workspacePackageJsonFile, pnpmLockFile)
-    : getExpectedVersionFromYarnLock(workspacePackageJsonFile, yarnLockFile);
+  const expectedVersion = await getExpectedVersionFromPnpmLockUpstream();
 
   Log.debug('Checking ng-dev version in lockfile and in the running script:');
   Log.debug(`  Local: ${localVersion}`);
@@ -68,49 +67,26 @@ export async function verifyNgDevToolIsUpToDate(workspacePath: string): Promise<
   return true;
 }
 
-function getExpectedVersionFromYarnLock(workspacePackageJsonFile: string, lockFilePath: string) {
+/** Retrieves the pnpm lock file from upstream on the primary branch and extracts the version. */
+async function getExpectedVersionFromPnpmLockUpstream(): Promise<string> {
+  const git = await GitClient.get();
   try {
-    const packageJson = JSON.parse(fs.readFileSync(workspacePackageJsonFile, 'utf8')) as any;
-    // If we are operating in the actual dev-infra repo, always return `true`.
-    if (packageJson.name === ngDevNpmPackageName) {
-      return true;
+    const {data} = await git.github.repos.getContent({
+      repo: git.remoteConfig.name,
+      owner: git.remoteConfig.owner,
+      ref: git.remoteConfig.mainBranchName,
+      // This media type ensures requested files come back as the raw content.
+      mediaType: {format: 'application/vnd.github.raw+json'},
+      path: 'pnpm-lock.yaml',
+    });
+    if (Array.isArray(data) || data.type !== 'file') {
+      throw Error(
+        `A non-single file of content was retrieved from Github when the pnpm-lock.yaml file was requested`,
+      );
     }
-
-    const lockFileContent = fs.readFileSync(lockFilePath, 'utf8');
-
-    let lockFileObject: Record<string, {version: string}>;
-    try {
-      const lockFile = lockfile.parse(lockFileContent);
-
-      if (lockFile.type !== 'success') {
-        throw Error('Unable to parse workspace lock file. Please ensure the file is valid.');
-      }
-      lockFileObject = lockFile.object as lockfile.LockFileObject;
-    } catch {
-      lockFileObject = parseYaml(lockFileContent);
-    }
-
-    const devInfraPkgVersion =
-      packageJson?.dependencies?.[ngDevNpmPackageName] ??
-      packageJson?.devDependencies?.[ngDevNpmPackageName] ??
-      packageJson?.optionalDependencies?.[ngDevNpmPackageName];
-    return lockFileObject[`${ngDevNpmPackageName}@${devInfraPkgVersion}`].version;
-  } catch (e) {
-    Log.debug('Could not find expected ng-dev version from `yarn.lock` file:', e);
-    return null;
-  }
-}
-
-function getExpectedVersionFromPnpmLock(workspacePackageJsonFile: string, lockFilePath: string) {
-  try {
-    const packageJson = JSON.parse(fs.readFileSync(workspacePackageJsonFile, 'utf8')) as any;
-    // If we are operating in the actual dev-infra repo, always return `true`.
-    if (packageJson.name === ngDevNpmPackageName) {
-      return true;
-    }
-
-    const lockFileContent = fs.readFileSync(lockFilePath, 'utf8');
-    const lockFile = parseYaml(lockFileContent);
+    const lockFile = parseYaml(
+      Buffer.from(data.content, data.encoding as BufferEncoding).toString('utf-8'),
+    );
     const importers = lockFile['importers']['.'];
     const depEntry =
       importers.dependencies?.['@angular/ng-dev'] ??
@@ -121,6 +97,6 @@ function getExpectedVersionFromPnpmLock(workspacePackageJsonFile: string, lockFi
     return lockFile['packages'][`@angular/ng-dev@${packageId}`].version;
   } catch (e) {
     Log.debug('Could not find expected ng-dev version from `pnpm-lock.yaml` file:', e);
-    return null;
+    return 'unknown';
   }
 }
