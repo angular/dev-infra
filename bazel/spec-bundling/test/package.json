@@ -5,10 +5,10 @@
     "@angular/platform-browser": "21.1.0-next.0",
     "@types/jasmine": "5.1.13",
     "@types/jsdom": "27.0.0",
-    "@types/node": "24.10.1",
+    "@types/node": "24.10.2",
     "jasmine-reporters": "2.5.2",
     "jasmine": "5.13.0",
-    "jsdom": "27.2.0",
+    "jsdom": "27.3.0",
     "tinyglobby": "0.2.15",
     "zone.js": "0.16.0"
   },
