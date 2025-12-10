@@ -392,7 +392,7 @@ export abstract class ReleaseAction {
       // cause the pnpm install from within Bazel to errantly attempt to install a package that
       // does not exist.
       try {
-        this.git.run(['clean', '-qdfX', '**/node_modules']);
+        this.git.run(['clean', '-dfX', '**/node_modules']);
       } catch {}
       await ExternalCommands.invokePnpmInstall(this.projectDir);
       return;
@@ -405,7 +405,7 @@ export abstract class ReleaseAction {
     // we might be able to fix this with Yarn 2+, it is reasonable ensuring clean node modules.
     // TODO: Remove this when we use Yarn 2+ in all Angular repositories.
     try {
-      this.git.run(['clean', '-qdfX', '**/node_modules']);
+      this.git.run(['clean', '-dfX', '**/node_modules']);
     } catch {}
     await ExternalCommands.invokeYarnInstall(this.projectDir);
   }
