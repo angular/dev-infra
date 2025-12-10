@@ -58,7 +58,7 @@ runs:
       run: |
         pkg="$RUNNER_TEMP/deploy-artifact.tar.gz"
 
-        tar -czvf "$pkg" -C '${{steps.copy.outputs.deploy-dir}}' .
+        tar -chzvf "$pkg" -C '${{steps.copy.outputs.deploy-dir}}' .
         echo "artifact-path=$pkg" >> $GITHUB_OUTPUT
 
     - uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
