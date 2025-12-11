@@ -31,8 +31,7 @@ export interface CommonCmdOpts {
 
 /** Interface describing the options for spawning a process synchronously. */
 export interface SpawnSyncOptions
-  extends CommonCmdOpts,
-    Omit<_SpawnSyncOptions, 'shell' | 'stdio' | 'input'> {}
+  extends CommonCmdOpts, Omit<_SpawnSyncOptions, 'shell' | 'stdio' | 'input'> {}
 
 /** Interface describing the options for spawning a process. */
 export interface SpawnOptions extends CommonCmdOpts, Omit<_SpawnOptions, 'shell' | 'stdio'> {}
@@ -222,9 +221,8 @@ function processAsyncCmd(
     // stderr due to a race condition around exiting.
     childProcess.on('close', (exitCode, signal) => {
       const exitDescription = exitCode !== null ? `exit code "${exitCode}"` : `signal "${signal}"`;
-      const printFn = options.mode === 'on-error' ? Log.error : Log.debug;
       const status = statusFromExitCodeAndSignal(exitCode, signal);
-
+      const printFn = status !== 0 && options.mode === 'on-error' ? Log.error : Log.debug;
       printFn(`Command "${command}" completed with ${exitDescription}.`);
       printFn(`Process output: \n${logOutput}`);
 
