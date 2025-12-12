@@ -59,8 +59,8 @@ importers:
   .github/local-actions/branch-manager:
     dependencies:
       '@actions/core':
-        specifier: 1.11.1
-        version: 1.11.1
+        specifier: 2.0.1
+        version: 2.0.1
       '@actions/github':
         specifier: 6.0.1
         version: 6.0.1
@@ -80,8 +80,8 @@ importers:
   .github/local-actions/labels-sync:
     dependencies:
       '@actions/core':
-        specifier: 1.11.1
-        version: 1.11.1
+        specifier: 2.0.1
+        version: 2.0.1
       '@actions/github':
         specifier: 6.0.1
         version: 6.0.1
@@ -101,8 +101,8 @@ importers:
   .github/local-actions/lock-closed:
     dependencies:
       '@actions/core':
-        specifier: 1.11.1
-        version: 1.11.1
+        specifier: 2.0.1
+        version: 2.0.1
       '@actions/github':
         specifier: 6.0.1
         version: 6.0.1
@@ -296,8 +296,8 @@ importers:
   github-actions:
     dependencies:
       '@actions/core':
-        specifier: 1.11.1
-        version: 1.11.1
+        specifier: 2.0.1
+        version: 2.0.1
       '@actions/github':
         specifier: 6.0.1
         version: 6.0.1
@@ -317,8 +317,8 @@ importers:
   github-actions/bazel/configure-remote:
     dependencies:
       '@actions/core':
-        specifier: 1.11.1
-        version: 1.11.1
+        specifier: 2.0.1
+        version: 2.0.1
       '@types/node':
         specifier: 24.10.2
         version: 24.10.2
@@ -326,8 +326,8 @@ importers:
   github-actions/branch-manager:
     dependencies:
       '@actions/core':
-        specifier: 1.11.1
-        version: 1.11.1
+        specifier: 2.0.1
+        version: 2.0.1
       '@actions/github':
         specifier: 6.0.1
         version: 6.0.1
@@ -350,8 +350,8 @@ importers:
   github-actions/browserstack:
     dependencies:
       '@actions/core':
-        specifier: 1.11.1
-        version: 1.11.1
+        specifier: 2.0.1
+        version: 2.0.1
       '@types/node':
         specifier: 24.10.2
         version: 24.10.2
@@ -359,8 +359,8 @@ importers:
   github-actions/feature-request:
     dependencies:
       '@actions/core':
-        specifier: 1.11.1
-        version: 1.11.1
+        specifier: 2.0.1
+        version: 2.0.1
       '@actions/github':
         specifier: 6.0.1
         version: 6.0.1
@@ -392,8 +392,8 @@ importers:
   github-actions/google-internal-tests:
     dependencies:
       '@actions/core':
-        specifier: 1.11.1
-        version: 1.11.1
+        specifier: 2.0.1
+        version: 2.0.1
       '@actions/github':
         specifier: 6.0.1
         version: 6.0.1
@@ -413,8 +413,8 @@ importers:
   github-actions/org-file-sync:
     dependencies:
       '@actions/core':
-        specifier: 1.11.1
-        version: 1.11.1
+        specifier: 2.0.1
+        version: 2.0.1
       '@actions/github':
         specifier: 6.0.1
         version: 6.0.1
@@ -437,8 +437,8 @@ importers:
   github-actions/post-approval-changes:
     dependencies:
       '@actions/core':
-        specifier: 1.11.1
-        version: 1.11.1
+        specifier: 2.0.1
+        version: 2.0.1
       '@actions/github':
         specifier: 6.0.1
         version: 6.0.1
@@ -467,8 +467,8 @@ importers:
   github-actions/previews/upload-artifacts-to-firebase:
     dependencies:
       '@actions/core':
-        specifier: 1.11.1
-        version: 1.11.1
+        specifier: 2.0.1
+        version: 2.0.1
       '@octokit/rest':
         specifier: 22.0.1
         version: 22.0.1
@@ -479,8 +479,8 @@ importers:
   github-actions/pull-request-labeling:
     dependencies:
       '@actions/core':
-        specifier: 1.11.1
-        version: 1.11.1
+        specifier: 2.0.1
+        version: 2.0.1
       '@actions/github':
         specifier: 6.0.1
         version: 6.0.1
@@ -500,8 +500,8 @@ importers:
   github-actions/saucelabs:
     dependencies:
       '@actions/core':
-        specifier: 1.11.1
-        version: 1.11.1
+        specifier: 2.0.1
+        version: 2.0.1
       '@types/node':
         specifier: 24.10.2
         version: 24.10.2
@@ -509,8 +509,8 @@ importers:
   github-actions/unified-status-check:
     dependencies:
       '@actions/core':
-        specifier: 1.11.1
-        version: 1.11.1
+        specifier: 2.0.1
+        version: 2.0.1
       '@actions/github':
         specifier: 6.0.1
         version: 6.0.1
@@ -536,8 +536,8 @@ importers:
   ng-dev:
     dependencies:
       '@actions/core':
-        specifier: 1.11.1
-        version: 1.11.1
+        specifier: 2.0.1
+        version: 2.0.1
       '@google-cloud/spanner':
         specifier: 8.0.0
         version: 8.0.0(supports-color@10.2.2)
@@ -703,11 +703,11 @@ packages:
   '@acemir/cssom@0.9.28':
     resolution: {integrity: sha512-LuS6IVEivI75vKN8S04qRD+YySP0RmU/cV8UNukhQZvprxF+76Z43TNo/a08eCodaGhT1Us8etqS1ZRY9/Or0A==}
 
-  '@actions/core@1.11.1':
-    resolution: {integrity: sha512-hXJCSrkwfA46Vd9Z3q4cpEpHB1rL5NG04+/rbqW9d3+CSvtB1tYe8UTpAlixa1vj0m/ULglfEK2UKxMGxCxv5A==}
+  '@actions/core@2.0.1':
+    resolution: {integrity: sha512-oBfqT3GwkvLlo1fjvhQLQxuwZCGTarTE5OuZ2Wg10hvhBj7LRIlF611WT4aZS6fDhO5ZKlY7lCAZTlpmyaHaeg==}
 
-  '@actions/exec@1.1.1':
-    resolution: {integrity: sha512-+sCcHHbVdk93a0XT19ECtO/gIXoxvdsgQLzb2fE2/5sIZmWQuluYyjPQtrtTHdU1YzTZ7bAPN4sITq2xi1679w==}
+  '@actions/exec@2.0.0':
+    resolution: {integrity: sha512-k8ngrX2voJ/RIN6r9xB82NVqKpnMRtxDoiO+g3olkIUpQNqjArXrCQceduQZCQj3P3xm32pChRLqRrtXTlqhIw==}
 
   '@actions/github@6.0.1':
     resolution: {integrity: sha512-xbZVcaqD4XnQAe35qSQqskb3SqIAfRyLBrHMd/8TuL7hJSz2QtbDwnNM8zWx4zO5l2fnGtseNE3MbEvD7BxVMw==}
@@ -715,8 +715,11 @@ packages:
   '@actions/http-client@2.2.3':
     resolution: {integrity: sha512-mx8hyJi/hjFvbPokCg4uRd4ZX78t+YyRPtnKWwIl+RzNaVuFpQHfmlGVfsKEJN8LwTCvL+DfVgAM04XaHkm6bA==}
 
-  '@actions/io@1.1.3':
-    resolution: {integrity: sha512-wi9JjgKLYS7U/z8PPbco+PvTb/nRWjeoFlJ1Qer83k/3C5PHQi28hiVdeE2kHXmIL99mQFawx8qt/JPjZilJ8Q==}
+  '@actions/http-client@3.0.0':
+    resolution: {integrity: sha512-1s3tXAfVMSz9a4ZEBkXXRQD4QhY3+GAsWSbaYpeknPOKEeyRiU3lH+bHiLMZdo2x/fIeQ/hscL1wCkDLVM2DZQ==}
+
+  '@actions/io@2.0.0':
+    resolution: {integrity: sha512-Jv33IN09XLO+0HS79aaODsvIRyduiF7NY/F6LYeK5oeUmrsz7aFdRphQjFoESF4jS7lMauDOttKALcpapVDIAg==}
 
   '@angular-devkit/core@21.0.2':
     resolution: {integrity: sha512-ePttMRRua9kv7df6fu2i5jTVJr5bzqwrKBBEtdXnWqOrYLUnU0G6XIpyGYVM6SyqpTwkTPlVsXZo5e8Lq356tg==}
@@ -6068,14 +6071,14 @@ snapshots:
 
   '@acemir/cssom@0.9.28': {}
 
-  '@actions/core@1.11.1':
+  '@actions/core@2.0.1':
     dependencies:
-      '@actions/exec': 1.1.1
-      '@actions/http-client': 2.2.3
+      '@actions/exec': 2.0.0
+      '@actions/http-client': 3.0.0
 
-  '@actions/exec@1.1.1':
+  '@actions/exec@2.0.0':
     dependencies:
-      '@actions/io': 1.1.3
+      '@actions/io': 2.0.0
 
   '@actions/github@6.0.1':
     dependencies:
@@ -6092,7 +6095,12 @@ snapshots:
       tunnel: 0.0.6
       undici: 5.29.0
 
-  '@actions/io@1.1.3': {}
+  '@actions/http-client@3.0.0':
+    dependencies:
+      tunnel: 0.0.6
+      undici: 5.29.0
+
+  '@actions/io@2.0.0': {}
 
   '@angular-devkit/core@21.0.2':
     dependencies:
