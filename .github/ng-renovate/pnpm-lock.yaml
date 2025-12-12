@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       renovate:
-        specifier: 42.42.0
-        version: 42.42.0(encoding@0.1.13)(typanion@3.14.0)
+        specifier: 42.46.0
+        version: 42.46.0(encoding@0.1.13)(typanion@3.14.0)
 
 packages:
 
@@ -559,8 +559,8 @@ packages:
     resolution: {integrity: sha512-2FK1hF93Fuf1laSdfiEmJvSJPVIDHEUTz68D3Fi9s0IZrrpaEcj6pTFBTbYvsgC5du4ogrtf5re7yMMvrKNgkw==}
     engines: {node: ^20.9.0 || ^22.11.0 || ^24, pnpm: ^10.0.0}
 
-  '@renovatebot/pgp@1.2.1':
-    resolution: {integrity: sha512-P5K1l5pLXGN+ErgGSq+Z97GJVogumqeWNxVJ5Dos3YEYTvrJZQcx0FIY/nfzpX5/t3qXQPdDT0ttyIzMRb7EFA==}
+  '@renovatebot/pgp@1.2.2':
+    resolution: {integrity: sha512-NZDZPajoCCInqu3nrX4O09N0dM+8OhFITAh1s9nuPlAaonkppM625r+t7UIGmlgOAZ9Klh+bcv40Q6MFzEkA3A==}
     engines: {node: ^22.11.0 || >=24.10.0, pnpm: ^10.0.0}
 
   '@renovatebot/ruby-semver@4.1.2':
@@ -2468,8 +2468,8 @@ packages:
   remark@15.0.1:
     resolution: {integrity: sha512-Eht5w30ruCXgFmxVUSlNWQ9iiimq07URKeFS3hNc8cUWy1llX4KDWfyEDZRycMc+znsN9Ux5/tJ/BFdgdOwA3A==}
 
-  renovate@42.42.0:
-    resolution: {integrity: sha512-FJ5qA76ObXaRai7/vS/UbK7DK29wDKkyE9vDLqJSJDovB9nknEJY9feCya6XjkCg5Sd6csbpELaR+tPs4EP1SQ==}
+  renovate@42.46.0:
+    resolution: {integrity: sha512-w6Pl4Jhs88cGKNMRaiTIraSbYYGd9T7LtWXfwrOX0etr7aJeO+pE7AuKWkxsiey51s/HfyaLxiVOsAV4FnybFg==}
     engines: {node: ^22.13.0 || ^24.11.0, pnpm: ^10.0.0}
     hasBin: true
 
@@ -4175,7 +4175,7 @@ snapshots:
 
   '@renovatebot/pep440@4.2.1': {}
 
-  '@renovatebot/pgp@1.2.1': {}
+  '@renovatebot/pgp@1.2.2': {}
 
   '@renovatebot/ruby-semver@4.1.2': {}
 
@@ -6538,7 +6538,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  renovate@42.42.0(encoding@0.1.13)(typanion@3.14.0):
+  renovate@42.46.0(encoding@0.1.13)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.940.0
       '@aws-sdk/client-ec2': 3.940.0
@@ -6570,7 +6570,7 @@ snapshots:
       '@renovatebot/detect-tools': 1.2.4
       '@renovatebot/osv-offline': 2.0.0
       '@renovatebot/pep440': 4.2.1
-      '@renovatebot/pgp': 1.2.1
+      '@renovatebot/pgp': 1.2.2
       '@renovatebot/ruby-semver': 4.1.2
       '@sindresorhus/is': 7.1.1
       '@yarnpkg/core': 4.5.0(typanion@3.14.0)
