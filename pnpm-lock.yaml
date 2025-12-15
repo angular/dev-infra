@@ -20,8 +20,8 @@ importers:
         specifier: 8.2.1
         version: 8.2.1
       firebase-tools:
-        specifier: 14.27.0
-        version: 14.27.0(@types/node@24.10.3)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3)
+        specifier: 15.0.0
+        version: 15.0.0(@types/node@24.10.3)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3)
       husky:
         specifier: 9.1.7
         version: 9.1.7
@@ -138,7 +138,7 @@ importers:
         version: 21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0)
       '@angular/fire':
         specifier: 21.0.0-rc.0
-        version: 21.0.0-rc.0(@angular/common@21.1.0-next.3(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.1.0-next.3(@angular/animations@21.1.0-next.3(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.1.0-next.3(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0)))(firebase-tools@14.27.0(@types/node@24.10.3)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3))(rxjs@7.8.2)
+        version: 21.0.0-rc.0(@angular/common@21.1.0-next.3(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.1.0-next.3(@angular/animations@21.1.0-next.3(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.1.0-next.3(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0)))(firebase-tools@15.0.0(@types/node@24.10.3)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3))(rxjs@7.8.2)
       '@angular/forms':
         specifier: 21.1.0-next.3
         version: 21.1.0-next.3(@angular/common@21.1.0-next.3(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.1.0-next.3(@angular/animations@21.1.0-next.3(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.1.0-next.3(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0)))(@standard-schema/spec@1.0.0)(rxjs@7.8.2)
@@ -185,8 +185,8 @@ importers:
         specifier: 7.0.1
         version: 7.0.1(firebase-admin@13.6.0(encoding@0.1.13))
       firebase-tools:
-        specifier: 14.27.0
-        version: 14.27.0(@types/node@24.10.3)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3)
+        specifier: 15.0.0
+        version: 15.0.0(@types/node@24.10.3)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3)
 
   bazel:
     dependencies:
@@ -2844,10 +2844,6 @@ packages:
     resolution: {integrity: sha512-TQMmc3w+5AxjpL8iIiwebF73dRDF4fBIieAqGn9RGCWaEVwQ6Fb2cGe31Yns0RRIzii5goJ1Y7xbMwo1TxMplw==}
     engines: {node: '>= 20.19.0'}
 
-  chownr@2.0.0:
-    resolution: {integrity: sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ==}
-    engines: {node: '>=10'}
-
   chownr@3.0.0:
     resolution: {integrity: sha512-+IxzY9BZOQd/XuYPRmrvEVjF/nqj5kgT4kEq7VofrDoM1MxoRjEWkrCC3EtLi59TVawxTAn+orJwFQcrqEN1+g==}
     engines: {node: '>=18'}
@@ -3534,8 +3530,8 @@ packages:
     peerDependencies:
       firebase-admin: ^11.10.0 || ^12.0.0 || ^13.0.0
 
-  firebase-tools@14.27.0:
-    resolution: {integrity: sha512-HrucHJ69mLM9pQhZFO1rb0N/QMpZD4iznoOtKd2lctEELPtbSMN5JHgdgzLlf+EXn5aQy87u5zlPd/0xwwyYTQ==}
+  firebase-tools@15.0.0:
+    resolution: {integrity: sha512-6HSF3meQwMNzDK5BIEFEq4jVMPqR6PBdqpuSLBE+3zpLlcmLknMVBDhdN32jhd2lj/wvfHBZV6ZSqTCNF7AtWw==}
     engines: {node: '>=20.0.0 || >=22.0.0 || >=24.0.0'}
     hasBin: true
 
@@ -3604,10 +3600,6 @@ packages:
 
   fs-extra@3.0.1:
     resolution: {integrity: sha512-V3Z3WZWVUYd8hoCL5xfXJCaHWYzmtwW5XWYSlLgERi8PWd8bx1kUHUk8L1BT57e49oKnDDD180mjfrHc1yA9rg==}
-
-  fs-minipass@2.1.0:
-    resolution: {integrity: sha512-V/JgOLFCS+R6Vcq0slCuaeWEdNC3ouDlJMNIsacH2VtALiu9mV4LPrHc5cDl8k5aw6J8jwgWWpiTo5RYhmIzvg==}
-    engines: {node: '>= 8'}
 
   fs-minipass@3.0.3:
     resolution: {integrity: sha512-XUBA9XClHbnJWSfBzjkm6RvPsyg3sryZt06BEQoXcF7EK/xpGaQYJgQKDJSUH5SGZ76Y7pFx1QBnXz09rU5Fbw==}
@@ -4494,17 +4486,9 @@ packages:
     resolution: {integrity: sha512-DxiNidxSEK+tHG6zOIklvNOwm3hvCrbUrdtzY74U6HKTJxvIDfOUL5W5P2Ghd3DTkhhKPYGqeNUIh5qcM4YBfw==}
     engines: {node: '>=8'}
 
-  minipass@5.0.0:
-    resolution: {integrity: sha512-3FnjYuehv9k6ovOEbyOswadCDPX1piCfhV8ncmYtHOjuPwylVWsghTLo7rabjC3Rx5xD4HDx8Wm1xnMF7S5qFQ==}
-    engines: {node: '>=8'}
-
   minipass@7.1.2:
     resolution: {integrity: sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==}
     engines: {node: '>=16 || 14 >=14.17'}
-
-  minizlib@2.1.2:
-    resolution: {integrity: sha512-bAxsR8BVfj60DWXHE3u30oHzfl4G7khkSuPW+qvpd7jFRHm7dLxOjUk1EHACJ/hxLY8phGJ0YhYHZo7jil7Qdg==}
-    engines: {node: '>= 8'}
 
   minizlib@3.1.0:
     resolution: {integrity: sha512-KZxYo1BUkWD2TVFLr0MQoM8vUUigWD3LlD83a/75BqC+4qE0Hb1Vo5v1FgcfaNXvfXzr+5EhQ6ing/CaBijTlw==}
@@ -5508,10 +5492,6 @@ packages:
   tar-stream@3.1.7:
     resolution: {integrity: sha512-qJj60CXt7IU1Ffyc3NJMjh6EkuCFej46zUqJ4J7pqYlThyd9bO0XBTmcOIhSzZJVWfsLks0+nle/j538YAW9RQ==}
 
-  tar@6.2.1:
-    resolution: {integrity: sha512-DZ4yORTwrbTj/7MZYq2w+/ZFdI6OZ/f9SFHR+71gIVUZhOQPHzVCLpvRnPgyaMpfWxxk/4ONva3GQSyNIKRv6A==}
-    engines: {node: '>=10'}
-
   tar@7.5.2:
     resolution: {integrity: sha512-7NyxrTE4Anh8km8iEy7o0QYPs+0JKBTj5ZaqHg6B39erLg0qYXN3BijtShwbsNSvQ+LN75+KV+C4QR/f6Gwnpg==}
     engines: {node: '>=18'}
@@ -6169,7 +6149,7 @@ snapshots:
       '@angular/compiler': 21.1.0-next.3
       zone.js: 0.16.0
 
-  '@angular/fire@21.0.0-rc.0(@angular/common@21.1.0-next.3(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.1.0-next.3(@angular/animations@21.1.0-next.3(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.1.0-next.3(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0)))(firebase-tools@14.27.0(@types/node@24.10.3)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3))(rxjs@7.8.2)':
+  '@angular/fire@21.0.0-rc.0(@angular/common@21.1.0-next.3(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.1.0-next.3(@angular/animations@21.1.0-next.3(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.1.0-next.3(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0)))(firebase-tools@15.0.0(@types/node@24.10.3)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3))(rxjs@7.8.2)':
     dependencies:
       '@angular-devkit/schematics': 21.0.2
       '@angular/common': 21.1.0-next.3(@angular/core@21.1.0-next.3(@angular/compiler@21.1.0-next.3)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2)
@@ -6181,7 +6161,7 @@ snapshots:
       rxjs: 7.8.2
       tslib: 2.8.1
     optionalDependencies:
-      firebase-tools: 14.27.0(@types/node@24.10.3)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3)
+      firebase-tools: 15.0.0(@types/node@24.10.3)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3)
     transitivePeerDependencies:
       - '@react-native-async-storage/async-storage'
       - chokidar
@@ -8488,8 +8468,6 @@ snapshots:
     dependencies:
       readdirp: 5.0.0
 
-  chownr@2.0.0: {}
-
   chownr@3.0.0:
     optional: true
 
@@ -9279,7 +9257,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  firebase-tools@14.27.0(@types/node@24.10.3)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3):
+  firebase-tools@15.0.0(@types/node@24.10.3)(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.3):
     dependencies:
       '@apphosting/build': 0.1.7(@types/node@24.10.3)(typescript@5.9.3)
       '@apphosting/common': 0.0.8
@@ -9344,7 +9322,6 @@ snapshots:
       stream-chain: 2.2.5
       stream-json: 1.9.1
       superstatic: 10.0.0(encoding@0.1.13)
-      tar: 6.2.1
       tcp-port-used: 1.0.2
       tmp: 0.2.5
       triple-beam: 1.4.1
@@ -9473,10 +9450,6 @@ snapshots:
       graceful-fs: 4.2.11
       jsonfile: 3.0.1
       universalify: 0.1.2
-
-  fs-minipass@2.1.0:
-    dependencies:
-      minipass: 3.3.6
 
   fs-minipass@3.0.3:
     dependencies:
@@ -10441,15 +10414,9 @@ snapshots:
   minipass@3.3.6:
     dependencies:
       yallist: 4.0.0
-
-  minipass@5.0.0: {}
+    optional: true
 
   minipass@7.1.2: {}
-
-  minizlib@2.1.2:
-    dependencies:
-      minipass: 3.3.6
-      yallist: 4.0.0
 
   minizlib@3.1.0:
     dependencies:
@@ -11613,15 +11580,6 @@ snapshots:
     transitivePeerDependencies:
       - bare-abort-controller
       - react-native-b4a
-
-  tar@6.2.1:
-    dependencies:
-      chownr: 2.0.0
-      fs-minipass: 2.1.0
-      minipass: 5.0.0
-      minizlib: 2.1.2
-      mkdirp: 1.0.4
-      yallist: 4.0.0
 
   tar@7.5.2:
     dependencies:
