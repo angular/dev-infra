@@ -5,7 +5,7 @@
     "@actions/github": "6.0.1",
     "@octokit/rest": "22.0.1",
     "@octokit/webhooks-types": "7.6.1",
-    "@types/node": "24.10.3",
+    "@types/node": "24.10.4",
     "typed-graphqlify": "3.1.6",
     "undici": "7.16.0"
   }
