@@ -54,18 +54,7 @@ rules_ts_ext.deps(
 use_repo(rules_ts_ext, "npm_typescript")
 
 node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
-node.toolchain(
-    node_repositories = {
-        "22.21.0-darwin_arm64": ("node-v22.21.0-darwin-arm64.tar.gz", "node-v22.21.0-darwin-arm64", "dbc1a17024a32827adb23b5b11ce98cefcd783145a30fe41bb2845be711e9742"),
-        "22.21.0-darwin_amd64": ("node-v22.21.0-darwin-x64.tar.gz", "node-v22.21.0-darwin-x64", "756674542a28207515cdd22ca290e53a9c1fb7b903603047278d339164eb376f"),
-        "22.21.0-linux_arm64": ("node-v22.21.0-linux-arm64.tar.xz", "node-v22.21.0-linux-arm64", "fe3e371f6f72d07a3f75a94a54c97d652ace6bfcc48f82cc0867f0c0722b84bd"),
-        "22.21.0-linux_ppc64le": ("node-v22.21.0-linux-ppc64le.tar.xz", "node-v22.21.0-linux-ppc64le", "7faab4f786f79c886555d86520502db68df0c1a0fae47a8cf9237e4bac505a4e"),
-        "22.21.0-linux_s390x": ("node-v22.21.0-linux-s390x.tar.xz", "node-v22.21.0-linux-s390x", "18110873863cc2f56eacb20f8da59adc3b53f5a7070f7d97501bd3d00003d236"),
-        "22.21.0-linux_amd64": ("node-v22.21.0-linux-x64.tar.xz", "node-v22.21.0-linux-x64", "71a04f4b9144870c9407b8019fe912514229e50246bc706862eded3ac8e9025d"),
-        "22.21.0-windows_amd64": ("node-v22.21.0-win-x64.zip", "node-v22.21.0-win-x64", "84d31df6571c3c7156707265bf51e2a021656fa1584bf6f4486b792dcde54d7d"),
-    },
-    node_version = "22.21.0",
-)
+node.toolchain(node_version = "24.11.0")
 use_repo(node, "nodejs_toolchains")
 
 rules_angular = use_extension("@rules_angular//setup:extensions.bzl", "rules_angular")
