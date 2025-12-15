@@ -24,7 +24,7 @@
     "@angular/compiler-cli": "21.1.0-next.3",
     "@bazel/bazelisk": "1.26.0",
     "@bazel/buildifier": "8.2.1",
-    "firebase-tools": "14.27.0",
+    "firebase-tools": "15.0.0",
     "husky": "9.1.7",
     "jasmine-core": "5.13.0",
     "jasmine-reporters": "2.5.2",
