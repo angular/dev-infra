@@ -8,7 +8,7 @@
   // Schedule Renovate to run during off-peak hours
   schedule: ['after 6am and before 10am on Monday, Wednesday, Friday'],
 
-  prConcurrentLimit: 8,
+  prConcurrentLimit: 12,
   prHourlyLimit: 4,
   timezone: 'Europe/Rome',
 
@@ -77,6 +77,7 @@
       matchUpdateTypes: ['digest', 'patch', 'minor'],
       matchManagers: ['npm'],
       matchBaseBranches: ['main'],
+      schedule: ['* 6-10 * * 4'], // 6:00 am to 10:00 am Every Thursday
     },
 
     // ============================================================================
@@ -93,12 +94,14 @@
     {
       groupName: 'bazel dependencies',
       matchManagers: ['bazel', 'bazel-module'],
+      schedule: ['* 6-10 * * 4'], // 6:00 am to 10:00 am Every Thursday
     },
 
     // Group GitHub Actions workflow
     {
       groupName: 'all github actions',
       matchManagers: ['github-actions'],
+      schedule: ['* 6-10 * * 4'], // 6:00 am to 10:00 am Every Thursday
     },
 
     // ============================================================================
@@ -145,17 +148,6 @@
     {
       groupName: 'typescript dependencies',
       matchDepNames: ['typescript', 'tslib'],
-    },
-
-    // Limit how many times these packages get updated (They deploy each merged PR)
-    {
-      matchDepNames: [
-        'github/codeql-action',
-        'google-closure-compiler',
-        'quicktype-core',
-        'renovate',
-      ],
-      schedule: ['after 6am and before 10am on Wednesday'],
     },
 
     // ============================================================================
