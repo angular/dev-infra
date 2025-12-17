@@ -29,6 +29,9 @@
     enabled: false,
   },
 
+  // Manually define pull request body template to only include desired sections
+  prBodyTemplate: '{{{header}}}{{{table}}}{{{warnings}}}{{{notes}}}{{{changelogs}}}{{{controls}}}',
+
   // Ignored dependencies in all repositories
   ignoreDeps: [
     'rules_pkg',
