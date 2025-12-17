@@ -1,1 +1,5 @@
-ignore_directories(["dist", "**/node_modules/**"])
+ignore_directories([
+    "dist",
+    "**/node_modules/**",
+    "**/.angular",
+])
