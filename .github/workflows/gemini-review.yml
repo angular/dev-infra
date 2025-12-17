@@ -43,7 +43,7 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: 'Run Gemini security analysis review'
-        uses: 'google-github-actions/run-gemini-cli@635ea06c806bdd9d252334d92222e72674a653e8' # v0.1.16
+        uses: 'google-github-actions/run-gemini-cli@ba709f0578653f8a65869f9b862bd47455cd96d2' # v0.1.18
         id: 'gemini_security_analysis'
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
