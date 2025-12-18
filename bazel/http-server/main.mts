@@ -6,33 +6,56 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import yargs from 'yargs';
+import {parseArgs} from 'node:util';
 import assert from 'node:assert';
 
 import {HttpServer} from './server.mjs';
 import {setupBazelWatcherSupport} from './ibazel.mjs';
 
-const {
-  rootPaths,
-  historyApiFallback,
-  enableDevUi,
-  environmentVariables,
-  port: cliPort,
-  relaxCors,
-} = yargs(process.argv.slice(2))
-  .strict()
-  .option('port', {
-    type: 'number',
-    default: 4200,
-  })
-  .option('historyApiFallback', {type: 'boolean', default: false})
-  .option('rootPaths', {type: 'array', string: true, default: ['']})
-  .option('environmentVariables', {type: 'array', string: true, default: []})
-  .option('enableDevUi', {type: 'boolean', default: false})
-  .option('relaxCors', {type: 'boolean', default: false})
-  .parseSync();
+const {values} = parseArgs({
+  args: process.argv.slice(2),
+  strict: true,
+  allowNegative: true,
+  options: {
+    port: {
+      type: 'string',
+      default: '4200',
+    },
+    'history-api-fallback': {
+      type: 'boolean',
+      default: false,
+    },
+    'root-paths': {
+      type: 'string',
+      multiple: true,
+      default: ['./'],
+    },
+    'environment-variables': {
+      type: 'string',
+      multiple: true,
+      default: [],
+    },
+    'enable-dev-ui': {
+      type: 'boolean',
+      default: false,
+    },
+    'relax-cors': {
+      type: 'boolean',
+      default: false,
+    },
+  },
+});
 
-let port = cliPort;
+const {
+  'root-paths': rootPaths,
+  'history-api-fallback': historyApiFallback,
+  'enable-dev-ui': enableDevUi,
+  'environment-variables': environmentVariables,
+  port: cliPort,
+  'relax-cors': relaxCors,
+} = values;
+
+let port = Number(cliPort);
 // Process environment port always overrides the CLI, or rule attribute-specified port.
 if (process.env.PORT !== undefined) {
   port = Number(process.env.PORT);

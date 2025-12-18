@@ -18,10 +18,8 @@ ts_project(
         "//bazel:node_modules/@types/browser-sync",
         "//bazel:node_modules/@types/node",
         "//bazel:node_modules/@types/send",
-        "//bazel:node_modules/@types/yargs",
         "//bazel:node_modules/browser-sync",
         "//bazel:node_modules/send",
-        "//bazel:node_modules/yargs",
     ],
 )
 

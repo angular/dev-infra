@@ -214,9 +214,6 @@ importers:
       '@types/wait-on':
         specifier: ^5.3.4
         version: 5.3.4
-      '@types/yargs':
-        specifier: 17.0.35
-        version: 17.0.35
       browser-sync:
         specifier: 3.0.4
         version: 3.0.4(bufferutil@4.0.9)(utf-8-validate@6.0.5)
@@ -253,9 +250,6 @@ importers:
       wait-on:
         specifier: ^9.0.0
         version: 9.0.3
-      yargs:
-        specifier: 18.0.0
-        version: 18.0.0
 
   bazel/spec-bundling/test:
     dependencies:
