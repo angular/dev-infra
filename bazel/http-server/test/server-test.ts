@@ -53,6 +53,7 @@ async function runTest() {
     // Wait for server to be ready, regardless of status code (404/200 or else)
     await waitOn({
       resources: [`http-get://${serverHost}`],
+      timeout: 20_000,
       headers: {
         'accept': 'text/html',
       },

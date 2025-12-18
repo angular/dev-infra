@@ -43,13 +43,13 @@ def _http_server_rule_impl(ctx):
         args += "--root-paths '%s' " % root
 
     if ctx.attr.history_api_fallback:
-        args += "--history-api-fallback=true "
+        args += "--history-api-fallback "
 
     if ctx.attr.enable_dev_ui:
-        args += "--enable-dev-ui=true "
+        args += "--enable-dev-ui "
 
     if ctx.attr.relax_cors:
-        args += "--relax-cors=true "
+        args += "--relax-cors "
 
     for variable_name in ctx.attr.environment_variables:
         args += "--environment-variables '%s' " % variable_name
