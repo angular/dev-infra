@@ -2,6 +2,7 @@ import {existsSync} from 'node:fs';
 import {green, Log} from '../../../utils/logging.js';
 import {join} from 'node:path';
 import {writeFile, readFile} from 'node:fs/promises';
+import {formatFiles} from '../../../format/format.js';
 
 /**
  * Updates the `renovate.json` configuration file to include a new base branch.
@@ -37,7 +38,9 @@ export async function updateRenovateConfig(
   configJson['baseBranchPatterns'] = ['main', newBranchName];
 
   await writeFile(renovateConfigPath, JSON.stringify(configJson, undefined, 2));
+  await formatFiles([renovateConfigPath]);
 
   Log.info(green(`  ✓   Updated Renovate config.`));
+
   return renovateConfigPath;
 }
