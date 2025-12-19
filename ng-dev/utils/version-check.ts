@@ -19,7 +19,7 @@ import {GitClient} from './git/git-client.js';
  * The currently executing version of ng-dev
  * Note: The placeholder will be replaced by the `pkg_npm` substitutions.
  */
-const localVersion = `0.0.0-{SCM_HEAD_SHA}`;
+export const localVersion = `0.0.0-{SCM_HEAD_SHA}`;
 
 /** Whether ngDevVersionMiddleware verification has already occured. */
 let verified = false;
