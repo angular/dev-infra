@@ -34,7 +34,6 @@
 
   // Ignored dependencies in all repositories
   ignoreDeps: [
-    'rules_pkg',
     'yarn', // Yarn is copied locally in all repositories where needed.
   ],
 
