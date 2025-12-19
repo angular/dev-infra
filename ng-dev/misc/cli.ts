@@ -7,6 +7,7 @@
  */
 import {Argv} from 'yargs';
 
+import {SyncModuleBazelModule} from './sync-module-bazel/cli.js';
 import {BuildAndLinkCommandModule} from './build-and-link/cli.js';
 import {GeneratedFilesModule} from './generated-files/cli.js';
 import {GeneratedNodeJsToolchainModule} from './generate-nodejs-toolchain/cli.js';
@@ -16,6 +17,7 @@ export function buildMiscParser(localYargs: Argv) {
   return localYargs
     .help()
     .strict()
+    .command(SyncModuleBazelModule)
     .command(BuildAndLinkCommandModule)
     .command(GeneratedFilesModule)
     .command(GeneratedNodeJsToolchainModule);
