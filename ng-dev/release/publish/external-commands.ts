@@ -256,20 +256,20 @@ export abstract class ExternalCommands {
     spawnOptions: SpawnOptions = {},
   ): Promise<SpawnResult> {
     if (PnpmVersioning.isUsingPnpm(projectDir)) {
-      return ChildProcess.spawn('npx', ['--yes', 'pnpm', '-s', 'run', ...args], {
-        ...spawnOptions,
-        cwd: projectDir,
-      });
-    } else {
-      // Note: We cannot use `yarn` directly as command because we might operate in
-      // a different publish branch and the current `PATH` will point to the Yarn version
-      // that invoked the release tool. More details in the function description.
-      const yarnCommand = await resolveYarnScriptForProject(projectDir);
-      return ChildProcess.spawn(yarnCommand.binary, [...yarnCommand.args, ...args], {
+      return ChildProcess.spawn('npx', ['--yes', 'pnpm', '-s', ...args], {
         ...spawnOptions,
         cwd: projectDir,
       });
     }
+
+    // Note: We cannot use `yarn` directly as command because we might operate in
+    // a different publish branch and the current `PATH` will point to the Yarn version
+    // that invoked the release tool. More details in the function description.
+    const yarnCommand = await resolveYarnScriptForProject(projectDir);
+    return ChildProcess.spawn(yarnCommand.binary, [...yarnCommand.args, ...args], {
+      ...spawnOptions,
+      cwd: projectDir,
+    });
   }
 
   /**
