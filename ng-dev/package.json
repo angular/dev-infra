@@ -17,7 +17,7 @@
   "dependencies": {
     "@actions/core": "2.0.1",
     "@google-cloud/spanner": "8.0.0",
-    "@google/genai": "1.33.0",
+    "@google/genai": "1.34.0",
     "@inquirer/prompts": "8.1.0",
     "@inquirer/type": "4.0.2",
     "@octokit/auth-app": "8.1.2",
@@ -43,7 +43,7 @@
     "@types/yargs": "17.0.35",
     "@types/yarnpkg__lockfile": "1.1.9",
     "@yarnpkg/lockfile": "1.1.0",
-    "bufferutil": "4.0.9",
+    "bufferutil": "4.1.0",
     "cli-progress": "3.12.0",
     "conventional-commits-filter": "5.0.0",
     "conventional-commits-parser": "6.2.1",
@@ -65,7 +65,7 @@
     "typed-graphqlify": "3.1.6",
     "tsx": "4.21.0",
     "typescript": "5.9.3",
-    "utf-8-validate": "6.0.5",
+    "utf-8-validate": "6.0.6",
     "which": "6.0.0",
     "yaml": "2.8.2",
     "yargs": "18.0.0"
