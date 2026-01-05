@@ -66,6 +66,19 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
         Log.warn(`You can generate a token here: ${GITHUB_TOKEN_GENERATE_URL}`);
         return false;
       }
+      // Catch errors to the Github API for repository rule violations. We want to
+      // exit the script with a better explanation of the error.
+      if (
+        isGithubApiError(e) &&
+        e.status === 405 &&
+        e.message.startsWith('Repository rule violations found')
+      ) {
+        Log.error('  ✘  Repository Rule Violation. This typically indicates that you are not');
+        Log.error('     currently a member of the expected group for merge permissions in this');
+        Log.error('     repository. Have you been placed in the expected caretaking group?');
+        Log.debug('Github API request failed: ' + bold(e.message));
+        return false;
+      }
       if (isGithubApiError(e)) {
         Log.error('Github API request failed: ' + bold(e.message));
         return false;
