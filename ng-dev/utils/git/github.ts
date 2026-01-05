@@ -12,6 +12,7 @@ import {Octokit} from '@octokit/rest';
 import {RequestParameters} from '@octokit/types';
 import {RequestError} from '@octokit/request-error';
 import {query} from 'typed-graphqlify';
+import {Log} from '../logging';
 
 /**
  * An object representation of a Graphql Query to be used as a response type and
@@ -30,7 +31,17 @@ export interface GithubRepo {
 /** A Github client for interacting with the Github APIs. */
 export class GithubClient {
   /** The octokit instance actually performing API requests. */
-  protected _octokit: Octokit = new Octokit({...this._octokitOptions});
+  protected _octokit: Octokit = new Octokit({
+    // Move all default octokit logging into debug. We prefer handle all of the logging exposed
+    // to user's from Github ourselves.
+    log: {
+      debug: Log.debug,
+      error: Log.debug,
+      info: Log.debug,
+      warn: Log.debug,
+    },
+    ...this._octokitOptions,
+  });
 
   readonly pulls: Octokit['pulls'] = this._octokit.pulls;
   readonly orgs: Octokit['orgs'] = this._octokit.orgs;
