@@ -48,7 +48,7 @@
     {
       postUpgradeTasks: {
         commands: [
-          'git restore .npmrc || true', // In case `.npmrc` avoid a hard error.
+          'bash -c "git restore .npmrc || true"', // If `.npmrc` doesn't exist, avoid a hard error.
           'bazel mod deps --lockfile_mode=update',
         ],
         // This is theory should be `branch` but in some cases this is causing the command not to
