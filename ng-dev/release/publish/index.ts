@@ -21,6 +21,7 @@ import {actions} from './actions/index.js';
 import {verifyNgDevToolIsUpToDate} from '../../utils/version-check.js';
 import {Log, yellow} from '../../utils/logging.js';
 import {Prompt} from '../../utils/prompt.js';
+import {setMergeModeRelease} from '../../caretaker/merge-mode/release.js';
 
 export enum CompletionState {
   SUCCESS,
@@ -158,9 +159,17 @@ export class ReleaseTool {
     }
     const mode = await getCurrentMergeMode();
     if (mode !== 'release') {
-      Log.error(`  ✘   The repository merge-mode is set to ${mode} but must be set to release`);
-      Log.error('      prior to publishing releases. You can set merge-mode for release using:');
-      Log.error('      ng-dev caretaker merge-mode release');
+      Log.warn(`  ⚠   The repository merge-mode is set to ${mode} but must be set to release`);
+      Log.warn('      prior to publishing releases. You can set merge-mode for release using:');
+      Log.warn('      ng-dev caretaker merge-mode release');
+      if (
+        await Prompt.confirm({
+          message: 'Would you like to move into release mode now?',
+          default: true,
+        })
+      ) {
+        return setMergeModeRelease();
+      }
       return false;
     }
     return true;

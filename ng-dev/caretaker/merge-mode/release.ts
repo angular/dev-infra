@@ -9,22 +9,24 @@
 import {assertValidGithubConfig, getConfig} from '../../utils/config';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
 import {setRepoMergeMode} from '../../utils/git/repository-merge-mode';
-import {green, Log, red, bold} from '../../utils/logging';
+import {green, Log, bold} from '../../utils/logging';
 
-export async function setMergeModeRelease() {
+export async function setMergeModeRelease(): Promise<boolean> {
   try {
     await setRepoReleaserTeamToOnlyCurrentUser();
     await setRepoMergeMode('release');
     Log.info(green('  ✔  Repository is set for release'));
+    return true;
   } catch (err) {
     Log.error('  ✘  Failed to setup of repository for release');
     if (err instanceof Error) {
       Log.info(err.message);
       Log.debug(err.stack);
-      return;
+      return false;
     }
     Log.info(err);
   }
+  return false;
 }
 
 async function setRepoReleaserTeamToOnlyCurrentUser() {
