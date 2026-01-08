@@ -12,26 +12,28 @@ import {assertValidGithubConfig, getConfig} from '../../utils/config.js';
 import {addGithubTokenOption} from '../../utils/git/github-yargs.js';
 import {assertValidReleaseConfig} from '../config/index.js';
 
-import {CompletionState, ReleaseTool} from './index.js';
+import {CompletionState, ReleaseTool, ReleaseToolFlags} from './index.js';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {green, Log, yellow} from '../../utils/logging.js';
 
 /** Command line options for publishing a release. */
-export interface ReleasePublishOptions {}
+export interface ReleasePublishOptions extends ReleaseToolFlags {}
 
 /** Yargs command builder for configuring the `ng-dev release publish` command. */
 function builder(argv: Argv): Argv<ReleasePublishOptions> {
-  return addGithubTokenOption(argv);
+  return addGithubTokenOption(argv).option('publishRegistry', {
+    type: 'string',
+  });
 }
 
 /** Yargs command handler for staging a release. */
-async function handler() {
+async function handler(flags: Arguments<ReleasePublishOptions>) {
   const git = await AuthenticatedGitClient.get();
   const config = await getConfig();
   assertValidReleaseConfig(config);
   assertValidGithubConfig(config);
 
-  const task = new ReleaseTool(git, config.release, config.github, git.baseDir);
+  const task = new ReleaseTool(git, config.release, config.github, git.baseDir, flags);
   const result = await task.run();
 
   switch (result) {
