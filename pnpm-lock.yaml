@@ -74,8 +74,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.16.0
-        version: 7.16.0
+        specifier: 7.18.2
+        version: 7.18.2
 
   .github/local-actions/labels-sync:
     dependencies:
@@ -95,8 +95,8 @@ importers:
         specifier: 24.10.4
         version: 24.10.4
       undici:
-        specifier: 7.16.0
-        version: 7.16.0
+        specifier: 7.18.2
+        version: 7.18.2
 
   .github/local-actions/lock-closed:
     dependencies:
@@ -116,8 +116,8 @@ importers:
         specifier: 24.10.4
         version: 24.10.4
       undici:
-        specifier: 7.16.0
-        version: 7.16.0
+        specifier: 7.18.2
+        version: 7.18.2
 
   apps/code-of-conduct:
     dependencies:
@@ -338,8 +338,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.16.0
-        version: 7.16.0
+        specifier: 7.18.2
+        version: 7.18.2
 
   github-actions/browserstack:
     dependencies:
@@ -380,8 +380,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.16.0
-        version: 7.16.0
+        specifier: 7.18.2
+        version: 7.18.2
 
   github-actions/google-internal-tests:
     dependencies:
@@ -401,8 +401,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.16.0
-        version: 7.16.0
+        specifier: 7.18.2
+        version: 7.18.2
 
   github-actions/org-file-sync:
     dependencies:
@@ -425,8 +425,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.16.0
-        version: 7.16.0
+        specifier: 7.18.2
+        version: 7.18.2
 
   github-actions/post-approval-changes:
     dependencies:
@@ -449,8 +449,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.16.0
-        version: 7.16.0
+        specifier: 7.18.2
+        version: 7.18.2
 
   github-actions/previews/pack-and-upload-artifact:
     dependencies:
@@ -488,8 +488,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.16.0
-        version: 7.16.0
+        specifier: 7.18.2
+        version: 7.18.2
 
   github-actions/saucelabs:
     dependencies:
@@ -524,8 +524,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.16.0
-        version: 7.16.0
+        specifier: 7.18.2
+        version: 7.18.2
 
   ng-dev:
     dependencies:
@@ -5672,8 +5672,8 @@ packages:
     resolution: {integrity: sha512-raqeBD6NQK4SkWhQzeYKd1KmIG6dllBOTt55Rmkt4HtI9mwdWtJljnrXjAFUBLTSN67HWrOIZ3EPF4kjUw80Bg==}
     engines: {node: '>=14.0'}
 
-  undici@7.16.0:
-    resolution: {integrity: sha512-QEg3HPMll0o3t2ourKwOeUAZ159Kn9mx5pnzHRQO8+Wixmh88YdZRiIwat0iNzNNXn0yoEtXJqFpyW7eM8BV7g==}
+  undici@7.18.2:
+    resolution: {integrity: sha512-y+8YjDFzWdQlSE9N5nzKMT3g4a5UBX1HKowfdXh0uvAnTaqqwqB92Jt4UXBAeKekDs5IaDKyJFR4X1gYVCgXcw==}
     engines: {node: '>=20.18.1'}
 
   unicode-emoji-modifier-base@1.0.0:
@@ -11751,7 +11751,7 @@ snapshots:
     dependencies:
       '@fastify/busboy': 2.1.1
 
-  undici@7.16.0: {}
+  undici@7.18.2: {}
 
   unicode-emoji-modifier-base@1.0.0: {}
 
