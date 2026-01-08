@@ -31,10 +31,12 @@ async function setMergeModeHandler({mode}: Arguments<Options>) {
     return;
   }
   if (mode === 'reset') {
-    return await resetMergeMode();
+    await resetMergeMode();
+    return;
   }
   if (mode === 'release') {
-    return await setMergeModeRelease();
+    await setMergeModeRelease();
+    return;
   }
   Log.error(`Unable to set the merge mode to the provided mode: ${mode}`);
 }

@@ -18,6 +18,7 @@ ts_project(
         "//ng-dev:node_modules/folder-hash",
         "//ng-dev:node_modules/semver",
         "//ng-dev:node_modules/typed-graphqlify",
+        "//ng-dev/caretaker/merge-mode",
         "//ng-dev/commit-message",
         "//ng-dev/format",
         "//ng-dev/pr/merge",
