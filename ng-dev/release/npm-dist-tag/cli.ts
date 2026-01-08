@@ -20,8 +20,10 @@ function subCommandsBuilder(argv: Argv) {
 }
 
 export const ReleaseNpmDistTagCommand: CommandModule<{}, {}> = {
-  describe: 'Update the NPM dist tags for release packages.',
+  // Hidden from help menu as this is primarily for use by the release tooling itself.
+  describe: false,
   command: 'npm-dist-tag',
+
   builder: subCommandsBuilder,
   handler: () => {},
 };

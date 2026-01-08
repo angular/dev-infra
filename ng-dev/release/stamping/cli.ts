@@ -63,5 +63,6 @@ export const BuildEnvStampCommand: CommandModule<{}, Options> = {
   builder,
   handler,
   command: 'build-env-stamp',
-  describe: 'Build the environment stamping information',
+  // Hidden from help menu as this is primarily for use by the release tooling itself.
+  describe: false,
 };

@@ -88,5 +88,6 @@ export const ReleaseBuildCommandModule: CommandModule<{}, ReleaseBuildOptions> =
   builder,
   handler,
   command: 'build',
-  describe: 'Builds the release output for the current branch.',
+  // Hidden from help as this is for use by the release tooling itself.
+  describe: false,
 };
