@@ -29,16 +29,30 @@ export enum CompletionState {
   MANUALLY_ABORTED,
 }
 
+/** A set of flags available to be used to override settings at runtime. */
+export interface ReleaseToolFlags {
+  publishRegistry?: string;
+}
+
 export class ReleaseTool {
   /** The previous git commit to return back to after the release tool runs. */
   private previousGitBranchOrRevision = this._git.getCurrentBranchOrRevision();
+  /** The release configuration for the release tool run. */
+  protected _config: ReleaseConfig;
 
   constructor(
     protected _git: AuthenticatedGitClient,
-    protected _config: ReleaseConfig,
+    config: ReleaseConfig,
     protected _github: GithubConfig,
     protected _projectRoot: string,
-  ) {}
+    _flags: ReleaseToolFlags,
+  ) {
+    this._config = {
+      ...config,
+      // Replace publishRegistry in the config with one provided via flag, if provided
+      publishRegistry: _flags.publishRegistry ?? config.publishRegistry,
+    };
+  }
 
   /** Runs the interactive release tool. */
   async run(): Promise<CompletionState> {
