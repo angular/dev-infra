@@ -61,13 +61,13 @@
     // Enable 'postUpdateTasks' for changes that effect the typescript and pnpm versions.
     // This is to ensure that the `MODULE.bazel` is updated with the correct versions.
     {
-      matchManagers: ['npm'],
-      matchDepNames: ['pnpm', 'typescript'],
+      matchManagers: ['npm', 'nvm'],
+      matchDepNames: ['pnpm', 'typescript', 'node'],
       postUpgradeTasks: {
         commands: [
-          'git restore .npmrc || true', // In case `.npmrc` avoid a hard error.
+          'bash -c "git restore .npmrc || true"', // If `.npmrc` doesn't exist, avoid a hard error.
           'pnpm install --frozen-lockfile',
-          'pnpm ng-dev misc sync-module-bazel || true', // TODO(alanagius): Remove || true once all repos update to the latest ng-dev.
+          'bash -c "pnpm ng-dev misc sync-module-bazel || true"', // If `ng-dev` doesn't exist, avoid a hard error.
         ],
         executionMode: 'branch',
       },
