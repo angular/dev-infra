@@ -12,6 +12,7 @@ import {join} from 'node:path';
 import {determineRepoBaseDirFromCwd} from '../../utils/repo-directory';
 import {PackageJson, syncNodeJs, syncPnpm, syncTypeScript} from './sync-module-bazel';
 import {ChildProcess} from '../../utils/child-process';
+import {formatFiles} from '../../format/format';
 
 async function builder(argv: Argv) {
   return argv;
@@ -55,7 +56,8 @@ async function handler() {
   if (originalBazelContent !== moduleBazelContent) {
     writeFileSync(moduleBazelPath, moduleBazelContent);
 
-    ChildProcess.spawnSync('pnpm', ['buildifier', 'MODULE.bazel']);
+    await formatFiles(['MODULE.bazel']);
+
     ChildProcess.spawnSync('pnpm', ['bazel', 'mod', 'deps', '--lockfile_mode=update'], {
       suppressErrorOnFailingExitCode: true,
     });

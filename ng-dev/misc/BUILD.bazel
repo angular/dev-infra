@@ -7,6 +7,7 @@ ts_project(
     deps = [
         "//ng-dev:node_modules/@types/node",
         "//ng-dev:node_modules/@types/yargs",
+        "//ng-dev/format",
         "//ng-dev/release/build",
         "//ng-dev/release/config",
         "//ng-dev/utils",
