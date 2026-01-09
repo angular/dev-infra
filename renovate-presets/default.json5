@@ -47,6 +47,7 @@
     // Workaround for https://github.com/renovatebot/renovate/issues/25557
     {
       postUpgradeTasks: {
+        matchManagers: ['bazel', 'bazel-module', 'bazelisk'],
         commands: [
           'bash -c "git restore .npmrc || true"', // If `.npmrc` doesn't exist, avoid a hard error.
           'bazel mod deps --lockfile_mode=update',
@@ -55,7 +56,21 @@
         // run when in the same branch there are mixtures of update types by different managers.
         executionMode: 'update',
       },
-      matchManagers: ['bazel', 'bazel-module', 'bazelisk'],
+    },
+
+    // Enable 'postUpdateTasks' for changes that effect the typescript and pnpm versions.
+    // This is to ensure that the `MODULE.bazel` is updated with the correct versions.
+    {
+      matchManagers: ['npm', 'nvm'],
+      matchDepNames: ['pnpm', 'typescript', 'node'],
+      postUpgradeTasks: {
+        commands: [
+          'bash -c "git restore .npmrc || true"', // If `.npmrc` doesn't exist, avoid a hard error.
+          'pnpm install --frozen-lockfile',
+          'bash -c "pnpm ng-dev misc sync-module-bazel || true"', // If `ng-dev` doesn't exist, avoid a hard error.
+        ],
+        executionMode: 'branch',
+      },
     },
 
     // Rule to require manual approval for NPM updates on branches other than 'main'.

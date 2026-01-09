@@ -13,6 +13,7 @@
         "commands": [
           "pnpm install --frozen-lockfile",
           "pnpm bazel mod deps --lockfile_mode=update",
+          "pnpm ng-dev misc sync-module-bazel",
           "pnpm update-generated-files"
         ],
         "executionMode": "branch"
