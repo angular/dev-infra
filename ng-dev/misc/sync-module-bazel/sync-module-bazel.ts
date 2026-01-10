@@ -47,6 +47,8 @@ const TS_VERSION_REGEXP = /ts_version(?:_from)? = ".*?"/;
 const TS_INTEGRITY_REGEXP = /ts_integrity = ".*?"/;
 /** RegExp that matches the Node.js version assignment in MODULE.bazel. */
 const NODE_VERSION_REGEXP = /node_version = "(.*?)"/;
+/** RegExp that matches the Node.js version from nvmrc assignment in MODULE.bazel. */
+const NODE_VERSION_FROM_NVMRC_REGEXP = /node_version_from_nvmrc = ".*?"/;
 /** RegExp that matches the Node.js repositories assignment in MODULE.bazel. */
 const NODE_REPOSITORIES_REGEXP = /node_repositories = \{[\s\S]*?\}/;
 
@@ -111,20 +113,27 @@ async function processNodeToolchainArgs(
   args: string,
   nvmrcVersion: string | undefined,
 ): Promise<string> {
-  const useVersionFromNvm = args.includes('node_version_from_nvmrc');
   const versionMatch = args.match(NODE_VERSION_REGEXP);
   let effectiveVersion = versionMatch?.[1];
 
-  if (useVersionFromNvm) {
+  if (effectiveVersion === nvmrcVersion) {
+    return args;
+  }
+
+  if (effectiveVersion) {
+    args = args.replace(NODE_VERSION_REGEXP, `node_version = "${nvmrcVersion}"`);
+    effectiveVersion = nvmrcVersion;
+  } else if (NODE_VERSION_FROM_NVMRC_REGEXP.test(args)) {
     if (!nvmrcVersion) {
       throw new Error('node_version_from_nvmrc used but .nvmrc not found');
     }
 
     effectiveVersion = nvmrcVersion;
-  } else if (effectiveVersion && effectiveVersion !== nvmrcVersion) {
-    args = args.replace(NODE_VERSION_REGEXP, `node_version = "${nvmrcVersion}"`);
-    effectiveVersion = nvmrcVersion;
+    // TODO(alanagius): This is needed as currently 'node_version_from_nvmrc' is buggy with 'node_repositories'.
+    // This should be addressed in version of rules_nodejs > 6.6.2
+    args = args.replace(NODE_VERSION_FROM_NVMRC_REGEXP, `node_version = "${nvmrcVersion}"`);
   }
+
   if (!effectiveVersion) {
     return args;
   }
