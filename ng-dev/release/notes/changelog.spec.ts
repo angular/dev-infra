@@ -4,6 +4,7 @@ import semver from 'semver';
 import {cleanTestTmpDir, dedent} from '../../utils/testing/index.js';
 import {Changelog, splitMarker} from './changelog.js';
 import {getMockGitClient} from '../../utils/testing/index.js';
+import {MergeMode} from '../../utils/git/repository-merge-mode.js';
 
 describe('Changelog', () => {
   let changelog: Changelog;
@@ -13,7 +14,7 @@ describe('Changelog', () => {
     cleanTestTmpDir();
     gitClient = getMockGitClient(
       {
-        mergeMode: 'team-only',
+        mergeMode: MergeMode.TEAM_ONLY,
         owner: 'angular',
         name: 'dev-infra-test',
         mainBranchName: 'main',

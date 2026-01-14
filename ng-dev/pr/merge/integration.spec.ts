@@ -26,6 +26,7 @@ import {
 } from '../../release/versioning/index.js';
 import {parsePrNumber} from './merge-pull-request.js';
 import {Prompt} from '../../utils/prompt.js';
+import {MergeMode} from '../../utils/git/repository-merge-mode.js';
 const API_ENDPOINT = `https://api.github.com`;
 
 describe('default target labels', () => {
@@ -36,7 +37,7 @@ describe('default target labels', () => {
   beforeEach(() => {
     api = new GithubClient();
     githubConfig = {
-      mergeMode: 'caretaker-only',
+      mergeMode: MergeMode.CARETAKER_ONLY,
       owner: 'angular',
       name: 'dev-infra-test',
       mainBranchName: 'master',

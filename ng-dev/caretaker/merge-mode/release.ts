@@ -8,13 +8,13 @@
 
 import {assertValidGithubConfig, getConfig} from '../../utils/config';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client';
-import {setRepoMergeMode} from '../../utils/git/repository-merge-mode';
+import {MergeMode, setRepoMergeMode} from '../../utils/git/repository-merge-mode';
 import {green, Log, bold} from '../../utils/logging';
 
 export async function setMergeModeRelease(): Promise<boolean> {
   try {
     await setRepoReleaserTeamToOnlyCurrentUser();
-    await setRepoMergeMode('release');
+    await setRepoMergeMode(MergeMode.RELEASE);
     Log.info(green('  ✔  Repository is set for release'));
     return true;
   } catch (err) {

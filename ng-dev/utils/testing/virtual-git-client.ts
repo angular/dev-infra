@@ -13,11 +13,12 @@ import {testTmpDir} from './index.js';
 import {GithubConfig} from '../config.js';
 import {AuthenticatedGitClient} from '../git/authenticated-git-client.js';
 import {GitClient} from '../git/git-client.js';
+import {MergeMode} from '../git/repository-merge-mode.js';
 
 /** A mock instance of a configuration for the ng-dev toolset for default testing. */
 export const mockNgDevConfig: {github: GithubConfig} = {
   github: {
-    mergeMode: 'caretaker-only',
+    mergeMode: MergeMode.CARETAKER_ONLY,
     name: 'name',
     owner: 'owner',
     mainBranchName: 'master',

@@ -6,12 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {RepositoryMergeModes} from '../../utils/config';
 import {bold, green, Log, red} from '../../utils/logging';
 import {Prompt} from '../../utils/prompt';
-import {getCurrentMergeMode, setRepoMergeMode} from '../../utils/git/repository-merge-mode';
+import {
+  getCurrentMergeMode,
+  MergeMode,
+  setRepoMergeMode,
+} from '../../utils/git/repository-merge-mode';
 
-export async function verifyMergeMode(expectedMode: RepositoryMergeModes): Promise<boolean> {
+export async function verifyMergeMode(expectedMode: MergeMode): Promise<boolean> {
   const mode = await getCurrentMergeMode();
   if (mode === expectedMode) {
     return true;

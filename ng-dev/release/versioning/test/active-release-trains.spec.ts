@@ -9,6 +9,7 @@ import nock from 'nock';
 import {fakeGithubPaginationResponse, matchesVersion} from '../../../utils/testing/index.js';
 import {GithubConfig} from '../../../utils/config.js';
 import {ReleaseTrain} from '../release-trains.js';
+import {MergeMode} from '../../../utils/git/repository-merge-mode.js';
 
 interface FakeBranch {
   name: string;
@@ -289,7 +290,7 @@ describe('active release train determination', () => {
 
   beforeEach(() => {
     setup({
-      mergeMode: 'team-only',
+      mergeMode: MergeMode.TEAM_ONLY,
       owner: 'angular',
       name: 'dev-infra-test',
       mainBranchName: 'main',
