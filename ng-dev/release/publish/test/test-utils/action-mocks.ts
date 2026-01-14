@@ -28,6 +28,7 @@ import {ReleaseAction} from '../../actions.js';
 import {DirectoryHash} from '../../directory-hash.js';
 import {ExternalCommands} from '../../external-commands.js';
 import {Prompt} from '../../../../utils/prompt.js';
+import {MergeMode} from '../../../../utils/git/repository-merge-mode.js';
 
 /** Default representative NPM package used in tests. */
 export const testRepresentativePackage = '@angular/pkg1';
@@ -45,7 +46,7 @@ export const testReleasePackages: NpmPackage[] = [
 /** Gets test configurations for running testing a publish action. */
 export function getTestConfigurationsForAction() {
   const githubConfig: GithubConfig = {
-    mergeMode: 'caretaker-only',
+    mergeMode: MergeMode.CARETAKER_ONLY,
     owner: 'angular',
     name: 'dev-infra-test',
     mainBranchName: 'master',

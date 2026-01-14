@@ -11,7 +11,15 @@ import {AuthenticatedGitClient} from './authenticated-git-client';
 
 const mergeModePropertyName = 'merge-mode';
 
-export async function getCurrentMergeMode() {
+export enum MergeMode {
+  TEAM_ONLY = 'team-only',
+  CARETAKER_ONLY = 'caretaker-only',
+  RELEASE = 'release',
+}
+
+const mergeModes = Object.values(MergeMode);
+
+export async function getCurrentMergeMode(): Promise<MergeMode> {
   const git = await AuthenticatedGitClient.get();
 
   const {data: properties} = await git.github.repos.customPropertiesForReposGetRepositoryValues({
@@ -24,11 +32,12 @@ export async function getCurrentMergeMode() {
     throw Error(`No repository configuration value with the key: ${mergeModePropertyName}`);
   }
 
-  // We safely case this as a string since we know that `merge-mode` is a single-select and therefore a string.
-  return property.value as string;
+  // We safely cast this as a MergeMode since we know that `merge-mode` is a single-select and
+  // therefore one of the valid strings.
+  return property.value as MergeMode;
 }
 
-export async function setRepoMergeMode(value: string) {
+export async function setRepoMergeMode(value: MergeMode) {
   const currentValue = await getCurrentMergeMode();
   if (currentValue === value) {
     Log.debug(
@@ -37,12 +46,10 @@ export async function setRepoMergeMode(value: string) {
     return false;
   }
   const git = await AuthenticatedGitClient.get();
-  const allowed_values = ['team-only', 'caretaker-only', 'release'];
-
-  if (!allowed_values!.includes(value)) {
+  if (!mergeModes.includes(value)) {
     throw Error(
       `Unable to update ${mergeModePropertyName}. The value provided must use one of: ` +
-        `${allowed_values!.join(', ')}\nBut "${value}" was provided as the value`,
+        `${mergeModes.join(', ')}\nBut "${value}" was provided as the value`,
     );
   }
 

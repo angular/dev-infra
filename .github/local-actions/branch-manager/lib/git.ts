@@ -12,6 +12,7 @@ import {
   GithubConfig,
   setConfig,
 } from '../../../../ng-dev/utils/config.js';
+import {MergeMode} from '../../../../ng-dev/utils/git/repository-merge-mode.js';
 
 /** The branch used as the primary branch for the temporary repo. */
 const mainBranchName = 'main';
@@ -25,7 +26,7 @@ export async function setupConfigAndGitClient(token: string, repo: {owner: strin
       mainBranchName,
       owner: repo.owner,
       name: repo.repo,
-      mergeMode: 'caretaker-only',
+      mergeMode: MergeMode.CARETAKER_ONLY,
     },
     pullRequest: {
       githubApiMerge: false,

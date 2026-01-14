@@ -7,6 +7,7 @@
  */
 
 import {GithubConfig, setConfig} from '../../../../utils/config.js';
+import {MergeMode} from '../../../../utils/git/repository-merge-mode.js';
 import {
   getMockGitClient,
   installSandboxGitClient,
@@ -34,7 +35,7 @@ describe('release notes generation', () => {
       buildPackages: async () => [],
     };
     githubConfig = {
-      mergeMode: 'caretaker-only',
+      mergeMode: MergeMode.CARETAKER_ONLY,
       owner: 'angular',
       name: 'dev-infra-test',
       mainBranchName: 'main',

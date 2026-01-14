@@ -8,6 +8,7 @@
 
 import {CommitFromGitLog, parseCommitFromGitLog} from '../../../../commit-message/parse.js';
 import {commitMessageBuilder} from '../../../../commit-message/test-util.js';
+import {MergeMode} from '../../../../utils/git/repository-merge-mode.js';
 import {CategorizedCommit, RenderContext, RenderContextData} from '../../../notes/context.js';
 
 const defaultContextData: RenderContextData = {
@@ -16,7 +17,7 @@ const defaultContextData: RenderContextData = {
   hiddenScopes: undefined,
   groupOrder: undefined,
   github: {
-    mergeMode: 'caretaker-only',
+    mergeMode: MergeMode.CARETAKER_ONLY,
     name: 'repoName',
     owner: 'repoOwner',
     mainBranchName: 'master',
