@@ -37,17 +37,7 @@ export async function setRepoMergeMode(value: string) {
     return false;
   }
   const git = await AuthenticatedGitClient.get();
-  const {value_type, allowed_values} = await getRepoConfigValueDefinition(
-    mergeModePropertyName,
-    git,
-  );
-
-  if (value_type !== 'single_select') {
-    throw Error(
-      `Unable to update ${mergeModePropertyName} as its type is ${value_type}, currently the ` +
-        `only supported configuration type is single_select`,
-    );
-  }
+  const allowed_values = ['team-only', 'caretaker-only', 'release'];
 
   if (!allowed_values!.includes(value)) {
     throw Error(
@@ -70,13 +60,4 @@ export async function setRepoMergeMode(value: string) {
   });
 
   return true;
-}
-
-async function getRepoConfigValueDefinition(key: string, git: AuthenticatedGitClient) {
-  return git.github.orgs
-    .customPropertiesForReposGetOrganizationDefinition({
-      custom_property_name: key,
-      org: git.remoteConfig.owner,
-    })
-    .then(({data}) => data);
 }
