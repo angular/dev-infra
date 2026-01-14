@@ -56,15 +56,15 @@ use_repo(rules_ts_ext, "npm_typescript")
 node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
 node.toolchain(
     node_repositories = {
-        "24.12.0-darwin_arm64": ("node-v24.12.0-darwin-arm64.tar.gz", "node-v24.12.0-darwin-arm64", "319f221adc5e44ff0ed57e8a441b2284f02b8dc6fc87b8eb92a6a93643fd8080"),
-        "24.12.0-darwin_amd64": ("node-v24.12.0-darwin-x64.tar.gz", "node-v24.12.0-darwin-x64", "b82ea4c62fd08e250cab59d625e75d77cc5b0a3d60c6698ebee4545c88a169c5"),
-        "24.12.0-linux_arm64": ("node-v24.12.0-linux-arm64.tar.xz", "node-v24.12.0-linux-arm64", "a06d42807fb500f7459e5f3fa6cb431447352826ee6f07e14adfeec58a1b3210"),
-        "24.12.0-linux_ppc64le": ("node-v24.12.0-linux-ppc64le.tar.xz", "node-v24.12.0-linux-ppc64le", "3a18221623530a35c35611786b33cedef8b84b5d4c683b01ba6341b15043bf97"),
-        "24.12.0-linux_s390x": ("node-v24.12.0-linux-s390x.tar.xz", "node-v24.12.0-linux-s390x", "b9038c2c6b51970cd09cc2bee81dd7e0fb7130823d940cec498c4686b204e4ed"),
-        "24.12.0-linux_amd64": ("node-v24.12.0-linux-x64.tar.xz", "node-v24.12.0-linux-x64", "bdebee276e58d0ef5448f3d5ac12c67daa963dd5e0a9bb621a53d1cefbc852fd"),
-        "24.12.0-windows_amd64": ("node-v24.12.0-win-x64.zip", "node-v24.12.0-win-x64", "9c125f61ae947b52e779095830f9cac267846a043ef7192183c84016aaad2812"),
+        "24.13.0-darwin_arm64": ("node-v24.13.0-darwin-arm64.tar.gz", "node-v24.13.0-darwin-arm64", "d595961e563fcae057d4a0fb992f175a54d97fcc4a14dc2d474d92ddeea3b9f8"),
+        "24.13.0-darwin_amd64": ("node-v24.13.0-darwin-x64.tar.gz", "node-v24.13.0-darwin-x64", "6f03c1b48ddbe1b129a6f8038be08e0899f05f17185b4d3e4350180ab669a7f3"),
+        "24.13.0-linux_arm64": ("node-v24.13.0-linux-arm64.tar.xz", "node-v24.13.0-linux-arm64", "aa881151bd0f9f154a0424dd60a72e9ce10672619121658c278a24327ef46831"),
+        "24.13.0-linux_ppc64le": ("node-v24.13.0-linux-ppc64le.tar.xz", "node-v24.13.0-linux-ppc64le", "babe8c72871c751ed288fc1a1aeb2a95d830f732e43d9e4ab0cf137e3273eb8e"),
+        "24.13.0-linux_s390x": ("node-v24.13.0-linux-s390x.tar.xz", "node-v24.13.0-linux-s390x", "75f6f780442b7b98a357fd9cf6e383c3d22a8efe9ed4ee1d54ea68ff16889904"),
+        "24.13.0-linux_amd64": ("node-v24.13.0-linux-x64.tar.xz", "node-v24.13.0-linux-x64", "e798599612f4bb71333a3397ab0d095fd62214e115aea45aa858a145fc72d67e"),
+        "24.13.0-windows_amd64": ("node-v24.13.0-win-x64.zip", "node-v24.13.0-win-x64", "ca2742695be8de44027d71b3f53a4bdb36009b95575fe1ae6f7f0b5ce091cb88"),
     },
-    node_version = "24.12.0",
+    node_version = "24.13.0",
 )
 use_repo(node, "nodejs_toolchains")
 
