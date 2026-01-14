@@ -16,8 +16,7 @@ const bazelRcContent = `
 build --announce_rc
 
 # Avoids re-downloading NodeJS/browsers all the time.
-# Replace path to make it compatable with WSL
-build --repository_cache=${escapedCachePath.replace(/c:\//i, '/mnt/c/')}
+build --repository_cache=${escapedCachePath}
 
 # More details on failures
 build --verbose_failures=true
