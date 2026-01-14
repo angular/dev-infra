@@ -14,9 +14,10 @@ import {CiModule} from './ci.js';
 import {G3Module} from './g3.js';
 import {GithubQueriesModule} from './github.js';
 import {ServicesModule} from './services.js';
+import {RepoStatusModule} from './repo-status.js';
 
 /** List of modules checked for the caretaker check command. */
-const moduleList = [GithubQueriesModule, ServicesModule, CiModule, G3Module];
+const moduleList = [RepoStatusModule, GithubQueriesModule, ServicesModule, CiModule, G3Module];
 
 /** Check the status of services which Angular caretakers need to monitor. */
 export async function checkServiceStatuses() {
