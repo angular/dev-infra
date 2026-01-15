@@ -1,9 +1,9 @@
 {
   "dependencies": {
-    "@actions/core": "2.0.1",
+    "@actions/core": "2.0.2",
     "@actions/github": "7.0.0",
     "@octokit/rest": "22.0.1",
-    "@types/node": "24.10.4",
+    "@types/node": "24.10.8",
     "typed-graphqlify": "3.1.6",
     "undici": "7.18.2"
   }
