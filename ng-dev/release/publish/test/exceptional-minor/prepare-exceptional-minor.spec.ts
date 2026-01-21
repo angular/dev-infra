@@ -20,7 +20,7 @@ import {ReleaseTrain} from '../../../versioning/release-trains.js';
 import {PrepareExceptionalMinorAction} from '../../actions/exceptional-minor/prepare-exceptional-minor.js';
 import {parse, setupReleaseActionForTesting} from '../test-utils/test-utils.js';
 
-describe('cut exceptional minor next release candidate action', () => {
+describe('prepate exceptional minor action', () => {
   it('should activate if a major is in the FF/RC train', async () => {
     expect(
       await PrepareExceptionalMinorAction.isActive(
