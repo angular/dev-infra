@@ -12,7 +12,7 @@ import {Log} from './logging.js';
 import {getCachedConfig, setCachedConfig} from './config-cache.js';
 import {determineRepoBaseDirFromCwd} from './repo-directory.js';
 import {pathToFileURL} from 'url';
-import {MergeMode} from './git/repository-merge-mode.js';
+import {RepositoryMergeMode} from './git/repository-merge-mode.js';
 
 /**
  * Type describing a ng-dev configuration.
@@ -23,9 +23,6 @@ import {MergeMode} from './git/repository-merge-mode.js';
 export type NgDevConfig<T = {}> = T & {
   __isNgDevConfigObject: boolean;
 };
-
-/** The merge modes repositories can defined as their normal merge mode. */
-export type RepositoryMergeMode = Extract<MergeMode, 'team-only' | 'caretaker-only'>;
 
 /**
  * Describes the Github configuration for dev-infra. This configuration is

@@ -11,11 +11,18 @@ import {AuthenticatedGitClient} from './authenticated-git-client';
 
 const mergeModePropertyName = 'merge-mode';
 
-export enum MergeMode {
-  TEAM_ONLY = 'team-only',
-  CARETAKER_ONLY = 'caretaker-only',
-  RELEASE = 'release',
-}
+/** The merge modes repositories can defined as their normal merge mode. */
+export const RepositoryMergeMode = {
+  TEAM_ONLY: 'team-only',
+  CARETAKER_ONLY: 'caretaker-only',
+} as const;
+export type RepositoryMergeMode = (typeof RepositoryMergeMode)[keyof typeof RepositoryMergeMode];
+
+export const MergeMode = {
+  ...RepositoryMergeMode,
+  RELEASE: 'release',
+} as const;
+export type MergeMode = (typeof MergeMode)[keyof typeof MergeMode];
 
 const mergeModes = Object.values(MergeMode);
 
