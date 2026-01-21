@@ -50,7 +50,8 @@ async function runCommands(commands?: string[]) {
   if (!commands || commands.length === 0) {
     return;
   }
-  for (let cmd of commands) {
-    await ChildProcess.exec(cmd, {mode: 'silent'});
+
+  for (const cmd of commands) {
+    await ChildProcess.exec(cmd, {mode: 'on-error'});
   }
 }
