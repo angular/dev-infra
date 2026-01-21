@@ -1,3 +1,0 @@
-workspace(
-    name = "nested_bazel_workspace",
-)
