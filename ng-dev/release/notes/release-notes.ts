@@ -5,7 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {render} from 'ejs';
+import ejs from 'ejs';
 import semver from 'semver';
 import {CommitFromGitLog} from '../../commit-message/parse.js';
 
@@ -48,14 +48,14 @@ export class ReleaseNotes {
 
   /** Retrieve the release note generated for a Github Release. */
   async getGithubReleaseEntry(): Promise<string> {
-    return render(githubReleaseTemplate, await this.generateRenderContext(), {
+    return ejs.render(githubReleaseTemplate, await this.generateRenderContext(), {
       rmWhitespace: true,
     });
   }
 
   /** Retrieve the release note generated for a CHANGELOG entry. */
   async getChangelogEntry() {
-    return render(changelogTemplate, await this.generateRenderContext(), {rmWhitespace: true});
+    return ejs.render(changelogTemplate, await this.generateRenderContext(), {rmWhitespace: true});
   }
 
   /**
