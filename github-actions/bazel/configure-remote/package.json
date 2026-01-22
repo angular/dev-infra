@@ -2,6 +2,6 @@
   "type": "module",
   "dependencies": {
     "@actions/core": "2.0.2",
-    "@types/node": "24.10.8"
+    "@types/node": "24.10.9"
   }
 }

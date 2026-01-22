@@ -4,7 +4,7 @@
     "@actions/github": "7.0.0",
     "@octokit/rest": "22.0.1",
     "@octokit/types": "16.0.0",
-    "@types/node": "24.10.8",
+    "@types/node": "24.10.9",
     "undici": "7.18.2"
   }
 }
