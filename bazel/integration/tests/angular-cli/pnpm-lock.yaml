@@ -52,8 +52,8 @@ importers:
         specifier: 24.10.9
         version: 24.10.9
       chromedriver:
-        specifier: ^143.0.0
-        version: 143.0.4
+        specifier: ^144.0.0
+        version: 144.0.0
       jasmine-core:
         specifier: ~5.13.0
         version: 5.13.0
@@ -1479,8 +1479,8 @@ packages:
     resolution: {integrity: sha512-+IxzY9BZOQd/XuYPRmrvEVjF/nqj5kgT4kEq7VofrDoM1MxoRjEWkrCC3EtLi59TVawxTAn+orJwFQcrqEN1+g==}
     engines: {node: '>=18'}
 
-  chromedriver@143.0.4:
-    resolution: {integrity: sha512-mE++40DprY2n4d3OPxzW7ujIFRY9eLYwJf4uBgQtMaJQkapSVXRzUrLzSMcRaybrt47Y1t8xW5AKoaUIL3aYZw==}
+  chromedriver@144.0.0:
+    resolution: {integrity: sha512-/tJRUsIroqvqlOMstecDXYIJpq0r441tIOnk951rAbT7OCMRZB98StG+NWp0m31TIKwuizOZobr/PP7ekVaSig==}
     engines: {node: '>=20'}
     hasBin: true
 
@@ -4339,7 +4339,7 @@ snapshots:
 
   chownr@3.0.0: {}
 
-  chromedriver@143.0.4:
+  chromedriver@144.0.0:
     dependencies:
       '@testim/chrome-version': 1.1.4
       axios: 1.13.2
