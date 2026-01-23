@@ -25,7 +25,7 @@
     "@angular/build": "21.1.0-rc.0",
     "@angular/cli": "21.1.0-rc.0",
     "@angular/compiler-cli": "21.2.0-next.0",
-    "@types/jasmine": "~5.1.9",
+    "@types/jasmine": "~6.0.0",
     "@types/node": "24.10.9",
     "chromedriver": "^143.0.0",
     "jasmine-core": "~5.13.0",
