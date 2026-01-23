@@ -5,7 +5,7 @@
     "@actions/github": "7.0.0",
     "@octokit/auth-app": "8.1.2",
     "@octokit/rest": "22.0.1",
-    "@types/jasmine": "5.1.15",
+    "@types/jasmine": "6.0.0",
     "@types/node": "24.10.9"
   }
 }
