@@ -10,14 +10,14 @@ importers:
     devDependencies:
       '@bazel/bazelisk':
         specifier: ^1.11.0
-        version: 1.28.0
+        version: 1.28.1
 
 packages:
 
-  '@bazel/bazelisk@1.28.0':
-    resolution: {integrity: sha512-TuS0DzLV6Hu6zwuQsrZUeqfrs3vKF3hLGJfgTWy6fXTqoYv72SxgmJ6seep1/yzTHKcGMglO4S+KuIXGlmnGyw==}
+  '@bazel/bazelisk@1.28.1':
+    resolution: {integrity: sha512-K21x83NXOtd0yb2qzjMES3UV4xEWZ1q1vnXFhADA1u7IoiMVQkJAVQRK3oZ5txpnrGafY15HS+YYr2nmsEP4Tg==}
     hasBin: true
 
 snapshots:
 
-  '@bazel/bazelisk@1.28.0': {}
+  '@bazel/bazelisk@1.28.1': {}
