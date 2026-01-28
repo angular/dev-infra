@@ -11,8 +11,8 @@ importers:
   .:
     devDependencies:
       '@angular/compiler-cli':
-        specifier: 21.2.0-next.0
-        version: 21.2.0-next.0(@angular/compiler@21.2.0-next.0)(typescript@5.9.3)
+        specifier: 21.2.0-next.1
+        version: 21.2.0-next.1(@angular/compiler@21.2.0-next.1)(typescript@5.9.3)
       '@bazel/bazelisk':
         specifier: 1.28.1
         version: 1.28.1
@@ -122,35 +122,35 @@ importers:
   apps/code-of-conduct:
     dependencies:
       '@angular/animations':
-        specifier: 21.2.0-next.0
-        version: 21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))
+        specifier: 21.2.0-next.1
+        version: 21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))
       '@angular/cdk':
         specifier: 21.2.0-next.1
-        version: 21.2.0-next.1(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-next.0(@angular/animations@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(rxjs@7.8.2)
+        version: 21.2.0-next.1(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-next.1(@angular/animations@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(rxjs@7.8.2)
       '@angular/common':
-        specifier: 21.2.0-next.0
-        version: 21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2)
+        specifier: 21.2.0-next.1
+        version: 21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2)
       '@angular/compiler':
-        specifier: 21.2.0-next.0
-        version: 21.2.0-next.0
+        specifier: 21.2.0-next.1
+        version: 21.2.0-next.1
       '@angular/core':
-        specifier: 21.2.0-next.0
-        version: 21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)
+        specifier: 21.2.0-next.1
+        version: 21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)
       '@angular/fire':
         specifier: 21.0.0-rc.0
-        version: 21.0.0-rc.0(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-next.0(@angular/animations@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(chokidar@5.0.0)(firebase-tools@15.3.1(@types/node@24.10.9)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(rxjs@7.8.2)
+        version: 21.0.0-rc.0(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-next.1(@angular/animations@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(chokidar@5.0.0)(firebase-tools@15.3.1(@types/node@24.10.9)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(rxjs@7.8.2)
       '@angular/forms':
-        specifier: 21.2.0-next.0
-        version: 21.2.0-next.0(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-next.0(@angular/animations@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(rxjs@7.8.2)
+        specifier: 21.2.0-next.1
+        version: 21.2.0-next.1(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-next.1(@angular/animations@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(rxjs@7.8.2)
       '@angular/material':
         specifier: 21.2.0-next.1
-        version: 21.2.0-next.1(543b4cd5add643034223e4134967d1ab)
+        version: 21.2.0-next.1(d363ea0c032248a351f6672d2b982900)
       '@angular/platform-browser':
-        specifier: 21.2.0-next.0
-        version: 21.2.0-next.0(@angular/animations@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))
+        specifier: 21.2.0-next.1
+        version: 21.2.0-next.1(@angular/animations@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))
       '@angular/router':
-        specifier: 21.2.0-next.0
-        version: 21.2.0-next.0(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-next.0(@angular/animations@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(rxjs@7.8.2)
+        specifier: 21.2.0-next.1
+        version: 21.2.0-next.1(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-next.1(@angular/animations@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(rxjs@7.8.2)
       '@octokit/rest':
         specifier: ''
         version: 22.0.1
@@ -260,14 +260,14 @@ importers:
   bazel/spec-bundling/test:
     dependencies:
       '@angular/compiler':
-        specifier: 21.2.0-next.0
-        version: 21.2.0-next.0
+        specifier: 21.2.0-next.1
+        version: 21.2.0-next.1
       '@angular/core':
-        specifier: 21.2.0-next.0
-        version: 21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)
+        specifier: 21.2.0-next.1
+        version: 21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)
       '@angular/platform-browser':
-        specifier: 21.2.0-next.0
-        version: 21.2.0-next.0(@angular/animations@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))
+        specifier: 21.2.0-next.1
+        version: 21.2.0-next.1(@angular/animations@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))
       '@types/jasmine':
         specifier: 6.0.0
         version: 6.0.0
@@ -731,11 +731,11 @@ packages:
     resolution: {integrity: sha512-3ptEOuALghEYEPVbhRa7g8a+YmvmHqHVNqF9XqCbG22nPGWkE58qfNNbXi3tF9iQxzKSGw5Iy5gYUvSvpsdcfw==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
 
-  '@angular/animations@21.2.0-next.0':
-    resolution: {integrity: sha512-vxjU8S2ZsVsuBTxN8AD5PcusiKW9KQRKQxlvGW9cryd+Tpwy0VO3Zn5n+TyuAwaV9PjgP5ysowPRnQekdGikiw==}
+  '@angular/animations@21.2.0-next.1':
+    resolution: {integrity: sha512-hqkSvcdx0YnmgJI+0ZAXDY18K51/u3XyDSqt3W/4F8sWJiTIQ8SmmawtW6sK6CifyG3R5PU1z5mkMBtVSm9fnA==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
     peerDependencies:
-      '@angular/core': 21.2.0-next.0
+      '@angular/core': 21.2.0-next.1
 
   '@angular/cdk@21.2.0-next.1':
     resolution: {integrity: sha512-vP5sta8kEDA1rbFCHxi1q4S+gfQdh9rsw+zPnmmP1Cttm3axW8WqEVi+46zul2ATGDERdvMSxteY2v+S2rkILw==}
@@ -745,33 +745,33 @@ packages:
       '@angular/platform-browser': ^21.0.0-0 || ^21.1.0-0 || ^21.2.0-0 || ^21.3.0-0 || ^22.0.0-0
       rxjs: ^6.5.3 || ^7.4.0
 
-  '@angular/common@21.2.0-next.0':
-    resolution: {integrity: sha512-sE82GeNk0cq1s3IDCoJtQDeBbfDtW6Ulu9QrYW+gd01J+2LZshGsMHSsjd6pEL/0CUmYn5SeXbc3aWPew4Kzdw==}
+  '@angular/common@21.2.0-next.1':
+    resolution: {integrity: sha512-MleR64CMSdb/sJF447b3iGguKP7r4I/y5WSzmObS4B/LhlQrmlLGhRjAz/5L7ewNTbebdIHGOkrsBmSHPKlOyQ==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
     peerDependencies:
-      '@angular/core': 21.2.0-next.0
+      '@angular/core': 21.2.0-next.1
       rxjs: ^6.5.3 || ^7.4.0
 
-  '@angular/compiler-cli@21.2.0-next.0':
-    resolution: {integrity: sha512-B0DhnVWKDqzmfZvqCyqm06Ckyi0zJGDmS3paZGRCj9MmwaWx6wnIbXRvZjIZjq0gq03Y9Llx7a7WLnaaT/stPQ==}
+  '@angular/compiler-cli@21.2.0-next.1':
+    resolution: {integrity: sha512-qeMZbY29en+mwWZU7Wt7YKcZ50Ai1hAFwb9OqjsqmgVuW+aN4ZAzhF+LLBOC6yCjmMgswlAMR9xuM/xH/JZTZQ==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
     hasBin: true
     peerDependencies:
-      '@angular/compiler': 21.2.0-next.0
+      '@angular/compiler': 21.2.0-next.1
       typescript: '>=5.9 <6.0'
     peerDependenciesMeta:
       typescript:
         optional: true
 
-  '@angular/compiler@21.2.0-next.0':
-    resolution: {integrity: sha512-iuGt0ffnFI3ucvMLM/Y/6zLMG5140j/IUcw6VMLXeMQhS7WH8w6gMxQ6jyH6ocoCijVRSysrKSBmH++D4nkoSg==}
+  '@angular/compiler@21.2.0-next.1':
+    resolution: {integrity: sha512-pPwV0y3+kNGo/uHdOk7JwGPdSLzUUrMOU3j1adBylZhkeWul9gJA++wsskdVS/udCmRlLzJX+2PIr6rb6y63lw==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
 
-  '@angular/core@21.2.0-next.0':
-    resolution: {integrity: sha512-+WFGCHR5dS591KPqXeCYEYH3NQDeBB+3+ienBueuxchAEYkxDc7mfRnUYR0WJ/DS60ZECGkNwe0L0x5NW2tAag==}
+  '@angular/core@21.2.0-next.1':
+    resolution: {integrity: sha512-8n1SOT23ZcuAOMy81xWF+a1wO//8+nkA0Vu1grEx/jj7ToC8zSq6mg/s9mFixP8GRPzpHtwOqNymbLncanG2Iw==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
     peerDependencies:
-      '@angular/compiler': 21.2.0-next.0
+      '@angular/compiler': 21.2.0-next.1
       rxjs: ^6.5.3 || ^7.4.0
       zone.js: ~0.15.0 || ~0.16.0
     peerDependenciesMeta:
@@ -796,13 +796,13 @@ packages:
       firebase-tools:
         optional: true
 
-  '@angular/forms@21.2.0-next.0':
-    resolution: {integrity: sha512-QwHbmcbi8rLsaDdbtfw8WDZDHEKqT/wAkGD+7ddf/7dNrUzlStWNFqovUtQZC8vWKG24QSQBcUUykdImLjWK0Q==}
+  '@angular/forms@21.2.0-next.1':
+    resolution: {integrity: sha512-kd1GLY1DCrutXtmYX8Z5ZjQtfv9e4imNCpHcfDZVfO4jI75xbD2+vZHB7XS8sRf/4RNHAs9ZcF0Z+Blzp71FaQ==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
     peerDependencies:
-      '@angular/common': 21.2.0-next.0
-      '@angular/core': 21.2.0-next.0
-      '@angular/platform-browser': 21.2.0-next.0
+      '@angular/common': 21.2.0-next.1
+      '@angular/core': 21.2.0-next.1
+      '@angular/platform-browser': 21.2.0-next.1
       rxjs: ^6.5.3 || ^7.4.0
 
   '@angular/material@21.2.0-next.1':
@@ -815,24 +815,24 @@ packages:
       '@angular/platform-browser': ^21.0.0-0 || ^21.1.0-0 || ^21.2.0-0 || ^21.3.0-0 || ^22.0.0-0
       rxjs: ^6.5.3 || ^7.4.0
 
-  '@angular/platform-browser@21.2.0-next.0':
-    resolution: {integrity: sha512-dKsVn0m+Vu1q8heUKoOF65ObAEkQ4TJhAgbXMx5TF3OQJZUD1BrS3w4fEHMuYE338icZVu7riicG23E1JDr5bw==}
+  '@angular/platform-browser@21.2.0-next.1':
+    resolution: {integrity: sha512-GIBlA5iVhc7p2B1yK1DGeOppiT6pQPYjPBRAHfINxPf6gAxWqzTElRCR5mWLmhA8yF+HRlWrknwV1MNHvpU/LQ==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
     peerDependencies:
-      '@angular/animations': 21.2.0-next.0
-      '@angular/common': 21.2.0-next.0
-      '@angular/core': 21.2.0-next.0
+      '@angular/animations': 21.2.0-next.1
+      '@angular/common': 21.2.0-next.1
+      '@angular/core': 21.2.0-next.1
     peerDependenciesMeta:
       '@angular/animations':
         optional: true
 
-  '@angular/router@21.2.0-next.0':
-    resolution: {integrity: sha512-A0uXDaveCKFG3Li38eS18pTBhbGJrx8ba1Ph6IuVFg90Tl0jAppV+RSbhyVypTqBkca/9zpQHx88X2w5tqIASw==}
+  '@angular/router@21.2.0-next.1':
+    resolution: {integrity: sha512-Ro4IH1wLinnA4zzinmVgOh3UndUw/9aXY/DjaJOjGm7Ip+sBoglBfS2H++glFMp8VQuNh+zKQGYGoHykUh9Cyw==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
     peerDependencies:
-      '@angular/common': 21.2.0-next.0
-      '@angular/core': 21.2.0-next.0
-      '@angular/platform-browser': 21.2.0-next.0
+      '@angular/common': 21.2.0-next.1
+      '@angular/core': 21.2.0-next.1
+      '@angular/platform-browser': 21.2.0-next.1
       rxjs: ^6.5.3 || ^7.4.0
 
   '@apidevtools/json-schema-ref-parser@9.1.2':
@@ -6230,29 +6230,29 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@angular/animations@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))':
+  '@angular/animations@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))':
     dependencies:
-      '@angular/core': 21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)
+      '@angular/core': 21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)
       tslib: 2.8.1
 
-  '@angular/cdk@21.2.0-next.1(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-next.0(@angular/animations@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(rxjs@7.8.2)':
+  '@angular/cdk@21.2.0-next.1(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-next.1(@angular/animations@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(rxjs@7.8.2)':
     dependencies:
-      '@angular/common': 21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2)
-      '@angular/core': 21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)
-      '@angular/platform-browser': 21.2.0-next.0(@angular/animations@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))
+      '@angular/common': 21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2)
+      '@angular/core': 21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)
+      '@angular/platform-browser': 21.2.0-next.1(@angular/animations@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))
       parse5: 8.0.0
       rxjs: 7.8.2
       tslib: 2.8.1
 
-  '@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2)':
+  '@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2)':
     dependencies:
-      '@angular/core': 21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)
+      '@angular/core': 21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)
       rxjs: 7.8.2
       tslib: 2.8.1
 
-  '@angular/compiler-cli@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(typescript@5.9.3)':
+  '@angular/compiler-cli@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(typescript@5.9.3)':
     dependencies:
-      '@angular/compiler': 21.2.0-next.0
+      '@angular/compiler': 21.2.0-next.1
       '@babel/core': 7.28.6
       '@jridgewell/sourcemap-codec': 1.5.5
       chokidar: 5.0.0
@@ -6266,24 +6266,24 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@angular/compiler@21.2.0-next.0':
+  '@angular/compiler@21.2.0-next.1':
     dependencies:
       tslib: 2.8.1
 
-  '@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)':
+  '@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)':
     dependencies:
       rxjs: 7.8.2
       tslib: 2.8.1
     optionalDependencies:
-      '@angular/compiler': 21.2.0-next.0
+      '@angular/compiler': 21.2.0-next.1
       zone.js: 0.16.0
 
-  '@angular/fire@21.0.0-rc.0(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-next.0(@angular/animations@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(chokidar@5.0.0)(firebase-tools@15.3.1(@types/node@24.10.9)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(rxjs@7.8.2)':
+  '@angular/fire@21.0.0-rc.0(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-next.1(@angular/animations@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(chokidar@5.0.0)(firebase-tools@15.3.1(@types/node@24.10.9)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(rxjs@7.8.2)':
     dependencies:
       '@angular-devkit/schematics': 21.1.1(chokidar@5.0.0)
-      '@angular/common': 21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2)
-      '@angular/core': 21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)
-      '@angular/platform-browser': 21.2.0-next.0(@angular/animations@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))
+      '@angular/common': 21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2)
+      '@angular/core': 21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)
+      '@angular/platform-browser': 21.2.0-next.1(@angular/animations@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))
       '@schematics/angular': 21.1.1(chokidar@5.0.0)
       firebase: 12.8.0
       rxfire: 6.1.0(firebase@12.8.0)(rxjs@7.8.2)
@@ -6295,38 +6295,38 @@ snapshots:
       - '@react-native-async-storage/async-storage'
       - chokidar
 
-  '@angular/forms@21.2.0-next.0(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-next.0(@angular/animations@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(rxjs@7.8.2)':
+  '@angular/forms@21.2.0-next.1(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-next.1(@angular/animations@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(rxjs@7.8.2)':
     dependencies:
-      '@angular/common': 21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2)
-      '@angular/core': 21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)
-      '@angular/platform-browser': 21.2.0-next.0(@angular/animations@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))
+      '@angular/common': 21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2)
+      '@angular/core': 21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)
+      '@angular/platform-browser': 21.2.0-next.1(@angular/animations@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))
       '@standard-schema/spec': 1.1.0
       rxjs: 7.8.2
       tslib: 2.8.1
 
-  '@angular/material@21.2.0-next.1(543b4cd5add643034223e4134967d1ab)':
+  '@angular/material@21.2.0-next.1(d363ea0c032248a351f6672d2b982900)':
     dependencies:
-      '@angular/cdk': 21.2.0-next.1(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-next.0(@angular/animations@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(rxjs@7.8.2)
-      '@angular/common': 21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2)
-      '@angular/core': 21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)
-      '@angular/forms': 21.2.0-next.0(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-next.0(@angular/animations@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(rxjs@7.8.2)
-      '@angular/platform-browser': 21.2.0-next.0(@angular/animations@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))
+      '@angular/cdk': 21.2.0-next.1(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-next.1(@angular/animations@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(rxjs@7.8.2)
+      '@angular/common': 21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2)
+      '@angular/core': 21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)
+      '@angular/forms': 21.2.0-next.1(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-next.1(@angular/animations@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(rxjs@7.8.2)
+      '@angular/platform-browser': 21.2.0-next.1(@angular/animations@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))
       rxjs: 7.8.2
       tslib: 2.8.1
 
-  '@angular/platform-browser@21.2.0-next.0(@angular/animations@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))':
+  '@angular/platform-browser@21.2.0-next.1(@angular/animations@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))':
     dependencies:
-      '@angular/common': 21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2)
-      '@angular/core': 21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)
+      '@angular/common': 21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2)
+      '@angular/core': 21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)
       tslib: 2.8.1
     optionalDependencies:
-      '@angular/animations': 21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))
+      '@angular/animations': 21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))
 
-  '@angular/router@21.2.0-next.0(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-next.0(@angular/animations@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(rxjs@7.8.2)':
+  '@angular/router@21.2.0-next.1(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-next.1(@angular/animations@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(rxjs@7.8.2)':
     dependencies:
-      '@angular/common': 21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2)
-      '@angular/core': 21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)
-      '@angular/platform-browser': 21.2.0-next.0(@angular/animations@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.0(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.0(@angular/compiler@21.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.0))
+      '@angular/common': 21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2)
+      '@angular/core': 21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)
+      '@angular/platform-browser': 21.2.0-next.1(@angular/animations@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))
       rxjs: 7.8.2
       tslib: 2.8.1
 
