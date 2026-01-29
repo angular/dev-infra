@@ -53,7 +53,7 @@
     "firebase": "12.8.0",
     "folder-hash": "4.1.1",
     "git-raw-commits": "5.0.0",
-    "jasmine-core": "5.13.0",
+    "jasmine-core": "6.0.1",
     "jasmine-reporters": "2.5.2",
     "jasmine": "6.0.0",
     "jsonc-parser": "3.3.1",
