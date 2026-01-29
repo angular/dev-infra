@@ -20,8 +20,8 @@ importers:
         specifier: 8.2.1
         version: 8.2.1
       firebase-tools:
-        specifier: 15.3.1
-        version: 15.3.1(@types/node@24.10.9)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)
+        specifier: 15.4.0
+        version: 15.4.0(@types/node@24.10.9)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)
       husky:
         specifier: 9.1.7
         version: 9.1.7
@@ -35,8 +35,8 @@ importers:
         specifier: 2.5.2
         version: 2.5.2
       prettier:
-        specifier: 3.8.0
-        version: 3.8.0
+        specifier: 3.8.1
+        version: 3.8.1
       tslib:
         specifier: ^2.5.2
         version: 2.8.1
@@ -59,11 +59,11 @@ importers:
   .github/local-actions/branch-manager:
     dependencies:
       '@actions/core':
-        specifier: 2.0.2
-        version: 2.0.2
+        specifier: 2.0.3
+        version: 2.0.3
       '@actions/github':
-        specifier: 8.0.0
-        version: 8.0.0
+        specifier: 8.0.1
+        version: 8.0.1
       '@octokit/rest':
         specifier: 22.0.1
         version: 22.0.1
@@ -74,17 +74,17 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.18.2
-        version: 7.18.2
+        specifier: 7.19.2
+        version: 7.19.2
 
   .github/local-actions/labels-sync:
     dependencies:
       '@actions/core':
-        specifier: 2.0.2
-        version: 2.0.2
+        specifier: 2.0.3
+        version: 2.0.3
       '@actions/github':
-        specifier: 8.0.0
-        version: 8.0.0
+        specifier: 8.0.1
+        version: 8.0.1
       '@octokit/rest':
         specifier: 22.0.1
         version: 22.0.1
@@ -95,17 +95,17 @@ importers:
         specifier: 24.10.9
         version: 24.10.9
       undici:
-        specifier: 7.18.2
-        version: 7.18.2
+        specifier: 7.19.2
+        version: 7.19.2
 
   .github/local-actions/lock-closed:
     dependencies:
       '@actions/core':
-        specifier: 2.0.2
-        version: 2.0.2
+        specifier: 2.0.3
+        version: 2.0.3
       '@actions/github':
-        specifier: 8.0.0
-        version: 8.0.0
+        specifier: 8.0.1
+        version: 8.0.1
       '@octokit/rest':
         specifier: 22.0.1
         version: 22.0.1
@@ -116,8 +116,8 @@ importers:
         specifier: 24.10.9
         version: 24.10.9
       undici:
-        specifier: 7.18.2
-        version: 7.18.2
+        specifier: 7.19.2
+        version: 7.19.2
 
   apps/code-of-conduct:
     dependencies:
@@ -138,7 +138,7 @@ importers:
         version: 21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)
       '@angular/fire':
         specifier: 21.0.0-rc.0
-        version: 21.0.0-rc.0(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-next.1(@angular/animations@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(chokidar@5.0.0)(firebase-tools@15.3.1(@types/node@24.10.9)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(rxjs@7.8.2)
+        version: 21.0.0-rc.0(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-next.1(@angular/animations@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(chokidar@5.0.0)(firebase-tools@15.4.0(@types/node@24.10.9)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(rxjs@7.8.2)
       '@angular/forms':
         specifier: 21.2.0-next.1
         version: 21.2.0-next.1(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-next.1(@angular/animations@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(rxjs@7.8.2)
@@ -188,11 +188,11 @@ importers:
         specifier: 13.6.0
         version: 13.6.0(encoding@0.1.13)
       firebase-functions:
-        specifier: 7.0.3
-        version: 7.0.3(@apollo/server@5.3.0(graphql@16.12.0))(@as-integrations/express4@1.1.2(@apollo/server@5.3.0(graphql@16.12.0))(express@5.2.1))(firebase-admin@13.6.0(encoding@0.1.13))
+        specifier: 7.0.4
+        version: 7.0.4(@apollo/server@5.3.0(graphql@16.12.0))(@as-integrations/express4@1.1.2(@apollo/server@5.3.0(graphql@16.12.0))(express@5.2.1))(firebase-admin@13.6.0(encoding@0.1.13))(graphql@16.12.0)
       firebase-tools:
-        specifier: 15.3.1
-        version: 15.3.1(@types/node@24.10.9)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)
+        specifier: 15.4.0
+        version: 15.4.0(@types/node@24.10.9)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)
 
   bazel:
     dependencies:
@@ -296,11 +296,11 @@ importers:
   github-actions:
     dependencies:
       '@actions/core':
-        specifier: 2.0.2
-        version: 2.0.2
+        specifier: 2.0.3
+        version: 2.0.3
       '@actions/github':
-        specifier: 8.0.0
-        version: 8.0.0
+        specifier: 8.0.1
+        version: 8.0.1
       '@octokit/auth-app':
         specifier: 8.1.2
         version: 8.1.2
@@ -317,8 +317,8 @@ importers:
   github-actions/bazel/configure-remote:
     dependencies:
       '@actions/core':
-        specifier: 2.0.2
-        version: 2.0.2
+        specifier: 2.0.3
+        version: 2.0.3
       '@types/node':
         specifier: 24.10.9
         version: 24.10.9
@@ -326,11 +326,11 @@ importers:
   github-actions/branch-manager:
     dependencies:
       '@actions/core':
-        specifier: 2.0.2
-        version: 2.0.2
+        specifier: 2.0.3
+        version: 2.0.3
       '@actions/github':
-        specifier: 8.0.0
-        version: 8.0.0
+        specifier: 8.0.1
+        version: 8.0.1
       '@octokit/rest':
         specifier: 22.0.1
         version: 22.0.1
@@ -344,14 +344,14 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.18.2
-        version: 7.18.2
+        specifier: 7.19.2
+        version: 7.19.2
 
   github-actions/browserstack:
     dependencies:
       '@actions/core':
-        specifier: 2.0.2
-        version: 2.0.2
+        specifier: 2.0.3
+        version: 2.0.3
       '@types/node':
         specifier: 24.10.9
         version: 24.10.9
@@ -359,11 +359,11 @@ importers:
   github-actions/feature-request:
     dependencies:
       '@actions/core':
-        specifier: 2.0.2
-        version: 2.0.2
+        specifier: 2.0.3
+        version: 2.0.3
       '@actions/github':
-        specifier: 8.0.0
-        version: 8.0.0
+        specifier: 8.0.1
+        version: 8.0.1
       '@octokit/request-error':
         specifier: 7.1.0
         version: 7.1.0
@@ -386,17 +386,17 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.18.2
-        version: 7.18.2
+        specifier: 7.19.2
+        version: 7.19.2
 
   github-actions/google-internal-tests:
     dependencies:
       '@actions/core':
-        specifier: 2.0.2
-        version: 2.0.2
+        specifier: 2.0.3
+        version: 2.0.3
       '@actions/github':
-        specifier: 8.0.0
-        version: 8.0.0
+        specifier: 8.0.1
+        version: 8.0.1
       '@octokit/rest':
         specifier: 22.0.1
         version: 22.0.1
@@ -407,17 +407,17 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.18.2
-        version: 7.18.2
+        specifier: 7.19.2
+        version: 7.19.2
 
   github-actions/org-file-sync:
     dependencies:
       '@actions/core':
-        specifier: 2.0.2
-        version: 2.0.2
+        specifier: 2.0.3
+        version: 2.0.3
       '@actions/github':
-        specifier: 8.0.0
-        version: 8.0.0
+        specifier: 8.0.1
+        version: 8.0.1
       '@octokit/rest':
         specifier: 22.0.1
         version: 22.0.1
@@ -431,17 +431,17 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.18.2
-        version: 7.18.2
+        specifier: 7.19.2
+        version: 7.19.2
 
   github-actions/post-approval-changes:
     dependencies:
       '@actions/core':
-        specifier: 2.0.2
-        version: 2.0.2
+        specifier: 2.0.3
+        version: 2.0.3
       '@actions/github':
-        specifier: 8.0.0
-        version: 8.0.0
+        specifier: 8.0.1
+        version: 8.0.1
       '@octokit/rest':
         specifier: 22.0.1
         version: 22.0.1
@@ -455,8 +455,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.18.2
-        version: 7.18.2
+        specifier: 7.19.2
+        version: 7.19.2
 
   github-actions/previews/pack-and-upload-artifact:
     dependencies:
@@ -467,8 +467,8 @@ importers:
   github-actions/previews/upload-artifacts-to-firebase:
     dependencies:
       '@actions/core':
-        specifier: 2.0.2
-        version: 2.0.2
+        specifier: 2.0.3
+        version: 2.0.3
       '@octokit/rest':
         specifier: 22.0.1
         version: 22.0.1
@@ -479,11 +479,11 @@ importers:
   github-actions/pull-request-labeling:
     dependencies:
       '@actions/core':
-        specifier: 2.0.2
-        version: 2.0.2
+        specifier: 2.0.3
+        version: 2.0.3
       '@actions/github':
-        specifier: 8.0.0
-        version: 8.0.0
+        specifier: 8.0.1
+        version: 8.0.1
       '@octokit/rest':
         specifier: 22.0.1
         version: 22.0.1
@@ -494,14 +494,14 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.18.2
-        version: 7.18.2
+        specifier: 7.19.2
+        version: 7.19.2
 
   github-actions/saucelabs:
     dependencies:
       '@actions/core':
-        specifier: 2.0.2
-        version: 2.0.2
+        specifier: 2.0.3
+        version: 2.0.3
       '@types/node':
         specifier: 24.10.9
         version: 24.10.9
@@ -509,11 +509,11 @@ importers:
   github-actions/unified-status-check:
     dependencies:
       '@actions/core':
-        specifier: 2.0.2
-        version: 2.0.2
+        specifier: 2.0.3
+        version: 2.0.3
       '@actions/github':
-        specifier: 8.0.0
-        version: 8.0.0
+        specifier: 8.0.1
+        version: 8.0.1
       '@octokit/graphql-schema':
         specifier: 15.26.1
         version: 15.26.1
@@ -530,14 +530,14 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.18.2
-        version: 7.18.2
+        specifier: 7.19.2
+        version: 7.19.2
 
   ng-dev:
     dependencies:
       '@actions/core':
-        specifier: 2.0.2
-        version: 2.0.2
+        specifier: 2.0.3
+        version: 2.0.3
       '@google-cloud/spanner':
         specifier: 8.0.0
         version: 8.0.0(supports-color@10.2.2)
@@ -703,17 +703,17 @@ packages:
   '@acemir/cssom@0.9.31':
     resolution: {integrity: sha512-ZnR3GSaH+/vJ0YlHau21FjfLYjMpYVIzTD8M8vIEQvIGxeOXyXdzCI140rrCY862p/C/BbzWsjc1dgnM9mkoTA==}
 
-  '@actions/core@2.0.2':
-    resolution: {integrity: sha512-Ast1V7yHbGAhplAsuVlnb/5J8Mtr/Zl6byPPL+Qjq3lmfIgWF1ak1iYfF/079cRERiuTALTXkSuEUdZeDCfGtA==}
+  '@actions/core@2.0.3':
+    resolution: {integrity: sha512-Od9Thc3T1mQJYddvVPM4QGiLUewdh+3txmDYHHxoNdkqysR1MbCT+rFOtNUxYAz+7+6RIsqipVahY2GJqGPyxA==}
 
   '@actions/exec@2.0.0':
     resolution: {integrity: sha512-k8ngrX2voJ/RIN6r9xB82NVqKpnMRtxDoiO+g3olkIUpQNqjArXrCQceduQZCQj3P3xm32pChRLqRrtXTlqhIw==}
 
-  '@actions/github@8.0.0':
-    resolution: {integrity: sha512-bBukvVRvIf7NshWEXFVnBaXs/ZyGzDvx+jbB5AdJij9CUG4VFEYJJD6T6y06dDkuULalQQUNvKXIH71yqw7SoQ==}
+  '@actions/github@8.0.1':
+    resolution: {integrity: sha512-cue7mS+kx1/2Dnc/094pitRUm+0uPXVXYVaqOdZwD15BsXATWYHW3idJDYOlyBc5gJlzAQ/w5YLU4LR8D7hjVg==}
 
-  '@actions/http-client@3.0.1':
-    resolution: {integrity: sha512-SbGS8c/vySbNO3kjFgSW77n83C4MQx/Yoe+b1hAdpuvfHxnkHzDq2pWljUpAA56Si1Gae/7zjeZsV0CYjmLo/w==}
+  '@actions/http-client@3.0.2':
+    resolution: {integrity: sha512-JP38FYYpyqvUsz+Igqlc/JG6YO9PaKuvqjM3iGvaLqFnJ7TFmcLyy2IDrY0bI0qCQug8E9K+elv5ZNfw62ZJzA==}
 
   '@actions/io@2.0.0':
     resolution: {integrity: sha512-Jv33IN09XLO+0HS79aaODsvIRyduiF7NY/F6LYeK5oeUmrsz7aFdRphQjFoESF4jS7lMauDOttKALcpapVDIAg==}
@@ -1258,10 +1258,6 @@ packages:
     peerDependenciesMeta:
       '@noble/hashes':
         optional: true
-
-  '@fastify/busboy@2.1.1':
-    resolution: {integrity: sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==}
-    engines: {node: '>=14'}
 
   '@fastify/busboy@3.2.0':
     resolution: {integrity: sha512-m9FVDXU3GT2ITSe0UaMA5rU3QkfC/UXtCU8y0gSN/GugTqtVldOBWIB5V6V3sbmenVZUIpU6f+mPEO2+m5iTaA==}
@@ -3604,22 +3600,25 @@ packages:
     resolution: {integrity: sha512-GdPA/t0+Cq8p1JnjFRBmxRxAGvF/kl2yfdhALl38PrRp325YxyQ5aNaHui0XmaKcKiGRFIJ/EgBNWFoDP0onjw==}
     engines: {node: '>=18'}
 
-  firebase-functions@7.0.3:
-    resolution: {integrity: sha512-DiIjIUv0OS4KEAA3jqyIc7ymZKdcmMcaXy7FCCkrDQo/1CVMbDDWMdZIslmsgSjldA2nhau1dTE/6JQI8Urjjw==}
+  firebase-functions@7.0.4:
+    resolution: {integrity: sha512-JQW73BgMGljsZ63zh28dixMY1ZCdguIx3WVMBVW31X5w81VmvYSbPpzHAgW3AJcqVKnffqfqLgDTLNch9HV7eA==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     peerDependencies:
       '@apollo/server': ^5.2.0
       '@as-integrations/express4': ^1.1.2
       firebase-admin: ^11.10.0 || ^12.0.0 || ^13.0.0
+      graphql: ^16.12.0
     peerDependenciesMeta:
       '@apollo/server':
         optional: true
       '@as-integrations/express4':
         optional: true
+      graphql:
+        optional: true
 
-  firebase-tools@15.3.1:
-    resolution: {integrity: sha512-8tMy4Dk4kVh7PD8zO1cZl23x4eNdlnxTku2nLNEIRn8Tv4byA9PSbEfeWv4A4OGvGusdXN74pjvrU/q/MkjyEg==}
+  firebase-tools@15.4.0:
+    resolution: {integrity: sha512-1AFDFy9j0Q9IV7TrSrhhranZZQ2kw39NXpTbGtOhV/Z2leeFoKI9dMQ2ps5UByVWChcZgcoO76qXE6yLohjOvg==}
     engines: {node: '>=20.0.0 || >=22.0.0 || >=24.0.0'}
     hasBin: true
 
@@ -5021,8 +5020,8 @@ packages:
     resolution: {integrity: sha512-9ZhXKM/rw350N1ovuWHbGxnGh/SNJ4cnxHiM0rxE4VN41wsg8P8zWn9hv/buK00RP4WvlOyr/RBDiptyxVbkZQ==}
     engines: {node: '>=0.10.0'}
 
-  prettier@3.8.0:
-    resolution: {integrity: sha512-yEPsovQfpxYfgWNhCfECjG5AQaO+K3dp6XERmOepyPDVqcJm+bjyCVO3pmU+nAPe0N5dDvekfGezt/EIiRe1TA==}
+  prettier@3.8.1:
+    resolution: {integrity: sha512-UOnG6LftzbdaHZcKoPFtOcCKztrQ57WkHDeRD9t/PTQtmT0NHSeWWepj6pS0z/N7+08BHFDQVUrfmfMRcZwbMg==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -5808,12 +5807,12 @@ packages:
   undici-types@7.16.0:
     resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
 
-  undici@5.29.0:
-    resolution: {integrity: sha512-raqeBD6NQK4SkWhQzeYKd1KmIG6dllBOTt55Rmkt4HtI9mwdWtJljnrXjAFUBLTSN67HWrOIZ3EPF4kjUw80Bg==}
-    engines: {node: '>=14.0'}
+  undici@6.23.0:
+    resolution: {integrity: sha512-VfQPToRA5FZs/qJxLIinmU59u0r7LXqoJkCzinq3ckNJp3vKEh7jTWN589YQ5+aoAC/TGRLyJLCPKcLQbM8r9g==}
+    engines: {node: '>=18.17'}
 
-  undici@7.18.2:
-    resolution: {integrity: sha512-y+8YjDFzWdQlSE9N5nzKMT3g4a5UBX1HKowfdXh0uvAnTaqqwqB92Jt4UXBAeKekDs5IaDKyJFR4X1gYVCgXcw==}
+  undici@7.19.2:
+    resolution: {integrity: sha512-4VQSpGEGsWzk0VYxyB/wVX/Q7qf9t5znLRgs0dzszr9w9Fej/8RVNQ+S20vdXSAyra/bJ7ZQfGv6ZMj7UEbzSg==}
     engines: {node: '>=20.18.1'}
 
   unicode-emoji-modifier-base@1.0.0:
@@ -6183,29 +6182,29 @@ snapshots:
 
   '@acemir/cssom@0.9.31': {}
 
-  '@actions/core@2.0.2':
+  '@actions/core@2.0.3':
     dependencies:
       '@actions/exec': 2.0.0
-      '@actions/http-client': 3.0.1
+      '@actions/http-client': 3.0.2
 
   '@actions/exec@2.0.0':
     dependencies:
       '@actions/io': 2.0.0
 
-  '@actions/github@8.0.0':
+  '@actions/github@8.0.1':
     dependencies:
-      '@actions/http-client': 3.0.1
+      '@actions/http-client': 3.0.2
       '@octokit/core': 7.0.6
       '@octokit/plugin-paginate-rest': 14.0.0(@octokit/core@7.0.6)
       '@octokit/plugin-rest-endpoint-methods': 17.0.0(@octokit/core@7.0.6)
       '@octokit/request': 10.0.7
       '@octokit/request-error': 7.1.0
-      undici: 5.29.0
+      undici: 6.23.0
 
-  '@actions/http-client@3.0.1':
+  '@actions/http-client@3.0.2':
     dependencies:
       tunnel: 0.0.6
-      undici: 5.29.0
+      undici: 6.23.0
 
   '@actions/io@2.0.0': {}
 
@@ -6278,7 +6277,7 @@ snapshots:
       '@angular/compiler': 21.2.0-next.1
       zone.js: 0.16.0
 
-  '@angular/fire@21.0.0-rc.0(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-next.1(@angular/animations@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(chokidar@5.0.0)(firebase-tools@15.3.1(@types/node@24.10.9)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(rxjs@7.8.2)':
+  '@angular/fire@21.0.0-rc.0(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.2.0-next.1(@angular/animations@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0)))(chokidar@5.0.0)(firebase-tools@15.4.0(@types/node@24.10.9)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3))(rxjs@7.8.2)':
     dependencies:
       '@angular-devkit/schematics': 21.1.1(chokidar@5.0.0)
       '@angular/common': 21.2.0-next.1(@angular/core@21.2.0-next.1(@angular/compiler@21.2.0-next.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2)
@@ -6290,7 +6289,7 @@ snapshots:
       rxjs: 7.8.2
       tslib: 2.8.1
     optionalDependencies:
-      firebase-tools: 15.3.1(@types/node@24.10.9)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)
+      firebase-tools: 15.4.0(@types/node@24.10.9)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3)
     transitivePeerDependencies:
       - '@react-native-async-storage/async-storage'
       - chokidar
@@ -6722,8 +6721,6 @@ snapshots:
     optional: true
 
   '@exodus/bytes@1.9.0': {}
-
-  '@fastify/busboy@2.1.1': {}
 
   '@fastify/busboy@3.2.0': {}
 
@@ -9476,7 +9473,7 @@ snapshots:
       - encoding
       - supports-color
 
-  firebase-functions@7.0.3(@apollo/server@5.3.0(graphql@16.12.0))(@as-integrations/express4@1.1.2(@apollo/server@5.3.0(graphql@16.12.0))(express@5.2.1))(firebase-admin@13.6.0(encoding@0.1.13)):
+  firebase-functions@7.0.4(@apollo/server@5.3.0(graphql@16.12.0))(@as-integrations/express4@1.1.2(@apollo/server@5.3.0(graphql@16.12.0))(express@5.2.1))(firebase-admin@13.6.0(encoding@0.1.13))(graphql@16.12.0):
     dependencies:
       '@types/cors': 2.8.19
       '@types/express': 4.17.25
@@ -9487,10 +9484,11 @@ snapshots:
     optionalDependencies:
       '@apollo/server': 5.3.0(graphql@16.12.0)
       '@as-integrations/express4': 1.1.2(@apollo/server@5.3.0(graphql@16.12.0))(express@5.2.1)
+      graphql: 16.12.0
     transitivePeerDependencies:
       - supports-color
 
-  firebase-tools@15.3.1(@types/node@24.10.9)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3):
+  firebase-tools@15.4.0(@types/node@24.10.9)(bufferutil@4.1.0)(encoding@0.1.13)(typescript@5.9.3):
     dependencies:
       '@apphosting/build': 0.1.7(@types/node@24.10.9)(typescript@5.9.3)
       '@apphosting/common': 0.0.8
@@ -11075,7 +11073,7 @@ snapshots:
     dependencies:
       xtend: 4.0.2
 
-  prettier@3.8.0: {}
+  prettier@3.8.1: {}
 
   proc-log@4.2.0: {}
 
@@ -12052,11 +12050,9 @@ snapshots:
 
   undici-types@7.16.0: {}
 
-  undici@5.29.0:
-    dependencies:
-      '@fastify/busboy': 2.1.1
+  undici@6.23.0: {}
 
-  undici@7.18.2: {}
+  undici@7.19.2: {}
 
   unicode-emoji-modifier-base@1.0.0: {}
 

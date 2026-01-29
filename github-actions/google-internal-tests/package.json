@@ -1,11 +1,11 @@
 {
   "type": "module",
   "dependencies": {
-    "@actions/core": "2.0.2",
-    "@actions/github": "8.0.0",
+    "@actions/core": "2.0.3",
+    "@actions/github": "8.0.1",
     "@octokit/rest": "22.0.1",
     "@types/node": "24.10.9",
     "typed-graphqlify": "3.1.6",
-    "undici": "7.18.2"
+    "undici": "7.19.2"
   }
 }
