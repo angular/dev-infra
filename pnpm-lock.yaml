@@ -62,8 +62,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       '@actions/github':
-        specifier: 8.0.1
-        version: 8.0.1
+        specifier: 9.0.0
+        version: 9.0.0
       '@octokit/rest':
         specifier: 22.0.1
         version: 22.0.1
@@ -83,8 +83,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       '@actions/github':
-        specifier: 8.0.1
-        version: 8.0.1
+        specifier: 9.0.0
+        version: 9.0.0
       '@octokit/rest':
         specifier: 22.0.1
         version: 22.0.1
@@ -104,8 +104,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       '@actions/github':
-        specifier: 8.0.1
-        version: 8.0.1
+        specifier: 9.0.0
+        version: 9.0.0
       '@octokit/rest':
         specifier: 22.0.1
         version: 22.0.1
@@ -299,8 +299,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       '@actions/github':
-        specifier: 8.0.1
-        version: 8.0.1
+        specifier: 9.0.0
+        version: 9.0.0
       '@octokit/auth-app':
         specifier: 8.1.2
         version: 8.1.2
@@ -329,8 +329,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       '@actions/github':
-        specifier: 8.0.1
-        version: 8.0.1
+        specifier: 9.0.0
+        version: 9.0.0
       '@octokit/rest':
         specifier: 22.0.1
         version: 22.0.1
@@ -362,8 +362,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       '@actions/github':
-        specifier: 8.0.1
-        version: 8.0.1
+        specifier: 9.0.0
+        version: 9.0.0
       '@octokit/request-error':
         specifier: 7.1.0
         version: 7.1.0
@@ -395,8 +395,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       '@actions/github':
-        specifier: 8.0.1
-        version: 8.0.1
+        specifier: 9.0.0
+        version: 9.0.0
       '@octokit/rest':
         specifier: 22.0.1
         version: 22.0.1
@@ -416,8 +416,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       '@actions/github':
-        specifier: 8.0.1
-        version: 8.0.1
+        specifier: 9.0.0
+        version: 9.0.0
       '@octokit/rest':
         specifier: 22.0.1
         version: 22.0.1
@@ -440,8 +440,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       '@actions/github':
-        specifier: 8.0.1
-        version: 8.0.1
+        specifier: 9.0.0
+        version: 9.0.0
       '@octokit/rest':
         specifier: 22.0.1
         version: 22.0.1
@@ -482,8 +482,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       '@actions/github':
-        specifier: 8.0.1
-        version: 8.0.1
+        specifier: 9.0.0
+        version: 9.0.0
       '@octokit/rest':
         specifier: 22.0.1
         version: 22.0.1
@@ -512,8 +512,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       '@actions/github':
-        specifier: 8.0.1
-        version: 8.0.1
+        specifier: 9.0.0
+        version: 9.0.0
       '@octokit/graphql-schema':
         specifier: 15.26.1
         version: 15.26.1
@@ -709,8 +709,8 @@ packages:
   '@actions/exec@3.0.0':
     resolution: {integrity: sha512-6xH/puSoNBXb72VPlZVm7vQ+svQpFyA96qdDBvhB8eNZOE8LtPf9L4oAsfzK/crCL8YZ+19fKYVnM63Sl+Xzlw==}
 
-  '@actions/github@8.0.1':
-    resolution: {integrity: sha512-cue7mS+kx1/2Dnc/094pitRUm+0uPXVXYVaqOdZwD15BsXATWYHW3idJDYOlyBc5gJlzAQ/w5YLU4LR8D7hjVg==}
+  '@actions/github@9.0.0':
+    resolution: {integrity: sha512-yJ0RoswsAaKcvkmpCE4XxBRiy/whH2SdTBHWzs0gi4wkqTDhXMChjSdqBz/F4AeiDlP28rQqL33iHb+kjAMX6w==}
 
   '@actions/http-client@3.0.2':
     resolution: {integrity: sha512-JP38FYYpyqvUsz+Igqlc/JG6YO9PaKuvqjM3iGvaLqFnJ7TFmcLyy2IDrY0bI0qCQug8E9K+elv5ZNfw62ZJzA==}
@@ -6194,7 +6194,7 @@ snapshots:
     dependencies:
       '@actions/io': 3.0.2
 
-  '@actions/github@8.0.1':
+  '@actions/github@9.0.0':
     dependencies:
       '@actions/http-client': 3.0.2
       '@octokit/core': 7.0.6
