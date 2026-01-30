@@ -8,8 +8,9 @@
 import {Argv} from 'yargs';
 import {MigrateModule} from './migrate.js';
 import {FixModule} from './fix.js';
+import {SkillsModule} from './skills/cli.js';
 
 /** Build the parser for the AI commands. */
 export function buildAiParser(localYargs: Argv) {
-  return localYargs.command(MigrateModule).command(FixModule);
+  return localYargs.command(MigrateModule).command(FixModule).command(SkillsModule);
 }
