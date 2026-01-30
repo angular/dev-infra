@@ -15,7 +15,7 @@
     }
   },
   "dependencies": {
-    "@actions/core": "2.0.3",
+    "@actions/core": "3.0.0",
     "@google-cloud/spanner": "8.0.0",
     "@google/genai": "1.38.0",
     "@inquirer/prompts": "8.2.0",
