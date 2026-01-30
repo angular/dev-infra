@@ -14,6 +14,7 @@ ts_project(
         "//ng-dev:node_modules/cli-progress",
         "//ng-dev:node_modules/fast-glob",
         "//ng-dev:node_modules/yargs",
+        "//ng-dev/ai/skills",
         "//ng-dev/utils",
     ],
 )

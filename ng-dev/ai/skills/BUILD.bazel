@@ -1,0 +1,39 @@
+load("//tools:defaults.bzl", "jasmine_test", "ts_project")
+
+ts_project(
+    name = "skills",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    visibility = ["//ng-dev:__subpackages__"],
+    deps = [
+        "//ng-dev:node_modules/@types/node",
+        "//ng-dev:node_modules/@types/yargs",
+        "//ng-dev:node_modules/fast-glob",
+        "//ng-dev:node_modules/yaml",
+        "//ng-dev:node_modules/yargs",
+        "//ng-dev:node_modules/zod",
+        "//ng-dev/utils",
+    ],
+)
+
+ts_project(
+    name = "test_lib",
+    testonly = True,
+    srcs = ["validate.spec.ts"],
+    deps = [
+        ":skills",
+        "//ng-dev:node_modules/@types/jasmine",
+        "//ng-dev:node_modules/@types/node",
+        "//ng-dev/utils",
+        "//ng-dev/utils/testing",
+    ],
+)
+
+jasmine_test(
+    name = "test",
+    data = glob(["fixtures/**"]) + [
+        ":test_lib",
+    ],
+)
