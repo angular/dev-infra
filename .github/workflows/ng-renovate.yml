@@ -36,6 +36,7 @@ jobs:
           cache-dependency-path: './.github/ng-renovate/pnpm-lock.yaml'
       - run: pnpm install --frozen-lockfile
         working-directory: ./.github/ng-renovate
+      - uses: astral-sh/setup-uv@803947b9bd8e9f986429fa0c5a41c367cd732b41 #v7.2.1
       - run: pnpm exec renovate
         working-directory: ./.github/ng-renovate
         env:
