@@ -87,7 +87,7 @@
     // Jasmine packages should be kept in sync.
     {
       groupName: 'jasmine dependencies',
-      matchPackageNames: ['jasmine', 'jasmine-core'],
+      matchPackageNames: ['@types/jasmine', 'jasmine', 'jasmine-core'],
     },
 
     // Group all non-major dependencies together for updates.
