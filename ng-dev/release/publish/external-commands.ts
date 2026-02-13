@@ -256,7 +256,7 @@ export abstract class ExternalCommands {
     spawnOptions: SpawnOptions = {},
   ): Promise<SpawnResult> {
     if (PnpmVersioning.isUsingPnpm(projectDir)) {
-      return ChildProcess.spawn('pnpm', args, {
+      return ChildProcess.spawn('pnpm', ['-s', ...args], {
         ...spawnOptions,
         cwd: projectDir,
       });
