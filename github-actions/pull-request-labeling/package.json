@@ -4,7 +4,10 @@
     "@actions/core": "3.0.0",
     "@actions/github": "9.0.0",
     "@octokit/rest": "22.0.1",
+    "@types/jasmine": "6.0.0",
+    "@types/micromatch": "^4.0.10",
     "@types/node": "24.10.9",
+    "micromatch": "^4.0.8",
     "typed-graphqlify": "3.1.6",
     "undici": "7.19.2"
   }
