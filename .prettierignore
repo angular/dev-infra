@@ -15,6 +15,7 @@ github-actions/previews/pack-and-upload-artifact/inject-artifact-metadata.js
 github-actions/previews/upload-artifacts-to-firebase/extract-artifact-metadata.js
 github-actions/previews/upload-artifacts-to-firebase/fetch-workflow-artifact.js
 github-actions/saucelabs/set-saucelabs-env.js
+github-actions/issue-labeling/main.js
 github-actions/slash-commands/main.js
 github-actions/unified-status-check/main.js
 

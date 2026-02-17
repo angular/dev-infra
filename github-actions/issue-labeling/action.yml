@@ -1,0 +1,12 @@
+name: 'Issue Labeling'
+description: 'Automatically labels issues using Gemini based on their content'
+inputs:
+  angular-robot-key:
+    description: 'The private key for the Angular Robot'
+    required: true
+  google-generative-ai-key:
+    description: 'The API key for Google Generative AI'
+    required: true
+runs:
+  using: 'node22'
+  main: 'main.js'

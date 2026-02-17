@@ -301,6 +301,9 @@ importers:
       '@actions/github':
         specifier: 9.0.0
         version: 9.0.0
+      '@google/generative-ai':
+        specifier: ^0.2.0
+        version: 0.2.1
       '@octokit/auth-app':
         specifier: 8.1.2
         version: 8.1.2
@@ -409,6 +412,33 @@ importers:
       undici:
         specifier: 7.19.2
         version: 7.19.2
+
+  github-actions/issue-labeling:
+    dependencies:
+      '@actions/core':
+        specifier: 3.0.0
+        version: 3.0.0
+      '@actions/github':
+        specifier: 9.0.0
+        version: 9.0.0
+      '@google/generative-ai':
+        specifier: ^0.2.0
+        version: 0.2.1
+      '@octokit/openapi-types':
+        specifier: 27.0.0
+        version: 27.0.0
+      '@octokit/rest':
+        specifier: 22.0.1
+        version: 22.0.1
+      '@types/jasmine':
+        specifier: 6.0.0
+        version: 6.0.0
+      '@types/node':
+        specifier: 24.10.9
+        version: 24.10.9
+      jasmine:
+        specifier: 6.0.0
+        version: 6.0.0
 
   github-actions/org-file-sync:
     dependencies:
@@ -1556,6 +1586,10 @@ packages:
     peerDependenciesMeta:
       '@modelcontextprotocol/sdk':
         optional: true
+
+  '@google/generative-ai@0.2.1':
+    resolution: {integrity: sha512-gNmMFadfwi7qf/6M9gImgyGJXY1jKQ/de8vGOqgJ0PPYgQ7WwzZDavbKrIuXS2zdqZZaYtxW3EFN6aG9x5wtFw==}
+    engines: {node: '>=18.0.0'}
 
   '@googleapis/sqladmin@35.0.0':
     resolution: {integrity: sha512-L9HaDhGBv7ElppWw3Sr+L2fbP+9pnP61bu1ZmfgoztSMMhtihQ3FGb175V1qx1zshiyCorspl0OiunA80G3Xjw==}
@@ -7249,6 +7283,8 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
+
+  '@google/generative-ai@0.2.1': {}
 
   '@googleapis/sqladmin@35.0.0':
     dependencies:
