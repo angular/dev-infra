@@ -13,6 +13,7 @@ import path from 'path';
 import {CaretakerConfig, GithubConfig, NgDevConfig} from '../../../utils/config.js';
 import {GoogleSyncConfig} from '../../../utils/g3-sync-config.js';
 import {targetLabels} from '../labels/target.js';
+import {Log} from '../../../utils/logging.js';
 
 import {PullRequestFromGithub} from '../fetch-pull-request.js';
 import {requiresLabels} from '../labels/requires.js';
@@ -158,7 +159,7 @@ describe('pull request validation', () => {
       expect(results.length).toBe(0);
     });
 
-    it('should prevent merging when primitives have been merged already and PR does not include primitives files', async () => {
+    it('should warn when primitives have been merged already and PR does not include primitives files', async () => {
       const config = createIsolatedValidationConfig({assertIsolatedSeparateFiles: true});
       let pr = createTestPullRequest();
       const files = ['packages/router/blah.ts'];
@@ -167,15 +168,15 @@ describe('pull request validation', () => {
       spyOn(PullRequestFiles, 'create').and.returnValue(fileHelper);
       spyOn(fileHelper, 'loadPullRequestFiles').and.returnValue(Promise.resolve(files));
       spyOn(G3Stats, 'getDiffStats').and.returnValue(diffStats);
+      const warnSpy = spyOn(Log, 'warn');
       const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
-      expect(results.length).toBe(1);
-      expect(results[0].message).toBe(
-        `This PR cannot be merged as Shared Primitives code has already been merged. ` +
-          `Primitives and Framework code must be merged and synced separately. Try again after a g3sync has finished.`,
+      expect(results.length).toBe(0);
+      expect(warnSpy).toHaveBeenCalledWith(
+        `Note: framework code and shared primitives code have both been merged. This is a little more risky. So be careful.`,
       );
     });
 
-    it('should prevent merging when framework changes have been merged already and PR includes primitives files', async () => {
+    it('should warn when framework changes have been merged already and PR includes primitives files', async () => {
       const config = createIsolatedValidationConfig({assertIsolatedSeparateFiles: true});
       let pr = createTestPullRequest();
       const files = ['packages/core/primitives/rando.ts'];
@@ -184,11 +185,11 @@ describe('pull request validation', () => {
       spyOn(PullRequestFiles, 'create').and.returnValue(fileHelper);
       spyOn(fileHelper, 'loadPullRequestFiles').and.returnValue(Promise.resolve(files));
       spyOn(G3Stats, 'getDiffStats').and.returnValue(diffStats);
+      const warnSpy = spyOn(Log, 'warn');
       const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
-      expect(results.length).toBe(1);
-      expect(results[0].message).toBe(
-        `This PR cannot be merged as Angular framework code has already been merged. ` +
-          `Primitives and Framework code must be merged and synced separately. Try again after a g3sync has finished.`,
+      expect(results.length).toBe(0);
+      expect(warnSpy).toHaveBeenCalledWith(
+        `Note: framework code and shared primitives code have both been merged. This is a little more risky. So be careful.`,
       );
     });
 

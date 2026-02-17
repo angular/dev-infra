@@ -20,6 +20,7 @@ import {G3StatsData, G3Stats} from '../../../utils/g3.js';
 import {createPullRequestValidation, PullRequestValidation} from './validation-config.js';
 import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client.js';
 import {fetchPullRequestFilesFromGithub} from '../fetch-pull-request.js';
+import {Log} from '../../../utils/logging.js';
 
 /** Assert the pull request has passing enforced statuses. */
 // TODO: update typings to make sure portability is properly handled for windows build.
@@ -69,17 +70,15 @@ class Validation extends PullRequestValidation {
 
     // covers 2 & 3
     if (diffStats.separateFiles > 0 && !hasSeparateSyncFiles) {
-      throw this._createError(
-        `This PR cannot be merged as Shared Primitives code has already been merged. ` +
-          `Primitives and Framework code must be merged and synced separately. Try again after a g3sync has finished.`,
+      Log.warn(
+        `Note: framework code and shared primitives code have both been merged. This is a little more risky. So be careful.`,
       );
     }
 
     // covers 1 & 4
     if (diffStats.files > 0 && diffStats.separateFiles === 0 && hasSeparateSyncFiles) {
-      throw this._createError(
-        `This PR cannot be merged as Angular framework code has already been merged. ` +
-          `Primitives and Framework code must be merged and synced separately. Try again after a g3sync has finished.`,
+      Log.warn(
+        `Note: framework code and shared primitives code have both been merged. This is a little more risky. So be careful.`,
       );
     }
   }
