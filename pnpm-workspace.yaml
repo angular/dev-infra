@@ -21,6 +21,7 @@ packages:
   - github-actions/branch-manager
   - github-actions/saucelabs
   - github-actions/browserstack
+  - github-actions/issue-labeling
   - github-actions/bazel/configure-remote
 # The minimum age of a release to be considered for dependency installation.
 # The value is in minutes (1440 minutes = 1 day).
