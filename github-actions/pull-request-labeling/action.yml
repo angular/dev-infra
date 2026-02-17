@@ -5,6 +5,9 @@ inputs:
   angular-robot-key:
     description: 'The private key for the Angular Robot Github app.'
     required: true
+  labels:
+    description: 'A map of labels to the paths that they should be applied to which are affected by the PR'
+    required: false
 runs:
   using: 'node20'
   main: 'main.js'

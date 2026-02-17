@@ -16,3 +16,4 @@ jobs:
       - uses: ./github-actions/pull-request-labeling
         with:
           angular-robot-key: ${{ secrets.ANGULAR_ROBOT_PRIVATE_KEY }}
+          labels: '{}'

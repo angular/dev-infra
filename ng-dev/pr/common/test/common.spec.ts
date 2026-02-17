@@ -30,7 +30,7 @@ import {
 import {PullRequestFiles} from '../validation/assert-isolated-separate-files.js';
 import {G3Stats} from '../../../utils/g3.js';
 import {PullRequestComments} from '../validation/assert-enforce-tested.js';
-import {CommentAuthorAssociation} from '@octokit/graphql-schema';
+import type {CommentAuthorAssociation} from '@octokit/graphql-schema';
 
 const API_ENDPOINT = `https://api.github.com`;
 

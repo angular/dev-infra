@@ -1,0 +1,28 @@
+load("//tools:defaults.bzl", "jasmine_test", "ts_project")
+
+ts_project(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob([
+        "**/*.ts",
+    ]),
+    tsconfig = "//github-actions:tsconfig_test",
+    visibility = [
+        "//github-actions/pull-request-labeling:__subpackages__",
+    ],
+    deps = [
+        "//github-actions:node_modules/@types/jasmine",
+        "//github-actions:node_modules/@types/node",
+        "//github-actions/pull-request-labeling:lib",
+        "//github-actions/pull-request-labeling:node_modules/@actions/core",
+        "//github-actions/pull-request-labeling:node_modules/@actions/github",
+        "//github-actions/pull-request-labeling:node_modules/@octokit/rest",
+    ],
+)
+
+jasmine_test(
+    name = "test",
+    data = [
+        ":test_lib",
+    ],
+)
