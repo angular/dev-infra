@@ -7,7 +7,7 @@ ts_project(
         exclude = ["**/*.spec.ts"],
     ),
     visibility = [
-        "//github-actions/pull-request-labeling:__subpackages__",
+        "//github-actions/labeling/pull-request:__subpackages__",
         "//ng-dev:__subpackages__",
     ],
     deps = [

@@ -413,7 +413,7 @@ importers:
         specifier: 7.22.0
         version: 7.22.0
 
-  github-actions/issue-labeling:
+  github-actions/labeling/issue:
     dependencies:
       '@actions/core':
         specifier: 3.0.0
@@ -439,6 +439,36 @@ importers:
       jasmine:
         specifier: 6.1.0
         version: 6.1.0
+
+  github-actions/labeling/pull-request:
+    dependencies:
+      '@actions/core':
+        specifier: 3.0.0
+        version: 3.0.0
+      '@actions/github':
+        specifier: 9.0.0
+        version: 9.0.0
+      '@octokit/rest':
+        specifier: 22.0.1
+        version: 22.0.1
+      '@types/jasmine':
+        specifier: 6.0.0
+        version: 6.0.0
+      '@types/micromatch':
+        specifier: ^4.0.10
+        version: 4.0.10
+      '@types/node':
+        specifier: 24.10.13
+        version: 24.10.13
+      micromatch:
+        specifier: ^4.0.8
+        version: 4.0.8
+      typed-graphqlify:
+        specifier: 3.1.6
+        version: 3.1.6
+      undici:
+        specifier: 7.22.0
+        version: 7.22.0
 
   github-actions/org-file-sync:
     dependencies:
@@ -505,36 +535,6 @@ importers:
       '@types/node':
         specifier: 24.10.13
         version: 24.10.13
-
-  github-actions/pull-request-labeling:
-    dependencies:
-      '@actions/core':
-        specifier: 3.0.0
-        version: 3.0.0
-      '@actions/github':
-        specifier: 9.0.0
-        version: 9.0.0
-      '@octokit/rest':
-        specifier: 22.0.1
-        version: 22.0.1
-      '@types/jasmine':
-        specifier: 6.0.0
-        version: 6.0.0
-      '@types/micromatch':
-        specifier: ^4.0.10
-        version: 4.0.10
-      '@types/node':
-        specifier: 24.10.13
-        version: 24.10.13
-      micromatch:
-        specifier: ^4.0.8
-        version: 4.0.8
-      typed-graphqlify:
-        specifier: 3.1.6
-        version: 3.1.6
-      undici:
-        specifier: 7.22.0
-        version: 7.22.0
 
   github-actions/saucelabs:
     dependencies:

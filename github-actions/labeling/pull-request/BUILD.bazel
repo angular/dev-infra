@@ -1,0 +1,36 @@
+load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
+load("//tools:defaults.bzl", "esbuild_checked_in", "ts_project")
+
+package(default_visibility = ["//github-actions/labeling/pull-request:__subpackages__"])
+
+npm_link_all_packages()
+
+ts_project(
+    name = "lib",
+    srcs = glob(["lib/*.ts"]),
+    tsconfig = "//github-actions:tsconfig",
+    deps = [
+        ":node_modules/@actions/core",
+        ":node_modules/@actions/github",
+        ":node_modules/@octokit/rest",
+        ":node_modules/@types/micromatch",
+        ":node_modules/@types/node",
+        ":node_modules/micromatch",
+        ":node_modules/undici",
+        "//github-actions:utils",
+        "//ng-dev/commit-message",
+        "//ng-dev/pr/common/labels",
+        "//ng-dev/utils",
+    ],
+)
+
+esbuild_checked_in(
+    name = "main",
+    srcs = [
+        ":lib",
+    ],
+    entry_point = "lib/main.ts",
+    format = "esm",
+    platform = "node",
+    target = "node22",
+)

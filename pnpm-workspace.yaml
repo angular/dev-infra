@@ -11,7 +11,6 @@ packages:
   - .github/local-actions/lock-closed
   - github-actions
   - github-actions/google-internal-tests
-  - github-actions/pull-request-labeling
   - github-actions/unified-status-check
   - github-actions/previews/pack-and-upload-artifact
   - github-actions/previews/upload-artifacts-to-firebase
@@ -21,7 +20,8 @@ packages:
   - github-actions/branch-manager
   - github-actions/saucelabs
   - github-actions/browserstack
-  - github-actions/issue-labeling
+  - github-actions/labeling/issue
+  - github-actions/labeling/pull-request
   - github-actions/bazel/configure-remote
 # The minimum age of a release to be considered for dependency installation.
 # The value is in minutes (1440 minutes = 1 day).
