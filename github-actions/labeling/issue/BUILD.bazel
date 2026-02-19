@@ -1,9 +1,6 @@
-load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
 load("//tools:defaults.bzl", "esbuild_checked_in", "jasmine_test", "ts_project")
 
 package(default_visibility = ["//github-actions/labeling/issue:__subpackages__"])
-
-npm_link_all_packages()
 
 ts_project(
     name = "lib",
@@ -13,13 +10,13 @@ ts_project(
     ),
     tsconfig = "//github-actions:tsconfig",
     deps = [
-        ":node_modules/@actions/core",
-        ":node_modules/@actions/github",
-        ":node_modules/@google/genai",
-        ":node_modules/@octokit/openapi-types",
-        ":node_modules/@octokit/rest",
-        ":node_modules/@types/node",
         "//github-actions:utils",
+        "//github-actions/labeling:node_modules/@actions/core",
+        "//github-actions/labeling:node_modules/@actions/github",
+        "//github-actions/labeling:node_modules/@google/genai",
+        "//github-actions/labeling:node_modules/@octokit/openapi-types",
+        "//github-actions/labeling:node_modules/@octokit/rest",
+        "//github-actions/labeling:node_modules/@types/node",
         "//ng-dev/pr/common/labels",
     ],
 )
@@ -31,14 +28,15 @@ ts_project(
     tsconfig = "//github-actions:tsconfig_test",
     deps = [
         ":lib",
-        ":node_modules/@actions/core",
-        ":node_modules/@actions/github",
-        ":node_modules/@google/genai",
-        ":node_modules/@octokit/openapi-types",
-        ":node_modules/@octokit/rest",
-        ":node_modules/@types/jasmine",
-        ":node_modules/@types/node",
+
         "//github-actions:utils",
+        "//github-actions/labeling:node_modules/@actions/core",
+        "//github-actions/labeling:node_modules/@actions/github",
+        "//github-actions/labeling:node_modules/@google/genai",
+        "//github-actions/labeling:node_modules/@octokit/openapi-types",
+        "//github-actions/labeling:node_modules/@octokit/rest",
+        "//github-actions/labeling:node_modules/@types/jasmine",
+        "//github-actions/labeling:node_modules/@types/node",
     ],
 )
 

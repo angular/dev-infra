@@ -413,7 +413,7 @@ importers:
         specifier: 7.22.0
         version: 7.22.0
 
-  github-actions/labeling/issue:
+  github-actions/labeling:
     dependencies:
       '@actions/core':
         specifier: 3.0.0
@@ -433,33 +433,15 @@ importers:
       '@types/jasmine':
         specifier: 6.0.0
         version: 6.0.0
-      '@types/node':
-        specifier: 24.10.13
-        version: 24.10.13
-      jasmine:
-        specifier: 6.1.0
-        version: 6.1.0
-
-  github-actions/labeling/pull-request:
-    dependencies:
-      '@actions/core':
-        specifier: 3.0.0
-        version: 3.0.0
-      '@actions/github':
-        specifier: 9.0.0
-        version: 9.0.0
-      '@octokit/rest':
-        specifier: 22.0.1
-        version: 22.0.1
-      '@types/jasmine':
-        specifier: 6.0.0
-        version: 6.0.0
       '@types/micromatch':
         specifier: ^4.0.10
         version: 4.0.10
       '@types/node':
         specifier: 24.10.13
         version: 24.10.13
+      jasmine:
+        specifier: 6.1.0
+        version: 6.1.0
       micromatch:
         specifier: ^4.0.8
         version: 4.0.8
@@ -467,8 +449,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.22.0
-        version: 7.22.0
+        specifier: 7.19.2
+        version: 7.19.2
 
   github-actions/org-file-sync:
     dependencies:
@@ -5899,6 +5881,10 @@ packages:
   undici@6.23.0:
     resolution: {integrity: sha512-VfQPToRA5FZs/qJxLIinmU59u0r7LXqoJkCzinq3ckNJp3vKEh7jTWN589YQ5+aoAC/TGRLyJLCPKcLQbM8r9g==}
     engines: {node: '>=18.17'}
+
+  undici@7.19.2:
+    resolution: {integrity: sha512-4VQSpGEGsWzk0VYxyB/wVX/Q7qf9t5znLRgs0dzszr9w9Fej/8RVNQ+S20vdXSAyra/bJ7ZQfGv6ZMj7UEbzSg==}
+    engines: {node: '>=20.18.1'}
 
   undici@7.22.0:
     resolution: {integrity: sha512-RqslV2Us5BrllB+JeiZnK4peryVTndy9Dnqq62S3yYRRTj0tFQCwEniUy2167skdGOy3vqRzEvl1Dm4sV2ReDg==}
@@ -12191,6 +12177,8 @@ snapshots:
   undici-types@7.22.0: {}
 
   undici@6.23.0: {}
+
+  undici@7.19.2: {}
 
   undici@7.22.0: {}
 
