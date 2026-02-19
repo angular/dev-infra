@@ -1,0 +1,13 @@
+{
+  "issue": {
+    "number": 123,
+    "owner": "angular",
+    "repo": "angular",
+    "title": "Tough Issue",
+    "body": "Complex Body"
+  },
+  "repo": {
+    "owner": "angular",
+    "repo": "angular"
+  }
+}
