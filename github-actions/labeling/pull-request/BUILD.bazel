@@ -1,9 +1,6 @@
-load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
 load("//tools:defaults.bzl", "esbuild_checked_in", "jasmine_test", "ts_project")
 
 package(default_visibility = ["//github-actions/labeling/pull-request:__subpackages__"])
-
-npm_link_all_packages()
 
 ts_project(
     name = "lib",
@@ -13,14 +10,14 @@ ts_project(
     ),
     tsconfig = "//github-actions:tsconfig",
     deps = [
-        ":node_modules/@actions/core",
-        ":node_modules/@actions/github",
-        ":node_modules/@octokit/rest",
-        ":node_modules/@types/micromatch",
-        ":node_modules/@types/node",
-        ":node_modules/micromatch",
-        ":node_modules/undici",
         "//github-actions:utils",
+        "//github-actions/labeling:node_modules/@actions/core",
+        "//github-actions/labeling:node_modules/@actions/github",
+        "//github-actions/labeling:node_modules/@octokit/rest",
+        "//github-actions/labeling:node_modules/@types/micromatch",
+        "//github-actions/labeling:node_modules/@types/node",
+        "//github-actions/labeling:node_modules/micromatch",
+        "//github-actions/labeling:node_modules/undici",
         "//ng-dev/commit-message",
         "//ng-dev/pr/common/labels",
         "//ng-dev/utils",
@@ -38,12 +35,12 @@ ts_project(
         "//github-actions/labeling/pull-request:__subpackages__",
     ],
     deps = [
-        "//github-actions:node_modules/@types/jasmine",
-        "//github-actions:node_modules/@types/node",
+        "//github-actions/labeling:node_modules/@actions/core",
+        "//github-actions/labeling:node_modules/@actions/github",
+        "//github-actions/labeling:node_modules/@octokit/rest",
+        "//github-actions/labeling:node_modules/@types/jasmine",
+        "//github-actions/labeling:node_modules/@types/node",
         "//github-actions/labeling/pull-request:lib",
-        "//github-actions/labeling/pull-request:node_modules/@actions/core",
-        "//github-actions/labeling/pull-request:node_modules/@actions/github",
-        "//github-actions/labeling/pull-request:node_modules/@octokit/rest",
     ],
 )
 
