@@ -4,6 +4,12 @@ import {context} from '@actions/github';
 import {GoogleGenAI} from '@google/genai';
 import {IssueLabeling} from './issue-labeling.js';
 
+class TestableIssueLabeling extends IssueLabeling {
+  public constructor(git: Octokit, coreService: typeof core) {
+    super(git, coreService);
+  }
+}
+
 describe('IssueLabeling', () => {
   let mockGit: {
     paginate: jasmine.Spy;
@@ -37,10 +43,7 @@ describe('IssueLabeling', () => {
         },
       }),
     );
-    mockGit.paginate.and.callFake((fn: any, opts: any) => {
-      // Return value matching listLabelsForRepo signature
-      return Promise.resolve([{name: 'area: core'}, {name: 'area: router'}, {name: 'bug'}]);
-    });
+    mockGit.paginate.and.resolveTo([{name: 'area: core'}, {name: 'area: router'}, {name: 'bug'}]);
 
     mockAI = {
       models: jasmine.createSpyObj('models', ['generateContent']),
@@ -60,9 +63,10 @@ describe('IssueLabeling', () => {
     mockCore.debug.and.callFake(console.debug);
     mockCore.setFailed.and.callFake(console.error);
 
+
     // We must cast the mock to Octokit because the mock only implements the subset used by the class.
     // This is standard for mocking large interfaces like Octokit.
-    issueLabeling = new IssueLabeling(mockGit as unknown as Octokit, mockCore);
+    issueLabeling = new TestableIssueLabeling(mockGit as unknown as Octokit, mockCore);
 
     spyOn(issueLabeling, 'getGenerativeAI').and.returnValue(mockAI);
   });
