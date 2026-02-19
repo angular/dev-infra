@@ -11,6 +11,13 @@ export default `
 # <%- version %><% if (title) { %> "<%- title %>"<% } %> (<%- dateStamp %>)
 
 <%_
+const commitsInChangelog = commits.filter(includeInReleaseNotes());
+if (commitsInChangelog.length === 0) {
+_%>
+
+No user facing changes in this release
+<%_
+}
 const breakingChanges = commits.filter(hasBreakingChanges);
 if (breakingChanges.length) {
 _%>
@@ -54,7 +61,6 @@ _%>
 _%>
 
 <%_
-const commitsInChangelog = commits.filter(includeInReleaseNotes());
 for (const group of asCommitGroups(commitsInChangelog)) {
 _%>
 
