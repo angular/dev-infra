@@ -23,7 +23,7 @@ export class IssueLabeling {
   /** The issue data fetched from Github. */
   issueData?: components['schemas']['issue'];
 
-  constructor(
+  protected constructor(
     private git: Octokit,
     private coreService: typeof core,
   ) {}
