@@ -520,6 +520,7 @@ describe('common release action logic', () => {
       );
       expect(changelogContent).toMatch(changelogPattern`
         # 10.0.1 <..>
+        No user facing changes in this release
 
         <!-- CHANGELOG SPLIT MARKER -->
 

@@ -9,6 +9,11 @@
 export default `
 <%_
 const commitsInChangelog = commits.filter(includeInReleaseNotes());
+if (commitsInChangelog.length === 0) {
+_%>
+No user facing changes in this release
+<%_ 
+}
 for (const group of asCommitGroups(commitsInChangelog)) {
 _%>
 
