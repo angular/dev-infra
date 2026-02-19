@@ -1,4 +1,4 @@
-import {PullRequestLabeling} from '../lib/pull-request-labeling.js';
+import {PullRequestLabeling} from './pull-request-labeling.js';
 import {Octokit} from '@octokit/rest';
 
 describe('PullRequestLabeling', () => {
