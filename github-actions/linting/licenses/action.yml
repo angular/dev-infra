@@ -11,7 +11,7 @@ runs:
   using: composite
   steps:
     - name: Check Package Licenses
-      uses: actions/dependency-review-action@3c4e3dcb1aa7874d2c16be7d79418e9b7efd6261 # v4.8.2
+      uses: actions/dependency-review-action@05fe4576374b728f0c523d6a13d64c25081e0803 # v4.8.3
       env:
         # The action ref here allows us to import the config file from the same sha we rely on in the downstream usage
         ACTION_REF: ${{ github.action_ref || 'main' }}
