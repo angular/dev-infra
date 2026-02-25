@@ -16,6 +16,7 @@ import {printActiveReleaseTrains} from '../versioning/print-active-trains.js';
 import {getNextBranchName, ReleaseRepoWithApi} from '../versioning/version-branches.js';
 
 import {ReleaseAction} from './actions.js';
+import {ExternalCommands} from './external-commands.js';
 import {FatalReleaseActionError, UserAbortedReleaseActionError} from './actions-error.js';
 import {actions} from './actions/index.js';
 import {verifyNgDevToolIsUpToDate} from '../../utils/version-check.js';
@@ -118,6 +119,8 @@ export class ReleaseTool {
   private async cleanup(): Promise<void> {
     // Return back to the git state from before the release tool ran.
     this._git.checkout(this.previousGitBranchOrRevision, true);
+    // Ensure we are back on the Node.js version expected by the original git state.
+    await ExternalCommands.invokeNvmInstall(this._projectRoot, true);
     // Ensure log out of NPM.
     await NpmCommand.logout(this._config.publishRegistry);
   }

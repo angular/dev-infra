@@ -394,6 +394,7 @@ export abstract class ReleaseAction {
       try {
         this.git.run(['clean', '-qdfX', '**/node_modules']);
       } catch {}
+      await ExternalCommands.invokeNvmInstall(this.projectDir);
       await ExternalCommands.invokePnpmInstall(this.projectDir);
       return;
     }
@@ -407,6 +408,7 @@ export abstract class ReleaseAction {
     try {
       this.git.run(['clean', '-qdfX', '**/node_modules']);
     } catch {}
+    await ExternalCommands.invokeNvmInstall(this.projectDir);
     await ExternalCommands.invokeYarnInstall(this.projectDir);
   }
 

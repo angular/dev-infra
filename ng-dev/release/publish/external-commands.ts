@@ -6,6 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {existsSync} from 'fs';
+import {join} from 'path';
 import semver from 'semver';
 import {ChildProcess, SpawnResult, SpawnOptions} from '../../utils/child-process.js';
 import {Spinner} from '../../utils/spinner.js';
@@ -184,6 +186,33 @@ export abstract class ExternalCommands {
       // To ease debugging in case of runtime exceptions, we still print the error to `debug`.
       Log.debug(e);
       Log.error(`  ✘   An error occurred while running release pre-checks.`);
+      throw new FatalReleaseActionError();
+    }
+  }
+
+  /**
+   * Invokes the `nvm install` command in order to install the correct Node.js version
+   * as specified in a `.nvmrc` file, if present.
+   */
+  static async invokeNvmInstall(projectDir: string): Promise<void>;
+  static async invokeNvmInstall(projectDir: string, quiet: boolean): Promise<void>;
+  static async invokeNvmInstall(projectDir: string, quiet = false): Promise<void> {
+    if (!existsSync(join(projectDir, '.nvmrc'))) {
+      return;
+    }
+
+    try {
+      await ChildProcess.spawn('nvm', ['install'], {
+        cwd: projectDir,
+        mode: 'on-error',
+      });
+      if (!quiet) {
+        const {stdout: nodeVersion} = await ChildProcess.spawn('node', ['--version']);
+        Log.info(green(`  ✓   Set node version to ${nodeVersion}.`));
+      }
+    } catch (e) {
+      Log.error(e);
+      Log.error('  ✘   An error occurred while installing Node.js via nvm.');
       throw new FatalReleaseActionError();
     }
   }
