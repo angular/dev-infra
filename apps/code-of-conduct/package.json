@@ -12,6 +12,6 @@
     "@angular/router": "21.2.0-rc.0",
     "@octokit/rest": "",
     "rxjs": "7.8.2",
-    "zone.js": "0.16.0"
+    "zone.js": "0.16.1"
   }
 }
