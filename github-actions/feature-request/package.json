@@ -6,10 +6,10 @@
     "@octokit/request-error": "7.1.0",
     "@octokit/rest": "22.0.1",
     "@types/jasmine": "6.0.0",
-    "@types/node": "24.10.9",
+    "@types/node": "24.10.13",
     "jasmine-reporters": "2.5.2",
-    "jasmine": "6.0.0",
+    "jasmine": "6.1.0",
     "typed-graphqlify": "3.1.6",
-    "undici": "7.19.2"
+    "undici": "7.22.0"
   }
 }
