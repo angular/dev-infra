@@ -33,6 +33,7 @@ describe('IssueLabeling', () => {
         data: {
           title: 'Tough Issue',
           body: 'Complex Body',
+          labels: [],
         },
       }),
     );
@@ -116,5 +117,20 @@ describe('IssueLabeling', () => {
   it('should initialize and run with manual instantiation check', () => {
     expect(issueLabeling).toBeDefined();
     expect(mockCore.getInput).not.toHaveBeenCalled(); // until run is called
+  });
+
+  it('should skip labeling when issue already has an area label', async () => {
+    mockGit.issues.get.and.resolveTo({
+      data: {
+        title: 'Tough Issue',
+        body: 'Complex Body',
+        labels: [{name: 'area: core'}],
+      },
+    });
+
+    await issueLabeling.run();
+
+    expect(mockGit.issues.addLabels).not.toHaveBeenCalled();
+    expect(mockCore.info).toHaveBeenCalledWith('Issue already has an area label. Skipping.');
   });
 });
