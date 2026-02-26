@@ -301,9 +301,9 @@ importers:
       '@actions/github':
         specifier: 9.0.0
         version: 9.0.0
-      '@google/generative-ai':
-        specifier: ^0.24.0
-        version: 0.24.1
+      '@google/genai':
+        specifier: ^1.43.0
+        version: 1.43.0(@modelcontextprotocol/sdk@1.27.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       '@octokit/auth-app':
         specifier: 8.2.0
         version: 8.2.0
@@ -421,9 +421,9 @@ importers:
       '@actions/github':
         specifier: 9.0.0
         version: 9.0.0
-      '@google/generative-ai':
-        specifier: ^0.24.0
-        version: 0.24.1
+      '@google/genai':
+        specifier: ^1.43.0
+        version: 1.43.0(@modelcontextprotocol/sdk@1.27.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       '@octokit/openapi-types':
         specifier: 27.0.0
         version: 27.0.0
@@ -1587,9 +1587,14 @@ packages:
       '@modelcontextprotocol/sdk':
         optional: true
 
-  '@google/generative-ai@0.24.1':
-    resolution: {integrity: sha512-MqO+MLfM6kjxcKoy0p1wRzG3b4ZZXtPI+z2IE26UogS2Cm/XHO+7gGRBh6gcJsOiIVoH93UwKvW4HdgiOZCy9Q==}
-    engines: {node: '>=18.0.0'}
+  '@google/genai@1.43.0':
+    resolution: {integrity: sha512-hklCsJNdMlDM1IwcCVcGQFBg2izY0+t5BIGbRsxi2UnKi6AGKL7pqJqmBDNRbw0bYCs4y3NA7TB+fkKfP/Nrdw==}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      '@modelcontextprotocol/sdk': ^1.25.2
+    peerDependenciesMeta:
+      '@modelcontextprotocol/sdk':
+        optional: true
 
   '@googleapis/sqladmin@35.2.0':
     resolution: {integrity: sha512-ajR9EGLs1pCkKfsXxfbVRnQ7ZPyktKNAuahHoU06CVKguWwQo3b9aFmq06PYnGk1oXc0+tlW+XEamNa/HF4pbQ==}
@@ -7287,7 +7292,18 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@google/generative-ai@0.24.1': {}
+  '@google/genai@1.43.0(@modelcontextprotocol/sdk@1.27.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6)':
+    dependencies:
+      google-auth-library: 10.5.0(supports-color@10.2.2)
+      p-retry: 4.6.2
+      protobufjs: 7.5.4
+      ws: 8.19.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
+    optionalDependencies:
+      '@modelcontextprotocol/sdk': 1.27.0(supports-color@10.2.2)
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
 
   '@googleapis/sqladmin@35.2.0':
     dependencies:

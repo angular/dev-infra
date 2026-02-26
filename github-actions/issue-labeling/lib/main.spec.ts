@@ -1,7 +1,7 @@
 import {Octokit} from '@octokit/rest';
 import * as core from '@actions/core';
 import {context} from '@actions/github';
-import {GenerativeModel} from '@google/generative-ai';
+import {GoogleGenAI} from '@google/genai';
 import {IssueLabeling} from './issue-labeling.js';
 
 describe('IssueLabeling', () => {
@@ -13,7 +13,7 @@ describe('IssueLabeling', () => {
       get: jasmine.Spy;
     };
   };
-  let mockModel: jasmine.SpyObj<GenerativeModel>;
+  let mockAI: any;
   let mockCore: jasmine.SpyObj<typeof core>;
   let issueLabeling: IssueLabeling;
 
@@ -41,7 +41,9 @@ describe('IssueLabeling', () => {
       return Promise.resolve([{name: 'area: core'}, {name: 'area: router'}, {name: 'bug'}]);
     });
 
-    mockModel = jasmine.createSpyObj<GenerativeModel>('GenerativeModel', ['generateContent']);
+    mockAI = {
+      models: jasmine.createSpyObj('models', ['generateContent']),
+    };
     mockCore = jasmine.createSpyObj<typeof core>('core', [
       'getInput',
       'info',
@@ -61,7 +63,7 @@ describe('IssueLabeling', () => {
     // This is standard for mocking large interfaces like Octokit.
     issueLabeling = new IssueLabeling(mockGit as unknown as Octokit, mockCore);
 
-    spyOn(issueLabeling, 'getGenerativeModel').and.returnValue(mockModel);
+    spyOn(issueLabeling, 'getGenerativeAI').and.returnValue(mockAI);
   });
 
   it('should initialize labels correctly', async () => {
@@ -72,11 +74,9 @@ describe('IssueLabeling', () => {
   });
 
   it('should apply a label when Gemini is confident', async () => {
-    mockModel.generateContent.and.returnValue(
+    mockAI.models.generateContent.and.returnValue(
       Promise.resolve({
-        response: {
-          text: () => 'area: core',
-        } as any, // Cast response structure as any because it's deeply nested and hard to construct manually
+        text: 'area: core',
       }),
     );
 
@@ -90,11 +90,9 @@ describe('IssueLabeling', () => {
   });
 
   it('should NOT apply a label when Gemini returns "ambiguous"', async () => {
-    mockModel.generateContent.and.returnValue(
+    mockAI.models.generateContent.and.returnValue(
       Promise.resolve({
-        response: {
-          text: () => 'ambiguous',
-        } as any,
+        text: 'ambiguous',
       }),
     );
 
@@ -104,11 +102,9 @@ describe('IssueLabeling', () => {
   });
 
   it('should NOT apply a label when Gemini returns an invalid label', async () => {
-    mockModel.generateContent.and.returnValue(
+    mockAI.models.generateContent.and.returnValue(
       Promise.resolve({
-        response: {
-          text: () => 'area: invalid',
-        } as any,
+        text: 'area: invalid',
       }),
     );
 

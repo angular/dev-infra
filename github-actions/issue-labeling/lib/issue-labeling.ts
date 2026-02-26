@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
-import {GoogleGenerativeAI} from '@google/generative-ai';
+import {GoogleGenAI} from '@google/genai';
 import {Octokit} from '@octokit/rest';
 import {ANGULAR_ROBOT, getAuthTokenFor, revokeActiveInstallationToken} from '../../utils.js';
 import {components} from '@octokit/openapi-types';
@@ -38,7 +38,7 @@ export class IssueLabeling {
     // Initialize labels and issue data
     await this.initialize();
 
-    const model = this.getGenerativeModel();
+    const ai = this.getGenerativeAI();
 
     const prompt = `
 You are a helper for an open source repository.
@@ -61,9 +61,11 @@ If no area label applies, respond with "none".
 `;
 
     try {
-      const result = await model.generateContent(prompt);
-      const response = result.response;
-      const text = response.text().trim();
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.0-flash',
+        contents: prompt,
+      });
+      const text = (response.text || '').trim();
 
       this.coreService.info(`Gemini suggested label: ${text}`);
 
@@ -80,10 +82,9 @@ If no area label applies, respond with "none".
     }
   }
 
-  getGenerativeModel() {
+  getGenerativeAI() {
     const apiKey = this.coreService.getInput('google-generative-ai-key', {required: true});
-    const genAI = new GoogleGenerativeAI(apiKey);
-    return genAI.getGenerativeModel({model: 'gemini-2.0-flash'});
+    return new GoogleGenAI({apiKey});
   }
 
   async addLabel(label: string) {
