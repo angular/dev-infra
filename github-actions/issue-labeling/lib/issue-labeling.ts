@@ -4,6 +4,7 @@ import {GoogleGenAI} from '@google/genai';
 import {Octokit} from '@octokit/rest';
 import {ANGULAR_ROBOT, getAuthTokenFor, revokeActiveInstallationToken} from '../../utils.js';
 import {components} from '@octokit/openapi-types';
+import {miscLabels} from '../../../ng-dev/pr/common/labels/index.js';
 
 export class IssueLabeling {
   static run = async () => {
@@ -71,6 +72,7 @@ If no area label applies, respond with "none".
 
       if (this.repoAreaLabels.has(text)) {
         await this.addLabel(text);
+        await this.addLabel(miscLabels.GEMINI_TRIAGED.name);
       } else {
         this.coreService.info(
           `Generated label "${text}" is not in the list of valid area labels or is "ambiguous"/"none".`,

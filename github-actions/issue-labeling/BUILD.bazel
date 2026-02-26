@@ -20,6 +20,7 @@ ts_project(
         ":node_modules/@octokit/rest",
         ":node_modules/@types/node",
         "//github-actions:utils",
+        "//ng-dev/pr/common/labels",
     ],
 )
 
