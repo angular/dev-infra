@@ -7,6 +7,6 @@
     "@octokit/rest": "22.0.1",
     "@types/jasmine": "6.0.0",
     "@types/node": "24.10.13",
-    "@google/generative-ai": "^0.24.0"
+    "@google/genai": "^1.43.0"
   }
 }
