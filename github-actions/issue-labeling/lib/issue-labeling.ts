@@ -39,8 +39,17 @@ export class IssueLabeling {
     // Initialize labels and issue data
     await this.initialize();
 
-    const ai = this.getGenerativeAI();
+    // Determine if the issue already has an area label, if it does we can exit early.
+    if (
+      this.issueData?.labels.some((label) =>
+        (typeof label === 'string' ? label : label.name)?.startsWith('area: '),
+      )
+    ) {
+      this.coreService.info('Issue already has an area label. Skipping.');
+      return;
+    }
 
+    const ai = this.getGenerativeAI();
     const prompt = `
 You are a helper for an open source repository.
 Your task is to allow the user to categorize the issue with an "area: " label.
