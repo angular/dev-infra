@@ -21,4 +21,8 @@ export const miscLabels = createTypedObject(MiscLabel)({
     description:
       'Label noting that a pull request will automatically be managed and rebased by renovate',
   },
+  GEMINI_TRIAGED: {
+    name: 'gemini-triaged',
+    description: 'Label noting that an issue has been triaged by gemini',
+  },
 });
