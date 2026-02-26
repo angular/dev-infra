@@ -76,8 +76,8 @@ echo "Git configuration has been updated to match the last commit author. Publis
 
 git add -A
 
-if git diff-index --quiet HEAD --; then
-  echo "Skipping push as no changes occured between this push and the previous commit."
+if git diff-index --quiet -I"0\.0\.0-[a-f0-9]+" HEAD --; then
+  echo "Skipping push as no changes occurred between this push and the previous commit (ignoring version bumps)."
 else
   git commit -m "${buildCommitMessage}"
   git push ${authenticatedRepoUrl} ${branchName} --force
