@@ -17,6 +17,7 @@ ts_project(
         "//github-actions/labeling:node_modules/@octokit/openapi-types",
         "//github-actions/labeling:node_modules/@octokit/rest",
         "//github-actions/labeling:node_modules/@types/node",
+        "//github-actions/labeling/shared",
         "//ng-dev/pr/common/labels",
     ],
 )
@@ -28,7 +29,6 @@ ts_project(
     tsconfig = "//github-actions:tsconfig_test",
     deps = [
         ":lib",
-
         "//github-actions:utils",
         "//github-actions/labeling:node_modules/@actions/core",
         "//github-actions/labeling:node_modules/@actions/github",

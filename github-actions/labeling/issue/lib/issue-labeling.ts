@@ -1,43 +1,19 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {GoogleGenAI} from '@google/genai';
-import {Octokit} from '@octokit/rest';
-import {ANGULAR_ROBOT, getAuthTokenFor, revokeActiveInstallationToken} from '../../../utils.js';
 import {components} from '@octokit/openapi-types';
 import {miscLabels} from '../../../../ng-dev/pr/common/labels/index.js';
+import {Labeling} from '../../shared/labeling.js';
 
-export class IssueLabeling {
-  static run = async () => {
-    const token = await getAuthTokenFor(ANGULAR_ROBOT);
-    const git = new Octokit({auth: token});
-    try {
-      const inst = new this(git, core);
-      await inst.run();
-    } finally {
-      await revokeActiveInstallationToken(git);
-    }
-  };
-
+export class IssueLabeling extends Labeling {
+  readonly type = 'Issue';
   /** Set of area labels available in the current repository. */
   repoAreaLabels = new Set<string>();
   /** The issue data fetched from Github. */
   issueData?: components['schemas']['issue'];
 
-  protected constructor(
-    private git: Octokit,
-    private coreService: typeof core,
-  ) {}
-
   async run() {
-    const {issue} = context;
-    if (!issue || !issue.number) {
-      this.coreService.info('No issue context found. Skipping.');
-      return;
-    }
-    this.coreService.info(`Issue #${issue.number}`);
-
-    // Initialize labels and issue data
-    await this.initialize();
+    core.info(`Updating labels for ${this.type} #${context.issue.number}`);
 
     // Determine if the issue already has an area label, if it does we can exit early.
     if (
@@ -45,7 +21,7 @@ export class IssueLabeling {
         (typeof label === 'string' ? label : label.name)?.startsWith('area: '),
       )
     ) {
-      this.coreService.info('Issue already has an area label. Skipping.');
+      core.info('Issue already has an area label. Skipping.');
       return;
     }
 
@@ -77,36 +53,25 @@ If no area label applies, respond with "none".
       });
       const text = (response.text || '').trim();
 
-      this.coreService.info(`Gemini suggested label: ${text}`);
+      core.info(`Gemini suggested label: ${text}`);
 
       if (this.repoAreaLabels.has(text)) {
         await this.addLabel(text);
         await this.addLabel(miscLabels.GEMINI_TRIAGED.name);
       } else {
-        this.coreService.info(
+        core.info(
           `Generated label "${text}" is not in the list of valid area labels or is "ambiguous"/"none".`,
         );
       }
     } catch (e) {
-      this.coreService.error('Failed to generate content from Gemini.');
-      this.coreService.setFailed(e as Error);
+      core.error('Failed to generate content from Gemini.');
+      core.setFailed(e as Error);
     }
   }
 
   getGenerativeAI() {
-    const apiKey = this.coreService.getInput('google-generative-ai-key', {required: true});
+    const apiKey = core.getInput('google-generative-ai-key', {required: true});
     return new GoogleGenAI({apiKey});
-  }
-
-  async addLabel(label: string) {
-    const {number: issue_number, owner, repo} = context.issue;
-    try {
-      await this.git.issues.addLabels({repo, owner, issue_number, labels: [label]});
-      this.coreService.info(`Added ${label} label to Issue #${issue_number}`);
-    } catch (err) {
-      this.coreService.error(`Failed to add ${label} label to Issue #${issue_number}`);
-      this.coreService.debug(err as string);
-    }
   }
 
   async initialize() {
@@ -123,15 +88,5 @@ If no area label applies, respond with "none".
         this.issueData = resp.data;
       }),
     ]);
-
-    if (this.repoAreaLabels.size === 0) {
-      this.coreService.warning('No area labels found in the repository.');
-      return;
-    }
-
-    if (!this.issueData) {
-      this.coreService.error('Failed to fetch issue data.');
-      return;
-    }
   }
 }
