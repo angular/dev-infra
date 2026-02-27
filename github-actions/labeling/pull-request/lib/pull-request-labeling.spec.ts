@@ -1,19 +1,16 @@
-import {PullRequestLabeling} from './pull-request-labeling.js';
+import {PullRequestLabeling as _PullRequestLabeling} from './pull-request-labeling.js';
 import {Octokit} from '@octokit/rest';
+
+class PullRequestLabeling extends _PullRequestLabeling {
+  setGit(git: any) {
+    this.git = git;
+  }
+}
 
 describe('PullRequestLabeling', () => {
   let labeling: PullRequestLabeling;
   let mockGit: jasmine.SpyObj<Octokit>;
-  let mockCore: {
-    getInput: jasmine.Spy;
-    info: jasmine.Spy;
-    error: jasmine.Spy;
-    debug: jasmine.Spy;
-  };
-  let mockContext: {
-    issue: {number: number; owner: string; repo: string};
-    repo: {owner: string; repo: string};
-  };
+  let getLabelsFromInputSpy: jasmine.Spy;
 
   beforeEach(() => {
     mockGit = jasmine.createSpyObj('Octokit', ['paginate', 'issues', 'pulls']);
@@ -21,7 +18,6 @@ describe('PullRequestLabeling', () => {
       'listLabelsOnIssue',
       'addLabels',
       'removeLabel',
-      'listLabelsForRepo',
     ]);
     mockGit.pulls = jasmine.createSpyObj('pulls', ['listCommits', 'get', 'listFiles']);
 
@@ -42,22 +38,17 @@ describe('PullRequestLabeling', () => {
     (mockGit.issues.listLabelsOnIssue as unknown as jasmine.Spy).and.resolveTo({data: []});
     (mockGit.pulls.get as unknown as jasmine.Spy).and.resolveTo({data: {base: {ref: 'main'}}});
 
-    mockCore = jasmine.createSpyObj('core', ['getInput', 'info', 'error', 'debug']);
-    mockContext = {
-      issue: {number: 12345, owner: 'angular', repo: 'angular'},
-      repo: {owner: 'angular', repo: 'angular'},
-    };
+    getLabelsFromInputSpy = spyOn(PullRequestLabeling.prototype, 'getLabelsFromInput');
 
-    labeling = new PullRequestLabeling(mockGit, mockCore as any, mockContext as any);
+    labeling = new PullRequestLabeling();
+    labeling.setGit(mockGit as unknown as Octokit);
   });
 
   it('should apply labels based on path configuration', async () => {
-    mockCore.getInput.and.returnValue(
-      JSON.stringify({
-        'target: feature': ['feature/**'],
-        'target: docs': ['docs/**'],
-      }),
-    );
+    getLabelsFromInputSpy.and.returnValue({
+      'target: feature': ['feature/**'],
+      'target: docs': ['docs/**'],
+    });
 
     await labeling.initialize();
     await labeling.pathBasedLabeling();
@@ -75,11 +66,9 @@ describe('PullRequestLabeling', () => {
   });
 
   it('should not apply labels if files do not match', async () => {
-    mockCore.getInput.and.returnValue(
-      JSON.stringify({
-        'target: nothing': ['nothing/**'],
-      }),
-    );
+    getLabelsFromInputSpy.and.returnValue({
+      'target: nothing': ['nothing/**'],
+    });
 
     await labeling.initialize();
     await labeling.pathBasedLabeling();

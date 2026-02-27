@@ -1,0 +1,17 @@
+load("//tools:defaults.bzl", "ts_project")
+
+package(default_visibility = ["//github-actions/labeling:__subpackages__"])
+
+ts_project(
+    name = "shared",
+    srcs = glob(
+        ["*.ts"],
+    ),
+    tsconfig = "//github-actions:tsconfig",
+    deps = [
+        "//github-actions:utils",
+        "//github-actions/labeling:node_modules/@actions/core",
+        "//github-actions/labeling:node_modules/@actions/github",
+        "//github-actions/labeling:node_modules/@octokit/rest",
+    ],
+)

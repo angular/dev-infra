@@ -1,74 +1,48 @@
 import {Octokit} from '@octokit/rest';
 import * as core from '@actions/core';
-import {context} from '@actions/github';
-import {GoogleGenAI} from '@google/genai';
-import {IssueLabeling} from './issue-labeling.js';
+import {IssueLabeling as _IssueLabeling} from './issue-labeling.js';
 
-class TestableIssueLabeling extends IssueLabeling {
-  public constructor(git: Octokit, coreService: typeof core) {
-    super(git, coreService);
+class IssueLabeling extends _IssueLabeling {
+  setGit(git: any) {
+    this.git = git;
   }
 }
 
 describe('IssueLabeling', () => {
-  let mockGit: {
-    paginate: jasmine.Spy;
-    issues: {
-      listLabelsForRepo: jasmine.Spy;
-      addLabels: jasmine.Spy;
-      get: jasmine.Spy;
-    };
-  };
+  let mockGit: jasmine.SpyObj<Octokit>;
   let mockAI: any;
-  let mockCore: jasmine.SpyObj<typeof core>;
   let issueLabeling: IssueLabeling;
+  let getIssue: jasmine.Spy;
 
   beforeEach(() => {
-    mockGit = {
-      paginate: jasmine.createSpy('paginate'),
-      issues: {
-        listLabelsForRepo: jasmine.createSpy('listLabelsForRepo'),
-        addLabels: jasmine.createSpy('addLabels'),
-        get: jasmine.createSpy('get'),
-      },
-    };
+    mockGit = jasmine.createSpyObj('Octokit', ['paginate', 'issues', 'pulls']);
+    mockGit.issues = jasmine.createSpyObj('issues', ['addLabels', 'get']);
 
-    mockGit.issues.addLabels.and.returnValue(Promise.resolve({}));
-    mockGit.issues.get.and.returnValue(
-      Promise.resolve({
-        data: {
-          title: 'Tough Issue',
-          body: 'Complex Body',
-          labels: [],
-        },
-      }),
-    );
-    mockGit.paginate.and.resolveTo([{name: 'area: core'}, {name: 'area: router'}, {name: 'bug'}]);
+    // Mock paginate to return the result of the promise if it's a list, or just execute the callback
+    (mockGit.paginate as jasmine.Spy).and.callFake((fn: any, args: any) => {
+      if (fn === mockGit.issues.listLabelsOnIssue) {
+        return Promise.resolve([{name: 'area: core'}, {name: 'area: router'}, {name: 'bug'}]);
+      }
+      return Promise.resolve([]);
+    });
+
+    (mockGit.issues.addLabels as unknown as jasmine.Spy).and.returnValue(Promise.resolve({}));
+    getIssue = mockGit.issues.get as unknown as jasmine.Spy;
+    getIssue.and.resolveTo({
+      data: {
+        title: 'Tough Issue',
+        body: 'Complex Body',
+        labels: [],
+      },
+    });
 
     mockAI = {
       models: jasmine.createSpyObj('models', ['generateContent']),
     };
-    mockCore = jasmine.createSpyObj<typeof core>('core', [
-      'getInput',
-      'info',
-      'error',
-      'warning',
-      'debug',
-      'setFailed',
-    ]);
-    mockCore.getInput.and.returnValue('mock-ai-key');
-    mockCore.error.and.callFake(console.error);
-    mockCore.info.and.callFake(console.info);
-    mockCore.warning.and.callFake(console.warn);
-    mockCore.debug.and.callFake(console.debug);
-    mockCore.setFailed.and.callFake(console.error);
 
-
-    // We must cast the mock to Octokit because the mock only implements the subset used by the class.
-    // This is standard for mocking large interfaces like Octokit.
-    issueLabeling = new TestableIssueLabeling(mockGit as unknown as Octokit, mockCore);
-
-    spyOn(issueLabeling, 'getGenerativeAI').and.returnValue(mockAI);
+    spyOn(IssueLabeling.prototype, 'getGenerativeAI').and.returnValue(mockAI);
+    issueLabeling = new IssueLabeling();
+    issueLabeling.setGit(mockGit as unknown as Octokit);
   });
 
   it('should initialize labels correctly', async () => {
@@ -85,6 +59,7 @@ describe('IssueLabeling', () => {
       }),
     );
 
+    await issueLabeling.initialize();
     await issueLabeling.run();
 
     expect(mockGit.issues.addLabels).toHaveBeenCalledWith(
@@ -101,6 +76,7 @@ describe('IssueLabeling', () => {
       }),
     );
 
+    await issueLabeling.initialize();
     await issueLabeling.run();
 
     expect(mockGit.issues.addLabels).not.toHaveBeenCalled();
@@ -113,28 +89,24 @@ describe('IssueLabeling', () => {
       }),
     );
 
+    await issueLabeling.initialize();
     await issueLabeling.run();
 
     expect(mockGit.issues.addLabels).not.toHaveBeenCalled();
   });
 
-  it('should initialize and run with manual instantiation check', () => {
-    expect(issueLabeling).toBeDefined();
-    expect(mockCore.getInput).not.toHaveBeenCalled(); // until run is called
-  });
-
   it('should skip labeling when issue already has an area label', async () => {
-    mockGit.issues.get.and.resolveTo({
+    getIssue.and.resolveTo({
       data: {
         title: 'Tough Issue',
         body: 'Complex Body',
         labels: [{name: 'area: core'}],
       },
     });
+    await issueLabeling.initialize();
 
     await issueLabeling.run();
 
     expect(mockGit.issues.addLabels).not.toHaveBeenCalled();
-    expect(mockCore.info).toHaveBeenCalledWith('Issue already has an area label. Skipping.');
   });
 });
