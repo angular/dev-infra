@@ -1,0 +1,17 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@actions/core": "3.0.0",
+    "@actions/github": "9.0.0",
+    "@octokit/rest": "22.0.1",
+    "@google/genai": "^1.43.0",
+    "@types/jasmine": "6.0.0",
+    "@types/micromatch": "^4.0.10",
+    "@types/node": "24.10.13",
+    "micromatch": "^4.0.8",
+    "typed-graphqlify": "3.1.6",
+    "undici": "7.19.2",
+    "@octokit/openapi-types": "27.0.0",
+    "jasmine": "6.1.0"
+  }
+}

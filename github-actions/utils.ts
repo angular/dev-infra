@@ -74,3 +74,8 @@ export async function revokeActiveInstallationToken(
   }
   info('Revoked installation token used for Angular Robot.');
 }
+
+export const utils = {
+  getAuthTokenFor,
+  revokeActiveInstallationToken,
+};
