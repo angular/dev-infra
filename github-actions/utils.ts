@@ -9,6 +9,8 @@ export type GithubAppMetadata = [appId: number, inputKey: string];
 export const ANGULAR_LOCK_BOT: GithubAppMetadata = [40213, 'lock-bot-key'];
 /** Angular Robot Github app (angular-robot). */
 export const ANGULAR_ROBOT: GithubAppMetadata = [43341, 'angular-robot-key'];
+/** Angular Review Bot Github app (angular-review-bot). */
+export const ANGULAR_REVIEW_BOT: GithubAppMetadata = [2990462, 'angular-review-bot-key'];
 
 /** Create a JWT authenticated App client to manage installation tokens. */
 async function getJwtAuthedAppClient([appId, inputKey]: GithubAppMetadata) {

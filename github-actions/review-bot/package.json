@@ -1,0 +1,15 @@
+{
+  "name": "review-bot",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@actions/core": "^1.11.1",
+    "@actions/github": "^6.0.0",
+    "@google/genai": "^1.43.0",
+    "@octokit/rest": "^21.0.2",
+    "@octokit/types": "^13.6.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0"
+  }
+}
