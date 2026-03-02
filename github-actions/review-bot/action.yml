@@ -1,0 +1,14 @@
+name: 'Gemini Code Review'
+description: 'Uses Gemini to perform an automated code review on a pull request and instruct on fixing failed checks.'
+author: 'Angular'
+inputs:
+  angular-review-bot-key:
+    description: 'The private key for the Angular Review Bot'
+    required: true
+  gemini-api-key:
+    description: 'The API key for the Gemini model'
+    required: true
+
+runs:
+  using: 'node20'
+  main: 'main.js'
