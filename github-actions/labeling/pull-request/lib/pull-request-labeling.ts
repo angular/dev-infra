@@ -44,7 +44,6 @@ export class PullRequestLabeling extends Labeling {
    * Perform labeling based on the path of the files in the pull request.
    */
   async pathBasedLabeling() {
-    console.log(this.managedLabelsByPath);
     if (!this.managedLabelsByPath) {
       return;
     }
@@ -54,8 +53,6 @@ export class PullRequestLabeling extends Labeling {
         this.pullRequestFilePaths.length > 0 &&
         micromatch(this.pullRequestFilePaths, paths as string | string[]).length > 0
       ) {
-        console.log(label);
-        console.log(this.labels);
         if (!this.labels.has(label)) {
           await this.addLabel(label);
         }
