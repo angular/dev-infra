@@ -57,6 +57,8 @@ apps/*-debug.log
 angular-*.tgz 
 
 # gemini-cli settings
-.gemini/
+.gemini/*
+!.gemini/config.yaml
+!.gemini/styleguide.md
 # GitHub App credentials
 gha-creds-*.json
