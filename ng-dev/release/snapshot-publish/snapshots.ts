@@ -133,7 +133,9 @@ export class SnapshotPublisher {
         }
 
         const branchExistsInRemote =
-          this.git.runGraceful(['ls-remote', '--heads', url, this.branchName]).stdout.trim() !== '';
+          this.git
+            .runGraceful(['ls-remote', '--heads', url, '--', this.branchName])
+            .stdout.trim() !== '';
 
         Log.info(`Cloning ${url} into ${tmpRepoDir}..`);
         if (branchExistsInRemote) {
@@ -145,7 +147,7 @@ export class SnapshotPublisher {
             `Cloning default branch and creating branch '${this.branchName}' on top of it.`,
           );
           this.git.run(['clone', url, tmpRepoDir, '--depth', '1']);
-          this.git.run(['checkout', '-b', this.branchName], {cwd: tmpRepoDir});
+          this.git.run(['checkout', '-b', '--', this.branchName], {cwd: tmpRepoDir});
         }
 
         await Promise.all(
@@ -153,6 +155,7 @@ export class SnapshotPublisher {
             .run(['ls-files'], {cwd: tmpRepoDir})
             .stdout.trim()
             .split('\n')
+            .filter((filePath) => filePath !== '')
             .map((filePath: string) => rm(join(tmpRepoDir, filePath), {force: true})),
         );
         cpSync(pkg.outputPath, tmpRepoDir, {recursive: true});
@@ -199,7 +202,13 @@ export class SnapshotPublisher {
         );
       } else {
         this.git.run(
-          ['push', addTokenToGitHttpsUrl(url, this.git.githubToken), this.branchName, '--force'],
+          [
+            'push',
+            addTokenToGitHttpsUrl(url, this.git.githubToken),
+            '--force',
+            '--',
+            this.branchName,
+          ],
           {cwd: dir},
         );
         Log.info(
