@@ -12,12 +12,12 @@ import {ANGULAR_REVIEW_BOT, getAuthTokenFor} from '../../utils.js';
 
 async function run(): Promise<void> {
   try {
-    const geminiApiKey = core.getInput('gemini-api-key', {required: true});
+    const geminiApiKey = core.getInput('google-generative-ai-key', {required: true});
 
     // Ensure we are running on a pull_request event
     const context = github.context;
-    if (context.eventName !== 'pull_request') {
-      core.info('This action only runs on pull_request events. Skipping.');
+    if (context.eventName !== 'pull_request_target') {
+      core.info('This action only runs on pull_request_target events. Skipping.');
       return;
     }
 
