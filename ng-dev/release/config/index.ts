@@ -50,6 +50,12 @@ export interface NpmPackage {
     /** Message to be displayed for the deprecated version. */
     message: string;
   };
+
+  /**
+   * Repository to which snapshots should be published.
+   * e.g. 'dev-infra-private-ng-dev-builds'
+   */
+  snapshotRepo?: string;
 }
 
 /** Configuration for staging and publishing a release. */

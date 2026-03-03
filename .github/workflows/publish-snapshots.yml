@@ -31,6 +31,5 @@ jobs:
       - run: pnpm bazel build //ng-dev:npm_package --config=release
       - name: Publish Snapshots
         env:
-          SNAPSHOT_BUILDS_GITHUB_TOKEN: ${{ secrets.SNAPSHOT_BUILDS_GITHUB_TOKEN }}
-        run: |
-          ./tools/publish_to_github.sh "@angular/ng-dev" "dev-infra-private-ng-dev-builds" "dist/bin/ng-dev/npm_package"
+          GITHUB_TOKEN: ${{ secrets.SNAPSHOT_BUILDS_GITHUB_TOKEN }}
+        run: pnpm ng-dev release publish-snapshots
