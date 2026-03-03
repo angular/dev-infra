@@ -202,10 +202,12 @@ export abstract class ExternalCommands {
     }
 
     try {
-      await ChildProcess.spawn('nvm', ['install'], {
+      // We must source nvm.sh so the shell recognizes the 'nvm' command since nvm is not a binary but a shell script.
+      await ChildProcess.spawn('. ~/.nvm/nvm.sh && nvm install', [], {
         cwd: projectDir,
         mode: 'on-error',
       });
+
       if (!quiet) {
         const {stdout: nodeVersion} = await ChildProcess.spawn('node', ['--version']);
         Log.info(green(`  ✓   Set node version to ${nodeVersion}.`));
