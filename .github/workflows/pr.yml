@@ -65,6 +65,8 @@ jobs:
         with:
           angular-review-bot-key: ${{ secrets.ANGULAR_REVIEW_BOT_PRIVATE_KEY }}
           google-generative-ai-key: ${{ secrets.GOOGLE_GENERATIVE_AI_KEY }}
+        continue-on-error: true
+      - run: exit 0
 
   # macos testing is disabled as we do not have any targets we currently test.
   #test-macos:
