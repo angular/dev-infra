@@ -102,7 +102,6 @@ npm.npm_translate_lock(
         "@devinfra//github-actions/bazel/configure-remote:package.json",
         "@devinfra//github-actions/branch-manager:package.json",
         "@devinfra//github-actions/browserstack:package.json",
-        "@devinfra//github-actions/feature-request:package.json",
         "@devinfra//github-actions/google-internal-tests:package.json",
         "@devinfra//github-actions/labeling/issue:package.json",
         "@devinfra//github-actions/labeling/pull-request:package.json",
