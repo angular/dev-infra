@@ -4,14 +4,14 @@ on:
   pull_request_target:
     types: [opened, synchronize, reopened]
   issues:
-    types: [opened, reopened]
+    types: [opened]
 
 # Declare default permissions as read only.
 permissions:
   contents: read
 
 jobs:
-  issue_labels:
+  issues:
     if: github.event_name == 'issues'
     runs-on: ubuntu-latest
     steps:
@@ -20,3 +20,12 @@ jobs:
         with:
           angular-robot-key: ${{ secrets.ANGULAR_ROBOT_PRIVATE_KEY }}
           google-generative-ai-key: ${{ secrets.GOOGLE_GENERATIVE_AI_KEY }}
+  pull_request:
+    if: github.event_name == 'pull_request_target'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: ./github-actions/labeling/pull-request
+        with:
+          angular-robot-key: ${{ secrets.ANGULAR_ROBOT_PRIVATE_KEY }}
+          labels: '{}'
