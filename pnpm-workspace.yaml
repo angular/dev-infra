@@ -16,7 +16,6 @@ packages:
   - github-actions/previews/upload-artifacts-to-firebase
   - github-actions/post-approval-changes
   - github-actions/org-file-sync
-  - github-actions/feature-request
   - github-actions/branch-manager
   - github-actions/saucelabs
   - github-actions/browserstack
