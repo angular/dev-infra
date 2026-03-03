@@ -215,6 +215,40 @@ describe('common release action logic', () => {
       }
     });
 
+    it('should deprecate packages if configured', async () => {
+      const {repo, instance, releaseConfig, builtPackagesWithInfo} = setupReleaseActionForTesting(
+        DelegateTestAction,
+        baseReleaseTrains,
+      );
+      const {version, branchName} = baseReleaseTrains.next;
+      const tagName = version.format();
+
+      repo
+        .expectBranchRequest(branchName, {
+          sha: 'STAGING_SHA',
+          parents: [{sha: 'BEFORE_STAGING_SHA'}],
+          commit: {message: `release: cut the v${version} release`},
+        })
+        .expectTagToBeCreated(tagName, 'STAGING_SHA')
+        .expectReleaseToBeCreated(version.toString(), tagName, true);
+
+      await instance.testPublish(
+        builtPackagesWithInfo,
+        version,
+        branchName,
+        'BEFORE_STAGING_SHA',
+        'latest',
+      );
+
+      expect(NpmCommand.deprecate).toHaveBeenCalledTimes(1);
+      expect(NpmCommand.deprecate).toHaveBeenCalledWith(
+        '@deprecated/somepkg',
+        '>=9.0.0',
+        'Use @angular/pkg2',
+        undefined,
+      );
+    });
+
     it('should capture release notes in release entry', async () => {
       const {repo, instance, githubConfig, builtPackagesWithInfo} = setupReleaseActionForTesting(
         DelegateTestAction,
@@ -456,6 +490,7 @@ describe('common release action logic', () => {
       await writePackageJson('@angular/pkg1', '10.0.1');
       await writePackageJson('@angular/pkg2', '10.0.1');
       await writePackageJson('@experimental/somepkg', '0.1000.1');
+      await writePackageJson('@deprecated/somepkg', '10.0.1');
 
       await expectGithubApiRequests(action, branchName, version.format(), {
         withCherryPicking: false,

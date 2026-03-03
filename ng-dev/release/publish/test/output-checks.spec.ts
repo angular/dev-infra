@@ -34,9 +34,12 @@ describe('package output checks', () => {
     spyOn(Log, 'error');
 
     // Write the fake built package output `package.json` files.
-    await writePackageJson('@angular/pkg1', '13.0.1');
-    await writePackageJson('@angular/pkg2', '13.0.1');
-    await writePackageJson('@experimental/somepkg', '0.1300.1');
+    await Promise.all([
+      writePackageJson('@angular/pkg1', '13.0.1'),
+      writePackageJson('@angular/pkg2', '13.0.1'),
+      writePackageJson('@experimental/somepkg', '0.1300.1'),
+      writePackageJson('@deprecated/somepkg', '13.0.1'),
+    ]);
 
     await expectAsync(
       action.instance.testStagingWithBuild(version, branchName, parse('0.0.0-compare-base')),
@@ -59,9 +62,12 @@ describe('package output checks', () => {
       spyOn(Log, 'error');
 
       // Write the fake built package output `package.json` files.
-      await writePackageJson('@angular/pkg1', '13.0.2');
-      await writePackageJson('@angular/pkg2', '13.0.2');
-      await writePackageJson('@experimental/somepkg', '0.1300.2');
+      await Promise.all([
+        writePackageJson('@angular/pkg1', '13.0.2'),
+        writePackageJson('@angular/pkg2', '13.0.2'),
+        writePackageJson('@experimental/somepkg', '0.1300.2'),
+        writePackageJson('@deprecated/somepkg', '13.0.2'),
+      ]);
 
       await expectAsync(
         action.instance.testStagingWithBuild(version, branchName, parse('0.0.0-compare-base')),
@@ -89,9 +95,12 @@ describe('package output checks', () => {
       spyOn(Log, 'error');
 
       // Write the fake built package output `package.json` files.
-      await writePackageJson('@angular/pkg1', '13.0.1');
-      await writePackageJson('@angular/pkg2', '13.0.1');
-      await writePackageJson('@experimental/somepkg', '13.0.2');
+      await Promise.all([
+        writePackageJson('@angular/pkg1', '13.0.1'),
+        writePackageJson('@angular/pkg2', '13.0.1'),
+        writePackageJson('@experimental/somepkg', '0.1300.2'),
+        writePackageJson('@deprecated/somepkg', '13.0.2'),
+      ]);
 
       await expectAsync(
         action.instance.testStagingWithBuild(version, branchName, parse('0.0.0-compare-base')),

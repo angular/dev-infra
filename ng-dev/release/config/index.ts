@@ -28,6 +28,28 @@ export interface NpmPackage {
    * and will not have any LTS dist tags configured.
    */
   experimental?: boolean;
+
+  /**
+   * Configuration for deprecating the package.
+   *
+   * If specified, the package will be deprecated at the specified version.
+   *
+   * @see https://docs.npmjs.com/cli/v8/commands/npm-deprecate
+   */
+  deprecated?: {
+    /** Version at which the package was deprecated.
+     * @example
+     * ```ts
+     * deprecated: {
+     *   version: '>=21.1.0',
+     *   message: 'This package is deprecated and will no longer be published.'
+     * }
+     * ```
+     */
+    version: string;
+    /** Message to be displayed for the deprecated version. */
+    message: string;
+  };
 }
 
 /** Configuration for staging and publishing a release. */

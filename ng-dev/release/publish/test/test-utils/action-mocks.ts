@@ -41,6 +41,7 @@ export const testReleasePackages: NpmPackage[] = [
   {name: '@angular/pkg1'},
   {name: '@angular/pkg2'},
   {name: '@experimental/somepkg', experimental: true},
+  {name: '@deprecated/somepkg', deprecated: {version: '>=9.0.0', message: 'Use @angular/pkg2'}},
 ];
 
 /** Gets test configurations for running testing a publish action. */
@@ -108,6 +109,7 @@ export function setupMocksForReleaseAction<T extends boolean>(
 
   // Fake all external commands for the release tool.
   spyOn(NpmCommand, 'publish').and.resolveTo();
+  spyOn(NpmCommand, 'deprecate').and.resolveTo();
   spyOn(ExternalCommands, 'invokeSetNpmDist').and.resolveTo();
   spyOn(ExternalCommands, 'invokeDeleteNpmDistTag').and.resolveTo();
   spyOn(ExternalCommands, 'invokeNvmInstall').and.resolveTo();

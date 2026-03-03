@@ -27,6 +27,30 @@ export abstract class NpmCommand {
   }
 
   /**
+   * Deprecates a specific version of a package.
+   * @throws With the process log output if the deprecation failed.
+   * @param packageName The name of the package to deprecate.
+   * @param version The version of the package to deprecate.
+   * @param message The deprecation message.
+   * @param registryUrl The registry URL to use for the deprecation.
+   */
+  static async deprecate(
+    packageName: string,
+    version: string,
+    message: string,
+    registryUrl: string | undefined,
+  ) {
+    const args = ['deprecate', `${packageName}@"${version}"`, `"${message}"`];
+
+    // If a custom registry URL has been specified, add the `--registry` flag.
+    if (registryUrl !== undefined) {
+      args.push('--registry', registryUrl);
+    }
+
+    await ChildProcess.spawn('npm', args, {mode: 'silent'});
+  }
+
+  /**
    * Sets the NPM tag to the specified version for the given package.
    * @throws With the process log output if the tagging failed.
    */

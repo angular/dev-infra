@@ -746,7 +746,34 @@ export abstract class ReleaseAction {
       await this._publishBuiltPackageToNpm(pkg, npmDistTag);
     }
 
+    await this._deprecatePackagesOnNpm(builtPackagesWithInfo);
+
     Log.info(green('  ✓   Published all packages successfully'));
+  }
+
+  private async _deprecatePackagesOnNpm(
+    builtPackagesWithInfo: BuiltPackageWithInfo[],
+  ): Promise<void> {
+    for (const pkg of builtPackagesWithInfo) {
+      if (!pkg.deprecated) {
+        continue;
+      }
+
+      Log.debug(`Starting deprecation of "${pkg.name}".`);
+      const spinner = new Spinner(`Deprecating "${pkg.name}"`);
+      const {version, message} = pkg.deprecated;
+
+      try {
+        await NpmCommand.deprecate(pkg.name, version, message, this.config.publishRegistry);
+        spinner.complete();
+        Log.info(green(`  ✓   Successfully deprecated "${pkg.name}@${version}"`));
+      } catch (e) {
+        spinner.complete();
+        Log.error(e);
+        Log.error(`  ✘   An error occurred while deprecating "${pkg.name}@${version}".`);
+        throw new FatalReleaseActionError();
+      }
+    }
   }
 
   /** Publishes the given built package to NPM with the specified NPM dist tag. */
@@ -757,7 +784,7 @@ export abstract class ReleaseAction {
     try {
       await NpmCommand.publish(pkg.outputPath, npmDistTag, this.config.publishRegistry);
       spinner.complete();
-      Log.info(green(`  ✓   Successfully published "${pkg.name}.`));
+      Log.info(green(`  ✓   Successfully published "${pkg.name}".`));
     } catch (e) {
       spinner.complete();
       Log.error(e);
