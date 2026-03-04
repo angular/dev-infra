@@ -7,7 +7,7 @@ export const release = {
     },
   ],
   buildPackages: async () => {
-    // TODO: Create a standard build script instead of expecting the build to alreqady be complete
+    // TODO: Create a standard build script instead of expecting the build to already be complete
     return [
       {
         name: '@angular/ng-dev',
