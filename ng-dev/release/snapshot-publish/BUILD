@@ -1,0 +1,18 @@
+load("//tools:defaults.bzl", "ts_project")
+
+ts_project(
+    name = "snapshot-publish",
+    srcs = [
+        "cli.ts",
+        "snapshots.ts",
+    ],
+    visibility = ["//ng-dev:__subpackages__"],
+    deps = [
+        "//ng-dev:node_modules/@types/node",
+        "//ng-dev:node_modules/@types/yargs",
+        "//ng-dev:node_modules/yargs",
+        "//ng-dev/release/build",
+        "//ng-dev/release/config",
+        "//ng-dev/utils",
+    ],
+)
