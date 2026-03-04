@@ -37,7 +37,7 @@ export class SnapshotPublisher {
   readonly commitSha = this.git.run(['rev-parse', '--short', 'HEAD']).stdout.trim();
   /** The commit author string from the current commit. */
   readonly commitAuthor = this.git
-    .run(['--no-pager', 'show', '-s', '--format', '"%an <%ae>"', 'HEAD'])
+    .run(['--no-pager', 'show', '-s', '--format="%an <%ae>"', 'HEAD'])
     .stdout.trim();
   /** The message of the current commit. */
   readonly commitMessage = this.git.run(['log', '--oneline', '-n', '1']).stdout.trim();
@@ -142,7 +142,7 @@ export class SnapshotPublisher {
             `Cloning default branch and creating branch '${this.branchName}' on top of it.`,
           );
           this.git.run(['clone', url, tmpRepoDir, '--depth', '1']);
-          this.git.run(['checkout', '-b', '--', this.branchName], {cwd: tmpRepoDir});
+          this.git.run(['checkout', '-b', this.branchName], {cwd: tmpRepoDir});
         }
 
         await Promise.all(
@@ -155,12 +155,9 @@ export class SnapshotPublisher {
         );
         cpSync(pkg.outputPath, tmpRepoDir, {recursive: true});
         this.git.run(['add', '-A'], {cwd: tmpRepoDir});
-        this.git.run(
-          ['commit', '--author', `"${this.commitAuthor}"`, '-m', this.snapshotCommitMessage],
-          {
-            cwd: tmpRepoDir,
-          },
-        );
+        this.git.run(['commit', '--author', this.commitAuthor, '-m', this.snapshotCommitMessage], {
+          cwd: tmpRepoDir,
+        });
 
         return {
           url,
