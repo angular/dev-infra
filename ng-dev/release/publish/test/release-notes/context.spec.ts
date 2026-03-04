@@ -187,7 +187,7 @@ function buildCommit(type: string, scope: string, withNote?: 'breaking-change' |
   const noteMarker = withNote === 'breaking-change' ? 'BREAKING CHANGE' : 'DEPRECATED';
   const footer = withNote ? `${noteMarker}: description of note` : '';
   const parts = {type, scope, footer};
-  return parseCommitFromGitLog(Buffer.from(buildCommitMessage(parts)));
+  return parseCommitFromGitLog(buildCommitMessage(parts));
 }
 
 function commitsFromList(...indexes: number[]) {

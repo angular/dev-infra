@@ -352,7 +352,7 @@ describe('common release action logic', () => {
         setupReleaseActionForTesting(DelegateTestAction, baseReleaseTrains);
       const {version, branchName} = baseReleaseTrains.latest;
       const tagName = version.format();
-      const testCommit = parseCommitFromGitLog(Buffer.from('fix(test): test'));
+      const testCommit = parseCommitFromGitLog('fix(test): test');
       const exceedingText = Array.from(new Array(githubReleaseBodyLimit), () => '#').join('');
 
       // Note: We cannot directly parse our commit with characters as much as the Github

@@ -96,7 +96,7 @@ function fetchCommitsForRevisionRange(
       if (entry.trim() === '') {
         return;
       }
-      const commit = parseCommitFromGitLog(Buffer.from(santizeCommitMessage(entry), 'utf-8'));
+      const commit = parseCommitFromGitLog(santizeCommitMessage(entry));
       if (commit.isRevert) {
         commits.delete(commit.originalHeader.match(/^revert:? "(.*)"/i)?.[1] || '');
       } else {

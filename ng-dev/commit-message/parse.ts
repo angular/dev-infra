@@ -123,14 +123,12 @@ const commitParser = new CommitParser(parseOptions);
 export const parseCommitMessage: (fullText: string) => Commit = parseInternal;
 
 /** Parse a commit message from a git log entry into its composite parts. */
-export const parseCommitFromGitLog: (fullText: Buffer) => CommitFromGitLog = parseInternal;
+export function parseCommitFromGitLog(fullText: string): CommitFromGitLog {
+  return parseInternal(fullText) as CommitFromGitLog;
+}
 
 /** Parse a full commit message into its composite parts. */
-function parseInternal(fullText: string): Commit;
-function parseInternal(fullText: Buffer): CommitFromGitLog;
-function parseInternal(fullText: string | Buffer): CommitFromGitLog | Commit {
-  // Ensure the fullText symbol is a `string`, even if a Buffer was provided.
-  fullText = fullText.toString().trim();
+function parseInternal(fullText: string): CommitFromGitLog | Commit {
   /** The initially parsed commit. */
   const commit = commitParser.parse(fullText);
   /** A list of breaking change notes from the commit. */
