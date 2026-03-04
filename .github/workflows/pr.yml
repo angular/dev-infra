@@ -3,8 +3,6 @@ name: Pull Request
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-  pull_request_target:
-    types: [opened, reopened]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -18,7 +16,6 @@ defaults:
 
 jobs:
   lint:
-    if: github.event_name == 'pull_request'
     timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
@@ -45,7 +42,6 @@ jobs:
           allow-dependencies-licenses: 'pkg:npm/renovate, pkg:npm/@renovatebot/detect-tools'
 
   test:
-    if: github.event_name == 'pull_request'
     timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
