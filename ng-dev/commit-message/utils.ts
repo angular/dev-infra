@@ -6,23 +6,27 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {getRawCommitsStream} from 'git-raw-commits';
+import {GitClient} from '@conventional-changelog/git-client';
+import {determineRepoBaseDirFromCwd} from '../utils/repo-directory';
 import {CommitFromGitLog, gitLogFormatForParsing, parseCommitFromGitLog} from './parse.js';
+
+/** The singleton instance of the GitClient, instantiated lazily. */
+let gitClient: GitClient;
 
 /**
  * Find all commits within the given range and return an object describing those.
  */
-export function getCommitsInRange(from: string, to: string = 'HEAD'): Promise<CommitFromGitLog[]> {
-  return new Promise((resolve, reject) => {
-    /** List of parsed commit objects. */
-    const commits: CommitFromGitLog[] = [];
-    /** Stream of raw git commit strings in the range provided. */
-    const commitStream = getRawCommitsStream({from, to, format: gitLogFormatForParsing});
+export async function getCommitsInRange(
+  from: string,
+  to: string = 'HEAD',
+): Promise<CommitFromGitLog[]> {
+  gitClient ??= new GitClient(determineRepoBaseDirFromCwd());
 
-    // Accumulate the parsed commits for each commit from the Readable stream into an array, then
-    // resolve the promise with the array when the Readable stream ends.
-    commitStream.on('data', (commit: Buffer) => commits.push(parseCommitFromGitLog(commit)));
-    commitStream.on('error', (err: Error) => reject(err));
-    commitStream.on('end', () => resolve(commits));
-  });
+  const commits: CommitFromGitLog[] = [];
+
+  for await (const commit of gitClient.getRawCommits({from, to, format: gitLogFormatForParsing})) {
+    commits.push(parseCommitFromGitLog(commit));
+  }
+
+  return commits;
 }
