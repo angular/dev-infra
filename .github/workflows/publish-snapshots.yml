@@ -32,4 +32,6 @@ jobs:
       - name: Publish Snapshots
         env:
           GITHUB_TOKEN: ${{ secrets.SNAPSHOT_BUILDS_GITHUB_TOKEN }}
+          GIT_COMMITTER_NAME: ${{ github.actor }}
+          GIT_COMMITTER_EMAIL: ${{ github.actor }}@users.noreply.github.com
         run: pnpm ng-dev release publish-snapshots
