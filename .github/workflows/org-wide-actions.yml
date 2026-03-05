@@ -23,6 +23,9 @@ jobs:
             angular
             angular-cli
             components
+            rules_angular
+            rules_browsers
+            rules_sass
 
   lock_closed:
     if: github.repository == 'angular/dev-infra'
@@ -40,3 +43,6 @@ jobs:
             flex-layout
             vscode-ng-language-service
             universal
+            rules_angular
+            rules_browsers
+            rules_sass
