@@ -25,6 +25,9 @@ jobs:
           - angular/angular-cli
           - angular/ai-tutor
           - angular/web-codegen-scorer
+          - angular/rules_browsers
+          - angular/rules_sass
+          - angular/rules_angular
     runs-on: ubuntu-latest
     steps:
       # Because the checkout and setup node action is contained in the dev-infra repo, we must
