@@ -25,6 +25,9 @@ export class Label<T extends LabelParams = LabelParams> {
     ManagedRepositories.ANGULAR_CLI,
     ManagedRepositories.COMPONENTS,
     ManagedRepositories.DEV_INFRA,
+    ManagedRepositories.RULES_ANGULAR,
+    ManagedRepositories.RULES_BROWSERS,
+    ManagedRepositories.RULES_SASS,
   ];
   /* The label string. */
   name = this.params.name;
@@ -41,4 +44,7 @@ export enum ManagedRepositories {
   ANGULAR = 'angular',
   ANGULAR_CLI = 'angular-cli',
   DEV_INFRA = 'dev-infra',
+  RULES_ANGULAR = 'rules_angular',
+  RULES_BROWSERS = 'rules_browsers',
+  RULES_SASS = 'rules_sass',
 }
