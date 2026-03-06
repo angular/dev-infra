@@ -24,21 +24,21 @@ bazel_dep(name = "rules_nodejs", version = "6.7.3")
 bazel_dep(name = "rules_browsers")
 git_override(
     module_name = "rules_browsers",
-    commit = "8231142fc5516323b040883bf774ba8362645387",
+    commit = "0072289db29cb40381fc7b70be8a38e4930d76fd",
     remote = "https://github.com/angular/rules_browsers.git",
 )
 
 bazel_dep(name = "rules_sass")
 git_override(
     module_name = "rules_sass",
-    commit = "1184a80751a21af8348f308abc5b38a41f26850e",
+    commit = "229f9affd7c18d3b217ad925b2238dfb09de6a40",
     remote = "https://github.com/angular/rules_sass.git",
 )
 
 bazel_dep(name = "rules_angular")
 git_override(
     module_name = "rules_angular",
-    commit = "d746c4f75e42cffe389d1ab077f4639be2bc78d1",
+    commit = "6de6ff1afab00a40dd1dc5d8a72b176bb7a6e504",
     remote = "https://github.com/angular/rules_angular.git",
 )
 

@@ -436,7 +436,7 @@
         "bzlTransitiveDigest": "6NyLUdrb79stFKm8oWIBK2q65cT5Upbr8IR2Qwsywu8=",
         "usagesDigest": "z0Tud1fYcJQUSCG5miWteoPFiVh7XDlsBc5WTtePLjI=",
         "recordedFileInputs": {
-          "@@rules_browsers+//package.json": "772d873d450a539e2133635aeb5e63744cf1cec86e6b37aeecd9267a147fb0d7"
+          "@@rules_browsers+//package.json": "bca72c280cc9f6ec6220cb4b4fdf63b19af01e851e72bcbf2f153933dd6916c1"
         },
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -944,7 +944,7 @@
     "@@rules_nodejs+//nodejs:extensions.bzl%node": {
       "general": {
         "bzlTransitiveDigest": "4pUxCNc22K4I+6+4Nxu52Hur12tFRfa1JMsN5mdDv60=",
-        "usagesDigest": "6lCZAAHRaqfl3ar54AB7Et5bfWPST/xiKkdcrVtE6TY=",
+        "usagesDigest": "6Nc0TFe1NTo1pcUVgBmiVMz8OZm/rCIpqmOBCdGXsXY=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -4103,7 +4103,7 @@
     },
     "@@rules_sass+//src/toolchain:extensions.bzl%sass": {
       "general": {
-        "bzlTransitiveDigest": "RA58Nyrsn03Z5YmQnpmBw3mqlVck++XIrx34amsqU/E=",
+        "bzlTransitiveDigest": "mOfuR8PsNuUWEq7JZ4MpIRbwyAGAqrCvkXXGaRNnlPQ=",
         "usagesDigest": "R0KshhzIouLWuexMUCrl4HY+FUDwlVVgF9Z7UnwyUWA=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
