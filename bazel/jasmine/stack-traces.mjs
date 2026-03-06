@@ -5,7 +5,7 @@ import {install} from 'source-map-support';
 install();
 
 /** The root path that the test files are running from within. */
-let rootPath = `${process.env.RUNFILES}/${process.env.TEST_WORKSPACE}/`;
+let rootPath = `${process.env.JS_BINARY__RUNFILES}/${process.env.TEST_WORKSPACE}/`;
 /** The root path match for when test files are not within the sandbox, but the executation is happening within the sandbox. */
 let sandboxPath = `/.*${process.env.JS_BINARY__WORKSPACE}/${process.env.JS_BINARY__BINDIR}/`;
 /** Regex to capture the content and name of the function in the stack trace. */

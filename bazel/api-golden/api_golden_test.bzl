@@ -1,5 +1,5 @@
-load("@aspect_bazel_lib//lib:copy_to_directory.bzl", "copy_to_directory")
 load("@aspect_rules_js//npm:defs.bzl", "npm_package")
+load("@bazel_lib//lib:copy_to_directory.bzl", "copy_to_directory")
 load("@bazel_skylib//rules:write_file.bzl", "write_file")
 load("//bazel/api-golden:api_golden_test_npm_package.bzl", "api_golden_test_npm_package", "default_strip_export_pattern")
 
