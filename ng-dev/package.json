@@ -41,7 +41,7 @@
     "@types/which": "3.0.4",
     "@types/yargs": "17.0.35",
     "@types/yarnpkg__lockfile": "1.1.9",
-    "@conventional-changelog/git-client": "1.0.1",
+    "@conventional-changelog/git-client": "2.6.0",
     "@yarnpkg/lockfile": "1.1.0",
     "bufferutil": "4.1.0",
     "cli-progress": "3.12.0",
