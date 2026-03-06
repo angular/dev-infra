@@ -8,9 +8,11 @@
 
 import {readFile} from 'node:fs/promises';
 import {join} from 'node:path';
+import assert from 'node:assert';
 
 /** The runfiles directory for the script. */
-const runfiles = process.env['RUNFILES'];
+const runfiles = process.env['JS_BINARY__RUNFILES'];
+assert(runfiles, 'Expected `JS_BINARY__RUNFILES` to be set.');
 
 async function main([packageJsonPath, moduleLockFilePath]) {
   /** The json contents of the BAZEL.module.lock file. */

@@ -13,10 +13,6 @@ import path from 'node:path';
 import send from 'send';
 import assert from 'node:assert';
 
-// The current working directory is the runfiles root.
-const runfilesRoot = process.env['RUNFILES']!;
-assert(runfilesRoot, 'Expected `RUNFILES` to be set.');
-
 /**
  * Http Server implementation that uses browser-sync internally. This server
  * supports Bazel runfile resolution in order to make it work in a Bazel sandbox
@@ -32,6 +28,9 @@ export class HttpServer {
   /** Options of the browser-sync server. */
   options: browserSync.Options;
 
+  /** The runfiles root directory. */
+  private readonly runfilesRoot: string;
+
   constructor(
     readonly port: number,
     private _rootPaths: string[],
@@ -40,6 +39,11 @@ export class HttpServer {
     private _environmentVariables: string[] = [],
     private _relaxCors: boolean = false,
   ) {
+    // The current working directory is the runfiles root.
+    const runfilesRoot = process.env['JS_BINARY__RUNFILES'];
+    assert(runfilesRoot, 'Expected `JS_BINARY__RUNFILES` to be set.');
+    this.runfilesRoot = runfilesRoot;
+
     this.options = {
       open: false,
       online: false,
@@ -141,7 +145,7 @@ export class HttpServer {
   private _resolveUrlFromRunfiles(url: string): string | null {
     for (let rootPath of this._rootPaths) {
       const fragment = path.posix.join(rootPath, getManifestPath(url));
-      const diskPath = path.join(runfilesRoot, fragment);
+      const diskPath = path.join(this.runfilesRoot, fragment);
 
       if (fs.existsSync(diskPath)) {
         return diskPath;

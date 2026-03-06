@@ -87,16 +87,20 @@ def _strict_deps_impl(ctx):
         ),
     )
 
+    transitive_runfiles = [
+        ctx.attr._bin[DefaultInfo].default_runfiles,
+        ctx.runfiles(transitive_files = ctx.attr.tsconfig[DefaultInfo].files),
+    ]
+
+    if JsInfo in ctx.attr.tsconfig:
+        transitive_runfiles.append(ctx.runfiles(transitive_files = ctx.attr.tsconfig[JsInfo].transitive_sources))
+
     runfiles = ctx.runfiles(
         files = [
                     manifest,
                 ] + ctx.files.srcs +
-                ctx.files._runfiles_lib +
-                ctx.files.tsconfig,
-    ).merge_all([
-        ctx.attr._bin[DefaultInfo].default_runfiles,
-        ctx.attr.tsconfig[DefaultInfo].default_runfiles,
-    ])
+                ctx.files._runfiles_lib,
+    ).merge_all(transitive_runfiles)
 
     return [
         DefaultInfo(

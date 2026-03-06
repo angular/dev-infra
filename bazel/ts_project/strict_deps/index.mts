@@ -8,6 +8,7 @@
 
 import {isBuiltin} from 'node:module';
 import fs from 'node:fs/promises';
+import assert from 'node:assert';
 import path from 'node:path';
 import ts from 'typescript';
 import {createDiagnostic} from './diagnostic.mjs';
@@ -18,6 +19,10 @@ import {readTsConfig} from './tsconfig.mjs';
 const [manifestExecPath, expectedFailureRaw] = process.argv.slice(2);
 const expectedFailure = expectedFailureRaw === 'true';
 
+assert(process.env['JS_BINARY__RUNFILES'], 'JS_BINARY__RUNFILES is not defined');
+assert(process.env['TEST_WORKSPACE'], 'TEST_WORKSPACE is not defined');
+
+const runfilesRoot = path.join(process.env['JS_BINARY__RUNFILES'], process.env['TEST_WORKSPACE']);
 const manifest: StrictDepsManifest = JSON.parse(await fs.readFile(manifestExecPath, 'utf8'));
 
 /**
@@ -39,7 +44,7 @@ const allowedModuleNames = new Set<string>(
 const allowedSources = new Set<string>(
   manifest.allowedSources.map((s) => s.replace(extensionRemoveRegex, '')),
 );
-const tsconfig = readTsConfig(path.join(process.cwd(), manifest.tsconfigPath));
+const tsconfig = readTsConfig(path.join(runfilesRoot, manifest.tsconfigPath));
 const diagnostics: ts.Diagnostic[] = [];
 
 /** Check if the moduleSpecifier matches any of the provided paths. */
