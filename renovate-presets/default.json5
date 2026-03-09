@@ -182,7 +182,6 @@
 
     // Disable major updates for specified dependencies
     {
-      enabled: false,
       matchDepNames: [
         '@types/node',
         'node',
@@ -192,6 +191,7 @@
         'tslib',
         'yarn',
       ],
+      dependencyDashboardApproval: true,
       matchUpdateTypes: ['major'],
     },
 
