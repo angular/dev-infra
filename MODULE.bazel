@@ -31,14 +31,14 @@ git_override(
 bazel_dep(name = "rules_sass")
 git_override(
     module_name = "rules_sass",
-    commit = "9135eeae8b8f31d432d44cc46bfa5a8edfa04c47",
+    commit = "ac89385361e502fb88fdbffe9979648045d8919c",
     remote = "https://github.com/angular/rules_sass.git",
 )
 
 bazel_dep(name = "rules_angular")
 git_override(
     module_name = "rules_angular",
-    commit = "2fe6d3b563c12fbdc32bb30fb21e9c8ca86fdcd2",
+    commit = "b930bab8deb308e14d8862d359ef064204daee2a",
     remote = "https://github.com/angular/rules_angular.git",
 )
 
