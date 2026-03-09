@@ -436,7 +436,7 @@
         "bzlTransitiveDigest": "6NyLUdrb79stFKm8oWIBK2q65cT5Upbr8IR2Qwsywu8=",
         "usagesDigest": "z0Tud1fYcJQUSCG5miWteoPFiVh7XDlsBc5WTtePLjI=",
         "recordedFileInputs": {
-          "@@rules_browsers+//package.json": "bca72c280cc9f6ec6220cb4b4fdf63b19af01e851e72bcbf2f153933dd6916c1"
+          "@@rules_browsers+//package.json": "adf6e827d02dda9dde753ffaa34bc58f8d0ebf5cb360ad9a6e28d985da1b03e6"
         },
         "recordedDirentsInputs": {},
         "envVariables": {},
