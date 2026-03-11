@@ -1,0 +1,7 @@
+load("//src:index.bzl", "sass_library")
+
+sass_library(
+    name = "cdk",
+    srcs = ["index.scss"],
+    visibility = ["//test/mappings/material:__pkg__"],
+)

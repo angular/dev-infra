@@ -1,0 +1,4 @@
+dist
+test
+node_modules
+browsers/private/update-tool/playwright

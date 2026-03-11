@@ -1,0 +1,8 @@
+package(default_visibility = ["//visibility:public"])
+
+exports_files([
+    "sass_linux_x64",
+    "sass_linux_arm",
+    "sass_mac_x64",
+    "sass_mac_arm",
+])

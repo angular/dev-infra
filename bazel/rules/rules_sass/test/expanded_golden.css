@@ -1,0 +1,8 @@
+.expanded {
+  color: blue;
+}
+.expanded .nested {
+  color: red;
+}
+
+/*# sourceMappingURL=expanded.css.map */

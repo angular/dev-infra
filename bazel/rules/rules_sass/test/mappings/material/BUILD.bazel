@@ -1,0 +1,17 @@
+load("@bazel_lib//lib:diff_test.bzl", "diff_test")
+load("//src:index.bzl", "sass_binary")
+
+sass_binary(
+    name = "material",
+    src = "index.scss",
+    module_mappings = {
+        "@angular/cdk": "../cdk",
+    },
+    deps = ["//test/mappings/cdk"],
+)
+
+diff_test(
+    name = "mapping_diff_test",
+    file1 = "index.css",
+    file2 = "index_golden.css",
+)

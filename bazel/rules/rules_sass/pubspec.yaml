@@ -1,0 +1,12 @@
+name: x_sass
+description: Sass compiler extended with path mapping support.
+version: 1.0.0
+
+environment:
+  sdk: ^3.7.2
+
+# Add regular dependencies here.
+dependencies:
+  sass_api: 17.3.3
+  sprintf: ^7.0.0
+  # path: ^1.8.0

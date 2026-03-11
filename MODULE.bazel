@@ -28,10 +28,9 @@ local_path_override(
 )
 
 bazel_dep(name = "rules_sass")
-git_override(
+local_path_override(
     module_name = "rules_sass",
-    commit = "23dbc96e739352b52f14b806d022aa16eb74e81c",
-    remote = "https://github.com/angular/rules_sass.git",
+    path = "bazel/rules/rules_sass",
 )
 
 bazel_dep(name = "rules_angular")

@@ -1,0 +1,37 @@
+"""Rules/toolchains for using sass with Bazel."""
+
+module(name = "rules_sass")
+
+sass = use_extension("@rules_sass//src/toolchain:extensions.bzl", "sass")
+sass.toolchain()
+use_repo(sass, "darwin_amd64_sass", "darwin_arm64_sass", "linux_amd64_sass", "linux_arm64_sass")
+
+register_toolchains(
+    "@linux_amd64_sass//:toolchain",
+    "@linux_arm64_sass//:toolchain",
+    "@darwin_amd64_sass//:toolchain",
+    "@darwin_arm64_sass//:toolchain",
+)
+
+bazel_dep(name = "platforms", version = "1.0.0")
+bazel_dep(name = "bazel_lib", version = "3.2.2")
+bazel_dep(name = "aspect_rules_js", version = "3.0.2")
+
+# Dev dependencies
+bazel_dep(name = "rules_angular", dev_dependency = True)
+local_path_override(
+    module_name = "rules_angular",
+    path = "../rules_angular",
+)
+
+bazel_dep(name = "rules_browsers", dev_dependency = True)
+local_path_override(
+    module_name = "rules_browsers",
+    path = "../rules_browsers",
+)
+
+bazel_dep(name = "devinfra", dev_dependency = True)
+local_path_override(
+    module_name = "devinfra",
+    path = "../../../",
+)
