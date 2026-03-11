@@ -2,4 +2,5 @@ ignore_directories([
     "dist",
     "**/node_modules/**",
     "**/.angular",
+    "bazel/rules/**",
 ])

@@ -1,0 +1,27 @@
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_config(
+    name = "tsconfig",
+    src = "tsconfig.json",
+)
+
+ts_project(
+    name = "lib",
+    srcs = [
+        "index.mts",
+    ],
+    tsconfig = ":tsconfig",
+    deps = [
+        "//:node_modules/@types/node",
+        "//:node_modules/tinyglobby",
+    ],
+)
+
+js_binary(
+    name = "bin",
+    data = [":lib"],
+    entry_point = ":index.mjs",
+)

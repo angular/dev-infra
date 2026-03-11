@@ -1,0 +1,82 @@
+module(name = "rules_angular")
+
+# Prod dependencies
+bazel_dep(name = "yq.bzl", version = "0.3.5")
+bazel_dep(name = "bazel_lib", version = "3.2.2")
+bazel_dep(name = "aspect_rules_js", version = "3.0.2")
+bazel_dep(name = "aspect_rules_ts", version = "3.8.6")
+bazel_dep(name = "bazel_skylib", version = "1.9.0")
+bazel_dep(name = "jq.bzl", version = "0.4.0")
+bazel_dep(name = "rules_nodejs", version = "6.7.3")
+
+# Dev dependencies
+bazel_dep(name = "rules_browsers", dev_dependency = True)
+git_override(
+    module_name = "rules_browsers",
+    commit = "7043f918640169063a6281ab4afb61389a0aad6d",
+    remote = "https://github.com/angular/rules_browsers.git",
+)
+
+bazel_dep(name = "rules_sass", dev_dependency = True)
+git_override(
+    module_name = "rules_sass",
+    commit = "781c41bf7a48147bb20103e250f7215475e915a1",
+    remote = "https://github.com/angular/rules_sass.git",
+)
+
+bazel_dep(name = "devinfra", dev_dependency = True)
+local_path_override(
+    module_name = "devinfra",
+    path = "../../../",
+)
+
+yq = use_extension("@yq.bzl//yq:extensions.bzl", "yq")
+use_repo(yq, "yq_toolchains")
+
+rules_ts_ext = use_extension("@aspect_rules_ts//ts:extensions.bzl", "ext")
+rules_ts_ext.deps(
+    name = "rules_angular_npm_typescript",
+    ts_integrity = "sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==",
+    ts_version = "5.9.2",
+)
+use_repo(rules_ts_ext, npm_typescript = "rules_angular_npm_typescript")
+
+node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
+node.toolchain(
+    node_repositories = {
+        "24.14.0-darwin_arm64": ("node-v24.14.0-darwin-arm64.tar.gz", "node-v24.14.0-darwin-arm64", "a1a54f46a750d2523d628d924aab61758a51c9dad3e0238beb14141be9615dd3"),
+        "24.14.0-darwin_amd64": ("node-v24.14.0-darwin-x64.tar.gz", "node-v24.14.0-darwin-x64", "f2879eb810e25993a0578e5d878930266fd2eafcffe9f2839b3d8db354d4879e"),
+        "24.14.0-linux_arm64": ("node-v24.14.0-linux-arm64.tar.xz", "node-v24.14.0-linux-arm64", "e7adfca03d9173276114a6f2219df1a7d25e1bfd6bbd771d3f839118a2053094"),
+        "24.14.0-linux_ppc64le": ("node-v24.14.0-linux-ppc64le.tar.xz", "node-v24.14.0-linux-ppc64le", "33beedaf3ff82ee511cfc5ca0cc7076161a54a982321d061409299e27bc5f41e"),
+        "24.14.0-linux_s390x": ("node-v24.14.0-linux-s390x.tar.xz", "node-v24.14.0-linux-s390x", "d133f1aac2d6dbaa4de9fe183184e57adbc9f45d62e37f55a864c8af92d4cb5a"),
+        "24.14.0-linux_amd64": ("node-v24.14.0-linux-x64.tar.xz", "node-v24.14.0-linux-x64", "41cd79bb7877c81605a9e68ec4c91547774f46a40c67a17e34d7179ef11729df"),
+        "24.14.0-windows_amd64": ("node-v24.14.0-win-x64.zip", "node-v24.14.0-win-x64", "313fa40c0d7b18575821de8cb17483031fe07d95de5994f6f435f3b345f85c66"),
+    },
+    node_version = "24.14.0",
+)
+
+pnpm = use_extension("@aspect_rules_js//npm:extensions.bzl", "pnpm")
+pnpm.pnpm(
+    name = "pnpm",
+    pnpm_version = "10.31.0",
+    pnpm_version_integrity = "sha512-45JziL+qgHjOt5t0j/wegnToTXUWPme8IuBsDTrtQ90VMVHL8R1/gwH/SsuYxovcXK32mJUygB/6/js+SmPCaA==",
+)
+use_repo(pnpm, "pnpm")
+
+npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm")
+npm.npm_translate_lock(
+    name = "rules_angular_npm",
+    data = [
+        "@rules_angular//:package.json",
+    ],
+    npmrc = "//:.npmrc",
+    pnpm_lock = "@rules_angular//:pnpm-lock.yaml",
+)
+use_repo(npm, "rules_angular_npm")
+
+rules_angular = use_extension("//setup:extensions.bzl", "rules_angular")
+rules_angular.setup(
+    angular_compiler_cli = "//:node_modules/@angular/compiler-cli",
+    typescript = "//:node_modules/typescript-local",
+)
+use_repo(rules_angular, "rules_angular_configurable_deps")

@@ -1,0 +1,46 @@
+load("//setup:bzl_library.bzl", "bzl_library")
+
+bzl_library(
+    name = "utils",
+    srcs = ["utils.bzl"],
+    deps = [
+        "@aspect_rules_js//js:defs",
+    ],
+)
+
+bzl_library(
+    name = "ng_application",
+    srcs = ["ng_application.bzl"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":utils",
+        "@aspect_rules_js//js:defs",
+    ],
+)
+
+bzl_library(
+    name = "ng_library",
+    srcs = ["ng_library.bzl"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":utils",
+        "@aspect_rules_js//js:defs",
+        "@jq.bzl//jq",
+    ],
+)
+
+bzl_library(
+    name = "ng_test",
+    srcs = ["ng_test.bzl"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":utils",
+        "@aspect_rules_js//js:defs",
+    ],
+)
+
+bzl_library(
+    name = "ng_config",
+    srcs = ["ng_config.bzl"],
+    deps = ["@jq.bzl//jq"],
+)

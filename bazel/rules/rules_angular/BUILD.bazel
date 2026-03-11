@@ -1,0 +1,11 @@
+load("@rules_angular_npm//:defs.bzl", "npm_link_all_packages")
+load("//src/private:symlink_package.bzl", "symlink_package")
+
+package(default_visibility = ["//visibility:public"])
+
+npm_link_all_packages()
+
+symlink_package(
+    name = "node_modules/typescript",
+    src = "@rules_angular_configurable_deps//:typescript",
+)

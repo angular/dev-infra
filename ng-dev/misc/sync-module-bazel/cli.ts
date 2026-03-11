@@ -7,7 +7,7 @@
  */
 
 import {Argv, CommandModule} from 'yargs';
-import {readFileSync, writeFileSync} from 'node:fs';
+import {existsSync, readFileSync, writeFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {determineRepoBaseDirFromCwd} from '../../utils/repo-directory';
 import {PackageJson, syncNodeJs, syncPnpm, syncTypeScript} from './sync-module-bazel';
@@ -19,15 +19,21 @@ async function builder(argv: Argv) {
 }
 
 async function handler() {
-  const rootDir = determineRepoBaseDirFromCwd();
+  const rootDir = process.cwd();
   const packageJsonPath = join(rootDir, 'package.json');
   const moduleBazelPath = join(rootDir, 'MODULE.bazel');
-  const nvmrcPath = join(rootDir, '.nvmrc');
+  let nvmrcPath = join(rootDir, '.nvmrc');
+  if (!existsSync(nvmrcPath)) {
+    nvmrcPath = join(determineRepoBaseDirFromCwd(), '.nvmrc');
+  }
 
   // Read package.json
   const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8')) as PackageJson;
   const pnpmVersion = packageJson.engines?.pnpm;
-  const tsVersion = packageJson.dependencies?.typescript || packageJson.devDependencies?.typescript;
+  const tsVersion =
+    packageJson.dependencies?.typescript ||
+    packageJson.devDependencies?.typescript ||
+    packageJson.dependencies?.['typescript-local']?.replace('npm:typescript@', '');
 
   // Read .nvmrc
   let nvmrcVersion: string | undefined;

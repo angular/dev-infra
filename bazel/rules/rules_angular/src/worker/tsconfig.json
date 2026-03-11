@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "node10",
+    "target": "esnext",
+    "declaration": true,
+    "strict": true,
+    "strictPropertyInitialization": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "types": ["node"],
+    "paths": {
+      // See `symlink_package.bzl`. This is necessary to support building
+      // with `typescript` and `compiler-cli` from the consumer Bazel repository.
+      "*": ["./node_modules_for_build/*"]
+    }
+  },
+  "exclude": ["node_modules/**"]
+}

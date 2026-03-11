@@ -1,0 +1,25 @@
+load("@bazel_lib//lib:run_binary.bzl", "run_binary")
+
+sh_binary(
+    name = "generate",
+    srcs = ["generate.sh"],
+    data = ["//src/optimization:ng_cli_tool"],
+)
+
+run_binary(
+    name = "boilerplate",
+    srcs = [
+        "//src/optimization:ng_cli_tool",
+    ],
+    env = {
+        "BAZEL_BINDIR": "$(BINDIR)",
+        "OUT_DIR": "$(@)",
+        "NG_CLI_TOOL_RUNFILES_PATH": "$(rlocationpath //src/optimization:ng_cli_tool)",
+    },
+    mnemonic = "GenerateCLIBoilerplate",
+    out_dirs = ["boilerplate"],
+    progress_message = "Generating Angular CLI boilerplate: %{label}",
+    tool = ":generate",
+    use_default_shell_env = True,
+    visibility = ["//visibility:public"],
+)

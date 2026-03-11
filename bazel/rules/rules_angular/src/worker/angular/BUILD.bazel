@@ -1,0 +1,23 @@
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_project(
+    name = "angular_lib",
+    srcs = glob([
+        "**/*.mts",
+    ]),
+    declaration = True,
+    tsconfig = "//src/worker:tsconfig",
+    deps = [
+        "//src/worker:node_modules/@angular/compiler-cli",  # user-provided Angular compiler.
+        "//src/worker:worker_lib_with_user_compiler",
+    ],
+)
+
+js_binary(
+    name = "bin",
+    data = [":angular_lib"],
+    entry_point = ":main_angular.mjs",
+)

@@ -55,6 +55,23 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm bazel test -- //...
 
+  rules_angular:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: bazel/rules/rules_angular
+    steps:
+      # Because the checkout and setup node action is contained in the dev-infra repo, we must
+      # checkout the repo to be able to run the action we have created.  Other repos will skip
+      # this step.
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: ./github-actions/npm/checkout-and-setup-node
+      - uses: ./github-actions/bazel/setup
+      - uses: ./github-actions/bazel/configure-remote
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm bazel test -- //...
+
   # macos testing is disabled as we do not have any targets we currently test.
   #test-macos:
   #  timeout-minutes: 30
