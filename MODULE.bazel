@@ -36,10 +36,9 @@ git_override(
 )
 
 bazel_dep(name = "rules_angular")
-git_override(
+local_path_override(
     module_name = "rules_angular",
-    commit = "c879cfd1e5f55ff4fce089028b4c842110a7c876",
-    remote = "https://github.com/angular/rules_angular.git",
+    path = "bazel/rules/rules_angular",
 )
 
 yq = use_extension("@yq.bzl//yq:extensions.bzl", "yq")

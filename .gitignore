@@ -39,7 +39,7 @@ yarn-error.log
 .bazelrc.user
 
 # Bazel generated directories
-/dist/
+**/dist/
 /bazel-out
 
 # Ignore ng-dev logs and user-config

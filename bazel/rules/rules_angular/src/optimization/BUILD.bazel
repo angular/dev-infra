@@ -1,0 +1,18 @@
+load("//src/architect:utils.bzl", "ng_bin")
+
+ng_bin(
+    name = "ng_cli_tool",
+    # For CLI, we always use the version from `rules_angular`. We
+    # only support a flexible version from e.g. HEAD for e.g. `@angular/build`.
+    node_modules = "@rules_angular//:node_modules",
+    visibility = ["//visibility:public"],
+)
+
+sh_binary(
+    name = "optimize",
+    srcs = ["@rules_angular//src/optimization:optimize.sh"],
+    data = [
+        ":ng_cli_tool",
+    ],
+    visibility = ["//visibility:public"],
+)

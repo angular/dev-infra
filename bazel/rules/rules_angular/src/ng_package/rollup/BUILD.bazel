@@ -1,0 +1,20 @@
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
+load("@bazel_lib//lib:directory_path.bzl", "directory_path")
+
+package(default_visibility = ["//visibility:public"])
+
+directory_path(
+    name = "rollup_entry_point",
+    directory = "//:node_modules/rollup/dir",
+    path = "dist/bin/rollup",
+)
+
+js_binary(
+    name = "bin",
+    data = [
+        "//:node_modules/rollup",
+    ],
+    entry_point = ":rollup_entry_point",
+)
+
+exports_files(["rollup.config.js"])

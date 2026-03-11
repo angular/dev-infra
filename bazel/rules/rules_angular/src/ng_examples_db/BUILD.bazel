@@ -1,0 +1,12 @@
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
+
+package(default_visibility = ["//visibility:public"])
+
+js_binary(
+    name = "bin",
+    data = [
+        "db_generator.mjs",
+        "//:node_modules/zod",
+    ],
+    entry_point = "db_generator.mjs",
+)

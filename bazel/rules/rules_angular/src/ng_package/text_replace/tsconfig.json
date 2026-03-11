@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "lib": ["ES2022"],
+    "types": ["node"]
+  }
+}

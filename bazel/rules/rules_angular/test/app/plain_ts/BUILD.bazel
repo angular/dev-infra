@@ -1,0 +1,14 @@
+load("//src/ts_project:index.bzl", "ts_project")
+
+package(default_visibility = ["//test:__subpackages__"])
+
+ts_project(
+    name = "plain_ts",
+    srcs = glob(["**/*.ts"]),
+    declaration = True,
+    tsconfig = "tsconfig.json",
+    deps = [
+        "//:node_modules/@angular/core",
+        "//test/app",
+    ],
+)

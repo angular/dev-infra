@@ -1,0 +1,19 @@
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config")
+load("//src/ng_project:index.bzl", "ng_project")
+
+ng_project(
+    name = "base_component",
+    srcs = [
+        "base.component.html",
+        "base.component.ts",
+    ],
+    tsconfig = ":tsconfig",
+    deps = [
+        "//:node_modules/@angular/core",
+    ],
+)
+
+ts_config(
+    name = "tsconfig",
+    src = "tsconfig.json",
+)

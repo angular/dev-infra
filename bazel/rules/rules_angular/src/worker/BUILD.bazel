@@ -1,0 +1,77 @@
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config", "ts_project")
+load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
+load("//src/private:symlink_package.bzl", "symlink_package")
+
+package(default_visibility = ["//visibility:public"])
+
+symlink_package(
+    name = "node_modules/@angular/compiler-cli",
+    src = "@rules_angular_configurable_deps//:angular_compiler_cli",
+)
+
+# ---
+
+copy_file(
+    name = "copy_worker_js",
+    src = "@aspect_rules_js//js/private/worker:worker.js",
+    out = "protocol/worker.cjs",
+)
+
+copy_file(
+    name = "copy_worker_js_with_user_compiler",
+    src = "@aspect_rules_js//js/private/worker:worker.js",
+    out = "with_user_compiler/protocol/worker.cjs",
+)
+
+ts_config(
+    name = "tsconfig",
+    src = "tsconfig.json",
+    deps = ["//:node_modules/@types/node"],
+)
+
+ts_project(
+    name = "vanilla_worker_lib",
+    srcs = glob([
+        "**/*.mts",
+        "**/*.cts",
+    ]),
+    data = [":copy_worker_js"],
+    declaration = True,
+    tsconfig = "tsconfig",
+    deps = [
+        "//:node_modules/typescript",
+        "//:node_modules/json-stable-stringify",
+        "//:node_modules/lru-cache",
+        "//:node_modules/memfs",
+        # NOTE: The Angular compiler in this target is not affecting any compilation
+        # output, but it's still necessary for some foundational utils like virtual FS.
+        "//:node_modules/@angular/compiler-cli",  # compiler from npm.
+    ],
+)
+
+ts_project(
+    name = "worker_lib_with_user_compiler",
+    srcs = glob([
+        "**/*.mts",
+        "**/*.cts",
+    ]),
+    data = [":copy_worker_js_with_user_compiler"],
+    declaration = True,
+    out_dir = "with_user_compiler",
+    tsconfig = "tsconfig",
+    deps = [
+        ":node_modules/@angular/compiler-cli",  # user-configured compiler
+        "//:node_modules/json-stable-stringify",
+        "//:node_modules/lru-cache",
+        "//:node_modules/memfs",
+        "//:node_modules/typescript",
+    ],
+)
+
+js_binary(
+    name = "worker_vanilla_ts",
+    data = [":vanilla_worker_lib"],
+    entry_point = ":main_vanilla.mjs",
+    fixed_args = ["--vanilla-ts"],
+)

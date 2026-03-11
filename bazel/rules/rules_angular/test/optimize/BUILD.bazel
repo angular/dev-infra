@@ -1,0 +1,15 @@
+load("//src/optimization:index.bzl", "optimize_angular_app")
+
+optimize_angular_app(
+    name = "optimize",
+    srcs = glob(["**/*.ts"]),
+    deps = [
+        "//:node_modules/@angular/build",
+        "//:node_modules/@angular/common",
+        "//:node_modules/@angular/core",
+        "//:node_modules/@angular/platform-browser",
+        "//:node_modules/rxjs",
+        "//:node_modules/tslib",
+        "//:node_modules/typescript",
+    ],
+)

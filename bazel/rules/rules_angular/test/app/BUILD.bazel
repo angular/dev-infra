@@ -1,0 +1,20 @@
+load("//src/ng_package:angular_package_format.bzl", "angular_package_format")
+load("//src/ng_project:index.bzl", "ng_project")
+
+ng_project(
+    name = "app",
+    srcs = glob(["**/*.ts"]) + ["template.html"],
+    declaration = True,
+    tsconfig = "tsconfig.json",
+    visibility = [":__subpackages__"],
+    deps = ["//:node_modules/@angular/core"],
+)
+
+angular_package_format(
+    name = "pkg",
+    package = "test-123",
+    deps = [
+        ":app",
+        "//test/app/plain_ts",
+    ],
+)

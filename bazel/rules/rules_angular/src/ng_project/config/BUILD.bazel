@@ -1,0 +1,14 @@
+load("//src/ng_project/config:compilation_mode.bzl", "partial_compilation_flag")
+
+partial_compilation_flag(
+    name = "partial_compilation",
+    build_setting_default = False,
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "partial_compilation_enabled",
+    flag_values = {
+        ":partial_compilation": "true",
+    },
+)
