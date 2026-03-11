@@ -17,7 +17,6 @@ github-actions/saucelabs/set-saucelabs-env.js
 github-actions/labeling/issue/main.js
 github-actions/slash-commands/main.js
 github-actions/unified-status-check/main.js
-
 bazel/map-size-tracking/test/size-golden.json
 
 **/test/goldens/**/*.md
@@ -25,3 +24,6 @@ bazel/map-size-tracking/test/size-golden.json
 
 # AI Skills intentionally not formatted to ensure validation failures.
 ng-dev/ai/skills/fixtures/invalid-frontmatter-location/skills/test-skill/SKILL.md
+
+# Golden files
+bazel/rules/rules_sass/test/**/*_golden.css

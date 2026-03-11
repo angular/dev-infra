@@ -1,9 +1,7 @@
-try-import ../../../.bazelrc
+common --@aspect_rules_ts//ts:skipLibCheck=always
+common --@aspect_rules_ts//ts:default_to_tsc_transpiler
 
-# Toolchain and platform related flags
-build:remote --extra_execution_platforms=@devinfra//bazel/remote-execution:platform_with_network
-build:remote --host_platform=@devinfra//bazel/remote-execution:platform_with_network
-build:remote --platforms=@devinfra//bazel/remote-execution:platform_with_network
+try-import ../../../.bazelrc.common
 
 ####################################################
 # User bazel configuration

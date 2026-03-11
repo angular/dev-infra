@@ -1,6 +1,0 @@
-ignore_directories([
-    "dist",
-    "node_modules",
-    "src/browsers/private/update-tool/playwright",
-    "test",
-])

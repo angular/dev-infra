@@ -1,0 +1,54 @@
+load("@bazel_lib//lib:diff_test.bzl", "diff_test")
+load("//src:index.bzl", "sass_binary", "sass_library")
+
+sass_library(
+    name = "b",
+    srcs = [
+        "b.scss",
+        "load_path/c.scss",
+    ],
+)
+
+sass_binary(
+    name = "a",
+    src = "a.scss",
+    include_paths = ["./test/load_path/"],
+    deps = [":b"],
+)
+
+sass_binary(
+    name = "expanded_test",
+    src = "expanded.scss",
+    output_style = "expanded",
+)
+
+sass_binary(
+    name = "no_sourcemap_test",
+    src = "no_sourcemap.scss",
+    sourcemap = False,
+)
+
+sass_binary(
+    name = "output_config_test",
+    src = "output_config.scss",
+    output_dir = "custom_dir",
+    output_name = "custom.css",
+)
+
+diff_test(
+    name = "expanded_diff_test",
+    file1 = "expanded.css",
+    file2 = "expanded_golden.css",
+)
+
+diff_test(
+    name = "no_sourcemap_diff_test",
+    file1 = "no_sourcemap.css",
+    file2 = "no_sourcemap_golden.css",
+)
+
+diff_test(
+    name = "output_config_diff_test",
+    file1 = "custom_dir/custom.css",
+    file2 = "output_config_golden.css",
+)

@@ -1,0 +1,13 @@
+{
+  "name": "rules_sass",
+  "version": "0.0.0",
+  "scripts": {
+    "ng-dev": "bash ../../../tools/local-dev.sh"
+  },
+  "packageManager": "pnpm@10.31.0",
+  "engines": {
+    "npm": "Please use pnpm instead of NPM to install dependencies",
+    "yarn": "Please use pnpm instead of Yarn to install dependencies",
+    "pnpm": "10.31.0"
+  }
+}

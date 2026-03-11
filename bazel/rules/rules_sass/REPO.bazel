@@ -1,0 +1,4 @@
+ignore_directories([
+    "dist",
+    "node_modules",
+])

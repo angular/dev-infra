@@ -51,6 +51,7 @@ jobs:
           [
             '.',
             'bazel/rules/rules_angular',
+            'bazel/rules/rules_sass',
             'bazel/rules/rules_browsers',
             'bazel/rules/rules_browsers/test',
           ]

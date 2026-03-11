@@ -1,12 +1,10 @@
+common --@aspect_rules_ts//ts:skipLibCheck=always
+common --@aspect_rules_ts//ts:default_to_tsc_transpiler
+
 # Flag for validation/demonstration of partial compilation usage.
 build --flag_alias=partial_compilation=//src/ng_project/config:partial_compilation
 
-import ../../../.bazelrc
-
-# Toolchain and platform related flags
-build:remote --extra_execution_platforms=@devinfra//bazel/remote-execution:platform_with_network
-build:remote --host_platform=@devinfra//bazel/remote-execution:platform_with_network
-build:remote --platforms=@devinfra//bazel/remote-execution:platform_with_network
+import ../../../.bazelrc.common
 
 ####################################################
 # User bazel configuration
