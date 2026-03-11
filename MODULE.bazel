@@ -22,10 +22,9 @@ bazel_dep(name = "aspect_rules_esbuild", version = "0.25.0")
 bazel_dep(name = "aspect_rules_ts", version = "3.8.5")
 bazel_dep(name = "rules_nodejs", version = "6.7.3")
 bazel_dep(name = "rules_browsers")
-git_override(
+local_path_override(
     module_name = "rules_browsers",
-    commit = "7043f918640169063a6281ab4afb61389a0aad6d",
-    remote = "https://github.com/angular/rules_browsers.git",
+    path = "bazel/rules/rules_browsers",
 )
 
 bazel_dep(name = "rules_sass")

@@ -1,0 +1,16 @@
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_project(
+    name = "lib",
+    srcs = ["test-runner.mts"],
+    tsc = "@npm_rules_browsers_typescript//:tsc",
+    tsc_worker = "@npm_rules_browsers_typescript//:tsc_worker",
+    tsconfig = "tsconfig.json",
+    validator = "@npm_rules_browsers_typescript//:validator",
+    deps = [
+        "//:node_modules/@types/node",
+        "//:node_modules/get-port",
+    ],
+)

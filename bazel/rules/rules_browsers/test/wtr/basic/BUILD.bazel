@@ -1,0 +1,13 @@
+load("@aspect_rules_js//js:defs.bzl", "js_library")
+load("@rules_browsers//wtr:index.bzl", "wtr_test")
+
+js_library(
+    name = "test_lib",
+    srcs = ["test.spec.mjs"],
+    deps = ["//:node_modules/jasmine"],
+)
+
+wtr_test(
+    name = "test",
+    deps = [":test_lib"],
+)
