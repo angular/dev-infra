@@ -43,21 +43,21 @@ async function handler() {
     // .nvmrc is optional.
   }
 
-  if (!pnpmVersion) {
-    throw new Error('Could find engines.pnpm in package.json');
-  }
-
-  if (!tsVersion) {
-    throw new Error('Could not find typescript in dependencies or devDependencies in package.json');
-  }
-
   // Read MODULE.bazel
   const originalBazelContent = readFileSync(moduleBazelPath, 'utf8');
   let moduleBazelContent = originalBazelContent;
 
-  moduleBazelContent = await syncPnpm(moduleBazelContent, pnpmVersion);
-  moduleBazelContent = await syncTypeScript(moduleBazelContent, tsVersion);
-  moduleBazelContent = await syncNodeJs(moduleBazelContent, nvmrcVersion);
+  if (pnpmVersion) {
+    moduleBazelContent = await syncPnpm(moduleBazelContent, pnpmVersion);
+  }
+
+  if (tsVersion) {
+    moduleBazelContent = await syncTypeScript(moduleBazelContent, tsVersion);
+  }
+
+  if (nvmrcVersion) {
+    moduleBazelContent = await syncNodeJs(moduleBazelContent, nvmrcVersion);
+  }
 
   if (originalBazelContent !== moduleBazelContent) {
     writeFileSync(moduleBazelPath, moduleBazelContent);
