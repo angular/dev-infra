@@ -27,7 +27,7 @@ local_path_override(
     path = "../",
 )
 
-bazel_dep(name = "aspect_rules_js", version = "3.0.2")
+bazel_dep(name = "aspect_rules_js", version = "3.0.3")
 
 npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm", dev_dependency = True)
 use_repo(npm, "npm_rules_browsers")
