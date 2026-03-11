@@ -209,7 +209,10 @@ export abstract class ExternalCommands {
       });
 
       if (!quiet) {
-        const {stdout: nodeVersion} = await ChildProcess.spawn('node', ['--version']);
+        const {stdout: nodeVersion} = await ChildProcess.spawn('node', ['--version'], {
+          mode: 'silent',
+          cwd: projectDir,
+        });
         Log.info(green(`  ✓   Set node version to ${nodeVersion}.`));
       }
     } catch (e) {
