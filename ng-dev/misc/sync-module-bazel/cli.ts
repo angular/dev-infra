@@ -19,6 +19,9 @@ async function builder(argv: Argv) {
 }
 
 async function handler() {
+  // TODO: Implement a marker-based root discovery (e.g., .ng-secondary-base).
+  // This should traverse upward to find the secondary base before falling back to `git rev-parse --show-toplevel`.
+  // Necessary to support non-standard repository structures where workflows are triggered outside the traditional rootDir.
   const rootDir = process.cwd();
   const packageJsonPath = join(rootDir, 'package.json');
   const moduleBazelPath = join(rootDir, 'MODULE.bazel');
@@ -43,21 +46,21 @@ async function handler() {
     // .nvmrc is optional.
   }
 
-  if (!pnpmVersion) {
-    throw new Error('Could find engines.pnpm in package.json');
-  }
-
-  if (!tsVersion) {
-    throw new Error('Could not find typescript in dependencies or devDependencies in package.json');
-  }
-
   // Read MODULE.bazel
   const originalBazelContent = readFileSync(moduleBazelPath, 'utf8');
   let moduleBazelContent = originalBazelContent;
 
-  moduleBazelContent = await syncPnpm(moduleBazelContent, pnpmVersion);
-  moduleBazelContent = await syncTypeScript(moduleBazelContent, tsVersion);
-  moduleBazelContent = await syncNodeJs(moduleBazelContent, nvmrcVersion);
+  if (pnpmVersion) {
+    moduleBazelContent = await syncPnpm(moduleBazelContent, pnpmVersion);
+  }
+
+  if (tsVersion) {
+    moduleBazelContent = await syncTypeScript(moduleBazelContent, tsVersion);
+  }
+
+  if (nvmrcVersion) {
+    moduleBazelContent = await syncNodeJs(moduleBazelContent, nvmrcVersion);
+  }
 
   if (originalBazelContent !== moduleBazelContent) {
     writeFileSync(moduleBazelPath, moduleBazelContent);
