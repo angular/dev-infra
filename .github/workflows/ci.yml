@@ -31,19 +31,23 @@ jobs:
   #       run: pnpm tsc -p tsconfig.json --noEmit
 
   test:
+    name: ${{ matrix.name }}
     timeout-minutes: 15
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        folder:
-          [
-            '.',
-            'bazel/rules/rules_angular',
-            'bazel/rules/rules_sass',
-            'bazel/rules/rules_browsers',
-            'bazel/rules/rules_browsers/test',
-          ]
+        include:
+          - name: 'dev-infra'
+            folder: '.'
+          - name: 'rules_angular'
+            folder: 'bazel/rules/rules_angular'
+          - name: 'rules_sass'
+            folder: 'bazel/rules/rules_sass'
+          - name: 'rules_browsers'
+            folder: 'bazel/rules/rules_browsers'
+          - name: 'rules_browsers/test'
+            folder: 'bazel/rules/rules_browsers/test'
     defaults:
       run:
         working-directory: ${{ matrix.folder }}
