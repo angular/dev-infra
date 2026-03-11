@@ -1,0 +1,108 @@
+"""Rules/toolchains to use browsers with Bazel."""
+
+module(
+    name = "rules_browsers",
+    version = "0.4.0",
+)
+
+# Load default browser versions used by targets in `//browsers` for direct consumption. Test rules
+# provided from the module use these repositories transitively. The root module depending on
+# `rules_browsers` can override the version used in its `MODULE.bazel` file.
+browsers = use_extension("//browsers:extensions.bzl", "browsers")
+browsers.chrome()
+browsers.chromedriver()
+browsers.firefox()
+use_repo(
+    browsers,
+    "rules_browsers_chrome_linux",
+    "rules_browsers_chrome_mac",
+    "rules_browsers_chrome_mac_arm",
+    "rules_browsers_chrome_win64",
+    "rules_browsers_chromedriver_linux",
+    "rules_browsers_chromedriver_mac",
+    "rules_browsers_chromedriver_mac_arm",
+    "rules_browsers_chromedriver_win64",
+    "rules_browsers_firefox_linux",
+    "rules_browsers_firefox_mac",
+    "rules_browsers_firefox_mac_arm",
+    "rules_browsers_firefox_win64",
+)
+
+# Miscellaneous dependencies.
+bazel_dep(name = "platforms", version = "1.0.0")
+bazel_dep(name = "bazel_skylib", version = "1.8.2")
+
+# Dev dependencies
+bazel_dep(name = "rules_angular", dev_dependency = True)
+local_path_override(
+    module_name = "rules_angular",
+    path = "../rules_angular",
+)
+
+bazel_dep(name = "rules_sass", dev_dependency = True)
+git_override(
+    module_name = "rules_sass",
+    commit = "781c41bf7a48147bb20103e250f7215475e915a1",
+    remote = "https://github.com/angular/rules_sass.git",
+)
+
+bazel_dep(name = "devinfra", dev_dependency = True)
+local_path_override(
+    module_name = "devinfra",
+    path = "../../../",
+)
+
+# Manually specify a recent Node.js version.
+bazel_dep(name = "rules_nodejs", version = "6.7.3")
+
+node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
+node.toolchain(
+    node_repositories = {
+        "24.14.0-darwin_arm64": ("node-v24.14.0-darwin-arm64.tar.gz", "node-v24.14.0-darwin-arm64", "a1a54f46a750d2523d628d924aab61758a51c9dad3e0238beb14141be9615dd3"),
+        "24.14.0-darwin_amd64": ("node-v24.14.0-darwin-x64.tar.gz", "node-v24.14.0-darwin-x64", "f2879eb810e25993a0578e5d878930266fd2eafcffe9f2839b3d8db354d4879e"),
+        "24.14.0-linux_arm64": ("node-v24.14.0-linux-arm64.tar.xz", "node-v24.14.0-linux-arm64", "e7adfca03d9173276114a6f2219df1a7d25e1bfd6bbd771d3f839118a2053094"),
+        "24.14.0-linux_ppc64le": ("node-v24.14.0-linux-ppc64le.tar.xz", "node-v24.14.0-linux-ppc64le", "33beedaf3ff82ee511cfc5ca0cc7076161a54a982321d061409299e27bc5f41e"),
+        "24.14.0-linux_s390x": ("node-v24.14.0-linux-s390x.tar.xz", "node-v24.14.0-linux-s390x", "d133f1aac2d6dbaa4de9fe183184e57adbc9f45d62e37f55a864c8af92d4cb5a"),
+        "24.14.0-linux_amd64": ("node-v24.14.0-linux-x64.tar.xz", "node-v24.14.0-linux-x64", "41cd79bb7877c81605a9e68ec4c91547774f46a40c67a17e34d7179ef11729df"),
+        "24.14.0-windows_amd64": ("node-v24.14.0-win-x64.zip", "node-v24.14.0-win-x64", "313fa40c0d7b18575821de8cb17483031fe07d95de5994f6f435f3b345f85c66"),
+    },
+    node_version = "24.14.0",
+)
+use_repo(node, "nodejs_toolchains")
+
+# JS
+bazel_dep(name = "aspect_rules_js", version = "3.0.2")
+
+pnpm = use_extension("@aspect_rules_js//npm:extensions.bzl", "pnpm")
+pnpm.pnpm(
+    name = "pnpm",
+    pnpm_version = "10.31.0",
+    pnpm_version_integrity = "sha512-45JziL+qgHjOt5t0j/wegnToTXUWPme8IuBsDTrtQ90VMVHL8R1/gwH/SsuYxovcXK32mJUygB/6/js+SmPCaA==",
+)
+use_repo(pnpm, "pnpm")
+
+npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm")
+npm.npm_translate_lock(
+    name = "npm_rules_browsers",
+    data = [
+        "//:package.json",
+    ],
+    npmrc = "//:.npmrc",
+    pnpm_lock = "//:pnpm-lock.yaml",
+)
+use_repo(npm, "npm_rules_browsers")
+
+# TS
+bazel_dep(name = "aspect_rules_ts", version = "3.8.6")
+
+rules_ts_ext = use_extension("@aspect_rules_ts//ts:extensions.bzl", "ext")
+rules_ts_ext.deps(
+    # Specify a name manually to prevent conflicts in consumers that also use
+    # `aspect_rules_ts`. This requires that we override the default for `tsc`,
+    # `tsc_worker` and `validator` on all `ts_project` targets.
+    # Upstream issue: https://github.com/aspect-build/rules_ts/issues/843
+    name = "npm_rules_browsers_typescript",
+    ts_integrity = "sha512-aJn6wq13/afZp/jT9QZmwEjDqqvSGp1VT5GVg+f/t6/oVyrgXM6BY1h9BRh/O5p3PlUPAe+WuiEZOmb/49RqoQ==",
+    ts_version = "5.8.2",
+)
+use_repo(rules_ts_ext, "npm_rules_browsers_typescript")

@@ -1,0 +1,21 @@
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+
+ts_project(
+    name = "update_tool_lib",
+    srcs = glob(["**/*.mts"]),
+    tsc = "@npm_rules_browsers_typescript//:tsc",
+    tsc_worker = "@npm_rules_browsers_typescript//:tsc_worker",
+    tsconfig = "tsconfig.json",
+    validator = "@npm_rules_browsers_typescript//:validator",
+    deps = [
+        "//:node_modules/@puppeteer/browsers",
+        "//:node_modules/@types/node",
+    ],
+)
+
+js_binary(
+    name = "update-tool",
+    data = [":update_tool_lib"],
+    entry_point = ":index.mjs",
+)

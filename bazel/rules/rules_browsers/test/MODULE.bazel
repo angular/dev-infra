@@ -1,0 +1,39 @@
+"""Private test module for rules_browsers."""
+
+module(name = "rules_browsers_test")
+
+# Dev dependencies
+bazel_dep(name = "rules_angular", dev_dependency = True)
+local_path_override(
+    module_name = "rules_angular",
+    path = "../../rules_angular",
+)
+
+bazel_dep(name = "rules_sass", dev_dependency = True)
+git_override(
+    module_name = "rules_sass",
+    commit = "781c41bf7a48147bb20103e250f7215475e915a1",
+    remote = "https://github.com/angular/rules_sass.git",
+)
+
+bazel_dep(name = "devinfra", dev_dependency = True)
+local_path_override(
+    module_name = "devinfra",
+    path = "../../../../",
+)
+
+bazel_dep(name = "rules_browsers")
+local_path_override(
+    module_name = "rules_browsers",
+    path = "../",
+)
+
+bazel_dep(name = "aspect_rules_js", version = "3.0.2")
+
+npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm", dev_dependency = True)
+use_repo(npm, "npm_rules_browsers")
+
+bazel_dep(name = "aspect_rules_ts", version = "3.8.6")
+
+rules_ts_ext = use_extension("@aspect_rules_ts//ts:extensions.bzl", "ext", dev_dependency = True)
+use_repo(rules_ts_ext, "npm_rules_browsers_typescript")

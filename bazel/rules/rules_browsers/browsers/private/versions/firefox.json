@@ -1,0 +1,648 @@
+{
+  "129.0": {
+    "linux": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/129.0/linux-x86_64/en-US/firefox-129.0.tar.bz2",
+      "integrity": "878a042f49ee34314bde9ca70a0f93c0941c247c72f17b87d904024bef2b27ad",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "firefox/firefox"
+      }
+    },
+    "mac": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/129.0/mac/en-US/Firefox%20129.0.dmg",
+      "integrity": "4b86e9de2b26339b30342a1ef3be1e3914d70921f81fd67bc9c63595823051f1",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "mac_arm": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/129.0/mac/en-US/Firefox%20129.0.dmg",
+      "integrity": "4b86e9de2b26339b30342a1ef3be1e3914d70921f81fd67bc9c63595823051f1",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "win64": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/129.0/win64/en-US/Firefox%20Setup%20129.0.exe",
+      "integrity": "c06a2f30ca219fdaedc67ef5d510e22122bed8de187d6ee99df0d2c515291678",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "core/firefox.exe"
+      }
+    }
+  },
+  "130.0": {
+    "linux": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/130.0/linux-x86_64/en-US/firefox-130.0.tar.bz2",
+      "integrity": "d5246cea96094146cb4403df7797df3000e94d9c9b7e6101700283a347d03ef9",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "firefox/firefox"
+      }
+    },
+    "mac": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/130.0/mac/en-US/Firefox%20130.0.dmg",
+      "integrity": "c89ee9abcf7a3554959a7d2db0a5a748be3ae2c30d7c170b879de10e46127602",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "mac_arm": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/130.0/mac/en-US/Firefox%20130.0.dmg",
+      "integrity": "c89ee9abcf7a3554959a7d2db0a5a748be3ae2c30d7c170b879de10e46127602",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "win64": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/130.0/win64/en-US/Firefox%20Setup%20130.0.exe",
+      "integrity": "24a6dbabbea8f71265632e5b2bb2495e8271e020064308f5553773f1b8880cb0",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "core/firefox.exe"
+      }
+    }
+  },
+  "131.0": {
+    "linux": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/131.0/linux-x86_64/en-US/firefox-131.0.tar.bz2",
+      "integrity": "4ca8504a62a31472ecb8c3a769d4301dd4ac692d4cc5d51b8fe2cf41e7b11106",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "firefox/firefox"
+      }
+    },
+    "mac": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/131.0/mac/en-US/Firefox%20131.0.dmg",
+      "integrity": "cd243b44746f56ee2042572cccab2736c0c6d419f85f90ad163a4ba04979ccb2",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "mac_arm": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/131.0/mac/en-US/Firefox%20131.0.dmg",
+      "integrity": "cd243b44746f56ee2042572cccab2736c0c6d419f85f90ad163a4ba04979ccb2",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "win64": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/131.0/win64/en-US/Firefox%20Setup%20131.0.exe",
+      "integrity": "37401b29a713758a4de5550d0a82e7bb53e97a83ae81ff732951974a0dfafde7",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "core/firefox.exe"
+      }
+    }
+  },
+  "132.0": {
+    "linux": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/132.0/linux-x86_64/en-US/firefox-132.0.tar.bz2",
+      "integrity": "e3a6f9a68ac72f5df01fac8c97c6de1a353af4b350b8c8b49b2c26c1fbbb2538",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "firefox/firefox"
+      }
+    },
+    "mac": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/132.0/mac/en-US/Firefox%20132.0.dmg",
+      "integrity": "5924171ce774ba8d102ddb45c573ff8acd4e0c289b62597f941ca58d79289704",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "mac_arm": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/132.0/mac/en-US/Firefox%20132.0.dmg",
+      "integrity": "5924171ce774ba8d102ddb45c573ff8acd4e0c289b62597f941ca58d79289704",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "win64": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/132.0/win64/en-US/Firefox%20Setup%20132.0.exe",
+      "integrity": "ad8def708c14f33e867fca118033312079329f2925c8ca508760b1c94ad9fb7e",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "core/firefox.exe"
+      }
+    }
+  },
+  "133.0": {
+    "linux": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/133.0/linux-x86_64/en-US/firefox-133.0.tar.bz2",
+      "integrity": "63cb097174d429043ad128341358d14cdb5d4c9d05d035d9e3094634ceaf22c2",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "firefox/firefox"
+      }
+    },
+    "mac": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/133.0/mac/en-US/Firefox%20133.0.dmg",
+      "integrity": "02c76e21d64f21d4e45b1205717ccd0736a75f2a50b01c74b25b17e374447a76",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "mac_arm": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/133.0/mac/en-US/Firefox%20133.0.dmg",
+      "integrity": "02c76e21d64f21d4e45b1205717ccd0736a75f2a50b01c74b25b17e374447a76",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "win64": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/133.0/win64/en-US/Firefox%20Setup%20133.0.exe",
+      "integrity": "0208dea91244f3de498c59e3b23cbf6ace7d70b02b0468d849529be2b8a68f1a",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "core/firefox.exe"
+      }
+    }
+  },
+  "134.0": {
+    "linux": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/134.0/linux-x86_64/en-US/firefox-134.0.tar.bz2",
+      "integrity": "f232764ff33abddba8e7a90f6bd7de7d73ff79b9104abe3a2477f68af287cbcd",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "firefox/firefox"
+      }
+    },
+    "mac": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/134.0/mac/en-US/Firefox%20134.0.dmg",
+      "integrity": "d293c10129a3c0bd10bd1724f0f5e35874382f1a17cc54bbc8f86666414a389e",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "mac_arm": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/134.0/mac/en-US/Firefox%20134.0.dmg",
+      "integrity": "d293c10129a3c0bd10bd1724f0f5e35874382f1a17cc54bbc8f86666414a389e",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "win64": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/134.0/win64/en-US/Firefox%20Setup%20134.0.exe",
+      "integrity": "5e3d3bedbf5f4f64bed66edafb81800f89f7c360356c00fe1295da995368b57d",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "core/firefox.exe"
+      }
+    }
+  },
+  "135.0": {
+    "linux": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/135.0/linux-x86_64/en-US/firefox-135.0.tar.xz",
+      "integrity": "6fcc1a2f95a6b232af82b4b7644566638c5df349e3095c65b7c18d1a63412d3d",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "firefox/firefox"
+      }
+    },
+    "mac": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/135.0/mac/en-US/Firefox%20135.0.dmg",
+      "integrity": "e55e24e6b2a4980f4b9091900835977b282f599dcdd5e38b753d95bad8a11da9",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "mac_arm": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/135.0/mac/en-US/Firefox%20135.0.dmg",
+      "integrity": "e55e24e6b2a4980f4b9091900835977b282f599dcdd5e38b753d95bad8a11da9",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "win64": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/135.0/win64/en-US/Firefox%20Setup%20135.0.exe",
+      "integrity": "f46d3cb68caa4d4366b942c225d256e0fc15a189263cd9efe29eff0dbfe02685",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "core/firefox.exe"
+      }
+    }
+  },
+  "136.0": {
+    "linux": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/136.0/linux-x86_64/en-US/firefox-136.0.tar.xz",
+      "integrity": "5222f51caacfccaf0f0cf795117f0ad37422fe9d413ef18f2c171e1622b9455a",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "firefox/firefox"
+      }
+    },
+    "mac": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/136.0/mac/en-US/Firefox%20136.0.dmg",
+      "integrity": "078559a33491b7c5ef5dcde62fe3c812835aae98b63a7e32b3bf7e33cb33fcc8",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "mac_arm": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/136.0/mac/en-US/Firefox%20136.0.dmg",
+      "integrity": "078559a33491b7c5ef5dcde62fe3c812835aae98b63a7e32b3bf7e33cb33fcc8",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "win64": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/136.0/win64/en-US/Firefox%20Setup%20136.0.exe",
+      "integrity": "901ad0b5b2415194a92aff386dc1a463138c4ca7a9f596aae3cf53c5e5bdc8ff",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "core/firefox.exe"
+      }
+    }
+  },
+  "137.0": {
+    "linux": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/137.0/linux-x86_64/en-US/firefox-137.0.tar.xz",
+      "integrity": "4d2d0a64a11f8aab7a1be583e1e4cddfaf2671967212b369a87489f3c11c3ac9",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "firefox/firefox"
+      }
+    },
+    "mac": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/137.0/mac/en-US/Firefox%20137.0.dmg",
+      "integrity": "bd9bff96ae3701f9c4957675ff3990fcb8306cbb2f6554fb81ad2427b1ec8464",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "mac_arm": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/137.0/mac/en-US/Firefox%20137.0.dmg",
+      "integrity": "bd9bff96ae3701f9c4957675ff3990fcb8306cbb2f6554fb81ad2427b1ec8464",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "win64": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/137.0/win64/en-US/Firefox%20Setup%20137.0.exe",
+      "integrity": "b3f6cf615947fe41304553c6383532e4d27f3b5cfb5c1d4463f0840f0cc2499a",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "core/firefox.exe"
+      }
+    }
+  },
+  "138.0": {
+    "linux": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/138.0/linux-x86_64/en-US/firefox-138.0.tar.xz",
+      "integrity": "a9b83684f6fa9eecf29c79119bab9239c4255ac53ce12126ced524cc8c7da758",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "firefox/firefox"
+      }
+    },
+    "mac": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/138.0/mac/en-US/Firefox%20138.0.dmg",
+      "integrity": "41ef4466ac515b1aa81b827f1c44bfc442d9663e96070da7b3bc2ced30215fcb",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "mac_arm": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/138.0/mac/en-US/Firefox%20138.0.dmg",
+      "integrity": "41ef4466ac515b1aa81b827f1c44bfc442d9663e96070da7b3bc2ced30215fcb",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "win64": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/138.0/win64/en-US/Firefox%20Setup%20138.0.exe",
+      "integrity": "e4be2a34b811dda20a9db33552230e75e65d2ef90b7b99aa82369fedd2bda5a1",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "core/firefox.exe"
+      }
+    }
+  },
+  "139.0": {
+    "linux": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/139.0/linux-x86_64/en-US/firefox-139.0.tar.xz",
+      "integrity": "1e3eab20cb84af1510b22e663438bd31ee1473652e10eb48661dcc6f1c0bbbe8",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "firefox/firefox"
+      }
+    },
+    "mac": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/139.0/mac/en-US/Firefox%20139.0.dmg",
+      "integrity": "03f1066b70b6e502c4f1a732a63f9f93146c6ea23d0af5e2e3a57d030e255353",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "mac_arm": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/139.0/mac/en-US/Firefox%20139.0.dmg",
+      "integrity": "03f1066b70b6e502c4f1a732a63f9f93146c6ea23d0af5e2e3a57d030e255353",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "win64": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/139.0/win64/en-US/Firefox%20Setup%20139.0.exe",
+      "integrity": "874c5c5ae63684d43ec35bc0d3639a8d6e7ec9f95c8acce3589db0c8c99e3663",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "core/firefox.exe"
+      }
+    }
+  },
+  "140.0": {
+    "linux": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/140.0/linux-x86_64/en-US/firefox-140.0.tar.xz",
+      "integrity": "ca3469774734743b878bca2cfb7efb7b8a8eb4a3c15c2f1f427fbc0472ad3f6e",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "firefox/firefox"
+      }
+    },
+    "mac": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/140.0/mac/en-US/Firefox%20140.0.dmg",
+      "integrity": "6ed2ee0aa3f64a9eac93e1195c8fca54ba6b53c07eeea6fe4c6144491ae6b3d9",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "mac_arm": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/140.0/mac/en-US/Firefox%20140.0.dmg",
+      "integrity": "6ed2ee0aa3f64a9eac93e1195c8fca54ba6b53c07eeea6fe4c6144491ae6b3d9",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "win64": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/140.0/win64/en-US/Firefox%20Setup%20140.0.exe",
+      "integrity": "2e112a61761ccfbd9d10cd9245a6a04a2ea14df4ca5de8a6b632e5b10a2293ff",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "core/firefox.exe"
+      }
+    }
+  },
+  "141.0": {
+    "linux": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/141.0/linux-x86_64/en-US/firefox-141.0.tar.xz",
+      "integrity": "2e96728330c1ffc90dbf45ecd10a82237e4ee528245888954000e67435494829",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "firefox/firefox"
+      }
+    },
+    "mac": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/141.0/mac/en-US/Firefox%20141.0.dmg",
+      "integrity": "37b716b18a7852d3253e9444dbd0eb275204e54b589cc7ad38209c7fceb7ccf3",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "mac_arm": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/141.0/mac/en-US/Firefox%20141.0.dmg",
+      "integrity": "37b716b18a7852d3253e9444dbd0eb275204e54b589cc7ad38209c7fceb7ccf3",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "win64": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/141.0/win64/en-US/Firefox%20Setup%20141.0.exe",
+      "integrity": "435a07e04e1fcae53b992cdcc31ccdf541d9f2433fce744f432b4be4620b5c8c",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "core/firefox.exe"
+      }
+    }
+  },
+  "142.0": {
+    "linux": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/142.0/linux-x86_64/en-US/firefox-142.0.tar.xz",
+      "integrity": "da8897a6a618e73878e6022a2bece76af509c304c73ae5c53dc523d35cb7bae6",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "firefox/firefox"
+      }
+    },
+    "mac": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/142.0/mac/en-US/Firefox%20142.0.dmg",
+      "integrity": "cc0ce6b3ec64d064c16187f92ca4a8df5a21a1d7aa2f79a9e82b44602f2b1a0f",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "mac_arm": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/142.0/mac/en-US/Firefox%20142.0.dmg",
+      "integrity": "cc0ce6b3ec64d064c16187f92ca4a8df5a21a1d7aa2f79a9e82b44602f2b1a0f",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "win64": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/142.0/win64/en-US/Firefox%20Setup%20142.0.exe",
+      "integrity": "58da8c1701d81cdf38e0fb81e0755ea0a4725e752fbe2598bc50f57371f2fda9",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "core/firefox.exe"
+      }
+    }
+  },
+  "143.0": {
+    "linux": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/143.0/linux-x86_64/en-US/firefox-143.0.tar.xz",
+      "integrity": "1c87a9de21941a15177384d4820a6aa3c7dacb38d34089c73a621734ebf1ea9a",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "firefox/firefox"
+      }
+    },
+    "mac": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/143.0/mac/en-US/Firefox%20143.0.dmg",
+      "integrity": "a5c570e277021b61df1295efe77446617ebd768d8ad36a20b309aa382685f6f2",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "mac_arm": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/143.0/mac/en-US/Firefox%20143.0.dmg",
+      "integrity": "a5c570e277021b61df1295efe77446617ebd768d8ad36a20b309aa382685f6f2",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "win64": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/143.0/win64/en-US/Firefox%20Setup%20143.0.exe",
+      "integrity": "fbbadc9a6881aa90d266b572304a75e8814b91817a1db7fc01015d667f60318d",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "core/firefox.exe"
+      }
+    }
+  },
+  "144.0": {
+    "linux": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/144.0/linux-x86_64/en-US/firefox-144.0.tar.xz",
+      "integrity": "c66a48222ff67d51560240d321895c6926c9b3af345cbf688ced8517781d88d1",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "firefox/firefox"
+      }
+    },
+    "mac": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/144.0/mac/en-US/Firefox%20144.0.dmg",
+      "integrity": "1e444b80921bc999d56c05a7decc1eaf88c0297cac5b90416299af2c77f5ecc9",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "mac_arm": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/144.0/mac/en-US/Firefox%20144.0.dmg",
+      "integrity": "1e444b80921bc999d56c05a7decc1eaf88c0297cac5b90416299af2c77f5ecc9",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "win64": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/144.0/win64/en-US/Firefox%20Setup%20144.0.exe",
+      "integrity": "d1e8a7c061e25a41c8dfa85e3aee8e86e9263c69104d80906c978c8d0556563a",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "core/firefox.exe"
+      }
+    }
+  },
+  "145.0": {
+    "linux": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/145.0/linux-x86_64/en-US/firefox-145.0.tar.xz",
+      "integrity": "00fb922cda6bab971e02bcbfb77923b0a234388ed7d77c23506ca0a1a61d4a86",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "firefox/firefox"
+      }
+    },
+    "mac": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/145.0/mac/en-US/Firefox%20145.0.dmg",
+      "integrity": "1c4556480deac8424049f3081a6de1e2c6de619bab3e8ce53e5a497b8d6d919e",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "mac_arm": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/145.0/mac/en-US/Firefox%20145.0.dmg",
+      "integrity": "1c4556480deac8424049f3081a6de1e2c6de619bab3e8ce53e5a497b8d6d919e",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "win64": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/145.0/win64/en-US/Firefox%20Setup%20145.0.exe",
+      "integrity": "4b0345c113242653d923b369fcbd48e3089c57658f8c1542f887c8a375d50306",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "core/firefox.exe"
+      }
+    }
+  },
+  "146.0": {
+    "linux": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/146.0/linux-x86_64/en-US/firefox-146.0.tar.xz",
+      "integrity": "8d56f479cc398a537a60a3fa20dca92d8a41925113d3a67f534881a4e4d7e344",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "firefox/firefox"
+      }
+    },
+    "mac": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/146.0/mac/en-US/Firefox%20146.0.dmg",
+      "integrity": "4b1645313887972d466cd82166ea571485c2c40a167f84624e3f3ca739993cc9",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "mac_arm": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/146.0/mac/en-US/Firefox%20146.0.dmg",
+      "integrity": "4b1645313887972d466cd82166ea571485c2c40a167f84624e3f3ca739993cc9",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "win64": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/146.0/win64/en-US/Firefox%20Setup%20146.0.exe",
+      "integrity": "216870c89648f32450cfefb5cec417fcd66d480d5dc83f894bf99f5fd7f38dbb",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "core/firefox.exe"
+      }
+    }
+  },
+  "147.0": {
+    "linux": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/147.0/linux-x86_64/en-US/firefox-147.0.tar.xz",
+      "integrity": "f055b9c0d7346a10d22edc7f10e08679af2ea495367381ab2be9cab3ec6add97",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "firefox/firefox"
+      }
+    },
+    "mac": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/147.0/mac/en-US/Firefox%20147.0.dmg",
+      "integrity": "48485e2068bc726e2f30cf5855fc2da1fc75c1272bc243a5394f428ffae3ba35",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "mac_arm": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/147.0/mac/en-US/Firefox%20147.0.dmg",
+      "integrity": "48485e2068bc726e2f30cf5855fc2da1fc75c1272bc243a5394f428ffae3ba35",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "win64": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/147.0/win64/en-US/Firefox%20Setup%20147.0.exe",
+      "integrity": "36ff9e150875aa48a0af9eec3eb67f66dddd8efac5c743265371a72ae3e796c4",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "core/firefox.exe"
+      }
+    }
+  }
+}

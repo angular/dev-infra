@@ -41,9 +41,6 @@ importers:
       '@bazel/bazelisk':
         specifier: 1.26.0
         version: 1.26.0
-      '@bazel/buildifier':
-        specifier: ^8.0.0
-        version: 8.2.1
       '@rollup/plugin-commonjs':
         specifier: ^29.0.0
         version: 29.0.2(rollup@4.59.0)
@@ -65,9 +62,6 @@ importers:
       memfs:
         specifier: ^4.14.0
         version: 4.56.11(tslib@2.8.1)
-      prettier:
-        specifier: ^3.4.1
-        version: 3.8.1
       rollup:
         specifier: ^4.59.0
         version: 4.59.0
@@ -347,10 +341,6 @@ packages:
 
   '@bazel/bazelisk@1.26.0':
     resolution: {integrity: sha512-bTNcHdGyEQ9r7SczEYUa0gkEQhJo1ld2BjXI8fWBvsUeoHi03QpUs2HZgDbjjrpQFQqG2ZbO7ihZvH8MjhUTHw==}
-    hasBin: true
-
-  '@bazel/buildifier@8.2.1':
-    resolution: {integrity: sha512-eZ/Aq+2r4PcJa6LbPCT6ffgIJfTU/gYilqIzoX2OLM4nNkbQC6tTMPZNn7aHHjhGPxbNLv41zm4Xqt1olCLgXw==}
     hasBin: true
 
   '@emnapi/core@1.8.1':
@@ -2268,11 +2258,6 @@ packages:
     resolution: {integrity: sha512-OW/rX8O/jXnm82Ey1k44pObPtdblfiuWnrd8X7GJ7emImCOstunGbXUpp7HdBrFQX6rJzn3sPT397Wp5aCwCHg==}
     engines: {node: ^10 || ^12 || >=14}
 
-  prettier@3.8.1:
-    resolution: {integrity: sha512-UOnG6LftzbdaHZcKoPFtOcCKztrQ57WkHDeRD9t/PTQtmT0NHSeWWepj6pS0z/N7+08BHFDQVUrfmfMRcZwbMg==}
-    engines: {node: '>=14'}
-    hasBin: true
-
   proc-log@6.1.0:
     resolution: {integrity: sha512-iG+GYldRf2BQ0UDUAd6JQ/RwzaQy6mXmsk/IzlYyal4A4SNFw54MeH4/tLkF4I5WoWG9SQwuqWzS99jaFQHBuQ==}
     engines: {node: ^20.17.0 || >=22.9.0}
@@ -3024,8 +3009,6 @@ snapshots:
       '@babel/helper-validator-identifier': 7.28.5
 
   '@bazel/bazelisk@1.26.0': {}
-
-  '@bazel/buildifier@8.2.1': {}
 
   '@emnapi/core@1.8.1':
     dependencies:
@@ -4809,8 +4792,6 @@ snapshots:
       nanoid: 3.3.11
       picocolors: 1.1.1
       source-map-js: 1.2.1
-
-  prettier@3.8.1: {}
 
   proc-log@6.1.0: {}
 

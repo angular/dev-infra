@@ -1,0 +1,27 @@
+load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_library")
+load("@rules_browsers//protractor_test:index.bzl", "protractor_test")
+
+js_binary(
+    name = "server_bin",
+    entry_point = "server.mjs",
+)
+
+js_library(
+    name = "tests",
+    srcs = ["test.spec.cjs"],
+)
+
+protractor_test(
+    name = "test",
+    server = ":server_bin",
+    deps = [
+        ":tests",
+        # Need to add these manually because the `Label` references in the `protractor_test`
+        # implementation mean it uses `rules_browsers` local node modules. These end up in a
+        # directory in `external/` under the execroot (because they're in a module). Since module
+        # resolution in Node looks for a `node_modules` directory in the ancestors, any
+        # `node_modules` in a subdirectory of the execroot won't be found.
+        "//:node_modules/protractor",
+        "//:node_modules/tinyglobby",
+    ],
+)

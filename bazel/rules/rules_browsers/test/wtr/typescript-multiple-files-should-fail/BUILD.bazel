@@ -1,0 +1,18 @@
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@rules_browsers//wtr:index.bzl", "wtr_test")
+
+ts_project(
+    name = "test_lib",
+    srcs = glob(["**/*.mts"]),
+    tsc = "@npm_rules_browsers_typescript//:tsc",
+    tsc_worker = "@npm_rules_browsers_typescript//:tsc_worker",
+    tsconfig = "tsconfig.json",
+    validator = "@npm_rules_browsers_typescript//:validator",
+    deps = ["//:node_modules/@types/jasmine"],
+)
+
+wtr_test(
+    name = "test",
+    expected_exit_code = 1,
+    deps = [":test_lib"],
+)

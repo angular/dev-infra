@@ -1,0 +1,48 @@
+{
+  "name": "rules_browsers",
+  "version": "0.4.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "ng-dev": "bash ../../../tools/local-dev.sh"
+  },
+  "packageManager": "pnpm@10.31.0",
+  "engines": {
+    "npm": "Please use pnpm instead of NPM to install dependencies",
+    "yarn": "Please use pnpm instead of Yarn to install dependencies",
+    "pnpm": "10.31.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@puppeteer/browsers": "2.13.0",
+    "@rollup/plugin-virtual": "^3.0.2",
+    "@types/jasmine": "^6.0.0",
+    "@types/node": "^22.14.0",
+    "@web/dev-server-rollup": "^0.6.4",
+    "@web/test-runner": "^0.20.2",
+    "@web/test-runner-core": "^0.13.4",
+    "@web/test-runner-puppeteer": "^0.18.0",
+    "get-port": "^7.1.0",
+    "jasmine": "^6.0.0",
+    "protractor": "^7.0.0",
+    "tinyglobby": "^0.2.12",
+    "typescript": "5.8.2",
+    "web-test-runner-jasmine": "0.2.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [],
+    "overrides": {
+      "puppeteer": "24.38.0",
+      "puppeteer-core": "24.38.0"
+    },
+    "packageExtensions": {
+      "grpc-gcp": {
+        "peerDependencies": {
+          "protobufjs": "*"
+        }
+      }
+    }
+  }
+}
