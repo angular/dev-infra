@@ -1,4 +1,4 @@
-name: Compiler Binaries
+name: rules_sass Compiler Binaries Update
 
 on:
   schedule:
@@ -52,14 +52,14 @@ jobs:
         uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8.1.0
         with:
           token: ${{ secrets.ANGULAR_ROBOT_ACCESS_TOKEN }}
-          push-to-fork: 'angular-robot/rules_sass'
+          push-to-fork: 'angular-robot/dev-infra'
           delete-branch: true
           maintainer-can-modify: true
           branch: compiler-binary-updates
           committer: Angular Robot <angular-robot@google.com>
           author: Angular Robot <angular-robot@google.com>
           title: 'Update compiler binaries to latest version'
-          commit-message: 'build: update compiler binaries to latest version'
+          commit-message: 'build: update rules_sass compiler binaries to latest version'
           body: |
             Updated Sass compiler binaries.
           labels: |

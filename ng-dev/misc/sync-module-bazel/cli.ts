@@ -19,6 +19,9 @@ async function builder(argv: Argv) {
 }
 
 async function handler() {
+  // TODO: Implement a marker-based root discovery (e.g., .ng-secondary-base).
+  // This should traverse upward to find the secondary base before falling back to `git rev-parse --show-toplevel`.
+  // Necessary to support non-standard repository structures where workflows are triggered outside the traditional rootDir.
   const rootDir = process.cwd();
   const packageJsonPath = join(rootDir, 'package.json');
   const moduleBazelPath = join(rootDir, 'MODULE.bazel');
