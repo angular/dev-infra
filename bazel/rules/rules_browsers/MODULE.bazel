@@ -101,7 +101,7 @@ rules_ts_ext.deps(
     # `tsc_worker` and `validator` on all `ts_project` targets.
     # Upstream issue: https://github.com/aspect-build/rules_ts/issues/843
     name = "npm_rules_browsers_typescript",
-    ts_integrity = "sha512-aJn6wq13/afZp/jT9QZmwEjDqqvSGp1VT5GVg+f/t6/oVyrgXM6BY1h9BRh/O5p3PlUPAe+WuiEZOmb/49RqoQ==",
-    ts_version = "5.8.2",
+    ts_integrity = "sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==",
+    ts_version = "5.8.3",
 )
 use_repo(rules_ts_ext, "npm_rules_browsers_typescript")
