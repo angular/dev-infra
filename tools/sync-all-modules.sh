@@ -1,35 +1,37 @@
 #!/bin/bash
+set -e
 
 echo "Starting synchronization of all Bazel modules..."
 
-# Find all MODULE.bazel files, excluding node_modules, dist, and bazel-out
-find . -name "MODULE.bazel" -not -path "*/node_modules/*" -not -path "*/dist/*" -not -path "*/bazel-out/*" -print0 | while IFS= read -r -d '' module_file; do
-  dir=$(dirname "$module_file")
-  
-  echo "****************************************************************"
-  echo "Processing: $dir"
-  echo "****************************************************************"
+# Update the root lockfile. This is needed for the sync-module-bazel command to work.
+bazel mod deps --lockfile_mode=update
 
-  # Execute commands in a subshell
+# Find and store all MODULE.bazel directories
+module_dirs=()
+while IFS= read -r -d '' module_file; do
+  module_dirs+=("$(dirname "$module_file")")
+done < <(find . -name "MODULE.bazel" -not -path "*/node_modules/*" -not -path "*/dist/*" -not -path "*/bazel-out/*" -print0)
+
+# Synchronize MODULE.bazel content with package.json and .nvmrc.
+echo "Synchronizing MODULE.bazel content..."
+for dir in "${module_dirs[@]}"; do
+  echo "Processing (Sync): $dir"
   (
     cd "$dir"
-    
-    # Update Bazel module dependencies and lockfile
-    echo "Updating Bazel dependencies..."
-    bazel mod deps --lockfile_mode=update
-    
-    # If a package.json exists AND it contains an ng-dev script, sync module bazel
     if [[ -f "package.json" ]] && grep -q '"ng-dev":' package.json; then
-      echo "package.json and ng-dev script detected. Running pnpm ng-dev misc sync-module-bazel..."
-      # Use a subshell to capture errors and prevent script termination if one fails
-      ( pnpm ng-dev misc sync-module-bazel ) || echo "Warning: Sync failed for $dir"
-    elif [[ -f "package.json" ]]; then
-      echo "package.json found but no ng-dev script detected. Skipping sync-module-bazel."
+      pnpm ng-dev misc sync-module-bazel
     fi
-
   )
-  
-  echo -e "Finished processing: $dir\n"
+done
+
+# Update Bazel lockfiles for each module due to circular dependencies.
+echo "Updating Bazel lockfiles..."
+for dir in "${module_dirs[@]}"; do
+  echo "Processing (Lockfile): $dir"
+  (
+    cd "$dir"
+    bazel mod deps --lockfile_mode=update
+  )
 done
 
 echo "All modules synchronized successfully."
