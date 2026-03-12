@@ -36,7 +36,12 @@ jobs:
           cache-dependency-path: './.github/ng-renovate/pnpm-lock.yaml'
       - run: pnpm install --frozen-lockfile
         working-directory: ./.github/ng-renovate
-      - uses: astral-sh/setup-uv@5a095e7a2014a4212f075830d4f7277575a9d098 # v7.3.1
+      - name: Setup UV
+        if: matrix.REPOSITORY == 'angular/web-codegen-scorer' # UV is only needed for web-codegen-scorer as it uses python.
+        uses: astral-sh/setup-uv@5a095e7a2014a4212f075830d4f7277575a9d098 # v7.3.1
+      - name: Setup Dart
+        if: matrix.REPOSITORY == 'angular/dev-infra' # Dart is only needed for rules_sass which is in dev-infra.
+        uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c # v1
       - run: pnpm exec renovate
         working-directory: ./.github/ng-renovate
         env:
