@@ -11,7 +11,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-15-intel, macos-latest]
         include:
           - os: ubuntu-latest
             bin_name: sass_linux_x64
@@ -22,12 +21,15 @@ jobs:
           - os: ubuntu-24.04-arm
             bin_name: sass_linux_arm
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: bazel/rules/rules_sass
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c # v1
       - run: dart pub get
-      - run: mkdir -p bazel/rules/rules_sass/src/compiler/built/
-      - run: dart compile exe ./bazel/rules/rules_sass/src/compiler/built/x_sass.dart -o bazel/rules/rules_sass/src/compiler/built/${{ matrix.bin_name }}
+      - run: mkdir -p src/compiler/built/
+      - run: dart compile exe src/compiler/bin/x_sass.dart -o src/compiler/built/${{ matrix.bin_name }}
       - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: ${{ matrix.bin_name }}
@@ -37,17 +39,20 @@ jobs:
   create_pr:
     needs: build
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: bazel/rules/rules_sass
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
         with:
           persist-credentials: false
-      - run: mkdir -p bazel/rules/rules_sass/src/compiler/built/
+      - run: mkdir -p src/compiler/built/
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           path: bazel/rules/rules_sass/src/compiler/built/
           merge-multiple: true
       - name: chmod binaries
-        run: chmod +x bazel/rules/rules_sass/src/compiler/built/*
+        run: chmod +x src/compiler/built/*
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8.1.0
         with:
