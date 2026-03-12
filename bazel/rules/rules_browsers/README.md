@@ -1,5 +1,9 @@
 # rules_browsers
 
+> [!IMPORTANT]
+> The source code for this library is maintained in the [angular/dev-infra](https://github.com/angular/dev-infra/tree/main/bazel/rules/rules_browsers) repository.
+> Please open any issues or pull requests in that repository.
+
 Use browsers in Bazel and run tests with them.
 
 ## Usage
@@ -7,7 +11,13 @@ Use browsers in Bazel and run tests with them.
 Add the dependency for `rules_browsers` to your `MODULE.bazel` file.
 
 ```starlark
-bazel_dep(name = "rules_browsers", version = "0.4.0")
+bazel_dep(name = "rules_browsers")
+
+git_override(
+    module_name = "rules_browsers",
+    remote = "https://github.com/angular/rules_browsers.git",
+    commit = "{SHA}",
+)
 ```
 
 This allows you to use provided testing macros. You can also use the

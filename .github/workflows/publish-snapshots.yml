@@ -28,7 +28,7 @@ jobs:
         with:
           bazelrc: .bazelrc
       - run: pnpm install --frozen-lockfile
-      - run: pnpm bazel build //ng-dev:npm_package --config=release
+      - run: bash ./tools/build-all.sh
       - name: Publish Snapshots
         env:
           GITHUB_TOKEN: ${{ secrets.SNAPSHOT_BUILDS_GITHUB_TOKEN }}

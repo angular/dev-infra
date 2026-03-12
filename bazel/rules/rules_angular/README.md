@@ -1,0 +1,19 @@
+# rules_angular
+
+> [!IMPORTANT]
+> The source code for this library is maintained in the [angular/dev-infra](https://github.com/angular/dev-infra/tree/main/bazel/rules/rules_angular) repository.
+> Please open any issues or pull requests in that repository.
+
+## Usage
+
+Add the dependency for `rules_angular` to your `MODULE.bazel` file.
+
+```starlark
+bazel_dep(name = "rules_angular")
+
+git_override(
+    module_name = "rules_angular",
+    remote = "https://github.com/angular/rules_angular.git",
+    commit = "{SHA}",
+)
+```
