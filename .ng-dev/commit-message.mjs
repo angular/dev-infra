@@ -14,18 +14,17 @@ export const commitMessage = {
   scopes: [
     ...buildScopesFor('bazel', [
       'api-golden',
-      'app-bundling',
-      'browsers',
       'constraints',
-      'esbuild',
       'http-server',
       'integration',
-      'karma',
-      'map-size-tracking',
-      'markdown-to-html',
+      'jasmine',
       'protos',
       'remote-execution',
       'spec-bundling',
+      'git-toolchain',
+      'rules_angular',
+      'rules_browser',
+      'rules_sass',
     ]),
     ...buildScopesFor('github-actions', [
       'pull-request-labeling',
@@ -45,7 +44,6 @@ export const commitMessage = {
     ]),
     ...buildScopesFor('apps', []),
     ...buildScopesFor('lint-rules', ['tslint', 'stylelint']),
-    ...buildScopesFor('shared-scripts', []),
-    ...buildScopesFor('shared-docs', []),
+    ...buildScopesFor('renovate-presets', []),
   ],
 };
