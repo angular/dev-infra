@@ -65,10 +65,11 @@ async function handler() {
   if (originalBazelContent !== moduleBazelContent) {
     writeFileSync(moduleBazelPath, moduleBazelContent);
 
-    await formatFiles(['MODULE.bazel']);
+    await formatFiles([moduleBazelPath]);
 
     ChildProcess.spawnSync('pnpm', ['bazel', 'mod', 'deps', '--lockfile_mode=update'], {
       suppressErrorOnFailingExitCode: true,
+      cwd: rootDir,
     });
   }
 }
