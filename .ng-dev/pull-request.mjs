@@ -9,7 +9,13 @@ export const pullRequest = {
     default: 'auto',
     labels: [{pattern: 'merge: squash commits', method: 'squash'}],
   },
-  requiredStatuses: [{name: 'test', type: 'check'}],
+  requiredStatuses: [
+    {type: 'check', name: 'dev-infra'},
+    {type: 'check', name: 'rules_angular'},
+    {type: 'check', name: 'rules_browsers'},
+    {type: 'check', name: 'rules_browser/test'},
+    {type: 'check', name: 'rules_sass'},
+  ],
 
   // Disable target labeling in the dev-infra repo as we don't have
   // any release trains and version branches.
