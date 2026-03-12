@@ -28,6 +28,7 @@ interface SnapshotRepo {
   dir: string;
   url: string;
   name: string;
+  containsChanges: boolean;
 }
 
 export class SnapshotPublisher {
@@ -155,6 +156,11 @@ export class SnapshotPublisher {
         );
         cpSync(pkg.outputPath, tmpRepoDir, {recursive: true});
         this.git.run(['add', '-A'], {cwd: tmpRepoDir});
+        const containsChanges =
+          this.git.runGraceful(
+            ['diff-index', '--quiet', '-I', '0\\.0\\.0-[a-f0-9]+', 'HEAD', '--'],
+            {cwd: tmpRepoDir},
+          ).status === 1;
         this.git.run(['commit', '--author', this.commitAuthor, '-m', this.snapshotCommitMessage], {
           cwd: tmpRepoDir,
         });
@@ -163,6 +169,7 @@ export class SnapshotPublisher {
           url,
           dir: tmpRepoDir,
           name: pkg.name,
+          containsChanges,
         };
       }),
     );
@@ -173,19 +180,12 @@ export class SnapshotPublisher {
    */
   async publishSnapshots(snapshots: SnapshotRepo[]): Promise<void> {
     Log.info(bold(`Publishing snapshots to GitHub...`));
-    for (const {name, dir, url} of snapshots) {
-      if (this.flags.skipNonAffectedSnapshots) {
-        const requiresPublish =
-          this.git.runGraceful(
-            ['diff-index', '--quiet', '-I', '0\\.0\\.0-[a-f0-9]+', 'HEAD', '--'],
-            {cwd: dir},
-          ).status !== 0;
-        if (!requiresPublish) {
-          Log.info(
-            `  ${yellow('⚠')} Skipping snapshot publish for ${name} as no changes occurred between this and the previous commit.`,
-          );
-          continue;
-        }
+    for (const {name, dir, url, containsChanges} of snapshots) {
+      if (this.flags.skipNonAffectedSnapshots && !containsChanges) {
+        Log.info(
+          `  ${yellow('⚠')} Skipping snapshot publish for ${name} as no changes occurred between this and the previous commit.`,
+        );
+        continue;
       }
 
       if (this.flags.dryRun) {
