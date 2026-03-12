@@ -161,9 +161,16 @@ export class SnapshotPublisher {
             ['diff-index', '--quiet', '-I', '0\\.0\\.0-[a-f0-9]+', 'HEAD', '--'],
             {cwd: tmpRepoDir},
           ).status === 1;
-        this.git.run(['commit', '--author', this.commitAuthor, '-m', this.snapshotCommitMessage], {
-          cwd: tmpRepoDir,
-        });
+        this.git.run(
+          [
+            'commit',
+            '--author',
+            this.commitAuthor,
+            '-m',
+            `"${this.snapshotCommitMessage.replace(/"/g, '\\"')}"`,
+          ],
+          {cwd: tmpRepoDir},
+        );
 
         return {
           url,
