@@ -210,7 +210,7 @@
     "//setup:extensions.bzl%rules_angular": {
       "general": {
         "bzlTransitiveDigest": "fkaH7HMicL3g7/NDaFzlq39kcLopMyQ3KdbDn+5CRzA=",
-        "usagesDigest": "jkYG7pVwv9AUzkvnnZz9u6hli0yfOwImvAzrkQK2DTY=",
+        "usagesDigest": "HEQ4Gmf3EPxCgnf3Tqa2HODnSVNDmEWlFWcP/XnMRbU=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -219,7 +219,7 @@
             "repoRuleId": "@@//setup:repositories.bzl%configurable_deps_repo",
             "attributes": {
               "angular_compiler_cli": "@@//:node_modules/@angular/compiler-cli",
-              "typescript": "@@//:node_modules/typescript-local"
+              "typescript": "@@//:node_modules/typescript"
             }
           },
           "dev_infra_rules_angular_configurable_deps": {

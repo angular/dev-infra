@@ -5,9 +5,15 @@ load("//src/private:symlink_package.bzl", "symlink_package")
 
 package(default_visibility = ["//visibility:public"])
 
+# User configured dependencies
 symlink_package(
     name = "node_modules/@angular/compiler-cli",
     src = "@rules_angular_configurable_deps//:angular_compiler_cli",
+)
+
+symlink_package(
+    name = "node_modules/typescript",
+    src = "@rules_angular_configurable_deps//:typescript",
 )
 
 # ---
@@ -40,13 +46,13 @@ ts_project(
     declaration = True,
     tsconfig = "tsconfig",
     deps = [
-        "//:node_modules/typescript",
         "//:node_modules/json-stable-stringify",
         "//:node_modules/lru-cache",
         "//:node_modules/memfs",
         # NOTE: The Angular compiler in this target is not affecting any compilation
         # output, but it's still necessary for some foundational utils like virtual FS.
         "//:node_modules/@angular/compiler-cli",  # compiler from npm.
+        "//:node_modules/typescript",  # typescript from npm.
     ],
 )
 
@@ -62,10 +68,10 @@ ts_project(
     tsconfig = "tsconfig",
     deps = [
         ":node_modules/@angular/compiler-cli",  # user-configured compiler
+        ":node_modules/typescript",  # user-configured typescript
         "//:node_modules/json-stable-stringify",
         "//:node_modules/lru-cache",
         "//:node_modules/memfs",
-        "//:node_modules/typescript",
     ],
 )
 

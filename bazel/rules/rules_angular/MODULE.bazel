@@ -75,6 +75,6 @@ use_repo(npm, "rules_angular_npm")
 rules_angular = use_extension("//setup:extensions.bzl", "rules_angular")
 rules_angular.setup(
     angular_compiler_cli = "//:node_modules/@angular/compiler-cli",
-    typescript = "//:node_modules/typescript-local",
+    typescript = "//:node_modules/typescript",
 )
 use_repo(rules_angular, "rules_angular_configurable_deps")
