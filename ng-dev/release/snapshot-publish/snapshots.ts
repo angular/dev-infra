@@ -161,9 +161,11 @@ export class SnapshotPublisher {
             ['diff-index', '--quiet', '-I', '0\\.0\\.0-[a-f0-9]+', 'HEAD', '--'],
             {cwd: tmpRepoDir},
           ).status === 1;
+
         this.git.run(
           [
             'commit',
+            '--allow-empty',
             '--author',
             this.commitAuthor,
             '-m',
