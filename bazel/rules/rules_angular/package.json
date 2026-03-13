@@ -18,11 +18,11 @@
       }
     }
   },
-  "packageManager": "pnpm@10.31.0",
+  "packageManager": "pnpm@10.32.1",
   "engines": {
     "npm": "Please use pnpm instead of NPM to install dependencies",
     "yarn": "Please use pnpm instead of Yarn to install dependencies",
-    "pnpm": "10.31.0"
+    "pnpm": "10.32.1"
   },
   "dependencies": {
     "@angular/compiler-cli": "22.0.0-next.1",
