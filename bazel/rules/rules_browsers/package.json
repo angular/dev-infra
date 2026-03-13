@@ -28,7 +28,7 @@
     "jasmine": "^6.0.0",
     "protractor": "^7.0.0",
     "tinyglobby": "^0.2.12",
-    "typescript": "5.8.2",
+    "typescript": "5.9.3",
     "web-test-runner-jasmine": "0.2.0"
   },
   "pnpm": {
