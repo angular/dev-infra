@@ -34,10 +34,7 @@ async function handler() {
   // Read package.json
   const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8')) as PackageJson;
   const pnpmVersion = packageJson.engines?.pnpm;
-  const tsVersion =
-    packageJson.dependencies?.typescript ||
-    packageJson.devDependencies?.typescript ||
-    packageJson.dependencies?.['typescript-local']?.replace('npm:typescript@', '');
+  const tsVersion = packageJson.dependencies?.typescript || packageJson.devDependencies?.typescript;
 
   // Read .nvmrc
   let nvmrcVersion: string | undefined;
