@@ -63,15 +63,15 @@ async function handler() {
     moduleBazelContent = await syncNodeJs(moduleBazelContent, nvmrcVersion);
   }
 
-  // if (originalBazelContent !== moduleBazelContent) {
-  // writeFileSync(moduleBazelPath, moduleBazelContent);
+  if (originalBazelContent !== moduleBazelContent) {
+    writeFileSync(moduleBazelPath, moduleBazelContent);
 
-  //await formatFiles([moduleBazelPath]);
+    await formatFiles([moduleBazelPath]);
 
-  ChildProcess.spawnSync(getBazelBin(), ['mod', 'deps', '--lockfile_mode=update'], {
-    suppressErrorOnFailingExitCode: true,
-  });
-  // }
+    ChildProcess.spawnSync(getBazelBin(), ['mod', 'deps', '--lockfile_mode=update'], {
+      suppressErrorOnFailingExitCode: true,
+    });
+  }
 }
 
 /** CLI command module. */
