@@ -53,7 +53,19 @@ jobs:
           merge-multiple: true
       - name: chmod binaries
         run: chmod +x src/compiler/built/*
+      - name: Check for meaningful changes
+        id: check
+        run: |
+          CHANGES=$(git diff --name-only | grep -v "^bazel/rules/rules_sass/src/compiler/built/sass_mac" || true)
+          if [ -z "$CHANGES" ]; then
+            echo "Only macOS binaries changed (non-deterministic). Skipping PR."
+            echo "skip_pr=true" >> $GITHUB_OUTPUT
+          else
+            echo "Meaningful changes detected."
+            echo "skip_pr=false" >> $GITHUB_OUTPUT
+          fi
       - name: Create Pull Request
+        if: steps.check.outputs.skip_pr != 'true'
         uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8.1.0
         with:
           token: ${{ secrets.ANGULAR_ROBOT_ACCESS_TOKEN }}
