@@ -13,6 +13,7 @@ import {determineRepoBaseDirFromCwd} from '../../utils/repo-directory';
 import {PackageJson, syncNodeJs, syncPnpm, syncTypeScript} from './sync-module-bazel';
 import {ChildProcess} from '../../utils/child-process';
 import {formatFiles} from '../../format/format';
+import {getBazelBin} from '../../utils/bazel-bin';
 
 async function builder(argv: Argv) {
   return argv;
@@ -67,7 +68,7 @@ async function handler() {
 
     await formatFiles([moduleBazelPath]);
 
-    ChildProcess.spawnSync('pnpm', ['bazel', 'mod', 'deps', '--lockfile_mode=update'], {
+    ChildProcess.spawnSync(getBazelBin(), ['mod', 'deps', '--lockfile_mode=update'], {
       suppressErrorOnFailingExitCode: true,
     });
   }

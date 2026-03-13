@@ -16,12 +16,15 @@ done < <(find . -name "MODULE.bazel" -not -path "*/node_modules/*" -not -path "*
 echo "Synchronizing MODULE.bazel content..."
 for dir in "${module_dirs[@]}"; do
   echo "Processing (Sync): $dir"
-  (
-    cd "$dir"
-    if [[ -f "package.json" ]] && grep -q '"ng-dev":' package.json; then
+  if [[ -f "$dir/package.json" ]] && grep -q '"ng-dev":' "$dir/package.json"; then
+    (
+      cd "$dir"
       pnpm ng-dev misc sync-module-bazel
-    fi
-  )
+    )
+
+    # Update the root lockfile. This is needed for the sync-module-bazel command to work due to circular dependencies.
+    bazel mod deps --lockfile_mode=update
+  fi
 done
 
 # Update Bazel lockfiles for each module due to circular dependencies.
