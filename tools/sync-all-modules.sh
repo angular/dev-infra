@@ -1,10 +1,13 @@
 #!/bin/bash
 set -e
 
+# Set the BAZEL environment variable to ensure the correct version is used.
+export BAZEL="$(git rev-parse --show-toplevel)/node_modules/.bin/bazel"
+
 echo "Starting synchronization of all Bazel modules..."
 
 # Update the root lockfile. This is needed for the sync-module-bazel command to work.
-bazel mod deps --lockfile_mode=update
+"$BAZEL" mod deps --lockfile_mode=update
 
 # Find and store all MODULE.bazel directories
 module_dirs=()
@@ -19,11 +22,11 @@ for dir in "${module_dirs[@]}"; do
   if [[ -f "$dir/package.json" ]] && grep -q '"ng-dev":' "$dir/package.json"; then
     (
       cd "$dir"
-      pnpm ng-dev misc sync-module-bazel
+      pnpm -s ng-dev misc sync-module-bazel
     )
 
     # Update the root lockfile. This is needed for the sync-module-bazel command to work due to circular dependencies.
-    bazel mod deps --lockfile_mode=update
+    "$BAZEL" mod deps --lockfile_mode=update
   fi
 done
 
@@ -33,7 +36,7 @@ for dir in "${module_dirs[@]}"; do
   echo "Processing (Lockfile): $dir"
   (
     cd "$dir"
-    bazel mod deps --lockfile_mode=update
+    "$BAZEL" mod deps --lockfile_mode=update
   )
 done
 
