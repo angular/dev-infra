@@ -34,8 +34,8 @@
   "pnpm": {
     "onlyBuiltDependencies": [],
     "overrides": {
-      "puppeteer": "24.39.0",
-      "puppeteer-core": "24.39.0"
+      "puppeteer": "24.39.1",
+      "puppeteer-core": "24.39.1"
     },
     "packageExtensions": {
       "grpc-gcp": {
