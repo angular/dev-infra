@@ -62,7 +62,7 @@ jobs:
         uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8.1.0
         with:
           token: ${{ secrets.ANGULAR_ROBOT_ACCESS_TOKEN }}
-          push-to-fork: 'alan-agius4/dev-infra'
+          push-to-fork: 'angular-robot/dev-infra'
           delete-branch: true
           maintainer-can-modify: true
           branch: compiler-binary-updates
