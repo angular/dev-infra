@@ -158,7 +158,17 @@ export class SnapshotPublisher {
         this.git.run(['add', '-A'], {cwd: tmpRepoDir});
         const containsChanges =
           this.git.runGraceful(
-            ['diff-index', '--quiet', '-I', '0\\.0\\.0-[a-f0-9]+', 'HEAD', '--'],
+            [
+              'diff-index',
+              '--quiet',
+              '-I',
+              '0\\.0\\.0-[a-f0-9]+',
+              'HEAD',
+              '--',
+              '.',
+              ':(exclude)**/MODULE.bazel.lock',
+              ':(exclude)**/package-lock.json',
+            ],
             {cwd: tmpRepoDir},
           ).status === 1;
 
