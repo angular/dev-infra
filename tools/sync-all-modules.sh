@@ -6,9 +6,6 @@ export BAZEL="$(git rev-parse --show-toplevel)/node_modules/.bin/bazel"
 
 echo "Starting synchronization of all Bazel modules..."
 
-# Update the root lockfile. This is needed for the sync-module-bazel command to work.
-"$BAZEL" mod deps --lockfile_mode=update
-
 # Find and store all MODULE.bazel directories
 module_dirs=()
 while IFS= read -r -d '' module_file; do
