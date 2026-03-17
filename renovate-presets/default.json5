@@ -30,7 +30,7 @@
   },
 
   // Manually define pull request body template to only include desired sections
-  prBodyTemplate: '{{{header}}}{{{table}}}{{{warnings}}}{{{notes}}}{{{changelogs}}}{{{controls}}}',
+  prBodyTemplate: '{{{header}}}{{{table}}}{{{warnings}}}{{{notes}}}{{{controls}}}{{{changelogs}}}',
 
   // Ignored dependencies in all repositories
   ignoreDeps: [
