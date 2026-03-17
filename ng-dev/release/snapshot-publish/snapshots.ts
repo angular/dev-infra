@@ -31,6 +31,11 @@ interface SnapshotRepo {
   containsChanges: boolean;
 }
 
+/**
+ * Paths to exclude from the snapshot commit.
+ */
+const PATHS_TO_EXCLUDE = ['**/MODULE.bazel.lock', '**/package-lock.json', '**/pubspec.lock'];
+
 export class SnapshotPublisher {
   /** The current branch name. */
   readonly branchName = this.git.getCurrentBranchOrRevision();
@@ -152,7 +157,7 @@ export class SnapshotPublisher {
             .stdout.trim()
             .split('\n')
             .filter((filePath) => filePath !== '')
-            .map((filePath: string) => rm(join(tmpRepoDir, filePath), {force: true})),
+            .map((filePath) => rm(join(tmpRepoDir, filePath), {force: true})),
         );
         cpSync(pkg.outputPath, tmpRepoDir, {recursive: true});
         this.git.run(['add', '-A'], {cwd: tmpRepoDir});
@@ -166,8 +171,7 @@ export class SnapshotPublisher {
               'HEAD',
               '--',
               '.',
-              ':(exclude)**/MODULE.bazel.lock',
-              ':(exclude)**/package-lock.json',
+              ...PATHS_TO_EXCLUDE.map((p) => `:(exclude)${p}`),
             ],
             {cwd: tmpRepoDir},
           ).status === 1;
