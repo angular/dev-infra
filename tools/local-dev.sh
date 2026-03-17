@@ -7,7 +7,7 @@ set -e
 
 devInfraProjectDir="$(dirname ${0})/.."
 ngDevBinFile="${devInfraProjectDir}/dist/bin/ng-dev/npm_package/bundles/cli.mjs"
-bazelCommand=${BAZEL:-"pnpm bazel"}
+bazelCommand=${BAZEL:-"pnpm -s bazel"}
 
 # Build the `ng-dev` binary into the `dev-infra/dist` directory.
 # We need to build in a subshell as Bazel requires the working
