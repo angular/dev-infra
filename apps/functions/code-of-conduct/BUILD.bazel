@@ -20,9 +20,11 @@ ts_project(
     name = "lib",
     srcs = [
         "blockUser.ts",
+        "getBlockedUsers.ts",
         "shared.ts",
         "syncUsers.ts",
         "unblockUser.ts",
+        "updateUser.ts",
     ],
     deps = [
         "//apps/functions:node_modules/@octokit/auth-app",

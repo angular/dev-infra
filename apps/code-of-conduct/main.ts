@@ -11,6 +11,7 @@ import {routes} from './app/app.routes.js';
 import {environment} from './environment.js';
 import {provideFunctions, getFunctions} from '@angular/fire/functions';
 import {provideFirestore, getFirestore} from '@angular/fire/firestore';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 if (environment.production) {
   enableProdMode();
@@ -19,7 +20,7 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
-    importProvidersFrom([BrowserAnimationsModule]),
+    importProvidersFrom([BrowserAnimationsModule, MatSnackBarModule]),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFunctions(() => getFunctions()),

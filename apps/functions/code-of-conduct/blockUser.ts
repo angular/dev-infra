@@ -15,13 +15,13 @@ export const blockUser = functions.https.onCall<BlockUserParams>(
   },
   async (request) => {
     const {comments, blockUntil, context, username} = request.data;
-    // Ensure that the request was authenticated.
-    checkAuthenticationAndAccess(request);
+    // Ensure that the request was authenticated and authorized.
+    const authRequest = await checkAuthenticationAndAccess(request);
 
     /** The Github client for performing Github actions. */
     const github = await getAuthenticatedGithubClient();
     /** The user performing the block action */
-    const actor = await admin.auth().getUser(request.auth.uid);
+    const actor = await admin.auth().getUser(authRequest.auth.uid);
     /** The display name of the user. */
     const actorName = actor.displayName || actor.email || 'Unknown User';
     /** The Firestore Document for the user being blocked. */
@@ -47,7 +47,7 @@ export const blockUser = functions.https.onCall<BlockUserParams>(
       username: username,
       blockedBy: actorName,
       blockedOn: new Date(),
-      blockUntil: new Date(blockUntil),
+      blockUntil: blockUntil === false ? false : new Date(blockUntil),
     });
   },
 );

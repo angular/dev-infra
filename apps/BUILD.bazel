@@ -19,6 +19,23 @@ copy_to_bin(
     ],
 )
 
+copy_to_bin(
+    name = "firebase_assets",
+    srcs = [
+
+        # Firebase function files
+        "//apps/functions:functions_files",
+
+        # Firebase hosted application files
+        "//apps/code-of-conduct:application_files",
+        ".firebaserc",
+        "deploy_wrapper_local.sh",
+        "firebase.json",
+        "firestore.indexes.json",
+        "firestore.rules",
+    ],
+)
+
 firebase.firebase_binary(
     name = "serve",
     chdir = package_name(),

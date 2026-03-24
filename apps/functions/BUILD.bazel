@@ -5,11 +5,29 @@ package(default_visibility = ["//visibility:private"])
 
 npm_link_all_packages()
 
+# TODO: Figure out a different way to deal with the file linking issues.
+genrule(
+    name = "fixed_bundle",
+    srcs = [":raw_bundle"],
+    outs = ["bundle.js"],
+    cmd = """
+    for f in $(locations :raw_bundle); do
+      if [[ $$f == *.js ]]; then
+        cp $$f $@
+        break
+      fi
+    done
+    chmod +w $@
+    sed -i 's/(0, import_node_module\\.createRequire)(import_meta\\.url)/(0, import_node_module.createRequire)(__filename)/g' $@
+    sed -i -E 's/import_([a-zA-Z0-9_]+)\\.default/(import_\\1.default || import_\\1)/g' $@
+    """,
+)
+
 copy_to_bin(
     name = "functions_files",
     srcs = [
         "package.json",
-        ":bundle",
+        ":fixed_bundle",
         "//apps/functions:node_modules/firebase-tools",
     ],
     visibility = ["//apps:__pkg__"],
@@ -28,7 +46,7 @@ ts_project(
 )
 
 esbuild(
-    name = "bundle",
+    name = "raw_bundle",
     srcs = [
         ":functions",
         "//apps/functions:node_modules/firebase-functions",
