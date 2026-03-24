@@ -34,7 +34,16 @@ interface SnapshotRepo {
 /**
  * Paths to exclude from the snapshot commit.
  */
-const PATHS_TO_EXCLUDE = ['**/MODULE.bazel.lock', '**/package-lock.json', '**/pubspec.lock'];
+const PATHS_TO_EXCLUDE = [
+  'MODULE.bazel.lock',
+  '**/MODULE.bazel.lock',
+
+  'pnpm-lock.yaml',
+  '**/pnpm-lock.yaml',
+
+  'pubspec.lock',
+  '**/pubspec.lock',
+];
 
 export class SnapshotPublisher {
   /** The current branch name. */
