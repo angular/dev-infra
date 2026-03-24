@@ -17,7 +17,18 @@
         ],
         "executionMode": "branch"
       },
-      "matchManagers": ["bazel", "bazel-module", "bazelisk", "npm"]
+      "matchManagers": ["npm"]
+    },
+    {
+      "postUpgradeTasks": {
+        "commands": [
+          "pnpm install --frozen-lockfile",
+          "bash ./tools/sync-all-modules.sh",
+          "pnpm update-generated-files"
+        ],
+        "executionMode": "branch"
+      },
+      "matchUpdateTypes": ["lockFileMaintenance"]
     }
   ]
 }
