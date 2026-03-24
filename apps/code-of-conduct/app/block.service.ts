@@ -1,16 +1,8 @@
 import {Injectable, inject} from '@angular/core';
-import {
-  updateDoc,
-  collection,
-  QueryDocumentSnapshot,
-  FirestoreDataConverter,
-  collectionSnapshots,
-  Firestore,
-  doc,
-  getDoc,
-} from '@angular/fire/firestore';
+import {QueryDocumentSnapshot, FirestoreDataConverter} from '@angular/fire/firestore';
 import {httpsCallable, Functions} from '@angular/fire/functions';
-import {map, shareReplay} from 'rxjs';
+import {map, shareReplay, from, switchMap, BehaviorSubject} from 'rxjs';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 export interface BlockUserParams {
   /** The username of the user being blocked. */
@@ -46,55 +38,64 @@ export type BlockedUserFromFirestore = BlockedUser & {
 export class BlockService {
   /** Firebase functions instance, provided from the root. */
   private functions = inject(Functions);
-  /** Firebase firestore instance, provided from the root. */
-  private firestore = inject(Firestore);
+  /** Snackbar for displaying failure alerts. */
+  private snackBar = inject(MatSnackBar);
+  /** Subject to trigger refreshing the blocked users list. */
+  private refreshBlockedUsers$ = new BehaviorSubject<void>(undefined);
 
-  /** Request a user to be blocked by the blocking service. */
-  readonly block = httpsCallable(this.functions, 'blockUser');
-
-  /** Request a user to be unblocked by the blocking service. */
-  readonly unblock = httpsCallable<UnblockUserParams>(this.functions, 'unblockUser');
-
-  /** Request a sync of all blocked users with the current Github blockings. */
-  readonly syncUsersFromGithub = httpsCallable<void>(this.functions, 'syncUsersFromGithub');
+  /** Request all blocked users. */
+  getBlockedUsers = this.asCallable<void, BlockedUserFromFirestore[]>('getBlockedUsers', true);
 
   /** All blocked users current blocked by the blocking service. */
-  readonly blockedUsers = collectionSnapshots(
-    collection(this.firestore, 'blockedUsers').withConverter(converter),
-  ).pipe(
+  readonly blockedUsers = this.refreshBlockedUsers$.pipe(
+    switchMap(() => from(this.getBlockedUsers())),
     map((blockedUsers) =>
       blockedUsers
-        .map((snapshot) => snapshot.data())
+        .map((user) => ({
+          ...user,
+          blockUntil: user.blockUntil === false ? false : new Date(user.blockUntil),
+          blockedOn: new Date(user.blockedOn),
+        }))
         .sort((a, b) => (a.username.toLowerCase() > b.username.toLowerCase() ? 1 : -1)),
     ),
     shareReplay(1),
   );
 
+  /** Request a user to be blocked. */
+  block = this.asCallable<BlockUserParams, void>('blockUser');
+
+  /** Request a user to be unblocked. */
+  unblock = this.asCallable<UnblockUserParams, void>('unblockUser');
+
+  /** Request a sync of all blocked users with the current Github blockings. */
+  syncUsersFromGithub = this.asCallable<void, void>('syncUsersFromGithub');
+
   /** Update the metadata for a blocked user. */
-  async update(username: string, data: Partial<BlockedUser>) {
-    const userDoc = await getDoc(
-      doc(collection(this.firestore, 'blockedUsers').withConverter(converter), username),
-    );
-    if (userDoc.exists()) {
-      return await updateDoc(userDoc.ref, data);
-    }
-    throw Error(`The entry for ${username} does not exist`);
+  update = this.asCallable<{username: string; data: Partial<BlockedUser>}, void>('updateUser');
+
+  /**
+   * Helper function to create a callable function that automatically refreshes the blocked users list.
+   * @param callableName The name of the callable function to create.
+   * @returns A function that can be called to invoke the callable function.
+   */
+  private asCallable<T, R>(
+    callableName: string,
+    skipRefresh = false,
+  ): (callableArg: T) => Promise<R> {
+    return async (callableArg: T) => {
+      try {
+        const result = await httpsCallable<T, R>(this.functions, callableName)(callableArg);
+        if (!skipRefresh) {
+          this.refreshBlockedUsers$.next();
+        }
+        return result.data;
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        this.snackBar.open(`Failed to execute ${callableName}: ${message}`, 'Dismiss', {
+          duration: 5000,
+        });
+        throw error;
+      }
+    };
   }
 }
-
-export const converter: FirestoreDataConverter<BlockedUser> = {
-  toFirestore: (user: BlockedUser) => {
-    return user;
-  },
-  fromFirestore: (data: QueryDocumentSnapshot<BlockedUser>) => {
-    return {
-      username: data.get('username'),
-      context: data.get('context'),
-      comments: data.get('comments'),
-      blockedBy: data.get('blockedBy'),
-      blockUntil:
-        data.get('blockUntil') === false ? false : new Date(data.get('blockUntil').seconds * 1000),
-      blockedOn: new Date(data.get('blockedOn').seconds * 1000),
-    };
-  },
-};

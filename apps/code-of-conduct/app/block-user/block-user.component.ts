@@ -102,7 +102,7 @@ export class BlockUserComponent {
   updateUser() {
     this.dialogRef.disableClose = true;
     this.blockService
-      .update(this.providedData.user!.username, this.blockUserForm.value)
+      .update({username: this.providedData.user!.username, data: this.blockUserForm.value})
       .then(() => this.dialogRef.close(), console.error)
       .finally(() => {
         this.blockUserForm.enable();

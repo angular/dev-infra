@@ -6,7 +6,7 @@ import * as functions from 'firebase-functions';
 /** Parameters for blocking a user. */
 export interface BlockUserParams {
   username: string;
-  blockUntil: string;
+  blockUntil: string | false;
   context: string;
   comments: string;
 }
@@ -29,8 +29,9 @@ export const converter: admin.firestore.FirestoreDataConverter<BlockedUser> = {
       context: data.get('context'),
       comments: data.get('comments'),
       blockedBy: data.get('blockedBy'),
-      blockUntil: new Date(data.get('blockUntil')),
-      blockedOn: new Date(data.get('blockedOn')),
+      blockedOn: new Date(data.get('blockedOn').seconds * 1000),
+      blockUntil:
+        data.get('blockUntil') == false ? false : new Date(data.get('blockUntil').seconds * 1000),
     };
   },
 };
@@ -44,7 +45,7 @@ export interface BlockedUser extends admin.firestore.DocumentData {
   blockedBy: string;
   blockedOn: Date;
   username: string;
-  blockUntil: Date;
+  blockUntil: Date | false;
   context: string;
   comments: string;
 }
@@ -55,15 +56,49 @@ interface AuthenticatedCallableContext extends functions.https.CallableRequest {
 }
 
 /** Verify that the incoming request is authenticated and authorized for access. */
-export function checkAuthenticationAndAccess(
+export async function checkAuthenticationAndAccess(
   context: functions.https.CallableRequest,
-): asserts context is AuthenticatedCallableContext {
+): Promise<AuthenticatedCallableContext> {
   // Authentication is managed by firebase as this occurs within the Firebase functions context.
   // If the user is unauthenticted, the authorization object will be undefined.
   if (context.auth == undefined) {
     // Throwing an HttpsError so that the client gets the error details.
     throw new functions.https.HttpsError('unauthenticated', 'This action requires authentication');
   }
+
+  const user = await admin.auth().getUser(context.auth.uid);
+  const githubProvider = user.providerData.find((data) => data.providerId === 'github.com');
+
+  if (!githubProvider) {
+    throw new functions.https.HttpsError(
+      'permission-denied',
+      'You must link your Github account to use this application.',
+    );
+  }
+
+  const github = await getAuthenticatedGithubClient();
+
+  try {
+    // Resolve the github username from the connected UID
+    const {data: githubUser} = await github.request('GET /user/{user_id}', {
+      user_id: githubProvider.uid,
+    });
+
+    await github.orgs.checkMembershipForUser({
+      org: 'angular',
+      username: githubUser.login,
+    });
+  } catch (err: any) {
+    if (err.status === 404) {
+      throw new functions.https.HttpsError(
+        'permission-denied',
+        'You must be a member of the Angular Github organization.',
+      );
+    }
+    throw err;
+  }
+
+  return context as AuthenticatedCallableContext;
 }
 
 /** Retrieves a Github client instance authenticated as the Angular Robot Github App. */

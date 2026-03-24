@@ -17,6 +17,7 @@ ng_project(
         ":node_modules/@angular/compiler",
         ":node_modules/@angular/core",
         ":node_modules/@angular/fire",
+        ":node_modules/@angular/material",
         ":node_modules/@angular/platform-browser",
         ":node_modules/@angular/router",
         ":node_modules/zone.js",
