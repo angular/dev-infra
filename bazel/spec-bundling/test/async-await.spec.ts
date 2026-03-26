@@ -2,7 +2,7 @@ import 'zone.js';
 import 'zone.js/testing';
 
 import {JSDOM} from 'jsdom';
-import {Component, provideZoneChangeDetection} from '@angular/core';
+import {ChangeDetectionStrategy, Component, provideZoneChangeDetection} from '@angular/core';
 import {fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {BrowserTestingModule, platformBrowserTesting} from '@angular/platform-browser/testing';
 
@@ -46,6 +46,7 @@ describe('native async/await downleveled', () => {
     '(click)': 'click()',
   },
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AppComponent {
   triggered = false;
