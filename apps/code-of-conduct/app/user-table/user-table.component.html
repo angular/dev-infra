@@ -1,4 +1,4 @@
-<mat-table [dataSource]="blockService.blockedUsers | async">
+<mat-table [dataSource]="(blockService.blockedUsers | async) ?? []">
   <ng-container matColumnDef="username">
     <mat-header-cell *matHeaderCellDef> Username </mat-header-cell>
     <mat-cell class="username-cell" *matCellDef="let user">
