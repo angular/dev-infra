@@ -17,7 +17,7 @@
         ],
         "executionMode": "branch"
       },
-      "matchManagers": ["npm", "bazel", "bazel-module", "bazelisk"]
+      "matchManagers": ["nvm", "npm", "bazel", "bazel-module", "bazelisk"]
     },
     {
       "postUpgradeTasks": {
