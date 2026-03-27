@@ -9,7 +9,7 @@
     "test": "ng test"
   },
   "private": true,
-  "packageManager": "pnpm@10.32.1",
+  "packageManager": "pnpm@10.33.0",
   "dependencies": {
     "@angular/animations": "22.0.0-next.5",
     "@angular/common": "22.0.0-next.5",
