@@ -6,11 +6,11 @@
   "scripts": {
     "ng-dev": "bash ../../../tools/local-dev.sh"
   },
-  "packageManager": "pnpm@10.32.1",
+  "packageManager": "pnpm@10.33.0",
   "engines": {
     "npm": "Please use pnpm instead of NPM to install dependencies",
     "yarn": "Please use pnpm instead of Yarn to install dependencies",
-    "pnpm": "10.32.1"
+    "pnpm": "10.33.0"
   },
   "keywords": [],
   "author": "",
