@@ -4,11 +4,11 @@
     "@angular/core": "22.0.0-next.5",
     "@angular/platform-browser": "22.0.0-next.5",
     "@types/jasmine": "6.0.0",
-    "@types/jsdom": "28.0.0",
+    "@types/jsdom": "28.0.1",
     "@types/node": "24.12.0",
     "jasmine-reporters": "2.5.2",
     "jasmine": "6.1.0",
-    "jsdom": "29.0.0",
+    "jsdom": "29.0.1",
     "tinyglobby": "0.2.15",
     "zone.js": "0.16.1"
   },

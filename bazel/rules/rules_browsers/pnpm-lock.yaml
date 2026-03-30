@@ -5,8 +5,8 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  puppeteer: 24.39.1
-  puppeteer-core: 24.39.1
+  puppeteer: 24.40.0
+  puppeteer-core: 24.40.0
 
 packageExtensionsChecksum: sha256-3L73Fw32UVtE6x5BJxJPBtQtH/mgsr31grNpdhHP1IY=
 
@@ -1634,12 +1634,12 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
-  puppeteer-core@24.39.1:
-    resolution: {integrity: sha512-AMqQIKoEhPS6CilDzw0Gd1brLri3emkC+1N2J6ZCCuY1Cglo56M63S0jOeBZDQlemOiRd686MYVMl9ELJBzN3A==}
+  puppeteer-core@24.40.0:
+    resolution: {integrity: sha512-MWL3XbUCfVgGR0gRsidzT6oKJT2QydPLhMITU6HoVWiiv4gkb6gJi3pcdAa8q4HwjBTbqISOWVP4aJiiyUJvag==}
     engines: {node: '>=18'}
 
-  puppeteer@24.39.1:
-    resolution: {integrity: sha512-68Zc9QpcVvfxp2C+3UL88TyUogEAn5tSylXidbEuEXvhiqK1+v65zeBU5ubinAgEHMGr3dcSYqvYrGtdzsPI3w==}
+  puppeteer@24.40.0:
+    resolution: {integrity: sha512-IxQbDq93XHVVLWHrAkFP7F7iHvb9o0mgfsSIMlhHb+JM+JjM1V4v4MNSQfcRWJopx9dsNOr9adYv0U5fm9BJBQ==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -2435,7 +2435,7 @@ snapshots:
       '@web/test-runner-core': 0.13.4
       '@web/test-runner-coverage-v8': 0.8.0
       chrome-launcher: 0.15.2
-      puppeteer-core: 24.39.1
+      puppeteer-core: 24.40.0
     transitivePeerDependencies:
       - bare-abort-controller
       - bare-buffer
@@ -2510,7 +2510,7 @@ snapshots:
     dependencies:
       '@web/test-runner-chrome': 0.18.1
       '@web/test-runner-core': 0.13.4
-      puppeteer: 24.39.1(typescript@5.9.3)
+      puppeteer: 24.40.0(typescript@5.9.3)
     transitivePeerDependencies:
       - bare-abort-controller
       - bare-buffer
@@ -3714,7 +3714,7 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  puppeteer-core@24.39.1:
+  puppeteer-core@24.40.0:
     dependencies:
       '@puppeteer/browsers': 2.13.0
       chromium-bidi: 14.0.0(devtools-protocol@0.0.1581282)
@@ -3731,13 +3731,13 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  puppeteer@24.39.1(typescript@5.9.3):
+  puppeteer@24.40.0(typescript@5.9.3):
     dependencies:
       '@puppeteer/browsers': 2.13.0
       chromium-bidi: 14.0.0(devtools-protocol@0.0.1581282)
       cosmiconfig: 9.0.1(typescript@5.9.3)
       devtools-protocol: 0.0.1581282
-      puppeteer-core: 24.39.1
+      puppeteer-core: 24.40.0
       typed-query-selector: 2.12.1
     transitivePeerDependencies:
       - bare-abort-controller

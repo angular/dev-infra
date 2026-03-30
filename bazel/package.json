@@ -10,7 +10,7 @@
     "@types/wait-on": "^5.3.4",
     "@types/source-map-support": "0.5.10",
     "browser-sync": "3.0.4",
-    "get-tsconfig": "4.13.6",
+    "get-tsconfig": "4.13.7",
     "piscina": "^5.0.0",
     "send": "1.2.1",
     "true-case-path": "2.2.1",
