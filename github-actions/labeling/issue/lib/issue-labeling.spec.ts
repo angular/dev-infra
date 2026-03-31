@@ -16,12 +16,16 @@ describe('IssueLabeling', () => {
 
   beforeEach(() => {
     mockGit = jasmine.createSpyObj('Octokit', ['paginate', 'issues', 'pulls']);
-    mockGit.issues = jasmine.createSpyObj('issues', ['addLabels', 'get']);
+    mockGit.issues = jasmine.createSpyObj('issues', ['addLabels', 'get', 'listLabelsForRepo']);
 
     // Mock paginate to return the result of the promise if it's a list, or just execute the callback
     (mockGit.paginate as jasmine.Spy).and.callFake((fn: any, args: any) => {
-      if (fn === mockGit.issues.listLabelsOnIssue) {
-        return Promise.resolve([{name: 'area: core'}, {name: 'area: router'}, {name: 'bug'}]);
+      if (fn === mockGit.issues.listLabelsForRepo) {
+        return Promise.resolve([
+          {name: 'area: core', description: 'Core Angular framework'},
+          {name: 'area: router', description: 'Angular Router'},
+          {name: 'bug', description: 'Bug report'},
+        ]);
       }
       return Promise.resolve([]);
     });
