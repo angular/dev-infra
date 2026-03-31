@@ -8,7 +8,7 @@ import {Labeling} from '../../shared/labeling.js';
 export class IssueLabeling extends Labeling {
   readonly type = 'Issue';
   /** Set of area labels available in the current repository. */
-  repoAreaLabels = new Set<string>();
+  repoAreaLabels = new Map<string, string>();
   /** The issue data fetched from Github. */
   issueData?: components['schemas']['issue'];
 
@@ -17,7 +17,7 @@ export class IssueLabeling extends Labeling {
 
     // Determine if the issue already has an area label, if it does we can exit early.
     if (
-      this.issueData?.labels.some((label) =>
+      this.issueData?.labels.some((label: string | {name?: string}) =>
         (typeof label === 'string' ? label : label.name)?.startsWith('area: '),
       )
     ) {
@@ -37,10 +37,13 @@ ${this.issueData!.body}
 
 The available area labels are:
 ${Array.from(this.repoAreaLabels)
-  .map((label) => ` - ${label}`)
+  .map(
+    ([label, description]) =>
+      ` - Label: ${label}${description ? `, Description: ${description}` : ''}`,
+  )
   .join('\n')}
 
-Based on the content, which area label is the best fit?
+Based on the content of the issue and the available labels, which area label is the best fit?
 Respond ONLY with the exact label name (e.g. "area: core").
 If you are strictly unsure or if multiple labels match equally well, respond with "ambiguous".
 If no area label applies, respond with "none".
@@ -82,7 +85,7 @@ If no area label applies, respond with "none".
         .then((labels) =>
           labels
             .filter((l) => l.name.startsWith('area: '))
-            .forEach((l) => this.repoAreaLabels.add(l.name)),
+            .forEach((l) => this.repoAreaLabels.set(l.name, l.description ?? '')),
         ),
       this.git.issues.get({owner, repo, issue_number: context.issue.number}).then((resp) => {
         this.issueData = resp.data;
