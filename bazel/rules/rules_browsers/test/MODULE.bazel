@@ -32,7 +32,7 @@ bazel_dep(name = "aspect_rules_js", version = "3.0.3")
 npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm", dev_dependency = True)
 use_repo(npm, "npm_rules_browsers")
 
-bazel_dep(name = "aspect_rules_ts", version = "3.8.7")
+bazel_dep(name = "aspect_rules_ts", version = "3.8.8")
 
 rules_ts_ext = use_extension("@aspect_rules_ts//ts:extensions.bzl", "ext", dev_dependency = True)
 use_repo(rules_ts_ext, "npm_rules_browsers_typescript")
