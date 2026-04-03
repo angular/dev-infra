@@ -8,6 +8,6 @@
     "@octokit/types": "16.0.0",
     "@types/node": "24.12.0",
     "typed-graphqlify": "3.1.6",
-    "undici": "7.24.6"
+    "undici": "7.24.7"
   }
 }

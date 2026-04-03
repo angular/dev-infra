@@ -74,8 +74,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.24.6
-        version: 7.24.6
+        specifier: 7.24.7
+        version: 7.24.7
 
   .github/local-actions/labels-sync:
     dependencies:
@@ -95,8 +95,8 @@ importers:
         specifier: 24.12.0
         version: 24.12.0
       undici:
-        specifier: 7.24.6
-        version: 7.24.6
+        specifier: 7.24.7
+        version: 7.24.7
 
   .github/local-actions/lock-closed:
     dependencies:
@@ -116,8 +116,8 @@ importers:
         specifier: 24.12.0
         version: 24.12.0
       undici:
-        specifier: 7.24.6
-        version: 7.24.6
+        specifier: 7.24.7
+        version: 7.24.7
 
   apps/code-of-conduct:
     dependencies:
@@ -197,8 +197,8 @@ importers:
   bazel:
     dependencies:
       '@microsoft/api-extractor':
-        specifier: 7.57.7
-        version: 7.57.7(@types/node@24.12.0)
+        specifier: 7.58.0
+        version: 7.58.0(@types/node@24.12.0)
       '@types/babel__core':
         specifier: 7.20.5
         version: 7.20.5
@@ -303,7 +303,7 @@ importers:
         version: 9.0.0
       '@google/genai':
         specifier: ^1.43.0
-        version: 1.47.0(@modelcontextprotocol/sdk@1.28.0(supports-color@10.2.2))(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
+        version: 1.47.0(@modelcontextprotocol/sdk@1.28.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       '@octokit/auth-app':
         specifier: 8.2.0
         version: 8.2.0
@@ -347,8 +347,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.24.6
-        version: 7.24.6
+        specifier: 7.24.7
+        version: 7.24.7
 
   github-actions/browserstack:
     dependencies:
@@ -377,8 +377,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.24.6
-        version: 7.24.6
+        specifier: 7.24.7
+        version: 7.24.7
 
   github-actions/labeling:
     dependencies:
@@ -390,7 +390,7 @@ importers:
         version: 9.0.0
       '@google/genai':
         specifier: ^1.43.0
-        version: 1.47.0(@modelcontextprotocol/sdk@1.28.0(supports-color@10.2.2))(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
+        version: 1.47.0(@modelcontextprotocol/sdk@1.28.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       '@octokit/openapi-types':
         specifier: 27.0.0
         version: 27.0.0
@@ -416,8 +416,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.24.6
-        version: 7.24.6
+        specifier: 7.24.7
+        version: 7.24.7
 
   github-actions/org-file-sync:
     dependencies:
@@ -440,8 +440,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.24.6
-        version: 7.24.6
+        specifier: 7.24.7
+        version: 7.24.7
 
   github-actions/post-approval-changes:
     dependencies:
@@ -464,8 +464,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.24.6
-        version: 7.24.6
+        specifier: 7.24.7
+        version: 7.24.7
 
   github-actions/previews/pack-and-upload-artifact:
     dependencies:
@@ -518,8 +518,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.24.6
-        version: 7.24.6
+        specifier: 7.24.7
+        version: 7.24.7
 
   ng-dev:
     dependencies:
@@ -533,8 +533,8 @@ importers:
         specifier: 8.0.0
         version: 8.0.0(supports-color@10.2.2)
       '@google/genai':
-        specifier: 1.47.0
-        version: 1.47.0(@modelcontextprotocol/sdk@1.28.0(supports-color@10.2.2))(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
+        specifier: 1.48.0
+        version: 1.48.0(@modelcontextprotocol/sdk@1.28.0(supports-color@10.2.2))(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
       '@inquirer/prompts':
         specifier: 8.3.2
         version: 8.3.2(@types/node@24.12.0)
@@ -647,8 +647,8 @@ importers:
         specifier: 3.3.1
         version: 3.3.1
       minimatch:
-        specifier: 10.2.4
-        version: 10.2.4
+        specifier: 10.2.5
+        version: 10.2.5
       multimatch:
         specifier: 8.0.0
         version: 8.0.0
@@ -1540,6 +1540,15 @@ packages:
       '@modelcontextprotocol/sdk':
         optional: true
 
+  '@google/genai@1.48.0':
+    resolution: {integrity: sha512-plonYK4ML2PrxsRD9SeqmFt76eREWkQdPCglOA6aYDzL1AAbE+7PUnT54SvpWGfws13L0AZEqGSpL7+1IPnTxQ==}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      '@modelcontextprotocol/sdk': ^1.25.2
+    peerDependenciesMeta:
+      '@modelcontextprotocol/sdk':
+        optional: true
+
   '@googleapis/sqladmin@35.2.0':
     resolution: {integrity: sha512-ajR9EGLs1pCkKfsXxfbVRnQ7ZPyktKNAuahHoU06CVKguWwQo3b9aFmq06PYnGk1oXc0+tlW+XEamNa/HF4pbQ==}
     engines: {node: '>=12.0.0'}
@@ -1915,11 +1924,11 @@ packages:
   '@jsdevtools/ono@7.1.3':
     resolution: {integrity: sha512-4JQNk+3mVzK3xh2rqd6RB4J46qUR19azEHBneZyTZM+c456qOrbbM/5xcR8huNCCcbVt7+UmizG6GuUvPvKUYg==}
 
-  '@microsoft/api-extractor-model@7.33.4':
-    resolution: {integrity: sha512-u1LTaNTikZAQ9uK6KG1Ms7nvNedsnODnspq/gH2dcyETWvH4hVNGNDvRAEutH66kAmxA4/necElqGNs1FggC8w==}
+  '@microsoft/api-extractor-model@7.33.5':
+    resolution: {integrity: sha512-Xh4dXuusndVQqVz4nEN9xOp0DyzsKxeD2FFJkSPg4arAjDSKPcy6cAc7CaeBPA7kF2wV1fuDlo2p/bNMpVr8yg==}
 
-  '@microsoft/api-extractor@7.57.7':
-    resolution: {integrity: sha512-kmnmVs32MFWbV5X6BInC1/TfCs7y1ugwxv1xHsAIj/DyUfoe7vtO0alRUgbQa57+yRGHBBjlNcEk33SCAt5/dA==}
+  '@microsoft/api-extractor@7.58.0':
+    resolution: {integrity: sha512-XcHlDylX5GblbGbs1eBoexjVyvdJMioTPuBCgCorE2rqijzTYxi6eudXyez3xACRxtH9aDtahoL9fYM4XTvQmg==}
     hasBin: true
 
   '@microsoft/tsdoc-config@0.18.1':
@@ -2273,8 +2282,8 @@ packages:
   '@protobufjs/utf8@1.1.0':
     resolution: {integrity: sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==}
 
-  '@rushstack/node-core-library@5.20.3':
-    resolution: {integrity: sha512-95JgEPq2k7tHxhF9/OJnnyHDXfC9cLhhta0An/6MlkDsX2A6dTzDrTUG18vx4vjc280V0fi0xDH9iQczpSuWsw==}
+  '@rushstack/node-core-library@5.21.0':
+    resolution: {integrity: sha512-LFzN+1lyWROit/P8Md6yxAth7lLYKn37oCKJHirEE2TQB25NDUM7bALf0ar+JAtwFfRCH+D+DGOA7DAzIi2r+g==}
     peerDependencies:
       '@types/node': '*'
     peerDependenciesMeta:
@@ -2292,16 +2301,16 @@ packages:
   '@rushstack/rig-package@0.7.2':
     resolution: {integrity: sha512-9XbFWuqMYcHUso4mnETfhGVUSaADBRj6HUAAEYk50nMPn8WRICmBuCphycQGNB3duIR6EEZX3Xj3SYc2XiP+9A==}
 
-  '@rushstack/terminal@0.22.3':
-    resolution: {integrity: sha512-gHC9pIMrUPzAbBiI4VZMU7Q+rsCzb8hJl36lFIulIzoceKotyKL3Rd76AZ2CryCTKEg+0bnTj406HE5YY5OQvw==}
+  '@rushstack/terminal@0.22.4':
+    resolution: {integrity: sha512-fhtLjnXCc/4WleVbVl6aoc7jcWnU6yqjS1S8WoaNREG3ycu/viZ9R/9QM7Y/b4CDvcXoiDyMNIay7JMwBptM3g==}
     peerDependencies:
       '@types/node': '*'
     peerDependenciesMeta:
       '@types/node':
         optional: true
 
-  '@rushstack/ts-command-line@5.3.3':
-    resolution: {integrity: sha512-c+ltdcvC7ym+10lhwR/vWiOhsrm/bP3By2VsFcs5qTKv+6tTmxgbVrtJ5NdNjANiV5TcmOZgUN+5KYQ4llsvEw==}
+  '@rushstack/ts-command-line@5.3.4':
+    resolution: {integrity: sha512-MLkVKVEN6/2clKTrjN2B2KqKCuPxRwnNsWY7a+FCAq2EMdkj10cM8YgiBSMeGFfzM0mDMzargpHNnNzaBi9Whg==}
 
   '@schematics/angular@21.2.5':
     resolution: {integrity: sha512-orOiXcG86t34ejqbkm7ZHEkGfwTU/ySYFgY7BOQdaYFCoNQXxtU87fZoHckJ2xYpVitoKTvbf1bxDDphXb3ycw==}
@@ -4591,8 +4600,8 @@ packages:
     resolution: {integrity: sha512-Rwi3pnapEqirPSbWbrZaa6N3nmqq4Xer/2XooiOKyV3q12ML06f7MOuc5DVH8ONZIFhwIYQ3yzPH4nt7iWHaTg==}
     engines: {node: 18 || 20 || >=22}
 
-  minimatch@10.2.4:
-    resolution: {integrity: sha512-oRjTw/97aTBN0RHbYCdtF1MQfvusSIBQM0IZEgzl6426+8jSC0nF1a/GmnVLpfB9yyr6g6FTqWqiZVbxrtaCIg==}
+  minimatch@10.2.5:
+    resolution: {integrity: sha512-MULkVLfKGYDFYejP07QOurDLLQpcjk7Fw+7jXS2R2czRQzR56yHRveU5NDJEOviH+hETZKSkIk5c+T23GjFUMg==}
     engines: {node: 18 || 20 || >=22}
 
   minimatch@3.1.5:
@@ -5834,11 +5843,6 @@ packages:
   typedarray-to-buffer@3.1.5:
     resolution: {integrity: sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==}
 
-  typescript@5.8.2:
-    resolution: {integrity: sha512-aJn6wq13/afZp/jT9QZmwEjDqqvSGp1VT5GVg+f/t6/oVyrgXM6BY1h9BRh/O5p3PlUPAe+WuiEZOmb/49RqoQ==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-
   typescript@5.9.3:
     resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
     engines: {node: '>=14.17'}
@@ -5858,8 +5862,8 @@ packages:
     resolution: {integrity: sha512-sC+b0tB1whOCzbtlx20fx3WgCXwkW627p4EA9uM+/tNNPkSS+eSEld6pAs9nDv7WbY1UUljBMYPtu9BCOrCWKA==}
     engines: {node: '>=18.17'}
 
-  undici@7.24.6:
-    resolution: {integrity: sha512-Xi4agocCbRzt0yYMZGMA6ApD7gvtUFaxm4ZmeacWI4cZxaF6C+8I8QfofC20NAePiB/IcvZmzkJ7XPa471AEtA==}
+  undici@7.24.7:
+    resolution: {integrity: sha512-H/nlJ/h0ggGC+uRL3ovD+G0i4bqhvsDOpbDv7At5eFLlj2b41L8QliGbnl2H7SnDiYhENphh1tQFJZf+MyfLsQ==}
     engines: {node: '>=20.18.1'}
 
   unicode-emoji-modifier-base@1.0.0:
@@ -7233,7 +7237,20 @@ snapshots:
       - supports-color
     optional: true
 
-  '@google/genai@1.47.0(@modelcontextprotocol/sdk@1.28.0(supports-color@10.2.2))(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)':
+  '@google/genai@1.47.0(@modelcontextprotocol/sdk@1.28.0)(bufferutil@4.1.0)(utf-8-validate@6.0.6)':
+    dependencies:
+      google-auth-library: 10.6.2(supports-color@10.2.2)
+      p-retry: 4.6.2
+      protobufjs: 7.5.4
+      ws: 8.20.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
+    optionalDependencies:
+      '@modelcontextprotocol/sdk': 1.28.0(supports-color@10.2.2)
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
+  '@google/genai@1.48.0(@modelcontextprotocol/sdk@1.28.0(supports-color@10.2.2))(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)':
     dependencies:
       google-auth-library: 10.6.2(supports-color@10.2.2)
       p-retry: 4.6.2
@@ -7608,30 +7625,30 @@ snapshots:
 
   '@jsdevtools/ono@7.1.3': {}
 
-  '@microsoft/api-extractor-model@7.33.4(@types/node@24.12.0)':
+  '@microsoft/api-extractor-model@7.33.5(@types/node@24.12.0)':
     dependencies:
       '@microsoft/tsdoc': 0.16.0
       '@microsoft/tsdoc-config': 0.18.1
-      '@rushstack/node-core-library': 5.20.3(@types/node@24.12.0)
+      '@rushstack/node-core-library': 5.21.0(@types/node@24.12.0)
     transitivePeerDependencies:
       - '@types/node'
 
-  '@microsoft/api-extractor@7.57.7(@types/node@24.12.0)':
+  '@microsoft/api-extractor@7.58.0(@types/node@24.12.0)':
     dependencies:
-      '@microsoft/api-extractor-model': 7.33.4(@types/node@24.12.0)
+      '@microsoft/api-extractor-model': 7.33.5(@types/node@24.12.0)
       '@microsoft/tsdoc': 0.16.0
       '@microsoft/tsdoc-config': 0.18.1
-      '@rushstack/node-core-library': 5.20.3(@types/node@24.12.0)
+      '@rushstack/node-core-library': 5.21.0(@types/node@24.12.0)
       '@rushstack/rig-package': 0.7.2
-      '@rushstack/terminal': 0.22.3(@types/node@24.12.0)
-      '@rushstack/ts-command-line': 5.3.3(@types/node@24.12.0)
+      '@rushstack/terminal': 0.22.4(@types/node@24.12.0)
+      '@rushstack/ts-command-line': 5.3.4(@types/node@24.12.0)
       diff: 8.0.4
       lodash: 4.17.23
       minimatch: 10.2.3
       resolve: 1.22.11
       semver: 7.5.4
       source-map: 0.6.1
-      typescript: 5.8.2
+      typescript: 5.9.3
     transitivePeerDependencies:
       - '@types/node'
 
@@ -7984,7 +8001,7 @@ snapshots:
 
   '@protobufjs/utf8@1.1.0': {}
 
-  '@rushstack/node-core-library@5.20.3(@types/node@24.12.0)':
+  '@rushstack/node-core-library@5.21.0(@types/node@24.12.0)':
     dependencies:
       ajv: 8.18.0
       ajv-draft-04: 1.0.0(ajv@8.18.0)
@@ -8006,17 +8023,17 @@ snapshots:
       resolve: 1.22.11
       strip-json-comments: 3.1.1
 
-  '@rushstack/terminal@0.22.3(@types/node@24.12.0)':
+  '@rushstack/terminal@0.22.4(@types/node@24.12.0)':
     dependencies:
-      '@rushstack/node-core-library': 5.20.3(@types/node@24.12.0)
+      '@rushstack/node-core-library': 5.21.0(@types/node@24.12.0)
       '@rushstack/problem-matcher': 0.2.1(@types/node@24.12.0)
       supports-color: 8.1.1
     optionalDependencies:
       '@types/node': 24.12.0
 
-  '@rushstack/ts-command-line@5.3.3(@types/node@24.12.0)':
+  '@rushstack/ts-command-line@5.3.4(@types/node@24.12.0)':
     dependencies:
-      '@rushstack/terminal': 0.22.3(@types/node@24.12.0)
+      '@rushstack/terminal': 0.22.4(@types/node@24.12.0)
       '@types/argparse': 1.0.38
       argparse: 1.0.10
       string-argv: 0.3.2
@@ -9894,7 +9911,7 @@ snapshots:
 
   glob@13.0.6:
     dependencies:
-      minimatch: 10.2.4
+      minimatch: 10.2.5
       minipass: 7.1.3
       path-scurry: 2.0.2
 
@@ -10385,7 +10402,7 @@ snapshots:
       saxes: 6.0.0
       symbol-tree: 3.2.4
       tough-cookie: 6.0.1
-      undici: 7.24.6
+      undici: 7.24.7
       w3c-xmlserializer: 5.0.0
       webidl-conversions: 8.0.1
       whatwg-mimetype: 5.0.0
@@ -10682,7 +10699,7 @@ snapshots:
     dependencies:
       brace-expansion: 5.0.5
 
-  minimatch@10.2.4:
+  minimatch@10.2.5:
     dependencies:
       brace-expansion: 5.0.5
 
@@ -10778,7 +10795,7 @@ snapshots:
     dependencies:
       array-differ: 4.0.0
       array-union: 3.0.1
-      minimatch: 10.2.4
+      minimatch: 10.2.5
 
   mute-stream@2.0.0: {}
 
@@ -12118,8 +12135,6 @@ snapshots:
     dependencies:
       is-typedarray: 1.0.0
 
-  typescript@5.8.2: {}
-
   typescript@5.9.3: {}
 
   ua-parser-js@1.0.41: {}
@@ -12130,7 +12145,7 @@ snapshots:
 
   undici@6.24.1: {}
 
-  undici@7.24.6: {}
+  undici@7.24.7: {}
 
   unicode-emoji-modifier-base@1.0.0: {}
 
