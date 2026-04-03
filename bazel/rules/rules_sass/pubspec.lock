@@ -365,18 +365,18 @@ packages:
     dependency: transitive
     description:
       name: sass
-      sha256: "377a3931521291cfc9f9e079bc83514b6761f293f6eb8ac8c7788f63c2364ad0"
+      sha256: "00adc78d8c906d6f5435526ee770fb5183e71f19818985e53f566b98ef693f59"
       url: "https://pub.dev"
     source: hosted
-    version: "1.98.0"
+    version: "1.99.0"
   sass_api:
     dependency: "direct main"
     description:
       name: sass_api
-      sha256: f56bf1cedaee68f144863b68a4448d53a66c5857ad03b72c7adf739e5f5af1de
+      sha256: f1ce74be211d3f6d61321e47f19dbfaf7df257e7472046860f9cca0499f35909
       url: "https://pub.dev"
     source: hosted
-    version: "17.4.0"
+    version: "17.5.0"
   shelf:
     dependency: transitive
     description:
