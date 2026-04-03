@@ -17,7 +17,7 @@
   "dependencies": {
     "@actions/core": "3.0.0",
     "@google-cloud/spanner": "8.0.0",
-    "@google/genai": "1.47.0",
+    "@google/genai": "1.48.0",
     "@inquirer/prompts": "8.3.2",
     "@inquirer/type": "4.0.4",
     "@octokit/auth-app": "8.2.0",
@@ -56,7 +56,7 @@
     "jasmine-reporters": "2.5.2",
     "jasmine": "6.1.0",
     "jsonc-parser": "3.3.1",
-    "minimatch": "10.2.4",
+    "minimatch": "10.2.5",
     "multimatch": "8.0.0",
     "nock": "14.0.11",
     "semver": "7.7.4",
