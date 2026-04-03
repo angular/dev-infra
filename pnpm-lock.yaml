@@ -74,8 +74,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.24.7
-        version: 7.24.7
+        specifier: 8.0.0
+        version: 8.0.0
 
   .github/local-actions/labels-sync:
     dependencies:
@@ -95,8 +95,8 @@ importers:
         specifier: 24.12.0
         version: 24.12.0
       undici:
-        specifier: 7.24.7
-        version: 7.24.7
+        specifier: 8.0.0
+        version: 8.0.0
 
   .github/local-actions/lock-closed:
     dependencies:
@@ -116,8 +116,8 @@ importers:
         specifier: 24.12.0
         version: 24.12.0
       undici:
-        specifier: 7.24.7
-        version: 7.24.7
+        specifier: 8.0.0
+        version: 8.0.0
 
   apps/code-of-conduct:
     dependencies:
@@ -347,8 +347,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.24.7
-        version: 7.24.7
+        specifier: 8.0.0
+        version: 8.0.0
 
   github-actions/browserstack:
     dependencies:
@@ -377,8 +377,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.24.7
-        version: 7.24.7
+        specifier: 8.0.0
+        version: 8.0.0
 
   github-actions/labeling:
     dependencies:
@@ -416,8 +416,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.24.7
-        version: 7.24.7
+        specifier: 8.0.0
+        version: 8.0.0
 
   github-actions/org-file-sync:
     dependencies:
@@ -440,8 +440,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.24.7
-        version: 7.24.7
+        specifier: 8.0.0
+        version: 8.0.0
 
   github-actions/post-approval-changes:
     dependencies:
@@ -464,8 +464,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.24.7
-        version: 7.24.7
+        specifier: 8.0.0
+        version: 8.0.0
 
   github-actions/previews/pack-and-upload-artifact:
     dependencies:
@@ -518,8 +518,8 @@ importers:
         specifier: 3.1.6
         version: 3.1.6
       undici:
-        specifier: 7.24.7
-        version: 7.24.7
+        specifier: 8.0.0
+        version: 8.0.0
 
   ng-dev:
     dependencies:
@@ -5865,6 +5865,10 @@ packages:
   undici@7.24.7:
     resolution: {integrity: sha512-H/nlJ/h0ggGC+uRL3ovD+G0i4bqhvsDOpbDv7At5eFLlj2b41L8QliGbnl2H7SnDiYhENphh1tQFJZf+MyfLsQ==}
     engines: {node: '>=20.18.1'}
+
+  undici@8.0.0:
+    resolution: {integrity: sha512-RGabV5g1ggSX5mU4k+B8BLWgb418gDbg0wAVFeiU00iOxtw4ufGsE6GFsuSd2uqOKooWSLf71JGapOFYpE8f+A==}
+    engines: {node: '>=22.19.0'}
 
   unicode-emoji-modifier-base@1.0.0:
     resolution: {integrity: sha512-yLSH4py7oFH3oG/9K+XWrz1pSi3dfUrWEnInbxMfArOfc1+33BlGPQtLsOYwvdMy11AwUBetYuaRxSPqgkq+8g==}
@@ -12146,6 +12150,8 @@ snapshots:
   undici@6.24.1: {}
 
   undici@7.24.7: {}
+
+  undici@8.0.0: {}
 
   unicode-emoji-modifier-base@1.0.0: {}
 
