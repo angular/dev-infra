@@ -9,6 +9,8 @@ module.exports = {
   // Renovate fork PRs should never be editable as Renovate would otherwise
   // not be able to delete the branches and future updates would be missed.
   forkModeDisallowMaintainerEdits: true,
+  // Needed for `bazel mod deps --lockfile_mode=update`.
+  allowedUnsafeExecutions: ['bazelModDeps'],
   onboarding: false,
   persistRepoData: true,
   allowedCommands: ['.'],
