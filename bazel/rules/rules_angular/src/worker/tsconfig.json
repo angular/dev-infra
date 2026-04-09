@@ -2,6 +2,7 @@
   "compilerOptions": {
     "module": "ESNext",
     "moduleResolution": "node10",
+    "ignoreDeprecations": "6.0",
     "target": "esnext",
     "declaration": true,
     "strict": true,

@@ -3,6 +3,8 @@
     "strict": true,
     "esModuleInterop": true,
     "noImplicitAny": true,
+    "module": "Node16",
+    "moduleResolution": "Node16",
     "lib": ["ES2022"],
     "types": ["node"]
   }

@@ -37,7 +37,7 @@ importers:
         version: 0.13.4
       '@web/test-runner-puppeteer':
         specifier: ^0.18.0
-        version: 0.18.0(typescript@5.9.3)
+        version: 0.18.0(typescript@6.0.2)
       get-port:
         specifier: ^7.1.0
         version: 7.2.0
@@ -51,8 +51,8 @@ importers:
         specifier: ^0.2.12
         version: 0.2.15
       typescript:
-        specifier: 5.9.3
-        version: 5.9.3
+        specifier: 6.0.2
+        version: 6.0.2
       web-test-runner-jasmine:
         specifier: 0.2.0
         version: 0.2.0(jasmine-core@6.1.0)
@@ -1940,8 +1940,8 @@ packages:
   typed-query-selector@2.12.1:
     resolution: {integrity: sha512-uzR+FzI8qrUEIu96oaeBJmd9E7CFEiQ3goA5qCVgc4s5llSubcfGHq9yUstZx/k4s9dXHVKsE35YWoFyvEqEHA==}
 
-  typescript@5.9.3:
-    resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
+  typescript@6.0.2:
+    resolution: {integrity: sha512-bGdAIrZ0wiGDo5l8c++HWtbaNCWTS4UTv7RaTH/ThVIgjkveJt83m74bBHMJkuCbslY8ixgLBVZJIOiQlQTjfQ==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -2509,11 +2509,11 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@web/test-runner-puppeteer@0.18.0(typescript@5.9.3)':
+  '@web/test-runner-puppeteer@0.18.0(typescript@6.0.2)':
     dependencies:
       '@web/test-runner-chrome': 0.18.1
       '@web/test-runner-core': 0.13.4
-      puppeteer: 24.40.0(typescript@5.9.3)
+      puppeteer: 24.40.0(typescript@6.0.2)
     transitivePeerDependencies:
       - bare-abort-controller
       - bare-buffer
@@ -2820,14 +2820,14 @@ snapshots:
 
   core-util-is@1.0.3: {}
 
-  cosmiconfig@9.0.1(typescript@5.9.3):
+  cosmiconfig@9.0.1(typescript@6.0.2):
     dependencies:
       env-paths: 2.2.1
       import-fresh: 3.3.1
       js-yaml: 4.1.1
       parse-json: 5.2.0
     optionalDependencies:
-      typescript: 5.9.3
+      typescript: 6.0.2
 
   cross-spawn@7.0.6:
     dependencies:
@@ -3733,11 +3733,11 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  puppeteer@24.40.0(typescript@5.9.3):
+  puppeteer@24.40.0(typescript@6.0.2):
     dependencies:
       '@puppeteer/browsers': 2.13.0
       chromium-bidi: 14.0.0(devtools-protocol@0.0.1581282)
-      cosmiconfig: 9.0.1(typescript@5.9.3)
+      cosmiconfig: 9.0.1(typescript@6.0.2)
       devtools-protocol: 0.0.1581282
       puppeteer-core: 24.40.0
       typed-query-selector: 2.12.1
@@ -4111,7 +4111,7 @@ snapshots:
 
   typed-query-selector@2.12.1: {}
 
-  typescript@5.9.3: {}
+  typescript@6.0.2: {}
 
   typical@4.0.0: {}
 
