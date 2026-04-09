@@ -52,7 +52,7 @@ ts_project(
         # NOTE: The Angular compiler in this target is not affecting any compilation
         # output, but it's still necessary for some foundational utils like virtual FS.
         "//:node_modules/@angular/compiler-cli",  # compiler from npm.
-        "//:node_modules/typescript",  # typescript from npm.
+        ":node_modules/typescript",  # user-configured typescript. Ensure that the users TypeScript version is always used for the compilation.
     ],
 )
 
