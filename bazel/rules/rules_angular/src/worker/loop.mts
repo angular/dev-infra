@@ -13,17 +13,9 @@ import {TsStructureIsReused} from './program_abstractions/structure_reused.mjs';
 import {VanillaTsProgram} from './program_abstractions/vanilla_ts.mjs';
 import {ProgramCache, WorkerProgramCacheEntry} from './program_cache.mjs';
 import {WorkRequest} from './protocol/worker.cjs';
-import {
-  AbsoluteFsPath,
-  NodeJSFileSystem,
-  readConfiguration,
-  FileSystem,
-  setFileSystem,
-} from './angular_foundation_utils.mjs';
-import {
-  ProgramDescriptor,
-  ProgramDescriptorCtor,
-} from './program_abstractions/program_descriptor.mjs';
+import {AbsoluteFsPath, readConfiguration, setFileSystem} from './angular_foundation_utils.mjs';
+import {ProgramDescriptorCtor} from './program_abstractions/program_descriptor.mjs';
+import {BazelSafeFilesystem} from './bazel_safe_filesystem.mjs';
 
 // Used for debug counting.
 let buildCount = 0;
@@ -70,7 +62,7 @@ export async function executeBuild(
   const fs =
     workerSortedInputFileNames !== null
       ? new WorkerSandboxFileSystem(workerSortedInputFileNames)
-      : new NodeJSFileSystem();
+      : new BazelSafeFilesystem();
 
   // Note: This is needed because functions like `readConfiguration` do not properly
   // re-use the passed `fs`, but call `getFileSystem`.

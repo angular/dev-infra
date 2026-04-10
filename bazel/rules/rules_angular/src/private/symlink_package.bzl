@@ -65,7 +65,10 @@ def _symlink_impl(ctx):
         target_path = relative_file(src_manifest_path, destination_manifest_path),
     )
 
-    runfiles = ctx.runfiles(files = [destination, destination_build])
+    runfiles = ctx.runfiles(
+        files = [destination, destination_build],
+        transitive_files = src[JsInfo].transitive_sources,
+    )
 
     return [
         DefaultInfo(

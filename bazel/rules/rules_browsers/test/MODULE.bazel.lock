@@ -547,24 +547,24 @@
     },
     "@@rules_angular+//setup:extensions.bzl%rules_angular": {
       "general": {
-        "bzlTransitiveDigest": "fkaH7HMicL3g7/NDaFzlq39kcLopMyQ3KdbDn+5CRzA=",
-        "usagesDigest": "bW3NjO5IwkrQn0yIQPRNd4Lb077vl5Gu8AOzyN+zmCw=",
+        "bzlTransitiveDigest": "4H2tnLKiAgAf8vLqcZCt5VmtZcU0fNbRrBpqTISsdkU=",
+        "usagesDigest": "0yL3Q65d62LRr6A6p/EyQpayxnPEYgTgBuWpe5HcsBM=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
         "generatedRepoSpecs": {
-          "rules_angular_configurable_deps": {
-            "repoRuleId": "@@rules_angular+//setup:repositories.bzl%configurable_deps_repo",
-            "attributes": {
-              "angular_compiler_cli": "@@rules_angular+//:node_modules/@angular/compiler-cli",
-              "typescript": "@@rules_angular+//:node_modules/typescript"
-            }
-          },
           "dev_infra_rules_angular_configurable_deps": {
             "repoRuleId": "@@rules_angular+//setup:repositories.bzl%configurable_deps_repo",
             "attributes": {
-              "angular_compiler_cli": "@@rules_angular+//:node_modules/@angular/compiler-cli",
-              "typescript": "@@rules_angular+//:node_modules/typescript"
+              "angular_compiler_cli": "@@devinfra+//:node_modules/@angular/compiler-cli",
+              "typescript": "@@devinfra+//:node_modules/typescript"
+            }
+          },
+          "rules_angular_configurable_deps": {
+            "repoRuleId": "@@rules_angular+//setup:repositories.bzl%configurable_deps_repo",
+            "attributes": {
+              "angular_compiler_cli": "@@devinfra+//:node_modules/@angular/compiler-cli",
+              "typescript": "@@devinfra+//:node_modules/typescript"
             }
           }
         },

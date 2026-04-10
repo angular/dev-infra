@@ -72,9 +72,11 @@ npm.npm_translate_lock(
 )
 use_repo(npm, "rules_angular_npm")
 
-rules_angular = use_extension("//setup:extensions.bzl", "rules_angular")
-rules_angular.setup(
+rules_angular_dev = use_extension("//setup:extensions.bzl", "rules_angular", dev_dependency = True)
+rules_angular_dev.setup(
     angular_compiler_cli = "//:node_modules/@angular/compiler-cli",
     typescript = "//:node_modules/typescript",
 )
+
+rules_angular = use_extension("//setup:extensions.bzl", "rules_angular")
 use_repo(rules_angular, "rules_angular_configurable_deps")

@@ -1,3 +1,4 @@
+import {createRequire} from 'node:module';
 import {NodeJSFileSystem, AbsoluteFsPath} from './angular_foundation_utils.mjs';
 
 // Guarding against unexpected scenarios from within the Bazel worker.
@@ -19,5 +20,11 @@ export class BazelSafeFilesystem extends NodeJSFileSystem {
   }
   removeDeep() {
     throw new Error('Not implemented');
+  }
+
+  getDefaultLibLocation(): AbsoluteFsPath {
+    const requireFn = createRequire(import.meta.filename);
+
+    return this.resolve(requireFn.resolve('typescript'), '..');
   }
 }
