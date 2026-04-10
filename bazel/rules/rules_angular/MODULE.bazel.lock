@@ -211,7 +211,7 @@
     "//setup:extensions.bzl%rules_angular": {
       "general": {
         "bzlTransitiveDigest": "aS7Uud1IzoU7PPLzH3s6IfFS4b2fa0SRWDi2/fS4bQU=",
-        "usagesDigest": "FEgK9//DoGVMYxymWXHDPFQOohPcpW+zJl/V44ljFaE=",
+        "usagesDigest": "naOhHX492QW2ixuMXolnDK20neJIV55BU/01AtqpEvQ=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -221,13 +221,6 @@
             "attributes": {
               "angular_compiler_cli": "@@//:node_modules/@angular/compiler-cli",
               "typescript": "@@//:node_modules/typescript"
-            }
-          },
-          "dev_infra_rules_angular_configurable_deps": {
-            "repoRuleId": "@@//setup:repositories.bzl%configurable_deps_repo",
-            "attributes": {
-              "angular_compiler_cli": "@@devinfra+//:node_modules/@angular/compiler-cli",
-              "typescript": "@@devinfra+//:node_modules/typescript"
             }
           }
         },
@@ -4088,62 +4081,6 @@
             "rules_python++python+python_3_9_host"
           ]
         ]
-      }
-    },
-    "@@rules_sass+//src/toolchain:extensions.bzl%sass": {
-      "general": {
-        "bzlTransitiveDigest": "mOfuR8PsNuUWEq7JZ4MpIRbwyAGAqrCvkXXGaRNnlPQ=",
-        "usagesDigest": "R0KshhzIouLWuexMUCrl4HY+FUDwlVVgF9Z7UnwyUWA=",
-        "recordedFileInputs": {},
-        "recordedDirentsInputs": {},
-        "envVariables": {},
-        "generatedRepoSpecs": {
-          "linux_amd64_sass": {
-            "repoRuleId": "@@rules_sass+//src/toolchain:configure_sass.bzl%configure_sass",
-            "attributes": {
-              "file": "@rules_sass//src/compiler/built:sass_linux_x64",
-              "sha256": "",
-              "constraints": [
-                "@@platforms//os:linux",
-                "@@platforms//cpu:x86_64"
-              ]
-            }
-          },
-          "linux_arm64_sass": {
-            "repoRuleId": "@@rules_sass+//src/toolchain:configure_sass.bzl%configure_sass",
-            "attributes": {
-              "file": "@rules_sass//src/compiler/built:sass_linux_arm",
-              "sha256": "",
-              "constraints": [
-                "@@platforms//os:linux",
-                "@@platforms//cpu:arm64"
-              ]
-            }
-          },
-          "darwin_amd64_sass": {
-            "repoRuleId": "@@rules_sass+//src/toolchain:configure_sass.bzl%configure_sass",
-            "attributes": {
-              "file": "@rules_sass//src/compiler/built:sass_mac_x64",
-              "sha256": "",
-              "constraints": [
-                "@@platforms//os:macos",
-                "@@platforms//cpu:x86_64"
-              ]
-            }
-          },
-          "darwin_arm64_sass": {
-            "repoRuleId": "@@rules_sass+//src/toolchain:configure_sass.bzl%configure_sass",
-            "attributes": {
-              "file": "@rules_sass//src/compiler/built:sass_mac_arm",
-              "sha256": "",
-              "constraints": [
-                "@@platforms//os:macos",
-                "@@platforms//cpu:arm64"
-              ]
-            }
-          }
-        },
-        "recordedRepoMappingEntries": []
       }
     },
     "@@yq.bzl+//yq:extensions.bzl%yq": {

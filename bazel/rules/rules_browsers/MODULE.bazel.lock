@@ -78,8 +78,7 @@
     "https://bcr.bazel.build/modules/googletest/1.14.0/MODULE.bazel": "cfbcbf3e6eac06ef9d85900f64424708cc08687d1b527f0ef65aa7517af8118f",
     "https://bcr.bazel.build/modules/jq.bzl/0.1.0/MODULE.bazel": "2ce69b1af49952cd4121a9c3055faa679e748ce774c7f1fda9657f936cae902f",
     "https://bcr.bazel.build/modules/jq.bzl/0.4.0/MODULE.bazel": "a7b39b37589f2b0dad53fd6c1ccaabbdb290330caa920d7ef3e6aad068cd4ab2",
-    "https://bcr.bazel.build/modules/jq.bzl/0.6.1/MODULE.bazel": "f30c46e0a08a9f7566a8bf60a43d48abea960cd7f57b315b01e2762f1537eb52",
-    "https://bcr.bazel.build/modules/jq.bzl/0.6.1/source.json": "9ca9e2f90baa6a5bb0a49626ed9528554ec83165adf47b39792673ecc7feda22",
+    "https://bcr.bazel.build/modules/jq.bzl/0.4.0/source.json": "52ec7530c4618e03f634b30ff719814a68d7d39c235938b7aa2abbfe1eb1c52c",
     "https://bcr.bazel.build/modules/jsoncpp/1.9.5/MODULE.bazel": "31271aedc59e815656f5736f282bb7509a97c7ecb43e927ac1a37966e0578075",
     "https://bcr.bazel.build/modules/jsoncpp/1.9.5/source.json": "4108ee5085dd2885a341c7fab149429db457b3169b86eb081fa245eadf69169d",
     "https://bcr.bazel.build/modules/libpfm/4.11.0/MODULE.bazel": "45061ff025b301940f1e30d2c16bea596c25b176c8b6b3087e92615adbd52902",
@@ -638,22 +637,12 @@
     "@@aspect_rules_ts+//ts:extensions.bzl%ext": {
       "general": {
         "bzlTransitiveDigest": "dhTbv9E6UfT1WJmmu3ORRPO6AKFJvgBjBxu+BO+u1RY=",
-        "usagesDigest": "eQBvD0rK9KXNT2C3yx+6OvYutklURI5LbfG7lzEscTU=",
+        "usagesDigest": "cb8Kby8xd7wp/hMGiCHzW6BkpGGnxVgn21jbMSAp/oo=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
         "generatedRepoSpecs": {
           "npm_rules_browsers_typescript": {
-            "repoRuleId": "@@aspect_rules_ts+//ts/private:npm_repositories.bzl%http_archive_version",
-            "attributes": {
-              "version": "6.0.2",
-              "integrity": "sha512-bGdAIrZ0wiGDo5l8c++HWtbaNCWTS4UTv7RaTH/ThVIgjkveJt83m74bBHMJkuCbslY8ixgLBVZJIOiQlQTjfQ==",
-              "urls": [
-                "https://registry.npmjs.org/typescript/-/typescript-{}.tgz"
-              ]
-            }
-          },
-          "rules_angular_npm_typescript": {
             "repoRuleId": "@@aspect_rules_ts+//ts/private:npm_repositories.bzl%http_archive_version",
             "attributes": {
               "version": "6.0.2",
@@ -755,32 +744,6 @@
             "bazel_tools"
           ]
         ]
-      }
-    },
-    "@@rules_angular+//setup:extensions.bzl%rules_angular": {
-      "general": {
-        "bzlTransitiveDigest": "aS7Uud1IzoU7PPLzH3s6IfFS4b2fa0SRWDi2/fS4bQU=",
-        "usagesDigest": "0yL3Q65d62LRr6A6p/EyQpayxnPEYgTgBuWpe5HcsBM=",
-        "recordedFileInputs": {},
-        "recordedDirentsInputs": {},
-        "envVariables": {},
-        "generatedRepoSpecs": {
-          "dev_infra_rules_angular_configurable_deps": {
-            "repoRuleId": "@@rules_angular+//setup:repositories.bzl%configurable_deps_repo",
-            "attributes": {
-              "angular_compiler_cli": "@@devinfra+//:node_modules/@angular/compiler-cli",
-              "typescript": "@@devinfra+//:node_modules/typescript"
-            }
-          },
-          "rules_angular_configurable_deps": {
-            "repoRuleId": "@@rules_angular+//setup:repositories.bzl%configurable_deps_repo",
-            "attributes": {
-              "angular_compiler_cli": "@@devinfra+//:node_modules/@angular/compiler-cli",
-              "typescript": "@@devinfra+//:node_modules/typescript"
-            }
-          }
-        },
-        "recordedRepoMappingEntries": []
       }
     },
     "@@rules_fuzzing+//fuzzing/private:extensions.bzl%non_module_dependencies": {
@@ -933,7 +896,7 @@
     "@@rules_nodejs+//nodejs:extensions.bzl%node": {
       "general": {
         "bzlTransitiveDigest": "4pUxCNc22K4I+6+4Nxu52Hur12tFRfa1JMsN5mdDv60=",
-        "usagesDigest": "qTh6l4/fB3Fpvs4QaKcyxjE/mcK7MXSYElmD3LaZf94=",
+        "usagesDigest": "0pEbiCiFuc80eTkbBcVGyuOlFqsmfTJLCi8mQAP8m7M=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -4090,66 +4053,10 @@
         ]
       }
     },
-    "@@rules_sass+//src/toolchain:extensions.bzl%sass": {
-      "general": {
-        "bzlTransitiveDigest": "mOfuR8PsNuUWEq7JZ4MpIRbwyAGAqrCvkXXGaRNnlPQ=",
-        "usagesDigest": "R0KshhzIouLWuexMUCrl4HY+FUDwlVVgF9Z7UnwyUWA=",
-        "recordedFileInputs": {},
-        "recordedDirentsInputs": {},
-        "envVariables": {},
-        "generatedRepoSpecs": {
-          "linux_amd64_sass": {
-            "repoRuleId": "@@rules_sass+//src/toolchain:configure_sass.bzl%configure_sass",
-            "attributes": {
-              "file": "@rules_sass//src/compiler/built:sass_linux_x64",
-              "sha256": "",
-              "constraints": [
-                "@@platforms//os:linux",
-                "@@platforms//cpu:x86_64"
-              ]
-            }
-          },
-          "linux_arm64_sass": {
-            "repoRuleId": "@@rules_sass+//src/toolchain:configure_sass.bzl%configure_sass",
-            "attributes": {
-              "file": "@rules_sass//src/compiler/built:sass_linux_arm",
-              "sha256": "",
-              "constraints": [
-                "@@platforms//os:linux",
-                "@@platforms//cpu:arm64"
-              ]
-            }
-          },
-          "darwin_amd64_sass": {
-            "repoRuleId": "@@rules_sass+//src/toolchain:configure_sass.bzl%configure_sass",
-            "attributes": {
-              "file": "@rules_sass//src/compiler/built:sass_mac_x64",
-              "sha256": "",
-              "constraints": [
-                "@@platforms//os:macos",
-                "@@platforms//cpu:x86_64"
-              ]
-            }
-          },
-          "darwin_arm64_sass": {
-            "repoRuleId": "@@rules_sass+//src/toolchain:configure_sass.bzl%configure_sass",
-            "attributes": {
-              "file": "@rules_sass//src/compiler/built:sass_mac_arm",
-              "sha256": "",
-              "constraints": [
-                "@@platforms//os:macos",
-                "@@platforms//cpu:arm64"
-              ]
-            }
-          }
-        },
-        "recordedRepoMappingEntries": []
-      }
-    },
     "@@yq.bzl+//yq:extensions.bzl%yq": {
       "general": {
         "bzlTransitiveDigest": "UfFMy8CWK4/dVo/tfaSAIYUiDGNAPes5eRllx9O9Q9Q=",
-        "usagesDigest": "umLriVxpGOcFzE0gKLxWJymQRp9eDPEe28SFkQxcVvs=",
+        "usagesDigest": "FO2bM4MZoGua3d4+POpaQX0r4pJLqmQMTeSWUl7BGoE=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},

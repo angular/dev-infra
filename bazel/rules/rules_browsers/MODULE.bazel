@@ -33,18 +33,6 @@ bazel_dep(name = "platforms", version = "1.0.0")
 bazel_dep(name = "bazel_skylib", version = "1.9.0")
 
 # Dev dependencies
-bazel_dep(name = "rules_angular", dev_dependency = True)
-local_path_override(
-    module_name = "rules_angular",
-    path = "../rules_angular",
-)
-
-bazel_dep(name = "rules_sass", dev_dependency = True)
-local_path_override(
-    module_name = "rules_sass",
-    path = "../rules_sass",
-)
-
 bazel_dep(name = "devinfra", dev_dependency = True)
 local_path_override(
     module_name = "devinfra",

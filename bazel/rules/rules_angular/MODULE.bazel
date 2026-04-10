@@ -16,12 +16,6 @@ local_path_override(
     path = "../rules_browsers",
 )
 
-bazel_dep(name = "rules_sass", dev_dependency = True)
-local_path_override(
-    module_name = "rules_sass",
-    path = "../rules_sass",
-)
-
 bazel_dep(name = "devinfra", dev_dependency = True)
 local_path_override(
     module_name = "devinfra",

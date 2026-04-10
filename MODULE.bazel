@@ -27,13 +27,13 @@ local_path_override(
     path = "bazel/rules/rules_browsers",
 )
 
-bazel_dep(name = "rules_sass")
+bazel_dep(name = "rules_sass", dev_dependency = True)
 local_path_override(
     module_name = "rules_sass",
     path = "bazel/rules/rules_sass",
 )
 
-bazel_dep(name = "rules_angular")
+bazel_dep(name = "rules_angular", dev_dependency = True)
 local_path_override(
     module_name = "rules_angular",
     path = "bazel/rules/rules_angular",
@@ -65,7 +65,7 @@ node.toolchain(
 )
 use_repo(node, "nodejs_toolchains")
 
-rules_angular = use_extension("@rules_angular//setup:extensions.bzl", "rules_angular")
+rules_angular = use_extension("@rules_angular//setup:extensions.bzl", "rules_angular", dev_dependency = True)
 rules_angular.setup(
     name = "dev_infra_rules_angular_configurable_deps",
     angular_compiler_cli = "//:node_modules/@angular/compiler-cli",
