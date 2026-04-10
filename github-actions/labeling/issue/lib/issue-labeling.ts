@@ -5,6 +5,9 @@ import {components} from '@octokit/openapi-types';
 import {miscLabels} from '../../../../ng-dev/pr/common/labels/index.js';
 import {Labeling} from '../../shared/labeling.js';
 
+export const NEEDS_TRIAGE_MILESTONE = 'needsTriage';
+export const BACKLOG_MILESTONE = 'Backlog';
+
 export class IssueLabeling extends Labeling {
   readonly type = 'Issue';
   /** Set of area labels available in the current repository. */
@@ -13,15 +16,44 @@ export class IssueLabeling extends Labeling {
   issueData?: components['schemas']['issue'];
 
   async run() {
-    core.info(`Updating labels for ${this.type} #${context.issue.number}`);
+    const {owner, repo, number} = context.issue;
+    core.info(`Processing ${this.type} #${number}...`);
 
+    if (!this.issueData) {
+      await this.initialize();
+    }
+
+    // 1. Run auto-labeler first (it safely skips if an area label is already present).
+    await this.runAutoLabeling();
+
+    // 2. Re-fetch the latest issue state to ensure we capture any newly added labels.
+    const updatedIssue = await this.git.issues.get({
+      owner,
+      repo,
+      issue_number: number,
+    });
+    const labels = updatedIssue.data.labels.map((l: string | {name?: string}) =>
+      typeof l === 'string' ? l : l.name || '',
+    );
+
+    const hasAreaLabel = labels.some((l) => l.startsWith('area: '));
+    const hasPriorityLabel = labels.some((l) => /^P[0-5]$/.test(l));
+
+    if (hasPriorityLabel) {
+      await this.applyMilestoneIfFound(BACKLOG_MILESTONE);
+    } else if (hasAreaLabel) {
+      await this.applyMilestoneIfFound(NEEDS_TRIAGE_MILESTONE);
+    }
+  }
+
+  async runAutoLabeling() {
     // Determine if the issue already has an area label, if it does we can exit early.
     if (
       this.issueData?.labels.some((label: string | {name?: string}) =>
         (typeof label === 'string' ? label : label.name)?.startsWith('area: '),
       )
     ) {
-      core.info('Issue already has an area label. Skipping.');
+      core.info('Issue already has an area label. Skipping auto-labeling.');
       return;
     }
 
@@ -69,6 +101,69 @@ If no area label applies, respond with "none".
     } catch (e) {
       core.error('Failed to generate content from Gemini.');
       core.setFailed(e as Error);
+    }
+  }
+
+  async applyMilestoneIfFound(targetMilestoneTitle: string) {
+    const {owner, repo, number} = context.issue;
+    core.info(`Checking for milestone with title "${targetMilestoneTitle}" in ${owner}/${repo}...`);
+
+    try {
+      const milestones = await this.git.paginate(this.git.issues.listMilestones, {
+        owner,
+        repo,
+        state: 'open',
+      });
+
+      const found = milestones.find(
+        (m) => m.title.toLowerCase() === targetMilestoneTitle.toLowerCase(),
+      );
+
+      if (found) {
+        const currentIssue = await this.git.issues.get({
+          owner,
+          repo,
+          issue_number: number,
+        });
+        const currentMilestone = currentIssue.data.milestone;
+
+        if (currentMilestone) {
+          if (
+            currentMilestone.title.toLowerCase() === NEEDS_TRIAGE_MILESTONE.toLowerCase() &&
+            targetMilestoneTitle.toLowerCase() === BACKLOG_MILESTONE.toLowerCase()
+          ) {
+            core.info(
+              `Transitioning milestone from "${currentMilestone.title}" to "${found.title}"...`,
+            );
+          } else if (currentMilestone.number === found.number) {
+            core.info(`Issue already has milestone "${found.title}". Skipping.`);
+            return;
+          } else {
+            core.info(
+              `Issue already has milestone "${currentMilestone.title}". Skipping overwrite with "${targetMilestoneTitle}".`,
+            );
+            return;
+          }
+        }
+
+        core.info(
+          `Found milestone "${found.title}" (ID: ${found.number}). Applying to issue #${number}...`,
+        );
+        await this.git.issues.update({
+          owner,
+          repo,
+          issue_number: number,
+          milestone: found.number,
+        });
+        core.info('Successfully applied milestone.');
+      } else {
+        core.info(
+          `Milestone "${targetMilestoneTitle}" was not found in this repository. Skipping.`,
+        );
+      }
+    } catch (e) {
+      core.error(`Failed to check or apply milestone "${targetMilestoneTitle}".`);
+      core.error(e as Error);
     }
   }
 
