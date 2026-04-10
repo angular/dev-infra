@@ -210,7 +210,7 @@
   "moduleExtensions": {
     "//setup:extensions.bzl%rules_angular": {
       "general": {
-        "bzlTransitiveDigest": "4H2tnLKiAgAf8vLqcZCt5VmtZcU0fNbRrBpqTISsdkU=",
+        "bzlTransitiveDigest": "aS7Uud1IzoU7PPLzH3s6IfFS4b2fa0SRWDi2/fS4bQU=",
         "usagesDigest": "FEgK9//DoGVMYxymWXHDPFQOohPcpW+zJl/V44ljFaE=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},

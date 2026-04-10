@@ -759,7 +759,7 @@
     },
     "@@rules_angular+//setup:extensions.bzl%rules_angular": {
       "general": {
-        "bzlTransitiveDigest": "4H2tnLKiAgAf8vLqcZCt5VmtZcU0fNbRrBpqTISsdkU=",
+        "bzlTransitiveDigest": "aS7Uud1IzoU7PPLzH3s6IfFS4b2fa0SRWDi2/fS4bQU=",
         "usagesDigest": "0yL3Q65d62LRr6A6p/EyQpayxnPEYgTgBuWpe5HcsBM=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},

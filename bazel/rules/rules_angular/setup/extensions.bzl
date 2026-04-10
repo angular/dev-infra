@@ -10,20 +10,22 @@ def _extension(ctx):
             root_setup = mod.tags.setup[0]
 
         for attr in mod.tags.setup:
-            if attr.name not in generated:
-                generated[attr.name] = True
-                configurable_deps_repo(
-                    name = attr.name,
-                    angular_compiler_cli = attr.angular_compiler_cli,
-                    typescript = attr.typescript,
-                )
+            if attr.name in generated:
+                fail("The repository '{}' is already registered by another module. Please use a different name.".format(attr.name))
+            generated[attr.name] = True
+            configurable_deps_repo(
+                name = attr.name,
+                angular_compiler_cli = attr.angular_compiler_cli,
+                typescript = attr.typescript,
+            )
 
-    if "rules_angular_configurable_deps" not in generated and root_setup:
-        configurable_deps_repo(
-            name = "rules_angular_configurable_deps",
-            angular_compiler_cli = root_setup.angular_compiler_cli,
-            typescript = root_setup.typescript,
-        )
+    if "rules_angular_configurable_deps" not in generated:
+        if root_setup:
+            configurable_deps_repo(
+                name = "rules_angular_configurable_deps",
+                angular_compiler_cli = root_setup.angular_compiler_cli,
+                typescript = root_setup.typescript,
+            )
 
 rules_angular = module_extension(
     implementation = _extension,
