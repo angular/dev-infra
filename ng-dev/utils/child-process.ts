@@ -88,6 +88,8 @@ export abstract class ChildProcess {
     // Pass args as a proper array with shell: false to prevent OS command injection.
     // When shell: true is used, Node.js internally joins command + args into a single
     // string evaluated by /bin/sh, making shell metacharacters in args exploitable.
+    // Note: shell: false may affect .cmd/.bat execution on Windows, but ng-dev
+    // targets Linux/macOS CI environments where this is not a concern.
     const commandText = `${command} ${args.join(' ')}`;
     const env = getEnvironmentForNonInteractiveCommand(options.env);
 
@@ -122,6 +124,8 @@ export abstract class ChildProcess {
     // Pass args as a proper array with shell: false to prevent OS command injection.
     // When shell: true is used, Node.js internally joins command + args into a single
     // string evaluated by /bin/sh, making shell metacharacters in args exploitable.
+    // Note: shell: false may affect .cmd/.bat execution on Windows, but ng-dev
+    // targets Linux/macOS CI environments where this is not a concern.
     const commandText = `${command} ${args.join(' ')}`;
     const env = getEnvironmentForNonInteractiveCommand(options.env);
 
@@ -139,9 +143,15 @@ export abstract class ChildProcess {
    *
    * @returns a Promise resolving with captured stdout and stderr on success. The promise
    *   rejects on command failure.
+   * @deprecated Use ChildProcess.spawn with an explicit args array instead.
+   *   exec() passes the command string directly to the shell, making it susceptible
+   *   to command injection via shell metacharacters in the command string.
    */
   static exec(command: string, options: ExecOptions = {}): Promise<SpawnResult> {
-    Log.warn('ChildProcess.exec is discouraged as it is susceptible to command injection. Prefer ChildProcess.spawn with an array of arguments.');
+    Log.warn(
+      `ChildProcess.exec is discouraged as it is susceptible to command injection ` +
+      `(command: ${command}). Prefer ChildProcess.spawn with an array of arguments.`,
+    );
     const env = getEnvironmentForNonInteractiveCommand(options.env);
     return processAsyncCmd(command, options, _exec(command, {...options, env}));
   }
