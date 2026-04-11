@@ -85,6 +85,9 @@ export abstract class ChildProcess {
    * @returns The command's stdout and stderr.
    */
   static spawnSync(command: string, args: string[], options: SpawnSyncOptions = {}): SpawnResult {
+    // Pass args as a proper array with shell: false to prevent OS command injection.
+    // When shell: true is used, Node.js internally joins command + args into a single
+    // string evaluated by /bin/sh, making shell metacharacters in args exploitable.
     const commandText = `${command} ${args.join(' ')}`;
     const env = getEnvironmentForNonInteractiveCommand(options.env);
 
@@ -95,7 +98,7 @@ export abstract class ChildProcess {
       signal,
       stdout,
       stderr,
-    } = _spawnSync(command, args, {...options, env, encoding: 'utf8', shell: true, stdio: 'pipe'});
+    } = _spawnSync(command, args, {...options, env, encoding: 'utf8', shell: false, stdio: 'pipe'});
 
     /** The status of the spawn result. */
     const status = statusFromExitCodeAndSignal(exitCode, signal);
@@ -116,13 +119,16 @@ export abstract class ChildProcess {
    *   rejects on command failure.
    */
   static spawn(command: string, args: string[], options: SpawnOptions = {}): Promise<SpawnResult> {
+    // Pass args as a proper array with shell: false to prevent OS command injection.
+    // When shell: true is used, Node.js internally joins command + args into a single
+    // string evaluated by /bin/sh, making shell metacharacters in args exploitable.
     const commandText = `${command} ${args.join(' ')}`;
     const env = getEnvironmentForNonInteractiveCommand(options.env);
 
     return processAsyncCmd(
       commandText,
       options,
-      _spawn(command, args, {...options, env, shell: true, stdio: 'pipe'}),
+      _spawn(command, args, {...options, env, shell: false, stdio: 'pipe'}),
     );
   }
 
@@ -135,6 +141,7 @@ export abstract class ChildProcess {
    *   rejects on command failure.
    */
   static exec(command: string, options: ExecOptions = {}): Promise<SpawnResult> {
+    Log.warn('ChildProcess.exec is discouraged as it is susceptible to command injection. Prefer ChildProcess.spawn with an array of arguments.');
     const env = getEnvironmentForNonInteractiveCommand(options.env);
     return processAsyncCmd(command, options, _exec(command, {...options, env}));
   }
