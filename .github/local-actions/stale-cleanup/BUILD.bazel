@@ -1,0 +1,32 @@
+load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
+load("//tools:defaults.bzl", "esbuild_checked_in", "ts_project")
+
+package(default_visibility = ["//.github/local-actions/stale-cleanup:__subpackages__"])
+
+npm_link_all_packages()
+
+ts_project(
+    name = "lib",
+    srcs = glob(
+        ["lib/*.ts"],
+    ),
+    tsconfig = "//.github/local-actions:tsconfig",
+    deps = [
+        "//.github/local-actions/stale-cleanup:node_modules/@actions/core",
+        "//.github/local-actions/stale-cleanup:node_modules/@actions/github",
+        "//.github/local-actions/stale-cleanup:node_modules/@octokit/rest",
+        "//.github/local-actions/stale-cleanup:node_modules/@types/node",
+        "//github-actions:utils",
+    ],
+)
+
+esbuild_checked_in(
+    name = "main",
+    srcs = [
+        ":lib",
+    ],
+    entry_point = "lib/main.ts",
+    format = "esm",
+    platform = "node",
+    target = "node24",
+)

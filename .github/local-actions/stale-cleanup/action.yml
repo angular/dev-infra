@@ -1,0 +1,15 @@
+name: 'Stale Draft PR Cleanup'
+description: 'Automatically closes draft PRs that have been inactive for a specific number of days.'
+author: 'Angular'
+inputs:
+  angular-robot-key:
+    description: 'The private key for the Angular Robot Github app.'
+    required: true
+  repos:
+    description: |
+      The repositories in which to clean up stale draft PRs. The organization name is derived from
+      the context in where the action runs.
+    required: true
+runs:
+  using: 'node24'
+  main: 'main.js'

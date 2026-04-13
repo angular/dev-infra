@@ -120,6 +120,21 @@ importers:
         specifier: 8.0.2
         version: 8.0.2
 
+  .github/local-actions/stale-cleanup:
+    dependencies:
+      '@actions/core':
+        specifier: 3.0.0
+        version: 3.0.0
+      '@actions/github':
+        specifier: 9.0.0
+        version: 9.0.0
+      '@octokit/rest':
+        specifier: 22.0.1
+        version: 22.0.1
+      '@types/node':
+        specifier: 24.12.2
+        version: 24.12.2
+
   apps/code-of-conduct:
     dependencies:
       '@angular/animations':

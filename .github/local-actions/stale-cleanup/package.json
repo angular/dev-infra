@@ -1,0 +1,11 @@
+{
+  "name": "@angular/stale-cleanup",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@actions/core": "3.0.0",
+    "@actions/github": "9.0.0",
+    "@octokit/rest": "22.0.1",
+    "@types/node": "24.12.2"
+  }
+}
