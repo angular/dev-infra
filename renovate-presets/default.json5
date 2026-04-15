@@ -42,6 +42,14 @@
     // GENERAL GROUPING & UPDATE BEHAVIOR
     // ============================================================================
 
+    // Group undici packages together. This is to avoid a situation where undici
+    // is updated and the types are not updated, causing type errors.
+    {
+      groupName: 'undici',
+      matchManagers: ['npm'],
+      matchDepNames: ['undici', 'undici-types'],
+    },
+
     // Enable 'postUpdateTasks' for changes that effect the typescript and pnpm versions.
     // This is to ensure that the `MODULE.bazel` is updated with the correct versions.
     {
