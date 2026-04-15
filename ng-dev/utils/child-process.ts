@@ -37,10 +37,10 @@ export interface SpawnSyncOptions
 export interface SpawnOptions extends CommonCmdOpts, Omit<_SpawnOptions, 'stdio'> {}
 
 /** Interface describing the options for exec-ing a process. */
-export interface ExecOptions extends CommonCmdOpts, Omit<_ExecOptions, 'shell' | 'stdio'> {}
+export interface ExecOptions extends CommonCmdOpts, Omit<_ExecOptions, 'stdio'> {}
 
 /** Interface describing the options for spawning an interactive process. */
-export interface SpawnInteractiveCommandOptions extends Omit<_SpawnOptions, 'shell' | 'stdio'> {}
+export interface SpawnInteractiveCommandOptions extends Omit<_SpawnOptions, 'stdio'> {}
 
 /** Interface describing the result of a spawned process. */
 export interface SpawnResult {
@@ -71,7 +71,7 @@ export abstract class ChildProcess {
     return new Promise<void>((resolve, reject) => {
       const commandText = `${command} ${args.join(' ')}`;
       Log.debug(`Executing command: ${commandText}`);
-      const childProcess = _spawn(command, args, {...options, shell: true, stdio: 'inherit'});
+      const childProcess = _spawn(command, args, {...options, stdio: 'inherit'});
       // The `close` event is used because the process is guaranteed to have completed writing to
       // stdout and stderr, using the `exit` event can cause inconsistent information in stdout and
       // stderr due to a race condition around exiting.
