@@ -99,7 +99,7 @@ export abstract class ChildProcess {
       signal,
       stdout,
       stderr,
-    } = _spawnSync(command, args, {...options, env, encoding: 'utf8', shell: options.shell ?? false, stdio: 'pipe'});
+    } = _spawnSync(command, args, {...options, env, encoding: 'utf8', stdio: 'pipe'});
 
     /** The status of the spawn result. */
     const status = statusFromExitCodeAndSignal(exitCode, signal);
@@ -130,7 +130,7 @@ export abstract class ChildProcess {
     return processAsyncCmd(
       commandText,
       options,
-      _spawn(command, args, {...options, env, shell: options.shell ?? false, stdio: 'pipe'}),
+      _spawn(command, args, {...options, env, stdio: 'pipe'}),
     );
   }
 
@@ -143,9 +143,6 @@ export abstract class ChildProcess {
    *   rejects on command failure.
    */
   static exec(command: string, options: ExecOptions = {}): Promise<SpawnResult> {
-    Log.warn(
-      'ChildProcess.exec is susceptible to command injection. Prefer ChildProcess.spawn with an explicit args array.',
-    );
     const env = getEnvironmentForNonInteractiveCommand(options.env);
     return processAsyncCmd(command, options, _exec(command, {...options, env}));
   }

@@ -202,10 +202,12 @@ export abstract class ExternalCommands {
     }
 
     try {
-      // We must source nvm.sh so the shell recognizes the 'nvm' command since nvm is not a binary but a shell script.
+      // We must source nvm.sh so the shell recognizes the 'nvm' command since nvm is not a binary
+      // but a shell function. The dot (.) built-in and && operator require shell: true here.
       await ChildProcess.spawn('. ~/.nvm/nvm.sh && nvm install', [], {
         cwd: projectDir,
         mode: 'on-error',
+        shell: true,
       });
 
       if (!quiet) {
