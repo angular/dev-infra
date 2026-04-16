@@ -26,11 +26,11 @@ jobs:
         working-directory: bazel/rules/rules_sass
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-      - uses: dart-lang/setup-dart@e51d8e571e22473a2ddebf0ef8a2123f0ab2c02c # v1
+      - uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260 # v1
       - run: dart pub get --enforce-lockfile
       - run: mkdir -p src/compiler/built/
       - run: dart compile exe src/compiler/bin/x_sass.dart -o src/compiler/built/${{ matrix.bin_name }}
-      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ${{ matrix.bin_name }}
           path: bazel/rules/rules_sass/src/compiler/built/${{ matrix.bin_name }}
@@ -66,7 +66,7 @@ jobs:
           fi
       - name: Create Pull Request
         if: steps.check.outputs.skip_pr != 'true'
-        uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8.1.0
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ secrets.ANGULAR_ROBOT_ACCESS_TOKEN }}
           push-to-fork: 'angular-robot/dev-infra'
