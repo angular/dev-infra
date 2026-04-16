@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       renovate:
-        specifier: 43.109.4
-        version: 43.109.4(typanion@3.14.0)
+        specifier: 43.120.1
+        version: 43.120.1(typanion@3.14.0)
 
 packages:
 
@@ -524,20 +524,20 @@ packages:
     resolution: {integrity: sha512-3GiqYMmerr9IsF5Rl98l5lGX/A/s9DQo5gHMgdteNPwL8VR3TZjn22hU+14jttST0mrua1g0aNrVWnpKdGM4Hw==}
     engines: {node: '>=22.12.0', pnpm: ^10.0.0}
 
-  '@renovatebot/osv-offline-db@2.4.0':
-    resolution: {integrity: sha512-W8MmEcyLmbTZG0j2Vh9CRVcqpKU9BvElki9nPReykmilE9ab66NczAwIpwRlyxjuJkr10lceX2XLzTVxfq+Qeg==}
+  '@renovatebot/osv-offline-db@2.4.1':
+    resolution: {integrity: sha512-AJLm/6Z+ZQb+z2QuoUAEjfJ8CMS3+DaiiDRREDWoy7OqcVVZEABvRFQoJwSdhwJfullhMGc/ibNzF2uFCxIilQ==}
     engines: {node: '>=22.12.0'}
 
-  '@renovatebot/osv-offline@2.4.0':
-    resolution: {integrity: sha512-HzDs05v0XGLJQ2myn9moJH3s8D1bIYayWjgqt+WpONuY1sm+f599fPMGbIDIZXyikMHB6V/F99T3cYVdX5dmUg==}
+  '@renovatebot/osv-offline@2.4.1':
+    resolution: {integrity: sha512-ql9VnbggBKER53aYd4JqJCuzIb5P2YR4DBbyWz9RzrFOaEaRvmLUb+sJ0nLsiRHp0jf7nNTTPlr29Am35NQoOQ==}
     engines: {node: '>=22.12.0'}
 
   '@renovatebot/pep440@4.2.2':
     resolution: {integrity: sha512-dSbrkSS9/NfNwhOgQ0rpKA9KNiKSFhgK707Wi+oX8SZLqvu8dvsVuzORbKOYq5eX4nSiwrHApWisecw0cZhjVQ==}
     engines: {node: ^20.9.0 || ^22.11.0 || ^24, pnpm: ^10.0.0}
 
-  '@renovatebot/pgp@1.3.4':
-    resolution: {integrity: sha512-8kpBO48AjOOW0g/Pxo2qqUTsizKMUHFHUkHl8rw2eD0YZULosVxt22NS8PPHHfZ58Opm/aggCAJLHa9yXlHjVA==}
+  '@renovatebot/pgp@1.3.5':
+    resolution: {integrity: sha512-xxlKDIZZlNBPwR3dalMrteiXBdwf3TSIsUFPdcmTb+MBKlC8On9Wi2ZDy/87it81cKwHWcbZY0ywjZo2ngFp9w==}
     engines: {node: ^22.11.0 || >=24.10.0, pnpm: ^10.0.0}
 
   '@renovatebot/ruby-semver@4.1.2':
@@ -546,6 +546,12 @@ packages:
 
   '@sec-ant/readable-stream@0.4.1':
     resolution: {integrity: sha512-831qok9r2t8AlxLko40y2ebgSDhenenCatLVeW/uBtnHPyhHOvG0C7TvfgecV+wHzIm5KUICgzmVpWS+IMEAeg==}
+
+  '@simple-git/args-pathspec@1.0.3':
+    resolution: {integrity: sha512-ngJMaHlsWDTfjyq9F3VIQ8b7NXbBLq5j9i5bJ6XLYtD6qlDXT7fdKY2KscWWUF8t18xx052Y/PUO1K1TRc9yKA==}
+
+  '@simple-git/argv-parser@1.1.1':
+    resolution: {integrity: sha512-Q9lBcfQ+VQCpQqGJFHe5yooOS5hGdLFFbJ5R+R5aDsnkPCahtn1hSkMcORX65J2Z5lxSkD0lQorMsncuBQxYUw==}
 
   '@sindresorhus/is@4.6.0':
     resolution: {integrity: sha512-t09vSN3MdfsyCHoFcTRCH/iUtG7OJ0CsjzB8cjAmKc/va/kIgeDI/TxsigdncE/4be734m0cvIYwNaV4i2XqAw==}
@@ -1700,8 +1706,8 @@ packages:
     resolution: {integrity: sha512-ozCC6gdQ+glXOQsveKD0YsDy8DSQFjDTz4zyzEHNV5+JP5D62LmfDZ6o1cycFx9ouG940M5dE8C8CTewdj2YWQ==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
-  lru-cache@11.3.3:
-    resolution: {integrity: sha512-JvNw9Y81y33E+BEYPr0U7omo+U9AySnsMsEiXgwT6yqd31VQWTLNQqmT4ou5eqPFUrTfIDFta2wKhB1hyohtAQ==}
+  lru-cache@11.3.5:
+    resolution: {integrity: sha512-NxVFwLAnrd9i7KUBxC4DrUhmgjzOs+1Qm50D3oF1/oL+r1NpZ4gA7xvG0/zJ8evR7zIKn4vLf7qTNduWFtCrRw==}
     engines: {node: 20 || >=22}
 
   luxon@3.7.2:
@@ -2063,8 +2069,8 @@ packages:
     resolution: {integrity: sha512-tkAQEw8ysMzmkhgw8k+1U/iPhWNhykKnSk4Rd5zLoPJCuJaGRPo6YposrZgaxHKzDHdDWWZvE/Sk7hsL2X/CpQ==}
     engines: {node: '>=18'}
 
-  p-queue@9.1.0:
-    resolution: {integrity: sha512-O/ZPaXuQV29uSLbxWBGGZO1mCQXV2BLIwUr59JUU9SoH76mnYvtms7aafH/isNSNGwuEfP6W/4xD0/TJXxrizw==}
+  p-queue@9.1.2:
+    resolution: {integrity: sha512-ktsDOALzTYTWWF1PbkNVg2rOt+HaOaMWJMUnt7T3qf5tvZ1L8dBW3tObzprBcXNMKkwj+yFSLqHso0x+UFcJXw==}
     engines: {node: '>=20'}
 
   p-throttle@8.1.0:
@@ -2146,8 +2152,8 @@ packages:
     resolution: {integrity: sha512-CvexbZtbov6jW2eXAvLukXjXUW1TzFaivC46BpWc/3BpcCysb5Vffu+B3XHMm8lVEuy2Mm4XGex8hBSg1yapPg==}
     engines: {node: '>=12.0.0'}
 
-  protobufjs@8.0.0:
-    resolution: {integrity: sha512-jx6+sE9h/UryaCZhsJWbJtTEy47yXoGNYI4z8ZaRncM0zBKeRqjO2JEcOUYwrYGb1WLhXM1FfMzW3annvFv0rw==}
+  protobufjs@8.0.1:
+    resolution: {integrity: sha512-NWWCCscLjs+cOKF/s/XVNFRW7Yih0fdH+9brffR5NZCy8k42yRdl5KlWKMVXuI1vfCoy4o1z80XR/W/QUb3V3w==}
     engines: {node: '>=12.0.0'}
 
   protocols@2.0.2:
@@ -2205,8 +2211,8 @@ packages:
   remark@15.0.1:
     resolution: {integrity: sha512-Eht5w30ruCXgFmxVUSlNWQ9iiimq07URKeFS3hNc8cUWy1llX4KDWfyEDZRycMc+znsN9Ux5/tJ/BFdgdOwA3A==}
 
-  renovate@43.109.4:
-    resolution: {integrity: sha512-G0GoDuqlGhybyUvG9Z+HB0WkwqLoP7OeMKrMA5CZixaH8NIAg1vVzFURYCYrHaUhfNAh/QhHUzw6u1blib1HnQ==}
+  renovate@43.120.1:
+    resolution: {integrity: sha512-/nlieWO/XmFo9Jeq0vBHhSOXKymq2hTihyAaaA06oFQoXUL5o7XyrEMWTU8Xgf3DMDz5EVV+JJOpCMMH0uPLCA==}
     engines: {node: ^24.11.0, pnpm: ^10.0.0}
     hasBin: true
 
@@ -2320,11 +2326,11 @@ packages:
   simple-get@4.0.1:
     resolution: {integrity: sha512-brv7p5WgH0jmQJr1ZDDfKDOSeWWg+OVypG99A/5vYGPqJ6pxiaHLy8nxtFjBA7oMa01ebA9gfh1uMCFqOuXxvA==}
 
-  simple-git@3.33.0:
-    resolution: {integrity: sha512-D4V/tGC2sjsoNhoMybKyGoE+v8A60hRawKQ1iFRA1zwuDgGZCBJ4ByOzZ5J8joBbi4Oam0qiPH+GhzmSBwbJng==}
+  simple-git@3.35.2:
+    resolution: {integrity: sha512-ZMjl06lzTm1EScxEGuM6+mEX+NQd14h/B3x0vWU+YOXAMF8sicyi1K4cjTfj5is+35ChJEHDl1EjypzYFWH2FA==}
 
-  slugify@1.6.8:
-    resolution: {integrity: sha512-HVk9X1E0gz3mSpoi60h/saazLKXKaZThMLU3u/aNwoYn8/xQyX2MGxL0ui2eaokkD7tF+Zo+cKTHUbe1mmmGzA==}
+  slugify@1.6.9:
+    resolution: {integrity: sha512-vZ7rfeehZui7wQs438JXBckYLkIIdfHOXsaVEUMyS5fHo1483l1bMdo0EDSWYclY0yZKFOipDy4KHuKs6ssvdg==}
     engines: {node: '>=8.0.0'}
 
   smart-buffer@4.2.0:
@@ -3426,7 +3432,7 @@ snapshots:
       agent-base: 7.1.4
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.6
-      lru-cache: 11.3.3
+      lru-cache: 11.3.5
       socks-proxy-agent: 8.0.5
     transitivePeerDependencies:
       - supports-color
@@ -3698,15 +3704,15 @@ snapshots:
       klona: 2.0.6
       moo: 0.5.3
 
-  '@renovatebot/osv-offline-db@2.4.0':
+  '@renovatebot/osv-offline-db@2.4.1':
     dependencies:
       debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
 
-  '@renovatebot/osv-offline@2.4.0':
+  '@renovatebot/osv-offline@2.4.1':
     dependencies:
-      '@renovatebot/osv-offline-db': 2.4.0
+      '@renovatebot/osv-offline-db': 2.4.1
       adm-zip: 0.5.17
       debug: 4.4.3
       fs-extra: 11.3.4
@@ -3717,11 +3723,17 @@ snapshots:
 
   '@renovatebot/pep440@4.2.2': {}
 
-  '@renovatebot/pgp@1.3.4': {}
+  '@renovatebot/pgp@1.3.5': {}
 
   '@renovatebot/ruby-semver@4.1.2': {}
 
   '@sec-ant/readable-stream@0.4.1': {}
+
+  '@simple-git/args-pathspec@1.0.3': {}
+
+  '@simple-git/argv-parser@1.1.1':
+    dependencies:
+      '@simple-git/args-pathspec': 1.0.3
 
   '@sindresorhus/is@4.6.0': {}
 
@@ -4337,7 +4349,7 @@ snapshots:
       '@npmcli/fs': 5.0.0
       fs-minipass: 3.0.3
       glob: 13.0.6
-      lru-cache: 11.3.3
+      lru-cache: 11.3.5
       minipass: 7.1.3
       minipass-collect: 2.0.1
       minipass-flush: 1.0.7
@@ -5062,7 +5074,7 @@ snapshots:
 
   lowercase-keys@3.0.0: {}
 
-  lru-cache@11.3.3: {}
+  lru-cache@11.3.5: {}
 
   luxon@3.7.2: {}
 
@@ -5598,7 +5610,7 @@ snapshots:
 
   p-map@7.0.4: {}
 
-  p-queue@9.1.0:
+  p-queue@9.1.2:
     dependencies:
       eventemitter3: 5.0.4
       p-timeout: 7.0.1
@@ -5640,7 +5652,7 @@ snapshots:
 
   path-scurry@2.0.2:
     dependencies:
-      lru-cache: 11.3.3
+      lru-cache: 11.3.5
       minipass: 7.1.3
 
   pend@1.2.0: {}
@@ -5688,7 +5700,7 @@ snapshots:
       '@types/node': 25.6.0
       long: 5.3.2
 
-  protobufjs@8.0.0:
+  protobufjs@8.0.1:
     dependencies:
       '@protobufjs/aspromise': 1.1.2
       '@protobufjs/base64': 1.1.2
@@ -5795,7 +5807,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  renovate@43.109.4(typanion@3.14.0):
+  renovate@43.120.1(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.1021.0
       '@aws-sdk/client-ec2': 3.1021.0
@@ -5827,9 +5839,9 @@ snapshots:
       '@redis/client': 5.11.0
       '@renovatebot/detect-tools': 3.0.0
       '@renovatebot/good-enough-parser': 2.0.0
-      '@renovatebot/osv-offline': 2.4.0
+      '@renovatebot/osv-offline': 2.4.1
       '@renovatebot/pep440': 4.2.2
-      '@renovatebot/pgp': 1.3.4
+      '@renovatebot/pgp': 1.3.5
       '@renovatebot/ruby-semver': 4.1.2
       '@sindresorhus/is': 7.2.0
       '@yarnpkg/core': 4.6.0(typanion@3.14.0)
@@ -5876,6 +5888,7 @@ snapshots:
       jsonata: 2.1.0
       jsonc-weaver: 0.2.4
       klona: 2.0.6
+      lru-cache: 11.3.5
       luxon: 3.7.2
       markdown-it: 14.1.1
       markdown-table: 3.0.4
@@ -5886,11 +5899,11 @@ snapshots:
       node-html-parser: 7.1.0
       p-all: 5.0.1
       p-map: 7.0.4
-      p-queue: 9.1.0
+      p-queue: 9.1.2
       p-throttle: 8.1.0
       parse-link-header: 2.0.0
       prettier: 3.8.1
-      protobufjs: 8.0.0
+      protobufjs: 8.0.1
       punycode: 2.3.1
       remark: 15.0.1
       remark-gfm: 4.0.1
@@ -5901,8 +5914,8 @@ snapshots:
       semver-stable: 3.0.0
       semver-utils: 1.1.4
       shlex: 3.0.0
-      simple-git: 3.33.0
-      slugify: 1.6.8
+      simple-git: 3.35.2
+      slugify: 1.6.9
       source-map-support: 0.5.21
       strip-json-comments: 5.0.3
       toml-eslint-parser: 1.0.3
@@ -6038,15 +6051,17 @@ snapshots:
       simple-concat: 1.0.1
     optional: true
 
-  simple-git@3.33.0:
+  simple-git@3.35.2:
     dependencies:
       '@kwsites/file-exists': 1.1.1
       '@kwsites/promise-deferred': 1.1.1
+      '@simple-git/args-pathspec': 1.0.3
+      '@simple-git/argv-parser': 1.1.1
       debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
 
-  slugify@1.6.8: {}
+  slugify@1.6.9: {}
 
   smart-buffer@4.2.0:
     optional: true
