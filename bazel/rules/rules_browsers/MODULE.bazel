@@ -40,7 +40,7 @@ local_path_override(
 )
 
 # Manually specify a recent Node.js version.
-bazel_dep(name = "rules_nodejs", version = "6.7.3")
+bazel_dep(name = "rules_nodejs", version = "6.7.4")
 
 node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
 node.toolchain(

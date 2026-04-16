@@ -10,7 +10,7 @@ register_toolchains(
     "//bazel/git-toolchain:git_macos_arm64_toolchain",
 )
 
-bazel_dep(name = "yq.bzl", version = "0.3.5")
+bazel_dep(name = "yq.bzl", version = "0.3.6")
 bazel_dep(name = "tar.bzl", version = "0.10.1")
 bazel_dep(name = "bazel_lib", version = "3.2.2")
 bazel_dep(name = "bazel_skylib", version = "1.9.0")
@@ -20,7 +20,7 @@ bazel_dep(name = "aspect_rules_jasmine", version = "2.0.4")
 bazel_dep(name = "platforms", version = "1.0.0")
 bazel_dep(name = "aspect_rules_esbuild", version = "0.25.1")
 bazel_dep(name = "aspect_rules_ts", version = "3.8.8")
-bazel_dep(name = "rules_nodejs", version = "6.7.3")
+bazel_dep(name = "rules_nodejs", version = "6.7.4")
 bazel_dep(name = "rules_browsers")
 local_path_override(
     module_name = "rules_browsers",
