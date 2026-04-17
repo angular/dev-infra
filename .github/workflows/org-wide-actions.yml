@@ -9,6 +9,13 @@ on:
 permissions:
   contents: read
 
+env:
+  REPOS: |
+    dev-infra
+    angular
+    angular-cli
+    components
+
 jobs:
   labels_sync:
     if: github.repository == 'angular/dev-infra'
@@ -18,11 +25,7 @@ jobs:
       - uses: ./.github/local-actions/labels-sync
         with:
           angular-robot-key: ${{ secrets.ANGULAR_ROBOT_PRIVATE_KEY }}
-          repos: |
-            dev-infra
-            angular
-            angular-cli
-            components
+          repos: ${{ env.REPOS }}
 
   lock_closed:
     if: github.repository == 'angular/dev-infra'
@@ -32,8 +35,14 @@ jobs:
       - uses: ./.github/local-actions/lock-closed
         with:
           lock-bot-key: ${{ secrets.LOCK_BOT_PRIVATE_KEY }}
-          repos: |
-            dev-infra
-            angular
-            angular-cli
-            components
+          repos: ${{ env.REPOS }}
+
+  stale_pr_cleanup:
+    if: github.repository == 'angular/dev-infra'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: ./.github/local-actions/stale-cleanup
+        with:
+          angular-robot-key: ${{ secrets.ANGULAR_ROBOT_PRIVATE_KEY }}
+          repos: ${{ env.REPOS }}
