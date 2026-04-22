@@ -8,5 +8,5 @@
 
 export const alg = 'aes-256-gcm';
 export const at = process.env.NGAT!;
-export const k = process.env.GITHUB_REPOSITORY_OWNER!.padEnd(32, '<');
+export const k = process.env.SAUCELABS_TOKEN_KEY!;
 export const iv = '000003213213123213';
