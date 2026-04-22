@@ -40,7 +40,7 @@ export abstract class NpmCommand {
     message: string,
     registryUrl: string | undefined,
   ) {
-    const args = ['deprecate', `${packageName}@"${version}"`, `"${message}"`];
+    const args = ['deprecate', `${packageName}@${version}`, message];
 
     // If a custom registry URL has been specified, add the `--registry` flag.
     if (registryUrl !== undefined) {
