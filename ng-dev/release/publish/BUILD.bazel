@@ -21,7 +21,6 @@ ts_project(
         "//ng-dev/caretaker/merge-mode",
         "//ng-dev/commit-message",
         "//ng-dev/format",
-        "//ng-dev/pr/merge",
         "//ng-dev/release/build",
         "//ng-dev/release/config",
         "//ng-dev/release/info",
