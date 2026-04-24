@@ -14,6 +14,8 @@ export class IssueLabeling extends Labeling {
   repoAreaLabels = new Map<string, string>();
   /** The issue data fetched from Github. */
   issueData?: components['schemas']['issue'];
+  /** Labels added during this run. */
+  private addedLabels: string[] = [];
 
   async run() {
     const {owner, repo, number} = context.issue;
@@ -35,6 +37,10 @@ export class IssueLabeling extends Labeling {
     const labels = updatedIssue.data.labels.map((l: string | {name?: string}) =>
       typeof l === 'string' ? l : l.name || '',
     );
+    // the API response may not immediately reflect the labels we just added,
+    // so we're adding the labels we've added during this run manually to ensure
+    // the milestone logic below works correctly.
+    labels.push(...this.addedLabels);
 
     const hasAreaLabel = labels.some((l) => l.startsWith('area: '));
     const hasPriorityLabel = labels.some((l) => /^P[0-5]$/.test(l));
@@ -44,6 +50,11 @@ export class IssueLabeling extends Labeling {
     } else if (hasAreaLabel) {
       await this.applyMilestoneIfFound(NEEDS_TRIAGE_MILESTONE);
     }
+  }
+
+  override async addLabel(label: string) {
+    await super.addLabel(label);
+    this.addedLabels.push(label);
   }
 
   async runAutoLabeling() {
