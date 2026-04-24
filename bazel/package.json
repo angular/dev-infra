@@ -2,6 +2,7 @@
   "name": "@devinfra/bazel",
   "dependencies": {
     "@microsoft/api-extractor": "7.58.2",
+    "diff": "^9.0.0",
     "@types/babel__core": "7.20.5",
     "@types/browser-sync": "2.29.1",
     "@types/node": "24.12.2",

@@ -14,6 +14,7 @@ import {testApiGolden} from './test_api_report.js';
 import * as fs from 'fs';
 import {Piscina} from 'piscina';
 import {styleText} from 'util';
+import {createPatch} from 'diff';
 
 /** Interface describing contents of a `package.json`. */
 export interface PackageJson {
@@ -89,7 +90,8 @@ async function main(
       const expected = await fs.promises.readFile(goldenFilePath, 'utf8');
       if (actual !== expected) {
         // Keep track of outdated goldens for error message.
-        outdatedGoldens.push(goldenName);
+        const patch = createPatch(goldenName, expected, actual);
+        outdatedGoldens.push({name: goldenName, diff: patch});
         return false;
       }
     }
@@ -97,7 +99,7 @@ async function main(
     return true;
   };
 
-  const outdatedGoldens: string[] = [];
+  const outdatedGoldens: {name: string; diff: string}[] = [];
   const tasks: Promise<boolean>[] = [];
   // Process in batches. Otherwise we risk out of memory errors.
   const batchSize = 10;
@@ -122,7 +124,11 @@ async function main(
     console.error(Array(80).fill('=').join(''));
     console.error(`${Array(35).fill('=').join('')} RESULTS ${Array(36).fill('=').join('')}`);
     console.error(Array(80).fill('=').join(''));
+
     if (singleFileMode) {
+      console.error(red(`Diff:`));
+      console.error(outdatedGoldens[0].diff);
+      console.info();
       console.error(
         red(
           `The golden is out of date and can be updated by running:\n  - bazel run ${process.env.TEST_TARGET}.accept`,
@@ -130,8 +136,16 @@ async function main(
       );
     } else {
       console.error(red(`The following goldens are outdated:`));
-      outdatedGoldens.forEach((name) => console.info(`-  ${name}`));
+      outdatedGoldens.forEach(({name}) => console.info(`-  ${name}`));
       console.info();
+
+      console.error(red(`Diffs:`));
+      outdatedGoldens.forEach(({name, diff}) => {
+        console.error(`\n--- Diff for ${name} ---`);
+        console.error(diff);
+      });
+      console.info();
+
       console.info(
         yellow(
           `The goldens can be updated by running:\n  - bazel run ${process.env.TEST_TARGET}.accept`,
