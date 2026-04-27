@@ -20,7 +20,7 @@ export async function updateGeneratedFileTargets(): Promise<void> {
       getBazelBin(),
       [
         'query',
-        `"kind(esbuild, //...) intersect attr(name, '_generated$', //...)"`,
+        `kind(esbuild, //...) intersect attr(name, '_generated$', //...)`,
         '--output',
         'label',
       ],
