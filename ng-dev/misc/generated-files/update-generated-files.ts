@@ -42,7 +42,7 @@ export async function updateGeneratedFileTargets(): Promise<void> {
     spinner.update(`Found ${targets.length} generated file targets to update`);
 
     // Build all of the generated file targets in parallel.
-    await ChildProcess.spawn(getBazelBin(), ['build', targets.join(' ')], {mode: 'silent'});
+    await ChildProcess.spawn(getBazelBin(), ['build', ...targets], {mode: 'silent'});
 
     // Individually run the generated file update targets.
     for (let idx = 0; idx < targets.length; idx++) {
