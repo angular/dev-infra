@@ -32,7 +32,7 @@ esbuild_checked_in(
     entry_point = "lib/fetch-workflow-artifact.ts",
     format = "esm",
     platform = "node",
-    target = "node22",
+    target = "node24",
 )
 
 esbuild_checked_in(
@@ -43,5 +43,5 @@ esbuild_checked_in(
     entry_point = "lib/extract-artifact-metadata.ts",
     format = "esm",
     platform = "node",
-    target = "node22",
+    target = "node24",
 )
