@@ -74,9 +74,6 @@ importers:
       typed-graphqlify:
         specifier: 3.1.6
         version: 3.1.6
-      undici:
-        specifier: 8.1.0
-        version: 8.1.0
 
   .github/local-actions/labels-sync:
     dependencies:
@@ -95,9 +92,6 @@ importers:
       '@types/node':
         specifier: 24.12.2
         version: 24.12.2
-      undici:
-        specifier: 8.1.0
-        version: 8.1.0
 
   .github/local-actions/lock-closed:
     dependencies:
@@ -116,9 +110,6 @@ importers:
       '@types/node':
         specifier: 24.12.2
         version: 24.12.2
-      undici:
-        specifier: 8.1.0
-        version: 8.1.0
 
   .github/local-actions/stale-cleanup:
     dependencies:
@@ -365,9 +356,6 @@ importers:
       typed-graphqlify:
         specifier: 3.1.6
         version: 3.1.6
-      undici:
-        specifier: 8.1.0
-        version: 8.1.0
 
   github-actions/browserstack:
     dependencies:
@@ -395,9 +383,6 @@ importers:
       typed-graphqlify:
         specifier: 3.1.6
         version: 3.1.6
-      undici:
-        specifier: 8.1.0
-        version: 8.1.0
 
   github-actions/labeling:
     dependencies:
@@ -434,9 +419,6 @@ importers:
       typed-graphqlify:
         specifier: 3.1.6
         version: 3.1.6
-      undici:
-        specifier: 8.1.0
-        version: 8.1.0
 
   github-actions/org-file-sync:
     dependencies:
@@ -458,9 +440,6 @@ importers:
       typed-graphqlify:
         specifier: 3.1.6
         version: 3.1.6
-      undici:
-        specifier: 8.1.0
-        version: 8.1.0
 
   github-actions/post-approval-changes:
     dependencies:
@@ -482,9 +461,6 @@ importers:
       typed-graphqlify:
         specifier: 3.1.6
         version: 3.1.6
-      undici:
-        specifier: 8.1.0
-        version: 8.1.0
 
   github-actions/previews/pack-and-upload-artifact:
     dependencies:
@@ -536,9 +512,6 @@ importers:
       typed-graphqlify:
         specifier: 3.1.6
         version: 3.1.6
-      undici:
-        specifier: 8.1.0
-        version: 8.1.0
 
   ng-dev:
     dependencies:
@@ -5817,10 +5790,6 @@ packages:
   undici@7.25.0:
     resolution: {integrity: sha512-xXnp4kTyor2Zq+J1FfPI6Eq3ew5h6Vl0F/8d9XU5zZQf1tX9s2Su1/3PiMmUANFULpmksxkClamIZcaUqryHsQ==}
     engines: {node: '>=20.18.1'}
-
-  undici@8.1.0:
-    resolution: {integrity: sha512-E9MkTS4xXLnRPYqxH2e6Hr2/49e7WFDKczKcCaFH4VaZs2iNvHMqeIkyUAD9vM8kujy9TjVrRlQ5KkdEJxB2pw==}
-    engines: {node: '>=22.19.0'}
 
   unicode-emoji-modifier-base@1.0.0:
     resolution: {integrity: sha512-yLSH4py7oFH3oG/9K+XWrz1pSi3dfUrWEnInbxMfArOfc1+33BlGPQtLsOYwvdMy11AwUBetYuaRxSPqgkq+8g==}
@@ -11983,8 +11952,6 @@ snapshots:
   undici@6.25.0: {}
 
   undici@7.25.0: {}
-
-  undici@8.1.0: {}
 
   unicode-emoji-modifier-base@1.0.0: {}
 

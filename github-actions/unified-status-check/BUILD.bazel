@@ -17,7 +17,6 @@ ts_project(
         ":node_modules/@octokit/types",
         ":node_modules/@types/node",
         ":node_modules/typed-graphqlify",
-        ":node_modules/undici",
         "//github-actions:utils",
         "//ng-dev/pr/common/labels",
     ],
