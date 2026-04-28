@@ -17,7 +17,6 @@ ts_project(
         "//github-actions/labeling:node_modules/@types/micromatch",
         "//github-actions/labeling:node_modules/@types/node",
         "//github-actions/labeling:node_modules/micromatch",
-        "//github-actions/labeling:node_modules/undici",
         "//github-actions/labeling/shared",
         "//ng-dev/commit-message",
         "//ng-dev/pr/common/labels",

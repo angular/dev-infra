@@ -14,7 +14,6 @@ ts_project(
         "//.github/local-actions/lock-closed:node_modules/@actions/github",
         "//.github/local-actions/lock-closed:node_modules/@octokit/rest",
         "//.github/local-actions/lock-closed:node_modules/@types/node",
-        "//.github/local-actions/lock-closed:node_modules/undici",
         "//github-actions:utils",
     ],
 )

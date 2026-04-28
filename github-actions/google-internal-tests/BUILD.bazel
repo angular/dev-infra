@@ -14,7 +14,6 @@ ts_project(
         ":node_modules/@actions/github",
         ":node_modules/@octokit/rest",
         ":node_modules/@types/node",
-        ":node_modules/undici",
         "//ng-dev/utils:g3_sync_config",
     ],
 )
