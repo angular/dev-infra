@@ -1,7 +1,7 @@
 {
   "type": "module",
   "dependencies": {
-    "@actions/core": "3.0.0",
+    "@actions/core": "3.0.1",
     "@types/node": "24.12.2"
   }
 }
