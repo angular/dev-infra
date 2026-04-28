@@ -52,7 +52,7 @@ esbuild_checked_in(
     entry_point = "lib/main.ts",
     format = "esm",
     platform = "node",
-    target = "node22",
+    target = "node24",
 )
 
 jasmine_test(
