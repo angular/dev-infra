@@ -3,7 +3,7 @@
   "type": "commonjs",
   "packageManager": "pnpm@10.33.2",
   "dependencies": {
-    "renovate": "43.120.1"
+    "renovate": "43.142.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
