@@ -3,8 +3,8 @@ name: Angular-Org Renovate
 on:
   workflow_dispatch:
   schedule:
-    # Runs every 30 minutes.
-    - cron: '*/30 * * * *'
+    # Run on the 17th and 47th minute of every hour.
+    - cron: '17,47 * * * *'
 
 concurrency:
   group: ${{ github.workflow }}
