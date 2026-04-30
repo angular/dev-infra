@@ -37,7 +37,7 @@ importers:
         version: 0.13.4
       '@web/test-runner-puppeteer':
         specifier: ^0.18.0
-        version: 0.18.0(typescript@6.0.2)
+        version: 0.18.0(typescript@6.0.3)
       get-port:
         specifier: ^7.1.0
         version: 7.2.0
@@ -51,8 +51,8 @@ importers:
         specifier: ^0.2.12
         version: 0.2.16
       typescript:
-        specifier: 6.0.2
-        version: 6.0.2
+        specifier: 6.0.3
+        version: 6.0.3
       web-test-runner-jasmine:
         specifier: 0.2.0
         version: 0.2.0(jasmine-core@6.2.0)
@@ -1940,8 +1940,8 @@ packages:
   typed-query-selector@2.12.2:
     resolution: {integrity: sha512-EOPFbyIub4ngnEdqi2yOcNeDLaX/0jcE1JoAXQDDMIthap7FoN795lc/SHfIq2d416VufXpM8z/lD+WRm2gfOQ==}
 
-  typescript@6.0.2:
-    resolution: {integrity: sha512-bGdAIrZ0wiGDo5l8c++HWtbaNCWTS4UTv7RaTH/ThVIgjkveJt83m74bBHMJkuCbslY8ixgLBVZJIOiQlQTjfQ==}
+  typescript@6.0.3:
+    resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -1968,7 +1968,7 @@ packages:
 
   uuid@3.4.0:
     resolution: {integrity: sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==}
-    deprecated: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   v8-to-istanbul@9.3.0:
@@ -2509,11 +2509,11 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@web/test-runner-puppeteer@0.18.0(typescript@6.0.2)':
+  '@web/test-runner-puppeteer@0.18.0(typescript@6.0.3)':
     dependencies:
       '@web/test-runner-chrome': 0.18.1
       '@web/test-runner-core': 0.13.4
-      puppeteer: 24.42.0(typescript@6.0.2)
+      puppeteer: 24.42.0(typescript@6.0.3)
     transitivePeerDependencies:
       - bare-abort-controller
       - bare-buffer
@@ -2820,14 +2820,14 @@ snapshots:
 
   core-util-is@1.0.3: {}
 
-  cosmiconfig@9.0.1(typescript@6.0.2):
+  cosmiconfig@9.0.1(typescript@6.0.3):
     dependencies:
       env-paths: 2.2.1
       import-fresh: 3.3.1
       js-yaml: 4.1.1
       parse-json: 5.2.0
     optionalDependencies:
-      typescript: 6.0.2
+      typescript: 6.0.3
 
   cross-spawn@7.0.6:
     dependencies:
@@ -3733,11 +3733,11 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  puppeteer@24.42.0(typescript@6.0.2):
+  puppeteer@24.42.0(typescript@6.0.3):
     dependencies:
       '@puppeteer/browsers': 2.13.0
       chromium-bidi: 14.0.0(devtools-protocol@0.0.1595872)
-      cosmiconfig: 9.0.1(typescript@6.0.2)
+      cosmiconfig: 9.0.1(typescript@6.0.3)
       devtools-protocol: 0.0.1595872
       puppeteer-core: 24.42.0
       typed-query-selector: 2.12.2
@@ -4112,7 +4112,7 @@ snapshots:
 
   typed-query-selector@2.12.2: {}
 
-  typescript@6.0.2: {}
+  typescript@6.0.3: {}
 
   typical@4.0.0: {}
 
