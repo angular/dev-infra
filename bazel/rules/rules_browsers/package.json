@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@puppeteer/browsers": "2.13.0",
+    "@puppeteer/browsers": "2.13.1",
     "@rollup/plugin-virtual": "^3.0.2",
     "@types/jasmine": "^6.0.0",
     "@types/node": "^22.14.0",
@@ -34,8 +34,8 @@
   "pnpm": {
     "onlyBuiltDependencies": [],
     "overrides": {
-      "puppeteer": "24.42.0",
-      "puppeteer-core": "24.42.0"
+      "puppeteer": "24.43.0",
+      "puppeteer-core": "24.43.0"
     },
     "packageExtensions": {
       "grpc-gcp": {

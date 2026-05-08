@@ -12,6 +12,6 @@
     "@angular/router": "22.0.0-next.10",
     "@octokit/rest": "",
     "rxjs": "7.8.2",
-    "zone.js": "0.16.1"
+    "zone.js": "0.16.2"
   }
 }
