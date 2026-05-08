@@ -8,9 +8,9 @@
     "@types/node": "24.12.2",
     "jasmine-reporters": "2.5.2",
     "jasmine": "6.2.0",
-    "jsdom": "29.1.0",
+    "jsdom": "29.1.1",
     "tinyglobby": "0.2.16",
-    "zone.js": "0.16.1"
+    "zone.js": "0.16.2"
   },
   "type": "module"
 }
