@@ -65,14 +65,25 @@ runs:
     # RISK: The downloaded `unsafe-artifact` is of input category `RISK`.
     - name: Extracting workflow artifact into Firebase public directory.
       shell: bash
+      env:
+        FIREBASE_PUBLIC_DIR: ${{inputs.firebase-public-dir}}
       run: |
-        extractDir="$RUNNER_TEMP/artifact-unpack"
+        set -euo pipefail
 
-        mkdir -p '${{inputs.firebase-public-dir}}'
+        extractDir="$RUNNER_TEMP/artifact-unpack"
+        publicDir="$FIREBASE_PUBLIC_DIR"
+
+        mkdir -p "$publicDir"
         mkdir -p "$extractDir"
 
         unzip unsafe-artifact.zip -d "$extractDir"
-        tar -xvzf "$extractDir/deploy-artifact.tar.gz" -C '${{inputs.firebase-public-dir}}'
+        tar -xzf "$extractDir/deploy-artifact.tar.gz" -C "$publicDir"
+
+        symlinks=$(find "$publicDir" -type l)
+        if [ -n "$symlinks" ]; then
+          printf '%s\n' "$symlinks" | sed 's/^/  /'
+          exit 1
+        fi
 
     - name: Extracting artifact metadata
       id: artifact-info
