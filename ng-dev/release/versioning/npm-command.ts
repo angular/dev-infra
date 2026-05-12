@@ -11,6 +11,7 @@ import semver from 'semver';
 import {ChildProcess} from '../../utils/child-process.js';
 
 import {NpmDistTag} from './npm-registry.js';
+import {Log} from '../../utils/logging.js';
 
 export abstract class NpmCommand {
   /**
@@ -47,7 +48,13 @@ export abstract class NpmCommand {
       args.push('--registry', registryUrl);
     }
 
-    await ChildProcess.spawn('npm', args, {mode: 'silent'});
+    try {
+      await ChildProcess.spawn('npm', args, {mode: 'silent'});
+    } catch (e) {
+      // TODO(alanagius): remove try/catch block once https://buganizer.corp.google.com/u/1/issues/512428441 is fixed.
+      Log.error(e);
+      Log.error(`  ✘   An error occurred while deprecating "${packageName}".`);
+    }
   }
 
   /**
