@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {existsSync} from 'fs';
-import {join} from 'path';
+import {existsSync, readFileSync} from 'fs';
+import {dirname, join} from 'path';
 import semver from 'semver';
 import {ChildProcess, SpawnResult, SpawnOptions} from '../../utils/child-process.js';
 import {Spinner} from '../../utils/spinner.js';
@@ -193,6 +193,10 @@ export abstract class ExternalCommands {
   /**
    * Invokes the `nvm install` command in order to install the correct Node.js version
    * as specified in a `.nvmrc` file, if present.
+   *
+   * We then run `nvm install` to install the correct version of node. We then run
+   * `nvm which` to get the path to the node binary, and we update the PATH
+   * environment variable to include this new node binary location.
    */
   static async invokeNvmInstall(projectDir: string): Promise<void>;
   static async invokeNvmInstall(projectDir: string, quiet: boolean): Promise<void>;
@@ -202,20 +206,50 @@ export abstract class ExternalCommands {
     }
 
     try {
+      const nodeVersionFromNvmrc = readFileSync(join(projectDir, '.nvmrc'), 'utf8').trim();
+
       // We must source nvm.sh so the shell recognizes the 'nvm' command since nvm is not a binary
       // but a shell function. The dot (.) built-in and && operator require shell: true here.
-      await ChildProcess.spawn('. ~/.nvm/nvm.sh && nvm install', [], {
+      // We redirect stdout of nvm install to stderr so that stdout only contains the result of nvm which.
+      const {stdout} = await ChildProcess.spawn(
+        '. ~/.nvm/nvm.sh && nvm install >&2 && nvm which',
+        [],
+        {
+          cwd: projectDir,
+          mode: 'on-error',
+          shell: true,
+        },
+      );
+
+      const nodeBinPath = stdout.trim();
+      if (nodeBinPath) {
+        const nodeDir = dirname(nodeBinPath);
+        const currentPath = process.env['PATH'] || '';
+        const pathParts = currentPath.split(':');
+
+        // Only update if the requested node directory is not already the first entry in PATH.
+        if (pathParts[0] !== nodeDir) {
+          const filteredParts = pathParts.filter((p) => p !== nodeDir);
+          process.env['PATH'] = [nodeDir, ...filteredParts].join(':');
+          Log.debug(`Updated process.env.PATH to include ${nodeDir}`);
+        }
+      }
+
+      const {stdout: nodeVersionOutput} = await ChildProcess.spawn('node', ['--version'], {
+        mode: 'silent',
         cwd: projectDir,
-        mode: 'on-error',
-        shell: true,
       });
+      const detectedNodeVersion = nodeVersionOutput.trim();
+
+      if (!semver.satisfies(detectedNodeVersion, nodeVersionFromNvmrc)) {
+        Log.error(`  ✘   Node.js version mismatch after update.\n`);
+        Log.error(`      Expected version: ${nodeVersionFromNvmrc}`);
+        Log.error(`      Actual version:   ${detectedNodeVersion}`);
+        throw new FatalReleaseActionError();
+      }
 
       if (!quiet) {
-        const {stdout: nodeVersion} = await ChildProcess.spawn('node', ['--version'], {
-          mode: 'silent',
-          cwd: projectDir,
-        });
-        Log.info(green(`  ✓   Set node version to ${nodeVersion}.`));
+        Log.info(green(`  ✓   Set node version to ${detectedNodeVersion}.`));
       }
     } catch (e) {
       Log.error(e);
