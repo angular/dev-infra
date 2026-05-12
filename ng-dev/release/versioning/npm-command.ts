@@ -52,8 +52,10 @@ export abstract class NpmCommand {
       await ChildProcess.spawn('npm', args, {mode: 'silent'});
     } catch (e) {
       // TODO(alanagius): remove try/catch block once https://buganizer.corp.google.com/u/1/issues/512428441 is fixed.
-      Log.error(e);
+      Log.error(Array(80).join('#'));
       Log.error(`  ✘   An error occurred while deprecating "${packageName}".`);
+      Log.error(e);
+      Log.error(Array(80).join('#'));
     }
   }
 
