@@ -17,5 +17,7 @@ export class PullRequestValidationFailure {
     public readonly validationName: keyof PullRequestValidationConfig,
     /** Validation config name for the failure. */
     public readonly canBeForceIgnored: boolean,
+    /** Whether the failure is final and will not change without action from a human. */
+    public readonly isFinal: boolean = true,
   ) {}
 }

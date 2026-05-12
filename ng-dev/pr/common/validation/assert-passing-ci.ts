@@ -31,10 +31,11 @@ class Validation extends PullRequestValidation {
     if (statuses.find((status) => status.name === 'lint') === undefined) {
       throw this._createError(
         'Pull request is missing expected status checks. Check the pull request for pending workflows',
+        false,
       );
     }
     if (combinedStatus === PullRequestStatus.PENDING) {
-      throw this._createError('Pull request has pending status checks.');
+      throw this._createError('Pull request has pending status checks.', false);
     }
     if (combinedStatus === PullRequestStatus.FAILING) {
       throw this._createError('Pull request has failing status checks.');

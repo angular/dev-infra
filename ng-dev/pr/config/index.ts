@@ -90,4 +90,5 @@ export function assertValidPullRequestConfig<T extends NgDevConfig>(
 
 export interface PullRequestValidationConfig {
   [key: `assert${string}`]: boolean;
+  waitIfPending?: boolean;
 }
