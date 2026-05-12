@@ -212,7 +212,7 @@ export abstract class ExternalCommands {
       // but a shell function. The dot (.) built-in and && operator require shell: true here.
       // We redirect stdout of nvm install to stderr so that stdout only contains the result of nvm which.
       const {stdout} = await ChildProcess.spawn(
-        '. ~/.nvm/nvm.sh && nvm install >&2 && nvm which',
+        '. ~/.nvm/nvm.sh && nvm install >&2 && nvm which --silent',
         [],
         {
           cwd: projectDir,
