@@ -18,6 +18,7 @@ export interface MergeCommandOptions {
   forceManualBranches: boolean;
   dryRun: boolean;
   ignorePendingReviews: boolean;
+  waitForValidations: boolean;
 }
 
 /** Builds the command. */
@@ -45,6 +46,11 @@ async function builder(argv: Argv) {
       type: 'boolean',
       default: false,
       description: 'Bypass the check for pending reviews on the pull request',
+    })
+    .option('wait-for-validations' as 'waitForValidations', {
+      type: 'boolean',
+      default: false,
+      description: 'Wait for pending validations to complete before merging.',
     });
 }
 
@@ -55,8 +61,15 @@ async function handler({
   forceManualBranches,
   dryRun,
   ignorePendingReviews,
+  waitForValidations,
 }: Arguments<MergeCommandOptions>) {
-  await mergePullRequest(pr, {branchPrompt, forceManualBranches, dryRun, ignorePendingReviews});
+  await mergePullRequest(pr, {
+    branchPrompt,
+    forceManualBranches,
+    dryRun,
+    ignorePendingReviews,
+    waitForValidations,
+  });
 }
 
 /** yargs command module describing the command. */

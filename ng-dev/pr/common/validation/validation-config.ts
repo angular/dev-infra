@@ -33,7 +33,10 @@ export function createPullRequestValidationConfig(
 }
 
 /** Type describing a helper function for validations to create a validation failure. */
-export type PullRequestValidationErrorCreateFn = (message: string) => PullRequestValidationFailure;
+export type PullRequestValidationErrorCreateFn = (
+  message: string,
+  isFinal?: boolean,
+) => PullRequestValidationFailure;
 
 /**
  * Base class for pull request validations, providing helpers for the validation errors,
@@ -62,7 +65,8 @@ export function createPullRequestValidation<T extends PullRequestValidation>(
       if (validationConfig[name]) {
         const validation = new (getValidationCtor())(
           name,
-          (message) => new PullRequestValidationFailure(message, name, canBeForceIgnored),
+          (message, isFinal = true) =>
+            new PullRequestValidationFailure(message, name, canBeForceIgnored, isFinal),
         );
         try {
           await validation.assert(...args);

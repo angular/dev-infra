@@ -39,6 +39,7 @@ export interface PullRequestMergeFlags {
   forceManualBranches: boolean;
   dryRun: boolean;
   ignorePendingReviews: boolean;
+  waitForValidations: boolean;
 }
 
 const defaultPullRequestMergeFlags: PullRequestMergeFlags = {
@@ -46,6 +47,7 @@ const defaultPullRequestMergeFlags: PullRequestMergeFlags = {
   forceManualBranches: false,
   dryRun: false,
   ignorePendingReviews: false,
+  waitForValidations: false,
 };
 
 /**
@@ -82,6 +84,7 @@ export class MergeTool {
     const validationConfig = createPullRequestValidationConfig({
       ...this.config.pullRequest.validators,
       ...partialValidationConfig,
+      waitIfPending: this.flags.waitForValidations,
     });
 
     if (this.git.hasUncommittedChanges()) {
