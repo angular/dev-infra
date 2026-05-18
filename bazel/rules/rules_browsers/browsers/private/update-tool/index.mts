@@ -115,7 +115,7 @@ async function downloadMilestonesAndWriteVersionsFiles({
 
   await new Promise<void>((resolve, reject) => {
     exec(
-      `pnpm ng-dev format files "${bzlFilePath}" "${jsonFilePath}"`,
+      `pnpm ng-dev format files "${bzlFilePath}" "${jsonFilePath}" --no-check`,
       {cwd: workspaceRoot},
       (err, stdout, stderr) => {
         if (err) {
