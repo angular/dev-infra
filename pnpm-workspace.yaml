@@ -22,6 +22,15 @@ packages:
   - github-actions/browserstack
   - github-actions/labeling
   - github-actions/bazel/configure-remote
+allowBuilds:
+  '@apollo/protobufjs': set this to true or false
+  '@firebase/util': set this to true or false
+  '@google/genai': set this to true or false
+  bufferutil: set this to true or false
+  esbuild: set this to true or false
+  protobufjs: set this to true or false
+  re2: set this to true or false
+  utf-8-validate: set this to true or false
 # The minimum age of a release to be considered for dependency installation.
 # The value is in minutes (1440 minutes = 1 day).
 minimumReleaseAge: 1440

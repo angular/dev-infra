@@ -1,5 +1,7 @@
 packages:
   - .
+allowBuilds:
+  puppeteer: set this to true or false
 minimumReleaseAge: 1440
 # List of packages to exclude from the minimum release age check.
 minimumReleaseAgeExclude:
