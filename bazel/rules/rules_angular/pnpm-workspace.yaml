@@ -6,3 +6,11 @@ minimumReleaseAgeExclude:
   - '@angular-devkit/*'
   - '@angular/*'
   - '@schematics/*'
+packageExtensions:
+  grpc-gcp:
+    peerDependencies:
+      protobufjs: '*'
+engineStrict: true
+hoist: false
+autoInstallPeers: false
+allowBuilds: {'@parcel/watcher': false, esbuild: false, lmdb: false, msgpackr-extract: false}

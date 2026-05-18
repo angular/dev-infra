@@ -32,3 +32,19 @@ minimumReleaseAgeExclude:
   - '@ngtools/webpack'
   - '@schematics/*'
   - 'ng-packagr'
+packageExtensions:
+  grpc-gcp:
+    peerDependencies:
+      protobufjs: '*'
+engineStrict: false
+hoist: false
+autoInstallPeers: false
+allowBuilds:
+  '@apollo/protobufjs': false
+  '@firebase/util': false
+  '@google/genai': false
+  bufferutil: false
+  esbuild: false
+  protobufjs: false
+  re2: false
+  utf-8-validate: false

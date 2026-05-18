@@ -6,3 +6,13 @@ minimumReleaseAgeExclude:
   - '@angular-devkit/*'
   - '@angular/*'
   - '@schematics/*'
+overrides:
+  puppeteer: 24.43.1
+  puppeteer-core: 24.43.1
+packageExtensions:
+  grpc-gcp:
+    peerDependencies:
+      protobufjs: '*'
+engineStrict: true
+hoist: false
+allowBuilds: {puppeteer: false}

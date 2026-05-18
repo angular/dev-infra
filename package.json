@@ -2,11 +2,11 @@
   "name": "@angular/build-tooling",
   "version": "0.0.0-{SCM_HEAD_SHA}",
   "private": true,
-  "packageManager": "pnpm@10.33.4",
+  "packageManager": "pnpm@11.1.2",
   "engines": {
     "npm": "Please use pnpm instead of NPM to install dependencies",
     "yarn": "Please use pnpm instead of Yarn to install dependencies",
-    "pnpm": "10.33.4"
+    "pnpm": "11.1.2"
   },
   "scripts": {
     "prepare": "husky",
@@ -36,18 +36,5 @@
     "tslib": "^2.5.2",
     "tslint": "6.1.3",
     "tsx": "^4.15.7"
-  },
-  "pnpm": {
-    "packageExtensions": {
-      "grpc-gcp": {
-        "peerDependencies": {
-          "protobufjs": "*"
-        }
-      }
-    },
-    "onlyBuiltDependencies": [
-      "firebase-functions",
-      "tsx"
-    ]
   }
 }
