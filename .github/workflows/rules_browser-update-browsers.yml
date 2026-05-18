@@ -1,0 +1,57 @@
+name: rules_browsers Browsers Metadata Update
+
+on:
+  schedule:
+    # Runs at minute 0 of every 6th hour (00:00, 06:00, 12:00, 18:00 UTC)
+    - cron: '0 */6 * * *'
+  workflow_dispatch: # Allows you to trigger it manually.
+
+permissions: {}
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Setup Node and pnpm
+        uses: ./github-actions/npm/checkout-and-setup-node
+
+      - uses: ./github-actions/bazel/setup
+      - uses: ./github-actions/bazel/configure-remote
+        with:
+          google_credential: ${{ secrets.RBE_TRUSTED_BUILDS_USER }}
+
+      - name: Install root dependencies (for buildifier & prettier)
+        run: pnpm install --frozen-lockfile
+
+      - name: Install rules_browsers dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: bazel/rules/rules_browsers
+
+      - name: Run update-tool
+        run: pnpm bazel run //browsers/private/update-tool
+        working-directory: bazel/rules/rules_browsers
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          token: ${{ secrets.ANGULAR_ROBOT_ACCESS_TOKEN }}
+          push-to-fork: 'angular-robot/dev-infra'
+          delete-branch: true
+          maintainer-can-modify: true
+          branch: rules-browsers-update
+          committer: Angular Robot <angular-robot@google.com>
+          author: Angular Robot <angular-robot@google.com>
+          title: 'build: update rules_browsers metadata'
+          commit-message: 'build: update rules_browsers browsers metadata to latest versions'
+          body: |
+            Automatically updated rules_browsers browsers metadata.
+          labels: |
+            action: merge
