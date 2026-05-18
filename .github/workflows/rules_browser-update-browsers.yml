@@ -39,6 +39,9 @@ jobs:
         run: pnpm bazel run //browsers/private/update-tool
         working-directory: bazel/rules/rules_browsers
 
+      - name: Sync Bazel MODULE.bazel files
+        run: bash ./tools/sync-all-modules.sh
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
@@ -49,7 +52,7 @@ jobs:
           branch: rules-browsers-update
           committer: Angular Robot <angular-robot@google.com>
           author: Angular Robot <angular-robot@google.com>
-          title: 'build: update rules_browsers metadata'
+          title: 'build: update rules_browsers browsers metadata'
           commit-message: 'build: update rules_browsers browsers metadata to latest versions'
           body: |
             Automatically updated rules_browsers browsers metadata.
