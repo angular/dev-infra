@@ -113,24 +113,23 @@ async function downloadMilestonesAndWriteVersionsFiles({
     generateVersionsBzlFile(getReadableBrowserName(browser), defaultVersion, versions),
   );
 
-  // Format the resulting `.json` file. Prettier may apply some formatting that
-  // isn't consistent with default stringification (e.g. line length).
-  exec(`npx prettier --write ${jsonFilePath}`, (err, stdout, stderr) => {
-    if (err) {
-      console.log(stdout);
-      console.log(stderr);
-      console.warn(`Formatting of ${jsonFilePath} failed: ${err.message}`);
-    }
-  });
+  await new Promise<void>((resolve, reject) => {
+    exec(
+      `pnpm ng-dev format files "${bzlFilePath}" "${jsonFilePath}"`,
+      {cwd: workspaceRoot},
+      (err, stdout, stderr) => {
+        if (err) {
+          console.log(stdout);
+          console.error(stderr);
+          console.error(`Formatting of ${bzlFilePath} and ${jsonFilePath} failed: ${err.message}`);
+          reject(err);
 
-  // Format the resulting `.bzl` file. JSON is valid here, but it's not
-  // formatted quite right (e.g. no trailing comma).
-  exec(`buildifier ${bzlFilePath}`, (err, stdout, stderr) => {
-    if (err) {
-      console.log(stdout);
-      console.log(stderr);
-      console.warn(`Formatting of ${bzlFilePath} failed: ${err.message}`);
-    }
+          return;
+        }
+
+        resolve();
+      },
+    );
   });
 }
 
