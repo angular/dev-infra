@@ -1,3 +1,9 @@
 # The minimum age of a release to be considered for dependency installation.
 # The value is in minutes (1440 minutes = 1 day).
 minimumReleaseAge: 1440
+allowBuilds:
+  better-sqlite3: false
+  core-js-pure: false
+  dtrace-provider: false
+  protobufjs: false
+  re2: true
