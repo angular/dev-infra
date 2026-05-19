@@ -15,8 +15,8 @@ importers:
   .:
     dependencies:
       '@puppeteer/browsers':
-        specifier: 2.13.2
-        version: 2.13.2
+        specifier: 3.0.3
+        version: 3.0.3
       '@rollup/plugin-virtual':
         specifier: ^3.0.2
         version: 3.0.2(rollup@4.60.3)
