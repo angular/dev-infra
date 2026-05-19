@@ -6,9 +6,6 @@ minimumReleaseAgeExclude:
   - '@angular-devkit/*'
   - '@angular/*'
   - '@schematics/*'
-overrides:
-  puppeteer: 25.0.3
-  puppeteer-core: 24.43.1
 packageExtensions:
   grpc-gcp:
     peerDependencies:
