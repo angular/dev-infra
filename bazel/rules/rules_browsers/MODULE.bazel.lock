@@ -214,7 +214,7 @@
   "moduleExtensions": {
     "//browsers:extensions.bzl%browsers": {
       "general": {
-        "bzlTransitiveDigest": "ae4BdsrdOIEG0LuuLqTkKa4bQtuVjmJ8Xwtxcvc5bV0=",
+        "bzlTransitiveDigest": "bSZZZDyC3Xuk66A4sGPS151M31eBfEr1Yii1vzk8Jbg=",
         "usagesDigest": "AjLxg6mv6EYde4ira4Pm7e2NrWFybg3pbNSHp9aeZhU=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
@@ -359,9 +359,9 @@
           "rules_browsers_firefox_linux": {
             "repoRuleId": "@@//browsers/private:browser_repo.bzl%browser_repo",
             "attributes": {
-              "sha256": "2ff987e94bfa6ed51f53d6b4baa7f0f8ec3fc26c4c47bd9f86c70d11aa0fbd60",
+              "sha256": "8ff8557a5ca3903ebbc1d18570684075f623465be5e362d63a95b3acc523f824",
               "urls": [
-                "https://archive.mozilla.org/pub/firefox/releases/150.0/linux-x86_64/en-US/firefox-150.0.tar.xz"
+                "https://archive.mozilla.org/pub/firefox/releases/151.0/linux-x86_64/en-US/firefox-151.0.tar.xz"
               ],
               "named_files": {
                 "FIREFOX": "firefox/firefox"
@@ -375,9 +375,9 @@
           "rules_browsers_firefox_mac": {
             "repoRuleId": "@@//browsers/private:browser_repo.bzl%browser_repo",
             "attributes": {
-              "sha256": "203667ff6b0920f89973d477b1394d99b4b78807a613914c97bb1b3200e6da1b",
+              "sha256": "5a56ebd8f0f8cec94a86e04c6793e1d1502b40206f5d4c86fff5b7a270e84f6b",
               "urls": [
-                "https://archive.mozilla.org/pub/firefox/releases/150.0/mac/en-US/Firefox%20150.0.dmg"
+                "https://archive.mozilla.org/pub/firefox/releases/151.0/mac/en-US/Firefox%20151.0.dmg"
               ],
               "named_files": {
                 "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
@@ -391,9 +391,9 @@
           "rules_browsers_firefox_mac_arm": {
             "repoRuleId": "@@//browsers/private:browser_repo.bzl%browser_repo",
             "attributes": {
-              "sha256": "203667ff6b0920f89973d477b1394d99b4b78807a613914c97bb1b3200e6da1b",
+              "sha256": "5a56ebd8f0f8cec94a86e04c6793e1d1502b40206f5d4c86fff5b7a270e84f6b",
               "urls": [
-                "https://archive.mozilla.org/pub/firefox/releases/150.0/mac/en-US/Firefox%20150.0.dmg"
+                "https://archive.mozilla.org/pub/firefox/releases/151.0/mac/en-US/Firefox%20151.0.dmg"
               ],
               "named_files": {
                 "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
@@ -407,9 +407,9 @@
           "rules_browsers_firefox_win64": {
             "repoRuleId": "@@//browsers/private:browser_repo.bzl%browser_repo",
             "attributes": {
-              "sha256": "7029e4b01635fcc24ca553a292af99d88ba11e502c45c12f1a4b9c10c3757076",
+              "sha256": "358381238a840831da8a6cda16721692df91a74bc44847ff0285da12de788a8d",
               "urls": [
-                "https://archive.mozilla.org/pub/firefox/releases/150.0/win64/en-US/Firefox%20Setup%20150.0.exe"
+                "https://archive.mozilla.org/pub/firefox/releases/151.0/win64/en-US/Firefox%20Setup%20151.0.exe"
               ],
               "named_files": {
                 "FIREFOX": "core/firefox.exe"
