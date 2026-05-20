@@ -9,5 +9,5 @@
     "@playwright/test": "^1.16.3",
     "typescript": "^6.0.2"
   },
-  "packageManager": "pnpm@11.1.2"
+  "packageManager": "pnpm@11.1.3"
 }
