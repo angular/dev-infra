@@ -8,16 +8,22 @@ import {
 } from '../../../../github-actions/utils.js';
 import {setTimeout as setTimeoutPromise} from 'timers/promises';
 
-// Helper function
-export function getLockMessage(item: { pull_request?: object; number: number }): string {
-  const itemType: 'issue' | 'pull request' = item.pull_request ? 'pull request' : 'issue';
-  const policyUrl =
-    'https://github.com/angular/angular/blob/f0fbced1c55bc8b8ed9df01cea99df42f3e7eae3/contributing-docs/auto-issue-locking.md';
+/**
+ * The URL of the policy. This is used to link to the policy from the lock message.
+ */
+const POLICY_URL =
+  'https://github.com/angular/angular/blob/f0fbced1c55bc8b8ed9df01cea99df42f3e7eae3/contributing-docs/auto-issue-locking.md';
 
+/**
+ * Generates a lock message for a GitHub issue or pull request.
+ * @param itemType The type of the item, either 'pull request' or 'issue'.
+ * @returns The lock message string.
+ */
+function getLockMessage(itemType: 'pull request' | 'issue'): string {
   return `${itemType.charAt(0).toUpperCase() + itemType.slice(1)} has been automatically locked due to inactivity.
-Please file a new ${itemType} if you are encountering a similar or related problem.
+Please file a new issue if you are encountering a similar or related problem.
 
-Read more about our [automatic conversation locking policy](${policyUrl}).
+Read more about our [automatic conversation locking policy](${POLICY_URL}).
 
 <sub>_This action has been performed automatically by a bot._</sub>`;
 }
@@ -72,7 +78,6 @@ async function runLockClosedAction(github: Octokit, repo: string): Promise<void>
 
   // Fixed amount of days a closed issue must be inactive before being locked
   const days = 30;
-  // Message will now be generated dynamically per item in the loop
   // Set the threshold date based on the days inactive
   const threshold = new Date();
   threshold.setDate(threshold.getDate() - days);
@@ -106,8 +111,8 @@ async function runLockClosedAction(github: Octokit, repo: string): Promise<void>
         continue;
       }
       console.info(`Locking ${itemType} #${item.number}`);
-      const dynamicMessage = getLockMessage(item);
-      await lockIssue(github, item.number, repo, dynamicMessage);
+      const message = getLockMessage(itemType);
+      await lockIssue(github, item.number, repo, message);
       await setTimeoutPromise(250);
       ++lockCount;
     } catch (error: any) {
