@@ -20,7 +20,7 @@ const POLICY_URL =
  * @returns The lock message string.
  */
 function getLockMessage(itemType: 'pull request' | 'issue'): string {
-  return `${itemType.charAt(0).toUpperCase() + itemType.slice(1)} has been automatically locked due to inactivity.
+  return `This ${itemType} has been automatically locked due to inactivity.
 Please file a new issue if you are encountering a similar or related problem.
 
 Read more about our [automatic conversation locking policy](${POLICY_URL}).

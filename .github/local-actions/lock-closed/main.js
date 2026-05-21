@@ -25207,7 +25207,7 @@ async function revokeActiveInstallationToken(githubOrToken) {
 import { setTimeout as setTimeoutPromise } from "timers/promises";
 var POLICY_URL = "https://github.com/angular/angular/blob/f0fbced1c55bc8b8ed9df01cea99df42f3e7eae3/contributing-docs/auto-issue-locking.md";
 function getLockMessage(itemType) {
-  return `${itemType.charAt(0).toUpperCase() + itemType.slice(1)} has been automatically locked due to inactivity.
+  return `This ${itemType} has been automatically locked due to inactivity.
 Please file a new issue if you are encountering a similar or related problem.
 
 Read more about our [automatic conversation locking policy](${POLICY_URL}).
