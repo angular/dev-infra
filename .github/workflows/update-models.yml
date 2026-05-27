@@ -1,0 +1,59 @@
+name: Gemini Models Auto-Update
+
+on:
+  schedule:
+    # Runs daily at 04:00 UTC
+    - cron: '0 4 * * *'
+  workflow_dispatch: # Allows manual trigger.
+
+permissions: {}
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  update-models:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Setup Node and pnpm
+        uses: ./github-actions/npm/checkout-and-setup-node
+
+      - uses: ./github-actions/bazel/setup
+      - uses: ./github-actions/bazel/configure-remote
+        with:
+          google_credential: ${{ secrets.RBE_TRUSTED_BUILDS_USER }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run Model Updater Action
+        uses: ./.github/local-actions/update-models
+
+      - name: Regenerate Generated Files
+        run: pnpm update-generated-files
+
+      - name: Run Tests
+        run: pnpm bazel test -- //...
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          token: ${{ secrets.ANGULAR_ROBOT_ACCESS_TOKEN }}
+          push-to-fork: 'angular-robot/dev-infra'
+          delete-branch: true
+          maintainer-can-modify: true
+          branch: gemini-model-updates
+          committer: Angular Robot <angular-robot@google.com>
+          author: Angular Robot <angular-robot@google.com>
+          title: 'build: update gemini models to recommended versions'
+          commit-message: 'build: update gemini models to recommended versions'
+          body: |
+            Automatically updated Gemini model versions based on the official deprecation schedules.
+            Also rebuilt any dependent checked-in action bundles and verified all tests pass.
+          labels: |
+            action: merge

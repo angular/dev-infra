@@ -7,7 +7,7 @@
  */
 
 /** Default model to use for AI-based scripts. */
-export const DEFAULT_MODEL = 'gemini-2.5-pro';
+export const DEFAULT_MODEL = 'gemini-3.1-pro-preview';
 
 /** Default temperature for AI-based scripts. */
 export const DEFAULT_TEMPERATURE = 0.1;
