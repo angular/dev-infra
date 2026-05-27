@@ -9,3 +9,13 @@ copy_to_bin(
         "//visibility:public",
     ],
 )
+
+copy_to_bin(
+    name = "verify-prettierignore",
+    srcs = [
+        "verify-prettierignore.mjs",
+    ],
+    visibility = [
+        "//visibility:public",
+    ],
+)
