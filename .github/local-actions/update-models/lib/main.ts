@@ -11,7 +11,7 @@ import {readFile, writeFile} from 'fs/promises';
 import glob from 'fast-glob';
 
 /** Parse the deprecations page to extract model replacements. */
-async function parseDeprecations(html: string): Promise<Map<string, string>> {
+function parseDeprecations(html: string): Map<string, string> {
   const replacements = new Map<string, string>();
   const tbodyRegex = /<tbody[^>]*>([\s\S]*?)<\/tbody>/gi;
   let tbodyMatch;
@@ -63,7 +63,7 @@ async function run() {
     return;
   }
 
-  const replacements = await parseDeprecations(html);
+  const replacements = parseDeprecations(html);
   if (replacements.size === 0) {
     core.warning('No model replacements found on the deprecations page.');
     return;
@@ -77,6 +77,7 @@ async function run() {
   // Find all .ts, .yml, .yaml files in the repository, ignoring node_modules/dist/.git
   const files = await glob(['**/*.{ts,yml,yaml}'], {
     ignore: ['**/node_modules/**', '**/dist/**', '**/.git/**'],
+    dot: true,
   });
 
   let totalUpdated = 0;
