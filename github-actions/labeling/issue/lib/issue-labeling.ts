@@ -94,7 +94,7 @@ If no area label applies, respond with "none".
 
     try {
       const response = await ai.models.generateContent({
-        model: 'gemini-3.1-flash-lite-preview',
+        model: 'gemini-3.1-flash-lite',
         contents: prompt,
       });
       const text = (response.text || '').trim();
