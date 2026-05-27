@@ -11,6 +11,7 @@ load("@rules_sass//src:index.bzl", _npm_sass_library = "npm_sass_library", _sass
 load("//bazel:extract_types.bzl", _extract_types = "extract_types")
 load("//bazel/jasmine:jasmine.bzl", _jasmine_test = "jasmine_test")
 load("//bazel/ts_project:index.bzl", _strict_deps_test = "strict_deps_test")
+load("//bazel/validation:defs.bzl", "validate_prettierignore")
 
 copy_to_bin = _copy_to_bin
 ts_config = _ts_config
@@ -167,4 +168,10 @@ def esbuild_checked_in(name, platform = None, config = {}, **kwargs):
         name = name,
         out_file = "%s.js" % name,
         in_file = ":%s_sanitized" % name,
+    )
+
+    validate_prettierignore(
+        name = "%s_prettierignore_test" % name,
+        prettierignore = "//:.prettierignore",
+        bundle = "%s.js" % name,
     )

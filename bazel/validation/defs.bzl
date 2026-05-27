@@ -13,3 +13,20 @@ def validate_ts_version_matching(package_json, module_lock_file):
             "$(rlocationpath %s)" % module_lock_file,
         ],
     )
+
+def validate_prettierignore(name, prettierignore, bundle):
+    js_test(
+        name = name,
+        data = [
+            prettierignore,
+            bundle,
+        ],
+        entry_point = "@devinfra//bazel/validation:verify-prettierignore",
+        no_copy_to_bin = [
+            prettierignore,
+        ],
+        fixed_args = [
+            "$(rlocationpath %s)" % prettierignore,
+            "$(rlocationpath %s)" % bundle,
+        ],
+    )

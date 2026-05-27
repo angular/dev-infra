@@ -12,6 +12,7 @@ ts_config(
 
 exports_files([
     "package.json",
+    ".prettierignore",
 ])
 
 validate_ts_version_matching(
