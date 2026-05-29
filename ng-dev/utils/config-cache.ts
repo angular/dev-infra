@@ -18,7 +18,7 @@ let cachedConfig: {} | null = null;
  * Set the cached configuration object to be loaded later. Only to be used on
  * CI and test situations in which loading from the `.ng-dev/` directory is not possible.
  */
-export function setCachedConfig(config: {}): void {
+export function setCachedConfig(config: {} | null): void {
   cachedConfig = config;
 }
 
