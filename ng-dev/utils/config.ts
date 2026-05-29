@@ -113,7 +113,11 @@ export async function getConfig(baseDir: string): Promise<NgDevConfig>;
 export async function getConfig<A extends MultipleAssertions>(
   assertions: A,
 ): Promise<NgDevConfig<Assertions<A>>>;
-export async function getConfig(baseDirOrAssertions?: unknown) {
+export async function getConfig<A extends MultipleAssertions>(
+  assertions: A,
+  returnNullOnConfigNotFound: true,
+): Promise<NgDevConfig<Assertions<A>> | null>;
+export async function getConfig(baseDirOrAssertions?: unknown, returnNullOnConfigNotFound = false) {
   let cachedConfig = getCachedConfig();
 
   if (cachedConfig === null) {
@@ -128,7 +132,11 @@ export async function getConfig(baseDirOrAssertions?: unknown) {
     // The full path to the configuration file.
     const configPath = join(baseDir, CONFIG_FILE_PATH_MATCHER);
     // Read the configuration and validate it before caching it for the future.
-    cachedConfig = await readConfigFile(configPath);
+    cachedConfig = await readConfigFile(configPath, returnNullOnConfigNotFound);
+
+    if (returnNullOnConfigNotFound && !cachedConfig) {
+      return null;
+    }
 
     // Store the newly-read configuration in the cache.
     setCachedConfig(cachedConfig);
@@ -212,18 +220,22 @@ export function assertValidCaretakerConfig<T extends NgDevConfig>(
  * Resolves and reads the specified configuration file, optionally returning an empty object
  * if the configuration file cannot be read.
  */
-async function readConfigFile(configPath: string, returnEmptyObjectOnError = false): Promise<{}> {
+async function readConfigFile(
+  configPath: string,
+  returnNullOnConfigNotFound = false,
+): Promise<{} | null> {
   try {
     // ESM imports expect a valid URL. On Windows, the disk name causes errors like:
     // `ERR_UNSUPPORTED_ESM_URL_SCHEME: <..> Received protocol 'c:'`
     return await import(pathToFileURL(configPath).toString());
   } catch (e) {
-    if (returnEmptyObjectOnError) {
+    if (returnNullOnConfigNotFound) {
       Log.debug(
         `Could not read configuration file at ${configPath}, returning empty object instead.`,
       );
       Log.debug(e);
-      return {};
+
+      return null;
     }
     Log.error(`Could not read configuration file at ${configPath}.`);
     Log.error(e);

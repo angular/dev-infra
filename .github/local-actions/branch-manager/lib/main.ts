@@ -12,7 +12,15 @@ import {
 import {MergeConflictsFatalError} from '../../../../ng-dev/pr/merge/failures.js';
 import {createPullRequestValidationConfig} from '../../../../ng-dev/pr/common/validation/validation-config.js';
 import {InvalidTargetLabelError} from '../../../../ng-dev/pr/common/targeting/target-label.js';
-import {resolve} from 'path';
+import {
+  assertValidCaretakerConfig,
+  assertValidGithubConfig,
+  setConfig,
+  getConfig,
+} from '../../../../ng-dev/utils/config.js';
+import {assertValidPullRequestConfig} from '../../../../ng-dev/pr/config/index.js';
+import {setTimeout} from 'node:timers/promises';
+import {AuthenticatedGitClient} from '../../../../ng-dev/utils/git/authenticated-git-client.js';
 
 interface CommmitStatus {
   state: 'pending' | 'error' | 'failure' | 'success';
@@ -28,6 +36,10 @@ const repo = core.getInput('repo', {required: true, trimWhitespace: true});
 const owner = core.getInput('owner', {required: true, trimWhitespace: true});
 /** The pull request number. */
 const pr = Number(core.getInput('pr', {required: true, trimWhitespace: true}));
+
+/** The SHA of the pull request */
+let sha = core.getInput('sha', {required: false, trimWhitespace: true});
+
 // If the provided pr is not a number, we cannot evaluate the mergeability.
 if (isNaN(pr)) {
   core.setFailed('The provided pr value was not a number');
@@ -35,23 +47,11 @@ if (isNaN(pr)) {
 }
 /** The token for the angular robot to perform actions in the requested repo. */
 const token = await getAuthTokenFor(ANGULAR_ROBOT, {repo, owner});
-const {
-  /** The ng-dev configuration used for the environment */
-  config,
-  /** The Authenticated Git Client instance. */
-  git,
-} = await setupConfigAndGitClient(token, {owner, repo});
-/** The sha of the latest commit on the pull request, which when provided is what triggered the check. */
-const sha = await (async () => {
-  let sha = core.getInput('sha', {required: false, trimWhitespace: true}) || undefined;
-  if (sha === undefined) {
-    sha = (await git.github.pulls.get({owner, repo, pull_number: pr})).data.head.sha as string;
-  }
-  return sha;
-})();
 
 /** Set the mergability status on the pull request provided in the environment. */
 async function setMergeabilityStatusOnPullRequest(
+  git: AuthenticatedGitClient,
+  sha: string,
   {state, description, targetUrl}: CommmitStatus,
   canRetry = true,
 ) {
@@ -68,17 +68,22 @@ async function setMergeabilityStatusOnPullRequest(
     });
   } catch {
     if (canRetry) {
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-      await setMergeabilityStatusOnPullRequest({state, description, targetUrl}, false);
+      await setTimeout(5_000);
+      await setMergeabilityStatusOnPullRequest(git, sha, {state, description, targetUrl}, false);
     }
   }
 }
 
 async function main() {
+  const {git, config: inBuiltConfig} = await setupConfigAndGitClient(token, {owner, repo});
+  sha ||= (await git.github.pulls.get({owner, repo, pull_number: pr})).data.head.sha;
+
   try {
     // This is intentionally not awaited because we are just setting the status to pending, and wanting
     // to continue working.
-    let _unawaitedPromise = setMergeabilityStatusOnPullRequest(
+    void setMergeabilityStatusOnPullRequest(
+      git,
+      sha,
       {
         state: 'pending',
         description: 'Mergability check in progress',
@@ -88,6 +93,21 @@ async function main() {
 
     // Create a tmp directory to perform checks in and change working to directory to it.
     await cloneRepoIntoTmpLocation({owner, repo});
+
+    // Remove cached config and use the repo config.
+    // TODO(alanagius): this is needed because `setupConfigAndGitClient` uses a dummy config.
+    setConfig(null);
+
+    let config = await getConfig(
+      [assertValidGithubConfig, assertValidPullRequestConfig, assertValidCaretakerConfig],
+      /** returnNullOnConfigNotFound */ true,
+    );
+
+    if (!config) {
+      config = inBuiltConfig;
+      // Set the default config back in the cache.
+      setConfig(config);
+    }
 
     /** The pull request after being retrieved and validated. */
     const pullRequest = await loadAndValidatePullRequest(
@@ -168,7 +188,7 @@ async function main() {
       }
     })();
 
-    await setMergeabilityStatusOnPullRequest(statusInfo);
+    await setMergeabilityStatusOnPullRequest(git, sha, statusInfo);
   } catch (e: Error | unknown) {
     let state: CommmitStatus['state'] = 'error';
     let description: string;
@@ -185,7 +205,7 @@ async function main() {
     } else {
       description = 'Internal Error, see link for action log';
     }
-    await setMergeabilityStatusOnPullRequest({state, description, targetUrl});
+    await setMergeabilityStatusOnPullRequest(git, sha, {state, description, targetUrl});
     // Re-throw the error so that the action run is set as failing.
     throw e;
   }
