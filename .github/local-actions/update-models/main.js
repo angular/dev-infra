@@ -24936,7 +24936,7 @@ function info(message) {
 
 // .github/local-actions/update-models/lib/main.ts
 var import_fast_glob = __toESM(require_out4());
-import { readFile, writeFile as writeFile2 } from "fs/promises";
+import { readFile, writeFile as writeFile2 } from "node:fs/promises";
 function parseDeprecations(html) {
   const replacements = /* @__PURE__ */ new Map();
   const tbodyRegex = /<tbody[^>]*>([\s\S]*?)<\/tbody>/gi;

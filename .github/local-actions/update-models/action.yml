@@ -1,5 +1,5 @@
 name: 'Update Gemini Models'
 description: 'Check Gemini deprecations page and auto-update references to recommended replacements'
 runs:
-  using: 'node22'
+  using: 'node24'
   main: 'main.js'

@@ -7,7 +7,7 @@
  */
 
 import * as core from '@actions/core';
-import {readFile, writeFile} from 'fs/promises';
+import {readFile, writeFile} from 'node:fs/promises';
 import glob from 'fast-glob';
 
 /** Parse the deprecations page to extract model replacements. */
