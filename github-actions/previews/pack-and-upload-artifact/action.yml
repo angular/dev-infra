@@ -49,7 +49,8 @@ runs:
       run: |
         node ${{github.action_path}}/remove-preview-label.js \
           '${{inputs.pull-number}}' \
-          '${{inputs.triggering-label}}'
+          '${{inputs.triggering-label}}' \
+          '${{inputs.angular-robot-key}}'
 
     - name: Copying artifact to temp directory to allow for metadata injection.
       id: copy
