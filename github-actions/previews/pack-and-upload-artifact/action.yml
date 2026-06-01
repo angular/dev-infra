@@ -32,11 +32,28 @@ inputs:
       Project-relative path to the directory contents that should be deployed.
       This is usually the distribution directory, like `dist/my-app/`.
 
+  angular-robot-key:
+    description: 'The private key for the Angular Robot Github app.'
+    required: true
+
+  triggering-label:
+    description: Label that triggers the preview deployment.
+    required: true
+
 runs:
   using: composite
   steps:
+    - name: Automatically remove preview trigger label if PR author is not a Googler
+      if: contains(github.event.pull_request.labels.*.name, inputs.triggering-label)
+      shell: bash
+      run: |
+        node ${{github.action_path}}/remove-preview-label.js \
+          '${{inputs.pull-number}}' \
+          '${{inputs.triggering-label}}'
+
     - name: Copying artifact to temp directory to allow for metadata injection.
       id: copy
+      if: contains(github.event.pull_request.labels.*.name, inputs.triggering-label)
       shell: bash
       run: |
         dir="$RUNNER_TEMP/pack-and-upload-tmp-dir/"
@@ -45,6 +62,7 @@ runs:
         echo "deploy-dir=$dir" >> $GITHUB_OUTPUT
 
     - name: Injecting artifact metadata
+      if: contains(github.event.pull_request.labels.*.name, inputs.triggering-label)
       shell: bash
       run: |
         node ${{github.action_path}}/inject-artifact-metadata.js \
@@ -54,6 +72,7 @@ runs:
 
     - name: Creating compressed tarball of artifact
       id: pack
+      if: contains(github.event.pull_request.labels.*.name, inputs.triggering-label)
       shell: bash
       run: |
         pkg="$RUNNER_TEMP/deploy-artifact.tar.gz"
@@ -62,6 +81,7 @@ runs:
         echo "artifact-path=$pkg" >> $GITHUB_OUTPUT
 
     - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      if: contains(github.event.pull_request.labels.*.name, inputs.triggering-label)
       with:
         name: '${{inputs.workflow-artifact-name}}'
         path: '${{steps.pack.outputs.artifact-path}}'

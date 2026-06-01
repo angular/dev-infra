@@ -476,6 +476,12 @@ importers:
 
   github-actions/previews/pack-and-upload-artifact:
     dependencies:
+      '@actions/core':
+        specifier: 3.0.1
+        version: 3.0.1
+      '@octokit/rest':
+        specifier: 22.0.1
+        version: 22.0.1
       '@types/node':
         specifier: 24.12.4
         version: 24.12.4

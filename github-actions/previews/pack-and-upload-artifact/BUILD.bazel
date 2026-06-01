@@ -10,7 +10,10 @@ ts_project(
     srcs = glob(["lib/*.ts"]),
     tsconfig = "//github-actions:tsconfig",
     deps = [
+        ":node_modules/@actions/core",
+        ":node_modules/@octokit/rest",
         ":node_modules/@types/node",
+        "//github-actions:utils",
         "//github-actions/previews:constants_lib",
     ],
 )
@@ -21,6 +24,17 @@ esbuild_checked_in(
         ":lib",
     ],
     entry_point = "lib/inject-artifact-metadata.ts",
+    format = "esm",
+    platform = "node",
+    target = "node24",
+)
+
+esbuild_checked_in(
+    name = "remove-preview-label",
+    srcs = [
+        ":lib",
+    ],
+    entry_point = "lib/remove-preview-label.ts",
     format = "esm",
     platform = "node",
     target = "node24",
