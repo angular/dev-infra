@@ -11,19 +11,12 @@ import {Octokit} from '@octokit/rest';
 import {ANGULAR_ROBOT, getAuthTokenFor, revokeActiveInstallationToken} from '../../../utils.js';
 
 async function main() {
-  const [pullNumberRaw, labelName, angularRobotKey] = process.argv.slice(2);
+  const [pullNumberRaw, labelName] = process.argv.slice(2);
   const pullNumber = Number(pullNumberRaw);
 
   if (isNaN(pullNumber)) {
     throw new Error(`Invalid pull request number: ${pullNumberRaw}`);
   }
-
-  if (!angularRobotKey) {
-    throw new Error('Angular Robot private key was not provided.');
-  }
-
-  // Set the environment variable expected by the getAuthTokenFor helper
-  process.env['INPUT_ANGULAR-ROBOT-KEY'] = angularRobotKey;
 
   let repoClient: Octokit | null = null;
   let googlersOrgClient: Octokit | null = null;

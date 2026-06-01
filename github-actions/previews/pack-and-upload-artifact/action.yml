@@ -46,11 +46,12 @@ runs:
     - name: Automatically remove preview trigger label if PR author is not a Googler
       if: contains(github.event.pull_request.labels.*.name, inputs.triggering-label)
       shell: bash
+      env:
+        INPUT_ANGULAR-ROBOT-KEY: '${{inputs.angular-robot-key}}'
       run: |
         node ${{github.action_path}}/remove-preview-label.js \
           '${{inputs.pull-number}}' \
-          '${{inputs.triggering-label}}' \
-          '${{inputs.angular-robot-key}}'
+          '${{inputs.triggering-label}}'
 
     - name: Copying artifact to temp directory to allow for metadata injection.
       id: copy
