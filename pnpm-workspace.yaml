@@ -10,6 +10,7 @@ packages:
   - .github/local-actions/labels-sync
   - .github/local-actions/lock-closed
   - .github/local-actions/stale-cleanup
+  - .github/local-actions/update-models
   - github-actions
   - github-actions/google-internal-tests
   - github-actions/unified-status-check

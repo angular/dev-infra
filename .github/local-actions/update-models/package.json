@@ -1,0 +1,8 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@actions/core": "3.0.1",
+    "@types/node": "24.12.4",
+    "fast-glob": "3.3.3"
+  }
+}
