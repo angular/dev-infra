@@ -29,6 +29,7 @@ export class AutosquashMergeStrategy extends MergeStrategy {
   override async check(pullRequest: PullRequest): Promise<void> {
     /** The original SHA, so that we can restore the temporary branch */
     const originalHeadSha = this.git.run(['rev-parse', TEMP_PR_HEAD_BRANCH]).stdout.trim();
+    const branchOrRevisionBeforeRebase = this.git.getCurrentBranchOrRevision();
 
     try {
       try {
@@ -47,6 +48,8 @@ export class AutosquashMergeStrategy extends MergeStrategy {
     } finally {
       // Restore the temporary branch after checks.
       this.git.run(['update-ref', `refs/heads/${TEMP_PR_HEAD_BRANCH}`, originalHeadSha]);
+      // Restore the original checked out branch/revision to clean up the working tree.
+      this.git.run(['checkout', '-f', branchOrRevisionBeforeRebase]);
     }
   }
   /**
