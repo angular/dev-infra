@@ -63,6 +63,7 @@ const moduleMappings = TMPL_module_mappings;
 const nodeModulesRoot = 'TMPL_node_modules_root';
 const entrypointMetadata = JSON.parse(`TMPL_metadata`);
 const sideEffectEntryPoints = JSON.parse('TMPL_side_effect_entrypoints');
+const manualChunksMap = Object.entries(JSON.parse('TMPL_manual_chunks'));
 const dtsMode = TMPL_dts_mode;
 
 log_verbose(`running with
@@ -260,6 +261,23 @@ const config = {
     // Name this with `_` as this can be useful when examing the output structure
     // and also it makes it clearer for users if these are imported by accident.
     chunkFileNames: '_[name]-chunk.' + outExtension,
+    manualChunks: manualChunksMap.length
+      ? (id) => {
+          const idWithoutExt = id.replace(/\\/g, '/').replace(/\.(d\.ts|[jt]s|[cm][jt]s)$/, '');
+          for (const [chunkName, patterns] of manualChunksMap) {
+            for (const pattern of patterns) {
+              if (idWithoutExt.endsWith(pattern)) {
+                // Ensure the suffix match is on a path segment boundary to prevent
+                // partial matches (e.g. 'other_file' matching 'some_other_file').
+                const startIdx = idWithoutExt.length - pattern.length;
+                if (startIdx === 0 || idWithoutExt[startIdx - 1] === '/') {
+                  return chunkName;
+                }
+              }
+            }
+          }
+        }
+      : undefined,
   },
 };
 
