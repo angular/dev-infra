@@ -49,11 +49,29 @@ WELL_KNOWN_EXTERNALS = [
     "tslib",
 ]
 
+def _strip_extension(pattern):
+    """Strips module extensions (.d.ts, .ts, .js, .mts, .mjs, .cts, .cjs) from a pattern path.
+
+    This allows manual chunk matching to operate on raw base paths without extension mismatch,
+    matching whatever format Rollup resolves module IDs to.
+
+    Args:
+        pattern: The path pattern string to normalize.
+
+    Returns:
+        The path string with its extension removed if present.
+    """
+    for ext in [".d.ts", ".ts", ".js", ".mts", ".mjs", ".cts", ".cjs"]:
+        if pattern.endswith(ext):
+            return pattern[:-len(ext)]
+    return pattern
+
 def _write_rollup_config(
         ctx,
         root_dir,
         metadata_arg,
         side_effect_entry_points,
+        manual_chunks,
         dts_mode):
     filename = "_%s_%s.rollup.conf.js" % (ctx.label.name, "dts" if dts_mode else "fesm")
     config = ctx.actions.declare_file(filename)
@@ -74,6 +92,10 @@ def _write_rollup_config(
     # an argument limit and we there might be a lot of globals which need to be passed to
     # rollup.
 
+    normalized_manual_chunks = {}
+    for chunk_name, patterns in manual_chunks.items():
+        normalized_manual_chunks[chunk_name] = [_strip_extension(p) for p in patterns]
+
     ctx.actions.expand_template(
         output = config,
         template = ctx.file._rollup_config_tmpl,
@@ -87,6 +109,7 @@ def _write_rollup_config(
             "TMPL_workspace_name": ctx.workspace_name,
             "TMPL_external": ", ".join(["'%s'" % e for e in externals]),
             "TMPL_side_effect_entrypoints": json.encode(side_effect_entry_points),
+            "TMPL_manual_chunks": json.encode(normalized_manual_chunks),
             "TMPL_dts_mode": "true" if dts_mode else "false",
         },
     )
@@ -304,6 +327,7 @@ def _angular_package_format_impl(ctx):
         ctx.bin_dir.path,
         metadata_arg,
         ctx.attr.side_effect_entry_points,
+        ctx.attr.manual_chunks,
         dts_mode = False,
     )
     fesm_rollup_inputs = depset(static_files, transitive = [unscoped_all_entry_point_esm2022_depset])
@@ -314,6 +338,7 @@ def _angular_package_format_impl(ctx):
         ctx.bin_dir.path,
         metadata_arg,
         ctx.attr.side_effect_entry_points,
+        ctx.attr.manual_chunks,
         dts_mode = True,
     )
     dts_rollup_inputs = depset(static_files, transitive = [unscoped_all_entry_point_dts_depset])
@@ -394,6 +419,10 @@ angular_package_format = rule(
         "externals": attr.string_list(
             doc = """List of external module that should not be bundled into the ESM bundles.""",
             default = [],
+        ),
+        "manual_chunks": attr.string_list_dict(
+            doc = "Manual chunks to be passed to rollup",
+            default = {},
         ),
         # TODO: Determine if we can remove this
         "license_banner": attr.label(

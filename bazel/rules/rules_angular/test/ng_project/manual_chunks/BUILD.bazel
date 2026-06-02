@@ -1,0 +1,58 @@
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config")
+load("@devinfra//bazel/jasmine:jasmine.bzl", "jasmine_test")
+load("//src/ng_package:angular_package_format.bzl", "angular_package_format")
+load("//src/ng_project:index.bzl", "ng_project")
+load("//src/ts_project:index.bzl", "ts_project")
+
+package(default_visibility = ["//test:__subpackages__"])
+
+ng_project(
+    name = "app",
+    srcs = [
+        "index.ts",
+        "other_file.ts",
+    ],
+    declaration = True,
+    tsconfig = "tsconfig.json",
+    deps = ["//:node_modules/@angular/core"],
+)
+
+angular_package_format(
+    name = "pkg_manual_chunks",
+    manual_chunks = {
+        "other_chunk": [
+            "other_file.ts",
+        ],
+    },
+    package = "test-chunks",
+    deps = [
+        ":app",
+    ],
+)
+
+ts_config(
+    name = "tsconfig_spec",
+    src = "tsconfig.spec.json",
+    deps = ["tsconfig.json"],
+)
+
+ts_project(
+    name = "test_chunks_lib",
+    testonly = True,
+    srcs = ["test_chunks.spec.ts"],
+    tsconfig = ":tsconfig_spec",
+    deps = [
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
+    ],
+)
+
+jasmine_test(
+    name = "test",
+    args = ["test/ng_project/manual_chunks/test_chunks.spec.js"],
+    data = [
+        ":pkg_manual_chunks",
+        ":test_chunks_lib",
+    ],
+    node_modules = "//:node_modules",
+)
