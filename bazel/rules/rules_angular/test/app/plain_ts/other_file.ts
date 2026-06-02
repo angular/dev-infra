@@ -1,4 +1,1 @@
-export interface FineType {
-  ok: boolean;
-}
-export const fine: FineType = {ok: true};
+export const fine = true;

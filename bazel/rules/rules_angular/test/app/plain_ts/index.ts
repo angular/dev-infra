@@ -1,6 +1,6 @@
 import {Component, input} from '@angular/core';
 import {} from '../../app/index';
-import {fine, FineType} from './other_file';
+import {fine} from './other_file';
 
 @Component({
   selector: 'my-comp',
@@ -8,5 +8,4 @@ import {fine, FineType} from './other_file';
 })
 export class MyComponent {
   name = input.required<string>();
-  isFine: FineType = fine;
 }
