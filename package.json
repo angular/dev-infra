@@ -21,7 +21,7 @@
     }
   },
   "dependencies": {
-    "@angular/compiler-cli": "22.0.0-rc.2",
+    "@angular/compiler-cli": "22.0.0",
     "typescript": "6.0.3"
   },
   "devDependencies": {
