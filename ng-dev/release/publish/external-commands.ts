@@ -61,7 +61,8 @@ export abstract class ExternalCommands {
         [
           'ng-dev',
           'release',
-          'set-dist-tag',
+          'npm-dist-tag',
+          'set',
           npmDistTag,
           version.format(),
           `--skip-experimental-packages=${options.skipExperimentalPackages}`,
