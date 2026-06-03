@@ -22,6 +22,37 @@ import {MergeConflictsFatalError} from '../failures.js';
  */
 export class AutosquashMergeStrategy extends MergeStrategy {
   /**
+   * To determine if an autosquash merge will succeed, we must dry-run the autosquash rebase. The
+   * default `check` method relies on `git cherry-pick`, which applies fixups sequentially rather
+   * than squashing them, and fails to catch conflicts caused by the squashing process.
+   */
+  override async check(pullRequest: PullRequest): Promise<void> {
+    /** The original SHA, so that we can restore the temporary branch */
+    const originalHeadSha = this.git.run(['rev-parse', TEMP_PR_HEAD_BRANCH]).stdout.trim();
+    const branchOrRevisionBeforeRebase = this.git.getCurrentBranchOrRevision();
+
+    try {
+      try {
+        this.git.run(
+          ['rebase', '--interactive', '--autosquash', pullRequest.baseSha, TEMP_PR_HEAD_BRANCH],
+          {
+            env: {...process.env, GIT_SEQUENCE_EDITOR: 'true'},
+          },
+        );
+      } catch (e) {
+        this.git.runGraceful(['rebase', '--abort']);
+        throw new MergeConflictsFatalError([]);
+      }
+
+      await super.check(pullRequest);
+    } finally {
+      // Restore the temporary branch after checks.
+      this.git.run(['update-ref', `refs/heads/${TEMP_PR_HEAD_BRANCH}`, originalHeadSha]);
+      // Restore the original checked out branch/revision to clean up the working tree.
+      this.git.run(['checkout', '-f', branchOrRevisionBeforeRebase]);
+    }
+  }
+  /**
    * Merges the specified pull request into the target branches and pushes the target
    * branches upstream. This method requires the temporary target branches to be fetched
    * already as we don't want to fetch the target branches per pull request merge. This
