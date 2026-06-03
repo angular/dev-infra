@@ -7,7 +7,7 @@
  */
 
 import {styleText} from 'util';
-import {createWriteStream, WriteStream, copyFileSync} from 'fs';
+import {createWriteStream, WriteStream, copyFileSync, existsSync, lstatSync} from 'fs';
 import {join} from 'path';
 import {Arguments} from 'yargs';
 import {determineRepoBaseDirFromCwd} from './repo-directory.js';
@@ -129,6 +129,12 @@ export async function captureLogOutputForCommand(argv: Arguments) {
   }
   const repoDir = determineRepoBaseDirFromCwd();
   const logFilePath = join(repoDir, '.ng-dev.log');
+  if (existsSync(logFilePath) && lstatSync(logFilePath).isSymbolicLink()) {
+    throw new Error(
+      'Security Violation: .ng-dev.log is a symbolic link. ' +
+        'To prevent arbitrary file write, execution is aborted.',
+    );
+  }
   logStream = createWriteStream(logFilePath, {encoding: 'utf-8'});
 
   /** The date time used for timestamping when the command was invoked. */
