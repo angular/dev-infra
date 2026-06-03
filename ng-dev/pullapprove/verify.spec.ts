@@ -133,6 +133,26 @@ describe('group parsing', () => {
       expect(passGroup.testFile('any')).toBe(true);
     });
   });
+
+  describe('security sandbox', () => {
+    it('should not allow escaping the sandbox to access process', () => {
+      const groups = getGroupsFromYaml(`
+        groups:
+          exploit:
+            conditions:
+              - "this.constructor.constructor('return process')().env.JE_ESCAPED = 'true'"
+      `);
+      const exploitGroup = getGroupByName(groups, 'exploit')!;
+      delete process.env['JE_ESCAPED'];
+
+      const exitSpy = spyOn(process, 'exit');
+
+      exploitGroup.testFile('any');
+
+      expect(process.env['JE_ESCAPED']).toBeUndefined();
+      expect(exitSpy).toHaveBeenCalledWith(1);
+    });
+  });
 });
 
 function getGroupByName(groups: PullApproveGroup[], name: string): PullApproveGroup | undefined {

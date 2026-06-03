@@ -18,6 +18,7 @@ ts_project(
         "//ng-dev:node_modules/@types/node",
         "//ng-dev:node_modules/@types/yargs",
         "//ng-dev:node_modules/minimatch",
+        "//ng-dev:node_modules/typescript",
         "//ng-dev:node_modules/yaml",
         "//ng-dev:node_modules/yargs",
         "//ng-dev/utils",
