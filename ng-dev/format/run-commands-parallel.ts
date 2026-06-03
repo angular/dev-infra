@@ -94,8 +94,14 @@ export function runFormatterInParallel(allFiles: string[], action: FormatterActi
       // Get the file and formatter for the next command.
       const {file, formatter} = nextCommand;
 
-      if (lstatSync(file).isSymbolicLink()) {
-        throw new Error(`Security violation: symlink detected for file ${file}`);
+      try {
+        if (lstatSync(file).isSymbolicLink()) {
+          Log.error(`Security violation: symlink detected for file ${file}`);
+          process.exit(1);
+        }
+      } catch (error) {
+        Log.error(`Security check failed for file ${file}: ${error}`);
+        process.exit(1);
       }
 
       const [spawnCmd, ...spawnArgs] = [...formatter.commandFor(action).split(' '), '--', file];
