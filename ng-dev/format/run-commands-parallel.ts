@@ -9,6 +9,7 @@
 import {Bar} from 'cli-progress';
 import multimatch from 'multimatch';
 import {cpus} from 'os';
+import {lstatSync} from 'fs';
 
 import {ChildProcess, SpawnResult} from '../utils/child-process.js';
 import {Log} from '../utils/logging.js';
@@ -93,7 +94,11 @@ export function runFormatterInParallel(allFiles: string[], action: FormatterActi
       // Get the file and formatter for the next command.
       const {file, formatter} = nextCommand;
 
-      const [spawnCmd, ...spawnArgs] = [...formatter.commandFor(action).split(' '), file];
+      if (lstatSync(file).isSymbolicLink()) {
+        throw new Error(`Security violation: symlink detected for file ${file}`);
+      }
+
+      const [spawnCmd, ...spawnArgs] = [...formatter.commandFor(action).split(' '), '--', file];
 
       ChildProcess.spawn(spawnCmd, spawnArgs, {
         suppressErrorOnFailingExitCode: true,
