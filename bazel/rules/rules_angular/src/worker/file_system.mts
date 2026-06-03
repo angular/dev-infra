@@ -131,7 +131,16 @@ export class WorkerSandboxFileSystem extends BazelSafeFilesystem {
 
   private toDiskPath(filePath: AbsoluteFsPath): string {
     // Resolve at the end to a system-separated path.
-    return nativeSysPath.resolve(nativeSysPath.join(execrootDiskPath, filePath));
+    const resolvedPath = nativeSysPath.resolve(nativeSysPath.join(execrootDiskPath, filePath));
+
+    // Ensure the resolved path does not escape the execroot disk path.
+    const relativeSysPath = nativeSysPath.relative(execrootDiskPath, resolvedPath);
+    const relativeNormalized = this.normalizePathFragmentToPosix(relativeSysPath);
+    if (relativeNormalized.startsWith('..')) {
+      throw new Error(`Path traversal detected: ${filePath} resolves outside the execroot.`);
+    }
+
+    return resolvedPath;
   }
 
   private fromDiskPath(diskPath: string): AbsoluteFsPath {
