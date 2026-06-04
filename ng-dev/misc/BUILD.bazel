@@ -6,7 +6,9 @@ ts_project(
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
         "//ng-dev:node_modules/@types/node",
+        "//ng-dev:node_modules/@types/semver",
         "//ng-dev:node_modules/@types/yargs",
+        "//ng-dev:node_modules/semver",
         "//ng-dev/format",
         "//ng-dev/release/build",
         "//ng-dev/release/config",
