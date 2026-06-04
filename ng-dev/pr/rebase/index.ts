@@ -55,6 +55,8 @@ export async function rebasePr(prNumber: number, interactive: boolean = false): 
   // See:
   // https://git-scm.com/docs/git-push#Documentation/git-push.txt---force-with-leaseltrefnamegtltexpectgt
   const forceWithLeaseFlag = `--force-with-lease=${headRefName}:${pr.headRefOid}`;
+  const escapedHeadRefName = `'${headRefName.replace(/'/g, "'\\''")}'`;
+  const escapedForceWithLeaseFlag = `--force-with-lease=${escapedHeadRefName}:${pr.headRefOid}`;
 
   // If the PR does not allow maintainers to modify it, exit as the rebased PR cannot
   // be pushed up.
@@ -143,7 +145,9 @@ export async function rebasePr(prNumber: number, interactive: boolean = false): 
     Log.info(
       `After manually completing rebase, run the following command to update PR #${prNumber}:`,
     );
-    Log.info(` $ git push ${pr.headRef.repository.url} HEAD:${headRefName} ${forceWithLeaseFlag}`);
+    Log.info(
+      ` $ git push ${pr.headRef.repository.url} HEAD:${escapedHeadRefName} ${escapedForceWithLeaseFlag}`,
+    );
     Log.info();
     Log.info(`To abort the rebase and return to the state of the repository before this command`);
     Log.info(`run the following command:`);

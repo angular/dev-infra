@@ -99,6 +99,8 @@ export async function checkOutPullRequestLocally(
   // https://git-scm.com/docs/git-push#Documentation/git-push.txt---force-with-leaseltrefnamegtltexpectgt
   /** Flag for a force push with lease back to upstream. */
   const forceWithLeaseFlag = `--force-with-lease=${headRefName}:${pr.headRefOid}`;
+  const escapedHeadRefName = `'${headRefName.replace(/'/g, "'\\''")}'`;
+  const escapedForceWithLeaseFlag = `--force-with-lease=${escapedHeadRefName}:${pr.headRefOid}`;
 
   // If the PR does not allow maintainers to modify it, exit as the rebased PR cannot
   // be pushed up.
@@ -130,7 +132,7 @@ export async function checkOutPullRequestLocally(
     resetGitState: (): boolean => {
       return git.checkout(previousBranchOrRevision, true);
     },
-    pushToUpstreamCommand: `git push ${upstreamUrlToPush(pr.headRef.repository.url)} HEAD:${headRefName} ${forceWithLeaseFlag}`,
+    pushToUpstreamCommand: `git push ${upstreamUrlToPush(pr.headRef.repository.url)} HEAD:${escapedHeadRefName} ${escapedForceWithLeaseFlag}`,
     resetGitStateCommand: `git rebase --abort && git reset --hard && git checkout ${previousBranchOrRevision}`,
     pullRequest: pr,
   };
