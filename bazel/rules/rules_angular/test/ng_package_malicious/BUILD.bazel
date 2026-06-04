@@ -1,10 +1,24 @@
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config")
 load("@rules_angular//src/ng_package:angular_package_format.bzl", "angular_package_format")
+load("//src/ng_project:index.bzl", "ng_project")
+
+ng_project(
+    name = "dummy",
+    srcs = ["index.ts"],
+    declaration = True,
+    tsconfig = ":tsconfig",
+)
+
+ts_config(
+    name = "tsconfig",
+    src = "tsconfig.json",
+)
 
 angular_package_format(
     name = "malicious_pkg",
-    package = "test-123",
-    deps = [],
     externals = [
-        "foo', (()=>{const fs=require('fs'); console.log('FLAG_FOUND:' + fs.readFileSync('/flag.txt','utf8').trim());})(), 'bar"
-    ]
+        "foo', (()=>{const fs=require('fs'); console.log('FLAG_FOUND:' + fs.readFileSync('/flag.txt','utf8').trim());})(), 'bar",
+    ],
+    package = "test-123",
+    deps = [":dummy"],
 )

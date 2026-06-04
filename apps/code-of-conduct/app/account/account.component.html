@@ -1,32 +1,55 @@
-<button *ngIf="account.isLoggedIn" (click)="open()" class="user-photo" referrerpolicy=“no-referrer” style.backgroundImage="url({{account.avatarUrl}})"></button>
+<button
+  *ngIf="account.isLoggedIn"
+  (click)="open()"
+  class="user-photo"
+  referrerpolicy="“no-referrer”"
+  style.backgroundImage="url({{ account.avatarUrl }})"
+></button>
 
 <ng-template #menuContent>
   <div class="account-menu-container mat-elevation-z8">
     <div class="user-photo">
-      <img referrerpolicy=“no-referrer” [src]="account.avatarUrl" alt="avatarUrl">
+      <img referrerpolicy="“no-referrer”" [src]="account.avatarUrl" alt="avatarUrl" />
     </div>
 
     <div class="title-row">
       <span class="title">{{ account.displayName || 'Welcome!' }}</span>
-      <button class="expand-button" mat-icon-button (click)="providerPanel.toggle()" *ngIf="account.isLoggedIn">
-        <mat-icon>{{providerPanel.expanded ? 'expand_less' : 'expand_more'}}</mat-icon>
+      <button
+        class="expand-button"
+        mat-icon-button
+        (click)="providerPanel.toggle()"
+        *ngIf="account.isLoggedIn"
+      >
+        <mat-icon>{{ providerPanel.expanded ? 'expand_less' : 'expand_more' }}</mat-icon>
       </button>
     </div>
     <ng-container cdkAccordionItem #providerPanel="cdkAccordionItem">
       <div *ngIf="providerPanel.expanded" class="provider-panel">
         <div class="provider-row">
-          <img class="provider-icon" src="http://google.com/favicon.ico" alt="google icon"/>
-          <span class="provider-email">{{ account.googleInfo?.email || "Unknown" }}</span>
+          <img class="provider-icon" src="http://google.com/favicon.ico" alt="google icon" />
+          <span class="provider-email">{{ account.googleInfo?.email || 'Unknown' }}</span>
         </div>
         <div class="provider-row">
-          <img class="provider-icon" src="http://github.com/favicon.ico" alt="github icon"/>
-          <span class="provider-email">{{ account.githubInfo?.email || "Account Not Linked" }}</span>
-          <button matTooltip ="Link Github account" *ngIf="account.githubInfo === null" mat-icon-button class="link-provider-account"
-            (click)="account.linkWithGithub()">
+          <img class="provider-icon" src="http://github.com/favicon.ico" alt="github icon" />
+          <span class="provider-email">{{
+            account.githubInfo?.email || 'Account Not Linked'
+          }}</span>
+          <button
+            matTooltip="Link Github account"
+            *ngIf="account.githubInfo === null"
+            mat-icon-button
+            class="link-provider-account"
+            (click)="account.linkWithGithub()"
+          >
             <mat-icon>add_link</mat-icon>
           </button>
-          <button matTooltip="Unlink Github account" *ngIf="account.githubInfo" mat-icon-button class="link-provider-account"
-            (click)="account.unlinkFromGithub()">
+          <button
+            matTooltip="Unlink Github account"
+            *ngIf="account.githubInfo"
+            mat-icon-button
+            class="link-provider-account"
+            (click)="account.unlinkFromGithub()"
+          >
             <mat-icon>link_off</mat-icon>
           </button>
         </div>
@@ -43,10 +66,22 @@
 
     <div class="bottom-row">
       <span class="spacer"></span>
-      <button *ngIf="!account.isLoggedIn" mat-stroked-button color="primary" (click)="account.signInWithGoogle()">Sign
-        In</button>
-      <button *ngIf="account.isLoggedIn" mat-stroked-button color="primary" (click)="account.signOut()">Sign
-        Out</button>
+      <button
+        *ngIf="!account.isLoggedIn"
+        mat-stroked-button
+        color="primary"
+        (click)="account.signInWithGoogle()"
+      >
+        Sign In
+      </button>
+      <button
+        *ngIf="account.isLoggedIn"
+        mat-stroked-button
+        color="primary"
+        (click)="account.signOut()"
+      >
+        Sign Out
+      </button>
     </div>
   </div>
 </ng-template>
