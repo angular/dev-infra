@@ -1562,5 +1562,39 @@
         "CHROME-HEADLESS-SHELL": "chrome-headless-shell-win64/chrome-headless-shell.exe"
       }
     }
+  },
+  "151.0.7873.0": {
+    "linux": {
+      "url": "https://storage.googleapis.com/chrome-for-testing-public/151.0.7873.0/linux64/chrome-headless-shell-linux64.zip",
+      "integrity": "782e1ef4ca23028a32757f1f62e009be78d73fd779c5b1a291bea8b51e1c52ad",
+      "exclude_patterns": ["**/*.log"],
+      "named_files": {
+        "CHROME-HEADLESS-SHELL": "chrome-headless-shell-linux64/chrome-headless-shell"
+      }
+    },
+    "mac": {
+      "url": "https://storage.googleapis.com/chrome-for-testing-public/151.0.7873.0/mac-x64/chrome-headless-shell-mac-x64.zip",
+      "integrity": "a93034c6b11dd36a76f248242228a2b2505625af36674f4e2bd43fb1cd3037b4",
+      "exclude_patterns": ["**/*.log"],
+      "named_files": {
+        "CHROME-HEADLESS-SHELL": "chrome-headless-shell-mac-x64/chrome-headless-shell"
+      }
+    },
+    "mac_arm": {
+      "url": "https://storage.googleapis.com/chrome-for-testing-public/151.0.7873.0/mac-arm64/chrome-headless-shell-mac-arm64.zip",
+      "integrity": "4d89be6f1009a8fa2f33190cd2786c9e84ab4a5e7515f57d0daa64a8f33f2f8c",
+      "exclude_patterns": ["**/*.log"],
+      "named_files": {
+        "CHROME-HEADLESS-SHELL": "chrome-headless-shell-mac-arm64/chrome-headless-shell"
+      }
+    },
+    "win64": {
+      "url": "https://storage.googleapis.com/chrome-for-testing-public/151.0.7873.0/win64/chrome-headless-shell-win64.zip",
+      "integrity": "e2e24644497b23d2cd848a3365307939678ad81b6d0ccdc17db54e7e2f863d4b",
+      "exclude_patterns": ["**/*.log"],
+      "named_files": {
+        "CHROME-HEADLESS-SHELL": "chrome-headless-shell-win64/chrome-headless-shell.exe"
+      }
+    }
   }
 }
