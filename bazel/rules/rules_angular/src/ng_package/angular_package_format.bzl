@@ -70,6 +70,11 @@ def _write_rollup_config(
 
     externals = WELL_KNOWN_EXTERNALS + ctx.attr.externals
 
+    for e in ctx.attr.externals:
+        for char in ["'", '"', "`", "$", "(", ")", "{", "}", "[", "]", ";", ":", "=", "+", " "]:
+            if char in e:
+                fail("Security violation: invalid character '%s' in external module name" % char)
+
     # Pass external & globals through a templated config file because on Windows there is
     # an argument limit and we there might be a lot of globals which need to be passed to
     # rollup.
@@ -85,7 +90,7 @@ def _write_rollup_config(
             "TMPL_metadata": json.encode(metadata_arg),
             "TMPL_root_dir": root_dir,
             "TMPL_workspace_name": ctx.workspace_name,
-            "TMPL_external": ", ".join(["'%s'" % e for e in externals]),
+            "TMPL_external": json.encode(externals),
             "TMPL_side_effect_entrypoints": json.encode(side_effect_entry_points),
             "TMPL_dts_mode": "true" if dts_mode else "false",
         },

@@ -63,6 +63,7 @@ const moduleMappings = TMPL_module_mappings;
 const nodeModulesRoot = 'TMPL_node_modules_root';
 const entrypointMetadata = JSON.parse(`TMPL_metadata`);
 const sideEffectEntryPoints = JSON.parse('TMPL_side_effect_entrypoints');
+const external = JSON.parse('TMPL_external');
 const dtsMode = TMPL_dts_mode;
 
 log_verbose(`running with
@@ -236,7 +237,7 @@ const outExtension = dtsMode ? 'd.ts' : 'mjs';
 const config = {
   input,
   plugins,
-  external: [TMPL_external],
+  external: external,
   treeshake: {
     // Note: Rollup would otherwise eagerly remove e.g. PURE statements. We should
     // keep those and leave elision to end-user bundling, depending on if they are
