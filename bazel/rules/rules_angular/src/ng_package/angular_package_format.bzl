@@ -70,11 +70,6 @@ def _write_rollup_config(
 
     externals = WELL_KNOWN_EXTERNALS + ctx.attr.externals
 
-    for e in ctx.attr.externals:
-        for char in ["'", '"', "`", "$", "(", ")", "{", "}", "[", "]", ";", ":", "=", "+", " "]:
-            if char in e:
-                fail("Security violation: invalid character '%s' in external module name" % char)
-
     # Pass external & globals through a templated config file because on Windows there is
     # an argument limit and we there might be a lot of globals which need to be passed to
     # rollup.

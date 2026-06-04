@@ -63,7 +63,7 @@ const moduleMappings = TMPL_module_mappings;
 const nodeModulesRoot = 'TMPL_node_modules_root';
 const entrypointMetadata = JSON.parse(`TMPL_metadata`);
 const sideEffectEntryPoints = JSON.parse('TMPL_side_effect_entrypoints');
-const external = JSON.parse('TMPL_external');
+const external = TMPL_external;
 const dtsMode = TMPL_dts_mode;
 
 log_verbose(`running with
