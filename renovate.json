@@ -11,7 +11,7 @@
     {
       "postUpgradeTasks": {
         "commands": [
-          "pnpm install --frozen-lockfile",
+          "pnpm install --frozen-lockfile --ignore-scripts",
           "bash ./tools/sync-all-modules.sh",
           "pnpm update-generated-files"
         ],
@@ -22,7 +22,7 @@
     {
       "postUpgradeTasks": {
         "commands": [
-          "pnpm install --frozen-lockfile",
+          "pnpm install --frozen-lockfile --ignore-scripts",
           "bash ./tools/sync-all-modules.sh",
           "pnpm update-generated-files"
         ],
