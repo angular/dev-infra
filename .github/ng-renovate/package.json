@@ -3,6 +3,6 @@
   "type": "commonjs",
   "packageManager": "pnpm@11.5.1",
   "dependencies": {
-    "renovate": "43.150.0"
+    "renovate": "43.209.4"
   }
 }
