@@ -21,7 +21,7 @@ NG_CLI_TOOL="$RUNFILES/$NG_CLI_TOOL_RUNFILES_PATH"
 cp -Rf -L $BOILERPLATE_DIR/* $OUT_DIR
 
 # Copy user files.
-cp -Rf -L $INPUT_PACKAGE/* $OUT_DIR/src/
+cp -Rf $INPUT_PACKAGE/* $OUT_DIR/src/
 
 # Prepare for `angular.json` to be modified below.
 unlink $OUT_DIR/angular.json
