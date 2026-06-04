@@ -49,7 +49,7 @@
       matchDepNames: ['pnpm', 'typescript', 'node'],
       postUpgradeTasks: {
         commands: [
-          'pnpm install --frozen-lockfile',
+          'pnpm install --frozen-lockfile --ignore-scripts',
           'bash -c "pnpm ng-dev misc sync-module-bazel || true"', // If `ng-dev` doesn't exist, avoid a hard error.
         ],
         executionMode: 'branch',
