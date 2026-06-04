@@ -19,11 +19,30 @@ def optimize_angular_app(
         root_paths = [""],
     )
 
+    native.genrule(
+        name = "_%s_check_symlinks" % name,
+        srcs = srcs,
+        outs = ["_%s_check_symlinks_passed.txt" % name],
+        cmd = """
+            for f in $(SRCS) ""; do
+                if [ -z "$$f" ]; then continue; fi
+                target=$$(readlink "$$f" || true)
+                if [ -n "$$target" ] && [ -h "$$target" ]; then
+                    echo "Security violation: Symbolic links are not permitted in user input. ($$f)" >&2
+                    exit 1
+                fi
+            done
+            touch $@
+        """,
+        tags = ["manual"],
+    )
+
     run_binary(
         name = "_%s_build" % name,
         tool = "@rules_angular//src/optimization:optimize",
         tags = ["manual"],
         srcs = [
+            ":_%s_check_symlinks" % name,
             ":_%s_package" % name,
             "@yq_toolchains//:resolved_toolchain",
             "@rules_angular//src/optimization/boilerplate",
