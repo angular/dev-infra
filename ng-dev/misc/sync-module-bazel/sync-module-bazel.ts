@@ -7,6 +7,7 @@
  */
 
 import {Log} from '../../utils/logging';
+import semver from 'semver';
 
 export interface PackageJson {
   engines?: {
@@ -158,6 +159,9 @@ async function processNodeToolchainArgs(
 
 /** Synchronizes the PNPM version and integrity in MODULE.bazel. */
 export async function syncPnpm(content: string, version: string): Promise<string> {
+  if (!semver.valid(version)) {
+    throw new Error(`Invalid PNPM version: ${version}`);
+  }
   if (!PNPM_VERSION_REGEXP.test(content)) {
     return content;
   }
@@ -178,6 +182,9 @@ export async function syncPnpm(content: string, version: string): Promise<string
 
 /** Synchronizes the TypeScript version and integrity in MODULE.bazel. */
 export async function syncTypeScript(content: string, version: string): Promise<string> {
+  if (!semver.valid(version)) {
+    throw new Error(`Invalid TypeScript version: ${version}`);
+  }
   if (!TS_VERSION_REGEXP.test(content)) {
     return content;
   }
