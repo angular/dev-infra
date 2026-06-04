@@ -64,6 +64,7 @@ export const dnsRedirecting = functions.https.onRequest(
     } else {
       // If no redirect is matched, we return a failure message
       response.status(404);
+      response.type('text/plain');
       response.send(
         `No redirect defined for ${request.protocol}://${request.hostname}${request.originalUrl}`,
       );
