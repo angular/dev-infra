@@ -27,9 +27,15 @@ def optimize_angular_app(
             for f in $(SRCS) ""; do
                 if [ -z "$$f" ]; then continue; fi
                 target=$$(readlink "$$f" || true)
-                if [ -n "$$target" ] && [ -h "$$target" ]; then
-                    echo "Security violation: Symbolic links are not permitted in user input. ($$f)" >&2
-                    exit 1
+                if [ -n "$$target" ]; then
+                    case "$$target" in
+                        /*) ;;
+                        *) target="$$(dirname "$$f")/$$target" ;;
+                    esac
+                    if [ -h "$$target" ]; then
+                        echo "Security violation: Symbolic links are not permitted in user input. ($$f)" >&2
+                        exit 1
+                    fi
                 fi
             done
             touch $@
