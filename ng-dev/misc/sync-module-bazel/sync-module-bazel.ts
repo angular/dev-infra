@@ -139,6 +139,10 @@ async function processNodeToolchainArgs(
     return args;
   }
 
+  if (!semver.valid(effectiveVersion)) {
+    throw new Error(`Invalid Node.js version: ${effectiveVersion}`);
+  }
+
   Log.info(`Resolving Node.js repositories for v${effectiveVersion}...`);
   const repositories = await getNodeJsRepositories(effectiveVersion);
   const lines = repositories.map(({filename, sha, type}) => {
