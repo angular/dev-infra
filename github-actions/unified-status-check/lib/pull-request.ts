@@ -8,6 +8,9 @@ import {context} from '@actions/github';
 /** All of the statuses to be ignored by the unified status check. */
 const ignoredStatuses = core.getMultilineInput('ignored', {trimWhitespace: true});
 
+/** All of the trusted creators for status checks. */
+const trustedCreators = ['angular-robot', 'ngbot', 'pullapprove'];
+
 /** The normalized state of a status or check */
 export type NormalizedState = 'success' | 'failure' | 'pending';
 
@@ -56,6 +59,20 @@ export class PullRequest {
   /** The id of the previous checkRun to be updated, if it exists. */
   previousRunId: number | undefined;
 
+  /** Whether the pull request is from a fork. */
+  isForkPR() {
+    const headRepo = this.pullRequest.headRepository;
+    if (!headRepo) {
+      return false;
+    }
+    return headRepo.owner.login !== context.repo.owner || headRepo.name !== context.repo.repo;
+  }
+
+  /** Get the owner of the fork repository. */
+  getForkOwner() {
+    return this.pullRequest.headRepository?.owner.login;
+  }
+
   /** Retrieve the pull request from Github. */
   static async get(github: Octokit) {
     const pullRequest = await github.graphql<typeof PR_SCHEMA>(query(PR_SCHEMA).toString());
@@ -80,6 +97,19 @@ export class PullRequest {
       let status: NormalizedStatus;
 
       if (checkOrStatus.__typename === 'CheckRun') {
+        const checkRunRepo = checkOrStatus.checkSuite?.repository;
+        if (checkRunRepo) {
+          const isUpstream =
+            checkRunRepo.owner.login === context.repo.owner &&
+            checkRunRepo.name === context.repo.repo;
+          if (!isUpstream) {
+            core.warning(
+              `Ignoring CheckRun "${checkOrStatus.name}" because it originated from fork repository "${checkRunRepo.owner.login}/${checkRunRepo.name}".`,
+            );
+            return;
+          }
+        }
+
         status = {
           state: checkOrStatus.conclusion
             ? checkConclusionStateToStatusStateMap.get(checkOrStatus.conclusion)!
@@ -93,6 +123,33 @@ export class PullRequest {
           this.previousRunId = checkOrStatus.databaseId;
         }
       } else if (checkOrStatus.__typename === 'StatusContext') {
+        const creatorLogin = checkOrStatus.creator?.login;
+        const isTrusted =
+          creatorLogin &&
+          trustedCreators.some((tc) => creatorLogin === tc || creatorLogin === `${tc}[bot]`);
+        if (!isTrusted) {
+          const isIgnored = PullRequest.ignored.some((matcher) =>
+            checkOrStatus.context.match(matcher),
+          );
+          if (!isIgnored) {
+            throw new Error(
+              `Security Violation: Status "${checkOrStatus.context}" was created by untrusted user "${creatorLogin}".`,
+            );
+          }
+          return;
+        }
+
+        if (this.isForkPR()) {
+          const forkOwner = this.getForkOwner();
+          if (forkOwner && checkOrStatus.targetUrl) {
+            if (checkOrStatus.targetUrl.includes(`/${forkOwner}/`)) {
+              throw new Error(
+                `Security Violation: Status "${checkOrStatus.context}" (created by ${creatorLogin}) points to fork repository of "${forkOwner}".`,
+              );
+            }
+          }
+        }
+
         status = {
           state: checkConclusionStateToStatusStateMap.get(checkOrStatus.state)!,
           name: checkOrStatus.context,
@@ -191,6 +248,12 @@ const PR_SCHEMA = {
           isDraft: graphqlTypes.boolean,
           state: graphqlTypes.custom<PullRequestState>(),
           number: graphqlTypes.number,
+          headRepository: optional({
+            owner: {
+              login: graphqlTypes.string,
+            },
+            name: graphqlTypes.string,
+          }),
           labels: params(
             {last: 100},
             {
@@ -220,12 +283,24 @@ const PR_SCHEMA = {
                                 name: graphqlTypes.string,
                                 title: optional(graphqlTypes.string),
                                 databaseId: graphqlTypes.number,
+                                checkSuite: {
+                                  repository: {
+                                    name: graphqlTypes.string,
+                                    owner: {
+                                      login: graphqlTypes.string,
+                                    },
+                                  },
+                                },
                               },
                               StatusContext: {
                                 __typename: graphqlTypes.constant('StatusContext'),
                                 state: graphqlTypes.custom<StatusState>(),
                                 context: graphqlTypes.string,
                                 description: optional(graphqlTypes.string),
+                                creator: optional({
+                                  login: graphqlTypes.string,
+                                }),
+                                targetUrl: optional(graphqlTypes.string),
                               },
                             }),
                           ],
