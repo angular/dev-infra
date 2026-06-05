@@ -69,14 +69,9 @@ export class IssueLabeling extends Labeling {
     }
 
     const ai = this.getGenerativeAI();
-    const prompt = `
+    const systemInstruction = `
 You are a helper for an open source repository.
 Your task is to allow the user to categorize the issue with an "area: " label.
-The following is the issue title and body:
-
-Title: ${this.issueData!.title}
-Body:
-${this.issueData!.body}
 
 The available area labels are:
 ${Array.from(this.repoAreaLabels)
@@ -92,10 +87,20 @@ If you are strictly unsure or if multiple labels match equally well, respond wit
 If no area label applies, respond with "none".
 `;
 
+    const userContent = `
+<issue_title>${this.issueData!.title}</issue_title>
+<issue_body>
+${this.issueData!.body}
+</issue_body>
+`;
+
     try {
       const response = await ai.models.generateContent({
         model: 'gemini-3.1-flash-lite',
-        contents: prompt,
+        contents: userContent,
+        config: {
+          systemInstruction: systemInstruction,
+        },
       });
       const text = (response.text || '').trim();
 
