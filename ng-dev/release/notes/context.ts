@@ -12,6 +12,16 @@ import {GithubConfig} from '../../utils/config.js';
 import {ReleaseNotesConfig} from '../config/index.js';
 import {compareString} from '../../utils/locale.js';
 
+/** Escapes HTML special characters in a string. */
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
 /** List of types to be included in the release notes. */
 const typesToIncludeInReleaseNotes = Object.values(COMMIT_TYPES)
   .filter((type) => type.releaseNotesLevel === ReleaseNotesLevel.Visible)
@@ -58,10 +68,21 @@ export class RenderContext {
   _categorizeCommits(commits: CommitFromGitLog[]): CategorizedCommit[] {
     return commits.map((commit) => {
       const {description, groupName} = this.data.categorizeCommit?.(commit) ?? {};
+      const escapedBreakingChanges = commit.breakingChanges.map((bc) => ({
+        ...bc,
+        text: escapeHtml(bc.text),
+      }));
+      const escapedDeprecations = commit.deprecations.map((dep) => ({
+        ...dep,
+        text: escapeHtml(dep.text),
+      }));
       return {
-        groupName: groupName ?? commit.scope,
-        description: description ?? commit.subject,
         ...commit,
+        type: escapeHtml(commit.type),
+        groupName: escapeHtml(groupName ?? commit.scope),
+        description: escapeHtml(description ?? commit.subject),
+        breakingChanges: escapedBreakingChanges,
+        deprecations: escapedDeprecations,
       };
     });
   }
