@@ -20,14 +20,45 @@ import fs from 'fs';
 
 import {artifactMetadata} from '../../constants.js';
 
+async function safeWrite(
+  deployDirPath: string,
+  metadataKey: keyof typeof artifactMetadata,
+  content: string,
+) {
+  const fileName = artifactMetadata[metadataKey];
+  const targetPath = path.join(deployDirPath, fileName);
+
+  try {
+    const stat = await fs.promises.lstat(targetPath);
+    if (stat.isSymbolicLink()) {
+      throw new Error(`Security violation: metadata file ${targetPath} is a symbolic link.`);
+    }
+  } catch (e: any) {
+    if (e.code !== 'ENOENT') {
+      throw e;
+    }
+  }
+
+  await fs.promises.writeFile(targetPath, content);
+}
+
 async function main() {
   const [deployDirPath, prNumber, buildRevision] = process.argv.slice(2);
 
-  await fs.promises.writeFile(path.join(deployDirPath, artifactMetadata['pull-number']), prNumber);
-  await fs.promises.writeFile(
-    path.join(deployDirPath, artifactMetadata['build-revision']),
-    buildRevision,
-  );
+  // Ensure deployDirPath itself is not a symlink
+  try {
+    const stat = await fs.promises.lstat(deployDirPath);
+    if (stat.isSymbolicLink()) {
+      throw new Error(`Security violation: deploy directory ${deployDirPath} is a symbolic link.`);
+    }
+  } catch (e: any) {
+    if (e.code !== 'ENOENT') {
+      throw e;
+    }
+  }
+
+  await safeWrite(deployDirPath, 'pull-number', prNumber);
+  await safeWrite(deployDirPath, 'build-revision', buildRevision);
 }
 
 try {
