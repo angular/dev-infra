@@ -71,11 +71,11 @@ export async function discoverNewConflictsForPr(newPrNumber: number, updatedAfte
   Log.info(`Checking ${pendingPrs.length} PRs for conflicts after a merge of #${newPrNumber}`);
 
   // Fetch and checkout the PR being checked.
-  git.run(['fetch', '-q', requestedPr.headRef.repository.url, requestedPr.headRef.name]);
+  git.run(['fetch', '-q', requestedPr.headRef.repository.url, '--', requestedPr.headRef.name]);
   git.run(['checkout', '-q', '-B', tempWorkingBranch, 'FETCH_HEAD']);
 
   // Rebase the PR against the PRs target branch.
-  git.run(['fetch', '-q', requestedPr.baseRef.repository.url, requestedPr.baseRef.name]);
+  git.run(['fetch', '-q', requestedPr.baseRef.repository.url, '--', requestedPr.baseRef.name]);
   try {
     git.run(['rebase', 'FETCH_HEAD'], {stdio: 'ignore'});
   } catch (err) {
@@ -93,7 +93,7 @@ export async function discoverNewConflictsForPr(newPrNumber: number, updatedAfte
   // Check each PR to determine if it can merge cleanly into the repo after the target PR.
   for (const pr of pendingPrs) {
     // Fetch and checkout the next PR
-    git.run(['fetch', '-q', pr.headRef.repository.url, pr.headRef.name]);
+    git.run(['fetch', '-q', pr.headRef.repository.url, '--', pr.headRef.name]);
     git.run(['checkout', '-q', '--detach', 'FETCH_HEAD']);
     // Check if the PR cleanly rebases into the repo after the target PR.
     try {

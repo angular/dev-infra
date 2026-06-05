@@ -61,7 +61,7 @@ export async function checkoutToTargetBranch(
   const baseRefUrl = addTokenToGitHttpsUrl(pullRequest.baseRef.repository.url, git.githubToken);
 
   git.run(['checkout', '-q', targetBranch]);
-  git.run(['fetch', '-q', baseRefUrl, targetBranch, '--deepen=500']);
+  git.run(['fetch', '-q', baseRefUrl, '--deepen=500', '--', targetBranch]);
   git.run(['checkout', '-b', branchName]);
 
   Log.info(`Running cherry-pick`);
