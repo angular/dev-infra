@@ -72,11 +72,11 @@ export async function rebasePr(prNumber: number, interactive: boolean = false): 
 
     // Fetch the branch at the commit of the PR, and check it out in a detached state.
     Log.info(`Checking out PR #${prNumber} from ${fullHeadRef}`);
-    git.run(['fetch', '-q', headRefUrl, headRefName, '--deepen=500']);
+    git.run(['fetch', '-q', headRefUrl, '--deepen=500', '--', headRefName]);
     git.run(['checkout', '-q', '--detach', 'FETCH_HEAD']);
     // Fetch the PRs target branch and rebase onto it.
     Log.info(`Fetching ${fullBaseRef} to rebase #${prNumber} on`);
-    git.run(['fetch', '-q', baseRefUrl, baseRefName, '--deepen=500']);
+    git.run(['fetch', '-q', baseRefUrl, '--deepen=500', '--', baseRefName]);
 
     const commonAncestorSha = git.run(['merge-base', 'HEAD', 'FETCH_HEAD']).stdout.trim();
 
