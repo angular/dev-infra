@@ -11,13 +11,35 @@ var artifactMetadata = {
 };
 
 // github-actions/previews/pack-and-upload-artifact/lib/inject-artifact-metadata.ts
+async function safeWrite(deployDirPath, metadataKey, content) {
+  const fileName = artifactMetadata[metadataKey];
+  const targetPath = path.join(deployDirPath, fileName);
+  try {
+    const stat = await fs.promises.lstat(targetPath);
+    if (stat.isSymbolicLink()) {
+      throw new Error(`Security violation: metadata file ${targetPath} is a symbolic link.`);
+    }
+  } catch (e) {
+    if (e.code !== "ENOENT") {
+      throw e;
+    }
+  }
+  await fs.promises.writeFile(targetPath, content);
+}
 async function main() {
   const [deployDirPath, prNumber, buildRevision] = process.argv.slice(2);
-  await fs.promises.writeFile(path.join(deployDirPath, artifactMetadata["pull-number"]), prNumber);
-  await fs.promises.writeFile(
-    path.join(deployDirPath, artifactMetadata["build-revision"]),
-    buildRevision
-  );
+  try {
+    const stat = await fs.promises.lstat(deployDirPath);
+    if (stat.isSymbolicLink()) {
+      throw new Error(`Security violation: deploy directory ${deployDirPath} is a symbolic link.`);
+    }
+  } catch (e) {
+    if (e.code !== "ENOENT") {
+      throw e;
+    }
+  }
+  await safeWrite(deployDirPath, "pull-number", prNumber);
+  await safeWrite(deployDirPath, "build-revision", buildRevision);
 }
 try {
   await main();
@@ -32,4 +54,4 @@ try {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsibGliL2luamVjdC1hcnRpZmFjdC1tZXRhZGF0YS50cyIsICIuLi9jb25zdGFudHMudHMiXSwKICAibWFwcGluZ3MiOiAiOzs7QUFpQkEsT0FBTyxVQUFVO0FBQ2pCLE9BQU8sUUFBUTs7O0FDVlIsSUFBTSxtQkFBbUI7RUFDOUIsZUFBZTtFQUNmLGtCQUFrQjs7OztBRFlwQixlQUFlLE9BQU87QUFDcEIsUUFBTSxDQUFDLGVBQWUsVUFBVSxhQUFhLElBQUksUUFBUSxLQUFLLE1BQU0sQ0FBQztBQUVyRSxRQUFNLEdBQUcsU0FBUyxVQUFVLEtBQUssS0FBSyxlQUFlLGlCQUFpQixhQUFhLENBQUMsR0FBRyxRQUFRO0FBQy9GLFFBQU0sR0FBRyxTQUFTO0FBQUEsSUFDaEIsS0FBSyxLQUFLLGVBQWUsaUJBQWlCLGdCQUFnQixDQUFDO0FBQUEsSUFDM0Q7QUFBQSxFQUNGO0FBQ0Y7QUFFQSxJQUFJO0FBQ0YsUUFBTSxLQUFLO0FBQ2IsU0FBUyxHQUFHO0FBQ1YsVUFBUSxNQUFNLENBQUM7QUFDZixVQUFRLEtBQUssQ0FBQztBQUNoQjsiLAogICJuYW1lcyI6IFtdCn0K
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsibGliL2luamVjdC1hcnRpZmFjdC1tZXRhZGF0YS50cyIsICIuLi9jb25zdGFudHMudHMiXSwKICAibWFwcGluZ3MiOiAiOzs7QUFpQkEsT0FBTyxVQUFVO0FBQ2pCLE9BQU8sUUFBUTs7O0FDVlIsSUFBTSxtQkFBbUI7RUFDOUIsZUFBZTtFQUNmLGtCQUFrQjs7OztBRFlwQixlQUFlLFVBQVUsZUFBdUIsYUFBNEMsU0FBaUI7QUFDM0csUUFBTSxXQUFXLGlCQUFpQixXQUFXO0FBQzdDLFFBQU0sYUFBYSxLQUFLLEtBQUssZUFBZSxRQUFRO0FBRXBELE1BQUk7QUFDRixVQUFNLE9BQU8sTUFBTSxHQUFHLFNBQVMsTUFBTSxVQUFVO0FBQy9DLFFBQUksS0FBSyxlQUFlLEdBQUc7QUFDekIsWUFBTSxJQUFJLE1BQU0scUNBQXFDLFVBQVUsc0JBQXNCO0FBQUEsSUFDdkY7QUFBQSxFQUNGLFNBQVMsR0FBUTtBQUNmLFFBQUksRUFBRSxTQUFTLFVBQVU7QUFDdkIsWUFBTTtBQUFBLElBQ1I7QUFBQSxFQUNGO0FBRUEsUUFBTSxHQUFHLFNBQVMsVUFBVSxZQUFZLE9BQU87QUFDakQ7QUFFQSxlQUFlLE9BQU87QUFDcEIsUUFBTSxDQUFDLGVBQWUsVUFBVSxhQUFhLElBQUksUUFBUSxLQUFLLE1BQU0sQ0FBQztBQUdyRSxNQUFJO0FBQ0YsVUFBTSxPQUFPLE1BQU0sR0FBRyxTQUFTLE1BQU0sYUFBYTtBQUNsRCxRQUFJLEtBQUssZUFBZSxHQUFHO0FBQ3pCLFlBQU0sSUFBSSxNQUFNLHdDQUF3QyxhQUFhLHNCQUFzQjtBQUFBLElBQzdGO0FBQUEsRUFDRixTQUFTLEdBQVE7QUFDZixRQUFJLEVBQUUsU0FBUyxVQUFVO0FBQ3ZCLFlBQU07QUFBQSxJQUNSO0FBQUEsRUFDRjtBQUVBLFFBQU0sVUFBVSxlQUFlLGVBQWUsUUFBUTtBQUN0RCxRQUFNLFVBQVUsZUFBZSxrQkFBa0IsYUFBYTtBQUNoRTtBQUVBLElBQUk7QUFDRixRQUFNLEtBQUs7QUFDYixTQUFTLEdBQUc7QUFDVixVQUFRLE1BQU0sQ0FBQztBQUNmLFVBQVEsS0FBSyxDQUFDO0FBQ2hCOyIsCiAgIm5hbWVzIjogW10KfQo=

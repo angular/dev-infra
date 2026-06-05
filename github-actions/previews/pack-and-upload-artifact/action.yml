@@ -57,20 +57,26 @@ runs:
       id: copy
       if: contains(github.event.pull_request.labels.*.name, inputs.triggering-label)
       shell: bash
+      env:
+        DEPLOY_DIR_INPUT: ${{inputs.deploy-directory}}
       run: |
         dir="$RUNNER_TEMP/pack-and-upload-tmp-dir/"
-        cp -R "${{inputs.deploy-directory}}" "$dir"
+        cp -R "$DEPLOY_DIR_INPUT" "$dir"
         chmod -R u+w "$dir"
         echo "deploy-dir=$dir" >> $GITHUB_OUTPUT
 
     - name: Injecting artifact metadata
       if: contains(github.event.pull_request.labels.*.name, inputs.triggering-label)
       shell: bash
+      env:
+        DEPLOY_DIR: ${{steps.copy.outputs.deploy-dir}}
+        PULL_NUMBER: ${{inputs.pull-number}}
+        BUILD_REVISION: ${{inputs.artifact-build-revision}}
       run: |
         node ${{github.action_path}}/inject-artifact-metadata.js \
-          '${{steps.copy.outputs.deploy-dir}}' \
-          '${{inputs.pull-number}}' \
-          '${{inputs.artifact-build-revision}}'
+          "$DEPLOY_DIR" \
+          "$PULL_NUMBER" \
+          "$BUILD_REVISION"
 
     - name: Creating compressed tarball of artifact
       id: pack
