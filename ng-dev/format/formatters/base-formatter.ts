@@ -22,7 +22,7 @@ export type FormatterAction = 'check' | 'format';
 
 // The metadata needed for running one of the `FormatterAction`s on a file.
 interface FormatterActionMetadata {
-  commandFlags: string;
+  commandFlags: string[];
   callback: CallbackFunc;
 }
 
@@ -59,12 +59,12 @@ export abstract class Formatter {
    * Retrieve the command to execute the provided action, including both the binary
    * and command line flags.
    */
-  commandFor(action: FormatterAction) {
+  commandFor(action: FormatterAction): string[] {
     switch (action) {
       case 'check':
-        return `${this.binaryFilePath} ${this.actions.check.commandFlags}`;
+        return [this.binaryFilePath, ...this.actions.check.commandFlags];
       case 'format':
-        return `${this.binaryFilePath} ${this.actions.format.commandFlags}`;
+        return [this.binaryFilePath, ...this.actions.format.commandFlags];
       default:
         throw Error('Unknown action type');
     }

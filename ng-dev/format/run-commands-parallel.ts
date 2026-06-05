@@ -98,7 +98,7 @@ export function runFormatterInParallel(allFiles: string[], action: FormatterActi
         throw new Error(`Security violation: symlink detected for file ${file}`);
       }
 
-      const [spawnCmd, ...spawnArgs] = [...formatter.commandFor(action).split(' '), '--', file];
+      const [spawnCmd, ...spawnArgs] = [...formatter.commandFor(action), '--', file];
 
       ChildProcess.spawn(spawnCmd, spawnArgs, {
         suppressErrorOnFailingExitCode: true,
