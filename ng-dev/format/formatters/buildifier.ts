@@ -24,7 +24,7 @@ export class Buildifier extends Formatter {
 
   override actions = {
     check: {
-      commandFlags: `${BAZEL_WARNING_FLAG} --lint=warn --mode=check --format=json`,
+      commandFlags: [BAZEL_WARNING_FLAG, '--lint=warn', '--mode=check', '--format=json'],
       callback: (_: string, code: number | NodeJS.Signals, stdout: string) => {
         // For cases where `stdout` is empty, we instead use an empty object to still allow parsing.
         stdout = stdout || '{}';
@@ -32,7 +32,7 @@ export class Buildifier extends Formatter {
       },
     },
     format: {
-      commandFlags: `${BAZEL_WARNING_FLAG} --lint=fix --mode=fix`,
+      commandFlags: [BAZEL_WARNING_FLAG, '--lint=fix', '--mode=fix'],
       callback: (file: string, code: number | NodeJS.Signals, _: string, stderr: string) => {
         if (code !== 0) {
           Log.error(`Error running buildifier on: ${file}`);
