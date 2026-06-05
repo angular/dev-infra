@@ -88,9 +88,9 @@ If no area label applies, respond with "none".
 `;
 
     const userContent = `
-<issue_title>${this.issueData!.title}</issue_title>
+<issue_title>${this.issueData?.title ?? ''}</issue_title>
 <issue_body>
-${this.issueData!.body}
+${this.issueData?.body ?? ''}
 </issue_body>
 `;
 
