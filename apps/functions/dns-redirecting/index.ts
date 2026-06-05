@@ -1,5 +1,10 @@
 import * as functions from 'firebase-functions';
 
+const isValidDomain = (domain: string): boolean => {
+  // Only allow alphanumeric characters, dots, and hyphens
+  return /^[a-zA-Z0-9.-]+$/.test(domain);
+};
+
 export const dnsRedirecting = functions.https.onRequest(
   {
     cors: true,
@@ -28,6 +33,11 @@ export const dnsRedirecting = functions.https.onRequest(
         );
         return;
       }
+    }
+
+    if (!isValidDomain(hostname)) {
+      response.status(400).send('Invalid Hostname');
+      return;
     }
 
     if (hostname === 'code-of-conduct.angular.io') {
