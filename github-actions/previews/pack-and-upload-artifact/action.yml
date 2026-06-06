@@ -41,7 +41,8 @@ runs:
       env:
         DEPLOY_DIR_INPUT: ${{inputs.deploy-directory}}
       run: |
-        dir="$RUNNER_TEMP/pack-and-upload-tmp-dir/"
+        dir="$RUNNER_TEMP/pack-and-upload-tmp-dir"
+        rm -rf "$dir"
         cp -R "$DEPLOY_DIR_INPUT" "$dir"
         chmod -R u+w "$dir"
         echo "deploy-dir=$dir" >> $GITHUB_OUTPUT
