@@ -7,7 +7,8 @@
  */
 
 import {existsSync, readFileSync} from 'fs';
-import {dirname, join} from 'path';
+import {dirname, join, resolve} from 'path';
+import os from 'os';
 import semver from 'semver';
 import {ChildProcess, SpawnResult, SpawnOptions} from '../../utils/child-process.js';
 import {Spinner} from '../../utils/spinner.js';
@@ -209,6 +210,21 @@ export abstract class ExternalCommands {
     try {
       const nodeVersionFromNvmrc = readFileSync(join(projectDir, '.nvmrc'), 'utf8').trim();
 
+      // Validate .nvmrc content to prevent command injection/path hijacking
+      if (
+        nodeVersionFromNvmrc.includes('/') ||
+        nodeVersionFromNvmrc.includes('\\') ||
+        nodeVersionFromNvmrc.includes('..')
+      ) {
+        throw new Error('Invalid .nvmrc content: contains path traversal characters');
+      }
+
+      const versionPattern = /^[v0-9.-]+$/;
+      const isValidSemverRange = semver.validRange(nodeVersionFromNvmrc) !== null;
+      if (!versionPattern.test(nodeVersionFromNvmrc) && !isValidSemverRange) {
+        throw new Error('Invalid .nvmrc content: does not match valid version pattern');
+      }
+
       // We must source nvm.sh so the shell recognizes the 'nvm' command since nvm is not a binary
       // but a shell function. The dot (.) built-in and && operator require shell: true here.
       // We redirect stdout of nvm install to stderr so that stdout only contains the result of nvm which.
@@ -224,7 +240,22 @@ export abstract class ExternalCommands {
 
       const nodeBinPath = stdout.trim();
       if (nodeBinPath) {
-        const nodeDir = dirname(nodeBinPath);
+        const homeDir = os.homedir();
+        const absoluteNodeBinPath = resolve(nodeBinPath);
+        const absoluteProjectDir = resolve(projectDir);
+
+        if (!absoluteNodeBinPath.startsWith(homeDir)) {
+          throw new Error(
+            `Security Error: Resolved Node.js path is outside the home directory: ${nodeBinPath}`,
+          );
+        }
+        if (absoluteNodeBinPath.startsWith(absoluteProjectDir)) {
+          throw new Error(
+            `Security Error: Resolved Node.js path is inside the project directory: ${nodeBinPath}`,
+          );
+        }
+
+        const nodeDir = dirname(absoluteNodeBinPath);
         const currentPath = process.env['PATH'] || '';
         const pathParts = currentPath.split(':');
 
