@@ -32,7 +32,8 @@ def _create_entrypoint_file(base_package, spec_files, bootstrap_files):
     output = ""
     for file in bootstrap_files + spec_files:
         base_dir_segments = "/".join([".."] * len(base_package.split("/")))
-        output += """import "%s/%s";\n""" % (base_dir_segments, file.short_path)
+        path = "%s/%s" % (base_dir_segments, file.short_path)
+        output += "import %s;\n" % repr(path)
     return output
 
 def _spec_entrypoint_impl(ctx):
