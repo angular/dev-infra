@@ -11,12 +11,14 @@ const targetLabelNames = new Set(Object.values(targetLabels).map((t) => t.name))
 async function run() {
   if (context.eventName === 'push') {
     const {ref} = context.payload as PushEvent;
-    if (ref.startsWith('refs/tags/')) {
-      core.info('No evaluation needed as tags do not cause branches to need to be rechecked');
+    if (!ref.startsWith('refs/heads/')) {
+      core.info('No evaluation needed as push is not to a branch');
       return;
     }
 
-    core.info(`Evaluating pull requests as a result of a push to '${ref}'`);
+    const branchName = ref.substring('refs/heads/'.length);
+
+    core.info(`Evaluating pull requests as a result of a push to branch '${branchName}'`);
 
     const prs = await github().then((api) =>
       api.paginate(
@@ -32,7 +34,7 @@ async function run() {
             .filter(({labels, base}) => {
               return (
                 // Whether the pull request is slated to merge into the same branch as the triggering push.
-                base.ref === ref &&
+                base.ref === branchName &&
                 // Whether the pull request has the action: merge label.
                 labels.some(({name}) => name === actionLabels.ACTION_MERGE.name)
               );
