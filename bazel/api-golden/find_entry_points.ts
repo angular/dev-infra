@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {dirname, join, relative} from 'path';
+import {dirname, isAbsolute, join, relative} from 'path';
 import {lstatSync, readFileSync, readdirSync} from 'fs';
 
 import {PackageJson} from './index_npm_packages.cjs';
@@ -32,9 +32,28 @@ export function findEntryPointsWithinNpmPackage(
   for (const [subpath, {types}] of Object.entries(packageJson.exports)) {
     // Wildcard types mappings are supported.
     if (types !== undefined && !types.includes('*')) {
+      if (isAbsolute(subpath) || subpath.split(/[/\\]/).includes('..')) {
+        throw new Error(`Invalid exports subpath: ${subpath}`);
+      }
+      if (isAbsolute(types) || types.split(/[/\\]/).includes('..')) {
+        throw new Error(`Invalid types entry point: ${types}`);
+      }
+
+      const resolvedSubpath = join(dirPath, subpath);
+      const relativeSubpath = relative(dirPath, resolvedSubpath);
+      if (relativeSubpath.startsWith('..') || isAbsolute(relativeSubpath)) {
+        throw new Error(`Subpath resolves outside package directory: ${subpath}`);
+      }
+
+      const resolvedTypesPath = join(dirPath, types);
+      const relativeTypes = relative(dirPath, resolvedTypesPath);
+      if (relativeTypes.startsWith('..') || isAbsolute(relativeTypes)) {
+        throw new Error(`Types entry point resolves outside package directory: ${types}`);
+      }
+
       entryPoints.push({
         subpath,
-        typesEntryPointPath: join(dirPath, types),
+        typesEntryPointPath: resolvedTypesPath,
       });
     }
   }

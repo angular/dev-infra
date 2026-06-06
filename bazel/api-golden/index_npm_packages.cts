@@ -66,6 +66,14 @@ async function main(
       goldenName = subpath;
     }
     const goldenFilePath = path.join(goldenDir, goldenName);
+
+    const relativeGoldenPath = path.relative(goldenDir, goldenFilePath);
+    if (relativeGoldenPath.startsWith('..') || path.isAbsolute(relativeGoldenPath)) {
+      throw new Error(
+        `Golden file path resolves outside of the golden directory: ${goldenFilePath}`,
+      );
+    }
+
     const moduleName = normalizePathToPosix(path.join(packageJson.name, subpath));
 
     // Run API extractor in child processes. This is because API extractor is very
