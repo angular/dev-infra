@@ -28,16 +28,8 @@ async function safeWrite(
   const fileName = artifactMetadata[metadataKey];
   const targetPath = path.join(deployDirPath, fileName);
 
-  try {
-    const stat = await fs.promises.lstat(targetPath);
-    if (stat.isSymbolicLink()) {
-      throw new Error(`Security violation: metadata file ${targetPath} is a symbolic link.`);
-    }
-  } catch (e: any) {
-    if (e.code !== 'ENOENT') {
-      throw e;
-    }
-  }
+  // Securely remove the file first if it exists to prevent TOCTOU and link-following attacks.
+  await fs.promises.rm(targetPath, {force: true});
 
   await fs.promises.writeFile(targetPath, content);
 }
