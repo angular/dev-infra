@@ -127,7 +127,12 @@ export async function rebasePr(prNumber: number, interactive: boolean = false): 
       return 0;
     }
   } catch (err) {
-    Log.error(err);
+    if (err instanceof Error) {
+      Log.error(err.message);
+      Log.debug(err.stack);
+    } else {
+      Log.error(err);
+    }
     git.checkout(previousBranchOrRevision, true);
     return 1;
   }

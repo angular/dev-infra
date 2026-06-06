@@ -33,7 +33,12 @@ export async function verifyMergeMode(expectedMode: MergeMode): Promise<boolean>
       return true;
     } catch (err) {
       Log.info(`${red('✘')} Failed to update merge-mode`);
-      Log.info(err);
+      if (err instanceof Error) {
+        Log.info(err.message);
+        Log.debug(err.stack);
+      } else {
+        Log.info(err);
+      }
       return false;
     }
   }
