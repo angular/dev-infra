@@ -99,8 +99,8 @@ export class HttpServer {
 
     // Detect if the url escapes the server's root path
     for (const rootPath of this._rootPaths) {
-      const absoluteRootPath = path.resolve(rootPath);
-      const absoluteJoinedPath = path.resolve(path.posix.join(rootPath, getManifestPath(req.url)));
+      const absoluteRootPath = path.resolve(rootPath) + path.sep;
+      const absoluteJoinedPath = path.resolve(path.posix.join(rootPath, getManifestPath(req.url))) + path.sep;
       if (!absoluteJoinedPath.startsWith(absoluteRootPath)) {
         res.statusCode = 500;
         res.end('Error: Detected directory traversal');
