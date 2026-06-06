@@ -1,5 +1,10 @@
 <button *ngIf="account.isLoggedIn" (click)="open()" class="user-photo">
-  <img referrerpolicy="no-referrer" [src]="account.avatarUrl" alt="Profile picture" class="button-avatar" />
+  <img
+    referrerpolicy="no-referrer"
+    [src]="account.avatarUrl"
+    alt="Profile picture"
+    class="button-avatar"
+  />
 </button>
 
 <ng-template #menuContent>
