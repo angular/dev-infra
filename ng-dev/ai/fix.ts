@@ -9,7 +9,8 @@
 import {createPartFromUri, FileState, GoogleGenAI, Part} from '@google/genai';
 import {setTimeout} from 'node:timers/promises';
 import {readFile, writeFile} from 'node:fs/promises';
-import {basename} from 'node:path';
+import {basename, resolve, relative, isAbsolute} from 'node:path';
+import {determineRepoBaseDirFromCwd} from '../utils/repo-directory.js';
 import glob from 'fast-glob';
 import assert from 'node:assert';
 import {Bar} from 'cli-progress';
@@ -138,6 +139,11 @@ async function fixFilesWithAI(
     clearOnComplete: true,
   });
 
+  const repoRoot = determineRepoBaseDirFromCwd();
+  const absoluteInputFilePaths = new Set(filePaths.map((p) => resolve(p)));
+
+  let spinner: Spinner | undefined;
+
   try {
     const {
       fileNameMap,
@@ -147,7 +153,7 @@ async function fixFilesWithAI(
 
     uploadedFileNames = uploadedFiles;
 
-    const spinner = new Spinner('AI is analyzing the files and generating potential fixes...');
+    spinner = new Spinner('AI is analyzing the files and generating potential fixes...');
     const response = await ai.models.generateContent({
       model,
       contents: [{text: generatePrompt(errorDescription, fileNameMap)}, ...partsForGeneration],
@@ -171,8 +177,30 @@ async function fixFilesWithAI(
       throw new Error('AI response is not a JSON array.');
     }
 
+    for (const fix of fixes) {
+      const absoluteFixPath = resolve(repoRoot, fix.filePath);
+      const relativePath = relative(repoRoot, absoluteFixPath);
+      const startsWithRepo = !relativePath.startsWith('..') && !isAbsolute(relativePath);
+      const isInInputFiles = absoluteInputFilePaths.has(absoluteFixPath);
+
+      if (!startsWithRepo) {
+        throw new Error(`AI-suggested file path ${fix.filePath} is outside the repository root.`);
+      }
+      if (!isInInputFiles) {
+        throw new Error(
+          `AI-suggested file path ${fix.filePath} is not in the list of input files.`,
+        );
+      }
+      fix.filePath = absoluteFixPath;
+    }
+
     spinner.complete();
     return fixes;
+  } catch (error) {
+    if (spinner) {
+      spinner.failure('AI fix failed.');
+    }
+    throw error;
   } finally {
     if (uploadedFileNames.length) {
       progressBar.start(uploadedFileNames.length, 0, {
