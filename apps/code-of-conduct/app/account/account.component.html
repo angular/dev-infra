@@ -1,15 +1,11 @@
-<button
-  *ngIf="account.isLoggedIn"
-  (click)="open()"
-  class="user-photo"
-  referrerpolicy="“no-referrer”"
-  style.backgroundImage="url({{ account.avatarUrl }})"
-></button>
+<button *ngIf="account.isLoggedIn" (click)="open()" class="user-photo">
+  <img referrerpolicy="no-referrer" [src]="account.avatarUrl" alt="Profile picture" class="button-avatar" />
+</button>
 
 <ng-template #menuContent>
   <div class="account-menu-container mat-elevation-z8">
     <div class="user-photo">
-      <img referrerpolicy="“no-referrer”" [src]="account.avatarUrl" alt="avatarUrl" />
+      <img referrerpolicy="no-referrer" [src]="account.avatarUrl" alt="Profile picture" />
     </div>
 
     <div class="title-row">
