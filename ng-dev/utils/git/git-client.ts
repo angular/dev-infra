@@ -139,6 +139,8 @@ export class GitClient {
 
   /** Whether the given branch contains the specified SHA. */
   hasCommit(branchName: string, sha: string): boolean {
+    assertValidGitRef(branchName);
+    assertValidGitRef(sha);
     return this.run(['branch', branchName, '--contains', sha]).stdout !== '';
   }
 
@@ -177,6 +179,7 @@ export class GitClient {
    * was cleanly checked out.
    */
   checkout(branchOrRevision: string, cleanState: boolean): boolean {
+    assertValidGitRef(branchOrRevision);
     if (cleanState) {
       // Abort any outstanding ams.
       this.runGraceful(['am', '--abort'], {stdio: 'ignore'});
@@ -192,6 +195,7 @@ export class GitClient {
 
   /** Retrieve a list of all files in the repository changed since the provided shaOrRef. */
   allChangesFilesSince(shaOrRef = 'HEAD'): string[] {
+    assertValidGitRef(shaOrRef);
     return Array.from(
       new Set([
         ...gitOutputAsArray(this.runGraceful(['diff', '--name-only', '--diff-filter=d', shaOrRef])),
@@ -254,4 +258,11 @@ function gitOutputAsArray(gitCommandResult: SpawnSyncReturns<string>): string[] 
     .split('\n')
     .map((x) => x.trim())
     .filter((x) => !!x);
+}
+
+/** Assert that a Git reference is valid and does not start with a hyphen. */
+export function assertValidGitRef(ref: string) {
+  if (ref.startsWith('-')) {
+    throw new Error(`Invalid Git reference: ${ref}`);
+  }
 }
