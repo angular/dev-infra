@@ -45,13 +45,13 @@ export class Prettier extends Formatter {
 
   override actions = {
     check: {
-      commandFlags: ['--config', this.configPath, '--check'],
+      commandFlags: this.configPath ? ['--config', this.configPath, '--check'] : ['--check'],
       callback: (_: string, code: number | NodeJS.Signals, stdout: string) => {
         return code !== 0;
       },
     },
     format: {
-      commandFlags: ['--config', this.configPath, '--write'],
+      commandFlags: this.configPath ? ['--config', this.configPath, '--write'] : ['--write'],
       callback: (file: string, code: number | NodeJS.Signals, _: string, stderr: string) => {
         if (code !== 0) {
           Log.error(`Error running prettier on: ${file}`);
