@@ -34,10 +34,9 @@ export async function verifyMergeMode(expectedMode: MergeMode): Promise<boolean>
     } catch (err) {
       Log.info(`${red('✘')} Failed to update merge-mode`);
       if (err instanceof Error) {
-        Log.info(err.message);
-        Log.debug(err.stack);
+        Log.debug(err.stack ?? err.message);
       } else {
-        Log.info(err);
+        Log.debug(String(err));
       }
       return false;
     }

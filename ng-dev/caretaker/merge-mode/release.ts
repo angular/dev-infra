@@ -20,13 +20,12 @@ export async function setMergeModeRelease(): Promise<boolean> {
   } catch (err) {
     Log.error('  ✘  Failed to setup of repository for release');
     if (err instanceof Error) {
-      Log.info(err.message);
-      Log.debug(err.stack);
-      return false;
+      Log.debug(err.stack ?? err.message);
+    } else {
+      Log.debug(String(err));
     }
-    Log.info(err);
+    return false;
   }
-  return false;
 }
 
 async function setRepoReleaserTeamToOnlyCurrentUser() {

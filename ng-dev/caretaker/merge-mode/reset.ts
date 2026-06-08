@@ -21,11 +21,10 @@ export async function resetMergeMode(): Promise<boolean> {
   } catch (err) {
     Log.info(`${red('✘')} Failed to reset the merge mode of the repository`);
     if (err instanceof Error) {
-      Log.info(err.message);
-      Log.debug(err.stack);
-      return false;
+      Log.debug(err.stack ?? err.message);
+    } else {
+      Log.debug(String(err));
     }
-    Log.info(err);
     return false;
   }
 }
