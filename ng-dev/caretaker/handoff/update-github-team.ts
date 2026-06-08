@@ -96,7 +96,11 @@ async function getGroupMembers(group: string) {
       })
       .then(({data}) => data.map((member) => member.login));
   } catch (e) {
-    Log.debug(e);
+    if (e instanceof Error) {
+      Log.debug(e.stack ?? e.message);
+    } else {
+      Log.debug(String(e));
+    }
     return [];
   }
 }
