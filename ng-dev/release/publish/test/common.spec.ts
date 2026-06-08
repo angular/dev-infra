@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {readFileSync, writeFileSync} from 'fs';
+import {existsSync, readFileSync, writeFileSync} from 'fs';
 import {join} from 'path';
 import semver from 'semver';
 
@@ -25,6 +25,7 @@ import {ActiveReleaseTrains} from '../../versioning/active-release-trains.js';
 import {NpmCommand} from '../../versioning/npm-command.js';
 import {ReleaseTrain} from '../../versioning/release-trains.js';
 import {actions} from '../actions/index.js';
+import {StageOnlySuccessError} from '../actions-error.js';
 import {githubReleaseBodyLimit} from '../constants.js';
 import {DelegateTestAction} from './delegate-test-action.js';
 import {getTestConfigurationsForAction, testReleasePackages} from './test-utils/action-mocks.js';
@@ -617,6 +618,58 @@ describe('common release action logic', () => {
           ],
         }),
       );
+    });
+  });
+
+  describe('stage-only mode', () => {
+    it('should throw StageOnlySuccessError and clean up output directories', async () => {
+      const action = setupReleaseActionForTesting(DelegateTestAction, baseReleaseTrains, {
+        stageOnly: true,
+        useSandboxGitClient: true,
+      });
+      const {version, branchName} = baseReleaseTrains.next;
+      const expectedStagingForkBranch = `release-stage-${version.format()}`;
+
+      const git = SandboxGitRepo.withInitialCommit(action.githubConfig).createTagForHead(
+        '0.0.0-compare-base',
+      );
+      git.commit('feat(test): first commit');
+
+      // Mock only the staging API requests (exclude merge/publish)
+      action.repo
+        .expectBranchRequest(branchName, {sha: 'PRE_STAGING_SHA'})
+        .expectCommitStatusCheck('PRE_STAGING_SHA', 'success')
+        .expectFindForkRequest(action.fork)
+        .expectPullRequestToBeCreated(branchName, action.fork, expectedStagingForkBranch, 200);
+
+      action.fork.expectBranchRequest(expectedStagingForkBranch);
+
+      // We need to simulate that we have built packages and they exist on disk.
+      // After staging succeeds, they should be cleaned up.
+      // Let's create dummy package output files/directories.
+      for (const pkg of action.builtPackagesWithInfo) {
+        await writePackageJson(pkg.name, version.format());
+        expect(existsSync(pkg.outputPath)).toBe(true);
+      }
+
+      const stagePromise = action.instance.testStagingWithBuild(
+        version,
+        branchName,
+        parse('0.0.0-compare-base'),
+      );
+
+      // Confirm changelog changes
+      action.promptConfirmSpy.and.returnValue(Promise.resolve(true));
+
+      await expectAsync(stagePromise).toBeRejectedWithError(
+        StageOnlySuccessError,
+        'Stage-only phase completed successfully.',
+      );
+
+      // Verify they are cleaned up
+      for (const pkg of action.builtPackagesWithInfo) {
+        expect(existsSync(pkg.outputPath)).toBe(false);
+      }
     });
   });
 });

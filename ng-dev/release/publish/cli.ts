@@ -17,13 +17,22 @@ import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.j
 import {green, Log, yellow} from '../../utils/logging.js';
 
 /** Command line options for publishing a release. */
-export interface ReleasePublishOptions extends ReleaseToolFlags {}
+export interface ReleasePublishOptions extends ReleaseToolFlags {
+  stageOnly?: boolean;
+}
 
 /** Yargs command builder for configuring the `ng-dev release publish` command. */
 function builder(argv: Argv): Argv<ReleasePublishOptions> {
-  return addGithubTokenOption(argv).option('publishRegistry', {
-    type: 'string',
-  });
+  return addGithubTokenOption(argv)
+    .option('publishRegistry', {
+      type: 'string',
+    })
+    .option('stage-only', {
+      type: 'boolean',
+      default: false,
+      description:
+        'Only stage the release (bump version, generate changelog, build, precheck, create PR) and exit.',
+    });
 }
 
 /** Yargs command handler for staging a release. */

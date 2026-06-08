@@ -17,10 +17,14 @@ import {getNextBranchName, ReleaseRepoWithApi} from '../versioning/version-branc
 
 import {ReleaseAction} from './actions.js';
 import {ExternalCommands} from './external-commands.js';
-import {FatalReleaseActionError, UserAbortedReleaseActionError} from './actions-error.js';
+import {
+  FatalReleaseActionError,
+  StageOnlySuccessError,
+  UserAbortedReleaseActionError,
+} from './actions-error.js';
 import {actions} from './actions/index.js';
 import {verifyNgDevToolIsUpToDate} from '../../utils/version-check.js';
-import {Log, yellow} from '../../utils/logging.js';
+import {green, Log, yellow} from '../../utils/logging.js';
 import {Prompt} from '../../utils/prompt.js';
 import {setMergeModeRelease} from '../../caretaker/merge-mode/release.js';
 
@@ -33,6 +37,7 @@ export enum CompletionState {
 /** A set of flags available to be used to override settings at runtime. */
 export interface ReleaseToolFlags {
   publishRegistry?: string;
+  stageOnly?: boolean;
 }
 
 export class ReleaseTool {
@@ -46,7 +51,7 @@ export class ReleaseTool {
     config: ReleaseConfig,
     protected _github: GithubConfig,
     protected _projectRoot: string,
-    _flags: ReleaseToolFlags,
+    protected _flags: ReleaseToolFlags,
   ) {
     this._config = {
       ...config,
@@ -99,6 +104,10 @@ export class ReleaseTool {
     try {
       await action.perform();
     } catch (e) {
+      if (e instanceof StageOnlySuccessError) {
+        Log.info(green(`✓ Staging completed successfully. PR URL: ${e.pullRequest.url}`));
+        return CompletionState.SUCCESS;
+      }
       if (e instanceof UserAbortedReleaseActionError) {
         return CompletionState.MANUALLY_ABORTED;
       }
@@ -137,6 +146,7 @@ export class ReleaseTool {
           this._git,
           this._config,
           this._projectRoot,
+          this._flags.stageOnly,
         );
         choices.push({name: await action.getDescription(), value: action});
       }
