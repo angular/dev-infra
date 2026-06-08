@@ -55,7 +55,8 @@ export class AuthenticatedGitClient extends GitClient {
 
   /** Sanitizes a given message by omitting the provided Github token if present. */
   override sanitizeConsoleOutput(value: string): string {
-    return value.replace(this._githubTokenRegex, '<TOKEN>');
+    const sanitized = super.sanitizeConsoleOutput(value);
+    return sanitized.replace(this._githubTokenRegex, '<TOKEN>');
   }
 
   /** Git URL that resolves to the configured repository. */

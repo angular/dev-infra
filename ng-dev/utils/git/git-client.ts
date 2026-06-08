@@ -111,18 +111,21 @@ export class GitClient {
 
     Log.debug(`Status: ${result.status}, Error: ${!!result.error}, Signal: ${result.signal}`);
 
-    if (result.status !== 0 && result.stderr !== null) {
+    if (result.status !== 0 && result.stderr !== null && result.stderr !== undefined) {
       // Git sometimes prints the command if it failed. This means that it could
       // potentially leak the Github token used for accessing the remote. To avoid
       // printing a token, we sanitize the string before printing the stderr output.
       process.stderr.write(this.sanitizeConsoleOutput(result.stderr));
     }
 
-    Log.debug('Stdout:', result.stdout);
-    Log.debug('Stderr:', result.stderr);
-    Log.debug('Process Error:', result.error);
+    Log.debug('Stdout:', result.stdout ? this.sanitizeConsoleOutput(result.stdout) : result.stdout);
+    Log.debug('Stderr:', result.stderr ? this.sanitizeConsoleOutput(result.stderr) : result.stderr);
 
     if (result.error !== undefined) {
+      Log.debug('Process Error:', this.sanitizeConsoleOutput(result.error.message));
+      if (result.error.stack) {
+        Log.debug('Process Error Stack:', this.sanitizeConsoleOutput(result.error.stack));
+      }
       // Git sometimes prints the command if it failed. This means that it could
       // potentially leak the Github token used for accessing the remote. To avoid
       // printing a token, we sanitize the string before printing the stderr output.
@@ -221,7 +224,7 @@ export class GitClient {
    * derived classes. e.g. to sanitize access tokens from Git commands.
    */
   sanitizeConsoleOutput(value: string) {
-    return value;
+    return value.replace(/(https?:\/\/)([^@:]+)(:[^@]+)?@/g, '$1<TOKEN>@');
   }
 
   /** The singleton instance of the unauthenticated `GitClient`. */
