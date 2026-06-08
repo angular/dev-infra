@@ -40,6 +40,19 @@ function getTitle(state: NormalizedState, results: ValidationResults) {
   return title;
 }
 
+function escapeMarkdown(text: string): string {
+  return text.replace(/([\\`*_{}[\]()#+\-.!])/g, '\\$1');
+}
+
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 function getSummary(results: ValidationResults, pullRequest: PullRequest) {
   return `
 ### Validations
@@ -69,7 +82,9 @@ ${
 ### Status and Check Results
 ${pullRequest.statuses.all
   .map(({name, state, description}) => {
-    return ` - ${stateToIconMap.get(state)} **${name}**: ${description}`;
+    const escapedName = escapeHtml(escapeMarkdown(name));
+    const escapedDescription = description ? escapeHtml(escapeMarkdown(description)) : '';
+    return ` - ${stateToIconMap.get(state)} **${escapedName}**: ${escapedDescription}`;
   })
   .join('\n')}
 `;
