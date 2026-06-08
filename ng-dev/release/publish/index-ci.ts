@@ -37,10 +37,20 @@ export class PublishCiTool {
   ) {}
 
   async run() {
+    if (!this.options.dryRun && !process.env['WOMBOT_TOKEN']) {
+      throw new Error('WOMBOT_TOKEN environment variable is not defined.');
+    }
+
     // Assert SHA: Verify git rev-parse HEAD matches expectedSha.
     const headSha = this.git.run(['rev-parse', 'HEAD']).stdout.trim();
     if (headSha !== this.options.expectedSha) {
       throw new Error(`Expected HEAD SHA to be ${this.options.expectedSha}, but got ${headSha}.`);
+    }
+
+    // Resolve and verify built packages exist before proceeding with any release actions (tags, releases)
+    const builtPackages = findBuiltPackages(this.options.builtPackagesDir);
+    if (builtPackages.length === 0) {
+      throw new Error(`No built packages found under directory ${this.options.builtPackagesDir}`);
     }
 
     // Determine beforeStagingSha
@@ -198,10 +208,6 @@ export class PublishCiTool {
     }
 
     // Publish to NPM/Wombat
-    const builtPackages = findBuiltPackages(this.options.builtPackagesDir);
-    if (builtPackages.length === 0) {
-      throw new Error(`No built packages found under directory ${this.options.builtPackagesDir}`);
-    }
 
     if (this.options.dryRun) {
       for (const pkg of builtPackages) {
@@ -222,10 +228,6 @@ export class PublishCiTool {
           ].join('\n') + '\n';
         writeFileSync(npmrcPath, wombatNpmrcContent);
         Log.info(green(`  ✓   Configured .npmrc to use Wombat registry.`));
-
-        if (!process.env['WOMBOT_TOKEN']) {
-          throw new Error('WOMBOT_TOKEN environment variable is not defined.');
-        }
 
         for (const pkg of builtPackages) {
           Log.info(`Publishing "${pkg.name}"...`);
@@ -253,9 +255,17 @@ function readPackageJsonAtRef(git: AuthenticatedGitClient, ref: string): any {
 }
 
 function findBuiltPackages(dir: string): BuiltPackage[] {
+  if (!existsSync(dir)) {
+    throw new Error(`The built packages directory does not exist: ${dir}`);
+  }
   const packages: BuiltPackage[] = [];
   const walk = (currentDir: string) => {
-    const files = readdirSync(currentDir);
+    let files: string[];
+    try {
+      files = readdirSync(currentDir);
+    } catch (e) {
+      return;
+    }
     if (files.includes('package.json')) {
       try {
         const pkgJson = JSON.parse(readFileSync(join(currentDir, 'package.json'), 'utf8'));
@@ -272,8 +282,12 @@ function findBuiltPackages(dir: string): BuiltPackage[] {
     }
     for (const file of files) {
       const fullPath = join(currentDir, file);
-      if (statSync(fullPath).isDirectory()) {
-        walk(fullPath);
+      try {
+        if (statSync(fullPath).isDirectory()) {
+          walk(fullPath);
+        }
+      } catch (e) {
+        // Ignore broken symlinks or unreadable files
       }
     }
   };

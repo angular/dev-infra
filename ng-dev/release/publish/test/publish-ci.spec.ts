@@ -147,6 +147,131 @@ describe('PublishCiTool', () => {
     await expectAsync(toolWithCorrectSha.run()).toBeResolved();
   });
 
+  describe('fail-fast validation', () => {
+    let originalWombotToken: string | undefined;
+
+    beforeEach(() => {
+      originalWombotToken = process.env['WOMBOT_TOKEN'];
+      delete process.env['WOMBOT_TOKEN'];
+    });
+
+    afterEach(() => {
+      if (originalWombotToken !== undefined) {
+        process.env['WOMBOT_TOKEN'] = originalWombotToken;
+      } else {
+        delete process.env['WOMBOT_TOKEN'];
+      }
+    });
+
+    it('should throw if WOMBOT_TOKEN is missing (dryRun: false) and not call GitHub API', async () => {
+      fs.writeFileSync(path.join(testTmpDir, 'package.json'), JSON.stringify({version: '10.0.0'}));
+      const sandbox = SandboxGitRepo.withInitialCommit(githubConfig);
+      const headSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
+
+      const tool = new PublishCiTool(
+        {github: githubConfig, release: releaseConfig} as any,
+        gitClient,
+        testTmpDir,
+        {
+          builtPackagesDir: path.join(testTmpDir, 'dist'),
+          expectedSha: headSha,
+          dryRun: false,
+        },
+      );
+
+      await expectAsync(tool.run()).toBeRejectedWithError(
+        'WOMBOT_TOKEN environment variable is not defined.',
+      );
+
+      expect(createRefSpy).not.toHaveBeenCalled();
+      expect(createReleaseSpy).not.toHaveBeenCalled();
+    });
+
+    it('should NOT throw if WOMBOT_TOKEN is missing when dryRun is true', async () => {
+      spyOn(ReleaseNotes, 'forRange').and.resolveTo({
+        getGithubReleaseEntry: async () => 'release notes body',
+        getUrlFragmentForRelease: async () => 'url-frag',
+      } as any);
+
+      const builtPackagesDir = path.join(testTmpDir, 'dist');
+      const pkgDir = path.join(builtPackagesDir, 'pkg1');
+      fs.mkdirSync(pkgDir, {recursive: true});
+      fs.writeFileSync(path.join(pkgDir, 'package.json'), JSON.stringify({name: '@angular/core'}));
+
+      fs.writeFileSync(path.join(testTmpDir, 'package.json'), JSON.stringify({version: '10.0.0'}));
+      const sandbox = SandboxGitRepo.withInitialCommit(githubConfig);
+      const headSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
+
+      const tool = new PublishCiTool(
+        {github: githubConfig, release: releaseConfig} as any,
+        gitClient,
+        testTmpDir,
+        {
+          builtPackagesDir: builtPackagesDir,
+          expectedSha: headSha,
+          dryRun: true,
+        },
+      );
+
+      await expectAsync(tool.run()).toBeResolved();
+    });
+
+    it('should throw if built packages directory does not exist and not call GitHub API', async () => {
+      process.env['WOMBOT_TOKEN'] = 'mock-wombat-token';
+
+      fs.writeFileSync(path.join(testTmpDir, 'package.json'), JSON.stringify({version: '10.0.0'}));
+      const sandbox = SandboxGitRepo.withInitialCommit(githubConfig);
+      const headSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
+
+      const nonExistentDir = path.join(testTmpDir, 'non-existent-dist');
+
+      const tool = new PublishCiTool(
+        {github: githubConfig, release: releaseConfig} as any,
+        gitClient,
+        testTmpDir,
+        {
+          builtPackagesDir: nonExistentDir,
+          expectedSha: headSha,
+        },
+      );
+
+      await expectAsync(tool.run()).toBeRejectedWithError(
+        `The built packages directory does not exist: ${nonExistentDir}`,
+      );
+
+      expect(createRefSpy).not.toHaveBeenCalled();
+      expect(createReleaseSpy).not.toHaveBeenCalled();
+    });
+
+    it('should throw if no built packages are found and not call GitHub API', async () => {
+      process.env['WOMBOT_TOKEN'] = 'mock-wombat-token';
+
+      fs.writeFileSync(path.join(testTmpDir, 'package.json'), JSON.stringify({version: '10.0.0'}));
+      const sandbox = SandboxGitRepo.withInitialCommit(githubConfig);
+      const headSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
+
+      const emptyDir = path.join(testTmpDir, 'empty-dist');
+      fs.mkdirSync(emptyDir, {recursive: true});
+
+      const tool = new PublishCiTool(
+        {github: githubConfig, release: releaseConfig} as any,
+        gitClient,
+        testTmpDir,
+        {
+          builtPackagesDir: emptyDir,
+          expectedSha: headSha,
+        },
+      );
+
+      await expectAsync(tool.run()).toBeRejectedWithError(
+        `No built packages found under directory ${emptyDir}`,
+      );
+
+      expect(createRefSpy).not.toHaveBeenCalled();
+      expect(createReleaseSpy).not.toHaveBeenCalled();
+    });
+  });
+
   describe('git graph traversal (beforeStagingSha)', () => {
     let releaseNotesSpy: jasmine.Spy;
     let builtPackagesDir: string;
