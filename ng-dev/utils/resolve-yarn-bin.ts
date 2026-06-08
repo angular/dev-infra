@@ -11,6 +11,7 @@ import * as path from 'path';
 import which from 'which';
 
 import {isNodeJSWrappedError} from './nodejs-errors.js';
+import {Prompt} from './prompt.js';
 import lockfile from '@yarnpkg/lockfile';
 import {parse as parseYaml} from 'yaml';
 import {ChildProcess} from './child-process.js';
@@ -52,7 +53,33 @@ export async function resolveYarnScriptForProject(projectDir: string): Promise<Y
 
   const yarnPathFromConfig = await getYarnPathFromConfigurationIfPresent(projectDir);
   if (yarnPathFromConfig !== null) {
-    info = {binary: 'node', args: [yarnPathFromConfig]};
+    const relativePath = path.relative(projectDir, yarnPathFromConfig);
+    const isLocal = !relativePath.startsWith('..') && !path.isAbsolute(relativePath);
+
+    let isTrusted = true;
+    if (isLocal) {
+      if (process.env['NG_DEV_TRUST_YARN_PATH'] === '1') {
+        isTrusted = true;
+      } else if (process.stdout.isTTY && process.stdin.isTTY) {
+        isTrusted = await Prompt.confirm({
+          message:
+            `The project configures a local Yarn path: ${yarnPathFromConfig}.\n` +
+            `Do you trust this path and want to use it?`,
+          default: false,
+        });
+      } else {
+        isTrusted = false;
+      }
+    }
+
+    if (isTrusted) {
+      info = {binary: 'node', args: [yarnPathFromConfig]};
+    } else {
+      Log.warn(
+        `Ignoring local Yarn path: ${yarnPathFromConfig} as it is not trusted.\n` +
+          `You can trust it by running with NG_DEV_TRUST_YARN_PATH=1 environment variable.`,
+      );
+    }
   }
 
   if (!info) {
