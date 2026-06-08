@@ -25,6 +25,7 @@ import {NpmDistTag} from '../versioning/npm-registry.js';
 export interface PublishCiToolOptions {
   builtPackagesDir: string;
   expectedSha: string;
+  dryRun?: boolean;
 }
 
 export class PublishCiTool {
@@ -118,18 +119,22 @@ export class PublishCiTool {
 
     // Create GitHub Release and Tags (Idempotent)
     const globalTagName = `v${newVersion}`;
-    try {
-      await this.git.github.git.createRef({
-        ...this.git.remoteParams,
-        ref: `refs/tags/${globalTagName}`,
-        sha: this.options.expectedSha,
-      });
-      Log.info(green(`  ✓   Tagged ${globalTagName} release upstream.`));
-    } catch (e) {
-      if (isGithubApiError(e) && e.status === 422) {
-        Log.warn(`Warning: Tag ${globalTagName} already exists, skipping tag creation.`);
-      } else {
-        throw e;
+    if (this.options.dryRun) {
+      Log.info(`[Dry-Run] Would tag global tag: ${globalTagName}`);
+    } else {
+      try {
+        await this.git.github.git.createRef({
+          ...this.git.remoteParams,
+          ref: `refs/tags/${globalTagName}`,
+          sha: this.options.expectedSha,
+        });
+        Log.info(green(`  ✓   Tagged ${globalTagName} release upstream.`));
+      } catch (e) {
+        if (isGithubApiError(e) && e.status === 422) {
+          Log.warn(`Warning: Tag ${globalTagName} already exists, skipping tag creation.`);
+        } else {
+          throw e;
+        }
       }
     }
 
@@ -143,23 +148,27 @@ export class PublishCiTool {
         `[View all changes here](${releaseNotesUrl}).`;
     }
 
-    try {
-      await this.git.github.repos.createRelease({
-        ...this.git.remoteParams,
-        name: globalTagName,
-        tag_name: globalTagName,
-        prerelease: newSemver.prerelease.length > 0,
-        make_latest: npmDistTag === 'latest' ? 'true' : 'false',
-        body: releaseBody,
-      });
-      Log.info(green(`  ✓   Created ${globalTagName} release in Github.`));
-    } catch (e) {
-      if (isGithubApiError(e) && e.status === 422) {
-        Log.warn(
-          `Warning: GitHub release for ${globalTagName} already exists, skipping release creation.`,
-        );
-      } else {
-        throw e;
+    if (this.options.dryRun) {
+      Log.info(`[Dry-Run] Would create GitHub Release for tag: ${globalTagName}`);
+    } else {
+      try {
+        await this.git.github.repos.createRelease({
+          ...this.git.remoteParams,
+          name: globalTagName,
+          tag_name: globalTagName,
+          prerelease: newSemver.prerelease.length > 0,
+          make_latest: npmDistTag === 'latest' ? 'true' : 'false',
+          body: releaseBody,
+        });
+        Log.info(green(`  ✓   Created ${globalTagName} release in Github.`));
+      } catch (e) {
+        if (isGithubApiError(e) && e.status === 422) {
+          Log.warn(
+            `Warning: GitHub release for ${globalTagName} already exists, skipping release creation.`,
+          );
+        } else {
+          throw e;
+        }
       }
     }
 
@@ -167,18 +176,22 @@ export class PublishCiTool {
     if (this.config.release.npmPackages.length > 1) {
       for (const npmPkg of this.config.release.npmPackages) {
         const monorepoTagName = `${npmPkg.name}@${newVersion}`;
-        try {
-          await this.git.github.git.createRef({
-            ...this.git.remoteParams,
-            ref: `refs/tags/${monorepoTagName}`,
-            sha: this.options.expectedSha,
-          });
-          Log.info(green(`  ✓   Tagged monorepo package release: ${monorepoTagName}`));
-        } catch (e) {
-          if (isGithubApiError(e) && e.status === 422) {
-            Log.warn(`Warning: Tag ${monorepoTagName} already exists, skipping tag creation.`);
-          } else {
-            throw e;
+        if (this.options.dryRun) {
+          Log.info(`[Dry-Run] Would tag monorepo package: ${monorepoTagName}`);
+        } else {
+          try {
+            await this.git.github.git.createRef({
+              ...this.git.remoteParams,
+              ref: `refs/tags/${monorepoTagName}`,
+              sha: this.options.expectedSha,
+            });
+            Log.info(green(`  ✓   Tagged monorepo package release: ${monorepoTagName}`));
+          } catch (e) {
+            if (isGithubApiError(e) && e.status === 422) {
+              Log.warn(`Warning: Tag ${monorepoTagName} already exists, skipping tag creation.`);
+            } else {
+              throw e;
+            }
           }
         }
       }
@@ -190,39 +203,45 @@ export class PublishCiTool {
       throw new Error(`No built packages found under directory ${this.options.builtPackagesDir}`);
     }
 
-    const npmrcPath = join(this.projectDir, '.npmrc');
-    let originalNpmrc: string | null = null;
-    if (existsSync(npmrcPath)) {
-      originalNpmrc = readFileSync(npmrcPath, 'utf8');
-    }
-
-    try {
-      const wombatNpmrcContent =
-        [
-          `registry=https://wombat-dressing-room.appspot.com/`,
-          `//wombat-dressing-room.appspot.com/:_authToken=\${WOMBOT_TOKEN}`,
-        ].join('\n') + '\n';
-      writeFileSync(npmrcPath, wombatNpmrcContent);
-      Log.info(green(`  ✓   Configured .npmrc to use Wombat registry.`));
-
-      if (!process.env['WOMBOT_TOKEN']) {
-        throw new Error('WOMBOT_TOKEN environment variable is not defined.');
-      }
-
+    if (this.options.dryRun) {
       for (const pkg of builtPackages) {
-        Log.info(`Publishing "${pkg.name}"...`);
-        await NpmCommand.publish(
-          pkg.outputPath,
-          npmDistTag,
-          'https://wombat-dressing-room.appspot.com/',
-        );
-        Log.info(green(`  ✓   Successfully published "${pkg.name}".`));
+        Log.info(`[Dry-Run] Would write .npmrc and publish package: ${pkg.name} to Wombat`);
       }
-    } finally {
-      if (originalNpmrc !== null) {
-        writeFileSync(npmrcPath, originalNpmrc);
-      } else if (existsSync(npmrcPath)) {
-        rmSync(npmrcPath);
+    } else {
+      const npmrcPath = join(this.projectDir, '.npmrc');
+      let originalNpmrc: string | null = null;
+      if (existsSync(npmrcPath)) {
+        originalNpmrc = readFileSync(npmrcPath, 'utf8');
+      }
+
+      try {
+        const wombatNpmrcContent =
+          [
+            `registry=https://wombat-dressing-room.appspot.com/`,
+            `//wombat-dressing-room.appspot.com/:_authToken=\${WOMBOT_TOKEN}`,
+          ].join('\n') + '\n';
+        writeFileSync(npmrcPath, wombatNpmrcContent);
+        Log.info(green(`  ✓   Configured .npmrc to use Wombat registry.`));
+
+        if (!process.env['WOMBOT_TOKEN']) {
+          throw new Error('WOMBOT_TOKEN environment variable is not defined.');
+        }
+
+        for (const pkg of builtPackages) {
+          Log.info(`Publishing "${pkg.name}"...`);
+          await NpmCommand.publish(
+            pkg.outputPath,
+            npmDistTag,
+            'https://wombat-dressing-room.appspot.com/',
+          );
+          Log.info(green(`  ✓   Successfully published "${pkg.name}".`));
+        }
+      } finally {
+        if (originalNpmrc !== null) {
+          writeFileSync(npmrcPath, originalNpmrc);
+        } else if (existsSync(npmrcPath)) {
+          rmSync(npmrcPath);
+        }
       }
     }
   }

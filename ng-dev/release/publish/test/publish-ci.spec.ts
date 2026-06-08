@@ -653,4 +653,122 @@ describe('PublishCiTool', () => {
       expect(fs.readFileSync(npmrcPath, 'utf8')).toBe(originalNpmrcContent);
     });
   });
+
+  describe('dry-run mode', () => {
+    let releaseNotesSpy: jasmine.Spy;
+    let builtPackagesDir: string;
+    let logInfoSpy: jasmine.Spy;
+
+    beforeEach(() => {
+      releaseNotesSpy = spyOn(ReleaseNotes, 'forRange').and.resolveTo({
+        getGithubReleaseEntry: async () => 'release notes body',
+        getUrlFragmentForRelease: async () => 'url-frag',
+      } as any);
+
+      builtPackagesDir = path.join(testTmpDir, 'dist');
+      const pkgDir = path.join(builtPackagesDir, 'pkg1');
+      fs.mkdirSync(pkgDir, {recursive: true});
+      fs.writeFileSync(path.join(pkgDir, 'package.json'), JSON.stringify({name: '@angular/core'}));
+
+      logInfoSpy = spyOn(Log, 'info');
+    });
+
+    it('should skip API calls and log dry-run actions', async () => {
+      fs.writeFileSync(path.join(testTmpDir, 'package.json'), JSON.stringify({version: '10.0.0'}));
+      const sandbox = SandboxGitRepo.withInitialCommit(githubConfig);
+
+      fs.writeFileSync(path.join(testTmpDir, 'package.json'), JSON.stringify({version: '10.1.0'}));
+      sandbox.commit('v10.1.0 commit');
+      const headSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
+
+      const tool = new PublishCiTool(
+        {github: githubConfig, release: releaseConfig} as any,
+        gitClient,
+        testTmpDir,
+        {
+          builtPackagesDir,
+          expectedSha: headSha,
+          dryRun: true,
+        },
+      );
+
+      await expectAsync(tool.run()).toBeResolved();
+
+      // Verify no external actions were performed
+      expect(createRefSpy).not.toHaveBeenCalled();
+      expect(createReleaseSpy).not.toHaveBeenCalled();
+      expect(publishSpy).not.toHaveBeenCalled();
+
+      // Verify dry-run logs
+      expect(logInfoSpy).toHaveBeenCalledWith('[Dry-Run] Would tag global tag: v10.1.0');
+      expect(logInfoSpy).toHaveBeenCalledWith(
+        '[Dry-Run] Would create GitHub Release for tag: v10.1.0',
+      );
+      expect(logInfoSpy).toHaveBeenCalledWith(
+        '[Dry-Run] Would write .npmrc and publish package: @angular/core to Wombat',
+      );
+    });
+
+    it('should skip monorepo tag creation and log dry-run actions', async () => {
+      const monorepoReleaseConfig = {
+        representativeNpmPackage: '@angular/core',
+        npmPackages: [{name: '@angular/core'}, {name: '@angular/common'}],
+        buildPackages: async () => [],
+      };
+      setConfig({github: githubConfig, release: monorepoReleaseConfig});
+
+      fs.writeFileSync(path.join(testTmpDir, 'package.json'), JSON.stringify({version: '10.0.0'}));
+      const sandbox = SandboxGitRepo.withInitialCommit(githubConfig);
+
+      fs.writeFileSync(path.join(testTmpDir, 'package.json'), JSON.stringify({version: '10.1.0'}));
+      sandbox.commit('v10.1.0 commit');
+      const headSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
+
+      const pkg1Dir = path.join(builtPackagesDir, 'pkg1');
+      const pkg2Dir = path.join(builtPackagesDir, 'pkg2');
+      fs.mkdirSync(pkg1Dir, {recursive: true});
+      fs.mkdirSync(pkg2Dir, {recursive: true});
+      fs.writeFileSync(path.join(pkg1Dir, 'package.json'), JSON.stringify({name: '@angular/core'}));
+      fs.writeFileSync(
+        path.join(pkg2Dir, 'package.json'),
+        JSON.stringify({name: '@angular/common'}),
+      );
+
+      const tool = new PublishCiTool(
+        {github: githubConfig, release: monorepoReleaseConfig} as any,
+        gitClient,
+        testTmpDir,
+        {
+          builtPackagesDir,
+          expectedSha: headSha,
+          dryRun: true,
+        },
+      );
+
+      await expectAsync(tool.run()).toBeResolved();
+
+      // Verify no external actions were performed
+      expect(createRefSpy).not.toHaveBeenCalled();
+      expect(createReleaseSpy).not.toHaveBeenCalled();
+      expect(publishSpy).not.toHaveBeenCalled();
+
+      // Verify dry-run logs
+      expect(logInfoSpy).toHaveBeenCalledWith('[Dry-Run] Would tag global tag: v10.1.0');
+      expect(logInfoSpy).toHaveBeenCalledWith(
+        '[Dry-Run] Would create GitHub Release for tag: v10.1.0',
+      );
+      expect(logInfoSpy).toHaveBeenCalledWith(
+        '[Dry-Run] Would tag monorepo package: @angular/core@10.1.0',
+      );
+      expect(logInfoSpy).toHaveBeenCalledWith(
+        '[Dry-Run] Would tag monorepo package: @angular/common@10.1.0',
+      );
+      expect(logInfoSpy).toHaveBeenCalledWith(
+        '[Dry-Run] Would write .npmrc and publish package: @angular/core to Wombat',
+      );
+      expect(logInfoSpy).toHaveBeenCalledWith(
+        '[Dry-Run] Would write .npmrc and publish package: @angular/common to Wombat',
+      );
+    });
+  });
 });
