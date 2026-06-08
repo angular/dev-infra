@@ -137,7 +137,8 @@ export class VirtualGitClient extends AuthenticatedGitClient {
 
   /** Handler for the `git fetch` command. */
   private _fetch(rawArgs: string[]) {
-    const {force, refspec, repoUrl} = yargs(rawArgs)
+    const cleanArgs = rawArgs.filter((arg) => arg !== '--');
+    const {force, refspec, repoUrl} = yargs(cleanArgs)
       .command('$0 <repoUrl> <refspec>', false)
       .positional('repoUrl', {type: 'string', demandOption: true})
       .positional('refspec', {type: 'string', demandOption: true})
