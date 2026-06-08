@@ -110,7 +110,7 @@ export class G3Stats {
     }
 
     // Retrieve the latest ref for the branch and return its sha.
-    git.runGraceful(['fetch', '-q', git.getRepoGitUrl(), branch]);
+    git.runGraceful(['fetch', '-q', git.getRepoGitUrl(), '--', branch]);
     return git.runGraceful(['rev-parse', 'FETCH_HEAD']).stdout.trim();
   }
 
