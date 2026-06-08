@@ -8,11 +8,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@11.5.1",
+  "packageManager": "pnpm@11.5.2",
   "engines": {
     "npm": "Please use pnpm instead of NPM to install dependencies",
     "yarn": "Please use pnpm instead of Yarn to install dependencies",
-    "pnpm": "11.5.1"
+    "pnpm": "11.5.2"
   },
   "dependencies": {
     "@angular/compiler-cli": "22.0.0",
