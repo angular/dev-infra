@@ -82,7 +82,13 @@ export function setupReleaseActionForTesting<
     testOptionsWithDefaults.useSandboxGitClient,
   );
 
-  const action = new actionCtor(active, gitClient, releaseConfig, projectDir);
+  const action = new actionCtor(
+    active,
+    gitClient,
+    releaseConfig,
+    projectDir,
+    testOptionsWithDefaults.stageOnly,
+  );
 
   return {
     instance: action,

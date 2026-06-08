@@ -29,7 +29,11 @@ import {ActiveReleaseTrains} from '../versioning/active-release-trains.js';
 import {createExperimentalSemver} from '../versioning/experimental-versions.js';
 import {NpmCommand} from '../versioning/npm-command.js';
 import {getReleaseTagForVersion} from '../versioning/version-tags.js';
-import {FatalReleaseActionError, UserAbortedReleaseActionError} from './actions-error.js';
+import {
+  FatalReleaseActionError,
+  StageOnlySuccessError,
+  UserAbortedReleaseActionError,
+} from './actions-error.js';
 import {
   analyzeAndExtendBuiltPackagesWithInfo,
   assertIntegrityOfBuiltPackages,
@@ -78,7 +82,15 @@ export interface ReleaseActionConstructor<T extends ReleaseAction = ReleaseActio
   /** Whether the release action is currently active. */
   isActive(active: ActiveReleaseTrains, config: ReleaseConfig): Promise<boolean>;
   /** Constructs a release action. */
-  new (...args: [ActiveReleaseTrains, AuthenticatedGitClient, ReleaseConfig, string]): T;
+  new (
+    ...args: [
+      active: ActiveReleaseTrains,
+      git: AuthenticatedGitClient,
+      config: ReleaseConfig,
+      projectDir: string,
+      stageOnly?: boolean,
+    ]
+  ): T;
 }
 
 /**
@@ -106,6 +118,7 @@ export abstract class ReleaseAction {
     protected git: AuthenticatedGitClient,
     protected config: ReleaseConfig,
     protected projectDir: string,
+    protected stageOnly = false,
   ) {}
 
   /**
@@ -518,6 +531,16 @@ export abstract class ReleaseAction {
     );
 
     Log.info(green('  ✓   Release staging pull request has been created.'));
+
+    if (this.stageOnly) {
+      for (const pkg of builtPackagesWithInfo) {
+        if (existsSync(pkg.outputPath)) {
+          await fs.rm(pkg.outputPath, {recursive: true, force: true});
+          Log.info(`Cleaned up built package directory: ${pkg.outputPath}`);
+        }
+      }
+      throw new StageOnlySuccessError(pullRequest);
+    }
 
     return {releaseNotes, pullRequest, builtPackagesWithInfo};
   }

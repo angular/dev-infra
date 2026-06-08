@@ -39,6 +39,11 @@ export interface TestOptions {
    * appear as published to NPM or not.
    */
   isExceptionalMinorPublishedToNpm?: boolean;
+
+  /**
+   * Whether the release action is running in stage-only mode.
+   */
+  stageOnly?: boolean;
 }
 
 /** Type describing the default options. Used for narrowing in generics. */
@@ -47,6 +52,7 @@ export type defaultTestOptionsType = TestOptions & {
   stubBuiltPackageOutputChecks: true;
   isNextPublishedToNpm: true;
   isExceptionalMinorPublishedToNpm: true;
+  stageOnly: false;
 };
 
 /** Default options for tests. Need to match with the default options type. */
@@ -55,6 +61,7 @@ export const defaultTestOptions: defaultTestOptionsType = {
   stubBuiltPackageOutputChecks: true,
   isNextPublishedToNpm: true,
   isExceptionalMinorPublishedToNpm: true,
+  stageOnly: false,
 };
 
 /** Type describing test options with defaults merged. */
