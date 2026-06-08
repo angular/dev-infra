@@ -18,6 +18,7 @@ import {green, Log} from '../../utils/logging.js';
 export interface ReleasePublishCiOptions {
   builtPackagesDir: string;
   expectedSha: string;
+  dryRun?: boolean;
 }
 
 function builder(argv: Argv): Argv<ReleasePublishCiOptions> {
@@ -31,6 +32,12 @@ function builder(argv: Argv): Argv<ReleasePublishCiOptions> {
       type: 'string',
       demandOption: true,
       description: 'The expected Git SHA of the release commit.',
+    })
+    .option('dry-run' as 'dryRun', {
+      type: 'boolean',
+      default: false,
+      description:
+        'Run the publish command in dry-run mode, skipping tag/release creation and NPM publishing.',
     });
 }
 
