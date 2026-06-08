@@ -533,12 +533,14 @@ export abstract class ReleaseAction {
     Log.info(green('  ✓   Release staging pull request has been created.'));
 
     if (this.stageOnly) {
-      for (const pkg of builtPackagesWithInfo) {
-        if (existsSync(pkg.outputPath)) {
-          await fs.rm(pkg.outputPath, {recursive: true, force: true});
-          Log.info(`Cleaned up built package directory: ${pkg.outputPath}`);
-        }
-      }
+      await Promise.all(
+        builtPackagesWithInfo.map(async (pkg) => {
+          if (existsSync(pkg.outputPath)) {
+            await fs.rm(pkg.outputPath, {recursive: true, force: true});
+            Log.info(`Cleaned up built package directory: ${pkg.outputPath}`);
+          }
+        }),
+      );
       throw new StageOnlySuccessError(pullRequest);
     }
 
