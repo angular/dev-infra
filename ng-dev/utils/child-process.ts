@@ -70,7 +70,7 @@ export abstract class ChildProcess {
   ) {
     return new Promise<void>((resolve, reject) => {
       const commandText = `${command} ${args.join(' ')}`;
-      Log.debug(`Executing command: ${commandText}`);
+      Log.debug(`Executing command: ${sanitize(commandText)}`);
       const childProcess = _spawn(command, args, {...options, stdio: 'inherit'});
       // The `close` event is used because the process is guaranteed to have completed writing to
       // stdout and stderr, using the `exit` event can cause inconsistent information in stdout and
@@ -92,7 +92,7 @@ export abstract class ChildProcess {
     const commandText = `${command} ${args.join(' ')}`;
     const env = getEnvironmentForNonInteractiveCommand(options.env);
 
-    Log.debug(`Executing command: ${commandText}`);
+    Log.debug(`Executing command: ${sanitize(commandText)}`);
 
     const {
       status: exitCode,
@@ -108,7 +108,7 @@ export abstract class ChildProcess {
       return {status, stdout, stderr};
     }
 
-    throw new Error(stderr);
+    throw new Error(sanitize(stderr));
   }
 
   /**
@@ -190,7 +190,11 @@ function processAsyncCmd(
     let stdout = '';
     let stderr = '';
 
-    Log.debug(`Executing command: ${command}`);
+    Log.debug(`Executing command: ${sanitize(command)}`);
+
+    childProcess.on('error', (err) => {
+      reject(err);
+    });
 
     // If provided, write `input` text to the process `stdin`.
     if (options.input !== undefined) {
@@ -210,7 +214,7 @@ function processAsyncCmd(
       // If console output is enabled, print the message directly to the stderr. Note that
       // we intentionally print all output to stderr as stdout should not be polluted.
       if (options.mode === undefined || options.mode === 'enabled') {
-        process.stderr.write(message);
+        process.stderr.write(sanitize(String(message)));
       }
     });
 
@@ -220,7 +224,7 @@ function processAsyncCmd(
       // If console output is enabled, print the message directly to the stderr. Note that
       // we intentionally print all output to stderr as stdout should not be polluted.
       if (options.mode === undefined || options.mode === 'enabled') {
-        process.stderr.write(message);
+        process.stderr.write(sanitize(String(message)));
       }
     });
 
@@ -231,8 +235,8 @@ function processAsyncCmd(
       const exitDescription = exitCode !== null ? `exit code "${exitCode}"` : `signal "${signal}"`;
       const status = statusFromExitCodeAndSignal(exitCode, signal);
       const printFn = status !== 0 && options.mode === 'on-error' ? Log.error : Log.debug;
-      printFn(`Command "${command}" completed with ${exitDescription}.`);
-      printFn(`Process output: \n${logOutput}`);
+      printFn(`Command "${sanitize(command)}" completed with ${exitDescription}.`);
+      printFn(`Process output: \n${sanitize(logOutput)}`);
 
       // On success, resolve the promise. Otherwise reject with the captured stderr
       // and stdout log output if the output mode was set to `silent`.
@@ -243,4 +247,12 @@ function processAsyncCmd(
       }
     });
   });
+}
+
+/** Sanitizes a string by redacting URL credentials. */
+function sanitize(value: string | null | undefined): string {
+  if (!value) {
+    return '';
+  }
+  return value.replace(/(https?:\/\/)([^@:/]*)(:[^@/]+)?@/g, '$1<TOKEN>@');
 }
