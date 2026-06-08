@@ -80,6 +80,7 @@ export async function pullRequestHasValidTestedComment(
   for (const {bodyText, author} of comments) {
     if (
       bodyText.startsWith(`TESTED=`) &&
+      author &&
       (await githubMacros.isGooglerOrgMember(gitClient.github, author.login))
     ) {
       return true;

@@ -75,8 +75,11 @@ class Validation extends PullRequestValidation {
         }
         break;
       case targetLabels['TARGET_AUTOMATION']:
-        if (!automationBots.includes(pullRequest.author.login)) {
-          throw this._createUserUsingAutomationLabelError(targetLabel, pullRequest.author.login);
+        if (!pullRequest.author || !automationBots.includes(pullRequest.author.login)) {
+          throw this._createUserUsingAutomationLabelError(
+            targetLabel,
+            pullRequest.author?.login ?? 'unknown',
+          );
         }
         break;
       default:

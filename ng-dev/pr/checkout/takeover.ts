@@ -35,9 +35,9 @@ export async function checkoutAsPrTakeover(
 
   // Validate that the takeover attempt is being made against a pull request created by an
   // expected account.
-  if (!takeoverAccounts.includes(pullRequest.author.login)) {
+  if (!pullRequest.author || !takeoverAccounts.includes(pullRequest.author.login)) {
     Log.warn(
-      ` ⚠ ${bold(pullRequest.author.login)} is not an account fully supported for takeover.`,
+      ` ⚠ ${bold(pullRequest.author?.login ?? 'unknown')} is not an account fully supported for takeover.`,
     );
     Log.warn(`   Supported accounts: ${bold(takeoverAccounts.join(', '))}`);
     if (

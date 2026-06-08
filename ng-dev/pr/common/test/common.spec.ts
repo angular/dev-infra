@@ -145,6 +145,27 @@ describe('pull request validation', () => {
       const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
       expect(results.length).toBe(1);
     });
+
+    it('should handle comments with null author without crashing', async () => {
+      const config = createIsolatedValidationConfig({assertEnforceTested: true});
+      let pr = createTestPullRequest();
+      const comments = [
+        {
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          author: null as any,
+          bodyText: 'TESTED="blah"',
+        },
+      ];
+      const commentHelper = PullRequestComments.create(git, pr.number);
+      spyOn(PullRequestComments, 'create').and.returnValue(commentHelper);
+      spyOn(commentHelper, 'loadPullRequestComments').and.returnValue(Promise.resolve(comments));
+
+      pr.labels.nodes.push({name: requiresLabels['REQUIRES_TGP'].name});
+      // Should not throw, should return validation error since no googler tested it
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(1);
+      expect(results[0].message).toContain('Pull Request requires a TGP');
+    });
   });
 
   describe('assert-isolate-primitives', () => {
