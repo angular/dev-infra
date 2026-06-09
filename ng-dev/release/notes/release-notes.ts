@@ -100,16 +100,15 @@ export class ReleaseNotes {
    * Prompt the user for a title for the release, if the project's configuration is defined to use a
    * title.
    */
-  async promptForReleaseTitle() {
+  async promptForReleaseTitle(): Promise<string | false> {
     const notesConfig = await this._getNotesConfig();
 
-    if (this.title === undefined) {
-      if (notesConfig.useReleaseTitle) {
-        this.title = await Prompt.input({message: 'Please provide a title for the release:'});
-      } else {
-        this.title = false;
-      }
+    if (this.title === undefined && notesConfig.useReleaseTitle) {
+      this.title = await Prompt.input({message: 'Please provide a title for the release:'});
     }
+
+    this.title ??= false;
+
     return this.title;
   }
 

@@ -86,7 +86,7 @@ export class RenderContext {
    * the configuration. Commits are order in the same order within each groups commit list as they
    * appear in the provided list of commits.
    * */
-  asCommitGroups(commits: CategorizedCommit[]) {
+  asCommitGroups = (commits: CategorizedCommit[]) => {
     /** The discovered groups to organize into. */
     const groups = new Map<string, CategorizedCommit[]>();
 
@@ -122,23 +122,23 @@ export class RenderContext {
       }
     }
     return commitGroups;
-  }
+  };
 
   /** Whether the specified commit contains breaking changes. */
-  hasBreakingChanges(commit: CategorizedCommit) {
+  hasBreakingChanges = (commit: CategorizedCommit) => {
     return commit.breakingChanges.length !== 0;
-  }
+  };
 
   /** Whether the specified commit contains deprecations. */
-  hasDeprecations(commit: CategorizedCommit) {
+  hasDeprecations = (commit: CategorizedCommit) => {
     return commit.deprecations.length !== 0;
-  }
+  };
 
   /**
    * A filter function for filtering a list of commits to only include commits which
    * should appear in release notes.
    */
-  includeInReleaseNotes() {
+  includeInReleaseNotes = () => {
     return (commit: CategorizedCommit) => {
       if (this.hiddenScopes.includes(commit.scope)) {
         return false;
@@ -153,36 +153,36 @@ export class RenderContext {
 
       return typesToIncludeInReleaseNotes.includes(commit.type);
     };
-  }
+  };
 
   /**
    * A filter function for filtering a list of commits to only include commits which contain a
    * unique value for the provided field across all commits in the list.
    */
-  unique(field: keyof CategorizedCommit) {
+  unique = (field: keyof CategorizedCommit) => {
     const set = new Set<CategorizedCommit[typeof field]>();
     return (commit: CategorizedCommit) => {
       const include = !set.has(commit[field]);
       set.add(commit[field]);
       return include;
     };
-  }
+  };
 
   /**
    * Convert a commit object to a Markdown link.
    */
-  commitToLink(commit: CategorizedCommit): string {
+  commitToLink = (commit: CategorizedCommit): string => {
     const url = `https://github.com/${this.data.github.owner}/${this.data.github.name}/commit/${commit.hash}`;
     return `[${commit.shortHash}](${url})`;
-  }
+  };
 
   /**
    * Convert a pull request number to a Markdown link.
    */
-  pullRequestToLink(prNumber: number): string {
+  pullRequestToLink = (prNumber: number): string => {
     const url = `https://github.com/${this.data.github.owner}/${this.data.github.name}/pull/${prNumber}`;
     return `[#${prNumber}](${url})`;
-  }
+  };
 
   /**
    * Transform a given string by replacing any pull request references with their
@@ -192,21 +192,21 @@ export class RenderContext {
    * automatically in release note entries, issues and pull requests, but not for plain
    * markdown files (like the changelog file).
    */
-  convertPullRequestReferencesToLinks(content: string): string {
+  convertPullRequestReferencesToLinks = (content: string): string => {
     return content.replace(/#(\d+)/g, (_, g) => this.pullRequestToLink(Number(g)));
-  }
+  };
 
   /**
    * Bulletize a paragraph.
    */
-  bulletizeText(text: string): string {
+  bulletizeText = (text: string): string => {
     return '- ' + text.replace(/\n/g, '\n  ');
-  }
+  };
 
   /**
    * Convert a commit object to a Markdown linked badged.
    */
-  commitToBadge(commit: CategorizedCommit): string {
+  commitToBadge = (commit: CategorizedCommit): string => {
     let color = 'yellow';
     switch (commit.type) {
       case 'fix':
@@ -222,7 +222,7 @@ export class RenderContext {
     const url = `https://github.com/${this.data.github.owner}/${this.data.github.name}/commit/${commit.hash}`;
     const imgSrc = `https://img.shields.io/badge/${commit.shortHash}-${commit.type}-${color}`;
     return `[![${commit.type} - ${commit.shortHash}](${imgSrc})](${url})`;
-  }
+  };
 }
 
 /**
