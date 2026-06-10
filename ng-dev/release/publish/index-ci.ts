@@ -322,6 +322,7 @@ export class PublishCiTool {
     } else {
       const tempDir = mkdtempSync(join(tmpdir(), 'angular-publish-ci-'));
       const tempNpmrcPath = join(tempDir, '.npmrc');
+      const originalUserconfig = process.env['NPM_CONFIG_USERCONFIG'];
 
       try {
         const wombatNpmrcContent =
@@ -332,10 +333,17 @@ export class PublishCiTool {
         writeFileSync(tempNpmrcPath, wombatNpmrcContent);
         Log.info(green(`  ✓   Created temporary .npmrc for Wombat registry.`));
 
+        // Set the environment variable to point to the temporary config
+        process.env['NPM_CONFIG_USERCONFIG'] = tempNpmrcPath;
+
         // Publish packages
         for (const pkg of builtPackages) {
           Log.info(`Publishing "${pkg.name}"...`);
-          await NpmCommand.publish(pkg.outputPath, npmDistTag, undefined, tempNpmrcPath);
+          await NpmCommand.publish(
+            pkg.outputPath,
+            npmDistTag,
+            'https://wombat-dressing-room.appspot.com/',
+          );
           Log.info(green(`  ✓   Successfully published "${pkg.name}".`));
         }
 
@@ -346,14 +354,26 @@ export class PublishCiTool {
           }
           Log.info(`Deprecating "${pkg.name}"...`);
           const {version, message} = pkg.deprecated;
-          await NpmCommand.deprecate(pkg.name, version, message, undefined, tempNpmrcPath);
+          await NpmCommand.deprecate(
+            pkg.name,
+            version,
+            message,
+            'https://wombat-dressing-room.appspot.com/',
+          );
           Log.info(green(`  ✓   Successfully deprecated "${pkg.name}@${version}".`));
         }
       } finally {
+        // Guaranteed cleanup of files and environment
         try {
           rmSync(tempDir, {recursive: true, force: true});
         } catch (e) {
           Log.warn(`Warning: Failed to clean up temporary directory ${tempDir}: ${e}`);
+        } finally {
+          if (originalUserconfig !== undefined) {
+            process.env['NPM_CONFIG_USERCONFIG'] = originalUserconfig;
+          } else {
+            delete process.env['NPM_CONFIG_USERCONFIG'];
+          }
         }
       }
     }

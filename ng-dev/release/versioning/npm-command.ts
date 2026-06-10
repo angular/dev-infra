@@ -18,19 +18,11 @@ export abstract class NpmCommand {
    * Runs NPM publish within a specified package directory.
    * @throws With the process log output if the publish failed.
    */
-  static async publish(
-    packagePath: string,
-    distTag: NpmDistTag,
-    registryUrl: string | undefined,
-    userconfig?: string,
-  ) {
+  static async publish(packagePath: string, distTag: NpmDistTag, registryUrl: string | undefined) {
     const args = ['publish', '--access', 'public', '--tag', distTag];
     // If a custom registry URL has been specified, add the `--registry` flag.
     if (registryUrl !== undefined) {
       args.push('--registry', registryUrl);
-    }
-    if (userconfig !== undefined) {
-      args.push('--userconfig', userconfig);
     }
     await ChildProcess.spawn('npm', args, {cwd: packagePath, mode: 'silent'});
   }
@@ -48,16 +40,12 @@ export abstract class NpmCommand {
     version: string,
     message: string,
     registryUrl: string | undefined,
-    userconfig?: string,
   ) {
     const args = ['deprecate', `${packageName}@${version}`, message];
 
     // If a custom registry URL has been specified, add the `--registry` flag.
     if (registryUrl !== undefined) {
       args.push('--registry', registryUrl);
-    }
-    if (userconfig !== undefined) {
-      args.push('--userconfig', userconfig);
     }
 
     try {

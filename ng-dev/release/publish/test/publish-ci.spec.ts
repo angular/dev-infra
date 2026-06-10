@@ -635,6 +635,7 @@ describe('PublishCiTool', () => {
     let releaseNotesSpy: jasmine.Spy;
     let builtPackagesDir: string;
     let npmrcPath: string;
+    let originalNpmConfigUserconfig: string | undefined;
 
     beforeEach(() => {
       releaseNotesSpy = spyOn(ReleaseNotes, 'forRange').and.resolveTo({
@@ -646,6 +647,17 @@ describe('PublishCiTool', () => {
       npmrcPath = path.join(testTmpDir, '.npmrc');
 
       process.env['WOMBOT_TOKEN'] = 'mock-wombat-token';
+
+      originalNpmConfigUserconfig = process.env['NPM_CONFIG_USERCONFIG'];
+      delete process.env['NPM_CONFIG_USERCONFIG'];
+    });
+
+    afterEach(() => {
+      if (originalNpmConfigUserconfig !== undefined) {
+        process.env['NPM_CONFIG_USERCONFIG'] = originalNpmConfigUserconfig;
+      } else {
+        delete process.env['NPM_CONFIG_USERCONFIG'];
+      }
     });
 
     it('should temporarily write wombat registry token to a temp .npmrc and clean up afterwards', async () => {
@@ -675,17 +687,12 @@ describe('PublishCiTool', () => {
 
       let npmrcContentDuringPublish: string | null = null;
       let tempNpmrcPath: string | undefined;
-
-      publishSpy.and.callFake(
-        async (pkgPath: string, tag: string, registry: string | undefined, userconfig?: string) => {
-          if (userconfig) {
-            tempNpmrcPath = userconfig;
-            if (fs.existsSync(userconfig)) {
-              npmrcContentDuringPublish = fs.readFileSync(userconfig, 'utf8');
-            }
-          }
-        },
-      );
+      publishSpy.and.callFake(async () => {
+        tempNpmrcPath = process.env['NPM_CONFIG_USERCONFIG'];
+        if (tempNpmrcPath && fs.existsSync(tempNpmrcPath)) {
+          npmrcContentDuringPublish = fs.readFileSync(tempNpmrcPath, 'utf8');
+        }
+      });
 
       const tool = new PublishCiTool(
         {github: githubConfig, release: testReleaseConfig} as any,
@@ -697,8 +704,9 @@ describe('PublishCiTool', () => {
         },
       );
 
-      // Verify .npmrc does not exist in project dir initially
+      // Verify .npmrc does not exist initially in project dir
       expect(fs.existsSync(npmrcPath)).toBe(false);
+      expect(process.env['NPM_CONFIG_USERCONFIG']).toBeUndefined();
 
       await expectAsync(tool.run()).toBeResolved();
 
@@ -715,16 +723,27 @@ describe('PublishCiTool', () => {
       expect(fs.existsSync(tempNpmrcPath!)).toBe(false);
       expect(fs.existsSync(path.dirname(tempNpmrcPath!))).toBe(false);
 
-      // Verify original npmrc was NOT created in project dir
+      // Verify project .npmrc was NOT created
       expect(fs.existsSync(npmrcPath)).toBe(false);
+
+      // Verify env var was cleaned up
+      expect(process.env['NPM_CONFIG_USERCONFIG']).toBeUndefined();
 
       // Verify NpmCommand.publish was called for both packages with correct arguments
       expect(publishSpy).toHaveBeenCalledTimes(2);
-      expect(publishSpy.calls.argsFor(0)).toEqual([pkg1Dir, 'latest', undefined, tempNpmrcPath]);
-      expect(publishSpy.calls.argsFor(1)).toEqual([pkg2Dir, 'latest', undefined, tempNpmrcPath]);
+      expect(publishSpy.calls.argsFor(0)).toEqual([
+        pkg1Dir,
+        'latest',
+        'https://wombat-dressing-room.appspot.com/',
+      ]);
+      expect(publishSpy.calls.argsFor(1)).toEqual([
+        pkg2Dir,
+        'latest',
+        'https://wombat-dressing-room.appspot.com/',
+      ]);
     });
 
-    it('should leave original .npmrc untouched if it existed beforehand', async () => {
+    it('should preserve original NPM_CONFIG_USERCONFIG and leave project .npmrc untouched', async () => {
       fs.writeFileSync(path.join(testTmpDir, 'package.json'), JSON.stringify({version: '10.0.0'}));
       const sandbox = SandboxGitRepo.withInitialCommit(githubConfig);
 
@@ -739,10 +758,15 @@ describe('PublishCiTool', () => {
       const originalNpmrcContent = 'registry=https://my-custom-registry.com/\n';
       fs.writeFileSync(npmrcPath, originalNpmrcContent);
 
-      let originalNpmrcContentDuringPublish: string | null = null;
+      const originalUserconfig = 'original-userconfig-path';
+      process.env['NPM_CONFIG_USERCONFIG'] = originalUserconfig;
+
+      let tempNpmrcPath: string | undefined;
+      let npmrcContentDuringPublish: string | null = null;
       publishSpy.and.callFake(async () => {
-        if (fs.existsSync(npmrcPath)) {
-          originalNpmrcContentDuringPublish = fs.readFileSync(npmrcPath, 'utf8');
+        tempNpmrcPath = process.env['NPM_CONFIG_USERCONFIG'];
+        if (tempNpmrcPath && fs.existsSync(tempNpmrcPath)) {
+          npmrcContentDuringPublish = fs.readFileSync(tempNpmrcPath, 'utf8');
         }
       });
 
@@ -758,15 +782,22 @@ describe('PublishCiTool', () => {
 
       await expectAsync(tool.run()).toBeResolved();
 
-      // Verify that original npmrc was not modified during publish
-      expect<string | null>(originalNpmrcContentDuringPublish).toBe(originalNpmrcContent);
+      // Verify that temp npmrc was used and configured correctly
+      expect(tempNpmrcPath).toBeDefined();
+      expect(tempNpmrcPath).not.toBe(originalUserconfig);
+      expect<string | null>(npmrcContentDuringPublish).toContain(
+        'registry=https://wombat-dressing-room.appspot.com/',
+      );
 
-      // Verify that original npmrc is still there unchanged
+      // Verify that original project .npmrc is completely untouched
       expect(fs.existsSync(npmrcPath)).toBe(true);
       expect(fs.readFileSync(npmrcPath, 'utf8')).toBe(originalNpmrcContent);
+
+      // Verify that original NPM_CONFIG_USERCONFIG is restored
+      expect(process.env['NPM_CONFIG_USERCONFIG']).toBe(originalUserconfig);
     });
 
-    it('should leave original .npmrc untouched even if publishing fails', async () => {
+    it('should restore NPM_CONFIG_USERCONFIG even if publishing fails', async () => {
       fs.writeFileSync(path.join(testTmpDir, 'package.json'), JSON.stringify({version: '10.0.0'}));
       const sandbox = SandboxGitRepo.withInitialCommit(githubConfig);
 
@@ -780,6 +811,9 @@ describe('PublishCiTool', () => {
 
       const originalNpmrcContent = 'registry=https://my-custom-registry.com/\n';
       fs.writeFileSync(npmrcPath, originalNpmrcContent);
+
+      const originalUserconfig = 'original-userconfig-path';
+      process.env['NPM_CONFIG_USERCONFIG'] = originalUserconfig;
 
       publishSpy.and.rejectWith(new Error('Npm publish error'));
 
@@ -795,9 +829,12 @@ describe('PublishCiTool', () => {
 
       await expectAsync(tool.run()).toBeRejectedWithError('Npm publish error');
 
-      // Verify that original npmrc is still there unchanged
+      // Verify that original project .npmrc is untouched
       expect(fs.existsSync(npmrcPath)).toBe(true);
       expect(fs.readFileSync(npmrcPath, 'utf8')).toBe(originalNpmrcContent);
+
+      // Verify that original NPM_CONFIG_USERCONFIG is restored
+      expect(process.env['NPM_CONFIG_USERCONFIG']).toBe(originalUserconfig);
     });
 
     it('should deprecate packages if configured', async () => {
@@ -850,6 +887,16 @@ describe('PublishCiTool', () => {
 
       // Verify publish was called for both
       expect(publishSpy).toHaveBeenCalledTimes(2);
+      expect(publishSpy.calls.argsFor(0)).toEqual([
+        pkg1Dir,
+        'latest',
+        'https://wombat-dressing-room.appspot.com/',
+      ]);
+      expect(publishSpy.calls.argsFor(1)).toEqual([
+        pkg2Dir,
+        'latest',
+        'https://wombat-dressing-room.appspot.com/',
+      ]);
 
       // Verify deprecate was called only for @angular/common
       expect(deprecateSpy).toHaveBeenCalledTimes(1);
@@ -857,8 +904,7 @@ describe('PublishCiTool', () => {
         '@angular/common',
         '>=9.0.0',
         'Use @angular/core instead',
-        undefined,
-        jasmine.any(String),
+        'https://wombat-dressing-room.appspot.com/',
       );
     });
   });
