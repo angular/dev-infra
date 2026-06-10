@@ -7,9 +7,19 @@
  */
 
 import {join} from 'path';
-import {readdirSync, statSync, readFileSync, existsSync, writeFileSync, rmSync} from 'fs';
+import {
+  readdirSync,
+  readFileSync,
+  existsSync,
+  writeFileSync,
+  rmSync,
+  mkdtempSync,
+  Dirent,
+} from 'fs';
+import {tmpdir} from 'os';
 import semver from 'semver';
-import {ReleaseConfig, BuiltPackage} from '../config/index.js';
+import {ReleaseConfig, BuiltPackage, BuiltPackageWithInfo} from '../config/index.js';
+import {analyzeAndExtendBuiltPackagesWithInfo} from './built-package-info.js';
 import {GithubConfig, NgDevConfig} from '../../utils/config.js';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {ReleaseNotes, workspaceRelativeChangelogPath} from '../notes/release-notes.js';
@@ -70,6 +80,11 @@ export class PublishCiTool {
       throw new Error(`No built packages found under directory ${this.options.builtPackagesDir}`);
     }
 
+    const builtPackagesWithInfo = await analyzeAndExtendBuiltPackagesWithInfo(
+      builtPackages,
+      this.config.release.npmPackages,
+    );
+
     const beforeStagingSha = this.getBeforeStagingSha();
 
     const newVersion = readPackageJsonAtRef(this.git, 'HEAD').version;
@@ -97,7 +112,7 @@ export class PublishCiTool {
 
     await this.createGithubReleaseAndTags(newVersion, newSemver, releaseNotes, npmDistTag);
 
-    await this.publishPackagesToNpm(builtPackages, npmDistTag);
+    await this.publishAndDeprecatePackages(builtPackagesWithInfo, npmDistTag);
   }
 
   /**
@@ -293,17 +308,20 @@ export class PublishCiTool {
    * @param builtPackages List of built packages to be published.
    * @param npmDistTag The NPM distribution tag (e.g. 'latest', 'next') to publish under.
    */
-  private async publishPackagesToNpm(builtPackages: BuiltPackage[], npmDistTag: NpmDistTag) {
+  private async publishAndDeprecatePackages(
+    builtPackages: BuiltPackageWithInfo[],
+    npmDistTag: NpmDistTag,
+  ) {
     if (this.options.dryRun) {
       for (const pkg of builtPackages) {
-        Log.info(`[Dry-Run] Would write .npmrc and publish package: ${pkg.name} to Wombat`);
+        Log.info(`[Dry-Run] Would publish package: ${pkg.name} to Wombat`);
+        if (pkg.deprecated) {
+          Log.info(`[Dry-Run] Would deprecate package: ${pkg.name}@${pkg.deprecated.version}`);
+        }
       }
     } else {
-      const npmrcPath = join(this.projectDir, '.npmrc');
-      let originalNpmrc: string | null = null;
-      if (existsSync(npmrcPath)) {
-        originalNpmrc = readFileSync(npmrcPath, 'utf8');
-      }
+      const tempDir = mkdtempSync(join(tmpdir(), 'angular-publish-ci-'));
+      const tempNpmrcPath = join(tempDir, '.npmrc');
 
       try {
         const wombatNpmrcContent =
@@ -311,23 +329,31 @@ export class PublishCiTool {
             `registry=https://wombat-dressing-room.appspot.com/`,
             `//wombat-dressing-room.appspot.com/:_authToken=\${WOMBOT_TOKEN}`,
           ].join('\n') + '\n';
-        writeFileSync(npmrcPath, wombatNpmrcContent);
-        Log.info(green(`  ✓   Configured .npmrc to use Wombat registry.`));
+        writeFileSync(tempNpmrcPath, wombatNpmrcContent);
+        Log.info(green(`  ✓   Created temporary .npmrc for Wombat registry.`));
 
+        // Publish packages
         for (const pkg of builtPackages) {
           Log.info(`Publishing "${pkg.name}"...`);
-          await NpmCommand.publish(
-            pkg.outputPath,
-            npmDistTag,
-            'https://wombat-dressing-room.appspot.com/',
-          );
+          await NpmCommand.publish(pkg.outputPath, npmDistTag, undefined, tempNpmrcPath);
           Log.info(green(`  ✓   Successfully published "${pkg.name}".`));
         }
+
+        // Deprecate packages if configured
+        for (const pkg of builtPackages) {
+          if (!pkg.deprecated) {
+            continue;
+          }
+          Log.info(`Deprecating "${pkg.name}"...`);
+          const {version, message} = pkg.deprecated;
+          await NpmCommand.deprecate(pkg.name, version, message, undefined, tempNpmrcPath);
+          Log.info(green(`  ✓   Successfully deprecated "${pkg.name}@${version}".`));
+        }
       } finally {
-        if (originalNpmrc !== null) {
-          writeFileSync(npmrcPath, originalNpmrc);
-        } else if (existsSync(npmrcPath)) {
-          rmSync(npmrcPath);
+        try {
+          rmSync(tempDir, {recursive: true, force: true});
+        } catch (e) {
+          Log.warn(`Warning: Failed to clean up temporary directory ${tempDir}: ${e}`);
         }
       }
     }
@@ -362,34 +388,34 @@ function findBuiltPackages(dir: string): BuiltPackage[] {
   }
   const packages: BuiltPackage[] = [];
   const walk = (currentDir: string) => {
-    let files: string[];
+    let entries: Dirent[];
     try {
-      files = readdirSync(currentDir);
+      entries = readdirSync(currentDir, {withFileTypes: true});
     } catch (e) {
       return;
     }
-    if (files.includes('package.json')) {
+    const hasPackageJson = entries.some((e) => e.isFile() && e.name === 'package.json');
+    if (hasPackageJson) {
       try {
         const pkgJson = JSON.parse(readFileSync(join(currentDir, 'package.json'), 'utf8'));
         if (pkgJson.name) {
-          packages.push({
-            name: pkgJson.name,
-            outputPath: currentDir,
-          });
+          if (!pkgJson.private) {
+            packages.push({
+              name: pkgJson.name,
+              outputPath: currentDir,
+            });
+          }
+          // Stop traversing deeper once we find a package boundary (even if private)
+          // to avoid looking into nested node_modules or sub-packages.
           return;
         }
       } catch (e) {
         // Ignore parsing errors
       }
     }
-    for (const file of files) {
-      const fullPath = join(currentDir, file);
-      try {
-        if (statSync(fullPath).isDirectory()) {
-          walk(fullPath);
-        }
-      } catch (e) {
-        // Ignore broken symlinks or unreadable files
+    for (const entry of entries) {
+      if (entry.isDirectory()) {
+        walk(join(currentDir, entry.name));
       }
     }
   };

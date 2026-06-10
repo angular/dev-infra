@@ -648,7 +648,14 @@ describe('PublishCiTool', () => {
       process.env['WOMBOT_TOKEN'] = 'mock-wombat-token';
     });
 
-    it('should temporarily write wombat registry token to .npmrc and clean up afterwards', async () => {
+    it('should temporarily write wombat registry token to a temp .npmrc and clean up afterwards', async () => {
+      const testReleaseConfig = {
+        representativeNpmPackage: '@angular/core',
+        npmPackages: [{name: '@angular/core'}, {name: '@angular/common'}],
+        buildPackages: async () => [],
+      };
+      setConfig({github: githubConfig, release: testReleaseConfig});
+
       fs.writeFileSync(path.join(testTmpDir, 'package.json'), JSON.stringify({version: '10.0.0'}));
       const sandbox = SandboxGitRepo.withInitialCommit(githubConfig);
 
@@ -667,14 +674,21 @@ describe('PublishCiTool', () => {
       );
 
       let npmrcContentDuringPublish: string | null = null;
-      publishSpy.and.callFake(async () => {
-        if (fs.existsSync(npmrcPath)) {
-          npmrcContentDuringPublish = fs.readFileSync(npmrcPath, 'utf8');
-        }
-      });
+      let tempNpmrcPath: string | undefined;
+
+      publishSpy.and.callFake(
+        async (pkgPath: string, tag: string, registry: string | undefined, userconfig?: string) => {
+          if (userconfig) {
+            tempNpmrcPath = userconfig;
+            if (fs.existsSync(userconfig)) {
+              npmrcContentDuringPublish = fs.readFileSync(userconfig, 'utf8');
+            }
+          }
+        },
+      );
 
       const tool = new PublishCiTool(
-        {github: githubConfig, release: releaseConfig} as any,
+        {github: githubConfig, release: testReleaseConfig} as any,
         gitClient,
         testTmpDir,
         {
@@ -683,37 +697,34 @@ describe('PublishCiTool', () => {
         },
       );
 
-      // Verify .npmrc does not exist initially
+      // Verify .npmrc does not exist in project dir initially
       expect(fs.existsSync(npmrcPath)).toBe(false);
 
       await expectAsync(tool.run()).toBeResolved();
 
-      // Verify it was correctly configured during publish
-      expect(npmrcContentDuringPublish).toContain(
+      // Verify temp npmrc was created and had correct content
+      expect(tempNpmrcPath).toBeDefined();
+      expect<string | null>(npmrcContentDuringPublish).toContain(
         'registry=https://wombat-dressing-room.appspot.com/',
       );
-      expect(npmrcContentDuringPublish).toContain(
+      expect<string | null>(npmrcContentDuringPublish).toContain(
         '//wombat-dressing-room.appspot.com/:_authToken=${WOMBOT_TOKEN}',
       );
 
-      // Verify that original npmrc is restored (since it did not exist, it should be deleted)
+      // Verify that the temp npmrc file and its directory are deleted
+      expect(fs.existsSync(tempNpmrcPath!)).toBe(false);
+      expect(fs.existsSync(path.dirname(tempNpmrcPath!))).toBe(false);
+
+      // Verify original npmrc was NOT created in project dir
       expect(fs.existsSync(npmrcPath)).toBe(false);
 
       // Verify NpmCommand.publish was called for both packages with correct arguments
       expect(publishSpy).toHaveBeenCalledTimes(2);
-      expect(publishSpy.calls.argsFor(0)).toEqual([
-        pkg1Dir,
-        'latest',
-        'https://wombat-dressing-room.appspot.com/',
-      ]);
-      expect(publishSpy.calls.argsFor(1)).toEqual([
-        pkg2Dir,
-        'latest',
-        'https://wombat-dressing-room.appspot.com/',
-      ]);
+      expect(publishSpy.calls.argsFor(0)).toEqual([pkg1Dir, 'latest', undefined, tempNpmrcPath]);
+      expect(publishSpy.calls.argsFor(1)).toEqual([pkg2Dir, 'latest', undefined, tempNpmrcPath]);
     });
 
-    it('should restore original .npmrc if it existed beforehand', async () => {
+    it('should leave original .npmrc untouched if it existed beforehand', async () => {
       fs.writeFileSync(path.join(testTmpDir, 'package.json'), JSON.stringify({version: '10.0.0'}));
       const sandbox = SandboxGitRepo.withInitialCommit(githubConfig);
 
@@ -728,6 +739,13 @@ describe('PublishCiTool', () => {
       const originalNpmrcContent = 'registry=https://my-custom-registry.com/\n';
       fs.writeFileSync(npmrcPath, originalNpmrcContent);
 
+      let originalNpmrcContentDuringPublish: string | null = null;
+      publishSpy.and.callFake(async () => {
+        if (fs.existsSync(npmrcPath)) {
+          originalNpmrcContentDuringPublish = fs.readFileSync(npmrcPath, 'utf8');
+        }
+      });
+
       const tool = new PublishCiTool(
         {github: githubConfig, release: releaseConfig} as any,
         gitClient,
@@ -740,12 +758,15 @@ describe('PublishCiTool', () => {
 
       await expectAsync(tool.run()).toBeResolved();
 
-      // Verify that original npmrc is restored
+      // Verify that original npmrc was not modified during publish
+      expect<string | null>(originalNpmrcContentDuringPublish).toBe(originalNpmrcContent);
+
+      // Verify that original npmrc is still there unchanged
       expect(fs.existsSync(npmrcPath)).toBe(true);
       expect(fs.readFileSync(npmrcPath, 'utf8')).toBe(originalNpmrcContent);
     });
 
-    it('should restore .npmrc even if publishing fails', async () => {
+    it('should leave original .npmrc untouched even if publishing fails', async () => {
       fs.writeFileSync(path.join(testTmpDir, 'package.json'), JSON.stringify({version: '10.0.0'}));
       const sandbox = SandboxGitRepo.withInitialCommit(githubConfig);
 
@@ -774,9 +795,71 @@ describe('PublishCiTool', () => {
 
       await expectAsync(tool.run()).toBeRejectedWithError('Npm publish error');
 
-      // Verify that original npmrc is restored
+      // Verify that original npmrc is still there unchanged
       expect(fs.existsSync(npmrcPath)).toBe(true);
       expect(fs.readFileSync(npmrcPath, 'utf8')).toBe(originalNpmrcContent);
+    });
+
+    it('should deprecate packages if configured', async () => {
+      const deprecateSpy = spyOn(NpmCommand, 'deprecate').and.resolveTo();
+
+      const deprecateReleaseConfig = {
+        representativeNpmPackage: '@angular/core',
+        npmPackages: [
+          {name: '@angular/core'},
+          {
+            name: '@angular/common',
+            deprecated: {
+              version: '>=9.0.0',
+              message: 'Use @angular/core instead',
+            },
+          },
+        ],
+        buildPackages: async () => [],
+      };
+      setConfig({github: githubConfig, release: deprecateReleaseConfig});
+
+      fs.writeFileSync(path.join(testTmpDir, 'package.json'), JSON.stringify({version: '10.0.0'}));
+      const sandbox = SandboxGitRepo.withInitialCommit(githubConfig);
+
+      fs.writeFileSync(path.join(testTmpDir, 'package.json'), JSON.stringify({version: '10.1.0'}));
+      sandbox.commit('v10.1.0 commit');
+      const headSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
+
+      const pkg1Dir = path.join(builtPackagesDir, 'pkg1');
+      const pkg2Dir = path.join(builtPackagesDir, 'pkg2');
+      fs.mkdirSync(pkg1Dir, {recursive: true});
+      fs.mkdirSync(pkg2Dir, {recursive: true});
+      fs.writeFileSync(path.join(pkg1Dir, 'package.json'), JSON.stringify({name: '@angular/core'}));
+      fs.writeFileSync(
+        path.join(pkg2Dir, 'package.json'),
+        JSON.stringify({name: '@angular/common'}),
+      );
+
+      const tool = new PublishCiTool(
+        {github: githubConfig, release: deprecateReleaseConfig} as any,
+        gitClient,
+        testTmpDir,
+        {
+          builtPackagesDir,
+          expectedSha: headSha,
+        },
+      );
+
+      await expectAsync(tool.run()).toBeResolved();
+
+      // Verify publish was called for both
+      expect(publishSpy).toHaveBeenCalledTimes(2);
+
+      // Verify deprecate was called only for @angular/common
+      expect(deprecateSpy).toHaveBeenCalledTimes(1);
+      expect(deprecateSpy).toHaveBeenCalledWith(
+        '@angular/common',
+        '>=9.0.0',
+        'Use @angular/core instead',
+        undefined,
+        jasmine.any(String),
+      );
     });
   });
 
@@ -831,7 +914,7 @@ describe('PublishCiTool', () => {
         '[Dry-Run] Would create GitHub Release for tag: v10.1.0',
       );
       expect(logInfoSpy).toHaveBeenCalledWith(
-        '[Dry-Run] Would write .npmrc and publish package: @angular/core to Wombat',
+        '[Dry-Run] Would publish package: @angular/core to Wombat',
       );
     });
 
@@ -890,10 +973,10 @@ describe('PublishCiTool', () => {
         '[Dry-Run] Would tag monorepo package: @angular/common@10.1.0',
       );
       expect(logInfoSpy).toHaveBeenCalledWith(
-        '[Dry-Run] Would write .npmrc and publish package: @angular/core to Wombat',
+        '[Dry-Run] Would publish package: @angular/core to Wombat',
       );
       expect(logInfoSpy).toHaveBeenCalledWith(
-        '[Dry-Run] Would write .npmrc and publish package: @angular/common to Wombat',
+        '[Dry-Run] Would publish package: @angular/common to Wombat',
       );
     });
   });
