@@ -1,3 +1,11 @@
+# Note on Design:
+# This is defined as a Reusable Workflow (workflow_call) in `.github/workflows/`
+# rather than a Composite Action in `github-actions/` because GitHub Actions
+# only allows environment protection rules (such as the dual-approval gate
+# enforced by the `npm-publish` environment in the `approve` job) to be defined
+# at the job level. Centralizing this workflow here allows us to enforce the
+# security gate for all calling repositories.
+
 name: Reusable Publish Release
 
 on:
