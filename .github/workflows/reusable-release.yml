@@ -1,0 +1,97 @@
+name: Reusable Publish Release
+
+on:
+  workflow_call:
+    secrets:
+      wombot-token:
+        description: 'The Wombat release-backed publish token'
+        required: true
+
+permissions: {}
+
+jobs:
+  # Job 1: Build and Verify the release assets.
+  build:
+    name: Build & Verify
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get-version.outputs.version }}
+      is-release-commit: ${{ steps.check-commit.outputs.is-release }}
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@main
+
+      - name: Install node modules
+        run: pnpm install --frozen-lockfile
+
+      - name: Check if commit is a release commit
+        id: check-commit
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          if [[ "$COMMIT_MSG" =~ ^release:\ v[0-9] || "$COMMIT_MSG" =~ ^Bump\ version\ to\ \"v[0-9] ]]; then
+            echo "is-release=true" >> $GITHUB_OUTPUT
+          else
+            echo "is-release=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Get version from package.json
+        id: get-version
+        if: steps.check-commit.outputs.is-release == 'true'
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Setup Bazel
+        if: steps.check-commit.outputs.is-release == 'true'
+        uses: angular/dev-infra/github-actions/bazel/setup@main
+
+      - name: Build release packages
+        if: steps.check-commit.outputs.is-release == 'true'
+        run: pnpm ng-dev release build --json > built_packages.json
+
+      - name: Run release prechecks
+        if: steps.check-commit.outputs.is-release == 'true'
+        run: pnpm ng-dev release precheck < built_packages.json
+
+      - name: Archive built packages
+        if: steps.check-commit.outputs.is-release == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-packages
+          path: dist/packages-dist/
+          retention-days: 1
+
+  # Job 2: The Gatekeeper.
+  # This job enforces the Org-level environment protection rules (Dual Approval).
+  approve:
+    name: Await Dual Approval
+    needs: build
+    if: needs.build.outputs.is-release-commit == 'true'
+    runs-on: ubuntu-latest
+    environment: npm-publish # Enforces required reviewers & prevent self-approval
+    steps:
+      - name: Approved
+        run: echo "Release approved by second party."
+
+  # Job 3: Publish to Wombat.
+  publish:
+    name: Publish to Wombat (NPM)
+    needs: [build, approve]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required for ng-dev to create GitHub releases/tags
+      id-token: write # Required to generate NPM/Sigstore provenance metadata
+    steps:
+      - name: Initialize environment
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@main
+
+      - name: Download built packages
+        uses: actions/download-artifact@v4
+        with:
+          name: release-packages
+          path: dist/packages-dist/
+
+      - name: Run ng-dev CI publish
+        env:
+          WOMBOT_TOKEN: ${{ secrets.wombot-token }}
+        run: pnpm ng-dev release publish-ci --built-packages-dir=dist/packages-dist/ --expected-sha=${{ github.sha }}
