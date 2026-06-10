@@ -26,6 +26,10 @@ inputs:
       File path to the pnpm lockfile, whose contents hash will be used as a cache key. Accepts multiple paths delimited by newlines.
     default: 'pnpm-lock.yaml'
 
+  clean:
+    description: 'Whether to clean the workspace before checkout'
+    default: 'true'
+
 runs:
   using: composite
   steps:
@@ -42,6 +46,7 @@ runs:
         filter: blob:none
         persist-credentials: false
         ref: ${{ inputs.ref }}
+        clean: ${{ inputs.clean }}
 
     - id: packageManager
       shell: bash
