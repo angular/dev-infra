@@ -339,11 +339,7 @@ export class PublishCiTool {
         // Publish packages
         for (const pkg of builtPackages) {
           Log.info(`Publishing "${pkg.name}"...`);
-          await NpmCommand.publish(
-            pkg.outputPath,
-            npmDistTag,
-            'https://wombat-dressing-room.appspot.com/',
-          );
+          await NpmCommand.publish(pkg.outputPath, npmDistTag, undefined);
           Log.info(green(`  ✓   Successfully published "${pkg.name}".`));
         }
 
@@ -354,12 +350,7 @@ export class PublishCiTool {
           }
           Log.info(`Deprecating "${pkg.name}"...`);
           const {version, message} = pkg.deprecated;
-          await NpmCommand.deprecate(
-            pkg.name,
-            version,
-            message,
-            'https://wombat-dressing-room.appspot.com/',
-          );
+          await NpmCommand.deprecate(pkg.name, version, message, undefined);
           Log.info(green(`  ✓   Successfully deprecated "${pkg.name}@${version}".`));
         }
       } finally {

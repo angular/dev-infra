@@ -731,16 +731,8 @@ describe('PublishCiTool', () => {
 
       // Verify NpmCommand.publish was called for both packages with correct arguments
       expect(publishSpy).toHaveBeenCalledTimes(2);
-      expect(publishSpy.calls.argsFor(0)).toEqual([
-        pkg1Dir,
-        'latest',
-        'https://wombat-dressing-room.appspot.com/',
-      ]);
-      expect(publishSpy.calls.argsFor(1)).toEqual([
-        pkg2Dir,
-        'latest',
-        'https://wombat-dressing-room.appspot.com/',
-      ]);
+      expect(publishSpy.calls.argsFor(0)).toEqual([pkg1Dir, 'latest', undefined]);
+      expect(publishSpy.calls.argsFor(1)).toEqual([pkg2Dir, 'latest', undefined]);
     });
 
     it('should preserve original NPM_CONFIG_USERCONFIG and leave project .npmrc untouched', async () => {
@@ -887,16 +879,8 @@ describe('PublishCiTool', () => {
 
       // Verify publish was called for both
       expect(publishSpy).toHaveBeenCalledTimes(2);
-      expect(publishSpy.calls.argsFor(0)).toEqual([
-        pkg1Dir,
-        'latest',
-        'https://wombat-dressing-room.appspot.com/',
-      ]);
-      expect(publishSpy.calls.argsFor(1)).toEqual([
-        pkg2Dir,
-        'latest',
-        'https://wombat-dressing-room.appspot.com/',
-      ]);
+      expect(publishSpy.calls.argsFor(0)).toEqual([pkg1Dir, 'latest', undefined]);
+      expect(publishSpy.calls.argsFor(1)).toEqual([pkg2Dir, 'latest', undefined]);
 
       // Verify deprecate was called only for @angular/common
       expect(deprecateSpy).toHaveBeenCalledTimes(1);
@@ -904,7 +888,7 @@ describe('PublishCiTool', () => {
         '@angular/common',
         '>=9.0.0',
         'Use @angular/core instead',
-        'https://wombat-dressing-room.appspot.com/',
+        undefined,
       );
     });
   });
