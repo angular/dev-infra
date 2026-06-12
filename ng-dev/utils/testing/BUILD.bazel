@@ -8,6 +8,7 @@ ts_project(
     ),
     tsconfig = "//ng-dev:tsconfig_test",
     visibility = [
+        "//github-actions/release/publish:__subpackages__",
         "//ng-dev:__subpackages__",
     ],
     deps = [

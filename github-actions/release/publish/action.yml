@@ -1,0 +1,23 @@
+name: 'Release Publish CI'
+description: 'Publishes a release to Wombat (NPM) and creates GitHub tags/releases using the Angular Robot App.'
+author: 'Angular'
+inputs:
+  angular-robot-key:
+    description: 'The private key for the Angular Robot Github app.'
+    required: true
+  wombot-token:
+    description: 'The Wombat release-backed publish token.'
+    required: true
+  built-packages-dir:
+    description: 'Path to the directory containing pre-built packages.'
+    required: true
+  expected-sha:
+    description: 'The expected Git SHA of the release commit.'
+    required: true
+  dry-run:
+    description: 'Run the publish command in dry-run mode, skipping tag/release creation and NPM publishing.'
+    required: false
+    default: 'false'
+runs:
+  using: 'node24'
+  main: 'main.js'

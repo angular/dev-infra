@@ -498,6 +498,24 @@ importers:
         specifier: 24.13.2
         version: 24.13.2
 
+  github-actions/release/publish:
+    dependencies:
+      '@actions/core':
+        specifier: 3.0.1
+        version: 3.0.1
+      '@types/jasmine':
+        specifier: 6.0.0
+        version: 6.0.0
+      '@types/node':
+        specifier: 24.12.4
+        version: 24.12.4
+      '@types/semver':
+        specifier: 7.7.1
+        version: 7.7.1
+      semver:
+        specifier: 7.8.1
+        version: 7.8.1
+
   github-actions/saucelabs:
     dependencies:
       '@actions/core':
@@ -6420,7 +6438,7 @@ snapshots:
       '@babel/code-frame': 7.29.7
       '@babel/generator': 7.29.7
       '@babel/helper-compilation-targets': 7.29.7
-      '@babel/helper-module-transforms': 7.29.7(@babel/core@7.29.7)
+      '@babel/helper-module-transforms': 7.29.7(@babel/core@7.29.7(supports-color@10.2.2))
       '@babel/helpers': 7.29.7
       '@babel/parser': 7.29.7
       '@babel/template': 7.29.7
@@ -6460,7 +6478,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@babel/helper-module-transforms@7.29.7(@babel/core@7.29.7)':
+  '@babel/helper-module-transforms@7.29.7(@babel/core@7.29.7(supports-color@10.2.2))':
     dependencies:
       '@babel/core': 7.29.7(supports-color@10.2.2)
       '@babel/helper-module-imports': 7.29.7

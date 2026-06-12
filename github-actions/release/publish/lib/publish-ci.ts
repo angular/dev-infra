@@ -18,19 +18,19 @@ import {
 } from 'fs';
 import {tmpdir} from 'os';
 import semver from 'semver';
-import {ReleaseConfig, BuiltPackage, BuiltPackageWithInfo} from '../config/index.js';
-import {analyzeAndExtendBuiltPackagesWithInfo} from './built-package-info.js';
-import {GithubConfig, NgDevConfig} from '../../utils/config.js';
-import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
-import {ReleaseNotes, workspaceRelativeChangelogPath} from '../notes/release-notes.js';
-import {NpmCommand} from '../versioning/npm-command.js';
-import {getFileContentsUrl} from '../../utils/git/github-urls.js';
-import {isGithubApiError} from '../../utils/git/github.js';
-import {githubReleaseBodyLimit} from './constants.js';
-import {green, Log} from '../../utils/logging.js';
-import {fetchLongTermSupportBranchesFromNpm} from '../versioning/long-term-support.js';
-import {ActiveReleaseTrains} from '../versioning/active-release-trains.js';
-import {NpmDistTag} from '../versioning/npm-registry.js';
+import {ReleaseConfig, BuiltPackage, BuiltPackageWithInfo} from '../../../../ng-dev/release/config/index.js';
+import {analyzeAndExtendBuiltPackagesWithInfo} from '../../../../ng-dev/release/publish/built-package-info.js';
+import {GithubConfig, NgDevConfig} from '../../../../ng-dev/utils/config.js';
+import {AuthenticatedGitClient} from '../../../../ng-dev/utils/git/authenticated-git-client.js';
+import {ReleaseNotes, workspaceRelativeChangelogPath} from '../../../../ng-dev/release/notes/release-notes.js';
+import {NpmCommand} from '../../../../ng-dev/release/versioning/npm-command.js';
+import {getFileContentsUrl} from '../../../../ng-dev/utils/git/github-urls.js';
+import {isGithubApiError} from '../../../../ng-dev/utils/git/github.js';
+import {githubReleaseBodyLimit} from '../../../../ng-dev/release/publish/constants.js';
+import {green, Log} from '../../../../ng-dev/utils/logging.js';
+import {fetchLongTermSupportBranchesFromNpm} from '../../../../ng-dev/release/versioning/long-term-support.js';
+import {ActiveReleaseTrains} from '../../../../ng-dev/release/versioning/active-release-trains.js';
+import {NpmDistTag} from '../../../../ng-dev/release/versioning/npm-registry.js';
 
 /** Options for configuring the PublishCiTool. */
 export interface PublishCiToolOptions {
@@ -171,8 +171,8 @@ export class PublishCiTool {
    * @throws {Error} If a previous stable version tag cannot be resolved when transitioning to stable.
    */
   private getPreviousVersionTag(
-    newSemver: semver.SemVer,
-    versionAtBeforeStagingSemver: semver.SemVer,
+     newSemver: semver.SemVer,
+     versionAtBeforeStagingSemver: semver.SemVer,
   ): string {
     if (newSemver.prerelease.length === 0 && versionAtBeforeStagingSemver.prerelease.length > 0) {
       this.git.run(['fetch', '--tags', this.git.getRepoGitUrl()]);

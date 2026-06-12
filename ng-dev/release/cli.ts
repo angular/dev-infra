@@ -12,7 +12,6 @@ import {ReleaseInfoCommandModule} from './info/cli.js';
 import {ReleaseNotesCommandModule} from './notes/cli.js';
 import {ReleasePrecheckCommandModule} from './precheck/cli.js';
 import {ReleasePublishCommandModule} from './publish/cli.js';
-import {ReleasePublishCiCommandModule} from './publish/cli-ci.js';
 import {ReleasePublishSnapshotsCommandModule} from './snapshot-publish/cli.js';
 import {BuildEnvStampCommand} from './stamping/cli.js';
 import {ReleaseNpmDistTagCommand} from './npm-dist-tag/cli.js';
@@ -24,7 +23,6 @@ export function buildReleaseParser(localYargs: Argv) {
     .strict()
     .demandCommand()
     .command(ReleasePublishCommandModule)
-    .command(ReleasePublishCiCommandModule)
     .command(ReleaseBuildCommandModule)
     .command(ReleaseInfoCommandModule)
     .command(ReleaseNpmDistTagCommand)

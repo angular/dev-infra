@@ -8,6 +8,7 @@ ts_project(
     ),
     visibility = [
         "//.github/local-actions/changelog/lib:__subpackages__",
+        "//github-actions/release/publish:__subpackages__",
         "//ng-dev:__subpackages__",
     ],
     deps = [
