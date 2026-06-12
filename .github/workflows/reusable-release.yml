@@ -1,0 +1,142 @@
+# Note on Design:
+# This is defined as a Reusable Workflow (workflow_call) in `.github/workflows/`
+# rather than a Composite Action in `github-actions/` because GitHub Actions
+# only allows environment protection rules (such as the dual-approval gate
+# enforced by the `npm-publish` environment in the `approve` job) to be defined
+# at the job level. Centralizing this workflow here allows us to enforce the
+# security gate for all calling repositories.
+
+name: Reusable Publish Release
+
+on:
+  workflow_call:
+    secrets:
+      wombot-token:
+        description: 'The Wombat release-backed publish token'
+        required: true
+
+permissions: {}
+
+jobs:
+  # Job 1: Build and Verify the release assets.
+  build:
+    name: Build & Verify
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get-version.outputs.version }}
+      is-release-commit: ${{ steps.check-commit.outputs.is-release }}
+      dev-infra-ref: ${{ steps.get-ref.outputs.ref }}
+    steps:
+      # Step 1: Extract the ref of the running reusable workflow to use for checking out dev-infra actions.
+      - name: Extract dev-infra ref
+        id: get-ref
+        run: |
+          # github.workflow_ref is of the form: "owner/repo/path/to/workflow.yml@ref"
+          # Extract the ref (part after @)
+          REF=$(echo "${{ github.workflow_ref }}" | cut -d'@' -f2)
+          echo "ref=$REF" >> $GITHUB_OUTPUT
+
+      # Step 2: Checkout dev-infra dynamically at the same ref to get the custom actions
+      - name: Checkout dev-infra
+        uses: actions/checkout@v4
+        with:
+          repository: angular/dev-infra
+          ref: ${{ steps.get-ref.outputs.ref }}
+          path: .dev-infra
+
+      # Step 3: Initialize environment (using local checkout-and-setup-node)
+      # We pass clean: false so it doesn't delete the .dev-infra directory we just checked out!
+      - name: Initialize environment
+        uses: ./.dev-infra/github-actions/npm/checkout-and-setup-node
+        with:
+          clean: false
+
+      # Step 4: Check if commit is a release commit
+      - name: Check if commit is a release commit
+        id: check-commit
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          if [[ "$COMMIT_MSG" =~ ^release:\ v[0-9] || "$COMMIT_MSG" =~ ^Bump\ version\ to\ \"v[0-9] ]]; then
+            echo "is-release=true" >> $GITHUB_OUTPUT
+          else
+            echo "is-release=false" >> $GITHUB_OUTPUT
+          fi
+
+      # Step 5: Install node modules (conditional on release)
+      - name: Install node modules
+        if: steps.check-commit.outputs.is-release == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Get version from package.json
+        id: get-version
+        if: steps.check-commit.outputs.is-release == 'true'
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      # Step 6: Setup Bazel (using local bazel/setup)
+      - name: Setup Bazel
+        if: steps.check-commit.outputs.is-release == 'true'
+        uses: ./.dev-infra/github-actions/bazel/setup
+
+      - name: Build release packages
+        if: steps.check-commit.outputs.is-release == 'true'
+        run: pnpm ng-dev release build --json > built_packages.json
+
+      - name: Run release prechecks
+        if: steps.check-commit.outputs.is-release == 'true'
+        run: pnpm ng-dev release precheck < built_packages.json
+
+      - name: Archive built packages
+        if: steps.check-commit.outputs.is-release == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-packages
+          path: dist/packages-dist/
+          retention-days: 1
+
+  # Job 2: The Gatekeeper.
+  # This job enforces the Org-level environment protection rules (Dual Approval).
+  approve:
+    name: Await Dual Approval
+    needs: build
+    if: needs.build.outputs.is-release-commit == 'true'
+    runs-on: ubuntu-latest
+    environment: npm-publish # Enforces required reviewers & prevent self-approval
+    steps:
+      - name: Approved
+        run: echo "Release approved by second party."
+
+  # Job 3: Publish to Wombat.
+  publish:
+    name: Publish to Wombat (NPM)
+    needs: [build, approve]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required for ng-dev to create GitHub releases/tags
+      id-token: write # Required to generate NPM/Sigstore provenance metadata
+    steps:
+      # Step 1: Checkout dev-infra dynamically at the same ref to get the custom actions
+      - name: Checkout dev-infra
+        uses: actions/checkout@v4
+        with:
+          repository: angular/dev-infra
+          ref: ${{ needs.build.outputs.dev-infra-ref }}
+          path: .dev-infra
+
+      # Step 2: Initialize environment (using local checkout-and-setup-node)
+      - name: Initialize environment
+        uses: ./.dev-infra/github-actions/npm/checkout-and-setup-node
+        with:
+          clean: false
+
+      - name: Download built packages
+        uses: actions/download-artifact@v4
+        with:
+          name: release-packages
+          path: dist/packages-dist/
+
+      - name: Run ng-dev CI publish
+        env:
+          WOMBOT_TOKEN: ${{ secrets.wombot-token }}
+        run: pnpm ng-dev release publish-ci --built-packages-dir=dist/packages-dist/ --expected-sha=${{ github.sha }}
