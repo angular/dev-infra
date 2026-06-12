@@ -14,6 +14,9 @@ on:
       wombot-token:
         description: 'The Wombat release-backed publish token'
         required: true
+      angular-robot-key:
+        description: 'The private key for the Angular Robot Github app'
+        required: true
 
 permissions: {}
 
@@ -113,7 +116,7 @@ jobs:
     needs: [build, approve]
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Required for ng-dev to create GitHub releases/tags
+      contents: read
       id-token: write # Required to generate NPM/Sigstore provenance metadata
     steps:
       # Step 1: Checkout dev-infra dynamically at the same ref to get the custom actions
@@ -136,7 +139,10 @@ jobs:
           name: release-packages
           path: dist/packages-dist/
 
-      - name: Run ng-dev CI publish
-        env:
-          WOMBOT_TOKEN: ${{ secrets.wombot-token }}
-        run: pnpm ng-dev release publish-ci --built-packages-dir=dist/packages-dist/ --expected-sha=${{ github.sha }}
+      - name: Run ng-dev CI publish (via custom action)
+        uses: ./.dev-infra/github-actions/release/publish
+        with:
+          angular-robot-key: ${{ secrets.angular-robot-key }}
+          wombot-token: ${{ secrets.wombot-token }}
+          built-packages-dir: dist/packages-dist/
+          expected-sha: ${{ github.sha }}

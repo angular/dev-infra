@@ -5,6 +5,7 @@ ts_project(
     testonly = True,
     srcs = glob(["**/*.ts"]),
     visibility = [
+        "//github-actions/release/publish:__subpackages__",
         "//ng-dev/release/notes:__subpackages__",
     ],
     deps = [

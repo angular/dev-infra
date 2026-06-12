@@ -1,0 +1,68 @@
+load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
+load("//tools:defaults.bzl", "esbuild_checked_in", "jasmine_test", "ts_project")
+
+package(default_visibility = ["//github-actions/release/publish:__subpackages__"])
+
+npm_link_all_packages()
+
+ts_project(
+    name = "lib",
+    srcs = [
+        "lib/main.ts",
+        "lib/publish-ci.ts",
+    ],
+    tsconfig = "//github-actions:tsconfig",
+    deps = [
+        "//github-actions:utils",
+        "//github-actions/release/publish:node_modules/@actions/core",
+        "//github-actions/release/publish:node_modules/@types/node",
+        "//github-actions/release/publish:node_modules/@types/semver",
+        "//github-actions/release/publish:node_modules/semver",
+        "//ng-dev/release/config",
+        "//ng-dev/release/notes",
+        "//ng-dev/release/publish",
+        "//ng-dev/release/versioning",
+        "//ng-dev/utils",
+    ],
+)
+
+esbuild_checked_in(
+    name = "main",
+    srcs = [
+        ":lib",
+    ],
+    entry_point = "lib/main.ts",
+    format = "esm",
+    platform = "node",
+    target = "node24",
+)
+
+ts_project(
+    name = "test_lib",
+    testonly = True,
+    srcs = ["lib/publish-ci.spec.ts"],
+    tsconfig = "//github-actions:tsconfig_test",
+    deps = [
+        ":lib",
+        "//github-actions:utils",
+        "//github-actions/release/publish:node_modules/@types/jasmine",
+        "//github-actions/release/publish:node_modules/@types/node",
+        "//github-actions/release/publish:node_modules/@types/semver",
+        "//github-actions/release/publish:node_modules/semver",
+        "//ng-dev/release/publish/test:test_lib",
+        "//ng-dev/utils",
+        "//ng-dev/utils/testing",
+    ],
+)
+
+jasmine_test(
+    name = "test",
+    data = [
+        ":test_lib",
+    ],
+    env = {
+        "GIT_BIN": "$(GIT_BIN_PATH)",
+    },
+    shard_count = 4,
+    toolchains = ["@devinfra//bazel/git-toolchain:current_git_toolchain"],
+)

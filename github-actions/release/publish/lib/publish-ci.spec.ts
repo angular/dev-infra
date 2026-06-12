@@ -6,26 +6,26 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {PublishCiTool} from '../index-ci.js';
-import {ReleaseConfig} from '../../config/index.js';
-import {GithubConfig, setConfig} from '../../../utils/config.js';
+import {PublishCiTool} from './publish-ci.js';
+import {ReleaseConfig} from '../../../../ng-dev/release/config/index.js';
+import {GithubConfig, setConfig} from '../../../../ng-dev/utils/config.js';
 import {
   getMockGitClient,
   installSandboxGitClient,
   SandboxGitRepo,
   testTmpDir,
   runGitInTmpDir,
-} from '../../../utils/testing/index.js';
-import {prepareTempDirectory} from './test-utils/action-mocks.js';
-import {fakeNpmPackageQueryRequest} from './test-utils/test-utils.js';
-import {ReleaseNotes} from '../../notes/release-notes.js';
-import {NpmCommand} from '../../versioning/npm-command.js';
-import {ActiveReleaseTrains} from '../../versioning/active-release-trains.js';
-import {ReleaseTrain} from '../../versioning/release-trains.js';
+} from '../../../../ng-dev/utils/testing/index.js';
+import {prepareTempDirectory} from '../../../../ng-dev/release/publish/test/test-utils/action-mocks.js';
+import {fakeNpmPackageQueryRequest} from '../../../../ng-dev/release/publish/test/test-utils/test-utils.js';
+import {ReleaseNotes} from '../../../../ng-dev/release/notes/release-notes.js';
+import {NpmCommand} from '../../../../ng-dev/release/versioning/npm-command.js';
+import {ActiveReleaseTrains} from '../../../../ng-dev/release/versioning/active-release-trains.js';
+import {ReleaseTrain} from '../../../../ng-dev/release/versioning/release-trains.js';
 import semver from 'semver';
 import * as fs from 'fs';
 import * as path from 'path';
-import {Log} from '../../../utils/logging.js';
+import {Log} from '../../../../ng-dev/utils/logging.js';
 
 class RequestError extends Error {
   request = {};
