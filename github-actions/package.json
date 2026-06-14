@@ -6,7 +6,7 @@
     "@octokit/auth-app": "8.2.0",
     "@octokit/rest": "22.0.1",
     "@types/jasmine": "6.0.0",
-    "@types/node": "24.12.4",
+    "@types/node": "24.13.2",
     "@google/genai": "^2.0.0"
   }
 }

@@ -13,9 +13,9 @@
     "@octokit/request-error": "7.1.0",
     "@octokit/rest": "22.0.1",
     "@octokit/webhooks-types": "7.6.1",
-    "@types/node": "24.12.4",
+    "@types/node": "24.13.2",
     "firebase-admin": "13.10.0",
     "firebase-functions": "7.2.5",
-    "firebase-tools": "15.19.0"
+    "firebase-tools": "15.20.0"
   }
 }

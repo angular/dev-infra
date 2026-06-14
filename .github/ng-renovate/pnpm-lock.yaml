@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       renovate:
-        specifier: 43.209.4
-        version: 43.209.4(typanion@3.14.0)
+        specifier: 43.220.0
+        version: 43.220.0(typanion@3.14.0)
 
 packages:
 
@@ -1453,6 +1453,10 @@ packages:
     resolution: {integrity: sha512-5YgH9UJd7wVb9hIouI2adWpgqrrICkt070Dnj8EUY1+B4B2P9eRLPAkAAo6NICA7CEhOIeBHl46u9zSNpNu7zA==}
     engines: {node: 20 || >=22}
 
+  lru-cache@11.5.1:
+    resolution: {integrity: sha512-RPimw/7aMdv2oqRrxKwvZXcPfwBrn/JZ2xYcY9Hus/6LaS3VOAKVWKWgNLCFSiOm1ESXinjsDlidVU7JlnCN2A==}
+    engines: {node: 20 || >=22}
+
   luxon@3.7.2:
     resolution: {integrity: sha512-vtEhXh/gNjI9Yg1u4jX/0YVPMvxzHuGgCm6tC5kZyb08yjGWGnqAjGJvcXbqQR2P3MyMEFnRbpcdFS6PBcLqew==}
     engines: {node: '>=12'}
@@ -1867,8 +1871,8 @@ packages:
     resolution: {integrity: sha512-iG+GYldRf2BQ0UDUAd6JQ/RwzaQy6mXmsk/IzlYyal4A4SNFw54MeH4/tLkF4I5WoWG9SQwuqWzS99jaFQHBuQ==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  protobufjs@8.4.2:
-    resolution: {integrity: sha512-64rfNzkWOZAIazXzpBFPWq6F9up6gMvTzjE2oWIzApx2N/dqVUEE7+bCn2+40780dFVtKOUab8QfxJ6KJDWbqA==}
+  protobufjs@8.5.0:
+    resolution: {integrity: sha512-df1jWDPA5VIBNRtuAHjqr09f2qN5D4Vke1wYqOQg1XJ7ZDpA7BD6L7E4tyChgGRLB5hqk2m79Zsy0WHwV9a84A==}
     engines: {node: '>=12.0.0'}
 
   protocols@2.0.2:
@@ -1919,8 +1923,8 @@ packages:
   remark@15.0.1:
     resolution: {integrity: sha512-Eht5w30ruCXgFmxVUSlNWQ9iiimq07URKeFS3hNc8cUWy1llX4KDWfyEDZRycMc+znsN9Ux5/tJ/BFdgdOwA3A==}
 
-  renovate@43.209.4:
-    resolution: {integrity: sha512-QT4CaSshRkJoKg4W1MSbpu0sttCNxwFwQsY+JDQEd3opbLYw4cmiwR7kJ1oh3VMLrd/pt3q02eyUIOpyz3WVzg==}
+  renovate@43.220.0:
+    resolution: {integrity: sha512-q3bkIyhnAV+oPirFeiI6jKIjN5IE1sbO7DHiAZgkfjCX68enwNsvm9N9dKYUBqo/GLdPhca9dERm4X0QP7LmvA==}
     engines: {node: ^24.11.0, pnpm: ^10.0.0}
     hasBin: true
 
@@ -4060,6 +4064,8 @@ snapshots:
 
   lru-cache@11.5.0: {}
 
+  lru-cache@11.5.1: {}
+
   luxon@3.7.2: {}
 
   markdown-it@14.2.0:
@@ -4614,7 +4620,7 @@ snapshots:
   proc-log@6.1.0:
     optional: true
 
-  protobufjs@8.4.2:
+  protobufjs@8.5.0:
     dependencies:
       long: 5.3.2
 
@@ -4693,7 +4699,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  renovate@43.209.4(typanion@3.14.0):
+  renovate@43.220.0(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.1053.0
       '@aws-sdk/client-ec2': 3.1053.0
@@ -4774,7 +4780,7 @@ snapshots:
       jsonata: 2.2.1
       jsonc-weaver: 0.2.4
       klona: 2.0.6
-      lru-cache: 11.5.0
+      lru-cache: 11.5.1
       luxon: 3.7.2
       markdown-it: 14.2.0
       markdown-table: 3.0.4
@@ -4789,7 +4795,7 @@ snapshots:
       p-throttle: 8.1.0
       parse-link-header: 2.0.0
       prettier: 3.8.1
-      protobufjs: 8.4.2
+      protobufjs: 8.5.0
       punycode: 2.3.1
       remark: 15.0.1
       remark-gfm: 4.0.1
