@@ -189,6 +189,10 @@ export class MergeTool {
       await strategy.merge(pullRequest);
       Log.info(green(`  ✓  Successfully merged the pull request: #${prNumber}`));
     } finally {
+      // Clean up repo by resetting any uncommitted changes.
+      // This can happen because pnpm will install the deps of the branch to run the pre-commit hooks which causes the lockfile to be updated.
+      this.git.runGraceful(['reset', '--hard']);
+
       // Switch back to the previous branch. We need to do this before deleting the temporary
       // branches because we cannot delete branches which are currently checked out.
       this.git.run(['checkout', '-f', previousBranchOrRevision]);
