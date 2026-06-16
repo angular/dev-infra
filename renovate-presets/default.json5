@@ -67,6 +67,12 @@
       dependencyDashboardApproval: true,
     },
 
+    // Esbuild packages should be kept in sync.
+    {
+      groupName: 'esbuild dependencies',
+      matchPackageNames: ['esbuild', 'esbuild-wasm'],
+    },
+
     // Jasmine packages should be kept in sync.
     {
       groupName: 'jasmine dependencies',
