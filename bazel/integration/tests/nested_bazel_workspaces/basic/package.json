@@ -6,7 +6,7 @@
   "scripts": {
     "test": "bazelisk test ..."
   },
-  "packageManager": "pnpm@11.6.0",
+  "packageManager": "pnpm@11.7.0",
   "devDependencies": {
     "@bazel/bazelisk": "^1.11.0"
   }
