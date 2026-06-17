@@ -94,6 +94,8 @@ export class PublishCiTool {
       throw new Error(`Failed to parse version ${newVersion} as semver.`);
     }
 
+    const npmDistTag = await determineNpmDistTag(newSemver, this.config.release, this.git);
+
     if (!this.options.skipTagging) {
       const beforeStagingSha = this.getBeforeStagingSha();
       const versionAtBeforeStaging = readPackageJsonAtRef(this.git, beforeStagingSha).version;
@@ -114,14 +116,11 @@ export class PublishCiTool {
         beforeStagingSha,
       );
 
-      const npmDistTag = await determineNpmDistTag(newSemver, this.config.release, this.git);
-
       await this.createGithubReleaseAndTags(newVersion, newSemver, releaseNotes, npmDistTag);
     } else {
       Log.info('Skipping Git tagging and GitHub Release creation as configured.');
     }
 
-    const npmDistTag = await determineNpmDistTag(newSemver, this.config.release, this.git);
     await this.publishAndDeprecatePackages(builtPackagesWithInfo, npmDistTag, newVersion);
 
     const markdownSummary = this.summary.toMarkdown();

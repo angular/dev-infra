@@ -45,7 +45,7 @@ export abstract class NpmCommand {
       const output = result.stdout.trim();
       return output !== '';
     } catch (e) {
-      const errString = String(e);
+      const errString = getErrorMessage(e);
       if (errString.includes('E404') || errString.includes('404 Not Found')) {
         return false;
       }
@@ -173,4 +173,23 @@ export abstract class NpmCommand {
       return this.checkIsLoggedIn(registryUrl);
     }
   }
+}
+
+/** Robustly extracts an error message string from an unknown error object. */
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  if (typeof error === 'string') {
+    return error;
+  }
+  if (error && typeof error === 'object') {
+    if ('message' in error && typeof error.message === 'string') {
+      return error.message;
+    }
+    if ('stderr' in error && typeof error.stderr === 'string') {
+      return error.stderr;
+    }
+  }
+  return String(error);
 }

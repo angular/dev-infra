@@ -97,7 +97,7 @@ export class PublishSummary {
           : p.status === 'SKIPPED'
             ? 'Skipped (Already Published)'
             : 'Failed';
-      const detail = p.error ? `\`${p.error}\`` : '';
+      const detail = p.error ? `\`${sanitizeErrorForMarkdownTable(p.error)}\`` : '';
       md += `| \`${p.name}\` | \`${p.version}\` | ${statusEmoji} ${statusText} | ${detail} |\n`;
     }
     md += '\n';
@@ -113,7 +113,7 @@ export class PublishSummary {
           : t.status === 'SKIPPED'
             ? 'Skipped (Already Exists)'
             : 'Failed';
-      const detail = t.error ? `\`${t.error}\`` : '';
+      const detail = t.error ? `\`${sanitizeErrorForMarkdownTable(t.error)}\`` : '';
       md += `| Tag \`${t.name}\` | ${statusEmoji} ${statusText} | ${detail} |\n`;
     }
     if (this.release) {
@@ -125,9 +125,17 @@ export class PublishSummary {
           : r.status === 'SKIPPED'
             ? 'Skipped (Already Exists)'
             : 'Failed';
-      const detail = r.error ? `\`${r.error}\`` : '';
+      const detail = r.error ? `\`${sanitizeErrorForMarkdownTable(r.error)}\`` : '';
       md += `| Release \`${r.name}\` | ${statusEmoji} ${statusText} | ${detail} |\n`;
     }
     return md;
   }
+}
+
+/** Sanitizes error messages to prevent breaking Markdown table formatting. */
+function sanitizeErrorForMarkdownTable(error: string | undefined): string {
+  if (!error) {
+    return '';
+  }
+  return error.replace(/\r?\n/g, ' ').replace(/\|/g, '\\|').replace(/`/g, "'");
 }
