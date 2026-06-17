@@ -1,0 +1,6 @@
+name: 'GHA SHA Enforcer'
+description: 'Enforce full-length SHAs and version comments for external GitHub Actions'
+author: 'Angular'
+runs:
+  using: 'node24'
+  main: 'main.js'

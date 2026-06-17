@@ -29,6 +29,7 @@ export const commitMessage = {
     ...buildScopesFor('github-actions', [
       'pull-request-labeling',
       'feature-request',
+      'gha-sha-enforcer',
       'lock-closed',
       'rebase',
     ]),
