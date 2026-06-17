@@ -15,6 +15,7 @@ import {ReleasePublishCommandModule} from './publish/cli.js';
 import {ReleasePublishSnapshotsCommandModule} from './snapshot-publish/cli.js';
 import {BuildEnvStampCommand} from './stamping/cli.js';
 import {ReleaseNpmDistTagCommand} from './npm-dist-tag/cli.js';
+import {ReleaseRecoverCiPublishCommandModule} from './recover-ci-publish/cli.js';
 
 /** Build the parser for the release commands. */
 export function buildReleaseParser(localYargs: Argv) {
@@ -29,5 +30,6 @@ export function buildReleaseParser(localYargs: Argv) {
     .command(ReleasePrecheckCommandModule)
     .command(BuildEnvStampCommand)
     .command(ReleaseNotesCommandModule)
-    .command(ReleasePublishSnapshotsCommandModule);
+    .command(ReleasePublishSnapshotsCommandModule)
+    .command(ReleaseRecoverCiPublishCommandModule);
 }
