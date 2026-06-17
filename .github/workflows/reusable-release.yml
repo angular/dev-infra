@@ -98,12 +98,21 @@ jobs:
         if: steps.check-commit.outputs.is-release == 'true'
         run: pnpm ng-dev release precheck < built_packages.json
 
+      - name: Pack release packages
+        if: steps.check-commit.outputs.is-release == 'true'
+        run: |
+          mkdir -p dist/packages-tgz
+          for path in $(jq -r '.[].outputPath' built_packages.json); do
+            (cd "$path" && pnpm pack)
+            mv "$path"/*.tgz dist/packages-tgz/
+          done
+
       - name: Archive built packages
         if: steps.check-commit.outputs.is-release == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: release-packages
-          path: dist/packages-dist/
+          path: dist/packages-tgz/
           retention-days: 1
 
   # Job 2: The Gatekeeper.

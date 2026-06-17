@@ -38,6 +38,16 @@ class RequestError extends Error {
   }
 }
 
+/** Helper to mock a built .tgz package in the dist directory. */
+function mockTgzPackage(builtPackagesDir: string, name: string, version: string): string {
+  const scopeAndName = name.startsWith('@') ? name.slice(1) : name;
+  const fileName = `${scopeAndName.replace(/\//g, '-')}-${version}.tgz`;
+  const tgzPath = path.join(builtPackagesDir, fileName);
+  fs.mkdirSync(path.dirname(tgzPath), {recursive: true});
+  fs.writeFileSync(tgzPath, 'dummy-tgz-content');
+  return tgzPath;
+}
+
 describe('PublishCiTool', () => {
   let githubConfig: GithubConfig;
   let releaseConfig: ReleaseConfig;
@@ -69,6 +79,7 @@ describe('PublishCiTool', () => {
 
     // Mock NpmCommand.publish
     publishSpy = spyOn(NpmCommand, 'publish').and.resolveTo();
+    spyOn(NpmCommand, 'checkVersionExists').and.resolveTo(false);
 
     // Mock GitHub API calls using a plain mock object to avoid Proxy issues
     createRefSpy = jasmine.createSpy('createRef').and.resolveTo({});
@@ -139,9 +150,7 @@ describe('PublishCiTool', () => {
 
     // Prepare dummy built package output
     const builtPackagesDir = path.join(testTmpDir, 'dist');
-    const pkgDir = path.join(builtPackagesDir, 'pkg1');
-    fs.mkdirSync(pkgDir, {recursive: true});
-    fs.writeFileSync(path.join(pkgDir, 'package.json'), JSON.stringify({name: '@angular/core'}));
+    mockTgzPackage(builtPackagesDir, '@angular/core', '10.0.0');
 
     process.env['WOMBOT_TOKEN'] = 'mock-wombat-token';
 
@@ -195,9 +204,7 @@ describe('PublishCiTool', () => {
       } as any);
 
       const builtPackagesDir = path.join(testTmpDir, 'dist');
-      const pkgDir = path.join(builtPackagesDir, 'pkg1');
-      fs.mkdirSync(pkgDir, {recursive: true});
-      fs.writeFileSync(path.join(pkgDir, 'package.json'), JSON.stringify({name: '@angular/core'}));
+      mockTgzPackage(builtPackagesDir, '@angular/core', '10.0.0');
 
       fs.writeFileSync(path.join(testTmpDir, 'package.json'), JSON.stringify({version: '10.0.0'}));
       const sandbox = SandboxGitRepo.withInitialCommit(githubConfig);
@@ -265,7 +272,7 @@ describe('PublishCiTool', () => {
       );
 
       await expectAsync(tool.run()).toBeRejectedWithError(
-        `No built packages found under directory ${emptyDir}`,
+        `Expected built package file not found: ${path.join(emptyDir, 'angular-core-10.0.0.tgz')}`,
       );
 
       expect(createRefSpy).not.toHaveBeenCalled();
@@ -284,9 +291,6 @@ describe('PublishCiTool', () => {
       } as any);
 
       builtPackagesDir = path.join(testTmpDir, 'dist');
-      const pkgDir = path.join(builtPackagesDir, 'pkg1');
-      fs.mkdirSync(pkgDir, {recursive: true});
-      fs.writeFileSync(path.join(pkgDir, 'package.json'), JSON.stringify({name: '@angular/core'}));
 
       process.env['WOMBOT_TOKEN'] = 'mock-wombat-token';
     });
@@ -317,6 +321,8 @@ describe('PublishCiTool', () => {
       // 6. Merge staging-branch into main with a merge commit
       runGitInTmpDir(['merge', 'staging-branch', '--no-ff', '-m', 'Merge branch staging-branch']);
       const mergeCommitSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
+
+      mockTgzPackage(builtPackagesDir, '@angular/core', '10.1.0-next.0');
 
       const tool = new PublishCiTool(
         {github: githubConfig, release: releaseConfig} as any,
@@ -352,6 +358,8 @@ describe('PublishCiTool', () => {
       sandbox.commit('release: bump version to 10.1.0-next.0');
       const headSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
 
+      mockTgzPackage(builtPackagesDir, '@angular/core', '10.1.0-next.0');
+
       const tool = new PublishCiTool(
         {github: githubConfig, release: releaseConfig} as any,
         gitClient,
@@ -383,9 +391,6 @@ describe('PublishCiTool', () => {
       } as any);
 
       builtPackagesDir = path.join(testTmpDir, 'dist');
-      const pkgDir = path.join(builtPackagesDir, 'pkg1');
-      fs.mkdirSync(pkgDir, {recursive: true});
-      fs.writeFileSync(path.join(pkgDir, 'package.json'), JSON.stringify({name: '@angular/core'}));
 
       process.env['WOMBOT_TOKEN'] = 'mock-wombat-token';
     });
@@ -411,6 +416,8 @@ describe('PublishCiTool', () => {
       fs.writeFileSync(path.join(testTmpDir, 'package.json'), JSON.stringify({version: '10.1.0'}));
       sandbox.commit('v10.1.0 stable commit');
       const headSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
+
+      mockTgzPackage(builtPackagesDir, '@angular/core', '10.1.0');
 
       const tool = new PublishCiTool(
         {github: githubConfig, release: releaseConfig} as any,
@@ -445,6 +452,8 @@ describe('PublishCiTool', () => {
       sandbox.commit('v10.1.0-next.1 commit');
       const headSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
 
+      mockTgzPackage(builtPackagesDir, '@angular/core', '10.1.0-next.1');
+
       const tool = new PublishCiTool(
         {github: githubConfig, release: releaseConfig} as any,
         gitClient,
@@ -474,9 +483,6 @@ describe('PublishCiTool', () => {
       } as any);
 
       builtPackagesDir = path.join(testTmpDir, 'dist');
-      const pkgDir = path.join(builtPackagesDir, 'pkg1');
-      fs.mkdirSync(pkgDir, {recursive: true});
-      fs.writeFileSync(path.join(pkgDir, 'package.json'), JSON.stringify({name: '@angular/core'}));
 
       process.env['WOMBOT_TOKEN'] = 'mock-wombat-token';
     });
@@ -494,6 +500,8 @@ describe('PublishCiTool', () => {
       );
       sandbox.commit('v10.1.0-next.1 commit');
       const headSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
+
+      mockTgzPackage(builtPackagesDir, '@angular/core', '10.1.0-next.1');
 
       const tool = new PublishCiTool(
         {github: githubConfig, release: releaseConfig} as any,
@@ -537,6 +545,8 @@ describe('PublishCiTool', () => {
       );
       sandbox.commit('v10.1.0-next.1 commit');
       const headSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
+
+      mockTgzPackage(builtPackagesDir, '@angular/core', '10.1.0-next.1');
 
       createRefSpy.and.rejectWith(new RequestError('Reference already exists', 422));
       createReleaseSpy.and.rejectWith(new RequestError('Release already exists', 422));
@@ -588,13 +598,8 @@ describe('PublishCiTool', () => {
     } as any);
 
     const builtPackagesDir = path.join(testTmpDir, 'dist');
-    // We need to create mock directories for both packages so findBuiltPackages works
-    const pkg1Dir = path.join(builtPackagesDir, 'pkg1');
-    const pkg2Dir = path.join(builtPackagesDir, 'pkg2');
-    fs.mkdirSync(pkg1Dir, {recursive: true});
-    fs.mkdirSync(pkg2Dir, {recursive: true});
-    fs.writeFileSync(path.join(pkg1Dir, 'package.json'), JSON.stringify({name: '@angular/core'}));
-    fs.writeFileSync(path.join(pkg2Dir, 'package.json'), JSON.stringify({name: '@angular/common'}));
+    mockTgzPackage(builtPackagesDir, '@angular/core', '10.1.0');
+    mockTgzPackage(builtPackagesDir, '@angular/common', '10.1.0');
 
     process.env['WOMBOT_TOKEN'] = 'mock-wombat-token';
 
@@ -675,15 +680,8 @@ describe('PublishCiTool', () => {
       sandbox.commit('v10.1.0 commit');
       const headSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
 
-      const pkg1Dir = path.join(builtPackagesDir, 'pkg1');
-      const pkg2Dir = path.join(builtPackagesDir, 'pkg2');
-      fs.mkdirSync(pkg1Dir, {recursive: true});
-      fs.mkdirSync(pkg2Dir, {recursive: true});
-      fs.writeFileSync(path.join(pkg1Dir, 'package.json'), JSON.stringify({name: '@angular/core'}));
-      fs.writeFileSync(
-        path.join(pkg2Dir, 'package.json'),
-        JSON.stringify({name: '@angular/common'}),
-      );
+      const pkg1Path = mockTgzPackage(builtPackagesDir, '@angular/core', '10.1.0');
+      const pkg2Path = mockTgzPackage(builtPackagesDir, '@angular/common', '10.1.0');
 
       let npmrcContentDuringPublish: string | null = null;
       let tempNpmrcPath: string | undefined;
@@ -731,8 +729,8 @@ describe('PublishCiTool', () => {
 
       // Verify NpmCommand.publish was called for both packages with correct arguments
       expect(publishSpy).toHaveBeenCalledTimes(2);
-      expect(publishSpy.calls.argsFor(0)).toEqual([pkg1Dir, 'latest', undefined]);
-      expect(publishSpy.calls.argsFor(1)).toEqual([pkg2Dir, 'latest', undefined]);
+      expect(publishSpy.calls.argsFor(0)).toEqual([pkg1Path, 'latest', undefined]);
+      expect(publishSpy.calls.argsFor(1)).toEqual([pkg2Path, 'latest', undefined]);
     });
 
     it('should preserve original NPM_CONFIG_USERCONFIG and leave project .npmrc untouched', async () => {
@@ -743,9 +741,7 @@ describe('PublishCiTool', () => {
       sandbox.commit('v10.1.0 commit');
       const headSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
 
-      const pkg1Dir = path.join(builtPackagesDir, 'pkg1');
-      fs.mkdirSync(pkg1Dir, {recursive: true});
-      fs.writeFileSync(path.join(pkg1Dir, 'package.json'), JSON.stringify({name: '@angular/core'}));
+      mockTgzPackage(builtPackagesDir, '@angular/core', '10.1.0');
 
       const originalNpmrcContent = 'registry=https://my-custom-registry.com/\n';
       fs.writeFileSync(npmrcPath, originalNpmrcContent);
@@ -797,9 +793,7 @@ describe('PublishCiTool', () => {
       sandbox.commit('v10.1.0 commit');
       const headSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
 
-      const pkg1Dir = path.join(builtPackagesDir, 'pkg1');
-      fs.mkdirSync(pkg1Dir, {recursive: true});
-      fs.writeFileSync(path.join(pkg1Dir, 'package.json'), JSON.stringify({name: '@angular/core'}));
+      mockTgzPackage(builtPackagesDir, '@angular/core', '10.1.0');
 
       const originalNpmrcContent = 'registry=https://my-custom-registry.com/\n';
       fs.writeFileSync(npmrcPath, originalNpmrcContent);
@@ -819,7 +813,9 @@ describe('PublishCiTool', () => {
         },
       );
 
-      await expectAsync(tool.run()).toBeRejectedWithError('Npm publish error');
+      await expectAsync(tool.run()).toBeRejectedWithError(
+        /Publish failed with the following errors:\nPackage "@angular\/core@10.1.0" failed to publish: Error: Npm publish error/,
+      );
 
       // Verify that original project .npmrc is untouched
       expect(fs.existsSync(npmrcPath)).toBe(true);
@@ -855,15 +851,8 @@ describe('PublishCiTool', () => {
       sandbox.commit('v10.1.0 commit');
       const headSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
 
-      const pkg1Dir = path.join(builtPackagesDir, 'pkg1');
-      const pkg2Dir = path.join(builtPackagesDir, 'pkg2');
-      fs.mkdirSync(pkg1Dir, {recursive: true});
-      fs.mkdirSync(pkg2Dir, {recursive: true});
-      fs.writeFileSync(path.join(pkg1Dir, 'package.json'), JSON.stringify({name: '@angular/core'}));
-      fs.writeFileSync(
-        path.join(pkg2Dir, 'package.json'),
-        JSON.stringify({name: '@angular/common'}),
-      );
+      const pkg1Path = mockTgzPackage(builtPackagesDir, '@angular/core', '10.1.0');
+      const pkg2Path = mockTgzPackage(builtPackagesDir, '@angular/common', '10.1.0');
 
       const tool = new PublishCiTool(
         {github: githubConfig, release: deprecateReleaseConfig} as any,
@@ -879,8 +868,8 @@ describe('PublishCiTool', () => {
 
       // Verify publish was called for both
       expect(publishSpy).toHaveBeenCalledTimes(2);
-      expect(publishSpy.calls.argsFor(0)).toEqual([pkg1Dir, 'latest', undefined]);
-      expect(publishSpy.calls.argsFor(1)).toEqual([pkg2Dir, 'latest', undefined]);
+      expect(publishSpy.calls.argsFor(0)).toEqual([pkg1Path, 'latest', undefined]);
+      expect(publishSpy.calls.argsFor(1)).toEqual([pkg2Path, 'latest', undefined]);
 
       // Verify deprecate was called only for @angular/common
       expect(deprecateSpy).toHaveBeenCalledTimes(1);
@@ -889,6 +878,55 @@ describe('PublishCiTool', () => {
         '>=9.0.0',
         'Use @angular/core instead',
         undefined,
+      );
+    });
+
+    it('should skip publishing packages that are already published on the registry', async () => {
+      const testReleaseConfig = {
+        representativeNpmPackage: '@angular/core',
+        npmPackages: [{name: '@angular/core'}, {name: '@angular/common'}],
+        buildPackages: async () => [],
+      };
+      setConfig({github: githubConfig, release: testReleaseConfig});
+
+      fs.writeFileSync(path.join(testTmpDir, 'package.json'), JSON.stringify({version: '10.0.0'}));
+      const sandbox = SandboxGitRepo.withInitialCommit(githubConfig);
+
+      fs.writeFileSync(path.join(testTmpDir, 'package.json'), JSON.stringify({version: '10.1.0'}));
+      sandbox.commit('v10.1.0 commit');
+      const headSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
+
+      const pkg1Path = mockTgzPackage(builtPackagesDir, '@angular/core', '10.1.0');
+      const pkg2Path = mockTgzPackage(builtPackagesDir, '@angular/common', '10.1.0');
+
+      // Override the global spy to return true only for @angular/core
+      const checkVersionSpy = NpmCommand.checkVersionExists as jasmine.Spy;
+      checkVersionSpy.and.callFake(async (name) => {
+        return name === '@angular/core';
+      });
+
+      const tool = new PublishCiTool(
+        {github: githubConfig, release: testReleaseConfig} as any,
+        gitClient,
+        testTmpDir,
+        {
+          builtPackagesDir,
+          expectedSha: headSha,
+        },
+      );
+
+      await expectAsync(tool.run()).toBeResolved();
+
+      // Verify checkVersionExists was called for both
+      expect(checkVersionSpy).toHaveBeenCalledTimes(2);
+
+      // Verify publish was called ONLY for @angular/common (pkg2Path)
+      expect(publishSpy).toHaveBeenCalledTimes(1);
+      expect(publishSpy).toHaveBeenCalledWith(pkg2Path, 'latest', undefined);
+      expect(publishSpy).not.toHaveBeenCalledWith(
+        pkg1Path,
+        jasmine.any(String),
+        jasmine.any(String),
       );
     });
   });
@@ -905,9 +943,6 @@ describe('PublishCiTool', () => {
       } as any);
 
       builtPackagesDir = path.join(testTmpDir, 'dist');
-      const pkgDir = path.join(builtPackagesDir, 'pkg1');
-      fs.mkdirSync(pkgDir, {recursive: true});
-      fs.writeFileSync(path.join(pkgDir, 'package.json'), JSON.stringify({name: '@angular/core'}));
 
       logInfoSpy = spyOn(Log, 'info');
     });
@@ -919,6 +954,8 @@ describe('PublishCiTool', () => {
       fs.writeFileSync(path.join(testTmpDir, 'package.json'), JSON.stringify({version: '10.1.0'}));
       sandbox.commit('v10.1.0 commit');
       const headSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
+
+      mockTgzPackage(builtPackagesDir, '@angular/core', '10.1.0');
 
       const tool = new PublishCiTool(
         {github: githubConfig, release: releaseConfig} as any,
@@ -963,15 +1000,8 @@ describe('PublishCiTool', () => {
       sandbox.commit('v10.1.0 commit');
       const headSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
 
-      const pkg1Dir = path.join(builtPackagesDir, 'pkg1');
-      const pkg2Dir = path.join(builtPackagesDir, 'pkg2');
-      fs.mkdirSync(pkg1Dir, {recursive: true});
-      fs.mkdirSync(pkg2Dir, {recursive: true});
-      fs.writeFileSync(path.join(pkg1Dir, 'package.json'), JSON.stringify({name: '@angular/core'}));
-      fs.writeFileSync(
-        path.join(pkg2Dir, 'package.json'),
-        JSON.stringify({name: '@angular/common'}),
-      );
+      mockTgzPackage(builtPackagesDir, '@angular/core', '10.1.0');
+      mockTgzPackage(builtPackagesDir, '@angular/common', '10.1.0');
 
       const tool = new PublishCiTool(
         {github: githubConfig, release: monorepoReleaseConfig} as any,

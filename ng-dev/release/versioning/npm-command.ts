@@ -19,12 +19,38 @@ export abstract class NpmCommand {
    * @throws With the process log output if the publish failed.
    */
   static async publish(packagePath: string, distTag: NpmDistTag, registryUrl: string | undefined) {
-    const args = ['publish', '--access', 'public', '--tag', distTag];
+    const args = ['publish', packagePath, '--access', 'public', '--tag', distTag];
     // If a custom registry URL has been specified, add the `--registry` flag.
     if (registryUrl !== undefined) {
       args.push('--registry', registryUrl);
     }
-    await ChildProcess.spawn('npm', args, {cwd: packagePath, mode: 'silent'});
+    await ChildProcess.spawn('npm', args, {mode: 'silent'});
+  }
+
+  /**
+   * Checks whether a specific version of a package exists on the registry.
+   * @returns Whether the version exists.
+   */
+  static async checkVersionExists(
+    packageName: string,
+    version: string,
+    registryUrl: string | undefined,
+  ): Promise<boolean> {
+    const args = ['view', `${packageName}@${version}`, 'version'];
+    if (registryUrl !== undefined) {
+      args.push('--registry', registryUrl);
+    }
+    try {
+      const result = await ChildProcess.spawn('npm', args, {mode: 'silent'});
+      const output = result.stdout.trim();
+      return output !== '';
+    } catch (e) {
+      const errString = String(e);
+      if (errString.includes('E404') || errString.includes('404 Not Found')) {
+        return false;
+      }
+      throw e;
+    }
   }
 
   /**
