@@ -32,6 +32,7 @@ import {
 } from '../../../../ng-dev/release/notes/release-notes.js';
 import {NpmCommand} from '../../../../ng-dev/release/versioning/npm-command.js';
 import {getFileContentsUrl} from '../../../../ng-dev/utils/git/github-urls.js';
+import {PublishSummary} from './publish-summary.js';
 import {isGithubApiError} from '../../../../ng-dev/utils/git/github.js';
 import {githubReleaseBodyLimit} from '../../../../ng-dev/release/publish/constants.js';
 import {green, Log} from '../../../../ng-dev/utils/logging.js';
@@ -47,6 +48,10 @@ export interface PublishCiToolOptions {
   expectedSha: string;
   /** Whether to run in dry-run mode (skips tags/releases creation and publishing). */
   dryRun?: boolean;
+  /** Whether to use local NPM configuration instead of setting up Wombat token. */
+  useLocalNpmConfig?: boolean;
+  /** Whether to skip creating Git tags and GitHub releases. */
+  skipTagging?: boolean;
 }
 
 /**
@@ -58,6 +63,8 @@ export interface PublishCiToolOptions {
  * the NPM registry (Wombat proxy) using the provided WOMBOT_TOKEN.
  */
 export class PublishCiTool {
+  private summary = new PublishSummary();
+
   constructor(
     protected config: NgDevConfig<{release: ReleaseConfig; github: GithubConfig}>,
     protected git: AuthenticatedGitClient,
@@ -67,59 +74,100 @@ export class PublishCiTool {
 
   /**
    * Executes the publish-ci process.
-   *
-   * Validates the environment, verifies the HEAD commit matches the expected SHA,
-   * resolves the pre-built packages, generates release notes by comparing versions,
-   * and performs the tagging, release creation, and NPM publishing.
-   *
-   * @throws {Error} If WOMBOT_TOKEN is missing (and not in dry-run), if HEAD SHA doesn't match
-   * expected SHA, if no built packages are found, or if any GitHub/NPM API operation fails.
    */
   async run() {
-    if (!this.options.dryRun && !process.env['WOMBOT_TOKEN']) {
+    if (this.options.useLocalNpmConfig) {
+      if (process.env['CI'] || process.env['GITHUB_ACTIONS']) {
+        throw new Error('useLocalNpmConfig cannot be used in a CI environment.');
+      }
+    } else if (!this.options.dryRun && !process.env['WOMBOT_TOKEN']) {
       throw new Error('WOMBOT_TOKEN environment variable is not defined.');
     }
 
     this.assertExpectedSha();
 
-    const builtPackages = findBuiltPackages(this.options.builtPackagesDir);
-    if (builtPackages.length === 0) {
-      throw new Error(`No built packages found under directory ${this.options.builtPackagesDir}`);
-    }
-
-    const builtPackagesWithInfo = await analyzeAndExtendBuiltPackagesWithInfo(
-      builtPackages,
-      this.config.release.npmPackages,
-    );
-
-    const beforeStagingSha = this.getBeforeStagingSha();
-
     const newVersion = readPackageJsonAtRef(this.git, 'HEAD').version;
-    const versionAtBeforeStaging = readPackageJsonAtRef(this.git, beforeStagingSha).version;
+    const builtPackagesWithInfo = await this.resolveTgzPackages(newVersion);
 
     const newSemver = semver.parse(newVersion);
     if (!newSemver) {
       throw new Error(`Failed to parse version ${newVersion} as semver.`);
     }
-    const versionAtBeforeStagingSemver = semver.parse(versionAtBeforeStaging);
-    if (!versionAtBeforeStagingSemver) {
-      throw new Error(`Failed to parse version ${versionAtBeforeStaging} as semver.`);
+
+    if (!this.options.skipTagging) {
+      const beforeStagingSha = this.getBeforeStagingSha();
+      const versionAtBeforeStaging = readPackageJsonAtRef(this.git, beforeStagingSha).version;
+      const versionAtBeforeStagingSemver = semver.parse(versionAtBeforeStaging);
+      if (!versionAtBeforeStagingSemver) {
+        throw new Error(`Failed to parse version ${versionAtBeforeStaging} as semver.`);
+      }
+
+      const previousVersionTag = this.getPreviousVersionTag(
+        newSemver,
+        versionAtBeforeStagingSemver,
+      );
+
+      const releaseNotes = await ReleaseNotes.forRange(
+        this.git,
+        newSemver,
+        previousVersionTag,
+        beforeStagingSha,
+      );
+
+      const npmDistTag = await determineNpmDistTag(newSemver, this.config.release, this.git);
+
+      await this.createGithubReleaseAndTags(newVersion, newSemver, releaseNotes, npmDistTag);
+    } else {
+      Log.info('Skipping Git tagging and GitHub Release creation as configured.');
     }
 
-    const previousVersionTag = this.getPreviousVersionTag(newSemver, versionAtBeforeStagingSemver);
-
-    const releaseNotes = await ReleaseNotes.forRange(
-      this.git,
-      newSemver,
-      previousVersionTag,
-      beforeStagingSha,
-    );
-
     const npmDistTag = await determineNpmDistTag(newSemver, this.config.release, this.git);
+    await this.publishAndDeprecatePackages(builtPackagesWithInfo, npmDistTag, newVersion);
 
-    await this.createGithubReleaseAndTags(newVersion, newSemver, releaseNotes, npmDistTag);
+    const markdownSummary = this.summary.toMarkdown();
+    Log.info('\n' + markdownSummary);
 
-    await this.publishAndDeprecatePackages(builtPackagesWithInfo, npmDistTag);
+    if (process.env['GITHUB_STEP_SUMMARY']) {
+      try {
+        writeFileSync(process.env['GITHUB_STEP_SUMMARY'], markdownSummary, {flag: 'a'});
+        Log.info(green('  ✓   Written job summary to GITHUB_STEP_SUMMARY.'));
+      } catch (e) {
+        Log.warn(`Warning: Failed to write GITHUB_STEP_SUMMARY: ${e}`);
+      }
+    }
+
+    if (this.summary.hasFailures()) {
+      const failures = this.summary.getFailedItems().join('\n');
+      throw new Error(`Publish failed with the following errors:\n${failures}`);
+    }
+  }
+
+  /** Resolves the pre-built .tgz packages from the builtPackagesDir. */
+  private async resolveTgzPackages(version: string): Promise<BuiltPackageWithInfo[]> {
+    if (!existsSync(this.options.builtPackagesDir)) {
+      throw new Error(
+        `The built packages directory does not exist: ${this.options.builtPackagesDir}`,
+      );
+    }
+    const builtPackages: BuiltPackage[] = [];
+    for (const npmPkg of this.config.release.npmPackages) {
+      const scopeAndName = npmPkg.name.startsWith('@') ? npmPkg.name.slice(1) : npmPkg.name;
+      const fileName = `${scopeAndName.replace(/\//g, '-')}-${version}.tgz`;
+      const tgzPath = join(this.options.builtPackagesDir, fileName);
+
+      if (!existsSync(tgzPath)) {
+        throw new Error(`Expected built package file not found: ${tgzPath}`);
+      }
+      builtPackages.push({
+        name: npmPkg.name,
+        outputPath: tgzPath,
+      });
+    }
+
+    return await analyzeAndExtendBuiltPackagesWithInfo(
+      builtPackages,
+      this.config.release.npmPackages,
+    );
   }
 
   /**
@@ -229,6 +277,7 @@ export class PublishCiTool {
     const globalTagName = `v${newVersion}`;
     if (this.options.dryRun) {
       Log.info(`[Dry-Run] Would tag global tag: ${globalTagName}`);
+      this.summary.addTag({name: globalTagName, status: 'CREATED'});
     } else {
       try {
         await this.git.github.git.createRef({
@@ -237,11 +286,14 @@ export class PublishCiTool {
           sha: this.options.expectedSha,
         });
         Log.info(green(`  ✓   Tagged ${globalTagName} release upstream.`));
+        this.summary.addTag({name: globalTagName, status: 'CREATED'});
       } catch (e) {
         if (isGithubApiError(e) && e.status === 422) {
           Log.warn(`Warning: Tag ${globalTagName} already exists, skipping tag creation.`);
+          this.summary.addTag({name: globalTagName, status: 'SKIPPED'});
         } else {
-          throw e;
+          Log.error(`Failed to tag global tag ${globalTagName}: ${e}`);
+          this.summary.addTag({name: globalTagName, status: 'FAILED', error: String(e)});
         }
       }
     }
@@ -258,6 +310,7 @@ export class PublishCiTool {
 
     if (this.options.dryRun) {
       Log.info(`[Dry-Run] Would create GitHub Release for tag: ${globalTagName}`);
+      this.summary.setRelease({name: globalTagName, status: 'CREATED'});
     } else {
       try {
         await this.git.github.repos.createRelease({
@@ -269,13 +322,16 @@ export class PublishCiTool {
           body: releaseBody,
         });
         Log.info(green(`  ✓   Created ${globalTagName} release in Github.`));
+        this.summary.setRelease({name: globalTagName, status: 'CREATED'});
       } catch (e) {
         if (isGithubApiError(e) && e.status === 422) {
           Log.warn(
             `Warning: GitHub release for ${globalTagName} already exists, skipping release creation.`,
           );
+          this.summary.setRelease({name: globalTagName, status: 'SKIPPED'});
         } else {
-          throw e;
+          Log.error(`Failed to create GitHub release ${globalTagName}: ${e}`);
+          this.summary.setRelease({name: globalTagName, status: 'FAILED', error: String(e)});
         }
       }
     }
@@ -285,6 +341,7 @@ export class PublishCiTool {
         const monorepoTagName = `${npmPkg.name}@${newVersion}`;
         if (this.options.dryRun) {
           Log.info(`[Dry-Run] Would tag monorepo package: ${monorepoTagName}`);
+          this.summary.addTag({name: monorepoTagName, status: 'CREATED'});
         } else {
           try {
             await this.git.github.git.createRef({
@@ -293,11 +350,14 @@ export class PublishCiTool {
               sha: this.options.expectedSha,
             });
             Log.info(green(`  ✓   Tagged monorepo package release: ${monorepoTagName}`));
+            this.summary.addTag({name: monorepoTagName, status: 'CREATED'});
           } catch (e) {
             if (isGithubApiError(e) && e.status === 422) {
               Log.warn(`Warning: Tag ${monorepoTagName} already exists, skipping tag creation.`);
+              this.summary.addTag({name: monorepoTagName, status: 'SKIPPED'});
             } else {
-              throw e;
+              Log.error(`Failed to tag monorepo package ${monorepoTagName}: ${e}`);
+              this.summary.addTag({name: monorepoTagName, status: 'FAILED', error: String(e)});
             }
           }
         }
@@ -318,20 +378,25 @@ export class PublishCiTool {
   private async publishAndDeprecatePackages(
     builtPackages: BuiltPackageWithInfo[],
     npmDistTag: NpmDistTag,
+    version: string,
   ) {
     if (this.options.dryRun) {
       for (const pkg of builtPackages) {
         Log.info(`[Dry-Run] Would publish package: ${pkg.name} to Wombat`);
+        this.summary.addPackage({name: pkg.name, version: version, status: 'PUBLISHED'});
         if (pkg.deprecated) {
           Log.info(`[Dry-Run] Would deprecate package: ${pkg.name}@${pkg.deprecated.version}`);
         }
       }
-    } else {
-      const tempDir = mkdtempSync(join(tmpdir(), 'angular-publish-ci-'));
-      const tempNpmrcPath = join(tempDir, '.npmrc');
-      const originalUserconfig = process.env['NPM_CONFIG_USERCONFIG'];
+      return;
+    }
 
-      try {
+    const tempDir = mkdtempSync(join(tmpdir(), 'angular-publish-ci-'));
+    const tempNpmrcPath = join(tempDir, '.npmrc');
+    const originalUserconfig = process.env['NPM_CONFIG_USERCONFIG'];
+
+    try {
+      if (!this.options.useLocalNpmConfig) {
         const wombatNpmrcContent =
           [
             `registry=https://wombat-dressing-room.appspot.com/`,
@@ -339,39 +404,76 @@ export class PublishCiTool {
           ].join('\n') + '\n';
         writeFileSync(tempNpmrcPath, wombatNpmrcContent);
         Log.info(green(`  ✓   Created temporary .npmrc for Wombat registry.`));
-
-        // Set the environment variable to point to the temporary config
         process.env['NPM_CONFIG_USERCONFIG'] = tempNpmrcPath;
+      } else {
+        Log.info('Using default local NPM configuration.');
+      }
 
-        // Publish packages
-        for (const pkg of builtPackages) {
-          Log.info(`Publishing "${pkg.name}"...`);
-          await NpmCommand.publish(pkg.outputPath, npmDistTag, undefined);
-          Log.info(green(`  ✓   Successfully published "${pkg.name}".`));
-        }
-
-        // Deprecate packages if configured
-        for (const pkg of builtPackages) {
-          if (!pkg.deprecated) {
+      // Publish packages
+      for (const pkg of builtPackages) {
+        Log.info(`Checking if "${pkg.name}@${version}" is already published...`);
+        try {
+          const exists = await NpmCommand.checkVersionExists(
+            pkg.name,
+            version,
+            this.config.release.publishRegistry,
+          );
+          if (exists) {
+            Log.warn(`Warning: Package "${pkg.name}@${version}" is already published. Skipping.`);
+            this.summary.addPackage({name: pkg.name, version: version, status: 'SKIPPED'});
             continue;
           }
-          Log.info(`Deprecating "${pkg.name}"...`);
-          const {version, message} = pkg.deprecated;
-          await NpmCommand.deprecate(pkg.name, version, message, undefined);
-          Log.info(green(`  ✓   Successfully deprecated "${pkg.name}@${version}".`));
-        }
-      } finally {
-        // Guaranteed cleanup of files and environment
-        try {
-          rmSync(tempDir, {recursive: true, force: true});
+
+          Log.info(`Publishing "${pkg.name}"...`);
+          await NpmCommand.publish(pkg.outputPath, npmDistTag, this.config.release.publishRegistry);
+          Log.info(green(`  ✓   Successfully published "${pkg.name}".`));
+          this.summary.addPackage({name: pkg.name, version: version, status: 'PUBLISHED'});
         } catch (e) {
-          Log.warn(`Warning: Failed to clean up temporary directory ${tempDir}: ${e}`);
-        } finally {
-          if (originalUserconfig !== undefined) {
-            process.env['NPM_CONFIG_USERCONFIG'] = originalUserconfig;
-          } else {
-            delete process.env['NPM_CONFIG_USERCONFIG'];
-          }
+          Log.error(`An error occurred while publishing "${pkg.name}": ${e}`);
+          this.summary.addPackage({
+            name: pkg.name,
+            version: version,
+            status: 'FAILED',
+            error: String(e),
+          });
+        }
+      }
+
+      // Deprecate packages if configured
+      for (const pkg of builtPackages) {
+        if (!pkg.deprecated) {
+          continue;
+        }
+        if (this.summary.hasPackageFailed(pkg.name)) {
+          Log.warn(`Skipping deprecation for "${pkg.name}" because publish failed.`);
+          continue;
+        }
+
+        Log.info(`Deprecating "${pkg.name}"...`);
+        const {version, message} = pkg.deprecated;
+        try {
+          await NpmCommand.deprecate(
+            pkg.name,
+            version,
+            message,
+            this.config.release.publishRegistry,
+          );
+          Log.info(green(`  ✓   Successfully deprecated "${pkg.name}@${version}".`));
+        } catch (e) {
+          Log.error(`Failed to deprecate "${pkg.name}": ${e}`);
+        }
+      }
+    } finally {
+      // Guaranteed cleanup of files and environment
+      try {
+        rmSync(tempDir, {recursive: true, force: true});
+      } catch (e) {
+        Log.warn(`Warning: Failed to clean up temporary directory ${tempDir}: ${e}`);
+      } finally {
+        if (originalUserconfig !== undefined) {
+          process.env['NPM_CONFIG_USERCONFIG'] = originalUserconfig;
+        } else {
+          delete process.env['NPM_CONFIG_USERCONFIG'];
         }
       }
     }
@@ -400,46 +502,6 @@ function readPackageJsonAtRef(git: AuthenticatedGitClient, ref: string): any {
  * @returns An array of `BuiltPackage` objects containing the name and output path.
  * @throws {Error} If the specified directory does not exist.
  */
-function findBuiltPackages(dir: string): BuiltPackage[] {
-  if (!existsSync(dir)) {
-    throw new Error(`The built packages directory does not exist: ${dir}`);
-  }
-  const packages: BuiltPackage[] = [];
-  const walk = (currentDir: string) => {
-    let entries: Dirent[];
-    try {
-      entries = readdirSync(currentDir, {withFileTypes: true});
-    } catch (e) {
-      return;
-    }
-    const hasPackageJson = entries.some((e) => e.isFile() && e.name === 'package.json');
-    if (hasPackageJson) {
-      try {
-        const pkgJson = JSON.parse(readFileSync(join(currentDir, 'package.json'), 'utf8'));
-        if (pkgJson.name) {
-          if (!pkgJson.private) {
-            packages.push({
-              name: pkgJson.name,
-              outputPath: currentDir,
-            });
-          }
-          // Stop traversing deeper once we find a package boundary (even if private)
-          // to avoid looking into nested node_modules or sub-packages.
-          return;
-        }
-      } catch (e) {
-        // Ignore parsing errors
-      }
-    }
-    for (const entry of entries) {
-      if (entry.isDirectory()) {
-        walk(join(currentDir, entry.name));
-      }
-    }
-  };
-  walk(dir);
-  return packages;
-}
 
 /**
  * Determines the NPM distribution tag (e.g. 'latest', 'next') for the version being published.
