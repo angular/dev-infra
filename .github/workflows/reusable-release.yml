@@ -39,20 +39,28 @@ jobs:
           REF=$(echo "${{ github.workflow_ref }}" | cut -d'@' -f2)
           echo "ref=$REF" >> $GITHUB_OUTPUT
 
-      # Step 2: Checkout dev-infra dynamically at the same ref to get the custom actions
+      # Checkout the calling repository first to ensure there is a .git directory at the root,
+      # which prevents the subsequent local action's checkout from deleting the .dev-infra folder.
+      - name: Checkout calling repo
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          clean: false
+
+      # Checkout dev-infra dynamically at the same ref to get the custom actions.
       - name: Checkout dev-infra
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           repository: angular/dev-infra
           ref: ${{ steps.get-ref.outputs.ref }}
           path: .dev-infra
+          clean: false
 
-      # Step 3: Initialize environment (using local checkout-and-setup-node)
-      # We pass clean: false so it doesn't delete the .dev-infra directory we just checked out!
+      # Initialize environment (using local checkout-and-setup-node).
+      # We skip checkout because the calling repository was already checked out at the root.
       - name: Initialize environment
         uses: ./.dev-infra/github-actions/npm/checkout-and-setup-node
         with:
-          clean: false
+          skip-checkout: true
 
       # Step 4: Check if commit is a release commit
       - name: Check if commit is a release commit
@@ -119,19 +127,28 @@ jobs:
       contents: read
       id-token: write # Required to generate NPM/Sigstore provenance metadata
     steps:
-      # Step 1: Checkout dev-infra dynamically at the same ref to get the custom actions
+      # Checkout the calling repository first to ensure there is a .git directory at the root,
+      # which prevents the subsequent local action's checkout from deleting the .dev-infra folder.
+      - name: Checkout calling repo
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          clean: false
+
+      # Checkout dev-infra dynamically at the same ref to get the custom actions.
       - name: Checkout dev-infra
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           repository: angular/dev-infra
           ref: ${{ needs.build.outputs.dev-infra-ref }}
           path: .dev-infra
+          clean: false
 
-      # Step 2: Initialize environment (using local checkout-and-setup-node)
+      # Initialize environment (using local checkout-and-setup-node).
+      # We skip checkout because the calling repository was already checked out at the root.
       - name: Initialize environment
         uses: ./.dev-infra/github-actions/npm/checkout-and-setup-node
         with:
-          clean: false
+          skip-checkout: true
 
       - name: Download built packages
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
