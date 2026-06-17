@@ -10,6 +10,7 @@ ts_project(
     srcs = [
         "lib/main.ts",
         "lib/publish-ci.ts",
+        "lib/publish-summary.ts",
     ],
     tsconfig = "//github-actions:tsconfig",
     deps = [
