@@ -17,6 +17,7 @@ packages:
   - github-actions/previews/pack-and-upload-artifact
   - github-actions/previews/upload-artifacts-to-firebase
   - github-actions/post-approval-changes
+  - github-actions/linting/gha-sha-enforcer
   - github-actions/org-file-sync
   - github-actions/branch-manager
   - github-actions/saucelabs

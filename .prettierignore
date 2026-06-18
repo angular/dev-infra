@@ -10,6 +10,7 @@ github-actions/branch-manager/main.js
 github-actions/browserstack/set-browserstack-env.js
 github-actions/labeling/pull-request/main.js
 github-actions/google-internal-tests/main.js
+github-actions/linting/gha-sha-enforcer/main.js
 github-actions/org-file-sync/main.js
 github-actions/post-approval-changes/main.js
 github-actions/release/publish/main.js

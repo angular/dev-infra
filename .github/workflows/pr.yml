@@ -40,6 +40,8 @@ jobs:
         uses: ./github-actions/linting/licenses
         with:
           allow-dependencies-licenses: 'pkg:npm/renovate, pkg:npm/@renovatebot/detect-tools'
+      - name: Enforce GHA SHAs
+        uses: ./github-actions/linting/gha-sha-enforcer
 
   test:
     name: ${{ matrix.name }}
