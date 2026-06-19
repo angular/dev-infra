@@ -50,7 +50,6 @@ ts_project(
         "//ng-dev:node_modules/@types/yargs",
         "//ng-dev:node_modules/yaml",
         "//ng-dev:node_modules/yargs",
-        "//ng-dev/ai",
         "//ng-dev/auth",
         "//ng-dev/caretaker",
         "//ng-dev/commit-message",

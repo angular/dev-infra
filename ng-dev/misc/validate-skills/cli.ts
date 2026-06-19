@@ -15,7 +15,7 @@ interface Options {
   baseDir: string;
 }
 
-async function builder(yargs: Argv) {
+function builder(yargs: Argv) {
   return yargs.option('base-dir' as 'baseDir', {
     type: 'string',
     default: determineRepoBaseDirFromCwd(),
@@ -31,8 +31,8 @@ async function handler({baseDir}: Arguments<Options>) {
 /**
  * Validates all skills found in the `skills/` directory.
  */
-export const SkillsModule: CommandModule<{}, Options> = {
-  command: 'skills validate',
+export const ValidateSkillsModule: CommandModule<{}, Options> = {
+  command: 'validate-skills',
   describe: 'Validate agent skills in the repository',
   builder,
   handler,
