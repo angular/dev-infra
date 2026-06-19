@@ -19,7 +19,7 @@
     "wait-on": "^9.0.0",
     "protractor": "7.0.0",
     "semver": "7.8.4",
-    "selenium-webdriver": "4.44.0",
+    "selenium-webdriver": "4.45.0",
     "source-map-support": "0.5.21",
     "tinyglobby": "0.2.17"
   }
