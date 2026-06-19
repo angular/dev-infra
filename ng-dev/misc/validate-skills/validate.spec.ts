@@ -2,7 +2,7 @@ import {join} from 'path';
 import {validateSkill, validateSkills} from './validate.js';
 
 function getFixturePath(relativePath: string): string {
-  return join(process.cwd(), 'ng-dev/ai/skills/fixtures', relativePath);
+  return join(process.cwd(), 'ng-dev/misc/validate-skills/fixtures', relativePath);
 }
 
 describe('validateSkills', () => {

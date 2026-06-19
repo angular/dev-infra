@@ -27,7 +27,7 @@ bazel/map-size-tracking/test/size-golden.json
 **/pnpm-lock.yaml
 
 # AI Skills intentionally not formatted to ensure validation failures.
-ng-dev/ai/skills/fixtures/invalid-frontmatter-location/skills/test-skill/SKILL.md
+ng-dev/misc/validate-skills/fixtures/invalid-frontmatter-location/skills/test-skill/SKILL.md
 
 # Golden files
 bazel/rules/rules_sass/test/**/*_golden.css

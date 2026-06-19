@@ -23,7 +23,6 @@ import {localVersion, ngDevVersionMiddleware} from './utils/version-check.js';
 import {buildAuthParser} from './auth/cli.js';
 import {buildPerfParser} from './perf/cli.js';
 import {buildConfigParser} from './config/cli.js';
-import {buildAiParser} from './ai/cli.js';
 import {Argv} from 'yargs';
 
 runParserWithCompletedFunctions((yargs: Argv) => {
@@ -44,7 +43,6 @@ runParserWithCompletedFunctions((yargs: Argv) => {
     .command('misc <command>', '', buildMiscParser)
     .command('ngbot <command>', false, buildNgbotParser)
     .command('perf <command>', '', buildPerfParser)
-    .command('ai <command>', '', buildAiParser)
     .command('config <command>', false, buildConfigParser)
     .version(localVersion)
     .wrap(120)
