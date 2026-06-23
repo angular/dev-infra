@@ -1,5 +1,6 @@
-export {format} from './format.mjs';
-export {github} from './github.mjs';
-export {pullRequest} from './pull-request.mjs';
-export {commitMessage} from './commit-message.mjs';
-export {release} from './release.mjs';
+console.log("just testing something out");
+export const github = {owner:'angular',name:'dev-infra',mainBranchName:'main',mergeMode:'all'};
+export const format = {};
+export const commitMessage = {};
+export const pullRequest = {};
+export const release = {};
