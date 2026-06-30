@@ -19,7 +19,7 @@ importers:
     devDependencies:
       '@angular/build':
         specifier: 22.1.0-next.1
-        version: 22.1.0-next.1(@angular/compiler-cli@22.1.0-next.2(@angular/compiler@22.1.0-next.2)(typescript@6.0.3))(@angular/compiler@22.1.0-next.2)(@angular/core@22.1.0-next.2(@angular/compiler@22.1.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@22.1.0-next.2(@angular/common@22.1.0-next.2(@angular/core@22.1.0-next.2(@angular/compiler@22.1.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.1.0-next.2(@angular/compiler@22.1.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2)))(@types/node@22.20.0)(chokidar@5.0.0)(postcss@8.5.15)(rollup@4.62.2)(tslib@2.8.1)(typescript@6.0.3)
+        version: 22.1.0-next.1(@angular/compiler-cli@22.1.0-next.2(@angular/compiler@22.1.0-next.2)(typescript@6.0.3))(@angular/compiler@22.1.0-next.2)(@angular/core@22.1.0-next.2(@angular/compiler@22.1.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@22.1.0-next.2(@angular/common@22.1.0-next.2(@angular/core@22.1.0-next.2(@angular/compiler@22.1.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.1.0-next.2(@angular/compiler@22.1.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2)))(@types/node@22.20.0)(chokidar@5.0.0)(postcss@8.5.16)(rollup@4.62.2)(tslib@2.8.1)(typescript@6.0.3)
       '@angular/cli':
         specifier: 22.1.0-next.1
         version: 22.1.0-next.1(@types/node@22.20.0)(chokidar@5.0.0)
@@ -70,7 +70,7 @@ importers:
         version: 6.4.1(rollup@4.62.2)(typescript@6.0.3)
       rollup-plugin-sourcemaps2:
         specifier: ^0.5.0
-        version: 0.5.7(@types/node@22.20.0)(rollup@4.62.2)
+        version: 0.5.8(@types/node@22.20.0)(rollup@4.62.2)
       rxjs:
         specifier: ^7.8.2
         version: 7.8.2
@@ -1365,15 +1365,6 @@ packages:
       rollup:
         optional: true
 
-  '@rollup/pluginutils@5.3.0':
-    resolution: {integrity: sha512-5EdhGZtnu3V88ces7s53hhfK5KSASnJZv8Lulpc04cWO3REESroJXg73DFsOmgbU2BhwV0E20bu2IDZb3VKW4Q==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-
   '@rollup/pluginutils@5.4.0':
     resolution: {integrity: sha512-MfPp06CjRLfXQ3wY0R8vJDYBy/MvVcc9OulEfR0B8Iv9ko+GCNaRZ+EpJYFl27LhKsZK0o420sYCRHCjfCgeUg==}
     engines: {node: '>=14.0.0'}
@@ -1579,8 +1570,8 @@ packages:
     resolution: {integrity: sha512-4Dj6M28JB+oAH8kFkTLUo+a2jwOFkuqb3yucU0CANcRRUbxS0cP0nZYCGjcc3BNXwRIsUVmDGgzawme7zvJHvg==}
     engines: {node: '>=12'}
 
-  baseline-browser-mapping@2.10.38:
-    resolution: {integrity: sha512-31/02mVB4yuQU6adKk5SlY6m+mxDwUq5KZkyYgnLrrKl7TEm1+3PyDtDBz2kOv/wxZz41GHsvV1A/u6RmiyBvw==}
+  baseline-browser-mapping@2.10.40:
+    resolution: {integrity: sha512-BSSLZ9/Cjjv7Gtj5B68ZzXcXUg8iOf3fme+FCuh8rC/Go+Kmh8cox7M3A8dolou16s64QjLPOSdngh7GxXvkSw==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
@@ -1595,8 +1586,8 @@ packages:
   boolbase@1.0.0:
     resolution: {integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==}
 
-  browserslist@4.28.2:
-    resolution: {integrity: sha512-48xSriZYYg+8qXna9kwqjIVzuQxi+KYWp2+5nCYnYKPTr0LvD89Jqk2Or5ogxz0NUMfIjhh2lIUX/LyX9B4oIg==}
+  browserslist@4.28.4:
+    resolution: {integrity: sha512-MTc8i/x9jBQd1iMw2CFGS+rwMa07eYjLR0CCTLDACl9xhxy+nIs3KeML/biicXtk9JrZ6dnnTatmc7ErPXIxqw==}
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
 
@@ -1742,8 +1733,8 @@ packages:
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
 
-  electron-to-chromium@1.5.376:
-    resolution: {integrity: sha512-cUVA7/RvbFTEuw/i3obUwDTRIXojaxkResf+ibByPFxjc6XK3VNtcQXV0NSbAlJ0FMjcJGgftVVB4Qo184EXvA==}
+  electron-to-chromium@1.5.380:
+    resolution: {integrity: sha512-W6d5AbuEoRayO447cqrg6lKJIlscgRnnxOZl/08kfV71BQDoEBC7Wwis68z87LjyK6f4kWyTaubuDbhHKrZkbA==}
 
   emoji-regex@10.6.0:
     resolution: {integrity: sha512-toUI84YS5YmxW219erniWD0CIVOo46xGKColeNQRgOzDorgBi1v4D71/OFzgD9GO2UGKIv1C3Sp8DAn0+j5w7A==}
@@ -1912,8 +1903,8 @@ packages:
     resolution: {integrity: sha512-T2UbfbBEF32wiepXIsMlTW9+dDYC6wMh/t/vYA4tuOMKqWz/n3vr1NFSxQiyP+zk2mXsoMA/i/7qV6LKut1t1A==}
     engines: {node: '>= 0.4'}
 
-  hono@4.12.26:
-    resolution: {integrity: sha512-uyZtpnYxM9CmQ7QsQknM4zN8EftNqhON1qYeIKM0Se67CCEe2c44xyGURwB0axX2fBDu1dqHrHAc1hmNT8ITkw==}
+  hono@4.12.27:
+    resolution: {integrity: sha512-1yrb/+w6HWQJrUCLkJ2IF5jNIPvvFkblV5RNOYl6bV+OA6p9GLcMpHFFGTosSvHvcAUibuUukRqhlYI4z32C7Q==}
     engines: {node: '>=16.9.0'}
 
   hosted-git-info@10.1.1:
@@ -1939,8 +1930,8 @@ packages:
     resolution: {integrity: sha512-im9DjEDQ55s9fL4EYzOAv0yMqmMBSZp6G0VvFyTMPKWxiSBHUj9NW/qqLmXUwXrrM7AvqSlTCfvqRb0cM8yYqw==}
     engines: {node: '>=0.10.0'}
 
-  immutable@5.1.6:
-    resolution: {integrity: sha512-q1swsS8K7L8usSHuOqF2TAoCCkonYz0SG38wLAggaa4Wml70zixIvt2ql4coQ2C2B3hTjltJry4r6bULwgAXLQ==}
+  immutable@5.1.8:
+    resolution: {integrity: sha512-TM5YqrGeTsVIPPpILzeqZ8D2Zc2TvNgSDi88zPF2a4cyqQdWV/wVWBDRDbNzzrLeRWScrFcOX9lW2iX6GOtUDw==}
 
   import-meta-resolve@4.2.0:
     resolution: {integrity: sha512-Iqv2fzaTQN28s/FwZAoFq0ZSs/7hMAHJVX+w8PZl3cY19Pxk6jFFalxQoIfW2826i/fDLXv8IiEZRIT0lDuWcg==}
@@ -2196,8 +2187,8 @@ packages:
     resolution: {integrity: sha512-s+w+rBWnpTMwSFbaE0UXsRlg7hU4FjekKU4eyAih5T8nJuNZT1nNsskXpxmeqSK9UzkBl6UgRlnKc8hz8IEqOw==}
     hasBin: true
 
-  node-releases@2.0.48:
-    resolution: {integrity: sha512-1uz8041X6LoI6ZSdZacM9lVY28vuzDlSKitnpbSNK0RfKoIJkX29NBPVEFXhnuSuEOA9Ww0xnPJ+ILWbGAv8DA==}
+  node-releases@2.0.50:
+    resolution: {integrity: sha512-J6l92tKHX6w8Jy5nO1Vuc01NoIiRGi/d6qBKVxh+IQ8Cr3b6HbVNfKiF8ZpFKufTwpwxMmce2W3iQZ861ZRyTg==}
     engines: {node: '>=18'}
 
   npm-package-arg@14.0.0:
@@ -2288,8 +2279,8 @@ packages:
     peerDependencies:
       postcss: ^8.4.31
 
-  postcss@8.5.15:
-    resolution: {integrity: sha512-FfR8sjd4em2T6fb3I2MwAJU7HWVMr9zba+enmQeeWFfCbm+UOC/0X4DS8XtpUTMwWMGbjKYP7xjfNekzyGmB3A==}
+  postcss@8.5.16:
+    resolution: {integrity: sha512-vuwillviilfKZsg0VGj5R/YwwcHx4SLsIOI/7K6mQkWx+l5cUHTjj5g0AasTBcyXsbfTgrwsUNmVUb5xVwyPwg==}
     engines: {node: ^10 || ^12 || >=14}
 
   proc-log@7.0.0:
@@ -2309,12 +2300,12 @@ packages:
       kerberos:
         optional: true
 
-  qs@6.15.2:
-    resolution: {integrity: sha512-Rzq0KEyX/w/tEybncDgdkZrJgVUsUMk3xjh3t5bv3S1HTAtg+uOYt72+ZfwiQwKdysThkTBdL/rTi6HDmX9Ddw==}
+  qs@6.15.3:
+    resolution: {integrity: sha512-O9gl3zCl5h5blw1KGUzQKhA5oUXSl8rwUIM5o0S3nCXMliSvy5Dzx7/DJcI+SwgICv+IneSZwhBh1oSyEHA71A==}
     engines: {node: '>=0.6'}
 
-  range-parser@1.2.1:
-    resolution: {integrity: sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==}
+  range-parser@1.3.0:
+    resolution: {integrity: sha512-hek2mFQpPuI4E1BBKrSto+BU3e3x4xuarsbiwr3+lf7p44juvFMV0XFWQAP3xUyqXA4RrXLIoaSUGbSt056ZMw==}
     engines: {node: '>= 0.6'}
 
   raw-body@3.0.2:
@@ -2361,8 +2352,8 @@ packages:
       rollup: ^3.29.4 || ^4
       typescript: ^4.5 || ^5.0 || ^6.0
 
-  rollup-plugin-sourcemaps2@0.5.7:
-    resolution: {integrity: sha512-z2biw/Bs4cFgVn9LKEE5EK5PXvT0aUGuZoQkTU1OENf1PTl9WsbsVRR5FsKqY6qQohltsGTp1sIQrR8tsezztQ==}
+  rollup-plugin-sourcemaps2@0.5.8:
+    resolution: {integrity: sha512-c5BfiVbKAmaz+RoEhFF44Tg/X2QoLxEB8F7wS/eNWDJF/NKxi0SF7srN3Dg0RUnIcYLyCOwscket5Mr3BImMbg==}
     engines: {node: '>=22.13.0'}
     peerDependencies:
       '@types/node': '>=18.0.0'
@@ -2763,7 +2754,7 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@angular/build@22.1.0-next.1(@angular/compiler-cli@22.1.0-next.2(@angular/compiler@22.1.0-next.2)(typescript@6.0.3))(@angular/compiler@22.1.0-next.2)(@angular/core@22.1.0-next.2(@angular/compiler@22.1.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@22.1.0-next.2(@angular/common@22.1.0-next.2(@angular/core@22.1.0-next.2(@angular/compiler@22.1.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.1.0-next.2(@angular/compiler@22.1.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2)))(@types/node@22.20.0)(chokidar@5.0.0)(postcss@8.5.15)(rollup@4.62.2)(tslib@2.8.1)(typescript@6.0.3)':
+  '@angular/build@22.1.0-next.1(@angular/compiler-cli@22.1.0-next.2(@angular/compiler@22.1.0-next.2)(typescript@6.0.3))(@angular/compiler@22.1.0-next.2)(@angular/core@22.1.0-next.2(@angular/compiler@22.1.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@22.1.0-next.2(@angular/common@22.1.0-next.2(@angular/core@22.1.0-next.2(@angular/compiler@22.1.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.1.0-next.2(@angular/compiler@22.1.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2)))(@types/node@22.20.0)(chokidar@5.0.0)(postcss@8.5.16)(rollup@4.62.2)(tslib@2.8.1)(typescript@6.0.3)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular-devkit/architect': 0.2201.0-next.1(chokidar@5.0.0)
@@ -2775,7 +2766,7 @@ snapshots:
       '@inquirer/confirm': 6.1.1(@types/node@22.20.0)
       '@vitejs/plugin-basic-ssl': 2.3.0(vite@8.0.16(@types/node@22.20.0)(esbuild@0.28.1)(sass@1.101.0))
       beasties: 0.4.2
-      browserslist: 4.28.2
+      browserslist: 4.28.4
       esbuild: 0.28.1
       https-proxy-agent: 9.1.0
       jsonc-parser: 3.3.1
@@ -2798,7 +2789,7 @@ snapshots:
       '@angular/core': 22.1.0-next.2(@angular/compiler@22.1.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2)
       '@angular/platform-browser': 22.1.0-next.2(@angular/common@22.1.0-next.2(@angular/core@22.1.0-next.2(@angular/compiler@22.1.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.1.0-next.2(@angular/compiler@22.1.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))
       lmdb: 3.5.5
-      postcss: 8.5.15
+      postcss: 8.5.16
       rollup: 4.62.2
     transitivePeerDependencies:
       - '@types/node'
@@ -2956,7 +2947,7 @@ snapshots:
     dependencies:
       '@babel/compat-data': 7.29.7
       '@babel/helper-validator-option': 7.29.7
-      browserslist: 4.28.2
+      browserslist: 4.28.4
       lru-cache: 5.1.1
       semver: 6.3.1
 
@@ -2964,7 +2955,7 @@ snapshots:
     dependencies:
       '@babel/compat-data': 8.0.0
       '@babel/helper-validator-option': 8.0.0
-      browserslist: 4.28.2
+      browserslist: 4.28.4
       lru-cache: 11.5.1
       semver: 7.8.5
 
@@ -3181,9 +3172,9 @@ snapshots:
   '@harperfast/extended-iterable@1.0.3':
     optional: true
 
-  '@hono/node-server@1.19.14(hono@4.12.26)':
+  '@hono/node-server@1.19.14(hono@4.12.27)':
     dependencies:
-      hono: 4.12.26
+      hono: 4.12.27
 
   '@inquirer/ansi@2.0.7': {}
 
@@ -3481,7 +3472,7 @@ snapshots:
 
   '@modelcontextprotocol/sdk@1.29.0(zod@4.4.3)':
     dependencies:
-      '@hono/node-server': 1.19.14(hono@4.12.26)
+      '@hono/node-server': 1.19.14(hono@4.12.27)
       ajv: 8.20.0
       ajv-formats: 3.0.1
       content-type: 1.0.5
@@ -3491,7 +3482,7 @@ snapshots:
       eventsource-parser: 3.1.0
       express: 5.2.1
       express-rate-limit: 8.5.2(express@5.2.1)
-      hono: 4.12.26
+      hono: 4.12.27
       jose: 6.2.3
       json-schema-typed: 8.0.2
       pkce-challenge: 5.0.1
@@ -3792,14 +3783,6 @@ snapshots:
     optionalDependencies:
       rollup: 4.62.2
 
-  '@rollup/pluginutils@5.3.0(rollup@4.62.2)':
-    dependencies:
-      '@types/estree': 1.0.9
-      estree-walker: 2.0.2
-      picomatch: 4.0.4
-    optionalDependencies:
-      rollup: 4.62.2
-
   '@rollup/pluginutils@5.4.0(rollup@4.62.2)':
     dependencies:
       '@types/estree': 1.0.9
@@ -3956,7 +3939,7 @@ snapshots:
 
   ansi-styles@6.2.3: {}
 
-  baseline-browser-mapping@2.10.38: {}
+  baseline-browser-mapping@2.10.40: {}
 
   beasties@0.4.2:
     dependencies:
@@ -3966,9 +3949,9 @@ snapshots:
       domhandler: 5.0.3
       htmlparser2: 10.1.0
       picocolors: 1.1.1
-      postcss: 8.5.15
+      postcss: 8.5.16
       postcss-media-query-parser: 0.2.3
-      postcss-safe-parser: 7.0.1(postcss@8.5.15)
+      postcss-safe-parser: 7.0.1(postcss@8.5.16)
 
   body-parser@2.3.0:
     dependencies:
@@ -3978,7 +3961,7 @@ snapshots:
       http-errors: 2.0.1
       iconv-lite: 0.7.2
       on-finished: 2.4.1
-      qs: 6.15.2
+      qs: 6.15.3
       raw-body: 3.0.2
       type-is: 2.1.0
     transitivePeerDependencies:
@@ -3986,13 +3969,13 @@ snapshots:
 
   boolbase@1.0.0: {}
 
-  browserslist@4.28.2:
+  browserslist@4.28.4:
     dependencies:
-      baseline-browser-mapping: 2.10.38
+      baseline-browser-mapping: 2.10.40
       caniuse-lite: 1.0.30001799
-      electron-to-chromium: 1.5.376
-      node-releases: 2.0.48
-      update-browserslist-db: 1.2.3(browserslist@4.28.2)
+      electron-to-chromium: 1.5.380
+      node-releases: 2.0.50
+      update-browserslist-db: 1.2.3(browserslist@4.28.4)
 
   buffer-from@1.1.2: {}
 
@@ -4123,7 +4106,7 @@ snapshots:
 
   ee-first@1.1.1: {}
 
-  electron-to-chromium@1.5.376: {}
+  electron-to-chromium@1.5.380: {}
 
   emoji-regex@10.6.0: {}
 
@@ -4219,8 +4202,8 @@ snapshots:
       once: 1.4.0
       parseurl: 1.3.3
       proxy-addr: 2.0.7
-      qs: 6.15.2
-      range-parser: 1.2.1
+      qs: 6.15.3
+      range-parser: 1.3.0
       router: 2.2.0
       send: 1.2.1
       serve-static: 2.2.1
@@ -4310,7 +4293,7 @@ snapshots:
     dependencies:
       function-bind: 1.1.2
 
-  hono@4.12.26: {}
+  hono@4.12.27: {}
 
   hosted-git-info@10.1.1:
     dependencies:
@@ -4346,7 +4329,7 @@ snapshots:
     dependencies:
       safer-buffer: 2.1.2
 
-  immutable@5.1.6: {}
+  immutable@5.1.8: {}
 
   import-meta-resolve@4.2.0: {}
 
@@ -4581,13 +4564,13 @@ snapshots:
       detect-libc: 2.1.2
     optional: true
 
-  node-releases@2.0.48: {}
+  node-releases@2.0.50: {}
 
   npm-package-arg@14.0.0:
     dependencies:
       hosted-git-info: 10.1.1
       proc-log: 7.0.0
-      semver: 7.8.5
+      semver: 7.8.4
       validate-npm-package-name: 8.0.0
 
   nth-check@2.1.1:
@@ -4662,11 +4645,11 @@ snapshots:
 
   postcss-media-query-parser@0.2.3: {}
 
-  postcss-safe-parser@7.0.1(postcss@8.5.15):
+  postcss-safe-parser@7.0.1(postcss@8.5.16):
     dependencies:
-      postcss: 8.5.15
+      postcss: 8.5.16
 
-  postcss@8.5.15:
+  postcss@8.5.16:
     dependencies:
       nanoid: 3.3.15
       picocolors: 1.1.1
@@ -4681,11 +4664,12 @@ snapshots:
 
   proxy-agent-negotiate@1.1.0: {}
 
-  qs@6.15.2:
+  qs@6.15.3:
     dependencies:
+      es-define-property: 1.0.1
       side-channel: 1.1.1
 
-  range-parser@1.2.1: {}
+  range-parser@1.3.0: {}
 
   raw-body@3.0.2:
     dependencies:
@@ -4767,9 +4751,9 @@ snapshots:
     optionalDependencies:
       '@babel/code-frame': 7.29.7
 
-  rollup-plugin-sourcemaps2@0.5.7(@types/node@22.20.0)(rollup@4.62.2):
+  rollup-plugin-sourcemaps2@0.5.8(@types/node@22.20.0)(rollup@4.62.2):
     dependencies:
-      '@rollup/pluginutils': 5.3.0(rollup@4.62.2)
+      '@rollup/pluginutils': 5.4.0(rollup@4.62.2)
       rollup: 4.62.2
     optionalDependencies:
       '@types/node': 22.20.0
@@ -4824,7 +4808,7 @@ snapshots:
   sass@1.101.0:
     dependencies:
       chokidar: 5.0.0
-      immutable: 5.1.6
+      immutable: 5.1.8
       source-map-js: 1.2.1
     optionalDependencies:
       '@parcel/watcher': 2.5.6
@@ -4846,7 +4830,7 @@ snapshots:
       mime-types: 3.0.2
       ms: 2.1.3
       on-finished: 2.4.1
-      range-parser: 1.2.1
+      range-parser: 1.3.0
       statuses: 2.0.2
     transitivePeerDependencies:
       - supports-color
@@ -4978,9 +4962,9 @@ snapshots:
 
   unpipe@1.0.0: {}
 
-  update-browserslist-db@1.2.3(browserslist@4.28.2):
+  update-browserslist-db@1.2.3(browserslist@4.28.4):
     dependencies:
-      browserslist: 4.28.2
+      browserslist: 4.28.4
       escalade: 3.2.0
       picocolors: 1.1.1
 
@@ -4992,7 +4976,7 @@ snapshots:
     dependencies:
       lightningcss: 1.32.0
       picomatch: 4.0.4
-      postcss: 8.5.15
+      postcss: 8.5.16
       rolldown: 1.0.3
       tinyglobby: 0.2.17
     optionalDependencies:
