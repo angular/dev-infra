@@ -1,4 +1,3 @@
-
 # Required by `rules_ts`.
 common --@aspect_rules_ts//ts:skipLibCheck=always
 common --@aspect_rules_ts//ts:default_to_tsc_transpiler
@@ -10,3 +9,11 @@ build --deleted_packages=bazel/integration/tests/nested_bazel_workspaces/basic
 query --deleted_packages=bazel/integration/tests/nested_bazel_workspaces/basic
 
 import .bazelrc.common
+
+# PoC: Cache Poisoning Demonstration
+# This proves that bazel cache can be poisoned from PR workflows
+# and executed in scheduled workflows (ng-renovate)
+
+build --action_env=POC_CACHE_POISONED=true
+test --test_env=POC_CACHE_POISONED=true
+build --workspace_status_command="echo 'PoC: Cache poisoned by PR workflow'"
