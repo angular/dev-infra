@@ -90,7 +90,7 @@ runs:
       shell: bash
       run: node ${{github.action_path}}/extract-artifact-metadata.js '${{inputs.firebase-public-dir}}'
 
-    - uses: FirebaseExtended/action-hosting-deploy@e2eda2e106cfa35cdbcf4ac9ddaf6c4756df2c8c # v0
+    - uses: FirebaseExtended/action-hosting-deploy@500ac625ca2dd40cbd15f7659af953801858032a # v0
       id: deploy
       with:
         # Note: No token used here as the action otherwise may attempt to post a
@@ -102,7 +102,7 @@ runs:
         entryPoint: '${{inputs.firebase-config-dir}}'
         channelId: pr-${{github.repository}}-${{steps.artifact-info.outputs.unsafe-pull-number}}-${{inputs.workflow-artifact-name}}
 
-    - uses: marocchino/sticky-pull-request-comment@0ea0beb66eb9baf113663a64ec522f60e49231c0 # v3.0.4
+    - uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
       with:
         header: ${{inputs.workflow-artifact-name}}
         message: |
