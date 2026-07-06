@@ -555,8 +555,8 @@ importers:
         specifier: 3.0.1
         version: 3.0.1
       '@conventional-changelog/git-client':
-        specifier: 2.7.0
-        version: 2.7.0(conventional-commits-filter@6.0.1)(conventional-commits-parser@7.0.1)
+        specifier: 3.0.2
+        version: 3.0.2(conventional-commits-filter@6.0.1)(conventional-commits-parser@7.0.1)
       '@google-cloud/spanner':
         specifier: 8.0.0
         version: 8.0.0(supports-color@10.2.2)
@@ -1053,12 +1053,12 @@ packages:
     resolution: {integrity: sha512-Ir+AOibqzrIsL6ajt3Rz3LskB7OiMVHqltZmspbW/TJuTVuyOMirVqAkjfY6JISiLHgyNqicAC8AyHHGzNd/dA==}
     engines: {node: '>=0.1.90'}
 
-  '@conventional-changelog/git-client@2.7.0':
-    resolution: {integrity: sha512-j7A8/LBEQ+3rugMzPXoKYzyUPpw/0CBQCyvtTR7Lmu4olG4yRC/Tfkq79Mr3yuPs0SUitlO2HwGP3gitMJnRFw==}
-    engines: {node: '>=18'}
+  '@conventional-changelog/git-client@3.0.2':
+    resolution: {integrity: sha512-84xuyOzE3VGsQqSX6SBQfWOjXCFui4QD6pSMu2FhzE9pZ6HQ2SrW3pMSOWLrz/QQCfR75xexX88VBKsIuFBqWA==}
+    engines: {node: '>=22'}
     peerDependencies:
-      conventional-commits-filter: ^5.0.0
-      conventional-commits-parser: ^6.4.0
+      conventional-commits-filter: ^6.0.1
+      conventional-commits-parser: ^7.0.1
     peerDependenciesMeta:
       conventional-commits-filter:
         optional: true
@@ -2318,13 +2318,9 @@ packages:
     resolution: {integrity: sha512-ctvsRartACu77VAM416VlNV3mag7FhU08I/734f4+sS/UZmnhuTM5a4tTTWEI1U7iPeJoBtjreh6LgeP+QZLbQ==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
 
-  '@simple-libs/child-process-utils@1.0.2':
-    resolution: {integrity: sha512-/4R8QKnd/8agJynkNdJmNw2MBxuFTRcNFnE5Sg/G+jkSsV8/UBgULMzhizWWW42p8L5H7flImV2ATi79Ove2Tw==}
-    engines: {node: '>=18'}
-
-  '@simple-libs/stream-utils@1.2.0':
-    resolution: {integrity: sha512-KxXvfapcixpz6rVEB6HPjOUZT22yN6v0vI0urQSk1L8MlEWPDFCZkhw2xmkyoTGYeFw7tWTZd7e3lVzRZRN/EA==}
-    engines: {node: '>=18'}
+  '@simple-libs/child-process-utils@2.0.0':
+    resolution: {integrity: sha512-dvNoRKLijXnD0XoJAz94pbNuB5GQgDr55UhpSPhffDkTT0Cmcqh9jSCOtwfT2d4H6MI9E7c4SgtMuJXZ6F3c6A==}
+    engines: {node: '>=22'}
 
   '@simple-libs/stream-utils@2.0.0':
     resolution: {integrity: sha512-fCTuZK4QBa+39Oz9l4OGfJfz+GpwCp3AqO7Zch3to99xHPgstVsRFpeQ8LNd2o1Gv8raL2mCFwiaHh7bFSp5DQ==}
@@ -6503,10 +6499,10 @@ snapshots:
 
   '@colors/colors@1.6.0': {}
 
-  '@conventional-changelog/git-client@2.7.0(conventional-commits-filter@6.0.1)(conventional-commits-parser@7.0.1)':
+  '@conventional-changelog/git-client@3.0.2(conventional-commits-filter@6.0.1)(conventional-commits-parser@7.0.1)':
     dependencies:
-      '@simple-libs/child-process-utils': 1.0.2
-      '@simple-libs/stream-utils': 1.2.0
+      '@simple-libs/child-process-utils': 2.0.0
+      '@simple-libs/stream-utils': 2.0.0
       semver: 7.8.5
     optionalDependencies:
       conventional-commits-filter: 6.0.1
@@ -7873,11 +7869,9 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@simple-libs/child-process-utils@1.0.2':
+  '@simple-libs/child-process-utils@2.0.0':
     dependencies:
-      '@simple-libs/stream-utils': 1.2.0
-
-  '@simple-libs/stream-utils@1.2.0': {}
+      '@simple-libs/stream-utils': 2.0.0
 
   '@simple-libs/stream-utils@2.0.0': {}
 
