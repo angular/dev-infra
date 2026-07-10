@@ -20,7 +20,7 @@
     "@rollup/plugin-virtual": "^3.0.2",
     "@types/jasmine": "^6.0.0",
     "@types/node": "^22.14.0",
-    "@web/dev-server-rollup": "^0.6.4",
+    "@web/dev-server-rollup": "^1.0.0",
     "@web/test-runner": "^0.20.2",
     "@web/test-runner-core": "^0.13.4",
     "@web/test-runner-puppeteer": "^0.18.0",
