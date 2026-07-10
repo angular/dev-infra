@@ -23,7 +23,7 @@
     "@web/dev-server-rollup": "^0.6.4",
     "@web/test-runner": "^0.20.2",
     "@web/test-runner-core": "^0.13.4",
-    "@web/test-runner-puppeteer": "^0.18.0",
+    "@web/test-runner-puppeteer": "^1.0.0",
     "get-port": "^7.1.0",
     "jasmine": "^6.0.0",
     "protractor": "^7.0.0",
