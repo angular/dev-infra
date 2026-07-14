@@ -19,7 +19,7 @@ class Validation extends PullRequestValidation {
   assert(pullRequest: PullRequestFromGithub) {
     const totalCount = pullRequest.reviews.nodes.filter(
       ({authorAssociation, commit}) =>
-        authorAssociation === 'MEMBER' && commit.oid === pullRequest.headRefOid,
+        authorAssociation === 'MEMBER' && commit?.oid === pullRequest.headRefOid,
     ).length;
     if (totalCount === 0) {
       throw this._createError(

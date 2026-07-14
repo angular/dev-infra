@@ -205,6 +205,23 @@ describe('pull request validation', () => {
       expect(results.length).toBe(1);
       expect(results[0].message).toContain('for the latest commit');
     });
+
+    it('should reject when a team member approval has no commit', async () => {
+      const config = createIsolatedValidationConfig({assertMinimumReviews: true});
+      const pr = createTestPullRequest();
+      pr.reviews.nodes.push({
+        authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+        author: {
+          login: 'fakelogin',
+        },
+        bodyText: '',
+        commit: null,
+      });
+
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(1);
+      expect(results[0].message).toContain('for the latest commit');
+    });
   });
 
   describe('assert-isolate-primitives', () => {

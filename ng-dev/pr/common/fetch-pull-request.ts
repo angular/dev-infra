@@ -97,9 +97,9 @@ export const PR_SCHEMA = {
           },
           authorAssociation: graphqlTypes.custom<CommentAuthorAssociation>(),
           bodyText: graphqlTypes.string,
-          commit: {
+          commit: optional({
             oid: graphqlTypes.string,
-          },
+          }),
         },
       ],
     },
