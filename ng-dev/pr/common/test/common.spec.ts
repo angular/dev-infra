@@ -168,6 +168,45 @@ describe('pull request validation', () => {
     });
   });
 
+  describe('assert-minimum-reviews', () => {
+    it('should pass when a team member approved the latest commit', async () => {
+      const config = createIsolatedValidationConfig({assertMinimumReviews: true});
+      const pr = createTestPullRequest();
+      pr.reviews.nodes.push({
+        authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+        author: {
+          login: 'fakelogin',
+        },
+        bodyText: '',
+        commit: {
+          oid: pr.headRefOid,
+        },
+      });
+
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(0);
+    });
+
+    it('should reject when the only team member approval is for an older commit', async () => {
+      const config = createIsolatedValidationConfig({assertMinimumReviews: true});
+      const pr = createTestPullRequest();
+      pr.reviews.nodes.push({
+        authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+        author: {
+          login: 'fakelogin',
+        },
+        bodyText: '',
+        commit: {
+          oid: '1234',
+        },
+      });
+
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(1);
+      expect(results[0].message).toContain('for the latest commit');
+    });
+  });
+
   describe('assert-isolate-primitives', () => {
     it('should pass when no google sync config present', async () => {
       const config = createIsolatedValidationConfig({assertIsolatedSeparateFiles: true});

@@ -103,8 +103,11 @@ async function runPostApprovalChangesAction(
     if (knownReviewers.has(user)) {
       continue;
     }
-    // Only consider reviews by Googlers for this check.
-    if (!(await isGooglerOrgMember(membershipCheckClient, user))) {
+    // Only consider reviews by trusted project members for this check.
+    if (
+      review.author_association !== 'MEMBER' &&
+      !(await isGooglerOrgMember(membershipCheckClient, user))
+    ) {
       continue;
     }
     knownReviewers.add(user);

@@ -18,11 +18,12 @@ export const minimumReviewsValidation = createPullRequestValidation(
 class Validation extends PullRequestValidation {
   assert(pullRequest: PullRequestFromGithub) {
     const totalCount = pullRequest.reviews.nodes.filter(
-      ({authorAssociation}) => authorAssociation === 'MEMBER',
+      ({authorAssociation, commit}) =>
+        authorAssociation === 'MEMBER' && commit.oid === pullRequest.headRefOid,
     ).length;
     if (totalCount === 0) {
       throw this._createError(
-        `Pull request cannot be merged without at least one review from a team member`,
+        `Pull request cannot be merged without at least one review from a team member for the latest commit`,
       );
     }
   }
