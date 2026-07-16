@@ -62,7 +62,7 @@
     // Engines and packageManagers are excluded from this rule.
     {
       matchBaseBranches: ['!main'],
-      matchDepNames: ['*', '!node', '!pnpm', '!npm', '!yarn'],
+      matchDepNames: ['!node', '!pnpm', '!npm', '!yarn'],
       matchManagers: ['npm'],
       dependencyDashboardApproval: true,
     },
@@ -82,7 +82,7 @@
     // Group all non-major dependencies together for updates.
     {
       groupName: 'all non-major dependencies',
-      matchDepNames: ['*', '!node', '!pnpm', '!npm', '!yarn'],
+      matchDepNames: ['!node', '!pnpm', '!npm', '!yarn'],
       matchUpdateTypes: ['digest', 'patch', 'minor'],
       matchManagers: ['npm'],
       matchBaseBranches: ['main'],
