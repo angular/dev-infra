@@ -1,12 +1,7 @@
 load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
-load("//tools:defaults.bzl", "copy_to_bin", "esbuild_checked_in", "js_binary", "ts_project")
+load("//tools:defaults.bzl", "esbuild_checked_in", "js_binary", "ts_project")
 
 npm_link_all_packages()
-
-copy_to_bin(
-    name = "gcp_token",
-    srcs = ["gcp_token.data"],
-)
 
 ts_project(
     name = "setup-bazel-remote-exec",
@@ -26,15 +21,7 @@ js_binary(
 
 esbuild_checked_in(
     name = "configure-remote",
-    srcs = [
-        ":gcp_token",
-        ":setup-bazel-remote-exec",
-    ],
-    config = {
-        "loader": {
-            ".data": "binary",
-        },
-    },
+    srcs = [":setup-bazel-remote-exec"],
     entry_point = "index.ts",
     format = "iife",
     platform = "node",

@@ -26,6 +26,8 @@ jobs:
       - uses: ./github-actions/npm/checkout-and-setup-node
       - uses: ./github-actions/bazel/setup
       - uses: ./github-actions/bazel/configure-remote
+        with:
+          google_credential: ${{ secrets.RBE_TRUSTED_BUILDS_USER }}
       - run: pnpm install --frozen-lockfile
       - name: Check code format
         run: pnpm ng-dev format changed --check ${{ github.event.pull_request.base.sha }}
@@ -72,6 +74,8 @@ jobs:
           disable-package-manager-cache: ${{ matrix.folder == 'bazel/rules/rules_browsers/test' }}
       - uses: ./github-actions/bazel/setup
       - uses: ./github-actions/bazel/configure-remote
+        with:
+          google_credential: ${{ secrets.RBE_TRUSTED_BUILDS_USER }}
       - name: Install NPM dependencies
         if: matrix.folder != 'bazel/rules/rules_browsers/test'
         run: pnpm install --frozen-lockfile

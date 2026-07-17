@@ -27,6 +27,7 @@ jobs:
       - uses: ./github-actions/bazel/configure-remote
         with:
           bazelrc: .bazelrc
+          google_credential: ${{ secrets.RBE_TRUSTED_BUILDS_USER }}
       - run: pnpm install --frozen-lockfile
       - run: bash ./tools/build-all.sh
       - name: Publish Snapshots

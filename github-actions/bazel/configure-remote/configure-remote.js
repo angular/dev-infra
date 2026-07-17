@@ -19288,17 +19288,7 @@ ${value}`;
     }
   });
 
-  // github-actions/bazel/configure-remote/gcp_token.data
-  var gcp_token_default = __toBinaryNode("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");
-
-  // github-actions/bazel/configure-remote/constants.js
-  var alg = "aes-256-gcm";
-  var at = "QwbjZ/z+yDtD+XZjKj9Ynw==";
-  var k = process.env.GITHUB_REPOSITORY_OWNER.padEnd(32, "<");
-  var iv = "000003213213123213";
-
   // github-actions/bazel/configure-remote/index.ts
-  var import_crypto = __require("crypto");
   var import_path = __toESM(__require("path"));
   var import_fs2 = __toESM(__require("fs"));
   var import_os3 = __toESM(__require("os"));
@@ -20613,20 +20603,23 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
       const bazelRcPath = getInput("bazelrc", { required: false, trimWhitespace: true });
       const allowWindowsRbe = getBooleanInput("allow_windows_rbe", { required: true });
       const trustedBuild = getBooleanInput("trusted_build", { required: false });
-      const credential = getInput("google_credential", { required: false, trimWhitespace: true }) || getEmbeddedCredential();
-      const destPath = isWindows2 ? import_path.default.join(process.env.APPDATA, "gcloud/application_default_credentials.json") : import_path.default.join(process.env.HOME, ".config/gcloud/application_default_credentials.json");
-      yield import_fs2.default.promises.mkdir(import_path.default.dirname(destPath), { recursive: true });
-      yield import_fs2.default.promises.writeFile(destPath, credential, "utf8");
+      const credential = getInput("google_credential", { required: false, trimWhitespace: true });
       const configMode = isWindows2 && !allowWindowsRbe ? "remote-cache" : "remote";
       if (bazelRcPath) {
         let content = yield readFileGracefully(bazelRcPath);
-        content += ["", `build --config=${configMode}`, "test --flaky_test_attempts=3"].join("\n");
-        if (trustedBuild) {
-          content += `
-build --config=trusted-build`;
-        }
+        content += getBazelRcAppendix(!!credential, configMode, trustedBuild);
         yield import_fs2.default.promises.writeFile(bazelRcPath, content, "utf8");
       }
+      if (!credential) {
+        console.warn("Skipping Bazel remote execution setup because google_credential was not provided.");
+        if (trustedBuild) {
+          console.warn("Ignoring trusted_build because google_credential was not provided.");
+        }
+        return;
+      }
+      const destPath = isWindows2 ? import_path.default.join(process.env.APPDATA, "gcloud/application_default_credentials.json") : import_path.default.join(process.env.HOME, ".config/gcloud/application_default_credentials.json");
+      yield import_fs2.default.promises.mkdir(import_path.default.dirname(destPath), { recursive: true });
+      yield import_fs2.default.promises.writeFile(destPath, credential, "utf8");
       exportVariable("GOOGLE_APPLICATION_CREDENTIALS", destPath);
     });
   }
@@ -20639,10 +20632,16 @@ build --config=trusted-build`;
       }
     });
   }
-  function getEmbeddedCredential() {
-    const t = gcp_token_default;
-    const dcip = (0, import_crypto.createDecipheriv)(alg, k, iv).setAuthTag(Buffer.from(at, "base64"));
-    return dcip.update(t, void 0, "utf8") + dcip.final("utf8");
+  function getBazelRcAppendix(credentialProvided, configMode, trustedBuild) {
+    const lines = [""];
+    if (credentialProvided) {
+      lines.push(`build --config=${configMode}`);
+    }
+    lines.push("test --flaky_test_attempts=3");
+    if (credentialProvided && trustedBuild) {
+      lines.push("build --config=trusted-build");
+    }
+    return lines.join("\n");
   }
   main().catch((e) => {
     console.error(e);

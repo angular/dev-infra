@@ -14,7 +14,9 @@ inputs:
       Windows is only configured to leverage remote caching.
   google_credential:
     description: |
-      A Google credential to be used as authentication for RBE API usages
+      A Google credential to be used as authentication for RBE API usages.
+      When omitted, remote execution is left disabled and only flaky test
+      retries are configured.
   trusted_build:
     default: false
     description: |

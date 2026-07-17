@@ -6,10 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-// @ts-ignore-next-line strict-deps
-import tokenRaw from './gcp_token.data';
-import {k, iv, alg, at} from './constants.js';
-import {createDecipheriv} from 'crypto';
 import path from 'path';
 import fs from 'fs';
 import os from 'os';
@@ -20,9 +16,24 @@ async function main() {
   const bazelRcPath = getInput('bazelrc', {required: false, trimWhitespace: true});
   const allowWindowsRbe = getBooleanInput('allow_windows_rbe', {required: true});
   const trustedBuild = getBooleanInput('trusted_build', {required: false});
-  const credential =
-    getInput('google_credential', {required: false, trimWhitespace: true}) ||
-    getEmbeddedCredential();
+  const credential = getInput('google_credential', {required: false, trimWhitespace: true});
+  const configMode = isWindows && !allowWindowsRbe ? 'remote-cache' : 'remote';
+
+  if (bazelRcPath) {
+    let content = await readFileGracefully(bazelRcPath);
+    content += getBazelRcAppendix(!!credential, configMode, trustedBuild);
+    await fs.promises.writeFile(bazelRcPath, content, 'utf8');
+  }
+
+  if (!credential) {
+    console.warn(
+      'Skipping Bazel remote execution setup because google_credential was not provided.',
+    );
+    if (trustedBuild) {
+      console.warn('Ignoring trusted_build because google_credential was not provided.');
+    }
+    return;
+  }
 
   const destPath = isWindows
     ? path.join(process.env.APPDATA!, 'gcloud/application_default_credentials.json')
@@ -30,17 +41,6 @@ async function main() {
 
   await fs.promises.mkdir(path.dirname(destPath), {recursive: true});
   await fs.promises.writeFile(destPath, credential, 'utf8');
-
-  const configMode = isWindows && !allowWindowsRbe ? 'remote-cache' : 'remote';
-
-  if (bazelRcPath) {
-    let content = await readFileGracefully(bazelRcPath);
-    content += ['', `build --config=${configMode}`, 'test --flaky_test_attempts=3'].join('\n');
-    if (trustedBuild) {
-      content += `\nbuild --config=trusted-build`;
-    }
-    await fs.promises.writeFile(bazelRcPath, content, 'utf8');
-  }
 
   // Expose application credentials as variable. This may not be necessary with the default
   // path being used for credentials, but it's helpful when we cross boundaries with e.g. WSL.
@@ -55,11 +55,21 @@ async function readFileGracefully(filePath: string): Promise<string> {
   }
 }
 
-/** Extract the embeeded credential from the action. */
-function getEmbeddedCredential(): string {
-  const t: Uint8Array = tokenRaw;
-  const dcip = createDecipheriv(alg, k, iv).setAuthTag(Buffer.from(at, 'base64'));
-  return dcip.update(t, undefined, 'utf8') + dcip.final('utf8');
+function getBazelRcAppendix(
+  credentialProvided: boolean,
+  configMode: 'remote' | 'remote-cache',
+  trustedBuild: boolean,
+): string {
+  const lines = [''];
+  if (credentialProvided) {
+    lines.push(`build --config=${configMode}`);
+  }
+  lines.push('test --flaky_test_attempts=3');
+  if (credentialProvided && trustedBuild) {
+    lines.push('build --config=trusted-build');
+  }
+
+  return lines.join('\n');
 }
 
 main().catch((e) => {
