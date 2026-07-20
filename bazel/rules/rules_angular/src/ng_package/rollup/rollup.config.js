@@ -12,11 +12,15 @@
 const {nodeResolve} = require('@rollup/plugin-node-resolve');
 const commonjs = require('@rollup/plugin-commonjs');
 const {transformSync} = require('@babel/core');
-const MagicString = require('magic-string');
+const MagicStringImp = require('magic-string');
 const sourcemaps = require('rollup-plugin-sourcemaps2');
 const {dts} = require('rollup-plugin-dts');
 const path = require('path');
 const fs = require('fs');
+
+// Support MagicString v0.x and v1 remove once all repos update to v1
+const MagicString =
+  typeof MagicStringImp === 'function' ? MagicStringImp : MagicStringImp.MagicString;
 
 function removeCommentsPlugin() {
   return {
