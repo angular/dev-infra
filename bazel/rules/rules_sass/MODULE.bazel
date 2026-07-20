@@ -14,8 +14,8 @@ register_toolchains(
 )
 
 bazel_dep(name = "platforms", version = "1.1.0")
-bazel_dep(name = "bazel_lib", version = "3.4.0")
-bazel_dep(name = "aspect_rules_js", version = "3.2.2")
+bazel_dep(name = "bazel_lib", version = "3.5.0")
+bazel_dep(name = "aspect_rules_js", version = "3.2.3")
 
 # Dev dependencies
 bazel_dep(name = "rules_browsers", dev_dependency = True)
