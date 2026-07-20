@@ -29,8 +29,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0(supports-color@7.2.0)
       '@web/test-runner-core':
-        specifier: ^0.13.4
-        version: 0.13.4(supports-color@7.2.0)
+        specifier: ^1.0.0
+        version: 1.0.0(supports-color@7.2.0)
       '@web/test-runner-puppeteer':
         specifier: ^1.0.0
         version: 1.0.0(supports-color@7.2.0)(typescript@6.0.3)
