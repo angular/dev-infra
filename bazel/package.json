@@ -1,11 +1,11 @@
 {
   "name": "@devinfra/bazel",
   "dependencies": {
-    "@microsoft/api-extractor": "7.58.9",
+    "@microsoft/api-extractor": "7.58.11",
     "diff": "^9.0.0",
     "@types/babel__core": "7.20.5",
     "@types/browser-sync": "2.29.1",
-    "@types/node": "24.13.2",
+    "@types/node": "24.13.3",
     "@types/selenium-webdriver": "^4.1.28",
     "@types/send": "1.2.1",
     "@types/wait-on": "^5.3.4",
@@ -19,7 +19,7 @@
     "wait-on": "^9.0.0",
     "protractor": "7.0.0",
     "semver": "7.8.5",
-    "selenium-webdriver": "4.45.0",
+    "selenium-webdriver": "4.46.0",
     "source-map-support": "0.5.21",
     "tinyglobby": "0.2.17"
   }
