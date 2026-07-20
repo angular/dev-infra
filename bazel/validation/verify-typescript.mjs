@@ -14,9 +14,9 @@ import assert from 'node:assert';
 const runfiles = process.env['JS_BINARY__RUNFILES'];
 assert(runfiles, 'Expected `JS_BINARY__RUNFILES` to be set.');
 
-async function main([packageJsonPath, moduleLockFilePath]) {
-  /** The json contents of the BAZEL.module.lock file. */
-  const moduleLock = JSON.parse(await readFile(join(runfiles, moduleLockFilePath), 'utf8'));
+async function main([packageJsonPath, moduleBazelPath]) {
+  /** The contents of the MODULE.bazel file. */
+  const moduleBazel = await readFile(join(runfiles, moduleBazelPath), 'utf8');
   /** The json contents of the package.json file. */
   const packageJson = JSON.parse(await readFile(join(runfiles, packageJsonPath), 'utf8'));
   /** The version of typescript extracted from the package.json file. */
@@ -28,44 +28,30 @@ async function main([packageJsonPath, moduleLockFilePath]) {
     console.error('Unable to find the typescript version within the package.json file.');
   }
 
-  /** The version of typescript extracted from the BAZEL.module.lock file. */
-  let lockfileVersion;
-  try {
-    // The path to the generated repo specs is static based on the location of the extension
-    // used. The name of the generated repo is determined by the user so we instead need to take
-    // the first value/item from the `generaredRepoSpecs` property and get the version from the
-    // attributes there.
-    const generatedRepoSpecs =
-      // TODO: Remove pre bazel v8 lockfile attribute path.
-      moduleLock['moduleExtensions']?.['@@aspect_rules_ts~//ts:extensions.bzl%ext']?.['general']?.[
-        'generatedRepoSpecs'
-      ] ||
-      moduleLock['moduleExtensions']?.['@@aspect_rules_ts+//ts:extensions.bzl%ext']?.['general']?.[
-        'generatedRepoSpecs'
-      ];
-    lockfileVersion =
-      Object.values(generatedRepoSpecs || {})[0]?.['attributes']?.['version'] || 'unknown';
-  } catch {
-    console.error('Unable to find the typescript version within the MODULE.bazel.lock file.');
+  /** The version of typescript extracted from the MODULE.bazel file. */
+  const match = moduleBazel.match(/^[^\n#]*\bts_version\b\s*=\s*["']([^"']+)["']/m);
+  const moduleBazelVersion = match ? match[1] : undefined;
+  if (moduleBazelVersion === undefined) {
+    console.error('Unable to find the typescript version within the MODULE.bazel file.');
   }
 
   // If either version is undefined, the comparison is invalid and we should exit.
-  if (packageJsonVersion === undefined || lockfileVersion === undefined) {
+  if (packageJsonVersion === undefined || moduleBazelVersion === undefined) {
     process.exitCode = 1;
     return;
   }
 
   // If the versions don't match, exit as a failure.
-  if (packageJsonVersion !== lockfileVersion) {
+  if (packageJsonVersion !== moduleBazelVersion) {
     console.error(
-      `Typescript version mismatch between MODULE.bazel (${lockfileVersion}) and package.json (${packageJsonVersion})`,
+      `Typescript version mismatch between MODULE.bazel (${moduleBazelVersion}) and package.json (${packageJsonVersion})`,
     );
     process.exitCode = 1;
     return;
   }
 
   console.info(
-    `Typescript version matches between MODULE.bazel and package.json: ${lockfileVersion}`,
+    `Typescript version matches between MODULE.bazel and package.json: ${moduleBazelVersion}`,
   );
 }
 
