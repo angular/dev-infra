@@ -21,7 +21,7 @@
     "@types/jasmine": "^6.0.0",
     "@types/node": "^22.14.0",
     "@web/dev-server-rollup": "^1.0.0",
-    "@web/test-runner": "^0.20.2",
+    "@web/test-runner": "^1.0.0",
     "@web/test-runner-core": "^0.13.4",
     "@web/test-runner-puppeteer": "^1.0.0",
     "get-port": "^7.1.0",
