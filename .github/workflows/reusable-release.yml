@@ -42,13 +42,13 @@ jobs:
       # Checkout the calling repository first to ensure there is a .git directory at the root,
       # which prevents the subsequent local action's checkout from deleting the .dev-infra folder.
       - name: Checkout calling repo
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           clean: false
 
       # Checkout dev-infra dynamically at the same ref to get the custom actions.
       - name: Checkout dev-infra
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: angular/dev-infra
           ref: ${{ steps.get-ref.outputs.ref }}
@@ -139,13 +139,13 @@ jobs:
       # Checkout the calling repository first to ensure there is a .git directory at the root,
       # which prevents the subsequent local action's checkout from deleting the .dev-infra folder.
       - name: Checkout calling repo
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           clean: false
 
       # Checkout dev-infra dynamically at the same ref to get the custom actions.
       - name: Checkout dev-infra
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: angular/dev-infra
           ref: ${{ needs.build.outputs.dev-infra-ref }}
