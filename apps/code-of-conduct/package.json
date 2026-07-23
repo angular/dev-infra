@@ -1,15 +1,15 @@
 {
   "dependencies": {
-    "@angular/animations": "22.1.0-next.6",
+    "@angular/animations": "22.1.0-rc.0",
     "@angular/cdk": "22.1.0-next.4",
-    "@angular/common": "22.1.0-next.6",
-    "@angular/compiler": "22.1.0-next.6",
-    "@angular/core": "22.1.0-next.6",
+    "@angular/common": "22.1.0-rc.0",
+    "@angular/compiler": "22.1.0-rc.0",
+    "@angular/core": "22.1.0-rc.0",
     "@angular/fire": "21.0.0-rc.0",
-    "@angular/forms": "22.1.0-next.6",
+    "@angular/forms": "22.1.0-rc.0",
     "@angular/material": "22.1.0-next.4",
-    "@angular/platform-browser": "22.1.0-next.6",
-    "@angular/router": "22.1.0-next.6",
+    "@angular/platform-browser": "22.1.0-rc.0",
+    "@angular/router": "22.1.0-rc.0",
     "@octokit/rest": "",
     "rxjs": "7.8.2",
     "zone.js": "0.16.2"
