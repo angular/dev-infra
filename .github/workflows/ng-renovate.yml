@@ -37,7 +37,7 @@ jobs:
         working-directory: ./.github/ng-renovate
       - name: Setup UV
         if: matrix.REPOSITORY == 'angular/web-codegen-scorer' # UV is only needed for web-codegen-scorer as it uses python.
-        uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990 # v8.3.2
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
       - name: Setup Dart
         if: matrix.REPOSITORY == 'angular/dev-infra' # Dart is only needed for rules_sass which is in dev-infra.
         uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260 # v1
