@@ -103,6 +103,7 @@
     {
       groupName: 'bazel dependencies',
       matchManagers: ['bazel', 'bazel-module'],
+      matchUpdateTypes: ['digest', 'patch', 'minor'],
       schedule: ['* 6-10 * * 4'], // 6:00 am to 10:00 am Every Thursday
     },
 
