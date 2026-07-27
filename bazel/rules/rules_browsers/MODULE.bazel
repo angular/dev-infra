@@ -63,8 +63,8 @@ bazel_dep(name = "aspect_rules_js", version = "3.2.3")
 pnpm = use_extension("@aspect_rules_js//npm:extensions.bzl", "pnpm")
 pnpm.pnpm(
     name = "pnpm",
-    pnpm_version = "11.16.0",
-    pnpm_version_integrity = "sha512-t2fpqY/IeuwPQtrvzQ6ElBws20XXPE4eaIYPsr39vgMqtZIQVHnl4Fwjf3QMil/9u7UjhXl93CKWdFobu4g+jQ==",
+    pnpm_version = "11.17.0",
+    pnpm_version_integrity = "sha512-zKPOozKtJUu4QUX5ZtGfSHlhUhA0b8kseaBH8joNezzKPDeS8AdrofGDHSd++88KkRmzGppg7Kf7PWIx8zHvcg==",
 )
 use_repo(pnpm, "pnpm")
 
