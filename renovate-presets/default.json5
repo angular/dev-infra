@@ -1,6 +1,6 @@
 {
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
-  extends: ['mergeConfidence:all-badges', 'group:monorepos'],
+  extends: ['mergeConfidence:all-badges', 'group:monorepos', 'helpers:pinGitHubActionDigests'],
   dependencyDashboard: true,
   rangeStrategy: 'replace',
   automerge: false,
@@ -136,10 +136,10 @@
       ],
     },
 
-    // @angular/benchpress is not released as 'next'
+    // @angular/benchpress, @angular/dev-infra and angular/dev-infra are not released as 'next'
     {
       followTag: null,
-      matchDepNames: ['@angular/benchpress'],
+      matchDepNames: ['@angular/benchpress', '@angular/dev-infra', 'angular/dev-infra'],
     },
 
     // Disable 'next' tag tracking on non-main branches
