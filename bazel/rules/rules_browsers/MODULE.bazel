@@ -30,7 +30,7 @@ use_repo(
 
 # Miscellaneous dependencies.
 bazel_dep(name = "platforms", version = "1.1.0")
-bazel_dep(name = "bazel_skylib", version = "1.9.0")
+bazel_dep(name = "bazel_skylib", version = "1.9.2")
 
 # Dev dependencies
 bazel_dep(name = "devinfra", dev_dependency = True)
@@ -58,7 +58,7 @@ node.toolchain(
 use_repo(node, "nodejs_toolchains")
 
 # JS
-bazel_dep(name = "aspect_rules_js", version = "3.2.3")
+bazel_dep(name = "aspect_rules_js", version = "3.3.1")
 
 pnpm = use_extension("@aspect_rules_js//npm:extensions.bzl", "pnpm")
 pnpm.pnpm(
