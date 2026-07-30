@@ -6,8 +6,12 @@ on:
     - cron: '0 */6 * * *'
   workflow_dispatch: # Allows you to trigger it manually.
 
+permissions: {}
+
 jobs:
   build:
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
       matrix:
@@ -38,6 +42,9 @@ jobs:
 
   create_pr:
     needs: build
+    permissions:
+      contents: write
+      pull-requests: write
     runs-on: ubuntu-latest
     defaults:
       run:
