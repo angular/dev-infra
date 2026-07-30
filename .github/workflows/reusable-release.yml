@@ -33,10 +33,12 @@ jobs:
       # Step 1: Extract the ref of the running reusable workflow to use for checking out dev-infra actions.
       - name: Extract dev-infra ref
         id: get-ref
+        env:
+          WORKFLOW_REF: ${{ github.workflow_ref }}
         run: |
           # github.workflow_ref is of the form: "owner/repo/path/to/workflow.yml@ref"
           # Extract the ref (part after @)
-          REF=$(echo "${{ github.workflow_ref }}" | cut -d'@' -f2)
+          REF=$(echo "$WORKFLOW_REF" | cut -d'@' -f2)
           echo "ref=$REF" >> $GITHUB_OUTPUT
 
       # Checkout the calling repository first to ensure there is a .git directory at the root,

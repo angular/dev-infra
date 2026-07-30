@@ -1,6 +1,7 @@
 name: DevInfra
 
 on:
+  # zizmor: ignore[dangerous-triggers] - {Trigger is safe as workflow does not checkout untrusted code}
   pull_request_target:
     types: [opened, synchronize, reopened]
   issues:
