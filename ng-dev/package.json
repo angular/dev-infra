@@ -60,7 +60,7 @@
     "multimatch": "8.0.0",
     "nock": "14.0.16",
     "semver": "7.8.5",
-    "supports-color": "10.2.2",
+    "supports-color": "11.0.0",
     "typed-graphqlify": "3.1.6",
     "tsx": "4.23.1",
     "typescript": "6.0.3",

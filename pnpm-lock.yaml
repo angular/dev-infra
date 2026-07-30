@@ -25,7 +25,7 @@ importers:
         version: 8.2.1
       firebase-tools:
         specifier: 15.24.0
-        version: 15.24.0(@types/node@24.13.3)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@10.2.2)
+        version: 15.24.0(@types/node@24.13.3)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)
       husky:
         specifier: 9.1.7
         version: 9.1.7
@@ -157,7 +157,7 @@ importers:
         version: 22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2)
       '@angular/fire':
         specifier: 21.0.0-rc.0
-        version: 21.0.0-rc.0(@angular/common@22.2.0-next.0(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@22.2.0-next.0(@angular/animations@22.2.0-next.0(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2)))(@angular/common@22.2.0-next.0(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2)))(chokidar@5.0.0)(firebase-tools@15.24.0(@types/node@24.13.3)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@10.2.2))(rxjs@7.8.2)
+        version: 21.0.0-rc.0(@angular/common@22.2.0-next.0(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@22.2.0-next.0(@angular/animations@22.2.0-next.0(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2)))(@angular/common@22.2.0-next.0(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2)))(chokidar@5.0.0)(firebase-tools@15.24.0(@types/node@24.13.3)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0))(rxjs@7.8.2)
       '@angular/forms':
         specifier: 22.2.0-next.0
         version: 22.2.0-next.0(@angular/common@22.2.0-next.0(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@22.2.0-next.0(@angular/animations@22.2.0-next.0(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2)))(@angular/common@22.2.0-next.0(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2)))(rxjs@7.8.2)
@@ -184,10 +184,10 @@ importers:
     dependencies:
       '@apollo/server':
         specifier: ^5.2.0
-        version: 5.5.1(graphql@16.14.2)(supports-color@10.2.2)
+        version: 5.5.1(graphql@16.14.2)(supports-color@11.0.0)
       '@as-integrations/express4':
         specifier: ^1.1.2
-        version: 1.1.2(@apollo/server@5.5.1(graphql@16.14.2)(supports-color@10.2.2))(express@4.22.2(supports-color@10.2.2))
+        version: 1.1.2(@apollo/server@5.5.1(graphql@16.14.2)(supports-color@11.0.0))(express@4.22.2(supports-color@11.0.0))
       '@octokit/auth-app':
         specifier: 8.2.0
         version: 8.2.0
@@ -205,13 +205,13 @@ importers:
         version: 24.13.3
       firebase-admin:
         specifier: 13.10.0
-        version: 13.10.0(encoding@0.1.13)(supports-color@10.2.2)
+        version: 13.10.0(encoding@0.1.13)(supports-color@11.0.0)
       firebase-functions:
         specifier: 7.3.0
-        version: 7.3.0(@apollo/server@5.5.1(graphql@16.14.2)(supports-color@10.2.2))(@as-integrations/express4@1.1.2(@apollo/server@5.5.1(graphql@16.14.2)(supports-color@10.2.2))(express@4.22.2(supports-color@10.2.2)))(firebase-admin@13.10.0(encoding@0.1.13)(supports-color@10.2.2))(graphql@16.14.2)(supports-color@10.2.2)
+        version: 7.3.0(@apollo/server@5.5.1(graphql@16.14.2)(supports-color@11.0.0))(@as-integrations/express4@1.1.2(@apollo/server@5.5.1(graphql@16.14.2)(supports-color@11.0.0))(express@4.22.2(supports-color@11.0.0)))(firebase-admin@13.10.0(encoding@0.1.13)(supports-color@11.0.0))(graphql@16.14.2)(supports-color@11.0.0)
       firebase-tools:
         specifier: 15.24.0
-        version: 15.24.0(@types/node@24.13.3)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@10.2.2)
+        version: 15.24.0(@types/node@24.13.3)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)
 
   bazel:
     dependencies:
@@ -241,7 +241,7 @@ importers:
         version: 5.3.4
       browser-sync:
         specifier: 3.0.4
-        version: 3.0.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)(utf-8-validate@6.0.6)
+        version: 3.0.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(utf-8-validate@6.0.6)
       diff:
         specifier: ^9.0.0
         version: 9.0.0
@@ -253,7 +253,7 @@ importers:
         version: 5.3.0
       protractor:
         specifier: 7.0.0
-        version: 7.0.0(supports-color@10.2.2)
+        version: 7.0.0(supports-color@11.0.0)
       selenium-webdriver:
         specifier: 4.46.0
         version: 4.46.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
@@ -262,7 +262,7 @@ importers:
         version: 7.8.5
       send:
         specifier: 1.2.1
-        version: 1.2.1(supports-color@10.2.2)
+        version: 1.2.1(supports-color@11.0.0)
       source-map-support:
         specifier: 0.5.21
         version: 0.5.21
@@ -277,7 +277,7 @@ importers:
         version: 6.0.3
       wait-on:
         specifier: ^9.0.0
-        version: 9.1.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
+        version: 9.1.0(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)
 
   bazel/spec-bundling/test:
     dependencies:
@@ -325,7 +325,7 @@ importers:
         version: 9.1.1
       '@google/genai':
         specifier: ^2.0.0
-        version: 2.13.0(@modelcontextprotocol/sdk@1.29.0(supports-color@10.2.2))(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
+        version: 2.13.0(@modelcontextprotocol/sdk@1.29.0(supports-color@11.0.0))(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       '@octokit/auth-app':
         specifier: 8.2.0
         version: 8.2.0
@@ -406,7 +406,7 @@ importers:
         version: 9.1.1
       '@google/genai':
         specifier: ^2.0.0
-        version: 2.13.0(@modelcontextprotocol/sdk@1.29.0(supports-color@10.2.2))(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
+        version: 2.13.0(@modelcontextprotocol/sdk@1.29.0(supports-color@11.0.0))(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       '@octokit/openapi-types':
         specifier: 27.0.0
         version: 27.0.0
@@ -559,10 +559,10 @@ importers:
         version: 3.1.0(conventional-commits-filter@6.0.1)(conventional-commits-parser@7.1.0)
       '@google-cloud/spanner':
         specifier: 8.0.0
-        version: 8.0.0(supports-color@10.2.2)
+        version: 8.0.0(supports-color@11.0.0)
       '@google/genai':
         specifier: 2.13.0
-        version: 2.13.0(@modelcontextprotocol/sdk@1.29.0(supports-color@10.2.2))(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
+        version: 2.13.0(@modelcontextprotocol/sdk@1.29.0(supports-color@11.0.0))(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       '@inquirer/prompts':
         specifier: 8.5.2
         version: 8.5.2(@types/node@24.13.3)
@@ -661,7 +661,7 @@ importers:
         version: 12.16.0
       folder-hash:
         specifier: 4.1.3
-        version: 4.1.3(supports-color@10.2.2)
+        version: 4.1.3(supports-color@11.0.0)
       jasmine:
         specifier: 6.3.0
         version: 6.3.0
@@ -687,8 +687,8 @@ importers:
         specifier: 7.8.5
         version: 7.8.5
       supports-color:
-        specifier: 10.2.2
-        version: 10.2.2
+        specifier: 11.0.0
+        version: 11.0.0
       tsx:
         specifier: 4.23.1
         version: 4.23.1
@@ -5543,9 +5543,9 @@ packages:
     engines: {node: 20 || 22 || 24}
     hasBin: true
 
-  supports-color@10.2.2:
-    resolution: {integrity: sha512-SS+jx45GF1QjgEXQx4NJZV9ImqmO2NPz5FNsIHrsDjh2YsHnawpan7SNQ1o8NuhrbHZy9AZhIoCUiCeaW/C80g==}
-    engines: {node: '>=18'}
+  supports-color@11.0.0:
+    resolution: {integrity: sha512-/zyImLdxhdygBIaVX0xTlQhKaCDLCrm665aqHk8xqK/Pa6k61fL6gwQGQq1k31yNyz6x55PppQgF2DMyPQa5xw==}
+    engines: {node: '>=22'}
 
   supports-color@2.0.0:
     resolution: {integrity: sha512-KKNVtd6pCYgPIKU4cp2733HWYCpplQhddZLBUryaAHou723x+FRzQ5Df824Fj+IyyuiQTRoub4SnIFfIcrp70g==}
@@ -6196,7 +6196,7 @@ snapshots:
       '@angular/compiler': 22.2.0-next.0
       zone.js: 0.16.2
 
-  '@angular/fire@21.0.0-rc.0(@angular/common@22.2.0-next.0(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@22.2.0-next.0(@angular/animations@22.2.0-next.0(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2)))(@angular/common@22.2.0-next.0(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2)))(chokidar@5.0.0)(firebase-tools@15.24.0(@types/node@24.13.3)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@10.2.2))(rxjs@7.8.2)':
+  '@angular/fire@21.0.0-rc.0(@angular/common@22.2.0-next.0(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@22.2.0-next.0(@angular/animations@22.2.0-next.0(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2)))(@angular/common@22.2.0-next.0(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2)))(chokidar@5.0.0)(firebase-tools@15.24.0(@types/node@24.13.3)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0))(rxjs@7.8.2)':
     dependencies:
       '@angular-devkit/schematics': 21.2.19(chokidar@5.0.0)
       '@angular/common': 22.2.0-next.0(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)
@@ -6208,7 +6208,7 @@ snapshots:
       rxjs: 7.8.2
       tslib: 2.8.1
     optionalDependencies:
-      firebase-tools: 15.24.0(@types/node@24.13.3)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@10.2.2)
+      firebase-tools: 15.24.0(@types/node@24.13.3)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)
     transitivePeerDependencies:
       - '@react-native-async-storage/async-storage'
       - chokidar
@@ -6283,7 +6283,7 @@ snapshots:
       '@apollo/utils.logger': 3.0.0
       graphql: 16.14.2
 
-  '@apollo/server@5.5.1(graphql@16.14.2)(supports-color@10.2.2)':
+  '@apollo/server@5.5.1(graphql@16.14.2)(supports-color@11.0.0)':
     dependencies:
       '@apollo/cache-control-types': 1.0.3(graphql@16.14.2)
       '@apollo/server-gateway-interface': 2.0.0(graphql@16.14.2)
@@ -6297,10 +6297,10 @@ snapshots:
       '@apollo/utils.withrequired': 3.0.0
       '@graphql-tools/schema': 10.0.38(graphql@16.14.2)
       async-retry: 1.3.3
-      body-parser: 2.3.0(supports-color@10.2.2)
+      body-parser: 2.3.0(supports-color@11.0.0)
       content-type: 1.0.5
       cors: 2.8.6
-      finalhandler: 2.1.1(supports-color@10.2.2)
+      finalhandler: 2.1.1(supports-color@11.0.0)
       graphql: 16.14.2
       loglevel: 1.9.2
       lru-cache: 11.5.2
@@ -6364,10 +6364,10 @@ snapshots:
 
   '@apphosting/common@0.0.8': {}
 
-  '@as-integrations/express4@1.1.2(@apollo/server@5.5.1(graphql@16.14.2)(supports-color@10.2.2))(express@4.22.2(supports-color@10.2.2))':
+  '@as-integrations/express4@1.1.2(@apollo/server@5.5.1(graphql@16.14.2)(supports-color@11.0.0))(express@4.22.2(supports-color@11.0.0))':
     dependencies:
-      '@apollo/server': 5.5.1(graphql@16.14.2)(supports-color@10.2.2)
-      express: 4.22.2(supports-color@10.2.2)
+      '@apollo/server': 5.5.1(graphql@16.14.2)(supports-color@11.0.0)
+      express: 4.22.2(supports-color@11.0.0)
 
   '@asamuzakjp/css-color@6.0.5':
     dependencies:
@@ -6949,35 +6949,35 @@ snapshots:
 
   '@firebase/webchannel-wrapper@1.0.6': {}
 
-  '@google-cloud/cloud-sql-connector@1.11.3(supports-color@10.2.2)':
+  '@google-cloud/cloud-sql-connector@1.11.3(supports-color@11.0.0)':
     dependencies:
-      '@googleapis/sqladmin': 37.0.0(supports-color@10.2.2)
-      gaxios: 7.3.0(supports-color@10.2.2)
-      google-auth-library: 10.9.1(supports-color@10.2.2)
+      '@googleapis/sqladmin': 37.0.0(supports-color@11.0.0)
+      gaxios: 7.3.0(supports-color@11.0.0)
+      google-auth-library: 10.9.1(supports-color@11.0.0)
       p-throttle: 8.1.0
     transitivePeerDependencies:
       - supports-color
 
-  '@google-cloud/common@6.1.0(supports-color@10.2.2)':
+  '@google-cloud/common@6.1.0(supports-color@11.0.0)':
     dependencies:
       '@google-cloud/projectify': 4.0.0
       '@google-cloud/promisify': 4.1.0
       arrify: 2.0.1
       duplexify: 4.1.3
       extend: 3.0.2
-      google-auth-library: 10.9.1(supports-color@10.2.2)
+      google-auth-library: 10.9.1(supports-color@11.0.0)
       html-entities: 2.6.0
-      retry-request: 8.0.4(supports-color@10.2.2)
-      teeny-request: 10.1.4(supports-color@10.2.2)
+      retry-request: 8.0.4(supports-color@11.0.0)
+      teeny-request: 10.1.4(supports-color@11.0.0)
     transitivePeerDependencies:
       - supports-color
 
-  '@google-cloud/firestore@7.11.6(encoding@0.1.13)(supports-color@10.2.2)':
+  '@google-cloud/firestore@7.11.6(encoding@0.1.13)(supports-color@11.0.0)':
     dependencies:
       '@opentelemetry/api': 1.9.1
       fast-deep-equal: 3.1.3
       functional-red-black-tree: 1.0.1
-      google-gax: 4.6.1(encoding@0.1.13)(supports-color@10.2.2)
+      google-gax: 4.6.1(encoding@0.1.13)(supports-color@11.0.0)
       protobufjs: 7.6.5
     transitivePeerDependencies:
       - encoding
@@ -7007,7 +7007,7 @@ snapshots:
 
   '@google-cloud/promisify@5.1.0': {}
 
-  '@google-cloud/pubsub@5.3.1(supports-color@10.2.2)':
+  '@google-cloud/pubsub@5.3.1(supports-color@11.0.0)':
     dependencies:
       '@google-cloud/paginator': 6.1.0
       '@google-cloud/precise-date': 5.1.0
@@ -7018,8 +7018,8 @@ snapshots:
       '@opentelemetry/semantic-conventions': 1.39.0
       arrify: 2.0.1
       extend: 3.0.2
-      google-auth-library: 10.9.1(supports-color@10.2.2)
-      google-gax: 5.0.8(supports-color@10.2.2)
+      google-auth-library: 10.9.1(supports-color@11.0.0)
+      google-gax: 5.0.8(supports-color@11.0.0)
       google-logging-utils: 1.2.0
       heap-js: 2.7.1
       is-stream-ended: 0.1.4
@@ -7029,9 +7029,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@google-cloud/spanner@8.0.0(supports-color@10.2.2)':
+  '@google-cloud/spanner@8.0.0(supports-color@11.0.0)':
     dependencies:
-      '@google-cloud/common': 6.1.0(supports-color@10.2.2)
+      '@google-cloud/common': 6.1.0(supports-color@11.0.0)
       '@google-cloud/precise-date': 5.1.0
       '@google-cloud/projectify': 5.1.0
       '@google-cloud/promisify': 5.1.0
@@ -7047,24 +7047,24 @@ snapshots:
       duplexify: 4.1.3
       events-intercept: 2.0.0
       extend: 3.0.2
-      google-auth-library: 10.9.1(supports-color@10.2.2)
-      google-gax: 5.0.8(supports-color@10.2.2)
+      google-auth-library: 10.9.1(supports-color@11.0.0)
+      google-gax: 5.0.8(supports-color@11.0.0)
       grpc-gcp: 1.1.1
       is: 3.3.2
       lodash.snakecase: 4.1.1
       merge-stream: 2.0.0
       p-queue: 6.6.2
       protobufjs: 7.6.5
-      retry-request: 8.0.4(supports-color@10.2.2)
+      retry-request: 8.0.4(supports-color@11.0.0)
       split-array-stream: 2.0.0
       stack-trace: 0.0.10
       stream-events: 1.0.5
-      teeny-request: 10.1.4(supports-color@10.2.2)
+      teeny-request: 10.1.4(supports-color@11.0.0)
       through2: 4.0.2
     transitivePeerDependencies:
       - supports-color
 
-  '@google-cloud/storage@7.21.0(encoding@0.1.13)(supports-color@10.2.2)':
+  '@google-cloud/storage@7.21.0(encoding@0.1.13)(supports-color@11.0.0)':
     dependencies:
       '@google-cloud/paginator': 5.0.2
       '@google-cloud/projectify': 4.0.0
@@ -7073,34 +7073,34 @@ snapshots:
       async-retry: 1.3.3
       duplexify: 4.1.3
       fast-xml-parser: 5.10.1
-      gaxios: 6.7.1(encoding@0.1.13)(supports-color@10.2.2)
-      google-auth-library: 9.15.1(encoding@0.1.13)(supports-color@10.2.2)
+      gaxios: 6.7.1(encoding@0.1.13)(supports-color@11.0.0)
+      google-auth-library: 9.15.1(encoding@0.1.13)(supports-color@11.0.0)
       html-entities: 2.6.0
       mime: 3.0.0
       p-limit: 3.1.0
-      retry-request: 7.0.2(encoding@0.1.13)(supports-color@10.2.2)
-      teeny-request: 9.0.0(encoding@0.1.13)(supports-color@10.2.2)
+      retry-request: 7.0.2(encoding@0.1.13)(supports-color@11.0.0)
+      teeny-request: 9.0.0(encoding@0.1.13)(supports-color@11.0.0)
     transitivePeerDependencies:
       - encoding
       - supports-color
     optional: true
 
-  '@google/genai@2.13.0(@modelcontextprotocol/sdk@1.29.0(supports-color@10.2.2))(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)':
+  '@google/genai@2.13.0(@modelcontextprotocol/sdk@1.29.0(supports-color@11.0.0))(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)':
     dependencies:
-      google-auth-library: 10.9.1(supports-color@10.2.2)
+      google-auth-library: 10.9.1(supports-color@11.0.0)
       p-retry: 4.6.2
       protobufjs: 7.6.5
       ws: 8.21.1(bufferutil@4.1.0)(utf-8-validate@6.0.6)
     optionalDependencies:
-      '@modelcontextprotocol/sdk': 1.29.0(supports-color@10.2.2)
+      '@modelcontextprotocol/sdk': 1.29.0(supports-color@11.0.0)
     transitivePeerDependencies:
       - bufferutil
       - supports-color
       - utf-8-validate
 
-  '@googleapis/sqladmin@37.0.0(supports-color@10.2.2)':
+  '@googleapis/sqladmin@37.0.0(supports-color@11.0.0)':
     dependencies:
-      googleapis-common: 8.0.3(supports-color@10.2.2)
+      googleapis-common: 8.0.3(supports-color@11.0.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -7485,7 +7485,7 @@ snapshots:
 
   '@microsoft/tsdoc@0.16.0': {}
 
-  '@modelcontextprotocol/sdk@1.29.0(supports-color@10.2.2)':
+  '@modelcontextprotocol/sdk@1.29.0(supports-color@11.0.0)':
     dependencies:
       '@hono/node-server': 1.19.17(hono@4.12.32)
       ajv: 8.20.0
@@ -7495,8 +7495,8 @@ snapshots:
       cross-spawn: 7.0.6
       eventsource: 3.0.7
       eventsource-parser: 3.1.0
-      express: 5.2.1(supports-color@10.2.2)
-      express-rate-limit: 8.6.1(express@5.2.1(supports-color@10.2.2))(supports-color@10.2.2)
+      express: 5.2.1(supports-color@11.0.0)
+      express-rate-limit: 8.6.1(express@5.2.1(supports-color@11.0.0))(supports-color@11.0.0)
       hono: 4.12.32
       jose: 6.2.4
       json-schema-typed: 8.0.2
@@ -8102,9 +8102,9 @@ snapshots:
     dependencies:
       es6-promisify: 5.0.0
 
-  agent-base@6.0.2(supports-color@10.2.2):
+  agent-base@6.0.2(supports-color@11.0.0):
     dependencies:
-      debug: 4.4.3(supports-color@10.2.2)
+      debug: 4.4.3(supports-color@11.0.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -8263,11 +8263,11 @@ snapshots:
 
   aws4@1.13.2: {}
 
-  axios@1.18.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2):
+  axios@1.18.1(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0):
     dependencies:
-      follow-redirects: 1.16.0(debug@4.4.3(supports-color@10.2.2))
+      follow-redirects: 1.16.0(debug@4.4.3(supports-color@11.0.0))
       form-data: 4.0.6
-      https-proxy-agent: 5.0.1(supports-color@10.2.2)
+      https-proxy-agent: 5.0.1(supports-color@11.0.0)
       proxy-from-env: 2.1.0
     transitivePeerDependencies:
       - debug
@@ -8352,11 +8352,11 @@ snapshots:
     dependencies:
       minimist: 1.2.8
 
-  body-parser@1.20.6(supports-color@10.2.2):
+  body-parser@1.20.6(supports-color@11.0.0):
     dependencies:
       bytes: 3.1.2
       content-type: 1.0.5
-      debug: 2.6.9(supports-color@10.2.2)
+      debug: 2.6.9(supports-color@11.0.0)
       depd: 2.0.0
       destroy: 1.2.0
       http-errors: 2.0.1
@@ -8369,11 +8369,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  body-parser@2.3.0(supports-color@10.2.2):
+  body-parser@2.3.0(supports-color@11.0.0):
     dependencies:
       bytes: 3.1.2
       content-type: 2.0.0
-      debug: 4.4.3(supports-color@10.2.2)
+      debug: 4.4.3(supports-color@11.0.0)
       http-errors: 2.0.1
       iconv-lite: 0.7.3
       on-finished: 2.4.1
@@ -8417,28 +8417,28 @@ snapshots:
       fresh: 0.5.2
       mitt: 1.2.0
 
-  browser-sync-ui@3.0.4(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6):
+  browser-sync-ui@3.0.4(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
       async-each-series: 0.1.1
       chalk: 4.1.2
       connect-history-api-fallback: 1.6.0
       immutable: 3.8.3
       server-destroy: 1.0.1
-      socket.io-client: 4.8.3(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
+      socket.io-client: 4.8.3(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       stream-throttle: 0.1.3
     transitivePeerDependencies:
       - bufferutil
       - supports-color
       - utf-8-validate
 
-  browser-sync@3.0.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)(utf-8-validate@6.0.6):
+  browser-sync@3.0.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
       browser-sync-client: 3.0.4
-      browser-sync-ui: 3.0.4(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
+      browser-sync-ui: 3.0.4(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       bs-recipes: 1.3.4
       chalk: 4.1.2
       chokidar: 3.6.0
-      connect: 3.6.6(supports-color@10.2.2)
+      connect: 3.6.6(supports-color@11.0.0)
       connect-history-api-fallback: 1.6.0
       dev-ip: 1.0.1
       easy-extender: 2.3.4
@@ -8446,19 +8446,19 @@ snapshots:
       etag: 1.8.1
       fresh: 0.5.2
       fs-extra: 3.0.1
-      http-proxy: 1.18.1(debug@4.4.3(supports-color@10.2.2))
+      http-proxy: 1.18.1(debug@4.4.3(supports-color@11.0.0))
       immutable: 3.8.3
       micromatch: 4.0.8
       opn: 5.3.0
       portscanner: 2.2.0
       raw-body: 2.5.3
-      resp-modifier: 6.0.2(supports-color@10.2.2)
+      resp-modifier: 6.0.2(supports-color@11.0.0)
       rx: 4.1.0
-      send: 0.19.2(supports-color@10.2.2)
-      serve-index: 1.9.2(supports-color@10.2.2)
-      serve-static: 1.16.3(supports-color@10.2.2)
+      send: 0.19.2(supports-color@11.0.0)
+      serve-index: 1.9.2(supports-color@11.0.0)
+      serve-static: 1.16.3(supports-color@11.0.0)
       server-destroy: 1.0.1
-      socket.io: 4.8.3(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
+      socket.io: 4.8.3(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       ua-parser-js: 1.0.41
       yargs: 17.7.3
     transitivePeerDependencies:
@@ -8475,9 +8475,9 @@ snapshots:
       node-releases: 2.0.51
       update-browserslist-db: 1.2.3(browserslist@4.28.7)
 
-  browserstack@1.6.1(supports-color@10.2.2):
+  browserstack@1.6.1(supports-color@11.0.0):
     dependencies:
-      https-proxy-agent: 2.2.4(supports-color@10.2.2)
+      https-proxy-agent: 2.2.4(supports-color@11.0.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -8703,11 +8703,11 @@ snapshots:
     dependencies:
       mime-db: 1.54.0
 
-  compression@1.8.1(supports-color@10.2.2):
+  compression@1.8.1(supports-color@11.0.0):
     dependencies:
       bytes: 3.1.2
       compressible: 2.0.18
-      debug: 2.6.9(supports-color@10.2.2)
+      debug: 2.6.9(supports-color@11.0.0)
       negotiator: 0.6.4
       on-headers: 1.1.0
       safe-buffer: 5.2.1
@@ -8733,19 +8733,19 @@ snapshots:
 
   connect-history-api-fallback@1.6.0: {}
 
-  connect@3.6.6(supports-color@10.2.2):
+  connect@3.6.6(supports-color@11.0.0):
     dependencies:
-      debug: 2.6.9(supports-color@10.2.2)
-      finalhandler: 1.1.0(supports-color@10.2.2)
+      debug: 2.6.9(supports-color@11.0.0)
+      finalhandler: 1.1.0(supports-color@11.0.0)
       parseurl: 1.3.3
       utils-merge: 1.0.1
     transitivePeerDependencies:
       - supports-color
 
-  connect@3.7.0(supports-color@10.2.2):
+  connect@3.7.0(supports-color@11.0.0):
     dependencies:
-      debug: 2.6.9(supports-color@10.2.2)
-      finalhandler: 1.1.2(supports-color@10.2.2)
+      debug: 2.6.9(supports-color@11.0.0)
+      finalhandler: 1.1.2(supports-color@11.0.0)
       parseurl: 1.3.3
       utils-merge: 1.0.1
     transitivePeerDependencies:
@@ -8832,35 +8832,35 @@ snapshots:
     transitivePeerDependencies:
       - '@noble/hashes'
 
-  debug@2.6.9(supports-color@10.2.2):
+  debug@2.6.9(supports-color@11.0.0):
     dependencies:
       ms: 2.0.0
     optionalDependencies:
-      supports-color: 10.2.2
+      supports-color: 11.0.0
 
-  debug@3.2.7(supports-color@10.2.2):
+  debug@3.2.7(supports-color@11.0.0):
     dependencies:
       ms: 2.1.3
     optionalDependencies:
-      supports-color: 10.2.2
+      supports-color: 11.0.0
 
-  debug@4.3.1(supports-color@10.2.2):
+  debug@4.3.1(supports-color@11.0.0):
     dependencies:
       ms: 2.1.2
     optionalDependencies:
-      supports-color: 10.2.2
+      supports-color: 11.0.0
 
-  debug@4.4.0(supports-color@10.2.2):
+  debug@4.4.0(supports-color@11.0.0):
     dependencies:
       ms: 2.1.3
     optionalDependencies:
-      supports-color: 10.2.2
+      supports-color: 11.0.0
 
-  debug@4.4.3(supports-color@10.2.2):
+  debug@4.4.3(supports-color@11.0.0):
     dependencies:
       ms: 2.1.3
     optionalDependencies:
-      supports-color: 10.2.2
+      supports-color: 11.0.0
 
   decamelize@1.2.0: {}
 
@@ -8989,10 +8989,10 @@ snapshots:
     dependencies:
       once: 1.4.0
 
-  engine.io-client@6.6.6(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6):
+  engine.io-client@6.6.6(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
       '@socket.io/component-emitter': 3.1.2
-      debug: 4.4.3(supports-color@10.2.2)
+      debug: 4.4.3(supports-color@11.0.0)
       engine.io-parser: 5.2.3
       ws: 8.21.1(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       xmlhttprequest-ssl: 2.1.2
@@ -9003,7 +9003,7 @@ snapshots:
 
   engine.io-parser@5.2.3: {}
 
-  engine.io@6.6.9(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6):
+  engine.io@6.6.9(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
       '@types/cors': 2.8.19
       '@types/node': 24.13.3
@@ -9012,7 +9012,7 @@ snapshots:
       base64id: 2.0.0
       cookie: 0.7.2
       cors: 2.8.6
-      debug: 4.4.3(supports-color@10.2.2)
+      debug: 4.4.3(supports-color@11.0.0)
       engine.io-parser: 5.2.3
       ws: 8.21.1(bufferutil@4.1.0)(utf-8-validate@6.0.6)
     transitivePeerDependencies:
@@ -9123,18 +9123,18 @@ snapshots:
     dependencies:
       eventsource-parser: 3.1.0
 
-  exegesis-express@4.0.0(supports-color@10.2.2):
+  exegesis-express@4.0.0(supports-color@11.0.0):
     dependencies:
-      exegesis: 4.3.0(supports-color@10.2.2)
+      exegesis: 4.3.0(supports-color@11.0.0)
     transitivePeerDependencies:
       - supports-color
 
-  exegesis@4.3.0(supports-color@10.2.2):
+  exegesis@4.3.0(supports-color@11.0.0):
     dependencies:
       '@apidevtools/json-schema-ref-parser': 9.1.2
       ajv: 8.20.0
       ajv-formats: 2.1.1(ajv@8.20.0)
-      body-parser: 1.20.6(supports-color@10.2.2)
+      body-parser: 1.20.6(supports-color@11.0.0)
       content-type: 1.0.5
       deep-freeze: 0.0.1
       events-listener: 1.1.0
@@ -9155,29 +9155,29 @@ snapshots:
   exponential-backoff@3.1.3:
     optional: true
 
-  express-rate-limit@8.6.1(express@5.2.1(supports-color@10.2.2))(supports-color@10.2.2):
+  express-rate-limit@8.6.1(express@5.2.1(supports-color@11.0.0))(supports-color@11.0.0):
     dependencies:
-      debug: 4.4.3(supports-color@10.2.2)
-      express: 5.2.1(supports-color@10.2.2)
+      debug: 4.4.3(supports-color@11.0.0)
+      express: 5.2.1(supports-color@11.0.0)
       ip-address: 10.3.1
     transitivePeerDependencies:
       - supports-color
 
-  express@4.22.2(supports-color@10.2.2):
+  express@4.22.2(supports-color@11.0.0):
     dependencies:
       accepts: 1.3.8
       array-flatten: 1.1.1
-      body-parser: 1.20.6(supports-color@10.2.2)
+      body-parser: 1.20.6(supports-color@11.0.0)
       content-disposition: 0.5.4
       content-type: 1.0.5
       cookie: 0.7.2
       cookie-signature: 1.0.7
-      debug: 2.6.9(supports-color@10.2.2)
+      debug: 2.6.9(supports-color@11.0.0)
       depd: 2.0.0
       encodeurl: 2.0.0
       escape-html: 1.0.3
       etag: 1.8.1
-      finalhandler: 1.3.2(supports-color@10.2.2)
+      finalhandler: 1.3.2(supports-color@11.0.0)
       fresh: 0.5.2
       http-errors: 2.0.1
       merge-descriptors: 1.0.3
@@ -9189,8 +9189,8 @@ snapshots:
       qs: 6.15.3
       range-parser: 1.2.1
       safe-buffer: 5.2.1
-      send: 0.19.2(supports-color@10.2.2)
-      serve-static: 1.16.3(supports-color@10.2.2)
+      send: 0.19.2(supports-color@11.0.0)
+      serve-static: 1.16.3(supports-color@11.0.0)
       setprototypeof: 1.2.0
       statuses: 2.0.2
       type-is: 1.6.18
@@ -9199,20 +9199,20 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  express@5.2.1(supports-color@10.2.2):
+  express@5.2.1(supports-color@11.0.0):
     dependencies:
       accepts: 2.0.0
-      body-parser: 2.3.0(supports-color@10.2.2)
+      body-parser: 2.3.0(supports-color@11.0.0)
       content-disposition: 1.1.0
       content-type: 1.0.5
       cookie: 0.7.2
       cookie-signature: 1.2.2
-      debug: 4.4.3(supports-color@10.2.2)
+      debug: 4.4.3(supports-color@11.0.0)
       depd: 2.0.0
       encodeurl: 2.0.0
       escape-html: 1.0.3
       etag: 1.8.1
-      finalhandler: 2.1.1(supports-color@10.2.2)
+      finalhandler: 2.1.1(supports-color@11.0.0)
       fresh: 2.0.0
       http-errors: 2.0.1
       merge-descriptors: 2.0.0
@@ -9223,9 +9223,9 @@ snapshots:
       proxy-addr: 2.0.7
       qs: 6.15.3
       range-parser: 1.3.0
-      router: 2.2.0(supports-color@10.2.2)
-      send: 1.2.1(supports-color@10.2.2)
-      serve-static: 2.2.1(supports-color@10.2.2)
+      router: 2.2.0(supports-color@11.0.0)
+      send: 1.2.1(supports-color@11.0.0)
+      serve-static: 2.2.1(supports-color@11.0.0)
       statuses: 2.0.2
       type-is: 2.1.0
       vary: 1.1.2
@@ -9303,9 +9303,9 @@ snapshots:
     dependencies:
       to-regex-range: 5.0.1
 
-  finalhandler@1.1.0(supports-color@10.2.2):
+  finalhandler@1.1.0(supports-color@11.0.0):
     dependencies:
-      debug: 2.6.9(supports-color@10.2.2)
+      debug: 2.6.9(supports-color@11.0.0)
       encodeurl: 1.0.2
       escape-html: 1.0.3
       on-finished: 2.3.0
@@ -9315,9 +9315,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  finalhandler@1.1.2(supports-color@10.2.2):
+  finalhandler@1.1.2(supports-color@11.0.0):
     dependencies:
-      debug: 2.6.9(supports-color@10.2.2)
+      debug: 2.6.9(supports-color@11.0.0)
       encodeurl: 1.0.2
       escape-html: 1.0.3
       on-finished: 2.3.0
@@ -9327,9 +9327,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  finalhandler@1.3.2(supports-color@10.2.2):
+  finalhandler@1.3.2(supports-color@11.0.0):
     dependencies:
-      debug: 2.6.9(supports-color@10.2.2)
+      debug: 2.6.9(supports-color@11.0.0)
       encodeurl: 2.0.0
       escape-html: 1.0.3
       on-finished: 2.4.1
@@ -9339,9 +9339,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  finalhandler@2.1.1(supports-color@10.2.2):
+  finalhandler@2.1.1(supports-color@11.0.0):
     dependencies:
-      debug: 4.4.3(supports-color@10.2.2)
+      debug: 4.4.3(supports-color@11.0.0)
       encodeurl: 2.0.0
       escape-html: 1.0.3
       on-finished: 2.4.1
@@ -9355,53 +9355,53 @@ snapshots:
       locate-path: 5.0.0
       path-exists: 4.0.0
 
-  firebase-admin@13.10.0(encoding@0.1.13)(supports-color@10.2.2):
+  firebase-admin@13.10.0(encoding@0.1.13)(supports-color@11.0.0):
     dependencies:
       '@fastify/busboy': 3.2.0
       '@firebase/database-compat': 2.1.4
       '@firebase/database-types': 1.0.20
       farmhash-modern: 1.1.0
       fast-deep-equal: 3.1.3
-      google-auth-library: 10.9.1(supports-color@10.2.2)
+      google-auth-library: 10.9.1(supports-color@11.0.0)
       jsonwebtoken: 9.0.3
-      jwks-rsa: 3.2.2(supports-color@10.2.2)
+      jwks-rsa: 3.2.2(supports-color@11.0.0)
     optionalDependencies:
-      '@google-cloud/firestore': 7.11.6(encoding@0.1.13)(supports-color@10.2.2)
-      '@google-cloud/storage': 7.21.0(encoding@0.1.13)(supports-color@10.2.2)
+      '@google-cloud/firestore': 7.11.6(encoding@0.1.13)(supports-color@11.0.0)
+      '@google-cloud/storage': 7.21.0(encoding@0.1.13)(supports-color@11.0.0)
     transitivePeerDependencies:
       - encoding
       - supports-color
 
-  firebase-functions@7.3.0(@apollo/server@5.5.1(graphql@16.14.2)(supports-color@10.2.2))(@as-integrations/express4@1.1.2(@apollo/server@5.5.1(graphql@16.14.2)(supports-color@10.2.2))(express@4.22.2(supports-color@10.2.2)))(firebase-admin@13.10.0(encoding@0.1.13)(supports-color@10.2.2))(graphql@16.14.2)(supports-color@10.2.2):
+  firebase-functions@7.3.0(@apollo/server@5.5.1(graphql@16.14.2)(supports-color@11.0.0))(@as-integrations/express4@1.1.2(@apollo/server@5.5.1(graphql@16.14.2)(supports-color@11.0.0))(express@4.22.2(supports-color@11.0.0)))(firebase-admin@13.10.0(encoding@0.1.13)(supports-color@11.0.0))(graphql@16.14.2)(supports-color@11.0.0):
     dependencies:
       '@types/cors': 2.8.19
       '@types/express': 4.17.25
       cors: 2.8.6
-      express: 4.22.2(supports-color@10.2.2)
-      firebase-admin: 13.10.0(encoding@0.1.13)(supports-color@10.2.2)
+      express: 4.22.2(supports-color@11.0.0)
+      firebase-admin: 13.10.0(encoding@0.1.13)(supports-color@11.0.0)
       protobufjs: 7.6.5
     optionalDependencies:
-      '@apollo/server': 5.5.1(graphql@16.14.2)(supports-color@10.2.2)
-      '@as-integrations/express4': 1.1.2(@apollo/server@5.5.1(graphql@16.14.2)(supports-color@10.2.2))(express@4.22.2(supports-color@10.2.2))
+      '@apollo/server': 5.5.1(graphql@16.14.2)(supports-color@11.0.0)
+      '@as-integrations/express4': 1.1.2(@apollo/server@5.5.1(graphql@16.14.2)(supports-color@11.0.0))(express@4.22.2(supports-color@11.0.0))
       graphql: 16.14.2
     transitivePeerDependencies:
       - supports-color
 
-  firebase-tools@15.24.0(@types/node@24.13.3)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@10.2.2):
+  firebase-tools@15.24.0(@types/node@24.13.3)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0):
     dependencies:
       '@apphosting/common': 0.0.8
       '@electric-sql/pglite': 0.3.16
       '@electric-sql/pglite-tools': 0.2.21(@electric-sql/pglite@0.3.16)
-      '@google-cloud/cloud-sql-connector': 1.11.3(supports-color@10.2.2)
-      '@google-cloud/pubsub': 5.3.1(supports-color@10.2.2)
+      '@google-cloud/cloud-sql-connector': 1.11.3(supports-color@11.0.0)
+      '@google-cloud/pubsub': 5.3.1(supports-color@11.0.0)
       '@inquirer/prompts': 7.10.1(@types/node@24.13.3)
-      '@modelcontextprotocol/sdk': 1.29.0(supports-color@10.2.2)
+      '@modelcontextprotocol/sdk': 1.29.0(supports-color@11.0.0)
       abort-controller: 3.0.0
       ajv: 8.20.0
       ajv-formats: 3.0.1
       archiver: 7.0.1
       async-lock: 1.4.1
-      body-parser: 1.20.6(supports-color@10.2.2)
+      body-parser: 1.20.6(supports-color@11.0.0)
       chokidar: 3.6.0
       cjson: 0.3.3
       cli-table3: 0.6.5
@@ -9412,15 +9412,15 @@ snapshots:
       cross-env: 7.0.3
       cross-spawn: 7.0.6
       csv-parse: 5.6.0
-      exegesis: 4.3.0(supports-color@10.2.2)
-      exegesis-express: 4.0.0(supports-color@10.2.2)
-      express: 4.22.2(supports-color@10.2.2)
+      exegesis: 4.3.0(supports-color@11.0.0)
+      exegesis-express: 4.0.0(supports-color@11.0.0)
+      express: 4.22.2(supports-color@11.0.0)
       form-data: 4.0.6
       fs-extra: 10.1.0
       fuzzy: 0.1.3
-      gaxios: 6.7.1(encoding@0.1.13)(supports-color@10.2.2)
+      gaxios: 6.7.1(encoding@0.1.13)(supports-color@11.0.0)
       glob: 10.5.0
-      google-auth-library: 9.15.1(encoding@0.1.13)(supports-color@10.2.2)
+      google-auth-library: 9.15.1(encoding@0.1.13)(supports-color@11.0.0)
       ignore: 7.0.6
       js-yaml: 4.3.0
       jsonwebtoken: 9.0.3
@@ -9431,28 +9431,28 @@ snapshots:
       marked-terminal: 7.3.0(marked@13.0.3)
       mime: 2.6.0
       minimatch: 3.1.5
-      morgan: 1.11.0(supports-color@10.2.2)
+      morgan: 1.11.0(supports-color@11.0.0)
       node-fetch: 2.7.0(encoding@0.1.13)
       open: 6.4.0
       ora: 5.4.1
       pg: 8.22.0
       pg-gateway: 0.3.0-beta.4
       pglite-2: '@electric-sql/pglite@0.2.17'
-      portfinder: 1.0.38(supports-color@10.2.2)
+      portfinder: 1.0.38(supports-color@11.0.0)
       progress: 2.0.3
-      proxy-agent: 6.5.0(supports-color@10.2.2)
+      proxy-agent: 6.5.0(supports-color@11.0.0)
       retry: 0.13.1
       semver: 7.8.5
       sql-formatter: 15.8.2
       stream-chain: 2.2.5
       stream-json: 1.9.1
-      superstatic: 10.0.0(encoding@0.1.13)(supports-color@10.2.2)
+      superstatic: 10.0.0(encoding@0.1.13)(supports-color@11.0.0)
       tar: 7.5.22
-      tcp-port-used: 1.0.3(supports-color@10.2.2)
+      tcp-port-used: 1.0.3(supports-color@11.0.0)
       tmp: 0.2.7
       triple-beam: 1.4.1
       undici: 6.28.0
-      universal-analytics: 0.5.4(supports-color@10.2.2)
+      universal-analytics: 0.5.4(supports-color@11.0.0)
       update-notifier-cjs: 5.1.7(encoding@0.1.13)
       winston: 3.19.0
       winston-transport: 4.9.0
@@ -9506,16 +9506,16 @@ snapshots:
 
   fn.name@1.1.0: {}
 
-  folder-hash@4.1.3(supports-color@10.2.2):
+  folder-hash@4.1.3(supports-color@11.0.0):
     dependencies:
-      debug: 4.4.0(supports-color@10.2.2)
+      debug: 4.4.0(supports-color@11.0.0)
       minimatch: 7.4.9
     transitivePeerDependencies:
       - supports-color
 
-  follow-redirects@1.16.0(debug@4.4.3(supports-color@10.2.2)):
+  follow-redirects@1.16.0(debug@4.4.3(supports-color@11.0.0)):
     optionalDependencies:
-      debug: 4.4.3(supports-color@10.2.2)
+      debug: 4.4.3(supports-color@11.0.0)
 
   for-each@0.3.5:
     dependencies:
@@ -9592,10 +9592,10 @@ snapshots:
 
   fuzzy@0.1.3: {}
 
-  gaxios@6.7.1(encoding@0.1.13)(supports-color@10.2.2):
+  gaxios@6.7.1(encoding@0.1.13)(supports-color@11.0.0):
     dependencies:
       extend: 3.0.2
-      https-proxy-agent: 7.0.6(supports-color@10.2.2)
+      https-proxy-agent: 7.0.6(supports-color@11.0.0)
       is-stream: 2.0.1
       node-fetch: 2.7.0(encoding@0.1.13)
       uuid: 9.0.1
@@ -9603,43 +9603,43 @@ snapshots:
       - encoding
       - supports-color
 
-  gaxios@7.1.3(supports-color@10.2.2):
+  gaxios@7.1.3(supports-color@11.0.0):
     dependencies:
       extend: 3.0.2
-      https-proxy-agent: 7.0.6(supports-color@10.2.2)
+      https-proxy-agent: 7.0.6(supports-color@11.0.0)
       node-fetch: 3.3.2
       rimraf: 5.0.10
     transitivePeerDependencies:
       - supports-color
 
-  gaxios@7.3.0(supports-color@10.2.2):
+  gaxios@7.3.0(supports-color@11.0.0):
     dependencies:
       extend: 3.0.2
-      https-proxy-agent: 7.0.6(supports-color@10.2.2)
+      https-proxy-agent: 7.0.6(supports-color@11.0.0)
       node-fetch: 3.3.2
     transitivePeerDependencies:
       - supports-color
 
-  gcp-metadata@6.1.1(encoding@0.1.13)(supports-color@10.2.2):
+  gcp-metadata@6.1.1(encoding@0.1.13)(supports-color@11.0.0):
     dependencies:
-      gaxios: 6.7.1(encoding@0.1.13)(supports-color@10.2.2)
+      gaxios: 6.7.1(encoding@0.1.13)(supports-color@11.0.0)
       google-logging-utils: 0.0.2
       json-bigint: 1.0.0
     transitivePeerDependencies:
       - encoding
       - supports-color
 
-  gcp-metadata@8.1.2(supports-color@10.2.2):
+  gcp-metadata@8.1.2(supports-color@11.0.0):
     dependencies:
-      gaxios: 7.3.0(supports-color@10.2.2)
+      gaxios: 7.3.0(supports-color@11.0.0)
       google-logging-utils: 1.1.3
       json-bigint: 1.0.0
     transitivePeerDependencies:
       - supports-color
 
-  gcp-metadata@8.1.4(supports-color@10.2.2):
+  gcp-metadata@8.1.4(supports-color@11.0.0):
     dependencies:
-      gaxios: 7.1.3(supports-color@10.2.2)
+      gaxios: 7.1.3(supports-color@11.0.0)
       google-logging-utils: 1.1.3
       json-bigint: 1.0.0
     transitivePeerDependencies:
@@ -9673,11 +9673,11 @@ snapshots:
     dependencies:
       resolve-pkg-maps: 1.0.0
 
-  get-uri@6.0.5(supports-color@10.2.2):
+  get-uri@6.0.5(supports-color@11.0.0):
     dependencies:
       basic-ftp: 5.3.1
       data-uri-to-buffer: 6.0.2
-      debug: 4.4.3(supports-color@10.2.2)
+      debug: 4.4.3(supports-color@11.0.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -9734,72 +9734,72 @@ snapshots:
       pify: 2.3.0
       pinkie-promise: 2.0.1
 
-  google-auth-library@10.5.0(supports-color@10.2.2):
+  google-auth-library@10.5.0(supports-color@11.0.0):
     dependencies:
       base64-js: 1.5.1
       ecdsa-sig-formatter: 1.0.11
-      gaxios: 7.3.0(supports-color@10.2.2)
-      gcp-metadata: 8.1.4(supports-color@10.2.2)
+      gaxios: 7.3.0(supports-color@11.0.0)
+      gcp-metadata: 8.1.4(supports-color@11.0.0)
       google-logging-utils: 1.1.3
-      gtoken: 8.0.0(supports-color@10.2.2)
+      gtoken: 8.0.0(supports-color@11.0.0)
       jws: 4.0.1
     transitivePeerDependencies:
       - supports-color
 
-  google-auth-library@10.9.1(supports-color@10.2.2):
+  google-auth-library@10.9.1(supports-color@11.0.0):
     dependencies:
       base64-js: 1.5.1
       ecdsa-sig-formatter: 1.0.11
-      gaxios: 7.3.0(supports-color@10.2.2)
-      gcp-metadata: 8.1.2(supports-color@10.2.2)
+      gaxios: 7.3.0(supports-color@11.0.0)
+      gcp-metadata: 8.1.2(supports-color@11.0.0)
       google-logging-utils: 1.1.3
       jws: 4.0.1
     transitivePeerDependencies:
       - supports-color
 
-  google-auth-library@9.15.1(encoding@0.1.13)(supports-color@10.2.2):
+  google-auth-library@9.15.1(encoding@0.1.13)(supports-color@11.0.0):
     dependencies:
       base64-js: 1.5.1
       ecdsa-sig-formatter: 1.0.11
-      gaxios: 6.7.1(encoding@0.1.13)(supports-color@10.2.2)
-      gcp-metadata: 6.1.1(encoding@0.1.13)(supports-color@10.2.2)
-      gtoken: 7.1.0(encoding@0.1.13)(supports-color@10.2.2)
+      gaxios: 6.7.1(encoding@0.1.13)(supports-color@11.0.0)
+      gcp-metadata: 6.1.1(encoding@0.1.13)(supports-color@11.0.0)
+      gtoken: 7.1.0(encoding@0.1.13)(supports-color@11.0.0)
       jws: 4.0.1
     transitivePeerDependencies:
       - encoding
       - supports-color
 
-  google-gax@4.6.1(encoding@0.1.13)(supports-color@10.2.2):
+  google-gax@4.6.1(encoding@0.1.13)(supports-color@11.0.0):
     dependencies:
       '@grpc/grpc-js': 1.14.4
       '@grpc/proto-loader': 0.7.15
       '@types/long': 4.0.2
       abort-controller: 3.0.0
       duplexify: 4.1.3
-      google-auth-library: 9.15.1(encoding@0.1.13)(supports-color@10.2.2)
+      google-auth-library: 9.15.1(encoding@0.1.13)(supports-color@11.0.0)
       node-fetch: 2.7.0(encoding@0.1.13)
       object-hash: 3.0.0
       proto3-json-serializer: 2.0.2
       protobufjs: 7.6.5
-      retry-request: 7.0.2(encoding@0.1.13)(supports-color@10.2.2)
+      retry-request: 7.0.2(encoding@0.1.13)(supports-color@11.0.0)
       uuid: 9.0.1
     transitivePeerDependencies:
       - encoding
       - supports-color
     optional: true
 
-  google-gax@5.0.8(supports-color@10.2.2):
+  google-gax@5.0.8(supports-color@11.0.0):
     dependencies:
       '@grpc/grpc-js': 1.14.4
       '@grpc/proto-loader': 0.8.1
       duplexify: 4.1.3
-      google-auth-library: 10.5.0(supports-color@10.2.2)
+      google-auth-library: 10.5.0(supports-color@11.0.0)
       google-logging-utils: 1.1.3
       node-fetch: 3.3.2
       object-hash: 3.0.0
       proto3-json-serializer: 3.0.4
       protobufjs: 7.6.5
-      retry-request: 8.0.4(supports-color@10.2.2)
+      retry-request: 8.0.4(supports-color@11.0.0)
       rimraf: 5.0.10
     transitivePeerDependencies:
       - supports-color
@@ -9810,11 +9810,11 @@ snapshots:
 
   google-logging-utils@1.2.0: {}
 
-  googleapis-common@8.0.3(supports-color@10.2.2):
+  googleapis-common@8.0.3(supports-color@11.0.0):
     dependencies:
       extend: 3.0.2
-      gaxios: 7.1.3(supports-color@10.2.2)
-      google-auth-library: 10.5.0(supports-color@10.2.2)
+      gaxios: 7.1.3(supports-color@11.0.0)
+      google-auth-library: 10.5.0(supports-color@11.0.0)
       google-logging-utils: 1.1.3
       qs: 6.15.3
       url-template: 2.0.8
@@ -9839,17 +9839,17 @@ snapshots:
       '@grpc/grpc-js': 1.14.4
       protobufjs: 7.6.5
 
-  gtoken@7.1.0(encoding@0.1.13)(supports-color@10.2.2):
+  gtoken@7.1.0(encoding@0.1.13)(supports-color@11.0.0):
     dependencies:
-      gaxios: 6.7.1(encoding@0.1.13)(supports-color@10.2.2)
+      gaxios: 6.7.1(encoding@0.1.13)(supports-color@11.0.0)
       jws: 4.0.1
     transitivePeerDependencies:
       - encoding
       - supports-color
 
-  gtoken@8.0.0(supports-color@10.2.2):
+  gtoken@8.0.0(supports-color@11.0.0):
     dependencies:
-      gaxios: 7.3.0(supports-color@10.2.2)
+      gaxios: 7.3.0(supports-color@11.0.0)
       jws: 4.0.1
     transitivePeerDependencies:
       - supports-color
@@ -9917,26 +9917,26 @@ snapshots:
 
   http-parser-js@0.5.10: {}
 
-  http-proxy-agent@5.0.0(supports-color@10.2.2):
+  http-proxy-agent@5.0.0(supports-color@11.0.0):
     dependencies:
       '@tootallnate/once': 2.0.1
-      agent-base: 6.0.2(supports-color@10.2.2)
-      debug: 4.4.3(supports-color@10.2.2)
+      agent-base: 6.0.2(supports-color@11.0.0)
+      debug: 4.4.3(supports-color@11.0.0)
     transitivePeerDependencies:
       - supports-color
     optional: true
 
-  http-proxy-agent@7.0.2(supports-color@10.2.2):
+  http-proxy-agent@7.0.2(supports-color@11.0.0):
     dependencies:
       agent-base: 7.1.4
-      debug: 4.4.3(supports-color@10.2.2)
+      debug: 4.4.3(supports-color@11.0.0)
     transitivePeerDependencies:
       - supports-color
 
-  http-proxy@1.18.1(debug@4.4.3(supports-color@10.2.2)):
+  http-proxy@1.18.1(debug@4.4.3(supports-color@11.0.0)):
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.16.0(debug@4.4.3(supports-color@10.2.2))
+      follow-redirects: 1.16.0(debug@4.4.3(supports-color@11.0.0))
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
@@ -9947,24 +9947,24 @@ snapshots:
       jsprim: 1.4.2
       sshpk: 1.18.0
 
-  https-proxy-agent@2.2.4(supports-color@10.2.2):
+  https-proxy-agent@2.2.4(supports-color@11.0.0):
     dependencies:
       agent-base: 4.3.0
-      debug: 3.2.7(supports-color@10.2.2)
+      debug: 3.2.7(supports-color@11.0.0)
     transitivePeerDependencies:
       - supports-color
 
-  https-proxy-agent@5.0.1(supports-color@10.2.2):
+  https-proxy-agent@5.0.1(supports-color@11.0.0):
     dependencies:
-      agent-base: 6.0.2(supports-color@10.2.2)
-      debug: 4.4.3(supports-color@10.2.2)
+      agent-base: 6.0.2(supports-color@11.0.0)
+      debug: 4.4.3(supports-color@11.0.0)
     transitivePeerDependencies:
       - supports-color
 
-  https-proxy-agent@7.0.6(supports-color@10.2.2):
+  https-proxy-agent@7.0.6(supports-color@11.0.0):
     dependencies:
       agent-base: 7.1.4
-      debug: 4.4.3(supports-color@10.2.2)
+      debug: 4.4.3(supports-color@11.0.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -10292,10 +10292,10 @@ snapshots:
       ecdsa-sig-formatter: 1.0.11
       safe-buffer: 5.2.1
 
-  jwks-rsa@3.2.2(supports-color@10.2.2):
+  jwks-rsa@3.2.2(supports-color@11.0.0):
     dependencies:
       '@types/jsonwebtoken': 9.0.10
-      debug: 4.4.3(supports-color@10.2.2)
+      debug: 4.4.3(supports-color@11.0.0)
       jose: 4.15.9
       limiter: 1.1.5
       lru-memoizer: 2.3.0
@@ -10516,10 +10516,10 @@ snapshots:
 
   moo@0.5.3: {}
 
-  morgan@1.11.0(supports-color@10.2.2):
+  morgan@1.11.0(supports-color@11.0.0):
     dependencies:
       basic-auth: 2.0.1
-      debug: 2.6.9(supports-color@10.2.2)
+      debug: 2.6.9(supports-color@11.0.0)
       depd: 2.0.0
       on-finished: 2.4.1
       on-headers: 1.1.0
@@ -10728,16 +10728,16 @@ snapshots:
 
   p-try@2.2.0: {}
 
-  pac-proxy-agent@7.2.0(supports-color@10.2.2):
+  pac-proxy-agent@7.2.0(supports-color@11.0.0):
     dependencies:
       '@tootallnate/quickjs-emscripten': 0.23.0
       agent-base: 7.1.4
-      debug: 4.4.3(supports-color@10.2.2)
-      get-uri: 6.0.5(supports-color@10.2.2)
-      http-proxy-agent: 7.0.2(supports-color@10.2.2)
-      https-proxy-agent: 7.0.6(supports-color@10.2.2)
+      debug: 4.4.3(supports-color@11.0.0)
+      get-uri: 6.0.5(supports-color@11.0.0)
+      http-proxy-agent: 7.0.2(supports-color@11.0.0)
+      https-proxy-agent: 7.0.6(supports-color@11.0.0)
       pac-resolver: 7.0.1
-      socks-proxy-agent: 8.0.5(supports-color@10.2.2)
+      socks-proxy-agent: 8.0.5(supports-color@11.0.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -10856,10 +10856,10 @@ snapshots:
 
   pkce-challenge@5.0.1: {}
 
-  portfinder@1.0.38(supports-color@10.2.2):
+  portfinder@1.0.38(supports-color@11.0.0):
     dependencies:
       async: 3.2.6
-      debug: 4.4.3(supports-color@10.2.2)
+      debug: 4.4.3(supports-color@11.0.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -10920,18 +10920,18 @@ snapshots:
       '@types/node': 24.13.3
       long: 5.3.2
 
-  protractor@7.0.0(supports-color@10.2.2):
+  protractor@7.0.0(supports-color@11.0.0):
     dependencies:
       '@types/q': 0.0.32
       '@types/selenium-webdriver': 3.0.26
       blocking-proxy: 1.0.1
-      browserstack: 1.6.1(supports-color@10.2.2)
+      browserstack: 1.6.1(supports-color@11.0.0)
       chalk: 1.1.3
       glob: 7.2.3
       jasmine: 2.8.0
       jasminewd2: 2.2.0
       q: 1.4.1
-      saucelabs: 1.5.0(supports-color@10.2.2)
+      saucelabs: 1.5.0(supports-color@11.0.0)
       selenium-webdriver: 3.6.0
       source-map-support: 0.4.18
       webdriver-js-extender: 2.1.0
@@ -10945,16 +10945,16 @@ snapshots:
       forwarded: 0.2.0
       ipaddr.js: 1.9.1
 
-  proxy-agent@6.5.0(supports-color@10.2.2):
+  proxy-agent@6.5.0(supports-color@11.0.0):
     dependencies:
       agent-base: 7.1.4
-      debug: 4.4.3(supports-color@10.2.2)
-      http-proxy-agent: 7.0.2(supports-color@10.2.2)
-      https-proxy-agent: 7.0.6(supports-color@10.2.2)
+      debug: 4.4.3(supports-color@11.0.0)
+      http-proxy-agent: 7.0.2(supports-color@11.0.0)
+      https-proxy-agent: 7.0.6(supports-color@11.0.0)
       lru-cache: 7.18.3
-      pac-proxy-agent: 7.2.0(supports-color@10.2.2)
+      pac-proxy-agent: 7.2.0(supports-color@11.0.0)
       proxy-from-env: 1.1.0
-      socks-proxy-agent: 8.0.5(supports-color@10.2.2)
+      socks-proxy-agent: 8.0.5(supports-color@11.0.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -11119,9 +11119,9 @@ snapshots:
       path-parse: 1.0.7
       supports-preserve-symlinks-flag: 1.0.0
 
-  resp-modifier@6.0.2(supports-color@10.2.2):
+  resp-modifier@6.0.2(supports-color@11.0.0):
     dependencies:
-      debug: 2.6.9(supports-color@10.2.2)
+      debug: 2.6.9(supports-color@11.0.0)
       minimatch: 3.1.5
     transitivePeerDependencies:
       - supports-color
@@ -11138,20 +11138,20 @@ snapshots:
 
   ret@0.1.15: {}
 
-  retry-request@7.0.2(encoding@0.1.13)(supports-color@10.2.2):
+  retry-request@7.0.2(encoding@0.1.13)(supports-color@11.0.0):
     dependencies:
       '@types/request': 2.48.13
       extend: 3.0.2
-      teeny-request: 9.0.0(encoding@0.1.13)(supports-color@10.2.2)
+      teeny-request: 9.0.0(encoding@0.1.13)(supports-color@11.0.0)
     transitivePeerDependencies:
       - encoding
       - supports-color
     optional: true
 
-  retry-request@8.0.4(supports-color@10.2.2):
+  retry-request@8.0.4(supports-color@11.0.0):
     dependencies:
       extend: 3.0.2
-      teeny-request: 10.1.4(supports-color@10.2.2)
+      teeny-request: 10.1.4(supports-color@11.0.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -11167,9 +11167,9 @@ snapshots:
     dependencies:
       glob: 10.5.0
 
-  router@2.2.0(supports-color@10.2.2):
+  router@2.2.0(supports-color@11.0.0):
     dependencies:
-      debug: 4.4.3(supports-color@10.2.2)
+      debug: 4.4.3(supports-color@11.0.0)
       depd: 2.0.0
       is-promise: 4.0.0
       parseurl: 1.3.3
@@ -11200,9 +11200,9 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
-  saucelabs@1.5.0(supports-color@10.2.2):
+  saucelabs@1.5.0(supports-color@11.0.0):
     dependencies:
-      https-proxy-agent: 2.2.4(supports-color@10.2.2)
+      https-proxy-agent: 2.2.4(supports-color@11.0.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -11241,9 +11241,9 @@ snapshots:
 
   semver@7.8.5: {}
 
-  send@0.19.2(supports-color@10.2.2):
+  send@0.19.2(supports-color@11.0.0):
     dependencies:
-      debug: 2.6.9(supports-color@10.2.2)
+      debug: 2.6.9(supports-color@11.0.0)
       depd: 2.0.0
       destroy: 1.2.0
       encodeurl: 2.0.0
@@ -11259,9 +11259,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  send@1.2.1(supports-color@10.2.2):
+  send@1.2.1(supports-color@11.0.0):
     dependencies:
-      debug: 4.4.3(supports-color@10.2.2)
+      debug: 4.4.3(supports-color@11.0.0)
       encodeurl: 2.0.0
       escape-html: 1.0.3
       etag: 1.8.1
@@ -11275,11 +11275,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  serve-index@1.9.2(supports-color@10.2.2):
+  serve-index@1.9.2(supports-color@11.0.0):
     dependencies:
       accepts: 1.3.8
       batch: 0.6.1
-      debug: 2.6.9(supports-color@10.2.2)
+      debug: 2.6.9(supports-color@11.0.0)
       escape-html: 1.0.3
       http-errors: 1.8.1
       mime-types: 2.1.35
@@ -11287,21 +11287,21 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  serve-static@1.16.3(supports-color@10.2.2):
+  serve-static@1.16.3(supports-color@11.0.0):
     dependencies:
       encodeurl: 2.0.0
       escape-html: 1.0.3
       parseurl: 1.3.3
-      send: 0.19.2(supports-color@10.2.2)
+      send: 0.19.2(supports-color@11.0.0)
     transitivePeerDependencies:
       - supports-color
 
-  serve-static@2.2.1(supports-color@10.2.2):
+  serve-static@2.2.1(supports-color@11.0.0):
     dependencies:
       encodeurl: 2.0.0
       escape-html: 1.0.3
       parseurl: 1.3.3
-      send: 1.2.1(supports-color@10.2.2)
+      send: 1.2.1(supports-color@11.0.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -11372,51 +11372,51 @@ snapshots:
 
   smart-buffer@4.2.0: {}
 
-  socket.io-adapter@2.5.8(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6):
+  socket.io-adapter@2.5.8(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
-      debug: 4.4.3(supports-color@10.2.2)
+      debug: 4.4.3(supports-color@11.0.0)
       ws: 8.21.1(bufferutil@4.1.0)(utf-8-validate@6.0.6)
     transitivePeerDependencies:
       - bufferutil
       - supports-color
       - utf-8-validate
 
-  socket.io-client@4.8.3(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6):
+  socket.io-client@4.8.3(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
       '@socket.io/component-emitter': 3.1.2
-      debug: 4.4.3(supports-color@10.2.2)
-      engine.io-client: 6.6.6(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
-      socket.io-parser: 4.2.7(supports-color@10.2.2)
+      debug: 4.4.3(supports-color@11.0.0)
+      engine.io-client: 6.6.6(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+      socket.io-parser: 4.2.7(supports-color@11.0.0)
     transitivePeerDependencies:
       - bufferutil
       - supports-color
       - utf-8-validate
 
-  socket.io-parser@4.2.7(supports-color@10.2.2):
+  socket.io-parser@4.2.7(supports-color@11.0.0):
     dependencies:
       '@socket.io/component-emitter': 3.1.2
-      debug: 4.4.3(supports-color@10.2.2)
+      debug: 4.4.3(supports-color@11.0.0)
     transitivePeerDependencies:
       - supports-color
 
-  socket.io@4.8.3(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6):
+  socket.io@4.8.3(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
       accepts: 1.3.8
       base64id: 2.0.0
       cors: 2.8.6
-      debug: 4.4.3(supports-color@10.2.2)
-      engine.io: 6.6.9(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
-      socket.io-adapter: 2.5.8(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
-      socket.io-parser: 4.2.7(supports-color@10.2.2)
+      debug: 4.4.3(supports-color@11.0.0)
+      engine.io: 6.6.9(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+      socket.io-adapter: 2.5.8(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+      socket.io-parser: 4.2.7(supports-color@11.0.0)
     transitivePeerDependencies:
       - bufferutil
       - supports-color
       - utf-8-validate
 
-  socks-proxy-agent@8.0.5(supports-color@10.2.2):
+  socks-proxy-agent@8.0.5(supports-color@11.0.0):
     dependencies:
       agent-base: 7.1.4
-      debug: 4.4.3(supports-color@10.2.2)
+      debug: 4.4.3(supports-color@11.0.0)
       socks: 2.8.9
     transitivePeerDependencies:
       - supports-color
@@ -11569,12 +11569,12 @@ snapshots:
 
   stubs@3.0.0: {}
 
-  superstatic@10.0.0(encoding@0.1.13)(supports-color@10.2.2):
+  superstatic@10.0.0(encoding@0.1.13)(supports-color@11.0.0):
     dependencies:
       basic-auth-connect: 1.1.0
       commander: 10.0.1
-      compression: 1.8.1(supports-color@10.2.2)
-      connect: 3.7.0(supports-color@10.2.2)
+      compression: 1.8.1(supports-color@11.0.0)
+      connect: 3.7.0(supports-color@11.0.0)
       destroy: 1.2.0
       glob-slasher: 1.0.1
       is-url: 1.2.4
@@ -11582,11 +11582,11 @@ snapshots:
       lodash: 4.18.1
       mime-types: 2.1.35
       minimatch: 6.2.3
-      morgan: 1.11.0(supports-color@10.2.2)
+      morgan: 1.11.0(supports-color@11.0.0)
       on-finished: 2.4.1
       on-headers: 1.1.0
       path-to-regexp: 1.9.0
-      router: 2.2.0(supports-color@10.2.2)
+      router: 2.2.0(supports-color@11.0.0)
       update-notifier-cjs: 5.1.7(encoding@0.1.13)
     optionalDependencies:
       re2: 1.26.1
@@ -11594,7 +11594,7 @@ snapshots:
       - encoding
       - supports-color
 
-  supports-color@10.2.2: {}
+  supports-color@11.0.0: {}
 
   supports-color@2.0.0: {}
 
@@ -11638,26 +11638,26 @@ snapshots:
       minizlib: 3.1.0
       yallist: 5.0.0
 
-  tcp-port-used@1.0.3(supports-color@10.2.2):
+  tcp-port-used@1.0.3(supports-color@11.0.0):
     dependencies:
-      debug: 4.3.1(supports-color@10.2.2)
+      debug: 4.3.1(supports-color@11.0.0)
       is2: 2.0.1
     transitivePeerDependencies:
       - supports-color
 
-  teeny-request@10.1.4(supports-color@10.2.2):
+  teeny-request@10.1.4(supports-color@11.0.0):
     dependencies:
-      http-proxy-agent: 7.0.2(supports-color@10.2.2)
-      https-proxy-agent: 7.0.6(supports-color@10.2.2)
+      http-proxy-agent: 7.0.2(supports-color@11.0.0)
+      https-proxy-agent: 7.0.6(supports-color@11.0.0)
       node-fetch: 3.3.2
       stream-events: 1.0.5
     transitivePeerDependencies:
       - supports-color
 
-  teeny-request@9.0.0(encoding@0.1.13)(supports-color@10.2.2):
+  teeny-request@9.0.0(encoding@0.1.13)(supports-color@11.0.0):
     dependencies:
-      http-proxy-agent: 5.0.0(supports-color@10.2.2)
-      https-proxy-agent: 5.0.1(supports-color@10.2.2)
+      http-proxy-agent: 5.0.0(supports-color@11.0.0)
+      https-proxy-agent: 5.0.1(supports-color@11.0.0)
       node-fetch: 2.7.0(encoding@0.1.13)
       stream-events: 1.0.5
       uuid: 9.0.1
@@ -11839,9 +11839,9 @@ snapshots:
     dependencies:
       crypto-random-string: 2.0.0
 
-  universal-analytics@0.5.4(supports-color@10.2.2):
+  universal-analytics@0.5.4(supports-color@11.0.0):
     dependencies:
-      debug: 4.4.3(supports-color@10.2.2)
+      debug: 4.4.3(supports-color@11.0.0)
       uuid: 14.0.1
     transitivePeerDependencies:
       - supports-color
@@ -11919,9 +11919,9 @@ snapshots:
     dependencies:
       xml-name-validator: 5.0.0
 
-  wait-on@9.1.0(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2):
+  wait-on@9.1.0(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0):
     dependencies:
-      axios: 1.18.1(debug@4.4.3(supports-color@10.2.2))(supports-color@10.2.2)
+      axios: 1.18.1(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)
       joi: 18.2.3
       lodash: 4.18.1
       minimist: 1.2.8
