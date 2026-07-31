@@ -2209,6 +2209,40 @@
       }
     }
   },
+  "152.0.7977.8": {
+    "linux": {
+      "url": "https://storage.googleapis.com/chrome-for-testing-public/152.0.7977.8/linux64/chromedriver-linux64.zip",
+      "integrity": "3561dff6eb2126862418182cf2bff617230d8122b3d7f202b2ba781e35842caf",
+      "exclude_patterns": [],
+      "named_files": {
+        "CHROMEDRIVER": "chromedriver-linux64/chromedriver"
+      }
+    },
+    "mac": {
+      "url": "https://storage.googleapis.com/chrome-for-testing-public/152.0.7977.8/mac-x64/chromedriver-mac-x64.zip",
+      "integrity": "a564fc8b5416173c67341cd136a52d56ee6f1440c7f1825371e024dba4c3ffd2",
+      "exclude_patterns": [],
+      "named_files": {
+        "CHROMEDRIVER": "chromedriver-mac-x64/chromedriver"
+      }
+    },
+    "mac_arm": {
+      "url": "https://storage.googleapis.com/chrome-for-testing-public/152.0.7977.8/mac-arm64/chromedriver-mac-arm64.zip",
+      "integrity": "39fa1eb272ce2d6cb98515b01e5d1775ff0d66922f72663a75d982045cdd19f6",
+      "exclude_patterns": [],
+      "named_files": {
+        "CHROMEDRIVER": "chromedriver-mac-arm64/chromedriver"
+      }
+    },
+    "win64": {
+      "url": "https://storage.googleapis.com/chrome-for-testing-public/152.0.7977.8/win64/chromedriver-win64.zip",
+      "integrity": "f01533c232926fbf94c7bb96dc280392b4f7423a60caff3dedf8ff558aee3f78",
+      "exclude_patterns": [],
+      "named_files": {
+        "CHROMEDRIVER": "chromedriver-win64/chromedriver.exe"
+      }
+    }
+  },
   "153.0.7979.0": {
     "linux": {
       "url": "https://storage.googleapis.com/chrome-for-testing-public/153.0.7979.0/linux64/chromedriver-linux64.zip",
@@ -2237,6 +2271,40 @@
     "win64": {
       "url": "https://storage.googleapis.com/chrome-for-testing-public/153.0.7979.0/win64/chromedriver-win64.zip",
       "integrity": "caf7c63464f124a301f53bd3babd3f7553d8249886d3469687ab6d805622dac8",
+      "exclude_patterns": [],
+      "named_files": {
+        "CHROMEDRIVER": "chromedriver-win64/chromedriver.exe"
+      }
+    }
+  },
+  "153.0.7981.3": {
+    "linux": {
+      "url": "https://storage.googleapis.com/chrome-for-testing-public/153.0.7981.3/linux64/chromedriver-linux64.zip",
+      "integrity": "8bab44616dd81669a7a99d77c6b7e952ee3ec3bfd01ddf864cf795a880cfbd92",
+      "exclude_patterns": [],
+      "named_files": {
+        "CHROMEDRIVER": "chromedriver-linux64/chromedriver"
+      }
+    },
+    "mac": {
+      "url": "https://storage.googleapis.com/chrome-for-testing-public/153.0.7981.3/mac-x64/chromedriver-mac-x64.zip",
+      "integrity": "d1f8618664ec5b0433c19b36eef91b55671a1adf595ffd012da8b859c32dc7b1",
+      "exclude_patterns": [],
+      "named_files": {
+        "CHROMEDRIVER": "chromedriver-mac-x64/chromedriver"
+      }
+    },
+    "mac_arm": {
+      "url": "https://storage.googleapis.com/chrome-for-testing-public/153.0.7981.3/mac-arm64/chromedriver-mac-arm64.zip",
+      "integrity": "3c8b50af153cf6e8de8f2ec9f4b9a1ce717cd76a3ca6c82f9e736d7b705bdbe2",
+      "exclude_patterns": [],
+      "named_files": {
+        "CHROMEDRIVER": "chromedriver-mac-arm64/chromedriver"
+      }
+    },
+    "win64": {
+      "url": "https://storage.googleapis.com/chrome-for-testing-public/153.0.7981.3/win64/chromedriver-win64.zip",
+      "integrity": "2fdba8a5036173c57627b38df844e2f9c6634dd027eaa5a5f306033e14414e08",
       "exclude_patterns": [],
       "named_files": {
         "CHROMEDRIVER": "chromedriver-win64/chromedriver.exe"
