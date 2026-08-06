@@ -27,6 +27,12 @@ import {Argv} from 'yargs';
 
 runParserWithCompletedFunctions((yargs: Argv) => {
   process.exitCode = 0;
+
+  // Ensure Windows CreateProcess does not search the current directory for bare executable names.
+  if (process.platform === 'win32') {
+    process.env['NoDefaultCurrentDirectoryInExePath'] = '1';
+  }
+
   return yargs
     .scriptName('ng-dev')
     .middleware([captureLogOutputForCommand, ngDevVersionMiddleware], true)
