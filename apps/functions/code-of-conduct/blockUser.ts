@@ -1,5 +1,5 @@
 import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
+import {getAuth} from 'firebase-admin/auth';
 import {
   checkAuthenticationAndAccess,
   BlockUserParams,
@@ -21,7 +21,7 @@ export const blockUser = functions.https.onCall<BlockUserParams>(
     /** The Github client for performing Github actions. */
     const github = await getAuthenticatedGithubClient();
     /** The user performing the block action */
-    const actor = await admin.auth().getUser(authRequest.auth.uid);
+    const actor = await getAuth().getUser(authRequest.auth.uid);
     /** The display name of the user. */
     const actorName = actor.displayName || actor.email || 'Unknown User';
     /** The Firestore Document for the user being blocked. */
