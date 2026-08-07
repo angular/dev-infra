@@ -1,4 +1,10 @@
-import * as admin from 'firebase-admin';
+import {getAuth} from 'firebase-admin/auth';
+import {
+  DocumentData,
+  FirestoreDataConverter,
+  QueryDocumentSnapshot,
+  getFirestore,
+} from 'firebase-admin/firestore';
 import {Octokit} from '@octokit/rest';
 import {createAppAuth} from '@octokit/auth-app';
 import * as functions from 'firebase-functions';
@@ -19,11 +25,11 @@ export interface UnblockUserParams {
 /**
  * Convertor to ensure the data types for javascript and firestore storage are in sync.
  */
-export const converter: admin.firestore.FirestoreDataConverter<BlockedUser> = {
+export const converter: FirestoreDataConverter<BlockedUser> = {
   toFirestore: (user: BlockedUser) => {
     return user;
   },
-  fromFirestore: (data: admin.firestore.QueryDocumentSnapshot<BlockedUser>) => {
+  fromFirestore: (data: QueryDocumentSnapshot<BlockedUser>) => {
     return {
       username: data.get('username'),
       context: data.get('context'),
@@ -38,10 +44,10 @@ export const converter: admin.firestore.FirestoreDataConverter<BlockedUser> = {
 
 /** Get the firestore collection for the blocked users, with the converter already set up. */
 export const blockedUsersCollection = () =>
-  admin.firestore().collection('blockedUsers').withConverter(converter);
+  getFirestore().collection('blockedUsers').withConverter(converter);
 
 /** A blocked user stored in Firestore. */
-export interface BlockedUser extends admin.firestore.DocumentData {
+export interface BlockedUser extends DocumentData {
   blockedBy: string;
   blockedOn: Date;
   username: string;
@@ -66,7 +72,7 @@ export async function checkAuthenticationAndAccess(
     throw new functions.https.HttpsError('unauthenticated', 'This action requires authentication');
   }
 
-  const user = await admin.auth().getUser(context.auth.uid);
+  const user = await getAuth().getUser(context.auth.uid);
   const githubProvider = user.providerData.find((data) => data.providerId === 'github.com');
 
   if (!githubProvider) {

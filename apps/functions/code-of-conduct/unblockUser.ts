@@ -6,7 +6,7 @@ import {
   getAuthenticatedGithubClient,
 } from './shared.js';
 import {Octokit} from '@octokit/rest';
-import * as admin from 'firebase-admin';
+import {DocumentSnapshot} from 'firebase-admin/firestore';
 import * as functions from 'firebase-functions';
 
 /** Unblocks the provided user from Github, clearing their records from our listing. */
@@ -41,12 +41,22 @@ export const dailyUnblock = functions.scheduler.onSchedule(
       .where('blockUntil', '<', new Date())
       .get();
 
-    await Promise.all(usersToUnblock.docs.map(async (user) => performUnblock(github, user)));
+    const results = await Promise.allSettled(
+      usersToUnblock.docs.map((user) => performUnblock(github, user)),
+    );
+    for (const result of results) {
+      if (result.status === 'rejected') {
+        functions.logger.error('Failed to unblock user:', result.reason);
+      }
+    }
   },
 );
 
-async function performUnblock(github: Octokit, doc: admin.firestore.DocumentSnapshot<BlockedUser>) {
-  await github.orgs
-    .unblockUser({org: 'angular', username: doc.get('username')})
-    .then(() => doc.ref.delete());
+async function performUnblock(github: Octokit, doc: DocumentSnapshot<BlockedUser>): Promise<void> {
+  const data = doc.data();
+  if (!data) {
+    throw new Error(`No blocked user record found for document "${doc.id}".`);
+  }
+  await github.orgs.unblockUser({org: 'angular', username: data.username});
+  await doc.ref.delete();
 }
