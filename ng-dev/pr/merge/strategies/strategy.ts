@@ -10,6 +10,7 @@ import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-clien
 import {
   FatalMergeToolError,
   MergeConflictsFatalError,
+  MismatchedPullRequestHeadShaFatalError,
   MismatchedTargetBranchFatalError,
   UnsatisfiedBaseShaFatalError,
 } from '../failures.js';
@@ -38,6 +39,17 @@ export abstract class MergeStrategy {
       pullRequest.targetBranches,
       `pull/${pullRequest.prNumber}/head:${TEMP_PR_HEAD_BRANCH}`,
     );
+
+    // The pull request was validated (approvals, CI status, target labels) against
+    // `pullRequest.headSha`, the head commit the GitHub API reported when the pull request
+    // was loaded. `pull/<number>/head` is a mutable ref though, so a pull request author can
+    // push a new commit between that validation and this fetch. Merging whatever the ref now
+    // points at would land commits that were never reviewed or checked, so we require the
+    // fetched head to be exactly the validated commit and fail closed on any mismatch.
+    const fetchedHeadSha = this.git.run(['rev-parse', TEMP_PR_HEAD_BRANCH]).stdout.trim();
+    if (fetchedHeadSha !== pullRequest.headSha) {
+      throw new MismatchedPullRequestHeadShaFatalError(pullRequest.headSha, fetchedHeadSha);
+    }
   }
 
   /**

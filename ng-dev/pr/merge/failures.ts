@@ -51,3 +51,14 @@ export class PullRequestValidationError extends FatalMergeToolError {
     super('Tool exited as at least one pull request validation error was discovered.');
   }
 }
+
+export class MismatchedPullRequestHeadShaFatalError extends FatalMergeToolError {
+  constructor(expectedSha: string, actualSha: string) {
+    super(
+      `Pull request head commit changed after it was validated. The pull request was ` +
+        `validated at ${expectedSha}, but its head is now ${actualSha}. Merging would land ` +
+        `commits that were never reviewed or checked. Please re-run the merge so the new head ` +
+        `is validated.`,
+    );
+  }
+}
