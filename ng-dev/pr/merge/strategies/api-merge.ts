@@ -58,7 +58,8 @@ export class GithubApiMergeStrategy extends AutosquashMergeStrategy {
    * @throws {FatalMergeToolError} A fatal error if the merge could not be performed.
    */
   override async merge(pullRequest: PullRequest): Promise<void> {
-    const {githubTargetBranch, prNumber, needsCommitMessageFixup, targetBranches} = pullRequest;
+    const {githubTargetBranch, prNumber, needsCommitMessageFixup, targetBranches, headSha} =
+      pullRequest;
     const cherryPickTargetBranches = targetBranches.filter((b) => b !== githubTargetBranch);
     const commits = await this.getPullRequestCommits(pullRequest);
     const {squashCount, fixupCount, normalCommitsCount} = await this.getCommitsInfo(pullRequest);
@@ -66,6 +67,11 @@ export class GithubApiMergeStrategy extends AutosquashMergeStrategy {
     const mergeOptions: OctokitMergeParams = {
       pull_number: prNumber,
       merge_method: method === 'auto' ? 'rebase' : method,
+      // Pin the merge to the head commit that was validated. `pulls.merge` otherwise merges
+      // whatever the pull request head currently is, so a commit pushed after validation but
+      // before this call would be merged without review or CI. With `sha` set, GitHub rejects
+      // the merge (HTTP 409) if the head has moved since it was validated.
+      sha: headSha,
       ...this.git.remoteParams,
     };
 
