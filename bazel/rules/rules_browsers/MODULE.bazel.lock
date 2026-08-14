@@ -660,7 +660,7 @@
                 "aspect_rules_esbuild": "0.27.0",
                 "aspect_tools_telemetry": "0.4.2"
               },
-              "last_notice": 1
+              "last_notice": 0
             }
           }
         },
