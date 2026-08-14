@@ -11,7 +11,7 @@
     "@types/wait-on": "^5.3.4",
     "@types/source-map-support": "0.5.10",
     "browser-sync": "3.0.4",
-    "get-tsconfig": "4.14.1",
+    "get-tsconfig": "4.14.2",
     "piscina": "^5.0.0",
     "send": "1.2.1",
     "true-case-path": "2.2.1",
@@ -19,7 +19,7 @@
     "wait-on": "^9.0.0",
     "protractor": "7.0.0",
     "semver": "7.8.5",
-    "selenium-webdriver": "4.46.0",
+    "selenium-webdriver": "4.47.0",
     "source-map-support": "0.5.21",
     "tinyglobby": "0.2.17"
   }
