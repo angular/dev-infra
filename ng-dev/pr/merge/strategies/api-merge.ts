@@ -144,6 +144,16 @@ export class GithubApiMergeStrategy extends AutosquashMergeStrategy {
       if (isGithubApiError(e) && (e.status === 403 || e.status === 404)) {
         throw new FatalMergeToolError('Insufficient Github API permissions to merge pull request.');
       }
+      // Github returns `409` when the `sha` we pinned the merge to no longer matches the pull
+      // request's actual head. That means the pull request's head moved after it was validated
+      // (approvals, CI status) but before this merge call went out.
+      if (isGithubApiError(e) && e.status === 409) {
+        throw new FatalMergeToolError(
+          `Pull request head commit changed after it was validated (expected ${headSha}). ` +
+            `Merging now would land commits that were never reviewed or checked. Please re-run ` +
+            `the merge so the new head is validated.`,
+        );
+      }
       throw e;
     }
 
