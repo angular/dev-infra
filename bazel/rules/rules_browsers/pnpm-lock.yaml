@@ -66,8 +66,8 @@ packages:
   '@hapi/bourne@3.0.0':
     resolution: {integrity: sha512-Waj1cwPXJDucOib4a3bAISsKJVb15MKi9IvmTI/7ssVEm6sywXGjVJDhl6/umt1pK1ZS7PacXU3A1PmFKHEZ2w==}
 
-  '@jasminejs/reporters@1.0.0':
-    resolution: {integrity: sha512-rM3GG4vx2H1Gp5kYCTr9aKlOEJFd43pzpiMAiy5b1+FUc2ub4e6bS6yCi/WQNDzAa5MVp9++dwcoEtcIfoEnhA==}
+  '@jasminejs/reporters@1.1.0':
+    resolution: {integrity: sha512-JIrlfaf9c6m0+GtBAgZdcFB6RIRbFBbXxZDZ0WOewq4cLIEcVKEe0RgI1FA77M39FNzeSMTAm+LK/kcQVIkfGQ==}
 
   '@jridgewell/resolve-uri@3.1.2':
     resolution: {integrity: sha512-bRISgCIjP20/tbWSPWMEi54QVPRZExkuD9lJL+UIxUKtwVJA8wW1Trb1jMs1RFXo1CBTNZ/5hpC9QvmKWdopKw==}
@@ -2200,7 +2200,7 @@ snapshots:
 
   '@hapi/bourne@3.0.0': {}
 
-  '@jasminejs/reporters@1.0.0': {}
+  '@jasminejs/reporters@1.1.0': {}
 
   '@jridgewell/resolve-uri@3.1.2': {}
 
@@ -3631,7 +3631,7 @@ snapshots:
 
   jasmine@6.3.0:
     dependencies:
-      '@jasminejs/reporters': 1.0.0
+      '@jasminejs/reporters': 1.1.0
       glob: 13.0.6
       jasmine-core: 6.3.0
 
