@@ -24,8 +24,8 @@ importers:
         specifier: 8.2.1
         version: 8.2.1
       firebase-tools:
-        specifier: 15.26.0
-        version: 15.26.0(@types/node@24.13.3)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+        specifier: 15.27.0
+        version: 15.27.0(@types/node@24.13.3)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       husky:
         specifier: 9.1.7
         version: 9.1.7
@@ -157,7 +157,7 @@ importers:
         version: 22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2)
       '@angular/fire':
         specifier: 21.0.0-rc.0
-        version: 21.0.0-rc.0(@angular/common@22.2.0-next.2(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@22.2.0-next.2(@angular/animations@22.2.0-next.2(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2)))(@angular/common@22.2.0-next.2(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2)))(chokidar@5.0.0)(firebase-tools@15.26.0(@types/node@24.13.3)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6))(rxjs@7.8.2)
+        version: 21.0.0-rc.0(@angular/common@22.2.0-next.2(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@22.2.0-next.2(@angular/animations@22.2.0-next.2(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2)))(@angular/common@22.2.0-next.2(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2)))(chokidar@5.0.0)(firebase-tools@15.27.0(@types/node@24.13.3)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6))(rxjs@7.8.2)
       '@angular/forms':
         specifier: 22.2.0-next.2
         version: 22.2.0-next.2(@angular/common@22.2.0-next.2(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@22.2.0-next.2(@angular/animations@22.2.0-next.2(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2)))(@angular/common@22.2.0-next.2(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2)))(rxjs@7.8.2)
@@ -210,8 +210,8 @@ importers:
         specifier: 7.3.2
         version: 7.3.2(@apollo/server@5.5.1(graphql@16.14.2)(supports-color@11.0.0))(@as-integrations/express4@1.1.2(@apollo/server@5.5.1(graphql@16.14.2)(supports-color@11.0.0))(express@4.22.2(supports-color@11.0.0)))(firebase-admin@14.2.0(@firebase/app-compat@0.5.16)(@firebase/app@0.16.0)(encoding@0.1.13)(supports-color@11.0.0))(graphql@16.14.2)(supports-color@11.0.0)
       firebase-tools:
-        specifier: 15.26.0
-        version: 15.26.0(@types/node@24.13.3)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+        specifier: 15.27.0
+        version: 15.27.0(@types/node@24.13.3)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6)
 
   bazel:
     dependencies:
@@ -246,8 +246,8 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
       get-tsconfig:
-        specifier: 4.14.2
-        version: 4.14.2
+        specifier: 4.14.3
+        version: 4.14.3
       piscina:
         specifier: ^5.0.0
         version: 5.3.0
@@ -561,8 +561,8 @@ importers:
         specifier: 8.0.0
         version: 8.0.0(supports-color@11.0.0)
       '@google/genai':
-        specifier: 2.17.0
-        version: 2.17.0(@modelcontextprotocol/sdk@1.30.0(supports-color@11.0.0))(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+        specifier: 2.17.1
+        version: 2.17.1(@modelcontextprotocol/sdk@1.30.0(supports-color@11.0.0))(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       '@inquirer/prompts':
         specifier: 8.5.2
         version: 8.5.2(@types/node@24.13.3)
@@ -1573,6 +1573,15 @@ packages:
 
   '@google/genai@2.17.0':
     resolution: {integrity: sha512-Cnw71bRtYXnGkN/K1YLb4Wz3yPwIe/7c5kw4VkbXAX508A9HHZCTMsBUhaAjTHDfD9Tn2veHxyJXK1Dxxtcx4g==}
+    engines: {node: '>=20.0.0'}
+    peerDependencies:
+      '@modelcontextprotocol/sdk': ^1.25.2
+    peerDependenciesMeta:
+      '@modelcontextprotocol/sdk':
+        optional: true
+
+  '@google/genai@2.17.1':
+    resolution: {integrity: sha512-CdZ3M/titoH81hXXkvOikrOW26bC9IXh9iYT7u+r+5p7wi1LnMEnB0AbJfDeWAkjuneP4oJ299BtCt6twmORWg==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       '@modelcontextprotocol/sdk': ^1.25.2
@@ -3670,8 +3679,8 @@ packages:
       graphql:
         optional: true
 
-  firebase-tools@15.26.0:
-    resolution: {integrity: sha512-5GlK9O7/FffndJ3XFk6fBPTBJH4lNWCxQDP9YoKFWDO85YiGOOpmYyr4lqSyCTkTeQpj1KI1vhPnd9aO6E73ww==}
+  firebase-tools@15.27.0:
+    resolution: {integrity: sha512-gQMMPkv20hAuCUy596Z/GPA0YiwJEr6xEwvJnc+BeZnMlJVYZcl4OL8vvPNqDDcQmrXlNRNAP/qpyVc+5jkxTw==}
     engines: {node: '>=20.0.0 || >=22.0.0 || >=24.0.0'}
     hasBin: true
 
@@ -3807,8 +3816,8 @@ packages:
     resolution: {integrity: sha512-sTSfBjoXBp89JvIKIefqw7U2CCebsc74kiY6awiGogKtoSGbgjYE/G/+l9sF3MWFPNc9IcoOC4ODfKHfxFmp0g==}
     engines: {node: '>= 0.4'}
 
-  get-tsconfig@4.14.2:
-    resolution: {integrity: sha512-XpwZALwwl/BaKTAyC6+c5T8y6kCg2jk+XGqOVrKIQmW49pNypYLMRjCUXqa28tQgJlhS2RlzP7sc+Rx7W6qsfw==}
+  get-tsconfig@4.14.3:
+    resolution: {integrity: sha512-++QEw4DIY7WGoukz+/+A/8dGYPT9l9yIadnmSgZ8Rjr3YVSVDipQSO9CdnJo9ePqFqUUqh+wk9uIaoiAwsiPkA==}
 
   get-uri@6.0.5:
     resolution: {integrity: sha512-b1O07XYq8eRuVzBNgJLstU6FYc1tS6wnMtF1I1D9lE8LxZSOGZ7LhxN54yPP6mGw5f2CkXY2BQUL9Fx41qvcIg==}
@@ -6190,7 +6199,7 @@ snapshots:
       '@angular/compiler': 22.2.0-next.2
       zone.js: 0.16.2
 
-  '@angular/fire@21.0.0-rc.0(@angular/common@22.2.0-next.2(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@22.2.0-next.2(@angular/animations@22.2.0-next.2(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2)))(@angular/common@22.2.0-next.2(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2)))(chokidar@5.0.0)(firebase-tools@15.26.0(@types/node@24.13.3)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6))(rxjs@7.8.2)':
+  '@angular/fire@21.0.0-rc.0(@angular/common@22.2.0-next.2(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))(@angular/platform-browser@22.2.0-next.2(@angular/animations@22.2.0-next.2(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2)))(@angular/common@22.2.0-next.2(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2))(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2)))(chokidar@5.0.0)(firebase-tools@15.27.0(@types/node@24.13.3)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6))(rxjs@7.8.2)':
     dependencies:
       '@angular-devkit/schematics': 21.2.21(chokidar@5.0.0)
       '@angular/common': 22.2.0-next.2(@angular/core@22.2.0-next.2(@angular/compiler@22.2.0-next.2)(rxjs@7.8.2)(zone.js@0.16.2))(rxjs@7.8.2)
@@ -6202,7 +6211,7 @@ snapshots:
       rxjs: 7.8.2
       tslib: 2.8.1
     optionalDependencies:
-      firebase-tools: 15.26.0(@types/node@24.13.3)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+      firebase-tools: 15.27.0(@types/node@24.13.3)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6)
     transitivePeerDependencies:
       - '@react-native-async-storage/async-storage'
       - chokidar
@@ -7076,6 +7085,19 @@ snapshots:
     optional: true
 
   '@google/genai@2.17.0(@modelcontextprotocol/sdk@1.30.0(supports-color@11.0.0))(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)':
+    dependencies:
+      google-auth-library: 10.9.1(supports-color@11.0.0)
+      p-retry: 4.6.2
+      protobufjs: 7.6.5
+      ws: 8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)
+    optionalDependencies:
+      '@modelcontextprotocol/sdk': 1.30.0(supports-color@11.0.0)
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
+  '@google/genai@2.17.1(@modelcontextprotocol/sdk@1.30.0(supports-color@11.0.0))(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)':
     dependencies:
       google-auth-library: 10.9.1(supports-color@11.0.0)
       p-retry: 4.6.2
@@ -9378,7 +9400,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  firebase-tools@15.26.0(@types/node@24.13.3)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6):
+  firebase-tools@15.27.0(@types/node@24.13.3)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
       '@apphosting/common': 0.0.8
       '@electric-sql/pglite': 0.3.16
@@ -9660,7 +9682,7 @@ snapshots:
       dunder-proto: 1.0.1
       es-object-atoms: 1.1.2
 
-  get-tsconfig@4.14.2:
+  get-tsconfig@4.14.3:
     dependencies:
       resolve-pkg-maps: 1.0.0
 
