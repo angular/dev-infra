@@ -100,11 +100,27 @@ async function runPostApprovalChangesAction(
   for (let review of allReviews.concat().reverse()) {
     /** The username of the reviewer, since all reviewers are users this should always exist. */
     const user = review.user!.login;
+    // A `COMMENTED` review is not a review decision. GitHub does not let one replace an
+    // approval either, so it must not be picked up here as the reviewer's latest review,
+    // which would make the check below treat the pull request as not approved and return
+    // early. Commenting on a pull request after approving it is common, so otherwise a
+    // reviewer's approval of an earlier head would never be refreshed.
+    if (review.state === 'COMMENTED') {
+      continue;
+    }
     if (knownReviewers.has(user)) {
       continue;
     }
-    // Only consider reviews by Googlers for this check.
-    if (!(await isGooglerOrgMember(membershipCheckClient, user))) {
+    // Only consider reviews by accounts that the merge tooling also trusts. `ng-dev`'s
+    // `assertMinimumReviews` accepts an approval from any repository `MEMBER`, so a member
+    // who is not in the `googlers` org can make a pull request merge-ready. If this check
+    // ignored those reviews it would see no reviews at all, return early, and never
+    // re-request a review after a non-Googler pushed a new commit, so the stale approval
+    // would keep satisfying the merge gate.
+    if (
+      review.author_association !== 'MEMBER' &&
+      !(await isGooglerOrgMember(membershipCheckClient, user))
+    ) {
       continue;
     }
     knownReviewers.add(user);
