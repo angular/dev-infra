@@ -81,6 +81,12 @@
       matchPackageNames: ['esbuild', 'esbuild-wasm'],
     },
 
+    // Sass packages should be kept in sync.
+    {
+      groupName: 'sass dependencies',
+      matchPackageNames: ['sass', 'sass-embedded'],
+    },
+
     // Jasmine packages should be kept in sync.
     {
       groupName: 'jasmine dependencies',
