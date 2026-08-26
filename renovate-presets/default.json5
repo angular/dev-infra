@@ -79,6 +79,12 @@
       matchPackageNames: ['@types/jasmine', 'jasmine', 'jasmine-core'],
     },
 
+    // @mcp-b/webmcp packages should be kept in sync.
+    {
+      groupName: 'mcp-b webmcp dependencies',
+      matchPackageNames: ['@mcp-b/webmcp-*'],
+    },
+
     // Group all non-major dependencies together for updates.
     {
       groupName: 'all non-major dependencies',
