@@ -67,6 +67,14 @@
       dependencyDashboardApproval: true,
     },
 
+    // Allow auto updates on non-main branches for pnpm, npm and yarn.
+    // These are scheduled to run once every Thursday.
+    {
+      matchBaseBranches: ['!main'],
+      matchDepNames: ['pnpm', 'npm', 'yarn'],
+      schedule: ['* 6-10 * * 4'], // 6:00 am to 10:00 am Every Thursday
+    },
+
     // Esbuild packages should be kept in sync.
     {
       groupName: 'esbuild dependencies',
@@ -88,7 +96,7 @@
     // Group all non-major dependencies together for updates.
     {
       groupName: 'all non-major dependencies',
-      matchDepNames: ['*', '!node', '!pnpm', '!npm', '!yarn'],
+      matchDepNames: ['*', '!node'],
       matchUpdateTypes: ['digest', 'patch', 'minor'],
       matchManagers: ['npm'],
       matchBaseBranches: ['main'],
