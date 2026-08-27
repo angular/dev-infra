@@ -51,6 +51,8 @@ export interface PullRequest {
   needsCommitMessageFixup: boolean;
   /** Whether the pull request has a caretaker note. */
   hasCaretakerNote: boolean;
+  /** The caretaker note comment text, if available. */
+  caretakerNote?: string;
   /** The SHA for the first commit the pull request is based on. */
   baseSha: string;
   /** Git revision range that matches the pull request commits. */
