@@ -12,11 +12,13 @@ import {bold, green, Log, red, yellow} from '../../utils/logging.js';
 
 import {PullRequestConfig, PullRequestValidationConfig} from '../config/index.js';
 import {
+  getCaretakerNoteFromComments,
   getCaretakerNotePromptMessage,
   getTargetedBranchesConfirmationPromptMessage,
   getTargetedBranchesMessage,
 } from './messages.js';
 import {loadAndValidatePullRequest, PullRequest} from './pull-request.js';
+import {fetchPullRequestCommentsFromGithub} from '../common/fetch-pull-request.js';
 import {GithubApiMergeStrategy} from './strategies/api-merge.js';
 import {AutosquashMergeStrategy} from './strategies/autosquash-merge.js';
 import {GithubConfig, NgDevConfig} from '../../utils/config.js';
@@ -133,14 +135,7 @@ export class MergeTool {
       await this.updatePullRequestTargetedBranchesFromPrompt(pullRequest);
     }
 
-    // If the pull request has a caretaker note applied, raise awareness by prompting
-    // the caretaker. The caretaker can then decide to proceed or abort the merge.
-    if (
-      pullRequest.hasCaretakerNote &&
-      !(await Prompt.confirm({message: getCaretakerNotePromptMessage(pullRequest)}))
-    ) {
-      throw new UserAbortedMergeToolError();
-    }
+    await this.checkCaretakerNoteConfirmation(pullRequest);
 
     const strategy = this.config.pullRequest.githubApiMerge
       ? new GithubApiMergeStrategy(this.git, this.config.pullRequest.githubApiMerge)
@@ -284,6 +279,44 @@ export class MergeTool {
     }
 
     pullRequest.targetBranches = selectedBranches;
+  }
+
+  /**
+   * If the pull request has a caretaker note applied, raise awareness by prompting
+   * the caretaker. The caretaker can then decide to proceed or abort the merge.
+   */
+  async checkCaretakerNoteConfirmation(pullRequest: PullRequest): Promise<void> {
+    if (!pullRequest.hasCaretakerNote) {
+      return;
+    }
+
+    const caretakerNote = await this.getCaretakerNote(pullRequest);
+    pullRequest.caretakerNote = caretakerNote;
+
+    if (
+      !(await Prompt.confirm({
+        message: getCaretakerNotePromptMessage(pullRequest, caretakerNote),
+      }))
+    ) {
+      throw new UserAbortedMergeToolError();
+    }
+  }
+
+  /**
+   * Searches the comments on the pull request for a single caretaker note.
+   * Returns the matching comment if exactly one is found, or undefined if
+   * none or multiple are found or if fetching fails.
+   */
+  async getCaretakerNote(pullRequest: PullRequest): Promise<string | undefined> {
+    try {
+      const comments = await fetchPullRequestCommentsFromGithub(this.git, pullRequest.prNumber);
+      if (comments !== null) {
+        return getCaretakerNoteFromComments(comments) ?? undefined;
+      }
+    } catch (e) {
+      Log.debug(`Failed to fetch pull request comments for caretaker note: ${e}`);
+    }
+    return undefined;
   }
 
   async confirmMergeAccess() {
