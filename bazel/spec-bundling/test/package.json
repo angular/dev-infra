@@ -1,8 +1,8 @@
 {
   "dependencies": {
-    "@angular/compiler": "22.2.0-next.3",
-    "@angular/core": "22.2.0-next.3",
-    "@angular/platform-browser": "22.2.0-next.3",
+    "@angular/compiler": "22.2.0-next.4",
+    "@angular/core": "22.2.0-next.4",
+    "@angular/platform-browser": "22.2.0-next.4",
     "@types/jasmine": "6.0.0",
     "@types/jsdom": "30.0.0",
     "@types/node": "24.13.3",
