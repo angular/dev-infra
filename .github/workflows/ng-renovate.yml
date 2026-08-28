@@ -40,7 +40,7 @@ jobs:
         uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
       - name: Setup Dart
         if: matrix.REPOSITORY == 'angular/dev-infra' # Dart is only needed for rules_sass which is in dev-infra.
-        uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260 # v1
+        uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1
       - run: pnpm exec renovate
         working-directory: ./.github/ng-renovate
         env:

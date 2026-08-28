@@ -30,7 +30,7 @@ jobs:
         working-directory: bazel/rules/rules_sass
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260 # v1
+      - uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1
       - run: dart pub get --enforce-lockfile
       - run: mkdir -p src/compiler/built/
       - run: dart compile exe src/compiler/bin/x_sass.dart -o src/compiler/built/${{ matrix.bin_name }}
