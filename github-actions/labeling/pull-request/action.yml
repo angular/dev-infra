@@ -8,6 +8,10 @@ inputs:
   labels:
     description: 'A map of labels to the paths that they should be applied to which are affected by the PR'
     required: false
+  preview-labels:
+    description: 'Labels to automatically remove from pull requests if the author is not a member of the googlers organization.'
+    required: false
+    default: 'adev: preview'
 runs:
   using: 'node24'
   main: 'main.js'
