@@ -476,12 +476,6 @@ importers:
 
   github-actions/previews/pack-and-upload-artifact:
     dependencies:
-      '@actions/core':
-        specifier: 3.0.1
-        version: 3.0.1
-      '@octokit/rest':
-        specifier: 22.0.1
-        version: 22.0.1
       '@types/node':
         specifier: 24.13.3
         version: 24.13.3
@@ -750,6 +744,7 @@ packages:
   '@angular/animations@22.2.0-next.5':
     resolution: {integrity: sha512-Q2ImjJNM14L+jKh5EvxDtooRf8tshZ+rlomtf24AI6Cxr7FelPXwPOZbYmHkPu0y5hqhey5+WNG5RQLRvKjiLQ==}
     engines: {node: ^22.22.3 || ^24.15.0 || >=26.0.0}
+    deprecated: '@angular/animations is deprecated. Use `animate.enter` and `animate.leave` instead. For more information see: https://v22.angular.dev/guide/animations.'
     peerDependencies:
       '@angular/core': 22.2.0-next.5
 
@@ -2569,6 +2564,7 @@ packages:
   '@xmldom/xmldom@0.8.15':
     resolution: {integrity: sha512-/5NV/vDALVFDXgLmfsy9TRCBlKwO2LNBFzpzvb9iIj+jR+eSc6DLYYvVOdivT/jm7MtU6TebYuRmzEOI7w40UA==}
     engines: {node: '>=10.0.0'}
+    deprecated: this version has critical issues, please update to the latest version
 
   '@yarnpkg/lockfile@1.1.0':
     resolution: {integrity: sha512-GpSwvyXOcOOlV70vbnzjj4fW5xW/FdUF6nQEt1ENy7m4ZCczi1+/buVUPAqmGfqznsORNFzUMjctTIp8a9tuCQ==}

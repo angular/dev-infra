@@ -2,7 +2,12 @@ import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {PullRequestEvent} from '@octokit/webhooks-types';
 import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
-import {ANGULAR_ROBOT, getAuthTokenFor, revokeActiveInstallationToken} from '../../utils.js';
+import {
+  ANGULAR_ROBOT,
+  getAuthTokenFor,
+  isGooglerOrgMember,
+  revokeActiveInstallationToken,
+} from '../../utils.js';
 
 /** Allowlist of known Google owned robot accounts. */
 const googleOwnedRobots = ['angular-robot'];
@@ -58,7 +63,7 @@ async function runPostApprovalChangesAction(
 
   const actionUser = context.actor;
 
-  if (await isGooglerOrgMember(membershipCheckClient, actionUser)) {
+  if (await isGooglerOrgMember(actionUser, membershipCheckClient)) {
     core.info(
       'Action performed by an account in the Googler Github Org, skipping as post approval changes are allowed.',
     );
@@ -104,7 +109,7 @@ async function runPostApprovalChangesAction(
       continue;
     }
     // Only consider reviews by Googlers for this check.
-    if (!(await isGooglerOrgMember(membershipCheckClient, user))) {
+    if (!(await isGooglerOrgMember(user, membershipCheckClient))) {
       continue;
     }
     knownReviewers.add(user);
@@ -140,25 +145,6 @@ async function runPostApprovalChangesAction(
     repo,
     reviewers: [reviewToRerequest.user!.login],
   });
-}
-
-/** Set of membership lookup results, used as cache for lookups. */
-const isGooglerOrgMemberCache = new Map<string, boolean>([]);
-
-async function isGooglerOrgMember(client: Octokit, username: string): Promise<boolean> {
-  if (isGooglerOrgMemberCache.has(username)) {
-    return isGooglerOrgMemberCache.get(username)!;
-  }
-  return await client.orgs
-    .checkMembershipForUser({org: 'googlers', username})
-    .then(
-      ({status}) => (status as number) === 204,
-      () => false,
-    )
-    .then((result) => {
-      isGooglerOrgMemberCache.set(username, result);
-      return result;
-    });
 }
 
 // Only run if the action is executed in a repository with is in the Angular org. This is in place

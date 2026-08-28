@@ -1,4 +1,4 @@
-import {getInput, info} from '@actions/core';
+import {error, getInput, info} from '@actions/core';
 import {Octokit} from '@octokit/rest';
 import {createAppAuth} from '@octokit/auth-app';
 import {context} from '@actions/github';
@@ -75,7 +75,32 @@ export async function revokeActiveInstallationToken(
   info('Revoked installation token used for Angular Robot.');
 }
 
+/** Set of membership lookup results, used as cache for lookups. */
+const isGooglerOrgMemberCache = new Map<string, boolean>();
+
+/**
+ * Checks whether the given user is a member of the googlers organization.
+ */
+export async function isGooglerOrgMember(username: string, client: Octokit): Promise<boolean> {
+  if (isGooglerOrgMemberCache.has(username)) {
+    return isGooglerOrgMemberCache.get(username)!;
+  }
+
+  try {
+    const isMember = await client.orgs.checkMembershipForUser({org: 'googlers', username}).then(
+      ({status}) => (status as number) === 204,
+      () => false,
+    );
+    isGooglerOrgMemberCache.set(username, isMember);
+    return isMember;
+  } catch (e) {
+    error(`Could not check googlers org membership for ${username}: ${e}`);
+    return false;
+  }
+}
+
 export const utils = {
   getAuthTokenFor,
   revokeActiveInstallationToken,
+  isGooglerOrgMember,
 };

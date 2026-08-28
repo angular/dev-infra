@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
-import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
+import {RestEndpointMethodTypes} from '@octokit/rest';
 import {Commit, parseCommitMessage} from '../../../../ng-dev/commit-message/parse.js';
 import {
   actionLabels,
@@ -10,6 +10,7 @@ import {
 
 import micromatch from 'micromatch';
 import {ManagedRepositories} from '../../../../ng-dev/pr/common/labels/base.js';
+import {utils} from '../../../utils.js';
 import {Labeling} from '../../shared/labeling.js';
 
 /** The type of the response data for a the pull request get method on from octokit. */
@@ -38,6 +39,7 @@ export class PullRequestLabeling extends Labeling {
     await this.commitMessageBasedLabeling();
     await this.pathBasedLabeling();
     await this.pullRequestMetadataLabeling();
+    await this.previewLabelAutoremoval();
   }
 
   /**
@@ -119,6 +121,44 @@ export class PullRequestLabeling extends Labeling {
     if (this.pullRequestMetadata.draft && this.labels.has(actionLabels.ACTION_MERGE.name)) {
       core.info(`This pull request is still in draft mode, removing "action: merge" label`);
       await this.removeLabel(actionLabels.ACTION_MERGE.name);
+    }
+  }
+
+  /**
+   * Automatically remove preview trigger labels if the PR author is not a member of the googlers
+   * organization.
+   */
+  async previewLabelAutoremoval() {
+    const author = this.pullRequestMetadata?.user?.login;
+    if (!author) {
+      core.debug('No PR author found, skipping preview label autoremoval.');
+      return;
+    }
+
+    const previewLabels = core.getMultilineInput('preview-labels', {trimWhitespace: true});
+    if (previewLabels.length === 0) {
+      return;
+    }
+
+    core.info(`Checking if PR #${context.issue.number} author (${author}) is a Googler...`);
+    const isGoogler = await utils.isGooglerOrgMember(author, this.git);
+
+    if (isGoogler) {
+      core.info(`PR author ${author} is a member of the googlers org. Keeping preview label.`);
+      return;
+    }
+
+    // Find any preview label currently applied to the PR
+    const labelsToRemove = previewLabels.filter((label) => this.labels.has(label));
+    if (labelsToRemove.length === 0) {
+      core.debug('No matching preview label found on PR.');
+      return;
+    }
+
+    core.info(`PR author ${author} is NOT a member of the googlers org. Removing preview label...`);
+    for (const label of labelsToRemove) {
+      await this.removeLabel(label);
+      this.labels.delete(label);
     }
   }
 

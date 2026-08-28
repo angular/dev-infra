@@ -35,6 +35,7 @@ ts_project(
         "//github-actions/labeling/pull-request:__subpackages__",
     ],
     deps = [
+        "//github-actions:utils",
         "//github-actions/labeling:node_modules/@actions/core",
         "//github-actions/labeling:node_modules/@actions/github",
         "//github-actions/labeling:node_modules/@octokit/rest",
