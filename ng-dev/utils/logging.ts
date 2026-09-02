@@ -37,6 +37,7 @@ export const yellow = styleText.bind(null, 'yellow');
 export const bold = styleText.bind(null, 'bold');
 export const blue = styleText.bind(null, 'blue');
 export const underline = styleText.bind(null, 'underline');
+export const magenta = styleText.bind(null, 'magenta');
 
 /** Class used for logging to the console and to a ng-dev log file. */
 export abstract class Log {
