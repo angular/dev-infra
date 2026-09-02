@@ -1,12 +1,7 @@
 load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
-load("//tools:defaults.bzl", "copy_to_bin", "esbuild_checked_in", "js_binary", "ts_project")
+load("//tools:defaults.bzl", "esbuild_checked_in", "ts_project")
 
 npm_link_all_packages()
-
-copy_to_bin(
-    name = "browserstack_token",
-    srcs = ["browserstack_token.data"],
-)
 
 ts_project(
     name = "browserstack",
@@ -18,23 +13,9 @@ ts_project(
     ],
 )
 
-js_binary(
-    name = "encrypt",
-    data = [":browserstack"],
-    entry_point = ":encrypt.js",
-)
-
 esbuild_checked_in(
     name = "set-browserstack-env",
-    srcs = [
-        ":browserstack",
-        ":browserstack_token",
-    ],
-    config = {
-        "loader": {
-            ".data": "binary",
-        },
-    },
+    srcs = [":browserstack"],
     entry_point = "index.ts",
     format = "iife",
     platform = "node",

@@ -1,11 +1,19 @@
 name: 'Config browserstack'
 description: 'Set browserstack environmental variables'
 author: 'Angular'
+inputs:
+  browserstack_username:
+    description: 'BrowserStack username'
+    required: true
+  browserstack_access_key:
+    description: 'BrowserStack access key'
+    required: true
 
 runs:
   using: composite
   steps:
     - run: node $GITHUB_ACTION_PATH/set-browserstack-env.js
       env:
-        NGAT: 'd56ftXEUwkfHJy5+rGBqNA=='
+        BROWSER_STACK_USERNAME: ${{ inputs.browserstack_username }}
+        BROWSER_STACK_ACCESS_KEY: ${{ inputs.browserstack_access_key }}
       shell: bash

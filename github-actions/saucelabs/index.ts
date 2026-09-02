@@ -6,27 +6,19 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-// @ts-ignore-next-line strict-deps
-import tokenRaw from './saucelabs_token.data';
-import {k, iv, alg, at} from './constants.js';
-import {createDecipheriv} from 'crypto';
 import {exportVariable, setSecret} from '@actions/core';
 
-interface SauceInfoObject {
-  SAUCE_USERNAME: string;
-  SAUCE_ACCESS_KEY: string;
-}
-
 async function main() {
-  const t: Uint8Array = tokenRaw;
-  const dcip = createDecipheriv(alg, k, iv).setAuthTag(Buffer.from(at, 'base64'));
-  const dec = dcip.update(t, undefined, 'utf8') + dcip.final('utf8');
-  const {SAUCE_USERNAME, SAUCE_ACCESS_KEY} = JSON.parse(dec) as SauceInfoObject;
-  // Register the access key as a secret to prevent it from being logged.
-  setSecret(SAUCE_ACCESS_KEY);
-  // Set the sauce access key and username as environment variables.
-  exportVariable('SAUCE_ACCESS_KEY', SAUCE_ACCESS_KEY);
-  exportVariable('SAUCE_USERNAME', SAUCE_USERNAME);
+  const username = process.env.SAUCE_USERNAME;
+  const accessKey = process.env.SAUCE_ACCESS_KEY;
+
+  if (!username || !accessKey) {
+    throw new Error('SAUCE_USERNAME and SAUCE_ACCESS_KEY are required');
+  }
+
+  setSecret(accessKey);
+  exportVariable('SAUCE_ACCESS_KEY', accessKey);
+  exportVariable('SAUCE_USERNAME', username);
 }
 
 main().catch((e) => {

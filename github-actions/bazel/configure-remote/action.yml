@@ -15,11 +15,19 @@ inputs:
   google_credential:
     description: |
       A Google credential to be used as authentication for RBE API usages
+    required: true
   trusted_build:
     default: false
     description: |
       Whether the environment should be considerd a trusted build.
 
 runs:
-  using: 'node24'
-  main: 'configure-remote.js'
+  using: composite
+  steps:
+    - run: node $GITHUB_ACTION_PATH/configure-remote.js
+      env:
+        BAZELRC: ${{ inputs.bazelrc }}
+        ALLOW_WINDOWS_RBE: ${{ inputs.allow_windows_rbe }}
+        TRUSTED_BUILD: ${{ inputs.trusted_build }}
+        GOOGLE_CREDENTIAL: ${{ inputs.google_credential }}
+      shell: bash

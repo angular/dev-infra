@@ -1,11 +1,19 @@
 name: 'Config saucelabs'
 description: 'Set saucelabs environmental variables'
 author: 'Angular'
+inputs:
+  sauce_username:
+    description: 'Sauce Labs username'
+    required: true
+  sauce_access_key:
+    description: 'Sauce Labs access key'
+    required: true
 
 runs:
   using: composite
   steps:
     - run: node $GITHUB_ACTION_PATH/set-saucelabs-env.js
       env:
-        NGAT: '2Lm9Sj7Zx8iAS+RIt7RADA=='
+        SAUCE_USERNAME: ${{ inputs.sauce_username }}
+        SAUCE_ACCESS_KEY: ${{ inputs.sauce_access_key }}
       shell: bash

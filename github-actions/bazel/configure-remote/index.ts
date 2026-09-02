@@ -6,23 +6,21 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-// @ts-ignore-next-line strict-deps
-import tokenRaw from './gcp_token.data';
-import {k, iv, alg, at} from './constants.js';
-import {createDecipheriv} from 'crypto';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
 import os from 'os';
-import {exportVariable, getBooleanInput, getInput} from '@actions/core';
+import {exportVariable} from '@actions/core';
 
 async function main() {
   const isWindows = os.platform() === 'win32';
-  const bazelRcPath = getInput('bazelrc', {required: false, trimWhitespace: true});
-  const allowWindowsRbe = getBooleanInput('allow_windows_rbe', {required: true});
-  const trustedBuild = getBooleanInput('trusted_build', {required: false});
-  const credential =
-    getInput('google_credential', {required: false, trimWhitespace: true}) ||
-    getEmbeddedCredential();
+  const bazelRcPath = process.env.BAZELRC;
+  const allowWindowsRbe = process.env.ALLOW_WINDOWS_RBE === 'true';
+  const trustedBuild = process.env.TRUSTED_BUILD === 'true';
+  const credential = process.env.GOOGLE_CREDENTIAL;
+
+  if (!credential) {
+    throw new Error('GOOGLE_CREDENTIAL is required');
+  }
 
   const destPath = isWindows
     ? path.join(process.env.APPDATA!, 'gcloud/application_default_credentials.json')
@@ -42,8 +40,6 @@ async function main() {
     await fs.promises.writeFile(bazelRcPath, content, 'utf8');
   }
 
-  // Expose application credentials as variable. This may not be necessary with the default
-  // path being used for credentials, but it's helpful when we cross boundaries with e.g. WSL.
   exportVariable('GOOGLE_APPLICATION_CREDENTIALS', destPath);
 }
 
@@ -53,13 +49,6 @@ async function readFileGracefully(filePath: string): Promise<string> {
   } catch {
     return '';
   }
-}
-
-/** Extract the embeeded credential from the action. */
-function getEmbeddedCredential(): string {
-  const t: Uint8Array = tokenRaw;
-  const dcip = createDecipheriv(alg, k, iv).setAuthTag(Buffer.from(at, 'base64'));
-  return dcip.update(t, undefined, 'utf8') + dcip.final('utf8');
 }
 
 main().catch((e) => {

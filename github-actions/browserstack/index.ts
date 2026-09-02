@@ -6,29 +6,19 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-// @ts-ignore-next-line strict-deps
-import tokenRaw from './browserstack_token.data';
-import {k, iv, alg, at} from './constants.js';
-import {createDecipheriv} from 'crypto';
 import {exportVariable, setSecret} from '@actions/core';
 
-interface BrowserStackInfoObject {
-  BROWSER_STACK_USERNAME: string;
-  BROWSER_STACK_ACCESS_KEY: string;
-}
-
 async function main() {
-  const t: Uint8Array = tokenRaw;
-  const dcip = createDecipheriv(alg, k, iv).setAuthTag(Buffer.from(at, 'base64'));
-  const dec = dcip.update(t, undefined, 'utf8') + dcip.final('utf8');
-  const {BROWSER_STACK_USERNAME, BROWSER_STACK_ACCESS_KEY} = JSON.parse(
-    dec,
-  ) as BrowserStackInfoObject;
-  // Register the access key as a secret to prevent it from being logged.
-  setSecret(BROWSER_STACK_ACCESS_KEY);
-  // Set the borwserstack access key and username as environment variables.
-  exportVariable('BROWSER_STACK_ACCESS_KEY', BROWSER_STACK_ACCESS_KEY);
-  exportVariable('BROWSER_STACK_USERNAME', BROWSER_STACK_USERNAME);
+  const username = process.env.BROWSER_STACK_USERNAME;
+  const accessKey = process.env.BROWSER_STACK_ACCESS_KEY;
+
+  if (!username || !accessKey) {
+    throw new Error('BROWSER_STACK_USERNAME and BROWSER_STACK_ACCESS_KEY are required');
+  }
+
+  setSecret(accessKey);
+  exportVariable('BROWSER_STACK_ACCESS_KEY', accessKey);
+  exportVariable('BROWSER_STACK_USERNAME', username);
 }
 
 main().catch((e) => {
