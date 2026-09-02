@@ -16,13 +16,19 @@ export const CARETAKER_NOTE_COMMENT_REGEX =
 
 /**
  * Searches the comments on a pull request for a single comment matching the caretaker note prefix.
+ * Only comments from trusted authors (OWNER, MEMBER, or COLLABORATOR) are considered.
  * Returns the comment body if exactly one matching comment is found, or null otherwise.
  */
 export function getCaretakerNoteFromComments(
   comments: PullRequestCommentsFromGithub[],
 ): string | null {
   const matchingComments = comments.filter(
-    (c) => !!c.bodyText && CARETAKER_NOTE_COMMENT_REGEX.test(c.bodyText),
+    (c) =>
+      !!c.bodyText &&
+      (c.authorAssociation === 'OWNER' ||
+        c.authorAssociation === 'MEMBER' ||
+        c.authorAssociation === 'COLLABORATOR') &&
+      CARETAKER_NOTE_COMMENT_REGEX.test(c.bodyText),
   );
 
   if (matchingComments.length === 1) {

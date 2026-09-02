@@ -64,16 +64,21 @@ describe('MergeTool caretaker note', () => {
     mergeTool = new MergeTool(fakeConfig, git, {dryRun: true});
   });
 
-  function mockComments(commentTexts: string[]) {
+  function mockComments(commentDefs: (string | {bodyText: string; authorAssociation?: string})[]) {
     graphqlSpy.and.resolveTo({
       repository: {
         pullRequest: {
           comments: {
-            nodes: commentTexts.map((bodyText) => ({
-              bodyText,
-              author: {login: 'testuser'},
-              authorAssociation: 'MEMBER',
-            })),
+            nodes: commentDefs.map((def) => {
+              const bodyText = typeof def === 'string' ? def : def.bodyText;
+              const authorAssociation =
+                typeof def === 'string' ? 'MEMBER' : (def.authorAssociation ?? 'MEMBER');
+              return {
+                bodyText,
+                author: {login: 'testuser'},
+                authorAssociation,
+              };
+            }),
             pageInfo: {
               hasNextPage: false,
               endCursor: null,
@@ -99,6 +104,12 @@ describe('MergeTool caretaker note', () => {
 
     it('returns undefined when multiple matching comments are found', async () => {
       mockComments(['caretaker note: first note', 'caretaker: second note']);
+      const note = await mergeTool.getCaretakerNote(fakePullRequest);
+      expect(note).toBeUndefined();
+    });
+
+    it('returns undefined when matching comment is from an untrusted author', async () => {
+      mockComments([{bodyText: 'caretaker note: malicious note', authorAssociation: 'NONE'}]);
       const note = await mergeTool.getCaretakerNote(fakePullRequest);
       expect(note).toBeUndefined();
     });

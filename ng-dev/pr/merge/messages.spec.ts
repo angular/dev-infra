@@ -100,11 +100,14 @@ describe('caretaker note prompt messages', () => {
   });
 
   describe('getCaretakerNoteFromComments', () => {
-    function createFakeComment(bodyText: string): PullRequestCommentsFromGithub {
+    function createFakeComment(
+      bodyText: string,
+      authorAssociation: string = 'MEMBER',
+    ): PullRequestCommentsFromGithub {
       return {
         bodyText,
         author: {login: 'testuser'},
-        authorAssociation: 'MEMBER' as any,
+        authorAssociation: authorAssociation as any,
       };
     }
 
@@ -142,6 +145,29 @@ describe('caretaker note prompt messages', () => {
         createFakeComment('caretaker note: Single valid note'),
       ];
       expect(getCaretakerNoteFromComments(comments)).toBe('caretaker note: Single valid note');
+    });
+
+    it('should ignore comments from untrusted authors', () => {
+      const comments = [
+        createFakeComment('caretaker note: Malicious note from stranger', 'NONE'),
+        createFakeComment('caretaker note: Malicious note from contributor', 'CONTRIBUTOR'),
+        createFakeComment('caretaker note: Malicious note from first timer', 'FIRST_TIMER'),
+      ];
+      expect(getCaretakerNoteFromComments(comments)).toBeNull();
+    });
+
+    it('should accept comments from OWNER, MEMBER, or COLLABORATOR', () => {
+      expect(
+        getCaretakerNoteFromComments([createFakeComment('caretaker note: Owner note', 'OWNER')]),
+      ).toBe('caretaker note: Owner note');
+      expect(
+        getCaretakerNoteFromComments([createFakeComment('caretaker note: Member note', 'MEMBER')]),
+      ).toBe('caretaker note: Member note');
+      expect(
+        getCaretakerNoteFromComments([
+          createFakeComment('caretaker note: Collaborator note', 'COLLABORATOR'),
+        ]),
+      ).toBe('caretaker note: Collaborator note');
     });
   });
 
