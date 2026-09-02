@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {red} from '../../utils/logging.js';
+import {red, magenta} from '../../utils/logging.js';
 import {PullRequestCommentsFromGithub} from '../common/fetch-pull-request.js';
 import {
   CARETAKER_NOTE_COMMENT_REGEX,
@@ -185,7 +185,7 @@ describe('caretaker note prompt messages', () => {
       expect(message).toBe(
         red('Pull request has a caretaker note applied. Please make sure you read it:') +
           '\n\n' +
-          '> caretaker note:\n> Please hold off on merging until RC is out.' +
+          magenta('> caretaker note:\n> Please hold off on merging until RC is out.') +
           '\n\nDo you want to proceed merging?',
       );
       // Ensure it does not point to the PR link
@@ -202,7 +202,7 @@ describe('caretaker note prompt messages', () => {
       expect(message).toBe(
         red('Pull request has a caretaker note applied. Please make sure you read it:') +
           '\n\n' +
-          '> caretaker: check this' +
+          magenta('> caretaker: check this') +
           '\n\nDo you want to proceed merging?',
       );
     });

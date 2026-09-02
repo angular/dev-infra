@@ -5,7 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {red, bold} from '../../utils/logging.js';
+import {red, bold, magenta} from '../../utils/logging.js';
 
 import {PullRequestCommentsFromGithub} from '../common/fetch-pull-request.js';
 import {PullRequest} from './pull-request.js';
@@ -48,7 +48,7 @@ export function getCaretakerNotePromptMessage(
   if (caretakerNote) {
     return (
       red('Pull request has a caretaker note applied. Please make sure you read it:') +
-      `\n\n${getQuotedComment(caretakerNote)}\n\nDo you want to proceed merging?`
+      `\n\n${magenta(getQuotedComment(caretakerNote))}\n\nDo you want to proceed merging?`
     );
   }
   return (
