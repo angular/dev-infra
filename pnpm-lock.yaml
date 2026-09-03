@@ -87,8 +87,8 @@ importers:
         specifier: 22.0.1
         version: 22.0.1
       '@octokit/types':
-        specifier: 17.0.0
-        version: 17.0.0
+        specifier: 18.0.0
+        version: 18.0.0
       '@types/node':
         specifier: 24.13.3
         version: 24.13.3
@@ -105,8 +105,8 @@ importers:
         specifier: 22.0.1
         version: 22.0.1
       '@octokit/types':
-        specifier: 17.0.0
-        version: 17.0.0
+        specifier: 18.0.0
+        version: 18.0.0
       '@types/node':
         specifier: 24.13.3
         version: 24.13.3
@@ -408,8 +408,8 @@ importers:
         specifier: ^2.0.0
         version: 2.19.0(@modelcontextprotocol/sdk@1.30.0(supports-color@11.0.0))(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       '@octokit/openapi-types':
-        specifier: 28.0.0
-        version: 28.0.0
+        specifier: 29.0.1
+        version: 29.0.1
       '@octokit/rest':
         specifier: 22.0.1
         version: 22.0.1
@@ -444,8 +444,8 @@ importers:
         specifier: 22.0.1
         version: 22.0.1
       '@octokit/types':
-        specifier: 17.0.0
-        version: 17.0.0
+        specifier: 18.0.0
+        version: 18.0.0
       '@types/node':
         specifier: 24.13.3
         version: 24.13.3
@@ -540,8 +540,8 @@ importers:
         specifier: 22.0.1
         version: 22.0.1
       '@octokit/types':
-        specifier: 17.0.0
-        version: 17.0.0
+        specifier: 18.0.0
+        version: 18.0.0
       '@types/node':
         specifier: 24.13.3
         version: 24.13.3
@@ -582,8 +582,8 @@ importers:
         specifier: 15.26.1
         version: 15.26.1
       '@octokit/openapi-types':
-        specifier: 28.0.0
-        version: 28.0.0
+        specifier: 29.0.1
+        version: 29.0.1
       '@octokit/plugin-paginate-rest':
         specifier: 15.0.0
         version: 15.0.0(@octokit/core@7.0.8)
@@ -597,8 +597,8 @@ importers:
         specifier: 22.0.1
         version: 22.0.1
       '@octokit/types':
-        specifier: 17.0.0
-        version: 17.0.0
+        specifier: 18.0.0
+        version: 18.0.0
       '@pnpm/dependency-path':
         specifier: 1001.1.10
         version: 1001.1.10
