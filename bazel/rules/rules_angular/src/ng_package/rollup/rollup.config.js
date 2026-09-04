@@ -60,15 +60,17 @@ function log_verbose(...m) {
   if (!!process.env['VERBOSE_LOGS']) console.error(`[${path.basename(__filename)}]`, ...m);
 }
 
-const workspaceName = 'TMPL_workspace_name';
-const rootDir = 'TMPL_root_dir';
-const bannerFile = TMPL_banner_file;
-const moduleMappings = TMPL_module_mappings;
-const nodeModulesRoot = 'TMPL_node_modules_root';
-const entrypointMetadata = JSON.parse(`TMPL_metadata`);
-const sideEffectEntryPoints = JSON.parse('TMPL_side_effect_entrypoints');
-const external = TMPL_external;
-const dtsMode = TMPL_dts_mode;
+const {
+  workspaceName,
+  rootDir,
+  bannerFile,
+  moduleMappings,
+  nodeModulesRoot,
+  entrypointMetadata,
+  sideEffectEntryPoints,
+  external,
+  dtsMode,
+} = TMPL_config;
 
 log_verbose(`running with
   cwd: ${process.cwd()}

@@ -77,17 +77,22 @@ def _write_rollup_config(
     ctx.actions.expand_template(
         output = config,
         template = ctx.file._rollup_config_tmpl,
+        # Substitutions are applied sequentially over the accumulating template, so text inserted
+        # by one substitution is re-scanned by every later one. A single substitution carrying all
+        # values as one JSON object keeps rule inputs from being re-entered as placeholders.
         substitutions = {
-            "TMPL_banner_file": "\"%s\"" % ctx.file.license_banner.path if ctx.file.license_banner else "undefined",
-            "TMPL_module_mappings": str(mappings),
-            # TODO: Determine node_modules_root
-            "TMPL_node_modules_root": "node_modules",
-            "TMPL_metadata": json.encode(metadata_arg),
-            "TMPL_root_dir": root_dir,
-            "TMPL_workspace_name": ctx.workspace_name,
-            "TMPL_external": json.encode(externals),
-            "TMPL_side_effect_entrypoints": json.encode(side_effect_entry_points),
-            "TMPL_dts_mode": "true" if dts_mode else "false",
+            "TMPL_config": json.encode(struct(
+                bannerFile = ctx.file.license_banner.path if ctx.file.license_banner else None,
+                dtsMode = dts_mode,
+                entrypointMetadata = metadata_arg,
+                external = externals,
+                moduleMappings = mappings,
+                # TODO: Determine node_modules_root
+                nodeModulesRoot = "node_modules",
+                rootDir = root_dir,
+                sideEffectEntryPoints = side_effect_entry_points,
+                workspaceName = ctx.workspace_name,
+            )),
         },
     )
 
