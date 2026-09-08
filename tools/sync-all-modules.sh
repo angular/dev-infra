@@ -19,7 +19,7 @@ for dir in "${module_dirs[@]}"; do
   if [[ -f "$dir/package.json" ]] && grep -q '"ng-dev":' "$dir/package.json"; then
     (
       cd "$dir"
-      pnpm -s ng-dev misc sync-module-bazel
+      pnpm --silent ng-dev misc sync-module-bazel
     )
 
     # Update the root lockfile. This is needed for the sync-module-bazel command to work due to circular dependencies.
