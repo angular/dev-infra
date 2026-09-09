@@ -8,9 +8,8 @@
 import {GitClient} from '../git/git-client.js';
 import {AuthenticatedGitClient} from '../git/authenticated-git-client.js';
 import {Log} from '../logging.js';
-import {mockNgDevConfig} from '../testing/index.js';
+import {cleanTestTmpDir, mockNgDevConfig, testTmpDir} from '../testing/index.js';
 import fs from 'fs';
-import os from 'os';
 import path from 'path';
 
 describe('GitClient validation', () => {
@@ -24,7 +23,7 @@ describe('GitClient validation', () => {
   };
 
   beforeEach(() => {
-    client = new GitClient(mockConfig as any, '/tmp');
+    client = new GitClient(mockConfig as any, testTmpDir);
   });
 
   describe('hasCommit', () => {
@@ -78,9 +77,12 @@ describe('GitClient sanitization', () => {
   let gitClient: GitClient;
   let logDebugSpy: jasmine.Spy;
   let stderrWriteSpy: jasmine.Spy;
-  const scriptPath = path.join(os.tmpdir(), 'mock-git-58c20eaf.sh');
+  let scriptPath: string;
 
   beforeEach(() => {
+    cleanTestTmpDir();
+    scriptPath = path.join(testTmpDir, 'mock-git.sh');
+
     // Write mock git script
     const scriptContent = `#!/bin/sh
 # shift 2 to get rid of -c credential.helper=
@@ -101,7 +103,7 @@ esac
     fs.writeFileSync(scriptPath, scriptContent);
     fs.chmodSync(scriptPath, 0o755);
 
-    gitClient = new GitClient(mockNgDevConfig, os.tmpdir());
+    gitClient = new GitClient(mockNgDevConfig, testTmpDir);
     (gitClient as any).gitBinPath = scriptPath; // Cast to any to override readonly
 
     logDebugSpy = spyOn(Log, 'debug');
@@ -148,7 +150,7 @@ esac
 
     it('should sanitize process error in logs if spawn fails', () => {
       // Force spawn failure by pointing to non-existent path
-      (gitClient as any).gitBinPath = path.join(os.tmpdir(), 'non-existent-path-58c20eaf');
+      (gitClient as any).gitBinPath = path.join(testTmpDir, 'non-existent-path');
       gitClient.runGraceful(['some-arg']);
 
       expect(logDebugSpy).toHaveBeenCalledWith('Process Error:', jasmine.stringMatching('ENOENT'));
@@ -165,7 +167,7 @@ esac
 describe('AuthenticatedGitClient sanitization', () => {
   class TestAuthenticatedGitClient extends AuthenticatedGitClient {
     constructor(token: string, config: any) {
-      super(token, 'user', config, os.tmpdir());
+      super(token, 'user', config, testTmpDir);
     }
   }
 
