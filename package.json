@@ -2,11 +2,11 @@
   "name": "@angular/build-tooling",
   "version": "0.0.0-{SCM_HEAD_SHA}",
   "private": true,
-  "packageManager": "pnpm@11.25.0",
+  "packageManager": "pnpm@11.26.0",
   "engines": {
     "npm": "Please use pnpm instead of NPM to install dependencies",
     "yarn": "Please use pnpm instead of Yarn to install dependencies",
-    "pnpm": "11.25.0"
+    "pnpm": "11.26.0"
   },
   "scripts": {
     "prepare": "husky",
@@ -27,7 +27,7 @@
   "devDependencies": {
     "@bazel/bazelisk": "1.28.1",
     "@bazel/buildifier": "8.2.1",
-    "firebase-tools": "15.28.2",
+    "firebase-tools": "15.30.0",
     "husky": "9.1.7",
     "jasmine-core": "6.3.0",
     "jasmine-reporters": "2.5.2",
