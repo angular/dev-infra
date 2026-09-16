@@ -23,7 +23,6 @@ jobs:
           - angular/dev-infra
           - angular/components
           - angular/angular-cli
-          - angular/web-codegen-scorer
     runs-on: ubuntu-latest
     steps:
       # Because the checkout and setup node action is contained in the dev-infra repo, we must
@@ -35,9 +34,6 @@ jobs:
           cache-dependency-path: './.github/ng-renovate/pnpm-lock.yaml'
       - run: pnpm install --frozen-lockfile
         working-directory: ./.github/ng-renovate
-      - name: Setup UV
-        if: matrix.REPOSITORY == 'angular/web-codegen-scorer' # UV is only needed for web-codegen-scorer as it uses python.
-        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
       - name: Setup Dart
         if: matrix.REPOSITORY == 'angular/dev-infra' # Dart is only needed for rules_sass which is in dev-infra.
         uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1
