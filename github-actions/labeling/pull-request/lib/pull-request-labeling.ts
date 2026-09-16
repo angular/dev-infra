@@ -193,7 +193,14 @@ export class PullRequestLabeling extends Labeling {
     if (this.managedLabelsByPath) {
       await this.git
         .paginate(this.git.pulls.listFiles, {owner, pull_number: number, repo})
-        .then((files) => this.pullRequestFilePaths.push(...files.map((file) => file.filename)));
+        .then((files) => {
+          for (const file of files) {
+            this.pullRequestFilePaths.push(file.filename);
+            if (file.status === 'renamed' && file.previous_filename) {
+              this.pullRequestFilePaths.push(file.previous_filename);
+            }
+          }
+        });
     }
   }
 
