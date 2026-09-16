@@ -62,7 +62,12 @@ async function main() {
 
   let affectsGoogle = false;
   for (const f of files) {
-    if (syncConfig.ngMatchFn(f.filename) || syncConfig.separateMatchFn(f.filename)) {
+    const paths = [f.filename];
+    if (f.status === 'renamed' && f.previous_filename) {
+      paths.push(f.previous_filename);
+    }
+
+    if (paths.some((filePath) => syncConfig.ngMatchFn(filePath) || syncConfig.separateMatchFn(filePath))) {
       affectsGoogle = true;
       break;
     }
