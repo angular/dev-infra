@@ -74,6 +74,36 @@ describe('PullRequestLabeling', () => {
     );
   });
 
+  it('should apply path labels based on the previous path of renamed files', async () => {
+    (mockGit.paginate as jasmine.Spy).and.callFake((fn: any, args: any) => {
+      if (fn === mockGit.issues.listLabelsForRepo || fn === mockGit.pulls.listCommits) {
+        return Promise.resolve([]);
+      }
+      if (fn === mockGit.pulls.listFiles) {
+        return Promise.resolve([
+          {
+            status: 'renamed',
+            filename: 'docs/example.ts',
+            previous_filename: 'packages/core/primitives/example.ts',
+          },
+        ]);
+      }
+      return Promise.resolve([]);
+    });
+    getLabelsFromInputSpy.and.returnValue({
+      'requires: TGP': ['packages/core/primitives/**'],
+    });
+
+    await labeling.initialize();
+    await labeling.pathBasedLabeling();
+
+    expect(mockGit.issues.addLabels).toHaveBeenCalledWith(
+      jasmine.objectContaining({
+        labels: ['requires: TGP'],
+      }),
+    );
+  });
+
   it('should not apply labels if files do not match', async () => {
     getLabelsFromInputSpy.and.returnValue({
       'target: nothing': ['nothing/**'],
