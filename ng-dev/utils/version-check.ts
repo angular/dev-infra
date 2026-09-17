@@ -8,13 +8,11 @@
 
 import * as path from 'path';
 import * as fs from 'fs';
-import {parseAllDocuments} from 'yaml';
 import {workspaceRelativePackageJsonPath} from './constants.js';
 import {Log} from './logging.js';
-import {tryGetPackageId} from '@pnpm/dependency-path';
 import {determineRepoBaseDirFromCwd} from './repo-directory.js';
-import {GitClient} from './git/git-client.js';
 import {Prompt} from './prompt.js';
+import {ChildProcess} from './child-process.js';
 
 /**
  * The currently executing version of ng-dev
@@ -52,7 +50,7 @@ export async function verifyNgDevToolIsUpToDate(workspacePath: string): Promise<
     Log.debug('Skipping ng-dev version check as this is a locally generated version.');
     return true;
   }
-  const expectedVersion = await getExpectedVersionFromPnpmLockUpstream();
+  const expectedVersion = await getExpectedVersionFromPnpm(workspacePath);
 
   Log.debug('Checking ng-dev version in lockfile and in the running script:');
   Log.debug(`  Local: ${localVersion}`);
@@ -60,15 +58,22 @@ export async function verifyNgDevToolIsUpToDate(workspacePath: string): Promise<
 
   if (expectedVersion === null) {
     Log.warn('  ⚠   Could not extract the expected `ng-dev` version from `pnpm-lock.yaml`.');
-    return await Prompt.confirm({
-      message: 'Do you want to continue anyway?',
-      default: false,
-    });
+    if (!process.stdin.isTTY) {
+      return false;
+    }
+    try {
+      return await Prompt.confirm({
+        message: 'Do you want to continue anyway?',
+        default: false,
+      });
+    } catch {
+      return false;
+    }
   }
 
   if (localVersion !== expectedVersion) {
     Log.warn('  ⚠   Your locally installed version of the `ng-dev` tool is outdated and not');
-    Log.warn('      matching with the version in the `package.json` file.');
+    Log.warn('      matching with the version in the `pnpm-lock.yaml` file.');
     Log.warn('      Re-install the dependencies to ensure you are using the correct version.');
     return false;
   }
@@ -76,75 +81,52 @@ export async function verifyNgDevToolIsUpToDate(workspacePath: string): Promise<
   return true;
 }
 
-/** Retrieves the pnpm lock file from upstream on the primary branch and extracts the version. */
-async function getExpectedVersionFromPnpmLockUpstream(): Promise<string | null> {
-  const git = await GitClient.get();
+/** Retrieves the expected ng-dev version from the pnpm lockfile using `pnpm list`. */
+async function getExpectedVersionFromPnpm(workspacePath: string): Promise<string | null> {
   try {
-    const {data} = await git.github.repos.getContent({
-      repo: git.remoteConfig.name,
-      owner: git.remoteConfig.owner,
-      ref: git.remoteConfig.mainBranchName,
-      // This media type ensures requested files come back as the raw content.
-      mediaType: {format: 'application/vnd.github.raw+json'},
-      path: 'pnpm-lock.yaml',
-    });
-    if (Array.isArray(data) || data.type !== 'file') {
-      throw Error(
-        `A non-single file of content was retrieved from Github when the pnpm-lock.yaml file was requested`,
-      );
-    }
-    const content = Buffer.from(data.content, data.encoding as BufferEncoding).toString('utf-8');
-    const expectedVersion = extractNgDevVersionFromPnpmLock(content);
-    if (expectedVersion === null) {
-      throw Error('Could not find @angular/ng-dev entry in pnpm-lock.yaml');
-    }
-
-    return expectedVersion;
+    const {stdout} = await ChildProcess.spawn(
+      'pnpm',
+      ['list', '@angular/ng-dev', '--json', '--lockfile-only'],
+      {
+        cwd: workspacePath,
+        mode: 'silent',
+        suppressErrorOnFailingExitCode: true,
+      },
+    );
+    return extractNgDevVersionFromPnpmList(stdout);
   } catch (e) {
-    Log.debug('Could not find expected ng-dev version from `pnpm-lock.yaml` file:', e);
+    Log.debug('Could not find expected ng-dev version from `pnpm list`:', e);
     return null;
   }
 }
 
+interface PnpmListProject {
+  dependencies?: Record<string, {version: string}>;
+  devDependencies?: Record<string, {version: string}>;
+  optionalDependencies?: Record<string, {version: string}>;
+}
+
 /**
- * Extracts the expected `@angular/ng-dev` version from the content of a `pnpm-lock.yaml` file.
- * Supports both single-document and multi-document YAML formats.
+ * Extracts the expected `@angular/ng-dev` version from the JSON output of
+ * `pnpm list "@angular/ng-dev" --json --lockfile-only`.
  */
-export function extractNgDevVersionFromPnpmLock(content: string): string | null {
-  const documents = parseAllDocuments(content);
-  for (const doc of documents) {
-    if (doc.errors.length > 0) {
-      throw doc.errors[0];
+export function extractNgDevVersionFromPnpmList(stdout: string): string | null {
+  try {
+    const projects = JSON.parse(stdout) as PnpmListProject[];
+    if (!Array.isArray(projects)) {
+      return null;
     }
-  }
-
-  const lockFiles = documents.map((doc) => doc.toJS());
-
-  for (const lockFile of lockFiles) {
-    const importers = lockFile?.['importers']?.['.'];
-    const depEntry =
-      importers?.dependencies?.['@angular/ng-dev'] ??
-      importers?.devDependencies?.['@angular/ng-dev'] ??
-      importers?.optionalDependencies?.['@angular/ng-dev'];
-    if (!depEntry) {
-      continue;
-    }
-    const depEntryVersion =
-      typeof depEntry === 'object' && depEntry !== null ? depEntry.version : depEntry;
-    if (typeof depEntryVersion !== 'string' || !depEntryVersion) {
-      continue;
-    }
-    const packageId = tryGetPackageId(depEntryVersion as any) ?? depEntryVersion;
-
-    for (const file of lockFiles) {
-      const version =
-        file?.['packages']?.[`@angular/ng-dev@${packageId}`]?.version ??
-        file?.['packages']?.[`@angular/ng-dev@${depEntryVersion}`]?.version;
-      if (version) {
-        return version;
+    for (const project of projects) {
+      const dep =
+        project.dependencies?.['@angular/ng-dev'] ??
+        project.devDependencies?.['@angular/ng-dev'] ??
+        project.optionalDependencies?.['@angular/ng-dev'];
+      if (dep?.version) {
+        return dep.version;
       }
     }
+  } catch {
+    return null;
   }
-
   return null;
 }

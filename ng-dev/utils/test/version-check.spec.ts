@@ -10,158 +10,109 @@ import fs from 'fs';
 import path from 'path';
 import {cleanTestTmpDir, testTmpDir} from '../testing/index.js';
 import {Prompt} from '../prompt.js';
-import {GitClient} from '../git/git-client.js';
-import {extractNgDevVersionFromPnpmLock, verifyNgDevToolIsUpToDate} from '../version-check.js';
+import {ChildProcess} from '../child-process.js';
+import {
+  extractNgDevVersionFromPnpmList,
+  localVersion,
+  verifyNgDevToolIsUpToDate,
+} from '../version-check.js';
 
-describe('extractNgDevVersionFromPnpmLock', () => {
-  it('should extract ng-dev version from a single-document pnpm-lock.yaml', () => {
-    const lockfile = `
-lockfileVersion: '9.0'
+describe('extractNgDevVersionFromPnpmList', () => {
+  it('should extract ng-dev version from devDependencies', () => {
+    const jsonOutput = JSON.stringify([
+      {
+        name: '@angular/devkit-repo',
+        version: '22.3.0-next.0',
+        devDependencies: {
+          '@angular/ng-dev': {
+            from: '@angular/ng-dev',
+            version: '0.0.0-cde7ad16c16f5c7dbd57b62e8b930443813484ec',
+          },
+        },
+      },
+    ]);
 
-importers:
-  .:
-    devDependencies:
-      '@angular/ng-dev':
-        specifier: ^18.0.0
-        version: 18.0.0
-
-packages:
-  '@angular/ng-dev@18.0.0':
-    resolution: {integrity: sha512-test==}
-    version: 18.0.0
-`;
-
-    expect(extractNgDevVersionFromPnpmLock(lockfile)).toBe('18.0.0');
-  });
-
-  it('should extract ng-dev version from a multi-document pnpm-lock.yaml', () => {
-    const lockfile = `
----
-lockfileVersion: '9.0'
-
-importers:
-  .:
-    configDependencies: {}
-    packageManagerDependencies:
-      pnpm:
-        specifier: 12.3.4
-        version: 12.3.4
-
-packages:
-  '@pnpm/exe.darwin-arm64@12.3.4':
-    resolution: {integrity: sha512-test==}
-
----
-lockfileVersion: '9.0'
-
-settings:
-  autoInstallPeers: false
-
-importers:
-  .:
-    devDependencies:
-      '@angular/ng-dev':
-        specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#2fe8cf97ca7d7f1616c3f29e910dde3a7ac5b981
-        version: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/2fe8cf97ca7d7f1616c3f29e910dde3a7ac5b981(@modelcontextprotocol/sdk@1.30.0(supports-color@11.0.0))
-
-packages:
-  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/2fe8cf97ca7d7f1616c3f29e910dde3a7ac5b981':
-    resolution: {gitHosted: true}
-    version: 0.0.0-183403ae13b785698eaf13c819dda55b9fed430b
-`;
-
-    expect(extractNgDevVersionFromPnpmLock(lockfile)).toBe(
-      '0.0.0-183403ae13b785698eaf13c819dda55b9fed430b',
+    expect(extractNgDevVersionFromPnpmList(jsonOutput)).toBe(
+      '0.0.0-cde7ad16c16f5c7dbd57b62e8b930443813484ec',
     );
   });
 
-  it('should extract ng-dev version when listed in dependencies', () => {
-    const lockfile = `
----
-lockfileVersion: '9.0'
+  it('should extract ng-dev version from dependencies', () => {
+    const jsonOutput = JSON.stringify([
+      {
+        name: 'my-project',
+        dependencies: {
+          '@angular/ng-dev': {
+            from: '@angular/ng-dev',
+            version: '19.0.0',
+          },
+        },
+      },
+    ]);
 
-importers:
-  .:
-    packageManagerDependencies:
-      pnpm:
-        specifier: 12.3.4
-        version: 12.3.4
-
----
-lockfileVersion: '9.0'
-
-importers:
-  .:
-    dependencies:
-      '@angular/ng-dev':
-        specifier: 19.0.0
-        version: 19.0.0
-
-packages:
-  '@angular/ng-dev@19.0.0':
-    version: 19.0.0
-`;
-
-    expect(extractNgDevVersionFromPnpmLock(lockfile)).toBe('19.0.0');
+    expect(extractNgDevVersionFromPnpmList(jsonOutput)).toBe('19.0.0');
   });
 
-  it('should extract ng-dev version when depEntry is a string (older lockfile format)', () => {
-    const lockfile = `
-lockfileVersion: '5.4'
+  it('should extract ng-dev version from optionalDependencies', () => {
+    const jsonOutput = JSON.stringify([
+      {
+        name: 'my-project',
+        optionalDependencies: {
+          '@angular/ng-dev': {
+            from: '@angular/ng-dev',
+            version: '19.1.0',
+          },
+        },
+      },
+    ]);
 
-importers:
-  .:
-    dependencies:
-      '@angular/ng-dev': 17.0.0
-
-packages:
-  '@angular/ng-dev@17.0.0':
-    version: 17.0.0
-`;
-
-    expect(extractNgDevVersionFromPnpmLock(lockfile)).toBe('17.0.0');
+    expect(extractNgDevVersionFromPnpmList(jsonOutput)).toBe('19.1.0');
   });
 
-  it('should handle depEntry object with missing version gracefully without throwing', () => {
-    const lockfile = `
-lockfileVersion: '9.0'
+  it('should extract ng-dev version when in a multi-project workspace', () => {
+    const jsonOutput = JSON.stringify([
+      {
+        name: 'project-a',
+        path: '/path/a',
+      },
+      {
+        name: 'project-b',
+        path: '/path/b',
+        devDependencies: {
+          '@angular/ng-dev': {
+            from: '@angular/ng-dev',
+            version: '19.2.0',
+          },
+        },
+      },
+    ]);
 
-importers:
-  .:
-    dependencies:
-      '@angular/ng-dev':
-        specifier: ^18.0.0
-`;
-
-    expect(extractNgDevVersionFromPnpmLock(lockfile)).toBeNull();
+    expect(extractNgDevVersionFromPnpmList(jsonOutput)).toBe('19.2.0');
   });
 
-  it('should return null if ng-dev is not present in lockfile', () => {
-    const lockfile = `
-lockfileVersion: '9.0'
+  it('should return null if ng-dev is not present in lockfile list output', () => {
+    const jsonOutput = JSON.stringify([
+      {
+        name: 'my-project',
+        dependencies: {
+          tslib: {
+            from: 'tslib',
+            version: '2.5.0',
+          },
+        },
+      },
+    ]);
 
-importers:
-  .:
-    dependencies:
-      tslib:
-        specifier: ^2.0.0
-        version: 2.5.0
-`;
-
-    expect(extractNgDevVersionFromPnpmLock(lockfile)).toBeNull();
+    expect(extractNgDevVersionFromPnpmList(jsonOutput)).toBeNull();
   });
 
-  it('should throw an error for invalid YAML syntax', () => {
-    const lockfile = `
-invalid: yaml: :
-`;
-
-    expect(() => extractNgDevVersionFromPnpmLock(lockfile)).toThrow();
+  it('should return null for invalid JSON output', () => {
+    expect(extractNgDevVersionFromPnpmList('not-json')).toBeNull();
   });
 });
 
 describe('verifyNgDevToolIsUpToDate', () => {
-  let gitClientMock: any;
+  let spawnSpy: jasmine.Spy;
 
   beforeEach(() => {
     cleanTestTmpDir();
@@ -170,39 +121,112 @@ describe('verifyNgDevToolIsUpToDate', () => {
       JSON.stringify({name: 'test-project', version: '1.0.0'}),
     );
 
-    gitClientMock = {
-      remoteConfig: {name: 'repo', owner: 'owner', mainBranchName: 'main'},
-      github: {
-        repos: {
-          getContent: jasmine.createSpy('getContent'),
+    spawnSpy = spyOn(ChildProcess, 'spawn');
+  });
+
+  it('should return true when localVersion matches expectedVersion', async () => {
+    const pnpmOutput = JSON.stringify([
+      {
+        devDependencies: {
+          '@angular/ng-dev': {
+            from: '@angular/ng-dev',
+            version: localVersion,
+          },
         },
       },
-    };
-    spyOn(GitClient, 'get').and.returnValue(Promise.resolve(gitClientMock as any));
+    ]);
+    spawnSpy.and.returnValue(Promise.resolve({status: 0, stdout: pnpmOutput, stderr: ''}));
+
+    const result = await verifyNgDevToolIsUpToDate(testTmpDir);
+
+    expect(result).toBeTrue();
+    expect(spawnSpy).toHaveBeenCalledWith(
+      'pnpm',
+      ['list', '@angular/ng-dev', '--json', '--lockfile-only'],
+      jasmine.objectContaining({cwd: testTmpDir, mode: 'silent'}),
+    );
+  });
+
+  it('should return false when localVersion does not match expectedVersion', async () => {
+    const pnpmOutput = JSON.stringify([
+      {
+        devDependencies: {
+          '@angular/ng-dev': {
+            from: '@angular/ng-dev',
+            version: 'different-version',
+          },
+        },
+      },
+    ]);
+    spawnSpy.and.returnValue(Promise.resolve({status: 0, stdout: pnpmOutput, stderr: ''}));
+
+    const result = await verifyNgDevToolIsUpToDate(testTmpDir);
+
+    expect(result).toBeFalse();
+  });
+
+  it('should return true if package.json name is @angular/build-tooling', async () => {
+    fs.writeFileSync(
+      path.join(testTmpDir, 'package.json'),
+      JSON.stringify({name: '@angular/build-tooling', version: '1.0.0'}),
+    );
+
+    const result = await verifyNgDevToolIsUpToDate(testTmpDir);
+
+    expect(result).toBeTrue();
+    expect(spawnSpy).not.toHaveBeenCalled();
   });
 
   it('should prompt user to continue when extracting version fails and return true if confirmed', async () => {
-    gitClientMock.github.repos.getContent.and.rejectWith(new Error('Network error'));
-    spyOn(Prompt, 'confirm').and.returnValue(Promise.resolve(true));
+    const originalIsTTY = process.stdin.isTTY;
+    try {
+      Object.defineProperty(process.stdin, 'isTTY', {value: true, configurable: true});
+      spawnSpy.and.rejectWith(new Error('Process error'));
+      spyOn(Prompt, 'confirm').and.returnValue(Promise.resolve(true));
 
-    const result = await verifyNgDevToolIsUpToDate(testTmpDir);
+      const result = await verifyNgDevToolIsUpToDate(testTmpDir);
 
-    expect(Prompt.confirm).toHaveBeenCalledWith(
-      jasmine.objectContaining({
-        message: 'Do you want to continue anyway?',
-        default: false,
-      }),
-    );
-    expect(result).toBeTrue();
+      expect(Prompt.confirm).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          message: 'Do you want to continue anyway?',
+          default: false,
+        }),
+      );
+      expect(result).toBeTrue();
+    } finally {
+      Object.defineProperty(process.stdin, 'isTTY', {value: originalIsTTY, configurable: true});
+    }
   });
 
   it('should return false when extracting version fails and user declines prompt', async () => {
-    gitClientMock.github.repos.getContent.and.rejectWith(new Error('Network error'));
-    spyOn(Prompt, 'confirm').and.returnValue(Promise.resolve(false));
+    const originalIsTTY = process.stdin.isTTY;
+    try {
+      Object.defineProperty(process.stdin, 'isTTY', {value: true, configurable: true});
+      spawnSpy.and.rejectWith(new Error('Process error'));
+      spyOn(Prompt, 'confirm').and.returnValue(Promise.resolve(false));
 
-    const result = await verifyNgDevToolIsUpToDate(testTmpDir);
+      const result = await verifyNgDevToolIsUpToDate(testTmpDir);
 
-    expect(Prompt.confirm).toHaveBeenCalled();
-    expect(result).toBeFalse();
+      expect(Prompt.confirm).toHaveBeenCalled();
+      expect(result).toBeFalse();
+    } finally {
+      Object.defineProperty(process.stdin, 'isTTY', {value: originalIsTTY, configurable: true});
+    }
+  });
+
+  it('should return false without prompting when extracting version fails in non-interactive environment', async () => {
+    const originalIsTTY = process.stdin.isTTY;
+    try {
+      Object.defineProperty(process.stdin, 'isTTY', {value: false, configurable: true});
+      spawnSpy.and.rejectWith(new Error('Process error'));
+      const confirmSpy = spyOn(Prompt, 'confirm');
+
+      const result = await verifyNgDevToolIsUpToDate(testTmpDir);
+
+      expect(confirmSpy).not.toHaveBeenCalled();
+      expect(result).toBeFalse();
+    } finally {
+      Object.defineProperty(process.stdin, 'isTTY', {value: originalIsTTY, configurable: true});
+    }
   });
 });

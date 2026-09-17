@@ -52,7 +52,6 @@ ts_project(
         "//ng-dev:node_modules/@octokit/request-error",
         "//ng-dev:node_modules/@octokit/rest",
         "//ng-dev:node_modules/@octokit/types",
-        "//ng-dev:node_modules/@pnpm/dependency-path",
         "//ng-dev:node_modules/@types/node",
         "//ng-dev:node_modules/@types/semver",
         "//ng-dev:node_modules/@types/which",
