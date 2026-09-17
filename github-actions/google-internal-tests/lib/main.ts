@@ -67,7 +67,11 @@ async function main() {
       paths.push(f.previous_filename);
     }
 
-    if (paths.some((filePath) => syncConfig.ngMatchFn(filePath) || syncConfig.separateMatchFn(filePath))) {
+    if (
+      paths.some(
+        (filePath) => syncConfig.ngMatchFn(filePath) || syncConfig.separateMatchFn(filePath),
+      )
+    ) {
       affectsGoogle = true;
       break;
     }
