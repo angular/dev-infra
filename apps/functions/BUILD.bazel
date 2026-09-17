@@ -54,5 +54,6 @@ esbuild(
     entry_point = "index.ts",
     format = "cjs",
     platform = "node",
+    target = "node24",
     visibility = ["//apps:__pkg__"],
 )
