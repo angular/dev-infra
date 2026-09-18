@@ -100,13 +100,23 @@ async function main() {
    * deploy channel and the pull request that gets commented on.
    */
   const github = new Octokit({auth: githubToken});
-  const {data: pullRequest} = await github.pulls.get({
-    owner,
-    repo,
-    pull_number: Number(pullNumber),
-  });
 
-  if (pullRequest.head.sha !== workflowRunHeadSha) {
+  let pullRequest;
+  try {
+    const response = await github.pulls.get({
+      owner,
+      repo,
+      pull_number: Number(pullNumber),
+    });
+    pullRequest = response.data;
+  } catch (e) {
+    const message = e instanceof Error ? e.message : String(e);
+    throw Error(`Could not fetch pull request #${pullNumber} to verify it: ${message}`);
+  }
+
+  // Git SHAs are hex, so compare case-insensitively rather than relying on the casing
+  // the API and the event payload happen to use.
+  if (pullRequest.head.sha.toLowerCase() !== workflowRunHeadSha.toLowerCase()) {
     throw Error(
       `Refusing to continue: the artifact claims pull request #${pullNumber}, but that pull ` +
         `request's head commit is ${pullRequest.head.sha} while this workflow run was ` +
