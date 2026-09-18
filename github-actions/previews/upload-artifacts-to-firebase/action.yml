@@ -88,6 +88,12 @@ runs:
     - name: Extracting artifact metadata
       id: artifact-info
       shell: bash
+      env:
+        # TRUSTED: used only to verify the artifact's claimed pull request against
+        # the workflow run that actually triggered this job.
+        GITHUB_TOKEN: '${{inputs.github-token}}'
+        WORKFLOW_RUN_HEAD_SHA: '${{github.event.workflow_run.head_sha}}'
+        GITHUB_REPOSITORY: '${{github.repository}}'
       run: node ${{github.action_path}}/extract-artifact-metadata.js '${{inputs.firebase-public-dir}}'
 
     - uses: FirebaseExtended/action-hosting-deploy@500ac625ca2dd40cbd15f7659af953801858032a # v0
@@ -100,14 +106,14 @@ runs:
         expires: 10d
         projectId: '${{inputs.firebase-project-id}}'
         entryPoint: '${{inputs.firebase-config-dir}}'
-        channelId: pr-${{github.repository}}-${{steps.artifact-info.outputs.unsafe-pull-number}}-${{inputs.workflow-artifact-name}}
+        channelId: pr-${{github.repository}}-${{steps.artifact-info.outputs.pull-number}}-${{inputs.workflow-artifact-name}}
 
     - uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
       with:
         header: ${{inputs.workflow-artifact-name}}
         message: |
-          Deployed ${{inputs.workflow-artifact-name}} for ${{steps.artifact-info.outputs.unsafe-build-revision}} to: ${{steps.deploy.outputs.details_url}}
+          Deployed ${{inputs.workflow-artifact-name}} for ${{steps.artifact-info.outputs.build-revision}} to: ${{steps.deploy.outputs.details_url}}
 
           _**Note**: As new commits are pushed to this pull request, this link is updated after the preview is rebuilt._
-        number: ${{steps.artifact-info.outputs.unsafe-pull-number}}
+        number: ${{steps.artifact-info.outputs.pull-number}}
         GITHUB_TOKEN: '${{inputs.github-token}}'
