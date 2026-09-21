@@ -61,3 +61,34 @@ invalid_strict_deps_test(
         ":sibling_import_from_depth",
     ],
 )
+
+strict_deps_test(
+    name = "import_subpath",
+    srcs = [
+        "import_subpath.ts",
+        "subpath_file.ts",
+    ],
+    package_json = "package.json",
+    tsconfig = "//bazel:tsconfig",
+    deps = ["//bazel:node_modules/@microsoft/api-extractor"],
+)
+
+invalid_strict_deps_test(
+    name = "invalid_import_subpath_without_package_json",
+    srcs = [
+        "import_subpath.ts",
+        "subpath_file.ts",
+    ],
+    tsconfig = "//bazel:tsconfig",
+    deps = ["//bazel:node_modules/@microsoft/api-extractor"],
+)
+
+invalid_strict_deps_test(
+    name = "invalid_import_subpath_missing_dep",
+    srcs = [
+        "import_subpath.ts",
+        "subpath_file.ts",
+    ],
+    package_json = "package.json",
+    tsconfig = "//bazel:tsconfig",
+)
