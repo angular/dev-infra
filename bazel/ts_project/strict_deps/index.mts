@@ -47,6 +47,64 @@ const allowedSources = new Set<string>(
 const tsconfig = readTsConfig(path.join(runfilesRoot, manifest.tsconfigPath));
 const diagnostics: ts.Diagnostic[] = [];
 
+let packageJsonImports: Record<string, unknown> | undefined;
+let packageJsonDir = '';
+
+if (manifest.packageJsonPath) {
+  const packageJsonContent = JSON.parse(
+    await fs.readFile(path.join(runfilesRoot, manifest.packageJsonPath), 'utf8'),
+  );
+  if (
+    packageJsonContent &&
+    typeof packageJsonContent === 'object' &&
+    typeof packageJsonContent.imports === 'object' &&
+    packageJsonContent.imports !== null
+  ) {
+    packageJsonImports = packageJsonContent.imports as Record<string, unknown>;
+  }
+  packageJsonDir = path.posix.dirname(manifest.packageJsonPath);
+}
+
+/**
+ * Recursively extract string targets from an import target value (which can be a string, array, or conditional object).
+ */
+function extractTargets(value: unknown): string[] {
+  if (typeof value === 'string') {
+    return [value];
+  }
+  if (Array.isArray(value)) {
+    return value.flatMap(extractTargets);
+  }
+  if (value && typeof value === 'object') {
+    return Object.values(value).flatMap(extractTargets);
+  }
+  return [];
+}
+
+/**
+ * Resolve a subpath import specifier against the package.json imports field.
+ */
+function resolveSubpathImport(specifier: string, imports: Record<string, unknown>): string[] {
+  if (specifier in imports) {
+    return extractTargets(imports[specifier]);
+  }
+
+  for (const [key, value] of Object.entries(imports)) {
+    if (key.includes('*')) {
+      const escapedKey = key.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '(.*)');
+      const regex = new RegExp(`^${escapedKey}$`);
+      const match = specifier.match(regex);
+      if (match) {
+        const sub = match[1];
+        const targets = extractTargets(value);
+        return targets.map((t) => t.replace(/[*]/g, sub));
+      }
+    }
+  }
+
+  return [];
+}
+
 /** Check if the moduleSpecifier matches any of the provided paths. */
 function checkPathsForMatch(moduleSpecifier: string, paths?: ts.MapLike<string[]>): boolean {
   for (const matcher of Object.keys(paths || {})) {
@@ -71,6 +129,42 @@ for (const fileExecPath of manifest.testFiles) {
     if (i.moduleSpecifier === '') {
       continue;
     }
+
+    if (moduleSpecifier.startsWith('#')) {
+      if (packageJsonImports) {
+        const resolvedTargets = resolveSubpathImport(i.moduleSpecifier, packageJsonImports);
+        if (resolvedTargets.length > 0) {
+          const isAllowed = resolvedTargets.some((target) => {
+            if (target.startsWith('.')) {
+              const targetFilePath = path.posix.join(packageJsonDir, target);
+              const normalizedTarget = targetFilePath.replace(extensionRemoveRegex, '');
+              return (
+                allowedSources.has(normalizedTarget) ||
+                allowedSources.has(`${normalizedTarget}/index`) ||
+                allowedSources.has(targetFilePath)
+              );
+            }
+
+            const moduleName = target.match(moduleSpeciferMatcher)?.[0] || target;
+            return allowedModuleNames.has(moduleName) || allowedModuleNames.has(target);
+          });
+
+          if (isAllowed) {
+            continue;
+          }
+        }
+      }
+
+      if (checkPathsForMatch(moduleSpecifier, tsconfig.options.paths)) {
+        continue;
+      }
+
+      diagnostics.push(
+        createDiagnostic(`No explicit Bazel dependency for this module.`, i.diagnosticNode),
+      );
+      continue;
+    }
+
     if (moduleSpecifier.startsWith('.')) {
       const targetFilePath = path.posix.join(
         path.dirname(i.diagnosticNode.getSourceFile().fileName),

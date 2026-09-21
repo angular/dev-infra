@@ -11,4 +11,5 @@ export interface StrictDepsManifest {
   allowedSources: string[];
   testFiles: string[];
   tsconfigPath: string;
+  packageJsonPath?: string;
 }

@@ -1,0 +1,7 @@
+{
+  "name": "strict-deps-test",
+  "imports": {
+    "#subpath_file": "./subpath_file.ts",
+    "#subpath_npm": "@microsoft/api-extractor"
+  }
+}

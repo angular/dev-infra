@@ -45,17 +45,25 @@ def _strict_deps_impl(ctx):
         if file.is_source:
             test_files.append(file.short_path)
 
+    for file in ctx.files.data:
+        allowed_sources.append(file.short_path)
+
+    manifest_content = {
+        # Note: Ensure this matches `StrictDepsManifest` from `manifest.mts`
+        "testFiles": test_files,
+        "allowedModuleNames": allowed_module_names,
+        "allowedSources": allowed_sources,
+        # The tsconfig from rules_ts has a single src so we know it will be the first file.
+        "tsconfigPath": ctx.files.tsconfig[0].short_path,
+    }
+
+    if ctx.file.package_json:
+        manifest_content["packageJsonPath"] = ctx.file.package_json.short_path
+
     manifest = ctx.actions.declare_file("%s_strict_deps_manifest.json" % ctx.attr.name)
     ctx.actions.write(
         output = manifest,
-        content = json.encode({
-            # Note: Ensure this matches `StrictDepsManifest` from `manifest.mts`
-            "testFiles": test_files,
-            "allowedModuleNames": allowed_module_names,
-            "allowedSources": allowed_sources,
-            # The tsconfig from rules_ts has a single src so we know it will be the first file.
-            "tsconfigPath": ctx.files.tsconfig[0].short_path,
-        }),
+        content = json.encode(manifest_content),
     )
 
     launcher = ctx.actions.declare_file("%s_launcher.sh" % ctx.attr.name)
@@ -95,11 +103,15 @@ def _strict_deps_impl(ctx):
     if JsInfo in ctx.attr.tsconfig:
         transitive_runfiles.append(ctx.runfiles(transitive_files = ctx.attr.tsconfig[JsInfo].transitive_sources))
 
+    runfiles_files = [
+        manifest,
+    ] + ctx.files.srcs + ctx.files._runfiles_lib
+
+    if ctx.file.package_json:
+        runfiles_files.append(ctx.file.package_json)
+
     runfiles = ctx.runfiles(
-        files = [
-                    manifest,
-                ] + ctx.files.srcs +
-                ctx.files._runfiles_lib,
+        files = runfiles_files,
     ).merge_all(transitive_runfiles)
 
     return [
@@ -124,10 +136,19 @@ _strict_deps_test = rule(
             mandatory = True,
             allow_files = True,
         ),
+        "data": attr.label_list(
+            doc = "Data files that are allowed to be imported",
+            allow_files = True,
+            default = [],
+        ),
         "tsconfig": attr.label(
             doc = "The tsconfig of the ts_project being checked",
             mandatory = True,
             allow_files = True,
+        ),
+        "package_json": attr.label(
+            doc = "The package.json of the package being checked",
+            allow_single_file = True,
         ),
         "will_fail": attr.bool(
             doc = "Whether the test is expected to fail",
