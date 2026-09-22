@@ -519,30 +519,6 @@ importers:
         specifier: 24.13.5
         version: 24.13.5
 
-  github-actions/unified-status-check:
-    dependencies:
-      '@actions/core':
-        specifier: 3.0.1
-        version: 3.0.1
-      '@actions/github':
-        specifier: 9.1.1
-        version: 9.1.1
-      '@octokit/graphql-schema':
-        specifier: 15.26.1
-        version: 15.26.1
-      '@octokit/rest':
-        specifier: 22.0.1
-        version: 22.0.1
-      '@octokit/types':
-        specifier: 17.0.0
-        version: 17.0.0
-      '@types/node':
-        specifier: 24.13.5
-        version: 24.13.5
-      typed-graphqlify:
-        specifier: 3.1.6
-        version: 3.1.6
-
   ng-dev:
     dependencies:
       '@actions/core':
