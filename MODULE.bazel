@@ -107,7 +107,6 @@ npm.npm_translate_lock(
         "@devinfra//github-actions/previews/pack-and-upload-artifact:package.json",
         "@devinfra//github-actions/previews/upload-artifacts-to-firebase:package.json",
         "@devinfra//github-actions/saucelabs:package.json",
-        "@devinfra//github-actions/unified-status-check:package.json",
         "@devinfra//ng-dev:package.json",
     ],
     pnpm_lock = "@devinfra//:pnpm-lock.yaml",

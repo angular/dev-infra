@@ -13,7 +13,6 @@ packages:
   - .github/local-actions/update-models
   - github-actions
   - github-actions/google-internal-tests
-  - github-actions/unified-status-check
   - github-actions/previews/pack-and-upload-artifact
   - github-actions/previews/upload-artifacts-to-firebase
   - github-actions/post-approval-changes

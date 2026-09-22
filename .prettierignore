@@ -19,7 +19,6 @@ github-actions/previews/upload-artifacts-to-firebase/fetch-workflow-artifact.js
 github-actions/saucelabs/set-saucelabs-env.js
 github-actions/labeling/issue/main.js
 github-actions/slash-commands/main.js
-github-actions/unified-status-check/main.js
 bazel/map-size-tracking/test/size-golden.json
 
 **/test/goldens/**/*.md
