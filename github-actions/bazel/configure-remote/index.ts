@@ -9,20 +9,19 @@
 // @ts-ignore-next-line strict-deps
 import tokenRaw from './gcp_token.data';
 import {k, iv, alg, at} from './constants.js';
-import {createDecipheriv} from 'crypto';
-import path from 'path';
-import fs from 'fs';
-import os from 'os';
+import {createDecipheriv} from 'node:crypto';
+import path from 'node:path';
+import fs from 'node:fs';
+import os from 'node:os';
 import {exportVariable, getBooleanInput, getInput} from '@actions/core';
 
 async function main() {
   const isWindows = os.platform() === 'win32';
   const bazelRcPath = getInput('bazelrc', {required: false, trimWhitespace: true});
   const allowWindowsRbe = getBooleanInput('allow_windows_rbe', {required: true});
-  const trustedBuild = getBooleanInput('trusted_build', {required: false});
-  const credential =
-    getInput('google_credential', {required: false, trimWhitespace: true}) ||
-    getEmbeddedCredential();
+  const googleCredential = getInput('google_credential', {required: false, trimWhitespace: true});
+  const trustedBuild = !!googleCredential;
+  const credential = googleCredential || getEmbeddedCredential();
 
   const destPath = isWindows
     ? path.join(process.env.APPDATA!, 'gcloud/application_default_credentials.json')
