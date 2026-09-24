@@ -76,8 +76,8 @@ use_repo(rules_angular, rules_angular_configurable_deps = "dev_infra_rules_angul
 pnpm = use_extension("@aspect_rules_js//npm:extensions.bzl", "pnpm")
 pnpm.pnpm(
     name = "pnpm",
-    pnpm_version = "11.27.0",
-    pnpm_version_integrity = "sha512-rRKCFGO7FDKV8fo+zed6a5uXp5kDhtqAD/V7/8OWTcZLexx1WdXb5cM3rqZZ7ZyJN9Q3C9GYyiAJvG+gJJgI5w==",
+    pnpm_version = "11.27.1",
+    pnpm_version_integrity = "sha512-qB1MIbmwmksK6/kO9eUn1CYr3aMi0mCCl4y1SQI6xtnK/Jixn/+qXHHbQ4pl9wIk7beNcxEYeGH/lkgNHNyiPA==",
 )
 use_repo(pnpm, "pnpm")
 
