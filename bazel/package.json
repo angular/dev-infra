@@ -1,11 +1,11 @@
 {
   "name": "@devinfra/bazel",
   "dependencies": {
-    "@microsoft/api-extractor": "7.59.1",
+    "@microsoft/api-extractor": "7.59.2",
     "diff": "^9.0.0",
     "@types/babel__core": "7.20.5",
     "@types/browser-sync": "2.29.1",
-    "@types/node": "24.13.5",
+    "@types/node": "24.13.6",
     "@types/selenium-webdriver": "^4.1.28",
     "@types/send": "1.2.1",
     "@types/wait-on": "^5.3.4",
