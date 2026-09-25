@@ -52,8 +52,8 @@ importers:
         specifier: 24.13.6
         version: 24.13.6
       chromedriver:
-        specifier: ^153.0.0
-        version: 153.0.2(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1)
+        specifier: ^154.0.0
+        version: 154.0.0(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1)
       jasmine-core:
         specifier: 6.3.0
         version: 6.3.0
@@ -1349,8 +1349,8 @@ packages:
     resolution: {integrity: sha512-TQMmc3w+5AxjpL8iIiwebF73dRDF4fBIieAqGn9RGCWaEVwQ6Fb2cGe31Yns0RRIzii5goJ1Y7xbMwo1TxMplw==}
     engines: {node: '>= 20.19.0'}
 
-  chromedriver@153.0.2:
-    resolution: {integrity: sha512-7bGkARUbohvGOrw9ZMKsKMIP3V4Pe4Tw3vguBBRTUHLcbRThFOiMlbGtj/7p31BDG9fAPJ+JSRX8dwCiARJZ8w==}
+  chromedriver@154.0.0:
+    resolution: {integrity: sha512-kn+ENZ2lEPAmeDTNNBbVw6Xt4KAr6M4EFcgeV4lUREgJWHVZBu4fFc+OFivtuf5Q9jM/qSmAcQ3MdWtdOE6mVA==}
     engines: {node: '>=22'}
     hasBin: true
 
@@ -3815,7 +3815,7 @@ snapshots:
     dependencies:
       readdirp: 5.1.1
 
-  chromedriver@153.0.2(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1):
+  chromedriver@154.0.0(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1):
     dependencies:
       '@testim/chrome-version': 1.1.4
       adm-zip: 0.6.1
