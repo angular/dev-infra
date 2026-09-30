@@ -85,9 +85,13 @@ describe('GitClient sanitization', () => {
 
     // Write mock git script
     const scriptContent = `#!/bin/sh
-# shift 2 to get rid of -c credential.helper=
-shift 2
+allArgs="$@"
+# shift 4 to get rid of -c credential.helper= -c core.hooksPath=
+shift 4
 case "$1" in
+  mock-args)
+    echo "$allArgs"
+    ;;
   mock-stdout)
     echo "stdout https://user:pass@github.com"
     ;;
@@ -132,6 +136,16 @@ esac
     it('should not modify URLs without credentials', () => {
       const input = 'Cloning into https://github.com/angular/angular.git';
       expect(gitClient.sanitizeConsoleOutput(input)).toBe(input);
+    });
+  });
+
+  describe('runGraceful git arguments', () => {
+    it('should disable hooks and the credential helper on every invocation', () => {
+      const result = gitClient.runGraceful(['mock-args']);
+
+      expect(result.stdout.trim()).toBe(
+        '-c credential.helper= -c core.hooksPath=/dev/null mock-args',
+      );
     });
   });
 
