@@ -2,7 +2,6 @@ import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {GoogleGenAI} from '@google/genai';
 import {components} from '@octokit/openapi-types';
-import {miscLabels} from '../../../../ng-dev/pr/common/labels/index.js';
 import {Labeling} from '../../shared/labeling.js';
 
 export const NEEDS_TRIAGE_MILESTONE = 'needsTriage';
@@ -108,7 +107,6 @@ ${this.issueData?.body ?? ''}
 
       if (this.repoAreaLabels.has(text)) {
         await this.addLabel(text);
-        await this.addLabel(miscLabels.GEMINI_TRIAGED.name);
       } else {
         core.info(
           `Generated label "${text}" is not in the list of valid area labels or is "ambiguous"/"none".`,
