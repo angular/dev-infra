@@ -92,7 +92,10 @@ export class GitClient {
 
     // Clear the credential helper that is used, preventing the temporary token from being saved as a
     // valid token for future use.
-    args = ['-c', 'credential.helper=', ...args];
+    // Point the hooks path at a location which can never hold hooks. Commands such as `pr checkout`
+    // and `pr rebase` check out pull request content into the working tree, and hooks provided by
+    // that content must not be executed.
+    args = ['-c', 'credential.helper=', '-c', 'core.hooksPath=/dev/null', ...args];
     // To improve the debugging experience in case something fails, we print all executed Git
     // commands at the DEBUG level to better understand the git actions occurring.
     // Note that we sanitize the command before printing it to the console. We do not want to
