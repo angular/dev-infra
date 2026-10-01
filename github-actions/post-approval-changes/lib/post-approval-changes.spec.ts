@@ -1,5 +1,4 @@
 import {context} from '@actions/github';
-import * as core from '@actions/core';
 import {Octokit} from '@octokit/rest';
 import {utils} from '../../utils.js';
 import {
@@ -11,19 +10,17 @@ import {
 describe('post-approval-changes', () => {
   let mockRepoClient: jasmine.SpyObj<Octokit>;
   let mockGooglersClient: jasmine.SpyObj<Octokit>;
-  let isGooglerOrgMemberSpy: jasmine.Spy;
   let getAuthTokenForSpy: jasmine.Spy;
   let revokeTokenSpy: jasmine.Spy;
-  let infoSpy: jasmine.Spy;
+  let stdoutWriteSpy: jasmine.Spy;
   let requestReviewersSpy: jasmine.Spy;
   let paginateSpy: jasmine.Spy;
 
   beforeEach(() => {
     // Set standard context
+    process.env['GITHUB_REPOSITORY'] = 'angular/angular';
     context.eventName = 'pull_request_target';
     (context as any).actor = 'external-user';
-    (context as any).repo = {owner: 'angular', repo: 'angular'};
-    (context as any).issue = {owner: 'angular', repo: 'angular', number: 123};
     (context as any).payload = {
       action: 'synchronize',
       pull_request: {
@@ -37,7 +34,9 @@ describe('post-approval-changes', () => {
 
     mockRepoClient = jasmine.createSpyObj('Octokit', ['paginate', 'pulls']);
     mockRepoClient.pulls = jasmine.createSpyObj('pulls', ['listReviews', 'requestReviewers']);
-    requestReviewersSpy = (mockRepoClient.pulls.requestReviewers as jasmine.Spy).and.resolveTo({});
+    requestReviewersSpy = (
+      mockRepoClient.pulls.requestReviewers as unknown as jasmine.Spy
+    ).and.resolveTo({});
     paginateSpy = (mockRepoClient.paginate as jasmine.Spy).and.callFake((fn: any) => {
       if (fn === mockRepoClient.pulls.listReviews) {
         return Promise.resolve([]);
@@ -47,14 +46,12 @@ describe('post-approval-changes', () => {
 
     mockGooglersClient = jasmine.createSpyObj('Octokit', ['orgs']);
 
-    isGooglerOrgMemberSpy = spyOn(utils, 'isGooglerOrgMember').and.callFake(
-      async (user: string) => {
-        return user.startsWith('googler');
-      },
-    );
+    spyOn(utils, 'isGooglerOrgMember').and.callFake(async (user: string) => {
+      return user.startsWith('googler');
+    });
     getAuthTokenForSpy = spyOn(utils, 'getAuthTokenFor').and.resolveTo('fake-token');
     revokeTokenSpy = spyOn(utils, 'revokeActiveInstallationToken').and.resolveTo();
-    infoSpy = spyOn(core, 'info');
+    stdoutWriteSpy = spyOn(process.stdout, 'write').and.callThrough();
   });
 
   describe('review deduplication', () => {
@@ -104,8 +101,10 @@ describe('post-approval-changes', () => {
       await runPostApprovalChangesAction(mockGooglersClient, mockRepoClient);
 
       expect(requestReviewersSpy).not.toHaveBeenCalled();
-      expect(infoSpy).toHaveBeenCalledWith(
-        'Passing check as at least one reviews is for the latest commit on the pull request',
+      expect(stdoutWriteSpy).toHaveBeenCalledWith(
+        jasmine.stringContaining(
+          'Passing check as at least one reviews is for the latest commit on the pull request',
+        ),
       );
     });
 
@@ -128,8 +127,8 @@ describe('post-approval-changes', () => {
       await runPostApprovalChangesAction(mockGooglersClient, mockRepoClient);
 
       expect(requestReviewersSpy).not.toHaveBeenCalled();
-      expect(infoSpy).toHaveBeenCalledWith(
-        'Skipping check as there are still non-approved review states.',
+      expect(stdoutWriteSpy).toHaveBeenCalledWith(
+        jasmine.stringContaining('Skipping check as there are still non-approved review states.'),
       );
     });
   });
@@ -192,8 +191,10 @@ describe('post-approval-changes', () => {
       await runPostApprovalChangesAction(mockGooglersClient, mockRepoClient);
 
       expect(requestReviewersSpy).not.toHaveBeenCalled();
-      expect(infoSpy).toHaveBeenCalledWith(
-        'Passing check as at least one reviews is for the latest commit on the pull request',
+      expect(stdoutWriteSpy).toHaveBeenCalledWith(
+        jasmine.stringContaining(
+          'Passing check as at least one reviews is for the latest commit on the pull request',
+        ),
       );
     });
 
@@ -213,8 +214,10 @@ describe('post-approval-changes', () => {
       await runPostApprovalChangesAction(mockGooglersClient, mockRepoClient);
 
       expect(requestReviewersSpy).not.toHaveBeenCalled();
-      expect(infoSpy).toHaveBeenCalledWith(
-        'Action performed by an account in the Googler Github Org, skipping as post approval changes are allowed.',
+      expect(stdoutWriteSpy).toHaveBeenCalledWith(
+        jasmine.stringContaining(
+          'Action performed by an account in the Googler Github Org, skipping as post approval changes are allowed.',
+        ),
       );
     });
   });
@@ -240,7 +243,7 @@ describe('post-approval-changes', () => {
 
       expect(requestReviewersSpy).toHaveBeenCalledWith(
         jasmine.objectContaining({
-          reviewers: ['googler-a', 'googler-b'],
+          reviewers: jasmine.arrayWithExactContents(['googler-a', 'googler-b']),
         }),
       );
     });
@@ -270,6 +273,53 @@ describe('post-approval-changes', () => {
           reviewers: ['googler-b'],
         }),
       );
+    });
+  });
+
+  describe('fail-closed on token error', () => {
+    it('should propagate rejection when getGooglersOrgInstallationToken fails', async () => {
+      getAuthTokenForSpy.and.callFake(async (_app: any, target: any) => {
+        if (target.org === 'googlers') {
+          throw new Error('Failed to get installation token for googlers');
+        }
+        return 'repo-token';
+      });
+
+      await expectAsync(getGooglersOrgInstallationToken()).toBeRejectedWithError(
+        /Failed to get installation token for googlers/,
+      );
+    });
+
+    it('should fail closed in postApprovalChangesMain and revoke repo token if googlers token fails', async () => {
+      getAuthTokenForSpy.and.callFake(async (_app: any, target: any) => {
+        if (target.org === 'googlers') {
+          throw new Error('500 Internal Server Error');
+        }
+        return 'repo-token';
+      });
+
+      // postApprovalChangesMain throws the error to be caught by main()'s outer handler
+      await expectAsync(postApprovalChangesMain()).toBeRejectedWithError(
+        /500 Internal Server Error/,
+      );
+
+      // Verify that repo token was properly revoked in finally block
+      expect(revokeTokenSpy).toHaveBeenCalled();
+    });
+
+    it('should still revoke repo token if revoking googlers org token throws', async () => {
+      (context as any).actor = 'googler-pusher';
+      let callCount = 0;
+      revokeTokenSpy.and.callFake(async () => {
+        callCount++;
+        if (callCount === 1) {
+          throw new Error('Failed to revoke googlers token');
+        }
+      });
+
+      await postApprovalChangesMain();
+
+      expect(revokeTokenSpy).toHaveBeenCalledTimes(2);
     });
   });
 });
