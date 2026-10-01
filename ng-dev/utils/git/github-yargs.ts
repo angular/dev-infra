@@ -9,7 +9,7 @@
 import {Log} from '../logging.js';
 
 import {Argv} from 'yargs';
-import {AuthenticatedGitClient} from './authenticated-git-client.js';
+import {AuthenticatedGitClient, TokenEnvironmentVariable} from './authenticated-git-client.js';
 import {GITHUB_TOKEN_GENERATE_URL} from './github-urls.js';
 
 /** Sets up the `github-token` command option for the given Yargs instance. */
@@ -42,7 +42,14 @@ export function addGithubTokenOption<T>(argv: Argv<T>) {
  * that the token should only be accessed from the AuthenticatedGitClient itself.
  */
 export function configureGitClientWithTokenOrFromEnvironment(token: string | undefined): void {
-  const githubToken = token || (process.env['GITHUB_TOKEN'] ?? process.env['TOKEN']);
+  let tokenEnvVar: TokenEnvironmentVariable | null = null;
+  if (process.env['GITHUB_TOKEN']) {
+    tokenEnvVar = 'GITHUB_TOKEN';
+  } else if (process.env['TOKEN']) {
+    tokenEnvVar = 'TOKEN';
+  }
+
+  const githubToken = token || (tokenEnvVar ? process.env[tokenEnvVar] : undefined);
   if (!githubToken) {
     Log.error('No Github token set. Please set the `GITHUB_TOKEN` environment variable.');
     Log.error('Alternatively, pass the `--github-token` command line flag.');
@@ -50,5 +57,10 @@ export function configureGitClientWithTokenOrFromEnvironment(token: string | und
     throw Error('Unable to determine the Github token.');
   }
 
-  AuthenticatedGitClient.configure(githubToken);
+  const sourceEnvVar = token ? null : tokenEnvVar;
+
+  AuthenticatedGitClient.configure(githubToken, 'user', sourceEnvVar);
+
+  delete process.env['GITHUB_TOKEN'];
+  delete process.env['TOKEN'];
 }
