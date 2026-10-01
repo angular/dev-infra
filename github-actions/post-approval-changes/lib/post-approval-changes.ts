@@ -2,10 +2,7 @@ import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {PullRequestEvent} from '@octokit/webhooks-types';
 import {Octokit, RestEndpointMethodTypes} from '@octokit/rest';
-import {
-  ANGULAR_ROBOT,
-  utils,
-} from '../../utils.js';
+import {ANGULAR_ROBOT, utils} from '../../utils.js';
 
 /** Allowlist of known Google owned robot accounts. */
 export const googleOwnedRobots = ['angular-robot'];
@@ -16,38 +13,36 @@ export async function postApprovalChangesMain() {
 
   try {
     const repoToken = await utils.getAuthTokenFor(ANGULAR_ROBOT, context.repo);
-    const googlersOrgToken = await getGooglersOrgInstallationToken();
-
     repoClient = new Octokit({auth: repoToken});
 
-    if (googlersOrgToken !== null) {
-      googlersOrgClient = new Octokit({auth: googlersOrgToken});
-    }
+    const googlersOrgToken = await getGooglersOrgInstallationToken();
+    googlersOrgClient = new Octokit({auth: googlersOrgToken});
 
-    await runPostApprovalChangesAction(googlersOrgClient ?? repoClient, repoClient);
+    await runPostApprovalChangesAction(googlersOrgClient, repoClient);
   } finally {
     if (googlersOrgClient !== null) {
-      await utils.revokeActiveInstallationToken(googlersOrgClient);
+      try {
+        await utils.revokeActiveInstallationToken(googlersOrgClient);
+      } catch (e) {
+        core.error(`Failed to revoke googlers org installation token: ${e}`);
+      }
     }
     if (repoClient !== null) {
-      await utils.revokeActiveInstallationToken(repoClient);
+      try {
+        await utils.revokeActiveInstallationToken(repoClient);
+      } catch (e) {
+        core.error(`Failed to revoke repo installation token: ${e}`);
+      }
     }
   }
 }
 
-export async function getGooglersOrgInstallationToken(): Promise<string | null> {
-  try {
-    // Use the `.github` repo from googlers to get an installation that has access to the googlers
-    // user membership.
-    return await utils.getAuthTokenFor(ANGULAR_ROBOT, {
-      org: 'googlers',
-    });
-  } catch (e) {
-    console.error('Could not retrieve installation token for `googlers` org.');
-    console.error(e);
-  }
-
-  return null;
+export async function getGooglersOrgInstallationToken(): Promise<string> {
+  // Use the `.github` repo from googlers to get an installation that has access to the googlers
+  // user membership. Do not swallow errors; propagate to fail closed.
+  return await utils.getAuthTokenFor(ANGULAR_ROBOT, {
+    org: 'googlers',
+  });
 }
 
 export async function runPostApprovalChangesAction(
