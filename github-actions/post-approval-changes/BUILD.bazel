@@ -1,5 +1,5 @@
 load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
-load("//tools:defaults.bzl", "esbuild_checked_in", "ts_project")
+load("//tools:defaults.bzl", "esbuild_checked_in", "jasmine_test", "ts_project")
 
 package(default_visibility = ["//github-actions/post-approval-changes:__subpackages__"])
 
@@ -7,7 +7,10 @@ npm_link_all_packages()
 
 ts_project(
     name = "lib",
-    srcs = glob(["lib/*.ts"]),
+    srcs = glob(
+        ["lib/*.ts"],
+        exclude = ["lib/*.spec.ts"],
+    ),
     tsconfig = "//github-actions:tsconfig",
     deps = [
         ":node_modules/@actions/core",
@@ -15,6 +18,28 @@ ts_project(
         ":node_modules/@octokit/rest",
         ":node_modules/@octokit/webhooks-types",
         ":node_modules/@types/node",
+        "//github-actions:utils",
+    ],
+)
+
+ts_project(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob([
+        "lib/*.spec.ts",
+    ]),
+    tsconfig = "//github-actions:tsconfig_test",
+    visibility = [
+        "//github-actions/post-approval-changes:__subpackages__",
+    ],
+    deps = [
+        ":lib",
+        ":node_modules/@actions/core",
+        ":node_modules/@actions/github",
+        ":node_modules/@octokit/rest",
+        ":node_modules/@octokit/webhooks-types",
+        ":node_modules/@types/node",
+        "//github-actions:node_modules/@types/jasmine",
         "//github-actions:utils",
     ],
 )
@@ -28,4 +53,11 @@ esbuild_checked_in(
     format = "esm",
     platform = "node",
     target = "node24",
+)
+
+jasmine_test(
+    name = "test",
+    data = [
+        ":test_lib",
+    ],
 )
