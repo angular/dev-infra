@@ -23518,8 +23518,8 @@ async function main() {
     );
   }
   console.info(`Verified pull request #${pullNumber} against workflow run ${workflowRunHeadSha}`);
-  setOutput("pull-number", pullNumber);
-  setOutput("build-revision", workflowRunHeadSha);
+  setOutput("unsafe-pull-number", pullNumber);
+  setOutput("unsafe-build-revision", workflowRunHeadSha);
 }
 try {
   await main();
