@@ -21,6 +21,9 @@ import {
 /** Describes a function that can be used to test for given Github OAuth scopes. */
 export type OAuthScopeTestFunction = (scopes: string[], missing: string[]) => void;
 
+/** The possible environment variables containing a GitHub token. */
+export type TokenEnvironmentVariable = 'GITHUB_TOKEN' | 'TOKEN';
+
 /** The possible types of users which could be used for authentication. */
 type UserType = 'bot' | 'user';
 
@@ -49,6 +52,7 @@ export class AuthenticatedGitClient extends GitClient {
     readonly userType: UserType,
     config: {github: GithubConfig},
     baseDir?: string,
+    readonly tokenEnvironmentVariable: TokenEnvironmentVariable | null = null,
   ) {
     super(config, baseDir);
   }
@@ -154,6 +158,8 @@ export class AuthenticatedGitClient extends GitClient {
 
   /** The previously configured access token. */
   private static _token: string | null = null;
+  /** The previously configured token environment variable name. */
+  private static _tokenEnvironmentVariable: TokenEnvironmentVariable | null = null;
   /** The singleton instance of the `AuthenticatedGitClient`. */
   private static _authenticatedInstance: Promise<AuthenticatedGitClient> | null = null;
   /** The previously configured user type. */
@@ -175,20 +181,31 @@ export class AuthenticatedGitClient extends GitClient {
       AuthenticatedGitClient._authenticatedInstance = (async (
         token: string,
         userType: UserType,
+        tokenEnvironmentVariable: TokenEnvironmentVariable | null,
       ) => {
         return new AuthenticatedGitClient(
           token,
           userType,
           await getConfig([assertValidGithubConfig]),
+          undefined,
+          tokenEnvironmentVariable,
         );
-      })(AuthenticatedGitClient._token, AuthenticatedGitClient._userType);
+      })(
+        AuthenticatedGitClient._token,
+        AuthenticatedGitClient._userType,
+        AuthenticatedGitClient._tokenEnvironmentVariable,
+      );
     }
 
     return AuthenticatedGitClient._authenticatedInstance;
   }
 
   /** Configures an authenticated git client. */
-  static configure(token: string, userType: UserType = 'user'): void {
+  static configure(
+    token: string,
+    userType: UserType = 'user',
+    tokenEnvironmentVariable: TokenEnvironmentVariable | null = null,
+  ): void {
     if (AuthenticatedGitClient._token) {
       throw Error(
         'Unable to configure `AuthenticatedGitClient` as it has been configured already.',
@@ -197,5 +214,6 @@ export class AuthenticatedGitClient extends GitClient {
 
     AuthenticatedGitClient._token = token;
     AuthenticatedGitClient._userType = userType;
+    AuthenticatedGitClient._tokenEnvironmentVariable = tokenEnvironmentVariable;
   }
 }
