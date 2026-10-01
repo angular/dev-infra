@@ -22,6 +22,7 @@ import {assertValidPullRequest} from '../validation/validate-pull-request.js';
 import {PullRequestConfig, PullRequestValidationConfig} from '../../config/index.js';
 import {PullRequestTarget} from '../targeting/target-label.js';
 import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client.js';
+import {upstreamUrlToPush} from '../checkout-pr.js';
 import {
   cleanTestTmpDir,
   installVirtualGitClientSpies,
@@ -251,6 +252,44 @@ describe('pull request validation', () => {
       spyOn(fileHelper, 'loadPullRequestFiles').and.returnValue(Promise.resolve(files));
       const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
       expect(results.length).toBe(0);
+    });
+  });
+
+  describe('upstreamUrlToPush', () => {
+    const repoUrl = 'https://github.com/angular/angular.git';
+
+    it('should use $GITHUB_TOKEN when git.tokenEnvironmentVariable is GITHUB_TOKEN', () => {
+      const mockGit = {tokenEnvironmentVariable: 'GITHUB_TOKEN'} as AuthenticatedGitClient;
+      expect(upstreamUrlToPush(repoUrl, mockGit)).toBe(
+        'https://x-access-token:$GITHUB_TOKEN@github.com/angular/angular.git',
+      );
+    });
+
+    it('should use $TOKEN when git.tokenEnvironmentVariable is TOKEN', () => {
+      const mockGit = {tokenEnvironmentVariable: 'TOKEN'} as AuthenticatedGitClient;
+      expect(upstreamUrlToPush(repoUrl, mockGit)).toBe(
+        'https://x-access-token:$TOKEN@github.com/angular/angular.git',
+      );
+    });
+
+    it('should return unauthenticated URL when git.tokenEnvironmentVariable is null', () => {
+      const mockGit = {tokenEnvironmentVariable: null} as AuthenticatedGitClient;
+      expect(upstreamUrlToPush(repoUrl, mockGit)).toBe('https://github.com/angular/angular.git');
+    });
+
+    it('should ignore process.env when determining push url credentials', () => {
+      const originalGithubToken = process.env['GITHUB_TOKEN'];
+      try {
+        process.env['GITHUB_TOKEN'] = 'super-secret';
+        const mockGit = {tokenEnvironmentVariable: null} as AuthenticatedGitClient;
+        expect(upstreamUrlToPush(repoUrl, mockGit)).toBe('https://github.com/angular/angular.git');
+      } finally {
+        if (originalGithubToken !== undefined) {
+          process.env['GITHUB_TOKEN'] = originalGithubToken;
+        } else {
+          delete process.env['GITHUB_TOKEN'];
+        }
+      }
     });
   });
 });

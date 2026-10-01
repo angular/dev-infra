@@ -6,6 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import childProcess, {ChildProcess as NodeChildProcess} from 'child_process';
+import {EventEmitter} from 'events';
 import {BuildWorker} from './index.js';
 import {setConfig} from '../../utils/config.js';
 import {BuiltPackage, NpmPackage, ReleaseConfig} from '../config/index.js';
@@ -80,5 +82,69 @@ describe('ng-dev release build', () => {
     expect(console.error).toHaveBeenCalledWith(jasmine.stringMatching(`- @angular/non-existent`));
     expect(process.exit).toHaveBeenCalledTimes(1);
     expect(process.exit).toHaveBeenCalledWith(1);
+  });
+});
+
+describe('BuildWorker.invokeBuild', () => {
+  let originalEnv: NodeJS.ProcessEnv;
+
+  beforeEach(() => {
+    originalEnv = {...process.env};
+  });
+
+  afterEach(() => {
+    process.env = originalEnv;
+  });
+
+  it('should scrub GITHUB_TOKEN, TOKEN, GH_TOKEN, and SNAPSHOT_BUILDS_GITHUB_TOKEN from child environment', async () => {
+    process.env['GITHUB_TOKEN'] = 'secret-github-token';
+    process.env['TOKEN'] = 'secret-token';
+    process.env['GH_TOKEN'] = 'secret-gh-token';
+    process.env['SNAPSHOT_BUILDS_GITHUB_TOKEN'] = 'secret-snapshot-token';
+    process.env['CUSTOM_VAR'] = 'preserved-var';
+
+    let capturedOptions: childProcess.ForkOptions | undefined;
+    const mockChildProcess = new EventEmitter() as NodeChildProcess;
+
+    spyOn(childProcess, 'fork').and.callFake((_modulePath: any, options?: any) => {
+      capturedOptions = options;
+      process.nextTick(() => {
+        mockChildProcess.emit('exit', 0);
+      });
+      return mockChildProcess;
+    });
+
+    const result = await BuildWorker.invokeBuild();
+
+    expect(result).toBeNull();
+    expect(capturedOptions).toBeDefined();
+    expect(capturedOptions?.env).toBeDefined();
+
+    const env = capturedOptions!.env!;
+    expect(env['GITHUB_TOKEN']).toBeUndefined();
+    expect(env['TOKEN']).toBeUndefined();
+    expect(env['GH_TOKEN']).toBeUndefined();
+    expect(env['SNAPSHOT_BUILDS_GITHUB_TOKEN']).toBeUndefined();
+
+    expect(env['CUSTOM_VAR']).toBe('preserved-var');
+    if (process.env['PATH']) {
+      expect(env['PATH']).toBe(process.env['PATH']);
+    }
+  });
+
+  it('should resolve with built packages received from worker process', async () => {
+    const mockPackages: BuiltPackage[] = [{name: '@angular/pkg1', outputPath: 'dist/pkg1'}];
+    const mockChildProcess = new EventEmitter() as NodeChildProcess;
+
+    spyOn(childProcess, 'fork').and.callFake(() => {
+      process.nextTick(() => {
+        mockChildProcess.emit('message', mockPackages);
+        mockChildProcess.emit('exit', 0);
+      });
+      return mockChildProcess;
+    });
+
+    const result = await BuildWorker.invokeBuild();
+    expect(result).toEqual(mockPackages);
   });
 });

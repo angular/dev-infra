@@ -28,6 +28,12 @@ async function main() {
     throw Error('This script needs to be invoked as a NodeJS worker.');
   }
 
+  // Scrub tokens as defense-in-depth before loading config or executing buildPackages.
+  delete process.env['GITHUB_TOKEN'];
+  delete process.env['TOKEN'];
+  delete process.env['GH_TOKEN'];
+  delete process.env['SNAPSHOT_BUILDS_GITHUB_TOKEN'];
+
   const config = await getConfig();
   assertValidReleaseConfig(config);
 

@@ -8,7 +8,7 @@
 
 import {dirname, join} from 'path';
 import {fileURLToPath} from 'url';
-import {fork} from 'child_process';
+import childProcess from 'child_process';
 import {BuiltPackage} from '../config/index.js';
 
 export abstract class BuildWorker {
@@ -21,11 +21,18 @@ export abstract class BuildWorker {
    */
   static async invokeBuild(): Promise<BuiltPackage[] | null> {
     return new Promise((resolve) => {
-      const buildProcess = fork(getBuildWorkerScriptPath(), {
+      const env: NodeJS.ProcessEnv = {...process.env};
+      delete env['GITHUB_TOKEN'];
+      delete env['TOKEN'];
+      delete env['GH_TOKEN'];
+      delete env['SNAPSHOT_BUILDS_GITHUB_TOKEN'];
+
+      const buildProcess = childProcess.fork(getBuildWorkerScriptPath(), {
         // The stdio option is set to redirect any "stdout" output directly to the "stderr" file
         // descriptor. An additional "ipc" file descriptor is created to support communication with
         // the build process. https://nodejs.org/api/child_process.html#child_process_options_stdio.
         stdio: ['inherit', 2, 2, 'ipc'],
+        env,
       });
       let builtPackages: BuiltPackage[] | null = null;
 
