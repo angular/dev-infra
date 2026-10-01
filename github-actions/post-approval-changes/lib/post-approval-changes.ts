@@ -60,19 +60,24 @@ export async function runPostApprovalChangesAction(
   const {pull_request: pr} = context.payload as PullRequestEvent;
 
   const actionUser = context.actor;
+  const isReopened = (context.payload as PullRequestEvent).action === 'reopened';
 
-  if (await utils.isGooglerOrgMember(actionUser, membershipCheckClient)) {
-    core.info(
-      'Action performed by an account in the Googler Github Org, skipping as post approval changes are allowed.',
-    );
-    return;
-  }
+  // For reopened events, we must verify commit freshness regardless of who clicked Reopen,
+  // preventing a bypass when an external PR with commits pushed while closed is reopened by a Googler.
+  if (!isReopened) {
+    if (await utils.isGooglerOrgMember(actionUser, membershipCheckClient)) {
+      core.info(
+        'Action performed by an account in the Googler Github Org, skipping as post approval changes are allowed.',
+      );
+      return;
+    }
 
-  if (googleOwnedRobots.includes(actionUser)) {
-    core.info(
-      'Action performed by a robot owned by Google, skipping as post approval changes are allowed.',
-    );
-    return;
+    if (googleOwnedRobots.includes(actionUser)) {
+      core.info(
+        'Action performed by a robot owned by Google, skipping as post approval changes are allowed.',
+      );
+      return;
+    }
   }
 
   console.debug(`Requested Reviewers: ${pr.requested_reviewers.join(', ')}`);

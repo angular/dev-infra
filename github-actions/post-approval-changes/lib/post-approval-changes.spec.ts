@@ -133,4 +133,89 @@ describe('post-approval-changes', () => {
       );
     });
   });
+
+  describe('reopen event commit freshness', () => {
+    it('should enforce commit freshness on reopened event even if reopened by a Googler', async () => {
+      // Reopened by a Googler actor
+      (context as any).actor = 'googler-reopener';
+      (context as any).payload = {
+        action: 'reopened',
+        pull_request: {
+          number: 123,
+          head: {sha: 'unreviewed-sha-after-reopen'},
+          requested_reviewers: [],
+          requested_teams: [],
+          user: {login: 'external-user'},
+        },
+      };
+
+      paginateSpy.and.resolveTo([
+        {
+          id: 1,
+          user: {login: 'googler-alice'},
+          state: 'APPROVED',
+          commit_id: 'stale-sha-before-close',
+        },
+      ]);
+
+      await runPostApprovalChangesAction(mockGooglersClient, mockRepoClient);
+
+      expect(requestReviewersSpy).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          reviewers: ['googler-alice'],
+        }),
+      );
+    });
+
+    it('should pass check on reopened event if approval is fresh', async () => {
+      (context as any).actor = 'googler-reopener';
+      (context as any).payload = {
+        action: 'reopened',
+        pull_request: {
+          number: 123,
+          head: {sha: 'reviewed-sha'},
+          requested_reviewers: [],
+          requested_teams: [],
+          user: {login: 'external-user'},
+        },
+      };
+
+      paginateSpy.and.resolveTo([
+        {
+          id: 1,
+          user: {login: 'googler-alice'},
+          state: 'APPROVED',
+          commit_id: 'reviewed-sha',
+        },
+      ]);
+
+      await runPostApprovalChangesAction(mockGooglersClient, mockRepoClient);
+
+      expect(requestReviewersSpy).not.toHaveBeenCalled();
+      expect(infoSpy).toHaveBeenCalledWith(
+        'Passing check as at least one reviews is for the latest commit on the pull request',
+      );
+    });
+
+    it('should still skip check for synchronize event when actor is a Googler', async () => {
+      (context as any).actor = 'googler-pusher';
+      (context as any).payload = {
+        action: 'synchronize',
+        pull_request: {
+          number: 123,
+          head: {sha: 'some-sha'},
+          requested_reviewers: [],
+          requested_teams: [],
+          user: {login: 'external-user'},
+        },
+      };
+
+      await runPostApprovalChangesAction(mockGooglersClient, mockRepoClient);
+
+      expect(requestReviewersSpy).not.toHaveBeenCalled();
+      expect(infoSpy).toHaveBeenCalledWith(
+        'Action performed by an account in the Googler Github Org, skipping as post approval changes are allowed.',
+      );
+    });
+  });
 });
