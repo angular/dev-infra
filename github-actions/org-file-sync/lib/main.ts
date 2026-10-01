@@ -4,33 +4,38 @@ import {Octokit} from '@octokit/rest';
 import {RequestError} from '@octokit/types';
 import {getAuthTokenFor, ANGULAR_ROBOT, revokeActiveInstallationToken} from '../../utils.js';
 
-const reposToSync = core.getMultilineInput('repos', {required: true, trimWhitespace: true});
-core.group('Repos being synced:', async () =>
-  reposToSync.forEach((repo) => core.info(`- ${repo}`)),
-);
-const filesToSync = core.getMultilineInput('files', {required: true, trimWhitespace: true});
-core.group('Files being synced:', async () =>
-  filesToSync.forEach((file) => core.info(`- ${file}`)),
-);
-
 /**
  * A file to be synced, a custom interface is used due to Octokit's types not properly expressing
  * the content value.
  */
-interface File {
+export interface File {
   sha: string;
   content: string;
 }
 
 /** A map of the files obtained for a repository */
-type Files = Map<string, File | null>;
+export type Files = Map<string, File | null>;
 
-/** Retrieve the files from Github which are syncronized for a given repo. */
-async function getFilesForRepo(github: Octokit, repo: string): Promise<Files> {
-  core.startGroup(`Retrieving files from "${repo}" repo`);
+/** Asserts that a given string is a valid 40-character hexadecimal git commit SHA. */
+export function assertValidCommitSha(sha: unknown): asserts sha is string {
+  if (typeof sha !== 'string' || !/^[0-9a-f]{40}$/i.test(sha)) {
+    throw new Error(
+      `Invalid or missing context.sha: "${sha}". A valid 40-character hexadecimal commit SHA is required to pin source files.`,
+    );
+  }
+}
+
+/** Retrieve the files from Github which are synchronized for a given repo. */
+export async function getFilesForRepo(
+  github: Octokit,
+  repo: string,
+  filesToSync: string[],
+  ref?: string,
+): Promise<Files> {
+  core.startGroup(`Retrieving files from "${repo}" repo${ref ? ` at ref ${ref}` : ''}`);
   const fileMap = new Map<string, File | null>();
   for (const path of filesToSync) {
-    fileMap.set(path, await getFile(github, repo, path));
+    fileMap.set(path, await getFile(github, repo, path, ref));
   }
   const fileCount = [...fileMap.values()].filter((file) => file !== null).length;
   core.info(`Retrieved ${fileCount} file(s)`);
@@ -42,9 +47,23 @@ async function getFilesForRepo(github: Octokit, repo: string): Promise<Files> {
  * Retrieve the file content for a specified file, properly handling the file not existing in the
  * repo and returning a 404.
  */
-async function getFile(github: Octokit, repo: string, path: string): Promise<File | null> {
-  core.info(`Retrieving "${path}" from ${repo} repo`);
-  return github.rest.repos.getContent({owner: context.repo.owner, repo, path}).then(
+export async function getFile(
+  github: Octokit,
+  repo: string,
+  path: string,
+  ref?: string,
+): Promise<File | null> {
+  core.info(`Retrieving "${path}" from ${repo} repo${ref ? ` at ref ${ref}` : ''}`);
+  const requestParams: {owner: string; repo: string; path: string; ref?: string} = {
+    owner: context.repo.owner,
+    repo,
+    path,
+  };
+  if (ref !== undefined) {
+    requestParams.ref = ref;
+  }
+
+  return github.rest.repos.getContent(requestParams).then(
     (response) => {
       if ((response.data as {content?: string}).content !== undefined) {
         return response.data as File;
@@ -65,13 +84,18 @@ async function getFile(github: Octokit, repo: string, path: string): Promise<Fil
  * Update the target repo to ensure the provided golden file contents are used for the files
  * with the same path in the repo.
  */
-async function updateRepoWithFiles(github: Octokit, repo: string, goldenFiles: Files) {
+export async function updateRepoWithFiles(
+  github: Octokit,
+  repo: string,
+  goldenFiles: Files,
+  filesToSync: string[],
+) {
   core.startGroup(`Update files in "${repo}" repo`);
   /** The current files, or lack of files, for synchronizing in target repo. */
-  const repoFiles = await getFilesForRepo(github, repo);
+  const repoFiles = await getFilesForRepo(github, repo, filesToSync);
 
   for (let [path, goldenFile] of goldenFiles.entries()) {
-    // If the golden file does not exist, we have nothing to syncronize.
+    // If the golden file does not exist, we have nothing to synchronize.
     if (goldenFile === null) {
       continue;
     }
@@ -82,7 +106,7 @@ async function updateRepoWithFiles(github: Octokit, repo: string, goldenFiles: F
     /** The current content of the file in the target repo. */
     let repoFileContent: string | undefined = undefined;
 
-    // If the repo file is null, there is not previous information to use for comparisons
+    // If the repo file is null, there is no previous information to use for comparisons
     if (repoFile !== null) {
       repoSha = repoFile.sha;
       repoFileContent = repoFile.content;
@@ -97,7 +121,7 @@ async function updateRepoWithFiles(github: Octokit, repo: string, goldenFiles: F
           repo,
           path,
           message: `build: update \`${path}\` to match the content of \`${context.repo.owner}/${context.repo.repo}\``,
-          // The SHA of the previous file content change is used if an update is occuring.
+          // The SHA of the previous file content change is used if an update is occurring.
           sha: repoSha,
         });
       } catch (e) {
@@ -111,21 +135,49 @@ async function updateRepoWithFiles(github: Octokit, repo: string, goldenFiles: F
   core.endGroup();
 }
 
-async function main() {
-  const github = new Octokit({auth: await getAuthTokenFor(ANGULAR_ROBOT)});
+export async function runOrgFileSync(
+  reposToSync: string[],
+  filesToSync: string[],
+  sha: string = context.sha,
+  octokit?: Octokit,
+) {
+  assertValidCommitSha(sha);
+
+  const github = octokit ?? new Octokit({auth: await getAuthTokenFor(ANGULAR_ROBOT)});
   try {
-    const goldenFiles: Files = await getFilesForRepo(github, context.repo.repo);
+    const goldenFiles: Files = await getFilesForRepo(github, context.repo.repo, filesToSync, sha);
 
     for (const repo of reposToSync) {
       core.info(`~~~~~~Updating "${repo}" repo~~~~~~~`);
-      await updateRepoWithFiles(github, repo, goldenFiles);
+      await updateRepoWithFiles(github, repo, goldenFiles, filesToSync);
     }
   } finally {
-    await revokeActiveInstallationToken(github);
+    if (!octokit) {
+      await revokeActiveInstallationToken(github);
+    }
   }
 }
 
-main().catch((err) => {
-  console.error(err);
-  core.setFailed('Failed with the above error');
-});
+async function main() {
+  const reposToSync = core.getMultilineInput('repos', {required: true, trimWhitespace: true});
+  core.group('Repos being synced:', async () =>
+    reposToSync.forEach((repo) => core.info(`- ${repo}`)),
+  );
+  const filesToSync = core.getMultilineInput('files', {required: true, trimWhitespace: true});
+  core.group('Files being synced:', async () =>
+    filesToSync.forEach((file) => core.info(`- ${file}`)),
+  );
+
+  await runOrgFileSync(reposToSync, filesToSync);
+}
+
+if (
+  process.env['JASMINE_RUNNER'] === undefined &&
+  !process.env['TEST_TARGET'] &&
+  !process.env['TEST_SRCDIR']
+) {
+  main().catch((err) => {
+    console.error(err);
+    core.setFailed('Failed with the above error');
+  });
+}
