@@ -25,114 +25,219 @@ import fs from 'fs';
 
 import {artifactMetadata} from '../../constants.js';
 
-/** The shape each metadata value is allowed to take. */
-const metadataPatterns: Record<keyof typeof artifactMetadata, RegExp> = {
-  'pull-number': /^[1-9][0-9]{0,9}$/,
-  'build-revision': /^[0-9a-f]{7,40}$/,
-};
+export interface WorkflowRunPullRequest {
+  number: number;
+  [key: string]: unknown;
+}
 
-/** Reads a single metadata value out of the unpacked artifact. */
-async function readMetadataValue(
-  fullArtifactDirPath: string,
-  key: keyof typeof artifactMetadata,
-  name: string,
-): Promise<string> {
-  /** The expected path of the artifact */
-  const expectedPath = path.normalize(path.join(fullArtifactDirPath, name));
+export interface WorkflowRunPayload {
+  head_sha?: string;
+  pull_requests?: WorkflowRunPullRequest[];
+  [key: string]: unknown;
+}
 
-  // We confirm that the provided artifact path is actually in the expected location instead of pointing somewhere
-  // else to exfiltrate information.
-  const realPath = await fs.promises.realpath(expectedPath);
-  if (expectedPath !== realPath) {
-    throw Error(
-      `Value for ${key} not stored directly in file as expected,\n  expected: ${expectedPath}\n  got: ${realPath}`,
+export interface ValidatedMetadata {
+  'pull-number': string;
+  'build-revision': string;
+}
+
+/**
+ * Validates untrusted metadata extracted from an uploaded artifact against the
+ * trusted workflow_run event payload.
+ *
+ * Fails closed if the workflow_run event is missing, has no pull requests attached,
+ * or if the metadata does not match the triggering PR or commit SHA.
+ */
+export function validateArtifactMetadata(
+  rawMetadata: Record<string, string>,
+  workflowRun: WorkflowRunPayload | undefined,
+): ValidatedMetadata {
+  if (!workflowRun) {
+    throw new Error(
+      'Missing context.payload.workflow_run. Preview deployment metadata can only be verified in workflow_run events.',
     );
   }
 
-  const content = (await fs.promises.readFile(expectedPath, 'utf8')).trim();
-
-  // The file contents come from the untrusted build, so reject anything that is not
-  // exactly the shape we expect before it reaches a deploy target or a comment.
-  if (!metadataPatterns[key].test(content)) {
-    throw Error(
-      `Value for ${key} does not match the expected format ${metadataPatterns[key]}.\n` +
-        `  got: ${JSON.stringify(content.slice(0, 100))}`,
+  // Previews and sticky comments exist exclusively for pull requests. Fail closed if pull_requests is missing or empty.
+  if (!Array.isArray(workflowRun.pull_requests) || workflowRun.pull_requests.length === 0) {
+    throw new Error(
+      'No pull requests associated with workflow_run event. Preview deployment cannot proceed without verified PR context.',
     );
   }
 
-  return content;
+  const rawPullNumber = rawMetadata['pull-number'];
+  if (!rawPullNumber || typeof rawPullNumber !== 'string') {
+    throw new Error('Missing or empty "pull-number" in artifact metadata.');
+  }
+
+  const trimmedPullNumber = rawPullNumber.trim();
+  if (!/^\d+$/.test(trimmedPullNumber)) {
+    throw new Error(
+      `Invalid pull-number format in artifact metadata: "${rawPullNumber}". Expected a positive integer.`,
+    );
+  }
+
+  const parsedPullNumber = Number.parseInt(trimmedPullNumber, 10);
+  if (parsedPullNumber <= 0) {
+    throw new Error(
+      `Invalid pull-number in artifact metadata: "${rawPullNumber}". Expected a positive non-zero integer.`,
+    );
+  }
+
+  const validPrNumbers = workflowRun.pull_requests.map((pr) => pr.number);
+  if (!validPrNumbers.includes(parsedPullNumber)) {
+    throw new Error(
+      `Untrusted pull-number ${parsedPullNumber} does not match any pull request associated with the workflow_run event (valid PRs: ${validPrNumbers.join(', ')}).`,
+    );
+  }
+
+  // Validate build revision against workflow_run.head_sha
+  if (
+    !workflowRun.head_sha ||
+    typeof workflowRun.head_sha !== 'string' ||
+    !/^[0-9a-f]{40}$/i.test(workflowRun.head_sha.trim())
+  ) {
+    throw new Error(
+      `Missing or malformed head_sha in workflow_run payload: "${workflowRun.head_sha}". Expected 40-character hex commit SHA.`,
+    );
+  }
+
+  const rawRevision = rawMetadata['build-revision'];
+  if (!rawRevision || typeof rawRevision !== 'string') {
+    throw new Error('Missing or empty "build-revision" in artifact metadata.');
+  }
+
+  const trimmedRevision = rawRevision.trim();
+  if (!/^[0-9a-f]{7,40}$/i.test(trimmedRevision)) {
+    throw new Error(
+      `Invalid build-revision format in artifact metadata: "${rawRevision}". Expected 7-40 hex characters.`,
+    );
+  }
+
+  const canonicalHeadSha = workflowRun.head_sha.trim().toLowerCase();
+  if (!canonicalHeadSha.startsWith(trimmedRevision.toLowerCase())) {
+    throw new Error(
+      `Untrusted build-revision "${trimmedRevision}" does not match workflow_run head_sha "${workflowRun.head_sha}".`,
+    );
+  }
+
+  return {
+    'pull-number': `${parsedPullNumber}`,
+    'build-revision': canonicalHeadSha,
+  };
+}
+
+function getWorkflowRunPayload(): WorkflowRunPayload | undefined {
+  const eventPath = process.env['GITHUB_EVENT_PATH'];
+  if (eventPath && fs.existsSync(eventPath)) {
+    try {
+      const payload = JSON.parse(fs.readFileSync(eventPath, 'utf8'));
+      return payload?.workflow_run;
+    } catch {
+      return undefined;
+    }
+  }
+  return undefined;
+}
+
+async function resolveWorkflowRunPayload(
+  rawMetadata: Record<string, string>,
+): Promise<WorkflowRunPayload | undefined> {
+  const workflowRun = getWorkflowRunPayload();
+
+  const githubToken = process.env['GITHUB_TOKEN'];
+  const workflowRunHeadSha = process.env['WORKFLOW_RUN_HEAD_SHA'] ?? workflowRun?.head_sha;
+  const repository = process.env['GITHUB_REPOSITORY'];
+  const rawPullNumber = rawMetadata['pull-number']?.trim();
+
+  if (
+    (!workflowRun?.pull_requests || workflowRun.pull_requests.length === 0) &&
+    githubToken &&
+    workflowRunHeadSha &&
+    repository &&
+    rawPullNumber &&
+    /^[1-9][0-9]{0,9}$/.test(rawPullNumber)
+  ) {
+    const [owner, repo] = repository.split('/');
+    const github = new Octokit({auth: githubToken});
+    const response = await github.pulls.get({
+      owner,
+      repo,
+      pull_number: Number(rawPullNumber),
+    });
+    if (response.data.head.sha.toLowerCase() === workflowRunHeadSha.toLowerCase()) {
+      return {
+        ...workflowRun,
+        head_sha: workflowRunHeadSha,
+        pull_requests: [{number: response.data.number}],
+      };
+    }
+    return {
+      ...workflowRun,
+      head_sha: workflowRunHeadSha,
+      pull_requests: [],
+    };
+  }
+
+  return workflowRun;
+}
+
+/**
+ * Extracts and validates metadata files from the unpacked artifact directory.
+ */
+export async function extractAndValidateArtifactMetadata(
+  artifactDirPath: string,
+  workflowRun?: WorkflowRunPayload,
+  setOutputFn: typeof setOutput = setOutput,
+): Promise<ValidatedMetadata> {
+  const fullArtifactDirPath = await fs.promises.realpath(artifactDirPath);
+  const rawMetadata: Record<string, string> = {};
+
+  for (const [key, name] of Object.entries(artifactMetadata)) {
+    const expectedPath = path.normalize(path.join(fullArtifactDirPath, name));
+
+    // Confirm that the provided artifact path is actually in the expected location instead of pointing somewhere
+    // else to exfiltrate information.
+    const realPath = await fs.promises.realpath(expectedPath);
+    if (expectedPath !== realPath) {
+      throw Error(
+        `Value for unsafe-${key} not stored directly in file as expected,\n  expected: ${expectedPath}\n  got: ${realPath}`,
+      );
+    }
+
+    const content = await fs.promises.readFile(expectedPath, 'utf8');
+    rawMetadata[key] = content;
+  }
+
+  const resolvedWorkflowRun =
+    workflowRun !== undefined ? workflowRun : await resolveWorkflowRunPayload(rawMetadata);
+  const validated = validateArtifactMetadata(rawMetadata, resolvedWorkflowRun);
+
+  for (const [key, value] of Object.entries(validated)) {
+    const outputName = `unsafe-${key}`;
+    console.info(`Setting output: ${outputName} = ${value}`);
+    setOutputFn(outputName, value);
+  }
+
+  return validated;
 }
 
 async function main() {
   const [artifactDirPath] = process.argv.slice(2);
-  /** The full path to the artifact directory. */
-  const fullArtifactDirPath = await fs.promises.realpath(artifactDirPath);
-
-  const githubToken = process.env['GITHUB_TOKEN'];
-  const workflowRunHeadSha = process.env['WORKFLOW_RUN_HEAD_SHA'];
-  const repository = process.env['GITHUB_REPOSITORY'];
-
-  if (!githubToken || !workflowRunHeadSha || !repository) {
-    throw Error(
-      'GITHUB_TOKEN, WORKFLOW_RUN_HEAD_SHA and GITHUB_REPOSITORY must all be set so that the ' +
-        'artifact metadata can be verified against the triggering workflow run.',
-    );
+  if (!artifactDirPath) {
+    throw new Error('Missing required argument: artifactDirPath');
   }
 
-  const [owner, repo] = repository.split('/');
-  const pullNumber = await readMetadataValue(
-    fullArtifactDirPath,
-    'pull-number',
-    artifactMetadata['pull-number'],
-  );
-
-  // `build-revision` is read so that a malformed artifact still fails loudly, but the value
-  // published below is the one taken from the trusted `workflow_run` payload.
-  await readMetadataValue(
-    fullArtifactDirPath,
-    'build-revision',
-    artifactMetadata['build-revision'],
-  );
-
-  /**
-   * Bind the claimed pull request to the workflow run that triggered this job. Without this
-   * an artifact may name any pull request, which would let an untrusted build choose the
-   * deploy channel and the pull request that gets commented on.
-   */
-  const github = new Octokit({auth: githubToken});
-
-  let pullRequest;
-  try {
-    const response = await github.pulls.get({
-      owner,
-      repo,
-      pull_number: Number(pullNumber),
-    });
-    pullRequest = response.data;
-  } catch (e) {
-    const message = e instanceof Error ? e.message : String(e);
-    throw Error(`Could not fetch pull request #${pullNumber} to verify it: ${message}`);
-  }
-
-  // Git SHAs are hex, so compare case-insensitively rather than relying on the casing
-  // the API and the event payload happen to use.
-  if (pullRequest.head.sha.toLowerCase() !== workflowRunHeadSha.toLowerCase()) {
-    throw Error(
-      `Refusing to continue: the artifact claims pull request #${pullNumber}, but that pull ` +
-        `request's head commit is ${pullRequest.head.sha} while this workflow run was ` +
-        `triggered by ${workflowRunHeadSha}.`,
-    );
-  }
-
-  console.info(`Verified pull request #${pullNumber} against workflow run ${workflowRunHeadSha}`);
-
-  setOutput('unsafe-pull-number', pullNumber);
-  setOutput('unsafe-build-revision', workflowRunHeadSha);
+  await extractAndValidateArtifactMetadata(artifactDirPath);
 }
 
-try {
-  await main();
-} catch (e) {
-  console.error(e);
-  process.exit(1);
+if (
+  process.env['JASMINE_RUNNER'] === undefined &&
+  !process.env['TEST_TARGET'] &&
+  !process.env['TEST_SRCDIR']
+) {
+  main().catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
 }
