@@ -144,12 +144,21 @@ export async function runPostApprovalChangesAction(
     return;
   }
 
-  const reviewToRerequest = reviews[0];
-  core.info(`Requesting a new review from ${reviewToRerequest.user!.login}`);
-  await repoClient.pulls.requestReviewers({
-    owner,
-    pull_number,
-    repo,
-    reviewers: [reviewToRerequest.user!.login],
-  });
+  const reviewersToRerequest = Array.from(
+    new Set(
+      reviews
+        .map((r) => r.user?.login)
+        .filter((login): login is string => Boolean(login) && login !== pr.user?.login),
+    ),
+  );
+
+  if (reviewersToRerequest.length > 0) {
+    core.info(`Requesting a new review from ${reviewersToRerequest.join(', ')}`);
+    await repoClient.pulls.requestReviewers({
+      owner,
+      pull_number,
+      repo,
+      reviewers: reviewersToRerequest,
+    });
+  }
 }

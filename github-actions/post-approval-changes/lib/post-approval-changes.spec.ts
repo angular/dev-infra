@@ -218,4 +218,58 @@ describe('post-approval-changes', () => {
       );
     });
   });
+
+  describe('re-request all stale approvers', () => {
+    it('should re-request all approvers when multiple Googlers have stale approvals', async () => {
+      paginateSpy.and.resolveTo([
+        {
+          id: 1,
+          user: {login: 'googler-a'},
+          state: 'APPROVED',
+          commit_id: 'old-sha',
+        },
+        {
+          id: 2,
+          user: {login: 'googler-b'},
+          state: 'APPROVED',
+          commit_id: 'old-sha',
+        },
+      ]);
+
+      await runPostApprovalChangesAction(mockGooglersClient, mockRepoClient);
+
+      expect(requestReviewersSpy).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          reviewers: ['googler-a', 'googler-b'],
+        }),
+      );
+    });
+
+    it('should exclude the PR author from the re-requested reviewers', async () => {
+      (context as any).payload.pull_request.user = {login: 'googler-a'};
+
+      paginateSpy.and.resolveTo([
+        {
+          id: 1,
+          user: {login: 'googler-a'},
+          state: 'APPROVED',
+          commit_id: 'old-sha',
+        },
+        {
+          id: 2,
+          user: {login: 'googler-b'},
+          state: 'APPROVED',
+          commit_id: 'old-sha',
+        },
+      ]);
+
+      await runPostApprovalChangesAction(mockGooglersClient, mockRepoClient);
+
+      expect(requestReviewersSpy).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          reviewers: ['googler-b'],
+        }),
+      );
+    });
+  });
 });
