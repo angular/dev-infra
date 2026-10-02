@@ -9,6 +9,7 @@ ts_project(
     tsconfig = "//github-actions:tsconfig",
     deps = [
         ":node_modules/@actions/core",
+        ":node_modules/@octokit/rest",
         ":node_modules/@types/node",
         "//github-actions/previews:constants_lib",
     ],
