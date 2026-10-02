@@ -131,11 +131,11 @@ importers:
         specifier: 9.1.7
         version: 9.1.7
       jasmine:
-        specifier: 6.3.0
-        version: 6.3.0
+        specifier: 7.0.0
+        version: 7.0.0
       jasmine-core:
-        specifier: 6.3.0
-        version: 6.3.0
+        specifier: 7.0.2
+        version: 7.0.2
       jasmine-reporters:
         specifier: 2.5.2
         version: 2.5.2
@@ -392,8 +392,8 @@ importers:
         specifier: 22.3.0-next.0
         version: 22.3.0-next.0(@angular/animations@22.3.0-next.0(@angular/core@22.3.0-next.0(@angular/compiler@22.3.0-next.0)(rxjs@7.8.2)(zone.js@0.16.3)))(@angular/common@22.3.0-next.0(@angular/core@22.3.0-next.0(@angular/compiler@22.3.0-next.0)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0-next.0(@angular/compiler@22.3.0-next.0)(rxjs@7.8.2)(zone.js@0.16.3))
       '@types/jasmine':
-        specifier: 6.0.0
-        version: 6.0.0
+        specifier: 7.0.0
+        version: 7.0.0
       '@types/jsdom':
         specifier: 30.0.0
         version: 30.0.0
@@ -401,8 +401,8 @@ importers:
         specifier: 24.19.0
         version: 24.19.0
       jasmine:
-        specifier: 6.3.0
-        version: 6.3.0
+        specifier: 7.0.0
+        version: 7.0.0
       jasmine-reporters:
         specifier: 2.5.2
         version: 2.5.2
@@ -434,8 +434,8 @@ importers:
         specifier: 22.0.1
         version: 22.0.1
       '@types/jasmine':
-        specifier: 6.0.0
-        version: 6.0.0
+        specifier: 7.0.0
+        version: 7.0.0
       '@types/node':
         specifier: 24.19.0
         version: 24.19.0
@@ -515,8 +515,8 @@ importers:
         specifier: 22.0.1
         version: 22.0.1
       '@types/jasmine':
-        specifier: 6.0.0
-        version: 6.0.0
+        specifier: 7.0.0
+        version: 7.0.0
       '@types/micromatch':
         specifier: ^4.0.10
         version: 4.0.10
@@ -524,8 +524,8 @@ importers:
         specifier: 24.19.0
         version: 24.19.0
       jasmine:
-        specifier: 6.3.0
-        version: 6.3.0
+        specifier: 7.0.0
+        version: 7.0.0
       micromatch:
         specifier: ^4.0.8
         version: 4.0.8
@@ -599,8 +599,8 @@ importers:
         specifier: 3.0.1
         version: 3.0.1
       '@types/jasmine':
-        specifier: 6.0.0
-        version: 6.0.0
+        specifier: 7.0.0
+        version: 7.0.0
       '@types/node':
         specifier: 24.19.0
         version: 24.19.0
@@ -683,8 +683,8 @@ importers:
         specifier: 4.0.4
         version: 4.0.4
       '@types/jasmine':
-        specifier: 6.0.0
-        version: 6.0.0
+        specifier: 7.0.0
+        version: 7.0.0
       '@types/node':
         specifier: 24.19.0
         version: 24.19.0
@@ -731,11 +731,11 @@ importers:
         specifier: 4.1.3
         version: 4.1.3(supports-color@11.0.0)
       jasmine:
-        specifier: 6.3.0
-        version: 6.3.0
+        specifier: 7.0.0
+        version: 7.0.0
       jasmine-core:
-        specifier: 6.3.0
-        version: 6.3.0
+        specifier: 7.0.2
+        version: 7.0.2
       jasmine-reporters:
         specifier: 2.5.2
         version: 2.5.2
@@ -2552,8 +2552,8 @@ packages:
   '@types/http-errors@2.0.5':
     resolution: {integrity: sha512-r8Tayk8HJnX0FztbZN7oVqGccWgw98T/0neJphO91KkmOzug1KkofZURD4UaD5uH8AqcFLfdPErnBod0u71/qg==}
 
-  '@types/jasmine@6.0.0':
-    resolution: {integrity: sha512-18lgGsLmEh3VJk9eZ5wAjTISxdqzl6YOwu8UdMpolajN57QOCNbl+AbHUd+Yu9ItrsFdB+c8LSZSGNg8nHaguw==}
+  '@types/jasmine@7.0.0':
+    resolution: {integrity: sha512-6yNx9BsBSKiXO2yqLXs/GZDuD58Gkn6Ty26254FFOuw6B4XU5Xq8mAR0xFy8zHgAhqQd++y41fSJ8BdwrWXhqQ==}
 
   '@types/jsdom@30.0.0':
     resolution: {integrity: sha512-uAHGxujGE0cDaKGdK28zgDotFtNA7MKq5DXl8LrfdxdCI8VHcg15oJz+amHTChPNI5JpgEPQWc2xFdrw3em/nQ==}
@@ -4380,8 +4380,8 @@ packages:
   jasmine-core@2.8.0:
     resolution: {integrity: sha512-SNkOkS+/jMZvLhuSx1fjhcNWUC/KG6oVyFUGkSBEr9n1axSNduWU8GlI7suaHXr4yxjet6KjrUZxUTE5WzzWwQ==}
 
-  jasmine-core@6.3.0:
-    resolution: {integrity: sha512-eMm5qBovNjNoGOcgE/W207+wrcK5zrQv0Rg/rWGboUJUmZp0dFCpHTyjpuDAfCwRCqg7f9U2q2jtv/aUuzdCQg==}
+  jasmine-core@7.0.2:
+    resolution: {integrity: sha512-YMVijt84KPQQFm1db1AQAxTXfq0k3wU06OkepLViljURFqiRQ7EYYX2eUAshhUv9fA9t1E2N65GrdqvupA9VPQ==}
 
   jasmine-reporters@2.5.2:
     resolution: {integrity: sha512-qdewRUuFOSiWhiyWZX8Yx3YNQ9JG51ntBEO4ekLQRpktxFTwUHy24a86zD/Oi2BRTKksEdfWQZcQFqzjqIkPig==}
@@ -4390,8 +4390,8 @@ packages:
     resolution: {integrity: sha512-KbdGQTf5jbZgltoHs31XGiChAPumMSY64OZMWLNYnEnMfG5uwGBhffePwuskexjT+/Jea/gU3qAU8344hNohSw==}
     hasBin: true
 
-  jasmine@6.3.0:
-    resolution: {integrity: sha512-u6L7yYtrtS1JALlp7f4k7Wz7o7ZKXauSKKkXc0L3qUkKrdaxYvNiMHhHp5gtTuVZZXVihXRxS7bWwDBX1wJ7EQ==}
+  jasmine@7.0.0:
+    resolution: {integrity: sha512-rnjiyg1LAhFZMoyU8ei/Wqyvti5oCzFhW7ZtkD6o+CSx3LpU9aYurPrh5BKyX3coGvmdEVYPC2HYh1rrBvZoWg==}
     hasBin: true
 
   jasminewd2@2.2.0:
@@ -8171,7 +8171,7 @@ snapshots:
 
   '@types/http-errors@2.0.5': {}
 
-  '@types/jasmine@6.0.0': {}
+  '@types/jasmine@7.0.0': {}
 
   '@types/jsdom@30.0.0':
     dependencies:
@@ -10357,7 +10357,7 @@ snapshots:
 
   jasmine-core@2.8.0: {}
 
-  jasmine-core@6.3.0: {}
+  jasmine-core@7.0.2: {}
 
   jasmine-reporters@2.5.2:
     dependencies:
@@ -10370,11 +10370,11 @@ snapshots:
       glob: 7.2.3
       jasmine-core: 2.8.0
 
-  jasmine@6.3.0:
+  jasmine@7.0.0:
     dependencies:
       '@jasminejs/reporters': 1.1.0
       glob: 13.0.6
-      jasmine-core: 6.3.0
+      jasmine-core: 7.0.2
 
   jasminewd2@2.2.0: {}
 
@@ -11002,7 +11002,7 @@ snapshots:
 
   path-scurry@2.0.2:
     dependencies:
-      lru-cache: 11.5.2
+      lru-cache: 11.5.3
       minipass: 7.1.3
 
   path-to-regexp@0.1.13: {}
