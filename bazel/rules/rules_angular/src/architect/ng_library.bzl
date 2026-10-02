@@ -1,74 +1,61 @@
-"Macro definition to package an angular library"
+"Macro definition to build a library"
 
-load("@aspect_rules_js//js:defs.bzl", "js_library", "js_run_binary")
-load("@jq.bzl//jq:jq.bzl", "jq")
+load("@aspect_rules_js//js:defs.bzl", "js_run_binary")
 load(":utils.bzl", "TEST_PATTERNS", "ng_bin")
 
 # Idiomatic configuration files created by `ng generate`
 LIBRARY_CONFIG = [
     ":tsconfig.lib.json",
-    ":tsconfig.lib.prod.json",
     ":package.json",
 ]
 
+# # Typical dependencies of angular libs
 NPM_DEPS = lambda node_modules: ["/".join([node_modules, s]) for s in [
-    "@angular/build",
-    "@angular/common",
-    "@angular/compiler",
-    "@angular/compiler-cli",
-    "@angular/core",
+    "@angular",  # Take all of them, since the list varies across angular versions
     "rxjs",
     "tslib",
-    "ng-packagr",
 ]]
 
-def ng_library(name, node_modules, ng_config, project_name = None, srcs = [], deps = [], **kwargs):
+def ng_library(
+        name,
+        node_modules,
+        ng_config,
+        project_name = None,
+        args = [],
+        srcs = [],
+        deps = [],
+        **kwargs):
     """
-    Bazel macro for compiling an NG library project that was produced by 'ng generate library'.
+    Bazel macro for compiling an NG library project. Creates {name} target.
 
     Args:
       name: the rule name
       node_modules: users installed and linked angular dependencies
-      project_name: the Angular CLI project name, defaults to current directory name
-      srcs: angular source files: typescript, HTML, and styles
-      deps: dependencies of the library
-      ng_config: root configurations (angular.json, tsconfig.json)
+      project_name: the Angular CLI project name, to the rule name
+      args: Extra arguments to pass to `ng build`.
+      srcs: library source files: typescript, HTML, and styles
+      ng_config: angular workspace root configs
+      deps: dependencies of the library, typically ng_library rules
       **kwargs: extra args passed to main Angular CLI rules
     """
     srcs = srcs or native.glob(["src/**/*"], exclude = TEST_PATTERNS)
-
-    project_name = project_name or native.package_name().split("/").pop()
-    build_target = "{}.build".format(name)
-
-    # NOTE: dist directories are under the project dir instead of the Angular CLI default of the root dist folder
-    jq(
-        name = "ng-package",  # outputs ng-package.json. Can only have one per package.
-        srcs = ["ng-package.json"],
-        # Replace the destination, without modifying original sources so they still work outside Bazel.
-        filter = """.dest = "dist" """,
-        visibility = ["//visibility:private"],
-    )
+    deps = deps + NPM_DEPS(node_modules) + LIBRARY_CONFIG
+    deps.append(ng_config)
+    project_name = project_name if project_name else name
 
     ng_bin(
         name = "_%s.ng_cli" % name,
         node_modules = node_modules,
     )
 
-    js_run_binary(
-        name = build_target,
-        chdir = native.package_name(),
-        args = ["build", project_name],
-        out_dirs = ["dist"],
-        tool = ":_%s.ng_cli" % name,
-        srcs = srcs + deps + NPM_DEPS(node_modules) + LIBRARY_CONFIG + [ng_config, "ng-package"],
-        mnemonic = "NgBuild",
-        visibility = ["//visibility:private"],
-        **kwargs
-    )
+    tool = ":_%s.ng_cli" % name
 
-    # Output the compiled library and its dependencies
-    js_library(
+    js_run_binary(
         name = name,
-        srcs = [build_target],
-        deps = deps,
+        chdir = native.package_name(),
+        args = ["build", project_name] + args,
+        out_dirs = ["dist"],
+        tool = tool,
+        srcs = srcs + deps,
+        **kwargs
     )

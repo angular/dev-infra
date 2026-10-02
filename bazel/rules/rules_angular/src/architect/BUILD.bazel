@@ -25,7 +25,6 @@ bzl_library(
     deps = [
         ":utils",
         "@aspect_rules_js//js:defs",
-        "@jq.bzl//jq",
     ],
 )
 
@@ -42,5 +41,6 @@ bzl_library(
 bzl_library(
     name = "ng_config",
     srcs = ["ng_config.bzl"],
+    visibility = ["//visibility:public"],
     deps = ["@jq.bzl//jq"],
 )

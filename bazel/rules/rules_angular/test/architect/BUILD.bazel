@@ -1,0 +1,6 @@
+load("//src/architect:ng_config.bzl", "ng_config")
+
+ng_config(
+    name = "ng_config",
+    visibility = ["//test/architect:__subpackages__"],
+)

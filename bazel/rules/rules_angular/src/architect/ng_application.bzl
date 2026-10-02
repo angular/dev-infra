@@ -33,6 +33,7 @@ def ng_application(
       node_modules: users installed and linked angular dependencies
       project_name: the Angular CLI project name, to the rule name
       args: Extra arguments to pass to `ng build`.
+      serve_args: Extra arguments to pass to `ng serve`.
       srcs: application source files: typescript, HTML, and styles
       ng_config: angular workspace root configs
       deps: dependencies of the application, typically ng_library rules
