@@ -8,7 +8,7 @@ APPLICATION_CONFIG = [
     ":tsconfig.app.json",
 ]
 
-# # Typical dependencies of angular apps
+# Typical dependencies of angular apps
 NPM_DEPS = lambda node_modules: ["/".join([node_modules, s]) for s in [
     "@angular",  # Take all of them, since the list varies across angular versions
     "rxjs",
@@ -33,14 +33,14 @@ def ng_application(
       node_modules: users installed and linked angular dependencies
       project_name: the Angular CLI project name, to the rule name
       args: Extra arguments to pass to `ng build`.
+      serve_args: Extra arguments to pass to `ng serve`.
       srcs: application source files: typescript, HTML, and styles
       ng_config: angular workspace root configs
       deps: dependencies of the application, typically ng_library rules
       **kwargs: extra args passed to main Angular CLI rules
     """
     srcs = srcs or native.glob(["src/**/*"], exclude = TEST_PATTERNS)
-    deps = deps + NPM_DEPS(node_modules) + APPLICATION_CONFIG
-    deps.append(ng_config)
+    deps = deps + NPM_DEPS(node_modules) + APPLICATION_CONFIG + [ng_config]
     project_name = project_name if project_name else name
 
     ng_bin(

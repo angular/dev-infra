@@ -1,0 +1,17 @@
+{
+  "name": "my-lib",
+  "version": "0.0.1",
+  "exports": {
+    ".": {
+      "default": "./src/public-api.ts"
+    }
+  },
+  "peerDependencies": {
+    "@angular/common": "^22.0.0 || ^22.3.0-next.0",
+    "@angular/core": "^22.0.0 || ^22.3.0-next.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
+}

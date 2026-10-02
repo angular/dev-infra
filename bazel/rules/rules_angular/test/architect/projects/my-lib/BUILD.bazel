@@ -1,0 +1,8 @@
+load("//src/architect:ng_library.bzl", "ng_library")
+
+ng_library(
+    name = "my-lib",
+    ng_config = "//test/architect:ng_config",
+    node_modules = "//:node_modules",
+    visibility = ["//test/architect:__subpackages__"],
+)
