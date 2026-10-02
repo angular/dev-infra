@@ -8,7 +8,7 @@ load("@jq.bzl//jq:jq.bzl", "jq")
 JQ_DIST_REPLACE_TSCONFIG = """
     .compilerOptions.paths |= if . then map_values(
       map(
-        gsub("^dist/(?<p>.+)$"; "projects/"+.p+"/dist")
+        gsub("^(\\\\./)?dist/(?<p>.+)$"; "./projects/"+.p+"/dist")
       )
     ) else {} end
 """
@@ -25,7 +25,7 @@ JQ_DIST_REPLACE_ANGULAR = """
       .
     end
     |
-    if .value.projectType == "application" then
+    if .value.architect.build then
       .value.architect.build.options.outputPath = "./" + .value.root + "/dist"
       |
       .value.architect.build.options.preserveSymlinks = true
