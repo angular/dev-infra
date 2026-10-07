@@ -2,13 +2,13 @@
 
 load("@jq.bzl//jq:jq.bzl", "jq")
 
-# JQ expressions to update Angular project output paths from dist/* to projects/*/dist
+# JQ expressions to update Angular project output paths from dist/* to <project-root>/*/dist
 # We do this to avoid mutating the files in the source tree, so that the native tooling without Bazel continues to work.
-# Note: This assumes that 1P linking projects follow the `projects/<project>/` folder structure.
 JQ_DIST_REPLACE_TSCONFIG = """
+    ($ng[0].projects | map_values(.root)) as $roots |
     .compilerOptions.paths |= if . then map_values(
       map(
-        gsub("^(\\\\./)?dist/(?<p>.+)$"; "./projects/"+.p+"/dist")
+        gsub("^(\\\\./)?dist/(?<p>[^/]+)(?<rest>.*)$"; "./" + ($roots[.p] // ("projects/" + .p)) + "/dist" + .rest)
       )
     ) else {} end
 """
@@ -49,6 +49,9 @@ def ng_config(name, **kwargs):
     jq(
         name = "tsconfig",
         srcs = ["tsconfig.json"],
+        data = ["angular.json"],
+        args = ["--slurpfile", "ng", "$(location angular.json)"],
+        expand_args = True,
         filter = JQ_DIST_REPLACE_TSCONFIG,
     )
 
