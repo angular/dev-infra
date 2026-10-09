@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {join} from 'path';
+import {join, resolve} from 'path';
 import {
   readdirSync,
   readFileSync,
@@ -121,7 +121,11 @@ export class PublishCiTool {
       Log.info('Skipping Git tagging and GitHub Release creation as configured.');
     }
 
-    await this.publishAndDeprecatePackages(builtPackagesWithInfo, npmDistTag, newVersion);
+    if (!this.summary.hasFailures()) {
+      await this.publishAndDeprecatePackages(builtPackagesWithInfo, npmDistTag, newVersion);
+    } else {
+      Log.error('Skipping package publishing due to tagging or release creation failures.');
+    }
 
     const markdownSummary = this.summary.toMarkdown();
     Log.info('\n' + markdownSummary);
@@ -288,8 +292,13 @@ export class PublishCiTool {
         this.summary.addTag({name: globalTagName, status: 'CREATED'});
       } catch (e) {
         if (isGithubApiError(e) && e.status === 422) {
-          Log.warn(`Warning: Tag ${globalTagName} already exists, skipping tag creation.`);
-          this.summary.addTag({name: globalTagName, status: 'SKIPPED'});
+          const verificationError = await this.verifyExistingTagSha(globalTagName);
+          if (verificationError === null) {
+            Log.warn(`Warning: Tag ${globalTagName} already exists, skipping tag creation.`);
+            this.summary.addTag({name: globalTagName, status: 'SKIPPED'});
+          } else {
+            this.summary.addTag({name: globalTagName, status: 'FAILED', error: verificationError});
+          }
         } else {
           Log.error(`Failed to tag global tag ${globalTagName}: ${e}`);
           this.summary.addTag({name: globalTagName, status: 'FAILED', error: String(e)});
@@ -324,10 +333,19 @@ export class PublishCiTool {
         this.summary.setRelease({name: globalTagName, status: 'CREATED'});
       } catch (e) {
         if (isGithubApiError(e) && e.status === 422) {
-          Log.warn(
-            `Warning: GitHub release for ${globalTagName} already exists, skipping release creation.`,
-          );
-          this.summary.setRelease({name: globalTagName, status: 'SKIPPED'});
+          const verificationError = await this.verifyExistingTagSha(globalTagName);
+          if (verificationError === null) {
+            Log.warn(
+              `Warning: GitHub release for ${globalTagName} already exists, skipping release creation.`,
+            );
+            this.summary.setRelease({name: globalTagName, status: 'SKIPPED'});
+          } else {
+            this.summary.setRelease({
+              name: globalTagName,
+              status: 'FAILED',
+              error: verificationError,
+            });
+          }
         } else {
           Log.error(`Failed to create GitHub release ${globalTagName}: ${e}`);
           this.summary.setRelease({name: globalTagName, status: 'FAILED', error: String(e)});
@@ -352,8 +370,17 @@ export class PublishCiTool {
             this.summary.addTag({name: monorepoTagName, status: 'CREATED'});
           } catch (e) {
             if (isGithubApiError(e) && e.status === 422) {
-              Log.warn(`Warning: Tag ${monorepoTagName} already exists, skipping tag creation.`);
-              this.summary.addTag({name: monorepoTagName, status: 'SKIPPED'});
+              const verificationError = await this.verifyExistingTagSha(monorepoTagName);
+              if (verificationError === null) {
+                Log.warn(`Warning: Tag ${monorepoTagName} already exists, skipping tag creation.`);
+                this.summary.addTag({name: monorepoTagName, status: 'SKIPPED'});
+              } else {
+                this.summary.addTag({
+                  name: monorepoTagName,
+                  status: 'FAILED',
+                  error: verificationError,
+                });
+              }
             } else {
               Log.error(`Failed to tag monorepo package ${monorepoTagName}: ${e}`);
               this.summary.addTag({name: monorepoTagName, status: 'FAILED', error: String(e)});
@@ -361,6 +388,51 @@ export class PublishCiTool {
           }
         }
       }
+    }
+  }
+
+  /**
+   * Verifies that an already-existing Git tag on GitHub points to `this.options.expectedSha`.
+   *
+   * @returns `null` if the tag points to `expectedSha`, or an error message if it points to a
+   *   different commit or if the lookup fails.
+   */
+  private async verifyExistingTagSha(tagName: string): Promise<string | null> {
+    try {
+      const existingRef = await this.git.github.git.getRef({
+        ...this.git.remoteParams,
+        ref: `tags/${tagName}`,
+      });
+      let existingSha = existingRef.data?.object?.sha;
+      if (!existingSha) {
+        const errorMsg = `Failed to resolve SHA for existing tag ${tagName}.`;
+        Log.error(errorMsg);
+        return errorMsg;
+      }
+      if (existingRef.data?.object?.type === 'tag') {
+        const tagObject = await this.git.github.git.getTag({
+          ...this.git.remoteParams,
+          tag_sha: existingSha,
+        });
+        existingSha = tagObject.data?.object?.sha;
+        if (!existingSha) {
+          const errorMsg = `Failed to resolve commit SHA for annotated tag ${tagName}.`;
+          Log.error(errorMsg);
+          return errorMsg;
+        }
+      }
+      if (existingSha === this.options.expectedSha) {
+        return null;
+      }
+      const errorMsg =
+        `Existing tag ${tagName} points to ${existingSha}, ` +
+        `which does not match expected SHA ${this.options.expectedSha}.`;
+      Log.error(errorMsg);
+      return errorMsg;
+    } catch (err) {
+      const errorMsg = `Failed to verify existing tag ${tagName}: ${err}`;
+      Log.error(errorMsg);
+      return errorMsg;
     }
   }
 
@@ -416,6 +488,7 @@ export class PublishCiTool {
             pkg.name,
             version,
             this.config.release.publishRegistry,
+            tempDir,
           );
           if (exists) {
             Log.warn(`Warning: Package "${pkg.name}@${version}" is already published. Skipping.`);
@@ -424,7 +497,12 @@ export class PublishCiTool {
           }
 
           Log.info(`Publishing "${pkg.name}"...`);
-          await NpmCommand.publish(pkg.outputPath, npmDistTag, this.config.release.publishRegistry);
+          await NpmCommand.publish(
+            resolve(pkg.outputPath),
+            npmDistTag,
+            this.config.release.publishRegistry,
+            tempDir,
+          );
           Log.info(green(`  ✓   Successfully published "${pkg.name}".`));
           this.summary.addPackage({name: pkg.name, version: version, status: 'PUBLISHED'});
         } catch (e) {
@@ -456,6 +534,7 @@ export class PublishCiTool {
             version,
             message,
             this.config.release.publishRegistry,
+            tempDir,
           );
           Log.info(green(`  ✓   Successfully deprecated "${pkg.name}@${version}".`));
         } catch (e) {

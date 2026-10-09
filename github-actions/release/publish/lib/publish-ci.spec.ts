@@ -53,6 +53,8 @@ describe('PublishCiTool', () => {
   let releaseConfig: ReleaseConfig;
   let gitClient: any;
   let createRefSpy: jasmine.Spy;
+  let getRefSpy: jasmine.Spy;
+  let getTagSpy: jasmine.Spy;
   let createReleaseSpy: jasmine.Spy;
   let publishSpy: jasmine.Spy;
 
@@ -83,10 +85,14 @@ describe('PublishCiTool', () => {
 
     // Mock GitHub API calls using a plain mock object to avoid Proxy issues
     createRefSpy = jasmine.createSpy('createRef').and.resolveTo({});
+    getRefSpy = jasmine.createSpy('getRef').and.resolveTo({});
+    getTagSpy = jasmine.createSpy('getTag').and.resolveTo({});
     createReleaseSpy = jasmine.createSpy('createRelease').and.resolveTo({});
     const mockGithub = {
       git: {
         createRef: createRefSpy,
+        getRef: getRefSpy,
+        getTag: getTagSpy,
       },
       repos: {
         createRelease: createReleaseSpy,
@@ -532,7 +538,7 @@ describe('PublishCiTool', () => {
       );
     });
 
-    it('should proceed to publish even if tag or release already exists', async () => {
+    it('should proceed to publish if existing tag or release matches expectedSha on HTTP 422', async () => {
       fs.writeFileSync(
         path.join(testTmpDir, 'package.json'),
         JSON.stringify({version: '10.1.0-next.0'}),
@@ -550,6 +556,7 @@ describe('PublishCiTool', () => {
 
       createRefSpy.and.rejectWith(new RequestError('Reference already exists', 422));
       createReleaseSpy.and.rejectWith(new RequestError('Release already exists', 422));
+      getRefSpy.and.resolveTo({data: {object: {sha: headSha}}});
 
       const warnSpy = spyOn(Log, 'warn');
 
@@ -565,6 +572,11 @@ describe('PublishCiTool', () => {
 
       await expectAsync(tool.run()).toBeResolved();
 
+      expect(getRefSpy).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          ref: 'tags/v10.1.0-next.1',
+        }),
+      );
       expect(warnSpy).toHaveBeenCalledWith(
         jasmine.stringMatching('Tag v10.1.0-next.1 already exists, skipping tag creation.'),
       );
@@ -574,6 +586,163 @@ describe('PublishCiTool', () => {
         ),
       );
       expect(publishSpy).toHaveBeenCalled();
+    });
+
+    it('should dereference annotated tags via git.getTag when verifying existing tag on HTTP 422', async () => {
+      fs.writeFileSync(
+        path.join(testTmpDir, 'package.json'),
+        JSON.stringify({version: '10.1.0-next.0'}),
+      );
+      const sandbox = SandboxGitRepo.withInitialCommit(githubConfig);
+
+      fs.writeFileSync(
+        path.join(testTmpDir, 'package.json'),
+        JSON.stringify({version: '10.1.0-next.1'}),
+      );
+      sandbox.commit('v10.1.0-next.1 commit');
+      const headSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
+
+      mockTgzPackage(builtPackagesDir, '@angular/core', '10.1.0-next.1');
+
+      createRefSpy.and.rejectWith(new RequestError('Reference already exists', 422));
+      getRefSpy.and.resolveTo({data: {object: {type: 'tag', sha: 'annotated-tag-object-sha'}}});
+      getTagSpy.and.resolveTo({data: {object: {sha: headSha}}});
+
+      spyOn(Log, 'warn');
+
+      const tool = new PublishCiTool(
+        {github: githubConfig, release: releaseConfig} as any,
+        gitClient,
+        testTmpDir,
+        {
+          builtPackagesDir,
+          expectedSha: headSha,
+        },
+      );
+
+      await expectAsync(tool.run()).toBeResolved();
+
+      expect(getTagSpy).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          tag_sha: 'annotated-tag-object-sha',
+        }),
+      );
+      expect(publishSpy).toHaveBeenCalled();
+    });
+
+    it('should fail and abort publishing if existing tag points to a different SHA on HTTP 422', async () => {
+      fs.writeFileSync(
+        path.join(testTmpDir, 'package.json'),
+        JSON.stringify({version: '10.1.0-next.0'}),
+      );
+      const sandbox = SandboxGitRepo.withInitialCommit(githubConfig);
+
+      fs.writeFileSync(
+        path.join(testTmpDir, 'package.json'),
+        JSON.stringify({version: '10.1.0-next.1'}),
+      );
+      sandbox.commit('v10.1.0-next.1 commit');
+      const headSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
+
+      mockTgzPackage(builtPackagesDir, '@angular/core', '10.1.0-next.1');
+
+      createRefSpy.and.rejectWith(new RequestError('Reference already exists', 422));
+      getRefSpy.and.resolveTo({data: {object: {sha: 'tampered-sha-99999'}}});
+
+      spyOn(Log, 'error');
+
+      const tool = new PublishCiTool(
+        {github: githubConfig, release: releaseConfig} as any,
+        gitClient,
+        testTmpDir,
+        {
+          builtPackagesDir,
+          expectedSha: headSha,
+        },
+      );
+
+      await expectAsync(tool.run()).toBeRejectedWithError(
+        new RegExp(
+          `Existing tag v10\\.1\\.0-next\\.1 points to tampered-sha-99999, which does not match expected SHA ${headSha}`,
+        ),
+      );
+      expect(publishSpy).not.toHaveBeenCalled();
+    });
+
+    it('should fail and abort publishing if existing release tag points to a different SHA on HTTP 422', async () => {
+      fs.writeFileSync(
+        path.join(testTmpDir, 'package.json'),
+        JSON.stringify({version: '10.1.0-next.0'}),
+      );
+      const sandbox = SandboxGitRepo.withInitialCommit(githubConfig);
+
+      fs.writeFileSync(
+        path.join(testTmpDir, 'package.json'),
+        JSON.stringify({version: '10.1.0-next.1'}),
+      );
+      sandbox.commit('v10.1.0-next.1 commit');
+      const headSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
+
+      mockTgzPackage(builtPackagesDir, '@angular/core', '10.1.0-next.1');
+
+      createReleaseSpy.and.rejectWith(new RequestError('Release already exists', 422));
+      getRefSpy.and.resolveTo({data: {object: {sha: 'tampered-sha-99999'}}});
+
+      spyOn(Log, 'error');
+
+      const tool = new PublishCiTool(
+        {github: githubConfig, release: releaseConfig} as any,
+        gitClient,
+        testTmpDir,
+        {
+          builtPackagesDir,
+          expectedSha: headSha,
+        },
+      );
+
+      await expectAsync(tool.run()).toBeRejectedWithError(
+        new RegExp(
+          `GitHub Release "v10\\.1\\.0-next\\.1" failed to create: Existing tag v10\\.1\\.0-next\\.1 points to tampered-sha-99999`,
+        ),
+      );
+      expect(publishSpy).not.toHaveBeenCalled();
+    });
+
+    it('should fail and abort publishing if getRef fails when verifying an existing tag on HTTP 422', async () => {
+      fs.writeFileSync(
+        path.join(testTmpDir, 'package.json'),
+        JSON.stringify({version: '10.1.0-next.0'}),
+      );
+      const sandbox = SandboxGitRepo.withInitialCommit(githubConfig);
+
+      fs.writeFileSync(
+        path.join(testTmpDir, 'package.json'),
+        JSON.stringify({version: '10.1.0-next.1'}),
+      );
+      sandbox.commit('v10.1.0-next.1 commit');
+      const headSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
+
+      mockTgzPackage(builtPackagesDir, '@angular/core', '10.1.0-next.1');
+
+      createRefSpy.and.rejectWith(new RequestError('Reference already exists', 422));
+      getRefSpy.and.rejectWith(new Error('GitHub API error during getRef'));
+
+      spyOn(Log, 'error');
+
+      const tool = new PublishCiTool(
+        {github: githubConfig, release: releaseConfig} as any,
+        gitClient,
+        testTmpDir,
+        {
+          builtPackagesDir,
+          expectedSha: headSha,
+        },
+      );
+
+      await expectAsync(tool.run()).toBeRejectedWithError(
+        /Failed to verify existing tag v10\.1\.0-next\.1: Error: GitHub API error during getRef/,
+      );
+      expect(publishSpy).not.toHaveBeenCalled();
     });
   });
 
@@ -727,10 +896,58 @@ describe('PublishCiTool', () => {
       // Verify env var was cleaned up
       expect(process.env['NPM_CONFIG_USERCONFIG']).toBeUndefined();
 
-      // Verify NpmCommand.publish was called for both packages with correct arguments
+      // Verify NpmCommand.publish was called for both packages with correct arguments and isolated cwd
       expect(publishSpy).toHaveBeenCalledTimes(2);
-      expect(publishSpy.calls.argsFor(0)).toEqual([pkg1Path, 'latest', undefined]);
-      expect(publishSpy.calls.argsFor(1)).toEqual([pkg2Path, 'latest', undefined]);
+      expect(publishSpy.calls.argsFor(0)).toEqual([
+        pkg1Path,
+        'latest',
+        undefined,
+        path.dirname(tempNpmrcPath!),
+      ]);
+      expect(publishSpy.calls.argsFor(1)).toEqual([
+        pkg2Path,
+        'latest',
+        undefined,
+        path.dirname(tempNpmrcPath!),
+      ]);
+    });
+
+    it('should isolate npm commands in tempDir and resolve relative package paths', async () => {
+      fs.writeFileSync(path.join(testTmpDir, 'package.json'), JSON.stringify({version: '10.0.0'}));
+      const sandbox = SandboxGitRepo.withInitialCommit(githubConfig);
+
+      fs.writeFileSync(path.join(testTmpDir, 'package.json'), JSON.stringify({version: '10.1.0'}));
+      sandbox.commit('v10.1.0 commit');
+      const headSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
+
+      const pkgPath = mockTgzPackage(builtPackagesDir, '@angular/core', '10.1.0');
+      const relativeBuiltPackagesDir = path.relative(process.cwd(), builtPackagesDir);
+      const checkVersionSpy = NpmCommand.checkVersionExists as jasmine.Spy;
+
+      const tool = new PublishCiTool(
+        {github: githubConfig, release: releaseConfig} as any,
+        gitClient,
+        testTmpDir,
+        {
+          builtPackagesDir: relativeBuiltPackagesDir,
+          expectedSha: headSha,
+        },
+      );
+
+      await expectAsync(tool.run()).toBeResolved();
+
+      expect(checkVersionSpy).toHaveBeenCalledWith(
+        '@angular/core',
+        '10.1.0',
+        undefined,
+        jasmine.stringMatching(/angular-publish-ci-/),
+      );
+      expect(publishSpy).toHaveBeenCalledWith(
+        pkgPath,
+        'latest',
+        undefined,
+        jasmine.stringMatching(/angular-publish-ci-/),
+      );
     });
 
     it('should preserve original NPM_CONFIG_USERCONFIG and leave project .npmrc untouched', async () => {
@@ -868,8 +1085,18 @@ describe('PublishCiTool', () => {
 
       // Verify publish was called for both
       expect(publishSpy).toHaveBeenCalledTimes(2);
-      expect(publishSpy.calls.argsFor(0)).toEqual([pkg1Path, 'latest', undefined]);
-      expect(publishSpy.calls.argsFor(1)).toEqual([pkg2Path, 'latest', undefined]);
+      expect(publishSpy.calls.argsFor(0)).toEqual([
+        pkg1Path,
+        'latest',
+        undefined,
+        jasmine.stringMatching(/angular-publish-ci-/),
+      ]);
+      expect(publishSpy.calls.argsFor(1)).toEqual([
+        pkg2Path,
+        'latest',
+        undefined,
+        jasmine.stringMatching(/angular-publish-ci-/),
+      ]);
 
       // Verify deprecate was called only for @angular/common
       expect(deprecateSpy).toHaveBeenCalledTimes(1);
@@ -878,6 +1105,7 @@ describe('PublishCiTool', () => {
         '>=9.0.0',
         'Use @angular/core instead',
         undefined,
+        jasmine.stringMatching(/angular-publish-ci-/),
       );
     });
 
@@ -922,9 +1150,15 @@ describe('PublishCiTool', () => {
 
       // Verify publish was called ONLY for @angular/common (pkg2Path)
       expect(publishSpy).toHaveBeenCalledTimes(1);
-      expect(publishSpy).toHaveBeenCalledWith(pkg2Path, 'latest', undefined);
+      expect(publishSpy).toHaveBeenCalledWith(
+        pkg2Path,
+        'latest',
+        undefined,
+        jasmine.stringMatching(/angular-publish-ci-/),
+      );
       expect(publishSpy).not.toHaveBeenCalledWith(
         pkg1Path,
+        jasmine.any(String),
         jasmine.any(String),
         jasmine.any(String),
       );

@@ -334,6 +334,8 @@ export abstract class ExternalCommands {
         [
           'install',
           '--frozen-lockfile',
+          '--ignore-scripts',
+          '--ignore-pnpmfile',
           // PNPM does not have no interactive,
           // See: https://github.com/pnpm/pnpm/issues/6778
           '--config.confirmModulesPurge=false',
