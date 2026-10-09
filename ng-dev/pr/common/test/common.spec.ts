@@ -15,7 +15,12 @@ import {GoogleSyncConfig} from '../../../utils/g3-sync-config.js';
 import {targetLabels} from '../labels/target.js';
 import {Log} from '../../../utils/logging.js';
 
-import {PullRequestFromGithub} from '../fetch-pull-request.js';
+import {
+  getStatusesForPullRequest,
+  PullRequestFromGithub,
+  PullRequestStatus,
+} from '../fetch-pull-request.js';
+import {mergeLabels} from '../labels/merge.js';
 import {requiresLabels} from '../labels/requires.js';
 
 import {assertValidPullRequest} from '../validation/validate-pull-request.js';
@@ -88,6 +93,173 @@ describe('pull request validation', () => {
     return configFileName;
   }
 
+  describe('assert-signed-cla', () => {
+    it('should pass when cla/google commit status is passing', async () => {
+      const config = createIsolatedValidationConfig({assertSignedCla: true});
+      const pr = createTestPullRequest();
+      pr.commits.nodes[1].commit.statusCheckRollup = {
+        state: 'SUCCESS',
+        contexts: {
+          nodes: [
+            {
+              __typename: 'StatusContext',
+              context: 'cla/google',
+              state: 'SUCCESS',
+              createdAt: '2026-07-13T10:00:00Z',
+            } as any,
+          ],
+        },
+      };
+
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(0);
+    });
+
+    it('should fail when only a CheckRun named cla/google is passing', async () => {
+      const config = createIsolatedValidationConfig({assertSignedCla: true});
+      const pr = createTestPullRequest();
+      pr.commits.nodes[1].commit.statusCheckRollup = {
+        state: 'SUCCESS',
+        contexts: {
+          nodes: [
+            {
+              __typename: 'CheckRun',
+              name: 'cla/google',
+              status: 'COMPLETED',
+              conclusion: 'SUCCESS',
+              completedAt: '2026-07-13T10:05:00Z',
+            } as any,
+          ],
+        },
+      };
+
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(1);
+      expect(results[0].message).toBe('CLA is not signed by the contributor.');
+    });
+
+    it('should not allow a passing CheckRun named cla/google to overwrite a failing StatusContext', async () => {
+      const config = createIsolatedValidationConfig({assertSignedCla: true});
+      const pr = createTestPullRequest();
+      pr.commits.nodes[1].commit.statusCheckRollup = {
+        state: 'FAILURE',
+        contexts: {
+          nodes: [
+            {
+              __typename: 'StatusContext',
+              context: 'cla/google',
+              state: 'FAILURE',
+              createdAt: '2026-07-13T10:00:00Z',
+            } as any,
+            {
+              __typename: 'CheckRun',
+              name: 'cla/google',
+              status: 'COMPLETED',
+              conclusion: 'SUCCESS',
+              completedAt: '2026-07-13T10:05:00Z',
+            } as any,
+          ],
+        },
+      };
+
+      const {statuses} = getStatusesForPullRequest(pr);
+      expect(statuses).toEqual([
+        {type: 'status', name: 'cla/google', status: PullRequestStatus.FAILING},
+        {type: 'check', name: 'cla/google', status: PullRequestStatus.PASSING},
+      ]);
+
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(1);
+      expect(results[0].message).toBe('CLA is not signed by the contributor.');
+    });
+  });
+
+  describe('assert-allowed-target-label', () => {
+    const fakeReleaseTrains = {isFeatureFreeze: () => false} as any;
+
+    it('should reject target: automation when author is not an automation bot', async () => {
+      const config = createIsolatedValidationConfig({assertChangesAllowForTargetLabel: true});
+      const pr = createTestPullRequest();
+      pr.author = {login: 'external-user'};
+      const automationTarget = {branches: ['main'], label: targetLabels['TARGET_AUTOMATION']};
+
+      const results = await assertValidPullRequest(
+        pr,
+        config,
+        ngDevConfig,
+        fakeReleaseTrains,
+        automationTarget,
+        git,
+      );
+      expect(results.length).toBe(1);
+      expect(results[0].message).toContain(
+        'Cannot merge into branch for "target: automation" as the pull request is authored by "external-user"',
+      );
+    });
+
+    it('should reject target: automation for non-bot author even when merge: fix commit message is applied', async () => {
+      const config = createIsolatedValidationConfig({assertChangesAllowForTargetLabel: true});
+      const pr = createTestPullRequest();
+      pr.author = {login: 'external-user'};
+      pr.labels.nodes.push({name: mergeLabels['MERGE_FIX_COMMIT_MESSAGE'].name});
+      const automationTarget = {branches: ['main'], label: targetLabels['TARGET_AUTOMATION']};
+
+      const results = await assertValidPullRequest(
+        pr,
+        config,
+        ngDevConfig,
+        fakeReleaseTrains,
+        automationTarget,
+        git,
+      );
+      expect(results.length).toBe(1);
+      expect(results[0].message).toContain(
+        'Cannot merge into branch for "target: automation" as the pull request is authored by "external-user"',
+      );
+    });
+
+    it('should allow target: automation when author is angular-robot', async () => {
+      const config = createIsolatedValidationConfig({assertChangesAllowForTargetLabel: true});
+      const pr = createTestPullRequest();
+      pr.author = {login: 'angular-robot'};
+      const automationTarget = {branches: ['main'], label: targetLabels['TARGET_AUTOMATION']};
+
+      const results = await assertValidPullRequest(
+        pr,
+        config,
+        ngDevConfig,
+        fakeReleaseTrains,
+        automationTarget,
+        git,
+      );
+      expect(results.length).toBe(0);
+    });
+
+    it('should still skip commit message validation for non-automation labels when merge: fix commit message is applied', async () => {
+      const config = createIsolatedValidationConfig({assertChangesAllowForTargetLabel: true});
+      const pr = createTestPullRequest();
+      pr.commits.nodes = [
+        {
+          commit: {
+            oid: '1234',
+            message: 'feat(ng-dev): add new feature',
+          } as any,
+        },
+      ];
+      pr.labels.nodes.push({name: mergeLabels['MERGE_FIX_COMMIT_MESSAGE'].name});
+
+      const results = await assertValidPullRequest(
+        pr,
+        config,
+        ngDevConfig,
+        fakeReleaseTrains,
+        prTarget,
+        git,
+      );
+      expect(results.length).toBe(0);
+    });
+  });
+
   describe('assert-enforce-tested', () => {
     it('should require a TGP when label is present', async () => {
       const config = createIsolatedValidationConfig({assertEnforceTested: true});
@@ -113,6 +285,7 @@ describe('pull request validation', () => {
             login: 'fakelogin',
           },
           bodyText: 'TESTED="blah"',
+          createdAt: '2026-07-13T12:00:00Z',
         },
       ];
       const commentHelper = PullRequestComments.create(git, pr.number);
@@ -135,6 +308,7 @@ describe('pull request validation', () => {
             login: 'fakelogin',
           },
           bodyText: 'TESTED="blah"',
+          createdAt: '2026-07-13T12:00:00Z',
         },
       ];
       const commentHelper = PullRequestComments.create(git, pr.number);
@@ -154,6 +328,7 @@ describe('pull request validation', () => {
           authorAssociation: 'MEMBER' as CommentAuthorAssociation,
           author: null as any,
           bodyText: 'TESTED="blah"',
+          createdAt: '2026-07-13T12:00:00Z',
         },
       ];
       const commentHelper = PullRequestComments.create(git, pr.number);
@@ -165,6 +340,62 @@ describe('pull request validation', () => {
       const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
       expect(results.length).toBe(1);
       expect(results[0].message).toContain('Pull Request requires a TGP');
+    });
+
+    it('should reject a stale TESTED comment created before the latest commit', async () => {
+      const config = createIsolatedValidationConfig({assertEnforceTested: true});
+      let pr = createTestPullRequest();
+      pr.commits.nodes[1].commit.committedDate = '2026-07-13T12:05:00Z';
+      const comments = [
+        {
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          author: {
+            login: 'fakelogin',
+          },
+          bodyText: 'TESTED="stale tgp"',
+          createdAt: '2026-07-13T12:00:00Z',
+        },
+      ];
+      const commentHelper = PullRequestComments.create(git, pr.number);
+      spyOn(PullRequestComments, 'create').and.returnValue(commentHelper);
+      spyOn(commentHelper, 'loadPullRequestComments').and.returnValue(Promise.resolve(comments));
+
+      pr.labels.nodes.push({name: requiresLabels['REQUIRES_TGP'].name});
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(1);
+      expect(results[0].message).toContain('Pull Request requires a TGP');
+    });
+
+    it('should pass when a fresh TESTED comment is created at or after the latest commit', async () => {
+      const config = createIsolatedValidationConfig({assertEnforceTested: true});
+      let pr = createTestPullRequest();
+      pr.commits.nodes[1].commit.committedDate = '2026-07-13T12:05:00Z';
+      const comments = [
+        {
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          author: {
+            login: 'fakelogin',
+          },
+          bodyText: 'TESTED="stale tgp"',
+          createdAt: '2026-07-13T12:00:00Z',
+        },
+        {
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          author: {
+            login: 'fakelogin',
+          },
+          bodyText: 'TESTED="fresh tgp"',
+          createdAt: '2026-07-13T12:10:00Z',
+        },
+      ];
+      const commentHelper = PullRequestComments.create(git, pr.number);
+      spyOn(PullRequestComments, 'create').and.returnValue(commentHelper);
+      spyOn(commentHelper, 'loadPullRequestComments').and.returnValue(Promise.resolve(comments));
+
+      pr.labels.nodes.push({name: requiresLabels['REQUIRES_TGP'].name});
+      interceptOrgsMembershipRequest('fakelogin', true);
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(0);
     });
   });
 

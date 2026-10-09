@@ -53,6 +53,8 @@ export const PR_SCHEMA = {
           commit: {
             oid: graphqlTypes.string,
             authoredDate: graphqlTypes.string,
+            committedDate: graphqlTypes.string,
+            pushedDate: graphqlTypes.custom<string | null>(),
             statusCheckRollup: optional({
               state: graphqlTypes.custom<StatusState>(),
               contexts: params(
@@ -168,6 +170,7 @@ export const PR_COMMENTS_SCHEMA = params(
     },
     authorAssociation: graphqlTypes.custom<CommentAuthorAssociation>(),
     bodyText: graphqlTypes.string,
+    createdAt: graphqlTypes.string,
   },
 );
 
@@ -246,17 +249,19 @@ export function getStatusesForPullRequest(
     .forEach((context) => {
       switch (context.__typename) {
         case 'CheckRun':
-          statusMap.set(context.name, {
+          statusMap.set(`check:${context.name}`, {
             type: 'check' as const,
             name: context.name,
             status: normalizeGithubCheckState(context.conclusion, context.status),
           });
+          break;
         case 'StatusContext':
-          statusMap.set(context.context!, {
+          statusMap.set(`status:${context.context!}`, {
             type: 'status' as const,
             name: context.context!,
             status: normalizeGithubStatusState(context.state!),
           });
+          break;
       }
     });
 

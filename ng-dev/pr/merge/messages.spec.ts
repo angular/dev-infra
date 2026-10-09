@@ -108,6 +108,7 @@ describe('caretaker note prompt messages', () => {
         bodyText,
         author: {login: 'testuser'},
         authorAssociation: authorAssociation as any,
+        createdAt: '2020-01-01T00:00:00Z',
       };
     }
 
