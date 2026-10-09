@@ -132,19 +132,16 @@ export async function checkOutPullRequestLocally(
     resetGitState: (): boolean => {
       return git.checkout(previousBranchOrRevision, true);
     },
-    pushToUpstreamCommand: `git push ${upstreamUrlToPush(pr.headRef.repository.url)} HEAD:${escapedHeadRefName} ${escapedForceWithLeaseFlag}`,
+    pushToUpstreamCommand: `git push ${upstreamUrlToPush(pr.headRef.repository.url, git)} HEAD:${escapedHeadRefName} ${escapedForceWithLeaseFlag}`,
     resetGitStateCommand: `git rebase --abort && git reset --hard && git checkout ${previousBranchOrRevision}`,
     pullRequest: pr,
   };
 }
 
-function upstreamUrlToPush(repoUrl: string): string {
+export function upstreamUrlToPush(repoUrl: string, git: AuthenticatedGitClient): string {
   const pushToUpstreamUrl = new URL(repoUrl);
-  if (process.env['GITHUB_TOKEN']) {
-    pushToUpstreamUrl.password = '$GITHUB_TOKEN';
-    pushToUpstreamUrl.username = 'x-access-token';
-  } else if (process.env['TOKEN']) {
-    pushToUpstreamUrl.password = '$TOKEN';
+  if (git.tokenEnvironmentVariable) {
+    pushToUpstreamUrl.password = `$${git.tokenEnvironmentVariable}`;
     pushToUpstreamUrl.username = 'x-access-token';
   }
 
