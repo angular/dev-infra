@@ -169,6 +169,36 @@ describe('RenderContext', () => {
     });
   });
 
+  describe('commitToLink', () => {
+    it('creates a markdown link for a commit', () => {
+      const renderContext = new RenderContext(defaultContextData);
+      const [commit] = renderContext._categorizeCommits([
+        {
+          ...buildCommit('fix', 'core'),
+          hash: '0123456789abcdef',
+          shortHash: '0123456',
+        },
+      ]);
+      expect(renderContext.commitToLink(commit)).toBe(
+        '[0123456](https://github.com/repoOwner/repoName/commit/0123456789abcdef)',
+      );
+    });
+
+    it('strips markdown link control characters from shortHash and hash', () => {
+      const renderContext = new RenderContext(defaultContextData);
+      const [commit] = renderContext._categorizeCommits([
+        {
+          ...buildCommit('fix', 'core'),
+          hash: '0123456789abcdef)(https://evil.example)',
+          shortHash: '0123456](https://evil.example)[',
+        },
+      ]);
+      expect(renderContext.commitToLink(commit)).toBe(
+        '[0123456https://evil.example](https://github.com/repoOwner/repoName/commit/0123456789abcdefhttps://evil.example)',
+      );
+    });
+  });
+
   afterAll(() => {
     jasmine.clock().uninstall();
   });

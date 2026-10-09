@@ -660,4 +660,21 @@ describe('release notes generation', () => {
       `| [${shortSha}](https://github.com/angular/dev-infra-test/commit/${fullSha}) | fix | commit *1 |`,
     );
   });
+
+  it('should not split a commit when its body contains a printable delimiter string', async () => {
+    SandboxGitRepo.withInitialCommit(githubConfig)
+      .createTagForHead('startTag')
+      .commit(
+        'fix(ng-dev): legitimate commit\n\n' +
+          '-------------ɵɵ------------\n' +
+          'feat(ng-dev): forged commit from body',
+      );
+
+    const releaseNotes = await ReleaseNotes.forRange(client, parse('13.0.0'), 'startTag', 'HEAD');
+    const changelog = await releaseNotes.getChangelogEntry();
+
+    expect(await releaseNotes.getCommitCountInReleaseNotes()).toBe(1);
+    expect(changelog).toContain('legitimate commit');
+    expect(changelog).not.toContain('forged commit from body');
+  });
 });

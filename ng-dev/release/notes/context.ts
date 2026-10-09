@@ -193,8 +193,10 @@ export class RenderContext {
    * Convert a commit object to a Markdown link.
    */
   commitToLink = (commit: CategorizedCommit): string => {
-    const url = `https://github.com/${this.data.github.owner}/${this.data.github.name}/commit/${commit.hash}`;
-    return `[${commit.shortHash}](${url})`;
+    const hash = sanitizeCommitHash(commit.hash);
+    const shortHash = sanitizeCommitHash(commit.shortHash);
+    const url = `https://github.com/${this.data.github.owner}/${this.data.github.name}/commit/${hash}`;
+    return `[${shortHash}](${url})`;
   };
 
   /**
@@ -240,10 +242,17 @@ export class RenderContext {
         color = 'orange';
         break;
     }
-    const url = `https://github.com/${this.data.github.owner}/${this.data.github.name}/commit/${commit.hash}`;
-    const imgSrc = `https://img.shields.io/badge/${commit.shortHash}-${commit.type}-${color}`;
-    return `[![${commit.type} - ${commit.shortHash}](${imgSrc})](${url})`;
+    const hash = sanitizeCommitHash(commit.hash);
+    const shortHash = sanitizeCommitHash(commit.shortHash);
+    const url = `https://github.com/${this.data.github.owner}/${this.data.github.name}/commit/${hash}`;
+    const imgSrc = `https://img.shields.io/badge/${shortHash}-${commit.type}-${color}`;
+    return `[![${commit.type} - ${shortHash}](${imgSrc})](${url})`;
   };
+}
+
+/** Sanitizes a commit hash or shortHash for safe interpolation into Markdown links. */
+function sanitizeCommitHash(hash: string | undefined): string {
+  return (hash ?? '').replace(/[\[\]()<>\\\r\n]/g, '');
 }
 
 /**

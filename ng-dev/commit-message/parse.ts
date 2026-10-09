@@ -107,10 +107,17 @@ const headerPattern = /^(\w+)(?:\(([^)]+)\))?: (.*)$/;
  */
 const headerCorrespondence = ['type', 'scope', 'subject'];
 /**
+ * Regex matching the trailing git log metadata fields appended by `gitLogFormatForParsing`.
+ */
+const GIT_LOG_METADATA_RE =
+  /\r?\n-hash-\r?\n([^\r\n]*)\r?\n-shortHash-\r?\n([^\r\n]*)\r?\n-author-\r?\n([^\r\n]*)\s*$/;
+
+/**
  * Configuration options for the commit parser.
  */
 const parseOptions: ParserOptions = {
   commentChar: '#',
+  fieldPattern: /(?!)/,
   headerPattern,
   headerCorrespondence,
   noteKeywords: [NoteSections.BREAKING_CHANGE, NoteSections.DEPRECATED],
@@ -129,8 +136,14 @@ export function parseCommitFromGitLog(fullText: string): CommitFromGitLog {
 
 /** Parse a full commit message into its composite parts. */
 function parseInternal(fullText: string): CommitFromGitLog | Commit {
+  const metadataMatch = fullText.match(GIT_LOG_METADATA_RE);
+  const messageText = metadataMatch ? fullText.slice(0, metadataMatch.index) : fullText;
+  const hash = metadataMatch?.[1]?.trim() || undefined;
+  const shortHash = metadataMatch?.[2]?.trim() || undefined;
+  const author = metadataMatch?.[3]?.trim() || undefined;
+
   /** The initially parsed commit. */
-  const commit = commitParser.parse(fullText);
+  const commit = commitParser.parse(messageText);
   /** A list of breaking change notes from the commit. */
   const breakingChanges: CommitNote[] = [];
   /** A list of deprecation notes from the commit. */
@@ -168,8 +181,8 @@ function parseInternal(fullText: string): CommitFromGitLog | Commit {
     isFixup: FIXUP_PREFIX_RE.test(fullText),
     isSquash: SQUASH_PREFIX_RE.test(fullText),
     isRevert: REVERT_PREFIX_RE.test(fullText),
-    author: commit['author'] || undefined,
-    hash: commit['hash'] || undefined,
-    shortHash: commit['shortHash'] || undefined,
+    author,
+    hash,
+    shortHash,
   };
 }
