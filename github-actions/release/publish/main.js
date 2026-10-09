@@ -2160,9 +2160,9 @@ var require_dispatcher_base = __commonJS({
       }
       close(callback) {
         if (callback === void 0) {
-          return new Promise((resolve5, reject) => {
+          return new Promise((resolve6, reject) => {
             this.close((err, data) => {
-              return err ? reject(err) : resolve5(data);
+              return err ? reject(err) : resolve6(data);
             });
           });
         }
@@ -2200,12 +2200,12 @@ var require_dispatcher_base = __commonJS({
           err = null;
         }
         if (callback === void 0) {
-          return new Promise((resolve5, reject) => {
+          return new Promise((resolve6, reject) => {
             this.destroy(err, (err2, data) => {
               return err2 ? (
                 /* istanbul ignore next: should never error */
                 reject(err2)
-              ) : resolve5(data);
+              ) : resolve6(data);
             });
           });
         }
@@ -4463,8 +4463,8 @@ var require_util2 = __commonJS({
     function createDeferredPromise() {
       let res;
       let rej;
-      const promise = new Promise((resolve5, reject) => {
-        res = resolve5;
+      const promise = new Promise((resolve6, reject) => {
+        res = resolve6;
         rej = reject;
       });
       return { promise, resolve: res, reject: rej };
@@ -6718,12 +6718,12 @@ upgrade: ${upgrade}\r
           cb();
         }
       }
-      const waitForDrain = () => new Promise((resolve5, reject) => {
+      const waitForDrain = () => new Promise((resolve6, reject) => {
         assert2(callback === null);
         if (socket[kError]) {
           reject(socket[kError]);
         } else {
-          callback = resolve5;
+          callback = resolve6;
         }
       });
       socket.on("close", onDrain).on("drain", onDrain);
@@ -7396,12 +7396,12 @@ var require_client_h2 = __commonJS({
           cb();
         }
       }
-      const waitForDrain = () => new Promise((resolve5, reject) => {
+      const waitForDrain = () => new Promise((resolve6, reject) => {
         assert2(callback === null);
         if (socket[kError]) {
           reject(socket[kError]);
         } else {
-          callback = resolve5;
+          callback = resolve6;
         }
       });
       h2stream.on("close", onDrain).on("drain", onDrain);
@@ -7879,16 +7879,16 @@ var require_client = __commonJS({
         return this[kNeedDrain] < 2;
       }
       async [kClose]() {
-        return new Promise((resolve5) => {
+        return new Promise((resolve6) => {
           if (this[kSize]) {
-            this[kClosedResolve] = resolve5;
+            this[kClosedResolve] = resolve6;
           } else {
-            resolve5(null);
+            resolve6(null);
           }
         });
       }
       async [kDestroy](err) {
-        return new Promise((resolve5) => {
+        return new Promise((resolve6) => {
           const requests = this[kQueue].splice(this[kPendingIdx]);
           for (let i = 0; i < requests.length; i++) {
             const request2 = requests[i];
@@ -7899,7 +7899,7 @@ var require_client = __commonJS({
               this[kClosedResolve]();
               this[kClosedResolve] = null;
             }
-            resolve5(null);
+            resolve6(null);
           };
           if (this[kHTTPContext]) {
             this[kHTTPContext].destroy(err, callback);
@@ -7950,7 +7950,7 @@ var require_client = __commonJS({
         });
       }
       try {
-        const socket = await new Promise((resolve5, reject) => {
+        const socket = await new Promise((resolve6, reject) => {
           client[kConnector]({
             host,
             hostname,
@@ -7962,7 +7962,7 @@ var require_client = __commonJS({
             if (err) {
               reject(err);
             } else {
-              resolve5(socket2);
+              resolve6(socket2);
             }
           });
         });
@@ -8298,8 +8298,8 @@ var require_pool_base = __commonJS({
         if (this[kQueue].isEmpty()) {
           await Promise.all(this[kClients].map((c) => c.close()));
         } else {
-          await new Promise((resolve5) => {
-            this[kClosedResolve] = resolve5;
+          await new Promise((resolve6) => {
+            this[kClosedResolve] = resolve6;
           });
         }
       }
@@ -9568,7 +9568,7 @@ var require_readable = __commonJS({
         if (this._readableState.closeEmitted) {
           return null;
         }
-        return await new Promise((resolve5, reject) => {
+        return await new Promise((resolve6, reject) => {
           if (this[kContentLength] > limit) {
             this.destroy(new AbortError());
           }
@@ -9581,7 +9581,7 @@ var require_readable = __commonJS({
             if (signal?.aborted) {
               reject(signal.reason ?? new AbortError());
             } else {
-              resolve5(null);
+              resolve6(null);
             }
           }).on("error", noop3).on("data", function(chunk) {
             limit -= chunk.length;
@@ -9600,7 +9600,7 @@ var require_readable = __commonJS({
     }
     async function consume(stream, type) {
       assert2(!stream[kConsume]);
-      return new Promise((resolve5, reject) => {
+      return new Promise((resolve6, reject) => {
         if (isUnusable(stream)) {
           const rState = stream._readableState;
           if (rState.destroyed && rState.closeEmitted === false) {
@@ -9617,7 +9617,7 @@ var require_readable = __commonJS({
             stream[kConsume] = {
               type,
               stream,
-              resolve: resolve5,
+              resolve: resolve6,
               reject,
               length: 0,
               body: []
@@ -9687,18 +9687,18 @@ var require_readable = __commonJS({
       return buffer;
     }
     function consumeEnd(consume2) {
-      const { type, body, resolve: resolve5, stream, length } = consume2;
+      const { type, body, resolve: resolve6, stream, length } = consume2;
       try {
         if (type === "text") {
-          resolve5(chunksDecode(body, length));
+          resolve6(chunksDecode(body, length));
         } else if (type === "json") {
-          resolve5(JSON.parse(chunksDecode(body, length)));
+          resolve6(JSON.parse(chunksDecode(body, length)));
         } else if (type === "arrayBuffer") {
-          resolve5(chunksConcat(body, length).buffer);
+          resolve6(chunksConcat(body, length).buffer);
         } else if (type === "blob") {
-          resolve5(new Blob(body, { type: stream[kContentType] }));
+          resolve6(new Blob(body, { type: stream[kContentType] }));
         } else if (type === "bytes") {
-          resolve5(chunksConcat(body, length));
+          resolve6(chunksConcat(body, length));
         }
         consumeFinish(consume2);
       } catch (err) {
@@ -9955,9 +9955,9 @@ var require_api_request = __commonJS({
     };
     function request2(opts, callback) {
       if (callback === void 0) {
-        return new Promise((resolve5, reject) => {
+        return new Promise((resolve6, reject) => {
           request2.call(this, opts, (err, data) => {
-            return err ? reject(err) : resolve5(data);
+            return err ? reject(err) : resolve6(data);
           });
         });
       }
@@ -10180,9 +10180,9 @@ var require_api_stream = __commonJS({
     };
     function stream(opts, factory, callback) {
       if (callback === void 0) {
-        return new Promise((resolve5, reject) => {
+        return new Promise((resolve6, reject) => {
           stream.call(this, opts, factory, (err, data) => {
-            return err ? reject(err) : resolve5(data);
+            return err ? reject(err) : resolve6(data);
           });
         });
       }
@@ -10467,9 +10467,9 @@ var require_api_upgrade = __commonJS({
     };
     function upgrade(opts, callback) {
       if (callback === void 0) {
-        return new Promise((resolve5, reject) => {
+        return new Promise((resolve6, reject) => {
           upgrade.call(this, opts, (err, data) => {
-            return err ? reject(err) : resolve5(data);
+            return err ? reject(err) : resolve6(data);
           });
         });
       }
@@ -10561,9 +10561,9 @@ var require_api_connect = __commonJS({
     };
     function connect(opts, callback) {
       if (callback === void 0) {
-        return new Promise((resolve5, reject) => {
+        return new Promise((resolve6, reject) => {
           connect.call(this, opts, (err, data) => {
-            return err ? reject(err) : resolve5(data);
+            return err ? reject(err) : resolve6(data);
           });
         });
       }
@@ -14427,7 +14427,7 @@ var require_fetch = __commonJS({
       function dispatch({ body }) {
         const url = requestCurrentURL(request2);
         const agent = fetchParams.controller.dispatcher;
-        return new Promise((resolve5, reject) => agent.dispatch(
+        return new Promise((resolve6, reject) => agent.dispatch(
           {
             path: url.pathname + url.search,
             origin: url.origin,
@@ -14503,7 +14503,7 @@ var require_fetch = __commonJS({
                 }
               }
               const onError = this.onError.bind(this);
-              resolve5({
+              resolve6({
                 status,
                 statusText,
                 headersList,
@@ -14549,7 +14549,7 @@ var require_fetch = __commonJS({
               for (let i = 0; i < rawHeaders.length; i += 2) {
                 headersList.append(bufferToLowerCasedHeaderName(rawHeaders[i]), rawHeaders[i + 1].toString("latin1"), true);
               }
-              resolve5({
+              resolve6({
                 status,
                 statusText: STATUS_CODES[status],
                 headersList,
@@ -18284,8 +18284,8 @@ var require_util8 = __commonJS({
       return true;
     }
     function delay(ms) {
-      return new Promise((resolve5) => {
-        setTimeout(resolve5, ms).unref();
+      return new Promise((resolve6) => {
+        setTimeout(resolve6, ms).unref();
       });
     }
     module.exports = {
@@ -19210,11 +19210,11 @@ var require_lib = __commonJS({
     }();
     var __awaiter3 = exports && exports.__awaiter || function(thisArg, _arguments, P, generator) {
       function adopt(value) {
-        return value instanceof P ? value : new P(function(resolve5) {
-          resolve5(value);
+        return value instanceof P ? value : new P(function(resolve6) {
+          resolve6(value);
         });
       }
-      return new (P || (P = Promise))(function(resolve5, reject) {
+      return new (P || (P = Promise))(function(resolve6, reject) {
         function fulfilled(value) {
           try {
             step(generator.next(value));
@@ -19230,7 +19230,7 @@ var require_lib = __commonJS({
           }
         }
         function step(result) {
-          result.done ? resolve5(result.value) : adopt(result.value).then(fulfilled, rejected);
+          result.done ? resolve6(result.value) : adopt(result.value).then(fulfilled, rejected);
         }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
       });
@@ -19317,26 +19317,26 @@ var require_lib = __commonJS({
       }
       readBody() {
         return __awaiter3(this, void 0, void 0, function* () {
-          return new Promise((resolve5) => __awaiter3(this, void 0, void 0, function* () {
+          return new Promise((resolve6) => __awaiter3(this, void 0, void 0, function* () {
             let output = Buffer.alloc(0);
             this.message.on("data", (chunk) => {
               output = Buffer.concat([output, chunk]);
             });
             this.message.on("end", () => {
-              resolve5(output.toString());
+              resolve6(output.toString());
             });
           }));
         });
       }
       readBodyBuffer() {
         return __awaiter3(this, void 0, void 0, function* () {
-          return new Promise((resolve5) => __awaiter3(this, void 0, void 0, function* () {
+          return new Promise((resolve6) => __awaiter3(this, void 0, void 0, function* () {
             const chunks = [];
             this.message.on("data", (chunk) => {
               chunks.push(chunk);
             });
             this.message.on("end", () => {
-              resolve5(Buffer.concat(chunks));
+              resolve6(Buffer.concat(chunks));
             });
           }));
         });
@@ -19544,14 +19544,14 @@ var require_lib = __commonJS({
        */
       requestRaw(info2, data) {
         return __awaiter3(this, void 0, void 0, function* () {
-          return new Promise((resolve5, reject) => {
+          return new Promise((resolve6, reject) => {
             function callbackForResult(err, res) {
               if (err) {
                 reject(err);
               } else if (!res) {
                 reject(new Error("Unknown error"));
               } else {
-                resolve5(res);
+                resolve6(res);
               }
             }
             this.requestRawWithCallback(info2, data, callbackForResult);
@@ -19795,12 +19795,12 @@ var require_lib = __commonJS({
         return __awaiter3(this, void 0, void 0, function* () {
           retryNumber = Math.min(ExponentialBackoffCeiling, retryNumber);
           const ms = ExponentialBackoffTimeSlice * Math.pow(2, retryNumber);
-          return new Promise((resolve5) => setTimeout(() => resolve5(), ms));
+          return new Promise((resolve6) => setTimeout(() => resolve6(), ms));
         });
       }
       _processResponse(res, options) {
         return __awaiter3(this, void 0, void 0, function* () {
-          return new Promise((resolve5, reject) => __awaiter3(this, void 0, void 0, function* () {
+          return new Promise((resolve6, reject) => __awaiter3(this, void 0, void 0, function* () {
             const statusCode = res.message.statusCode || 0;
             const response = {
               statusCode,
@@ -19808,7 +19808,7 @@ var require_lib = __commonJS({
               headers: {}
             };
             if (statusCode === HttpCodes2.NotFound) {
-              resolve5(response);
+              resolve6(response);
             }
             function dateTimeDeserializer(key, value) {
               if (typeof value === "string") {
@@ -19847,7 +19847,7 @@ var require_lib = __commonJS({
               err.result = response.result;
               reject(err);
             } else {
-              resolve5(response);
+              resolve6(response);
             }
           }));
         });
@@ -24267,10 +24267,10 @@ var require_folder_hash = __commonJS({
         return promise.catch((err) => {
           if (err.code && (err.code === "EMFILE" || err.code === "ENFILE")) {
             log.queue(`queued ${dirname3}/${name} because of ${err.code}`);
-            const promise2 = new Promise((resolve5, reject) => {
+            const promise2 = new Promise((resolve6, reject) => {
               queue.push(() => {
                 log.queue(`Will processs queued ${dirname3}/${name}`);
-                return hashElementPromise(stats, dirname3, options, isRootElement).then((ok) => resolve5(ok)).catch((err2) => reject(err2));
+                return hashElementPromise(stats, dirname3, options, isRootElement).then((ok) => resolve6(ok)).catch((err2) => reject(err2));
               });
             });
             if (queueTimer === void 0) {
@@ -24314,7 +24314,7 @@ var require_folder_hash = __commonJS({
         } else if (ignore(name, filePath, options.files)) {
           return Promise.resolve(void 0);
         }
-        return new Promise((resolve5, reject) => {
+        return new Promise((resolve6, reject) => {
           try {
             const hash = crypto.createHash(options.algo, options.algoOptions);
             if (options.files.ignoreBasename || options.ignoreBasenameOnce || isRootElement && options.files.ignoreRootName) {
@@ -24330,7 +24330,7 @@ var require_folder_hash = __commonJS({
             f.pipe(hash, { end: false });
             f.on("end", () => {
               const hashedFile = new HashedFile(name, hash, options.encoding);
-              return resolve5(hashedFile);
+              return resolve6(hashedFile);
             });
           } catch (ex) {
             return reject(ex);
@@ -30722,7 +30722,7 @@ var require_lib3 = __commonJS({
       return matches;
     };
     exports.analyse = analyse;
-    var detectFile = (filepath, opts = {}) => new Promise((resolve5, reject) => {
+    var detectFile = (filepath, opts = {}) => new Promise((resolve6, reject) => {
       let fd;
       const fs3 = (0, node_1.default)();
       const handler2 = (err, buffer) => {
@@ -30732,7 +30732,7 @@ var require_lib3 = __commonJS({
         if (err) {
           reject(err);
         } else if (buffer) {
-          resolve5((0, exports.detect)(buffer));
+          resolve6((0, exports.detect)(buffer));
         } else {
           reject(new Error("No error and no buffer received"));
         }
@@ -35594,11 +35594,11 @@ import { EOL as EOL2 } from "os";
 import { constants, promises } from "fs";
 var __awaiter = function(thisArg, _arguments, P, generator) {
   function adopt(value) {
-    return value instanceof P ? value : new P(function(resolve5) {
-      resolve5(value);
+    return value instanceof P ? value : new P(function(resolve6) {
+      resolve6(value);
     });
   }
-  return new (P || (P = Promise))(function(resolve5, reject) {
+  return new (P || (P = Promise))(function(resolve6, reject) {
     function fulfilled(value) {
       try {
         step(generator.next(value));
@@ -35614,7 +35614,7 @@ var __awaiter = function(thisArg, _arguments, P, generator) {
       }
     }
     function step(result) {
-      result.done ? resolve5(result.value) : adopt(result.value).then(fulfilled, rejected);
+      result.done ? resolve6(result.value) : adopt(result.value).then(fulfilled, rejected);
     }
     step((generator = generator.apply(thisArg, _arguments || [])).next());
   });
@@ -40294,7 +40294,7 @@ function getCachedAuthentication(state, auth22) {
   return newScope === currentScope ? authentication : false;
 }
 async function wait(seconds) {
-  await new Promise((resolve5) => setTimeout(resolve5, seconds * 1e3));
+  await new Promise((resolve6) => setTimeout(resolve6, seconds * 1e3));
 }
 async function waitForAccessToken(request2, clientId, clientType, verification) {
   try {
@@ -41304,7 +41304,7 @@ async function sendRequestWithRetries(state, request2, options, createdAt, retri
     state.log.warn(
       `[@octokit/auth-app] Retrying after 401 response to account for token replication delay (retry: ${retries}, wait: ${awaitTime / 1e3}s)`
     );
-    await new Promise((resolve5) => setTimeout(resolve5, awaitTime));
+    await new Promise((resolve6) => setTimeout(resolve6, awaitTime));
     return sendRequestWithRetries(state, request2, options, createdAt, retries);
   }
 }
@@ -41412,11 +41412,11 @@ var httpClient = __toESM(require_lib());
 var import_undici2 = __toESM(require_undici());
 var __awaiter2 = function(thisArg, _arguments, P, generator) {
   function adopt(value) {
-    return value instanceof P ? value : new P(function(resolve5) {
-      resolve5(value);
+    return value instanceof P ? value : new P(function(resolve6) {
+      resolve6(value);
     });
   }
-  return new (P || (P = Promise))(function(resolve5, reject) {
+  return new (P || (P = Promise))(function(resolve6, reject) {
     function fulfilled(value) {
       try {
         step(generator.next(value));
@@ -41432,7 +41432,7 @@ var __awaiter2 = function(thisArg, _arguments, P, generator) {
       }
     }
     function step(result) {
-      result.done ? resolve5(result.value) : adopt(result.value).then(fulfilled, rejected);
+      result.done ? resolve6(result.value) : adopt(result.value).then(fulfilled, rejected);
     }
     step((generator = generator.apply(thisArg, _arguments || [])).next());
   });
@@ -41508,11 +41508,11 @@ import { spawn as _spawn, spawnSync as _spawnSync, exec as _exec } from "child_p
 import assert from "assert";
 var ChildProcess = class {
   static spawnInteractive(command2, args, options = {}) {
-    return new Promise((resolve5, reject) => {
+    return new Promise((resolve6, reject) => {
       const commandText = `${command2} ${args.join(" ")}`;
       Log.debug(`Executing command: ${sanitize(commandText)}`);
       const childProcess = _spawn(command2, args, { ...options, stdio: "inherit" });
-      childProcess.on("close", (status) => status === 0 ? resolve5() : reject(status));
+      childProcess.on("close", (status) => status === 0 ? resolve6() : reject(status));
     });
   }
   static spawnSync(command2, args, options = {}) {
@@ -41544,7 +41544,7 @@ function getEnvironmentForNonInteractiveCommand(userProvidedEnv) {
   return { FORCE_COLOR: forceColorValue, ...userProvidedEnv ?? process.env };
 }
 function processAsyncCmd(command2, options, childProcess) {
-  return new Promise((resolve5, reject) => {
+  return new Promise((resolve6, reject) => {
     let logOutput = "";
     let stdout = "";
     let stderr = "";
@@ -41579,7 +41579,7 @@ function processAsyncCmd(command2, options, childProcess) {
       printFn(`Process output: 
 ${sanitize(logOutput)}`);
       if (status === 0 || options.suppressErrorOnFailingExitCode) {
-        resolve5({ stdout, stderr, status });
+        resolve6({ stdout, stderr, status });
       } else {
         reject(options.mode === "silent" ? logOutput : void 0);
       }
@@ -46069,12 +46069,12 @@ var YargsInstance = class {
   async getCompletion(args, done) {
     argsert("<array> [function]", [args, done], arguments.length);
     if (!done) {
-      return new Promise((resolve5, reject) => {
+      return new Promise((resolve6, reject) => {
         __classPrivateFieldGet(this, _YargsInstance_completion, "f").getCompletion(args, (err, completions) => {
           if (err)
             reject(err);
           else
-            resolve5(completions);
+            resolve6(completions);
         });
       });
     } else {
@@ -47524,7 +47524,7 @@ async function invokeWithRetry(fn, retries = 3, delay = 1e3) {
         }
       }
       Log.warn(`GitHub API call failed (attempt ${attempt}/${retries}). Retrying in ${delay}ms...`);
-      await new Promise((resolve5) => setTimeout(resolve5, delay));
+      await new Promise((resolve6) => setTimeout(resolve6, delay));
     }
   }
   throw new Error("Unreachable");
@@ -47857,7 +47857,7 @@ function assertValidReleaseConfig(config) {
 
 // github-actions/release/publish/lib/publish-ci.js
 var import_semver6 = __toESM(require_semver2());
-import { join as join6 } from "path";
+import { join as join6, resolve as resolve5 } from "path";
 import { existsSync as existsSync3, writeFileSync as writeFileSync3, rmSync as rmSync2, mkdtempSync as mkdtempSync2 } from "fs";
 import { tmpdir } from "os";
 
@@ -48029,8 +48029,8 @@ ejs.promiseImpl = new Function("return this;")().Promise;
 ejs.resolveInclude = function(name, filename, isDir) {
   let dirname3 = path.dirname;
   let extname2 = path.extname;
-  let resolve5 = path.resolve;
-  let includePath = resolve5(isDir ? filename : dirname3(filename), name);
+  let resolve6 = path.resolve;
+  let includePath = resolve6(isDir ? filename : dirname3(filename), name);
   let ext2 = extname2(name);
   if (!ext2) {
     includePath += ".ejs";
@@ -48105,10 +48105,10 @@ function tryHandleCache(options, data, cb) {
   let result;
   if (!cb) {
     if (typeof ejs.promiseImpl == "function") {
-      return new ejs.promiseImpl(function(resolve5, reject) {
+      return new ejs.promiseImpl(function(resolve6, reject) {
         try {
           result = handleCache(options)(data);
-          resolve5(result);
+          resolve6(result);
         } catch (err) {
           reject(err);
         }
@@ -49591,13 +49591,13 @@ import { AsyncResource as AsyncResource3 } from "node:async_hooks";
 
 // 
 function withResolver() {
-  let resolve5;
+  let resolve6;
   let reject;
   const promise = new Promise((res, rej) => {
-    resolve5 = res;
+    resolve6 = res;
     reject = rej;
   });
-  return { promise, resolve: resolve5, reject };
+  return { promise, resolve: resolve6, reject };
 }
 
 // 
@@ -49975,7 +49975,7 @@ function createPrompt(view) {
     });
     output.mute();
     const screen = new ScreenManager(rl);
-    const { promise, resolve: resolve5, reject } = withResolver();
+    const { promise, resolve: resolve6, reject } = withResolver();
     return withHooks(rl, (cycle) => {
       const clearEffects = AsyncResource3.bind(() => effectScheduler.clearAll());
       const settlePrompt = (settle) => {
@@ -49986,7 +49986,7 @@ function createPrompt(view) {
           reject(error2);
         }
       };
-      const resolvePrompt = (value) => settlePrompt(() => resolve5(value));
+      const resolvePrompt = (value) => settlePrompt(() => resolve6(value));
       const rejectPrompt = (error2) => settlePrompt(() => reject(error2));
       const promptPromise = Object.assign(promise.finally(() => {
         cleanups.forEach((cleanup) => cleanup());
@@ -50372,7 +50372,7 @@ var ExternalEditor = class {
   }
   runAsync(callback) {
     this.createTempFile();
-    const promise = new Promise((resolve5, reject) => {
+    const promise = new Promise((resolve6, reject) => {
       try {
         const editorProcess = spawn(this.editor.bin, this.editorArgs(), {
           shell: false,
@@ -50383,7 +50383,7 @@ var ExternalEditor = class {
         });
         editorProcess.once("exit", (code) => {
           this.lastExitStatus = code ?? 0;
-          resolve5();
+          resolve6();
         });
       } catch (launchError) {
         reject(new LaunchEditorError(launchError));
@@ -53488,7 +53488,7 @@ async function getActiveFormatters() {
 // ng-dev/format/run-commands-parallel.js
 var AVAILABLE_THREADS = Math.max(Math.min(cpus().length, 8) - 1, 1);
 function runFormatterInParallel(allFiles, action) {
-  return new Promise(async (resolve5) => {
+  return new Promise(async (resolve6) => {
     const formatters = await getActiveFormatters();
     const failures = [];
     const pendingCommands = [];
@@ -53496,7 +53496,7 @@ function runFormatterInParallel(allFiles, action) {
       pendingCommands.push(...multimatch.call(void 0, allFiles, formatter.getFileMatcher(), { dot: true }).map((file) => ({ formatter, file })));
     }
     if (pendingCommands.length === 0) {
-      return resolve5(false);
+      return resolve6(false);
     }
     switch (action) {
       case "format":
@@ -53539,7 +53539,7 @@ function runFormatterInParallel(allFiles, action) {
         threads[thread] = false;
         if (threads.every((active) => !active)) {
           progressBar.stop();
-          resolve5(failures);
+          resolve6(failures);
         }
       });
       threads[thread] = true;
@@ -54641,20 +54641,20 @@ var ReleaseNotes = class _ReleaseNotes {
 
 // ng-dev/release/versioning/npm-command.js
 var NpmCommand = class {
-  static async publish(packagePath, distTag, registryUrl) {
+  static async publish(packagePath, distTag, registryUrl, cwd) {
     const args = ["publish", packagePath, "--access", "public", "--tag", distTag];
     if (registryUrl !== void 0) {
       args.push("--registry", registryUrl);
     }
-    await ChildProcess.spawn("npm", args, { mode: "silent" });
+    await ChildProcess.spawn("npm", args, { mode: "silent", ...cwd ? { cwd } : {} });
   }
-  static async checkVersionExists(packageName, version, registryUrl) {
+  static async checkVersionExists(packageName, version, registryUrl, cwd) {
     const args = ["view", `${packageName}@${version}`, "version"];
     if (registryUrl !== void 0) {
       args.push("--registry", registryUrl);
     }
     try {
-      const result = await ChildProcess.spawn("npm", args, { mode: "silent" });
+      const result = await ChildProcess.spawn("npm", args, { mode: "silent", ...cwd ? { cwd } : {} });
       const output = result.stdout.trim();
       return output !== "";
     } catch (e) {
@@ -54665,13 +54665,13 @@ var NpmCommand = class {
       throw e;
     }
   }
-  static async deprecate(packageName, version, message, registryUrl) {
+  static async deprecate(packageName, version, message, registryUrl, cwd) {
     const args = ["deprecate", `${packageName}@${version}`, message];
     if (registryUrl !== void 0) {
       args.push("--registry", registryUrl);
     }
     try {
-      await ChildProcess.spawn("npm", args, { mode: "silent" });
+      await ChildProcess.spawn("npm", args, { mode: "silent", ...cwd ? { cwd } : {} });
     } catch (e) {
       Log.error(Array(80).join("#"));
       Log.error(`  \u2718   An error occurred while deprecating "${packageName}".`);
@@ -55322,14 +55322,14 @@ ${failures}`);
       for (const pkg of builtPackages) {
         Log.info(`Checking if "${pkg.name}@${version}" is already published...`);
         try {
-          const exists2 = await NpmCommand.checkVersionExists(pkg.name, version, this.config.release.publishRegistry);
+          const exists2 = await NpmCommand.checkVersionExists(pkg.name, version, this.config.release.publishRegistry, tempDir);
           if (exists2) {
             Log.warn(`Warning: Package "${pkg.name}@${version}" is already published. Skipping.`);
             this.summary.addPackage({ name: pkg.name, version, status: "SKIPPED" });
             continue;
           }
           Log.info(`Publishing "${pkg.name}"...`);
-          await NpmCommand.publish(pkg.outputPath, npmDistTag, this.config.release.publishRegistry);
+          await NpmCommand.publish(resolve5(pkg.outputPath), npmDistTag, this.config.release.publishRegistry, tempDir);
           Log.info(green(`  \u2713   Successfully published "${pkg.name}".`));
           this.summary.addPackage({ name: pkg.name, version, status: "PUBLISHED" });
         } catch (e) {
@@ -55353,7 +55353,7 @@ ${failures}`);
         Log.info(`Deprecating "${pkg.name}"...`);
         const { version: version2, message } = pkg.deprecated;
         try {
-          await NpmCommand.deprecate(pkg.name, version2, message, this.config.release.publishRegistry);
+          await NpmCommand.deprecate(pkg.name, version2, message, this.config.release.publishRegistry, tempDir);
           Log.info(green(`  \u2713   Successfully deprecated "${pkg.name}@${version2}".`));
         } catch (e) {
           Log.error(`Failed to deprecate "${pkg.name}": ${e}`);
