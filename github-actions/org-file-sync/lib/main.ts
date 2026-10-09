@@ -112,7 +112,9 @@ async function updateRepoWithFiles(github: Octokit, repo: string, goldenFiles: F
 }
 
 async function main() {
-  const github = new Octokit({auth: await getAuthTokenFor(ANGULAR_ROBOT)});
+  const github = new Octokit({
+    auth: await getAuthTokenFor(ANGULAR_ROBOT, {repositories: [context.repo.repo, ...reposToSync]}),
+  });
   try {
     const goldenFiles: Files = await getFilesForRepo(github, context.repo.repo);
 
