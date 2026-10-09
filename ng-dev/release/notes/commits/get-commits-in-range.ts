@@ -79,12 +79,8 @@ function fetchCommitsForRevisionRange(
   client: GitClient,
   revisionRange: string,
 ): CommitFromGitLog[] {
-  const splitDelimiter = '-------------ɵɵ------------';
-  const output = client.run([
-    'log',
-    `--format=${gitLogFormatForParsing}${splitDelimiter}`,
-    revisionRange,
-  ]);
+  const splitDelimiter = '\0';
+  const output = client.run(['log', `--format=${gitLogFormatForParsing}%x00`, revisionRange]);
   /** A set of the commits in the provided range. */
   const commits = new Map<string, CommitFromGitLog>();
 
