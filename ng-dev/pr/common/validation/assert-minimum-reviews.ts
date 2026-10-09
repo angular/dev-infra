@@ -18,7 +18,10 @@ export const minimumReviewsValidation = createPullRequestValidation(
 class Validation extends PullRequestValidation {
   assert(pullRequest: PullRequestFromGithub) {
     const totalCount = pullRequest.reviews.nodes.filter(
-      ({authorAssociation}) => authorAssociation === 'MEMBER',
+      (review) =>
+        review &&
+        review.authorAssociation === 'MEMBER' &&
+        review.commit?.oid === pullRequest.headRefOid,
     ).length;
     if (totalCount === 0) {
       throw this._createError(

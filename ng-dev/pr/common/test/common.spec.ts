@@ -253,6 +253,92 @@ describe('pull request validation', () => {
       expect(results.length).toBe(0);
     });
   });
+
+  describe('assert-minimum-reviews', () => {
+    it('should fail when pull request has no reviews', async () => {
+      const config = createIsolatedValidationConfig({assertMinimumReviews: true});
+      let pr = createTestPullRequest();
+      pr.reviews.nodes = [];
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(1);
+      expect(results[0].message).toBe(
+        'Pull request cannot be merged without at least one review from a team member',
+      );
+    });
+
+    it('should fail when member review is on a stale commit', async () => {
+      const config = createIsolatedValidationConfig({assertMinimumReviews: true});
+      let pr = createTestPullRequest();
+      pr.headRefOid = 'fresh-head-sha';
+      pr.reviews.nodes = [
+        {
+          author: {login: 'member1'},
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          bodyText: 'LGTM',
+          commit: {oid: 'stale-head-sha'},
+        },
+      ];
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(1);
+      expect(results[0].message).toBe(
+        'Pull request cannot be merged without at least one review from a team member',
+      );
+    });
+
+    it('should fail when review has null commit', async () => {
+      const config = createIsolatedValidationConfig({assertMinimumReviews: true});
+      let pr = createTestPullRequest();
+      pr.headRefOid = 'fresh-head-sha';
+      pr.reviews.nodes = [
+        {
+          author: {login: 'member1'},
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          bodyText: 'LGTM',
+          commit: null as any,
+        },
+      ];
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(1);
+      expect(results[0].message).toBe(
+        'Pull request cannot be merged without at least one review from a team member',
+      );
+    });
+
+    it('should fail when fresh approval is by non-member', async () => {
+      const config = createIsolatedValidationConfig({assertMinimumReviews: true});
+      let pr = createTestPullRequest();
+      pr.headRefOid = 'fresh-head-sha';
+      pr.reviews.nodes = [
+        {
+          author: {login: 'external-user'},
+          authorAssociation: 'NONE' as CommentAuthorAssociation,
+          bodyText: 'LGTM',
+          commit: {oid: 'fresh-head-sha'},
+        },
+      ];
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(1);
+      expect(results[0].message).toBe(
+        'Pull request cannot be merged without at least one review from a team member',
+      );
+    });
+
+    it('should pass when at least one member approval matches headRefOid', async () => {
+      const config = createIsolatedValidationConfig({assertMinimumReviews: true});
+      let pr = createTestPullRequest();
+      pr.headRefOid = 'fresh-head-sha';
+      pr.reviews.nodes = [
+        {
+          author: {login: 'member1'},
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          bodyText: 'LGTM',
+          commit: {oid: 'fresh-head-sha'},
+        },
+      ];
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(0);
+    });
+  });
 });
 
 function createIsolatedValidationConfig(
