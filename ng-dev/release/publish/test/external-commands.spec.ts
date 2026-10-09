@@ -140,3 +140,36 @@ describe('ExternalCommands.invokeNvmInstall', () => {
     );
   });
 });
+
+describe('ExternalCommands.invokePnpmInstall', () => {
+  beforeEach(() => {
+    cleanTestTmpDir();
+    spyOn(Log, 'info');
+    spyOn(Log, 'error');
+  });
+
+  it('should pass --ignore-scripts and --ignore-pnpmfile when running pnpm install', async () => {
+    const spawnSpy = spyOn(ChildProcess, 'spawn').and.resolveTo({
+      stdout: '',
+      stderr: '',
+      status: 0,
+    });
+
+    await expectAsync(ExternalCommands.invokePnpmInstall(testTmpDir)).toBeResolved();
+
+    expect(spawnSpy).toHaveBeenCalledOnceWith(
+      'pnpm',
+      [
+        'install',
+        '--frozen-lockfile',
+        '--ignore-scripts',
+        '--ignore-pnpmfile',
+        '--config.confirmModulesPurge=false',
+      ],
+      {
+        cwd: testTmpDir,
+        mode: 'on-error',
+      },
+    );
+  });
+});
