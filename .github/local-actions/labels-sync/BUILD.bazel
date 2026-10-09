@@ -13,7 +13,6 @@ ts_project(
         "//.github/local-actions/labels-sync:node_modules/@actions/core",
         "//.github/local-actions/labels-sync:node_modules/@actions/github",
         "//.github/local-actions/labels-sync:node_modules/@octokit/rest",
-        "//.github/local-actions/labels-sync:node_modules/@octokit/types",
         "//.github/local-actions/labels-sync:node_modules/@types/node",
         "//github-actions:utils",
         "//ng-dev/pr/common/labels",

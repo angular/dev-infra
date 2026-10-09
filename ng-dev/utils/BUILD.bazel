@@ -46,7 +46,6 @@ ts_project(
         "//ng-dev:node_modules/@octokit/auth-app",
         "//ng-dev:node_modules/@octokit/core",
         "//ng-dev:node_modules/@octokit/graphql",
-        "//ng-dev:node_modules/@octokit/openapi-types",
         "//ng-dev:node_modules/@octokit/plugin-paginate-rest",
         "//ng-dev:node_modules/@octokit/plugin-rest-endpoint-methods",
         "//ng-dev:node_modules/@octokit/request-error",

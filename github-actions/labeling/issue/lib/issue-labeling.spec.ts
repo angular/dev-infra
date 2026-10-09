@@ -1,5 +1,4 @@
 import {Octokit} from '@octokit/rest';
-import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {
   IssueLabeling as _IssueLabeling,
