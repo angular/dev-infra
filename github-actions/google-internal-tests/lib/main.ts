@@ -12,8 +12,8 @@ type GetCombinedStatusForRefResponse =
 type GithubStatus = GetCombinedStatusForRefResponse['data']['statuses'][0];
 
 export async function main(
-  github?: Octokit,
-  syncConfig?: Awaited<ReturnType<typeof getGoogleSyncConfig>>,
+  providedGithub?: Octokit,
+  providedSyncConfig?: Awaited<ReturnType<typeof getGoogleSyncConfig>>,
 ) {
   if (context.repo.owner !== 'angular') {
     core.info('Skipping Google Internal Tests action for non-Angular repos.');
@@ -26,17 +26,19 @@ export async function main(
     );
   }
 
-  const githubToken = core.getInput('github-token', {required: !github});
   const runTestGuideURL = core.getInput('run-tests-guide-url', {required: false});
-  if (!syncConfig) {
-    const syncConfigPath = path.resolve(core.getInput('sync-config', {required: true}));
-    syncConfig = await getGoogleSyncConfig(syncConfigPath);
-  }
+  const syncConfig =
+    providedSyncConfig ??
+    (await getGoogleSyncConfig(path.resolve(core.getInput('sync-config', {required: true}))));
 
   const prNum = context.payload.pull_request!.number;
   const prHeadSHA = context.payload.pull_request!.head!.sha;
   const prBaseRef = context.payload.pull_request!.base!.ref;
-  github ??= new Octokit({auth: githubToken});
+  const github =
+    providedGithub ??
+    new Octokit({
+      auth: core.getInput('github-token', {required: true}),
+    });
   const existingGoogleStatus = await findExistingTestStatus(github, prHeadSHA);
 
   // If there is an existing status already pointing to an internal CL or currently pending, we
@@ -71,20 +73,35 @@ export async function main(
     pull_number: prNum,
   });
 
-  let affectsGoogle = false;
-  for (const f of files) {
-    const paths = [f.filename];
-    if (f.status === 'renamed' && f.previous_filename) {
-      paths.push(f.previous_filename);
-    }
+  const maxPaginatedFiles = 3000;
+  const changedFilesCount = context.payload.pull_request?.changed_files;
 
-    if (
-      paths.some(
-        (filePath) => syncConfig.ngMatchFn(filePath) || syncConfig.separateMatchFn(filePath),
-      )
-    ) {
-      affectsGoogle = true;
-      break;
+  let affectsGoogle = false;
+  if (
+    files.length >= maxPaginatedFiles ||
+    (typeof changedFilesCount === 'number' && files.length < changedFilesCount)
+  ) {
+    core.warning(
+      `Pull request file list reached the GitHub pagination limit (${files.length} files returned` +
+        `${typeof changedFilesCount === 'number' ? ` of ${changedFilesCount}` : ''}). ` +
+        `Assuming pull request affects Google to fail closed.`,
+    );
+    affectsGoogle = true;
+  } else {
+    for (const f of files) {
+      const paths = [f.filename];
+      if (f.status === 'renamed' && f.previous_filename) {
+        paths.push(f.previous_filename);
+      }
+
+      if (
+        paths.some(
+          (filePath) => syncConfig.ngMatchFn(filePath) || syncConfig.separateMatchFn(filePath),
+        )
+      ) {
+        affectsGoogle = true;
+        break;
+      }
     }
   }
 

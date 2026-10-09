@@ -156,4 +156,39 @@ describe('google-internal-tests action', () => {
       sha: 'deadbeef1234567890',
     });
   });
+
+  it('should fail closed with pending status when returned file list reaches 3000-file pagination limit', async () => {
+    prFiles = Array.from({length: 3000}, (_, i) => ({
+      filename: `docs/dummy-${i}.md`,
+    }));
+
+    await main(mockGit as unknown as Octokit, mockSyncConfig);
+
+    expect(mockGit.repos.createCommitStatus).toHaveBeenCalledOnceWith({
+      owner: 'angular',
+      repo: 'angular',
+      state: 'pending',
+      description: 'Waiting for tests to start. @Googlers: Initiate a presubmit. See -->',
+      target_url: 'https://goo.gle/angular-internal-presubmit',
+      context: 'google-internal-tests',
+      sha: 'deadbeef1234567890',
+    });
+  });
+
+  it('should fail closed with pending status when returned file count is less than pull_request.changed_files', async () => {
+    context.payload.pull_request!['changed_files'] = 3005;
+    prFiles = [{filename: 'docs/README.md'}];
+
+    await main(mockGit as unknown as Octokit, mockSyncConfig);
+
+    expect(mockGit.repos.createCommitStatus).toHaveBeenCalledOnceWith({
+      owner: 'angular',
+      repo: 'angular',
+      state: 'pending',
+      description: 'Waiting for tests to start. @Googlers: Initiate a presubmit. See -->',
+      target_url: 'https://goo.gle/angular-internal-presubmit',
+      context: 'google-internal-tests',
+      sha: 'deadbeef1234567890',
+    });
+  });
 });
