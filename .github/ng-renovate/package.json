@@ -1,8 +1,8 @@
 {
   "name": "ng-renovate",
   "type": "commonjs",
-  "packageManager": "pnpm@12.8.1",
+  "packageManager": "pnpm@12.10.1",
   "dependencies": {
-    "renovate": "44.127.0"
+    "renovate": "44.145.2"
   }
 }

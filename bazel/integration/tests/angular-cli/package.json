@@ -9,7 +9,7 @@
     "test": "ng test"
   },
   "private": true,
-  "packageManager": "pnpm@12.8.1",
+  "packageManager": "pnpm@12.10.1",
   "dependencies": {
     "@angular/animations": "22.3.0-next.1",
     "@angular/common": "22.3.0-next.1",
@@ -26,7 +26,7 @@
     "@angular/cli": "22.3.0-next.1",
     "@angular/compiler-cli": "22.3.0-next.1",
     "@types/jasmine": "~6.0.0",
-    "@types/node": "24.19.0",
+    "@types/node": "24.19.1",
     "chromedriver": "^154.0.0",
     "jasmine-core": "6.3.0",
     "karma": "~6.4.4",
