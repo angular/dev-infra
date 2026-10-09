@@ -700,9 +700,6 @@ importers:
       '@octokit/graphql-schema':
         specifier: 15.26.1
         version: 15.26.1
-      '@octokit/plugin-paginate-rest':
-        specifier: 16.0.0
-        version: 16.0.0(@octokit/core@7.0.8)
       '@octokit/plugin-rest-endpoint-methods':
         specifier: 18.0.0
         version: 18.0.0(@octokit/core@7.0.8)
@@ -2295,12 +2292,6 @@ packages:
 
   '@octokit/plugin-paginate-rest@14.0.0':
     resolution: {integrity: sha512-fNVRE7ufJiAA3XUrha2omTA39M6IXIc6GIZLvlbsm8QOQCYvpq/LkMNGyFlB1d8hTDzsAXa3OKtybdMAYsV/fw==}
-    engines: {node: '>= 20'}
-    peerDependencies:
-      '@octokit/core': '>=6'
-
-  '@octokit/plugin-paginate-rest@16.0.0':
-    resolution: {integrity: sha512-7RtUeGZypAK4EA4LrjTCnsLALNOoUcYh5vOnCNXpdIQVTQCPh4OFu7324iPqAls3KGgVnZktKUnNKZCOKyHrlA==}
     engines: {node: '>= 20'}
     peerDependencies:
       '@octokit/core': '>=6'
@@ -7846,11 +7837,6 @@ snapshots:
     dependencies:
       '@octokit/core': 7.0.8
       '@octokit/types': 16.0.0
-
-  '@octokit/plugin-paginate-rest@16.0.0(@octokit/core@7.0.8)':
-    dependencies:
-      '@octokit/core': 7.0.8
-      '@octokit/types': 18.0.0
 
   '@octokit/plugin-request-log@6.0.0(@octokit/core@7.0.8)':
     dependencies:
