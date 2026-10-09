@@ -34,6 +34,16 @@ class Validation extends PullRequestValidation {
     labelsOnPullRequest: string[],
     pullRequest: PullRequestFromGithub,
   ) {
+    if (targetLabel === targetLabels['TARGET_AUTOMATION']) {
+      if (!pullRequest.author || !automationBots.includes(pullRequest.author.login)) {
+        throw this._createUserUsingAutomationLabelError(
+          targetLabel,
+          pullRequest.author?.login ?? 'unknown',
+        );
+      }
+      return;
+    }
+
     if (labelsOnPullRequest.includes(mergeLabels['MERGE_FIX_COMMIT_MESSAGE'].name)) {
       Log.debug(
         'Skipping commit message target label validation because the commit message fixup label is ' +
@@ -72,14 +82,6 @@ class Validation extends PullRequestValidation {
         // minor releases, or major releases according to SemVer.
         if (hasDeprecations && !releaseTrains.isFeatureFreeze()) {
           throw this._createHasDeprecationsError(targetLabel);
-        }
-        break;
-      case targetLabels['TARGET_AUTOMATION']:
-        if (!pullRequest.author || !automationBots.includes(pullRequest.author.login)) {
-          throw this._createUserUsingAutomationLabelError(
-            targetLabel,
-            pullRequest.author?.login ?? 'unknown',
-          );
         }
         break;
       default:

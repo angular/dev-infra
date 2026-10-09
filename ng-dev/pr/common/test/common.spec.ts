@@ -20,6 +20,7 @@ import {
   PullRequestFromGithub,
   PullRequestStatus,
 } from '../fetch-pull-request.js';
+import {mergeLabels} from '../labels/merge.js';
 import {requiresLabels} from '../labels/requires.js';
 
 import {assertValidPullRequest} from '../validation/validate-pull-request.js';
@@ -170,6 +171,92 @@ describe('pull request validation', () => {
       const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
       expect(results.length).toBe(1);
       expect(results[0].message).toBe('CLA is not signed by the contributor.');
+    });
+  });
+
+  describe('assert-allowed-target-label', () => {
+    const fakeReleaseTrains = {isFeatureFreeze: () => false} as any;
+
+    it('should reject target: automation when author is not an automation bot', async () => {
+      const config = createIsolatedValidationConfig({assertChangesAllowForTargetLabel: true});
+      const pr = createTestPullRequest();
+      pr.author = {login: 'external-user'};
+      const automationTarget = {branches: ['main'], label: targetLabels['TARGET_AUTOMATION']};
+
+      const results = await assertValidPullRequest(
+        pr,
+        config,
+        ngDevConfig,
+        fakeReleaseTrains,
+        automationTarget,
+        git,
+      );
+      expect(results.length).toBe(1);
+      expect(results[0].message).toContain(
+        'Cannot merge into branch for "target: automation" as the pull request is authored by "external-user"',
+      );
+    });
+
+    it('should reject target: automation for non-bot author even when merge: fix commit message is applied', async () => {
+      const config = createIsolatedValidationConfig({assertChangesAllowForTargetLabel: true});
+      const pr = createTestPullRequest();
+      pr.author = {login: 'external-user'};
+      pr.labels.nodes.push({name: mergeLabels['MERGE_FIX_COMMIT_MESSAGE'].name});
+      const automationTarget = {branches: ['main'], label: targetLabels['TARGET_AUTOMATION']};
+
+      const results = await assertValidPullRequest(
+        pr,
+        config,
+        ngDevConfig,
+        fakeReleaseTrains,
+        automationTarget,
+        git,
+      );
+      expect(results.length).toBe(1);
+      expect(results[0].message).toContain(
+        'Cannot merge into branch for "target: automation" as the pull request is authored by "external-user"',
+      );
+    });
+
+    it('should allow target: automation when author is angular-robot', async () => {
+      const config = createIsolatedValidationConfig({assertChangesAllowForTargetLabel: true});
+      const pr = createTestPullRequest();
+      pr.author = {login: 'angular-robot'};
+      const automationTarget = {branches: ['main'], label: targetLabels['TARGET_AUTOMATION']};
+
+      const results = await assertValidPullRequest(
+        pr,
+        config,
+        ngDevConfig,
+        fakeReleaseTrains,
+        automationTarget,
+        git,
+      );
+      expect(results.length).toBe(0);
+    });
+
+    it('should still skip commit message validation for non-automation labels when merge: fix commit message is applied', async () => {
+      const config = createIsolatedValidationConfig({assertChangesAllowForTargetLabel: true});
+      const pr = createTestPullRequest();
+      pr.commits.nodes = [
+        {
+          commit: {
+            oid: '1234',
+            message: 'feat(ng-dev): add new feature',
+          } as any,
+        },
+      ];
+      pr.labels.nodes.push({name: mergeLabels['MERGE_FIX_COMMIT_MESSAGE'].name});
+
+      const results = await assertValidPullRequest(
+        pr,
+        config,
+        ngDevConfig,
+        fakeReleaseTrains,
+        prTarget,
+        git,
+      );
+      expect(results.length).toBe(0);
     });
   });
 
