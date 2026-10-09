@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {join} from 'path';
+import {join, resolve} from 'path';
 import {
   readdirSync,
   readFileSync,
@@ -416,6 +416,7 @@ export class PublishCiTool {
             pkg.name,
             version,
             this.config.release.publishRegistry,
+            tempDir,
           );
           if (exists) {
             Log.warn(`Warning: Package "${pkg.name}@${version}" is already published. Skipping.`);
@@ -424,7 +425,12 @@ export class PublishCiTool {
           }
 
           Log.info(`Publishing "${pkg.name}"...`);
-          await NpmCommand.publish(pkg.outputPath, npmDistTag, this.config.release.publishRegistry);
+          await NpmCommand.publish(
+            resolve(pkg.outputPath),
+            npmDistTag,
+            this.config.release.publishRegistry,
+            tempDir,
+          );
           Log.info(green(`  ✓   Successfully published "${pkg.name}".`));
           this.summary.addPackage({name: pkg.name, version: version, status: 'PUBLISHED'});
         } catch (e) {
@@ -456,6 +462,7 @@ export class PublishCiTool {
             version,
             message,
             this.config.release.publishRegistry,
+            tempDir,
           );
           Log.info(green(`  ✓   Successfully deprecated "${pkg.name}@${version}".`));
         } catch (e) {

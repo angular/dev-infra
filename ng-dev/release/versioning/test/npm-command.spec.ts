@@ -51,6 +51,22 @@ describe('NpmCommand', () => {
         {mode: 'silent'},
       );
     });
+
+    it('should pass cwd option when provided', async () => {
+      const spawnSpy = spyOn(ChildProcess, 'spawn').and.resolveTo({
+        stdout: '',
+        stderr: '',
+        status: 0,
+      });
+
+      await NpmCommand.publish('/abs/dist/pkg.tgz', 'latest', undefined, '/tmp/isolated-npm-dir');
+
+      expect(spawnSpy).toHaveBeenCalledWith(
+        'npm',
+        ['publish', '/abs/dist/pkg.tgz', '--access', 'public', '--tag', 'latest'],
+        {mode: 'silent', cwd: '/tmp/isolated-npm-dir'},
+      );
+    });
   });
 
   describe('checkVersionExists', () => {
@@ -73,6 +89,27 @@ describe('NpmCommand', () => {
         ['view', '@angular/core@17.0.0', 'version', '--registry', 'https://registry.npmjs.org'],
         {mode: 'silent'},
       );
+    });
+
+    it('should pass cwd option when provided', async () => {
+      const spawnSpy = spyOn(ChildProcess, 'spawn').and.resolveTo({
+        stdout: '17.0.0\n',
+        stderr: '',
+        status: 0,
+      });
+
+      const result = await NpmCommand.checkVersionExists(
+        '@angular/core',
+        '17.0.0',
+        undefined,
+        '/tmp/isolated-npm-dir',
+      );
+
+      expect(result).toBe(true);
+      expect(spawnSpy).toHaveBeenCalledWith('npm', ['view', '@angular/core@17.0.0', 'version'], {
+        mode: 'silent',
+        cwd: '/tmp/isolated-npm-dir',
+      });
     });
 
     it('should return false if the version does not exist (E404)', async () => {
