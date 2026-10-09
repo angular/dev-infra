@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {parseCommitMessage} from './parse.js';
+import {parseCommitFromGitLog, parseCommitMessage} from './parse.js';
 import {commitMessageBuilder, CommitMessageParts} from './test-util.js';
 
 const commitValues: CommitMessageParts = {
@@ -181,6 +181,43 @@ describe('commit message parsing:', () => {
       });
       const parsedMessage = parseCommitMessage(message);
       expect(parsedMessage.deprecations.length).toBe(0);
+    });
+  });
+
+  describe('parses git log metadata', () => {
+    it('extracts trailing hash, shortHash, and author fields', () => {
+      const rawLog =
+        buildCommitMessage() +
+        '\n-hash-\n0123456789abcdef0123456789abcdef01234567' +
+        '\n-shortHash-\n0123456' +
+        '\n-author-\nReal Author';
+      const parsed = parseCommitFromGitLog(rawLog);
+      expect(parsed.hash).toBe('0123456789abcdef0123456789abcdef01234567');
+      expect(parsed.shortHash).toBe('0123456');
+      expect(parsed.author).toBe('Real Author');
+      expect(parsed.body).toBe(commitValues.body);
+      expect(parsed.footer).toBe(commitValues.footer);
+    });
+
+    it('prevents commit body metadata smuggling and scissor truncation', () => {
+      const smuggledBody =
+        'Legitimate body text\n' +
+        '-hash-\n' +
+        'spoofed-hash\n' +
+        '-shortHash-\n' +
+        'spoofed](https://evil.example) [\n' +
+        '-author-\n' +
+        'Spoofed Author\n' +
+        '# ------------------------ >8 ------------------------';
+      const rawLog =
+        buildCommitMessage({body: smuggledBody, footer: ''}) +
+        '\n-hash-\n0123456789abcdef0123456789abcdef01234567' +
+        '\n-shortHash-\n0123456' +
+        '\n-author-\nReal Author';
+      const parsed = parseCommitFromGitLog(rawLog);
+      expect(parsed.hash).toBe('0123456789abcdef0123456789abcdef01234567');
+      expect(parsed.shortHash).toBe('0123456');
+      expect(parsed.author).toBe('Real Author');
     });
   });
 });
