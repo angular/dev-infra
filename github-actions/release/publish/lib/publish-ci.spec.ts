@@ -727,10 +727,58 @@ describe('PublishCiTool', () => {
       // Verify env var was cleaned up
       expect(process.env['NPM_CONFIG_USERCONFIG']).toBeUndefined();
 
-      // Verify NpmCommand.publish was called for both packages with correct arguments
+      // Verify NpmCommand.publish was called for both packages with correct arguments and isolated cwd
       expect(publishSpy).toHaveBeenCalledTimes(2);
-      expect(publishSpy.calls.argsFor(0)).toEqual([pkg1Path, 'latest', undefined]);
-      expect(publishSpy.calls.argsFor(1)).toEqual([pkg2Path, 'latest', undefined]);
+      expect(publishSpy.calls.argsFor(0)).toEqual([
+        pkg1Path,
+        'latest',
+        undefined,
+        path.dirname(tempNpmrcPath!),
+      ]);
+      expect(publishSpy.calls.argsFor(1)).toEqual([
+        pkg2Path,
+        'latest',
+        undefined,
+        path.dirname(tempNpmrcPath!),
+      ]);
+    });
+
+    it('should isolate npm commands in tempDir and resolve relative package paths', async () => {
+      fs.writeFileSync(path.join(testTmpDir, 'package.json'), JSON.stringify({version: '10.0.0'}));
+      const sandbox = SandboxGitRepo.withInitialCommit(githubConfig);
+
+      fs.writeFileSync(path.join(testTmpDir, 'package.json'), JSON.stringify({version: '10.1.0'}));
+      sandbox.commit('v10.1.0 commit');
+      const headSha = gitClient.run(['rev-parse', 'HEAD']).stdout.trim();
+
+      const pkgPath = mockTgzPackage(builtPackagesDir, '@angular/core', '10.1.0');
+      const relativeBuiltPackagesDir = path.relative(process.cwd(), builtPackagesDir);
+      const checkVersionSpy = NpmCommand.checkVersionExists as jasmine.Spy;
+
+      const tool = new PublishCiTool(
+        {github: githubConfig, release: releaseConfig} as any,
+        gitClient,
+        testTmpDir,
+        {
+          builtPackagesDir: relativeBuiltPackagesDir,
+          expectedSha: headSha,
+        },
+      );
+
+      await expectAsync(tool.run()).toBeResolved();
+
+      expect(checkVersionSpy).toHaveBeenCalledWith(
+        '@angular/core',
+        '10.1.0',
+        undefined,
+        jasmine.stringMatching(/angular-publish-ci-/),
+      );
+      expect(publishSpy).toHaveBeenCalledWith(
+        pkgPath,
+        'latest',
+        undefined,
+        jasmine.stringMatching(/angular-publish-ci-/),
+      );
     });
 
     it('should preserve original NPM_CONFIG_USERCONFIG and leave project .npmrc untouched', async () => {
@@ -868,8 +916,18 @@ describe('PublishCiTool', () => {
 
       // Verify publish was called for both
       expect(publishSpy).toHaveBeenCalledTimes(2);
-      expect(publishSpy.calls.argsFor(0)).toEqual([pkg1Path, 'latest', undefined]);
-      expect(publishSpy.calls.argsFor(1)).toEqual([pkg2Path, 'latest', undefined]);
+      expect(publishSpy.calls.argsFor(0)).toEqual([
+        pkg1Path,
+        'latest',
+        undefined,
+        jasmine.stringMatching(/angular-publish-ci-/),
+      ]);
+      expect(publishSpy.calls.argsFor(1)).toEqual([
+        pkg2Path,
+        'latest',
+        undefined,
+        jasmine.stringMatching(/angular-publish-ci-/),
+      ]);
 
       // Verify deprecate was called only for @angular/common
       expect(deprecateSpy).toHaveBeenCalledTimes(1);
@@ -878,6 +936,7 @@ describe('PublishCiTool', () => {
         '>=9.0.0',
         'Use @angular/core instead',
         undefined,
+        jasmine.stringMatching(/angular-publish-ci-/),
       );
     });
 
@@ -922,9 +981,15 @@ describe('PublishCiTool', () => {
 
       // Verify publish was called ONLY for @angular/common (pkg2Path)
       expect(publishSpy).toHaveBeenCalledTimes(1);
-      expect(publishSpy).toHaveBeenCalledWith(pkg2Path, 'latest', undefined);
+      expect(publishSpy).toHaveBeenCalledWith(
+        pkg2Path,
+        'latest',
+        undefined,
+        jasmine.stringMatching(/angular-publish-ci-/),
+      );
       expect(publishSpy).not.toHaveBeenCalledWith(
         pkg1Path,
+        jasmine.any(String),
         jasmine.any(String),
         jasmine.any(String),
       );
