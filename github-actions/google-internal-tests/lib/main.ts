@@ -11,7 +11,10 @@ type GetCombinedStatusForRefResponse =
   RestEndpointMethodTypes['repos']['getCombinedStatusForRef']['response'];
 type GithubStatus = GetCombinedStatusForRefResponse['data']['statuses'][0];
 
-async function main() {
+export async function main(
+  providedGithub?: Octokit,
+  providedSyncConfig?: Awaited<ReturnType<typeof getGoogleSyncConfig>>,
+) {
   if (context.repo.owner !== 'angular') {
     core.info('Skipping Google Internal Tests action for non-Angular repos.');
     return;
@@ -23,20 +26,30 @@ async function main() {
     );
   }
 
-  const githubToken = core.getInput('github-token', {required: true});
   const runTestGuideURL = core.getInput('run-tests-guide-url', {required: false});
-  const syncConfigPath = path.resolve(core.getInput('sync-config', {required: true}));
-  const syncConfig = await getGoogleSyncConfig(syncConfigPath);
+  const syncConfig =
+    providedSyncConfig ??
+    (await getGoogleSyncConfig(path.resolve(core.getInput('sync-config', {required: true}))));
 
   const prNum = context.payload.pull_request!.number;
   const prHeadSHA = context.payload.pull_request!.head!.sha;
   const prBaseRef = context.payload.pull_request!.base!.ref;
-  const github = new Octokit({auth: githubToken});
+  const github =
+    providedGithub ??
+    new Octokit({
+      auth: core.getInput('github-token', {required: true}),
+    });
   const existingGoogleStatus = await findExistingTestStatus(github, prHeadSHA);
 
-  // If there is an existing status already pointing to an internal CL, we do not override
-  // the status. This can happen when e.g. a presubmit-tested PR is closed and reopened.
-  if (existingGoogleStatus && existingGoogleStatus.target_url?.startsWith('http://cl/')) {
+  // If there is an existing status already pointing to an internal CL or currently pending, we
+  // do not override the status. This can happen when e.g. a presubmit-tested PR is closed and
+  // reopened, or when the same commit SHA is opened against a non-sync branch while a sync
+  // branch PR is pending.
+  if (
+    existingGoogleStatus &&
+    (existingGoogleStatus.state === 'pending' ||
+      existingGoogleStatus.target_url?.startsWith('http://cl/'))
+  ) {
     core.info(`Pull request HEAD commit already has existing test status.`);
     return;
   }
@@ -60,20 +73,35 @@ async function main() {
     pull_number: prNum,
   });
 
-  let affectsGoogle = false;
-  for (const f of files) {
-    const paths = [f.filename];
-    if (f.status === 'renamed' && f.previous_filename) {
-      paths.push(f.previous_filename);
-    }
+  const maxPaginatedFiles = 3000;
+  const changedFilesCount = context.payload.pull_request?.changed_files;
 
-    if (
-      paths.some(
-        (filePath) => syncConfig.ngMatchFn(filePath) || syncConfig.separateMatchFn(filePath),
-      )
-    ) {
-      affectsGoogle = true;
-      break;
+  let affectsGoogle = false;
+  if (
+    files.length >= maxPaginatedFiles ||
+    (typeof changedFilesCount === 'number' && files.length < changedFilesCount)
+  ) {
+    core.warning(
+      `Pull request file list reached the GitHub pagination limit (${files.length} files returned` +
+        `${typeof changedFilesCount === 'number' ? ` of ${changedFilesCount}` : ''}). ` +
+        `Assuming pull request affects Google to fail closed.`,
+    );
+    affectsGoogle = true;
+  } else {
+    for (const f of files) {
+      const paths = [f.filename];
+      if (f.status === 'renamed' && f.previous_filename) {
+        paths.push(f.previous_filename);
+      }
+
+      if (
+        paths.some(
+          (filePath) => syncConfig.ngMatchFn(filePath) || syncConfig.separateMatchFn(filePath),
+        )
+      ) {
+        affectsGoogle = true;
+        break;
+      }
     }
   }
 
@@ -111,7 +139,9 @@ async function findExistingTestStatus(
   return existingStatuses.find((s) => s.context === statusContext) ?? null;
 }
 
-main().catch((e: Error) => {
-  console.error(e);
-  core.setFailed(e.message);
-});
+if (!process.env['TEST_SRCDIR']) {
+  main().catch((e: Error) => {
+    console.error(e);
+    core.setFailed(e.message);
+  });
+}
