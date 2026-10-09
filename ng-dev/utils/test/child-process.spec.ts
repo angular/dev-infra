@@ -93,6 +93,25 @@ describe('ChildProcess sanitization', () => {
         jasmine.stringContaining('error: https://<TOKEN>@github.com'),
       );
     });
+
+    it('should sanitize rejected logOutput when failing in silent mode', async () => {
+      try {
+        await ChildProcess.spawn(
+          'node',
+          [
+            '-e',
+            'console.log("stdout: https://token@github.com"); console.error("stderr: https://user:secret@github.com"); process.exit(1)',
+          ],
+          {mode: 'silent'},
+        );
+        fail('Expected spawn to reject on non-zero exit code');
+      } catch (err) {
+        expect(String(err)).toContain('stdout: https://<TOKEN>@github.com');
+        expect(String(err)).toContain('stderr: https://<TOKEN>@github.com');
+        expect(String(err)).not.toContain('token');
+        expect(String(err)).not.toContain('secret');
+      }
+    });
   });
 
   describe('exec', () => {

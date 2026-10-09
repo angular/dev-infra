@@ -243,7 +243,7 @@ function processAsyncCmd(
       if (status === 0 || options.suppressErrorOnFailingExitCode) {
         resolve({stdout, stderr, status});
       } else {
-        reject(options.mode === 'silent' ? logOutput : undefined);
+        reject(options.mode === 'silent' ? sanitize(logOutput) : undefined);
       }
     });
   });
