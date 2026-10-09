@@ -5,11 +5,11 @@
     "@actions/github": "9.1.1",
     "@octokit/rest": "22.0.1",
     "@google/genai": "^2.0.0",
-    "@types/jasmine": "6.0.0",
+    "@types/jasmine": "7.0.0",
     "@types/micromatch": "^4.0.10",
     "@types/node": "24.19.1",
     "micromatch": "^4.0.8",
     "typed-graphqlify": "3.1.6",
-    "jasmine": "6.3.0"
+    "jasmine": "7.0.0"
   }
 }
