@@ -1,4 +1,4 @@
-import {components} from '@octokit/openapi-types';
+import type {RestEndpointMethodTypes} from '@octokit/rest';
 
 type DeepPartial<T> = T extends object
   ? {
@@ -6,6 +6,6 @@ type DeepPartial<T> = T extends object
     }
   : T;
 
-export type Commit = components['schemas']['commit'];
+export type Commit = RestEndpointMethodTypes['repos']['getCommit']['response']['data'];
 
 export type PartialCommit = DeepPartial<Commit>;

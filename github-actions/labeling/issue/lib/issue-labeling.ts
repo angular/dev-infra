@@ -1,7 +1,7 @@
 import * as core from '@actions/core';
 import {context} from '@actions/github';
 import {GoogleGenAI} from '@google/genai';
-import {components} from '@octokit/openapi-types';
+import type {RestEndpointMethodTypes} from '@octokit/rest';
 import {Labeling} from '../../shared/labeling.js';
 
 export const NEEDS_TRIAGE_MILESTONE = 'needsTriage';
@@ -12,7 +12,7 @@ export class IssueLabeling extends Labeling {
   /** Set of area labels available in the current repository. */
   repoAreaLabels = new Map<string, string>();
   /** The issue data fetched from Github. */
-  issueData?: components['schemas']['issue'];
+  issueData?: RestEndpointMethodTypes['issues']['get']['response']['data'];
   /** Labels added during this run. */
   private addedLabels: string[] = [];
 

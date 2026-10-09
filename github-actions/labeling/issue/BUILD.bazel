@@ -14,7 +14,6 @@ ts_project(
         "//github-actions/labeling:node_modules/@actions/core",
         "//github-actions/labeling:node_modules/@actions/github",
         "//github-actions/labeling:node_modules/@google/genai",
-        "//github-actions/labeling:node_modules/@octokit/openapi-types",
         "//github-actions/labeling:node_modules/@octokit/rest",
         "//github-actions/labeling:node_modules/@types/node",
         "//github-actions/labeling/shared",
@@ -33,7 +32,6 @@ ts_project(
         "//github-actions/labeling:node_modules/@actions/core",
         "//github-actions/labeling:node_modules/@actions/github",
         "//github-actions/labeling:node_modules/@google/genai",
-        "//github-actions/labeling:node_modules/@octokit/openapi-types",
         "//github-actions/labeling:node_modules/@octokit/rest",
         "//github-actions/labeling:node_modules/@types/jasmine",
         "//github-actions/labeling:node_modules/@types/node",
@@ -48,7 +46,7 @@ jasmine_test(
     ],
     env = {
         "GITHUB_REPOSITORY": "angular/angular",
-        "GITHUB_EVENT_PATH": "$(location :issue-context.json)",
+        "GITHUB_EVENT_PATH": "$(rootpath :issue-context.json)",
     },
 )
 
