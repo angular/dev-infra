@@ -52,6 +52,7 @@ esbuild(
         "//apps/functions:node_modules/firebase-functions",
     ],
     entry_point = "index.ts",
+    external = ["../../package.json"],
     format = "cjs",
     platform = "node",
     target = "node24",
