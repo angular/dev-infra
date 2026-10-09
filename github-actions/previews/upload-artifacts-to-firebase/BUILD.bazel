@@ -1,5 +1,5 @@
 load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
-load("//tools:defaults.bzl", "esbuild_checked_in", "ts_project")
+load("//tools:defaults.bzl", "esbuild_checked_in", "jasmine_test", "ts_project")
 
 npm_link_all_packages()
 
@@ -11,6 +11,22 @@ ts_project(
         ":node_modules/@actions/core",
         ":node_modules/@octokit/rest",
         ":node_modules/@types/node",
+        "//github-actions/previews:constants_lib",
+    ],
+)
+
+ts_project(
+    name = "test_lib",
+    testonly = True,
+    srcs = [
+        "lib/extract-artifact-metadata.spec.ts",
+    ],
+    tsconfig = "//github-actions:tsconfig_test",
+    deps = [
+        ":extract_artifact_metadata_lib",
+        ":node_modules/@actions/core",
+        ":node_modules/@types/node",
+        "//github-actions:node_modules/@types/jasmine",
         "//github-actions/previews:constants_lib",
     ],
 )
@@ -45,4 +61,12 @@ esbuild_checked_in(
     format = "esm",
     platform = "node",
     target = "node24",
+)
+
+jasmine_test(
+    name = "test",
+    data = [
+        "package.json",
+        ":test_lib",
+    ],
 )
