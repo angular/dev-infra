@@ -53,6 +53,8 @@ export const PR_SCHEMA = {
           commit: {
             oid: graphqlTypes.string,
             authoredDate: graphqlTypes.string,
+            committedDate: graphqlTypes.string,
+            pushedDate: graphqlTypes.custom<string | null>(),
             statusCheckRollup: optional({
               state: graphqlTypes.custom<StatusState>(),
               contexts: params(
@@ -168,6 +170,7 @@ export const PR_COMMENTS_SCHEMA = params(
     },
     authorAssociation: graphqlTypes.custom<CommentAuthorAssociation>(),
     bodyText: graphqlTypes.string,
+    createdAt: graphqlTypes.string,
   },
 );
 

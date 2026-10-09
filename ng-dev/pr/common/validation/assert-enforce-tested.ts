@@ -34,7 +34,11 @@ class Validation extends PullRequestValidation {
       pullRequest.number,
     ).loadPullRequestComments();
 
-    if (await pullRequestHasValidTestedComment(comments, gitClient)) {
+    const latestCommit = pullRequest.commits.nodes[pullRequest.commits.nodes.length - 1]?.commit;
+    const latestCommitDate =
+      latestCommit?.pushedDate ?? latestCommit?.committedDate ?? latestCommit?.authoredDate;
+
+    if (await pullRequestHasValidTestedComment(comments, gitClient, latestCommitDate)) {
       return;
     }
 
@@ -76,8 +80,16 @@ export class PullRequestComments {
 export async function pullRequestHasValidTestedComment(
   comments: PullRequestCommentsFromGithub[],
   gitClient: AuthenticatedGitClient,
+  latestCommitDate?: string,
 ): Promise<boolean> {
-  for (const {bodyText, author} of comments) {
+  for (const comment of comments) {
+    const {bodyText, author} = comment;
+    if (
+      latestCommitDate &&
+      (!comment.createdAt || !(Date.parse(comment.createdAt) >= Date.parse(latestCommitDate)))
+    ) {
+      continue;
+    }
     if (
       bodyText.startsWith(`TESTED=`) &&
       author &&

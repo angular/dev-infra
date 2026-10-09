@@ -285,6 +285,7 @@ describe('pull request validation', () => {
             login: 'fakelogin',
           },
           bodyText: 'TESTED="blah"',
+          createdAt: '2026-07-13T12:00:00Z',
         },
       ];
       const commentHelper = PullRequestComments.create(git, pr.number);
@@ -307,6 +308,7 @@ describe('pull request validation', () => {
             login: 'fakelogin',
           },
           bodyText: 'TESTED="blah"',
+          createdAt: '2026-07-13T12:00:00Z',
         },
       ];
       const commentHelper = PullRequestComments.create(git, pr.number);
@@ -326,6 +328,7 @@ describe('pull request validation', () => {
           authorAssociation: 'MEMBER' as CommentAuthorAssociation,
           author: null as any,
           bodyText: 'TESTED="blah"',
+          createdAt: '2026-07-13T12:00:00Z',
         },
       ];
       const commentHelper = PullRequestComments.create(git, pr.number);
@@ -337,6 +340,62 @@ describe('pull request validation', () => {
       const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
       expect(results.length).toBe(1);
       expect(results[0].message).toContain('Pull Request requires a TGP');
+    });
+
+    it('should reject a stale TESTED comment created before the latest commit', async () => {
+      const config = createIsolatedValidationConfig({assertEnforceTested: true});
+      let pr = createTestPullRequest();
+      pr.commits.nodes[1].commit.committedDate = '2026-07-13T12:05:00Z';
+      const comments = [
+        {
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          author: {
+            login: 'fakelogin',
+          },
+          bodyText: 'TESTED="stale tgp"',
+          createdAt: '2026-07-13T12:00:00Z',
+        },
+      ];
+      const commentHelper = PullRequestComments.create(git, pr.number);
+      spyOn(PullRequestComments, 'create').and.returnValue(commentHelper);
+      spyOn(commentHelper, 'loadPullRequestComments').and.returnValue(Promise.resolve(comments));
+
+      pr.labels.nodes.push({name: requiresLabels['REQUIRES_TGP'].name});
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(1);
+      expect(results[0].message).toContain('Pull Request requires a TGP');
+    });
+
+    it('should pass when a fresh TESTED comment is created at or after the latest commit', async () => {
+      const config = createIsolatedValidationConfig({assertEnforceTested: true});
+      let pr = createTestPullRequest();
+      pr.commits.nodes[1].commit.committedDate = '2026-07-13T12:05:00Z';
+      const comments = [
+        {
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          author: {
+            login: 'fakelogin',
+          },
+          bodyText: 'TESTED="stale tgp"',
+          createdAt: '2026-07-13T12:00:00Z',
+        },
+        {
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          author: {
+            login: 'fakelogin',
+          },
+          bodyText: 'TESTED="fresh tgp"',
+          createdAt: '2026-07-13T12:10:00Z',
+        },
+      ];
+      const commentHelper = PullRequestComments.create(git, pr.number);
+      spyOn(PullRequestComments, 'create').and.returnValue(commentHelper);
+      spyOn(commentHelper, 'loadPullRequestComments').and.returnValue(Promise.resolve(comments));
+
+      pr.labels.nodes.push({name: requiresLabels['REQUIRES_TGP'].name});
+      interceptOrgsMembershipRequest('fakelogin', true);
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(0);
     });
   });
 
