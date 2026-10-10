@@ -308,8 +308,8 @@ importers:
         specifier: 22.3.0-next.1
         version: 22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3)
       '@angular/fire':
-        specifier: 21.0.0-rc.1
-        version: 21.0.0-rc.1(@angular/common@22.3.0-next.1(@angular/core@22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.3.0-next.1(@angular/animations@22.3.0-next.1(@angular/core@22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3)))(@angular/common@22.3.0-next.1(@angular/core@22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3)))(chokidar@5.0.0)(firebase-tools@15.33.0(@types/node@24.19.1)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6))(rxjs@7.8.2)(typescript@5.9.3)
+        specifier: 21.0.0-rc.2
+        version: 21.0.0-rc.2(@angular/common@22.3.0-next.1(@angular/core@22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.3.0-next.1(@angular/animations@22.3.0-next.1(@angular/core@22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3)))(@angular/common@22.3.0-next.1(@angular/core@22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3)))(chokidar@5.0.0)(firebase-tools@15.33.0(@types/node@24.19.1)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6))(rxjs@7.8.2)(typescript@5.9.3)
       '@angular/forms':
         specifier: 22.3.0-next.1
         version: 22.3.0-next.1(@angular/common@22.3.0-next.1(@angular/core@22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.3.0-next.1(@angular/animations@22.3.0-next.1(@angular/core@22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3)))(@angular/common@22.3.0-next.1(@angular/core@22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3)))(rxjs@7.8.2)
@@ -912,19 +912,16 @@ packages:
       zone.js:
         optional: true
 
-  '@angular/fire@21.0.0-rc.1':
-    resolution: {integrity: sha512-C4F82u3pYhCoW4bfoMd/hmNhSVjq41GO0J1Fh8Iim27PYXu9unrusLdfEvAdFul/s4TcAsvpCoVTgdTT68xsPg==}
+  '@angular/fire@21.0.0-rc.2':
+    resolution: {integrity: sha512-NjgX5HZSP4C4I/ZEXzVy8AyR4AnujYab41Np0MTcbJN83vlcQ79ChOX8+wL7FgfR1sJrdrQLOZ3np5dlCsr3pA==}
     peerDependencies:
       '@angular/common': ^21.2.0
       '@angular/core': ^21.2.0
       '@angular/platform-browser': ^21.2.0
-      '@angular/platform-server': ^21.2.0
       firebase-tools: ^14.0.0 || ^15.0.0
       rxjs: ~7.8.0
       typescript: '>=5.8 <6.0'
     peerDependenciesMeta:
-      '@angular/platform-server':
-        optional: true
       firebase-tools:
         optional: true
       typescript:
@@ -6330,7 +6327,7 @@ snapshots:
       '@angular/compiler': 22.3.0-next.1
       zone.js: 0.16.3
 
-  '@angular/fire@21.0.0-rc.1(@angular/common@22.3.0-next.1(@angular/core@22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.3.0-next.1(@angular/animations@22.3.0-next.1(@angular/core@22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3)))(@angular/common@22.3.0-next.1(@angular/core@22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3)))(chokidar@5.0.0)(firebase-tools@15.33.0(@types/node@24.19.1)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6))(rxjs@7.8.2)(typescript@5.9.3)':
+  '@angular/fire@21.0.0-rc.2(@angular/common@22.3.0-next.1(@angular/core@22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.3.0-next.1(@angular/animations@22.3.0-next.1(@angular/core@22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3)))(@angular/common@22.3.0-next.1(@angular/core@22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0-next.1(@angular/compiler@22.3.0-next.1)(rxjs@7.8.2)(zone.js@0.16.3)))(chokidar@5.0.0)(firebase-tools@15.33.0(@types/node@24.19.1)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6))(rxjs@7.8.2)(typescript@5.9.3)':
     dependencies:
       '@angular-devkit/architect': 0.2102.26(chokidar@5.0.0)
       '@angular-devkit/core': 21.2.26(chokidar@5.0.0)
