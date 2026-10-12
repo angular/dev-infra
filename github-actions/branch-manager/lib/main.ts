@@ -132,7 +132,9 @@ let _github: Octokit | null = null;
 /** Get the shared instance of Octokit, first creating the instance if necessary. */
 async function github() {
   if (_github === null) {
-    const token = await getAuthTokenFor(ANGULAR_ROBOT);
+    const token = await getAuthTokenFor(ANGULAR_ROBOT, {
+      repositories: Array.from(new Set([context.repo.repo, 'dev-infra'])),
+    });
     _github = new Octokit({auth: token});
   }
   return _github;

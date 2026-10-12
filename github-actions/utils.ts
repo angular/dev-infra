@@ -3,6 +3,8 @@ import {Octokit} from '@octokit/rest';
 import {createAppAuth} from '@octokit/auth-app';
 import {context} from '@actions/github';
 
+import {RestEndpointMethodTypes} from '@octokit/rest';
+
 export type GithubAppMetadata = [appId: number, inputKey: string];
 
 /** Angular Lock Bot Github app (angular-lock-bot). */
@@ -11,7 +13,7 @@ export const ANGULAR_LOCK_BOT: GithubAppMetadata = [40213, 'lock-bot-key'];
 export const ANGULAR_ROBOT: GithubAppMetadata = [43341, 'angular-robot-key'];
 
 /** Create a JWT authenticated App client to manage installation tokens. */
-async function getJwtAuthedAppClient([appId, inputKey]: GithubAppMetadata) {
+async function getJwtAuthedAppClient([appId, inputKey]: GithubAppMetadata): Promise<Octokit> {
   /** The private key for the angular robot app. */
   const privateKey = getInput(inputKey, {required: true});
 
@@ -25,6 +27,29 @@ async function getJwtAuthedAppClient([appId, inputKey]: GithubAppMetadata) {
 type Org = {org: string};
 type Repo = {repo: string; owner: string};
 
+/** Options for configuring the installation auth token retrieval. */
+export interface GetAuthTokenOptions {
+  /** Explicit list of repositories to scope the token to. If omitted, defaults to [repo.repo] when repo context exists. */
+  repositories?: string[];
+  /** Whether the minted token should have org-wide access across all installation repositories. */
+  orgWide?: boolean;
+}
+
+/** Type guard to determine if a target is an Org. */
+export function isOrg(target: unknown): target is Org {
+  return typeof target === 'object' && target !== null && typeof (target as Org).org === 'string';
+}
+
+/** Type guard to determine if a target is a Repo. */
+export function isRepo(target: unknown): target is Repo {
+  return (
+    typeof target === 'object' &&
+    target !== null &&
+    typeof (target as Repo).repo === 'string' &&
+    typeof (target as Repo).owner === 'string'
+  );
+}
+
 /**
  * Retrieves an installation auth token for the provided app.
  *
@@ -34,28 +59,62 @@ type Repo = {repo: string; owner: string};
  * act on a repository, unlike the github-actions robot account which implicitly has access based on
  * where it was executed from.
  */
-export async function getAuthTokenFor(app: GithubAppMetadata, org: Org): Promise<string>;
-export async function getAuthTokenFor(app: GithubAppMetadata, repo?: Repo): Promise<string>;
 export async function getAuthTokenFor(
   app: GithubAppMetadata,
-  orgOrRepo: Org | Repo = context.repo,
+  org: Org,
+  options?: GetAuthTokenOptions,
+): Promise<string>;
+export async function getAuthTokenFor(
+  app: GithubAppMetadata,
+  repo: Repo,
+  options?: GetAuthTokenOptions,
+): Promise<string>;
+export async function getAuthTokenFor(
+  app: GithubAppMetadata,
+  options?: GetAuthTokenOptions,
+): Promise<string>;
+export async function getAuthTokenFor(
+  app: GithubAppMetadata,
+  orgOrRepoOrOptions: Org | Repo | GetAuthTokenOptions = context.repo,
+  options: GetAuthTokenOptions = {},
 ): Promise<string> {
-  const github = await getJwtAuthedAppClient(app);
-  let id: number;
-  let org = orgOrRepo as Org;
-  let repo = orgOrRepo as Repo;
+  let target: Org | Repo;
+  let opts: GetAuthTokenOptions;
 
-  if (typeof org.org === 'string') {
-    id = (await github.apps.getOrgInstallation({...org})).data.id;
+  if (isOrg(orgOrRepoOrOptions)) {
+    target = orgOrRepoOrOptions;
+    opts = options;
+  } else if (isRepo(orgOrRepoOrOptions)) {
+    target = orgOrRepoOrOptions;
+    opts = options;
   } else {
-    id = (await github.apps.getRepoInstallation({...repo})).data.id;
+    target = context.repo;
+    opts = (orgOrRepoOrOptions as GetAuthTokenOptions) ?? {};
   }
 
-  const {token} = (
-    await github.rest.apps.createInstallationAccessToken({
+  const github = await utils.getJwtAuthedAppClient(app);
+  let id: number;
+
+  if (isOrg(target)) {
+    id = (await github.apps.getOrgInstallation({...target})).data.id;
+  } else {
+    id = (await github.apps.getRepoInstallation({...target})).data.id;
+  }
+
+  const requestParams: RestEndpointMethodTypes['apps']['createInstallationAccessToken']['parameters'] =
+    {
       installation_id: id,
-    })
-  ).data;
+    };
+
+  if (!opts.orgWide) {
+    if (opts.repositories && opts.repositories.length > 0) {
+      requestParams.repositories = opts.repositories;
+    } else if (isRepo(target)) {
+      requestParams.repositories = [target.repo];
+    }
+  }
+
+  const {token} = (await github.rest.apps.createInstallationAccessToken(requestParams)).data;
 
   return token;
 }
@@ -100,6 +159,7 @@ export async function isGooglerOrgMember(username: string, client: Octokit): Pro
 }
 
 export const utils = {
+  getJwtAuthedAppClient,
   getAuthTokenFor,
   revokeActiveInstallationToken,
   isGooglerOrgMember,

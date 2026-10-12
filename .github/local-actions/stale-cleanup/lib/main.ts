@@ -76,9 +76,9 @@ export async function closeStaleDraftPrs(github: Octokit, repo: string): Promise
 }
 
 async function main() {
-  const github = new Octokit({auth: await getAuthTokenFor(ANGULAR_ROBOT)});
+  const repos = core.getMultilineInput('repos', {required: true, trimWhitespace: true});
+  const github = new Octokit({auth: await getAuthTokenFor(ANGULAR_ROBOT, {repositories: repos})});
   try {
-    const repos = core.getMultilineInput('repos', {required: true, trimWhitespace: true});
     await core.group('Repos being cleaned:', async () =>
       repos.forEach((repo) => core.info(`- ${repo}`)),
     );

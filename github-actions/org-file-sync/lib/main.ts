@@ -143,7 +143,13 @@ export async function runOrgFileSync(
 ) {
   assertValidCommitSha(sha);
 
-  const github = octokit ?? new Octokit({auth: await getAuthTokenFor(ANGULAR_ROBOT)});
+  const github =
+    octokit ??
+    new Octokit({
+      auth: await getAuthTokenFor(ANGULAR_ROBOT, {
+        repositories: [context.repo.repo, ...reposToSync],
+      }),
+    });
   try {
     const goldenFiles: Files = await getFilesForRepo(github, context.repo.repo, filesToSync, sha);
 
