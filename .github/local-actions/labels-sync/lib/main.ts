@@ -69,14 +69,14 @@ async function syncLabelsInRepo(github: Octokit, repoName: string, managedLabels
 }
 
 async function main() {
+  /** The repositories to sync the labels in, from the provided config. */
+  const repos = core.getMultilineInput('repos', {required: true, trimWhitespace: true});
   /** The Github API instance to use for requests. */
-  const github = new Octokit({auth: await getAuthTokenFor(ANGULAR_ROBOT)});
+  const github = new Octokit({auth: await getAuthTokenFor(ANGULAR_ROBOT, {repositories: repos})});
 
   try {
     /** The list of managed labels. */
     const labels = [...Object.values(allLabels)];
-    /** The repositories to sync the labels in, from the provided config. */
-    const repos = core.getMultilineInput('repos', {required: true, trimWhitespace: true});
 
     await core.group('Repos being synced:', async () =>
       repos.forEach((repo) => core.info(`- ${repo}`)),

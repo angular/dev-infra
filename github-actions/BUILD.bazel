@@ -1,5 +1,5 @@
 load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
-load("//tools:defaults.bzl", "ts_config", "ts_project")
+load("//tools:defaults.bzl", "jasmine_test", "ts_config", "ts_project")
 
 package(default_visibility = ["//github-actions:__subpackages__"])
 
@@ -41,5 +41,28 @@ ts_project(
         ":node_modules/@octokit/auth-app",
         ":node_modules/@octokit/rest",
         ":node_modules/@types/node",
+    ],
+)
+
+ts_project(
+    name = "test_lib",
+    testonly = True,
+    srcs = [
+        "utils.spec.ts",
+    ],
+    tsconfig = ":tsconfig_test",
+    deps = [
+        ":node_modules/@actions/github",
+        ":node_modules/@octokit/rest",
+        ":node_modules/@types/jasmine",
+        ":node_modules/@types/node",
+        ":utils",
+    ],
+)
+
+jasmine_test(
+    name = "test",
+    data = [
+        ":test_lib",
     ],
 )
