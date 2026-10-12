@@ -44,7 +44,10 @@ esbuild_checked_in(
 ts_project(
     name = "test_lib",
     testonly = True,
-    srcs = ["lib/publish-ci.spec.ts"],
+    srcs = [
+        "lib/main.spec.ts",
+        "lib/publish-ci.spec.ts",
+    ],
     tsconfig = "//github-actions:tsconfig_test",
     deps = [
         ":lib",

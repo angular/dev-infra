@@ -1,14 +1,14 @@
 import * as core from '@actions/core';
-import {getAuthTokenFor, ANGULAR_ROBOT} from '../../../utils.js';
+import {utils, ANGULAR_ROBOT} from '../../../utils.js';
 import {AuthenticatedGitClient} from '../../../../ng-dev/utils/git/authenticated-git-client.js';
 import {getConfig, assertValidGithubConfig} from '../../../../ng-dev/utils/config.js';
 import {assertValidReleaseConfig} from '../../../../ng-dev/release/config/index.js';
 import {PublishCiTool} from './publish-ci.js';
 
-async function run() {
+export async function run(): Promise<void> {
+  let token: string | null = null;
   try {
-    const token = await getAuthTokenFor(ANGULAR_ROBOT);
-    core.setSecret(token);
+    token = await utils.getAuthTokenFor(ANGULAR_ROBOT);
 
     const wombotToken = core.getInput('wombot-token', {required: true});
     process.env['WOMBOT_TOKEN'] = wombotToken;
@@ -42,7 +42,17 @@ async function run() {
     } else {
       core.setFailed(`Unknown error: ${e}`);
     }
+  } finally {
+    if (token !== null) {
+      try {
+        await utils.revokeActiveInstallationToken(token);
+      } catch (err) {
+        core.warning(`Failed to revoke active installation token: ${err}`);
+      }
+    }
   }
 }
 
-await run();
+if (process.env['JASMINE_RUNNER'] === undefined && !process.env['TEST_TARGET']) {
+  await run();
+}
