@@ -47,7 +47,7 @@
     "ejs": "7.0.1",
     "encoding": "0.1.13",
     "fast-glob": "3.3.3",
-    "firebase": "12.19.0",
+    "firebase": "13.0.0",
     "folder-hash": "4.1.4",
     "jasmine-core": "6.3.0",
     "jasmine-reporters": "2.5.2",
