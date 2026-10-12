@@ -56,14 +56,14 @@
       },
     },
 
-    // Rule to require manual approval for NPM updates on branches other than 'main'.
+    // Rule to require manual approval for NPM and Rust updates on branches other than 'main'.
     // This is to prevent auto updates to branches that are not the main branch.
     // But, still allows the updates to be manually selected in case of an important bug fix.
     // Engines and packageManagers are excluded from this rule.
     {
       matchBaseBranches: ['!main'],
       matchDepNames: ['*', '!node', '!pnpm', '!npm', '!yarn'],
-      matchManagers: ['npm'],
+      matchManagers: ['npm', 'cargo'],
       dependencyDashboardApproval: true,
     },
 
@@ -117,6 +117,14 @@
     {
       minimumReleaseAge: '1 day',
       matchManagers: ['npm'],
+    },
+
+    // Group Rust updates
+    {
+      groupName: 'rust dependencies',
+      matchManagers: ['cargo'],
+      matchUpdateTypes: ['digest', 'patch', 'minor'],
+      schedule: ['* 6-10 * * 4'], // 6:00 am to 10:00 am Every Thursday
     },
 
     // Group Bazel updates
