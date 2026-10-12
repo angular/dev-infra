@@ -1,4 +1,4 @@
-import {error, getInput, info} from '@actions/core';
+import {error, getInput, info, setSecret} from '@actions/core';
 import {Octokit} from '@octokit/rest';
 import {createAppAuth} from '@octokit/auth-app';
 import {context} from '@actions/github';
@@ -115,6 +115,12 @@ export async function getAuthTokenFor(
   }
 
   const {token} = (await github.rest.apps.createInstallationAccessToken(requestParams)).data;
+
+  if (typeof token !== 'string' || token.trim().length === 0) {
+    throw new Error('GitHub API did not return a valid installation access token.');
+  }
+
+  setSecret(token);
 
   return token;
 }

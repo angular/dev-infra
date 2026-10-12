@@ -145,4 +145,63 @@ describe('github-actions/utils', () => {
     });
   });
 
+  describe('getAuthTokenFor - secret masking', () => {
+    let mockGetRepoInstallation: jasmine.Spy;
+    let mockCreateInstallationAccessToken: jasmine.Spy;
+    let stdoutWriteSpy: jasmine.Spy;
+
+    beforeEach(() => {
+      process.env['INPUT_ANGULAR-ROBOT-KEY'] = 'dummy-private-key';
+      stdoutWriteSpy = spyOn(process.stdout, 'write').and.callThrough();
+
+      mockGetRepoInstallation = jasmine.createSpy('getRepoInstallation').and.resolveTo({
+        data: {id: 11111},
+      });
+      mockCreateInstallationAccessToken = jasmine
+        .createSpy('createInstallationAccessToken')
+        .and.resolveTo({
+          data: {token: 'super-secret-installation-token'},
+        });
+
+      spyOn(utils, 'getJwtAuthedAppClient').and.resolveTo({
+        apps: {
+          getRepoInstallation: mockGetRepoInstallation,
+        },
+        rest: {
+          apps: {
+            createInstallationAccessToken: mockCreateInstallationAccessToken,
+          },
+        },
+      } as unknown as Octokit);
+
+      spyOnProperty(context, 'repo', 'get').and.returnValue({
+        owner: 'angular',
+        repo: 'dev-infra',
+      });
+    });
+
+    afterEach(() => {
+      delete process.env['INPUT_ANGULAR-ROBOT-KEY'];
+    });
+
+    it('should register the minted token with core.setSecret before returning', async () => {
+      const token = await getAuthTokenFor(ANGULAR_ROBOT);
+
+      expect(token).toBe('super-secret-installation-token');
+      expect(stdoutWriteSpy).toHaveBeenCalledWith(
+        jasmine.stringContaining('::add-mask::super-secret-installation-token'),
+      );
+    });
+
+    it('should throw an error and not call core.setSecret if token is empty or whitespace', async () => {
+      mockCreateInstallationAccessToken.and.resolveTo({
+        data: {token: '   '},
+      });
+
+      await expectAsync(getAuthTokenFor(ANGULAR_ROBOT)).toBeRejectedWithError(
+        'GitHub API did not return a valid installation access token.',
+      );
+      expect(stdoutWriteSpy).not.toHaveBeenCalledWith(jasmine.stringContaining('::add-mask::'));
+    });
+  });
 });
