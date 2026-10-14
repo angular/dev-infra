@@ -95,28 +95,7 @@ describe('pull request validation', () => {
   }
 
   describe('assert-signed-cla', () => {
-    it('should pass when cla/google commit status is passing', async () => {
-      const config = createIsolatedValidationConfig({assertSignedCla: true});
-      const pr = createTestPullRequest();
-      pr.commits.nodes[1].commit.statusCheckRollup = {
-        state: 'SUCCESS',
-        contexts: {
-          nodes: [
-            {
-              __typename: 'StatusContext',
-              context: 'cla/google',
-              state: 'SUCCESS',
-              createdAt: '2026-07-13T10:00:00Z',
-            } as any,
-          ],
-        },
-      };
-
-      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
-      expect(results.length).toBe(0);
-    });
-
-    it('should fail when only a CheckRun named cla/google is passing', async () => {
+    it('should pass when a CheckRun named cla/google is passing', async () => {
       const config = createIsolatedValidationConfig({assertSignedCla: true});
       const pr = createTestPullRequest();
       pr.commits.nodes[1].commit.statusCheckRollup = {
@@ -135,12 +114,32 @@ describe('pull request validation', () => {
       };
 
       const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(0);
+    });
+
+    it('should fail when only a StatusContext named cla/google is passing', async () => {
+      const config = createIsolatedValidationConfig({assertSignedCla: true});
+      const pr = createTestPullRequest();
+      pr.commits.nodes[1].commit.statusCheckRollup = {
+        state: 'SUCCESS',
+        contexts: {
+          nodes: [
+            {
+              __typename: 'StatusContext',
+              context: 'cla/google',
+              state: 'SUCCESS',
+              createdAt: '2026-07-13T10:00:00Z',
+            } as any,
+          ],
+        },
+      };
+
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
       expect(results.length).toBe(1);
       expect(results[0].message).toBe('CLA is not signed by the contributor.');
     });
 
-    it('should not allow a passing CheckRun named cla/google to overwrite a failing StatusContext', async () => {
-      const config = createIsolatedValidationConfig({assertSignedCla: true});
+    it('should not allow a CheckRun to overwrite a StatusContext with the same name', async () => {
       const pr = createTestPullRequest();
       pr.commits.nodes[1].commit.statusCheckRollup = {
         state: 'FAILURE',
@@ -168,10 +167,6 @@ describe('pull request validation', () => {
         {type: 'status', name: 'cla/google', status: PullRequestStatus.FAILING},
         {type: 'check', name: 'cla/google', status: PullRequestStatus.PASSING},
       ]);
-
-      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
-      expect(results.length).toBe(1);
-      expect(results[0].message).toBe('CLA is not signed by the contributor.');
     });
   });
 

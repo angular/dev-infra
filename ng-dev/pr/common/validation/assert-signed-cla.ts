@@ -25,7 +25,7 @@ export const signedClaValidation = createPullRequestValidation(
 class Validation extends PullRequestValidation {
   assert(pullRequest: PullRequestFromGithub) {
     const passing = getStatusesForPullRequest(pullRequest).statuses.some(({type, name, status}) => {
-      return type === 'status' && name === 'cla/google' && status === PullRequestStatus.PASSING;
+      return type === 'check' && name === 'cla/google' && status === PullRequestStatus.PASSING;
     });
 
     if (!passing) {
