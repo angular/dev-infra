@@ -249,19 +249,17 @@ export function getStatusesForPullRequest(
     .forEach((context) => {
       switch (context.__typename) {
         case 'CheckRun':
-          statusMap.set(`check:${context.name}`, {
+          statusMap.set(context.name, {
             type: 'check' as const,
             name: context.name,
             status: normalizeGithubCheckState(context.conclusion, context.status),
           });
-          break;
         case 'StatusContext':
-          statusMap.set(`status:${context.context!}`, {
+          statusMap.set(context.context!, {
             type: 'status' as const,
             name: context.context!,
             status: normalizeGithubStatusState(context.state!),
           });
-          break;
       }
     });
 
