@@ -984,5 +984,39 @@
         "FIREFOX": "core/firefox.exe"
       }
     }
+  },
+  "158.0": {
+    "linux": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/158.0/linux-x86_64/en-US/firefox-158.0.tar.xz",
+      "integrity": "9549b054ec4cf85f50f6a19d8c6fb79580312e71ebc4ec2cb217ec9af09dc12a",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "firefox/firefox"
+      }
+    },
+    "mac": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/158.0/mac/en-US/Firefox%20158.0.dmg",
+      "integrity": "dfe8508ee8880cec1578253eb02b9154b5971a55e832d97396f463cd07b5ef67",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "mac_arm": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/158.0/mac/en-US/Firefox%20158.0.dmg",
+      "integrity": "dfe8508ee8880cec1578253eb02b9154b5971a55e832d97396f463cd07b5ef67",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
+      }
+    },
+    "win64": {
+      "url": "https://archive.mozilla.org/pub/firefox/releases/158.0/win64/en-US/Firefox%20Setup%20158.0.exe",
+      "integrity": "450ab1c772e02f0c9ef02f489b153d86c45bd9311b202d10dc233f3c0206f8d1",
+      "exclude_patterns": [],
+      "named_files": {
+        "FIREFOX": "core/firefox.exe"
+      }
+    }
   }
 }
