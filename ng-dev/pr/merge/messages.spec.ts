@@ -6,12 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {red, magenta} from '../../utils/logging.js';
+import {red, magenta, bold, green, yellow} from '../../utils/logging.js';
 import {PullRequestCommentsFromGithub} from '../common/fetch-pull-request.js';
 import {
   CARETAKER_NOTE_COMMENT_REGEX,
+  formatCaretakerNoteForSummary,
   getCaretakerNoteFromComments,
   getCaretakerNotePromptMessage,
+  getMergeResultsSummary,
+  getMultiPullRequestSummary,
+  getPullRequestSummary,
   getQuotedComment,
 } from './messages.js';
 import {PullRequest} from './pull-request.js';
@@ -242,6 +246,131 @@ describe('caretaker note prompt messages', () => {
           `\nQuick link to PR: ${fakePullRequest.url}\nDo you want to proceed merging?`,
       );
       expect(message).toContain(`Quick link to PR: ${fakePullRequest.url}`);
+    });
+  });
+
+  describe('formatCaretakerNoteForSummary', () => {
+    it('strips caretaker note prefix from single-line comment', () => {
+      expect(formatCaretakerNoteForSummary('caretaker note: remember this thing')).toBe(
+        'remember this thing',
+      );
+      expect(formatCaretakerNoteForSummary('caretaker: remember this thing')).toBe(
+        'remember this thing',
+      );
+      expect(formatCaretakerNoteForSummary('Note for caretaker: remember this thing')).toBe(
+        'remember this thing',
+      );
+    });
+
+    it('formats multi-line caretaker notes with indentation', () => {
+      const multiline = 'caretaker note:\nFirst instruction\nSecond instruction';
+      expect(formatCaretakerNoteForSummary(multiline)).toBe(
+        '\n         First instruction\n         Second instruction',
+      );
+    });
+  });
+
+  describe('getPullRequestSummary', () => {
+    it('formats a PR without caretaker note', () => {
+      const pr: PullRequest = {
+        ...fakePullRequest,
+        prNumber: 1234,
+        targetBranches: ['23.0.x'],
+        hasCaretakerNote: false,
+      };
+
+      expect(getPullRequestSummary(pr)).toBe('PR #1234:\n       branches: 23.0.x');
+    });
+
+    it('formats a PR with caretaker note', () => {
+      const pr: PullRequest = {
+        ...fakePullRequest,
+        prNumber: 123,
+        targetBranches: ['22.3.x', '23.0.x'],
+        hasCaretakerNote: true,
+        caretakerNote: 'caretaker note: remember this thing',
+      };
+
+      expect(getPullRequestSummary(pr)).toBe(
+        'PR #123:\n       branches: 22.3.x, 23.0.x\n       caretaker note: remember this thing',
+      );
+    });
+
+    it('formats a PR with hasCaretakerNote true but no note found in comments', () => {
+      const pr: PullRequest = {
+        ...fakePullRequest,
+        prNumber: 123,
+        targetBranches: ['main'],
+        hasCaretakerNote: true,
+        caretakerNote: undefined,
+      };
+
+      expect(getPullRequestSummary(pr)).toBe(
+        `PR #123:\n       branches: main\n       caretaker note: ${red(
+          `Applied, but no note found in comments (${pr.url})`,
+        )}`,
+      );
+    });
+
+    it('formats validation warnings when present', () => {
+      const pr: PullRequest = {
+        ...fakePullRequest,
+        prNumber: 123,
+        targetBranches: ['main'],
+        hasCaretakerNote: false,
+        validationFailures: [
+          {message: 'Pending status: "ci/angular: tests"', canBeForceIgnored: true} as any,
+          {message: 'Missing non-enforced status', canBeForceIgnored: true} as any,
+        ],
+      };
+
+      expect(getPullRequestSummary(pr)).toBe(
+        `PR #123:\n       branches: main\n       validation warning: ${yellow(
+          'Pending status: "ci/angular: tests"',
+        )}\n       validation warning: ${yellow('Missing non-enforced status')}`,
+      );
+    });
+  });
+
+  describe('getMultiPullRequestSummary', () => {
+    it('formats multiple PRs separated by blank line', () => {
+      const pr1: PullRequest = {
+        ...fakePullRequest,
+        prNumber: 123,
+        targetBranches: ['22.3.x', '23.0.x'],
+        hasCaretakerNote: true,
+        caretakerNote: 'caretaker note: remember this thing',
+      };
+      const pr2: PullRequest = {
+        ...fakePullRequest,
+        prNumber: 1234,
+        targetBranches: ['23.0.x'],
+        hasCaretakerNote: false,
+      };
+
+      expect(getMultiPullRequestSummary([pr1, pr2])).toBe(
+        'PR #123:\n       branches: 22.3.x, 23.0.x\n       caretaker note: remember this thing\n\n' +
+          'PR #1234:\n       branches: 23.0.x',
+      );
+    });
+  });
+
+  describe('getMergeResultsSummary', () => {
+    it('summarizes successful and failed PRs', () => {
+      const summary = getMergeResultsSummary([
+        {prNumber: 123, status: 'success', targetBranches: ['22.3.x', '23.0.x']},
+        {
+          prNumber: 1234,
+          status: 'failed',
+          failureReason: 'Merge conflicts detected on target branches: 23.0.x',
+        },
+      ]);
+
+      expect(summary).toContain(bold('Merge Results:'));
+      expect(summary).toContain(green('  ✓  PR #123: Successfully merged into 22.3.x, 23.0.x'));
+      expect(summary).toContain(
+        red('  ✘  PR #1234: Failed to merge: Merge conflicts detected on target branches: 23.0.x'),
+      );
     });
   });
 });
