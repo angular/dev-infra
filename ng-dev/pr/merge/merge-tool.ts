@@ -21,6 +21,7 @@ import {loadAndValidatePullRequest, PullRequest} from './pull-request.js';
 import {fetchPullRequestCommentsFromGithub} from '../common/fetch-pull-request.js';
 import {GithubApiMergeStrategy} from './strategies/api-merge.js';
 import {AutosquashMergeStrategy} from './strategies/autosquash-merge.js';
+import {MergeStrategy} from './strategies/strategy.js';
 import {GithubConfig, NgDevConfig} from '../../utils/config.js';
 import {assertValidReleaseConfig} from '../../release/config/index.js';
 import {
@@ -33,6 +34,10 @@ import {
   PullRequestValidationError,
   UserAbortedMergeToolError,
 } from './failures.js';
+import {
+  InvalidTargetBranchError,
+  InvalidTargetLabelError,
+} from '../common/targeting/target-label.js';
 import {createPullRequestValidationConfig} from '../common/validation/validation-config.js';
 import {Prompt} from '../../utils/prompt.js';
 
@@ -42,6 +47,17 @@ export interface PullRequestMergeFlags {
   dryRun: boolean;
   ignorePendingReviews: boolean;
   waitForValidations: boolean;
+}
+
+/** Extracts a human-readable failure message from known error types. */
+export function getErrorMessage(error: unknown): string {
+  if (error instanceof InvalidTargetBranchError || error instanceof InvalidTargetLabelError) {
+    return error.failureMessage;
+  }
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return String(error);
 }
 
 const defaultPullRequestMergeFlags: PullRequestMergeFlags = {
@@ -106,30 +122,8 @@ export class MergeTool {
 
     await this.confirmMergeAccess();
 
-    const pullRequest = await loadAndValidatePullRequest(this, prNumber, validationConfig);
-
-    if (pullRequest.validationFailures.length > 0) {
-      Log.error(`Pull request did not pass one or more validation checks. Error:`);
-
-      for (const failure of pullRequest.validationFailures) {
-        Log.error(` -> ${bold(failure.message)}`);
-      }
-      Log.info();
-
-      if (pullRequest.validationFailures.some((failure) => !failure.canBeForceIgnored)) {
-        Log.debug('Discovered a fatal error, which cannot be forced');
-        throw new PullRequestValidationError();
-      }
-
-      Log.info(yellow(`All discovered validations are non-fatal and can be forcibly ignored.`));
-      if (
-        !(await Prompt.confirm({
-          message: 'Do you want to forcibly ignore these validation failures?',
-        }))
-      ) {
-        throw new PullRequestValidationError();
-      }
-    }
+    const pullRequest = await this.loadAndValidatePullRequest(prNumber, validationConfig);
+    await this.assertPullRequestValidation(pullRequest);
 
     if (this.flags.forceManualBranches) {
       await this.updatePullRequestTargetedBranchesFromPrompt(pullRequest);
@@ -137,9 +131,7 @@ export class MergeTool {
 
     await this.checkCaretakerNoteConfirmation(pullRequest);
 
-    const strategy = this.config.pullRequest.githubApiMerge
-      ? new GithubApiMergeStrategy(this.git, this.config.pullRequest.githubApiMerge)
-      : new AutosquashMergeStrategy(this.git);
+    const strategy = this.getMergeStrategy(pullRequest);
 
     // Branch or revision that is currently checked out so that we can switch back to
     // it once the pull request has been merged.
@@ -186,6 +178,8 @@ export class MergeTool {
     } finally {
       // Clean up repo by resetting any uncommitted changes.
       // This can happen because pnpm will install the deps of the branch to run the pre-commit hooks which causes the lockfile to be updated.
+      this.git.runGraceful(['rebase', '--abort']);
+      this.git.runGraceful(['cherry-pick', '--abort']);
       this.git.runGraceful(['reset', '--hard']);
 
       // Switch back to the previous branch. We need to do this before deleting the temporary
@@ -351,5 +345,57 @@ export class MergeTool {
       // TODO(josephperrott): Find a way to check access of the installation without using a JWT.
       Log.debug('Assuming correct access because this a bot account.');
     }
+  }
+
+  /** Loads and validates the specified pull request. */
+  async loadAndValidatePullRequest(
+    prNumber: number,
+    validationConfig: PullRequestValidationConfig,
+  ): Promise<PullRequest> {
+    return loadAndValidatePullRequest(this, prNumber, validationConfig);
+  }
+
+  /**
+   * Asserts that a pull request has passed validation checks, or prompts the user
+   * to forcibly ignore non-fatal validation failures.
+   *
+   * @throws {PullRequestValidationError} If validation checks fail and are not ignored.
+   */
+  async assertPullRequestValidation(pullRequest: PullRequest): Promise<void> {
+    if (pullRequest.validationFailures.length === 0) {
+      return;
+    }
+
+    Log.error(
+      `Pull request #${pullRequest.prNumber} did not pass one or more validation checks. Error:`,
+    );
+
+    for (const failure of pullRequest.validationFailures) {
+      Log.error(` -> ${bold(failure.message)}`);
+    }
+    Log.info();
+
+    if (pullRequest.validationFailures.some((failure) => !failure.canBeForceIgnored)) {
+      Log.debug('Discovered a fatal error, which cannot be forced');
+      throw new PullRequestValidationError(
+        pullRequest.validationFailures.map((f) => f.message).join('; '),
+      );
+    }
+
+    Log.info(yellow(`All discovered validations are non-fatal and can be forcibly ignored.`));
+    if (
+      !(await Prompt.confirm({
+        message: 'Do you want to forcibly ignore these validation failures?',
+      }))
+    ) {
+      throw new PullRequestValidationError('Validation failures were not forcibly ignored by user.');
+    }
+  }
+
+  /** Gets the merge strategy to use for the pull request. */
+  getMergeStrategy(pullRequest: PullRequest): MergeStrategy {
+    return this.config.pullRequest.githubApiMerge
+      ? new GithubApiMergeStrategy(this.git, this.config.pullRequest.githubApiMerge)
+      : new AutosquashMergeStrategy(this.git);
   }
 }
