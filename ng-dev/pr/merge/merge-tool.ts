@@ -14,8 +14,11 @@ import {PullRequestConfig, PullRequestValidationConfig} from '../config/index.js
 import {
   getCaretakerNoteFromComments,
   getCaretakerNotePromptMessage,
+  getMergeResultsSummary,
+  getMultiPullRequestSummary,
   getTargetedBranchesConfirmationPromptMessage,
   getTargetedBranchesMessage,
+  PullRequestMergeResult,
 } from './messages.js';
 import {loadAndValidatePullRequest, PullRequest} from './pull-request.js';
 import {fetchPullRequestCommentsFromGithub} from '../common/fetch-pull-request.js';
@@ -31,6 +34,7 @@ import {
 } from '../../release/versioning/index.js';
 import {
   FatalMergeToolError,
+  MergeConflictsFatalError,
   PullRequestValidationError,
   UserAbortedMergeToolError,
 } from './failures.js';
@@ -40,6 +44,9 @@ import {
 } from '../common/targeting/target-label.js';
 import {createPullRequestValidationConfig} from '../common/validation/validation-config.js';
 import {Prompt} from '../../utils/prompt.js';
+import {isGithubApiError} from '../../utils/git/github.js';
+
+export type {PullRequestMergeResult} from './messages.js';
 
 export interface PullRequestMergeFlags {
   branchPrompt: boolean;
@@ -98,13 +105,29 @@ export class MergeTool {
     prNumber: number,
     partialValidationConfig: PullRequestValidationConfig,
   ): Promise<void> {
-    /** The full validation config, using the provided config from flags, config and defaults. */
-    const validationConfig = createPullRequestValidationConfig({
-      ...this.config.pullRequest.validators,
-      ...partialValidationConfig,
-      waitIfPending: this.flags.waitForValidations,
-    });
+    const results = await this.mergeMany([prNumber], partialValidationConfig);
+    const result = results.find((r) => r.prNumber === prNumber);
+    if (!result || result.status !== 'success') {
+      throw new FatalMergeToolError(result?.failureReason ?? 'Failed to merge pull request.');
+    }
+  }
 
+  /**
+   * Merges multiple pull requests in batch.
+   *
+   * Pull requests are validated upfront and displayed in a combined summary.
+   * After a single confirmation prompt, pull requests are merged sequentially.
+   * If a pull request encounters a merge conflict or failure, it is skipped so
+   * that subsequent pull requests can still be merged.
+   *
+   * @param prNumbers Pull requests that should be merged.
+   * @param partialValidationConfig Pull request validation config.
+   * @returns List of results for each processed pull request.
+   */
+  async mergeMany(
+    prNumbers: number[],
+    partialValidationConfig: PullRequestValidationConfig,
+  ): Promise<PullRequestMergeResult[]> {
     if (this.git.hasUncommittedChanges()) {
       throw new FatalMergeToolError(
         'Local working repository not clean. Please make sure there are ' +
@@ -120,74 +143,179 @@ export class MergeTool {
       );
     }
 
-    await this.confirmMergeAccess();
+    const uniquePrNumbers = Array.from(new Set(prNumbers));
 
-    const pullRequest = await this.loadAndValidatePullRequest(prNumber, validationConfig);
-    await this.assertPullRequestValidation(pullRequest);
-
-    if (this.flags.forceManualBranches) {
-      await this.updatePullRequestTargetedBranchesFromPrompt(pullRequest);
+    if (this.flags.forceManualBranches && uniquePrNumbers.length > 1) {
+      throw new FatalMergeToolError(
+        'Manual branch selection (--force-manual-branches) cannot be used when merging multiple pull requests.',
+      );
     }
 
-    await this.checkCaretakerNoteConfirmation(pullRequest);
+    await this.confirmMergeAccess();
 
-    const strategy = this.getMergeStrategy(pullRequest);
+    const validationConfig = createPullRequestValidationConfig({
+      ...this.config.pullRequest.validators,
+      ...partialValidationConfig,
+      waitIfPending: this.flags.waitForValidations,
+    });
+
+    const results: PullRequestMergeResult[] = [];
+    const validPullRequests: PullRequest[] = [];
+
+    // Phase 1: Load and validate each pull request upfront.
+    for (const prNumber of uniquePrNumbers) {
+      try {
+        const pullRequest = await this.loadAndValidatePullRequest(prNumber, validationConfig);
+        await this.assertPullRequestValidation(pullRequest);
+
+        if (pullRequest.hasCaretakerNote) {
+          pullRequest.caretakerNote = await this.getCaretakerNote(pullRequest);
+        }
+
+        if (this.flags.forceManualBranches) {
+          await this.updatePullRequestTargetedBranchesFromPrompt(pullRequest);
+        }
+
+        validPullRequests.push(pullRequest);
+      } catch (e) {
+        if (e instanceof UserAbortedMergeToolError) {
+          throw e;
+        }
+
+        if (isGithubApiError(e) && e.status === 401) {
+          throw e;
+        }
+
+        if (
+          e instanceof FatalMergeToolError ||
+          e instanceof InvalidTargetBranchError ||
+          e instanceof InvalidTargetLabelError ||
+          isGithubApiError(e)
+        ) {
+          const reason = getErrorMessage(e);
+          Log.error(`Could not load PR #${prNumber}: ${bold(reason)}`);
+          results.push({
+            prNumber,
+            status: 'failed',
+            failureReason: reason,
+          });
+        } else {
+          throw e;
+        }
+      }
+    }
+
+    if (validPullRequests.length === 0) {
+      Log.error('No pull requests are ready to be merged.');
+      Log.info();
+      if (results.length > 0) {
+        Log.info(getMergeResultsSummary(results, this.flags.dryRun));
+        Log.info();
+      }
+      return results;
+    }
+
+    // Phase 2: Display aggregated summary of changes and request single confirmation.
+    Log.info();
+    Log.info(getMultiPullRequestSummary(validPullRequests));
+    Log.info();
+
+    if (
+      !this.flags.dryRun &&
+      this.flags.branchPrompt &&
+      !(await Prompt.confirm({message: getTargetedBranchesConfirmationPromptMessage()}))
+    ) {
+      throw new UserAbortedMergeToolError();
+    }
 
     // Branch or revision that is currently checked out so that we can switch back to
     // it once the pull request has been merged.
     const previousBranchOrRevision = this.git.getCurrentBranchOrRevision();
 
-    // The following block runs Git commands as child processes. These Git commands can fail.
-    // We want to capture these command errors and return an appropriate merge request status.
-    try {
-      // Run preparations for the merge (e.g. fetching branches).
-      await strategy.prepare(pullRequest);
+    // Phase 3: Merge each valid PR sequentially.
+    for (const pullRequest of validPullRequests) {
+      const strategy = this.getMergeStrategy(pullRequest);
 
-      // Print the target branches.
-      Log.info();
-      Log.info(getTargetedBranchesMessage(pullRequest));
+      try {
+        await strategy.prepare(pullRequest);
+        await strategy.check(pullRequest);
 
-      // Check for conflicts between the pull request and target branches.
-      await strategy.check(pullRequest);
+        if (!this.flags.dryRun) {
+          await strategy.merge(pullRequest);
+        }
 
-      Log.info('');
-      Log.info(green(`     PR: ${bold(pullRequest.title)}`));
-      Log.info(green(`  ✓  Pull request can be merged into all target branches.`));
-      Log.info();
+        results.push({
+          prNumber: pullRequest.prNumber,
+          status: 'success',
+          targetBranches: pullRequest.targetBranches,
+        });
+      } catch (e) {
+        if (e instanceof UserAbortedMergeToolError) {
+          throw e;
+        }
 
-      if (this.flags.dryRun) {
-        Log.info(green(`  ✓  Exiting due to dry run mode.`));
-        return;
+        let reason = 'Unknown error';
+        if (e instanceof MergeConflictsFatalError) {
+          reason = `Merge conflicts detected on target branches: ${e.failedBranches.join(', ')}`;
+          Log.error(red(`  ✘  PR #${pullRequest.prNumber} cannot be merged: ${reason}`));
+        } else if (
+          isGithubApiError(e) &&
+          e.status === 405 &&
+          e.message.startsWith('Repository rule violations found')
+        ) {
+          reason =
+            'Repository Rule Violation (ensure you have been placed in the expected caretaking group)';
+          Log.error(red(`  ✘  Repository Rule Violation for PR #${pullRequest.prNumber}.`));
+          Log.error(
+            '     This typically indicates that you are not currently a member of the expected',
+          );
+          Log.error(
+            '     group for merge permissions in this repository. Have you been placed in the',
+          );
+          Log.error('     expected caretaking group?');
+          Log.debug('Github API request failed: ' + bold(e.message));
+        } else if (isGithubApiError(e)) {
+          if (e.status === 401) {
+            throw e;
+          }
+          reason = `GitHub API error: ${e.message}`;
+          Log.error(red(`  ✘  PR #${pullRequest.prNumber} cannot be merged: ${reason}`));
+        } else if (e instanceof FatalMergeToolError) {
+          reason = e.message;
+          Log.error(red(`  ✘  PR #${pullRequest.prNumber} cannot be merged: ${reason}`));
+        } else {
+          throw e;
+        }
+
+        results.push({
+          prNumber: pullRequest.prNumber,
+          status: 'failed',
+          failureReason: reason,
+          targetBranches: pullRequest.targetBranches,
+        });
+      } finally {
+        this.git.runGraceful(['rebase', '--abort']);
+        this.git.runGraceful(['cherry-pick', '--abort']);
+        this.git.runGraceful(['reset', '--hard']);
+        this.git.runGraceful(['checkout', '-f', previousBranchOrRevision]);
+        await strategy.cleanup(pullRequest);
       }
-
-      if (
-        // If there is no target labeling then the pull request is always just directly merged, so
-        // the confirmation can be skipped.
-        !this.config.pullRequest.__noTargetLabeling &&
-        // In cases where manual branch targeting is used, the user already confirmed.
-        !this.flags.forceManualBranches &&
-        this.flags.branchPrompt &&
-        !(await Prompt.confirm({message: getTargetedBranchesConfirmationPromptMessage()}))
-      ) {
-        throw new UserAbortedMergeToolError();
-      }
-
-      // Perform the merge and pass-through potential failures.
-      await strategy.merge(pullRequest);
-      Log.info(green(`  ✓  Successfully merged the pull request: #${prNumber}`));
-    } finally {
-      // Clean up repo by resetting any uncommitted changes.
-      // This can happen because pnpm will install the deps of the branch to run the pre-commit hooks which causes the lockfile to be updated.
-      this.git.runGraceful(['rebase', '--abort']);
-      this.git.runGraceful(['cherry-pick', '--abort']);
-      this.git.runGraceful(['reset', '--hard']);
-
-      // Switch back to the previous branch. We need to do this before deleting the temporary
-      // branches because we cannot delete branches which are currently checked out.
-      this.git.run(['checkout', '-f', previousBranchOrRevision]);
-
-      await strategy.cleanup(pullRequest);
     }
+
+    if (this.flags.dryRun) {
+      Log.info(green(`  ✓  Exiting due to dry run mode.`));
+    }
+
+    // Phase 4: Output summary of results, preserving the original input PR order.
+    results.sort(
+      (a, b) => uniquePrNumbers.indexOf(a.prNumber) - uniquePrNumbers.indexOf(b.prNumber),
+    );
+
+    Log.info();
+    Log.info(getMergeResultsSummary(results, this.flags.dryRun));
+    Log.info();
+
+    return results;
   }
 
   /**
@@ -356,39 +484,32 @@ export class MergeTool {
   }
 
   /**
-   * Asserts that a pull request has passed validation checks, or prompts the user
-   * to forcibly ignore non-fatal validation failures.
+   * Asserts that a pull request does not have fatal validation failures.
    *
-   * @throws {PullRequestValidationError} If validation checks fail and are not ignored.
+   * Non-fatal validation failures are permitted and included as warnings in the
+   * pull request summary, to be confirmed by the user in the single confirmation prompt.
+   *
+   * @throws {PullRequestValidationError} If a fatal validation check fails.
    */
   async assertPullRequestValidation(pullRequest: PullRequest): Promise<void> {
     if (pullRequest.validationFailures.length === 0) {
       return;
     }
 
-    Log.error(
-      `Pull request #${pullRequest.prNumber} did not pass one or more validation checks. Error:`,
-    );
-
-    for (const failure of pullRequest.validationFailures) {
-      Log.error(` -> ${bold(failure.message)}`);
-    }
-    Log.info();
-
     if (pullRequest.validationFailures.some((failure) => !failure.canBeForceIgnored)) {
+      Log.error(
+        `Pull request #${pullRequest.prNumber} did not pass one or more validation checks. Error:`,
+      );
+
+      for (const failure of pullRequest.validationFailures) {
+        Log.error(` -> ${bold(failure.message)}`);
+      }
+      Log.info();
+
       Log.debug('Discovered a fatal error, which cannot be forced');
       throw new PullRequestValidationError(
         pullRequest.validationFailures.map((f) => f.message).join('; '),
       );
-    }
-
-    Log.info(yellow(`All discovered validations are non-fatal and can be forcibly ignored.`));
-    if (
-      !(await Prompt.confirm({
-        message: 'Do you want to forcibly ignore these validation failures?',
-      }))
-    ) {
-      throw new PullRequestValidationError('Validation failures were not forcibly ignored by user.');
     }
   }
 
