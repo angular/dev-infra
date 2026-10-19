@@ -101,11 +101,11 @@ export abstract class MergeStrategy {
   async cleanup(pullRequest: PullRequest) {
     // Delete all temporary target branches.
     pullRequest.targetBranches.forEach((branchName) =>
-      this.git.run(['branch', '-D', this.getLocalTargetBranchName(branchName)]),
+      this.git.runGraceful(['branch', '-D', this.getLocalTargetBranchName(branchName)]),
     );
 
     // Delete temporary branch for the pull request head.
-    this.git.run(['branch', '-D', TEMP_PR_HEAD_BRANCH]);
+    this.git.runGraceful(['branch', '-D', TEMP_PR_HEAD_BRANCH]);
   }
 
   /** Gets a deterministic local branch name for a given branch. */
