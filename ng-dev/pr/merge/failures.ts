@@ -47,8 +47,8 @@ export class MergeConflictsFatalError extends FatalMergeToolError {
 }
 
 export class PullRequestValidationError extends FatalMergeToolError {
-  constructor() {
-    super('Tool exited as at least one pull request validation error was discovered.');
+  constructor(public failure?: string) {
+    super(failure ?? 'Tool exited as at least one pull request validation error was discovered.');
   }
 }
 

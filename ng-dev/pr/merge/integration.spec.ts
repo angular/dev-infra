@@ -638,6 +638,10 @@ describe('pr number validation', () => {
     expect(parsePrNumber('https://github.com/angular/angular/pull/12345')).toBe(12345);
   });
 
+  it('should succeed with a full github url with trailing slash', () => {
+    expect(parsePrNumber('https://github.com/angular/angular/pull/12345/')).toBe(12345);
+  });
+
   it('should fail with a random string', () => {
     try {
       expect(parsePrNumber('baldfey')).toThrow(

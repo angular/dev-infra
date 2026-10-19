@@ -25,6 +25,39 @@ import {
 } from '../common/targeting/target-label.js';
 
 /**
+ * Merges the specified pull requests in batch.
+ *
+ * @param prNumbers Numbers of the pull requests that should be merged.
+ * @param flags Configuration options for merging pull requests.
+ */
+export async function mergePullRequests(prNumbers: number[], flags: PullRequestMergeFlags) {
+  // Set the environment variable to skip all git commit hooks triggered by husky. We are unable to
+  // rely on `--no-verify` as some hooks still run, notably the `prepare-commit-msg` hook.
+  process.env['HUSKY'] = '0';
+
+  const tool = await createPullRequestMergeTool(flags);
+
+  // Perform the merge. If any pull request fails to merge, exit with code 1.
+  if (!(await performMerge())) {
+    process.exit(1);
+  }
+
+  /** Performs the merge and returns whether it was successful or not. */
+  async function performMerge(
+    validationConfig = {
+      assertCompletedReviews: !flags.ignorePendingReviews,
+    },
+  ): Promise<boolean> {
+    try {
+      const results = await tool.mergeMany(prNumbers, validationConfig);
+      return results.length > 0 && results.every((r) => r.status === 'success');
+    } catch (e) {
+      return handleMergeError(e);
+    }
+  }
+}
+
+/**
  * Merges a given pull request based on labels configured in the given merge configuration.
  * Pull requests can be merged with different strategies such as the Github API merge
  * strategy, or the local autosquash strategy. Either strategy has benefits and downsides.
@@ -58,63 +91,73 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
       await tool.merge(prNumber, validationConfig);
       return true;
     } catch (e) {
-      // Catch errors to the Github API for invalid requests. We want to
-      // exit the script with a better explanation of the error.
-      if (isGithubApiError(e) && e.status === 401) {
-        Log.error('Github API request failed: ' + bold(e.message));
-        Log.error('Please ensure that your provided token is valid.');
-        Log.warn(`You can generate a token here: ${GITHUB_TOKEN_GENERATE_URL}`);
-        return false;
-      }
-      // Catch errors to the Github API for repository rule violations. We want to
-      // exit the script with a better explanation of the error.
-      if (
-        isGithubApiError(e) &&
-        e.status === 405 &&
-        e.message.startsWith('Repository rule violations found')
-      ) {
-        Log.error('  ✘  Repository Rule Violation. This typically indicates that you are not');
-        Log.error('     currently a member of the expected group for merge permissions in this');
-        Log.error('     repository. Have you been placed in the expected caretaking group?');
-        Log.debug('Github API request failed: ' + bold(e.message));
-        return false;
-      }
-      if (isGithubApiError(e)) {
-        Log.error('Github API request failed: ' + bold(e.message));
-        return false;
-      }
-      if (e instanceof UserAbortedMergeToolError) {
-        Log.warn('Manually aborted merging..');
-        return false;
-      }
-      if (e instanceof InvalidTargetBranchError) {
-        Log.error(`Pull request selects an invalid GitHub destination branch:`);
-        Log.error(` -> ${bold(e.failureMessage)}`);
-      }
-      if (e instanceof InvalidTargetLabelError) {
-        Log.error(`Pull request target label could not be determined:`);
-        Log.error(` -> ${bold(e.failureMessage)}`);
-      }
-
-      if (e instanceof PullRequestValidationError) {
-        Log.error('Pull request failed at least one validation check.');
-        Log.error('See above for specific error information');
-        return false;
-      }
-
-      // Note: Known errors in the merge tooling extend from the FatalMergeToolError, as such
-      // the instance check for FatalMergeToolError should remain last as it will be truthy for
-      // all of the subclasses.
-      if (e instanceof FatalMergeToolError) {
-        Log.error(`Could not merge the specified pull request. Error:`);
-        Log.error(` -> ${bold(e.message)}`);
-        return false;
-      }
-
-      // For unknown errors, always re-throw.
-      throw e;
+      return handleMergeError(e);
     }
   }
+}
+
+/**
+ * Handles errors encountered during merge execution, providing user-friendly explanations.
+ * Returns false if the error was handled as a non-rethrowable merge failure.
+ */
+export function handleMergeError(e: unknown): boolean {
+  // Catch errors to the Github API for invalid requests. We want to
+  // exit the script with a better explanation of the error.
+  if (isGithubApiError(e) && e.status === 401) {
+    Log.error('Github API request failed: ' + bold(e.message));
+    Log.error('Please ensure that your provided token is valid.');
+    Log.warn(`You can generate a token here: ${GITHUB_TOKEN_GENERATE_URL}`);
+    return false;
+  }
+  // Catch errors to the Github API for repository rule violations. We want to
+  // exit the script with a better explanation of the error.
+  if (
+    isGithubApiError(e) &&
+    e.status === 405 &&
+    e.message.startsWith('Repository rule violations found')
+  ) {
+    Log.error('  ✘  Repository Rule Violation. This typically indicates that you are not');
+    Log.error('     currently a member of the expected group for merge permissions in this');
+    Log.error('     repository. Have you been placed in the expected caretaking group?');
+    Log.debug('Github API request failed: ' + bold(e.message));
+    return false;
+  }
+  if (isGithubApiError(e)) {
+    Log.error('Github API request failed: ' + bold(e.message));
+    return false;
+  }
+  if (e instanceof UserAbortedMergeToolError) {
+    Log.warn('Manually aborted merging..');
+    return false;
+  }
+  if (e instanceof InvalidTargetBranchError) {
+    Log.error(`Pull request selects an invalid GitHub destination branch:`);
+    Log.error(` -> ${bold(e.failureMessage)}`);
+    return false;
+  }
+  if (e instanceof InvalidTargetLabelError) {
+    Log.error(`Pull request target label could not be determined:`);
+    Log.error(` -> ${bold(e.failureMessage)}`);
+    return false;
+  }
+
+  if (e instanceof PullRequestValidationError) {
+    Log.error('Pull request failed at least one validation check.');
+    Log.error('See above for specific error information');
+    return false;
+  }
+
+  // Note: Known errors in the merge tooling extend from the FatalMergeToolError, as such
+  // the instance check for FatalMergeToolError should remain last as it will be truthy for
+  // all of the subclasses.
+  if (e instanceof FatalMergeToolError) {
+    Log.error(`Could not merge the specified pull request(s). Error:`);
+    Log.error(` -> ${bold(e.message)}`);
+    return false;
+  }
+
+  // For unknown errors, always re-throw.
+  throw e;
 }
 
 /**
@@ -152,9 +195,9 @@ async function createPullRequestMergeTool(flags: PullRequestMergeFlags) {
  */
 export function parsePrNumber(prUrlOrNumber: string): number {
   // There is no url validation here other than presence of `/`.
-  // So whatever is the last segment of that string, url or not, will be
+  // So whatever is the last non-empty segment of that string, url or not, will be
   // parsed as a PR number.
-  const prNumber = parseInt(prUrlOrNumber.split('/').pop()!);
+  const prNumber = parseInt(prUrlOrNumber.split('/').filter(Boolean).pop()!);
   if (isNaN(prNumber)) {
     throw new Error('Pull Request was unable to be parsed from the parameters');
   }
