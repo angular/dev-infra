@@ -9,11 +9,12 @@
 import {Argv, Arguments, CommandModule} from 'yargs';
 import {addDryRunFlag} from '../../utils/dry-run.js';
 
-import {mergePullRequest, parsePrNumber} from './merge-pull-request.js';
+import {mergePullRequests, parsePrNumber} from './merge-pull-request.js';
 import {addGithubTokenOption} from '../../utils/git/github-yargs.js';
 /** The options available to the merge command via CLI. */
 export interface MergeCommandOptions {
-  pr: number;
+  prs: number[];
+  pr?: number[];
   branchPrompt: boolean;
   forceManualBranches: boolean;
   dryRun: boolean;
@@ -26,11 +27,18 @@ async function builder(argv: Argv) {
   return addDryRunFlag(addGithubTokenOption(argv))
     .help()
     .strict()
-    .positional('pr', {
+    .positional('prs', {
+      alias: 'pr',
       demandOption: true,
-      coerce: (prUrlOrNumber: string) => parsePrNumber(prUrlOrNumber),
+      coerce: (prs: (string | number)[]) =>
+        (Array.isArray(prs) ? prs : [prs])
+          .flatMap((pr) => String(pr).split(','))
+          .map((pr) => pr.trim())
+          .filter(Boolean)
+          .map((pr) => parsePrNumber(pr)),
       type: 'string',
-      description: 'The PR to be merged.',
+      array: true,
+      description: 'The PR(s) to be merged.',
     })
     .option('branch-prompt' as 'branchPrompt', {
       type: 'boolean',
@@ -56,6 +64,7 @@ async function builder(argv: Argv) {
 
 /** Handles the command. */
 async function handler({
+  prs,
   pr,
   branchPrompt,
   forceManualBranches,
@@ -63,7 +72,7 @@ async function handler({
   ignorePendingReviews,
   waitForValidations,
 }: Arguments<MergeCommandOptions>) {
-  await mergePullRequest(pr, {
+  await mergePullRequests(prs ?? pr, {
     branchPrompt,
     forceManualBranches,
     dryRun,
@@ -76,6 +85,6 @@ async function handler({
 export const MergeCommandModule: CommandModule<{}, MergeCommandOptions> = {
   handler,
   builder,
-  command: 'merge <pr>',
-  describe: 'Merge a PR into its targeted branches.',
+  command: 'merge <prs..>',
+  describe: 'Merge PR(s) into their targeted branches.',
 };

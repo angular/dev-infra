@@ -25,6 +25,39 @@ import {
 } from '../common/targeting/target-label.js';
 
 /**
+ * Merges the specified pull requests in batch.
+ *
+ * @param prNumbers Numbers of the pull requests that should be merged.
+ * @param flags Configuration options for merging pull requests.
+ */
+export async function mergePullRequests(prNumbers: number[], flags: PullRequestMergeFlags) {
+  // Set the environment variable to skip all git commit hooks triggered by husky. We are unable to
+  // rely on `--no-verify` as some hooks still run, notably the `prepare-commit-msg` hook.
+  process.env['HUSKY'] = '0';
+
+  const tool = await createPullRequestMergeTool(flags);
+
+  // Perform the merge. If any pull request fails to merge, exit with code 1.
+  if (!(await performMerge())) {
+    process.exit(1);
+  }
+
+  /** Performs the merge and returns whether it was successful or not. */
+  async function performMerge(
+    validationConfig = {
+      assertCompletedReviews: !flags.ignorePendingReviews,
+    },
+  ): Promise<boolean> {
+    try {
+      const results = await tool.mergeMany(prNumbers, validationConfig);
+      return results.length > 0 && results.every((r) => r.status === 'success');
+    } catch (e) {
+      return handleMergeError(e);
+    }
+  }
+}
+
+/**
  * Merges a given pull request based on labels configured in the given merge configuration.
  * Pull requests can be merged with different strategies such as the Github API merge
  * strategy, or the local autosquash strategy. Either strategy has benefits and downsides.
