@@ -58,63 +58,73 @@ export async function mergePullRequest(prNumber: number, flags: PullRequestMerge
       await tool.merge(prNumber, validationConfig);
       return true;
     } catch (e) {
-      // Catch errors to the Github API for invalid requests. We want to
-      // exit the script with a better explanation of the error.
-      if (isGithubApiError(e) && e.status === 401) {
-        Log.error('Github API request failed: ' + bold(e.message));
-        Log.error('Please ensure that your provided token is valid.');
-        Log.warn(`You can generate a token here: ${GITHUB_TOKEN_GENERATE_URL}`);
-        return false;
-      }
-      // Catch errors to the Github API for repository rule violations. We want to
-      // exit the script with a better explanation of the error.
-      if (
-        isGithubApiError(e) &&
-        e.status === 405 &&
-        e.message.startsWith('Repository rule violations found')
-      ) {
-        Log.error('  ✘  Repository Rule Violation. This typically indicates that you are not');
-        Log.error('     currently a member of the expected group for merge permissions in this');
-        Log.error('     repository. Have you been placed in the expected caretaking group?');
-        Log.debug('Github API request failed: ' + bold(e.message));
-        return false;
-      }
-      if (isGithubApiError(e)) {
-        Log.error('Github API request failed: ' + bold(e.message));
-        return false;
-      }
-      if (e instanceof UserAbortedMergeToolError) {
-        Log.warn('Manually aborted merging..');
-        return false;
-      }
-      if (e instanceof InvalidTargetBranchError) {
-        Log.error(`Pull request selects an invalid GitHub destination branch:`);
-        Log.error(` -> ${bold(e.failureMessage)}`);
-      }
-      if (e instanceof InvalidTargetLabelError) {
-        Log.error(`Pull request target label could not be determined:`);
-        Log.error(` -> ${bold(e.failureMessage)}`);
-      }
-
-      if (e instanceof PullRequestValidationError) {
-        Log.error('Pull request failed at least one validation check.');
-        Log.error('See above for specific error information');
-        return false;
-      }
-
-      // Note: Known errors in the merge tooling extend from the FatalMergeToolError, as such
-      // the instance check for FatalMergeToolError should remain last as it will be truthy for
-      // all of the subclasses.
-      if (e instanceof FatalMergeToolError) {
-        Log.error(`Could not merge the specified pull request. Error:`);
-        Log.error(` -> ${bold(e.message)}`);
-        return false;
-      }
-
-      // For unknown errors, always re-throw.
-      throw e;
+      return handleMergeError(e);
     }
   }
+}
+
+/**
+ * Handles errors encountered during merge execution, providing user-friendly explanations.
+ * Returns false if the error was handled as a non-rethrowable merge failure.
+ */
+export function handleMergeError(e: unknown): boolean {
+  // Catch errors to the Github API for invalid requests. We want to
+  // exit the script with a better explanation of the error.
+  if (isGithubApiError(e) && e.status === 401) {
+    Log.error('Github API request failed: ' + bold(e.message));
+    Log.error('Please ensure that your provided token is valid.');
+    Log.warn(`You can generate a token here: ${GITHUB_TOKEN_GENERATE_URL}`);
+    return false;
+  }
+  // Catch errors to the Github API for repository rule violations. We want to
+  // exit the script with a better explanation of the error.
+  if (
+    isGithubApiError(e) &&
+    e.status === 405 &&
+    e.message.startsWith('Repository rule violations found')
+  ) {
+    Log.error('  ✘  Repository Rule Violation. This typically indicates that you are not');
+    Log.error('     currently a member of the expected group for merge permissions in this');
+    Log.error('     repository. Have you been placed in the expected caretaking group?');
+    Log.debug('Github API request failed: ' + bold(e.message));
+    return false;
+  }
+  if (isGithubApiError(e)) {
+    Log.error('Github API request failed: ' + bold(e.message));
+    return false;
+  }
+  if (e instanceof UserAbortedMergeToolError) {
+    Log.warn('Manually aborted merging..');
+    return false;
+  }
+  if (e instanceof InvalidTargetBranchError) {
+    Log.error(`Pull request selects an invalid GitHub destination branch:`);
+    Log.error(` -> ${bold(e.failureMessage)}`);
+    return false;
+  }
+  if (e instanceof InvalidTargetLabelError) {
+    Log.error(`Pull request target label could not be determined:`);
+    Log.error(` -> ${bold(e.failureMessage)}`);
+    return false;
+  }
+
+  if (e instanceof PullRequestValidationError) {
+    Log.error('Pull request failed at least one validation check.');
+    Log.error('See above for specific error information');
+    return false;
+  }
+
+  // Note: Known errors in the merge tooling extend from the FatalMergeToolError, as such
+  // the instance check for FatalMergeToolError should remain last as it will be truthy for
+  // all of the subclasses.
+  if (e instanceof FatalMergeToolError) {
+    Log.error(`Could not merge the specified pull request(s). Error:`);
+    Log.error(` -> ${bold(e.message)}`);
+    return false;
+  }
+
+  // For unknown errors, always re-throw.
+  throw e;
 }
 
 /**
