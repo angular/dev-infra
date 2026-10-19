@@ -152,9 +152,9 @@ async function createPullRequestMergeTool(flags: PullRequestMergeFlags) {
  */
 export function parsePrNumber(prUrlOrNumber: string): number {
   // There is no url validation here other than presence of `/`.
-  // So whatever is the last segment of that string, url or not, will be
+  // So whatever is the last non-empty segment of that string, url or not, will be
   // parsed as a PR number.
-  const prNumber = parseInt(prUrlOrNumber.split('/').pop()!);
+  const prNumber = parseInt(prUrlOrNumber.split('/').filter(Boolean).pop()!);
   if (isNaN(prNumber)) {
     throw new Error('Pull Request was unable to be parsed from the parameters');
   }
