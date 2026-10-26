@@ -246,18 +246,8 @@ export abstract class MergeStrategy {
    * because the PR's target branch is *not* the repository's main branch.
    *
    * It updates any open linked issues to a `closed` state with a `completed` reason.
-   *
-   * @note The method is a **no-op** if the PR target is the main branch,
-   * as GitHub handles issue closure automatically in that case.
    */
-  protected async closeLinkedIssues({
-    closingIssuesReferences,
-    githubTargetBranch,
-  }: PullRequest): Promise<void> {
-    if (githubTargetBranch === this.git.mainBranchName) {
-      return;
-    }
-
+  protected async closeLinkedIssues({closingIssuesReferences}: PullRequest): Promise<void> {
     for (const {number: issue_number, state} of closingIssuesReferences) {
       if (state === 'CLOSED') {
         continue;
