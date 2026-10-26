@@ -131,12 +131,12 @@ export class AutosquashMergeStrategy extends MergeStrategy {
         pull_number: pullRequest.prNumber,
         state: 'closed',
       });
-
-      // When a pull request is merged, GitHub automatically closes any linked issues.
-      // This is not the case when the pull request is not merged into the main branch.
-      // This is why we need to manually close the linked issues.
-      await this.closeLinkedIssues(pullRequest);
     }
+
+    // When a pull request is merged, GitHub automatically closes any linked issues.
+    // This is not the case when the pull request is not merged into the main branch or closed via commit message.
+    // This is why we need to manually close the linked issues.
+    await this.closeLinkedIssues(pullRequest);
   }
 }
 
