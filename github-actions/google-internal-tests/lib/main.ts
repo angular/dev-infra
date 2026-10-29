@@ -55,11 +55,15 @@ export async function main(
   }
 
   if (syncBranch !== prBaseRef) {
+    if (existingGoogleStatus) {
+      core.info(`Pull request HEAD commit already has existing test status.`);
+      return;
+    }
     core.info(`Skipping Google Internal Tests action for PRs not targeting: ${syncBranch}`);
     await github.repos.createCommitStatus({
       ...context.repo,
       state: 'success',
-      description: `Skipped. PR does not target \`${syncBranch}\` branch`,
+      description: `Skipped. PR does not target \`${syncBranch}\` branch (targets \`${prBaseRef}\`)`,
       context: statusContext,
       sha: prHeadSHA,
     });
