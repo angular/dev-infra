@@ -73,6 +73,13 @@ export async function testApiGolden(
         files: [indexFilePath, ...typeLocations],
         compilerOptions: {
           paths: {},
+          // In TypeScript 6.0+, default moduleResolution changed to "bundler", which resolves
+          // package self-referencing imports (e.g. @angular/forms in @angular/forms/signals) to local
+          // files via package.json "exports". Because these files are local (not in node_modules),
+          // API Extractor treats the imported package as internal rather than external, dropping
+          // the import statement in the generated API report. Forcing "node10" ensures external
+          // package imports are recognized as external.
+          moduleResolution: 'node10',
           types: typeNames,
           lib: ['esnext', 'dom'],
         },
