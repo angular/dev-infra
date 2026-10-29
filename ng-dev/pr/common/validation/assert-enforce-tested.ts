@@ -7,6 +7,7 @@
  */
 
 import githubMacros from '../../../utils/git/github-macros.js';
+import {assertValidCaretakerConfig, NgDevConfig} from '../../../utils/config.js';
 import {
   fetchPullRequestCommentsFromGithub,
   PullRequestFromGithub,
@@ -15,6 +16,7 @@ import {
 import {createPullRequestValidation, PullRequestValidation} from './validation-config.js';
 import {requiresLabels} from '../labels/index.js';
 import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client.js';
+import {getGsyncConfig, PullRequestFiles} from './assert-isolated-separate-files.js';
 
 /** Assert the pull request has passing enforced statuses. */
 // TODO: update typings to make sure portability is properly handled for windows build.
@@ -24,8 +26,12 @@ export const enforceTestedValidation = createPullRequestValidation(
 );
 
 class Validation extends PullRequestValidation {
-  async assert(pullRequest: PullRequestFromGithub, gitClient: AuthenticatedGitClient) {
-    if (!pullRequestRequiresTGP(pullRequest)) {
+  async assert(
+    pullRequest: PullRequestFromGithub,
+    gitClient: AuthenticatedGitClient,
+    config?: NgDevConfig,
+  ) {
+    if (!(await pullRequestRequiresTGP(pullRequest, gitClient, config))) {
       return;
     }
 
@@ -51,10 +57,31 @@ class Validation extends PullRequestValidation {
 }
 
 /**
- * Checks the list of labels for the `requires: TGP` label
+ * Checks the list of labels for the `requires: TGP` label, or whether the PR modifies
+ * separate-sync files (e.g. `packages/core/primitives/**`) when label application was skipped.
  */
-function pullRequestRequiresTGP(pullRequest: PullRequestFromGithub): boolean {
-  return pullRequest.labels.nodes.some(({name}) => name === requiresLabels['REQUIRES_TGP'].name);
+async function pullRequestRequiresTGP(
+  pullRequest: PullRequestFromGithub,
+  gitClient: AuthenticatedGitClient,
+  config?: NgDevConfig,
+): Promise<boolean> {
+  if (pullRequest.labels.nodes.some(({name}) => name === requiresLabels['REQUIRES_TGP'].name)) {
+    return true;
+  }
+  if (config) {
+    try {
+      assertValidCaretakerConfig(config);
+      const g3SyncConfigWithMatchers = await getGsyncConfig(config.caretaker, gitClient);
+      if (g3SyncConfigWithMatchers !== null) {
+        return await PullRequestFiles.create(
+          gitClient,
+          pullRequest.number,
+          g3SyncConfigWithMatchers.config,
+        ).pullRequestHasSeparateFiles();
+      }
+    } catch {}
+  }
+  return false;
 }
 
 export class PullRequestComments {

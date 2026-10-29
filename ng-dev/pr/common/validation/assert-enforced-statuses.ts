@@ -25,9 +25,16 @@ class Validation extends PullRequestValidation {
 
     const {statuses} = getStatusesForPullRequest(pullRequest);
     const missing: string[] = [];
+    const targetBranch = pullRequest.baseRefName || 'main';
 
     for (const enforced of config.requiredStatuses) {
-      if (!statuses.some((s) => s.name === enforced.name && s.type === enforced.type)) {
+      const matchingStatus = statuses.find(
+        (s) => s.name === enforced.name && s.type === enforced.type,
+      );
+      if (
+        !matchingStatus ||
+        isSkippedStatusForTargetBranch(matchingStatus.description, targetBranch)
+      ) {
         missing.push(enforced.name);
       }
     }
@@ -38,4 +45,27 @@ class Validation extends PullRequestValidation {
       );
     }
   }
+}
+
+function isSkippedStatusForTargetBranch(
+  description: string | undefined,
+  targetBranch: string,
+): boolean {
+  if (!description) {
+    return false;
+  }
+  const match = description.match(
+    /^Skipped\. PR does not target `?([^`]+)`? branch(?: \(targets `?([^`]+)`?\))?$/,
+  );
+  if (!match) {
+    return false;
+  }
+  const [, skippedBranch, stampedTargetBranch] = match;
+  if (skippedBranch === targetBranch) {
+    return true;
+  }
+  if (stampedTargetBranch && stampedTargetBranch !== targetBranch) {
+    return true;
+  }
+  return false;
 }

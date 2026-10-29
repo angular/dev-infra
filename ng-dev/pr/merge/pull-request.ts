@@ -95,8 +95,8 @@ export async function loadAndValidatePullRequest(
     throw new FatalMergeToolError('Pull request could not be found.');
   }
 
-  const labels = prData.labels.nodes.map((l) => l.name);
-  const githubTargetBranch = prData.baseRefName;
+  let labels = prData.labels.nodes.map((l) => l.name);
+  let githubTargetBranch = prData.baseRefName;
 
   const {mainBranchName, name, owner} = config.github;
 
@@ -134,6 +134,9 @@ export async function loadAndValidatePullRequest(
     target,
     git,
   );
+
+  labels = prData.labels.nodes.map((l) => l.name);
+  githubTargetBranch = prData.baseRefName;
 
   const requiredBaseSha =
     config.pullRequest.requiredBaseCommits &&

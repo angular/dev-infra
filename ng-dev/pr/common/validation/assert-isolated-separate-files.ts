@@ -84,7 +84,7 @@ class Validation extends PullRequestValidation {
   }
 }
 
-async function getGsyncConfig(
+export async function getGsyncConfig(
   config: CaretakerConfig,
   git: AuthenticatedGitClient,
 ): Promise<{

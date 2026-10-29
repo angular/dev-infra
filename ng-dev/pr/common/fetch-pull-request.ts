@@ -10,6 +10,7 @@ import type {
   CheckConclusionState,
   CheckStatusState,
   MergeableState,
+  PullRequestReviewState,
   PullRequestState,
   StatusState,
   CommentAuthorAssociation,
@@ -55,6 +56,16 @@ export const PR_SCHEMA = {
             authoredDate: graphqlTypes.string,
             committedDate: graphqlTypes.string,
             pushedDate: graphqlTypes.custom<string | null>(),
+            author: optional({
+              user: optional({
+                login: graphqlTypes.string,
+              }),
+            }),
+            committer: optional({
+              user: optional({
+                login: graphqlTypes.string,
+              }),
+            }),
             statusCheckRollup: optional({
               state: graphqlTypes.custom<StatusState>(),
               contexts: params(
@@ -73,6 +84,7 @@ export const PR_SCHEMA = {
                         __typename: graphqlTypes.constant('StatusContext'),
                         state: graphqlTypes.custom<StatusState>(),
                         context: graphqlTypes.string,
+                        description: optional(graphqlTypes.string),
                         createdAt: graphqlTypes.string,
                       },
                     }),
@@ -86,11 +98,25 @@ export const PR_SCHEMA = {
       ],
     },
   ),
-  reviewRequests: {
-    totalCount: graphqlTypes.number,
-  },
+  reviewRequests: params(
+    {first: 100},
+    {
+      totalCount: graphqlTypes.number,
+      nodes: [
+        {
+          requestedReviewer: optional(
+            onUnion({
+              User: {
+                login: graphqlTypes.string,
+              },
+            }),
+          ),
+        },
+      ],
+    },
+  ),
   reviews: params(
-    {last: 100, states: 'APPROVED'},
+    {last: 100, states: '[APPROVED, CHANGES_REQUESTED, DISMISSED]'},
     {
       nodes: [
         {
@@ -98,10 +124,12 @@ export const PR_SCHEMA = {
             login: graphqlTypes.string,
           },
           authorAssociation: graphqlTypes.custom<CommentAuthorAssociation>(),
+          state: graphqlTypes.custom<PullRequestReviewState>(),
+          submittedAt: graphqlTypes.string,
           bodyText: graphqlTypes.string,
-          commit: {
+          commit: optional({
             oid: graphqlTypes.string,
-          },
+          }),
         },
       ],
     },
@@ -183,6 +211,7 @@ export type PullRequestStatusInfo = {
     status: PullRequestStatus;
     type: 'check' | 'status';
     name: string;
+    description?: string;
   }[];
 };
 
@@ -260,6 +289,7 @@ export function getStatusesForPullRequest(
             type: 'status' as const,
             name: context.context!,
             status: normalizeGithubStatusState(context.state!),
+            ...(context.description ? {description: context.description} : {}),
           });
           break;
       }
