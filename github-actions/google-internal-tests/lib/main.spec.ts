@@ -97,10 +97,25 @@ describe('google-internal-tests action', () => {
       owner: 'angular',
       repo: 'angular',
       state: 'success',
-      description: 'Skipped. PR does not target `main` branch',
+      description: 'Skipped. PR does not target `main` branch (targets `18.2.x`)',
       context: 'google-internal-tests',
       sha: 'deadbeef1234567890',
     });
+  });
+
+  it('should not overwrite an existing status when triggered on a non-main branch with the same head SHA', async () => {
+    context.payload.pull_request!.base.ref = '18.2.x';
+    existingStatuses = [
+      {
+        context: 'google-internal-tests',
+        state: 'failure',
+        target_url: null,
+      },
+    ];
+
+    await main(mockGit as unknown as Octokit, mockSyncConfig);
+
+    expect(mockGit.repos.createCommitStatus).not.toHaveBeenCalled();
   });
 
   it('should not overwrite an existing status pointing to an internal CL', async () => {
