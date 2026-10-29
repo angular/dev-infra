@@ -7,7 +7,11 @@
  */
 
 import {PullRequestConfig} from '../../config/index.js';
-import {getStatusesForPullRequest, PullRequestFromGithub} from '../fetch-pull-request.js';
+import {
+  getStatusesForPullRequest,
+  PullRequestFromGithub,
+  PullRequestStatus,
+} from '../fetch-pull-request.js';
 import {createPullRequestValidation, PullRequestValidation} from './validation-config.js';
 
 /** Assert the pull request has passing enforced statuses. */
@@ -25,16 +29,27 @@ class Validation extends PullRequestValidation {
 
     const {statuses} = getStatusesForPullRequest(pullRequest);
     const missing: string[] = [];
+    const notPassing: string[] = [];
 
     for (const enforced of config.requiredStatuses) {
-      if (!statuses.some((s) => s.name === enforced.name && s.type === enforced.type)) {
+      const status = statuses.find((s) => s.name === enforced.name && s.type === enforced.type);
+
+      if (status === undefined) {
         missing.push(enforced.name);
+      } else if (status.status !== PullRequestStatus.PASSING) {
+        notPassing.push(enforced.name);
       }
     }
 
     if (missing.length > 0) {
       throw this._createError(
         `Required statuses are missing on the pull request (${missing.join(', ')}).`,
+      );
+    }
+
+    if (notPassing.length > 0) {
+      throw this._createError(
+        `Required statuses are not passing on the pull request (${notPassing.join(', ')}).`,
       );
     }
   }
