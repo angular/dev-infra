@@ -69,17 +69,20 @@ async function pullRequestRequiresTGP(
     return true;
   }
   if (config) {
+    let g3SyncConfigWithMatchers: Awaited<ReturnType<typeof getGsyncConfig>> = null;
     try {
       assertValidCaretakerConfig(config);
-      const g3SyncConfigWithMatchers = await getGsyncConfig(config.caretaker, gitClient);
-      if (g3SyncConfigWithMatchers !== null) {
-        return await PullRequestFiles.create(
-          gitClient,
-          pullRequest.number,
-          g3SyncConfigWithMatchers.config,
-        ).pullRequestHasSeparateFiles();
-      }
-    } catch {}
+      g3SyncConfigWithMatchers = await getGsyncConfig(config.caretaker, gitClient);
+    } catch {
+      // Caretaker config or g3 sync config is invalid/missing, so we can't check separate files.
+    }
+    if (g3SyncConfigWithMatchers !== null) {
+      return await PullRequestFiles.create(
+        gitClient,
+        pullRequest.number,
+        g3SyncConfigWithMatchers.config,
+      ).pullRequestHasSeparateFiles();
+    }
   }
   return false;
 }

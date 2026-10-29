@@ -51,10 +51,11 @@ class Validation extends PullRequestValidation {
         continue;
       }
       const reviewerLogin = review.author?.login;
-      if (reviewerLogin && requestedReviewers.has(reviewerLogin)) {
+      const key = reviewerLogin || `__anonymous_${anonymousIndex++}`;
+      if (reviewerLogin && requestedReviewers.has(reviewerLogin) && state === 'APPROVED') {
+        latestMemberReviews.delete(key);
         continue;
       }
-      const key = reviewerLogin || `__anonymous_${anonymousIndex++}`;
       latestMemberReviews.set(key, {...review, state});
     }
 
@@ -100,9 +101,13 @@ class Validation extends PullRequestValidation {
     }
     for (const node of pullRequest.commits?.nodes ?? []) {
       const commit = node?.commit;
-      for (const commitLogin of [commit?.author?.user?.login, commit?.committer?.user?.login]) {
+      const authorLoginFromCommit = commit?.author?.user?.login;
+      const committerLoginFromCommit = commit?.committer?.user?.login;
+      if (!authorLoginFromCommit || !committerLoginFromCommit) {
+        return false;
+      }
+      for (const commitLogin of [authorLoginFromCommit, committerLoginFromCommit]) {
         if (
-          commitLogin &&
           commitLogin !== authorLogin &&
           commitLogin !== 'web-flow' &&
           !(await this._isGooglerOrRobot(commitLogin, gitClient))

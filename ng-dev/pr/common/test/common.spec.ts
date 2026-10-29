@@ -541,10 +541,48 @@ describe('pull request validation', () => {
       );
     });
 
+    it('should still block merge when a MEMBER with CHANGES_REQUESTED is re-requested for review even if another MEMBER approved', async () => {
+      const config = createIsolatedValidationConfig({assertMinimumReviews: true});
+      const pr = createTestPullRequest();
+      pr.author = {login: 'external-contributor'};
+      pr.reviewRequests = {
+        totalCount: 1,
+        nodes: [{requestedReviewer: {login: 'blocking-reviewer'}}],
+      };
+      pr.reviews.nodes = [
+        {
+          author: {login: 'blocking-reviewer'},
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          state: 'CHANGES_REQUESTED',
+          submittedAt: '2026-10-20T10:00:00Z',
+          bodyText: 'Needs changes',
+          commit: {oid: '1234'},
+        },
+        {
+          author: {login: 'approving-reviewer'},
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          state: 'APPROVED',
+          submittedAt: '2026-10-20T10:05:00Z',
+          bodyText: 'LGTM',
+          commit: {oid: '4321'},
+        },
+      ];
+
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(1);
+      expect(results[0].message).toBe(
+        'Pull request cannot be merged while a team member has requested changes.',
+      );
+    });
+
     it('should pass when a verified Googler PR author has a MEMBER approval on an earlier commit SHA', async () => {
       const config = createIsolatedValidationConfig({assertMinimumReviews: true});
       const pr = createTestPullRequest();
       pr.author = {login: 'googler-author'};
+      for (const node of pr.commits.nodes) {
+        node.commit.author = {user: {login: 'googler-author'}};
+        node.commit.committer = {user: {login: 'googler-author'}};
+      }
       pr.reviews.nodes = [
         {
           author: {login: 'member-reviewer'},
@@ -565,6 +603,10 @@ describe('pull request validation', () => {
       const config = createIsolatedValidationConfig({assertMinimumReviews: true});
       const pr = createTestPullRequest();
       pr.author = {login: 'angular-robot'};
+      for (const node of pr.commits.nodes) {
+        node.commit.author = {user: {login: 'angular-robot'}};
+        node.commit.committer = {user: {login: 'angular-robot'}};
+      }
       pr.reviews.nodes = [
         {
           author: {login: 'member-reviewer'},
@@ -584,7 +626,10 @@ describe('pull request validation', () => {
       const config = createIsolatedValidationConfig({assertMinimumReviews: true});
       const pr = createTestPullRequest();
       pr.author = {login: 'googler-author'};
+      pr.commits.nodes[0].commit.author = {user: {login: 'googler-author'}};
+      pr.commits.nodes[0].commit.committer = {user: {login: 'googler-author'}};
       pr.commits.nodes[1].commit.author = {user: {login: 'external-contributor'}};
+      pr.commits.nodes[1].commit.committer = {user: {login: 'external-contributor'}};
       pr.reviews.nodes = [
         {
           author: {login: 'member-reviewer'},
@@ -597,6 +642,33 @@ describe('pull request validation', () => {
       ];
       interceptOrgsMembershipRequest('googler-author', true);
       interceptOrgsMembershipRequest('external-contributor', false);
+
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(1);
+      expect(results[0].message).toContain(
+        'Pull request cannot be merged because the latest commit (4321) has not been approved by a team member.',
+      );
+    });
+
+    it('should fail when a verified Googler PR author has a stale MEMBER approval and a commit has an unlinked GitHub author', async () => {
+      const config = createIsolatedValidationConfig({assertMinimumReviews: true});
+      const pr = createTestPullRequest();
+      pr.author = {login: 'googler-author'};
+      pr.commits.nodes[0].commit.author = {user: {login: 'googler-author'}};
+      pr.commits.nodes[0].commit.committer = {user: {login: 'googler-author'}};
+      pr.commits.nodes[1].commit.author = {user: undefined};
+      pr.commits.nodes[1].commit.committer = {user: {login: 'googler-author'}};
+      pr.reviews.nodes = [
+        {
+          author: {login: 'member-reviewer'},
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          state: 'APPROVED',
+          submittedAt: '2026-10-20T10:00:00Z',
+          bodyText: 'LGTM',
+          commit: {oid: '1234'},
+        },
+      ];
+      interceptOrgsMembershipRequest('googler-author', true);
 
       const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
       expect(results.length).toBe(1);
