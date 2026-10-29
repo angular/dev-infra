@@ -393,6 +393,270 @@ describe('pull request validation', () => {
       const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
       expect(results.length).toBe(0);
     });
+
+    it('should require a TGP when separate-sync files are modified even if the requires: TGP label is missing', async () => {
+      const config = createIsolatedValidationConfig({assertEnforceTested: true});
+      let pr = createTestPullRequest();
+      const files = ['packages/core/primitives/rando.ts'];
+      const fileHelper = PullRequestFiles.create(git, pr.number, googleSyncConfig);
+      spyOn(PullRequestFiles, 'create').and.returnValue(fileHelper);
+      spyOn(fileHelper, 'loadPullRequestFiles').and.returnValue(Promise.resolve(files));
+      const commentHelper = PullRequestComments.create(git, pr.number);
+      spyOn(PullRequestComments, 'create').and.returnValue(commentHelper);
+      spyOn(commentHelper, 'loadPullRequestComments').and.returnValue(Promise.resolve([]));
+
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(1);
+      expect(results[0].message).toContain('Pull Request requires a TGP');
+    });
+  });
+
+  describe('assert-minimum-reviews', () => {
+    it('should pass when a MEMBER has approved the current headRefOid', async () => {
+      const config = createIsolatedValidationConfig({assertMinimumReviews: true});
+      const pr = createTestPullRequest();
+      pr.author = {login: 'external-contributor'};
+      pr.reviews.nodes = [
+        {
+          author: {login: 'member-reviewer'},
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          state: 'APPROVED',
+          submittedAt: '2026-10-20T10:00:00Z',
+          bodyText: 'LGTM',
+          commit: {oid: '4321'},
+        },
+      ];
+
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(0);
+    });
+
+    it('should fail when a MEMBER approval is on a stale commit SHA for an external contributor', async () => {
+      const config = createIsolatedValidationConfig({assertMinimumReviews: true});
+      const pr = createTestPullRequest();
+      pr.author = {login: 'external-contributor'};
+      pr.reviews.nodes = [
+        {
+          author: {login: 'member-reviewer'},
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          state: 'APPROVED',
+          submittedAt: '2026-10-20T10:00:00Z',
+          bodyText: 'LGTM',
+          commit: {oid: '1234'},
+        },
+      ];
+      interceptOrgsMembershipRequest('external-contributor', false);
+
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(1);
+      expect(results[0].message).toContain(
+        'Pull request cannot be merged because the latest commit (4321) has not been approved by a team member.',
+      );
+    });
+
+    it('should fail when a MEMBER is re-requested and leaves a COMMENTED review on the new headRefOid without re-approving', async () => {
+      const config = createIsolatedValidationConfig({assertMinimumReviews: true});
+      const pr = createTestPullRequest();
+      pr.author = {login: 'external-contributor'};
+      pr.reviews.nodes = [
+        {
+          author: {login: 'member-reviewer'},
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          state: 'APPROVED',
+          submittedAt: '2026-10-17T01:29:52Z',
+          bodyText: 'LGTM',
+          commit: {oid: '1234'},
+        },
+        {
+          author: {login: 'member-reviewer'},
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          state: 'COMMENTED',
+          submittedAt: '2026-10-19T17:38:44Z',
+          bodyText: 'nit',
+          commit: {oid: '4321'},
+        },
+      ];
+      interceptOrgsMembershipRequest('external-contributor', false);
+
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(1);
+      expect(results[0].message).toContain(
+        'Pull request cannot be merged because the latest commit (4321) has not been approved by a team member.',
+      );
+    });
+
+    it('should fail when a MEMBER approves headRefOid and subsequently submits CHANGES_REQUESTED on the same headRefOid', async () => {
+      const config = createIsolatedValidationConfig({assertMinimumReviews: true});
+      const pr = createTestPullRequest();
+      pr.author = {login: 'external-contributor'};
+      pr.reviews.nodes = [
+        {
+          author: {login: 'member-reviewer'},
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          state: 'APPROVED',
+          submittedAt: '2026-10-20T10:00:00Z',
+          bodyText: 'LGTM',
+          commit: {oid: '4321'},
+        },
+        {
+          author: {login: 'member-reviewer'},
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          state: 'CHANGES_REQUESTED',
+          submittedAt: '2026-10-20T10:05:00Z',
+          bodyText: 'Wait, found an issue',
+          commit: {oid: '4321'},
+        },
+      ];
+
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(1);
+      expect(results[0].message).toBe(
+        'Pull request cannot be merged while a team member has requested changes.',
+      );
+    });
+
+    it('should fail when the sole approving MEMBER is currently in reviewRequests', async () => {
+      const config = createIsolatedValidationConfig({assertMinimumReviews: true});
+      const pr = createTestPullRequest();
+      pr.author = {login: 'external-contributor'};
+      pr.reviewRequests = {
+        totalCount: 1,
+        nodes: [{requestedReviewer: {login: 'member-reviewer'}}],
+      };
+      pr.reviews.nodes = [
+        {
+          author: {login: 'member-reviewer'},
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          state: 'APPROVED',
+          submittedAt: '2026-10-20T10:00:00Z',
+          bodyText: 'LGTM',
+          commit: {oid: '4321'},
+        },
+      ];
+
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(1);
+      expect(results[0].message).toBe(
+        'Pull request cannot be merged without at least one review from a team member',
+      );
+    });
+
+    it('should pass when a verified Googler PR author has a MEMBER approval on an earlier commit SHA', async () => {
+      const config = createIsolatedValidationConfig({assertMinimumReviews: true});
+      const pr = createTestPullRequest();
+      pr.author = {login: 'googler-author'};
+      pr.reviews.nodes = [
+        {
+          author: {login: 'member-reviewer'},
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          state: 'APPROVED',
+          submittedAt: '2026-10-20T10:00:00Z',
+          bodyText: 'LGTM',
+          commit: {oid: '1234'},
+        },
+      ];
+      interceptOrgsMembershipRequest('googler-author', true);
+
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(0);
+    });
+
+    it('should pass when angular-robot PR author has a MEMBER approval on an earlier commit SHA', async () => {
+      const config = createIsolatedValidationConfig({assertMinimumReviews: true});
+      const pr = createTestPullRequest();
+      pr.author = {login: 'angular-robot'};
+      pr.reviews.nodes = [
+        {
+          author: {login: 'member-reviewer'},
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          state: 'APPROVED',
+          submittedAt: '2026-10-20T10:00:00Z',
+          bodyText: 'LGTM',
+          commit: {oid: '1234'},
+        },
+      ];
+
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(0);
+    });
+
+    it('should fail when a verified Googler PR author has a stale MEMBER approval but a commit was authored by a non-Googler', async () => {
+      const config = createIsolatedValidationConfig({assertMinimumReviews: true});
+      const pr = createTestPullRequest();
+      pr.author = {login: 'googler-author'};
+      pr.commits.nodes[1].commit.author = {user: {login: 'external-contributor'}};
+      pr.reviews.nodes = [
+        {
+          author: {login: 'member-reviewer'},
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          state: 'APPROVED',
+          submittedAt: '2026-10-20T10:00:00Z',
+          bodyText: 'LGTM',
+          commit: {oid: '1234'},
+        },
+      ];
+      interceptOrgsMembershipRequest('googler-author', true);
+      interceptOrgsMembershipRequest('external-contributor', false);
+
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(1);
+      expect(results[0].message).toContain(
+        'Pull request cannot be merged because the latest commit (4321) has not been approved by a team member.',
+      );
+    });
+  });
+
+  describe('assert-enforced-statuses', () => {
+    it('should fail when google-internal-tests status was skipped for non-main branch on a PR targeting main', async () => {
+      const config = createIsolatedValidationConfig({assertEnforcedStatuses: true});
+      ngDevConfig.pullRequest.requiredStatuses = [{type: 'status', name: 'google-internal-tests'}];
+      const pr = createTestPullRequest();
+      pr.baseRefName = 'main';
+      pr.commits.nodes[1].commit.statusCheckRollup = {
+        state: 'SUCCESS',
+        contexts: {
+          nodes: [
+            {
+              __typename: 'StatusContext',
+              context: 'google-internal-tests',
+              state: 'SUCCESS',
+              description: 'Skipped. PR does not target `main` branch',
+              createdAt: '2026-10-20T10:00:00Z',
+            } as any,
+          ],
+        },
+      };
+
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(1);
+      expect(results[0].message).toBe(
+        'Required statuses are missing on the pull request (google-internal-tests).',
+      );
+    });
+
+    it('should pass when google-internal-tests status was skipped for non-main branch on a PR targeting that non-main branch', async () => {
+      const config = createIsolatedValidationConfig({assertEnforcedStatuses: true});
+      ngDevConfig.pullRequest.requiredStatuses = [{type: 'status', name: 'google-internal-tests'}];
+      const pr = createTestPullRequest();
+      pr.baseRefName = '18.2.x';
+      pr.commits.nodes[1].commit.statusCheckRollup = {
+        state: 'SUCCESS',
+        contexts: {
+          nodes: [
+            {
+              __typename: 'StatusContext',
+              context: 'google-internal-tests',
+              state: 'SUCCESS',
+              description: 'Skipped. PR does not target `main` branch (targets `18.2.x`)',
+              createdAt: '2026-10-20T10:00:00Z',
+            } as any,
+          ],
+        },
+      };
+
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(0);
+    });
   });
 
   describe('assert-isolate-primitives', () => {

@@ -49,7 +49,7 @@ async function runValidations(
   });
 
   const validationPromises = [
-    minimumReviewsValidation.run(validationConfig, pullRequest),
+    minimumReviewsValidation.run(validationConfig, pullRequest, gitClient),
     completedReviewsValidation.run(validationConfig, pullRequest),
     mergeReadyValidation.run(validationConfig, pullRequest),
     signedClaValidation.run(validationConfig, pullRequest),
@@ -63,7 +63,7 @@ async function runValidations(
       pullRequest.number,
       gitClient,
     ),
-    enforceTestedValidation.run(validationConfig, pullRequest, gitClient),
+    enforceTestedValidation.run(validationConfig, pullRequest, gitClient, ngDevConfig),
   ];
 
   if (activeReleaseTrains !== null) {
@@ -148,7 +148,8 @@ export async function assertValidPullRequest(
     if (!freshPr) {
       throw new Error('Failed to re-fetch pull request data');
     }
-    pullRequest = freshPr;
+    Object.assign(originalPullRequest, freshPr);
+    pullRequest = originalPullRequest;
     attempts++;
   }
 }
