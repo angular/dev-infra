@@ -55,15 +55,20 @@ export async function main(
   }
 
   if (syncBranch !== prBaseRef) {
+    const skippedDescription = `Skipped. PR does not target \`${syncBranch}\` branch (targets \`${prBaseRef}\`)`;
     if (existingGoogleStatus) {
-      core.info(`Pull request HEAD commit already has existing test status.`);
-      return;
+      const isSkipped = existingGoogleStatus.description?.startsWith('Skipped. PR does not target');
+      const isForCurrentBranch = existingGoogleStatus.description === skippedDescription;
+      if (!isSkipped || isForCurrentBranch) {
+        core.info(`Pull request HEAD commit already has existing test status.`);
+        return;
+      }
     }
     core.info(`Skipping Google Internal Tests action for PRs not targeting: ${syncBranch}`);
     await github.repos.createCommitStatus({
       ...context.repo,
       state: 'success',
-      description: `Skipped. PR does not target \`${syncBranch}\` branch (targets \`${prBaseRef}\`)`,
+      description: skippedDescription,
       context: statusContext,
       sha: prHeadSHA,
     });

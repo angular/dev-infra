@@ -4,7 +4,12 @@ import {main} from './main.js';
 
 describe('google-internal-tests action', () => {
   let mockGit: jasmine.SpyObj<Octokit>;
-  let existingStatuses: Array<{context: string; state: string; target_url?: string | null}>;
+  let existingStatuses: Array<{
+    context: string;
+    state: string;
+    description?: string | null;
+    target_url?: string | null;
+  }>;
   let prFiles: Array<{filename: string; status?: string; previous_filename?: string}>;
   const mockSyncConfig = {
     config: {
@@ -116,6 +121,29 @@ describe('google-internal-tests action', () => {
     await main(mockGit as unknown as Octokit, mockSyncConfig);
 
     expect(mockGit.repos.createCommitStatus).not.toHaveBeenCalled();
+  });
+
+  it('should update an existing skipped status when a PR is retargeted between non-main branches', async () => {
+    context.payload.pull_request!.base.ref = '18.3.x';
+    existingStatuses = [
+      {
+        context: 'google-internal-tests',
+        state: 'success',
+        description: 'Skipped. PR does not target `main` branch (targets `18.2.x`)',
+        target_url: null,
+      },
+    ];
+
+    await main(mockGit as unknown as Octokit, mockSyncConfig);
+
+    expect(mockGit.repos.createCommitStatus).toHaveBeenCalledOnceWith({
+      owner: 'angular',
+      repo: 'angular',
+      state: 'success',
+      description: 'Skipped. PR does not target `main` branch (targets `18.3.x`)',
+      context: 'google-internal-tests',
+      sha: 'deadbeef1234567890',
+    });
   });
 
   it('should not overwrite an existing status pointing to an internal CL', async () => {
