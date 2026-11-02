@@ -102,13 +102,19 @@
     // Oxc parser packages should be kept in sync.
     {
       groupName: 'oxc-parser dependencies',
-      matchPackageNames: ['oxc-parser', '@oxc-parser/*'],
+      matchPackageNames: ['oxc-parser', '@oxc-parser/*', '@oxc-project/types'],
     },
 
     // Rolldown packages should be kept in sync.
     {
       groupName: 'rolldown dependencies',
       matchPackageNames: ['rolldown', '@rolldown/*'],
+    },
+
+    // Rollup packages should be kept in sync.
+    {
+      groupName: 'rollup dependencies',
+      matchPackageNames: ['rollup', '@rollup/*'],
     },
 
     // Group all non-major dependencies together for updates.
