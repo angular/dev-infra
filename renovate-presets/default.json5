@@ -99,6 +99,18 @@
       matchPackageNames: ['@mcp-b/webmcp-*'],
     },
 
+    // Oxc parser packages should be kept in sync.
+    {
+      groupName: 'oxc-parser dependencies',
+      matchPackageNames: ['oxc-parser', '@oxc-parser/*'],
+    },
+
+    // Rolldown packages should be kept in sync.
+    {
+      groupName: 'rolldown dependencies',
+      matchPackageNames: ['rolldown', '@rolldown/*'],
+    },
+
     // Group all non-major dependencies together for updates.
     {
       groupName: 'all non-major dependencies',
