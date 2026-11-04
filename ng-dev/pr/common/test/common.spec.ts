@@ -84,7 +84,7 @@ describe('pull request validation', () => {
    */
   function interceptOrgsMembershipRequest(username: string, result: boolean) {
     const mock = nock(getOrgsApiRequestUrl());
-    const responseCode = result ? 204 : 302;
+    const responseCode = result ? 204 : 404;
     mock.get(`/googlers/members/${username}`).reply(responseCode);
   }
 
@@ -675,6 +675,78 @@ describe('pull request validation', () => {
       expect(results[0].message).toContain(
         'Pull request cannot be merged because the latest commit (4321) has not been approved by a team member.',
       );
+    });
+
+    it('should warn and ask for a review when the caller token cannot verify private googlers org membership (redirected to public_members)', async () => {
+      const config = createIsolatedValidationConfig({assertMinimumReviews: true});
+      const pr = createTestPullRequest();
+      pr.author = {login: 'private-googler-author'};
+      for (const node of pr.commits.nodes) {
+        node.commit.author = {user: {login: 'private-googler-author'}};
+        node.commit.committer = {user: {login: 'private-googler-author'}};
+      }
+      pr.reviews.nodes = [
+        {
+          author: {login: 'member-reviewer'},
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          state: 'APPROVED',
+          submittedAt: '2026-10-20T10:00:00Z',
+          bodyText: 'LGTM',
+          commit: {oid: '1234'},
+        },
+      ];
+      nock(getOrgsApiRequestUrl())
+        .get('/googlers/members/private-googler-author')
+        .reply(302, undefined, {
+          Location: `${API_ENDPOINT}/organizations/16860514/public_members/private-googler-author`,
+        });
+      nock(API_ENDPOINT)
+        .get('/organizations/16860514/public_members/private-googler-author')
+        .optionally()
+        .reply(404);
+      const warnSpy = spyOn(Log, 'warn');
+
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(1);
+      expect(warnSpy).toHaveBeenCalledWith(
+        jasmine.stringContaining(
+          'Unable to verify membership in the "googlers" GitHub organization with the current GitHub token.',
+        ),
+      );
+      expect(results[0].message).toBe(
+        'Pull request cannot be merged because the latest commit (4321) has not been approved by a team member, and the current GitHub token cannot verify "googlers" organization membership. Please submit a review approving the latest commit or configure a token with "googlers" organization access.',
+      );
+    });
+
+    it('should pass when redirected to public_members and the author is a public member of googlers', async () => {
+      const config = createIsolatedValidationConfig({assertMinimumReviews: true});
+      const pr = createTestPullRequest();
+      pr.author = {login: 'public-googler-author'};
+      for (const node of pr.commits.nodes) {
+        node.commit.author = {user: {login: 'public-googler-author'}};
+        node.commit.committer = {user: {login: 'public-googler-author'}};
+      }
+      pr.reviews.nodes = [
+        {
+          author: {login: 'member-reviewer'},
+          authorAssociation: 'MEMBER' as CommentAuthorAssociation,
+          state: 'APPROVED',
+          submittedAt: '2026-10-20T10:00:00Z',
+          bodyText: 'LGTM',
+          commit: {oid: '1234'},
+        },
+      ];
+      nock(getOrgsApiRequestUrl())
+        .get('/googlers/members/public-googler-author')
+        .reply(302, undefined, {
+          Location: `${API_ENDPOINT}/organizations/16860514/public_members/public-googler-author`,
+        });
+      nock(API_ENDPOINT)
+        .get('/organizations/16860514/public_members/public-googler-author')
+        .reply(204);
+
+      const results = await assertValidPullRequest(pr, config, ngDevConfig, null, prTarget, git);
+      expect(results.length).toBe(0);
     });
   });
 
