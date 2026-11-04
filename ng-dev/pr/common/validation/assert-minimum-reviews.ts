@@ -9,6 +9,7 @@
 import type {PullRequestReviewState} from '@octokit/graphql-schema';
 import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client.js';
 import githubMacros from '../../../utils/git/github-macros.js';
+import {Log} from '../../../utils/logging.js';
 import {PullRequestFromGithub} from '../fetch-pull-request.js';
 import {createPullRequestValidation, PullRequestValidation} from './validation-config.js';
 
@@ -82,8 +83,19 @@ class Validation extends PullRequestValidation {
     );
 
     if (!hasApprovalForHead) {
-      const isExemptAuthor = await this._isExemptFromHeadShaApproval(pullRequest, gitClient);
-      if (!isExemptAuthor) {
+      const exemptionResult = await this._checkExemptionFromHeadShaApproval(pullRequest, gitClient);
+      if (!exemptionResult.isExempt) {
+        if (exemptionResult.cannotVerifyGooglerOrg) {
+          Log.warn(
+            'Unable to verify membership in the "googlers" GitHub organization with the current ' +
+              'GitHub token. Ensure your GitHub account is a member of the "googlers" ' +
+              'organization (http://go/github) and that your token includes the "read:org" or ' +
+              '"repo" scope.',
+          );
+          throw this._createError(
+            `Pull request cannot be merged because the latest commit (${pullRequest.headRefOid}) has not been approved by a team member, and the current GitHub token cannot verify "googlers" organization membership. Please submit a review approving the latest commit or configure a token with "googlers" organization access.`,
+          );
+        }
         throw this._createError(
           `Pull request cannot be merged because the latest commit (${pullRequest.headRefOid}) has not been approved by a team member.`,
         );
@@ -91,45 +103,59 @@ class Validation extends PullRequestValidation {
     }
   }
 
-  private async _isExemptFromHeadShaApproval(
+  private async _checkExemptionFromHeadShaApproval(
     pullRequest: PullRequestFromGithub,
     gitClient?: AuthenticatedGitClient,
-  ): Promise<boolean> {
+  ): Promise<{isExempt: boolean; cannotVerifyGooglerOrg: boolean}> {
     const authorLogin = pullRequest.author?.login;
-    if (!authorLogin || !(await this._isGooglerOrRobot(authorLogin, gitClient))) {
-      return false;
+    if (!authorLogin) {
+      return {isExempt: false, cannotVerifyGooglerOrg: false};
     }
+    const authorCheck = await this._verifyGooglerOrRobot(authorLogin, gitClient);
+    if (!authorCheck.isGooglerOrRobot) {
+      return {isExempt: false, cannotVerifyGooglerOrg: authorCheck.cannotVerifyGooglerOrg};
+    }
+
+    const verifiedLogins = new Set<string>([authorLogin, 'web-flow', ...googleOwnedRobots]);
     for (const node of pullRequest.commits?.nodes ?? []) {
       const commit = node?.commit;
       const authorLoginFromCommit = commit?.author?.user?.login;
       const committerLoginFromCommit = commit?.committer?.user?.login;
       if (!authorLoginFromCommit || !committerLoginFromCommit) {
-        return false;
+        return {isExempt: false, cannotVerifyGooglerOrg: false};
       }
       for (const commitLogin of [authorLoginFromCommit, committerLoginFromCommit]) {
-        if (
-          commitLogin !== authorLogin &&
-          commitLogin !== 'web-flow' &&
-          !(await this._isGooglerOrRobot(commitLogin, gitClient))
-        ) {
-          return false;
+        if (verifiedLogins.has(commitLogin)) {
+          continue;
         }
+        const commitCheck = await this._verifyGooglerOrRobot(commitLogin, gitClient);
+        if (!commitCheck.isGooglerOrRobot) {
+          return {isExempt: false, cannotVerifyGooglerOrg: commitCheck.cannotVerifyGooglerOrg};
+        }
+        verifiedLogins.add(commitLogin);
       }
     }
-    return true;
+    return {isExempt: true, cannotVerifyGooglerOrg: false};
   }
 
-  private async _isGooglerOrRobot(
+  private async _verifyGooglerOrRobot(
     username: string,
     gitClient?: AuthenticatedGitClient,
-  ): Promise<boolean> {
+  ): Promise<{isGooglerOrRobot: boolean; cannotVerifyGooglerOrg: boolean}> {
     if (googleOwnedRobots.includes(username)) {
-      return true;
+      return {isGooglerOrRobot: true, cannotVerifyGooglerOrg: false};
     }
     if (!gitClient) {
-      return false;
+      return {isGooglerOrRobot: false, cannotVerifyGooglerOrg: false};
     }
-    return await githubMacros.isGooglerOrgMember(gitClient.github, authorLoginOrUser(username));
+    const {isMember, canVerifyOrg} = await githubMacros.verifyGooglerOrgMembership(
+      gitClient.github,
+      authorLoginOrUser(username),
+    );
+    return {
+      isGooglerOrRobot: isMember,
+      cannotVerifyGooglerOrg: !canVerifyOrg,
+    };
   }
 }
 
