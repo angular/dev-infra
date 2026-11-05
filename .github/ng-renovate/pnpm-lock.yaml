@@ -167,8 +167,8 @@ importers:
   .:
     dependencies:
       renovate:
-        specifier: 44.210.1
-        version: 44.210.1(supports-color@7.2.0)(typanion@3.14.0)
+        specifier: 44.210.2
+        version: 44.210.2(supports-color@7.2.0)(typanion@3.14.0)
 
 packages:
 
@@ -626,8 +626,8 @@ packages:
     resolution: {integrity: sha512-auJDVBrP3LtjjlZ7bLe1G2SXxAOpY77DmM56UacCQL9RTCfIj6wSEEUtTZIUMZemSc3+sCOVYwlMlhyzBMZ3wA==}
     engines: {node: '>=24.10.0', pnpm: '>=10.0.0'}
 
-  '@renovatebot/good-enough-parser@3.0.0':
-    resolution: {integrity: sha512-dvFb9ST8WVo+YsrhK6vbWBib49Biu4/fPmZf1QRNIR1Ov5T04god/AA3rRJcyRrofzt/K96vPO9RPhEE3u+hfg==}
+  '@renovatebot/good-enough-parser@4.0.3':
+    resolution: {integrity: sha512-D8PRmC0voAmSzdXaPQT9JJNm+QeXpwQDXzbuf0hXIxg4EgSc4X8J+REseT3aaacOC9zht4Ntpb0tnjwQEL2nfg==}
     engines: {node: '>=24.10.0', pnpm: '>=10.0.0'}
 
   '@renovatebot/osv-offline-db@4.5.10':
@@ -700,32 +700,37 @@ packages:
     resolution: {integrity: sha512-4BAffykYOgO+5nzBWYwE3W90sBgLJoUPRWWcL8wlyiM8IB8ipJz3UMJ9KXQd1RKQXpKp8Tutn80HZtWsu2u76w==}
     engines: {node: '>=10'}
 
-  '@thi.ng/api@7.2.0':
-    resolution: {integrity: sha512-4NcwHXxwPF/JgJG/jSFd9rjfQNguF0QrHvd6e+CEf4T0sFChqetW6ZmJ6/a2X+noDVntgulegA+Bx0HHzw+Tyw==}
+  '@thi.ng/api@8.12.28':
+    resolution: {integrity: sha512-SbC2c2fULIXtAsgtT9Vz7Dviv1KaZD3oYrvqy3zV405xHuipaFMZN1VbVr6LzN8JCdIFp0oH4b6OdNHdojdzcA==}
+    engines: {node: '>=18'}
 
-  '@thi.ng/arrays@1.0.3':
-    resolution: {integrity: sha512-ZUB27bdpTwcvxYJTlt/eWKrj98nWXo0lAUPwRwubk4GlH8rTKKkc7qZr9/4LCKPsNjnZdQqbBtNvNf3HjYxCzw==}
+  '@thi.ng/arrays@2.14.26':
+    resolution: {integrity: sha512-sIzVJyXZRQC8KQQpRn7KZZlanRej2Q+bvmFsq9GhAh5kuzfCjaCGuXibTtJS2X5uEMfXvH2D6mi0auIBbZ+V9Q==}
+    engines: {node: '>=18'}
 
-  '@thi.ng/checks@2.9.11':
-    resolution: {integrity: sha512-fBvWod32w24JlJsrrOdl+tlx+UNehCORi4rHaJ7l7HH+SEhD/lYTCXOBjwu9D/ztIUjMP5Q+n8cAqI5iPhbvAQ==}
+  '@thi.ng/checks@3.11.1':
+    resolution: {integrity: sha512-S64V2nAPA0Y66VwpJdi3fdwv4xP9G7M13nvQWzp6YTERsnusI6FtihbxhENt/DQ/k+iP+aVSsy+LgtqwkFvvag==}
+    engines: {node: '>=18'}
 
-  '@thi.ng/compare@1.3.34':
-    resolution: {integrity: sha512-E+UWhmo8l5yeHDuriPUsfrnk/Mj5kSDNRX7lPfv2zNdAQ7N8UDzc0IXu46U6EpqtCReo+2n5N8qzfD3TjerFRw==}
+  '@thi.ng/compare@2.5.16':
+    resolution: {integrity: sha512-NSqurH5cqjHjcyKANPoKofDEbfQRNkL2Ct+3W5o1QdY6y/iSDysccOVdwA4oc5A49+bMwmOIUhnTyiiRIlYkWQ==}
+    engines: {node: '>=18'}
 
-  '@thi.ng/equiv@1.0.45':
-    resolution: {integrity: sha512-tdXaJfF0pFvT80Q7BOlhc7H7ja/RbVGzlGpE4LqjDWfXPPbLYwmq6EbQuHWeXuvT0qe+BsGnuO5UXAR5B8oGGQ==}
+  '@thi.ng/equiv@2.1.117':
+    resolution: {integrity: sha512-HNZvfMsTMPMEh9TisOgasMVStG5kgEfLfKww+Am2RrOb2B1fQ6ZKJYRJCf+bMF8SOboaz74V9KewIDcMKTR8Qw==}
+    engines: {node: '>=18'}
 
-  '@thi.ng/errors@1.3.4':
-    resolution: {integrity: sha512-hTk71OPKnioN349sdj2DAoY+69eSerB3MN4Zwz6mosr1QFzIMkfkNOtBeC+Gm0yi0V0EY5LeBYFgqb3oXbtTbw==}
+  '@thi.ng/errors@2.6.17':
+    resolution: {integrity: sha512-momw7wo3EXes1wa6Smckr+l4BaJi/h+E67R3furYOBjQpciie1OgoTa43PXPb1POsuWxynkEF8OCnQgreE8twg==}
+    engines: {node: '>=18'}
 
-  '@thi.ng/hex@1.0.4':
-    resolution: {integrity: sha512-9ofIG4nXhEskGeOJthpi/9LXFIPrlZ/MmHpgLWa3wNqTVhODP/o++mu9jDKojHEpKvswkkFCE+mSVmMu8xo4mQ==}
+  '@thi.ng/random@4.1.54':
+    resolution: {integrity: sha512-h4sUHPlDd1abr78o3jmvFeAKMH97YHAbrcjCcb9YaQiAADLu64NvkR0hCA69kuAJSXCYJZ9k8e0EjmbuEhFuuQ==}
+    engines: {node: '>=18'}
 
-  '@thi.ng/random@2.4.8':
-    resolution: {integrity: sha512-4JJB8zbaPxjlAp1kCqsBbs6eN4Ivd/5fs1e4GlvmNkyGSucHIDTWvw6NnQWqUx2oPaAEDB9CFCH7SOcGC/cwkw==}
-
-  '@thi.ng/zipper@1.0.3':
-    resolution: {integrity: sha512-dWfuk5nzf5wGEmcF90AXNEuWr3NVwRF+cf/9ZSE6xImA7Vy5XpHNMwLHFszZaC+kqiDXr+EZ0lXWDF46a8lSPA==}
+  '@thi.ng/zipper@2.1.181':
+    resolution: {integrity: sha512-hNnVHHGjZziANFqIVokVIIHvSfr7ICZhLEWr5Azo/DCEFb+k6/u2Pi9esHFoC+8HNu5kIHRDW5J8eKNwab1fIA==}
+    engines: {node: '>=18'}
 
   '@types/cacheable-request@6.0.3':
     resolution: {integrity: sha512-IQ3EbTzGxIigb1I3qPZc1rWJnH0BmSKv5QYTalEwweFvyBDLSAe24zP0le/hyi7ecGfZVlIVAg4BZqb8WBwKqw==}
@@ -2081,8 +2086,8 @@ packages:
   remark@15.0.1:
     resolution: {integrity: sha512-Eht5w30ruCXgFmxVUSlNWQ9iiimq07URKeFS3hNc8cUWy1llX4KDWfyEDZRycMc+znsN9Ux5/tJ/BFdgdOwA3A==}
 
-  renovate@44.210.1:
-    resolution: {integrity: sha512-Bw1dlsgz8EKyO0pYKL8Bl8me1JW/XJKP07waDtKb8u9xSlRwPR82g/jX8jOh+IXMmYeE4QYYspeIaRDo9xuAJw==}
+  renovate@44.210.2:
+    resolution: {integrity: sha512-bFMr4pjH6VyFWq2EI2zDlMPj2CTzpXd4MJDwXcbbZuVBRaQephtUZOahEsMs+GXxaTnMwJYNBk0n9rg/gNP24w==}
     engines: {node: ^24.11.0, pnpm: ^11.0.0}
     hasBin: true
 
@@ -3097,9 +3102,9 @@ snapshots:
       upath: 3.0.8
       zod: 4.6.7
 
-  '@renovatebot/good-enough-parser@3.0.0':
+  '@renovatebot/good-enough-parser@4.0.3':
     dependencies:
-      '@thi.ng/zipper': 1.0.3
+      '@thi.ng/zipper': 2.1.181
       '@types/moo': 0.5.10
       klona: 2.0.6
       moo: 0.5.3
@@ -3181,42 +3186,38 @@ snapshots:
     dependencies:
       defer-to-connect: 2.0.1
 
-  '@thi.ng/api@7.2.0': {}
+  '@thi.ng/api@8.12.28': {}
 
-  '@thi.ng/arrays@1.0.3':
+  '@thi.ng/arrays@2.14.26':
     dependencies:
-      '@thi.ng/api': 7.2.0
-      '@thi.ng/checks': 2.9.11
-      '@thi.ng/compare': 1.3.34
-      '@thi.ng/equiv': 1.0.45
-      '@thi.ng/errors': 1.3.4
-      '@thi.ng/random': 2.4.8
+      '@thi.ng/api': 8.12.28
+      '@thi.ng/checks': 3.11.1
+      '@thi.ng/compare': 2.5.16
+      '@thi.ng/equiv': 2.1.117
+      '@thi.ng/errors': 2.6.17
+      '@thi.ng/random': 4.1.54
 
-  '@thi.ng/checks@2.9.11':
+  '@thi.ng/checks@3.11.1': {}
+
+  '@thi.ng/compare@2.5.16':
     dependencies:
-      tslib: 2.8.1
+      '@thi.ng/api': 8.12.28
 
-  '@thi.ng/compare@1.3.34':
+  '@thi.ng/equiv@2.1.117': {}
+
+  '@thi.ng/errors@2.6.17': {}
+
+  '@thi.ng/random@4.1.54':
     dependencies:
-      '@thi.ng/api': 7.2.0
+      '@thi.ng/api': 8.12.28
+      '@thi.ng/errors': 2.6.17
 
-  '@thi.ng/equiv@1.0.45': {}
-
-  '@thi.ng/errors@1.3.4': {}
-
-  '@thi.ng/hex@1.0.4': {}
-
-  '@thi.ng/random@2.4.8':
+  '@thi.ng/zipper@2.1.181':
     dependencies:
-      '@thi.ng/api': 7.2.0
-      '@thi.ng/checks': 2.9.11
-      '@thi.ng/hex': 1.0.4
-
-  '@thi.ng/zipper@1.0.3':
-    dependencies:
-      '@thi.ng/api': 7.2.0
-      '@thi.ng/arrays': 1.0.3
-      '@thi.ng/checks': 2.9.11
+      '@thi.ng/api': 8.12.28
+      '@thi.ng/arrays': 2.14.26
+      '@thi.ng/checks': 3.11.1
+      '@thi.ng/errors': 2.6.17
 
   '@types/cacheable-request@6.0.3':
     dependencies:
@@ -4806,7 +4807,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  renovate@44.210.1(supports-color@7.2.0)(typanion@3.14.0):
+  renovate@44.210.2(supports-color@7.2.0)(typanion@3.14.0):
     dependencies:
       '@aws-sdk/client-codecommit': 3.1139.0
       '@aws-sdk/client-ec2': 3.1139.0
@@ -4841,7 +4842,7 @@ snapshots:
       '@redis/client': 6.3.0(@opentelemetry/api@1.10.0)
       '@renovatebot/base-image': 13.155.0(zod@4.6.7)
       '@renovatebot/detect-tools': 5.0.0
-      '@renovatebot/good-enough-parser': 3.0.0
+      '@renovatebot/good-enough-parser': 4.0.3
       '@renovatebot/osv-offline': 4.5.10(supports-color@7.2.0)(zod@4.6.7)
       '@renovatebot/pep440': 6.0.0
       '@renovatebot/pgp': 2.0.4
