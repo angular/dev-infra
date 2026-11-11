@@ -7,153 +7,153 @@ importers:
     configDependencies: {}
     packageManagerDependencies:
       pnpm:
-        specifier: 12.16.1
-        version: 12.16.1
+        specifier: 12.18.0
+        version: 12.18.0
 
 packages:
 
-  '@pnpm/exe.android-arm64@12.16.1':
-    resolution: {integrity: sha512-PKf78Ew+i0CBYf0Xc+eMcqQiqyBT+u8XCVg1F5roc98/6wWfdYlWhrUMmEBiKWaJ3JqHxrtt8l1NwZ7qfJt2/Q==}
+  '@pnpm/exe.android-arm64@12.18.0':
+    resolution: {integrity: sha512-fOF6IwgvnUKEmVedGqiAsNPfN2Ry8GvaqzSQOiF3RJFbpBfPKO/6YT54s1GjToyYinRxw9preHHPe4y2N3SzhA==}
     cpu: [arm64]
     os: [android]
 
-  '@pnpm/exe.android-x64@12.16.1':
-    resolution: {integrity: sha512-xdu7gMbB98pdvhwMeA6612Of515FDlRUtfA/1f7nWPZfPLnEdSRBO2u+1N0XBtQ/ennhPH/lrxB1gC6gnR/cdg==}
+  '@pnpm/exe.android-x64@12.18.0':
+    resolution: {integrity: sha512-6OiolnaCsB3/GcJ9XNrenbUH3zFHRJ+5QynrMUUEyThbgnnCzWxa199hpQlOmxN4rAXuYQ0IYgWFNUZxyzg31Q==}
     cpu: [x64]
     os: [android]
 
-  '@pnpm/exe.darwin-arm64@12.16.1':
-    resolution: {integrity: sha512-pVbmIIbhixiLvADLu1WA3TaW8FZy/D72R1De27WbbFx8/2mxvnsTyFVm4fO9kjpjMY7RzJd48CiQ96p8fO3ebQ==}
+  '@pnpm/exe.darwin-arm64@12.18.0':
+    resolution: {integrity: sha512-zkq+4YzVIX39ETYLyC3W7LY7MpHEU/J3nRhHl4i2yPld2Cf2+rEKRh3ejJ4AmaQ77HHJLCktY4Z3jq0fpcxFXg==}
     cpu: [arm64]
     os: [darwin]
 
-  '@pnpm/exe.darwin-x64@12.16.1':
-    resolution: {integrity: sha512-xZvQBFqcZjO7vFKTK3XsJpqY6lnBL9EWSLCzVUPq3kZ94+D96gwJCa76xxGNK8Cj32f4eeM91Qg+yNRR4sRpDw==}
+  '@pnpm/exe.darwin-x64@12.18.0':
+    resolution: {integrity: sha512-qMsL9qx92unOTa6hgkfiTJv8ceZaTx0IQg7InhYDVX2ZrTECujaVEEVypnJK5m3eGUsP1KD7Y4qIgleCwfRsYw==}
     cpu: [x64]
     os: [darwin]
 
-  '@pnpm/exe.freebsd-x64@12.16.1':
-    resolution: {integrity: sha512-zTtunfi9mBhRXiXEJYfwiJj0tk7MgTSfqDSRh+Az9FZ9THazVIiQiVNS8jpcsftDOqu7LKNffQdjmgwHDThfUg==}
+  '@pnpm/exe.freebsd-x64@12.18.0':
+    resolution: {integrity: sha512-/9vy/4ms52cU4MjZ5NhHd6N2d9L9W0kARf5/ff2tweAHu0VeUzs/0qp/7ZHFuddm2Wa/m0AKQoPum9AVUCqKsw==}
     cpu: [x64]
     os: [freebsd]
 
-  '@pnpm/exe.linux-arm64-musl@12.16.1':
-    resolution: {integrity: sha512-BJ3mOmcmQgcUo92Ee/WfEOt1pRiv3y2MMAkhEiYHd85UiPpHTfFhv+SpCbALmfExzXk3UlaRtMYwHlkQymc4VA==}
+  '@pnpm/exe.linux-arm64-musl@12.18.0':
+    resolution: {integrity: sha512-Vp+TIMPPyackVCXkOdEKH/RmAn/r07EcIyrgZYQK7VrkksqZOie0GnWIx+85mPqeFEYCRtXIZAFJ9L4ceTndDg==}
     cpu: [arm64]
     os: [linux]
     libc: [musl]
 
-  '@pnpm/exe.linux-arm64@12.16.1':
-    resolution: {integrity: sha512-JaRd5gNxwdNGBBkrZFt8bknrK4YmHVJBW0JMhUQ0fJ0dEYp6C2GT9ExaCqOO8EwYEyqM+jpKgJIK+8WFaJy3ew==}
+  '@pnpm/exe.linux-arm64@12.18.0':
+    resolution: {integrity: sha512-2dpyVBCHT+FfpuQh9i+7MXAqNWYLCvD5vYr5p6Eimxoga8USLnjbUgyj72AOrO0hjc5ri3TEFP3jiyBHjkSZpQ==}
     cpu: [arm64]
     os: [linux]
     libc: [glibc]
 
-  '@pnpm/exe.linux-ppc64@12.16.1':
-    resolution: {integrity: sha512-FnSV0Jv40S1cMv7vFNWwvu0X567Lec4L4HCRead3CFcD6zQDNbGw81s8N5bcKPahtPD9ApVuhsbmFCx4rw6RMw==}
+  '@pnpm/exe.linux-ppc64@12.18.0':
+    resolution: {integrity: sha512-BBOOOfNJ2QwIIya3eKqOjiN4WNTszfRz7HCvw9XggcT7+ftMjNP8XJ/GfW+ltCBeUFR9d8WBVsr2m/NLjX2CZQ==}
     cpu: [ppc64]
     os: [linux]
     libc: [glibc]
 
-  '@pnpm/exe.linux-riscv64@12.16.1':
-    resolution: {integrity: sha512-C1Sww4FN5IttD4atRRhAKmQtSGWVp04ZAKNxO8pfu2bkRPwOW+7v+2DH1Xs1W+kZYYpO86BYDvUcadefF+AgaQ==}
+  '@pnpm/exe.linux-riscv64@12.18.0':
+    resolution: {integrity: sha512-7kMN77xSOYJX8GPSH5RbNAc5oM61LMmcSUukDDUwllnZPXm8GRPskCNsTWy8SCw01Kr1FB+5SwGNMiTdiziLNQ==}
     cpu: [riscv64]
     os: [linux]
     libc: [glibc]
 
-  '@pnpm/exe.linux-s390x@12.16.1':
-    resolution: {integrity: sha512-kn2fautsTcxIMODoovQVqZyfpDRdNgGkoeVqNdrKqbeBBvrEl+fXLkmZiq5xDht1LMr4sYiCNcsMfNMT6JPFmg==}
+  '@pnpm/exe.linux-s390x@12.18.0':
+    resolution: {integrity: sha512-htuSCpEcmDzhKoJqXbPkvfr176dBHU0QIF5mWcRiqxRXAB/1JoYiMYotfjWpk+ztgpB9qlx4XnWlLFAf7gzc6g==}
     cpu: [s390x]
     os: [linux]
     libc: [glibc]
 
-  '@pnpm/exe.linux-x64-musl@12.16.1':
-    resolution: {integrity: sha512-PM6ccHCOe/O9SsTflTJTYWfwogJZa6EmUvpnwZgiPguJBddh20wDQKgxUPXf48rDsPm9vMsIij0uHswwwbXL8g==}
+  '@pnpm/exe.linux-x64-musl@12.18.0':
+    resolution: {integrity: sha512-Uj+vzfIQ62kDP10x36yHZIXVs5ohdNtiPYwn5FhCLlNScHPo0OAI+ShGDtLofiBXKE7umu71Jmjm7N8a8zVcDw==}
     cpu: [x64]
     os: [linux]
     libc: [musl]
 
-  '@pnpm/exe.linux-x64@12.16.1':
-    resolution: {integrity: sha512-RK//8ZLcXGW8A2k8bQOXZDBN1Qu92zN4dYnG1bzj1zoQ1fkZ6jNzZ1AvXtsfGVma795CJtvoaF5bLXf4l/FIUw==}
+  '@pnpm/exe.linux-x64@12.18.0':
+    resolution: {integrity: sha512-OJ+X2wcraldCwj75pCIerWARQSRpdfj0eBTs/2ODyhfeW46ylOnjTIE/GKra6Mn6E72/gBmXS8igrUioa+F9fQ==}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
 
-  '@pnpm/exe.win32-arm64@12.16.1':
-    resolution: {integrity: sha512-Ox3kNNVxtGw6pK7SVejmeOUgHhUTZgAM7NQQ6cU7frPw3ix9+j7d2MGbRg3fyEFAaKWq8ZAZLTQGcDyLnAu+qA==}
+  '@pnpm/exe.win32-arm64@12.18.0':
+    resolution: {integrity: sha512-wEY6jiACGcbhhi5yD59doHqNTndS7AaujaPmtWAu1DKkHru2hy5fJ9yUGecW72Ypaw2/I3BEprfMOopap2NQtw==}
     cpu: [arm64]
     os: [win32]
 
-  '@pnpm/exe.win32-x64@12.16.1':
-    resolution: {integrity: sha512-k+FhRJ0ttphFoFIVB1Sk4v76YJAulafmA/Ly57cysesUhhIzVlApeOShUz0jXubKx317TThlEfpQrukldnqORA==}
+  '@pnpm/exe.win32-x64@12.18.0':
+    resolution: {integrity: sha512-5FJkghO7RLRkQpWxeVEygW9XsmnNuxzPfXbgwFWCHsFyFhpDn/vOdL88ToQEM0Kt5igdW5s6U0/IDH8Dvkt3pg==}
     cpu: [x64]
     os: [win32]
 
-  pnpm@12.16.1:
-    resolution: {integrity: sha512-CR0d7nknV1Zhsl2rPCrjHK/BxU1rce1qZgDPDByxBDSkR+rhQBXxsj4ua+3u1535SpMuIWTSgyKA3OP7MvZW0Q==}
+  pnpm@12.18.0:
+    resolution: {integrity: sha512-nXiC1dyCFH7PxOBiqjSDTgrQKWcQoYN6ERWuASEn02txCeMhrBWYod0KZVl2gbHpmRfhLtDXSerpEYeUM2O+sw==}
     engines: {node: '>=18'}
     hasBin: true
 
 snapshots:
 
-  '@pnpm/exe.android-arm64@12.16.1':
+  '@pnpm/exe.android-arm64@12.18.0':
     optional: true
 
-  '@pnpm/exe.android-x64@12.16.1':
+  '@pnpm/exe.android-x64@12.18.0':
     optional: true
 
-  '@pnpm/exe.darwin-arm64@12.16.1':
+  '@pnpm/exe.darwin-arm64@12.18.0':
     optional: true
 
-  '@pnpm/exe.darwin-x64@12.16.1':
+  '@pnpm/exe.darwin-x64@12.18.0':
     optional: true
 
-  '@pnpm/exe.freebsd-x64@12.16.1':
+  '@pnpm/exe.freebsd-x64@12.18.0':
     optional: true
 
-  '@pnpm/exe.linux-arm64-musl@12.16.1':
+  '@pnpm/exe.linux-arm64-musl@12.18.0':
     optional: true
 
-  '@pnpm/exe.linux-arm64@12.16.1':
+  '@pnpm/exe.linux-arm64@12.18.0':
     optional: true
 
-  '@pnpm/exe.linux-ppc64@12.16.1':
+  '@pnpm/exe.linux-ppc64@12.18.0':
     optional: true
 
-  '@pnpm/exe.linux-riscv64@12.16.1':
+  '@pnpm/exe.linux-riscv64@12.18.0':
     optional: true
 
-  '@pnpm/exe.linux-s390x@12.16.1':
+  '@pnpm/exe.linux-s390x@12.18.0':
     optional: true
 
-  '@pnpm/exe.linux-x64-musl@12.16.1':
+  '@pnpm/exe.linux-x64-musl@12.18.0':
     optional: true
 
-  '@pnpm/exe.linux-x64@12.16.1':
+  '@pnpm/exe.linux-x64@12.18.0':
     optional: true
 
-  '@pnpm/exe.win32-arm64@12.16.1':
+  '@pnpm/exe.win32-arm64@12.18.0':
     optional: true
 
-  '@pnpm/exe.win32-x64@12.16.1':
+  '@pnpm/exe.win32-x64@12.18.0':
     optional: true
 
-  pnpm@12.16.1:
+  pnpm@12.18.0:
     optionalDependencies:
-      '@pnpm/exe.android-arm64': 12.16.1
-      '@pnpm/exe.android-x64': 12.16.1
-      '@pnpm/exe.darwin-arm64': 12.16.1
-      '@pnpm/exe.darwin-x64': 12.16.1
-      '@pnpm/exe.freebsd-x64': 12.16.1
-      '@pnpm/exe.linux-arm64': 12.16.1
-      '@pnpm/exe.linux-arm64-musl': 12.16.1
-      '@pnpm/exe.linux-ppc64': 12.16.1
-      '@pnpm/exe.linux-riscv64': 12.16.1
-      '@pnpm/exe.linux-s390x': 12.16.1
-      '@pnpm/exe.linux-x64': 12.16.1
-      '@pnpm/exe.linux-x64-musl': 12.16.1
-      '@pnpm/exe.win32-arm64': 12.16.1
-      '@pnpm/exe.win32-x64': 12.16.1
+      '@pnpm/exe.android-arm64': 12.18.0
+      '@pnpm/exe.android-x64': 12.18.0
+      '@pnpm/exe.darwin-arm64': 12.18.0
+      '@pnpm/exe.darwin-x64': 12.18.0
+      '@pnpm/exe.freebsd-x64': 12.18.0
+      '@pnpm/exe.linux-arm64': 12.18.0
+      '@pnpm/exe.linux-arm64-musl': 12.18.0
+      '@pnpm/exe.linux-ppc64': 12.18.0
+      '@pnpm/exe.linux-riscv64': 12.18.0
+      '@pnpm/exe.linux-s390x': 12.18.0
+      '@pnpm/exe.linux-x64': 12.18.0
+      '@pnpm/exe.linux-x64-musl': 12.18.0
+      '@pnpm/exe.win32-arm64': 12.18.0
+      '@pnpm/exe.win32-x64': 12.18.0
 
 ---
 lockfileVersion: '9.0'
@@ -182,8 +182,8 @@ importers:
         specifier: 8.2.1
         version: 8.2.1
       firebase-tools:
-        specifier: 15.34.2
-        version: 15.34.2(@types/node@26.6.5)(bufferutil@4.1.0)(encoding@0.1.14)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+        specifier: 15.35.0
+        version: 15.35.0(@types/node@26.6.5)(bufferutil@4.2.0)(encoding@0.1.14)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       husky:
         specifier: 9.1.7
         version: 9.1.7
@@ -309,7 +309,7 @@ importers:
         version: 22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3)
       '@angular/fire':
         specifier: 22.0.0-rc.0
-        version: 22.0.0-rc.0(@angular/common@22.3.0-next.3(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.3.0-next.3(@angular/animations@22.3.0-next.3(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3)))(@angular/common@22.3.0-next.3(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3)))(chokidar@5.0.0)(firebase-tools@15.34.2(@types/node@26.6.5)(bufferutil@4.1.0)(encoding@0.1.14)(supports-color@11.0.0)(utf-8-validate@6.0.6))(firebase@12.19.0)(rxjs@7.8.2)(typescript@6.0.3)
+        version: 22.0.0-rc.0(@angular/common@22.3.0-next.3(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.3.0-next.3(@angular/animations@22.3.0-next.3(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3)))(@angular/common@22.3.0-next.3(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3)))(chokidar@5.0.0)(firebase-tools@15.35.0(@types/node@26.6.5)(bufferutil@4.2.0)(encoding@0.1.14)(supports-color@11.0.0)(utf-8-validate@6.0.6))(firebase@12.19.0)(rxjs@7.8.2)(typescript@6.0.3)
       '@angular/forms':
         specifier: 22.3.0-next.3
         version: 22.3.0-next.3(@angular/common@22.3.0-next.3(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.3.0-next.3(@angular/animations@22.3.0-next.3(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3)))(@angular/common@22.3.0-next.3(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3)))(rxjs@7.8.2)
@@ -362,8 +362,8 @@ importers:
         specifier: 7.4.0
         version: 7.4.0(@apollo/server@5.5.1(graphql@16.14.2)(supports-color@11.0.0))(@as-integrations/express4@1.1.2(@apollo/server@5.5.1(graphql@16.14.2)(supports-color@11.0.0))(express@4.22.3(supports-color@11.0.0)))(firebase-admin@14.5.0(@firebase/app-compat@0.5.21)(@firebase/app@0.16.5)(supports-color@11.0.0))(graphql@16.14.2)(supports-color@11.0.0)
       firebase-tools:
-        specifier: 15.34.2
-        version: 15.34.2(@types/node@24.19.2)(bufferutil@4.1.0)(encoding@0.1.14)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+        specifier: 15.35.0
+        version: 15.35.0(@types/node@24.19.2)(bufferutil@4.2.0)(encoding@0.1.14)(supports-color@11.0.0)(utf-8-validate@6.0.6)
 
   bazel:
     dependencies:
@@ -393,7 +393,7 @@ importers:
         version: 5.3.4
       browser-sync:
         specifier: 3.0.4
-        version: 3.0.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(utf-8-validate@6.0.6)
+        version: 3.0.4(bufferutil@4.2.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(utf-8-validate@6.0.6)
       diff:
         specifier: ^9.0.0
         version: 9.0.0
@@ -408,7 +408,7 @@ importers:
         version: 7.0.0(supports-color@11.0.0)
       selenium-webdriver:
         specifier: 4.52.0
-        version: 4.52.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
+        version: 4.52.0(bufferutil@4.2.0)(utf-8-validate@6.0.6)
       semver:
         specifier: 7.8.6
         version: 7.8.6
@@ -477,7 +477,7 @@ importers:
         version: 9.1.1
       '@google/genai':
         specifier: ^2.0.0
-        version: 2.31.0(@modelcontextprotocol/sdk@1.32.2(supports-color@11.0.0))(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+        version: 2.31.0(@modelcontextprotocol/sdk@1.32.2(supports-color@11.0.0))(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       '@octokit/auth-app':
         specifier: 8.3.1
         version: 8.3.1
@@ -558,7 +558,7 @@ importers:
         version: 9.1.1
       '@google/genai':
         specifier: ^2.0.0
-        version: 2.31.0(@modelcontextprotocol/sdk@1.32.2(supports-color@11.0.0))(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+        version: 2.31.0(@modelcontextprotocol/sdk@1.32.2(supports-color@11.0.0))(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       '@octokit/rest':
         specifier: 22.0.1
         version: 22.0.1
@@ -681,7 +681,7 @@ importers:
         version: 8.0.0(supports-color@11.0.0)
       '@google/genai':
         specifier: 2.32.0
-        version: 2.32.0(@modelcontextprotocol/sdk@1.32.2(supports-color@11.0.0))(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+        version: 2.32.0(@modelcontextprotocol/sdk@1.32.2(supports-color@11.0.0))(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       '@inquirer/prompts':
         specifier: 8.7.5
         version: 8.7.5(@types/node@24.19.2)
@@ -746,8 +746,8 @@ importers:
         specifier: 1.1.0
         version: 1.1.0
       bufferutil:
-        specifier: 4.1.0
-        version: 4.1.0
+        specifier: 4.2.0
+        version: 4.2.0
       cli-progress:
         specifier: 3.12.0
         version: 3.12.0
@@ -785,14 +785,14 @@ importers:
         specifier: 3.3.1
         version: 3.3.1
       minimatch:
-        specifier: 11.0.4
-        version: 11.0.4
+        specifier: 11.0.5
+        version: 11.0.5
       multimatch:
         specifier: 8.0.0
         version: 8.0.0
       nock:
-        specifier: 15.0.5
-        version: 15.0.5(supports-color@11.0.0)
+        specifier: 15.0.6
+        version: 15.0.6(supports-color@11.0.0)
       semver:
         specifier: 7.8.6
         version: 7.8.6
@@ -861,6 +861,7 @@ packages:
   '@angular/animations@22.3.0-next.3':
     resolution: {integrity: sha512-rI9YK5vj7jVcTfnl3acHglt80ut6v0sdIpYVl5kEIidrfXyx/y/HnAxbfjpnoI2kC4iaSl2a5tz7ZRlR48eGfw==}
     engines: {node: ^22.22.3 || ^24.15.0 || >=26.0.0}
+    deprecated: '@angular/animations is deprecated. Use `animate.enter` and `animate.leave` instead. For more information see: https://v22.angular.dev/guide/animations.'
     peerDependencies:
       '@angular/core': 22.3.0-next.3
 
@@ -2155,8 +2156,8 @@ packages:
     resolution: {integrity: sha512-wgm9Ehl2jpeqP3zw/7mo3kRHFp5MEDhqAdwy1fTGkHAwnkGOVsgpvQhL8B5n1qlb01jV3n/bI0ZfZp5lWA1k4w==}
     engines: {node: '>=18.0.0'}
 
-  '@isaacs/nonrecursive-glob-match@1.0.3':
-    resolution: {integrity: sha512-SI7kyKHq4XXDRozw+r9GlRZkia1ZkFrpLW98r2IC2Bpr8YkFGE3fvjzmxCG0x78A++69HmDNrDvSMYBZmHGpKA==}
+  '@isaacs/nonrecursive-glob-match@1.1.0':
+    resolution: {integrity: sha512-GPm/Dbvk5RLmhRnxXIa7nTpK0xtl4E0wj0MslsuNiJ1FIROU+2+9lgUC/dgF7Ey4QCWhfEsgxilMRMCdHPfDfw==}
 
   '@jasminejs/reporters@1.1.0':
     resolution: {integrity: sha512-JIrlfaf9c6m0+GtBAgZdcFB6RIRbFBbXxZDZ0WOewq4cLIEcVKEe0RgI1FA77M39FNzeSMTAm+LK/kcQVIkfGQ==}
@@ -2205,8 +2206,8 @@ packages:
       '@cfworker/json-schema':
         optional: true
 
-  '@mswjs/interceptors@0.44.0':
-    resolution: {integrity: sha512-IYHevRStF4ijM20GI9c9Ndhw483NSAjCydQhUr4/zIB0BNLsTVw3vFAxTo6TlvX4QnV60wEHttUa9539TTAq+A==}
+  '@mswjs/interceptors@0.45.11':
+    resolution: {integrity: sha512-+ISPERIRIHhSVnFQRGCP9jDJXxn0/z2+pWWbXUym6JUfpUCRW2Pvro4P9RBKGYUKTKAULszKurKMTQIsaJUIgQ==}
     engines: {node: '>=22'}
 
   '@napi-rs/nice-android-arm-eabi@1.1.1':
@@ -3242,8 +3243,8 @@ packages:
   buffer@6.0.3:
     resolution: {integrity: sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==}
 
-  bufferutil@4.1.0:
-    resolution: {integrity: sha512-ZMANVnAixE6AWWnPzlW2KpUrxhm9woycYvPOo67jWHyFowASTEd9s+QN1EIMsSDtwhIxN4sWE1jotpuDUIgyIw==}
+  bufferutil@4.2.0:
+    resolution: {integrity: sha512-gyy58jET9kst2IGyBKb96a4Y2bPGTHXGyCd0/1eqIV3hr1Sz3VxtA8n7bXh8fLIuE2K6Z0Upax5a5Msx+HU1IQ==}
     engines: {node: '>=6.14.2'}
 
   builtin-modules@1.1.1:
@@ -3982,8 +3983,8 @@ packages:
       graphql:
         optional: true
 
-  firebase-tools@15.34.2:
-    resolution: {integrity: sha512-Xo010+PZAj5sL6hn33p19egXDmVlowPZknbs2Rf4nxd6Ulx6gLCd76qHd9XT2lV3B0u7yi0iO0BU5qrLeY8Y+g==}
+  firebase-tools@15.35.0:
+    resolution: {integrity: sha512-grcjoqNsJoWTTu+YEuM8BScOM7c5lM1XCFenmz0RhNEyJVoj8dTslPy7sx5Hct69+9OAKJb70qZ3JTHZFw+3zQ==}
     engines: {node: '>=20.0.0 || >=22.0.0 || >=24.0.0'}
     hasBin: true
 
@@ -4859,11 +4860,6 @@ packages:
     engines: {node: '>=4'}
     hasBin: true
 
-  mime@2.6.0:
-    resolution: {integrity: sha512-USPkMeET31rOMiarsBNIHZKLGgvKc/LrjofAnBlOttf5ajRvqiRA8QsenbcooctK6d6Ts6aqZXBA+XbkKthiQg==}
-    engines: {node: '>=4.0.0'}
-    hasBin: true
-
   mime@3.0.0:
     resolution: {integrity: sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A==}
     engines: {node: '>=10.0.0'}
@@ -4881,8 +4877,8 @@ packages:
     resolution: {integrity: sha512-vpLQEs+VLCr1nU0BXS07maYoFwlDAH0gngQuuttxIwutDFEMHq2blX+8vpgxDdK3J1PwjCJiep77OitTZ4Ll1A==}
     engines: {node: 18 || 20 || >=22}
 
-  minimatch@11.0.4:
-    resolution: {integrity: sha512-/UJ1dEoVQTjPNDh6SGlUo+ueLMmoHTas4q+8yaAR/5t6nLAIiBDJtoYUh20IYleix7ehiQkgczb84PE3uzHkxg==}
+  minimatch@11.0.5:
+    resolution: {integrity: sha512-snPlVppFcYWfLLFQGhDxUyBcHNtMlWmn3jtj7pEaO+DP8pqL0IvAzXhMYmn1z9ASNtgmwLBdFxSf4tMUB0OTKA==}
     engines: {node: 20 || >=22}
 
   minimatch@3.1.5:
@@ -4980,8 +4976,8 @@ packages:
     resolution: {integrity: sha512-NMPBRMJgiQHjbd8phG3Vebdx4kZ1H121rbl5IkMqeOsahptB9BKo/d7oJ3zTXqTgagn2bWlNSXkh0QUGM31RYg==}
     engines: {node: '>=18'}
 
-  nock@15.0.5:
-    resolution: {integrity: sha512-nVeuZGS2we1PyvqbW082Qj0EB4bd//6pZk/zOPDlaTPU72qcWrqfHg3kx9JcBcH1fJxwJHjmsfuQ4mss42su4w==}
+  nock@15.0.6:
+    resolution: {integrity: sha512-eyOJ1wemcgJZ+PQC3lecfF3gQc2SAmGlQ4mHGfFXcOa/+7v0qjnX+ft/NV2F+4vCwzkXZqik3gS6ZIjh+QcigQ==}
     engines: {node: '>=22.20.0'}
 
   node-domexception@1.0.0:
@@ -5591,11 +5587,6 @@ packages:
 
   semver@7.7.4:
     resolution: {integrity: sha512-vFKC2IEtQnVhpT78h1Yp8wzwrf8CM+MzKMHGJZfBtzhZNycRFnXsHk6E5TxIkkMsgNS7mdX3AGB7x2QM2di4lA==}
-    engines: {node: '>=10'}
-    hasBin: true
-
-  semver@7.8.5:
-    resolution: {integrity: sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -6460,7 +6451,7 @@ snapshots:
       '@angular/compiler': 22.3.0-next.3
       zone.js: 0.16.3
 
-  '@angular/fire@22.0.0-rc.0(@angular/common@22.3.0-next.3(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.3.0-next.3(@angular/animations@22.3.0-next.3(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3)))(@angular/common@22.3.0-next.3(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3)))(chokidar@5.0.0)(firebase-tools@15.34.2(@types/node@26.6.5)(bufferutil@4.1.0)(encoding@0.1.14)(supports-color@11.0.0)(utf-8-validate@6.0.6))(firebase@12.19.0)(rxjs@7.8.2)(typescript@6.0.3)':
+  '@angular/fire@22.0.0-rc.0(@angular/common@22.3.0-next.3(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3))(@angular/platform-browser@22.3.0-next.3(@angular/animations@22.3.0-next.3(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3)))(@angular/common@22.3.0-next.3(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2))(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3)))(chokidar@5.0.0)(firebase-tools@15.35.0(@types/node@26.6.5)(bufferutil@4.2.0)(encoding@0.1.14)(supports-color@11.0.0)(utf-8-validate@6.0.6))(firebase@12.19.0)(rxjs@7.8.2)(typescript@6.0.3)':
     dependencies:
       '@angular-devkit/architect': 0.2202.5(chokidar@5.0.0)
       '@angular/common': 22.3.0-next.3(@angular/core@22.3.0-next.3(@angular/compiler@22.3.0-next.3)(rxjs@7.8.2)(zone.js@0.16.3))(rxjs@7.8.2)
@@ -6471,7 +6462,7 @@ snapshots:
       rxjs: 7.8.2
       tslib: 2.8.1
     optionalDependencies:
-      firebase-tools: 15.34.2(@types/node@26.6.5)(bufferutil@4.1.0)(encoding@0.1.14)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+      firebase-tools: 15.35.0(@types/node@26.6.5)(bufferutil@4.2.0)(encoding@0.1.14)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       typescript: 6.0.3
     transitivePeerDependencies:
       - chokidar
@@ -7638,12 +7629,12 @@ snapshots:
       - supports-color
     optional: true
 
-  '@google/genai@2.31.0(@modelcontextprotocol/sdk@1.32.2(supports-color@11.0.0))(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)':
+  '@google/genai@2.31.0(@modelcontextprotocol/sdk@1.32.2(supports-color@11.0.0))(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)':
     dependencies:
       google-auth-library: 10.9.1(supports-color@11.0.0)
       p-retry: 4.6.2
       protobufjs: 7.6.6
-      ws: 8.22.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
+      ws: 8.22.0(bufferutil@4.2.0)(utf-8-validate@6.0.6)
     optionalDependencies:
       '@modelcontextprotocol/sdk': 1.32.2(supports-color@11.0.0)
     transitivePeerDependencies:
@@ -7651,12 +7642,12 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@google/genai@2.32.0(@modelcontextprotocol/sdk@1.32.2(supports-color@11.0.0))(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)':
+  '@google/genai@2.32.0(@modelcontextprotocol/sdk@1.32.2(supports-color@11.0.0))(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)':
     dependencies:
       google-auth-library: 10.9.1(supports-color@11.0.0)
       p-retry: 4.6.2
       protobufjs: 7.6.6
-      ws: 8.22.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
+      ws: 8.22.0(bufferutil@4.2.0)(utf-8-validate@6.0.6)
     optionalDependencies:
       '@modelcontextprotocol/sdk': 1.32.2(supports-color@11.0.0)
     transitivePeerDependencies:
@@ -8117,7 +8108,7 @@ snapshots:
     dependencies:
       minipass: 7.1.3
 
-  '@isaacs/nonrecursive-glob-match@1.0.3': {}
+  '@isaacs/nonrecursive-glob-match@1.1.0': {}
 
   '@jasminejs/reporters@1.1.0': {}
 
@@ -8196,7 +8187,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mswjs/interceptors@0.44.0(supports-color@11.0.0)':
+  '@mswjs/interceptors@0.45.11(supports-color@11.0.0)':
     dependencies:
       '@open-draft/until': 3.0.1
       '@types/debug': 4.1.13
@@ -9228,24 +9219,24 @@ snapshots:
       fresh: 0.5.2
       mitt: 1.2.0
 
-  browser-sync-ui@3.0.4(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6):
+  browser-sync-ui@3.0.4(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
       async-each-series: 0.1.1
       chalk: 4.1.2
       connect-history-api-fallback: 1.6.0
       immutable: 3.8.4
       server-destroy: 1.0.1
-      socket.io-client: 4.8.4(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+      socket.io-client: 4.8.4(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       stream-throttle: 0.1.3
     transitivePeerDependencies:
       - bufferutil
       - supports-color
       - utf-8-validate
 
-  browser-sync@3.0.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(utf-8-validate@6.0.6):
+  browser-sync@3.0.4(bufferutil@4.2.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
       browser-sync-client: 3.0.4
-      browser-sync-ui: 3.0.4(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+      browser-sync-ui: 3.0.4(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       bs-recipes: 1.3.4
       chalk: 4.1.2
       chokidar: 3.6.0
@@ -9269,7 +9260,7 @@ snapshots:
       serve-index: 1.9.2(supports-color@11.0.0)
       serve-static: 1.16.3(supports-color@11.0.0)
       server-destroy: 1.0.1
-      socket.io: 4.8.4(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+      socket.io: 4.8.4(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       ua-parser-js: 1.0.41
       yargs: 17.7.3
     transitivePeerDependencies:
@@ -9310,7 +9301,7 @@ snapshots:
       base64-js: 1.5.1
       ieee754: 1.2.1
 
-  bufferutil@4.1.0:
+  bufferutil@4.2.0:
     dependencies:
       node-gyp-build: 4.8.4
 
@@ -9794,12 +9785,12 @@ snapshots:
     dependencies:
       once: 1.4.0
 
-  engine.io-client@6.6.7(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6):
+  engine.io-client@6.6.7(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
       '@socket.io/component-emitter': 3.1.2
       debug: 4.4.3(supports-color@11.0.0)
       engine.io-parser: 5.2.3
-      ws: 8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)
+      ws: 8.21.3(bufferutil@4.2.0)(utf-8-validate@6.0.6)
       xmlhttprequest-ssl: 2.1.2
     transitivePeerDependencies:
       - bufferutil
@@ -9808,7 +9799,7 @@ snapshots:
 
   engine.io-parser@5.2.3: {}
 
-  engine.io@6.6.11(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6):
+  engine.io@6.6.11(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
       '@types/cors': 2.8.19
       '@types/node': 24.19.2
@@ -9818,7 +9809,7 @@ snapshots:
       cors: 2.8.6
       debug: 4.4.3(supports-color@11.0.0)
       engine.io-parser: 5.2.3
-      ws: 8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)
+      ws: 8.21.3(bufferutil@4.2.0)(utf-8-validate@6.0.6)
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -9940,7 +9931,7 @@ snapshots:
       promise-breaker: 6.0.0
       qs: 6.17.0
       raw-body: 2.5.3
-      semver: 7.8.5
+      semver: 7.8.6
     transitivePeerDependencies:
       - supports-color
 
@@ -10179,7 +10170,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  firebase-tools@15.34.2(@types/node@24.19.2)(bufferutil@4.1.0)(encoding@0.1.14)(supports-color@11.0.0)(utf-8-validate@6.0.6):
+  firebase-tools@15.35.0(@types/node@24.19.2)(bufferutil@4.2.0)(encoding@0.1.14)(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
       '@electric-sql/pglite': 0.3.16
       '@electric-sql/pglite-tools': 0.2.21(@electric-sql/pglite@0.3.16)
@@ -10220,7 +10211,6 @@ snapshots:
       lsofi: 2.0.0
       marked: 13.0.3
       marked-terminal: 7.3.0(marked@13.0.3)
-      mime: 2.6.0
       minimatch: 3.1.5
       morgan: 1.12.1(supports-color@11.0.0)
       node-fetch: 2.7.0(encoding@0.1.14)
@@ -10232,7 +10222,7 @@ snapshots:
       portfinder: 1.0.38(supports-color@11.0.0)
       progress: 2.0.3
       retry: 0.13.1
-      semver: 7.8.5
+      semver: 7.8.6
       sql-formatter: 15.9.0
       stream-chain: 4.3.0
       stream-json: 3.7.0
@@ -10245,7 +10235,7 @@ snapshots:
       update-notifier-cjs: 5.1.7(encoding@0.1.14)
       winston: 3.19.0
       winston-transport: 4.9.0
-      ws: 8.22.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
+      ws: 8.22.0(bufferutil@4.2.0)(utf-8-validate@6.0.6)
       yaml: 2.9.1
       zod: 4.6.7
     transitivePeerDependencies:
@@ -10260,7 +10250,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  firebase-tools@15.34.2(@types/node@26.6.5)(bufferutil@4.1.0)(encoding@0.1.14)(supports-color@11.0.0)(utf-8-validate@6.0.6):
+  firebase-tools@15.35.0(@types/node@26.6.5)(bufferutil@4.2.0)(encoding@0.1.14)(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
       '@electric-sql/pglite': 0.3.16
       '@electric-sql/pglite-tools': 0.2.21(@electric-sql/pglite@0.3.16)
@@ -10301,7 +10291,6 @@ snapshots:
       lsofi: 2.0.0
       marked: 13.0.3
       marked-terminal: 7.3.0(marked@13.0.3)
-      mime: 2.6.0
       minimatch: 3.1.5
       morgan: 1.12.1(supports-color@11.0.0)
       node-fetch: 2.7.0(encoding@0.1.14)
@@ -10313,7 +10302,7 @@ snapshots:
       portfinder: 1.0.38(supports-color@11.0.0)
       progress: 2.0.3
       retry: 0.13.1
-      semver: 7.8.5
+      semver: 7.8.6
       sql-formatter: 15.9.0
       stream-chain: 4.3.0
       stream-json: 3.7.0
@@ -10326,7 +10315,7 @@ snapshots:
       update-notifier-cjs: 5.1.7(encoding@0.1.14)
       winston: 3.19.0
       winston-transport: 4.9.0
-      ws: 8.22.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
+      ws: 8.22.0(bufferutil@4.2.0)(utf-8-validate@6.0.6)
       yaml: 2.9.1
       zod: 4.6.7
     transitivePeerDependencies:
@@ -11178,7 +11167,7 @@ snapshots:
       lodash.isstring: 4.0.1
       lodash.once: 4.1.1
       ms: 2.1.3
-      semver: 7.8.5
+      semver: 7.8.6
 
   jsprim@1.4.2:
     dependencies:
@@ -11355,8 +11344,6 @@ snapshots:
 
   mime@1.6.0: {}
 
-  mime@2.6.0: {}
-
   mime@3.0.0:
     optional: true
 
@@ -11370,9 +11357,9 @@ snapshots:
     dependencies:
       brace-expansion: 5.0.12
 
-  minimatch@11.0.4:
+  minimatch@11.0.5:
     dependencies:
-      '@isaacs/nonrecursive-glob-match': 1.0.3
+      '@isaacs/nonrecursive-glob-match': 1.1.0
       brace-expansion: 5.0.12
 
   minimatch@3.1.5:
@@ -11465,9 +11452,9 @@ snapshots:
     dependencies:
       content-type: 2.1.0
 
-  nock@15.0.5(supports-color@11.0.0):
+  nock@15.0.6(supports-color@11.0.0):
     dependencies:
-      '@mswjs/interceptors': 0.44.0(supports-color@11.0.0)
+      '@mswjs/interceptors': 0.45.11(supports-color@11.0.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -11501,7 +11488,7 @@ snapshots:
       graceful-fs: 4.2.11
       nopt: 10.0.1
       proc-log: 7.0.0
-      semver: 7.8.5
+      semver: 7.8.6
       tar: 7.5.22
       tinyglobby: 0.2.17
       undici: 8.12.3
@@ -12072,12 +12059,12 @@ snapshots:
       tmp: 0.0.30
       xml2js: 0.4.23
 
-  selenium-webdriver@4.52.0(bufferutil@4.1.0)(utf-8-validate@6.0.6):
+  selenium-webdriver@4.52.0(bufferutil@4.2.0)(utf-8-validate@6.0.6):
     dependencies:
       '@bazel/runfiles': 6.5.0
       jszip: 3.10.2
       tmp: 0.2.7
-      ws: 8.22.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
+      ws: 8.22.0(bufferutil@4.2.0)(utf-8-validate@6.0.6)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -12091,8 +12078,6 @@ snapshots:
   semver@6.3.1: {}
 
   semver@7.7.4: {}
-
-  semver@7.8.5: {}
 
   semver@7.8.6: {}
 
@@ -12225,20 +12210,20 @@ snapshots:
     dependencies:
       unicode-emoji-modifier-base: 1.0.0
 
-  socket.io-adapter@2.5.8(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6):
+  socket.io-adapter@2.5.8(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
       debug: 4.4.3(supports-color@11.0.0)
-      ws: 8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)
+      ws: 8.21.3(bufferutil@4.2.0)(utf-8-validate@6.0.6)
     transitivePeerDependencies:
       - bufferutil
       - supports-color
       - utf-8-validate
 
-  socket.io-client@4.8.4(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6):
+  socket.io-client@4.8.4(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
       '@socket.io/component-emitter': 3.1.2
       debug: 4.4.3(supports-color@11.0.0)
-      engine.io-client: 6.6.7(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+      engine.io-client: 6.6.7(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       socket.io-parser: 4.2.7(supports-color@11.0.0)
     transitivePeerDependencies:
       - bufferutil
@@ -12252,13 +12237,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  socket.io@4.8.4(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6):
+  socket.io@4.8.4(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
       accepts: 1.3.8
       cors: 2.8.6
       debug: 4.4.3(supports-color@11.0.0)
-      engine.io: 6.6.11(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
-      socket.io-adapter: 2.5.8(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+      engine.io: 6.6.11(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+      socket.io-adapter: 2.5.8(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       socket.io-parser: 4.2.7(supports-color@11.0.0)
     transitivePeerDependencies:
       - bufferutil
@@ -12697,7 +12682,7 @@ snapshots:
       pupa: 2.1.1
       registry-auth-token: 5.1.1
       registry-url: 5.1.0
-      semver: 7.8.5
+      semver: 7.8.6
       semver-diff: 3.1.1
       xdg-basedir: 4.0.0
     transitivePeerDependencies:
@@ -12886,14 +12871,14 @@ snapshots:
       signal-exit: 3.0.7
       typedarray-to-buffer: 3.1.5
 
-  ws@8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6):
+  ws@8.21.3(bufferutil@4.2.0)(utf-8-validate@6.0.6):
     optionalDependencies:
-      bufferutil: 4.1.0
+      bufferutil: 4.2.0
       utf-8-validate: 6.0.6
 
-  ws@8.22.0(bufferutil@4.1.0)(utf-8-validate@6.0.6):
+  ws@8.22.0(bufferutil@4.2.0)(utf-8-validate@6.0.6):
     optionalDependencies:
-      bufferutil: 4.1.0
+      bufferutil: 4.2.0
       utf-8-validate: 6.0.6
 
   xdg-basedir@4.0.0: {}
