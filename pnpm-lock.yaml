@@ -476,8 +476,8 @@ importers:
         specifier: 9.1.1
         version: 9.1.1
       '@google/genai':
-        specifier: ^2.0.0
-        version: 2.31.0(@modelcontextprotocol/sdk@1.32.2(supports-color@11.0.0))(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+        specifier: ^3.0.0
+        version: 3.0.0(@modelcontextprotocol/sdk@1.32.2(supports-color@11.0.0))(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       '@octokit/auth-app':
         specifier: 8.3.1
         version: 8.3.1
@@ -557,8 +557,8 @@ importers:
         specifier: 9.1.1
         version: 9.1.1
       '@google/genai':
-        specifier: ^2.0.0
-        version: 2.31.0(@modelcontextprotocol/sdk@1.32.2(supports-color@11.0.0))(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+        specifier: ^3.0.0
+        version: 3.0.0(@modelcontextprotocol/sdk@1.32.2(supports-color@11.0.0))(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       '@octokit/rest':
         specifier: 22.0.1
         version: 22.0.1
@@ -680,8 +680,8 @@ importers:
         specifier: 8.0.0
         version: 8.0.0(supports-color@11.0.0)
       '@google/genai':
-        specifier: 2.32.0
-        version: 2.32.0(@modelcontextprotocol/sdk@1.32.2(supports-color@11.0.0))(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+        specifier: 3.0.0
+        version: 3.0.0(@modelcontextprotocol/sdk@1.32.2(supports-color@11.0.0))(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       '@inquirer/prompts':
         specifier: 8.7.5
         version: 8.7.5(@types/node@24.19.2)
@@ -1743,18 +1743,9 @@ packages:
     resolution: {integrity: sha512-M3kA6UA2Tjp5aznCrgKcm9CzOjiQyRMnquqalqXAeS5wvkqqZxN8wpNjjHafOSYs6lQ82U7f2i8we4eTfIrpkA==}
     engines: {node: '>=22'}
 
-  '@google/genai@2.31.0':
-    resolution: {integrity: sha512-u1fw0qEiuWwNcjZixJFRfQF0awQnHb/rBBQUeiYGF+nmTXQCvcgpR2UMhKU9KNdnZdYhahY5jwS6nJ2V2tGtDA==}
-    engines: {node: '>=20.0.0'}
-    peerDependencies:
-      '@modelcontextprotocol/sdk': ^1.25.2
-    peerDependenciesMeta:
-      '@modelcontextprotocol/sdk':
-        optional: true
-
-  '@google/genai@2.32.0':
-    resolution: {integrity: sha512-60c79uXpR0a47bmGqDxbXEBuQUalNmwo5mx5kqb91jIW4FoqpsLSt86DeVhRhtH5+s/16Wqxt3sXzFQn2U1OHQ==}
-    engines: {node: '>=20.0.0'}
+  '@google/genai@3.0.0':
+    resolution: {integrity: sha512-0o2uBXPWBNUu0jWg2Id5iBtCnsd7lnxKPQfnijKvNublG/zj40CToERvz/eyfNjzzXt2kwuvxpouLUrRCZ2WUQ==}
+    engines: {node: '>=22.0.0'}
     peerDependencies:
       '@modelcontextprotocol/sdk': ^1.25.2
     peerDependenciesMeta:
@@ -7549,20 +7540,7 @@ snapshots:
       - supports-color
     optional: true
 
-  '@google/genai@2.31.0(@modelcontextprotocol/sdk@1.32.2(supports-color@11.0.0))(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)':
-    dependencies:
-      google-auth-library: 10.9.1(supports-color@11.0.0)
-      p-retry: 4.6.2
-      protobufjs: 7.6.6
-      ws: 8.22.0(bufferutil@4.2.0)(utf-8-validate@6.0.6)
-    optionalDependencies:
-      '@modelcontextprotocol/sdk': 1.32.2(supports-color@11.0.0)
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
-
-  '@google/genai@2.32.0(@modelcontextprotocol/sdk@1.32.2(supports-color@11.0.0))(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)':
+  '@google/genai@3.0.0(@modelcontextprotocol/sdk@1.32.2(supports-color@11.0.0))(bufferutil@4.2.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)':
     dependencies:
       google-auth-library: 10.9.1(supports-color@11.0.0)
       p-retry: 4.6.2
