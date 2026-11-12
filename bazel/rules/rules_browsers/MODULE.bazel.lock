@@ -221,7 +221,7 @@
   "moduleExtensions": {
     "//browsers:extensions.bzl%browsers": {
       "general": {
-        "bzlTransitiveDigest": "RW0Ymbtb+8rzkVr6mRk7SWmq1dsCFt6AzrbsyG3mC5M=",
+        "bzlTransitiveDigest": "ZDmIf5ppOwTGXoMjIVG/ipZ9kLV1g1XCrAHWrAqDmog=",
         "usagesDigest": "AjLxg6mv6EYde4ira4Pm7e2NrWFybg3pbNSHp9aeZhU=",
         "recordedInputs": [],
         "generatedRepoSpecs": {
