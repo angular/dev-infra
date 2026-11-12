@@ -169,8 +169,8 @@ importers:
   .:
     dependencies:
       '@puppeteer/browsers':
-        specifier: 3.2.6
-        version: 3.2.6(yauzl@2.10.0)
+        specifier: 3.2.7
+        version: 3.2.7(yauzl@2.10.0)
       '@rollup/plugin-virtual':
         specifier: ^3.0.2
         version: 3.0.3(rollup@4.68.2)
@@ -256,6 +256,19 @@ packages:
 
   '@puppeteer/browsers@3.2.6':
     resolution: {integrity: sha512-MJP29gVoHznmqmwhH1tlZqzfeQ3aylTpSSa6WKZXtkwYUH02i9imBmWGTyZrbnAou5paX78SE4jMAUqnEPf8ug==}
+    engines: {node: '>=22.12.0'}
+    hasBin: true
+    peerDependencies:
+      proxy-agent: '>=8.0.1'
+      yauzl: ^2.10.0 || ^3.4.0
+    peerDependenciesMeta:
+      proxy-agent:
+        optional: true
+      yauzl:
+        optional: true
+
+  '@puppeteer/browsers@3.2.7':
+    resolution: {integrity: sha512-B3C/v8OEEaJYcN1IzzgbPmt+GbFANr4Mf/NrqNuGk/dIchrv6quNqxgT+A6qE0Ge0MN95NjKUddcR1JMpYRMWA==}
     engines: {node: '>=22.12.0'}
     hasBin: true
     peerDependencies:
@@ -2387,6 +2400,13 @@ snapshots:
       - supports-color
 
   '@puppeteer/browsers@3.2.6(yauzl@2.10.0)':
+    dependencies:
+      modern-tar: 0.8.6
+      yargs: 18.2.0
+    optionalDependencies:
+      yauzl: 2.10.0
+
+  '@puppeteer/browsers@3.2.7(yauzl@2.10.0)':
     dependencies:
       modern-tar: 0.8.6
       yargs: 18.2.0
