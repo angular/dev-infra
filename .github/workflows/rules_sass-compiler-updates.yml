@@ -30,7 +30,7 @@ jobs:
         working-directory: bazel/rules/rules_sass
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1
+      - uses: dart-lang/setup-dart@2286a0c042b44434fe26d292bbce8d34f7ec662b # v1
       - run: dart pub get --enforce-lockfile
       - run: mkdir -p src/compiler/built/
       - run: dart compile exe src/compiler/bin/x_sass.dart -o src/compiler/built/${{ matrix.bin_name }}
@@ -73,7 +73,7 @@ jobs:
           fi
       - name: Create Pull Request
         if: steps.check.outputs.skip_pr != 'true'
-        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        uses: peter-evans/create-pull-request@3ffccacd46053766916f087ce41d627c0b8cf2d1 # v8.1.3
         with:
           token: ${{ secrets.ANGULAR_ROBOT_ACCESS_TOKEN }}
           push-to-fork: 'angular-robot/dev-infra'
