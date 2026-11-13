@@ -20,3 +20,5 @@ inputs:
 runs:
   using: 'node24'
   main: 'configure-remote.js'
+  post: 'post.js'
+  post-if: 'failure()'

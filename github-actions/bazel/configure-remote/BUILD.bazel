@@ -1,5 +1,5 @@
 load("@devinfra_npm//:defs.bzl", "npm_link_all_packages")
-load("//tools:defaults.bzl", "copy_to_bin", "esbuild_checked_in", "js_binary", "ts_project")
+load("//tools:defaults.bzl", "copy_to_bin", "esbuild_checked_in", "jasmine_test", "js_binary", "ts_project")
 
 npm_link_all_packages()
 
@@ -8,13 +8,42 @@ copy_to_bin(
     srcs = ["gcp_token.data"],
 )
 
+copy_to_bin(
+    name = "bazel_matchers",
+    srcs = ["bazel-matchers.json"],
+)
+
 ts_project(
     name = "setup-bazel-remote-exec",
-    srcs = glob(["*.ts"]),
+    srcs = glob(
+        ["*.ts"],
+        exclude = ["*.spec.ts"],
+    ),
     tsconfig = "//github-actions:tsconfig",
     deps = [
         ":node_modules/@actions/core",
         ":node_modules/@types/node",
+    ],
+)
+
+ts_project(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob(["*.spec.ts"]),
+    tsconfig = "//github-actions:tsconfig_test",
+    deps = [
+        ":node_modules/@types/node",
+        ":setup-bazel-remote-exec",
+        "//github-actions:node_modules/@types/jasmine",
+    ],
+)
+
+jasmine_test(
+    name = "test",
+    data = [
+        ":bazel_matchers",
+        ":test_lib",
+        "//github-actions/npm/checkout-and-setup-node:matchers",
     ],
 )
 
@@ -38,4 +67,15 @@ esbuild_checked_in(
     entry_point = "index.ts",
     format = "iife",
     platform = "node",
+)
+
+esbuild_checked_in(
+    name = "post",
+    srcs = [
+        ":setup-bazel-remote-exec",
+    ],
+    entry_point = "post-entry.ts",
+    format = "esm",
+    platform = "node",
+    target = "node24",
 )

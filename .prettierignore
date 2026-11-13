@@ -6,6 +6,7 @@
 .github/local-actions/stale-cleanup/main.js
 .github/local-actions/update-models/main.js
 github-actions/bazel/configure-remote/configure-remote.js
+github-actions/bazel/configure-remote/post.js
 github-actions/branch-manager/main.js
 github-actions/browserstack/set-browserstack-env.js
 github-actions/labeling/pull-request/main.js
