@@ -1,0 +1,32 @@
+{
+  "problemMatcher": [
+    {
+      "owner": "angular-bazel-error-abs",
+      "severity": "error",
+      "fileLocation": ["absolute"],
+      "pattern": [
+        {
+          "regexp": "^(?:\\x1b\\[[0-9;]*m)*ERROR:(?:\\x1b\\[[0-9;]*m)*\\s+(/[^\\s:]+):(\\d+):(?:(\\d+):)?\\s+(.+?)(?:\\x1b\\[[0-9;]*m)*$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "message": 4
+        }
+      ]
+    },
+    {
+      "owner": "angular-bazel-error-rel",
+      "severity": "error",
+      "fileLocation": ["relative", "${workspaceRoot}"],
+      "pattern": [
+        {
+          "regexp": "^(?:\\x1b\\[[0-9;]*m)*ERROR:(?:\\x1b\\[[0-9;]*m)*\\s+([^\\s/:][^\\s:]*):(\\d+):(?:(\\d+):)?\\s+(.+?)(?:\\x1b\\[[0-9;]*m)*$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "message": 4
+        }
+      ]
+    }
+  ]
+}
