@@ -36,7 +36,7 @@ export interface FailureAnnotation {
 /** The parts of a Build Event Protocol event that are read here. */
 interface BepEvent {
   id?: {targetCompleted?: {label?: string}; testSummary?: {label?: string}};
-  aborted?: {description?: string};
+  aborted?: {reason?: string; description?: string};
   progress?: {stderr?: string; stdout?: string};
   completed?: {failureDetail?: {message?: string}};
   testSummary?: {overallStatus?: string};
@@ -47,7 +47,9 @@ export function collectAnnotations(rawBep: string): FailureAnnotation[] {
   const failedTests = new Map<string, string>();
   const failedBuilds = new Map<string, string>();
   const aborted: string[] = [];
-  let output = '';
+  const outputLines: string[] = [];
+  let stderrCarry = '';
+  let stdoutCarry = '';
   let succeeded = false;
 
   for (const line of rawBep.split('\n')) {
@@ -57,7 +59,8 @@ export function collectAnnotations(rawBep: string): FailureAnnotation[] {
     } catch {
       continue;
     }
-    output += (event.progress?.stderr ?? '') + (event.progress?.stdout ?? '');
+    stderrCarry = appendChunk(stderrCarry, event.progress?.stderr, outputLines);
+    stdoutCarry = appendChunk(stdoutCarry, event.progress?.stdout, outputLines);
     if (event.finished !== undefined) {
       succeeded = event.finished.overallSuccess === true;
     }
@@ -69,20 +72,21 @@ export function collectAnnotations(rawBep: string): FailureAnnotation[] {
     }
 
     const targetLabel = event.id?.targetCompleted?.label;
-    const buildFailure = event.completed?.failureDetail?.message?.trim();
-    if (targetLabel && buildFailure) {
-      failedBuilds.set(targetLabel, buildFailure);
+    const buildFailure =
+      event.completed?.failureDetail?.message?.trim() || event.aborted?.description?.trim();
+    if (targetLabel && (buildFailure || event.aborted)) {
+      failedBuilds.set(targetLabel, buildFailure ?? '');
     } else if (!targetLabel && event.aborted?.description) {
       aborted.push(event.aborted.description.trim());
     }
   }
+  outputLines.push(...cleanLines(stderrCarry), ...cleanLines(stdoutCarry));
 
   // The step that failed was not Bazel, e.g. a later non-Bazel step of the job.
   if (succeeded) {
     return [];
   }
 
-  const outputLines = cleanLines(output);
   const testLogs = new Map<string, string>();
   for (const line of outputLines) {
     const match = TEST_LOG_LOCATION.exec(line);
@@ -98,9 +102,13 @@ export function collectAnnotations(rawBep: string): FailureAnnotation[] {
   }
 
   const buildContext = extractBuildContext(outputLines);
+  const fallbackContext = buildContext.length > 0 ? buildContext : aborted;
   for (const [label, detail] of failedBuilds) {
     const title = `${label} FAILED TO BUILD`;
-    annotations.push({title, message: [title, detail, ...buildContext].join('\n')});
+    annotations.push({
+      title,
+      message: [title, ...(detail ? [detail] : []), ...fallbackContext].join('\n'),
+    });
   }
 
   if (annotations.length === 0 && (aborted.length > 0 || buildContext.length > 0)) {
@@ -128,13 +136,26 @@ export function formatWorkflowCommands(annotations: readonly FailureAnnotation[]
         title.length <= MAX_TITLE_CHARS ? title : `${title.slice(0, MAX_TITLE_CHARS - 3)}...`;
       // The end of the output is where the failure is, so lines are dropped from the start.
       const lines = message.split('\n');
-      while (lines.length > 1 && escapeData(lines.join('\n')).length > MAX_MESSAGE_CHARS) {
+      while (lines.length > 1 && lines.join('\n').length > MAX_MESSAGE_CHARS) {
         lines.shift();
       }
-      const safeMessage = escapeData(lines.join('\n')).slice(-MAX_MESSAGE_CHARS);
+      const safeMessage = escapeData(lines.join('\n').slice(-MAX_MESSAGE_CHARS));
       return `::error title=${escapeData(safeTitle).replace(/[:,]/g, encodeURIComponent)}::${safeMessage}`;
     })
     .join('\n');
+}
+
+function appendChunk(carry: string, chunk: string | undefined, out: string[]): string {
+  if (!chunk) {
+    return carry;
+  }
+  const combined = carry + chunk;
+  const lastNewline = combined.lastIndexOf('\n');
+  if (lastNewline === -1) {
+    return combined;
+  }
+  out.push(...cleanLines(combined.slice(0, lastNewline + 1)));
+  return combined.slice(lastNewline + 1);
 }
 
 function readTestLogTail(logPath: string | undefined): string {
@@ -158,8 +179,10 @@ function extractBuildContext(outputLines: readonly string[]): string[] {
 function cleanLines(raw: string): string[] {
   return (
     stripVTControlCharacters(raw)
-      .split(/\r?\n/)
+      .replace(/\r+\n/g, '\n')
+      .split('\n')
       // Keep only the final state of lines that were redrawn using carriage returns.
+      .map((line) => line.replace(/\r+$/, ''))
       .map((line) => line.slice(line.lastIndexOf('\r') + 1).trimEnd())
       .filter((line) => line !== '')
   );

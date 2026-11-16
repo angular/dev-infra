@@ -31,19 +31,21 @@ describe('bazel failure annotations', () => {
   });
 
   it('reports the end of the test log of failed tests and ignores flaky tests', () => {
-    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'devinfra-ci-annotations-test-'));
+    const tmp = fs.mkdtempSync(
+      path.join(process.env['TEST_TMPDIR'] || os.tmpdir(), 'devinfra-ci-annotations-test-'),
+    );
     try {
       const logPath = path.join(tmp, 'test.log');
       fs.writeFileSync(
         logPath,
-        ['Failures:', '1) bootstrap', '\x1b[31m  Expected 1 to be 2.\x1b[0m', ''].join('\n'),
+        ['Failures:\r\r\n1) bootstrap\r\r\n\x1b[31m  Expected 1 to be 2.\x1b[0m\r\r\n'].join(''),
       );
       const failLine = `\x1b[31mFAIL: \x1b[0m//pkg:failed (Exit 3) (see ${logPath})\n`;
 
       const annotations = collectAnnotations(
         bep(
-          // A line of output can be split across two progress events.
-          {progress: {stderr: `INFO: Build completed\n${failLine.slice(0, 20)}`}},
+          // A stderr line split across events must not have stdout spliced into it.
+          {progress: {stderr: `INFO: Build completed\n${failLine.slice(0, 20)}`, stdout: 'note\n'}},
           {progress: {stderr: failLine.slice(20)}},
           testSummary('//pkg:flaky', 'FLAKY'),
           testSummary('//pkg:failed', 'FAILED'),
@@ -107,12 +109,39 @@ describe('bazel failure annotations', () => {
     ]);
   });
 
-  it('reports loading and analysis failures, which have no failed target', () => {
+  it('reports target analysis failures when aborted has targetCompleted', () => {
+    const annotations = collectAnnotations(
+      bep(
+        {
+          id: {configuredLabel: {label: '//packages/core:dep'}},
+          aborted: {
+            reason: 'ANALYSIS_FAILURE',
+            description: "target '//packages/core:dep' is not visible",
+          },
+        },
+        {
+          id: {targetCompleted: {label: '//packages/core:test'}},
+          aborted: {reason: 'ANALYSIS_FAILURE'},
+        },
+        FAILED_BUILD,
+      ),
+    );
+
+    expect(annotations).toEqual([
+      {
+        title: '//packages/core:test FAILED TO BUILD',
+        message:
+          "//packages/core:test FAILED TO BUILD\ntarget '//packages/core:dep' is not visible",
+      },
+    ]);
+  });
+
+  it('reports loading failures, which have no failed target', () => {
     const annotations = collectAnnotations(
       bep(
         {
           id: {pattern: {pattern: ['//packages/bad/...']}},
-          aborted: {reason: 'ANALYSIS_FAILURE', description: "no such package 'packages/bad'"},
+          aborted: {reason: 'LOADING_FAILURE', description: "no such package 'packages/bad'"},
         },
         FAILED_BUILD,
       ),
@@ -135,22 +164,28 @@ describe('bazel failure annotations', () => {
     });
   });
 
-  it('escapes workflow commands and keeps the end of messages that are too long', () => {
+  it('escapes workflow commands and keeps the end of messages without splitting escapes', () => {
     const output = formatWorkflowCommands([
       {title: '//pkg:test FAILED', message: `${'x'.repeat(5000)}\n100% done\nlast line`},
+      {title: '//pkg:long FAILED', message: `prefix%${'a'.repeat(3799)}`},
     ]);
-    expect(output).toBe('::error title=//pkg%3Atest FAILED::100%25 done%0Alast line');
+    expect(output).toBe(
+      [
+        '::error title=//pkg%3Atest FAILED::100%25 done%0Alast line',
+        `::error title=//pkg%3Along FAILED::%25${'a'.repeat(3799)}`,
+      ].join('\n'),
+    );
   });
 });
 
 describe('problem matchers', () => {
   type Matchers = {problemMatcher: Array<{owner: string; pattern: Array<{regexp: string}>}>};
-  const problemMatcher = [
-    './bazel-matchers.json',
-    '../../npm/checkout-and-setup-node/matchers.json',
-  ]
-    .map((file) => JSON.parse(fs.readFileSync(new URL(file, import.meta.url), 'utf8')) as Matchers)
-    .flatMap((matchers) => matchers.problemMatcher);
+  const {problemMatcher} = JSON.parse(
+    fs.readFileSync(
+      new URL('../../npm/checkout-and-setup-node/matchers.json', import.meta.url),
+      'utf8',
+    ),
+  ) as Matchers;
 
   /** Matches a line against the pattern of every matcher, as the Actions runner does. */
   function match(line: string, patternIndex = 0): Record<string, string[]> {
@@ -164,18 +199,17 @@ describe('problem matchers', () => {
     return matches;
   }
 
-  it('matches tsc errors', () => {
-    expect(match("scripts/ci/foo.mts(12,5): error TS2322: Type 'a' is not 'b'.")).toEqual({
-      'angular-tsc': ['scripts/ci/foo.mts', '12', '5', 'error', 'TS2322', "Type 'a' is not 'b'."],
-    });
-  });
-
   it('matches the file line and the failure lines of tslint output', () => {
     // Output of the default `stylish` formatter of tslint, as printed on CI.
     expect(match('/home/runner/work/angular/angular/packages/core/src/version.ts:32:1')).toEqual({
       'angular-tslint': ['/home/runner/work/angular/angular/packages/core/src/version.ts'],
     });
-    expect(match("ERROR: 32:1  no-var-keyword  Forbidden 'var' keyword", 1)).toEqual({
+    expect(
+      match(
+        "\x1b[31mERROR: 32:1\x1b[39m  \x1b[90mno-var-keyword\x1b[39m  \x1b[33mForbidden 'var' keyword\x1b[39m",
+        1,
+      ),
+    ).toEqual({
       'angular-tslint': ['ERROR', '32', '1', 'no-var-keyword', "Forbidden 'var' keyword"],
     });
     expect(
@@ -186,29 +220,6 @@ describe('problem matchers', () => {
     ).toEqual({'angular-tslint': ['WARNING', '2', '7', 'semicolon', 'Missing semicolon']});
     // Failure lines must not be picked up by the single-line matchers.
     expect(match("ERROR: 32:1  no-var-keyword  Forbidden 'var' keyword")).toEqual({});
-  });
-
-  it('matches Bazel ERROR lines', () => {
-    expect(
-      match(
-        '\x1b[31m\x1b[1mERROR:\x1b[0m /home/runner/work/angular/angular/packages/core/BUILD.bazel:10:1: Compiling TypeScript failed',
-      ),
-    ).toEqual({
-      'angular-bazel-error-abs': [
-        '/home/runner/work/angular/angular/packages/core/BUILD.bazel',
-        '10',
-        '1',
-        'Compiling TypeScript failed',
-      ],
-    });
-    expect(match('ERROR: packages/core/BUILD.bazel:10:1: Compiling TypeScript failed')).toEqual({
-      'angular-bazel-error-rel': [
-        'packages/core/BUILD.bazel',
-        '10',
-        '1',
-        'Compiling TypeScript failed',
-      ],
-    });
   });
 
   it('matches circular dependencies and ng-dev errors', () => {

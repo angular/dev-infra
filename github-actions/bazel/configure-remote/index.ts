@@ -52,12 +52,6 @@ async function main() {
   // path being used for credentials, but it's helpful when we cross boundaries with e.g. WSL.
   exportVariable('GOOGLE_APPLICATION_CREDENTIALS', destPath);
   exportVariable('BAZEL_BEP_PATH', bepPath);
-
-  const actionDir = process.argv[1] ? path.dirname(path.resolve(process.argv[1])) : '';
-  const matcherPath = actionDir ? path.join(actionDir, 'bazel-matchers.json') : '';
-  if (matcherPath && fs.existsSync(matcherPath)) {
-    process.stdout.write(`::add-matcher::${matcherPath}\n`);
-  }
 }
 
 async function readFileGracefully(filePath: string): Promise<string> {

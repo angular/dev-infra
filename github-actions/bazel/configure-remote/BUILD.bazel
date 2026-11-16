@@ -8,11 +8,6 @@ copy_to_bin(
     srcs = ["gcp_token.data"],
 )
 
-copy_to_bin(
-    name = "bazel_matchers",
-    srcs = ["bazel-matchers.json"],
-)
-
 ts_project(
     name = "setup-bazel-remote-exec",
     srcs = glob(
@@ -41,7 +36,6 @@ ts_project(
 jasmine_test(
     name = "test",
     data = [
-        ":bazel_matchers",
         ":test_lib",
         "//github-actions/npm/checkout-and-setup-node:matchers",
     ],
