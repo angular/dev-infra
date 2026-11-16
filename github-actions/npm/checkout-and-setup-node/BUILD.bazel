@@ -1,0 +1,8 @@
+load("//tools:defaults.bzl", "copy_to_bin")
+
+package(default_visibility = ["//github-actions:__subpackages__"])
+
+copy_to_bin(
+    name = "matchers",
+    srcs = ["matchers.json"],
+)

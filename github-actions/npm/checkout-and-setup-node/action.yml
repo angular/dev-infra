@@ -74,3 +74,7 @@ runs:
         node-version-file: ${{ inputs.node-version-file-path }}
         node-version: ${{ inputs.node-version }}
         package-manager-cache: false
+
+    - name: Register problem matchers
+      run: echo "::add-matcher::$GITHUB_ACTION_PATH/matchers.json"
+      shell: bash
