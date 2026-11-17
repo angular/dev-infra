@@ -30,11 +30,26 @@
       ]
     },
     {
+      "owner": "angular-ng-dev-format",
+      "severity": "error",
+      "pattern": [
+        {
+          "regexp": "^(?:\\x1b\\[[0-9;]*m)*The following files (?:are out of format|could not be formatted):(?:\\x1b\\[[0-9;]*m)*$"
+        },
+        {
+          "regexp": "^(?:\\x1b\\[[0-9;]*m)*\\s*•\\s+(([^:\\s\\x1b][^:\\x1b]*)(?::\\s+.+?)?)(?:\\x1b\\[[0-9;]*m)*$",
+          "message": 1,
+          "file": 2,
+          "loop": true
+        }
+      ]
+    },
+    {
       "owner": "angular-ng-dev-error",
       "severity": "error",
       "pattern": [
         {
-          "regexp": "^(?:\\x1b\\[[0-9;]*m)*\\s*(?:[✘x](?:\\x1b\\[[0-9;]*m)*\\s{2,}(?:\\x1b\\[[0-9;]*m)*|!\\s+(?=Invalid\\s))(.+?)(?:\\x1b\\[[0-9;]*m)*$",
+          "regexp": "^(?:\\x1b\\[[0-9;]*m)*\\s*(?:[✘x](?:\\x1b\\[[0-9;]*m)*\\s{2,}(?:\\x1b\\[[0-9;]*m)*|!\\s+(?=Invalid\\s)|(?=(?:pnpm|yarn) ng-dev format files\\s))(.+?)(?:\\x1b\\[[0-9;]*m)*$",
           "message": 1
         }
       ]

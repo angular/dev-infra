@@ -234,4 +234,34 @@ describe('problem matchers', () => {
     });
     expect(match('  • packages/core/a.ts')).toEqual({});
   });
+
+  it('matches ng-dev format failures for prettier and buildifier', () => {
+    // `Log.warn('\nThe following files are out of format:')` wraps the leading newline in ANSI
+    // yellow, so the header text line only has the closing reset sequence at the end.
+    expect(match('The following files are out of format:\x1b[39m')).toEqual({
+      'angular-ng-dev-format': [],
+    });
+    expect(match('\x1b[31mThe following files could not be formatted:\x1b[39m')).toEqual({
+      'angular-ng-dev-format': [],
+    });
+    expect(match('\x1b[33m  • packages/core/src/format_me.ts\x1b[39m', 1)).toEqual({
+      'angular-ng-dev-format': ['packages/core/src/format_me.ts', 'packages/core/src/format_me.ts'],
+    });
+    expect(match('\x1b[33m  • github-actions/BUILD.bazel\x1b[39m', 1)).toEqual({
+      'angular-ng-dev-format': ['github-actions/BUILD.bazel', 'github-actions/BUILD.bazel'],
+    });
+    expect(match('  • packages/core/a.ts: SyntaxError: Unexpected token (1:5)', 1)).toEqual({
+      'angular-ng-dev-format': [
+        'packages/core/a.ts: SyntaxError: Unexpected token (1:5)',
+        'packages/core/a.ts',
+      ],
+    });
+    expect(
+      match('  pnpm ng-dev format files packages/core/src/format_me.ts github-actions/BUILD.bazel'),
+    ).toEqual({
+      'angular-ng-dev-error': [
+        'pnpm ng-dev format files packages/core/src/format_me.ts github-actions/BUILD.bazel',
+      ],
+    });
+  });
 });
