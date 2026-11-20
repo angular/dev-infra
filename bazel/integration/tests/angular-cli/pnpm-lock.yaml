@@ -219,8 +219,8 @@ importers:
         specifier: 24.19.2
         version: 24.19.2
       chromedriver:
-        specifier: ^157.0.0
-        version: 157.0.0(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1)
+        specifier: ^158.0.0
+        version: 158.0.0(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1)
       jasmine-core:
         specifier: 6.3.0
         version: 6.3.0
@@ -270,6 +270,7 @@ packages:
   '@angular/animations@22.3.0-rc.0':
     resolution: {integrity: sha512-goIB1JVRVV1jHIt8lZOtFBxN8mj7ya6V6vF/qcjD7M3TezBVQM92Ht2UkwqlZJWjlFEAQBkKPTixh7/5EJQqFA==}
     engines: {node: ^22.22.3 || ^24.15.0 || >=26.0.0}
+    deprecated: '@angular/animations is deprecated. Use `animate.enter` and `animate.leave` instead. For more information see: https://v22.angular.dev/guide/animations.'
     peerDependencies:
       '@angular/core': 22.3.0-rc.0
 
@@ -1706,8 +1707,8 @@ packages:
     resolution: {integrity: sha512-Ec2Z7wpcKBiMpR7DxteoqS/sq5G5d2A4fpxzPv6+fD7xNNdrTghn7L11YwV5EN1B3i72Erc3XVT5FkWIDx90+A==}
     engines: {node: '>= 22.22'}
 
-  chromedriver@157.0.0:
-    resolution: {integrity: sha512-IwYuey+2f+yczWMxei84oF2MMKbrrDU+G4AQT95fXLG3rURvB7pemRgZWDLVZHDMV6g5eDPKE0TT9s6Lw45Kbg==}
+  chromedriver@158.0.0:
+    resolution: {integrity: sha512-JATTHrwH8KluyjW2mGnShg6psaKD5C3u0lyB946jlMrj82WZO0WoFbpTE8pS6Wp3Qrpkj2ZfzUG6wUrpiN2EPQ==}
     engines: {node: '>=22'}
     hasBin: true
 
@@ -4375,7 +4376,7 @@ snapshots:
     dependencies:
       readdirp: 5.1.1
 
-  chromedriver@157.0.0(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1):
+  chromedriver@158.0.0(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1):
     dependencies:
       '@testim/chrome-version': 1.1.4
       adm-zip: 0.6.1
