@@ -11,6 +11,11 @@ import {types as graphqlTypes} from 'typed-graphqlify';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {addTokenToGitHttpsUrl} from '../../utils/git/github-urls.js';
 import {getPr} from '../../utils/github.js';
+import {
+  assertNoNodeModulesInCommitRange,
+  ensureBaseCommitExistsLocally,
+  MismatchedFetchedHeadShaError,
+} from './validation/assert-safe-pr-files.js';
 
 /* Graphql schema for the response body for a pending PR. */
 const PR_SCHEMA = {
@@ -109,9 +114,17 @@ export async function checkOutPullRequestLocally(
   }
 
   try {
-    // Fetch the branch at the commit of the PR, and check it out in a detached state.
-    git.run(['fetch', '-q', headRefUrl, '--', headRefName]);
-    git.run(['checkout', '--detach', 'FETCH_HEAD']);
+    // Fetch the branch at the commit of the PR, verify its head SHA matches the queried SHA,
+    // assert its commits introduce no `node_modules/` entries, and check it out detached.
+    const baseRefUrl = addTokenToGitHttpsUrl(pr.baseRef.repository.url, git.githubToken);
+    git.run(['fetch', '-q', headRefUrl, '--deepen=500', '--', headRefName]);
+    const fetchedHeadSha = git.run(['rev-parse', 'FETCH_HEAD']).stdout.trim();
+    if (fetchedHeadSha !== pr.headRefOid) {
+      throw new MismatchedFetchedHeadShaError(pr.headRefOid, fetchedHeadSha);
+    }
+    ensureBaseCommitExistsLocally(git, pr.baseRefOid, baseRefUrl, pr.baseRef.name);
+    assertNoNodeModulesInCommitRange(git, `${pr.baseRefOid}..${pr.headRefOid}`);
+    git.run(['checkout', '--detach', pr.headRefOid]);
   } catch (e) {
     git.checkout(previousBranchOrRevision, true);
     throw e;

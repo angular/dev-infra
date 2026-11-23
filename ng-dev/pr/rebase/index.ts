@@ -12,6 +12,10 @@ import {addTokenToGitHttpsUrl} from '../../utils/git/github-urls.js';
 import {Log} from '../../utils/logging.js';
 import {Prompt} from '../../utils/prompt.js';
 import {fetchPullRequestFromGithub} from '../common/fetch-pull-request.js';
+import {
+  assertNoNodeModulesInCommitRange,
+  MismatchedFetchedHeadShaError,
+} from '../common/validation/assert-safe-pr-files.js';
 
 /**
  * Rebase the provided PR onto its merge target branch, and push up the resulting
@@ -72,15 +76,23 @@ export async function rebasePr(prNumber: number, interactive: boolean = false): 
     // Fetches are done with --deepen=500 increase the likelihood of finding a common ancestor when
     // a shallow clone is being used.
 
-    // Fetch the branch at the commit of the PR, and check it out in a detached state.
-    Log.info(`Checking out PR #${prNumber} from ${fullHeadRef}`);
+    // Fetch the PR branch and verify its head SHA matches the queried PR metadata before checkout.
+    Log.info(`Fetching PR #${prNumber} from ${fullHeadRef}`);
     git.run(['fetch', '-q', headRefUrl, '--deepen=500', '--', headRefName]);
-    git.run(['checkout', '-q', '--detach', 'FETCH_HEAD']);
-    // Fetch the PRs target branch and rebase onto it.
+    const fetchedHeadSha = git.run(['rev-parse', 'FETCH_HEAD']).stdout.trim();
+    if (fetchedHeadSha !== pr.headRefOid) {
+      throw new MismatchedFetchedHeadShaError(pr.headRefOid, fetchedHeadSha);
+    }
+
+    // Fetch the PR's target branch so FETCH_HEAD points to the target branch tip for rebase.
     Log.info(`Fetching ${fullBaseRef} to rebase #${prNumber} on`);
     git.run(['fetch', '-q', baseRefUrl, '--deepen=500', '--', baseRefName]);
 
-    const commonAncestorSha = git.run(['merge-base', 'HEAD', 'FETCH_HEAD']).stdout.trim();
+    const commonAncestorSha = git.run(['merge-base', fetchedHeadSha, 'FETCH_HEAD']).stdout.trim();
+    assertNoNodeModulesInCommitRange(git, `${commonAncestorSha}..${fetchedHeadSha}`);
+
+    Log.info(`Checking out PR #${prNumber} from ${fullHeadRef}`);
+    git.run(['checkout', '-q', '--detach', fetchedHeadSha]);
 
     const commits = await getCommitsInRange(commonAncestorSha, 'HEAD');
 

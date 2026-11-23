@@ -58,4 +58,8 @@ jasmine_test(
     data = [
         ":test_lib",
     ],
+    env = {
+        "GIT_BIN": "$(GIT_BIN_PATH)",
+    },
+    toolchains = ["@devinfra//bazel/git-toolchain:current_git_toolchain"],
 )

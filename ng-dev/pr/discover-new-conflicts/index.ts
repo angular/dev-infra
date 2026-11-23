@@ -15,6 +15,11 @@ import {
   fetchPendingPullRequestsFromGithub,
   PullRequestFromGithub,
 } from '../common/fetch-pull-request.js';
+import {
+  assertNoNodeModulesInCommitRange,
+  ForbiddenPullRequestPathsError,
+  MismatchedFetchedHeadShaError,
+} from '../common/validation/assert-safe-pr-files.js';
 
 /** Name of a temporary local branch that is used for checking conflicts. **/
 const tempWorkingBranch = '__NgDevRepoBaseAfterChange__';
@@ -70,52 +75,132 @@ export async function discoverNewConflictsForPr(newPrNumber: number, updatedAfte
   Log.info(`Retrieved ${allPendingPRs.length} total pending PRs`);
   Log.info(`Checking ${pendingPrs.length} PRs for conflicts after a merge of #${newPrNumber}`);
 
-  // Fetch and checkout the PR being checked.
-  git.run(['fetch', '-q', requestedPr.headRef.repository.url, '--', requestedPr.headRef.name]);
-  git.run(['checkout', '-q', '-B', tempWorkingBranch, 'FETCH_HEAD']);
-
-  // Rebase the PR against the PRs target branch.
-  git.run(['fetch', '-q', requestedPr.baseRef.repository.url, '--', requestedPr.baseRef.name]);
   try {
-    git.run(['rebase', 'FETCH_HEAD'], {stdio: 'ignore'});
-  } catch (err) {
-    if (err instanceof GitCommandError) {
-      Log.error('The requested PR currently has conflicts');
-      git.checkout(previousBranchOrRevision, true);
+    // Fetch the target base branch first and pin its tip SHA before fetching PR heads.
+    git.run([
+      'fetch',
+      '-q',
+      requestedPr.baseRef.repository.url,
+      '--deepen=500',
+      '--',
+      requestedPr.baseRef.name,
+    ]);
+    const baseTipSha = git.run(['rev-parse', 'FETCH_HEAD']).stdout.trim();
+
+    // Fetch the requested PR head, verify its head SHA and file paths, and check it out.
+    git.run([
+      'fetch',
+      '-q',
+      requestedPr.headRef.repository.url,
+      '--deepen=500',
+      '--',
+      requestedPr.headRef.name,
+    ]);
+    const requestedPrHeadSha = git.run(['rev-parse', 'FETCH_HEAD']).stdout.trim();
+    if (requestedPrHeadSha !== requestedPr.headRefOid) {
+      Log.error(
+        new MismatchedFetchedHeadShaError(requestedPr.headRefOid, requestedPrHeadSha).message,
+      );
       process.exit(1);
     }
-    throw err;
-  }
 
-  // Start the progress bar
-  progressBar.start(pendingPrs.length, 0);
+    const requestedMergeBaseResult = git.runGraceful([
+      'merge-base',
+      baseTipSha,
+      requestedPrHeadSha,
+    ]);
+    if (requestedMergeBaseResult.status !== 0) {
+      Log.error('The requested PR has no common ancestor with its target branch');
+      process.exit(1);
+    }
+    const requestedMergeBase = requestedMergeBaseResult.stdout.trim();
 
-  // Check each PR to determine if it can merge cleanly into the repo after the target PR.
-  for (const pr of pendingPrs) {
-    // Fetch and checkout the next PR
-    git.run(['fetch', '-q', pr.headRef.repository.url, '--', pr.headRef.name]);
-    git.run(['checkout', '-q', '--detach', 'FETCH_HEAD']);
-    // Check if the PR cleanly rebases into the repo after the target PR.
     try {
-      git.run(['rebase', tempWorkingBranch], {stdio: 'ignore'});
+      assertNoNodeModulesInCommitRange(git, `${requestedMergeBase}..${requestedPrHeadSha}`);
+    } catch (err) {
+      if (err instanceof ForbiddenPullRequestPathsError) {
+        Log.error(err.message);
+        process.exit(1);
+      }
+      throw err;
+    }
+    git.run(['checkout', '-q', '-B', tempWorkingBranch, requestedPrHeadSha]);
+
+    // Rebase the PR against the pinned target branch tip.
+    try {
+      git.run(['rebase', baseTipSha], {stdio: 'ignore'});
     } catch (err) {
       if (err instanceof GitCommandError) {
-        conflicts.push(pr);
-      } else {
+        Log.error('The requested PR currently has conflicts');
+        process.exit(1);
+      }
+      throw err;
+    }
+
+    // Start the progress bar
+    progressBar.start(pendingPrs.length, 0);
+
+    // Check each PR to determine if it can merge cleanly into the repo after the target PR.
+    for (const pr of pendingPrs) {
+      // Fetch and validate the next PR before checking it out into the working tree.
+      git.run(['fetch', '-q', pr.headRef.repository.url, '--deepen=500', '--', pr.headRef.name]);
+      const candidateHeadSha = git.run(['rev-parse', 'FETCH_HEAD']).stdout.trim();
+      if (candidateHeadSha !== pr.headRefOid) {
+        Log.warn(
+          `Skipping PR #${pr.number}: ${new MismatchedFetchedHeadShaError(pr.headRefOid, candidateHeadSha).message}`,
+        );
+        progressBar.increment(1);
+        continue;
+      }
+
+      const candidateMergeBaseResult = git.runGraceful([
+        'merge-base',
+        baseTipSha,
+        candidateHeadSha,
+      ]);
+      if (candidateMergeBaseResult.status !== 0) {
+        Log.warn(
+          `Skipping PR #${pr.number}: unable to determine common ancestor with ${requestedPr.baseRef.name}.`,
+        );
+        progressBar.increment(1);
+        continue;
+      }
+      const candidateMergeBase = candidateMergeBaseResult.stdout.trim();
+
+      try {
+        assertNoNodeModulesInCommitRange(git, `${candidateMergeBase}..${candidateHeadSha}`);
+      } catch (err) {
+        if (err instanceof ForbiddenPullRequestPathsError) {
+          Log.warn(`Skipping PR #${pr.number}: ${err.message}`);
+          progressBar.increment(1);
+          continue;
+        }
         throw err;
       }
-    }
-    // Abort any outstanding rebase attempt.
-    git.runGraceful(['rebase', '--abort'], {stdio: 'ignore'});
+      git.run(['checkout', '-q', '--detach', candidateHeadSha]);
+      // Check if the PR cleanly rebases into the repo after the target PR.
+      try {
+        git.run(['rebase', tempWorkingBranch], {stdio: 'ignore'});
+      } catch (err) {
+        if (err instanceof GitCommandError) {
+          conflicts.push(pr);
+        } else {
+          throw err;
+        }
+      }
+      // Abort any outstanding rebase attempt.
+      git.runGraceful(['rebase', '--abort'], {stdio: 'ignore'});
 
-    progressBar.increment(1);
+      progressBar.increment(1);
+    }
+    // End the progress bar as all PRs have been processed.
+    progressBar.stop();
+  } finally {
+    git.checkout(previousBranchOrRevision, true);
   }
-  // End the progress bar as all PRs have been processed.
-  progressBar.stop();
+
   Log.info();
   Log.info(`Result:`);
-
-  git.checkout(previousBranchOrRevision, true);
 
   // If no conflicts are found, exit successfully.
   if (conflicts.length === 0) {

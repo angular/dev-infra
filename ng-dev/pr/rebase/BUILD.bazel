@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "ts_project")
+load("//tools:defaults.bzl", "jasmine_test", "ts_project")
 
 ts_project(
     name = "rebase",
@@ -20,4 +20,29 @@ ts_project(
         "//ng-dev/pr/common",
         "//ng-dev/utils",
     ],
+)
+
+ts_project(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob(["*.spec.ts"]),
+    deps = [
+        ":rebase",
+        "//ng-dev:node_modules/@types/jasmine",
+        "//ng-dev:node_modules/@types/node",
+        "//ng-dev:node_modules/nock",
+        "//ng-dev/utils",
+        "//ng-dev/utils/testing",
+    ],
+)
+
+jasmine_test(
+    name = "test",
+    data = [
+        ":test_lib",
+    ],
+    env = {
+        "GIT_BIN": "$(GIT_BIN_PATH)",
+    },
+    toolchains = ["@devinfra//bazel/git-toolchain:current_git_toolchain"],
 )

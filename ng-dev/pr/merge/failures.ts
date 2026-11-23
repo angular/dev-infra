@@ -62,3 +62,12 @@ export class MismatchedPullRequestHeadShaFatalError extends FatalMergeToolError 
     );
   }
 }
+
+export class ForbiddenPullRequestFilesFatalError extends FatalMergeToolError {
+  constructor(public forbiddenPaths: string[]) {
+    super(
+      `Pull request commits touch forbidden paths under node_modules/: ` +
+        `${forbiddenPaths.join(', ')}. Refusing to merge.`,
+    );
+  }
+}
