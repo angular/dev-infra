@@ -17,6 +17,7 @@ import {
   ChildProcess as _ChildProcess,
 } from 'child_process';
 import {Log} from './logging.js';
+import {getExcludedDirsForCwd, sanitizeEnvironmentPath} from './environment.js';
 import assert from 'assert';
 
 export interface CommonCmdOpts {
@@ -70,8 +71,12 @@ export abstract class ChildProcess {
   ) {
     return new Promise<void>((resolve, reject) => {
       const commandText = `${command} ${args.join(' ')}`;
+      const env = sanitizeEnvironmentPath(
+        options.env ?? process.env,
+        getExcludedDirsForCwd(options.cwd),
+      );
       Log.debug(`Executing command: ${sanitize(commandText)}`);
-      const childProcess = _spawn(command, args, {...options, stdio: 'inherit'});
+      const childProcess = _spawn(command, args, {...options, env, stdio: 'inherit'});
       // The `close` event is used because the process is guaranteed to have completed writing to
       // stdout and stderr, using the `exit` event can cause inconsistent information in stdout and
       // stderr due to a race condition around exiting.
@@ -90,7 +95,7 @@ export abstract class ChildProcess {
     // shell metacharacters in args exploitable. Callers that genuinely require shell
     // features (e.g. sourcing shell scripts) may explicitly pass shell: true.
     const commandText = `${command} ${args.join(' ')}`;
-    const env = getEnvironmentForNonInteractiveCommand(options.env);
+    const env = getEnvironmentForNonInteractiveCommand(options.env, options.cwd);
 
     Log.debug(`Executing command: ${sanitize(commandText)}`);
 
@@ -125,7 +130,7 @@ export abstract class ChildProcess {
     // shell metacharacters in args exploitable. Callers that genuinely require shell
     // features (e.g. sourcing shell scripts) may explicitly pass shell: true.
     const commandText = `${command} ${args.join(' ')}`;
-    const env = getEnvironmentForNonInteractiveCommand(options.env);
+    const env = getEnvironmentForNonInteractiveCommand(options.env, options.cwd);
 
     return processAsyncCmd(
       commandText,
@@ -143,7 +148,7 @@ export abstract class ChildProcess {
    *   rejects on command failure.
    */
   static exec(command: string, options: ExecOptions = {}): Promise<SpawnResult> {
-    const env = getEnvironmentForNonInteractiveCommand(options.env);
+    const env = getEnvironmentForNonInteractiveCommand(options.env, options.cwd);
     return processAsyncCmd(command, options, _exec(command, {...options, env}));
   }
 }
@@ -169,12 +174,17 @@ function statusFromExitCodeAndSignal(exitCode: number | null, signal: NodeJS.Sig
  */
 function getEnvironmentForNonInteractiveCommand(
   userProvidedEnv?: NodeJS.ProcessEnv,
+  cwd?: string | URL,
 ): NodeJS.ProcessEnv {
   // Pass through the color level from the TTY/process performing the `spawn` call.
   const forceColorValue =
     supportsColor.stdout !== false ? supportsColor.stdout.level.toString() : undefined;
+  const sanitizedEnv = sanitizeEnvironmentPath(
+    userProvidedEnv ?? process.env,
+    getExcludedDirsForCwd(cwd),
+  );
 
-  return {FORCE_COLOR: forceColorValue, ...(userProvidedEnv ?? process.env)};
+  return {FORCE_COLOR: forceColorValue, ...sanitizedEnv};
 }
 
 /**
