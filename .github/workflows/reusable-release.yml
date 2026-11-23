@@ -1,19 +1,22 @@
 # Note on Design:
 # This is defined as a Reusable Workflow (workflow_call) in `.github/workflows/`
 # rather than a Composite Action in `github-actions/` because GitHub Actions
-# only allows environment protection rules (such as the dual-approval gate
-# enforced by the `npm-publish` environment in the `approve` job) to be defined
-# at the job level. Centralizing this workflow here allows us to enforce the
-# security gate for all calling repositories.
+# only allows environment protection rules (such as `environment: npm-publish` on
+# the `publish` job, which enforces dual-approval and binds the `environment`
+# OIDC claim for GCP Workload Identity Federation with OSS Exit Gate) to be
+# defined at the job level. Centralizing this workflow here allows us to enforce
+# the security gate for all calling repositories.
 
 name: Reusable Publish Release
 
 on:
   workflow_call:
+    inputs:
+      exit-gate-project:
+        description: 'The OSS Exit Gate project name (overrides release.exitGate.projectName in .ng-dev/release.mjs).'
+        required: false
+        type: string
     secrets:
-      wombot-token:
-        description: 'The Wombat release-backed publish token'
-        required: true
       angular-robot-key:
         description: 'The private key for the Angular Robot Github app'
         required: true
@@ -25,6 +28,8 @@ jobs:
   build:
     name: Build & Verify
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       version: ${{ steps.get-version.outputs.version }}
       is-release-commit: ${{ steps.check-commit.outputs.is-release }}
@@ -47,6 +52,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           clean: false
+          persist-credentials: false
 
       # Checkout dev-infra dynamically at the same ref to get the custom actions.
       - name: Checkout dev-infra
@@ -56,6 +62,7 @@ jobs:
           ref: ${{ steps.get-ref.outputs.ref }}
           path: .dev-infra
           clean: false
+          persist-credentials: false
 
       # Initialize environment (using local checkout-and-setup-node).
       # We skip checkout because the calling repository was already checked out at the root.
@@ -102,12 +109,13 @@ jobs:
 
       - name: Pack release packages
         if: steps.check-commit.outputs.is-release == 'true'
+        shell: bash
         run: |
           mkdir -p dist/packages-tgz
-          for path in $(jq -r '.[].outputPath' built_packages.json); do
+          while IFS= read -r path; do
             (cd "$path" && pnpm pack)
             mv "$path"/*.tgz dist/packages-tgz/
-          done
+          done < <(jq -r '.[].outputPath' built_packages.json)
 
       - name: Archive built packages
         if: steps.check-commit.outputs.is-release == 'true'
@@ -117,26 +125,18 @@ jobs:
           path: dist/packages-tgz/
           retention-days: 1
 
-  # Job 2: The Gatekeeper.
-  # This job enforces the Org-level environment protection rules (Dual Approval).
-  approve:
-    name: Await Dual Approval
+  # Job 2: Publish to NPM via OSS Exit Gate.
+  # The `npm-publish` environment enforces Org-level protection rules (Dual Approval)
+  # and binds the `environment` OIDC claim for GCP Workload Identity Federation.
+  publish:
+    name: Publish to NPM (OSS Exit Gate)
     needs: build
     if: needs.build.outputs.is-release-commit == 'true'
     runs-on: ubuntu-latest
-    environment: npm-publish # Enforces required reviewers & prevent self-approval
-    steps:
-      - name: Approved
-        run: echo "Release approved by second party."
-
-  # Job 3: Publish to Wombat.
-  publish:
-    name: Publish to Wombat (NPM)
-    needs: [build, approve]
-    runs-on: ubuntu-latest
+    environment: npm-publish # Enforces required reviewers, prevents self-approval, and binds OIDC environment claim
     permissions:
       contents: read
-      id-token: write # Required to generate NPM/Sigstore provenance metadata
+      id-token: write # Required for Google Cloud Workload Identity Federation (OSS Exit Gate)
     steps:
       # Checkout the calling repository first to ensure there is a .git directory at the root,
       # which prevents the subsequent local action's checkout from deleting the .dev-infra folder.
@@ -144,6 +144,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           clean: false
+          persist-credentials: false
 
       # Checkout dev-infra dynamically at the same ref to get the custom actions.
       - name: Checkout dev-infra
@@ -153,6 +154,7 @@ jobs:
           ref: ${{ needs.build.outputs.dev-infra-ref }}
           path: .dev-infra
           clean: false
+          persist-credentials: false
 
       # Initialize environment (using local checkout-and-setup-node).
       # We skip checkout because the calling repository was already checked out at the root.
@@ -167,10 +169,21 @@ jobs:
           name: release-packages
           path: dist/packages-dist/
 
+      # Authenticate with GCP only after checkout, environment setup, and artifact download
+      # so earlier steps do not run with live Workload Identity Federation credentials.
+      - name: Authenticate with OSS Exit Gate GCP Project (WIF)
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+        with:
+          workload_identity_provider: 'projects/305452601764/locations/global/workloadIdentityPools/builders/providers/github'
+          cleanup_credentials: true
+
+      - name: Setup gcloud tool
+        uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
+
       - name: Run ng-dev CI publish (via custom action)
         uses: ./.dev-infra/github-actions/release/publish
         with:
           angular-robot-key: ${{ secrets.angular-robot-key }}
-          wombot-token: ${{ secrets.wombot-token }}
+          exit-gate-project: ${{ inputs.exit-gate-project }}
           built-packages-dir: dist/packages-dist/
           expected-sha: ${{ github.sha }}

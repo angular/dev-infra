@@ -8,6 +8,7 @@ ts_project(
     ]),
     deps = [
         "//ng-dev:node_modules/@types/jasmine",
+        "//ng-dev:node_modules/@types/node",
         "//ng-dev:node_modules/nock",
         "//ng-dev/release/versioning",
         "//ng-dev/utils",

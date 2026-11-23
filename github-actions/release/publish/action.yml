@@ -1,12 +1,9 @@
 name: 'Release Publish CI'
-description: 'Publishes a release to Wombat (NPM) and creates GitHub tags/releases using the Angular Robot App.'
+description: 'Publishes a release via OSS Exit Gate (Artifact Registry and GCS manifest) and creates GitHub tags/releases using the Angular Robot App.'
 author: 'Angular'
 inputs:
   angular-robot-key:
     description: 'The private key for the Angular Robot Github app.'
-    required: true
-  wombot-token:
-    description: 'The Wombat release-backed publish token.'
     required: true
   built-packages-dir:
     description: 'Path to the directory containing pre-built packages.'
@@ -14,8 +11,11 @@ inputs:
   expected-sha:
     description: 'The expected Git SHA of the release commit.'
     required: true
+  exit-gate-project:
+    description: 'The OSS Exit Gate project name (overrides release.exitGate.projectName in .ng-dev/release.mjs).'
+    required: false
   dry-run:
-    description: 'Run the publish command in dry-run mode, skipping tag/release creation and NPM publishing.'
+    description: 'Run the publish command in dry-run mode, skipping tag/release creation, Artifact Registry staging, and Exit Gate triggering.'
     required: false
     default: 'false'
 runs:

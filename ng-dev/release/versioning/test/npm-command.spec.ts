@@ -67,6 +67,41 @@ describe('NpmCommand', () => {
         {mode: 'silent', cwd: '/tmp/isolated-npm-dir'},
       );
     });
+
+    it('should pass env option when provided', async () => {
+      const spawnSpy = spyOn(ChildProcess, 'spawn').and.resolveTo({
+        stdout: '',
+        stderr: '',
+        status: 0,
+      });
+      const customEnv: NodeJS.ProcessEnv = {
+        PATH: '/usr/bin',
+        EXIT_GATE_AR_TOKEN: 'test-token',
+      };
+
+      await NpmCommand.publish(
+        '/abs/dist/pkg.tgz',
+        'latest',
+        'https://us-npm.pkg.dev/oss-exit-gate-prod/angular--npm/',
+        '/tmp/isolated-npm-dir',
+        customEnv,
+      );
+
+      expect(spawnSpy).toHaveBeenCalledWith(
+        'npm',
+        [
+          'publish',
+          '/abs/dist/pkg.tgz',
+          '--access',
+          'public',
+          '--tag',
+          'latest',
+          '--registry',
+          'https://us-npm.pkg.dev/oss-exit-gate-prod/angular--npm/',
+        ],
+        {mode: 'silent', cwd: '/tmp/isolated-npm-dir', env: customEnv},
+      );
+    });
   });
 
   describe('checkVersionExists', () => {
@@ -112,6 +147,43 @@ describe('NpmCommand', () => {
       });
     });
 
+    it('should pass env option when provided', async () => {
+      const spawnSpy = spyOn(ChildProcess, 'spawn').and.resolveTo({
+        stdout: '17.0.0\n',
+        stderr: '',
+        status: 0,
+      });
+      const customEnv: NodeJS.ProcessEnv = {
+        PATH: '/usr/bin',
+        EXIT_GATE_AR_TOKEN: 'test-token',
+      };
+
+      const result = await NpmCommand.checkVersionExists(
+        '@angular/core',
+        '17.0.0',
+        'https://us-npm.pkg.dev/oss-exit-gate-prod/angular--npm/',
+        '/tmp/isolated-npm-dir',
+        customEnv,
+      );
+
+      expect(result).toBe(true);
+      expect(spawnSpy).toHaveBeenCalledWith(
+        'npm',
+        [
+          'view',
+          '@angular/core@17.0.0',
+          'version',
+          '--registry',
+          'https://us-npm.pkg.dev/oss-exit-gate-prod/angular--npm/',
+        ],
+        {
+          mode: 'silent',
+          cwd: '/tmp/isolated-npm-dir',
+          env: customEnv,
+        },
+      );
+    });
+
     it('should return false if the version does not exist (E404)', async () => {
       spyOn(ChildProcess, 'spawn').and.callFake(() => {
         return Promise.reject('npm ERR! code E404\nnpm ERR! 404 Not Found: @angular/core@99.9.9');
@@ -133,6 +205,57 @@ describe('NpmCommand', () => {
       } catch (e) {
         expect(String(e)).toContain('ETIMEDOUT');
       }
+    });
+  });
+
+  describe('deprecate', () => {
+    it('should call npm deprecate without cwd or env when omitted', async () => {
+      const spawnSpy = spyOn(ChildProcess, 'spawn').and.resolveTo({
+        stdout: '',
+        stderr: '',
+        status: 0,
+      });
+
+      await NpmCommand.deprecate('@angular/old', '>=21.0.0', 'Deprecated package', undefined);
+
+      expect(spawnSpy).toHaveBeenCalledWith(
+        'npm',
+        ['deprecate', '@angular/old@>=21.0.0', 'Deprecated package'],
+        {mode: 'silent'},
+      );
+    });
+
+    it('should pass registry, cwd, and env options when provided', async () => {
+      const spawnSpy = spyOn(ChildProcess, 'spawn').and.resolveTo({
+        stdout: '',
+        stderr: '',
+        status: 0,
+      });
+      const customEnv: NodeJS.ProcessEnv = {
+        PATH: '/usr/bin',
+        EXIT_GATE_AR_TOKEN: 'test-token',
+      };
+
+      await NpmCommand.deprecate(
+        '@angular/old',
+        '>=21.0.0',
+        'Deprecated package',
+        'https://us-npm.pkg.dev/oss-exit-gate-prod/angular--npm/',
+        '/tmp/isolated-npm-dir',
+        customEnv,
+      );
+
+      expect(spawnSpy).toHaveBeenCalledWith(
+        'npm',
+        [
+          'deprecate',
+          '@angular/old@>=21.0.0',
+          'Deprecated package',
+          '--registry',
+          'https://us-npm.pkg.dev/oss-exit-gate-prod/angular--npm/',
+        ],
+        {mode: 'silent', cwd: '/tmp/isolated-npm-dir', env: customEnv},
+      );
     });
   });
 });

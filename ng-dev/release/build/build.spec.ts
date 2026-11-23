@@ -96,11 +96,23 @@ describe('BuildWorker.invokeBuild', () => {
     process.env = originalEnv;
   });
 
-  it('should scrub GITHUB_TOKEN, TOKEN, GH_TOKEN, and SNAPSHOT_BUILDS_GITHUB_TOKEN from child environment', async () => {
-    process.env['GITHUB_TOKEN'] = 'secret-github-token';
-    process.env['TOKEN'] = 'secret-token';
-    process.env['GH_TOKEN'] = 'secret-gh-token';
-    process.env['SNAPSHOT_BUILDS_GITHUB_TOKEN'] = 'secret-snapshot-token';
+  it('should scrub sensitive token and credential environment variables from child environment', async () => {
+    const scrubbedVars = [
+      'GITHUB_TOKEN',
+      'TOKEN',
+      'GH_TOKEN',
+      'SNAPSHOT_BUILDS_GITHUB_TOKEN',
+      'WOMBOT_TOKEN',
+      'GOOGLE_APPLICATION_CREDENTIALS',
+      'CLOUDSDK_AUTH_ACCESS_TOKEN',
+      'GOOGLE_OAUTH_ACCESS_TOKEN',
+      'EXIT_GATE_AR_TOKEN',
+      'ACTIONS_ID_TOKEN_REQUEST_TOKEN',
+      'ACTIONS_ID_TOKEN_REQUEST_URL',
+    ];
+    for (const envVar of scrubbedVars) {
+      process.env[envVar] = `secret-${envVar.toLowerCase()}`;
+    }
     process.env['CUSTOM_VAR'] = 'preserved-var';
 
     let capturedOptions: childProcess.ForkOptions | undefined;
@@ -121,10 +133,9 @@ describe('BuildWorker.invokeBuild', () => {
     expect(capturedOptions?.env).toBeDefined();
 
     const env = capturedOptions!.env!;
-    expect(env['GITHUB_TOKEN']).toBeUndefined();
-    expect(env['TOKEN']).toBeUndefined();
-    expect(env['GH_TOKEN']).toBeUndefined();
-    expect(env['SNAPSHOT_BUILDS_GITHUB_TOKEN']).toBeUndefined();
+    for (const envVar of scrubbedVars) {
+      expect(env[envVar]).withContext(`Expected ${envVar} to be scrubbed`).toBeUndefined();
+    }
 
     expect(env['CUSTOM_VAR']).toBe('preserved-var');
     if (process.env['PATH']) {

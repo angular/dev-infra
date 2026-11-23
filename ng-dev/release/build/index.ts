@@ -26,6 +26,13 @@ export abstract class BuildWorker {
       delete env['TOKEN'];
       delete env['GH_TOKEN'];
       delete env['SNAPSHOT_BUILDS_GITHUB_TOKEN'];
+      delete env['WOMBOT_TOKEN'];
+      delete env['GOOGLE_APPLICATION_CREDENTIALS'];
+      delete env['CLOUDSDK_AUTH_ACCESS_TOKEN'];
+      delete env['GOOGLE_OAUTH_ACCESS_TOKEN'];
+      delete env['EXIT_GATE_AR_TOKEN'];
+      delete env['ACTIONS_ID_TOKEN_REQUEST_TOKEN'];
+      delete env['ACTIONS_ID_TOKEN_REQUEST_URL'];
 
       const buildProcess = childProcess.fork(getBuildWorkerScriptPath(), {
         // The stdio option is set to redirect any "stdout" output directly to the "stderr" file

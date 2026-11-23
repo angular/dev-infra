@@ -7,7 +7,7 @@
  */
 
 import {existsSync, readFileSync, writeFileSync} from 'fs';
-import {join} from 'path';
+import {join, resolve} from 'path';
 import semver from 'semver';
 
 import {CommitFromGitLog, parseCommitFromGitLog} from '../../../commit-message/parse.js';
@@ -22,10 +22,16 @@ import {
 import {ReleaseConfig} from '../../config/index.js';
 import {ReleaseNotes, workspaceRelativeChangelogPath} from '../../notes/release-notes.js';
 import {ActiveReleaseTrains} from '../../versioning/active-release-trains.js';
+import {
+  buildExitGateNpmrcContent,
+  createExitGateManifest,
+  ExitGateCommand,
+  getExitGateArRegistryUrl,
+} from '../../versioning/exit-gate.js';
 import {NpmCommand} from '../../versioning/npm-command.js';
 import {ReleaseTrain} from '../../versioning/release-trains.js';
 import {actions} from '../actions/index.js';
-import {StageOnlySuccessError} from '../actions-error.js';
+import {FatalReleaseActionError, StageOnlySuccessError} from '../actions-error.js';
 import {githubReleaseBodyLimit} from '../constants.js';
 import {DelegateTestAction} from './delegate-test-action.js';
 import {getTestConfigurationsForAction, testReleasePackages} from './test-utils/action-mocks.js';
@@ -248,6 +254,204 @@ describe('common release action logic', () => {
         'Use @angular/pkg2',
         undefined,
       );
+    });
+
+    it('should publish via OSS Exit Gate when exitGate is configured', async () => {
+      const {repo, instance, releaseConfig, builtPackagesWithInfo} = setupReleaseActionForTesting(
+        DelegateTestAction,
+        baseReleaseTrains,
+      );
+      const {version, branchName} = baseReleaseTrains.next;
+      const tagName = version.format();
+      const releaseSha = 'deadbeef1234567890abcdef1234567890abcdef';
+
+      repo
+        .expectBranchRequest(branchName, {
+          sha: releaseSha,
+          parents: [{sha: 'BEFORE_STAGING_SHA'}],
+          commit: {message: `release: cut the v${version} release`},
+        })
+        .expectTagToBeCreated(tagName, releaseSha)
+        .expectReleaseToBeCreated(version.toString(), tagName, true);
+
+      releaseConfig.exitGate = {projectName: 'angular'};
+
+      const getAccessTokenSpy = spyOn(ExitGateCommand, 'getAccessToken').and.resolveTo(
+        'fake-adc-token',
+      );
+      const cleanArSpy = spyOn(ExitGateCommand, 'cleanArtifactRegistryPackages').and.resolveTo([]);
+
+      let capturedTempDir: string | undefined;
+      let capturedNpmrcContent: string | undefined;
+      (NpmCommand.publish as jasmine.Spy).and.callFake(
+        async (_pkgPath: string, _distTag: string, _registry: string, cwd?: string) => {
+          capturedTempDir = cwd;
+          if (cwd !== undefined && capturedNpmrcContent === undefined) {
+            capturedNpmrcContent = readFileSync(join(cwd, 'ar.npmrc'), 'utf8');
+          }
+        },
+      );
+
+      let capturedManifestContent: string | undefined;
+      const uploadManifestSpy = spyOn(ExitGateCommand, 'uploadManifest').and.callFake(
+        async (localPath: string, _projectName: string, manifestFileName: string) => {
+          capturedManifestContent = readFileSync(localPath, 'utf8');
+          return `gs://oss-exit-gate-prod-projects-bucket/angular/npm/manifests/${manifestFileName}`;
+        },
+      );
+
+      const logWarnSpy = spyOn(Log, 'warn');
+      const logInfoSpy = spyOn(Log, 'info');
+
+      await instance.testPublish(
+        builtPackagesWithInfo,
+        version,
+        branchName,
+        'BEFORE_STAGING_SHA',
+        'latest',
+      );
+
+      expect(getAccessTokenSpy).toHaveBeenCalledOnceWith({useApplicationDefault: true});
+      expect(cleanArSpy).toHaveBeenCalledOnceWith('angular', {accessToken: 'fake-adc-token'});
+
+      expect(capturedTempDir).toBeDefined();
+      expect(capturedNpmrcContent).toBe(buildExitGateNpmrcContent('angular', 'EXIT_GATE_AR_TOKEN'));
+
+      const expectedArRegistryUrl = getExitGateArRegistryUrl('angular');
+      expect(NpmCommand.publish).toHaveBeenCalledTimes(testReleasePackages.length);
+      for (const pkg of testReleasePackages) {
+        expect(NpmCommand.publish).toHaveBeenCalledWith(
+          resolve(testTmpDir, `${testTmpDir}/dist/${pkg.name}`),
+          'latest',
+          expectedArRegistryUrl,
+          capturedTempDir,
+          jasmine.objectContaining({
+            NPM_CONFIG_USERCONFIG: join(capturedTempDir!, 'ar.npmrc'),
+            EXIT_GATE_AR_TOKEN: 'fake-adc-token',
+          }),
+        );
+      }
+
+      expect(uploadManifestSpy).toHaveBeenCalledTimes(1);
+      const [uploadedLocalPath, uploadedProjectName, uploadedFileName, uploadedOptions] =
+        uploadManifestSpy.calls.mostRecent().args;
+      expect(uploadedProjectName).toBe('angular');
+      expect(uploadedFileName).toMatch(/^manifest-10\.1\.0-next\.0-deadbeef-\d+\.json$/);
+      expect(uploadedLocalPath).toBe(join(capturedTempDir!, uploadedFileName));
+      expect(uploadedOptions).toEqual({accessToken: 'fake-adc-token'});
+      expect(JSON.parse(capturedManifestContent!)).toEqual(createExitGateManifest('latest'));
+
+      expect(NpmCommand.deprecate).not.toHaveBeenCalled();
+      expect(logWarnSpy).toHaveBeenCalledWith(
+        jasmine.stringContaining('OSS Exit Gate does not support "npm deprecate"'),
+      );
+      expect(logWarnSpy).toHaveBeenCalledWith(
+        jasmine.stringContaining('npm deprecate "@deprecated/somepkg@>=9.0.0" "Use @angular/pkg2"'),
+      );
+      expect(logInfoSpy).toHaveBeenCalledWith(
+        jasmine.stringContaining('triggered asynchronously via OSS Exit Gate'),
+      );
+
+      // Temporary directory containing ar.npmrc and manifest must be cleaned up.
+      expect(existsSync(capturedTempDir!)).toBe(false);
+    });
+
+    it('should resolve relative package outputPath against projectDir in Exit Gate mode', async () => {
+      const {repo, instance, releaseConfig, projectDir, builtPackagesWithInfo} =
+        setupReleaseActionForTesting(DelegateTestAction, baseReleaseTrains);
+      const {version, branchName} = baseReleaseTrains.next;
+      const tagName = version.format();
+      const releaseSha = 'deadbeef1234567890abcdef1234567890abcdef';
+
+      repo
+        .expectBranchRequest(branchName, {
+          sha: releaseSha,
+          parents: [{sha: 'BEFORE_STAGING_SHA'}],
+          commit: {message: `release: cut the v${version} release`},
+        })
+        .expectTagToBeCreated(tagName, releaseSha)
+        .expectReleaseToBeCreated(version.toString(), tagName, true);
+
+      releaseConfig.exitGate = {projectName: 'angular'};
+
+      spyOn(ExitGateCommand, 'getAccessToken').and.resolveTo('fake-adc-token');
+      spyOn(ExitGateCommand, 'cleanArtifactRegistryPackages').and.resolveTo([]);
+      spyOn(ExitGateCommand, 'uploadManifest').and.resolveTo('gs://fake/manifest.json');
+
+      const relativeBuiltPackages = [
+        {
+          ...builtPackagesWithInfo[0],
+          outputPath: './dist/relative-pkg',
+        },
+      ];
+
+      await instance.testPublish(
+        relativeBuiltPackages,
+        version,
+        branchName,
+        'BEFORE_STAGING_SHA',
+        'latest',
+      );
+
+      expect(NpmCommand.publish).toHaveBeenCalledOnceWith(
+        resolve(projectDir, './dist/relative-pkg'),
+        'latest',
+        getExitGateArRegistryUrl('angular'),
+        jasmine.any(String),
+        jasmine.objectContaining({EXIT_GATE_AR_TOKEN: 'fake-adc-token'}),
+      );
+    });
+
+    it('should clean up temp directory, redact token, and throw FatalReleaseActionError if AR staging fails', async () => {
+      const {repo, instance, releaseConfig, builtPackagesWithInfo} = setupReleaseActionForTesting(
+        DelegateTestAction,
+        baseReleaseTrains,
+      );
+      const {version, branchName} = baseReleaseTrains.next;
+      const tagName = version.format();
+      const releaseSha = 'deadbeef1234567890abcdef1234567890abcdef';
+
+      repo
+        .expectBranchRequest(branchName, {
+          sha: releaseSha,
+          parents: [{sha: 'BEFORE_STAGING_SHA'}],
+          commit: {message: `release: cut the v${version} release`},
+        })
+        .expectTagToBeCreated(tagName, releaseSha)
+        .expectReleaseToBeCreated(version.toString(), tagName, true);
+
+      releaseConfig.exitGate = {projectName: 'angular'};
+
+      spyOn(ExitGateCommand, 'getAccessToken').and.resolveTo('fake-adc-token');
+      spyOn(ExitGateCommand, 'cleanArtifactRegistryPackages').and.resolveTo([]);
+      const uploadManifestSpy = spyOn(ExitGateCommand, 'uploadManifest').and.resolveTo('gs://fake');
+      const logErrorSpy = spyOn(Log, 'error');
+
+      let capturedTempDir: string | undefined;
+      (NpmCommand.publish as jasmine.Spy).and.callFake(
+        async (_pkgPath: string, _distTag: string, _registry: string, cwd?: string) => {
+          capturedTempDir = cwd;
+          throw new Error('AR publish failed with fake-adc-token');
+        },
+      );
+
+      await expectAsync(
+        instance.testPublish(
+          builtPackagesWithInfo,
+          version,
+          branchName,
+          'BEFORE_STAGING_SHA',
+          'latest',
+        ),
+      ).toBeRejectedWithError(FatalReleaseActionError);
+
+      expect(uploadManifestSpy).not.toHaveBeenCalled();
+      expect(capturedTempDir).toBeDefined();
+      expect(existsSync(capturedTempDir!)).toBe(false);
+      expect(logErrorSpy).toHaveBeenCalledWith(jasmine.stringContaining('[REDACTED]'));
+      for (const callArgs of logErrorSpy.calls.allArgs()) {
+        expect(callArgs.map(String).join(' ')).not.toContain('fake-adc-token');
+      }
     });
 
     it('should capture release notes in release entry', async () => {

@@ -28,6 +28,8 @@ export interface CommonCmdOpts {
   mode?: 'enabled' | 'silent' | 'on-error';
   /** Whether to prevent exit codes being treated as failures. */
   suppressErrorOnFailingExitCode?: boolean;
+  /** When true, suppresses logging `logOutput` to `Log.debug` / `Log.error`. */
+  sensitiveOutput?: boolean;
 }
 
 /** Interface describing the options for spawning a process synchronously. */
@@ -77,6 +79,11 @@ export abstract class ChildProcess {
       );
       Log.debug(`Executing command: ${sanitize(commandText)}`);
       const childProcess = _spawn(command, args, {...options, env, stdio: 'inherit'});
+      childProcess.on('error', (err) => {
+        const sanitizedErr = sanitizeError(err);
+        Log.debug(`Command "${sanitize(commandText)}" failed with error: ${sanitizedErr.message}`);
+        reject(sanitizedErr);
+      });
       // The `close` event is used because the process is guaranteed to have completed writing to
       // stdout and stderr, using the `exit` event can cause inconsistent information in stdout and
       // stderr due to a race condition around exiting.
@@ -203,7 +210,10 @@ function processAsyncCmd(
     Log.debug(`Executing command: ${sanitize(command)}`);
 
     childProcess.on('error', (err) => {
-      reject(err);
+      const sanitizedErr = sanitizeError(err);
+      const printFn = options.mode === 'on-error' ? Log.error : Log.debug;
+      printFn(`Command "${sanitize(command)}" failed with error: ${sanitizedErr.message}`);
+      reject(sanitizedErr);
     });
 
     // If provided, write `input` text to the process `stdin`.
@@ -246,7 +256,9 @@ function processAsyncCmd(
       const status = statusFromExitCodeAndSignal(exitCode, signal);
       const printFn = status !== 0 && options.mode === 'on-error' ? Log.error : Log.debug;
       printFn(`Command "${sanitize(command)}" completed with ${exitDescription}.`);
-      printFn(`Process output: \n${sanitize(logOutput)}`);
+      if (!options.sensitiveOutput) {
+        printFn(`Process output: \n${sanitize(logOutput)}`);
+      }
 
       // On success, resolve the promise. Otherwise reject with the captured stderr
       // and stdout log output if the output mode was set to `silent`.
@@ -259,10 +271,69 @@ function processAsyncCmd(
   });
 }
 
-/** Sanitizes a string by redacting URL credentials. */
+/**
+ * Sanitizes a string by redacting URL credentials, GCP OAuth2 access tokens,
+ * GitHub tokens, Authorization headers, `.npmrc` auth directives, and JWTs.
+ */
 function sanitize(value: string | null | undefined): string {
   if (!value) {
     return '';
   }
-  return value.replace(/(https?:\/\/)([^@:/]*)(:[^@/]+)?@/g, '$1<TOKEN>@');
+  return value
+    .replace(/(https?:\/\/)([^@:/]*)(:[^@/]+)?@/g, '$1<TOKEN>@')
+    .replace(/(Authorization\s*:\s*(?:Bearer|Basic)\s+)[^\s'"]+/gi, '$1<REDACTED>')
+    .replace(/(:_(?:authToken|password)=)[^\s'"]+/gi, '$1<REDACTED>')
+    .replace(/\bya29\.[A-Za-z0-9._-]+\b/g, '<REDACTED_TOKEN>')
+    .replace(/\bgh[pousr]_[A-Za-z0-9_]{36,255}\b/g, '<REDACTED_GITHUB_TOKEN>')
+    .replace(/\bgithub_pat_[A-Za-z0-9_]{22,255}\b/g, '<REDACTED_GITHUB_PAT>')
+    .replace(/\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\b/g, '<REDACTED_JWT>');
+}
+
+/** Sanitizes an error's message, stack, and any captured output fields. */
+function sanitizeError(err: Error): Error {
+  if (!(err instanceof Error)) {
+    return new Error(sanitize(String(err)));
+  }
+  const sanitized = new Error(sanitize(err.message));
+  sanitized.name = err.name;
+  if (err.stack !== undefined) {
+    sanitized.stack = sanitize(err.stack);
+  }
+  const extra = err as NodeJS.ErrnoException & {
+    spawnargs?: string[];
+    cmd?: string;
+    stdout?: string;
+    stderr?: string;
+  };
+  const target = sanitized as NodeJS.ErrnoException & {
+    spawnargs?: string[];
+    cmd?: string;
+    stdout?: string;
+    stderr?: string;
+  };
+  if (extra.code !== undefined) {
+    target.code = extra.code;
+  }
+  if (extra.errno !== undefined) {
+    target.errno = extra.errno;
+  }
+  if (extra.syscall !== undefined) {
+    target.syscall = sanitize(extra.syscall);
+  }
+  if (extra.path !== undefined) {
+    target.path = sanitize(extra.path);
+  }
+  if (extra.cmd !== undefined) {
+    target.cmd = sanitize(extra.cmd);
+  }
+  if (Array.isArray(extra.spawnargs)) {
+    target.spawnargs = extra.spawnargs.map((arg: string) => sanitize(arg));
+  }
+  if (typeof extra.stdout === 'string') {
+    target.stdout = sanitize(extra.stdout);
+  }
+  if (typeof extra.stderr === 'string') {
+    target.stderr = sanitize(extra.stderr);
+  }
+  return sanitized;
 }

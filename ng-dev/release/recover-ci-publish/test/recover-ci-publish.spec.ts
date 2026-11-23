@@ -7,11 +7,9 @@
  */
 
 import fs from 'node:fs';
-import path from 'node:path';
 import {ReleaseRecoverCiPublishTool} from '../recover-ci-publish.js';
-import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client.js';
 import {ChildProcess} from '../../../utils/child-process.js';
-import {NpmCommand} from '../../versioning/npm-command.js';
+import {ExitGateCommand} from '../../versioning/exit-gate.js';
 import {PublishCiTool} from '../../../../github-actions/release/publish/lib/publish-ci.js';
 import {Prompt} from '../../../utils/prompt.js';
 import {Log} from '../../../utils/logging.js';
@@ -28,12 +26,14 @@ describe('ReleaseRecoverCiPublishTool', () => {
   let downloadArtifactSpy: jasmine.Spy;
   let spawnSpy: jasmine.Spy;
   let publishCiRunSpy: jasmine.Spy;
-  let checkIsLoggedInSpy: jasmine.Spy;
-  let startInteractiveLoginSpy: jasmine.Spy;
+  let checkAdcAuthenticatedSpy: jasmine.Spy;
+  let startInteractiveAdcLoginSpy: jasmine.Spy;
   let promptConfirmSpy: jasmine.Spy;
 
   beforeEach(() => {
     tempDirCreated = null;
+    process.exitCode = undefined;
+
     // Mock fs.mkdtempSync to track the created directory
     const orgMkdtemp = fs.mkdtempSync;
     spyOn(fs, 'mkdtempSync').and.callFake(((prefix: string) => {
@@ -55,8 +55,8 @@ describe('ReleaseRecoverCiPublishTool', () => {
     listWorkflowRunArtifactsSpy = jasmine.createSpy('listWorkflowRunArtifacts').and.resolveTo({
       data: {
         artifacts: [
-          {name: 'other-artifact', id: 111},
-          {name: 'release-packages-tgz', id: 222},
+          {name: 'other-artifact', id: 111, expired: false},
+          {name: 'release-packages', id: 222, expired: false},
         ],
       },
     });
@@ -78,7 +78,7 @@ describe('ReleaseRecoverCiPublishTool', () => {
     };
 
     releaseConfig = {
-      publishRegistry: 'https://registry.npmjs.org',
+      exitGate: {projectName: 'angular'},
       npmPackages: [{name: '@angular/core'}],
       representativeNpmPackage: '@angular/core',
     };
@@ -91,9 +91,12 @@ describe('ReleaseRecoverCiPublishTool', () => {
     // Mock ChildProcess.spawn (for unzip)
     spawnSpy = spyOn(ChildProcess, 'spawn').and.resolveTo({stdout: '', stderr: ''} as any);
 
-    // Mock NpmCommand static methods
-    checkIsLoggedInSpy = spyOn(NpmCommand, 'checkIsLoggedIn').and.resolveTo(true);
-    startInteractiveLoginSpy = spyOn(NpmCommand, 'startInteractiveLogin').and.resolveTo();
+    // Mock ExitGateCommand static methods
+    checkAdcAuthenticatedSpy = spyOn(ExitGateCommand, 'checkAdcAuthenticated').and.resolveTo(true);
+    startInteractiveAdcLoginSpy = spyOn(
+      ExitGateCommand,
+      'startInteractiveAdcLogin',
+    ).and.resolveTo();
 
     // Mock Prompt
     promptConfirmSpy = spyOn(Prompt, 'confirm').and.resolveTo(true);
@@ -109,6 +112,7 @@ describe('ReleaseRecoverCiPublishTool', () => {
   });
 
   afterEach(() => {
+    process.exitCode = undefined;
     // Clean up any leaked temp directories if test failed before cleanup
     if (tempDirCreated && fs.existsSync(tempDirCreated)) {
       try {
@@ -117,58 +121,107 @@ describe('ReleaseRecoverCiPublishTool', () => {
     }
   });
 
-  describe('NPM login verification', () => {
-    it('should proceed if already logged into NPM', async () => {
-      checkIsLoggedInSpy.and.resolveTo(true);
+  describe('Google Cloud ADC verification & config validation', () => {
+    it('should proceed when already authenticated via ADC', async () => {
+      checkAdcAuthenticatedSpy.and.resolveTo(true);
 
       const tool = new ReleaseRecoverCiPublishTool(gitClient, releaseConfig, githubConfig, 12345);
       await tool.run();
 
-      expect(checkIsLoggedInSpy).toHaveBeenCalledWith('https://registry.npmjs.org');
-      expect(startInteractiveLoginSpy).not.toHaveBeenCalled();
-      expect(publishCiRunSpy).toHaveBeenCalled();
+      expect(checkAdcAuthenticatedSpy).toHaveBeenCalledTimes(1);
+      expect(promptConfirmSpy).not.toHaveBeenCalled();
+      expect(startInteractiveAdcLoginSpy).not.toHaveBeenCalled();
+      expect(publishCiRunSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('should prompt and login if not logged in and user confirms', async () => {
-      checkIsLoggedInSpy.and.resolveTo(false);
+    it('should prompt and run interactive ADC login when unauthenticated and user confirms', async () => {
+      checkAdcAuthenticatedSpy.and.resolveTo(false);
       promptConfirmSpy.and.resolveTo(true);
 
       const tool = new ReleaseRecoverCiPublishTool(gitClient, releaseConfig, githubConfig, 12345);
       await tool.run();
 
-      expect(checkIsLoggedInSpy).toHaveBeenCalled();
-      expect(promptConfirmSpy).toHaveBeenCalled();
-      expect(startInteractiveLoginSpy).toHaveBeenCalledWith('https://registry.npmjs.org');
-      expect(publishCiRunSpy).toHaveBeenCalled();
+      expect(checkAdcAuthenticatedSpy).toHaveBeenCalledTimes(1);
+      expect(promptConfirmSpy).toHaveBeenCalledWith({
+        message:
+          'Would you like to authenticate with Google Cloud (gcloud auth application-default login) now?',
+      });
+      expect(startInteractiveAdcLoginSpy).toHaveBeenCalledTimes(1);
+      expect(publishCiRunSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('should abort if not logged in and user declines login', async () => {
-      checkIsLoggedInSpy.and.resolveTo(false);
+    it('should abort when unauthenticated and user declines login', async () => {
+      checkAdcAuthenticatedSpy.and.resolveTo(false);
       promptConfirmSpy.and.resolveTo(false);
 
       const tool = new ReleaseRecoverCiPublishTool(gitClient, releaseConfig, githubConfig, 12345);
       await tool.run();
 
-      expect(checkIsLoggedInSpy).toHaveBeenCalled();
-      expect(promptConfirmSpy).toHaveBeenCalled();
-      expect(startInteractiveLoginSpy).not.toHaveBeenCalled();
+      expect(checkAdcAuthenticatedSpy).toHaveBeenCalledTimes(1);
+      expect(promptConfirmSpy).toHaveBeenCalledTimes(1);
+      expect(startInteractiveAdcLoginSpy).not.toHaveBeenCalled();
+      expect(getWorkflowRunSpy).not.toHaveBeenCalled();
       expect(publishCiRunSpy).not.toHaveBeenCalled();
+      expect(tempDirCreated).toBeNull();
       expect(process.exitCode).toBe(1);
-      process.exitCode = undefined; // reset
     });
 
-    it('should force interactive login for Wombat registry without checking login state', async () => {
-      releaseConfig.publishRegistry = 'https://wombat-dressing-room.appspot.com/publish';
-      checkIsLoggedInSpy.and.resolveTo(true); // Should be ignored
+    it('should abort when startInteractiveAdcLogin rejects', async () => {
+      checkAdcAuthenticatedSpy.and.resolveTo(false);
+      promptConfirmSpy.and.resolveTo(true);
+      startInteractiveAdcLoginSpy.and.rejectWith(new Error('gcloud login failed'));
 
       const tool = new ReleaseRecoverCiPublishTool(gitClient, releaseConfig, githubConfig, 12345);
       await tool.run();
 
-      expect(checkIsLoggedInSpy).not.toHaveBeenCalled();
-      expect(startInteractiveLoginSpy).toHaveBeenCalledWith(
-        'https://wombat-dressing-room.appspot.com/publish',
+      expect(checkAdcAuthenticatedSpy).toHaveBeenCalledTimes(1);
+      expect(startInteractiveAdcLoginSpy).toHaveBeenCalledTimes(1);
+      expect(getWorkflowRunSpy).not.toHaveBeenCalled();
+      expect(publishCiRunSpy).not.toHaveBeenCalled();
+      expect(tempDirCreated).toBeNull();
+      expect(process.exitCode).toBe(1);
+    });
+
+    it('should skip ADC check in dry-run mode', async () => {
+      const tool = new ReleaseRecoverCiPublishTool(gitClient, releaseConfig, githubConfig, 12345, {
+        dryRun: true,
+      });
+      await tool.run();
+
+      expect(checkAdcAuthenticatedSpy).not.toHaveBeenCalled();
+      expect(startInteractiveAdcLoginSpy).not.toHaveBeenCalled();
+      expect(publishCiRunSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should abort fail-fast when exitGateProject is missing in non-dry-run mode', async () => {
+      releaseConfig.exitGate = undefined;
+
+      const tool = new ReleaseRecoverCiPublishTool(gitClient, releaseConfig, githubConfig, 12345, {
+        dryRun: false,
+      });
+      await tool.run();
+
+      expect(checkAdcAuthenticatedSpy).not.toHaveBeenCalled();
+      expect(getWorkflowRunSpy).not.toHaveBeenCalled();
+      expect(publishCiRunSpy).not.toHaveBeenCalled();
+      expect(tempDirCreated).toBeNull();
+      expect(Log.error).toHaveBeenCalledWith(
+        'OSS Exit Gate project name is not defined. Configure `release.exitGate.projectName` or pass `--exit-gate-project`.',
       );
-      expect(publishCiRunSpy).toHaveBeenCalled();
+      expect(process.exitCode).toBe(1);
+    });
+
+    it('should abort fail-fast when exitGateProject has an invalid format', async () => {
+      const tool = new ReleaseRecoverCiPublishTool(gitClient, releaseConfig, githubConfig, 12345, {
+        exitGateProject: '../evil',
+      });
+      await tool.run();
+
+      expect(checkAdcAuthenticatedSpy).not.toHaveBeenCalled();
+      expect(getWorkflowRunSpy).not.toHaveBeenCalled();
+      expect(publishCiRunSpy).not.toHaveBeenCalled();
+      expect(tempDirCreated).toBeNull();
+      expect(process.exitCode).toBe(1);
     });
   });
 
@@ -193,7 +246,7 @@ describe('ReleaseRecoverCiPublishTool', () => {
       const tool = new ReleaseRecoverCiPublishTool(gitClient, releaseConfig, githubConfig, 12345);
       await tool.run();
 
-      // Verify downloadArtifact called with correct artifact ID (222 for release-packages-tgz)
+      // Verify downloadArtifact called with correct artifact ID (222 for release-packages)
       expect(downloadArtifactSpy).toHaveBeenCalledWith({
         owner: 'angular',
         repo: 'angular',
@@ -213,7 +266,7 @@ describe('ReleaseRecoverCiPublishTool', () => {
     it('should throw error if expected artifact is missing in the run', async () => {
       listWorkflowRunArtifactsSpy.and.resolveTo({
         data: {
-          artifacts: [{name: 'some-other-artifact', id: 999}],
+          artifacts: [{name: 'some-other-artifact', id: 999, expired: false}],
         },
       });
 
@@ -224,7 +277,27 @@ describe('ReleaseRecoverCiPublishTool', () => {
       expect(spawnSpy).not.toHaveBeenCalled();
       expect(publishCiRunSpy).not.toHaveBeenCalled();
       expect(process.exitCode).toBe(1);
-      process.exitCode = undefined; // reset
+    });
+
+    it('should throw error before downloading if expected artifact has expired', async () => {
+      listWorkflowRunArtifactsSpy.and.resolveTo({
+        data: {
+          artifacts: [{name: 'release-packages', id: 222, expired: true}],
+        },
+      });
+
+      const tool = new ReleaseRecoverCiPublishTool(gitClient, releaseConfig, githubConfig, 12345);
+      await tool.run();
+
+      expect(downloadArtifactSpy).not.toHaveBeenCalled();
+      expect(spawnSpy).not.toHaveBeenCalled();
+      expect(publishCiRunSpy).not.toHaveBeenCalled();
+      expect(Log.error).toHaveBeenCalledWith(
+        new Error(
+          'Artifact "release-packages" (ID: 222) in run 12345 has expired and can no longer be downloaded.',
+        ),
+      );
+      expect(process.exitCode).toBe(1);
     });
   });
 
@@ -235,7 +308,8 @@ describe('ReleaseRecoverCiPublishTool', () => {
         const options = this['options'];
         expect(options.builtPackagesDir).toContain('extracted');
         expect(options.expectedSha).toBe('mock-sha-12345');
-        expect(options.useLocalNpmConfig).toBe(true);
+        expect(options.exitGateProject).toBe('angular');
+        expect(options.useApplicationDefaultCredentials).toBe(true);
         expect(options.dryRun).toBe(false);
         expect(options.skipTagging).toBe(true);
         return Promise.resolve();
@@ -243,6 +317,20 @@ describe('ReleaseRecoverCiPublishTool', () => {
 
       const tool = new ReleaseRecoverCiPublishTool(gitClient, releaseConfig, githubConfig, 12345, {
         dryRun: false,
+      });
+      await tool.run();
+
+      expect(publishCiRunSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should forward CLI exitGateProject override to PublishCiTool', async () => {
+      publishCiRunSpy.and.callFake(function (this: PublishCiTool) {
+        expect(this['options'].exitGateProject).toBe('custom-project');
+        return Promise.resolve();
+      });
+
+      const tool = new ReleaseRecoverCiPublishTool(gitClient, releaseConfig, githubConfig, 12345, {
+        exitGateProject: 'custom-project',
       });
       await tool.run();
 

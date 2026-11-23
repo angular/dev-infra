@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {existsSync, promises as fs} from 'fs';
-import {join} from 'path';
+import {chmodSync, existsSync, mkdtempSync, promises as fs, rmSync, writeFileSync} from 'fs';
+import {tmpdir} from 'os';
+import {join, resolve} from 'path';
 import semver from 'semver';
 import glob from 'fast-glob';
 
@@ -26,6 +27,15 @@ import {BuiltPackage, BuiltPackageWithInfo, ReleaseConfig} from '../config/index
 import {ReleaseNotes, workspaceRelativeChangelogPath} from '../notes/release-notes.js';
 import {NpmDistTag, PackageJson} from '../versioning/index.js';
 import {ActiveReleaseTrains} from '../versioning/active-release-trains.js';
+import {
+  assertValidExitGateProject,
+  assertValidNpmDistTag,
+  buildExitGateNpmrcContent,
+  createExitGateManifest,
+  createManifestFileName,
+  ExitGateCommand,
+  getExitGateArRegistryUrl,
+} from '../versioning/exit-gate.js';
 import {createExperimentalSemver} from '../versioning/experimental-versions.js';
 import {NpmCommand} from '../versioning/npm-command.js';
 import {getReleaseTagForVersion} from '../versioning/version-tags.js';
@@ -755,11 +765,8 @@ export abstract class ReleaseAction {
     // built in the staging phase have not been modified accidentally.
     await assertIntegrityOfBuiltPackages(builtPackagesWithInfo);
 
-    // NOTE:
-    // The Github Release must be created prior to publishing to npm as the version of the package
-    // being published is verified by wombot proxy to already match the existing Github relase.
-
-    // Create a Github release for the new version.
+    // Create the GitHub release before publishing packages so that release notes and tags
+    // are in place prior to publishing.
     await this._createGithubReleaseForVersion(
       releaseNotes,
       releaseSha,
@@ -767,14 +774,139 @@ export abstract class ReleaseAction {
       additionalOptions.showAsLatestOnGitHub,
     );
 
-    // Walk through all built packages and publish them to NPM.
-    for (const pkg of builtPackagesWithInfo) {
-      await this._publishBuiltPackageToNpm(pkg, npmDistTag);
+    if (this.config.exitGate !== undefined) {
+      await this._publishBuiltPackagesViaExitGate(
+        builtPackagesWithInfo,
+        npmDistTag,
+        releaseNotes.version.format(),
+        releaseSha,
+      );
+    } else {
+      // Walk through all built packages and publish them to NPM.
+      for (const pkg of builtPackagesWithInfo) {
+        await this._publishBuiltPackageToNpm(pkg, npmDistTag);
+      }
+
+      await this._deprecatePackagesOnNpm(builtPackagesWithInfo);
+
+      Log.info(green('  ✓   Published all packages successfully'));
+    }
+  }
+
+  /**
+   * Publishes the given built packages via OSS Exit Gate by staging them to Artifact Registry
+   * and uploading a publishing manifest to GCS.
+   */
+  private async _publishBuiltPackagesViaExitGate(
+    builtPackagesWithInfo: BuiltPackageWithInfo[],
+    npmDistTag: NpmDistTag,
+    version: string,
+    releaseSha: string,
+  ): Promise<void> {
+    const projectName = assertValidExitGateProject(this.config.exitGate!.projectName);
+    assertValidNpmDistTag(npmDistTag);
+
+    const tempDir = mkdtempSync(join(tmpdir(), 'ng-dev-exit-gate-'));
+
+    try {
+      chmodSync(tempDir, 0o700);
+
+      const accessToken = await ExitGateCommand.getAccessToken({useApplicationDefault: true});
+
+      Log.debug(`Cleaning stale Artifact Registry packages for "${projectName}".`);
+      let deletedPackages: string[];
+      try {
+        deletedPackages = await ExitGateCommand.cleanArtifactRegistryPackages(projectName, {
+          accessToken,
+        });
+      } catch (e) {
+        Log.error(redactSecret(String(e), accessToken));
+        Log.error(
+          `  ✘   An error occurred while cleaning stale Artifact Registry packages for "${projectName}".`,
+        );
+        throw new FatalReleaseActionError();
+      }
+      if (deletedPackages?.length) {
+        Log.debug(`Cleaned ${deletedPackages.length} stale Artifact Registry package(s).`);
+      }
+
+      const arNpmrcPath = join(tempDir, 'ar.npmrc');
+      writeFileSync(arNpmrcPath, buildExitGateNpmrcContent(projectName, 'EXIT_GATE_AR_TOKEN'), {
+        mode: 0o600,
+      });
+
+      const arRegistryUrl = getExitGateArRegistryUrl(projectName);
+      const publishEnv: NodeJS.ProcessEnv = {
+        ...process.env,
+        NPM_CONFIG_USERCONFIG: arNpmrcPath,
+        EXIT_GATE_AR_TOKEN: accessToken,
+      };
+
+      for (const pkg of builtPackagesWithInfo) {
+        Log.debug(`Staging "${pkg.name}" to Artifact Registry for OSS Exit Gate.`);
+        const spinner = new Spinner(`Staging "${pkg.name}" to Artifact Registry`);
+
+        try {
+          await NpmCommand.publish(
+            resolve(this.projectDir, pkg.outputPath),
+            npmDistTag,
+            arRegistryUrl,
+            tempDir,
+            publishEnv,
+          );
+          spinner.complete();
+          Log.info(green(`  ✓   Successfully staged "${pkg.name}" to Artifact Registry.`));
+        } catch (e) {
+          spinner.complete();
+          Log.error(redactSecret(String(e), accessToken));
+          Log.error(`  ✘   An error occurred while staging "${pkg.name}" to Artifact Registry.`);
+          throw new FatalReleaseActionError();
+        }
+      }
+
+      const manifest = createExitGateManifest(npmDistTag);
+      const manifestFileName = createManifestFileName(version, releaseSha);
+      const localManifestPath = join(tempDir, manifestFileName);
+      writeFileSync(localManifestPath, `${JSON.stringify(manifest, null, 2)}\n`, {mode: 0o600});
+
+      let manifestGcsUri: string;
+      try {
+        manifestGcsUri = await ExitGateCommand.uploadManifest(
+          localManifestPath,
+          projectName,
+          manifestFileName,
+          {accessToken},
+        );
+      } catch (e) {
+        Log.error(redactSecret(String(e), accessToken));
+        Log.error(
+          `  ✘   An error occurred while uploading the OSS Exit Gate manifest for "${projectName}".`,
+        );
+        throw new FatalReleaseActionError();
+      }
+
+      Log.info(
+        green(
+          `  ✓   Uploaded OSS Exit Gate release manifest (${manifestGcsUri}). ` +
+            'Publishing to NPM has been triggered asynchronously via OSS Exit Gate.',
+        ),
+      );
+    } finally {
+      rmSync(tempDir, {recursive: true, force: true});
     }
 
-    await this._deprecatePackagesOnNpm(builtPackagesWithInfo);
-
-    Log.info(green('  ✓   Published all packages successfully'));
+    for (const pkg of builtPackagesWithInfo) {
+      if (!pkg.deprecated) {
+        continue;
+      }
+      Log.warn(
+        `  ⚠   OSS Exit Gate does not support "npm deprecate" for "${pkg.name}". ` +
+          'Please run the following command manually once the release is published to NPM:',
+      );
+      Log.warn(
+        `      npm deprecate "${pkg.name}@${pkg.deprecated.version}" "${pkg.deprecated.message}"`,
+      );
+    }
   }
 
   private async _deprecatePackagesOnNpm(
@@ -894,4 +1026,12 @@ export abstract class ReleaseAction {
       }
     }
   }
+}
+
+/** Replaces all occurrences of a secret in text to prevent accidental log leakage. */
+function redactSecret(text: string, secret: string): string {
+  if (!secret) {
+    return text;
+  }
+  return text.split(secret).join('[REDACTED]');
 }

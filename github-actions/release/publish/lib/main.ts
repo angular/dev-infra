@@ -8,27 +8,32 @@ import {PublishCiTool} from './publish-ci.js';
 export async function run(): Promise<void> {
   let token: string | null = null;
   try {
-    token = await utils.getAuthTokenFor(ANGULAR_ROBOT);
-
-    const wombotToken = core.getInput('wombot-token', {required: true});
-    process.env['WOMBOT_TOKEN'] = wombotToken;
-
-    core.info('Configuring AuthenticatedGitClient with generated token...');
-    AuthenticatedGitClient.configure(token, 'bot');
+    const exitGateProject = core.getInput('exit-gate-project', {required: false}) || undefined;
+    const builtPackagesDir = core.getInput('built-packages-dir', {required: true});
+    const expectedSha = core.getInput('expected-sha', {required: true});
+    const dryRun = core.getBooleanInput('dry-run', {required: false});
 
     core.info('Loading repository configuration...');
     const config = await getConfig();
     assertValidReleaseConfig(config);
     assertValidGithubConfig(config);
 
+    token = await utils.getAuthTokenFor(ANGULAR_ROBOT);
+    delete process.env['INPUT_ANGULAR-ROBOT-KEY'];
+
+    core.info('Configuring AuthenticatedGitClient with generated token...');
+    AuthenticatedGitClient.configure(token, 'bot');
+
     core.info('Initializing Git client...');
     const git = await AuthenticatedGitClient.get();
 
     core.info('Starting PublishCiTool...');
     const tool = new PublishCiTool(config, git, git.baseDir, {
-      builtPackagesDir: core.getInput('built-packages-dir', {required: true}),
-      expectedSha: core.getInput('expected-sha', {required: true}),
-      dryRun: core.getBooleanInput('dry-run', {required: false}),
+      builtPackagesDir,
+      expectedSha,
+      exitGateProject,
+      dryRun,
+      maskSecret: (secret: string) => core.setSecret(secret),
     });
 
     await tool.run();

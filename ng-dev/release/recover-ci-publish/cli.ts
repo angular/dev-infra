@@ -18,7 +18,7 @@ import {ReleaseRecoverCiPublishTool} from './recover-ci-publish.js';
 export interface ReleaseRecoverCiPublishOptions {
   runId: number;
   dryRun: boolean;
-  publishRegistry: string | undefined;
+  exitGateProject: string | undefined;
 }
 
 /** Yargs command builder for configuring the `ng-dev release recover-ci-publish` command. */
@@ -34,9 +34,9 @@ function builder(argv: Argv): Argv<ReleaseRecoverCiPublishOptions> {
       default: false,
       description: 'Run the recovery process in dry-run mode (skips actual publishing).',
     })
-    .option('publish-registry', {
+    .option('exit-gate-project', {
       type: 'string',
-      description: 'NPM registry URL to publish packages to (overrides config).',
+      description: 'OSS Exit Gate project name (overrides release.exitGate.projectName).',
     }) as unknown as Argv<ReleaseRecoverCiPublishOptions>;
 }
 
@@ -49,7 +49,7 @@ async function handler(args: Arguments<ReleaseRecoverCiPublishOptions>) {
 
   const tool = new ReleaseRecoverCiPublishTool(git, config.release, config.github, args.runId, {
     dryRun: args.dryRun,
-    publishRegistry: args.publishRegistry,
+    exitGateProject: args.exitGateProject,
   });
 
   await tool.run();

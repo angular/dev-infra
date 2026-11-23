@@ -24,6 +24,12 @@ function builder(argv: Argv): Argv<ReleasePublishOptions> {
   return addGithubTokenOption(argv)
     .option('publishRegistry', {
       type: 'string',
+      description:
+        'NPM registry URL to publish packages to (overrides config and bypasses OSS Exit Gate).',
+    })
+    .option('exit-gate-project', {
+      type: 'string',
+      description: 'OSS Exit Gate project name (overrides release.exitGate.projectName).',
     })
     .option('stage-only', {
       type: 'boolean',
