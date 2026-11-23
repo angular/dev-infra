@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "copy_to_bin", "ts_project")
+load("//tools:defaults.bzl", "copy_to_bin", "jasmine_test", "ts_project")
 
 copy_to_bin(
     name = "commit-message-filter",
@@ -12,7 +12,10 @@ copy_to_bin(
 
 ts_project(
     name = "checkout",
-    srcs = glob(["*.ts"]),
+    srcs = glob(
+        ["*.ts"],
+        exclude = ["*.spec.ts"],
+    ),
     visibility = ["//ng-dev:__subpackages__"],
     deps = [
         "//ng-dev:node_modules/@types/node",
@@ -21,4 +24,29 @@ ts_project(
         "//ng-dev/release/versioning",
         "//ng-dev/utils",
     ],
+)
+
+ts_project(
+    name = "test_lib",
+    testonly = True,
+    srcs = glob(["*.spec.ts"]),
+    deps = [
+        ":checkout",
+        "//ng-dev:node_modules/@types/jasmine",
+        "//ng-dev:node_modules/@types/node",
+        "//ng-dev/pr/common",
+        "//ng-dev/release/versioning",
+        "//ng-dev/utils/testing",
+    ],
+)
+
+jasmine_test(
+    name = "test",
+    data = [
+        ":test_lib",
+    ],
+    env = {
+        "GIT_BIN": "$(GIT_BIN_PATH)",
+    },
+    toolchains = ["@devinfra//bazel/git-toolchain:current_git_toolchain"],
 )

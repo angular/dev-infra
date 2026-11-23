@@ -27,6 +27,8 @@ export class AutosquashMergeStrategy extends MergeStrategy {
    * than squashing them, and fails to catch conflicts caused by the squashing process.
    */
   override async check(pullRequest: PullRequest): Promise<void> {
+    this.assertTargetBranchAndCommitRange(pullRequest);
+
     /** The original SHA, so that we can restore the temporary branch */
     const originalHeadSha = this.git.run(['rev-parse', TEMP_PR_HEAD_BRANCH]).stdout.trim();
     const branchOrRevisionBeforeRebase = this.git.getCurrentBranchOrRevision();
@@ -44,7 +46,7 @@ export class AutosquashMergeStrategy extends MergeStrategy {
         throw new MergeConflictsFatalError([]);
       }
 
-      await super.check(pullRequest);
+      await this.checkMergeableIntoTargets(pullRequest);
     } finally {
       // Restore the temporary branch after checks.
       this.git.run(['update-ref', `refs/heads/${TEMP_PR_HEAD_BRANCH}`, originalHeadSha]);
@@ -71,6 +73,8 @@ export class AutosquashMergeStrategy extends MergeStrategy {
       baseSha,
       prNumber,
     } = pullRequest;
+
+    this.assertTargetBranchAndCommitRange(pullRequest);
 
     // We always rebase the pull request so that fixup or squash commits are automatically
     // collapsed. Git's autosquash functionality does only work in interactive rebases, so

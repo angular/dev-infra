@@ -12,11 +12,15 @@ import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.j
 import {addTokenToGitHttpsUrl} from '../../utils/git/github-urls.js';
 import {green, Log, yellow} from '../../utils/logging.js';
 import {checkOutPullRequestLocally} from '../common/checkout-pr.js';
+import {
+  assertNoNodeModulesInCommitRange,
+  ensureBaseCommitExistsLocally,
+} from '../common/validation/assert-safe-pr-files.js';
 
 export async function checkoutToTargetBranch(
   prNumber: number,
   target: string,
-  {pullRequest}: Awaited<ReturnType<typeof checkOutPullRequestLocally>>,
+  {pullRequest, resetGitState}: Awaited<ReturnType<typeof checkOutPullRequestLocally>>,
 ) {
   /** An authenticated git client. */
   const git = await AuthenticatedGitClient.get();
@@ -59,15 +63,27 @@ export async function checkoutToTargetBranch(
   Log.info(`Targeting '${targetBranch}' branch\n`);
 
   const baseRefUrl = addTokenToGitHttpsUrl(pullRequest.baseRef.repository.url, git.githubToken);
+  const revisionRange = `${pullRequest.baseRefOid}..${pullRequest.headRefOid}`;
 
   git.run(['checkout', '-q', targetBranch]);
   git.run(['fetch', '-q', baseRefUrl, '--deepen=500', '--', targetBranch]);
+  try {
+    ensureBaseCommitExistsLocally(
+      git,
+      pullRequest.baseRefOid,
+      baseRefUrl,
+      pullRequest.baseRef.name,
+    );
+    assertNoNodeModulesInCommitRange(git, revisionRange);
+  } catch (e) {
+    resetGitState();
+    throw e;
+  }
   git.run(['checkout', '-b', branchName]);
 
   Log.info(`Running cherry-pick`);
 
   try {
-    const revisionRange = `${pullRequest.baseRefOid}..${pullRequest.headRefOid}`;
     git.run(['cherry-pick', revisionRange]);
     Log.info(
       ` ${green('✔')} Cherry-pick is complete. You can now push to create a new pull request.`,

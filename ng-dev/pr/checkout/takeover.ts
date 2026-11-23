@@ -8,9 +8,14 @@
 
 import {dirname, join} from 'path';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
+import {addTokenToGitHttpsUrl} from '../../utils/git/github-urls.js';
 import {bold, green, Log} from '../../utils/logging.js';
 import {Prompt} from '../../utils/prompt.js';
 import {checkOutPullRequestLocally} from '../common/checkout-pr.js';
+import {
+  assertNoNodeModulesInCommitRange,
+  ensureBaseCommitExistsLocally,
+} from '../common/validation/assert-safe-pr-files.js';
 import {fileURLToPath} from 'url';
 
 /** List of accounts that are supported for takeover. */
@@ -52,6 +57,20 @@ export async function checkoutAsPrTakeover(
       resetGitState();
       return;
     }
+  }
+
+  try {
+    const baseRefUrl = addTokenToGitHttpsUrl(pullRequest.baseRef.repository.url, git.githubToken);
+    ensureBaseCommitExistsLocally(
+      git,
+      pullRequest.baseRefOid,
+      baseRefUrl,
+      pullRequest.baseRef.name,
+    );
+    assertNoNodeModulesInCommitRange(git, `${pullRequest.baseRefOid}..HEAD`);
+  } catch (e) {
+    resetGitState();
+    throw e;
   }
 
   Log.info(`Setting local branch name based on the pull request`);

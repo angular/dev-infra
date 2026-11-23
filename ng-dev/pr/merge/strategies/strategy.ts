@@ -8,7 +8,13 @@
 
 import {AuthenticatedGitClient} from '../../../utils/git/authenticated-git-client.js';
 import {
+  assertNoNodeModulesInCommitRange,
+  ensureBaseCommitExistsLocally,
+  ForbiddenPullRequestPathsError,
+} from '../../common/validation/assert-safe-pr-files.js';
+import {
   FatalMergeToolError,
+  ForbiddenPullRequestFilesFatalError,
   MergeConflictsFatalError,
   MismatchedPullRequestHeadShaFatalError,
   MismatchedTargetBranchFatalError,
@@ -74,12 +80,16 @@ export abstract class MergeStrategy {
    *   a branch via the Github UI that is managed by merge tooling.
    */
   async check(pullRequest: PullRequest): Promise<void> {
-    const {githubTargetBranch, targetBranches, requiredBaseSha} = pullRequest;
-    // If the pull request does not have its base branch set to any determined target
-    // branch, we cannot merge using the API.
-    if (targetBranches.every((t) => t !== githubTargetBranch)) {
-      throw new MismatchedTargetBranchFatalError(targetBranches);
-    }
+    this.assertTargetBranchAndCommitRange(pullRequest);
+    await this.checkMergeableIntoTargets(pullRequest);
+  }
+
+  /**
+   * Verifies required base commits and dry-run cherry-picks the pull request into all determined
+   * target branches.
+   */
+  protected async checkMergeableIntoTargets(pullRequest: PullRequest): Promise<void> {
+    const {targetBranches, requiredBaseSha} = pullRequest;
 
     // In cases where a required base commit is specified for this pull request, check if
     // the pull request contains the given commit. If not, return a pull request failure.
@@ -95,6 +105,41 @@ export abstract class MergeStrategy {
     // into the other target branches. We don't want to merge the PR through the API, and
     // then run into cherry-pick conflicts after the initial merge already completed.
     await this._assertMergeableOrThrow(pullRequest, targetBranches);
+  }
+
+  /**
+   * Validates that the GitHub base branch is among the determined target branches and that no
+   * commit in the pull request touches paths under `node_modules/`.
+   */
+  protected assertTargetBranchAndCommitRange(pullRequest: PullRequest): void {
+    const {githubTargetBranch, targetBranches, baseSha, revisionRange} = pullRequest;
+    // If the pull request does not have its base branch set to any determined target
+    // branch, we cannot merge using the API.
+    if (targetBranches.every((t) => t !== githubTargetBranch)) {
+      throw new MismatchedTargetBranchFatalError(targetBranches);
+    }
+
+    ensureBaseCommitExistsLocally(this.git, baseSha, this.git.getRepoGitUrl(), githubTargetBranch);
+
+    const localTargetBranch = this.getLocalTargetBranchName(githubTargetBranch);
+    const mergeBaseResult = this.git.runGraceful([
+      'merge-base',
+      localTargetBranch,
+      TEMP_PR_HEAD_BRANCH,
+    ]);
+    const mergeBaseSha = mergeBaseResult.status === 0 ? mergeBaseResult.stdout.trim() : null;
+
+    try {
+      assertNoNodeModulesInCommitRange(this.git, revisionRange);
+      if (mergeBaseSha && mergeBaseSha !== baseSha) {
+        assertNoNodeModulesInCommitRange(this.git, `${mergeBaseSha}..${TEMP_PR_HEAD_BRANCH}`);
+      }
+    } catch (e) {
+      if (e instanceof ForbiddenPullRequestPathsError) {
+        throw new ForbiddenPullRequestFilesFatalError(e.forbiddenPaths);
+      }
+      throw e;
+    }
   }
 
   /** Cleans up the pull request merge. e.g. deleting temporary local branches. */
