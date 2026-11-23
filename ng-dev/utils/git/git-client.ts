@@ -10,6 +10,12 @@ import {DryRunError, isDryRun} from '../dry-run.js';
 import {GithubConfig, assertValidGithubConfig, getConfig} from '../config.js';
 import {SpawnSyncOptions, SpawnSyncReturns, spawnSync} from 'child_process';
 import {Log} from '../logging.js';
+import {
+  getExcludedDirsForCwd,
+  getPathFromEnvironment,
+  resolveSafeExecutable,
+  sanitizeEnvironmentPath,
+} from '../environment.js';
 
 import {GithubClient} from './github.js';
 import {getRepositoryGitUrl} from './github-urls.js';
@@ -52,6 +58,9 @@ export class GitClient {
    * in the shell environment (using `$PATH`).
    */
   readonly gitBinPath: string = 'git';
+
+  /** Cached system `git` binary resolution keyed by sanitized `PATH` and excluded directories. */
+  private cachedGitResolution: {key: string; binPath: string | null} | null = null;
 
   constructor(
     /** The configuration, containing the github specific configuration. */
@@ -103,10 +112,45 @@ export class GitClient {
     // others if the tool failed, and we do not want to leak tokens.
     Log.debug('Executing: git', this.sanitizeConsoleOutput(args.join(' ')));
 
-    const result = spawnSync(this.gitBinPath, args, {
+    const excludedDirs = Array.from(new Set([this.baseDir, ...getExcludedDirsForCwd(options.cwd)]));
+    const env = sanitizeEnvironmentPath(options.env ?? process.env, excludedDirs);
+    let gitExecutable = this.gitBinPath;
+    if (gitExecutable === 'git') {
+      const resolutionKey = `${getPathFromEnvironment(env)}\0${excludedDirs.join('\0')}`;
+      if (this.cachedGitResolution?.key !== resolutionKey) {
+        this.cachedGitResolution = {
+          key: resolutionKey,
+          binPath: resolveSafeExecutable('git', env, excludedDirs),
+        };
+      }
+      if (this.cachedGitResolution.binPath === null) {
+        const missingGitError = Object.assign(
+          new Error('Unable to locate a system git executable outside the repository.'),
+          {code: 'ENOENT'},
+        );
+        Log.debug('Process Error:', this.sanitizeConsoleOutput(missingGitError.message));
+        if (missingGitError.stack) {
+          Log.debug('Process Error Stack:', this.sanitizeConsoleOutput(missingGitError.stack));
+        }
+        process.stderr.write(this.sanitizeConsoleOutput(missingGitError.message));
+        return {
+          pid: 0,
+          output: ['', '', ''],
+          stdout: '',
+          stderr: '',
+          status: null,
+          signal: null,
+          error: missingGitError,
+        };
+      }
+      gitExecutable = this.cachedGitResolution.binPath;
+    }
+
+    const result = spawnSync(gitExecutable, args, {
       cwd: this.baseDir,
       stdio: 'pipe',
       ...options,
+      env,
       // Encoding is always `utf8` and not overridable. This ensures that this method
       // always returns `string` as output instead of buffers.
       encoding: 'utf8',

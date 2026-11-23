@@ -8,6 +8,10 @@
 
 import {ChildProcess} from '../child-process.js';
 import {Log} from '../logging.js';
+import {cleanTestTmpDir, testTmpDir} from '../testing/index.js';
+import fs from 'fs';
+import path from 'path';
+import {pathToFileURL} from 'url';
 
 describe('ChildProcess sanitization', () => {
   let debugSpy: jasmine.Spy;
@@ -127,6 +131,43 @@ describe('ChildProcess sanitization', () => {
       expect(debugSpy).toHaveBeenCalledWith(
         jasmine.stringContaining('output: https://<TOKEN>@github.com'),
       );
+    });
+  });
+
+  describe('PATH sanitization', () => {
+    beforeEach(() => {
+      cleanTestTmpDir();
+    });
+
+    it('strips cwd-local and ancestor repository node_modules/.bin entries across spawnSync, spawn, and exec', async () => {
+      const repoDir = path.join(testTmpDir, 'repo');
+      const subDir = path.join(repoDir, 'packages', 'core');
+      const repoBinDir = path.join(repoDir, 'node_modules', '.bin');
+      fs.mkdirSync(path.join(repoDir, '.git'), {recursive: true});
+      fs.mkdirSync(subDir, {recursive: true});
+      fs.mkdirSync(repoBinDir, {recursive: true});
+      const envPath = [repoBinDir, process.env['PATH'] ?? ''].join(path.delimiter);
+
+      const syncRes = ChildProcess.spawnSync('node', ['-e', 'console.log(process.env.PATH)'], {
+        cwd: subDir,
+        env: {...process.env, PATH: envPath},
+        mode: 'silent',
+      });
+      expect(syncRes.stdout.trim().split(path.delimiter)).not.toContain(repoBinDir);
+
+      const asyncRes = await ChildProcess.spawn('node', ['-e', 'console.log(process.env.PATH)'], {
+        cwd: pathToFileURL(subDir),
+        env: {...process.env, PATH: envPath},
+        mode: 'silent',
+      });
+      expect(asyncRes.stdout.trim().split(path.delimiter)).not.toContain(repoBinDir);
+
+      const execRes = await ChildProcess.exec('node -e "console.log(process.env.PATH)"', {
+        cwd: subDir,
+        env: {...process.env, PATH: envPath},
+        mode: 'silent',
+      });
+      expect(execRes.stdout.trim().split(path.delimiter)).not.toContain(repoBinDir);
     });
   });
 });

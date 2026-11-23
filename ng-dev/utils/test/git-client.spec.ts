@@ -9,7 +9,9 @@ import {GitClient} from '../git/git-client.js';
 import {AuthenticatedGitClient} from '../git/authenticated-git-client.js';
 import {Log} from '../logging.js';
 import {cleanTestTmpDir, mockNgDevConfig, testTmpDir} from '../testing/index.js';
+import {spawnSync} from 'child_process';
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 
 describe('GitClient validation', () => {
@@ -168,8 +170,6 @@ esac
       gitClient.runGraceful(['some-arg']);
 
       expect(logDebugSpy).toHaveBeenCalledWith('Process Error:', jasmine.stringMatching('ENOENT'));
-      // If it fails to spawn, result.error.stack should also be logged if present
-      // We check if "Process Error Stack:" was logged.
       const stackLogged = logDebugSpy.calls
         .all()
         .some((call) => call.args[0] === 'Process Error Stack:');
@@ -192,5 +192,128 @@ describe('AuthenticatedGitClient sanitization', () => {
     const expected =
       'Cloning into https://<TOKEN>@github.com/angular/angular.git with token <TOKEN>';
     expect(client.sanitizeConsoleOutput(input)).toBe(expected);
+  });
+});
+
+describe('GitClient executable resolution and PATH filtering', () => {
+  let realGitBin: string;
+  let trustedBinDir: string;
+
+  beforeEach(() => {
+    cleanTestTmpDir();
+    realGitBin = process.env['GIT_BIN']!;
+    trustedBinDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ng-dev-trusted-bin-'));
+
+    // Expose the toolchain git binary from a trusted directory outside `testTmpDir`.
+    fs.symlinkSync(realGitBin, path.join(trustedBinDir, 'git'));
+
+    spawnSync(realGitBin, ['init'], {cwd: testTmpDir, encoding: 'utf8'});
+    spawnSync(realGitBin, ['config', 'user.email', 'caretaker@angular.io'], {
+      cwd: testTmpDir,
+      encoding: 'utf8',
+    });
+    spawnSync(realGitBin, ['config', 'user.name', 'Caretaker'], {
+      cwd: testTmpDir,
+      encoding: 'utf8',
+    });
+  });
+
+  afterEach(() => {
+    fs.rmSync(trustedBinDir, {recursive: true, force: true});
+  });
+
+  it('resolves system git instead of a repository-local node_modules/.bin/git executable', () => {
+    const repoBinDir = path.join(testTmpDir, 'node_modules', '.bin');
+    const localMarker = path.join(testTmpDir, '.git', 'local-git-invoked');
+    fs.mkdirSync(repoBinDir, {recursive: true});
+
+    const localGitShim = path.join(repoBinDir, 'git');
+    fs.writeFileSync(
+      localGitShim,
+      `#!/bin/sh\necho invoked > "${localMarker}"\necho LOCAL_SHIM\nexit 0\n`,
+    );
+    fs.chmodSync(localGitShim, 0o755);
+
+    const envPath = [repoBinDir, trustedBinDir, process.env['PATH'] ?? ''].join(path.delimiter);
+    const client = new GitClient(mockNgDevConfig, testTmpDir);
+    const result = client.run(['rev-parse', '--is-inside-work-tree'], {
+      env: {...process.env, PATH: envPath},
+    });
+
+    expect(result.stdout.trim()).toBe('true');
+    expect(fs.existsSync(localMarker)).toBeFalse();
+  });
+
+  it('excludes repository-local node_modules/.bin entries from git subprocess PATH', () => {
+    const repoBinDir = path.join(testTmpDir, 'node_modules', '.bin');
+    const localMarker = path.join(testTmpDir, '.git', 'local-helper-invoked');
+    const trustedMarker = path.join(testTmpDir, '.git', 'trusted-helper-invoked');
+    const dummyKeyPath = path.join(trustedBinDir, 'dummy_key');
+    fs.mkdirSync(repoBinDir, {recursive: true});
+    fs.writeFileSync(dummyKeyPath, 'dummy');
+
+    const localHelperShim = path.join(repoBinDir, 'ssh-keygen');
+    fs.writeFileSync(localHelperShim, `#!/bin/sh\necho local > "${localMarker}"\nexit 1\n`);
+    fs.chmodSync(localHelperShim, 0o755);
+
+    const trustedHelperShim = path.join(trustedBinDir, 'ssh-keygen');
+    fs.writeFileSync(trustedHelperShim, `#!/bin/sh\necho trusted > "${trustedMarker}"\nexit 1\n`);
+    fs.chmodSync(trustedHelperShim, 0o755);
+
+    const envPath = [repoBinDir, trustedBinDir, process.env['PATH'] ?? ''].join(path.delimiter);
+    const client = new GitClient(mockNgDevConfig, testTmpDir);
+    client.runGraceful(
+      [
+        '-c',
+        'gpg.format=ssh',
+        '-c',
+        'commit.gpgsign=true',
+        '-c',
+        `user.signingkey=${dummyKeyPath}`,
+        'commit',
+        '--allow-empty',
+        '-m',
+        'signed commit test',
+      ],
+      {
+        env: {...process.env, PATH: envPath},
+      },
+    );
+
+    expect(fs.existsSync(localMarker)).toBeFalse();
+    expect(fs.existsSync(trustedMarker)).toBeTrue();
+  });
+
+  it('re-resolves git when options.env.PATH changes and fails cleanly in worktrees when no system git exists', () => {
+    const worktreeDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ng-dev-worktree-'));
+    try {
+      // Simulate a Git worktree where `.git` is a regular file rather than a directory.
+      fs.writeFileSync(
+        path.join(worktreeDir, '.git'),
+        `gitdir: ${path.join(testTmpDir, '.git')}\n`,
+      );
+      const repoBinDir = path.join(worktreeDir, 'node_modules', '.bin');
+      const localMarker = path.join(testTmpDir, '.git', 'worktree-local-git');
+      fs.mkdirSync(repoBinDir, {recursive: true});
+
+      const localGitShim = path.join(repoBinDir, 'git');
+      fs.writeFileSync(localGitShim, `#!/bin/sh\necho invoked > "${localMarker}"\nexit 0\n`);
+      fs.chmodSync(localGitShim, 0o755);
+
+      const client = new GitClient(mockNgDevConfig, worktreeDir);
+      const missingResult = client.runGraceful(['status'], {env: {PATH: repoBinDir}});
+      expect(missingResult.status).toBeNull();
+      expect((missingResult.error as NodeJS.ErrnoException)?.code).toBe('ENOENT');
+      expect(fs.existsSync(localMarker)).toBeFalse();
+
+      // Passing a valid system PATH on a subsequent call re-resolves cleanly.
+      const okResult = client.run(['rev-parse', '--is-inside-work-tree'], {
+        cwd: testTmpDir,
+        env: {...process.env, PATH: trustedBinDir},
+      });
+      expect(okResult.stdout.trim()).toBe('true');
+    } finally {
+      fs.rmSync(worktreeDir, {recursive: true, force: true});
+    }
   });
 });

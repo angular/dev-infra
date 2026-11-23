@@ -20,6 +20,7 @@ import {buildReleaseParser} from './release/cli.js';
 import {tsCircularDependenciesBuilder} from './ts-circular-dependencies/index.js';
 import {captureLogOutputForCommand} from './utils/logging.js';
 import {localVersion, ngDevVersionMiddleware} from './utils/version-check.js';
+import {getExcludedDirsForCwd, sanitizeProcessEnvironmentPath} from './utils/environment.js';
 import {buildAuthParser} from './auth/cli.js';
 import {buildPerfParser} from './perf/cli.js';
 import {buildConfigParser} from './config/cli.js';
@@ -28,10 +29,8 @@ import {Argv} from 'yargs';
 runParserWithCompletedFunctions((yargs: Argv) => {
   process.exitCode = 0;
 
-  // Ensure Windows CreateProcess does not search the current directory for bare executable names.
-  if (process.platform === 'win32') {
-    process.env['NoDefaultCurrentDirectoryInExePath'] = '1';
-  }
+  // Remove relative and repository-local entries from PATH before invoking commands or tools.
+  sanitizeProcessEnvironmentPath(getExcludedDirsForCwd());
 
   return yargs
     .scriptName('ng-dev')
