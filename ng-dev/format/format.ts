@@ -28,8 +28,9 @@ export async function formatFiles(files: string[]): Promise<1 | 0> {
   // The process should exit as a failure if any of the files failed to format.
   if (failures.length !== 0) {
     Log.error(`The following files could not be formatted:`);
-    failures.forEach(({filePath, message}) => {
-      Log.info(`  • ${filePath}: ${message}`);
+    failures.forEach(({filePath, line, message}) => {
+      const location = line !== undefined ? `${filePath}:${line}` : filePath;
+      Log.error(`  • ${location}: ${message}`);
     });
     Log.error(`Formatting failed, see errors above for more information.`);
     return 1;
@@ -55,8 +56,9 @@ export async function checkFiles(files: string[]) {
   if (failures.length) {
     // Provide output expressing which files are failing formatting.
     Log.warn('\nThe following files are out of format:');
-    for (const {filePath} of failures) {
-      Log.warn(`  • ${filePath}`);
+    for (const {filePath, line} of failures) {
+      const location = line !== undefined ? `${filePath}:${line}` : filePath;
+      Log.warn(`  • ${location}: File is out of format`);
     }
     Log.warn();
 

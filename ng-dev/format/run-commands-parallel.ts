@@ -27,6 +27,8 @@ export interface FormatFailure {
   filePath: string;
   /** Error message reported by the formatter. */
   message: string;
+  /** 1-based line number of the first formatting or lint issue, if known. */
+  line?: number;
 }
 
 /**
@@ -103,11 +105,12 @@ export function runFormatterInParallel(allFiles: string[], action: FormatterActi
       ChildProcess.spawn(spawnCmd, spawnArgs, {
         suppressErrorOnFailingExitCode: true,
         mode: 'silent',
-      }).then(({stdout, stderr, status}: SpawnResult) => {
+      }).then(async ({stdout, stderr, status}: SpawnResult) => {
         // Run the provided callback function.
         const failed = formatter.callbackFor(action)(file, status, stdout, stderr);
         if (failed) {
-          failures.push({filePath: file, message: stderr});
+          const line = await formatter.getFailureLine(file, action, status, stdout, stderr);
+          failures.push({filePath: file, message: stderr, line});
         }
         // Note in the progress bar another file being completed.
         progressBar.increment(1);

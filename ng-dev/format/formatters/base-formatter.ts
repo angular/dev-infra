@@ -94,4 +94,53 @@ export abstract class Formatter {
   getFileMatcher() {
     return this.config[this.name] ? this.matchers : [];
   }
+
+  /**
+   * Determines the 1-based line number of the first formatting or lint issue in `file`, if known.
+   */
+  async getFailureLine(
+    _file: string,
+    _action: FormatterAction,
+    _code: number | NodeJS.Signals,
+    _stdout: string,
+    _stderr: string,
+  ): Promise<number | undefined> {
+    return undefined;
+  }
+}
+
+/**
+ * Compares original and formatted file contents and returns the 1-based line number of the first
+ * differing line, or `undefined` if both strings are identical.
+ */
+export function findFirstDifferingLine(original: string, formatted: string): number | undefined {
+  if (original === formatted) {
+    return undefined;
+  }
+  const splitLines = (content: string) =>
+    content === '' ? [] : content.replace(/\r?\n$/, '').split(/\r?\n/);
+  const originalLines = splitLines(original);
+  const formattedLines = splitLines(formatted);
+  const maxOriginalLine = Math.max(originalLines.length, 1);
+  const maxLines = Math.max(originalLines.length, formattedLines.length);
+  for (let i = 0; i < maxLines; i++) {
+    if (originalLines[i] !== formattedLines[i]) {
+      // Clamp to the last existing line in the original file (1-based) so annotations
+      // anchor to a valid line in the file.
+      return Math.min(i + 1, maxOriginalLine);
+    }
+  }
+  // Lines matched ignoring line endings (e.g. CRLF vs LF); find first raw line difference.
+  const splitRawLines = (content: string) =>
+    content === '' ? [] : content.replace(/\n$/, '').split('\n');
+  const originalRawLines = splitRawLines(original);
+  const formattedRawLines = splitRawLines(formatted);
+  const maxRawLines = Math.max(originalRawLines.length, formattedRawLines.length);
+  for (let i = 0; i < maxRawLines; i++) {
+    if (originalRawLines[i] !== formattedRawLines[i]) {
+      return Math.min(i + 1, maxOriginalLine);
+    }
+  }
+  // Only difference is the presence or absence of a trailing newline at EOF.
+  return maxOriginalLine;
 }

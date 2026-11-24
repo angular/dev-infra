@@ -188,8 +188,8 @@ describe('problem matchers', () => {
   ) as Matchers;
 
   /** Matches a line against the pattern of every matcher, as the Actions runner does. */
-  function match(line: string, patternIndex = 0): Record<string, string[]> {
-    const matches: Record<string, string[]> = {};
+  function match(line: string, patternIndex = 0): Record<string, Array<string | undefined>> {
+    const matches: Record<string, Array<string | undefined>> = {};
     for (const {owner, pattern} of problemMatcher) {
       const groups = new RegExp(pattern[patternIndex]?.regexp ?? '$^').exec(line);
       if (groups !== null) {
@@ -244,16 +244,46 @@ describe('problem matchers', () => {
     expect(match('\x1b[31mThe following files could not be formatted:\x1b[39m')).toEqual({
       'angular-ng-dev-format': [],
     });
-    expect(match('\x1b[33m  • packages/core/src/format_me.ts\x1b[39m', 1)).toEqual({
-      'angular-ng-dev-format': ['packages/core/src/format_me.ts', 'packages/core/src/format_me.ts'],
+    expect(
+      match('\x1b[33m  • packages/core/src/format_me.ts:42: File is out of format\x1b[39m', 1),
+    ).toEqual({
+      'angular-ng-dev-format': [
+        'packages/core/src/format_me.ts:42: File is out of format',
+        'packages/core/src/format_me.ts',
+        '42',
+      ],
     });
-    expect(match('\x1b[33m  • github-actions/BUILD.bazel\x1b[39m', 1)).toEqual({
-      'angular-ng-dev-format': ['github-actions/BUILD.bazel', 'github-actions/BUILD.bazel'],
+    expect(
+      match('\x1b[33m  • github-actions/BUILD.bazel:7: File is out of format\x1b[39m', 1),
+    ).toEqual({
+      'angular-ng-dev-format': [
+        'github-actions/BUILD.bazel:7: File is out of format',
+        'github-actions/BUILD.bazel',
+        '7',
+      ],
+    });
+    expect(
+      match('\x1b[31m  • packages/core/a.ts:12: SyntaxError: Unexpected token (12:5)\x1b[39m', 1),
+    ).toEqual({
+      'angular-ng-dev-format': [
+        'packages/core/a.ts:12: SyntaxError: Unexpected token (12:5)',
+        'packages/core/a.ts',
+        '12',
+      ],
+    });
+    // Legacy line-less output from older `@angular/ng-dev` versions remains supported.
+    expect(match('\x1b[33m  • packages/core/src/format_me.ts\x1b[39m', 1)).toEqual({
+      'angular-ng-dev-format': [
+        'packages/core/src/format_me.ts',
+        'packages/core/src/format_me.ts',
+        undefined,
+      ],
     });
     expect(match('  • packages/core/a.ts: SyntaxError: Unexpected token (1:5)', 1)).toEqual({
       'angular-ng-dev-format': [
         'packages/core/a.ts: SyntaxError: Unexpected token (1:5)',
         'packages/core/a.ts',
+        undefined,
       ],
     });
     expect(
