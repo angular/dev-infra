@@ -6,12 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {readFileSync} from 'fs';
 import {join} from 'path';
 
 import {ChildProcess} from '../../utils/child-process.js';
 import {Log} from '../../utils/logging.js';
 
-import {Formatter} from './base-formatter.js';
+import {findFirstDifferingLine, Formatter, FormatterAction} from './base-formatter.js';
 
 /**
  * Formatter for running prettier against Typescript and Javascript files.
@@ -63,4 +64,37 @@ export class Prettier extends Formatter {
       },
     },
   };
+
+  override async getFailureLine(
+    file: string,
+    action: FormatterAction,
+    _code: number | NodeJS.Signals,
+    _stdout: string,
+    stderr: string,
+  ): Promise<number | undefined> {
+    // Prettier syntax errors include `(line:col)` in stderr, e.g. `SyntaxError: ... (2:12)`.
+    const syntaxErrorMatch = /\((\d+):\d+\)/.exec(stderr);
+    if (syntaxErrorMatch) {
+      const line = Number(syntaxErrorMatch[1]);
+      return line >= 1 ? line : undefined;
+    }
+
+    if (action !== 'check') {
+      return undefined;
+    }
+
+    try {
+      const args = this.configPath ? ['--config', this.configPath, '--', file] : ['--', file];
+      const {status, stdout} = await ChildProcess.spawn(this.binaryFilePath, args, {
+        suppressErrorOnFailingExitCode: true,
+        mode: 'silent',
+      });
+      if (status !== 0) {
+        return undefined;
+      }
+      return findFirstDifferingLine(readFileSync(file, 'utf8'), stdout);
+    } catch {
+      return undefined;
+    }
+  }
 }
