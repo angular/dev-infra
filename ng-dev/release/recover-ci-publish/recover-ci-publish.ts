@@ -14,7 +14,7 @@ import {GithubConfig} from '../../utils/config.js';
 import {ReleaseConfig} from '../config/index.js';
 import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.js';
 import {ChildProcess} from '../../utils/child-process.js';
-import {NpmCommand} from '../versioning/npm-command.js';
+import {ExitGateCommand, assertValidExitGateProject} from '../versioning/exit-gate.js';
 import {PublishCiTool} from '../../../github-actions/release/publish/lib/publish-ci.js';
 import {Log} from '../../utils/logging.js';
 import {Prompt} from '../../utils/prompt.js';
@@ -23,15 +23,16 @@ import {Prompt} from '../../utils/prompt.js';
 export interface ReleaseRecoverCiPublishToolOptions {
   /** Whether to run in dry-run mode. */
   dryRun?: boolean;
-  /** NPM registry URL to publish packages to (overrides config). */
-  publishRegistry?: string;
+  /** OSS Exit Gate project name (overrides `release.exitGate.projectName`). */
+  exitGateProject?: string;
 }
 
 /**
  * Tool to recover a failed CI release publish run locally.
  *
- * Downloads the built packages (.tgz) from a failed GitHub Actions run,
- * extracts them, and publishes them locally using the user's Wombat token session.
+ * Downloads the pre-built packages (.tgz) from a failed GitHub Actions run,
+ * extracts them, and stages/triggers OSS Exit Gate locally using Google Cloud
+ * Application Default Credentials (ADC).
  */
 export class ReleaseRecoverCiPublishTool {
   constructor(
@@ -44,14 +45,34 @@ export class ReleaseRecoverCiPublishTool {
 
   /** Runs the recovery process. */
   async run(): Promise<void> {
-    const registry = this.options.publishRegistry ?? this.releaseConfig.publishRegistry;
-
-    // 1. Verify NPM Login State (Fail fast)
-    const loginOk = await this._verifyNpmLoginState(registry);
-    if (!loginOk) {
-      Log.error('  ✘   NPM login verification failed. Aborting recovery.');
+    // 1. Resolve and validate OSS Exit Gate project name (fail fast)
+    const rawExitGateProject =
+      this.options.exitGateProject || this.releaseConfig.exitGate?.projectName;
+    let exitGateProject: string | undefined;
+    if (rawExitGateProject) {
+      try {
+        exitGateProject = assertValidExitGateProject(rawExitGateProject);
+      } catch (e) {
+        Log.error(`  ✘   ${e instanceof Error ? e.message : e}`);
+        process.exitCode = 1;
+        return;
+      }
+    } else if (!this.options.dryRun) {
+      Log.error(
+        'OSS Exit Gate project name is not defined. Configure `release.exitGate.projectName` or pass `--exit-gate-project`.',
+      );
       process.exitCode = 1;
       return;
+    }
+
+    // 2. Verify Google Cloud ADC state (fail fast)
+    if (!this.options.dryRun) {
+      const adcOk = await this._verifyGcloudAdcState();
+      if (!adcOk) {
+        Log.error('  ✘   Google Cloud ADC authentication verification failed. Aborting recovery.');
+        process.exitCode = 1;
+        return;
+      }
     }
 
     // Create temp directory for downloading and extracting artifacts
@@ -59,7 +80,7 @@ export class ReleaseRecoverCiPublishTool {
     Log.debug(`Created temp directory: ${tempDir}`);
 
     try {
-      // 2. Fetch GHA Run Details
+      // 3. Fetch GHA Run Details
       Log.info(`Fetching workflow run details for run ID: ${this.runId}...`);
       const {data: run} = await this.git.github.rest.actions.getWorkflowRun({
         owner: this.githubConfig.owner,
@@ -68,7 +89,7 @@ export class ReleaseRecoverCiPublishTool {
       });
       Log.info(`Found run: ${run.name} (Commit SHA: ${run.head_sha})`);
 
-      // 3. Fetch Artifacts List
+      // 4. Fetch Artifacts List
       Log.info('Fetching list of artifacts for this run...');
       const {data: artifactsData} = await this.git.github.rest.actions.listWorkflowRunArtifacts({
         owner: this.githubConfig.owner,
@@ -76,13 +97,18 @@ export class ReleaseRecoverCiPublishTool {
         run_id: this.runId,
       });
 
-      const artifactName = 'release-packages-tgz';
+      const artifactName = 'release-packages';
       const artifact = artifactsData.artifacts.find((art: any) => art.name === artifactName);
       if (!artifact) {
         throw new Error(`Expected artifact "${artifactName}" not found in run ${this.runId}.`);
       }
+      if (artifact.expired) {
+        throw new Error(
+          `Artifact "${artifactName}" (ID: ${artifact.id}) in run ${this.runId} has expired and can no longer be downloaded.`,
+        );
+      }
 
-      // 4. Download Artifact ZIP
+      // 5. Download Artifact ZIP
       Log.info(`Downloading artifact "${artifactName}" (ID: ${artifact.id})...`);
       const downloadResponse = await this.git.github.rest.actions.downloadArtifact({
         owner: this.githubConfig.owner,
@@ -97,7 +123,7 @@ export class ReleaseRecoverCiPublishTool {
       fs.writeFileSync(zipPath, buffer);
       Log.info(`Downloaded artifact zip to ${zipPath}`);
 
-      // 5. Extract Artifact ZIP
+      // 6. Extract Artifact ZIP
       const extractDir = path.join(tempDir, 'extracted');
       fs.mkdirSync(extractDir, {recursive: true});
       Log.info(`Extracting packages to ${extractDir}...`);
@@ -115,18 +141,19 @@ export class ReleaseRecoverCiPublishTool {
       }
       Log.info('Packages extracted successfully.');
 
-      // 6. Publish via PublishCiTool
+      // 7. Publish via PublishCiTool
       Log.info('Initializing PublishCiTool for local publishing...');
       const tool = new PublishCiTool(
         {github: this.githubConfig, release: this.releaseConfig} as any,
         this.git,
-        this.git.baseDir, // Project root directory where local package.json / git is located
+        this.git.baseDir,
         {
           builtPackagesDir: extractDir,
           expectedSha: run.head_sha,
-          useLocalNpmConfig: true, // Bypasses GHA Wombat token check, uses local configuration
+          exitGateProject,
+          useApplicationDefaultCredentials: true,
           dryRun: this.options.dryRun,
-          skipTagging: true, // Tagging should be done in GHA, only recover publishing
+          skipTagging: true,
         },
       );
 
@@ -138,7 +165,7 @@ export class ReleaseRecoverCiPublishTool {
       Log.error(e);
       process.exitCode = 1;
     } finally {
-      // 7. Cleanup
+      // 8. Cleanup
       Log.debug(`Cleaning up temp directory: ${tempDir}`);
       try {
         fs.rmSync(tempDir, {recursive: true, force: true});
@@ -148,33 +175,24 @@ export class ReleaseRecoverCiPublishTool {
     }
   }
 
-  /** Verifies that the user is logged into NPM locally. */
-  private async _verifyNpmLoginState(registry: string | undefined): Promise<boolean> {
-    const registryName = `NPM at the ${registry ?? 'default NPM'} registry`;
-
-    if (registry?.includes('wombat-dressing-room.appspot.com')) {
-      Log.info('Unable to determine NPM login state for Wombat proxy, requiring login now.');
-      try {
-        await NpmCommand.startInteractiveLogin(registry);
-      } catch {
-        return false;
-      }
+  /** Verifies that the user is authenticated with Google Cloud ADC locally. */
+  private async _verifyGcloudAdcState(): Promise<boolean> {
+    if (await ExitGateCommand.checkAdcAuthenticated()) {
+      Log.debug('Already authenticated with Google Cloud ADC.');
       return true;
     }
 
-    if (await NpmCommand.checkIsLoggedIn(registry)) {
-      Log.debug(`Already logged into ${registryName}.`);
-      return true;
-    }
-
-    Log.warn(`  ✘   Not currently logged into ${registryName}.`);
-    const shouldLogin = await Prompt.confirm({message: 'Would you like to log into NPM now?'});
+    Log.warn('  ✘   Not currently authenticated with Google Cloud ADC.');
+    const shouldLogin = await Prompt.confirm({
+      message:
+        'Would you like to authenticate with Google Cloud (gcloud auth application-default login) now?',
+    });
     if (shouldLogin) {
       try {
-        await NpmCommand.startInteractiveLogin(registry);
+        await ExitGateCommand.startInteractiveAdcLogin();
         return true;
       } catch (e) {
-        Log.error('NPM login failed:', e);
+        Log.error('Google Cloud ADC authentication failed:', e);
         return false;
       }
     }

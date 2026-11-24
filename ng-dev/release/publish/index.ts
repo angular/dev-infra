@@ -11,6 +11,7 @@ import {AuthenticatedGitClient} from '../../utils/git/authenticated-git-client.j
 import {getCurrentMergeMode} from '../../utils/git/repository-merge-mode.js';
 import {ReleaseConfig} from '../config/index.js';
 import {ActiveReleaseTrains} from '../versioning/active-release-trains.js';
+import {assertValidExitGateProject, ExitGateCommand} from '../versioning/exit-gate.js';
 import {NpmCommand} from '../versioning/npm-command.js';
 import {printActiveReleaseTrains} from '../versioning/print-active-trains.js';
 import {getNextBranchName, ReleaseRepoWithApi} from '../versioning/version-branches.js';
@@ -37,6 +38,7 @@ export enum CompletionState {
 /** A set of flags available to be used to override settings at runtime. */
 export interface ReleaseToolFlags {
   publishRegistry?: string;
+  exitGateProject?: string;
   stageOnly?: boolean;
 }
 
@@ -53,11 +55,25 @@ export class ReleaseTool {
     protected _projectRoot: string,
     protected _flags: ReleaseToolFlags,
   ) {
-    this._config = {
-      ...config,
-      // Replace publishRegistry in the config with one provided via flag, if provided
-      publishRegistry: _flags.publishRegistry ?? config.publishRegistry,
-    };
+    if (_flags.publishRegistry !== undefined) {
+      this._config = {
+        ...config,
+        // Explicitly passed `--publishRegistry` overrides config and bypasses OSS Exit Gate.
+        publishRegistry: _flags.publishRegistry,
+        exitGate: undefined,
+      };
+    } else if (_flags.exitGateProject !== undefined) {
+      const projectName = assertValidExitGateProject(_flags.exitGateProject);
+      this._config = {
+        ...config,
+        exitGate: {projectName},
+        publishRegistry: undefined,
+      };
+    } else {
+      this._config = {
+        ...config,
+      };
+    }
   }
 
   /** Runs the interactive release tool. */
@@ -81,7 +97,7 @@ export class ReleaseTool {
       return CompletionState.FATAL_ERROR;
     }
 
-    if (!(await this._verifyNpmLoginState())) {
+    if (!this._flags.stageOnly && !(await this._verifyPublishAuthState())) {
       return CompletionState.MANUALLY_ABORTED;
     }
 
@@ -130,8 +146,10 @@ export class ReleaseTool {
     this._git.checkout(this.previousGitBranchOrRevision, true);
     // Ensure we are back on the Node.js version expected by the original git state.
     await ExternalCommands.invokeNvmInstall(this._projectRoot, true);
-    // Ensure log out of NPM.
-    await NpmCommand.logout(this._config.publishRegistry);
+    // Ensure log out of NPM when publishing directly to an NPM registry.
+    if (!this._flags.stageOnly && !this._config.exitGate) {
+      await NpmCommand.logout(this._config.publishRegistry);
+    }
   }
 
   /** Prompts the caretaker for a release action that should be performed. */
@@ -236,22 +254,39 @@ export class ReleaseTool {
   }
 
   /**
-   * Verifies that the user is logged into NPM at the correct registry, if defined for the release.
-   * @returns a boolean indicating whether the user is logged into NPM.
+   * Verifies that the user is authenticated for publishing (Google Cloud ADC when using
+   * OSS Exit Gate, or NPM login for direct/custom NPM registry publishing).
+   * @returns a boolean indicating whether the user is authenticated for publishing.
    */
-  private async _verifyNpmLoginState(): Promise<boolean> {
-    const registry = `NPM at the ${this._config.publishRegistry ?? 'default NPM'} registry`;
-    // TODO(josephperrott): remove wombat specific block once wombot allows `npm whoami` check to
-    // check the status of the local token in the .npmrc file.
-    if (this._config.publishRegistry?.includes('wombat-dressing-room.appspot.com')) {
-      Log.info('Unable to determine NPM login state for wombat proxy, requiring login now.');
-      try {
-        await NpmCommand.startInteractiveLogin(this._config.publishRegistry);
-      } catch {
-        return false;
+  private async _verifyPublishAuthState(): Promise<boolean> {
+    if (this._config.exitGate !== undefined) {
+      if (await ExitGateCommand.checkAdcAuthenticated()) {
+        Log.debug('Already authenticated with Google Cloud ADC for OSS Exit Gate.');
+        return true;
       }
-      return true;
+      Log.warn(
+        '  ✘   Not currently authenticated with Google Cloud Application Default Credentials (ADC) ' +
+          'for OSS Exit Gate.',
+      );
+      const shouldLogin = await Prompt.confirm({
+        message:
+          'Would you like to authenticate with Google Cloud (gcloud auth application-default login) now?',
+      });
+      if (shouldLogin) {
+        Log.debug('Starting interactive Google Cloud ADC login.');
+        try {
+          await ExitGateCommand.startInteractiveAdcLogin();
+        } catch (e) {
+          Log.error(e);
+          Log.error('  ✘   Failed to authenticate with Google Cloud ADC.');
+          return false;
+        }
+        return true;
+      }
+      return false;
     }
+
+    const registry = `NPM at the ${this._config.publishRegistry ?? 'default NPM'} registry`;
     if (await NpmCommand.checkIsLoggedIn(this._config.publishRegistry)) {
       Log.debug(`Already logged into ${registry}.`);
       return true;

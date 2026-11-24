@@ -6,15 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {join, resolve} from 'path';
+import {join, resolve, sep} from 'path';
 import {
-  readdirSync,
-  readFileSync,
+  chmodSync,
   existsSync,
-  writeFileSync,
-  rmSync,
+  lstatSync,
   mkdtempSync,
-  Dirent,
+  realpathSync,
+  rmSync,
+  writeFileSync,
 } from 'fs';
 import {tmpdir} from 'os';
 import semver from 'semver';
@@ -31,6 +31,17 @@ import {
   workspaceRelativeChangelogPath,
 } from '../../../../ng-dev/release/notes/release-notes.js';
 import {NpmCommand} from '../../../../ng-dev/release/versioning/npm-command.js';
+import {
+  assertValidExitGateProject,
+  assertValidNpmDistTag,
+  buildExitGateNpmrcContent,
+  createExitGateManifest,
+  createManifestFileName,
+  ExitGateCommand,
+  getExitGateArRegistryUrl,
+  getExitGateManifestGcsUri,
+  PUBLIC_NPM_REGISTRY_URL,
+} from '../../../../ng-dev/release/versioning/exit-gate.js';
 import {getFileContentsUrl} from '../../../../ng-dev/utils/git/github-urls.js';
 import {PublishSummary} from './publish-summary.js';
 import {isGithubApiError} from '../../../../ng-dev/utils/git/github.js';
@@ -46,12 +57,19 @@ export interface PublishCiToolOptions {
   builtPackagesDir: string;
   /** The expected Git SHA of the release commit to verify against HEAD. */
   expectedSha: string;
-  /** Whether to run in dry-run mode (skips tags/releases creation and publishing). */
+  /** OSS Exit Gate project name (overrides `config.release.exitGate.projectName`). */
+  exitGateProject?: string;
+  /** Whether to run in dry-run mode (skips tags/releases creation, AR staging, and Exit Gate triggering). */
   dryRun?: boolean;
-  /** Whether to use local NPM configuration instead of setting up Wombat token. */
-  useLocalNpmConfig?: boolean;
+  /**
+   * Whether to use local Google Cloud Application Default Credentials instead of CI credentials.
+   * Cannot be enabled in CI environments.
+   */
+  useApplicationDefaultCredentials?: boolean;
   /** Whether to skip creating Git tags and GitHub releases. */
   skipTagging?: boolean;
+  /** Optional callback invoked to mask dynamically acquired secrets in CI logs. */
+  maskSecret?: (secret: string) => void;
 }
 
 /**
@@ -59,29 +77,40 @@ export interface PublishCiToolOptions {
  *
  * This tool is designed to run non-interactively in a CI environment after a release
  * staging PR has been merged. It handles Git tagging (both global and monorepo packages),
- * GitHub Release creation (with generated release notes), and publishing the packages to
- * the NPM registry (Wombat proxy) using the provided WOMBOT_TOKEN.
+ * GitHub Release creation (with generated release notes), staging pre-built packages to
+ * Google Cloud Artifact Registry, and uploading a release manifest to GCS to trigger
+ * asynchronous publishing to npmjs.org via OSS Exit Gate.
  */
 export class PublishCiTool {
-  private summary = new PublishSummary();
+  private summary: PublishSummary;
 
   constructor(
     protected config: NgDevConfig<{release: ReleaseConfig; github: GithubConfig}>,
     protected git: AuthenticatedGitClient,
     protected projectDir: string,
     protected options: PublishCiToolOptions,
-  ) {}
+  ) {
+    this.summary = new PublishSummary({dryRun: options.dryRun});
+  }
 
   /**
    * Executes the publish-ci process.
    */
   async run() {
-    if (this.options.useLocalNpmConfig) {
-      if (process.env['CI'] || process.env['GITHUB_ACTIONS']) {
-        throw new Error('useLocalNpmConfig cannot be used in a CI environment.');
-      }
-    } else if (!this.options.dryRun && !process.env['WOMBOT_TOKEN']) {
-      throw new Error('WOMBOT_TOKEN environment variable is not defined.');
+    if (
+      this.options.useApplicationDefaultCredentials &&
+      (process.env['CI'] || process.env['GITHUB_ACTIONS'])
+    ) {
+      throw new Error('useApplicationDefaultCredentials cannot be used in a CI environment.');
+    }
+
+    let exitGateProject = this.options.exitGateProject || this.config.release.exitGate?.projectName;
+    if (exitGateProject !== undefined && exitGateProject !== '') {
+      exitGateProject = assertValidExitGateProject(exitGateProject);
+    } else if (!this.options.dryRun) {
+      throw new Error(
+        'OSS Exit Gate project name is not defined. Configure `release.exitGate.projectName` or pass `exitGateProject`.',
+      );
     }
 
     this.assertExpectedSha();
@@ -95,6 +124,7 @@ export class PublishCiTool {
     }
 
     const npmDistTag = await determineNpmDistTag(newSemver, this.config.release, this.git);
+    assertValidNpmDistTag(npmDistTag);
 
     if (!this.options.skipTagging) {
       const beforeStagingSha = this.getBeforeStagingSha();
@@ -122,7 +152,12 @@ export class PublishCiTool {
     }
 
     if (!this.summary.hasFailures()) {
-      await this.publishAndDeprecatePackages(builtPackagesWithInfo, npmDistTag, newVersion);
+      await this.publishPackagesViaExitGate(
+        builtPackagesWithInfo,
+        npmDistTag,
+        newVersion,
+        exitGateProject,
+      );
     } else {
       Log.error('Skipping package publishing due to tagging or release creation failures.');
     }
@@ -152,6 +187,7 @@ export class PublishCiTool {
         `The built packages directory does not exist: ${this.options.builtPackagesDir}`,
       );
     }
+    const realBuiltDir = realpathSync(this.options.builtPackagesDir);
     const builtPackages: BuiltPackage[] = [];
     for (const npmPkg of this.config.release.npmPackages) {
       const scopeAndName = npmPkg.name.startsWith('@') ? npmPkg.name.slice(1) : npmPkg.name;
@@ -160,6 +196,16 @@ export class PublishCiTool {
 
       if (!existsSync(tgzPath)) {
         throw new Error(`Expected built package file not found: ${tgzPath}`);
+      }
+      if (!lstatSync(tgzPath).isFile()) {
+        throw new Error(`Built package path is not a regular file: ${tgzPath}`);
+      }
+      const realTgzPath = realpathSync(tgzPath);
+      const expectedPrefix = realBuiltDir.endsWith(sep) ? realBuiltDir : realBuiltDir + sep;
+      if (!realTgzPath.startsWith(expectedPrefix)) {
+        throw new Error(
+          `Built package path escapes builtPackagesDir: ${tgzPath} (resolved to ${realTgzPath})`,
+        );
       }
       builtPackages.push({
         name: npmPkg.name,
@@ -437,125 +483,268 @@ export class PublishCiTool {
   }
 
   /**
-   * Publishes the pre-built packages to the NPM registry via Wombat Dressing Room.
-   *
-   * Temporarily configures the local `.npmrc` file to point to the Wombat registry and include
-   * the authenticated `WOMBOT_TOKEN`. After publishing all resolved packages, the original
-   * `.npmrc` is restored (or deleted if it did not exist before).
+   * Stages pre-built packages to Google Cloud Artifact Registry and uploads a manifest to GCS
+   * to trigger asynchronous publishing to npmjs.org via OSS Exit Gate.
    *
    * @param builtPackages List of built packages to be published.
    * @param npmDistTag The NPM distribution tag (e.g. 'latest', 'next') to publish under.
+   * @param version The release version string being published.
+   * @param exitGateProject The OSS Exit Gate project name (may be undefined in dry-run mode).
    */
-  private async publishAndDeprecatePackages(
+  private async publishPackagesViaExitGate(
     builtPackages: BuiltPackageWithInfo[],
     npmDistTag: NpmDistTag,
     version: string,
+    exitGateProject: string | undefined,
   ) {
     if (this.options.dryRun) {
+      const projectLabel = exitGateProject || '<unconfigured>';
+      const arRegistryUrl = exitGateProject
+        ? getExitGateArRegistryUrl(exitGateProject)
+        : 'https://us-npm.pkg.dev/oss-exit-gate-prod/<project>--npm/';
+
       for (const pkg of builtPackages) {
-        Log.info(`[Dry-Run] Would publish package: ${pkg.name} to Wombat`);
-        this.summary.addPackage({name: pkg.name, version: version, status: 'PUBLISHED'});
+        Log.info(
+          `[Dry-Run] Would stage package: ${pkg.name}@${version} to Artifact Registry (${arRegistryUrl})`,
+        );
+        this.summary.addPackage({name: pkg.name, version, status: 'STAGED'});
         if (pkg.deprecated) {
-          Log.info(`[Dry-Run] Would deprecate package: ${pkg.name}@${pkg.deprecated.version}`);
+          Log.warn(
+            `[Dry-Run] Skipping deprecation for ${pkg.name}@${pkg.deprecated.version} ` +
+              '(unsupported by OSS Exit Gate; manual deprecation required after publish).',
+          );
+          this.summary.addWarning(
+            `Manual deprecation required for \`${pkg.name}@${pkg.deprecated.version}\`: ` +
+              `\`npm deprecate "${pkg.name}@${pkg.deprecated.version}" "${pkg.deprecated.message}"\``,
+          );
         }
       }
+
+      const manifest = createExitGateManifest(npmDistTag);
+      const manifestFileName = createManifestFileName(version, this.options.expectedSha);
+      const gcsUri = exitGateProject
+        ? getExitGateManifestGcsUri(exitGateProject, manifestFileName)
+        : `gs://oss-exit-gate-prod-projects-bucket/<project>/npm/manifests/${manifestFileName}`;
+      Log.info(
+        `[Dry-Run] Would upload OSS Exit Gate manifest to ${gcsUri}:\n${JSON.stringify(manifest, null, 2)}`,
+      );
+      this.summary.setExitGate({
+        project: projectLabel,
+        distTag: npmDistTag,
+        manifestUri: gcsUri,
+        status: 'TRIGGERED',
+        detail: 'Dry-run',
+      });
       return;
     }
 
+    if (!exitGateProject) {
+      throw new Error(
+        'OSS Exit Gate project name is not defined. Configure `release.exitGate.projectName` or pass `exitGateProject`.',
+      );
+    }
+
     const tempDir = mkdtempSync(join(tmpdir(), 'angular-publish-ci-'));
-    const tempNpmrcPath = join(tempDir, '.npmrc');
-    const originalUserconfig = process.env['NPM_CONFIG_USERCONFIG'];
+    chmodSync(tempDir, 0o700);
 
     try {
-      if (!this.options.useLocalNpmConfig) {
-        const wombatNpmrcContent =
-          [
-            `registry=https://wombat-dressing-room.appspot.com/`,
-            `//wombat-dressing-room.appspot.com/:_authToken=\${WOMBOT_TOKEN}`,
-          ].join('\n') + '\n';
-        writeFileSync(tempNpmrcPath, wombatNpmrcContent);
-        Log.info(green(`  ✓   Created temporary .npmrc for Wombat registry.`));
-        process.env['NPM_CONFIG_USERCONFIG'] = tempNpmrcPath;
-      } else {
-        Log.info('Using default local NPM configuration.');
-      }
+      // Phase 1: Check existing versions against public npm.
+      const emptyNpmrcPath = join(tempDir, 'empty.npmrc');
+      writeFileSync(emptyNpmrcPath, '', {mode: 0o600});
+      const checkEnv: NodeJS.ProcessEnv = {
+        ...process.env,
+        NPM_CONFIG_USERCONFIG: emptyNpmrcPath,
+      };
 
-      // Publish packages
+      const packagesToStage: BuiltPackageWithInfo[] = [];
       for (const pkg of builtPackages) {
-        Log.info(`Checking if "${pkg.name}@${version}" is already published...`);
+        Log.info(`Checking if "${pkg.name}@${version}" is already published on NPM...`);
         try {
           const exists = await NpmCommand.checkVersionExists(
             pkg.name,
             version,
-            this.config.release.publishRegistry,
+            PUBLIC_NPM_REGISTRY_URL,
             tempDir,
+            checkEnv,
           );
           if (exists) {
             Log.warn(`Warning: Package "${pkg.name}@${version}" is already published. Skipping.`);
-            this.summary.addPackage({name: pkg.name, version: version, status: 'SKIPPED'});
+            this.summary.addPackage({name: pkg.name, version, status: 'SKIPPED'});
             continue;
           }
-
-          Log.info(`Publishing "${pkg.name}"...`);
-          await NpmCommand.publish(
-            resolve(pkg.outputPath),
-            npmDistTag,
-            this.config.release.publishRegistry,
-            tempDir,
-          );
-          Log.info(green(`  ✓   Successfully published "${pkg.name}".`));
-          this.summary.addPackage({name: pkg.name, version: version, status: 'PUBLISHED'});
+          packagesToStage.push(pkg);
         } catch (e) {
-          Log.error(`An error occurred while publishing "${pkg.name}": ${e}`);
+          Log.error(`Failed to check existing version for "${pkg.name}@${version}": ${e}`);
           this.summary.addPackage({
             name: pkg.name,
-            version: version,
+            version,
             status: 'FAILED',
             error: String(e),
           });
         }
       }
 
-      // Deprecate packages if configured
-      for (const pkg of builtPackages) {
-        if (!pkg.deprecated) {
-          continue;
-        }
-        if (this.summary.hasPackageFailed(pkg.name)) {
-          Log.warn(`Skipping deprecation for "${pkg.name}" because publish failed.`);
-          continue;
-        }
+      // Phase 2: Gate before Artifact Registry staging.
+      if (this.summary.hasFailures()) {
+        Log.error('Aborting Artifact Registry staging due to package version check failures.');
+        this.summary.setExitGate({
+          project: exitGateProject,
+          distTag: npmDistTag,
+          status: 'SKIPPED',
+          detail: 'Aborted due to package version check failures.',
+        });
+        return;
+      }
 
-        Log.info(`Deprecating "${pkg.name}"...`);
-        const {version, message} = pkg.deprecated;
+      if (packagesToStage.length === 0) {
+        Log.info(
+          'All packages are already published on NPM. Skipping Artifact Registry staging and Exit Gate trigger.',
+        );
+        this.summary.setExitGate({
+          project: exitGateProject,
+          distTag: npmDistTag,
+          status: 'SKIPPED',
+          detail: 'All packages already published on NPM.',
+        });
+        return;
+      }
+
+      // Phase 3: Authenticate, clean stale AR packages, and stage to Artifact Registry.
+      const accessToken = await ExitGateCommand.getAccessToken({
+        useApplicationDefault: this.options.useApplicationDefaultCredentials,
+        maskSecret: this.options.maskSecret,
+      });
+      const gcloudOptions = this.options.useApplicationDefaultCredentials
+        ? {accessToken}
+        : undefined;
+
+      Log.info(`Cleaning stale packages in Artifact Registry for project "${exitGateProject}"...`);
+      const deletedPackages = gcloudOptions
+        ? await ExitGateCommand.cleanArtifactRegistryPackages(exitGateProject, gcloudOptions)
+        : await ExitGateCommand.cleanArtifactRegistryPackages(exitGateProject);
+      if (deletedPackages.length > 0) {
+        Log.warn(
+          `Cleaned ${deletedPackages.length} stale package(s) from Artifact Registry before staging.`,
+        );
+      }
+
+      const arNpmrcPath = join(tempDir, 'ar.npmrc');
+      writeFileSync(arNpmrcPath, buildExitGateNpmrcContent(exitGateProject, 'EXIT_GATE_AR_TOKEN'), {
+        mode: 0o600,
+      });
+
+      const arRegistryUrl = getExitGateArRegistryUrl(exitGateProject);
+      const publishEnv: NodeJS.ProcessEnv = {
+        ...process.env,
+        NPM_CONFIG_USERCONFIG: arNpmrcPath,
+        EXIT_GATE_AR_TOKEN: accessToken,
+      };
+
+      for (const pkg of packagesToStage) {
+        Log.info(`Staging "${pkg.name}@${version}" to Artifact Registry...`);
         try {
-          await NpmCommand.deprecate(
-            pkg.name,
-            version,
-            message,
-            this.config.release.publishRegistry,
+          await NpmCommand.publish(
+            resolve(pkg.outputPath),
+            npmDistTag,
+            arRegistryUrl,
             tempDir,
+            publishEnv,
           );
-          Log.info(green(`  ✓   Successfully deprecated "${pkg.name}@${version}".`));
+          Log.info(green(`  ✓   Successfully staged "${pkg.name}" to Artifact Registry.`));
+          this.summary.addPackage({name: pkg.name, version, status: 'STAGED'});
         } catch (e) {
-          Log.error(`Failed to deprecate "${pkg.name}": ${e}`);
+          const sanitizedError = redactSecret(String(e), accessToken);
+          Log.error(`An error occurred while staging "${pkg.name}": ${sanitizedError}`);
+          this.summary.addPackage({
+            name: pkg.name,
+            version,
+            status: 'FAILED',
+            error: sanitizedError,
+          });
+        }
+      }
+
+      // Phase 4: Upload manifest to GCS to trigger OSS Exit Gate.
+      if (this.summary.hasFailures()) {
+        Log.error(
+          'Skipping OSS Exit Gate manifest upload due to Artifact Registry staging failures.',
+        );
+        this.summary.setExitGate({
+          project: exitGateProject,
+          distTag: npmDistTag,
+          status: 'SKIPPED',
+          detail: 'Aborted due to Artifact Registry staging failures.',
+        });
+      } else {
+        const manifest = createExitGateManifest(npmDistTag);
+        const manifestFileName = createManifestFileName(version, this.options.expectedSha);
+        const localManifestPath = join(tempDir, manifestFileName);
+        writeFileSync(localManifestPath, JSON.stringify(manifest, null, 2) + '\n', {mode: 0o600});
+        try {
+          const gcsUri = gcloudOptions
+            ? await ExitGateCommand.uploadManifest(
+                localManifestPath,
+                exitGateProject,
+                manifestFileName,
+                gcloudOptions,
+              )
+            : await ExitGateCommand.uploadManifest(
+                localManifestPath,
+                exitGateProject,
+                manifestFileName,
+              );
+          Log.info(green(`  ✓   Uploaded OSS Exit Gate manifest to ${gcsUri}.`));
+          this.summary.setExitGate({
+            project: exitGateProject,
+            distTag: npmDistTag,
+            manifestUri: gcsUri,
+            status: 'TRIGGERED',
+          });
+        } catch (e) {
+          const sanitizedError = redactSecret(String(e), accessToken);
+          Log.error(`Failed to upload OSS Exit Gate manifest: ${sanitizedError}`);
+          this.summary.setExitGate({
+            project: exitGateProject,
+            distTag: npmDistTag,
+            status: 'FAILED',
+            error: sanitizedError,
+          });
+        }
+      }
+
+      // Phase 5: Warn about deprecated packages (unsupported by OSS Exit Gate).
+      if (!this.summary.hasFailures()) {
+        for (const pkg of builtPackages) {
+          if (!pkg.deprecated || this.summary.hasPackageFailed(pkg.name)) {
+            continue;
+          }
+          const {version: deprecatedVersion, message} = pkg.deprecated;
+          const manualCmd = `npm deprecate "${pkg.name}@${deprecatedVersion}" "${message}"`;
+          Log.warn(
+            `Warning: Skipping deprecation for "${pkg.name}@${deprecatedVersion}" because OSS Exit Gate ` +
+              `does not support \`npm deprecate\`. Run manually after publishing completes: ${manualCmd}`,
+          );
+          this.summary.addWarning(
+            `Manual deprecation required for \`${pkg.name}@${deprecatedVersion}\`: \`${manualCmd}\``,
+          );
         }
       }
     } finally {
-      // Guaranteed cleanup of files and environment
       try {
         rmSync(tempDir, {recursive: true, force: true});
       } catch (e) {
         Log.warn(`Warning: Failed to clean up temporary directory ${tempDir}: ${e}`);
-      } finally {
-        if (originalUserconfig !== undefined) {
-          process.env['NPM_CONFIG_USERCONFIG'] = originalUserconfig;
-        } else {
-          delete process.env['NPM_CONFIG_USERCONFIG'];
-        }
       }
     }
   }
+}
+
+/** Replaces all occurrences of a secret in text to prevent accidental log or summary leakage. */
+function redactSecret(text: string, secret: string): string {
+  if (!secret) {
+    return text;
+  }
+  return text.split(secret).join('[REDACTED]');
 }
 
 /**
@@ -569,17 +758,6 @@ function readPackageJsonAtRef(git: AuthenticatedGitClient, ref: string): any {
   const content = git.run(['show', `${ref}:package.json`]).stdout.trim();
   return JSON.parse(content);
 }
-
-/**
- * Recursively searches a directory to find all built packages.
- *
- * A directory is considered a built package if it contains a `package.json` file
- * with a valid `name` property.
- *
- * @param dir The root directory to start the search from.
- * @returns An array of `BuiltPackage` objects containing the name and output path.
- * @throws {Error} If the specified directory does not exist.
- */
 
 /**
  * Determines the NPM distribution tag (e.g. 'latest', 'next') for the version being published.

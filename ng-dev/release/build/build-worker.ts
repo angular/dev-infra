@@ -33,6 +33,13 @@ async function main() {
   delete process.env['TOKEN'];
   delete process.env['GH_TOKEN'];
   delete process.env['SNAPSHOT_BUILDS_GITHUB_TOKEN'];
+  delete process.env['WOMBOT_TOKEN'];
+  delete process.env['GOOGLE_APPLICATION_CREDENTIALS'];
+  delete process.env['CLOUDSDK_AUTH_ACCESS_TOKEN'];
+  delete process.env['GOOGLE_OAUTH_ACCESS_TOKEN'];
+  delete process.env['EXIT_GATE_AR_TOKEN'];
+  delete process.env['ACTIONS_ID_TOKEN_REQUEST_TOKEN'];
+  delete process.env['ACTIONS_ID_TOKEN_REQUEST_URL'];
 
   const config = await getConfig();
   assertValidReleaseConfig(config);

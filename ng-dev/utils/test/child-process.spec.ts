@@ -32,6 +32,29 @@ describe('ChildProcess sanitization', () => {
         'Executing command: node -e  https://<TOKEN>@github.com',
       );
     });
+
+    it('should sanitize spawn errors on failure', async () => {
+      try {
+        await ChildProcess.spawnInteractive(
+          `https://user:secret@example.invalid/${['ya29', 'secret_token_123'].join('.')}`,
+          [],
+        );
+        fail('Expected spawnInteractive to reject on ENOENT');
+      } catch (err) {
+        const errnoErr = err as NodeJS.ErrnoException;
+        expect(errnoErr).toEqual(jasmine.any(Error));
+        expect(errnoErr.code).toBe('ENOENT');
+        expect(errnoErr.message).toContain('https://<TOKEN>@example.invalid/<REDACTED_TOKEN>');
+        expect(errnoErr.message).not.toContain('secret');
+        expect(errnoErr.stack).not.toContain('secret');
+        expect(debugSpy).toHaveBeenCalledWith(
+          jasmine.stringContaining('https://<TOKEN>@example.invalid/<REDACTED_TOKEN>'),
+        );
+        for (const call of debugSpy.calls.allArgs()) {
+          expect(String(call[0])).not.toContain('secret');
+        }
+      }
+    });
   });
 
   describe('spawnSync', () => {
@@ -114,6 +137,169 @@ describe('ChildProcess sanitization', () => {
         expect(String(err)).toContain('stderr: https://<TOKEN>@github.com');
         expect(String(err)).not.toContain('token');
         expect(String(err)).not.toContain('secret');
+      }
+    });
+
+    it('should redact GCP OAuth2 access tokens in command logs and output', async () => {
+      const token = ['ya29', 'a0AfH6SMB_example-token.12345'].join('.');
+      await ChildProcess.spawn('node', ['-e', `console.log("token: ${token}")`], {
+        mode: 'silent',
+      });
+
+      expect(debugSpy).toHaveBeenCalledWith(jasmine.stringContaining('token: <REDACTED_TOKEN>'));
+      for (const call of debugSpy.calls.allArgs()) {
+        expect(String(call[0])).not.toContain(token);
+      }
+    });
+
+    it('should redact Authorization Bearer and Basic headers', async () => {
+      await ChildProcess.spawn(
+        'node',
+        [
+          '-e',
+          'console.log("Authorization: Bearer super-secret-bearer"); console.log("authorization: basic dXNlcjpwYXNz")',
+        ],
+        {mode: 'silent'},
+      );
+
+      expect(debugSpy).toHaveBeenCalledWith(
+        jasmine.stringContaining('Authorization: Bearer <REDACTED>'),
+      );
+      expect(debugSpy).toHaveBeenCalledWith(
+        jasmine.stringContaining('authorization: basic <REDACTED>'),
+      );
+      for (const call of debugSpy.calls.allArgs()) {
+        expect(String(call[0])).not.toContain('super-secret-bearer');
+        expect(String(call[0])).not.toContain('dXNlcjpwYXNz');
+      }
+    });
+
+    it('should redact .npmrc _authToken and _password directives', async () => {
+      await ChildProcess.spawn(
+        'node',
+        [
+          '-e',
+          'console.log("//registry.npmjs.org/:_authToken=npm_secret123"); console.log("//registry.npmjs.org/:_password=c2VjcmV0")',
+        ],
+        {mode: 'silent'},
+      );
+
+      expect(debugSpy).toHaveBeenCalledWith(
+        jasmine.stringContaining('//registry.npmjs.org/:_authToken=<REDACTED>'),
+      );
+      expect(debugSpy).toHaveBeenCalledWith(
+        jasmine.stringContaining('//registry.npmjs.org/:_password=<REDACTED>'),
+      );
+      for (const call of debugSpy.calls.allArgs()) {
+        expect(String(call[0])).not.toContain('npm_secret123');
+        expect(String(call[0])).not.toContain('c2VjcmV0');
+      }
+    });
+
+    it('should redact JWTs in command logs and output', async () => {
+      const jwt =
+        'eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV';
+      await ChildProcess.spawn('node', ['-e', `console.log("jwt: ${jwt}")`], {
+        mode: 'silent',
+      });
+
+      expect(debugSpy).toHaveBeenCalledWith(jasmine.stringContaining('jwt: <REDACTED_JWT>'));
+      for (const call of debugSpy.calls.allArgs()) {
+        expect(String(call[0])).not.toContain(jwt);
+      }
+    });
+
+    it('should redact GitHub classic and fine-grained tokens in command logs and output', async () => {
+      const classicToken = ['ghp', 'a'.repeat(36)].join('_');
+      const installToken = ['ghs', 'b'.repeat(36)].join('_');
+      const fineGrainedPat = ['github', 'pat', 'c'.repeat(22), 'd'.repeat(59)].join('_');
+      await ChildProcess.spawn(
+        'node',
+        [
+          '-e',
+          `console.log("classic: ${classicToken} install: ${installToken} pat: ${fineGrainedPat}")`,
+        ],
+        {mode: 'silent'},
+      );
+
+      expect(debugSpy).toHaveBeenCalledWith(
+        jasmine.stringContaining(
+          'classic: <REDACTED_GITHUB_TOKEN> install: <REDACTED_GITHUB_TOKEN> pat: <REDACTED_GITHUB_PAT>',
+        ),
+      );
+      for (const call of debugSpy.calls.allArgs()) {
+        expect(String(call[0])).not.toContain(classicToken);
+        expect(String(call[0])).not.toContain(installToken);
+        expect(String(call[0])).not.toContain(fineGrainedPat);
+      }
+    });
+
+    it('should suppress Process output logging when sensitiveOutput is true', async () => {
+      const result = await ChildProcess.spawn(
+        'node',
+        ['-e', 'process.stdout.write("sensitive-" + "raw-secret")'],
+        {mode: 'silent', sensitiveOutput: true},
+      );
+
+      expect(result.stdout).toBe('sensitive-raw-secret');
+      expect(debugSpy).toHaveBeenCalledWith(
+        jasmine.stringMatching(/Command ".*" completed with exit code "0"\./),
+      );
+      for (const call of debugSpy.calls.allArgs()) {
+        expect(String(call[0])).not.toContain('Process output:');
+        expect(String(call[0])).not.toContain('sensitive-raw-secret');
+      }
+    });
+
+    it('should suppress Process output logging on error when sensitiveOutput is true', async () => {
+      try {
+        await ChildProcess.spawn(
+          'node',
+          ['-e', 'console.error("sensitive-" + "error-secret"); process.exit(1)'],
+          {mode: 'on-error', sensitiveOutput: true},
+        );
+        fail('Expected spawn to reject on non-zero exit code');
+      } catch {
+        // Expected rejection.
+      }
+
+      expect(errorSpy).toHaveBeenCalledWith(
+        jasmine.stringMatching(/Command ".*" completed with exit code "1"\./),
+      );
+      for (const call of [...debugSpy.calls.allArgs(), ...errorSpy.calls.allArgs()]) {
+        expect(String(call[0])).not.toContain('Process output:');
+        expect(String(call[0])).not.toContain('sensitive-error-secret');
+      }
+    });
+
+    it('should sanitize error fields and logs on spawn error events', async () => {
+      try {
+        await ChildProcess.spawn(
+          `https://user:secret@example.invalid/${['ya29', 'secret_token_123'].join('.')}`,
+          ['--header', 'Authorization: Bearer top-secret-token'],
+          {mode: 'on-error'},
+        );
+        fail('Expected spawn to reject on ENOENT');
+      } catch (err) {
+        const errnoErr = err as NodeJS.ErrnoException & {spawnargs?: string[]};
+        expect(errnoErr).toEqual(jasmine.any(Error));
+        expect(errnoErr.code).toBe('ENOENT');
+        expect(errnoErr.message).toContain('https://<TOKEN>@example.invalid/<REDACTED_TOKEN>');
+        expect(errnoErr.message).not.toContain('secret');
+        expect(errnoErr.stack).not.toContain('secret');
+        expect(errnoErr.path).toContain('https://<TOKEN>@example.invalid/<REDACTED_TOKEN>');
+        expect(errnoErr.path).not.toContain('secret');
+        expect(errnoErr.syscall).not.toContain('secret');
+        expect(errnoErr.spawnargs?.join(' ')).toContain('Authorization: Bearer <REDACTED>');
+        expect(errnoErr.spawnargs?.join(' ')).not.toContain('top-secret-token');
+
+        expect(errorSpy).toHaveBeenCalledWith(
+          jasmine.stringContaining('https://<TOKEN>@example.invalid/<REDACTED_TOKEN>'),
+        );
+        for (const call of [...debugSpy.calls.allArgs(), ...errorSpy.calls.allArgs()]) {
+          expect(String(call[0])).not.toContain('secret');
+          expect(String(call[0])).not.toContain('top-secret-token');
+        }
       }
     });
   });

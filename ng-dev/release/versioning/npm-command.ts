@@ -23,13 +23,18 @@ export abstract class NpmCommand {
     distTag: NpmDistTag,
     registryUrl: string | undefined,
     cwd?: string,
+    env?: NodeJS.ProcessEnv,
   ) {
     const args = ['publish', packagePath, '--access', 'public', '--tag', distTag];
     // If a custom registry URL has been specified, add the `--registry` flag.
     if (registryUrl !== undefined) {
       args.push('--registry', registryUrl);
     }
-    await ChildProcess.spawn('npm', args, {mode: 'silent', ...(cwd ? {cwd} : {})});
+    await ChildProcess.spawn('npm', args, {
+      mode: 'silent',
+      ...(cwd ? {cwd} : {}),
+      ...(env ? {env} : {}),
+    });
   }
 
   /**
@@ -41,13 +46,18 @@ export abstract class NpmCommand {
     version: string,
     registryUrl: string | undefined,
     cwd?: string,
+    env?: NodeJS.ProcessEnv,
   ): Promise<boolean> {
     const args = ['view', `${packageName}@${version}`, 'version'];
     if (registryUrl !== undefined) {
       args.push('--registry', registryUrl);
     }
     try {
-      const result = await ChildProcess.spawn('npm', args, {mode: 'silent', ...(cwd ? {cwd} : {})});
+      const result = await ChildProcess.spawn('npm', args, {
+        mode: 'silent',
+        ...(cwd ? {cwd} : {}),
+        ...(env ? {env} : {}),
+      });
       const output = result.stdout.trim();
       return output !== '';
     } catch (e) {
@@ -73,6 +83,7 @@ export abstract class NpmCommand {
     message: string,
     registryUrl: string | undefined,
     cwd?: string,
+    env?: NodeJS.ProcessEnv,
   ) {
     const args = ['deprecate', `${packageName}@${version}`, message];
 
@@ -82,7 +93,11 @@ export abstract class NpmCommand {
     }
 
     try {
-      await ChildProcess.spawn('npm', args, {mode: 'silent', ...(cwd ? {cwd} : {})});
+      await ChildProcess.spawn('npm', args, {
+        mode: 'silent',
+        ...(cwd ? {cwd} : {}),
+        ...(env ? {env} : {}),
+      });
     } catch (e) {
       // TODO(alanagius): remove try/catch block once https://buganizer.corp.google.com/u/1/issues/512428441 is fixed.
       Log.error(Array(80).join('#'));

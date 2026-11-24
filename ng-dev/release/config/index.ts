@@ -58,10 +58,21 @@ export interface NpmPackage {
   snapshotRepo?: string;
 }
 
+/** Regular expression validating an OSS Exit Gate project name. */
+export const EXIT_GATE_PROJECT_NAME_REGEX = /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/;
+
+/** Configuration for publishing release packages via OSS Exit Gate. */
+export interface ExitGateConfig {
+  /** The registered OSS Exit Gate project name (e.g. `angular`). */
+  projectName: string;
+}
+
 /** Configuration for staging and publishing a release. */
 export interface ReleaseConfig {
   /** Registry URL used for publishing release packages. Defaults to the NPM registry. */
   publishRegistry?: string;
+  /** Configuration for publishing release packages through OSS Exit Gate. */
+  exitGate?: ExitGateConfig;
   /**
    * The representative NPM package for this project. The specified package will be used
    * for querying the NPM registry to e.g. determine active LTS branches.
@@ -163,14 +174,38 @@ export function assertValidReleaseConfig<T extends NgDevConfig>(
 
     if (representativePkgEntry === undefined) {
       errors.push(
-        `Configured "representativeNpmPackage" (${representativePkgEntry}) does not match ` +
-          `a package in "npmPackages".`,
+        `Configured "representativeNpmPackage" (${config.release.representativeNpmPackage}) ` +
+          `does not match a package in "npmPackages".`,
       );
     } else if (representativePkgEntry.experimental) {
       errors.push(
-        `Configured "representativeNpmPackage" (${representativePkgEntry}) corresponds to an ` +
-          `experimental package. The representative NPM package is expected to be a ` +
-          `long-standing and non-experimental package of the project.`,
+        `Configured "representativeNpmPackage" (${config.release.representativeNpmPackage}) ` +
+          `corresponds to an experimental package. The representative NPM package is ` +
+          `expected to be a long-standing and non-experimental package of the project.`,
+      );
+    }
+  }
+
+  if (config.release.exitGate !== undefined) {
+    if (
+      typeof config.release.exitGate !== 'object' ||
+      config.release.exitGate === null ||
+      Array.isArray(config.release.exitGate)
+    ) {
+      errors.push('Configured "exitGate" must be an object.');
+    } else if (
+      typeof config.release.exitGate.projectName !== 'string' ||
+      !EXIT_GATE_PROJECT_NAME_REGEX.test(config.release.exitGate.projectName)
+    ) {
+      errors.push(
+        'Configured "exitGate.projectName" must be a valid OSS Exit Gate project name ' +
+          '(lowercase alphanumeric and hyphens, 1-63 chars).',
+      );
+    }
+
+    if (config.release.publishRegistry !== undefined) {
+      errors.push(
+        'Cannot configure both "exitGate" and "publishRegistry" in release configuration.',
       );
     }
   }
