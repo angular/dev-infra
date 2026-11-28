@@ -424,16 +424,16 @@
     },
     "@@rules_browsers+//browsers:extensions.bzl%browsers": {
       "general": {
-        "bzlTransitiveDigest": "11vL+WEXLSRGlsbP+jSNjHCGolNDAtUuuzC/rAxI2EE=",
+        "bzlTransitiveDigest": "07g7j0gcYV9jnPtFhLcPd8HsY8Z2TewpdRCt2shJj1w=",
         "usagesDigest": "FmXYJVoVJlnfUU8x8gObSvu4qWcco/9Faw61aC/wBF0=",
         "recordedInputs": [],
         "generatedRepoSpecs": {
           "rules_browsers_chrome_linux": {
             "repoRuleId": "@@rules_browsers+//browsers/private:browser_repo.bzl%browser_repo",
             "attributes": {
-              "sha256": "824a97aba236d7d16c096c742816c31cc9c4ff4f7ada809c74677b0cfe01a54a",
+              "sha256": "b186452b79ae18c26a91540dda92e8b4f4cd61f1720194ff0934e53d78579bbd",
               "urls": [
-                "https://storage.googleapis.com/chrome-for-testing-public/160.0.8180.0/linux64/chrome-headless-shell-linux64.zip"
+                "https://storage.googleapis.com/chrome-for-testing-public/160.0.8189.0/linux64/chrome-headless-shell-linux64.zip"
               ],
               "named_files": {
                 "CHROME-HEADLESS-SHELL": "chrome-headless-shell-linux64/chrome-headless-shell"
@@ -449,9 +449,9 @@
           "rules_browsers_chrome_mac": {
             "repoRuleId": "@@rules_browsers+//browsers/private:browser_repo.bzl%browser_repo",
             "attributes": {
-              "sha256": "4bd6b89a9a739e02e9606578b98ad40597c0aa9e9d651976be4599a496001c88",
+              "sha256": "490794ba0f8d7f02866c75b2bf14bb1790f79c17238513a4552702c40e48a695",
               "urls": [
-                "https://storage.googleapis.com/chrome-for-testing-public/160.0.8180.0/mac-x64/chrome-headless-shell-mac-x64.zip"
+                "https://storage.googleapis.com/chrome-for-testing-public/160.0.8189.0/mac-x64/chrome-headless-shell-mac-x64.zip"
               ],
               "named_files": {
                 "CHROME-HEADLESS-SHELL": "chrome-headless-shell-mac-x64/chrome-headless-shell"
@@ -467,9 +467,9 @@
           "rules_browsers_chrome_mac_arm": {
             "repoRuleId": "@@rules_browsers+//browsers/private:browser_repo.bzl%browser_repo",
             "attributes": {
-              "sha256": "cb472d3de14e9982e182c2d08756a9aaf02e695407a8812103faf125527f56ac",
+              "sha256": "335893c5ab67d0cd9b707da0b5544f7dd245f5a39ea8327e297d79fd3ade131a",
               "urls": [
-                "https://storage.googleapis.com/chrome-for-testing-public/160.0.8180.0/mac-arm64/chrome-headless-shell-mac-arm64.zip"
+                "https://storage.googleapis.com/chrome-for-testing-public/160.0.8189.0/mac-arm64/chrome-headless-shell-mac-arm64.zip"
               ],
               "named_files": {
                 "CHROME-HEADLESS-SHELL": "chrome-headless-shell-mac-arm64/chrome-headless-shell"
@@ -485,9 +485,9 @@
           "rules_browsers_chrome_win64": {
             "repoRuleId": "@@rules_browsers+//browsers/private:browser_repo.bzl%browser_repo",
             "attributes": {
-              "sha256": "0c2b501463ae54f1219028137a0b964b5d54e62d5e7789cf71ab35e330ed5df5",
+              "sha256": "4764265ba47eaff969a458a1db7a502f63d36848882eebf3dd30faa469b74127",
               "urls": [
-                "https://storage.googleapis.com/chrome-for-testing-public/160.0.8180.0/win64/chrome-headless-shell-win64.zip"
+                "https://storage.googleapis.com/chrome-for-testing-public/160.0.8189.0/win64/chrome-headless-shell-win64.zip"
               ],
               "named_files": {
                 "CHROME-HEADLESS-SHELL": "chrome-headless-shell-win64/chrome-headless-shell.exe"
@@ -503,9 +503,9 @@
           "rules_browsers_chromedriver_linux": {
             "repoRuleId": "@@rules_browsers+//browsers/private:browser_repo.bzl%browser_repo",
             "attributes": {
-              "sha256": "444daae68038fad3a70a8cbd44ceaf71ca9ceb306f3afa69efae311b0a8903cd",
+              "sha256": "35f94718b410e42dd18ea29ae5b9f9702a0c493d9486947a4e3abefa67e2d74b",
               "urls": [
-                "https://storage.googleapis.com/chrome-for-testing-public/160.0.8180.0/linux64/chromedriver-linux64.zip"
+                "https://storage.googleapis.com/chrome-for-testing-public/160.0.8189.0/linux64/chromedriver-linux64.zip"
               ],
               "named_files": {
                 "CHROMEDRIVER": "chromedriver-linux64/chromedriver"
@@ -519,9 +519,9 @@
           "rules_browsers_chromedriver_mac": {
             "repoRuleId": "@@rules_browsers+//browsers/private:browser_repo.bzl%browser_repo",
             "attributes": {
-              "sha256": "7f4de7a732c619e7835bf9d06bcf72dbd73afd2e7cafdc3b6cf3fe2067359d34",
+              "sha256": "46cb20918a307147e0aa8302bc671538f79b3cc8627986cc876ef6cdc8f07476",
               "urls": [
-                "https://storage.googleapis.com/chrome-for-testing-public/160.0.8180.0/mac-x64/chromedriver-mac-x64.zip"
+                "https://storage.googleapis.com/chrome-for-testing-public/160.0.8189.0/mac-x64/chromedriver-mac-x64.zip"
               ],
               "named_files": {
                 "CHROMEDRIVER": "chromedriver-mac-x64/chromedriver"
@@ -535,9 +535,9 @@
           "rules_browsers_chromedriver_mac_arm": {
             "repoRuleId": "@@rules_browsers+//browsers/private:browser_repo.bzl%browser_repo",
             "attributes": {
-              "sha256": "52c15173627a96781b4e7902f2aca59daabd48839a49c9ea4f91b00f56a38c15",
+              "sha256": "ae23506f4b61898490f90261022e00a7a7ae972e4ba01f8c53b5e911282624ae",
               "urls": [
-                "https://storage.googleapis.com/chrome-for-testing-public/160.0.8180.0/mac-arm64/chromedriver-mac-arm64.zip"
+                "https://storage.googleapis.com/chrome-for-testing-public/160.0.8189.0/mac-arm64/chromedriver-mac-arm64.zip"
               ],
               "named_files": {
                 "CHROMEDRIVER": "chromedriver-mac-arm64/chromedriver"
@@ -551,9 +551,9 @@
           "rules_browsers_chromedriver_win64": {
             "repoRuleId": "@@rules_browsers+//browsers/private:browser_repo.bzl%browser_repo",
             "attributes": {
-              "sha256": "c39a4a264c3d8aa82f72b86808936bbe48170eec28388871578787af42dff7d1",
+              "sha256": "1a56194ef5b06bd3f3ca88c63aa831d183bed5be7faabde192a5005bb2776883",
               "urls": [
-                "https://storage.googleapis.com/chrome-for-testing-public/160.0.8180.0/win64/chromedriver-win64.zip"
+                "https://storage.googleapis.com/chrome-for-testing-public/160.0.8189.0/win64/chromedriver-win64.zip"
               ],
               "named_files": {
                 "CHROMEDRIVER": "chromedriver-win64/chromedriver.exe"
@@ -567,9 +567,9 @@
           "rules_browsers_firefox_linux": {
             "repoRuleId": "@@rules_browsers+//browsers/private:browser_repo.bzl%browser_repo",
             "attributes": {
-              "sha256": "fde774e9757c8878534c05ec210db592bf6a1b244c57941ffb2e364c04f35fcd",
+              "sha256": "3e9b1e5132d7b53b1ad968c7300281e90e6a0ef57d0656b1516202d686d25733",
               "urls": [
-                "https://archive.mozilla.org/pub/firefox/releases/160.0/linux-x86_64/en-US/firefox-160.0.tar.xz"
+                "https://archive.mozilla.org/pub/firefox/releases/161.0/linux-x86_64/en-US/firefox-161.0.tar.xz"
               ],
               "named_files": {
                 "FIREFOX": "firefox/firefox"
@@ -583,9 +583,9 @@
           "rules_browsers_firefox_mac": {
             "repoRuleId": "@@rules_browsers+//browsers/private:browser_repo.bzl%browser_repo",
             "attributes": {
-              "sha256": "b270ccc60eb899bd0277bd078d7bd8690f5c4fc3e44b4fa9ee78ed2a3e89f0ca",
+              "sha256": "18f398ada9ba9faa5458dc01c2a68fc7df35517283be2e7a421a0867c5f47f83",
               "urls": [
-                "https://archive.mozilla.org/pub/firefox/releases/160.0/mac/en-US/Firefox%20160.0.dmg"
+                "https://archive.mozilla.org/pub/firefox/releases/161.0/mac/en-US/Firefox%20161.0.dmg"
               ],
               "named_files": {
                 "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
@@ -599,9 +599,9 @@
           "rules_browsers_firefox_mac_arm": {
             "repoRuleId": "@@rules_browsers+//browsers/private:browser_repo.bzl%browser_repo",
             "attributes": {
-              "sha256": "b270ccc60eb899bd0277bd078d7bd8690f5c4fc3e44b4fa9ee78ed2a3e89f0ca",
+              "sha256": "18f398ada9ba9faa5458dc01c2a68fc7df35517283be2e7a421a0867c5f47f83",
               "urls": [
-                "https://archive.mozilla.org/pub/firefox/releases/160.0/mac/en-US/Firefox%20160.0.dmg"
+                "https://archive.mozilla.org/pub/firefox/releases/161.0/mac/en-US/Firefox%20161.0.dmg"
               ],
               "named_files": {
                 "FIREFOX": "Firefox.app/Contents/MacOS/firefox"
@@ -615,9 +615,9 @@
           "rules_browsers_firefox_win64": {
             "repoRuleId": "@@rules_browsers+//browsers/private:browser_repo.bzl%browser_repo",
             "attributes": {
-              "sha256": "8732312ee2d7960c6ea830a4e0d3c0ff5fe0b10856dab44e2c432fcdeb63ff63",
+              "sha256": "8368757b8e39ffe0441b2489e051d0d5ffc016c246ed5634495104da0e66fa83",
               "urls": [
-                "https://archive.mozilla.org/pub/firefox/releases/160.0/win64/en-US/Firefox%20Setup%20160.0.exe"
+                "https://archive.mozilla.org/pub/firefox/releases/161.0/win64/en-US/Firefox%20Setup%20161.0.exe"
               ],
               "named_files": {
                 "FIREFOX": "core/firefox.exe"
