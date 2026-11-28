@@ -26,7 +26,7 @@
     "@angular/cli": "22.3.0-rc.0",
     "@angular/compiler-cli": "22.3.0-rc.0",
     "@types/jasmine": "~6.0.0",
-    "@types/node": "24.19.2",
+    "@types/node": "24.19.4",
     "chromedriver": "^158.0.0",
     "jasmine-core": "6.3.0",
     "karma": "~6.4.4",
